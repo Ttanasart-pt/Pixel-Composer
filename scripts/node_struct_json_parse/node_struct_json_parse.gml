@@ -2,15 +2,15 @@ function Node_Struct_JSON_Parse(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	name = "JSON Parse";
 	setDimension(96, 32 + 24);
 	
-	inputs[| 0] = nodeValue_Text("JSON string", self, 0)
+	inputs[0] = nodeValue_Text("JSON string", self, 0)
 		.setVisible(true, true);
 	
-	outputs[| 0] = nodeValue_Output("Struct", self, VALUE_TYPE.struct, {} );
+	outputs[0] = nodeValue_Output("Struct", self, VALUE_TYPE.struct, {} );
 	
 	static update = function(frame = CURRENT_FRAME) {
 		var _str = getInputData(0);
 		var str  = json_parse(_str);
-		outputs[| 0].setValue(str);
+		outputs[0].setValue(str);
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

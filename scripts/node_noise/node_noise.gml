@@ -1,18 +1,18 @@
 function Node_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Noise";
 	
-	inputs[| 0] = nodeValue_Dimension(self);
+	inputs[0] = nodeValue_Dimension(self);
 	
-	inputs[| 1] = nodeValue_Float("Seed", self, seed_random(6))
-		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 1].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
+	inputs[1] = nodeValue_Float("Seed", self, seed_random(6))
+		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[1].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
-	inputs[| 2] = nodeValue_Enum_Button("Color mode", self,  0, [ "Greyscale", "RGB", "HSV" ]);
+	inputs[2] = nodeValue_Enum_Button("Color mode", self,  0, [ "Greyscale", "RGB", "HSV" ]);
 	
-	inputs[| 3] = nodeValue_Slider_Range("Color R range", self, [ 0, 1 ]);
+	inputs[3] = nodeValue_Slider_Range("Color R range", self, [ 0, 1 ]);
 	
-	inputs[| 4] = nodeValue_Slider_Range("Color G range", self, [ 0, 1 ]);
+	inputs[4] = nodeValue_Slider_Range("Color G range", self, [ 0, 1 ]);
 	
-	inputs[| 5] = nodeValue_Slider_Range("Color B range", self, [ 0, 1 ]);
+	inputs[5] = nodeValue_Slider_Range("Color B range", self, [ 0, 1 ]);
 	
 	input_display_list = [
 		["Output",	false], 0, 
@@ -20,20 +20,20 @@ function Node_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		["Color",	false], 2, 3, 4, 5, 
 	];
 	
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	attribute_surface_depth();
 	
 	static step = function() {
 		var _col = getInputData(2);
 		
-		inputs[| 3].setVisible(_col != 0);
-		inputs[| 4].setVisible(_col != 0);
-		inputs[| 5].setVisible(_col != 0);
+		inputs[3].setVisible(_col != 0);
+		inputs[4].setVisible(_col != 0);
+		inputs[5].setVisible(_col != 0);
 		
-		inputs[| 3].name = _col == 1? "Color R range" : "Color H range";
-		inputs[| 4].name = _col == 1? "Color G range" : "Color S range";
-		inputs[| 5].name = _col == 1? "Color B range" : "Color V range";
+		inputs[3].name = _col == 1? "Color R range" : "Color H range";
+		inputs[4].name = _col == 1? "Color G range" : "Color S range";
+		inputs[5].name = _col == 1? "Color B range" : "Color V range";
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {

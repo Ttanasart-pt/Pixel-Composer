@@ -51,7 +51,7 @@ event_inherited();
 			if((i == n - 1 && _m[1] > _y0) || (_m[1] > _y0 && _m[1] <= _y1) || (i == 0 && _m[1] < _y1))
 				hovr = i;
 			
-			var ind = node.inputs[| disp];
+			var ind = node.inputs[disp];
 			draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text_sub);
 			draw_text_add(hg + ui(8), _y + hg / 2 - 1, ind.name);
 			

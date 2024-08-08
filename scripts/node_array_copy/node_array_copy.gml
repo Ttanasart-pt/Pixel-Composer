@@ -2,23 +2,23 @@ function Node_Array_Copy(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	name = "Array Copy";
 	setDimension(96, 32 + 24);
 	
-	inputs[| 0] = nodeValue("Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0)
+	inputs[0] = nodeValue("Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0)
 		.setArrayDepth(1)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue_Int("Starting Index", self, 0);
+	inputs[1] = nodeValue_Int("Starting Index", self, 0);
 	
-	inputs[| 2] = nodeValue_Int("Size", self, 1);
+	inputs[2] = nodeValue_Int("Size", self, 1);
 	
-	outputs[| 0] = nodeValue_Output("Array", self, VALUE_TYPE.any, 0)
+	outputs[0] = nodeValue_Output("Array", self, VALUE_TYPE.any, 0)
 		.setArrayDepth(1);
 		
 	static step = function() {
 		var _typ = VALUE_TYPE.any;
-		if(inputs[| 0].value_from != noone) _typ = inputs[| 0].value_from.type;
+		if(inputs[0].value_from != noone) _typ = inputs[0].value_from.type;
 		
-		inputs[| 0].setType(_typ);
-		outputs[| 0].setType(_typ);
+		inputs[0].setType(_typ);
+		outputs[0].setType(_typ);
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
@@ -32,7 +32,7 @@ function Node_Array_Copy(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		for( var i = 0; i < _siz; i++ ) 
 			res[i] = array_safe_get_fast(_arr, _ind + i);
 		
-		outputs[| 0].setValue(res);
+		outputs[0].setValue(res);
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

@@ -8,16 +8,16 @@ function Node_Smoke_Render_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 	
 	manual_ungroupable	 = false;
 	
-	inputs[| 0] = nodeValue("Domain", self, JUNCTION_CONNECT.input, VALUE_TYPE.sdomain, noone)
+	inputs[0] = nodeValue("Domain", self, JUNCTION_CONNECT.input, VALUE_TYPE.sdomain, noone)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue_Dimension(self);
+	inputs[1] = nodeValue_Dimension(self);
 		
-	inputs[| 2] = nodeValue_Bool("Interpolate", self, false);
+	inputs[2] = nodeValue_Bool("Interpolate", self, false);
 		
-	inputs[| 3] = nodeValue_Bool("Draw Domain", self, false);
+	inputs[3] = nodeValue_Bool("Draw Domain", self, false);
 		
-	inputs[| 4] = nodeValue_Bool("Auto Update", self, true);
+	inputs[4] = nodeValue_Bool("Auto Update", self, true);
 	
 	input_display_list = [
 		["Domain",	false], 0, 
@@ -38,14 +38,14 @@ function Node_Smoke_Render_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 		if(!is_struct(group)) return;
 			
 		if(!is_undefined(outParent))
-			ds_list_remove(group.outputs, outParent);
+			array_remove(group.outputs, outParent);
 			
 		outParent = nodeValue("Rendered", group, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone)
 			.uncache()
 			.setVisible(true, true);
 		outParent.from = self;
 		
-		ds_list_add(group.outputs, outParent);
+		array_push(group.outputs, outParent);
 		group.refreshNodeDisplay();
 		group.sortIO();
 	} if(!LOADING && !APPENDING) createOutput();

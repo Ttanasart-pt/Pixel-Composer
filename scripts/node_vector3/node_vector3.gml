@@ -3,26 +3,26 @@ function Node_Vector3(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	color = COLORS.node_blend_number;
 	setDimension(96, 32 + 24 * 3);
 	
-	inputs[| 0] = nodeValue_Float("x", self, 0)
+	inputs[0] = nodeValue_Float("x", self, 0)
 		.setVisible(true, true);
 		
-	inputs[| 1] = nodeValue_Float("y", self, 0)
+	inputs[1] = nodeValue_Float("y", self, 0)
 		.setVisible(true, true);
 		
-	inputs[| 2] = nodeValue_Float("z", self, 0)
+	inputs[2] = nodeValue_Float("z", self, 0)
 		.setVisible(true, true);
 	
-	inputs[| 3] = nodeValue_Bool("Integer", self, false);
+	inputs[3] = nodeValue_Bool("Integer", self, false);
 	
-	outputs[| 0] = nodeValue_Output("Vector", self, VALUE_TYPE.float, [ 0, 0, 0 ])
+	outputs[0] = nodeValue_Output("Vector", self, VALUE_TYPE.float, [ 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	static step = function() {
 		var int = getInputData(3);
 		for( var i = 0; i < 3; i++ )
-			inputs[| i].setType(int? VALUE_TYPE.integer : VALUE_TYPE.float);
+			inputs[i].setType(int? VALUE_TYPE.integer : VALUE_TYPE.float);
 		
-		outputs[| 0].setType(int? VALUE_TYPE.integer : VALUE_TYPE.float);
+		outputs[0].setType(int? VALUE_TYPE.integer : VALUE_TYPE.float);
 	}
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) {

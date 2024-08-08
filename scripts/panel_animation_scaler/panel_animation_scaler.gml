@@ -28,8 +28,8 @@ function Panel_Animation_Scaler() : Panel_Linear_Setting() constructor {
 			
 			if(!_node || !_node.active) continue;
 			
-			for(var i = 0; i < ds_list_size(_node.inputs); i++) {
-				var in = _node.inputs[| i];
+			for(var i = 0; i < array_length(_node.inputs); i++) {
+				var in = _node.inputs[i];
 				if(!in.is_anim) continue;
 				for(var j = 0; j < ds_list_size(in.animator.values); j++) {
 					var t = in.animator.values[| j];

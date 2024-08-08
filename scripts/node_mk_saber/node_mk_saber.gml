@@ -1,28 +1,28 @@
 function Node_MK_Saber(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "MK Saber";
 	
-	inputs[| 0] = nodeValue_Dimension(self);
+	inputs[0] = nodeValue_Dimension(self);
 	
-	inputs[| 1] = nodeValue_Vector("Point 1", self, [ 0, 0 ]);
+	inputs[1] = nodeValue_Vector("Point 1", self, [ 0, 0 ]);
 	
-	inputs[| 2] = nodeValue_Vector("Point 2", self, [ 16, 16 ]);
+	inputs[2] = nodeValue_Vector("Point 2", self, [ 16, 16 ]);
 	
-	inputs[| 3] = nodeValue_Int("Thickness", self, 2)
+	inputs[3] = nodeValue_Int("Thickness", self, 2)
 	
-	inputs[| 4] = nodeValue_Gradient("Color", self, new gradientObject(cola(c_white)))
+	inputs[4] = nodeValue_Gradient("Color", self, new gradientObject(cola(c_white)))
 	
-	inputs[| 5] = nodeValue_Int("Trace", self, 0);
+	inputs[5] = nodeValue_Int("Trace", self, 0);
 	
-	inputs[| 6] = nodeValue_Bool("Fix length", self, false);
+	inputs[6] = nodeValue_Bool("Fix length", self, false);
 	
-	inputs[| 7] = nodeValue_Int("Gradient step", self, 1);
+	inputs[7] = nodeValue_Int("Gradient step", self, 1);
 	
-	inputs[| 8] = nodeValue_Float("Glow intensity", self, 0)
+	inputs[8] = nodeValue_Float("Glow intensity", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 9] = nodeValue_Int("Glow radius", self, 0);
+	inputs[9] = nodeValue_Int("Glow radius", self, 0);
 	
-	inputs[| 10] = nodeValue_Surface("Trace texture", self)
+	inputs[10] = nodeValue_Surface("Trace texture", self)
 		.setVisible(true, true);
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 0, 
@@ -30,7 +30,7 @@ function Node_MK_Saber(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		["Render",		false], 4, 7, 5, 8, 9, 10,
 	];
 	
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	prev_points  = noone;
 	fixed_length = 0;
@@ -50,8 +50,8 @@ function Node_MK_Saber(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		draw_set_color(COLORS._main_accent);
 		draw_line(_p1x, _p1y, _p2x, _p2y);
 		var _hov = false;
-		var  hv  = inputs[| 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); active &= !hv; _hov |= hv;
-		var  hv  = inputs[| 2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); active &= !hv; _hov |= hv;
+		var  hv  = inputs[1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); active &= !hv; _hov |= hv;
+		var  hv  = inputs[2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); active &= !hv; _hov |= hv;
 		
 		return _hov;
 	} #endregion

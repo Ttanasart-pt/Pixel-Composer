@@ -12,7 +12,7 @@ MPEG-4 (.mp4)|*.mp4",
 	}
 	
 	var node = new Node_Export(_x, _y, _group).skipDefault();
-	node.inputs[| 1].setValue(path);
+	node.inputs[1].setValue(path);
 	if(NODE_NEW_MANUAL) node.extensionCheck();
 	
 	return node;
@@ -46,24 +46,24 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	_format_still = { filter: "Portable Network Graphics (.png)|*.png|Joint Photographic Experts Group (.jpg)|*.jpg" };
 	_format_anim  = { filter: "Graphics Interchange Format (.gif)|*.gif|Animated WebP (.webp)|*.webp" };
 	
-	inputs[| 0] = nodeValue_Surface("Surface", self);
+	inputs[0] = nodeValue_Surface("Surface", self);
 	
-	inputs[| 1] = nodeValue_Text("Paths",   self, "")
+	inputs[1] = nodeValue_Text("Paths",   self, "")
 		.setDisplay(VALUE_DISPLAY.path_save, _format_still)
 		.setVisible(true);
 	
-	inputs[| 2] = nodeValue_Text("Template",  self, "%d%n")
+	inputs[2] = nodeValue_Text("Template",  self, "%d%n")
 		.rejectArray();
-	inputs[| 2].editWidget.format		= TEXT_AREA_FORMAT.path_template;
-	inputs[| 2].editWidget.auto_update	= true;
+	inputs[2].editWidget.format		= TEXT_AREA_FORMAT.path_template;
+	inputs[2].editWidget.auto_update	= true;
 	
 	format_single = ["Single image", "Image sequence", "Animation"];
 	format_array  = ["Multiple images", "Image sequences", "Animations"];
 	
-	inputs[| 3] = nodeValue_Enum_Scroll("Type", self,  0, { data: format_single, update_hover: false })
+	inputs[3] = nodeValue_Enum_Scroll("Type", self,  0, { data: format_single, update_hover: false })
 		.rejectArray();
 	
-	inputs[| 4] = nodeValue_Int("Template guides", self, 0)
+	inputs[4] = nodeValue_Int("Template guides", self, 0)
 		.setDisplay(VALUE_DISPLAY.label, 
 @"%d          Directory
 %1d        Goes up 1 level
@@ -71,47 +71,47 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 %f           Frame
 %i           Array index" );
 
-	inputs[| 5] = nodeValue_Bool("Loop", self, true)
+	inputs[5] = nodeValue_Bool("Loop", self, true)
 		.setVisible(false)
 		.rejectArray();
 	
-	inputs[| 6] = nodeValue_Bool("Frame optimization", self, false)
+	inputs[6] = nodeValue_Bool("Frame optimization", self, false)
 		.setVisible(false)
 		.rejectArray();
 	
-	inputs[| 7] = nodeValue_Float("Color merge", self, 0.02)
+	inputs[7] = nodeValue_Float("Color merge", self, 0.02)
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setVisible(false)
 		.rejectArray();
 	
-	inputs[| 8] = nodeValue_Int("Framerate", self, 30)
+	inputs[8] = nodeValue_Int("Framerate", self, 30)
 		.rejectArray();
 	
 	format_image     = [ ".png", ".jpg", ".webp" ];
 	format_animation = [ ".gif", ".apng", ".webp", ".mp4" ];
 	
-	inputs[| 9] = nodeValue_Enum_Scroll("Format", self,  0, { data: format_image, update_hover: false })
+	inputs[9] = nodeValue_Enum_Scroll("Format", self,  0, { data: format_image, update_hover: false })
 		.rejectArray();
 	
-	inputs[| 10] = nodeValue_Float("Quality", self, 23)
+	inputs[10] = nodeValue_Float("Quality", self, 23)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 100, 0.1 ] })
 		.rejectArray();
 	
-	inputs[| 11] = nodeValue_Int("Sequence begin", self, 0);
+	inputs[11] = nodeValue_Int("Sequence begin", self, 0);
 	
-	inputs[| 12] = nodeValue_Slider_Range("Frame range", self, [0, -1], { range: [0, TOTAL_FRAMES, 0.1] });
+	inputs[12] = nodeValue_Slider_Range("Frame range", self, [0, -1], { range: [0, TOTAL_FRAMES, 0.1] });
 	
 	png_format   = [ "INDEX4", "INDEX8", "Default (PNG32)" ];
-	inputs[| 13] = nodeValue_Enum_Scroll("Subformat", self,  2, { data: png_format, update_hover: false });
+	inputs[13] = nodeValue_Enum_Scroll("Subformat", self,  2, { data: png_format, update_hover: false });
 	
-	inputs[| 14] = nodeValue_Int("Frame step", self, 1);
+	inputs[14] = nodeValue_Int("Frame step", self, 1);
 	
-	inputs[| 15] = nodeValue_Bool("Custom Range", self, false)
+	inputs[15] = nodeValue_Bool("Custom Range", self, false)
 		.rejectArray();
 	
-	inputs[| 16] = nodeValue_Bool("Export on Save", self, false)
+	inputs[16] = nodeValue_Bool("Export on Save", self, false)
 	
-	outputs[| 0] = nodeValue_Output("Preview", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Preview", self, VALUE_TYPE.surface, noone);
 	
 	template_guide = [
 		["%d",  "Directory"],
@@ -131,7 +131,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var _ext    = getInputData(9);
 		var path    = pathString(rawpath);
 		var pathA   = pathString(rawpath,, true);
-		path = string_replace(path, ".png", array_safe_get_fast(inputs[|  9].display_data.data, _ext, ""));
+		path = string_replace(path, ".png", array_safe_get_fast(inputs[ 9].display_data.data, _ext, ""));
 		
 		draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text);
 		var _th = ui(12) + string_height_ext(path, -1, _tw - ui(16), true);
@@ -236,32 +236,32 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var form = getInputData(3);
 		
 		if(_index == 3) {
-			if(NOT_LOAD) inputs[| 9].setValue(0);
+			if(NOT_LOAD) inputs[9].setValue(0);
 			
 			switch(form) {
 				case 0 : 
 				case 1 : 
-					inputs[| 1].display_data = _format_still;
+					inputs[1].display_data = _format_still;
 					break;
 				case 2 : 
-					inputs[| 1].display_data = _format_anim;
+					inputs[1].display_data = _format_anim;
 					break;
 			}
 		}
 		
 		if(NOT_LOAD && _index == 3 && form == 1)
-			inputs[| 2].setValue("%d%n%3f%i");
+			inputs[2].setValue("%d%n%3f%i");
 		
 		if(NOT_LOAD && _index == 1) {
 			var _path = getInputData(1);
 			var _ext  = filename_ext(_path);
 			
 			switch(_ext) {
-				case ".png" :  inputs[| 9].setValue(0); break;
-				case ".jpg" :  inputs[| 9].setValue(1); break;
+				case ".png" :  inputs[9].setValue(0); break;
+				case ".jpg" :  inputs[9].setValue(1); break;
 			
-				case ".gif" :  inputs[| 9].setValue(0); break;
-				case ".webp" : inputs[| 9].setValue(1); break;
+				case ".gif" :  inputs[9].setValue(0); break;
+				case ".webp" : inputs[9].setValue(1); break;
 			}
 		}
 	} #endregion
@@ -272,21 +272,21 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			
 		switch(_ext) {
 			case ".png" : 
-				inputs[| 3].setValue(0);
-				inputs[| 9].setValue(0);
+				inputs[3].setValue(0);
+				inputs[9].setValue(0);
 				break;
 			case ".jpg" : 
-				inputs[| 3].setValue(0);
-				inputs[| 9].setValue(1);
+				inputs[3].setValue(0);
+				inputs[9].setValue(1);
 				break;
 			
 			case ".gif" : 
-				inputs[| 3].setValue(2);
-				inputs[| 9].setValue(0);
+				inputs[3].setValue(2);
+				inputs[9].setValue(0);
 				break;
 			case ".webp" : 
-				inputs[| 3].setValue(2);
-				inputs[| 9].setValue(1);
+				inputs[3].setValue(2);
+				inputs[9].setValue(1);
 				break;
 		}
 	} #endregion
@@ -475,7 +475,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		}
 		
 		var _e   = getInputData(9);
-		var _ext = array_safe_get_fast(inputs[| 9].display_data.data, _e, ".png");
+		var _ext = array_safe_get_fast(inputs[9].display_data.data, _e, ".png");
 		
 		if(_array)	array_push(s, ["ext", _ext]);
 		else		s += _ext;
@@ -744,14 +744,14 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var expo = getInputData(16);
 		
 		if(is_array(surf)) {
-			inputs[| 3].display_data.data	 = format_array;
-			inputs[| 3].editWidget.data_list = format_array;
+			inputs[3].display_data.data	 = format_array;
+			inputs[3].editWidget.data_list = format_array;
 		} else {
-			inputs[| 3].display_data.data    = format_single;
-			inputs[| 3].editWidget.data_list = format_single;
+			inputs[3].display_data.data    = format_single;
+			inputs[3].editWidget.data_list = format_single;
 		}
 		
-		outputs[| 0].setValue(surf);
+		outputs[0].setValue(surf);
 		
 		var anim = getInputData(3); // single, sequence, animation
 		var extn = getInputData(9);
@@ -760,59 +760,59 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		if(expo && anim == NODE_EXPORT_FORMAT.single && IS_SAVING)
 			doInspectorAction();
 		
-		inputs[| 11].setVisible(anim == 1);
-		inputs[| 16].setVisible(anim == 0);
+		inputs[11].setVisible(anim == 1);
+		inputs[16].setVisible(anim == 0);
 		
-		inputs[| 12].editWidget.minn = FIRST_FRAME + 1;
-		inputs[| 12].editWidget.maxx = LAST_FRAME + 1;
-		if(!user) inputs[| 12].setValueDirect([ FIRST_FRAME + 1, LAST_FRAME + 1], noone, false, 0, false);
+		inputs[12].editWidget.minn = FIRST_FRAME + 1;
+		inputs[12].editWidget.maxx = LAST_FRAME + 1;
+		if(!user) inputs[12].setValueDirect([ FIRST_FRAME + 1, LAST_FRAME + 1], noone, false, 0, false);
 		
-		inputs[| 14].setVisible(anim >  0);
+		inputs[14].setVisible(anim >  0);
 		
 		if(anim == NODE_EXPORT_FORMAT.animation) {
 			var _fmt = array_safe_get_fast(format_animation, extn);
 			
-			inputs[|  5].setVisible(_fmt == ".gif");
-			inputs[|  6].setVisible(_fmt == ".gif");
-			inputs[|  7].setVisible(_fmt == ".gif");
-			inputs[|  8].setVisible(true);
+			inputs[ 5].setVisible(_fmt == ".gif");
+			inputs[ 6].setVisible(_fmt == ".gif");
+			inputs[ 7].setVisible(_fmt == ".gif");
+			inputs[ 8].setVisible(true);
 		
-			inputs[|  9].display_data.data	  = format_animation;
-			inputs[|  9].editWidget.data_list = format_animation;
+			inputs[ 9].display_data.data	  = format_animation;
+			inputs[ 9].editWidget.data_list = format_animation;
 			
-			inputs[| 13].setVisible(false);
+			inputs[13].setVisible(false);
 			
 			if(_fmt == ".mp4") {
-				inputs[| 10].setName("CRF value");
-				inputs[| 10].tooltip = "Quality of the output, with 0 being the highest (and largest file size), and 51 being the lowest.";
+				inputs[10].setName("CRF value");
+				inputs[10].tooltip = "Quality of the output, with 0 being the highest (and largest file size), and 51 being the lowest.";
 				
-				inputs[| 10].setVisible(true);
-				inputs[| 10].editWidget.minn =  0;
-				inputs[| 10].editWidget.maxx = 51;
+				inputs[10].setVisible(true);
+				inputs[10].editWidget.minn =  0;
+				inputs[10].editWidget.maxx = 51;
 			} else 
-				inputs[| 10].setVisible(false);
+				inputs[10].setVisible(false);
 		} else {
 			var _fmt = array_safe_get_fast(format_image, extn);
 			
-			inputs[|  5].setVisible(false);
-			inputs[|  6].setVisible(false);
-			inputs[|  7].setVisible(false);
-			inputs[|  8].setVisible(false);
+			inputs[ 5].setVisible(false);
+			inputs[ 6].setVisible(false);
+			inputs[ 7].setVisible(false);
+			inputs[ 8].setVisible(false);
 		
-			inputs[|  9].display_data.data	  = format_image;
-			inputs[|  9].editWidget.data_list = format_image;
+			inputs[ 9].display_data.data	  = format_image;
+			inputs[ 9].editWidget.data_list = format_image;
 			
-			inputs[| 13].setVisible(_fmt == ".png");
+			inputs[13].setVisible(_fmt == ".png");
 			
 			if(_fmt == ".jpg" || _fmt == ".webp") {
-				inputs[| 10].setName("Quality");
-				inputs[| 10].tooltip = "Quality of the output.";
+				inputs[10].setName("Quality");
+				inputs[10].tooltip = "Quality of the output.";
 				
-				inputs[| 10].setVisible(true);
-				inputs[| 10].editWidget.minn =   0;
-				inputs[| 10].editWidget.maxx = 100;
+				inputs[10].setVisible(true);
+				inputs[10].editWidget.minn =   0;
+				inputs[10].editWidget.maxx = 100;
 			} else 
-				inputs[| 10].setVisible(false);
+				inputs[10].setVisible(false);
 		}
 		
 		if(render_process_id != 0) {

@@ -2,37 +2,37 @@ function Node_MK_Blinker(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	name = "MK Blinker";
 	batch_output = false;
 	
-	inputs[| 0] = nodeValue_Surface("Surface in", self);
+	inputs[0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue_Surface("Mask", self);
+	inputs[1] = nodeValue_Surface("Mask", self);
 	
-	inputs[| 2] = nodeValue_Int("Seed", self, seed_random(6))
-		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 2].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
+	inputs[2] = nodeValue_Int("Seed", self, seed_random(6))
+		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[2].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
-	inputs[| 3] = nodeValue_Float("Amount", self, 0.5)
+	inputs[3] = nodeValue_Float("Amount", self, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider);
 		
-	inputs[| 4] = nodeValue_Palette("Target Colors", self, [ c_black ] );
+	inputs[4] = nodeValue_Palette("Target Colors", self, [ c_black ] );
 		
-	inputs[| 5] = nodeValue_Palette("Light Colors", self, [ c_white ] );
+	inputs[5] = nodeValue_Palette("Light Colors", self, [ c_white ] );
 	
-	inputs[| 6] = nodeValue_Bool("Active", self, true);
+	inputs[6] = nodeValue_Bool("Active", self, true);
 		active_index = 6;
 		
-	inputs[| 7] = nodeValue_Float("Tolerance", self, 0.1 )
+	inputs[7] = nodeValue_Float("Tolerance", self, 0.1 )
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 8] = nodeValue_Bool("Glow", self, false);
+	inputs[8] = nodeValue_Bool("Glow", self, false);
 	
-	inputs[| 9] = nodeValue_Float("Size", self, 4 )
+	inputs[9] = nodeValue_Float("Size", self, 4 )
 		.setDisplay(VALUE_DISPLAY.slider, { range : [ 1, 8, 0.1 ] });
 	
-	inputs[| 10] = nodeValue_Float("Strength", self, 0.5 )
+	inputs[10] = nodeValue_Float("Strength", self, 0.5 )
 		.setDisplay(VALUE_DISPLAY.slider);
 		
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 		
-	outputs[| 1] = nodeValue_Output("Light only", self, VALUE_TYPE.surface, noone);
+	outputs[1] = nodeValue_Output("Light only", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 6, 
 		["Surfaces", false], 0, 1, 

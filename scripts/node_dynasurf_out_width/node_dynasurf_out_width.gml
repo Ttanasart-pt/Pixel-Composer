@@ -5,9 +5,9 @@ function Node_DynaSurf_Out_Width(_x, _y, _group = noone) : Node_PCX(_x, _y, _gro
 	manual_deletable	 = false;
 	destroy_when_upgroup = true;
 	
-	inputs[| 0] = nodeValue("Width", self, JUNCTION_CONNECT.input, VALUE_TYPE.PCXnode, noone);
+	inputs[0] = nodeValue("Width", self, JUNCTION_CONNECT.input, VALUE_TYPE.PCXnode, noone);
 	
-	outputs[| 0] = nodeValue_Output("PCX", self, VALUE_TYPE.PCXnode, noone)
+	outputs[0] = nodeValue_Output("PCX", self, VALUE_TYPE.PCXnode, noone)
 		.setVisible(false);
 	
 	input_display_list = [ 0 ];
@@ -21,7 +21,7 @@ function Node_DynaSurf_Out_Width(_x, _y, _group = noone) : Node_PCX(_x, _y, _gro
 	
 	static update = function() {
 		var _w = getInputData(0);
-		outputs[| 0].setValue(_w);
+		outputs[0].setValue(_w);
 		
 		if(group) group.setDynamicSurface();
 	}

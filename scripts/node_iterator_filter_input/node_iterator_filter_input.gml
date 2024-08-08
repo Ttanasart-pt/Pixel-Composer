@@ -5,31 +5,31 @@ function Node_Iterator_Filter_Input(_x, _y, _group = noone) : Node(_x, _y, _grou
 	
 	manual_deletable = false;
 	
-	outputs[| 0] = nodeValue_Output("Value in", self, VALUE_TYPE.any, 0 );
-	outputs[| 0].getValueDefault = method(outputs[| 0], outputs[| 0].getValueRecursive); //Get value from outside loop
-	outputs[| 0].getValueRecursive = function(arr) { #region
+	outputs[0] = nodeValue_Output("Value in", self, VALUE_TYPE.any, 0 );
+	outputs[0].getValueDefault = method(outputs[0], outputs[0].getValueRecursive); //Get value from outside loop
+	outputs[0].getValueRecursive = function(arr) { #region
 		if(!variable_struct_exists(group, "iterated"))
-			return outputs[| 0].getValueDefault(arr);
+			return outputs[0].getValueDefault(arr);
 			
 		var ind = group.iterated;
 		var val = group.getInputData(0);
 		
 		arr[@ 0] = array_safe_get_fast(val, ind)
-		arr[@ 1] = group.inputs[| 0];
+		arr[@ 1] = group.inputs[0];
 	} #endregion
 	
 	static step = function() { #region
 		if(group == noone) return noone;
 		if(!variable_struct_exists(group, "iterated")) return;
 		
-		if(outputs[| 0].setType(group.inputs[| 0].type))
+		if(outputs[0].setType(group.inputs[0].type))
 			will_setHeight = true;
 	} #endregion
 	
 	static getPreviewValues = function() { #region
 		if(group == noone) return noone;
 		
-		switch(group.inputs[| 0].type) {
+		switch(group.inputs[0].type) {
 			case VALUE_TYPE.surface :
 			case VALUE_TYPE.dynaSurface :
 				break;
@@ -43,7 +43,7 @@ function Node_Iterator_Filter_Input(_x, _y, _group = noone) : Node(_x, _y, _grou
 	static getGraphPreviewSurface = function() { #region
 		if(group == noone) return noone;
 		
-		switch(group.inputs[| 0].type) {
+		switch(group.inputs[0].type) {
 			case VALUE_TYPE.surface :
 			case VALUE_TYPE.dynaSurface :
 				break;

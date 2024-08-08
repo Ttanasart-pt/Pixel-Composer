@@ -1,35 +1,35 @@
 function Node_Diffuse(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Diffuse";
 	
-	inputs[| 0] = nodeValue_Surface("Density field", self);
+	inputs[0] = nodeValue_Surface("Density field", self);
 	
-	inputs[| 1] = nodeValue_Float("Dissipation", self, 0.05)
+	inputs[1] = nodeValue_Float("Dissipation", self, 0.05)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -0.2, 0.2, 0.001] });
 	
-	inputs[| 2] = nodeValue_Float("Scale", self, 1);
+	inputs[2] = nodeValue_Float("Scale", self, 1);
 	
-	inputs[| 3] = nodeValue_Float("Randomness", self, 1);
+	inputs[3] = nodeValue_Float("Randomness", self, 1);
 	
-	inputs[| 4] = nodeValue_Float("Flow rate", self, 0.5)
+	inputs[4] = nodeValue_Float("Flow rate", self, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 1, 0.01] });
 	
-	inputs[| 5] = nodeValue_Slider_Range("Threshold", self, [ 0.5, 0.7 ]);
+	inputs[5] = nodeValue_Slider_Range("Threshold", self, [ 0.5, 0.7 ]);
 		
-	inputs[| 6] = nodeValue_Int("Seed", self, seed_random(6))
-		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 6].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
+	inputs[6] = nodeValue_Int("Seed", self, seed_random(6))
+		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[6].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
-	inputs[| 7] = nodeValue_Surface("External", self);
+	inputs[7] = nodeValue_Surface("External", self);
 	
-	inputs[| 8] = nodeValue_Float("External Strength", self, 0.1)
+	inputs[8] = nodeValue_Float("External Strength", self, 0.1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -0.25, 0.25, 0.01] });
 	
-	inputs[| 9] = nodeValue_Int("Detail", self, 1)
+	inputs[9] = nodeValue_Int("Detail", self, 1)
 	
-	inputs[| 10] = nodeValue_Enum_Scroll("External Type", self,  0, [ "Point", "Vector" ]);
+	inputs[10] = nodeValue_Enum_Scroll("External Type", self,  0, [ "Point", "Vector" ]);
 		
-	inputs[| 11] = nodeValue_Rotation("External Direction", self, 0);
+	inputs[11] = nodeValue_Rotation("External Direction", self, 0);
 	
-	outputs[| 0] = nodeValue_Output("Result", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Result", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 0, 6, 
 		["Diffuse",		false], 1, 
@@ -43,7 +43,7 @@ function Node_Diffuse(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	static step = function() {
 		var _ftyp = getInputData(10);
 		
-		inputs[| 11].setVisible(_ftyp == 1);
+		inputs[11].setVisible(_ftyp == 1);
 	}
 	
 	static update = function() {
@@ -64,7 +64,7 @@ function Node_Diffuse(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		var _sw = surface_get_width_safe(_surf);
 		var _sh = surface_get_height_safe(_surf);
 		
-		var _outSurf = outputs[| 0].getValue();
+		var _outSurf = outputs[0].getValue();
 		    _outSurf = surface_verify(_outSurf, _sw, _sh);
 		
 		for( var i = 0, n = array_length(temp_surface); i < n; i++ )
@@ -97,6 +97,6 @@ function Node_Diffuse(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 			draw_surface_safe(temp_surface[1]);
 		surface_reset_shader();
 		
-		outputs[| 0].setValue(_outSurf);
+		outputs[0].setValue(_outSurf);
 	}
 }

@@ -11,9 +11,9 @@ function Node_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 	static onDrawNode  = function(xx, yy, _mx, _my, _s, _hover, _focus) {}
 	
 	static getPreviewObject = function() { #region
-		if(ds_list_empty(outputs)) return noone;
+		if(array_empty(outputs)) return noone;
 		
-		switch(outputs[| preview_channel].type) {
+		switch(outputs[preview_channel].type) {
 			case VALUE_TYPE.d3Mesh		: 
 			case VALUE_TYPE.d3Light		: 
 			case VALUE_TYPE.d3Camera	: 
@@ -22,7 +22,7 @@ function Node_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 			default : return noone;
 		}
 		
-		var _obj = outputs[| 0].getValue();
+		var _obj = outputs[0].getValue();
 		if(is_array(_obj)) _obj = array_safe_get_fast(_obj, preview_index, noone);
 		
 		return _obj;

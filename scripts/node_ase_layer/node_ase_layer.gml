@@ -1,14 +1,14 @@
 function Node_ASE_layer(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "ASE Layer";
 	
-	inputs[| 0] = nodeValue("ASE data", self, JUNCTION_CONNECT.input, VALUE_TYPE.object, noone)
+	inputs[0] = nodeValue("ASE data", self, JUNCTION_CONNECT.input, VALUE_TYPE.object, noone)
 		.setVisible(false, true)
 		.rejectArray();
 	
-	inputs[| 1] = nodeValue_Bool("Crop Output", self, false)
+	inputs[1] = nodeValue_Bool("Crop Output", self, false)
 		.rejectArray();
 	
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	layer_object = noone;
 	_name = "";
@@ -40,10 +40,10 @@ function Node_ASE_layer(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var cw = cel? cel.data[$ "Width"]  : 1;
 		var ch = cel? cel.data[$ "Height"] : 1;
 		
-		var surf = outputs[| 0].getValue();
+		var surf = outputs[0].getValue();
 		if(celDim)	surf = surface_verify(surf, cw, ch);
 		else		surf = surface_verify(surf, ww, hh);
-		outputs[| 0].setValue(surf);
+		outputs[0].setValue(surf);
 		
 		if(cel == 0) { surface_clear(surf); return; }
 		

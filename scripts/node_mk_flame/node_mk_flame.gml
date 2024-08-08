@@ -2,15 +2,15 @@ function Node_MK_Flame(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	name = "MK Flame";
 	update_on_frame = true;
 	
-	inputs[| 0] = nodeValue_Dimension(self);
+	inputs[0] = nodeValue_Dimension(self);
 	
-	inputs[| 1] = nodeValue_Rotation("Direction", self, 45);
+	inputs[1] = nodeValue_Rotation("Direction", self, 45);
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 0,  
 		["Shape",	false], 1, 
 	];
 	
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	static step = function() { #region
 		

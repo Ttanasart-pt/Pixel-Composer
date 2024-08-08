@@ -35,8 +35,8 @@ function Node_Feedback_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		var node_in  = PROJECT.nodeMap[? attributes.junc_in[0]];
 		var node_out = PROJECT.nodeMap[? attributes.junc_out[0]];
 		
-		junc_in  = node_in?  node_in.inputs[| attributes.junc_in[1]]   : noone;
-		junc_out = node_out? node_out.outputs[| attributes.junc_out[1]] : noone;
+		junc_in  = node_in?  node_in.inputs[attributes.junc_in[1]]   : noone;
+		junc_out = node_out? node_out.outputs[attributes.junc_out[1]] : noone;
 		
 		if(junc_in)  junc_in.value_from_loop = self;
 		if(junc_out) array_push(junc_out.value_to_loop, self);

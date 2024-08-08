@@ -1,20 +1,20 @@
 function Node_PB_Fx_Highlight(_x, _y, _group = noone) : Node_PB_Fx(_x, _y, _group) constructor {
 	name = "Highlight";
 	
-	inputs[| 1] = nodeValue_Int("Highlight Area", self, array_create(9) )
+	inputs[1] = nodeValue_Int("Highlight Area", self, array_create(9) )
 		.setDisplay(VALUE_DISPLAY.matrix, { size: 3 });
 		
-	inputs[| 2] = nodeValue_Color("Light Color", self, c_white );
+	inputs[2] = nodeValue_Color("Light Color", self, c_white );
 		
-	inputs[| 3] = nodeValue_Color("Shadow Color", self, c_black );
+	inputs[3] = nodeValue_Color("Shadow Color", self, c_black );
 		
-	inputs[| 4] = nodeValue_Float("Roughness", self, 0 )
+	inputs[4] = nodeValue_Float("Roughness", self, 0 )
 		.setDisplay(VALUE_DISPLAY.slider);
 		
-	inputs[| 5] = nodeValue_Float("Roughness Scale", self, 1 );
+	inputs[5] = nodeValue_Float("Roughness Scale", self, 1 );
 		
-	inputs[| 6] = nodeValue_Float("Seed", self, seed_random(6))
-		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 6].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
+	inputs[6] = nodeValue_Float("Seed", self, seed_random(6))
+		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[6].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
 	holding_side = noone;
 	
@@ -46,7 +46,7 @@ function Node_PB_Fx_Highlight(_x, _y, _group = noone) : Node_PB_Fx(_x, _y, _grou
 					
 					if(holding_side != noone) {
 						_side[ind] = holding_side;
-						inputs[| 1].setValue(_side);
+						inputs[1].setValue(_side);
 					}
 				}
 					
@@ -55,7 +55,7 @@ function Node_PB_Fx_Highlight(_x, _y, _group = noone) : Node_PB_Fx(_x, _y, _grou
 						_side[ind] = !_side[ind];
 					else
 						_side[ind] = (_side[ind] + 2) % 3 - 1;
-					inputs[| 1].setValue(_side);
+					inputs[1].setValue(_side);
 					
 					holding_side = _side[ind];
 				}

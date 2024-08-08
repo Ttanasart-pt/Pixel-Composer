@@ -508,20 +508,20 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		var _outp = -1;
 		var _path = -1;
 	
-		for( var i = 0; i < ds_list_size(_node.outputs); i++ ) {
-			if(_node.outputs[| i].type == VALUE_TYPE.path)
-				_path = _node.outputs[| i];
-			if(_node.outputs[| i].type == VALUE_TYPE.surface && _outp == -1)
-				_outp = _node.outputs[| i];
+		for( var i = 0; i < array_length(_node.outputs); i++ ) {
+			if(_node.outputs[i].type == VALUE_TYPE.path)
+				_path = _node.outputs[i];
+			if(_node.outputs[i].type == VALUE_TYPE.surface && _outp == -1)
+				_outp = _node.outputs[i];
 		}
 	
 		if(_outp == -1) return;
 	
 		var _export = nodeBuild("Node_Export", _node.x + _node.w + 64, _node.y);
 		if(_path != -1)
-			_export.inputs[| 1].setFrom(_path);
+			_export.inputs[1].setFrom(_path);
 	
-		_export.inputs[| 0].setFrom(_outp);
+		_export.inputs[0].setFrom(_outp);
 	}
 
 	function setTriggerPreview() {
@@ -556,10 +556,10 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		var _outp = -1;
 		var surf  = -1;
 	
-		for( var i = 0; i < ds_list_size(_node.outputs); i++ ) {
-			if(_node.outputs[| i].type != VALUE_TYPE.surface) continue;
+		for( var i = 0; i < array_length(_node.outputs); i++ ) {
+			if(_node.outputs[i].type != VALUE_TYPE.surface) continue;
 			
-			_outp = _node.outputs[| i];
+			_outp = _node.outputs[i];
 			surf  = _outp.getValue();
 			break;
 		}
@@ -570,7 +570,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		var _canvas = nodeBuild("Node_Canvas", _node.x + _node.w + 64, _node.y).skipDefault();
 		var _dim    = surface_get_dimension(surf[0]);
 		
-		_canvas.inputs[| 0].setValue(_dim);
+		_canvas.inputs[0].setValue(_dim);
 		_canvas.attributes.dimension = _dim;
 		_canvas.attributes.frames    = array_length(surf);
 		_canvas.canvas_surface       = surface_array_clone(surf);
@@ -584,10 +584,10 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		var _outp = -1;
 		var surf = -1;
 	
-		for( var i = 0; i < ds_list_size(_node.outputs); i++ ) {
-			if(_node.outputs[| i].type == VALUE_TYPE.surface) {
-				_outp = _node.outputs[| i];
-				var _val = _node.outputs[| i].getValue();
+		for( var i = 0; i < array_length(_node.outputs); i++ ) {
+			if(_node.outputs[i].type == VALUE_TYPE.surface) {
+				_outp = _node.outputs[i];
+				var _val = _node.outputs[i].getValue();
 				if(is_array(_val))
 					surf  = _val[_node.preview_index];
 				else
@@ -600,12 +600,12 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	
 		var _canvas = nodeBuild("Node_Canvas", _node.x, _node.y + _node.h + 64).skipDefault();
 	
-		_canvas.inputs[| 0].setValue([surface_get_width_safe(surf), surface_get_height_safe(surf)]);
-		_canvas.inputs[| 5].setValue(true);
+		_canvas.inputs[0].setValue([surface_get_width_safe(surf), surface_get_height_safe(surf)]);
+		_canvas.inputs[5].setValue(true);
 	
 		var _blend = nodeBuild("Node_Blend", _node.x + _node.w + 64, _node.y).skipDefault();
-		_blend.inputs[| 0].setFrom(_outp);
-		_blend.inputs[| 1].setFrom(_canvas.outputs[| 0]);
+		_blend.inputs[0].setFrom(_outp);
+		_blend.inputs[1].setFrom(_canvas.outputs[0]);
 	}
 	
 	function getFocusingNode() { return array_empty(nodes_selecting)? noone : nodes_selecting[0]; }
@@ -722,8 +722,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			for(var i = 0; i < array_length(nodes_selecting); i++) {
 				var _node = nodes_selecting[i];
 				
-				for( var j = 0, m = ds_list_size(_node.inputs); j < m; j++ ) {
-					var _input = _node.inputs[| j];
+				for( var j = 0, m = array_length(_node.inputs); j < m; j++ ) {
+					var _input = _node.inputs[j];
 					if(_input.value_from == noone) continue;
 					_input.setColor(color);
 				}
@@ -1646,8 +1646,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				var _my = round(mouse_graph_y / project.graphGrid.size) * project.graphGrid.size;
 						
 				var _pin = nodeBuild("Node_Pin", _mx, _my).skipDefault();
-				_pin.inputs[| 0].setFrom(junction_hovering.value_from);
-				junction_hovering.setFrom(_pin.outputs[| 0]);
+				_pin.inputs[0].setFrom(junction_hovering.value_from);
+				junction_hovering.setFrom(_pin.outputs[0]);
 			}
 		} 
 		
@@ -1771,8 +1771,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 						var _indx = target.index;
 						
 						for( var i = 0, n = array_length(value_draggings); i < n; i++ ) {
-							_node.inputs[| _indx].setFrom(value_draggings[i]);
-							if(++_indx > ds_list_size(_node.inputs)) break;
+							_node.inputs[_indx].setFrom(value_draggings[i]);
+							if(++_indx > array_length(_node.inputs)) break;
 						}
 					}
 					
@@ -1968,8 +1968,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 						if(_node == value_focus.node) {
 							ds_priority_add(_jlist, value_focus, value_focus.y);
 						} else {
-							for( var j = 0, m = ds_list_size(_node.outputs); j < m; j++ ) {
-								var _junction = _node.outputs[| j];
+							for( var j = 0, m = array_length(_node.outputs); j < m; j++ ) {
+								var _junction = _node.outputs[j];
 								if(!_junction.visible) continue;
 								if(value_bit(_junction.type) & value_bit(value_dragging.type) == 0) continue;
 							
@@ -2541,17 +2541,17 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			if(node.input_display_list != -1) {
 				for (var i = 0, n = array_length(node.input_display_list); i < n; i++) {
 					if(!is_real(node.input_display_list[i])) continue;
-					if(node.inputs[| node.input_display_list[i]].setFrom(value_dragging)) break;
+					if(node.inputs[node.input_display_list[i]].setFrom(value_dragging)) break;
 				}
 					
 			} else {
-				for (var i = 0, n = ds_list_size(node.inputs); i < n; i++)
-					if(node.inputs[| i].setFrom(value_dragging)) break;
+				for (var i = 0, n = array_length(node.inputs); i < n; i++)
+					if(node.inputs[i].setFrom(value_dragging)) break;
 			}
 			
 		} else if(value_dragging.connect_type == JUNCTION_CONNECT.input) {
-			for (var i = 0, n = ds_list_size(node.outputs); i < n; i++)
-				if(value_dragging.setFrom(node.outputs[| i])) break;
+			for (var i = 0, n = array_length(node.outputs); i < n; i++)
+				if(value_dragging.setFrom(node.outputs[i])) break;
 				
 		}
 		
@@ -2561,12 +2561,12 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	function doTransform() {
 		for( var i = 0; i < array_length(nodes_selecting); i++ ) {
 			var node = nodes_selecting[i];
-			if(ds_list_empty(node.outputs)) continue;
+			if(array_empty(node.outputs)) continue;
 			
-			var _o = node.outputs[| 0];
+			var _o = node.outputs[0];
 			if(_o.type == VALUE_TYPE.surface || _o.type == VALUE_TYPE.dynaSurface) {
 				var tr = nodeBuild("Node_Transform", node.x + node.w + 64, node.y).skipDefault();
-				tr.inputs[| 0].setFrom(_o);
+				tr.inputs[0].setFrom(_o);
 			}
 		}
 	}
@@ -2735,7 +2735,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			var args = [node, path];
 	
 			global.FILE_LOAD_ASYNC[? img] = [ function(args) {
-				args[0].inputs[| 0].setValue(args[1]);
+				args[0].inputs[0].setValue(args[1]);
 				args[0].doUpdate();
 			}, args];
 		}
@@ -2750,18 +2750,18 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		var cx = max(_n0.x, _n1.x) + 160;
 		var cy = round((_n0.y + _n1.y) / 2 / 32) * 32;
 		
-		var _j0 = _n0.outputs[| 0]; 
-		var _j1 = _n1.outputs[| 0]; 
+		var _j0 = _n0.outputs[0]; 
+		var _j1 = _n1.outputs[0]; 
 			
 		if(_j0.type == VALUE_TYPE.surface && _j1.type == VALUE_TYPE.surface) {
 			var _blend = nodeBuild("Node_Blend", cx, cy, getCurrentContext()).skipDefault().skipDefault();
-			_blend.inputs[| 0].setFrom(_j0);
-			_blend.inputs[| 1].setFrom(_j1);
+			_blend.inputs[0].setFrom(_j0);
+			_blend.inputs[1].setFrom(_j1);
 			
 		} else if((_j0.type == VALUE_TYPE.integer || _j0.type == VALUE_TYPE.float) && (_j1.type == VALUE_TYPE.integer || _j1.type == VALUE_TYPE.float)) {
 			var _blend = nodeBuild("Node_Math", cx, cy, getCurrentContext()).skipDefault().skipDefault();
-			_blend.inputs[| 1].setFrom(_j0);
-			_blend.inputs[| 2].setFrom(_j1);
+			_blend.inputs[1].setFrom(_j0);
+			_blend.inputs[2].setFrom(_j1);
 			
 		}
 		
@@ -2779,9 +2779,9 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		
 		for(var i = 0; i < amo; i++) {
 			var _node = nodes_selecting[i];
-			if(ds_list_size(_node.outputs) == 0) continue;
+			if(array_length(_node.outputs) == 0) continue;
 			
-			if(_node.outputs[| 0].type != VALUE_TYPE.surface) continue;
+			if(_node.outputs[0].type != VALUE_TYPE.surface) continue;
 			
 			cx = max(cx, _node.x);
 			cy += _node.y;
@@ -2797,7 +2797,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		
 		repeat(len) {
 			var _node = ds_priority_delete_min(pr);
-			_compose.addInput(_node.outputs[| 0]);
+			_compose.addInput(_node.outputs[0]);
 		}
 		
 		nodes_selecting = [];
@@ -2815,7 +2815,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		
 		for(var i = 0; i < amo; i++) {
 			var _node = nodes_selecting[i];
-			if(ds_list_size(_node.outputs) == 0) continue;
+			if(array_length(_node.outputs) == 0) continue;
 			
 			cx = max(cx, _node.x);
 			cy += _node.y;
@@ -2831,7 +2831,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		
 		repeat(len) {
 			var _node = ds_priority_delete_min(pr);
-			_array.addInput(_node.outputs[| 0]);
+			_array.addInput(_node.outputs[0]);
 		}
 		
 		nodes_selecting = [];
@@ -2868,7 +2868,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		y1 += 64;
 	
 		var f = nodeBuild("Node_Frame", x0, y0, getCurrentContext()).skipDefault();
-		f.inputs[| 0].setValue([x1 - x0, y1 - y0]);
+		f.inputs[0].setValue([x1 - x0, y1 - y0]);
 	} 
 
 	function doDelete(_merge = false) { //
@@ -2896,13 +2896,13 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		if(instanceof(node_prop_clipboard) != instanceof(node_hover)) return;
 		
 		var _vals = [];
-		for( var i = 0, n = ds_list_size(node_prop_clipboard.inputs); i < n; i++ ) {
-			var _inp = node_prop_clipboard.inputs[| i];
+		for( var i = 0, n = array_length(node_prop_clipboard.inputs); i < n; i++ ) {
+			var _inp = node_prop_clipboard.inputs[i];
 			_vals[i] = _inp.serialize();
 		}
 		
-		for( var i = 0, n = ds_list_size(node_hover.inputs); i < n; i++ ) {
-			var _inp = node_hover.inputs[| i];
+		for( var i = 0, n = array_length(node_hover.inputs); i < n; i++ ) {
+			var _inp = node_hover.inputs[i];
 			if(_inp.value_from != noone) continue;
 			
 			_inp.applyDeserialize(_vals[i]);
@@ -2924,17 +2924,17 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		switch(DRAGGING.type) {
 			case "Color":
 				node = nodeBuild("Node_Color", mouse_grid_x, mouse_grid_y).skipDefault();
-				node.inputs[| 0].setValue(DRAGGING.data);
+				node.inputs[0].setValue(DRAGGING.data);
 				break;
 				
 			case "Palette":
 				node = nodeBuild("Node_Palette", mouse_grid_x, mouse_grid_y).skipDefault();
-				node.inputs[| 0].setValue(DRAGGING.data);
+				node.inputs[0].setValue(DRAGGING.data);
 				break;
 				
 			case "Gradient":
 				node = nodeBuild("Node_Gradient_Out", mouse_grid_x, mouse_grid_y).skipDefault();
-				node.inputs[| 0].setValue(DRAGGING.data);
+				node.inputs[0].setValue(DRAGGING.data);
 				break;
 			
 			case "Number":
@@ -2946,21 +2946,21 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 					}
 					
 					for( var i = 0, n = array_length(DRAGGING.data); i < n; i++ )
-						node.inputs[| i].setValue(DRAGGING.data[i]);
+						node.inputs[i].setValue(DRAGGING.data[i]);
 				} else {
 					node = nodeBuild("Node_Number", mouse_grid_x, mouse_grid_y).skipDefault();
-					node.inputs[| 0].setValue(DRAGGING.data);
+					node.inputs[0].setValue(DRAGGING.data);
 				}
 				break;
 				
 			case "Bool":
 				node = nodeBuild("Node_Boolean", mouse_grid_x, mouse_grid_y).skipDefault();
-				node.inputs[| 0].setValue(DRAGGING.data);
+				node.inputs[0].setValue(DRAGGING.data);
 				break;
 				
 			case "Text":
 				node = nodeBuild("Node_String", mouse_grid_x, mouse_grid_y).skipDefault();
-				node.inputs[| 0].setValue(DRAGGING.data);
+				node.inputs[0].setValue(DRAGGING.data);
 				break;
 				
 			case "Path":
@@ -3012,8 +3012,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		}
 			
 		if(!key_mod_press(SHIFT) && node && struct_has(DRAGGING, "from") && DRAGGING.from.value_from == noone) {
-			for( var i = 0; i < ds_list_size(node.outputs); i++ )
-				if(DRAGGING.from.setFrom(node.outputs[| i])) break;
+			for( var i = 0; i < array_length(node.outputs); i++ )
+				if(DRAGGING.from.setFrom(node.outputs[i])) break;
 		}
 	} 
 	
@@ -3068,16 +3068,16 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		for (var i = 0, n = array_length(_list); i < n; i++) {
 			var _node = _list[i];
 			
-			for(var j = 0; j < ds_list_size(_node.inputs); j++) {
-				var _jun = _node.inputs[| j];
+			for(var j = 0; j < array_length(_node.inputs); j++) {
+				var _jun = _node.inputs[j];
 				if(!_jun.isVisible()) continue;
 				
 				if(_jun.value_from == noone)
 					_jun.visible_manual = -1;
 			}
 			
-			for(var j = 0; j < ds_list_size(_node.outputs); j++) {
-				var _jun = _node.outputs[| j];
+			for(var j = 0; j < array_length(_node.outputs); j++) {
+				var _jun = _node.outputs[j];
 				if(!_jun.isVisible()) continue;
 				
 				if(array_empty(_jun.getJunctionTo()))
@@ -3100,11 +3100,11 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		var _ti = nodeBuild("Node_Tunnel_In",  _jo.rx + 32, _jo.ry).skipDefault();
 		var _to = nodeBuild("Node_Tunnel_Out", _ji.rx - 32, _ji.ry).skipDefault();
 		
-		_to.inputs[| 0].setValue(_key);
-		_ti.inputs[| 0].setValue(_key);
+		_to.inputs[0].setValue(_key);
+		_ti.inputs[0].setValue(_key);
 		
-		_ti.inputs[| 1].setFrom(_jo);
-		_ji.setFrom(_to.outputs[| 0]);
+		_ti.inputs[1].setFrom(_jo);
+		_ji.setFrom(_to.outputs[0]);
 	}
 	
 	function createAction() {
@@ -3240,7 +3240,7 @@ function load_file_path(path, _x = undefined, _y = undefined) {
 				case "gpl"      : 
 				case "pal"      : 
 					node = new Node_Palette(_x, _y, PANEL_GRAPH.getCurrentContext()).skipDefault();
-					node.inputs[| 0].setValue(loadPalette(p));
+					node.inputs[0].setValue(loadPalette(p));
 					break;
 			}
 			

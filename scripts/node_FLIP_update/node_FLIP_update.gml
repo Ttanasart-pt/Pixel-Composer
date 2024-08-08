@@ -6,26 +6,26 @@ function Node_FLIP_Update(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	manual_ungroupable = false;
 	
-	inputs[| 0] = nodeValue_Fdomain("Domain", self, noone)
+	inputs[0] = nodeValue_Fdomain("Domain", self, noone)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue_Bool("Update", self, true);
+	inputs[1] = nodeValue_Bool("Update", self, true);
 	
-	inputs[| 2] = nodeValue_Bool("Override timestep", self, false);
+	inputs[2] = nodeValue_Bool("Override timestep", self, false);
 	
-	inputs[| 3] = nodeValue_Float("Timestep", self, 0.01);
+	inputs[3] = nodeValue_Float("Timestep", self, 0.01);
 	
 	input_display_list = [ 0, 1,
 		["Timestep", false], 2, 3, 
 	];
 	
-	outputs[| 0] = nodeValue_Output("Domain", self, VALUE_TYPE.fdomain, noone);
+	outputs[0] = nodeValue_Output("Domain", self, VALUE_TYPE.fdomain, noone);
 	
 	static update = function(frame = CURRENT_FRAME) {
 		var domain  = getInputData(0);
 		var _active = getInputData(1);
 		
-		outputs[| 0].setValue(domain);
+		outputs[0].setValue(domain);
 		
 		if(!instance_exists(domain)) return;
 		if(domain.domain == noone)   return;

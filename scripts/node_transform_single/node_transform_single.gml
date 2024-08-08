@@ -1,17 +1,17 @@
 function Node_Transform_Single(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Transform single";
 	
-	inputs[| 0] = nodeValue_Surface("Surface in", self);
+	inputs[0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue_Float("Position x", self, 0);
-	inputs[| 2] = nodeValue_Float("Position y", self, 0);
-	inputs[| 3] = nodeValue_Float("Anchor x",   self, 0);
-	inputs[| 4] = nodeValue_Float("Anchor y",   self, 0);
-	inputs[| 5] = nodeValue_Float("Rotation",   self, 0);
-	inputs[| 6] = nodeValue_Float("Scale x",    self, 1);
-	inputs[| 7] = nodeValue_Float("Scale y",    self, 1);
+	inputs[1] = nodeValue_Float("Position x", self, 0);
+	inputs[2] = nodeValue_Float("Position y", self, 0);
+	inputs[3] = nodeValue_Float("Anchor x",   self, 0);
+	inputs[4] = nodeValue_Float("Anchor y",   self, 0);
+	inputs[5] = nodeValue_Float("Rotation",   self, 0);
+	inputs[6] = nodeValue_Float("Scale x",    self, 1);
+	inputs[7] = nodeValue_Float("Scale y",    self, 1);
 	
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var pos_x = _data[1];
@@ -50,9 +50,9 @@ function Node_Transform_Single(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		PROCESSOR_OVERLAY_CHECK
 		
-		if(array_length(current_data) < ds_list_size(inputs)) return;
+		if(array_length(current_data) < array_length(inputs)) return;
 		
-		var _surf = outputs[| 0].getValue();
+		var _surf = outputs[0].getValue();
 		if(is_array(_surf)) {
 			if(array_length(_surf) == 0) return;
 			_surf = _surf[preview_index];
@@ -131,11 +131,11 @@ function Node_Transform_Single(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 			}
 			
 			if(overlay_dragging == 1) {
-				inputs[| 1].setValue(pos_x);
-				inputs[| 2].setValue(pos_y);
+				inputs[1].setValue(pos_x);
+				inputs[2].setValue(pos_y);
 			} else if(overlay_dragging == 2) {
-				inputs[| 3].setValue(pos_x);
-				inputs[| 4].setValue(pos_y);
+				inputs[3].setValue(pos_x);
+				inputs[4].setValue(pos_y);
 			}
 			
 			if(mouse_release(mb_left))
@@ -145,7 +145,7 @@ function Node_Transform_Single(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 			var da = angle_difference(overlay_drag_ma, aa);
 			var sa = overlay_drag_sa - da;
 			
-			inputs[| 5].setValue(sa);
+			inputs[5].setValue(sa);
 			
 			if(mouse_release(mb_left))
 				overlay_dragging = 0;	

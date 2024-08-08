@@ -1,15 +1,15 @@
 function Node_Wiggler(_x, _y, _group = noone) : Node_Fn(_x, _y, _group) constructor {
 	name = "Wiggler";
 	
-	inputs[| inl + 0] = nodeValue_Vector("Range", self, [ 0, 1 ]);
+	inputs[inl + 0] = nodeValue_Vector("Range", self, [ 0, 1 ]);
 	
-	inputs[| inl + 1] = nodeValue_Int("Frequency", self, 4 )
+	inputs[inl + 1] = nodeValue_Int("Frequency", self, 4 )
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 32, 0.1] });
 	
-	inputs[| inl + 2] = nodeValue_Float("Seed", self, seed_random(6))
-		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| inl + 2].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
+	inputs[inl + 2] = nodeValue_Float("Seed", self, seed_random(6))
+		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[inl + 2].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
-	inputs[| inl + 3] = nodeValue_Toggle("Clip", self, 0b11 , { data : [ "Start", "End" ] });
+	inputs[inl + 3] = nodeValue_Toggle("Clip", self, 0b11 , { data : [ "Start", "End" ] });
 	
 	array_append(input_display_list, [
 		["Wiggle",	false], inl + 2, inl + 0, inl + 1, inl + 3, 

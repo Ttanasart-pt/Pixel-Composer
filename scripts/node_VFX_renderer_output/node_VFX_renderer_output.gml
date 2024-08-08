@@ -7,15 +7,15 @@ function Node_VFX_Renderer_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 	manual_ungroupable = false;
 	previewable = true;
 	
-	inputs[| 0] = nodeValue_Vector("Output dimension", self, DEF_SURF);
+	inputs[0] = nodeValue_Vector("Output dimension", self, DEF_SURF);
 		
-	inputs[| 1] = nodeValue_Bool("Round position", self, true, "Round position to the closest integer value to avoid jittering.")
+	inputs[1] = nodeValue_Bool("Round position", self, true, "Round position to the closest integer value to avoid jittering.")
 		.rejectArray();
 	
-	inputs[| 2] = nodeValue_Enum_Button("Render Type", self,  PARTICLE_RENDER_TYPE.surface , [ "Surface", "Line" ])
+	inputs[2] = nodeValue_Enum_Button("Render Type", self,  PARTICLE_RENDER_TYPE.surface , [ "Surface", "Line" ])
 		.rejectArray();
 	
-	inputs[| 3] = nodeValue_Int("Line life", self, 4 )
+	inputs[3] = nodeValue_Int("Line life", self, 4 )
 		.rejectArray();
 		
 	input_display_list = [ 
@@ -32,17 +32,17 @@ function Node_VFX_Renderer_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 	static onInspector2Update = function() { clearCache(); }
 	
 	static createNewInput = function() {
-		var index = ds_list_size(inputs);
+		var index = array_length(inputs);
 		
-		inputs[| index + 0] = nodeValue_Enum_Scroll("Blend mode", self,  0 , [ "Normal", "Alpha", "Additive" ])
+		inputs[index + 0] = nodeValue_Enum_Scroll("Blend mode", self,  0 , [ "Normal", "Alpha", "Additive" ])
 			.rejectArray();
 		
-		inputs[| index + 1] = nodeValue_Particle("Particles", self, noone )
+		inputs[index + 1] = nodeValue_Particle("Particles", self, noone )
 			.setVisible(true, true);
 			
 		array_push(input_display_list, ["Particle", false], index + 0, index + 1);
 		
-		return inputs[| index + 1];
+		return inputs[index + 1];
 	} 
 	
 	setDynamicInput(2, true, VALUE_TYPE.particle);
@@ -53,14 +53,14 @@ function Node_VFX_Renderer_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 		if(!is_struct(group)) return;
 			
 		if(!is_undefined(outParent))
-			ds_list_remove(group.outputs, outParent);
+			array_remove(group.outputs, outParent);
 			
 		outParent = nodeValue("Rendered", group, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone)
 			.uncache()
 			.setVisible(true, true);
 		outParent.from = self;
 		
-		ds_list_add(group.outputs, outParent);
+		array_push(group.outputs, outParent);
 		group.refreshNodeDisplay();
 		group.sortIO();
 	} if(!LOADING && !APPENDING) createOutput(); #endregion
@@ -71,7 +71,7 @@ function Node_VFX_Renderer_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 		var _dim = getInputData(0);
 		var _typ = getInputData(2);
 		
-		inputs[| 3].setVisible(_typ == PARTICLE_RENDER_TYPE.line);
+		inputs[3].setVisible(_typ == PARTICLE_RENDER_TYPE.line);
 		
 		var _outSurf = outParent.getValue();
 		    _outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
@@ -88,10 +88,10 @@ function Node_VFX_Renderer_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 			return;
 		}
 		
-		var _dim   = inputs[| 0].getValue(_time);
-		var _exact = inputs[| 1].getValue(_time);
-		var _type  = inputs[| 2].getValue(_time);
-		var _llife = inputs[| 3].getValue(_time);
+		var _dim   = inputs[0].getValue(_time);
+		var _exact = inputs[1].getValue(_time);
+		var _type  = inputs[2].getValue(_time);
+		var _llife = inputs[3].getValue(_time);
 		
 		var _outSurf	= outParent.getValue();
 		
@@ -105,9 +105,9 @@ function Node_VFX_Renderer_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 		if(_type == PARTICLE_RENDER_TYPE.surface)
 			shader_set_interpolation(_outSurf);
 			
-			for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
-				var blend = inputs[| i + 0].getValue(_time);
-				var parts = inputs[| i + 1].getValue(_time);
+			for( var i = input_fix_len; i < array_length(inputs); i += data_length ) {
+				var blend = inputs[i + 0].getValue(_time);
+				var parts = inputs[i + 1].getValue(_time);
 				
 				switch(blend) {
 					case PARTICLE_BLEND_MODE.normal:   BLEND_NORMAL; break;

@@ -6,13 +6,13 @@ function Node_Rigid_Activate(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	manual_ungroupable	 = false;
 	
-	inputs[| 0] = nodeValue("Object", self, JUNCTION_CONNECT.input, VALUE_TYPE.rigid, noone)
+	inputs[0] = nodeValue("Object", self, JUNCTION_CONNECT.input, VALUE_TYPE.rigid, noone)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue_Bool("Physics activated", self, true)
+	inputs[1] = nodeValue_Bool("Physics activated", self, true)
 		.rejectArray();
 	
-	outputs[| 0] = nodeValue_Output("Object", self, VALUE_TYPE.rigid, noone);
+	outputs[0] = nodeValue_Output("Object", self, VALUE_TYPE.rigid, noone);
 	
 	input_display_list = [
 		["Object",		 true],	0,
@@ -21,7 +21,7 @@ function Node_Rigid_Activate(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	static update = function(frame = CURRENT_FRAME) {
 		var _obj = getInputData(0);
-		outputs[| 0].setValue(_obj);
+		outputs[0].setValue(_obj);
 		
 		RETURN_ON_REST
 			

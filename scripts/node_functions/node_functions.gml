@@ -40,12 +40,12 @@
 				_pos[0] = value_snap(dragging_sx + _dx, _snx);
 				_pos[1] = value_snap(dragging_sy + _dy, _sny);
 				
-				if(inputs[| _posInd].setValue(_pos))
+				if(inputs[_posInd].setValue(_pos))
 					UNDO_HOLDING = true;
 				
-				if(inputs[| _posInd].unit.mode == VALUE_UNIT.reference) {
+				if(inputs[_posInd].unit.mode == VALUE_UNIT.reference) {
 					var p = [ _pos[0], _pos[1] ];
-					_pos = inputs[| _posInd].unit.apply(p);
+					_pos = inputs[_posInd].unit.apply(p);
 				}
 			} else if(drag_type == 1) {
 				var aa = point_direction(rot_anc_x, rot_anc_y, _mx, _my);
@@ -56,7 +56,7 @@
 				else 
 					_rot = dragging_sx - da;
 			
-				if(inputs[| _rotInd].setValue(_rot))
+				if(inputs[_rotInd].setValue(_rot))
 					UNDO_HOLDING = true;	
 			} else if(drag_type == 2) {
 				var _p = point_rotate(_mx - dragging_mx, _my - dragging_my, 0, 0, -_rot);
@@ -68,12 +68,12 @@
 					_sca[1] = min(_sca[0], _sca[1]);
 				}
 				
-				if(inputs[| _scaInd].setValue(_sca))
+				if(inputs[_scaInd].setValue(_sca))
 					UNDO_HOLDING = true;	
 					
-				if(_scaUnit && inputs[| _scaInd].unit.mode == VALUE_UNIT.reference) {
+				if(_scaUnit && inputs[_scaInd].unit.mode == VALUE_UNIT.reference) {
 					var s = [ _sca[0], _sca[1] ];
-					_sca = inputs[| _scaInd].unit.apply(s);
+					_sca = inputs[_scaInd].unit.apply(s);
 				}
 			}
 			

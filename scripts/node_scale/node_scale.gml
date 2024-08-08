@@ -4,20 +4,20 @@ function Node_Scale(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	manage_atlas = false;
 	
-	inputs[| 0] = nodeValue_Surface("Surface in", self);
+	inputs[0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue_Float("Scale", self, 1);
+	inputs[1] = nodeValue_Float("Scale", self, 1);
 	
-	inputs[| 2] = nodeValue_Enum_Button("Mode", self,  0, [ "Upscale", "Scale to fit" ]);
+	inputs[2] = nodeValue_Enum_Button("Mode", self,  0, [ "Upscale", "Scale to fit" ]);
 	
-	inputs[| 3] = nodeValue_Vector("Target dimension", self, DEF_SURF);
+	inputs[3] = nodeValue_Vector("Target dimension", self, DEF_SURF);
 	
-	inputs[| 4] = nodeValue_Bool("Active", self, true);
+	inputs[4] = nodeValue_Bool("Active", self, true);
 		active_index = 4;
 		
-	inputs[| 5] = nodeValue_Bool("Scale atlas position", self, true);
+	inputs[5] = nodeValue_Bool("Scale atlas position", self, true);
 		
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 4, 
 		["Surfaces", true], 0,
@@ -31,7 +31,7 @@ function Node_Scale(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var _surf = getSingleValue(0);
 		
 		var _atlas = is_instanceof(_surf, SurfaceAtlas);
-		inputs[| 5].setVisible(_atlas);
+		inputs[5].setVisible(_atlas);
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
@@ -42,8 +42,8 @@ function Node_Scale(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var _atlS = _data[5];
 		var cDep  = attrDepth();
 		
-		inputs[| 1].setVisible(mode == 0);
-		inputs[| 3].setVisible(mode == 1);
+		inputs[1].setVisible(mode == 0);
+		inputs[3].setVisible(mode == 1);
 		
 		var isAtlas = is_instanceof(surf, SurfaceAtlas);
 		if(isAtlas && !is_instanceof(_outSurf, SurfaceAtlas))

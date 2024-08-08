@@ -19,7 +19,7 @@ function Node_3D_Transform_Image(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, 
 	projMat = matrix_build_projection_ortho(1, 1, 0.001, 10);
 	
 	
-	inputs[| in_mesh + 0] = nodeValue_Surface("Surface", self)
+	inputs[in_mesh + 0] = nodeValue_Surface("Surface", self)
 		.setVisible(true, true);
 	
 	input_display_list = [
@@ -27,14 +27,14 @@ function Node_3D_Transform_Image(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, 
 		__d3d_input_list_transform,
 	]
 	
-	outputs[| 0].setVisible(false);
-	outputs[| 1] = nodeValue_Output("Rendered", self, VALUE_TYPE.surface, noone);
+	outputs[0].setVisible(false);
+	outputs[1] = nodeValue_Output("Rendered", self, VALUE_TYPE.surface, noone);
 	
 	output_display_list = [ 1 ]
 	
 	static onDrawOverlay3D = function(active, params, _mx, _my, _snx, _sny, _panel) {
 		#region draw result
-			var _outSurf = outputs[| 1].getValue();
+			var _outSurf = outputs[1].getValue();
 			if(is_array(_outSurf)) _outSurf = array_safe_get_fast(_outSurf, preview_index);
 			if(!is_surface(_outSurf)) return;
 		
@@ -103,7 +103,7 @@ function Node_3D_Transform_Image(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, 
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover = false, _focus = false) { #region
 		if(!previewable) return;
 		
-		var _surf = outputs[| 1].getValue();
+		var _surf = outputs[1].getValue();
 		if(is_array(_surf)) _surf = array_safe_get_fast(_surf, preview_index);
 		if(!is_surface(_surf)) return;
 		

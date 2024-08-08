@@ -3,23 +3,23 @@ function Node_Path_Sample(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	batch_output = false;
 	setDimension(96, 48);
 	
-	inputs[| 0] = nodeValue_PathNode("Path", self, noone)
+	inputs[0] = nodeValue_PathNode("Path", self, noone)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue_Float("Ratio", self, 0);
+	inputs[1] = nodeValue_Float("Ratio", self, 0);
 	
-	inputs[| 2] = nodeValue_Enum_Scroll("Type", self,  0, [ "Loop", "Ping pong" ]);
+	inputs[2] = nodeValue_Enum_Scroll("Type", self,  0, [ "Loop", "Ping pong" ]);
 	
-	outputs[| 0] = nodeValue_Output("Position", self, VALUE_TYPE.float, [ 0, 0 ])
+	outputs[0] = nodeValue_Output("Position", self, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	outputs[| 1] = nodeValue_Output("Direction", self, VALUE_TYPE.float, 0);
+	outputs[1] = nodeValue_Output("Direction", self, VALUE_TYPE.float, 0);
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var _path = getInputData(0);
 		if(_path && struct_has(_path, "drawOverlay")) _path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 		
-		var _pnt = outputs[| 0].getValue();
+		var _pnt = outputs[0].getValue();
 		if(process_amount == 1) _pnt = [ _pnt ];
 		
 		draw_set_color(COLORS._main_accent);

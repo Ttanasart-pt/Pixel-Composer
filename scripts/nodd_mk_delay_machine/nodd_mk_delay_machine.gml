@@ -4,22 +4,22 @@ function Node_MK_Delay_Machine(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	is_simulation = true;
 	
-	inputs[| 0] = nodeValue_Surface("Surface", self);
+	inputs[0] = nodeValue_Surface("Surface", self);
 	
-	inputs[| 1] = nodeValue_Int("Delay Amounts", self, 4);
+	inputs[1] = nodeValue_Int("Delay Amounts", self, 4);
 	
-	inputs[| 2] = nodeValue_Int("Delay Frames", self, 1);
+	inputs[2] = nodeValue_Int("Delay Frames", self, 1);
 	
-	inputs[| 3] = nodeValue_Palette("Blend over Delay", self, [ c_white ]);
+	inputs[3] = nodeValue_Palette("Blend over Delay", self, [ c_white ]);
 	
-	inputs[| 4] = nodeValue("Alpha over Delay", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11);
+	inputs[4] = nodeValue("Alpha over Delay", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11);
 	
-	inputs[| 5] = nodeValue_Enum_Scroll("Palette Select", self, 0, [ "Loop", "Pingpong", "Random" ]);
+	inputs[5] = nodeValue_Enum_Scroll("Palette Select", self, 0, [ "Loop", "Pingpong", "Random" ]);
 	
-	inputs[| 6] = nodeValue_Int("Seed", self, seed_random(6))
-		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 6].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
+	inputs[6] = nodeValue_Int("Seed", self, seed_random(6))
+		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[6].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
-	outputs[| 0] = nodeValue_Output("Surface", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 0,
 		["Delay",	false], 1, 2, 
@@ -34,7 +34,7 @@ function Node_MK_Delay_Machine(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	static step = function() {  
 		var _psel = getInputData(5);
 		
-		inputs[| 6].setVisible(_psel == 2);
+		inputs[6].setVisible(_psel == 2);
 	}
 	
 	static update = function() {  
@@ -53,7 +53,7 @@ function Node_MK_Delay_Machine(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		var _sw = surface_get_width_safe(_surf);
 		var _sh = surface_get_height_safe(_surf);
 		
-		var _outSurf = outputs[| 0].getValue();
+		var _outSurf = outputs[0].getValue();
 			_outSurf = surface_verify(_outSurf, _sw, _sh);
 		
 		var cc, aa;
@@ -79,6 +79,6 @@ function Node_MK_Delay_Machine(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			}
 		surface_reset_target();
 		
-		outputs[| 0].setValue(_outSurf);
+		outputs[0].setValue(_outSurf);
 	}
 }

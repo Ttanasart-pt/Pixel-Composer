@@ -5,7 +5,7 @@ enum ARRAY_PROCESS {
 	expand_inv,
 }
 
-#macro PROCESSOR_OVERLAY_CHECK if(array_length(current_data) != ds_list_size(inputs)) return 0;
+#macro PROCESSOR_OVERLAY_CHECK if(array_length(current_data) != array_length(inputs)) return 0;
 
 function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	attributes.array_process = ARRAY_PROCESS.loop;
@@ -41,9 +41,9 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	static getSingleValue = function(_index, _arr = preview_index, output = false) { 
 		var _l  = output? outputs : inputs;
-		if(_index < 0  || _index >= ds_list_size(_l)) return 0;
+		if(_index < 0  || _index >= array_length(_l)) return 0;
 		
-		var _n  = _l[| _index];
+		var _n  = _l[_index];
 		var _in = output? _n.getValue() : getInputData(_index);
 		
 		if(!_n.isArray(_in)) return _in;
@@ -52,10 +52,10 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		if(!is_array(_in)) return 0;
 		
 		switch(attributes.array_process) {
-			case ARRAY_PROCESS.loop :		_aIndex = safe_mod(_arr, array_length(_in)); break;
-			case ARRAY_PROCESS.hold :		_aIndex = min(_arr, array_length(_in) - 1);  break;
-			case ARRAY_PROCESS.expand :		_aIndex = floor(_arr / process_length[_index][1]) % process_length[_index][0]; break;
-			case ARRAY_PROCESS.expand_inv : _aIndex = floor(_arr / process_length[ds_list_size(_l) - 1 - _index][1]) % process_length[_index][0]; break;
+			case ARRAY_PROCESS.loop :		_aIndex = safe_mod(_arr, array_length(_in));															break;
+			case ARRAY_PROCESS.hold :		_aIndex = min(_arr, array_length(_in) - 1	); 															break;
+			case ARRAY_PROCESS.expand :		_aIndex = floor(_arr / process_length[_index][1]) % process_length[_index][0];							break;
+			case ARRAY_PROCESS.expand_inv : _aIndex = floor(_arr / process_length[array_length(_l) - 1 - _index][1]) % process_length[_index][0];	break;
 		}
 		
 		return array_safe_get_fast(_in, _aIndex);
@@ -66,7 +66,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		var _in = getSingleValue(dimension_index, arr);
 		
-		if(inputs[| dimension_index].type == VALUE_TYPE.surface && is_surface(_in)) {
+		if(inputs[dimension_index].type == VALUE_TYPE.surface && is_surface(_in)) {
 			var ww = surface_get_width_safe(_in);
 			var hh = surface_get_height_safe(_in);
 			return [ww, hh];
@@ -79,18 +79,17 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	} 
 	
 	static processDataArray = function(outIndex) { 
-		var _output = outputs[| outIndex];
+		var _output = outputs[outIndex];
 		var _out    = _output.getValue();
 		var _atlas  = false;
 		var _pAtl   = noone;
-		var _data   = array_create(ds_list_size(inputs));
+		var _data   = [];
 		
 		if(process_amount == 1) { // render single data
 			if(_output.type == VALUE_TYPE.d3object) //passing 3D vertex call
 				return _out;
 			
-			for(var i = 0; i < ds_list_size(inputs); i++)
-				_data[i] = inputs_data[i];
+			_data = array_map(inputs, function(_in, i) /*=>*/ {return inputs_data[i]});
 			
 			if(_output.type == VALUE_TYPE.surface) {								// Surface preparation
 				if(manage_atlas) {
@@ -103,7 +102,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				if(dimension_index > -1) {
 					var surf = _data[dimension_index];
 					var _sw = 1, _sh = 1;
-					if(inputs[| dimension_index].type == VALUE_TYPE.surface) {
+					if(inputs[dimension_index].type == VALUE_TYPE.surface) {
 						if(is_surface(surf)) {
 							_sw = surface_get_width_safe(surf);
 							_sh = surface_get_height_safe(surf);
@@ -127,7 +126,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			current_data = _data;
 			
 			if(active_index > -1 && !_data[active_index]) // skip
-				return inputs[| 0].type == VALUE_TYPE.surface? surface_clone(_data[0], _out) : _data[0];
+				return inputs[0].type == VALUE_TYPE.surface? surface_clone(_data[0], _out) : _data[0];
 			
 			var data = processData(_out, _data, outIndex, 0);					// Process data
 			
@@ -152,8 +151,8 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		#endregion
 		
 		for(var l = 0; l < process_amount; l++) {
-			for(var i = 0; i < ds_list_size(inputs); i++)
-				_data[i] = all_inputs[i][l];
+			__l = l;
+			_data[i] = array_map(inputs, function(_in, i) /*=>*/ {return all_inputs[i][__l]});
 			
 			if(_output.type == VALUE_TYPE.surface) { #region						// Output surface verification
 				if(manage_atlas) {
@@ -166,7 +165,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				if(dimension_index > -1) {
 					var surf = _data[dimension_index];
 					var _sw = 1, _sh = 1;
-					if(inputs[| dimension_index].type == VALUE_TYPE.surface) {
+					if(inputs[dimension_index].type == VALUE_TYPE.surface) {
 						if(is_surface(surf)) {
 							_sw = surface_get_width_safe(surf);
 							_sh = surface_get_height_safe(surf);
@@ -192,7 +191,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				current_data = _data;
 			
 			if(active_index > -1 && !_data[active_index]) { // skip
-				if(!_atlas && inputs[| 0].type == VALUE_TYPE.surface)
+				if(!_atlas && inputs[0].type == VALUE_TYPE.surface)
 					_out[l] = surface_clone(_data[0], _out[l]);
 				else 
 					_out[l] = _data[0];
@@ -216,22 +215,22 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	}
 	
 	static processBatchOutput = function() { 
-		var _is  = ds_list_size(inputs);
-		var _os  = ds_list_size(outputs);
+		var _is  = array_length(inputs);
+		var _os  = array_length(outputs);
 		var _dep = attrDepth();
 		
 		var data;
 		var _out = array_create(_os);
-		for(var i = 0; i < _os; i++) _out[i] = outputs[| i].getValue();
+		for(var i = 0; i < _os; i++) _out[i] = outputs[i].getValue();
 		
-		var _surfOut = outputs[| 0];
+		var _surfOut = outputs[0];
 		var _skip = active_index != -1 && !inputs_data[active_index];
 		
 		if(process_amount == 1) {
 			current_data = inputs_data;
 			
 			if(_skip) { // skip
-				var _skp = inputs[| 0].type == VALUE_TYPE.surface? surface_clone(inputs_data[0], _out[0]) : inputs_data[0];
+				var _skp = inputs[0].type == VALUE_TYPE.surface? surface_clone(inputs_data[0], _out[0]) : inputs_data[0];
 				_surfOut.setValue(_skp);
 				return;
 			}
@@ -240,16 +239,16 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				var _dim = getDimension();
 				
 				for(var i = 0; i < _os; i++) 
-					if(outputs[| i].type == VALUE_TYPE.surface) _out[i] = surface_verify(_out[i], _dim[0], _dim[1], _dep);
+					if(outputs[i].type == VALUE_TYPE.surface) _out[i] = surface_verify(_out[i], _dim[0], _dim[1], _dep);
 			}
 			
 			if(_os == 1) {
 				data = processData(_out[0], inputs_data, 0, 0);
-				outputs[| 0].setValue(data);
+				outputs[0].setValue(data);
 				
 			} else {
 				data = processData(_out, inputs_data, 0, 0);
-				for(var i = 0; i < _os; i++) outputs[| i].setValue(data[i]);
+				for(var i = 0; i < _os; i++) outputs[i].setValue(data[i]);
 			}
 			
 			return;
@@ -257,7 +256,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		if(_skip) {
 			
-			var _skp = inputs[| 0].type == VALUE_TYPE.surface? surface_array_clone(inputs_data[0]) : inputs_data[0];
+			var _skp = inputs[0].type == VALUE_TYPE.surface? surface_array_clone(inputs_data[0]) : inputs_data[0];
 			_surfOut.setValue(_skp);
 			
 		} else {
@@ -274,7 +273,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				
 				for(var i = 0; i < _os; i++) {
 					_outa[i] = array_safe_get(_out[i], l);
-					if(outputs[| i].type == VALUE_TYPE.surface) 
+					if(outputs[i].type == VALUE_TYPE.surface) 
 						_outa[i] = surface_verify(_outa[i], _dim[0], _dim[1], _dep);
 				}
 				
@@ -289,25 +288,27 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			}
 			
 			for( var i = 0, n = _os; i < n; i++ )
-				outputs[| i].setValue(_outputs[i]);
+				outputs[i].setValue(_outputs[i]);
 		}
 		
 	} 
 	
 	static processOutput = function() { 
-		for(var i = 0; i < ds_list_size(outputs); i++) {
-			var val = outputs[| i].process_array? processDataArray(i) : processData(outputs[| i].getValue(), noone, i);
+		for(var i = 0; i < array_length(outputs); i++) {
+			var val = outputs[i].process_array? processDataArray(i) : processData(outputs[i].getValue(), noone, i);
 			if(val != undefined)
-				outputs[| i].setValue(val);
+				outputs[i].setValue(val);
 		}
 	} 
 	
 	static preGetInputs = function() {}
 	
 	static getInputs = function() {
+		NODE_SET_INPUT_SIZE
+		
 		preGetInputs();
 		
-		var _len = ds_list_size(inputs);
+		var _len = input_list_size;
 		
 		process_amount	= 1;
 		inputs_data		= array_verify(inputs_data,		_len);
@@ -315,9 +316,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		process_length  = array_verify(process_length,	_len);
 		all_inputs      = array_verify(all_inputs,		_len);
 		
-		for(var i = 0; i < _len; i++) {
-			var _in = inputs[| i];
-			
+		array_foreach(inputs, function(_in, i) /*=>*/ {
 			var raw = _in.getValue();
 			var amo = _in.arrayLength(raw);
 			var val = raw;
@@ -326,11 +325,10 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			else if(amo == 1) val = raw[0];		//spread single array
 			amo = max(1, amo);
 			
-			//setInputData(i, val);
-			inputs_data[i] = val;
+			inputs_data[i] = val;				//setInputData(i, val);
 			input_value_map[$ _in.internalName] = val;
 			
-			inputs_is_array[i] = _in.isArray(val);
+			inputs_is_array[i] = _in.__is_array;
 			
 			switch(attributes.array_process) {
 				case ARRAY_PROCESS.loop : 
@@ -345,7 +343,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			}
 			
 			process_length[i] = [ amo, process_amount ];
-		}
+		});
 		
 		var amoMax = process_amount;
 		for( var i = 0; i < _len; i++ ) {
@@ -375,10 +373,10 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				case ARRAY_PROCESS.loop :		_index = safe_mod(l, array_length(_in)); break;
 				case ARRAY_PROCESS.hold :		_index = min(l, array_length(_in) - 1);  break;
 				case ARRAY_PROCESS.expand :		_index = floor(l / process_length[i][1]) % process_length[i][0]; break;
-				case ARRAY_PROCESS.expand_inv : _index = floor(l / process_length[ds_list_size(inputs) - 1 - i][1]) % process_length[i][0]; break;
+				case ARRAY_PROCESS.expand_inv : _index = floor(l / process_length[array_length(inputs) - 1 - i][1]) % process_length[i][0]; break;
 			}
 				
-			all_inputs[i][l] = inputs[| i].arrayBalance(_in[_index]);
+			all_inputs[i][l] = inputs[i].arrayBalance(_in[_index]);
 		} #endregion
 		
 	}

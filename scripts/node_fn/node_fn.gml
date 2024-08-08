@@ -4,11 +4,11 @@ function Node_Fn(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 	update_on_frame = true;
 	setDimension(96, 96);
 	
-	inputs[| 0] = nodeValue_Enum_Scroll("Display", self,  1 , [ "Number", "Graph" ]);
+	inputs[0] = nodeValue_Enum_Scroll("Display", self,  1 , [ "Number", "Graph" ]);
 	
-	outputs[| 0] = nodeValue_Output("Output", self, VALUE_TYPE.float, 0);
+	outputs[0] = nodeValue_Output("Output", self, VALUE_TYPE.float, 0);
 	
-	inl = ds_list_size(inputs);
+	inl = array_length(inputs);
 	
 	input_display_list = [
 		["Display",	 true],	0, 

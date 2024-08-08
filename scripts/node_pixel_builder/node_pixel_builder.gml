@@ -5,12 +5,12 @@ function Node_Pixel_Builder(_x, _y, _group = noone) : Node_Collection(_x, _y, _g
 	
 	reset_all_child = true;
 	
-	inputs[| 0] = nodeValue_Dimension(self);
+	inputs[0] = nodeValue_Dimension(self);
 	
-	outputs[| 0] = nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone);
 	
-	custom_input_index  = ds_list_size(inputs);
-	custom_output_index = ds_list_size(outputs);
+	custom_input_index  = array_length(inputs);
+	custom_output_index = array_length(outputs);
 	
 	if(NODE_NEW_MANUAL) {
 		var input  = nodeBuild("Node_PB_Layer", -256, -32, self);
@@ -19,8 +19,8 @@ function Node_Pixel_Builder(_x, _y, _group = noone) : Node_Collection(_x, _y, _g
 	
 	static getNextNodes = function() { #region
 		var allReady = true;
-		for(var i = custom_input_index; i < ds_list_size(inputs); i++) {
-			var _in = inputs[| i].from;
+		for(var i = custom_input_index; i < array_length(inputs); i++) {
+			var _in = inputs[i].from;
 			if(!_in.isRenderActive()) continue;
 			
 			allReady &= _in.isRenderable()
@@ -38,7 +38,7 @@ function Node_Pixel_Builder(_x, _y, _group = noone) : Node_Collection(_x, _y, _g
 		buildPixel();
 		
 		var _nodes = [];
-		var _tos  = outputs[| 0].getJunctionTo();
+		var _tos  = outputs[0].getJunctionTo();
 			
 		for( var j = 0; j < array_length(_tos); j++ ) {
 			var _to = _tos[j];
@@ -58,14 +58,14 @@ function Node_Pixel_Builder(_x, _y, _group = noone) : Node_Collection(_x, _y, _g
 		for( var i = 0; i < array_length(nodes); i++ ) {
 			var _n = nodes[i];
 			
-			for( var j = 0; j < ds_list_size(_n.outputs); j++ ) {
-				var _out = _n.outputs[| j];
+			for( var j = 0; j < array_length(_n.outputs); j++ ) {
+				var _out = _n.outputs[j];
 				
 				if(_out.type != VALUE_TYPE.pbBox) continue;
 				var _to  = _out.getJunctionTo();
 				if(array_length(_to)) continue;
 				
-				var _pbox = _n.outputs[| j].getValue();
+				var _pbox = _n.outputs[j].getValue();
 				
 				if(!is_array(_pbox)) 
 					_pbox = [ _pbox ];
@@ -83,12 +83,12 @@ function Node_Pixel_Builder(_x, _y, _group = noone) : Node_Collection(_x, _y, _g
 			}
 		}
 		
-		var _outSurf = outputs[| 0].getValue();
+		var _outSurf = outputs[0].getValue();
 		surface_array_free(_outSurf);
 		
 		if(ds_map_empty(_surfs)) {
 			ds_map_destroy(_surfs);
-			outputs[| 0].setValue(surface_create(_dim[0], _dim[1]));
+			outputs[0].setValue(surface_create(_dim[0], _dim[1]));
 			LOG_BLOCK_END();
 			return;
 		}
@@ -112,7 +112,7 @@ function Node_Pixel_Builder(_x, _y, _group = noone) : Node_Collection(_x, _y, _g
 		
 		ds_map_destroy(_surfs);
 		
-		outputs[| 0].setValue(_outSurf);
+		outputs[0].setValue(_outSurf);
 		LOG_BLOCK_END();
 	} #endregion
 }

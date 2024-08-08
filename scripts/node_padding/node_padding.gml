@@ -2,27 +2,27 @@ function Node_Padding(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	name = "Padding";
 	dimension_index = -1;
 	
-	inputs[| 0] = nodeValue_Surface("Surface in", self);
+	inputs[0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue_Padding("Padding", self, [0, 0, 0, 0])
+	inputs[1] = nodeValue_Padding("Padding", self, [0, 0, 0, 0])
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	inputs[| 2] = nodeValue_Enum_Scroll("Fill method", self,  0, [ "Empty", "Solid" ]);
+	inputs[2] = nodeValue_Enum_Scroll("Fill method", self,  0, [ "Empty", "Solid" ]);
 	
-	inputs[| 3] = nodeValue_Color("Fill color", self, c_black);
+	inputs[3] = nodeValue_Color("Fill color", self, c_black);
 	
-	inputs[| 4] = nodeValue_Bool("Active", self, true);
+	inputs[4] = nodeValue_Bool("Active", self, true);
 		active_index = 4;
 		
-	inputs[| 5] = nodeValue_Enum_Button("Pad mode", self,  0, [ "Pad out", "Pad to size" ]);
+	inputs[5] = nodeValue_Enum_Button("Pad mode", self,  0, [ "Pad out", "Pad to size" ]);
 	
-	inputs[| 6] = nodeValue_Vector("Target dimension", self, DEF_SURF)
+	inputs[6] = nodeValue_Vector("Target dimension", self, DEF_SURF)
 	
-	inputs[| 7] = nodeValue_Enum_Button("Horizontal alignment", self,  0 , [ THEME.inspector_surface_halign, THEME.inspector_surface_halign, THEME.inspector_surface_halign]);
+	inputs[7] = nodeValue_Enum_Button("Horizontal alignment", self,  0 , [ THEME.inspector_surface_halign, THEME.inspector_surface_halign, THEME.inspector_surface_halign]);
 	
-	inputs[| 8] = nodeValue_Enum_Button("Vertical alignment", self,  0 , [ THEME.inspector_surface_valign, THEME.inspector_surface_valign, THEME.inspector_surface_valign ]);
+	inputs[8] = nodeValue_Enum_Button("Vertical alignment", self,  0 , [ THEME.inspector_surface_valign, THEME.inspector_surface_valign, THEME.inspector_surface_valign ]);
 		
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 4, 
 		["Surfaces", true], 0, 
@@ -35,11 +35,11 @@ function Node_Padding(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	static step = function() {
 		var mode = getInputData(5);
 		
-		inputs[| 1].setVisible(mode == 0);
+		inputs[1].setVisible(mode == 0);
 		
-		inputs[| 6].setVisible(mode == 1);
-		inputs[| 7].setVisible(mode == 1);
-		inputs[| 8].setVisible(mode == 1);
+		inputs[6].setVisible(mode == 1);
+		inputs[7].setVisible(mode == 1);
+		inputs[8].setVisible(mode == 1);
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
@@ -55,7 +55,7 @@ function Node_Padding(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var fillClr = _data[3];
 		var cDep    = attrDepth();
 		
-		inputs[| 3].setVisible(fill);
+		inputs[3].setVisible(fill);
 		
 		var ww	= surface_get_width_safe(_data[0]);
 		var hh	= surface_get_height_safe(_data[0]);

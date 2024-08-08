@@ -2,18 +2,18 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	name = "Transform Path";
 	setDimension(96, 48);
 	
-	inputs[| 0] = nodeValue_PathNode("Path", self, noone)
+	inputs[0] = nodeValue_PathNode("Path", self, noone)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue_Vector("Position", self, [ 0, 0 ]);
+	inputs[1] = nodeValue_Vector("Position", self, [ 0, 0 ]);
 	
-	inputs[| 2] = nodeValue_Rotation("Rotation", self, 0);
+	inputs[2] = nodeValue_Rotation("Rotation", self, 0);
 	
-	inputs[| 3] = nodeValue_Vector("Scale", self, [ 1, 1 ]);
+	inputs[3] = nodeValue_Vector("Scale", self, [ 1, 1 ]);
 	
-	inputs[| 4] = nodeValue_Vector("Anchor", self, [ 0, 0 ]);
+	inputs[4] = nodeValue_Vector("Anchor", self, [ 0, 0 ]);
 		
-	outputs[| 0] = nodeValue_Output("Path", self, VALUE_TYPE.pathnode, self);
+	outputs[0] = nodeValue_Output("Path", self, VALUE_TYPE.pathnode, self);
 	
 	cached_pos = ds_map_create();
 	
@@ -25,11 +25,11 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		
 		// if(pth) pth.drawOverlay(-1, false, _x, _y, _s, _mx, _my, _snx, _sny);
 		
-		active &= !inputs[| 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-		active &= !inputs[| 2].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny);
+		active &= !inputs[1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		active &= !inputs[2].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny);
 		
-		inputs[| 4].overlay_draw_text = false;
-		active &= !inputs[| 4].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, 1);
+		inputs[4].overlay_draw_text = false;
+		active &= !inputs[4].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, 1);
 	}
 	
 	static getLineCount 	= function()        { var _path = getInputData(0); return struct_has(_path, "getLineCount")?	_path.getLineCount()		: 1;  }
@@ -132,7 +132,7 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	static update = function() {
 		ds_map_clear(cached_pos);
-		outputs[| 0].setValue(self);
+		outputs[0].setValue(self);
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

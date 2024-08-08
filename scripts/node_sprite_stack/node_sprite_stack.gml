@@ -2,37 +2,37 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	name = "Sprite Stack";
 	dimension_index = 1;
 	
-	inputs[| 0] = nodeValue_Surface("Base shape", self);
+	inputs[0] = nodeValue_Surface("Base shape", self);
 	
-	inputs[| 1] = nodeValue_Dimension(self);
+	inputs[1] = nodeValue_Dimension(self);
 	
-	inputs[| 2] = nodeValue_Int("Stack amount", self, 4);
+	inputs[2] = nodeValue_Int("Stack amount", self, 4);
 	
-	inputs[| 3] = nodeValue_Vector("Stack shift", self, [ 0, 1 ] );
+	inputs[3] = nodeValue_Vector("Stack shift", self, [ 0, 1 ] );
 	
-	inputs[| 4] = nodeValue_Vector("Position", self, [ 0, 0 ] )
+	inputs[4] = nodeValue_Vector("Position", self, [ 0, 0 ] )
 		.setUnitRef(function(index) { return getDimension(index); });
 		
-	inputs[| 5] = nodeValue_Rotation("Rotation", self, 0);
+	inputs[5] = nodeValue_Rotation("Rotation", self, 0);
 	
-	inputs[| 6] = nodeValue_Color("Stack blend", self, c_white );
+	inputs[6] = nodeValue_Color("Stack blend", self, c_white );
 	
-	inputs[| 7] = nodeValue_Float("Alpha end", self, 1, "Alpha value for the last copy." )
+	inputs[7] = nodeValue_Float("Alpha end", self, 1, "Alpha value for the last copy." )
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 8] = nodeValue_Bool("Move base", self, false, "Make each copy move the original image." );
+	inputs[8] = nodeValue_Bool("Move base", self, false, "Make each copy move the original image." );
 	
-	inputs[| 9] = nodeValue_Enum_Scroll("Highlight", self,  0, [ "None", "Color", "Inner pixel" ]);
+	inputs[9] = nodeValue_Enum_Scroll("Highlight", self,  0, [ "None", "Color", "Inner pixel" ]);
 	
-	inputs[| 10] = nodeValue_Color("Highlight color", self, c_white);
+	inputs[10] = nodeValue_Color("Highlight color", self, c_white);
 	
-	inputs[| 11] = nodeValue_Float("Highlight alpha", self, 1)
+	inputs[11] = nodeValue_Float("Highlight alpha", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 12] = nodeValue_Float("Array process", self, 1)
+	inputs[12] = nodeValue_Float("Array process", self, 1)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Individual", "Combined" ]);
 	
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
 		["Surface",	false],	0, 1, 12, 
@@ -64,9 +64,9 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		draw_set_color(COLORS._main_accent);
 		draw_line(px, py, sx, sy);
 		var _hov = false;
-		var  hv  = inputs[| 3].drawOverlay(hover, active, px, py, _s * 4, _mx, _my, _snx, _sny, 1); active &= hv; _hov |= hv;
-		var  hv  = inputs[| 4].drawOverlay(hover, active, _x, _y, _s,     _mx, _my, _snx, _sny);	active &= hv; _hov |= hv;
-		var  hv  = inputs[| 5].drawOverlay(hover, active, px, py, _s,     _mx, _my, _snx, _sny);	active &= hv; _hov |= hv;
+		var  hv  = inputs[3].drawOverlay(hover, active, px, py, _s * 4, _mx, _my, _snx, _sny, 1); active &= hv; _hov |= hv;
+		var  hv  = inputs[4].drawOverlay(hover, active, _x, _y, _s,     _mx, _my, _snx, _sny);	active &= hv; _hov |= hv;
+		var  hv  = inputs[5].drawOverlay(hover, active, px, py, _s,     _mx, _my, _snx, _sny);	active &= hv; _hov |= hv;
 		
 		return _hov;
 	}
@@ -126,10 +126,10 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	}
 	
 	static preGetInputs = function() {
-		var _surf = inputs[|  0].getValue();
-		var _arry = inputs[| 12].getValue();
+		var _surf = inputs[ 0].getValue();
+		var _arry = inputs[12].getValue();
 		
-		inputs[| 0].setArrayDepth(is_array(_surf) && _arry);
+		inputs[0].setArrayDepth(is_array(_surf) && _arry);
 	}
 	
 	static step = function() {
@@ -137,12 +137,12 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var _surf = getInputData(0);
 		var _arry = getInputData(12);
 		
-		inputs[|  2].setVisible(_arry == 0 || !is_array(_surf));
+		inputs[ 2].setVisible(_arry == 0 || !is_array(_surf));
 		
-		inputs[| 10].setVisible(_high);
-		inputs[| 11].setVisible(_high);
+		inputs[10].setVisible(_high);
+		inputs[11].setVisible(_high);
 		
-		inputs[| 12].setVisible(is_array(_surf));
+		inputs[12].setVisible(is_array(_surf));
 		
 		// custom preview
 		preview_custom = preview_custom_index != noone && is_array(_surf) && _arry;
@@ -280,9 +280,9 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	static getPreviewValues = function() {
 		if(preview_custom && is_surface(preview_custom_surface)) return preview_custom_surface;
-		if(preview_channel >= ds_list_size(outputs)) return noone;
+		if(preview_channel >= array_length(outputs)) return noone;
 		
-		switch(outputs[| preview_channel].type) {
+		switch(outputs[preview_channel].type) {
 			case VALUE_TYPE.surface :
 			case VALUE_TYPE.dynaSurface :
 				break;
@@ -290,6 +290,6 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 				return;
 		}
 		
-		return outputs[| preview_channel].getValue();
+		return outputs[preview_channel].getValue();
 	}
 }

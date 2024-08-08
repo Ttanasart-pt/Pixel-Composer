@@ -2,14 +2,14 @@ function Node_Path_Bake(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	name = "Bake Path";
 	setDimension(96, 48);
 	
-	inputs[| 0] = nodeValue_PathNode("Path", self, noone)
+	inputs[0] = nodeValue_PathNode("Path", self, noone)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue_Float("Segment length", self, 1);
+	inputs[1] = nodeValue_Float("Segment length", self, 1);
 	
-	inputs[| 2] = nodeValue_Bool("Spread single path", self, true);
+	inputs[2] = nodeValue_Bool("Spread single path", self, true);
 	
-	outputs[| 0] = nodeValue_Output("Segments", self, VALUE_TYPE.float, [[]])
+	outputs[0] = nodeValue_Output("Segments", self, VALUE_TYPE.float, [[]])
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setArrayDepth(2);
 	
@@ -19,7 +19,7 @@ function Node_Path_Bake(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var _path = getInputData(0);
 		if(_path && struct_has(_path, "drawOverlay")) _path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 		
-		var _segs = outputs[| 0].getValue();
+		var _segs = outputs[0].getValue();
 		var ox, oy, nx, ny;
 		
 		if(array_invalid(_segs) || array_invalid(_segs[0])) return;
@@ -73,7 +73,7 @@ function Node_Path_Bake(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		}
 		
 		if(_sped && _amo == 1) _segs = _segs[0];
-		outputs[| 0].setValue(_segs);
+		outputs[0].setValue(_segs);
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

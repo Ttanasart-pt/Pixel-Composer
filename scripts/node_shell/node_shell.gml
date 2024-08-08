@@ -2,9 +2,9 @@ function Node_Shell(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Execute Shell";
 	setDimension(96, 32 + 24 * 1);
 	
-	inputs[| 0] = nodeValue_Text("Path", self, "");
+	inputs[0] = nodeValue_Text("Path", self, "");
 	
-	inputs[| 1] = nodeValue_Text("Script", self, "");
+	inputs[1] = nodeValue_Text("Script", self, "");
 	
 	insp1UpdateTooltip   = "Run";
 	insp1UpdateIcon      = [ THEME.sequence_control, 1, COLORS._main_value_positive ];

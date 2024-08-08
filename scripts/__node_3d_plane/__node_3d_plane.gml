@@ -2,37 +2,37 @@ function __Node_3D_Plane(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	name = "3D Plane";
 	batch_output = false;
 	
-	inputs[| 0] = nodeValue_Surface("Surface in", self);
+	inputs[0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue_Vector("Render position", self, [ 0.5, 0.5 ])
+	inputs[1] = nodeValue_Vector("Render position", self, [ 0.5, 0.5 ])
 		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
 	
-	inputs[| 2] = nodeValue_Vector("Object rotation", self, [ 0, 0, 0 ]);
+	inputs[2] = nodeValue_Vector("Object rotation", self, [ 0, 0, 0 ]);
 	
-	inputs[| 3] = nodeValue_Vector("Render scale", self, [ 1, 1 ]);
+	inputs[3] = nodeValue_Vector("Render scale", self, [ 1, 1 ]);
 	
-	inputs[| 4] = nodeValue_Enum_Scroll("Output dimension", self, OUTPUT_SCALING.same_as_input, [ "Same as input", "Constant", "Relative to input" ])
+	inputs[4] = nodeValue_Enum_Scroll("Output dimension", self, OUTPUT_SCALING.same_as_input, [ "Same as input", "Constant", "Relative to input" ])
 		.rejectArray();
 	
-	inputs[| 5] = nodeValue_Vector("Constant dimension", self, DEF_SURF);
+	inputs[5] = nodeValue_Vector("Constant dimension", self, DEF_SURF);
 	
-	inputs[| 6] = nodeValue_Vector("Object position", self, [ 0, 0, 0 ]);
+	inputs[6] = nodeValue_Vector("Object position", self, [ 0, 0, 0 ]);
 	
-	inputs[| 7] = nodeValue_Vector("Object scale", self, [ 1, 1, 1 ]);
+	inputs[7] = nodeValue_Vector("Object scale", self, [ 1, 1, 1 ]);
 	
-	inputs[| 8] = nodeValue_Enum_Button("Projection", self, 0, [ "Orthographic", "Perspective" ])
+	inputs[8] = nodeValue_Enum_Button("Projection", self, 0, [ "Orthographic", "Perspective" ])
 		.rejectArray();
 		
-	inputs[| 9] = nodeValue_Float("Field of view", self, 60)
+	inputs[9] = nodeValue_Float("Field of view", self, 60)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 1, 90, 0.1 ] });
 	
-	inputs[| 10] = nodeValue_Vector("Texture scale", self, [ 1, 1 ]);
+	inputs[10] = nodeValue_Vector("Texture scale", self, [ 1, 1 ]);
 	
-	inputs[| 11] = nodeValue_Vector("Texture shift", self, [ 0, 0 ]);
+	inputs[11] = nodeValue_Vector("Texture shift", self, [ 0, 0 ]);
 		
-	inputs[| 12] = nodeValue_Int("Subdiviion", self, 1)
+	inputs[12] = nodeValue_Int("Subdiviion", self, 1)
 		
-	inputs[| 13] = nodeValue_Enum_Button("Normal axis", self, 2, [ "X", "Y", "Z" ]);
+	inputs[13] = nodeValue_Enum_Button("Normal axis", self, 2, [ "X", "Y", "Z" ]);
 	
 	input_display_list = [0, 
 		["Geometry",		  true], 13, 12, 
@@ -42,11 +42,11 @@ function __Node_3D_Plane(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		["Texture",			 false], 10, 11,
 	];
 	
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue_Output("3D scene", self, VALUE_TYPE.d3object, function() { return submit_vertex(); });
+	outputs[1] = nodeValue_Output("3D scene", self, VALUE_TYPE.d3object, function() { return submit_vertex(); });
 	
-	outputs[| 2] = nodeValue_Output("3D vertex", self, VALUE_TYPE.d3vertex, []);
+	outputs[2] = nodeValue_Output("3D vertex", self, VALUE_TYPE.d3vertex, []);
 	
 	output_display_list = [
 		0, 1, 2
@@ -110,9 +110,9 @@ function __Node_3D_Plane(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		PROCESSOR_OVERLAY_CHECK
 		
-		if(inputs[| 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny)) 
+		if(inputs[1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny)) 
 			active = false;
-		var _out = outputs[| 0].getValue();
+		var _out = outputs[0].getValue();
 		if(!is_surface(_out) || !surface_exists(_out)) return;
 		
 		_3d_gizmo(active, _x, _y, _s, _mx, _my, _snx, _sny);
@@ -144,17 +144,17 @@ function __Node_3D_Plane(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		
 		switch(_out_type) {
 			case OUTPUT_SCALING.same_as_input :
-				inputs[| 5].setVisible(false);
+				inputs[5].setVisible(false);
 				_ww  = surface_get_width_safe(_data[0]);
 				_hh  = surface_get_height_safe(_data[0]);
 				break;
 			case OUTPUT_SCALING.constant :	
-				inputs[| 5].setVisible(true);
+				inputs[5].setVisible(true);
 				_ww  = _out[0];
 				_hh  = _out[1];
 				break;
 			case OUTPUT_SCALING.relative : 
-				inputs[| 5].setVisible(true);
+				inputs[5].setVisible(true);
 				_ww  = surface_get_width_safe(_data[0]) * _out[0];
 				_hh  = surface_get_height_safe(_data[0]) * _out[1];
 				break;
@@ -185,7 +185,7 @@ function __Node_3D_Plane(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			generate_vb();
 		}
 		
-		inputs[| 9].setVisible(_proj);
+		inputs[9].setVisible(_proj);
 		
 		surface_set_target(_outSurf);
 		DRAW_CLEAR

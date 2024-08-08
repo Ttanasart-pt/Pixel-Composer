@@ -586,8 +586,8 @@ function Panel_Animation() : PanelContent() constructor {
 				var _anim = [];
 				var _prop = [];
 				
-				for( var j = 0, m = ds_list_size(_node.inputs); j < m; j++ ) {
-					var prop = _node.inputs[| j];
+				for( var j = 0, m = array_length(_node.inputs); j < m; j++ ) {
+					var prop = _node.inputs[j];
 					if(!prop.isTimelineVisible()) continue;
 					
 					var anim = prop.sep_axis? prop.animators : [ prop.animator ];
@@ -2331,8 +2331,8 @@ function Panel_Animation() : PanelContent() constructor {
 						var _node = PROJECT.allNodes[m];
 						if(!_node || !_node.active) continue;
 						
-						for(var i = 0; i < ds_list_size(_node.inputs); i++) {
-							var in = _node.inputs[| i];
+						for(var i = 0; i < array_length(_node.inputs); i++) {
+							var in = _node.inputs[i];
 							if(!in.is_anim) continue;
 							
 							for(var j = 0; j < ds_list_size(in.animator.values); j++) {
@@ -2624,9 +2624,9 @@ function Panel_Animation() : PanelContent() constructor {
 				var propFrom = copy_clipboard[| i].anim.prop;
 				var propTo   = noone;
 				
-				for( var j = 0; j < ds_list_size(nodeTo.inputs); j++ ) {
-					if(nodeTo.inputs[| j].name == propFrom.name) {
-						propTo = nodeTo.inputs[| j].animator;
+				for( var j = 0; j < array_length(nodeTo.inputs); j++ ) {
+					if(nodeTo.inputs[j].name == propFrom.name) {
+						propTo = nodeTo.inputs[j].animator;
 						copy_clipboard[| i].cloneAnimator(shf, propTo);
 						break;
 					}

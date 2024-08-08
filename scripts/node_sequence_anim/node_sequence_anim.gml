@@ -3,19 +3,19 @@ function Node_Sequence_Anim(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	update_on_frame = true;
 	setAlwaysTimeline(new timelineItemNode_Sequence_Anim(self));
 	
-	inputs[| 0] = nodeValue_Surface("Surface in", self, [])
+	inputs[0] = nodeValue_Surface("Surface in", self, [])
 		.setArrayDepth(1);
 	
-	inputs[| 1] = nodeValue_Float("Speed", self, 1)
+	inputs[1] = nodeValue_Float("Speed", self, 1)
 		.rejectArray();
 		
-	inputs[| 2] = nodeValue_Int("Sequence", self, [])
+	inputs[2] = nodeValue_Int("Sequence", self, [])
 		.setVisible(true, true)
 		.setArrayDepth(1);
 		
-	inputs[| 3] = nodeValue_Enum_Scroll("Overflow", self,  0, [ "Hold", "Loop", "Ping Pong", "Empty" ]);
+	inputs[3] = nodeValue_Enum_Scroll("Overflow", self,  0, [ "Hold", "Loop", "Ping Pong", "Empty" ]);
 	
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	sequence_surface = noone;
 	sequence_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
@@ -33,7 +33,7 @@ function Node_Sequence_Anim(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _y, _w, _h, COLORS.node_composite_bg_blend, 1);
 		
-		if(_hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h) && inputs[| 2].value_from == noone) {
+		if(_hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h) && inputs[2].value_from == noone) {
 			draw_sprite_stretched_add(THEME.ui_panel, 1, _x, _y, _w, _h, c_white, 0.2);
 			
 			if(mouse_press(mb_left, _focus)) 
@@ -87,7 +87,7 @@ function Node_Sequence_Anim(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	static update = function(frame = CURRENT_FRAME) {
 		var _sur = getInputData(0);
 		if(!is_array(_sur)) {
-			outputs[| 0].setValue(_sur);
+			outputs[0].setValue(_sur);
 			return;
 		}
 		
@@ -113,18 +113,18 @@ function Node_Sequence_Anim(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			if(ind >= _slen)
 				ind = _slpp - ind;
 		} else if(_ovf == 3 && ind >= array_length(_seq)) {
-			outputs[| 0].setValue(noone);
+			outputs[0].setValue(noone);
 			return;
 		}
 			
 		ind = array_safe_get(_seq, ind,, ARRAY_OVERFLOW.loop);
 		
 		if(ind == noone) {
-			outputs[| 0].setValue(noone);
+			outputs[0].setValue(noone);
 			return;
 		}
 		
-		outputs[| 0].setValue(array_safe_get_fast(_sur, ind));
+		outputs[0].setValue(array_safe_get_fast(_sur, ind));
 	}
 }
 

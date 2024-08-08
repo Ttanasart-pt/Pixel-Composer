@@ -4,34 +4,34 @@ function Node_VCT(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 	color  = COLORS.node_blend_vct;
 	vct    = new VCT(self);
 	
-	inputs[| 0] = nodeValue_Int("Editor", self, 0)
+	inputs[0] = nodeValue_Int("Editor", self, 0)
 		.setDisplay(VALUE_DISPLAY.button, { name: "Editor", onClick: function() {
 			vct.createDialog();
 		} });
 	
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 		
 	input_display_list = [ 0, 
 		["Automations", false], 
 	];
 
 	static createNewInput = function(key = "") {
-		var index = ds_list_size(inputs);
+		var index = array_length(inputs);
 		var _s    = floor((index - input_fix_len) / data_length);
 		var name  = string_title(string_replace_all(key, "_", " "));
 		
 		var _var  = vct[$ key];
 		
-		inputs[| index] = nodeValue(name, self, JUNCTION_CONNECT.input, _var.type, 0)
+		inputs[index] = nodeValue(name, self, JUNCTION_CONNECT.input, _var.type, 0)
 			.setDisplay(_var.disp, _var.disp_data);
-		inputs[| index].display_data.key = key;
+		inputs[index].display_data.key = key;
 		
 		array_append(input_display_list, [ index ]);
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		for( var i = 1; i < array_length(_data); i++ )
-			vct[$ inputs[| i].display_data.key].setDirect(_data[i]);
+			vct[$ inputs[i].display_data.key].setDirect(_data[i]);
 			
 		var params = {
 			frame: CURRENT_FRAME

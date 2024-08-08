@@ -8,20 +8,20 @@ function Node_DynaSurf_In(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	inParent = undefined;
 	
-	outputs[| 0] = nodeValue_Output("Value", self, VALUE_TYPE.PCXnode, noone);
+	outputs[0] = nodeValue_Output("Value", self, VALUE_TYPE.PCXnode, noone);
 	
 	static createInput = function() { #region
 		if(group == noone || !is_struct(group)) return noone;
 		
 		if(!is_undefined(inParent))
-			ds_list_remove(group.inputs, inParent);
+			array_remove(group.inputs, inParent);
 		
 		inParent = nodeValue_Surface("Value", group)
 			.uncache()
 			.setVisible(true, true);
 		inParent.from = self;
 		
-		ds_list_add(group.inputs, inParent);
+		array_push(group.inputs, inParent);
 		group.refreshNodeDisplay();
 		group.sortIO();
 		
@@ -43,7 +43,7 @@ function Node_DynaSurf_In(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		if(is_undefined(inParent)) return;
 		var _val = inParent.getValue();
 		
-		outputs[| 0].setValue(new __funcTree("", _val));
+		outputs[0].setValue(new __funcTree("", _val));
 	} #endregion
 	
 	static postDeserialize = function() { #region

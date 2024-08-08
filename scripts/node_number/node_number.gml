@@ -4,7 +4,7 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	setDimension(96, 32 + 24 * 1);
 	
-	wd_slider = slider(0, 1, 0.01, function(val) { inputs[| 0].setValue(val); } );
+	wd_slider = slider(0, 1, 0.01, function(val) { inputs[0].setValue(val); } );
 	
 	slider_value    = -1;
 	slider_surface  = -1;
@@ -19,26 +19,26 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	rotator_p = 0;
 	rotator_m = 0;
 	
-	inputs[| 0] = nodeValue_Float("Value", self, 0)
+	inputs[0] = nodeValue_Float("Value", self, 0)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue_Bool("Integer", self, false);
+	inputs[1] = nodeValue_Bool("Integer", self, false);
 	
-	inputs[| 2] = nodeValue_Enum_Scroll("Display", self, 0, { data: [ "Number", "Slider", "Rotator" ], update_hover: false });
+	inputs[2] = nodeValue_Enum_Scroll("Display", self, 0, { data: [ "Number", "Slider", "Rotator" ], update_hover: false });
 	
-	inputs[| 3] = nodeValue_Range("Range", self, [ 0, 1 ]);
+	inputs[3] = nodeValue_Range("Range", self, [ 0, 1 ]);
 	
-	inputs[| 4] = nodeValue_Float("Step", self, 0.01);
+	inputs[4] = nodeValue_Float("Step", self, 0.01);
 	
-	inputs[| 5] = nodeValue_Bool("Clamp to range", self, true);
+	inputs[5] = nodeValue_Bool("Clamp to range", self, true);
 	
-	outputs[| 0] = nodeValue_Output("Number", self, VALUE_TYPE.float, 0);
+	outputs[0] = nodeValue_Output("Number", self, VALUE_TYPE.float, 0);
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var __ax = getInputData(0);
 		if(is_array(__ax)) return;
 		
-		inputs[| 0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		inputs[0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
 	static step = function() {
@@ -51,35 +51,35 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		switch(disp) {
 			case 0 : 
 				min_h = 0;
-				inputs[| 3].setVisible(false);
-				inputs[| 4].setVisible(false);
-				inputs[| 5].setVisible(false);
+				inputs[3].setVisible(false);
+				inputs[4].setVisible(false);
+				inputs[5].setVisible(false);
 				break;
 				
 			case 1 : 
-				if(inputs[| 0].value_from == noone && !show_parameter) setDimension(160, 96, false);
+				if(inputs[0].value_from == noone && !show_parameter) setDimension(160, 96, false);
 				min_h = con_h;
 				
-				inputs[| 3].setVisible(true);
-				inputs[| 4].setVisible(true);
-				inputs[| 5].setVisible(true);
+				inputs[3].setVisible(true);
+				inputs[4].setVisible(true);
+				inputs[5].setVisible(true);
 				break;
 				
 			case 2 : 
-				if(inputs[| 0].value_from == noone && !show_parameter) setDimension(128, 128, false);
+				if(inputs[0].value_from == noone && !show_parameter) setDimension(128, 128, false);
 				min_h = con_h;
 				
-				inputs[| 3].setVisible(false);
-				inputs[| 4].setVisible(false);
-				inputs[| 5].setVisible(false);
+				inputs[3].setVisible(false);
+				inputs[4].setVisible(false);
+				inputs[5].setVisible(false);
 				break;
 		}
 		
 		if(_ch != con_h) will_setHeight = true;
 		
 		for( var i = 0; i < 1; i++ )
-			inputs[| i].setType(int? VALUE_TYPE.integer : VALUE_TYPE.float);
-		outputs[| 0].setType(int? VALUE_TYPE.integer : VALUE_TYPE.float);
+			inputs[i].setType(int? VALUE_TYPE.integer : VALUE_TYPE.float);
+		outputs[0].setType(int? VALUE_TYPE.integer : VALUE_TYPE.float);
 	}
 	
 	static processNumber = function(_val, _int) { 
@@ -96,13 +96,13 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	static update = function() {
 		var _dat = getInputData(0);
-		outputs[| 0].setValue(_dat);
+		outputs[0].setValue(_dat);
 		
 	
 		var _int = getInputData(1);
 		
 		var _res = processNumber(_dat, _int);
-		outputs[| 0].setValue(_res);
+		outputs[0].setValue(_res);
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
@@ -115,7 +115,7 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var cmp  = getInputData(5);
 		var _col = getColor();
 		
-		if(disp == 0 || inputs[| 0].value_from != noone || bbox.h < line_get_height(f_p2)) {
+		if(disp == 0 || inputs[0].value_from != noone || bbox.h < line_get_height(f_p2)) {
 			draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
 			draw_text_bbox(bbox, string(val));
 			return;
@@ -164,7 +164,7 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					    _valL = value_snap(_valL, stp);
 					if(cmp) _valL = clamp(_valL, _minn, _maxx);
 					
-					if(inputs[| 0].setValue(_valL))
+					if(inputs[0].setValue(_valL))
 						UNDO_HOLDING = true;
 					
 					if(mouse_release(mb_left)) {
@@ -214,7 +214,7 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					var dx  = angle_difference(dir, rotator_p);
 					rotator_p = dir;
 					
-					if(inputs[| 0].setValue(val + dx))
+					if(inputs[0].setValue(val + dx))
 						UNDO_HOLDING = true;
 					
 					if(mouse_release(mb_left)) {

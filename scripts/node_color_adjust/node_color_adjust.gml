@@ -2,92 +2,92 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	name = "Color Adjust";
 	batch_output = false;
 	
-	inputs[| 0] = nodeValue_Surface("Surface in", self);
+	inputs[0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue_Float("Brightness", self, 0)
+	inputs[1] = nodeValue_Float("Brightness", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] })
 		.setMappable(18);
 	
-	inputs[| 2] = nodeValue_Float("Contrast",   self, 0.5)
+	inputs[2] = nodeValue_Float("Contrast",   self, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(19);
 	
-	inputs[| 3] = nodeValue_Float("Hue",        self, 0)
+	inputs[3] = nodeValue_Float("Hue",        self, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] })
 		.setMappable(20);
 	
-	inputs[| 4] = nodeValue_Float("Saturation", self, 0)
+	inputs[4] = nodeValue_Float("Saturation", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] })
 		.setMappable(21);
 	
-	inputs[| 5] = nodeValue_Float("Value",      self, 0)
+	inputs[5] = nodeValue_Float("Value",      self, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] })
 		.setMappable(22);
 	
-	inputs[| 6] = nodeValue_Color("Blend",   self, cola(c_white));
+	inputs[6] = nodeValue_Color("Blend",   self, cola(c_white));
 	
-	inputs[| 7] = nodeValue_Float("Blend amount",  self, 0)
+	inputs[7] = nodeValue_Float("Blend amount",  self, 0)
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(23);
 	
-	inputs[| 8] = nodeValue_Surface("Mask", self);
+	inputs[8] = nodeValue_Surface("Mask", self);
 	
-	inputs[| 9] = nodeValue_Float("Alpha", self, 1)
+	inputs[9] = nodeValue_Float("Alpha", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(24);
 	
-	inputs[| 10] = nodeValue_Float("Exposure", self, 1)
+	inputs[10] = nodeValue_Float("Exposure", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01 ] })
 		.setMappable(25);
 	
-	inputs[| 11] = nodeValue_Bool("Active", self, true);
+	inputs[11] = nodeValue_Bool("Active", self, true);
 		active_index = 11;
 		
-	inputs[| 12] = nodeValue_Enum_Button("Input Type", self,  0, [ "Surface", "Color" ]);
+	inputs[12] = nodeValue_Enum_Button("Input Type", self,  0, [ "Surface", "Color" ]);
 	
-	inputs[| 13] = nodeValue_Palette("Color", self, array_clone(DEF_PALETTE))
+	inputs[13] = nodeValue_Palette("Color", self, array_clone(DEF_PALETTE))
 		.setVisible(true, true);
 	
-	inputs[| 14] = nodeValue_Enum_Scroll("Blend mode", self,  0, BLEND_TYPES);
+	inputs[14] = nodeValue_Enum_Scroll("Blend mode", self,  0, BLEND_TYPES);
 		
-	inputs[| 15] = nodeValue_Toggle("Channel", self, 0b1111, { data: array_create(4, THEME.inspector_channel) });
+	inputs[15] = nodeValue_Toggle("Channel", self, 0b1111, { data: array_create(4, THEME.inspector_channel) });
 	
-	inputs[| 16] = nodeValue_Bool("Invert mask", self, false);
+	inputs[16] = nodeValue_Bool("Invert mask", self, false);
 	
-	inputs[| 17] = nodeValue_Float("Mask feather", self, 1)
+	inputs[17] = nodeValue_Float("Mask feather", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] });
 	
 	////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 18] = nodeValue_Surface("Brightness map", self)
+	inputs[18] = nodeValue_Surface("Brightness map", self)
 		.setVisible(false, false);
 	
-	inputs[| 19] = nodeValue_Surface("Contrast map", self)
+	inputs[19] = nodeValue_Surface("Contrast map", self)
 		.setVisible(false, false);
 	
-	inputs[| 20] = nodeValue_Surface("Hue map", self)
+	inputs[20] = nodeValue_Surface("Hue map", self)
 		.setVisible(false, false);
 	
-	inputs[| 21] = nodeValue_Surface("Saturation map", self)
+	inputs[21] = nodeValue_Surface("Saturation map", self)
 		.setVisible(false, false);
 	
-	inputs[| 22] = nodeValue_Surface("Value map", self)
+	inputs[22] = nodeValue_Surface("Value map", self)
 		.setVisible(false, false);
 	
-	inputs[| 23] = nodeValue_Surface("Blend map", self)
+	inputs[23] = nodeValue_Surface("Blend map", self)
 		.setVisible(false, false);
 	
-	inputs[| 24] = nodeValue_Surface("Alpha map", self)
+	inputs[24] = nodeValue_Surface("Alpha map", self)
 		.setVisible(false, false);
 	
-	inputs[| 25] = nodeValue_Surface("Exposure map", self)
+	inputs[25] = nodeValue_Surface("Exposure map", self)
 		.setVisible(false, false);
 		
 	////////////////////////////////////////////////////////////////////////////////////////
 	
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue_Output("Color out", self, VALUE_TYPE.color, [])
+	outputs[1] = nodeValue_Output("Color out", self, VALUE_TYPE.color, [])
 		.setDisplay(VALUE_DISPLAY.palette);
 	
 	input_display_list = [11, 12, 15, 9, 24, 
@@ -104,27 +104,27 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	static step = function() { #region
 		var type = getInputData(12);
 		
-		inputs[|  0].setVisible(type == 0, type == 0);
-		inputs[|  8].setVisible(type == 0, type == 0);
-		inputs[|  9].setVisible(type == 0);
-		inputs[| 13].setVisible(type == 1, type == 1);
-		inputs[| 14].setVisible(type == 0);
+		inputs[ 0].setVisible(type == 0, type == 0);
+		inputs[ 8].setVisible(type == 0, type == 0);
+		inputs[ 9].setVisible(type == 0);
+		inputs[13].setVisible(type == 1, type == 1);
+		inputs[14].setVisible(type == 0);
 		
-		outputs[| 0].setVisible(type == 0, type == 0);
-		outputs[| 1].setVisible(type == 1, type == 1);
+		outputs[0].setVisible(type == 0, type == 0);
+		outputs[1].setVisible(type == 1, type == 1);
 		
 		var _msk = is_surface(getSingleValue(8));
-		inputs[| 16].setVisible(_msk);
-		inputs[| 17].setVisible(_msk);
+		inputs[16].setVisible(_msk);
+		inputs[17].setVisible(_msk);
 		
-		inputs[|  1].mappableStep();
-		inputs[|  2].mappableStep();
-		inputs[|  3].mappableStep();
-		inputs[|  4].mappableStep();
-		inputs[|  5].mappableStep();
-		inputs[|  7].mappableStep();
-		inputs[|  9].mappableStep();
-		inputs[| 10].mappableStep();
+		inputs[ 1].mappableStep();
+		inputs[ 2].mappableStep();
+		inputs[ 3].mappableStep();
+		inputs[ 4].mappableStep();
+		inputs[ 5].mappableStep();
+		inputs[ 7].mappableStep();
+		inputs[ 9].mappableStep();
+		inputs[10].mappableStep();
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
@@ -232,18 +232,18 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 				shader_set_surface("param0", temp_surface[0]);
 				shader_set_surface("param1", temp_surface[1]);
 				
-				shader_set_f_map_s("brightness", _bri, _data[18], inputs[|  1]);
-				shader_set_f_map_s("exposure",   _exp, _data[25], inputs[| 10]);
-				shader_set_f_map_s("contrast",   _con, _data[19], inputs[|  2]);
-				shader_set_f_map_s("hue",        _hue, _data[20], inputs[|  3]);
-				shader_set_f_map_s("sat",        _sat, _data[21], inputs[|  4]);
-				shader_set_f_map_s("val",        _val, _data[22], inputs[|  5]);
+				shader_set_f_map_s("brightness", _bri, _data[18], inputs[ 1]);
+				shader_set_f_map_s("exposure",   _exp, _data[25], inputs[10]);
+				shader_set_f_map_s("contrast",   _con, _data[19], inputs[ 2]);
+				shader_set_f_map_s("hue",        _hue, _data[20], inputs[ 3]);
+				shader_set_f_map_s("sat",        _sat, _data[21], inputs[ 4]);
+				shader_set_f_map_s("val",        _val, _data[22], inputs[ 5]);
 				
 				shader_set_color("blend",   _bl);
-				shader_set_f_map_s("blendAmount", _bla * _color_get_alpha(_bl), _data[23], inputs[| 7]);
+				shader_set_f_map_s("blendAmount", _bla * _color_get_alpha(_bl), _data[23], inputs[7]);
 				shader_set_i("blendMode",   _blm);
 				
-				shader_set_f_map_s("alpha", _alp, _data[24], inputs[| 9]);
+				shader_set_f_map_s("alpha", _alp, _data[24], inputs[9]);
 				shader_set_i("use_mask", is_surface(_m));
 				shader_set_surface("mask", _m);
 			
@@ -266,7 +266,7 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var bbox = drawGetBbox(xx, yy, _s);
 		if(bbox.h < 1) return;
 		
-		var pal = outputs[| 1].getValue();
+		var pal = outputs[1].getValue();
 		if(array_empty(pal)) return;
 		if(!is_array(pal[0])) pal = [ pal ];
 		

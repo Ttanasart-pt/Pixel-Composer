@@ -3,24 +3,24 @@ function Node_Color_RGB(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	setDimension(96, 48);
 	
-	inputs[| 0] = nodeValue_Float("Red", self, 1)
+	inputs[0] = nodeValue_Float("Red", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue_Float("Green", self, 1)
+	inputs[1] = nodeValue_Float("Green", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setVisible(true, true);
 	
-	inputs[| 2] = nodeValue_Float("Blue", self, 1)
+	inputs[2] = nodeValue_Float("Blue", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setVisible(true, true);
 	
-	inputs[| 3] = nodeValue_Bool("Normalized", self, 1);
+	inputs[3] = nodeValue_Bool("Normalized", self, 1);
 	
-	inputs[| 4] = nodeValue_Float("Alpha", self, 1)
+	inputs[4] = nodeValue_Float("Alpha", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	outputs[| 0] = nodeValue_Output("Color", self, VALUE_TYPE.color, c_white);
+	outputs[0] = nodeValue_Output("Color", self, VALUE_TYPE.color, c_white);
 	
 	input_display_list = [ 3, 0, 1, 2, 4 ];
 	
@@ -29,29 +29,29 @@ function Node_Color_RGB(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var _nor = getInputData(3);
 			
 			if(_nor) {
-				inputs[| 0].setType(VALUE_TYPE.float);
-				inputs[| 0].setDisplay(VALUE_DISPLAY.slider);
+				inputs[0].setType(VALUE_TYPE.float);
+				inputs[0].setDisplay(VALUE_DISPLAY.slider);
 				
-				inputs[| 1].setType(VALUE_TYPE.float);
-				inputs[| 1].setDisplay(VALUE_DISPLAY.slider);
+				inputs[1].setType(VALUE_TYPE.float);
+				inputs[1].setDisplay(VALUE_DISPLAY.slider);
 				
-				inputs[| 2].setType(VALUE_TYPE.float);
-				inputs[| 2].setDisplay(VALUE_DISPLAY.slider);
+				inputs[2].setType(VALUE_TYPE.float);
+				inputs[2].setDisplay(VALUE_DISPLAY.slider);
 				
-				inputs[| 4].setType(VALUE_TYPE.float);
-				inputs[| 4].setDisplay(VALUE_DISPLAY.slider);
+				inputs[4].setType(VALUE_TYPE.float);
+				inputs[4].setDisplay(VALUE_DISPLAY.slider);
 			} else {
-				inputs[| 0].setType(VALUE_TYPE.integer);
-				inputs[| 0].setDisplay(VALUE_DISPLAY.slider, { range: [0, 255, 0.1] });
+				inputs[0].setType(VALUE_TYPE.integer);
+				inputs[0].setDisplay(VALUE_DISPLAY.slider, { range: [0, 255, 0.1] });
 				
-				inputs[| 1].setType(VALUE_TYPE.integer);
-				inputs[| 1].setDisplay(VALUE_DISPLAY.slider, { range: [0, 255, 0.1] });
+				inputs[1].setType(VALUE_TYPE.integer);
+				inputs[1].setDisplay(VALUE_DISPLAY.slider, { range: [0, 255, 0.1] });
 				
-				inputs[| 2].setType(VALUE_TYPE.integer);
-				inputs[| 2].setDisplay(VALUE_DISPLAY.slider, { range: [0, 255, 0.1] });
+				inputs[2].setType(VALUE_TYPE.integer);
+				inputs[2].setDisplay(VALUE_DISPLAY.slider, { range: [0, 255, 0.1] });
 				
-				inputs[| 4].setType(VALUE_TYPE.integer);
-				inputs[| 4].setDisplay(VALUE_DISPLAY.slider, { range: [0, 255, 0.1] });
+				inputs[4].setType(VALUE_TYPE.integer);
+				inputs[4].setDisplay(VALUE_DISPLAY.slider, { range: [0, 255, 0.1] });
 			}
 		}
 	} #endregion
@@ -74,7 +74,7 @@ function Node_Color_RGB(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var bbox = drawGetBbox(xx, yy, _s);
 		if(bbox.h < 1) return;
 		
-		var col = outputs[| 0].getValue();
+		var col = outputs[0].getValue();
 		
 		if(is_array(col)) {
 			drawPalette(col, bbox.x0, bbox.y0, bbox.w, bbox.h);

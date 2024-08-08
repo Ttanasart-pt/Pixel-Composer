@@ -1,31 +1,31 @@
 function Node_Color_Remove(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Remove Color";
 	
-	inputs[| 0] = nodeValue_Surface("Surface in", self);
+	inputs[0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue_Palette("Colors", self, array_clone(DEF_PALETTE));
+	inputs[1] = nodeValue_Palette("Colors", self, array_clone(DEF_PALETTE));
 	
-	inputs[| 2] = nodeValue_Float("Threshold", self, 0.1)
+	inputs[2] = nodeValue_Float("Threshold", self, 0.1)
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(10);
 	
-	inputs[| 3] = nodeValue_Surface("Mask", self);
+	inputs[3] = nodeValue_Surface("Mask", self);
 	
-	inputs[| 4] = nodeValue_Float("Mix", self, 1)
+	inputs[4] = nodeValue_Float("Mix", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 5] = nodeValue_Bool("Active", self, true);
+	inputs[5] = nodeValue_Bool("Active", self, true);
 		active_index = 5;
 	
-	inputs[| 6] = nodeValue_Bool("Invert", self, false, "Keep the selected colors and remove the rest.");
+	inputs[6] = nodeValue_Bool("Invert", self, false, "Keep the selected colors and remove the rest.");
 	
-	inputs[| 7] = nodeValue_Toggle("Channel", self, 0b1111, { data: array_create(4, THEME.inspector_channel) });
+	inputs[7] = nodeValue_Toggle("Channel", self, 0b1111, { data: array_create(4, THEME.inspector_channel) });
 	
 	__init_mask_modifier(3); // inputs 8, 9, 
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 10] = nodeValueMap("Threshold map", self);
+	inputs[10] = nodeValueMap("Threshold map", self);
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -34,14 +34,14 @@ function Node_Color_Remove(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		["Remove",	false], 1, 2, 10, 6, 
 	]
 	
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	attribute_surface_depth();
 	
 	static step = function() { #region
 		__step_mask_modifier();
 		
-		inputs[| 2].mappableStep();
+		inputs[2].mappableStep();
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
@@ -54,7 +54,7 @@ function Node_Color_Remove(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		surface_set_shader(_outSurf, sh_color_remove);
 			shader_set_f("colorFrom",     _colors);
 			shader_set_i("colorFrom_amo", array_length(frm));
-			shader_set_f_map("treshold",  _data[2], _data[10], inputs[| 2]);
+			shader_set_f_map("treshold",  _data[2], _data[10], inputs[2]);
 			shader_set_i("invert",        _data[6]);
 			
 			draw_surface_safe(_data[0]);

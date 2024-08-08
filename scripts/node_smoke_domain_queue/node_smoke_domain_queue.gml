@@ -4,24 +4,24 @@ function Node_Smoke_Domain_Queue(_x, _y, _group = noone) : Node_Smoke(_x, _y, _g
 	
 	manual_ungroupable	 = false;
 	
-	outputs[| 0] = nodeValue_Output("Domain", self, VALUE_TYPE.sdomain, noone);
+	outputs[0] = nodeValue_Output("Domain", self, VALUE_TYPE.sdomain, noone);
 	
 	static createNewInput = function() {
-		var index = ds_list_size(inputs);
+		var index = array_length(inputs);
 		
-		inputs[| index] = nodeValue("Input", self, JUNCTION_CONNECT.input, VALUE_TYPE.sdomain, noone )
+		inputs[index] = nodeValue("Input", self, JUNCTION_CONNECT.input, VALUE_TYPE.sdomain, noone )
 			.setVisible(true, true);
 		
-		return inputs[| index];
+		return inputs[index];
 	} 
 	
 	setDynamicInput(1, true, VALUE_TYPE.sdomain);
 	
 	static update = function() {
-		for( var i = 0; i < ds_list_size(inputs); i++ ) {
+		for( var i = 0; i < array_length(inputs); i++ ) {
 			var _dom = getInputData(i);
 			if(_dom != noone && instance_exists(_dom))
-				outputs[| 0].setValue(_dom);
+				outputs[0].setValue(_dom);
 		}
 	}
 	

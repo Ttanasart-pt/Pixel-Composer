@@ -1,41 +1,41 @@
 function Node_MK_GridBalls(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "MK GridBalls";
 	
-	inputs[| 0] = nodeValue_Surface("Surface in", self);
+	inputs[0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue_Dimension(self);
+	inputs[1] = nodeValue_Dimension(self);
 	
-	inputs[| 2] = nodeValue_Vector("Amount", self, [ 4, 4 ]);
+	inputs[2] = nodeValue_Vector("Amount", self, [ 4, 4 ]);
 	
-	inputs[| 3] = nodeValue_Rotation("Light", self, 0);
+	inputs[3] = nodeValue_Rotation("Light", self, 0);
 	
-	inputs[| 4] = nodeValue_Float("Scatter", self, 0);
+	inputs[4] = nodeValue_Float("Scatter", self, 0);
 	
-	inputs[| 5] = nodeValue_Int("Seed", self, seed_random(6))
-		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 5].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
+	inputs[5] = nodeValue_Int("Seed", self, seed_random(6))
+		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[5].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 		
-	inputs[| 6] = nodeValue_Float("Shading", self, 0.5)
+	inputs[6] = nodeValue_Float("Shading", self, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider);
 		
-	inputs[| 7] = nodeValue_Rotation("Scatter direction", self, 0);
+	inputs[7] = nodeValue_Rotation("Scatter direction", self, 0);
 		
-	inputs[| 8] = nodeValue_Vector("Shift", self, [ 0, 0 ]);
+	inputs[8] = nodeValue_Vector("Shift", self, [ 0, 0 ]);
 	
-	inputs[| 9] = nodeValue_Float("Stretch", self, 0);
+	inputs[9] = nodeValue_Float("Stretch", self, 0);
 	
-	inputs[| 10] = nodeValue_Rotation("Stretch direction", self, 0);
+	inputs[10] = nodeValue_Rotation("Stretch direction", self, 0);
 		
-	inputs[| 11] = nodeValue_Float("Stretch shift", self, 0)
+	inputs[11] = nodeValue_Float("Stretch shift", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] });
 	
-	inputs[| 12] = nodeValue_Float("Roundness", self, 1)
+	inputs[12] = nodeValue_Float("Roundness", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 13] = nodeValue_Float("Twist", self, 0);
+	inputs[13] = nodeValue_Float("Twist", self, 0);
 	
-	inputs[| 14] = nodeValue_Rotation("Twist axis", self, 0);
+	inputs[14] = nodeValue_Rotation("Twist axis", self, 0);
 		
-	inputs[| 15] = nodeValue_Float("Twist shift", self, 0)
+	inputs[15] = nodeValue_Float("Twist shift", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] });
 		
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 5, 1, 
@@ -45,7 +45,7 @@ function Node_MK_GridBalls(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		["Render",		false], 12, 3, 6, 
 	];
 	
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	attribute_surface_depth();
 	
@@ -53,7 +53,7 @@ function Node_MK_GridBalls(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _hov = false;
-		var  hv  = inputs[| 8].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= hv;
+		var  hv  = inputs[8].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= hv;
 		
 		return _hov;
 	}

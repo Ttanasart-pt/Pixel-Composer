@@ -1,11 +1,11 @@
 function Node_Fn_Ease(_x, _y, _group = noone) : Node_Fn(_x, _y, _group) constructor {
 	name = "Ease";
 	
-	inputs[| inl + 0] = nodeValue_Slider_Range("Range", self, [ 0, 1 ]  );
+	inputs[inl + 0] = nodeValue_Slider_Range("Range", self, [ 0, 1 ]  );
 		
-	inputs[| inl + 1] = nodeValue_Slider_Range("Amount", self, [ 0.1, 0.9 ]  );
+	inputs[inl + 1] = nodeValue_Slider_Range("Amount", self, [ 0.1, 0.9 ]  );
 		
-	inputs[| inl + 2] = nodeValue_Enum_Scroll("Smooth", self,  0 , [ "Cubic poly", "Quadratic rat", "Cubic rat", "Cosine" ] );
+	inputs[inl + 2] = nodeValue_Enum_Scroll("Smooth", self,  0 , [ "Cubic poly", "Quadratic rat", "Cubic rat", "Cosine" ] );
 		
 	array_append(input_display_list, [
 		["Value",	false], inl + 0, inl + 1, inl + 2, 

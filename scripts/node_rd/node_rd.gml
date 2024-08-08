@@ -1,56 +1,56 @@
 function Node_RD(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Reaction Diffusion";
 	
-	inputs[| 0] = nodeValue_Surface("Seed", self);
+	inputs[0] = nodeValue_Surface("Seed", self);
 	
-	inputs[| 1] = nodeValue_Float("Kill rate", self, 0.058)
+	inputs[1] = nodeValue_Float("Kill rate", self, 0.058)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 0.1, 0.001] })
 		.setMappable(8);
 	
-	inputs[| 2] = nodeValue_Float("Feed rate", self, 0.043)
+	inputs[2] = nodeValue_Float("Feed rate", self, 0.043)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 0.1, 0.001] })
 		.setMappable(9);
 	
-	inputs[| 3] = nodeValue_Float("Timestep", self, 1)
+	inputs[3] = nodeValue_Float("Timestep", self, 1)
 		.setMappable(10);
 	
-	inputs[| 4] = nodeValue_Int("Iteration", self, 16);
+	inputs[4] = nodeValue_Int("Iteration", self, 16);
 	
-	inputs[| 5] = nodeValue_Float("Diffusion A", self, 1.)
+	inputs[5] = nodeValue_Float("Diffusion A", self, 1.)
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(11);
 	
-	inputs[| 6] = nodeValue_Float("Diffusion B", self, .2)
+	inputs[6] = nodeValue_Float("Diffusion B", self, .2)
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(12);
 	
-	inputs[| 7] = nodeValue_Surface("Add B", self);
+	inputs[7] = nodeValue_Surface("Add B", self);
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 8] = nodeValue_Surface("Kill map", self)
+	inputs[8] = nodeValue_Surface("Kill map", self)
 		.setVisible(false, false);
 	
-	inputs[| 9] = nodeValue_Surface("Feed map", self)
+	inputs[9] = nodeValue_Surface("Feed map", self)
 		.setVisible(false, false);
 	
-	inputs[| 10] = nodeValue_Surface("Time map", self)
+	inputs[10] = nodeValue_Surface("Time map", self)
 		.setVisible(false, false);
 	
-	inputs[| 11] = nodeValue_Surface("DfA map", self)
+	inputs[11] = nodeValue_Surface("DfA map", self)
 		.setVisible(false, false);
 	
-	inputs[| 12] = nodeValue_Surface("DfB map", self)
+	inputs[12] = nodeValue_Surface("DfB map", self)
 		.setVisible(false, false);
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 13] = nodeValue_Float("Diffusion", self, 1.)
+	inputs[13] = nodeValue_Float("Diffusion", self, 1.)
 		.setDisplay(VALUE_DISPLAY.slider)
 		
-	outputs[| 0] = nodeValue_Output("Reacted", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Reacted", self, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue_Output("Rendered", self, VALUE_TYPE.surface, noone);
+	outputs[1] = nodeValue_Output("Rendered", self, VALUE_TYPE.surface, noone);
 	
 	preview_channel = 1;
 	
@@ -66,11 +66,11 @@ function Node_RD(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	temp_surface = [ surface_create(1, 1), surface_create(1, 1) ];
 		
 	static step = function() { #region
-		inputs[| 1].mappableStep();
-		inputs[| 2].mappableStep();
-		inputs[| 3].mappableStep();
-		inputs[| 5].mappableStep();
-		inputs[| 6].mappableStep();
+		inputs[1].mappableStep();
+		inputs[2].mappableStep();
+		inputs[3].mappableStep();
+		inputs[5].mappableStep();
+		inputs[6].mappableStep();
 	} #endregion
 	
 	static update = function() {
@@ -84,8 +84,8 @@ function Node_RD(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var _db   = getInputData(6);
 		var _b    = getInputData(7);
 		
-		var _outp = outputs[| 0].getValue();
-		var _rend = outputs[| 1].getValue();
+		var _outp = outputs[0].getValue();
+		var _rend = outputs[1].getValue();
 		
 		var _sw = surface_get_width_safe(_surf);
 		var _sh = surface_get_height_safe(_surf);
@@ -114,13 +114,13 @@ function Node_RD(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		repeat(_it) {
 			surface_set_shader(temp_surface[!_ind], sh_rd_propagate);
 				shader_set_f("dimension", _sw, _sh);
-				shader_set_f_map("k",  _k , getInputData( 8), inputs[| 1]);
-				shader_set_f_map("f",  _f , getInputData( 9), inputs[| 2]);
-				shader_set_f_map("dt", _dt, getInputData(10), inputs[| 3]);
+				shader_set_f_map("k",  _k , getInputData( 8), inputs[1]);
+				shader_set_f_map("f",  _f , getInputData( 9), inputs[2]);
+				shader_set_f_map("dt", _dt, getInputData(10), inputs[3]);
 				
 				shader_set_f("dd", _dd);
-				shader_set_f_map("da", _da, getInputData(11), inputs[| 5]);
-				shader_set_f_map("db", _db, getInputData(12), inputs[| 6]);
+				shader_set_f_map("da", _da, getInputData(11), inputs[5]);
+				shader_set_f_map("db", _db, getInputData(12), inputs[6]);
 				
 				draw_surface_safe(temp_surface[_ind]);
 			surface_reset_shader();
@@ -136,7 +136,7 @@ function Node_RD(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			draw_surface_safe(_surf);
 		surface_reset_shader();
 		
-		outputs[| 0].setValue(_outp);
-		outputs[| 1].setValue(_rend);
+		outputs[0].setValue(_outp);
+		outputs[1].setValue(_rend);
 	}
 }

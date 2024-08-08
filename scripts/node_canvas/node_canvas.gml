@@ -3,49 +3,49 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	color	= COLORS.node_blend_canvas;
 	setAlwaysTimeline(new timelineItemNode_Canvas(self));
 	
-	inputs[|  0] = nodeValue_Dimension(self);
+	inputs[ 0] = nodeValue_Dimension(self);
 	
-	inputs[|  1] = nodeValue_Color("Color", self, c_white );
-	inputs[|  2] = nodeValue_Int("Brush size", self, 1 )
+	inputs[ 1] = nodeValue_Color("Color", self, c_white );
+	inputs[ 2] = nodeValue_Int("Brush size", self, 1 )
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 32, 0.1] });
 	
-	inputs[|  3] = nodeValue_Float("Fill threshold", self, 0.)
+	inputs[ 3] = nodeValue_Float("Fill threshold", self, 0.)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[|  4] = nodeValue_Enum_Scroll("Fill type", self,  0, ["4 connect", "8 connect", "Entire canvas"]);
+	inputs[ 4] = nodeValue_Enum_Scroll("Fill type", self,  0, ["4 connect", "8 connect", "Entire canvas"]);
 	
-	inputs[|  5] = nodeValue_Bool("Draw preview overlay", self, true);
+	inputs[ 5] = nodeValue_Bool("Draw preview overlay", self, true);
 	
-	inputs[|  6] = nodeValue_Surface("Brush", self)
+	inputs[ 6] = nodeValue_Surface("Brush", self)
 		.setVisible(true, false);
 	
-	inputs[|  7] = nodeValue_Int("Surface amount", self, 1);
+	inputs[ 7] = nodeValue_Int("Surface amount", self, 1);
 	
-	inputs[|  8] = nodeValue_Surface("Background", self);
+	inputs[ 8] = nodeValue_Surface("Background", self);
 	
-	inputs[|  9] = nodeValue_Float("Background alpha", self, 1.)
+	inputs[ 9] = nodeValue_Float("Background alpha", self, 1.)
 		.setDisplay(VALUE_DISPLAY.slider);
 		
-	inputs[| 10] = nodeValue_Bool("Render background", self, true);
+	inputs[10] = nodeValue_Bool("Render background", self, true);
 	
-	inputs[| 11] = nodeValue_Float("Alpha", self, 1 )
+	inputs[11] = nodeValue_Float("Alpha", self, 1 )
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 12] = nodeValue_Bool("Frames animation", self, true );
+	inputs[12] = nodeValue_Bool("Frames animation", self, true );
 	
-	inputs[| 13] = nodeValue_Float("Animation speed", self, 1 );
+	inputs[13] = nodeValue_Float("Animation speed", self, 1 );
 	
-	inputs[| 14] = nodeValue_Bool("Use background dimension", self, true );
+	inputs[14] = nodeValue_Bool("Use background dimension", self, true );
 	
-	inputs[| 15] = nodeValue_Range("Brush distance", self, [ 1, 1 ] , { linked : true });
+	inputs[15] = nodeValue_Range("Brush distance", self, [ 1, 1 ] , { linked : true });
 	
-	inputs[| 16] = nodeValue_Bool("Rotate brush by direction", self, false );
+	inputs[16] = nodeValue_Bool("Rotate brush by direction", self, false );
 	
-	inputs[| 17] = nodeValue_Rotation_Random("Random direction", self, [ 0, 0, 0, 0, 0 ] );
+	inputs[17] = nodeValue_Rotation_Random("Random direction", self, [ 0, 0, 0, 0, 0 ] );
 	
-	inputs[| 18] = nodeValue_Enum_Scroll("Animation Type", self,  0, [ "Loop", "Hold", "Clear" ]);
+	inputs[18] = nodeValue_Enum_Scroll("Animation Type", self,  0, [ "Loop", "Hold", "Clear" ]);
 	
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	frame_renderer_x     = 0;
 	frame_renderer_x_to  = 0;
@@ -1002,8 +1002,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var brush = getInputData(6);
 		var anim  = getInputData(12);
 		
-		inputs[| 15].setVisible(is_surface(brush));
-		inputs[| 16].setVisible(is_surface(brush));
+		inputs[15].setVisible(is_surface(brush));
+		inputs[16].setVisible(is_surface(brush));
 		
 		update_on_frame = fram > 1 && anim;
 		
@@ -1055,7 +1055,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				draw_surface_safe(_canvas_surface);
 			surface_reset_shader();
 			
-			outputs[| 0].setValue(output_surface[0]);
+			outputs[0].setValue(output_surface[0]);
 		} else {
 			for( var i = 0; i < _frames; i++ ) {
 				var _canvas_surface = getCanvasSurface(i);
@@ -1080,10 +1080,10 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					case 2 : _fr_index = _fr_index < _frames? _fr_index : noone;	break;
 				}
 				
-				outputs[| 0].setValue(_fr_index == noone? temp_surface[1] : output_surface[_fr_index]);
+				outputs[0].setValue(_fr_index == noone? temp_surface[1] : output_surface[_fr_index]);
 				
 			} else
-				outputs[| 0].setValue(output_surface);
+				outputs[0].setValue(output_surface);
 		}
 		
 		if(live_edit) {
@@ -1167,7 +1167,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		sprite_delete(_spr);
 		
 		attributes.dimension = [_sw, _sh];
-		inputs[| 0].setValue([_sw, _sh]);
+		inputs[0].setValue([_sw, _sh]);
 		setCanvasSurface(_s);
 		surface_store_buffer();
 		

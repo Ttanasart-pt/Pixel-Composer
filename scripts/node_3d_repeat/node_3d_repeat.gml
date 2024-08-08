@@ -1,39 +1,39 @@
 function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constructor {
 	name  = "3D Repeat";
 		
-	inputs[| 0] = nodeValue_D3Mesh("Objects", self, noone)
+	inputs[0] = nodeValue_D3Mesh("Objects", self, noone)
 		.setArrayDepth(1)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue_Enum_Button("Object Mode", self,  0 , [ "Duplicate", "Array" ] )
+	inputs[1] = nodeValue_Enum_Button("Object Mode", self,  0 , [ "Duplicate", "Array" ] )
 		.rejectArray();
 	
-	inputs[| 2] = nodeValue_Int("Amount", self, 1 );
+	inputs[2] = nodeValue_Int("Amount", self, 1 );
 	
-	inputs[| 3] = nodeValue_Vector("Starting Position", self, [ 0, 0, 0 ] );
+	inputs[3] = nodeValue_Vector("Starting Position", self, [ 0, 0, 0 ] );
 	
-	inputs[| 4] = nodeValue_Quaternion("Starting Rotation", self, [ 0, 0, 0, 1 ] );
+	inputs[4] = nodeValue_Quaternion("Starting Rotation", self, [ 0, 0, 0, 1 ] );
 	
-	inputs[| 5] = nodeValue_Vector("Starting Scale", self, [ 1, 1, 1 ] );
+	inputs[5] = nodeValue_Vector("Starting Scale", self, [ 1, 1, 1 ] );
 	
-	inputs[| 6] = nodeValue_Vector("Shift Position", self, [ 0, 0, 0 ] );
+	inputs[6] = nodeValue_Vector("Shift Position", self, [ 0, 0, 0 ] );
 	
-	inputs[| 7] = nodeValue_Quaternion("Shift Rotation", self, [ 0, 0, 0, 1 ] );
+	inputs[7] = nodeValue_Quaternion("Shift Rotation", self, [ 0, 0, 0, 1 ] );
 	
-	inputs[| 8] = nodeValue_Vector("Shift Scale", self, [ 0, 0, 0 ] );
+	inputs[8] = nodeValue_Vector("Shift Scale", self, [ 0, 0, 0 ] );
 	
-	inputs[| 9] = nodeValue_Float("Positions", self, [] )
+	inputs[9] = nodeValue_Float("Positions", self, [] )
 		.setArrayDepth(2);
 	
-	inputs[| 10] = nodeValue_Float("Rotations", self, [] )
+	inputs[10] = nodeValue_Float("Rotations", self, [] )
 		.setArrayDepth(2);
 	
-	inputs[| 11] = nodeValue_Float("Scales", self, [] )
+	inputs[11] = nodeValue_Float("Scales", self, [] )
 		.setArrayDepth(2);
 	
-	inputs[| 12] = nodeValue_Bool("Use Instance", self, true )
+	inputs[12] = nodeValue_Bool("Use Instance", self, true )
 	
-	outputs[| 0] = nodeValue_Output("Scene", self, VALUE_TYPE.d3Scene, noone);
+	outputs[0] = nodeValue_Output("Scene", self, VALUE_TYPE.d3Scene, noone);
 	
 	input_display_list = [
 		["Objects",		false], 0, 3, 4, 5, 
@@ -45,9 +45,9 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 	static step = function() { #region
 		var _mode = getSingleValue(1);
 		
-		inputs[| 0].setArrayDepth(_mode == 1);
+		inputs[0].setArrayDepth(_mode == 1);
 		
-		inputs[| 2].setVisible(_mode == 0);
+		inputs[2].setVisible(_mode == 0);
 	} #endregion
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) {

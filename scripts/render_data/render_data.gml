@@ -24,8 +24,8 @@ function ResetAllNodesRender() { #region
 		if(!is_instanceof(_node, Node)) return;
 		
 		_node.setRenderStatus(false);
-		for( var i = 0, n = ds_list_size(_node.inputs); i < n; i++ ) 
-			_node.inputs[| i].resetCache();
+		for( var i = 0, n = array_length(_node.inputs); i < n; i++ ) 
+			_node.inputs[i].resetCache();
 		return;
 	});
 	
@@ -107,8 +107,8 @@ function __topoSort(_arr, _nodeArr) { #region
 			_isRoot = false;
 			
 		} else {
-			for( var j = 0, m = ds_list_size(_node.outputs); j < m; j++ ) {
-				var _to = _node.outputs[| j].getJunctionTo();
+			for( var j = 0, m = array_length(_node.outputs); j < m; j++ ) {
+				var _to = _node.outputs[j].getJunctionTo();
 				
 				if(_global) _isRoot &= array_empty(_to);
 				else        _isRoot &= !array_any(_to, function(_val) { return array_exists(__temp_nodeList, _val.node); } );
@@ -186,6 +186,7 @@ function Render(partial = false, runAction = false) { #region
 		var rendering = noone;
 		var error     = 0;
 		var reset_all = !partial;
+		var renderable;
 		
 		if(reset_all) {
 			LOG_IF(global.FLAG.render == 1, $"xxxxxxxxxx Resetting {array_length(PROJECT.nodeTopo)} nodes xxxxxxxxxx");
@@ -225,8 +226,8 @@ function Render(partial = false, runAction = false) { #region
 			LOG_BLOCK_START();
 			LOG_IF(global.FLAG.render == 1, $"➤➤➤➤➤➤ CURRENT RENDER QUEUE {RENDER_QUEUE} [{RENDER_QUEUE.size()}] ");
 			
-			rendering = RENDER_QUEUE.dequeue();
-			var renderable = rendering.isRenderable();
+			rendering  = RENDER_QUEUE.dequeue();
+			renderable = rendering.isRenderable();
 			
 			LOG_IF(global.FLAG.render == 1, $"Rendering {rendering.internalName} ({rendering.display_name}) : {renderable? "Update" : "Pass"} ({rendering.rendered})");
 			

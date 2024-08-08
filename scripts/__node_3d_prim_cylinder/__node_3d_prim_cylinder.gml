@@ -3,50 +3,50 @@ function __Node_3D_Cylinder(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	batch_output = false;
 	dimension_index = 2;
 	
-	inputs[| 0] = nodeValue_Int("Sides", self, 16);
+	inputs[0] = nodeValue_Int("Sides", self, 16);
 	
-	inputs[| 1] = nodeValue_Float("Thickness", self, 0.2);
+	inputs[1] = nodeValue_Float("Thickness", self, 0.2);
 		
-	inputs[| 2] = nodeValue_Dimension(self);
+	inputs[2] = nodeValue_Dimension(self);
 	
-	inputs[| 3] = nodeValue_Vector("Render position", self, [ 0.5, 0.5 ])
+	inputs[3] = nodeValue_Vector("Render position", self, [ 0.5, 0.5 ])
 		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
 	
-	inputs[| 4] = nodeValue_Vector("Render rotation", self, [ 0, 0, 0 ]);
+	inputs[4] = nodeValue_Vector("Render rotation", self, [ 0, 0, 0 ]);
 	
-	inputs[| 5] = nodeValue_Vector("Render scale", self, [ 1, 1 ]);
+	inputs[5] = nodeValue_Vector("Render scale", self, [ 1, 1 ]);
 	
-	inputs[| 6] = nodeValue_Surface("Textures top",	self);
-	inputs[| 7] = nodeValue_Surface("Textures bottom", self);
-	inputs[| 8] = nodeValue_Surface("Textures side",	self);
+	inputs[6] = nodeValue_Surface("Textures top",	self);
+	inputs[7] = nodeValue_Surface("Textures bottom", self);
+	inputs[8] = nodeValue_Surface("Textures side",	self);
 	
-	inputs[| 9] = nodeValue_Vector("Object scale", self, [ 1, 1, 1 ]);
+	inputs[9] = nodeValue_Vector("Object scale", self, [ 1, 1, 1 ]);
 	
-	inputs[| 10] = nodeValue_Rotation("Light direction", self, 0);
+	inputs[10] = nodeValue_Rotation("Light direction", self, 0);
 		
-	inputs[| 11] = nodeValue_Float("Light height", self, 0.5)
+	inputs[11] = nodeValue_Float("Light height", self, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-1, 1, 0.01] });
 		
-	inputs[| 12] = nodeValue_Float("Light intensity", self, 1)
+	inputs[12] = nodeValue_Float("Light intensity", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 13] = nodeValue_Color("Light color", self, c_white);
-	inputs[| 14] = nodeValue_Color("Ambient color", self, c_grey);
+	inputs[13] = nodeValue_Color("Light color", self, c_white);
+	inputs[14] = nodeValue_Color("Ambient color", self, c_grey);
 	
-	inputs[| 15] = nodeValue_Vector("Object rotation", self, [ 0, 0, 0 ]);
+	inputs[15] = nodeValue_Vector("Object rotation", self, [ 0, 0, 0 ]);
 		
-	inputs[| 16] = nodeValue_Vector("Object position", self, [ 0, 0, 0 ]);
+	inputs[16] = nodeValue_Vector("Object position", self, [ 0, 0, 0 ]);
 	
-	inputs[| 17] = nodeValue_Enum_Button("Projection", self,  0, [ "Orthographic", "Perspective" ])
+	inputs[17] = nodeValue_Enum_Button("Projection", self,  0, [ "Orthographic", "Perspective" ])
 		.rejectArray();
 		
-	inputs[| 18] = nodeValue_Float("Field of view", self, 60)
+	inputs[18] = nodeValue_Float("Field of view", self, 60)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 1, 90, 0.1 ] });
 		
-	inputs[| 19] = nodeValue_Float("Taper", self, 1)
+	inputs[19] = nodeValue_Float("Taper", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 20] = nodeValue_Bool("Scale view with dimension", self, true)
+	inputs[20] = nodeValue_Bool("Scale view with dimension", self, true)
 	
 	input_display_list = [
 		["Output",				false], 2, 20, 
@@ -57,13 +57,13 @@ function __Node_3D_Cylinder(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		["Light",				false], 10, 11, 12, 13, 14,
 	];
 	
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue_Output("3D scene", self, VALUE_TYPE.d3object, function() { return submit_vertex(); });
+	outputs[1] = nodeValue_Output("3D scene", self, VALUE_TYPE.d3object, function() { return submit_vertex(); });
 	
-	outputs[| 2] = nodeValue_Output("Normal pass", self, VALUE_TYPE.surface, noone);
+	outputs[2] = nodeValue_Output("Normal pass", self, VALUE_TYPE.surface, noone);
 	
-	outputs[| 3] = nodeValue_Output("3D vertex", self, VALUE_TYPE.d3vertex, []);
+	outputs[3] = nodeValue_Output("3D vertex", self, VALUE_TYPE.d3vertex, []);
 	
 	output_display_list = [
 		0, 2, 1, 3
@@ -196,7 +196,7 @@ function __Node_3D_Cylinder(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		var _fov  = _data[18];
 		var _dimS = _data[20];
 		
-		inputs[| 18].setVisible(_proj);
+		inputs[18].setVisible(_proj);
 		
 		var pass = "diff";
 		switch(_output_index) {

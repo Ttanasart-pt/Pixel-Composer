@@ -6,13 +6,13 @@ function Node_Strand_Collision(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	manual_ungroupable	 = false;
 	
-	inputs[| 0] = nodeValue("Strand", self, JUNCTION_CONNECT.input, VALUE_TYPE.strands, noone)
+	inputs[0] = nodeValue("Strand", self, JUNCTION_CONNECT.input, VALUE_TYPE.strands, noone)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue("Collision mesh", self, JUNCTION_CONNECT.input, VALUE_TYPE.mesh, noone)
+	inputs[1] = nodeValue("Collision mesh", self, JUNCTION_CONNECT.input, VALUE_TYPE.mesh, noone)
 		.setVisible(true, true);
 	
-	outputs[| 0] = nodeValue_Output("Strand", self, VALUE_TYPE.strands, noone);
+	outputs[0] = nodeValue_Output("Strand", self, VALUE_TYPE.strands, noone);
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _msh = getInputData(1);
@@ -46,7 +46,7 @@ function Node_Strand_Collision(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			}
 		}
 		
-		outputs[| 0].setValue(_str);
+		outputs[0].setValue(_str);
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

@@ -4,23 +4,23 @@ function Node_Smoke_Apply_Velocity(_x, _y, _group = noone) : Node_Smoke(_x, _y, 
 	
 	manual_ungroupable	 = false;
 	
-	inputs[| 0] = nodeValue("Domain", self, JUNCTION_CONNECT.input, VALUE_TYPE.sdomain, noone)
+	inputs[0] = nodeValue("Domain", self, JUNCTION_CONNECT.input, VALUE_TYPE.sdomain, noone)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue_Surface("Brush", self);
+	inputs[1] = nodeValue_Surface("Brush", self);
 	
-	inputs[| 2] = nodeValue_Vector("Position", self, [0, 0]);
+	inputs[2] = nodeValue_Vector("Position", self, [0, 0]);
 	
-	inputs[| 3] = nodeValue_Vector("Velocity", self, [0, 0]);
+	inputs[3] = nodeValue_Vector("Velocity", self, [0, 0]);
 	
-	inputs[| 4] = nodeValue_Bool("Active", self, true);
+	inputs[4] = nodeValue_Bool("Active", self, true);
 	
 	input_display_list = [ 
 		["Domain",		false], 0, 
 		["Velocity",	false], 4, 1, 2, 3
 	];
 	
-	outputs[| 0] = nodeValue_Output("Domain", self, VALUE_TYPE.sdomain, noone);
+	outputs[0] = nodeValue_Output("Domain", self, VALUE_TYPE.sdomain, noone);
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _mat = getInputData(1);
@@ -35,7 +35,7 @@ function Node_Smoke_Apply_Velocity(_x, _y, _group = noone) : Node_Smoke(_x, _y, 
 			draw_surface_ext_safe(_mat, mx, my, _s, _s, 0, c_white, 0.5);
 		}
 		
-		inputs[| 2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		inputs[2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
@@ -46,7 +46,7 @@ function Node_Smoke_Apply_Velocity(_x, _y, _group = noone) : Node_Smoke(_x, _y, 
 		var _act = getInputData(4);
 		
 		FLUID_DOMAIN_CHECK
-		outputs[| 0].setValue(_dom);
+		outputs[0].setValue(_dom);
 		
 		if(!_act) return;
 		if(!is_surface(_mat)) return;

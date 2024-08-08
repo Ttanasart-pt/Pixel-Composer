@@ -2,11 +2,11 @@ function Node_Armature_Path(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	name = "Armature Path";
 	setDimension(96, 72);
 	
-	inputs[| 0] = nodeValue_Armature("Armature", self, noone)
+	inputs[0] = nodeValue_Armature("Armature", self, noone)
 		.setVisible(true, true)
 		.rejectArray();
 	
-	outputs[| 0] = nodeValue_Output("Path", self, VALUE_TYPE.pathnode, self);
+	outputs[0] = nodeValue_Output("Path", self, VALUE_TYPE.pathnode, self);
 	
 	lines = [];
 	
@@ -107,7 +107,7 @@ function Node_Armature_Path(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		ds_stack_destroy(_bst);
 		
-		outputs[| 0].setValue(self);
+		outputs[0].setValue(self);
 	} #endregion
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region

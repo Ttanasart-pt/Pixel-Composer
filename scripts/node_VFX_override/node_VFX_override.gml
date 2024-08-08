@@ -7,23 +7,23 @@ function Node_VFX_Override(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	manual_ungroupable = false;
 	setDimension(96, 48);
 	
-	inputs[| 0] = nodeValue_Particle("Particles", self, -1 )
+	inputs[0] = nodeValue_Particle("Particles", self, -1 )
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue_Float("Positions", self, noone );
+	inputs[1] = nodeValue_Float("Positions", self, noone );
 	
-	inputs[| 2] = nodeValue_Float("Rotations", self, noone );
+	inputs[2] = nodeValue_Float("Rotations", self, noone );
 	
-	inputs[| 3] = nodeValue_Float("Scales", self, noone );
+	inputs[3] = nodeValue_Float("Scales", self, noone );
 	
-	inputs[| 4] = nodeValue_Color("Blend", self, noone );
+	inputs[4] = nodeValue_Color("Blend", self, noone );
 	
-	inputs[| 5] = nodeValue_Float("Alpha", self, noone );
+	inputs[5] = nodeValue_Float("Alpha", self, noone );
 	
-	inputs[| 6] = nodeValue_Surface("Surface", self)
+	inputs[6] = nodeValue_Surface("Surface", self)
 		.setVisible(true, false);
 	
-	outputs[| 0] = nodeValue_Output("Particles", self, VALUE_TYPE.particle, -1 );
+	outputs[0] = nodeValue_Output("Particles", self, VALUE_TYPE.particle, -1 );
 	
 	static update = function(frame = CURRENT_FRAME) {
 		var parts = getInputData(0);
@@ -38,12 +38,12 @@ function Node_VFX_Override(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		var nParts = array_create(array_length(parts));
 		
-		var _a_pos = inputs[| 1].value_from != noone;
-		var _a_rot = inputs[| 2].value_from != noone;
-		var _a_sca = inputs[| 3].value_from != noone;
-		var _a_col = inputs[| 4].value_from != noone;
-		var _a_alp = inputs[| 5].value_from != noone;
-		var _a_srf = inputs[| 6].value_from != noone;
+		var _a_pos = inputs[1].value_from != noone;
+		var _a_rot = inputs[2].value_from != noone;
+		var _a_sca = inputs[3].value_from != noone;
+		var _a_col = inputs[4].value_from != noone;
+		var _a_alp = inputs[5].value_from != noone;
+		var _a_srf = inputs[6].value_from != noone;
 		
 		if(array_get_depth(_pos) < 2) _pos = [ _pos ];
 		if(array_get_depth(_sca) < 2) _sca = [ _sca ];
@@ -80,7 +80,7 @@ function Node_VFX_Override(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			nParts[i] = nPart;
 		}
 	
-		outputs[| 0].setValue(nParts);
+		outputs[0].setValue(nParts);
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

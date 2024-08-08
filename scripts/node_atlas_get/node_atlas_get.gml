@@ -2,27 +2,27 @@ function Node_Atlas_Get(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	name = "Atlas Get";
 	previewable = true;
 	
-	inputs[| 0] = nodeValue_Surface("Atlas", self)
+	inputs[0] = nodeValue_Surface("Atlas", self)
 		.setVisible(true, true);
 	
-	outputs[| 0] = nodeValue_Output("Surface", self, VALUE_TYPE.surface, [])
+	outputs[0] = nodeValue_Output("Surface", self, VALUE_TYPE.surface, [])
 		.setArrayDepth(1);
 	
-	outputs[| 1] = nodeValue_Output("Position", self, VALUE_TYPE.float, [])
+	outputs[1] = nodeValue_Output("Position", self, VALUE_TYPE.float, [])
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setArrayDepth(1);
 	
-	outputs[| 2] = nodeValue_Output("Rotation", self, VALUE_TYPE.float, [])
+	outputs[2] = nodeValue_Output("Rotation", self, VALUE_TYPE.float, [])
 		.setArrayDepth(1);
 	
-	outputs[| 3] = nodeValue_Output("Scale", self, VALUE_TYPE.float, [])
+	outputs[3] = nodeValue_Output("Scale", self, VALUE_TYPE.float, [])
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setArrayDepth(1);
 		
-	outputs[| 4] = nodeValue_Output("Blend", self, VALUE_TYPE.color, [])
+	outputs[4] = nodeValue_Output("Blend", self, VALUE_TYPE.color, [])
 		.setArrayDepth(1);
 		
-	outputs[| 5] = nodeValue_Output("Alpha", self, VALUE_TYPE.float, [])
+	outputs[5] = nodeValue_Output("Alpha", self, VALUE_TYPE.float, [])
 		.setArrayDepth(1);
 	
 	static update = function(frame = CURRENT_FRAME) {
@@ -53,11 +53,11 @@ function Node_Atlas_Get(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			alph[i] = _at.alpha;
 		}
 		
-		outputs[| 0].setValue(surf);
-		outputs[| 1].setValue(posi);
-		outputs[| 2].setValue(rota);
-		outputs[| 3].setValue(scal);
-		outputs[| 4].setValue(blns);
-		outputs[| 5].setValue(alph);
+		outputs[0].setValue(surf);
+		outputs[1].setValue(posi);
+		outputs[2].setValue(rota);
+		outputs[3].setValue(scal);
+		outputs[4].setValue(blns);
+		outputs[5].setValue(alph);
 	}
 }

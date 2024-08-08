@@ -7,7 +7,7 @@ function Node_create_Json_File_Read(_x, _y, _group = noone) {
 	}
 	
 	var node = new Node_Json_File_Read(_x, _y, _group).skipDefault();
-	node.inputs[| 0].setValue(path);
+	node.inputs[0].setValue(path);
 	node.doUpdate();
 	
 	return node;
@@ -17,7 +17,7 @@ function Node_create_Json_File_Read_path(_x, _y, path) {
 	if(!file_exists_empty(path)) return noone;
 	
 	var node = new Node_Json_File_Read(_x, _y, PANEL_GRAPH.getCurrentContext()).skipDefault();
-	node.inputs[| 0].setValue(path);
+	node.inputs[0].setValue(path);
 	node.doUpdate();
 	
 	return node;	
@@ -29,14 +29,14 @@ function Node_Json_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	w = 128;
 	
-	inputs[| 0]  = nodeValue_Text("Path", self, "")
+	inputs[0]  = nodeValue_Text("Path", self, "")
 		.setDisplay(VALUE_DISPLAY.path_load, { filter: "JSON file|*.json" })
 		.rejectArray();
 	
-	outputs[| 0] = nodeValue_Output("Path", self, VALUE_TYPE.path, "")
+	outputs[0] = nodeValue_Output("Path", self, VALUE_TYPE.path, "")
 		.setVisible(true, true);
 	
-	outputs[| 1] = nodeValue_Output("Struct", self, VALUE_TYPE.struct, {});
+	outputs[1] = nodeValue_Output("Struct", self, VALUE_TYPE.struct, {});
 	
 	content      = {};
 	path_current = "";
@@ -73,7 +73,7 @@ function Node_Json_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		
 		if(ext != ".json") return false;
 		
-		outputs[| 0].setValue(path);
+		outputs[0].setValue(path);
 				
 		content = json_load_struct(path);
 				
@@ -101,7 +101,7 @@ function Node_Json_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		var path = path_get(getInputData(0));
 		if(path_current != path) updatePaths(path);
 		
-		outputs[| 1].setValue(content);
+		outputs[1].setValue(content);
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
@@ -116,6 +116,6 @@ function Node_Json_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		if(is_array(path)) path = array_safe_get(path, 0);
 		if(!file_exists_empty(path)) return;
 		
-		inputs[| 0].setValue(path); 
+		inputs[0].setValue(path); 
 	}
 }

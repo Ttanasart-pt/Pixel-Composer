@@ -1,39 +1,39 @@
 function Node_Quasicrystal(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Quasicrystal";
 	
-	inputs[| 0] = nodeValue_Dimension(self);
+	inputs[0] = nodeValue_Dimension(self);
 	
-	inputs[| 1] = nodeValue_Float("Scale", self, 16)
+	inputs[1] = nodeValue_Float("Scale", self, 16)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 64, 0.1] })
 		.setMappable(6);
 	
-	inputs[| 2] = nodeValue_Rotation("Angle", self, 0)
+	inputs[2] = nodeValue_Rotation("Angle", self, 0)
 		.setMappable(7);
 	
-	inputs[| 3] = nodeValue_Vector("Position", self, [ 0, 0 ] )
+	inputs[3] = nodeValue_Vector("Position", self, [ 0, 0 ] )
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	inputs[| 4] = nodeValue_Color("Color 1", self, c_white);
+	inputs[4] = nodeValue_Color("Color 1", self, c_white);
 	
-	inputs[| 5] = nodeValue_Color("Color 2", self, c_black);
-	
-	//////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	inputs[| 6] = nodeValueMap("Scale map", self);
-	
-	inputs[| 7] = nodeValueMap("Angle map", self);
+	inputs[5] = nodeValue_Color("Color 2", self, c_black);
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 8] = nodeValue_Float("Phase", self, 0)
+	inputs[6] = nodeValueMap("Scale map", self);
+	
+	inputs[7] = nodeValueMap("Angle map", self);
+	
+	//////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	inputs[8] = nodeValue_Float("Phase", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(8);
 	
-	inputs[| 9] = nodeValueMap("Phasemap", self);
+	inputs[9] = nodeValueMap("Phasemap", self);
 	
-	inputs[| 10] = nodeValue_Rotation_Range("Angle Range", self, [ 0, 180 ]);
+	inputs[10] = nodeValue_Rotation_Range("Angle Range", self, [ 0, 180 ]);
 		
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 
 		["Output",	 true],	0,  
@@ -49,16 +49,16 @@ function Node_Quasicrystal(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var py   = _y + pos[1] * _s;
 		var _hov = false;
 		
-		var  hv  = inputs[| 3].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); active &= !hv; _hov |= hv;
-		var  hv  = inputs[| 2].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny); active &= !hv; _hov |= hv;
+		var  hv  = inputs[3].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); active &= !hv; _hov |= hv;
+		var  hv  = inputs[2].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny); active &= !hv; _hov |= hv;
 		
 		return _hov;
 	} #endregion
 	
 	static step = function() { #region
-		inputs[| 1].mappableStep();
-		inputs[| 2].mappableStep();
-		inputs[| 8].mappableStep();
+		inputs[1].mappableStep();
+		inputs[2].mappableStep();
+		inputs[8].mappableStep();
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
@@ -77,9 +77,9 @@ function Node_Quasicrystal(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			shader_set_f("position",	 _pos[0] / _dim[0], _pos[1] / _dim[1]);
 			shader_set_2("rangleRange",	 _aran);
 			
-			shader_set_f_map("amount",	_data[1], _data[6], inputs[|  1]);
-			shader_set_f_map("angle",	_data[2], _data[7], inputs[|  2]);
-			shader_set_f_map("phase",	_data[8], _data[9], inputs[|  8]);
+			shader_set_f_map("amount",	_data[1], _data[6], inputs[ 1]);
+			shader_set_f_map("angle",	_data[2], _data[7], inputs[ 2]);
+			shader_set_f_map("phase",	_data[8], _data[9], inputs[ 8]);
 			
 			shader_set_color("color0", _clr0);
 			shader_set_color("color1", _clr1);

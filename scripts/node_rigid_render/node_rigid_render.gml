@@ -8,11 +8,11 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	//use_cache = CACHE_USE.auto;
 	update_on_frame = true;
 	
-	inputs[| 0] = nodeValue_Vector("Render dimension", self, DEF_SURF);
+	inputs[0] = nodeValue_Vector("Render dimension", self, DEF_SURF);
 		
-	inputs[| 1] = nodeValue_Bool("Round position", self, false)
+	inputs[1] = nodeValue_Bool("Round position", self, false)
 	
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	attribute_surface_depth();
 	
@@ -29,11 +29,11 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	static onInspector2Update = function() { clearCache(); }
 	
 	static createNewInput = function() {
-		var index = ds_list_size(inputs);
-		inputs[| index] = nodeValue("Object", self, JUNCTION_CONNECT.input, VALUE_TYPE.rigid, noone )
+		var index = array_length(inputs);
+		inputs[index] = nodeValue("Object", self, JUNCTION_CONNECT.input, VALUE_TYPE.rigid, noone )
 			.setVisible(true, true);
 		
-		return inputs[| index];	
+		return inputs[index];	
 	} setDynamicInput(1, true, VALUE_TYPE.rigid);
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
@@ -59,10 +59,10 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		//	return;
 		
 		var _rnd = getInputData(1);
-		var _outSurf = outputs[| 0].getValue();
+		var _outSurf = outputs[0].getValue();
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
-		outputs[| 0].setValue(_outSurf);
+		outputs[0].setValue(_outSurf);
 		
 		surface_set_target(_outSurf);
 		DRAW_CLEAR
@@ -72,7 +72,7 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			draw_set_color(c_white);
 			physics_world_draw_debug(flag);
 		} else {
-			for( var i = input_fix_len; i < ds_list_size(inputs); i++ ) {
+			for( var i = input_fix_len; i < array_length(inputs); i++ ) {
 				var objNode = getInputData(i);
 				if(!is_array(objNode)) continue;
 				
@@ -101,7 +101,7 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	} #endregion
 	
 	static getPreviewValues = function() { #region
-		var _surf = outputs[| 0].getValue();
+		var _surf = outputs[0].getValue();
 		if(is_surface(_surf)) return _surf;
 		return preview_surface;
 	} #endregion

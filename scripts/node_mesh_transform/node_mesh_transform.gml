@@ -2,22 +2,22 @@ function Node_Mesh_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	name = "Mesh Transform";
 	setDimension(96, 48);;
 	
-	inputs[| 0] = nodeValue("Mesh", self, JUNCTION_CONNECT.input, VALUE_TYPE.mesh, noone)
+	inputs[0] = nodeValue("Mesh", self, JUNCTION_CONNECT.input, VALUE_TYPE.mesh, noone)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue_Vector("Position", self, [ 0, 0 ]);
+	inputs[1] = nodeValue_Vector("Position", self, [ 0, 0 ]);
 	
-	inputs[| 2] = nodeValue_Rotation("Rotation", self, 0);
+	inputs[2] = nodeValue_Rotation("Rotation", self, 0);
 	
-	inputs[| 3] = nodeValue_Vector("Scale", self, [ 1, 1 ]);
+	inputs[3] = nodeValue_Vector("Scale", self, [ 1, 1 ]);
 	
-	inputs[| 4] = nodeValue_Vector("Anchor", self, [ 0, 0 ]);
+	inputs[4] = nodeValue_Vector("Anchor", self, [ 0, 0 ]);
 	
-	outputs[| 0] = nodeValue_Output("Mesh", self, VALUE_TYPE.mesh, noone);
+	outputs[0] = nodeValue_Output("Mesh", self, VALUE_TYPE.mesh, noone);
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var imesh = getInputData(0);
-		var omesh = outputs[| 0].getValue();
+		var omesh = outputs[0].getValue();
 		if(imesh == noone) return;
 		
 		var _cm = imesh.center;
@@ -31,8 +31,8 @@ function Node_Mesh_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		
 		var _hov = false;
 		
-		var hv = inputs[| 1].drawOverlay(hover, active, ax, ay, _s, _mx, _my, _snx, _sny); active &= !hv; _hov |= hv;
-		var hv = inputs[| 2].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny); active &= !hv; _hov |= hv;
+		var hv = inputs[1].drawOverlay(hover, active, ax, ay, _s, _mx, _my, _snx, _sny); active &= !hv; _hov |= hv;
+		var hv = inputs[2].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny); active &= !hv; _hov |= hv;
 		
 		draw_set_color(COLORS._main_accent);
 		omesh.draw(_x, _y, _s);
@@ -73,7 +73,7 @@ function Node_Mesh_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		
 		mesh.calcCoM();
 		
-		outputs[| 0].setValue(mesh);
+		outputs[0].setValue(mesh);
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

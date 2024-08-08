@@ -3,20 +3,20 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	preview_alpha = 0.5;
 	
 	onSurfaceSize = function() { return surface_get_dimension(getInputData(0)); };
-	inputs[| 0] = nodeValue_Area("Focus area", self, DEF_AREA, { onSurfaceSize, useShape : false });
+	inputs[0] = nodeValue_Area("Focus area", self, DEF_AREA, { onSurfaceSize, useShape : false });
 	
-	inputs[| 1] = nodeValue_Float("Zoom", self, 1)
+	inputs[1] = nodeValue_Float("Zoom", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0.01, 4, 0.01 ] });
 	
-	inputs[| 2] = nodeValue_Bool("Depth of Field", self, false);
+	inputs[2] = nodeValue_Bool("Depth of Field", self, false);
 	
-	inputs[| 3] = nodeValue_Float("Focal distance", self, 0);
+	inputs[3] = nodeValue_Float("Focal distance", self, 0);
 	
-	inputs[| 4] = nodeValue_Float("Defocus", self, 1);
+	inputs[4] = nodeValue_Float("Defocus", self, 1);
 	
-	inputs[| 5] = nodeValue_Float("Focal range", self, 0);
+	inputs[5] = nodeValue_Float("Focal range", self, 0);
 	
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
 		["Camera",		false], 0, 1, 
@@ -29,30 +29,30 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	temp_surface = [ noone, noone ];
 	
 	static createNewInput = function() { 
-		var index = ds_list_size(inputs);
+		var index = array_length(inputs);
 		var _s    = floor((index - input_fix_len) / data_length);
 		
 		if(_s) array_push(input_display_list, new Inspector_Spacer(20, true));
 		
-		inputs[| index + 0] = nodeValue_Surface($"Element {_s}", self, noone);
+		inputs[index + 0] = nodeValue_Surface($"Element {_s}", self, noone);
 		
-		inputs[| index + 1] = nodeValue_Enum_Button($"Positioning {_s}", self,  false, [ "Space", "Camera" ]);
+		inputs[index + 1] = nodeValue_Enum_Button($"Positioning {_s}", self,  false, [ "Space", "Camera" ]);
 	
-		inputs[| index + 2] = nodeValue_Vector($"Position {_s}", self, [ 0, 0 ] )
+		inputs[index + 2] = nodeValue_Vector($"Position {_s}", self, [ 0, 0 ] )
 			.setUnitRef(function(index) { return getDimension(index); });
 		
-		inputs[| index + 3] = nodeValue_Enum_Scroll($"Oversample {_s}", self,  0, [ new scrollItem("Empty ",   s_node_camera_repeat, 0), 
+		inputs[index + 3] = nodeValue_Enum_Scroll($"Oversample {_s}", self,  0, [ new scrollItem("Empty ",   s_node_camera_repeat, 0), 
 													 new scrollItem("Repeat ",  s_node_camera_repeat, 1), 
 													 new scrollItem("Repeat X", s_node_camera_repeat, 2), 
 													 new scrollItem("Repeat Y", s_node_camera_repeat, 3), ]);
 		
-		inputs[| index + 4] = nodeValue_Vector($"Parallax {_s}", self, [ 0, 0 ]);
+		inputs[index + 4] = nodeValue_Vector($"Parallax {_s}", self, [ 0, 0 ]);
 		
-		inputs[| index + 5] = nodeValue($"Depth {_s}", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
+		inputs[index + 5] = nodeValue($"Depth {_s}", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
 		
 		for( var i = 0; i < data_length; i++ ) array_push(input_display_list, index + i);
 		
-		return inputs[| index + 0];
+		return inputs[index + 0];
 	} setDynamicInput(6, true, VALUE_TYPE.surface);
 	
 	static getPreviewValues = function() { return getInputData(input_fix_len); }
@@ -60,7 +60,7 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) {
 		PROCESSOR_OVERLAY_CHECK
 		
-		var _out  = outputs[| 0].getValue();
+		var _out  = outputs[0].getValue();
 		if(is_array(_out)) _out = _out[preview_index];
 		
 		var _area = current_data[0];
@@ -71,7 +71,7 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 		if(PANEL_PREVIEW.getNodePreview() == self)
 			draw_surface_ext_safe(_out, _cam_x, _cam_y, _s * _zoom, _s * _zoom);
-		inputs[| 0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		inputs[0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 		
 		draw_set_color(COLORS._main_accent);
 		var x0 = _cam_x;

@@ -15,55 +15,55 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	uniform_band = shader_get_uniform(shader, "band");
 	uniform_attn = shader_get_uniform(shader, "atten");
 	
-	inputs[| 0] = nodeValue_Surface("Surface in", self);
+	inputs[0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue_Enum_Scroll("Light shape", self, 0, [	new scrollItem("Point",           s_node_2d_light_shape, 0), 
+	inputs[1] = nodeValue_Enum_Scroll("Light shape", self, 0, [	new scrollItem("Point",           s_node_2d_light_shape, 0), 
 																	new scrollItem("Line",            s_node_2d_light_shape, 1), 
 																	new scrollItem("Line asymmetric", s_node_2d_light_shape, 2), 
 																	new scrollItem("Spot",            s_node_2d_light_shape, 3), ]);
 	
-	inputs[| 2] = nodeValue_Vector("Center", self, [ 16, 16 ])
+	inputs[2] = nodeValue_Vector("Center", self, [ 16, 16 ])
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	inputs[| 3] = nodeValue_Float("Range", self, 16);
+	inputs[3] = nodeValue_Float("Range", self, 16);
 	
-	inputs[| 4] = nodeValue_Float("Intensity", self, 1)
+	inputs[4] = nodeValue_Float("Intensity", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 5] = nodeValue_Color("Color", self, c_white);
+	inputs[5] = nodeValue_Color("Color", self, c_white);
 	
-	inputs[| 6] = nodeValue_Vector("Start", self, [ 16, 16 ]);
+	inputs[6] = nodeValue_Vector("Start", self, [ 16, 16 ]);
 	
-	inputs[| 7] = nodeValue_Vector("Finish", self, [ 32, 16 ]);
+	inputs[7] = nodeValue_Vector("Finish", self, [ 32, 16 ]);
 	
-	inputs[| 8] = nodeValue_Int("Sweep", self, 15)
+	inputs[8] = nodeValue_Int("Sweep", self, 15)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-80, 80, 0.1] });
 	
-	inputs[| 9] = nodeValue_Int("Sweep end", self, 0)
+	inputs[9] = nodeValue_Int("Sweep end", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-80, 80, 0.1] });
 	
-	inputs[| 10] = nodeValue_Int("Banding", self, 0)
+	inputs[10] = nodeValue_Int("Banding", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 16, 0.1] });
 	
-	inputs[| 11] = nodeValue_Enum_Scroll("Attenuation", self, 0, 
+	inputs[11] = nodeValue_Enum_Scroll("Attenuation", self, 0, 
 											   [ new scrollItem("Quadratic",		s_node_curve, 0),
 												 new scrollItem("Invert quadratic", s_node_curve, 1),
 												 new scrollItem("Linear",			s_node_curve, 2), ])
 		 .setTooltip("Control how light fade out over distance.");
 	
-	inputs[| 12] = nodeValue_Int("Radial banding", self, 0)
+	inputs[12] = nodeValue_Int("Radial banding", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 16, 0.1] });
 	
-	inputs[| 13] = nodeValue_Rotation("Radial start", self, 0);
+	inputs[13] = nodeValue_Rotation("Radial start", self, 0);
 	
-	inputs[| 14] = nodeValue_Float("Radial band ratio", self, 0.5)
+	inputs[14] = nodeValue_Float("Radial band ratio", self, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 15] = nodeValue_Bool("Active", self, true);
+	inputs[15] = nodeValue_Bool("Active", self, true);
 		active_index = 15;
 		
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
-	outputs[| 1] = nodeValue_Output("Light only", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[1] = nodeValue_Output("Light only", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 15, 0, 
 		["Shape",	false], 1, 2, 6, 7, 8, 9, 
@@ -85,14 +85,14 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				var px = _x + pos[0] * _s;
 				var py = _y + pos[1] * _s;
 		
-				var hv = inputs[| 2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= bool(hv);
-				var hv = inputs[| 3].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny); _hov |= bool(hv);
+				var hv = inputs[2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= bool(hv);
+				var hv = inputs[3].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny); _hov |= bool(hv);
 				break;
 			case LIGHT_SHAPE_2D.line :
 			case LIGHT_SHAPE_2D.line_asym :
 			case LIGHT_SHAPE_2D.spot :
-				var hv = inputs[| 6].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= bool(hv);
-				var hv = inputs[| 7].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= bool(hv);
+				var hv = inputs[6].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= bool(hv);
+				var hv = inputs[7].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= bool(hv);
 				break;
 		}
 		
@@ -104,41 +104,41 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		
 		switch(_shape) {
 			case LIGHT_SHAPE_2D.point :
-				inputs[| 2].setVisible(true);
-				inputs[| 3].setVisible(true);
-				inputs[| 6].setVisible(false);
-				inputs[| 7].setVisible(false);
-				inputs[| 8].setVisible(false);
-				inputs[| 9].setVisible(false);
+				inputs[2].setVisible(true);
+				inputs[3].setVisible(true);
+				inputs[6].setVisible(false);
+				inputs[7].setVisible(false);
+				inputs[8].setVisible(false);
+				inputs[9].setVisible(false);
 				
-				inputs[| 12].setVisible(true);
-				inputs[| 13].setVisible(true);
-				inputs[| 14].setVisible(true);
+				inputs[12].setVisible(true);
+				inputs[13].setVisible(true);
+				inputs[14].setVisible(true);
 				break;
 			case LIGHT_SHAPE_2D.line :
 			case LIGHT_SHAPE_2D.line_asym :
-				inputs[| 2].setVisible(false);
-				inputs[| 3].setVisible(true);
-				inputs[| 6].setVisible(true);
-				inputs[| 7].setVisible(true);
-				inputs[| 8].setVisible(true);
-				inputs[| 9].setVisible(_shape == LIGHT_SHAPE_2D.line_asym);
+				inputs[2].setVisible(false);
+				inputs[3].setVisible(true);
+				inputs[6].setVisible(true);
+				inputs[7].setVisible(true);
+				inputs[8].setVisible(true);
+				inputs[9].setVisible(_shape == LIGHT_SHAPE_2D.line_asym);
 				
-				inputs[| 12].setVisible(false);
-				inputs[| 13].setVisible(false);
-				inputs[| 14].setVisible(false);
+				inputs[12].setVisible(false);
+				inputs[13].setVisible(false);
+				inputs[14].setVisible(false);
 				break;
 			case LIGHT_SHAPE_2D.spot :
-				inputs[| 2].setVisible(false);
-				inputs[| 3].setVisible(false);
-				inputs[| 6].setVisible(true);
-				inputs[| 7].setVisible(true);
-				inputs[| 8].setVisible(true);
-				inputs[| 9].setVisible(false);
+				inputs[2].setVisible(false);
+				inputs[3].setVisible(false);
+				inputs[6].setVisible(true);
+				inputs[7].setVisible(true);
+				inputs[8].setVisible(true);
+				inputs[9].setVisible(false);
 				
-				inputs[| 12].setVisible(false);
-				inputs[| 13].setVisible(false);
-				inputs[| 14].setVisible(false);
+				inputs[12].setVisible(false);
+				inputs[13].setVisible(false);
+				inputs[14].setVisible(false);
 				break;
 		}
 		

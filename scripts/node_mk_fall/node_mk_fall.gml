@@ -2,58 +2,58 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	name = "MK Fall";
 	update_on_frame = true;
 	
-	inputs[| 0] = nodeValue_Surface("Background", self);
+	inputs[0] = nodeValue_Surface("Background", self);
 	
-	inputs[| 1] = nodeValue_Dimension(self);
+	inputs[1] = nodeValue_Dimension(self);
 		
-	inputs[| 2] = nodeValue_Int("Seed", self, seed_random(6))
-		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 2].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
+	inputs[2] = nodeValue_Int("Seed", self, seed_random(6))
+		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[2].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
-	inputs[| 3] = nodeValue_Area("Area", self, DEF_AREA);
+	inputs[3] = nodeValue_Area("Area", self, DEF_AREA);
 	
-	inputs[| 4] = nodeValue_Int("Amount", self, 10);
+	inputs[4] = nodeValue_Int("Amount", self, 10);
 	
-	inputs[| 5] = nodeValue_Float("Gravity", self, 0);
+	inputs[5] = nodeValue_Float("Gravity", self, 0);
 	
-	inputs[| 6] = nodeValue_Range("X Swing", self, [ 1, 1 ], { linked : true });
+	inputs[6] = nodeValue_Range("X Swing", self, [ 1, 1 ], { linked : true });
 	
-	inputs[| 7] = nodeValue_Range("Y Swing", self, [ 0.25, 0.25 ], { linked : true });
+	inputs[7] = nodeValue_Range("Y Swing", self, [ 0.25, 0.25 ], { linked : true });
 	
-	inputs[| 8] = nodeValue_Range("Swing frequency", self, [ 1, 1 ], { linked : true });
+	inputs[8] = nodeValue_Range("Swing frequency", self, [ 1, 1 ], { linked : true });
 	
-	inputs[| 9] = nodeValue_Vector("Size", self, [ 4, 2 ]);
+	inputs[9] = nodeValue_Vector("Size", self, [ 4, 2 ]);
 	
-	inputs[| 10] = nodeValue_Range("Speed", self, [ 1, 1 ], { linked : true });
+	inputs[10] = nodeValue_Range("Speed", self, [ 1, 1 ], { linked : true });
 	
-	inputs[| 11] = nodeValue_Range("X Momentum", self, [ 0, 0 ], { linked : true });
+	inputs[11] = nodeValue_Range("X Momentum", self, [ 0, 0 ], { linked : true });
 	
-	inputs[| 12] = nodeValue_Vector("Wind", self, [ 0, 0 ]);
+	inputs[12] = nodeValue_Vector("Wind", self, [ 0, 0 ]);
 	
-	inputs[| 13] = nodeValue_Gradient("Color", self, new gradientObject(cola(c_white)))
+	inputs[13] = nodeValue_Gradient("Color", self, new gradientObject(cola(c_white)))
 	
-	inputs[| 14] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11);
+	inputs[14] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11);
 	
-	inputs[| 15] = nodeValue_Bool("Ground", self, false);
+	inputs[15] = nodeValue_Bool("Ground", self, false);
 	
-	inputs[| 16] = nodeValue_Range("Ground levels", self, [ DEF_SURF_H / 2, DEF_SURF_H ]);
+	inputs[16] = nodeValue_Range("Ground levels", self, [ DEF_SURF_H / 2, DEF_SURF_H ]);
 	
-	inputs[| 17] = nodeValue_Range("Y Momentum", self, [ 0, 0 ], { linked : true });
+	inputs[17] = nodeValue_Range("Y Momentum", self, [ 0, 0 ], { linked : true });
 		
-	inputs[| 18] = nodeValue_Bool("Twist", self, false);
+	inputs[18] = nodeValue_Bool("Twist", self, false);
 		
-	inputs[| 19] = nodeValue_Float("Twist Rate", self, 0.1)
+	inputs[19] = nodeValue_Float("Twist Rate", self, 0.1)
 		.setDisplay(VALUE_DISPLAY.slider);
 		
-	inputs[| 20] = nodeValue_Range("Twist Speed", self, [ 5, 10 ]);
+	inputs[20] = nodeValue_Range("Twist Speed", self, [ 5, 10 ]);
 		
-	inputs[| 21] = nodeValue_Range("Scale", self, [ 1, 1 ], { linked : true });
+	inputs[21] = nodeValue_Range("Scale", self, [ 1, 1 ], { linked : true });
 	
-	inputs[| 22] = nodeValue_Enum_Scroll("Render Type", self,  0, [ new scrollItem("Leaf", s_node_shape_leaf, 0), new scrollItem("Circle", s_node_shape_circle, 0) ]);
+	inputs[22] = nodeValue_Enum_Scroll("Render Type", self,  0, [ new scrollItem("Leaf", s_node_shape_leaf, 0), new scrollItem("Circle", s_node_shape_circle, 0) ]);
 	
-	inputs[| 23] = nodeValue_Float("Twist Radius", self, 0.7)
+	inputs[23] = nodeValue_Float("Twist Radius", self, 0.7)
 		.setDisplay(VALUE_DISPLAY.slider);
 		
-	outputs[| 0] = nodeValue_Output("Output", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Output", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 2, 
 		["Dimension", false], 0, 1, 
@@ -104,7 +104,7 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		}
 		
 		var _hov = false;
-		var  hv  = inputs[| 3].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= hv;
+		var  hv  = inputs[3].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= hv;
 		
 		if(getInputData(15)) {
 			var _gr = getInputData(16);
@@ -250,7 +250,7 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	static step = function() { #region
 		var _typ = getInputData(22);
 		
-		inputs[| 9].setVisible(_typ == 0);
+		inputs[9].setVisible(_typ == 0);
 	} #endregion
 	
 	static update = function() { #region
@@ -284,9 +284,9 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		
 		if(is_surface(_surf)) _dim = surface_get_dimension(_surf);
 		
-		var _outSurf = outputs[| 0].getValue();
+		var _outSurf = outputs[0].getValue();
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
-		outputs[| 0].setValue(_outSurf);
+		outputs[0].setValue(_outSurf);
 		
 		surface_set_target(_outSurf);
 			DRAW_CLEAR

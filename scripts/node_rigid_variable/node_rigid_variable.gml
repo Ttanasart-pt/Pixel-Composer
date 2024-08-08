@@ -8,49 +8,49 @@ function Node_Rigid_Variable(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	setDimension(96, 48);
 	
-	inputs[| 0] = nodeValue("Object", self, JUNCTION_CONNECT.input, VALUE_TYPE.rigid, noone )
+	inputs[0] = nodeValue("Object", self, JUNCTION_CONNECT.input, VALUE_TYPE.rigid, noone )
 		.setVisible(true, true);
 	
 	input_display_list = [ 0 ];
 	
-	outputs[| 0] = nodeValue_Output("Positions", self, VALUE_TYPE.float, [ 0, 0 ] )
+	outputs[0] = nodeValue_Output("Positions", self, VALUE_TYPE.float, [ 0, 0 ] )
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setVisible(false);
 	
-	outputs[| 1] = nodeValue_Output("Scales", self, VALUE_TYPE.float, [ 0, 0 ] )
+	outputs[1] = nodeValue_Output("Scales", self, VALUE_TYPE.float, [ 0, 0 ] )
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setVisible(false);
 	
-	outputs[| 2] = nodeValue_Output("Rotations", self, VALUE_TYPE.float, 0 )
+	outputs[2] = nodeValue_Output("Rotations", self, VALUE_TYPE.float, 0 )
 		.setVisible(false);
 	
-	outputs[| 3] = nodeValue_Output("Blends", self, VALUE_TYPE.color, 0 )
+	outputs[3] = nodeValue_Output("Blends", self, VALUE_TYPE.color, 0 )
 		.setVisible(false);
 	
-	outputs[| 4] = nodeValue_Output("Alpha", self, VALUE_TYPE.float, 0 )
+	outputs[4] = nodeValue_Output("Alpha", self, VALUE_TYPE.float, 0 )
 		.setVisible(false);
 	
-	outputs[| 5] = nodeValue_Output("Velocity", self, VALUE_TYPE.float, [ 0, 0 ] )
+	outputs[5] = nodeValue_Output("Velocity", self, VALUE_TYPE.float, [ 0, 0 ] )
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setVisible(false);
 	
-	outputs[| 6] = nodeValue_Output("Center of mass", self, VALUE_TYPE.float, [ 0, 0 ] )
+	outputs[6] = nodeValue_Output("Center of mass", self, VALUE_TYPE.float, [ 0, 0 ] )
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setVisible(false);
 	
-	outputs[| 7] = nodeValue_Output("Velocity magnitude", self, VALUE_TYPE.float, 0 )
+	outputs[7] = nodeValue_Output("Velocity magnitude", self, VALUE_TYPE.float, 0 )
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setVisible(false);
 	
 	static update = function(frame = CURRENT_FRAME) {
 		var objs = getInputData(0);
-		outputs[| 0].setValue(objs);
+		outputs[0].setValue(objs);
 		
 		var _get = [];
 		var _val = [];
 		
-		for( var i = 0; i < ds_list_size(outputs); i++ ) {
-			_get[i] = outputs[| i].visible;
+		for( var i = 0; i < array_length(outputs); i++ ) {
+			_get[i] = outputs[i].visible;
 			_val[i] = [];
 			if(_get[i]) _val[i] = array_create(array_length(objs));
 		}
@@ -70,8 +70,8 @@ function Node_Rigid_Variable(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			if(_get[7]) _val[7][i] = point_distance(0, 0, obj.phy_linear_velocity_x, obj.phy_linear_velocity_y);
 		}
 		
-		for( var i = 0; i < ds_list_size(outputs); i++ )
-			if(_get[i]) outputs[| i].setValue(_val[i]);
+		for( var i = 0; i < array_length(outputs); i++ )
+			if(_get[i]) outputs[i].setValue(_val[i]);
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

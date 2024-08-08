@@ -79,9 +79,9 @@ function __Dust(x, y, size = 8) constructor {
 function Node_Dust(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Dust";
 	
-	inputs[| 0] = nodeValue_Dimension(self);
+	inputs[0] = nodeValue_Dimension(self);
 	
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
 		["Output",	false], 0,
@@ -95,9 +95,9 @@ function Node_Dust(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	static update = function() {
 		var _dim = getInputData(0);
 		
-		var _outSurf = outputs[| 0].getValue();
+		var _outSurf = outputs[0].getValue();
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
-		outputs[| 0].setValue(_outSurf);
+		outputs[0].setValue(_outSurf);
 		
 		if(IS_FIRST_FRAME) {
 			dusts = [ new __Dust( 0, _dim[1] / 2 ) ];

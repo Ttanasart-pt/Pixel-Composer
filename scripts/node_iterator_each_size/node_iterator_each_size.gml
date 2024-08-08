@@ -5,12 +5,12 @@ function Node_Iterator_Each_Length(_x, _y, _group = noone) : Node(_x, _y, _group
 	
 	setDimension(96, 48);
 	
-	outputs[| 0] = nodeValue_Output("Length", self, VALUE_TYPE.integer, 0);
+	outputs[0] = nodeValue_Output("Length", self, VALUE_TYPE.integer, 0);
 	
 	static update = function(frame = CURRENT_FRAME) { 
 		if(!variable_struct_exists(group, "iterated")) return;
 		var val = group.getInputData(0);
-		outputs[| 0].setValue(array_length(val));
+		outputs[0].setValue(array_length(val));
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

@@ -123,6 +123,8 @@ _FILE_DROPPED     = false;
 		NodeTopoSort();
 	}
 	
+	if(!PROJECT.safeMode) array_foreach(PROJECT.allNodes, function(_node) /*=>*/ { if(!_node.active) return; _node.stepBegin(); });
+	
 	if(LIVE_UPDATE)
 		Render();
 	else if(!PROJECT.safeMode) {
@@ -130,7 +132,6 @@ _FILE_DROPPED     = false;
 		
 		if(PROJECT.active) {
 			PROJECT.animator.is_simulating = false;
-			array_foreach(PROJECT.allNodes, function(_node) { if(!_node.active) return; _node.stepBegin(); });
 			
 			if(PROGRAM_ARGUMENTS._run) {
 				if(PROJECT != noone && PROJECT.path != "") {

@@ -6,21 +6,21 @@ function Node_FLIP_Wall(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	manual_ungroupable = false;
 	
-	inputs[| 0] = nodeValue_Fdomain("Domain", self, noone )
+	inputs[0] = nodeValue_Fdomain("Domain", self, noone )
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue_Area("Area", self, DEF_AREA , { useShape : false });
+	inputs[1] = nodeValue_Area("Area", self, DEF_AREA , { useShape : false });
 	
 	input_display_list = [ 0, 
 		["Collider",	false], 1
 	]
 	
-	outputs[| 0] = nodeValue_Output("Domain", self, VALUE_TYPE.fdomain, noone );
+	outputs[0] = nodeValue_Output("Domain", self, VALUE_TYPE.fdomain, noone );
 	
 	obstracle = new FLIP_Obstracle();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		if(inputs[| 1].drawOverlay(hover, active,  _x,  _y, _s, _mx, _my, _snx, _sny)) active = false;
+		if(inputs[1].drawOverlay(hover, active,  _x,  _y, _s, _mx, _my, _snx, _sny)) active = false;
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
@@ -28,7 +28,7 @@ function Node_FLIP_Wall(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var _area  = getInputData(1);
 		if(!instance_exists(domain)) return;
 		
-		outputs[| 0].setValue(domain);
+		outputs[0].setValue(domain);
 		FLIP_setSolid_rectangle(domain.domain, _area[0], _area[1], _area[2], _area[3]);
 	}
 	

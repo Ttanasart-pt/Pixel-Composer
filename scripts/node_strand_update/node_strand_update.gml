@@ -6,12 +6,12 @@ function Node_Strand_Update(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	manual_ungroupable	 = false;
 	
-	inputs[| 0] = nodeValue("Strand", self, JUNCTION_CONNECT.input, VALUE_TYPE.strands, noone)
+	inputs[0] = nodeValue("Strand", self, JUNCTION_CONNECT.input, VALUE_TYPE.strands, noone)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue_Int("Step", self, 4)
+	inputs[1] = nodeValue_Int("Step", self, 4)
 	
-	outputs[| 0] = nodeValue_Output("Strand", self, VALUE_TYPE.strands, noone);
+	outputs[0] = nodeValue_Output("Strand", self, VALUE_TYPE.strands, noone);
 	
 	static update = function(frame = CURRENT_FRAME) {
 		var _str = getInputData(0);
@@ -23,7 +23,7 @@ function Node_Strand_Update(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		for( var i = 0, n = array_length(__str); i < n; i++ ) 
 			__str[i].step(_itr);
-		outputs[| 0].setValue(_str);
+		outputs[0].setValue(_str);
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

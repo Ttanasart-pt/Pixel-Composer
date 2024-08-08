@@ -2,16 +2,16 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	name = "Smooth Path";
 	setDimension(96, 48);;
 	
-	inputs[| 0] = nodeValue_Bool("Loop", self, false)
+	inputs[0] = nodeValue_Bool("Loop", self, false)
 		.rejectArray();
 	
-	inputs[| 1] = nodeValue_Bool("Round anchor", self, false)
+	inputs[1] = nodeValue_Bool("Round anchor", self, false)
 		.rejectArray();
 	
-	inputs[| 2] = nodeValue_Float("Smoothness", self, 3)
+	inputs[2] = nodeValue_Float("Smoothness", self, 3)
 		.setDisplay(VALUE_DISPLAY.slider, { range : [ 1, 5, 0.01 ] } );
 	
-	outputs[| 0] = nodeValue_Output("Path data", self, VALUE_TYPE.pathnode, self);
+	outputs[0] = nodeValue_Output("Path data", self, VALUE_TYPE.pathnode, self);
 	
 	input_display_list = [
 		["Path",	false], 0, 1, 2, 
@@ -48,26 +48,26 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			["Anchors",	false], 
 		];
 		
-		for( var i = input_fix_len, n = ds_list_size(inputs); i < n; i++ ) {
+		for( var i = input_fix_len, n = array_length(inputs); i < n; i++ ) {
 			array_push(input_display_list, i);
-			inputs[| i].name = $"Anchor {i - input_fix_len}";
+			inputs[i].name = $"Anchor {i - input_fix_len}";
 		}
 	} #endregion
 	
 	static createNewInput = function(_x = 0, _y = 0) { #region
-		var index = ds_list_size(inputs);
+		var index = array_length(inputs);
 		
-		inputs[| index] = nodeValue_Vector("Anchor",  self, [ _x, _y ]);
+		inputs[index] = nodeValue_Vector("Anchor",  self, [ _x, _y ]);
 		
-		recordAction(ACTION_TYPE.list_insert, inputs, [ inputs[| index], index, "add path anchor point" ]);
+		recordAction(ACTION_TYPE.list_insert, inputs, [ inputs[index], index, "add path anchor point" ]);
 		resetDisplayList();
 		
-		return inputs[| index];
+		return inputs[index];
 	} #endregion
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var sample = PREFERENCES.path_resolution;
-		var ansize = ds_list_size(inputs) - input_fix_len;
+		var ansize = array_length(inputs) - input_fix_len;
 		var loop   = getInputData(0);
 		var rond   = getInputData(1);
 		
@@ -99,8 +99,8 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			#region draw anchor
 				var _act = active && !isUsingTool(0);
 				
-				for(var i = input_fix_len; i < ds_list_size(inputs); i++) {
-					var a = inputs[| i].drawOverlay(hover, _act, _x, _y, _s, _mx, _my, _snx, _sny);
+				for(var i = input_fix_len; i < array_length(inputs); i++) {
+					var a = inputs[i].drawOverlay(hover, _act, _x, _y, _s, _mx, _my, _snx, _sny);
 					_act &= !a;
 					if(a) _anchor_hover = i;
 				}
@@ -118,12 +118,12 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 					UNDO_HOLDING = true;
 				
 					if(_line_hover != -1) {
-						ds_list_remove(inputs, anc);
-						ds_list_insert(inputs, input_fix_len + _line_hover + 1, anc);
+						array_remove(inputs, anc);
+						array_insert(inputs, input_fix_len + _line_hover + 1, anc);
 					}
 				} else {
-					recordAction(ACTION_TYPE.list_delete, inputs, [ inputs[| input_fix_len + _anchor_hover], input_fix_len + _anchor_hover, "remove path anchor point" ]);
-					ds_list_delete(inputs, input_fix_len + _anchor_hover);
+					recordAction(ACTION_TYPE.list_delete, inputs, [ inputs[input_fix_len + _anchor_hover], input_fix_len + _anchor_hover, "remove path anchor point" ]);
+					array_delete(inputs, input_fix_len + _anchor_hover, 1);
 					resetDisplayList();
 				}
 				
@@ -143,7 +143,7 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		boundary    = new BoundingBox();
 		
 		var sample  = PREFERENCES.path_resolution;
-		var ansize  = ds_list_size(inputs) - input_fix_len;
+		var ansize  = array_length(inputs) - input_fix_len;
 		if(ansize < 2) return;
 		
 		var con = loop? ansize : ansize - 1;
@@ -206,7 +206,7 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var loop = getInputData(1);
 		if(loop) _dist = safe_mod(_dist, lengthTotal, MOD_NEG.wrap);
 		
-		var ansize = ds_list_size(inputs) - input_fix_len;
+		var ansize = array_length(inputs) - input_fix_len;
 		if(ansize == 0) return out;
 		
 		for(var i = 0; i < ansize; i++) {
@@ -250,7 +250,7 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var smot = getInputData(2);
 		
 		var _a = [];
-		for(var i = input_fix_len; i < ds_list_size(inputs); i++) {
+		for(var i = input_fix_len; i < array_length(inputs); i++) {
 			var _anc = array_clone(getInputData(i));
 			
 			if(rond) {

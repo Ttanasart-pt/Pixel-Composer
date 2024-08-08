@@ -15,16 +15,16 @@ function Node_VFX_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _group
 	preview_node = noone;
 	allCached    = false;
 	
-	inputs[| 0] = nodeValue_Bool("Loop", self, true )
+	inputs[0] = nodeValue_Bool("Loop", self, true )
 		.rejectArray();
 	
-	custom_input_index = ds_list_size(inputs);
+	custom_input_index = array_length(inputs);
 	
 	if(NODE_NEW_MANUAL) { #region
 		var input  = nodeBuild("Node_VFX_Spawner", -256, -32, self);
 		var output = nodeBuild("Node_VFX_Renderer_Output", 256 + 32 * 5, -32, self);
 		
-		output.inputs[| output.input_fix_len + 1].setFrom(input.outputs[| 0]);
+		output.inputs[output.input_fix_len + 1].setFrom(input.outputs[0]);
 		preview_node = output;
 	} #endregion
 	

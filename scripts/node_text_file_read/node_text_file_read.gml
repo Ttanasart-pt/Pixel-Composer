@@ -7,7 +7,7 @@ function Node_create_Text_File_Read(_x, _y, _group = noone) {
 	}
 	
 	var node = new Node_Text_File_Read(_x, _y, _group).skipDefault();
-	node.inputs[| 0].setValue(path);
+	node.inputs[0].setValue(path);
 	node.doUpdate();
 	
 	return node;
@@ -17,7 +17,7 @@ function Node_create_Text_File_Read_path(_x, _y, path) {
 	if(!file_exists_empty(path)) return noone;
 	
 	var node = new Node_Text_File_Read(_x, _y, PANEL_GRAPH.getCurrentContext()).skipDefault();
-	node.inputs[| 0].setValue(path);
+	node.inputs[0].setValue(path);
 	node.doUpdate();
 	
 	return node;	
@@ -29,12 +29,12 @@ function Node_Text_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	w = 128;
 	
-	inputs[| 0]  = nodeValue_Text("Path", self, "")
+	inputs[0]  = nodeValue_Text("Path", self, "")
 		.setDisplay(VALUE_DISPLAY.path_load, { filter: "any file|*" })
 		.rejectArray();
 	
-	outputs[| 0] = nodeValue_Output("Content", self, VALUE_TYPE.text, "");
-	outputs[| 1] = nodeValue_Output("Path", self, VALUE_TYPE.path, "")
+	outputs[0] = nodeValue_Output("Content", self, VALUE_TYPE.text, "");
+	outputs[1] = nodeValue_Output("Path", self, VALUE_TYPE.path, "")
 		.setVisible(true, true);
 	
 	content      = "";
@@ -70,7 +70,7 @@ function Node_Text_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		var ext   = string_lower(filename_ext(path));
 		var _name = string_replace(filename_name(path), filename_ext(path), "");
 		
-		outputs[| 1].setValue(path);
+		outputs[1].setValue(path);
 				
 		content = file_read_all(path);
 		
@@ -98,7 +98,7 @@ function Node_Text_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		var path = path_get(getInputData(0));
 		if(path_current != path) updatePaths(path);
 		
-		outputs[| 0].setValue(content);
+		outputs[0].setValue(content);
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
@@ -114,6 +114,6 @@ function Node_Text_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		if(is_array(path)) path = array_safe_get(path, 0);
 		if(!file_exists_empty(path)) return;
 		
-		inputs[| 0].setValue(path); 
+		inputs[0].setValue(path); 
 	}
 }

@@ -122,8 +122,8 @@ function Action(_type, _object, _data, _trigger = 0) constructor {
 					var _vt = _dl.value_to;
 					_nd.enable();
 					
-					for (var j = 0, m = ds_list_size(_nd.outputs); j < m; j++) {
-						var _out = _nd.outputs[| j];
+					for (var j = 0, m = array_length(_nd.outputs); j < m; j++) {
+						var _out = _nd.outputs[j];
 						var _too = _vt[j];
 						
 						for (var k = 0, p = array_length(_too); k < p; k++)
@@ -135,7 +135,7 @@ function Action(_type, _object, _data, _trigger = 0) constructor {
 				
 				for (var i = 0, n = array_length(_connectTo);    i < n; i++)
 				for (var j = 0, m = array_length(_connectTo[i]); j < m; j++)
-					_connectTo[i][j].setFrom(obj.outputs[| i]);
+					_connectTo[i][j].setFrom(obj.outputs[i]);
 				
 				break;
 				

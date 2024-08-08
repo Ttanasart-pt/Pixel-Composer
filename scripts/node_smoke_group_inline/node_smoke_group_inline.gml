@@ -9,7 +9,7 @@ function Node_Smoke_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inlin
 		var _domain = nodeBuild("Node_Smoke_Domain", x,       y);
 		var _render = nodeBuild("Node_Smoke_Render", x + 320, y);
 		
-		_render.inputs[| 0].setFrom(_domain.outputs[| 0]);
+		_render.inputs[0].setFrom(_domain.outputs[0]);
 		
 		addNode(_domain);
 		addNode(_render);

@@ -2,14 +2,14 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	name = "Armature Pose";
 	setDimension(96, 72);
 	
-	inputs[| 0] = nodeValue_Armature("Armature", self, noone)
+	inputs[0] = nodeValue_Armature("Armature", self, noone)
 		.setVisible(true, true);
 	
 	input_display_list = [ 0,
 		["Bones", false]
 	]
 	
-	outputs[| 0] = nodeValue_Output("Armature", self, VALUE_TYPE.armature, noone);
+	outputs[0] = nodeValue_Output("Armature", self, VALUE_TYPE.armature, noone);
 	
 	boneMap = ds_map_create();
 	
@@ -25,17 +25,17 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		new scrollBox(["Octahedral", "Stick"], function(ind) { attributes.display_bone = ind; })]);
 	
 	static createNewInput = function(bone = noone) {
-		var index = ds_list_size(inputs);
+		var index = array_length(inputs);
 		
-		inputs[| index] = nodeValue(bone != noone? bone.name : "bone", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0, 1 ] )
+		inputs[index] = nodeValue(bone != noone? bone.name : "bone", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0, 1 ] )
 			.setDisplay(VALUE_DISPLAY.transform);
-		inputs[| index].display_data.bone_id = bone != noone? bone.ID : noone;
+		inputs[index].display_data.bone_id = bone != noone? bone.ID : noone;
 		
-		if(bone != noone) boneMap[? bone.ID] = inputs[| index];
+		if(bone != noone) boneMap[? bone.ID] = inputs[index];
 		
 		array_push(input_display_list, index);
 		
-		return inputs[| index];
+		return inputs[index];
 	} setDynamicInput(1, false);
 	
 	static setBone = function() {
@@ -59,8 +59,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		ds_stack_destroy(_bst);
 		//print($"Bone counts: {array_length(_bones)}");
 		
-		var _inputs = ds_list_create();
-		_inputs[| 0] = inputs[| 0];
+		var _inputs = [ inputs[0] ];
 		
 		var _input_display_list = [
 			input_display_list[0],
@@ -69,7 +68,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		for( var i = 0, n = array_length(_bones); i < n; i++ ) {
 			var bone = _bones[i];
-			var _idx = ds_list_size(_inputs);
+			var _idx = array_length(_inputs);
 			array_push(_input_display_list, _idx);
 			//print($"  > Adding bone ID: {bone.ID}");
 			
@@ -77,14 +76,13 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				var _inp = boneMap[? bone.ID];
 				
 				_inp.index = _idx;
-				ds_list_add(_inputs, _inp);
+				array_push(_inputs, _inp);
 			} else {
 				var _inp = createNewInput(bone);
-				ds_list_add(_inputs, _inp);
+				array_push(_inputs, _inp);
 			}
 		}
 		
-		ds_list_destroy(inputs);
 		inputs = _inputs;
 		input_display_list = _input_display_list;
 		
@@ -104,7 +102,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	posing_my = 0;
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var _b = outputs[| 0].getValue();
+		var _b = outputs[0].getValue();
 		if(_b == noone) return;
 		
 		anchor_selecting = _b.draw(attributes, active * 0b111, _x, _y, _s, _mx, _my, anchor_selecting, posing_bone);
@@ -224,7 +222,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			return;
 		}
 		
-		var _boneCount = ds_list_size(inputs) - input_fix_len;
+		var _boneCount = array_length(inputs) - input_fix_len;
 		if(_boneCount != _b.childCount()) setBone();
 	}
 	
@@ -261,7 +259,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		ds_stack_destroy(_bst);
 		_bone_pose.setPose();
 		
-		outputs[| 0].setValue(_bone_pose);
+		outputs[0].setValue(_bone_pose);
 	}
 	
 	static getPreviewBoundingBox = function() {
@@ -270,7 +268,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var maxx = -9999999;
 		var maxy = -9999999;
 		
-		var _b = outputs[| 0].getValue();
+		var _b = outputs[0].getValue();
 		if(_b == noone) return BBOX().fromPoints(0, 0, 1, 1);
 		
 		var _bst = ds_stack_create();
@@ -300,8 +298,8 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	}
 	
 	static doApplyDeserialize = function() {
-		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
-			var inp = inputs[| i];
+		for( var i = input_fix_len; i < array_length(inputs); i += data_length ) {
+			var inp = inputs[i];
 			var idx = struct_try_get(inp.display_data, "bone_id");
 			
 			boneMap[? idx] = inp;

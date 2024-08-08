@@ -82,14 +82,14 @@ function groupNodes(nodeArray, _group = noone, record = true, check_connect = tr
 			
 			var _n  = new Node_Group_Input(_x, _y, _group);
 			var _ti = array_find(GROUP_IO_TYPE_MAP, _frm.type);
-			if(_ti >= 0) _n.inputs[| 2].setValue(_ti);
+			if(_ti >= 0) _n.inputs[2].setValue(_ti);
 			
 			_n.onValueUpdate(0);
 			_n.inParent.setFrom(_frm);
 				
 			for( var j = 0; j < m; j++ ) {
 				var _to = _tos[j];
-				_to.setFrom(_n.outputs[| 0]);
+				_to.setFrom(_n.outputs[0]);
 			}
 		}
 		
@@ -105,7 +105,7 @@ function groupNodes(nodeArray, _group = noone, record = true, check_connect = tr
 			 m = array_length(_tos);
 			
 			var _n = new Node_Group_Output(_x, _y, _group);
-			_n.inputs[| 0].setFrom(_frm);
+			_n.inputs[0].setFrom(_frm);
 			
 			for( var j = 0; j < m; j++ ) {
 				var _to = _tos[j];
@@ -214,7 +214,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		var _tind = array_find(GROUP_IO_TYPE_MAP, _type);
 		
 		input.attributes.inherit_type = false;
-		if(_tind != -1) input.inputs[| 2].setValue(_tind);
+		if(_tind != -1) input.inputs[2].setValue(_tind);
 			
 		input.inParent.setFrom(juncFrom);
 		
@@ -335,8 +335,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	static getOutputNodes = function() {
 		var _nodes = [];
-		for( var i = custom_output_index; i < ds_list_size(outputs); i++ ) {
-			var _junc = outputs[| i];
+		for( var i = custom_output_index; i < array_length(outputs); i++ ) {
+			var _junc = outputs[i];
 			
 			for( var j = 0; j < array_length(_junc.value_to); j++ ) {
 				var _to = _junc.value_to[j];
@@ -353,7 +353,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}
 	
 	static sortIO = function() {
-		var _ilen = ds_list_size(inputs);
+		var _ilen = array_length(inputs);
 		var _iarr = attributes.input_display_list;
 		
 		for( var i = custom_input_index; i < _ilen; i++ ) 
@@ -368,7 +368,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		///////////////////////////////////////////////////////////////////
 		
-		var _olen = ds_list_size(outputs);
+		var _olen = array_length(outputs);
 		var _oarr = attributes.output_display_list;
 		
 		for( var i = custom_output_index; i < _olen; i++ ) 
@@ -403,8 +403,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		var _nodes = [];
 		if(isRenderActive()) {
 			var allReady = true;
-			for(var i = custom_input_index; i < ds_list_size(inputs); i++) {
-				var _in = inputs[| i].from;
+			for(var i = custom_input_index; i < array_length(inputs); i++) {
+				var _in = inputs[i].from;
 				if(!_in.isRenderActive()) continue;
 			
 				if(!_in.isRenderable()) {
@@ -426,8 +426,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		LOG_BLOCK_START();
 		
 		var nextNodes = [];
-		for( var i = 0; i < ds_list_size(outputs); i++ ) {
-			var _ot = outputs[| i];
+		for( var i = 0; i < array_length(outputs); i++ ) {
+			var _ot = outputs[i];
 			if(!_ot.forward) continue;
 			if(_ot.type == VALUE_TYPE.node) continue;
 				
@@ -459,8 +459,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		}
 		
 		if(result)
-		for( var i = custom_output_index, n = ds_list_size(outputs); i < n; i++ ) {
-			var _o = outputs[| i];
+		for( var i = custom_output_index, n = array_length(outputs); i < n; i++ ) {
+			var _o = outputs[i];
 			if(_o.from.rendered) continue;
 				
 			LOG_IF(global.FLAG.render == 1, $"Set fail because {_o.from.internalName} is not rendered.");
@@ -479,8 +479,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		if(update_on_frame) return true;
 		if(!rendered)       return true;
 		
-		for( var i = custom_input_index, n = ds_list_size(inputs); i < n; i++ ) 
-			if(inputs[| i].isActiveDynamic(frame) || !inputs[| i].from.rendered) return true;
+		for( var i = custom_input_index, n = array_length(inputs); i < n; i++ ) 
+			if(inputs[i].isActiveDynamic(frame) || !inputs[i].from.rendered) return true;
 		
 		return false;
 	}
@@ -501,8 +501,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(!draw_input_overlay) return;
 		
-		for(var i = custom_input_index; i < ds_list_size(inputs); i++) {
-			var _in   = inputs[| i];
+		for(var i = custom_input_index; i < array_length(inputs); i++) {
+			var _in   = inputs[i];
 			var _show = _in.from.getInputData(6);
 			
 			if(!_show) continue;
@@ -571,18 +571,18 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		for( var i = 0, n = array_length(nodes); i < n; i++ ) {
 			if(!nodes[i].active) continue;
 			if(is_instanceof(nodes[i], Node_Group_Thumbnail))
-				return nodes[i].inputs[| 0].getValue();
+				return nodes[i].inputs[0].getValue();
 		}
 		
-		var _oj = outputs[| preview_channel];
+		var _oj = outputs[preview_channel];
 		if(is_undefined(_oj)) return noone;
 		
-		var _fr = _oj.from.inputs[| 0];
+		var _fr = _oj.from.inputs[0];
 		return _fr.value_from == noone? noone : _fr.value_from.node.getGraphPreviewSurface();
 	}
 	
 	function getPreviewingNode() {
-		var _oj = outputs[| preview_channel];
+		var _oj = outputs[preview_channel];
 		if(is_undefined(_oj)) return self;
 		
 		switch(_oj.type) {
@@ -592,7 +592,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			case VALUE_TYPE.d3Scene  : 
 			case VALUE_TYPE.d3object : 
 			case VALUE_TYPE.sdf : 
-				var _fr = _oj.from.inputs[| 0];
+				var _fr = _oj.from.inputs[0];
 				return _fr.value_from == noone? self : _fr.value_from.node;
 		}
 		
@@ -616,15 +616,15 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		var _attr = variable_clone(attributes);
 		
 		_attr.custom_input_list = [];
-		for( var i = custom_input_index, n = ds_list_size(inputs); i < n; i++ ) {
-			if(struct_has(inputs[| i], "from"))
-				array_push(_attr.custom_input_list, inputs[| i].from.node_id);
+		for( var i = custom_input_index, n = array_length(inputs); i < n; i++ ) {
+			if(struct_has(inputs[i], "from"))
+				array_push(_attr.custom_input_list, inputs[i].from.node_id);
 		}
 		
 		_attr.custom_output_list = [];
-		for( var i = custom_output_index, n = ds_list_size(outputs); i < n; i++ ) {
-			if(struct_has(outputs[| i], "from"))
-				array_push(_attr.custom_output_list , outputs[| i].from.node_id);
+		for( var i = custom_output_index, n = array_length(outputs); i < n; i++ ) {
+			if(struct_has(outputs[i], "from"))
+				array_push(_attr.custom_output_list , outputs[i].from.node_id);
 		}
 		
 		return _attr;
@@ -636,25 +636,25 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		if(LOADING_VERSION < 11690) {
 			var pr = ds_priority_create();
 			
-			for( var i = ds_list_size(inputs) - 1; i >= custom_input_index; i-- ) {
-				if(!struct_has(inputs[| i].attributes, "input_priority")) continue;
+			for( var i = array_length(inputs) - 1; i >= custom_input_index; i-- ) {
+				if(!struct_has(inputs[i].attributes, "input_priority")) continue;
 				
-				var _pri = inputs[| i].attributes.input_priority;
-				ds_priority_add(pr, inputs[| i], _pri);
-				ds_list_delete(inputs, i);
+				var _pri = inputs[i].attributes.input_priority;
+				ds_priority_add(pr, inputs[i], _pri);
+				array_delete(inputs, i, 1);
 			}
 			
-			repeat(ds_priority_size(pr)) ds_list_add(inputs, ds_priority_delete_min(pr));
+			repeat(ds_priority_size(pr)) array_push(inputs, ds_priority_delete_min(pr));
 			
-			for( var i = ds_list_size(outputs) - 1; i >= custom_output_index; i-- ) {
-				if(!struct_has(outputs[| i].attributes, "output_priority")) continue;
+			for( var i = array_length(outputs) - 1; i >= custom_output_index; i-- ) {
+				if(!struct_has(outputs[i].attributes, "output_priority")) continue;
 				
-				var _pri = outputs[| i].attributes.output_priority;
-				ds_priority_add(pr, outputs[| i], _pri);
-				ds_list_delete(outputs, i);
+				var _pri = outputs[i].attributes.output_priority;
+				ds_priority_add(pr, outputs[i], _pri);
+				array_delete(outputs, i, 1);
 			}
 			
-			repeat(ds_priority_size(pr)) ds_list_add(outputs, ds_priority_delete_min(pr));
+			repeat(ds_priority_size(pr)) array_push(outputs, ds_priority_delete_min(pr));
 			
 			ds_priority_destroy(pr);
 			return;
@@ -669,13 +669,13 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			for( var i = 0, n = array_length(_ilist); i < n; i++ ) 
 				_ilist[i] = ds_map_try_get(APPEND_MAP, _ilist[i], _ilist[i]);
 			
-			for( var i = ds_list_size(inputs) - 1; i >= custom_input_index; i-- ) {
-				if(!struct_has(inputs[| i], "from")) continue;
+			for( var i = array_length(inputs) - 1; i >= custom_input_index; i-- ) {
+				if(!struct_has(inputs[i], "from")) continue;
 				
-				var _frNode = inputs[| i].from.node_id;
+				var _frNode = inputs[i].from.node_id;
 				if(array_exists(_ilist, _frNode)) {
-					_inarr[$ _frNode] = inputs[| i];
-					ds_list_delete(inputs, i);
+					_inarr[$ _frNode] = inputs[i];
+					array_delete(inputs, i, 1);
 				}
 			}
 			
@@ -683,8 +683,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 				if(!struct_has(_inarr, _ilist[i])) continue;
 				
 				var _inJunc = _inarr[$ _ilist[i]];
-				_inJunc.index = ds_list_size(inputs);
-				ds_list_add(inputs, _inJunc);
+				_inJunc.index = array_length(inputs);
+				array_push(inputs, _inJunc);
 			}
 			
 		}
@@ -697,13 +697,13 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			for( var i = 0, n = array_length(_ilist); i < n; i++ ) 
 				_ilist[i] = ds_map_try_get(APPEND_MAP, _ilist[i], _ilist[i]);
 			
-			for( var i = ds_list_size(outputs) - 1; i >= custom_output_index; i-- ) {
-				if(!struct_has(outputs[| i], "from")) continue;
+			for( var i = array_length(outputs) - 1; i >= custom_output_index; i-- ) {
+				if(!struct_has(outputs[i], "from")) continue;
 				
-				var _frNode = outputs[| i].from.node_id;
+				var _frNode = outputs[i].from.node_id;
 				if(array_exists(_ilist, _frNode)) {
-					_inarr[$ _frNode] = outputs[| i];
-					ds_list_delete(outputs, i);
+					_inarr[$ _frNode] = outputs[i];
+					array_delete(outputs, i, 1);
 				}
 			}
 			
@@ -711,8 +711,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 				if(!struct_has(_inarr, _ilist[i])) continue;
 				
 				var _outJunc = _inarr[$ _ilist[i]];
-				_outJunc.index = ds_list_size(outputs);
-				ds_list_add(outputs, _outJunc);
+				_outJunc.index = array_length(outputs);
+				array_push(outputs, _outJunc);
 			}
 			
 		}

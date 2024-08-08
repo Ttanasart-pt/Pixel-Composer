@@ -6,21 +6,21 @@ function Node_Strand_Render_Texture(_x, _y, _group = noone) : Node(_x, _y, _grou
 	
 	manual_ungroupable	 = false;
 	
-	inputs[| 0] = nodeValue_Dimension(self);
+	inputs[0] = nodeValue_Dimension(self);
 	
-	inputs[| 1] = nodeValue("Strand", self, JUNCTION_CONNECT.input, VALUE_TYPE.strands, noone)
+	inputs[1] = nodeValue("Strand", self, JUNCTION_CONNECT.input, VALUE_TYPE.strands, noone)
 		.setVisible(true, true);
 	
-	inputs[| 2] = nodeValue_Range("Thickness", self, [ 8, 8 ], { linked : true });
+	inputs[2] = nodeValue_Range("Thickness", self, [ 8, 8 ], { linked : true });
 	
-	inputs[| 3] = nodeValue_Gradient("Random color", self, new gradientObject(cola(c_white)));
+	inputs[3] = nodeValue_Gradient("Random color", self, new gradientObject(cola(c_white)));
 	
-	inputs[| 4] = nodeValue_Surface("Texture", self);
+	inputs[4] = nodeValue_Surface("Texture", self);
 	
-	inputs[| 5] = nodeValue_Float("Seed", self, seed_random(6))
-		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 5].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
+	inputs[5] = nodeValue_Float("Seed", self, seed_random(6))
+		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[5].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 5, 
 		["Output",  false], 0,
@@ -51,15 +51,15 @@ function Node_Strand_Render_Texture(_x, _y, _group = noone) : Node(_x, _y, _grou
 		var _tex = getInputData(4);
 		var _sed = getInputData(5);
 		
-		var _surf = outputs[| 0].getValue();
+		var _surf = outputs[0].getValue();
 		_surf = surface_verify(_surf, _dim[0], _dim[1]);
-		outputs[| 0].setValue(_surf);
+		outputs[0].setValue(_surf);
 		
 		if(_str == noone) 
 			return;
 		if(!is_array(_str)) 
 			_str = [ _str ];
-		if(inputs[| 4].value_from == noone) 
+		if(inputs[4].value_from == noone) 
 			return;
 			
 		if(!is_array(_tex)) _tex = [ _tex ];

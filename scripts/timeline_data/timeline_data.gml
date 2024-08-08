@@ -120,7 +120,7 @@ function timelineItemNode(node) : timelineItem() constructor {
 	}
 	
 	static drawDopesheetOutput = function(_x, _y, _s, _msx, _msy) { return;
-		var _surf = node.outputs[| 0].getValue();
+		var _surf = node.outputs[0].getValue();
 		if(!is_surface(_surf)) return;
 		
 		var _h  = h - 2;

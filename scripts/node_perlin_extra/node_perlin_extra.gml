@@ -2,59 +2,59 @@ function Node_Perlin_Extra(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 	name   = "Extra Perlins";
 	shader = sh_perlin_extra;
 	
-	inputs[| 1] = nodeValue_Vector("Position", self, [ 0, 0 ])
+	inputs[1] = nodeValue_Vector("Position", self, [ 0, 0 ])
 		.setUnitRef(function(index) { return getDimension(index); });
 		addShaderProp(SHADER_UNIFORM.float, "position");
 		
-	inputs[| 2] = nodeValue_Vector("Scale", self, [ 4, 4 ])
+	inputs[2] = nodeValue_Vector("Scale", self, [ 4, 4 ])
 		.setMappable(13);
 		addShaderProp(SHADER_UNIFORM.float, "scale");
 	
-	inputs[| 3] = nodeValue_Int("Iteration", self, 2);
+	inputs[3] = nodeValue_Int("Iteration", self, 2);
 		addShaderProp(SHADER_UNIFORM.integer, "iteration");
 	
-	inputs[| 4] = nodeValue_Bool("Tile", self, true, "Tiling only works with integer scale, and some effect type doesn't support tiling.");
+	inputs[4] = nodeValue_Bool("Tile", self, true, "Tiling only works with integer scale, and some effect type doesn't support tiling.");
 		addShaderProp(SHADER_UNIFORM.integer, "tile");
 			
-	inputs[| 5] = nodeValue_Float("Seed", self, seed_random(6))
-		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 5].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
+	inputs[5] = nodeValue_Float("Seed", self, seed_random(6))
+		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[5].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 		addShaderProp(SHADER_UNIFORM.float, "seed");
 		
-	inputs[| 6] = nodeValue_Enum_Button("Color mode", self,  0, [ "Greyscale", "RGB", "HSV" ]);
+	inputs[6] = nodeValue_Enum_Button("Color mode", self,  0, [ "Greyscale", "RGB", "HSV" ]);
 		addShaderProp(SHADER_UNIFORM.integer, "colored");
 	
-	inputs[| 7] = nodeValue_Slider_Range("Color R range", self, [ 0, 1 ]);
+	inputs[7] = nodeValue_Slider_Range("Color R range", self, [ 0, 1 ]);
 		addShaderProp(SHADER_UNIFORM.float, "colorRanR");
 	
-	inputs[| 8] = nodeValue_Slider_Range("Color G range", self, [ 0, 1 ]);
+	inputs[8] = nodeValue_Slider_Range("Color G range", self, [ 0, 1 ]);
 		addShaderProp(SHADER_UNIFORM.float, "colorRanG");
 	
-	inputs[| 9] = nodeValue_Slider_Range("Color B range", self, [ 0, 1 ]);
+	inputs[9] = nodeValue_Slider_Range("Color B range", self, [ 0, 1 ]);
 		addShaderProp(SHADER_UNIFORM.float, "colorRanB");
 	
-	inputs[| 10] = nodeValue_Enum_Scroll("Noise type", self,  0, [ "Absolute worley", "Fluid", "Noisy", "Camo", "Blocky", "Max", "Vine" ]);
+	inputs[10] = nodeValue_Enum_Scroll("Noise type", self,  0, [ "Absolute worley", "Fluid", "Noisy", "Camo", "Blocky", "Max", "Vine" ]);
 		addShaderProp(SHADER_UNIFORM.integer, "type");
 		
-	inputs[| 11] = nodeValue_Float("Parameter A", self, 0)
+	inputs[11] = nodeValue_Float("Parameter A", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(14);
 		addShaderProp(SHADER_UNIFORM.float, "paramA");
 		
-	inputs[| 12] = nodeValue_Float("Parameter B", self, 1)
+	inputs[12] = nodeValue_Float("Parameter B", self, 1)
 		.setMappable(15);
 		addShaderProp(SHADER_UNIFORM.float, "paramB");
 		
 	//////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 13] = nodeValueMap("Scale map", self);			addShaderProp();
+	inputs[13] = nodeValueMap("Scale map", self);			addShaderProp();
 	
-	inputs[| 14] = nodeValueMap("Parameter A map", self);	addShaderProp();
+	inputs[14] = nodeValueMap("Parameter A map", self);	addShaderProp();
 	
-	inputs[| 15] = nodeValueMap("Parameter B map", self);	addShaderProp();
+	inputs[15] = nodeValueMap("Parameter B map", self);	addShaderProp();
 	
 	//////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 16] = nodeValue_Rotation("Rotation", self, 0);
+	inputs[16] = nodeValue_Rotation("Rotation", self, 0);
 		addShaderProp(SHADER_UNIFORM.float, "rotation");
 			
 	input_display_list = [
@@ -65,7 +65,7 @@ function Node_Perlin_Extra(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _hov = false;
-		var  hv  = inputs[| 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= hv;
+		var  hv  = inputs[1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= hv;
 		
 		return _hov;
 	}
@@ -74,19 +74,19 @@ function Node_Perlin_Extra(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 		var _col = getInputData(6);
 		var _typ = getInputData(10);
 		
-		inputs[| 7].setVisible(_col != 0);
-		inputs[| 8].setVisible(_col != 0);
-		inputs[| 9].setVisible(_col != 0);
+		inputs[7].setVisible(_col != 0);
+		inputs[8].setVisible(_col != 0);
+		inputs[9].setVisible(_col != 0);
 		
-		inputs[| 7].name = _col == 1? "Color R range" : "Color H range";
-		inputs[| 8].name = _col == 1? "Color G range" : "Color S range";
-		inputs[| 9].name = _col == 1? "Color B range" : "Color V range";
+		inputs[7].name = _col == 1? "Color R range" : "Color H range";
+		inputs[8].name = _col == 1? "Color G range" : "Color S range";
+		inputs[9].name = _col == 1? "Color B range" : "Color V range";
 		
-		inputs[| 11].setVisible(_typ > 0);
-		inputs[| 12].setVisible(false);
+		inputs[11].setVisible(_typ > 0);
+		inputs[12].setVisible(false);
 		
-		inputs[|  2].mappableStep();
-		inputs[| 11].mappableStep();
-		inputs[| 12].mappableStep();
+		inputs[ 2].mappableStep();
+		inputs[11].mappableStep();
+		inputs[12].mappableStep();
 	} #endregion
 }

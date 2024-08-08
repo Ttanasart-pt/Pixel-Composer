@@ -7,13 +7,13 @@ function Node_Iterator_Input(_x, _y, _group = noone) : Node_Group_Input(_x, _y, 
 	manual_ungroupable	 = false;
 	setDimension(96, 48);
 	
-	outputs[| 0].getValueDefault = method(outputs[| 0], outputs[| 0].getValueRecursive); //Get value from outside loop
+	outputs[0].getValueDefault = method(outputs[0], outputs[0].getValueRecursive); //Get value from outside loop
 	
-	outputs[| 0].getValueRecursive = function(arr) {
+	outputs[0].getValueRecursive = function(arr) {
 		if(!struct_has(group, "iterated"))
-			return outputs[| 0].getValueDefault(arr);
+			return outputs[0].getValueDefault(arr);
 		
-		var _to = outputs[| 1].getJunctionTo();
+		var _to = outputs[1].getJunctionTo();
 		
 		// Not connect to any loop output
 		if(array_empty(_to)) {
@@ -26,7 +26,7 @@ function Node_Iterator_Input(_x, _y, _group = noone) : Node_Group_Input(_x, _y, 
 		
 		// First iteration, get value from outside
 		if(_node_output == noone || group.iterated == 0) {
-			outputs[| 0].getValueDefault(arr);
+			outputs[0].getValueDefault(arr);
 			arr[@ 0] = variable_clone(arr[@ 0]);
 			return;
 		}
@@ -36,6 +36,6 @@ function Node_Iterator_Input(_x, _y, _group = noone) : Node_Group_Input(_x, _y, 
 		arr[@ 1] = inParent;
 	}
 	
-	outputs[| 1] = nodeValue_Output("Loop entrance", self, VALUE_TYPE.node, 0)
+	outputs[1] = nodeValue_Output("Loop entrance", self, VALUE_TYPE.node, 0)
 		.nonForward();
 }

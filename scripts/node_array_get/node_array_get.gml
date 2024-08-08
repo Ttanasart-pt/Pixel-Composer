@@ -2,24 +2,24 @@ function Node_Array_Get(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	name = "Array Get";
 	setDimension(96, 32 + 24);
 	
-	inputs[| 0] = nodeValue("Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0)
+	inputs[0] = nodeValue("Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue_Int("Index", self, 0)
+	inputs[1] = nodeValue_Int("Index", self, 0)
 		.setVisible(true, true);
 	
-	inputs[| 2] = nodeValue_Enum_Scroll("Overflow", self, 0, [ "Clamp", "Loop", "Ping Pong" ])
+	inputs[2] = nodeValue_Enum_Scroll("Overflow", self, 0, [ "Clamp", "Loop", "Ping Pong" ])
 		.rejectArray();
 	
-	outputs[| 0] = nodeValue_Output("Value", self, VALUE_TYPE.any, 0);
+	outputs[0] = nodeValue_Output("Value", self, VALUE_TYPE.any, 0);
 	
 	static step = function() {
-		inputs[| 0].setType(VALUE_TYPE.any);
-		outputs[| 0].setType(VALUE_TYPE.any);
+		inputs[0].setType(VALUE_TYPE.any);
+		outputs[0].setType(VALUE_TYPE.any);
 		
-		if(inputs[| 0].value_from != noone) {
-			inputs[| 0].setType(inputs[| 0].value_from.type);
-			outputs[| 0].setType(inputs[| 0].type);
+		if(inputs[0].value_from != noone) {
+			inputs[0].setType(inputs[0].value_from.type);
+			outputs[0].setType(inputs[0].type);
 		}
 	}
 	
@@ -64,7 +64,7 @@ function Node_Array_Get(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		} else 
 			res = getArray(_arr, index, _ovf);
 		
-		outputs[| 0].setValue(res);
+		outputs[0].setValue(res);
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

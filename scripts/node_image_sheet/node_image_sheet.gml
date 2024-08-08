@@ -1,27 +1,27 @@
 function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Splice Spritesheet";
 	
-	inputs[| 0] = nodeValue_Surface("Surface in", self);
+	inputs[0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1]  = nodeValue_Vector("Sprite size", self, [ 32, 32 ]);
+	inputs[1]  = nodeValue_Vector("Sprite size", self, [ 32, 32 ]);
 	
-	inputs[| 2]  = nodeValue_Int("Row", self, 1); //unused
-	inputs[| 3]  = nodeValue_Vector("Amount", self, [ 1, 1 ]);
+	inputs[2]  = nodeValue_Int("Row", self, 1); //unused
+	inputs[3]  = nodeValue_Vector("Amount", self, [ 1, 1 ]);
 	
-	inputs[| 4]  = nodeValue_Vector("Offset", self, [ 0, 0 ]);
+	inputs[4]  = nodeValue_Vector("Offset", self, [ 0, 0 ]);
 	
-	inputs[| 5]  = nodeValue_Vector("Spacing", self, [ 0, 0 ]);
+	inputs[5]  = nodeValue_Vector("Spacing", self, [ 0, 0 ]);
 	
-	inputs[| 6]  = nodeValue_Padding("Padding", self, [0, 0, 0, 0]);
+	inputs[6]  = nodeValue_Padding("Padding", self, [0, 0, 0, 0]);
 	
-	inputs[| 7]  = nodeValue_Enum_Scroll("Output", self,  1, [ "Animation", "Array" ]);
+	inputs[7]  = nodeValue_Enum_Scroll("Output", self,  1, [ "Animation", "Array" ]);
 	
-	inputs[| 8]  = nodeValue_Float("Animation speed", self, 1);
+	inputs[8]  = nodeValue_Float("Animation speed", self, 1);
 	
-	inputs[| 9]  = nodeValue_Enum_Scroll("Main Axis", self,  0, [ new scrollItem("Horizontal", s_node_alignment, 0), 
+	inputs[9]  = nodeValue_Enum_Scroll("Main Axis", self,  0, [ new scrollItem("Horizontal", s_node_alignment, 0), 
 												 new scrollItem("Vertical",   s_node_alignment, 1), ]);
 	
-	inputs[| 10] = nodeValue_Trigger("Auto fill", self, false, "Automatically set amount based on sprite size.")
+	inputs[10] = nodeValue_Trigger("Auto fill", self, false, "Automatically set amount based on sprite size.")
 		.setDisplay(VALUE_DISPLAY.button, { name: "Auto fill", UI : true, onClick: function() { #region
 			var _sur = getInputData(0);
 			if(!is_surface(_sur) || _sur == DEF_SURFACE) return;
@@ -38,23 +38,23 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			var fill_w = floor((ww - _offs[0]) / sh_w);
 			var fill_h = floor((hh - _offs[1]) / sh_h);
 			
-			inputs[| 3].setValue([ fill_w, fill_h ]);
+			inputs[3].setValue([ fill_w, fill_h ]);
 		
 			doUpdate();
 		} }); #endregion
 		
-	inputs[| 11] = nodeValue_Trigger("Sync animation", self, false )
+	inputs[11] = nodeValue_Trigger("Sync animation", self, false )
 		.setDisplay(VALUE_DISPLAY.button, { name: "Sync frames", UI : true, onClick: function() { 
-			var _atl = outputs[| 1].getValue();
+			var _atl = outputs[1].getValue();
 			var _spd = getInputData(8);
 			TOTAL_FRAMES = max(1, _spd == 0? 1 : ceil(array_length(_atl) / _spd));
 		} });
 		
-	inputs[| 12] = nodeValue_Bool("Filter empty output", self, false);
+	inputs[12] = nodeValue_Bool("Filter empty output", self, false);
 		
-	inputs[| 13] = nodeValue_Enum_Scroll("Filtered Pixel", self,  0, [ "Transparent", "Color" ]);
+	inputs[13] = nodeValue_Enum_Scroll("Filtered Pixel", self,  0, [ "Transparent", "Color" ]);
 	
-	inputs[| 14] = nodeValue_Color("Filtered Color", self, c_black)
+	inputs[14] = nodeValue_Color("Filtered Color", self, c_black)
 	
 	input_display_list = [
 		["Sprite", false],	0, 1, 6, 
@@ -63,9 +63,9 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		["Filter Empty", true, 12], 13, 14, 
 	];
 	
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue_Output("Atlas Data", self, VALUE_TYPE.surface, [])
+	outputs[1] = nodeValue_Output("Atlas Data", self, VALUE_TYPE.surface, [])
 		.setArrayDepth(1);
 	
 	attribute_surface_depth();
@@ -215,7 +215,7 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			
 				if(mouse_release(mb_left)) {
 					drag_type = 0;
-					inputs[| 4].setValue(off);
+					inputs[4].setValue(off);
 				}
 			} else if(drag_type == 2) {
 				var _dx = value_snap(round(abs((_mx - drag_mx) / _s)), _snx);
@@ -231,7 +231,7 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				
 				if(mouse_release(mb_left)) {
 					drag_type = 0;
-					inputs[| 1].setValue(dim);
+					inputs[1].setValue(dim);
 				}
 			} else if(drag_type == 3) {
 				var _col = floor((abs(_mx - drag_mx) / _s - _spc[0]) / (__dim[0] + _spc[0]));
@@ -239,7 +239,7 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				
 				if(mouse_release(mb_left)) {
 					drag_type = 0;
-					inputs[| 3].setValue(curr_amo);
+					inputs[3].setValue(curr_amo);
 				}
 			} else if(drag_type == 4) {
 				var _row = floor((abs(_my - drag_my) / _s - _spc[1]) / (__dim[1] + _spc[1]));
@@ -247,7 +247,7 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				
 				if(mouse_release(mb_left)) {
 					drag_type = 0;
-					inputs[| 3].setValue(curr_amo);
+					inputs[3].setValue(curr_amo);
 				}
 			}
 						
@@ -279,9 +279,9 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _out  = getInputData(7);
 		var _flty = getInputData(13);
 		
-		inputs[| 11].setVisible(!_out);
-		inputs[|  8].setVisible(!_out);
-		inputs[| 14].setVisible(_flty);
+		inputs[11].setVisible(!_out);
+		inputs[ 8].setVisible(!_out);
+		inputs[14].setVisible(_flty);
 	}
 	
 	static spliceSprite = function() {
@@ -290,7 +290,7 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		spliceSurf  = _inSurf;
 		
-		var _outSurf = outputs[| 0].getValue();
+		var _outSurf = outputs[0].getValue();
 		var _out	 = getInputData(7);
 		
 		var _dim	= getInputData(1);
@@ -400,8 +400,8 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		atls_array = array_create(_arrAmo);
 		array_copy(atls_array, 0, _atl, 0, _arrAmo);
 		
-		if(_out == 1) outputs[| 0].setValue(surf_array);
-		outputs[| 1].setValue(atls_array);
+		if(_out == 1) outputs[0].setValue(surf_array);
+		outputs[1].setValue(atls_array);
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
@@ -418,7 +418,7 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		if(array_length(surf_array)) {
 			var ind = safe_mod(CURRENT_FRAME * _spd, array_length(surf_array));
-			outputs[| 0].setValue(array_safe_get_fast(surf_array, ind));
+			outputs[0].setValue(array_safe_get_fast(surf_array, ind));
 		}
 	}
 }

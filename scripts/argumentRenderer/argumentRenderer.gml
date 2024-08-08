@@ -9,20 +9,20 @@ function argumentRenderer(_typeArray = []) {
 		var hh = ui(8);
 		var _th = TEXTBOX_HEIGHT + ui(4);
 		
-		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
-			var _jType = inputs[| i + 1];
+		for( var i = input_fix_len; i < array_length(inputs); i += data_length ) {
+			var _jType = inputs[i + 1];
 			var _h = 0;
 			
 			_jType.editWidget.setFocusHover(_focus, _hover);
 			_jType.editWidget.draw(tx, ty, ui(128), _th, _jType.display_data.data[_jType.showValue()], _m, argument_renderer.rx, argument_renderer.ry);
 			
-			var _jName = inputs[| i + 0];
+			var _jName = inputs[i + 0];
 			_jName.editWidget.setFocusHover(_focus, _hover);
 			_jName.editWidget.draw(tx + ui(128 + 8), ty, _w - ui(128 + 8), _th, _jName.showValue(), _m, _jName.display_type);
 			
 			_h += _th + ui(8);
 			
-			var _jValue = inputs[| i + 2];
+			var _jValue = inputs[i + 2];
 			if(argument_renderer.showValue && _jValue.editWidget != noone) {
 				draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text_sub);
 				draw_text_add(tx + ui(8), ty + _th + ui(8 + 6), __txt("Value"));
@@ -42,11 +42,11 @@ function argumentRenderer(_typeArray = []) {
 	});
 	
 	argument_renderer.register = function(parent = noone) {
-		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
-			inputs[| i + 1].editWidget.register(parent);
-			inputs[| i + 0].editWidget.register(parent);
-			if(inputs[| i + 2].editWidget != noone)
-				inputs[| i + 2].editWidget.register(parent);
+		for( var i = input_fix_len; i < array_length(inputs); i += data_length ) {
+			inputs[i + 1].editWidget.register(parent);
+			inputs[i + 0].editWidget.register(parent);
+			if(inputs[i + 2].editWidget != noone)
+				inputs[i + 2].editWidget.register(parent);
 		}
 	}
 	

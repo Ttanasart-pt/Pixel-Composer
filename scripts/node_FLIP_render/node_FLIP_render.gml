@@ -5,34 +5,34 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	manual_ungroupable = false;
 	
-	inputs[| 0] = nodeValue_Fdomain("Domain", self, noone)
+	inputs[0] = nodeValue_Fdomain("Domain", self, noone)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue_Float("Merge threshold", self, 0.75)
+	inputs[1] = nodeValue_Float("Merge threshold", self, 0.75)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 2] = nodeValue_Range("Lifespan", self, [ 0, 0 ], { linked : true });
+	inputs[2] = nodeValue_Range("Lifespan", self, [ 0, 0 ], { linked : true });
 	
-	inputs[| 3] = nodeValue_Float("Particle expansion", self, 20);
+	inputs[3] = nodeValue_Float("Particle expansion", self, 20);
 	
-	inputs[| 4] = nodeValue_Bool("Draw obstracles", self, true);
+	inputs[4] = nodeValue_Bool("Draw obstracles", self, true);
 	
-	inputs[| 5] = nodeValue_Surface("Fluid particle", self);
+	inputs[5] = nodeValue_Surface("Fluid particle", self);
 	
-	inputs[| 6] = nodeValue_Enum_Scroll("Render type", self,  0, [ new scrollItem("Particle", s_node_flip_render, 0), 
+	inputs[6] = nodeValue_Enum_Scroll("Render type", self,  0, [ new scrollItem("Particle", s_node_flip_render, 0), 
 												 new scrollItem("Line",     s_node_flip_render, 1), ] );
 	
-	inputs[| 7] = nodeValue_Bool("Threshold", self, true);
+	inputs[7] = nodeValue_Bool("Threshold", self, true);
 	
-	inputs[| 8] = nodeValue_Bool("Additive", self, true);
+	inputs[8] = nodeValue_Bool("Additive", self, true);
 	
-	inputs[| 9] = nodeValue_Slider_Range("Alpha", self, [ 1, 1 ]);
+	inputs[9] = nodeValue_Slider_Range("Alpha", self, [ 1, 1 ]);
 	
-	inputs[| 10] = nodeValue_Int("Segments", self, 1);
+	inputs[10] = nodeValue_Int("Segments", self, 1);
 	
-	inputs[| 11] = nodeValue_Gradient("Color Over Velocity", self, new gradientObject(cola(c_white)));
+	inputs[11] = nodeValue_Gradient("Color Over Velocity", self, new gradientObject(cola(c_white)));
 	
-	inputs[| 12] = nodeValue_Range("Velocity Map", self, [ 0, 10 ]);
+	inputs[12] = nodeValue_Range("Velocity Map", self, [ 0, 10 ]);
 	
 	input_display_list = [ 0, 5, 
 		["Rendering", false], 6, 10, 3, 4, 9, 
@@ -40,7 +40,7 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		["Post Processing", false], 8, 7, 1, 
 	];
 	
-	outputs[| 0] = nodeValue_Output("Rendered", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Rendered", self, VALUE_TYPE.surface, noone);
 	
 	seed = irandom_range(100000, 999999);
 	temp_surface = [ noone ];
@@ -83,10 +83,10 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _typ = getInputData(6);
 		var _thr = getInputData(7);
 		
-		inputs[|  1].setVisible(_typ == 0 && _thr);
-		inputs[|  3].setVisible(_typ == 0);
-		inputs[|  5].setVisible(_typ == 0, _typ == 0);
-		inputs[| 10].setVisible(_typ == 1);
+		inputs[ 1].setVisible(_typ == 0 && _thr);
+		inputs[ 3].setVisible(_typ == 0);
+		inputs[ 5].setVisible(_typ == 0, _typ == 0);
+		inputs[10].setVisible(_typ == 1);
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
@@ -109,7 +109,7 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _cvl = getInputData(11);
 		var _vlr = getInputData(12);
 		
-		var _outSurf = outputs[| 0].getValue();
+		var _outSurf = outputs[0].getValue();
 		var _maxpart = domain.maxParticles;
 		var _padd    = domain.particleSize;
 		var _ww = domain.width  - _padd * 2;
@@ -118,7 +118,7 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		_outSurf        = surface_verify(_outSurf,        _ww, _hh);
 		temp_surface[0] = surface_verify(temp_surface[0], _ww, _hh);
 		
-		outputs[| 0].setValue(_outSurf);		
+		outputs[0].setValue(_outSurf);		
 		
 		var _x, _y, _px, _py, _r, _l, _a, _v, _sx, _sy;
 		var _rad = domain.particleRadius * _exp;

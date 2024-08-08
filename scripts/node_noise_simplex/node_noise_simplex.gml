@@ -1,34 +1,34 @@
 function Node_Noise_Simplex(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Simplex Noise";
 	
-	inputs[| 0] = nodeValue_Dimension(self);
+	inputs[0] = nodeValue_Dimension(self);
 	
-	inputs[| 1] = nodeValue_Vector("Position", self, [ 0, 0, 0 ] );
+	inputs[1] = nodeValue_Vector("Position", self, [ 0, 0, 0 ] );
 	
-	inputs[| 2] = nodeValue_Vector("Scale", self, [ 1, 1 ] )
+	inputs[2] = nodeValue_Vector("Scale", self, [ 1, 1 ] )
 		.setMappable(8);
 	
-	inputs[| 3] = nodeValue_Int("Iteration", self, 1 )
+	inputs[3] = nodeValue_Int("Iteration", self, 1 )
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] })
 		.setMappable(9);
 	
-	inputs[| 4] = nodeValue_Enum_Button("Color mode", self,  0, [ "Greyscale", "RGB", "HSV" ]);
+	inputs[4] = nodeValue_Enum_Button("Color mode", self,  0, [ "Greyscale", "RGB", "HSV" ]);
 	
-	inputs[| 5] = nodeValue_Slider_Range("Color R range", self, [ 0, 1 ]);
+	inputs[5] = nodeValue_Slider_Range("Color R range", self, [ 0, 1 ]);
 	
-	inputs[| 6] = nodeValue_Slider_Range("Color G range", self, [ 0, 1 ]);
+	inputs[6] = nodeValue_Slider_Range("Color G range", self, [ 0, 1 ]);
 	
-	inputs[| 7] = nodeValue_Slider_Range("Color B range", self, [ 0, 1 ]);
+	inputs[7] = nodeValue_Slider_Range("Color B range", self, [ 0, 1 ]);
 	
 	//////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 8] = nodeValueMap("Scale map", self);
+	inputs[8] = nodeValueMap("Scale map", self);
 	
-	inputs[| 9] = nodeValueMap("Iteration map", self);
+	inputs[9] = nodeValueMap("Iteration map", self);
 	
 	//////////////////////////////////////////////////////////////////////////////////
 		
-	inputs[| 10] = nodeValue_Rotation("Rotation", self, 0);
+	inputs[10] = nodeValue_Rotation("Rotation", self, 0);
 		
 	input_display_list = [
 		["Output",	false], 0, 
@@ -36,23 +36,23 @@ function Node_Noise_Simplex(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		["Render",	false], 4, 5, 6, 7, 
 	];
 	
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	attribute_surface_depth();
 	
 	static step = function() { #region
 		var _col = getInputData(4);
 		
-		inputs[| 5].setVisible(_col != 0);
-		inputs[| 6].setVisible(_col != 0);
-		inputs[| 7].setVisible(_col != 0);
+		inputs[5].setVisible(_col != 0);
+		inputs[6].setVisible(_col != 0);
+		inputs[7].setVisible(_col != 0);
 		
-		inputs[| 5].name = _col == 1? "Color R range" : "Color H range";
-		inputs[| 6].name = _col == 1? "Color G range" : "Color S range";
-		inputs[| 7].name = _col == 1? "Color B range" : "Color V range";
+		inputs[5].name = _col == 1? "Color R range" : "Color H range";
+		inputs[6].name = _col == 1? "Color G range" : "Color S range";
+		inputs[7].name = _col == 1? "Color B range" : "Color V range";
 		
-		inputs[| 2].mappableStep();
-		inputs[| 3].mappableStep();
+		inputs[2].mappableStep();
+		inputs[3].mappableStep();
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
@@ -71,8 +71,8 @@ function Node_Noise_Simplex(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			shader_set_f("dimension", _dim);
 			shader_set_3("position",  _pos);
 			shader_set_f("rotation",  degtorad(_ang));
-			shader_set_f_map("scale",     _data[2], _data[8], inputs[| 2]);
-			shader_set_f_map("iteration", _data[3], _data[9], inputs[| 3]);
+			shader_set_f_map("scale",     _data[2], _data[8], inputs[2]);
+			shader_set_f_map("iteration", _data[3], _data[9], inputs[3]);
 			
 			shader_set_i("colored",   _col);
 			shader_set_2("colorRanR", _clr);
@@ -87,7 +87,7 @@ function Node_Noise_Simplex(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _hov = false;
-		var  hv  = inputs[| 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= hv;
+		var  hv  = inputs[1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= hv;
 		
 		return _hov;
 	}

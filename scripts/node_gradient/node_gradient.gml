@@ -1,59 +1,59 @@
 function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Draw Gradient";
 	
-	inputs[| 0] = nodeValue_Dimension(self);
+	inputs[0] = nodeValue_Dimension(self);
 	
-	inputs[| 1] = nodeValue_Gradient("Gradient", self, new gradientObject([ cola(c_black), cola(c_white) ]))
+	inputs[1] = nodeValue_Gradient("Gradient", self, new gradientObject([ cola(c_black), cola(c_white) ]))
 		.setMappable(15);
 	
-	inputs[| 2] = nodeValue_Enum_Scroll("Type", self,  0, [ new scrollItem("Linear",   s_node_gradient_type, 0),
+	inputs[2] = nodeValue_Enum_Scroll("Type", self,  0, [ new scrollItem("Linear",   s_node_gradient_type, 0),
 												 new scrollItem("Circular", s_node_gradient_type, 1),
 												 new scrollItem("Radial",   s_node_gradient_type, 2) ]);
 	
-	inputs[| 3] = nodeValue_Rotation("Angle", self, 0)
+	inputs[3] = nodeValue_Rotation("Angle", self, 0)
 		.setMappable(10);
 
-	inputs[| 4] = nodeValue_Float("Radius", self, .5)
+	inputs[4] = nodeValue_Float("Radius", self, .5)
 		.setMappable(11);
 		
-	inputs[| 5] = nodeValue_Float("Shift", self, 0)
+	inputs[5] = nodeValue_Float("Shift", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-2, 2, 0.01] })
 		.setMappable(12);
 	
-	inputs[| 6] = nodeValue_Vector("Center", self, [ 0.5, 0.5 ])
+	inputs[6] = nodeValue_Vector("Center", self, [ 0.5, 0.5 ])
 		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
 	
-	inputs[| 7] = nodeValue_Enum_Button("Loop", self,  0, [ "None", "Loop", "Pingpong" ]);
+	inputs[7] = nodeValue_Enum_Button("Loop", self,  0, [ "None", "Loop", "Pingpong" ]);
 	
-	inputs[| 8] = nodeValue_Surface("Mask", self);
+	inputs[8] = nodeValue_Surface("Mask", self);
 	
-	inputs[| 9] = nodeValue_Float("Scale", self, 1)
+	inputs[9] = nodeValue_Float("Scale", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 2, 0.01] })
 		.setMappable(13);
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 10] = nodeValueMap("Angle map", self);
+	inputs[10] = nodeValueMap("Angle map", self);
 	
-	inputs[| 11] = nodeValueMap("Radius map", self);
+	inputs[11] = nodeValueMap("Radius map", self);
 	
-	inputs[| 12] = nodeValueMap("Shift map", self);
+	inputs[12] = nodeValueMap("Shift map", self);
 	
-	inputs[| 13] = nodeValueMap("Scale map", self);
-	
-	//////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	inputs[| 14] = nodeValue_Bool("Uniform ratio", self, true);
+	inputs[13] = nodeValueMap("Scale map", self);
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 15] = nodeValueMap("Gradient map", self);
-	
-	inputs[| 16] = nodeValueGradientRange("Gradient map range", self, inputs[| 1]);
+	inputs[14] = nodeValue_Bool("Uniform ratio", self, true);
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	inputs[15] = nodeValueMap("Gradient map", self);
+	
+	inputs[16] = nodeValueGradientRange("Gradient map range", self, inputs[1]);
+	
+	//////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
 		["Output",		true],	0, 8, 
@@ -66,8 +66,8 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		PROCESSOR_OVERLAY_CHECK
 		var _hov = false;
-		var a = inputs[| 6].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);					active &= !a; _hov |= a;
-		var a = inputs[| 16].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, current_data[0]); active &= !a; _hov |= a;
+		var a = inputs[6].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);					active &= !a; _hov |= a;
+		var a = inputs[16].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, current_data[0]); active &= !a; _hov |= a;
 		
 		return _hov;
 	}
@@ -75,15 +75,15 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	static step = function() {
 		var _typ = getInputData(2);
 		
-		inputs[|  3].setVisible(_typ != 1);
-		inputs[|  4].setVisible(_typ == 1);
-		inputs[| 14].setVisible(_typ);
+		inputs[ 3].setVisible(_typ != 1);
+		inputs[ 4].setVisible(_typ == 1);
+		inputs[14].setVisible(_typ);
 		
-		inputs[| 1].mappableStep();
-		inputs[| 3].mappableStep();
-		inputs[| 4].mappableStep();
-		inputs[| 5].mappableStep();
-		inputs[| 9].mappableStep();
+		inputs[1].mappableStep();
+		inputs[3].mappableStep();
+		inputs[4].mappableStep();
+		inputs[5].mappableStep();
+		inputs[9].mappableStep();
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
@@ -97,7 +97,7 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
 		surface_set_shader(_outSurf, sh_gradient);
-			shader_set_gradient(_data[1], _data[15], _data[16], inputs[| 1]);
+			shader_set_gradient(_data[1], _data[15], _data[16], inputs[1]);
 			
 			shader_set_f("dimension",  _dim);
 			
@@ -106,10 +106,10 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			shader_set_i("type",   _typ);
 			shader_set_i("uniAsp", _uni);
 			
-			shader_set_f_map("angle",  _data[3], _data[10], inputs[| 3]);
-			shader_set_f_map("radius", _data[4], _data[11], inputs[| 4]);
-			shader_set_f_map("shift",  _data[5], _data[12], inputs[| 5]);
-			shader_set_f_map("scale",  _data[9], _data[13], inputs[| 9]);
+			shader_set_f_map("angle",  _data[3], _data[10], inputs[3]);
+			shader_set_f_map("radius", _data[4], _data[11], inputs[4]);
+			shader_set_f_map("shift",  _data[5], _data[12], inputs[5]);
+			shader_set_f_map("scale",  _data[9], _data[13], inputs[9]);
 			
 			if(is_surface(_msk)) draw_surface_stretched_ext(_msk, 0, 0, _dim[0], _dim[1], c_white, 1);
 			else                 draw_sprite_stretched_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], c_white, 1);

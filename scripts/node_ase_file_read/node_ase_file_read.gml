@@ -7,7 +7,7 @@ function Node_create_ASE_File_Read(_x, _y, _group = noone) {
 	}
 	
 	var node = new Node_ASE_File_Read(_x, _y, _group).skipDefault();
-	node.inputs[| 0].setValue(path);
+	node.inputs[0].setValue(path);
 	if(NODE_NEW_MANUAL) node.doUpdate();
 	
 	return node;
@@ -17,7 +17,7 @@ function Node_create_ASE_File_Read_path(_x, _y, path) {
 	if(!file_exists_empty(path)) return noone;
 	
 	var node = new Node_ASE_File_Read(_x, _y, PANEL_GRAPH.getCurrentContext()).skipDefault();
-	node.inputs[| 0].setValue(path);
+	node.inputs[0].setValue(path);
 	node.doUpdate();
 	
 	return node;	
@@ -29,23 +29,23 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	w = 128;
 	
-	inputs[| 0]  = nodeValue_Text("Path", self, "")
+	inputs[0]  = nodeValue_Text("Path", self, "")
 		.setDisplay(VALUE_DISPLAY.path_load, { filter: "Aseprite file|*.ase;*.aseprite" });
 		
-	inputs[| 1]  = nodeValue_Trigger("Generate layers", self, false )
+	inputs[1]  = nodeValue_Trigger("Generate layers", self, false )
 		.setDisplay(VALUE_DISPLAY.button, { name: "Generate", UI : true, onClick: function() { refreshLayers(); } });
 	
-	inputs[| 2]  = nodeValue_Text("Current tag", self, "");
+	inputs[2]  = nodeValue_Text("Current tag", self, "");
 	
-	inputs[| 3]  = nodeValue_Bool("Use cel dimension", self, false);
+	inputs[3]  = nodeValue_Bool("Use cel dimension", self, false);
 	
-	outputs[| 0] = nodeValue_Output("Output", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Output", self, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue_Output("Content", self, VALUE_TYPE.object, self);
+	outputs[1] = nodeValue_Output("Content", self, VALUE_TYPE.object, self);
 	
-	outputs[| 2] = nodeValue_Output("Path", self, VALUE_TYPE.path, "");
+	outputs[2] = nodeValue_Output("Path", self, VALUE_TYPE.path, "");
 	
-	outputs[| 3] = nodeValue_Output("Palette", self, VALUE_TYPE.color, [])
+	outputs[3] = nodeValue_Output("Palette", self, VALUE_TYPE.color, [])
 		.setDisplay(VALUE_DISPLAY.palette);
 	
 	hold_visibility = true;
@@ -140,7 +140,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				if(mouse_press(mb_left, _focus)) {
 					var _currTag = getInputData(2);
 					var _tagName = tag[$ "Name"];
-					inputs[| 2].setValue(_currTag == _tagName? "" : _tagName);
+					inputs[2].setValue(_currTag == _tagName? "" : _tagName);
 				}
 			}
 			
@@ -186,7 +186,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	first_update = false;
 	
 	on_drop_file = function(path) { 
-		inputs[| 0].setValue(path);
+		inputs[0].setValue(path);
 		doUpdate();
 		return true;
 	} 
@@ -207,8 +207,8 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			var _name  = _layer.name;
 			var _node  = noone;
 			
-			for( var j = 0; j < array_length(outputs[| 1].value_to); j++ ) {
-				var _targNode = outputs[| 1].value_to[j].node;
+			for( var j = 0; j < array_length(outputs[1].value_to); j++ ) {
+				var _targNode = outputs[1].value_to[j].node;
 				if(!_targNode.active) continue;
 				
 				if(_targNode.display_name == _name) {
@@ -221,8 +221,8 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				_node = nodeBuild("Node_ASE_layer", nx, ny + i * _nh);
 			
 			lvs[i] = _node;
-			lvs[i].inputs[| 0].setFrom(outputs[| 1]);
-			lvs[i].inputs[| 1].setValue(use_cel);
+			lvs[i].inputs[0].setFrom(outputs[1]);
+			lvs[i].inputs[1].setValue(use_cel);
 			lvs[i].setDisplayName(_name);
 		}
 	} 
@@ -271,7 +271,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 						for( var k = 0; k < array_length(plt); k++ )
 							array_push(p_arr, make_color_rgb(plt[k][0], plt[k][1], plt[k][2]));
 						
-						outputs[| 3].setValue(p_arr);
+						outputs[3].setValue(p_arr);
 						break;
 						
 					case 0x2004: //layer
@@ -333,7 +333,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var path        = path_get(getInputData(0));
 		var current_tag = getInputData(2);
 		
-		outputs[| 2].setValue(path);
+		outputs[2].setValue(path);
 		
 		if(path_current != path) updatePaths(path);
 		if(content == noone) return;
@@ -347,8 +347,8 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		}
 		
 		_tag_delay = 0;
-		for( var i = 0; i < ds_list_size(inputs[| 2].animator.values); i++ ) {
-			var kf = inputs[| 2].animator.values[| i];
+		for( var i = 0; i < array_length(inputs[2].animator.values); i++ ) {
+			var kf = inputs[2].animator.values[| i];
 			if(kf.time > CURRENT_FRAME) break;
 			_tag_delay = kf.time;
 		}
@@ -357,9 +357,9 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var ww  = content[$ "Width"];
 		var hh  = content[$ "Height"];
 		
-		var surf = outputs[| 0].getValue();
+		var surf = outputs[0].getValue();
 		    surf = surface_verify(surf, ww, hh);
-		outputs[| 0].setValue(surf);
+		outputs[0].setValue(surf);
 		
 		for (var i = 0, n = array_length(temp_surface); i < n; i++) {
 			temp_surface[i] = surface_verify(temp_surface[i], ww, hh);
@@ -413,6 +413,6 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		if(is_array(path)) path = array_safe_get(path, 0);
 		if(!file_exists_empty(path)) return;
 		
-		inputs[| 0].setValue(path); 
+		inputs[0].setValue(path); 
 	}
 }

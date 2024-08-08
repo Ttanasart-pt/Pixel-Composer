@@ -1,7 +1,7 @@
 function Node_Fn_Constant(_x, _y, _group = noone) : Node_Fn(_x, _y, _group) constructor {
 	name = "Constant";
 	
-	inputs[| inl + 0] = nodeValue_Float("Value", self, 0 );
+	inputs[inl + 0] = nodeValue_Float("Value", self, 0 );
 		
 	array_append(input_display_list, [
 		["Value",	false], inl + 0

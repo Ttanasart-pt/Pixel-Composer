@@ -135,7 +135,7 @@ function Panel_Array_Sequence(node) : PanelContent() constructor {
 				if(pHOVER && !_def && point_in_rectangle(msx, msy, _sx, _sy, _sx + _ns, _sy + _ns)) {
 					if(mouse_press(mb_left, pFOCUS)) {
 						_ord[i] = noone;
-						node.inputs[| 2].setValue(_ord);
+						node.inputs[2].setValue(_ord);
 						content_drag = _i;
 					}
 				}
@@ -157,7 +157,7 @@ function Panel_Array_Sequence(node) : PanelContent() constructor {
 				
 				if(mouse_release(mb_left, pFOCUS)) {
 					_ord = array_safe_set(_ord, frm, content_drag, noone);
-					node.inputs[| 2].setValue(_ord);
+					node.inputs[2].setValue(_ord);
 					content_drag = noone;
 				}
 			}
@@ -176,7 +176,7 @@ function Panel_Array_Sequence(node) : PanelContent() constructor {
 		if(len_stretching) {
 			var frm  = round((msx - sequence_x - _ns / 2) / _ns);
 			_ord = array_resize_fill(_ord, frm, noone);
-			node.inputs[| 2].setValue(_ord);
+			node.inputs[2].setValue(_ord);
 			
 			if(mouse_release(mb_left))
 				len_stretching = false;

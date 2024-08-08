@@ -25,19 +25,19 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	name = "MK Lens Flare";
 	batch_output = false;
 	
-	inputs[| 0] = nodeValue_Surface("Background", self);
+	inputs[0] = nodeValue_Surface("Background", self);
 	
-	inputs[| 1] = nodeValue_Vector("Origin", self, [ 0, 0 ])
+	inputs[1] = nodeValue_Vector("Origin", self, [ 0, 0 ])
 		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
 	
-	inputs[| 2] = nodeValue_Dimension(self);
+	inputs[2] = nodeValue_Dimension(self);
 		
-	inputs[| 3] = nodeValue_Float("Scale", self, 1)
+	inputs[3] = nodeValue_Float("Scale", self, 1)
 		
-	inputs[| 4] = nodeValue_Float("Alpha", self, 1)
+	inputs[4] = nodeValue_Float("Alpha", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 5] = nodeValue_Struct("Flares", self, [
+	inputs[5] = nodeValue_Struct("Flares", self, [
 																							new __FlarePart( FLARE_TYPE.circle,   0,  8,   0.75, 16, false, , [ 0, 1 ] ),
 																							new __FlarePart( FLARE_TYPE.circle,   0, 16,   0.5,  16, false, , [ 0, 1 ] ),
 																							new __FlarePart( FLARE_TYPE.star,     0, 14,   0.3,   8, true,  , [ 0.2, 0.8 ], 2, 0.85 ),
@@ -55,12 +55,12 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		.setArrayDepth(1)
 		.setArrayDynamic();
 		
-	inputs[| 6] = nodeValue_Vector("Focus", self, [ 0.5, 0.5 ])
+	inputs[6] = nodeValue_Vector("Focus", self, [ 0.5, 0.5 ])
 		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
 		
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 		
-	outputs[| 1] = nodeValue_Output("Light only", self, VALUE_TYPE.surface, noone);
+	outputs[1] = nodeValue_Output("Light only", self, VALUE_TYPE.surface, noone);
 	
 	static __frame = function(_x, _y, _w, _h, _m, _hover) {  
 		var _hv = point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h) && _hover;
@@ -84,13 +84,13 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	flare_draw_y = 0;
 	
 	function edit_flare_color(color) {
-		var _flares = inputs[| 5].getValue();
+		var _flares = inputs[5].getValue();
 		_flares[flare_color_editing].blend = color;
 		triggerRender();
 	}
 	
 	flare_builder = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { #region
-		var _flares = inputs[| 5].getValue();
+		var _flares = inputs[5].getValue();
 		var _amo = array_length(_flares);
 		
 		var _fx = _x;
@@ -261,7 +261,7 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		
 		if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, _focus, _hover, "", THEME.add_16, 0, COLORS._main_value_positive) == 2) {
 			array_push(_flares, new __FlarePart());
-			inputs[| 5].setValue(_flares);
+			inputs[5].setValue(_flares);
 			triggerRender();
 		}
 		
@@ -269,7 +269,7 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		
 		if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, _focus, _hover, "", THEME.minus_16, 0, COLORS._main_value_negative) == 2) {
 			array_delete(_flares, array_length(_flares) - 1, 1);
-			inputs[| 5].setValue(_flares);
+			inputs[5].setValue(_flares);
 			triggerRender();
 		}
 		
@@ -320,8 +320,8 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _hov = false;
-		var  hv  = inputs[| 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= hv;
-		var  hv  = inputs[| 6].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= hv;
+		var  hv  = inputs[1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= hv;
+		var  hv  = inputs[6].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= hv;
 		
 		return _hov;
 	}

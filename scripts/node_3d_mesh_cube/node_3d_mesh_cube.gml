@@ -2,24 +2,24 @@ function Node_3D_Mesh_Cube(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 	name = "3D Cube";
 	object_class = noone;
 	
-	inputs[| in_mesh + 0] = nodeValue_Bool("Material per side", self, false );
+	inputs[in_mesh + 0] = nodeValue_Bool("Material per side", self, false );
 	
-	inputs[| in_mesh + 1] = nodeValue_D3Material("Material", self, new __d3dMaterial())
+	inputs[in_mesh + 1] = nodeValue_D3Material("Material", self, new __d3dMaterial())
 		.setVisible(true, true);
 	
-	inputs[| in_mesh + 2] = nodeValue_D3Material("Material Bottom", self, new __d3dMaterial())
+	inputs[in_mesh + 2] = nodeValue_D3Material("Material Bottom", self, new __d3dMaterial())
 		.setVisible(true, true);
 	
-	inputs[| in_mesh + 3] = nodeValue_D3Material("Material Left", self, new __d3dMaterial())
+	inputs[in_mesh + 3] = nodeValue_D3Material("Material Left", self, new __d3dMaterial())
 		.setVisible(true, true);
 	
-	inputs[| in_mesh + 4] = nodeValue_D3Material("Material Right", self, new __d3dMaterial())
+	inputs[in_mesh + 4] = nodeValue_D3Material("Material Right", self, new __d3dMaterial())
 		.setVisible(true, true);
 	
-	inputs[| in_mesh + 5] = nodeValue_D3Material("Material Back", self, new __d3dMaterial())
+	inputs[in_mesh + 5] = nodeValue_D3Material("Material Back", self, new __d3dMaterial())
 		.setVisible(true, true);
 	
-	inputs[| in_mesh + 6] = nodeValue_D3Material("Material Front", self, new __d3dMaterial())
+	inputs[in_mesh + 6] = nodeValue_D3Material("Material Front", self, new __d3dMaterial())
 		.setVisible(true, true);
 	
 	input_display_list = [
@@ -35,13 +35,13 @@ function Node_3D_Mesh_Cube(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 	static step = function() { 
 		var _mat_side = getInputData(in_mesh + 0);
 		
-		inputs[| in_mesh + 1].name = _mat_side? "Material Top" : "Material";
-		inputs[| in_mesh + 1].setVisible(true, true);
-		inputs[| in_mesh + 2].setVisible(_mat_side, _mat_side);
-		inputs[| in_mesh + 3].setVisible(_mat_side, _mat_side);
-		inputs[| in_mesh + 4].setVisible(_mat_side, _mat_side);
-		inputs[| in_mesh + 5].setVisible(_mat_side, _mat_side);
-		inputs[| in_mesh + 6].setVisible(_mat_side, _mat_side);
+		inputs[in_mesh + 1].name = _mat_side? "Material Top" : "Material";
+		inputs[in_mesh + 1].setVisible(true, true);
+		inputs[in_mesh + 2].setVisible(_mat_side, _mat_side);
+		inputs[in_mesh + 3].setVisible(_mat_side, _mat_side);
+		inputs[in_mesh + 4].setVisible(_mat_side, _mat_side);
+		inputs[in_mesh + 5].setVisible(_mat_side, _mat_side);
+		inputs[in_mesh + 6].setVisible(_mat_side, _mat_side);
 	} 
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) { 

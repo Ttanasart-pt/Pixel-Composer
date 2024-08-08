@@ -3,17 +3,17 @@ function Node_Mesh_Create_Path(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	setDimension(96, 48);
 	
-	inputs[| 0] = nodeValue_PathNode("Path", self, noone)
+	inputs[0] = nodeValue_PathNode("Path", self, noone)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue_Int("Sample", self, 8);
+	inputs[1] = nodeValue_Int("Sample", self, 8);
 	
-	inputs[| 2] = nodeValue_Enum_Scroll("Algorithm", self,  0, [ "Ear Clipping", "Convex Fan", "Delaunay" ]);
+	inputs[2] = nodeValue_Enum_Scroll("Algorithm", self,  0, [ "Ear Clipping", "Convex Fan", "Delaunay" ]);
 	
-	outputs[| 0] = nodeValue_Output("Mesh", self, VALUE_TYPE.mesh, noone);
+	outputs[0] = nodeValue_Output("Mesh", self, VALUE_TYPE.mesh, noone);
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var mesh = outputs[| 0].getValue();
+		var mesh = outputs[0].getValue();
 		if(mesh == noone) return;
 		
 		draw_set_color(COLORS._main_accent);
@@ -53,7 +53,7 @@ function Node_Mesh_Create_Path(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		mesh.points    = points;
 		mesh.triangles = triangles;
 		
-		outputs[| 0].setValue(mesh);
+		outputs[0].setValue(mesh);
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

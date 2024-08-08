@@ -16,43 +16,43 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	name = "Dither";
 	
-	inputs[| 0] = nodeValue_Surface("Surface in", self);
+	inputs[0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue_Palette("Palette", self, array_clone(DEF_PALETTE));
+	inputs[1] = nodeValue_Palette("Palette", self, array_clone(DEF_PALETTE));
 	
-	inputs[| 2] = nodeValue_Enum_Scroll("Pattern", self,  0, [ "2 x 2 Bayer", "4 x 4 Bayer", "8 x 8 Bayer", "White Noise", "Custom" ]);
+	inputs[2] = nodeValue_Enum_Scroll("Pattern", self,  0, [ "2 x 2 Bayer", "4 x 4 Bayer", "8 x 8 Bayer", "White Noise", "Custom" ]);
 	
-	inputs[| 3] = nodeValue_Surface("Dither map", self)
+	inputs[3] = nodeValue_Surface("Dither map", self)
 		.setVisible(false);
 	
-	inputs[| 4] = nodeValue_Float("Contrast", self, 1)
+	inputs[4] = nodeValue_Float("Contrast", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 5, 0.1] });
 	
-	inputs[| 5] = nodeValue_Surface("Contrast map", self);
+	inputs[5] = nodeValue_Surface("Contrast map", self);
 	
-	inputs[| 6] = nodeValue_Enum_Button("Mode", self,  0, [ "Color", "Alpha" ]);
+	inputs[6] = nodeValue_Enum_Button("Mode", self,  0, [ "Color", "Alpha" ]);
 	
-	inputs[| 7] = nodeValue_Surface("Mask", self);
+	inputs[7] = nodeValue_Surface("Mask", self);
 	
-	inputs[| 8] = nodeValue_Float("Mix", self, 1)
+	inputs[8] = nodeValue_Float("Mix", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 9] = nodeValue_Bool("Active", self, true);
+	inputs[9] = nodeValue_Bool("Active", self, true);
 		active_index = 9;
 	
-	inputs[| 10] = nodeValue_Toggle("Channel", self, 0b1111, { data: array_create(4, THEME.inspector_channel) });
+	inputs[10] = nodeValue_Toggle("Channel", self, 0b1111, { data: array_create(4, THEME.inspector_channel) });
 	
 	__init_mask_modifier(7); // inputs 11, 12, 
 	
-	inputs[| 13] = nodeValue_Int("Seed", self, seed_random(6))
-		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 13].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
+	inputs[13] = nodeValue_Int("Seed", self, seed_random(6))
+		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[13].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 		
-	inputs[| 14] = nodeValue_Bool("Use palette", self, true);
+	inputs[14] = nodeValue_Bool("Use palette", self, true);
 	
-	inputs[| 15] = nodeValue_Int("Steps", self, 4)
+	inputs[15] = nodeValue_Int("Steps", self, 4)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [2, 16, 0.1] });
 	
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 9, 10, 13, 
 		["Surfaces", true], 0, 7, 8, 11, 12, 
@@ -70,12 +70,12 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _mode    = getInputData(6);
 		var _use_pal = getInputData(14);
 		
-		inputs[| 3].setVisible(_type == 4, _type == 4);
-		inputs[| 1].setVisible(_mode == 0 && _use_pal);
-		inputs[| 4].setVisible(_mode == 0);
-		inputs[| 5].setVisible(_mode == 0);
+		inputs[3].setVisible(_type == 4, _type == 4);
+		inputs[1].setVisible(_mode == 0 && _use_pal);
+		inputs[4].setVisible(_mode == 0);
+		inputs[5].setVisible(_mode == 0);
 		
-		inputs[| 15].setVisible(!_use_pal);
+		inputs[15].setVisible(!_use_pal);
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {

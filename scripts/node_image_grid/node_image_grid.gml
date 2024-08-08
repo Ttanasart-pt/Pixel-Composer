@@ -1,32 +1,32 @@
 function Node_Image_Grid(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Image Grid";
 	
-	inputs[| 0] = nodeValue_Enum_Scroll("Main Axis", self,  0, [ new scrollItem("Horizontal", s_node_alignment, 0), 
+	inputs[0] = nodeValue_Enum_Scroll("Main Axis", self,  0, [ new scrollItem("Horizontal", s_node_alignment, 0), 
 												 new scrollItem("Vertical",   s_node_alignment, 1) ])
 		.rejectArray();
 	
-	inputs[| 1] = nodeValue_Int("Column", self, 4)
+	inputs[1] = nodeValue_Int("Column", self, 4)
 		.setValidator(VV_min(1))
 		.rejectArray();
 	
-	inputs[| 2] = nodeValue_Vector("Spacing", self, [ 0, 0 ])
+	inputs[2] = nodeValue_Vector("Spacing", self, [ 0, 0 ])
 		.rejectArray();
 	
-	inputs[| 3] = nodeValue_Padding("Padding", self, [ 0, 0, 0, 0 ])
+	inputs[3] = nodeValue_Padding("Padding", self, [ 0, 0, 0, 0 ])
 		.rejectArray();
 	
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue_Output("Atlas data", self, VALUE_TYPE.surface, []);
+	outputs[1] = nodeValue_Output("Atlas data", self, VALUE_TYPE.surface, []);
 	
 	temp_surface = [ noone, noone ];
 	
 	static createNewInput = function() {
-		var index = ds_list_size(inputs);
-		inputs[| index] = nodeValue_Surface("Input", self)
+		var index = array_length(inputs);
+		inputs[index] = nodeValue_Surface("Input", self)
 			.setVisible(true, true);
 			
-		return inputs[| index];
+		return inputs[index];
 	} setDynamicInput(1, true, VALUE_TYPE.surface);
 	
 	attribute_surface_depth();
@@ -41,7 +41,7 @@ function Node_Image_Grid(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		var hh = 0;
 		var surfs = [];
 		
-		for( var i = input_fix_len; i < ds_list_size(inputs); i++ ) {
+		for( var i = input_fix_len; i < array_length(inputs); i++ ) {
 			var _surf = getInputData(i);
 			if(!is_array(_surf)) _surf = [ _surf ];
 			
@@ -87,7 +87,7 @@ function Node_Image_Grid(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		ww += _padd[PADDING.left] + _padd[PADDING.right]; 
 		hh += _padd[PADDING.top] + _padd[PADDING.bottom]; 
 		
-		var _outSurf = outputs[| 0].getValue();
+		var _outSurf = outputs[0].getValue();
 		_outSurf     = surface_verify(_outSurf, ww, hh, attrDepth());
 		
 		temp_surface[0] = surface_verify(temp_surface[0], ww, hh, attrDepth());
@@ -140,8 +140,8 @@ function Node_Image_Grid(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			draw_surface_safe(temp_surface[ppind]);
 		surface_reset_shader();
 		
-		outputs[| 0].setValue(_outSurf);
-		outputs[| 1].setValue(atlas);
+		outputs[0].setValue(_outSurf);
+		outputs[1].setValue(atlas);
 	} #endregion
 }
 

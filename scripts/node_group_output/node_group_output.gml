@@ -7,10 +7,10 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	skipDefault();
 	setDimension(96, 32 + 24);
 	
-	inputs[| 0] = nodeValue("Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, -1)
+	inputs[0] = nodeValue("Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, -1)
 		.uncache()
 		.setVisible(true, true);
-	inputs[| 0].onSetFrom = function(juncFrom) /*=>*/ { if(attributes.inherit_name && !LOADING && !APPENDING) setDisplayName(juncFrom.name); }
+	inputs[0].onSetFrom = function(juncFrom) /*=>*/ { if(attributes.inherit_name && !LOADING && !APPENDING) setDisplayName(juncFrom.name); }
 	
 	attributes.inherit_name = true;
 	outParent   			= undefined;
@@ -52,22 +52,20 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		if(group == noone) return;
 		if(!is_struct(group)) return;
 		
-		if(!is_undefined(outParent)) ds_list_remove(group.outputs, outParent);
+		if(!is_undefined(outParent)) array_remove(group.outputs, outParent);
 			
 		outParent = nodeValue("Value", group, JUNCTION_CONNECT.output, VALUE_TYPE.any, -1)
 			.uncache()
 			.setVisible(true, true);
 		outParent.from = self;
 		
-		ds_list_add(group.outputs, outParent);
+		array_push(group.outputs, outParent);
 		
 		if(!LOADING && !APPENDING) {
 			group.refreshNodeDisplay();
 			group.sortIO();
 			group.setHeight();
 		}
-		
-		outParent.setFrom(inputs[| 0]);
 		
 	} if(!LOADING && !APPENDING) createOutput();
 	
@@ -76,7 +74,7 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		outParent.name = display_name; 
 		
-		var _in0 = inputs[| 0];
+		var _in0 = inputs[0];
 		var _pty = _in0.type;
 		var _typ = _in0.value_from == noone? VALUE_TYPE.any         : _in0.value_from.type;
 		var _dis = _in0.value_from == noone? VALUE_DISPLAY._default : _in0.value_from.display_type;
@@ -90,14 +88,18 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		if(group && _pty != _typ) group.setHeight();
 	}
 	
-	static getGraphPreviewSurface = function() { return inputs[| 0].getValue(); }
+	static update = function() {
+		outParent.setValue(inputs[0].getValue());
+	}
+	
+	static getGraphPreviewSurface = function() { return inputs[0].getValue(); }
 	static postDeserialize		  = function() { if(group == noone) return; createOutput(false); }
 	static doApplyDeserialize	  = function() {}
 	
 	static onDestroy = function() {
 		if(is_undefined(outParent)) return;
 		
-		ds_list_remove(group.outputs, outParent);
+		array_remove(group.outputs, outParent);
 		group.sortIO();
 		group.refreshNodes();
 		
@@ -109,7 +111,7 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	}
 	
 	static onUngroup = function() {
-		var fr = inputs[| 0].value_from;
+		var fr = inputs[0].value_from;
 		
 		for( var i = 0; i < array_length(outParent.value_to); i++ ) {
 			var to = outParent.value_to[i];

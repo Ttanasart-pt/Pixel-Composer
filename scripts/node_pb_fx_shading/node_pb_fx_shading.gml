@@ -1,9 +1,9 @@
 function Node_PB_Fx_Shading(_x, _y, _group = noone) : Node_PB_Fx(_x, _y, _group) constructor {
 	name = "Shading";
 	
-	inputs[| 1] = nodeValue_Padding("Width", self, [ 1, 1, 1, 1 ] );
+	inputs[1] = nodeValue_Padding("Width", self, [ 1, 1, 1, 1 ] );
 		
-	inputs[| 2] = nodeValue_Color("Color", self, c_white );
+	inputs[2] = nodeValue_Color("Color", self, c_white );
 	
 	input_display_list = [ 0, 
 		["Effect",	false], 1, 2, 

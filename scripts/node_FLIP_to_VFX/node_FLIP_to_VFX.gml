@@ -6,10 +6,10 @@ function Node_FLIP_to_VFX(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	manual_ungroupable = false;
 	
-	inputs[| 0] = nodeValue_Fdomain("Domain", self, noone)
+	inputs[0] = nodeValue_Fdomain("Domain", self, noone)
 		.setVisible(true, true);
 		
-	outputs[| 0] = nodeValue_Output("Particles",	self, VALUE_TYPE.particle, [] );
+	outputs[0] = nodeValue_Output("Particles",	self, VALUE_TYPE.particle, [] );
 	
 	attributes.part_amount = 512;
 	array_push(attributeEditors, ["Maximum particles", function() { return attributes.part_amount; },
@@ -25,7 +25,7 @@ function Node_FLIP_to_VFX(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		var _x, _y, _p, _px, _py, _r, _l, _a, _v, _sx, _sy;
 		var _mx  = min(array_length(domain.particlePos) / 2 - 1, domain.numParticles);
-		var _pa  = outputs[| 0].getValue();
+		var _pa  = outputs[0].getValue();
 		var _ind = 0;
 		
 		for( var i = 0; i < _mx; i++ ) {
@@ -46,7 +46,7 @@ function Node_FLIP_to_VFX(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		}
 		
 		array_resize(_pa, _ind);
-		outputs[| 0].setValue(_pa);
+		outputs[0].setValue(_pa);
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

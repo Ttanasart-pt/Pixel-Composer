@@ -2,28 +2,28 @@ function Node_PB_Box_Inset(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _group)
 	name = "Inset";
 	batch_output = false;
 	
-	inputs[| 1] = nodeValue("pBox", self, JUNCTION_CONNECT.input, VALUE_TYPE.pbBox, noone )
+	inputs[1] = nodeValue("pBox", self, JUNCTION_CONNECT.input, VALUE_TYPE.pbBox, noone )
 		.setVisible(true, true);
 		
-	inputs[| 2] = nodeValue_Padding("Inset", self, [ 2, 2, 2, 2 ] );
+	inputs[2] = nodeValue_Padding("Inset", self, [ 2, 2, 2, 2 ] );
 		
-	inputs[| 3] = nodeValue_Enum_Scroll("Type", self,  0 , [ "Padding", "Ratio" ]);
+	inputs[3] = nodeValue_Enum_Scroll("Type", self,  0 , [ "Padding", "Ratio" ]);
 		
-	inputs[| 4] = nodeValue_Float("Width", self, 0.5 )
+	inputs[4] = nodeValue_Float("Width", self, 0.5 )
 		.setDisplay(VALUE_DISPLAY.slider);
 		
-	inputs[| 5] = nodeValue_Float("Height", self, 0.5 )
-		.setDisplay(VALUE_DISPLAY.slider);
-	
-	inputs[| 6] = nodeValue_Float("Horizontal alignment", self, 0.5 )
+	inputs[5] = nodeValue_Float("Height", self, 0.5 )
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 7] = nodeValue_Float("Vertical alignment", self, 0.5 )
+	inputs[6] = nodeValue_Float("Horizontal alignment", self, 0.5 )
+		.setDisplay(VALUE_DISPLAY.slider);
+	
+	inputs[7] = nodeValue_Float("Vertical alignment", self, 0.5 )
 		.setDisplay(VALUE_DISPLAY.slider);
 		
-	outputs[| 0] = nodeValue_Output("pBox Inset", self, VALUE_TYPE.pbBox, noone );
+	outputs[0] = nodeValue_Output("pBox Inset", self, VALUE_TYPE.pbBox, noone );
 	
-	outputs[| 1] = nodeValue_Output("pBox Frame", self, VALUE_TYPE.pbBox, noone );
+	outputs[1] = nodeValue_Output("pBox Frame", self, VALUE_TYPE.pbBox, noone );
 	
 	input_display_list = [ 0, 1,
 		["Inset",	false], 3, 2, 4, 5, 6, 7, 
@@ -34,11 +34,11 @@ function Node_PB_Box_Inset(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _group)
 		
 		var _type = current_data[3];
 		
-		inputs[| 2].setVisible(_type == 0);
-		inputs[| 4].setVisible(_type == 1);
-		inputs[| 5].setVisible(_type == 1);
-		inputs[| 6].setVisible(_type == 1);
-		inputs[| 7].setVisible(_type == 1);
+		inputs[2].setVisible(_type == 0);
+		inputs[4].setVisible(_type == 1);
+		inputs[5].setVisible(_type == 1);
+		inputs[6].setVisible(_type == 1);
+		inputs[7].setVisible(_type == 1);
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
@@ -122,7 +122,7 @@ function Node_PB_Box_Inset(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _group)
 				} else 
 					draw_clear(c_white);
 				
-				var _msk = outputs[| 0].getValue();
+				var _msk = outputs[0].getValue();
 				if(is_array(_msk)) _msk = array_safe_get_fast(_msk, _array_index);
 				
 				BLEND_SUBTRACT

@@ -35,31 +35,31 @@ function __generate_node_data() { #region
 		var _lin = [], _lot = [];
 		var _din = [], _dot = [];
 		
-		for( var i = 0; i < ds_list_size(_b.inputs); i++ ) {
-			_din[i] = variable_clone(_b.inputs[| i], 1);
+		for( var i = 0; i < array_length(_b.inputs); i++ ) {
+			_din[i] = variable_clone(_b.inputs[i], 1);
 			
 			_jin[i] = {
-				type:	 _b.inputs[| i].type,
-				visible: _b.inputs[| i].visible? 1 : 0,
+				type:	 _b.inputs[i].type,
+				visible: _b.inputs[i].visible? 1 : 0,
 			};
 			
 			_lin[i] = {
-				name:	 _b.inputs[| i]._initName,
-				tooltip: _b.inputs[| i].tooltip,
+				name:	 _b.inputs[i]._initName,
+				tooltip: _b.inputs[i].tooltip,
 			};
 		}
 		
-		for( var i = 0; i < ds_list_size(_b.outputs); i++ ) {
-			_dot[i] = variable_clone(_b.outputs[| i], 1);
+		for( var i = 0; i < array_length(_b.outputs); i++ ) {
+			_dot[i] = variable_clone(_b.outputs[i], 1);
 			
 			_jot[i] = {
-				type:	 _b.outputs[| i].type,
-				visible: _b.outputs[| i].visible? 1 : 0,
+				type:	 _b.outputs[i].type,
+				visible: _b.outputs[i].visible? 1 : 0,
 			};
 			
 			_lot[i] = {
-				name:	 _b.outputs[| i]._initName,
-				tooltip: _b.outputs[| i].tooltip,
+				name:	 _b.outputs[i]._initName,
+				tooltip: _b.outputs[i].tooltip,
 			};
 		}
 			

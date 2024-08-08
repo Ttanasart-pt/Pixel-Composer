@@ -50,7 +50,7 @@
 	}
 	
 	function attribute_surface_depth(label = true) {
-		var depth_array = inputs[| 0].type == VALUE_TYPE.surface? global.SURFACE_FORMAT_NAME_PROCESS : global.SURFACE_FORMAT_NAME;
+		var depth_array = inputs[0].type == VALUE_TYPE.surface? global.SURFACE_FORMAT_NAME_PROCESS : global.SURFACE_FORMAT_NAME;
 		attributes.color_depth = array_find(depth_array, "8 bit RGBA");
 		
 		if(label) array_push(attributeEditors, "Surface");

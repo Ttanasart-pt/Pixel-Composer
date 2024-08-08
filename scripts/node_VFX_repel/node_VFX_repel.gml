@@ -2,7 +2,7 @@ function Node_VFX_Repel(_x, _y, _group = noone) : Node_VFX_effector(_x, _y, _gro
 	name = "Repel";
 	node_draw_icon = s_node_vfx_repel;
 	
-	inputs[| 4].setVisible(false, false);
+	inputs[4].setVisible(false, false);
 	
 	function onAffect(part, str) {
 		var _area      = getInputData(1);

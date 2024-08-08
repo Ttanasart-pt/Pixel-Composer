@@ -114,7 +114,7 @@ function canvas_tool_resize() : canvas_tool() constructor {
 						surface_free(_canvas_surface);
 					}
 					
-					node.inputs[| 0].setValue([_sw, _sh]);
+					node.inputs[0].setValue([_sw, _sh]);
 				}
 			}
 			

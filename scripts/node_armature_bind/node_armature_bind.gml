@@ -12,27 +12,27 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	name = "Armature Bind";
 	batch_output = false;
 	
-	inputs[| 0] = nodeValue_Dimension(self);
+	inputs[0] = nodeValue_Dimension(self);
 	
-	inputs[| 1] = nodeValue_Armature("Armature", self, noone)
+	inputs[1] = nodeValue_Armature("Armature", self, noone)
 		.setVisible(true, true)
 		.rejectArray();
 		
-	inputs[| 2] = nodeValue_Struct("Bind data", self, noone)
+	inputs[2] = nodeValue_Struct("Bind data", self, noone)
 		.setVisible(true, true)
 		.setArrayDepth(1); 
 		
-	inputs[| 3] = nodeValue_Vector("Bone transform", self, [ 0, 0 ]);
+	inputs[3] = nodeValue_Vector("Bone transform", self, [ 0, 0 ]);
 		
-	inputs[| 4] = nodeValue_Float("Bone scale", self, 1)
+	inputs[4] = nodeValue_Float("Bone scale", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0.1, 2, 0.01 ] });
 	
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue_Output("Atlas data", self, VALUE_TYPE.surface, [])
+	outputs[1] = nodeValue_Output("Atlas data", self, VALUE_TYPE.surface, [])
 		.rejectArrayProcess();
 	
-	outputs[| 2] = nodeValue_Output("Bind data", self, VALUE_TYPE.struct, [])
+	outputs[2] = nodeValue_Output("Bind data", self, VALUE_TYPE.struct, [])
 		.setArrayDepth(1);
 	
 	attribute_surface_depth();
@@ -68,14 +68,14 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		ds_map_clear(surfMap);
 		
 		var index = -1;
-		var amo   = min(ds_list_size(inputs) - data_length, array_length(current_data));
+		var amo   = min(array_length(inputs) - data_length, array_length(current_data));
 		var _bind = getSingleValue(2);
 		var use_data = _bind != noone;
 		
 		for(var i = input_fix_len; i < amo; i += data_length) {
 			index++;
 			var _surf = current_data[i];
-			var _id   = inputs[| i].display_data.bone_id;
+			var _id   = inputs[i].display_data.bone_id;
 			if(_id == "") continue;
 			
 			if(ds_map_exists(surfMap, _id))
@@ -151,7 +151,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 							TOOLTIP = [ _surf, VALUE_TYPE.surface ];
 							if(mouse_press(mb_left, _focus)) {
 								layer_dragging = _sid;
-								inputs[| input_fix_len + _sid * data_length].display_data.bone_id = "";
+								inputs[input_fix_len + _sid * data_length].display_data.bone_id = "";
 							}
 								
 							draw_set_color(COLORS._main_accent);
@@ -182,7 +182,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			
 			if(layer_dragging != noone && hovering && mouse_release(mb_left)) {
 				var _lind = input_fix_len + layer_dragging * data_length;
-				inputs[| _lind].display_data.bone_id = hovering.ID;
+				inputs[_lind].display_data.bone_id = hovering.ID;
 				
 				layer_dragging = noone;
 				triggerRender();
@@ -192,8 +192,8 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				draw_sprite_stretched_ext(THEME.ui_panel, 1, _x, _ty, _w, bh - ui(32), COLORS._main_accent, 1);
 		#endregion
 		
-		var amo = floor((ds_list_size(inputs) - input_fix_len) / data_length);
-		if(array_length(current_data) != ds_list_size(inputs)) return 0;
+		var amo = floor((array_length(inputs) - input_fix_len) / data_length);
+		if(array_length(current_data) != array_length(inputs)) return 0;
 		
 		if(use_data) {
 			layer_renderer.h = bh + ui(8);
@@ -299,7 +299,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			
 				draw_set_text(f_p1, fa_left, fa_center, hover? COLORS._main_text : COLORS._main_text);
 				draw_set_alpha(aa);
-				draw_text(_sx1 + 12, _cy + lh / 2, inputs[| _inp].name);
+				draw_text(_sx1 + 12, _cy + lh / 2, inputs[_inp].name);
 				draw_set_alpha(1);
 			
 				if(_hover && point_in_rectangle(_m[0], _m[1], _x, _cy, _x + _w, _cy + lh)) {
@@ -313,7 +313,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 					}
 				}
 				
-				var binded = inputs[| _inp].display_data.bone_id != "";
+				var binded = inputs[_inp].display_data.bone_id != "";
 				
 				if(layer_dragging == noone || layer_dragging == index) {
 					var _bx = _x + 24;
@@ -350,12 +350,12 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				array_insert(_sel, hoverIndex, sel);
 				
 				for( var i = 0; i < data_length; i++ ) {
-					ext[i] = inputs[| index];
-					ds_list_delete(inputs, index);
+					ext[i] = inputs[index];
+					array_delete(inputs, index, 1);
 				}
 				
 				for( var i = 0; i < data_length; i++ ) {
-					ds_list_insert(inputs, targt + i, ext[i]);
+					array_insert(inputs, targt + i, ext[i]);
 				}
 				
 				doUpdate();
@@ -379,7 +379,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	function deleteLayer(index) {
 		var idx = input_fix_len + index * data_length;
 		for( var i = 0; i < data_length; i++ ) {
-			ds_list_delete(inputs, idx);
+			array_delete(inputs, idx, 1);
 			array_remove(input_display_list, idx + i);
 		}
 		
@@ -392,21 +392,21 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	}
 	
 	static createNewInput = function() {
-		var index = ds_list_size(inputs);
+		var index = array_length(inputs);
 		var _s    = floor((index - input_fix_len) / data_length);
 		
-		inputs[| index + 0] = nodeValue_Surface("Surface", self);
-		inputs[| index + 0].surface_index = index;
-		inputs[| index + 0].hover_effect  = 0;
-		inputs[| index + 0].display_data.bone_id = "";
+		inputs[index + 0] = nodeValue_Surface("Surface", self);
+		inputs[index + 0].surface_index = index;
+		inputs[index + 0].hover_effect  = 0;
+		inputs[index + 0].display_data.bone_id = "";
 		
-		inputs[| index + 1] = nodeValue_Float("Transform", self, [ 0, 0, 0, 1, 1 ] )
+		inputs[index + 1] = nodeValue_Float("Transform", self, [ 0, 0, 0, 1, 1 ] )
 			.setDisplay(VALUE_DISPLAY.transform);
-		inputs[| index + 2] = nodeValue_Bool("Inherit Rotation", self, true );
-		inputs[| index + 3] = nodeValue_Bool("Apply Bone Rotation", self, false );
+		inputs[index + 2] = nodeValue_Bool("Inherit Rotation", self, true );
+		inputs[index + 3] = nodeValue_Bool("Apply Bone Rotation", self, false );
 		
-		inputs[| index + 4] = nodeValue_Bool("Inherit Scale", self, false );
-		inputs[| index + 5] = nodeValue_Bool("Apply Bone Scale", self, false );
+		inputs[index + 4] = nodeValue_Bool("Inherit Scale", self, false );
+		inputs[index + 5] = nodeValue_Bool("Apply Bone Scale", self, false );
 		
 		for( var i = 0; i < data_length; i++ )
 			array_push(input_display_list, index + i);
@@ -416,7 +416,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		while(_s >= array_length(attributes.layer_selectable))
 			array_push(attributes.layer_selectable, true);
 		
-		return inputs[| index + 0];
+		return inputs[index + 0];
 	} setDynamicInput(6);
 	
 	temp_surface = [ surface_create(1, 1), surface_create(1, 1), surface_create(1, 1) ];
@@ -479,8 +479,8 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		if(bone == noone) return;
 		
 		bone.draw(attributes, false, _x + _dpos[0] * _s, _y + _dpos[1] * _s, _s * _dsca, _mx, _my, anchor_selecting);
-		inputs[| 3].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-		//inputs[| 4].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		inputs[3].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		//inputs[4].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 		
 		var mx = (_mx - _x) / _s;
 		var my = (_my - _y) / _s;
@@ -509,7 +509,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			
 			_tran = array_clone(_tran);
 			
-			var _bone = inputs[| surf_dragging].display_data.bone_id;
+			var _bone = inputs[surf_dragging].display_data.bone_id;
 			_bone = boneMap[? _bone];
 			
 			if(drag_type == NODE_COMPOSE_DRAG.move) {
@@ -557,7 +557,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				_tran[TRANSFORM.sca_y] = sca_y;
 			}
 			
-			if(inputs[| surf_dragging + 1].setValue(_tran))
+			if(inputs[surf_dragging + 1].setValue(_tran))
 				UNDO_HOLDING = true;	
 			
 			if(mouse_release(mb_left)) {
@@ -571,15 +571,15 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		var _vis = attributes.layer_visible;
 		var _sel = attributes.layer_selectable;
 		
-		var amo = (ds_list_size(inputs) - input_fix_len) / data_length;
-		var anchors = array_create(ds_list_size(inputs));
+		var amo = (array_length(inputs) - input_fix_len) / data_length;
+		var anchors = array_create(array_length(inputs));
 		
 		for(var i = 0; i < amo; i++) { #region
 			var index = input_fix_len + i * data_length;
 			var _surf = array_safe_get_fast(current_data, index);
 			if(!_surf || is_array(_surf)) continue;
 			
-			var _bone = inputs[| index].display_data.bone_id;
+			var _bone = inputs[index].display_data.bone_id;
 			if(!ds_map_exists(boneMap, _bone)) {
 				//print($"Bone not found {_bone}");
 				continue;
@@ -644,7 +644,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			var _surf = array_safe_get_fast(current_data, index);
 			if(!_surf || is_array(_surf)) continue;
 			
-			var _bone = inputs[| index].display_data.bone_id;
+			var _bone = inputs[index].display_data.bone_id;
 			if(!ds_map_exists(boneMap, _bone))
 				continue;
 			
@@ -741,11 +741,11 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	static step = function() { #region
 		var _dim_type = getSingleValue(1);
-		inputs[| 2].setVisible(_dim_type == COMPOSE_OUTPUT_SCALING.constant);
+		inputs[2].setVisible(_dim_type == COMPOSE_OUTPUT_SCALING.constant);
 		
-		for( var i = input_fix_len, n = ds_list_size(inputs); i < n; i += data_length ) {
-			inputs[| i + 3].setVisible(current_data[i + 2]);
-			inputs[| i + 5].setVisible(current_data[i + 4]);
+		for( var i = input_fix_len, n = array_length(inputs); i < n; i += data_length ) {
+			inputs[i + 3].setVisible(current_data[i + 2]);
+			inputs[i + 5].setVisible(current_data[i + 4]);
 		}
 	} #endregion
 	
@@ -780,7 +780,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		var use_data  = _bind != noone;
 		var res_index = 0;
 		var bg		  = 0;
-		var imageAmo  = use_data? array_length(_bind) : (ds_list_size(inputs) - input_fix_len) / data_length;
+		var imageAmo  = use_data? array_length(_bind) : (array_length(inputs) - input_fix_len) / data_length;
 		var _vis	  = attributes.layer_visible;
 		var _bg  = 0, _s;
 		
@@ -802,7 +802,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			
 			if(!is_surface(_s)) continue;
 			
-			var _b = use_data? _bind[i].bone : inputs[| datInd].display_data.bone_id;
+			var _b = use_data? _bind[i].bone : inputs[datInd].display_data.bone_id;
 			
 			if(!ds_map_exists(boneMap, _b))
 				continue;
@@ -863,7 +863,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		var _tran = getInputData(surfIndex + 1);
 		var _arot = getInputData(surfIndex + 2);
 		
-		var _b = use_data? _bind[i].bone : inputs[| surfIndex].display_data.bone_id;
+		var _b = use_data? _bind[i].bone : inputs[surfIndex].display_data.bone_id;
 		if(!ds_map_exists(boneMap, _b)) return;
 		
 		_b = boneMap[? _b];
@@ -875,7 +875,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		var _rot = _arot? -_b.angle : 0;
 		
 		var _tr  = [ _cx - _anc.x, _cy - _anc.y, _rot, 1, 1 ];
-		inputs[| surfIndex + 1].setValue(_tr);
+		inputs[surfIndex + 1].setValue(_tr);
 	} #endregion
 	
 	static attributeSerialize = function() { #region

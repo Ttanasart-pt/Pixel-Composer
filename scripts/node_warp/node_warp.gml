@@ -1,28 +1,28 @@
 function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Warp";
 	
-	inputs[| 0] = nodeValue_Surface("Surface in", self);
+	inputs[0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue_Vector("Top left", self, [ 0, 0 ] )
+	inputs[1] = nodeValue_Vector("Top left", self, [ 0, 0 ] )
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	inputs[| 2] = nodeValue_Vector("Top right", self, [ DEF_SURF_W, 0 ] )
+	inputs[2] = nodeValue_Vector("Top right", self, [ DEF_SURF_W, 0 ] )
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	inputs[| 3] = nodeValue_Vector("Bottom left", self, [ 0, DEF_SURF_H ] )
+	inputs[3] = nodeValue_Vector("Bottom left", self, [ 0, DEF_SURF_H ] )
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	inputs[| 4] = nodeValue_Vector("Bottom right", self, DEF_SURF )
+	inputs[4] = nodeValue_Vector("Bottom right", self, DEF_SURF )
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	inputs[| 5] = nodeValue_Bool("Active", self, true);
+	inputs[5] = nodeValue_Bool("Active", self, true);
 		active_index = 5;
 	
-	inputs[| 6] = nodeValue_Bool("Use custom dimension", self, false);
+	inputs[6] = nodeValue_Bool("Use custom dimension", self, false);
 	
-	inputs[| 7] = nodeValue_Dimension(self);
+	inputs[7] = nodeValue_Dimension(self);
 	
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 5,
 		["Surfaces", false], 0, 6, 7, 
@@ -49,10 +49,10 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _sw = surface_get_width_safe(_surf);
 			var _sh = surface_get_height_safe(_surf);
 			
-			inputs[| 1].setValue([   0,   0 ]);
-			inputs[| 2].setValue([ _sw,   0 ]);
-			inputs[| 3].setValue([   0, _sh ]);
-			inputs[| 4].setValue([ _sw, _sh ]);
+			inputs[1].setValue([   0,   0 ]);
+			inputs[2].setValue([ _sw,   0 ]);
+			inputs[3].setValue([   0, _sh ]);
+			inputs[4].setValue([ _sw, _sh ]);
 			
 			attributes.initalset = true;
 		}
@@ -61,14 +61,14 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	static step = function() { 
 		var _useDim = getInputData(6);
 		
-		inputs[| 7].setVisible(_useDim);
+		inputs[7].setVisible(_useDim);
 		dimension_index = _useDim? 7 : 0;
 	} 
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, params) {
 		PROCESSOR_OVERLAY_CHECK
 		
-		var _surf = outputs[| 0].getValue();
+		var _surf = outputs[0].getValue();
 		if(is_array(_surf)) {
 			if(array_length(_surf) == 0) return;
 			_surf = _surf[preview_index];
@@ -152,8 +152,8 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				var _trx = value_snap(drag_s[1][0] + dx, _snx);
 				var _try = value_snap(drag_s[1][1] + dy, _sny);
 			
-				var _up1 = inputs[| 1].setValue([ _tlx, _tly ]);
-				var _up2 = inputs[| 2].setValue([ _trx, _try ]);
+				var _up1 = inputs[1].setValue([ _tlx, _tly ]);
+				var _up2 = inputs[2].setValue([ _trx, _try ]);
 			
 				if(_up1 || _up2) UNDO_HOLDING = true;
 			} else if(drag_side == 1) {
@@ -165,8 +165,8 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				var _blx = value_snap(drag_s[1][0] + dx, _snx);
 				var _bly = value_snap(drag_s[1][1] + dy, _sny);
 			
-				var _up1 = inputs[| 1].setValue([ _tlx, _tly ]);
-				var _up3 = inputs[| 3].setValue([ _blx, _bly ]);
+				var _up1 = inputs[1].setValue([ _tlx, _tly ]);
+				var _up3 = inputs[3].setValue([ _blx, _bly ]);
 			
 				if(_up1 || _up3) UNDO_HOLDING = true;
 			} else if(drag_side == 2) {
@@ -178,8 +178,8 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				var _trx = value_snap(drag_s[1][0] + dx, _snx);
 				var _try = value_snap(drag_s[1][1] + dy, _sny);
 			
-				var _up4 = inputs[| 4].setValue([ _brx, _bry ]);
-				var _up2 = inputs[| 2].setValue([ _trx, _try ]);
+				var _up4 = inputs[4].setValue([ _brx, _bry ]);
+				var _up2 = inputs[2].setValue([ _trx, _try ]);
 			
 				if(_up4 || _up2) UNDO_HOLDING = true;
 			} else if(drag_side == 3) {
@@ -191,8 +191,8 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				var _blx = value_snap(drag_s[1][0] + dx, _snx);
 				var _bly = value_snap(drag_s[1][1] + dy, _sny);
 			
-				var _up4 = inputs[| 4].setValue([ _brx, _bry ]);
-				var _up3 = inputs[| 3].setValue([ _blx, _bly ]);
+				var _up4 = inputs[4].setValue([ _brx, _bry ]);
+				var _up3 = inputs[3].setValue([ _blx, _bly ]);
 			
 				if(_up4 || _up3) UNDO_HOLDING = true;
 			} else if(_hactive) {
@@ -233,10 +233,10 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			}
 		
 			var _hov = false;
-			var  hv  = inputs[| 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); active = !hv; _hov |= hv;
-			var  hv  = inputs[| 2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); active = !hv; _hov |= hv;
-			var  hv  = inputs[| 3].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); active = !hv; _hov |= hv;
-			var  hv  = inputs[| 4].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); active = !hv; _hov |= hv;
+			var  hv  = inputs[1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); active = !hv; _hov |= hv;
+			var  hv  = inputs[2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); active = !hv; _hov |= hv;
+			var  hv  = inputs[3].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); active = !hv; _hov |= hv;
+			var  hv  = inputs[4].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); active = !hv; _hov |= hv;
 			
 			return _hov;
 		#endregion

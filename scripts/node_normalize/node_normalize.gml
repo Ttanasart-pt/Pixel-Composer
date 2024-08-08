@@ -1,13 +1,13 @@
 function Node_Normalize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Normalize";
 	
-	inputs[| 0] = nodeValue_Surface("Surface in", self);
+	inputs[0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue_Enum_Button("Mode", self,  0, [ "BW", "RGB" ]);
+	inputs[1] = nodeValue_Enum_Button("Mode", self,  0, [ "BW", "RGB" ]);
 	
 	input_display_list = [ 0, 1 ];
 	
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	attribute_surface_depth();
 	

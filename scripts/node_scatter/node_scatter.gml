@@ -12,103 +12,103 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	batch_output = false;
 	dimension_index = 1;
 	
-	inputs[| 0] = nodeValue_Surface("Surface in", self);
+	inputs[0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue_Dimension(self);
+	inputs[1] = nodeValue_Dimension(self);
 	
-	inputs[| 2] = nodeValue_Int("Amount", self, 8)
+	inputs[2] = nodeValue_Int("Amount", self, 8)
 		.setValidator(VV_min(0));
 	
-	inputs[| 3] = nodeValue_Vec2_Range("Scale", self, [ 1, 1, 1, 1 ] , { linked : true });
+	inputs[3] = nodeValue_Vec2_Range("Scale", self, [ 1, 1, 1, 1 ] , { linked : true });
 	
-	inputs[| 4] = nodeValue_Rotation_Random("Angle", self, [ 0, 0, 0, 0, 0 ] );
+	inputs[4] = nodeValue_Rotation_Random("Angle", self, [ 0, 0, 0, 0, 0 ] );
 	
 	onSurfaceSize = function() { return getInputData(1, DEF_SURF); };
-	inputs[| 5] = nodeValue_Area("Area", self, DEF_AREA_REF, { onSurfaceSize })
+	inputs[5] = nodeValue_Area("Area", self, DEF_AREA_REF, { onSurfaceSize })
 		.setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
 	
-	inputs[| 6] = nodeValue_Enum_Scroll("Distribution", self,  5, [ "Area", "Border", "Map", "Direct Data", "Path", "Full image + Tile" ]);
+	inputs[6] = nodeValue_Enum_Scroll("Distribution", self,  5, [ "Area", "Border", "Map", "Direct Data", "Path", "Full image + Tile" ]);
 	
-	inputs[| 7] = nodeValue_Bool("Point at center", self, false, "Rotate each copy to face the spawn center.");
+	inputs[7] = nodeValue_Bool("Point at center", self, false, "Rotate each copy to face the spawn center.");
 	
-	inputs[| 8] = nodeValue_Bool("Uniform scaling", self, true);
+	inputs[8] = nodeValue_Bool("Uniform scaling", self, true);
 	
-	inputs[| 9] = nodeValue_Enum_Button("Scatter", self,  1, [ "Uniform", "Random" ]);
+	inputs[9] = nodeValue_Enum_Button("Scatter", self,  1, [ "Uniform", "Random" ]);
 	
-	inputs[| 10] = nodeValue_Float("Seed", self, seed_random(6))
-		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 10].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
+	inputs[10] = nodeValue_Float("Seed", self, seed_random(6))
+		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[10].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
-	inputs[| 11] = nodeValue_Gradient("Random blend", self, new gradientObject(cola(c_white)))
+	inputs[11] = nodeValue_Gradient("Random blend", self, new gradientObject(cola(c_white)))
 		.setMappable(28);
 	
-	inputs[| 12] = nodeValue_Slider_Range("Alpha", self, [ 1, 1 ]);
+	inputs[12] = nodeValue_Slider_Range("Alpha", self, [ 1, 1 ]);
 		
-	inputs[| 13] = nodeValue_Surface("Distribution map", self);
+	inputs[13] = nodeValue_Surface("Distribution map", self);
 	
-	inputs[| 14] = nodeValue_Vector("Distribution data", self, []);
-	inputs[| 14].array_depth = 1;
+	inputs[14] = nodeValue_Vector("Distribution data", self, []);
+	inputs[14].array_depth = 1;
 	
-	inputs[| 15] = nodeValue_Int("Array", self, 0, @"What to do when input array of surface.
+	inputs[15] = nodeValue_Int("Array", self, 0, @"What to do when input array of surface.
 - Spread: Create Array of output each scattering single surface.
 - Mixed: Create single output scattering multiple images.")
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Spread output", "Index", "Random", "Data", "Texture" ]);
 		
-	inputs[| 16] = nodeValue_Bool("Multiply alpha", self, true);
+	inputs[16] = nodeValue_Bool("Multiply alpha", self, true);
 		
-	inputs[| 17] = nodeValue_Text("Use value", self, [ "Scale" ], "Apply the third value in each data point (if exist) on given properties.")
+	inputs[17] = nodeValue_Text("Use value", self, [ "Scale" ], "Apply the third value in each data point (if exist) on given properties.")
 		.setDisplay(VALUE_DISPLAY.text_array, { data: [ "Scale",  "Rotation", "Color" ] });
 		
-	inputs[| 18] = nodeValue_Enum_Scroll("Blend mode", self,  0, [ "Normal", "Add", "Max" ]);
+	inputs[18] = nodeValue_Enum_Scroll("Blend mode", self,  0, [ "Normal", "Add", "Max" ]);
 		
-	inputs[| 19] = nodeValue_PathNode("Path", self, noone);
+	inputs[19] = nodeValue_PathNode("Path", self, noone);
 		
-	inputs[| 20] = nodeValue_Bool("Rotate along path", self, true);
+	inputs[20] = nodeValue_Bool("Rotate along path", self, true);
 		
-	inputs[| 21] = nodeValue_Float("Path Shift", self, 0)
+	inputs[21] = nodeValue_Float("Path Shift", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 22] = nodeValue_Float("Scatter Distance", self, 0);
+	inputs[22] = nodeValue_Float("Scatter Distance", self, 0);
 	
-	inputs[| 23] = nodeValue_Bool("Sort Y", self, false);
+	inputs[23] = nodeValue_Bool("Sort Y", self, false);
 	
-	inputs[| 24] = nodeValue_Int("Array indices", self, [])
+	inputs[24] = nodeValue_Int("Array indices", self, [])
 		.setArrayDepth(1);
 	
-	inputs[| 25] = nodeValue_Surface("Array texture", self);
+	inputs[25] = nodeValue_Surface("Array texture", self);
 	
-	inputs[| 26] = nodeValue_Range("Animated array", self, [ 0, 0 ], { linked : true });
+	inputs[26] = nodeValue_Range("Animated array", self, [ 0, 0 ], { linked : true });
 	
-	inputs[| 27] = nodeValue_Enum_Scroll("Animated array end", self,  0, [ "Loop", "Ping Pong" ]);
+	inputs[27] = nodeValue_Enum_Scroll("Animated array end", self,  0, [ "Loop", "Ping Pong" ]);
 		
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 28] = nodeValueMap("Gradient map", self);
+	inputs[28] = nodeValueMap("Gradient map", self);
 	
-	inputs[| 29] = nodeValueGradientRange("Gradient map range", self, inputs[| 11]);
+	inputs[29] = nodeValueGradientRange("Gradient map range", self, inputs[11]);
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 30] = nodeValue_Vector("Uniform amount", self, [ 4, 4 ]);
+	inputs[30] = nodeValue_Vector("Uniform amount", self, [ 4, 4 ]);
 	
-	inputs[| 31] = nodeValue_Bool("Auto amount", self, false);
+	inputs[31] = nodeValue_Bool("Auto amount", self, false);
 	
-	inputs[| 32] = nodeValue_Rotation("Rotate per radius", self, 0);
+	inputs[32] = nodeValue_Rotation("Rotate per radius", self, 0);
 	
-	inputs[| 33] = nodeValue_Vec2_Range("Random position", self, [ 0, 0, 0, 0 ]);
+	inputs[33] = nodeValue_Vec2_Range("Random position", self, [ 0, 0, 0, 0 ]);
 	
-	inputs[| 34] = nodeValue_Vector("Scale per radius", self, [ 0, 0 ]);
+	inputs[34] = nodeValue_Vector("Scale per radius", self, [ 0, 0 ]);
 	
-	inputs[| 35] = nodeValue_Rotation_Range("Angle range", self, [ 0, 360 ]);
+	inputs[35] = nodeValue_Rotation_Range("Angle range", self, [ 0, 360 ]);
 	
-	inputs[| 36] = nodeValue_Vector("Shift position", self, [ 0, 0 ]);
+	inputs[36] = nodeValue_Vector("Shift position", self, [ 0, 0 ]);
 	
-	inputs[| 37] = nodeValue_Bool("Exact", self,  false)
+	inputs[37] = nodeValue_Bool("Exact", self,  false)
 	
-	inputs[| 38] = nodeValue_Enum_Button("Spacing", self,   0, [ "After", "Between", "Around" ]);
+	inputs[38] = nodeValue_Enum_Button("Spacing", self,   0, [ "After", "Between", "Around" ]);
 	
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 		
-	outputs[| 1] = nodeValue_Output("Atlas data", self, VALUE_TYPE.surface, [])
+	outputs[1] = nodeValue_Output("Atlas data", self, VALUE_TYPE.surface, [])
 		.setVisible(false)
 		.rejectArrayProcess();
 	
@@ -140,8 +140,8 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var _distType = current_data[6];
 		var _hov = false;
 		
-		if(_distType < 3) { var hv = inputs[| 5].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); active &= !hv; _hov |= hv; }
-		var hv = inputs[| 29].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, current_data[1]); active &= !hv; _hov |= hv;
+		if(_distType < 3) { var hv = inputs[5].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); active &= !hv; _hov |= hv; }
+		var hv = inputs[29].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, current_data[1]); active &= !hv; _hov |= hv;
 		
 		return _hov;
 	} #endregion
@@ -149,7 +149,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	static onValueUpdate = function(index) { #region
 		if(index == 15) {
 			var _arr = getInputData(15);
-			inputs[| 0].array_depth = _arr;
+			inputs[0].array_depth = _arr;
 			
 			update();
 		}
@@ -165,51 +165,51 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 		update_on_frame = _arr && (_amn[0] != 0 || _amn[1] != 0);
 		
-		inputs[| 0].array_depth = bool(_arr);
+		inputs[0].array_depth = bool(_arr);
 		
-		inputs[| 13].setVisible(_dis == 2, _dis == 2);
-		inputs[| 14].setVisible(_dis == 3, _dis == 3);
-		inputs[| 17].setVisible(_dis == 3);
-		inputs[|  9].setVisible(_dis != 2 && _dis != 3);
-		inputs[| 19].setVisible(_dis == 4, _dis == 4);
-		inputs[| 20].setVisible(_dis == 4);
-		inputs[| 21].setVisible(_dis == 4 && _spa == 0);
-		inputs[| 22].setVisible(_dis == 4);
-		inputs[| 38].setVisible(_dis == 4 && _sct == 0);
-		inputs[| 24].setVisible(_arr == 3, _arr == 3);
-		inputs[| 25].setVisible(_arr == 4, _arr == 4);
-		inputs[| 26].setVisible(_arr);
-		inputs[| 27].setVisible(_arr);
+		inputs[13].setVisible(_dis == 2, _dis == 2);
+		inputs[14].setVisible(_dis == 3, _dis == 3);
+		inputs[17].setVisible(_dis == 3);
+		inputs[ 9].setVisible(_dis != 2 && _dis != 3);
+		inputs[19].setVisible(_dis == 4, _dis == 4);
+		inputs[20].setVisible(_dis == 4);
+		inputs[21].setVisible(_dis == 4 && _spa == 0);
+		inputs[22].setVisible(_dis == 4);
+		inputs[38].setVisible(_dis == 4 && _sct == 0);
+		inputs[24].setVisible(_arr == 3, _arr == 3);
+		inputs[25].setVisible(_arr == 4, _arr == 4);
+		inputs[26].setVisible(_arr);
+		inputs[27].setVisible(_arr);
 		
-		inputs[|  5].setVisible(_dis < 3);
-		inputs[|  2].setVisible( true);
-		inputs[| 30].setVisible(false);
-		inputs[| 31].setVisible(false);
-		inputs[| 32].setVisible(false);
-		inputs[| 34].setVisible(false);
-		inputs[| 35].setVisible(false);
+		inputs[ 5].setVisible(_dis < 3);
+		inputs[ 2].setVisible( true);
+		inputs[30].setVisible(false);
+		inputs[31].setVisible(false);
+		inputs[32].setVisible(false);
+		inputs[34].setVisible(false);
+		inputs[35].setVisible(false);
 		
 		if(_dis == 0 && _sct == 0) {
 			if(_are[AREA_INDEX.shape] == AREA_SHAPE.elipse) {
 				var _aut = getInputData(31);
 			
-				inputs[|  2].setVisible( _aut);
-				inputs[| 30].setVisible(!_aut);
-				inputs[| 31].setVisible( true);
-				inputs[| 32].setVisible(!_aut);
-				inputs[| 34].setVisible(!_aut);
-				inputs[| 35].setVisible(!_aut);
+				inputs[ 2].setVisible( _aut);
+				inputs[30].setVisible(!_aut);
+				inputs[31].setVisible( true);
+				inputs[32].setVisible(!_aut);
+				inputs[34].setVisible(!_aut);
+				inputs[35].setVisible(!_aut);
 				
 			} else {
-				inputs[|  2].setVisible(false);
-				inputs[| 30].setVisible( true);
+				inputs[ 2].setVisible(false);
+				inputs[30].setVisible( true);
 			}
 		} else if(_dis == 5) {
-			inputs[|  2].setVisible(_sct == 1);
-			inputs[| 30].setVisible(_sct == 0);
+			inputs[ 2].setVisible(_sct == 1);
+			inputs[30].setVisible(_sct == 0);
 		}
 		
-		inputs[| 11].mappableStep();
+		inputs[11].mappableStep();
 	} #endregion
 	
 	////=========== PROCESS ===========
@@ -343,10 +343,10 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			
 			var _alpUni = alpha[0] == alpha[1];
 			
-			var _clrUni = !inputs[| 11].attributes.mapped && color.keyLength == 1;
+			var _clrUni = !inputs[11].attributes.mapped && color.keyLength == 1;
 			var _clrSin = color.evalFast(0);
 			
-			var _useAtl = outputs[| 1].visible;
+			var _useAtl = outputs[1].visible;
 			
 			var _datLen = array_length(scatter_data);
 			
@@ -570,7 +570,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				if(vCol && _v != noone)
 					grSamp *= _v;
 				
-				var clr  = _clrUni? _clrSin  : evaluate_gradient_map(grSamp, color, clr_map, clr_rng, inputs[| 11], true); 
+				var clr  = _clrUni? _clrSin  : evaluate_gradient_map(grSamp, color, clr_map, clr_rng, inputs[11], true); 
 				var alp  = _alpUni? alpha[0] : random_range(alpha[0], alpha[1]);
 				var _atl = _sct_len >= _datLen? noone : scatter_data[_sct_len];
 				

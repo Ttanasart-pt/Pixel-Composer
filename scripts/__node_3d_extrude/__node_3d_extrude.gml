@@ -2,50 +2,50 @@ function __Node_3D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	name = "3D Extrude";
 	batch_output = false;
 	
-	inputs[| 0] = nodeValue_Surface("Surface in", self);
+	inputs[0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue_Dimension(self);
+	inputs[1] = nodeValue_Dimension(self);
 	
-	inputs[| 2] = nodeValue_Vector("Object position", self, [ 0, 0, 0 ]);
+	inputs[2] = nodeValue_Vector("Object position", self, [ 0, 0, 0 ]);
 	
-	inputs[| 3] = nodeValue_Vector("Object rotation", self, [ 0, 180, 0 ]);
+	inputs[3] = nodeValue_Vector("Object rotation", self, [ 0, 180, 0 ]);
 	
-	inputs[| 4] = nodeValue_Vector("Object scale", self, [ 1, 1, 0.1 ]);
+	inputs[4] = nodeValue_Vector("Object scale", self, [ 1, 1, 0.1 ]);
 	
-	inputs[| 5] = nodeValue_Vector("Render position", self, [ 0.5, 0.5 ])
+	inputs[5] = nodeValue_Vector("Render position", self, [ 0.5, 0.5 ])
 		.setUnitRef( function() { return getInputData(1); }, VALUE_UNIT.reference);
 		
-	inputs[| 6] = nodeValue_Vector("Render rotation", self, [ 0, 0, 0 ]);
+	inputs[6] = nodeValue_Vector("Render rotation", self, [ 0, 0, 0 ]);
 	
-	inputs[| 7] = nodeValue_Vector("Render scale", self, [ 1, 1 ]);
+	inputs[7] = nodeValue_Vector("Render scale", self, [ 1, 1 ]);
 	
-	inputs[| 8] = nodeValue_Trigger("Manual generate", self, false )
+	inputs[8] = nodeValue_Trigger("Manual generate", self, false )
 		.setDisplay(VALUE_DISPLAY.button, { name: "Generate", UI : true, onClick: function() { generateMesh(); doUpdate(); } });
 		
-	inputs[| 9] = nodeValue_Rotation("Light direction", self, 0);
+	inputs[9] = nodeValue_Rotation("Light direction", self, 0);
 		
-	inputs[| 10] = nodeValue_Float("Light height", self, 0.5)
+	inputs[10] = nodeValue_Float("Light height", self, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-1, 1, 0.01] });
 		
-	inputs[| 11] = nodeValue_Float("Light intensity", self, 1)
+	inputs[11] = nodeValue_Float("Light intensity", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 12] = nodeValue_Color("Light color", self, c_white);
-	inputs[| 13] = nodeValue_Color("Ambient color", self, c_grey);
+	inputs[12] = nodeValue_Color("Light color", self, c_white);
+	inputs[13] = nodeValue_Color("Ambient color", self, c_grey);
 	
-	inputs[| 14] = nodeValue_Surface("Height map", self);
+	inputs[14] = nodeValue_Surface("Height map", self);
 	
-	inputs[| 15] = nodeValue_Bool("Always update", self, false);
+	inputs[15] = nodeValue_Bool("Always update", self, false);
 	
-	inputs[| 16] = nodeValue_Enum_Button("Projection", self,  0, [ "Orthographic", "Perspective" ])
+	inputs[16] = nodeValue_Enum_Button("Projection", self,  0, [ "Orthographic", "Perspective" ])
 		.rejectArray();
 		
-	inputs[| 17] = nodeValue_Float("Field of view", self, 60)
+	inputs[17] = nodeValue_Float("Field of view", self, 60)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 1, 90, 0.1 ] });
 	
-	inputs[| 18] = nodeValue_Bool("Scale view with dimension", self, true)
+	inputs[18] = nodeValue_Bool("Scale view with dimension", self, true)
 	
-	inputs[| 19] = nodeValue_Bool("Smooth", self, false)
+	inputs[19] = nodeValue_Bool("Smooth", self, false)
 	
 	input_display_list = [
 		["Output",			 false], 1, 18, 
@@ -55,13 +55,13 @@ function __Node_3D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		["Light",			 false], 9, 10, 11, 12, 13,
 	];
 	
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue_Output("3D scene", self, VALUE_TYPE.d3object, function(index) { return submit_vertex(index); });
+	outputs[1] = nodeValue_Output("3D scene", self, VALUE_TYPE.d3object, function(index) { return submit_vertex(index); });
 	
-	outputs[| 2] = nodeValue_Output("Normal pass", self, VALUE_TYPE.surface, noone);
+	outputs[2] = nodeValue_Output("Normal pass", self, VALUE_TYPE.surface, noone);
 	
-	outputs[| 3] = nodeValue_Output("3D vertex", self, VALUE_TYPE.d3vertex, []);
+	outputs[3] = nodeValue_Output("3D vertex", self, VALUE_TYPE.d3vertex, []);
 	
 	output_display_list = [
 		0, 2, 1, 3
@@ -396,7 +396,7 @@ function __Node_3D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			mesh_genetated  = true;
 			
 			RENDER_ALL
-			outputs[| 3].setValue(vertexObjects);
+			outputs[3].setValue(vertexObjects);
 		}
 	}
 	
@@ -451,7 +451,7 @@ function __Node_3D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var _dimS = _data[18];
 		var _smt  = _data[19];
 		
-		inputs[| 17].setVisible(_proj);
+		inputs[17].setVisible(_proj);
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 		if(!is_surface(_ins)) return _outSurf;

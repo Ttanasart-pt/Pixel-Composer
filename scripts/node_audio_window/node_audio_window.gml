@@ -1,28 +1,28 @@
 function Node_Audio_Window(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Audio Window";
 	
-	inputs[| 0] = nodeValue_AudioBit("Audio data", self, noone)
+	inputs[0] = nodeValue_AudioBit("Audio data", self, noone)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue_Int("Width", self, 4096, "Amount of bits to extract.");
+	inputs[1] = nodeValue_Int("Width", self, 4096, "Amount of bits to extract.");
 	
-	inputs[| 2] = nodeValue_Float("Location", self, 0)
+	inputs[2] = nodeValue_Float("Location", self, 0)
 		.setDisplay(VALUE_DISPLAY._default, { unit: 0, side_button: button(function() { 
-					inputs[| 2].display_data.unit = (inputs[| 2].display_data.unit + 1) % 3; 
-					inputs[| 2].display_data.side_button.tooltip.index = inputs[| 2].display_data.unit; 
+					inputs[2].display_data.unit = (inputs[2].display_data.unit + 1) % 3; 
+					inputs[2].display_data.side_button.tooltip.index = inputs[2].display_data.unit; 
 					update();
 				}).setTooltip( new tooltipSelector("Unit", [ "Bit", "Second", "Progress" ]) ) 
-				  .setIcon( THEME.unit_audio, [ function() { return inputs[| 2].display_data.unit; } ], COLORS._main_icon )
+				  .setIcon( THEME.unit_audio, [ function() { return inputs[2].display_data.unit; } ], COLORS._main_icon )
 			}
 		);
 		
-	inputs[| 3] = nodeValue_Enum_Button("Cursor location", self,  1, [ "Start", "Middle", "End" ]);
+	inputs[3] = nodeValue_Enum_Button("Cursor location", self,  1, [ "Start", "Middle", "End" ]);
 	
-	inputs[| 4] = nodeValue_Int("Step", self, 16);
+	inputs[4] = nodeValue_Int("Step", self, 16);
 	
-	inputs[| 5] = nodeValue_Bool("Match timeline", self, true, "Set window cursor to match animation timeline.");
+	inputs[5] = nodeValue_Bool("Match timeline", self, true, "Set window cursor to match animation timeline.");
 	
-	outputs[| 0] = nodeValue_Output("Bit Array", self, VALUE_TYPE.float, [])
+	outputs[0] = nodeValue_Output("Bit Array", self, VALUE_TYPE.float, [])
 		.setArrayDepth(1);
 		
 	input_display_list = [ 0, 
@@ -36,7 +36,7 @@ function Node_Audio_Window(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	static step = function() {
 		var _anim = getInputData(5);
 		
-		inputs[| 2].setVisible(!_anim);
+		inputs[2].setVisible(!_anim);
 		update_on_frame = _anim;
 	}
 	
@@ -50,7 +50,7 @@ function Node_Audio_Window(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var _stp  = getInputData(4);	_stp = max(1, _stp);
 		var _anim = getInputData(5);
 		
-		var _unit = inputs[| 2].display_data.unit;
+		var _unit = inputs[2].display_data.unit;
 		var off = 0, st = 0, ed = 1, len = 1;
 		var _ch = _aud.getChannel();
 		
@@ -92,7 +92,7 @@ function Node_Audio_Window(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				res[i][_ind++] = _dat[j];
 		}
 		
-		outputs[| 0].setValue(res);
+		outputs[0].setValue(res);
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region

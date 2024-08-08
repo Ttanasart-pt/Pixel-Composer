@@ -7,7 +7,7 @@ function Node_create_WAV_File_Read(_x, _y, _group = noone) {
 	}
 	
 	var node = new Node_WAV_File_Read(_x, _y, _group).skipDefault();
-	node.inputs[| 0].setValue(path);
+	node.inputs[0].setValue(path);
 	if(NODE_NEW_MANUAL) node.doUpdate();
 	
 	return node;
@@ -17,7 +17,7 @@ function Node_create_WAV_File_Read_path(_x, _y, path) {
 	if(!file_exists_empty(path)) return noone;
 	
 	var node = new Node_WAV_File_Read(_x, _y, PANEL_GRAPH.getCurrentContext()).skipDefault();
-	node.inputs[| 0].setValue(path);
+	node.inputs[0].setValue(path);
 	node.doUpdate();
 	
 	return node;	
@@ -27,30 +27,30 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	name  = "WAV File In";
 	color = COLORS.node_blend_input;
 	
-	inputs[| 0]  = nodeValue_Text("Path", self, "")
+	inputs[0]  = nodeValue_Text("Path", self, "")
 		.setDisplay(VALUE_DISPLAY.path_load, { filter: "audio|*.wav" })
 		.rejectArray();
 	
-	inputs[| 1]  = nodeValue_Trigger("Sync length", self, false )
+	inputs[1]  = nodeValue_Trigger("Sync length", self, false )
 		.setDisplay(VALUE_DISPLAY.button, { name: "Sync", UI : true, onClick: function() { 
 			if(content == noone) return;
 			TOTAL_FRAMES = max(1, ceil(content.duration * PROJECT.animator.framerate));
 		} });
 		
-	inputs[| 2]  = nodeValue_Bool("Mono", self, false);
+	inputs[2]  = nodeValue_Bool("Mono", self, false);
 		
-	outputs[| 0] = nodeValue_Output("Data", self, VALUE_TYPE.audioBit, noone)
+	outputs[0] = nodeValue_Output("Data", self, VALUE_TYPE.audioBit, noone)
 		.setArrayDepth(1);
 	
-	outputs[| 1] = nodeValue_Output("Path", self, VALUE_TYPE.path, "");
+	outputs[1] = nodeValue_Output("Path", self, VALUE_TYPE.path, "");
 	
-	outputs[| 2] = nodeValue_Output("Sample rate", self, VALUE_TYPE.integer, 44100)
+	outputs[2] = nodeValue_Output("Sample rate", self, VALUE_TYPE.integer, 44100)
 		.setVisible(false);
 	
-	outputs[| 3] = nodeValue_Output("Channels", self, VALUE_TYPE.integer, 2)
+	outputs[3] = nodeValue_Output("Channels", self, VALUE_TYPE.integer, 2)
 		.setVisible(false);
 	
-	outputs[| 4] = nodeValue_Output("Duration (s)", self, VALUE_TYPE.float, 0)
+	outputs[4] = nodeValue_Output("Duration (s)", self, VALUE_TYPE.float, 0)
 		.setVisible(false);
 	
 	content      = noone;
@@ -111,7 +111,7 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		if(ext != ".wav") return false;
 			
-		outputs[| 1].setValue(path);
+		outputs[1].setValue(path);
 		
 		printIf(global.FLAG.wav_import, "-- Reading file...");
 		
@@ -120,15 +120,15 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	}
 	
 	function readSoundComplete() {
-		outputs[| 0].setValue(content);
-		outputs[| 2].setValue(content.sample);
-		outputs[| 3].setValue(content.channels);
-		outputs[| 4].setValue(content.duration);
+		outputs[0].setValue(content);
+		outputs[2].setValue(content.sample);
+		outputs[3].setValue(content.channels);
+		outputs[4].setValue(content.duration);
 		
 		printIf(global.FLAG.wav_import, "-- Creating preview buffer...");
 		
 		var frm = ceil(content.duration * PROJECT.animator.framerate);
-		inputs[| 1].editWidget.text = $"Sync ({frm} frames)";
+		inputs[1].editWidget.text = $"Sync ({frm} frames)";
 		
 		var bufferId = buffer_create(content.packet * 2, buffer_fixed, 1);
 		buffer_seek(bufferId, buffer_seek_start, 0);
@@ -169,7 +169,7 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			
 			if(content != noone) {
 				var frm = max(1, ceil(content.duration * PROJECT.animator.framerate));
-				inputs[| 1].editWidget.text = $"Sync ({frm} frames)";
+				inputs[1].editWidget.text = $"Sync ({frm} frames)";
 			}
 			
 			RENDER_ALL_REORDER
@@ -280,6 +280,6 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		if(is_array(path)) path = array_safe_get(path, 0);
 		if(!file_exists_empty(path)) return;
 		
-		inputs[| 0].setValue(path); 
+		inputs[0].setValue(path); 
 	}
 }

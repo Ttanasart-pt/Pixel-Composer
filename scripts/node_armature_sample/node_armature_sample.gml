@@ -2,16 +2,16 @@ function Node_Armature_Sample(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	name = "Armature Sample";
 	setDimension(96, 72);
 	
-	inputs[| 0] = nodeValue_Armature("Armature", self, noone)
+	inputs[0] = nodeValue_Armature("Armature", self, noone)
 		.setVisible(true, true)
 		.rejectArray();
 		
-	inputs[| 1] = nodeValue_Text("Bone name", self, "");
+	inputs[1] = nodeValue_Text("Bone name", self, "");
 		
-	inputs[| 2] = nodeValue_Float("Sample point", self, 0)
+	inputs[2] = nodeValue_Float("Sample point", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	outputs[| 0] = nodeValue_Output("Position", self, VALUE_TYPE.integer, [ 0, 0 ])
+	outputs[0] = nodeValue_Output("Position", self, VALUE_TYPE.integer, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	#region ++++ attributes ++++
@@ -47,12 +47,12 @@ function Node_Armature_Sample(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		
 		var _b = _bone.findBoneByName(_name);
 		if(_b == noone) {
-			outputs[| 0].setValue([0, 0]);
+			outputs[0].setValue([0, 0]);
 			return;
 		}
 		
 		var _p = _b.getPoint(_prog);
-		outputs[| 0].setValue([_p.x, _p.y]);
+		outputs[0].setValue([_p.x, _p.y]);
 	} #endregion
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region

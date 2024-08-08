@@ -2,45 +2,45 @@ function __Node_3D_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	name = "3D Displace";
 	batch_output = false;
 	
-	inputs[| 0] = nodeValue_Dimension(self);
+	inputs[0] = nodeValue_Dimension(self);
 	
-	inputs[| 1] = nodeValue_Vector("Object position", self, [ 0, 0, 0 ]);
+	inputs[1] = nodeValue_Vector("Object position", self, [ 0, 0, 0 ]);
 	
-	inputs[| 2] = nodeValue_Vector("Object rotation", self, [ 0, 0, 0 ]);
+	inputs[2] = nodeValue_Vector("Object rotation", self, [ 0, 0, 0 ]);
 	
-	inputs[| 3] = nodeValue_Vector("Object scale", self, [ 1, 1, 1 ]);
+	inputs[3] = nodeValue_Vector("Object scale", self, [ 1, 1, 1 ]);
 	
-	inputs[| 4] = nodeValue_Vector("Render position", self, [ 0.5, 0.5 ])
+	inputs[4] = nodeValue_Vector("Render position", self, [ 0.5, 0.5 ])
 		.setUnitRef( function() { return getInputData(0); }, VALUE_UNIT.reference);
 	
-	inputs[| 5] = nodeValue_Vector("Render scale", self, [ 1, 1 ]);
+	inputs[5] = nodeValue_Vector("Render scale", self, [ 1, 1 ]);
 		
-	inputs[| 6] = nodeValue_Rotation("Light direction", self, 0);
+	inputs[6] = nodeValue_Rotation("Light direction", self, 0);
 		
-	inputs[| 7] = nodeValue_Float("Light height", self, 0.5)
+	inputs[7] = nodeValue_Float("Light height", self, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-1, 1, 0.01] });
 		
-	inputs[| 8] = nodeValue_Float("Light intensity", self, 1)
+	inputs[8] = nodeValue_Float("Light intensity", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 9] = nodeValue_Color("Light color", self, c_white);
+	inputs[9] = nodeValue_Color("Light color", self, c_white);
 	
-	inputs[| 10] = nodeValue_Color("Ambient color", self, c_grey);
+	inputs[10] = nodeValue_Color("Ambient color", self, c_grey);
 	
-	inputs[| 11] = nodeValue("3D vertex", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3vertex, [])
+	inputs[11] = nodeValue("3D vertex", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3vertex, [])
 		.setVisible(true, true);
 		
-	inputs[| 12] = nodeValue_Enum_Button("Projection", self,  0, [ "Orthographic", "Perspective" ])
+	inputs[12] = nodeValue_Enum_Button("Projection", self,  0, [ "Orthographic", "Perspective" ])
 		.rejectArray();
 		
-	inputs[| 13] = nodeValue_Float("Field of view", self, 60)
+	inputs[13] = nodeValue_Float("Field of view", self, 60)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 1, 90, 0.1 ] });
 	
-	inputs[| 14] = nodeValue_Bool("Scale view with dimension", self, true);
+	inputs[14] = nodeValue_Bool("Scale view with dimension", self, true);
 	
-	inputs[| 15] = nodeValue_Surface("Displacement map", self);
+	inputs[15] = nodeValue_Surface("Displacement map", self);
 	
-	inputs[| 16] = nodeValue_Float("Strength", self, 1)
+	inputs[16] = nodeValue_Float("Strength", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01 ] });
 	
 	input_display_list = [ 11,
@@ -51,13 +51,13 @@ function __Node_3D_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		["Light",			 true], 6, 7, 8, 9, 10,
 	];
 	
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue_Output("3D scene", self, VALUE_TYPE.d3object, function() { return submit_vertex(); });
+	outputs[1] = nodeValue_Output("3D scene", self, VALUE_TYPE.d3object, function() { return submit_vertex(); });
 	
-	outputs[| 2] = nodeValue_Output("Normal pass", self, VALUE_TYPE.surface, noone);
+	outputs[2] = nodeValue_Output("Normal pass", self, VALUE_TYPE.surface, noone);
 	
-	outputs[| 3] = nodeValue_Output("3D vertex", self, VALUE_TYPE.d3vertex, []);
+	outputs[3] = nodeValue_Output("3D vertex", self, VALUE_TYPE.d3vertex, []);
 	
 	output_display_list = [
 		0, 2, 1, 3, 
@@ -92,7 +92,7 @@ function __Node_3D_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	static step = function() {
 		var _proj = getInputData(12);
-		inputs[| 13].setVisible(_proj);
+		inputs[13].setVisible(_proj);
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {

@@ -1,31 +1,31 @@
 function Node_Blur_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Path Blur";
 	
-	inputs[| 0] = nodeValue_Surface("Surface in", self);
-	inputs[| 1] = nodeValue_PathNode("Blur Path", self, noone)
+	inputs[0] = nodeValue_Surface("Surface in", self);
+	inputs[1] = nodeValue_PathNode("Blur Path", self, noone)
 		.setVisible(true, true);
 	
-	inputs[| 2] = nodeValue_Int("Resolution", self, 32);
+	inputs[2] = nodeValue_Int("Resolution", self, 32);
 	
-	inputs[| 3] = nodeValue_Surface("Mask", self);
+	inputs[3] = nodeValue_Surface("Mask", self);
 	
-	inputs[| 4] = nodeValue_Float("Mix", self, 1)
+	inputs[4] = nodeValue_Float("Mix", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 5] = nodeValue_Bool("Active", self, true);
+	inputs[5] = nodeValue_Bool("Active", self, true);
 		active_index = 5;
 	
-	inputs[| 6] = nodeValue_Toggle("Channel", self, 0b1111, { data: array_create(4, THEME.inspector_channel) });
+	inputs[6] = nodeValue_Toggle("Channel", self, 0b1111, { data: array_create(4, THEME.inspector_channel) });
 	
 	__init_mask_modifier(3); // inputs 7, 8
 	
-	inputs[| 9] = nodeValue_Float("Intensity", self, 1);
+	inputs[9] = nodeValue_Float("Intensity", self, 1);
 	
-	inputs[| 10] = nodeValue("Intensity Along Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11);
+	inputs[10] = nodeValue("Intensity Along Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11);
 	
-	inputs[| 11] = nodeValue_Slider_Range("Range", self, [ 0, 1 ]);
+	inputs[11] = nodeValue_Slider_Range("Range", self, [ 0, 1 ]);
 	
-	inputs[| 12] = nodeValue_Float("Path Origin", self, 0)
+	inputs[12] = nodeValue_Float("Path Origin", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	input_display_list = [ 5, 6, 
@@ -34,7 +34,7 @@ function Node_Blur_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		["Blur",	false],	2, 9, 10, 
 	];
 	
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	attribute_surface_depth();
 	attribute_oversample();

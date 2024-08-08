@@ -5,7 +5,7 @@ function __test_update_current_collections() { #region
 	print("---------- COLLECTION UPDATING STARTED ----------");
 	
 	var sel = PANEL_GRAPH.getFocusingNode(), outj = noone;
-	if(sel != noone) outj = sel.outputs[| 0];
+	if(sel != noone) outj = sel.outputs[0];
 	
 	while(!ds_stack_empty(st)) {
 		var _st = ds_stack_pop(st);
@@ -62,7 +62,7 @@ function __test_load_current_collections() { #region
 	print("---------- COLLECTION TESTING STARTED ----------");
 	
 	var sel = PANEL_GRAPH.getFocusingNode();
-	var outj = sel == noone? noone : sel.outputs[| 0];
+	var outj = sel == noone? noone : sel.outputs[0];
 			
 	while(!ds_stack_empty(st)) {
 		var _st = ds_stack_pop(st);
@@ -78,9 +78,9 @@ function __test_load_current_collections() { #region
 				coll.y = yy;
 				
 				if(outj) 
-				for( var k = 0; k < ds_list_size(coll.inputs); k++ ) {
-					if(coll.inputs[| k].type != VALUE_TYPE.surface) continue;
-					coll.inputs[| k].setFrom(outj);
+				for( var k = 0; k < array_length(coll.inputs); k++ ) {
+					if(coll.inputs[k].type != VALUE_TYPE.surface) continue;
+					coll.inputs[k].setFrom(outj);
 					break;
 				}
 			} else {
@@ -89,9 +89,9 @@ function __test_load_current_collections() { #region
 					coll[j].y = yy;
 					
 					if(outj) 
-					for( var k = 0; k < ds_list_size(coll[j].inputs); k++ ) {
-						if(coll[j].inputs[| k].type != VALUE_TYPE.surface) continue;
-						coll[j].inputs[| k].setFrom(outj);
+					for( var k = 0; k < array_length(coll[j].inputs); k++ ) {
+						if(coll[j].inputs[k].type != VALUE_TYPE.surface) continue;
+						coll[j].inputs[k].setFrom(outj);
 						break;
 					}
 				}
@@ -122,7 +122,7 @@ function __test_load_all_nodes() { #region
 	var col = 10;
 	var ind = 0;
 	var sel = PANEL_GRAPH.getFocusingNode();
-	var outj = sel == noone? noone : sel.outputs[| 0];
+	var outj = sel == noone? noone : sel.outputs[0];
 	
 	var index = 0;
 	var indst = 0; // 150 -- 175 -- 200
@@ -144,9 +144,9 @@ function __test_load_all_nodes() { #region
 				xx += 160;
 			if(b) {
 				if(outj) 
-				for( var i = 0; i < ds_list_size(b.inputs); i++ ) {
-					if(b.inputs[| i].type != VALUE_TYPE.surface) continue;
-					b.inputs[| i].setFrom(outj);	
+				for( var i = 0; i < array_length(b.inputs); i++ ) {
+					if(b.inputs[i].type != VALUE_TYPE.surface) continue;
+					b.inputs[i].setFrom(outj);	
 					break;
 				}
 			}
@@ -166,7 +166,7 @@ function __test_metadata_current_collections() { #region
 	
 	var sel   = PANEL_GRAPH.getFocusingNode(), outj = noone;
 	var _meta = PROJECT.meta.serialize();
-	if(sel != noone) outj = sel.outputs[| 0];
+	if(sel != noone) outj = sel.outputs[0];
 	
 	while(!ds_stack_empty(st)) {
 		var _st = ds_stack_pop(st);

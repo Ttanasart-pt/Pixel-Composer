@@ -6,35 +6,35 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	
 	manual_ungroupable	 = false;
 	
-	inputs[| 0] = nodeValue("Object", self, JUNCTION_CONNECT.input, VALUE_TYPE.rigid, noone)
+	inputs[0] = nodeValue("Object", self, JUNCTION_CONNECT.input, VALUE_TYPE.rigid, noone)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue_Enum_Scroll("Force type", self,  0, [ "Constant", "Impulse", "Torque", "Explode" ])
+	inputs[1] = nodeValue_Enum_Scroll("Force type", self,  0, [ "Constant", "Impulse", "Torque", "Explode" ])
 		.rejectArray();
 	
-	inputs[| 2] = nodeValue_Vector("Position", self, [ 0, 0 ])
+	inputs[2] = nodeValue_Vector("Position", self, [ 0, 0 ])
 		.rejectArray();
 	
-	inputs[| 3] = nodeValue_Float("Torque", self, 0)
+	inputs[3] = nodeValue_Float("Torque", self, 0)
 		.rejectArray();
 	
-	inputs[| 4] = nodeValue_Int("Apply frame", self, 0, "Frame index to apply force.")
+	inputs[4] = nodeValue_Int("Apply frame", self, 0, "Frame index to apply force.")
 		.rejectArray();
 	
-	inputs[| 5] = nodeValue_Vector("Force", self, [ 0.1, 0 ])
+	inputs[5] = nodeValue_Vector("Force", self, [ 0.1, 0 ])
 		.rejectArray();
 	
-	inputs[| 6] = nodeValue_Enum_Button("Scope", self,  0, [ "Global", "Local" ])
+	inputs[6] = nodeValue_Enum_Button("Scope", self,  0, [ "Global", "Local" ])
 		.rejectArray();
 	
-	inputs[| 7] = nodeValue_Float("Strength", self, 1)
+	inputs[7] = nodeValue_Float("Strength", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 16, 0.01] })
 		.rejectArray();
 	
-	inputs[| 8] = nodeValue_Float("Range", self, 8)
+	inputs[8] = nodeValue_Float("Range", self, 8)
 		.rejectArray();
 		
-	outputs[| 0] = nodeValue_Output("Object", self, VALUE_TYPE.rigid, noone);
+	outputs[0] = nodeValue_Output("Object", self, VALUE_TYPE.rigid, noone);
 	
 	input_display_list = [
 		["Object",	 true],	0,
@@ -72,8 +72,8 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			draw_line_width2(px, py, fx, fy, 8, 2);
 			draw_set_alpha(1);
 			
-			inputs[| 2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-			inputs[| 5].drawOverlay(hover, active, px, py, _s * attributes.display_scale, _mx, _my, _snx, _sny, 0, 10);
+			inputs[2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+			inputs[5].drawOverlay(hover, active, px, py, _s * attributes.display_scale, _mx, _my, _snx, _sny, 0, 10);
 		} else if(_typ == 3) {
 			var _rad = getInputData(8);
 			
@@ -82,26 +82,26 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			draw_circle_prec(px, py, _rad * _s, 1);
 			draw_set_alpha(1);
 			
-			inputs[| 2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-			inputs[| 8].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny);
+			inputs[2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+			inputs[8].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny);
 		} else 
-			inputs[| 2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+			inputs[2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
 	static step = function() {
 		var _typ = getInputData(1);
 		
-		inputs[| 3].setVisible(_typ == 2);
-		inputs[| 4].setVisible(_typ > 0);
-		inputs[| 5].setVisible(_typ == 0 || _typ == 1);
-		inputs[| 6].setVisible(_typ != 3);
-		inputs[| 7].setVisible(_typ == 3);
-		inputs[| 8].setVisible(_typ == 3);
+		inputs[3].setVisible(_typ == 2);
+		inputs[4].setVisible(_typ > 0);
+		inputs[5].setVisible(_typ == 0 || _typ == 1);
+		inputs[6].setVisible(_typ != 3);
+		inputs[7].setVisible(_typ == 3);
+		inputs[8].setVisible(_typ == 3);
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
 		var _obj = getInputData(0);
-		outputs[| 0].setValue(_obj);
+		outputs[0].setValue(_obj);
 		
 		RETURN_ON_REST
 			

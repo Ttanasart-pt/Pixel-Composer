@@ -2,26 +2,26 @@ function Node_Trigger(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	name = "Trigger";
 	setDimension(96, 56);
 	
-	inputs[| 0] = nodeValue_Trigger("Trigger", self, false )
+	inputs[0] = nodeValue_Trigger("Trigger", self, false )
 		.setDisplay(VALUE_DISPLAY.button, { name: "Trigger" });
 	
-	outputs[| 0] = nodeValue_Output("Trigger", self, VALUE_TYPE.trigger, false );
+	outputs[0] = nodeValue_Output("Trigger", self, VALUE_TYPE.trigger, false );
 	
 	insp2UpdateTooltip   = "Trigger";
 	insp2UpdateIcon      = [ THEME.sequence_control, 1, COLORS._main_value_positive ];
 	
-	static onInspector2Update = function() { inputs[| 0].setAnim(true); inputs[| 0].setValue(true); }
+	static onInspector2Update = function() { inputs[0].setAnim(true); inputs[0].setValue(true); }
 	
 	static update = function() { 
 		
-		var _val = inputs[| 0].getValue();
-		outputs[| 0].setValue(_val);
+		var _val = inputs[0].getValue();
+		outputs[0].setValue(_val);
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
 		var bbox = drawGetBbox(xx, yy, _s);
-		var trg  = outputs[| 0].getValue();
+		var trg  = outputs[0].getValue();
 		
 		var cc = trg? COLORS._main_accent : COLORS._main_icon;
 		var rr = min(bbox.w, bbox.h) / 2 - 6;

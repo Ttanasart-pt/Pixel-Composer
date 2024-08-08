@@ -2,18 +2,18 @@ function Node_Path_Map_Area(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	name = "Remap Path";
 	setDimension(96, 48);;
 	
-	inputs[| 0] = nodeValue_PathNode("Path", self, noone)
+	inputs[0] = nodeValue_PathNode("Path", self, noone)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue_Area("Area", self, DEF_AREA, { useShape : false });
-	inputs[| 1].editWidget.adjust_shape = false;
+	inputs[1] = nodeValue_Area("Area", self, DEF_AREA, { useShape : false });
+	inputs[1].editWidget.adjust_shape = false;
 	
-	outputs[| 0] = nodeValue_Output("Path", self, VALUE_TYPE.pathnode, self);
+	outputs[0] = nodeValue_Output("Path", self, VALUE_TYPE.pathnode, self);
 	
 	cached_pos = ds_map_create();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		inputs[| 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		inputs[1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
 	static getLineCount = function() { 
@@ -70,7 +70,7 @@ function Node_Path_Map_Area(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	}
 	
 	static update = function() { 
-		outputs[| 0].setValue(self);
+		outputs[0].setValue(self);
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

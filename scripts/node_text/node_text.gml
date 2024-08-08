@@ -2,66 +2,66 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	name = "Draw Text";
 	font = f_p0;
 	
-	inputs[| 0] = nodeValue_Text("Text", self, "")
+	inputs[0] = nodeValue_Text("Text", self, "")
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue_Text("Font", self, "")
+	inputs[1] = nodeValue_Text("Font", self, "")
 		.setDisplay(VALUE_DISPLAY.path_font);
 	
-	inputs[| 2] = nodeValue_Int("Size", self, 16);
+	inputs[2] = nodeValue_Int("Size", self, 16);
 	
-	inputs[| 3] = nodeValue_Bool("Anti-Aliasing ", self, false);
+	inputs[3] = nodeValue_Bool("Anti-Aliasing ", self, false);
 	
-	inputs[| 4] = nodeValue_Vector("Character range", self, [ 32, 128 ]);
+	inputs[4] = nodeValue_Vector("Character range", self, [ 32, 128 ]);
 	
-	inputs[| 5] = nodeValue_Color("Color", self, c_white);
+	inputs[5] = nodeValue_Color("Color", self, c_white);
 	
-	inputs[| 6] = nodeValue_Vector("Fixed dimension", self, DEF_SURF )
+	inputs[6] = nodeValue_Vector("Fixed dimension", self, DEF_SURF )
 		.setVisible(true, false);
 	
-	inputs[| 7] = nodeValue_Enum_Button("Horizontal alignment", self,  0 , [ THEME.inspector_text_halign, THEME.inspector_text_halign, THEME.inspector_text_halign]);
+	inputs[7] = nodeValue_Enum_Button("Horizontal alignment", self,  0 , [ THEME.inspector_text_halign, THEME.inspector_text_halign, THEME.inspector_text_halign]);
 	
-	inputs[| 8] = nodeValue_Enum_Button("Vertical alignment", self,  0 , [ THEME.inspector_text_valign, THEME.inspector_text_valign, THEME.inspector_text_valign ]);
+	inputs[8] = nodeValue_Enum_Button("Vertical alignment", self,  0 , [ THEME.inspector_text_valign, THEME.inspector_text_valign, THEME.inspector_text_valign ]);
 	
-	inputs[| 9] = nodeValue_Enum_Scroll("Output dimension", self,  1 , [ "Fixed", "Dynamic" ]);
+	inputs[9] = nodeValue_Enum_Scroll("Output dimension", self,  1 , [ "Fixed", "Dynamic" ]);
 	
-	inputs[| 10] = nodeValue_Padding("Padding", self, [0, 0, 0, 0]);
+	inputs[10] = nodeValue_Padding("Padding", self, [0, 0, 0, 0]);
 	
-	inputs[| 11] = nodeValue_Float("Letter spacing", self, 0);
+	inputs[11] = nodeValue_Float("Letter spacing", self, 0);
 	
-	inputs[| 12] = nodeValue_Float("Line height", self, 0);
+	inputs[12] = nodeValue_Float("Line height", self, 0);
 	
-	inputs[| 13] = nodeValue_PathNode("Path", self, noone)
+	inputs[13] = nodeValue_PathNode("Path", self, noone)
 		.setVisible(true, true);
 	
-	inputs[| 14] = nodeValue_Float("Path shift", self, 0);
+	inputs[14] = nodeValue_Float("Path shift", self, 0);
 	
-	inputs[| 15] = nodeValue_Bool("Scale to fit", self, false);
+	inputs[15] = nodeValue_Bool("Scale to fit", self, false);
 	
-	inputs[| 16] = nodeValue_Bool("Render background", self, false);
+	inputs[16] = nodeValue_Bool("Render background", self, false);
 	
-	inputs[| 17] = nodeValue_Color("BG Color", self, c_black);
+	inputs[17] = nodeValue_Color("BG Color", self, c_black);
 	
-	inputs[| 18] = nodeValue_Bool("Wave", self, false);
+	inputs[18] = nodeValue_Bool("Wave", self, false);
 	
-	inputs[| 19] = nodeValue_Float("Wave amplitude", self, 4);
+	inputs[19] = nodeValue_Float("Wave amplitude", self, 4);
 	
-	inputs[| 20] = nodeValue_Float("Wave scale", self, 30);
+	inputs[20] = nodeValue_Float("Wave scale", self, 30);
 	
-	inputs[| 21] = nodeValue_Rotation("Wave phase", self, 0);
+	inputs[21] = nodeValue_Rotation("Wave phase", self, 0);
 	
-	inputs[| 22] = nodeValue_Float("Wave shape", self, 0)
+	inputs[22] = nodeValue_Float("Wave shape", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 3, 0.01 ] });
 	
-	inputs[| 23] = nodeValue_Bool("Typewriter", self, false);
+	inputs[23] = nodeValue_Bool("Typewriter", self, false);
 	
-	inputs[| 24] = nodeValue_Slider_Range("Range", self, [ 0, 1 ]);
+	inputs[24] = nodeValue_Slider_Range("Range", self, [ 0, 1 ]);
 	
-	inputs[| 25] = nodeValue_Enum_Button("Trim type", self,  0 , [ "Character", "Word", "Line" ]);
+	inputs[25] = nodeValue_Enum_Button("Trim type", self,  0 , [ "Character", "Word", "Line" ]);
 	
-	inputs[| 26] = nodeValue_Bool("Use full text size", self, true );
+	inputs[26] = nodeValue_Bool("Use full text size", self, true );
 	
-	inputs[| 27] = nodeValue_Int("Max line width", self, 0 );
+	inputs[27] = nodeValue_Int("Max line width", self, 0 );
 		
 	input_display_list = [
 		["Output",		true],	9,  6, 10,
@@ -73,7 +73,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		["Trim",		 true, 23], 25, 24, 26, 
 	];
 	
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	 
 	attribute_surface_depth();
 	
@@ -109,17 +109,17 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		
 		var _use_path = _path != noone && struct_has(_path, "getPointDistance");
 		
-		inputs[|  6].setVisible(_dimt == 0 || _use_path);
-		inputs[|  7].setVisible(_dimt == 0 || _use_path);
-		inputs[|  8].setVisible(_dimt == 0 || _use_path);
-		inputs[|  9].setVisible(!_use_path);
-		inputs[| 14].setVisible( _use_path);
-		inputs[| 15].setVisible(_dimt == 0 && !_use_path && _font != "");
+		inputs[ 6].setVisible(_dimt == 0 || _use_path);
+		inputs[ 7].setVisible(_dimt == 0 || _use_path);
+		inputs[ 8].setVisible(_dimt == 0 || _use_path);
+		inputs[ 9].setVisible(!_use_path);
+		inputs[14].setVisible( _use_path);
+		inputs[15].setVisible(_dimt == 0 && !_use_path && _font != "");
 		
-		inputs[|  2].setVisible(_font != "");
-		inputs[|  3].setVisible(_font != "");
-		inputs[| 11].setVisible(_font != "");
-		inputs[| 12].setVisible(_font != "");
+		inputs[ 2].setVisible(_font != "");
+		inputs[ 3].setVisible(_font != "");
+		inputs[11].setVisible(_font != "");
+		inputs[12].setVisible(_font != "");
 	} #endregion
 	
 	static waveGet = function(_ind) { #region

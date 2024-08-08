@@ -1,6 +1,6 @@
-function nodeValue_Rotation_Random(_name, _node, _value, _tooltip = "") { return new NodeValue_Rotation_Random(_name, _node, _value, _tooltip); }
+function nodeValue_Rotation(_name, _node, _value, _tooltip = "") { return new NodeValue_Rotation(_name, _node, _value, _tooltip); }
 
-function NodeValue_Rotation_Random(_name, _node, _value, _tooltip = "") : NodeValue(_name, _node, JUNCTION_CONNECT.input, VALUE_TYPE.float, _value, _tooltip) constructor {
+function NodeValue_Rotation(_name, _node, _value, _tooltip = "") : NodeValue(_name, _node, JUNCTION_CONNECT.input, VALUE_TYPE.float, _value, _tooltip) constructor {
 	setDisplay(VALUE_DISPLAY.rotation);
 	
 	/////============== GET =============

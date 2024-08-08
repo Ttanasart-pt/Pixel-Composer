@@ -2,22 +2,22 @@ function Node_PB_Box_Divide(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _group
 	name = "Divide";
 	batch_output = false;
 	
-	inputs[| 1] = nodeValue("pBox", self, JUNCTION_CONNECT.input, VALUE_TYPE.pbBox, noone )
+	inputs[1] = nodeValue("pBox", self, JUNCTION_CONNECT.input, VALUE_TYPE.pbBox, noone )
 		.setVisible(true, true);
 		
-	inputs[| 2] = nodeValue_Int("Amount", self, 2 );
+	inputs[2] = nodeValue_Int("Amount", self, 2 );
 		
-	inputs[| 3] = nodeValue_Int("Spacing", self, 1 );
+	inputs[3] = nodeValue_Int("Spacing", self, 1 );
 	
-	inputs[| 4] = nodeValue_Enum_Button("Axis", self,  0 , [ "X", "Y" ]);
+	inputs[4] = nodeValue_Enum_Button("Axis", self,  0 , [ "X", "Y" ]);
 		
-	inputs[| 5] = nodeValue_Bool("Mirror", self, 0 )
+	inputs[5] = nodeValue_Bool("Mirror", self, 0 )
 		
-	inputs[| 6] = nodeValue_Enum_Button("Spacing", self,  0 , [ "Space Between", "Space Around", "Begin", "End" ]);
+	inputs[6] = nodeValue_Enum_Button("Spacing", self,  0 , [ "Space Between", "Space Around", "Begin", "End" ]);
 	
-	outputs[| 0] = nodeValue_Output("pBox Content", self, VALUE_TYPE.pbBox, [ noone ] );
+	outputs[0] = nodeValue_Output("pBox Content", self, VALUE_TYPE.pbBox, [ noone ] );
 		
-	outputs[| 1] = nodeValue_Output("pBox Space", self, VALUE_TYPE.pbBox, [ noone ] );
+	outputs[1] = nodeValue_Output("pBox Space", self, VALUE_TYPE.pbBox, [ noone ] );
 	
 	input_display_list = [ 0, 1,
 		["Divide",	false], 4, 2, 3, 6, 5, 

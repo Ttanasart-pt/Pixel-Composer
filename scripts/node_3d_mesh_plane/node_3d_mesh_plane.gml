@@ -3,15 +3,15 @@ function Node_3D_Mesh_Plane(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _grou
 	
 	object_class = __3dPlane;
 	
-	inputs[| in_mesh + 0] = nodeValue_D3Material("Material", self, new __d3dMaterial())
+	inputs[in_mesh + 0] = nodeValue_D3Material("Material", self, new __d3dMaterial())
 		.setVisible(true, true);
 	
-	inputs[| in_mesh + 1] = nodeValue_Enum_Button("Normal", self,  2 , [ "X", "Y", "Z" ]);
+	inputs[in_mesh + 1] = nodeValue_Enum_Button("Normal", self,  2 , [ "X", "Y", "Z" ]);
 	
-	inputs[| in_mesh + 2] = nodeValue_Bool("Both side", self, false )
+	inputs[in_mesh + 2] = nodeValue_Bool("Both side", self, false )
 		.rejectArray();
 	
-	inputs[| in_mesh + 3] = nodeValue_D3Material("Back Material", self, new __d3dMaterial())
+	inputs[in_mesh + 3] = nodeValue_D3Material("Back Material", self, new __d3dMaterial())
 	
 	input_display_list = [
 		__d3d_input_list_mesh, in_mesh + 1, 
@@ -20,9 +20,9 @@ function Node_3D_Mesh_Plane(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _grou
 	]
 	
 	static preGetInputs = function() {
-		var _both = inputs[| in_mesh + 2].getValue();
+		var _both = inputs[in_mesh + 2].getValue();
 		
-		inputs[| in_mesh + 3].setVisible(_both, _both);
+		inputs[in_mesh + 3].setVisible(_both, _both);
 	}
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) { #region

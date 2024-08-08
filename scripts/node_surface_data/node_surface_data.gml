@@ -2,12 +2,12 @@ function Node_Surface_data(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	name	= "Surface data";
 	color	= COLORS.node_blend_number;
 	
-	inputs[| 0] = nodeValue_Surface("Surface", self);
+	inputs[0] = nodeValue_Surface("Surface", self);
 	
-	outputs[| 0] = nodeValue_Output("Dimension", self, VALUE_TYPE.integer, [ 1, 1 ])
+	outputs[0] = nodeValue_Output("Dimension", self, VALUE_TYPE.integer, [ 1, 1 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 		
-	outputs[| 1] = nodeValue_Output("Array length", self, VALUE_TYPE.integer, 0);
+	outputs[1] = nodeValue_Output("Array length", self, VALUE_TYPE.integer, 0);
 	
 	
 	setDimension(96, 48);
@@ -23,13 +23,13 @@ function Node_Surface_data(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				_dim[i][1] = surface_get_height_safe(_insurf[i]);
 			}
 			
-			outputs[| 0].setValue(_dim);
-			outputs[| 1].setValue(len);
+			outputs[0].setValue(_dim);
+			outputs[1].setValue(len);
 			return;
 		}
 		
 		if(!_insurf || !surface_exists(_insurf)) return;
 		
-		outputs[| 0].setValue([ surface_get_width_safe(_insurf), surface_get_height_safe(_insurf) ]);
+		outputs[0].setValue([ surface_get_width_safe(_insurf), surface_get_height_safe(_insurf) ]);
 	}
 }

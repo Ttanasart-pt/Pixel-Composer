@@ -6,7 +6,7 @@ function Node_Iterate_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 	
 	is_root     = false;
 	
-	inputs[| 0] = nodeValue_Int("Repeat", self, 1 )
+	inputs[0] = nodeValue_Int("Repeat", self, 1 )
 		.uncache();
 		
 	managedRenderOrder = true;
@@ -21,15 +21,10 @@ function Node_Iterate_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 	iterated        = 0;
 	
 	static getIterationCount = function() { return getInputData(0); }
+	static bypassConnection  = function() { return iterated > 0 && !is_undefined(value_buffer); }
+	static bypassNextNode    = function() { return iterated < getIterationCount(); }
 	
-	static bypassConnection = function() { return iterated > 0 && !is_undefined(value_buffer);
-	} #endregion
-	
-	static bypassNextNode = function() { #region
-		return iterated < getIterationCount();
-	} #endregion
-	
-	static getNextNodes = function() { #region
+	static getNextNodes = function() {
 		LOG_BLOCK_START();	
 		LOG_IF(global.FLAG.render == 1, "[outputNextNode] Get next node from inline iterate");
 		
@@ -42,7 +37,7 @@ function Node_Iterate_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 		LOG_BLOCK_END();
 		
 		return _nodes;
-	} #endregion
+	}
 	
 	static connectJunctions = function(jFrom, jTo) {
 		junc_in  = jFrom.is_dummy? jFrom.dummy_get() : jFrom;
@@ -52,18 +47,18 @@ function Node_Iterate_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 		attributes.junc_out = [ junc_out.node.node_id, junc_out.index ];
 	}
 	
-	static scanJunc = function() { #region
+	static scanJunc = function() {
 		var node_in  = PROJECT.nodeMap[? attributes.junc_in[0]];
 		var node_out = PROJECT.nodeMap[? attributes.junc_out[0]];
 		
-		junc_in  = node_in?  node_in.inputs[| attributes.junc_in[1]]   : noone;
-		junc_out = node_out? node_out.outputs[| attributes.junc_out[1]] : noone;
+		junc_in  = node_in?  node_in.inputs[attributes.junc_in[1]]   : noone;
+		junc_out = node_out? node_out.outputs[attributes.junc_out[1]] : noone;
 		
 		if(junc_in)  { junc_in.value_from_loop = self;				addNode(junc_in.node);  }
 		if(junc_out) { array_push(junc_out.value_to_loop, self);	addNode(junc_out.node); }
-	} #endregion
+	}
 	
-	static updateValue = function() { #region
+	static updateValue = function() {
 		var type = junc_out.type;
 		var val  = junc_out.getValue();
 		
@@ -72,41 +67,42 @@ function Node_Iterate_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 				surface_array_free(value_buffer);
 				value_buffer = surface_array_clone(val);
 				break;
+				
 			default :
 				value_buffer = variable_clone(val);
 				break;
 		}
-	} #endregion
+	}
 	
-	static getValue = function(arr) { #region
+	static getValue = function(arr) {
 		INLINE
 		
 		arr[@ 0] = value_buffer;
 		arr[@ 1] = junc_out;
-	} #endregion
+	}
 	
-	static update = function() { #region
-		iteration_count = inputs[| 0].getValue();
+	static update = function() {
+		iteration_count = inputs[0].getValue();
 		iterated        = 0;
 		value_buffer    = undefined;
-	} #endregion
+	}
 	
-	static drawConnections = function(params = {}) { #region
+	static drawConnections = function(params = {}) {
 		if(!active) return;
 		if(!junc_in || !junc_out) return;
 		if(!junc_in.node.active || !junc_out.node.active) return;
 		
 		if(drawJuncConnection(junc_out, junc_in, params))
 			return self;
-	} #endregion
+	}
 	
-	static postDeserialize = function() { #region
+	static postDeserialize = function() {
 		refreshMember();
 		scanJunc();
-	} #endregion
+	}
 	
-	static onDestroy = function() { #region
+	static onDestroy = function() {
 		if(junc_in)  junc_in.value_from_loop = noone;
 		if(junc_out) array_remove(junc_out.value_to_loop, self);
-	} #endregion
+	}
 }

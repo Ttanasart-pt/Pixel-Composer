@@ -1,14 +1,14 @@
 function Node_FXAA(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "FXAA";
 	
-	inputs[| 0] = nodeValue_Surface("Surface in", self);
+	inputs[0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue_Bool("Active", self, true);
+	inputs[1] = nodeValue_Bool("Active", self, true);
 	
-	inputs[| 2] = nodeValue_Float("Distance", self, 0.5)
+	inputs[2] = nodeValue_Float("Distance", self, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 3] = nodeValue_Float("Mix", self, 1)
+	inputs[3] = nodeValue_Float("Mix", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	active_index = 1;
@@ -18,7 +18,7 @@ function Node_FXAA(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		["Effect", false], 2, 3, 
 	]
 	
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	attribute_surface_depth();
 	

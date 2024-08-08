@@ -3,15 +3,15 @@ function Node_String_Join(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	setDimension(96, 48);
 	
-	inputs[| 0] = nodeValue_Text("Text array", self, [])
+	inputs[0] = nodeValue_Text("Text array", self, [])
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue_Text("Divider", self, "")
+	inputs[1] = nodeValue_Text("Divider", self, "")
 		.rejectArray();
 		
-	inputs[| 1].editWidget.format = TEXT_AREA_FORMAT.delimiter;
+	inputs[1].editWidget.format = TEXT_AREA_FORMAT.delimiter;
 	
-	outputs[| 0] = nodeValue_Output("Text", self, VALUE_TYPE.text, "");
+	outputs[0] = nodeValue_Output("Text", self, VALUE_TYPE.text, "");
 	
 	static update = function() { 
 		var _arr = getInputData(0);
@@ -21,11 +21,11 @@ function Node_String_Join(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		for( var i = 0, n = array_length(_arr); i < n; i++ ) 
 			str += (i? _div : "")  + string(_arr[i]);
 		
-		outputs[| 0].setValue(str);
+		outputs[0].setValue(str);
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var str  = outputs[| 0].getValue();
+		var str  = outputs[0].getValue();
 		var bbox = drawGetBbox(xx, yy, _s);
 		
 		draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);

@@ -8,9 +8,9 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 	
 	modifiable = false;
 	
-	inputs[|  0] = nodeValue_Dimension(self);
+	inputs[ 0] = nodeValue_Dimension(self);
 	
-	custom_input_index = ds_list_size(inputs);
+	custom_input_index = array_length(inputs);
 	
 	attributes.show_slope_check = true;
 	array_push(attributeEditors, "Display");
@@ -122,7 +122,7 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 		for(var i = 0; i < _amo; i++) {
 			var index = composite.input_fix_len + i * composite.data_length;
 			
-			var _can = composite.inputs[| index].value_from;
+			var _can = composite.inputs[index].value_from;
 			if(_can == noone) continue;
 			
 			var _nod = _can.node;
@@ -130,12 +130,12 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 			var _modStack = [ _nod ];
 			
 			while(!is_instanceof(_nod, Node_Canvas)) {
-				if(_nod.inputs[| 0].type != VALUE_TYPE.surface) 
+				if(_nod.inputs[0].type != VALUE_TYPE.surface) 
 					break;
-				if(_nod.inputs[| 0].value_from == noone) 
+				if(_nod.inputs[0].value_from == noone) 
 					break;
 				
-				_nod = _nod.inputs[| 0].value_from.node;
+				_nod = _nod.inputs[0].value_from.node;
 				array_push(_modStack, _nod);
 			}
 			
@@ -188,9 +188,9 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 		_b += 32;
 		var _canvas = nodeBuild("Node_Canvas", _l, _b);
 		_canvas.setDisplayName($"Layer {array_length(canvases)}");
-		_canvas.inputs[| 12].setValue(true);
+		_canvas.inputs[12].setValue(true);
 		
-		composite.dummy_input.setFrom(_canvas.outputs[| 0]);
+		composite.dummy_input.setFrom(_canvas.outputs[0]);
 		
 		add(_canvas);
 		return _canvas;
@@ -200,7 +200,7 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 		if(composite == noone) return;
 		
 		var idx = composite.input_fix_len + index * composite.data_length;
-		var inp = composite.inputs[| idx];
+		var inp = composite.inputs[idx];
 		var nod = inp.value_from? inp.value_from.node : noone;
 		if(!nod) return;
 		
@@ -217,7 +217,7 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 		
 		for(var i = 0; i < imageAmo; i++) {
 			var _ind  = composite.input_fix_len + i * composite.data_length;
-			var _inp  = composite.inputs[| _ind];
+			var _inp  = composite.inputs[_ind];
 			var _junc = _inp.value_from? _inp.value_from.node : noone;
 			
 			if(_junc == noone) continue;
@@ -233,17 +233,17 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 	
 	if(NODE_NEW_MANUAL) {
 		var _canvas  = nodeBuild("Node_Canvas", x - 160, y);
-		_canvas.inputs[| 12].setValue(true);
+		_canvas.inputs[12].setValue(true);
 		_canvas.setDisplayName($"Background");
 		
 		var _compose = nodeBuild("Node_Composite", x, y);
-		_compose.dummy_input.setFrom(_canvas.outputs[| 0]);
+		_compose.dummy_input.setFrom(_canvas.outputs[0]);
 		
 		add(_canvas);
 		add(_compose);
 		
 		var _output = nodeBuild("Node_Group_Output", x + 160, y, self);
-		_output.inputs[| 0].setFrom(_compose.outputs[| 0]);
+		_output.inputs[0].setFrom(_compose.outputs[0]);
 	}
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
@@ -269,7 +269,7 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 			if(_ind == noone) 
 				_ind = composite.input_fix_len;
 			
-			var _inp = composite.inputs[| _ind];
+			var _inp = composite.inputs[_ind];
 			var _can = _inp? _inp.value_from : noone;
 			if(_can && struct_has(layers, _can.node.node_id))
 				canvas_sel = layers[$ _can.node.node_id].canvas;
@@ -296,7 +296,7 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 		var _dim = getInputData(0);
 		
 		for (var i = 0, n = array_length(canvases); i < n; i++)
-			canvases[i].inputs[| 0].setValue(_dim);
+			canvases[i].inputs[0].setValue(_dim);
 	}
 	
 	static dropPath = function(path) {

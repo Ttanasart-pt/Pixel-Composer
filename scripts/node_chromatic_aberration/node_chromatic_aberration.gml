@@ -1,25 +1,25 @@
 function Node_Chromatic_Aberration(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Chromatic Aberration";
 	
-	inputs[| 0] = nodeValue_Surface("Surface in", self);
+	inputs[0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue_Vector("Center", self, [ 0.5, 0.5 ])
+	inputs[1] = nodeValue_Vector("Center", self, [ 0.5, 0.5 ])
 		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
 	
-	inputs[| 2] = nodeValue_Float("Strength", self, 1)
+	inputs[2] = nodeValue_Float("Strength", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-16, 16, 0.01] })
 		.setMappable(4);
 	
-	inputs[| 3] = nodeValue_Bool("Active", self, true);
+	inputs[3] = nodeValue_Bool("Active", self, true);
 		active_index = 3;
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 4] = nodeValueMap("Strength map", self);
+	inputs[4] = nodeValueMap("Strength map", self);
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 3, 
 		["Surface",  false], 0, 
@@ -35,13 +35,13 @@ function Node_Chromatic_Aberration(_x, _y, _group = noone) : Node_Processor(_x, 
 		var py   = _y + pos[1] * _s;
 		var _hov = false;
 		
-		var hv = inputs[| 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= hv;
+		var hv = inputs[1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= hv;
 		
 		return _hov;
 	} #endregion
 	
 	static step = function() { #region
-		inputs[| 2].mappableStep();
+		inputs[2].mappableStep();
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
@@ -50,7 +50,7 @@ function Node_Chromatic_Aberration(_x, _y, _group = noone) : Node_Processor(_x, 
 		shader_set_interpolation(_data[0]);
 			shader_set_f("dimension", surface_get_width_safe(_data[0]), surface_get_height_safe(_data[0]));
 			shader_set_2("center",       _data[1]);
-			shader_set_f_map("strength", _data[2], _data[4], inputs[| 2]);
+			shader_set_f_map("strength", _data[2], _data[4], inputs[2]);
 			draw_surface_safe(_data[0]);
 		surface_reset_shader();
 		

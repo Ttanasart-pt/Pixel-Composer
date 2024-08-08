@@ -1,32 +1,32 @@
 function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Stack";
 	
-	inputs[| 0] = nodeValue_Enum_Scroll("Axis", self,  0, [ new scrollItem("Horizontal", s_node_alignment, 0), 
+	inputs[0] = nodeValue_Enum_Scroll("Axis", self,  0, [ new scrollItem("Horizontal", s_node_alignment, 0), 
 												 new scrollItem("Vertical",   s_node_alignment, 1), 
 												 new scrollItem("On top",     s_node_alignment, 3), ])
 		.rejectArray();
 	
-	inputs[| 1] = nodeValue_Enum_Button("Align", self,  1, [ "Start", "Middle", "End"])
+	inputs[1] = nodeValue_Enum_Button("Align", self,  1, [ "Start", "Middle", "End"])
 		.rejectArray();
 	
-	inputs[| 2] = nodeValue_Int("Spacing", self, 0)
+	inputs[2] = nodeValue_Int("Spacing", self, 0)
 		.rejectArray();
 	
-	inputs[| 3] = nodeValue_Padding("Padding", self, [ 0, 0, 0, 0 ])
+	inputs[3] = nodeValue_Padding("Padding", self, [ 0, 0, 0, 0 ])
 		.rejectArray();
 	
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue_Output("Atlas data", self, VALUE_TYPE.surface, []);
+	outputs[1] = nodeValue_Output("Atlas data", self, VALUE_TYPE.surface, []);
 	
 	temp_surface = [ noone, noone ];
 	
 	static createNewInput = function() {
-		var index = ds_list_size(inputs);
-		inputs[| index] = nodeValue_Surface("Input", self)
+		var index = array_length(inputs);
+		inputs[index] = nodeValue_Surface("Input", self)
 			.setVisible(true, true);
 			
-		return inputs[| index];
+		return inputs[index];
 	} setDynamicInput(1, true, VALUE_TYPE.surface);
 	
 	attribute_surface_depth();
@@ -34,8 +34,8 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	static step = function() { #region
 		var _axis = getInputData(0);
 		
-		inputs[| 1].setVisible(_axis != 2);
-		inputs[| 2].setVisible(_axis != 2);
+		inputs[1].setVisible(_axis != 2);
+		inputs[2].setVisible(_axis != 2);
 	} #endregion
 	
 	static update = function(frame = CURRENT_FRAME) { #region
@@ -47,7 +47,7 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var ww = 0;
 		var hh = 0;
 		
-		for( var i = input_fix_len; i < ds_list_size(inputs); i++ ) {
+		for( var i = input_fix_len; i < array_length(inputs); i++ ) {
 			var _surf = getInputData(i);
 			if(!is_array(_surf)) _surf = [ _surf ];
 			
@@ -75,7 +75,7 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var ow = ww + _padd[PADDING.left] + _padd[PADDING.right]; 
 		var oh = hh + _padd[PADDING.top] + _padd[PADDING.bottom]; 
 		
-		var _outSurf = outputs[| 0].getValue();
+		var _outSurf = outputs[0].getValue();
 		_outSurf     = surface_verify(_outSurf, ow, oh, attrDepth());
 		
 		temp_surface[0] = surface_verify(temp_surface[0], ow, oh, attrDepth());
@@ -88,7 +88,7 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var ppind = 0;
 		var sx = 0, sy = 0;
 		
-		for( var i = input_fix_len; i < ds_list_size(inputs); i++ ) {
+		for( var i = input_fix_len; i < array_length(inputs); i++ ) {
 			var _surf = getInputData(i);
 			if(!is_array(_surf)) _surf = [ _surf ];
 				
@@ -145,8 +145,8 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			BLEND_NORMAL
 		surface_reset_target();
 		
-		outputs[| 0].setValue(_outSurf);
-		outputs[| 1].setValue(atlas);
+		outputs[0].setValue(_outSurf);
+		outputs[1].setValue(atlas);
 	} #endregion
 }
 

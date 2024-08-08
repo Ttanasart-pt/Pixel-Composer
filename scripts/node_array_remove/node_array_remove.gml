@@ -2,37 +2,37 @@ function Node_Array_Remove(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	name = "Array Remove";
 	setDimension(96, 32 + 24);
 	
-	inputs[| 0] = nodeValue("Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0)
+	inputs[0] = nodeValue("Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue_Enum_Button("Type", self,  0, [ "Index", "Value" ])
+	inputs[1] = nodeValue_Enum_Button("Type", self,  0, [ "Index", "Value" ])
 		.rejectArray();
 	
-	inputs[| 2] = nodeValue_Int("Index", self, 0);
+	inputs[2] = nodeValue_Int("Index", self, 0);
 	
-	inputs[| 3] = nodeValue("Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0)
+	inputs[3] = nodeValue("Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0)
 		.setVisible(true, true);
 	
-	inputs[| 4] = nodeValue_Bool("Spread array", self, false )
+	inputs[4] = nodeValue_Bool("Spread array", self, false )
 		.rejectArray();
 		
-	outputs[| 0] = nodeValue_Output("Array", self, VALUE_TYPE.any, 0);
+	outputs[0] = nodeValue_Output("Array", self, VALUE_TYPE.any, 0);
 	
 	static step = function() {
 		var type  = getInputData(1);
 		
-		inputs[| 2].setVisible(type == 0, type == 0);
-		inputs[| 3].setVisible(type == 1, type == 1);
+		inputs[2].setVisible(type == 0, type == 0);
+		inputs[3].setVisible(type == 1, type == 1);
 		
-		inputs[| 0].setType(VALUE_TYPE.any);
-		inputs[| 3].setType(VALUE_TYPE.any);
-		outputs[| 0].setType(VALUE_TYPE.any);
+		inputs[0].setType(VALUE_TYPE.any);
+		inputs[3].setType(VALUE_TYPE.any);
+		outputs[0].setType(VALUE_TYPE.any);
 		
-		if(inputs[| 0].value_from != noone) {
-			var type = inputs[| 0].value_from.type;
-			inputs[| 0].setType(type);
-			inputs[| 3].setType(type);
-			outputs[| 0].setType(type);
+		if(inputs[0].value_from != noone) {
+			var type = inputs[0].value_from.type;
+			inputs[0].setType(type);
+			inputs[3].setType(type);
+			outputs[0].setType(type);
 		}
 		
 	}
@@ -63,7 +63,7 @@ function Node_Array_Remove(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				array_remove(_arr, value[i]);
 		}
 		
-		outputs[| 0].setValue(_arr);
+		outputs[0].setValue(_arr);
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

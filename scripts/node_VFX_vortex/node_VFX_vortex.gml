@@ -2,13 +2,13 @@ function Node_VFX_Vortex(_x, _y, _group = noone) : Node_VFX_effector(_x, _y, _gr
 	name = "Vortex";
 	node_draw_icon = s_node_vfx_vortex;
 	
-	inputs[| 4].setVisible(false, false);
+	inputs[4].setVisible(false, false);
 	
-	inputs[| effector_input_length + 0] = nodeValue_Float("Attraction force", self, 2 );
+	inputs[effector_input_length + 0] = nodeValue_Float("Attraction force", self, 2 );
 	
-	inputs[| effector_input_length + 1] = nodeValue_Bool("Clockwise", self, true );
+	inputs[effector_input_length + 1] = nodeValue_Bool("Clockwise", self, true );
 	
-	inputs[| effector_input_length + 2] = nodeValue_Bool("Destroy when reach middle", self, false );
+	inputs[effector_input_length + 2] = nodeValue_Bool("Destroy when reach middle", self, false );
 		
 	array_push(input_display_list, effector_input_length + 0, effector_input_length + 1, effector_input_length + 2);
 	

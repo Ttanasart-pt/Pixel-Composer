@@ -1,9 +1,9 @@
 function Node_Surface_To_Color(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name	= "Surface to Color";
 	
-	inputs[| 0] = nodeValue_Surface("Surface", self);
+	inputs[0] = nodeValue_Surface("Surface", self);
 	
-	outputs[| 0] = nodeValue_Output("Colors", self, VALUE_TYPE.color, [])
+	outputs[0] = nodeValue_Output("Colors", self, VALUE_TYPE.color, [])
 		.setDisplay(VALUE_DISPLAY.palette);
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {

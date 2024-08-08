@@ -1,38 +1,38 @@
 function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Posterize";
 	
-	inputs[| 0] = nodeValue_Surface("Surface in", self);
+	inputs[0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue_Palette("Palette", self, array_clone(DEF_PALETTE));
+	inputs[1] = nodeValue_Palette("Palette", self, array_clone(DEF_PALETTE));
 	
-	inputs[| 2] = nodeValue_Bool("Use palette", self, true);
+	inputs[2] = nodeValue_Bool("Use palette", self, true);
 	
-	inputs[| 3] = nodeValue_Int("Steps", self, 4)
+	inputs[3] = nodeValue_Int("Steps", self, 4)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [2, 16, 0.1] });
 	
-	inputs[| 4] = nodeValue_Float("Gamma", self, 1)
+	inputs[4] = nodeValue_Float("Gamma", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 2, 0.01] })
 		.setMappable(7);
 	
-	inputs[| 5] = nodeValue_Bool("Active", self, true);
+	inputs[5] = nodeValue_Bool("Active", self, true);
 		active_index = 5;
 		
-	inputs[| 6] = nodeValue_Bool("Posterize alpha", self, true);
+	inputs[6] = nodeValue_Bool("Posterize alpha", self, true);
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 7] = nodeValueMap("Gamma map", self);
+	inputs[7] = nodeValueMap("Gamma map", self);
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 8] = nodeValue_Enum_Button("Space", self,  0, [ "RGB", "LAB" ]);
+	inputs[8] = nodeValue_Enum_Button("Space", self,  0, [ "RGB", "LAB" ]);
 	
 	input_display_list = [ 5, 0, 
 		["Palette", false, 2], 1, 3, 4, 7, 8, 
 		["Alpha",   false], 6, 
 	];
 	
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	attribute_surface_depth();
 	
@@ -41,11 +41,11 @@ function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	static step = function() {
 		var _use_pal = getInputData(2);
 		
-		inputs[| 1].setVisible(_use_pal);
-		inputs[| 3].setVisible(!_use_pal);
-		inputs[| 4].setVisible(!_use_pal);
-		inputs[| 4].mappableStep();
-		inputs[| 8].setVisible(_use_pal);
+		inputs[1].setVisible(_use_pal);
+		inputs[3].setVisible(!_use_pal);
+		inputs[4].setVisible(!_use_pal);
+		inputs[4].mappableStep();
+		inputs[8].setVisible(_use_pal);
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
@@ -143,7 +143,7 @@ function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				shader_set_f("cMax",       _max);
 				shader_set_f("cMin",       _min);
 				shader_set_f("colors",    _data[3]);
-				shader_set_f_map("gamma", _data[4], _data[7], inputs[| 4]);
+				shader_set_f_map("gamma", _data[4], _data[7], inputs[4]);
 				shader_set_i("alpha",     _alp);
 			
 				draw_surface_safe(_surf);

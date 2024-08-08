@@ -7,7 +7,7 @@ function Node_create_CSV_File_Read(_x, _y, _group = noone) {
 	}
 	
 	var node = new Node_CSV_File_Read(_x, _y, _group).skipDefault();
-	node.inputs[| 0].setValue(path);
+	node.inputs[0].setValue(path);
 	node.doUpdate();
 	
 	return node;
@@ -17,7 +17,7 @@ function Node_create_CSV_File_Read_path(_x, _y, path) {
 	if(!file_exists_empty(path)) return noone;
 	
 	var node = new Node_CSV_File_Read(_x, _y, PANEL_GRAPH.getCurrentContext()).skipDefault();
-	node.inputs[| 0].setValue(path);
+	node.inputs[0].setValue(path);
 	node.doUpdate();
 	
 	return node;	
@@ -29,16 +29,16 @@ function Node_CSV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	w = 128;
 	
-	inputs[| 0]  = nodeValue_Text("Path", self, "")
+	inputs[0]  = nodeValue_Text("Path", self, "")
 		.setDisplay(VALUE_DISPLAY.path_load, { filter: "CSV file|*.csv" })
 		.rejectArray();
 		
-	inputs[| 1]  = nodeValue_Bool("Convert to number", self, false)
+	inputs[1]  = nodeValue_Bool("Convert to number", self, false)
 		.rejectArray();
 	
-	outputs[| 0] = nodeValue_Output("Content", self, VALUE_TYPE.text, "");
+	outputs[0] = nodeValue_Output("Content", self, VALUE_TYPE.text, "");
 	
-	outputs[| 1] = nodeValue_Output("Path", self, VALUE_TYPE.path, "")
+	outputs[1] = nodeValue_Output("Path", self, VALUE_TYPE.path, "")
 		.setVisible(true, true);
 	
 	content      = "";
@@ -69,12 +69,12 @@ function Node_CSV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		if(ext != ".csv") return false;
 			
-		outputs[| 1].setValue(path);
+		outputs[1].setValue(path);
 		
 		content = file_text_read_all_lines(path);
 		
 		var convert = getInputData(1);
-		outputs[| 0].setType(convert? VALUE_TYPE.float : VALUE_TYPE.text);
+		outputs[0].setType(convert? VALUE_TYPE.float : VALUE_TYPE.text);
 		if(convert) {
 			for( var i = 0, n = array_length(content); i < n; i++ ) {
 				var c = content[i];
@@ -120,7 +120,7 @@ function Node_CSV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var path = path_get(getInputData(0));
 		if(path_current != path) updatePaths(path);
 		
-		outputs[| 0].setValue(content);
+		outputs[0].setValue(content);
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
@@ -136,6 +136,6 @@ function Node_CSV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		if(is_array(path)) path = array_safe_get(path, 0);
 		if(!file_exists_empty(path)) return;
 		
-		inputs[| 0].setValue(path); 
+		inputs[0].setValue(path); 
 	}
 }

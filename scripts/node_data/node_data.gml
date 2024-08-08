@@ -1,24 +1,27 @@
-global.loop_nodes = [ "Node_Iterate", "Node_Iterate_Each" ];
-
-#macro INAME internalName == ""? name : internalName
-#macro SHOW_PARAM (show_parameter && previewable)
-
-enum CACHE_USE {
-	none,
-	manual,
-	auto
-}
-
-enum DYNA_INPUT_COND {
-	connection = 1 << 0,
-	zero       = 1 << 1,
-}
-
-enum NODE_3D {
-	none,
-	polygon,
-	sdf,
-}
+#region global
+	global.loop_nodes = [ "Node_Iterate", "Node_Iterate_Each" ];
+	
+	#macro INAME internalName == ""? name : internalName
+	#macro SHOW_PARAM (show_parameter && previewable)
+	#macro NODE_SET_INPUT_SIZE input_list_size = array_length(inputs); output_list_size = array_length(outputs);
+	
+	enum CACHE_USE {
+		none,
+		manual,
+		auto
+	}
+	
+	enum DYNA_INPUT_COND {
+		connection = 1 << 0,
+		zero       = 1 << 1,
+	}
+	
+	enum NODE_3D {
+		none,
+		polygon,
+		sdf,
+	}
+#endregion
 
 function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
@@ -137,11 +140,14 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	#endregion
 	
 	#region ---- junctions ----
-		inputs    = ds_list_create();
-		outputs   = ds_list_create();
+		inputs    = [];
+		outputs   = [];
 		inputMap  = ds_map_create();
 		outputMap = ds_map_create();
 		input_value_map = {};
+		
+		input_list_size  = 0;
+		output_list_size = 0;
 		
 		use_display_list		= true;
 		input_display_list		= -1;
@@ -194,10 +200,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		input_button_length = 0;
 		
 		run_in(1, function() {
-			input_buttons = [];
+			input_buttons   = [];
+			NODE_SET_INPUT_SIZE
 			
-			for( var i = 0; i < ds_list_size(inputs); i++ ) {
-				var _in = inputs[| i];
+			for( var i = 0; i < input_list_size; i++ ) {
+				var _in = inputs[i];
 				if(!is_instanceof(_in, NodeValue)) continue;
 				if(_in.type != VALUE_TYPE.trigger) continue;
 				
@@ -336,24 +343,26 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var type_self = instanceof(self);
 		if(!struct_has(global.NODE_GUIDE, type_self)) return;
 		
+		NODE_SET_INPUT_SIZE
+		
 		var _n = global.NODE_GUIDE[$ type_self];
 		var _ins = _n.inputs;
 		var _ots = _n.outputs;
 		
-		var amo = min(ds_list_size(inputs), array_length(_ins));
+		var amo = min(input_list_size, array_length(_ins));
 		for( var i = 0; i < amo; i++ ) {
-			inputs[| i].name    = _ins[i].name;
-			inputs[| i].tooltip = _ins[i].tooltip;
+			inputs[i].name    = _ins[i].name;
+			inputs[i].tooltip = _ins[i].tooltip;
 		}
 		
-		var amo = min(ds_list_size(outputs), array_length(_ots));
+		var amo = min(output_list_size, array_length(_ots));
 		for( var i = 0; i < amo; i++ ) {
-			outputs[| i].name    = _ots[i].name;
-			outputs[| i].tooltip = _ots[i].tooltip;
+			outputs[i].name    = _ots[i].name;
+			outputs[i].tooltip = _ots[i].tooltip;
 		}
-	} run_in(1, initTooltip);
+	} run_in(1, function() /*=>*/ {return initTooltip});
 	
-	static setDisplayName = function(_name) { #region
+	static setDisplayName = function(_name) {
 		renamed = true;
 		display_name = _name;
 		internalName = string_replace_all(display_name, " ", "_");
@@ -363,7 +372,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			onSetDisplayName();
 		
 		return self;
-	} #endregion
+	}
 	
 	static getFullName    = function() { return renamed? $"[{name}] " + display_name : name; }
 	static getDisplayName = function() { return renamed? display_name : name; }
@@ -382,7 +391,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		input_display_list_raw = array_clone(input_display_list, 1);
 		input_display_len	= input_display_list == -1? 0 : array_length(input_display_list);
-		input_fix_len		= ds_list_size(inputs);
+		input_fix_len		= array_length(inputs);
 		data_length			= _data_length;
 		
 		dynamic_input_cond  = _dynamic_input_cond;
@@ -397,17 +406,18 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static refreshDynamicInput = function() {
-		var _in = ds_list_create();
+		NODE_SET_INPUT_SIZE
+		var _in = [];
 		
 		for( var i = 0; i < input_fix_len; i++ )
-			ds_list_add(_in, inputs[| i]);
+			array_push(_in, inputs[i]);
 		
 		input_display_list = array_clone(input_display_list_raw, 1);
 		var sep = false;
 		
-		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
+		for( var i = input_fix_len; i < input_list_size; i += data_length ) {
 			var _active = false;
-			var _inp    = inputs[| i + dyna_input_check_shift];
+			var _inp    = inputs[i + dyna_input_check_shift];
 			
 			if(dynamic_input_cond & DYNA_INPUT_COND.connection)
 				_active |= _inp.hasJunctionFrom();
@@ -425,27 +435,26 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 					var _ind = i + j;
 					
 					if(input_display_list != -1)
-						array_push(input_display_list, ds_list_size(_in));
-					ds_list_add(_in, inputs[| _ind]);
+						array_push(input_display_list, array_length(_in));
+					array_push(_in, inputs[_ind]);
 				}
 			} else {
 				for( var j = 0; j < data_length; j++ )
-					delete inputs[| i + j];
+					delete inputs[i + j];
 			}
 		}
 		
-		var _ina = ds_list_size(_in);
+		var _ina = array_length(_in);
 		for( var i = 0; i < _ina; i++ )
 			_in[| i].index = i;
 		
 		if(dummy_input) dummy_input.index = _ina;
 		
-		ds_list_destroy(inputs);
 		inputs = _in;
 		
 	}
 
-	static getInputAmount = function() { return (ds_list_size(inputs) - input_fix_len) / data_length; }
+	static getInputAmount = function() { return (input_list_size - input_fix_len) / data_length; }
 	
 	function onInputResize() { refreshDynamicInput(); triggerRender(); }
 	
@@ -453,13 +462,13 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var _targ = noone;
 		var _dy   = 9999;
 		
-		for( var i = 0; i < ds_list_size(outputs); i++ ) {
-			if(!outputs[| i].isVisible()) continue;
-			if(junc != noone && !junc.isConnectable(outputs[| i], true)) continue;
+		for( var i = 0; i < output_list_size; i++ ) {
+			if(!outputs[i].isVisible()) continue;
+			if(junc != noone && !junc.isConnectable(outputs[i], true)) continue;
 			
-			var _ddy = abs(outputs[| i].y - _y);
+			var _ddy = abs(outputs[i].y - _y);
 			if(_ddy < _dy) {
-				_targ = outputs[| i];
+				_targ = outputs[i];
 				_dy   = _ddy;
 			}
 		}
@@ -467,11 +476,13 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static getInput = function(_y = 0, junc = noone, shift = input_fix_len) {
+		NODE_SET_INPUT_SIZE
+		
 		var _targ = noone;
 		var _dy   = 9999;
 		
-		for( var i = shift; i < ds_list_size(inputs); i++ ) {
-			var _inp = inputs[| i];
+		for( var i = shift; i < input_list_size; i++ ) {
+			var _inp = inputs[i];
 			
 			if(!_inp.isVisible()) continue;
 			if(_inp.value_from != noone) continue;
@@ -520,6 +531,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	/////============= STEP =============
 	
 	static stepBegin = function() {
+		NODE_SET_INPUT_SIZE
+		
 		if(use_cache) cacheArrayCheck();
 		
 		doStepBegin();
@@ -592,21 +605,23 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return jun_list_arr;
 	}
 	
-	static getOutputJunctionAmount = function()      { return output_display_list == -1? ds_list_size(outputs) : array_length(output_display_list); }
+	static getOutputJunctionAmount = function()      { return output_display_list == -1? output_list_size : array_length(output_display_list); }
 	static getOutputJunctionIndex  = function(index) { return output_display_list == -1? index : output_display_list[index]; }
 	
 	static updateIO = function() {
-		for( var i = 0, n = ds_list_size(inputs); i < n; i++ )
-			inputs[| i].visible_in_list = false;
+		NODE_SET_INPUT_SIZE
 		
-		inputs_amount = (input_display_list == -1 || !use_display_list)? ds_list_size(inputs) : array_length(input_display_list);
+		for( var i = 0, n = input_list_size; i < n; i++ )
+			inputs[i].visible_in_list = false;
+		
+		inputs_amount = (input_display_list == -1 || !use_display_list)? input_list_size : array_length(input_display_list);
 		inputs_index  = [];
 		
 		for( var i = 0; i < inputs_amount; i++ ) {
 			var _input = getInputJunctionIndex(i);
 			if(_input == noone) continue;
 			
-			var _inp = inputs[| _input];
+			var _inp = inputs[_input];
 			if(!is_struct(_inp) || !is_instanceof(_inp, NodeValue)) continue;
 			
 			array_push(inputs_index, _input);
@@ -614,18 +629,20 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 		inputs_amount = array_length(inputs_index);
 		
-		outputs_amount = output_display_list == -1? ds_list_size(outputs) : array_length(output_display_list);
+		outputs_amount = output_display_list == -1? output_list_size : array_length(output_display_list);
 		outputs_index  = array_create_ext(outputs_amount, function(index) { return getOutputJunctionIndex(index); });
 	} run_in(1, function() /*=>*/ { updateIO() });
 	
 	static setHeight = function() {
+		NODE_SET_INPUT_SIZE
+		
 		w = SHOW_PARAM? attributes.node_param_width : min_w;
 		
 		if(!auto_height) return;
 		
 		var _ss = getGraphPreviewSurface();
 		var _ps = is_surface(_ss);
-		var _ou = preview_channel >= 0 && preview_channel < ds_list_size(outputs) && outputs[| preview_channel].type == VALUE_TYPE.surface;
+		var _ou = preview_channel >= 0 && preview_channel < output_list_size && outputs[preview_channel].type == VALUE_TYPE.surface;
 		
 		// print($"{previewable} && {preview_draw} && ([{_ss}] {_ps} || {_ou})");
 		var _prev_surf = previewable && preview_draw && (_ps || _ou);
@@ -648,8 +665,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 		
 		var _p = previewable;
-		for( var i = 0; i < ds_list_size(inputs); i++ ) {
-			var _inp = inputs[| i];
+		for( var i = 0; i < input_list_size; i++ ) {
+			var _inp = inputs[i];
 			if(is_instanceof(_inp, NodeValue) && _inp.isVisible()) {
 				if(_p) _hi += junction_draw_hei_y;
 				_p = true;
@@ -659,8 +676,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(auto_input && dummy_input) _hi += junction_draw_hei_y;
 		var _p = previewable;
 		
-		for( var i = 0; i < ds_list_size(outputs); i++ ) {
-			if(!outputs[| i].isVisible()) continue;
+		for( var i = 0; i < output_list_size; i++ ) {
+			if(!outputs[i].isVisible()) continue;
 			if(_p) _ho += junction_draw_hei_y;
 			_p = true;
 		}
@@ -670,15 +687,17 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 	}
 	
-	static getJunctionList = function() { #region ////getJunctionList
-		var amo = input_display_list == -1? ds_list_size(inputs) : array_length(input_display_list);
+	static getJunctionList = function() { ////getJunctionList
+		NODE_SET_INPUT_SIZE
+	
+		var amo = input_display_list == -1? input_list_size : array_length(input_display_list);
 		inputDisplayList = [];
 		
 		for(var i = 0; i < amo; i++) {
 			var ind = getInputJunctionIndex(i);
 			if(ind == noone) continue;
 			
-			var jun = ds_list_get(inputs, ind, noone);
+			var jun = array_safe_get(inputs, ind, noone);
 			if(jun == noone || is_undefined(jun)) continue;
 			if(!jun.isVisible()) continue;
 			
@@ -686,33 +705,38 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 		
 		if(auto_input && dummy_input) array_push(inputDisplayList, dummy_input);
-	}#endregion
+	}
 	
 	static onValidate = function() {
+		NODE_SET_INPUT_SIZE
+		
 		value_validation[VALIDATION.pass]	 = 0;
 		value_validation[VALIDATION.warning] = 0;
 		value_validation[VALIDATION.error]   = 0;
 		
-		for( var i = 0; i < ds_list_size(inputs); i++ ) {
-			var jun = inputs[| i];
+		for( var i = 0; i < input_list_size; i++ ) {
+			var jun = inputs[i];
 			if(jun.value_validation)
 				value_validation[jun.value_validation]++;
 		}
 	}
 	
 	static getJunctionTos = function() {
-		var _vto = array_create(ds_list_size(outputs));
-		for (var j = 0, m = ds_list_size(outputs); j < m; j++)
-			_vto[j] = array_clone(outputs[| j].value_to);
+		var _vto = array_create(output_list_size);
+		for (var j = 0; j < output_list_size; j++)
+			_vto[j] = array_clone(outputs[j].value_to);
+			
 		return _vto;
 	}
 	
 	static checkConnectGroup = function(_io) {
+		NODE_SET_INPUT_SIZE
+		
 		var _y  = y;
 		var _n  = noone;
 		
-		for(var i = 0; i < ds_list_size(inputs); i++) {
-			var _in = inputs[| i];
+		for(var i = 0; i < input_list_size; i++) {
+			var _in = inputs[i];
 			if(_in.value_from == noone)				continue;
 			if(_in.value_from.node.group == group)	continue;
 			
@@ -725,8 +749,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				_io.inputs[$ _ind ] = [ _in ];
 		}
 		
-		for(var i = 0; i < ds_list_size(outputs); i++) {
-			var _ou = outputs[| i];
+		for(var i = 0; i < output_list_size; i++) {
+			var _ou = outputs[i];
 			
 			for(var j = 0; j < array_length(_ou.value_to); j++) {
 				var _to = _ou.value_to[j];
@@ -753,10 +777,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static resetDefault = function() { 
 		var folder = instanceof(self);
+		NODE_SET_INPUT_SIZE
 		
 		if(!ds_map_exists(global.PRESETS_MAP, folder)) {
-			for( var i = 0, n = ds_list_size(inputs); i < n; i++ )
-				inputs[| i].resetValue();
+			for( var i = 0, n = input_list_size; i < n; i++ )
+				inputs[i].resetValue();
 			return;
 		}
 		
@@ -770,8 +795,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			return;
 		}
 		
-		for( var i = 0, n = ds_list_size(inputs); i < n; i++ )
-			inputs[| i].resetValue();
+		for( var i = 0, n = input_list_size; i < n; i++ )
+			inputs[i].resetValue();
 			
 	} if(!APPENDING && !LOADING) run_in(1, function() /*=>*/ { if(set_default) resetDefault() });
 	
@@ -785,27 +810,26 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static getInputData = function(index, def = 0) { return array_safe_get_fast(inputs_data, index, def); }
 	
 	// static setInputData = function(index, value) {
-	// 	var _inp = inputs[| index];
+	// 	var _inp = inputs[index];
 	// 	inputs_data[index] = value;
 	// 	if(is_struct(_inp)) input_value_map[$ _inp.internalName] = value;
 	// }
 	
 	static getInputs = function(frame = CURRENT_FRAME) {
-		var i = -1;
-		var n = ds_list_size(inputs);
-		inputs_data	= array_verify(inputs_data, n);
+		NODE_SET_INPUT_SIZE
 		
-		repeat(n) { 
-			var _inp = inputs[| ++i];
+		inputs_data	= array_verify(inputs_data, input_list_size);
+		__frame     = frame;
+		
+		array_foreach(inputs, function(_inp, i) /*=>*/ {
+			if(!is_instanceof(_inp, NodeValue)) return;
+			if(!_inp.isDynamic())               return;
 			
-			if(!is_instanceof(_inp, NodeValue)) continue;
-			if(!_inp.isDynamic())               continue;
-			
-			var val = _inp.getValue(frame);
+			var val = _inp.getValue(__frame);
 			
 			inputs_data[i] = val;								// setInputData(i, val);
 			input_value_map[$ _inp.internalName] = val;
-		}
+		});
 	}
 	
 	/////============ UPDATE ============
@@ -818,6 +842,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static postUpdate = function(frame = CURRENT_FRAME) {}
 	
 	static doUpdate = function(frame = CURRENT_FRAME) {
+		NODE_SET_INPUT_SIZE
+		
 		if(PROJECT.safeMode) return;
 		if(NODE_EXTRACT)     return;
 		
@@ -848,19 +874,18 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			}
 		}
 		
-		for( var i = 0, n = ds_list_size(inputs); i < n; i++ )
-			inputs[| i].updateColor(getInputData(i));
-		
-		for( var i = 0, n = ds_list_size(outputs); i < n; i++ )
-			outputs[| i].updateColor(outputs[| i].getValue());
+		if(!IS_PLAYING) {
+			array_foreach(inputs,  function(in, i) /*=>*/ { in.updateColor(getInputData(i)); });
+			array_foreach(outputs, function(in, i) /*=>*/ { in.updateColor(in.getValue());   });
+		}
 		
 		postUpdate(frame);
 		cached_manual = false;
 		
 		if(!use_cache && PROJECT.onion_skin.enabled) {
-			for( var i = 0; i < ds_list_size(outputs); i++ ) {
-				if(outputs[| i].type != VALUE_TYPE.surface) continue;
-				cacheCurrentFrame(outputs[| i].getValue());
+			for( var i = 0; i < output_list_size; i++ ) {
+				if(outputs[i].type != VALUE_TYPE.surface) continue;
+				cacheCurrentFrame(outputs[i].getValue());
 				break;
 			}
 		}
@@ -905,8 +930,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(!rendered)       return true;
 		
 		force_requeue = false;
-		for(var i = 0; i < ds_list_size(inputs); i++)
-			if(inputs[| i].isActiveDynamic(frame)) return true;
+		for(var i = 0; i < input_list_size; i++)
+			if(inputs[i].isActiveDynamic(frame)) return true;
 		
 		return false;
 	}
@@ -935,8 +960,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static forwardPassiveDynamic = function() {
 		rendered = false;
 		
-		for( var i = 0, n = ds_list_size(outputs); i < n; i++ ) {
-			var _outp = outputs[| i];
+		for( var i = 0, n = output_list_size; i < n; i++ ) {
+			var _outp = outputs[i];
 			
 			for(var j = 0; j < array_length(_outp.value_to); j++) {
 				var _to = _outp.value_to[j];
@@ -957,8 +982,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static isLeaf = function() {
 		INLINE 
 		
-		for( var i = 0, n = ds_list_size(inputs); i < n; i++ ) {
-			var _inp = inputs[| i];
+		for( var i = 0, n = input_list_size; i < n; i++ ) {
+			var _inp = inputs[i];
 			if(!_inp.value_from == noone) return false;
 		}
 		
@@ -970,10 +995,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		if(list == noone) return isLeaf();
 		
-		for( var i = 0, n = ds_list_size(inputs); i < n; i++ ) {
-			var _inp = inputs[| i].value_from;
+		for( var i = 0, n = input_list_size; i < n; i++ ) {
+			var _inp = inputs[i].value_from;
 			
-			// print($"Checking isLeafList {inputs[| i]} < {_inp} | list {ds_list_to_array(list)}");
 			if(_inp != noone && array_exists(list, _inp.node)) 
 				return false;
 		}
@@ -984,11 +1008,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static isRenderActive = function() { return renderActive || (PREFERENCES.render_all_export && IS_RENDERING); }
 	
 	static isRenderable = function(log = false) { //Check if every input is ready (updated)
-		if(!active)	return false;
-		if(!isRenderActive()) return false;
+		if(!active || !isRenderActive()) return false;
 		
-		for(var j = 0; j < ds_list_size(inputs); j++)
-			if(!inputs[| j].isRendered()) return false;
+		for(var j = 0; j < input_list_size; j++)
+			if(!inputs[j].isRendered()) return false;
 		
 		return true;
 	}
@@ -1008,8 +1031,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(attributes.show_update_trigger && updatedInTrigger.value_from) 
 			array_push(prev, updatedInTrigger.value_from.node);
 		
-		for( var i = 0, n = ds_list_size(inputs); i < n; i++ ) {
-			var _in = inputs[| i];
+		for( var i = 0, n = input_list_size; i < n; i++ ) {
+			var _in = inputs[i];
 			
 			if(_in.value_from != noone) {
 				if(in_VFX && !_in.value_from.node.in_VFX) {
@@ -1038,8 +1061,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		LOG_BLOCK_START();
 		LOG_IF(global.FLAG.render == 1, $"→→→→→ Call get next node from: {INAME}");
 		
-		for(var i = 0; i < ds_list_size(outputs); i++) {
-			var _ot = outputs[| i];
+		for(var i = 0; i < output_list_size; i++) {
+			var _ot = outputs[i];
 			if(!_ot.forward)				continue;
 			
 			for( var j = 0, n = array_length(_ot.value_to_loop); j < n; j++ ) {
@@ -1072,8 +1095,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static getNextNodesRaw = function() {
 		var nodes = [];
 		
-		for(var i = 0; i < ds_list_size(outputs); i++) {
-			var _ot = outputs[| i];
+		for(var i = 0; i < output_list_size; i++) {
+			var _ot = outputs[i];
 			if(!_ot.forward) continue;
 			if(_ot.type == VALUE_TYPE.node) continue;
 			
@@ -1128,6 +1151,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	} run_in(1, function() { refreshNodeDisplay(); });
 	
 	static preDraw = function(_x, _y, _s) {
+		NODE_SET_INPUT_SIZE
+		
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
 		var jun;
@@ -1152,18 +1177,18 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		updatedOutTrigger.x = xx + w * _s;
 		updatedOutTrigger.y = yy + 10;
 		
-		if(in_cache_len != array_length(inputDisplayList) || out_cache_len != ds_list_size(outputs)) {
+		if(in_cache_len != array_length(inputDisplayList) || out_cache_len != output_list_size) {
 			refreshNodeDisplay();
 			
 			in_cache_len  = array_length(inputDisplayList);
-			out_cache_len = ds_list_size(outputs);
+			out_cache_len = output_list_size;
 		}
 			
 		var _iny = yy + (junction_draw_pad_y + junction_draw_hei_y * 0.5 * SHOW_PARAM) * _s;
 		var rx = x, ry = y + junction_draw_pad_y + junction_draw_hei_y * 0.5 * SHOW_PARAM;
 		
-		for( var i = 0, n = ds_list_size(inputs); i < n; i++ ) {
-			jun = inputs[| i];
+		for( var i = 0, n = input_list_size; i < n; i++ ) {
+			jun = inputs[i];
 			jun.x = xx;
 			jun.y = _iny;
 			
@@ -1189,7 +1214,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		for(var i = 0; i < outputs_amount; i++) {
 			var idx = outputs_index[i];
-			jun = outputs[| idx];
+			jun = outputs[idx];
 			
 			jun.x  = xx;
 			jun.y  = _outy;
@@ -1388,8 +1413,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				hover = jun;
 		}
 		
-		for(var i = 0; i < ds_list_size(outputs); i++) {
-			var jun = outputs[| i];
+		for(var i = 0; i < output_list_size; i++) {
+			var jun = outputs[i];
 			if(!jun.isVisible()) continue;
 			
 			if(jun.drawJunction(_s, _mx, _my))
@@ -1425,8 +1450,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				hover = jun;
 		}
 		
-		for(var i = 0; i < ds_list_size(outputs); i++) {
-			var jun = outputs[| i];
+		for(var i = 0; i < output_list_size; i++) {
+			var jun = outputs[i];
 			if(!jun.isVisible()) continue;
 			
 			if(jun.drawJunction_fast(_s, _mx, _my))
@@ -1455,7 +1480,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(draw_graph_culled) return;
 		if(!active) return;
 		
-		var amo = input_display_list == -1? ds_list_size(inputs) : array_length(input_display_list);
+		var amo = input_display_list == -1? input_list_size : array_length(input_display_list);
 		var jun;
 		
 		var xx = x * _s + _x;
@@ -1493,11 +1518,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 		
 		if(show_output_name) {
-			for(var i = 0; i < ds_list_size(outputs); i++)
-				if(outputs[| i].isVisible()) outputs[| i].drawNameBG(_s);
+			for(var i = 0; i < output_list_size; i++)
+				if(outputs[i].isVisible()) outputs[i].drawNameBG(_s);
 			
-			for(var i = 0; i < ds_list_size(outputs); i++)
-				if(outputs[| i].isVisible()) outputs[| i].drawName(_s, _mx, _my);
+			for(var i = 0; i < output_list_size; i++)
+				if(outputs[i].isVisible()) outputs[i].drawName(_s, _mx, _my);
 		}
 		
 		if(hasInspector1Update() && PANEL_GRAPH.pHOVER && point_in_circle(_mx, _my, inspectInput1.x, inspectInput1.y, 10)) {
@@ -1521,8 +1546,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var high = params.highlight; // 0
 		var bg   = params.bg;        // 0
 		
-		for(var i = 0; i < ds_list_size(outputs); i++) {
-			var jun       = outputs[| i];
+		for(var i = 0; i < output_list_size; i++) {
+			var jun       = outputs[i];
 			var connected = false;
 			
 			for( var j = 0; j < array_length(jun.value_to); j++ ) {
@@ -1545,7 +1570,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		}
 		
-		__draw_inputs = array_verify(__draw_inputs, ds_list_size(inputs));
+		__draw_inputs = array_verify(__draw_inputs, input_list_size);
 		var _len = 0;
 		var _jun, _hov;
 		
@@ -1560,8 +1585,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 		
 		var drawLineIndex = 1;
-		for(var i = 0, n = ds_list_size(inputs); i < n; i++) {
-			_jun = inputs[| i];
+		for(var i = 0, n = input_list_size; i < n; i++) {
+			_jun = inputs[i];
 			_jun.draw_blend_color = bg;
 			_jun.draw_blend       = high? PREFERENCES.connection_line_highlight_fade : -1;
 			
@@ -1589,7 +1614,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static getGraphPreviewSurface = function() {
-		var _node = outputs[| preview_channel];
+		var _node = array_safe_get(outputs, preview_channel);
 		if(!is_instanceof(_node, NodeValue)) return noone;
 		
 		switch(_node.type) {
@@ -1852,9 +1877,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		if(!PREFERENCES.connection_line_highlight_all && _depth == 1) return;
 		
-		for( var i = 0, n = ds_list_size(inputs); i < n; i++ ) {
-			if(inputs[| i].value_from == noone) continue;
-			inputs[| i].value_from.node.drawBranch(_depth + 1);
+		for( var i = 0, n = input_list_size; i < n; i++ ) {
+			if(inputs[i].value_from == noone) continue;
+			inputs[i].value_from.node.drawBranch(_depth + 1);
 		}
 	}
 	
@@ -1872,13 +1897,13 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	/////============ PREVIEW ============
 	
 	static getPreviewValues = function() {
-		if(preview_channel >= ds_list_size(outputs)) return noone;
+		if(preview_channel >= output_list_size) return noone;
 		
-		var _type = outputs[| preview_channel].type;
+		var _type = outputs[preview_channel].type;
 		if(_type != VALUE_TYPE.surface && _type != VALUE_TYPE.dynaSurface)
 			return noone;
 		
-		var val = outputs[| preview_channel].getValue();
+		var val = outputs[preview_channel].getValue();
 		if(is_struct(val) && is_instanceof(val, dynaSurf))
 			val = array_safe_get_fast(val.surfaces, 0, noone);
 		
@@ -1906,8 +1931,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static getAnimationCacheExist = function(frame) { return cacheExist(frame); }
 	
 	static clearInputCache = function() {
-		for( var i = 0; i < ds_list_size(inputs); i++ )
-			inputs[| i].cache_value[0] = false;
+		for( var i = 0; i < input_list_size; i++ )
+			inputs[i].cache_value[0] = false;
 	}
 	
 	static cacheArrayCheck = function() {
@@ -1951,7 +1976,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(!cacheExist(frame)) return false;
 		
 		var _s = cached_output[CURRENT_FRAME];
-		outputs[| 0].setValue(_s);
+		outputs[0].setValue(_s);
 			
 		return true;
 	}
@@ -1993,8 +2018,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(group != _group) return;
 		setRenderStatus(true);
 		
-		for( var i = 0, n = ds_list_size(inputs); i < n; i++ ) {
-			var _input = inputs[| i];
+		for( var i = 0, n = input_list_size; i < n; i++ ) {
+			var _input = inputs[i];
 			if(_input.value_from == noone) continue;
 			
 			_input.value_from.node.cachedPropagate(_group);
@@ -2002,9 +2027,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static clearInputCache = function() {
-		for( var i = 0; i < ds_list_size(inputs); i++ ) {
-			if(!is_instanceof(inputs[| i], NodeValue)) continue;
-			inputs[| i].resetCache();
+		for( var i = 0; i < input_list_size; i++ ) {
+			if(!is_instanceof(inputs[i], NodeValue)) continue;
+			inputs[i].resetCache();
 		}
 	}
 	
@@ -2084,13 +2109,13 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 		
 		var _inputs = [];
-		for(var i = 0; i < ds_list_size(inputs); i++)
-			array_push(_inputs, inputs[| i].serialize(scale, preset));
+		for(var i = 0; i < array_length(inputs); i++)
+			array_push(_inputs, inputs[i].serialize(scale, preset));
 		_map.inputs = _inputs;
 		
 		var _outputs = [];
-		for(var i = 0; i < ds_list_size(outputs); i++)
-			array_push(_outputs, outputs[| i].serialize(scale, preset));
+		for(var i = 0; i < array_length(outputs); i++)
+			array_push(_outputs, outputs[i].serialize(scale, preset));
 		_map.outputs = _outputs;
 		
 		var _trigger = [];
@@ -2233,25 +2258,25 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		preApplyDeserialize();
 		
 		var _inputs = load_map.inputs;
-		var amo = min(ds_list_size(inputs), array_length(_inputs));
+		var amo = min(array_length(inputs), array_length(_inputs));
 		
 		//print($"Applying deserialzie for {name}");
 		
 		for(var i = 0; i < amo; i++) {
-			if(inputs[| i] == noone || _inputs[i] == noone) continue;
+			if(inputs[i] == noone || _inputs[i] == noone) continue;
 			
-			//print($"      Apply {i} : {inputs[| i].name}");
-			inputs[| i].applyDeserialize(_inputs[i], load_scale, preset);
+			//print($"      Apply {i} : {inputs[i].name}");
+			inputs[i].applyDeserialize(_inputs[i], load_scale, preset);
 		}
 		
 		if(struct_has(load_map, "outputs")) {
 			var _outputs = load_map.outputs;
-			var amo = min(ds_list_size(outputs), array_length(_outputs));
+			var amo = min(array_length(outputs), array_length(_outputs));
 			
 			for(var i = 0; i < amo; i++) {
-				if(outputs[| i] == noone) continue;
+				if(outputs[i] == noone) continue;
 				
-				outputs[| i].applyDeserialize(_outputs[i], load_scale, preset);
+				outputs[i].applyDeserialize(_outputs[i], load_scale, preset);
 			}
 		}
 		
@@ -2298,8 +2323,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static connect = function(log = false) {
 		var connected = true;
-		for(var i = 0; i < ds_list_size(inputs); i++)
-			connected &= inputs[| i].connect(log);
+		for(var i = 0; i < array_length(inputs); i++)
+			connected &= inputs[i].connect(log);
 		
 		inspectInput1.connect(log);
 		inspectInput2.connect(log);
@@ -2319,16 +2344,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	/////=========== CLEAN UP ===========
 	
 	static cleanUp = function() {
-		if(ds_exists(inputs, ds_type_list))
-		for( var i = 0; i < ds_list_size(inputs); i++ )
-			inputs[| i].cleanUp();
+		for( var i = 0; i < array_length(inputs); i++ )
+			inputs[i].cleanUp();
 		
-		if(ds_exists(outputs, ds_type_list))	
-		for( var i = 0; i < ds_list_size(outputs); i++ )
-			outputs[| i].cleanUp();
-		
-		ds_list_destroy(inputs);
-		ds_list_destroy(outputs);
+		for( var i = 0; i < array_length(outputs); i++ )
+			outputs[i].cleanUp();
 		
 		ds_map_destroy(inputMap);
 		ds_map_destroy(outputMap);
@@ -2379,15 +2399,15 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		PANEL_PREVIEW.removeNodePreview(self);
 		
 		var val_from_map = {};
-		for( var i = 0; i < ds_list_size(inputs); i++ ) {
-			var _i = inputs[| i];
+		for( var i = 0; i < array_length(inputs); i++ ) {
+			var _i = inputs[i];
 			if(_i.value_from == noone) continue;
 			
 			val_from_map[$ _i.type] = _i.value_from;
 		}
 		
-		for(var i = 0; i < ds_list_size(outputs); i++) {
-			var jun = outputs[| i];
+		for(var i = 0; i < array_length(outputs); i++) {
+			var jun = outputs[i];
 			
 			for(var j = array_length(jun.value_to) - 1; j >= 0; j--) {
 				var _vt = jun.value_to[j];
@@ -2404,8 +2424,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			jun.value_to = [];
 		}
 		
-		for( var i = 0; i < ds_list_size( inputs); i++ )  inputs[| i].destroy();
-		for( var i = 0; i < ds_list_size(outputs); i++ ) outputs[| i].destroy();
+		for( var i = 0; i < array_length( inputs); i++ )  inputs[i].destroy();
+		for( var i = 0; i < array_length(outputs); i++ ) outputs[i].destroy();
 		
 		onDestroy();
 		if(group)  group.refreshNodes();
@@ -2429,8 +2449,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static droppable = function(dragObj) {
-		for( var i = 0; i < ds_list_size(inputs); i++ ) {
-			if(dragObj.type == inputs[| i].drop_key)
+		for( var i = 0; i < array_length(inputs); i++ ) {
+			if(dragObj.type == inputs[i].drop_key)
 				return true;
 		}
 		return false;
@@ -2443,9 +2463,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			return;
 		}
 		
-		for( var i = 0; i < ds_list_size(inputs); i++ ) {
-			if(dragObj.type == inputs[| i].drop_key) {
-				inputs[| i].setValue(dragObj.data);
+		for( var i = 0; i < array_length(inputs); i++ ) {
+			if(dragObj.type == inputs[i].drop_key) {
+				inputs[i].setValue(dragObj.data);
 				return;
 			}
 		}
@@ -2489,8 +2509,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static isTerminal = function() {
-		for( var i = 0; i < ds_list_size(outputs); i++ ) {
-			var _to = outputs[| i].getJunctionTo();
+		for( var i = 0; i < array_length(outputs); i++ ) {
+			var _to = outputs[i].getJunctionTo();
 			if(array_length(_to)) return false;
 		}
 		
@@ -2502,7 +2522,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static attrDepth = function() {
 		if(struct_has(attributes, "color_depth")) {
 			var form = attributes.color_depth;
-			if(inputs[| 0].type == VALUE_TYPE.surface) 
+			if(inputs[0].type == VALUE_TYPE.surface) 
 				form--;
 			if(form >= 0)
 				return array_safe_get_fast(global.SURFACE_FORMAT, form, surface_rgba8unorm);

@@ -1,21 +1,21 @@
 function Node_PB_Draw_Trapezoid(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _group) constructor {
 	name = "Trapezoid";
 	
-	inputs[| 3] = nodeValue_Enum_Scroll("Axis", self,  0 , [ new scrollItem("Horizontal", s_node_alignment, 0), 
+	inputs[3] = nodeValue_Enum_Scroll("Axis", self,  0 , [ new scrollItem("Horizontal", s_node_alignment, 0), 
 												 new scrollItem("Vertical",   s_node_alignment, 1), ]);
 	
-	inputs[| 4] = nodeValue_Enum_Scroll("Type", self,  0 , [ "Symmetric", "Independent" ]);
+	inputs[4] = nodeValue_Enum_Scroll("Type", self,  0 , [ "Symmetric", "Independent" ]);
 	
-	inputs[| 5] = nodeValue_Float("Bevel", self, 0.5 )
+	inputs[5] = nodeValue_Float("Bevel", self, 0.5 )
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 6] = nodeValue_Float("Bevel 1", self, 0.5 )
+	inputs[6] = nodeValue_Float("Bevel 1", self, 0.5 )
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 7] = nodeValue_Float("Bevel 2", self, 0.5 )
+	inputs[7] = nodeValue_Float("Bevel 2", self, 0.5 )
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 8] = nodeValue_Bool("Invert", self, false );
+	inputs[8] = nodeValue_Bool("Invert", self, false );
 	
 	input_display_list = [
 		["Draw",	false], 0, 1, 2, 
@@ -27,9 +27,9 @@ function Node_PB_Draw_Trapezoid(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _
 		
 		var _type = current_data[4];
 		
-		inputs[| 5].setVisible(_type == 0);
-		inputs[| 6].setVisible(_type == 1);
-		inputs[| 7].setVisible(_type == 1);
+		inputs[5].setVisible(_type == 0);
+		inputs[6].setVisible(_type == 1);
+		inputs[7].setVisible(_type == 1);
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {

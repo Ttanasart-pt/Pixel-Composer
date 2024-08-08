@@ -2,26 +2,26 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	name = "Crop";
 	preview_alpha = 0.5;
 	
-	inputs[| 0] = nodeValue_Surface("Surface in", self);
+	inputs[0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue_Padding("Crop", self, [ 0, 0, 0, 0 ])
+	inputs[1] = nodeValue_Padding("Crop", self, [ 0, 0, 0, 0 ])
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	inputs[| 2] = nodeValue_Bool("Active", self, true);
+	inputs[2] = nodeValue_Bool("Active", self, true);
 		active_index = 2;
 		
-	inputs[| 3] = nodeValue_Enum_Scroll("Aspect Ratio", self,  0, [ "None", "Manual", "1:1", "3:2", "4:3", "16:9" ]);
+	inputs[3] = nodeValue_Enum_Scroll("Aspect Ratio", self,  0, [ "None", "Manual", "1:1", "3:2", "4:3", "16:9" ]);
 		
-	inputs[| 4] = nodeValue_Vector("Ratio", self, [ 1, 1 ]);
+	inputs[4] = nodeValue_Vector("Ratio", self, [ 1, 1 ]);
 	
-	inputs[| 5] = nodeValue_Vector("Center", self, [ .5, .5 ])
+	inputs[5] = nodeValue_Vector("Center", self, [ .5, .5 ])
 		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
 		
-	inputs[| 6] = nodeValue_Float("Width", self, 8 );
+	inputs[6] = nodeValue_Float("Width", self, 8 );
 		
-	inputs[| 7] = nodeValue_Enum_Scroll("Fit Mode", self,  0, [ "Manual", "Width", "Height", "Minimum" ]);
+	inputs[7] = nodeValue_Enum_Scroll("Fit Mode", self,  0, [ "Manual", "Width", "Height", "Minimum" ]);
 		
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 2,
 		["Surface", true], 0, 
@@ -41,8 +41,8 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						
 						var _ratio  = getRatio(_asp, _rat);
 						
-						inputs[| 5].setValue([ _dim[0] / 2, _cen[1] ]);
-						inputs[| 6].setValue(_dim[0]);
+						inputs[5].setValue([ _dim[0] / 2, _cen[1] ]);
+						inputs[6].setValue(_dim[0]);
 					});
 					
 	tool_fith = new NodeTool("Fit Height",      THEME.crop_fit_height)
@@ -54,8 +54,8 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						
 						var _ratio  = getRatio(_asp, _rat);
 						
-						inputs[| 5].setValue([ _cen[0], _dim[1] / 2 ]);
-						inputs[| 6].setValue(_dim[1] * _ratio);
+						inputs[5].setValue([ _cen[0], _dim[1] / 2 ]);
+						inputs[6].setValue(_dim[1] * _ratio);
 					});
 					
 	tools = [ tool_drag ];
@@ -82,10 +82,10 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var _asp = getInputData(3);
 		var _fit = getInputData(7);
 		
-		inputs[| 1].setVisible(_asp == 0);
-		inputs[| 4].setVisible(_asp == 1);
-		inputs[| 5].setVisible(_asp >  0 && _fit == 0);
-		inputs[| 6].setVisible(_asp >  0 && _fit == 0);
+		inputs[1].setVisible(_asp == 0);
+		inputs[4].setVisible(_asp == 1);
+		inputs[5].setVisible(_asp >  0 && _fit == 0);
+		inputs[6].setVisible(_asp >  0 && _fit == 0);
 	}
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, params) {
@@ -126,7 +126,7 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					_my0 = value_snap(round((_my0 - _y) / _s), _sny);
 					_my1 = value_snap(round((_my1 - _y) / _s), _sny);
 					
-					if(inputs[| 1].setValue([dim[0] - _mx1, _my0, _mx0, dim[1] - _my1]))
+					if(inputs[1].setValue([dim[0] - _mx1, _my0, _mx0, dim[1] - _my1]))
 						UNDO_HOLDING = true;
 					
 					draw_set_color(COLORS._main_accent);
@@ -212,7 +212,7 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					_splice[3] = value_snap(drag_sv[3] - (_my - drag_my) / _s, _sny);
 				}
 				
-				if(inputs[| 1].setValue(_splice))
+				if(inputs[1].setValue(_splice))
 					UNDO_HOLDING = true;
 				
 				if(mouse_release(mb_left, active)) {
@@ -305,8 +305,8 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _px = _x + _cent[0] * _s;
 			var _py = _y + _cent[1] * _s;
 			
-			var a = inputs[| 5].drawOverlay(hover, active,  _x,  _y, _s, _mx, _my, _snx, _sny); 	active &= !a;
-			var a = inputs[| 6].drawOverlay(hover, active, _px, _py, _s / 2, _mx, _my, _snx, _sny); active &= !a;
+			var a = inputs[5].drawOverlay(hover, active,  _x,  _y, _s, _mx, _my, _snx, _sny); 	active &= !a;
+			var a = inputs[6].drawOverlay(hover, active, _px, _py, _s / 2, _mx, _my, _snx, _sny); active &= !a;
 			
 		} else {
 			var _idim = surface_get_dimension(_inSurf);
@@ -333,13 +333,13 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		if(index != 3) return;
 			
 		var _dim = getDimension(0);
-		var _asp = inputs[| 3].getValue();
-		var _rat = inputs[| 4].getValue();
+		var _asp = inputs[3].getValue();
+		var _rat = inputs[4].getValue();
 		
 		var _ratio  = getRatio(_asp, _rat);
 		
-		inputs[| 5].setValue([ _dim[0] / 2, _dim[1] / 2 ]);
-		inputs[| 6].setValue(min(_dim[0], _dim[1] * _ratio));
+		inputs[5].setValue([ _dim[0] / 2, _dim[1] / 2 ]);
+		inputs[6].setValue(min(_dim[0], _dim[1] * _ratio));
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {

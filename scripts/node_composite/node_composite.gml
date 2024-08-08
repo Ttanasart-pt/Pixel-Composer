@@ -13,11 +13,11 @@ enum COMPOSE_OUTPUT_SCALING {
 function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Composite";
 	
-	inputs[| 0] = nodeValue_Padding("Padding", self, [ 0, 0, 0, 0 ]);
+	inputs[0] = nodeValue_Padding("Padding", self, [ 0, 0, 0, 0 ]);
 	
-	inputs[| 1] = nodeValue_Enum_Scroll("Output dimension", self,  COMPOSE_OUTPUT_SCALING.first, [ "First surface", "Largest surface", "Constant" ]);
+	inputs[1] = nodeValue_Enum_Scroll("Output dimension", self,  COMPOSE_OUTPUT_SCALING.first, [ "First surface", "Largest surface", "Constant" ]);
 	
-	inputs[| 2] = nodeValue_Dimension(self)
+	inputs[2] = nodeValue_Dimension(self)
 		.setVisible(false);
 	
 	attribute_surface_depth();
@@ -42,7 +42,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		if(renaming == noone) return;
 		
 		if(is_real(renaming)) 
-			inputs[| renaming].setName(_name);
+			inputs[renaming].setName(_name);
 			
 		else if(is_struct(renaming) && is_instanceof(renaming, Node))
 			renaming.setDisplayName(_name) 
@@ -80,7 +80,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var index = input_fix_len + ind * data_length;
 			var _surf = current_data[index + 0];
 			var _pos  = current_data[index + 1];
-			var _inp  = inputs[| index];
+			var _inp  = inputs[index];
 			var _junc = _inp.value_from? _inp.value_from.node : noone;
 			
 			var _bx = _x + _w - ui(24);
@@ -104,8 +104,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 					
 					draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _px, _py, _pw, _ph, COLORS.node_composite_bg_blend, 1);
 					
-					var jn_bld = inputs[| index + 4];
-					var jn_alp = inputs[| index + 5];
+					var jn_bld = inputs[index + 4];
+					var jn_alp = inputs[index + 5];
 					
 					var wd_bld = jn_bld.editWidget;
 					var wd_alp = jn_alp.editWidget;
@@ -257,7 +257,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 								draw_sprite_ui_uniform(THEME.visible_12, _acti, _bx, _by - ui(2), 1, c_white);
 								
 								if(mouse_press(mb_left, _focus))
-									_modi.inputs[| _modi.active_index].setValue(!_acti);
+									_modi.inputs[_modi.active_index].setValue(!_acti);
 							} else 
 								draw_sprite_ui_uniform(THEME.visible_12, _acti, _bx, _by - ui(2), 1, COLORS._main_icon);
 								
@@ -341,12 +341,12 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				array_insert(_sel, hoverIndex, sel);
 				
 				for( var i = 0; i < data_length; i++ ) {
-					ext[i] = inputs[| index];
-					ds_list_delete(inputs, index);
+					ext[i] = inputs[index];
+					array_delete(inputs, index, 1);
 				}
 				
 				for( var i = 0; i < data_length; i++ )
-					ds_list_insert(inputs, targt + i, ext[i]);
+					array_insert(inputs, targt + i, ext[i]);
 				
 				doUpdate();
 			}
@@ -378,7 +378,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var idx = input_fix_len + index * data_length;
 		
 		if(canvas_group) {
-			var _inp   = inputs[| idx];
+			var _inp   = inputs[idx];
 			var _nodes = [];
 			
 			while(_inp != noone) {
@@ -386,9 +386,9 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				array_push_unique(_nodes, _n);
 				
 				_inp = noone;
-				for(var i = 0; i < ds_list_size(_n.inputs); i++) {
-					if(_n.inputs[| i].value_from != noone)
-						_inp = _n.inputs[| i];
+				for(var i = 0; i < array_length(_n.inputs); i++) {
+					if(_n.inputs[i].value_from != noone)
+						_inp = _n.inputs[i];
 				}
 			}
 			
@@ -398,38 +398,38 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		} 
 		
 		for( var i = 0; i < data_length; i++ )
-			ds_list_delete(inputs, idx);
+			array_delete(inputs, idx, 1);
 		
 		input_display_list = array_clone(input_display_list_raw, 1);
 		
-		for(var i = input_fix_len, n = ds_list_size(inputs); i < n; i++)
+		for(var i = input_fix_len, n = array_length(inputs); i < n; i++)
 			array_push(input_display_list, i);
 		
 		doUpdate();
 	}
 	
 	static createNewInput = function() { 
-		var index = ds_list_size(inputs);
+		var index = array_length(inputs);
 		var _s    = floor((index - input_fix_len) / data_length);
 		
-		inputs[| index + 0] = nodeValue_Surface($"Surface {_s}", self, noone);
-		inputs[| index + 0].hover_effect  = 0;
+		inputs[index + 0] = nodeValue_Surface($"Surface {_s}", self, noone);
+		inputs[index + 0].hover_effect  = 0;
 		
-		inputs[| index + 1] = nodeValue_Vector($"Position {_s}", self, [ 0, 0 ] )
+		inputs[index + 1] = nodeValue_Vector($"Position {_s}", self, [ 0, 0 ] )
 			.setUnitRef(function(index) { return [ overlay_w, overlay_h ]; });
 		
-		inputs[| index + 2] = nodeValue_Rotation($"Rotation {_s}", self, 0);
+		inputs[index + 2] = nodeValue_Rotation($"Rotation {_s}", self, 0);
 		
-		inputs[| index + 3] = nodeValue_Vector($"Scale {_s}", self, [ 1, 1 ] );
+		inputs[index + 3] = nodeValue_Vector($"Scale {_s}", self, [ 1, 1 ] );
 		
-		inputs[| index + 4] = nodeValue_Enum_Scroll($"Blend {_s}", self,  0, BLEND_TYPES );
+		inputs[index + 4] = nodeValue_Enum_Scroll($"Blend {_s}", self,  0, BLEND_TYPES );
 		
-		inputs[| index + 5] = nodeValue_Float($"Opacity {_s}", self, 1)
+		inputs[index + 5] = nodeValue_Float($"Opacity {_s}", self, 1)
 			.setDisplay(VALUE_DISPLAY.slider);
 		
 		for( var i = 0; i < data_length; i++ ) {
 			array_push(input_display_list, index + i);
-			inputs[| index + i].surface_index = index;
+			inputs[index + i].surface_index = index;
 		}
 		
 		while(_s >= array_length(attributes.layer_visible))
@@ -438,16 +438,16 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		while(_s >= array_length(attributes.layer_selectable))
 			array_push(attributes.layer_selectable, true);
 		
-		return inputs[| index + 0];
+		return inputs[index + 0];
 	} 
 	
 	setDynamicInput(6, true, VALUE_TYPE.surface);
 	
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue_Output("Atlas data", self, VALUE_TYPE.atlas, []);
+	outputs[1] = nodeValue_Output("Atlas data", self, VALUE_TYPE.atlas, []);
 	
-	outputs[| 2] = nodeValue_Output_Dimension(self, VALUE_TYPE.integer, [1, 1])
+	outputs[2] = nodeValue_Output("Dimension", self, VALUE_TYPE.integer, [1, 1])
 		.setVisible(false)
 		.setDisplay(VALUE_DISPLAY.vector);
 	
@@ -543,7 +543,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 					}
 				}
 				
-				if(inputs[| input_dragging].setValue([ pos_x, pos_y ]))
+				if(inputs[input_dragging].setValue([ pos_x, pos_y ]))
 					UNDO_HOLDING = true;
 					
 			} else if(drag_type == NODE_COMPOSE_DRAG.rotate) {
@@ -556,7 +556,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				else 
 					sa = dragging_sx - da;
 			
-				if(inputs[| input_dragging].setValue(sa))
+				if(inputs[input_dragging].setValue(sa))
 					UNDO_HOLDING = true;	
 			
 			} else if(drag_type == NODE_COMPOSE_DRAG.scale) {
@@ -574,7 +574,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 					sca_y = min(sca_x, sca_y);
 				}
 				
-				if(inputs[| input_dragging].setValue([ sca_x, sca_y ]))
+				if(inputs[input_dragging].setValue([ sca_x, sca_y ]))
 					UNDO_HOLDING = true;
 				
 			}
@@ -591,7 +591,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _sel = attributes.layer_selectable;
 		
 		var amo     = getInputAmount();
-		var anchors = array_create(ds_list_size(inputs));
+		var anchors = array_create(array_length(inputs));
 		
 		for(var i = 0; i < amo; i++) {
 			var vis = _vis[i];
@@ -744,7 +744,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	static step = function() {
 		var _dim_type = getSingleValue(1);
 		
-		inputs[| 2].setVisible(_dim_type == COMPOSE_OUTPUT_SCALING.constant);
+		inputs[2].setVisible(_dim_type == COMPOSE_OUTPUT_SCALING.constant);
 		
 		if(canvas_draw != noone && surface_selecting == noone && getInputAmount())
 			surface_selecting = input_fix_len;

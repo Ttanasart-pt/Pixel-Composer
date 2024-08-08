@@ -1,16 +1,16 @@
 function Node_Crop_Content(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Crop Content";
 	
-	inputs[| 0] = nodeValue_Surface("Surface in", self);
+	inputs[0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue_Bool("Active", self, true);
+	inputs[1] = nodeValue_Bool("Active", self, true);
 	
-	inputs[| 2] = nodeValue_Enum_Scroll("Array Sizing", self,  1, [ "Largest, same size", "Independent" ])
+	inputs[2] = nodeValue_Enum_Scroll("Array Sizing", self,  1, [ "Largest, same size", "Independent" ])
 		.setTooltip("Cropping mode for dealing with image array.");
 	
-	inputs[| 3] = nodeValue_Padding("Padding", self, [ 0, 0, 0, 0 ], "Add padding back after crop.");
+	inputs[3] = nodeValue_Padding("Padding", self, [ 0, 0, 0, 0 ], "Add padding back after crop.");
 		
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 1,
 		["Surfaces", false], 0, 2, 
@@ -32,12 +32,12 @@ function Node_Crop_Content(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var _array	= getInputData(2);
 		var _padd	= getInputData(3);
 		
-		var _outSurf = outputs[| 0].getValue();
+		var _outSurf = outputs[0].getValue();
 		surface_array_free(_outSurf);
 		
 		if(!_active) {			
 			_outSurf = surface_array_clone(_inSurf);
-			outputs[| 0].setValue(_outSurf);
+			outputs[0].setValue(_outSurf);
 			
 			return;
 		}
@@ -126,6 +126,6 @@ function Node_Crop_Content(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		}
 		
 		if(!_arr) res = res[0];
-		outputs[| 0].setValue(res);
+		outputs[0].setValue(res);
 	}
 }

@@ -2,23 +2,23 @@ function Node_Find_Pixel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	name = "Find pixel";
 	setDimension(96, 48);
 	
-	inputs[| 0] = nodeValue_Surface("Surface in", self);
+	inputs[0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue_Color("Search color", self, c_black);
+	inputs[1] = nodeValue_Color("Search color", self, c_black);
 	
-	inputs[| 2] = nodeValue_Float("Tolerance", self, 0)
+	inputs[2] = nodeValue_Float("Tolerance", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 3] = nodeValue_Bool("Find all", self, false);
+	inputs[3] = nodeValue_Bool("Find all", self, false);
 	
-	inputs[| 4] = nodeValue_Bool("Include alpha", self, false);
+	inputs[4] = nodeValue_Bool("Include alpha", self, false);
 	
-	inputs[| 5] = nodeValue_Float("Alpha tolerance", self, 0.2)
+	inputs[5] = nodeValue_Float("Alpha tolerance", self, 0.2)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	// inputs[| 6] = nodeValue_Enum_Button("Axis", self,  1, [ "X", "Y" ]);
+	// inputs[6] = nodeValue_Enum_Button("Axis", self,  1, [ "X", "Y" ]);
 	
-	outputs[| 0] = nodeValue_Output("Position", self, VALUE_TYPE.integer, [ 0, 0 ])
+	outputs[0] = nodeValue_Output("Position", self, VALUE_TYPE.integer, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	input_display_list = [ 0, 
@@ -33,7 +33,7 @@ function Node_Find_Pixel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	static step = function() { #region
 		// var _all  = getInputData(3);
 		
-		// inputs[| 6].setVisible(_all);
+		// inputs[6].setVisible(_all);
 	} #endregion
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) { #region

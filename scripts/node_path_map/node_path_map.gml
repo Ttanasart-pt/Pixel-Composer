@@ -1,19 +1,19 @@
 function Node_Path_Map(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Map Path";
 	
-	inputs[| 0] = nodeValue_PathNode("Path", self, noone)
+	inputs[0] = nodeValue_PathNode("Path", self, noone)
 		.setVisible(true, true)
 		.rejectArray();
 	
-	inputs[| 1] = nodeValue_Dimension(self);
+	inputs[1] = nodeValue_Dimension(self);
 	
-	inputs[| 2] = nodeValue_Surface("Texture", self);
+	inputs[2] = nodeValue_Surface("Texture", self);
 	
-	inputs[| 3] = nodeValue_Int("Subdivision", self, 16)
+	inputs[3] = nodeValue_Int("Subdivision", self, 16)
 		.setValidator(VV_min(2))
 		.rejectArray();
 		
-	outputs[| 0] = nodeValue_Output("Rendered", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Rendered", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 0, 
 		["Mapping", false], 1, 2, 3, 
@@ -66,7 +66,7 @@ function Node_Path_Map(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			_pnt[i] = _p;
 		}
 		
-		var _out = outputs[| 0].getValue();
+		var _out = outputs[0].getValue();
 		    _out = surface_verify(_out, _dim[0], _dim[1])
 		
 		surface_set_shader(_out, noone);
@@ -97,6 +97,6 @@ function Node_Path_Map(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			draw_primitive_end();
 		surface_reset_shader();
 		
-		outputs[| 0].setValue(_out);
+		outputs[0].setValue(_out);
 	}
 } 

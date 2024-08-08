@@ -1,44 +1,44 @@
 function Node_RM_Terrain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "RM Terrain";
 	
-	inputs[| 0] = nodeValue_Dimension(self);
+	inputs[0] = nodeValue_Dimension(self);
 	
-	inputs[| 1] = nodeValue_Surface("Surface", self);
+	inputs[1] = nodeValue_Surface("Surface", self);
 	
-	inputs[| 2] = nodeValue_Vector("Position", self, [ 0, 0, 0 ]);
+	inputs[2] = nodeValue_Vector("Position", self, [ 0, 0, 0 ]);
 	
-	inputs[| 3] = nodeValue_Vector("Rotation", self, [ 30, 45, 0 ]);
+	inputs[3] = nodeValue_Vector("Rotation", self, [ 30, 45, 0 ]);
 	
-	inputs[| 4] = nodeValue_Float("Scale", self, 1)
+	inputs[4] = nodeValue_Float("Scale", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01 ] });
 	
-	inputs[| 5] = nodeValue_Float("FOV", self, 30)
+	inputs[5] = nodeValue_Float("FOV", self, 30)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 90, 1 ] });
 	
-	inputs[| 6] = nodeValue_Vector("View Range", self, [ 0, 6 ]);
+	inputs[6] = nodeValue_Vector("View Range", self, [ 0, 6 ]);
 	
-	inputs[| 7] = nodeValue_Float("BG Bleed", self, 1)
+	inputs[7] = nodeValue_Float("BG Bleed", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 8] = nodeValue_Color("Ambient", self, c_white);
+	inputs[8] = nodeValue_Color("Ambient", self, c_white);
 	
-	inputs[| 9] = nodeValue_Float("Height", self, 1)
+	inputs[9] = nodeValue_Float("Height", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01 ] });
 	
-	inputs[| 10] = nodeValue_Bool("Tile", self, true)
+	inputs[10] = nodeValue_Bool("Tile", self, true)
 	
-	inputs[| 11] = nodeValue_Surface("Texture", self);
+	inputs[11] = nodeValue_Surface("Texture", self);
 	
-	inputs[| 12] = nodeValue_Color("Background", self, c_black);
+	inputs[12] = nodeValue_Color("Background", self, c_black);
 	
-	inputs[| 13] = nodeValue_Surface("Reflection", self);
+	inputs[13] = nodeValue_Surface("Reflection", self);
 	
-	inputs[| 14] = nodeValue_Vector("Sun Position", self, [ .5, 1, .5 ]);
+	inputs[14] = nodeValue_Vector("Sun Position", self, [ .5, 1, .5 ]);
 	
-	inputs[| 15] = nodeValue_Float("Shadow", self, 0.2)
+	inputs[15] = nodeValue_Float("Shadow", self, 0.2)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	outputs[| 0] = nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 0,
 		["Extrusion", false], 1, 9, 10,

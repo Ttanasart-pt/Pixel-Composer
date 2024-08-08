@@ -7,7 +7,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static processData = function(_output, _data, _index) { return noone; }
 	
 	function preProcess(_outindex) {
-		var _out = outputs[| _outindex].getValue();
+		var _out = outputs[_outindex].getValue();
 		
 		if(process_amount == 0) //render single data
 			return processData(_out, inputs_data, _outindex);
@@ -17,12 +17,12 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		else if(array_length(_out) != process_amount) 
 			array_resize(_out, process_amount);
 			
-		var _data    = array_create(ds_list_size(inputs));
+		var _data    = array_create(array_length(inputs));
 		for(var l = 0; l < process_amount; l++) {
-			for(var i = 0; i < ds_list_size(inputs); i++) { //input prepare
+			for(var i = 0; i < array_length(inputs); i++) { //input prepare
 				var _in = inputs_data[i];
 				
-				if(!inputs[| i].isArray(_in)) {
+				if(!inputs[i].isArray(_in)) {
 					_data[i] = inputs_data[i];	
 					continue;
 				}
@@ -47,23 +47,23 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	static update = function() {
 		process_amount = 0;
-		inputs_data = array_create(ds_list_size(inputs));
+		inputs_data = array_create(array_length(inputs));
 		
-		for(var i = 0; i < ds_list_size(inputs); i++) { //pre-collect current input data
-			inputs_data[i] = inputs[| i].getValue();
+		for(var i = 0; i < array_length(inputs); i++) { //pre-collect current input data
+			inputs_data[i] = inputs[i].getValue();
 			
 			if(!is_array(inputs_data[i])) continue;
 			if(array_length(inputs_data[i]) == 0) continue;
-			if(!inputs[| i].isArray(inputs_data[i])) continue;
+			if(!inputs[i].isArray(inputs_data[i])) continue;
 			
-			if(typeArray(inputs[| i].display_type)) {
+			if(typeArray(inputs[i].display_type)) {
 				process_amount = max(process_amount, array_length(inputs_data[i][0]));
 			} else 
 				process_amount = max(process_amount, array_length(inputs_data[i]));
 		}
 		
-		for(var i = 0; i < ds_list_size(outputs); i++) {
-			outputs[| i].setValue(preProcess(i));
+		for(var i = 0; i < array_length(outputs); i++) {
+			outputs[i].setValue(preProcess(i));
 		}
 	}	
 }

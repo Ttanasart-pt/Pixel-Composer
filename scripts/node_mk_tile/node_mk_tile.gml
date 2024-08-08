@@ -2,32 +2,32 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	name = "MK Tile";
 	dimension_index = -1;
 	
-	inputs[| 0] = nodeValue_Surface("Texture", self);
+	inputs[0] = nodeValue_Surface("Texture", self);
 	
-	inputs[| 1] = nodeValue_Surface("Background texture", self);
+	inputs[1] = nodeValue_Surface("Background texture", self);
 	
-	inputs[| 2] = nodeValue_Enum_Button("Type", self,  0, [ "GMS Corner (18 sprites)", "GMS Corner + Side (55 sprites)", "Godot Blob (48 sprites)" ] );
+	inputs[2] = nodeValue_Enum_Button("Type", self,  0, [ "GMS Corner (18 sprites)", "GMS Corner + Side (55 sprites)", "Godot Blob (48 sprites)" ] );
 	
-	inputs[| 3] = nodeValue_Enum_Button("Output type", self,  0, [ "Sheet", "Array" ] );
+	inputs[3] = nodeValue_Enum_Button("Output type", self,  0, [ "Sheet", "Array" ] );
 	
-	inputs[| 4] = nodeValue_Padding("Crop", self, [ 8, 8, 8, 8 ]);
+	inputs[4] = nodeValue_Padding("Crop", self, [ 8, 8, 8, 8 ]);
 	
-	inputs[| 5] = nodeValue_Enum_Button("Edge type", self,  0, [ "Uniform", "Individual" ] );
+	inputs[5] = nodeValue_Enum_Button("Edge type", self,  0, [ "Uniform", "Individual" ] );
 	
-	inputs[| 6] = nodeValue_Surface("Edge",			self);
-	inputs[| 7] = nodeValue_Surface("Edge bottom",	self);
-	inputs[| 8] = nodeValue_Surface("Edge left",	self);
-	inputs[| 9] = nodeValue_Surface("Edge right",	self);
+	inputs[6] = nodeValue_Surface("Edge",			self);
+	inputs[7] = nodeValue_Surface("Edge bottom",	self);
+	inputs[8] = nodeValue_Surface("Edge left",	self);
+	inputs[9] = nodeValue_Surface("Edge right",	self);
 	
-	inputs[| 10] = nodeValue_Padding("Edge shift", self, [ 0, 0, 0, 0 ]);
+	inputs[10] = nodeValue_Padding("Edge shift", self, [ 0, 0, 0, 0 ]);
 		
-	inputs[| 11] = nodeValue_Toggle("Full edge", self, 0, { data: [ "T", "B", "L", "R" ] });
+	inputs[11] = nodeValue_Toggle("Full edge", self, 0, { data: [ "T", "B", "L", "R" ] });
 	
-	inputs[| 12] = nodeValue_Enum_Scroll("Edge sprite", self,  0, [ "Single", "Side + Center", "Side + Center + Side" ] );
+	inputs[12] = nodeValue_Enum_Scroll("Edge sprite", self,  0, [ "Single", "Side + Center", "Side + Center + Side" ] );
 	
-	inputs[| 13] = nodeValue_Enum_Button("Edge transform", self,  0, [ "Flip", "Rotate" ] );
+	inputs[13] = nodeValue_Enum_Button("Edge transform", self,  0, [ "Flip", "Rotate" ] );
 		
-	inputs[| 14] = nodeValue_Bool("Sort array by bit", self, true)
+	inputs[14] = nodeValue_Bool("Sort array by bit", self, true)
 		
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 
 		["Surfaces",	  true], 0, 1, 
@@ -37,7 +37,7 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		["Output",		 false], 3, 14, 
 	];
 	
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	temp_surface = array_create(55);
 	for( var i = 0, n = array_length(temp_surface); i < n; i++ ) 
@@ -139,12 +139,12 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var _edgType = getSingleValue( 5);
 		var _edgFull = getSingleValue(11);
 		
-		inputs[|  6].name = _edgType == 1? "Edge top" : "Edge"
-		inputs[|  7].setVisible(_edgType == 1, _edgType == 1);
-		inputs[|  8].setVisible(_edgType == 1, _edgType == 1);
-		inputs[|  9].setVisible(_edgType == 1, _edgType == 1);
-		inputs[| 13].setVisible(_edgType == 0);
-		inputs[| 14].setVisible(_outType == 1);
+		inputs[ 6].name = _edgType == 1? "Edge top" : "Edge"
+		inputs[ 7].setVisible(_edgType == 1, _edgType == 1);
+		inputs[ 8].setVisible(_edgType == 1, _edgType == 1);
+		inputs[ 9].setVisible(_edgType == 1, _edgType == 1);
+		inputs[13].setVisible(_edgType == 0);
+		inputs[14].setVisible(_outType == 1);
 	} #endregion
 	
 	static generateFull = function(_data, _tex0, _tex1, _edge, _crop, indMain, indEdge_et, indEdge_eb, indEdge_el, indEdge_er) { #region

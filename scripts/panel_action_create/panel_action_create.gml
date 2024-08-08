@@ -115,8 +115,8 @@ function Panel_Action_Create() : PanelContent() constructor {
 				if(_r.expanded) {
 					var _val = _nd.setValues;
 					
-					for(var j = 0; j < ds_list_size(_n.inputs); j++) {
-						var _in   = _n.inputs[| j];
+					for(var j = 0; j < array_length(_n.inputs); j++) {
+						var _in   = _n.inputs[j];
 						if(!value_type_direct_settable(_in.type)) continue;
 						
 						var _vali = _val[$ j];
@@ -214,8 +214,8 @@ function Panel_Action_Create() : PanelContent() constructor {
 			var _idT  = i;
 			var _vals = {};
 			
-			for(var j = 0; j < ds_list_size(_n.inputs); j++) {
-				var _in = _n.inputs[| j];
+			for(var j = 0; j < array_length(_n.inputs); j++) {
+				var _in = _n.inputs[j];
 				_vals[$ j] = {};
 				
 				if(_in.value_from == noone || !struct_has(_nmap, _in.value_from.node.node_id)) {

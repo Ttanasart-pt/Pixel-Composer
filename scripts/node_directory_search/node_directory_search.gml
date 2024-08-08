@@ -7,7 +7,7 @@ function Node_create_Directory_Search(_x, _y, _group = noone) {
 	}
 	
 	var node = new Node_Directory_Search(_x, _y, _group).skipDefault();
-	node.inputs[| 0].setValue(path);
+	node.inputs[0].setValue(path);
 	if(NODE_NEW_MANUAL) node.doUpdate();
 	
 	return node;
@@ -17,7 +17,7 @@ function Node_create_Directory_path(_x, _y, path) {
 	if(!directory_exists(path)) return noone;
 	
 	var node = new Node_Directory_Search(_x, _y, PANEL_GRAPH.getCurrentContext()).skipDefault();
-	node.inputs[| 0].setValue(path);
+	node.inputs[0].setValue(path);
 	node.doUpdate();
 	return node;	
 }
@@ -26,19 +26,19 @@ function Node_Directory_Search(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	name  = "Directory Search";
 	color = COLORS.node_blend_input;
 	
-	inputs[| 0]  = nodeValue_Text("Path", self, "")
+	inputs[0]  = nodeValue_Text("Path", self, "")
 		.setDisplay(VALUE_DISPLAY.path_load, { filter: "dir" });
 		
-	inputs[| 1]  = nodeValue_Text("Extensions", self, ".png");
+	inputs[1]  = nodeValue_Text("Extensions", self, ".png");
 	
-	inputs[| 2]  = nodeValue_Enum_Scroll("Type", self,  0, [ "Surface", "Text" ]);
+	inputs[2]  = nodeValue_Enum_Scroll("Type", self,  0, [ "Surface", "Text" ]);
 	
-	inputs[| 3]  = nodeValue_Bool("Recursive", self, false)
+	inputs[3]  = nodeValue_Bool("Recursive", self, false)
 		
-	outputs[| 0] = nodeValue_Output("Outputs", self, VALUE_TYPE.surface, [])
+	outputs[0] = nodeValue_Output("Outputs", self, VALUE_TYPE.surface, [])
 		.setVisible(true, true);
 		
-	outputs[| 1] = nodeValue_Output("Paths", self, VALUE_TYPE.path, [""])
+	outputs[1] = nodeValue_Output("Paths", self, VALUE_TYPE.path, [""])
 		.setVisible(true, true);
 	
 	attribute_surface_depth();
@@ -152,7 +152,7 @@ function Node_Directory_Search(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		updatePaths();
 		var type   = getInputData(2);
 	
-		var _outsurf = outputs[| 0].getValue();
+		var _outsurf = outputs[0].getValue();
 		if(!is_array(_outsurf)) _outsurf = [ _outsurf ];
 		
 		var _paths    = struct_get_names(paths);
@@ -182,15 +182,15 @@ function Node_Directory_Search(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		array_resize(_imgPaths, _ind);
 		array_resize(_outsurf,  _ind);
 		
-		outputs[| 0].setType(type == 0? VALUE_TYPE.surface : VALUE_TYPE.text);
-		outputs[| 0].setValue(_outsurf);
-		outputs[| 1].setValue(_imgPaths);
+		outputs[0].setType(type == 0? VALUE_TYPE.surface : VALUE_TYPE.text);
+		outputs[0].setValue(_outsurf);
+		outputs[1].setValue(_imgPaths);
 	}
 	
 	static dropPath = function(path) { 
 		if(is_array(path)) path = array_safe_get(path, 0);
 		if(!directory_exists(path)) return;
 		
-		inputs[| 0].setValue(path); 
+		inputs[0].setValue(path); 
 	}
 }

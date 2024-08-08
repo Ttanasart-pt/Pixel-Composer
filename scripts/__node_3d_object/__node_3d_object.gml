@@ -8,20 +8,20 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 	preview_channel = 0;
 	apply_anchor    = false;
 	
-	inputs[| 0] = nodeValue_Vector("Position", self, [ 0, 0, 0 ], { linkable: false });
+	inputs[0] = nodeValue_Vector("Position", self, [ 0, 0, 0 ], { linkable: false });
 	
-	inputs[| 1] = nodeValue_Quaternion("Rotation", self, [ 0, 0, 0, 1 ]);
+	inputs[1] = nodeValue_Quaternion("Rotation", self, [ 0, 0, 0, 1 ]);
 	
-	inputs[| 2] = nodeValue_Vector("Scale", self, [ 1, 1, 1 ]);
+	inputs[2] = nodeValue_Vector("Scale", self, [ 1, 1, 1 ]);
 	
-	inputs[| 3] = nodeValue_Vector("Anchor", self, [ 0, 0, 0 ], { 
+	inputs[3] = nodeValue_Vector("Anchor", self, [ 0, 0, 0 ], { 
 			linkable: false, 
 			side_button : button(function() { apply_anchor = !apply_anchor; triggerRender(); })
 				.setIcon(THEME.icon_3d_anchor, [ function() /*=>*/ {return apply_anchor} ], c_white)
 				.setTooltip("Apply Position") 
 		});
 	
-	in_d3d = ds_list_size(inputs);
+	in_d3d = array_length(inputs);
 	
 	#macro __d3d_input_list_transform ["Transform", false], 0, 3, 1, 2
 	
@@ -70,7 +70,7 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 	
 	static drawGizmoPosition = function(index, object, _vpos, active, params, _mx, _my, _snx, _sny, _panel) { #region
 		#region ---- main ----
-			var _pos  = inputs[| index].getValue(,,, true);
+			var _pos  = inputs[index].getValue(,,, true);
 			var _qrot = object == noone? new BBMOD_Quaternion() : object.transform.rotation;
 			var _qinv = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(1, 0, 0), 90);
 		
@@ -230,7 +230,7 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 						for( var i = 0; i < 3; i++ ) 
 							val[i] += prj.getIndex(i) * _dist;
 						
-						if(inputs[| index].setValue(value_snap(val, _snx)))
+						if(inputs[index].setValue(value_snap(val, _snx)))
 							UNDO_HOLDING = true;
 					}
 				} else {
@@ -251,7 +251,7 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 						for( var i = 0; i < 3; i++ ) 
 							val[i] += _diff.getIndex(i);
 						
-						if(inputs[| index].setValue(value_snap(val, _snx))) 
+						if(inputs[index].setValue(value_snap(val, _snx))) 
 							UNDO_HOLDING = true;
 					}
 				}
@@ -282,14 +282,14 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 	
 	static drawGizmoRotation = function(index, object, _vpos, active, params, _mx, _my, _snx, _sny, _panel) { #region
 		#region ---- main ----
-			var _rot  = inputs[| index].getValue();
+			var _rot  = inputs[index].getValue();
 			var _qrot = object == noone? new BBMOD_Quaternion() : object.transform.rotation;
 			var _qinv = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(1, 0, 0), 90);
 			
 			var _camera = params.camera;
 			var _qview  = new BBMOD_Quaternion().FromEuler(_camera.focus_angle_y, -_camera.focus_angle_x, 0);
 		
-			var _ang    = inputs[| index].display_data.angle_display;
+			var _ang    = inputs[index].display_data.angle_display;
 			var _global = _ang == QUARTERNION_DISPLAY.quarterion? tool_attribute.context : 1;
 			
 			var _hover     = noone;
@@ -371,7 +371,7 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 				var _val   = _currR.Mul(drag_val);
 				var _Nrot  = _ang == QUARTERNION_DISPLAY.quarterion? _val.ToArray() : _val.ToEuler(true);
 				
-				if(inputs[| index].setValue(_Nrot))
+				if(inputs[index].setValue(_Nrot))
 					UNDO_HOLDING = true;
 			} 
 				
@@ -394,7 +394,7 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 	static drawGizmoScale = function(index, object, _vpos, active, params, _mx, _my, _snx, _sny, _panel) { #region
 		tool_attribute.context = 0;
 		#region ---- main ----
-			var _sca  = inputs[| index].getValue(,,, true);
+			var _sca  = inputs[index].getValue(,,, true);
 			var _qrot = object == noone? new BBMOD_Quaternion() : object.transform.rotation;
 			var _qinv = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(1, 0, 0), 90);
 		
@@ -534,7 +534,7 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 							
 						drag_val[drag_axis] += _dist;
 							
-						if(inputs[| index].setValue(value_snap(drag_val, _snx))) 
+						if(inputs[index].setValue(value_snap(drag_val, _snx))) 
 							UNDO_HOLDING = true;
 					}
 				} else {
@@ -555,7 +555,7 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 						for( var i = 0; i < 3; i++ ) 
 							drag_val[i] += _diff.getIndex(i);
 							
-						if(inputs[| index].setValue(value_snap(drag_val, _snx))) 
+						if(inputs[index].setValue(value_snap(drag_val, _snx))) 
 							UNDO_HOLDING = true;
 					}
 				}
@@ -584,7 +584,7 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 	} #endregion
 	
 	static drawOverlay3D = function(active, params, _mx, _my, _snx, _sny, _panel) { 
-		var _rot = inputs[| 1].display_data.angle_display;
+		var _rot = inputs[1].display_data.angle_display;
 		tools = _rot == QUARTERNION_DISPLAY.quarterion? tool_quate : tool_euler;
 		if(_rot == QUARTERNION_DISPLAY.euler && isUsingTool("Rotate"))
 			PANEL_PREVIEW.tool_current = noone;
@@ -593,7 +593,7 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 		if(array_empty(object)) return;
 		object = object[0];
 		
-		var _pos  = inputs[| 0].getValue(,,, true);
+		var _pos  = inputs[0].getValue(,,, true);
 		var _vpos = new __vec3( _pos[0], _pos[1], _pos[2] );
 		
 			 if(isUsingTool("Transform"))	drawGizmoPosition(0, object, _vpos, active, params, _mx, _my, _snx, _sny, _panel);

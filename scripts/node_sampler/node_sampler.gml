@@ -2,24 +2,24 @@ function Node_Sampler(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	name = "Sampler";
 	setDimension(96, 48);
 	
-	inputs[| 0] = nodeValue_Surface("Surface in", self);
+	inputs[0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue_Vector("Position", self, [ 0, 0 ])
+	inputs[1] = nodeValue_Vector("Position", self, [ 0, 0 ])
 		.setUnitRef(function(index) { return getDimension(index); });
 		
-	inputs[| 2] = nodeValue_Int("Sampling size", self, 1, "Size of square around the position to sample and average pixel color.")
+	inputs[2] = nodeValue_Int("Sampling size", self, 1, "Size of square around the position to sample and average pixel color.")
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 3, 0.1] });
 	
-	inputs[| 3] = nodeValue_Bool("Alpha", self, false);
+	inputs[3] = nodeValue_Bool("Alpha", self, false);
 	
-	outputs[| 0] = nodeValue_Output("Color", self, VALUE_TYPE.color, c_white);
+	outputs[0] = nodeValue_Output("Color", self, VALUE_TYPE.color, c_white);
 	
 	static getPreviewValues = function() { return getInputData(0); }
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		PROCESSOR_OVERLAY_CHECK
 		
-		inputs[| 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		inputs[1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 		
 		var _suf = current_data[0];
 		if(!is_surface(_suf)) return;
@@ -89,7 +89,7 @@ function Node_Sampler(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		var bbox = drawGetBbox(xx, yy, _s);
-		var col  = outputs[| 0].getValue();
+		var col  = outputs[0].getValue();
 		if(bbox.h <= 0) return;
 		
 		if(is_array(col)) {

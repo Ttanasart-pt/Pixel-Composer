@@ -6,17 +6,17 @@ function Node_FLIP_Add_Rigidbody(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	
 	manual_ungroupable = false;
 	
-	inputs[| 0] = nodeValue_Fdomain("Domain", self, noone )
+	inputs[0] = nodeValue_Fdomain("Domain", self, noone )
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue("Objects", self, JUNCTION_CONNECT.input, VALUE_TYPE.rigid, [] )
+	inputs[1] = nodeValue("Objects", self, JUNCTION_CONNECT.input, VALUE_TYPE.rigid, [] )
 		.setVisible(true, true);
 	
 	input_display_list = [ 0, 
 		["Collider",	false], 1, 
 	]
 	
-	outputs[| 0] = nodeValue_Output("Domain", self, VALUE_TYPE.fdomain, noone );
+	outputs[0] = nodeValue_Output("Domain", self, VALUE_TYPE.fdomain, noone );
 	
 	obstracle = new FLIP_Obstracle();
 	index     = 0;
@@ -30,7 +30,7 @@ function Node_FLIP_Add_Rigidbody(_x, _y, _group = noone) : Node(_x, _y, _group) 
 		var domain = getInputData(0);
 		if(!instance_exists(domain)) return;
 		
-		outputs[| 0].setValue(domain);
+		outputs[0].setValue(domain);
 		
 		var _objects = getInputData(1);
 		if(array_empty(_objects)) return;

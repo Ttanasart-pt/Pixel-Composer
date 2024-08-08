@@ -13,14 +13,14 @@ function Node_MIDI_In(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	for( var i = 0; i < inps; i++ ) 
 		_miniNames[i] = rtmidi_name_in(i);
 	
-	inputs[| 0] = nodeValue_Enum_Scroll("Input", self,  0, { data: _miniNames, update_hover: false })
+	inputs[0] = nodeValue_Enum_Scroll("Input", self,  0, { data: _miniNames, update_hover: false })
 		.rejectArray();
 		
-	outputs[| 0] = nodeValue_Output("Raw Message", self, VALUE_TYPE.float, []);
+	outputs[0] = nodeValue_Output("Raw Message", self, VALUE_TYPE.float, []);
 	
-	outputs[| 1] = nodeValue_Output("Pressing notes", self, VALUE_TYPE.float, []);
+	outputs[1] = nodeValue_Output("Pressing notes", self, VALUE_TYPE.float, []);
 	
-	outputs[| 2] = nodeValue_Output("Direct values", self, VALUE_TYPE.struct, {});
+	outputs[2] = nodeValue_Output("Direct values", self, VALUE_TYPE.struct, {});
 	
 	watcher_controllers = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { #region
 		var _h = ui(48);
@@ -31,16 +31,16 @@ function Node_MIDI_In(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 			createNewInput();
 		}
 		
-		var amo = ds_list_size(inputs);
+		var amo = array_length(inputs);
 		if(buttonTextIconInstant(amo > 1, THEME.button_hide, _x + _w - bw, _y + ui(8), bw, bh, _m, _focus, _hover, "", THEME.minus, __txt("Remove"), COLORS._main_value_negative) == 2) {
-			var _out = outputs[| ds_list_size(outputs) - 1];
+			var _out = outputs[array_length(outputs) - 1];
 			for( var i = 0, n = array_length(_out.value_to); i < n; i++ )
 				_out.value_to[i].removeFrom();
 			
-			array_remove(input_display_list, ds_list_size(inputs) - 1);
-			ds_list_delete(inputs,  ds_list_size(inputs)  - 1);
-			ds_list_delete(inputs,  ds_list_size(inputs)  - 1);
-			ds_list_delete(outputs, ds_list_size(outputs) - 1);
+			array_remove(input_display_list, array_length(inputs) - 1);
+			array_delete(inputs, array_length(inputs) - 1, 1);
+			array_delete(inputs, array_length(inputs) - 1, 1);
+			array_delete(outputs, array_length(outputs) - 1, 1);
 		}
 		
 		var _wx = TEXTBOX_HEIGHT + ui(16);
@@ -48,9 +48,9 @@ function Node_MIDI_In(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		var _wh = TEXTBOX_HEIGHT;
 		var _ww = _w - _wx - _wh - ui(8);
 		
-		for( var i = input_fix_len, n = ds_list_size(inputs); i < n; i += data_length ) {
-			var jun   = inputs[| i + 0];
-			var nor   = inputs[| i + 1];
+		for( var i = input_fix_len, n = array_length(inputs); i < n; i += data_length ) {
+			var jun   = inputs[i + 0];
+			var nor   = inputs[i + 1];
 			
 			var _name = jun.getName();
 			var wid   = jun.editWidget;
@@ -94,15 +94,15 @@ function Node_MIDI_In(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	];
 	
 	static createNewInput = function() {
-		var _index = ds_list_size(inputs);
+		var _index = array_length(inputs);
 		index_watching = _index;
 		
 		var _inp = nodeValue_Int("Index", self, -1 );
 		_inp.editWidget.slidable = false;
-		ds_list_add(inputs,  _inp);
-		ds_list_add(inputs,  nodeValue("Normalize", self, JUNCTION_CONNECT.input,  VALUE_TYPE.boolean, false ));
+		array_push(inputs,  _inp);
+		array_push(inputs,  nodeValue("Normalize", self, JUNCTION_CONNECT.input,  VALUE_TYPE.boolean, false ));
 		
-		ds_list_add(outputs, nodeValue_Output("Value", self, VALUE_TYPE.float, -1 ));
+		array_push(outputs, nodeValue_Output("Value", self, VALUE_TYPE.float, -1 ));
 		
 		return _inp;
 	} setDynamicInput(2, false);
@@ -123,7 +123,7 @@ function Node_MIDI_In(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	} #endregion
 	
 	static update = function() { #region
-		var _inport = inputs[| 0].getValue();
+		var _inport = inputs[0].getValue();
 		if(_inport != MIDI_INPORT) {
 			rtmidi_set_inport(_inport);
 			MIDI_INPORT = _inport;
@@ -150,25 +150,25 @@ function Node_MIDI_In(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 			disp_value = vval;
 			
 			if(index_watching != noone) {
-				inputs[| index_watching].setValue(vkey);
+				inputs[index_watching].setValue(vkey);
 				index_watching = noone;
 			}
 		}
 		
-		outputs[| 0].setValue(a);
-		outputs[| 1].setValue(notesPressing);
-		outputs[| 2].setValue(values);
+		outputs[0].setValue(a);
+		outputs[1].setValue(notesPressing);
+		outputs[2].setValue(values);
 		
 		var _ind = 1;
-		for( var i = input_fix_len, n = ds_list_size(inputs); i < n; i += data_length ) {
-			var _ikey = inputs[| i + 0].getValue();
-			var _inor = inputs[| i + 1].getValue();
+		for( var i = input_fix_len, n = array_length(inputs); i < n; i += data_length ) {
+			var _ikey = inputs[i + 0].getValue();
+			var _inor = inputs[i + 1].getValue();
 			
 			var _val = struct_try_get(values, _ikey, 0);
 			if(_inor) _val /= 127;
 			
-			outputs[| 2 + _ind].setName($"{_ikey} Value");
-			outputs[| 2 + _ind].setValue(_val);
+			outputs[2 + _ind].setName($"{_ikey} Value");
+			outputs[2 + _ind].setValue(_val);
 			_ind++;
 		}
 		

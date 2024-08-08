@@ -2,19 +2,19 @@ function Node_Mirror(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	name = "Mirror";
 	batch_output = false;
 	
-	inputs[| 0] = nodeValue_Surface("Surface in", self);
+	inputs[0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue_Vector("Position", self, [ 0.5, 0.5 ])
+	inputs[1] = nodeValue_Vector("Position", self, [ 0.5, 0.5 ])
 		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
 	
-	inputs[| 2] = nodeValue_Rotation("Angle", self, 0);
+	inputs[2] = nodeValue_Rotation("Angle", self, 0);
 	
-	inputs[| 3] = nodeValue_Bool("Active", self, true);
+	inputs[3] = nodeValue_Bool("Active", self, true);
 		active_index = 3;
 	
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue_Output("Mirror mask", self, VALUE_TYPE.surface, noone);
+	outputs[1] = nodeValue_Output("Mirror mask", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 3,
 		["Surfaces", false], 0, 
@@ -40,8 +40,8 @@ function Node_Mirror(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		draw_line(dx0, dy0, dx1, dy1);
 		
 		var _hov = false;
-		var  hv  = inputs[| 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);		active &= !hv; _hov |= hv;
-		var  hv  = inputs[| 2].drawOverlay(hover, active, _posx, _posy, _s, _mx, _my, _snx, _sny);  active &= !hv; _hov |= hv;
+		var  hv  = inputs[1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);		active &= !hv; _hov |= hv;
+		var  hv  = inputs[2].drawOverlay(hover, active, _posx, _posy, _s, _mx, _my, _snx, _sny);  active &= !hv; _hov |= hv;
 		
 		return _hov;
 	} #endregion

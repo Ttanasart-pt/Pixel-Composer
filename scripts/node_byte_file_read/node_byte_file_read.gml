@@ -4,19 +4,19 @@ function Node_Byte_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	w = 128;
 	
-	inputs[| 0]  = nodeValue_Text("Path", self, "")
+	inputs[0]  = nodeValue_Text("Path", self, "")
 		.setDisplay(VALUE_DISPLAY.path_load, { filter: "any file|*" })
 		.rejectArray();
 	
-	outputs[| 0] = nodeValue_Output("Content", self, VALUE_TYPE.buffer, noone);
-	outputs[| 1] = nodeValue_Output("Path", self, VALUE_TYPE.path, "")
+	outputs[0] = nodeValue_Output("Content", self, VALUE_TYPE.buffer, noone);
+	outputs[1] = nodeValue_Output("Path", self, VALUE_TYPE.path, "")
 		.setVisible(true, true);
 	
 	content = noone;
 	
 	on_drop_file = function(path) {
 		path = path_get(path);
-		inputs[| 0].setValue(path);
+		inputs[0].setValue(path);
 		
 		if(updatePaths(path)) {
 			doUpdate();
@@ -47,7 +47,7 @@ function Node_Byte_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		path_current = path;
 		edit_time    = max(edit_time, file_get_modify_s(path_current));
 		
-		outputs[| 1].setValue(path_current);
+		outputs[1].setValue(path_current);
 		content = buffer_load(path_current);
 		
 		return true;
@@ -70,7 +70,7 @@ function Node_Byte_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		if(path_current != path)
 			updatePaths(path);
 			
-		outputs[| 0].setValue(content);
+		outputs[0].setValue(content);
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
@@ -85,6 +85,6 @@ function Node_Byte_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		if(is_array(path)) path = array_safe_get(path, 0);
 		if(!file_exists_empty(path)) return;
 		
-		inputs[| 0].setValue(path); 
+		inputs[0].setValue(path); 
 	}
 }

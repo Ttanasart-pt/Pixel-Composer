@@ -17,13 +17,13 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		lines = [];
 	#endregion
 	
-	inputs[| 0] = nodeValue_Float("Point array", self, [])
+	inputs[0] = nodeValue_Float("Point array", self, [])
 		.setVisible(true, true)
 		.setArrayDepth(2);
 	
-	inputs[| 1] = nodeValue_Bool("Loop", self, false);
+	inputs[1] = nodeValue_Bool("Loop", self, false);
 	
-	outputs[| 0] = nodeValue_Output("Path", self, VALUE_TYPE.pathnode, self);
+	outputs[0] = nodeValue_Output("Path", self, VALUE_TYPE.pathnode, self);
 	
 	cached_pos = ds_map_create();
 	
@@ -189,7 +189,7 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		updateLength();
 		
-		outputs[| 0].setValue(self);
+		outputs[0].setValue(self);
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

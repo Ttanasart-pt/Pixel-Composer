@@ -44,12 +44,12 @@ function Node_Custom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		shader.fs = d3d11_shader_compile_ps($"{path}/{info.shader_fs}", "main", "ps_4_0");
 		if(!d3d11_shader_exists(shader.fs)) noti_warning(d3d11_get_error_string());
 		
-		ds_list_clear(inputs);
-		ds_list_clear(outputs);
+		inputs  = [];
+		outputs = [];
 		
 		for( var i = 0, n = array_length(info.inputs); i < n; i++ ) {
 			var _input = info.inputs[i];
-			inputs[| i] = nodeValue(_input.name, self, JUNCTION_CONNECT.input, value_type_from_string(_input.type), _input.value)
+			inputs[i] = nodeValue(_input.name, self, JUNCTION_CONNECT.input, value_type_from_string(_input.type), _input.value)
 							.setVisible(_input.show_in_inspector, _input.show_in_graph);
 			input_index_map[? _input.name] = i;
 			
@@ -62,7 +62,7 @@ function Node_Custom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 		for( var i = 0, n = array_length(info.outputs); i < n; i++ ) {
 			var _output = info.outputs[i];
-			outputs[| i] = nodeValue_Output(_output.name, self, value_type_from_string(_output.type), _output.value)
+			outputs[i] = nodeValue_Output(_output.name, self, value_type_from_string(_output.type), _output.value)
 							.setVisible(_output.show_in_graph);
 			output_index_map[? _output.name] = i;
 			

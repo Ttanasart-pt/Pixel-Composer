@@ -1,18 +1,18 @@
 function Node_3D_Mesh_Stack_Slice(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Slice Stack";
 	
-	inputs[| 0] = nodeValue_D3Mesh("Mesh", self, noone)
+	inputs[0] = nodeValue_D3Mesh("Mesh", self, noone)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue_Vector("Output Dimension", self, [ 16, 16 ]);
+	inputs[1] = nodeValue_Vector("Output Dimension", self, [ 16, 16 ]);
 	
-	inputs[| 2] = nodeValue_Float("Scale", self, 1);
+	inputs[2] = nodeValue_Float("Scale", self, 1);
 	
-	inputs[| 3] = nodeValue_Int("Slices", self, 4);
+	inputs[3] = nodeValue_Int("Slices", self, 4);
 	
-	inputs[| 4] = nodeValue_Vector("BBOX Padding", self, [ 0, 0, 0 ]);
+	inputs[4] = nodeValue_Vector("BBOX Padding", self, [ 0, 0, 0 ]);
 		
-	outputs[| 0] = nodeValue_Output("Outputs", self, VALUE_TYPE.surface, [])
+	outputs[0] = nodeValue_Output("Outputs", self, VALUE_TYPE.surface, [])
 		.setArrayDepth(1);
 	
 	mesh_data = new Inspector_Label("", f_code);
@@ -208,7 +208,7 @@ function Node_3D_Mesh_Stack_Slice(_x, _y, _group = noone) : Node(_x, _y, _group)
 		if(_mesh == noone) return;
 		if(!is_instanceof(_mesh, __3dObject)) return;
 		
-		var _surfs = outputs[| 0].getValue();
+		var _surfs = outputs[0].getValue();
 		    _surfs = array_verify(_surfs, slicesAmo);
 		    
 		for(var i = 0; i < slicesAmo; i++) {
@@ -217,7 +217,7 @@ function Node_3D_Mesh_Stack_Slice(_x, _y, _group = noone) : Node(_x, _y, _group)
 		}
 		
 		surfaces = _surfs;
-		outputs[| 0].setValue(_surfs);
+		outputs[0].setValue(_surfs);
 		    
 		splicing        = force || dimensions != params.dim || slicesAmo != params.slic;
 		splice_progress = 0;

@@ -3,14 +3,14 @@ function Node_Path_Separate_Folder(_x, _y, _group = noone) : Node_Processor(_x, 
 	
 	setDimension(96, 48);
 	
-	inputs[| 0] = nodeValue_Text("Path", self, "")
+	inputs[0] = nodeValue_Text("Path", self, "")
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue_Bool("Keep extension", self, true);
+	inputs[1] = nodeValue_Bool("Keep extension", self, true);
 	
-	outputs[| 0] = nodeValue_Output("Directory", self, VALUE_TYPE.path, "");
+	outputs[0] = nodeValue_Output("Directory", self, VALUE_TYPE.path, "");
 	
-	outputs[| 1] = nodeValue_Output("File Name", self, VALUE_TYPE.path, "");
+	outputs[1] = nodeValue_Output("File Name", self, VALUE_TYPE.path, "");
 	
 	static processData = function(_output, _data, _index = 0) { 
 		if(_index == 0)
@@ -20,7 +20,7 @@ function Node_Path_Separate_Folder(_x, _y, _group = noone) : Node_Processor(_x, 
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var str = outputs[| 1].getValue();
+		var str = outputs[1].getValue();
 		var bbox = drawGetBbox(xx, yy, _s);
 		
 		draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);

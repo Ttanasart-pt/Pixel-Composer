@@ -2,18 +2,18 @@ function Node_Lovify(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	name  = "Lovify";
 	color = CDEF.red;
 	
-	inputs[| 0] = nodeValue_Surface("Surface in", self);
+	inputs[0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue_Int("Seed", self, seed_random(6))
-		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 1].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
+	inputs[1] = nodeValue_Int("Seed", self, seed_random(6))
+		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[1].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
-	inputs[| 2] = nodeValue_Float("Density", self, 0.5 )
+	inputs[2] = nodeValue_Float("Density", self, 0.5 )
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 3] = nodeValue_Float("Distribution", self, 0.1 )
+	inputs[3] = nodeValue_Float("Distribution", self, 0.1 )
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 1, 
 		["Surfaces", false], 0, 

@@ -3,23 +3,23 @@ function Node_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	use_cache   = CACHE_USE.manual;
 	clearCacheOnChange = false;
 	
-	inputs[| 0] = nodeValue_Surface("Surface in",		self);
+	inputs[0] = nodeValue_Surface("Surface in",		self);
 	
-	inputs[| 1] = nodeValue_Int("Max life",			self, 5);
+	inputs[1] = nodeValue_Int("Max life",			self, 5);
 	
-	inputs[| 2] = nodeValue_Bool("Loop",				self, false);
+	inputs[2] = nodeValue_Bool("Loop",				self, false);
 	
-	inputs[| 3] = nodeValue_Int("Max distance",		self, -1, "Maximum distance to search for movement, set to -1 to search the entire image.");
+	inputs[3] = nodeValue_Int("Max distance",		self, -1, "Maximum distance to search for movement, set to -1 to search the entire image.");
 	
-	inputs[| 4] = nodeValue_Bool("Match color",		self, true, "Make trail track pixels of the same color, instead of the closet pixels.");
+	inputs[4] = nodeValue_Bool("Match color",		self, true, "Make trail track pixels of the same color, instead of the closet pixels.");
 	
-	inputs[| 5] = nodeValue_Bool("Blend color",		self, true, "Blend color between two pixel smoothly.");
+	inputs[5] = nodeValue_Bool("Blend color",		self, true, "Blend color between two pixel smoothly.");
 	
-	inputs[| 6] = nodeValue("Alpha over life",	self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11);
+	inputs[6] = nodeValue("Alpha over life",	self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11);
 	
-	outputs[| 0] = nodeValue_Output("Surface out",		self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out",		self, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue_Output("Trail UV",		self, VALUE_TYPE.surface, noone);
+	outputs[1] = nodeValue_Output("Trail UV",		self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
 		["Surfaces",		 true], 0, 
@@ -47,11 +47,11 @@ function Node_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	static step = function() {
 		var _colr  = getInputData(4);
 		
-		inputs[| 5].setVisible(!_colr);
+		inputs[5].setVisible(!_colr);
 	}
 	
 	static update = function() {
-		if(!inputs[| 0].value_from) return;
+		if(!inputs[0].value_from) return;
 		
 		var _surf  = getInputData(0);
 		var _life  = getInputData(1);
@@ -73,13 +73,13 @@ function Node_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			surface_reset_target();
 		}
 			
-		var _outSurf = outputs[| 0].getValue();
+		var _outSurf = outputs[0].getValue();
 		_outSurf = surface_verify(_outSurf, surface_get_width_safe(_surf), surface_get_height_safe(_surf), cDep);
-		outputs[| 0].setValue(_outSurf);
+		outputs[0].setValue(_outSurf);
 			
-		var _outUV = outputs[| 1].getValue();
+		var _outUV = outputs[1].getValue();
 		_outUV = surface_verify(_outUV, surface_get_width_safe(_surf), surface_get_height_safe(_surf), cDep);
-		outputs[| 1].setValue(_outUV);
+		outputs[1].setValue(_outUV);
 		
 		var curf = CURRENT_FRAME;
 		var frame_amo = _loop? _life : min(_life, curf);

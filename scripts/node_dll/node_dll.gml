@@ -2,15 +2,15 @@ function Node_DLL(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "DLL";
 	setDimension(96, 32 + 24 * 1);
 	
-	inputs[| 0] = nodeValue_Text("DLL File", self, "")
+	inputs[0] = nodeValue_Text("DLL File", self, "")
 		.setDisplay(VALUE_DISPLAY.path_load, { filter: "Dynamic-link library (.dll)|*.dll" })
 		.setVisible(true, false);
 	
-	inputs[| 1] = nodeValue_Text("Function name", self, "");
+	inputs[1] = nodeValue_Text("Function name", self, "");
 	
-	inputs[| 2] = nodeValue_Enum_Button("Return type", self,  0, [ "Number", "Buffer" ]);
+	inputs[2] = nodeValue_Enum_Button("Return type", self,  0, [ "Number", "Buffer" ]);
 	
-	outputs[| 0] = nodeValue_Output("Return Value", self, VALUE_TYPE.float, 0);
+	outputs[0] = nodeValue_Output("Return Value", self, VALUE_TYPE.float, 0);
 	
 	ext_cache       = "";
 	ext_function    = -1;
@@ -43,39 +43,39 @@ function Node_DLL(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	]
 	
 	static createNewInput = function() {
-		var index = ds_list_size(inputs);
+		var index = array_length(inputs);
 		
-		inputs[| index + 0] = nodeValue_Enum_Button("Parameter type", self,  0, [ "Number", "Buffer" ]);
+		inputs[index + 0] = nodeValue_Enum_Button("Parameter type", self,  0, [ "Number", "Buffer" ]);
 		
-		inputs[| index + 1] = nodeValue_Float("Parameter value", self, 0 )
+		inputs[index + 1] = nodeValue_Float("Parameter value", self, 0 )
 			.setVisible(true, true);
 		
 		array_push(input_display_list, index + 0, index + 1);
 		
-		return [ inputs[| index + 0], inputs[| index + 1] ];
+		return [ inputs[index + 0], inputs[index + 1] ];
 	} 
 	
 	setDynamicInput(2, false);
 	
 	static refreshDynamicInput = function() {
-		var _l   = ds_list_create();
+		var _l   = [];
 		var amo  = attributes.size;
 		var _ind = input_fix_len + amo * data_length;
 		
-		for( var i = 0; i < min(_ind, ds_list_size(inputs)); i++ )
-			ds_list_add(_l, inputs[| i]);
+		for( var i = 0; i < min(_ind, array_length(inputs)); i++ )
+			array_push(_l, inputs[i]);
 		
 		var _add = amo - getInputAmount();
-		repeat(_add) ds_list_append_array(_l, createNewInput());
+		repeat(_add) array_append(_l, createNewInput());
 		
 		input_display_list = array_clone(input_display_list_raw);
 		
-		for( var i = input_fix_len; i < ds_list_size(_l); i++ ) {
-			_l[| i].index = i;
+		for( var i = input_fix_len; i < array_length(_l); i++ ) {
+			_l[i].index = i;
 			array_push(input_display_list, i);
 		}
 		
-		ds_list_destroy(inputs);
+
 		inputs = _l;
 		
 		getJunctionList();
@@ -97,7 +97,7 @@ function Node_DLL(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			var _ind = input_fix_len + i * data_length;
 			var _typ = getInputData(_ind + 0);
 			
-			inputs[| _ind + 1].setType(val_types[_typ]);
+			inputs[_ind + 1].setType(val_types[_typ]);
 			ts[i] = _typ? ty_string : ty_real;
 			
 			var _val = getInputData(_ind + 1);
@@ -163,11 +163,11 @@ function Node_DLL(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			}
 		}
 		
-		outputs[| 0].setType(val_types[_fnS.type]);
+		outputs[0].setType(val_types[_fnS.type]);
 		
 		if(_fnS.type) _res = buffer_from_string(_res);
 		
-		outputs[| 0].setValue(_res);
+		outputs[0].setValue(_res);
 		
 	}
 	

@@ -13,9 +13,9 @@ function Node_Strand_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _gr
 		var _render = nodeBuild("Node_Strand_Render",  128, -32, self);
 		var _output = nodeBuild("Node_Group_Output",   384, -32, self);
 		
-		_output.inputs[| 0].setFrom(_render.outputs[| 0]);
-		_render.inputs[| 1].setFrom(_update.outputs[| 0]);
-		_update.inputs[| 0].setFrom(_create.outputs[| 0]);
+		_output.inputs[0].setFrom(_render.outputs[0]);
+		_render.inputs[1].setFrom(_update.outputs[0]);
+		_update.inputs[0].setFrom(_create.outputs[0]);
 	}
 	
 	static onStep = function() {

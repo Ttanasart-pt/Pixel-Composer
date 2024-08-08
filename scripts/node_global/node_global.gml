@@ -198,7 +198,7 @@ function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
 	static createValue = function() { #region
 		var _in    = nodeValue_Float("NewValue", self, 0);
 		_in.editor = new variable_editor(_in);
-		ds_list_add(inputs, _in);
+		array_push(inputs, _in);
 		
 		return _in;
 	} #endregion
@@ -225,8 +225,8 @@ function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
 	} #endregion
 	
 	static step = function() { #region
-		for( var i = 0; i < ds_list_size(inputs); i++ ) {
-			var _inp = inputs[| i];
+		for( var i = 0; i < array_length(inputs); i++ ) {
+			var _inp = inputs[i];
 			value[? _inp.name] = _inp;
 			
 			var val   = true;
@@ -239,14 +239,14 @@ function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
 		var _map = {};
 		
 		var _inputs = [];
-		for(var i = 0; i < ds_list_size(inputs); i++) {
-			var _ser = inputs[| i].serialize();
+		for(var i = 0; i < array_length(inputs); i++) {
+			var _ser = inputs[i].serialize();
 			
-			_ser.global_type    = inputs[| i].editor.type_index;
-			_ser.global_disp    = inputs[| i].editor.disp_index;
-			_ser.global_name    = inputs[| i].editor.value_name;
-			_ser.global_s_range = inputs[| i].editor.slider_range;
-			_ser.global_s_step  = inputs[| i].editor.slider_step;
+			_ser.global_type    = inputs[i].editor.type_index;
+			_ser.global_disp    = inputs[i].editor.disp_index;
+			_ser.global_name    = inputs[i].editor.value_name;
+			_ser.global_s_range = inputs[i].editor.slider_range;
+			_ser.global_s_step  = inputs[i].editor.slider_step;
 			
 			array_push(_inputs, _ser);
 		}

@@ -35,8 +35,8 @@ function Panel_Preview_Window() : PanelContent() constructor {
 	
 	function changeChannel(index) {
 		var channel = index - array_length(menu);
-		for( var i = 0; i < ds_list_size(node_target.outputs); i++ ) {
-			var o = node_target.outputs[| i];
+		for( var i = 0; i < array_length(node_target.outputs); i++ ) {
+			var o = node_target.outputs[i];
 			if(o.type != VALUE_TYPE.surface) continue;
 			if(channel-- == 0) {
 				preview_channel = i;
@@ -147,8 +147,8 @@ function Panel_Preview_Window() : PanelContent() constructor {
 	
 		if(mouse_click(mb_right, pFOCUS)) {
 			var _menu = array_clone(menu);
-			for( var i = 0; i < ds_list_size(node_target.outputs); i++ ) {
-				var o = node_target.outputs[| i];
+			for( var i = 0; i < array_length(node_target.outputs); i++ ) {
+				var o = node_target.outputs[i];
 				if(o.type != VALUE_TYPE.surface) continue;
 			
 				array_push(_menu, menuItem(o.name, function(_dat) { changeChannel(_dat.index); }));

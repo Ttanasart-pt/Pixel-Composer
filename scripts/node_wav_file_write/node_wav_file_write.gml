@@ -3,22 +3,22 @@ function Node_WAV_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	color = COLORS.node_blend_input;
 	setDimension(, 72);
 	
-	inputs[| 0]  = nodeValue_Text("Path", self, "")
+	inputs[0]  = nodeValue_Text("Path", self, "")
 		.setDisplay(VALUE_DISPLAY.path_save, { filter: "audio file|*.wav" })
 		.rejectArray()
 		.setVisible(true);
 	
-	inputs[| 1]  = nodeValue_Float("Audio Data", self, [[]])
+	inputs[1]  = nodeValue_Float("Audio Data", self, [[]])
 		.setArrayDepth(1)
 		.setVisible(true, true);
 	
-	inputs[| 2]  = nodeValue_Int("Sample", self, 44100);
+	inputs[2]  = nodeValue_Int("Sample", self, 44100);
 	
-	inputs[| 3]  = nodeValue_Enum_Scroll("Bit Depth", self,  0, [ "8 bit positive", "16 bit integer" ]);
+	inputs[3]  = nodeValue_Enum_Scroll("Bit Depth", self,  0, [ "8 bit positive", "16 bit integer" ]);
 		
-	inputs[| 4]  = nodeValue_Bool("Remap Data", self, false)
+	inputs[4]  = nodeValue_Bool("Remap Data", self, false)
 	
-	inputs[| 5]  = nodeValue_Vector("Data Range", self, [ 0, 1 ]);
+	inputs[5]  = nodeValue_Vector("Data Range", self, [ 0, 1 ]);
 	
 	input_display_list = [ 
 		[ "Data",	false], 1, 0, 4, 5, 
@@ -35,7 +35,7 @@ function Node_WAV_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	static step = function() {
 		var remap = getInputData(4);
 		
-		inputs[| 5].setVisible(remap);
+		inputs[5].setVisible(remap);
 	}
 	
 	static export = function() {

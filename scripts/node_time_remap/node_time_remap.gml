@@ -8,18 +8,18 @@ function Node_Time_Remap(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	uniform_min = shader_get_uniform(shader, "vMin");
 	uniform_max = shader_get_uniform(shader, "vMax");
 	
-	inputs[| 0] = nodeValue_Surface("Surface in", self)
+	inputs[0] = nodeValue_Surface("Surface in", self)
 		.rejectArray();
 	
-	inputs[| 1] = nodeValue_Surface("Map", self)
+	inputs[1] = nodeValue_Surface("Map", self)
 		.rejectArray();
 	
-	inputs[| 2] = nodeValue_Int("Max life",   self, 3)
+	inputs[2] = nodeValue_Int("Max life",   self, 3)
 		.rejectArray();
 	
-	inputs[| 3] = nodeValue_Bool("Loop", self, false)
+	inputs[3] = nodeValue_Bool("Loop", self, false)
 	
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 
 		["Surfaces", false], 0, 1, 
@@ -34,9 +34,9 @@ function Node_Time_Remap(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		var _life    = getInputData(2);
 		var _loop    = getInputData(3);
 		
-		var _surf  = outputs[| 0].getValue();
+		var _surf  = outputs[0].getValue();
 		_surf = surface_verify(_surf, surface_get_width_safe(_inSurf), surface_get_height_safe(_inSurf), attrDepth());
-		outputs[| 0].setValue(_surf);
+		outputs[0].setValue(_surf);
 		
 		var ste = 1 / _life;
 		

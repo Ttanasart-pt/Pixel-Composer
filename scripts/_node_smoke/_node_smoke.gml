@@ -7,7 +7,7 @@ function Node_Smoke(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		if(_update) update(frame);
 		//print($"Update {frame}: {name}");
 		
-		var outJunc = outputs[| 0];
+		var outJunc = outputs[0];
 		for( var i = 0; i < array_length(outJunc.value_to); i++ ) {
 			var _to = outJunc.value_to[i];
 			if(_to.value_from != outJunc) continue;

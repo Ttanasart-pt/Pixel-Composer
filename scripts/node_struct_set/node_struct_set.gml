@@ -3,14 +3,14 @@ function Node_Struct_Set(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	setDimension(96, 48);
 	
-	inputs[| 0] = nodeValue_Struct("Struct", self, {})
+	inputs[0] = nodeValue_Struct("Struct", self, {})
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue_Text("Key", self, "");
+	inputs[1] = nodeValue_Text("Key", self, "");
 	
-	inputs[| 2] = nodeValue("Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0);
+	inputs[2] = nodeValue("Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0);
 	
-	outputs[| 0] = nodeValue_Output("Struct", self, VALUE_TYPE.struct, {});
+	outputs[0] = nodeValue_Output("Struct", self, VALUE_TYPE.struct, {});
 	
 	static update = function() { 
 		var str = getInputData(0);
@@ -20,7 +20,7 @@ function Node_Struct_Set(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		var keys = string_splice(key, ".");
 		var _str = str;
 		
-		var out = outputs[| 0];
+		var out = outputs[0];
 		
 		for( var j = 0; j < array_length(keys); j++ ) {
 			var k = keys[j];

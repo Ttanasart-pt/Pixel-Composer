@@ -1,12 +1,12 @@
 function Node_3D_Modifier(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constructor {
 	name = "3D Mesh Modifier";
 	
-	inputs[| 0] = nodeValue_D3Mesh("Mesh", self, noone)
+	inputs[0] = nodeValue_D3Mesh("Mesh", self, noone)
 		.setVisible(true, true);
 	
-	in_mesh = ds_list_size(inputs);
+	in_mesh = array_length(inputs);
 	
-	outputs[| 0] = nodeValue_Output("Mesh", self, VALUE_TYPE.d3Mesh, noone);
+	outputs[0] = nodeValue_Output("Mesh", self, VALUE_TYPE.d3Mesh, noone);
 	
 	static modify_object = function(_object, _data, _matrix) { #region
 		return _object;

@@ -1,48 +1,48 @@
 function Node_RM_Render(_x, _y, _group = noone) : Node_RM(_x, _y, _group) constructor {
 	name  = "RM Render";
 	
-	inputs[| 0] = nodeValue_Dimension(self);
+	inputs[0] = nodeValue_Dimension(self);
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 1] = nodeValue_Enum_Button("Projection", self,  0, [ "Perspective", "Orthographic" ]);
+	inputs[1] = nodeValue_Enum_Button("Projection", self,  0, [ "Perspective", "Orthographic" ]);
 	
-	inputs[| 2] = nodeValue_Float("FOV", self, 30)
+	inputs[2] = nodeValue_Float("FOV", self, 30)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 90, 1 ] });
 	
-	inputs[| 3] = nodeValue_Float("Ortho Scale", self, 5.)
+	inputs[3] = nodeValue_Float("Ortho Scale", self, 5.)
 	
-	inputs[| 4] = nodeValue_Vector("View Range", self, [ 3, 6 ]);
+	inputs[4] = nodeValue_Vector("View Range", self, [ 3, 6 ]);
 	
-	inputs[| 5] = nodeValue_Float("Depth", self, 0)
+	inputs[5] = nodeValue_Float("Depth", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 6] = nodeValue_Bool("Draw BG", self, false);
+	inputs[6] = nodeValue_Bool("Draw BG", self, false);
 	
-	inputs[| 7] = nodeValue_Color("Background", self, c_black);
+	inputs[7] = nodeValue_Color("Background", self, c_black);
 	
-	inputs[| 8] = nodeValue_Float("Ambient Level", self, 0.2)
+	inputs[8] = nodeValue_Float("Ambient Level", self, 0.2)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 9] = nodeValue_Vector("Light Position", self, [ -.4, -.5, 1 ]);
+	inputs[9] = nodeValue_Vector("Light Position", self, [ -.4, -.5, 1 ]);
 	
-	inputs[| 10] = nodeValue_Surface("Environment", self);
+	inputs[10] = nodeValue_Surface("Environment", self);
 	
-	inputs[| 11] = nodeValue_Vector("Camera Rotation", self, [ 30, 45, 0 ]);
+	inputs[11] = nodeValue_Vector("Camera Rotation", self, [ 30, 45, 0 ]);
 	
-	inputs[| 12] = nodeValue_Float("Camera Scale", self, 1)
+	inputs[12] = nodeValue_Float("Camera Scale", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01 ] });
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 13] = nodeValue_SDF("SDF Object", self, {})
+	inputs[13] = nodeValue_SDF("SDF Object", self, {})
 		.setVisible(true, true);
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 14] = nodeValue_Bool("Env Interpolation", self, false);
+	inputs[14] = nodeValue_Bool("Env Interpolation", self, false);
 	
-	outputs[| 0] = nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 0, 13, 
 		["Camera",  false], 11, 12, 1, 2, 3, 4, 5, 
@@ -58,7 +58,7 @@ function Node_RM_Render(_x, _y, _group = noone) : Node_RM(_x, _y, _group) constr
 	static step = function() {
 		var _pro = getSingleValue( 1);
 		
-		inputs[| 3].setVisible(_pro == 1);
+		inputs[3].setVisible(_pro == 1);
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index = 0) {

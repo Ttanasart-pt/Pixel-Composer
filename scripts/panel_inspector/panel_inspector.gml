@@ -527,8 +527,8 @@ function Panel_Inspector() : PanelContent() constructor {
 		_inspecting.inspecting = true;
 		prop_hover	= noone;
 		var jun		= noone;
-		var amoIn	= is_array(_inspecting.input_display_list)?  array_length(_inspecting.input_display_list)  : ds_list_size(_inspecting.inputs);
-		var amoOut	= is_array(_inspecting.output_display_list)? array_length(_inspecting.output_display_list) : ds_list_size(_inspecting.outputs);
+		var amoIn	= is_array(_inspecting.input_display_list)?  array_length(_inspecting.input_display_list)  : array_length(_inspecting.inputs);
+		var amoOut	= is_array(_inspecting.output_display_list)? array_length(_inspecting.output_display_list) : array_length(_inspecting.outputs);
 		var amo		= inspectGroup == 0? amoIn + 1 + amoOut : amoIn;
 		var hh		= 0;
 		
@@ -637,8 +637,8 @@ function Panel_Inspector() : PanelContent() constructor {
 			var yy = hh + _y;
 			
 			if(i < amoIn) { // inputs
-					 if(!is_array(_inspecting.input_display_list))		jun = _inspecting.inputs[| i];
-				else if(is_real(_inspecting.input_display_list[i])) 	jun = _inspecting.inputs[| _inspecting.input_display_list[i]];
+					 if(!is_array(_inspecting.input_display_list))		jun = _inspecting.inputs[i];
+				else if(is_real(_inspecting.input_display_list[i])) 	jun = _inspecting.inputs[_inspecting.input_display_list[i]];
 				else													jun = _inspecting.input_display_list[i];
 				
 			} else if(i == amoIn) { // output label
@@ -652,8 +652,8 @@ function Panel_Inspector() : PanelContent() constructor {
 			} else { // outputs
 				var _oi = i - amoIn - 1;
 				
-					 if(!is_array(_inspecting.output_display_list))		jun = _inspecting.outputs[| _oi];
-				else if(is_real(_inspecting.output_display_list[_oi]))	jun = _inspecting.outputs[| _inspecting.output_display_list[_oi]];
+					 if(!is_array(_inspecting.output_display_list))		jun = _inspecting.outputs[_oi];
+				else if(is_real(_inspecting.output_display_list[_oi]))	jun = _inspecting.outputs[_inspecting.output_display_list[_oi]];
 				else													jun = _inspecting.output_display_list[_oi];
 			} 
 			
@@ -736,7 +736,7 @@ function Panel_Inspector() : PanelContent() constructor {
 							draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, 0, yy, ui(32), lbh, COLORS.panel_inspector_group_hover, 1);
 							
 							if(mouse_press(mb_left, pFOCUS))
-								_inspecting.inputs[| togl].setValue(!toging);
+								_inspecting.inputs[togl].setValue(!toging);
 						} else 
 							draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, 0, yy, ui(32), lbh, COLORS.panel_inspector_group_bg, 1);
 						

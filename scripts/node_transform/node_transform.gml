@@ -8,56 +8,56 @@ enum OUTPUT_SCALING {
 function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Transform";
 	
-	inputs[| 0] = nodeValue_Surface("Surface in", self);
+	inputs[0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue_Vec2("Output dimension", self, [ 1, 1 ])
+	inputs[1] = nodeValue_Vec2("Output dimension", self, [ 1, 1 ])
 		.setVisible(false);
 	
-	inputs[| 2] = nodeValue_Vec2("Position", self, [ 0.5, 0.5 ])
+	inputs[2] = nodeValue_Vec2("Position", self, [ 0.5, 0.5 ])
 		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
 	
-	inputs[| 3] = nodeValue_Vec2("Anchor", self, [ 0.5, 0.5 ])
+	inputs[3] = nodeValue_Vec2("Anchor", self, [ 0.5, 0.5 ])
 		.setDisplay(VALUE_DISPLAY.vector, {
 			side_button : new buttonAnchor(function(ind) { 
 				switch(ind) {
-					case 0 : inputs[| 3].setValue([ 0.0, 0.0 ]); break;
-					case 1 : inputs[| 3].setValue([ 0.5, 0.0 ]); break;
-					case 2 : inputs[| 3].setValue([ 1.0, 0.0 ]); break;
+					case 0 : inputs[3].setValue([ 0.0, 0.0 ]); break;
+					case 1 : inputs[3].setValue([ 0.5, 0.0 ]); break;
+					case 2 : inputs[3].setValue([ 1.0, 0.0 ]); break;
 					
-					case 3 : inputs[| 3].setValue([ 0.0, 0.5 ]); break;
-					case 4 : inputs[| 3].setValue([ 0.5, 0.5 ]); break;
-					case 5 : inputs[| 3].setValue([ 1.0, 0.5 ]); break;
+					case 3 : inputs[3].setValue([ 0.0, 0.5 ]); break;
+					case 4 : inputs[3].setValue([ 0.5, 0.5 ]); break;
+					case 5 : inputs[3].setValue([ 1.0, 0.5 ]); break;
 					
-					case 6 : inputs[| 3].setValue([ 0.0, 1.0 ]); break;
-					case 7 : inputs[| 3].setValue([ 0.5, 1.0 ]); break;
-					case 8 : inputs[| 3].setValue([ 1.0, 1.0 ]); break;
+					case 6 : inputs[3].setValue([ 0.0, 1.0 ]); break;
+					case 7 : inputs[3].setValue([ 0.5, 1.0 ]); break;
+					case 8 : inputs[3].setValue([ 1.0, 1.0 ]); break;
 				}
 			}) 
 		});
 	
-	inputs[| 4] = nodeValue_Bool("Relative anchor", self, true);
+	inputs[4] = nodeValue_Bool("Relative anchor", self, true);
 	
-	inputs[| 5] = nodeValue_Rotation("Rotation", self, 0);
+	inputs[5] = nodeValue_Rotation("Rotation", self, 0);
 	
-	inputs[| 6] = nodeValue_Vec2("Scale", self, [ 1, 1 ]);
+	inputs[6] = nodeValue_Vec2("Scale", self, [ 1, 1 ]);
 	
-	inputs[| 7] = nodeValue_Enum_Button("Render Mode", self, 0, [ "Normal", "Tile", "Wrap" ]);
+	inputs[7] = nodeValue_Enum_Button("Render Mode", self, 0, [ "Normal", "Tile", "Wrap" ]);
 	
-	inputs[| 8] = nodeValue_Float("Rotate by velocity", self, 0, "Make the surface rotates to follow its movement.")
+	inputs[8] = nodeValue_Float("Rotate by velocity", self, 0, "Make the surface rotates to follow its movement.")
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 9] = nodeValue_Enum_Scroll("Output dimension type", self, OUTPUT_SCALING.same_as_input, [ "Same as input", "Constant", "Relative to input", "Transformed" ]);
+	inputs[9] = nodeValue_Enum_Scroll("Output dimension type", self, OUTPUT_SCALING.same_as_input, [ "Same as input", "Constant", "Relative to input", "Transformed" ]);
 	
-	inputs[| 10] = nodeValue_Bool("Round position", self, false, "Round position to the nearest integer value to avoid jittering.");
+	inputs[10] = nodeValue_Bool("Round position", self, false, "Round position to the nearest integer value to avoid jittering.");
 	
-	inputs[| 11] = nodeValue_Bool("Active", self, true);
+	inputs[11] = nodeValue_Bool("Active", self, true);
 		active_index = 11;
 	
-	inputs[| 12] = nodeValue_Bool("Echo", self, false);
+	inputs[12] = nodeValue_Bool("Echo", self, false);
 	
-	inputs[| 13] = nodeValue_Int("Echo amount", self, 8);
+	inputs[13] = nodeValue_Int("Echo amount", self, 8);
 	
-	inputs[| 14] = nodeValue_Float("Alpha", self, 1)
+	inputs[14] = nodeValue_Float("Alpha", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 		
 	input_display_list = [ 11, 0,  
@@ -69,9 +69,9 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		["Echo",		 true, 12], 13, 
 	];
 	
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue_Output("Dimension", self, VALUE_TYPE.integer, [ 1, 1 ])
+	outputs[1] = nodeValue_Output("Dimension", self, VALUE_TYPE.integer, [ 1, 1 ])
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setVisible(false);
 	
@@ -140,15 +140,15 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			_surf = _surf[preview_index];
 		}
 		
-		inputs[| 3].setValue([ 0.5, 0.5 ]);
-		inputs[| 2].setValue([ surface_get_width_safe(_surf) / 2, surface_get_height_safe(_surf) / 2 ]);
+		inputs[3].setValue([ 0.5, 0.5 ]);
+		inputs[2].setValue([ surface_get_width_safe(_surf) / 2, surface_get_height_safe(_surf) / 2 ]);
 	}
 	
 	static step = function() {
 		var pos = getSingleValue(2);
 		var anc = getSingleValue(3);
 		
-		var _b = inputs[| 3].editWidget.side_button;
+		var _b = inputs[3].editWidget.side_button;
 		var _a = anc[0] * 2 + anc[1] * 20;
 		
 		switch(_a) {
@@ -197,7 +197,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var alp       = _data[14];
 		
 		var _outSurf  = _outData[0];
-		var _outRes   = array_create(ds_list_size(outputs));
+		var _outRes   = array_create(array_length(outputs));
 		
 		var cDep = attrDepth();
 		
@@ -218,20 +218,20 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		switch(out_type) { #region output dimension
 			case OUTPUT_SCALING.same_as_input :
-				inputs[| 1].setVisible(false);
+				inputs[1].setVisible(false);
 				break;
 			case OUTPUT_SCALING.constant :	
-				inputs[| 1].setVisible(true);
+				inputs[1].setVisible(true);
 				_ww  = out[0];
 				_hh  = out[1];
 				break;
 			case OUTPUT_SCALING.relative : 
-				inputs[| 1].setVisible(true);
+				inputs[1].setVisible(true);
 				_ww = ww * out[0];
 				_hh = hh * out[1];
 				break;
 			case OUTPUT_SCALING.scale : 
-				inputs[| 1].setVisible(false);
+				inputs[1].setVisible(false);
 				_ww = ww * sca[0];
 				_hh = hh * sca[1];
 				
@@ -352,7 +352,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			_surf = _surf[preview_index];
 		}
 		
-		var _surf_out = outputs[| 0].getValue();
+		var _surf_out = outputs[0].getValue();
 		if(is_array(_surf_out)) {
 			if(array_length(_surf_out) == 0) return;
 			_surf_out = _surf_out[preview_index];
@@ -456,7 +456,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			pos_y = value_snap(pos_y, _sny);
 			
 			if(overlay_dragging == 1) { //Move
-				if(inputs[| 2].setValue([ pos_x, pos_y ]))
+				if(inputs[2].setValue([ pos_x, pos_y ]))
 					UNDO_HOLDING = true;
 			} else if(overlay_dragging == 2) { //Move anchor
 				var nanx = pos_x / ww;
@@ -464,13 +464,13 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				
 				if(key_mod_press(ALT)) {
 					var modi = false;
-					modi |= inputs[| 3].setValue([ nanx, nany ]);
-					modi |= inputs[| 2].setValue([ overlay_drag_px + pos_x, overlay_drag_py + pos_y ]);
+					modi |= inputs[3].setValue([ nanx, nany ]);
+					modi |= inputs[2].setValue([ overlay_drag_px + pos_x, overlay_drag_py + pos_y ]);
 					
 					if(modi)
 						UNDO_HOLDING = true;
 				} else {
-					if(inputs[| 3].setValue([ nanx, nany ]))
+					if(inputs[3].setValue([ nanx, nany ]))
 						UNDO_HOLDING = true;
 				}
 			}
@@ -487,7 +487,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			if(key_mod_press(CTRL)) sa = round((overlay_drag_sa - da) / 15) * 15;
 			else					sa = overlay_drag_sa - da;
 			
-			if(inputs[| 5].setValue(sa))
+			if(inputs[5].setValue(sa))
 				UNDO_HOLDING = true;
 			
 			if(mouse_release(mb_left)) {
@@ -536,7 +536,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				_sh = _sw;
 			}
 			
-			if(inputs[| 6].setValue([ _sw, _sh ]))
+			if(inputs[6].setValue([ _sw, _sh ]))
 				UNDO_HOLDING = true;
 			
 			if(mouse_release(mb_left)) {
@@ -589,8 +589,8 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		}
 		
 		#region path
-			if(inputs[| 2].is_anim && inputs[| 2].value_from == noone && !inputs[| 2].sep_axis) {
-				var posInp = inputs[| 2];
+			if(inputs[2].is_anim && inputs[2].value_from == noone && !inputs[2].sep_axis) {
+				var posInp = inputs[2];
 				var allPos = posInp.animator.values;
 				var ox, oy, nx, ny;
 			

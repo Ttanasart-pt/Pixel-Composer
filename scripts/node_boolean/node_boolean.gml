@@ -6,16 +6,16 @@ function Node_Boolean(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	hover_state    = 0;
 	hover_state_to = 0;
 	
-	wd_checkBox = new checkBox( function() { inputs[| 0].setValue(!getInputData(0)); } );
+	wd_checkBox = new checkBox( function() { inputs[0].setValue(!getInputData(0)); } );
 	
-	inputs[| 0] = nodeValue_Bool("Value", self, false)
+	inputs[0] = nodeValue_Bool("Value", self, false)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue_Bool("Hide Background", self, false);
+	inputs[1] = nodeValue_Bool("Hide Background", self, false);
 	
-	inputs[| 2] = nodeValue_Enum_Button("Name location", self,  1, [ "Top", "Bottom" ]);
+	inputs[2] = nodeValue_Enum_Button("Name location", self,  1, [ "Top", "Bottom" ]);
 	
-	outputs[| 0] = nodeValue_Output("Boolean", self, VALUE_TYPE.boolean, false);
+	outputs[0] = nodeValue_Output("Boolean", self, VALUE_TYPE.boolean, false);
 	
 	input_display_list = [ 0, 
 		["Display",	false], 1, 2, 

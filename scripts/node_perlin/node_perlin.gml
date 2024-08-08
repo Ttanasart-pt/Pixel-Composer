@@ -1,36 +1,36 @@
 function Node_Perlin(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Perlin Noise";
 	
-	inputs[| 0] = nodeValue_Dimension(self);
+	inputs[0] = nodeValue_Dimension(self);
 	
-	inputs[| 1] = nodeValue_Vector("Position", self, [ 0, 0 ])
+	inputs[1] = nodeValue_Vector("Position", self, [ 0, 0 ])
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	inputs[| 2] = nodeValue_Vector("Scale", self, [ 5, 5 ])
+	inputs[2] = nodeValue_Vector("Scale", self, [ 5, 5 ])
 		.setMappable(10);
 	
-	inputs[| 3] = nodeValue_Int("Iteration", self, 4);
+	inputs[3] = nodeValue_Int("Iteration", self, 4);
 	
-	inputs[| 4] = nodeValue_Bool("Tile", self, true);
+	inputs[4] = nodeValue_Bool("Tile", self, true);
 		
-	inputs[| 5] = nodeValue_Float("Seed", self, seed_random(6))
-		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 5].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
+	inputs[5] = nodeValue_Float("Seed", self, seed_random(6))
+		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[5].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 		
-	inputs[| 6] = nodeValue_Enum_Button("Color mode", self,  0, [ "Greyscale", "RGB", "HSV" ]);
+	inputs[6] = nodeValue_Enum_Button("Color mode", self,  0, [ "Greyscale", "RGB", "HSV" ]);
 	
-	inputs[| 7] = nodeValue_Slider_Range("Color R range", self, [ 0, 1 ]);
+	inputs[7] = nodeValue_Slider_Range("Color R range", self, [ 0, 1 ]);
 	
-	inputs[| 8] = nodeValue_Slider_Range("Color G range", self, [ 0, 1 ]);
+	inputs[8] = nodeValue_Slider_Range("Color G range", self, [ 0, 1 ]);
 	
-	inputs[| 9] = nodeValue_Slider_Range("Color B range", self, [ 0, 1 ]);
+	inputs[9] = nodeValue_Slider_Range("Color B range", self, [ 0, 1 ]);
 	
 	//////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 10] = nodeValueMap("Scale map", self);
+	inputs[10] = nodeValueMap("Scale map", self);
 	
 	//////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 11] = nodeValue_Rotation("Rotation", self, 0);
+	inputs[11] = nodeValue_Rotation("Rotation", self, 0);
 		
 	input_display_list = [
 		["Output", 	 true],	0, 5, 
@@ -38,13 +38,13 @@ function Node_Perlin(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		["Render",	false], 6, 7, 8, 9, 
 	];
 	
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	attribute_surface_depth();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _hov = false;
-		var  hv  = inputs[| 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= hv;
+		var  hv  = inputs[1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= hv;
 		
 		return _hov;
 	}
@@ -52,15 +52,15 @@ function Node_Perlin(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	static step = function() {
 		var _col = getInputData(6);
 		
-		inputs[| 7].setVisible(_col != 0);
-		inputs[| 8].setVisible(_col != 0);
-		inputs[| 9].setVisible(_col != 0);
+		inputs[7].setVisible(_col != 0);
+		inputs[8].setVisible(_col != 0);
+		inputs[9].setVisible(_col != 0);
 		
-		inputs[| 7].name = _col == 1? "Color R range" : "Color H range";
-		inputs[| 8].name = _col == 1? "Color G range" : "Color S range";
-		inputs[| 9].name = _col == 1? "Color B range" : "Color V range";
+		inputs[7].name = _col == 1? "Color R range" : "Color H range";
+		inputs[8].name = _col == 1? "Color G range" : "Color S range";
+		inputs[9].name = _col == 1? "Color B range" : "Color V range";
 		
-		inputs[| 2].mappableStep();
+		inputs[2].mappableStep();
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
@@ -82,7 +82,7 @@ function Node_Perlin(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			shader_set_f("u_resolution", _dim);
 			shader_set_2("position",     _pos);
 			shader_set_f("rotation",     degtorad(_rot));
-			shader_set_f_map("scale",    _data[2], _data[10], inputs[| 2]);
+			shader_set_f_map("scale",    _data[2], _data[10], inputs[2]);
 			shader_set_f("seed",         _sed);
 			shader_set_i("tile",         _til);
 			shader_set_i("iteration",    _ite);

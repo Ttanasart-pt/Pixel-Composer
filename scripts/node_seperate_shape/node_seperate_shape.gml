@@ -1,27 +1,27 @@
 function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "Separate Shape";
 	
-	inputs[| 0] = nodeValue_Surface("Surface in", self)
+	inputs[0] = nodeValue_Surface("Surface in", self)
 		.rejectArray();
 	
-	inputs[| 1] = nodeValue_Float("Tolerance", self, 0.2)
+	inputs[1] = nodeValue_Float("Tolerance", self, 0.2)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 1, 0.01 ], update_stat: SLIDER_UPDATE.release })
 		.rejectArray();
 		
-	inputs[| 2] = nodeValue_Bool("Override color", self, false)
+	inputs[2] = nodeValue_Bool("Override color", self, false)
 		.rejectArray();
 	
-	inputs[| 3] = nodeValue_Color("Color", self, c_white)
+	inputs[3] = nodeValue_Color("Color", self, c_white)
 		.rejectArray();
 	
-	inputs[| 4] = nodeValue_Bool("Ignore blank", self, true, "Skip empty and black shape.")
+	inputs[4] = nodeValue_Bool("Ignore blank", self, true, "Skip empty and black shape.")
 		.rejectArray();
 	
-	inputs[| 5] = nodeValue_Enum_Button("Mode", self,  0 , [ "Greyscale", "Alpha" ] )
+	inputs[5] = nodeValue_Enum_Button("Mode", self,  0 , [ "Greyscale", "Alpha" ] )
 		
-	outputs[| 0] = nodeValue_Output("Surface out",	self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out",	self, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue_Output("Atlas",	self, VALUE_TYPE.surface, []);
+	outputs[1] = nodeValue_Output("Atlas",	self, VALUE_TYPE.surface, []);
 	
 	input_display_list = [
 		["Shape",	false], 0, 5, 1, 4,
@@ -153,8 +153,8 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			
 			ds_map_destroy(reg);
 			
-			outputs[| 0].setValue(_val);
-			outputs[| 1].setValue(_atlas);
+			outputs[0].setValue(_val);
+			outputs[1].setValue(_atlas);
 		#endregion
 	}
 }

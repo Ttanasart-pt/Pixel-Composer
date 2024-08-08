@@ -12,56 +12,56 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		triggerRender();
 	});
 	
-	inputs[| 0] = nodeValue_Surface("Surface in", self);
+	inputs[0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue_Int("Width",   self, 0)
+	inputs[1] = nodeValue_Int("Width",   self, 0)
 		.setDisplay(VALUE_DISPLAY._default, { front_button : filter_button })
 		.setValidator(VV_min(0))
 		.setMappable(15);
 	
-	inputs[| 2] = nodeValue_Color("Color",   self, c_white);
+	inputs[2] = nodeValue_Color("Color",   self, c_white);
 	
-	inputs[| 3] = nodeValue_Bool("Blend",   self, 0, "Blend outline color with the original color.");
+	inputs[3] = nodeValue_Bool("Blend",   self, 0, "Blend outline color with the original color.");
 	
-	inputs[| 4] = nodeValue_Float("Blend alpha",   self, 1)
+	inputs[4] = nodeValue_Float("Blend alpha",   self, 1)
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(16);
 	
-	inputs[| 5] = nodeValue_Enum_Button("Position",   self,  1, ["Inside", "Outside"]);
+	inputs[5] = nodeValue_Enum_Button("Position",   self,  1, ["Inside", "Outside"]);
 	
-	inputs[| 6] = nodeValue_Bool("Anti aliasing",   self, 0);
+	inputs[6] = nodeValue_Bool("Anti aliasing",   self, 0);
 	
-	inputs[| 7] = nodeValue_Enum_Scroll("Oversample mode", self,  0, [ "Empty", "Clamp", "Repeat" ])
+	inputs[7] = nodeValue_Enum_Scroll("Oversample mode", self,  0, [ "Empty", "Clamp", "Repeat" ])
 		.setTooltip("How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.");
 		
-	inputs[| 8] = nodeValue_Int("Start",   self, 0, "Shift outline inside, outside the shape.")
+	inputs[8] = nodeValue_Int("Start",   self, 0, "Shift outline inside, outside the shape.")
 		.setMappable(17);
 	
-	inputs[| 9] = nodeValue_Surface("Mask", self);
+	inputs[9] = nodeValue_Surface("Mask", self);
 	
-	inputs[| 10] = nodeValue_Float("Mix", self, 1)
+	inputs[10] = nodeValue_Float("Mix", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 11] = nodeValue_Bool("Active", self, true);
+	inputs[11] = nodeValue_Bool("Active", self, true);
 		active_index = 11;
 	
-	inputs[| 12] = nodeValue_Bool("Crop border", self, false);
+	inputs[12] = nodeValue_Bool("Crop border", self, false);
 	
 	__init_mask_modifier(9); // inputs 13, 14
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 15] = nodeValueMap("Width map", self);
+	inputs[15] = nodeValueMap("Width map", self);
 	
-	inputs[| 16] = nodeValueMap("Blend alpha map", self);
+	inputs[16] = nodeValueMap("Blend alpha map", self);
 	
-	inputs[| 17] = nodeValueMap("Start map", self);
+	inputs[17] = nodeValueMap("Start map", self);
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue_Output("Outline", self, VALUE_TYPE.surface, noone);
+	outputs[1] = nodeValue_Output("Outline", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 11, 
 		["Surfaces", true], 0, 9, 10, 13, 14, 
@@ -77,13 +77,13 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var _wid  = getInputData(1);
 		var _side = getInputData(5);
 		
-		inputs[| 12].setVisible(_side == 0);
+		inputs[12].setVisible(_side == 0);
 		
 		__step_mask_modifier();
 		
-		inputs[| 1].mappableStep();
-		inputs[| 4].mappableStep();
-		inputs[| 8].mappableStep();
+		inputs[1].mappableStep();
+		inputs[4].mappableStep();
+		inputs[8].mappableStep();
 		
 		filter_button.index = attributes.filter;
 	} #endregion
@@ -101,8 +101,8 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 		surface_set_shader(_outSurf, sh_outline);
 			shader_set_f("dimension",       ww, hh);
-			shader_set_f_map("borderSize",  _data[1], _data[15], inputs[| 1]);
-			shader_set_f_map("borderStart", _data[8], _data[17], inputs[| 8]);
+			shader_set_f_map("borderSize",  _data[1], _data[15], inputs[1]);
+			shader_set_f_map("borderStart", _data[8], _data[17], inputs[8]);
 			shader_set_color("borderColor", cl);
 			
 			shader_set_i("side",            side);
@@ -110,7 +110,7 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			shader_set_i("is_aa",           aa);
 			shader_set_i("outline_only",    _output_index);
 			shader_set_i("is_blend",        blend);
-			shader_set_f_map("blend_alpha", _data[4], _data[16], inputs[| 4]);
+			shader_set_f_map("blend_alpha", _data[4], _data[16], inputs[4]);
 			shader_set_i("sampleMode",      sam);
 			shader_set_i("crop_border",     _crop);
 			shader_set_i("filter",          attributes.filter);

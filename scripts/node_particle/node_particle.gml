@@ -4,25 +4,25 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 
 	onSurfaceSize = function() { return getInputData(input_len, DEF_SURF); };
 	
-	inputs[| 3] = nodeValue_Area("Spawn area", self, DEF_AREA_REF, { onSurfaceSize } )
+	inputs[3] = nodeValue_Area("Spawn area", self, DEF_AREA_REF, { onSurfaceSize } )
 		.rejectArray()
 		.setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
 	
-	inputs[| input_len + 0] = nodeValue_Vector("Output dimension", self, DEF_SURF);
+	inputs[input_len + 0] = nodeValue_Vector("Output dimension", self, DEF_SURF);
 		
-	inputs[| input_len + 1] = nodeValue_Bool("Round position", self, true, "Round position to the closest integer value to avoid jittering.");
+	inputs[input_len + 1] = nodeValue_Bool("Round position", self, true, "Round position to the closest integer value to avoid jittering.");
 	
-	inputs[| input_len + 2] = nodeValue_Enum_Scroll("Blend mode", self,  0 , [ "Normal", "Alpha", "Additive" ]);
+	inputs[input_len + 2] = nodeValue_Enum_Scroll("Blend mode", self,  0 , [ "Normal", "Alpha", "Additive" ]);
 	
-	inputs[| input_len + 3] = nodeValue_Surface("Background", self);
+	inputs[input_len + 3] = nodeValue_Surface("Background", self);
 	
-	inputs[| input_len + 4] = nodeValue_Enum_Button("Render Type", self,  PARTICLE_RENDER_TYPE.surface , [ "Surface", "Line" ]);
+	inputs[input_len + 4] = nodeValue_Enum_Button("Render Type", self,  PARTICLE_RENDER_TYPE.surface , [ "Surface", "Line" ]);
 	
-	inputs[| input_len + 5] = nodeValue_Int("Line life", self, 4 );
+	inputs[input_len + 5] = nodeValue_Int("Line life", self, 4 );
 		
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
-	for(var i = input_len, n = ds_list_size(inputs); i < n; i++) inputs[| i].rejectArray();
+	for(var i = input_len, n = array_length(inputs); i < n; i++) inputs[i].rejectArray();
 	
 	attribute_surface_depth();
 	attribute_interpolation();
@@ -43,10 +43,10 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 	static onValueUpdate = function(index = 0) {
 		if(index == input_len + 0) {
 			var _dim		= getInputData(input_len + 0);
-			var _outSurf	= outputs[| 0].getValue();
+			var _outSurf	= outputs[0].getValue();
 			
 			_outSurf = surface_verify(_outSurf, array_safe_get_fast(_dim, 0, 1), array_safe_get_fast(_dim, 1, 1), attrDepth());
-			outputs[| 0].setValue(_outSurf);
+			outputs[0].setValue(_outSurf);
 		}
 		
 		if(PROJECT.animator.is_playing)
@@ -71,7 +71,7 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 		var _dim = getInputData(input_len + 0);
 		var _typ = getInputData(input_len + 4);
 		
-		inputs[| input_len + 5].setVisible(_typ == PARTICLE_RENDER_TYPE.line);
+		inputs[input_len + 5].setVisible(_typ == PARTICLE_RENDER_TYPE.line);
 		
 		if(curr_dimension[0] != _dim[0] || curr_dimension[1] != _dim[1]) {
 			clearCache();
@@ -86,14 +86,14 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 		var _dim	  = getInputData(input_len + 0);
 		var _bg 	  = getInputData(input_len + 3);
 		
-		var _outSurf  = outputs[| 0].getValue();
+		var _outSurf  = outputs[0].getValue();
 		
 		if(is_surface(_bg)) _dim = surface_get_dimension(_bg)
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		render_amount = 0;		
 		
-		outputs[| 0].setValue(_outSurf);
+		outputs[0].setValue(_outSurf);
 		
 		if(IS_FIRST_FRAME) {
 			reset();
@@ -104,15 +104,15 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 	}
 	
 	function render(_time = CURRENT_FRAME) {
-		var _dim   = inputs[| input_len + 0].getValue(_time);
-		var _exact = inputs[| input_len + 1].getValue(_time);
-		var _blend = inputs[| input_len + 2].getValue(_time);
-		var _bg    = inputs[| input_len + 3].getValue(_time);
+		var _dim   = inputs[input_len + 0].getValue(_time);
+		var _exact = inputs[input_len + 1].getValue(_time);
+		var _blend = inputs[input_len + 2].getValue(_time);
+		var _bg    = inputs[input_len + 3].getValue(_time);
 		
-		var _type  = inputs[| input_len + 4].getValue(_time);
-		var _llife = inputs[| input_len + 5].getValue(_time);
+		var _type  = inputs[input_len + 4].getValue(_time);
+		var _llife = inputs[input_len + 5].getValue(_time);
 		
-		var _outSurf = outputs[| 0].getValue();
+		var _outSurf = outputs[0].getValue();
 		
 		if(is_surface(_bg)) _dim = surface_get_dimension(_bg)
 		

@@ -1,6 +1,6 @@
-function nodeValue_Dimension(_node, _tooltip = "") { return new NodeValue_Dimension(_node, _tooltip); }
+function nodeValue_Dimension(_node, value = DEF_SURF) { return new NodeValue_Dimension(_node, value); }
 
-function NodeValue_Dimension(_node, _tooltip = "") : NodeValue("Dimension", _node, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF, _tooltip) constructor {
+function NodeValue_Dimension(_node, value) : NodeValue("Dimension", _node, JUNCTION_CONNECT.input, VALUE_TYPE.integer, value, "") constructor {
 	setDisplay(VALUE_DISPLAY.vector, 2);
 	
 	/////============== GET =============

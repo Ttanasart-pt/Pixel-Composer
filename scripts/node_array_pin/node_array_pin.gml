@@ -12,32 +12,32 @@ function Node_Array_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	bg_spr_add = 0;
 	
-	outputs[| 0] = nodeValue_Output("Array", self, VALUE_TYPE.any, []);
+	outputs[0] = nodeValue_Output("Array", self, VALUE_TYPE.any, []);
 	
 	static createNewInput = function() {
-		var index = ds_list_size(inputs);
+		var index = array_length(inputs);
 		
-		inputs[| index] = nodeValue("Input", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, -1 )
+		inputs[index] = nodeValue("Input", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, -1 )
 			.setVisible(true, true);
 		
-		return inputs[| index];
+		return inputs[index];
 	} setDynamicInput(1);
 	
 	static update = function(frame = CURRENT_FRAME) {
 		var res  = [];
 		var ind  = 0;
 		
-		for( var i = input_fix_len; i < ds_list_size(inputs); i++ ) {
-			if(!inputs[| i].value_from) continue;
+		for( var i = input_fix_len; i < array_length(inputs); i++ ) {
+			if(!inputs[i].value_from) continue;
 			
 			var val = getInputData(i);
 			array_push(res, val);
 			
-			inputs[|  i].setType(inputs[| i].value_from.type);
-			outputs[| 0].setType(inputs[| i].value_from.type);
+			inputs[ i].setType(inputs[i].value_from.type);
+			outputs[0].setType(inputs[i].value_from.type);
 		}
 		
-		outputs[| 0].setValue(res);
+		outputs[0].setValue(res);
 	}
 	
 	static pointIn = function(_x, _y, _mx, _my, _s) {
@@ -51,16 +51,16 @@ function Node_Array_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
 		
-		for( var i = input_fix_len; i < ds_list_size(inputs); i++ ) {
-			inputs[| i].x = xx;
-			inputs[| i].y = yy;
+		for( var i = input_fix_len; i < array_length(inputs); i++ ) {
+			inputs[i].x = xx;
+			inputs[i].y = yy;
 		}
 		
 		dummy_input.x = xx;
 		dummy_input.y = yy;
 		
-		outputs[| 0].x = xx;
-		outputs[| 0].y = yy;
+		outputs[0].x = xx;
+		outputs[0].y = yy;
 	}
 	
 	static drawBadge = function(_x, _y, _s) {}
@@ -68,7 +68,7 @@ function Node_Array_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	static drawJunctions = function(_x, _y, _mx, _my, _s) {
 		var _dval = PANEL_GRAPH.value_dragging;
-		var hover = _dval == noone || _dval.connect_type == JUNCTION_CONNECT.input? outputs[| 0] : dummy_input;
+		var hover = _dval == noone || _dval.connect_type == JUNCTION_CONNECT.input? outputs[0] : dummy_input;
 		var xx	  = x * _s + _x;
 		var yy	  = y * _s + _y;
 		isHovering = point_in_circle(_mx, _my, xx, yy, _s * 24);

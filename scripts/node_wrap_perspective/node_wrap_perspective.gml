@@ -1,36 +1,36 @@
 function Node_Warp_Perspective(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Perspective Warp";
 	
-	inputs[| 0] = nodeValue_Surface("Surface in", self);
+	inputs[0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue_Bool("Active", self, true);
+	inputs[1] = nodeValue_Bool("Active", self, true);
 		active_index = 1;
 		
-	inputs[| 2] = nodeValue_Vector("Top left", self, [ 0, 0 ] )
+	inputs[2] = nodeValue_Vector("Top left", self, [ 0, 0 ] )
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	inputs[| 3] = nodeValue_Vector("Top right", self, [ DEF_SURF_W, 0 ] )
+	inputs[3] = nodeValue_Vector("Top right", self, [ DEF_SURF_W, 0 ] )
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	inputs[| 4] = nodeValue_Vector("Bottom left", self, [ 0, DEF_SURF_H ] )
+	inputs[4] = nodeValue_Vector("Bottom left", self, [ 0, DEF_SURF_H ] )
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	inputs[| 5] = nodeValue_Vector("Bottom right", self, DEF_SURF )
+	inputs[5] = nodeValue_Vector("Bottom right", self, DEF_SURF )
 		.setUnitRef(function(index) { return getDimension(index); });
 		
-	inputs[| 6] = nodeValue_Vector("Top left", self, [ 0, 0 ] )
+	inputs[6] = nodeValue_Vector("Top left", self, [ 0, 0 ] )
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	inputs[| 7] = nodeValue_Vector("Top right", self, [ DEF_SURF_W, 0 ] )
+	inputs[7] = nodeValue_Vector("Top right", self, [ DEF_SURF_W, 0 ] )
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	inputs[| 8] = nodeValue_Vector("Bottom left", self, [ 0, DEF_SURF_H ] )
+	inputs[8] = nodeValue_Vector("Bottom left", self, [ 0, DEF_SURF_H ] )
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	inputs[| 9] = nodeValue_Vector("Bottom right", self, DEF_SURF )
+	inputs[9] = nodeValue_Vector("Bottom right", self, DEF_SURF )
 		.setUnitRef(function(index) { return getDimension(index); });
 		
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 1,
 		["Surfaces", false], 0,
@@ -49,9 +49,9 @@ function Node_Warp_Perspective(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		PROCESSOR_OVERLAY_CHECK
 		
-		if(array_length(current_data) < ds_list_size(inputs)) return;
+		if(array_length(current_data) < array_length(inputs)) return;
 		
-		var _surf = outputs[| 0].getValue();
+		var _surf = outputs[0].getValue();
 		if(is_array(_surf)) {
 			if(array_length(_surf) == 0) return;
 			_surf = _surf[preview_index];
@@ -90,10 +90,10 @@ function Node_Warp_Perspective(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 		draw_line(br[0], br[1], tr[0], tr[1]);
 		draw_line(br[0], br[1], bl[0], bl[1]);
 		
-		if(inputs[| tool * 4 + 2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
-		if(inputs[| tool * 4 + 3].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
-		if(inputs[| tool * 4 + 4].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
-		if(inputs[| tool * 4 + 5].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
+		if(inputs[tool * 4 + 2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
+		if(inputs[tool * 4 + 3].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
+		if(inputs[tool * 4 + 4].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
+		if(inputs[tool * 4 + 5].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
 		
 		var dx = 0;
 		var dy = 0;
@@ -108,8 +108,8 @@ function Node_Warp_Perspective(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 			var _trx = value_snap(drag_s[1][0] + dx, _snx);
 			var _try = value_snap(drag_s[1][1] + dy, _sny);
 			
-			   inputs[| tool * 4 + 2].setValue([ _tlx, _tly ])
-			if(inputs[| tool * 4 + 3].setValue([ _trx, _try ])) UNDO_HOLDING = true;
+			   inputs[tool * 4 + 2].setValue([ _tlx, _tly ])
+			if(inputs[tool * 4 + 3].setValue([ _trx, _try ])) UNDO_HOLDING = true;
 		} else if(drag_side == tool * 4 + 3) {
 			draw_line_width(tl[0], tl[1], bl[0], bl[1], 3);
 			
@@ -119,8 +119,8 @@ function Node_Warp_Perspective(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 			var _blx = value_snap(drag_s[1][0] + dx, _snx);
 			var _bly = value_snap(drag_s[1][1] + dy, _sny);
 			
-			   inputs[| tool * 4 + 2].setValue([ _tlx, _tly ]);
-			if(inputs[| tool * 4 + 4].setValue([ _blx, _bly ])) UNDO_HOLDING = true;
+			   inputs[tool * 4 + 2].setValue([ _tlx, _tly ]);
+			if(inputs[tool * 4 + 4].setValue([ _blx, _bly ])) UNDO_HOLDING = true;
 		} else if(drag_side == tool * 4 + 4) {
 			draw_line_width(br[0], br[1], tr[0], tr[1], 3);
 			
@@ -130,8 +130,8 @@ function Node_Warp_Perspective(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 			var _trx = value_snap(drag_s[1][0] + dx, _snx);
 			var _try = value_snap(drag_s[1][1] + dy, _sny);
 			
-			   inputs[| tool * 4 + 5].setValue([ _brx, _bry ]);
-			if(inputs[| tool * 4 + 3].setValue([ _trx, _try ])) UNDO_HOLDING = true;
+			   inputs[tool * 4 + 5].setValue([ _brx, _bry ]);
+			if(inputs[tool * 4 + 3].setValue([ _trx, _try ])) UNDO_HOLDING = true;
 		} else if(drag_side == tool * 4 + 5) {
 			draw_line_width(br[0], br[1], bl[0], bl[1], 3);
 			
@@ -141,8 +141,8 @@ function Node_Warp_Perspective(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 			var _blx = value_snap(drag_s[1][0] + dx, _snx);
 			var _bly = value_snap(drag_s[1][1] + dy, _sny);
 			
-			   inputs[| tool * 4 + 5].setValue([ _brx, _bry ]);
-			if(inputs[| tool * 4 + 4].setValue([ _blx, _bly ])) UNDO_HOLDING = true;
+			   inputs[tool * 4 + 5].setValue([ _brx, _bry ]);
+			if(inputs[tool * 4 + 4].setValue([ _blx, _bly ])) UNDO_HOLDING = true;
 		} else if(active) {
 			draw_set_color(COLORS._main_accent);
 			if(distance_to_line_infinite(_mx, _my, tl[0], tl[1], tr[0], tr[1]) < 12) {
@@ -180,10 +180,10 @@ function Node_Warp_Perspective(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 			}
 		}
 		
-		inputs[| tool * 4 + 2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-		inputs[| tool * 4 + 3].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-		inputs[| tool * 4 + 4].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-		inputs[| tool * 4 + 5].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		inputs[tool * 4 + 2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		inputs[tool * 4 + 3].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		inputs[tool * 4 + 4].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		inputs[tool * 4 + 5].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {

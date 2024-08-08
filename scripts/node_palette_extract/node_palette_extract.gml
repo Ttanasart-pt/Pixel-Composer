@@ -2,22 +2,22 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	name = "Palette Extract";
 	setDimension(96, 48);;
 	
-	inputs[| 0] = nodeValue_Surface("Surface in", self);
+	inputs[0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue_Int("Max colors", self, 5, "Amount of color in a palette.")
+	inputs[1] = nodeValue_Int("Max colors", self, 5, "Amount of color in a palette.")
 		.rejectArray();
 	
-	inputs[| 2] = nodeValue_Int("Seed", self, seed_random(6), "Random seed to be used to initialize K-mean algorithm.")
-		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 2].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) })
+	inputs[2] = nodeValue_Int("Seed", self, seed_random(6), "Random seed to be used to initialize K-mean algorithm.")
+		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[2].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) })
 		.rejectArray();
 	
-	inputs[| 3] = nodeValue_Enum_Scroll("Algorithm", self,  0, { data: [ "K-mean", "Frequency", "All colors" ], update_hover: false })
+	inputs[3] = nodeValue_Enum_Scroll("Algorithm", self,  0, { data: [ "K-mean", "Frequency", "All colors" ], update_hover: false })
 		.rejectArray();
 	
-	inputs[| 4] = nodeValue_Enum_Scroll("Color Space", self,  1, { data: [ "RGB", "HSV" ], update_hover: false })
+	inputs[4] = nodeValue_Enum_Scroll("Color Space", self,  1, { data: [ "RGB", "HSV" ], update_hover: false })
 		.rejectArray();
 	
-	outputs[| 0] = nodeValue_Output("Palette", self, VALUE_TYPE.color, [ ])
+	outputs[0] = nodeValue_Output("Palette", self, VALUE_TYPE.color, [ ])
 		.setDisplay(VALUE_DISPLAY.palette);
 	
 	static getPreviewValues = function() { return getInputData(0); }
@@ -277,9 +277,9 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	static step = function() { #region
 		var _algo = getInputData(3);
 		
-		inputs[| 1].setVisible(_algo != 2);
-		inputs[| 2].setVisible(_algo == 0);
-		inputs[| 4].setVisible(_algo == 0);
+		inputs[1].setVisible(_algo != 2);
+		inputs[2].setVisible(_algo == 0);
+		inputs[4].setVisible(_algo == 0);
 	} #endregion
 	
 	static extractPalette = function(_surf, _algo, _size, _seed) { #region
@@ -307,7 +307,7 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 		var bbox = drawGetBbox(xx, yy, _s);
 		if(bbox.h < 1) return;
 		
-		var pal = outputs[| 0].getValue();
+		var pal = outputs[0].getValue();
 		if(array_empty(pal)) return;
 		if(!is_array(pal[0])) pal = [ pal ];
 		

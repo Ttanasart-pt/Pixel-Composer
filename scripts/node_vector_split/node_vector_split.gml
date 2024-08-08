@@ -7,25 +7,25 @@ function Node_Vector_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	draw_padding = 4;
 	
-	inputs[| 0] = nodeValue_Vector("Vector", self, [ 0, 0, 0, 0 ])
+	inputs[0] = nodeValue_Vector("Vector", self, [ 0, 0, 0, 0 ])
 		.setArrayDynamic()
 		.setVisible(true, true);
 	
-	outputs[| 0] = nodeValue_Output("x", self, VALUE_TYPE.float, 0);
-	outputs[| 1] = nodeValue_Output("y", self, VALUE_TYPE.float, 0);
-	outputs[| 2] = nodeValue_Output("z", self, VALUE_TYPE.float, 0);
-	outputs[| 3] = nodeValue_Output("w", self, VALUE_TYPE.float, 0);
+	outputs[0] = nodeValue_Output("x", self, VALUE_TYPE.float, 0);
+	outputs[1] = nodeValue_Output("y", self, VALUE_TYPE.float, 0);
+	outputs[2] = nodeValue_Output("z", self, VALUE_TYPE.float, 0);
+	outputs[3] = nodeValue_Output("w", self, VALUE_TYPE.float, 0);
 	
 	static step = function() {
-		if(inputs[| 0].value_from == noone) return;
+		if(inputs[0].value_from == noone) return;
 		
 		var type = VALUE_TYPE.float;
-		if(inputs[| 0].value_from.type == VALUE_TYPE.integer)
+		if(inputs[0].value_from.type == VALUE_TYPE.integer)
 			type = VALUE_TYPE.integer;
 		
-		inputs[| 0].setType(type);
+		inputs[0].setType(type);
 		for( var i = 0; i < 4; i++ )
-			outputs[| i].setType(type);
+			outputs[i].setType(type);
 	}
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) {
@@ -42,7 +42,7 @@ function Node_Vector_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
 		var str = "";
 		for( var i = 0; i < 4; i++ )
-			if(outputs[| i].visible) str += $"{outputs[| i].getValue()}\n";
+			if(outputs[i].visible) str += $"{outputs[i].getValue()}\n";
 		
 		str = string_trim(str);
 		var bbox = drawGetBbox(xx, yy, _s);

@@ -21,11 +21,9 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	
 	is_root = true;
 	
-	static topoSortable = function() { #region
-		return false;
-	} #endregion
+	static topoSortable = function() { return false; }
 	
-	static removeNode = function(node) { #region
+	static removeNode = function(node) {
 		array_remove(attributes.members, node.node_id);
 		
 		array_remove(nodes, node);
@@ -33,11 +31,11 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		if(node.inline_context == self)
 			node.inline_context = noone;
 		onRemoveNode(node); 
-	} #endregion
+	}
 	
 	static onRemoveNode = function(node) {}
 	
-	static addNode = function(node) { #region
+	static addNode = function(node) {
 		if(node.inline_context != noone && node.inline_context != self)
 			node.inline_context.removeNode(node);
 		node.inline_context = self;
@@ -46,7 +44,7 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		array_push_unique(nodes, node);
 		
 		onAddNode(node);
-	} #endregion
+	}
 	
 	static addPoint = function(_x, _y) {
 		add_point = true;
@@ -58,7 +56,7 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	
 	static ccw = function(a, b, c) { return (b[0] - a[0]) * (c[1] - a[1]) - (c[0] - a[0]) * (b[1] - a[1]); }
 	
-	static getNodeBorder = function(_ind, _vertex, _node) { #region
+	static getNodeBorder = function(_ind, _vertex, _node) {
 		var _rad = 6;
 		var _stp = 30;
 		
@@ -73,9 +71,9 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		for( var i = 270; i <= 360; i += _stp ) _vertex[_ind++] = [ _nx1 + lengthdir_x(_rad, i), _ny1 + lengthdir_y(_rad, i) ];
 		
 		return _ind;
-	} #endregion
+	}
 	
-	static refreshMember = function() { #region
+	static refreshMember = function() {
 		nodes = [];
 		
 		for( var i = 0, n = array_length(attributes.members); i < n; i++ ) {
@@ -86,9 +84,9 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			
 			addNode(PROJECT.nodeMap[? attributes.members[i]]);
 		}
-	} #endregion
+	}
 	
-	static refreshGroupBG = function() { #region
+	static refreshGroupBG = function() {
 		var _hash = "";
 		var _ind  = 0;
 		
@@ -124,61 +122,59 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		
 		if(add_point) array_push(_vtrx, [ point_x, point_y ]);
 		
-		#region create convex shape
-			__temp_minP = _vtrx[0];
-			__temp_minI = 0;
-			
-			for( var i = 0, n = array_length(_vtrx); i < n; i++ ) {
-				var _v  = _vtrx[i];
-				var _vx = _v[0];
-				var _vy = _v[1];
-			
-				if(_vy > __temp_minP[1] || (_vy == __temp_minP[1] && _vx < __temp_minP[0])) {
-					__temp_minP = _v;
-					__temp_minI = i;
-				}
-			}
-			
-			_vtrx = array_map( _vtrx, function(a, i)   { return [ a[0], a[1], i == __temp_minI? -999 : point_direction(__temp_minP[0], __temp_minP[1], a[0], a[1]) + 360 ] });
-			        array_sort(_vtrx, function(a0, a1) { return a0[2] == a1[2]? sign(a0[0] - a1[0]) : sign(a0[2] - a1[2]); });
+		__temp_minP = _vtrx[0];
+		__temp_minI = 0;
 		
-			var _linS = 0;
-			for( var i = 1, n = array_length(_vtrx); i < n; i++ ) {
-				if(_vtrx[i][1] != _vtrx[0][1]) break;
-				_linS = i;
-			}
+		for( var i = 0, n = array_length(_vtrx); i < n; i++ ) {
+			var _v  = _vtrx[i];
+			var _vx = _v[0];
+			var _vy = _v[1];
 		
-			array_delete(_vtrx, 1, _linS - 1);
+			if(_vy > __temp_minP[1] || (_vy == __temp_minP[1] && _vx < __temp_minP[0])) {
+				__temp_minP = _v;
+				__temp_minI = i;
+			}
+		}
 		
-			group_vertex = [ _vtrx[0], _vtrx[1] ];
-			
-			for( var i = 2, n = array_length(_vtrx); i < n; i++ ) {
-				var _v = _vtrx[i];
-			
-				while( array_length(group_vertex) >= 2 && ccw( group_vertex[array_length(group_vertex) - 2], group_vertex[array_length(group_vertex) - 1], _v ) >= 0 )
-					array_pop(group_vertex);
-				array_push(group_vertex, _v);
-			}
-			
-			for( var i = array_length(group_vertex) - 1; i >= 0; i-- ) {
-				var n  = array_length(group_vertex);
-				if(n < 4) break;
-				
-				var v0 = group_vertex[(i - 1 + n) % n];
-				var v1 = group_vertex[i];
-				var v2 = group_vertex[(i + 1) % n];
-				
-				var a0 = point_direction(v1[0], v1[1], v0[0], v0[1]);
-				var a1 = point_direction(v1[0], v1[1], v2[0], v2[1]);
-				var d  = angle_difference(a0, a1);
-				
-				if(min(abs(d), abs(d - 180)) <= 2) 
-					array_delete(group_vertex, i, 1);
-			}
-		#endregion
-	} #endregion
+		_vtrx = array_map( _vtrx, function(a, i)   { return [ a[0], a[1], i == __temp_minI? -999 : point_direction(__temp_minP[0], __temp_minP[1], a[0], a[1]) + 360 ] });
+		        array_sort(_vtrx, function(a0, a1) { return a0[2] == a1[2]? sign(a0[0] - a1[0]) : sign(a0[2] - a1[2]); });
 	
-	static groupCheck = function(_x, _y, _s, _mx, _my) { #region
+		var _linS = 0;
+		for( var i = 1, n = array_length(_vtrx); i < n; i++ ) {
+			if(_vtrx[i][1] != _vtrx[0][1]) break;
+			_linS = i;
+		}
+	
+		array_delete(_vtrx, 1, _linS - 1);
+	
+		group_vertex = [ _vtrx[0], _vtrx[1] ];
+		
+		for( var i = 2, n = array_length(_vtrx); i < n; i++ ) {
+			var _v = _vtrx[i];
+		
+			while( array_length(group_vertex) >= 2 && ccw( group_vertex[array_length(group_vertex) - 2], group_vertex[array_length(group_vertex) - 1], _v ) >= 0 )
+				array_pop(group_vertex);
+			array_push(group_vertex, _v);
+		}
+		
+		for( var i = array_length(group_vertex) - 1; i >= 0; i-- ) {
+			var n  = array_length(group_vertex);
+			if(n < 4) break;
+			
+			var v0 = group_vertex[(i - 1 + n) % n];
+			var v1 = group_vertex[i];
+			var v2 = group_vertex[(i + 1) % n];
+			
+			var a0 = point_direction(v1[0], v1[1], v0[0], v0[1]);
+			var a1 = point_direction(v1[0], v1[1], v2[0], v2[1]);
+			var d  = angle_difference(a0, a1);
+			
+			if(min(abs(d), abs(d - 180)) <= 2) 
+				array_delete(group_vertex, i, 1);
+		}
+	}
+	
+	static groupCheck = function(_x, _y, _s, _mx, _my) {
 		if(array_length(group_vertex) < 3) return;
 		if(!modifiable) return;
 		
@@ -220,11 +216,11 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			
 			group_dragging = false;
 		}
-	} #endregion
+	}
 	
 	static pointIn = function(_x, _y, _mx, _my, _s) { return false; }
 	
-	static resetRender = function(_clearCache = false) { #region
+	static resetRender = function(_clearCache = false) {
 		LOG_LINE_IF(global.FLAG.render == 1, $"Reset Render for {INAME}");
 		
 		setRenderStatus(false);
@@ -232,9 +228,9 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		
 		for( var i = 0; i < array_length(nodes); i++ )
 			nodes[i].resetRender(_clearCache);
-	} #endregion
+	}
 	
-	static drawNodeBG = function(_x, _y, _mx, _my, _s) { #region
+	static drawNodeBG = function(_x, _y, _mx, _my, _s) {
 		
 		refreshGroupBG();
 		if(array_length(group_vertex) < 3) return false;
@@ -293,13 +289,13 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		add_point = false;
 		
 		return _hov;
-	} #endregion
+	}
 	
 	static drawNode = function(_x, _y, _mx, _my, _s, display_parameter = noone) {}
 	
 	static drawBadge = function(_x, _y, _s) {}
 	
-	static postDeserialize = function() { #region
+	static postDeserialize = function() {
 		refreshMember();
-	} #endregion
+	}
 }

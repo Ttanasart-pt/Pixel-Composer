@@ -4,23 +4,23 @@ function Node_Anim_Curve(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	setDimension(96, 48);
 	
-	inputs[| 0] = nodeValue("Curve",   self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_01);
-	inputs[| 1] = nodeValue_Float("Progress", self, 0)
+	inputs[0] = nodeValue("Curve",   self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_01);
+	inputs[1] = nodeValue_Float("Progress", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 2] = nodeValue_Float("Minimum", self, 0);
-	inputs[| 3] = nodeValue_Float("Maximum", self, 1);
+	inputs[2] = nodeValue_Float("Minimum", self, 0);
+	inputs[3] = nodeValue_Float("Maximum", self, 1);
 	
-	inputs[| 4] = nodeValue_Bool("Animated", self, false);
+	inputs[4] = nodeValue_Bool("Animated", self, false);
 	
-	outputs[| 0] = nodeValue_Output("Curve", self, VALUE_TYPE.float, []);
+	outputs[0] = nodeValue_Output("Curve", self, VALUE_TYPE.float, []);
 	
 	input_display_list = [ 0, 4, 1, 2, 3 ];
 	
 	static step = function() {
 		var _anim = getSingleValue(4);
 		
-		inputs[| 1].setVisible(!_anim);
+		inputs[1].setVisible(!_anim);
 	}
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) {  		
@@ -30,7 +30,7 @@ function Node_Anim_Curve(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		var _max  = _data[3];
 		var val   = eval_curve_x(curve, time) * (_max - _min) + _min;
 		
-		inputs[| 0].editWidget.progress_draw = time;
+		inputs[0].editWidget.progress_draw = time;
 		
 		return val;
 	}

@@ -2,12 +2,12 @@ function Node_Fn_Math(_x, _y, _group = noone) : Node_Fn(_x, _y, _group) construc
 	name       = "Math";
 	time_based = false;
 	
-	inputs[| inl + 0] = nodeValue_Enum_Scroll("Operation", self,  2 , [ "Add", "Minus", "Multiply" ] );
+	inputs[inl + 0] = nodeValue_Enum_Scroll("Operation", self,  2 , [ "Add", "Minus", "Multiply" ] );
 	
-	inputs[| inl + 1] = nodeValue_Float("Value 1", self, 0 )
+	inputs[inl + 1] = nodeValue_Float("Value 1", self, 0 )
 		.setVisible(true, true);
 	
-	inputs[| inl + 2] = nodeValue_Float("Value 2", self, 0 )
+	inputs[inl + 2] = nodeValue_Float("Value 2", self, 0 )
 		.setVisible(true, true);
 		
 	array_append(input_display_list, [
@@ -30,11 +30,11 @@ function Node_Fn_Math(_x, _y, _group = noone) : Node_Fn(_x, _y, _group) construc
 		var _v0 = getSingleValue(inl + 1);
 		var _v1 = getSingleValue(inl + 2);
 		
-		var _f0 = inputs[| inl + 1].value_from;
+		var _f0 = inputs[inl + 1].value_from;
 		if(_f0 != noone && is_instanceof(_f0.node, Node_Fn)) 
 			_v0 = _f0.node.getDisplayX(i);
 		
-		var _f1 = inputs[| inl + 2].value_from;
+		var _f1 = inputs[inl + 2].value_from;
 		if(_f1 != noone && is_instanceof(_f1.node, Node_Fn)) 
 			_v1 = _f1.node.getDisplayX(i);
 			

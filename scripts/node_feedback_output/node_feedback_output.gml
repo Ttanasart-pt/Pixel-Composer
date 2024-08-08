@@ -4,21 +4,21 @@ function Node_Feedback_Output(_x, _y, _group = noone) : Node_Group_Output(_x, _y
 	is_group_io = true;
 	setDimension(96, 32 + 24 * 2);
 	
-	inputs[| 1] = nodeValue("Feedback loop", self, JUNCTION_CONNECT.input, VALUE_TYPE.node, -1)
+	inputs[1] = nodeValue("Feedback loop", self, JUNCTION_CONNECT.input, VALUE_TYPE.node, -1)
 		.setVisible(true, true);
 	
 	cache_value = -1;
 	
 	static update = function(frame = CURRENT_FRAME) {
-		if(inputs[| 0].value_from == noone) return;
+		if(inputs[0].value_from == noone) return;
 		if(IS_LAST_FRAME) {
 			cache_value = noone;
 			return;
 		}
 		
 		var _val_get = getInputData(0);
-		var _arr     = inputs[| 0].value_from.isArray();
-		var is_surf	 = inputs[| 0].type == VALUE_TYPE.surface;
+		var _arr     = inputs[0].value_from.isArray();
+		var is_surf	 = inputs[0].type == VALUE_TYPE.surface;
 		
 		if(is_array(cache_value)) {
 			for( var i = 0, n = array_length(cache_value); i < n; i++ ) {

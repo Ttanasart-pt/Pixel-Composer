@@ -1,17 +1,17 @@
 function Node_Combine_HSV(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "HSV Combine";
 	
-	inputs[| 0] = nodeValue_Surface("Hue",        self);
-	inputs[| 1] = nodeValue_Surface("Saturation", self);
-	inputs[| 2] = nodeValue_Surface("Value",      self);
-	inputs[| 3] = nodeValue_Surface("Alpha",      self);
+	inputs[0] = nodeValue_Surface("Hue",        self);
+	inputs[1] = nodeValue_Surface("Saturation", self);
+	inputs[2] = nodeValue_Surface("Value",      self);
+	inputs[3] = nodeValue_Surface("Alpha",      self);
 	
-	inputs[| 4] = nodeValue_Bool("Array Input", self, false);
+	inputs[4] = nodeValue_Bool("Array Input", self, false);
 	
-	inputs[| 5] = nodeValue_Surface("HSV Array", self, [])
+	inputs[5] = nodeValue_Surface("HSV Array", self, [])
 		.setArrayDepth(1);
 	
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
 		["Surfaces",	 true], 4, 0, 1, 2, 3, 5, 
@@ -22,12 +22,12 @@ function Node_Combine_HSV(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	static step = function() { #region
 		var _arr = getInputData(4);
 		
-		inputs[| 0].setVisible(!_arr, !_arr);
-		inputs[| 1].setVisible(!_arr, !_arr);
-		inputs[| 2].setVisible(!_arr, !_arr);
-		inputs[| 3].setVisible(!_arr, !_arr);
+		inputs[0].setVisible(!_arr, !_arr);
+		inputs[1].setVisible(!_arr, !_arr);
+		inputs[2].setVisible(!_arr, !_arr);
+		inputs[3].setVisible(!_arr, !_arr);
 		
-		inputs[| 5].setVisible(_arr, _arr);
+		inputs[5].setVisible(_arr, _arr);
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region

@@ -18,17 +18,17 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	if(!LOADING && !APPENDING && !ds_map_empty(TUNNELS_IN))
 		tname = ds_map_find_first(TUNNELS_IN);
 	
-	inputs[| 0] = nodeValue_Text("Name", self, tname )
+	inputs[0] = nodeValue_Text("Name", self, tname )
 		.setDisplay(VALUE_DISPLAY.text_tunnel)
 		.rejectArray();
 	
-	outputs[| 0] = nodeValue_Output("Value out", self, VALUE_TYPE.any, noone );
+	outputs[0] = nodeValue_Output("Value out", self, VALUE_TYPE.any, noone );
 	
 	insp2UpdateTooltip = "Goto tunnel in";
 	insp2UpdateIcon    = [ THEME.tunnel, 1, c_white ];
 	
 	static onInspector2Update = function() {
-		var _key = inputs[| 0].getValue();
+		var _key = inputs[0].getValue();
 		if(!ds_map_exists(TUNNELS_IN, _key)) return;
 		
 		var _node = TUNNELS_IN[? _key].node;
@@ -36,36 +36,36 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}
 	
 	static isRenderable = function() {
-		var _key = inputs[| 0].getValue();
+		var _key = inputs[0].getValue();
 		if(!ds_map_exists(TUNNELS_IN, _key)) return false;
 		
 		return TUNNELS_IN[? _key].node.rendered;
 	}
 	
 	static onValueUpdate = function(index = -1) {
-		var _key = inputs[| 0].getValue();
+		var _key = inputs[0].getValue();
 		
 		if(index == 0) { RENDER_ALL_REORDER }
 	}
 	
 	static step = function() {
-		var _key = inputs[| 0].getValue();
+		var _key = inputs[0].getValue();
 		TUNNELS_OUT[? node_id] = _key;
 		
 		if(ds_map_exists(TUNNELS_IN, _key)) {
-			outputs[| 0].setType(TUNNELS_IN[? _key].type);
-			outputs[| 0].display_type = TUNNELS_IN[? _key].display_type;
+			outputs[0].setType(TUNNELS_IN[? _key].type);
+			outputs[0].display_type = TUNNELS_IN[? _key].display_type;
 		} else {
-			outputs[| 0].setType(VALUE_TYPE.any);
-			outputs[| 0].display_type = VALUE_DISPLAY._default;
+			outputs[0].setType(VALUE_TYPE.any);
+			outputs[0].display_type = VALUE_DISPLAY._default;
 		}
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
-		var _key = inputs[| 0].getValue();
+		var _key = inputs[0].getValue();
 		
 		if(ds_map_exists(TUNNELS_IN, _key))
-			outputs[| 0].setValue(TUNNELS_IN[? _key].getValue());
+			outputs[0].setValue(TUNNELS_IN[? _key].getValue());
 	}
 	
 	/////////////////////////////////////////////////////////////////////////////
@@ -81,11 +81,11 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
 		
-		inputs[| 0].x = xx;
-		inputs[| 0].y = yy;
+		inputs[0].x = xx;
+		inputs[0].y = yy;
 		
-		outputs[| 0].x = xx;
-		outputs[| 0].y = yy;
+		outputs[0].x = xx;
+		outputs[0].y = yy;
 	}
 	
 	static drawBadge = function(_x, _y, _s) {}
@@ -100,7 +100,7 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		hover |= tun && tun.tunnel_hover == self;
 		if(!hover) return;
 		
-		var _key = inputs[| 0].getValue();
+		var _key = inputs[0].getValue();
 		if(!ds_map_exists(TUNNELS_IN, _key)) return;
 		
 		var node = TUNNELS_IN[? _key].node;
@@ -109,7 +109,7 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		preview_connecting      = true;
 		node.preview_connecting = true;
 		
-		draw_set_color(outputs[| 0].color_display);
+		draw_set_color(outputs[0].color_display);
 		draw_set_alpha(0.5);
 		
 		var frx = _x + node.x * _s;
@@ -124,11 +124,11 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		var yy = y * _s + _y;
 		isHovering = point_in_circle(_mx, _my, xx, yy, _s * 24);
 		
-		var jhov = outputs[| 0].drawJunction(_s, _mx, _my);
+		var jhov = outputs[0].drawJunction(_s, _mx, _my);
 		if(!isHovering) return noone;
 		
 		hover_scale_to = 1;
-		return jhov? outputs[| 0] : noone;
+		return jhov? outputs[0] : noone;
 	}
 	
 	static drawNode = function(_x, _y, _mx, _my, _s) {
@@ -148,7 +148,7 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			preview_connecting = false;
 			
 			shader_set(sh_node_arc);
-				shader_set_color("color", outputs[| 0].color_display, hover_alpha);
+				shader_set_color("color", outputs[0].color_display, hover_alpha);
 				shader_set_f("angle", degtorad(-90));
 				
 				var _r = preview_scale * _s * 20;
@@ -178,7 +178,7 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		hover_scale_to = 0;
 		
 		draw_set_text(f_sdf, fa_center, fa_bottom, COLORS._main_text);
-		draw_text_transformed(xx, yy - 12 * _s, string(inputs[| 0].getValue()), _s * .3, _s * .3, 0);
+		draw_text_transformed(xx, yy - 12 * _s, string(inputs[0].getValue()), _s * .3, _s * .3, 0);
 		
 		return drawJunctions(_x, _y, _mx, _my, _s);
 	}

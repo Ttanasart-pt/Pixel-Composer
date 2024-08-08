@@ -2,13 +2,13 @@ function Node_PB_Fx(_x, _y, _group = noone) : Node_PB(_x, _y, _group) constructo
 	name = "PB FX";
 	batch_output = false;
 	
-	inputs[| 0] = nodeValue("pBox", self, JUNCTION_CONNECT.input, VALUE_TYPE.pbBox, noone)
+	inputs[0] = nodeValue("pBox", self, JUNCTION_CONNECT.input, VALUE_TYPE.pbBox, noone)
 		.setVisible(true, true);
 	
-	outputs[| 0] = nodeValue_Output("pBox", self, VALUE_TYPE.pbBox, noone);
+	outputs[0] = nodeValue_Output("pBox", self, VALUE_TYPE.pbBox, noone);
 	
 	static getGraphPreviewSurface = function() {
-		var _nbox = outputs[| 0].getValue();
+		var _nbox = outputs[0].getValue();
 		if(_nbox == noone) return noone;
 		if(is_array(_nbox)) {
 			if(array_empty(_nbox)) return noone;
@@ -20,7 +20,7 @@ function Node_PB_Fx(_x, _y, _group = noone) : Node_PB(_x, _y, _group) constructo
 }
 
 #macro PB_FX_PBOX if(_output_index == 1) {																		\
-			var _surf = outputs[| 0].getValue();																\
+			var _surf = outputs[0].getValue();																\
 			if(is_array(_surf)) _surf = array_safe_get_fast(_surf, _array_index);								\
 			if(!is_surface(_surf)) return noone;																\
 																												\

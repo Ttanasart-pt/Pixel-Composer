@@ -15,56 +15,56 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	object = [];
 	attributes.mesh = [];
 	
-	inputs[| 0] = nodeValue_Bool("Affect by force", self, true)
+	inputs[0] = nodeValue_Bool("Affect by force", self, true)
 		.rejectArray()
 		.setAnimable(false);
 	
-	inputs[| 1] = nodeValue_Float("Weight", self, 0.5)
+	inputs[1] = nodeValue_Float("Weight", self, 0.5)
 		.rejectArray()
 		.setAnimable(false);
 	
-	inputs[| 2] = nodeValue_Float("Contact friction", self, 0.2)
+	inputs[2] = nodeValue_Float("Contact friction", self, 0.2)
 		.rejectArray()
 		.setAnimable(false);
 	
-	inputs[| 3] = nodeValue_Float("Air resistance", self, 0.2)
+	inputs[3] = nodeValue_Float("Air resistance", self, 0.2)
 		.rejectArray()
 		.setAnimable(false);
 	
-	inputs[| 4] = nodeValue_Float("Rotation resistance", self, 0.2)
+	inputs[4] = nodeValue_Float("Rotation resistance", self, 0.2)
 		.rejectArray()
 		.setAnimable(false);
 	
-	inputs[| 5] = nodeValue_Enum_Scroll("Shape", self,  0, [ new scrollItem("Box", s_node_shape_rectangle, 0), new scrollItem("Circle", s_node_shape_circle, 0), new scrollItem("Custom", s_node_shape_misc, 1) ])
+	inputs[5] = nodeValue_Enum_Scroll("Shape", self,  0, [ new scrollItem("Box", s_node_shape_rectangle, 0), new scrollItem("Circle", s_node_shape_circle, 0), new scrollItem("Custom", s_node_shape_misc, 1) ])
 		.rejectArray()
 		.setAnimable(false);
 	
-	inputs[| 6] = nodeValue_Surface("Texture", self)
+	inputs[6] = nodeValue_Surface("Texture", self)
 		.setAnimable(false);
 	
-	inputs[| 7] = nodeValue_Vector("Start position", self, [ 16, 16 ])
+	inputs[7] = nodeValue_Vector("Start position", self, [ 16, 16 ])
 		.setAnimable(false);
 	
-	inputs[| 8] = nodeValue_Bool("Spawn", self, true, "Make object spawn when start.")
+	inputs[8] = nodeValue_Bool("Spawn", self, true, "Make object spawn when start.")
 		.rejectArray()
 		.setAnimable(false);
 	
-	inputs[| 9] = nodeValue_Trigger("Generate mesh", self, false )
+	inputs[9] = nodeValue_Trigger("Generate mesh", self, false )
 		.setDisplay(VALUE_DISPLAY.button, { name: "Generate", UI : true, onClick: function() { generateAllMesh(); } });
 	
-	inputs[| 10] = nodeValue_Float("Mesh expansion", self, 0)
+	inputs[10] = nodeValue_Float("Mesh expansion", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -2, 2, 0.1 ] })
 		.rejectArray()
 		.setAnimable(false);
 	
-	inputs[| 11] = nodeValue_Bool("Add pixel collider", self, true)
+	inputs[11] = nodeValue_Bool("Add pixel collider", self, true)
 		.rejectArray()
 		.setAnimable(false);
 		
-	inputs[| 12] = nodeValue_Int("Collision group", self, 1)
+	inputs[12] = nodeValue_Int("Collision group", self, 1)
 		.rejectArray()
 		
-	outputs[| 0] = nodeValue_Output("Object", self, VALUE_TYPE.rigid, object);
+	outputs[0] = nodeValue_Output("Object", self, VALUE_TYPE.rigid, object);
 	
 	input_display_list = [ 8, 12, 
 		["Texture",	false],	6, 
@@ -166,7 +166,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		} else 
 			drawOverlayPreviewSingle(0, _x, _y, _s, _pr_x, _pr_y, _tex);
 			
-		return inputs[| 7].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		return inputs[7].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 	} #endregion
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
@@ -286,7 +286,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			}
 		}
 		
-		var a = inputs[| 7].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); active &= !a;
+		var a = inputs[7].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); active &= !a;
 		
 		return active;
 	} #endregion
@@ -687,15 +687,15 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	static update = function(frame = CURRENT_FRAME) { #region
 		if(IS_FIRST_FRAME) reset();
 		
-		outputs[| 0].setValue(object);
+		outputs[0].setValue(object);
 	} #endregion
 	
 	static step = function() { #region
 		var _shp = getInputData(5);
 		
-		inputs[|  9].setVisible(_shp == 2);
-		inputs[| 10].setVisible(_shp == 2);
-		inputs[| 11].setVisible(_shp == 2);
+		inputs[ 9].setVisible(_shp == 2);
+		inputs[10].setVisible(_shp == 2);
+		inputs[11].setVisible(_shp == 2);
 		
 		tools = _shp == 2? mesh_tools : -1;
 		

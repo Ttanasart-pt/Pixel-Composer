@@ -2,12 +2,12 @@ function Node_Array_CSV_Parse(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	name = "CSV Parse";
 	setDimension(96, 32 + 24);
 	
-	inputs[| 0] = nodeValue_Text("CSV string", self, 0)
+	inputs[0] = nodeValue_Text("CSV string", self, 0)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue_Int("Skip line", self, 0);
+	inputs[1] = nodeValue_Int("Skip line", self, 0);
 	
-	outputs[| 0] = nodeValue_Output("Array", self, VALUE_TYPE.any, 0)
+	outputs[0] = nodeValue_Output("Array", self, VALUE_TYPE.any, 0)
 		.setArrayDepth(1);
 	
 	static update = function(frame = CURRENT_FRAME) {
@@ -20,7 +20,7 @@ function Node_Array_CSV_Parse(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		for( var i = _skp; i < array_length(_lines); i++ )
 			array_push(_arr, string_splice(_lines[i], ","));
 		
-		outputs[| 0].setValue(_arr);
+		outputs[0].setValue(_arr);
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

@@ -81,9 +81,9 @@ function Panel_Node_Data_Gen() : PanelContent() constructor {
 		var _lin = [], _lot = [];
 		var _din = [], _dot = [];
 		
-		for( var i = 0; i < ds_list_size(_b.inputs); i++ ) {
-			_din[i] = __node_data_clone(_b.inputs[| i]);
-			var _in = _b.inputs[| i];
+		for( var i = 0; i < array_length(_b.inputs); i++ ) {
+			_din[i] = __node_data_clone(_b.inputs[i]);
+			var _in = _b.inputs[i];
 			if(!is_instanceof(_in, NodeValue)) continue;
 			
 			_jin[i] = {
@@ -104,9 +104,9 @@ function Panel_Node_Data_Gen() : PanelContent() constructor {
 			}
 		}
 		
-		for( var i = 0; i < ds_list_size(_b.outputs); i++ ) {
-			_dot[i] = __node_data_clone(_b.outputs[| i]);
-			var _ot = _b.outputs[| i];
+		for( var i = 0; i < array_length(_b.outputs); i++ ) {
+			_dot[i] = __node_data_clone(_b.outputs[i]);
+			var _ot = _b.outputs[i];
 			if(!is_instanceof(_ot, NodeValue)) continue;
 			
 			_jot[i] = {

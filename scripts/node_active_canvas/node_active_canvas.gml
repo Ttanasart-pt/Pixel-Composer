@@ -1,26 +1,26 @@
 function Node_Active_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "Active Canvas";
 	
-	inputs[| 0] = nodeValue_Dimension(self);
+	inputs[0] = nodeValue_Dimension(self);
 	
-	inputs[| 1] = nodeValue_Surface("Texture", self);
+	inputs[1] = nodeValue_Surface("Texture", self);
 	
-	inputs[| 2] = nodeValue_Vector("Position", self, [ 0, 0 ] );
+	inputs[2] = nodeValue_Vector("Position", self, [ 0, 0 ] );
 	
-	inputs[| 3] = nodeValue_Rotation("Rotation", self, 0);
+	inputs[3] = nodeValue_Rotation("Rotation", self, 0);
 	
-	inputs[| 4] = nodeValue_Vector("Scale", self, [ 1, 1 ] );
+	inputs[4] = nodeValue_Vector("Scale", self, [ 1, 1 ] );
 	
-	inputs[| 5] = nodeValue_Color("Color", self, c_white );
+	inputs[5] = nodeValue_Color("Color", self, c_white );
 	
-	inputs[| 6] = nodeValue_Float("Alpha", self, 1 )
+	inputs[6] = nodeValue_Float("Alpha", self, 1 )
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 7] = nodeValue_Bool("Active", self, true );
+	inputs[7] = nodeValue_Bool("Active", self, true );
 	
-	inputs[| 8] = nodeValue_Range("Distance", self, [ 1, 1 ] , { linked : true });
+	inputs[8] = nodeValue_Range("Distance", self, [ 1, 1 ] , { linked : true });
 	
-	outputs[| 0] = nodeValue_Output("Output", self, VALUE_TYPE.surface, noone );
+	outputs[0] = nodeValue_Output("Output", self, VALUE_TYPE.surface, noone );
 	
 	input_display_list = [ 0,
 		[ "Brush transform",  false ], 7, 2, 3, 4,
@@ -33,7 +33,7 @@ function Node_Active_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	temp_surface = [ surface_create(1, 1) ];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
-		inputs[| 2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		inputs[2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 	} #endregion
 	
 	static step = function() { #region
@@ -50,7 +50,7 @@ function Node_Active_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	} #endregion
 	
 	static update = function() { #region
-		var _surf = outputs[| 0].getValue();
+		var _surf = outputs[0].getValue();
 		
 		var _dim   = getInputData(0);
 		var _bsurf = getInputData(1);
@@ -69,7 +69,7 @@ function Node_Active_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		_bdst[0] = max(0.01, _bdst[0]);
 		_bdst[1] = max(0.01, _bdst[1]);
 		
-		outputs[| 0].setValue(_surf);
+		outputs[0].setValue(_surf);
 		if(!_bact) return;
 		
 		surface_set_target(temp_surface[0]);

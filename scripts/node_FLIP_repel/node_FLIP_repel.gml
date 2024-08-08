@@ -6,22 +6,22 @@ function Node_FLIP_Repel(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	manual_ungroupable = false;
 	
-	inputs[| 0] = nodeValue_Fdomain("Domain", self, noone )
+	inputs[0] = nodeValue_Fdomain("Domain", self, noone )
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue_Vector("Position", self, [ 0, 0 ] )
+	inputs[1] = nodeValue_Vector("Position", self, [ 0, 0 ] )
 		.setUnitRef(function(index) { return getDimension(); });
 	
-	inputs[| 2] = nodeValue_Float("Radius", self, 4 );
+	inputs[2] = nodeValue_Float("Radius", self, 4 );
 	
-	inputs[| 3] = nodeValue_Float("Strength", self, 4 )
+	inputs[3] = nodeValue_Float("Strength", self, 4 )
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 16, 0.1 ] });
 		
 	input_display_list = [ 0, 
 		["Repel",	false], 1, 2, 3, 
 	]
 	
-	outputs[| 0] = nodeValue_Output("Domain", self, VALUE_TYPE.fdomain, noone );
+	outputs[0] = nodeValue_Output("Domain", self, VALUE_TYPE.fdomain, noone );
 	
 	static getDimension = function() { #region
 		var domain = getInputData(0);
@@ -42,7 +42,7 @@ function Node_FLIP_Repel(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		draw_set_color(COLORS._main_accent);
 		draw_circle_prec(_px, _py, _r, true, 32);
 		
-		if(inputs[| 1].drawOverlay(hover, active,  _x,  _y, _s, _mx, _my, _snx, _sny)) { hover = false; active = false; }
+		if(inputs[1].drawOverlay(hover, active,  _x,  _y, _s, _mx, _my, _snx, _sny)) { hover = false; active = false; }
 		
 	} #endregion
 	
@@ -54,7 +54,7 @@ function Node_FLIP_Repel(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		var domain = getInputData(0);
 		if(!instance_exists(domain)) return;
 		
-		outputs[| 0].setValue(domain);
+		outputs[0].setValue(domain);
 		
 		var _posit = getInputData(1);
 		var _rad   = getInputData(2);

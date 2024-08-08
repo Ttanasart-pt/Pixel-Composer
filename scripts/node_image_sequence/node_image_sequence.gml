@@ -9,7 +9,7 @@ function Node_create_Image_Sequence(_x, _y, _group = noone) {
 	var node  = new Node_Image_Sequence(_x, _y, _group).skipDefault();
 	var paths = string_splice(path, "\n");
 	
-	node.inputs[| 0].setValue(paths);
+	node.inputs[0].setValue(paths);
 	if(NODE_NEW_MANUAL) node.doUpdate();
 	
 	return node;
@@ -17,7 +17,7 @@ function Node_create_Image_Sequence(_x, _y, _group = noone) {
 
 function Node_create_Image_Sequence_path(_x, _y, _path) {
 	var node = new Node_Image_Sequence(_x, _y, PANEL_GRAPH.getCurrentContext()).skipDefault();
-	    node.inputs[| 0].setValue(_path);
+	    node.inputs[0].setValue(_path);
 	    node.doUpdate();
 
 	return node;
@@ -39,24 +39,24 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	spr   = [];
 	color = COLORS.node_blend_input;
 	
-	inputs[| 0]  = nodeValue_Text("Paths", self, [])
+	inputs[0]  = nodeValue_Text("Paths", self, [])
 		.setDisplay(VALUE_DISPLAY.path_array, { filter: ["image|*.png;*.jpg", ""] });
 	
-	inputs[| 1]  = nodeValue_Padding("Padding", self, [0, 0, 0, 0])
+	inputs[1]  = nodeValue_Padding("Padding", self, [0, 0, 0, 0])
 		.rejectArray();
 	
-	inputs[| 2] = nodeValue_Enum_Scroll("Canvas size", self,  0, [ "Individual", "Minimum", "Maximum" ])
+	inputs[2] = nodeValue_Enum_Scroll("Canvas size", self,  0, [ "Individual", "Minimum", "Maximum" ])
 		.rejectArray();
 	
-	inputs[| 3] = nodeValue_Enum_Scroll("Sizing method", self,  0, [ "Padding / Crop", "Scale" ])
+	inputs[3] = nodeValue_Enum_Scroll("Sizing method", self,  0, [ "Padding / Crop", "Scale" ])
 		.rejectArray();
 	
 	input_display_list = [
 		["Array settings",	false], 0, 1, 2, 3
 	];
 	
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, []);
-	outputs[| 1] = nodeValue_Output("Paths", self, VALUE_TYPE.path, [] ).
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, []);
+	outputs[1] = nodeValue_Output("Paths", self, VALUE_TYPE.path, [] ).
 		setVisible(true, true);
 	
 	attribute_surface_depth();
@@ -79,7 +79,7 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		
 		var paths = paths_to_array_ext(path);
 		
-		inputs[| 0].setValue(path);
+		inputs[0].setValue(path);
 		if(updatePaths()) {
 			doUpdate();
 			return true;
@@ -133,7 +133,7 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			}
 		}
 		
-		outputs[| 1].setValue(paths);
+		outputs[1].setValue(paths);
 		
 		return true;
 	}
@@ -152,21 +152,21 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
-		var path = inputs[| 0].getValue();
+		var path = inputs[0].getValue();
 		
 		if(!array_equals(path_current, path)) 
 			updatePaths();
 		
 		var pad = getInputData(1);
 		var can = getInputData(2);
-		inputs[| 3].setVisible(can != CANVAS_SIZE.individual);
+		inputs[3].setVisible(can != CANVAS_SIZE.individual);
 		
 		var siz = getInputData(3);
 		
 		var  ww = -1,  hh = -1;
 		var _ww = -1, _hh = -1;
 		
-		var surfs = outputs[| 0].getValue();
+		var surfs = outputs[0].getValue();
 		var amo   = array_length(spr);
 		for(var i = amo; i < array_length(surfs); i++)
 			surface_free(surfs[i]);
@@ -246,11 +246,11 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			
 		}
 		
-		outputs[| 0].setValue(surfs);
+		outputs[0].setValue(surfs);
 	}
 	
 	static dropPath = function(path) { 
 		if(!is_array(path)) path = [ path ];
-		inputs[| 0].setValue(path); 
+		inputs[0].setValue(path); 
 	}
 }

@@ -7,7 +7,7 @@ function Node_create_Display_Image(_x, _y, _group = noone) {
 	}
 	
 	var node = new Node_Display_Image(_x, _y, _group).skipDefault();
-	node.inputs[| 0].setValue(path);
+	node.inputs[0].setValue(path);
 	node.doUpdate();
 	return node;
 }
@@ -16,7 +16,7 @@ function Node_create_Display_Image_path(_x, _y, path) {
 	if(!file_exists_empty(path)) return noone;
 	
 	var node = new Node_Display_Image(_x, _y, PANEL_GRAPH.getCurrentContext()).skipDefault();
-	node.inputs[| 0].setValue(path);
+	node.inputs[0].setValue(path);
 	node.doUpdate();
 	
 	return node;	
@@ -26,18 +26,18 @@ function Node_Display_Image(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	name		= "Display Image";
 	auto_height	= false;
 	
-	inputs[| 0]  = nodeValue_Text("Path", self, "")
+	inputs[0]  = nodeValue_Text("Path", self, "")
 		.setVisible(false)
 		.setDisplay(VALUE_DISPLAY.path_load, { filter: "image|*.png;*.jpg" })
 		.rejectArray();
 	
-	inputs[| 1]  = nodeValue_Vector("Position", self, [ x, y ])
+	inputs[1]  = nodeValue_Vector("Position", self, [ x, y ])
 		.rejectArray();
 	
-	inputs[| 2]  = nodeValue_Vector("Scale", self, [ 1, 1 ])
+	inputs[2]  = nodeValue_Vector("Scale", self, [ 1, 1 ])
 		.rejectArray();
 	
-	inputs[| 3]  = nodeValue_Bool("Smooth transform", self, true)
+	inputs[3]  = nodeValue_Bool("Smooth transform", self, true)
 		.rejectArray();
 	
 	input_display_list = [ 0,
@@ -64,7 +64,7 @@ function Node_Display_Image(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		x = _x;
 		y = _y;
 		
-		if(inputs[| 1].setValue([ _x, _y ]))
+		if(inputs[1].setValue([ _x, _y ]))
 			UNDO_HOLDING = true;
 	} #endregion
 	

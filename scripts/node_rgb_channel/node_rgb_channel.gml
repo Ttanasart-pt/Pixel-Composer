@@ -2,30 +2,30 @@ function Node_RGB_Channel(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	name = "RGBA Extract";
 	batch_output = false;
 	
-	inputs[| 0] = nodeValue_Surface("Surface In", self);
+	inputs[0] = nodeValue_Surface("Surface In", self);
 	
-	inputs[| 1] = nodeValue_Enum_Scroll("Output Type", self,  0, [ "Channel value", "Greyscale" ]);
+	inputs[1] = nodeValue_Enum_Scroll("Output Type", self,  0, [ "Channel value", "Greyscale" ]);
 		
-	inputs[| 2] = nodeValue_Bool("Keep Alpha", self, false);
+	inputs[2] = nodeValue_Bool("Keep Alpha", self, false);
 	
-	inputs[| 3] = nodeValue_Bool("Output Array", self, false);
+	inputs[3] = nodeValue_Bool("Output Array", self, false);
 	
-	outputs[| 0] = nodeValue_Output("Red",   self, VALUE_TYPE.surface, noone);
-	outputs[| 1] = nodeValue_Output("Green", self, VALUE_TYPE.surface, noone);
-	outputs[| 2] = nodeValue_Output("Blue",  self, VALUE_TYPE.surface, noone);
-	outputs[| 3] = nodeValue_Output("Alpha", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Red",   self, VALUE_TYPE.surface, noone);
+	outputs[1] = nodeValue_Output("Green", self, VALUE_TYPE.surface, noone);
+	outputs[2] = nodeValue_Output("Blue",  self, VALUE_TYPE.surface, noone);
+	outputs[3] = nodeValue_Output("Alpha", self, VALUE_TYPE.surface, noone);
 	
 	attribute_surface_depth();
 	
 	static step = function() { #region
 		var _arr = getInputData(3);
 		
-		outputs[| 0].name = _arr? "RGBA" : "Red";
-		outputs[| 0].setArrayDepth(_arr);
+		outputs[0].name = _arr? "RGBA" : "Red";
+		outputs[0].setArrayDepth(_arr);
 		
-		outputs[| 1].setVisible(!_arr, !_arr);
-		outputs[| 2].setVisible(!_arr, !_arr);
-		outputs[| 3].setVisible(!_arr, !_arr);
+		outputs[1].setVisible(!_arr, !_arr);
+		outputs[2].setVisible(!_arr, !_arr);
+		outputs[3].setVisible(!_arr, !_arr);
 	} #endregion
 	
 	static setShader = function(index, grey, _alp) {

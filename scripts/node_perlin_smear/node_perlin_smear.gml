@@ -1,21 +1,21 @@
 function Node_Perlin_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Smear noise";
 	
-	inputs[| 0] = nodeValue_Dimension(self);
+	inputs[0] = nodeValue_Dimension(self);
 	
-	inputs[| 1] = nodeValue_Vector("Position", self, [ 0, 0 ])
+	inputs[1] = nodeValue_Vector("Position", self, [ 0, 0 ])
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	inputs[| 2] = nodeValue_Vector("Scale", self, [ 4, 6 ]);
+	inputs[2] = nodeValue_Vector("Scale", self, [ 4, 6 ]);
 	
-	inputs[| 3] = nodeValue_Int("Iteration", self, 3);
+	inputs[3] = nodeValue_Int("Iteration", self, 3);
 	
-	inputs[| 4] = nodeValue_Float("Brightness", self, 0.5)
+	inputs[4] = nodeValue_Float("Brightness", self, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 5] = nodeValue_Rotation("Rotation", self, 0);
+	inputs[5] = nodeValue_Rotation("Rotation", self, 0);
 		
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
 		["Output",		false], 0, 
@@ -26,7 +26,7 @@ function Node_Perlin_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _hov = false;
-		var  hv  = inputs[| 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= hv;
+		var  hv  = inputs[1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= hv;
 		
 		return _hov;
 	}

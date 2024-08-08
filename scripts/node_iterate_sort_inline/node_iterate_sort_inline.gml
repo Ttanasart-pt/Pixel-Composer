@@ -102,13 +102,13 @@ function Node_Iterate_Sort_Inline(_x, _y, _group = noone) : Node_Collection_Inli
 	} #endregion
 	
 	static compareValue = function(val1, val2) { #region
-		input_node.outputs[| 0].setValue(val1,,, false);
-		input_node.outputs[| 1].setValue(val2,,, false);
+		input_node.outputs[0].setValue(val1,,, false);
+		input_node.outputs[1].setValue(val2,,, false);
 		
 		resetRender(true);
 		RenderList(topoList);
 		
-		var res = output_node.inputs[| 0].getValue();
+		var res = output_node.inputs[0].getValue();
 		//print($"Comparing value {val1}, {val2} > [{res}]");
 		
 		return res;
@@ -142,24 +142,24 @@ function Node_Iterate_Sort_Inline(_x, _y, _group = noone) : Node_Collection_Inli
 		iterated = 0;
 		loop_start_time = get_timer();
 		
-		var _frj = input_node.inputs[| 0].value_from;
+		var _frj = input_node.inputs[0].value_from;
 		var type = _frj == noone? VALUE_TYPE.any : _frj.type;
 		
-		input_node.inputs[| 0].setType(type);
-		input_node.outputs[| 0].setType(type);
-		input_node.outputs[| 1].setType(type);
+		input_node.inputs[0].setType(type);
+		input_node.outputs[0].setType(type);
+		input_node.outputs[1].setType(type);
 		
-		output_node.outputs[| 0].setType(type);
+		output_node.outputs[0].setType(type);
 		
-		if(input_node.inputs[| 0].value_from == noone) return;
+		if(input_node.inputs[0].value_from == noone) return;
 		
-		var arrIn  = input_node.inputs[| 0].getValue();
-		var arrOut = output_node.outputs[| 0].getValue();
+		var arrIn  = input_node.inputs[0].getValue();
+		var arrOut = output_node.outputs[0].getValue();
 		
 		arrOut = array_clone(arrIn);
 		
 		quickSort(arrOut, 0, array_length(arrOut) - 1);
-		output_node.outputs[| 0].setValue(arrOut);
+		output_node.outputs[0].setValue(arrOut);
 	} #endregion
 	
 }

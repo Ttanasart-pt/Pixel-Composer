@@ -1,30 +1,30 @@
 function Node_Flood_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Flood Fill";
 	
-	inputs[| 0] = nodeValue_Surface("Surface in", self);
+	inputs[0] = nodeValue_Surface("Surface in", self);
 		
-	inputs[| 1] = nodeValue_Surface("Mask", self);
+	inputs[1] = nodeValue_Surface("Mask", self);
 	
-	inputs[| 2] = nodeValue_Float("Mix", self, 1)
+	inputs[2] = nodeValue_Float("Mix", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 3] = nodeValue_Bool("Active", self, true);
+	inputs[3] = nodeValue_Bool("Active", self, true);
 		active_index = 3;
 		
-	inputs[| 4] = nodeValue_Vector("Position", self, [ 1, 1 ]);
+	inputs[4] = nodeValue_Vector("Position", self, [ 1, 1 ]);
 		
-	inputs[| 5] = nodeValue_Color("Colors", self, cola(c_black) );
+	inputs[5] = nodeValue_Color("Colors", self, cola(c_black) );
 	
-	inputs[| 6] = nodeValue_Float("Threshold", self, 0.1)
+	inputs[6] = nodeValue_Float("Threshold", self, 0.1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 7] = nodeValue_Bool("Diagonal", self, false);
+	inputs[7] = nodeValue_Bool("Diagonal", self, false);
 	
 	__init_mask_modifier(1); // inputs 8, 9
 	
-	inputs[| 10] = nodeValue_Enum_Scroll("Blend", self,  0, [ "Override", "Multiply" ]);
+	inputs[10] = nodeValue_Enum_Scroll("Blend", self,  0, [ "Override", "Multiply" ]);
 	
-	outputs[| 0] = nodeValue_Output("Surface out",	self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out",	self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 3,
 		["Surfaces", false], 0, 1, 2, 8, 9, 
@@ -45,7 +45,7 @@ function Node_Flood_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _hov = false;
-		var  hv  = inputs[| 4].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= hv;
+		var  hv  = inputs[4].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= hv;
 		
 		return _hov;
 	}

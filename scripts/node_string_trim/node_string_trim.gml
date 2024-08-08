@@ -3,19 +3,19 @@ function Node_String_Trim(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	setDimension(96, 48);
 	
-	inputs[| 0] = nodeValue_Text("Text", self, "")
+	inputs[0] = nodeValue_Text("Text", self, "")
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue_Int("Head", self, 0);
+	inputs[1] = nodeValue_Int("Head", self, 0);
 	
-	inputs[| 2] = nodeValue_Int("Tail", self, 0);
+	inputs[2] = nodeValue_Int("Tail", self, 0);
 	
-	inputs[| 3] = nodeValue_Enum_Scroll("Trim", self,  0, ["Character", "Word"]);
+	inputs[3] = nodeValue_Enum_Scroll("Trim", self,  0, ["Character", "Word"]);
 	
-	inputs[| 4] = nodeValue_Enum_Scroll("Mode", self,  0, ["Counter", "Progress"])
+	inputs[4] = nodeValue_Enum_Scroll("Mode", self,  0, ["Counter", "Progress"])
 		.setTooltip("Set to progress to use ratio, where 0 means no change and 1 means the entire length of the text.");
 	
-	outputs[| 0] = nodeValue_Output("Text", self, VALUE_TYPE.text, "");
+	outputs[0] = nodeValue_Output("Text", self, VALUE_TYPE.text, "");
 	
 	input_display_list = [
 		["Text",	false], 0,
@@ -25,8 +25,8 @@ function Node_String_Trim(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	static step = function() {
 		var mode = getInputData(4);
 		
-		inputs[| 1].setType(mode? VALUE_TYPE.float : VALUE_TYPE.integer);
-		inputs[| 2].setType(mode? VALUE_TYPE.float : VALUE_TYPE.integer);
+		inputs[1].setType(mode? VALUE_TYPE.float : VALUE_TYPE.integer);
+		inputs[2].setType(mode? VALUE_TYPE.float : VALUE_TYPE.integer);
 	}
 	
 	static processData = function(_output, _data, _index = 0) { 
@@ -65,7 +65,7 @@ function Node_String_Trim(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var str = outputs[| 0].getValue();
+		var str = outputs[0].getValue();
 		var bbox = drawGetBbox(xx, yy, _s);
 		
 		draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);

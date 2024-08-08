@@ -10,7 +10,7 @@
 		var query = struct_try_get(_param, "query", "");
 		
 		var ind   = array_find(global.node_blend_keys, query);
-		if(ind >= 0) node.inputs[| 2].setValue(ind);
+		if(ind >= 0) node.inputs[2].setValue(ind);
 		
 		return node;
 	}
@@ -34,42 +34,42 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	name = "Blend";
 	manage_atlas = false;
 	
-	inputs[| 0] = nodeValue_Surface("Background", self);
-	inputs[| 1] = nodeValue_Surface("Foreground", self);
+	inputs[0] = nodeValue_Surface("Background", self);
+	inputs[1] = nodeValue_Surface("Foreground", self);
 	
-	inputs[| 2] = nodeValue_Enum_Scroll("Blend mode", self, 0, BLEND_TYPES );
+	inputs[2] = nodeValue_Enum_Scroll("Blend mode", self, 0, BLEND_TYPES );
 	
-	inputs[| 3] = nodeValue_Float("Opacity", self, 1)
+	inputs[3] = nodeValue_Float("Opacity", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 4] = nodeValue_Surface("Mask", self);
+	inputs[4] = nodeValue_Surface("Mask", self);
 	
-	inputs[| 5] = nodeValue_Enum_Scroll("Fill mode", self, 0, [ "None", "Stretch", "Tile" ]);
+	inputs[5] = nodeValue_Enum_Scroll("Fill mode", self, 0, [ "None", "Stretch", "Tile" ]);
 	
-	inputs[| 6] = nodeValue_Enum_Scroll("Output dimension", self, 0, [ "Background", "Forground", "Mask", "Maximum", "Constant" ])
+	inputs[6] = nodeValue_Enum_Scroll("Output dimension", self, 0, [ "Background", "Forground", "Mask", "Maximum", "Constant" ])
 		.rejectArray();
 	
-	inputs[| 7] = nodeValue_Vector("Constant dimension", self, DEF_SURF);
+	inputs[7] = nodeValue_Vector("Constant dimension", self, DEF_SURF);
 	
-	inputs[| 8] = nodeValue_Bool("Active", self, true);
+	inputs[8] = nodeValue_Bool("Active", self, true);
 		active_index = 8;
 		
-	inputs[| 9] = nodeValue_Bool("Preserve alpha", self, false);
+	inputs[9] = nodeValue_Bool("Preserve alpha", self, false);
 		
-	inputs[| 10] = nodeValue_Enum_Button("Horizontal Align", self, 0, 
+	inputs[10] = nodeValue_Enum_Button("Horizontal Align", self, 0, 
 		[ THEME.inspector_surface_halign, THEME.inspector_surface_halign, THEME.inspector_surface_halign]);
 		
-	inputs[| 11] = nodeValue_Enum_Button("Vertical Align", self, 0, 
+	inputs[11] = nodeValue_Enum_Button("Vertical Align", self, 0, 
 		[ THEME.inspector_surface_valign, THEME.inspector_surface_valign, THEME.inspector_surface_valign]);
 	
-	inputs[| 12] = nodeValue_Bool("Invert mask", self, false);
+	inputs[12] = nodeValue_Bool("Invert mask", self, false);
 	
-	inputs[| 13] = nodeValue_Float("Mask feather", self, 1)
+	inputs[13] = nodeValue_Float("Mask feather", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] });
 	
-	inputs[| 14] = nodeValue_Vector("Position", self, [ 0.5, 0.5 ]);
+	inputs[14] = nodeValue_Vector("Position", self, [ 0.5, 0.5 ]);
 		
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 8, 
 		["Surfaces",	 true],	0, 1, 4, 12, 13, 6, 7,
@@ -89,7 +89,7 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	drag_my  = 0;
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var _surf = outputs[| 0].getValue();
+		var _surf = outputs[0].getValue();
 		if(is_array(_surf)) _surf = array_safe_get_fast(_surf, preview_index);
 		if(is_struct(_surf)) return;
 		if(!surface_exists(_surf)) return;
@@ -118,7 +118,7 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			px /= sw;
 			py /= sh;
 			
-			if(inputs[| 14].setValue([ px, py ]))
+			if(inputs[14].setValue([ px, py ]))
 				UNDO_HOLDING = true;
 			
 			if(mouse_release(mb_left)) {
@@ -150,11 +150,11 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		
 		var _atlas  = is_instanceof(_fore, SurfaceAtlas);
 		
-		inputs[| 5].setVisible(!_atlas);
-		inputs[| 6].editWidget.data_list = _atlas? [ "Background", "Forground" ] : [ "Background", "Forground", "Mask", "Maximum", "Constant" ];
-		inputs[| 7].setVisible(_outp == 4);
+		inputs[5].setVisible(!_atlas);
+		inputs[6].editWidget.data_list = _atlas? [ "Background", "Forground" ] : [ "Background", "Forground", "Mask", "Maximum", "Constant" ];
+		inputs[7].setVisible(_outp == 4);
 		
-		inputs[| 14].setVisible(_fill == 0 && !_atlas);
+		inputs[14].setVisible(_fill == 0 && !_atlas);
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {

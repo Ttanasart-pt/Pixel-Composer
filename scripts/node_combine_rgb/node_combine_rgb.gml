@@ -2,29 +2,29 @@ function Node_Combine_RGB(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	name = "RGB Combine";
 	dimension_index = -1;
 	
-	inputs[| 0] = nodeValue_Surface("Red",   self);
-	inputs[| 1] = nodeValue_Surface("Green", self);
-	inputs[| 2] = nodeValue_Surface("Blue",  self);
-	inputs[| 3] = nodeValue_Surface("Alpha", self);
+	inputs[0] = nodeValue_Surface("Red",   self);
+	inputs[1] = nodeValue_Surface("Green", self);
+	inputs[2] = nodeValue_Surface("Blue",  self);
+	inputs[3] = nodeValue_Surface("Alpha", self);
 	
-	inputs[| 4] = nodeValue_Enum_Scroll("Sampling type", self,  0, ["Channel value", "Greyscale"]);
+	inputs[4] = nodeValue_Enum_Scroll("Sampling type", self,  0, ["Channel value", "Greyscale"]);
 	
-	inputs[| 5] = nodeValue_Float("Base value", self, 0, "Set value to the unconnected color channels.")
+	inputs[5] = nodeValue_Float("Base value", self, 0, "Set value to the unconnected color channels.")
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(6);
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 6] = nodeValueMap("Base value", self);
+	inputs[6] = nodeValueMap("Base value", self);
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 7] = nodeValue_Bool("Array Input", self, false);
+	inputs[7] = nodeValue_Bool("Array Input", self, false);
 	
-	inputs[| 8] = nodeValue_Surface("RGBA Array", self, [])
+	inputs[8] = nodeValue_Surface("RGBA Array", self, [])
 		.setArrayDepth(1);
 	
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
 		["Sampling",	false], 4, 5, 6, 
@@ -34,16 +34,16 @@ function Node_Combine_RGB(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	attribute_surface_depth();
 	
 	static step = function() { #region
-		inputs[| 5].mappableStep();
+		inputs[5].mappableStep();
 		
 		var _arr = getInputData(7);
 		
-		inputs[| 0].setVisible(!_arr, !_arr);
-		inputs[| 1].setVisible(!_arr, !_arr);
-		inputs[| 2].setVisible(!_arr, !_arr);
-		inputs[| 3].setVisible(!_arr, !_arr);
+		inputs[0].setVisible(!_arr, !_arr);
+		inputs[1].setVisible(!_arr, !_arr);
+		inputs[2].setVisible(!_arr, !_arr);
+		inputs[3].setVisible(!_arr, !_arr);
 		
-		inputs[| 8].setVisible(_arr, _arr);
+		inputs[8].setVisible(_arr, _arr);
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
@@ -75,7 +75,7 @@ function Node_Combine_RGB(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			shader_set_i("useA", is_surface(_a));
 			
 			shader_set_i("mode",     !_data[4]);
-			shader_set_f_map("base", _data[5], _data[6], inputs[| 5]);
+			shader_set_f_map("base", _data[5], _data[6], inputs[5]);
 			
 			draw_sprite_stretched(s_fx_pixel, 0, 0, 0, _ww, _hh);
 			

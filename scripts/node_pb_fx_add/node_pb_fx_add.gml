@@ -1,7 +1,7 @@
 function Node_PB_Fx_Add(_x, _y, _group = noone) : Node_PB_Fx(_x, _y, _group) constructor {
 	name = "Add";
 	
-	inputs[| 1] = nodeValue("pbox", self, JUNCTION_CONNECT.input, VALUE_TYPE.pbBox, noone )
+	inputs[1] = nodeValue("pbox", self, JUNCTION_CONNECT.input, VALUE_TYPE.pbBox, noone )
 		.setVisible(true, true);
 		
 	input_display_list = [ 0, 

@@ -14,7 +14,7 @@ function Node_Iterate_Filter_Inline(_x, _y, _group = noone) : Node_Collection_In
 		var input  = nodeBuild("Node_Iterator_Filter_Inline_Input",  x,       y);
 		var output = nodeBuild("Node_Iterator_Filter_Inline_Output", x + 256, y);
 		
-		if(!CLONING) output.inputs[| 0].setFrom(input.outputs[| 0]);
+		if(!CLONING) output.inputs[0].setFrom(input.outputs[0]);
 		
 		addNode(input);
 		addNode(output);
@@ -34,7 +34,7 @@ function Node_Iterate_Filter_Inline(_x, _y, _group = noone) : Node_Collection_In
 	} #endregion
 	
 	static getIterationCount = function() { #region
-		var _arr = input_node.inputs[| 0].getValue();
+		var _arr = input_node.inputs[0].getValue();
 		return array_length(_arr);
 	} #endregion
 	
@@ -97,7 +97,7 @@ function Node_Iterate_Filter_Inline(_x, _y, _group = noone) : Node_Collection_In
 		}
 		
 		iterated = 0;
-		output_node.outputs[| 0].setValue([]);
+		output_node.outputs[0].setValue([]);
 	} #endregion
 	
 }

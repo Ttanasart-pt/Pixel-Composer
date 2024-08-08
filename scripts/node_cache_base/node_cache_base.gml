@@ -72,8 +72,8 @@ function __Node_Cache(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	static getCacheGroup = function(node) { #region
 		if(node != self) addNode(node);
 		
-		for( var i = 0, n = ds_list_size(node.inputs); i < n; i++ ) {
-			var _from = node.inputs[| i].value_from;
+		for( var i = 0, n = array_length(node.inputs); i < n; i++ ) {
+			var _from = node.inputs[i].value_from;
 			
 			if(_from == noone) continue;
 			if(_from.node == self) continue;

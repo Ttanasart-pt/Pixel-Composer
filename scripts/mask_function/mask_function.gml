@@ -1,9 +1,9 @@
 function __init_mask_modifier(_mask_index) { #region
-	var _ind = ds_list_size(inputs);
+	var _ind = array_length(inputs);
 	
-	inputs[| _ind + 0] = nodeValue_Bool("Invert mask", self, false);
+	inputs[_ind + 0] = nodeValue_Bool("Invert mask", self, false);
 	
-	inputs[| _ind + 1] = nodeValue_Float("Mask feather", self, 0)
+	inputs[_ind + 1] = nodeValue_Float("Mask feather", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 32, 0.1] });
 		
 	__mask_index     = _mask_index;
@@ -14,8 +14,8 @@ function __init_mask_modifier(_mask_index) { #region
 
 function __step_mask_modifier() { #region
 	var _msk = is_surface(getSingleValue(__mask_index));
-	inputs[| __mask_mod_index + 0].setVisible(_msk);
-	inputs[| __mask_mod_index + 1].setVisible(_msk);
+	inputs[__mask_mod_index + 0].setVisible(_msk);
+	inputs[__mask_mod_index + 1].setVisible(_msk);
 } #endregion
 
 function __process_mask_modifier(data) { #region

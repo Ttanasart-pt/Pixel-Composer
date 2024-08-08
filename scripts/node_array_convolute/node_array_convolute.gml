@@ -2,15 +2,15 @@ function Node_Array_Convolute(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	name = "Array Convolute";
 	setDimension(96, 32 + 24);
 	
-	inputs[| 0] = nodeValue_Float("Array", self, 0)
+	inputs[0] = nodeValue_Float("Array", self, 0)
 		.setArrayDepth(1)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue_Float("Kernel", self, [])
+	inputs[1] = nodeValue_Float("Kernel", self, [])
 		.setArrayDepth(1)
 		.setVisible(true, true);
 	
-	outputs[| 0] = nodeValue_Output("Array", self, VALUE_TYPE.float, 0)
+	outputs[0] = nodeValue_Output("Array", self, VALUE_TYPE.float, 0)
 		.setArrayDepth(1);
 		
 	static convolute = function(arr, ker) {
@@ -50,7 +50,7 @@ function Node_Array_Convolute(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		} else 
 			res = convolute(_arr, _ker);
 			
-		outputs[| 0].setValue(res);
+		outputs[0].setValue(res);
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

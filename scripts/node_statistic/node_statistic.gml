@@ -19,7 +19,7 @@ enum STAT_OPERATOR {
 			default : ind = array_find(global.node_statistic_keys, query);
 		}
 		
-		if(ind >= 0) node.inputs[| 0].setValue(ind);
+		if(ind >= 0) node.inputs[0].setValue(ind);
 	
 		return node;
 	}
@@ -30,20 +30,20 @@ function Node_Statistic(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	setDimension(96, 48);
 	
-	inputs[| 0] = nodeValue_Enum_Scroll("Type", self,  0, [ "Sum", "Mean", "Median", "Max", "Min" ])
+	inputs[0] = nodeValue_Enum_Scroll("Type", self,  0, [ "Sum", "Mean", "Median", "Max", "Min" ])
 		.rejectArray();
 	
 	static createNewInput = function() {
-		var index = ds_list_size(inputs);
-		inputs[| index] = nodeValue_Float("Input", self, -1 )
+		var index = array_length(inputs);
+		inputs[index] = nodeValue_Float("Input", self, -1 )
 			.setVisible(false, true);
 			
-		return inputs[| index];
+		return inputs[index];
 	} 
 	
 	setDynamicInput(1, true, VALUE_TYPE.float);
 	
-	outputs[| 0] = nodeValue_Output("Statistic", self, VALUE_TYPE.float, -1);
+	outputs[0] = nodeValue_Output("Statistic", self, VALUE_TYPE.float, -1);
 	
 	static update = function(frame = CURRENT_FRAME) { #region
 		var type = getInputData(0);
@@ -51,7 +51,7 @@ function Node_Statistic(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		switch(type) {
 			case STAT_OPERATOR._sum : 
-				for( var i = input_fix_len; i < ds_list_size(inputs); i++ ) {
+				for( var i = input_fix_len; i < array_length(inputs); i++ ) {
 					var val = getInputData(i);
 					if(is_array(val)) {
 						for( var j = 0; j < array_length(val); j++ )
@@ -61,13 +61,13 @@ function Node_Statistic(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				}
 				break;
 			case STAT_OPERATOR._average : 
-				if(ds_list_size(inputs) <= input_fix_len + 1) {
+				if(array_length(inputs) <= input_fix_len + 1) {
 					res = 0;
 					break;
 				}
 				
 				var amo = 0;
-				for( var i = input_fix_len; i < ds_list_size(inputs); i++ ) {
+				for( var i = input_fix_len; i < array_length(inputs); i++ ) {
 					var val = getInputData(i);
 					if(is_array(val)) {
 						for( var j = 0; j < array_length(val); j++ ) {
@@ -82,14 +82,14 @@ function Node_Statistic(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				res /= amo;
 				break;
 			case STAT_OPERATOR._median : 
-				if(ds_list_size(inputs) - input_fix_len == 0) {
+				if(array_length(inputs) - input_fix_len == 0) {
 					res = 0;
 					break;
 				}
 				
 				var vals = [];
 				var amo = 0;
-				for( var i = input_fix_len; i < ds_list_size(inputs); i++ ) {
+				for( var i = input_fix_len; i < array_length(inputs); i++ ) {
 					var val = getInputData(i);
 					if(is_array(val)) {
 						for( var j = 0; j < array_length(val); j++ ) {
@@ -115,7 +115,7 @@ function Node_Statistic(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				break;
 			case STAT_OPERATOR._min : 
 				var _min = 9999999999;
-				for( var i = input_fix_len; i < ds_list_size(inputs); i++ ) {
+				for( var i = input_fix_len; i < array_length(inputs); i++ ) {
 					var val = getInputData(i);
 					if(is_array(val)) {
 						for( var j = 0; j < array_length(val); j++ )
@@ -128,7 +128,7 @@ function Node_Statistic(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			case STAT_OPERATOR._max : 
 				var _max = -9999999999;
 				
-				for( var i = input_fix_len; i < ds_list_size(inputs); i++ ) {
+				for( var i = input_fix_len; i < array_length(inputs); i++ ) {
 					var val = getInputData(i);
 					if(is_array(val)) {
 						for( var j = 0; j < array_length(val); j++ )
@@ -140,7 +140,7 @@ function Node_Statistic(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				break;
 		}
 		
-		outputs[| 0].setValue(res);
+		outputs[0].setValue(res);
 	} #endregion
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region

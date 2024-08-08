@@ -1,24 +1,24 @@
 function Node_Pack_Sprites(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "Pack Sprites";
 	
-	inputs[| 0] = nodeValue_Surface("Sprites", self);
+	inputs[0] = nodeValue_Surface("Sprites", self);
 	
-	inputs[| 1] = nodeValue_Enum_Scroll("Algorithm", self,  0, { data: [ "Skyline", "Shelf", "Top left", "Best fit" ], update_hover: false });
+	inputs[1] = nodeValue_Enum_Scroll("Algorithm", self,  0, { data: [ "Skyline", "Shelf", "Top left", "Best fit" ], update_hover: false });
 	
-	inputs[| 2] = nodeValue_Int("Max width", self, 128);
+	inputs[2] = nodeValue_Int("Max width", self, 128);
 	
-	inputs[| 3] = nodeValue_Int("Max height", self, 128);
+	inputs[3] = nodeValue_Int("Max height", self, 128);
 	
-	inputs[| 4] = nodeValue_Int("Spacing", self, 0);
+	inputs[4] = nodeValue_Int("Spacing", self, 0);
 	
-	outputs[| 0] = nodeValue_Output("Packed image", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Packed image", self, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue_Output("Atlas data", self, VALUE_TYPE.surface, []);
+	outputs[1] = nodeValue_Output("Atlas data", self, VALUE_TYPE.surface, []);
 	
 	input_display_list = [ 0, 4, 1, 2, 3 ];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
-		var rect = outputs[| 1].getValue();
+		var rect = outputs[1].getValue();
 		var spac = getInputData(4);
 		
 		draw_set_color(COLORS._main_accent);
@@ -46,8 +46,8 @@ function Node_Pack_Sprites(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	static step = function() { #region
 		var algo = getInputData(1);
 		
-		inputs[| 2].setVisible(algo == 1 || algo == 0);
-		inputs[| 3].setVisible(algo == 2 || algo == 0);
+		inputs[2].setVisible(algo == 1 || algo == 0);
+		inputs[3].setVisible(algo == 2 || algo == 0);
 	} #endregion
 	
 	static update = function() { #region
@@ -105,9 +105,9 @@ function Node_Pack_Sprites(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			logNode(_txt); noti_warning(_txt);
 		}
 		
-		var _surf = outputs[| 0].getValue();
+		var _surf = outputs[0].getValue();
 		_surf = surface_verify(_surf, area.w, area.h, surface_get_format(_inpt[0]));
-		outputs[| 0].setValue(_surf);
+		outputs[0].setValue(_surf);
 		
 		surface_set_target(_surf);
 			DRAW_CLEAR
@@ -123,6 +123,6 @@ function Node_Pack_Sprites(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			BLEND_NORMAL
 		surface_reset_target();
 		
-		outputs[| 1].setValue(atlas);
+		outputs[1].setValue(atlas);
 	} #endregion
 }

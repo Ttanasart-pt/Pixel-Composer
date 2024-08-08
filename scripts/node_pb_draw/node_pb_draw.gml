@@ -1,17 +1,17 @@
 function Node_PB_Draw(_x, _y, _group = noone) : Node_PB(_x, _y, _group) constructor {
 	name = "PB Draw";
 	
-	inputs[| 0] = nodeValue("pBox", self, JUNCTION_CONNECT.input, VALUE_TYPE.pbBox, noone )
+	inputs[0] = nodeValue("pBox", self, JUNCTION_CONNECT.input, VALUE_TYPE.pbBox, noone )
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue_Color("Color", self, c_white );
+	inputs[1] = nodeValue_Color("Color", self, c_white );
 	
-	inputs[| 2] = nodeValue_Bool("Apply Mask", self, true );
+	inputs[2] = nodeValue_Bool("Apply Mask", self, true );
 	
-	outputs[| 0] = nodeValue_Output("pBox", self, VALUE_TYPE.pbBox, noone);
+	outputs[0] = nodeValue_Output("pBox", self, VALUE_TYPE.pbBox, noone);
 	
 	static getGraphPreviewSurface = function() {
-		var _nbox = outputs[| 0].getValue();
+		var _nbox = outputs[0].getValue();
 		if(_nbox == noone) return noone;
 		if(is_array(_nbox)) {
 			if(array_empty(_nbox)) return noone;

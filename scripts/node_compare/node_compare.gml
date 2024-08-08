@@ -21,7 +21,7 @@ enum COMPARE_OPERATOR {
 			default : ind = array_find(global.node_compare_keys, query);
 		}
 		
-		if(ind >= 0) node.inputs[| 0].setValue(ind);
+		if(ind >= 0) node.inputs[0].setValue(ind);
 		
 		return node;
 	}
@@ -33,20 +33,20 @@ function Node_Compare(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	
 	setDimension(96, 48);
 	
-	inputs[| 0] = nodeValue_Enum_Scroll("Type", self,  0, [ new scrollItem("Equal",			s_node_condition_type, 0), 
+	inputs[0] = nodeValue_Enum_Scroll("Type", self,  0, [ new scrollItem("Equal",			s_node_condition_type, 0), 
 												 new scrollItem("Not equal",		s_node_condition_type, 1), 
 												 new scrollItem("Greater ",			s_node_condition_type, 4), 
 												 new scrollItem("Greater or equal", s_node_condition_type, 5), 
 												 new scrollItem("Lesser",			s_node_condition_type, 2), 
 												 new scrollItem("Lesser or equal",	s_node_condition_type, 3), ]);
 	
-	inputs[| 1] = nodeValue_Float("a", self, 0)
+	inputs[1] = nodeValue_Float("a", self, 0)
 		.setVisible(true, true);
 		
-	inputs[| 2] = nodeValue_Float("b", self, 0)
+	inputs[2] = nodeValue_Float("b", self, 0)
 		.setVisible(true, true);
 	
-	outputs[| 0] = nodeValue_Output("Result", self, VALUE_TYPE.boolean, false);
+	outputs[0] = nodeValue_Output("Result", self, VALUE_TYPE.boolean, false);
 	
 	static _compare = function(mode, a, b) {
 		switch(mode) {
@@ -95,7 +95,7 @@ function Node_Compare(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		var b    = getInputData(2);
 		var val  = evalArray(mode, a, b);
 		
-		outputs[| 0].setValue(val);
+		outputs[0].setValue(val);
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

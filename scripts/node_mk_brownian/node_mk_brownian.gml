@@ -2,36 +2,36 @@ function Node_MK_Brownian(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	name = "MK Brownian";
 	update_on_frame = true;
 	
-	inputs[| 0] = nodeValue_Surface("Background", self);
+	inputs[0] = nodeValue_Surface("Background", self);
 	
-	inputs[| 1] = nodeValue_Surface("Sprite", self);
+	inputs[1] = nodeValue_Surface("Sprite", self);
 	
-	inputs[| 2] = nodeValue_Int("Amount", self, 10);
+	inputs[2] = nodeValue_Int("Amount", self, 10);
 	
-	inputs[| 3] = nodeValue_Area("Area", self, DEF_AREA);
+	inputs[3] = nodeValue_Area("Area", self, DEF_AREA);
 	
-	inputs[| 4] = nodeValue_Rotation_Random("Direction", self, [ 0, 45, 135, 0, 0 ] );
+	inputs[4] = nodeValue_Rotation_Random("Direction", self, [ 0, 45, 135, 0, 0 ] );
 	
-	inputs[| 5] = nodeValue_Range("Speed", self, [ 1, 1 ]);
+	inputs[5] = nodeValue_Range("Speed", self, [ 1, 1 ]);
 	
-	inputs[| 6] = nodeValue_Gradient("Color", self, new gradientObject(cola(c_white)));
+	inputs[6] = nodeValue_Gradient("Color", self, new gradientObject(cola(c_white)));
 	
-	inputs[| 7] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11);
+	inputs[7] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11);
 	
-	inputs[| 8] = nodeValue_Int("Seed", self, seed_random(6))
-		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 8].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
+	inputs[8] = nodeValue_Int("Seed", self, seed_random(6))
+		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[8].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
-	inputs[| 9] = nodeValue_Range("Angular speed", self, [ -45, 45 ]);
+	inputs[9] = nodeValue_Range("Angular speed", self, [ -45, 45 ]);
 	
-	inputs[| 10] = nodeValue_Range("Angular acceleration", self, [ -2, 2 ]);
+	inputs[10] = nodeValue_Range("Angular acceleration", self, [ -2, 2 ]);
 		
-	inputs[| 11] = nodeValue_Bool("Turn", self, false);
+	inputs[11] = nodeValue_Bool("Turn", self, false);
 	
-	inputs[| 12] = nodeValue_Dimension(self);
+	inputs[12] = nodeValue_Dimension(self);
 		
-	inputs[| 13] = nodeValue_Range("Size", self, [ 1, 1 ], { linked : true });
+	inputs[13] = nodeValue_Range("Size", self, [ 1, 1 ], { linked : true });
 		
-	outputs[| 0] = nodeValue_Output("Output", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Output", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 8, 
 		["Dimension", false], 0, 12, 
@@ -44,7 +44,7 @@ function Node_MK_Brownian(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _hov = false;
-		var  hv  = inputs[| 3].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= hv;
+		var  hv  = inputs[3].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= hv;
 		
 		return _hov;
 	}
@@ -97,9 +97,9 @@ function Node_MK_Brownian(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		if(is_surface(_surf)) _dim = surface_get_dimension(_surf)
 		
-		var _outSurf = outputs[| 0].getValue();
+		var _outSurf = outputs[0].getValue();
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
-		outputs[| 0].setValue(_outSurf);
+		outputs[0].setValue(_outSurf);
 		
 		surface_set_target(_outSurf);
 			DRAW_CLEAR

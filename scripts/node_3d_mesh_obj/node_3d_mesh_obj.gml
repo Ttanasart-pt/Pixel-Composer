@@ -25,17 +25,17 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 	object = noone;
 	object_class = __3dObject;
 	
-	inputs[| in_mesh + 0] = nodeValue_Text("File Path", self, "" )
+	inputs[in_mesh + 0] = nodeValue_Text("File Path", self, "" )
 		.setDisplay(VALUE_DISPLAY.path_load, { filter: "3d object|*.obj" })
 		.rejectArray();
 	
-	inputs[| in_mesh + 1] = nodeValue_Bool("Flip UV", self, true, "Flip UV axis, can be use to fix some texture mapping error.")
+	inputs[in_mesh + 1] = nodeValue_Bool("Flip UV", self, true, "Flip UV axis, can be use to fix some texture mapping error.")
 		.rejectArray();
 	
-	inputs[| in_mesh + 2] = nodeValue_Float("Import Scale", self, 1)
+	inputs[in_mesh + 2] = nodeValue_Float("Import Scale", self, 1)
 		.rejectArray();
 		
-	inputs[| in_mesh + 3] = nodeValue_Enum_Scroll("Axis", self, 0, [ "XYZ", "XZ-Y", "X-ZY" ])
+	inputs[in_mesh + 3] = nodeValue_Enum_Scroll("Axis", self, 0, [ "XYZ", "XZ-Y", "X-ZY" ])
 		.rejectArray();
 		
 	input_display_list = [
@@ -65,15 +65,15 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 	
 	static onInspector1Update = function() { 
 		current_path = ""; 
-		outputs[| 0].setValue(noone);
+		outputs[0].setValue(noone);
 	}
 
-	function setPath(path) { inputs[| in_mesh + 0].setValue(path); }
+	function setPath(path) { inputs[in_mesh + 0].setValue(path); }
 	
 	static createNewInput = function(index = -1) { #region
-		if(index == -1) index = ds_list_size(inputs);
+		if(index == -1) index = array_length(inputs);
 		
-		inputs[| index] = nodeValue_D3Material("Material", self, new __d3dMaterial())
+		inputs[index] = nodeValue_D3Material("Material", self, new __d3dMaterial())
 							.setVisible(true, true);
 	} #endregion
 	
@@ -81,7 +81,7 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 		var index = input_fix_len + m_index;
 		
 		input_display_list[input_display_len + m_index] = index;
-		if(index < ds_list_size(inputs)) return;
+		if(index < array_length(inputs)) return;
 		
 		createNewInput(index);
 		
@@ -89,19 +89,19 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 		
 		var matY = y - (array_length(materials) - 1) / 2 * (128 + 32);
 		var mat  = materials[m_index];
-		inputs[| index].name = materialNames[m_index] + " Material";
+		inputs[index].name = materialNames[m_index] + " Material";
 		
 		if(file_exists_empty(mat.diff_path)) {
 			var sol = Node_create_Image_path(x - (w + 128), matY + m_index * (128 + 32), mat.diff_path);
 			sol.name = mat.name + " texture";
 			
-			inputs[| index].setFrom(sol.outputs[| 0]);
+			inputs[index].setFrom(sol.outputs[0]);
 		} else {
 			var sol = nodeBuild("Node_Solid", x - (w + 128), matY + m_index * (128 + 32));
 			sol.name = mat.name + " texture";
-			sol.inputs[| 1].setValue(cola(mat.diff));
+			sol.inputs[1].setValue(cola(mat.diff));
 			
-			inputs[| index].setFrom(sol.outputs[| 0]);
+			inputs[index].setFrom(sol.outputs[0]);
 		}
 	} #endregion
 	
@@ -109,8 +109,8 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 		if(!file_exists_empty(_path)) return;
 		current_path = _path;
 		
-		var _scale = inputs[| in_mesh + 2].getValue();
-		var _axis  = inputs[| in_mesh + 3].getValue();
+		var _scale = inputs[in_mesh + 2].getValue();
+		var _axis  = inputs[in_mesh + 3].getValue();
 		
 		readObj_init(_scale, _axis);
 		
@@ -178,8 +178,8 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 		array_resize(input_display_list, input_display_len);
 			
 		var _overflow = input_fix_len + array_length(materialNames);
-		while(ds_list_size(inputs) > _overflow)
-			ds_list_delete(inputs, _overflow);
+		while(array_length(inputs) > _overflow)
+			array_delete(inputs, _overflow, 1);
 		
 		for(var i = 0; i < array_length(materialNames); i++) 
 			createMaterial(i);

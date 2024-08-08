@@ -155,15 +155,12 @@ event_inherited();
 		}
 		
 		var _new_node = noone;
-		var _inputs   = ds_list_create();
-		var _outputs  = ds_list_create();
+		var _inputs   = [];
+		var _outputs  = [];
 		
 		if(is_instanceof(_node, NodeObject)) {
 			_new_node = _node.build(node_target_x, node_target_y,, _param);
-			if(!_new_node) {
-				ds_list_destroy(_inputs); ds_list_destroy(_outputs);
-				return;
-			}
+			if(!_new_node) return;
 			
 			if(category == NODE_CATEGORY && _node.show_in_recent) {
 				array_remove(global.RECENT_NODES, _node.node);
@@ -175,35 +172,22 @@ event_inherited();
 			if(is_instanceof(context, Node_Collection_Inline))
 				context.addNode(_new_node);
 			
-			for( var i = 0, n = ds_list_size(_new_node.inputs); i < n; i++ ) 
-				ds_list_add(_inputs, _new_node.inputs[| i]);
+			for( var i = 0, n = array_length(_new_node.inputs); i < n; i++ ) 
+				array_push(_inputs, _new_node.inputs[i]);
 			
 			if(_new_node.dummy_input)
-				ds_list_add(_inputs, _new_node.dummy_input);
+				array_push(_inputs, _new_node.dummy_input);
 			
-			for( var i = 0, n = ds_list_size(_new_node.outputs); i < n; i++ ) 
-				ds_list_add(_outputs, _new_node.outputs[| i]);
+			for( var i = 0, n = array_length(_new_node.outputs); i < n; i++ ) 
+				array_push(_outputs, _new_node.outputs[i]);
 			
 		} else if(is_instanceof(_node, NodeAction)) {  ////////////////////////////////////////// NOT IMPLEMENTED
-			var res = _node.build(node_target_x, node_target_y,, _param);
-			
-			// if(_node.inputNode != noone) {
-			// 	_inputs  = res[$ _node.inputNode].inputs;
-			// }
-			
-			// if(_node.outputNode != noone) {
-			// 	_outputs = res[$ _node.outputNode].outputs;
-			// }
-			
-			ds_list_destroy(_inputs); ds_list_destroy(_outputs);
+			_node.build(node_target_x, node_target_y,, _param);
 			return;
 			
 		} else {
 			var _new_list = APPEND(_node.path);
-			if(_new_list == noone) {
-				ds_list_destroy(_inputs); ds_list_destroy(_outputs);
-				return;
-			}
+			if(_new_list == noone) return;
 			
 			var tx = 99999;
 			var ty = 99999;
@@ -225,15 +209,15 @@ event_inherited();
 			
 			for( var i = 0; i < array_length(_new_list); i++ ) {
 				var _in = _new_list[i].inputs;
-				for( var j = 0; j < ds_list_size(_in); j++ ) {
-					if(_in[| j].value_from == noone)
-						ds_list_add(_inputs, _in[| j]);
+				for( var j = 0; j < array_length(_in); j++ ) {
+					if(_in[j].value_from == noone)
+						array_push(_inputs, _in[j]);
 				}
 				
 				var _ot = _new_list[i].outputs;
-				for( var j = 0; j < ds_list_size(_ot); j++ ) {
-					if(array_empty(_ot[| j].value_to))
-						ds_list_add(_outputs, _ot[| j]);
+				for( var j = 0; j < array_length(_ot); j++ ) {
+					if(array_empty(_ot[j].value_to))
+						array_push(_outputs, _ot[j]);
 				}
 			}
 		}
@@ -243,18 +227,18 @@ event_inherited();
 			var _call_input = node_called.connect_type == JUNCTION_CONNECT.input;
 			var _junc_list  = _call_input? _outputs : _inputs;
 			
-			for(var i = 0; i < ds_list_size(_junc_list); i++) {
-				var _target = _junc_list[| i]; 
+			for(var i = 0; i < array_length(_junc_list); i++) {
+				var _target = _junc_list[i]; 
 				if(!_target.auto_connect) continue;
 				
-				if(_call_input && node_called.isConnectableStrict(_junc_list[| i]) == 1) {
-					node_called.setFrom(_junc_list[| i]);
+				if(_call_input && node_called.isConnectableStrict(_junc_list[i]) == 1) {
+					node_called.setFrom(_junc_list[i]);
 					_new_node.x -= _new_node.w;
 					break;
 				} 
 				
-				if(!_call_input && _junc_list[| i].isConnectableStrict(node_called) == 1) {
-					_junc_list[| i].setFrom(node_called);
+				if(!_call_input && _junc_list[i].isConnectableStrict(node_called) == 1) {
+					_junc_list[i].setFrom(node_called);
 					break;
 				}
 			}
@@ -263,16 +247,16 @@ event_inherited();
 			var to   = junction_hovering;
 			var from = junction_hovering.value_from;
 			
-			for( var i = 0; i < ds_list_size(_inputs); i++ ) {
-				var _in = _inputs[| i];
+			for( var i = 0; i < array_length(_inputs); i++ ) {
+				var _in = _inputs[i];
 				if(_in.auto_connect && _in.isConnectableStrict(from)) {
 					_in.setFrom(from);
 					break;
 				}
 			}
 				
-			for( var i = 0; i < ds_list_size(_outputs); i++ ) {
-				var _ot = _outputs[| i];
+			for( var i = 0; i < array_length(_outputs); i++ ) {
+				var _ot = _outputs[i];
 				if(to.isConnectableStrict(_ot)) {
 					to.setFrom(_ot);
 					break;
@@ -295,9 +279,6 @@ event_inherited();
 				}
 			}
 		}
-		
-		ds_list_destroy(_inputs);
-		ds_list_destroy(_outputs);
 	}
 	
 	catagory_pane = new scrollPane(category_width, dialog_h - ui(66), function(_y, _m) { #region catagory_pane

@@ -51,8 +51,8 @@ function cmd_submit(command) { #region
 			var glb = PROJECT.globalNode;
 			
 			if(glb.inputExist(key)) {
-				for( var i = 0; i < ds_list_size(glb.inputs); i++ ) {
-					var _inp = glb.inputs[| i];
+				for( var i = 0; i < array_length(glb.inputs); i++ ) {
+					var _inp = glb.inputs[i];
 					if(_inp.name != key) continue;
 					
 					if(_inp.type == VALUE_TYPE.text || _inp.type == VALUE_TYPE.path) {

@@ -20,47 +20,47 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	setDimension(96, 48);
 	seed  = 1;
 	
-	inputs[| 0] = nodeValue_Particle("Particles", self, -1 )
+	inputs[0] = nodeValue_Particle("Particles", self, -1 )
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue_Area("Area", self, DEF_AREA)
+	inputs[1] = nodeValue_Area("Area", self, DEF_AREA)
 		.rejectArray();
 	
-	inputs[| 2] = nodeValue("Falloff", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_01 )
+	inputs[2] = nodeValue("Falloff", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_01 )
 		.rejectArray();
 	
-	inputs[| 3] = nodeValue_Float("Falloff distance", self, 4 )
+	inputs[3] = nodeValue_Float("Falloff distance", self, 4 )
 		.rejectArray();
 	
-	inputs[| 4] = nodeValue_Vector("Effect Vector", self, [ -1, 0 ] )
+	inputs[4] = nodeValue_Vector("Effect Vector", self, [ -1, 0 ] )
 		.rejectArray();
 	
-	inputs[| 5] = nodeValue_Float("Strength", self, 1 )
+	inputs[5] = nodeValue_Float("Strength", self, 1 )
 		.rejectArray();
 	
-	inputs[| 6] = nodeValue_Rotation_Range("Rotate particle", self, [ 0, 0 ] )
+	inputs[6] = nodeValue_Rotation_Range("Rotate particle", self, [ 0, 0 ] )
 		.rejectArray();
 	
-	inputs[| 7] = nodeValue_Vec2_Range("Scale particle", self, [ 0, 0, 0, 0 ] , { linked : true })
+	inputs[7] = nodeValue_Vec2_Range("Scale particle", self, [ 0, 0, 0, 0 ] , { linked : true })
 		.rejectArray();
 	
-	inputs[| 8] = nodeValue_Int("Seed", self, seed_random(6))
-		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 8].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) })
+	inputs[8] = nodeValue_Int("Seed", self, seed_random(6))
+		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[8].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) })
 		.rejectArray();
 		
-	effector_input_length = ds_list_size(inputs);
+	effector_input_length = array_length(inputs);
 		
 	input_display_list = [ 0,
 		["Area",	false], 1, 2, 3,
 		["Effect",	false], 8, 4, 5, 6, 7,
 	];
 	
-	outputs[| 0] = nodeValue_Output("Particles", self, VALUE_TYPE.particle, -1 );
+	outputs[0] = nodeValue_Output("Particles", self, VALUE_TYPE.particle, -1 );
 	
 	UPDATE_PART_FORWARD
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
-		inputs[| 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		inputs[1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 		
 		var area = getInputData(1);
 		var cx = _x + area[0] * _s;
@@ -162,7 +162,7 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	static update = function(frame = CURRENT_FRAME) { #region
 		var val = getInputData(0);
-		outputs[| 0].setValue(val);
+		outputs[0].setValue(val);
 		if(val == -1) return;
 		
 		if(!is_array(val) || array_length(val) == 0) return;
@@ -172,7 +172,7 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			affect(val[i][j]);
 		}
 		
-		var jun = outputs[| 0];
+		var jun = outputs[0];
 		for(var j = 0; j < array_length(jun.value_to); j++) {
 			if(jun.value_to[j].value_from == jun)
 				jun.value_to[j].node.doUpdate();

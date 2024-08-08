@@ -682,12 +682,12 @@ function Panel_Preview() : PanelContent() constructor {
 	}
 	
 	function drawNodeChannel(_node, _x, _y) {
-		if(ds_list_size(_node.outputs) < 2) return 0;
+		if(array_length(_node.outputs) < 2) return 0;
 		
 		var chName = [];
 		sbChannelIndex = [];
 		
-		var currName = _node.outputs[| _node.preview_channel].name;
+		var currName = _node.outputs[_node.preview_channel].name;
 		draw_set_text(sbChannel.font, fa_center, fa_center);
 		var ww  = 0;
 		var hh  = TEXTBOX_HEIGHT - ui(2);
@@ -695,7 +695,7 @@ function Panel_Preview() : PanelContent() constructor {
 		
 		for( var i = 0; i < _am; i++ ) {
 			var _outi = _node.getOutputJunctionIndex(i);
-			var _outj = _node.outputs[| _outi];
+			var _outj = _node.outputs[_outi];
 			
 			array_push(chName, _outj.name);
 			array_push(sbChannelIndex, _outj);

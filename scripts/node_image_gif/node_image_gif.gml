@@ -7,7 +7,7 @@ function Node_create_Image_gif(_x, _y, _group = noone) {
 	}
 	
 	var node = new Node_Image_gif(_x, _y, _group).skipDefault();
-	node.inputs[| 0].setValue(path);
+	node.inputs[0].setValue(path);
 	if(NODE_NEW_MANUAL) node.doUpdate();
 	
 	return node;
@@ -17,7 +17,7 @@ function Node_create_Image_gif_path(_x, _y, path) {
 	if(!file_exists_empty(path)) return noone;
 	
 	var node = new Node_Image_gif(_x, _y, PANEL_GRAPH.getCurrentContext()).skipDefault();
-	node.inputs[| 0].setValue(path);
+	node.inputs[0].setValue(path);
 	node.doUpdate();
 	
 	return node;
@@ -29,10 +29,10 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	update_on_frame = true;
 	setAlwaysTimeline(new timelineItemNode_Image_gif(self));
 	
-	inputs[| 0] = nodeValue_Text("Path", self, "")
+	inputs[0] = nodeValue_Text("Path", self, "")
 		.setDisplay(VALUE_DISPLAY.path_load, { filter: "Animated gif|*.gif" });
 		
-	inputs[| 1] = nodeValue_Trigger("Set animation length to gif", self, false )
+	inputs[1] = nodeValue_Trigger("Set animation length to gif", self, false )
 		.setDisplay(VALUE_DISPLAY.button, { name: "Match length", UI : true, onClick: function() { 
 				if(!spr) return;
 				if(!sprite_exists(spr)) return;
@@ -40,21 +40,21 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				PROJECT.animator.framerate = 12;
 			} });
 	
-	inputs[| 2]  = nodeValue_Bool("Output as array", self, false);
+	inputs[2]  = nodeValue_Bool("Output as array", self, false);
 	
-	inputs[| 3]  = nodeValue_Enum_Scroll("Loop modes", self,  0, ["Loop", "Ping pong", "Hold last frame", "Hide"])
+	inputs[3]  = nodeValue_Enum_Scroll("Loop modes", self,  0, ["Loop", "Ping pong", "Hold last frame", "Hide"])
 		.rejectArray();
 	
-	inputs[| 4]  = nodeValue_Int("Start frame", self, 0);
+	inputs[4]  = nodeValue_Int("Start frame", self, 0);
 	
-	inputs[| 5]  = nodeValue_Bool("Custom frame order", self, false);
+	inputs[5]  = nodeValue_Bool("Custom frame order", self, false);
 	
-	inputs[| 6]  = nodeValue_Int("Frame", self, 0);
+	inputs[6]  = nodeValue_Int("Frame", self, 0);
 	
-	inputs[| 7]  = nodeValue_Float("Animation speed", self, 1);
+	inputs[7]  = nodeValue_Float("Animation speed", self, 1);
 	
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
-	outputs[| 1] = nodeValue_Output("Path", self, VALUE_TYPE.path, "")
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[1] = nodeValue_Output("Path", self, VALUE_TYPE.path, "")
 		.setVisible(true, true);
 		
 	input_display_list = [ 
@@ -78,7 +78,7 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		new checkBox(function() { attributes.file_checker = !attributes.file_checker; }) ]);
 	
 	on_drop_file = function(path) { #region
-		inputs[| 0].setValue(path);
+		inputs[0].setValue(path);
 		
 		if(updatePaths(path)) {
 			doUpdate();
@@ -105,7 +105,7 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			return false;
 		
 		setDisplayName(_name);
-		outputs[| 1].setValue(path);
+		outputs[1].setValue(path);
 		
 		if(spr) sprite_delete(spr);
 		sprite_add_gif(path, function(_spr) { 
@@ -127,10 +127,10 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var _lop = getInputData(3);
 		var _cus = getInputData(5);
 		
-		inputs[| 3].setVisible(!_arr);
-		inputs[| 4].setVisible(!_cus);
-		inputs[| 6].setVisible( _cus);
-		inputs[| 7].setVisible(!_cus);
+		inputs[3].setVisible(!_arr);
+		inputs[4].setVisible(!_cus);
+		inputs[6].setVisible( _cus);
+		inputs[7].setVisible(!_cus);
 		
 		if(loading == 2 && spr_builder != noone && spr_builder.building()) {
 			surfaces = [];
@@ -164,13 +164,13 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var ww = sprite_get_width(spr);
 		var hh = sprite_get_height(spr);
 		
-		var _outsurf = outputs[| 0].getValue();
+		var _outsurf = outputs[0].getValue();
 		var array = getInputData(2);
 		
 		if(array) {
 			var amo = sprite_get_number(spr);
 			if(array_length(surfaces) == amo && is_surface(surfaces[0])) {
-				outputs[| 0].setValue(surfaces);
+				outputs[0].setValue(surfaces);
 				return;
 			}
 			
@@ -185,7 +185,7 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				surface_reset_shader();
 			}
 			
-			outputs[| 0].setValue(surfaces);
+			outputs[0].setValue(surfaces);
 			return;
 		}
 		
@@ -217,7 +217,7 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		}
 		
 		_outsurf = surface_verify(_outsurf, ww, hh, attrDepth());
-		outputs[| 0].setValue(_outsurf);
+		outputs[0].setValue(_outsurf);
 		
 		surface_set_shader(_outsurf);
 			if(_drw) draw_sprite(spr, _frm, 0, 0);
@@ -236,7 +236,7 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		if(is_array(path)) path = array_safe_get(path, 0);
 		if(!file_exists_empty(path)) return;
 		
-		inputs[| 0].setValue(path);
+		inputs[0].setValue(path);
 	}
 }
 

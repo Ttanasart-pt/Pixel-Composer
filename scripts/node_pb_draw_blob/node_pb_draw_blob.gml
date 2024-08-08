@@ -1,10 +1,10 @@
 function Node_PB_Draw_Blob(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _group) constructor {
 	name = "Blob";
 	
-	inputs[| 3] = nodeValue_Float("Top", self, 0.5 )
+	inputs[3] = nodeValue_Float("Top", self, 0.5 )
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 4] = nodeValue_Float("Bottom", self, 1 )
+	inputs[4] = nodeValue_Float("Bottom", self, 1 )
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	input_display_list = [
@@ -22,7 +22,7 @@ function Node_PB_Draw_Blob(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _group
 		x0 = _x + x0 * _s;
 		y0 = _y + y0 * _s;
 		
-		//inputs[| 2].drawOverlay(hover, active, x0, y0, _s, _mx, _my, _snx, _sny);
+		//inputs[2].drawOverlay(hover, active, x0, y0, _s, _mx, _my, _snx, _sny);
 		
 		var x0 = _pbox.x + _pbox.w / 2;
 		var y0 = _pbox.y + _pbox.h;
@@ -30,7 +30,7 @@ function Node_PB_Draw_Blob(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _group
 		x0 = _x + x0 * _s;
 		y0 = _y + y0 * _s;
 		
-		//inputs[| 3].drawOverlay(hover, active, x0, y0, _s, _mx, _my, _snx, _sny);
+		//inputs[3].drawOverlay(hover, active, x0, y0, _s, _mx, _my, _snx, _sny);
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {

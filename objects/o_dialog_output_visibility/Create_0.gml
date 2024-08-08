@@ -18,10 +18,10 @@ event_inherited();
 		if(node == noone) return 0;
 		
 		var hh = line_get_height() + ui(8);
-		var _h = ds_list_size(node.outputs) * hh;
+		var _h = array_length(node.outputs) * hh;
 		
-		for( var i = 0; i < ds_list_size(node.outputs); i++ ) {
-			var output = node.outputs[| i];
+		for( var i = 0; i < array_length(node.outputs); i++ ) {
+			var output = node.outputs[i];
 			var _yy = _y + hh * i;
 			
 			if(sHOVER && sc_outputs.hover && point_in_rectangle(_m[0], _m[1], 0, _yy, sc_outputs.w, _yy + hh - 1)) {

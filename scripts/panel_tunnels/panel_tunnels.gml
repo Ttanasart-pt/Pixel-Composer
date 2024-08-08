@@ -45,7 +45,7 @@ function Panel_Tunnels() : PanelContent() constructor {
 			search_res = [];
 			for( var i = 0, n = array_length(tunnel_ins); i < n; i++ ) {
 				var node = tunnel_ins[i];
-				var key  = node.inputs[| 0].getValue(0);
+				var key  = node.inputs[0].getValue(0);
 			
 				if(string_pos(search_string, key) == 0) continue;
 				array_push(search_res, node);
@@ -80,7 +80,7 @@ function Panel_Tunnels() : PanelContent() constructor {
 				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, _y, ww, hg, COLORS._main_icon_light, 1);
 			draw_sprite_stretched_add(THEME.ui_panel, 1, 0, _y, ww, hg, c_white, .3);
 			
-			var key = node.inputs[| 0].getValue(0);
+			var key = node.inputs[0].getValue(0);
 			var bw = ui(28);
 			var bh = ui(28);
 			var bx = ww - ui(4) - bw;
@@ -92,7 +92,7 @@ function Panel_Tunnels() : PanelContent() constructor {
 		
 			if(buttonInstant(THEME.button_hide, bx, by, bw, bh, _m, sc_tunnel.active, sc_tunnel.hover, __txtx("panel_tunnel_create_tunnel", "Create tunnel out"), THEME.tunnel) == 2) {
 				var _node = nodeBuild("Node_Tunnel_Out", build_x, build_y);
-				_node.inputs[| 0].setValue(key);
+				_node.inputs[0].setValue(key);
 				
 				if(in_dialog) instance_destroy();
 			}

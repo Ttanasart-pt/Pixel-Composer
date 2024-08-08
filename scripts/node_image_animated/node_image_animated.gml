@@ -8,7 +8,7 @@ function Node_create_Image_Animated(_x, _y, _group = noone) {
 	
 	var node  = new Node_Image_Animated(_x, _y, _group).skipDefault();
 	var paths = string_splice(path, "\n");
-	node.inputs[| 0].setValue(paths);
+	node.inputs[0].setValue(paths);
 	if(NODE_NEW_MANUAL) node.doUpdate();
 	
 	return node;
@@ -17,7 +17,7 @@ function Node_create_Image_Animated(_x, _y, _group = noone) {
 function Node_create_Image_Animated_path(_x, _y, _path) {
 	var node = new Node_Image_Animated(_x, _y, PANEL_GRAPH.getCurrentContext()).skipDefault();
 	
-	node.inputs[| 0].setValue(_path);
+	node.inputs[0].setValue(_path);
 	node.doUpdate();
 	
 	return node;
@@ -38,35 +38,35 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	update_on_frame = true;
 	
-	inputs[| 0]  = nodeValue_Text("Path", self, [])
+	inputs[0]  = nodeValue_Text("Path", self, [])
 		.setDisplay(VALUE_DISPLAY.path_array, { filter: ["image|*.png;*.jpg", ""] });
 	
-	inputs[| 1]  = nodeValue_Padding("Padding", self, [0, 0, 0, 0])
+	inputs[1]  = nodeValue_Padding("Padding", self, [0, 0, 0, 0])
 		.rejectArray();
 		
-	inputs[| 2] = nodeValue_Bool("Stretch frame", self, false, "Stretch animation speed to match project length.")
+	inputs[2] = nodeValue_Bool("Stretch frame", self, false, "Stretch animation speed to match project length.")
 		.rejectArray();
 	
-	inputs[| 3] = nodeValue_Float("Animation speed", self, 1)
+	inputs[3] = nodeValue_Float("Animation speed", self, 1)
 		.rejectArray();
 		
-	inputs[| 4] = nodeValue_Enum_Scroll("Loop modes", self,  0, ["Loop", "Ping pong", "Hold last frame", "Hide"])
+	inputs[4] = nodeValue_Enum_Scroll("Loop modes", self,  0, ["Loop", "Ping pong", "Hold last frame", "Hide"])
 		.rejectArray();
 		
-	inputs[| 5] = nodeValue_Trigger("Set animation length to match", self, false )
+	inputs[5] = nodeValue_Trigger("Set animation length to match", self, false )
 		.setDisplay(VALUE_DISPLAY.button, { name: "Match length", UI : true, onClick: function() { 
 				if(array_length(spr) == 0) return;
 				TOTAL_FRAMES = array_length(spr);
 			} });
 	
-	inputs[| 6]  = nodeValue_Bool("Custom frame order", self, false);
+	inputs[6]  = nodeValue_Bool("Custom frame order", self, false);
 	
-	inputs[| 7]  = nodeValue_Int("Frame", self, 0);
+	inputs[7]  = nodeValue_Int("Frame", self, 0);
 
-	inputs[| 8] = nodeValue_Enum_Scroll("Canvas size", self,  2, [ "First", "Minimum", "Maximum" ])
+	inputs[8] = nodeValue_Enum_Scroll("Canvas size", self,  2, [ "First", "Minimum", "Maximum" ])
 		.rejectArray();
 		
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
 		["Image", false],		0, 1, 8, 
@@ -94,7 +94,7 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		
 		var paths = paths_to_array_ext(path);
 		
-		inputs[| 0].setValue(paths);
+		inputs[0].setValue(paths);
 		if(updatePaths(paths)) {
 			doUpdate();
 			return true;
@@ -157,9 +157,9 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		var str  = getInputData(2);
 		var _cus = getInputData(6);
 		
-		inputs[| 2].setVisible(!_cus);
-		inputs[| 3].setVisible(!_cus && !str);
-		inputs[| 4].setVisible(!_cus && !str);
+		inputs[2].setVisible(!_cus);
+		inputs[3].setVisible(!_cus && !str);
+		inputs[4].setVisible(!_cus && !str);
 		
 		if(attributes.file_checker)
 		for( var i = 0, n = array_length(path_current); i < n; i++ ) {
@@ -215,9 +215,9 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		ww += _pad[0] + _pad[2];
 		hh += _pad[1] + _pad[3];
 		
-		var surfs = outputs[| 0].getValue();
+		var surfs = outputs[0].getValue();
 		surfs = surface_verify(surfs, ww, hh, attrDepth());
-		outputs[| 0].setValue(surfs);
+		outputs[0].setValue(surfs);
 		
 		switch(_end) {
 			case ANIMATION_END.loop : 
@@ -290,6 +290,6 @@ function timelineItemNode_Image_Animated(node) : timelineItemNode(node) construc
 	
 	static dropPath = function(path) { 
 		if(!is_array(path)) path = [ path ];
-		inputs[| 0].setValue(path); 
+		inputs[0].setValue(path); 
 	}
 }

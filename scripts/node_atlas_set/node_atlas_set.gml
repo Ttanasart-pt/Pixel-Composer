@@ -2,24 +2,24 @@ function Node_Atlas_Set(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	name = "Atlas Set";
 	previewable = true;
 	
-	inputs[| 0] = nodeValue_Surface("Atlas", self)
+	inputs[0] = nodeValue_Surface("Atlas", self)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue_Surface("Surface", self);
+	inputs[1] = nodeValue_Surface("Surface", self);
 	
-	inputs[| 2] = nodeValue_Vector("Position", self, [ 0, 0 ]);
+	inputs[2] = nodeValue_Vector("Position", self, [ 0, 0 ]);
 	
-	inputs[| 3] = nodeValue_Rotation("Rotation", self, 0);
+	inputs[3] = nodeValue_Rotation("Rotation", self, 0);
 	
-	inputs[| 4] = nodeValue_Vector("Scale", self, [ 0, 0 ]);
+	inputs[4] = nodeValue_Vector("Scale", self, [ 0, 0 ]);
 		
-	inputs[| 5] = nodeValue_Color("Blend", self, c_white);
+	inputs[5] = nodeValue_Color("Blend", self, c_white);
 		
-	inputs[| 6] = nodeValue_Float("Alpha", self, 1);
+	inputs[6] = nodeValue_Float("Alpha", self, 1);
 	
-	inputs[| 7] = nodeValue_Bool("Recalculate Position", self, true);
+	inputs[7] = nodeValue_Bool("Recalculate Position", self, true);
 	
-	outputs[| 0] = nodeValue_Output("Atlas", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Atlas", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
 		0, 1, 2, 3, 7, 4, 5, 6, 
@@ -42,7 +42,7 @@ function Node_Atlas_Set(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		for( var i = 0; i < 7; i++ ) {
 			val[i] = getInputData(i);
 			len[i] = is_array(val[i])? array_length(val[i]) : 0;
-			use[i] = inputs[| i].value_from != noone;
+			use[i] = inputs[i].value_from != noone;
 		}
 		
 		var n    = array_length(atl);
@@ -115,6 +115,6 @@ function Node_Atlas_Set(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		}
 		
 		array_resize(natl, _ind);
-		outputs[| 0].setValue(natl);
+		outputs[0].setValue(natl);
 	}
 }

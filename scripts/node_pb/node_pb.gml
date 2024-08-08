@@ -9,10 +9,10 @@ function Node_PB(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 		if(drawOverlayPB != noone) 
 			drawOverlayPB(active, _x, _y, _s, _mx, _my, _snx, _sny);
 			
-		for( var i = 0; i < ds_list_size(outputs); i++ ) {
-			if(outputs[| i].type != VALUE_TYPE.pbBox) continue;
+		for( var i = 0; i < array_length(outputs); i++ ) {
+			if(outputs[i].type != VALUE_TYPE.pbBox) continue;
 			
-			var _box = outputs[| i].getValue();
+			var _box = outputs[i].getValue();
 			if(!is_array(_box)) _box = [ _box ];
 			
 			for( var j = 0; j < array_length(_box); j++ ) {
@@ -27,8 +27,8 @@ function Node_PB(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 	static getNextNodes = function() {
 		if(!struct_has(group, "checkComplete")) return [];
 		
-		for( var i = 0; i < ds_list_size(outputs); i++ ) {
-			var _ot  = outputs[| i];
+		for( var i = 0; i < array_length(outputs); i++ ) {
+			var _ot  = outputs[i];
 			var _tos = _ot.getJunctionTo();
 			
 			if(array_length(_tos) > 0)
@@ -38,5 +38,5 @@ function Node_PB(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 		return group.checkComplete();
 	}
 	
-	static getPreviewValues = function() { return group.outputs[| 0].getValue(); }
+	static getPreviewValues = function() { return group.outputs[0].getValue(); }
 }

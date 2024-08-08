@@ -1,16 +1,16 @@
 function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Nine Slice";
 	
-	inputs[| 0] = nodeValue_Surface("Surface in", self);
+	inputs[0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue_Dimension(self);
+	inputs[1] = nodeValue_Dimension(self);
 	
-	inputs[| 2] = nodeValue_Padding("Splice", self, [ 0, 0, 0, 0 ])
+	inputs[2] = nodeValue_Padding("Splice", self, [ 0, 0, 0, 0 ])
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	inputs[| 3] = nodeValue_Enum_Scroll("Filling modes", self, 0, [ "Scale", "Repeat" ]);
+	inputs[3] = nodeValue_Enum_Scroll("Filling modes", self, 0, [ "Scale", "Repeat" ]);
 	
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	attribute_surface_depth();
 	attribute_interpolation();
@@ -27,7 +27,7 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		if(is_array(s)) s = s[0];
 			
 		if(!is_surface(s)) return;
-		inputs[| 1].setValue( [ surface_get_width_safe(s), surface_get_height_safe(s) ] );
+		inputs[1].setValue( [ surface_get_width_safe(s), surface_get_height_safe(s) ] );
 	}
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
@@ -63,7 +63,7 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			else					vv = drag_sv - (_my - drag_my) / _s;
 				
 			_splice[drag_side] = vv;
-			if(inputs[| 2].setValue(_splice))
+			if(inputs[2].setValue(_splice))
 				UNDO_HOLDING = true;
 			
 			if(mouse_release(mb_left)) {
@@ -72,7 +72,7 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			}
 		}
 		
-		if(inputs[| 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny)) 
+		if(inputs[1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny)) 
 			return;
 		
 		if(distance_to_line_infinite(_mx, _my, sp_r, -hh, sp_r, hh) < 12) {

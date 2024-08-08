@@ -15,41 +15,41 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 	name		= "Render Spritesheet";
 	anim_drawn	= array_create(TOTAL_FRAMES + 1, false);
 	
-	inputs[| 0] = nodeValue_Surface("Sprites", self);
+	inputs[0] = nodeValue_Surface("Sprites", self);
 	
-	inputs[| 1] = nodeValue_Enum_Scroll("Sprite set", self,  0, [ "Animation", "Sprite array" ])
+	inputs[1] = nodeValue_Enum_Scroll("Sprite set", self,  0, [ "Animation", "Sprite array" ])
 		.rejectArray();
 	
-	inputs[| 2] = nodeValue_Int("Frame step", self, 1, "Number of frames until next sprite. Can be seen as (Step - 1) frame skip.")
+	inputs[2] = nodeValue_Int("Frame step", self, 1, "Number of frames until next sprite. Can be seen as (Step - 1) frame skip.")
 		.rejectArray();
 	
-	inputs[| 3] = nodeValue_Enum_Scroll("Packing type", self,  0, [ new scrollItem("Horizontal", s_node_alignment, 0), 
+	inputs[3] = nodeValue_Enum_Scroll("Packing type", self,  0, [ new scrollItem("Horizontal", s_node_alignment, 0), 
 												 new scrollItem("Vertical",   s_node_alignment, 1), 
 												 new scrollItem("Grid",       s_node_alignment, 2), ])
 		.rejectArray();
 		
-	inputs[| 4] = nodeValue_Int("Grid column", self, 4)
+	inputs[4] = nodeValue_Int("Grid column", self, 4)
 		.rejectArray();
 	
-	inputs[| 5] = nodeValue_Enum_Button("Alignment", self,  0, [ "First", "Middle", "Last" ])
+	inputs[5] = nodeValue_Enum_Button("Alignment", self,  0, [ "First", "Middle", "Last" ])
 		.rejectArray();
 	
-	inputs[| 6] = nodeValue_Int("Spacing", self, 0);
+	inputs[6] = nodeValue_Int("Spacing", self, 0);
 	
-	inputs[| 7] = nodeValue_Padding("Padding", self, [ 0, 0, 0, 0 ])
+	inputs[7] = nodeValue_Padding("Padding", self, [ 0, 0, 0, 0 ])
 	
-	inputs[| 8] = nodeValue_Slider_Range("Range", self, [ 0, 0 ])
+	inputs[8] = nodeValue_Slider_Range("Range", self, [ 0, 0 ])
 		.setTooltip("Starting/ending frames, set end to 0 to default to last frame.")
 		
-	inputs[| 9] = nodeValue_Vector("Spacing", self, [ 0, 0 ]);
+	inputs[9] = nodeValue_Vector("Spacing", self, [ 0, 0 ]);
 	
-	inputs[| 10] = nodeValue_Bool("Overlappable", self, false);
+	inputs[10] = nodeValue_Bool("Overlappable", self, false);
 	
-	inputs[| 11] = nodeValue_Bool("Custom Range", self, false);
+	inputs[11] = nodeValue_Bool("Custom Range", self, false);
 	
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 		
-	outputs[| 1] = nodeValue_Output("Atlas Data", self, VALUE_TYPE.surface, []);
+	outputs[1] = nodeValue_Output("Atlas Data", self, VALUE_TYPE.surface, []);
 	
 	input_display_list = [
 		["Surfaces",  false], 0, 1, 2,
@@ -71,23 +71,23 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		var pack = getInputData(3);
 		var user = getInputData(11);
 		
-		if(pack == 0)	inputs[| 5].editWidget.data = [ "Top", "Center", "Bottom" ];
-		else			inputs[| 5].editWidget.data = [ "Left", "Center", "Right" ];
+		if(pack == 0)	inputs[5].editWidget.data = [ "Top", "Center", "Bottom" ];
+		else			inputs[5].editWidget.data = [ "Left", "Center", "Right" ];
 		
-		inputs[| 2].setVisible(grup == SPRITE_ANIM_GROUP.animation);
-		inputs[| 4].setVisible(pack == SPRITE_STACK.grid);
-		inputs[| 5].setVisible(pack != SPRITE_STACK.grid);
-		inputs[| 6].setVisible(pack != SPRITE_STACK.grid);
-		inputs[| 9].setVisible(pack == SPRITE_STACK.grid);
+		inputs[2].setVisible(grup == SPRITE_ANIM_GROUP.animation);
+		inputs[4].setVisible(pack == SPRITE_STACK.grid);
+		inputs[5].setVisible(pack != SPRITE_STACK.grid);
+		inputs[6].setVisible(pack != SPRITE_STACK.grid);
+		inputs[9].setVisible(pack == SPRITE_STACK.grid);
 		
 		if(grup == SPRITE_ANIM_GROUP.animation) {
-			inputs[| 8].editWidget.slide_range[0] = FIRST_FRAME + 1;
-			inputs[| 8].editWidget.slide_range[1] = LAST_FRAME + 1;
-			if(!user) inputs[| 8].setValueDirect([ FIRST_FRAME + 1, LAST_FRAME + 1], noone, false, 0, false);
+			inputs[8].editWidget.slide_range[0] = FIRST_FRAME + 1;
+			inputs[8].editWidget.slide_range[1] = LAST_FRAME + 1;
+			if(!user) inputs[8].setValueDirect([ FIRST_FRAME + 1, LAST_FRAME + 1], noone, false, 0, false);
 		} else {
-			inputs[| 8].editWidget.slide_range[0] = 0;
-			inputs[| 8].editWidget.slide_range[1] = array_length(inpt) - 1;
-			if(!user) inputs[| 8].setValueDirect([ 0, array_length(inpt) - 1], noone, false, 0, false);
+			inputs[8].editWidget.slide_range[0] = 0;
+			inputs[8].editWidget.slide_range[1] = array_length(inpt) - 1;
+			if(!user) inputs[8].setValueDirect([ 0, array_length(inpt) - 1], noone, false, 0, false);
 		}
 		
 		update_on_frame = grup == 0;
@@ -125,8 +125,8 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		var cDep = attrDepth();
 		
 		if(!is_array(inpt)) {
-			outputs[| 0].setValue(surface_clone(inpt));
-			outputs[| 1].setValue([]);
+			outputs[0].setValue(surface_clone(inpt));
+			outputs[1].setValue([]);
 			return;	
 		}
 		
@@ -308,8 +308,8 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 			surface_reset_shader();
 		#endregion
 		
-		outputs[| 0].setValue(_surf);
-		outputs[| 1].setValue(array_spread(atlases));
+		outputs[0].setValue(_surf);
+		outputs[1].setValue(array_spread(atlases));
 	} #endregion
 	
 	anim_curr_w = -1;
@@ -328,7 +328,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		//var ovlp = getInputData(10);
 		var user = getInputData(11);
 		
-		var _out = outputs[| 0].getValue();
+		var _out = outputs[0].getValue();
 		var cDep = attrDepth();
 		
 		printIf(log, $"Init animation");
@@ -397,8 +397,8 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		}
 			
 		if(!arr) _out = array_safe_get_fast(_out, 0);
-		outputs[| 0].setValue(_out);
-		outputs[| 1].setValue(array_spread(atlases));
+		outputs[0].setValue(_out);
+		outputs[1].setValue(array_spread(atlases));
 				
 		printIf(log, $"Surface generated [{ww}, {hh}]");
 	} #endregion
@@ -455,7 +455,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 			}
 		#endregion
 		
-		var oupt   = outputs[| 0].getValue();
+		var oupt   = outputs[0].getValue();
 		var _frame = floor((CURRENT_FRAME - _st) / skip);
 		var drawn  = false;
 		var px = padd[2];
@@ -544,6 +544,6 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		} #endregion
 		
 		if(drawn) array_safe_set(anim_drawn, CURRENT_FRAME, true);
-		outputs[| 1].setValue(array_spread(atlases));
+		outputs[1].setValue(array_spread(atlases));
 	} #endregion
 }

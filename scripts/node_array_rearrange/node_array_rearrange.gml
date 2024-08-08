@@ -4,14 +4,14 @@ function Node_Array_Rearrange(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	draw_pad_w  = 10;
 	setDimension(96, 48);
 	
-	inputs[| 0] = nodeValue("Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0)
+	inputs[0] = nodeValue("Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0)
 		.setArrayDepth(1)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue_Int("Orders", self, [])
+	inputs[1] = nodeValue_Int("Orders", self, [])
 		.setArrayDepth(1);
 	
-	outputs[| 0] = nodeValue_Output("Array", self, VALUE_TYPE.any, 0)
+	outputs[0] = nodeValue_Output("Array", self, VALUE_TYPE.any, 0)
 		.setArrayDepth(1);
 	
 	type     = VALUE_TYPE.any;
@@ -20,13 +20,13 @@ function Node_Array_Rearrange(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	order_y  = 0;
 	
 	rearranger = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { #region
-		var _arr = inputs[| 0].getValue();
-		var _ord = inputs[| 1].getValue();
+		var _arr = inputs[0].getValue();
+		var _ord = inputs[1].getValue();
 		
 		var amo  = array_length(_arr);
 		var _fx  = _x;
 		var _fy  = _y + ui(8);
-		var _fh  = inputs[| 0].type == VALUE_TYPE.surface? ui(48) : ui(32);
+		var _fh  = inputs[0].type == VALUE_TYPE.surface? ui(48) : ui(32);
 		var _fsh = _fh - ui(8);
 		var _h   = amo * (_fh + ui(4));
 		
@@ -51,7 +51,7 @@ function Node_Array_Rearrange(_x, _y, _group = noone) : Node(_x, _y, _group) con
 			
 			var _ffcx = _fx + _w / 2;
 			
-			switch(inputs[| 0].type) {
+			switch(inputs[0].type) {
 				case VALUE_TYPE.surface :
 					var _sw = surface_get_width_safe(_val);
 					var _sh = surface_get_height_safe(_val);
@@ -87,7 +87,7 @@ function Node_Array_Rearrange(_x, _y, _group = noone) : Node(_x, _y, _group) con
 			
 			array_remove(_ord, ordering);
 			array_insert(_ord, _hov, ordering);
-			inputs[| 1].setValue(_ord);
+			inputs[1].setValue(_ord);
 			
 			if(mouse_release(mb_left)) {
 				ordering = noone;
@@ -104,19 +104,19 @@ function Node_Array_Rearrange(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	static onValueFromUpdate = function(index = 0) { #region
 		if(LOADING || APPENDING) return;
 		
-		var _arr = inputs[| 0].getValue();
+		var _arr = inputs[0].getValue();
 		var _val = array_create(array_length(_arr));
 		for( var i = 0, n = array_length(_arr); i < n; i++ ) 
 			_val[i] = i;
-		inputs[| 1].setValue(_val);
+		inputs[1].setValue(_val);
 	} #endregion
 	
 	static step = function() { #region
 		var _typ = VALUE_TYPE.any;
-		if(inputs[| 0].value_from != noone) _typ = inputs[| 0].value_from.type;
+		if(inputs[0].value_from != noone) _typ = inputs[0].value_from.type;
 		
-		inputs[| 0].setType(_typ);
-		outputs[| 0].setType(_typ);
+		inputs[0].setType(_typ);
+		outputs[0].setType(_typ);
 		
 		if(type != _typ) {
 			if(_typ == VALUE_TYPE.surface)
@@ -141,12 +141,12 @@ function Node_Array_Rearrange(_x, _y, _group = noone) : Node(_x, _y, _group) con
 			res[i]   = array_safe_get_fast(_arr, _ind);
 		}
 		
-		outputs[| 0].setValue(res);
+		outputs[0].setValue(res);
 	} #endregion
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
-		var str  = outputs[| 0].getValue();
+		var str  = outputs[0].getValue();
 		var bbox = drawGetBbox(xx, yy, _s);
 		draw_text_bbox(bbox, str);
 	} #endregion

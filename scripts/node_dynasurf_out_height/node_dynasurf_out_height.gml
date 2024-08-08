@@ -5,9 +5,9 @@ function Node_DynaSurf_Out_Height(_x, _y, _group = noone) : Node_PCX(_x, _y, _gr
 	manual_deletable	 = false;
 	destroy_when_upgroup = true;
 	
-	inputs[| 0] = nodeValue("Height", self, JUNCTION_CONNECT.input, VALUE_TYPE.PCXnode, noone);
+	inputs[0] = nodeValue("Height", self, JUNCTION_CONNECT.input, VALUE_TYPE.PCXnode, noone);
 	
-	outputs[| 0] = nodeValue_Output("PCX", self, VALUE_TYPE.PCXnode, noone)
+	outputs[0] = nodeValue_Output("PCX", self, VALUE_TYPE.PCXnode, noone)
 		.setVisible(false);
 	
 	input_display_list = [ 0 ];
@@ -21,7 +21,7 @@ function Node_DynaSurf_Out_Height(_x, _y, _group = noone) : Node_PCX(_x, _y, _gr
 	
 	static update = function() {
 		var _h = getInputData(0);
-		outputs[| 0].setValue(_h);
+		outputs[0].setValue(_h);
 		
 		if(group) group.setDynamicSurface();
 	}

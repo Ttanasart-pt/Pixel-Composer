@@ -22,7 +22,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		rx      = x;
 		ry      = y;
 		
-		index   = _connect == JUNCTION_CONNECT.input? ds_list_size(node.inputs) : ds_list_size(node.outputs);
+		index   = _connect == JUNCTION_CONNECT.input? array_length(node.inputs) : array_length(node.outputs);
 		type    = _type;
 		forward = true;
 		_initName = _name;
@@ -109,6 +109,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		def_unit    = VALUE_UNIT.constant;
 		dyna_depo   = ds_list_create();
 		value_tag   = "";
+		
+		type_array  = 0;
 		
 		is_modified = false;
 		cache_value = [ false, false, undefined, undefined ];
@@ -415,7 +417,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		editWidget = mapWidget && attributes.mapped? mapWidget : editWidgetRaw;
 		setArrayDepth(attributes.mapped);
 		
-		var inp = node.inputs[| attributes.map_index];
+		var inp = node.inputs[attributes.map_index];
 		var vis = attributes.mapped && show_in_inspector;
 		
 		if(inp.visible != vis) {
@@ -475,7 +477,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		if(type == VALUE_TYPE.gradient && struct_has(attributes, "map_index")) 
-			node.inputs[| attributes.map_index + 1].setAnim(anim);
+			node.inputs[attributes.map_index + 1].setAnim(anim);
 		
 		node.refreshTimeline();
 	} #endregion
@@ -523,13 +525,14 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return visible_in_list;
 	}
 	
-	static setDisplay = function(_type = VALUE_DISPLAY._default, _data = {}) { #region
-		display_type	  = _type;
-		display_data	  = _data;
+	static setDisplay = function(_type = VALUE_DISPLAY._default, _data = {}) {
+		display_type = _type;
+		display_data = _data;
+		type_array   = typeArray(display_type);
 		resetDisplay();
 		
 		return self;
-	} #endregion
+	}
 	
 	static resetDisplay = function() { #region //////////////////// RESET DISPLAY ////////////////////
 		editWidget = noone;
@@ -1222,14 +1225,16 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static getValueRecursive = function(arr = __curr_get_val, _time = CURRENT_FRAME) {
 		
-		arr[@ 0] = __getAnimValue(_time);
-		arr[@ 1] = self;
-		
 		if(value_from_loop && value_from_loop.bypassConnection() && value_from_loop.junc_out)
 			value_from_loop.getValue(arr);
 			
 		else if(value_from && value_from != self)
 			value_from.getValueRecursive(arr, _time);
+		
+		else {
+			arr[@ 0] = __getAnimValue(_time);
+			arr[@ 1] = self;
+		}
 		
 		if(!expUse || !expTree.validate()) return;
 			
@@ -1350,33 +1355,27 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return false;
 	}
 	
+	__is_array = false;
 	static isArray = function(val = undefined) {
-		var _cac = val == undefined;
-		
-		if(_cac) {
-			if(cache_array[0]) return cache_array[1];
-			val = getValue();
-			cache_array[0] = true;
-		}
-		
-		var _dep = __array_get_depth(val) > array_depth + typeArray(display_type);
-		if(_cac) cache_array[1] = _dep;
-		return _dep;
+		val ??= getValue();
+		return __array_get_depth(val) > array_depth + type_array;
 	}
 	
 	static arrayLength = function(val = undefined) {
 		val ??= getValue();
 		
-		if(!isArray(val)) 
-			return -1;
+		__is_array = false;
+		type_array = typeArray(display_type);
 		
-		if(array_depth == 0 && !typeArray(display_type)) 
-			return array_length(val);
+		if(!is_array(val))				   return -1;
+		
+		__is_array = isArray(val);
+		if(!__is_array)					   return -1;
+		if(array_depth + type_array == 0)  return array_length(val);
 		
 		var ar     = val;
-		var _depth = max(0, array_depth + typeArray(display_type) - 1);
-		repeat(_depth)
-			ar = ar[0];
+		var _depth = max(0, array_depth + type_array - 1);
+		repeat(_depth) ar = ar[0];
 		
 		return array_length(ar);
 	}
@@ -1468,9 +1467,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			
 			for( var i = 0, n = array_length(PANEL_INSPECTOR.inspectings); i < n; i++ ) {
 				var _node = PANEL_INSPECTOR.inspectings[i];
-				if(ind >= ds_list_size(_node.inputs)) continue;
+				if(ind >= array_length(_node.inputs)) continue;
 				
-				var r = _node.inputs[| ind].setValueDirect(val, index);
+				var r = _node.inputs[ind].setValueDirect(val, index);
 				if(_node == node) res = r;
 			}
 		} else {
@@ -1508,9 +1507,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(type == VALUE_TYPE.gradient)				updated = true;
 		if(display_type == VALUE_DISPLAY.palette)   updated = true;
-		
-		for( var i = 0, n = array_length(value_to_loop); i < n; i++ )
-			value_to_loop[i].updateValue();
 		
 		if(!updated) return false; /////////////////////////////////////////////////////////////////////////////////
 		
@@ -1572,8 +1568,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		var _dat = json_try_parse(str);
 		
-		if(typeArray(display_type) && !is_array(_dat))
-			_dat = [ _dat ];
+		if(type_array && !is_array(_dat)) _dat = [ _dat ];
 		
 		setValue(_dat);
 	}
@@ -1731,8 +1726,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static searchNodeBackward = function(_node) { #region
 		if(node == _node) return true;
-		for(var i = 0; i < ds_list_size(node.inputs); i++) {
-			var _in = node.inputs[| i].value_from;
+		for(var i = 0; i < array_length(node.inputs); i++) {
+			var _in = node.inputs[i].value_from;
 			if(_in && _in.searchNodeBackward(_node))
 				return true;
 		}
@@ -2166,14 +2161,14 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		var _nd = PROJECT.nodeMap[? _node];
-		var _ol = ds_list_size(_nd.outputs);
+		var _ol = array_length(_nd.outputs);
 		
 		if(log) log_warning("LOAD", $"[Connect] Reconnecting {node.name} to {_nd.name}", node);
 		
 		     if(con_index == VALUE_TAG.updateInTrigger)  return setFrom(_nd.updatedInTrigger);
 		else if(con_index == VALUE_TAG.updateOutTrigger) return setFrom(_nd.updatedOutTrigger);
 		else if(con_index < _ol) {
-			var _set = setFrom(_nd.outputs[| con_index], false, true);
+			var _set = setFrom(_nd.outputs[con_index], false, true);
 			if(_set) return true;
 			
 				 if(_set == -1) log_warning("LOAD", $"[Connect] Connection conflict {node.name} to {_nd.name} : Not connectable.", node);
@@ -2194,8 +2189,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var ext = nodeBuild(_type, node.x, node.y);
 		ext.x -= ext.w + 32;
 		
-		for( var i = 0; i < ds_list_size(ext.outputs); i++ ) {
-			if(setFrom(ext.outputs[| i])) break;
+		for( var i = 0; i < array_length(ext.outputs); i++ ) {
+			if(setFrom(ext.outputs[i])) break;
 		}
 		
 		var animFrom = animator.values;
@@ -2206,16 +2201,16 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			case "Node_Vector3": len++;
 			case "Node_Vector2": 
 				for( var j = 0; j < len; j++ ) {
-					var animTo = ext.inputs[| j].animator;
+					var animTo = ext.inputs[j].animator;
 					var animLs = animTo.values;
 					
-					ext.inputs[| j].setAnim(is_anim);
+					ext.inputs[j].setAnim(is_anim);
 					ds_list_clear(animLs);
 				}
 				
 				for( var i = 0; i < ds_list_size(animFrom); i++ ) {
 					for( var j = 0; j < len; j++ ) {
-						var animTo = ext.inputs[| j].animator;
+						var animTo = ext.inputs[j].animator;
 						var animLs = animTo.values;
 						var a = animFrom[| i].clone(animTo);
 						
@@ -2227,10 +2222,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			case "Node_Path": 
 				break;
 			default:
-				var animTo = ext.inputs[| 0].animator;
+				var animTo = ext.inputs[0].animator;
 				var animLs = animTo.values;
 				
-				ext.inputs[| 0].setAnim(is_anim);
+				ext.inputs[0].setAnim(is_anim);
 				ds_list_clear(animLs);
 				
 				for( var i = 0; i < ds_list_size(animFrom); i++ )

@@ -3,27 +3,27 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	length = 0;
 	setDimension(96, 48);;
 	
-	inputs[| 0] = nodeValue_Vector("Output scale", self, [ 8, 8 ]);
+	inputs[0] = nodeValue_Vector("Output scale", self, [ 8, 8 ]);
 	
-	inputs[| 1] = nodeValue_Enum_Scroll("Coordinate", self,  0, [ new scrollItem("Cartesian", s_node_axis_type, 0), 
+	inputs[1] = nodeValue_Enum_Scroll("Coordinate", self,  0, [ new scrollItem("Cartesian", s_node_axis_type, 0), 
 												 new scrollItem("Polar",     s_node_axis_type, 1),  ]);
 	
 	eq_type_car = [ "x function", "y function", "parametric" ];
 	eq_type_pol = [ "r function", "O function", "parametric" ];
-	inputs[| 2] = nodeValue_Enum_Scroll("Equation type", self,  0, eq_type_car);
+	inputs[2] = nodeValue_Enum_Scroll("Equation type", self,  0, eq_type_car);
 	
-	inputs[| 3] = nodeValue_Text("0 function", self, "");
-	inputs[| 4] = nodeValue_Text("1 function", self, "");
+	inputs[3] = nodeValue_Text("0 function", self, "");
+	inputs[4] = nodeValue_Text("1 function", self, "");
 	
-	inputs[| 5] = nodeValue_Vector("Origin", self, [ DEF_SURF_W / 2, DEF_SURF_H / 2 ] );
+	inputs[5] = nodeValue_Vector("Origin", self, [ DEF_SURF_W / 2, DEF_SURF_H / 2 ] );
 		
-	inputs[| 6] = nodeValue_Slider_Range("Range", self, [ 0, 1 ], { range: [ -1, 1, 0.01 ] });
+	inputs[6] = nodeValue_Slider_Range("Range", self, [ 0, 1 ], { range: [ -1, 1, 0.01 ] });
 		
-	inputs[| 7] = nodeValue_Vector("Input scale", self, [ 1, 1 ]);
+	inputs[7] = nodeValue_Vector("Input scale", self, [ 1, 1 ]);
 		
-	inputs[| 8] = nodeValue_Vector("Input shift", self, [ 0, 0 ]);
+	inputs[8] = nodeValue_Vector("Input shift", self, [ 0, 0 ]);
 		
-	outputs[| 0] = nodeValue_Output("Path", self, VALUE_TYPE.pathnode, self);
+	outputs[0] = nodeValue_Output("Path", self, VALUE_TYPE.pathnode, self);
 	
 	input_display_list = [
 		[ "Variable",  false ], 5, 7, 8, 0, 
@@ -34,7 +34,7 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	cached_pos = ds_map_create();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		inputs[| 5].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		inputs[5].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
 	static getLineCount		= function() { return 1; }
@@ -111,46 +111,46 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var _coor = getInputData(1);
 		var _eqa  = getInputData(2);
 		
-		inputs[| 2].editWidget.data_list = _coor? eq_type_pol : eq_type_car;
+		inputs[2].editWidget.data_list = _coor? eq_type_pol : eq_type_car;
 		
 		switch(_coor) {
 			case 0 :
 				switch(_eqa) {
 					case 0 : 
-						inputs[| 3].name = "f(x) = ";
-						inputs[| 4].setVisible(false);
-						inputs[| 6].name = "x range";
+						inputs[3].name = "f(x) = ";
+						inputs[4].setVisible(false);
+						inputs[6].name = "x range";
 						break;
 					case 1 : 
-						inputs[| 3].name = "f(y) = ";
-						inputs[| 4].setVisible(false);
-						inputs[| 6].name = "y range";
+						inputs[3].name = "f(y) = ";
+						inputs[4].setVisible(false);
+						inputs[6].name = "y range";
 						break;
 					case 2 : 
-						inputs[| 3].name = "x(t) = ";
-						inputs[| 4].name = "y(t) = ";
-						inputs[| 4].setVisible(true);
-						inputs[| 6].name = "t range";
+						inputs[3].name = "x(t) = ";
+						inputs[4].name = "y(t) = ";
+						inputs[4].setVisible(true);
+						inputs[6].name = "t range";
 						break;
 				}
 				break;
 			case 1 :
 				switch(_eqa) {
 					case 0 : 
-						inputs[| 3].name = "f(r) = ";
-						inputs[| 4].setVisible(false);
-						inputs[| 6].name = "r range";
+						inputs[3].name = "f(r) = ";
+						inputs[4].setVisible(false);
+						inputs[6].name = "r range";
 						break;
 					case 1 : 
-						inputs[| 3].name = "f(O) = ";
-						inputs[| 4].setVisible(false);
-						inputs[| 6].name = "O range";
+						inputs[3].name = "f(O) = ";
+						inputs[4].setVisible(false);
+						inputs[6].name = "O range";
 						break;
 					case 2 : 
-						inputs[| 3].name = "r(t) = ";
-						inputs[| 4].name = "O(t) = ";
-						inputs[| 4].setVisible(true);
-						inputs[| 6].name = "t range";
+						inputs[3].name = "r(t) = ";
+						inputs[4].name = "O(t) = ";
+						inputs[4].setVisible(true);
+						inputs[6].name = "t range";
 						break;
 				}
 				break;
@@ -176,7 +176,7 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	static update = function() { 
 		updateBoundary();
-		outputs[| 0].setValue(self); 
+		outputs[0].setValue(self); 
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

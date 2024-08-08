@@ -7,7 +7,7 @@ enum SHADER_UNIFORM {
 
 function addShaderProp(_type = undefined, _key = undefined) {
 	INLINE
-	var _ind = ds_list_size(inputs) - 1;
+	var _ind = array_length(inputs) - 1;
 	shader_data[_ind] = _type == undefined? 0 : { type: _type, key: _key };
 }
 
@@ -16,14 +16,14 @@ function Node_Shader(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	shader = noone;
 	shader_data = [];
 	
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	static setShader = function(_data) { #region
 		for( var i = 0, n = array_length(shader_data); i < n; i++ ) {
 			var _dat = shader_data[i];
 			if(_dat == 0) continue;
 			
-			var _inp = inputs[| i];
+			var _inp = inputs[i];
 			
 			switch(_dat.type) {
 				case SHADER_UNIFORM.integer : shader_set_i(_dat.key, _data[i]); break;

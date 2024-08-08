@@ -7,7 +7,7 @@ function Node_create_Image(_x, _y, _group = noone) {
 	}
 	
 	var node = new Node_Image(_x, _y, _group).skipDefault();
-	node.inputs[| 0].setValue(path);
+	node.inputs[0].setValue(path);
 	if(NODE_NEW_MANUAL) node.doUpdate();
 	
 	return node;
@@ -17,7 +17,7 @@ function Node_create_Image_path(_x, _y, path) {
 	if(!file_exists_empty(path)) return noone;
 	
 	var node = new Node_Image(_x, _y, PANEL_GRAPH.getCurrentContext()).skipDefault();
-	node.inputs[| 0].setValue(path);
+	node.inputs[0].setValue(path);
 	node.doUpdate();
 	return node;	
 }
@@ -26,13 +26,13 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Image";
 	color = COLORS.node_blend_input;
 	
-	inputs[| 0]  = nodeValue_Text("Path", self, "")
+	inputs[0]  = nodeValue_Text("Path", self, "")
 		.setDisplay(VALUE_DISPLAY.path_load, { filter: "image|*.png;*.jpg" });
 		
-	inputs[| 1]  = nodeValue_Padding("Padding", self, [0, 0, 0, 0]);
+	inputs[1]  = nodeValue_Padding("Padding", self, [0, 0, 0, 0]);
 		
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
-	outputs[| 1] = nodeValue_Output("Path", self, VALUE_TYPE.path, "")
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[1] = nodeValue_Output("Path", self, VALUE_TYPE.path, "")
 		.setVisible(true, true);
 	
 	attribute_surface_depth();
@@ -46,7 +46,7 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		new checkBox(function() { attributes.file_checker = !attributes.file_checker; }) ]);
 	
 	on_drop_file = function(path) { #region
-		inputs[| 0].setValue(path);
+		inputs[0].setValue(path);
 		
 		if(updatePaths(path)) {
 			doUpdate();
@@ -116,12 +116,12 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var path = path_get(getInputData(0));
 		var pad  = getInputData(1);
 		
-		outputs[| 1].setValue(path);
+		outputs[1].setValue(path);
 		updatePaths(path);
 		
 		if(!sprite_exists(spr)) return;
 		
-		var _outsurf = outputs[| 0].getValue();
+		var _outsurf = outputs[0].getValue();
 		
 		var ww = sprite_get_width(spr)  + pad[0] + pad[2];
 		var hh = sprite_get_height(spr) + pad[1] + pad[3];
@@ -132,7 +132,7 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			draw_sprite(spr, 0, pad[2], pad[1]);
 		surface_reset_shader();
 		
-		outputs[| 0].setValue(_outsurf);
+		outputs[0].setValue(_outsurf);
 		
 		#region splice
 			if(!attributes.check_splice) return;
@@ -151,10 +151,10 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			var hh = sprite_get_height(spr);
 					
 			var _splice = nodeBuild("Node_Image_Sheet", x + w + 64, y);
-			_splice.inputs[| 0].setFrom(outputs[| 0], false);
-			_splice.inputs[| 1].setValue([ ww, hh ]);
-			_splice.inputs[| 2].setValue(amo);
-			_splice.inputs[| 3].setValue([ amo, 1 ]);
+			_splice.inputs[0].setFrom(outputs[0], false);
+			_splice.inputs[1].setValue([ ww, hh ]);
+			_splice.inputs[2].setValue(amo);
+			_splice.inputs[3].setValue([ amo, 1 ]);
 			
 		#endregion
 	} #endregion
@@ -163,6 +163,6 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		if(is_array(path)) path = array_safe_get(path, 0);
 		if(!file_exists_empty(path)) return;
 		
-		inputs[| 0].setValue(path); 
+		inputs[0].setValue(path); 
 	}
 }

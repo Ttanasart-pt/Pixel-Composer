@@ -78,65 +78,68 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	skipDefault();
 	setDimension(96, 32 + 24);
 	
-	inputs[| 0] = nodeValue_Enum_Scroll("Display type", self,  0, { data: GROUP_IO_DISPLAY[11], update_hover: false });
+	inputs[0] = nodeValue_Enum_Scroll("Display type", self,  0, { data: GROUP_IO_DISPLAY[11], update_hover: false });
 	
-	inputs[| 1] = nodeValue_Range("Range", self, [ 0, 1 ])
+	inputs[1] = nodeValue_Range("Range", self, [ 0, 1 ])
 		.setVisible(false);
 	
-	inputs[| 2] = nodeValue_Enum_Scroll("Input type", self,  11, { data: GROUP_IO_TYPE_NAME, update_hover: false });
+	inputs[2] = nodeValue_Enum_Scroll("Input type", self,  11, { data: GROUP_IO_TYPE_NAME, update_hover: false });
 	
-	inputs[| 3] = nodeValue_Text("Enum label", self, "")
+	inputs[3] = nodeValue_Text("Enum label", self, "")
 		.setVisible(false);
 	
-	inputs[| 4] = nodeValue_Enum_Button("Vector size", self,  0, [ "2", "3", "4" ])
+	inputs[4] = nodeValue_Enum_Button("Vector size", self,  0, [ "2", "3", "4" ])
 		.setVisible(false);
 	
-	inputs[| 5] = nodeValue_Int("Order", self, 0);
+	inputs[5] = nodeValue_Int("Order", self, 0);
 	
-	inputs[| 6] = nodeValue_Bool("Display preview gizmo", self, true);
+	inputs[6] = nodeValue_Bool("Display preview gizmo", self, true);
 		
-	inputs[| 7] = nodeValue_Float("Step", self, 0.01)
+	inputs[7] = nodeValue_Float("Step", self, 0.01)
 		.setVisible(false);
 		
-	inputs[| 8] = nodeValue_Text("Button Label", self, "Trigger")
+	inputs[8] = nodeValue_Text("Button Label", self, "Trigger")
 		.setVisible(false);
 	
-	inputs[| 9] = nodeValue_Enum_Scroll("Visible Condition", self,  0, [ "Show", "Hide", /* 2 */ new scrollItem("Equal",			s_node_condition_type, 0), 
+	inputs[9] = nodeValue_Enum_Scroll("Visible Condition", self,  0, [ "Show", "Hide", /* 2 */ new scrollItem("Equal",			s_node_condition_type, 0), 
 												        		 /* 3 */ new scrollItem("Not equal",		s_node_condition_type, 1), 
 												        		 /* 4 */ new scrollItem("Greater ",			s_node_condition_type, 4), 
 												        		 /* 5 */ new scrollItem("Greater or equal",	s_node_condition_type, 5), 
 												        		 /* 6 */ new scrollItem("Lesser",			s_node_condition_type, 2), 
 												        		 /* 7 */ new scrollItem("Lesser or equal",	s_node_condition_type, 3), ]);
 	
-	inputs[| 10] = nodeValue_Float("Visible Check", self, 0);
+	inputs[10] = nodeValue_Float("Visible Check", self, 0);
 	
-	inputs[| 11] = nodeValue_Float("Visible Check To", self, 0);
+	inputs[11] = nodeValue_Float("Visible Check To", self, 0);
 	
-	inputs[| 10].setFrom_condition = function(_valueFrom) {
+	inputs[10].setFrom_condition = function(_valueFrom) {
 		if(is_instanceof(_valueFrom.node, Node_Group_Input)) return true;
 		
 		noti_warning("Group IO visibility must be connected directly to another group input.",, self);
 		return false;
 	}
 	
-	for( var i = 0, n = ds_list_size(inputs); i < n; i++ )
-		inputs[| i].uncache().rejectArray();
+	for( var i = 0, n = array_length(inputs); i < n; i++ )
+		inputs[i].uncache().rejectArray();
 		
 	input_display_list = [ 
 		["Display", false], 6, 9, 10, 11, 
 		["Data",	false], 2, 0, 4, 1, 7, 3, 8, 
 	];
 	
-	outputs[| 0] = nodeValue_Output("Value", self, VALUE_TYPE.any, 0)
+	outputs[0] = nodeValue_Output("Value", self, VALUE_TYPE.any, 0)
 		.uncache();
 	
 	attributes.inherit_name = true;
 	attributes.inherit_type = true;
 	doTrigger = 0;
 	
+	dtype  = -1;
+	range  = 0;
+	
 	onSetDisplayName = function() { attributes.inherit_name = false; }
 	
-	outputs[| 0].onSetTo = function(juncTo) {
+	outputs[0].onSetTo = function(juncTo) {
 		if(attributes.inherit_name && !LOADING && !APPENDING)
 			setDisplayName(juncTo.name);
 		
@@ -146,10 +149,10 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var ind = array_find(GROUP_IO_TYPE_MAP, juncTo.type);
 		if(ind == -1) return;
 		
-		if(ind == inputs[| 2].getValue()) return;
+		if(ind == inputs[2].getValue()) return;
 		
-		outputs[| 0].setType(juncTo.type);
-		inputs[| 2].setValue(ind);
+		outputs[0].setType(juncTo.type);
+		inputs[2].setValue(ind);
 	}
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
@@ -161,18 +164,18 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		if(!active)	return false;
 		if(!isRenderActive()) return false;
 		
-		for(var j = 0; j < 9; j++) if(!inputs[| j].isRendered()) return false;
+		for(var j = 0; j < 9; j++) if(!inputs[j].isRendered()) return false;
 		return true;
 	}
 	
 	static visibleCheck = function() {
-		var _vty = inputs[|  9].getValue();
+		var _vty = inputs[ 9].getValue();
 		
-		inputs[| 10].setVisible(_vty >= 2, _vty >= 2);
-		inputs[| 11].setVisible(_vty >= 2);
+		inputs[10].setVisible(_vty >= 2, _vty >= 2);
+		inputs[11].setVisible(_vty >= 2);
 		
-		var _val = inputs[| 10].getValue();
-		var _vto = inputs[| 11].getValue();
+		var _val = inputs[10].getValue();
+		var _vto = inputs[11].getValue();
 		var _vis = true;
 		
 		switch(_vty) {
@@ -211,8 +214,8 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _step		= getInputData(7);
 		
 		if(index == 2) {
-			if(outputs[| 0].type != _val_type) {
-				var _o = outputs[| 0];
+			if(outputs[0].type != _val_type) {
+				var _o = outputs[0];
 				for(var j = 0; j < array_length(_o.value_to); j++) {
 					var _to = _o.value_to[j];
 					if(_to.value_from == _o)
@@ -220,14 +223,14 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				}
 			}
 			
-			inputs[| 0].setValue(0);
+			inputs[0].setValue(0);
 			attributes.inherit_type = false;
 		}
 		
 		_dtype = array_safe_get_fast(array_safe_get_fast(GROUP_IO_DISPLAY, _val_type), _dtype);
 		
 		inParent.setType(_val_type);
-		outputs[| 0].setType(_val_type);
+		outputs[0].setType(_val_type);
 		var _val = inParent.getValue();
 		
 		switch(_dtype) {
@@ -334,7 +337,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				
 			case "Gradient":
 				inParent.setType(VALUE_TYPE.gradient);
-				outputs[| 0].setType(inParent.type);
+				outputs[0].setType(inParent.type);
 				
 				inParent.animator = new valueAnimator(new gradientObject(cola(c_white)), inParent);
 				
@@ -371,15 +374,14 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		if(group == noone || !is_struct(group)) return noone;
 				
 		if(!is_undefined(inParent))
-			ds_list_remove(group.inputs, inParent);
+			array_remove(group.inputs, inParent);
 		
 		inParent = nodeValue("Value", group, JUNCTION_CONNECT.input, VALUE_TYPE.any, -1)
 			.uncache()
 			.setVisible(true, true);
 		inParent.from = self;
 		
-		ds_list_add(group.inputs, inParent);
-		outputs[| 0].setFrom(inParent, false, false);
+		array_push(group.inputs, inParent);
 		
 		if(!LOADING && !APPENDING) {
 			group.refreshNodeDisplay();
@@ -390,11 +392,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		return inParent;
 	}
-	
 	if(!LOADING && !APPENDING) createInput();
-	
-	dtype  = -1;
-	range  = 0;
 	
 	static step = function() {
 		if(is_undefined(inParent)) return;
@@ -403,8 +401,8 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _dsList     = array_safe_get_fast(GROUP_IO_DISPLAY, _type);
 		if(_dsList == 0) _dsList = [ "Default" ];
 		
-		inputs[| 0].display_data.data    = _dsList;
-		inputs[| 0].editWidget.data_list = _dsList;
+		inputs[0].display_data.data    = _dsList;
+		inputs[0].editWidget.data_list = _dsList;
 			
 		if(inParent.name != display_name) {
 			inParent.name = display_name;
@@ -413,10 +411,11 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		if(inParent.type == VALUE_TYPE.trigger) {
 			if(doTrigger == 1) {
-				outputs[| 0].setValue(true);
+				outputs[0].setValue(true);
 				doTrigger = -1;
+				
 			} else if(doTrigger == -1) {
-				outputs[| 0].setValue(false);
+				outputs[0].setValue(false);
 				doTrigger = 0;
 			}
 		}
@@ -428,31 +427,31 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		var _datype = array_safe_get_fast(GROUP_IO_TYPE_MAP, _data, VALUE_TYPE.any);
 		
-		inputs[| 1].setVisible(false);
-		inputs[| 3].setVisible(false);
-		inputs[| 4].setVisible(false);
-		inputs[| 7].setVisible(false);
-		inputs[| 8].setVisible(_datype == VALUE_TYPE.trigger);
+		inputs[1].setVisible(false);
+		inputs[3].setVisible(false);
+		inputs[4].setVisible(false);
+		inputs[7].setVisible(false);
+		inputs[8].setVisible(_datype == VALUE_TYPE.trigger);
 		
 		switch(_dstype) {
 			case "Slider" :
 			case "Slider range" :
-				inputs[| 7].setVisible(true);
-				inputs[| 1].setVisible(true);
+				inputs[7].setVisible(true);
+				inputs[1].setVisible(true);
 				break;
 				
 			case "Range" :
-				inputs[| 1].setVisible(true);
+				inputs[1].setVisible(true);
 				break;
 				
 			case "Enum button" :
 			case "Menu scroll" :
-				inputs[| 3].setVisible(true);
+				inputs[3].setVisible(true);
 				break;
 				
 			case "Vector" :
 			case "Vector range" :
-				inputs[| 4].setVisible(true);
+				inputs[4].setVisible(true);
 				break;
 		}
 	}
@@ -460,9 +459,11 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	static update = function(frame = CURRENT_FRAME) {
 		if(is_undefined(inParent)) return;
 		visibleCheck();
+		
+		outputs[0].setValue(inParent.getValue());
 	}
 	
-	static getGraphPreviewSurface = function() { return inputs[| 0].getValue(); }
+	static getGraphPreviewSurface = function() { return inputs[0].getValue(); }
 	
 	static postDeserialize = function() { createInput(false); }
 	
@@ -480,7 +481,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	static onDestroy = function() {
 		if(is_undefined(inParent)) return;
 		
-		ds_list_remove(group.inputs, inParent);
+		array_remove(group.inputs, inParent);
 		group.sortIO();
 		group.refreshNodes();
 	}
@@ -488,9 +489,9 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	static onUngroup = function() {
 		var fr = inParent.value_from;
 		
-		for( var i = 0; i < array_length(outputs[| 0].value_to); i++ ) {
-			var to = outputs[| 0].value_to[i];
-			if(to.value_from != outputs[| 0]) continue;
+		for( var i = 0; i < array_length(outputs[0].value_to); i++ ) {
+			var to = outputs[0].value_to[i];
+			if(to.value_from != outputs[0]) continue;
 			
 			to.setFrom(fr);
 		}

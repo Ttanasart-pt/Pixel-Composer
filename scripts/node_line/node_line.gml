@@ -1,75 +1,75 @@
 function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {	
 	name = "Draw Line";
 	
-	inputs[| 0] = nodeValue_Dimension(self);
+	inputs[0] = nodeValue_Dimension(self);
 	
-	inputs[| 1] = nodeValue_Bool("Background", self, false);
+	inputs[1] = nodeValue_Bool("Background", self, false);
 	
-	inputs[| 2] = nodeValue_Int("Segment", self, 1)
+	inputs[2] = nodeValue_Int("Segment", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 32, 0.1] });
 	
-	inputs[| 3] = nodeValue_Vector("Width", self, [ 2, 2 ]);
+	inputs[3] = nodeValue_Vector("Width", self, [ 2, 2 ]);
 	
-	inputs[| 4] = nodeValue_Float("Wiggle", self, 0)
+	inputs[4] = nodeValue_Float("Wiggle", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 16, 0.01] });
 	
-	inputs[| 5] = nodeValue_Float("Random seed", self, 0);
+	inputs[5] = nodeValue_Float("Random seed", self, 0);
 	
-	inputs[| 6] = nodeValue_Rotation("Rotation", self, 0);
+	inputs[6] = nodeValue_Rotation("Rotation", self, 0);
 	
-	inputs[| 7] = nodeValue_PathNode("Path", self, noone, "Draw line along path.")
+	inputs[7] = nodeValue_PathNode("Path", self, noone, "Draw line along path.")
 		.setVisible(true, true);
 	
-	inputs[| 8] = nodeValue_Slider_Range("Range", self, [0, 1])
+	inputs[8] = nodeValue_Slider_Range("Range", self, [0, 1])
 		.setTooltip("Range of the path to draw.");
 	
-	inputs[| 9] = nodeValue_Float("Shift", self, 0);
+	inputs[9] = nodeValue_Float("Shift", self, 0);
 	
-	inputs[| 10] = nodeValue_Gradient("Color over length", self, new gradientObject(cola(c_white)));
+	inputs[10] = nodeValue_Gradient("Color over length", self, new gradientObject(cola(c_white)));
 	
-	inputs[| 11] = nodeValue("Width over length", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11);
+	inputs[11] = nodeValue("Width over length", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11);
 	
-	inputs[| 12] = nodeValue_Bool("Span width over path", self, false, "Apply the full 'width over length' to the trimmed path.");
+	inputs[12] = nodeValue_Bool("Span width over path", self, false, "Apply the full 'width over length' to the trimmed path.");
 		
-	inputs[| 13] = nodeValue_Bool("Round cap", self, false);
+	inputs[13] = nodeValue_Bool("Round cap", self, false);
 	
-	inputs[| 14] = nodeValue_Int("Round segment", self, 4)
+	inputs[14] = nodeValue_Int("Round segment", self, 4)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [2, 16, 0.1] });
 	
-	inputs[| 15] = nodeValue_Bool("Span color over path", self, false, "Apply the full 'color over length' to the trimmed path.");
+	inputs[15] = nodeValue_Bool("Span color over path", self, false, "Apply the full 'color over length' to the trimmed path.");
 	
-	inputs[| 16] = nodeValue_Bool("Width pass", self, false);
+	inputs[16] = nodeValue_Bool("Width pass", self, false);
 	
-	inputs[| 17] = nodeValue_Bool("1px mode", self, false, "Render pixel perfect 1px line.");
+	inputs[17] = nodeValue_Bool("1px mode", self, false, "Render pixel perfect 1px line.");
 	
-	inputs[| 18] = nodeValue_Surface("Texture", self);
+	inputs[18] = nodeValue_Surface("Texture", self);
 	
-	inputs[| 19] = nodeValue_Bool("Fix length", self, false, "Fix length of each segment instead of segment count.");
+	inputs[19] = nodeValue_Bool("Fix length", self, false, "Fix length of each segment instead of segment count.");
 	
-	inputs[| 20] = nodeValue_Float("Segment length", self, 4);
+	inputs[20] = nodeValue_Float("Segment length", self, 4);
 	
-	inputs[| 21] = nodeValue_Vector("Texture position", self, [ 0, 0 ]);
+	inputs[21] = nodeValue_Vector("Texture position", self, [ 0, 0 ]);
 	
-	inputs[| 22] = nodeValue_Rotation("Texture Rotation", self, 0);
+	inputs[22] = nodeValue_Rotation("Texture Rotation", self, 0);
 	
-	inputs[| 23] = nodeValue_Vector("Texture scale", self, [ 1, 1 ]);
+	inputs[23] = nodeValue_Vector("Texture scale", self, [ 1, 1 ]);
 	
-	inputs[| 24] = nodeValue_Gradient("Random Blend", self, new gradientObject(cola(c_white)));
+	inputs[24] = nodeValue_Gradient("Random Blend", self, new gradientObject(cola(c_white)));
 	
-	inputs[| 25] = nodeValue_Bool("Invert", self, false );
+	inputs[25] = nodeValue_Bool("Invert", self, false );
 	
-	inputs[| 26] = nodeValue_Bool("Clamp range", self, false );
+	inputs[26] = nodeValue_Bool("Clamp range", self, false );
 	
-	inputs[| 27] = nodeValue_Enum_Scroll("Data Type", self,  1, [ "None", "Path", "Segments" ]);
+	inputs[27] = nodeValue_Enum_Scroll("Data Type", self,  1, [ "None", "Path", "Segments" ]);
 	
-	inputs[| 28] = nodeValue_Vector("Segments", self, [[]])
+	inputs[28] = nodeValue_Vector("Segments", self, [[]])
 		.setArrayDepth(2);
 		
-	inputs[| 29] = nodeValue_Bool("Scale texture to length", self, true );
+	inputs[29] = nodeValue_Bool("Scale texture to length", self, true );
 	
-	inputs[| 30] = nodeValue_Bool("Use Path Bounding box", self, false );
+	inputs[30] = nodeValue_Bool("Use Path Bounding box", self, false );
 	
-	inputs[| 31] = nodeValue_Padding("Padding", self, [ 0, 0, 0, 0 ])
+	inputs[31] = nodeValue_Padding("Padding", self, [ 0, 0, 0, 0 ])
 		
 	input_display_list = [
 		["Output",			true],	0, 1, 30, 31, 
@@ -80,9 +80,9 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		["Texture",			false], 18, 21, 22, 23, 29, 
 	];
 	
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue_Output("Width Pass", self, VALUE_TYPE.surface, noone);
+	outputs[1] = nodeValue_Output("Width Pass", self, VALUE_TYPE.surface, noone);
 	
 	lines     = [];
 	line_data = [];
@@ -118,31 +118,31 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	static step = function() {
 		var px    = !getInputData(17);
-		var _tex  = inputs[| 18].value_from != noone;
+		var _tex  = inputs[18].value_from != noone;
 		var _flen = getInputData(19);
 		
-		inputs[|  3].setVisible(px);
-		inputs[| 11].setVisible(px);
-		inputs[| 12].setVisible(px);
-		inputs[| 13].setVisible(px && !_tex);
-		inputs[| 14].setVisible(px);
-		inputs[| 18].setVisible(px);
+		inputs[ 3].setVisible(px);
+		inputs[11].setVisible(px);
+		inputs[12].setVisible(px);
+		inputs[13].setVisible(px && !_tex);
+		inputs[14].setVisible(px);
+		inputs[18].setVisible(px);
 		
-		inputs[| 15].setVisible(!_tex);
-		inputs[| 16].setVisible(!_tex);
+		inputs[15].setVisible(!_tex);
+		inputs[16].setVisible(!_tex);
 		
-		inputs[|  2].setVisible(!_flen);
-		inputs[| 20].setVisible( _flen);
+		inputs[ 2].setVisible(!_flen);
+		inputs[20].setVisible( _flen);
 		
 		var _dtype = getInputData(27);
 		var _pbbox = getInputData(30);
 		
-		inputs[|  6].setVisible(_dtype == 0);
-		inputs[|  7].setVisible(_dtype == 1, _dtype == 1);
-		inputs[| 28].setVisible(_dtype == 2, _dtype == 2);
+		inputs[ 6].setVisible(_dtype == 0);
+		inputs[ 7].setVisible(_dtype == 1, _dtype == 1);
+		inputs[28].setVisible(_dtype == 2, _dtype == 2);
 		
-		inputs[| 30].setVisible(_dtype);
-		inputs[| 31].setVisible(_dtype && _pbbox);
+		inputs[30].setVisible(_dtype);
+		inputs[31].setVisible(_dtype && _pbbox);
 	}
 	
 	static onValueUpdate = function(index = 0) {
@@ -200,7 +200,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		
 		/////// Data
 		
-		if(IS_FIRST_FRAME || inputs[| 11].is_anim)
+		if(IS_FIRST_FRAME || inputs[11].is_anim)
 			ds_map_clear(widthMap);
 		
 		var _surfDim = [ _dim[0], _dim[1] ];

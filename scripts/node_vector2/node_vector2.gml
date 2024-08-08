@@ -4,17 +4,17 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	setDimension(96, 32 + 24 * 2);
 	
-	inputs[| 0] = nodeValue_Float("x", self, 0)
+	inputs[0] = nodeValue_Float("x", self, 0)
 		.setVisible(true, true);
 		
-	inputs[| 1] = nodeValue_Float("y", self, 0)
+	inputs[1] = nodeValue_Float("y", self, 0)
 		.setVisible(true, true);
 	
-	inputs[| 2] = nodeValue_Bool("Integer", self, false);
+	inputs[2] = nodeValue_Bool("Integer", self, false);
 	
-	inputs[| 3] = nodeValue_Enum_Scroll("Display", self,  0, [ "Number", "Coordinate" ]);
+	inputs[3] = nodeValue_Enum_Scroll("Display", self,  0, [ "Number", "Coordinate" ]);
 	
-	outputs[| 0] = nodeValue_Output("Vector", self, VALUE_TYPE.float, [ 0, 0 ])
+	outputs[0] = nodeValue_Output("Vector", self, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	drag_type = 0;
@@ -79,8 +79,8 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				_val[1] = _ny;
 			}
 			
-			var s0 = inputs[| 0].setValue(_val[0]);
-			var s1 = inputs[| 1].setValue(_val[1]);
+			var s0 = inputs[0].setValue(_val[0]);
+			var s1 = inputs[1].setValue(_val[1]);
 			
 			if(s0 || s1)
 				UNDO_HOLDING = true;
@@ -109,13 +109,13 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var disp = getInputData(3);
 		
 		for( var i = 0; i < 2; i++ ) 
-			inputs[| i].setType(int? VALUE_TYPE.integer : VALUE_TYPE.float);
+			inputs[i].setType(int? VALUE_TYPE.integer : VALUE_TYPE.float);
 		
-		outputs[| 0].setType(int? VALUE_TYPE.integer : VALUE_TYPE.float);
+		outputs[0].setType(int? VALUE_TYPE.integer : VALUE_TYPE.float);
 		
 		setDimension(96, 80, false);
 				
-		if(disp == 1 && inputs[| 0].value_from == noone && inputs[| 1].value_from == noone)
+		if(disp == 1 && inputs[0].value_from == noone && inputs[1].value_from == noone)
 			setDimension(160, 160, false);
 	} #endregion
 	
@@ -135,7 +135,7 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var v0 = array_safe_get_fast(vec, 0);
 		var v1 = array_safe_get_fast(vec, 1);
 		
-		if(disp == 0 || inputs[| 0].value_from != noone || inputs[| 1].value_from != noone) {
+		if(disp == 0 || inputs[0].value_from != noone || inputs[1].value_from != noone) {
 			draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
 			var str	= $"{v0}\n{v1}";
 			var ss	= string_scale(str, bbox.w, bbox.h);
@@ -190,8 +190,8 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				my = round(my);
 			}
 			
-			var _i0 = inputs[| 0].setValue(mx);
-			var _i1 = inputs[| 1].setValue(my);
+			var _i0 = inputs[0].setValue(mx);
+			var _i1 = inputs[1].setValue(my);
 			if(_i0 || _i1) UNDO_HOLDING = true;
 				
 			if(mouse_release(mb_left)) {

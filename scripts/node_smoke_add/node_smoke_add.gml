@@ -6,24 +6,24 @@ function Node_Smoke_Add(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) con
 	
 	manual_ungroupable	 = false;
 	
-	inputs[| 0] = nodeValue("Domain", self, JUNCTION_CONNECT.input, VALUE_TYPE.sdomain, noone)
+	inputs[0] = nodeValue("Domain", self, JUNCTION_CONNECT.input, VALUE_TYPE.sdomain, noone)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue_Surface("Fluid brush", self);
+	inputs[1] = nodeValue_Surface("Fluid brush", self);
 	
-	inputs[| 2] = nodeValue_Vector("Position", self, [0, 0]);
+	inputs[2] = nodeValue_Vector("Position", self, [0, 0]);
 	
-	inputs[| 3] = nodeValue_Bool("Active", self, true);
+	inputs[3] = nodeValue_Bool("Active", self, true);
 	
-	inputs[| 4] = nodeValue_Float("Inherit velocity", self, 0)
+	inputs[4] = nodeValue_Float("Inherit velocity", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] });
 	
-	inputs[| 5] = nodeValue_Float("Density", self, 1)
+	inputs[5] = nodeValue_Float("Density", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 6] = nodeValue_Int("Expand velocity mask", self, 0);
+	inputs[6] = nodeValue_Int("Expand velocity mask", self, 0);
 	
-	inputs[| 7] = nodeValue_Vector("Velocity", self, [0, 0]);
+	inputs[7] = nodeValue_Vector("Velocity", self, [0, 0]);
 	
 	input_display_list = [ 
 		["Domain",	 false], 0, 
@@ -33,7 +33,7 @@ function Node_Smoke_Add(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) con
 	
 	_prevPos = noone;
 	
-	outputs[| 0] = nodeValue_Output("Domain", self, VALUE_TYPE.sdomain, noone);
+	outputs[0] = nodeValue_Output("Domain", self, VALUE_TYPE.sdomain, noone);
 	
 	temp_surface = [ surface_create(1, 1) ];
 	
@@ -50,7 +50,7 @@ function Node_Smoke_Add(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) con
 			draw_surface_ext_safe(_mat, mx, my, _s, _s, 0, c_white, 0.5);
 		}
 		
-		inputs[| 2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		inputs[2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 	} #endregion
 	
 	static update = function(frame = CURRENT_FRAME) {
@@ -64,7 +64,7 @@ function Node_Smoke_Add(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) con
 		var _vel = getInputData(7);
 		
 		FLUID_DOMAIN_CHECK
-		outputs[| 0].setValue(_dom);
+		outputs[0].setValue(_dom);
 		
 		if(!_act) return;
 		if(!is_surface(_mat)) return;

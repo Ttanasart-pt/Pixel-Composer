@@ -20,7 +20,7 @@ enum LOGIC_OPERATOR {
 			default : ind = array_find(global.node_logic_keys, query);
 		}
 		
-		if(ind >= 0) node.inputs[| 0].setValue(ind);
+		if(ind >= 0) node.inputs[0].setValue(ind);
 		
 		return node;
 	}
@@ -32,7 +32,7 @@ function Node_Logic(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	setDimension(96, 48);
 	
-	inputs[| 0] = nodeValue_Enum_Scroll("Type", self,  0, [ new scrollItem("And" , s_node_logic, 0), 
+	inputs[0] = nodeValue_Enum_Scroll("Type", self,  0, [ new scrollItem("And" , s_node_logic, 0), 
 												 new scrollItem("Or"  ,	s_node_logic, 1), 
 												 new scrollItem("Not" , s_node_logic, 2), 
 												 new scrollItem("Nand", s_node_logic, 3), 
@@ -40,25 +40,25 @@ function Node_Logic(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 												 new scrollItem("Xor" , s_node_logic, 5), ])
 		.rejectArray();
 	
-	outputs[| 0] = nodeValue_Output("Result", self, VALUE_TYPE.boolean, false);
+	outputs[0] = nodeValue_Output("Result", self, VALUE_TYPE.boolean, false);
 	
 	static createNewInput = function()  {
-		var index = ds_list_size(inputs);
+		var index = array_length(inputs);
 		
 		var jname = chr(ord("a") + index - 1);
-		inputs[| index] = nodeValue_Bool(jname,  self, false )
+		inputs[index] = nodeValue_Bool(jname,  self, false )
 			.setVisible(true, true);
 		
-		return inputs[| index];
+		return inputs[index];
 	} setDynamicInput(1, true, VALUE_TYPE.boolean);
 	
 	static trimInputs = function(amo) {
-		if(ds_list_size(inputs) < amo + 1) {
-			while(ds_list_size(inputs) < amo + 1) 
+		if(array_length(inputs) < amo + 1) {
+			while(array_length(inputs) < amo + 1) 
 				createNewInput();
 		} else {
-			while(ds_list_size(inputs) > amo + 1) 
-				ds_list_delete(inputs, amo + 1);
+			while(array_length(inputs) > amo + 1) 
+				array_delete(inputs, amo + 1, 1);
 		}
 	}
 	
@@ -143,7 +143,7 @@ function Node_Logic(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			case LOGIC_OPERATOR.land :	
 			case LOGIC_OPERATOR.lor :	
 				var val = a;
-				var to  = ds_list_size(inputs);
+				var to  = array_length(inputs);
 				
 				for( var i = 2; i < to; i++ ) {
 					var b = getInputData(i);
@@ -151,7 +151,7 @@ function Node_Logic(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				}
 		}
 		
-		outputs[| 0].setValue(val);
+		outputs[0].setValue(val);
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

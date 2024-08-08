@@ -1,32 +1,32 @@
 function Node_Surface_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Replace Image";
 	
-	inputs[| 0] = nodeValue_Surface("Base Image", self);
+	inputs[0] = nodeValue_Surface("Base Image", self);
 	
-	inputs[| 1] = nodeValue_Surface("Target Image", self)
+	inputs[1] = nodeValue_Surface("Target Image", self)
 		.setArrayDepth(1);
 	
-	inputs[| 2] = nodeValue_Surface("Replacement Image", self)
+	inputs[2] = nodeValue_Surface("Replacement Image", self)
 		.setArrayDepth(1);
 	
-	inputs[| 3] = nodeValue_Float("Color Threshold", self, 0.1, "How similiar the color need to be in order to be count as matched." )
+	inputs[3] = nodeValue_Float("Color Threshold", self, 0.1, "How similiar the color need to be in order to be count as matched." )
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 4] = nodeValue_Bool("Draw Base Image", self, true );
+	inputs[4] = nodeValue_Bool("Draw Base Image", self, true );
 	
-	inputs[| 5] = nodeValue_Bool("Fast Mode", self, true );
+	inputs[5] = nodeValue_Bool("Fast Mode", self, true );
 	
-	inputs[| 6] = nodeValue_Float("Pixel Threshold", self, 0.1, "How many pixel need to me matched to replace with replacement image." )
+	inputs[6] = nodeValue_Float("Pixel Threshold", self, 0.1, "How many pixel need to me matched to replace with replacement image." )
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 7] = nodeValue_Enum_Scroll("Array mode", self,  0, { data: [ "Match index", "Randomized" ], update_hover: false });
+	inputs[7] = nodeValue_Enum_Scroll("Array mode", self,  0, { data: [ "Match index", "Randomized" ], update_hover: false });
 	
-	inputs[| 8] = nodeValue_Float("Seed", self, seed_random(6))
-		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 8].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
+	inputs[8] = nodeValue_Float("Seed", self, seed_random(6))
+		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[8].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
-	inputs[| 9] = nodeValue_Bool("Replace Empty", self, false)
+	inputs[9] = nodeValue_Bool("Replace Empty", self, false)
 	
-	outputs[| 0] = nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
 		["Surfaces",	 true], 0, 1, 2, 7, 8, 
@@ -80,7 +80,7 @@ function Node_Surface_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	
 	static step = function() {
 		var _mode = getInputData(7);
-		inputs[| 8].setVisible(_mode == 1);
+		inputs[8].setVisible(_mode == 1);
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {

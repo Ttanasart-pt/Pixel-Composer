@@ -15,27 +15,27 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	draw_scale  = 1;
 	init_size   = true;
 	
-	ta_editor   = new textArea(TEXTBOX_INPUT.text, function(val) { inputs[| 1].setValue(val); })
+	ta_editor   = new textArea(TEXTBOX_INPUT.text, function(val) { inputs[1].setValue(val); })
 	
-	inputs[| 0] = nodeValue_Color("Color", self, c_white )
+	inputs[0] = nodeValue_Color("Color", self, c_white )
 		.rejectArray();
 	
-	inputs[| 1] = nodeValue_Text("Text", self, "Text");
+	inputs[1] = nodeValue_Text("Text", self, "Text");
 	
-	inputs[| 2] = nodeValue_Enum_Scroll("Style", self,  2, [ "Header", "Sub header", "Normal" ])
+	inputs[2] = nodeValue_Enum_Scroll("Style", self,  2, [ "Header", "Sub header", "Normal" ])
 		.rejectArray();
 	
-	inputs[| 3] = nodeValue_Float("Alpha", self, 0.75)
+	inputs[3] = nodeValue_Float("Alpha", self, 0.75)
 		.setDisplay(VALUE_DISPLAY.slider)
 		.rejectArray();
 	
-	inputs[| 4] = nodeValue_Float("Line width", self, -1)
+	inputs[4] = nodeValue_Float("Line width", self, -1)
 		.rejectArray();
 	
-	inputs[| 5]  = nodeValue_Vector("Position", self, [ x, y ])
+	inputs[5]  = nodeValue_Vector("Position", self, [ x, y ])
 		.rejectArray();
 	
-	inputs[| 6] = nodeValue_Float("Line height", self, 0)
+	inputs[6] = nodeValue_Float("Line height", self, 0)
 		.rejectArray();
 		
 	input_display_list = [1, 
@@ -68,7 +68,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		x = _x;
 		y = _y;
 		
-		if(inputs[| 5].setValue([ _x, _y ]))
+		if(inputs[5].setValue([ _x, _y ]))
 			UNDO_HOLDING = true;
 	}
 	
@@ -410,18 +410,18 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var yy = y * _s + _y;
 		var jun;
 		
-		if(in_cache_len != array_length(inputDisplayList) || out_cache_len != ds_list_size(outputs)) {
+		if(in_cache_len != array_length(inputDisplayList) || out_cache_len != array_length(outputs)) {
 			refreshNodeDisplay();
 			
 			in_cache_len  = array_length(inputDisplayList);
-			out_cache_len = ds_list_size(outputs);
+			out_cache_len = array_length(outputs);
 		}
 			
 		var _iny = yy + (junction_draw_hei_y * 0.5) * _s;
 		
-		for( var i = 0, n = ds_list_size(inputs); i < n; i++ ) { 
-			inputs[| i].x = xx; 
-			inputs[| i].y = _iny; 
+		for( var i = 0, n = array_length(inputs); i < n; i++ ) { 
+			inputs[i].x = xx; 
+			inputs[i].y = _iny; 
 		}
 		
 		for(var i = 0; i < in_cache_len; i++) {
@@ -493,7 +493,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			}
 			draw_set_alpha(1);
 			
-			if(inputs[| 1].value_from == noone && PANEL_GRAPH.node_hovering == self && PANEL_GRAPH.getFocusingNode() == self) {
+			if(inputs[1].value_from == noone && PANEL_GRAPH.node_hovering == self && PANEL_GRAPH.getFocusingNode() == self) {
 				if(point_in_rectangle(mx, my, xx, yy, xx + ww + 8, yy + hh + 8) && DOUBLE_CLICK) {
 					ta_editor._current_text = txt;
 					ta_editor.activate();

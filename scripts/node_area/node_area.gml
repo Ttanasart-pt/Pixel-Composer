@@ -3,20 +3,20 @@ function Node_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	color = COLORS.node_blend_number;
 	setDimension(96, 48);
 	
-	inputs[| 0] = nodeValue_Vector("Position", self, [ 0, 0 ] )
+	inputs[0] = nodeValue_Vector("Position", self, [ 0, 0 ] )
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue_Vector("Span", self, [ 16, 16 ] )
+	inputs[1] = nodeValue_Vector("Span", self, [ 16, 16 ] )
 		.setVisible(true, true);
 	
-	inputs[| 2] = nodeValue_Enum_Scroll("Shape", self, AREA_SHAPE.rectangle, [ 
+	inputs[2] = nodeValue_Enum_Scroll("Shape", self, AREA_SHAPE.rectangle, [ 
 			new scrollItem("Rectangle", s_node_shape_rectangle, 0), 
 			new scrollItem("Elipse",	s_node_shape_circle,	0) 
 		]);
 	
-	inputs[| 3] = nodeValue_Enum_Scroll("Type", self, 0, [ "Center Span", "Two Point" ]);
+	inputs[3] = nodeValue_Enum_Scroll("Type", self, 0, [ "Center Span", "Two Point" ]);
 	
-	outputs[| 0] = nodeValue_Output("Area", self, VALUE_TYPE.float, [ 0, 0, 0, 0, AREA_SHAPE.rectangle ])
+	outputs[0] = nodeValue_Output("Area", self, VALUE_TYPE.float, [ 0, 0, 0, 0, AREA_SHAPE.rectangle ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	input_display_list = [ 3, 
@@ -47,8 +47,8 @@ function Node_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				case AREA_SHAPE.elipse :    draw_ellipse(px - ex, py - ey, px + ex, py + ey, true);   break;
 			}
 			
-			hv = inputs[| 0].drawOverlay(_hov, active, _x, _y, _s, _mx, _my, _snx, _sny); _hhh |= hv; _hov &= !hv;
-			hv = inputs[| 1].drawOverlay(_hov, active, px, py, _s, _mx, _my, _snx, _sny); _hhh |= hv; _hov &= !hv;
+			hv = inputs[0].drawOverlay(_hov, active, _x, _y, _s, _mx, _my, _snx, _sny); _hhh |= hv; _hov &= !hv;
+			hv = inputs[1].drawOverlay(_hov, active, px, py, _s, _mx, _my, _snx, _sny); _hhh |= hv; _hov &= !hv;
 			
 		} else if(_type == 1) {
 			var _v0 = current_data[0];
@@ -65,8 +65,8 @@ function Node_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				case AREA_SHAPE.elipse :    draw_ellipse(px, py, ex, ey, true);   break;
 			}
 			
-			hv = inputs[| 0].drawOverlay(_hov, active, _x, _y, _s, _mx, _my, _snx, _sny); _hhh |= hv; _hov &= !hv;
-			hv = inputs[| 1].drawOverlay(_hov, active, _x, _y, _s, _mx, _my, _snx, _sny); _hhh |= hv; _hov &= !hv;
+			hv = inputs[0].drawOverlay(_hov, active, _x, _y, _s, _mx, _my, _snx, _sny); _hhh |= hv; _hov &= !hv;
+			hv = inputs[1].drawOverlay(_hov, active, _x, _y, _s, _mx, _my, _snx, _sny); _hhh |= hv; _hov &= !hv;
 		}
 			
 		return _hhh;
@@ -79,14 +79,14 @@ function Node_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var _type = _data[3];
 		
 		if(_type == 0) {
-			inputs[| 0].setName("Position");
-			inputs[| 1].setName("Span");
+			inputs[0].setName("Position");
+			inputs[1].setName("Span");
 			
 			return [ _v0[0], _v0[1], _v1[0], _v1[1], _shap ];
 			 	
 		} else if(_type == 1) {
-			inputs[| 0].setName("Point 1");
-			inputs[| 1].setName("Point 2");
+			inputs[0].setName("Point 1");
+			inputs[1].setName("Point 2");
 			
 			var xc = ( _v0[0] + _v1[0] ) / 2;
 			var yc = ( _v0[1] + _v1[1] ) / 2;

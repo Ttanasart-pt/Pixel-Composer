@@ -7,38 +7,38 @@ function Node_FLIP_Domain(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	manual_ungroupable = false;
 	update_on_frame    = true;
 	
-	inputs[| 0] = nodeValue_Dimension(self);
+	inputs[0] = nodeValue_Dimension(self);
 	
-	inputs[| 1] = nodeValue_Int("Particle Size", self, 1);
+	inputs[1] = nodeValue_Int("Particle Size", self, 1);
 	
-	inputs[| 2] = nodeValue_Int("Particle Density", self, 10);
+	inputs[2] = nodeValue_Int("Particle Density", self, 10);
 	
-	inputs[| 3] = nodeValue_Float("FLIP Ratio", self, 0.8)
+	inputs[3] = nodeValue_Float("FLIP Ratio", self, 0.8)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 4] = nodeValue_Float("Resolve accelerator", self, 1.5);
+	inputs[4] = nodeValue_Float("Resolve accelerator", self, 1.5);
 	
-	inputs[| 5] = nodeValue_Int("Iteration", self, 8);
+	inputs[5] = nodeValue_Int("Iteration", self, 8);
 	
-	inputs[| 6] = nodeValue_Float("Damping", self, 0.8)
+	inputs[6] = nodeValue_Float("Damping", self, 0.8)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 7] = nodeValue_Float("Gravity", self, 5);
+	inputs[7] = nodeValue_Float("Gravity", self, 5);
 	
-	inputs[| 8] = nodeValue_Float("Time Step", self, 0.05);
+	inputs[8] = nodeValue_Float("Time Step", self, 0.05);
 	
-	inputs[| 9] = nodeValue_Toggle("Wall", self, 0b1111, { data:  [ "T", "B", "L", "R" ] });
+	inputs[9] = nodeValue_Toggle("Wall", self, 0b1111, { data:  [ "T", "B", "L", "R" ] });
 	
-	inputs[| 10] = nodeValue_Float("Viscosity", self, 0.)
+	inputs[10] = nodeValue_Float("Viscosity", self, 0.)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] });
 	
-	inputs[| 11] = nodeValue_Float("Friction", self, 0.)
+	inputs[11] = nodeValue_Float("Friction", self, 0.)
 		.setDisplay(VALUE_DISPLAY.slider);
 		
-	inputs[| 12] = nodeValue_Float("Wall Elasticity", self, 0.)
+	inputs[12] = nodeValue_Float("Wall Elasticity", self, 0.)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 2, 0.01 ] });
 	
-	inputs[| 13] = nodeValue_Rotation("Gravity Direction", self, 0);
+	inputs[13] = nodeValue_Rotation("Gravity Direction", self, 0);
 	
 	input_display_list = [
 		["Domain",	false], 0, 1, 9, 12, 
@@ -46,7 +46,7 @@ function Node_FLIP_Domain(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		["Physics", false], 7, 13, 10, 11, 
 	]
 	
-	outputs[| 0] = nodeValue_Output("Domain", self, VALUE_TYPE.fdomain, noone);
+	outputs[0] = nodeValue_Output("Domain", self, VALUE_TYPE.fdomain, noone);
 	
 	#region attributes
 		array_push(attributeEditors, "FLIP Solver");
@@ -99,7 +99,7 @@ function Node_FLIP_Domain(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	static step = function() {
 		var _col = getInputData(9);
 		
-		inputs[| 12].setVisible(_col);
+		inputs[12].setVisible(_col);
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
@@ -158,7 +158,7 @@ function Node_FLIP_Domain(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		domain.update();
 		
-		outputs[| 0].setValue(domain);
+		outputs[0].setValue(domain);
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { 

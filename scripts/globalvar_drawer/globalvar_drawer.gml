@@ -17,7 +17,7 @@ function globalvar_viewer_draw(xx, yy, ww, _m, focus, hover, _scrollPane, rx, ry
 	
 	if(var_editing) {
 		var del = noone;
-		if(ds_list_size(_node.inputs)) {
+		if(array_length(_node.inputs)) {
 			yy += ui(8);
 			hh += ui(8);
 		}
@@ -25,7 +25,7 @@ function globalvar_viewer_draw(xx, yy, ww, _m, focus, hover, _scrollPane, rx, ry
 		var wd_x  = xx;
 		var wd_w  = ww;
 		
-		var _len = ds_list_size(_node.inputs);
+		var _len = array_length(_node.inputs);
 		var _ins = var_drag_insert;
 		var_drag_insert = _len;
 		
@@ -35,7 +35,7 @@ function globalvar_viewer_draw(xx, yy, ww, _m, focus, hover, _scrollPane, rx, ry
 		var_drag_shift = lerp_float(var_drag_shift, (var_dragging != noone) * 48, 4);
 		
 		for( var j = 0; j < _len; j++ ) {
-			var _inpu = _node.inputs[| j];
+			var _inpu = _node.inputs[j];
 			var _edit = _inpu.editor;
 			
 			var _wd_x = wd_x + (var_drag_disp == j) * var_drag_shift;
@@ -96,11 +96,11 @@ function globalvar_viewer_draw(xx, yy, ww, _m, focus, hover, _scrollPane, rx, ry
 		
 		if(var_dragging != noone) {
 			if(var_drag_insert != var_dragging) {
-				var _inp = _node.inputs[| var_dragging];
-				ds_list_delete(_node.inputs, var_dragging);
+				var _inp = _node.inputs[var_dragging];
+				array_delete(_node.inputs, var_dragging, 1);
 				
 				if(var_drag_insert > var_dragging) var_drag_insert--;
-				ds_list_insert(_node.inputs, var_drag_insert, _inp);
+				array_insert(_node.inputs, var_drag_insert, _inp);
 				
 				var_dragging  = var_drag_insert;
 				var_drag_disp = var_drag_insert;
@@ -111,16 +111,16 @@ function globalvar_viewer_draw(xx, yy, ww, _m, focus, hover, _scrollPane, rx, ry
 		}
 					
 		if(del != noone)
-			ds_list_delete(_node.inputs, del);
+			array_delete(_node.inputs, del, 1);
 	} else {
-		for( var j = 0; j < ds_list_size(_node.inputs); j++ ) {
-			var widg    = drawWidget(xx, yy, ww, _m, _node.inputs[| j], true, focus, hover, _scrollPane, rx, ry);
+		for( var j = 0; j < array_length(_node.inputs); j++ ) {
+			var widg    = drawWidget(xx, yy, ww, _m, _node.inputs[j], true, focus, hover, _scrollPane, rx, ry);
 			var widH    = widg[0];
 			var mbRight = widg[1];
 			var widHov  = widg[2];
 						
 			if(hover && point_in_rectangle(_m[0], _m[1], xx, yy, xx + ww, yy + widH))
-				_HOVERING_ELEMENT = _node.inputs[| j];
+				_HOVERING_ELEMENT = _node.inputs[j];
 			
 			yy += lb_h + widH + padd;
 			hh += lb_h + widH + padd;

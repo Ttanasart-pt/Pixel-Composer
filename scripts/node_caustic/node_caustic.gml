@@ -2,21 +2,21 @@ function Node_Caustic(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y, _g
 	name   = "Caustic";
 	shader = sh_water_caustic;
 	
-	inputs[| 1] = nodeValue_Vector("Position", self, [ 0, 0 ])
+	inputs[1] = nodeValue_Vector("Position", self, [ 0, 0 ])
 		.setUnitRef(function(index) { return getDimension(index); });
 		addShaderProp(SHADER_UNIFORM.float, "position");
 		
-	inputs[| 2] = nodeValue_Vector("Scale", self, [ 4, 4 ]);
+	inputs[2] = nodeValue_Vector("Scale", self, [ 4, 4 ]);
 		addShaderProp(SHADER_UNIFORM.float, "scale");
 				
-	inputs[| 3] = nodeValue_Float("Seed", self, seed_random(6))
-		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 3].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
+	inputs[3] = nodeValue_Float("Seed", self, seed_random(6))
+		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[3].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 		addShaderProp(SHADER_UNIFORM.float, "seed");
 				
-	inputs[| 4] = nodeValue_Float("Progress", self, 0)
+	inputs[4] = nodeValue_Float("Progress", self, 0)
 		addShaderProp(SHADER_UNIFORM.float, "progress");
 				
-	inputs[| 5] = nodeValue_Float("Detail", self, 1.24)
+	inputs[5] = nodeValue_Float("Detail", self, 1.24)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 2, 0.01 ] });
 		addShaderProp(SHADER_UNIFORM.float, "detail");
 			

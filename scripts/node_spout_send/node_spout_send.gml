@@ -1,11 +1,11 @@
 function Node_Spout_Send(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name	= "Spout Send";
 	
-	inputs[| 0] = nodeValue_Text("Sender name", self, "PixelComposer");
+	inputs[0] = nodeValue_Text("Sender name", self, "PixelComposer");
 	
-	inputs[| 1] = nodeValue_Surface("Surface", self);
+	inputs[1] = nodeValue_Surface("Surface", self);
 	
-	outputs[| 0] = nodeValue_Output("Surface", self, VALUE_TYPE.surface, noone)
+	outputs[0] = nodeValue_Output("Surface", self, VALUE_TYPE.surface, noone)
 		.setVisible(false);
 	
 	spoutIndex = spoutSenderInit();
@@ -19,8 +19,8 @@ function Node_Spout_Send(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	static update = function() { #region
 		if(spoutIndex == noone) return;
 		
-		var _name = inputs[| 0].getValue();
-		var _surf = inputs[| 1].getValue();
+		var _name = inputs[0].getValue();
+		var _surf = inputs[1].getValue();
 		
 		if(!is_surface(_surf)) return;
 		
@@ -33,6 +33,6 @@ function Node_Spout_Send(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		spoutSetSenderName(spoutIndex, _name);
 		spoutSendPixels(spoutIndex, buffer_get_address(surf_buff), _sw, _sh);
 		
-		outputs[| 0].setValue(_surf);
+		outputs[0].setValue(_surf);
 	} #endregion
 }

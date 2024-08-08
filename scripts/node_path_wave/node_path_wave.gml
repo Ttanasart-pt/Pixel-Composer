@@ -2,29 +2,29 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	name = "Wave Path";
 	setDimension(96, 48);;
 	
-	inputs[| 0] = nodeValue_PathNode("Path", self, noone)
+	inputs[0] = nodeValue_PathNode("Path", self, noone)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue_Range("Frequency", self, [ 4, 4 ], { linked : true });
+	inputs[1] = nodeValue_Range("Frequency", self, [ 4, 4 ], { linked : true });
 	
-	inputs[| 2] = nodeValue_Range("Amplitude", self, [ 4, 4 ], { linked : true });
+	inputs[2] = nodeValue_Range("Amplitude", self, [ 4, 4 ], { linked : true });
 	
-	inputs[| 3] = nodeValue_Range("Shift", self, [ 0, 0 ], { linked : true });
+	inputs[3] = nodeValue_Range("Shift", self, [ 0, 0 ], { linked : true });
 	
-	inputs[| 4] = nodeValue_Bool("Smooth", self, false);
+	inputs[4] = nodeValue_Bool("Smooth", self, false);
 	
-	inputs[| 5] = nodeValue_Float("Seed", self, seed_random(6))
-		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 5].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
+	inputs[5] = nodeValue_Float("Seed", self, seed_random(6))
+		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[5].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
-	inputs[| 6] = nodeValue_Bool("Wiggle", self, false);
+	inputs[6] = nodeValue_Bool("Wiggle", self, false);
 	
-	inputs[| 7] = nodeValue_Range("Wiggle Amplitude", self, [ -2, 2 ]);
+	inputs[7] = nodeValue_Range("Wiggle Amplitude", self, [ -2, 2 ]);
 	
-	inputs[| 8] = nodeValue_Float("Wiggle Frequency", self, 8);
+	inputs[8] = nodeValue_Float("Wiggle Frequency", self, 8);
 	
-	inputs[| 9] = nodeValue("Amplitude over length", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11);
+	inputs[9] = nodeValue("Amplitude over length", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11);
 	
-	outputs[| 0] = nodeValue_Output("Path", self, VALUE_TYPE.pathnode, self);
+	outputs[0] = nodeValue_Output("Path", self, VALUE_TYPE.pathnode, self);
 	
 	input_display_list = [ 5, 
 		["Path",	 true], 0,
@@ -196,7 +196,7 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		amp_curve = new curveMap(_ampc, 128);
 		
-		outputs[| 0].setValue(self);
+		outputs[0].setValue(self);
 	} #endregion
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region

@@ -13,14 +13,14 @@ function Node_Struct(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		var amo = attributes.size;
 		if(buttonTextIconInstant(attributes.size > 0, THEME.button_hide, _x + _w - bw, _y + ui(8), bw, bh, _m, _focus, _hover, "", THEME.minus, __txt("Remove"), COLORS._main_value_negative) == 2)
-			deleteInput(ds_list_size(inputs) - data_length);
+			deleteInput(array_length(inputs) - data_length);
 		
 		return _h;
 	}); #endregion
 	
 	input_display_list = [ size_adjust_tool, ];
 	
-	outputs[| 0] = nodeValue_Output("Struct", self, VALUE_TYPE.struct, {});
+	outputs[0] = nodeValue_Output("Struct", self, VALUE_TYPE.struct, {});
 	
 	#region //////////////////////////////// Dynamic IO ////////////////////////////////
 	
@@ -44,7 +44,7 @@ function Node_Struct(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		setDynamicInput(2, false);
 		
 		static addInput = function() {
-			var index = ds_list_size(inputs);
+			var index = array_length(inputs);
 			
 			attributes.size++;
 			createNewInput();
@@ -52,7 +52,7 @@ function Node_Struct(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			if(!UNDO_HOLDING) {
 				var _inputs = array_create(data_length);
 				for(var i = 0; i < data_length; i++)
-					_inputs[i] = inputs[| index + i];
+					_inputs[i] = inputs[index + i];
 				
 				recordAction(ACTION_TYPE.custom, function(data, undo) {
 					if(undo) deleteInput(data.index);
@@ -67,7 +67,7 @@ function Node_Struct(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			if(!UNDO_HOLDING) {
 				var _inputs = array_create(data_length);
 				for(var i = 0; i < data_length; i++)
-					_inputs[i] = inputs[| index + i];
+					_inputs[i] = inputs[index + i];
 				
 				recordAction(ACTION_TYPE.custom, function(data, undo) {
 					if(undo) insertInput(data.index, data.inputs);
@@ -77,7 +77,7 @@ function Node_Struct(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			
 			attributes.size--;
 			for(var i = data_length - 1; i >= 0; i--)
-				ds_list_delete(inputs, index + i);
+				array_delete(inputs, index + i, 1);
 			
 			onInputResize();
 		}
@@ -86,7 +86,7 @@ function Node_Struct(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			attributes.size++;
 			
 			for(var i = 0; i < data_length; i++)
-				ds_list_insert(inputs, index + i, _inputs[i]);
+				array_insert(inputs, index + i, _inputs[i]);
 			
 			onInputResize();
 		}
@@ -94,8 +94,8 @@ function Node_Struct(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		static refreshDynamicInput = function() {
 			input_display_list = array_clone(input_display_list_raw);
 			
-			for( var i = 0; i < ds_list_size(inputs); i++ ) {
-				inputs[| i].index = i;
+			for( var i = 0; i < array_length(inputs); i++ ) {
+				inputs[i].index = i;
 				array_push(input_display_list, i);
 			}
 			
@@ -109,14 +109,14 @@ function Node_Struct(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		if(index < 0) return;
 		
 		if(safe_mod(index - input_fix_len, data_length) == 0) {
-			inputs[| index + 1].setVisible(false, true);
-			inputs[| index + 1].name = $"{getInputData(index)} value";
+			inputs[index + 1].setVisible(false, true);
+			inputs[index + 1].name = $"{getInputData(index)} value";
 		}
 	}
 	
 	static step = function() { 
-		for(var i = input_fix_len; i < ds_list_size(inputs); i += data_length) {
-			var inp  = inputs[| i + 1];
+		for(var i = input_fix_len; i < array_length(inputs); i += data_length) {
+			var inp  = inputs[i + 1];
 			var typ  = inp.value_from == noone? VALUE_TYPE.any : inp.value_from.type;
 			inp.setType(typ);
 		}
@@ -125,10 +125,10 @@ function Node_Struct(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	static update = function() { 
 		var str = {};
 		
-		for(var i = input_fix_len; i < ds_list_size(inputs); i += data_length) {
+		for(var i = input_fix_len; i < array_length(inputs); i += data_length) {
 			var key = getInputData(i + 0);
 			var val = getInputData(i + 1);
-			var frm = inputs[| i + 1].value_from;
+			var frm = inputs[i + 1].value_from;
 			
 			if(key == "") continue;
 			
@@ -140,7 +140,7 @@ function Node_Struct(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				str[$ key] = val;
 		}
 		
-		outputs[| 0].setValue(str);
+		outputs[0].setValue(str);
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
@@ -148,9 +148,9 @@ function Node_Struct(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		draw_set_text(f_sdf, fa_left, fa_center, COLORS._main_text);
 		
-		for(var i = input_fix_len; i < ds_list_size(inputs); i += data_length) {
+		for(var i = input_fix_len; i < array_length(inputs); i += data_length) {
 			var key = getInputData(i + 0, "");
-			var val = inputs[| i + 1];
+			var val = inputs[i + 1];
 			if(!val.visible) continue;
 			
 			var _ss = min(_s * .4, string_scale(key, bbox.w - 12 * _s, 9999));

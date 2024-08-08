@@ -22,27 +22,27 @@ function Node_FLIP_Apply_Force(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	manual_ungroupable = false;
 	
-	inputs[| 0] = nodeValue_Fdomain("Domain", self, noone )
+	inputs[0] = nodeValue_Fdomain("Domain", self, noone )
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue_Vector("Position", self, [ 0, 0 ] )
+	inputs[1] = nodeValue_Vector("Position", self, [ 0, 0 ] )
 		.setUnitRef(function(index) { return getDimension(); });
 	
-	inputs[| 2] = nodeValue_Float("Radius", self, 4 )	
+	inputs[2] = nodeValue_Float("Radius", self, 4 )	
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] });
 	
-	inputs[| 3] = nodeValue_Enum_Scroll("Shape", self,  0 , [ new scrollItem("Circle", s_node_shape_circle, 0), new scrollItem("Rectangle", s_node_shape_rectangle, 0), ]);
+	inputs[3] = nodeValue_Enum_Scroll("Shape", self,  0 , [ new scrollItem("Circle", s_node_shape_circle, 0), new scrollItem("Rectangle", s_node_shape_rectangle, 0), ]);
 		
-	inputs[| 4] = nodeValue_Vector("Size", self, [ 4, 4 ] );
+	inputs[4] = nodeValue_Vector("Size", self, [ 4, 4 ] );
 		
-	inputs[| 5] = nodeValue_Surface("Texture", self)
+	inputs[5] = nodeValue_Surface("Texture", self)
 	
 	input_display_list = [ 0, 
 		["Collider",	false], 3, 2, 4, 
 		["Obstracle",	false], 1, 5, 
 	]
 	
-	outputs[| 0] = nodeValue_Output("Domain", self, VALUE_TYPE.fdomain, noone );
+	outputs[0] = nodeValue_Output("Domain", self, VALUE_TYPE.fdomain, noone );
 	
 	obstracle = new FLIP_Obstracle();
 	index     = 0;
@@ -81,22 +81,22 @@ function Node_FLIP_Apply_Force(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		     if(_shp == 0) draw_circle(_px, _py, _r, true);
 		else if(_shp == 1) draw_rectangle(_px - _w, _py - _h, _px + _w, _py + _h, true);
 		
-		if(inputs[| 1].drawOverlay(hover, active,  _x,  _y, _s, _mx, _my, _snx, _sny)) active = false;
+		if(inputs[1].drawOverlay(hover, active,  _x,  _y, _s, _mx, _my, _snx, _sny)) active = false;
 		
 	}
 	
 	static step = function() {
 		var _shp = getInputData(3);
 		
-		inputs[| 2].setVisible(_shp == 0);
-		inputs[| 4].setVisible(_shp == 1);
+		inputs[2].setVisible(_shp == 0);
+		inputs[4].setVisible(_shp == 1);
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
 		var domain = getInputData(0);
 		if(!instance_exists(domain)) return;
 		
-		outputs[| 0].setValue(domain);
+		outputs[0].setValue(domain);
 		
 		var _posit = getInputData(1);
 		var _rad   = getInputData(2);

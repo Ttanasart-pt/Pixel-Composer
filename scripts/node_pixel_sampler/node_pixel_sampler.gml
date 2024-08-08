@@ -1,28 +1,28 @@
 function Node_Pixel_Sampler(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Pixel Sampler";
 	
-	inputs[| 0] = nodeValue_Surface("Base Texture", self);
+	inputs[0] = nodeValue_Surface("Base Texture", self);
 	
-	inputs[| 1] = nodeValue_Enum_Button("Sample Mode", self,  0 , [ "Keep Size", "Expand" ]);
+	inputs[1] = nodeValue_Enum_Button("Sample Mode", self,  0 , [ "Keep Size", "Expand" ]);
 	
-	inputs[| 2] = nodeValue_Enum_Button("Match Mode", self,  0 , [ "Brightness", "RGB", "Hue" ]);
+	inputs[2] = nodeValue_Enum_Button("Match Mode", self,  0 , [ "Brightness", "RGB", "Hue" ]);
 		
-	inputs[| 3] = nodeValue_Surface("Surfaces", self, [ noone ])
+	inputs[3] = nodeValue_Surface("Surfaces", self, [ noone ])
 		.setArrayDepth(1);
 	
-	inputs[| 4] = nodeValue_Gradient("Gradient", self, new gradientObject([ cola(c_black), cola(c_white) ]))
+	inputs[4] = nodeValue_Gradient("Gradient", self, new gradientObject([ cola(c_black), cola(c_white) ]))
 		.setMappable(5);
 		
-	inputs[| 5] = nodeValueMap("Gradient map", self);
+	inputs[5] = nodeValueMap("Gradient map", self);
 	
-	inputs[| 6] = nodeValueGradientRange("Gradient map range", self, inputs[| 4]);
+	inputs[6] = nodeValueGradientRange("Gradient map range", self, inputs[4]);
 	
-	inputs[| 7] = nodeValue_Enum_Scroll("Color Blending", self,  0 , [ "None", "Multiply" ]);
+	inputs[7] = nodeValue_Enum_Scroll("Color Blending", self,  0 , [ "None", "Multiply" ]);
 	
-	inputs[| 8] = nodeValue_Float("Blending Intensity", self, 1 )
+	inputs[8] = nodeValue_Float("Blending Intensity", self, 1 )
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
 		["Base Texture", false], 0, 1, 2, 
@@ -35,7 +35,7 @@ function Node_Pixel_Sampler(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	temp_surface = [ noone ];
 	
 	static step = function() {
-		inputs[| 4].mappableStep();
+		inputs[4].mappableStep();
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
@@ -106,7 +106,7 @@ function Node_Pixel_Sampler(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			shader_set_i("amount",         _inps);
 			shader_set_i("sampleMode",     _samp);
 			shader_set_i("matchMode",      _mach);
-			shader_set_gradient(_data[4], _data[5], _data[6], inputs[| 4]);
+			shader_set_gradient(_data[4], _data[5], _data[6], inputs[4]);
 			
 			shader_set_i("blendMode",      _blnd);
 			shader_set_f("blendIntensity", _bint);

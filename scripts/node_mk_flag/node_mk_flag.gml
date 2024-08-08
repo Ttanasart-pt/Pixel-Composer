@@ -2,37 +2,37 @@ function Node_MK_Flag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	name = "MK Flag";
 	update_on_frame = true;
 	
-	inputs[| 0] = nodeValue_Dimension(self);
+	inputs[0] = nodeValue_Dimension(self);
 	
-	inputs[| 1] = nodeValue_Surface("Texture", self);
+	inputs[1] = nodeValue_Surface("Texture", self);
 	
-	inputs[| 2] = nodeValue_Vector("Position", self, [ 0, 0 ]);
+	inputs[2] = nodeValue_Vector("Position", self, [ 0, 0 ]);
 	
-	inputs[| 3] = nodeValue_Enum_Button("Pin side", self,  0, [ "Left", "Right", "Up", "Down" ]);
+	inputs[3] = nodeValue_Enum_Button("Pin side", self,  0, [ "Left", "Right", "Up", "Down" ]);
 	
-	inputs[| 4] = nodeValue_Int("Subdivision", self, 8);
+	inputs[4] = nodeValue_Int("Subdivision", self, 8);
 	
-	inputs[| 5] = nodeValue_Float("Wind speed", self, 2);
+	inputs[5] = nodeValue_Float("Wind speed", self, 2);
 	
-	inputs[| 6] = nodeValue_Float("Wave width", self, 1)
+	inputs[6] = nodeValue_Float("Wave width", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 4, 0.1] });
 	
-	inputs[| 7] = nodeValue_Float("Wave size", self, 0.2)
+	inputs[7] = nodeValue_Float("Wave size", self, 0.2)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 8] = nodeValue_Float("Phase", self, 0.1)
+	inputs[8] = nodeValue_Float("Phase", self, 0.1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 9] = nodeValue_Float("Clip", self, 0.2)
+	inputs[9] = nodeValue_Float("Clip", self, 0.2)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 10] = nodeValue_Float("Shadow", self, 0.2)
+	inputs[10] = nodeValue_Float("Shadow", self, 0.2)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 11] = nodeValue_Float("Shadow threshold", self, 0)
+	inputs[11] = nodeValue_Float("Shadow threshold", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-0.1, 0.1, 0.001] });
 	
-	inputs[| 12] = nodeValue_Bool("Invert shadow", self, 0);
+	inputs[12] = nodeValue_Bool("Invert shadow", self, 0);
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 0, 
 		["Flag",	    false], 4, 1, 2, 3, 
@@ -40,7 +40,7 @@ function Node_MK_Flag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		["Rendering",	false], 10, 11, 12, 
 	];
 	
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	attributes.iteration = 4;
 	array_push(attributeEditors, "Verlet solver");
@@ -180,7 +180,7 @@ function Node_MK_Flag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _hov = false;
-		var  hv  = inputs[| 2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); active &= !hv; _hov |= hv;
+		var  hv  = inputs[2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); active &= !hv; _hov |= hv;
 		
 		//for( var i = 0, n = array_length(links); i < n; i++ ) {
 		//	var _l = links[i];

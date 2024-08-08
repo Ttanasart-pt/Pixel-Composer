@@ -4,25 +4,25 @@ function Node_Argument(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	
 	draw_padding = 8;
 	
-	inputs[| 0] = nodeValue_Text("Tag", self, "");
+	inputs[0] = nodeValue_Text("Tag", self, "");
 	
-	inputs[| 1] = nodeValue_Enum_Scroll("Type", self, 0, [ "String", "Number" ]);
+	inputs[1] = nodeValue_Enum_Scroll("Type", self, 0, [ "String", "Number" ]);
 	
-	inputs[| 2] = nodeValue_Text("Default value", self, "");
+	inputs[2] = nodeValue_Text("Default value", self, "");
 	
-	outputs[| 0] = nodeValue_Output("Value", self, VALUE_TYPE.text, "");
+	outputs[0] = nodeValue_Output("Value", self, VALUE_TYPE.text, "");
 	
 	static step = function() { #region
 		var typ = getInputData(1);
 		
 		switch(typ) {
 			case 0 : 
-				inputs[| 2].setType(VALUE_TYPE.text);  
-				outputs[| 0].setType(VALUE_TYPE.text);  
+				inputs[2].setType(VALUE_TYPE.text);  
+				outputs[0].setType(VALUE_TYPE.text);  
 				break;
 			case 1 : 
-				inputs[| 2].setType(VALUE_TYPE.float);  
-				outputs[| 0].setType(VALUE_TYPE.float); 
+				inputs[2].setType(VALUE_TYPE.float);  
+				outputs[0].setType(VALUE_TYPE.float); 
 				break;
 		}
 	} #endregion
@@ -34,8 +34,8 @@ function Node_Argument(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		var val = struct_try_get(PROGRAM_ARGUMENTS, tag, def);
 		
 		switch(typ) {
-			case 0 : outputs[| 0].setValue(val);			break;
-			case 1 : outputs[| 0].setValue(toNumber(val));	break;
+			case 0 : outputs[0].setValue(val);			break;
+			case 1 : outputs[0].setValue(toNumber(val));	break;
 		}
 	} #endregion
 	

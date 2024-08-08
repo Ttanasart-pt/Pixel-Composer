@@ -1,61 +1,61 @@
 function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Stripe";
 	
-	inputs[| 0] = nodeValue_Dimension(self);
+	inputs[0] = nodeValue_Dimension(self);
 	
-	inputs[| 1] = nodeValue_Float("Amount", self, 1)
+	inputs[1] = nodeValue_Float("Amount", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] })
 		.setMappable(11);
 	
-	inputs[| 2] = nodeValue_Rotation("Angle", self, 0)
+	inputs[2] = nodeValue_Rotation("Angle", self, 0)
 		.setMappable(12);
 	
-	inputs[| 3] = nodeValue_Enum_Button("Type", self,  0, [ "Solid", "Smooth", "AA" ]);
+	inputs[3] = nodeValue_Enum_Button("Type", self,  0, [ "Solid", "Smooth", "AA" ]);
 	
-	inputs[| 4] = nodeValue_Vector("Position", self, [ 0, 0 ] )
+	inputs[4] = nodeValue_Vector("Position", self, [ 0, 0 ] )
 		.setUnitRef(function(index) { return getDimension(index); });
 		
-	inputs[| 5] = nodeValue_Float("Random", self, 0)
+	inputs[5] = nodeValue_Float("Random", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(13);
 		
-	inputs[| 6] = nodeValue_Enum_Button("Coloring", self,  0, [ "Alternate", "Palette", "Random" ]);
+	inputs[6] = nodeValue_Enum_Button("Coloring", self,  0, [ "Alternate", "Palette", "Random" ]);
 	
-	inputs[| 7] = nodeValue_Gradient("Colors", self, new gradientObject(cola(c_white)))
+	inputs[7] = nodeValue_Gradient("Colors", self, new gradientObject(cola(c_white)))
 		.setMappable(15);
 	
-	inputs[| 8] = nodeValue_Color("Color 1", self, c_white);
+	inputs[8] = nodeValue_Color("Color 1", self, c_white);
 	
-	inputs[| 9] = nodeValue_Color("Color 2", self, c_black);
+	inputs[9] = nodeValue_Color("Color 2", self, c_black);
 	
-	inputs[| 10] = nodeValue_Float("Strip ratio", self, 0.5)
+	inputs[10] = nodeValue_Float("Strip ratio", self, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(14);
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 11] = nodeValueMap("Amount map", self);
+	inputs[11] = nodeValueMap("Amount map", self);
 	
-	inputs[| 12] = nodeValueMap("Angle map", self);
+	inputs[12] = nodeValueMap("Angle map", self);
 	
-	inputs[| 13] = nodeValueMap("Random map", self);
+	inputs[13] = nodeValueMap("Random map", self);
 	
-	inputs[| 14] = nodeValueMap("Ratio map", self);
+	inputs[14] = nodeValueMap("Ratio map", self);
 	
-	inputs[| 15] = nodeValueMap("Gradient map", self);
+	inputs[15] = nodeValueMap("Gradient map", self);
 	
-	inputs[| 16] = nodeValueGradientRange("Gradient map range", self, inputs[| 7]);
+	inputs[16] = nodeValueGradientRange("Gradient map range", self, inputs[7]);
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 17] = nodeValue_Float("Progress", self, 0.5)
+	inputs[17] = nodeValue_Float("Progress", self, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider);
 		
-	inputs[| 18] = nodeValue_Palette("Colors", self, [ c_black, c_white ] );
+	inputs[18] = nodeValue_Palette("Colors", self, [ c_black, c_white ] );
 		
-	inputs[| 19] = nodeValueSeed(self, VALUE_TYPE.float);
+	inputs[19] = nodeValueSeed(self, VALUE_TYPE.float);
 		
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 19, 
 		["Output",	true],	0,  
@@ -73,9 +73,9 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var py   = _y + pos[1] * _s;
 		var _hov = false;
 		
-		var hv = inputs[| 4].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);						active &= !hv; _hov |= hv;
-		var hv = inputs[| 2].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny);						active &= !hv; _hov |= hv;
-		var hv = inputs[| 16].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, current_data[0]);	active &= !hv; _hov |= hv;
+		var hv = inputs[4].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);						active &= !hv; _hov |= hv;
+		var hv = inputs[2].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny);						active &= !hv; _hov |= hv;
+		var hv = inputs[16].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, current_data[0]);	active &= !hv; _hov |= hv;
 		
 		return _hov;
 	}
@@ -83,16 +83,16 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	static step = function() {
 		var _clr = getSingleValue(6);
 		
-		inputs[|  1].mappableStep();
-		inputs[|  2].mappableStep();
-		inputs[|  5].mappableStep();
-		inputs[|  7].mappableStep();
-		inputs[| 10].mappableStep();
+		inputs[ 1].mappableStep();
+		inputs[ 2].mappableStep();
+		inputs[ 5].mappableStep();
+		inputs[ 7].mappableStep();
+		inputs[10].mappableStep();
 		
-		inputs[|  8].setVisible(_clr == 0);
-		inputs[|  9].setVisible(_clr == 0);
-		inputs[| 18].setVisible(_clr == 1);
-		inputs[|  7].setVisible(_clr == 2);
+		inputs[ 8].setVisible(_clr == 0);
+		inputs[ 9].setVisible(_clr == 0);
+		inputs[18].setVisible(_clr == 1);
+		inputs[ 7].setVisible(_clr == 2);
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
@@ -116,10 +116,10 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			shader_set_i("blend",		 _bnd);
 			shader_set_f("progress",	 _prg);
 			
-			shader_set_f_map("amount",		 _data[ 1], _data[11], inputs[|  1]);
-			shader_set_f_map("angle",		 _data[ 2], _data[12], inputs[|  2]);
-			shader_set_f_map("randomAmount", _data[ 5], _data[13], inputs[|  5]);
-			shader_set_f_map("ratio",        _data[10], _data[14], inputs[| 10]);
+			shader_set_f_map("amount",		 _data[ 1], _data[11], inputs[ 1]);
+			shader_set_f_map("angle",		 _data[ 2], _data[12], inputs[ 2]);
+			shader_set_f_map("randomAmount", _data[ 5], _data[13], inputs[ 5]);
+			shader_set_f_map("ratio",        _data[10], _data[14], inputs[10]);
 			
 			shader_set_i("coloring",	_color);
 			
@@ -127,7 +127,7 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			shader_set_color("color1", _clr1);
 			shader_set_palette(_pal);
 			
-			shader_set_gradient(_data[7], _data[15], _data[16], inputs[| 7]);
+			shader_set_gradient(_data[7], _data[15], _data[16], inputs[7]);
 			
 			draw_sprite_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], 0, c_white, 1);
 		surface_reset_shader();

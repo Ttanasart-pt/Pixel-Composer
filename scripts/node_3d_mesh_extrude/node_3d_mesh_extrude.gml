@@ -3,25 +3,25 @@ function Node_3D_Mesh_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 	
 	object_class = __3dSurfaceExtrude;
 	
-	inputs[| in_mesh + 0] = nodeValue_D3Material("Front Surface", self, new __d3dMaterial())
+	inputs[in_mesh + 0] = nodeValue_D3Material("Front Surface", self, new __d3dMaterial())
 		.setVisible(true, true);
 	
-	inputs[| in_mesh + 1] = nodeValue_Surface("Front Height", self);
+	inputs[in_mesh + 1] = nodeValue_Surface("Front Height", self);
 	
-	inputs[| in_mesh + 2] = nodeValue_Bool("Smooth", self, false)
+	inputs[in_mesh + 2] = nodeValue_Bool("Smooth", self, false)
 	
-	inputs[| in_mesh + 3] = nodeValue_Bool("Always update", self, false);
+	inputs[in_mesh + 3] = nodeValue_Bool("Always update", self, false);
 	
-	inputs[| in_mesh + 4] = nodeValue_Bool("Double Side", self, false);
+	inputs[in_mesh + 4] = nodeValue_Bool("Double Side", self, false);
 	
-	inputs[| in_mesh + 5] = nodeValue_D3Material("Back Surface", self, new __d3dMaterial())
+	inputs[in_mesh + 5] = nodeValue_D3Material("Back Surface", self, new __d3dMaterial())
 		.setVisible(true, true);
 	
-	inputs[| in_mesh + 6] = nodeValue_Surface("Back Height", self);
+	inputs[in_mesh + 6] = nodeValue_Surface("Back Height", self);
 	
-	inputs[| in_mesh + 7] = nodeValue_Slider_Range("Front Height Level", self, [ 0, 1 ]);
+	inputs[in_mesh + 7] = nodeValue_Slider_Range("Front Height Level", self, [ 0, 1 ]);
 	
-	inputs[| in_mesh + 8] = nodeValue_Slider_Range("Back Height Level", self, [ 0, 1 ]);
+	inputs[in_mesh + 8] = nodeValue_Slider_Range("Back Height Level", self, [ 0, 1 ]);
 	
 	input_display_list = [ in_mesh + 3,
 		__d3d_input_list_mesh,
@@ -45,8 +45,8 @@ function Node_3D_Mesh_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 	static step = function() {
 		var _double = getSingleValue(in_mesh + 4);
 		
-		inputs[| in_mesh + 5].setVisible(true, _double);
-		inputs[| in_mesh + 6].setVisible(true, _double);
+		inputs[in_mesh + 5].setVisible(true, _double);
+		inputs[in_mesh + 6].setVisible(true, _double);
 	}
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) { #region

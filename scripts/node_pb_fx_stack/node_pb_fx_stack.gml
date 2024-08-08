@@ -1,17 +1,17 @@
 function Node_PB_Fx_Stack(_x, _y, _group = noone) : Node_PB_Fx(_x, _y, _group) constructor {
 	name = "Stack";
 	
-	inputs[| 1] = nodeValue_Int("Amount", self, 4 );
+	inputs[1] = nodeValue_Int("Amount", self, 4 );
 	
-	inputs[| 2] = nodeValue_Enum_Button("Direction", self,  0 , array_create(4, THEME.obj_direction) );
+	inputs[2] = nodeValue_Enum_Button("Direction", self,  0 , array_create(4, THEME.obj_direction) );
 	
-	inputs[| 3] = nodeValue_Color("Color", self, c_white );
+	inputs[3] = nodeValue_Color("Color", self, c_white );
 	
-	inputs[| 4] = nodeValue_Bool("Highlight", self, false );
+	inputs[4] = nodeValue_Bool("Highlight", self, false );
 	
-	inputs[| 5] = nodeValue_Color("Highlight Color", self, c_white );
+	inputs[5] = nodeValue_Color("Highlight Color", self, c_white );
 	
-	inputs[| 6] = nodeValue_Bool("Invert", self, false );
+	inputs[6] = nodeValue_Bool("Invert", self, false );
 	
 	input_display_list = [ 0,
 		["Effect",	false], 1, 2, 6, 3, 4, 5, 
@@ -22,7 +22,7 @@ function Node_PB_Fx_Stack(_x, _y, _group = noone) : Node_PB_Fx(_x, _y, _group) c
 		
 		var _high = current_data[4];
 		
-		inputs[| 5].setVisible(_high);
+		inputs[5].setVisible(_high);
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {

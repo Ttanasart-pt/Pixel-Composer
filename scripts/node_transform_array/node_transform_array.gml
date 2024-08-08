@@ -4,16 +4,16 @@ function Node_Transform_Array(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	
 	setDimension(96, 48);
 	
-	inputs[| 0] = nodeValue_Vector("Postion", self, [ 0, 0 ] )
+	inputs[0] = nodeValue_Vector("Postion", self, [ 0, 0 ] )
 		.setVisible(true, true);
 		
-	inputs[| 1] = nodeValue_Rotation("Rotation", self, 0)
+	inputs[1] = nodeValue_Rotation("Rotation", self, 0)
 		.setVisible(true, true);
 	
-	inputs[| 2] = nodeValue_Vector("Scale", self, [ 1, 1 ] )
+	inputs[2] = nodeValue_Vector("Scale", self, [ 1, 1 ] )
 		.setVisible(true, true);
 	
-	outputs[| 0] = nodeValue_Output("Transform", self, VALUE_TYPE.float, [ 0, 0, 0, 1, 1 ])
+	outputs[0] = nodeValue_Output("Transform", self, VALUE_TYPE.float, [ 0, 0, 0, 1, 1 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
@@ -23,8 +23,8 @@ function Node_Transform_Array(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 		var px  = _x + pos[0] * _s;
 		var py  = _y + pos[1] * _s;
 		
-		inputs[| 0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-		inputs[| 1].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny);
+		inputs[0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		inputs[1].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny);
 	}
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) {  

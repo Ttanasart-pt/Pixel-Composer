@@ -4,9 +4,9 @@ function __Node_Base(x, y) constructor {
 	
 	node_id = 0;
 	
-	display_name = "";
-	inputs  = ds_list_create();
-	outputs = ds_list_create();
+	display_name    = "";
+	inputs          = [];
+	outputs         = [];
 	input_value_map = {};
 	
 	active_index	= -1;
@@ -31,8 +31,8 @@ function __Node_Base(x, y) constructor {
 			var _pre_anim = is_anim_timeline;
 			var _cur_anim = anim_timeline;
 		
-			for( var i = 0, n = ds_list_size(inputs); i < n; i++ ) {
-				var _inp = inputs[| i];
+			for( var i = 0, n = array_length(inputs); i < n; i++ ) {
+				var _inp = inputs[i];
 				if(_inp.is_anim && _inp.value_from == noone) {
 					_cur_anim = true;
 					break;

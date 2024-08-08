@@ -3,12 +3,12 @@ function Node_Struct_Get(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	setDimension(96, 48);
 	
-	inputs[| 0] = nodeValue_Struct("Struct", self, {})
+	inputs[0] = nodeValue_Struct("Struct", self, {})
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue_Text("Key", self, "");
+	inputs[1] = nodeValue_Text("Key", self, "");
 	
-	outputs[| 0] = nodeValue_Output("Struct", self, VALUE_TYPE.struct, {});
+	outputs[0] = nodeValue_Output("Struct", self, VALUE_TYPE.struct, {});
 	
 	static getStructValue = function(str, keys) { #region
 		var _pnt = str, val = 0;
@@ -60,13 +60,13 @@ function Node_Struct_Get(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 				val[i] = _v[1];
 			}
 			
-			outputs[| 0].setType(typ);
-			outputs[| 0].setValue(val);
+			outputs[0].setType(typ);
+			outputs[0].setValue(val);
 		} else {
 			var val  = getStructValue(str, keys);
 		
-			outputs[| 0].setType(val[0]);
-			outputs[| 0].setValue(val[1]);
+			outputs[0].setType(val[0]);
+			outputs[0].setValue(val[1]);
 		}
 	} #endregion
 	

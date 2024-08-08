@@ -1,9 +1,9 @@
 function Node_Template(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "";
 	
-	inputs[| 0] = nodeValue_Surface("", self);
+	inputs[0] = nodeValue_Surface("", self);
 	
-	outputs[| 0] = nodeValue_Output("", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 0 ];
 	

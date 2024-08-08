@@ -350,7 +350,7 @@ enum CAMERA_PROJ {
 				if(drag_prev != undefined) {
 					_pos[drag_index] += (mAdj - drag_prev) / 8000;
 					
-					if(inputs[| input_pos].setValue(_pos)) 
+					if(inputs[input_pos].setValue(_pos)) 
 						UNDO_HOLDING = true;
 				}
 				drag_prev = mAdj;
@@ -416,7 +416,7 @@ enum CAMERA_PROJ {
 					var _mulp  = _currQ.Mul(_currR);
 					var _Nrot  = new BBMOD_Matrix(_mulp.ToMatrix()).ToEuler();
 				
-					if(inputs[| input_rot].setValue(_Nrot)) 
+					if(inputs[input_rot].setValue(_Nrot)) 
 						UNDO_HOLDING = true;
 				}
 				
@@ -467,7 +467,7 @@ enum CAMERA_PROJ {
 				if(drag_prev != undefined) {
 					_sca[drag_index] += (mAdj - drag_prev) / 8000;
 					
-					if(inputs[| input_sca].setValue(_sca)) 
+					if(inputs[input_sca].setValue(_sca)) 
 						UNDO_HOLDING = true;
 				}
 				drag_prev = mAdj;
@@ -486,7 +486,7 @@ enum CAMERA_PROJ {
 			drag_my		= _my;
 		}
 		
-		inputs[| global_pos].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		inputs[global_pos].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 	#endregion
 	}
 	

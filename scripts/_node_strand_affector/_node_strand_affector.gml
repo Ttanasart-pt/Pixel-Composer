@@ -32,7 +32,7 @@
 #macro STRAND_EFFECTOR_POST																										\
 			}																													\
 	}																															\
-	outputs[| 0].setValue(_str);																								
+	outputs[0].setValue(_str);																								
 
 function _Node_Strand_Affector(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Affector";
@@ -40,23 +40,23 @@ function _Node_Strand_Affector(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	icon  = THEME.strandSim;
 	setDimension(96, 48);
 	
-	inputs[| 0] = nodeValue("Strand", self, JUNCTION_CONNECT.input, VALUE_TYPE.strands, noone)
+	inputs[0] = nodeValue("Strand", self, JUNCTION_CONNECT.input, VALUE_TYPE.strands, noone)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue_Enum_Scroll("Shape", self, 0, [ "Point", "Band" ]);
+	inputs[1] = nodeValue_Enum_Scroll("Shape", self, 0, [ "Point", "Band" ]);
 	
-	inputs[| 2] = nodeValue_Vector("Position", self, [ 0, 0 ]);
+	inputs[2] = nodeValue_Vector("Position", self, [ 0, 0 ]);
 	
-	inputs[| 3] = nodeValue_Float("Range", self, 4);
+	inputs[3] = nodeValue_Float("Range", self, 4);
 	
-	inputs[| 4] = nodeValue_Rotation("Direction", self, 0);
+	inputs[4] = nodeValue_Rotation("Direction", self, 0);
 	
-	inputs[| 5] = nodeValue_Float("Falloff", self, 0.2)
+	inputs[5] = nodeValue_Float("Falloff", self, 0.2)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	outputs[| 0] = nodeValue_Output("Strand", self, VALUE_TYPE.strands, noone);
+	outputs[0] = nodeValue_Output("Strand", self, VALUE_TYPE.strands, noone);
 	
-	input_fix_len = ds_list_size(inputs);
+	input_fix_len = array_length(inputs);
 	
 	input_display_list = [ 0, 
 		["Shape",		false], 1, 2, 3, 4, 5, 
@@ -139,14 +139,14 @@ function _Node_Strand_Affector(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			draw_line_dashed(px0, py0, px1, py1);
 		}
 		
-		active &= inputs[| 2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-		active &= inputs[| 4].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny);
-		active &= inputs[| 3].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny);
+		active &= inputs[2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		active &= inputs[4].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny);
+		active &= inputs[3].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny);
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
 		var _typ = getInputData(1);
-		inputs[| 4].setVisible(_typ == 1);
+		inputs[4].setVisible(_typ == 1);
 		
 		STRAND_EFFECTOR_PRE
 			// add effect (pnt, mulp)

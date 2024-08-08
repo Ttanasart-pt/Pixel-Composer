@@ -1,17 +1,17 @@
 function Node_Websocket_Receiver(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Websocket Receiver";
 		
-	inputs[| 0] = nodeValue_Int("Port", self, 22400);
+	inputs[0] = nodeValue_Int("Port", self, 22400);
 	
-	inputs[| 1] = nodeValue_Bool("Active", self, true);
+	inputs[1] = nodeValue_Bool("Active", self, true);
 	
-	inputs[| 2] = nodeValue_Enum_Button("Mode", self,  1, [ "Client", "Server" ]);
+	inputs[2] = nodeValue_Enum_Button("Mode", self,  1, [ "Client", "Server" ]);
 	
-	inputs[| 3] = nodeValue_Text("Url", self, "");
+	inputs[3] = nodeValue_Text("Url", self, "");
 	
-	outputs[| 0] = nodeValue_Output("Data", self, VALUE_TYPE.struct, {});
+	outputs[0] = nodeValue_Output("Data", self, VALUE_TYPE.struct, {});
 	
-	outputs[| 1] = nodeValue_Output("Receive data", self, VALUE_TYPE.trigger, false);
+	outputs[1] = nodeValue_Output("Receive data", self, VALUE_TYPE.trigger, false);
 	
 	input_display_list = [ 1, 2,
 		["Connection", false], 0, 3,
@@ -91,7 +91,7 @@ function Node_Websocket_Receiver(_x, _y, _group = noone) : Node(_x, _y, _group) 
 				if(_data == noone)	_data = { rawData: new Buffer(_buffer) }
 				else				buffer_delete(_buffer);
 					
-				outputs[| 0].setValue(_data);
+				outputs[0].setValue(_data);
 				network_trigger = true;
 				break;
 		}
@@ -100,13 +100,13 @@ function Node_Websocket_Receiver(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	static step = function() { #region
 		var _mode = getInputData(2);
 		
-		inputs[| 3].setVisible(_mode == 0);
+		inputs[3].setVisible(_mode == 0);
 		
 		if(network_trigger == 1) {
-			outputs[| 1].setValue(1);
+			outputs[1].setValue(1);
 			network_trigger = -1;
 		} else if(network_trigger == -1) {
-			outputs[| 1].setValue(0);
+			outputs[1].setValue(0);
 			network_trigger = 0;
 		}
 	} #endregion

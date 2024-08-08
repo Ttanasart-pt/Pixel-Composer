@@ -6,7 +6,7 @@ function Node_VFX_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 	is_root  = false;
 	topoList = [];
 	
-	inputs[| 0] = nodeValue_Bool("Loop", self, true )
+	inputs[0] = nodeValue_Bool("Loop", self, true )
 		.rejectArray();
 	
 	is_simulation      = true;
@@ -19,7 +19,7 @@ function Node_VFX_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 		var input  = nodeBuild("Node_VFX_Spawner",  x,       y);
 		var output = nodeBuild("Node_VFX_Renderer", x + 256, y);
 		
-		output.dummy_input.setFrom(input.outputs[| 0]);
+		output.dummy_input.setFrom(input.outputs[0]);
 		
 		addNode(input);
 		addNode(output);

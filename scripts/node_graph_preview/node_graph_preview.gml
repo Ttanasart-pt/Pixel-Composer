@@ -2,19 +2,19 @@ function Node_Graph_Preview(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	name = "Graph Preview";
 	preview_draw = true;
 	
-	inputs[| 0]  = nodeValue_Surface("Surface", self)
+	inputs[0]  = nodeValue_Surface("Surface", self)
 		.rejectArray();
 	
-	inputs[| 1]  = nodeValue_Vector("Position", self, [ 0, 0 ])
+	inputs[1]  = nodeValue_Vector("Position", self, [ 0, 0 ])
 		.rejectArray();
 	
-	inputs[| 2]  = nodeValue_Float("Scale", self, 1)
+	inputs[2]  = nodeValue_Float("Scale", self, 1)
 		.rejectArray();
 
-	inputs[| 3]  = nodeValue_Bool("Sticky", self, true)
+	inputs[3]  = nodeValue_Bool("Sticky", self, true)
 		.rejectArray();
 		
-	inputs[| 4]  = nodeValue_Float("Alpha", self, 0.5)
+	inputs[4]  = nodeValue_Float("Alpha", self, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider)
 		.rejectArray();
 		
@@ -65,7 +65,7 @@ function Node_Graph_Preview(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			var _x0 = stick? drag_sx + (_mx - drag_mx) : drag_sx + (_mx - drag_mx) / _s;
 			var _y0 = stick? drag_sy + (_my - drag_my) : drag_sy + (_my - drag_my) / _s;
 			
-			inputs[| 1].setValue([ _x0, _y0 ]);
+			inputs[1].setValue([ _x0, _y0 ]);
 			
 			if(mouse_release(mb_left))
 				dragging = noone;
@@ -76,7 +76,7 @@ function Node_Graph_Preview(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			var _sh = surface_get_height_safe(surf);
 			var _ss = min((_mx - drag_sx) / _sw, (_my - drag_sy) / _sh);
 			
-			inputs[| 2].setValue(stick? _ss : _ss / _s);
+			inputs[2].setValue(stick? _ss : _ss / _s);
 			
 			if(mouse_release(mb_left))
 				dragging = noone;

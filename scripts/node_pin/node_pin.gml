@@ -13,23 +13,23 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	bg_spr_add = 0;
 	
-	inputs[| 0] = nodeValue("In", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0 )
+	inputs[0] = nodeValue("In", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0 )
 		.setVisible(true, true);
 	
-	outputs[| 0] = nodeValue_Output("Out", self, VALUE_TYPE.any, 0);
+	outputs[0] = nodeValue_Output("Out", self, VALUE_TYPE.any, 0);
 	
 	static update = function() {
-		if(inputs[| 0].value_from != noone) {
+		if(inputs[0].value_from != noone) {
 		
-			inputs[| 0].setType(inputs[| 0].value_from.type);
-			outputs[| 0].setType(inputs[| 0].value_from.type);
+			inputs[0].setType(inputs[0].value_from.type);
+			outputs[0].setType(inputs[0].value_from.type);
 			
-			inputs[| 0].color_display  = inputs[| 0].value_from.color_display;
-			outputs[| 0].color_display = inputs[| 0].color_display;
+			inputs[0].color_display  = inputs[0].value_from.color_display;
+			outputs[0].color_display = inputs[0].color_display;
 		}
 		
 		var _val = getInputData(0);
-		outputs[| 0].setValue(_val);
+		outputs[0].setValue(_val);
 	}
 	
 	static pointIn = function(_x, _y, _mx, _my, _s) {
@@ -43,11 +43,11 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
 		
-		inputs[| 0].x = xx;
-		inputs[| 0].y = yy;
+		inputs[0].x = xx;
+		inputs[0].y = yy;
 		
-		outputs[| 0].x = xx;
-		outputs[| 0].y = yy;
+		outputs[0].x = xx;
+		outputs[0].y = yy;
 	}
 	
 	static drawBadge = function(_x, _y, _s) {}
@@ -55,7 +55,7 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	static drawJunctions = function(_x, _y, _mx, _my, _s) {
 		var _dval = PANEL_GRAPH.value_dragging;
-		var hover = _dval == noone || _dval.connect_type == JUNCTION_CONNECT.input? outputs[| 0] : inputs[| 0];
+		var hover = _dval == noone || _dval.connect_type == JUNCTION_CONNECT.input? outputs[0] : inputs[0];
 		var xx	  = x * _s + _x;
 		var yy	  = y * _s + _y;
 		

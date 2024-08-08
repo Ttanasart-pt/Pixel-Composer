@@ -2,15 +2,15 @@ function Node_VFX_Oscillate(_x, _y, _group = noone) : Node_VFX_effector(_x, _y, 
 	name = "Oscillate";
 	node_draw_icon = s_node_vfx_osc;
 	
-	inputs[| 4].setVisible(false, false);
-	inputs[| 6].setVisible(false, false);
-	inputs[| 7].setVisible(false, false);
+	inputs[4].setVisible(false, false);
+	inputs[6].setVisible(false, false);
+	inputs[7].setVisible(false, false);
 	
-	inputs[| effector_input_length + 0] = nodeValue_Float("Amplitude", self, 2 );
+	inputs[effector_input_length + 0] = nodeValue_Float("Amplitude", self, 2 );
 	
-	inputs[| effector_input_length + 1] = nodeValue_Float("Frequency", self, 0.2 );
+	inputs[effector_input_length + 1] = nodeValue_Float("Frequency", self, 0.2 );
 	
-	inputs[| effector_input_length + 2] = nodeValue_Bool("Multiply by speed", self, false );
+	inputs[effector_input_length + 2] = nodeValue_Bool("Multiply by speed", self, false );
 	
 	array_push(input_display_list, effector_input_length + 0, effector_input_length + 1, effector_input_length + 2);
 	

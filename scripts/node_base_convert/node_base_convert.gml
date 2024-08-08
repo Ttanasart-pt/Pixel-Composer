@@ -4,14 +4,14 @@ function Node_Base_Convert(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	setDimension(96, 48);
 	
-	inputs[| 0] = nodeValue_Text("Value", self, "")
+	inputs[0] = nodeValue_Text("Value", self, "")
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue_Int("Base from", self, 10);
+	inputs[1] = nodeValue_Int("Base from", self, 10);
 	
-	inputs[| 2] = nodeValue_Int("Base to", self, 10);
+	inputs[2] = nodeValue_Int("Base to", self, 10);
 	
-	outputs[| 0] = nodeValue_Output("Result", self, VALUE_TYPE.text, "");
+	outputs[0] = nodeValue_Output("Result", self, VALUE_TYPE.text, "");
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) { 
 		var val   = _data[0];

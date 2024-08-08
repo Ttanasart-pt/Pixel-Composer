@@ -8,31 +8,31 @@ function Node_Rigid_Object_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group
 	
 	object = [];
 	
-	inputs[| 0] = nodeValue("Object", self, JUNCTION_CONNECT.input, VALUE_TYPE.rigid, noone)
+	inputs[0] = nodeValue("Object", self, JUNCTION_CONNECT.input, VALUE_TYPE.rigid, noone)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue_Area("Spawn area", self, DEF_AREA)
+	inputs[1] = nodeValue_Area("Spawn area", self, DEF_AREA)
 		.rejectArray();
 	
-	inputs[| 2] = nodeValue_Enum_Button("Spawn type", self,  0, [ "Stream", "Burst" ])
+	inputs[2] = nodeValue_Enum_Button("Spawn type", self,  0, [ "Stream", "Burst" ])
 		.rejectArray();
 	
-	inputs[| 3] = nodeValue_Int("Spawn delay", self, 4)
+	inputs[3] = nodeValue_Int("Spawn delay", self, 4)
 		.rejectArray();
 	
-	inputs[| 4] = nodeValue_Int("Spawn amount", self, 1)
+	inputs[4] = nodeValue_Int("Spawn amount", self, 1)
 		.rejectArray();
 	
-	inputs[| 5] = nodeValue_Int("Spawn frame", self, 0)
+	inputs[5] = nodeValue_Int("Spawn frame", self, 0)
 		.rejectArray();
 	
-	inputs[| 6] = nodeValue_Bool("Spawn", self, true)
+	inputs[6] = nodeValue_Bool("Spawn", self, true)
 		.rejectArray();
 	
-	inputs[| 7] = nodeValue_Int("Seed", self, seed_random(6))
-		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 7].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
+	inputs[7] = nodeValue_Int("Seed", self, seed_random(6))
+		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[7].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
-	outputs[| 0] = nodeValue_Output("Object", self, VALUE_TYPE.rigid, object);
+	outputs[0] = nodeValue_Output("Object", self, VALUE_TYPE.rigid, object);
 	
 	input_display_list = [ 0, 7, 
 		["Spawn",	false],	6, 1, 2, 3, 5, 4,
@@ -59,7 +59,7 @@ function Node_Rigid_Object_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group
 			active &= !_hov;
 		}
 		
-		return inputs[| 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		return inputs[1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
 	static reset = function() {
@@ -70,8 +70,8 @@ function Node_Rigid_Object_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group
 	static step = function() {
 		var _typ = getInputData(2);
 		
-		inputs[| 3].setVisible(_typ == 0);
-		inputs[| 5].setVisible(_typ == 1);
+		inputs[3].setVisible(_typ == 0);
+		inputs[5].setVisible(_typ == 1);
 	}
 	
 	static spawn = function(seed = 0) {
@@ -111,7 +111,7 @@ function Node_Rigid_Object_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group
 		else if(_typ == 1 && CURRENT_FRAME == _frm) 
 			spawn(_sed);
 			
-		outputs[| 0].setValue(object);
+		outputs[0].setValue(object);
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

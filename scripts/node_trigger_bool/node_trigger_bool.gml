@@ -3,14 +3,14 @@ function Node_Trigger_Bool(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	update_on_frame = true;
 	setDimension(96, 32 + 24 * 1);
 	
-	inputs[| 0] = nodeValue_Bool("Boolean", self, false);
+	inputs[0] = nodeValue_Bool("Boolean", self, false);
 	
-	inputs[| 1] = nodeValue_Enum_Scroll("Trigger condition", self,  0, [ new scrollItem("True frame",    s_node_trigger_cond, 0), 
+	inputs[1] = nodeValue_Enum_Scroll("Trigger condition", self,  0, [ new scrollItem("True frame",    s_node_trigger_cond, 0), 
 												 new scrollItem("False to True", s_node_trigger_cond, 1), 
 												 new scrollItem("True to False", s_node_trigger_cond, 2), 
 												 new scrollItem("Value changed", s_node_trigger_cond, 3), ]);
 	
-	outputs[| 0] = nodeValue_Output("Trigger", self, VALUE_TYPE.trigger, false);
+	outputs[0] = nodeValue_Output("Trigger", self, VALUE_TYPE.trigger, false);
 	
 	prevVal = false;
 	preview = false;
@@ -29,7 +29,7 @@ function Node_Trigger_Bool(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			case 3 : doTrigger =  prevVal !=  val;	break;
 		}
 		
-		outputs[| 0].setValue(doTrigger);
+		outputs[0].setValue(doTrigger);
 		
 		preview = doTrigger;
 		prevVal = val;

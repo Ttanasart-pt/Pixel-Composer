@@ -20,30 +20,30 @@ function Node_HLSL(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	name   = "HLSL";
 	shader = { vs: -1, fs: -1 };
 	
-	inputs[| 0] = nodeValue_Text("Vertex", self, @"")
+	inputs[0] = nodeValue_Text("Vertex", self, @"")
 		.setDisplay(VALUE_DISPLAY.codeHLSL)
 		.rejectArray();
 	
-	inputs[| 1] = nodeValue_Text("Fragment", self, 
+	inputs[1] = nodeValue_Text("Fragment", self, 
 @"float4 surfaceColor = gm_BaseTextureObject.Sample(gm_BaseTexture, input.uv);
 output.color = surfaceColor;")
 		.setDisplay(VALUE_DISPLAY.codeHLSL)
 		.rejectArray();
 	
-	inputs[| 2] = nodeValue_Surface("Base Texture", self);
+	inputs[2] = nodeValue_Surface("Base Texture", self);
 	
-	outputs[| 0] = nodeValue_Output("Surface", self, VALUE_TYPE.surface, noone );
+	outputs[0] = nodeValue_Output("Surface", self, VALUE_TYPE.surface, noone );
 	
 	static createNewInput = function() {
-		var index = ds_list_size(inputs);
-		inputs[| index + 0] = nodeValue_Text("Argument name", self, "" );
+		var index = array_length(inputs);
+		inputs[index + 0] = nodeValue_Text("Argument name", self, "" );
 		
-		inputs[| index + 1] = nodeValue_Enum_Scroll("Argument type", self,  0 , { data: [ "Float", "Int", "Vec2", "Vec3", "Vec4", "Mat3", "Mat4", "Sampler2D", "Color" ], update_hover: false });
-		inputs[| index + 1].editWidget.interactable = false;
+		inputs[index + 1] = nodeValue_Enum_Scroll("Argument type", self,  0 , { data: [ "Float", "Int", "Vec2", "Vec3", "Vec4", "Mat3", "Mat4", "Sampler2D", "Color" ], update_hover: false });
+		inputs[index + 1].editWidget.interactable = false;
 		
-		inputs[| index + 2] = nodeValue_Float("Argument value", self, 0 )
+		inputs[index + 2] = nodeValue_Float("Argument value", self, 0 )
 			.setVisible(true, true);
-		inputs[| index + 2].editWidget.interactable = false;
+		inputs[index + 2].editWidget.interactable = false;
 	}
 	
 	argumentRenderer();
@@ -102,29 +102,29 @@ void main(in VertexShaderOutput _input, out PixelShaderOutput output) {
 	setDynamicInput(3, false);
 	
 	static refreshDynamicInput = function() {
-		var _in = ds_list_create();
+		var _in = [];
 		
 		for( var i = 0; i < input_fix_len; i++ )
-			ds_list_add(_in, inputs[| i]);
+			array_push(_in, inputs[i]);
 		
 		array_resize(input_display_list, input_display_len);
 		
-		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
+		for( var i = input_fix_len; i < array_length(inputs); i += data_length ) {
 			if(getInputData(i) == "") {
-				delete inputs[| i + 0];
-				delete inputs[| i + 1];
-				delete inputs[| i + 2];
+				delete inputs[i + 0];
+				delete inputs[i + 1];
+				delete inputs[i + 2];
 				continue;
 			}
 			
 			var inp_name = getInputData(i + 0);
-			var inp_type = inputs[| i + 1];
-			var inp_valu = inputs[| i + 2];
+			var inp_type = inputs[i + 1];
+			var inp_valu = inputs[i + 2];
 			var cur_valu = getInputData(i + 2);
 			
-			ds_list_add(_in, inputs[| i + 0]);
-			ds_list_add(_in, inp_type);
-			ds_list_add(_in, inp_valu);
+			array_push(_in, inputs[i + 0]);
+			array_push(_in, inp_type);
+			array_push(_in, inp_valu);
 				
 			inp_type.editWidget.interactable = true;
 			if(inp_valu.editWidget != noone)
@@ -209,12 +209,10 @@ void main(in VertexShaderOutput _input, out PixelShaderOutput output) {
 			array_push(input_display_list, i + 2);
 		}
 		
-		for( var i = 0; i < ds_list_size(_in); i++ )
-			_in[| i].index = i;
+		for( var i = 0; i < array_length(_in); i++ )
+			_in[ i].index = i;
 		
-		ds_list_destroy(inputs);
 		inputs = _in;
-		
 		createNewInput();
 		
 		//print("==========================");
@@ -244,7 +242,7 @@ void main(in VertexShaderOutput _input, out PixelShaderOutput output) {
 		var fs_sample = "";
 		var sampler_slot = 1;
 		
-		for( var i = input_fix_len, n = ds_list_size(inputs); i < n; i += data_length ) {
+		for( var i = input_fix_len, n = array_length(inputs); i < n; i += data_length ) {
 			var _arg_name = getInputData(i + 0);
 			if(_arg_name == "") continue;
 			

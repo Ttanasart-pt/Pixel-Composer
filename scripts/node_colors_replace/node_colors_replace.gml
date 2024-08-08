@@ -1,21 +1,21 @@
 function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Replace Colors";
 	
-	inputs[| 0] = nodeValue_Surface("Surface in", self);
-	inputs[| 1] = nodeValue_Palette("Palette from", self, []);
+	inputs[0] = nodeValue_Surface("Surface in", self);
+	inputs[1] = nodeValue_Palette("Palette from", self, []);
 	
-	inputs[| 2] = nodeValue_Palette("Palette to", self, [])
+	inputs[2] = nodeValue_Palette("Palette to", self, [])
 		.setVisible(false, false);
 	
-	inputs[| 3] = nodeValue_Float("Threshold", self, 0.1)
+	inputs[3] = nodeValue_Float("Threshold", self, 0.1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 4] = nodeValue_Surface("Mask", self);
+	inputs[4] = nodeValue_Surface("Mask", self);
 	
-	inputs[| 5] = nodeValue_Float("Mix", self, 1)
+	inputs[5] = nodeValue_Float("Mix", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 6] = nodeValue_Bool("Active", self, true);
+	inputs[6] = nodeValue_Bool("Active", self, true);
 		active_index = 6;
 		
 	__init_mask_modifier(4); // inputs 7, 8, 
@@ -31,7 +31,7 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		for (var i = palette_select[0]; i <= palette_select[1]; i++)
 			_to[i] = colr;
 		
-		inputs[| 2].setValue(_to);			// Not necessary due to array reference
+		inputs[2].setValue(_to);			// Not necessary due to array reference
 	}
 		
 	sort_menu = [
@@ -56,7 +56,7 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			refreshPalette();
 			
 		bx += bs + ui(4);
-		var jun   = inputs[| 2];
+		var jun   = inputs[2];
 		var index = jun.value_from == noone? jun.is_anim : 2;
 		if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, _focus, _hover,, THEME.animate_clock, index, index == 2? COLORS._main_accent : COLORS._main_icon) == 2) 
 			jun.setAnim(!jun.is_anim);
@@ -185,7 +185,7 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		//["Comparison",	false], 3, 
 	];
 	
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	attribute_surface_depth();
 	
@@ -223,15 +223,15 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		
 		ds_map_destroy(_map);
 		
-		inputs[| 1].setValue(palFrom);
-		inputs[| 2].setValue(palTo);
+		inputs[1].setValue(palFrom);
+		inputs[2].setValue(palTo);
 	}
 			
 	static refreshPalette = function() {
 		var _surf = getInputData(0);
 		
-		inputs[| 1].setValue([]);
-		inputs[| 2].setValue([]);
+		inputs[1].setValue([]);
+		inputs[2].setValue([]);
 		
 		if(!is_array(_surf))
 			_surf = [ _surf ];
@@ -265,8 +265,8 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		var palette = ds_map_keys_to_array(_pall);
 		ds_map_destroy(_pall);
 		
-		inputs[| 1].setValue(palette);
-		inputs[| 2].setValue(palette);
+		inputs[1].setValue(palette);
+		inputs[2].setValue(palette);
 	}
 	
 	static onValueFromUpdate = function(index) {

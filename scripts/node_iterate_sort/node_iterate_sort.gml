@@ -6,15 +6,15 @@ function Node_Iterate_Sort(_x, _y, _group = noone) : Node_Collection(_x, _y, _gr
 	reset_all_child     = true;
 	managedRenderOrder  = true;
 	
-	inputs[| 0] = nodeValue("Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, [] )
+	inputs[0] = nodeValue("Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, [] )
 		.setVisible(true, true);
 	
-	outputs[| 0] = nodeValue_Output("Array", self, VALUE_TYPE.any, noone );
+	outputs[0] = nodeValue_Output("Array", self, VALUE_TYPE.any, noone );
 	
 	topoList = [];
 	
-	custom_input_index  = ds_list_size(inputs);
-	custom_output_index = ds_list_size(inputs);
+	custom_input_index  = array_length(inputs);
+	custom_output_index = array_length(inputs);
 	loop_start_time     = 0;
 	
 	inputNodes = [ noone, noone ];
@@ -44,8 +44,8 @@ function Node_Iterate_Sort(_x, _y, _group = noone) : Node_Collection(_x, _y, _gr
 	static getNextNodes = function() { return getNextNodesExternal(); }
 	
 	static onStep = function() { #region
-		var type = inputs[| 0].value_from == noone? VALUE_TYPE.any : inputs[| 0].value_from.type;
-		inputs[| 0].setType(type);
+		var type = inputs[0].value_from == noone? VALUE_TYPE.any : inputs[0].value_from.type;
+		inputs[0].setType(type);
 	} #endregion
 	
 	static update = function(frame = CURRENT_FRAME) { #region
@@ -56,12 +56,12 @@ function Node_Iterate_Sort(_x, _y, _group = noone) : Node_Collection(_x, _y, _gr
 			outputNode     = noone;
 			var inputReady = 0;
 			
-			if(inputs[| 0].value_from) {
-				inputs[| 0].setType(inputs[| 0].value_from.type);
-				outputs[| 0].setType(inputs[| 0].value_from.type);
+			if(inputs[0].value_from) {
+				inputs[0].setType(inputs[0].value_from.type);
+				outputs[0].setType(inputs[0].value_from.type);
 			}
 		
-			var _typ = inputs[| 0].type;
+			var _typ = inputs[0].type;
 		
 			for( var i = 0; i < array_length(nodes); i++ ) {
 				var _n = nodes[i];
@@ -69,21 +69,21 @@ function Node_Iterate_Sort(_x, _y, _group = noone) : Node_Collection(_x, _y, _gr
 				
 				switch(_n.attributes.sort_inputs) {
 					case 1 : 
-						inputNodes[0] = _n.inputs[| 0];
+						inputNodes[0] = _n.inputs[0];
 						
-						_n.inputs[| 0].setType( _typ);
-						_n.outputs[| 0].setType(_typ);
+						_n.inputs[0].setType( _typ);
+						_n.outputs[0].setType(_typ);
 						inputReady += 1;
 						break;
 					case 2 : 
-						inputNodes[1] = _n.inputs[| 0];
+						inputNodes[1] = _n.inputs[0];
 						
-						_n.inputs[| 0].setType( _typ);
-						_n.outputs[| 0].setType(_typ);
+						_n.inputs[0].setType( _typ);
+						_n.outputs[0].setType(_typ);
 						inputReady += 2;
 						break;
 					case 9 : 
-						outputNode = nodes[i].inputs[| 0];
+						outputNode = nodes[i].inputs[0];
 						inputReady += 4;
 						break;
 				}
@@ -148,15 +148,15 @@ function Node_Iterate_Sort(_x, _y, _group = noone) : Node_Collection(_x, _y, _gr
 		loop_start_time = get_timer();
 		
 		var arrIn  = getInputData(0);
-		var arrOut = outputs[| 0].getValue();
+		var arrOut = outputs[0].getValue();
 		
-		if(inputs[| 0].type == VALUE_TYPE.surface) {
+		if(inputs[0].type == VALUE_TYPE.surface) {
 			surface_array_free(arrOut);
 			arrOut = surface_array_clone(arrIn);
 		} else
 			arrOut = array_clone(arrIn);
 		
 		quickSort(arrOut, 0, array_length(arrOut) - 1);
-		outputs[| 0].setValue(arrOut);
+		outputs[0].setValue(arrOut);
 	} #endregion
 }

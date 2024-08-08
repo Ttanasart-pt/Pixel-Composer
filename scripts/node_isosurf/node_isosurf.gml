@@ -1,23 +1,23 @@
 function Node_IsoSurf(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name	= "IsoSurf";
 	
-	inputs[| 0] = nodeValue_Int("Direction", self, 4)
+	inputs[0] = nodeValue_Int("Direction", self, 4)
 		.setValidator(VV_min(1));
 	
-	inputs[| 1] = nodeValue_Surface("Surfaces", self)
+	inputs[1] = nodeValue_Surface("Surfaces", self)
 		.setVisible(true, true)
 		.setArrayDepth(1);
 	
-	inputs[| 2] = nodeValue_Rotation("Angle Shift", self, 0);
+	inputs[2] = nodeValue_Rotation("Angle Shift", self, 0);
 	
-	inputs[| 3] = nodeValue_Float("Angle Split", self, [ 0 * 90, 1 * 90, 2 * 90, 3 * 90 ])
+	inputs[3] = nodeValue_Float("Angle Split", self, [ 0 * 90, 1 * 90, 2 * 90, 3 * 90 ])
 		.setArrayDynamic()
 		.setArrayDepth(1);
 	
-	inputs[| 4] = nodeValue_Vector("Offsets", self, [])
+	inputs[4] = nodeValue_Vector("Offsets", self, [])
 		.setArrayDepth(1);
 	
-	outputs[| 0] = nodeValue_Output("IsoSurf", self, VALUE_TYPE.dynaSurface, noone);
+	outputs[0] = nodeValue_Output("IsoSurf", self, VALUE_TYPE.dynaSurface, noone);
 	
 	knob_select   = noone;
 	knob_hover    = noone;
@@ -92,7 +92,7 @@ function Node_IsoSurf(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var val      = key_mod_press(CTRL)? round(real_val / 15) * 15 : real_val;
 			_angle[knob_dragging] = val;
 			
-			if(inputs[| 3].setValue(_angle)) UNDO_HOLDING = true;
+			if(inputs[3].setValue(_angle)) UNDO_HOLDING = true;
 			
 			if(mouse_release(mb_left))
 				knob_dragging = noone;
@@ -148,7 +148,7 @@ function Node_IsoSurf(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				_offs[knob_select][0] = _mx;
 				_offs[knob_select][1] = _my;
 				
-				inputs[| 4].setValue(_offs);
+				inputs[4].setValue(_offs);
 			}
 		}
 		
@@ -177,7 +177,7 @@ function Node_IsoSurf(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		for( var i = 0, n = _amo; i < n; i++ )
 			_off[i] = [ 0, 0 ];
 		
-		inputs[| 4].setValue(_off);
+		inputs[4].setValue(_off);
 	}
 	
 	static onValueUpdate = function(index) {
@@ -194,8 +194,8 @@ function Node_IsoSurf(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			_off[i] = array_verify(_off[i], 2);
 		}
 		
-		inputs[| 3].setValue(_ang);
-		inputs[| 4].setValue(_off);
+		inputs[3].setValue(_ang);
+		inputs[4].setValue(_off);
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {

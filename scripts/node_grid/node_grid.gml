@@ -1,74 +1,74 @@
 function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Grid";
 	
-	inputs[| 0] = nodeValue_Dimension(self);
+	inputs[0] = nodeValue_Dimension(self);
 	
-	inputs[| 1] = nodeValue_Vector("Position", self, [ 0, 0 ])
+	inputs[1] = nodeValue_Vector("Position", self, [ 0, 0 ])
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	inputs[| 2] = nodeValue_Vector("Grid Size", self, [ 8, 8 ])
+	inputs[2] = nodeValue_Vector("Grid Size", self, [ 8, 8 ])
 		.setMappable(13);
 	
-	inputs[| 3] = nodeValue_Float("Gap", self, 0.2)
+	inputs[3] = nodeValue_Float("Gap", self, 0.2)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 0.5, 0.001] })
 		.setMappable(14);
 	
-	inputs[| 4] = nodeValue_Rotation("Angle", self, 0)
+	inputs[4] = nodeValue_Rotation("Angle", self, 0)
 		.setMappable(15);
 		
-	inputs[| 5] = nodeValue_Gradient("Tile color", self, new gradientObject(cola(c_white)))
+	inputs[5] = nodeValue_Gradient("Tile color", self, new gradientObject(cola(c_white)))
 		.setMappable(20);
 		
-	inputs[| 6] = nodeValue_Color("Gap color",  self, c_black);
+	inputs[6] = nodeValue_Color("Gap color",  self, c_black);
 	
-	inputs[| 7] = nodeValue_Surface("Texture", self);
+	inputs[7] = nodeValue_Surface("Texture", self);
 	
-	inputs[| 8] = nodeValue_Float("Shift", self, 0)
+	inputs[8] = nodeValue_Float("Shift", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-0.5, 0.5, 0.01] })
 		.setMappable(16);
 		
-	inputs[| 9] = nodeValue_Enum_Button("Shift axis", self,  0, ["X", "Y"]);
+	inputs[9] = nodeValue_Enum_Button("Shift axis", self,  0, ["X", "Y"]);
 		
-	inputs[| 10] = nodeValue_Enum_Scroll("Render type", self,  0, ["Colored tile", "Colored tile (Accurate)", "Height map", "Texture grid", "Texture sample"]);
+	inputs[10] = nodeValue_Enum_Scroll("Render type", self,  0, ["Colored tile", "Colored tile (Accurate)", "Height map", "Texture grid", "Texture sample"]);
 		
-	inputs[| 11] = nodeValue_Float("Seed", self, seed_random(6))
-		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 11].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
+	inputs[11] = nodeValue_Float("Seed", self, seed_random(6))
+		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[11].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
-	inputs[| 12] = nodeValue_Bool("Anti aliasing", self, false);
+	inputs[12] = nodeValue_Bool("Anti aliasing", self, false);
 	
-		inputs[| 13] = nodeValueMap("Scale map", self);
+		inputs[13] = nodeValueMap("Scale map", self);
 	
-		inputs[| 14] = nodeValueMap("Gap map", self);
+		inputs[14] = nodeValueMap("Gap map", self);
 	
-		inputs[| 15] = nodeValueMap("Angle map", self);
+		inputs[15] = nodeValueMap("Angle map", self);
 	
-		inputs[| 16] = nodeValueMap("Shift map", self);
+		inputs[16] = nodeValueMap("Shift map", self);
 	
-	inputs[| 17] = nodeValue_Bool("Truchet", self, false);
+	inputs[17] = nodeValue_Bool("Truchet", self, false);
 	
-	inputs[| 18] = nodeValue_Int("Truchet seed", self, seed_random());
+	inputs[18] = nodeValue_Int("Truchet seed", self, seed_random());
 	
-	inputs[| 19] = nodeValue_Float("Flip horizontal", self, 0.5)
+	inputs[19] = nodeValue_Float("Flip horizontal", self, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-		inputs[| 20] = nodeValueMap("Gradient map", self);
+		inputs[20] = nodeValueMap("Gradient map", self);
 	
-		inputs[| 21] = nodeValueGradientRange("Gradient map range", self, inputs[| 5]);
+		inputs[21] = nodeValueGradientRange("Gradient map range", self, inputs[5]);
 	
-	inputs[| 22] = nodeValue_Float("Flip vertical", self, 0.5)
+	inputs[22] = nodeValue_Float("Flip vertical", self, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 23] = nodeValue_Rotation_Range("Texture angle", self, [ 0, 0 ]);
+	inputs[23] = nodeValue_Rotation_Range("Texture angle", self, [ 0, 0 ]);
 		
-	inputs[| 24] = nodeValue_Slider_Range("Level", self, [ 0, 1 ]);
+	inputs[24] = nodeValue_Slider_Range("Level", self, [ 0, 1 ]);
 	
-	inputs[| 25] = nodeValue_Bool("Use Texture Dimension", self, true);
+	inputs[25] = nodeValue_Bool("Use Texture Dimension", self, true);
 	
-	inputs[| 26] = nodeValue_Float("Gap Width", self, 1);
+	inputs[26] = nodeValue_Float("Gap Width", self, 1);
 	
-	inputs[| 27] = nodeValue_Bool("Diagonal", self, false);
+	inputs[27] = nodeValue_Bool("Diagonal", self, false);
 	
-	inputs[| 28] = nodeValue_Bool("Uniform height", self, true);
+	inputs[28] = nodeValue_Bool("Uniform height", self, true);
 	
 	input_display_list = [
 		["Output",  false], 0,
@@ -77,7 +77,7 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		["Truchet",  true, 17], 18, 19, 22, 23, 
 	];
 	
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	attribute_surface_depth();
 	
@@ -85,20 +85,20 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var hov = false;
 		var pos = getSingleValue(1);
 		
-		var hv = inputs[|  1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);                      			active &= !hv; hov |= bool(hv);
-		var hv = inputs[|  2].drawOverlay(hover, active, _x + pos[0] * _s, _y + pos[1] * _s, _s, _mx, _my, _snx, _sny, 1);	active &= !hv; hov |= bool(hv);
-		var hv = inputs[|  4].drawOverlay(hover, active, _x + pos[0] * _s, _y + pos[1] * _s, _s, _mx, _my, _snx, _sny);     active &= !hv; hov |= bool(hv);
-		var hv = inputs[| 21].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, getSingleValue(0));				active &= !hv; hov |= bool(hv);
+		var hv = inputs[ 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);                      			active &= !hv; hov |= bool(hv);
+		var hv = inputs[ 2].drawOverlay(hover, active, _x + pos[0] * _s, _y + pos[1] * _s, _s, _mx, _my, _snx, _sny, 1);	active &= !hv; hov |= bool(hv);
+		var hv = inputs[ 4].drawOverlay(hover, active, _x + pos[0] * _s, _y + pos[1] * _s, _s, _mx, _my, _snx, _sny);     active &= !hv; hov |= bool(hv);
+		var hv = inputs[21].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, getSingleValue(0));				active &= !hv; hov |= bool(hv);
 		
 		return hov;
 	}
 	
 	static step = function() { #region
-		inputs[| 2].mappableStep();
-		inputs[| 3].mappableStep();
-		inputs[| 4].mappableStep();
-		inputs[| 5].mappableStep();
-		inputs[| 8].mappableStep();
+		inputs[2].mappableStep();
+		inputs[3].mappableStep();
+		inputs[4].mappableStep();
+		inputs[5].mappableStep();
+		inputs[8].mappableStep();
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
@@ -110,18 +110,18 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var _col_gap  = _data[6];
 		var _tex_mode = _mode == 3 || _mode == 4;
 		
-		inputs[|  5].setVisible(_mode == 0 || _mode == 1);
-		inputs[|  3].setVisible(_mode == 0 || _mode == 3 || _mode == 4);
-		inputs[| 24].setVisible(_mode == 2);
-		inputs[| 26].setVisible(_mode == 1);
+		inputs[ 5].setVisible(_mode == 0 || _mode == 1);
+		inputs[ 3].setVisible(_mode == 0 || _mode == 3 || _mode == 4);
+		inputs[24].setVisible(_mode == 2);
+		inputs[26].setVisible(_mode == 1);
 		
-		inputs[|  4].setVisible(_mode != 1);
-		inputs[|  8].setVisible(_mode != 1);
-		inputs[|  9].setVisible(_mode != 1);
-		inputs[| 27].setVisible(_mode == 1);
+		inputs[ 4].setVisible(_mode != 1);
+		inputs[ 8].setVisible(_mode != 1);
+		inputs[ 9].setVisible(_mode != 1);
+		inputs[27].setVisible(_mode == 1);
 		
-		inputs[|  7].setVisible(_tex_mode, _tex_mode);
-		inputs[| 25].setVisible(_tex_mode, _tex_mode);
+		inputs[ 7].setVisible(_tex_mode, _tex_mode);
+		inputs[25].setVisible(_tex_mode, _tex_mode);
 		
 		var _tex_dim = is_surface(_sam) && _tex_mode && _data[25];
 		if(_tex_dim) _dim = surface_get_dimension(_sam);
@@ -132,10 +132,10 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			shader_set_f("position",	_pos[0] / _dim[0], _pos[1] / _dim[1]);
 			shader_set_f("dimension",	_dim[0], _dim[1]);
 			
-			shader_set_f_map("scale",	_data[ 2], _data[13], inputs[| 2]);
-			shader_set_f_map("width",	_data[ 3], _data[14], inputs[| 3]);
-			shader_set_f_map("angle",	_data[ 4], _data[15], inputs[| 4]);
-			shader_set_f_map("shift",	_data[ 8], _data[16], inputs[| 8]);
+			shader_set_f_map("scale",	_data[ 2], _data[13], inputs[2]);
+			shader_set_f_map("width",	_data[ 3], _data[14], inputs[3]);
+			shader_set_f_map("angle",	_data[ 4], _data[15], inputs[4]);
+			shader_set_f_map("shift",	_data[ 8], _data[16], inputs[8]);
 			
 			shader_set_i("mode",		   _mode);
 			shader_set_f("seed", 		   _data[11]);
@@ -153,7 +153,7 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			
 			shader_set_color("gapCol",  _col_gap);
 			
-			shader_set_gradient(_data[5], _data[20], _data[21], inputs[| 5]);
+			shader_set_gradient(_data[5], _data[20], _data[21], inputs[5]);
 			
 			if(is_surface(_sam))	draw_surface_stretched_safe(_sam, 0, 0, _dim[0], _dim[1]);
 			else					draw_sprite_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], 0, c_white, 1);

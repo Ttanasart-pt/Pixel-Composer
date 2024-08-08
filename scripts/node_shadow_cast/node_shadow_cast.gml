@@ -2,11 +2,11 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	name = "Cast Shadow";
 	batch_output = false;
 	
-	inputs[| 0] = nodeValue_Surface("Background", self);
+	inputs[0] = nodeValue_Surface("Background", self);
 	
-	inputs[| 1] = nodeValue_Surface("Solid", self);
+	inputs[1] = nodeValue_Surface("Solid", self);
 	
-	inputs[| 2] = nodeValue_Vector("Light Position", self, [ 0, 0 ])
+	inputs[2] = nodeValue_Vector("Light Position", self, [ 0, 0 ])
 		.setUnitRef(function(index) { 
 			var _surf = getInputData(0);
 			if(is_array(_surf) && array_length(_surf) == 0)
@@ -21,51 +21,51 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			return [ surface_get_width_safe(_surf), surface_get_height_safe(_surf) ];
 		}, VALUE_UNIT.reference);
 		
-	inputs[| 3] = nodeValue_Float("Soft light radius", self, 1)
+	inputs[3] = nodeValue_Float("Soft light radius", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 2, 0.01] });
 	
-	inputs[| 4] = nodeValue_Int("Light density", self, 1)
+	inputs[4] = nodeValue_Int("Light density", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] });
 	
-	inputs[| 5] = nodeValue_Enum_Scroll("Light type", self,  0, [ new scrollItem("Point", s_node_shadow_type, 0), 
+	inputs[5] = nodeValue_Enum_Scroll("Light type", self,  0, [ new scrollItem("Point", s_node_shadow_type, 0), 
 												 new scrollItem("Sun",   s_node_shadow_type, 1) ]);
 	
-	inputs[| 6] = nodeValue_Color("Ambient color", self, c_grey);
+	inputs[6] = nodeValue_Color("Ambient color", self, c_grey);
 	
-	inputs[| 7] = nodeValue_Color("Light color", self, c_white);
+	inputs[7] = nodeValue_Color("Light color", self, c_white);
 	
-	inputs[| 8] = nodeValue_Float("Light radius", self, 16);
+	inputs[8] = nodeValue_Float("Light radius", self, 16);
 	
-	inputs[| 9] = nodeValue_Bool("Render solid", self, true);
+	inputs[9] = nodeValue_Bool("Render solid", self, true);
 	
-	inputs[| 10] = nodeValue_Bool("Use BG color", self, false, "If checked, background color will be used as shadow caster.");
+	inputs[10] = nodeValue_Bool("Use BG color", self, false, "If checked, background color will be used as shadow caster.");
 	
-	inputs[| 11] = nodeValue_Float("BG threshold", self, 0.1)
+	inputs[11] = nodeValue_Float("BG threshold", self, 0.1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 12] = nodeValue_Float("Light intensity", self, 1)
+	inputs[12] = nodeValue_Float("Light intensity", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 2, 0.01] });
 	
-	inputs[| 13] = nodeValue_Int("Banding", self, 0)
+	inputs[13] = nodeValue_Int("Banding", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 16, 0.1] });
 	
-	inputs[| 14] = nodeValue_Enum_Scroll("Attenuation", self,  0, [ new scrollItem("Quadratic",			s_node_curve, 0),
+	inputs[14] = nodeValue_Enum_Scroll("Attenuation", self,  0, [ new scrollItem("Quadratic",			s_node_curve, 0),
 																	new scrollItem("Invert quadratic",	s_node_curve, 1),
 																	new scrollItem("Linear",			s_node_curve, 2), ])
 		.setTooltip("Control how light fade out over distance.");
 	
-	inputs[| 15] = nodeValue_Int("Ambient occlusion", self, 0)
+	inputs[15] = nodeValue_Int("Ambient occlusion", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 16, 0.1] });
 		
-	inputs[| 16] = nodeValue_Float("Ambient occlusion strength", self, 0.1)
+	inputs[16] = nodeValue_Float("Ambient occlusion strength", self, 0.1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 0.5, 0.001] });
 	
-	inputs[| 17] = nodeValue_Bool("Active", self, true);
+	inputs[17] = nodeValue_Bool("Active", self, true);
 		active_index = 17;
 	
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue_Output("Light mask", self, VALUE_TYPE.surface, noone);
+	outputs[1] = nodeValue_Output("Light mask", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 17, 
 		["Surfaces",		   true], 0, 1, 
@@ -82,8 +82,8 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		PROCESSOR_OVERLAY_CHECK
 		
 		var _hov = false;
-		var  hv  = inputs[| 2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= hv;
-		if(array_length(current_data) != ds_list_size(inputs)) return _hov;
+		var  hv  = inputs[2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= hv;
+		if(array_length(current_data) != array_length(inputs)) return _hov;
 		
 		var _type = current_data[5];
 		if(_type == 0) {
@@ -91,7 +91,7 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			var px = _x + pos[0] * _s;
 			var py = _y + pos[1] * _s;
 			
-			var hv = inputs[| 8].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny, 0, 1 / 4); _hov |= hv;
+			var hv = inputs[8].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny, 0, 1 / 4); _hov |= hv;
 		}
 		
 		return _hov;
@@ -117,7 +117,7 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		var _bg_use = _data[10];
 		var _bg_thr = _data[11];
 		
-		inputs[| 8].setVisible(_type == 0);
+		inputs[8].setVisible(_type == 0);
 		
 		if(!is_surface(_bg)) return _outSurf;
 		

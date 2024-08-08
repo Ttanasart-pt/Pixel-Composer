@@ -2,6 +2,8 @@ function nodeValue_Palette(_name, _node, _value, _tooltip = "") { return new Nod
 
 function NodeValue_Palette(_name, _node, _value, _tooltip = "") : NodeValue(_name, _node, JUNCTION_CONNECT.input, VALUE_TYPE.color, _value, _tooltip) constructor {;
 	
+	setDisplay(VALUE_DISPLAY.palette);
+	
 	/////============== GET =============
 	
 	static getValue = function(_time = CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { //// Get value

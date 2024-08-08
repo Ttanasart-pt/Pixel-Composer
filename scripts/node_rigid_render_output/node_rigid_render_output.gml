@@ -7,10 +7,10 @@ function Node_Rigid_Render_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 	
 	previewable = true;
 	
-	inputs[| 0] = nodeValue_Vector("Render dimension", self, DEF_SURF)
+	inputs[0] = nodeValue_Vector("Render dimension", self, DEF_SURF)
 		.rejectArray();
 		
-	inputs[| 1] = nodeValue_Bool("Round position", self, false)
+	inputs[1] = nodeValue_Bool("Round position", self, false)
 	
 	attribute_surface_depth();
 	
@@ -22,11 +22,11 @@ function Node_Rigid_Render_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 		})]);
 	
 	static createNewInput = function() {
-		var index = ds_list_size(inputs);
-		inputs[| index] = nodeValue("Object", self, JUNCTION_CONNECT.input, VALUE_TYPE.rigid, noone )
+		var index = array_length(inputs);
+		inputs[index] = nodeValue("Object", self, JUNCTION_CONNECT.input, VALUE_TYPE.rigid, noone )
 			.setVisible(true, true);
 			
-		return inputs[| index];
+		return inputs[index];
 	} setDynamicInput(1, true, VALUE_TYPE.rigid);
 	
 	static createOutput = function() { #region
@@ -34,14 +34,14 @@ function Node_Rigid_Render_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 		if(!is_struct(group)) return;
 			
 		if(!is_undefined(outParent))
-			ds_list_remove(group.outputs, outParent);
+			array_remove(group.outputs, outParent);
 			
 		outParent = nodeValue("Rendered", group, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone)
 			.uncache()
 			.setVisible(true, true);
 		outParent.from = self;
 		
-		ds_list_add(group.outputs, outParent);
+		array_push(group.outputs, outParent);
 		group.refreshNodeDisplay();
 		group.sortIO();
 	} if(!LOADING && !APPENDING) createOutput(); #endregion
@@ -79,7 +79,7 @@ function Node_Rigid_Render_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 			draw_set_color(c_white);
 			physics_world_draw_debug(flag);
 		} else {
-			for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i++ ) {
+			for( var i = input_fix_len; i < array_length(inputs) - 1; i++ ) {
 				var objNode = getInputData(i);
 				if(!is_array(objNode)) continue;
 				

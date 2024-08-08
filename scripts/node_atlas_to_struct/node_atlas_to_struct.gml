@@ -2,10 +2,10 @@ function Node_Atlas_Struct(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	name = "Atlas to Struct";
 	setDimension(96, 48);
 	
-	inputs[| 0] = nodeValue_Surface("Atlas", self)
+	inputs[0] = nodeValue_Surface("Atlas", self)
 		.setVisible(true, true);
 	
-	outputs[| 0] = nodeValue_Output("Struct", self, VALUE_TYPE.struct, [])
+	outputs[0] = nodeValue_Output("Struct", self, VALUE_TYPE.struct, [])
 		.setArrayDepth(1);
 		
 	static update = function(frame = CURRENT_FRAME) {
@@ -35,6 +35,6 @@ function Node_Atlas_Struct(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			}
 		}
 		
-		outputs[| 0].setValue(str);
+		outputs[0].setValue(str);
 	}
 }

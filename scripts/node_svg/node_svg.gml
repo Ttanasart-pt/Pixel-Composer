@@ -2,7 +2,7 @@ function Node_create_SVG_path(_x, _y, path) {
 	if(!file_exists_empty(path)) return noone;
 	
 	var node = new Node_SVG(_x, _y, PANEL_GRAPH.getCurrentContext()).skipDefault();
-	node.inputs[| 0].setValue(path);
+	node.inputs[0].setValue(path);
 	node.doUpdate();
 	return node;	
 }
@@ -11,14 +11,14 @@ function Node_SVG(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "SVG";
 	color = COLORS.node_blend_input;
 	
-	inputs[| 0]  = nodeValue_Text("Path", self, "")
+	inputs[0]  = nodeValue_Text("Path", self, "")
 		.setDisplay(VALUE_DISPLAY.path_load, { filter: "Scalable Vector Graphics|*.svg" });
 		
-	inputs[| 1]  = nodeValue_Float("Scale", self, 1);
+	inputs[1]  = nodeValue_Float("Scale", self, 1);
 		
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue_Output("SVG Struct", self, VALUE_TYPE.struct, {});
+	outputs[1] = nodeValue_Output("SVG Struct", self, VALUE_TYPE.struct, {});
 	
 	attribute_surface_depth();
 	
@@ -33,7 +33,7 @@ function Node_SVG(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		new checkBox(function() { attributes.file_checker = !attributes.file_checker; }) ]);
 	
 	on_drop_file = function(path) {
-		inputs[| 0].setValue(path);
+		inputs[0].setValue(path);
 		
 		if(readFile(path)) {
 			doUpdate();
@@ -97,10 +97,10 @@ function Node_SVG(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			readFile(path);
 		
 		if(!is_instanceof(content, SVG)) return;
-		outputs[| 1].setValue(path);
+		outputs[1].setValue(path);
 		
 		var _scale   = getInputData(1);
-		var _outsurf = outputs[| 0].getValue();
+		var _outsurf = outputs[0].getValue();
 		
 		var ww = content.width  * _scale;
 		var hh = content.height * _scale;
@@ -111,14 +111,14 @@ function Node_SVG(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			content.draw(_scale);
 		surface_reset_shader();
 		
-		outputs[| 0].setValue(_outsurf);
-		outputs[| 1].setValue(rawContent);
+		outputs[0].setValue(_outsurf);
+		outputs[1].setValue(rawContent);
 	}
 	
 	static dropPath = function(path) {
 		if(is_array(path)) path = array_safe_get(path, 0);
 		if(!file_exists_empty(path)) return;
 		
-		inputs[| 0].setValue(path);
+		inputs[0].setValue(path);
 	}
 }

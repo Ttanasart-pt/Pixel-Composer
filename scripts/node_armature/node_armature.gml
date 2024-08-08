@@ -2,7 +2,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	name = "Armature Create";
 	setDimension(96, 72);
 	
-	//inputs[| 0] = nodeValue_Int("Axis", self, 0);
+	//inputs[0] = nodeValue_Int("Axis", self, 0);
 	
 	bone_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { #region
 		var _b  = attributes.bones;
@@ -138,7 +138,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		return bone;
 	} #endregion
 	
-	outputs[| 0] = nodeValue_Output("Armature", self, VALUE_TYPE.armature, noone);
+	outputs[0] = nodeValue_Output("Armature", self, VALUE_TYPE.armature, noone);
 	
 	#region ++++ attributes ++++
 	attributes.bones = new __Bone(,,,,, self);
@@ -562,7 +562,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	static step = function() {}
 	
 	static update = function(frame = CURRENT_FRAME) { #region
-		outputs[| 0].setValue(attributes.bones);
+		outputs[0].setValue(attributes.bones);
 	} #endregion
 	
 	static getPreviewBoundingBox = function() { #region

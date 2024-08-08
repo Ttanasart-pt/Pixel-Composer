@@ -4,20 +4,20 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	cached_pos = ds_map_create();
 	
-	outputs[| 0] = nodeValue_Output("Combined Path", self, VALUE_TYPE.pathnode, self);
+	outputs[0] = nodeValue_Output("Combined Path", self, VALUE_TYPE.pathnode, self);
 	
 	static createNewInput = function() {
-		var index = ds_list_size(inputs);
+		var index = array_length(inputs);
 		
-		inputs[| index] = nodeValue_PathNode("Path", self, noone )
+		inputs[index] = nodeValue_PathNode("Path", self, noone )
 			.setVisible(true, true);
 		
-		return inputs[| index];
+		return inputs[index];
 	} setDynamicInput(1, true, VALUE_TYPE.pathnode);
 	
 	static getLineCount = function() {
 		var l = 0;
-		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
+		for( var i = input_fix_len; i < array_length(inputs); i += data_length ) {
 			var _path = getInputData(i);
 			l += struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
 		}
@@ -25,7 +25,7 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}
 	
 	static getSegmentCount = function(ind = 0) {
-		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
+		for( var i = input_fix_len; i < array_length(inputs); i += data_length ) {
 			var _path = getInputData(i);
 			var lc    = struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
 			
@@ -37,7 +37,7 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}
 	
 	static getLength = function(ind = 0) {
-		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
+		for( var i = input_fix_len; i < array_length(inputs); i += data_length ) {
 			var _path = getInputData(i);
 			var lc    = struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
 			
@@ -49,7 +49,7 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}
 	
 	static getAccuLength = function(ind = 0) {
-		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
+		for( var i = input_fix_len; i < array_length(inputs); i += data_length ) {
 			var _path = getInputData(i);
 			var lc    = struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
 			
@@ -61,7 +61,7 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}
 	
 	static getPointRatio = function(_rat, ind = 0) {
-		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
+		for( var i = input_fix_len; i < array_length(inputs); i += data_length ) {
 			var _path = getInputData(i);
 			var lc = struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
 			
@@ -73,7 +73,7 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}
 	
 	static getPointDistance = function(_dist, ind = 0) {
-		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
+		for( var i = input_fix_len; i < array_length(inputs); i += data_length ) {
 			var _path = getInputData(i);
 			var lc = struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
 			
@@ -85,7 +85,7 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}
 	
 	static getBoundary = function(ind = 0) {
-		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
+		for( var i = input_fix_len; i < array_length(inputs); i += data_length ) {
 			var _path = getInputData(i);
 			var lc    = struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
 			
@@ -97,7 +97,7 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
+		for( var i = input_fix_len; i < array_length(inputs); i += data_length ) {
 			var _path = getInputData(i);
 			if(!struct_has(_path, "drawOverlay")) continue;
 			
@@ -107,6 +107,6 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	static update = function(frame = CURRENT_FRAME) {
 		ds_map_clear(cached_pos);
-		outputs[| 0].setValue(self);
+		outputs[0].setValue(self);
 	}
 }

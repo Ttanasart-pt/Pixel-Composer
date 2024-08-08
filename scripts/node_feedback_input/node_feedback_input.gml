@@ -4,12 +4,12 @@ function Node_Feedback_Input(_x, _y, _group = noone) : Node_Group_Input(_x, _y, 
 	is_group_io = true;
 	setDimension(96, 32 + 24 * 2);
 	
-	outputs[| 0].getValueDefault = method(outputs[| 0], outputs[| 0].getValueRecursive); //Get value from outside loop
-	outputs[| 0].getValueRecursive = function(arr, _time) {
+	outputs[0].getValueDefault = method(outputs[0], outputs[0].getValueRecursive); //Get value from outside loop
+	outputs[0].getValueRecursive = function(arr, _time) {
 		var _node_output = noone;
-		for( var i = 0; i < array_length(outputs[| 1].value_to); i++ ) {
-			var vt = outputs[| 1].value_to[i];
-			if(vt.value_from == outputs[| 1])
+		for( var i = 0; i < array_length(outputs[1].value_to); i++ ) {
+			var vt = outputs[1].value_to[i];
+			if(vt.value_from == outputs[1])
 				_node_output = vt;
 		}
 		
@@ -19,8 +19,8 @@ function Node_Feedback_Input(_x, _y, _group = noone) : Node_Group_Input(_x, _y, 
 			return;
 		}
 		
-		outputs[| 0].getValueDefault(arr);
+		outputs[0].getValueDefault(arr);
 	}
 	
-	outputs[| 1] = nodeValue_Output("Feedback loop", self, VALUE_TYPE.node, 0).nonForward();
+	outputs[1] = nodeValue_Output("Feedback loop", self, VALUE_TYPE.node, 0).nonForward();
 }

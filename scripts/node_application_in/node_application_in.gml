@@ -2,7 +2,7 @@ function Node_Application_In(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	name = "GUI In";
 	update_on_frame = true;
 	
-	inputs[| 0] = nodeValue_Surface("GUI", self);
+	inputs[0] = nodeValue_Surface("GUI", self);
 	
 	APP_SURF_OVERRIDE = true;
 	
@@ -11,7 +11,7 @@ function Node_Application_In(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	} #endregion
 	
 	static update = function() { #region
-		var s = inputs[| 0].getValue();
+		var s = inputs[0].getValue();
 		
 		if(!is_surface(s)) return;
 		

@@ -3,17 +3,17 @@ function Node_Segment_Filter(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	setDimension(96, 48);
 	
-	inputs[| 0] = nodeValue_Vector("Segments", self, [[]])
+	inputs[0] = nodeValue_Vector("Segments", self, [[]])
 		.setVisible(true, true)
 		.setArrayDepth(1);
 	
-	inputs[| 1] = nodeValue_Rotation("Angle", self, 0);
+	inputs[1] = nodeValue_Rotation("Angle", self, 0);
 	
-	inputs[| 2] = nodeValue_Float("Spread", self, 15);
+	inputs[2] = nodeValue_Float("Spread", self, 15);
 	
-	inputs[| 3] = nodeValue_Bool("Both side", self, true);
+	inputs[3] = nodeValue_Bool("Both side", self, true);
 		
-	outputs[| 0] = nodeValue_Output("Segments", self, VALUE_TYPE.float, [[]])
+	outputs[0] = nodeValue_Output("Segments", self, VALUE_TYPE.float, [[]])
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setArrayDepth(2);
 	
@@ -25,7 +25,7 @@ function Node_Segment_Filter(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	path_preview_surface = noone;
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var _segs = outputs[| 0].getValue();
+		var _segs = outputs[0].getValue();
 		var ox, oy, nx, ny;
 		
 		if(array_invalid(_segs) || array_invalid(_segs[0])) return;
@@ -102,7 +102,7 @@ function Node_Segment_Filter(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			if(!array_empty(_seg)) array_push(_segOut, _seg);
 		}
 		
-		outputs[| 0].setValue(_segOut);
+		outputs[0].setValue(_segOut);
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

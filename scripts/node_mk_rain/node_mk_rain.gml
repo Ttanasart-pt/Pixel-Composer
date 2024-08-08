@@ -2,45 +2,45 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	name = "MK Rain";
 	update_on_frame = true;
 	
-	inputs[| 0] = nodeValue_Surface("Surface in", self);
+	inputs[0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue_Rotation("Direction", self, 45);
+	inputs[1] = nodeValue_Rotation("Direction", self, 45);
 	
-	inputs[| 2] = nodeValue_Float("Density", self, 5);
+	inputs[2] = nodeValue_Float("Density", self, 5);
 	
-	inputs[| 3] = nodeValue_Range("Raindrop width", self, [ 1, 1 ]);
+	inputs[3] = nodeValue_Range("Raindrop width", self, [ 1, 1 ]);
 	
-	inputs[| 4] = nodeValue_Range("Raindrop length", self, [ 5, 10 ]);
+	inputs[4] = nodeValue_Range("Raindrop length", self, [ 5, 10 ]);
 	
-	inputs[| 5] = nodeValue_Gradient("Color", self, new gradientObject(cola(c_white)));
+	inputs[5] = nodeValue_Gradient("Color", self, new gradientObject(cola(c_white)));
 	
-	inputs[| 6] = nodeValue_Slider_Range("Alpha", self, [ 0.5, 1 ]);
+	inputs[6] = nodeValue_Slider_Range("Alpha", self, [ 0.5, 1 ]);
 		
-	inputs[| 7] = nodeValue_Range("Velocity", self, [ 1, 2 ]);
+	inputs[7] = nodeValue_Range("Velocity", self, [ 1, 2 ]);
 	
-	inputs[| 8] = nodeValue_Int("Seed", self, seed_random(6))
-		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 8].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
+	inputs[8] = nodeValue_Int("Seed", self, seed_random(6))
+		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[8].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
-	inputs[| 9] = nodeValue_Enum_Scroll("Shape", self,  0, [ new scrollItem("Rain",    s_node_mk_rain_type, 0),
+	inputs[9] = nodeValue_Enum_Scroll("Shape", self,  0, [ new scrollItem("Rain",    s_node_mk_rain_type, 0),
 												             new scrollItem("Snow",    s_node_mk_rain_type, 1),
 												             new scrollItem("Texture", s_node_mk_rain_type, 2) ]);
 	
-	inputs[| 10] = nodeValue_Range("Snow size", self, [ 3, 4 ]);
+	inputs[10] = nodeValue_Range("Snow size", self, [ 3, 4 ]);
 	
-	inputs[| 11] = nodeValue_Surface("Texture", self);
+	inputs[11] = nodeValue_Surface("Texture", self);
 	
-	inputs[| 12] = nodeValue_Slider_Range("Track extension", self, [ 0, 0 ], { range: [ 0, 10, 0.01 ] });
+	inputs[12] = nodeValue_Slider_Range("Track extension", self, [ 0, 0 ], { range: [ 0, 10, 0.01 ] });
 	
-	inputs[| 13] = nodeValue("Size over lifetime", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11);
+	inputs[13] = nodeValue("Size over lifetime", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11);
 	
-	inputs[| 14] = nodeValue_Bool("Limited lifespan", self, false);
+	inputs[14] = nodeValue_Bool("Limited lifespan", self, false);
 	
-	inputs[| 15] = nodeValue_Slider_Range("Lifespan", self, [ 0, 1 ])
+	inputs[15] = nodeValue_Slider_Range("Lifespan", self, [ 0, 1 ])
 		.setTooltip("Lifespan of a droplet as a ratio of the entire animation.");
 		
-	inputs[| 16] = nodeValue("Alpha over lifetime", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11);
+	inputs[16] = nodeValue("Alpha over lifetime", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11);
 		
-	inputs[| 17] = nodeValue_Bool("Fade alpha", self, false);
+	inputs[17] = nodeValue_Bool("Fade alpha", self, false);
 		
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 0, 8, 
 		["Shape",		false], 9, 3, 4, 10, 11, 
@@ -49,16 +49,16 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		["Render",		false], 5, 6, 17, 
 	];
 	
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	static step = function() { #region
 		var _shap = getSingleValue(9);
 		
-		inputs[|  3].setVisible(_shap == 0);
-		inputs[|  4].setVisible(_shap == 0);
-		inputs[| 10].setVisible(_shap == 1);
-		inputs[| 11].setVisible(_shap == 2);
-		inputs[| 17].setVisible(_shap == 0);
+		inputs[ 3].setVisible(_shap == 0);
+		inputs[ 4].setVisible(_shap == 0);
+		inputs[10].setVisible(_shap == 1);
+		inputs[11].setVisible(_shap == 2);
+		inputs[17].setVisible(_shap == 0);
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region

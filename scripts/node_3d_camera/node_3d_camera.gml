@@ -18,66 +18,66 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	
 	global.SKY_SPHERE = new __3dUVSphere(0.5, 16, 8, true);
 	
-	inputs[| in_d3d + 0] = nodeValue_Int("FOV", self, 60 )
+	inputs[in_d3d + 0] = nodeValue_Int("FOV", self, 60 )
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 10, 90, 0.1 ] });
 	
-	inputs[| in_d3d + 1] = nodeValue_Vector("Clipping Distance", self, [ 1, 10 ] );
+	inputs[in_d3d + 1] = nodeValue_Vector("Clipping Distance", self, [ 1, 10 ] );
 	 
-	inputs[| in_d3d + 2] = nodeValue_Dimension(self);
+	inputs[in_d3d + 2] = nodeValue_Dimension(self);
 	
-	inputs[| in_d3d + 3] = nodeValue_Enum_Button("Projection", self,  1 , [ "Perspective", "Orthographic" ]);
+	inputs[in_d3d + 3] = nodeValue_Enum_Button("Projection", self,  1 , [ "Perspective", "Orthographic" ]);
 	
-	inputs[| in_d3d + 4] = nodeValue_D3Scene("Scene", self, noone )
+	inputs[in_d3d + 4] = nodeValue_D3Scene("Scene", self, noone )
 		.setVisible(true, true);
 	
-	inputs[| in_d3d + 5] = nodeValue_Color("Ambient Light", self, c_dkgrey );
+	inputs[in_d3d + 5] = nodeValue_Color("Ambient Light", self, c_dkgrey );
 	
-	inputs[| in_d3d + 6] = nodeValue_Bool("Show Background", self, false );
+	inputs[in_d3d + 6] = nodeValue_Bool("Show Background", self, false );
 	
-	inputs[| in_d3d + 7] = nodeValue_Enum_Button("Backface Culling", self,  2 , [ "None", "CW", "CCW" ]);
+	inputs[in_d3d + 7] = nodeValue_Enum_Button("Backface Culling", self,  2 , [ "None", "CW", "CCW" ]);
 	
-	inputs[| in_d3d + 8] = nodeValue_Float("Orthographic Scale", self, 0.5 )
+	inputs[in_d3d + 8] = nodeValue_Float("Orthographic Scale", self, 0.5 )
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0.01, 4, 0.01 ] });
 	
-	inputs[| in_d3d + 9] = nodeValue_Enum_Scroll("Postioning Mode", self, 2, [ "Position + Rotation", "Position + Lookat", "Lookat + Rotation" ] );
+	inputs[in_d3d + 9] = nodeValue_Enum_Scroll("Postioning Mode", self, 2, [ "Position + Rotation", "Position + Lookat", "Lookat + Rotation" ] );
 	
-	inputs[| in_d3d + 10] = nodeValue_Vector("Lookat Position", self, [ 0, 0, 0 ] );
+	inputs[in_d3d + 10] = nodeValue_Vector("Lookat Position", self, [ 0, 0, 0 ] );
 	
-	inputs[| in_d3d + 11] = nodeValue_Rotation("Roll", self, 0);
+	inputs[in_d3d + 11] = nodeValue_Rotation("Roll", self, 0);
 	
-	inputs[| in_d3d + 12] = nodeValue_Rotation("Horizontal Angle", self, 45 );
+	inputs[in_d3d + 12] = nodeValue_Rotation("Horizontal Angle", self, 45 );
 	
-	inputs[| in_d3d + 13] = nodeValue_Float("Vertical Angle", self, 30 )
+	inputs[in_d3d + 13] = nodeValue_Float("Vertical Angle", self, 30 )
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 90, 0.1] });
 	
-	inputs[| in_d3d + 14] = nodeValue_Float("Distance", self, 4 );
+	inputs[in_d3d + 14] = nodeValue_Float("Distance", self, 4 );
 	
-	inputs[| in_d3d + 15] = nodeValue_Bool("Gamma Adjust", self, false );
+	inputs[in_d3d + 15] = nodeValue_Bool("Gamma Adjust", self, false );
 	
-	inputs[| in_d3d + 16] = nodeValue_Surface("Environment Texture", self);
+	inputs[in_d3d + 16] = nodeValue_Surface("Environment Texture", self);
 	
-	inputs[| in_d3d + 17] = nodeValue_Bool("Ambient Occlusion", self, false );
+	inputs[in_d3d + 17] = nodeValue_Bool("Ambient Occlusion", self, false );
 	
-	inputs[| in_d3d + 18] = nodeValue_Float("AO Radius", self, 0.25 );
+	inputs[in_d3d + 18] = nodeValue_Float("AO Radius", self, 0.25 );
 	
-	inputs[| in_d3d + 19] = nodeValue_Float("AO Bias", self, 0.05 );
+	inputs[in_d3d + 19] = nodeValue_Float("AO Bias", self, 0.05 );
 	
-	inputs[| in_d3d + 20] = nodeValue_Float("AO Strength", self, 1. )
+	inputs[in_d3d + 20] = nodeValue_Float("AO Strength", self, 1. )
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0.01, 4, 0.01 ] });
 	
-	inputs[| in_d3d + 21] = nodeValue_Int("Round Normal", self, 0 )
+	inputs[in_d3d + 21] = nodeValue_Int("Round Normal", self, 0 )
 		.setWindows();
 	
-	inputs[| in_d3d + 22] = nodeValue_Enum_Button("Blend mode", self,  0 , [ "Normal", "Additive" ]);
+	inputs[in_d3d + 22] = nodeValue_Enum_Button("Blend mode", self,  0 , [ "Normal", "Additive" ]);
 		
-	in_cam = ds_list_size(inputs);
+	in_cam = array_length(inputs);
 	
-	outputs[| 0] = nodeValue_Output("Rendered", self, VALUE_TYPE.surface, noone );
+	outputs[0] = nodeValue_Output("Rendered", self, VALUE_TYPE.surface, noone );
 	
-	outputs[| 1] = nodeValue_Output("Normal", self, VALUE_TYPE.surface, noone )
+	outputs[1] = nodeValue_Output("Normal", self, VALUE_TYPE.surface, noone )
 		.setVisible(false);
 	
-	outputs[| 2] = nodeValue_Output("Depth", self, VALUE_TYPE.surface, noone )
+	outputs[2] = nodeValue_Output("Depth", self, VALUE_TYPE.surface, noone )
 		.setVisible(false);
 	
 	input_display_list = [ in_d3d + 4,
@@ -104,7 +104,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	}
 	
 	static drawOverlay3D = function(active, params, _mx, _my, _snx, _sny, _panel) {
-	var _rot = inputs[| 1].display_data.angle_display;
+	var _rot = inputs[1].display_data.angle_display;
 		tools = _rot == QUARTERNION_DISPLAY.quarterion? tool_quate : tool_euler;
 		if(_rot == QUARTERNION_DISPLAY.euler && isUsingTool("Rotate"))
 			PANEL_PREVIEW.tool_current = noone;
@@ -113,13 +113,13 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		if(array_empty(object)) return;
 		object = object[0];
 		
-		var _pos  = inputs[| 0].getValue(,,, true);
+		var _pos  = inputs[0].getValue(,,, true);
 		var _vpos = new __vec3( _pos[0], _pos[1], _pos[2] );
 		
 		if(isUsingTool("Transform"))	drawGizmoPosition(0, object, _vpos, active, params, _mx, _my, _snx, _sny, _panel);
 		else if(isUsingTool("Rotate"))	drawGizmoRotation(1, object, _vpos, active, params, _mx, _my, _snx, _sny, _panel);
 		else if(isUsingTool("Move Target")) {
-			var _lkpos  = inputs[| in_d3d + 10].getValue(,,, true);
+			var _lkpos  = inputs[in_d3d + 10].getValue(,,, true);
 			var _lkvpos = new __vec3( _lkpos[0], _lkpos[1], _lkpos[2] );
 			
 			drawGizmoPosition(in_d3d + 10, noone, _lkvpos, active, params, _mx, _my, _snx, _sny, _panel);
@@ -131,7 +131,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		}
 		
 		#region draw result
-			var _outSurf = outputs[| 0].getValue();
+			var _outSurf = outputs[0].getValue();
 			if(is_array(_outSurf)) _outSurf = array_safe_get_fast(_outSurf, 0);
 			if(!is_surface(_outSurf)) return;
 		
@@ -162,20 +162,20 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		var _posm = getInputData(in_d3d +  9);
 		var _ao   = getInputData(in_d3d + 17);
 		
-		inputs[| in_d3d + 0].setVisible(_proj == 0);
-		inputs[| in_d3d + 8].setVisible(_proj == 1);
+		inputs[in_d3d + 0].setVisible(_proj == 0);
+		inputs[in_d3d + 8].setVisible(_proj == 1);
 		
-		inputs[| 0].setVisible(_posm == 0 || _posm == 1);
-		inputs[| 1].setVisible(_posm == 0);
-		inputs[| in_d3d + 10].setVisible(_posm == 1 || _posm == 2);
-		inputs[| in_d3d + 11].setVisible(_posm == 1);
-		inputs[| in_d3d + 12].setVisible(_posm == 2);
-		inputs[| in_d3d + 13].setVisible(_posm == 2);
-		inputs[| in_d3d + 14].setVisible(_posm == 2);
+		inputs[0].setVisible(_posm == 0 || _posm == 1);
+		inputs[1].setVisible(_posm == 0);
+		inputs[in_d3d + 10].setVisible(_posm == 1 || _posm == 2);
+		inputs[in_d3d + 11].setVisible(_posm == 1);
+		inputs[in_d3d + 12].setVisible(_posm == 2);
+		inputs[in_d3d + 13].setVisible(_posm == 2);
+		inputs[in_d3d + 14].setVisible(_posm == 2);
 		
-		inputs[| in_d3d + 18].setVisible(_ao);
-		inputs[| in_d3d + 19].setVisible(_ao);
-		inputs[| in_d3d + 20].setVisible(_ao);
+		inputs[in_d3d + 18].setVisible(_ao);
+		inputs[in_d3d + 19].setVisible(_ao);
+		inputs[in_d3d + 20].setVisible(_ao);
 		
 		switch(_posm) {
 			case 0 : 
@@ -304,9 +304,9 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		#endregion
 		
 		#region submit
-			var _render = outputs[| 0].getValue();
-			var _normal = outputs[| 1].getValue();
-			var _depth  = outputs[| 2].getValue();
+			var _render = outputs[0].getValue();
+			var _normal = outputs[1].getValue();
+			var _depth  = outputs[2].getValue();
 			var _bgSurf = _dbg? scene.renderBackground(_dim[0], _dim[1]) : noone;
 		
 			_render = surface_verify(_render, _dim[0], _dim[1]);

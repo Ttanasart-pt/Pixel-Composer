@@ -6,27 +6,27 @@ function Node_Strand_Render(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	manual_ungroupable	 = false;
 	
-	inputs[| 0] = nodeValue_Dimension(self);
+	inputs[0] = nodeValue_Dimension(self);
 	
-	inputs[| 1] = nodeValue("Strand", self, JUNCTION_CONNECT.input, VALUE_TYPE.strands, noone)
+	inputs[1] = nodeValue("Strand", self, JUNCTION_CONNECT.input, VALUE_TYPE.strands, noone)
 		.setVisible(true, true);
 	
-	inputs[| 2] = nodeValue_Range("Thickness", self, [ 1, 1 ], { linked : true });
+	inputs[2] = nodeValue_Range("Thickness", self, [ 1, 1 ], { linked : true });
 	
-	inputs[| 3] = nodeValue("Thickness over length", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11);
+	inputs[3] = nodeValue("Thickness over length", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11);
 	
-	inputs[| 4] = nodeValue_Gradient("Random color", self, new gradientObject(cola(c_white)));
+	inputs[4] = nodeValue_Gradient("Random color", self, new gradientObject(cola(c_white)));
 	
-	inputs[| 5] = nodeValue_Gradient("Color over length", self, new gradientObject(cola(c_white)));
+	inputs[5] = nodeValue_Gradient("Color over length", self, new gradientObject(cola(c_white)));
 	
-	inputs[| 6] = nodeValue_Float("Seed", self, seed_random(6))
-		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[| 6].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
+	inputs[6] = nodeValue_Float("Seed", self, seed_random(6))
+		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[6].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
-	inputs[| 7] = nodeValue_Float("Child", self, 0, "Render extra strands between the real strands.");
+	inputs[7] = nodeValue_Float("Child", self, 0, "Render extra strands between the real strands.");
 	
-	inputs[| 8] = nodeValue_Int("Update quality", self, 4);
+	inputs[8] = nodeValue_Int("Update quality", self, 4);
 	
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 6, 8, 
 		["Output",  false], 0,
@@ -61,9 +61,9 @@ function Node_Strand_Render(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var _chd = getInputData(7);
 		var _stp = getInputData(8);
 		
-		var _surf = outputs[| 0].getValue();
+		var _surf = outputs[0].getValue();
 		_surf = surface_verify(_surf, _dim[0], _dim[1]);
-		outputs[| 0].setValue(_surf);
+		outputs[0].setValue(_surf);
 		
 		if(_str == noone) return;
 		if(!is_array(_str)) _str = [ _str ];

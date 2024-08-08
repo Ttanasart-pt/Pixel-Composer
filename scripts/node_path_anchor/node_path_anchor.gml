@@ -3,16 +3,16 @@ function Node_Path_Anchor(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	color = COLORS.node_blend_number;
 	setDimension(96, 48);
 		
-	inputs[| 0] = nodeValue_Vector("Postion", self, [ 0, 0 ] )
+	inputs[0] = nodeValue_Vector("Postion", self, [ 0, 0 ] )
 		.setVisible(true, true);
 		
-	inputs[| 1] = nodeValue_Vector("Control point 1", self, [ -16, 0 ] );
+	inputs[1] = nodeValue_Vector("Control point 1", self, [ -16, 0 ] );
 		
-	inputs[| 2] = nodeValue_Vector("Control point 2", self, [ 16, 0 ] );
+	inputs[2] = nodeValue_Vector("Control point 2", self, [ 16, 0 ] );
 		
-	inputs[| 3] = nodeValue_Bool("Mirror control point", self, true );
+	inputs[3] = nodeValue_Bool("Mirror control point", self, true );
 	
-	outputs[| 0] = nodeValue_Output("Anchor", self, VALUE_TYPE.float, [ 0, 0, 0, 0, 0, 0 ])
+	outputs[0] = nodeValue_Output("Anchor", self, VALUE_TYPE.float, [ 0, 0, 0, 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	tools = [
@@ -39,11 +39,11 @@ function Node_Path_Anchor(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		draw_line(px, py, c1x, c1y);
 		draw_line(px, py, c2x, c2y);
 		
-		active &= !inputs[| 0].drawOverlay(hover, !isUsingTool(0) && active, _x, _y, _s, _mx, _my, _snx, _sny);
-		active &= !inputs[| 1].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny);
+		active &= !inputs[0].drawOverlay(hover, !isUsingTool(0) && active, _x, _y, _s, _mx, _my, _snx, _sny);
+		active &= !inputs[1].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny);
 		
 		if(!_mir)
-			active &= !inputs[| 2].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny);
+			active &= !inputs[2].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny);
 		else
 			draw_circle_prec(c2x, c2y, 4, false);
 	}

@@ -3,22 +3,22 @@ function Node_Onion_Skin(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	use_cache   = CACHE_USE.manual;
 	clearCacheOnChange = false;
 	
-	inputs[| 0] = nodeValue_Surface("Surface in", self);
+	inputs[0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[| 1] = nodeValue_Slider_Range("Range", self, [-1, 1], { range: [ -16, 16, 0.1 ] });
+	inputs[1] = nodeValue_Slider_Range("Range", self, [-1, 1], { range: [ -16, 16, 0.1 ] });
 	
-	inputs[| 2] = nodeValue_Float("Alpha", self, 0.5)
+	inputs[2] = nodeValue_Float("Alpha", self, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider);
 		
-	inputs[| 3] = nodeValue_Color("Color pre", self, c_red)
+	inputs[3] = nodeValue_Color("Color pre", self, c_red)
 	
-	inputs[| 4] = nodeValue_Color("Color post", self, c_blue)
+	inputs[4] = nodeValue_Color("Color post", self, c_blue)
 	
-	inputs[| 5] = nodeValue_Int("Step", self, 1)
+	inputs[5] = nodeValue_Int("Step", self, 1)
 	
-	inputs[| 6] = nodeValue_Bool("On top", self, true, "Render current frame on top of all frames.")
+	inputs[6] = nodeValue_Bool("On top", self, true, "Render current frame on top of all frames.")
 	
-	outputs[| 0] = nodeValue_Output("Output", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Output", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
 		["Surface", false], 0, 1, 5,  
@@ -31,7 +31,7 @@ function Node_Onion_Skin(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	static onInspector2Update = function() { clearCache(); }
 	
 	static update = function() { 
-		if(!inputs[| 0].value_from) return;
+		if(!inputs[0].value_from) return;
 		
 		var _surf = getInputData(0);
 		var _rang = getInputData(1);
@@ -44,9 +44,9 @@ function Node_Onion_Skin(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		var _top  = getInputData(6);
 		cacheCurrentFrame(_surf);
 		
-		var _outSurf = outputs[| 0].getValue();
+		var _outSurf = outputs[0].getValue();
 		_outSurf = surface_verify(_outSurf, surface_get_width_safe(_surf), surface_get_height_safe(_surf));
-		outputs[| 0].setValue(_outSurf);
+		outputs[0].setValue(_outSurf);
 		
 		surface_set_target(_outSurf);
 			DRAW_CLEAR

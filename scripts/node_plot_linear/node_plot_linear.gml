@@ -8,7 +8,7 @@
 		switch(query) {
 			case "waveform" : 
 			case "graph" : 
-				node.inputs[| 11].setValue(1); 
+				node.inputs[11].setValue(1); 
 				break;
 		}
 		
@@ -19,80 +19,80 @@
 function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Draw Bar / Graph";
 	
-	inputs[| 0] = nodeValue_Dimension(self);
+	inputs[0] = nodeValue_Dimension(self);
 	
-	inputs[| 1] = nodeValue_Float("Data", self, [])
+	inputs[1] = nodeValue_Float("Data", self, [])
 		.setArrayDepth(1)
 		.setVisible(true, true);
 		
-	inputs[| 2] = nodeValue_Slider_Range("Range", self, [ 0, 1 ]);
+	inputs[2] = nodeValue_Slider_Range("Range", self, [ 0, 1 ]);
 		
-	inputs[| 3] = nodeValue_Float("Sample frequency", self, 1);
+	inputs[3] = nodeValue_Float("Sample frequency", self, 1);
 	
-	inputs[| 4] = nodeValue_Vector("Origin", self, [ 0, DEF_SURF_H / 2 ]);
+	inputs[4] = nodeValue_Vector("Origin", self, [ 0, DEF_SURF_H / 2 ]);
 		
-	inputs[| 5] = nodeValue_Float("Scale", self, DEF_SURF_W / 2);
+	inputs[5] = nodeValue_Float("Scale", self, DEF_SURF_W / 2);
 	
-	inputs[| 6] = nodeValue_Color("Base Color", self, c_white);
+	inputs[6] = nodeValue_Color("Base Color", self, c_white);
 		
-	inputs[| 7] = nodeValue_Float("Graph Thickness", self, 1);
+	inputs[7] = nodeValue_Float("Graph Thickness", self, 1);
 	
-	inputs[| 8] = nodeValue_Bool("Background", self, false);
+	inputs[8] = nodeValue_Bool("Background", self, false);
 		
-	inputs[| 9] = nodeValue_Color("Background color", self, c_black);
+	inputs[9] = nodeValue_Color("Background color", self, c_black);
 	
-	inputs[| 10] = nodeValue_Rotation("Direction", self, 0);
+	inputs[10] = nodeValue_Rotation("Direction", self, 0);
 	
-	inputs[| 11] = nodeValue_Enum_Scroll("Type", self,  0, [ new scrollItem("Bar chart", s_node_plot_linear_type, 0), 
+	inputs[11] = nodeValue_Enum_Scroll("Type", self,  0, [ new scrollItem("Bar chart", s_node_plot_linear_type, 0), 
 												 new scrollItem("Graph",	 s_node_plot_linear_type, 1), ]);
 	
-	inputs[| 12] = nodeValue_Float("Value Offset", self, 0);
+	inputs[12] = nodeValue_Float("Value Offset", self, 0);
 	
-	inputs[| 13] = nodeValue_Gradient("Color Over Sample", self, new gradientObject(cola(c_white)))
+	inputs[13] = nodeValue_Gradient("Color Over Sample", self, new gradientObject(cola(c_white)))
 		.setMappable(27);
 	
-	inputs[| 14] = nodeValue_Enum_Scroll("Trim mode", self,  0, [ "Range", "Window" ]);
+	inputs[14] = nodeValue_Enum_Scroll("Trim mode", self,  0, [ "Range", "Window" ]);
 	
-	inputs[| 15] = nodeValue_Int("Window Size", self, 8);
+	inputs[15] = nodeValue_Int("Window Size", self, 8);
 	
-	inputs[| 16] = nodeValue_Float("Window Offset", self, 0);
+	inputs[16] = nodeValue_Float("Window Offset", self, 0);
 	
-	inputs[| 17] = nodeValue_Float("Spacing", self, 1);
+	inputs[17] = nodeValue_Float("Spacing", self, 1);
 	
-	inputs[| 18] = nodeValue_Float("Bar Width", self, 4);
+	inputs[18] = nodeValue_Float("Bar Width", self, 4);
 	
-	inputs[| 19] = nodeValue_Bool("Rounded Bar", self, false);
+	inputs[19] = nodeValue_Bool("Rounded Bar", self, false);
 	
-	inputs[| 20] = nodeValue_PathNode("Path", self, noone)
+	inputs[20] = nodeValue_PathNode("Path", self, noone)
 		.setVisible(true, true);
 	
-	inputs[| 21] = nodeValue_Bool("Flip Value", self, false);
+	inputs[21] = nodeValue_Bool("Flip Value", self, false);
 	
-	inputs[| 22] = nodeValue_Bool("Loop", self, false);
+	inputs[22] = nodeValue_Bool("Loop", self, false);
 	
-	inputs[| 23] = nodeValue_Float("Smooth", self, 0)
+	inputs[23] = nodeValue_Float("Smooth", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider);
 		
-	inputs[| 24] = nodeValue_Gradient("Color Over Value", self, new gradientObject(cola(c_white)))
+	inputs[24] = nodeValue_Gradient("Color Over Value", self, new gradientObject(cola(c_white)))
 		.setMappable(29);
 		
-	inputs[| 25] = nodeValue_Range("Value range", self, [ 0, 1 ] );
+	inputs[25] = nodeValue_Range("Value range", self, [ 0, 1 ] );
 	
-	inputs[| 26] = nodeValue_Bool("Absolute", self, false);
-	
-	//////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	inputs[| 27] = nodeValueMap("Sample Gradient map", self);
-	
-	inputs[| 28] = nodeValueGradientRange("Sample Gradient map range", self, inputs[| 13]);
-	
-	inputs[| 29] = nodeValueMap("Value Gradient map", self);
-	
-	inputs[| 30] = nodeValueGradientRange("Value Gradient map range", self, inputs[| 24]);
+	inputs[26] = nodeValue_Bool("Absolute", self, false);
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	inputs[27] = nodeValueMap("Sample Gradient map", self);
+	
+	inputs[28] = nodeValueGradientRange("Sample Gradient map range", self, inputs[13]);
+	
+	inputs[29] = nodeValueMap("Value Gradient map", self);
+	
+	inputs[30] = nodeValueGradientRange("Value Gradient map range", self, inputs[24]);
+	
+	//////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 0, 
 		["Data", 	 true], 1, 12, 21, 14, 2, 3, 15, 16, 
@@ -110,22 +110,22 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		
 		var _use_path = getSingleValue(20) != noone;
 		
-		inputs[|  2].setVisible(_trim_mode == 0);
-		inputs[| 15].setVisible(_trim_mode == 1);
-		inputs[| 16].setVisible(_trim_mode == 1);
+		inputs[ 2].setVisible(_trim_mode == 0);
+		inputs[15].setVisible(_trim_mode == 1);
+		inputs[16].setVisible(_trim_mode == 1);
 		
-		inputs[|  9].setVisible(_ubg);
-		inputs[|  7].setVisible(_typ == 1);
-		inputs[| 18].setVisible(_typ == 0);
-		inputs[| 19].setVisible(_typ == 0);
-		inputs[| 22].setVisible(_typ == 1);
-		inputs[| 23].setVisible(_typ == 1);
+		inputs[ 9].setVisible(_ubg);
+		inputs[ 7].setVisible(_typ == 1);
+		inputs[18].setVisible(_typ == 0);
+		inputs[19].setVisible(_typ == 0);
+		inputs[22].setVisible(_typ == 1);
+		inputs[23].setVisible(_typ == 1);
 		
-		inputs[|  4].setVisible(!_use_path);
-		inputs[| 10].setVisible(!_use_path);
+		inputs[ 4].setVisible(!_use_path);
+		inputs[10].setVisible(!_use_path);
 		
-		inputs[| 13].mappableStep();
-		inputs[| 24].mappableStep();
+		inputs[13].mappableStep();
+		inputs[24].mappableStep();
 	}
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
@@ -134,12 +134,12 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		var _use_path = current_data[20] != noone;
 		
 		if(!_use_path) {
-			var a = inputs[| 4].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+			var a = inputs[4].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 			active &= !a;
 		}
 		
-		var a = inputs[| 28].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, current_data[0]); active &= !a;
-		var a = inputs[| 30].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, current_data[0]); active &= !a;
+		var a = inputs[28].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, current_data[0]); active &= !a;
+		var a = inputs[30].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, current_data[0]); active &= !a;
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
@@ -239,11 +239,11 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 				
 				_ang_nor = _ang + 90;
 				_val	 = _smp_data[i] + _off;
-				_col_sam = evaluate_gradient_map(i / amo, _cls, _cls_map, _cls_rng, inputs[| 13]);
+				_col_sam = evaluate_gradient_map(i / amo, _cls, _cls_map, _cls_rng, inputs[13]);
 				
 				var _val_p = _clv_a? abs(_val) : _val;
 				var _val_prog = (_val_p - _clv_r[0]) / (_clv_r[1] - _clv_r[0]);
-				_col_val = evaluate_gradient_map(_val_prog, _clv, _clv_map, _clv_rng, inputs[| 24]);
+				_col_val = evaluate_gradient_map(_val_prog, _clv, _clv_map, _clv_rng, inputs[24]);
 				
 				var _c1 = colorMultiply(_lcl, _col_sam);
 				var _c2 = _col_val;

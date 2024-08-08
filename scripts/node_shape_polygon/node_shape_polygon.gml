@@ -6,54 +6,54 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	for( var i = 0, n = array_length(shapesArray); i < n; i++ ) 
 		shapesArray[i] = new scrollItem(shapesArray[i], s_node_shape_poly_type, i);
 		
-	inputs[| 0] = nodeValue_Dimension(self);
+	inputs[0] = nodeValue_Dimension(self);
 	
-	inputs[| 1] = nodeValue_Bool("Background", self, false);
+	inputs[1] = nodeValue_Bool("Background", self, false);
 	
-	inputs[| 2] = nodeValue_Color("Background color", self, c_black);
+	inputs[2] = nodeValue_Color("Background color", self, c_black);
 	
-	inputs[| 3] = nodeValue_Color("Shape color", self, c_white);
+	inputs[3] = nodeValue_Color("Shape color", self, c_white);
 	
-	inputs[| 4] = nodeValue_Enum_Scroll("Shape", self,  0, shapesArray);
+	inputs[4] = nodeValue_Enum_Scroll("Shape", self,  0, shapesArray);
 	
-	inputs[| 5] = nodeValue_Vector("Position", self, [ 0.5, 0.5 ])
+	inputs[5] = nodeValue_Vector("Position", self, [ 0.5, 0.5 ])
 		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
 	
-	inputs[| 6] = nodeValue_Rotation("Rotation", self, 0);
+	inputs[6] = nodeValue_Rotation("Rotation", self, 0);
 	
-	inputs[| 7] = nodeValue_Vector("Scale", self, [ 0.5, 0.5 ])
+	inputs[7] = nodeValue_Vector("Scale", self, [ 0.5, 0.5 ])
 		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
 	
-	inputs[| 8] = nodeValue_Int("Sides", self, 16)
+	inputs[8] = nodeValue_Int("Sides", self, 16)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [2, 64, 0.1] });
 	
-	inputs[| 9] = nodeValue_Float("Inner radius", self, 0.5)
+	inputs[9] = nodeValue_Float("Inner radius", self, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 10] = nodeValue_Float("Radius", self, 0.5)
+	inputs[10] = nodeValue_Float("Radius", self, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 11] = nodeValue_Int("Teeth", self, 6)
+	inputs[11] = nodeValue_Int("Teeth", self, 6)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [3, 16, 0.1] });
 	
-	inputs[| 12] = nodeValue_Float("Teeth height", self, 0.2)
+	inputs[12] = nodeValue_Float("Teeth height", self, 0.2)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 13] = nodeValue_Float("Teeth taper", self, 0)
+	inputs[13] = nodeValue_Float("Teeth taper", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-0.5, 0.5, 0.01] });
 	
-	inputs[| 14] = nodeValue_Rotation_Range("Angle range", self, [ 0, 360 ]);
+	inputs[14] = nodeValue_Rotation_Range("Angle range", self, [ 0, 360 ]);
 	
-	inputs[| 15] = nodeValue_Bool("Round cap", self, false);
+	inputs[15] = nodeValue_Bool("Round cap", self, false);
 	
-	inputs[| 16] = nodeValue("Mesh", self, JUNCTION_CONNECT.input, VALUE_TYPE.mesh, noone)
+	inputs[16] = nodeValue("Mesh", self, JUNCTION_CONNECT.input, VALUE_TYPE.mesh, noone)
 		.setVisible(true, true);
 		
-	outputs[| 0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 		
-	outputs[| 1] = nodeValue_Output("Mesh", self, VALUE_TYPE.mesh, noone);
+	outputs[1] = nodeValue_Output("Mesh", self, VALUE_TYPE.mesh, noone);
 		
-	outputs[| 2] = nodeValue_Output("Path", self, VALUE_TYPE.pathnode, noone);
+	outputs[2] = nodeValue_Output("Path", self, VALUE_TYPE.pathnode, noone);
 	
 	input_display_list = [ 16, 
 		["Output", 		false], 0, 
@@ -68,7 +68,7 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	node_draw_transform_init();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		if(array_length(current_data) != ds_list_size(inputs)) return;
+		if(array_length(current_data) != array_length(inputs)) return;
 		if(process_amount > 1) return;
 		
 		draw_set_color(c_grey);
@@ -112,14 +112,14 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		var _cap    = _data[15];
 		var _mesh   = _data[16];
 		
-		inputs[|  8].setVisible(_shp == 1 || _shp == 2 || _shp == 3 || _shp == 4 || _shp == 5);
-		inputs[|  9].setVisible(_shp == 2 || _shp == 4 || _shp == 5 || _shp == 6 || _shp == 7);
-		inputs[| 10].setVisible(_shp == 3);
-		inputs[| 11].setVisible(_shp == 6);
-		inputs[| 12].setVisible(_shp == 6);
-		inputs[| 13].setVisible(_shp == 6);
-		inputs[| 14].setVisible(_shp == 5);
-		inputs[| 15].setVisible(_shp == 5);
+		inputs[ 8].setVisible(_shp == 1 || _shp == 2 || _shp == 3 || _shp == 4 || _shp == 5);
+		inputs[ 9].setVisible(_shp == 2 || _shp == 4 || _shp == 5 || _shp == 6 || _shp == 7);
+		inputs[10].setVisible(_shp == 3);
+		inputs[11].setVisible(_shp == 6);
+		inputs[12].setVisible(_shp == 6);
+		inputs[13].setVisible(_shp == 6);
+		inputs[14].setVisible(_shp == 5);
+		inputs[15].setVisible(_shp == 5);
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
@@ -141,7 +141,7 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			draw_set_color(_shc);
 			draw_primitive_begin(pr_trianglelist);
 			
-			outputs[| 2].setVisible(_mesh == noone);
+			outputs[2].setVisible(_mesh == noone);
 			
 			if(_mesh != noone) {
 				for( var j = 0; j < array_length(_mesh.triangles); j++ ) {

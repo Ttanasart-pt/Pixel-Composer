@@ -2,13 +2,13 @@ function Node_HTTP_request(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	name = "HTTP";
 	setDimension(96, 72);
 	
-	inputs[| 0] = nodeValue_Text("Address", self, "");
+	inputs[0] = nodeValue_Text("Address", self, "");
 	
-	inputs[| 1] = nodeValue_Enum_Scroll("Type", self,  0, [ "Get", "Post" ]);
+	inputs[1] = nodeValue_Enum_Scroll("Type", self,  0, [ "Get", "Post" ]);
 	
-	inputs[| 2] = nodeValue_Text("Content", self, "")
+	inputs[2] = nodeValue_Text("Content", self, "")
 	
-	outputs[| 0] = nodeValue_Output("Result", self, VALUE_TYPE.text, "");
+	outputs[0] = nodeValue_Output("Result", self, VALUE_TYPE.text, "");
 	
 	address_domain = "";
 	
@@ -17,7 +17,7 @@ function Node_HTTP_request(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var _type = getInputData(1);
 		var _post = getInputData(2);
 		
-		inputs[| 2].setVisible(_type == 1, _type == 1);
+		inputs[2].setVisible(_type == 1, _type == 1);
 		
 		if(_addr == "") return;
 		
@@ -30,7 +30,7 @@ function Node_HTTP_request(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			case 0 :
 				asyncCall(http_get(_addr), function(param, data) /*=>*/ {
 					var res = data[? "result"];
-					outputs[| 0].setValue(res);
+					outputs[0].setValue(res);
 					triggerRender(false);
 				});
 				break;
@@ -38,7 +38,7 @@ function Node_HTTP_request(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			case 1 :
 				asyncCall(http_post_string(_addr, _post), function(param, data) /*=>*/ {
 					var res = data[? "result"];
-					outputs[| 0].setValue(res);
+					outputs[0].setValue(res);
 					triggerRender(false);
 				});
 				break;

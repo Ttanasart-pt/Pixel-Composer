@@ -5,36 +5,36 @@ function Node_Smoke_Domain(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 	
 	manual_ungroupable	 = false;
 	
-	inputs[| 0] = nodeValue_Dimension(self);
+	inputs[0] = nodeValue_Dimension(self);
 	
-	inputs[| 1] = nodeValue_Surface("Collision", self);
+	inputs[1] = nodeValue_Surface("Collision", self);
 	
-	inputs[| 2] = nodeValue_Enum_Button("Material dissipation type", self,  1, [ "Multiply", "Subtract" ]);
+	inputs[2] = nodeValue_Enum_Button("Material dissipation type", self,  1, [ "Multiply", "Subtract" ]);
 	
-	inputs[| 3] = nodeValue_Float("Material dissipation", self, 0.02)
+	inputs[3] = nodeValue_Float("Material dissipation", self, 0.02)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 0.1, 0.01 ] });
 	
-	inputs[| 4] = nodeValue_Enum_Button("Velocity dissipation type", self,  1, [ "Multiply", "Subtract" ]);
+	inputs[4] = nodeValue_Enum_Button("Velocity dissipation type", self,  1, [ "Multiply", "Subtract" ]);
 	
-	inputs[| 5] = nodeValue_Float("Velocity dissipation", self, 0.00)
+	inputs[5] = nodeValue_Float("Velocity dissipation", self, 0.00)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 0.1, 0.01 ] });
 	
-	inputs[| 6] = nodeValue_Vector("Acceleration", self, [ 0, 0 ]);
+	inputs[6] = nodeValue_Vector("Acceleration", self, [ 0, 0 ]);
 	
-	inputs[| 7] = nodeValue_Vector("Material intertia", self, [ 1, -0.2 ]);
+	inputs[7] = nodeValue_Vector("Material intertia", self, [ 1, -0.2 ]);
 	
-	inputs[| 8] = nodeValue_Float("Initial pressure", self, 0.75)
+	inputs[8] = nodeValue_Float("Initial pressure", self, 0.75)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 9] = nodeValue_Float("Material Maccormack weight", self, 1)
+	inputs[9] = nodeValue_Float("Material Maccormack weight", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 10] = nodeValue_Float("Velocity Maccormack weight", self, 0)
+	inputs[10] = nodeValue_Float("Velocity Maccormack weight", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 11] = nodeValue_Bool("Wrap", self, false);
+	inputs[11] = nodeValue_Bool("Wrap", self, false);
 	
-	outputs[| 0] = nodeValue_Output("Domain", self, VALUE_TYPE.sdomain, noone);
+	outputs[0] = nodeValue_Output("Domain", self, VALUE_TYPE.sdomain, noone);
 	
 	input_display_list = [ 
 		["Domain",		false], 0, 11, 1,
@@ -95,7 +95,7 @@ function Node_Smoke_Domain(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 		
 		fd_rectangle_set_repeat(domain, wrap);
 		
-		outputs[| 0].setValue(domain);
+		outputs[0].setValue(domain);
 	} #region
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region

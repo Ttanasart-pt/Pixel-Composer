@@ -1,7 +1,7 @@
 function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) constructor {
 	name  = "RM Primitive";
 	
-	inputs[| 0] = nodeValue_Dimension(self);
+	inputs[0] = nodeValue_Dimension(self);
 	
 	shape_types = [ 
 		"Plane", "Box", "Box Frame", "Box Round", 
@@ -18,136 +18,136 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 	for( var i = 0, n = array_length(shape_types); i < n; i++ )
 		shape_types_str[i] = shape_types[i] == -1? -1 : new scrollItem(shape_types[i], s_node_shape_3d, _ind++, COLORS._main_icon_light);
 	
-	inputs[| 1] = nodeValue_Enum_Scroll("Shape", self,  1, { data: shape_types_str, horizontal: true, text_pad: ui(16) });
+	inputs[1] = nodeValue_Enum_Scroll("Shape", self,  1, { data: shape_types_str, horizontal: true, text_pad: ui(16) });
 	
-	inputs[| 2] = nodeValue_Vector("Position", self, [ 0, 0, 0 ]);
+	inputs[2] = nodeValue_Vector("Position", self, [ 0, 0, 0 ]);
 	
-	inputs[| 3] = nodeValue_Vector("Rotation", self, [ 0, 0, 0 ]);
+	inputs[3] = nodeValue_Vector("Rotation", self, [ 0, 0, 0 ]);
 	
-	inputs[| 4] = nodeValue_Float("Scale", self, 1)
+	inputs[4] = nodeValue_Float("Scale", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01 ] });
 	
-	inputs[| 5] = nodeValue_Float("FOV", self, 30)
+	inputs[5] = nodeValue_Float("FOV", self, 30)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 90, 1 ] });
 	
-	inputs[| 6] = nodeValue_Vector("View Range", self, [ 3, 6 ]);
+	inputs[6] = nodeValue_Vector("View Range", self, [ 3, 6 ]);
 	
-	inputs[| 7] = nodeValue_Float("Depth", self, 0)
+	inputs[7] = nodeValue_Float("Depth", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 8] = nodeValue_Vector("Light Position", self, [ -.4, -.5, 1 ]);
+	inputs[8] = nodeValue_Vector("Light Position", self, [ -.4, -.5, 1 ]);
 	
-	inputs[| 9] = nodeValue_Color("Base Color", self, c_white);
+	inputs[9] = nodeValue_Color("Base Color", self, c_white);
 	
-	inputs[| 10] = nodeValue_Float("Ambient Level", self, 0.2)
+	inputs[10] = nodeValue_Float("Ambient Level", self, 0.2)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 11] = nodeValue_Vector("Elongate", self, [ 0, 0, 0 ]);
+	inputs[11] = nodeValue_Vector("Elongate", self, [ 0, 0, 0 ]);
 	
-	inputs[| 12] = nodeValue_Float("Rounded", self, 0.)
+	inputs[12] = nodeValue_Float("Rounded", self, 0.)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 13] = nodeValue_Enum_Button("Projection", self,  0, [ "Perspective", "Orthographic" ]);
+	inputs[13] = nodeValue_Enum_Button("Projection", self,  0, [ "Perspective", "Orthographic" ]);
 	
-	inputs[| 14] = nodeValue_Float("Ortho Scale", self, 1.)
+	inputs[14] = nodeValue_Float("Ortho Scale", self, 1.)
 	
-	inputs[| 15] = nodeValue_Vector("Wave Amplitude", self, [ 4, 4, 4 ]);
+	inputs[15] = nodeValue_Vector("Wave Amplitude", self, [ 4, 4, 4 ]);
 	
-	inputs[| 16] = nodeValue_Vector("Wave Intensity", self, [ 0, 0, 0 ]);
+	inputs[16] = nodeValue_Vector("Wave Intensity", self, [ 0, 0, 0 ]);
 	
-	inputs[| 17] = nodeValue_Vector("Wave Phase", self, [ 0, 0, 0 ]);
+	inputs[17] = nodeValue_Vector("Wave Phase", self, [ 0, 0, 0 ]);
 	
-	inputs[| 18] = nodeValue_Enum_Button("Twist Axis", self,  0, [ "X", "Y", "Z" ]);
+	inputs[18] = nodeValue_Enum_Button("Twist Axis", self,  0, [ "X", "Y", "Z" ]);
 	
-	inputs[| 19] = nodeValue_Float("Twist Amount", self, 0)
+	inputs[19] = nodeValue_Float("Twist Amount", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 8, 0.1 ] });
 	
-	inputs[| 20] = nodeValue_Vector("Tile Distance", self, [ 1, 1, 1 ]);
+	inputs[20] = nodeValue_Vector("Tile Distance", self, [ 1, 1, 1 ]);
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 21] = nodeValue_Vector("Size", self, [ 1, 1, 1 ]);
+	inputs[21] = nodeValue_Vector("Size", self, [ 1, 1, 1 ]);
 	
-	inputs[| 22] = nodeValue_Float("Radius", self, .7)
+	inputs[22] = nodeValue_Float("Radius", self, .7)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 23] = nodeValue_Float("Thickness", self, .2)
+	inputs[23] = nodeValue_Float("Thickness", self, .2)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 24] = nodeValue_Float("Crop", self, 0.)
+	inputs[24] = nodeValue_Float("Crop", self, 0.)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] });
 	
-	inputs[| 25] = nodeValue_Rotation("Angle", self, 30);
+	inputs[25] = nodeValue_Rotation("Angle", self, 30);
 	
-	inputs[| 26] = nodeValue_Float("Height", self, .5)
+	inputs[26] = nodeValue_Float("Height", self, .5)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 27] = nodeValue_Slider_Range("Radius Range", self, [ .7, .1 ]);
+	inputs[27] = nodeValue_Slider_Range("Radius Range", self, [ .7, .1 ]);
 	
-	inputs[| 28] = nodeValue_Float("Uniform Size", self, 1)
+	inputs[28] = nodeValue_Float("Uniform Size", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 29] = nodeValue_Vector("Tile Amount", self, [ 1, 1, 1 ]);
+	inputs[29] = nodeValue_Vector("Tile Amount", self, [ 1, 1, 1 ]);
 	
-	inputs[| 30] = nodeValue_Color("Background", self, c_black);
+	inputs[30] = nodeValue_Color("Background", self, c_black);
 	
-	inputs[| 31] = nodeValue_Bool("Draw BG", self, false);
+	inputs[31] = nodeValue_Bool("Draw BG", self, false);
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 32] = nodeValue_Bool("Volumetric", self, false);
+	inputs[32] = nodeValue_Bool("Volumetric", self, false);
 	
-	inputs[| 33] = nodeValue_Float("Density", self, 0.3)
+	inputs[33] = nodeValue_Float("Density", self, 0.3)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 34] = nodeValue_Surface("Environment", self);
+	inputs[34] = nodeValue_Surface("Environment", self);
 	
-	inputs[| 35] = nodeValue_Float("Reflective", self, 0.)
+	inputs[35] = nodeValue_Float("Reflective", self, 0.)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 36] = nodeValue_Surface("Texture", self);
+	inputs[36] = nodeValue_Surface("Texture", self);
 	
-	inputs[| 37] = nodeValue_Float("Triplanar Smoothing", self, 1.)
+	inputs[37] = nodeValue_Float("Triplanar Smoothing", self, 1.)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 10, 0.1 ] });
 	
-	inputs[| 38] = nodeValue_Float("Texture Scale", self, 1.);
+	inputs[38] = nodeValue_Float("Texture Scale", self, 1.);
 	
-	inputs[| 39] = nodeValue_Vector("Corner", self, [ 0.25, 0.25, 0.25, 0.25 ]);
+	inputs[39] = nodeValue_Vector("Corner", self, [ 0.25, 0.25, 0.25, 0.25 ]);
 	
-	inputs[| 40] = nodeValue_Vector("2D Size", self, [ 0.5, 0.5 ]);
+	inputs[40] = nodeValue_Vector("2D Size", self, [ 0.5, 0.5 ]);
 	
-	inputs[| 41] = nodeValue_Int("Side", self, 3);
+	inputs[41] = nodeValue_Int("Side", self, 3);
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
-	inputs[| 42] = nodeValue_Vector("Camera Rotation", self, [ 30, 45, 0 ]);
+	inputs[42] = nodeValue_Vector("Camera Rotation", self, [ 30, 45, 0 ]);
 	
-	inputs[| 43] = nodeValue_Float("Camera Scale", self, 1)
+	inputs[43] = nodeValue_Float("Camera Scale", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01 ] });
 	
-	inputs[| 44] = nodeValue_Bool("Render", self, true);
+	inputs[44] = nodeValue_Bool("Render", self, true);
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 45] = nodeValue_Bool("Tile", self, false);
+	inputs[45] = nodeValue_Bool("Tile", self, false);
 		
-	inputs[| 46] = nodeValue_Vector("Tiled Shift", self, [ 0, 0, 0 ]);
+	inputs[46] = nodeValue_Vector("Tiled Shift", self, [ 0, 0, 0 ]);
 		
-	inputs[| 47] = nodeValue_Vector("Tiled Rotation", self, [ 0, 0, 0 ]);
+	inputs[47] = nodeValue_Vector("Tiled Rotation", self, [ 0, 0, 0 ]);
 		
-	inputs[| 48] = nodeValue_Float("Tiled Scale", self, 0);
+	inputs[48] = nodeValue_Float("Tiled Scale", self, 0);
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[| 49] = nodeValue_Bool("Env Interpolation", self, false);
+	inputs[49] = nodeValue_Bool("Env Interpolation", self, false);
 	
-	inputs[| 50] = nodeValue_Bool("Texture Interpolation", self, false);
+	inputs[50] = nodeValue_Bool("Texture Interpolation", self, false);
 	
-	outputs[| 0] = nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone);
+	outputs[0] = nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue_Output("Shape Data", self, VALUE_TYPE.sdf, noone);
+	outputs[1] = nodeValue_Output("Shape Data", self, VALUE_TYPE.sdf, noone);
 	
 	input_display_list = [ 0,
 		["Primitive",  false],  1, 21, 22, 23, 24, 25, 26, 27, 28, 39, 40, 41, 
@@ -194,7 +194,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 	
 	static drawGizmoPosition = function(index, _vpos, active, params, _mx, _my, _snx, _sny, _panel) { #region
 		#region ---- main ----
-			var _pos  = inputs[| index].getValue(,,, true);
+			var _pos  = inputs[index].getValue(,,, true);
 			    // _pos  = [ -_pos[0], _pos[2], -_pos[1] ];
 			var _qinv = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(1, 0, 0), 90);
 			
@@ -345,7 +345,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 				
 				drag_pre0 = mAdj;
 				
-				if(inputs[| index].setValue(value_snap(val, _snx)))
+				if(inputs[index].setValue(value_snap(val, _snx)))
 					UNDO_HOLDING = true;
 				
 				drag_val  = [ val[0], val[1], val[2] ];
@@ -391,26 +391,26 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 		var _ort = getSingleValue(13);
 		var _ren = getSingleValue(44);
 		
-		inputs[| 21].setVisible(false);
-		inputs[| 22].setVisible(false);
-		inputs[| 23].setVisible(false);
-		inputs[| 24].setVisible(false);
-		inputs[| 25].setVisible(false);
-		inputs[| 26].setVisible(false);
-		inputs[| 27].setVisible(false);
-		inputs[| 28].setVisible(false);
-		inputs[| 39].setVisible(false);
-		inputs[| 40].setVisible(false);
-		inputs[| 41].setVisible(false);
+		inputs[21].setVisible(false);
+		inputs[22].setVisible(false);
+		inputs[23].setVisible(false);
+		inputs[24].setVisible(false);
+		inputs[25].setVisible(false);
+		inputs[26].setVisible(false);
+		inputs[27].setVisible(false);
+		inputs[28].setVisible(false);
+		inputs[39].setVisible(false);
+		inputs[40].setVisible(false);
+		inputs[41].setVisible(false);
 		
-		outputs[| 0].setVisible(_ren, _ren);
+		outputs[0].setVisible(_ren, _ren);
 		
 		var _shape = shape_types[_shp];
 		switch(_shape) { // Size
 			case "Box" : 
 			case "Box Frame" : 
 			case "Ellipse" : 
-				inputs[| 21].setVisible(true);
+				inputs[21].setVisible(true);
 				break;
 		}
 		
@@ -424,7 +424,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 			case "Capsule" : 
 			case "3D Arc" : 
 			case "Pie" : 
-				inputs[| 22].setVisible(true);
+				inputs[22].setVisible(true);
 				break;
 		}
 		
@@ -438,14 +438,14 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 			case "Extrude" : 
 			case "Prism" : 
 			case "Pie" : 
-				inputs[| 23].setVisible(true);
+				inputs[23].setVisible(true);
 				break;
 		}
 		
 		switch(_shape) { // Crop
 			case "Cut Sphere" : 
 			case "Cut Hollow Sphere" : 
-				inputs[| 24].setVisible(true);
+				inputs[24].setVisible(true);
 				break;
 		}
 		
@@ -454,7 +454,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 			case "Cone" : 
 			case "3D Arc" : 
 			case "Pie" : 
-				inputs[| 25].setVisible(true);
+				inputs[25].setVisible(true);
 				break;
 		}
 		
@@ -464,14 +464,14 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 			case "Cone" : 
 			case "Capped Cone" : 
 			case "Round Cone" : 
-				inputs[| 26].setVisible(true);
+				inputs[26].setVisible(true);
 				break;
 		}
 		
 		switch(_shape) { // Radius Range
 			case "Capped Cone" : 
 			case "Round Cone" : 
-				inputs[| 27].setVisible(true);
+				inputs[27].setVisible(true);
 				break;
 		}
 		
@@ -480,30 +480,30 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 			case "Pyramid" : 
 			case "Terrain" : 
 			case "Extrude" : 
-				inputs[| 28].setVisible(true);
+				inputs[28].setVisible(true);
 				break;
 		}
 		
 		switch(_shape) { // Corner
 			case "Box Round" : 
-				inputs[| 39].setVisible(true);
+				inputs[39].setVisible(true);
 				break;
 		}
 		
 		switch(_shape) { // Size 2D
 			case "Box Round" : 
-				inputs[| 40].setVisible(true);
+				inputs[40].setVisible(true);
 				break;
 		}
 		
 		switch(_shape) { // Sides
 			case "Prism" : 
-				inputs[| 41].setVisible(true);
+				inputs[41].setVisible(true);
 				break;
 		}
 		
-		inputs[|  5].setVisible(_ort == 0);
-		inputs[| 14].setVisible(_ort == 1);
+		inputs[ 5].setVisible(_ort == 0);
+		inputs[14].setVisible(_ort == 1);
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index = 0) {
