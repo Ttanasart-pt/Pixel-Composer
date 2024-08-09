@@ -19,14 +19,20 @@ function NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _no
 		var val = __curr_get_val[0];
 		var nod = __curr_get_val[1];
 		
-		var typ = nod == undefined? VALUE_TYPE.any : nod.type;
+		var typ = nod.type;
 		var dis = nod.display_type;
 		
 		if(typ != VALUE_TYPE.surface) {
-			if(!is_array(val))         val = [ val, val ];
-			if(array_length(val) != 2) val = [ array_safe_get_fast(val, 0), array_safe_get_fast(val, 1) ];
+			if(!is_array(val)) return [ val, val ];
 			
-			return valueProcess(val, nod, applyUnit, arrIndex);
+			var _d = array_get_depth(val);
+			if(_d == 1) return valueProcess(val, nod, applyUnit, arrIndex);
+			if(_d == 2) {
+				for (var i = 0, n = array_length(val); i < n; i++) 
+					val[i] = valueProcess(val[1], nod, applyUnit, arrIndex);
+			}
+			
+			return val;
 		}
 		
 		// Dimension conversion
@@ -49,8 +55,10 @@ function NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _no
 			
 			if(eqSize) return _osZ;
 			return sArr;
+			
 		} else if (is_surface(val)) 
 			return [ surface_get_width_safe(val), surface_get_height_safe(val) ];
+			
 		return [ 1, 1 ];
 	}
 	

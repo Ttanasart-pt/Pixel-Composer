@@ -445,36 +445,74 @@
 #endregion
 
 #region hotkey
+
+	function call_dialog_preference() 	{ dialogCall(o_dialog_preference);				}
+	function call_dialog_splash()     	{ dialogCall(o_dialog_splash);					}
+	function call_dialog_release_note()	{ dialogCall(o_dialog_release_note);			}
+	function open_autosave_folder() 	{ shellOpenExplorer(DIRECTORY + "autosave");	}
+	
+	function call_panel_addon() 		{ dialogPanelCall(new Panel_Addon());			}
+	function call_panel_history()		{ dialogPanelCall(new Panel_History()); 		}
+	
+	function call_panel_Notification()  { panelAdd("Panel_Notification",	true); }
+	function call_panel_Collection()    { panelAdd("Panel_Collection",		true); }
+	function call_panel_Graph()         { panelAdd("Panel_Graph", 			true); }
+	
+	function call_panel_Preview()       	{ panelAdd("Panel_Preview",				true); }
+	function call_panel_Preview_Histogram() { panelAdd("Panel_Preview_Histogram",	true); }
+	
+	function call_panel_Inspector()     { panelAdd("Panel_Inspector", 		true); }
+	function call_panel_Workspace()     { panelAdd("Panel_Workspace", 		true); }
+	function call_panel_Animation()     { panelAdd("Panel_Animation", 		true); }
+	function call_panel_Node_Align()    { panelAdd("Panel_Node_Align",		true); }
+	function call_panel_Nodes()         { panelAdd("Panel_Nodes", 			true); }
+	function call_panel_Tunnels()       { panelAdd("Panel_Tunnels",			true); }
+	
+	function call_panel_Color()         { panelAdd("Panel_Color", 			true); }
+	function call_panel_Palette()       { panelAdd("Panel_Palette",			true); }
+	function call_panel_Palette_Mixer() { panelAdd("Panel_Palette_Mixer",	true); }
+	function call_panel_Gradient()      { panelAdd("Panel_Gradient",		true); }
+	
+	function call_panel_Console()       { panelAdd("Panel_Console",			true); }
+	function call_panel_Globalvar()     { panelAdd("Panel_Globalvar",		true); }
+	function call_panel_File_Explorer() { panelAdd("Panel_File_Explorer",	true); }
+	
 	function __initPanelHotkeys() {
-		addHotkey("", "Preference",    "", MOD_KEY.none, function() /*=>*/ {return dialogCall(o_dialog_preference)});
-		addHotkey("", "Splash screen", "", MOD_KEY.none, function() /*=>*/ {return dialogCall(o_dialog_splash)});
-		addHotkey("", "Release note",  "", MOD_KEY.none, function() /*=>*/ {return dialogCall(o_dialog_release_note)});
-		addHotkey("", "Autosave folder",  "", MOD_KEY.none, function() /*=>*/ {return shellOpenExplorer(DIRECTORY + "autosave")});
+		registerFunction("", "Preference",  		"", MOD_KEY.none, 	call_dialog_preference);
+		registerFunction("", "Splash screen",		"", MOD_KEY.none, 	call_dialog_splash);
+		registerFunction("", "Release note",		"", MOD_KEY.none, 	call_dialog_release_note);
+		registerFunction("", "Autosave folder", 	"", MOD_KEY.none,	open_autosave_folder);
 		
-		addHotkey("", "Recent files",  "R", MOD_KEY.ctrl | MOD_KEY.shift, function() /*=>*/ {
+		registerFunction("", "Recent files",  "R", MOD_KEY.ctrl | MOD_KEY.shift, function() /*=>*/ {
 			var arr = [];
 			for(var i = 0; i < min(10, ds_list_size(RECENT_FILES)); i++)
-				array_push(arr, menuItem(RECENT_FILES[| i], function(_dat) { LOAD_PATH(_dat.name); }));
-			
+				array_push(arr, menuItemAction(RECENT_FILES[| i], function(_dat) { LOAD_PATH(_dat.name); }));
 			return menuCall("Recent files",,, arr);
 		});
 		
-		addHotkey("", "Addons",  "", MOD_KEY.none, function() /*=>*/ {return dialogPanelCall(new Panel_Addon())});
-		addHotkey("", "History", "", MOD_KEY.none, function() /*=>*/ {return dialogPanelCall(new Panel_History())});
+		registerFunction("", "Addons",  "", MOD_KEY.none, call_panel_addon);
+		registerFunction("", "History", "", MOD_KEY.none, call_panel_history);
 		
-		addHotkey("", "Notification Panel", "", MOD_KEY.none, function() /*=>*/ {return panelAdd("Panel_Notification",	true)});
-		addHotkey("", "Collections Panel",  "", MOD_KEY.none, function() /*=>*/ {return panelAdd("Panel_Collection",	true)});
-		addHotkey("", "Graph Panel",	  	"", MOD_KEY.none, function() /*=>*/ {return panelAdd("Panel_Graph", 		true)});
-		addHotkey("", "Preview Panel",  	"", MOD_KEY.none, function() /*=>*/ {return panelAdd("Panel_Preview",		true)});
-		addHotkey("", "Inspector Panel",	"", MOD_KEY.none, function() /*=>*/ {return panelAdd("Panel_Inspector", 	true)});
-		addHotkey("", "Workspace Panel",	"", MOD_KEY.none, function() /*=>*/ {return panelAdd("Panel_Workspace", 	true)});
-		addHotkey("", "Animation Panel",	"", MOD_KEY.none, function() /*=>*/ {return panelAdd("Panel_Animation", 	true)});
-		addHotkey("", "Align Panel",		"", MOD_KEY.none, function() /*=>*/ {return panelAdd("Panel_Node_Align",	true)});
-		addHotkey("", "Nodes Panel",		"", MOD_KEY.none, function() /*=>*/ {return panelAdd("Panel_Nodes", 		true)});
-		addHotkey("", "Tunnels Panel",  	"", MOD_KEY.none, function() /*=>*/ {return panelAdd("Panel_Tunnels",		true)});
-		addHotkey("", "Color Panel",		"", MOD_KEY.none, function() /*=>*/ {return panelAdd("Panel_Color", 		true)});
-		addHotkey("", "Palettes Panel", 	"", MOD_KEY.none, function() /*=>*/ {return panelAdd("Panel_Palette",		true)});
-		addHotkey("", "Gradients Panel",	"", MOD_KEY.none, function() /*=>*/ {return panelAdd("Panel_Gradient",		true)});
-		addHotkey("", "Console Panel",  	"",	MOD_KEY.none, function() /*=>*/ {return panelAdd("Panel_Console",		true)});
+		registerFunction("", "Notification Panel",	"", MOD_KEY.none, call_panel_Notification	);
+		registerFunction("", "Collections Panel",	"", MOD_KEY.none, call_panel_Collection 	);
+		registerFunction("", "Graph Panel",	  		"", MOD_KEY.none, call_panel_Graph          );
+		registerFunction("", "Preview Panel",  		"", MOD_KEY.none, call_panel_Preview    	);
+		registerFunction("", "Preview Histogram",	"", MOD_KEY.none, call_panel_Preview_Histogram );
+		registerFunction("", "Inspector Panel",		"", MOD_KEY.none, call_panel_Inspector  	);
+		registerFunction("", "Workspace Panel",		"", MOD_KEY.none, call_panel_Workspace  	);
+		registerFunction("", "Animation Panel",		"", MOD_KEY.none, call_panel_Animation  	);
+		
+		registerFunction("", "Align Panel",			"", MOD_KEY.none, call_panel_Node_Align     );
+		registerFunction("", "Nodes Panel",			"", MOD_KEY.none, call_panel_Nodes          );
+		registerFunction("", "Tunnels Panel",  		"", MOD_KEY.none, call_panel_Tunnels    	);
+		
+		registerFunction("", "Color Panel",			"", MOD_KEY.none, call_panel_Color          );
+		registerFunction("", "Palettes Panel", 		"", MOD_KEY.none, call_panel_Palette    	);
+		registerFunction("", "Palettes Mixer Panel","", MOD_KEY.none, call_panel_Palette_Mixer 	);
+		registerFunction("", "Gradients Panel",		"", MOD_KEY.none, call_panel_Gradient   	);
+		
+		registerFunction("", "Console Panel",  		"",	MOD_KEY.none, call_panel_Console    	);
+		registerFunction("", "Globalvar Panel",  	"",	MOD_KEY.none, call_panel_Globalvar    	);
+		registerFunction("", "File Explorer Panel",	"",	MOD_KEY.none, call_panel_File_Explorer 	);
 	}
 #endregion

@@ -13,7 +13,7 @@ function __NodeValue_Object(_name, _node, _type, _value, _tooltip = "") : NodeVa
 		return val;
 	}
 	
-	static __getAnimValue = function(_time = CURRENT_FRAME) { return array_empty(animator.values)? 0 : animator.values[0].value; } 
+	static __getAnimValue = function(_time = CURRENT_FRAME) { return array_empty(animator.values)? noone : animator.values[0].value; } 
 	
 	static arrayLength = arrayLengthSimple;
 }

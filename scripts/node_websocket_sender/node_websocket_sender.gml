@@ -9,7 +9,7 @@ function Node_Websocket_Sender(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	inputs[3] = nodeValue_Surface("Surface", self);
 	
-	inputs[4] = nodeValue_Text("Path", self, "")
+	inputs[4] = nodeValue_Path("Path", self, "")
 		.setDisplay(VALUE_DISPLAY.path_load)
 		.nonValidate();
 	

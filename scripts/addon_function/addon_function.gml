@@ -41,7 +41,7 @@ function addonContextItem(_addon, _name, _function) constructor {
 	self._name  = _name;
 	self._function = _function;
 	
-	menu_item = menuItem(_name, function(_data) { 
+	menu_item = menuItemAction(_name, function(_data) { 
 		lua_call(_addon.thread, self._function, lua_byref(_data.context, true)); 
 	})//.setColor(COLORS._main_accent);
 }
@@ -50,7 +50,7 @@ function addonContextSubMenu(_name, _content) constructor {
 	self.name = _name;
 	self.content = _content;
 	
-	menu_item = menuItem(name, function(_dat) { 
+	menu_item = menuItemAction(name, function(_dat) { 
 		return submenuCall(_dat, content);
 	})//.setColor(COLORS._main_accent)
 	  .setIsShelf();

@@ -26,7 +26,7 @@ function Node_Display_Image(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	name		= "Display Image";
 	auto_height	= false;
 	
-	inputs[0]  = nodeValue_Text("Path", self, "")
+	inputs[0]  = nodeValue_Path("Path", self, "")
 		.setVisible(false)
 		.setDisplay(VALUE_DISPLAY.path_load, { filter: "image|*.png;*.jpg" })
 		.rejectArray();

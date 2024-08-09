@@ -3,7 +3,7 @@ function Node_WAV_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	color = COLORS.node_blend_input;
 	setDimension(, 72);
 	
-	inputs[0]  = nodeValue_Text("Path", self, "")
+	inputs[0]  = nodeValue_Path("Path", self, "")
 		.setDisplay(VALUE_DISPLAY.path_save, { filter: "audio file|*.wav" })
 		.rejectArray()
 		.setVisible(true);

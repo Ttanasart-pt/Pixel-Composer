@@ -11,41 +11,38 @@
 	}
 	
 	function __fnInit() {
-		globalvar CMD_FUNCTIONS;
+		globalvar CMD_FUNCTIONS, ACTION_MAP;
 		CMD_FUNCTIONS = {};
-		
-		__registerFunction("new",		NEW);
-		__registerFunction("save",		SAVE_AT,		[ ARG("project", function() { return PROJECT; }, true), ARG("path", ""), ARG("log", "save at ") ]);
-		__registerFunction("load",		LOAD_AT,		[ ARG("path", ""), ARG("readonly", false), ARG("override", false) ]);
-		__registerFunction("close",		closeProject,	[ ARG("project", function() { return PROJECT; }, true) ]);
-		__registerFunction("append",	APPEND,			[ ARG("path", ""), ARG("context", function() { return PANEL_GRAPH.getCurrentContext(); }, true) ]);
-		
-		__registerFunction("undo",		UNDO);
-		__registerFunction("redo",		REDO);
-		__registerFunction("exit",		window_close);
+		ACTION_MAP    = {};
 		
 		__fnInit_Global();
 		__fnInit_Preview();
 		__fnInit_Inspector();
 		__fnInit_Animation();
 		__fnInit_Graph();
+		__fnInit_Collection();
 	}
 #endregion
 
-function __registerFunction(name, fn, args = []) { #region
-	INLINE
-	CMD_FUNCTIONS[$ name] = { fn, args };
-} #endregion
+function registerFunction(_context, _name, _key, _mod, _action, _args = []) { 
+	addHotkey(_context, _name, _key, _mod, _action);
+	
+	var _fnName = _context == ""? _name : $"{_context} {_name}";
+		_fnName = string_to_var(_fnName);
+		
+	CMD_FUNCTIONS[$ _fnName] = { _action, _args };
+	ACTION_MAP[$ _action]    = [ _context, _name ];
+}
 
-function callStatusFunction(name) { #region
+function callStatusFunction(name) {
 	INLINE
 	var command = $"{name} {string_join_ext(",", _args)}";
 	
 	array_push(CMD, cmdLine(command, COLORS._main_text_sub));
 	array_push(CMDIN, command);
-} #endregion
+}
 
-function callFunction(name, args) { #region
+function callFunction(name, args) {
 	INLINE
 	
 	var _f = CMD_FUNCTIONS[$ name];
@@ -71,5 +68,5 @@ function callFunction(name, args) { #region
 	}
 	
 	return true;
-} #endregion
+}
 	

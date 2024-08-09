@@ -151,9 +151,10 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		#endregion
 		
 		for(var l = 0; l < process_amount; l++) {
-			__l = l;
-			_data[i] = array_map(inputs, function(_in, i) /*=>*/ {return all_inputs[i][__l]});
 			
+			for(var i = input_list_size - 1; i >= 0; i--)
+				_data[i] = all_inputs[i][l];
+				
 			if(_output.type == VALUE_TYPE.surface) { #region						// Output surface verification
 				if(manage_atlas) {
 					_pAtl  = _data[atlas_index];

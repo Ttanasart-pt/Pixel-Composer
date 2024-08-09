@@ -370,10 +370,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	mappedJunc  = noone;
 	mapped_vec4 = false;
 	
-	static setMappable = function(index, vec4 = false) { #region
+	static setMappable = function(index, vec4 = false) {
 		attributes.mapped     = false;
 		attributes.map_index  = index;
-		mapped_vec4 = vec4;
+		mapped_vec4           = vec4;
+		
+		if(arrayLength == arrayLengthSimple)
+			arrayLength = __arrayLength;
 		
 		mapButton = button(function() { 
 						attributes.mapped = !attributes.mapped;
@@ -405,7 +408,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		editWidget.side_button = mapButton;
 		
 		return self;
-	} #endregion
+	}
 	
 	static setMapped = function(junc) { #region
 		mappedJunc = junc;
@@ -1159,7 +1162,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var val = __curr_get_val[0];
 		var nod = __curr_get_val[1];
 		
-		var typ = nod == undefined? VALUE_TYPE.any : nod.type;
+		var typ = nod.type;
 		var dis = nod.display_type;
 		
 		if(connect_type == JUNCTION_CONNECT.output) return val;
@@ -1359,8 +1362,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return __array_get_depth(val) > array_depth + type_array;
 	}
 	
-	__is_array = false;
-	static arrayLength = function(val = undefined) {
+	__is_array     = false;
+	__array_length = -1;
+	
+	static __arrayLength = function(val = undefined) {
 		val ??= getValue();
 		
 		__is_array = false;
@@ -1385,6 +1390,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		__is_array = is_array(val);
 		return __is_array? array_length(val) : -1;
 	}
+	
+	arrayLength = __arrayLength;
 	
 	/////============== SET =============
 	

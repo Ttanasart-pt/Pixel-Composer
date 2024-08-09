@@ -48,7 +48,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	inputs[0] = nodeValue_Surface("Surface", self);
 	
-	inputs[1] = nodeValue_Text("Paths",   self, "")
+	inputs[1] = nodeValue_Path("Paths",   self, "")
 		.setDisplay(VALUE_DISPLAY.path_save, _format_still)
 		.setVisible(true);
 	

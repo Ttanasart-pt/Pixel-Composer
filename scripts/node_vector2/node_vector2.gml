@@ -36,13 +36,13 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	wd_pan_my	= 0;
 	
 	coordinate_menu = [
-		menuItem(__txt("Reset view"),  function() {
+		menuItemAction(__txt("Reset view"),  function() {
 			wd_minx		= -1;
 			wd_miny		= -1;
 			wd_maxx		=  1;
 			wd_maxy		=  1;
 		}),
-		menuItem(__txt("Focus value"),  function() {
+		menuItemAction(__txt("Focus value"),  function() {
 			var _x = getInputData(0);
 			var _y = getInputData(1);
 			

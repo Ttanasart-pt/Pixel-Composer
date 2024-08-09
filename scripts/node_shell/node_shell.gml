@@ -2,7 +2,7 @@ function Node_Shell(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Execute Shell";
 	setDimension(96, 32 + 24 * 1);
 	
-	inputs[0] = nodeValue_Text("Path", self, "");
+	inputs[0] = nodeValue_Path("Path", self, "");
 	
 	inputs[1] = nodeValue_Text("Script", self, "");
 	

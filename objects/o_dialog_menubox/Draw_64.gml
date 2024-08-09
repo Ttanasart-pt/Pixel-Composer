@@ -3,16 +3,26 @@ if(!ready) exit;
 
 #region draw
 	var yy = dialog_y;
+	var _lclick = sFOCUS && (!mouse_init_inside && mouse_release(mb_left)) || (keyboard_check_pressed(vk_enter) && hk_editing == noone);
+	var _rclick = sFOCUS && (!mouse_init_inside && mouse_release(mb_right));
 	
 	draw_sprite_stretched(THEME.s_box_r2_clr, 0, dialog_x, dialog_y, dialog_w, dialog_h);
 	
 	for(var i = 0; i < array_length(menu); i++) {
 		var _menuItem = menu[i];
 		
+		if(is_string(_menuItem)) {
+			draw_set_text(f_p3, fa_left, fa_top, COLORS._main_text_sub);
+			draw_text(dialog_x + ui(8), yy + ui(4), _menuItem);
+			
+			yy += string_height(_menuItem) + ui(8);
+			continue;
+		}
+		
 		if(is_instanceof(_menuItem, MenuItem) && _menuItem.shiftMenu != noone && key_mod_press(SHIFT))
 			_menuItem = _menuItem.shiftMenu;
 			
-		if(_menuItem == -1) { #region
+		if(_menuItem == -1) {
 			var bx = dialog_x + ui(8);
 			var bw = dialog_w - ui(16);
 			draw_set_color(CDEF.main_mdblack);
@@ -20,12 +30,14 @@ if(!ready) exit;
 			yy += ui(8);
 			
 			continue;
-		} #endregion
+		}
 		
 		var label = _menuItem.name;
 		var _h    = is_instanceof(_menuItem, MenuItemGroup)? hght * 2 : hght;
 		var cc    = struct_try_get(_menuItem, "color", c_white);
-		
+		var _key  = _menuItem.hotkey != noone? find_hotkey(_menuItem.hotkey[0], _menuItem.hotkey[1]) : noone;
+		_menuItem.hoykeyObject = _key;
+				
 		if(sHOVER && point_in_rectangle(mouse_mx, mouse_my, dialog_x, yy + 1, dialog_x + dialog_w, yy + _h - 1)) {
 			selecting = i;
 			var tips  = array_safe_get_fast(tooltips, i, noone);
@@ -38,25 +50,53 @@ if(!ready) exit;
 			
 			draw_sprite_stretched_ext(THEME.textbox, 3, dialog_x, yy, dialog_w, _h, _hc, _ha);
 			
-			var _click = sFOCUS && (!mouse_inside && mouse_release(mb_left)) || keyboard_check_released(vk_enter);
-			
-			if(_hovering_ch && is_instanceof(_menuItem, MenuItem) && _menuItem.active && _click) {
+			if(is_instanceof(_menuItem, MenuItem) && _menuItem.active && _hovering_ch) {
+				
+				if(_lclick) {
+					var _dat = {
+						_x:      dialog_x,
+						x:       dialog_x + dialog_w,
+						y:       yy,
+						depth:   depth,
+						name:    _menuItem.name,
+						index:   i,
+						context: context,
+						params:  _menuItem.params,
+					};
 					
-				var _dat = {
-					_x:      dialog_x,
-					x:       dialog_x + dialog_w,
-					y:       yy,
-					depth:   depth,
-					name:    _menuItem.name,
-					index:   i,
-					context: context,
-					params:  _menuItem.params,
-				};
+					var _res = _menuItem.func(_dat);
+					if(_menuItem.isShelf)	array_push(children, _res.id);      // open child
+					else if(remove_parents)	instance_destroy(o_dialog_menubox); // close all
+					else					instance_destroy();					// close self
+				}
 				
-				var _res = _menuItem.func(_dat);
-				if(_menuItem.isShelf) array_push(children, _res.id);
-				else                  instance_destroy(o_dialog_menubox);
-				
+				if(_key && _rclick) {
+					var _dat = {
+						_x:      dialog_x,
+						x:       mouse_mx + ui(4),
+						y:       mouse_my + ui(4),
+						depth:   depth,
+						name:    _menuItem.name,
+						index:   i,
+						context: context,
+						params:  _menuItem.params,
+					};
+					
+					selecting_menu = _menuItem;
+					var _loadKey = $"{_key.context}.{_key.name}";
+					
+					var context_menu_settings = [
+						_loadKey,
+						menuItemAction("Edit hotkey", function() /*=>*/ {
+							hk_editing        = selecting_menu;
+							keyboard_lastchar = hk_editing.hoykeyObject.key;
+						}),
+					];
+					
+					with(o_dialog_menubox) { if(!remove_parents) instance_destroy(); }
+					var _menu = submenuCall(_dat, context_menu_settings);
+					_menu.remove_parents = false;
+				}
 			}
 		} else if(cc != c_white)
 			draw_sprite_stretched_ext(THEME.textbox, 3, dialog_x, yy, dialog_w, _h, cc, 0.5);
@@ -92,6 +132,7 @@ if(!ready) exit;
 					
 					_sw = string_width(_str) + ui(12);
 					_sh = string_height(_str) + ui(8);
+					
 				} else {
 					if(is_array(_sprs)) {
 						_spr = _sprs[0];
@@ -120,6 +161,7 @@ if(!ready) exit;
 				if(_str != "")
 					draw_text(_bx, _by, _str);
 			}
+			
 		} else {
 			if(_menuItem.spr != noone) {
 				var spr = is_array(_menuItem.spr)? _menuItem.spr[0] : _menuItem.spr;
@@ -140,21 +182,47 @@ if(!ready) exit;
 			
 			if(_menuItem.isShelf) {
 				draw_sprite_ui_uniform(THEME.arrow, 0, dialog_x + dialog_w - ui(20), yy + hght / 2, 1, COLORS._main_icon);	
-			} else if(_menuItem.hotkey != noone) {
-				var _key = find_hotkey(_menuItem.hotkey[0], _menuItem.hotkey[1]);
 				
-				if(_key) {
-					var _hx = dialog_x + dialog_w - ui(16);
-					var _hy = yy + hght / 2 + ui(2);
-					hotkey_draw(key_get_name(_key.key, _key.modi), _hx, _hy);
-				}	
+			} else if(_key) {
+				var _hx = dialog_x + dialog_w - ui(16);
+				var _hy = yy + hght / 2 + ui(2);
+				
+				draw_set_font(f_p1);
+				
+				var _ktxt = key_get_name(_key.key, _key.modi);
+				var _tw = string_width(_ktxt);
+				var _th = line_get_height();
+				
+				var _bx = _hx - _tw - ui(4);
+				var _by = _hy - _th / 2 - ui(3);
+				var _bw = _tw + ui(8);
+				var _bh = _th + ui(3);
+				
+				if(hk_editing == _menuItem) {
+					draw_set_text(f_p1, fa_right, fa_center, COLORS._main_accent);
+					draw_sprite_stretched_ext(THEME.ui_panel, 1, _bx, _by, _bw, _bh, COLORS._main_text_accent);
+					
+				} else if(_ktxt != "") {
+					draw_set_text(f_p1, fa_right, fa_center, COLORS._main_text_sub);
+					draw_sprite_stretched_ext(THEME.ui_panel, 1, _bx, _by, _bw, _bh, CDEF.main_dkgrey);
+				}
+				
+				draw_text(_hx, _hy, _ktxt);
 			}
 		}
 		
 		yy += _h;
 	}
 	
-	if(sFOCUS) {
+	if(hk_editing != noone) {
+		if(keyboard_check_pressed(vk_enter))
+			hk_editing = noone;
+		else if(keyboard_check_pressed(vk_escape))
+			hk_editing = noone;
+		else 
+			hotkey_editing(hk_editing.hoykeyObject);
+			
+	} else if(sFOCUS) {
 		if(keyboard_check_pressed(vk_up)) {
 			selecting--;
 			if(selecting < 0) selecting = array_length(menu) - 1;
@@ -162,14 +230,14 @@ if(!ready) exit;
 			
 		if(keyboard_check_pressed(vk_down))
 			selecting = safe_mod(selecting + 1, array_length(menu));
-			
+		
 		if(keyboard_check_pressed(vk_escape))
 			instance_destroy();
 	}
 	
 	draw_sprite_stretched(THEME.s_box_r2_clr, 1, dialog_x, dialog_y, dialog_w, dialog_h);
 	
-	if(mouse_inside && (mouse_release(mb_left) || mouse_release(mb_right))) mouse_inside = false;
+	if(mouse_init_inside && (mouse_release(mb_left) || mouse_release(mb_right))) mouse_init_inside = false;
 #endregion
 
 #region debug

@@ -327,15 +327,15 @@ function Panel_Color() : PanelContent() constructor {
 		
 		if(mouse_press(mb_right, pFOCUS)) {
 			menuCall("color_window_menu",,, [
-				menuItem(__txt("Hue"),  		function() { mode = 0; } ),
-				menuItem(__txt("Value"),		function() { mode = 1; } ),
-				menuItem(__txt("Saturation"),	function() { mode = 2; } ),
+				menuItemAction(__txt("Hue"),  		function() { mode = 0; } ),
+				menuItemAction(__txt("Value"),		function() { mode = 1; } ),
+				menuItemAction(__txt("Saturation"),	function() { mode = 2; } ),
 				-1,
-				menuItem(__txt("Toggle Alpha"),   function() { show_alpha   = !show_alpha;   }, noone, noone, function() /*=>*/ {return show_alpha}   ),
-				menuItem(__txt("Toggle Palette"), function() { show_palette = !show_palette; }, noone, noone, function() /*=>*/ {return show_palette} ),
-				menuItem(__txt("Toggle Hex"),     function() { show_hex     = !show_hex;     }, noone, noone, function() /*=>*/ {return show_hex}     ),
+				menuItemAction(__txt("Toggle Alpha"),   function() { show_alpha   = !show_alpha;   }, noone, noone, function() /*=>*/ {return show_alpha}   ),
+				menuItemAction(__txt("Toggle Palette"), function() { show_palette = !show_palette; }, noone, noone, function() /*=>*/ {return show_palette} ),
+				menuItemAction(__txt("Toggle Hex"),     function() { show_hex     = !show_hex;     }, noone, noone, function() /*=>*/ {return show_hex}     ),
 				-1,
-				menuItem(__txt("Discretize"),     function() { discretize_pal = !discretize_pal; }, noone, noone, function() /*=>*/ {return discretize_pal} ),
+				menuItemAction(__txt("Discretize"),     function() { discretize_pal = !discretize_pal; }, noone, noone, function() /*=>*/ {return discretize_pal} ),
 			]);
 		}
 		

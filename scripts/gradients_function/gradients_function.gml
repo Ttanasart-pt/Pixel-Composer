@@ -287,6 +287,8 @@ function gradientObject(color = c_black) constructor {
 			var _time  = s.keys[i].time;
 			var _value = s.keys[i].value;
 			
+			if(LOADING_VERSION < 11660) _value = cola(_value);
+			
 			keys[i] = new gradientKey(_time, _value); 
 		}
 		

@@ -637,14 +637,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		NODE_SET_INPUT_SIZE
 		
 		w = SHOW_PARAM? attributes.node_param_width : min_w;
-		
 		if(!auto_height) return;
 		
 		var _ss = getGraphPreviewSurface();
 		var _ps = is_surface(_ss);
 		var _ou = preview_channel >= 0 && preview_channel < output_list_size && outputs[preview_channel].type == VALUE_TYPE.surface;
-		
-		// print($"{previewable} && {preview_draw} && ([{_ss}] {_ps} || {_ou})");
 		var _prev_surf = previewable && preview_draw && (_ps || _ou);
 		
 		junction_draw_hei_y = SHOW_PARAM? 32 : 24;
@@ -653,8 +650,13 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var _hi, _ho;
 		
 		if(previewable) {
-			_hi = junction_draw_pad_y + SHOW_PARAM * 4;
-			_ho = junction_draw_pad_y + SHOW_PARAM * 4;
+			_hi = junction_draw_pad_y;
+			_ho = junction_draw_pad_y;
+			
+			if(SHOW_PARAM) {
+				_hi = con_h;
+				_ho = con_h;
+			}
 			
 		} else {
 			junction_draw_hei_y = 16;
@@ -1183,14 +1185,24 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			in_cache_len  = array_length(inputDisplayList);
 			out_cache_len = output_list_size;
 		}
-			
-		var _iny = yy + (junction_draw_pad_y + junction_draw_hei_y * 0.5 * SHOW_PARAM) * _s;
-		var rx = x, ry = y + junction_draw_pad_y + junction_draw_hei_y * 0.5 * SHOW_PARAM;
+		
+		var _junRy = junction_draw_pad_y;
+		var _junSy = yy + _junRy * _s;
+		
+		if(SHOW_PARAM) {
+			_junRy = con_h + junction_draw_hei_y / 2;
+			_junSy = yy + _junRy * _s;
+		}
+		
+		var _ix = xx;
+		var _iy = _junSy;
+		var rx  = x;
+		var ry  = y + _junRy;
 		
 		for( var i = 0, n = input_list_size; i < n; i++ ) {
 			jun = inputs[i];
-			jun.x = xx;
-			jun.y = _iny;
+			jun.x = _ix;
+			jun.y = _iy;
 			
 			jun.rx = rx;
 			jun.ry = ry;
@@ -1199,26 +1211,28 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		for(var i = 0; i < in_cache_len; i++) {
 			jun = inputDisplayList[i];
 			
-			jun.x = xx;
-			jun.y = _iny;
-			_iny += junction_draw_hei_y * _s;
+			jun.x = _ix;
+			jun.y = _iy;
+			_iy  += junction_draw_hei_y * _s;
 			
 			jun.rx = rx;
 			jun.ry = ry;
 			ry    += junction_draw_hei_y;
 		}
 		
-		xx = xx + w * _s;
-		var _outy = yy + (junction_draw_pad_y + junction_draw_hei_y * 0.5 * SHOW_PARAM) * _s;
-		var rx = x + w, ry = y + junction_draw_pad_y + junction_draw_hei_y * 0.5 * SHOW_PARAM;
+		var _ox = xx + w * _s;
+		var _oy = _junSy;
+		var rx  = x + w;
+		var ry  = y + _junRy;
+		var idx;
 		
 		for(var i = 0; i < outputs_amount; i++) {
-			var idx = outputs_index[i];
+			idx = outputs_index[i];
 			jun = outputs[idx];
 			
-			jun.x  = xx;
-			jun.y  = _outy;
-			_outy += junction_draw_hei_y * _s * jun.isVisible();
+			jun.x = _ox;
+			jun.y = _oy;
+			_oy  += junction_draw_hei_y * _s * jun.isVisible();
 			
 			jun.rx = rx;
 			jun.ry = ry;
@@ -1227,7 +1241,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		if(SHOW_PARAM) h = h_param;
 		
-		onPreDraw(_x, _y, _s, _iny, _outy);
+		onPreDraw(_x, _y, _s, _iy, _oy);
 	}
 	
 	static onPreDraw = function(_x, _y, _s, _iny, _outy) {}
@@ -1365,7 +1379,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			}
 			
 			if(jun.value_from || wd == noone) {
-				jy += wh;
+				extY += junction_draw_hei_y;
+				jy   += wh;
 				continue;
 			}
 			
@@ -1398,7 +1413,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			if(wd.isHovering()) draggable = false;
 		}
 		
-		h       = con_h + extY + 4;
+		h = con_h + extY + 4;
 		h_param = h;
 	}
 	

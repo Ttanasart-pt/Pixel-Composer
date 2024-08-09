@@ -11,24 +11,24 @@ function Panel_Notification() : PanelContent() constructor {
 	showHeader  = false;
 	
 	rightClickMenu = [ 
-		menuItem(__txtx("noti_clear_log", "Clear log messages"), function() { 
+		menuItemAction(__txtx("noti_clear_log", "Clear log messages"), function() { 
 			for( var i = ds_list_size(STATUSES) - 1; i >= 0; i-- ) {
 				if(STATUSES[| i].type == NOTI_TYPE.log) 
 					ds_list_delete(STATUSES, i);
 			}
 		}), 
-		menuItem(__txtx("noti_clear_warn", "Clear warning messages"), function() { 
+		menuItemAction(__txtx("noti_clear_warn", "Clear warning messages"), function() { 
 			for( var i = ds_list_size(STATUSES) - 1; i >= 0; i-- ) {
 				if(STATUSES[| i].type == NOTI_TYPE.warning) 
 					ds_list_delete(STATUSES, i);
 			}
 		}),
 		-1,
-		menuItem(__txtx("noti_clear_all", "Clear all notifications"), function() { 
+		menuItemAction(__txtx("noti_clear_all", "Clear all notifications"), function() { 
 			ds_list_clear(STATUSES);
 		}),
 		-1,
-		menuItem(__txtx("noti_open_log", "Open log file"), function() { 
+		menuItemAction(__txtx("noti_open_log", "Open log file"), function() { 
 			shellOpenExplorer(DIRECTORY + "log/log.txt");
 		}),
 	];
@@ -77,10 +77,10 @@ function Panel_Notification() : PanelContent() constructor {
 				
 					if(mouse_press(mb_right, pFOCUS)) {
 						var dia = menuCall("notification_menu",,, [ 
-							menuItem(__txtx("noti_copy_message", "Copy notification message"), function() { 
+							menuItemAction(__txtx("noti_copy_message", "Copy notification message"), function() { 
 								clipboard_set_text(o_dialog_menubox.noti.txt);
 							}), 
-							menuItem(__txtx("noti_delete_message", "Delete notification"), function() { 
+							menuItemAction(__txtx("noti_delete_message", "Delete notification"), function() { 
 								ds_list_remove(STATUSES, o_dialog_menubox.noti);
 							}), 
 						],, noti);

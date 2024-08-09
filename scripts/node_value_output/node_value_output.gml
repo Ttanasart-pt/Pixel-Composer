@@ -4,7 +4,7 @@ function NodeValue_Output(_name, _node, _type, _value, _tooltip = "") : NodeValu
 	
 	/////============== GET =============
 	
-	output_value = 0;
+	output_value = _value;
 	
 	static getValue = function(_time = CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { //// Get value
 		return output_value;

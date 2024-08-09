@@ -24,9 +24,9 @@
 	globalvar CMD, CMDIN;
 	globalvar FPS_REAL;
 	
-	OS    = os_type;
-	CMD   = [];
-	CMDIN = [];
+	OS       = os_type;
+	CMD      = [];
+	CMDIN    = [];
 	FPS_REAL = 0;
 	
 	DEBUG = false;
@@ -39,7 +39,7 @@
 	LATEST_VERSION	= 11700;
 	VERSION			= 11790;
 	SAVE_VERSION	= 11700;
-	VERSION_STRING  = "1.17.10.002";
+	VERSION_STRING  = "1.17.10.003";
 	BUILD_NUMBER	= 11790;
 	
 	HOTKEYS			= ds_map_create();
@@ -54,15 +54,16 @@
 #endregion
 
 #region input
-	globalvar FOCUS, FOCUS_STR, HOVER, HOVERING_ELEMENT, _HOVERING_ELEMENT;
+	globalvar FOCUS, FOCUS_STR, FOCUS_CONTENT, HOVER, HOVERING_ELEMENT, _HOVERING_ELEMENT;
 	globalvar DOUBLE_CLICK, DOUBLE_CLICK_POS;
 	globalvar DIALOG_CLICK;
 	
 	DOUBLE_CLICK_POS = [ 0, 0 ];
 	DOUBLE_CLICK = false;
 	
-	FOCUS      = noone;
-	FOCUS_STR  = "";
+	FOCUS	      = noone;
+	FOCUS_CONTENT = noone;
+	FOCUS_STR	  = "";
 	
 	HOVER             = noone;
 	HOVERING_ELEMENT  = noone;
@@ -178,19 +179,59 @@
 #endregion
 
 #region functions
-	function __fnInit_Global() {
-		__registerFunction("fullscreen",	global_fullscreen);
-		__registerFunction("render_all",	global_render_all);
-		__registerFunction("project_close",	global_project_close);
-		
-		__registerFunction("theme_reload",	global_theme_reload);
+	function global_fullscreen()		{ CALL("fullscreen");			winMan_setFullscreen(!window_is_fullscreen);										}
+	function global_project_close()		{ CALL("close_project");		PANEL_GRAPH.close();																}
+	function global_project_close_all()	{ CALL("close_project_all");	 for( var i = array_length(PROJECTS) - 1; i >= 0; i-- ) closeProject(PROJECTS[i]);	}
+	function global_theme_reload()		{ CALL("reload_theme");			loadGraphic(PREFERENCES.theme); resetPanel();										}
+	
+	function global_render_all()		{ CALL("render_all");			RENDER_ALL_REORDER																	}
+	function global_export_all()		{ 
+		for (var i = 0, n = array_length(PROJECT.allNodes); i < n; i++) {
+			var node = PROJECT.allNodes[i];
+			
+			if(!node.active) continue;
+			if(instanceof(node) != "Node_Export") continue;
+			
+			node.doInspectorAction();
+		}
 	}
 	
-	function global_fullscreen()	{ CALL("fullscreen");		winMan_setFullscreen(!window_is_fullscreen);	}
-	function global_render_all()	{ CALL("render_all");		RENDER_ALL_REORDER								}
-	function global_project_close()	{ CALL("project_close");	PANEL_GRAPH.close();							}
+	function __fnInit_Global() {
+		registerFunction("", "New file",			"N",	MOD_KEY.ctrl,					NEW);
+		
+		if(!DEMO) {
+			registerFunction("", "Save",			"S",	MOD_KEY.ctrl,					SAVE);
+			registerFunction("", "Save as", 		"S",	MOD_KEY.ctrl | MOD_KEY.shift,	SAVE_AS);
+			registerFunction("", "Save at", 		"",		MOD_KEY.none,					SAVE_AT, [ ARG("project", function() { return PROJECT; }, true), ARG("path", ""), ARG("log", "save at ") ]);
+			registerFunction("", "Save all",		"S",	MOD_KEY.ctrl | MOD_KEY.alt,		SAVE_ALL);
+			registerFunction("", "Open",			"O",	MOD_KEY.ctrl,					LOAD);
+			registerFunction("", "Open Safe",		"",		MOD_KEY.none,					LOAD_SAFE);
+			registerFunction("", "Open at",			"",		MOD_KEY.none,					LOAD_AT, [ ARG("path", ""), ARG("readonly", false), ARG("override", false) ]);
+			registerFunction("", "Append",			"",		MOD_KEY.none,					APPEND,  [ ARG("path", ""), ARG("context", function() { return PANEL_GRAPH.getCurrentContext(); }, true) ]);
+			
+			registerFunction("", "Import .zip",		"",		MOD_KEY.none,					__IMPORT_ZIP);
+			registerFunction("", "Export .zip",		"",		MOD_KEY.none,					__EXPORT_ZIP);
+		}
+		
+		registerFunction("", "Undo",				"Z",	MOD_KEY.ctrl,					UNDO);
+		registerFunction("", "Redo",				"Z",	MOD_KEY.ctrl | MOD_KEY.shift,	REDO);
+		
+		registerFunction("", "Full panel",  		"`",	MOD_KEY.none,					set_focus_fullscreen);
+		registerFunction("", "Reset layout",		vk_f10, MOD_KEY.ctrl,					resetPanel);
+		
+		registerFunction("", "Open notification",	vk_f12, MOD_KEY.none,					function() /*=>*/ { dialogPanelCall(new Panel_Notification()); });
+		
+		registerFunction("", "Fullscreen",			vk_f11, MOD_KEY.none,					global_fullscreen);
+		registerFunction("", "Render all",			vk_f5,	MOD_KEY.none,					global_render_all);
+		registerFunction("", "Export all",			"",		MOD_KEY.none,					global_export_all);
+		
+		registerFunction("", "Close file",			"Q",	MOD_KEY.ctrl,					global_project_close);
+		registerFunction("", "Close all files",		"",		MOD_KEY.none,					global_project_close_all);
+		registerFunction("", "Close program",		vk_f4,	MOD_KEY.alt,					window_close);
+		registerFunction("", "Close project",		"",		MOD_KEY.none,					closeProject, [ ARG("project", function() { return PROJECT; }, true) ]);
+		registerFunction("", "Reload theme",		vk_f10, MOD_KEY.ctrl | MOD_KEY.shift,	global_theme_reload);
+	}
 	
-	function global_theme_reload()	{ CALL("theme_reload");		loadGraphic(PREFERENCES.theme); resetPanel();	}
 #endregion
 
 #region debug

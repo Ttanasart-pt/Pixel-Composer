@@ -9,7 +9,7 @@ function NodeValue_Float(_name, _node, _value, _tooltip = "") : NodeValue(_name,
 		var val = __curr_get_val[0];
 		var nod = __curr_get_val[1];
 		
-		var typ = nod == undefined? VALUE_TYPE.any : nod.type;
+		var typ = nod.type;
 		var dis = nod.display_type;
 		
 		if(typ != VALUE_TYPE.surface) {

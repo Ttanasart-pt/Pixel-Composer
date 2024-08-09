@@ -1,6 +1,12 @@
+#macro CHECK_PANEL_PREVIEW_WINDOW if(!is_instanceof(FOCUS_CONTENT, Panel_Preview_Window)) return;
+
+function panel_preview_window_reset()	{ CHECK_PANEL_PREVIEW_WINDOW CALL("preview_window_reset");		FOCUS_CONTENT.reset();													}
+function panel_preview_window_inspect()	{ CHECK_PANEL_PREVIEW_WINDOW CALL("preview_window_inspect");	PANEL_GRAPH.nodes_selecting = [ FOCUS_CONTENT.node_target ];			}
+function panel_preview_window_preview()	{ CHECK_PANEL_PREVIEW_WINDOW CALL("preview_window_preview");	PANEL_PREVIEW.setNodePreview(FOCUS_CONTENT.node_target);				}
+
 function Panel_Preview_Window() : PanelContent() constructor {
-	min_w = ui(64);
-	min_h = ui(64);
+	min_w   = ui(64);
+	min_h   = ui(64);
 	padding = 8;
 	title_height = 24;
 	
@@ -48,11 +54,15 @@ function Panel_Preview_Window() : PanelContent() constructor {
 	content_surface = noone;
 	surfaceCheck();
 	
+	registerFunction("Preview Window", "Reset view",	"",	   MOD_KEY.none,	panel_preview_window_reset);
+	registerFunction("Preview Window", "Inspect",		"",	   MOD_KEY.none,	panel_preview_window_inspect);
+	registerFunction("Preview Window", "Preview",		"",	   MOD_KEY.none,	panel_preview_window_preview);
+	
 	menu = [
-		menuItem(__txtx("reset_view", "Reset view"), function() { reset(); }), 
+		menuItemAction(__txtx("reset_view", "Reset view"), panel_preview_window_reset), 
 		-1,
-		menuItem(__txt("Inspect"), function() { PANEL_GRAPH.nodes_selecting = [ node_target ]; }), 
-		menuItem(__txtx("panel_graph_send_to_preview", "Send to preview"), function() { PANEL_PREVIEW.setNodePreview(node_target); }), 
+		menuItemAction(__txt("Inspect"), panel_preview_window_inspect), 
+		menuItemAction(__txtx("panel_graph_send_to_preview", "Send to preview"), panel_preview_window_preview), 
 		-1,
 	]
 
@@ -151,7 +161,7 @@ function Panel_Preview_Window() : PanelContent() constructor {
 				var o = node_target.outputs[i];
 				if(o.type != VALUE_TYPE.surface) continue;
 			
-				array_push(_menu, menuItem(o.name, function(_dat) { changeChannel(_dat.index); }));
+				array_push(_menu, menuItemAction(o.name, function(_dat) { changeChannel(_dat.index); }));
 			}
 			menuCall("preview_window_menu",,, _menu,, node_target);
 		}

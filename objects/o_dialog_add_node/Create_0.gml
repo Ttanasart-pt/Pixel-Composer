@@ -60,21 +60,25 @@ event_inherited();
 		category_width = maxLen + ui(56);
 	#endregion
 	
+	function trigger_favourite() {
+		if(node_menu_selecting == noone) return;
+		
+		var _node = node_menu_selecting.node;
+		if(!is_array(global.FAV_NODES)) global.FAV_NODES = [];
+		
+		if(array_exists(global.FAV_NODES, _node))	array_remove(global.FAV_NODES, _node);
+		else										array_push(global.FAV_NODES, _node);
+	}
+	
+	registerFunction("Add Node", "Trigger Favourite",	"",	   MOD_KEY.none,	trigger_favourite);
+	
 	function rightClick(node) {
 		if(!is_instanceof(node, NodeObject)) return;
 		
 		node_menu_selecting = node;
 		var fav  = array_exists(global.FAV_NODES, node.node);
 		var menu = [
-			menuItem(fav? __txtx("add_node_remove_favourite", "Remove from favourite") : __txtx("add_node_add_favourite", "Add to favourite"), 
-			function() {
-				if(!is_array(global.FAV_NODES)) global.FAV_NODES = [];
-				
-				if(array_exists(global.FAV_NODES, node_menu_selecting.node))
-					array_remove(global.FAV_NODES, node_menu_selecting.node);
-				else 
-					array_push(global.FAV_NODES, node_menu_selecting.node);
-			}, THEME.star)
+			menuItemAction(fav? __txtx("add_node_remove_favourite", "Remove from favourite") : __txtx("add_node_add_favourite", "Add to favourite"), trigger_favourite, THEME.star)
 		];
 		
 		menuCall("add_node_window_manu",,, menu,, node_menu_selecting);

@@ -53,7 +53,7 @@ event_inherited();
 				
 				if(mouse_click(mb_right, sFOCUS)) {
 					var dia = menuCall("preset_window_menu",,, [ 
-						menuItem(__txt("Delete"), function() { 
+						menuItemAction(__txt("Delete"), function() { 
 							file_delete(o_dialog_menubox.path);
 							__initPresets();
 						}), 

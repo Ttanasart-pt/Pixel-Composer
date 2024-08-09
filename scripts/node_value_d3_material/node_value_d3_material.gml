@@ -13,7 +13,7 @@ function NodeValue_D3Material(_name, _node, _value, _tooltip = "") : NodeValue(_
 		var val = __curr_get_val[0];
 		var nod = __curr_get_val[1];
 		
-		var typ = nod == undefined? VALUE_TYPE.any : nod.type;
+		var typ = nod.type;
 		var dis = nod.display_type;
 		
 		if(nod == self)

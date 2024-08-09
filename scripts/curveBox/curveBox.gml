@@ -482,12 +482,12 @@ function curveBox(_onModify) : widget() constructor {
 						[ [THEME.curve_presets, 3], function() { onModify(CURVE_DEF_10); } ],
 					]),
 					-1,
-					menuItem(__txt("Reset View"), function() { 
+					menuItemAction(__txt("Reset View"), function() { 
 						minx = 0; maxx = 1;
 						miny = 0; maxy = 1;
 					}),
-					menuItem(grid_show? __txt("Hide grid") : __txt("Show grid"), function() { grid_show = !grid_show; }),
-					menuItem(__txt("Snap to grid"), function() { grid_snap = !grid_snap; },,, function() { return grid_snap } ),
+					menuItemAction(grid_show? __txt("Hide grid") : __txt("Show grid"), function() { grid_show = !grid_show; }),
+					menuItemAction(__txt("Snap to grid"), function() { grid_snap = !grid_snap; },,, function() { return grid_snap } ),
 					menuItemGroup(__txt("Grid size"), [
 						[ "1%",  function() { grid_step = 0.01; } ],
 						[ "5%",  function() { grid_step = 0.05; } ],

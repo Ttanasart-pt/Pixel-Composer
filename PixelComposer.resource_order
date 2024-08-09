@@ -1171,6 +1171,7 @@
     {"name":"node_value_palette","order":2,"path":"scripts/node_value_palette/node_value_palette.yy",},
     {"name":"node_value_particle","order":4,"path":"scripts/node_value_particle/node_value_particle.yy",},
     {"name":"node_value_path_anchor","order":18,"path":"scripts/node_value_path_anchor/node_value_path_anchor.yy",},
+    {"name":"node_value_path","order":34,"path":"scripts/node_value_path/node_value_path.yy",},
     {"name":"node_value_pathnode","order":5,"path":"scripts/node_value_pathnode/node_value_pathnode.yy",},
     {"name":"node_value_quarterion","order":19,"path":"scripts/node_value_quarterion/node_value_quarterion.yy",},
     {"name":"node_value_range","order":2,"path":"scripts/node_value_range/node_value_range.yy",},

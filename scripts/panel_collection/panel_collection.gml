@@ -1,3 +1,25 @@
+#region funtion calls
+	function __fnInit_Collection() {
+		registerFunction("Collection", "Replace",			"",   MOD_KEY.none,	panel_collection_replace);
+		registerFunction("Collection", "Edit Meta",			"",   MOD_KEY.none,	panel_collection_edit_meta);
+		registerFunction("Collection", "Update Thumbnail",	"",   MOD_KEY.none,	panel_collection_update_thumbnail);
+		registerFunction("Collection", "Delete Collection",	"",   MOD_KEY.none,	panel_collection_delete_collection);
+		
+		registerFunction("Collection", "Upload To Steam",	"",   MOD_KEY.none,	panel_collection_steam_file_upload);
+		registerFunction("Collection", "Update Steam",		"",   MOD_KEY.none,	panel_collection_steam_file_update);
+		registerFunction("Collection", "Unsubscribe",		"",   MOD_KEY.none,	panel_collection_steam_unsubscribe);
+	}
+	
+	function panel_collection_replace()				{ CALL("collection_replace");			PANEL_COLLECTION.replace();				}
+	function panel_collection_edit_meta()			{ CALL("collection_edit_meta");			PANEL_COLLECTION.edit_meta();			}
+	function panel_collection_update_thumbnail()	{ CALL("collection_update_thumbnail");	PANEL_COLLECTION.update_thumbnail();	}
+	function panel_collection_delete_collection()	{ CALL("collection_delete_collection");	PANEL_COLLECTION.delete_collection();	}
+	
+	function panel_collection_steam_file_upload()	{ CALL("collection_steam_file_upload");	PANEL_COLLECTION.steam_file_upload();	}
+	function panel_collection_steam_file_update()	{ CALL("collection_steam_file_update");	PANEL_COLLECTION.steam_file_update();	}
+	function panel_collection_steam_unsubscribe()	{ CALL("collection_steam_unsubscribe");	PANEL_COLLECTION.steam_unsubscribe();	}
+#endregion
+
 function Panel_Collection() : PanelContent() constructor {
 	title = __txt("Collections");
 	expandable = false;
@@ -36,6 +58,103 @@ function Panel_Collection() : PanelContent() constructor {
 	
 	PANEL_COLLECTION = self;
 	
+	#region ++++++++++++ Actions ++++++++++++
+		function replace() { 
+			if(_menu_node == noone) return;
+			
+			var _path = filename_dir(_menu_node.path);
+			var _name = filename_name(_menu_node.path);
+			
+			saveCollection(PANEL_INSPECTOR.getInspecting(), _path, _name, false, _menu_node.meta);
+		}
+		
+		function edit_meta() { 
+			if(_menu_node == noone) return;
+			
+			var dia  = dialogCall(o_dialog_file_name_collection, mouse_mx + ui(8), mouse_my + ui(-320));
+			var meta = _menu_node.getMetadata();
+			if(meta != noone && meta != undefined) 
+				dia.meta = meta;
+			
+			dia.node = PANEL_INSPECTOR.getInspecting();
+			dia.data_path = data_path;
+			dia.updating  = _menu_node;
+			dia.doExpand();
+		}
+		
+		function update_thumbnail() { 
+			if(_menu_node == noone) return;
+			
+			var _path = _menu_node.path;
+			var preview_surface = PANEL_PREVIEW.getNodePreviewSurface();
+			if(!is_surface(preview_surface)) {
+				noti_warning("Please send any node to preview panel to use as a thumbnail.")
+				return;
+			}
+			
+			var icon_path = string_replace(_path, filename_ext(_path), ".png");
+			surface_save_safe(preview_surface, icon_path);
+			
+			refreshContext();
+		}
+		
+		function delete_collection() {
+			if(_menu_node == noone) return;
+			
+			file_delete(_menu_node.path);
+			refreshContext();
+		}
+		
+		function steam_file_upload() { 
+			if(_menu_node == noone) return;
+			
+			var dia = dialogCall(o_dialog_file_name_collection, mouse_mx + ui(8), mouse_my + ui(-320));
+			var meta = _menu_node.getMetadata();
+			if(meta != noone && meta != undefined) 
+				dia.meta = meta;
+			
+			dia.data_path	= data_path;
+			dia.ugc			= 1;
+			dia.updating	= _menu_node;
+			dia.doExpand();
+		}
+		
+		function steam_file_update() { 
+			if(_menu_node == noone) return;
+			
+			var _node = PANEL_INSPECTOR.getInspecting();
+			if(_node == noone) {
+				noti_warning("No node selected. Select a node in graph panel to update workshop content.");
+				return;
+			}
+			var dia = dialogCall(o_dialog_file_name_collection, mouse_mx + ui(8), mouse_my + ui(-320));
+			var meta = _menu_node.getMetadata();
+			if(meta != noone && meta != undefined) 
+				dia.meta = meta;
+			
+			dia.node		= _node;
+			dia.data_path	= data_path;
+			dia.ugc			= 2;
+			dia.updating	= _menu_node;
+			dia.doExpand();
+		}
+		
+		function steam_unsubscribe() {
+			if(_menu_node == noone) return;
+			
+			var meta = _menu_node.getMetadata();
+			var del_id = meta.file_id;
+			
+			for( var i = 0; i < ds_list_size(STEAM_COLLECTION); i++ ) {
+				if(STEAM_COLLECTION[| i].getMetadata().file_id == del_id) {
+					ds_list_delete(STEAM_COLLECTION, i);
+					break;
+				}
+			}
+			steam_ugc_unsubscribe_item(del_id);
+		}
+	#endregion
+	
 	static initMenu = function() {
 		if(_menu_node == noone) return;
 		var meta = _menu_node.getMetadata();
@@ -44,41 +163,11 @@ function Panel_Collection() : PanelContent() constructor {
 		
 		if(meta == noone || !meta.steam) {
 			contentMenu = [
-				menuItem(__txtx("panel_collection_replace", "Replace with selected"), function() { 
-					var _path = filename_dir(_menu_node.path);
-					var _name = filename_name(_menu_node.path);
-					
-					saveCollection(PANEL_INSPECTOR.getInspecting(), _path, _name, false, _menu_node.meta);
-				}),
-				menuItem(__txtx("panel_collection_edit_meta", "Edit metadata") + "...", function() { 
-					var dia  = dialogCall(o_dialog_file_name_collection, mouse_mx + ui(8), mouse_my + ui(-320));
-					var meta = _menu_node.getMetadata();
-					if(meta != noone && meta != undefined) 
-						dia.meta = meta;
-					
-					dia.node = PANEL_INSPECTOR.getInspecting();
-					dia.data_path = data_path;
-					dia.updating  = _menu_node;
-					dia.doExpand();
-				}),
-				menuItem(__txtx("panel_collection_update_thumbnail", "Update thumbnail"), function() { 
-					var _path = _menu_node.path;
-					var preview_surface = PANEL_PREVIEW.getNodePreviewSurface();
-					if(!is_surface(preview_surface)) {
-						noti_warning("Please send any node to preview panel to use as a thumbnail.")
-						return;
-					}
-					
-					var icon_path = string_replace(_path, filename_ext(_path), ".png");
-					surface_save_safe(preview_surface, icon_path);
-					
-					refreshContext();
-				}),
+				menuItemAction(__txtx("panel_collection_replace", "Replace with selected"),   	panel_collection_replace),
+				menuItemAction(__txtx("panel_collection_edit_meta", "Edit metadata") + "...", 	panel_collection_edit_meta),
+				menuItemAction(__txtx("panel_collection_update_thumbnail", "Update thumbnail"),	panel_collection_update_thumbnail),
 				-1,
-				menuItem(__txt("Delete"), function() { 
-					file_delete(_menu_node.path);
-					refreshContext();
-				})
+				menuItemAction(__txt("Delete"), panel_collection_delete_collection)
 			];
 			
 			if(STEAM_ENABLED) 
@@ -87,50 +176,11 @@ function Panel_Collection() : PanelContent() constructor {
 		
 		if(STEAM_ENABLED) {
 			if(meta.steam == FILE_STEAM_TYPE.local) {
-				array_push(contentMenu, menuItem(__txtx("panel_collection_workshop_upload", "Upload to Steam Workshop") + "...", function() { 
-					var dia = dialogCall(o_dialog_file_name_collection, mouse_mx + ui(8), mouse_my + ui(-320));
-					var meta = _menu_node.getMetadata();
-					if(meta != noone && meta != undefined) 
-						dia.meta = meta;
-					
-					dia.data_path	= data_path;
-					dia.ugc			= 1;
-					dia.updating	= _menu_node;
-					dia.doExpand();
-				}));
+				array_push(contentMenu, menuItemAction(__txtx("panel_collection_workshop_upload", "Upload to Steam Workshop") + "...", panel_collection_steam_file_upload));
 			} else {
-				if(meta.author_steam_id == STEAM_USER_ID && meta.file_id != 0) {
-					array_push(contentMenu, menuItem(__txtx("panel_collection_workshop_update", "Update Steam Workshop content") + "...", function() { 
-						var _node = PANEL_INSPECTOR.getInspecting();
-						if(_node == noone) {
-							noti_warning("No node selected. Select a node in graph panel to update workshop content.");
-							return;
-						}
-						var dia = dialogCall(o_dialog_file_name_collection, mouse_mx + ui(8), mouse_my + ui(-320));
-						var meta = _menu_node.getMetadata();
-						if(meta != noone && meta != undefined) 
-							dia.meta = meta;
-						
-						dia.node		= _node;
-						dia.data_path	= data_path;
-						dia.ugc			= 2;
-						dia.updating	= _menu_node;
-						dia.doExpand();
-					}));
-				}
-				
-				array_push(contentMenu, menuItem(__txt("Unsubscribe"), function() {
-					var meta = _menu_node.getMetadata();
-					var del_id = meta.file_id;
-					
-					for( var i = 0; i < ds_list_size(STEAM_COLLECTION); i++ ) {
-						if(STEAM_COLLECTION[| i].getMetadata().file_id == del_id) {
-							ds_list_delete(STEAM_COLLECTION, i);
-							break;
-						}
-					}
-					steam_ugc_unsubscribe_item(del_id);
-				}));
+				if(meta.author_steam_id == STEAM_USER_ID && meta.file_id != 0)
+					array_push(contentMenu, menuItemAction(__txtx("panel_collection_workshop_update", "Update Steam Workshop content") + "...", panel_collection_steam_file_update));
+				array_push(contentMenu, menuItemAction(__txt("Unsubscribe"), panel_collection_steam_unsubscribe));
 			}
 		}
 	}

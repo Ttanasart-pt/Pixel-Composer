@@ -1,116 +1,90 @@
-#region context menu
+#region data
 	globalvar CONTEXT_MENU_CALLBACK;
 	CONTEXT_MENU_CALLBACK = ds_map_create();
-	
-	function menuCall(menu_id = "", _x = mouse_mx + ui(4), _y = mouse_my + ui(4), menu = [], align = fa_left, context = noone) {
-		var dia = dialogCall(o_dialog_menubox, _x, _y);
-		if(menu_id != "" && ds_map_exists(CONTEXT_MENU_CALLBACK, menu_id)) {
-			var callbacks = CONTEXT_MENU_CALLBACK[? menu_id];
-			
-			for( var i = 0, n = array_length(callbacks); i < n; i++ ) 
-				array_append(menu, callbacks[i].populate());
-		}
-		
-		dia.menu_id = menu_id;
-		dia.context = context;
-		dia.setMenu(menu, align);
-		return dia;
-	}
-	
-	function pieMenuCall(menu_id = "", _x = mouse_mx, _y = mouse_my, menu = [], context = noone) {
-		var dia = instance_create(_x, _y, o_pie_menu);
-		if(menu_id != "" && ds_map_exists(CONTEXT_MENU_CALLBACK, menu_id)) {
-			var callbacks = CONTEXT_MENU_CALLBACK[? menu_id];
-			
-			for( var i = 0, n = array_length(callbacks); i < n; i++ ) 
-				array_append(menu, callbacks[i].populate());
-		}
-		
-		dia.menu_id = menu_id;
-		dia.context = context;
-		dia.setMenu(menu);
-		return dia;
-	}
-
-	function submenuCall(_data, menu = []) {
-		var dia = instance_create_depth(_data.x - ui(4), _data.y, _data.depth - 1, o_dialog_menubox);
-		dia.context = _data.context;
-		dia.setMenu(menu);
-		
-		if(_data.x - ui(4) + dia.dialog_w > WIN_W - ui(2))
-			dia.dialog_x = _data._x - dia.dialog_w + ui(4);
-		
-		return dia;
-	}
-	
-	function fileNameCall(path, onModify, _x = mouse_mx + 8, _y = mouse_my + 8) {
-		var dia = dialogCall(o_dialog_file_name, _x, _y);
-		dia.onModify = onModify;
-		dia.path     = string_trim_end(path, [ "\\", "/" ]) + "/";
-		
-		return dia;
-	}
-	
-	function menuItem(name, func, spr = noone, hotkey = noone, toggle = noone, params = {}) {
-		INLINE
-		return new MenuItem(name, func, spr, hotkey, toggle, params);
-	}
-	
-	function MenuItem(name, func, spr = noone, hotkey = noone, toggle = noone, params = {}) constructor {
-		active = true;
-		self.name	= name;
-		self.func	= func;
-		self.spr	= spr;
-		self.hotkey = hotkey;
-		self.toggle = toggle;
-		self.params = params;
-		color   = c_white;
-		
-		isShelf     = false;
-		shelfObject = noone;
-		
-		shiftMenu = noone;
-		
-		static setIsShelf = function() {
-			INLINE
-			isShelf = true;
-			return self;
-		}
-		
-		static setActive = function(active) {
-			INLINE
-			self.active = active;
-			return self;
-		}
-		
-		static setColor = function(color) {
-			INLINE
-			self.color = color;
-			return self;
-		}
-		
-		static setShiftMenu = function(shiftMenu) {
-			INLINE
-			self.shiftMenu = shiftMenu;
-			return self;
-		}
-	
-		static deactivate = function() {
-			INLINE
-			active = false;
-			return self;
-		}
-	}
-
-	function menuItemGroup(name, group) {
-		return new MenuItemGroup(name, group);
-	}
-	
-	function MenuItemGroup(name, group) constructor {
-		active = true;
-		self.name	= name;
-		self.group  = group;
-		
-		spacing = ui(36);
-	}
 #endregion
+
+function menuCall(menu_id = "", _x = mouse_mx + ui(4), _y = mouse_my + ui(4), menu = [], align = fa_left, context = noone) {
+	var dia = dialogCall(o_dialog_menubox, _x, _y);
+	if(menu_id != "" && ds_map_exists(CONTEXT_MENU_CALLBACK, menu_id)) {
+		var callbacks = CONTEXT_MENU_CALLBACK[? menu_id];
+		
+		for( var i = 0, n = array_length(callbacks); i < n; i++ ) 
+			array_append(menu, callbacks[i].populate());
+	}
+	
+	dia.menu_id = menu_id;
+	dia.context = context;
+	dia.setMenu(menu, align);
+	return dia;
+}
+
+function pieMenuCall(menu_id = "", _x = mouse_mx, _y = mouse_my, menu = [], context = noone) {
+	var dia = instance_create(_x, _y, o_pie_menu);
+	if(menu_id != "" && ds_map_exists(CONTEXT_MENU_CALLBACK, menu_id)) {
+		var callbacks = CONTEXT_MENU_CALLBACK[? menu_id];
+		
+		for( var i = 0, n = array_length(callbacks); i < n; i++ ) 
+			array_append(menu, callbacks[i].populate());
+	}
+	
+	dia.menu_id = menu_id;
+	dia.context = context;
+	dia.setMenu(menu);
+	return dia;
+}
+
+function submenuCall(_data, menu = []) {
+	var dia = instance_create_depth(_data.x - ui(4), _data.y, _data.depth - 1, o_dialog_menubox);
+	dia.context		= _data.context;
+	dia.setMenu(menu);
+	
+	if(_data.x - ui(4) + dia.dialog_w > WIN_W - ui(2))
+		dia.dialog_x = _data._x - dia.dialog_w + ui(4);
+	
+	
+	return dia;
+}
+
+function fileNameCall(path, onModify, _x = mouse_mx + 8, _y = mouse_my + 8) {
+	var dia = dialogCall(o_dialog_file_name, _x, _y);
+	dia.onModify = onModify;
+	dia.path     = string_trim_end(path, [ "\\", "/" ]) + "/";
+	
+	return dia;
+}
+
+function menuItem(name, func, spr = noone, hotkey = noone, toggle = noone, params = {}) { return new MenuItem(name, func, spr, hotkey, toggle, params); }
+function menuItemAction(name, func, spr = noone, toggle = noone) { return new MenuItem(name, func, spr, struct_try_get(ACTION_MAP, func, noone), toggle); }
+
+function MenuItem(_name, _func, _spr = noone, _hotkey = noone, _toggle = noone, _params = {}) constructor {
+	active	= true;
+	name	= _name;
+	func	= _func;
+	spr		= _spr;
+	hotkey	= _hotkey;
+	toggle	= _toggle;
+	params	= _params;
+	color	= c_white;
+	
+	isShelf      = false;
+	shelfObject  = noone;
+	shiftMenu	 = noone;
+	hoykeyObject = noone;
+	
+	static deactivate   = function()			/*=>*/ { INLINE active		= false;		return self; }
+	static setIsShelf   = function()			/*=>*/ { INLINE isShelf 	= true;			return self; }
+	static setActive    = function(_active)		/*=>*/ { INLINE active 		= _active;		return self; }
+	static setColor     = function(_color)		/*=>*/ { INLINE color		= _color;		return self; }
+	static setShiftMenu = function(_shiftMenu)	/*=>*/ { INLINE shiftMenu	= _shiftMenu;	return self; }
+}
+
+function menuItemGroup(_name, _group) { return new MenuItemGroup(_name, _group); }
+
+function MenuItemGroup(_name, _group) constructor {
+	active	= true;
+	name	= _name;
+	group	= _group;
+	hotkey  = noone;
+	
+	spacing = ui(36);
+}

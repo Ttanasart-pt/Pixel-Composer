@@ -1,5 +1,11 @@
+#macro CHECK_PANEL_WORKSPACE if(!is_instanceof(FOCUS_CONTENT, Panel_Workspace)) return;
+
+function panel_workspace_apply()	{ CHECK_PANEL_WORKSPACE CALL("panel_workspace_apply");		FOCUS_CONTENT.apply_space();   }
+function panel_workspace_replace()	{ CHECK_PANEL_WORKSPACE CALL("panel_workspace_replace");	FOCUS_CONTENT.replace_space(); }
+function panel_workspace_delete()	{ CHECK_PANEL_WORKSPACE CALL("panel_workspace_delete");		FOCUS_CONTENT.delete_space();  }
+
 function Panel_Workspace() : PanelContent() constructor {
-	title = "Workspace";
+	title      = "Workspace";
 	workspaces = [];
 	w = ui(480);
 	h = ui(40);
@@ -7,9 +13,32 @@ function Panel_Workspace() : PanelContent() constructor {
 	scroll     = 0;
 	scroll_to  = 0;
 	scroll_max = 0;
-	hori = false;
+	hori       = false;
 	
 	layout_selecting = "";
+	
+	registerFunction("Workspace", "Apply",	 "", MOD_KEY.none, panel_workspace_apply);
+	registerFunction("Workspace", "Replace", "", MOD_KEY.none, panel_workspace_replace);
+	registerFunction("Workspace", "Delete",	 "", MOD_KEY.none, panel_workspace_delete);
+	
+	function apply_space() {
+		if(layout_selecting == "") return;
+		PREFERENCES.panel_layout_file = layout_selecting;
+		PREF_SAVE();
+		setPanel();
+	}
+	
+	function replace_space() { 
+		if(layout_selecting == "") return;
+		var cont = panelSerialize();
+		json_save_struct(DIRECTORY + "layouts/" + layout_selecting + ".json", cont);
+	}
+	
+	function delete_space() { 
+		if(layout_selecting == "") return;
+		file_delete(DIRECTORY + "layouts/" + layout_selecting + ".json");
+		refreshContent();
+	}
 	
 	function refreshContent() {
 		workspaces = [];
@@ -20,8 +49,8 @@ function Panel_Workspace() : PanelContent() constructor {
 				array_push(workspaces, filename_name_only(f));
 			f = file_find_next();
 		}
-	}
-	refreshContent();
+		
+	} refreshContent();
 	
 	function onFocusBegin() { refreshContent(); }
 	
@@ -74,20 +103,9 @@ function Panel_Workspace() : PanelContent() constructor {
 				if(mouse_press(mb_right, pFOCUS)) {
 					layout_selecting = str;
 					menuCall("workspace_menu",,, [
-						menuItem(__txt("Select"), function() { 
-							PREFERENCES.panel_layout_file = layout_selecting;
-							PREF_SAVE();
-							setPanel();
-						}),
-						menuItem(__txtx("workspace_replace_current", "Replace with current"), function() { 
-							var cont = panelSerialize();
-							json_save_struct(DIRECTORY + "layouts/" + layout_selecting + ".json", cont);
-
-						}),
-						menuItem(__txt("Delete"), function() { 
-							file_delete(DIRECTORY + "layouts/" + layout_selecting + ".json");
-							refreshContent();
-						}, THEME.cross),
+						menuItemAction(__txt("Select"), apply_space),
+						menuItemAction(__txtx("workspace_replace_current", "Replace with current"), replace_space),
+						menuItemAction(__txt("Delete"), delete_space, THEME.cross),
 					]);
 				}
 			}

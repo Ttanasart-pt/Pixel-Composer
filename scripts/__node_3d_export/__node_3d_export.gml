@@ -4,7 +4,7 @@ function __Node_3D_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	inputs[0] = nodeValue("Vertex data", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3vertex, [] )
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Text("Path", self, "", "Export location without '.obj' extension." )
+	inputs[1] = nodeValue_Path("Path", self, "", "Export location without '.obj' extension." )
 		.setDisplay(VALUE_DISPLAY.path_save, { filter: "3d object|*.obj" });
 	
 	inputs[2] = nodeValue_Bool("Export texture", self, true );

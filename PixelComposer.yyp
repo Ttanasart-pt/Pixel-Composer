@@ -1777,6 +1777,7 @@
     {"id":{"name":"node_value_palette","path":"scripts/node_value_palette/node_value_palette.yy",},},
     {"id":{"name":"node_value_particle","path":"scripts/node_value_particle/node_value_particle.yy",},},
     {"id":{"name":"node_value_path_anchor","path":"scripts/node_value_path_anchor/node_value_path_anchor.yy",},},
+    {"id":{"name":"node_value_path","path":"scripts/node_value_path/node_value_path.yy",},},
     {"id":{"name":"node_value_pathnode","path":"scripts/node_value_pathnode/node_value_pathnode.yy",},},
     {"id":{"name":"node_value_quarterion","path":"scripts/node_value_quarterion/node_value_quarterion.yy",},},
     {"id":{"name":"node_value_range","path":"scripts/node_value_range/node_value_range.yy",},},

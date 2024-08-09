@@ -635,11 +635,6 @@ event_inherited();
 		})
 	]);
 	
-	vk_list = [ 
-		vk_left, vk_right, vk_up, vk_down, vk_space, vk_backspace, vk_tab, vk_home, vk_end, vk_delete, vk_insert, 
-		vk_pageup, vk_pagedown, vk_pause, vk_printscreen, 
-		vk_f1, vk_f2, vk_f3, vk_f4, vk_f5, vk_f6, vk_f7, vk_f8, vk_f9, vk_f10, vk_f11, vk_f12,
-	];
 	hk_editing = noone;
 	
 	sp_hotkey = new scrollPane(dialog_w - ui(padding + padding) - page_width, dialog_h - ui(title_height + padding), function(_y, _m) {
@@ -694,11 +689,13 @@ event_inherited();
 		th  = line_get_height(f_p1);
 		ind = 0;
 		
+		var _hov = sHOVER && sp_hotkey.hover;
+		
 		for(var j = 0; j < ds_list_size(HOTKEY_CONTEXT); j++) {
 			var ll = HOTKEYS[? HOTKEY_CONTEXT[| j]];
 			
 			for(var i = 0; i < ds_list_size(ll); i++) {
-				var key = ll[| i];
+				var key   = ll[| i];
 				var group = key.context;
 				var name  = __txt(key.name);
 				var pkey  = key.key;
@@ -729,39 +726,46 @@ event_inherited();
 				}
 				
 				var _yy   = yy + hh;
-				
-				if(ind++ % 2 == 0)
-					draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, _yy - padd, sp_hotkey.surface_w, th + padd * 2, COLORS.dialog_preference_prop_bg, 1);
-				
 				var _lb_y = _yy;
+				
+				if(ind++ % 2 == 0) draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, _yy - padd, sp_hotkey.surface_w, th + padd * 2, COLORS.dialog_preference_prop_bg, 1);
+				
 				draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text);
 				draw_text_add(ui(24), _lb_y, name);
 				
 				var dk = key_get_name(key.key, key.modi);
 				var kw = string_width(dk);
-			
+				
+				var tx = key_x1 - ui(24);
+				var bx = tx - kw - ui(8);
+				var by = _yy - ui(4);
+				var bw = kw + ui(16);
+				var bh = th + ui(8);
+				var cc = c_white;
+				
 				if(hk_editing == key) {
-					dk = key_get_name(key.key, key.modi);
-					kw = string_width(dk);
-					draw_sprite_stretched(THEME.button_hide, 2, key_x1 - ui(40) - kw, _yy, kw + ui(32), th);
+					draw_sprite_stretched_ext(THEME.ui_panel, 1, bx, by, bw, bh, COLORS._main_accent);
+					cc = COLORS._main_text_accent;
 					
 				} else {
-					var bx = key_x1 - ui(40) - kw;
-					var by = _yy;
-					var b = buttonInstant(THEME.button_hide, bx, by, kw + ui(32), th, _m, sFOCUS, sHOVER && sp_hotkey.hover) 
+					if(_hov && point_in_rectangle(_m[0], _m[1], bx, by, bx + bw, by + bh)) {
+						draw_sprite_stretched_ext(THEME.ui_panel, 1, bx, by, bw, bh, CDEF.main_ltgrey);
+						sp_hotkey.hover_content = true;
+						cc = CDEF.main_ltgrey;
 						
-					if(b) sp_hotkey.hover_content = true;
-					if(b == 2) {
-						hk_editing = key;
-						keyboard_lastchar = pkey;
+						if(mouse_press(mb_left, sFOCUS)) {
+							hk_editing        = key;
+							keyboard_lastchar = pkey;
+						}
+						
+					} else {
+						draw_sprite_stretched_ext(THEME.ui_panel, 1, bx, by, bw, bh, CDEF.main_dkgrey, 1);
+						cc = COLORS._main_text_sub;
 					}
 				}
 				
-				var cc = (key.key == 0 && key.modi == MOD_KEY.none)? COLORS._main_text_sub : COLORS._main_text;
-				if(hk_editing == key) cc = COLORS._main_text_accent;
-				
 				draw_set_text(f_p1, fa_right, fa_top, cc);
-				draw_text_add(key_x1 - ui(24), _lb_y, dk);
+				draw_text_add(tx, _lb_y, dk);
 				
 				if(key.key != dkey || key.modi != dmod) {
 					modified = true;
@@ -782,7 +786,7 @@ event_inherited();
 		}
 		
 		draw_set_text(f_p0b, fa_left, fa_top, COLORS._main_text_sub);
-		draw_text_add(ui(8), yy + hh, "Nodes (Single key only)");
+		draw_text_add(ui(8), yy + hh, "Nodes");
 		array_push(sect, [ "Nodes", sp_hotkey, hh + ui(12) ]);
 		hh += string_height("l") + ui(16);
 		
@@ -862,65 +866,7 @@ event_inherited();
 			}
 		}
 		
-		if(hk_editing != noone) {
-			var _mod_prs = 0;
-			
-			if(keyboard_check(vk_control))	_mod_prs |= MOD_KEY.ctrl;
-			if(keyboard_check(vk_shift))	_mod_prs |= MOD_KEY.shift;
-			if(keyboard_check(vk_alt))		_mod_prs |= MOD_KEY.alt;
-			
-			if(keyboard_check_pressed(vk_escape)) {
-				hk_editing.key  = 0;
-				hk_editing.modi = 0;
-				
-				PREF_SAVE();
-			} else if(keyboard_check_pressed(vk_anykey)) {
-				hk_editing.modi  = _mod_prs;
-				hk_editing.key   = 0;
-				var press = false;
-				
-				for(var a = 0; a < array_length(vk_list); a++) {
-					if(!keyboard_check_pressed(vk_list[a])) continue;
-					hk_editing.key = vk_list[a];
-					press = true; 
-					break;
-				}
-										
-				if(!press) {
-					var k = ds_map_find_first(global.KEY_STRING_MAP);
-					var amo = ds_map_size(global.KEY_STRING_MAP);
-					repeat(amo) {
-						if(!keyboard_check_pressed(k)) {
-							k = ds_map_find_next(global.KEY_STRING_MAP, k);
-							continue;
-						}
-						hk_editing.key	= k;
-						press = true;
-						break;
-					}
-				}
-				
-				PREF_SAVE();
-			}
-		}
-		
-		//if(modified) {
-		//	var bx = x1 - ui(32);
-		//	var by = yy + ui(2);
-		//	if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), _m, sFOCUS, sHOVER && sp_hotkey.hover, __txt("Reset all"), THEME.refresh_16) == 2) {
-		//		for(var j = 0; j < ds_list_size(HOTKEY_CONTEXT); j++) {
-		//			var ll = HOTKEYS[? HOTKEY_CONTEXT[| j]];
-		//			for(var i = 0; i < ds_list_size(ll); i++) {
-		//				var key = ll[| i];
-		//				key.key = key.dKey;
-		//				key.modi = key.dModi;
-						
-		//				PREF_SAVE();
-		//			}
-		//		}
-		//	}
-		//}
-		
+		if(hk_editing != noone) hotkey_editing(hk_editing);
 		sections[page_current] = sect;
 		
 		return hh;

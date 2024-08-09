@@ -207,29 +207,29 @@ function Panel_File_Explorer() : PanelContent() constructor {
 		__menu_cnxt_selecting = noone;
 		
 		menu_file_image = [
-			menuItem("Add as node", function() {
+			menuItemAction("Add as node", function() {
 				var node = Node_create_Image_path(PANEL_GRAPH.graph_cx, PANEL_GRAPH.graph_cy, __menu_file_selecting.path);
 				PANEL_PREVIEW.setNodePreview(node);
 				PANEL_INSPECTOR.inspecting = node;
 			}),
 			
-			menuItem("Add as canvas", function() {
+			menuItemAction("Add as canvas", function() {
 				var node = nodeBuild("Node_Canvas", PANEL_GRAPH.graph_cx, PANEL_GRAPH.graph_cy).loadImagePath(__menu_file_selecting.path);
 				PANEL_PREVIEW.setNodePreview(node);
 				PANEL_INSPECTOR.inspecting = node;
 			}),
 			
-			menuItem("Copy path", function() { clipboard_set_text(__menu_file_selecting.path); }, THEME.copy),
+			menuItemAction("Copy path", function() { clipboard_set_text(__menu_file_selecting.path); }, THEME.copy),
 		];
 		
 		menu_file_project = [ 
-			menuItem("Open", function() { LOAD_AT(__menu_file_selecting.path); }), 
+			menuItemAction("Open", function() { LOAD_AT(__menu_file_selecting.path); }), 
 			
-			menuItem("Copy path", function() { clipboard_set_text(__menu_file_selecting.path); }, THEME.copy),
+			menuItemAction("Copy path", function() { clipboard_set_text(__menu_file_selecting.path); }, THEME.copy),
 		];
 		
 		menu_general = [ 
-			menuItem("New Canvas", function() { 
+			menuItemAction("New Canvas", function() { 
 				var dia = dialogCall(o_dialog_file_name, mouse_mx + 8, mouse_my + 8);
 				dia.onModify = function (txt) {
 					var _s = surface_create(DEF_SURF_W, DEF_SURF_H);
@@ -246,7 +246,7 @@ function Panel_File_Explorer() : PanelContent() constructor {
 				dia.path = __menu_cnxt_selecting.path + "/";
 			}, THEME.new_file), 
 			
-			menuItem("New Folder", function() { 
+			menuItemAction("New Folder", function() { 
 				var dia = dialogCall(o_dialog_file_name, mouse_mx + 8, mouse_my + 8);
 				dia.name = "New Folder";
 				dia.onModify = function (txt) {
@@ -257,7 +257,7 @@ function Panel_File_Explorer() : PanelContent() constructor {
 			}, THEME.folder), 
 			
 			-1,
-			menuItem("Refresh", function() { if(rootFile) rootFile.getContent() }), 
+			menuItemAction("Refresh", function() { if(rootFile) rootFile.getContent() }), 
 		];
 	#endregion
 	
@@ -446,8 +446,6 @@ function Panel_File_Explorer() : PanelContent() constructor {
 						_dir.getContent();
 					_dir.open = !_dir.open;
 				}
-				
-				// if(mouse_press(mb_right)) menuCall("",,, [ menuItem("Delete", function() {}) ]);
 				
 			}
 			

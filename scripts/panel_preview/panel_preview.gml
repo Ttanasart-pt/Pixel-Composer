@@ -1,19 +1,44 @@
 #region funtion calls
 	function __fnInit_Preview() {
-		__registerFunction("preview_focus_content",				panel_preview_focus_content);
-		__registerFunction("preview_save_current_frame",		panel_preview_save_current_frame);
-		__registerFunction("preview_saveCurrentFrameToFocus",	panel_preview_saveCurrentFrameToFocus);
-		__registerFunction("preview_save_all_current_frame",	panel_preview_save_all_current_frame);
-		__registerFunction("preview_preview_window",			panel_preview_preview_window);
-		__registerFunction("preview_toggle_grid",				panel_preview_toggle_grid);
+		registerFunction("Preview", "Focus content",			"F", MOD_KEY.none,	panel_preview_focus_content);
+		registerFunction("Preview", "Save current frame",		"S", MOD_KEY.shift,	panel_preview_save_current_frame);
+		registerFunction("Preview", "Save to focused file",		"",  MOD_KEY.none,	panel_preview_saveCurrentFrameToFocus);
+		registerFunction("Preview", "Save all current frame",	"",  MOD_KEY.none,	panel_preview_save_all_current_frame);
+		registerFunction("Preview", "Preview window",			"P", MOD_KEY.ctrl,	panel_preview_preview_window);
+		registerFunction("Preview", "Toggle grid",				"G", MOD_KEY.ctrl,	panel_preview_toggle_grid);
+	
+		registerFunction("Preview", "Pan",		"", MOD_KEY.ctrl,					panel_preview_pan);
+		registerFunction("Preview", "Zoom",		"", MOD_KEY.alt | MOD_KEY.ctrl,		panel_preview_zoom);
 		
-		__registerFunction("preview_pan",	panel_preview_pan);
-		__registerFunction("preview_zoom",	panel_preview_zoom);
+		registerFunction("Preview", "3D Front view",	vk_numpad1,	MOD_KEY.none,	panel_preview_3d_view_front);
+		registerFunction("Preview", "3D Back view",		vk_numpad1,	MOD_KEY.alt,	panel_preview_3d_view_back);
+		registerFunction("Preview", "3D Right view ",	vk_numpad3,	MOD_KEY.none,	panel_preview_3d_view_right);
+		registerFunction("Preview", "3D Left view ",	vk_numpad3,	MOD_KEY.alt,	panel_preview_3d_view_left);
+		registerFunction("Preview", "3D Top view",		vk_numpad7,	MOD_KEY.none,	panel_preview_3d_view_top);
+		registerFunction("Preview", "3D Bottom view",	vk_numpad7,	MOD_KEY.alt,	panel_preview_3d_view_bottom);
+		
+		registerFunction("Preview", "Scale x1",		"1", MOD_KEY.none,	function() /*=>*/ { panel_preview_set_zoom(1); });
+		registerFunction("Preview", "Scale x2",		"2", MOD_KEY.none,	function() /*=>*/ { panel_preview_set_zoom(2); });
+		registerFunction("Preview", "Scale x4",		"3", MOD_KEY.none,	function() /*=>*/ { panel_preview_set_zoom(4); });
+		registerFunction("Preview", "Scale x8",		"4", MOD_KEY.none,	function() /*=>*/ { panel_preview_set_zoom(8); });
+		
+		registerFunction("Preview", "Set Tile Off",			"",	MOD_KEY.none,	panel_preview_set_tile_off);
+		registerFunction("Preview", "Set Tile Horizontal",	"",	MOD_KEY.none,	panel_preview_set_tile_horizontal);
+		registerFunction("Preview", "Set Tile Vertical",	"",	MOD_KEY.none,	panel_preview_set_tile_vertical);
+		registerFunction("Preview", "Set Tile Both",		"",	MOD_KEY.none,	panel_preview_set_tile_both);
+		registerFunction("Preview", "Toggle Tile",			"",	MOD_KEY.none,	panel_preview_set_tile_toggle);
+		
+		registerFunction("Preview", "New Preview Window",		"",	MOD_KEY.none,	panel_preview_new_preview_window);
+		registerFunction("Preview", "Save Current Frame",		"",	MOD_KEY.none,	panel_preview_saveCurrentFrame);
+		registerFunction("Preview", "Save All Current Frames",	"",	MOD_KEY.none,	panel_preview_saveAllCurrentFrames);
+		registerFunction("Preview", "Copy Current Frame",		"",	MOD_KEY.none,	panel_preview_copyCurrentFrame);
+		registerFunction("Preview", "Copy Color",				"",	MOD_KEY.none,	panel_preview_copy_color);
+		registerFunction("Preview", "Copy Color Hex",			"",	MOD_KEY.none,	panel_preview_copy_color_hex);
 	}
 	
 	function panel_preview_focus_content()				{ CALL("preview_focus_content");			PANEL_PREVIEW.fullView();												}
 	function panel_preview_save_current_frame()			{ CALL("preview_save_current_frame");		PANEL_PREVIEW.saveCurrentFrame();										}
-	function panel_preview_saveCurrentFrameToFocus()	{ CALL("preview_saveCurrentFrameToFocus");	PANEL_PREVIEW.saveCurrentFrameToFocus();								}
+	function panel_preview_saveCurrentFrameToFocus()	{ CALL("preview_save_to_focused_file");		PANEL_PREVIEW.saveCurrentFrameToFocus();								}
 	function panel_preview_save_all_current_frame()		{ CALL("preview_save_all_current_frame");	PANEL_PREVIEW.saveAllCurrentFrames();									}
 	function panel_preview_preview_window()				{ CALL("preview_preview_window");			PANEL_PREVIEW.create_preview_window(PANEL_PREVIEW.getNodePreview());	}
 	function panel_preview_toggle_grid()				{ CALL("preview_toggle_grid");				PROJECT.previewGrid.show = !PROJECT.previewGrid.show;					}
@@ -21,14 +46,28 @@
 	function panel_preview_pan()						{ CALL("preview_pan");						PANEL_PREVIEW.canvas_dragging_key = true; }
 	function panel_preview_zoom()						{ CALL("preview_zoom");						PANEL_PREVIEW.canvas_zooming_key  = true; }
 	
-	function panel_preview_3d_view_front()				{ CALL("preview_3d_view_front");	PANEL_PREVIEW.d3_view_action_front(); }
-	function panel_preview_3d_view_back()				{ CALL("preview_3d_view_back");		PANEL_PREVIEW.d3_view_action_back(); }
-	function panel_preview_3d_view_right()				{ CALL("preview_3d_view_right");	PANEL_PREVIEW.d3_view_action_right(); }
-	function panel_preview_3d_view_left()				{ CALL("preview_3d_view_left");		PANEL_PREVIEW.d3_view_action_left(); }
-	function panel_preview_3d_view_top()				{ CALL("preview_3d_view_top");		PANEL_PREVIEW.d3_view_action_top();   }
-	function panel_preview_3d_view_bottom()				{ CALL("preview_3d_view_bottom");	PANEL_PREVIEW.d3_view_action_bottom();   }
+	function panel_preview_3d_view_front()				{ CALL("preview_3d_front_view");			PANEL_PREVIEW.d3_view_action_front();	}
+	function panel_preview_3d_view_back()				{ CALL("preview_3d_back_view");				PANEL_PREVIEW.d3_view_action_back();	}
+	function panel_preview_3d_view_right()				{ CALL("preview_3d_right_view");			PANEL_PREVIEW.d3_view_action_right();	}
+	function panel_preview_3d_view_left()				{ CALL("preview_3d_left_view");				PANEL_PREVIEW.d3_view_action_left();	}
+	function panel_preview_3d_view_top()				{ CALL("preview_3d_top_view");				PANEL_PREVIEW.d3_view_action_top();		}
+	function panel_preview_3d_view_bottom()				{ CALL("preview_3d_bottom_view");			PANEL_PREVIEW.d3_view_action_bottom();	}
 	
-	function panel_preview_set_zoom(zoom)				{ CALL("preview_preview_set_zoom");	PANEL_PREVIEW.fullView(zoom); }
+	function panel_preview_set_zoom(zoom)				{ CALL("preview_preview_set_zoom");			PANEL_PREVIEW.fullView(zoom); }
+	
+	function panel_preview_set_tile_off()				{ CALL("preview_set_tile_off");				PANEL_PREVIEW.set_tile_off();        }
+	function panel_preview_set_tile_horizontal()		{ CALL("preview_set_tile_horizontal");		PANEL_PREVIEW.set_tile_horizontal(); }
+	function panel_preview_set_tile_vertical()			{ CALL("preview_set_tile_vertical");		PANEL_PREVIEW.set_tile_vertical();   }
+	function panel_preview_set_tile_both()				{ CALL("preview_set_tile_both");			PANEL_PREVIEW.set_tile_both();       }
+	function panel_preview_set_tile_toggle()			{ CALL("preview_set_tile_toggle");			PANEL_PREVIEW.set_tile_toggle();     }
+	
+	function panel_preview_new_preview_window()			{ CALL("preview_new_preview_window");		PANEL_PREVIEW.new_preview_window();     }
+	function panel_preview_saveCurrentFrame()			{ CALL("preview_saveCurrentFrame");			PANEL_PREVIEW.saveCurrentFrame();   	}
+	function panel_preview_saveAllCurrentFrames()		{ CALL("preview_saveAllCurrentFrames");		PANEL_PREVIEW.saveAllCurrentFrames();   }
+	function panel_preview_copyCurrentFrame()			{ CALL("preview_copyCurrentFrame");			PANEL_PREVIEW.copyCurrentFrame();   	}
+	function panel_preview_copy_color()					{ CALL("preview_copy_color");				PANEL_PREVIEW.copy_color();     		}
+	function panel_preview_copy_color_hex()				{ CALL("preview_copy_color_hex");			PANEL_PREVIEW.copy_color_hex();     	}
+	
 #endregion
 
 function Panel_Preview() : PanelContent() constructor {
@@ -221,31 +260,17 @@ function Panel_Preview() : PanelContent() constructor {
 	
 	tb_framerate = new textBox(TEXTBOX_INPUT.number, function(val) { preview_rate = real(val); });
 	
-	#region ++++ hotkey ++++
-		addHotkey("Preview", "Focus content",			"F", MOD_KEY.none,	panel_preview_focus_content);
-		addHotkey("Preview", "Save current frame",		"S", MOD_KEY.shift,	panel_preview_save_current_frame);
-		addHotkey("Preview", "Save to focused file",	"",  MOD_KEY.none,	panel_preview_saveCurrentFrameToFocus);
-		addHotkey("Preview", "Save all current frame",	"",  MOD_KEY.none,	panel_preview_save_all_current_frame);
-		addHotkey("Preview", "Preview window",			"P", MOD_KEY.ctrl,	panel_preview_preview_window);
-		addHotkey("Preview", "Toggle grid",				"G", MOD_KEY.ctrl,	panel_preview_toggle_grid);
-	
-		addHotkey("Preview", "Pan",		"", MOD_KEY.ctrl,					panel_preview_pan);
-		addHotkey("Preview", "Zoom",	"", MOD_KEY.alt | MOD_KEY.ctrl,		panel_preview_zoom);
-		
-		addHotkey("Preview", "3D Front view",	vk_numpad1,	MOD_KEY.none,	panel_preview_3d_view_front);
-		addHotkey("Preview", "3D Back view",	vk_numpad1,	MOD_KEY.alt,	panel_preview_3d_view_back);
-		addHotkey("Preview", "3D Right view ",	vk_numpad3,	MOD_KEY.none,	panel_preview_3d_view_right);
-		addHotkey("Preview", "3D Left view ",	vk_numpad3,	MOD_KEY.alt,	panel_preview_3d_view_left);
-		addHotkey("Preview", "3D Top view",		vk_numpad7,	MOD_KEY.none,	panel_preview_3d_view_top);
-		addHotkey("Preview", "3D Bottom view",	vk_numpad7,	MOD_KEY.alt,	panel_preview_3d_view_bottom);
-		
-		addHotkey("Preview", "Scale x1",		"1",	MOD_KEY.none,	function() /*=>*/ { panel_preview_set_zoom(1); });
-		addHotkey("Preview", "Scale x2",		"2",	MOD_KEY.none,	function() /*=>*/ { panel_preview_set_zoom(2); });
-		addHotkey("Preview", "Scale x4",		"3",	MOD_KEY.none,	function() /*=>*/ { panel_preview_set_zoom(4); });
-		addHotkey("Preview", "Scale x8",		"4",	MOD_KEY.none,	function() /*=>*/ { panel_preview_set_zoom(8); });
-	#endregion
-	
 	#region ++++ toolbars & actions ++++
+		function set_tile_off()        { tileMode = 0; }
+		function set_tile_horizontal() { tileMode = 1; }
+		function set_tile_vertical()   { tileMode = 2; }
+		function set_tile_both()       { tileMode = 3; }
+		function set_tile_toggle()     { tileMode = (tileMode + 1) % 4; }
+		
+		function new_preview_window() { create_preview_window(getNodePreview()); } 
+		function copy_color()		  { clipboard_set_text(sample_color); }
+		function copy_color_hex()	  { clipboard_set_text(color_get_hex(sample_color)); }
+		
 		topbar_height  = ui(32);
 		toolbar_height = ui(40);
 		toolbars = [
@@ -261,9 +286,9 @@ function Panel_Preview() : PanelContent() constructor {
 				function() { return splitView;  },
 				function() { 
 					switch(splitView) {
-						case 0 : return __txtx("panel_preview_split_view_off", "Split view off");
-						case 1 : return __txtx("panel_preview_horizontal_split_view", "Horizontal split view");
-						case 2 : return __txtx("panel_preview_vertical_split_view", "Vertical split view");
+						case 0 : return __txtx("panel_preview_split_view_off",			"Split view off");
+						case 1 : return __txtx("panel_preview_horizontal_split_view",	"Horizontal split view");
+						case 2 : return __txtx("panel_preview_vertical_split_view", 	"Vertical split view");
 					}
 					return __txtx("panel_preview_split_view", "Split view");
 				}, 
@@ -274,19 +299,19 @@ function Panel_Preview() : PanelContent() constructor {
 				function() { var t = [3, 0, 1, 2]; return array_safe_get_fast(t, tileMode);  },
 				function() { 
 					switch(tileMode) {
-						case 0 : return __txtx("panel_preview_tile_off", "Tile off");
+						case 0 : return __txtx("panel_preview_tile_off",		"Tile off");
 						case 1 : return __txtx("panel_preview_tile_horizontal", "Tile horizontal");
-						case 2 : return __txtx("panel_preview_tile_vertical", "Tile vertical");
-						case 3 : return __txtx("panel_preview_tile_both", "Tile both");
+						case 2 : return __txtx("panel_preview_tile_vertical",	"Tile vertical");
+						case 3 : return __txtx("panel_preview_tile_both",		"Tile both");
 					}
 					return __txtx("panel_preview_tile_mode", "Tile mode");
 				}, 
 				function(data) { 
 					menuCall("preview_tile_menu", data.x + ui(28), data.y + ui(28), [
-						menuItem(__txtx("panel_preview_tile_off", "Tile off"),					function() { tileMode = 0; }),
-						menuItem(__txtx("panel_preview_tile_horizontal", "Tile horizontal"),	function() { tileMode = 1; }),
-						menuItem(__txtx("panel_preview_tile_vertical", "Tile vertical"),		function() { tileMode = 2; }),
-						menuItem(__txtx("panel_preview_tile_both", "Tile both"),				function() { tileMode = 3; }),
+						menuItemAction(__txtx("panel_preview_tile_off",			"Tile off"),		panel_preview_set_tile_off),
+						menuItemAction(__txtx("panel_preview_tile_horizontal",	"Tile horizontal"),	panel_preview_set_tile_horizontal),
+						menuItemAction(__txtx("panel_preview_tile_vertical",	"Tile vertical"),	panel_preview_set_tile_vertical),
+						menuItemAction(__txtx("panel_preview_tile_both",		"Tile both"),		panel_preview_set_tile_both),
 					]);
 				} 
 			],
@@ -2099,14 +2124,14 @@ function Panel_Preview() : PanelContent() constructor {
 		
 		if(mouse_on_preview && mouse_press(mb_right, pFOCUS) && !key_mod_press(SHIFT)) {
 			menuCall("preview_context_menu",,, [ 
-				menuItem(__txtx("panel_graph_preview_window", "Send to preview window"), function() { create_preview_window(getNodePreview()); },	noone, ["Preview", "Preview window"]), 
+				menuItemAction(__txtx("panel_graph_preview_window", "Send to preview window"),						panel_preview_new_preview_window), 
 				-1,
-				menuItem(__txtx("panel_preview_save", "Save current preview as") + "...",			function() { saveCurrentFrame(); }, 			noone, ["Preview", "Save current frame"]), 
-				menuItem(__txtx("panel_preview_save_all", "Save all current previews as") + "...",	function() { saveAllCurrentFrames(); }, 		noone, ["Preview", "Save all current frame"]), 
+				menuItemAction(__txtx("panel_preview_save", "Save current preview as") + "...",						panel_preview_saveCurrentFrame), 
+				menuItemAction(__txtx("panel_preview_save_all", "Save all current previews as") + "...",			panel_preview_saveAllCurrentFrames), 
 				-1,
-				menuItem($"{__txtx("panel_preview_copy_image", "Copy image")}",								function() { copyCurrentFrame(); }, THEME.copy), 
-				menuItem($"{__txtx("panel_preview_copy_color", "Copy color")} [{sample_color}]",			function() { clipboard_set_text(sample_color); }), 
-				menuItem($"{__txtx("panel_preview_copy_hex", "Copy hex")} [{color_get_hex(sample_color)}]", function() { clipboard_set_text(color_get_hex(sample_color)); }), 
+				menuItemAction($"{__txtx("panel_preview_copy_image", "Copy image")}",								panel_preview_copyCurrentFrame, THEME.copy), 
+				menuItemAction($"{__txtx("panel_preview_copy_color", "Copy color")} [{sample_color}]",				panel_preview_copy_color), 
+				menuItemAction($"{__txtx("panel_preview_copy_hex", "Copy hex")} [{color_get_hex(sample_color)}]",	panel_preview_copy_color_hex), 
 			],, getNodePreview());
 		}
 		

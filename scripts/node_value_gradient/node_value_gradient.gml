@@ -1,7 +1,6 @@
 function nodeValue_Gradient(_name, _node, _value, _tooltip = "") { return new NodeValue_Gradient(_name, _node, _value, _tooltip); }
 
 function NodeValue_Gradient(_name, _node, _value, _tooltip = "") : NodeValue(_name, _node, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, _value, _tooltip) constructor {
-	setDisplay(VALUE_DISPLAY.palette);
 	
 	/////============== GET =============
 	
@@ -11,7 +10,7 @@ function NodeValue_Gradient(_name, _node, _value, _tooltip = "") : NodeValue(_na
 		var nod = __curr_get_val[1];
 		
 		if(is_instanceof(val, gradientObject)) return val;
-		if(typeFrom != VALUE_TYPE.color)	   return val;
+		if(nod.type != VALUE_TYPE.color)	   return val;
 		
 		if(is_array(val)) {
 			var amo  = array_length(val);

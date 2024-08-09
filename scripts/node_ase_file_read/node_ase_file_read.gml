@@ -29,7 +29,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	w = 128;
 	
-	inputs[0]  = nodeValue_Text("Path", self, "")
+	inputs[0]  = nodeValue_Path("Path", self, "")
 		.setDisplay(VALUE_DISPLAY.path_load, { filter: "Aseprite file|*.ase;*.aseprite" });
 		
 	inputs[1]  = nodeValue_Trigger("Generate layers", self, false )

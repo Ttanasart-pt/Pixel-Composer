@@ -5,6 +5,8 @@ function __loadParams(readonly = false, override = false, apply_layout = false) 
 	self.apply_layout = apply_layout;
 }
 
+function LOAD_SAFE() { LOAD(true); }
+
 function LOAD(safe = false) {
 	if(DEMO) return false;
 	
@@ -271,7 +273,8 @@ function LOAD_AT(path, params = new __loadParams()) { #region
 	return true;
 } #endregion
 
-function __IMPORT_ZIP() { #region
+function __EXPORT_ZIP()	{ exportPortable(PROJECT); }
+function __IMPORT_ZIP() {
 	var path = get_open_filename_pxc("Pixel Composer portable project (.zip)|*.zip", "");
 	
 	var _fname = filename_name_only(path);
@@ -289,4 +292,4 @@ function __IMPORT_ZIP() { #region
 	if(!file_exists_empty(_proj)) return false;
 	
 	LOAD_PATH(_proj, true);
-} #endregion
+}

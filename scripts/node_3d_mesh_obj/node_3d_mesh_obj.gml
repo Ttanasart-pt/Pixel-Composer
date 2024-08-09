@@ -25,7 +25,7 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 	object = noone;
 	object_class = __3dObject;
 	
-	inputs[in_mesh + 0] = nodeValue_Text("File Path", self, "" )
+	inputs[in_mesh + 0] = nodeValue_Path("File Path", self, "" )
 		.setDisplay(VALUE_DISPLAY.path_load, { filter: "3d object|*.obj" })
 		.rejectArray();
 	

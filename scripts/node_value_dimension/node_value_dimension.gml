@@ -19,7 +19,7 @@ function NodeValue_Dimension(_node, value) : NodeValue("Dimension", _node, JUNCT
 		var val = __curr_get_val[0];
 		var nod = __curr_get_val[1];
 		
-		var typ = nod == undefined? VALUE_TYPE.any : nod.type;
+		var typ = nod.type;
 		var dis = nod.display_type;
 		
 		if(typ != VALUE_TYPE.surface) {

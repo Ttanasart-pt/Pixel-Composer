@@ -39,7 +39,7 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	spr   = [];
 	color = COLORS.node_blend_input;
 	
-	inputs[0]  = nodeValue_Text("Paths", self, [])
+	inputs[0]  = nodeValue_Path("Paths", self, [])
 		.setDisplay(VALUE_DISPLAY.path_array, { filter: ["image|*.png;*.jpg", ""] });
 	
 	inputs[1]  = nodeValue_Padding("Padding", self, [0, 0, 0, 0])

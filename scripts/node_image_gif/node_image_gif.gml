@@ -29,7 +29,7 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	update_on_frame = true;
 	setAlwaysTimeline(new timelineItemNode_Image_gif(self));
 	
-	inputs[0] = nodeValue_Text("Path", self, "")
+	inputs[0] = nodeValue_Path("Path", self, "")
 		.setDisplay(VALUE_DISPLAY.path_load, { filter: "Animated gif|*.gif" });
 		
 	inputs[1] = nodeValue_Trigger("Set animation length to gif", self, false )

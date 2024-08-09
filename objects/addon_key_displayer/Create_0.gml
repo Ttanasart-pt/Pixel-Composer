@@ -12,8 +12,8 @@ event_inherited();
 	show_graph		 = false;
 	
 	menu = [
-		menuItem("Toggle double click bar", function() /*=>*/ { show_doubleclick = !show_doubleclick; }),
-		menuItem("Toggle graph",            function() /*=>*/ { show_graph       = !show_graph;       }),
+		menuItemAction("Toggle double click bar", function() /*=>*/ { show_doubleclick = !show_doubleclick; }),
+		menuItemAction("Toggle graph",            function() /*=>*/ { show_graph       = !show_graph;       }),
 	];
 	
 	extra_keys = [

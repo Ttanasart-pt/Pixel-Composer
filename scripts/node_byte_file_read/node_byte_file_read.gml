@@ -4,7 +4,7 @@ function Node_Byte_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	w = 128;
 	
-	inputs[0]  = nodeValue_Text("Path", self, "")
+	inputs[0]  = nodeValue_Path("Path", self, "")
 		.setDisplay(VALUE_DISPLAY.path_load, { filter: "any file|*" })
 		.rejectArray();
 	

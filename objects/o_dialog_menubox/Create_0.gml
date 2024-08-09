@@ -2,25 +2,27 @@
 event_inherited();
 
 #region data
-	menu_id = "";
-	
 	destroy_on_click_out = false;
-	draggable    = false;
-	mouse_inside = false;
-	selecting    = -1;
+	draggable   		 = false;
+	mouse_init_inside	 = false;
+	selecting   		 = -1;
 	
-	alarm[0]  = -1;
-	menu      = 1;
-	hght      = ui(36);
-	
-	tooltips  = [];
-	show_icon = false;
-	context   = noone;
+	menu_id    = "";
+	alarm[0]   = -1;
+	menu       = 1;
+	hght       = ui(36);
+	tooltips   = [];
+	show_icon  = false;
+	context    = noone;
 	
 	_hovering_ch  = true;
 	init_pressing = false;
 	
 	setFocus(self.id);
+	
+	remove_parents = true;
+	selecting_menu = noone;
+	hk_editing     = noone;
 	
 	function setMenu(_menu, align = fa_left) {
 		with(_p_dialog) { if(on_top) continue; other.depth = min(depth - 1, other.depth); }
@@ -42,6 +44,13 @@ event_inherited();
 			var _menuItem = menu[i];
 			if(_menuItem == -1) {
 				dialog_h += ui(8);
+				continue;
+			}
+			
+			if(is_string(_menuItem)) {
+				draw_set_font(f_p3);
+				dialog_w =  max(dialog_w, string_width(_menuItem) + ui(24));
+				dialog_h += string_height(_menuItem) + ui(8);
 				continue;
 			}
 			
@@ -85,7 +94,7 @@ event_inherited();
 			case fa_right:	dialog_x = round(max(dialog_x - dialog_w, 2)); break;
 		}
 		
-		mouse_inside = point_in_rectangle(mouse_mx, mouse_my, dialog_x, dialog_y, dialog_x + dialog_w, dialog_y + dialog_h);
+		mouse_init_inside = point_in_rectangle(mouse_mx, mouse_my, dialog_x, dialog_y, dialog_x + dialog_w, dialog_y + dialog_h);
 		ready = true;
 	}
 #endregion

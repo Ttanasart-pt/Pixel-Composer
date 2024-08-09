@@ -138,7 +138,7 @@ event_inherited();
 				if(mouse_press(mb_right, interactable && sFOCUS)) {
 					hovering_name = _gradient.path;
 					menuCall("gradient_window_preset_menu",,, [
-						menuItem(__txtx("gradient_editor_delete", "Delete gradient"), function() { 
+						menuItemAction(__txtx("gradient_editor_delete", "Delete gradient"), function() { 
 							file_delete(hovering_name); 
 							__initGradient();
 						})
@@ -227,7 +227,7 @@ event_inherited();
 				hovering = pal;
 				
 				menuCall("palette_window_preset_menu",,, [
-					menuItem(__txtx("gradient_set_palette", "Convert to Gradient"), function() { 
+					menuItemAction(__txtx("gradient_set_palette", "Convert to Gradient"), function() { 
 						var _p = hovering.palette;
 						if(array_length(_p) < 2) return;
 						

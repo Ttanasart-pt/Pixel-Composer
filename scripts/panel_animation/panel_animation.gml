@@ -1,32 +1,77 @@
 #region funtion calls
 	function __fnInit_Animation() {
-		__registerFunction("animation_play_pause",		panel_animation_play_pause);
-		__registerFunction("animation_resume",			panel_animation_resume);
+		registerFunction("",			"Play/Pause",		vk_space,	MOD_KEY.none,	panel_animation_play_pause);
+		registerFunction("",			"Resume/Pause",		vk_space,	MOD_KEY.shift,	panel_animation_resume);
+								
+		registerFunction("",			"First frame",		vk_home,	MOD_KEY.none,	panel_animation_first_frame);
+		registerFunction("",			"Last frame",		vk_end,		MOD_KEY.none,	panel_animation_last_frame);
+		registerFunction("",			"Next frame",		vk_right,	MOD_KEY.none,	panel_animation_next_frame);
+		registerFunction("",			"Previous frame",	vk_left,	MOD_KEY.none,	panel_animation_prev_frame);
+	
+		registerFunction("Animation", "Delete keys",		vk_delete,	MOD_KEY.none,	panel_animation_delete_key);
+		registerFunction("Animation", "Duplicate",			"D",	MOD_KEY.ctrl,		panel_animation_duplicate);
+		registerFunction("Animation", "Copy",				"C",	MOD_KEY.ctrl,		panel_animation_copy);
+		registerFunction("Animation", "Paste",				"V",	MOD_KEY.ctrl,		panel_animation_paste);
+		registerFunction("Animation", "Collapse Toggle",	"C",	MOD_KEY.none,		panel_animation_collapseToggle);
+		registerFunction("Animation", "Toggle Nodes",		"H",	MOD_KEY.none,		panel_animation_show_nodes);
 		
-		__registerFunction("animation_first_frame",		panel_animation_first_frame);
-		__registerFunction("animation_last_frame",		panel_animation_last_frame);
-		__registerFunction("animation_next_frame",		panel_animation_next_frame);
-		__registerFunction("animation_prev_frame",		panel_animation_prev_frame);
+		registerFunction("Animation", "Settings",			"S",	MOD_KEY.ctrl | MOD_KEY.shift, panel_animation_settings);
+		registerFunction("Animation", "Scaler",				"",		MOD_KEY.none,	panel_animation_scale);
 		
-		__registerFunction("animation_delete_key",		panel_animation_delete_key);
-		__registerFunction("animation_duplicate",		panel_animation_duplicate);
-		__registerFunction("animation_copy",			panel_animation_copy);
-		__registerFunction("animation_paste",			panel_animation_paste);
+		registerFunction("Animation", "Edit Keyframe Value","",		MOD_KEY.none,	panel_animation_edit_keyframe_value);
+		registerFunction("Animation", "Lock Keyframe Y",	"",		MOD_KEY.none,	panel_animation_edit_keyframe_lock_y);
+		registerFunction("Animation", "Stagger",			"",		MOD_KEY.none,	panel_animation_edit_keyframe_stagger);
+		registerFunction("Animation", "Driver",				"",		MOD_KEY.none,	panel_animation_keyframe_driver);
+		
+		registerFunction("Animation", "New Folder",			"",		MOD_KEY.none,	panel_animation_dopesheet_new_folder);
+		registerFunction("Animation", "Dopesheet Expand",	"",		MOD_KEY.none,	panel_animation_dopesheet_expand);
+		registerFunction("Animation", "Dopesheet Collapse",	"",		MOD_KEY.none,	panel_animation_dopesheet_collapse);
+		
+		registerFunction("Animation", "Rename Group",		"",		MOD_KEY.none,	panel_animation_group_rename);
+		registerFunction("Animation", "Remove Group",		"",		MOD_KEY.none,	panel_animation_group_remove);
+		registerFunction("Animation", "Separate Axis",		"",		MOD_KEY.none,	panel_animation_separate_axis);
+		registerFunction("Animation", "Combine Axis",		"",		MOD_KEY.none,	panel_animation_combine_axis);
+		
+		registerFunction("Animation", "Set Range Start",	"",		MOD_KEY.none,	panel_animation_range_set_start);
+		registerFunction("Animation", "Set Range End",		"",		MOD_KEY.none,	panel_animation_range_set_end);
+		registerFunction("Animation", "Reset Range",		"",		MOD_KEY.none,	panel_animation_range_reset);
 	}
 	
-	function panel_animation_play_pause()	{ CALL("animation_play_pause");	if(IS_RENDERING) return; if(IS_PLAYING) PROJECT.animator.pause() else PROJECT.animator.play();					  }
-	function panel_animation_resume()		{ CALL("animation_resume");		if(IS_RENDERING) return; if(PROJECT.animator.is_playing) PROJECT.animator.pause() else PROJECT.animator.resume(); }
+	function panel_animation_settings()     { var dia = dialogPanelCall(new Panel_Animation_Setting()); dia.anchor = ANCHOR.none; }
+	function panel_animation_scale()		{ dialogPanelCall(new Panel_Animation_Scaler()); }
 	
-	function panel_animation_first_frame()	{ CALL("animation_first_frame");	if(IS_RENDERING) return; PROJECT.animator.firstFrame(); }
-	function panel_animation_last_frame()	{ CALL("animation_last_frame");		if(IS_RENDERING) return; PROJECT.animator.lastFrame();  }
-	function panel_animation_next_frame()	{ CALL("animation_next_frame");		if(IS_RENDERING) return; PROJECT.animator.setFrame(min(PROJECT.animator.real_frame + 1, TOTAL_FRAMES - 1)); }
-	function panel_animation_prev_frame()	{ CALL("animation_prev_frame");		if(IS_RENDERING) return; PROJECT.animator.setFrame(max(PROJECT.animator.real_frame - 1, 0));                }
+	function panel_animation_play_pause()	{ CALL("play_pause");	if(IS_RENDERING) return; if(IS_PLAYING) PROJECT.animator.pause() else PROJECT.animator.play();					  }
+	function panel_animation_resume()		{ CALL("resume_pause");	if(IS_RENDERING) return; if(PROJECT.animator.is_playing) PROJECT.animator.pause() else PROJECT.animator.resume(); }
 	
-	function panel_animation_delete_key()	{ CALL("animation_delete_key");	PANEL_ANIMATION.deleteKeys();   }
-	function panel_animation_duplicate()	{ CALL("animation_duplicate");	PANEL_ANIMATION.doDuplicate();  }
-	function panel_animation_copy()			{ CALL("animation_copy");		PANEL_ANIMATION.doCopy();       }
-	function panel_animation_paste()		{ CALL("animation_paste");		PANEL_ANIMATION.doPaste(PANEL_ANIMATION.value_focusing); }
-	function panel_animation_show_nodes()	{ CALL("animation_paste");		PANEL_ANIMATION.show_nodes = !PANEL_ANIMATION.show_nodes; }
+	function panel_animation_first_frame()	{ CALL("first_frame");		if(IS_RENDERING) return; PROJECT.animator.firstFrame(); }
+	function panel_animation_last_frame()	{ CALL("last_frame");		if(IS_RENDERING) return; PROJECT.animator.lastFrame();  }
+	function panel_animation_next_frame()	{ CALL("next_frame");		if(IS_RENDERING) return; PROJECT.animator.setFrame(min(PROJECT.animator.real_frame + 1, TOTAL_FRAMES - 1)); }
+	function panel_animation_prev_frame()	{ CALL("previous_frame");	if(IS_RENDERING) return; PROJECT.animator.setFrame(max(PROJECT.animator.real_frame - 1, 0));                }
+	
+	function panel_animation_collapseToggle(){ CALL("animation_collapse_toggle");	PANEL_ANIMATION.collapseToggle();   }
+	function panel_animation_delete_key()	 { CALL("animation_delete_key");		PANEL_ANIMATION.deleteKeys();   	}
+	function panel_animation_duplicate()	 { CALL("animation_duplicate");			PANEL_ANIMATION.doDuplicate();  	}
+	function panel_animation_copy()			 { CALL("animation_copy");				PANEL_ANIMATION.doCopy();       	}
+	function panel_animation_paste()		 { CALL("animation_paste");				PANEL_ANIMATION.doPaste(PANEL_ANIMATION.value_focusing);	}
+	function panel_animation_show_nodes()	 { CALL("animation_toggle_nodes");		PANEL_ANIMATION.show_nodes = !PANEL_ANIMATION.show_nodes;	}
+	
+	function panel_animation_edit_keyframe_value()	 { CALL("animation_edit_keyframe_value");		PANEL_ANIMATION.edit_keyframe_value();		}
+	function panel_animation_edit_keyframe_lock_y()	 { CALL("animation_edit_lock_keyframe_y");		PANEL_ANIMATION.edit_keyframe_lock_y();		}
+	function panel_animation_edit_keyframe_stagger() { CALL("animation_stagger");					PANEL_ANIMATION.edit_keyframe_stagger();	}
+	function panel_animation_keyframe_driver()	 	 { CALL("animation_driver");					PANEL_ANIMATION.edit_keyframe_driver();		}
+	
+	function panel_animation_dopesheet_new_folder()	 { CALL("animation_new_folder");				PANEL_ANIMATION.dopesheet_new_folder();		}
+	function panel_animation_dopesheet_expand()	 	 { CALL("animation_dopesheet_expand");			PANEL_ANIMATION.dopesheet_expand();			}
+	function panel_animation_dopesheet_collapse()	 { CALL("animation_dopesheet_collapse");		PANEL_ANIMATION.dopesheet_collapse();		}
+	
+	function panel_animation_group_rename()	 { CALL("animation_rename_group");		PANEL_ANIMATION.group_rename();		}
+	function panel_animation_group_remove()	 { CALL("animation_remove_group");		PANEL_ANIMATION.group_remove();		}
+	function panel_animation_separate_axis() { CALL("animation_separate_axis");		PANEL_ANIMATION.separate_axis();	}
+	function panel_animation_combine_axis()	 { CALL("animation_combine_axis");		PANEL_ANIMATION.combine_axis();		}
+	
+	function panel_animation_range_set_start()	 { CALL("animation_range_set_start");	PANEL_ANIMATION.range_set_start();	}
+	function panel_animation_range_set_end()	 { CALL("animation_range_set_end");		PANEL_ANIMATION.range_set_end();	}
+	function panel_animation_range_reset()		 { CALL("animation_range_reset");		PANEL_ANIMATION.range_reset();		}
 #endregion
 
 enum KEYFRAME_DRAG_TYPE {
@@ -48,19 +93,19 @@ function Panel_Animation() : PanelContent() constructor {
 		tool_width	= ui(224);
 	#endregion
 	
-	static initSize = function() { #region
-		timeline_w = w - tool_width - ui(80);
-		timeline_surface = surface_create_valid(timeline_w, timeline_h);
-		timeline_mask = surface_create_valid(timeline_w, timeline_h);
+	static initSize = function() {
+		timeline_w			= w - tool_width - ui(80);
+		timeline_surface	= surface_create_valid(timeline_w, timeline_h);
+		timeline_mask		= surface_create_valid(timeline_w, timeline_h);
 		
-		dope_sheet_w = w - tool_width;
-		dope_sheet_h = h - timeline_h - ui(20);
-		dope_sheet_surface = surface_create_valid(dope_sheet_w, 1);
-		dope_sheet_mask    = surface_create_valid(dope_sheet_w, 1);
+		dope_sheet_w		= w - tool_width;
+		dope_sheet_h		= h - timeline_h - ui(20);
+		dope_sheet_surface	= surface_create_valid(dope_sheet_w, 1);
+		dope_sheet_mask 	= surface_create_valid(dope_sheet_w, 1);
 		
 		dope_sheet_name_mask    = surface_create_valid(tool_width, 1);
 		dope_sheet_name_surface = surface_create_valid(tool_width, 1);
-	} #endregion
+	}
 	initSize();
 	
 	#region ---- position ----
@@ -177,54 +222,27 @@ function Panel_Animation() : PanelContent() constructor {
 		tool_width_mx    = 0;
 	#endregion
 	
-	on_end_dragging_anim = noone;
+	on_end_dragging_anim	= noone;
+	onion_dragging			= noone;
+	prev_cache				= array_create(TOTAL_FRAMES);
+	copy_clipboard			= ds_list_create();
 	
-	onion_dragging = noone;
+	__collapse = false;
+	function collapseToggle() {
+		PANEL_ANIMATION.__collapse = !PANEL_ANIMATION.__collapse;
 	
-	prev_cache = array_create(TOTAL_FRAMES);
-	
-	copy_clipboard = ds_list_create();
-	
-	#region ++++ hotkeys ++++
-
-		__collapse = false;
-		function collapseToggle() { #region
-			PANEL_ANIMATION.__collapse = !PANEL_ANIMATION.__collapse;
-		
-			for( var i = 0, n = array_length(PANEL_ANIMATION.timeline_contents); i < n; i++ )
-				PANEL_ANIMATION.timeline_contents[i].item.show = PANEL_ANIMATION.__collapse;
-		} #endregion
-	
-		addHotkey("",			"Play/Pause",		vk_space,	MOD_KEY.none,	panel_animation_play_pause);
-		addHotkey("",			"Resume/Pause",		vk_space,	MOD_KEY.shift,	panel_animation_resume);
-								
-		addHotkey("",			"First frame",		vk_home,	MOD_KEY.none,	panel_animation_first_frame);
-		addHotkey("",			"Last frame",		vk_end,		MOD_KEY.none,	panel_animation_last_frame);
-		addHotkey("",			"Next frame",		vk_right,	MOD_KEY.none,	panel_animation_next_frame);
-		addHotkey("",			"Previous frame",	vk_left,	MOD_KEY.none,	panel_animation_prev_frame);
-	
-		addHotkey("Animation", "Delete keys",		vk_delete,	MOD_KEY.none,	panel_animation_delete_key);
-		addHotkey("Animation", "Duplicate",			"D",		MOD_KEY.ctrl,	panel_animation_duplicate);
-		addHotkey("Animation", "Copy",				"C",		MOD_KEY.ctrl,	panel_animation_copy);
-		addHotkey("Animation", "Paste",				"V",		MOD_KEY.ctrl,	panel_animation_paste);
-		addHotkey("Animation", "Collapse Toggle",	"C",		MOD_KEY.none,	collapseToggle);
-		addHotkey("Animation", "Toggle nodes",		"H",		MOD_KEY.none,	panel_animation_show_nodes);
-		
-		addHotkey("Animation", "Settings",			"S",		MOD_KEY.ctrl | MOD_KEY.shift,	function() { 
-			var dia = dialogPanelCall(new Panel_Animation_Setting()); 
-			dia.anchor = ANCHOR.none;
-		});
-		
-		tooltip_toggle_nodes = new tooltipHotkey(__txtx("panel_animation_show_node", "Toggle node label"), "Animation", "Toggle nodes");
-	#endregion
+		for( var i = 0, n = array_length(PANEL_ANIMATION.timeline_contents); i < n; i++ )
+			PANEL_ANIMATION.timeline_contents[i].item.show = PANEL_ANIMATION.__collapse;
+	}
 	
 	#region ++++ control_buttons ++++
-		tooltip_resume   = new tooltipHotkey(__txt("Resume"), "", "Resume/Pause");
-		tooltip_pause    = new tooltipHotkey(__txt("Pause"),  "", "Resume/Pause");
-		tooltip_fr_first = new tooltipHotkey(__txtx("panel_animation_go_to_first_frame", "Go to first frame"),  "", "First frame");
-		tooltip_fr_last  = new tooltipHotkey(__txtx("panel_animation_go_to_last_frame", "Go to last frame"),    "", "Last frame");
-		tooltip_fr_prev  = new tooltipHotkey(__txtx("panel_animation_previous_frame", "Previous frame"),        "", "Previous frame");
-		tooltip_fr_next  = new tooltipHotkey(__txtx("panel_animation_next_frame", "Next frame"),                "", "Next frame");
+		tooltip_toggle_nodes = new tooltipHotkey(__txtx("panel_animation_show_node", "Toggle node label"), "Animation", "Toggle nodes");
+		tooltip_resume  	 = new tooltipHotkey(__txt("Resume"), "", "Resume/Pause");
+		tooltip_pause   	 = new tooltipHotkey(__txt("Pause"),  "", "Resume/Pause");
+		tooltip_fr_first	 = new tooltipHotkey(__txtx("panel_animation_go_to_first_frame", "Go to first frame"),  "", "First frame");
+		tooltip_fr_last 	 = new tooltipHotkey(__txtx("panel_animation_go_to_last_frame", "Go to last frame"),    "", "Last frame");
+		tooltip_fr_prev 	 = new tooltipHotkey(__txtx("panel_animation_previous_frame", "Previous frame"),        "", "Previous frame");
+		tooltip_fr_next 	 = new tooltipHotkey(__txtx("panel_animation_next_frame", "Next frame"),                "", "Next frame");
 	
 		control_buttons = [ 
 			[ 
@@ -268,19 +286,38 @@ function Panel_Animation() : PanelContent() constructor {
 	
 	#region ++++ context menu ++++
 	
-	keyframe_menu = [
+	#region actions
+		function edit_keyframe_value() { if(array_empty(keyframe_selecting)) return; editKeyFrame(keyframe_selecting[0]); }
 		
-		menuItem(__txtx("panel_animation_keyframe_edit", "Edit Value..."), function() { 
-			if(array_empty(keyframe_selecting)) return;
-			editKeyFrame(keyframe_selecting[0]);
-		}),
-		
-		menuItem(__txtx("panel_animation_lock_y", "Lock/Unlock Y easing"), function() { 
+		function edit_keyframe_lock_y() { 
 			for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
 				var k = keyframe_selecting[i];
 				k.ease_y_lock = !k.ease_y_lock;
-			} 
-		}),
+			}
+		}
+		
+		function edit_keyframe_stagger() { stagger_mode = 1; }
+		function edit_keyframe_driver()  { dialogPanelCall(new Panel_Keyframe_Driver(keyframe_selecting[0]), mouse_mx + ui(8), mouse_my + ui(8)); }
+		
+		function dopesheet_new_folder() { var _dir = new timelineItemGroup(); PROJECT.timelines.addItem(_dir); }
+		function dopesheet_expand()     { for( var i = 0, n = array_length(timeline_contents); i < n; i++ ) timeline_contents[i].item.show = true;  }
+		function dopesheet_collapse()   { for( var i = 0, n = array_length(timeline_contents); i < n; i++ ) timeline_contents[i].item.show = false; }
+		
+		function group_rename() { context_selecting_item.item.rename();  }
+		function group_remove() { context_selecting_item.item.destroy(); }
+		
+		function separate_axis() { context_selecting_prop.sep_axis = true;  }
+		function combine_axis()  { context_selecting_prop.sep_axis = false; }
+		
+		function range_set_start() { if(FRAME_RANGE == noone) FRAME_RANGE = [ __selecting_frame, TOTAL_FRAMES ]; else FRAME_RANGE[0] = __selecting_frame; }
+		function range_set_end()   { if(FRAME_RANGE == noone) FRAME_RANGE = [ 0, __selecting_frame ];            else FRAME_RANGE[1] = __selecting_frame; }
+		function range_reset()     { FRAME_RANGE = noone; }
+	#endregion
+	
+	keyframe_menu = [
+		
+		menuItemAction(__txtx("panel_animation_keyframe_edit", "Edit Value..."), panel_animation_edit_keyframe_value),
+		menuItemAction(__txtx("panel_animation_lock_y", "Lock/Unlock Y easing"), panel_animation_edit_keyframe_lock_y),
 				
 		menuItemGroup(__txtx("panel_animation_ease_in", "Ease in"),  [ 
 			[ [THEME.timeline_ease, 0], function() { 
@@ -355,36 +392,27 @@ function Panel_Animation() : PanelContent() constructor {
 			[ [THEME.object_halign, 1], function() { alignKeys(fa_center); } ],
 			[ [THEME.object_halign, 2], function() { alignKeys(fa_right); } ],
 		]),
-		menuItem(__txtx("panel_animation_stagger", "Stagger"), function() { stagger_mode = 1; }),
-		menuItem(__txtx("panel_driver", "Driver..."), function() { dialogPanelCall(new Panel_Keyframe_Driver(keyframe_selecting[0]), mouse_mx + ui(8), mouse_my + ui(8)); }),
+		menuItemAction(__txtx("panel_animation_stagger", "Stagger"),	panel_animation_edit_keyframe_stagger),
+		menuItemAction(__txtx("panel_driver", "Driver..."), 			panel_animation_keyframe_driver),
 		-1,
-		menuItem(__txt("Delete"),	 function() { deleteKeys(); },				noone,			 [ "Animation", "Delete keys" ]),
-		menuItem(__txt("Duplicate"), function() { doDuplicate(); },				THEME.duplicate, [ "Animation", "Duplicate" ]),
-		menuItem(__txt("Copy"),		 function() { doCopy(); },					THEME.copy,		 [ "Animation", "Copy" ]),
-		menuItem(__txt("Paste"),	 function() { doPaste(value_focusing); },	THEME.paste,	 [ "Animation", "Paste" ]),
+		menuItemAction(__txt("Delete"),		panel_animation_delete_key),
+		menuItemAction(__txt("Duplicate"),	panel_animation_duplicate,	THEME.duplicate),
+		menuItemAction(__txt("Copy"),		panel_animation_copy,		THEME.copy),
+		menuItemAction(__txt("Paste"),		panel_animation_paste,		THEME.paste),
 	];
 	
 	keyframe_menu_empty = [
-		menuItem(__txt("Paste"),	 function() { doPaste(value_focusing); },	THEME.paste,	 [ "Animation", "Paste" ]),
+		menuItemAction(__txt("Paste"),		panel_animation_paste,		THEME.paste),
 	];
 	
 	context_selecting_item = noone;
 	context_selecting_prop = noone;
 	
 	name_menu_empty = [
-		menuItem(__txt("New folder"), function() { 
-			var _dir = new timelineItemGroup();
-			PROJECT.timelines.addItem(_dir);
-		},	THEME.folder_content),
+		menuItemAction(__txt("New folder"), 	panel_animation_dopesheet_new_folder,	THEME.folder_content),
 		-1,
-		menuItem(__txt("Expand all"), function() {
-			for( var i = 0, n = array_length(timeline_contents); i < n; i++ )
-				timeline_contents[i].item.show = true;
-		}),
-		menuItem(__txt("Collapse all"), function() {
-			for( var i = 0, n = array_length(timeline_contents); i < n; i++ )
-				timeline_contents[i].item.show = false;
-		}),
+		menuItemAction(__txt("Expand all"), 	panel_animation_dopesheet_expand),
+		menuItemAction(__txt("Collapse all"),	panel_animation_dopesheet_collapse),
 	];
 	
 	var _clrs = COLORS.labels;
@@ -417,21 +445,21 @@ function Panel_Animation() : PanelContent() constructor {
 	
 	name_menu_group = [
 		clr,
-		menuItem(__txt("Rename"), function() { context_selecting_item.item.rename(); }),
-		menuItem(__txt("Delete"), function() { context_selecting_item.item.destroy(); }, THEME.cross),
+		menuItemAction(__txt("Rename"), panel_animation_group_rename),
+		menuItemAction(__txt("Delete"), panel_animation_group_remove, THEME.cross),
 		-1,
 		name_menu_empty[0]
 	];
 	
 	name_menu_prop_sep = [
-		menuItem(__txtx("panel_inspector_axis_separate", "Separate axis"),	function() { context_selecting_prop.sep_axis = true; }),
+		menuItemAction(__txtx("panel_inspector_axis_separate", "Separate axis"), panel_animation_separate_axis),
 		-1,
 		name_menu_empty[2],
 		name_menu_empty[3],
 	];
 	
 	name_menu_prop_join = [
-		menuItem(__txtx("panel_inspector_axis_combine", "Combine axis"),	function() { context_selecting_prop.sep_axis = false; }),
+		menuItemAction(__txtx("panel_inspector_axis_combine", "Combine axis"), panel_animation_combine_axis),
 		-1,
 		name_menu_empty[2],
 		name_menu_empty[3],
@@ -448,7 +476,7 @@ function Panel_Animation() : PanelContent() constructor {
 		keyframe_selecting = [];
 	}
 	
-	function alignKeys(halign = fa_left) { #region
+	function alignKeys(halign = fa_left) {
 		if(array_empty(keyframe_selecting)) return;
 		
 		var tt = 0;
@@ -476,13 +504,13 @@ function Panel_Animation() : PanelContent() constructor {
 			var k = keyframe_selecting[i];
 			k.anim.setKeyTime(k, tt,, true);
 		}
-	} #endregion
+	}
 	
-	function arrangeKeys() { #region
+	function arrangeKeys() {
 		//keyframe_selecting = l;
-	} #endregion
+	}
 	
-	function staggerKeys(_index, _stag) { #region
+	function staggerKeys(_index, _stag) {
 		var modified = false;
 		var t = keyframe_selecting[_index].time;
 		
@@ -494,11 +522,11 @@ function Panel_Animation() : PanelContent() constructor {
 		}
 		
 		if(modified) UNDO_HOLDING = true;
-	} #endregion
+	}
 	
 	function onFocusBegin() { PANEL_ANIMATION = self; }
 	
-	function surfaceVerify() { #region
+	function surfaceVerify() {
 		if(w - tool_width > 1) {
 			timeline_mask    = surface_verify(timeline_mask, timeline_w, timeline_h);
 			timeline_surface = surface_verify(timeline_surface, timeline_w, timeline_h);
@@ -513,16 +541,16 @@ function Panel_Animation() : PanelContent() constructor {
 			dope_sheet_name_mask    = surface_verify(dope_sheet_name_mask,    tool_width, dope_sheet_h);
 			dope_sheet_name_surface = surface_verify(dope_sheet_name_surface, tool_width, dope_sheet_h);
 		}
-	} #endregion
+	}
 	
-	function onResize() { #region
+	function onResize() {
 		initSize();
 		
 		surfaceVerify();
 		resetTimelineMask();
-	} #endregion
+	}
 	
-	function resetTimelineMask() { #region
+	function resetTimelineMask() {
 		timeline_mask = surface_verify(timeline_mask, timeline_w, timeline_h);
 			
 		surface_set_target(timeline_mask);
@@ -547,7 +575,7 @@ function Panel_Animation() : PanelContent() constructor {
 			
 			gpu_set_blendmode(bm_normal);
 		}
-	} #endregion
+	}
 	resetTimelineMask();
 	
 	function getTimelineContentFolder(folder, _context = [], _depth = 0, _show = true) { #region
@@ -802,9 +830,9 @@ function Panel_Animation() : PanelContent() constructor {
 					__selecting_frame = clamp(round((mx - bar_x - timeline_shift) / timeline_scale), 0, TOTAL_FRAMES - 1);
 					
 					menuCall("animation_summary_menu",,, [
-						menuItem(__txtx("panel_animation_range_start", "Set start"),	function() { if(FRAME_RANGE == noone) FRAME_RANGE = [ __selecting_frame, TOTAL_FRAMES ]; else FRAME_RANGE[0] = __selecting_frame; }, [ THEME.frame_range, 0 ]),
-						menuItem(__txtx("panel_animation_range_end",   "Set end"),		function() { if(FRAME_RANGE == noone) FRAME_RANGE = [ 0, __selecting_frame ];            else FRAME_RANGE[1] = __selecting_frame; }, [ THEME.frame_range, 1 ]),
-						menuItem(__txtx("panel_animation_range_reset", "Reset range"),	function() { FRAME_RANGE = noone; }),
+						menuItemAction(__txtx("panel_animation_range_start", "Set start"),		panel_animation_range_set_start, [ THEME.frame_range, 0 ]),
+						menuItemAction(__txtx("panel_animation_range_end",   "Set end"),		panel_animation_range_set_end,   [ THEME.frame_range, 1 ]),
+						menuItemAction(__txtx("panel_animation_range_reset", "Reset range"),	panel_animation_range_reset),
 					]);
 				}
 			}
@@ -1300,9 +1328,9 @@ function Panel_Animation() : PanelContent() constructor {
 		var key_hover   = noone;
 		var key_list    = animator.values;
 		
-		if((animator.prop.on_end == KEYFRAME_END.loop || animator.prop.on_end == KEYFRAME_END.ping) && ds_list_size(key_list) > 1) {
-			var keyframe_s = animator.prop.loop_range == -1? key_list[| 0].time : key_list[| ds_list_size(key_list) - 1 - animator.prop.loop_range].time;
-			var keyframe_e = key_list[| ds_list_size(key_list) - 1].time;
+		if((animator.prop.on_end == KEYFRAME_END.loop || animator.prop.on_end == KEYFRAME_END.ping) && array_length(key_list) > 1) {
+			var keyframe_s = animator.prop.loop_range == -1? key_list[0].time : key_list[array_length(key_list) - 1 - animator.prop.loop_range].time;
+			var keyframe_e = key_list[array_length(key_list) - 1].time;
 								
 			var ks_x = (keyframe_s + 1) * timeline_scale + timeline_shift;
 			var ke_x = (keyframe_e + 1) * timeline_scale + timeline_shift;
@@ -1313,8 +1341,8 @@ function Panel_Animation() : PanelContent() constructor {
 			draw_set_alpha(1);
 		}
 		
-		for( var k = 0; k < ds_list_size(key_list); k++ ) { //draw easing
-			var key = key_list[| k];
+		for( var k = 0, n = array_length(key_list); k < n; k++ ) { //draw easing
+			var key = key_list[k];
 			var t   = key.dopesheet_x;
 						
 			if(key.ease_in_type == CURVE_TYPE.bezier) {

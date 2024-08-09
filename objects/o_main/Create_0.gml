@@ -60,29 +60,6 @@
 	
 	panelInit();
 	
-	addHotkey("", "New file", "N",				MOD_KEY.ctrl, NEW);
-	if(!DEMO) {
-		addHotkey("", "Save", "S",				MOD_KEY.ctrl,					SAVE);
-		addHotkey("", "Save as", "S",			MOD_KEY.ctrl | MOD_KEY.shift,	SAVE_AS);
-		addHotkey("", "Save all", "S",			MOD_KEY.ctrl | MOD_KEY.alt,		SAVE_ALL);
-		addHotkey("", "Open", "O",				MOD_KEY.ctrl,					LOAD);
-	}
-	
-	addHotkey("", "Undo", "Z",					MOD_KEY.ctrl,					UNDO);
-	addHotkey("", "Redo", "Z",					MOD_KEY.ctrl | MOD_KEY.shift,	REDO);
-	
-	addHotkey("", "Full panel",   "`",			MOD_KEY.none,					set_focus_fullscreen);
-	addHotkey("", "Reset layout", vk_f10,		MOD_KEY.ctrl,					resetPanel);
-	
-	addHotkey("", "Open notification", vk_f12,	MOD_KEY.none,					function() { dialogPanelCall(new Panel_Notification()); });
-	
-	addHotkey("", "Fullscreen", vk_f11,			MOD_KEY.none,					global_fullscreen);
-	addHotkey("", "Render all", vk_f5,			MOD_KEY.none,					global_render_all);
-	
-	addHotkey("", "Close file", "Q",			MOD_KEY.ctrl,					global_project_close);
-	addHotkey("", "Close program", vk_f4,		MOD_KEY.alt,					window_close);
-	addHotkey("", "Reload theme", vk_f10,		MOD_KEY.ctrl | MOD_KEY.shift,	global_theme_reload);
-	
 	globalvar HOTKEY_MOD, HOTKEY_BLOCK;
 	HOTKEY_MOD   = 0;
 	HOTKEY_BLOCK = false;

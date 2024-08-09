@@ -1,3 +1,9 @@
+#macro CHECK_PANEL_PRESETS if(!is_instanceof(FOCUS_CONTENT, Panel_Presets)) return;
+
+function panel_preset_replace()	{ CHECK_PANEL_PRESETS CALL("panel_preset_replace");	FOCUS_CONTENT.replacePreset(FOCUS_CONTENT.selecting_preset.path);					}
+function panel_preset_delete()	{ CHECK_PANEL_PRESETS CALL("panel_preset_delete");	file_delete(FOCUS_CONTENT.selecting_preset.path); FOCUS_CONTENT.__initPresets();	}
+function panel_preset_reset()	{ CHECK_PANEL_PRESETS CALL("panel_preset_reset");	FOCUS_CONTENT.newPresetFromNode("_default");										}
+
 function Panel_Presets(_node) : PanelContent() constructor {
 	title   = __txt("Presets");
 	padding = 8;
@@ -22,14 +28,18 @@ function Panel_Presets(_node) : PanelContent() constructor {
 	
 	directory_verify($"{DIRECTORY}Presets/{instanceof(node)}/");
 	__initPresets();
-		
+	
+	registerFunction("Presets", "Replace",			"",	   MOD_KEY.none,	panel_preset_replace);
+	registerFunction("Presets", "Delete",			"",	   MOD_KEY.none,	panel_preset_delete);
+	registerFunction("Presets", "Reset To Default",	"",	   MOD_KEY.none,	panel_preset_reset);
+	
 	context_menu = [
-		menuItem(__txt("Replace preset"), function() { replacePreset(selecting_preset.path); }),
-		menuItem(__txt("Delete"),         function() { file_delete(selecting_preset.path); __initPresets(); }, THEME.cross), 
+		menuItemAction(__txt("Replace preset"), panel_preset_replace),
+		menuItemAction(__txt("Delete"),         panel_preset_delete, THEME.cross), 
 	];
 	
 	context_def = [
-		menuItem(__txt("Set to default"), function() { newPresetFromNode("_default");  }),
+		menuItemAction(__txt("Set to default"), panel_preset_reset),
 	];
 	
 	thumbnail_mask = surface_create(1, 1);
