@@ -32,11 +32,10 @@
 	
 #endregion
 
-function registerFunction(_context, _name, _key, _mod, _action) { return new functionOnject(_context, _name, _key, _mod, _action); }
+function registerFunction(_context, _name, _key, _mod, _action) { return new functionObject(_context, _name, _key, _mod, _action); }
 
-function functionOnject(_context, _name, _key, _mod, _action) constructor {
-	addHotkey(_context, _name, _key, _mod, _action);
-	
+function functionObject(_context, _name, _key, _mod, _action) constructor {
+	hotkey   = addHotkey(_context, _name, _key, _mod, _action);
 	context  = _context;
 	name     = _name;
 	dkey     = _key;
@@ -46,6 +45,7 @@ function functionOnject(_context, _name, _key, _mod, _action) constructor {
 	
 	fnName = _context == ""? _name : $"{_context} {_name}";
 	fnName = string_to_var(fnName);
+	menu   = noone;
 		
 	FUNCTIONS[$ fnName]     = self;
 	CMD_FUNCTIONS[$ fnName] = { action: _action, args: [] };
@@ -56,10 +56,10 @@ function functionOnject(_context, _name, _key, _mod, _action) constructor {
 		return self;
 	}
 	
-	static setMenu     = function(_id, _spr = noone, shelf = false) { 
-		var men = menuItemAction(__txt(name), action, _spr);	
-		if(shelf) men.setIsShelf();
-		MENU_ITEMS[$ _id] = men;	
+	static setMenu = function(_id, _spr = noone, shelf = false) { 
+		menu = menuItemAction(__txt(name), action, _spr);	
+		if(shelf) menu.setIsShelf();
+		MENU_ITEMS[$ _id] = menu;
 		
 		return self;
 	}

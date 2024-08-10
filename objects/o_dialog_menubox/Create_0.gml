@@ -44,6 +44,7 @@ event_inherited();
 		draw_set_text(font, fa_center, fa_center, COLORS._main_text);
 		for(var i = 0; i < array_length(menu); i++) {
 			var _menuItem = menu[i];
+			
 			if(_menuItem == -1) {
 				dialog_h += ui(8);
 				continue;
@@ -75,10 +76,7 @@ event_inherited();
 					}
 				} 
 				
-				if(_menuItem.spr != noone)
-					show_icon = true;
-				if(_menuItem.toggle != noone)
-					show_icon = true;
+				if(_menuItem.spr != noone || _menuItem.toggle != noone) show_icon = true;
 			}
 			
 			dialog_w = max(dialog_w, ww);

@@ -149,6 +149,8 @@ function addHotkey(_context, _name, _key, _mod, _action) {
 	
 	if(_context == "") ds_list_insert(HOTKEYS[? _context], 0, key);
 	else			   ds_list_add(HOTKEYS[? _context], key);
+	
+	return key;
 }
 
 function find_hotkey(_context, _name) {

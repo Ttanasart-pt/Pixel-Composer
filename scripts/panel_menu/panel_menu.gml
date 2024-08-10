@@ -38,7 +38,7 @@
             registerFunction("", "Import .zip",     "",     MOD_KEY.none,                                 __IMPORT_ZIP             ).setMenu("import_zip",     )
             registerFunction("", "Export .zip",     "",     MOD_KEY.none,                                 __EXPORT_ZIP             ).setMenu("export_zip",     )
             
-            registerFunction("", "Recent Files",    "",     MOD_KEY.none,                                 
+            registerFunction("", "Recent Files",    "R",    MOD_KEY.ctrl | MOD_KEY.shift,
                 function(_dat) { 
                     var arr = [];
                     for(var i = 0; i < min(10, ds_list_size(RECENT_FILES)); i++)  {

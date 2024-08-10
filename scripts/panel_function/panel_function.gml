@@ -448,6 +448,7 @@
 	function call_dialog_preference() 	    { dialogCall(o_dialog_preference);				    }
 	function call_dialog_splash()     	    { dialogCall(o_dialog_splash);					   	}
 	function call_dialog_release_note()	    { dialogCall(o_dialog_release_note);			   	}
+	function call_dialog_command_palette()  { dialogCall(o_dialog_command_palette);			   	}
 	function open_autosave_folder() 	    { shellOpenExplorer(DIRECTORY + "autosave");		}
 	
 	function call_panel_addon() 		    { dialogPanelCall(new Panel_Addon());			   	}
@@ -477,9 +478,11 @@
 	function call_panel_File_Explorer()     { panelAdd("Panel_File_Explorer",	    true);      }
 	
 	function __fnInit_Panels() {
+		
         registerFunction("", "Preference",                "", MOD_KEY.none, call_dialog_preference            ).setMenu("preference",      THEME.gear)
         registerFunction("", "Splash screen",             "", MOD_KEY.none, call_dialog_splash                ).setMenu("splash_screen")
         registerFunction("", "Release note",              "", MOD_KEY.none, call_dialog_release_note          ).setMenu("release_note")
+        registerFunction("", "Command Palette",           "T", MOD_KEY.ctrl | MOD_KEY.shift, call_dialog_command_palette       ).setMenu("command_palette")
         registerFunction("", "Autosave folder",           "", MOD_KEY.none, open_autosave_folder              ).setMenu("autosave_folder", THEME.save_auto)
         
         registerFunction("", "Addons",                    "", MOD_KEY.none, call_panel_addon                  ).setMenu("addons")
@@ -506,14 +509,5 @@
         registerFunction("", "Console Panel",             "", MOD_KEY.none, call_panel_Console                ).setMenu("console_panel")
         registerFunction("", "Globalvar Panel",           "", MOD_KEY.none, call_panel_Globalvar              ).setMenu("globalvar_panel")
         registerFunction("", "File Explorer Panel",       "", MOD_KEY.none, call_panel_File_Explorer          ).setMenu("file_explorer_panel")
-        
-		
-		registerFunction("", "Recent files",		"R", MOD_KEY.ctrl | MOD_KEY.shift, function() /*=>*/ {
-			var arr = [];
-			for(var i = 0; i < min(10, ds_list_size(RECENT_FILES)); i++)
-				array_push(arr, menuItemAction(RECENT_FILES[| i], function(_dat) { LOAD_PATH(_dat.name); }));
-			return menuCall("Recent files",,, arr);
-		}).setMenu("recent_files");
-		
 	}
 #endregion
