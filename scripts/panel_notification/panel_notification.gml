@@ -1,36 +1,40 @@
+#region funtion calls
+	function __fnInit_Notification() {
+		registerFunction("Notifications", "Clear log messages",			"",   MOD_KEY.none,	notification_clear_all		).setMenu("noti_clear_all");
+		registerFunction("Notifications", "Clear warning messages",		"",   MOD_KEY.none,	notification_clear_log		).setMenu("noti_clear_log");
+		registerFunction("Notifications", "Clear all notifications",	"",   MOD_KEY.none,	notification_clear_warning	).setMenu("noti_clear_warning");
+		
+		registerFunction("Notifications", "Open log file",				"",   MOD_KEY.none,	notification_open_log		).setMenu("noti_open_log");
+		
+	}
+	
+	function notification_clear_all()		{ CALL("notification_clear_all");     ds_list_clear(STATUSES); }
+	function notification_clear_log()		{ CALL("notification_clear_log");     for( var i = ds_list_size(STATUSES) - 1; i >= 0; i-- ) if(STATUSES[| i].type == NOTI_TYPE.log) ds_list_delete(STATUSES, i);     }
+	function notification_clear_warning()	{ CALL("notification_clear_warning"); for( var i = ds_list_size(STATUSES) - 1; i >= 0; i-- ) if(STATUSES[| i].type == NOTI_TYPE.warning) ds_list_delete(STATUSES, i); }
+	
+	function notification_open_log()  		{ CALL("notification_open_log");	  shellOpenExplorer(DIRECTORY + "log/log.txt"); }
+	
+#endregion
+
 function Panel_Notification() : PanelContent() constructor {
 	title = __txt("Notifications");
 	w = ui(720);
 	h = ui(480);
 	
 	title_height = 64;
-	padding = 20;
+	padding      = 20;
 	
-	current_page = 0;
-	filter = NOTI_TYPE.log | NOTI_TYPE.warning | NOTI_TYPE.error;
-	showHeader  = false;
+	current_page   = 0;
+	filter         = NOTI_TYPE.log | NOTI_TYPE.warning | NOTI_TYPE.error;
+	showHeader     = false;
+	noti_selecting = noone;
 	
 	rightClickMenu = [ 
-		menuItemAction(__txtx("noti_clear_log", "Clear log messages"), function() { 
-			for( var i = ds_list_size(STATUSES) - 1; i >= 0; i-- ) {
-				if(STATUSES[| i].type == NOTI_TYPE.log) 
-					ds_list_delete(STATUSES, i);
-			}
-		}), 
-		menuItemAction(__txtx("noti_clear_warn", "Clear warning messages"), function() { 
-			for( var i = ds_list_size(STATUSES) - 1; i >= 0; i-- ) {
-				if(STATUSES[| i].type == NOTI_TYPE.warning) 
-					ds_list_delete(STATUSES, i);
-			}
-		}),
+		MENU_ITEMS.noti_clear_all,
+		MENU_ITEMS.noti_clear_log,
+		MENU_ITEMS.noti_clear_warning,
 		-1,
-		menuItemAction(__txtx("noti_clear_all", "Clear all notifications"), function() { 
-			ds_list_clear(STATUSES);
-		}),
-		-1,
-		menuItemAction(__txtx("noti_open_log", "Open log file"), function() { 
-			shellOpenExplorer(DIRECTORY + "log/log.txt");
-		}),
+		MENU_ITEMS.noti_open_log,
 	];
 	
 	function onResize() {
@@ -76,16 +80,13 @@ function Panel_Notification() : PanelContent() constructor {
 						noti.onClick();
 				
 					if(mouse_press(mb_right, pFOCUS)) {
-						var dia = menuCall("notification_menu",,, [ 
-							menuItemAction(__txtx("noti_copy_message", "Copy notification message"), function() { 
-								clipboard_set_text(o_dialog_menubox.noti.txt);
-							}), 
-							menuItemAction(__txtx("noti_delete_message", "Delete notification"), function() { 
-								ds_list_remove(STATUSES, o_dialog_menubox.noti);
-							}), 
-						],, noti);
+						noti_selecting = noti;
 						
-						dia.noti = noti;
+						var dia = menuCall("notification_menu",,, [ 
+							menuItem(__txtx("noti_copy_message",   "Copy notification message"), function() { clipboard_set_text(noti_selecting.txt);   }), 
+							menuItem(__txtx("noti_delete_message", "Delete notification"),       function() { ds_list_remove(STATUSES, noti_selecting); }), 
+						]);
+						
 					}
 				}
 				

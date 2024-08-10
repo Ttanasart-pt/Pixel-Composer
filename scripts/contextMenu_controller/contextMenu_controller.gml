@@ -33,14 +33,15 @@ function pieMenuCall(menu_id = "", _x = mouse_mx, _y = mouse_my, menu = [], cont
 	return dia;
 }
 
-function submenuCall(_data, menu = []) {
+function submenuCall(_data = undefined, menu = []) {
+	if(is_undefined(_data)) return menuCall("",,, menu);
+	
 	var dia = instance_create_depth(_data.x - ui(4), _data.y, _data.depth - 1, o_dialog_menubox);
 	dia.context		= _data.context;
 	dia.setMenu(menu);
 	
 	if(_data.x - ui(4) + dia.dialog_w > WIN_W - ui(2))
 		dia.dialog_x = _data._x - dia.dialog_w + ui(4);
-	
 	
 	return dia;
 }

@@ -178,62 +178,6 @@
 	DEF_SURFACE_RESET();
 #endregion
 
-#region functions
-	function global_fullscreen()		{ CALL("fullscreen");			winMan_setFullscreen(!window_is_fullscreen);										}
-	function global_project_close()		{ CALL("close_project");		PANEL_GRAPH.close();																}
-	function global_project_close_all()	{ CALL("close_project_all");	 for( var i = array_length(PROJECTS) - 1; i >= 0; i-- ) closeProject(PROJECTS[i]);	}
-	function global_theme_reload()		{ CALL("reload_theme");			loadGraphic(PREFERENCES.theme); resetPanel();										}
-	
-	function global_render_all()		{ CALL("render_all");			RENDER_ALL_REORDER																	}
-	function global_export_all()		{ 
-		for (var i = 0, n = array_length(PROJECT.allNodes); i < n; i++) {
-			var node = PROJECT.allNodes[i];
-			
-			if(!node.active) continue;
-			if(instanceof(node) != "Node_Export") continue;
-			
-			node.doInspectorAction();
-		}
-	}
-	
-	function __fnInit_Global() {
-		registerFunction("", "New file",			"N",	MOD_KEY.ctrl,					NEW);
-		
-		if(!DEMO) {
-			registerFunction("", "Save",			"S",	MOD_KEY.ctrl,					SAVE);
-			registerFunction("", "Save as", 		"S",	MOD_KEY.ctrl | MOD_KEY.shift,	SAVE_AS);
-			registerFunction("", "Save at", 		"",		MOD_KEY.none,					SAVE_AT, [ ARG("project", function() { return PROJECT; }, true), ARG("path", ""), ARG("log", "save at ") ]);
-			registerFunction("", "Save all",		"S",	MOD_KEY.ctrl | MOD_KEY.alt,		SAVE_ALL);
-			registerFunction("", "Open",			"O",	MOD_KEY.ctrl,					LOAD);
-			registerFunction("", "Open Safe",		"",		MOD_KEY.none,					LOAD_SAFE);
-			registerFunction("", "Open at",			"",		MOD_KEY.none,					LOAD_AT, [ ARG("path", ""), ARG("readonly", false), ARG("override", false) ]);
-			registerFunction("", "Append",			"",		MOD_KEY.none,					APPEND,  [ ARG("path", ""), ARG("context", function() { return PANEL_GRAPH.getCurrentContext(); }, true) ]);
-			
-			registerFunction("", "Import .zip",		"",		MOD_KEY.none,					__IMPORT_ZIP);
-			registerFunction("", "Export .zip",		"",		MOD_KEY.none,					__EXPORT_ZIP);
-		}
-		
-		registerFunction("", "Undo",				"Z",	MOD_KEY.ctrl,					UNDO);
-		registerFunction("", "Redo",				"Z",	MOD_KEY.ctrl | MOD_KEY.shift,	REDO);
-		
-		registerFunction("", "Full panel",  		"`",	MOD_KEY.none,					set_focus_fullscreen);
-		registerFunction("", "Reset layout",		vk_f10, MOD_KEY.ctrl,					resetPanel);
-		
-		registerFunction("", "Open notification",	vk_f12, MOD_KEY.none,					function() /*=>*/ { dialogPanelCall(new Panel_Notification()); });
-		
-		registerFunction("", "Fullscreen",			vk_f11, MOD_KEY.none,					global_fullscreen);
-		registerFunction("", "Render all",			vk_f5,	MOD_KEY.none,					global_render_all);
-		registerFunction("", "Export all",			"",		MOD_KEY.none,					global_export_all);
-		
-		registerFunction("", "Close file",			"Q",	MOD_KEY.ctrl,					global_project_close);
-		registerFunction("", "Close all files",		"",		MOD_KEY.none,					global_project_close_all);
-		registerFunction("", "Close program",		vk_f4,	MOD_KEY.alt,					window_close);
-		registerFunction("", "Close project",		"",		MOD_KEY.none,					closeProject, [ ARG("project", function() { return PROJECT; }, true) ]);
-		registerFunction("", "Reload theme",		vk_f10, MOD_KEY.ctrl | MOD_KEY.shift,	global_theme_reload);
-	}
-	
-#endregion
-
 #region debug
 	global.FLAG = {
 		render				: 0,

@@ -5,6 +5,10 @@ if(!ready) exit;
 	var yy = dialog_y;
 	var _lclick = sFOCUS && (!mouse_init_inside && mouse_release(mb_left)) || (keyboard_check_pressed(vk_enter) && hk_editing == noone);
 	var _rclick = sFOCUS && (!mouse_init_inside && mouse_release(mb_right));
+	if(!mouse_init_inside && mouse_press(mb_right) && item_selecting) {
+		instance_destroy(item_selecting);
+		item_selecting = noone;
+	}
 	
 	draw_sprite_stretched(THEME.s_box_r2_clr, 0, dialog_x, dialog_y, dialog_w, dialog_h);
 	
@@ -23,8 +27,8 @@ if(!ready) exit;
 			_menuItem = _menuItem.shiftMenu;
 			
 		if(_menuItem == -1) {
-			var bx = dialog_x + ui(8);
-			var bw = dialog_w - ui(16);
+			var bx = dialog_x + ui(16);
+			var bw = dialog_w - ui(32);
 			draw_set_color(CDEF.main_mdblack);
 			draw_line_width(bx, yy + ui(3), bx + bw, yy + ui(3), 2);
 			yy += ui(8);
@@ -50,9 +54,9 @@ if(!ready) exit;
 			
 			draw_sprite_stretched_ext(THEME.textbox, 3, dialog_x, yy, dialog_w, _h, _hc, _ha);
 			
-			if(is_instanceof(_menuItem, MenuItem) && _menuItem.active && _hovering_ch) {
+			if(is_instanceof(_menuItem, MenuItem) && _hovering_ch) {
 				
-				if(_lclick) {
+				if(_menuItem.active && _lclick) {
 					var _dat = {
 						_x:      dialog_x,
 						x:       dialog_x + dialog_w,
@@ -72,7 +76,7 @@ if(!ready) exit;
 				
 				if(_key && _rclick) {
 					var _dat = {
-						_x:      dialog_x,
+						_x:      mouse_mx + ui(4),
 						x:       mouse_mx + ui(4),
 						y:       mouse_my + ui(4),
 						depth:   depth,
@@ -83,19 +87,21 @@ if(!ready) exit;
 					};
 					
 					selecting_menu = _menuItem;
-					var _loadKey = $"{_key.context}.{_key.name}";
+					var _loadKey = string_to_var($"{_key.context}.{_key.name}");
 					
 					var context_menu_settings = [
 						_loadKey,
-						menuItemAction("Edit hotkey", function() /*=>*/ {
+						menuItem("Edit hotkey", function() /*=>*/ {
 							hk_editing        = selecting_menu;
 							keyboard_lastchar = hk_editing.hoykeyObject.key;
 						}),
 					];
 					
 					with(o_dialog_menubox) { if(!remove_parents) instance_destroy(); }
-					var _menu = submenuCall(_dat, context_menu_settings);
-					_menu.remove_parents = false;
+					
+					item_selecting = submenuCall(_dat, context_menu_settings);
+					item_selecting.remove_parents = false;
+					array_push(children, item_selecting.id);
 				}
 			}
 		} else if(cc != c_white)
@@ -103,7 +109,7 @@ if(!ready) exit;
 		
 		if(is_instanceof(_menuItem, MenuItemGroup)) {
 			var _submenus = _menuItem.group;
-			draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text_sub);
+			draw_set_text(font, fa_center, fa_center, COLORS._main_text_sub);
 			draw_set_alpha(_menuItem.active * 0.75 + 0.25);
 			draw_text(dialog_x + dialog_w / 2, yy + hght / 2, label);
 			draw_set_alpha(1);
@@ -166,7 +172,7 @@ if(!ready) exit;
 			if(_menuItem.spr != noone) {
 				var spr = is_array(_menuItem.spr)? _menuItem.spr[0] : _menuItem.spr;
 				var ind = is_array(_menuItem.spr)? _menuItem.spr[1] : 0;
-				draw_sprite_ui(spr, ind, dialog_x + ui(24), yy + hght / 2,,,, COLORS._main_icon, _menuItem.active * 0.5 + 0.25);
+				draw_sprite_ui(spr, ind, dialog_x + ui(24), yy + hght / 2, .8, .8, 0, COLORS._main_icon, _menuItem.active * 0.5 + 0.25);
 			}
 			
 			if(_menuItem.toggle != noone) {
@@ -175,19 +181,21 @@ if(!ready) exit;
 			}
 			
 			var tx = dialog_x + show_icon * ui(32) + ui(16);
-			draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
+			draw_set_text(font, fa_left, fa_center, COLORS._main_text);
 			draw_set_alpha(_menuItem.active * 0.75 + 0.25);
 			draw_text(tx, yy + hght / 2, label);
 			draw_set_alpha(1);
 			
+			var _hx = dialog_x + dialog_w - ui(16);
+			var _hy = yy + hght / 2 + ui(2);
+			
 			if(_menuItem.isShelf) {
 				draw_sprite_ui_uniform(THEME.arrow, 0, dialog_x + dialog_w - ui(20), yy + hght / 2, 1, COLORS._main_icon);	
-				
-			} else if(_key) {
-				var _hx = dialog_x + dialog_w - ui(16);
-				var _hy = yy + hght / 2 + ui(2);
-				
-				draw_set_font(f_p1);
+				_hx -= ui(24);
+			}
+			
+			if(_key) {
+				draw_set_font(font);
 				
 				var _ktxt = key_get_name(_key.key, _key.modi);
 				var _tw = string_width(_ktxt);
@@ -199,11 +207,11 @@ if(!ready) exit;
 				var _bh = _th + ui(3);
 				
 				if(hk_editing == _menuItem) {
-					draw_set_text(f_p1, fa_right, fa_center, COLORS._main_accent);
+					draw_set_text(font, fa_right, fa_center, COLORS._main_accent);
 					draw_sprite_stretched_ext(THEME.ui_panel, 1, _bx, _by, _bw, _bh, COLORS._main_text_accent);
 					
 				} else if(_ktxt != "") {
-					draw_set_text(f_p1, fa_right, fa_center, COLORS._main_text_sub);
+					draw_set_text(font, fa_right, fa_center, COLORS._main_text_sub);
 					draw_sprite_stretched_ext(THEME.ui_panel, 1, _bx, _by, _bw, _bh, CDEF.main_dkgrey);
 				}
 				
@@ -217,10 +225,11 @@ if(!ready) exit;
 	if(hk_editing != noone) {
 		if(keyboard_check_pressed(vk_enter))
 			hk_editing = noone;
-		else if(keyboard_check_pressed(vk_escape))
-			hk_editing = noone;
 		else 
 			hotkey_editing(hk_editing.hoykeyObject);
+			
+		if(keyboard_check_pressed(vk_escape))
+			hk_editing = noone;
 			
 	} else if(sFOCUS) {
 		if(keyboard_check_pressed(vk_up)) {

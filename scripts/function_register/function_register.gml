@@ -11,27 +11,63 @@
 	}
 	
 	function __fnInit() {
-		globalvar CMD_FUNCTIONS, ACTION_MAP;
+		globalvar CMD_FUNCTIONS, ACTION_MAP, MENU_ITEMS, FUNCTIONS;
+		
+		FUNCTIONS     = {};
 		CMD_FUNCTIONS = {};
 		ACTION_MAP    = {};
+		MENU_ITEMS    = {};
 		
 		__fnInit_Global();
+		__fnInit_Panels();
 		__fnInit_Preview();
 		__fnInit_Inspector();
 		__fnInit_Animation();
 		__fnInit_Graph();
 		__fnInit_Collection();
+		__fnInit_Presets();
+		__fnInit_Notification();
+		__fnInit_Preview_Window();
 	}
+	
 #endregion
 
-function registerFunction(_context, _name, _key, _mod, _action, _args = []) { 
+function registerFunction(_context, _name, _key, _mod, _action) { return new functionOnject(_context, _name, _key, _mod, _action); }
+
+function functionOnject(_context, _name, _key, _mod, _action) constructor {
 	addHotkey(_context, _name, _key, _mod, _action);
 	
-	var _fnName = _context == ""? _name : $"{_context} {_name}";
-		_fnName = string_to_var(_fnName);
+	context  = _context;
+	name     = _name;
+	dkey     = _key;
+	dmod     = _mod;
+	action   = _action;
+	hide     = false;
+	
+	fnName = _context == ""? _name : $"{_context} {_name}";
+	fnName = string_to_var(fnName);
 		
-	CMD_FUNCTIONS[$ _fnName] = { _action, _args };
-	ACTION_MAP[$ _action]    = [ _context, _name ];
+	FUNCTIONS[$ fnName]     = self;
+	CMD_FUNCTIONS[$ fnName] = { action: _action, args: [] };
+	ACTION_MAP[$ _action]   = [ _context, _name ];
+	
+	static setArg      = function(_args = []) { 
+		CMD_FUNCTIONS[$ fnName] = { action, args: _args };
+		return self;
+	}
+	
+	static setMenu     = function(_id, _spr = noone, shelf = false) { 
+		var men = menuItemAction(__txt(name), action, _spr);	
+		if(shelf) men.setIsShelf();
+		MENU_ITEMS[$ _id] = men;	
+		
+		return self;
+	}
+	
+	static hidePalette = function() { 
+		hide = true; 
+		return self; 
+	}
 }
 
 function callStatusFunction(name) {

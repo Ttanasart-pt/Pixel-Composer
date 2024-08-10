@@ -174,7 +174,6 @@
 		panelDisplayInit();
 		
 		checkPanelValid();
-		__initPanelHotkeys();
 	} #endregion
 	
 	function setPanel() { #region
@@ -446,73 +445,75 @@
 
 #region hotkey
 
-	function call_dialog_preference() 	{ dialogCall(o_dialog_preference);				}
-	function call_dialog_splash()     	{ dialogCall(o_dialog_splash);					}
-	function call_dialog_release_note()	{ dialogCall(o_dialog_release_note);			}
-	function open_autosave_folder() 	{ shellOpenExplorer(DIRECTORY + "autosave");	}
+	function call_dialog_preference() 	    { dialogCall(o_dialog_preference);				    }
+	function call_dialog_splash()     	    { dialogCall(o_dialog_splash);					   	}
+	function call_dialog_release_note()	    { dialogCall(o_dialog_release_note);			   	}
+	function open_autosave_folder() 	    { shellOpenExplorer(DIRECTORY + "autosave");		}
 	
-	function call_panel_addon() 		{ dialogPanelCall(new Panel_Addon());			}
-	function call_panel_history()		{ dialogPanelCall(new Panel_History()); 		}
+	function call_panel_addon() 		    { dialogPanelCall(new Panel_Addon());			   	}
+	function call_panel_history()		    { dialogPanelCall(new Panel_History()); 		    }
 	
-	function call_panel_Notification()  { panelAdd("Panel_Notification",	true); }
-	function call_panel_Collection()    { panelAdd("Panel_Collection",		true); }
-	function call_panel_Graph()         { panelAdd("Panel_Graph", 			true); }
+	function call_panel_Notification()      { panelAdd("Panel_Notification",	    true);      }
+	function call_panel_Collection()        { panelAdd("Panel_Collection",		    true);      }
+	function call_panel_Graph()             { panelAdd("Panel_Graph", 			    true);      }
 	
-	function call_panel_Preview()       	{ panelAdd("Panel_Preview",				true); }
-	function call_panel_Preview_Histogram() { panelAdd("Panel_Preview_Histogram",	true); }
+	function call_panel_Preview()       	{ panelAdd("Panel_Preview",				true);      }
+	function call_panel_Preview_Histogram() { panelAdd("Panel_Preview_Histogram",	true);		}
 	
-	function call_panel_Inspector()     { panelAdd("Panel_Inspector", 		true); }
-	function call_panel_Workspace()     { panelAdd("Panel_Workspace", 		true); }
-	function call_panel_Animation()     { panelAdd("Panel_Animation", 		true); }
-	function call_panel_Node_Align()    { panelAdd("Panel_Node_Align",		true); }
-	function call_panel_Nodes()         { panelAdd("Panel_Nodes", 			true); }
-	function call_panel_Tunnels()       { panelAdd("Panel_Tunnels",			true); }
+	function call_panel_Inspector()         { panelAdd("Panel_Inspector", 		    true);      }
+	function call_panel_Workspace()         { panelAdd("Panel_Workspace", 		    true);      }
+	function call_panel_Animation()         { panelAdd("Panel_Animation", 		    true);      }
+	function call_panel_Node_Align()        { panelAdd("Panel_Node_Align",		    true);      }
+	function call_panel_Nodes()             { panelAdd("Panel_Nodes", 			    true);      }
+	function call_panel_Tunnels()           { panelAdd("Panel_Tunnels",			    true);      }
 	
-	function call_panel_Color()         { panelAdd("Panel_Color", 			true); }
-	function call_panel_Palette()       { panelAdd("Panel_Palette",			true); }
-	function call_panel_Palette_Mixer() { panelAdd("Panel_Palette_Mixer",	true); }
-	function call_panel_Gradient()      { panelAdd("Panel_Gradient",		true); }
+	function call_panel_Color()             { panelAdd("Panel_Color", 			    true);      }
+	function call_panel_Palette()           { panelAdd("Panel_Palette",			    true);      }
+	function call_panel_Palette_Mixer()     { panelAdd("Panel_Palette_Mixer",	    true);      }
+	function call_panel_Gradient()          { panelAdd("Panel_Gradient",		    true);      }
 	
-	function call_panel_Console()       { panelAdd("Panel_Console",			true); }
-	function call_panel_Globalvar()     { panelAdd("Panel_Globalvar",		true); }
-	function call_panel_File_Explorer() { panelAdd("Panel_File_Explorer",	true); }
+	function call_panel_Console()           { panelAdd("Panel_Console",			    true);      }
+	function call_panel_Globalvar()         { panelAdd("Panel_Globalvar",		    true);      }
+	function call_panel_File_Explorer()     { panelAdd("Panel_File_Explorer",	    true);      }
 	
-	function __initPanelHotkeys() {
-		registerFunction("", "Preference",  		"", MOD_KEY.none, 	call_dialog_preference);
-		registerFunction("", "Splash screen",		"", MOD_KEY.none, 	call_dialog_splash);
-		registerFunction("", "Release note",		"", MOD_KEY.none, 	call_dialog_release_note);
-		registerFunction("", "Autosave folder", 	"", MOD_KEY.none,	open_autosave_folder);
+	function __fnInit_Panels() {
+        registerFunction("", "Preference",                "", MOD_KEY.none, call_dialog_preference            ).setMenu("preference",      THEME.gear)
+        registerFunction("", "Splash screen",             "", MOD_KEY.none, call_dialog_splash                ).setMenu("splash_screen")
+        registerFunction("", "Release note",              "", MOD_KEY.none, call_dialog_release_note          ).setMenu("release_note")
+        registerFunction("", "Autosave folder",           "", MOD_KEY.none, open_autosave_folder              ).setMenu("autosave_folder", THEME.save_auto)
+        
+        registerFunction("", "Addons",                    "", MOD_KEY.none, call_panel_addon                  ).setMenu("addons")
+        registerFunction("", "History",                   "", MOD_KEY.none, call_panel_history                ).setMenu("history")
+        
+        registerFunction("", "Notification Panel",    vk_f12, MOD_KEY.none, call_panel_Notification           ).setMenu("notification_panel")
+        registerFunction("", "Collections Panel",         "", MOD_KEY.none, call_panel_Collection             ).setMenu("collections_panel")
+        registerFunction("", "Graph Panel",               "", MOD_KEY.none, call_panel_Graph                  ).setMenu("graph_panel")
+        registerFunction("", "Preview Panel",             "", MOD_KEY.none, call_panel_Preview                ).setMenu("preview_panel")
+        registerFunction("", "Preview Histogram",         "", MOD_KEY.none, call_panel_Preview_Histogram      ).setMenu("preview_histogram")
+        registerFunction("", "Inspector Panel",           "", MOD_KEY.none, call_panel_Inspector              ).setMenu("inspector_panel")
+        registerFunction("", "Workspace Panel",           "", MOD_KEY.none, call_panel_Workspace              ).setMenu("workspace_panel")
+        registerFunction("", "Animation Panel",           "", MOD_KEY.none, call_panel_Animation              ).setMenu("animation_panel")
+        
+        registerFunction("", "Align Panel",               "", MOD_KEY.none, call_panel_Node_Align             ).setMenu("align_panel")
+        registerFunction("", "Nodes Panel",               "", MOD_KEY.none, call_panel_Nodes                  ).setMenu("nodes_panel")
+        registerFunction("", "Tunnels Panel",             "", MOD_KEY.none, call_panel_Tunnels                ).setMenu("tunnels_panel")
+        
+        registerFunction("", "Color Panel",               "", MOD_KEY.none, call_panel_Color                  ).setMenu("color_panel")
+        registerFunction("", "Palettes Panel",            "", MOD_KEY.none, call_panel_Palette                ).setMenu("palettes_panel")
+        registerFunction("", "Palettes Mixer Panel",      "", MOD_KEY.none, call_panel_Palette_Mixer          ).setMenu("palettes_mixer_panel")
+        registerFunction("", "Gradients Panel",           "", MOD_KEY.none, call_panel_Gradient               ).setMenu("gradients_panel")
+        
+        registerFunction("", "Console Panel",             "", MOD_KEY.none, call_panel_Console                ).setMenu("console_panel")
+        registerFunction("", "Globalvar Panel",           "", MOD_KEY.none, call_panel_Globalvar              ).setMenu("globalvar_panel")
+        registerFunction("", "File Explorer Panel",       "", MOD_KEY.none, call_panel_File_Explorer          ).setMenu("file_explorer_panel")
+        
 		
-		registerFunction("", "Recent files",  "R", MOD_KEY.ctrl | MOD_KEY.shift, function() /*=>*/ {
+		registerFunction("", "Recent files",		"R", MOD_KEY.ctrl | MOD_KEY.shift, function() /*=>*/ {
 			var arr = [];
 			for(var i = 0; i < min(10, ds_list_size(RECENT_FILES)); i++)
 				array_push(arr, menuItemAction(RECENT_FILES[| i], function(_dat) { LOAD_PATH(_dat.name); }));
 			return menuCall("Recent files",,, arr);
-		});
+		}).setMenu("recent_files");
 		
-		registerFunction("", "Addons",  "", MOD_KEY.none, call_panel_addon);
-		registerFunction("", "History", "", MOD_KEY.none, call_panel_history);
-		
-		registerFunction("", "Notification Panel",	"", MOD_KEY.none, call_panel_Notification	);
-		registerFunction("", "Collections Panel",	"", MOD_KEY.none, call_panel_Collection 	);
-		registerFunction("", "Graph Panel",	  		"", MOD_KEY.none, call_panel_Graph          );
-		registerFunction("", "Preview Panel",  		"", MOD_KEY.none, call_panel_Preview    	);
-		registerFunction("", "Preview Histogram",	"", MOD_KEY.none, call_panel_Preview_Histogram );
-		registerFunction("", "Inspector Panel",		"", MOD_KEY.none, call_panel_Inspector  	);
-		registerFunction("", "Workspace Panel",		"", MOD_KEY.none, call_panel_Workspace  	);
-		registerFunction("", "Animation Panel",		"", MOD_KEY.none, call_panel_Animation  	);
-		
-		registerFunction("", "Align Panel",			"", MOD_KEY.none, call_panel_Node_Align     );
-		registerFunction("", "Nodes Panel",			"", MOD_KEY.none, call_panel_Nodes          );
-		registerFunction("", "Tunnels Panel",  		"", MOD_KEY.none, call_panel_Tunnels    	);
-		
-		registerFunction("", "Color Panel",			"", MOD_KEY.none, call_panel_Color          );
-		registerFunction("", "Palettes Panel", 		"", MOD_KEY.none, call_panel_Palette    	);
-		registerFunction("", "Palettes Mixer Panel","", MOD_KEY.none, call_panel_Palette_Mixer 	);
-		registerFunction("", "Gradients Panel",		"", MOD_KEY.none, call_panel_Gradient   	);
-		
-		registerFunction("", "Console Panel",  		"",	MOD_KEY.none, call_panel_Console    	);
-		registerFunction("", "Globalvar Panel",  	"",	MOD_KEY.none, call_panel_Globalvar    	);
-		registerFunction("", "File Explorer Panel",	"",	MOD_KEY.none, call_panel_File_Explorer 	);
 	}
 #endregion

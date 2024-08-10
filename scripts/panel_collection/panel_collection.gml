@@ -1,13 +1,13 @@
 #region funtion calls
 	function __fnInit_Collection() {
-		registerFunction("Collection", "Replace",			"",   MOD_KEY.none,	panel_collection_replace);
-		registerFunction("Collection", "Edit Meta",			"",   MOD_KEY.none,	panel_collection_edit_meta);
-		registerFunction("Collection", "Update Thumbnail",	"",   MOD_KEY.none,	panel_collection_update_thumbnail);
-		registerFunction("Collection", "Delete Collection",	"",   MOD_KEY.none,	panel_collection_delete_collection);
+		registerFunction("Collection", "Replace",			"",   MOD_KEY.none,	panel_collection_replace			).setMenu("collection_replace")
+		registerFunction("Collection", "Edit Meta",			"",   MOD_KEY.none,	panel_collection_edit_meta			).setMenu("collection_edit_meta")
+		registerFunction("Collection", "Update Thumbnail",	"",   MOD_KEY.none,	panel_collection_update_thumbnail	).setMenu("collection_update_thumbnail")
+		registerFunction("Collection", "Delete Collection",	"",   MOD_KEY.none,	panel_collection_delete_collection	).setMenu("collection_delete_collection")
 		
-		registerFunction("Collection", "Upload To Steam",	"",   MOD_KEY.none,	panel_collection_steam_file_upload);
-		registerFunction("Collection", "Update Steam",		"",   MOD_KEY.none,	panel_collection_steam_file_update);
-		registerFunction("Collection", "Unsubscribe",		"",   MOD_KEY.none,	panel_collection_steam_unsubscribe);
+		registerFunction("Collection", "Upload To Steam",	"",   MOD_KEY.none,	panel_collection_steam_file_upload	).setMenu("collection_upload_to_steam")
+		registerFunction("Collection", "Update Steam",		"",   MOD_KEY.none,	panel_collection_steam_file_update	).setMenu("collection_update_steam")
+		registerFunction("Collection", "Unsubscribe",		"",   MOD_KEY.none,	panel_collection_steam_unsubscribe	).setMenu("collection_unsubscribe")
 	}
 	
 	function panel_collection_replace()				{ CALL("collection_replace");			PANEL_COLLECTION.replace();				}
@@ -163,11 +163,11 @@ function Panel_Collection() : PanelContent() constructor {
 		
 		if(meta == noone || !meta.steam) {
 			contentMenu = [
-				menuItemAction(__txtx("panel_collection_replace", "Replace with selected"),   	panel_collection_replace),
-				menuItemAction(__txtx("panel_collection_edit_meta", "Edit metadata") + "...", 	panel_collection_edit_meta),
-				menuItemAction(__txtx("panel_collection_update_thumbnail", "Update thumbnail"),	panel_collection_update_thumbnail),
+				MENU_ITEMS.collection_replace,
+				MENU_ITEMS.collection_edit_meta,
+				MENU_ITEMS.collection_update_thumbnail,
 				-1,
-				menuItemAction(__txt("Delete"), panel_collection_delete_collection)
+				MENU_ITEMS.collection_delete_collection,
 			];
 			
 			if(STEAM_ENABLED) 
@@ -176,11 +176,11 @@ function Panel_Collection() : PanelContent() constructor {
 		
 		if(STEAM_ENABLED) {
 			if(meta.steam == FILE_STEAM_TYPE.local) {
-				array_push(contentMenu, menuItemAction(__txtx("panel_collection_workshop_upload", "Upload to Steam Workshop") + "...", panel_collection_steam_file_upload));
+				array_push(contentMenu, MENU_ITEMS.collection_upload_to_steam);
 			} else {
 				if(meta.author_steam_id == STEAM_USER_ID && meta.file_id != 0)
-					array_push(contentMenu, menuItemAction(__txtx("panel_collection_workshop_update", "Update Steam Workshop content") + "...", panel_collection_steam_file_update));
-				array_push(contentMenu, menuItemAction(__txt("Unsubscribe"), panel_collection_steam_unsubscribe));
+					array_push(contentMenu, MENU_ITEMS.collection_update_steam);
+				array_push(contentMenu, MENU_ITEMS.collection_unsubscribe);
 			}
 		}
 	}

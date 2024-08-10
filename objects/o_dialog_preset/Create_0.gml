@@ -13,6 +13,8 @@ event_inherited();
 	adding  = false;
 	add_txt = "";
 	tb_add  = new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ { add_txt = txt; newPresetFromNode(txt); adding = false; });
+	
+	selecting_path = "";
 #endregion
 
 #region content
@@ -52,13 +54,8 @@ event_inherited();
 				}
 				
 				if(mouse_click(mb_right, sFOCUS)) {
-					var dia = menuCall("preset_window_menu",,, [ 
-						menuItemAction(__txt("Delete"), function() { 
-							file_delete(o_dialog_menubox.path);
-							__initPresets();
-						}), 
-					],, preset);
-					dia.path = preset.path;
+					selecting_path = preset.path;
+					var dia = menuCall("preset_window_menu",,, [ menuItem(__txt("Delete"), function() { file_delete(selecting_path); __initPresets(); }), ]); 
 				}
 			}
 			

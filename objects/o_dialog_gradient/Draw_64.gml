@@ -100,11 +100,11 @@ if !ready exit;
 		
 		if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, interactable && sFOCUS, sHOVER, __txtx("gradient_editor_key_blend", "Key blending"), THEME.grad_blend) == 2) {
 			menuCall("gradient_window_blend_menu", bx + ui(32), by, [ 
-				menuItemAction(__txtx("gradient_editor_blend_hard",  "Solid"),  function() { gradient.type = 1; onApply(gradient); }), 
-				menuItemAction(__txtx("gradient_editor_blend_RGB",   "RGB"),    function() { gradient.type = 0; onApply(gradient); }), 
-				menuItemAction(__txtx("gradient_editor_blend_sRGB",  "sRGB"),   function() { gradient.type = 4; onApply(gradient); }), 
-				menuItemAction(__txtx("gradient_editor_blend_HSV",   "HSV"),    function() { gradient.type = 2; onApply(gradient); }), 
-				menuItemAction(__txtx("gradient_editor_blend_OKLAB", "OKLAB"),  function() { gradient.type = 3; onApply(gradient); }), 
+				menuItem(__txtx("gradient_editor_blend_hard",  "Solid"),  function() { gradient.type = 1; onApply(gradient); }), 
+				menuItem(__txtx("gradient_editor_blend_RGB",   "RGB"),    function() { gradient.type = 0; onApply(gradient); }), 
+				menuItem(__txtx("gradient_editor_blend_sRGB",  "sRGB"),   function() { gradient.type = 4; onApply(gradient); }), 
+				menuItem(__txtx("gradient_editor_blend_HSV",   "HSV"),    function() { gradient.type = 2; onApply(gradient); }), 
+				menuItem(__txtx("gradient_editor_blend_OKLAB", "OKLAB"),  function() { gradient.type = 3; onApply(gradient); }), 
 			],, gradient);
 		}
 		bx -= ui(32);

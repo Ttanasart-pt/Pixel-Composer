@@ -103,9 +103,9 @@ function Panel_Workspace() : PanelContent() constructor {
 				if(mouse_press(mb_right, pFOCUS)) {
 					layout_selecting = str;
 					menuCall("workspace_menu",,, [
-						menuItemAction(__txt("Select"), apply_space),
-						menuItemAction(__txtx("workspace_replace_current", "Replace with current"), replace_space),
-						menuItemAction(__txt("Delete"), delete_space, THEME.cross),
+						menuItem(__txt("Select"), apply_space),
+						menuItem(__txtx("workspace_replace_current", "Replace with current"), replace_space),
+						menuItem(__txt("Delete"), delete_space, THEME.cross),
 					]);
 				}
 			}

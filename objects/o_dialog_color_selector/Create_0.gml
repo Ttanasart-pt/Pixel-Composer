@@ -101,10 +101,10 @@ event_inherited();
 				hovering = pal;
 				
 				menuCall("palette_window_preset_menu",,, [
-					menuItemAction(__txtx("palette_editor_set_default", "Set as default"), function() { 
+					menuItem(__txtx("palette_editor_set_default", "Set as default"), function() { 
 						PROJECT.setPalette(array_clone(hovering.palette));
 					}),
-					menuItemAction(__txtx("palette_editor_delete", "Delete palette"), function() { 
+					menuItem(__txtx("palette_editor_delete", "Delete palette"), function() { 
 						file_delete(hovering.path); 
 						__initPalette();
 					}),

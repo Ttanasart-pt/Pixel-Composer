@@ -10,7 +10,8 @@ event_inherited();
 	menu_id    = "";
 	alarm[0]   = -1;
 	menu       = 1;
-	hght       = ui(36);
+	font       = f_p1;
+	hght       = line_get_height(font, 12);
 	tooltips   = [];
 	show_icon  = false;
 	context    = noone;
@@ -20,6 +21,7 @@ event_inherited();
 	
 	setFocus(self.id);
 	
+	item_selecting = noone;
 	remove_parents = true;
 	selecting_menu = noone;
 	hk_editing     = noone;
@@ -39,7 +41,7 @@ event_inherited();
 			instance_destroy(children[i]);
 		children = [];
 		
-		draw_set_text(f_p0, fa_center, fa_center, COLORS._main_text);
+		draw_set_text(font, fa_center, fa_center, COLORS._main_text);
 		for(var i = 0; i < array_length(menu); i++) {
 			var _menuItem = menu[i];
 			if(_menuItem == -1) {
@@ -54,7 +56,7 @@ event_inherited();
 				continue;
 			}
 			
-			draw_set_font(f_p0);
+			draw_set_font(font);
 			var ww = string_width(_menuItem.name) + ui(64);
 			
 			if(instanceof(_menuItem) == "MenuItemGroup") {
@@ -67,7 +69,7 @@ event_inherited();
 				if(_menuItem.hotkey != noone) {
 					var _key = find_hotkey(_menuItem.hotkey[0], _menuItem.hotkey[1]);
 					if(_key) {
-						draw_set_font(f_p1);
+						draw_set_font(font);
 						var ss = key_get_name(_key.key, _key.modi);	
 						ww += string_width(ss) + ui(16);
 					}

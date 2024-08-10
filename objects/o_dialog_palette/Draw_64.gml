@@ -87,12 +87,12 @@ if palette == 0 exit;
 		if(b) mouse_draggable = false;
 		if(b == 2) {
 			menuCall("palette_window_sort_menu", bx + ui(32), by, [ 
-				menuItemAction(__txtx("palette_editor_sort_brighter", "Brighter"), function() { sortPalette(__sortBright); }), 
-				menuItemAction(__txtx("palette_editor_sort_darker", "Darker"),     function() { sortPalette(__sortDark); }),
+				menuItem(__txtx("palette_editor_sort_brighter", "Brighter"), function() { sortPalette(__sortBright); }), 
+				menuItem(__txtx("palette_editor_sort_darker", "Darker"),     function() { sortPalette(__sortDark); }),
 				-1,
-				menuItemAction(__txtx("palette_editor_sort_hue", "Hue"),           function() { sortPalette(__sortHue); }), 
-				menuItemAction(__txtx("palette_editor_sort_sat", "Saturation"),    function() { sortPalette(__sortSat); }), 
-				menuItemAction(__txtx("palette_editor_sort_val", "Value"),         function() { sortPalette(__sortVal); }), 
+				menuItem(__txtx("palette_editor_sort_hue", "Hue"),           function() { sortPalette(__sortHue); }), 
+				menuItem(__txtx("palette_editor_sort_sat", "Saturation"),    function() { sortPalette(__sortSat); }), 
+				menuItem(__txtx("palette_editor_sort_val", "Value"),         function() { sortPalette(__sortVal); }), 
 			],, palette);
 		}
 		bx -= ui(32);

@@ -9,5 +9,4 @@ for( var i = 0, n = array_length(children); i < n; i++ ) {
 }
 	
 _hovering_ch = hov;
-if((mouse_check_button_pressed(mb_left)) && !hov) 
-	instance_destroy();
+if(!hov && mouse_press(mb_left)) instance_destroy();

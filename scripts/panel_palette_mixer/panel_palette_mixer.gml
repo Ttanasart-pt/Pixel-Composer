@@ -188,7 +188,7 @@ function Panel_Palette_Mixer() : PanelContent() constructor {
 			var _b = buttonInstant(THEME.button_hide, _bx, _by, _bs, pal_h, [ mx, my ], pFOCUS, pHOVER, "", THEME.hamburger_s);
 			if(_b == 2) {
 				menuCall("",,, [
-					menuItemAction("Save palette as...", function() {
+					menuItem("Save palette as...", function() {
 						var _path = get_save_filename_pxc("Hex paleete|*.hex", "Palette");
 						if(_path != "") {
 							var _str = palette_string_hex(palette, false);
@@ -392,7 +392,7 @@ function Panel_Palette_Mixer() : PanelContent() constructor {
 						conn_menu_ctx = [ blnd_hovering ];
 						
 						menuCall(,,, [
-							menuItemAction("Delete Blend point", function() { array_delete(palette_data.blends, conn_menu_ctx[0], 1); } ),
+							menuItem("Delete Blend point", function() { array_delete(palette_data.blends, conn_menu_ctx[0], 1); } ),
 						]);
 					}
 				
@@ -443,7 +443,7 @@ function Panel_Palette_Mixer() : PanelContent() constructor {
 						conn_menu_ctx = [ conn[0], conn[1], _con_rat ];
 						
 						menuCall(,,, [
-							menuItemAction("New Blend point", function() { array_push(palette_data.blends, { from : conn_menu_ctx[0], to : conn_menu_ctx[1], amount : conn_menu_ctx[2] }) } ),
+							menuItem("New Blend point", function() { array_push(palette_data.blends, { from : conn_menu_ctx[0], to : conn_menu_ctx[1], amount : conn_menu_ctx[2] }) } ),
 						]);
 					}
 					
@@ -467,18 +467,18 @@ function Panel_Palette_Mixer() : PanelContent() constructor {
 					
 					if(mouse_press(mb_right)) {
 						menuCall(,,, [
-							menuItemAction("Center view", function() { centerView(); } ),
+							menuItem("Center view", function() { centerView(); } ),
 							-1,
-							menuItemAction("Save mixed...", function() { 
+							menuItem("Save mixed...", function() { 
 								var _path = get_save_filename_pxc("JSON|*.json", "New mixed");
 								if(_path != "") save_palette_mixer(palette_data, _path);
 							}, THEME.save),
-							menuItemAction("Load mixed...", function() { 
+							menuItem("Load mixed...", function() { 
 								var _path = get_open_filename_pxc("JSON|*.json", "");
 								if(_path != "") palette_data = load_palette_mixer(_path);
 							}, THEME.noti_icon_file_load),
 							-1,
-							menuItemAction("Clear palette", function() { palette_data = { nodes: [], connections: [], blends: [], } }, THEME.cross),
+							menuItem("Clear palette", function() { palette_data = { nodes: [], connections: [], blends: [], } }, THEME.cross),
 						]);
 					}
 				}

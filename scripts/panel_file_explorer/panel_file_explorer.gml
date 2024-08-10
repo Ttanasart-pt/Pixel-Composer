@@ -207,29 +207,29 @@ function Panel_File_Explorer() : PanelContent() constructor {
 		__menu_cnxt_selecting = noone;
 		
 		menu_file_image = [
-			menuItemAction("Add as node", function() {
+			menuItem("Add as node", function() {
 				var node = Node_create_Image_path(PANEL_GRAPH.graph_cx, PANEL_GRAPH.graph_cy, __menu_file_selecting.path);
 				PANEL_PREVIEW.setNodePreview(node);
 				PANEL_INSPECTOR.inspecting = node;
 			}),
 			
-			menuItemAction("Add as canvas", function() {
+			menuItem("Add as canvas", function() {
 				var node = nodeBuild("Node_Canvas", PANEL_GRAPH.graph_cx, PANEL_GRAPH.graph_cy).loadImagePath(__menu_file_selecting.path);
 				PANEL_PREVIEW.setNodePreview(node);
 				PANEL_INSPECTOR.inspecting = node;
 			}),
 			
-			menuItemAction("Copy path", function() { clipboard_set_text(__menu_file_selecting.path); }, THEME.copy),
+			menuItem("Copy path", function() { clipboard_set_text(__menu_file_selecting.path); }, THEME.copy),
 		];
 		
 		menu_file_project = [ 
-			menuItemAction("Open", function() { LOAD_AT(__menu_file_selecting.path); }), 
+			menuItem("Open", function() { LOAD_AT(__menu_file_selecting.path); }), 
 			
-			menuItemAction("Copy path", function() { clipboard_set_text(__menu_file_selecting.path); }, THEME.copy),
+			menuItem("Copy path", function() { clipboard_set_text(__menu_file_selecting.path); }, THEME.copy),
 		];
 		
 		menu_general = [ 
-			menuItemAction("New Canvas", function() { 
+			menuItem("New Canvas", function() { 
 				var dia = dialogCall(o_dialog_file_name, mouse_mx + 8, mouse_my + 8);
 				dia.onModify = function (txt) {
 					var _s = surface_create(DEF_SURF_W, DEF_SURF_H);
@@ -246,7 +246,7 @@ function Panel_File_Explorer() : PanelContent() constructor {
 				dia.path = __menu_cnxt_selecting.path + "/";
 			}, THEME.new_file), 
 			
-			menuItemAction("New Folder", function() { 
+			menuItem("New Folder", function() { 
 				var dia = dialogCall(o_dialog_file_name, mouse_mx + 8, mouse_my + 8);
 				dia.name = "New Folder";
 				dia.onModify = function (txt) {
@@ -257,7 +257,7 @@ function Panel_File_Explorer() : PanelContent() constructor {
 			}, THEME.folder), 
 			
 			-1,
-			menuItemAction("Refresh", function() { if(rootFile) rootFile.getContent() }), 
+			menuItem("Refresh", function() { if(rootFile) rootFile.getContent() }), 
 		];
 	#endregion
 	
