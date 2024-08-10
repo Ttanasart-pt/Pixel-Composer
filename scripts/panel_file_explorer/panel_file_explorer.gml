@@ -323,7 +323,7 @@ function Panel_File_Explorer() : PanelContent() constructor {
 			__menu_cnxt_selecting = context_hovering;
 			
 			if(file_hovering == noone || is_instanceof(file_hovering, ExpDir)) 
-				menuCall("",,, menu_general);
+				menuCall("", menu_general);
 		}
 		
 		if(file_dragging) {
@@ -546,11 +546,8 @@ function Panel_File_Explorer() : PanelContent() constructor {
 					if(pFOCUS && mouse_press(mb_right)) {
 						__menu_file_selecting = _fil;
 						
-						if(path_is_image(_fil.path))
-							menuCall("",,, menu_file_image);
-							
-						else if(path_is_project(_fil.path))
-							menuCall("",,, menu_file_project);
+							 if(path_is_image(_fil.path))   menuCall("", menu_file_image);
+						else if(path_is_project(_fil.path)) menuCall("", menu_file_project);
 					}
 					
 					if(pFOCUS && DOUBLE_CLICK)
@@ -629,11 +626,8 @@ function Panel_File_Explorer() : PanelContent() constructor {
 					if(pFOCUS && mouse_press(mb_right)) {
 						__menu_file_selecting = _fil;
 						
-						if(path_is_image(_fil.path))
-							menuCall("",,, menu_file_image);
-							
-						else if(path_is_project(_fil.path))
-							menuCall("",,, menu_file_project);
+							 if(path_is_image(_fil.path))   menuCall("", menu_file_image);
+						else if(path_is_project(_fil.path)) menuCall("", menu_file_project);
 					}
 					
 					if(pFOCUS && DOUBLE_CLICK)

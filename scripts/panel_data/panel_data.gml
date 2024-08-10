@@ -554,7 +554,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 						if(instanceof(content[i]) == "Panel_Menu")
 							array_remove(menu, 2);
 						
-						menuCall("panel_border_menu",,, menu);
+						menuCall("panel_border_menu", menu);
 					}
 					
 					if(mouse_press(mb_middle, FOCUS == self))
@@ -722,7 +722,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 					if(instanceof(getContent()) == "Panel_Menu")
 						array_remove(menu, border_rb_close);
 						
-					menuCall("panel_border_menu",,, menu);
+					menuCall("panel_border_menu", menu);
 				}
 			}
 		} 

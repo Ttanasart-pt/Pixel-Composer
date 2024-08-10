@@ -68,7 +68,7 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			
 		bx += bs + ui(4);
 		if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, _focus, _hover,, THEME.sort_16) == 2)
-			menuCall("", mouse_mx + ui(4), mouse_my + ui(4), sort_menu);
+			menuCall("", sort_menu);
 			
 		var _from = getInputData(1);
 		var _to   = getInputData(2);

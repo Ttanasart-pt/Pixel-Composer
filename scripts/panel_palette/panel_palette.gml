@@ -160,7 +160,7 @@ function Panel_Palette() : PanelContent() constructor {
 					hovering = preset;
 					right_clicked = true;
 					
-					menuCall("palette_window_preset_menu",,, [
+					menuCall("palette_window_preset_menu", [
 						menu_add,
 						menu_refresh,
 						-1, 
@@ -183,7 +183,7 @@ function Panel_Palette() : PanelContent() constructor {
 		}
 		
 		if(!right_clicked && mouse_press(mb_right, pFOCUS)) {
-			menuCall("palette_window_preset_menu_empty",,, [
+			menuCall("palette_window_preset_menu_empty", [
 				menu_add,
 				menu_refresh,
 				-1,

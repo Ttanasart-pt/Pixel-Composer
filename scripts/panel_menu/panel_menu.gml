@@ -428,8 +428,8 @@ function Panel_Menu() : PanelContent() constructor {
                     draw_sprite_stretched(THEME.s_box_r2_clr, 0, x0, y0, x1 - x0, y1 - y0);
                     
                     if((mouse_press(mb_left, pFOCUS)) || instance_exists(o_dialog_menubox)) {
-                        if(hori) menuCall($"main_{_name}_menu", x + x0, y + y1, _menu[1]);
-                        else     menuCall($"main_{_name}_menu", x + x1, y + y0, _menu[1]);
+                        if(hori) menuCall($"main_{_name}_menu", _menu[1], x + x0, y + y1);
+                        else     menuCall($"main_{_name}_menu", _menu[1], x + x1, y + y0);
                     }
                 }
             
@@ -726,7 +726,7 @@ function Panel_Menu() : PanelContent() constructor {
                     array_push(tip, [ method(_dat, _dat.getThumbnail), VALUE_TYPE.surface ]);
                 }
                 
-                var dia = hori? menuCall("title_recent_menu", x + tcx, y + h, arr, fa_center) : menuCall("title_recent_menu", x + w, y + tby0, arr);
+                var dia = hori? menuCall("title_recent_menu", arr, x + tcx, y + h, fa_center) : menuCall("title_recent_menu", arr, x + w, y + tby0);
                 dia.tooltips = tip;
             }
             

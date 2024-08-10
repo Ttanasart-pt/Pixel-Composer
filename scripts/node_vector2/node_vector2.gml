@@ -260,9 +260,9 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				wd_maxy = wd_cy + ry;
 			}
 			
-			if(mouse_press(mb_right, _focus)) {
-				menuCall("node_vec2_coordinate",,, coordinate_menu);
-			}
+			if(mouse_press(mb_right, _focus))
+				menuCall("node_vec2_coordinate", coordinate_menu);
+			
 		} #endregion
 		
 		draw_set_text(f_sdf, fa_center, fa_bottom, COLORS._main_text);

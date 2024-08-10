@@ -187,7 +187,7 @@ function Panel_Palette_Mixer() : PanelContent() constructor {
 			
 			var _b = buttonInstant(THEME.button_hide, _bx, _by, _bs, pal_h, [ mx, my ], pFOCUS, pHOVER, "", THEME.hamburger_s);
 			if(_b == 2) {
-				menuCall("",,, [
+				menuCall("", [
 					menuItem("Save palette as...", function() {
 						var _path = get_save_filename_pxc("Hex paleete|*.hex", "Palette");
 						if(_path != "") {
@@ -391,7 +391,7 @@ function Panel_Palette_Mixer() : PanelContent() constructor {
 					if(mouse_press(mb_right)) {
 						conn_menu_ctx = [ blnd_hovering ];
 						
-						menuCall(,,, [
+						menuCall("", [
 							menuItem("Delete Blend point", function() { array_delete(palette_data.blends, conn_menu_ctx[0], 1); } ),
 						]);
 					}
@@ -442,7 +442,7 @@ function Panel_Palette_Mixer() : PanelContent() constructor {
 					if(mouse_press(mb_right)) {
 						conn_menu_ctx = [ conn[0], conn[1], _con_rat ];
 						
-						menuCall(,,, [
+						menuCall("", [
 							menuItem("New Blend point", function() { array_push(palette_data.blends, { from : conn_menu_ctx[0], to : conn_menu_ctx[1], amount : conn_menu_ctx[2] }) } ),
 						]);
 					}
@@ -466,7 +466,7 @@ function Panel_Palette_Mixer() : PanelContent() constructor {
 					}
 					
 					if(mouse_press(mb_right)) {
-						menuCall(,,, [
+						menuCall("", [
 							menuItem("Center view", function() { centerView(); } ),
 							-1,
 							menuItem("Save mixed...", function() { 

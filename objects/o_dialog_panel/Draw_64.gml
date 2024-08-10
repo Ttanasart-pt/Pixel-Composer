@@ -99,8 +99,8 @@ if !ready exit;
 			
 				instance_destroy();
 			} else if(mouse_press(mb_right)) {
-				menuCall("panel_window_menu",,, [
-					menuItemAction(__txt("Move"),    function() { 
+				menuCall("panel_window_menu", [
+					menuItemAction(__txt("Move"), function() { 
 						content.dragSurface = surface_clone(panel);
 						o_main.panel_dragging = content;
 						content.in_dialog = false;
@@ -108,7 +108,7 @@ if !ready exit;
 					
 						instance_destroy();
 					}),
-				],, content);
+				]);
 			}
 			
 		}

@@ -3,7 +3,10 @@
 	CONTEXT_MENU_CALLBACK = ds_map_create();
 #endregion
 
-function menuCall(menu_id = "", _x = mouse_mx + ui(4), _y = mouse_my + ui(4), menu = [], align = fa_left, context = noone) {
+function menuCall(menu_id = "", menu = [], _x = 0, _y = 0, align = fa_left, context = noone) {
+	_x = _x == 0? mouse_mx + ui(4) : _x;
+	_y = _y == 0? mouse_my + ui(4) : _y;
+	
 	var dia = dialogCall(o_dialog_menubox, _x, _y);
 	if(menu_id != "" && ds_map_exists(CONTEXT_MENU_CALLBACK, menu_id)) {
 		var callbacks = CONTEXT_MENU_CALLBACK[? menu_id];
@@ -34,7 +37,7 @@ function pieMenuCall(menu_id = "", _x = mouse_mx, _y = mouse_my, menu = [], cont
 }
 
 function submenuCall(_data = undefined, menu = []) {
-	if(is_undefined(_data)) return menuCall("",,, menu);
+	if(is_undefined(_data)) return menuCall("", menu);
 	
 	var dia = instance_create_depth(_data.x - ui(4), _data.y, _data.depth - 1, o_dialog_menubox);
 	dia.context		= _data.context;

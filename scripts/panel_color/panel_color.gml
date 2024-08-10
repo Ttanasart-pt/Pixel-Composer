@@ -326,7 +326,7 @@ function Panel_Color() : PanelContent() constructor {
 		}
 		
 		if(mouse_press(mb_right, pFOCUS)) {
-			menuCall("color_window_menu",,, [
+			menuCall("color_window_menu", [
 				menuItem(__txt("Hue"),  		function() { mode = 0; } ),
 				menuItem(__txt("Value"),		function() { mode = 1; } ),
 				menuItem(__txt("Saturation"),	function() { mode = 2; } ),

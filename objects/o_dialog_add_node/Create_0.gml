@@ -81,7 +81,7 @@ event_inherited();
 			menuItem(fav? __txtx("add_node_remove_favourite", "Remove from favourite") : __txtx("add_node_add_favourite", "Add to favourite"), trigger_favourite, THEME.star)
 		];
 		
-		menuCall("add_node_window_manu",,, menu,, node_menu_selecting);
+		menuCall("add_node_window_manu", menu, 0, 0, fa_left, node_menu_selecting);
 	}
 	
 	function filtered(node) {

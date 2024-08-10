@@ -2,7 +2,8 @@
 
 draw_sprite_stretched(THEME.textbox, 3, dialog_x, dialog_y, dialog_w, dialog_h);
 
-WIDGET_CURRENT = tb_search;
+if(hk_editing == noone)
+	WIDGET_CURRENT = tb_search;
 tb_search.setFocusHover(true, true);
 tb_search.draw(dialog_x, dialog_y, dialog_w, ui(32), search_string);
 tb_search.sprite_index = 0;

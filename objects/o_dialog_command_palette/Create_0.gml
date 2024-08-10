@@ -74,14 +74,32 @@ event_inherited();
 		
 		for(var i = 0; i < array_length(data); i++) {
 			var _menu = data[i];
-			var _menuItem = _menu.menu;
+			
+			var _menuItem	= _menu.menu;
+			var _key		= _menu.hotkey;
 			
 			if(selecting == i) {
 				draw_sprite_stretched_ext(THEME.textbox, 3, 0, _ly, dialog_w, hght, COLORS.dialog_menubox_highlight, 1);
 				
-				if(sc_content.active && (mouse_press(mb_left) || keyboard_check_pressed(vk_enter))) {
-					_menu.action();
-					instance_destroy();
+				if(sc_content.active) {
+					if(mouse_press(mb_left) || keyboard_check_pressed(vk_enter)) {
+						_menu.action();
+						instance_destroy();
+					}
+					
+					if(mouse_press(mb_right)) {
+						selecting_menu = _menuItem;
+						var _loadKey = string_to_var($"{_key.context}.{_key.name}");
+						var context_menu_settings = [
+							_loadKey,
+							menuItem("Edit hotkey", function() /*=>*/ {
+								hk_editing        = _key;
+								keyboard_lastchar = _key.key;
+							}),
+						];
+						
+						item_selecting = menuCall("", context_menu_settings);
+					}
 				}
 			}
 			
@@ -100,12 +118,12 @@ event_inherited();
 				draw_text_add(_tx, _ty, _cnxt);
 				_tx += string_width(_cnxt);
 				
-				draw_sprite_ext(THEME.arrow, 0, _tx + ui(10), _ty, 1, 1, 0, COLORS._main_text_sub);
-				_tx += ui(20);
+				draw_sprite_ext(THEME.arrow, 0, _tx + ui(8), _ty, 1, 1, 0, COLORS._main_text_sub);
+				_tx += ui(16);
 			}
 			
 			draw_set_text(f_p2, fa_left, fa_center, COLORS._main_icon_light);
-			draw_text_add(_tx, _ty, _name);
+			draw_text_match_ext(_tx, _ty, _name, _dw, search_string);
 			
 			if(_menuItem != noone && _menuItem.spr != noone) {
 				var spr = is_array(_menuItem.spr)? _menuItem.spr[0] : _menuItem.spr;
@@ -113,8 +131,7 @@ event_inherited();
 				draw_sprite_ui(spr, ind, ui(16), _ty, .75, .75, 0, COLORS._main_icon, 0.75);
 			}
 			
-			if(_menu.hotkey != noone) {
-				var _key = _menu.hotkey;
+			if(_key != noone) {
 				var _hx = _dw - ui(6);
 				var _hy = _ty + ui(1);
 				
@@ -138,7 +155,7 @@ event_inherited();
 					draw_sprite_stretched_ext(THEME.ui_panel, 1, _bx, _by, _bw, _bh, CDEF.main_dkgrey);
 				}
 				
-				draw_text(_hx, _hy, _ktxt);
+				draw_text_add(_hx, _hy, _ktxt);
 			}
 			
 			_ly += hght;
@@ -146,16 +163,27 @@ event_inherited();
 		}
 		
 		if(sc_content.active) {
-			if(keyboard_check_pressed(vk_up)) {
-				selecting--;
-				if(selecting < 0) selecting = array_length(data) - 1;
-			}
-			
-			if(keyboard_check_pressed(vk_down))
-				selecting = safe_mod(selecting + 1, array_length(data));
+			if(hk_editing != noone) {
+				if(keyboard_check_pressed(vk_enter))
+					hk_editing = noone;
+				else 
+					hotkey_editing(hk_editing);
+					
+				if(keyboard_check_pressed(vk_escape))
+					hk_editing = noone;
+					
+			} else {
+				if(keyboard_check_pressed(vk_up)) {
+					selecting--;
+					if(selecting < 0) selecting = array_length(data) - 1;
+				}
 				
-			if(keyboard_check_pressed(vk_escape))
-				instance_destroy();
+				if(keyboard_check_pressed(vk_down))
+					selecting = safe_mod(selecting + 1, array_length(data));
+					
+				if(keyboard_check_pressed(vk_escape))
+					instance_destroy();
+			}
 		}
 		
 		_prex = mouse_mx;

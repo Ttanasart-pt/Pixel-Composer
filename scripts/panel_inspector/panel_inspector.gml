@@ -751,7 +751,7 @@ function Panel_Inspector() : PanelContent() constructor {
                         if(mouse_press(mb_left, pFOCUS))
                             jun[@ 1] = !coll;
                         if(mouse_press(mb_right, pFOCUS))
-                            menuCall("inspector_group_menu",,, group_menu,, _inspecting);
+                            menuCall("inspector_group_menu", group_menu, 0, 0, fa_left, _inspecting);
                     } else
                         draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, lbx, yy, lbw, lbh, COLORS.panel_inspector_group_bg, 1);
                 
@@ -914,7 +914,7 @@ function Panel_Inspector() : PanelContent() constructor {
                             array_push(_menuItem, menu_junc_extract);
                     }
                     
-                    var dia = menuCall("inspector_value_menu",,, _menuItem,, jun);
+                    var dia = menuCall("inspector_value_menu", _menuItem,, jun);
                     __dialog_junction = jun;
                 } #endregion
             } 

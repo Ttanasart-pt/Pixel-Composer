@@ -88,7 +88,6 @@ if(!ready) exit;
 					
 					selecting_menu = _menuItem;
 					var _loadKey = string_to_var($"{_key.context}.{_key.name}");
-					
 					var context_menu_settings = [
 						_loadKey,
 						menuItem("Edit hotkey", function() /*=>*/ {

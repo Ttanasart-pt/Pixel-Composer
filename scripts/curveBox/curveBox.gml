@@ -474,7 +474,7 @@ function curveBox(_onModify) : widget() constructor {
 			}
 			
 			if(node_hovering == -1 && mouse_press(mb_right, active)) {
-				menuCall("widget_curve", rx + _m[0], ry + _m[1], [
+				menuCall("widget_curve", [
 					menuItemGroup(__txt("Presets"), [ 
 						[ [THEME.curve_presets, 0], function() { onModify(CURVE_DEF_00); } ],
 						[ [THEME.curve_presets, 1], function() { onModify(CURVE_DEF_11); } ],
@@ -482,19 +482,19 @@ function curveBox(_onModify) : widget() constructor {
 						[ [THEME.curve_presets, 3], function() { onModify(CURVE_DEF_10); } ],
 					]),
 					-1,
-					menuItemAction(__txt("Reset View"), function() { 
+					menuItem(__txt("Reset View"), function() { 
 						minx = 0; maxx = 1;
 						miny = 0; maxy = 1;
 					}),
-					menuItemAction(grid_show? __txt("Hide grid") : __txt("Show grid"), function() { grid_show = !grid_show; }),
-					menuItemAction(__txt("Snap to grid"), function() { grid_snap = !grid_snap; },,, function() { return grid_snap } ),
+					menuItem(grid_show? __txt("Hide grid") : __txt("Show grid"), function() { grid_show = !grid_show; }),
+					menuItem(__txt("Snap to grid"), function() { grid_snap = !grid_snap; },,, function() { return grid_snap } ),
 					menuItemGroup(__txt("Grid size"), [
 						[ "1%",  function() { grid_step = 0.01; } ],
 						[ "5%",  function() { grid_step = 0.05; } ],
 						[ "10%", function() { grid_step = 0.10; } ],
 						[ "25%", function() { grid_step = 0.25; } ],
 					]),
-				]);
+				], rx + _m[0], ry + _m[1]);
 			}
 		} #endregion
 			

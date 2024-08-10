@@ -307,12 +307,12 @@ function Panel_Preview() : PanelContent() constructor {
                     return __txtx("panel_preview_tile_mode", "Tile mode");
                 }, 
                 function(data) { 
-                    menuCall("preview_tile_menu", data.x + ui(28), data.y + ui(28), [
+                    menuCall("preview_tile_menu", [
                         MENU_ITEMS.preview_set_tile_off,
                         MENU_ITEMS.preview_set_tile_horizontal,
                         MENU_ITEMS.preview_set_tile_vertical,
                         MENU_ITEMS.preview_set_tile_both,
-                    ]);
+                    ], data.x + ui(28), data.y + ui(28));
                 } 
             ],
             [ 
@@ -2121,7 +2121,7 @@ function Panel_Preview() : PanelContent() constructor {
         drawToolBar(tool, _prev_node);
         
         if(mouse_on_preview && mouse_press(mb_right, pFOCUS) && !key_mod_press(SHIFT)) {
-            menuCall("preview_context_menu",,, [ 
+            menuCall("preview_context_menu", [ 
                 MENU_ITEMS.preview_new_preview_window, 
                 -1,
                 MENU_ITEMS.preview_save_current_frame, 
@@ -2130,7 +2130,7 @@ function Panel_Preview() : PanelContent() constructor {
                 MENU_ITEMS.preview_copy_current_frame, 
                 MENU_ITEMS.preview_copy_color, 
                 MENU_ITEMS.preview_copy_color_hex, 
-            ],, getNodePreview());
+            ], 0, 0, fa_left, getNodePreview());
         }
         
         ////////////////////////////////// File drop //////////////////////////////////

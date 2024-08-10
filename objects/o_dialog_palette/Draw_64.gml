@@ -86,14 +86,14 @@ if palette == 0 exit;
 		var b = buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, interactable && sFOCUS, sHOVER, _txt, THEME.sort, 0, bc);
 		if(b) mouse_draggable = false;
 		if(b == 2) {
-			menuCall("palette_window_sort_menu", bx + ui(32), by, [ 
+			menuCall("palette_window_sort_menu", [ 
 				menuItem(__txtx("palette_editor_sort_brighter", "Brighter"), function() { sortPalette(__sortBright); }), 
 				menuItem(__txtx("palette_editor_sort_darker", "Darker"),     function() { sortPalette(__sortDark); }),
 				-1,
 				menuItem(__txtx("palette_editor_sort_hue", "Hue"),           function() { sortPalette(__sortHue); }), 
 				menuItem(__txtx("palette_editor_sort_sat", "Saturation"),    function() { sortPalette(__sortSat); }), 
 				menuItem(__txtx("palette_editor_sort_val", "Value"),         function() { sortPalette(__sortVal); }), 
-			],, palette);
+			], bx + ui(32), by, fa_left, palette);
 		}
 		bx -= ui(32);
 		

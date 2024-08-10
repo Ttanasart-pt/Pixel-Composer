@@ -829,7 +829,7 @@ function Panel_Animation() : PanelContent() constructor {
                                     if(mouse_press(mb_right, pFOCUS)) {
                     __selecting_frame = clamp(round((mx - bar_x - timeline_shift) / timeline_scale), 0, TOTAL_FRAMES - 1);
                     
-                    menuCall("animation_summary_menu",,, [
+                    menuCall("animation_summary_menu", [
                         MENU_ITEMS.animation_set_range_start,
                         MENU_ITEMS.animation_set_range_end,
                         MENU_ITEMS.animation_reset_range,
@@ -2416,26 +2416,26 @@ function Panel_Animation() : PanelContent() constructor {
         if(keyframe_boxable && mouse_press(mb_right, pFOCUS)) { #region context menu
             if(point_in_rectangle(mx, my, bar_x, ui(8), bar_x + dope_sheet_w, ui(8) + dope_sheet_h)) {
                 
-                if(array_empty(keyframe_selecting)) menuCall("animation_keyframe_empty_menu",,, keyframe_menu_empty);
-                else                                menuCall("animation_keyframe_menu",,, keyframe_menu,, keyframe_selecting);
+                if(array_empty(keyframe_selecting)) menuCall("animation_keyframe_empty_menu", keyframe_menu_empty);
+                else                                menuCall("animation_keyframe_menu", keyframe_menu);
                 
             } else if(point_in_rectangle(mx, my, ui(8), ui(8), ui(8) + tool_width, ui(8) + dope_sheet_h)) {
                 
                 if(context_selecting_prop != noone) {
                     if(context_selecting_prop.sepable) 
-                        menuCall("animation_name_empty_menu",,, context_selecting_prop.sep_axis? name_menu_prop_join : name_menu_prop_sep);
+                        menuCall("animation_name_empty_menu", context_selecting_prop.sep_axis? name_menu_prop_join : name_menu_prop_sep);
                     else 
-                        menuCall("animation_name_empty_menu",,, name_menu_empty);
+                        menuCall("animation_name_empty_menu", name_menu_empty);
                 }
                 
                 else if(context_selecting_item == noone)
-                    menuCall("animation_name_empty_menu",,, name_menu_empty);
+                    menuCall("animation_name_empty_menu", name_menu_empty);
                     
                 else if(is_instanceof(context_selecting_item.item, timelineItemNode))
-                    menuCall("animation_name_empty_menu",,, name_menu_item);
+                    menuCall("animation_name_empty_menu", name_menu_item);
                     
                 else if(is_instanceof(context_selecting_item.item, timelineItemGroup))
-                    menuCall("animation_name_empty_menu",,, name_menu_group);
+                    menuCall("animation_name_empty_menu", name_menu_group);
             }
         } #endregion
             

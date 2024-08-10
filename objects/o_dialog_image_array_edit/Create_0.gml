@@ -111,7 +111,7 @@ event_inherited();
 		}
 		
 		if(menu > -1) {
-			menuCall("image_array_edit_menu",,, [
+			menuCall("image_array_edit_menu", [
 				menuItem(__txt("Remove"), function() {
 					var arr = target.getValue();
 					array_delete(arr, menuOn, 1);
@@ -119,7 +119,7 @@ event_inherited();
 					target.setValue(arr);
 					target.node.triggerRender();
 				})
-			],, target );
+			]);
 		}
 		
 		return _h;

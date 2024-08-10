@@ -1353,7 +1353,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                             }
                         }
                         
-                        menuCall("graph_node_selected_menu",,, menu);
+                        menuCall("graph_node_selected_menu", menu);
                         
                     } else if(node_hover && node_hover.draggable) {
                         // print($"Right click node hover {node_hover}");
@@ -1380,7 +1380,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                         if(array_length(nodes_selecting) >= 2) 
                             array_push(menu, -1, menu_nodes_align, menu_nodes_blend, menu_nodes_compose, menu_nodes_array);
                     
-                        menuCall("graph_node_selected_multiple_menu",,, menu );
+                        menuCall("graph_node_selected_multiple_menu", menu );
                         
                     } else if(node_hover == noone) {
                         // print($"Right click not node hover");
@@ -1410,7 +1410,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                         var ctx     = is_instanceof(frame_hovering, Node_Collection_Inline)? frame_hovering : getCurrentContext();
                         var _diaAdd = callAddDialog(ctx);
                         
-                        var _dia = menuCall("graph_node_selected_menu", o_dialog_add_node.dialog_x - ui(8), o_dialog_add_node.dialog_y + ui(4), menu, fa_right );
+                        var _dia = menuCall("graph_node_selected_menu", menu, o_dialog_add_node.dialog_x - ui(8), o_dialog_add_node.dialog_y + ui(4), fa_right );
                         _dia.passthrough = true;
                         setFocus(_diaAdd, "Dialog");
                     }
@@ -1816,7 +1816,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                 }, THEME.loop_24,,, { junc_in : _connect[1], junc_out : _connect[2] }),
             ];
             
-            menuCall(,,, menu);
+            menuCall("", menu);
         }
         
         value_dragging        = noone;

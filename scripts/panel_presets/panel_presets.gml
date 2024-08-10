@@ -110,7 +110,7 @@ function Panel_Presets(_node) : PanelContent() constructor {
 				
 				if(mouse_press(mb_right, pFOCUS)) {
 					selecting_preset = preset;
-					menuCall("preset_window_menu",,, context_menu);
+					menuCall("preset_window_menu", context_menu);
 				}
 			}
 			
@@ -130,7 +130,7 @@ function Panel_Presets(_node) : PanelContent() constructor {
 				}
 				
 				if(mouse_press(mb_right, pFOCUS))
-					menuCall("preset_window_menu",,, context_def);
+					menuCall("preset_window_menu", context_def);
 			}
 			
 			draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text, aa);
@@ -167,7 +167,7 @@ function Panel_Presets(_node) : PanelContent() constructor {
 				
 				if(mouse_press(mb_right, pFOCUS)) {
 					selecting_preset = preset;
-					dia = menuCall("preset_window_menu",,, context_menu);
+					dia = menuCall("preset_window_menu", context_menu);
 				}
 			}
 			
