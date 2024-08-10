@@ -1,23 +1,4 @@
 #region funtion calls
-    function __fnInit_Inspector() {
-        registerFunction("", "Color picker",                   "",    MOD_KEY.alt,     panel_inspector_color_pick           ).setMenu("color_picker")
-        
-        registerFunction("Inspector", "Copy property",         "C",   MOD_KEY.ctrl,    panel_inspector_copy_prop            ).setMenu("inspector_copy_property",  THEME.copy)
-        registerFunction("Inspector", "Paste property",        "V",   MOD_KEY.ctrl,    panel_inspector_paste_prop           ).setMenu("inspector_paste_property", THEME.paste)
-        registerFunction("Inspector", "Toggle animation",      "I",   MOD_KEY.none,    panel_inspector_toggle_animation     ).setMenu("inspector_toggle_animation")
-        
-        registerFunction("Inspector", "Expand All Sections",   "",    MOD_KEY.none,    panel_inspector_section_expand_all   ).setMenu("inspector_expand_all_sections")
-        registerFunction("Inspector", "Collapse All Sections", "",    MOD_KEY.none,    panel_inspector_section_collapse_all ).setMenu("inspector_collapse_all_sections")
-        
-        registerFunction("Inspector", "Reset",                 "",    MOD_KEY.none,    panel_inspector_reset                ).setMenu("inspector_reset")
-        registerFunction("Inspector", "Add",                   "",    MOD_KEY.none,    panel_inspector_add                  ).setMenu("inspector_add")
-        registerFunction("Inspector", "Remove",                "",    MOD_KEY.none,    panel_inspector_remove               ).setMenu("inspector_remove")
-        registerFunction("Inspector", "Combine Axis",          "",    MOD_KEY.none,    panel_inspector_axis_combine         ).setMenu("inspector_combine_axis")
-        registerFunction("Inspector", "Separate Axis",         "",    MOD_KEY.none,    panel_inspector_axis_separate        ).setMenu("inspector_separate_axis")
-        registerFunction("Inspector", "Use Expression",        "",    MOD_KEY.none,    panel_inspector_use_expression       ).setMenu("inspector_use_expression")
-        registerFunction("Inspector", "Disable Expression",    "",    MOD_KEY.none,    panel_inspector_disable_expression   ).setMenu("inspector_disable_expression")
-        registerFunction("Inspector", "Extract Value",         "",    MOD_KEY.none,    panel_inspector_extract_single       ).setMenu("inspector_extract_value")
-    }
     
     function panel_inspector_copy_prop()                 { CALL("inspector_copy_property");          PANEL_INSPECTOR.propSelectCopy();                                                           }
     function panel_inspector_paste_prop()                { CALL("inspector_paste_property");         PANEL_INSPECTOR.propSelectPaste();                                                          }
@@ -37,6 +18,50 @@
     function panel_inspector_disable_expression()        { CALL("inspector_disable_expression");     PANEL_INSPECTOR.junction_disable_expression();                                              }
     function panel_inspector_extract_single()            { CALL("inspector_extract_single");         PANEL_INSPECTOR.junction_extract_single();                                                  }
     
+    function __fnInit_Inspector() {
+        registerFunction("", "Color picker",                   "",    MOD_KEY.alt,     panel_inspector_color_pick           ).setMenu("color_picker")
+        
+        registerFunction("Inspector", "Copy property",         "C",   MOD_KEY.ctrl,    panel_inspector_copy_prop            ).setMenu("inspector_copy_property",  THEME.copy)
+        registerFunction("Inspector", "Paste property",        "V",   MOD_KEY.ctrl,    panel_inspector_paste_prop           ).setMenu("inspector_paste_property", THEME.paste)
+        registerFunction("Inspector", "Toggle animation",      "I",   MOD_KEY.none,    panel_inspector_toggle_animation     ).setMenu("inspector_toggle_animation")
+        
+        registerFunction("Inspector", "Expand All Sections",   "",    MOD_KEY.none,    panel_inspector_section_expand_all   ).setMenu("inspector_expand_all_sections")
+        registerFunction("Inspector", "Collapse All Sections", "",    MOD_KEY.none,    panel_inspector_section_collapse_all ).setMenu("inspector_collapse_all_sections")
+        
+        registerFunction("Inspector", "Reset",                 "",    MOD_KEY.none,    panel_inspector_reset                ).setMenu("inspector_reset")
+        registerFunction("Inspector", "Add",                   "",    MOD_KEY.none,    panel_inspector_add                  ).setMenu("inspector_add")
+        registerFunction("Inspector", "Remove",                "",    MOD_KEY.none,    panel_inspector_remove               ).setMenu("inspector_remove")
+        registerFunction("Inspector", "Combine Axis",          "",    MOD_KEY.none,    panel_inspector_axis_combine         ).setMenu("inspector_combine_axis")
+        registerFunction("Inspector", "Separate Axis",         "",    MOD_KEY.none,    panel_inspector_axis_separate        ).setMenu("inspector_separate_axis")
+        registerFunction("Inspector", "Use Expression",        "",    MOD_KEY.none,    panel_inspector_use_expression       ).setMenu("inspector_use_expression")
+        registerFunction("Inspector", "Disable Expression",    "",    MOD_KEY.none,    panel_inspector_disable_expression   ).setMenu("inspector_disable_expression")
+        registerFunction("Inspector", "Extract Value",         "",    MOD_KEY.none,    panel_inspector_extract_single       ).setMenu("inspector_extract_value")
+        
+        __fnGroupInit_Inspector();
+    }
+    
+    function __fnGroupInit_Inspector() {
+        var _clrs = COLORS.labels;
+        var _item = array_create(array_length(_clrs));
+    
+        for( var i = 0, n = array_length(_clrs); i < n; i++ ) {
+            _item[i] = [ 
+                [ THEME.timeline_color, i > 0, _clrs[i] ], 
+                function(_data) { PANEL_INSPECTOR.setSelectingItemColor(_data.color); }, "", { color: i == 0? -1 : _clrs[i] }
+            ];
+        }
+        
+        array_push(_item, [ 
+            [ THEME.timeline_color, 2 ], 
+            function(_data) { colorSelectorCall(PANEL_INSPECTOR.__dialog_junction? PANEL_INSPECTOR.__dialog_junction.color : c_white, PANEL_INSPECTOR.setSelectingItemColor); }
+        ]);
+        
+        MENU_ITEMS.inspector_group_set_color = menuItemGroup(__txt("Color"), _item, ["Inspector", "Set Color"]).setSpacing(ui(24));
+        registerFunction("Inspector", "Set Color",             "",    MOD_KEY.none,    function() /*=>*/ { menuCall("", [ MENU_ITEMS.inspector_group_set_color ]); });
+        
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
+    }
 #endregion
 
 function Inspector_Custom_Renderer(drawFn, registerFn = noone) : widget() constructor {
@@ -57,27 +82,27 @@ function Inspector_Custom_Renderer(drawFn, registerFn = noone) : widget() constr
     static toString = function() { return $"Custon renderer"; }
 }
 
-function Inspector_Sprite(spr)                    constructor { self.spr = spr; }
+function Inspector_Sprite(spr)                  constructor { self.spr = spr; }
 function Inspector_Spacer(height, line = false) constructor { self.h = height;  self.line = line; }
 function Inspector_Label( text, font = f_p3)    constructor { self.text = text; self.font = font; }
 
 function Panel_Inspector() : PanelContent() constructor {
     #region ---- main ----
         context_str = "Inspector";
-        title = __txt("Inspector");
-        icon  = THEME.panel_inspector_icon;
+        title       = __txt("Inspector");
+        icon        = THEME.panel_inspector_icon;
     
         w     = ui(400);
         h     = ui(640);
         min_w = ui(160);
         
-        locked         = false;
+        locked       = false;
         focusable    = true;
         
-        inspecting     = noone;
+        inspecting   = noone;
         inspectings  = [];
         inspectGroup = false;
-        top_bar_h     = ui(100);
+        top_bar_h    = ui(100);
         
         static initSize = function() {
             content_w = w - ui(32);
@@ -89,18 +114,17 @@ function Panel_Inspector() : PanelContent() constructor {
     #endregion
     
     #region ---- properties ----
-        prop_hover        = noone;
+        prop_hover      = noone;
         prop_selecting  = noone;
         
         prop_highlight      = noone;
         prop_highlight_time = 0;
     
-        prop_dragging   = noone;
-        prop_sel_drag_x = 0;
-        prop_sel_drag_y = 0;
+        prop_dragging       = noone;
+        prop_sel_drag_x     = 0;
+        prop_sel_drag_y     = 0;
     
-        color_picking    = false;
-        
+        color_picking = false;
         picker_index  = 0;
         picker_change = false;
         
@@ -111,21 +135,21 @@ function Panel_Inspector() : PanelContent() constructor {
     drawWidgetInit();
     
     #region ---- header labels ----
-        tb_node_name    = new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ { if(inspecting) inspecting.setDisplayName(txt); });
-    
-        tb_prop_filter    = new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ { filter_text = txt; });
-        tb_prop_filter.no_empty        = false;
-        tb_prop_filter.auto_update    = true;
-        tb_prop_filter.font            = f_p0;
-        tb_prop_filter.color        = COLORS._main_text_sub;
-        tb_prop_filter.align        = fa_center;
-        tb_prop_filter.hide            = true;
+        tb_node_name                 = new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ { if(inspecting) inspecting.setDisplayName(txt); });
+        
+        tb_prop_filter               = new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ { filter_text = txt; });
+        tb_prop_filter.no_empty      = false;
+        tb_prop_filter.auto_update   = true;
+        tb_prop_filter.font          = f_p0;
+        tb_prop_filter.color         = COLORS._main_text_sub;
+        tb_prop_filter.align         = fa_center;
+        tb_prop_filter.hide          = true;
         filter_text = "";
     
-        prop_page_button = new buttonGroup([ "Properties", "Settings", THEME.message_16 ], function(val) /*=>*/ { prop_page = val; });
-        prop_page_button.buttonSpr    = [ THEME.button_hide_left, THEME.button_hide_middle, THEME.button_hide_right ];
+        prop_page_button             = new buttonGroup([ "Properties", "Settings", THEME.message_16 ], function(val) /*=>*/ { prop_page = val; });
+        prop_page_button.buttonSpr   = [ THEME.button_hide_left, THEME.button_hide_middle, THEME.button_hide_right ];
         prop_page_button.font        = f_p2;
-        prop_page_button.fColor        = COLORS._main_text_sub;
+        prop_page_button.fColor      = COLORS._main_text_sub;
         prop_page = 0;
     #endregion
     
@@ -186,13 +210,13 @@ function Panel_Inspector() : PanelContent() constructor {
                 nodeCollapseAll(inspectings[i]);
         }
         
-        function junction_reset()              { if(__dialog_junction == noone) return; __dialog_junction.resetValue();         }
+        function junction_reset()              { if(__dialog_junction == noone) return; __dialog_junction.resetValue();      }
         function junction_add()                { if(__dialog_junction == noone) return; __dialog_junction.setAnim(true);     }
-        function junction_remove()             { if(__dialog_junction == noone) return; __dialog_junction.setAnim(false);     }
+        function junction_remove()             { if(__dialog_junction == noone) return; __dialog_junction.setAnim(false);    }
         function junction_axis_combine()       { if(__dialog_junction == noone) return; __dialog_junction.sep_axis = false;  }
-        function junction_axis_separate()      { if(__dialog_junction == noone) return; __dialog_junction.sep_axis = true;     }
+        function junction_axis_separate()      { if(__dialog_junction == noone) return; __dialog_junction.sep_axis = true;   }
         function junction_use_expression()     { if(__dialog_junction == noone) return; __dialog_junction.expUse = true;     }
-        function junction_disable_expression() { if(__dialog_junction == noone) return; __dialog_junction.expUse = false;     }
+        function junction_disable_expression() { if(__dialog_junction == noone) return; __dialog_junction.expUse = false;    }
         function junction_extract_single()     { if(__dialog_junction == noone) return; __dialog_junction.extractNode();     }
 
         group_menu = [
@@ -223,27 +247,7 @@ function Panel_Inspector() : PanelContent() constructor {
                 _val_to[i].setColor(color);
         }
         
-        var _clrs = COLORS.labels;
-        var _item = array_create(array_length(_clrs));
-    
-        for( var i = 0, n = array_length(_clrs); i < n; i++ ) {
-            _item[i] = [ 
-                [ THEME.timeline_color, i > 0, _clrs[i] ], 
-                function(_data) { 
-                    setSelectingItemColor(_data.color);
-                }, "", { color: i == 0? -1 : _clrs[i] }
-            ];
-        }
-    
-        array_push(_item, [ 
-            [ THEME.timeline_color, 2 ], 
-            function(_data) { 
-                colorSelectorCall(__dialog_junction? __dialog_junction.color : c_white, setSelectingItemColor);
-            }
-        ]);
-    
-        menu_junc_color = menuItemGroup(__txt("Color"), _item);
-        menu_junc_color.spacing = ui(24);
+        menu_junc_color = MENU_ITEMS.inspector_group_set_color;
     #endregion
     
     function setInspecting(inspecting, _lock = false, _focus = true) {

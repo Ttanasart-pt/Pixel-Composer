@@ -67,6 +67,7 @@
             
         registerFunction("", "Reload theme",        vk_f10, MOD_KEY.ctrl | MOD_KEY.shift,                 global_theme_reload      ).setMenu("reload_theme",   )
     }
+    
 #endregion
 
 function Panel_Menu() : PanelContent() constructor {
@@ -165,11 +166,7 @@ function Panel_Menu() : PanelContent() constructor {
         [ __txt("Preview"), [
             MENU_ITEMS.preview_focus_content, 
             MENU_ITEMS.preview_save_current_frame, 
-            menuItemGroup(__txtx("panel_menu_preview_background", "Preview background"), [
-                [ s_preview_transparent,    function() { PANEL_PREVIEW.canvas_bg = -1;      } ],
-                [ s_preview_white,          function() { PANEL_PREVIEW.canvas_bg = c_white; } ],
-                [ s_preview_black,          function() { PANEL_PREVIEW.canvas_bg = c_black; } ],
-            ]),
+            MENU_ITEMS.preview_group_preview_bg,
         ]], 
         
         [ __txt("Animation"), [

@@ -5,6 +5,7 @@ event_inherited();
 	destroy_on_click_out = false;
 	draggable   		 = false;
 	mouse_init_inside	 = false;
+	mouse_init_r_pressed = mouse_click(mb_right);
 	selecting   		 = -1;
 	
 	menu_id    = "";

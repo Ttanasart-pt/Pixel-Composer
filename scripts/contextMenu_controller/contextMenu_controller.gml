@@ -1,11 +1,15 @@
 #region data
-	globalvar CONTEXT_MENU_CALLBACK;
+	globalvar CONTEXT_MENU_CALLBACK, FOCUS_BEFORE;
+	
 	CONTEXT_MENU_CALLBACK = ds_map_create();
+	FOCUS_BEFORE = noone;
 #endregion
 
 function menuCall(menu_id = "", menu = [], _x = 0, _y = 0, align = fa_left, context = noone) {
 	_x = _x == 0? mouse_mx + ui(4) : _x;
 	_y = _y == 0? mouse_my + ui(4) : _y;
+	
+	FOCUS_BEFORE = FOCUS;
 	
 	var dia = dialogCall(o_dialog_menubox, _x, _y);
 	if(menu_id != "" && ds_map_exists(CONTEXT_MENU_CALLBACK, menu_id)) {
@@ -82,13 +86,19 @@ function MenuItem(_name, _func, _spr = noone, _hotkey = noone, _toggle = noone, 
 	static setShiftMenu = function(_shiftMenu)	/*=>*/ { INLINE shiftMenu	= _shiftMenu;	return self; }
 }
 
-function menuItemGroup(_name, _group) { return new MenuItemGroup(_name, _group); }
-
-function MenuItemGroup(_name, _group) constructor {
+function menuItemGroup(_name, _group, _hotkey = noone) { return new MenuItemGroup(_name, _group, _hotkey); }
+function MenuItemGroup(_name, _group, _hotkey = noone) constructor {
 	active	= true;
 	name	= _name;
 	group	= _group;
-	hotkey  = noone;
+	hotkey  = _hotkey;
+	params	= {};
 	
+	hoykeyObject = noone;
 	spacing = ui(36);
+	
+	static setSpacing = function(_spacing) {
+		spacing = _spacing;
+		return self;
+	}
 }

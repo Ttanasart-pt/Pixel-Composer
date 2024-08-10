@@ -4,7 +4,7 @@ if(!ready) exit;
 #region draw
 	var yy = dialog_y;
 	var _lclick = sFOCUS && (!mouse_init_inside && mouse_release(mb_left)) || (keyboard_check_pressed(vk_enter) && hk_editing == noone);
-	var _rclick = sFOCUS && (!mouse_init_inside && mouse_release(mb_right));
+	var _rclick = sFOCUS && !mouse_init_inside && !mouse_init_r_pressed && mouse_release(mb_right);
 	if(!mouse_init_inside && mouse_press(mb_right) && item_selecting) {
 		instance_destroy(item_selecting);
 		item_selecting = noone;
@@ -54,8 +54,7 @@ if(!ready) exit;
 			
 			draw_sprite_stretched_ext(THEME.textbox, 3, dialog_x, yy, dialog_w, _h, _hc, _ha);
 			
-			if(is_instanceof(_menuItem, MenuItem) && _hovering_ch) {
-				
+			if(_hovering_ch && is_instanceof(_menuItem, MenuItem)) {
 				if(_menuItem.active && _lclick) {
 					var _dat = {
 						_x:      dialog_x,
@@ -73,7 +72,9 @@ if(!ready) exit;
 					else if(remove_parents)	instance_destroy(o_dialog_menubox); // close all
 					else					instance_destroy();					// close self
 				}
-				
+			}
+			
+			if(_hovering_ch && (is_instanceof(_menuItem, MenuItem) || is_instanceof(_menuItem, MenuItemGroup))) {
 				if(_key && _rclick) {
 					var _dat = {
 						_x:      mouse_mx + ui(4),
@@ -88,6 +89,7 @@ if(!ready) exit;
 					
 					selecting_menu = _menuItem;
 					var _loadKey = string_to_var($"{_key.context}.{_key.name}");
+					
 					var context_menu_settings = [
 						_loadKey,
 						menuItem("Edit hotkey", function() /*=>*/ {
@@ -103,9 +105,13 @@ if(!ready) exit;
 					array_push(children, item_selecting.id);
 				}
 			}
+				
 		} else if(cc != c_white)
 			draw_sprite_stretched_ext(THEME.textbox, 3, dialog_x, yy, dialog_w, _h, cc, 0.5);
 		
+		var _hx = dialog_x + dialog_w - ui(16);
+		var _hy = yy + hght / 2 + ui(2);
+			
 		if(is_instanceof(_menuItem, MenuItemGroup)) {
 			var _submenus = _menuItem.group;
 			draw_set_text(font, fa_center, fa_center, COLORS._main_text_sub);
@@ -185,37 +191,34 @@ if(!ready) exit;
 			draw_text(tx, yy + hght / 2, label);
 			draw_set_alpha(1);
 			
-			var _hx = dialog_x + dialog_w - ui(16);
-			var _hy = yy + hght / 2 + ui(2);
-			
 			if(_menuItem.isShelf) {
 				draw_sprite_ui_uniform(THEME.arrow, 0, dialog_x + dialog_w - ui(20), yy + hght / 2, 1, COLORS._main_icon);	
 				_hx -= ui(24);
 			}
+		}
+		
+		if(_key) {
+			draw_set_font(font);
 			
-			if(_key) {
-				draw_set_font(font);
+			var _ktxt = key_get_name(_key.key, _key.modi);
+			var _tw = string_width(_ktxt);
+			var _th = line_get_height();
+			
+			var _bx = _hx - _tw - ui(4);
+			var _by = _hy - _th / 2 - ui(3);
+			var _bw = _tw + ui(8);
+			var _bh = _th + ui(3);
+			
+			if(hk_editing == _menuItem) {
+				draw_set_text(font, fa_right, fa_center, COLORS._main_accent);
+				draw_sprite_stretched_ext(THEME.ui_panel, 1, _bx, _by, _bw, _bh, COLORS._main_text_accent);
 				
-				var _ktxt = key_get_name(_key.key, _key.modi);
-				var _tw = string_width(_ktxt);
-				var _th = line_get_height();
-				
-				var _bx = _hx - _tw - ui(4);
-				var _by = _hy - _th / 2 - ui(3);
-				var _bw = _tw + ui(8);
-				var _bh = _th + ui(3);
-				
-				if(hk_editing == _menuItem) {
-					draw_set_text(font, fa_right, fa_center, COLORS._main_accent);
-					draw_sprite_stretched_ext(THEME.ui_panel, 1, _bx, _by, _bw, _bh, COLORS._main_text_accent);
-					
-				} else if(_ktxt != "") {
-					draw_set_text(font, fa_right, fa_center, COLORS._main_text_sub);
-					draw_sprite_stretched_ext(THEME.ui_panel, 1, _bx, _by, _bw, _bh, CDEF.main_dkgrey);
-				}
-				
-				draw_text(_hx, _hy, _ktxt);
+			} else if(_ktxt != "") {
+				draw_set_text(font, fa_right, fa_center, COLORS._main_text_sub);
+				draw_sprite_stretched_ext(THEME.ui_panel, 1, _bx, _by, _bw, _bh, CDEF.main_dkgrey);
 			}
+			
+			draw_text(_hx, _hy, _ktxt);
 		}
 		
 		yy += _h;
@@ -246,6 +249,7 @@ if(!ready) exit;
 	draw_sprite_stretched(THEME.s_box_r2_clr, 1, dialog_x, dialog_y, dialog_w, dialog_h);
 	
 	if(mouse_init_inside && (mouse_release(mb_left) || mouse_release(mb_right))) mouse_init_inside = false;
+	if(mouse_release(mb_right)) mouse_init_r_pressed = false;
 #endregion
 
 #region debug

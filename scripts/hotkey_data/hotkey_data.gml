@@ -163,6 +163,8 @@ function find_hotkey(_context, _name) {
 }
 
 function hotkey_editing(hotkey) {
+	HOTKEY_BLOCK = true;
+	
 	static vk_list = [ 
 		vk_left, vk_right, vk_up, vk_down, vk_space, vk_backspace, vk_tab, vk_home, vk_end, vk_delete, vk_insert, 
 		vk_pageup, vk_pagedown, vk_pause, vk_printscreen, 

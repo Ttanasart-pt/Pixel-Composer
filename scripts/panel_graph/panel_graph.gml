@@ -58,7 +58,7 @@
     function panel_graph_doCopyProp()              { CALL("graph_doCopyProp");          PANEL_GRAPH.doCopyProp();                                                               }
     function panel_graph_doPasteProp()             { CALL("graph_doPasteProp");         PANEL_GRAPH.doPasteProp();                                                              }
     function panel_graph_createTunnel()            { CALL("graph_createTunnel");        PANEL_GRAPH.createTunnel();                                                             }
-
+    
     function __fnInit_Graph() {
         registerFunction("Graph", "Add Node",              "A", MOD_KEY.none,                    panel_graph_add_node            ).setMenu("graph_add_node")
         registerFunction("Graph", "Focus Content",         "F", MOD_KEY.none,                    panel_graph_focus_content       ).setMenu("graph_focus_content")
@@ -123,6 +123,60 @@
             registerFunction("Graph", "Export Selected",   "E", MOD_KEY.ctrl,                    panel_graph_export              ).setMenu("graph_export_selected")
             registerFunction("Graph", "Export Hover",      "",  MOD_KEY.none,                    panel_graph_send_to_export      ).setMenu("graph_export_hover")
         }
+        
+        __fnGroupInit_Graph()
+    }
+    
+    function __fnGroupInit_Graph() {
+        
+        MENU_ITEMS.graph_group_align = menuItemGroup(__txtx("panel_graph_align_nodes", "Align"), [
+                [ [THEME.inspector_surface_halign, 0], function() { node_halign(PANEL_GRAPH.nodes_selecting, fa_left);   } ],
+                [ [THEME.inspector_surface_halign, 1], function() { node_halign(PANEL_GRAPH.nodes_selecting, fa_center); } ],
+                [ [THEME.inspector_surface_halign, 2], function() { node_halign(PANEL_GRAPH.nodes_selecting, fa_right);  } ],
+                
+                [ [THEME.inspector_surface_valign, 0], function() { node_valign(PANEL_GRAPH.nodes_selecting, fa_top);    } ],
+                [ [THEME.inspector_surface_valign, 1], function() { node_valign(PANEL_GRAPH.nodes_selecting, fa_middle); } ],
+                [ [THEME.inspector_surface_valign, 2], function() { node_valign(PANEL_GRAPH.nodes_selecting, fa_bottom); } ],
+                
+                [ [THEME.obj_distribute_h, 0],         function() { node_hdistribute(PANEL_GRAPH.nodes_selecting);       } ],
+                [ [THEME.obj_distribute_v, 0],         function() { node_vdistribute(PANEL_GRAPH.nodes_selecting);       } ],
+        ], ["Graph", "Align Nodes"]);
+        registerFunction("Graph", "Align Nodes",           "",  MOD_KEY.none,                    function() /*=>*/ { menuCall("", [ MENU_ITEMS.graph_group_align ]); });
+        
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
+        var _clrs = COLORS.labels;
+        var _item = array_create(array_length(_clrs));
+
+        for( var i = 0, n = array_length(_clrs); i < n; i++ ) {
+            _item[i] = [ 
+                [ THEME.timeline_color, i > 0, _clrs[i] ], 
+                function(_data) {  PANEL_GRAPH.setSelectingNodeColor(_data.color); }, "", { color: i == 0? -1 : _clrs[i] }
+            ];
+        }
+
+        array_push(_item, [ [ THEME.timeline_color, 2 ], function() /*=>*/ { colorSelectorCall(PANEL_GRAPH.node_hover? PANEL_GRAPH.node_hover.attributes.color : c_white, PANEL_GRAPH.setSelectingNodeColor); } ]);
+        
+        MENU_ITEMS.graph_group_node_color = menuItemGroup(__txt("Node Color"), _item, ["Graph", "Set Node Color"]).setSpacing(ui(24));
+        registerFunction("Graph", "Set Node Color",        "",  MOD_KEY.none,                    function() /*=>*/ { menuCall("", [ MENU_ITEMS.graph_group_node_color ]); });
+        
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
+        var _clrs = COLORS.labels;
+        var _item = array_create(array_length(_clrs));
+
+        for( var i = 0, n = array_length(_clrs); i < n; i++ ) {
+            _item[i] = [ 
+                [ THEME.timeline_color, i > 0, _clrs[i] ], 
+                function(_data) { PANEL_GRAPH.setSelectingJuncColor(_data.color); }, "", { color: i == 0? -1 : _clrs[i] }
+            ];
+        }
+
+        array_push(_item, [ [ THEME.timeline_color, 2 ], function() /*=>*/ { colorSelectorCall(PANEL_GRAPH.__junction_hovering? PANEL_GRAPH.__junction_hovering.color : c_white, PANEL_GRAPH.setSelectingJuncColor); } ]);
+        
+        MENU_ITEMS.graph_group_junction_color = menuItemGroup(__txt("Connection Color"), _item, ["Graph", "Set Junction Color"]).setSpacing(ui(24));
+        registerFunction("Graph", "Set Junction Color",    "",  MOD_KEY.none,                    function() /*=>*/ { menuCall("", [ MENU_ITEMS.graph_group_junction_color ]); });
+        
     }
 #endregion
 
@@ -640,19 +694,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
     menu_node_delete_merge  = MENU_ITEMS.graph_delete_merge;
     menu_node_duplicate     = MENU_ITEMS.graph_duplicate;
     menu_node_copy          = MENU_ITEMS.graph_copy;
-              
-    menu_nodes_align   = menuItemGroup(__txtx("panel_graph_align_nodes", "Align"), [
-            [ [THEME.inspector_surface_halign, 0], function() { node_halign(nodes_selecting, fa_left);   } ],
-            [ [THEME.inspector_surface_halign, 1], function() { node_halign(nodes_selecting, fa_center); } ],
-            [ [THEME.inspector_surface_halign, 2], function() { node_halign(nodes_selecting, fa_right);  } ],
-            
-            [ [THEME.inspector_surface_valign, 0], function() { node_valign(nodes_selecting, fa_top);    } ],
-            [ [THEME.inspector_surface_valign, 1], function() { node_valign(nodes_selecting, fa_middle); } ],
-            [ [THEME.inspector_surface_valign, 2], function() { node_valign(nodes_selecting, fa_bottom); } ],
-            
-            [ [THEME.obj_distribute_h, 0],         function() { node_hdistribute(nodes_selecting);       } ],
-            [ [THEME.obj_distribute_v, 0],         function() { node_vdistribute(nodes_selecting);       } ],
-    ]);
+    
+    menu_nodes_align        = MENU_ITEMS.graph_group_align;
     
     menu_node_transform     = MENU_ITEMS.graph_transform_node;
     menu_nodes_blend        = MENU_ITEMS.graph_blend;
@@ -675,27 +718,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
             array_foreach(nodes_selecting, function(node) { node.attributes.color = __temp_color; });
         }
         
-        var _clrs = COLORS.labels;
-        var _item = array_create(array_length(_clrs));
-
-        for( var i = 0, n = array_length(_clrs); i < n; i++ ) {
-            _item[i] = [ 
-                [ THEME.timeline_color, i > 0, _clrs[i] ], 
-                function(_data) { 
-                    setSelectingNodeColor(_data.color);
-                }, "", { color: i == 0? -1 : _clrs[i] }
-            ];
-        }
-
-        array_push(_item, [ 
-            [ THEME.timeline_color, 2 ], 
-            function(_data) { 
-                colorSelectorCall(node_hover? node_hover.attributes.color : c_white, setSelectingNodeColor);
-            }
-        ]);
-
-        menu_node_color = menuItemGroup(__txt("Node Color"), _item);
-        menu_node_color.spacing = ui(24);
+        menu_node_color = MENU_ITEMS.graph_group_node_color;
     
     
     // junction color
@@ -715,28 +738,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                 }
             }
         }
-    
-        var _clrs = COLORS.labels;
-        var _item = array_create(array_length(_clrs));
-
-        for( var i = 0, n = array_length(_clrs); i < n; i++ ) {
-            _item[i] = [ 
-                [ THEME.timeline_color, i > 0, _clrs[i] ], 
-                function(_data) { 
-                    setSelectingJuncColor(_data.color);
-                }, "", { color: i == 0? -1 : _clrs[i] }
-            ];
-        }
-
-        array_push(_item, [ 
-            [ THEME.timeline_color, 2 ], 
-            function(_data) { 
-                colorSelectorCall(__junction_hovering? __junction_hovering.color : c_white, setSelectingJuncColor);
-            }
-        ]);
-
-        menu_junc_color = menuItemGroup(__txt("Connection Color"), _item);
-        menu_junc_color.spacing = ui(24);
+        
+        menu_junc_color = MENU_ITEMS.graph_group_junction_color;
     
     
     //// ============ Project ============
