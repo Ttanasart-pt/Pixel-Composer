@@ -1875,6 +1875,7 @@
     {"id":{"name":"panel_graph_view_settings","path":"scripts/panel_graph_view_settings/panel_graph_view_settings.yy",},},
     {"id":{"name":"panel_graph","path":"scripts/panel_graph/panel_graph.yy",},},
     {"id":{"name":"panel_history","path":"scripts/panel_history/panel_history.yy",},},
+    {"id":{"name":"panel_image_array_editor","path":"scripts/panel_image_array_editor/panel_image_array_editor.yy",},},
     {"id":{"name":"panel_inspector","path":"scripts/panel_inspector/panel_inspector.yy",},},
     {"id":{"name":"panel_keyframe_driver","path":"scripts/panel_keyframe_driver/panel_keyframe_driver.yy",},},
     {"id":{"name":"panel_menu","path":"scripts/panel_menu/panel_menu.yy",},},

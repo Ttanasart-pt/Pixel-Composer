@@ -17,7 +17,7 @@ event_inherited();
 	
 	function onResize() {
 		sp_content.resize(dialog_w - ui(padding + padding), dialog_h - ui(title_height + padding));
-	}	
+	}
 #endregion
 
 #region content

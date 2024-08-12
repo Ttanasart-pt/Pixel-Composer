@@ -1259,6 +1259,7 @@
     {"name":"panel_graph_grid_settings","order":7,"path":"scripts/panel_graph_grid_settings/panel_graph_grid_settings.yy",},
     {"name":"panel_graph_view_settings","order":8,"path":"scripts/panel_graph_view_settings/panel_graph_view_settings.yy",},
     {"name":"panel_history","order":5,"path":"scripts/panel_history/panel_history.yy",},
+    {"name":"panel_image_array_editor","order":1,"path":"scripts/panel_image_array_editor/panel_image_array_editor.yy",},
     {"name":"panel_keyframe_driver","order":2,"path":"scripts/panel_keyframe_driver/panel_keyframe_driver.yy",},
     {"name":"panel_menu","order":6,"path":"scripts/panel_menu/panel_menu.yy",},
     {"name":"panel_node_align","order":3,"path":"scripts/panel_node_align/panel_node_align.yy",},

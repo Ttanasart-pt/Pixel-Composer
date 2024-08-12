@@ -1,11 +1,11 @@
 function file_exists_empty(path) { INLINE return path != "" && file_exists(path); }
 
-function file_copy_override(src, dest) { #region
+function file_copy_override(src, dest) {
 	if(file_exists_empty(dest)) file_delete(dest);
 	file_copy(src, dest);
-} #endregion
+}
 
-function filepath_resolve(path) { #region
+function filepath_resolve(path) {
 	INLINE
 	var _path = path;
 	
@@ -13,16 +13,18 @@ function filepath_resolve(path) { #region
 	_path = string_replace_all(_path, "%APP%/", APP_LOCATION);
 	
 	return _path;
-} #endregion
+}
 
-function get_open_filenames_compat(ext, sel, caption = "Open") { #region
+function get_open_filenames_compat(ext, sel, caption = "Open") {
 	INLINE
 	
-	if(OS == os_windows) return get_open_filenames_ext(ext, sel, PREFERENCES.dialog_path, caption);
-	return get_open_filename_pxc(ext, sel, caption);
-} #endregion
+	var pat = OS == os_windows? get_open_filenames_ext(ext, sel, PREFERENCES.dialog_path, caption) : get_open_filename_pxc(ext, sel, caption);
+	key_release();
 	
-function file_get_modify_s(path) { #region
+	return pat;
+}
+	
+function file_get_modify_s(path) {
 	INLINE
 	
 	if(!file_exists_empty(path)) return 0;
@@ -35,7 +37,7 @@ function file_get_modify_s(path) { #region
 	var _s = file_datetime_modified_second(path);
 	
 	return ((((_y * 12 + _m) * 31 + _d) * 24 + _h) * 60 + _n) * 60 + _s;
-} #endregion
+}
 
 function get_save_filename_pxc(filter, name, caption = "Save as") {
 	INLINE

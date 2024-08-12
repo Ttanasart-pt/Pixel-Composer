@@ -92,6 +92,10 @@
 	
 	#macro mouse_mx (PEN_USE? PEN_X : device_mouse_x_to_gui(0))
 	#macro mouse_my (PEN_USE? PEN_Y : device_mouse_y_to_gui(0))
+	
+	#macro mouse_mxs (FILE_IS_DROPPING? FILE_DROPPING_X : mouse_mx)
+	#macro mouse_mys (FILE_IS_DROPPING? FILE_DROPPING_Y : mouse_my)
+	
 	#macro mouse_raw_x (device_mouse_raw_x(0) + window_get_x())
 	#macro mouse_raw_y (device_mouse_raw_y(0) + window_get_y())
 	#macro mouse_ui [device_mouse_x_to_gui(0), device_mouse_y_to_gui(0)]

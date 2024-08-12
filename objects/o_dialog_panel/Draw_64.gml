@@ -3,8 +3,8 @@ if !ready exit;
 
 #region base UI
 	var p = ui(8);
-	var m_in = point_in_rectangle(mouse_mx, mouse_my, dialog_x + p, dialog_y + p, dialog_x + dialog_w - p, dialog_y + dialog_h - p);
-	var m_ot = point_in_rectangle(mouse_mx, mouse_my, dialog_x, dialog_y, dialog_x + dialog_w, dialog_y + dialog_h);
+	var m_in = point_in_rectangle(mouse_mxs, mouse_mys, dialog_x + p, dialog_y + p, dialog_x + dialog_w - p, dialog_y + dialog_h - p);
+	var m_ot = point_in_rectangle(mouse_mxs, mouse_mys, dialog_x, dialog_y, dialog_x + dialog_w, dialog_y + dialog_h);
 	
 	DIALOG_DRAW_BG
 #endregion

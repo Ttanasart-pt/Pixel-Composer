@@ -2463,8 +2463,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
             var _gy  = my / graph_s - graph_y;
             var _node_hover = noone;
             
-            var _mx = (FILE_IS_DROPPING? FILE_DROPPING_X : mouse_mx) - x;
-            var _my = (FILE_IS_DROPPING? FILE_DROPPING_Y : mouse_my) - y;
+            var _mx = mouse_mxs - x;
+            var _my = mouse_mys - y;
             
             for(var i = 0; i < array_length(nodes_list); i++) {
                 var _n = nodes_list[i];

@@ -59,24 +59,20 @@ event_inherited();
 			}
 			
 			draw_set_font(font);
-			var ww = string_width(_menuItem.name) + ui(64);
+			var ww   = string_width(_menuItem.name) + ui(64);
+			var _key = _menuItem.hotkey != noone? find_hotkey(_menuItem.hotkey[0], _menuItem.hotkey[1]) : noone;
+			
+			draw_set_font(font);
+			var _kw = _key? string_width(key_get_name(_key.key, _key.modi)) + ui(16) : 0;
 			
 			if(instanceof(_menuItem) == "MenuItemGroup") {
 				var amo = array_length(_menuItem.group);
-				ww = max(ww, ui(16) + amo * (_menuItem.spacing + ui(4)));
+				ww = max(ww + _kw * 2, ui(16) + amo * (_menuItem.spacing + ui(4)));
 				dialog_h += hght;
 			} 
 			
 			if(instanceof(_menuItem) == "MenuItem") {
-				if(_menuItem.hotkey != noone) {
-					var _key = find_hotkey(_menuItem.hotkey[0], _menuItem.hotkey[1]);
-					if(_key) {
-						draw_set_font(font);
-						var ss = key_get_name(_key.key, _key.modi);	
-						ww += string_width(ss) + ui(16);
-					}
-				} 
-				
+				ww += _kw;
 				if(_menuItem.spr != noone || _menuItem.toggle != noone) show_icon = true;
 			}
 			

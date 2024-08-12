@@ -13,8 +13,7 @@ function pathArrayBox(_target, _data, _onClick) : widget() constructor {
 	}, THEME.button_path_icon);
 	
 	static trigger = function() { 
-		with(dialogCall(o_dialog_image_array_edit, WIN_W / 2, WIN_H / 2))
-			target       = other.target;
+		dialogPanelCall(new Panel_Image_Array_Editor(target));
 	}
 	
 	static drawParam = function(params) {

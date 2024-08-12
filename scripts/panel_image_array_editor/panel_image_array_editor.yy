@@ -1,0 +1,13 @@
+{
+  "$GMScript":"",
+  "%Name":"panel_image_array_editor",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"panel_image_array_editor",
+  "parent":{
+    "name":"nodes",
+    "path":"folders/panels/nodes.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -396,8 +396,8 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				dragging = -1;
 			}
 		} else {
-			var _mx = FILE_IS_DROPPING? FILE_DROPPING_X : mouse_mx;
-			var _my = FILE_IS_DROPPING? FILE_DROPPING_Y : mouse_my;
+			var _mx = mouse_mxs;
+			var _my = mouse_mys;
 			
 			if(con && point_in_rectangle(_mx, _my, x + ui(2), y + ui(2), x + w - ui(4), y + h - ui(4))) {
 				HOVER = self;
@@ -663,8 +663,8 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		
 		if(tab) drawTab();
 		
-		var _mx = FILE_IS_DROPPING? FILE_DROPPING_X : mouse_mx;
-		var _my = FILE_IS_DROPPING? FILE_DROPPING_Y : mouse_my;
+		var _mx = mouse_mxs;
+		var _my = mouse_mys;
 			
 		var p = ui(6);
 		var m_in = point_in_rectangle(_mx, _my, tx + p, ty + p, tx + tw - p, ty + th - p);
