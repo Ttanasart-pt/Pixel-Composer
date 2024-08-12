@@ -7,11 +7,11 @@ if !ready exit;
 		DIALOG_DRAW_FOCUS
 	
 	draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
-	draw_text(dialog_x + ui(24), dialog_y + ui(16), __txtx("add_images_title_images", "Import multiple images"));
+	draw_text(dialog_x + ui(24), dialog_y + ui(16), __txtx("add_images_title_images", "Import multiple images as"));
 #endregion
 
 #region nodes
-	draw_sprite_stretched(THEME.ui_panel_bg, 1, dialog_x + ui(16), dialog_y + ui(44), dialog_w - ui(32), ui(120));
+	draw_sprite_stretched(THEME.ui_panel_bg, 1, dialog_x + ui(12), dialog_y + ui(44), dialog_w - ui(24), ui(120));
 	var grid_size  = ui(64);
 	var grid_space = ui(16);
 	var grid_width = grid_size + grid_space;
@@ -36,7 +36,7 @@ if !ready exit;
 					case "Node_Image" :
 						for( var i = 0, n = array_length(path_arr); i < n; i++ )  {
 							var path = path_arr[i];
-							Node_create_Image_path(nx, ny, path);
+							Node_create_Image_path(nx, ny, path).skipDefault();
 							ny += 160;
 						}
 						break;
@@ -44,15 +44,15 @@ if !ready exit;
 					case "Node_Canvas" :
 						for( var i = 0, n = array_length(path_arr); i < n; i++ )  {
 							var path = path_arr[i];
-							var _canvas = nodeBuild("Node_Canvas", nx, ny);
+							var _canvas = nodeBuild("Node_Canvas", nx, ny).skipDefault();
 							_canvas.loadImagePath(path);
 							ny += 160;
 						}
 						break;
 						
-					case "Node_Image_Sequence"   : Node_create_Image_Sequence_path(nx, ny, path_arr);	break;
-					case "Node_Image_Animated"   : Node_create_Image_Animated_path(nx, ny, path_arr);	break;
-					case "Node_Directory_Search" : Node_create_Directory_path(nx, ny, paths[0]);		break;
+					case "Node_Image_Sequence"   : Node_create_Image_Sequence_path(nx, ny, path_arr).skipDefault();	break;
+					case "Node_Image_Animated"   : Node_create_Image_Animated_path(nx, ny, path_arr).skipDefault();	break;
+					case "Node_Directory_Search" : Node_create_Directory_path(nx, ny, paths[0]).skipDefault();		break;
 				}
 				instance_destroy();
 			}

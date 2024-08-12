@@ -244,10 +244,7 @@ event_inherited();
 						LOAD_PATH(_project.path, true);
 						PROJECT.thumbnail = array_safe_get_fast(_project.spr_path, 0);
 						
-						if(txt == "Workshop") {
-							PROJECT.meta.file_id = _meta.file_id;
-							PROJECT.meta.steam   = FILE_STEAM_TYPE.steamOpen;
-						}
+						if(PROJECT.meta.file_id) PROJECT.meta.steam = FILE_STEAM_TYPE.steamOpen;
 						instance_destroy();
 					}
 				}

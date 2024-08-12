@@ -1150,7 +1150,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		return true;
 	}
 	
-	static loadImagePath = function(path) {
+	static loadImagePath = function(path, live = false) {
 		if(!file_exists_empty(path)) return noone;
 		
 		var _spr = sprite_add(path, 0, 0, 0, 0, 0);
@@ -1171,8 +1171,10 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		setCanvasSurface(_s);
 		surface_store_buffer();
 		
-		live_edit   = true;
-		live_target = path;
+		if(live) {
+			live_edit   = true;
+			live_target = path;
+		}
 	
 		return self;
 	} 

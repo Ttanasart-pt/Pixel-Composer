@@ -730,6 +730,7 @@
     {"id":{"name":"FLIP_Domain","path":"objects/FLIP_Domain/FLIP_Domain.yy",},},
     {"id":{"name":"fx_particle_spawner","path":"objects/fx_particle_spawner/fx_particle_spawner.yy",},},
     {"id":{"name":"o_dialog_about","path":"objects/o_dialog_about/o_dialog_about.yy",},},
+    {"id":{"name":"o_dialog_add_image","path":"objects/o_dialog_add_image/o_dialog_add_image.yy",},},
     {"id":{"name":"o_dialog_add_multiple_images","path":"objects/o_dialog_add_multiple_images/o_dialog_add_multiple_images.yy",},},
     {"id":{"name":"o_dialog_add_node","path":"objects/o_dialog_add_node/o_dialog_add_node.yy",},},
     {"id":{"name":"o_dialog_arrayBox","path":"objects/o_dialog_arrayBox/o_dialog_arrayBox.yy",},},

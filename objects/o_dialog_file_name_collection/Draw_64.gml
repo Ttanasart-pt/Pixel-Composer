@@ -35,6 +35,7 @@
 		txt  = __txtx("panel_inspector_workshop_upload", "Upload to Steam Workshop");
 		icon = THEME.workshop_upload;
 		clr  = c_white;
+		
 	} else if(ugc == 2) {
 		txt  = __txtx("panel_inspector_workshop_update", "Update Steam Workshop");
 		icon = THEME.workshop_update;
@@ -48,6 +49,7 @@
 		draw_sprite_ui(THEME.loading_s, 0, bx + ui(16), by + ui(16),,, current_time / 5, COLORS._main_icon);
 		if(STEAM_UGC_ITEM_UPLOADING == false)
 			instance_destroy();
+			
 	} else {
 		if(buttonInstant(THEME.button_hide, bx, by, bw, bh, mouse_ui, sFOCUS, sHOVER, txt, icon, 0, clr) == 2) {
 			if(meta.author_steam_id == 0)

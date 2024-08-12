@@ -3,10 +3,10 @@
 		registerFunction("Collection", "Replace",			"",   MOD_KEY.none,	panel_collection_replace			).setMenu("collection_replace")
 		registerFunction("Collection", "Edit Meta",			"",   MOD_KEY.none,	panel_collection_edit_meta			).setMenu("collection_edit_meta")
 		registerFunction("Collection", "Update Thumbnail",	"",   MOD_KEY.none,	panel_collection_update_thumbnail	).setMenu("collection_update_thumbnail")
-		registerFunction("Collection", "Delete Collection",	"",   MOD_KEY.none,	panel_collection_delete_collection	).setMenu("collection_delete_collection")
+		registerFunction("Collection", "Delete Collection",	"",   MOD_KEY.none,	panel_collection_delete_collection	).setMenu("collection_delete_collection",	THEME.cross)
 		
-		registerFunction("Collection", "Upload To Steam",	"",   MOD_KEY.none,	panel_collection_steam_file_upload	).setMenu("collection_upload_to_steam")
-		registerFunction("Collection", "Update Steam",		"",   MOD_KEY.none,	panel_collection_steam_file_update	).setMenu("collection_update_steam")
+		registerFunction("Collection", "Upload To Steam",	"",   MOD_KEY.none,	panel_collection_steam_file_upload	).setMenu("collection_upload_to_steam", 	THEME.workshop_upload)
+		registerFunction("Collection", "Update Steam",		"",   MOD_KEY.none,	panel_collection_steam_file_update	).setMenu("collection_update_steam",    	THEME.workshop_update)
 		registerFunction("Collection", "Unsubscribe",		"",   MOD_KEY.none,	panel_collection_steam_unsubscribe	).setMenu("collection_unsubscribe")
 	}
 	
@@ -24,10 +24,10 @@ function Panel_Collection() : PanelContent() constructor {
 	title = __txt("Collections");
 	expandable = false;
 	
-	group_w   = ui(180);
+	group_w          = ui(180);
 	group_w_dragging = false;
-	group_w_sx = false;
-	group_w_mx = false;
+	group_w_sx       = false;
+	group_w_mx       = false;
 	
 	static initSize = function() {
 		content_w = w - ui(8) - group_w;
@@ -41,20 +41,18 @@ function Panel_Collection() : PanelContent() constructor {
 	roots = [ ["Collections", COLLECTIONS] , ["Assets", global.ASSETS] ];
 	if(STEAM_ENABLED) array_push(roots, ["Projects", STEAM_PROJECTS]);
 	
-	mode  = 0;
-	root  = roots[mode][1];
+	page    = 0;
+	root    = roots[page][1];
 	context = root;
 	
-	search_list = ds_list_create();
+	search_list   = ds_list_create();
 	
 	file_dragging = noone;
 	_menu_node    = noone;
-	
-	updated_path = noone;
-	updated_prog = 0;
-	data_path    = "";
-	
-	view_tooltip = new tooltipSelector("View", [ "Grid", "List" ])
+	updated_path  = noone;
+	updated_prog  = 0;
+	data_path     = "";
+	view_tooltip  = new tooltipSelector("View", [ "Grid", "List" ])
 	
 	PANEL_COLLECTION = self;
 	
@@ -187,7 +185,7 @@ function Panel_Collection() : PanelContent() constructor {
 	initMenu();
 	
 	search_string = "";
-	tb_search = new textBox(TEXTBOX_INPUT.text, function(str) { 
+	tb_search = new textBox(TEXTBOX_INPUT.text, function(str) /*=>*/ { 
 		search_string = string(str); 
 		searchCollection(search_list, search_string);
 	});
@@ -203,24 +201,23 @@ function Panel_Collection() : PanelContent() constructor {
 		var content;
 		var steamNode = [];
 		
-		if(mode == 0) {
-			if(!COLLECTIONS.scanned) 
-				COLLECTIONS.scan([".json", ".pxcc"]); 
-			
-			if(context == root) content = STEAM_COLLECTION;
-			else				content = context.content;
-			
-			for( var i = 0; i < ds_list_size(STEAM_COLLECTION); i++ ) {
-				var meta = STEAM_COLLECTION[| i].meta;	
-				if(array_exists(meta.tags, context.name))
-					array_push(steamNode, STEAM_COLLECTION[| i]);	
-			}
-		
-		} else if(mode == 1) {
-			content = context.content;
-			
-		} else if(mode == 2) {
-			content = context;
+		switch(page) {
+		    case 0 :
+    		    if(!COLLECTIONS.scanned) 
+    				COLLECTIONS.scan([".json", ".pxcc"]); 
+    			
+    			if(context == root) content = STEAM_COLLECTION;
+    			else				content = context.content;
+    			
+    			for( var i = 0; i < ds_list_size(STEAM_COLLECTION); i++ ) {
+    				var meta = STEAM_COLLECTION[| i].meta;	
+    				if(array_exists(meta.tags, context.name))
+    					array_push(steamNode, STEAM_COLLECTION[| i]);	
+    			}
+		        break;
+		       
+	        case 1 : content = context.content;     break;
+	        case 2 : content = context;             break;
 		}
 		
 		if(search_string != "") content = search_list;
@@ -230,9 +227,9 @@ function Panel_Collection() : PanelContent() constructor {
 		var frame	   = PREFERENCES.collection_animated? current_time * PREFERENCES.collection_preview_speed / 3000 : 0;
 		var _cw		   = contentPane.surface_w;
 		var _hover	   = pHOVER && contentPane.hover;
-		var hh = 0;
 		
-		updated_prog = lerp_linear(updated_prog, 0, 0.01);
+		updated_prog   = lerp_linear(updated_prog, 0, 0.01);
+		var hh = 0;
 		
 		if(contentView == 0) {
 			var grid_width = round(grid_size * 1.25);
@@ -319,7 +316,7 @@ function Panel_Collection() : PanelContent() constructor {
 						} else
 							draw_sprite_ui_uniform(THEME.group, 0, _boxx + grid_size / 2, yy + grid_size / 2, 1, c_white);
 					
-						if(meta != noone && mode == 0) {
+						if(meta != noone && page == 0) {
 							if(struct_try_get(meta, "steam")) {
 								draw_sprite_ui_uniform(THEME.steam, 0, _boxx + ui(12), yy + ui(12), 1, COLORS._main_icon_dark, 1);
 								if(meta.author_steam_id == STEAM_USER_ID)
@@ -447,7 +444,7 @@ function Panel_Collection() : PanelContent() constructor {
 		
 		folderPane.resize(group_w - ui(8), content_h);
 		
-		if(mode == 2)	contentPane.resize(w - ui(16), content_h);
+		if(page == 2)	contentPane.resize(w - ui(16), content_h);
 		else			contentPane.resize(content_w - ui(6), content_h);
 	} 
 	
@@ -458,8 +455,8 @@ function Panel_Collection() : PanelContent() constructor {
 	} 
 	
 	function refreshContext() { 
-		if(mode == 0)		context.scan([ ".json", ".pxcc" ]);	
-		else if(mode == 1)	context.scan([ ".png", ".jpg", ".gif" ]);	
+		if(page == 0)		context.scan([ ".json", ".pxcc" ]);	
+		else if(page == 1)	context.scan([ ".png", ".jpg", ".gif" ]);	
 		
 		if(STEAM_ENABLED) steamUCGload();
 	} 
@@ -469,7 +466,7 @@ function Panel_Collection() : PanelContent() constructor {
 		
 		var content_y = ui(48);
 		
-		if(mode == 2) {
+		if(page == 2) {
 			var pad = ui(8);
 			
 			draw_sprite_stretched(THEME.ui_panel_bg, 1, pad, content_y, w - pad * 2, content_h);
@@ -519,13 +516,13 @@ function Panel_Collection() : PanelContent() constructor {
 			var _bw = string_width(r[0]) + ui(20);
 			
 			if(buttonInstant(THEME.button_hide_fill, _bx, _by, _bw, bh, [ mx, my ], pFOCUS, pHOVER) == 2) {
-				mode = i;
+				page = i;
 				root = r[1];
 				context = root;
 				onResize();
 			}
 			
-			draw_set_text(f_p0b, fa_left, fa_center, i == mode? COLORS._main_text : COLORS._main_text_sub);
+			draw_set_text(f_p0b, fa_left, fa_center, i == page? COLORS._main_text : COLORS._main_text_sub);
 			draw_text(_x, _y, __txt(r[0]));
 			
 			_x += string_width(r[0]) + ui(24);
@@ -545,7 +542,7 @@ function Panel_Collection() : PanelContent() constructor {
 			}
 			bx -= ui(36);
 			
-			if(mode == 0 && !DEMO) {
+			if(page == 0 && !DEMO) {
 				if(bx > rootx) {
 					if(context != root) {
 						var txt = __txtx("panel_collection_add_node", "Add selecting node as collection");

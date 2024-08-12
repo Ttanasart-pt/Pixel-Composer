@@ -3193,8 +3193,7 @@ function load_file_path(path, _x = undefined, _y = undefined) {
     var is_multi = type == "image" && (array_length(path) > 1 || directory_exists(path[0]));
     
     if(is_multi) {
-        with(dialogCall(o_dialog_add_multiple_images, WIN_W / 2, WIN_H / 2))
-            setPath(path);
+        with(dialogCall(o_dialog_add_multiple_images)) setPath(path);
     } else {
         if(!IS_CMD) PANEL_GRAPH.onStepBegin();
         
@@ -3211,9 +3210,12 @@ function load_file_path(path, _x = undefined, _y = undefined) {
                 case "ase"      :
                 case "aseprite" : node = Node_create_ASE_File_Read_path(_x, _y, p);                                 break;
                     
-                case "png"        :
-                case "jpg"        :
-                case "jpeg"     : node = Node_create_Image_path(_x, _y, p);                                         break;
+                case "png"      :
+                case "jpg"      :
+                case "jpeg"     : 
+                    if(keyboard_check_direct(vk_shift)) with(dialogCall(o_dialog_add_image)) setPath(p);
+                    else                                node = Node_create_Image_path(_x, _y, p);
+                    break;
                     
                 case "gif"      : node = Node_create_Image_gif_path(_x, _y, p);                                     break;
                 case "obj"      : node = Node_create_3D_Obj_path(_x, _y, p);                                        break;

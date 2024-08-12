@@ -278,9 +278,9 @@ function Panel_Inspector() : PanelContent() constructor {
     }
     
     static drawMeta = function(_y, _m) {
-        var con_w  = contentPane.surface_w - ui(4);
-        var _hover = pHOVER && contentPane.hover;
         
+        var con_w   = contentPane.surface_w - ui(4);
+        var _hover  = pHOVER && contentPane.hover;
         var context = PANEL_GRAPH.getCurrentContext();
         var meta = context == noone? PROJECT.meta : context.metadata;
         if(meta == noone) return 0;
@@ -393,12 +393,15 @@ function Panel_Inspector() : PanelContent() constructor {
                     break;
                     
                 case 1 :
-                    var _wdx  = viewMode == INSP_VIEW_MODE.spacious? ui(16) : ui(140);
-                    var _wdw  = w - ui(48) - _wdx;
+                    var _wdx = viewMode == INSP_VIEW_MODE.spacious? ui(16) : ui(140);
+                    var _wdw = w - ui(48) - _wdx;
+                    var _whh = line_get_height(_font);
+                    var _edt = !PROJECT.meta.file_id || PROJECT.meta.author_steam_id == STEAM_USER_ID;
                         
                     for( var j = 0; j < array_length(meta.displays); j++ ) {
                         var display = meta.displays[j];
-                    
+                        var _wdgt   = meta_tb[j];
+                        
                         draw_set_text(_font, fa_left, fa_top, COLORS._main_text_inner);
                         draw_text_over(ui(16), viewMode == INSP_VIEW_MODE.spacious? yy : yy + ui(3), __txt(display[0]));
                         
@@ -411,23 +414,24 @@ function Panel_Inspector() : PanelContent() constructor {
                             _lh = line_get_height() + ui(6);
                         }
                         
-                        meta_tb[j].setFocusHover(pFOCUS, _hover);
-                        if(pFOCUS) meta_tb[j].register(contentPane);
+                        _wdgt.setFocusHover(pFOCUS, _hover);
+                        _wdgt.setInteract(_edt);
+                        if(pFOCUS) _wdgt.register(contentPane);
                         
                         var _dataFunc = display[1];
                         var _data = _dataFunc(meta);
                         var _wdy  = yy;
-                        var _wdh  = display[2];
+                        var _wdh  = _whh * display[2];
                         
                         var _param = new widgetParam(_wdx, _wdy, _wdw, _wdh, _data, {}, _m, rx, ry);
                         _param.font = _font;
                         
-                        switch(instanceof(meta_tb[j])) {
-                            case "textArrayBox" : meta_tb[j].arraySet = current_meta.tags; break;
+                        switch(instanceof(_wdgt)) {
+                            case "textArrayBox" : _wdgt.arraySet = current_meta.tags; break;
                         }
                         
-                        wh = meta_tb[j].drawParam(_param);
-                        if(meta_tb[j].inBBOX(_m)) contentPane.hover_content = true;
+                        wh = _wdgt.drawParam(_param);
+                        if(_wdgt.inBBOX(_m)) contentPane.hover_content = true;
                         
                         if(viewMode == INSP_VIEW_MODE.spacious) {
                             yy += wh + ui(8);
@@ -439,7 +443,7 @@ function Panel_Inspector() : PanelContent() constructor {
                         }
                     }
                     
-                    if(STEAM_ENABLED) {
+                    if(STEAM_ENABLED && _edt) {
                         meta_steam_avatar.setFocusHover(pFOCUS, _hover);
                         if(pFOCUS) meta_steam_avatar.register(contentPane);
                         

@@ -29,11 +29,11 @@ function MetaDataManager() constructor {
 	steam		= FILE_STEAM_TYPE.local;
 	
 	static displays = [
-		[ "Description",  function(meta) { return meta.description; }	, line_get_height() * 5],
-		[ "Author",		  function(meta) { return meta.author; }		, line_get_height() ],
-		[ "Contact info", function(meta) { return meta.contact; }		, line_get_height() ],
-		[ "Alias",		  function(meta) { return meta.alias; }			, line_get_height() ],
-		[ "Tags",		  function(meta) { return meta.tags; }			, line_get_height() ],
+		[ "Description",  function(meta) { return meta.description; }	, 5],
+		[ "Author",		  function(meta) { return meta.author; }		, 1],
+		[ "Contact info", function(meta) { return meta.contact; }		, 1],
+		[ "Alias",		  function(meta) { return meta.alias; }			, 1],
+		[ "Tags",		  function(meta) { return meta.tags; }			, 1],
 	];
 	
 	static serialize = function() {
