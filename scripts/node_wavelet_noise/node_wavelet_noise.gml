@@ -2,11 +2,11 @@ function Node_Wavelet_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, 
 	name   = "Wavelet Noise";
 	shader = sh_noise_wavelet;
 	
-	inputs[1] = nodeValue_Vector("Position", self, [ 0, 0 ])
+	inputs[1] = nodeValue_Vec2("Position", self, [ 0, 0 ])
 		.setUnitRef(function(index) { return getDimension(index); });
 		addShaderProp(SHADER_UNIFORM.float, "position");
 		
-	inputs[2] = nodeValue_Vector("Scale", self, [ 4, 4 ])
+	inputs[2] = nodeValue_Vec2("Scale", self, [ 4, 4 ])
 		.setMappable(6);
 		addShaderProp(SHADER_UNIFORM.float, "scale");
 				

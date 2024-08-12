@@ -18,7 +18,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	inputs[1] = nodeValue_Rotation("Angle", self, 45);
 		
-	inputs[2] = nodeValue_Vector("Starting position", self, [ DEF_SURF_W / 2, DEF_SURF_H / 2 ]);
+	inputs[2] = nodeValue_Vec2("Starting position", self, [ DEF_SURF_W / 2, DEF_SURF_H / 2 ]);
 	
 	inputs[3] = nodeValue_Int("Iteration", self, 4);
 	

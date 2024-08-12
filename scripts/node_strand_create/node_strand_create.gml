@@ -11,7 +11,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	inputs[1] = nodeValue_Int("Density", self, 8, "How many strands to generate.");
 	
-	inputs[2] = nodeValue_Vector("Length", self, [ 4, 4 ]);
+	inputs[2] = nodeValue_Vec2("Length", self, [ 4, 4 ]);
 	
 	inputs[3] = nodeValue_Int("Segment", self, 4);
 	
@@ -20,7 +20,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	inputs[5] = nodeValue_PathNode("Path", self, noone);
 	
-	inputs[6] = nodeValue_Vector("Position", self, [ 0, 0 ]);
+	inputs[6] = nodeValue_Vec2("Position", self, [ 0, 0 ]);
 	
 	inputs[7] = nodeValue_Enum_Button("Side", self,  0, [ "Inner", "Outer", "Both" ]);
 	
@@ -52,7 +52,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	inputs[16] = nodeValue_Bool("View fix hair", self, false);
 	
-	inputs[17] = nodeValue_Vector("Root strength", self, [-1, -1])
+	inputs[17] = nodeValue_Vec2("Root strength", self, [-1, -1])
 		.setTooltip("The force required to break strand from its root. Set to -1 to make strand infinitely strong.");
 	
 	outputs[0] = nodeValue_Output("Strand", self, VALUE_TYPE.strands, noone);

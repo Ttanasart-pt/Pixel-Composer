@@ -3,10 +3,10 @@ function Node_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	color = COLORS.node_blend_number;
 	setDimension(96, 48);
 	
-	inputs[0] = nodeValue_Vector("Position", self, [ 0, 0 ] )
+	inputs[0] = nodeValue_Vec2("Position", self, [ 0, 0 ] )
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Vector("Span", self, [ 16, 16 ] )
+	inputs[1] = nodeValue_Vec2("Span", self, [ 16, 16 ] )
 		.setVisible(true, true);
 	
 	inputs[2] = nodeValue_Enum_Scroll("Shape", self, AREA_SHAPE.rectangle, [ 

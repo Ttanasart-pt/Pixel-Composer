@@ -21,7 +21,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	inputs[in_d3d + 0] = nodeValue_Int("FOV", self, 60 )
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 10, 90, 0.1 ] });
 	
-	inputs[in_d3d + 1] = nodeValue_Vector("Clipping Distance", self, [ 1, 10 ] );
+	inputs[in_d3d + 1] = nodeValue_Vec2("Clipping Distance", self, [ 1, 10 ] );
 	 
 	inputs[in_d3d + 2] = nodeValue_Dimension(self);
 	
@@ -41,7 +41,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	
 	inputs[in_d3d + 9] = nodeValue_Enum_Scroll("Postioning Mode", self, 2, [ "Position + Rotation", "Position + Lookat", "Lookat + Rotation" ] );
 	
-	inputs[in_d3d + 10] = nodeValue_Vector("Lookat Position", self, [ 0, 0, 0 ] );
+	inputs[in_d3d + 10] = nodeValue_Vec3("Lookat Position", self, [ 0, 0, 0 ] );
 	
 	inputs[in_d3d + 11] = nodeValue_Rotation("Roll", self, 0);
 	

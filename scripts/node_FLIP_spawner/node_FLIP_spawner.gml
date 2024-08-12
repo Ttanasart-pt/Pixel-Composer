@@ -11,7 +11,7 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	inputs[1] = nodeValue_Enum_Scroll("Spawn Shape", self,  0 , [ new scrollItem("Circle", s_node_shape_circle, 0), new scrollItem("Rectangle", s_node_shape_rectangle, 0), "Surface" ]);
 	
-	inputs[2] = nodeValue_Vector("Spawn Position", self, [ 0.5, 0.25 ] )
+	inputs[2] = nodeValue_Vec2("Spawn Position", self, [ 0.5, 0.25 ] )
 		.setUnitRef(function(index) { return getDimension(); }, VALUE_UNIT.reference);
 	
 	inputs[3] = nodeValue_Enum_Button("Spawn Type", self,  0 , [ "Stream", "Splash" ]);
@@ -37,7 +37,7 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 	inputs[12] = nodeValue_Int("Spawn Duration", self, 1 );
 	
-	inputs[13] = nodeValue_Vector("Spawn Szie", self, [ 2, 2 ] );
+	inputs[13] = nodeValue_Vec2("Spawn Szie", self, [ 2, 2 ] );
 	
 	input_display_list = [ 0, 9, 
 		["Spawner",	false], 1, 7, 8, 13, 2, 3, 4, 12, 5, 

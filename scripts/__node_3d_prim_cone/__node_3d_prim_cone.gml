@@ -4,14 +4,14 @@ function __Node_3D_Cone(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	inputs[0] = nodeValue_Dimension(self);
 	
-	inputs[1] = nodeValue_Vector("Render position", self, [ 0.5, 0.5 ])
+	inputs[1] = nodeValue_Vec2("Render position", self, [ 0.5, 0.5 ])
 		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
 	
-	inputs[2] = nodeValue_Vector("Render rotation", self, [ 0, 0, 0 ]);
+	inputs[2] = nodeValue_Vec3("Render rotation", self, [ 0, 0, 0 ]);
 	
-	inputs[3] = nodeValue_Vector("Render scale", self, [ 1, 1 ]);
+	inputs[3] = nodeValue_Vec2("Render scale", self, [ 1, 1 ]);
 	
-	inputs[4] = nodeValue_Vector("Object scale", self, [ 1, 1, 1 ]);
+	inputs[4] = nodeValue_Vec3("Object scale", self, [ 1, 1, 1 ]);
 	
 	inputs[5] = nodeValue_Rotation("Light direction", self, 0);
 		
@@ -24,9 +24,9 @@ function __Node_3D_Cone(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	inputs[8] = nodeValue_Color("Light color", self, c_white);
 	inputs[9] = nodeValue_Color("Ambient color", self, c_grey);
 	
-	inputs[10] = nodeValue_Vector("Object rotation", self, [ 0, 0, 0 ]);
+	inputs[10] = nodeValue_Vec3("Object rotation", self, [ 0, 0, 0 ]);
 		
-	inputs[11] = nodeValue_Vector("Object position", self, [ 0, 0, 0 ]);
+	inputs[11] = nodeValue_Vec3("Object position", self, [ 0, 0, 0 ]);
 	
 	inputs[12] = nodeValue_Enum_Button("Projection", self,  0, [ "Orthographic", "Perspective" ])
 		.rejectArray();

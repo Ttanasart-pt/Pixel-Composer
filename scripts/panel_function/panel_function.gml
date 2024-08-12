@@ -479,35 +479,35 @@
 	
 	function __fnInit_Panels() {
 		
-        registerFunction("", "Preference",                "", MOD_KEY.none, call_dialog_preference            ).setMenu("preference",      THEME.gear)
+        registerFunction("", "Preferences",               "", MOD_KEY.none, call_dialog_preference            ).setMenu("preference",      THEME.gear)
         registerFunction("", "Splash screen",             "", MOD_KEY.none, call_dialog_splash                ).setMenu("splash_screen")
         registerFunction("", "Release note",              "", MOD_KEY.none, call_dialog_release_note          ).setMenu("release_note")
-        registerFunction("", "Command Palette",           "T", MOD_KEY.ctrl | MOD_KEY.shift, call_dialog_command_palette       ).setMenu("command_palette")
-        registerFunction("", "Autosave folder",           "", MOD_KEY.none, open_autosave_folder              ).setMenu("autosave_folder", THEME.save_auto)
+        registerFunction("", "Command Palette",           "T", MOD_KEY.ctrl | MOD_KEY.shift, call_dialog_command_palette).setMenu("command_palette")
+        registerFunction("", "Open Autosave Folder",      "", MOD_KEY.none, open_autosave_folder              ).setMenu("autosave_folder", THEME.save_auto)
         
         registerFunction("", "Addons",                    "", MOD_KEY.none, call_panel_addon                  ).setMenu("addons")
         registerFunction("", "History",                   "", MOD_KEY.none, call_panel_history                ).setMenu("history")
         
-        registerFunction("", "Notification Panel",    vk_f12, MOD_KEY.none, call_panel_Notification           ).setMenu("notification_panel")
-        registerFunction("", "Collections Panel",         "", MOD_KEY.none, call_panel_Collection             ).setMenu("collections_panel")
-        registerFunction("", "Graph Panel",               "", MOD_KEY.none, call_panel_Graph                  ).setMenu("graph_panel")
-        registerFunction("", "Preview Panel",             "", MOD_KEY.none, call_panel_Preview                ).setMenu("preview_panel")
-        registerFunction("", "Preview Histogram",         "", MOD_KEY.none, call_panel_Preview_Histogram      ).setMenu("preview_histogram")
-        registerFunction("", "Inspector Panel",           "", MOD_KEY.none, call_panel_Inspector              ).setMenu("inspector_panel")
-        registerFunction("", "Workspace Panel",           "", MOD_KEY.none, call_panel_Workspace              ).setMenu("workspace_panel")
-        registerFunction("", "Animation Panel",           "", MOD_KEY.none, call_panel_Animation              ).setMenu("animation_panel")
+        registerFunction("", "Notification Panel",    vk_f12, MOD_KEY.none, call_panel_Notification           ).setMenuAlt("Notification", "notification_panel")
+        registerFunction("", "Collections Panel",         "", MOD_KEY.none, call_panel_Collection             ).setMenuAlt("Collections",  "collections_panel")
+        registerFunction("", "Graph Panel",               "", MOD_KEY.none, call_panel_Graph                  ).setMenuAlt("Graph",        "graph_panel")
+        registerFunction("", "Preview Panel",             "", MOD_KEY.none, call_panel_Preview                ).setMenuAlt("Preview",      "preview_panel")
+        registerFunction("", "Preview Histogram",         "", MOD_KEY.none, call_panel_Preview_Histogram      ).setMenuAlt("Preview",      "preview_histogram")
+        registerFunction("", "Inspector Panel",           "", MOD_KEY.none, call_panel_Inspector              ).setMenuAlt("Inspector",    "inspector_panel")
+        registerFunction("", "Workspace Panel",           "", MOD_KEY.none, call_panel_Workspace              ).setMenuAlt("Workspace",    "workspace_panel")
+        registerFunction("", "Animation Panel",           "", MOD_KEY.none, call_panel_Animation              ).setMenuAlt("Animation",    "animation_panel")
         
-        registerFunction("", "Align Panel",               "", MOD_KEY.none, call_panel_Node_Align             ).setMenu("align_panel")
-        registerFunction("", "Nodes Panel",               "", MOD_KEY.none, call_panel_Nodes                  ).setMenu("nodes_panel")
-        registerFunction("", "Tunnels Panel",             "", MOD_KEY.none, call_panel_Tunnels                ).setMenu("tunnels_panel")
+        registerFunction("", "Align Panel",               "", MOD_KEY.none, call_panel_Node_Align             ).setMenuAlt("Align",        "align_panel")
+        registerFunction("", "Nodes Panel",               "", MOD_KEY.none, call_panel_Nodes                  ).setMenuAlt("Nodes",        "nodes_panel")
+        registerFunction("", "Tunnels Panel",             "", MOD_KEY.none, call_panel_Tunnels                ).setMenuAlt("Tunnels",      "tunnels_panel")
         
-        registerFunction("", "Color Panel",               "", MOD_KEY.none, call_panel_Color                  ).setMenu("color_panel")
-        registerFunction("", "Palettes Panel",            "", MOD_KEY.none, call_panel_Palette                ).setMenu("palettes_panel")
-        registerFunction("", "Palettes Mixer Panel",      "", MOD_KEY.none, call_panel_Palette_Mixer          ).setMenu("palettes_mixer_panel")
-        registerFunction("", "Gradients Panel",           "", MOD_KEY.none, call_panel_Gradient               ).setMenu("gradients_panel")
+        registerFunction("", "Color Panel",               "", MOD_KEY.none, call_panel_Color                  ).setMenuAlt("Color",        "color_panel")
+        registerFunction("", "Palettes Panel",            "", MOD_KEY.none, call_panel_Palette                ).setMenuAlt("Palettes",     "palettes_panel")
+        registerFunction("", "Palettes Mixer Panel",      "", MOD_KEY.none, call_panel_Palette_Mixer          ).setMenuAlt("Palettes",     "palettes_mixer_panel")
+        registerFunction("", "Gradients Panel",           "", MOD_KEY.none, call_panel_Gradient               ).setMenuAlt("Gradients",    "gradients_panel")
         
-        registerFunction("", "Console Panel",             "", MOD_KEY.none, call_panel_Console                ).setMenu("console_panel")
-        registerFunction("", "Globalvar Panel",           "", MOD_KEY.none, call_panel_Globalvar              ).setMenu("globalvar_panel")
-        registerFunction("", "File Explorer Panel",       "", MOD_KEY.none, call_panel_File_Explorer          ).setMenu("file_explorer_panel")
+        registerFunction("", "Console Panel",             "", MOD_KEY.none, call_panel_Console                ).setMenuAlt("Console",      "console_panel")
+        registerFunction("", "Globalvar Panel",           "", MOD_KEY.none, call_panel_Globalvar              ).setMenuAlt("Globalvar",    "globalvar_panel")
+        registerFunction("", "File Explorer Panel",       "", MOD_KEY.none, call_panel_File_Explorer          ).setMenuAlt("File",         "file_explorer_panel")
 	}
 #endregion

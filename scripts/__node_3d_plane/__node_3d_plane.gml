@@ -4,21 +4,21 @@ function __Node_3D_Plane(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	inputs[0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[1] = nodeValue_Vector("Render position", self, [ 0.5, 0.5 ])
+	inputs[1] = nodeValue_Vec2("Render position", self, [ 0.5, 0.5 ])
 		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
 	
-	inputs[2] = nodeValue_Vector("Object rotation", self, [ 0, 0, 0 ]);
+	inputs[2] = nodeValue_Vec3("Object rotation", self, [ 0, 0, 0 ]);
 	
-	inputs[3] = nodeValue_Vector("Render scale", self, [ 1, 1 ]);
+	inputs[3] = nodeValue_Vec2("Render scale", self, [ 1, 1 ]);
 	
 	inputs[4] = nodeValue_Enum_Scroll("Output dimension", self, OUTPUT_SCALING.same_as_input, [ "Same as input", "Constant", "Relative to input" ])
 		.rejectArray();
 	
-	inputs[5] = nodeValue_Vector("Constant dimension", self, DEF_SURF);
+	inputs[5] = nodeValue_Vec2("Constant dimension", self, DEF_SURF);
 	
-	inputs[6] = nodeValue_Vector("Object position", self, [ 0, 0, 0 ]);
+	inputs[6] = nodeValue_Vec3("Object position", self, [ 0, 0, 0 ]);
 	
-	inputs[7] = nodeValue_Vector("Object scale", self, [ 1, 1, 1 ]);
+	inputs[7] = nodeValue_Vec3("Object scale", self, [ 1, 1, 1 ]);
 	
 	inputs[8] = nodeValue_Enum_Button("Projection", self, 0, [ "Orthographic", "Perspective" ])
 		.rejectArray();
@@ -26,9 +26,9 @@ function __Node_3D_Plane(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	inputs[9] = nodeValue_Float("Field of view", self, 60)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 1, 90, 0.1 ] });
 	
-	inputs[10] = nodeValue_Vector("Texture scale", self, [ 1, 1 ]);
+	inputs[10] = nodeValue_Vec2("Texture scale", self, [ 1, 1 ]);
 	
-	inputs[11] = nodeValue_Vector("Texture shift", self, [ 0, 0 ]);
+	inputs[11] = nodeValue_Vec2("Texture shift", self, [ 0, 0 ]);
 		
 	inputs[12] = nodeValue_Int("Subdiviion", self, 1)
 		

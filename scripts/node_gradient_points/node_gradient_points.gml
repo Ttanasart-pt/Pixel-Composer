@@ -3,19 +3,19 @@ function Node_Gradient_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	
 	inputs[0] = nodeValue_Dimension(self);
 	
-	inputs[1] = nodeValue_Vector("Center 1", self, [ 0, 0 ] )
+	inputs[1] = nodeValue_Vec2("Center 1", self, [ 0, 0 ] )
 		.setUnitRef(function(index) { return getDimension(index); });
 	inputs[2] = nodeValue_Color("Color 1", self, c_white );
 	
-	inputs[3] = nodeValue_Vector("Center 2", self, [ DEF_SURF_W, 0 ] )
+	inputs[3] = nodeValue_Vec2("Center 2", self, [ DEF_SURF_W, 0 ] )
 		.setUnitRef(function(index) { return getDimension(index); });
 	inputs[4] = nodeValue_Color("Color 2", self, c_white );
 	
-	inputs[5] = nodeValue_Vector("Center 3", self, [ 0, DEF_SURF_H ] )
+	inputs[5] = nodeValue_Vec2("Center 3", self, [ 0, DEF_SURF_H ] )
 		.setUnitRef(function(index) { return getDimension(index); });
 	inputs[6] = nodeValue_Color("Color 3", self, c_white );
 	
-	inputs[7] = nodeValue_Vector("Center 4", self, DEF_SURF , { useGlobal : false })
+	inputs[7] = nodeValue_Vec2("Center 4", self, DEF_SURF , { useGlobal : false })
 		.setUnitRef(function(index) { return getDimension(index); });
 	inputs[8] = nodeValue_Color("Color 4", self, c_white );
 	

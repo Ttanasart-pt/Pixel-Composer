@@ -13,12 +13,12 @@ function __Node_3D_Obj(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	
 	inputs[2] = nodeValue_Dimension(self);
 	
-	inputs[3] = nodeValue_Vector("Render position", self, [ 0.5, 0.5 ])
+	inputs[3] = nodeValue_Vec2("Render position", self, [ 0.5, 0.5 ])
 		.setUnitRef( function() { return getInputData(2); }, VALUE_UNIT.reference);
 		
-	inputs[4] = nodeValue_Vector("Render rotation", self, [ 0, 0, 0 ]);
+	inputs[4] = nodeValue_Vec3("Render rotation", self, [ 0, 0, 0 ]);
 	
-	inputs[5] = nodeValue_Vector("Render scale", self, [ 1, 1 ]);
+	inputs[5] = nodeValue_Vec2("Render scale", self, [ 1, 1 ]);
 		
 	inputs[6] = nodeValue_Rotation("Light direction", self, 0)
 		.rejectArray();
@@ -37,14 +37,14 @@ function __Node_3D_Obj(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	inputs[10] = nodeValue_Color("Ambient color", self, c_grey)
 		.rejectArray();
 	
-	inputs[11] = nodeValue_Vector("Object scale", self, [ 1, 1, 1 ]);
+	inputs[11] = nodeValue_Vec3("Object scale", self, [ 1, 1, 1 ]);
 		
 	inputs[12] = nodeValue_Bool("Flip UV", self, true, "Flip UV axis, can be use to fix some texture mapping error.")
 		.rejectArray();
 	
-	inputs[13] = nodeValue_Vector("Object rotation", self, [ 0, 0, 180 ]);
+	inputs[13] = nodeValue_Vec3("Object rotation", self, [ 0, 0, 180 ]);
 		
-	inputs[14] = nodeValue_Vector("Object position", self, [ 0, 0, 0 ]);
+	inputs[14] = nodeValue_Vec3("Object position", self, [ 0, 0, 0 ]);
 	
 	inputs[15] = nodeValue_Enum_Button("Projection", self,  0, [ "Orthographic", "Perspective" ])
 		.rejectArray();

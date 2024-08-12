@@ -6,18 +6,18 @@ function __Node_3D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	inputs[1] = nodeValue_Dimension(self);
 	
-	inputs[2] = nodeValue_Vector("Object position", self, [ 0, 0, 0 ]);
+	inputs[2] = nodeValue_Vec3("Object position", self, [ 0, 0, 0 ]);
 	
-	inputs[3] = nodeValue_Vector("Object rotation", self, [ 0, 180, 0 ]);
+	inputs[3] = nodeValue_Vec3("Object rotation", self, [ 0, 180, 0 ]);
 	
-	inputs[4] = nodeValue_Vector("Object scale", self, [ 1, 1, 0.1 ]);
+	inputs[4] = nodeValue_Vec3("Object scale", self, [ 1, 1, 0.1 ]);
 	
-	inputs[5] = nodeValue_Vector("Render position", self, [ 0.5, 0.5 ])
+	inputs[5] = nodeValue_Vec2("Render position", self, [ 0.5, 0.5 ])
 		.setUnitRef( function() { return getInputData(1); }, VALUE_UNIT.reference);
 		
-	inputs[6] = nodeValue_Vector("Render rotation", self, [ 0, 0, 0 ]);
+	inputs[6] = nodeValue_Vec3("Render rotation", self, [ 0, 0, 0 ]);
 	
-	inputs[7] = nodeValue_Vector("Render scale", self, [ 1, 1 ]);
+	inputs[7] = nodeValue_Vec2("Render scale", self, [ 1, 1 ]);
 	
 	inputs[8] = nodeValue_Trigger("Manual generate", self, false )
 		.setDisplay(VALUE_DISPLAY.button, { name: "Generate", UI : true, onClick: function() { generateMesh(); doUpdate(); } });

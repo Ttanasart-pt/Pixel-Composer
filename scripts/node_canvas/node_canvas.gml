@@ -50,6 +50,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	frame_renderer_x     = 0;
 	frame_renderer_x_to  = 0;
 	frame_renderer_x_max = 0;
+	_selecting_frame     = noone;
 	
 	frame_renderer_content = surface_create(1, 1);
 	frame_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus, _full = true, _fx = frame_renderer_x) { #region frame_renderer
@@ -120,11 +121,18 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 						
 						if(mouse_press(mb_left, _focus)) 
 							_del = i;
+							
 					} else if(point_in_rectangle(_msx, _msy, _sx, _sy, _sx + _ssw, _sy + _ssh)) {
-						_del_a = 0;
-						
+						draw_sprite_stretched_add(THEME.s_box_r2, 1, _sx, _sy, _ssw, _ssh, c_white, .2);
 						if(mouse_press(mb_left, _focus)) 
 							setFrame(i);
+							
+						if(mouse_press(mb_right, _focus))  {
+							_selecting_frame = i;
+							menuCall("node_canvas_frame", [
+								menuItem(__txt("Delete"), function() /*=>*/ { removeFrame(_selecting_frame); }, THEME.cross)
+							]);
+						}
 					}
 					
 					if(_del_a != noone) {
@@ -1259,9 +1267,11 @@ function timelineItemNode_Canvas(node) : timelineItemNode(node) constructor {
 			}
 		}
 		
-		if(!_hov && _chv) {
-			var _fr = round((_msx - _x) / _s);
-			if(_fr < 1 || _fr > TOTAL_FRAMES) return _hov;
+		var _fr = round((_msx - _x) / _s);
+		if(_fr < 1 || _fr > TOTAL_FRAMES) return _hov;
+		
+		var _frAdd = _fr - node.attributes.frames;
+		if(!_hov && _chv && _frAdd < 16) {
 			
 			_rx  = _x + _fr * _s;
 			_rx0 = _rx - _h / 2;

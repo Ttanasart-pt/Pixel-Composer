@@ -90,10 +90,10 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	inputs[15] = nodeValue_Enum_Scroll("Positioning Mode", self,  0, [ "Area", "Center + Scale", "Full Image" ])
 		
-	inputs[16] = nodeValue_Vector("Center", self, [ DEF_SURF_W / 2, DEF_SURF_H / 2 ] )
+	inputs[16] = nodeValue_Vec2("Center", self, [ DEF_SURF_W / 2, DEF_SURF_H / 2 ] )
 		.setUnitRef(onSurfaceSize);
 		
-	inputs[17] = nodeValue_Vector("Half Size", self, [ DEF_SURF_W / 2, DEF_SURF_H / 2 ] )
+	inputs[17] = nodeValue_Vec2("Half Size", self, [ DEF_SURF_W / 2, DEF_SURF_H / 2 ] )
 		.setUnitRef(onSurfaceSize);
 		
 	inputs[18] = nodeValue_Bool("Tile", self, false);
@@ -113,7 +113,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		
 	inputs[25] = nodeValue_Int("Teeth Amount", self, 6 );
 		
-	inputs[26] = nodeValue_Vector("Teeth Size", self, [ 0.2, 0.2 ] , { slideSpeed : 0.01 });
+	inputs[26] = nodeValue_Vec2("Teeth Size", self, [ 0.2, 0.2 ] , { slideSpeed : 0.01 });
 		
 	inputs[27] = nodeValue_Rotation("Teeth Rotation", self, 0);
 		

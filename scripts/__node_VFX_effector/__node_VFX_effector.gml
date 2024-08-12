@@ -32,7 +32,7 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	inputs[3] = nodeValue_Float("Falloff distance", self, 4 )
 		.rejectArray();
 	
-	inputs[4] = nodeValue_Vector("Effect Vector", self, [ -1, 0 ] )
+	inputs[4] = nodeValue_Vec2("Effect Vector", self, [ -1, 0 ] )
 		.rejectArray();
 	
 	inputs[5] = nodeValue_Float("Strength", self, 1 )

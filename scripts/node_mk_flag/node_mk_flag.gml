@@ -6,7 +6,7 @@ function Node_MK_Flag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	inputs[1] = nodeValue_Surface("Texture", self);
 	
-	inputs[2] = nodeValue_Vector("Position", self, [ 0, 0 ]);
+	inputs[2] = nodeValue_Vec2("Position", self, [ 0, 0 ]);
 	
 	inputs[3] = nodeValue_Enum_Button("Pin side", self,  0, [ "Left", "Right", "Up", "Down" ]);
 	

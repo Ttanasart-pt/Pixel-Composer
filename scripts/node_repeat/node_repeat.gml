@@ -31,7 +31,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 												 new scrollItem("Grid",     s_node_repeat_axis, 1), 
 												 new scrollItem("Circular", s_node_repeat_axis, 2), ]);
 	
-	inputs[4] = nodeValue_Vector("Shift position", self, [ DEF_SURF_W / 2, 0 ])
+	inputs[4] = nodeValue_Vec2("Shift position", self, [ DEF_SURF_W / 2, 0 ])
 		.setUnitRef(function() { return getDimension(); });
 	
 	inputs[5] = nodeValue_Rotation_Range("Repeat rotation", self, [0, 0]);
@@ -42,7 +42,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	inputs[8] = nodeValue_Float("Radius", self, 1);
 		
-	inputs[9] = nodeValue_Vector("Start position", self, [0, 0])
+	inputs[9] = nodeValue_Vec2("Start position", self, [0, 0])
 		.setUnitRef(function(index) { return getInputData(1); });
 		
 	inputs[10] = nodeValue("Scale over copy", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11 );
@@ -68,7 +68,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	inputs[18] = nodeValue_Int("Column", self, 4);
 	
-	inputs[19] = nodeValue_Vector("Column shift", self, [0, DEF_SURF_H / 2])
+	inputs[19] = nodeValue_Vec2("Column shift", self, [0, DEF_SURF_H / 2])
 		.setUnitRef(function() { return getDimension(); });
 	
 	inputs[20] = nodeValue_Float("Animator midpoint", self, 0.5)
@@ -77,11 +77,11 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	inputs[21] = nodeValue_Float("Animator range", self, 0.1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[22] = nodeValue_Vector("Animator position", self, [ 0, 0 ]);
+	inputs[22] = nodeValue_Vec2("Animator position", self, [ 0, 0 ]);
 	
 	inputs[23] = nodeValue_Rotation("Animator rotation", self, 0);
 		
-	inputs[24] = nodeValue_Vector("Animator scale", self, [ 0, 0 ]);
+	inputs[24] = nodeValue_Vec2("Animator scale", self, [ 0, 0 ]);
 		
 	inputs[25] = nodeValue("Animator falloff", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_10);
 	 

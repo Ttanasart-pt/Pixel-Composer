@@ -21,13 +21,13 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	
 	inputs[8] = nodeValue_Range("Swing frequency", self, [ 1, 1 ], { linked : true });
 	
-	inputs[9] = nodeValue_Vector("Size", self, [ 4, 2 ]);
+	inputs[9] = nodeValue_Vec2("Size", self, [ 4, 2 ]);
 	
 	inputs[10] = nodeValue_Range("Speed", self, [ 1, 1 ], { linked : true });
 	
 	inputs[11] = nodeValue_Range("X Momentum", self, [ 0, 0 ], { linked : true });
 	
-	inputs[12] = nodeValue_Vector("Wind", self, [ 0, 0 ]);
+	inputs[12] = nodeValue_Vec2("Wind", self, [ 0, 0 ]);
 	
 	inputs[13] = nodeValue_Gradient("Color", self, new gradientObject(cola(c_white)))
 	

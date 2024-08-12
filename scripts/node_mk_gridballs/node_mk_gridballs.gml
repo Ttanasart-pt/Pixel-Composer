@@ -5,7 +5,7 @@ function Node_MK_GridBalls(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	inputs[1] = nodeValue_Dimension(self);
 	
-	inputs[2] = nodeValue_Vector("Amount", self, [ 4, 4 ]);
+	inputs[2] = nodeValue_Vec2("Amount", self, [ 4, 4 ]);
 	
 	inputs[3] = nodeValue_Rotation("Light", self, 0);
 	
@@ -19,7 +19,7 @@ function Node_MK_GridBalls(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		
 	inputs[7] = nodeValue_Rotation("Scatter direction", self, 0);
 		
-	inputs[8] = nodeValue_Vector("Shift", self, [ 0, 0 ]);
+	inputs[8] = nodeValue_Vec2("Shift", self, [ 0, 0 ]);
 	
 	inputs[9] = nodeValue_Float("Stretch", self, 0);
 	

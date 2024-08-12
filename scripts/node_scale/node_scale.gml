@@ -10,7 +10,7 @@ function Node_Scale(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	inputs[2] = nodeValue_Enum_Button("Mode", self,  0, [ "Upscale", "Scale to fit" ]);
 	
-	inputs[3] = nodeValue_Vector("Target dimension", self, DEF_SURF);
+	inputs[3] = nodeValue_Vec2("Target dimension", self, DEF_SURF);
 	
 	inputs[4] = nodeValue_Bool("Active", self, true);
 		active_index = 4;

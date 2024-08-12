@@ -932,10 +932,13 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(!rendered)       return true;
 		
 		force_requeue = false;
-		for(var i = 0; i < input_list_size; i++)
-			if(inputs[i].isActiveDynamic(frame)) return true;
+		__temp_frame  = frame;
+		return array_any(inputs, function(inp) /*=>*/ {return inp.isActiveDynamic(__temp_frame)});
 		
-		return false;
+		// for(var i = 0; i < input_list_size; i++)
+		// 	if(inputs[i].isActiveDynamic(frame)) return true;
+		
+		// return false;
 	}
 	
 	static triggerRender = function(resetSelf = true) {

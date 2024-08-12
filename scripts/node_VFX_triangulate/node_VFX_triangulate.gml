@@ -14,7 +14,7 @@ function Node_VFX_Triangulate(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	
 	manual_ungroupable	 = false;
 	
-	inputs[0] = nodeValue_Vector("Output dimension", self, DEF_SURF );
+	inputs[0] = nodeValue_Vec2("Output dimension", self, DEF_SURF );
 		
 	inputs[1] = nodeValue_Particle("Particles", self, -1 )
 		.setVisible(true, true);

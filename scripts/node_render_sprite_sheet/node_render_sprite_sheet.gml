@@ -41,7 +41,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 	inputs[8] = nodeValue_Slider_Range("Range", self, [ 0, 0 ])
 		.setTooltip("Starting/ending frames, set end to 0 to default to last frame.")
 		
-	inputs[9] = nodeValue_Vector("Spacing", self, [ 0, 0 ]);
+	inputs[9] = nodeValue_Vec2("Spacing", self, [ 0, 0 ]);
 	
 	inputs[10] = nodeValue_Bool("Overlappable", self, false);
 	

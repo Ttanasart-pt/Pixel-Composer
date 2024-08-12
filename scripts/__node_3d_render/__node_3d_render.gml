@@ -3,12 +3,12 @@
 	
 //	inputs[2] = nodeValue_Dimension(self);
 	
-//	inputs[3] = nodeValue_Vector("Render position", self, [ 0.5, 0.5 ])
+//	inputs[3] = nodeValue_Vec2("Render position", self, [ 0.5, 0.5 ])
 //		.setUnitRef( function() { return getInputData(2); }, VALUE_UNIT.reference);
 		
-//	inputs[4] = nodeValue_Vector("Render rotation", self, [ 0, 0, 0 ]);
+//	inputs[4] = nodeValue_Vec3("Render rotation", self, [ 0, 0, 0 ]);
 	
-//	inputs[5] = nodeValue_Vector("Render scale", self, [ 1, 1 ]);
+//	inputs[5] = nodeValue_Vec2("Render scale", self, [ 1, 1 ]);
 		
 //	inputs[6] = nodeValue_Float("Light direction", self, 0)
 //		.setDisplay(VALUE_DISPLAY.rotation)

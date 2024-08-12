@@ -29,8 +29,8 @@
         registerFunction("Inspector", "Collapse All Sections", "",    MOD_KEY.none,    panel_inspector_section_collapse_all ).setMenu("inspector_collapse_all_sections")
         
         registerFunction("Inspector", "Reset",                 "",    MOD_KEY.none,    panel_inspector_reset                ).setMenu("inspector_reset")
-        registerFunction("Inspector", "Add",                   "",    MOD_KEY.none,    panel_inspector_add                  ).setMenu("inspector_add")
-        registerFunction("Inspector", "Remove",                "",    MOD_KEY.none,    panel_inspector_remove               ).setMenu("inspector_remove")
+        registerFunction("Inspector", "Animate",               "",    MOD_KEY.none,    panel_inspector_add                  ).setMenu("inspector_animate")
+        registerFunction("Inspector", "Reset Animation",       "",    MOD_KEY.none,    panel_inspector_remove               ).setMenu("inspector_remove_animate")
         registerFunction("Inspector", "Combine Axis",          "",    MOD_KEY.none,    panel_inspector_axis_combine         ).setMenu("inspector_combine_axis")
         registerFunction("Inspector", "Separate Axis",         "",    MOD_KEY.none,    panel_inspector_axis_separate        ).setMenu("inspector_separate_axis")
         registerFunction("Inspector", "Use Expression",        "",    MOD_KEY.none,    panel_inspector_use_expression       ).setMenu("inspector_use_expression")
@@ -155,22 +155,28 @@ function Panel_Inspector() : PanelContent() constructor {
     
     #region ---- metadata ----
         current_meta = -1;
-        meta_tb[0] = new textArea(TEXTBOX_INPUT.text, function(str) { current_meta.description    = str; });    
-        meta_tb[1] = new textArea(TEXTBOX_INPUT.text, function(str) { current_meta.author        = str; });
-        meta_tb[2] = new textArea(TEXTBOX_INPUT.text, function(str) { current_meta.contact        = str; });
-        meta_tb[3] = new textArea(TEXTBOX_INPUT.text, function(str) { current_meta.alias        = str; });
+        meta_tb[0] = new textArea(TEXTBOX_INPUT.text, function(str) { current_meta.description = str; });    
+        meta_tb[1] = new textArea(TEXTBOX_INPUT.text, function(str) { current_meta.author      = str; });
+        meta_tb[2] = new textArea(TEXTBOX_INPUT.text, function(str) { current_meta.contact     = str; });
+        meta_tb[3] = new textArea(TEXTBOX_INPUT.text, function(str) { current_meta.alias       = str; });
         meta_tb[4] = new textArrayBox(noone, META_TAGS);
         for( var i = 0, n = array_length(meta_tb); i < n; i++ )
             meta_tb[i].hide = true;
-    
+        
         meta_display = [ 
-            [ __txt("Project Settings"), false ], 
-            [ __txt("Metadata"), true ], 
-            [ __txtx("panel_globalvar", "Global variables"), true, button(function() { panelAdd("Panel_Globalvar", true); }, THEME.node_goto).setIcon(THEME.node_goto, 0, COLORS._main_icon) ], 
-            [ __txt("Group Properties"), true ], 
+            [ __txt("Project Settings"),                        false ], 
+            [ __txt("Metadata"),                                true  ], 
+            [ __txtx("panel_globalvar", "Global variables"),    true  ], 
+            [ __txt("Group Properties"),                        true  ], 
         ];
         
         meta_steam_avatar = new checkBox(function() { STEAM_UGC_ITEM_AVATAR = !STEAM_UGC_ITEM_AVATAR; });
+        
+        global_buttons = [
+            // button(() => { panelAdd("Panel_Globalvar", true); }   ).setIcon(THEME.node_goto,  0, COLORS._main_icon_light),
+            button(function() /*=>*/ { meta_display[2][1] = false; var_editing = !var_editing; }          ).setIcon(THEME.gear_16,    0, COLORS._main_icon_light),
+            button(function() /*=>*/ { meta_display[2][1] = false; PROJECT.globalNode.createValue(); }    ).setIcon(THEME.add_16,     0, COLORS._main_value_positive),
+        ];
     #endregion
     
     #region ---- workshop ----
@@ -226,8 +232,8 @@ function Panel_Inspector() : PanelContent() constructor {
         
         __dialog_junction = noone;
         menu_junc_reset_value      = MENU_ITEMS.inspector_reset;
-        menu_junc_add_anim         = MENU_ITEMS.inspector_add;
-        menu_junc_rem_anim         = MENU_ITEMS.inspector_remove;
+        menu_junc_add_anim         = MENU_ITEMS.inspector_animate;
+        menu_junc_rem_anim         = MENU_ITEMS.inspector_remove_animate;
         menu_junc_combine_axis     = MENU_ITEMS.inspector_combine_axis;
         menu_junc_separate_axis    = MENU_ITEMS.inspector_separate_axis;
         menu_junc_expression_ena   = MENU_ITEMS.inspector_use_expression;
@@ -300,24 +306,53 @@ function Panel_Inspector() : PanelContent() constructor {
             
             var _meta = meta_display[i];
             var _txt  = array_safe_get_fast(_meta, 0);
-            var _b      = array_safe_get_fast(_meta, 2, noone);
-            var _x1   = con_w - (_b != noone) * ui(30);
             
-            if(_hover && point_in_rectangle(_m[0], _m[1], 0, yy, _x1, yy + lbh)) {
-                draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, 0, yy, con_w, lbh, COLORS.panel_inspector_group_hover, 1);
+            switch(i) {
+                case 2 :
+                    var _bw = ui(28);
+                    var _bh = lbh - ui(4);
+                    
+                    var _x1 = con_w;
+                    var _y1 = yy + ui(2);
+                    
+                    var _amo = array_length(global_buttons);
+                    var _tw  = (_bw + ui(4)) * _amo;
+                    draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, con_w - _tw, yy, _tw, lbh, COLORS.panel_inspector_group_bg, 1);
+                    
+                    global_buttons[0].icon       = var_editing? THEME.accept_16 : THEME.gear_16;
+                    global_buttons[0].icon_blend = var_editing? COLORS._main_value_positive : COLORS._main_icon_light;
+                    
+                    for (var j = 0, m = array_length(global_buttons); j < m; j++) {
+                        _x1 -= _bw + ui(4);
                         
-                if(mouse_press(mb_left, pFOCUS))
-                    meta_display[i][1] = !meta_display[i][1];
-            } else
-                draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, 0, yy, con_w, lbh, COLORS.panel_inspector_group_bg, 1);
-            
-            if(_b != noone) {
-                _b.setFocusHover(pFOCUS, _hover);
-                _b.draw(_x1, yy + ui(2), ui(28), lbh - ui(4), _m, THEME.button_hide_fill);
-                if(_b.inBBOX(_m)) contentPane.hover_content = true;
+                        var _b = global_buttons[j];
+                            _b.setFocusHover(pFOCUS, _hover);
+                            _b.draw(_x1 + ui(2), _y1, _bw, _bh, _m, THEME.button_hide_fill);
+                        if(_b.inBBOX(_m)) contentPane.hover_content = true;
+                    }
+                    
+                    _x1 -= ui(4);
+                    if(_hover && point_in_rectangle(_m[0], _m[1], 0, yy, _x1, yy + lbh)) {
+                        draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, 0, yy, _x1, lbh, COLORS.panel_inspector_group_hover, 1);
+                        if(mouse_press(mb_left, pFOCUS)) _meta[1] = !_meta[1];
+                        
+                    } else
+                        draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, 0, yy, _x1, lbh, COLORS.panel_inspector_group_bg, 1);
+                    
+                    break;
+                    
+                default : 
+                    var _x1   = con_w;
+                    
+                    if(_hover && point_in_rectangle(_m[0], _m[1], 0, yy, _x1, yy + lbh)) {
+                        draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, 0, yy, con_w, lbh, COLORS.panel_inspector_group_hover, 1);
+                        if(mouse_press(mb_left, pFOCUS)) _meta[1] = !_meta[1];
+                        
+                    } else
+                        draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, 0, yy, con_w, lbh, COLORS.panel_inspector_group_bg, 1);
             }
             
-            draw_sprite_ui(THEME.arrow, meta_display[i][1]? 0 : 3, ui(16), yy + lbh / 2, 1, 1, 0, COLORS.panel_inspector_group_bg, 1);    
+            draw_sprite_ui(THEME.arrow, _meta[1]? 0 : 3, ui(16), yy + lbh / 2, 1, 1, 0, COLORS.panel_inspector_group_bg, 1);    
             
             draw_set_text(viewMode? f_p0 : f_p1, fa_left, fa_center, COLORS._main_text_inner);
             draw_text_add(ui(32), yy + lbh / 2, _txt);
@@ -325,7 +360,7 @@ function Panel_Inspector() : PanelContent() constructor {
             yy += lbh + ui(viewMode? 8 : 6);
             hh += lbh + ui(viewMode? 8 : 6);
             
-            if(meta_display[i][1]) continue;
+            if(_meta[1]) continue;
             
             var _font = viewMode == INSP_VIEW_MODE.spacious? f_p0 : f_p2;
             
@@ -396,7 +431,7 @@ function Panel_Inspector() : PanelContent() constructor {
                     var _wdx = viewMode == INSP_VIEW_MODE.spacious? ui(16) : ui(140);
                     var _wdw = w - ui(48) - _wdx;
                     var _whh = line_get_height(_font);
-                    var _edt = !PROJECT.meta.file_id || PROJECT.meta.author_steam_id == STEAM_USER_ID;
+                    var _edt = PROJECT.meta.author_steam_id && PROJECT.meta.author_steam_id == STEAM_USER_ID;
                         
                     for( var j = 0; j < array_length(meta.displays); j++ ) {
                         var display = meta.displays[j];
@@ -478,62 +513,62 @@ function Panel_Inspector() : PanelContent() constructor {
                     if(_m[1] > yy) contentPane.hover_content = true;
                     
                     var glPar = globalvar_viewer_draw(ui(16), yy, contentPane.surface_w - ui(24), _m, pFOCUS, _hover, contentPane, ui(16) + x, top_bar_h + y);
-                    var gvh = glPar[0];
+                    var gvh   = glPar[0];
                     
                     yy += gvh + ui(8);
                     hh += gvh + ui(8);
                 
-                    var bh = ui(36);
-                    var bx = ui(16);
-                    var by = yy;
-                    var bbw = contentPane.surface_w - ui(24);
+                    // var bh = ui(36);
+                    // var bx = ui(16);
+                    // var by = yy;
+                    // var bbw = contentPane.surface_w - ui(24);
                 
-                    if(var_editing) {
-                        var bw = bbw / 2 - ui(4);
+                    // if(var_editing) {
+                    //     var bw = bbw / 2 - ui(4);
                     
-                        if(buttonInstant(THEME.button_hide, bx, by, bw, bh, _m, pFOCUS, _hover) == 2)
-                            var_editing = !var_editing;
+                    //     if(buttonInstant(THEME.button_hide, bx, by, bw, bh, _m, pFOCUS, _hover) == 2)
+                    //         var_editing = !var_editing;
         
-                        var txt  = __txt("Apply");
-                        var icon = THEME.accept;
-                        var colr = COLORS._main_value_positive;
+                    //     var txt  = __txt("Apply");
+                    //     var icon = THEME.accept;
+                    //     var colr = COLORS._main_value_positive;
                     
-                        draw_set_text(f_p0b, fa_left, fa_center, COLORS._main_icon)
-                        var bxc = bx + bw / 2 - (string_width(txt) + ui(48)) / 2;
-                        var byc = by + bh / 2;
-                        draw_sprite_ui(icon, 0, bxc + ui(24), byc,,,, colr);
-                        draw_text_over(bxc + ui(48), byc, txt);
+                    //     draw_set_text(f_p0b, fa_left, fa_center, COLORS._main_icon)
+                    //     var bxc = bx + bw / 2 - (string_width(txt) + ui(48)) / 2;
+                    //     var byc = by + bh / 2;
+                    //     draw_sprite_ui(icon, 0, bxc + ui(24), byc,,,, colr);
+                    //     draw_text_over(bxc + ui(48), byc, txt);
                         
-                        bx += bw + ui(4);
+                    //     bx += bw + ui(4);
                         
-                        if(buttonInstant(THEME.button_hide, bx, by, bw, bh, _m, pFOCUS, _hover) == 2)
-                            PROJECT.globalNode.createValue();
+                    //     if(buttonInstant(THEME.button_hide, bx, by, bw, bh, _m, pFOCUS, _hover) == 2)
+                    //         PROJECT.globalNode.createValue();
                     
-                        var txt  = __txt("Add");
-                        var icon = THEME.add;
+                    //     var txt  = __txt("Add");
+                    //     var icon = THEME.add;
                 
-                        draw_set_text(f_p0b, fa_left, fa_center, COLORS._main_icon)
-                        var bxc = bx + bw / 2 - (string_width(txt) + ui(48)) / 2;
-                        var byc = by + bh / 2;
-                        draw_sprite_ui(icon, 0, bxc + ui(24), byc,,,, colr);
-                        draw_text_over(bxc + ui(48), byc, txt);
+                    //     draw_set_text(f_p0b, fa_left, fa_center, COLORS._main_icon)
+                    //     var bxc = bx + bw / 2 - (string_width(txt) + ui(48)) / 2;
+                    //     var byc = by + bh / 2;
+                    //     draw_sprite_ui(icon, 0, bxc + ui(24), byc,,,, colr);
+                    //     draw_text_over(bxc + ui(48), byc, txt);
                         
-                    } else {
-                        var bw = bbw;
+                    // } else {
+                    //     var bw = bbw;
                     
-                        if(buttonInstant(THEME.button_hide, bx, by, bw, bh, _m, pFOCUS, _hover) == 2)
-                            var_editing = !var_editing;
-        
-                        var txt  = __txt("Edit");
-                        var icon = THEME.gear;
-                        var colr = COLORS._main_icon;
+                    //     if(buttonInstant(THEME.button_hide, bx, by, bw, bh, _m, pFOCUS, _hover) == 2)
+                    //         var_editing = !var_editing;
+                        
+                    //     var txt  = __txt("Edit");
+                    //     var icon = THEME.gear;
+                    //     var colr = COLORS._main_icon;
                     
-                        draw_set_text(f_p0b, fa_left, fa_center, colr)
-                        var bxc = bx + bw / 2 - (string_width(txt) + ui(48)) / 2;
-                        var byc = by + bh / 2;
-                        draw_sprite_ui(icon, 0, bxc + ui(24), byc,,,, colr);
-                        draw_text_over(bxc + ui(48), byc, txt);
-                    }
+                    //     draw_set_text(f_p0b, fa_left, fa_center, colr)
+                    //     var bxc = bx + bw / 2 - (string_width(txt) + ui(48)) / 2;
+                    //     var byc = by + bh / 2;
+                    //     draw_sprite_ui(icon, 0, bxc + ui(24), byc,,,, colr);
+                    //     draw_text_over(bxc + ui(48), byc, txt);
+                    // }
                     
                     break;
                     
@@ -922,7 +957,7 @@ function Panel_Inspector() : PanelContent() constructor {
                             array_push(_menuItem, menu_junc_extract);
                     }
                     
-                    var dia = menuCall("inspector_value_menu", _menuItem,, jun);
+                    var dia = menuCall("inspector_value_menu", _menuItem);
                     __dialog_junction = jun;
                 } #endregion
             } 

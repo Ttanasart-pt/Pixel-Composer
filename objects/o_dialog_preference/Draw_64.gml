@@ -96,7 +96,14 @@ if !ready exit;
 		if(mouse_press(mb_left, sFOCUS)) 
 			hk_editing = noone;
 		
+		var _ppy = py + hotkey_cont_h;
+		
+		hk_scroll.font = f_p2;
+		hk_scroll.setFocusHover(sFOCUS, sHOVER);
+		hk_scroll.draw(px, _ppy, ui(200), ui(24), hk_page);
+		
 		sp_hotkey.setFocusHover(sFOCUS, sHOVER);
-		sp_hotkey.draw(px, py);
+		sp_hotkey.draw(px, _ppy + ui(32));
+		
 	}
 #endregion

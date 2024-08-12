@@ -43,7 +43,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	inputs[19] = nodeValue_Range("Gravity", self, [ 0, 0 ] , { linked : true });
 	
-	inputs[20] = nodeValue_Vector("Direction wiggle", self, [ 0, 0 ] , { label: [ "Amplitude", "Period" ], linkable: false, per_line: true });
+	inputs[20] = nodeValue_Vec2("Direction wiggle", self, [ 0, 0 ] , { label: [ "Amplitude", "Period" ], linkable: false, per_line: true });
 	
 	inputs[21] = nodeValue_Bool("Loop", self, true );
 	
@@ -95,11 +95,11 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	inputs[40] = nodeValue_Float("Bounce friction", self, 0.1, "Apply horizontal friction once particle stop bouncing." )
 		.setDisplay(VALUE_DISPLAY.slider);
 		
-	inputs[41] = nodeValue_Vector("Position wiggle", self, [ 0, 0 ] , { label: [ "Amplitude", "Period" ], linkable: false, per_line: true });
+	inputs[41] = nodeValue_Vec2("Position wiggle", self, [ 0, 0 ] , { label: [ "Amplitude", "Period" ], linkable: false, per_line: true });
 		
-	inputs[42] = nodeValue_Vector("Rotation wiggle", self, [ 0, 0 ] , { label: [ "Amplitude", "Period" ], linkable: false, per_line: true });
+	inputs[42] = nodeValue_Vec2("Rotation wiggle", self, [ 0, 0 ] , { label: [ "Amplitude", "Period" ], linkable: false, per_line: true });
 		
-	inputs[43] = nodeValue_Vector("Scale wiggle", self, [ 0, 0 ] , { label: [ "Amplitude", "Period" ], linkable: false, per_line: true });
+	inputs[43] = nodeValue_Vec2("Scale wiggle", self, [ 0, 0 ] , { label: [ "Amplitude", "Period" ], linkable: false, per_line: true });
 		
 	inputs[44] = nodeValue_Trigger("Spawn", self,  false )
 		.setDisplay(VALUE_DISPLAY.button, { name: "Trigger" });
@@ -164,7 +164,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	for( var i = 0; i < attributes.part_amount; i++ )
 		parts[i] = new __part(self);
 		
-	static spawn = function(_time = CURRENT_FRAME, _pos = -1) { #region
+	static spawn = function(_time = CURRENT_FRAME, _pos = -1) {
 		var _inSurf     	= getInputData( 0);
 		
 		var _spawn_amount	= getInputData( 2);
@@ -306,13 +306,13 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			
 			parts_runner = safe_mod(parts_runner + 1, attributes.part_amount);
 		}
-	} #endregion
+	}
 	
 	static onSpawn = function(_time, part) {}
 	
 	static updateParticleForward = function() {}
 	
-	static getSurfaceCache = function() { #region
+	static getSurfaceCache = function() {
 		var surfs = getInputData(0);
 		
 		if(array_empty(surfs)) return;
@@ -333,9 +333,9 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			
 			surface_cache[$ surfs[i]] = surface_clone(_s);
 		}
-	} #endregion
+	}
 	
-	function reset() { #region
+	function reset() {
 		getInputs(0);
 		
 		var keys = variable_struct_get_names(surface_cache);
@@ -377,13 +377,13 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		#endregion
 		
 		render();
-	} #endregion
+	}
 	
-	static resetSeed = function() { #region
+	static resetSeed = function() {
 		seed = getInputData(32);
-	} #endregion
+	}
 	
-	function checkPartPool() { #region
+	function checkPartPool() {
 		var _part_amo = attributes.part_amount;
 		var _curr_amo = array_length(parts);
 		
@@ -393,9 +393,9 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		} else if(_part_amo < _curr_amo) {
 			array_resize(parts, _part_amo);
 		}
-	} #endregion
+	}
 	
-	static runVFX = function(_time = CURRENT_FRAME, _render = true) { #region
+	static runVFX = function(_time = CURRENT_FRAME, _render = true) {
 		var _spawn_delay  = inputs[1].getValue(_time);
 		var _spawn_type   = inputs[16].getValue(_time);
 		var _spawn_active = inputs[27].getValue(_time);
@@ -425,11 +425,11 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		if(!_render) return;
 		
 		render(_time);
-	} #endregion
+	}
 	
 	static onStep = function() {}
 	
-	static step = function() { #region
+	static step = function() {
 		var _inSurf = getInputData(0);
 		var _dist   = getInputData(4);
 		var _scatt  = getInputData(24);
@@ -471,9 +471,9 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		}
 		
 		onStep();
-	} #endregion
+	}
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _spr  = getInputData(0);
 		if(array_empty(_spr)) return;
 		if(is_array(_spr))
@@ -484,17 +484,17 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		inputs[3].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag);
 		if(onDrawOverlay != -1)
 			onDrawOverlay(active, _x, _y, _s, _mx, _my);
-	} #endregion
+	}
 	
 	static onDrawOverlay = -1;
 	
-	static update = function(frame = CURRENT_FRAME) { #region
+	static update = function(frame = CURRENT_FRAME) {
 		var _resetSeed = getInputData(48);
 		if(_resetSeed) resetSeed();
 	
 		checkPartPool();
 		onUpdate(frame);
-	} #endregion
+	}
 	
 	static onUpdate = function(frame = CURRENT_FRAME) {}
 	
@@ -504,14 +504,14 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	static onPartStep    = noone;
 	static onPartDestroy = noone;
 	
-	static doSerialize = function(_map) { #region
+	static doSerialize = function(_map) {
 		_map.part_base_length = input_len;
-	} #endregion
+	}
 	
-	static postDeserialize = function() { #region
+	static postDeserialize = function() {
 		var _tlen = struct_try_get(load_map, "part_base_length", 40);
 		
 		for( var i = _tlen; i < input_len; i++ )
 			array_insert(load_map.inputs, i, noone);
-	} #endregion
+	}
 }

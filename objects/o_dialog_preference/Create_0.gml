@@ -12,17 +12,27 @@ event_inherited();
 	should_restart = false;
 #endregion
 
-#region resize
+#region size
 	dialog_resizable = true;
 	dialog_w_min = ui(640);
 	dialog_h_min = ui(480);
 	
+	panel_width   = dialog_w - ui(padding + padding) - page_width;
+	panel_height  = dialog_h - ui(title_height + padding);
+	
+	hotkey_cont_h = ui(0);
+	hotkey_height = panel_height - hotkey_cont_h - ui(32);
+	
 	onResize = function() /*=>*/ {
-		sp_page.resize(page_width - ui(4), dialog_h - ui(title_height + padding));
+		panel_width   = dialog_w - ui(padding + padding) - page_width;
+		panel_height  = dialog_h - ui(title_height + padding);
+		hotkey_height = panel_height - hotkey_cont_h - ui(32);
 		
-		sp_pref.resize(  dialog_w - ui(padding + padding) - page_width, dialog_h - ui(title_height + padding));
-		sp_hotkey.resize(dialog_w - ui(padding + padding) - page_width, dialog_h - ui(title_height + padding));
-		sp_colors.resize(dialog_w - ui(padding + padding) - page_width, dialog_h - (title_height + ui(padding + 40)));
+		sp_page.resize(page_width - ui(4), panel_height);
+		
+		sp_pref.resize(  panel_width, panel_height);
+		sp_hotkey.resize(panel_width, hotkey_height);
+		sp_colors.resize(panel_width, panel_height - ui(40));
 	}
 #endregion
 
@@ -37,7 +47,7 @@ event_inherited();
 	section_current = "";
 	sections = array_create(array_length(page));
 	
-	sp_page = new scrollPane(page_width - ui(4), dialog_h - ui(title_height + padding), function(_y, _m, _r) {
+	sp_page = new scrollPane(page_width - ui(4), panel_height, function(_y, _m, _r) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 1);
 		var ww = sp_page.surface_w;
 		var hh = 0;
@@ -403,6 +413,18 @@ event_inherited();
 			new checkBox(function() /*=>*/ { PREFERENCES.panel_graph_group_require_shift = !PREFERENCES.panel_graph_group_require_shift; PREF_SAVE(); })
 		));
 		
+		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
+			__txtx("pref_use_alt", "Use ALT for"),
+			"alt_picker",
+			new buttonGroup([ "Pan", "Color Picker" ], function(val) /*=>*/ { PREFERENCES.alt_picker = val; PREF_SAVE(); })
+		));
+		
+		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item(
+			__txtx("pref_pan_key", "Panning key"),
+			new scrollBox([ "Middle Mouse", "Mouse 4", "Mouse 5" ], function(val) /*=>*/ { PREFERENCES.pan_mouse_key = val + 3; PREF_SAVE(); }),
+			function() /*=>*/ { return PREFERENCES.pan_mouse_key - 3; },
+		));
+		
 	ds_list_add(pref_appr, __txt("Preview")); ////////////////////////////////////////////////////////////////////// Preview
 	
 		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
@@ -524,7 +546,7 @@ event_inherited();
 		}, false);
 	sb_theme.align = fa_left;
 	
-	sp_colors = new scrollPane(dialog_w - ui(padding + padding) - page_width, dialog_h - (title_height + ui(padding) + ui(40)), function(_y, _m, _r) {
+	sp_colors = new scrollPane(panel_width, panel_height - ui(40), function(_y, _m, _r) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		var hh	 = 0;
 		var th   = line_get_height(f_p0);
@@ -616,121 +638,108 @@ event_inherited();
 #endregion
 
 #region hotkey
-	pref_hot = ds_list_create();
-	ds_list_add(pref_hot, [
-		__txtx("pref_use_alt", "Use ALT for"),
-		"alt_picker",
-		new buttonGroup([ "Pan", "Color Picker" ], function(val) /*=>*/ { 
-			PREFERENCES.alt_picker = val; 
-			PREF_SAVE();
-		})
-	]);
+	hk_editing    = noone;
+	hotkeyContext = [];
+	hotkeyArray   = [];
 	
-	ds_list_add(pref_hot, [
-		__txtx("pref_pan_key", "Panning key"),
-		function() /*=>*/ { return PREFERENCES.pan_mouse_key - 3; },
-		new scrollBox([ "Middle Mouse", "Mouse 4", "Mouse 5" ], function(val) /*=>*/ { 
-			PREFERENCES.pan_mouse_key = val + 3; 
-			PREF_SAVE();
-		})
-	]);
+	for(var j = 0; j < ds_list_size(HOTKEY_CONTEXT); j++) {
+		var ctx  = HOTKEY_CONTEXT[| j];
+		var _lst = [];
+		
+		var ll = HOTKEYS[? ctx];
+		for(var i = 0; i < ds_list_size(ll); i++)
+			array_push(_lst, ll[| i]);
+		
+		array_push(hotkeyContext, { context: ctx, list: _lst });
+		
+		var _title = ctx == ""? "Global" : ctx;
+		    _title = string_replace_all(_title, "_", " ");
+		array_push(hotkeyArray, _title);
+	}
 	
-	hk_editing = noone;
-	
-	sp_hotkey = new scrollPane(dialog_w - ui(padding + padding) - page_width, dialog_h - ui(title_height + padding), function(_y, _m) {
-		draw_clear_alpha(COLORS.panel_bg_clear, 0);
-		var padd		= ui(8);
-		var hh			= ui(8);
-		var currGroup	= noone;
-		var x1		 = sp_hotkey.surface_w;
-		var key_x1   = x1 - ui(32);
-		var modified = false;
+	var keys = struct_get_names(HOTKEYS_CUSTOM);
+	for( var i = 0, n = array_length(keys); i < n; i++ ) {
+		var ctx = keys[i];
 		
-		draw_set_text(f_p0, fa_left, fa_top);
+		var hotkey = HOTKEYS_CUSTOM[$ ctx];
+		var hks    = struct_get_names(hotkey);
+		var _lst   = [];
 		
-		var yy    = _y + ui(8);
-		var th    = line_get_height(f_p0);
-		var ind   = 0;
-		var sect  = [];
-		var psect = "";
-		
-		for( var i = 0, n = ds_list_size(pref_hot); i < n; i++ ) {
-			var _pref = pref_hot[| i];
+		for (var j = 0, m = array_length(hks); j < m; j++) {
+			var _n = hks[j];
+			var _k = hotkey[$ _n];
 			
-			var _yy  = yy + hh;
-			var name = _pref[0];
-			var val  = _pref[1];
-			    val  = is_method(val)? val() : PREFERENCES[$ val];
+			_k.context = ctx;
+			_k.name    = _n;
 			
-			if(search_text != "" && string_pos(string_lower(search_text), string_lower(name)) == 0)
-				continue;
-			
-			if(ind++ % 2 == 0)
-				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, _yy - padd, sp_hotkey.surface_w, th + padd * 2, COLORS.dialog_preference_prop_bg, 1);
-			
-			draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
-			draw_text_add(ui(24), _yy, _pref[0]);
-			
-			_pref[2].setFocusHover(sFOCUS, sHOVER && sp_hotkey.hover); 
-			
-			var widget_w = ui(240);
-			var widget_h = th + (padd - ui(4)) * 2;
-			
-			var widget_x = x1 - ui(4) - widget_w;
-			var widget_y = _yy - ui(4);
-			
-			var params = new widgetParam(widget_x, widget_y, widget_w, widget_h, val, {}, _m, sp_hotkey.x, sp_hotkey.y);
-			var _th = _pref[2].drawParam(params) ?? 0;
-			if(_pref[2].inBBOX(_m)) sp_hotkey.hover_content = true;
-			
-			hh += _th + padd + ui(8);
+			array_push(_lst, _k);
 		}
 		
-		th  = line_get_height(f_p1);
-		ind = 0;
+		array_push(hotkeyContext, { context: ctx, list: _lst });
 		
-		var _hov = sHOVER && sp_hotkey.hover;
+		var _title = ctx == ""? "Global" : ctx;
+		    _title = string_replace_all(_title, "_", " ");
+		array_push(hotkeyArray, _title);
+	}
+	
+	hk_page   = 0;
+	hk_scroll = new scrollBox(hotkeyArray, function(val) /*=>*/ { hk_page = val; });
+	hk_scroll.align = fa_left;
+	
+	sp_hotkey = new scrollPane(panel_width, hotkey_height, function(_y, _m) {
+		draw_clear_alpha(COLORS.panel_bg_clear, 0);
+		draw_set_text(f_p2, fa_left, fa_top);
 		
-		for(var j = 0; j < ds_list_size(HOTKEY_CONTEXT); j++) {
-			var ll = HOTKEYS[? HOTKEY_CONTEXT[| j]];
+		var padd	  = ui(6);
+		var hh		  = 0;
+		var currGroup = noone;
+		
+		var _ww       = sp_hotkey.surface_w;
+		var key_x1    = _ww - ui(32);
+		var yy        = _y + ui(8);
+		
+		var ind       = 0;
+		var sect      = [];
+		var psect     = "";
+		var th        = line_get_height();
+		var _hov      = sHOVER && sp_hotkey.hover;
+		var modified  = false;
+		
+		// for (var i = 0, n = array_length(hotkeyContext); i < n; i++) {
+			// var _ctxObj = hotkeyContext[i];
+			var _ctxObj = hotkeyContext[hk_page];
+			var _cntx   = _ctxObj.context;
+			var _list   = _ctxObj.list;
+			var _yy     = yy + hh;
 			
-			for(var i = 0; i < ds_list_size(ll); i++) {
-				var key   = ll[| i];
-				var group = key.context;
-				var name  = __txt(key.name);
-				var pkey  = key.key;
-				var modi  = key.modi;
+			// var _grlab  = _cntx == ""? __txt("Global") : _cntx;
+			// draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text_sub);
+			// draw_text_add(ui(8), _yy, _grlab);
+			
+			// array_push(sect, [ _grlab, sp_hotkey, hh + ui(12) ]);
+			// if(_yy >= 0 && section_current == "") 
+			// 	section_current = psect;
+			// psect = _grlab;
+			
+			ind = 0;
+			// hh  += string_height("l") + ui(8);
+			
+			for (var j = 0, m = array_length(_list); j < m; j++) {
 				
-				var dkey  = key.dKey;
-				var dmod  = key.dModi;
-				var _yy   = yy + hh;
+				var key   = _list[j];
+				var name  = __txt(key.name);
 				
 				if(search_text != "" && string_pos(string_lower(search_text), string_lower(name)) == 0)
 					continue;
 				
-				if(group != currGroup) {
-					if(group != "") hh += ui(12);
-					
-					var _grp = group == ""? __txt("Global") : group;
-					draw_set_text(f_p0b, fa_left, fa_top, COLORS._main_text_sub);
-					draw_text_add(ui(8), _yy, _grp);
-					
-					array_push(sect, [ _grp, sp_hotkey, hh + ui(12) ]);
-					if(_yy >= 0 && section_current == "") 
-						section_current = psect;
-					psect = _grp;
-					
-					ind = 0;
-					hh  += string_height("l") + ui(16);
-					currGroup = group;
-				}
-				
+				var pkey  = key.key;
+				var modi  = key.modi;
 				var _yy   = yy + hh;
 				var _lb_y = _yy;
 				
-				if(ind++ % 2 == 0) draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, _yy - padd, sp_hotkey.surface_w, th + padd * 2, COLORS.dialog_preference_prop_bg, 1);
+				if(ind++ % 2 == 0) draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, _yy - padd, _ww, th + padd * 2, COLORS.dialog_preference_prop_bg, 1);
 				
-				draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text);
+				draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text);
 				draw_text_add(ui(24), _lb_y, name);
 				
 				var dk = key_get_name(key.key, key.modi);
@@ -738,9 +747,9 @@ event_inherited();
 				
 				var tx = key_x1 - ui(24);
 				var bx = tx - kw - ui(8);
-				var by = _yy - ui(4);
+				var by = _yy - ui(3);
 				var bw = kw + ui(16);
-				var bh = th + ui(8);
+				var bh = th + ui(6);
 				var cc = c_white;
 				
 				if(hk_editing == key) {
@@ -751,7 +760,7 @@ event_inherited();
 					if(_hov && point_in_rectangle(_m[0], _m[1], bx, by, bx + bw, by + bh)) {
 						draw_sprite_stretched_ext(THEME.ui_panel, 1, bx, by, bw, bh, CDEF.main_ltgrey);
 						sp_hotkey.hover_content = true;
-						cc = CDEF.main_ltgrey;
+						cc = CDEF.main_white;
 						
 						if(mouse_press(mb_left, sFOCUS)) {
 							hk_editing        = key;
@@ -760,98 +769,18 @@ event_inherited();
 						
 					} else {
 						draw_sprite_stretched_ext(THEME.ui_panel, 1, bx, by, bw, bh, CDEF.main_dkgrey, 1);
-						cc = COLORS._main_text_sub;
+						cc = CDEF.main_ltgrey;
 					}
 				}
 				
-				draw_set_text(f_p1, fa_right, fa_top, cc);
+				draw_set_text(f_p2, fa_right, fa_top, cc);
 				draw_text_add(tx, _lb_y, dk);
-				
-				if(key.key != dkey || key.modi != dmod) {
-					modified = true;
-					var bx = x1 - ui(32);
-					var by = _yy;
-					var b  = buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), _m, sFOCUS, sHOVER && sp_hotkey.hover, __txt("Reset"), THEME.refresh_16);
-					if(b) sp_hotkey.hover_content = true;
-					if(b == 2) {
-						key.key  = dkey;
-						key.modi = dmod;
-						
-						PREF_SAVE();
-					}
-				}
-				
-				hh += th + padd * 2;
-			}
-		}
-		
-		draw_set_text(f_p0b, fa_left, fa_top, COLORS._main_text_sub);
-		draw_text_add(ui(8), yy + hh, "Nodes");
-		array_push(sect, [ "Nodes", sp_hotkey, hh + ui(12) ]);
-		hh += string_height("l") + ui(16);
-		
-		var keys = struct_get_names(HOTKEYS_CUSTOM);
-		for( var i = 0, n = array_length(keys); i < n; i++ ) {
-			var _key    = keys[i];
-			var hotkeys = struct_get_names(HOTKEYS_CUSTOM[$ _key]);
-			var _key_t  = string_title(string_replace(_key, "Node_", ""));
-			var _yy     = yy + hh;
-			
-			draw_set_text(f_p0b, fa_left, fa_top, COLORS._main_text_sub);
-			draw_text_add(ui(8), _yy, _key_t);
-			array_push(sect, [ "- " + _key_t, sp_hotkey, hh + ui(12) ]);
-			
-			if(_yy >= 0 && section_current == "") 
-				section_current = psect;
-			psect = "- " + _key_t;
-			hh += string_height("l") + ui(16);
-			ind = 0;
-			
-			for( var j = 0, m = array_length(hotkeys); j < m; j++ ) {
-				var _hotkey = hotkeys[j];
-				var  hotkey = HOTKEYS_CUSTOM[$ _key][$ _hotkey];
-				
-				var name = __txt(_hotkey);
-				var pkey = hotkey.getName();
-				var _yy  = yy + hh;
-				
-				if(ind++ % 2 == 0)
-					draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, _yy - padd, sp_hotkey.surface_w, th + padd * 2, COLORS.dialog_preference_prop_bg, 1);
-				
-				var _lb_y = _yy;
-				draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text);
-				draw_text_add(ui(24), _lb_y, name);
-				
-				var kw = string_width(pkey);
-				var bx = key_x1 - ui(40) - kw;
-				var key = hotkey;
-				
-				if(hk_editing == key) {
-					draw_sprite_stretched(THEME.button_hide, 2, key_x1 - ui(40) - kw, _yy, kw + ui(32), th);
-					
-				} else {
-					var bx = key_x1 - ui(40) - kw;
-					var by = _yy;
-					var b  = buttonInstant(THEME.button_hide, bx, by, kw + ui(32), th, _m, sFOCUS, sHOVER && sp_hotkey.hover)
-					
-					if(b) sp_hotkey.hover_content = true;
-					if(b == 2) {
-						hk_editing = key;
-						keyboard_lastchar = key.key;
-					}
-				}
-				
-				var cc = (hotkey.key == "")? COLORS._main_text_sub : COLORS._main_text;
-				if(hk_editing == key) cc = COLORS._main_text_accent;
-				
-				draw_set_text(f_p1, fa_right, fa_top, cc);
-				draw_text_add(key_x1 - ui(24), _lb_y, pkey);
 				
 				if(key.key != key.dKey || key.modi != key.dModi) {
 					modified = true;
-					var bx = x1 - ui(32);
-					var by = _yy;
-					var b  = buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), _m, sFOCUS, sHOVER && sp_hotkey.hover, __txt("Reset"), THEME.refresh_16)
+					var bx   = x1 - ui(32);
+					var by   = _yy + th / 2 - ui(12);
+					var b    = buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), _m, sFOCUS, _hov, __txt("Reset"), THEME.refresh_16);
 					
 					if(b) sp_hotkey.hover_content = true;
 					if(b == 2) {
@@ -864,19 +793,19 @@ event_inherited();
 				
 				hh += th + padd * 2;
 			}
-		}
+		// }
 		
+		// sections[page_current] = sect;
 		if(hk_editing != noone) hotkey_editing(hk_editing);
-		sections[page_current] = sect;
 		
-		return hh;
+		return hh + ui(32);
 	})
 #endregion
 
 #region scrollpane
 	current_list = pref_global;
 	
-	sp_pref = new scrollPane(dialog_w - ui(padding + padding) - page_width, dialog_h - ui(title_height + padding), function(_y, _m, _r) {
+	sp_pref = new scrollPane(panel_width, panel_height, function(_y, _m, _r) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		var hh		= 0;
 		var th		= TEXTBOX_HEIGHT;

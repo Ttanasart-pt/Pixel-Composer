@@ -22,7 +22,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		.setVisible(true, true)
 		.setArrayDepth(1); 
 		
-	inputs[3] = nodeValue_Vector("Bone transform", self, [ 0, 0 ]);
+	inputs[3] = nodeValue_Vec2("Bone transform", self, [ 0, 0 ]);
 		
 	inputs[4] = nodeValue_Float("Bone scale", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0.1, 2, 0.01 ] });

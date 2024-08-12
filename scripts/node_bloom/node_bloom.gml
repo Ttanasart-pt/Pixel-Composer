@@ -32,7 +32,7 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	inputs[13] = nodeValue_Enum_Scroll("Types", self, 0, [ "Gaussian", "Zoom" ]);
 	
-	inputs[14] = nodeValue_Vector("Zoom Origin", self, [ 0.5, 0.5 ])
+	inputs[14] = nodeValue_Vec2("Zoom Origin", self, [ 0.5, 0.5 ])
 		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
 		
 	input_display_list = [ 7, 8, 

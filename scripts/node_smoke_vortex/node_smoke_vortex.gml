@@ -7,7 +7,7 @@ function Node_Smoke_Vortex(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 	inputs[0] = nodeValue("Domain", self, JUNCTION_CONNECT.input, VALUE_TYPE.sdomain, noone)
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Vector("Position", self, [0, 0]);
+	inputs[1] = nodeValue_Vec2("Position", self, [0, 0]);
 	
 	inputs[2] = nodeValue_Float("Radius", self, 8);
 	

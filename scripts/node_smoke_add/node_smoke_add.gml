@@ -11,7 +11,7 @@ function Node_Smoke_Add(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) con
 	
 	inputs[1] = nodeValue_Surface("Fluid brush", self);
 	
-	inputs[2] = nodeValue_Vector("Position", self, [0, 0]);
+	inputs[2] = nodeValue_Vec2("Position", self, [0, 0]);
 	
 	inputs[3] = nodeValue_Bool("Active", self, true);
 	
@@ -23,7 +23,7 @@ function Node_Smoke_Add(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) con
 	
 	inputs[6] = nodeValue_Int("Expand velocity mask", self, 0);
 	
-	inputs[7] = nodeValue_Vector("Velocity", self, [0, 0]);
+	inputs[7] = nodeValue_Vec2("Velocity", self, [0, 0]);
 	
 	input_display_list = [ 
 		["Domain",	 false], 0, 

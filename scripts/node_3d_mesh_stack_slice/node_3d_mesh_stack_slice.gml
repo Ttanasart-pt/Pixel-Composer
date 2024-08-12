@@ -4,13 +4,13 @@ function Node_3D_Mesh_Stack_Slice(_x, _y, _group = noone) : Node(_x, _y, _group)
 	inputs[0] = nodeValue_D3Mesh("Mesh", self, noone)
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Vector("Output Dimension", self, [ 16, 16 ]);
+	inputs[1] = nodeValue_Vec2("Output Dimension", self, [ 16, 16 ]);
 	
 	inputs[2] = nodeValue_Float("Scale", self, 1);
 	
 	inputs[3] = nodeValue_Int("Slices", self, 4);
 	
-	inputs[4] = nodeValue_Vector("BBOX Padding", self, [ 0, 0, 0 ]);
+	inputs[4] = nodeValue_Vec3("BBOX Padding", self, [ 0, 0, 0 ]);
 		
 	outputs[0] = nodeValue_Output("Outputs", self, VALUE_TYPE.surface, [])
 		.setArrayDepth(1);

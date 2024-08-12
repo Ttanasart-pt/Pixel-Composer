@@ -29,7 +29,7 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		
 	inputs[3] = nodeValue_Float("Sample frequency", self, 1);
 	
-	inputs[4] = nodeValue_Vector("Origin", self, [ 0, DEF_SURF_H / 2 ]);
+	inputs[4] = nodeValue_Vec2("Origin", self, [ 0, DEF_SURF_H / 2 ]);
 		
 	inputs[5] = nodeValue_Float("Scale", self, DEF_SURF_W / 2);
 	

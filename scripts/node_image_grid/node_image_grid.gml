@@ -9,7 +9,7 @@ function Node_Image_Grid(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		.setValidator(VV_min(1))
 		.rejectArray();
 	
-	inputs[2] = nodeValue_Vector("Spacing", self, [ 0, 0 ])
+	inputs[2] = nodeValue_Vec2("Spacing", self, [ 0, 0 ])
 		.rejectArray();
 	
 	inputs[3] = nodeValue_Padding("Padding", self, [ 0, 0, 0, 0 ])

@@ -88,7 +88,7 @@ if(!ready) exit;
 					};
 					
 					selecting_menu = _menuItem;
-					var _loadKey = string_to_var($"{_key.context}.{_key.name}");
+					var _loadKey   = _key.full_name();
 					
 					var context_menu_settings = [
 						_loadKey,

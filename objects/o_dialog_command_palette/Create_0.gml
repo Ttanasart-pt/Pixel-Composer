@@ -103,7 +103,7 @@ event_inherited();
 					if(mouse_press(mb_right)) {
 						selecting_hotkey = _key;
 						
-						var _loadKey = string_to_var($"{_key.context}.{_key.name}");
+						var _loadKey = _key.full_name();
 						var context_menu_settings = [
 							_loadKey,
 							menuItem("Edit hotkey", function() /*=>*/ {

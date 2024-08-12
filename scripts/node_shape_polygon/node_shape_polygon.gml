@@ -16,12 +16,12 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	inputs[4] = nodeValue_Enum_Scroll("Shape", self,  0, shapesArray);
 	
-	inputs[5] = nodeValue_Vector("Position", self, [ 0.5, 0.5 ])
+	inputs[5] = nodeValue_Vec2("Position", self, [ 0.5, 0.5 ])
 		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
 	
 	inputs[6] = nodeValue_Rotation("Rotation", self, 0);
 	
-	inputs[7] = nodeValue_Vector("Scale", self, [ 0.5, 0.5 ])
+	inputs[7] = nodeValue_Vec2("Scale", self, [ 0.5, 0.5 ])
 		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
 	
 	inputs[8] = nodeValue_Int("Sides", self, 16)

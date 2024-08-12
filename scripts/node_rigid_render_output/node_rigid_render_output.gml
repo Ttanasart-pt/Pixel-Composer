@@ -7,7 +7,7 @@ function Node_Rigid_Render_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 	
 	previewable = true;
 	
-	inputs[0] = nodeValue_Vector("Render dimension", self, DEF_SURF)
+	inputs[0] = nodeValue_Vec2("Render dimension", self, DEF_SURF)
 		.rejectArray();
 		
 	inputs[1] = nodeValue_Bool("Round position", self, false)

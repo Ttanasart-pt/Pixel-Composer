@@ -6,9 +6,9 @@ function Node_Bevel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	inputs[1] = nodeValue_Int("Height", self, 4)
 		.setMappable(11);
 	
-	inputs[2] = nodeValue_Vector("Shift", self, [ 0, 0 ]);
+	inputs[2] = nodeValue_Vec2("Shift", self, [ 0, 0 ]);
 	
-	inputs[3] = nodeValue_Vector("Scale", self, [ 1, 1 ] );
+	inputs[3] = nodeValue_Vec2("Scale", self, [ 1, 1 ] );
 	
 	inputs[4] = nodeValue_Enum_Scroll("Slope", self, 0, [ new scrollItem("Linear",   s_node_curve, 2), 
 												            new scrollItem("Smooth",   s_node_curve, 4), 

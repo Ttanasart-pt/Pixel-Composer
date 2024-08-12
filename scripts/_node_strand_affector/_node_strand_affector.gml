@@ -45,7 +45,7 @@ function _Node_Strand_Affector(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	inputs[1] = nodeValue_Enum_Scroll("Shape", self, 0, [ "Point", "Band" ]);
 	
-	inputs[2] = nodeValue_Vector("Position", self, [ 0, 0 ]);
+	inputs[2] = nodeValue_Vec2("Position", self, [ 0, 0 ]);
 	
 	inputs[3] = nodeValue_Float("Range", self, 4);
 	

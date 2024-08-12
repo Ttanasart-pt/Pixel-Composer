@@ -31,10 +31,10 @@ function Node_Display_Image(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		.setDisplay(VALUE_DISPLAY.path_load, { filter: "image|*.png;*.jpg" })
 		.rejectArray();
 	
-	inputs[1]  = nodeValue_Vector("Position", self, [ x, y ])
+	inputs[1]  = nodeValue_Vec2("Position", self, [ x, y ])
 		.rejectArray();
 	
-	inputs[2]  = nodeValue_Vector("Scale", self, [ 1, 1 ])
+	inputs[2]  = nodeValue_Vec2("Scale", self, [ 1, 1 ])
 		.rejectArray();
 	
 	inputs[3]  = nodeValue_Bool("Smooth transform", self, true)

@@ -2,11 +2,11 @@ function Node_Flow_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y,
 	name   = "Flow Noise";
 	shader = sh_noise_flow;
 	
-	inputs[1] = nodeValue_Vector("Position", self, [ 0, 0 ])
+	inputs[1] = nodeValue_Vec2("Position", self, [ 0, 0 ])
 		.setUnitRef(function(index) { return getDimension(index); });
 		addShaderProp(SHADER_UNIFORM.float, "position");
 		
-	inputs[2] = nodeValue_Vector("Scale", self, [ 2, 2 ]);
+	inputs[2] = nodeValue_Vec2("Scale", self, [ 2, 2 ]);
 		addShaderProp(SHADER_UNIFORM.float, "scale");
 				
 	inputs[3] = nodeValue_Float("Progress", self, 0)

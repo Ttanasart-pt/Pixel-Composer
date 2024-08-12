@@ -3,16 +3,16 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	inputs[0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[1] = nodeValue_Vector("Top left", self, [ 0, 0 ] )
+	inputs[1] = nodeValue_Vec2("Top left", self, [ 0, 0 ] )
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	inputs[2] = nodeValue_Vector("Top right", self, [ DEF_SURF_W, 0 ] )
+	inputs[2] = nodeValue_Vec2("Top right", self, [ DEF_SURF_W, 0 ] )
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	inputs[3] = nodeValue_Vector("Bottom left", self, [ 0, DEF_SURF_H ] )
+	inputs[3] = nodeValue_Vec2("Bottom left", self, [ 0, DEF_SURF_H ] )
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	inputs[4] = nodeValue_Vector("Bottom right", self, DEF_SURF )
+	inputs[4] = nodeValue_Vec2("Bottom right", self, DEF_SURF )
 		.setUnitRef(function(index) { return getDimension(index); });
 	
 	inputs[5] = nodeValue_Bool("Active", self, true);

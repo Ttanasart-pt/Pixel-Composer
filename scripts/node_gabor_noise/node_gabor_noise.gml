@@ -2,11 +2,11 @@ function Node_Gabor_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y
 	name   = "Gabor Noise";
 	shader = sh_noise_gabor;
 	
-	inputs[1] = nodeValue_Vector("Position", self, [ 0, 0 ])
+	inputs[1] = nodeValue_Vec2("Position", self, [ 0, 0 ])
 		.setUnitRef(function(index) { return getDimension(index); });
 		addShaderProp(SHADER_UNIFORM.float, "position");
 		
-	inputs[2] = nodeValue_Vector("Scale", self, [ 4, 4 ])
+	inputs[2] = nodeValue_Vec2("Scale", self, [ 4, 4 ])
 		.setMappable(8);
 		addShaderProp(SHADER_UNIFORM.float, "scale");
 				
@@ -24,7 +24,7 @@ function Node_Gabor_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y
 		.setMappable(10);
 		addShaderProp(SHADER_UNIFORM.float, "sharpness");
 				
-	inputs[6] = nodeValue_Vector("Augment", self, [ 11, 31 ]);
+	inputs[6] = nodeValue_Vec2("Augment", self, [ 11, 31 ]);
 		addShaderProp(SHADER_UNIFORM.float, "augment");
 		
 	inputs[7] = nodeValue_Rotation("Phase", self, 0)

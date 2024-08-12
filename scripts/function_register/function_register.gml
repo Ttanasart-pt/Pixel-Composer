@@ -56,6 +56,14 @@ function functionObject(_context, _name, _key, _mod, _action) constructor {
 		return self;
 	}
 	
+	static setMenuAlt = function(_name, _id, _spr = noone, shelf = false) { 
+		menu = menuItemAction(__txt(_name), action, _spr);	
+		if(shelf) menu.setIsShelf();
+		MENU_ITEMS[$ _id] = menu;
+		
+		return self;
+	}
+	
 	static setMenu = function(_id, _spr = noone, shelf = false) { 
 		menu = menuItemAction(__txt(name), action, _spr);	
 		if(shelf) menu.setIsShelf();

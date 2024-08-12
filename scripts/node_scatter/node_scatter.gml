@@ -88,7 +88,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[30] = nodeValue_Vector("Uniform amount", self, [ 4, 4 ]);
+	inputs[30] = nodeValue_Vec2("Uniform amount", self, [ 4, 4 ]);
 	
 	inputs[31] = nodeValue_Bool("Auto amount", self, false);
 	
@@ -96,11 +96,11 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	inputs[33] = nodeValue_Vec2_Range("Random position", self, [ 0, 0, 0, 0 ]);
 	
-	inputs[34] = nodeValue_Vector("Scale per radius", self, [ 0, 0 ]);
+	inputs[34] = nodeValue_Vec2("Scale per radius", self, [ 0, 0 ]);
 	
 	inputs[35] = nodeValue_Rotation_Range("Angle range", self, [ 0, 360 ]);
 	
-	inputs[36] = nodeValue_Vector("Shift position", self, [ 0, 0 ]);
+	inputs[36] = nodeValue_Vec2("Shift position", self, [ 0, 0 ]);
 	
 	inputs[37] = nodeValue_Bool("Exact", self,  false)
 	

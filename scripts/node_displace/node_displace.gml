@@ -5,7 +5,7 @@ function Node_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	inputs[1] = nodeValue_Surface("Displace map", self);
 	
-	inputs[2] = nodeValue_Vector("Position", self, [ 1, 0 ] )
+	inputs[2] = nodeValue_Vec2("Position", self, [ 1, 0 ] )
 		.setTooltip("Vector to displace pixel by.")
 		.setUnitRef(function(index) { return getDimension(index); });
 	

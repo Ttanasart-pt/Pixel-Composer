@@ -10,7 +10,7 @@ function Node_Box_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	inputs[2] = nodeValue_Rotation("Angle", self, 0)
 		.setMappable(7);
 	
-	inputs[3] = nodeValue_Vector("Position", self, [0, 0] )
+	inputs[3] = nodeValue_Vec2("Position", self, [0, 0] )
 		.setUnitRef(function(index) { return getDimension(index); });
 	
 	inputs[4] = nodeValue_Color("Color 1", self, c_white);

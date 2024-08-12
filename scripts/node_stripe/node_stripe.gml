@@ -12,7 +12,7 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	inputs[3] = nodeValue_Enum_Button("Type", self,  0, [ "Solid", "Smooth", "AA" ]);
 	
-	inputs[4] = nodeValue_Vector("Position", self, [ 0, 0 ] )
+	inputs[4] = nodeValue_Vec2("Position", self, [ 0, 0 ] )
 		.setUnitRef(function(index) { return getDimension(index); });
 		
 	inputs[5] = nodeValue_Float("Random", self, 0)

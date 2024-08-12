@@ -35,9 +35,6 @@
             registerFunction("", "Append",          "",     MOD_KEY.none,                                 APPEND                   ).setMenu("append",         )
                 .setArg([ ARG("path", ""), ARG("context", function() { return PANEL_GRAPH.getCurrentContext() }, true) ])
             
-            registerFunction("", "Import .zip",     "",     MOD_KEY.none,                                 __IMPORT_ZIP             ).setMenu("import_zip",     )
-            registerFunction("", "Export .zip",     "",     MOD_KEY.none,                                 __EXPORT_ZIP             ).setMenu("export_zip",     )
-            
             registerFunction("", "Recent Files",    "R",    MOD_KEY.ctrl | MOD_KEY.shift,
                 function(_dat) { 
                     var arr = [];
@@ -46,7 +43,13 @@
                         array_push(arr, menuItem(_rec, function(_dat) { LOAD_PATH(_dat.name); }));
                     }
                     return submenuCall(_dat, arr)
-                }).setMenu("recent_files",, true)
+                }).setMenu("recent_files",, true);
+                
+            registerFunction("", "Import .zip",     "",     MOD_KEY.none,                                 __IMPORT_ZIP             ).setMenu("import_zip",     )
+            registerFunction("", "Export .zip",     "",     MOD_KEY.none,                                 __EXPORT_ZIP             ).setMenu("export_zip",     )
+            
+            registerFunction("", "Import",          "",     MOD_KEY.none, function(_dat) /*=>*/ {return submenuCall(_dat, [ MENU_ITEMS.import_zip ])}   ).setMenu("import_menu",, true);
+            registerFunction("", "Export",          "",     MOD_KEY.none, function(_dat) /*=>*/ {return submenuCall(_dat, [ MENU_ITEMS.export_zip ])}   ).setMenu("export_menu",, true);
         }
         
         registerFunction("", "Undo",                "Z",    MOD_KEY.ctrl,                                 UNDO                     ).setMenu("undo",           )
@@ -66,6 +69,20 @@
             .setArg([ ARG("project", function() { return PROJECT; }, true) ])
             
         registerFunction("", "Reload theme",        vk_f10, MOD_KEY.ctrl | MOD_KEY.shift,                 global_theme_reload      ).setMenu("reload_theme",   )
+        
+        registerFunction("", "Addons Menu",         "",     MOD_KEY.none, function(_dat) /*=>*/ {
+            var arr = [
+                MENU_ITEMS.addons,
+                menuItem(__txtx("panel_menu_addons_key", "Key displayer"), function() /*=>*/ { if(instance_exists(addon_key_displayer)) return; instance_create_depth(0, 0, 0, addon_key_displayer); }),
+                -1
+            ];
+            
+            for( var i = 0, n = array_length(ADDONS); i < n; i++ )
+                array_push(arr, menuItem(ADDONS[i].name, function(_dat) /*=>*/ { addonTrigger(_dat.name); } ));
+            
+            return submenuCall(_dat, arr);
+        }).setMenu("addon_menu", THEME.addon_icon, true)
+        
     }
     
 #endregion
@@ -98,8 +115,8 @@ function Panel_Menu() : PanelContent() constructor {
         MENU_ITEMS.recent_files,
         
         MENU_ITEMS.autosave_folder,
-        menuItemAction(__txt("Import"), function(_dat) { var arr = [ MENU_ITEMS.import_zip, ]; return submenuCall(_dat, arr); }).setIsShelf(),
-        menuItemAction(__txt("Export"), function(_dat) { var arr = [ MENU_ITEMS.export_zip, ]; return submenuCall(_dat, arr); }).setIsShelf(),
+        MENU_ITEMS.import_menu,
+        MENU_ITEMS.export_menu,
         -1,
     ];
     
@@ -107,27 +124,7 @@ function Panel_Menu() : PanelContent() constructor {
         MENU_ITEMS.preference,
         MENU_ITEMS.splash_screen,
         -1,
-        menuItemAction(__txt("Addons"), function(_dat) { 
-            var arr = [
-                MENU_ITEMS.addons,
-                menuItemAction(__txtx("panel_menu_addons_key", "Key displayer"), function() { 
-                    if(instance_exists(addon_key_displayer)) {
-                        instance_destroy(addon_key_displayer);
-                        return;
-                    }
-                    
-                    instance_create_depth(0, 0, 0, addon_key_displayer);
-                }),
-                -1
-            ];
-            
-            for( var i = 0, n = array_length(ADDONS); i < n; i++ ) {
-                var _dir = ADDONS[i].name;
-                array_push(arr, menuItemAction(_dir, function(_dat) { addonTrigger(_dat.name); } ));
-            }
-            
-            return submenuCall(_dat, arr);
-        }, THEME.addon_icon ).setIsShelf(),
+        MENU_ITEMS.addon_menu,
         -1,
         MENU_ITEMS.fullscreen,
         MENU_ITEMS.close_file,

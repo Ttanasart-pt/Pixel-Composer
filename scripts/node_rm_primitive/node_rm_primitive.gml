@@ -20,9 +20,9 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 	
 	inputs[1] = nodeValue_Enum_Scroll("Shape", self,  1, { data: shape_types_str, horizontal: true, text_pad: ui(16) });
 	
-	inputs[2] = nodeValue_Vector("Position", self, [ 0, 0, 0 ]);
+	inputs[2] = nodeValue_Vec3("Position", self, [ 0, 0, 0 ]);
 	
-	inputs[3] = nodeValue_Vector("Rotation", self, [ 0, 0, 0 ]);
+	inputs[3] = nodeValue_Vec3("Rotation", self, [ 0, 0, 0 ]);
 	
 	inputs[4] = nodeValue_Float("Scale", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01 ] });
@@ -30,19 +30,19 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 	inputs[5] = nodeValue_Float("FOV", self, 30)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 90, 1 ] });
 	
-	inputs[6] = nodeValue_Vector("View Range", self, [ 3, 6 ]);
+	inputs[6] = nodeValue_Vec2("View Range", self, [ 3, 6 ]);
 	
 	inputs[7] = nodeValue_Float("Depth", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[8] = nodeValue_Vector("Light Position", self, [ -.4, -.5, 1 ]);
+	inputs[8] = nodeValue_Vec3("Light Position", self, [ -.4, -.5, 1 ]);
 	
 	inputs[9] = nodeValue_Color("Base Color", self, c_white);
 	
 	inputs[10] = nodeValue_Float("Ambient Level", self, 0.2)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[11] = nodeValue_Vector("Elongate", self, [ 0, 0, 0 ]);
+	inputs[11] = nodeValue_Vec3("Elongate", self, [ 0, 0, 0 ]);
 	
 	inputs[12] = nodeValue_Float("Rounded", self, 0.)
 		.setDisplay(VALUE_DISPLAY.slider);
@@ -51,22 +51,22 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 	
 	inputs[14] = nodeValue_Float("Ortho Scale", self, 1.)
 	
-	inputs[15] = nodeValue_Vector("Wave Amplitude", self, [ 4, 4, 4 ]);
+	inputs[15] = nodeValue_Vec3("Wave Amplitude", self, [ 4, 4, 4 ]);
 	
-	inputs[16] = nodeValue_Vector("Wave Intensity", self, [ 0, 0, 0 ]);
+	inputs[16] = nodeValue_Vec3("Wave Intensity", self, [ 0, 0, 0 ]);
 	
-	inputs[17] = nodeValue_Vector("Wave Phase", self, [ 0, 0, 0 ]);
+	inputs[17] = nodeValue_Vec3("Wave Phase", self, [ 0, 0, 0 ]);
 	
 	inputs[18] = nodeValue_Enum_Button("Twist Axis", self,  0, [ "X", "Y", "Z" ]);
 	
 	inputs[19] = nodeValue_Float("Twist Amount", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 8, 0.1 ] });
 	
-	inputs[20] = nodeValue_Vector("Tile Distance", self, [ 1, 1, 1 ]);
+	inputs[20] = nodeValue_Vec3("Tile Distance", self, [ 1, 1, 1 ]);
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[21] = nodeValue_Vector("Size", self, [ 1, 1, 1 ]);
+	inputs[21] = nodeValue_Vec3("Size", self, [ 1, 1, 1 ]);
 	
 	inputs[22] = nodeValue_Float("Radius", self, .7)
 		.setDisplay(VALUE_DISPLAY.slider);
@@ -89,7 +89,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[29] = nodeValue_Vector("Tile Amount", self, [ 1, 1, 1 ]);
+	inputs[29] = nodeValue_Vec3("Tile Amount", self, [ 1, 1, 1 ]);
 	
 	inputs[30] = nodeValue_Color("Background", self, c_black);
 	
@@ -114,15 +114,15 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 	
 	inputs[38] = nodeValue_Float("Texture Scale", self, 1.);
 	
-	inputs[39] = nodeValue_Vector("Corner", self, [ 0.25, 0.25, 0.25, 0.25 ]);
+	inputs[39] = nodeValue_Vec4("Corner", self, [ 0.25, 0.25, 0.25, 0.25 ]);
 	
-	inputs[40] = nodeValue_Vector("2D Size", self, [ 0.5, 0.5 ]);
+	inputs[40] = nodeValue_Vec2("2D Size", self, [ 0.5, 0.5 ]);
 	
 	inputs[41] = nodeValue_Int("Side", self, 3);
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
-	inputs[42] = nodeValue_Vector("Camera Rotation", self, [ 30, 45, 0 ]);
+	inputs[42] = nodeValue_Vec3("Camera Rotation", self, [ 30, 45, 0 ]);
 	
 	inputs[43] = nodeValue_Float("Camera Scale", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01 ] });
@@ -133,9 +133,9 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 	
 	inputs[45] = nodeValue_Bool("Tile", self, false);
 		
-	inputs[46] = nodeValue_Vector("Tiled Shift", self, [ 0, 0, 0 ]);
+	inputs[46] = nodeValue_Vec3("Tiled Shift", self, [ 0, 0, 0 ]);
 		
-	inputs[47] = nodeValue_Vector("Tiled Rotation", self, [ 0, 0, 0 ]);
+	inputs[47] = nodeValue_Vec3("Tiled Rotation", self, [ 0, 0, 0 ]);
 		
 	inputs[48] = nodeValue_Float("Tiled Scale", self, 0);
 	

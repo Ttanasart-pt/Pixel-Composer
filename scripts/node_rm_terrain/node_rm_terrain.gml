@@ -5,9 +5,9 @@ function Node_RM_Terrain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	inputs[1] = nodeValue_Surface("Surface", self);
 	
-	inputs[2] = nodeValue_Vector("Position", self, [ 0, 0, 0 ]);
+	inputs[2] = nodeValue_Vec3("Position", self, [ 0, 0, 0 ]);
 	
-	inputs[3] = nodeValue_Vector("Rotation", self, [ 30, 45, 0 ]);
+	inputs[3] = nodeValue_Vec3("Rotation", self, [ 30, 45, 0 ]);
 	
 	inputs[4] = nodeValue_Float("Scale", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01 ] });
@@ -15,7 +15,7 @@ function Node_RM_Terrain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	inputs[5] = nodeValue_Float("FOV", self, 30)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 90, 1 ] });
 	
-	inputs[6] = nodeValue_Vector("View Range", self, [ 0, 6 ]);
+	inputs[6] = nodeValue_Vec2("View Range", self, [ 0, 6 ]);
 	
 	inputs[7] = nodeValue_Float("BG Bleed", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
@@ -33,7 +33,7 @@ function Node_RM_Terrain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	inputs[13] = nodeValue_Surface("Reflection", self);
 	
-	inputs[14] = nodeValue_Vector("Sun Position", self, [ .5, 1, .5 ]);
+	inputs[14] = nodeValue_Vec3("Sun Position", self, [ .5, 1, .5 ]);
 	
 	inputs[15] = nodeValue_Float("Shadow", self, 0.2)
 		.setDisplay(VALUE_DISPLAY.slider);

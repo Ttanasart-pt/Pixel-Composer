@@ -2,11 +2,11 @@ function Node_Caustic(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y, _g
 	name   = "Caustic";
 	shader = sh_water_caustic;
 	
-	inputs[1] = nodeValue_Vector("Position", self, [ 0, 0 ])
+	inputs[1] = nodeValue_Vec2("Position", self, [ 0, 0 ])
 		.setUnitRef(function(index) { return getDimension(index); });
 		addShaderProp(SHADER_UNIFORM.float, "position");
 		
-	inputs[2] = nodeValue_Vector("Scale", self, [ 4, 4 ]);
+	inputs[2] = nodeValue_Vec2("Scale", self, [ 4, 4 ]);
 		addShaderProp(SHADER_UNIFORM.float, "scale");
 				
 	inputs[3] = nodeValue_Float("Seed", self, seed_random(6))

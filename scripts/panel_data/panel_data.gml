@@ -53,18 +53,18 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	
 	draw_droppable = false;
 	
-	border_rb_close = menuItemAction(__txt("Close"), function() {
+	border_rb_close = menuItem(__txt("Close"), function() {
 		var con = getContent();
 		if(con == noone) return;
 		con.close();
 	}, THEME.cross);
 	
 	border_rb_menu = [
-		menuItemAction(__txt("Move"),    function() { 
+		menuItem(__txt("Move"),    function() { 
 			extract(); 
 			panel_mouse = 1;
 		}),
-		menuItemAction(__txtx("panel_pop_out", "Pop out"), function() { popWindow(); }, THEME.node_goto),
+		menuItem(__txtx("panel_pop_out", "Pop out"), function() { popWindow(); }, THEME.node_goto),
 		border_rb_close
 	];
 	

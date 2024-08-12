@@ -25,7 +25,7 @@ function Node_FLIP_Apply_Force(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	inputs[0] = nodeValue_Fdomain("Domain", self, noone )
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Vector("Position", self, [ 0, 0 ] )
+	inputs[1] = nodeValue_Vec2("Position", self, [ 0, 0 ] )
 		.setUnitRef(function(index) { return getDimension(); });
 	
 	inputs[2] = nodeValue_Float("Radius", self, 4 )	
@@ -33,7 +33,7 @@ function Node_FLIP_Apply_Force(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	inputs[3] = nodeValue_Enum_Scroll("Shape", self,  0 , [ new scrollItem("Circle", s_node_shape_circle, 0), new scrollItem("Rectangle", s_node_shape_rectangle, 0), ]);
 		
-	inputs[4] = nodeValue_Vector("Size", self, [ 4, 4 ] );
+	inputs[4] = nodeValue_Vec2("Size", self, [ 4, 4 ] );
 		
 	inputs[5] = nodeValue_Surface("Texture", self)
 	

@@ -7,7 +7,7 @@ function Node_Zigzag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] })
 		.setMappable(6);
 		
-	inputs[2] = nodeValue_Vector("Position", self, [0, 0] )
+	inputs[2] = nodeValue_Vec2("Position", self, [0, 0] )
 		.setUnitRef(function(index) { return getDimension(index); });
 	
 	inputs[3] = nodeValue_Color("Color 1", self, c_white);

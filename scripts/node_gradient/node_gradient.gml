@@ -20,7 +20,7 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-2, 2, 0.01] })
 		.setMappable(12);
 	
-	inputs[6] = nodeValue_Vector("Center", self, [ 0.5, 0.5 ])
+	inputs[6] = nodeValue_Vec2("Center", self, [ 0.5, 0.5 ])
 		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
 	
 	inputs[7] = nodeValue_Enum_Button("Loop", self,  0, [ "None", "Loop", "Pingpong" ]);

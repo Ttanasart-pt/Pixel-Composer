@@ -32,7 +32,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	inputs[4] = nodeValue_Float("Line width", self, -1)
 		.rejectArray();
 	
-	inputs[5]  = nodeValue_Vector("Position", self, [ x, y ])
+	inputs[5]  = nodeValue_Vec2("Position", self, [ x, y ])
 		.rejectArray();
 	
 	inputs[6] = nodeValue_Float("Line height", self, 0)

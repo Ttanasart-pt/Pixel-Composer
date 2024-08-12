@@ -26,7 +26,7 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	inputs[6] = nodeValue_Bool("Fixed position", self, false, "Fix point position, and only select point in the area.");
 	
-	inputs[7] = nodeValue_Vector("Reference dimension", self, DEF_SURF);
+	inputs[7] = nodeValue_Vec2("Reference dimension", self, DEF_SURF);
 	
 	inputs[8] = nodeValue_Surface("Reference value", self);
 	

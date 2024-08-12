@@ -22,6 +22,7 @@ function MetaDataManager() constructor {
 	contact		= "";
 	alias		= "";
 	type		= FILE_TYPE.collection;
+	
 	author_steam_id = 0;
 	file_id		= 0;
 	tags		= [];

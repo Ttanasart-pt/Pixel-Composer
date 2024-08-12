@@ -2,10 +2,10 @@ function Node_Noise_Cristal(_x, _y, _group = noone) : Node_Shader_Generator(_x, 
 	name   = "Cristal Noise";
 	shader = sh_noise_cristal;
 	
-	inputs[1] = nodeValue_Vector("Position", self, [ 0, 0 ] );
+	inputs[1] = nodeValue_Vec2("Position", self, [ 0, 0 ] );
 		addShaderProp(SHADER_UNIFORM.float, "position");
 		
-	inputs[2] = nodeValue_Vector("Scale", self, [ 1, 1 ] );
+	inputs[2] = nodeValue_Vec2("Scale", self, [ 1, 1 ] );
 		addShaderProp(SHADER_UNIFORM.float, "scale");
 		
 	inputs[3] = nodeValue_Float("Seed", self, seed_random(6))

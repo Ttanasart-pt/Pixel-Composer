@@ -5,7 +5,7 @@ function Node_MK_GridFlip(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	inputs[1] = nodeValue_Dimension(self);
 	
-	inputs[2] = nodeValue_Vector("Amount", self, [ 4, 4 ]);
+	inputs[2] = nodeValue_Vec2("Amount", self, [ 4, 4 ]);
 		
 	inputs[3] = nodeValue_Int("Seed", self, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[3].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });

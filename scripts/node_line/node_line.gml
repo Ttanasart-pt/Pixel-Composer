@@ -8,7 +8,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	inputs[2] = nodeValue_Int("Segment", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 32, 0.1] });
 	
-	inputs[3] = nodeValue_Vector("Width", self, [ 2, 2 ]);
+	inputs[3] = nodeValue_Vec2("Width", self, [ 2, 2 ]);
 	
 	inputs[4] = nodeValue_Float("Wiggle", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 16, 0.01] });
@@ -48,11 +48,11 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	inputs[20] = nodeValue_Float("Segment length", self, 4);
 	
-	inputs[21] = nodeValue_Vector("Texture position", self, [ 0, 0 ]);
+	inputs[21] = nodeValue_Vec2("Texture position", self, [ 0, 0 ]);
 	
 	inputs[22] = nodeValue_Rotation("Texture Rotation", self, 0);
 	
-	inputs[23] = nodeValue_Vector("Texture scale", self, [ 1, 1 ]);
+	inputs[23] = nodeValue_Vec2("Texture scale", self, [ 1, 1 ]);
 	
 	inputs[24] = nodeValue_Gradient("Random Blend", self, new gradientObject(cola(c_white)));
 	

@@ -11,7 +11,7 @@ function Node_Flood_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	inputs[3] = nodeValue_Bool("Active", self, true);
 		active_index = 3;
 		
-	inputs[4] = nodeValue_Vector("Position", self, [ 1, 1 ]);
+	inputs[4] = nodeValue_Vec2("Position", self, [ 1, 1 ]);
 		
 	inputs[5] = nodeValue_Color("Colors", self, cola(c_black) );
 	

@@ -42,7 +42,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	inputs[6] = nodeValue_Surface("Texture", self)
 		.setAnimable(false);
 	
-	inputs[7] = nodeValue_Vector("Start position", self, [ 16, 16 ])
+	inputs[7] = nodeValue_Vec2("Start position", self, [ 16, 16 ])
 		.setAnimable(false);
 	
 	inputs[8] = nodeValue_Bool("Spawn", self, true, "Make object spawn when start.")

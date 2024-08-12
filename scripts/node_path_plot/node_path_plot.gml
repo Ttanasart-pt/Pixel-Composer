@@ -3,7 +3,7 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	length = 0;
 	setDimension(96, 48);;
 	
-	inputs[0] = nodeValue_Vector("Output scale", self, [ 8, 8 ]);
+	inputs[0] = nodeValue_Vec2("Output scale", self, [ 8, 8 ]);
 	
 	inputs[1] = nodeValue_Enum_Scroll("Coordinate", self,  0, [ new scrollItem("Cartesian", s_node_axis_type, 0), 
 												 new scrollItem("Polar",     s_node_axis_type, 1),  ]);
@@ -15,13 +15,13 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	inputs[3] = nodeValue_Text("0 function", self, "");
 	inputs[4] = nodeValue_Text("1 function", self, "");
 	
-	inputs[5] = nodeValue_Vector("Origin", self, [ DEF_SURF_W / 2, DEF_SURF_H / 2 ] );
+	inputs[5] = nodeValue_Vec2("Origin", self, [ DEF_SURF_W / 2, DEF_SURF_H / 2 ] );
 		
 	inputs[6] = nodeValue_Slider_Range("Range", self, [ 0, 1 ], { range: [ -1, 1, 0.01 ] });
 		
-	inputs[7] = nodeValue_Vector("Input scale", self, [ 1, 1 ]);
+	inputs[7] = nodeValue_Vec2("Input scale", self, [ 1, 1 ]);
 		
-	inputs[8] = nodeValue_Vector("Input shift", self, [ 0, 0 ]);
+	inputs[8] = nodeValue_Vec2("Input shift", self, [ 0, 0 ]);
 		
 	outputs[0] = nodeValue_Output("Path", self, VALUE_TYPE.pathnode, self);
 	

@@ -12,7 +12,7 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	inputs[1] = nodeValue_Enum_Scroll("Force type", self,  0, [ "Constant", "Impulse", "Torque", "Explode" ])
 		.rejectArray();
 	
-	inputs[2] = nodeValue_Vector("Position", self, [ 0, 0 ])
+	inputs[2] = nodeValue_Vec2("Position", self, [ 0, 0 ])
 		.rejectArray();
 	
 	inputs[3] = nodeValue_Float("Torque", self, 0)
@@ -21,7 +21,7 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	inputs[4] = nodeValue_Int("Apply frame", self, 0, "Frame index to apply force.")
 		.rejectArray();
 	
-	inputs[5] = nodeValue_Vector("Force", self, [ 0.1, 0 ])
+	inputs[5] = nodeValue_Vec2("Force", self, [ 0.1, 0 ])
 		.rejectArray();
 	
 	inputs[6] = nodeValue_Enum_Button("Scope", self,  0, [ "Global", "Local" ])

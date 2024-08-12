@@ -2577,6 +2577,7 @@
     {"id":{"name":"s_folder_content","path":"sprites/s_folder_content/s_folder_content.yy",},},
     {"id":{"name":"s_frame_range","path":"sprites/s_frame_range/s_frame_range.yy",},},
     {"id":{"name":"s_fx_pixel","path":"sprites/s_fx_pixel/s_fx_pixel.yy",},},
+    {"id":{"name":"s_gear_16","path":"sprites/s_gear_16/s_gear_16.yy",},},
     {"id":{"name":"s_gear_24","path":"sprites/s_gear_24/s_gear_24.yy",},},
     {"id":{"name":"s_gizmo","path":"sprites/s_gizmo/s_gizmo.yy",},},
     {"id":{"name":"s_grad_blend","path":"sprites/s_grad_blend/s_grad_blend.yy",},},

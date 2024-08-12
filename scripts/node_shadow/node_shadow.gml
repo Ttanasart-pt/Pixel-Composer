@@ -7,7 +7,7 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	inputs[2] = nodeValue_Float("Strength", self, .5)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 2, 0.01] });
 	
-	inputs[3] = nodeValue_Vector("Shift", self, [ 4, 4 ])
+	inputs[3] = nodeValue_Vec2("Shift", self, [ 4, 4 ])
 		.setUnitRef(function(index) { return getDimension(index); });
 	
 	inputs[4] = nodeValue_Float("Grow", self, 3)
@@ -28,7 +28,7 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	inputs[11] = nodeValue_Enum_Scroll("Positioning", self,  0, [ "Shift", "Light" ]);
 	
-	inputs[12] = nodeValue_Vector("Light Position", self, [ 0, 0 ])
+	inputs[12] = nodeValue_Vec2("Light Position", self, [ 0, 0 ])
 		.setUnitRef(function(index) { return getDimension(index); });
 		
 	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);

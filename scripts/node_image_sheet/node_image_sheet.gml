@@ -3,14 +3,14 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	inputs[0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[1]  = nodeValue_Vector("Sprite size", self, [ 32, 32 ]);
+	inputs[1]  = nodeValue_Vec2("Sprite size", self, [ 32, 32 ]);
 	
 	inputs[2]  = nodeValue_Int("Row", self, 1); //unused
-	inputs[3]  = nodeValue_Vector("Amount", self, [ 1, 1 ]);
+	inputs[3]  = nodeValue_Vec2("Amount", self, [ 1, 1 ]);
 	
-	inputs[4]  = nodeValue_Vector("Offset", self, [ 0, 0 ]);
+	inputs[4]  = nodeValue_Vec2("Offset", self, [ 0, 0 ]);
 	
-	inputs[5]  = nodeValue_Vector("Spacing", self, [ 0, 0 ]);
+	inputs[5]  = nodeValue_Vec2("Spacing", self, [ 0, 0 ]);
 	
 	inputs[6]  = nodeValue_Padding("Padding", self, [0, 0, 0, 0]);
 	

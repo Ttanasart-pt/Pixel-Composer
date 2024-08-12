@@ -9,7 +9,7 @@ function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	inputs[3] = nodeValue_Color("Ambient", self, c_black);
 	
-	inputs[4] = nodeValue_Vector("Light position", self, [ 0, 0 ])
+	inputs[4] = nodeValue_Vec2("Light position", self, [ 0, 0 ])
 		.setUnitRef(function(index) { return getDimension(index); });
 	
 	inputs[5] = nodeValue_Float("Light range", self, 16);

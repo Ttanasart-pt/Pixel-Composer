@@ -34,7 +34,7 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	draw_y1 = 0;
 	
 	
-	inputs[0] = nodeValue_Vector("Size", self, [ 240, 160 ] )
+	inputs[0] = nodeValue_Vec2("Size", self, [ 240, 160 ] )
 		.rejectArray();
 	
 	inputs[1] = nodeValue_Color("Color", self, cola(c_white) )

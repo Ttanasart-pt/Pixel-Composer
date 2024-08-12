@@ -12,9 +12,9 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		
 	inputs[3] = nodeValue_Enum_Scroll("Aspect Ratio", self,  0, [ "None", "Manual", "1:1", "3:2", "4:3", "16:9" ]);
 		
-	inputs[4] = nodeValue_Vector("Ratio", self, [ 1, 1 ]);
+	inputs[4] = nodeValue_Vec2("Ratio", self, [ 1, 1 ]);
 	
-	inputs[5] = nodeValue_Vector("Center", self, [ .5, .5 ])
+	inputs[5] = nodeValue_Vec2("Center", self, [ .5, .5 ])
 		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
 		
 	inputs[6] = nodeValue_Float("Width", self, 8 );

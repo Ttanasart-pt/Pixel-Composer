@@ -12,7 +12,7 @@ function Node_PB_Fx_Hash(_x, _y, _group = noone) : Node_PB_Fx(_x, _y, _group) co
 	
 	inputs[5] = nodeValue_Int("Detail", self, 1 )
 	
-	inputs[6] = nodeValue_Vector("Dissolve Scale", self, [ 4, 4 ] );
+	inputs[6] = nodeValue_Vec2("Dissolve Scale", self, [ 4, 4 ] );
 	
 	input_display_list = [ 0,
 		["Effect",	 false], 2, 1, 3, 

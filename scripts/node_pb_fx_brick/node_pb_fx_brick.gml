@@ -1,7 +1,7 @@
 function Node_PB_Fx_Brick(_x, _y, _group = noone) : Node_PB_Fx(_x, _y, _group) constructor {
 	name = "Brick";
 	
-	inputs[1] = nodeValue_Vector("Scale", self, [ 4, 1 ] );
+	inputs[1] = nodeValue_Vec2("Scale", self, [ 4, 1 ] );
 	
 	inputs[2] = nodeValue_Enum_Button("Axis", self,  0 , [ "X", "Y" ] );
 	
@@ -14,7 +14,7 @@ function Node_PB_Fx_Brick(_x, _y, _group = noone) : Node_PB_Fx(_x, _y, _group) c
 	
 	inputs[6] = nodeValue_Int("Detail", self, 1 )
 	
-	inputs[7] = nodeValue_Vector("Dissolve Scale", self, [ 4, 4 ] );
+	inputs[7] = nodeValue_Vec2("Dissolve Scale", self, [ 4, 4 ] );
 		
 	input_display_list = [ 0,
 		["Effect",	 false], 1, 2, 3, 4, 

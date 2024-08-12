@@ -22,7 +22,7 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 																	new scrollItem("Line asymmetric", s_node_2d_light_shape, 2), 
 																	new scrollItem("Spot",            s_node_2d_light_shape, 3), ]);
 	
-	inputs[2] = nodeValue_Vector("Center", self, [ 16, 16 ])
+	inputs[2] = nodeValue_Vec2("Center", self, [ 16, 16 ])
 		.setUnitRef(function(index) { return getDimension(index); });
 	
 	inputs[3] = nodeValue_Float("Range", self, 16);
@@ -32,9 +32,9 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	inputs[5] = nodeValue_Color("Color", self, c_white);
 	
-	inputs[6] = nodeValue_Vector("Start", self, [ 16, 16 ]);
+	inputs[6] = nodeValue_Vec2("Start", self, [ 16, 16 ]);
 	
-	inputs[7] = nodeValue_Vector("Finish", self, [ 32, 16 ]);
+	inputs[7] = nodeValue_Vec2("Finish", self, [ 32, 16 ]);
 	
 	inputs[8] = nodeValue_Int("Sweep", self, 15)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-80, 80, 0.1] });

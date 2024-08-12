@@ -7,7 +7,7 @@ function Node_VFX_Renderer_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 	manual_ungroupable = false;
 	previewable = true;
 	
-	inputs[0] = nodeValue_Vector("Output dimension", self, DEF_SURF);
+	inputs[0] = nodeValue_Vec2("Output dimension", self, DEF_SURF);
 		
 	inputs[1] = nodeValue_Bool("Round position", self, true, "Round position to the closest integer value to avoid jittering.")
 		.rejectArray();

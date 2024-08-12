@@ -12,11 +12,11 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	inputs[3] = nodeValue_Bool("Anti-Aliasing ", self, false);
 	
-	inputs[4] = nodeValue_Vector("Character range", self, [ 32, 128 ]);
+	inputs[4] = nodeValue_Vec2("Character range", self, [ 32, 128 ]);
 	
 	inputs[5] = nodeValue_Color("Color", self, c_white);
 	
-	inputs[6] = nodeValue_Vector("Fixed dimension", self, DEF_SURF )
+	inputs[6] = nodeValue_Vec2("Fixed dimension", self, DEF_SURF )
 		.setVisible(true, false);
 	
 	inputs[7] = nodeValue_Enum_Button("Horizontal alignment", self,  0 , [ THEME.inspector_text_halign, THEME.inspector_text_halign, THEME.inspector_text_halign]);

@@ -7,11 +7,11 @@ function Node_Atlas_Set(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	inputs[1] = nodeValue_Surface("Surface", self);
 	
-	inputs[2] = nodeValue_Vector("Position", self, [ 0, 0 ]);
+	inputs[2] = nodeValue_Vec2("Position", self, [ 0, 0 ]);
 	
 	inputs[3] = nodeValue_Rotation("Rotation", self, 0);
 	
-	inputs[4] = nodeValue_Vector("Scale", self, [ 0, 0 ]);
+	inputs[4] = nodeValue_Vec2("Scale", self, [ 0, 0 ]);
 		
 	inputs[5] = nodeValue_Color("Blend", self, c_white);
 		

@@ -27,7 +27,7 @@ function Node_3D_Mesh_Path_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 	
 	inputs[in_mesh + 8] = nodeValue("Radius Over Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11 );
 	
-	inputs[in_mesh + 9] = nodeValue_Vector("Texture Scale", self, [ 1, 1 ] );
+	inputs[in_mesh + 9] = nodeValue_Vec2("Texture Scale", self, [ 1, 1 ] );
 	
 	inputs[in_mesh + 10] = nodeValue_Bool("Loop", self, false );
 	

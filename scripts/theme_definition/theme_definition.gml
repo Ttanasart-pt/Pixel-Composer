@@ -69,6 +69,7 @@ function Theme() constructor {
     folder                          = s_folder_24;
     frame_range                     = s_frame_range;
     gear                            = s_gear_24;
+    gear_16                         = s_gear_16;
     grad_blend                      = s_grad_blend;
     group_s                         = s_group_16;
     group                           = s_group_24;

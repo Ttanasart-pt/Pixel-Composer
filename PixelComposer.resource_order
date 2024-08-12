@@ -1871,6 +1871,7 @@
     {"name":"s_folder_add","order":66,"path":"sprites/s_folder_add/s_folder_add.yy",},
     {"name":"s_folder_content","order":67,"path":"sprites/s_folder_content/s_folder_content.yy",},
     {"name":"s_frame_range","order":68,"path":"sprites/s_frame_range/s_frame_range.yy",},
+    {"name":"s_gear_16","order":230,"path":"sprites/s_gear_16/s_gear_16.yy",},
     {"name":"s_gear_24","order":69,"path":"sprites/s_gear_24/s_gear_24.yy",},
     {"name":"s_gizmo","order":4,"path":"sprites/s_gizmo/s_gizmo.yy",},
     {"name":"s_grad_blend","order":70,"path":"sprites/s_grad_blend/s_grad_blend.yy",},

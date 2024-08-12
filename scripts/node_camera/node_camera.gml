@@ -38,7 +38,7 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 		inputs[index + 1] = nodeValue_Enum_Button($"Positioning {_s}", self,  false, [ "Space", "Camera" ]);
 	
-		inputs[index + 2] = nodeValue_Vector($"Position {_s}", self, [ 0, 0 ] )
+		inputs[index + 2] = nodeValue_Vec2($"Position {_s}", self, [ 0, 0 ] )
 			.setUnitRef(function(index) { return getDimension(index); });
 		
 		inputs[index + 3] = nodeValue_Enum_Scroll($"Oversample {_s}", self,  0, [ new scrollItem("Empty ",   s_node_camera_repeat, 0), 
@@ -46,7 +46,7 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 													 new scrollItem("Repeat X", s_node_camera_repeat, 2), 
 													 new scrollItem("Repeat Y", s_node_camera_repeat, 3), ]);
 		
-		inputs[index + 4] = nodeValue_Vector($"Parallax {_s}", self, [ 0, 0 ]);
+		inputs[index + 4] = nodeValue_Vec2($"Parallax {_s}", self, [ 0, 0 ]);
 		
 		inputs[index + 5] = nodeValue($"Depth {_s}", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
 		

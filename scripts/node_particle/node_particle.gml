@@ -2,13 +2,12 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 	name = "Particle";
 	use_cache = CACHE_USE.auto;
 
-	onSurfaceSize = function() { return getInputData(input_len, DEF_SURF); };
+	onSurfaceSize = function() { 
+		var _inp = getInputData(input_len, DEF_SURF); 
+		return [ _inp[0], _inp[1] ];
+	};
 	
-	inputs[3] = nodeValue_Area("Spawn area", self, DEF_AREA_REF, { onSurfaceSize } )
-		.rejectArray()
-		.setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
-	
-	inputs[input_len + 0] = nodeValue_Vector("Output dimension", self, DEF_SURF);
+	inputs[input_len + 0] = nodeValue_Vec2("Output dimension", self, DEF_SURF);
 		
 	inputs[input_len + 1] = nodeValue_Bool("Round position", self, true, "Round position to the closest integer value to avoid jittering.");
 	
@@ -19,7 +18,12 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 	inputs[input_len + 4] = nodeValue_Enum_Button("Render Type", self,  PARTICLE_RENDER_TYPE.surface , [ "Surface", "Line" ]);
 	
 	inputs[input_len + 5] = nodeValue_Int("Line life", self, 4 );
-		
+	
+	inputs[3] = nodeValue_Area("Spawn area", self, DEF_AREA_REF )
+		    		.setUnitRef(onSurfaceSize, VALUE_UNIT.reference)
+		    		.rejectArray()
+	inputs[3].index = 3;
+	
 	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	for(var i = input_len, n = array_length(inputs); i < n; i++) inputs[i].rejectArray();
@@ -49,8 +53,7 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 			outputs[0].setValue(_outSurf);
 		}
 		
-		if(PROJECT.animator.is_playing)
-			PROJECT.animator.firstFrame();
+		if(IS_PLAYING) clearCache();
 	}
 	
 	static reLoop = function() {
@@ -82,11 +85,10 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 	}
 	
 	static onUpdate = function(frame = CURRENT_FRAME) {
-		var _inSurf   = getInputData(0);
-		var _dim	  = getInputData(input_len + 0);
-		var _bg 	  = getInputData(input_len + 3);
-		
-		var _outSurf  = outputs[0].getValue();
+		var _inSurf  = getInputData(0);
+		var _dim	 = getInputData(input_len + 0);
+		var _bg 	 = getInputData(input_len + 3);
+		var _outSurf = outputs[0].getValue();
 		
 		if(is_surface(_bg)) _dim = surface_get_dimension(_bg)
 		

@@ -100,11 +100,11 @@ if !ready exit;
 				instance_destroy();
 			} else if(mouse_press(mb_right)) {
 				menuCall("panel_window_menu", [
-					menuItemAction(__txt("Move"), function() { 
-						content.dragSurface = surface_clone(panel);
+					menuItem(__txt("Move"), function() { 
+						content.dragSurface   = surface_clone(panel);
 						o_main.panel_dragging = content;
-						content.in_dialog = false;
-						panel_mouse = 1;
+						content.in_dialog     = false;
+						panel_mouse           = 1;
 					
 						instance_destroy();
 					}),

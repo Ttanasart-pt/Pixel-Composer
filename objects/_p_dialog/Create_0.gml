@@ -6,7 +6,10 @@
 #region data
 	on_top    = false;
 
-	with(_p_dialog) { if(on_top) continue; other.depth = min(depth - 1, other.depth); }
+	with(_p_dialog) { 
+		if(on_top) continue; 
+		other.depth = min(depth - 1, other.depth); 
+	}
 	
 	ds_list_add(DIALOGS, self);
 	

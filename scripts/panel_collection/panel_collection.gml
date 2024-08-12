@@ -140,15 +140,16 @@ function Panel_Collection() : PanelContent() constructor {
 		function steam_unsubscribe() {
 			if(_menu_node == noone) return;
 			
-			var meta = _menu_node.getMetadata();
+			var meta   = _menu_node.getMetadata();
 			var del_id = meta.file_id;
 			
 			for( var i = 0; i < ds_list_size(STEAM_COLLECTION); i++ ) {
-				if(STEAM_COLLECTION[| i].getMetadata().file_id == del_id) {
-					ds_list_delete(STEAM_COLLECTION, i);
-					break;
-				}
+				if(STEAM_COLLECTION[| i].getMetadata().file_id != del_id) continue;
+				
+				ds_list_delete(STEAM_COLLECTION, i);
+				break;
 			}
+			
 			steam_ugc_unsubscribe_item(del_id);
 		}
 	#endregion
@@ -175,8 +176,9 @@ function Panel_Collection() : PanelContent() constructor {
 		if(STEAM_ENABLED) {
 			if(meta.steam == FILE_STEAM_TYPE.local) {
 				array_push(contentMenu, MENU_ITEMS.collection_upload_to_steam);
+				
 			} else {
-				if(meta.author_steam_id == STEAM_USER_ID && meta.file_id != 0)
+				if(meta.author_steam_id && meta.author_steam_id == STEAM_USER_ID)
 					array_push(contentMenu, MENU_ITEMS.collection_update_steam);
 				array_push(contentMenu, MENU_ITEMS.collection_unsubscribe);
 			}

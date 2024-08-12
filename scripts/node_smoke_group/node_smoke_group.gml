@@ -26,9 +26,9 @@ function Node_Smoke_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _gro
 	inputs[5] = nodeValue_Float("Velocity dissipation", self, 0.00)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 0.1, 0.01 ] });
 	
-	inputs[6] = nodeValue_Vector("Acceleration", self, [ 0, 0 ]);
+	inputs[6] = nodeValue_Vec2("Acceleration", self, [ 0, 0 ]);
 	
-	inputs[7] = nodeValue_Vector("Material intertia", self, [ 1, -0.2 ]);
+	inputs[7] = nodeValue_Vec2("Material intertia", self, [ 1, -0.2 ]);
 	
 	inputs[8] = nodeValue_Float("Initial pressure", self, 0.75)
 		.setDisplay(VALUE_DISPLAY.slider);

@@ -16,7 +16,7 @@ function Node_Padding(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 	inputs[5] = nodeValue_Enum_Button("Pad mode", self,  0, [ "Pad out", "Pad to size" ]);
 	
-	inputs[6] = nodeValue_Vector("Target dimension", self, DEF_SURF)
+	inputs[6] = nodeValue_Vec2("Target dimension", self, DEF_SURF)
 	
 	inputs[7] = nodeValue_Enum_Button("Horizontal alignment", self,  0 , [ THEME.inspector_surface_halign, THEME.inspector_surface_halign, THEME.inspector_surface_halign]);
 	

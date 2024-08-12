@@ -9,9 +9,9 @@ function Node_Smoke_Apply_Velocity(_x, _y, _group = noone) : Node_Smoke(_x, _y, 
 	
 	inputs[1] = nodeValue_Surface("Brush", self);
 	
-	inputs[2] = nodeValue_Vector("Position", self, [0, 0]);
+	inputs[2] = nodeValue_Vec2("Position", self, [0, 0]);
 	
-	inputs[3] = nodeValue_Vector("Velocity", self, [0, 0]);
+	inputs[3] = nodeValue_Vec2("Velocity", self, [0, 0]);
 	
 	inputs[4] = nodeValue_Bool("Active", self, true);
 	

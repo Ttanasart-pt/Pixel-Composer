@@ -5,13 +5,13 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	inputs[0] = nodeValue_PathNode("Path", self, noone)
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Vector("Position", self, [ 0, 0 ]);
+	inputs[1] = nodeValue_Vec2("Position", self, [ 0, 0 ]);
 	
 	inputs[2] = nodeValue_Rotation("Rotation", self, 0);
 	
-	inputs[3] = nodeValue_Vector("Scale", self, [ 1, 1 ]);
+	inputs[3] = nodeValue_Vec2("Scale", self, [ 1, 1 ]);
 	
-	inputs[4] = nodeValue_Vector("Anchor", self, [ 0, 0 ]);
+	inputs[4] = nodeValue_Vec2("Anchor", self, [ 0, 0 ]);
 		
 	outputs[0] = nodeValue_Output("Path", self, VALUE_TYPE.pathnode, self);
 	

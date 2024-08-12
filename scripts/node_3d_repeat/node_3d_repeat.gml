@@ -10,17 +10,17 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 	
 	inputs[2] = nodeValue_Int("Amount", self, 1 );
 	
-	inputs[3] = nodeValue_Vector("Starting Position", self, [ 0, 0, 0 ] );
+	inputs[3] = nodeValue_Vec3("Starting Position", self, [ 0, 0, 0 ] );
 	
 	inputs[4] = nodeValue_Quaternion("Starting Rotation", self, [ 0, 0, 0, 1 ] );
 	
-	inputs[5] = nodeValue_Vector("Starting Scale", self, [ 1, 1, 1 ] );
+	inputs[5] = nodeValue_Vec3("Starting Scale", self, [ 1, 1, 1 ] );
 	
-	inputs[6] = nodeValue_Vector("Shift Position", self, [ 0, 0, 0 ] );
+	inputs[6] = nodeValue_Vec3("Shift Position", self, [ 0, 0, 0 ] );
 	
 	inputs[7] = nodeValue_Quaternion("Shift Rotation", self, [ 0, 0, 0, 1 ] );
 	
-	inputs[8] = nodeValue_Vector("Shift Scale", self, [ 0, 0, 0 ] );
+	inputs[8] = nodeValue_Vec3("Shift Scale", self, [ 0, 0, 0 ] );
 	
 	inputs[9] = nodeValue_Float("Positions", self, [] )
 		.setArrayDepth(2);

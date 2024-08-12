@@ -6,7 +6,7 @@ function Node_Blur_Zoom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	inputs[1] = nodeValue_Float("Strength", self, 0.2)
 		.setMappable(12);
 	
-	inputs[2] = nodeValue_Vector("Center",   self, [ 0.5, 0.5 ])
+	inputs[2] = nodeValue_Vec2("Center",   self, [ 0.5, 0.5 ])
 		.setUnitRef(function(index) { return getDimension(index); });
 		
 	inputs[3] = nodeValue_Enum_Scroll("Oversample mode", self,  0, [ "Empty", "Clamp", "Repeat" ])

@@ -1,7 +1,7 @@
 function Node_Wiggler(_x, _y, _group = noone) : Node_Fn(_x, _y, _group) constructor {
 	name = "Wiggler";
 	
-	inputs[inl + 0] = nodeValue_Vector("Range", self, [ 0, 1 ]);
+	inputs[inl + 0] = nodeValue_Vec2("Range", self, [ 0, 1 ]);
 	
 	inputs[inl + 1] = nodeValue_Int("Frequency", self, 4 )
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 32, 0.1] });

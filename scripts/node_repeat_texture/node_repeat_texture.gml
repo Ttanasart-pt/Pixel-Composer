@@ -4,7 +4,7 @@ function Node_Repeat_Texture(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	
 	inputs[0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[1] = nodeValue_Vector("Target dimension", self, DEF_SURF);
+	inputs[1] = nodeValue_Vec2("Target dimension", self, DEF_SURF);
 		
 	inputs[2] = nodeValue_Enum_Scroll("Type", self,  1, [ "Tile", "Scatter", "Cell" ]);
 	

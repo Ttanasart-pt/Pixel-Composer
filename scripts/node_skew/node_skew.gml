@@ -10,7 +10,7 @@ function Node_Skew(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		
 	inputs[3] = nodeValue_Bool("Wrap", self, false);
 	
-	inputs[4] = nodeValue_Vector("Center", self, [0, 0] , { side_button : button(function() { centerAnchor(); })
+	inputs[4] = nodeValue_Vec2("Center", self, [0, 0] , { side_button : button(function() { centerAnchor(); })
 															.setIcon(THEME.anchor)
 															.setTooltip(__txt("Set to center")) });
 	

@@ -2,11 +2,11 @@ function Node_Perlin_Extra(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 	name   = "Extra Perlins";
 	shader = sh_perlin_extra;
 	
-	inputs[1] = nodeValue_Vector("Position", self, [ 0, 0 ])
+	inputs[1] = nodeValue_Vec2("Position", self, [ 0, 0 ])
 		.setUnitRef(function(index) { return getDimension(index); });
 		addShaderProp(SHADER_UNIFORM.float, "position");
 		
-	inputs[2] = nodeValue_Vector("Scale", self, [ 4, 4 ])
+	inputs[2] = nodeValue_Vec2("Scale", self, [ 4, 4 ])
 		.setMappable(13);
 		addShaderProp(SHADER_UNIFORM.float, "scale");
 	

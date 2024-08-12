@@ -10,15 +10,16 @@ function steam_ugc_create_project() {
 	STEAM_UGC_ITEM_FILE		 = file;
 	STEAM_UGC_TYPE			 = STEAM_UGC_FILE_TYPE.project;
 	
-	directory_destroy(DIRECTORY + "steamUGC");
-	directory_create(DIRECTORY + "steamUGC");
+	var _dir = DIRECTORY + "steamUGC"
+	directory_destroy(_dir);
+	directory_create(_dir);
 	
-	file_copy(file.path, DIRECTORY + "steamUGC/" + filename_name(file.path));
-	json_save_struct(DIRECTORY + "steamUGC/" + filename_name_only(file.path) + ".meta", file.meta);
+	file_copy(file.path, $"{_dir}/{filename_name(file.path)}");
+	json_save_struct($"{_dir}/{filename_name_only(file.path)}.meta", file.meta);
 	
 	var preview_surface = PANEL_PREVIEW.getNodePreviewSurface();
-	surface_save_safe(preview_surface, DIRECTORY + "steamUGC/thumbnail.png");
-	steam_ugc_project_generate(DIRECTORY + "steamUGC/thumbnail.png");
+	surface_save_safe(preview_surface, $"{_dir}/thumbnail.png");
+	steam_ugc_project_generate($"{_dir}/thumbnail.png");
 	
 	STEAM_UGC_ITEM_ID = steam_ugc_create_item(STEAM_APP_ID, ugc_filetype_community);
 }
@@ -34,15 +35,16 @@ function steam_ugc_update_project(update_preview = false, update_note = "Updated
 	STEAM_UGC_ITEM_FILE		 = file;
 	STEAM_UGC_TYPE			 = STEAM_UGC_FILE_TYPE.project;
 	
-	directory_destroy(DIRECTORY + "steamUGC");
-	directory_create(DIRECTORY + "steamUGC");
+	var _dir = DIRECTORY + "steamUGC"
+	directory_destroy(_dir);
+	directory_create(_dir);
 	
-	file_copy(file.path, DIRECTORY + "steamUGC/" + filename_name(file.path));
+	file_copy(file.path, $"{_dir}/{filename_name(file.path)}");
 	if(file_exists_empty(PROJECT.thumbnail))
-		file_copy(PROJECT.thumbnail, DIRECTORY + "steamUGC/thumbnail.png");
-	json_save_struct(DIRECTORY + "steamUGC/" + filename_name_only(file.path) + ".meta", file.meta);
+		file_copy(PROJECT.thumbnail, $"{_dir}/thumbnail.png");
+	json_save_struct($"{_dir}/{filename_name_only(file.path)}.meta", file.meta);
 	
-	STEAM_UGC_PUBLISH_ID = file.meta.file_id;
+	STEAM_UGC_PUBLISH_ID    = file.meta.file_id;
 	STEAM_UGC_UPDATE_HANDLE = steam_ugc_start_item_update(STEAM_APP_ID, STEAM_UGC_PUBLISH_ID);
 	
 	steam_ugc_set_item_title(STEAM_UGC_UPDATE_HANDLE, STEAM_UGC_ITEM_FILE.name);
@@ -56,7 +58,7 @@ function steam_ugc_update_project(update_preview = false, update_note = "Updated
 	steam_ugc_project_generate(PROJECT.thumbnail);
 	
 	steam_ugc_set_item_tags(STEAM_UGC_UPDATE_HANDLE, tgs);
-	steam_ugc_set_item_content(STEAM_UGC_UPDATE_HANDLE, DIRECTORY + "steamUGC");
+	steam_ugc_set_item_content(STEAM_UGC_UPDATE_HANDLE, _dir);
 	if(file_exists_empty(TEMPDIR + "steamUGCthumbnail.png"))
 		steam_ugc_set_item_preview(STEAM_UGC_UPDATE_HANDLE, TEMPDIR + "steamUGCthumbnail.png");
 		

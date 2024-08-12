@@ -5,7 +5,7 @@ function Node_Graph_Preview(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	inputs[0]  = nodeValue_Surface("Surface", self)
 		.rejectArray();
 	
-	inputs[1]  = nodeValue_Vector("Position", self, [ 0, 0 ])
+	inputs[1]  = nodeValue_Vec2("Position", self, [ 0, 0 ])
 		.rejectArray();
 	
 	inputs[2]  = nodeValue_Float("Scale", self, 1)

@@ -18,7 +18,7 @@ function Node_WAV_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		
 	inputs[4]  = nodeValue_Bool("Remap Data", self, false)
 	
-	inputs[5]  = nodeValue_Vector("Data Range", self, [ 0, 1 ]);
+	inputs[5]  = nodeValue_Vec2("Data Range", self, [ 0, 1 ]);
 	
 	input_display_list = [ 
 		[ "Data",	false], 1, 0, 4, 5, 

@@ -3,7 +3,7 @@ function Node_Spherize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	inputs[0] = nodeValue_Surface("Surface in", self);
 	
-	inputs[1] = nodeValue_Vector("Center", self, [ DEF_SURF_W / 2, DEF_SURF_H / 2 ])
+	inputs[1] = nodeValue_Vec2("Center", self, [ DEF_SURF_W / 2, DEF_SURF_H / 2 ])
 		.setUnitRef(function(index) { return getDimension(index); });
 	
 	inputs[2] = nodeValue_Float("Strength", self, 1)

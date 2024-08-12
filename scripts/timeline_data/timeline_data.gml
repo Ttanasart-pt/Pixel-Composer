@@ -96,7 +96,9 @@ function timelineItemNode(node) : timelineItem() constructor {
 			aa = 1;
 			if(mouse_press(mb_left, focus)) show = !show;
 		}
-		draw_sprite_ui_uniform(THEME.arrow, show? 3 : 0, lx + ui(10), _y + lh / 2, 1, col == -1? CDEF.main_grey : col, aa);
+		
+		if(node.isActiveDynamic())
+			draw_sprite_ui_uniform(THEME.arrow, show? 3 : 0, lx + ui(10), _y + lh / 2, 1, col == -1? CDEF.main_grey : col, aa);
 		
 		draw_set_text(f_p3, fa_left, fa_center);
 		var nodeName = $"[{node.name}] ";

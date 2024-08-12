@@ -6,7 +6,7 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	inputs[1] = nodeValue_Surface("Solid", self);
 	
-	inputs[2] = nodeValue_Vector("Light Position", self, [ 0, 0 ])
+	inputs[2] = nodeValue_Vec2("Light Position", self, [ 0, 0 ])
 		.setUnitRef(function(index) { 
 			var _surf = getInputData(0);
 			if(is_array(_surf) && array_length(_surf) == 0)

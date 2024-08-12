@@ -9,7 +9,7 @@ function Node_FLIP_Repel(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	inputs[0] = nodeValue_Fdomain("Domain", self, noone )
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Vector("Position", self, [ 0, 0 ] )
+	inputs[1] = nodeValue_Vec2("Position", self, [ 0, 0 ] )
 		.setUnitRef(function(index) { return getDimension(); });
 	
 	inputs[2] = nodeValue_Float("Radius", self, 4 );

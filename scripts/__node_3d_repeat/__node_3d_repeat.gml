@@ -3,16 +3,16 @@ function __Node_3D_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	inputs[0] = nodeValue_Dimension(self);
 	
-	inputs[1] = nodeValue_Vector("Object position", self, [ 0, 0, 0 ]);
+	inputs[1] = nodeValue_Vec3("Object position", self, [ 0, 0, 0 ]);
 	
-	inputs[2] = nodeValue_Vector("Object rotation", self, [ 0, 0, 0 ]);
+	inputs[2] = nodeValue_Vec3("Object rotation", self, [ 0, 0, 0 ]);
 	
-	inputs[3] = nodeValue_Vector("Object scale", self, [ 1, 1, 1 ]);
+	inputs[3] = nodeValue_Vec3("Object scale", self, [ 1, 1, 1 ]);
 	
-	inputs[4] = nodeValue_Vector("Render position", self, [ 0.5, 0.5 ])
+	inputs[4] = nodeValue_Vec3("Render position", self, [ 0.5, 0.5 ])
 		.setUnitRef( function() { return getInputData(0); }, VALUE_UNIT.reference);
 	
-	inputs[5] = nodeValue_Vector("Render scale", self, [ 1, 1 ]);
+	inputs[5] = nodeValue_Vec2("Render scale", self, [ 1, 1 ]);
 		
 	inputs[6] = nodeValue_Rotation("Light direction", self, 0);
 		
@@ -31,11 +31,11 @@ function __Node_3D_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	inputs[12] = nodeValue_Int("Repeat", self, 1, "Amount of copies to be generated.");
 	
-	inputs[13] = nodeValue_Vector("Repeat position", self, [ 1, 0, 0 ]);
+	inputs[13] = nodeValue_Vec3("Repeat position", self, [ 1, 0, 0 ]);
 	
-	inputs[14] = nodeValue_Vector("Repeat rotation", self, [ 0, 0, 0 ]);
+	inputs[14] = nodeValue_Vec3("Repeat rotation", self, [ 0, 0, 0 ]);
 	
-	inputs[15] = nodeValue_Vector("Repeat scale", self, [ 1, 1, 1 ]);
+	inputs[15] = nodeValue_Vec3("Repeat scale", self, [ 1, 1, 1 ]);
 	
 	inputs[16] = nodeValue_Enum_Button("Repeat pattern", self,  0, [ "Linear", "Circular" ])
 		.rejectArray();

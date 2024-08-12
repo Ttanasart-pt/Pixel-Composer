@@ -14,6 +14,7 @@ function globalvar_viewer_draw(xx, yy, ww, _m, focus, hover, _scrollPane, rx, ry
 	var chov = false; 
 	
 	var _node = PROJECT.globalNode;
+	var _font = viewMode == INSP_VIEW_MODE.spacious? f_p0 : f_p2;
 	
 	if(var_editing) {
 		var del = noone;
@@ -29,35 +30,38 @@ function globalvar_viewer_draw(xx, yy, ww, _m, focus, hover, _scrollPane, rx, ry
 		var _ins = var_drag_insert;
 		var_drag_insert = _len;
 		
-		var _hov = hover && (var_dragging == noone);
-		var _foc = focus && (var_dragging == noone);
+		var _hov  = hover && (var_dragging == noone);
+		var _foc  = focus && (var_dragging == noone);
+		var _wd_h = viewMode == INSP_VIEW_MODE.spacious? ui(32) : ui(24);
+		var _pd_h = viewMode == INSP_VIEW_MODE.spacious? ui(4)  : ui(2)
+		var _dgs  = ui(24);
+		var _dgh  = _dgs / 2;
 		
-		var_drag_shift = lerp_float(var_drag_shift, (var_dragging != noone) * 48, 4);
+		var_drag_shift = lerp_float(var_drag_shift, (var_dragging != noone) * -16, 4);
 		
 		for( var j = 0; j < _len; j++ ) {
 			var _inpu = _node.inputs[j];
 			var _edit = _inpu.editor;
-			
 			var _wd_x = wd_x + (var_drag_disp == j) * var_drag_shift;
-			var wd_h  = ui(32);
 			
 			if(var_dragging != noone && _m[1] < yy && var_drag_insert == _len) 
-				var_drag_insert = j > var_dragging? j : j - 1;
+				var_drag_insert = max(0, j > var_dragging? j : j - 1);
 				
 			if(j) {
-				draw_set_color(merge_color(c_black, COLORS.panel_toolbar_separator, 0.75));
-				draw_line_round(wd_x + ui(8), yy, wd_x + wd_w - ui(16), yy, 4);
-						
-				yy += ui(10);
-				hh += ui(10);
+				// draw_set_color(merge_color(c_black, COLORS.panel_toolbar_separator, 0.75));
+				// draw_line_round(wd_x + ui(8), yy, wd_x + wd_w - ui(16), yy, 2);
+				
+				yy += _pd_h;
+				hh += _pd_h;
 			}
 			
 			if(var_dragging == noone) {
 				var bx = wd_x + ui(10);
-				var by = yy + ui(16);
-				if(hover && point_in_rectangle(_m[0], _m[1], bx - ui(12), by - ui(12), bx + ui(12), by + ui(12))) {
+				var by = yy + _wd_h / 2;
+				
+				if(hover && point_in_rectangle(_m[0], _m[1], bx - _dgh, by - _dgh, bx + _dgh, by + _dgh)) {
 					chov = true;
-					draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, bx - ui(12), by - ui(12), ui(24), ui(24), COLORS._main_icon_light, 1);
+					draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, bx - _dgh, by - _dgh, _dgs, _dgs, COLORS._main_icon_light, 1);
 					
 					if(mouse_press(mb_left, _foc)) {
 						var_drag_disp   = j;
@@ -65,33 +69,38 @@ function globalvar_viewer_draw(xx, yy, ww, _m, focus, hover, _scrollPane, rx, ry
 						var_drag_insert = j;
 					}
 				} else 
-					draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, bx - ui(12), by - ui(12), ui(24), ui(24), COLORS._main_icon_light, 0.75);
+					draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, bx - _dgh, by - _dgh, _dgs, _dgs, COLORS._main_icon_light, 0.75);
 			
 				draw_sprite_ext(THEME.hamburger, 0, bx, by, 0.5, 0.5, 0, COLORS._main_icon_light, 1);
 			}
-			
-			_edit.tb_name.setFocusHover(_foc, _hov);
-			_edit.sc_type.setFocusHover(_foc, _hov);
-			_edit.sc_disp.setFocusHover(_foc, _hov);
+
+			_edit.tb_name.setFocusHover(_foc, _hov); _edit.tb_name.font = _font;
+			_edit.sc_type.setFocusHover(_foc, _hov); _edit.sc_type.font = _font;
+			_edit.sc_disp.setFocusHover(_foc, _hov); _edit.sc_disp.font = _font;
 			
 			if(_foc) _edit.tb_name.register(_scrollPane);
 			
-			_edit.tb_name.draw(_wd_x + ui(32), yy, wd_w - wd_h - ui(32 + 4), wd_h, _inpu.name, _m, TEXTBOX_INPUT.text);
-			if(buttonInstant(THEME.button_hide, _wd_x + wd_w - wd_h, yy, wd_h, wd_h, _m, _foc, _hov,, THEME.icon_delete,, COLORS._main_value_negative) == 2) 
+			var _wd_xx = _wd_x + ui(32);
+			var _wd_ww = wd_w - _wd_h - ui(32 + 4);
+			
+			_edit.tb_name.draw(_wd_xx, yy, _wd_ww, _wd_h, _inpu.name, _m, TEXTBOX_INPUT.text);
+			if(buttonInstant(THEME.button_hide, _wd_x + wd_w - _wd_h, yy, _wd_h, _wd_h, _m, _foc, _hov,, THEME.icon_delete,, COLORS._main_value_negative) == 2) 
 				del = j;
-			yy += wd_h + ui(8);
-			hh += wd_h + ui(8);
+			yy += _wd_h + _pd_h * 2;
+			hh += _wd_h + _pd_h * 2;
+			
+			var _wd_ww = (wd_w - ui(32)) / 2 - ui(2);
+			
+			_edit.sc_type.draw(_wd_xx, yy, _wd_ww, _wd_h, _edit.val_type_name[_edit.type_index], _m, rx, ry);
+			_edit.sc_disp.draw(_wd_xx + _wd_ww + ui(4), yy, _wd_ww, _wd_h, _edit.sc_disp.data_list[_edit.disp_index], _m, rx, ry);
 						
-			_edit.sc_type.draw(_wd_x, yy, wd_w / 2 - ui(2), wd_h, _edit.val_type_name[_edit.type_index], _m, rx, ry);
-			_edit.sc_disp.draw(_wd_x + wd_w / 2 + ui(2), yy, wd_w / 2 - ui(2), wd_h, _edit.sc_disp.data_list[_edit.disp_index], _m, rx, ry);
+			yy += _wd_h + _pd_h;
+			hh += _wd_h + _pd_h;
 						
-			yy += wd_h + ui(4);
-			hh += wd_h + ui(4);
+			var wdh = _inpu.editor.draw(_wd_x, yy, wd_w, _m, _foc, _hov);
 						
-			var wd_h = _inpu.editor.draw(_wd_x, yy, wd_w, _m, _foc, _hov);
-						
-			yy += wd_h + ui(4);
-			hh += wd_h + ui(4);
+			yy += wdh + _pd_h;
+			hh += wdh + _pd_h;
 		}
 		
 		if(var_dragging != noone) {
