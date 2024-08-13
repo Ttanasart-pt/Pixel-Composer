@@ -7,10 +7,10 @@ function Panel_Nodes() : PanelContent() constructor {
 	
 	search_string = "";
 	
-	tb_search = new textBox(TEXTBOX_INPUT.text, function(str) /*=>*/ { search_string = string(str); });
-	tb_search.align			= fa_left;
-	tb_search.auto_update	= true;
-	tb_search.boxColor		= COLORS._main_icon_light;
+	tb_search             = new textBox(TEXTBOX_INPUT.text, function(str) /*=>*/ { search_string = string(str); });
+	tb_search.align		  = fa_left;
+	tb_search.auto_update = true;
+	tb_search.boxColor	  = COLORS._main_icon_light;
 	
 	node_collapse = ds_map_create();
 
@@ -26,7 +26,7 @@ function Panel_Nodes() : PanelContent() constructor {
 			var node = _arr[i];
 			var name = node.renamed? node.display_name : node.name;
 			
-			if(string_lower(search_string) != "" && string_lower(string_pos(search_string, name)) == 0)
+			if(string_lower(search_string) != "" && string_pos(string_lower(search_string), string_lower(name)) == 0)
 				continue;
 			
 			var isGroup = struct_has(node, "nodes");

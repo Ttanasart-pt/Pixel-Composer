@@ -107,7 +107,6 @@ function Panel_Menu() : PanelContent() constructor {
     menu_file_nondemo = [
         MENU_ITEMS.new_file,
         MENU_ITEMS.open,
-            // .setShiftMenu(menuItemAction(__txt("Open in safe mode") + "...",    LOAD_SAFE, THEME.noti_icon_file_load)),
             
         MENU_ITEMS.save,
         MENU_ITEMS.save_as,

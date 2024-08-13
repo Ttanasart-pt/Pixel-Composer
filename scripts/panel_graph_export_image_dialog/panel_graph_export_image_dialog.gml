@@ -41,43 +41,24 @@ function Panel_Graph_Export_Image(targetPanel) : PanelContent() constructor {
 	widgets      = [];
 	
 	widgets[0] = [ "Nodes",				new scrollBox(nodes_select, 
-		function(val) { 
+		function(val) /*=>*/ { 
 			sel      = val; 
 			nodeList = val? targetPanel.nodes_selecting : targetPanel.nodes_list; 
 			refresh(); 
 		}, false),
-		function() { return nodes_select[sel] }  ];
-		
-	widgets[1] = [ "Scale",				new textBox(TEXTBOX_INPUT.number, function(val) { settings.scale = val; refresh(); }),
-		function() { return settings.scale }	];
-		
-	widgets[2] = [ "Padding",			new textBox(TEXTBOX_INPUT.number, function(val) { settings.padding = val; refresh(); }),
-		function() { return settings.padding }	];
-		
-	widgets[3] = [ "Solid Background",	new checkBox(function() { settings.bgEnable = !settings.bgEnable; refresh(); }),
-		function() { return settings.bgEnable }	];
-		
-	widgets[4] = [ "Background Color",	new buttonColor(function(val) { settings.bgColor = val; refresh(); }),
-		function() { return settings.bgColor }	];
-		
-	widgets[5] = [ "Render Grid",		new checkBox(function() { settings.gridEnable = !settings.gridEnable; refresh(); }),
-		function() { return settings.gridEnable }	];
-		
-	widgets[6] = [ "Grid Color",		new buttonColor(function(val) { settings.gridColor = val; refresh(); }),
-		function() { return settings.gridColor }	];
-		
-	widgets[7] = [ "Grid Opacity",		new textBox(TEXTBOX_INPUT.number, function(val) { settings.gridAlpha = val; refresh(); }),
-		function() { return settings.gridAlpha }	];
-		
-	widgets[8] = [ "Border",			new textBox(TEXTBOX_INPUT.number, function(val) { settings.borderPad = val; refresh(); }),
-		function() { return settings.borderPad }	];
-		
-	widgets[9] = [ "Border Color",		new buttonColor(function(val) { settings.borderColor = val; refresh(); }),
-		function() { return settings.borderColor }	];
-		
-	widgets[10] = [ "Border Opacity",	new textBox(TEXTBOX_INPUT.number, function(val) { settings.borderAlpha = val; refresh(); }),
-		function() { return settings.borderAlpha }	];
-		
+		function() /*=>*/ {return nodes_select[sel]}  
+	];
+	
+	widgets[1]  = [ "Scale",			new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ { settings.scale       = val; refresh(); }),                  function() /*=>*/ {return settings.scale}       ];
+	widgets[2]  = [ "Padding",			new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ { settings.padding     = val; refresh(); }),                  function() /*=>*/ {return settings.padding}     ];
+	widgets[3]  = [ "Solid Background",	new checkBox(                     function()    /*=>*/ { settings.bgEnable    = !settings.bgEnable; refresh(); }),   function() /*=>*/ {return settings.bgEnable}    ];
+	widgets[4]  = [ "Background Color",	new buttonColor(                  function(val) /*=>*/ { settings.bgColor     = val; refresh(); }),                  function() /*=>*/ {return settings.bgColor}     ];
+	widgets[5]  = [ "Render Grid",		new checkBox(                     function()    /*=>*/ { settings.gridEnable  = !settings.gridEnable; refresh(); }), function() /*=>*/ {return settings.gridEnable}  ];
+	widgets[6]  = [ "Grid Color",		new buttonColor(                  function(val) /*=>*/ { settings.gridColor   = val; refresh(); }),                  function() /*=>*/ {return settings.gridColor}   ];
+	widgets[7]  = [ "Grid Opacity",		new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ { settings.gridAlpha   = val; refresh(); }),                  function() /*=>*/ {return settings.gridAlpha}   ];
+	widgets[8]  = [ "Border",			new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ { settings.borderPad   = val; refresh(); }),                  function() /*=>*/ {return settings.borderPad}   ];
+	widgets[9]  = [ "Border Color",		new buttonColor(                  function(val) /*=>*/ { settings.borderColor = val; refresh(); }),                  function() /*=>*/ {return settings.borderColor} ];
+	widgets[10] = [ "Border Opacity",	new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ { settings.borderAlpha = val; refresh(); }),                  function() /*=>*/ {return settings.borderAlpha} ];
 	
 	b_export = button(function() {
 		if(!is_surface(surface)) return;

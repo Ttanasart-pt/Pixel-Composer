@@ -160,7 +160,9 @@ function LOAD_AT(path, params = new __loadParams()) { #region
 	if(struct_has(_load_content, "nodes")) {
 		try {
 			var _node_list = _load_content.nodes;
+			
 			for(var i = 0, n = array_length(_node_list); i < n; i++) {
+				
 				var _node = nodeLoad(_node_list[i]);
 				if(_node) array_push(create_list, _node);
 			}

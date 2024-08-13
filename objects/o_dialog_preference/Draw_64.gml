@@ -96,6 +96,148 @@ if !ready exit;
 		if(mouse_press(mb_left, sFOCUS)) 
 			hk_editing = noone;
 		
+		var hk_w = panel_width;
+		var hk_h = hotkey_cont_h - ui(16);
+		var kdsp = keyboards_display;
+		var keys = keyboards_display.keys;
+		
+		var ks   = min(hk_w / kdsp.width, hk_h / kdsp.height);
+		var _kww = ks * kdsp.width;
+		var _khh = ks * kdsp.height;
+		
+		var _ksx = px + hk_w / 2 - _kww / 2;
+		var _ksy = py + hk_h / 2 - _khh / 2;
+		var _kp  = ui(2);
+		
+		var _keyUsing = {};
+		var _ctxObj   = hotkeyContext[hk_page];
+		var _cntx     = _ctxObj.context;
+		var _list     = _ctxObj.list;
+		
+		for (var j = 0, m = array_length(_list); j < m; j++) {
+			
+			var _ky   = _list[j];
+			var _kkey = _ky.key;
+			var _kmod = _ky.modi;
+			
+			if(_kkey == noone && _kmod == MOD_KEY.none) continue;
+			
+			if(!struct_has(_keyUsing, _kkey))
+				_keyUsing[$ _kkey] = {};
+			
+			var _kuse = _keyUsing[$ _kkey];
+			if(!struct_has(_kuse, _kmod))
+				_kuse[$ _kmod] = [];
+				
+			array_append(_kuse[$ _kmod], _ky);
+		}
+		
+		var c_control = CDEF.orange, kc_control = colorMultiply(CDEF.main_dkgrey, c_control);
+		var c_shift   = CDEF.blue,   kc_shift   = colorMultiply(CDEF.main_dkgrey, c_shift);
+		var c_alt     = CDEF.lime,   kc_alt     = colorMultiply(CDEF.main_dkgrey, c_alt);
+		var _sel      = true;
+		
+		var _mod_arr = [
+			MOD_KEY.ctrl, MOD_KEY.shift, MOD_KEY.alt,
+			MOD_KEY.ctrl | MOD_KEY.shift,
+			MOD_KEY.ctrl | MOD_KEY.alt,
+			MOD_KEY.shift | MOD_KEY.alt,
+			MOD_KEY.ctrl | MOD_KEY.shift | MOD_KEY.alt,
+		];
+		
+		var _cur_mod  = MOD_KEY.ctrl  * key_mod_press(CTRL)
+		              + MOD_KEY.shift * key_mod_press(SHIFT)
+		              + MOD_KEY.alt   * key_mod_press(ALT)
+		
+		var _cmod = _cur_mod == MOD_KEY.none? hk_modifiers : _cur_mod;
+		
+		draw_set_text(f_p4, fa_center, fa_center);
+		for (var i = 0, n = array_length(keys); i < n; i++) {
+			var _key = keys[i];
+			var _kx  = _ksx + _key.x * ks;
+			var _ky  = _ksy + _key.y * ks;
+			var _kw  = _key.w * ks;
+			var _kh  = _key.h * ks;
+			var _vk  = _key.vk;
+			
+			_kx += _kw / 2 - (_kw - _kp) / 2;
+			_ky += _kh / 2 - (_kh - _kp) / 2;
+			_kw -= _kp;
+			_kh -= _kp;
+			
+			if(_vk == -1) {
+				draw_sprite_stretched_ext(THEME.ui_panel, 0, _kx, _ky, _kw, _kh, CDEF.main_black, 0.3);
+				continue;
+			}
+			
+			var _tc  = CDEF.main_grey;
+			var _hov = sHOVER && point_in_rectangle(mouse_mx, mouse_my, _kx - _kp, _ky - _kp, _kx + _kw + _kp - 1, _ky + _kh + _kp - 1);
+			
+			if(_vk == vk_control) {
+				_sel = bool(MOD_KEY.ctrl & _cmod);
+				
+				draw_sprite_stretched_ext(THEME.ui_panel, 0, _kx, _ky, _kw, _kh, _sel? c_control : kc_control);
+				_tc = _sel? kc_control : c_control;
+				
+				if(mouse_press(mb_left, sFOCUS && _hov)) hk_modifiers ^= MOD_KEY.ctrl;
+				
+			} else if(_vk == vk_shift) {
+				_sel = bool(MOD_KEY.shift & _cmod);
+				
+				draw_sprite_stretched_ext(THEME.ui_panel, 0, _kx, _ky, _kw, _kh, _sel? c_shift : kc_shift);
+				_tc = _sel? kc_shift : c_shift;
+				
+				if(mouse_press(mb_left, sFOCUS && _hov)) hk_modifiers ^= MOD_KEY.shift;
+					
+			} else if(_vk == vk_alt) {
+				_sel = bool(MOD_KEY.alt & _cmod);
+				
+				draw_sprite_stretched_ext(THEME.ui_panel, 0, _kx, _ky, _kw, _kh, _sel? c_alt : kc_alt);
+				_tc = _sel? kc_alt : c_alt;
+				
+				if(mouse_press(mb_left, sFOCUS && _hov)) hk_modifiers ^= MOD_KEY.alt;
+					
+			} else if(struct_has(_keyUsing, _vk) && struct_has(_keyUsing[$ _vk], _cmod)) {
+				draw_sprite_stretched_ext(THEME.ui_panel, 0, _kx, _ky, _kw, _kh, CDEF.main_ltgrey);
+				draw_sprite_stretched_add(THEME.ui_panel, 1, _kx, _ky, _kw, _kh, c_white, 0.1);
+				_tc = CDEF.main_mdblack;
+				
+				var _act = _keyUsing[$ _vk][$ _cmod];
+				
+				if(_hov) {
+					TOOLTIP = new tooltipHotkey_assign(_act, key_get_name(_vk, _cmod));
+					
+					if(mouse_press(mb_left, sFOCUS)) {
+						if(hotkey_focus_index >= array_length(_act))
+							hotkey_focus_index = 0;
+							
+						hotkey_focus           = _act[hotkey_focus_index];
+						hotkey_focus_highlight = _act[hotkey_focus_index];
+						hotkey_focus_high_bg   = 1;
+						
+						hotkey_focus_index++;
+					}
+				}
+				
+			} else {
+				draw_sprite_stretched_ext(THEME.ui_panel, 0, _kx, _ky, _kw, _kh, CDEF.main_black);
+				_tc  = CDEF.main_grey;
+				
+				if(_hov) {
+					TOOLTIP = new tooltipHotkey_assign(noone, key_get_name(_vk, _cmod));
+				}
+			}
+			
+			draw_sprite_stretched_add(THEME.ui_panel, 1, _kx, _ky, _kw, _kh, c_white, 0.1 + _hov * 0.2);
+			
+			if(is_string(_key.key)) {
+				draw_set_color(_tc);
+				draw_set_alpha(1);
+				draw_text(_kx + _kw / 2, _ky + _kh / 2, _key.key);
+			}
+			
+		}
+		
 		var _ppy = py + hotkey_cont_h;
 		
 		hk_scroll.font = f_p2;

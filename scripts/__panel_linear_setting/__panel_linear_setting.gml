@@ -1,10 +1,11 @@
-function __Panel_Linear_Setting_Item(name, editWidget, data, onEdit = noone, getDefault = noone) constructor {
+function __Panel_Linear_Setting_Item(name, editWidget, data, onEdit = noone, getDefault = noone, action = noone) constructor {
 	self.name       = name;
 	self.editWidget = editWidget;
 	self.data       = data;
 	
 	self.onEdit     = onEdit;
 	self.getDefault = getDefault;
+	self.action     = action == noone? noone : struct_try_get(FUNCTIONS, string_to_var2(action[0], action[1]), noone);
 	
 	self.is_patreon = false;
 	
@@ -27,21 +28,24 @@ function __Panel_Linear_Setting_Label(name, sprite, _index = 0, _color = c_white
 }
 
 function Panel_Linear_Setting() : PanelContent() constructor {
-	title = __txtx("preview_3d_settings", "3D Preview Settings");
-	
-	w = ui(400);
+	title   = __txt("Settings");
+	w       = ui(400);
+	wdgw    = ui(180);
 	
 	bg_y    = -1;
 	bg_y_to = -1;
-	bg_a    = 0;
+	bg_a    =  0;
 	
-	properties = []
+	hk_editing     = noone;
+	selecting_menu = noone;
+	properties     = [];
+	
 	static setHeight = function() { h = ui(12 + 36 * array_length(properties)); }
 	
 	static drawSettings = function(panel) {
 		var yy = ui(24);
 		var th = ui(36);
-		var ww = w - ui(180);
+		var ww = wdgw;
 		var wh = TEXTBOX_HEIGHT;
 		
 		var _hov = false;
@@ -75,8 +79,6 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 				_widg.setFocusHover(pFOCUS, pHOVER);
 				_widg.register();
 				
-				//if(i % 2) draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, ui(4), yy - th / 2, w - ui(8), th, COLORS.panel_prop_bg, 0.25);
-				
 				if(pHOVER && point_in_rectangle(mx, my, 0, yy - th / 2, w, yy + th / 2)) {
 					bg_y_to = yy - th / 2;
 					_hov    = true;
@@ -98,6 +100,50 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 				}
 				
 				_widg.drawParam(params); 
+				
+				if(_prop.action != noone) {
+					var _key = _prop.action.hotkey;
+					
+					if(_hov && !_widg.inBBOX([ mx, my ]) && mouse_press(mb_right)) {
+						selecting_menu = _key;
+						
+						var context_menu_settings = [
+							_key.full_name(),
+							menuItem(__txt("Edit hotkey"), function() /*=>*/ { hk_editing = selecting_menu; keyboard_lastchar = hk_editing.key; }),
+						];
+						
+						menuCall("", context_menu_settings);
+					}
+					
+								
+					if(_key) {
+						draw_set_font(f_p1);
+						
+						var _ktxt = key_get_name(_key.key, _key.modi);
+						var _tw = string_width(_ktxt);
+						var _th = line_get_height();
+						
+						var _hx = _x1 - ww - ui(16);
+						var _hy = yy + ui(2);
+							
+						var _bx = _hx - _tw - ui(4);
+						var _by = _hy - _th / 2 - ui(3);
+						var _bw = _tw + ui(8);
+						var _bh = _th + ui(3);
+						
+						if(hk_editing == _key) {
+							draw_set_text(f_p1, fa_right, fa_center, COLORS._main_accent);
+							draw_sprite_stretched_ext(THEME.ui_panel, 1, _bx, _by, _bw, _bh, COLORS._main_text_accent);
+							
+						} else if(_ktxt != "") {
+							draw_set_text(f_p1, fa_right, fa_center, COLORS._main_text_sub);
+							draw_sprite_stretched_ext(THEME.ui_panel, 1, _bx, _by, _bw, _bh, CDEF.main_dkgrey);
+						}
+						
+						draw_text(_hx, _hy, _ktxt);
+					}
+		
+				}
 				
 				if(_prop.getDefault != noone) {
 					var _defVal = is_method(_prop.getDefault)? _prop.getDefault() : _prop.getDefault;
@@ -122,6 +168,13 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 		
 		if(bg_y == -1) bg_y = bg_y_to;
 		else           bg_y = lerp_float(bg_y, bg_y_to, 2);
+		
+		if(hk_editing != noone) {
+			if(keyboard_check_pressed(vk_enter))  hk_editing = noone;
+			else                                  hotkey_editing(hk_editing);
+			
+			if(keyboard_check_pressed(vk_escape)) hk_editing = noone;
+		} 
 	}
 	
 	function drawContent(panel) { drawSettings(panel); }

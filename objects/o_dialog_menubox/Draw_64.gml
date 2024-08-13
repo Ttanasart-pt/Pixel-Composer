@@ -88,17 +88,12 @@ if(!ready) exit;
 					};
 					
 					selecting_menu = _menuItem;
-					var _loadKey   = _key.full_name();
-					
-					var context_menu_settings = [
-						_loadKey,
-						menuItem("Edit hotkey", function() /*=>*/ {
-							hk_editing        = selecting_menu;
-							keyboard_lastchar = hk_editing.hoykeyObject.key;
-						}),
-					];
 					
 					with(o_dialog_menubox) { if(!remove_parents) instance_destroy(); }
+					var context_menu_settings = [
+						_key.full_name(),
+						menuItem(__txt("Edit hotkey"), function() /*=>*/ { hk_editing = selecting_menu; keyboard_lastchar = hk_editing.hoykeyObject.key; }),
+					];
 					
 					item_selecting = submenuCall(_dat, context_menu_settings);
 					item_selecting.remove_parents = false;

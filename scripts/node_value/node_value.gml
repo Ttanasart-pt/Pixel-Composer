@@ -11,6 +11,7 @@ function nodeValueSeed(_node, _type) {
 }
 
 function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constructor {
+	
 	static DISPLAY_DATA_KEYS = [ "linked", "angle_display", "bone_id", "unit", "atlas_crop" ];
 	
 	#region ---- main ----
@@ -102,7 +103,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	#endregion
 	
 	#region ---- value ----
-		def_val	    = variable_clone(_value);
+		
+		def_val	    = array_clone(_value);
 		def_length  = is_array(def_val)? array_length(def_val) : 0;
 		def_depth   = array_get_depth(def_val);
 		unit		= new nodeValueUnit(self);
@@ -537,7 +539,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return self;
 	}
 	
-	static resetDisplay = function() { #region //////////////////// RESET DISPLAY ////////////////////
+	static resetDisplay = function() {
+		
 		editWidget = noone;
 		switch(display_type) {
 			case VALUE_DISPLAY.button : #region
@@ -807,7 +810,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				extract_node = "Node_Boolean";
 				break; #endregion
 				
-			case VALUE_TYPE.color :		 #region
+			case VALUE_TYPE.color :		
 				switch(display_type) {
 					case VALUE_DISPLAY._default :
 						editWidget = new buttonColor(function(color) { return setValueInspector(color); } );
@@ -822,15 +825,15 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						extract_node = "Node_Palette";
 						break;
 				}
-				break; #endregion
+				break;
 				
-			case VALUE_TYPE.gradient :	 #region
+			case VALUE_TYPE.gradient :	
 				editWidget = new buttonGradient(function(gradient) { return setValueInspector(gradient); } );
 						
 				extract_node = "Node_Gradient_Out";
-				break; #endregion
+				break;
 				
-			case VALUE_TYPE.path :		 #region
+			case VALUE_TYPE.path :		
 				switch(display_type) {
 					case VALUE_DISPLAY.path_array :
 						editWidget = new pathArrayBox(self, display_data.filter, function(path) { setValueInspector(path); } );
@@ -868,14 +871,14 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						editWidget = new fontScrollBox( function(val) { return setValueInspector(FONT_INTERNAL[val]); } );
 						break;
 				}
-				break; #endregion
+				break;
 				
-			case VALUE_TYPE.curve :		 #region
+			case VALUE_TYPE.curve :		
 				display_type = VALUE_DISPLAY.curve;
 				editWidget = new curveBox(function(_modified) { return setValueInspector(_modified); });
-				break; #endregion
+				break;
 				
-			case VALUE_TYPE.text :		 #region
+			case VALUE_TYPE.text :		
 				switch(display_type) {
 					case VALUE_DISPLAY._default :
 						editWidget = new textArea(TEXTBOX_INPUT.text, function(str) { return setValueInspector(str); });
@@ -922,9 +925,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						editWidget = new textArrayBox(function() { return animator.values[0].value; }, display_data.data, function() { node.doUpdate(); });
 						break;
 				}
-				break; #endregion
+				break;
 				
-			case VALUE_TYPE.d3Material : #region
+			case VALUE_TYPE.d3Material :
 				editWidget = new materialBox(function(ind) { 
 					var res = setValueInspector(ind); 
 					node.triggerRender();
@@ -934,19 +937,19 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				if(!struct_has(display_data, "atlas")) display_data.atlas = true;
 				show_in_inspector = true;
 				extract_node = "Node_Canvas";
-				break; #endregion
+				break;
 				
-			case VALUE_TYPE.surface :	 #region
+			case VALUE_TYPE.surface :	
 				editWidget = new surfaceBox(function(ind) { return setValueInspector(ind); } );
 				
 				if(!struct_has(display_data, "atlas")) display_data.atlas = true;
 				show_in_inspector = true;
 				extract_node = "Node_Canvas";
-				break; #endregion
+				break;
 				
-			case VALUE_TYPE.pathnode :	 #region
+			case VALUE_TYPE.pathnode :	
 				extract_node = "Node_Path";
-				break; #endregion
+				break;
 		}
 		
 		if(is_struct(display_data) && struct_has(display_data, "side_button") && editWidget.side_button == noone)
@@ -961,7 +964,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		setDropKey();
-	} resetDisplay(); #endregion
+	} 
+	
+	resetDisplay();
 	
 	/////============ RENDER ============
 	
@@ -2276,6 +2281,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static cleanUp = function() {}
 		
 	static toString = function() { return (connect_type == JUNCTION_CONNECT.input? "Input" : "Output") + $" junction {index} of [{name}]: {node}"; }
+	
 }
 
 /////========== FUNCTIONS ==========

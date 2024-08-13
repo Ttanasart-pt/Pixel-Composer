@@ -165,14 +165,13 @@ function find_hotkey(_context, _name) {
 }
 
 function hotkey_editing(hotkey) {
-	HOTKEY_BLOCK = true;
-	
 	static vk_list = [ 
 		vk_left, vk_right, vk_up, vk_down, vk_space, vk_backspace, vk_tab, vk_home, vk_end, vk_delete, vk_insert, 
 		vk_pageup, vk_pagedown, vk_pause, vk_printscreen, 
 		vk_f1, vk_f2, vk_f3, vk_f4, vk_f5, vk_f6, vk_f7, vk_f8, vk_f9, vk_f10, vk_f11, vk_f12,
 	];
 	
+	HOTKEY_BLOCK = true;
 	var _mod_prs = 0;
 	
 	if(keyboard_check(vk_control))	_mod_prs |= MOD_KEY.ctrl;
@@ -188,7 +187,7 @@ function hotkey_editing(hotkey) {
 	} else if(keyboard_check_pressed(vk_anykey)) {
 		hotkey.modi  = _mod_prs;
 		hotkey.key   = 0;
-		var press = false;
+		var press    = false;
 		
 		for(var a = 0; a < array_length(vk_list); a++) {
 			if(!keyboard_check_pressed(vk_list[a])) continue;
@@ -198,8 +197,9 @@ function hotkey_editing(hotkey) {
 		}
 								
 		if(!press) {
-			var k = ds_map_find_first(global.KEY_STRING_MAP);
+			var k   = ds_map_find_first(global.KEY_STRING_MAP);
 			var amo = ds_map_size(global.KEY_STRING_MAP);
+			
 			repeat(amo) {
 				if(!keyboard_check_pressed(k)) {
 					k = ds_map_find_next(global.KEY_STRING_MAP, k);

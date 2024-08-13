@@ -62,7 +62,6 @@ function fileNameCall(path, onModify, _x = mouse_mx + 8, _y = mouse_my + 8) {
 }
 
 function menuItem(name, func, spr = noone, hotkey = noone, toggle = noone, params = {}) { return new MenuItem(name, func, spr, hotkey, toggle, params); }
-function menuItemAction(name, func, spr = noone, toggle = noone) { return new MenuItem(name, func, spr, struct_try_get(ACTION_MAP, func, noone), toggle); }
 
 function MenuItem(_name, _func, _spr = noone, _hotkey = noone, _toggle = noone, _params = {}) constructor {
 	active	= true;

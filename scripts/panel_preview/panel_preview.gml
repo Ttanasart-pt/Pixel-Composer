@@ -32,6 +32,18 @@
     function panel_preview_copy_color()                 { CALL("preview_copy_color");                PANEL_PREVIEW.copy_color();                                              }
     function panel_preview_copy_color_hex()             { CALL("preview_copy_color_hex");            PANEL_PREVIEW.copy_color_hex();                                          }
     
+    function panel_preview_toggle_grid_pixel()          { CALL("preview_toggle_grid_pixel");         PROJECT.previewGrid.pixel = !PROJECT.previewGrid.pixel;                  }
+    function panel_preview_toggle_grid_visible()        { CALL("preview_toggle_grid_visible");       PROJECT.previewGrid.show  = !PROJECT.previewGrid.show;                   }
+    function panel_preview_toggle_grid_snap()           { CALL("preview_toggle_grid_snap");          PROJECT.previewGrid.snap  = !PROJECT.previewGrid.snap;                   }
+    
+    function panel_preview_onion_enabled()              { CALL("preview_onion_enabled");             PROJECT.onion_skin.enabled = !PROJECT.onion_skin.enabled;                }
+    function panel_preview_onion_on_top()               { CALL("preview_onion_on_top");              PROJECT.onion_skin.on_top  = !PROJECT.onion_skin.on_top;                 }
+    
+    function panel_preview_show_info()                  { CALL("preview_show_info");                 PANEL_PREVIEW.show_info  = !PANEL_PREVIEW.show_info;                     }
+    function panel_preview_toggle_reset_view()          { CALL("preview_toggle_reset_view");         PANEL_PREVIEW.toggle_reset_view();                                       }
+    function panel_preview_toggle_split_view()          { CALL("preview_toggle_split_view");         PANEL_PREVIEW.toggle_split_view();                                       }
+    function panel_preview_toggle_lock()                { CALL("preview_toggle_lock");               PANEL_PREVIEW.toggle_lock();                                             }
+    
     function __fnInit_Preview() {
         registerFunction("Preview", "Focus content",            "F", MOD_KEY.none,                   panel_preview_focus_content             ).setMenu("preview_focus_content", THEME.icon_center_canvas)
         registerFunction("Preview", "Save current frame",       "S", MOD_KEY.shift,                  panel_preview_save_current_frame        ).setMenu("preview_save_current_frame")
@@ -68,6 +80,31 @@
         registerFunction("Preview", "Copy Color",               "",    MOD_KEY.none,                 panel_preview_copy_color                ).setMenu("preview_copy_color")
         registerFunction("Preview", "Copy Color Hex",           "",    MOD_KEY.none,                 panel_preview_copy_color_hex            ).setMenu("preview_copy_color_hex")
         
+        registerFunction("Preview", "Toggle Pixel Grid",        "",    MOD_KEY.none,                 panel_preview_toggle_grid_pixel         ).setMenu("preview_toggle_grid_pixel")
+        registerFunction("Preview", "Toggle Grid",              "",    MOD_KEY.none,                 panel_preview_toggle_grid_visible       ).setMenu("preview_toggle_grid_visible")
+        registerFunction("Preview", "Toggle Snap to Grid",      "",    MOD_KEY.none,                 panel_preview_toggle_grid_snap          ).setMenu("preview_toggle_grid_snap")
+        
+        registerFunction("Preview", "Toggle Onion Skin",        "",    MOD_KEY.none,                 panel_preview_onion_enabled             ).setMenu("preview_onion_enabled")
+        registerFunction("Preview", "Toggle Onion Skin view",   "",    MOD_KEY.none,                 panel_preview_onion_on_top              ).setMenu("preview_onion_on_top")
+        
+        registerFunction("Preview", "Toggle Show Info",         "",    MOD_KEY.none,                 panel_preview_show_info                 ).setMenu("preview_show_info")
+        registerFunction("Preview", "Toggle Reset View",        "",    MOD_KEY.none,                 panel_preview_toggle_reset_view         ).setMenu("preview_toggle_reset_view")
+        registerFunction("Preview", "Toggle Split View",        "",    MOD_KEY.none,                 panel_preview_toggle_split_view         ).setMenu("preview_toggle_split_view")
+        registerFunction("Preview", "Toggle Lock",              "",    MOD_KEY.none,                 panel_preview_toggle_lock               ).setMenu("preview_toggle_lock")
+        registerFunction("Preview", "Tiling Settings",          "",    MOD_KEY.none,                 function(_dat) /*=>*/ { submenuCall(_dat, [
+                                                                                                            MENU_ITEMS.preview_set_tile_off,
+                                                                                                            MENU_ITEMS.preview_set_tile_horizontal,
+                                                                                                            MENU_ITEMS.preview_set_tile_vertical,
+                                                                                                            MENU_ITEMS.preview_set_tile_both,
+                                                                                                        ]) }).setMenu("preview_tiling_settings")
+        
+        registerFunction("Preview", "Grid Settings",            "",    MOD_KEY.none,   function() /*=>*/ { dialogPanelCall(new Panel_Preview_Grid_Setting())                }).setMenu("preview_grid_settings")
+        registerFunction("Preview", "Onion Skin Settings",      "",    MOD_KEY.none,   function() /*=>*/ { dialogPanelCall(new Panel_Preview_Onion_Setting())               }).setMenu("preview_onion_settings")
+        registerFunction("Preview", "3D View Settings",         "",    MOD_KEY.none,   function() /*=>*/ { dialogPanelCall(new Panel_Preview_3D_Setting(PANEL_PREVIEW))     }).setMenu("preview_3D_settings")
+        registerFunction("Preview", "3D SDF View Settings",     "",    MOD_KEY.none,   function() /*=>*/ { dialogPanelCall(new Panel_Preview_3D_SDF_Setting(PANEL_PREVIEW)) }).setMenu("preview_3D_SDF_settings")
+        registerFunction("Preview", "3D Snap Settings",         "",    MOD_KEY.none,   function() /*=>*/ { dialogPanelCall(new Panel_Preview_Snap_Setting(PANEL_PREVIEW))   }).setMenu("preview_snap_settings")
+        registerFunction("Preview", "View Settings",            "",    MOD_KEY.none,   function() /*=>*/ { dialogPanelCall(new Panel_Preview_View_Setting(PANEL_PREVIEW))   }).setMenu("preview_view_settings")
+        
         __fnGroupInit_Preview();
     }
     
@@ -90,110 +127,104 @@ function Panel_Preview() : PanelContent() constructor {
     last_focus = noone;
     
     #region ---- canvas control & sample ----
-        function initSize() {
-            canvas_x = w / 2;
-            canvas_y = h / 2;
-        }
-        run_in(1, function() { initSize() });
+        function initSize() { canvas_x = w / 2; canvas_y = h / 2; }
+        run_in(1, function() /*=>*/ { initSize() });
         
-        canvas_x = 0;
-        canvas_y = 0;
-        canvas_s = 1;
-        canvas_w = ui(128);
-        canvas_h = ui(128);
-        canvas_a = 0;
-    
-        canvas_bg = -1;
-    
+        canvas_x    = 0;
+        canvas_y    = 0;
+        canvas_s    = 1;
+        canvas_w    = ui(128);
+        canvas_h    = ui(128);
+        canvas_a    = 0;
+        canvas_bg   = -1;
         do_fullView = false;
-    
-        canvas_hover = true;
+        
+        canvas_hover        = true;
         canvas_dragging_key = false;
-        canvas_dragging = false;
-        canvas_drag_key = 0;
-        canvas_drag_mx  = 0;
-        canvas_drag_my  = 0;
-        canvas_drag_sx  = 0;
-        canvas_drag_sy  = 0;
+        canvas_dragging     = false;
+        canvas_drag_key     = 0;
+        canvas_drag_mx      = 0;
+        canvas_drag_my      = 0;
+        canvas_drag_sx      = 0;
+        canvas_drag_sy      = 0;
     
-        canvas_zooming_key = false;
-        canvas_zooming  = false;
-        canvas_zoom_mx  = 0;
-        canvas_zoom_my  = 0;
-        canvas_zoom_m   = 0;
-        canvas_zoom_s   = 0;
+        canvas_zooming_key  = false;
+        canvas_zooming      = false;
+        canvas_zoom_mx      = 0;
+        canvas_zoom_my      = 0;
+        canvas_zoom_m       = 0;
+        canvas_zoom_s       = 0;
         
-        view_pan_tool  = false;
-        view_zoom_tool = false;
+        view_pan_tool       = false;
+        view_zoom_tool      = false;
         
-        sample_color = noone;
-        sample_x = noone;
-        sample_y = noone;
+        sample_color        = noone;
+        sample_x            = noone;
+        sample_y            = noone;
     
     #endregion
     
     #region ---- preview ----
-        locked           = false;
-        preview_node     = [ noone, noone ];
-        preview_surfaces = [ 0, 0 ];
-        preview_surface  = [ 0, 0 ];
-        tile_surface     = surface_create(1, 1);
+        locked              = false;
+        preview_node        = [ noone, noone ];
+        preview_surfaces    = [ 0, 0 ];
+        preview_surface     = [ 0, 0 ];
+        tile_surface        = surface_create(1, 1);
         
-        preview_x        = 0;
-        preview_x_to    = 0;
-        preview_x_max    = 0;
-        preview_sequence  = [ 0, 0 ];
-        _preview_sequence = preview_sequence;
-        preview_rate      = 10;
+        preview_x           = 0;
+        preview_x_to        = 0;
+        preview_x_max       = 0;
+        preview_sequence    = [ 0, 0 ];
+        _preview_sequence   = preview_sequence;
+        preview_rate        = 10;
         
-        right_menu_x      = 0;
-        right_menu_y      = 8;
-        mouse_on_preview  = 0;
-        _mouse_on_preview = 0;
+        right_menu_x        = 0;
+        right_menu_y        = 8;
+        mouse_on_preview    = 0;
+        _mouse_on_preview   = 0;
+        
+        splitView           = 0;
+        splitPosition       = 0.5;
+        splitSelection      = 0;
+    
+        splitViewDragging   = false;
+        splitViewStart      = 0;
+        splitViewMouse      = 0;
+    
+        tileMode            = 0;
+        bg_color            = COLORS.panel_bg_clear;
+        
+        mouse_pos_string    = "";
+        
+        show_info           = true;
+        show_view_control   = 1;
         
         resetViewOnDoubleClick = true;
-    
-        splitView        = 0;
-        splitPosition    = 0.5;
-        splitSelection    = 0;
-    
-        splitViewDragging = false;
-        splitViewStart  = 0;
-        splitViewMouse  = 0;
-    
-        tileMode = 0;
-        
-        bg_color = COLORS.panel_bg_clear;
-        
-        mouse_pos_string = "";
-        
-        show_info = true;
-        show_view_control = 1;
     #endregion
     
     #region ---- tool ----
-        tool_x       = 0;
-        tool_x_to    = 0;
-        tool_x_max   = 0;
+        tool_x              = 0;
+        tool_x_to           = 0;
+        tool_x_max          = 0;
         
-        tool_y       = 0;
-        tool_y_to    = 0;
-        tool_y_max   = 0;
+        tool_y              = 0;
+        tool_y_to           = 0;
+        tool_y_max          = 0;
         
-        tool_ry       = 0;
-        tool_ry_to    = 0;
-        tool_ry_max   = 0;
+        tool_ry             = 0;
+        tool_ry_to          = 0;
+        tool_ry_max         = 0;
         
-        tool_current = noone;
+        tool_current        = noone;
         
-        toolbar_width  = ui(40);
-        toolbar_height = ui(40);
+        toolbar_width       = ui(40);
+        toolbar_height      = ui(40);
         
-        tool_hovering     = noone;
-        tool_side_draw_l  = false;
-        tool_side_draw_r  = false;
-        overlay_hovering  = false;
-        view_hovering     = false;
+        tool_hovering       = noone;
+        tool_side_draw_l    = false;
+        tool_side_draw_r    = false;
+        overlay_hovering    = false;
+        view_hovering       = false;
         
         sbChannel = new scrollBox([], function(index) {
             var node = __getNodePreview();
@@ -209,62 +240,62 @@ function Panel_Preview() : PanelContent() constructor {
     #endregion
     
     #region ---- 3d ----
-        d3_active = NODE_3D.none;
+        d3_active            = NODE_3D.none;
         d3_active_transition = 0;
         
-        d3_surface = noone;
-        d3_surface_normal  = noone;
-        d3_surface_depth   = noone;
-        d3_surface_outline = noone;
-        d3_surface_bg      = noone;
-        d3_preview_channel = 0;
+        d3_surface           = noone;
+        d3_surface_normal    = noone;
+        d3_surface_depth     = noone;
+        d3_surface_outline   = noone;
+        d3_surface_bg        = noone;
+        d3_preview_channel   = 0;
         
-        d3_deferData = noone;
-        d3_drawBG    = false;
+        d3_deferData         = noone;
+        d3_drawBG            = false;
         
-        global.SKY_SPHERE = new __3dUVSphere(0.5, 16, 8, true);
+        global.SKY_SPHERE    = new __3dUVSphere(0.5, 16, 8, true);
         
         #region camera
-            d3_view_camera = new __3dCamera();
-            d3_camW = 1;
-            d3_camH = 1;
+            d3_view_camera   = new __3dCamera();
+            d3_camW          = 1;
+            d3_camH          = 1;
         
             d3_view_camera.setFocusAngle(135, 45, 4);
-            d3_camLerp   = 0;
-            d3_camLerp_x = 0;
-            d3_camLerp_y = 0;
+            d3_camLerp       = 0;
+            d3_camLerp_x     = 0;
+            d3_camLerp_y     = 0;
     
-            d3_camTarget = new __vec3();
+            d3_camTarget     = new __vec3();
         
-            d3_camPanning = false;
-            d3_camPan_mx  = 0;
-            d3_camPan_my  = 0;
+            d3_camPanning    = false;
+            d3_camPan_mx     = 0;
+            d3_camPan_my     = 0;
             
-            d3_zoom_speed = 0.2;
-            d3_pan_speed  = 2;
+            d3_zoom_speed    = 0.2;
+            d3_pan_speed     = 2;
         #endregion
         
         #region scene
-            d3_scene  = new __3dScene(d3_view_camera, "Preview panel");
-            d3_scene.lightAmbient = $404040;
-            d3_scene.cull_mode    = cull_counterclockwise;
-            d3_scene_preview      = d3_scene;
+            d3_scene               = new __3dScene(d3_view_camera, "Preview panel");
+            d3_scene.lightAmbient  = $404040;
+            d3_scene.cull_mode     = cull_counterclockwise;
+            d3_scene_preview       = d3_scene;
             
             d3_scene_light_enabled = true;
             
-            d3_scene_light0 = new __3dLightDirectional();
-            d3_scene_light0.transform.position.set(-1, -2, 3);
+            d3_scene_light0        = new __3dLightDirectional();
             d3_scene_light0.color  = $FFFFFF;
-            d3_scene_light0.shadow_active = false;
+            d3_scene_light0.shadow_active    = false;
             d3_scene_light0.shadow_map_scale = 4;
+            d3_scene_light0.transform.position.set(-1, -2, 3);
             
-            d3_scene_light1 = new __3dLightDirectional();
-            d3_scene_light1.transform.position.set(1, 2, -3);
+            d3_scene_light1        = new __3dLightDirectional();
             d3_scene_light1.color  = $505050;
+            d3_scene_light1.transform.position.set(1, 2, -3);
         #endregion
         
         #region tool
-            d3_tool_snap = false;
+            d3_tool_snap          = false;
             d3_tool_snap_position = 1;
             d3_tool_snap_rotation = 15;
         #endregion
@@ -273,52 +304,57 @@ function Panel_Preview() : PanelContent() constructor {
     tb_framerate = new textBox(TEXTBOX_INPUT.number, function(val) { preview_rate = real(val); });
     
     #region ++++ toolbars & actions ++++
-        function set_tile_off()        { tileMode = 0; }
-        function set_tile_horizontal() { tileMode = 1; }
-        function set_tile_vertical()   { tileMode = 2; }
-        function set_tile_both()       { tileMode = 3; }
-        function set_tile_toggle()     { tileMode = (tileMode + 1) % 4; }
+        static set_tile_off        = function() /*=>*/ { tileMode = 0; }
+        static set_tile_horizontal = function() /*=>*/ { tileMode = 1; }
+        static set_tile_vertical   = function() /*=>*/ { tileMode = 2; }
+        static set_tile_both       = function() /*=>*/ { tileMode = 3; }
+        static set_tile_toggle     = function() /*=>*/ { tileMode = (tileMode + 1) % 4; }
         
-        function new_preview_window()  { create_preview_window(getNodePreview()); } 
-        function copy_color()          { clipboard_set_text(sample_color); }
-        function copy_color_hex()      { clipboard_set_text(color_get_hex(sample_color)); }
+        static new_preview_window  = function() /*=>*/ { create_preview_window(getNodePreview()); } 
+        static copy_color          = function() /*=>*/ { clipboard_set_text(sample_color); }
+        static copy_color_hex      = function() /*=>*/ { clipboard_set_text(color_get_hex(sample_color)); }
+        
+        static toggle_reset_view   = function() /*=>*/ { resetViewOnDoubleClick = !resetViewOnDoubleClick; } 
+        static toggle_split_view   = function() /*=>*/ { splitView = (splitView + 1) % 3; }
+        
+        static toggle_lock         = function() /*=>*/ { locked = !locked }
         
         topbar_height  = ui(32);
         toolbar_height = ui(40);
         toolbars = [
             [ 
                 THEME.icon_reset_when_preview,
-                function() { return resetViewOnDoubleClick;  },
-                function() { return resetViewOnDoubleClick? __txtx("panel_preview_center_canvas_on_preview", "Center canvas on preview") :
-                        __txtx("panel_preview_keep_canvas_on_preview", "Keep canvas on preview"); }, 
-                function() { resetViewOnDoubleClick = !resetViewOnDoubleClick; } 
+                function() /*=>*/ {return resetViewOnDoubleClick},
+                function() /*=>*/ { return new tooltipHotkey(resetViewOnDoubleClick? __txtx("panel_preview_center_canvas_on_preview", "Center canvas on preview") :
+                                                                         __txtx("panel_preview_keep_canvas_on_preview", "Keep canvas on preview"), "Preview", "Toggle Reset View" )}, 
+                toggle_reset_view,
             ],
             [ 
                 THEME.icon_split_view,
-                function() { return splitView;  },
-                function() { 
+                function() /*=>*/ {return splitView},
+                function() /*=>*/ { 
                     switch(splitView) {
-                        case 0 : return __txtx("panel_preview_split_view_off",            "Split view off");
-                        case 1 : return __txtx("panel_preview_horizontal_split_view",    "Horizontal split view");
-                        case 2 : return __txtx("panel_preview_vertical_split_view",     "Vertical split view");
+                        case 0 : return new tooltipHotkey(__txtx("panel_preview_split_view_off",          "Split view off"),        "Preview", "Toggle Split View");
+                        case 1 : return new tooltipHotkey(__txtx("panel_preview_horizontal_split_view",   "Horizontal split view"), "Preview", "Toggle Split View");
+                        case 2 : return new tooltipHotkey(__txtx("panel_preview_vertical_split_view",     "Vertical split view"),   "Preview", "Toggle Split View");
                     }
-                    return __txtx("panel_preview_split_view", "Split view");
-                }, 
-                function() { splitView = (splitView + 1) % 3; } 
+                    return new tooltipHotkey(__txtx("panel_preview_split_view", "Split view"), "Preview", "Toggle Split View");
+                },
+                toggle_split_view,
             ],
             [
                 THEME.icon_tile_view,
-                function() { var t = [3, 0, 1, 2]; return array_safe_get_fast(t, tileMode);  },
-                function() { 
+                function() /*=>*/ { var t = [3, 0, 1, 2]; return array_safe_get_fast(t, tileMode);  },
+                function() /*=>*/ { 
                     switch(tileMode) {
-                        case 0 : return __txtx("panel_preview_tile_off",        "Tile off");
-                        case 1 : return __txtx("panel_preview_tile_horizontal", "Tile horizontal");
-                        case 2 : return __txtx("panel_preview_tile_vertical",    "Tile vertical");
-                        case 3 : return __txtx("panel_preview_tile_both",        "Tile both");
+                        case 0 : return new tooltipHotkey(__txtx("panel_preview_tile_off",         "Tile off"),        "Preview", "Tiling Settings");
+                        case 1 : return new tooltipHotkey(__txtx("panel_preview_tile_horizontal",  "Tile horizontal"), "Preview", "Tiling Settings");
+                        case 2 : return new tooltipHotkey(__txtx("panel_preview_tile_vertical",    "Tile vertical"),   "Preview", "Tiling Settings");
+                        case 3 : return new tooltipHotkey(__txtx("panel_preview_tile_both",        "Tile both"),       "Preview", "Tiling Settings");
                     }
-                    return __txtx("panel_preview_tile_mode", "Tile mode");
+                    return new tooltipHotkey(__txtx("panel_preview_tile_mode", "Tile mode"), "Preview", "Tiling Settings");
                 }, 
-                function(data) { 
+                function(data) /*=>*/ { 
                     menuCall("preview_tile_menu", [
                         MENU_ITEMS.preview_set_tile_off,
                         MENU_ITEMS.preview_set_tile_horizontal,
@@ -329,19 +365,15 @@ function Panel_Preview() : PanelContent() constructor {
             ],
             [ 
                 THEME.icon_grid_setting,
-                function() { return 0; },
-                function() { return __txtx("grid_title", "Grid setting") }, 
-                function(param) { 
-                    var dia = dialogPanelCall(new Panel_Preview_Grid_Setting(), param.x, param.y, { anchor: ANCHOR.bottom | ANCHOR.left }); 
-                } 
+                function() /*=>*/ {return 0},
+                function() /*=>*/ {return new tooltipHotkey(__txtx("grid_title", "Grid setting"), "Preview", "Grid Settings")}, 
+                function(param) /*=>*/ { dialogPanelCall(new Panel_Preview_Grid_Setting(), param.x, param.y, { anchor: ANCHOR.bottom | ANCHOR.left }); } 
             ],
             [ 
                 THEME.onion_skin,
-                function() { return 0; },
-                function() { return __txt("Onion Skin") }, 
-                function(param) { 
-                    var dia = dialogPanelCall(new Panel_Preview_Onion_Setting(), param.x, param.y, { anchor: ANCHOR.bottom | ANCHOR.left }); 
-                } 
+                function() /*=>*/ {return 0},
+                function() /*=>*/ {return new tooltipHotkey(__txt("Onion Skin"), "Preview", "Onion Skin Settings")}, 
+                function(param) /*=>*/ { dialogPanelCall(new Panel_Preview_Onion_Setting(), param.x, param.y, { anchor: ANCHOR.bottom | ANCHOR.left }); } 
             ],
         ];
     
@@ -349,13 +381,13 @@ function Panel_Preview() : PanelContent() constructor {
             [ 
                 THEME.d3d_preview_settings,
                 function() /*=>*/ {return 0},
-                function() /*=>*/ {return __txt("3D Preview Settings")},
+                function() /*=>*/ {return new tooltipHotkey(__txt("3D Preview Settings"), "Preview", "3D View Settings")},
                 function(param) /*=>*/ { dialogPanelCall(new Panel_Preview_3D_Setting(self), param.x, param.y, { anchor: ANCHOR.bottom | ANCHOR.left }); } 
             ],
             [ 
                 THEME.d3d_snap_settings,
                 function() /*=>*/ {return 0},
-                function() /*=>*/ {return __txt("3D Snap Settings")},
+                function() /*=>*/ {return new tooltipHotkey(__txt("3D Snap Settings"), "Preview", "3D Snap Settings")},
                 function(param) /*=>*/ { dialogPanelCall(new Panel_Preview_Snap_Setting(self), param.x, param.y, { anchor: ANCHOR.bottom | ANCHOR.left }); } 
             ],
         ];
@@ -364,42 +396,39 @@ function Panel_Preview() : PanelContent() constructor {
             [ 
                 THEME.d3d_preview_settings,
                 function() /*=>*/ {return 0},
-                function() /*=>*/ {return __txt("3D SDF Preview Settings")},
+                function() /*=>*/ {return new tooltipHotkey(__txt("3D SDF Preview Settings"), "Preview", "3D SDF View Settings")},
                 function(param) /*=>*/ { dialogPanelCall(new Panel_Preview_3D_SDF_Setting(self), param.x, param.y, { anchor: ANCHOR.bottom | ANCHOR.left }); } 
             ],
             [ 
                 THEME.d3d_snap_settings,
                 function() /*=>*/ {return 0},
-                function() /*=>*/ {return __txt("3D Snap Settings")},
+                function() /*=>*/ {return new tooltipHotkey(__txt("3D Snap Settings"), "Preview", "3D Snap Settings")},
                 function(param) /*=>*/ { dialogPanelCall(new Panel_Preview_Snap_Setting(self), param.x, param.y, { anchor: ANCHOR.bottom | ANCHOR.left }); } 
             ],
         ];
         
-        tooltip_center = new tooltipHotkey(__txtx("panel_preview_center_canvas", "Center canvas"), "Preview", "Focus content");
-        tooltip_export = new tooltipHotkey(__txtx("panel_preview_export_canvas", "Export canvas"), "Preview", "Save current frame");
-        
         actions = [
             [ 
                 THEME.lock,
-                __txtx("panel_preview_lock_preview", "Lock previewing node"), 
-                function() /*=>*/ { locked = !locked; },
+                new tooltipHotkey(__txtx("panel_preview_lock_preview", "Lock previewing node"), "Preview", "Toggle Lock"), 
+                toggle_lock,
                 function() /*=>*/ {return !locked},
             ],
             [ 
                 THEME.icon_preview_export,
-                tooltip_export, 
+                new tooltipHotkey(__txtx("panel_preview_export_canvas", "Export canvas"),       "Preview", "Save current frame"), 
                 function() /*=>*/ { saveCurrentFrame(); },
                 function() /*=>*/ {return 0},
             ],
             [ 
                 THEME.icon_center_canvas,
-                tooltip_center, 
+                new tooltipHotkey(__txtx("panel_preview_center_canvas", "Center canvas"),       "Preview", "Focus content"), 
                 function() /*=>*/ { fullView(); },
                 function() /*=>*/ {return 0},
             ],
             [ 
                 THEME.icon_visibility,
-                __txtx("graph_visibility_title", "Visibility settings"), 
+                new tooltipHotkey(__txtx("graph_visibility_title", "Visibility settings"),      "Preview", "View Settings"), 
                 function(param) /*=>*/ { dialogPanelCall(new Panel_Preview_View_Setting(self), param.x, param.y, { anchor: ANCHOR.bottom | ANCHOR.left }); },
                 function() /*=>*/ {return 0},
             ],
@@ -1976,9 +2005,9 @@ function Panel_Preview() : PanelContent() constructor {
         var _toolbars = toolbars;
         
         switch(d3_active) {
-            case NODE_3D.none :     _toolbars = toolbars;            break;
-            case NODE_3D.polygon :    _toolbars = toolbars_3d;        break;
-            case NODE_3D.sdf :        _toolbars = toolbars_3d_sdf;    break;
+            case NODE_3D.none :     _toolbars = toolbars;        break;
+            case NODE_3D.polygon :  _toolbars = toolbars_3d;     break;
+            case NODE_3D.sdf :      _toolbars = toolbars_3d_sdf; break;
         }
         
         for( var i = 0, n = array_length(_toolbars); i < n; i++ ) {

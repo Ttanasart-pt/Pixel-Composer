@@ -11,11 +11,10 @@
 	}
 	
 	function __fnInit() {
-		globalvar CMD_FUNCTIONS, ACTION_MAP, MENU_ITEMS, FUNCTIONS;
+		globalvar CMD_FUNCTIONS, MENU_ITEMS, FUNCTIONS;
 		
 		FUNCTIONS     = {};
 		CMD_FUNCTIONS = {};
-		ACTION_MAP    = {};
 		MENU_ITEMS    = {};
 		
 		__fnInit_Global();
@@ -43,13 +42,11 @@ function functionObject(_context, _name, _key, _mod, _action) constructor {
 	action   = _action;
 	hide     = false;
 	
-	fnName = _context == ""? _name : $"{_context} {_name}";
-	fnName = string_to_var(fnName);
-	menu   = noone;
+	fnName   = string_to_var2(_context, _name);
+	menu     = noone;
 		
 	FUNCTIONS[$ fnName]     = self;
 	CMD_FUNCTIONS[$ fnName] = { action: _action, args: [] };
-	ACTION_MAP[$ _action]   = [ _context, _name ];
 	
 	static setArg      = function(_args = []) { 
 		CMD_FUNCTIONS[$ fnName] = { action, args: _args };
@@ -57,7 +54,7 @@ function functionObject(_context, _name, _key, _mod, _action) constructor {
 	}
 	
 	static setMenuAlt = function(_name, _id, _spr = noone, shelf = false) { 
-		menu = menuItemAction(__txt(_name), action, _spr);	
+		menu = menuItem(__txt(_name), action, _spr, [ context, name ]);
 		if(shelf) menu.setIsShelf();
 		MENU_ITEMS[$ _id] = menu;
 		
@@ -65,7 +62,7 @@ function functionObject(_context, _name, _key, _mod, _action) constructor {
 	}
 	
 	static setMenu = function(_id, _spr = noone, shelf = false) { 
-		menu = menuItemAction(__txt(name), action, _spr);	
+		menu = menuItem(__txt(name), action, _spr, [ context, name ]);
 		if(shelf) menu.setIsShelf();
 		MENU_ITEMS[$ _id] = menu;
 		

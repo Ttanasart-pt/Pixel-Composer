@@ -33,3 +33,50 @@ function tooltipHotkey(text, context = "", name = "") constructor {
 		hotkey_draw(keyStr, _hx, _hy);
 	}
 }
+
+function tooltipHotkey_assign(text, hotkey = "") constructor {
+	self.text   = text;
+	self.hotkey = hotkey;
+	
+	static drawTooltip = function() {
+		var _uns = text == noone;
+		var _txt = _uns? [ __txt("Unassigned") ] : text;
+		
+		draw_set_font(f_p1);
+		var _w1 = string_width(hotkey);
+		
+		draw_set_font(f_p0);
+		var _w2 = 0;
+		var  th = 0;
+		
+		for (var i = 0, n = array_length(_txt); i < n; i++) {
+			var _t  = _txt[i];
+			var _ts = is_string(_t)? _t : _t.name;
+			
+			_w2  = max(_w2, string_width(_ts));
+			 th += string_height(_ts);
+		}
+		
+		var tw = min(WIN_W - ui(32), _w1 + ui(24) + _w2);
+		var mx = min(mouse_mx + ui(16), WIN_W - (tw + ui(16)));
+		var my = min(mouse_my + ui(16), WIN_H - (th + ui(16)));
+		
+		draw_sprite_stretched(THEME.textbox, 3, mx, my, tw + ui(16), th + ui(16));
+		draw_sprite_stretched(THEME.textbox, 0, mx, my, tw + ui(16), th + ui(16));
+		
+		var txy = my + ui(8);
+		
+		draw_set_text(f_p0, fa_left, fa_top, _uns? COLORS._main_text_sub : COLORS._main_text);
+		for (var i = 0, n = array_length(_txt); i < n; i++) {
+			var _t  = _txt[i];
+			var _ts = is_string(_t)? _t : _t.name;
+			
+			draw_text(mx + ui(8), txy, _ts);
+			txy += string_height(_ts);
+		}
+		
+		var _hx = mx + tw + ui(6);
+		var _hy = my + line_get_height() / 2 + ui(10);
+		hotkey_draw(hotkey, _hx, _hy);
+	}
+}

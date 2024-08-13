@@ -1,7 +1,5 @@
 function Panel_Preview_3D_Setting(panel) : Panel_Linear_Setting() constructor {
 	title = __txtx("preview_3d_settings", "3D Preview Settings");
-	
-	w = ui(380);
 	preview_panel = panel;
 	
 	properties_default = [

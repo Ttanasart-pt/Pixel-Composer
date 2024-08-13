@@ -38,6 +38,7 @@ function Theme() constructor {
     chat                            = s_chat;
     checkbox_on_start               = s_checkbox_on_start;
     circle_16                       = s_circle_16;
+    circle_hotkey                   = s_circle_hotkey;
     circle                          = s_circle_8;
     circle_toggle_8                 = s_circle_toggle_8;
     code_show_auto                  = s_code_show_auto;

@@ -37,6 +37,7 @@ function scrollBox(_data, _onModify, update_hover = true) : widget() constructor
 		var ind = array_find(data, curr_text);
 		open    = true;
 		
+		FOCUS_BEFORE = FOCUS;
 		with(dialogCall(horizontal? o_dialog_scrollbox_horizontal : o_dialog_scrollbox, x + open_rx, y + open_ry)) {
 			initVal      = ind;
 			font         = other.font;

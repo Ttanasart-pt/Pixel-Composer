@@ -27,27 +27,23 @@ if(PROJECT.active && !PROJECT.safeMode) { //node step
 	if(!instance_exists(o_dialog_preference) && !HOTKEY_BLOCK) {
 		if(ds_map_exists(HOTKEYS, "")) {
 			var l = HOTKEYS[? ""];
-			for(var i = 0; i < ds_list_size(l); i++) {
+			for(var i = 0, n = ds_list_size(l); i < n; i++) {
 				var hotkey = l[| i];
 				if(hotkey.key == 0 && hotkey.modi == MOD_KEY.none) continue;
 			
-				if(key_press(hotkey.key, hotkey.modi)) {
+				if(key_press(hotkey.key, hotkey.modi))
 					hotkey.action();
-					break;
-				}
 			}
 		}
 		
 		if(ds_map_exists(HOTKEYS, FOCUS_STR)) {
 			var list = HOTKEYS[? FOCUS_STR];
-			for(var i = 0; i < ds_list_size(list); i++) {
-				var hotkey	= list[| i];
+			for(var i = 0, n = ds_list_size(list); i < n; i++) {
+				var hotkey = list[| i];
 				if(hotkey.key == 0 && hotkey.modi == MOD_KEY.none) continue;
-			
-				if(key_press(hotkey.key, hotkey.modi)) {
+				
+				if(key_press(hotkey.key, hotkey.modi))
 					hotkey.action();
-					break;
-				}
 			}
 		}
 	}

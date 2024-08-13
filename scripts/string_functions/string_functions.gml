@@ -40,8 +40,9 @@ function filename_name_only(name) {
 	return string_replace(name, filename_ext(name), "")
 }
 	
-function string_to_var(str) { INLINE return string_replace_all(string_replace_all(string_lower(str), " ", "_"), "/", "_"); }
-function string_quote(str)  { INLINE return $"\"{str}\""; }
+function string_to_var(str)            { INLINE return string_replace_all(string_replace_all(string_lower(str), " ", "_"), "/", "_"); }
+function string_to_var2(context, name) { INLINE return string_to_var(context == ""? name : $"{context} {name}"); }
+function string_quote(str)             { INLINE return $"\"{str}\""; }
 
 function array_to_string(arr) {
 	if(!is_array(arr))   return string(arr);

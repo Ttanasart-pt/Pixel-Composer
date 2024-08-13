@@ -2,8 +2,8 @@
 event_inherited();
 
 #region data
-	dialog_w   = ui(900);
-	dialog_h   = ui(640);
+	dialog_w   = min(WIN_W - ui(16), ui(1000));
+	dialog_h   = min(WIN_H - ui(16), ui(700));
 	page_width = ui(160);
 	
 	destroy_on_click_out = true;
@@ -20,7 +20,7 @@ event_inherited();
 	panel_width   = dialog_w - ui(padding + padding) - page_width;
 	panel_height  = dialog_h - ui(title_height + padding);
 	
-	hotkey_cont_h = ui(0);
+	hotkey_cont_h = ui(240);
 	hotkey_height = panel_height - hotkey_cont_h - ui(32);
 	
 	onResize = function() /*=>*/ {
@@ -639,8 +639,16 @@ event_inherited();
 
 #region hotkey
 	hk_editing    = noone;
+	hk_modifiers  = MOD_KEY.none;
 	hotkeyContext = [];
 	hotkeyArray   = [];
+	
+	hotkey_focus           = noone;
+	hotkey_focus_highlight = noone;
+	hotkey_focus_high_bg   = 0;
+	hotkey_focus_index     = 0;
+	
+	keyboards_display = new KeyboardDisplay();
 	
 	for(var j = 0; j < ds_list_size(HOTKEY_CONTEXT); j++) {
 		var ctx  = HOTKEY_CONTEXT[| j];
@@ -676,14 +684,11 @@ event_inherited();
 		}
 		
 		array_push(hotkeyContext, { context: ctx, list: _lst });
-		
-		var _title = ctx == ""? "Global" : ctx;
-		    _title = string_replace_all(_title, "_", " ");
-		array_push(hotkeyArray, _title);
+		array_push(hotkeyArray, $" -  {ctx}");
 	}
 	
 	hk_page   = 0;
-	hk_scroll = new scrollBox(hotkeyArray, function(val) /*=>*/ { hk_page = val; });
+	hk_scroll = new scrollBox(hotkeyArray, function(val) /*=>*/ { hk_page = val; sp_hotkey.scroll_y_to = 0; });
 	hk_scroll.align = fa_left;
 	
 	sp_hotkey = new scrollPane(panel_width, hotkey_height, function(_y, _m) {
@@ -705,97 +710,91 @@ event_inherited();
 		var _hov      = sHOVER && sp_hotkey.hover;
 		var modified  = false;
 		
-		// for (var i = 0, n = array_length(hotkeyContext); i < n; i++) {
-			// var _ctxObj = hotkeyContext[i];
-			var _ctxObj = hotkeyContext[hk_page];
-			var _cntx   = _ctxObj.context;
-			var _list   = _ctxObj.list;
-			var _yy     = yy + hh;
+		var _ctxObj = hotkeyContext[hk_page];
+		var _cntx   = _ctxObj.context;
+		var _list   = _ctxObj.list;
+		var _yy     = yy + hh;
+		
+		var _search = string_lower(search_text);
+		
+		for (var j = 0, m = array_length(_list); j < m; j++) {
 			
-			// var _grlab  = _cntx == ""? __txt("Global") : _cntx;
-			// draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text_sub);
-			// draw_text_add(ui(8), _yy, _grlab);
+			var key   = _list[j];
+			var name  = __txt(key.name);
+			var dk    = key_get_name(key.key, key.modi);
 			
-			// array_push(sect, [ _grlab, sp_hotkey, hh + ui(12) ]);
-			// if(_yy >= 0 && section_current == "") 
-			// 	section_current = psect;
-			// psect = _grlab;
+			if(_search != "" && string_pos(_search, string_lower(name)) == 0
+			                 && string_pos(_search, string_lower(dk))   == 0)
+				continue;
 			
-			ind = 0;
-			// hh  += string_height("l") + ui(8);
+			var pkey  = key.key;
+			var modi  = key.modi;
+			var _yy   = yy + hh;
+			var _lb_y = _yy;
 			
-			for (var j = 0, m = array_length(_list); j < m; j++) {
+			if(hotkey_focus == key) sp_hotkey.scroll_y_to = -hh;
+			
+			if(ind++ % 2 == 0)				  draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, _yy - padd, _ww, th + padd * 2, COLORS.dialog_preference_prop_bg, 1);
+			if(hotkey_focus_highlight == key) draw_sprite_stretched_add(THEME.ui_panel,    0, 0, _yy - padd, _ww, th + padd * 2, COLORS._main_accent, min(1, hotkey_focus_high_bg) * .5);
+			
+			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text);
+			draw_text_add(ui(24), _lb_y, name);
+			
+			var kw = string_width(dk);
+			
+			var tx = key_x1 - ui(24);
+			var bx = tx - kw - ui(8);
+			var by = _yy - ui(3);
+			var bw = kw + ui(16);
+			var bh = th + ui(6);
+			var cc = c_white;
+			
+			if(hk_editing == key) {
+				draw_sprite_stretched_ext(THEME.ui_panel, 1, bx, by, bw, bh, COLORS._main_accent);
+				cc = COLORS._main_text_accent;
 				
-				var key   = _list[j];
-				var name  = __txt(key.name);
-				
-				if(search_text != "" && string_pos(string_lower(search_text), string_lower(name)) == 0)
-					continue;
-				
-				var pkey  = key.key;
-				var modi  = key.modi;
-				var _yy   = yy + hh;
-				var _lb_y = _yy;
-				
-				if(ind++ % 2 == 0) draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, _yy - padd, _ww, th + padd * 2, COLORS.dialog_preference_prop_bg, 1);
-				
-				draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text);
-				draw_text_add(ui(24), _lb_y, name);
-				
-				var dk = key_get_name(key.key, key.modi);
-				var kw = string_width(dk);
-				
-				var tx = key_x1 - ui(24);
-				var bx = tx - kw - ui(8);
-				var by = _yy - ui(3);
-				var bw = kw + ui(16);
-				var bh = th + ui(6);
-				var cc = c_white;
-				
-				if(hk_editing == key) {
-					draw_sprite_stretched_ext(THEME.ui_panel, 1, bx, by, bw, bh, COLORS._main_accent);
-					cc = COLORS._main_text_accent;
+			} else {
+				if(_hov && point_in_rectangle(_m[0], _m[1], bx, by, bx + bw, by + bh)) {
+					draw_sprite_stretched_ext(THEME.ui_panel, 1, bx, by, bw, bh, CDEF.main_ltgrey);
+					sp_hotkey.hover_content = true;
+					cc = CDEF.main_white;
+					
+					if(mouse_press(mb_left, sFOCUS)) {
+						hk_editing        = key;
+						keyboard_lastchar = pkey;
+					}
 					
 				} else {
-					if(_hov && point_in_rectangle(_m[0], _m[1], bx, by, bx + bw, by + bh)) {
-						draw_sprite_stretched_ext(THEME.ui_panel, 1, bx, by, bw, bh, CDEF.main_ltgrey);
-						sp_hotkey.hover_content = true;
-						cc = CDEF.main_white;
-						
-						if(mouse_press(mb_left, sFOCUS)) {
-							hk_editing        = key;
-							keyboard_lastchar = pkey;
-						}
-						
-					} else {
-						draw_sprite_stretched_ext(THEME.ui_panel, 1, bx, by, bw, bh, CDEF.main_dkgrey, 1);
-						cc = CDEF.main_ltgrey;
-					}
+					draw_sprite_stretched_ext(THEME.ui_panel, 1, bx, by, bw, bh, CDEF.main_dkgrey, 1);
+					cc = CDEF.main_ltgrey;
 				}
-				
-				draw_set_text(f_p2, fa_right, fa_top, cc);
-				draw_text_add(tx, _lb_y, dk);
-				
-				if(key.key != key.dKey || key.modi != key.dModi) {
-					modified = true;
-					var bx   = x1 - ui(32);
-					var by   = _yy + th / 2 - ui(12);
-					var b    = buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), _m, sFOCUS, _hov, __txt("Reset"), THEME.refresh_16);
-					
-					if(b) sp_hotkey.hover_content = true;
-					if(b == 2) {
-						key.key  = key.dKey;
-						key.modi = key.dModi;
-						
-						PREF_SAVE();
-					}
-				}
-				
-				hh += th + padd * 2;
 			}
-		// }
+			
+			draw_set_text(f_p2, fa_right, fa_top, cc);
+			draw_text_add(tx, _lb_y, dk);
+			
+			if(key.key != key.dKey || key.modi != key.dModi) {
+				modified = true;
+				var bx   = _ww - ui(32);
+				var by   = _yy + th / 2 - ui(12);
+				var b    = buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), _m, sFOCUS, _hov, __txt("Reset"), THEME.refresh_16);
+				
+				if(b) sp_hotkey.hover_content = true;
+				if(b == 2) {
+					key.key  = key.dKey;
+					key.modi = key.dModi;
+					
+					PREF_SAVE();
+				}
+			}
+			
+			hh += th + padd * 2;
+		}
 		
-		// sections[page_current] = sect;
+		hotkey_focus         = noone;
+		hotkey_focus_high_bg = lerp_linear(hotkey_focus_high_bg, 0, DELTA_TIME);
+		if(hotkey_focus_high_bg == 0) hotkey_focus_highlight = noone;
+		
 		if(hk_editing != noone) hotkey_editing(hk_editing);
 		
 		return hh + ui(32);
@@ -917,9 +916,7 @@ event_inherited();
 #endregion
 
 #region search
-	tb_search = new textBox(TEXTBOX_INPUT.text, function(str) /*=>*/ {
-		search_text = str;
-	});
+	tb_search = new textBox(TEXTBOX_INPUT.text, function(str) /*=>*/ { search_text = str; });
 	tb_search.align	= fa_left;
 	
 	search_text = "";

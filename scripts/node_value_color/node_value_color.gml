@@ -9,7 +9,10 @@ function NodeValue_Color(_name, _node, _value, _tooltip = "") : NodeValue(_name,
 		var val = __curr_get_val[0];
 		var nod = __curr_get_val[1];
 		
-		return val >= 1? cola(val) : make_color_rgb(val * 255, val * 255, val * 255);
+		return val;
+		
+		if(nod.type == VALUE_TYPE.integer || nod.type == VALUE_TYPE.float)
+			return val >= 1? cola(val) : make_color_rgb(val * 255, val * 255, val * 255);
 	}
 	
 	static __getAnimValue = function(_time = CURRENT_FRAME) {

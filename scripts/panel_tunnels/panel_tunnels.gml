@@ -1,57 +1,55 @@
 function Panel_Tunnels() : PanelContent() constructor {
 	title   = __txt("Tunnels");
 	padding = 8;
-		
-	#region data
-		w = ui(320);
-		h = ui(480);
-		
-		build_x = 0;
-		build_y = 0;
-		
+	
+	w = ui(320);
+	h = ui(480);
+	
+	build_x = 0;
+	build_y = 0;
+	
+	tunnel_ins    = [];
+	tunnel_select = noone;
+	tunnel_hover  = noone;
+	
+	function scanNodes() {
 		tunnel_ins = [];
-		tunnel_select = noone;
-		tunnel_hover  = noone;
 		
-		function scanNodes() {
-			tunnel_ins = [];
+		for (var i = 0, n = array_length(PROJECT.allNodes); i < n; i++) {
+			var node = PROJECT.allNodes[i];
 			
-			for (var i = 0, n = array_length(PROJECT.allNodes); i < n; i++) {
-				var node = PROJECT.allNodes[i];
-				
-				if(instanceof(node) == "Node_Tunnel_In") 
-					array_push(tunnel_ins, node);
-			}
+			if(instanceof(node) == "Node_Tunnel_In") 
+				array_push(tunnel_ins, node);
 		}
-		scanNodes();
+	}
+	scanNodes();
+	
+	search_string     = "";
+	keyboard_lastchar = "";
+	keyboard_lastkey  = -1;
+	KEYBOARD_STRING   = "";
+	
+	search_res = [];
+	tb_search = new textBox(TEXTBOX_INPUT.text, function(str) { 
+		search_string = string(str); 
+		searchNodes();
+	});
+	
+	tb_search.align			= fa_left;
+	tb_search.auto_update	= true;
+	tb_search.boxColor		= COLORS._main_icon_light;
+	WIDGET_CURRENT			= tb_search;
+	
+	function searchNodes() {
+		search_res = [];
+		for( var i = 0, n = array_length(tunnel_ins); i < n; i++ ) {
+			var node = tunnel_ins[i];
+			var key  = node.inputs[0].getValue(0);
 		
-		search_string = "";
-		keyboard_lastchar = "";
-		KEYBOARD_STRING = "";
-		keyboard_lastkey = -1;
-		
-		search_res    = [];
-		tb_search = new textBox(TEXTBOX_INPUT.text, function(str) { 
-			search_string = string(str); 
-			searchNodes();
-		});
-		
-		tb_search.align			= fa_left;
-		tb_search.auto_update	= true;
-		tb_search.boxColor		= COLORS._main_icon_light;
-		WIDGET_CURRENT			= tb_search;
-		
-		function searchNodes() {
-			search_res = [];
-			for( var i = 0, n = array_length(tunnel_ins); i < n; i++ ) {
-				var node = tunnel_ins[i];
-				var key  = node.inputs[0].getValue(0);
-			
-				if(string_pos(search_string, key) == 0) continue;
-				array_push(search_res, node);
-			}
+			if(string_pos(search_string, key) == 0) continue;
+			array_push(search_res, node);
 		}
-	#endregion
+	}
 	
 	function onResize() { sc_tunnel.resize(w - ui(padding + padding), h - ui(padding + padding) - ui(28)); }
 

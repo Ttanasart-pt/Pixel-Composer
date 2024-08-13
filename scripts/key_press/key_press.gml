@@ -1,4 +1,11 @@
 #region key map
+	enum MOD_KEY {
+		none   = 0,
+		ctrl   = 1 << 0,
+		shift  = 1 << 1,
+		alt    = 1 << 2
+	}
+
 	global.KEY_STRING_MAP = ds_map_create();
 	
 	global.KEY_STRING_MAP[?  0] = ""
@@ -40,10 +47,10 @@
 	global.KEY_STRING_MAP[? 89] = "Y"
 	global.KEY_STRING_MAP[? 90] = "Z"
 
-	global.KEY_STRING_MAP[? 96] = "Num 0"
-	global.KEY_STRING_MAP[? 97] = "Num 1"
-	global.KEY_STRING_MAP[? 98] = "Num 2"
-	global.KEY_STRING_MAP[? 99] = "Num 3"
+	global.KEY_STRING_MAP[? 96]  = "Num 0"
+	global.KEY_STRING_MAP[? 97]  = "Num 1"
+	global.KEY_STRING_MAP[? 98]  = "Num 2"
+	global.KEY_STRING_MAP[? 99]  = "Num 3"
 	global.KEY_STRING_MAP[? 100] = "Num 4"
 	global.KEY_STRING_MAP[? 101] = "Num 5"
 	global.KEY_STRING_MAP[? 102] = "Num 6"
@@ -95,34 +102,34 @@
 		if(_mod & MOD_KEY.shift)	dk += "Shift+";
 		if(_mod & MOD_KEY.alt)		dk += "Alt+";
 		
-		switch(_key) {
-			case vk_space : dk += "Space";	break;	
-			case vk_left  : dk += "Left";	break;	
-			case vk_right : dk += "Right";	break;	
-			case vk_up    : dk += "Up";		break;	
-			case vk_down  : dk += "Down";	break;	
-			case vk_backspace :   dk += "Backspace"; break;
-			case vk_tab :         dk += "Tab";		 break;
-			case vk_home :        dk += "Home";		 break;
-			case vk_end :         dk += "End";		 break;
-			case vk_delete :      dk += "Delete";	 break;
-			case vk_insert :      dk += "Insert";	 break; 
-			case vk_pageup :      dk += "Page Up";	 break;
-			case vk_pagedown :    dk += "Page Down"; break;
-			case vk_pause :       dk += "Pause";	 break;
-			case vk_printscreen : dk += "Printscreen"; break;         
-			case vk_f1 :  dk += "F1"; break;
-			case vk_f2 :  dk += "F2"; break;
-			case vk_f3 :  dk += "F3"; break;
-			case vk_f4 :  dk += "F4"; break;
-			case vk_f5 :  dk += "F5"; break;
-			case vk_f6 :  dk += "F6"; break;
-			case vk_f7 :  dk += "F7"; break;
-			case vk_f8 :  dk += "F8"; break;
-			case vk_f9 :  dk += "F9"; break;
-			case vk_f10 : dk += "F10"; break;
-			case vk_f11 : dk += "F11"; break;
-			case vk_f12 : dk += "F12"; break;          
+		switch(_key) { 
+			case vk_space :         dk += "Space";       break;	
+			case vk_left  :         dk += "Left";        break;	
+			case vk_right :         dk += "Right";	     break;	
+			case vk_up    :         dk += "Up";		     break;	
+			case vk_down  :         dk += "Down";	     break;	
+			case vk_backspace :     dk += "Backspace";   break;
+			case vk_tab :           dk += "Tab";		 break;
+			case vk_home :          dk += "Home";		 break;
+			case vk_end :           dk += "End";		 break;
+			case vk_delete :        dk += "Delete";	     break;
+			case vk_insert :        dk += "Insert";	     break; 
+			case vk_pageup :        dk += "Page Up";	 break;
+			case vk_pagedown :      dk += "Page Down";   break;
+			case vk_pause :         dk += "Pause";	     break;
+			case vk_printscreen :   dk += "Printscreen"; break;         
+			case vk_f1 :            dk += "F1";          break;
+			case vk_f2 :            dk += "F2";          break;
+			case vk_f3 :            dk += "F3";          break;
+			case vk_f4 :            dk += "F4";          break;
+			case vk_f5 :            dk += "F5";          break;
+			case vk_f6 :            dk += "F6";          break;
+			case vk_f7 :            dk += "F7";          break;
+			case vk_f8 :            dk += "F8";          break;
+			case vk_f9 :            dk += "F9";          break;
+			case vk_f10 :           dk += "F10";         break;
+			case vk_f11 :           dk += "F11";         break;
+			case vk_f12 :           dk += "F12";         break;          
 			
 			default : 
 				if(ds_map_exists(global.KEY_STRING_MAP, _key)) 
@@ -138,13 +145,6 @@
 		return dk;
 	}
 #endregion
-
-enum MOD_KEY {
-	none   = 0,
-	ctrl   = 1 << 0,
-	shift  = 1 << 1,
-	alt    = 1 << 2
-}
 
 function key_press(_key, _mod = MOD_KEY.none) {
 	if(WIDGET_CURRENT) return false;
