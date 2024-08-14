@@ -1,9 +1,8 @@
 function Panel_Nodes() : PanelContent() constructor {
 	title   = __txt("Nodes");
-	padding = 8;
-	
-	w = ui(320);
-	h = ui(480);
+	padding = ui(8);
+	w       = ui(320);
+	h       = ui(480);
 	
 	search_string = "";
 	

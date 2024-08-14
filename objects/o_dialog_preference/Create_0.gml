@@ -658,6 +658,7 @@ event_inherited();
 		for(var i = 0; i < ds_list_size(ll); i++)
 			array_push(_lst, ll[| i]);
 		
+		array_sort(_lst, function(s1, s2) /*=>*/ {return string_compare(s1.name, s2.name)});
 		array_push(hotkeyContext, { context: ctx, list: _lst });
 		
 		var _title = ctx == ""? "Global" : ctx;
@@ -683,8 +684,9 @@ event_inherited();
 			array_push(_lst, _k);
 		}
 		
+		array_sort(_lst, function(s1, s2) /*=>*/ {return string_compare(s1.name, s2.name)});
 		array_push(hotkeyContext, { context: ctx, list: _lst });
-		array_push(hotkeyArray, $" -  {ctx}");
+		array_push(hotkeyArray, $"   {ctx}");
 	}
 	
 	hk_page   = 0;

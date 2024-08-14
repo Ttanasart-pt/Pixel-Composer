@@ -1,79 +1,59 @@
 globalvar HOTKEYS_CUSTOM;
 
 function __initHotKey() {
-	HOTKEYS_CUSTOM  = {
-		"Node_Canvas": {
-			"Selection":            new hotkeySimple("S"),
-			"Magic Selection":      new hotkeySimple("W"),
-			"Pencil":               new hotkeySimple("B"),
-			"Eraser":               new hotkeySimple("E"),
-			"Rectangle":            new hotkeySimple("N"),
-			"Ellipse":              new hotkeySimple("M"),
-			"Iso Cube":             new hotkeySimple(""),
-			"Curve":                new hotkeySimple(""),
-			"Freeform":             new hotkeySimple("Q"),
-			"Fill":                 new hotkeySimple("G"),
-			
-			"Outline":              new hotkeySimple("O", MOD_KEY.alt),
-			"Extrude":              new hotkeySimple("E", MOD_KEY.alt),
-			"Inset":                new hotkeySimple("I", MOD_KEY.alt),
-			"Skew":                 new hotkeySimple("S", MOD_KEY.alt),
-			"Corner":               new hotkeySimple("C", MOD_KEY.alt),
-		},
-		
-		"Node_Mesh_Warp": {
-			"Edit control point":   new hotkeySimple("V"),
-			"Pin mesh":             new hotkeySimple("P"),
-			"Mesh edit":            new hotkeySimple("M"),
-			"Anchor remove":        new hotkeySimple("E"),
-		},
-		
-		"Node_Armature": {
-			"Move":                 new hotkeySimple("V"),
-			"Scale":                new hotkeySimple("S"),
-			"Add bones":            new hotkeySimple("A"),
-			"Remove bones":         new hotkeySimple("E"),
-			"Detach bones":         new hotkeySimple("D"),
-			"IK":                   new hotkeySimple("K"),
-		},
-		
-		"Node_Path": {
-			"Transform":            new hotkeySimple("T"),
-			"Anchor add / remove":  new hotkeySimple("A"),
-			"Edit Control point":   new hotkeySimple("C"),
-			"Draw path":            new hotkeySimple("B"),
-			"Rectangle path":       new hotkeySimple("N"),
-			"Circle path":          new hotkeySimple("M"),
-		},
-		
-		"Node_Rigid_Object": {
-			"Mesh edit":            new hotkeySimple("A"),
-			"Anchor remove":        new hotkeySimple("E"),
-		},
-		
-		"Node_Strand_Create": {
-			"Push":                 new hotkeySimple("P"),
-			"Comb":                 new hotkeySimple("C"),
-			"Stretch":              new hotkeySimple("S"),
-			"Shorten":              new hotkeySimple("D"),
-			"Grab":                 new hotkeySimple("G"),
-		},
-		
-		"Node_Path_Anchor": {
-			"Adjust control point": new hotkeySimple("A"),
-		},
-		
-		"Node_3D_Object": {
-			"Transform":            new hotkeySimple("G"),
-			"Rotate":               new hotkeySimple("R"),
-			"Scale":                new hotkeySimple("S"),
-		},
-		
-		"Node_3D_Camera": {
-			"Move Target":          new hotkeySimple("T"),
-		},
-		
-	};
+	HOTKEYS_CUSTOM  = {};
+	
+	hotkeySimple("Node_Canvas",         	"Selection",            "S");
+	hotkeySimple("Node_Canvas",         	"Magic Selection",      "W");
+	hotkeySimple("Node_Canvas",         	"Pencil",               "B");
+	hotkeySimple("Node_Canvas",         	"Eraser",               "E");
+	hotkeySimple("Node_Canvas",         	"Rectangle",            "N");
+	hotkeySimple("Node_Canvas",         	"Ellipse",              "M");
+	hotkeySimple("Node_Canvas",         	"Iso Cube",             "");
+	hotkeySimple("Node_Canvas",         	"Curve",                "");
+	hotkeySimple("Node_Canvas",         	"Freeform",             "Q");
+	hotkeySimple("Node_Canvas",         	"Fill",                 "G");
+	hotkeySimple("Node_Canvas",         	"Outline",              "O", MOD_KEY.alt);
+	hotkeySimple("Node_Canvas",         	"Extrude",              "E", MOD_KEY.alt);
+	hotkeySimple("Node_Canvas",         	"Inset",                "I", MOD_KEY.alt);
+	hotkeySimple("Node_Canvas",         	"Skew",                 "S", MOD_KEY.alt);
+	hotkeySimple("Node_Canvas",         	"Corner",               "C", MOD_KEY.alt);
+	  
+	hotkeySimple("Node_Mesh_Warp",          "Edit control point",   "V");
+	hotkeySimple("Node_Mesh_Warp",          "Pin mesh",             "P");
+	hotkeySimple("Node_Mesh_Warp",          "Mesh edit",            "M");
+	hotkeySimple("Node_Mesh_Warp",          "Anchor remove",        "E");
+	 
+	hotkeySimple("Node_Armature",           "Move",                 "V");
+	hotkeySimple("Node_Armature",           "Scale",                "S");
+	hotkeySimple("Node_Armature",           "Add bones",            "A");
+	hotkeySimple("Node_Armature",           "Remove bones",         "E");
+	hotkeySimple("Node_Armature",           "Detach bones",         "D");
+	hotkeySimple("Node_Armature",           "IK",                   "K");
+	           
+	hotkeySimple("Node_Path",               "Transform",            "T");
+	hotkeySimple("Node_Path",               "Anchor add / remove",  "A");
+	hotkeySimple("Node_Path",               "Edit Control point",   "C");
+	hotkeySimple("Node_Path",               "Draw path",            "B");
+	hotkeySimple("Node_Path",               "Rectangle path",       "N");
+	hotkeySimple("Node_Path",               "Circle path",          "M");
+	
+	hotkeySimple("Node_Rigid_Object",       "Mesh edit",            "A");
+	hotkeySimple("Node_Rigid_Object",       "Anchor remove",        "E");
+	            
+	hotkeySimple("Node_Strand_Create",      "Push",                 "P");
+	hotkeySimple("Node_Strand_Create",      "Comb",                 "C");
+	hotkeySimple("Node_Strand_Create",      "Stretch",              "S");
+	hotkeySimple("Node_Strand_Create",      "Shorten",              "D");
+	hotkeySimple("Node_Strand_Create",      "Grab",                 "G");
+	
+	hotkeySimple("Node_Path_Anchor",        "Adjust control point", "A");
+	       
+	hotkeySimple("Node_3D_Object",          "Transform",            "G");
+	hotkeySimple("Node_3D_Object",          "Rotate",               "R");
+	hotkeySimple("Node_3D_Object",          "Scale",                "S");
+	                  
+	hotkeySimple("Node_3D_Camera",          "Move Target",          "T");
 }
 
 function getToolHotkey(_group, _key) {
@@ -86,13 +66,20 @@ function getToolHotkey(_group, _key) {
 	
 	return _grp[$ _key];
 }
+
+function hotkeySimple(_context, _name, _key, modi = MOD_KEY.none) {	return new HotkeySimple(_context, _name, _key, modi); }
+function HotkeySimple(_context, _name, _key, modi = MOD_KEY.none) constructor {
+	context	= _context;
+	name	= _name;
 	
-function hotkeySimple(_key, modi = MOD_KEY.none) constructor {
 	self.key  = key_get_index(_key);
 	self.modi = modi;
 	
 	dKey  = key;
 	dModi = modi;
+	
+	if(!struct_has(HOTKEYS_CUSTOM, context)) HOTKEYS_CUSTOM[$ context] = {};
+	HOTKEYS_CUSTOM[$ context][$ name] = self;
 	
 	static isPressing = function() { 
 		if(is_string(key)) key = key_get_index(key);
@@ -103,6 +90,12 @@ function hotkeySimple(_key, modi = MOD_KEY.none) constructor {
 		if(is_string(key)) key = key_get_index(key);
 		return key_get_name(key, modi);
 	}
+	
+	static serialize   = function()   {  return { context, name, key, modi } }
+	static deserialize = function(ll) { if(!is_struct(ll)) return; key = ll.key; modi = ll.modi; }
+	
+	var _loadKey = $"{context}_{name}";
+	if(struct_has(HOTKEYS_DATA, _loadKey)) deserialize(HOTKEYS_DATA[$ _loadKey]);
 }
 
 function hotkeyObject(_context, _name, _key, _mod = MOD_KEY.none, _action = noone) constructor {
@@ -115,18 +108,13 @@ function hotkeyObject(_context, _name, _key, _mod = MOD_KEY.none, _action = noon
 	dKey	= _key;
 	dModi	= _mod;
 	
-	static serialize = function() { return { context, name, key, modi }; }
-	
-	static deserialize = function(ll) {
-		key  = is_struct(ll)? ll.key  : ll[2];
-		modi = is_struct(ll)? ll.modi : ll[3];
-	}
-	
 	static full_name = function() { return string_to_var(context == ""? $"global.{name}" : $"{context}.{name}"); }
 	
+	static serialize   = function()   {  return { context, name, key, modi } }
+	static deserialize = function(ll) { if(!is_struct(ll)) return; key = ll.key; modi = ll.modi; }
+	
 	var _loadKey = $"{context}_{name}";
-	if(struct_has(HOTKEYS_DATA, _loadKey)) 
-		deserialize(HOTKEYS_DATA[$ _loadKey]);
+	if(struct_has(HOTKEYS_DATA, _loadKey)) deserialize(HOTKEYS_DATA[$ _loadKey]);
 }
 
 function addHotkey(_context, _name, _key, _mod, _action) {
@@ -245,4 +233,68 @@ function hotkey_draw(keyStr, _x, _y, _status = 0) {
 	
 	draw_sprite_stretched_ext(THEME.ui_panel, 1, _x - _tw - ui(4), _y - _th / 2 - ui(3), _tw + ui(8), _th + ui(3), bc);
 	draw_text(_x, _y, keyStr);
+}
+
+function hotkey_serialize() {
+	
+	var _context = [];
+	for(var i = 0, n = ds_list_size(HOTKEY_CONTEXT); i < n; i++) {
+		var ll = HOTKEYS[? HOTKEY_CONTEXT[| i]];
+		
+		for(var j = 0, m = ds_list_size(ll); j < m; j++) {
+			var _hk = ll[| j];
+			if(_hk.dKey == _hk.key && _hk.dModi == _hk.modi) continue;
+			array_push(_context, _hk.serialize());
+		}
+	}
+	
+	var _node = [];
+	var _cust = variable_struct_get_names(HOTKEYS_CUSTOM);
+	for(var i = 0, n = array_length(_cust); i < n; i++) {
+		
+		var nd = _cust[i];
+		var nl = HOTKEYS_CUSTOM[$ nd];
+		var kk = variable_struct_get_names(nl);
+		
+		for (var j = 0, m = array_length(kk); j < m; j++) {
+			var _nm = kk[j];
+			var _hk = nl[$ _nm];
+			
+			if(_hk.dKey == _hk.key && _hk.dModi == _hk.modi) continue;
+			array_push(_node, _hk.serialize());
+		}
+	}
+	
+	json_save_struct(DIRECTORY + "hotkeys.json", { context: _context, node: _node });
+}
+
+function hotkey_deserialize() {
+	HOTKEYS_DATA = {};
+	var path = DIRECTORY + "hotkeys.json";
+	if(!file_exists(path)) return;
+	
+	var map = json_load_struct(path);
+	if(!is_struct(map)) return;
+	
+	if(struct_has(map, "context")) {
+		var _ctx = map.context;
+		for(var i = 0; i < array_length(_ctx); i++) {
+			var key_list    = _ctx[i];
+			var _context	= key_list.context;
+			var name		= key_list.name;
+			
+			HOTKEYS_DATA[$ $"{_context}_{name}"] = key_list;
+		}
+	}
+	
+	if(struct_has(map, "node")) {
+		var _ctx = map.node;
+		for(var i = 0; i < array_length(_ctx); i++) {
+			var key_list    = _ctx[i];
+			var _context	= key_list.context;
+			var name		= key_list.name;
+			
+			HOTKEYS_DATA[$ $"{_context}_{name}"] = key_list;
+		}
+	}
 }

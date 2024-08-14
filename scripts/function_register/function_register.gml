@@ -11,11 +11,12 @@
 	}
 	
 	function __fnInit() {
-		globalvar CMD_FUNCTIONS, MENU_ITEMS, FUNCTIONS;
+		globalvar CMD_FUNCTIONS, MENU_ITEMS, FUNCTIONS, RECENT_COMMANDS;
 		
-		FUNCTIONS     = {};
-		CMD_FUNCTIONS = {};
-		MENU_ITEMS    = {};
+		FUNCTIONS       = {};
+		CMD_FUNCTIONS   = {};
+		MENU_ITEMS      = {};
+		RECENT_COMMANDS = [];
 		
 		__fnInit_Global();
 		__fnInit_Panels();

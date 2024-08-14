@@ -249,24 +249,13 @@
 		PREFERENCES.window_height	= max(600, window_minimize_size[1]);
 		PREFERENCES.window_monitor  = window_monitor;
 		
-		var _hotkey = [];
-		for(var j = 0; j < ds_list_size(HOTKEY_CONTEXT); j++) {
-			var ll = HOTKEYS[? HOTKEY_CONTEXT[| j]];
-			
-			for(var i = 0; i < ds_list_size(ll); i++) {
-				var _hk = ll[| i];
-				if(_hk.dKey == _hk.key && _hk.dModi == _hk.modi) continue;
-				
-				array_push(_hotkey, _hk.serialize());
-			}
-		}
-		
 		json_save_struct(DIRECTORY + "keys.json",       		PREFERENCES);
-		json_save_struct(DIRECTORY + "hotkeys.json",       		_hotkey);
 		json_save_struct(DIRECTORY + "Nodes/fav.json",			global.FAV_NODES);
 		json_save_struct(DIRECTORY + "Nodes/recent.json",		global.RECENT_NODES);
 		json_save_struct(DIRECTORY + "key_nodes.json",  		HOTKEYS_CUSTOM);
 		json_save_struct(DIRECTORY + "default_project.json",    PROJECT_ATTRIBUTES);
+		
+		hotkey_serialize();
 	}
 	
 	function PREF_LOAD() {
@@ -275,20 +264,6 @@
 			var map = json_load_struct(path);
 			if(struct_has(map, "preferences")) struct_override(PREFERENCES, map.preferences);
 			else                               struct_override(PREFERENCES, map);
-		}
-		
-		var path = DIRECTORY + "hotkeys.json";
-		if(file_exists(path)) {
-			var map = json_load_struct(path);
-			HOTKEYS_DATA = {};
-			
-			for(var i = 0; i < array_length(map); i++) {
-				var key_list    = map[i];
-				var _context	= is_struct(key_list)? key_list.context : key_list[0];
-				var name		= is_struct(key_list)? key_list.name    : key_list[1];
-				
-				HOTKEYS_DATA[$ $"{_context}_{name}"] = key_list;
-			}
 		}
 		
 		if(!directory_exists($"{DIRECTORY}Themes/{PREFERENCES.theme}"))
@@ -308,6 +283,7 @@
 		var f = json_load_struct(DIRECTORY + "default_project.json");
 		struct_override(PROJECT_ATTRIBUTES, f);
 		
+		hotkey_deserialize();
 	}
 	
 	function PREF_APPLY() {

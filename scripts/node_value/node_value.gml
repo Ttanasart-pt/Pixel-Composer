@@ -104,37 +104,35 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	#region ---- value ----
 		
-		def_val	    = array_clone(_value);
-		def_length  = is_array(def_val)? array_length(def_val) : 0;
-		def_depth   = array_get_depth(def_val);
-		unit		= new nodeValueUnit(self);
-		def_unit    = VALUE_UNIT.constant;
-		dyna_depo   = ds_list_create();
-		value_tag   = "";
+		def_val	      = array_clone(_value);
+		def_length    = is_array(def_val)? array_length(def_val) : 0;
+		def_depth     = array_get_depth(def_val);
+		unit		  = new nodeValueUnit(self);
+		def_unit      = VALUE_UNIT.constant;
+		dyna_depo     = ds_list_create();
+		value_tag     = "";
 		
-		type_array  = 0;
+		type_array    = 0;
 		
-		is_modified = false;
-		cache_value = [ false, false, undefined, undefined ];
-		cache_array = [ false, false ];
-		use_cache   = true;
-		record_value = true;
+		is_modified   = false;
+		cache_value   = [ false, false, undefined, undefined ];
+		cache_array   = [ false, false ];
+		use_cache     = true;
+		record_value  = true;
 		
 		process_array = true;
 		dynamic_array = false;
 		validateValue = true;
 		runInUI       = false;
 		
-		fullUpdate = false;
+		fullUpdate    = false;
+		attributes    = {};
 		
-		attributes = {};
-		
-		node.inputs_data[index] = _value;
+		node.inputs_data[index]              = _value;
 		node.input_value_map[$ internalName] = _value;
 		
 		__curr_get_val = [ 0, 0 ];
-		
-		validator = noone;
+		validator      = noone;
 	#endregion
 	
 	#region ---- draw ----
@@ -1474,7 +1472,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 	} #endregion
 	
-	static setValueInspector = function(_val = 0, index = noone, time = CURRENT_FRAME) { #region
+	static setValueInspector = function(_val = 0, index = noone, time = CURRENT_FRAME) {
 		INLINE
 		
 		var res = false;
@@ -1487,30 +1485,29 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				var _node = PANEL_INSPECTOR.inspectings[i];
 				if(ind >= array_length(_node.inputs)) continue;
 				
-				var r = _node.inputs[ind].setValueDirect(val, index);
+				var r = _node.inputs[ind].setValueDirect(val, index, true, time);
 				if(_node == node) res = r;
 			}
-		} else {
-			res = setValueDirect(val, index, time);
-		}
-			
+		} else
+			res = setValueDirect(val, index, true, time);
+		
 		return res;
-	} #endregion
+	}
 	
 	static setValueDirect = function(val = 0, index = noone, record = true, time = CURRENT_FRAME, _update = true) {
 		is_modified = true;
 		var updated = false;
 		var _val    = val;
 		var _inp    = connect_type == JUNCTION_CONNECT.input;
-			
-		record &= record_value;
-			
+		
+		record &= record_value & _inp;
+		
 		if(sep_axis) {
 			if(index == noone) {
 				for( var i = 0, n = array_length(animators); i < n; i++ )
-					updated |= animators[i].setValue(val[i], _inp && record, time); 
+					updated |= animators[i].setValue(val[i], record, time); 
 			} else
-				updated = animators[index].setValue(val, _inp && record, time);
+				updated = animators[index].setValue(val, record, time);
 				
 		} else {
 			if(index != noone) {
@@ -1520,7 +1517,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				_val[index] = val;
 			}
 			
-			updated = animator.setValue(_val, _inp && record, time);
+			updated = animator.setValue(_val, record, time);
 		}
 		
 		if(type == VALUE_TYPE.gradient)				updated = true;

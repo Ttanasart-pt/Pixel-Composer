@@ -14,7 +14,7 @@ event_inherited();
 	
 	setFocus(self.id);
 	
-	data = [];
+	data = array_clone(RECENT_COMMANDS, 1);
 	keys = variable_struct_get_names(FUNCTIONS);
 	
 	hk_editing = noone;
@@ -41,6 +41,11 @@ event_inherited();
 	keyboard_trigger = false;
 	
 	function searchMenu() {
+		if(search_string == "") {
+			data = array_clone(RECENT_COMMANDS, 1);
+			return;
+		}
+		
 		data = [];
 		var pr_list      = ds_priority_create();
 		var search_lower = string_lower(search_string);
@@ -97,6 +102,7 @@ event_inherited();
 				if(sc_content.active) {
 					if((!keyboard_trigger && mouse_press(mb_left)) || keyboard_check_pressed(vk_enter)) {
 						_menu.action();
+						array_push(RECENT_COMMANDS, _menu);
 						instance_destroy();
 					}
 					

@@ -482,7 +482,7 @@
         registerFunction("", "Preferences",               "", MOD_KEY.none, call_dialog_preference            ).setMenu("preference",      THEME.gear)
         registerFunction("", "Splash screen",             "", MOD_KEY.none, call_dialog_splash                ).setMenu("splash_screen")
         registerFunction("", "Release note",              "", MOD_KEY.none, call_dialog_release_note          ).setMenu("release_note")
-        registerFunction("", "Command Palette",           "T", MOD_KEY.ctrl | MOD_KEY.shift, call_dialog_command_palette).setMenu("command_palette")
+        registerFunction("", "Command Palette",     vk_space, MOD_KEY.ctrl, call_dialog_command_palette       ).setMenu("command_palette")
         registerFunction("", "Open Autosave Folder",      "", MOD_KEY.none, open_autosave_folder              ).setMenu("autosave_folder", THEME.save_auto)
         
         registerFunction("", "Addons",                    "", MOD_KEY.none, call_panel_addon                  ).setMenu("addons")

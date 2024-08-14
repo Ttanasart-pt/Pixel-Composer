@@ -44,6 +44,28 @@ function string_to_var(str)            { INLINE return string_replace_all(string
 function string_to_var2(context, name) { INLINE return string_to_var(context == ""? name : $"{context} {name}"); }
 function string_quote(str)             { INLINE return $"\"{str}\""; }
 
+function string_compare(s1, s2) {
+    var l1 = string_length(s1);
+    var l2 = string_length(s2);
+
+    var i = 0;
+    var c1, c2;
+
+    repeat(min(l1, l2)) {
+        c1 = string_lower(string_char_at(s1, i));
+        c2 = string_lower(string_char_at(s2, i));
+
+        if(c1 == c2) {
+            i++;
+            continue;
+        }
+        
+        return ord(c1) - ord(c2);
+    }
+
+    return l1 - l2;
+}
+
 function array_to_string(arr) {
 	if(!is_array(arr))   return string(arr);
 	if(array_empty(arr)) return "[]";

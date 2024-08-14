@@ -210,3 +210,12 @@ function node_auto_align(nodeList) {
 	     if(h_var < v_var) { node_halign(nodeList); node_vdistribute(nodeList); }
 	else if(v_var < h_var) { node_valign(nodeList); node_hdistribute(nodeList); }
 }
+
+function node_snap_grid(nodeList, spacing = 16) {
+	for (var i = 0, n = array_length(nodeList); i < n; i++) {
+		var _node = nodeList[i];
+		
+		_node.x = value_snap(_node.x, spacing);
+		_node.y = value_snap(_node.y, spacing);
+	}
+}

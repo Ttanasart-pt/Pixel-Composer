@@ -40,6 +40,7 @@
     function panel_graph_paste()                   { CALL("graph_paste");               PANEL_GRAPH.doPaste();                                                                          }
     
     function panel_graph_auto_align()              { CALL("graph_auto_align");          node_auto_align(PANEL_GRAPH.nodes_selecting);                                                   }
+    function panel_graph_snap_nodes()              { CALL("graph_snap_nodes");          node_snap_grid(PANEL_GRAPH.nodes_selecting, PANEL_GRAPH.project.graphGrid.size);                }
     function panel_graph_search()                  { CALL("graph_search");              PANEL_GRAPH.toggleSearch();                                                                     }
     function panel_graph_toggle_minimap()          { CALL("graph_toggle_minimap");      PANEL_GRAPH.minimap_show = !PANEL_GRAPH.minimap_show;                                           }
                                                                                                                             
@@ -92,12 +93,11 @@
         registerFunction("Graph", "Array",                 "A", MOD_KEY.ctrl | MOD_KEY.shift,    panel_graph_array               ).setMenu("graph_array")
         registerFunction("Graph", "Frame",                 "F", MOD_KEY.shift,                   panel_graph_frame               ).setMenu("graph_frame")
         
-        registerFunction("Graph", "Canvas",                "",  MOD_KEY.none,                    
-            function(_dat) { return submenuCall(_dat, [ MENU_ITEMS.graph_canvas_copy, MENU_ITEMS.graph_canvas_blend ]); }        ).setMenu("graph_canvas",, true)
         registerFunction("Graph", "Copy to Canvas",        "C", MOD_KEY.ctrl | MOD_KEY.shift,    panel_graph_canvas_copy         ).setMenu("graph_canvas_copy")
         registerFunction("Graph", "Blend Canvas",          "C", MOD_KEY.ctrl | MOD_KEY.alt,      panel_graph_canvas_blend        ).setMenu("graph_canvas_blend")
-                                                    
-    
+        registerFunction("Graph", "Canvas",                "",  MOD_KEY.none,                    
+            function(_dat) { return submenuCall(_dat, [ MENU_ITEMS.graph_canvas_copy, MENU_ITEMS.graph_canvas_blend ]); }        ).setMenu("graph_canvas",, true)
+		
         registerFunction("Graph", "Delete (break)",        vk_delete, MOD_KEY.shift,             panel_graph_delete_break        ).setMenu("graph_delete_break",    THEME.cross)
         registerFunction("Graph", "Delete (merge)",        vk_delete, MOD_KEY.none,              panel_graph_delete_merge        ).setMenu("graph_delete_merge",    THEME.cross)
     
@@ -109,6 +109,7 @@
         registerFunction("Graph", "Zoom",                  "", MOD_KEY.alt | MOD_KEY.ctrl,       panel_graph_zoom                ).setMenu("graph_zoom")
         
         registerFunction("Graph", "Auto Align",            "L", MOD_KEY.none,                    panel_graph_auto_align          ).setMenu("graph_auto_align")
+        registerFunction("Graph", "Snap Nodes",            "",  MOD_KEY.none,                    panel_graph_snap_nodes          ).setMenu("graph_snap_nodes")
         registerFunction("Graph", "Search",                "F", MOD_KEY.ctrl,                    panel_graph_search              ).setMenu("graph_search")
         registerFunction("Graph", "Toggle Minimap",        "M", MOD_KEY.ctrl,                    panel_graph_toggle_minimap      ).setMenu("graph_toggle_minimap")
         
@@ -291,9 +292,10 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         graph_cx = 0;
         graph_cy = 0;
         
-        graph_autopan  = false;
-        graph_pan_x_to = 0;
-        graph_pan_y_to = 0;
+        graph_autopan   = false;
+        graph_pan_x_to  = 0;
+        graph_pan_y_to  = 0;
+        graph_pan_speed = 32;
         
         scale      = [ 0.01, 0.02, 0.05, 0.10, 0.15, 0.20, 0.25, 0.33, 0.50, 0.65, 0.80, 1, 1.2, 1.35, 1.5, 2.0 ];
         graph_s    = 1;
@@ -735,19 +737,17 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
     
     menu_connection_tunnel  = MENU_ITEMS.graph_create_tunnel;
     
-    // node color
+    #region colors setters
+    	__junction_hovering = noone;
+        menu_node_color     = MENU_ITEMS.graph_group_node_color;
+        menu_junc_color     = MENU_ITEMS.graph_group_junction_color;
+        
         function setSelectingNodeColor(color) { 
             __temp_color = color;
             
             if(node_hover) node_hover.attributes.color = __temp_color;
             array_foreach(nodes_selecting, function(node) { node.attributes.color = __temp_color; });
         }
-        
-        menu_node_color = MENU_ITEMS.graph_group_node_color;
-    
-    
-    // junction color
-        __junction_hovering = noone;
         
         function setSelectingJuncColor(color) { 
             if(__junction_hovering == noone) return; 
@@ -763,9 +763,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                 }
             }
         }
-        
-        menu_junc_color = MENU_ITEMS.graph_group_junction_color;
-    
+    #endregion
     
     //// ============ Project ============
     
@@ -782,14 +780,14 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
     
     //// ============ Views ============
     
-    function onFocusBegin() { //
+    function onFocusBegin() {
         PANEL_GRAPH = self; 
         PROJECT = project;
         
         nodes_select_drag = 0;
     } 
     
-    function focusNode(_node) { //
+    function focusNode(_node) {
         if(_node == noone) {
             nodes_selecting = [];
             return;
@@ -799,15 +797,12 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         fullView();
     } 
     
-    function fullView() {
-        INLINE
-        toCenterNode(array_empty(nodes_selecting)? nodes_list : nodes_selecting);
-    }
+    function fullView() { INLINE toCenterNode(array_empty(nodes_selecting)? nodes_list : nodes_selecting); }
     
     function dragGraph() {
         if(graph_autopan) {
-            graph_x = lerp_float(graph_x, graph_pan_x_to, 32, 1);
-            graph_y = lerp_float(graph_y, graph_pan_y_to, 32, 1);
+            graph_x = lerp_float(graph_x, graph_pan_x_to, graph_pan_speed, 1);
+            graph_y = lerp_float(graph_y, graph_pan_y_to, graph_pan_speed, 1);
             
             if(graph_x == graph_pan_x_to && graph_y == graph_pan_y_to)
                 graph_autopan = false;
@@ -937,10 +932,11 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         graph_y = round(graph_y);
     }
     
-    function autoPanTo(_x, _y) {
-        graph_autopan  = true;
-        graph_pan_x_to = _x;
-        graph_pan_y_to = _y;
+    function autoPanTo(_x, _y, _speed = 32) {
+        graph_autopan   = true;
+        graph_pan_x_to  = _x;
+        graph_pan_y_to  = _y;
+        graph_pan_speed = _speed;
     }
     
     function setSlideShow(index, skip = false) {
@@ -973,7 +969,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
             graph_y = _ty;
             
         } else
-            autoPanTo(_tx, _ty, skip);
+            autoPanTo(_tx, _ty, _targ.slide_speed);
     }
     
     //// =========== Context ==========
@@ -3119,6 +3115,9 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         
         _ti.inputs[1].setFrom(_jo);
         _ji.setFrom(_to.outputs[0]);
+        
+        _to.inputs[0].updateColor();
+        _ti.inputs[1].updateColor();
     }
     
     function createAction() {
