@@ -1,9 +1,9 @@
 {
   "$GMScript":"",
-  "%Name":"node_vector_cross_3D",
+  "%Name":"node_vector_magnitude",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"node_vector_cross_3D",
+  "name":"node_vector_magnitude",
   "parent":{
     "name":"vector",
     "path":"folders/nodes/data/value/vector.yy",

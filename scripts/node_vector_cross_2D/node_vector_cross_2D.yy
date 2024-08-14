@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"node_vector_cross_2D",
   "parent":{
-    "name":"number",
-    "path":"folders/nodes/data/value/number.yy",
+    "name":"vector",
+    "path":"folders/nodes/data/value/vector.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

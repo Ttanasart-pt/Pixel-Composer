@@ -48,7 +48,7 @@ function string_compare(s1, s2) {
     var l1 = string_length(s1);
     var l2 = string_length(s2);
 
-    var i = 0;
+    var i = 1;
     var c1, c2;
 
     repeat(min(l1, l2)) {

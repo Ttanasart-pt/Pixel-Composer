@@ -12,16 +12,16 @@
 
 #region project
 	function Project() constructor {
-		active	= true; /// @is {bool}
+		active	= true;
 		
 		meta      = __getdefaultMetaData();	
-		path	  = ""; /// @is {string}
+		path	  = "";
 		thumbnail = "";													
-		version   = SAVE_VERSION; /// @is {number}
-		seed      = irandom_range(100000, 999999); /// @is {number}
+		version   = SAVE_VERSION;
+		seed      = irandom_range(100000, 999999);
 		
-		modified  = false; /// @is {bool}
-		readonly  = false; /// @is {bool}
+		modified  = false;
+		readonly  = false;
 		safeMode  = false;
 		
 		allNodes    = [];

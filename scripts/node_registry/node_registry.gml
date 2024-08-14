@@ -866,9 +866,11 @@ function __initNodes() {
 		addNodeObject(values, "Vector3",			s_node_vec3,				"Node_Vector3",				[1, Node_Vector3]);
 		addNodeObject(values, "Vector4",			s_node_vec4,				"Node_Vector4",				[1, Node_Vector4]);
 		addNodeObject(values, "Vector Split",		s_node_vec_split,			"Node_Vector_Split",		[1, Node_Vector_Split]);
+		addNodeObject(values, "Magnitude",	        s_node_magnitude,	        "Node_Vector_Magnitude",    [1, Node_Vector_Magnitude], ["vector length", "vector magnitude"]).setVersion(1_17_10_0);
 		addNodeObject(values, "Dot product",		s_node_dot_product,			"Node_Vector_Dot",			[1, Node_Vector_Dot]).setVersion(1141);
 		addNodeObject(values, "Cross product 3D",	s_node_cross_product_2d,	"Node_Vector_Cross_3D",		[1, Node_Vector_Cross_3D]).setVersion(1141);
 		addNodeObject(values, "Cross product 2D",	s_node_cross_product_3d,	"Node_Vector_Cross_2D",		[1, Node_Vector_Cross_2D]).setVersion(1141);
+		addNodeObject(values, "Swizzle",            s_node_swizzle,             "Node_Vector_Swizzle",      [1, Node_Vector_Swizzle], ["swap axis"]).setVersion(1_17_10_0);
 		
 		ds_list_add(values, "Texts");
 		addNodeObject(values, "Text",				s_node_text,				"Node_String",					[1, Node_String]);
