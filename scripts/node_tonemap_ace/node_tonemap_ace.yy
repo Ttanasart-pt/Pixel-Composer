@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_tonemap_ace",
   "isCompatibility":false,
   "isDnD":false,

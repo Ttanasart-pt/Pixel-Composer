@@ -63,13 +63,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	inputs[3] = nodeValue_Enum_Scroll("Type", self,  0, { data: format_single, update_hover: false })
 		.rejectArray();
 	
-	inputs[4] = nodeValue_Int("Template guides", self, 0)
-		.setDisplay(VALUE_DISPLAY.label, 
-@"%d          Directory
-%1d        Goes up 1 level
-%n          File name
-%f           Frame
-%i           Array index" );
+	inputs[4] = nodeValue_Int("Template guides", self, 0);
 
 	inputs[5] = nodeValue_Bool("Loop", self, true)
 		.setVisible(false)

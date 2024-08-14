@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_path_bridge",
   "isCompatibility":false,
   "isDnD":false,

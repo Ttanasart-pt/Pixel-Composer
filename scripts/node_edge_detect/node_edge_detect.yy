@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_edge_detect",
   "isCompatibility":false,
   "isDnD":false,

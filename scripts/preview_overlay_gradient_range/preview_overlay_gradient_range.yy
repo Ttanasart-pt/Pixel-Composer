@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"preview_overlay_gradient_range",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"__matrix4",
   "isCompatibility":false,
   "isDnD":false,

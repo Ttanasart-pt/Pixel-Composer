@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"__shapes",
   "isCompatibility":false,
   "isDnD":false,

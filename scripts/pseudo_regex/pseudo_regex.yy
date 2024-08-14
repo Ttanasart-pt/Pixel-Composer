@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"pseudo_regex",
   "isCompatibility":false,
   "isDnD":false,

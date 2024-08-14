@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"draw_text_delimiter",
   "isCompatibility":false,
   "isDnD":false,

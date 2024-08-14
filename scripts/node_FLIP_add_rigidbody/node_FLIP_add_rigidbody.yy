@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_FLIP_add_rigidbody",
   "isCompatibility":false,
   "isDnD":false,

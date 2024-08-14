@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"controlPointBox",
   "isCompatibility":false,
   "isDnD":false,

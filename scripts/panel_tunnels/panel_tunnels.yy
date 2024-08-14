@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"panel_tunnels",
   "isCompatibility":false,
   "isDnD":false,

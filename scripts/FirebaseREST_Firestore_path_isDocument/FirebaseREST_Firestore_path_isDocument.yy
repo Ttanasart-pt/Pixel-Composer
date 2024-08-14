@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"FirebaseREST_Firestore_path_isDocument",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_3d_mesh_sphere_ico",
   "isCompatibility":false,
   "isDnD":false,

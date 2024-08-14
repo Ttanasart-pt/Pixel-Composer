@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"compat_path_array",
   "isCompatibility":false,
   "isDnD":false,

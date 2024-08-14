@@ -15,25 +15,26 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static DISPLAY_DATA_KEYS = [ "linked", "angle_display", "bone_id", "unit", "atlas_crop" ];
 	
 	#region ---- main ----
-		active  = true;
-		from    = noone;
-		node    = _node;
-		x	    = node.x;
-		y       = node.y;
-		rx      = x;
-		ry      = y;
+		active    = true;
+		from      = noone;
+		node      = _node;
+		x	      = node.x;
+		y         = node.y;
+		rx        = x;
+		ry        = y;
+		tags      = VALUE_TAG.none;
 		
-		index   = _connect == JUNCTION_CONNECT.input? array_length(node.inputs) : array_length(node.outputs);
-		type    = _type;
-		forward = true;
+		index     = array_length(node.inputs);
+		type      = _type;
+		forward   = true;
 		_initName = _name;
 		
 		node.will_setHeight = true;
 		
 		static updateName = function(_name) {
-			name         = _name;
-			internalName = string_to_var(name);
-			name_custom  = true;
+			name          = _name;
+			internalName  = string_to_var(name);
+			name_custom   = true;
 		} updateName(_name);
 		
 		name_custom = false;
@@ -52,12 +53,17 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		mapWidget      = noone;
 		active_tooltip = "";
 		
-		tags = VALUE_TAG.none;
+		is_dummy       = false;
+		dummy_get      = noone;
+		dummy_undo     = -1;
+		dummy_redo     = -1;
 		
-		is_dummy   = false;
-		dummy_get  = noone;
-		dummy_undo = -1;
-		dummy_redo = -1;
+		bypass_junc    = noone;
+		
+		if(_connect == JUNCTION_CONNECT.input) {
+			bypass_junc = new NodeValue_Input_Bypass(self, _name, _node, _type, index);
+			node.input_bypass[index] = bypass_junc;
+		}
 	#endregion
 	
 	#region ---- connection ----
@@ -290,6 +296,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		type = _type;
 		draw_junction_index = type;
+		if(bypass_junc) bypass_junc.setType(_type);
 		
 		return true;
 	}
@@ -1957,8 +1964,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static drawConnectionsRaw = function(params = {}) { return drawJuncConnection(value_from, self, params); }
 	static drawConnections    = function(params = {}) {
-		if(value_from == noone || !value_from.node.active || !isVisible()) 
-			return noone;
+		if(value_from == noone || !value_from.node.active || !isVisible()) return noone;
 		return drawJuncConnection(value_from, self, params);
 	}
 	
@@ -2087,6 +2093,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		_map.display_data = display_data;
 		_map.attributes   = attributes;
 		_map.name_custom  = name_custom;
+		_map.bypass       = bypass_junc? bypass_junc.visible : false;
 		
 		return _map;
 	} #endregion
@@ -2123,6 +2130,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(name_custom) name = struct_try_get(_map, "name", name);
 		
 		animator.deserialize(struct_try_get(_map, "raw_value"), scale);
+		if(bypass_junc) bypass_junc.visible = struct_try_get(_map, "bypass", false);
 		
 		if(struct_has(_map, "animators")) {
 			var anims = _map.animators;
@@ -2184,6 +2192,19 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		else if(con_index == VALUE_TAG.updateOutTrigger) return setFrom(_nd.updatedOutTrigger);
 		else if(con_index < _ol) {
 			var _set = setFrom(_nd.outputs[con_index], false, true);
+			if(_set) return true;
+			
+				 if(_set == -1) log_warning("LOAD", $"[Connect] Connection conflict {node.name} to {_nd.name} : Not connectable.", node);
+			else if(_set == -2) log_warning("LOAD", $"[Connect] Connection conflict {node.name} to {_nd.name} : Condition not met.", node); 
+			
+			return false;
+			
+		} else if(con_index >= 1000) {
+			var _inp = array_safe_get_fast(_nd.inputs, con_index - 1000, noone);
+			if(_inp == noone) return false;
+			
+			var _set = setFrom(_inp.bypass_junc, false, true);
+			
 			if(_set) return true;
 			
 				 if(_set == -1) log_warning("LOAD", $"[Connect] Connection conflict {node.name} to {_nd.name} : Not connectable.", node);

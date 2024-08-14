@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"_line_drawer",
   "isCompatibility":false,
   "isDnD":false,

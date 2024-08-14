@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_mk_gridflip",
   "isCompatibility":false,
   "isDnD":false,

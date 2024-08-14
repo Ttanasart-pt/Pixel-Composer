@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_diffuse",
   "isCompatibility":false,
   "isDnD":false,

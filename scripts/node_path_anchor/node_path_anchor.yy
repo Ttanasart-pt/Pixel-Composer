@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_path_anchor",
   "isCompatibility":false,
   "isDnD":false,

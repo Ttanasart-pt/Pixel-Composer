@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_array_pin",
   "isCompatibility":false,
   "isDnD":false,

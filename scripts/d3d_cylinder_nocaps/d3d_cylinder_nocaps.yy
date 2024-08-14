@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"d3d_cylinder_nocaps",
   "isCompatibility":false,
   "isDnD":false,

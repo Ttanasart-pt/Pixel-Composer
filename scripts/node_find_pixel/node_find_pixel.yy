@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_find_pixel",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"mac_window_step",
   "isCompatibility":false,
   "isDnD":false,

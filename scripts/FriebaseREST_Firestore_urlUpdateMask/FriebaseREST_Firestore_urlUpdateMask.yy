@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"FriebaseREST_Firestore_urlUpdateMask",
   "isCompatibility":false,
   "isDnD":false,

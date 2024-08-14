@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"string_splice",
   "isCompatibility":false,
   "isDnD":false,

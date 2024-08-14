@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"paddingBox",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"FirebaseREST_Firestore_jsonDecode",
   "isCompatibility":false,
   "isDnD":false,

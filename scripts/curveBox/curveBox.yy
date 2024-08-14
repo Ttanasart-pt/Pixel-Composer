@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"curveBox",
   "isCompatibility":false,
   "isDnD":false,

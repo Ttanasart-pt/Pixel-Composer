@@ -100,6 +100,7 @@ function Theme() constructor {
     info                            = s_info;
     inspector_view                  = s_icon_inspector_view;
     junc_visible                    = s_junc_visible;
+    junction_bypass                 = s_junction_bypass;
     keyframe_override               = s_icon_keyframe_override;
     loading_s                       = s_loading_s;
     loading                         = s_loading;

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"panel_array_sequence",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_pb_fx_radial",
   "isCompatibility":false,
   "isDnD":false,

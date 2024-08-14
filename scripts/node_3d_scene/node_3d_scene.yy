@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_3d_scene",
   "isCompatibility":false,
   "isDnD":false,

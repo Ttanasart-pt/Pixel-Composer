@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_voronoi_extra",
   "isCompatibility":false,
   "isDnD":false,

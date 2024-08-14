@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"_3d_rotation",
   "isCompatibility":false,
   "isDnD":false,

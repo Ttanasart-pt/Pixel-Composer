@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"var_comparison",
   "isCompatibility":false,
   "isDnD":false,

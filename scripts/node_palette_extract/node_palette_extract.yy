@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_palette_extract",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"draw_connect_elbow_diag",
   "isCompatibility":false,
   "isDnD":false,

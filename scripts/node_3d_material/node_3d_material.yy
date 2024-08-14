@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_3d_material",
   "isCompatibility":false,
   "isDnD":false,

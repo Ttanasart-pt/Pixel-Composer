@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_mesh_to_path",
   "isCompatibility":false,
   "isDnD":false,

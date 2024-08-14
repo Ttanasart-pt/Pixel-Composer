@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_surface_to_color",
   "isCompatibility":false,
   "isDnD":false,

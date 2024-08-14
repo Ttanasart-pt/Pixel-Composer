@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"tuple_functions",
   "isCompatibility":false,
   "isDnD":false,

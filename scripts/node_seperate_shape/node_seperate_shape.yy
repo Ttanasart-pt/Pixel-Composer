@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_seperate_shape",
   "isCompatibility":false,
   "isDnD":false,

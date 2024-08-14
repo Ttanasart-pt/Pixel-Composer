@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_strand_group_inline",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"type_conversion",
   "isCompatibility":false,
   "isDnD":false,

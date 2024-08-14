@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_interpret_number",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_rigid_render_output",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_path_from_mask",
   "isCompatibility":false,
   "isDnD":false,

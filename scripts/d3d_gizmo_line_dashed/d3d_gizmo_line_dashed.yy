@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"d3d_gizmo_line_dashed",
   "isCompatibility":false,
   "isDnD":false,

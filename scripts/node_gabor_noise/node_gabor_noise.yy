@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_gabor_noise",
   "isCompatibility":false,
   "isDnD":false,

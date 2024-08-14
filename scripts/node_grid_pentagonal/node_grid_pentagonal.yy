@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_grid_pentagonal",
   "isCompatibility":false,
   "isDnD":false,

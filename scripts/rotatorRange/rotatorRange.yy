@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"rotatorRange",
   "isCompatibility":false,
   "isDnD":false,

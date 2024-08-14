@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_rigid_force_apply",
   "isCompatibility":false,
   "isDnD":false,

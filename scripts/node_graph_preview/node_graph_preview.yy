@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_graph_preview",
   "isCompatibility":false,
   "isDnD":false,

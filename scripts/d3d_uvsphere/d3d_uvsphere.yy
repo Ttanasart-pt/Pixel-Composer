@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"d3d_uvsphere",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"gameframe",
   "isCompatibility":false,
   "isDnD":false,

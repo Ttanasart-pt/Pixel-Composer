@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_wav_file_read",
   "isCompatibility":false,
   "isDnD":false,

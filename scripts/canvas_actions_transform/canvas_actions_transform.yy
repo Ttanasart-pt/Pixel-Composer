@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"canvas_actions_transform",
   "isCompatibility":false,
   "isDnD":false,

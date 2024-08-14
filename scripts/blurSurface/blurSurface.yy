@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"blurSurface",
   "isCompatibility":false,
   "isDnD":false,

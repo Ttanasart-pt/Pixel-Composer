@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_atlas_to_struct",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"__vertex_function",
   "isCompatibility":false,
   "isDnD":false,

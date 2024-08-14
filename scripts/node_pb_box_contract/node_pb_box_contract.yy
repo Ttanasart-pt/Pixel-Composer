@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_pb_box_contract",
   "isCompatibility":false,
   "isDnD":false,

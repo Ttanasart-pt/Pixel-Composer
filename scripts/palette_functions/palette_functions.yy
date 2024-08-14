@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"palette_functions",
   "isCompatibility":false,
   "isDnD":false,

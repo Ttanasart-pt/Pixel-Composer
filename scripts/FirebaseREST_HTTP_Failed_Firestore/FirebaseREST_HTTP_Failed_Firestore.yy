@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"FirebaseREST_HTTP_Failed_Firestore",
   "isCompatibility":false,
   "isDnD":false,

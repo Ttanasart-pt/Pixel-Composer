@@ -5,8 +5,6 @@ function draw_sprite_ext_override(spr, ind, _x, _y, xscale = 1, yscale = 1, rot 
 	INLINE __draw_sprite_ext(spr, ind, round(_x), round(_y), xscale, yscale, rot, color, alpha);
 }
 
-
-
 #macro draw_sprite_stretched_ext draw_sprite_stretched_ext_override
 #macro __draw_sprite_stretched_ext draw_sprite_stretched_ext
 
@@ -57,12 +55,12 @@ function draw_sprite_bbox(spr, ind, _bbox) {
 	__draw_sprite_stretched(spr, ind, _bbox.x0, _bbox.y0, _bbox.w, _bbox.h);
 }
 
-function draw_sprite_bbox_uniform(spr, ind, _bbox) {
+function draw_sprite_bbox_uniform(spr, ind, _bbox, _col = c_white, _alp = 1) {
 	INLINE
 	if(_bbox == noone) return;
 	var _minS = min(_bbox.w, _bbox.h);
 	
-	__draw_sprite_stretched(spr, ind, _bbox.xc - _minS / 2, _bbox.yc - _minS / 2, _minS, _minS);
+	__draw_sprite_stretched_ext(spr, ind, _bbox.xc - _minS / 2, _bbox.yc - _minS / 2, _minS, _minS, _col, _alp);
 }
 
 function draw_sprite_uniform(spr, ind, _x, _y, scale, color = c_white) {

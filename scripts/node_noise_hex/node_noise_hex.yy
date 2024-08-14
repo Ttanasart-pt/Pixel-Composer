@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_noise_hex",
   "isCompatibility":false,
   "isDnD":false,

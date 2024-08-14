@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"distribution_function",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"canvas_tool_outline",
   "isCompatibility":false,
   "isDnD":false,

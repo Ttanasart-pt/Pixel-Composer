@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_monitor_capture",
   "isCompatibility":false,
   "isDnD":false,

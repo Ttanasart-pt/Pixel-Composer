@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"animation_curve",
   "isCompatibility":false,
   "isDnD":false,

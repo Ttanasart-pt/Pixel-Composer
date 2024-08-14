@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"argumentRenderer",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"BBMOD_Vec2",
   "isCompatibility":false,
   "isDnD":false,

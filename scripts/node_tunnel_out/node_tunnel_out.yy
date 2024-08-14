@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_tunnel_out",
   "isCompatibility":false,
   "isDnD":false,

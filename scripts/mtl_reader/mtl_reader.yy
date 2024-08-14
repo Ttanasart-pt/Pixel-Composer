@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"mtl_reader",
   "isCompatibility":false,
   "isDnD":false,

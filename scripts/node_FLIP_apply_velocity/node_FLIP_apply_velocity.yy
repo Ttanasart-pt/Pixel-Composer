@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_FLIP_apply_velocity",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"delau_helper",
   "isCompatibility":false,
   "isDnD":false,

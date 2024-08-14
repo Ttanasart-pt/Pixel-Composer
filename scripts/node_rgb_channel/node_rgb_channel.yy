@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_rgb_channel",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_box_pattern",
   "isCompatibility":false,
   "isDnD":false,

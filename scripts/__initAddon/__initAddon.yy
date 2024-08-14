@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"__initAddon",
   "isCompatibility":false,
   "isDnD":false,

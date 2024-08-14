@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_strand_length_adjust",
   "isCompatibility":false,
   "isDnD":false,

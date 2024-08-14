@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_curve_hsv",
   "isCompatibility":false,
   "isDnD":false,

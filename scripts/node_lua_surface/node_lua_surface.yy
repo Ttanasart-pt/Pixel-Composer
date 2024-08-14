@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_lua_surface",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"_node_VFX_spawner",
   "isCompatibility":false,
   "isDnD":false,

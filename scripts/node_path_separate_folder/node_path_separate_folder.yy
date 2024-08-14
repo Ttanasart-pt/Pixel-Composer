@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_path_separate_folder",
   "isCompatibility":false,
   "isDnD":false,

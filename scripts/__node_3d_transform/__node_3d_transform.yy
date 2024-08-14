@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"__node_3d_transform",
   "isCompatibility":false,
   "isDnD":false,

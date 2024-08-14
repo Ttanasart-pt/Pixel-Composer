@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"matrixGrid",
   "isCompatibility":false,
   "isDnD":false,

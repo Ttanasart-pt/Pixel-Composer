@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_morph_surface",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"FirebaseREST_asyncFunction_Firestore",
   "isCompatibility":false,
   "isDnD":false,

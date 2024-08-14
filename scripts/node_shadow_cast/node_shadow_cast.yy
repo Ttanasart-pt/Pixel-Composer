@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_shadow_cast",
   "isCompatibility":false,
   "isDnD":false,

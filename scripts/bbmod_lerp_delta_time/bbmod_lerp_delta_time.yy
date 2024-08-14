@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"bbmod_lerp_delta_time",
   "isCompatibility":false,
   "isDnD":false,

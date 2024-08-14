@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"point_rotate",
   "isCompatibility":false,
   "isDnD":false,

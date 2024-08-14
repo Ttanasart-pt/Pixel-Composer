@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"svg_objects",
   "isCompatibility":false,
   "isDnD":false,

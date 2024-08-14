@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_wrap_perspective",
   "isCompatibility":false,
   "isDnD":false,

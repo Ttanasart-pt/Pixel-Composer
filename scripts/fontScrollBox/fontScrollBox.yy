@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"fontScrollBox",
   "isCompatibility":false,
   "isDnD":false,

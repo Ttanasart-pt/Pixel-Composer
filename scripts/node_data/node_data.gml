@@ -140,11 +140,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	#endregion
 	
 	#region ---- junctions ----
-		inputs    = [];
-		outputs   = [];
-		inputMap  = ds_map_create();
-		outputMap = ds_map_create();
-		input_value_map = {};
+		inputs           = [];
+		outputs          = [];
+		input_bypass     = [];
+		inputMap         = ds_map_create();
+		outputMap        = ds_map_create();
+		input_value_map  = {};
 		
 		input_list_size  = 0;
 		output_list_size = 0;
@@ -155,28 +156,27 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		inspector_display_list	= -1;
 		is_dynamic_output		= false;
 		
-		inspectInput1 = nodeValue("Toggle execution", self, JUNCTION_CONNECT.input, VALUE_TYPE.action, false).setVisible(true, true);
-		inspectInput2 = nodeValue("Toggle execution", self, JUNCTION_CONNECT.input, VALUE_TYPE.action, false).setVisible(true, true);
+		inspectInput1           = nodeValue("Toggle execution", self, JUNCTION_CONNECT.input, VALUE_TYPE.action, false).setVisible(true, true);
+		inspectInput1.index     = -1;
 		
-		inspectInput1.index = -1;
-		inspectInput2.index = -1;
+		inspectInput2           = nodeValue("Toggle execution", self, JUNCTION_CONNECT.input, VALUE_TYPE.action, false).setVisible(true, true);
+		inspectInput2.index     = -1;
 		
-		updatedInTrigger   = nodeValue("Update",  self, JUNCTION_CONNECT.input,  VALUE_TYPE.trigger, false).setVisible(true, true);
-		updatedOutTrigger  = nodeValue_Output("Updated", self, VALUE_TYPE.trigger, false).setVisible(true, true);
-		
+		updatedInTrigger        = nodeValue("Update",  self, JUNCTION_CONNECT.input,  VALUE_TYPE.trigger, false).setVisible(true, true);
 		updatedInTrigger.index  = -1;
+		updatedInTrigger.tags   = VALUE_TAG.updateInTrigger;
+		
+		updatedOutTrigger       = nodeValue_Output("Updated", self, VALUE_TYPE.trigger, false).setVisible(true, true);
 		updatedOutTrigger.index = -1;
+		updatedOutTrigger.tags  = VALUE_TAG.updateOutTrigger;
 		
-		updatedInTrigger.tags  = VALUE_TAG.updateInTrigger;
-		updatedOutTrigger.tags = VALUE_TAG.updateOutTrigger;
+		insp1UpdateActive       = true;
+		insp1UpdateTooltip      = __txtx("panel_inspector_execute", "Execute node");
+		insp1UpdateIcon         = [ THEME.sequence_control, 1, COLORS._main_value_positive ];
 		
-		insp1UpdateActive   = true;
-		insp1UpdateTooltip  = __txtx("panel_inspector_execute", "Execute node");
-		insp1UpdateIcon     = [ THEME.sequence_control, 1, COLORS._main_value_positive ];
-		
-		insp2UpdateActive   = true;
-		insp2UpdateTooltip = __txtx("panel_inspector_execute", "Execute node");
-		insp2UpdateIcon    = [ THEME.sequence_control, 1, COLORS._main_value_positive ];
+		insp2UpdateActive       = true;
+		insp2UpdateTooltip      = __txtx("panel_inspector_execute", "Execute node");
+		insp2UpdateIcon         = [ THEME.sequence_control, 1, COLORS._main_value_positive ];
 		
 		is_dynamic_input  = false;
 		auto_input		  = false;
@@ -446,7 +446,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		var _ina = array_length(_in);
 		for( var i = 0; i < _ina; i++ )
-			_in[| i].index = i;
+			_in[i].index = i;
 		
 		if(dummy_input) dummy_input.index = _ina;
 		
@@ -684,6 +684,14 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			_p = true;
 		}
 		
+		for( var i = 0; i < input_list_size; i++ ) {
+			var _inp = inputs[i];
+			var _byp = _inp.bypass_junc;
+			if(_byp == noone) continue;
+			
+			_ho += junction_draw_hei_y * _byp.visible;
+		}
+		
 		h = max(min_h, _prev_surf * 128, _hi, _ho);
 		if(attributes.node_height) h = max(h, attributes.node_height);
 		
@@ -829,6 +837,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 			var val = _inp.getValue(__frame);
 			
+			_inp.bypass_junc.setValue(val);
 			inputs_data[i] = val;								// setInputData(i, val);
 			input_value_map[$ _inp.internalName] = val;
 		});
@@ -1068,7 +1077,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		for(var i = 0; i < output_list_size; i++) {
 			var _ot = outputs[i];
-			if(!_ot.forward)				continue;
+			if(!_ot.forward) continue;
 			
 			for( var j = 0, n = array_length(_ot.value_to_loop); j < n; j++ ) {
 				var _to = _ot.value_to_loop[j];
@@ -1090,6 +1099,19 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				//LOG_IF(global.FLAG.render == 1, $"→→ Check output: {_ot.name} connect to node {_to.node.internalName}");
 			}
 		}	
+		
+		for(var i = 0; i < input_list_size; i++) {
+			var _in = inputs[i];
+			if(_in.bypass_junc == noone) continue;
+			
+			var _tos = _in.bypass_junc.getJunctionTo();
+			for( var j = 0; j < array_length(_tos); j++ ) {
+				var _to = _tos[j];
+				
+				array_push(nodes, _to.node);
+				array_push(nodeNames, _to.node.internalName);
+			}
+		}
 		
 		LOG_IF(global.FLAG.render == 1, $"→→ Push {nodeNames} to queue.");
 		
@@ -1117,6 +1139,15 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			for( var j = 0; j < array_length(_tos); j++ )
 				array_push(nodes, _tos[j].node);
 		}	
+		
+		for(var i = 0; i < input_list_size; i++) {
+			var _in = inputs[i];
+			if(_in.bypass_junc == noone) continue;
+			
+			var _tos = _in.bypass_junc.getJunctionTo();
+			for( var j = 0; j < array_length(_tos); j++ )
+				array_push(nodes, _tos[j].node);
+		}
 		
 		return nodes;
 	}
@@ -1204,23 +1235,19 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		for( var i = 0, n = input_list_size; i < n; i++ ) {
 			jun = inputs[i];
-			jun.x = _ix;
-			jun.y = _iy;
 			
-			jun.rx = rx;
-			jun.ry = ry;
+			jun.x  = _ix; jun.rx = rx;  
+			jun.y  = _iy; jun.ry = ry;
 		}
 		
 		for(var i = 0; i < in_cache_len; i++) {
 			jun = inputDisplayList[i];
 			
-			jun.x = _ix;
-			jun.y = _iy;
-			_iy  += junction_draw_hei_y * _s;
+			jun.x = _ix; jun.rx = rx;
+			jun.y = _iy; jun.ry = ry;
 			
-			jun.rx = rx;
-			jun.ry = ry;
-			ry    += junction_draw_hei_y;
+			_iy += junction_draw_hei_y * _s;
+			ry  += junction_draw_hei_y;
 		}
 		
 		var _ox = xx + w * _s;
@@ -1233,13 +1260,23 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			idx = outputs_index[i];
 			jun = outputs[idx];
 			
-			jun.x = _ox;
-			jun.y = _oy;
-			_oy  += junction_draw_hei_y * _s * jun.isVisible();
+			jun.x = _ox; jun.rx = rx;
+			jun.y = _oy; jun.ry = ry;
 			
-			jun.rx = rx;
-			jun.ry = ry;
-			ry    += junction_draw_hei_y * jun.isVisible();
+			_oy += junction_draw_hei_y * jun.isVisible() * _s;
+			ry  += junction_draw_hei_y * jun.isVisible();
+		}
+		
+		for( var i = 0; i < input_list_size; i++ ) {
+			var _inp = inputs[i];
+			var jun = _inp.bypass_junc;
+			if(jun == noone) continue;
+			
+			jun.x = _ox; jun.rx = rx;
+			jun.y = _oy; jun.ry = ry;
+			
+			_oy += junction_draw_hei_y * jun.visible * _s;
+			ry  += junction_draw_hei_y * jun.visible;
 		}
 		
 		if(SHOW_PARAM) h = h_param;
@@ -1427,23 +1464,26 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		for(var i = 0, n = array_length(inputDisplayList); i < n; i++) {
 			var jun = inputDisplayList[i];
 			
-			if(jun.drawJunction(_s, _mx, _my))
-				hover = jun;
+			if(jun.drawJunction(_s, _mx, _my)) hover = jun;
 		}
 		
 		for(var i = 0; i < output_list_size; i++) {
 			var jun = outputs[i];
-			if(!jun.isVisible()) continue;
 			
-			if(jun.drawJunction(_s, _mx, _my))
-				hover = jun;
+			if(!jun.isVisible()) continue;
+			if(jun.drawJunction(_s, _mx, _my)) hover = jun;
 		}
 		
-		if(hasInspector1Update() && inspectInput1.drawJunction(_s, _mx, _my))
-			hover = inspectInput1;
+		for( var i = 0; i < input_list_size; i++ ) {
+			var _inp = inputs[i];
+			var jun = _inp.bypass_junc;
 			
-		if(hasInspector2Update() && inspectInput2.drawJunction(_s, _mx, _my))
-			hover = inspectInput2;
+			if(jun == noone || !jun.visible) continue;
+			if(jun.drawJunction(_s, _mx, _my)) hover = jun;
+		}
+		
+		if(hasInspector1Update() && inspectInput1.drawJunction(_s, _mx, _my)) hover = inspectInput1;
+		if(hasInspector2Update() && inspectInput2.drawJunction(_s, _mx, _my)) hover = inspectInput2;
 		
 		if(attributes.show_update_trigger) {
 			if(updatedInTrigger.drawJunction(_s, _mx, _my))  hover = updatedInTrigger;
@@ -1464,23 +1504,26 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		for(var i = 0, n = array_length(inputDisplayList); i < n; i++) {
 			var jun = inputDisplayList[i];
 			
-			if(jun.drawJunction_fast(_s, _mx, _my))
-				hover = jun;
+			if(jun.drawJunction_fast(_s, _mx, _my)) hover = jun;
 		}
 		
 		for(var i = 0; i < output_list_size; i++) {
 			var jun = outputs[i];
-			if(!jun.isVisible()) continue;
 			
-			if(jun.drawJunction_fast(_s, _mx, _my))
-				hover = jun;
+			if(!jun.isVisible()) continue;
+			if(jun.drawJunction_fast(_s, _mx, _my)) hover = jun;
 		}
 		
-		if(hasInspector1Update() && inspectInput1.drawJunction_fast(_s, _mx, _my))
-			hover = inspectInput1;
+		for( var i = 0; i < input_list_size; i++ ) {
+			var _inp = inputs[i];
+			var jun = _inp.bypass_junc;
 			
-		if(hasInspector2Update() && inspectInput2.drawJunction_fast(_s, _mx, _my))
-			hover = inspectInput2;
+			if(jun == noone || !jun.visible) continue;
+			if(jun.drawJunction_fast(_s, _mx, _my)) hover = jun;
+		}
+		
+		if(hasInspector1Update() && inspectInput1.drawJunction_fast(_s, _mx, _my)) hover = inspectInput1;
+		if(hasInspector2Update() && inspectInput2.drawJunction_fast(_s, _mx, _my)) hover = inspectInput2;
 		
 		if(attributes.show_update_trigger) {
 			if(updatedInTrigger.drawJunction_fast(_s, _mx, _my))  hover = updatedInTrigger;
@@ -1514,13 +1557,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		show_input_name  &= point_in_rectangle(_mx, _my, xx - (    12) * _s, _y0, xx + (    12) * _s, _y1);
 		show_output_name &= point_in_rectangle(_mx, _my, xx + (w - 12) * _s, _y0, xx + (w + 12) * _s, _y1);
-
+		
 		if(PANEL_GRAPH.value_dragging && PANEL_GRAPH.node_hovering == self) {
-			if(PANEL_GRAPH.value_dragging.connect_type == JUNCTION_CONNECT.input) 
-				show_output_name = true;
-			
-			if(PANEL_GRAPH.value_dragging.connect_type == JUNCTION_CONNECT.output) 
-				show_input_name = true;
+			if(PANEL_GRAPH.value_dragging.connect_type == JUNCTION_CONNECT.input)  show_output_name = true;
+			if(PANEL_GRAPH.value_dragging.connect_type == JUNCTION_CONNECT.output) show_input_name = true;
 		}
 		
 		if(show_input_name) {
@@ -1539,8 +1579,20 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			for(var i = 0; i < output_list_size; i++)
 				if(outputs[i].isVisible()) outputs[i].drawNameBG(_s);
 			
+			for( var i = 0; i < input_list_size; i++ ) {
+				var jun = inputs[i].bypass_junc;
+				if(jun == noone || !jun.visible) continue;
+				jun.drawNameBG(_s);
+			}
+			
 			for(var i = 0; i < output_list_size; i++)
 				if(outputs[i].isVisible()) outputs[i].drawName(_s, _mx, _my);
+			
+			for( var i = 0; i < input_list_size; i++ ) {
+				var jun = inputs[i].bypass_junc;
+				if(jun == noone || !jun.visible) continue;
+				jun.drawName(_s, _mx, _my);
+			}
 		}
 		
 		if(hasInspector1Update() && PANEL_GRAPH.pHOVER && point_in_circle(_mx, _my, inspectInput1.x, inspectInput1.y, 10)) {
@@ -1613,6 +1665,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			if(!_jun.isVisible())            continue;
 			
 			if(i >= 0) __draw_inputs[_len++] = _jun;
+		}
+		
+		for( var i = 0; i < input_list_size; i++ ) {
+			var jun = inputs[i].bypass_junc;
+			if(jun == noone || !jun.visible) continue;
+			jun.drawBypass(params);
 		}
 		
 		for( var i = 0; i < _len; i++ ) {

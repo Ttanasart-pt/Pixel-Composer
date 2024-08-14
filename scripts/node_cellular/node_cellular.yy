@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_cellular",
   "isCompatibility":false,
   "isDnD":false,

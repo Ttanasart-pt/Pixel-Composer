@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"json_minify",
   "isCompatibility":false,
   "isDnD":false,

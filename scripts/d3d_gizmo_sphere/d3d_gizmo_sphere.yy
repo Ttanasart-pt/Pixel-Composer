@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"d3d_gizmo_sphere",
   "isCompatibility":false,
   "isDnD":false,

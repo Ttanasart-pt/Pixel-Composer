@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_armature_sample",
   "isCompatibility":false,
   "isDnD":false,

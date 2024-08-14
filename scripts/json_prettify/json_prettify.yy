@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"json_prettify",
   "isCompatibility":false,
   "isDnD":false,

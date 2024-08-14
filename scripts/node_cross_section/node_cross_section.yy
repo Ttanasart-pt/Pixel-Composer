@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_cross_section",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_FLIP_to_VFX",
   "isCompatibility":false,
   "isDnD":false,

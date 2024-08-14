@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_statistic",
   "isCompatibility":false,
   "isDnD":false,

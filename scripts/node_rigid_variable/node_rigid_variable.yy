@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_rigid_variable",
   "isCompatibility":false,
   "isDnD":false,

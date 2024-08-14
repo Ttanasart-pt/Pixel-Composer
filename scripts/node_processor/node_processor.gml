@@ -322,6 +322,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			var amo = _in.arrayLength(raw);
 			var val = raw;
 			
+			_in.bypass_junc.setValue(val);
 				 if(amo == 0) val = noone;		//empty array
 			else if(amo == 1) val = raw[0];		//spread single array
 			amo = max(1, amo);

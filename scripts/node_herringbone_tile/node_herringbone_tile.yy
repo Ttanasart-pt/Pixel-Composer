@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_herringbone_tile",
   "isCompatibility":false,
   "isDnD":false,

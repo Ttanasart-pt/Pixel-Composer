@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_align_functions",
   "isCompatibility":false,
   "isDnD":false,

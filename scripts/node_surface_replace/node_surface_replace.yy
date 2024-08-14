@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_surface_replace",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_smoke_vortex",
   "isCompatibility":false,
   "isDnD":false,

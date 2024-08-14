@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_stagger",
   "isCompatibility":false,
   "isDnD":false,

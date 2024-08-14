@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_3d_round_vertex",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"preview_overlay_puppet",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"hlsl_server",
   "isCompatibility":false,
   "isDnD":false,

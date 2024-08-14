@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"pack_skyline",
   "isCompatibility":false,
   "isDnD":false,

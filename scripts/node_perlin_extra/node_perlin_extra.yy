@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_perlin_extra",
   "isCompatibility":false,
   "isDnD":false,

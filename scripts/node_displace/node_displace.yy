@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_displace",
   "isCompatibility":false,
   "isDnD":false,

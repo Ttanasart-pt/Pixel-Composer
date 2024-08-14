@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_PCX_fn_surface_height",
   "isCompatibility":false,
   "isDnD":false,

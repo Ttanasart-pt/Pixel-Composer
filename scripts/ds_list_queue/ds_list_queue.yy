@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"ds_list_queue",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"panel_preview_3d_setting",
   "isCompatibility":false,
   "isDnD":false,

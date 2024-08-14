@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"sprite_add_functions",
   "isCompatibility":false,
   "isDnD":false,

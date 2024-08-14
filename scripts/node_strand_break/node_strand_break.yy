@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_strand_break",
   "isCompatibility":false,
   "isDnD":false,

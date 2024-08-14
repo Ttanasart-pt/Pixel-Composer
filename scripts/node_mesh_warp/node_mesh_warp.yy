@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_mesh_warp",
   "isCompatibility":false,
   "isDnD":false,

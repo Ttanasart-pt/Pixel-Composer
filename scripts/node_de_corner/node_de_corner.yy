@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_de_corner",
   "isCompatibility":false,
   "isDnD":false,

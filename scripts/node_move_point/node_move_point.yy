@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_move_point",
   "isCompatibility":false,
   "isDnD":false,

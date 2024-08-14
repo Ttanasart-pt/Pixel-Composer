@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_3d_mesh_stack_slice",
   "isCompatibility":false,
   "isDnD":false,

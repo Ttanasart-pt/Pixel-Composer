@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_array_csv_parse",
   "isCompatibility":false,
   "isDnD":false,

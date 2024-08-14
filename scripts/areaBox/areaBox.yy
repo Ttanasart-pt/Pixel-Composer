@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"areaBox",
   "isCompatibility":false,
   "isDnD":false,

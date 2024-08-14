@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_gamma_map",
   "isCompatibility":false,
   "isDnD":false,

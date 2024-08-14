@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"d3d_gizmo_axis",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"FirebasePathsUserFunctions",
   "isCompatibility":false,
   "isDnD":false,

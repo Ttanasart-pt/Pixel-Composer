@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_palette_replace",
   "isCompatibility":false,
   "isDnD":false,

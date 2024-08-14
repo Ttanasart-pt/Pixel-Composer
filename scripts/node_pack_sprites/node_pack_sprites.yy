@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_pack_sprites",
   "isCompatibility":false,
   "isDnD":false,

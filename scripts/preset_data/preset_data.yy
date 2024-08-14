@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"preset_data",
   "isCompatibility":false,
   "isDnD":false,

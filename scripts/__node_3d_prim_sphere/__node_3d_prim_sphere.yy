@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"__node_3d_prim_sphere",
   "isCompatibility":false,
   "isDnD":false,

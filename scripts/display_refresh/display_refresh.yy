@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"display_refresh",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_gradient_shift",
   "isCompatibility":false,
   "isDnD":false,

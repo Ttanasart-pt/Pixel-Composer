@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_pb_draw_semi_ellipse",
   "isCompatibility":false,
   "isDnD":false,

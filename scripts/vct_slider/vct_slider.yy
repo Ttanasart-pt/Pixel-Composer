@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"vct_slider",
   "isCompatibility":false,
   "isDnD":false,

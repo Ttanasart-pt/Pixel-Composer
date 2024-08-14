@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"surfaceBox",
   "isCompatibility":false,
   "isDnD":false,

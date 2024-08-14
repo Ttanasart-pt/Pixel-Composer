@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"pathAnchorBox",
   "isCompatibility":false,
   "isDnD":false,

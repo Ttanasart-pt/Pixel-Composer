@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"json_compare",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_blur_simple",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"BBMOD_Matrix",
   "isCompatibility":false,
   "isDnD":false,

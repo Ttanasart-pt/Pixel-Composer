@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_active_canvas",
   "isCompatibility":false,
   "isDnD":false,

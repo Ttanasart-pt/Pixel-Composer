@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_image_sequence",
   "isCompatibility":false,
   "isDnD":false,

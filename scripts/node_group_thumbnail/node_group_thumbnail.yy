@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_group_thumbnail",
   "isCompatibility":false,
   "isDnD":false,

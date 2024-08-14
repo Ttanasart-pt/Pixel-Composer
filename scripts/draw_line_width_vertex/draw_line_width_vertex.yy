@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"draw_line_width_vertex",
   "isCompatibility":false,
   "isDnD":false,

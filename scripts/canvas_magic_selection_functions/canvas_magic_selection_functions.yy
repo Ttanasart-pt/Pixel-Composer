@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"canvas_magic_selection_functions",
   "isCompatibility":false,
   "isDnD":false,

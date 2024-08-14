@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"d3d_bbox",
   "isCompatibility":false,
   "isDnD":false,

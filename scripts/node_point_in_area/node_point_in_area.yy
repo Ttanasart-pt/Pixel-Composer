@@ -1,0 +1,13 @@
+{
+  "$GMScript":"",
+  "%Name":"node_point_in_area",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_point_in_area",
+  "parent":{
+    "name":"number",
+    "path":"folders/nodes/data/value/number.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

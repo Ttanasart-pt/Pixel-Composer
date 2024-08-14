@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_FLIP_vortex",
   "isCompatibility":false,
   "isDnD":false,

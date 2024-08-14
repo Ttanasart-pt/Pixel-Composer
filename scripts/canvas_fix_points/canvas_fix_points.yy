@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"canvas_fix_points",
   "isCompatibility":false,
   "isDnD":false,

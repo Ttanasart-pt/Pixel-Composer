@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_pixel_cloud",
   "isCompatibility":false,
   "isDnD":false,

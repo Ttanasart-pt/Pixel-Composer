@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"preview_overlay_vector",
   "isCompatibility":false,
   "isDnD":false,

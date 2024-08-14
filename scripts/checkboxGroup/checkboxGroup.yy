@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"checkboxGroup",
   "isCompatibility":false,
   "isDnD":false,

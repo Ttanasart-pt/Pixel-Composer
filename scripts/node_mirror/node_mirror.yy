@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_mirror",
   "isCompatibility":false,
   "isDnD":false,

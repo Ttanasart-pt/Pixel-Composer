@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_sequence_anim",
   "isCompatibility":false,
   "isDnD":false,

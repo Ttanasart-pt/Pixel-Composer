@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"getGradientData",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"patreon_email_check",
   "isCompatibility":false,
   "isDnD":false,

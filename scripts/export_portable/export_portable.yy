@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"export_portable",
   "isCompatibility":false,
   "isDnD":false,

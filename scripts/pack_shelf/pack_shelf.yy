@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"pack_shelf",
   "isCompatibility":false,
   "isDnD":false,

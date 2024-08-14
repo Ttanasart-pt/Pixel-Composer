@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"safe_operation",
   "isCompatibility":false,
   "isDnD":false,

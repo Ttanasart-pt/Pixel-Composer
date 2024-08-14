@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"draw_UI_scale",
   "isCompatibility":false,
   "isDnD":false,

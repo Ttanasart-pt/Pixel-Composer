@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"time_source",
   "isCompatibility":false,
   "isDnD":false,

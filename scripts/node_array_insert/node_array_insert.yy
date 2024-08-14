@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_array_insert",
   "isCompatibility":false,
   "isDnD":false,

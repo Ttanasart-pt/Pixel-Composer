@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_fn_wave_table",
   "isCompatibility":false,
   "isDnD":false,

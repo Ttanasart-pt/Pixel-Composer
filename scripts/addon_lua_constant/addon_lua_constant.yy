@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"addon_lua_constant",
   "isCompatibility":false,
   "isDnD":false,

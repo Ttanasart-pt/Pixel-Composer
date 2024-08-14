@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"colToVec4",
   "isCompatibility":false,
   "isDnD":false,

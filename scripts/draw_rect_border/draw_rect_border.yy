@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"draw_rect_border",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"mask_function",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"d3d_cube_faces",
   "isCompatibility":false,
   "isDnD":false,

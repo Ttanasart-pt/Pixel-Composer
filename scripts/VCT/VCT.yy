@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"VCT",
   "isCompatibility":false,
   "isDnD":false,

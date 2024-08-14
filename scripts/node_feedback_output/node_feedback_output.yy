@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_feedback_output",
   "isCompatibility":false,
   "isDnD":false,

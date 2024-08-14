@@ -15,17 +15,16 @@ function drawWidgetInit() {
 }
 
 function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _focus = false, _scrollPane = noone, rx = 0, ry = 0) { 
-	var con_w = ww - ui(4);
-	var xc	  = xx + ww / 2;
-	var _font = viewMode == INSP_VIEW_MODE.spacious? f_p0 : f_p2;
-	
+	var con_w     = ww - ui(4);
+	var xc	      = xx + ww / 2;
+	var _font     = viewMode == INSP_VIEW_MODE.spacious? f_p0 : f_p2;
 	var breakLine = viewMode == INSP_VIEW_MODE.spacious || jun.expUse;
-	var lb_h = line_get_height(_font) + ui(6);
-	var lb_y = yy + lb_h / 2;
+	var lb_h      = line_get_height(_font) + ui(6);
+	var lb_y      = yy + lb_h / 2;
 	
-	var _name = jun.getName();
-	var wid   = jun.editWidget;
-	var cHov  = false;
+	var _name     = jun.getName();
+	var wid       = jun.editWidget;
+	var cHov      = false;
 	
 	switch(instanceof(wid)) {
 		case "textArea" : 
@@ -64,8 +63,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		}
 	}
 		
-	if(anim_hold != noone && mouse_release(mb_left))
-		anim_hold = noone;
+	if(anim_hold != noone && mouse_release(mb_left)) anim_hold = noone;
 		
 	butx += ui(20);
 	if(!global_var) { // visibility
@@ -94,8 +92,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 	} else
 		draw_sprite_ui_uniform(THEME.node_use_expression, 0, butx, lb_y, 1,, 0.8);
 		
-	if(visi_hold != noone && mouse_release(mb_left))
-		visi_hold = noone;
+	if(visi_hold != noone && mouse_release(mb_left)) visi_hold = noone;
 		
 	var cc = COLORS._main_text;
 	if(jun.expUse) {
@@ -244,23 +241,25 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		}
 	#endregion
 		
-	#region expression, pop up editor
+	#region right buttons
 		if(jun.connect_type == JUNCTION_CONNECT.input && breakLine && !jun.is_anim && !global_var) {
-			var bx = xx + ww + ui(16);
-			var by = lb_y;
+			var bx  = xx + ww + ui(16);
+			var by  = lb_y;
+			var bs  = ui(24);
+			var bsh = bs / 2;
 			
-			bx -= ui(28);
+			bx -= bs + ui(4);
 			if(jun.is_modified) {
-				var b = buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, _focus, _hover, __txtx("panel_inspector_reset", "Reset value"), THEME.refresh_16, 0, COLORS._main_icon)
+				var b = buttonInstant(THEME.button_hide, bx - bsh, by - bsh, bs, bs, _m, _focus, _hover, __txtx("panel_inspector_reset", "Reset value"), THEME.refresh_16, 0, COLORS._main_icon)
 				if(b)      cHov = true;
 				if(b == 2) jun.resetValue();
 				
 			} else 
 				draw_sprite_ui(THEME.refresh_16, 0, bx, by,,,, COLORS._main_icon, 0.5);
 			
-			bx -= ui(28);
+			bx -= bs + ui(4);
 			var ic_b = jun.expUse? c_white : COLORS._main_icon;
-			var b = buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, _focus, _hover, __txtx("panel_inspector_use_expression", "Use expression"), THEME.node_use_expression, jun.expUse, ic_b)
+			var b = buttonInstant(THEME.button_hide, bx - bsh, by - bsh, bs, bs, _m, _focus, _hover, __txtx("panel_inspector_use_expression", "Use expression"), THEME.node_use_expression, jun.expUse, ic_b)
 			
 			if(b) cHov = true;
 			if(b == 2) {
@@ -270,18 +269,18 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			}
 				
 			if(jun.expUse) {
-				bx -= ui(28);
+				bx -= bs + ui(4);
 				var cc = NODE_DROPPER_TARGET == jun? COLORS._main_value_positive : COLORS._main_icon;
-				var b  = buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, _focus, _hover, __txtx("panel_inspector_dropper", "Node Dropper"), THEME.node_dropper, 0, cc)
+				var b  = buttonInstant(THEME.button_hide, bx - bsh, by - bsh, bs, bs, _m, _focus, _hover, __txtx("panel_inspector_dropper", "Node Dropper"), THEME.node_dropper, 0, cc)
 				
 				if(b) cHov = true;
 				if(b == 2) NODE_DROPPER_TARGET = NODE_DROPPER_TARGET == jun? noone : jun;
 			}
 			
 			if(jun.expUse || jun.type == VALUE_TYPE.text) {
-				bx -= ui(28);
+				bx -= bs + ui(4);
 				var cc = jun.popup_dialog == noone? COLORS._main_icon : COLORS._main_value_positive;
-				var b  = buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, _focus, _hover, __txtx("panel_inspector_pop_text", "Pop up Editor"), THEME.text_popup, 0, cc)
+				var b  = buttonInstant(THEME.button_hide, bx - bsh, by - bsh, bs, bs, _m, _focus, _hover, __txtx("panel_inspector_pop_text", "Pop up Editor"), THEME.text_popup, 0, cc)
 				
 				if(b) cHov = true;
 				if(b == 2) {
@@ -290,29 +289,33 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 					jun.popup_dialog.content.title = $"{jun.node.name} - {_name}";
 				}
 			}
+			
+			if(jun.bypass_junc) {
+				bx -= bs + ui(4);
+				var ic_b = jun.bypass_junc.visible? COLORS._main_icon_light : COLORS._main_icon;
+				var b = buttonInstant(THEME.button_hide, bx - bsh, by - bsh, bs, bs, _m, _focus, _hover, __txt("Bypass"), THEME.junction_bypass, jun.bypass_junc.visible, ic_b)
+				
+				if(b) cHov = true;
+				if(b == 2) {
+					jun.bypass_junc.visible = !jun.bypass_junc.visible; 
+					jun.node.setHeight();
+				}
+			}
 		}
 	#endregion
 	
-	var _hsy = yy + lb_h;
-	var padd = ui(8);
-	
+	var _hsy       = yy + lb_h;
+	var padd       = ui(8);
 	var labelWidth = max(lb_w, min(ww * 0.4, ui(200)));
-	var widExtend  = breakLine;
-	
-	switch(jun.type) {
-		case VALUE_TYPE.curve :   
-			widExtend = true;
-			break;
-	}
+	var widExtend  = breakLine || jun.type == VALUE_TYPE.curve;
 	
 	var editBoxX   = xx	+ !widExtend * labelWidth;
 	var editBoxY   = widExtend? _hsy : yy;
-	
 	var editBoxW   = (xx + ww) - editBoxX;
 	var editBoxH   = widExtend? TEXTBOX_HEIGHT : lb_h;
-			
-	var widH	= widExtend? editBoxH : 0;
-	var mbRight	= true;
+	
+	var widH	   = widExtend? editBoxH : 0;
+	var mbRight	   = true;
 		
 	if(jun.expUse) { // expression editor
 		var expValid = jun.expTree != noone && jun.expTree.validate();
@@ -394,15 +397,8 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		cHov |= wid.inBBOX(_m)
 		
 		mbRight &= wid.right_click_block;
-	
-	} else if(jun.display_type == VALUE_DISPLAY.label) { // label
-		draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text_sub);
-		draw_text_add(xx + ui(16), _hsy, jun.display_data.data);
-				
-		widH = string_height(jun.display_data.data);
-	
-	} else
-		widH = 0;
+		
+	} 
 	
 	return [ widH, mbRight, cHov ];
 }	

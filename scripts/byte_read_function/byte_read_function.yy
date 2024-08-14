@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"byte_read_function",
   "isCompatibility":false,
   "isDnD":false,

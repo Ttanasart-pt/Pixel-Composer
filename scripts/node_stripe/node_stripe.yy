@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_stripe",
   "isCompatibility":false,
   "isDnD":false,

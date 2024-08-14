@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"panel_node_credit",
   "isCompatibility":false,
   "isDnD":false,

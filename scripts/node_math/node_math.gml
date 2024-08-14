@@ -105,6 +105,37 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	use_mod = 0;
 	use_deg = false;
 	
+	static onValueUpdate = function(index = 0) {
+		if(index != 0) return;
+		
+		var _type = inputs[0].getValue();
+		
+		switch(_type) {
+			case MATH_OPERATOR.add :		setDisplayName("Add")        break;
+			case MATH_OPERATOR.subtract :	setDisplayName("Subtract");	 break;
+			case MATH_OPERATOR.multiply :	setDisplayName("Multiply");	 break;
+			case MATH_OPERATOR.divide :		setDisplayName("Divide");    break;
+			
+			case MATH_OPERATOR.power :		setDisplayName("Power");     break;
+			case MATH_OPERATOR.root :		setDisplayName("Root");      break;
+			
+			case MATH_OPERATOR.sin :		setDisplayName("Sin");       break;
+			case MATH_OPERATOR.cos :		setDisplayName("Cos");       break;
+			case MATH_OPERATOR.tan :		setDisplayName("Tan");       break;
+			case MATH_OPERATOR.modulo :		setDisplayName("Modulo");    break;
+			
+			case MATH_OPERATOR.floor :		setDisplayName("Floor");     break;
+			case MATH_OPERATOR.ceiling :	setDisplayName("Ceiling");   break;
+			case MATH_OPERATOR.round :		setDisplayName("Round");     break;
+			
+			case MATH_OPERATOR.lerp :		setDisplayName("Lerp");      break;
+			case MATH_OPERATOR.abs :		setDisplayName("Abs");       break;
+			
+			case MATH_OPERATOR.clamp :		setDisplayName("Clamp");     break;
+			case MATH_OPERATOR.snap :		setDisplayName("Snap");      break;
+		}
+	}
+	
 	static _eval = function(a, b, c = 0) {
 		switch(use_mod) {
 			case MATH_OPERATOR.add :		return a + b;    

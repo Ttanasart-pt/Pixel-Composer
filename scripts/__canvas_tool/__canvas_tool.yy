@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"__canvas_tool",
   "isCompatibility":false,
   "isDnD":false,

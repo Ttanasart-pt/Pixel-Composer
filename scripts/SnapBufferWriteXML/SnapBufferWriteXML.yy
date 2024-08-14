@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"SnapBufferWriteXML",
   "isCompatibility":false,
   "isDnD":false,

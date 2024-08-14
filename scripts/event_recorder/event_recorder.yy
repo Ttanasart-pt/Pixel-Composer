@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"event_recorder",
   "isCompatibility":false,
   "isDnD":false,

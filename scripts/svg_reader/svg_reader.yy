@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"svg_reader",
   "isCompatibility":false,
   "isDnD":false,

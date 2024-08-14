@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"panel_keyframe_driver",
   "isCompatibility":false,
   "isDnD":false,

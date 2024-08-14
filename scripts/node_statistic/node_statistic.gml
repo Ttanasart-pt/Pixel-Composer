@@ -45,6 +45,20 @@ function Node_Statistic(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	outputs[0] = nodeValue_Output("Statistic", self, VALUE_TYPE.float, -1);
 	
+	static onValueUpdate = function(index = 0) {
+		if(index != 0) return;
+		
+		var _type = inputs[0].getValue();
+		
+		switch(_type) {
+			case STAT_OPERATOR._sum :		setDisplayName("Sum")        break;
+			case STAT_OPERATOR._average :	setDisplayName("Average");	 break;
+			case STAT_OPERATOR._median :	setDisplayName("Median");	 break;
+			case STAT_OPERATOR._max :		setDisplayName("Max");       break;
+			case STAT_OPERATOR._min :		setDisplayName("Min");       break;
+		}
+	}
+	
 	static update = function(frame = CURRENT_FRAME) { #region
 		var type = getInputData(0);
 		var res = 0;

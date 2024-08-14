@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_FLIP_repel",
   "isCompatibility":false,
   "isDnD":false,

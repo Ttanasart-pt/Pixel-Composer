@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"ds_map",
   "isCompatibility":false,
   "isDnD":false,

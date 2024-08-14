@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"scrollBox",
   "isCompatibility":false,
   "isDnD":false,

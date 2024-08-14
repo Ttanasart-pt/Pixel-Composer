@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"pcx_server",
   "isCompatibility":false,
   "isDnD":false,

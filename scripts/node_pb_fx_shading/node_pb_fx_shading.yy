@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_pb_fx_shading",
   "isCompatibility":false,
   "isDnD":false,

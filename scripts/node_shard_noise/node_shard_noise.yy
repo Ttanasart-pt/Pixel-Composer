@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_shard_noise",
   "isCompatibility":false,
   "isDnD":false,

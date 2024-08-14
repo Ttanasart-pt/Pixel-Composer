@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"panel_notification",
   "isCompatibility":false,
   "isDnD":false,

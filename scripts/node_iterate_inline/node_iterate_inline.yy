@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_iterate_inline",
   "isCompatibility":false,
   "isDnD":false,

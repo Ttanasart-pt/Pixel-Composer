@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_vignette",
   "isCompatibility":false,
   "isDnD":false,

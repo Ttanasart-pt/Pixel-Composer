@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_3d_mesh_path_extrude",
   "isCompatibility":false,
   "isDnD":false,

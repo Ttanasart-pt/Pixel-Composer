@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_edge_shade",
   "isCompatibility":false,
   "isDnD":false,

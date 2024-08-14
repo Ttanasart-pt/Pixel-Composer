@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"surface_get_palette",
   "isCompatibility":false,
   "isDnD":false,

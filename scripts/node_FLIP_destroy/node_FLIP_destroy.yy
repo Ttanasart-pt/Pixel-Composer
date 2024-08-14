@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_FLIP_destroy",
   "isCompatibility":false,
   "isDnD":false,

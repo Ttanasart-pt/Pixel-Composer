@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_skew",
   "isCompatibility":false,
   "isDnD":false,

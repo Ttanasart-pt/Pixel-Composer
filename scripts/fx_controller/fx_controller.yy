@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"fx_controller",
   "isCompatibility":false,
   "isDnD":false,

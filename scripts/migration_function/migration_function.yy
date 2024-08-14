@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"migration_function",
   "isCompatibility":false,
   "isDnD":false,

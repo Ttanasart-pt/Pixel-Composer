@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_grid_tri",
   "isCompatibility":false,
   "isDnD":false,

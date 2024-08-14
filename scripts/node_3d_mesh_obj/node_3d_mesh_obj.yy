@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_3d_mesh_obj",
   "isCompatibility":false,
   "isDnD":false,

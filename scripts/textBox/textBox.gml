@@ -351,7 +351,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		var cc = sliding == 2? COLORS._main_accent : color;
 		draw_set_text(font, fa_left, fa_top, cc);
 		
-		if(input == TEXTBOX_INPUT.number) {
+		if(input == TEXTBOX_INPUT.number && string_char_at(_text, 1) != "[") {
 			var _tx = string_pos(".", _text);
 			
 			if(_tx != 0) {

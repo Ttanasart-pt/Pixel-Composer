@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"panel_file_explorer",
   "isCompatibility":false,
   "isDnD":false,

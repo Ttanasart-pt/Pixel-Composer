@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"process_functions",
   "isCompatibility":false,
   "isDnD":false,

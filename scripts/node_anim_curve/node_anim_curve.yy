@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_anim_curve",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_warp",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"v1",
+  "$GMScript":"",
   "%Name":"node_VFX_vortex",
   "isCompatibility":false,
   "isDnD":false,
