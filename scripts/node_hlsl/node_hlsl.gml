@@ -41,7 +41,7 @@ output.color = surfaceColor;")
 		inputs[index + 1] = nodeValue_Enum_Scroll("Argument type", self,  0 , { data: [ "Float", "Int", "Vec2", "Vec3", "Vec4", "Mat3", "Mat4", "Sampler2D", "Color" ], update_hover: false });
 		inputs[index + 1].editWidget.interactable = false;
 		
-		inputs[index + 2] = nodeValue_Float("Argument value", self, 0 )
+		inputs[index + 2] = nodeValue("Argument value", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )
 			.setVisible(true, true);
 		inputs[index + 2].editWidget.interactable = false;
 	}
@@ -94,7 +94,7 @@ void main(in VertexShaderOutput _input, out PixelShaderOutput output) {
 	
 	input_display_list = [ 2, 
 		["Vertex Shader [read only]", true], new Inspector_Label(vs_string, _f_code_s),
-		["Shader",		 false], preLabel, 1, new Inspector_Label(fs_postString, _f_code_s), 
+		["Fragmanet Shader",		 false], preLabel, 1, new Inspector_Label(fs_postString, _f_code_s), 
 		["Arguments",	 false], argument_renderer,
 		["Values",		  true], 
 	];
@@ -110,17 +110,17 @@ void main(in VertexShaderOutput _input, out PixelShaderOutput output) {
 		array_resize(input_display_list, input_display_len);
 		
 		for( var i = input_fix_len; i < array_length(inputs); i += data_length ) {
-			if(getInputData(i) == "") {
+			var inp_name = inputs[i].getValue();
+			var inp_type = inputs[i + 1];
+			var inp_valu = inputs[i + 2];
+			var cur_valu = inputs[i + 2].getValue();
+			
+			if(inp_name == "") {
 				delete inputs[i + 0];
 				delete inputs[i + 1];
 				delete inputs[i + 2];
 				continue;
 			}
-			
-			var inp_name = getInputData(i + 0);
-			var inp_type = inputs[i + 1];
-			var inp_valu = inputs[i + 2];
-			var cur_valu = getInputData(i + 2);
 			
 			array_push(_in, inputs[i + 0]);
 			array_push(_in, inp_type);
@@ -210,7 +210,7 @@ void main(in VertexShaderOutput _input, out PixelShaderOutput output) {
 		}
 		
 		for( var i = 0; i < array_length(_in); i++ )
-			_in[ i].index = i;
+			_in[i].index = i;
 		
 		inputs = _in;
 		createNewInput();
@@ -219,6 +219,7 @@ void main(in VertexShaderOutput _input, out PixelShaderOutput output) {
 		//for( var i = 0, n = array_length(input_display_list); i < n; i++ )
 		//	print(input_display_list[i]);
 		//print("==========================");
+		
 	} if(!LOADING && !APPENDING) refreshDynamicInput();
 	
 	insp1UpdateTooltip  = __txt("Compile");

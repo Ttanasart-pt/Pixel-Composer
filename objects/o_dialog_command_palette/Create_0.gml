@@ -153,7 +153,7 @@ event_inherited();
 				draw_sprite_ui(spr, ind, ui(16), _ty, .75, .75, 0, COLORS._main_icon, 0.75);
 			}
 			
-			if(_key != noone) {
+			if(is_instanceof(_key, hotkeyObject)) {
 				var _hx = _dw - ui(6);
 				var _hy = _ty + ui(1);
 				
