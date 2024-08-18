@@ -8,7 +8,7 @@ function NodeValue_Text(_name, _node, _value, _tooltip = "") : NodeValue(_name, 
 		getValueRecursive(self.__curr_get_val, _time);
 		var val = __curr_get_val[0];
 		var nod = __curr_get_val[1];
-		return string(val);
+		return val;
 	}
 	
 	static __getAnimValue = function(_time = CURRENT_FRAME) {
