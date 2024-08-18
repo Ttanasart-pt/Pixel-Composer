@@ -15,7 +15,7 @@ function Panel_Palette() : PanelContent() constructor {
 	view_label = true;
 	
 	menu_refresh = menuItem(__txt("Refresh"), function() { __initPalette(); });
-	menu_add     = menuItem(__txt("Add"), function(_dat) {
+	menu_add     = menuItemShelf(__txt("Add"), function(_dat) {
 		return submenuCall(_dat, [
 			menuItem(__txt("File..."), function() {
 				var _p = get_open_filename("hex|*.hex|gpl|*.gpl|Image|.png", "palette");
@@ -35,7 +35,7 @@ function Panel_Palette() : PanelContent() constructor {
 				}).setName("Palette")
 			}),
 		]);
-	}).setIsShelf();
+	});
 	
 	menu_stretch = menuItem(__txt("Stretch"), function() { PREFERENCES.palette_stretch = !PREFERENCES.palette_stretch; }, noone, noone, function() /*=>*/ {return PREFERENCES.palette_stretch});
 	menu_mini    = menuItem(__txt("Label"), function() { view_label = !view_label; }, noone, noone, function() /*=>*/ {return view_label});

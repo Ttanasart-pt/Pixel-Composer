@@ -4,11 +4,11 @@ function Node_Monitor_Capture(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	
 	monitors = display_measure_all();
 	
-	inputs[0] = nodeValue_Enum_Scroll("Mode", self,  0, [ "Monitor", "Region" ]);
+	newInput(0, nodeValue_Enum_Scroll("Mode", self,  0, [ "Monitor", "Region" ]));
 	
-	inputs[1] = nodeValue_Enum_Scroll("Monitor", self,  0, array_create_ext(array_length(monitors), function(ind) { return monitors[ind][9]; }));
+	newInput(1, nodeValue_Enum_Scroll("Monitor", self,  0, array_create_ext(array_length(monitors), function(ind) /*=>*/ {return monitors[ind][9]})));
 	
-	inputs[2] = nodeValue_Vec4("Region", self, [ 0, 0, display_get_width(), display_get_height() ]);
+	newInput(2, nodeValue_Vec4("Region", self, [ 0, 0, display_get_width(), display_get_height() ]));
 	
 	outputs[0] = nodeValue_Output("GUI", self, VALUE_TYPE.surface, noone);
 	

@@ -38,11 +38,13 @@
             registerFunction("", "Recent Files",    "R",    MOD_KEY.ctrl | MOD_KEY.shift,
                 function(_dat) { 
                     var arr = [];
+                    var dat = [];
                     for(var i = 0; i < min(10, ds_list_size(RECENT_FILES)); i++)  {
                         var _rec = RECENT_FILES[| i];
-                        array_push(arr, menuItem(_rec, function(_dat) { LOAD_PATH(_dat.name); }));
+                        array_push(arr, menuItem(_rec, function(_dat) { LOAD_PATH(_dat.path); }, noone, noone, noone, { path: _rec }));
                     }
-                    return submenuCall(_dat, arr)
+                    
+                    return submenuCall(_dat, arr);
                 }).setMenu("recent_files",, true);
                 
             registerFunction("", "Import .zip",     "",     MOD_KEY.none,                                 __IMPORT_ZIP             ).setMenu("import_zip",     )
@@ -179,11 +181,13 @@ function Panel_Menu() : PanelContent() constructor {
         ]],
         
         [ __txt("Panels"), [
-            menuItem(__txt("Workspace"), function(_dat) { 
-                var arr = [], lays = [];
+            menuItemShelf(__txt("Workspace"), function(_dat) { 
+                var arr = [];
+                var lay = [];
+                
                 var f   = file_find_first(DIRECTORY + "layouts/*", 0);
                 while(f != "") {
-                    array_push(lays, filename_name_only(f));
+                    array_push(lay, filename_name_only(f));
                     f = file_find_next();
                 }
                 
@@ -199,17 +203,15 @@ function Panel_Menu() : PanelContent() constructor {
                 array_push(arr, MENU_ITEMS.reset_layout);
                 array_push(arr, -1);
                 
-                for(var i = 0; i < array_length(lays); i++)  {
-                    array_push(arr, menuItem(lays[i], 
-                        function(_dat) { 
-                            PREFERENCES.panel_layout_file = _dat.name;
-                            PREF_SAVE();
-                            setPanel();
-                        },,, function(item) { return item.name == PREFERENCES.panel_layout_file; } ));
+                for(var i = 0; i < array_length(lay); i++)  {
+                    array_push(arr, menuItem(lay[i], 
+                        function(_dat) /*=>*/ { PREFERENCES.panel_layout_file = _dat.path; PREF_SAVE(); setPanel(); }, noone, noone, 
+                        function(item) /*=>*/ {return item.name == PREFERENCES.panel_layout_file},
+                        { path: lay[i] }));
                 }
                 
                 return submenuCall(_dat, arr);
-            }).setIsShelf(),
+            }),
             -1,
             
             MENU_ITEMS.collections_panel,
@@ -222,22 +224,22 @@ function Panel_Menu() : PanelContent() constructor {
             MENU_ITEMS.globalvar_panel,
             MENU_ITEMS.file_explorer_panel,
             
-            menuItem(__txt("Nodes"), function(_dat) { 
+            menuItemShelf(__txt("Nodes"), function(_dat) { 
                 return submenuCall(_dat, [
                     MENU_ITEMS.align_panel,
                     MENU_ITEMS.nodes_panel,
                     MENU_ITEMS.tunnels_panel,
                 ]);
-            } ).setIsShelf(),
+            }),
             
-            menuItem(__txt("Color"), function(_dat) { 
+            menuItemShelf(__txt("Color"), function(_dat) { 
                 return submenuCall(_dat, [
                     MENU_ITEMS.color_panel,
                     MENU_ITEMS.palettes_panel,
                     MENU_ITEMS.palettes_mixer_panel,
                     MENU_ITEMS.gradients_panel,
                 ]);
-            } ).setIsShelf(),
+            }),
             
             MENU_ITEMS.preview_histogram,
         ]],
@@ -265,9 +267,9 @@ function Panel_Menu() : PanelContent() constructor {
             menuItem(__txtx("panel_menu_test_error", "Display Error"),                            function() /*=>*/ { noti_error("Error message") }),
             menuItem(__txtx("panel_menu_test_crash", "Force crash"),                              function() /*=>*/ { print(1 + "a"); }),
             -1,
-            menuItem(__txt("Misc."), function(_dat) { 
+            menuItemShelf(__txt("Misc."), function(_dat) { 
                 return submenuCall(_dat, [ menuItem(__txtx("panel_menu_node_credit", "Node credit dialog"), function() /*=>*/ { var dia = dialogPanelCall(new Panel_Node_Cost()); }), ]);
-            } ).setIsShelf(),
+            }),
         ]]);
     }
     
@@ -711,16 +713,18 @@ function Panel_Menu() : PanelContent() constructor {
             if(_b == 2) {
                 _hov = true;
                 var arr = [];
+                var dat = [];
                 var tip = [];
+                
                 for(var i = 0; i < min(10, ds_list_size(RECENT_FILES)); i++)  {
                     var _rec = RECENT_FILES[| i];
                     var _dat = RECENT_FILE_DATA[| i];
-                    array_push(arr, menuItem(_rec, function(_dat) { LOAD_PATH(_dat.name); }));
+                    array_push(arr, menuItem(_rec, function(_dat) /*=>*/ {return LOAD_PATH(_dat.path)}, noone, noone, noone, { path: _dat.path }) );
                     array_push(tip, [ method(_dat, _dat.getThumbnail), VALUE_TYPE.surface ]);
                 }
                 
                 var dia = hori? menuCall("title_recent_menu", arr, x + tcx, y + h, fa_center) : menuCall("title_recent_menu", arr, x + w, y + tby0);
-                dia.tooltips = tip;
+                dia.tooltips   = tip;
             }
             
             if(hori) {

@@ -1347,7 +1347,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                                 
                                 var _to = value_focus.value_to[i];
                                 var _lb = $"[{_to.node.display_name}] {_to.getName()}";
-                                array_push(menu, menuItem(_lb, function(data) /*=>*/ { data.params.juncTo.removeFrom(); }, THEME.cross, noone, noone, { juncTo: _to }));
+                                array_push(menu, menuItem(_lb, function(data) /*=>*/ { data.juncTo.removeFrom(); }, THEME.cross, noone, noone, { juncTo: _to }));
                             }
                             
                             for( var i = 0, n = array_length(value_focus.value_to_loop); i < n; i++ ) {
@@ -1355,7 +1355,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                                 
                                 var _to = value_focus.value_to_loop[i];
                                 var _lb = $"[{_to.junc_in.node.display_name}] {_to.junc_in.getName()}";
-                                array_push(menu, menuItem(_lb, function(data) /*=>*/ { data.params.juncTo.destroy(); }, _to.icon_24, noone, noone, { juncTo: _to }));
+                                array_push(menu, menuItem(_lb, function(data) /*=>*/ { data.juncTo.destroy(); }, _to.icon_24, noone, noone, { juncTo: _to }));
                             }
                         } else {
                             var sep = false;
@@ -1365,7 +1365,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                                 
                                 var _jun = value_focus.value_from;
                                 var _lb  = $"[{_jun.node.display_name}] {_jun.getName()}";
-                                array_push(menu, menuItem(_lb, function(data) /*=>*/ { __junction_hovering.removeFrom(); }, THEME.cross));
+                                array_push(menu, menuItem(_lb, function() /*=>*/ { __junction_hovering.removeFrom(); }, THEME.cross));
                             }
                                 
                             if(value_focus.value_from_loop) {
@@ -1373,7 +1373,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                                 
                                 var _jun = value_focus.value_from_loop.junc_out;
                                 var _lb  = $"[{_jun.node.display_name}] {_jun.getName()}";
-                                array_push(menu, menuItem(_lb, function(data) /*=>*/ { __junction_hovering.removeFromLoop(); }, value_focus.value_from_loop.icon_24));
+                                array_push(menu, menuItem(_lb, function() /*=>*/ { __junction_hovering.removeFromLoop(); }, value_focus.value_from_loop.icon_24));
                             }
                         }
                         
@@ -1817,8 +1817,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                 
             var menu = [
                 menuItem("Feedback", function(data) {
-                    var junc_in  = data.params.junc_in;
-                    var junc_out = data.params.junc_out;
+                    var junc_in  = data.junc_in;
+                    var junc_out = data.junc_out;
                     
                     var feed = nodeBuild("Node_Feedback_Inline", 0, 0).skipDefault();
                     // feed.connectJunctions(junc_in, junc_out);
@@ -1826,18 +1826,18 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                     feed.attributes.junc_out = [ junc_out.node.node_id, junc_out.index ];
                     feed.scanJunc();
                     
-                }, THEME.feedback_24,,, { junc_in : _connect[1], junc_out : _connect[2] }),
+                }, THEME.feedback_24, noone, noone, { junc_in : _connect[1], junc_out : _connect[2] }),
                 
                 menuItem("Loop", function(data) {
-                    var junc_in  = data.params.junc_in;
-                    var junc_out = data.params.junc_out;
+                    var junc_in  = data.junc_in;
+                    var junc_out = data.junc_out;
                     
                     var feed = nodeBuild("Node_Iterate_Inline", 0, 0).skipDefault();
                     feed.attributes.junc_in  = [ junc_in .node.node_id, junc_in .index ];
                     feed.attributes.junc_out = [ junc_out.node.node_id, junc_out.index ];
                     feed.scanJunc();
                     
-                }, THEME.loop_24,,, { junc_in : _connect[1], junc_out : _connect[2] }),
+                }, THEME.loop_24, noone, noone, { junc_in : _connect[1], junc_out : _connect[2] }),
             ];
             
             menuCall("", menu);

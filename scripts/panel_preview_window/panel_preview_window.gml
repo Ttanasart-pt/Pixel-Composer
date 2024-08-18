@@ -45,15 +45,15 @@ function Panel_Preview_Window() : PanelContent() constructor {
 		pany = 0;
 	}
 	
-	function changeChannel(index) {
-		var channel = index - array_length(menu);
+	function changeChannel(_index) {
+		var channel = 0;
+		
 		for( var i = 0; i < array_length(node_target.outputs); i++ ) {
 			var o = node_target.outputs[i];
 			if(o.type != VALUE_TYPE.surface) continue;
-			if(channel-- == 0) {
+			
+			if(channel++ == _index)
 				preview_channel = i;
-				return;
-			}
 		}
 	}
 	
@@ -159,11 +159,14 @@ function Panel_Preview_Window() : PanelContent() constructor {
 	
 		if(mouse_click(mb_right, pFOCUS)) {
 			var _menu = array_clone(menu);
+			var _chan = 0;
+			
 			for( var i = 0; i < array_length(node_target.outputs); i++ ) {
 				var o = node_target.outputs[i];
 				if(o.type != VALUE_TYPE.surface) continue;
 			
-				array_push(_menu, menuItem(o.name, function(_dat) { changeChannel(_dat.index); }));
+				array_push(_menu, menuItem(o.name, function(_dat) { changeChannel(_dat.index); }, noone, noone, noone, { index: _chan }));
+				_chan++;
 			}
 			menuCall("preview_window_menu", _menu, 0, 0, fa_left, node_target);
 		}

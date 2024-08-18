@@ -152,7 +152,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		for(var l = 0; l < process_amount; l++) {
 			
-			for(var i = input_list_size - 1; i >= 0; i--)
+			for(var i = array_length(inputs) - 1; i >= 0; i--)
 				_data[i] = all_inputs[i][l];
 				
 			if(_output.type == VALUE_TYPE.surface) { #region						// Output surface verification
@@ -305,11 +305,9 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static preGetInputs = function() {}
 	
 	static getInputs = function() {
-		NODE_SET_INPUT_SIZE
-		
 		preGetInputs();
 		
-		var _len = input_list_size;
+		var _len = array_length(inputs);
 		
 		process_amount	= 1;
 		inputs_data		= array_verify(inputs_data,		_len);

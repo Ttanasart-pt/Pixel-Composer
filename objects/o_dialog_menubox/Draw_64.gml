@@ -57,27 +57,30 @@ if(!ready) exit;
 			if(_hovering_ch && is_instanceof(_menuItem, MenuItem)) {
 				if(_menuItem.active && _lclick) {
 					
+					var _par = _menuItem.params;
+					var _dat = {
+						_x:      dialog_x,
+						x:       dialog_x + dialog_w,
+						y:       yy,
+						name:    _menuItem.name,
+						index:   i,
+						depth:   depth,
+						context: context,
+						params:  _menuItem.params,
+					};
+					
 					if(_menuItem.isShelf) {
-						var _dat = {
-							_x:      dialog_x,
-							x:       dialog_x + dialog_w,
-							y:       yy,
-							depth:   depth,
-							name:    _menuItem.name,
-							index:   i,
-							context: context,
-							params:  _menuItem.params,
-						};
-						
 						var _res = _menuItem.func(_dat);
 						array_push(children, _res.id);      // open child
 						
 					} else if(remove_parents) {
-						_menuItem.func();
+						if(_par == noone) _menuItem.func();
+						else              _menuItem.func(_par);
 						instance_destroy(o_dialog_menubox); // close all
 						
 					} else {
-						_menuItem.func();
+						if(_par == noone) _menuItem.func();
+						else              _menuItem.func(_par);
 						instance_destroy();					// close self
 						
 					}

@@ -44,7 +44,7 @@ function submenuCall(_data = undefined, menu = []) {
 	if(is_undefined(_data)) return menuCall("", menu);
 	
 	var dia = instance_create_depth(_data.x - ui(4), _data.y, _data.depth - 1, o_dialog_menubox);
-	dia.context		= _data.context;
+	dia.context	   = _data.context;
 	dia.setMenu(menu);
 	
 	if(_data.x - ui(4) + dia.dialog_w > WIN_W - ui(2))
@@ -61,7 +61,8 @@ function fileNameCall(path, onModify, _x = mouse_mx + 8, _y = mouse_my + 8) {
 	return dia;
 }
 
-function menuItem(name, func, spr = noone, hotkey = noone, toggle = noone, params = {}) { return new MenuItem(name, func, spr, hotkey, toggle, params); }
+function menuItem(     name, func, spr = noone, hotkey = noone, toggle = noone, params = {}) { return new MenuItem(name, func, spr, hotkey, toggle, params); }
+function menuItemShelf(name, func, spr = noone, hotkey = noone, toggle = noone, params = {}) { return new MenuItem(name, func, spr, hotkey, toggle, params).setIsShelf(); }
 
 function MenuItem(_name, _func, _spr = noone, _hotkey = noone, _toggle = noone, _params = {}) constructor {
 	active	= true;
