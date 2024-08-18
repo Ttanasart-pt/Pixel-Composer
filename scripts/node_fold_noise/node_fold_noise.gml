@@ -6,24 +6,24 @@ function Node_Fold_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y,
 		.setUnitRef(function(index) { return getDimension(index); });
 		addShaderProp(SHADER_UNIFORM.float, "position");
 		
-	inputs[2] = nodeValue_Vec2("Scale", self, [ 2, 2 ]);
+	newInput(2, nodeValue_Vec2("Scale", self, [ 2, 2 ]));
 		addShaderProp(SHADER_UNIFORM.float, "scale");
 		
 	inputs[3] = nodeValue_Int("Iteration", self, 2)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 6, 0.1] });
 		addShaderProp(SHADER_UNIFORM.integer, "iteration");
 		
-	inputs[4] = nodeValue_Float("Stretch", self, 2);
+	newInput(4, nodeValue_Float("Stretch", self, 2));
 		addShaderProp(SHADER_UNIFORM.float, "stretch");
 		
 	inputs[5] = nodeValue_Float("Amplitude", self, 1.3)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 2, 0.01] });
 		addShaderProp(SHADER_UNIFORM.float, "amplitude");
 		
-	inputs[6] = nodeValue_Enum_Button("Mode", self,  0, [ "Greyscale", "Map" ]);
+	newInput(6, nodeValue_Enum_Button("Mode", self,  0, [ "Greyscale", "Map" ]));
 		addShaderProp(SHADER_UNIFORM.integer, "mode");
 				
-	inputs[7] = nodeValue_Rotation("Rotation", self, 0);
+	newInput(7, nodeValue_Rotation("Rotation", self, 0));
 		addShaderProp(SHADER_UNIFORM.float, "rotation");
 		
 	input_display_list = [

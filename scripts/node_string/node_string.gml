@@ -2,7 +2,7 @@ function Node_String(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	name = "Text";
 	setDimension(96, 48);;
 	
-	inputs[0] = nodeValue_Text("Text", self, "");
+	newInput(0, nodeValue_Text("Text", self, ""));
 	
 	outputs[0] = nodeValue_Output("Text", self, VALUE_TYPE.text, "");
 	

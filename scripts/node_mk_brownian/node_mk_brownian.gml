@@ -2,34 +2,34 @@ function Node_MK_Brownian(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	name = "MK Brownian";
 	update_on_frame = true;
 	
-	inputs[0] = nodeValue_Surface("Background", self);
+	newInput(0, nodeValue_Surface("Background", self));
 	
-	inputs[1] = nodeValue_Surface("Sprite", self);
+	newInput(1, nodeValue_Surface("Sprite", self));
 	
-	inputs[2] = nodeValue_Int("Amount", self, 10);
+	newInput(2, nodeValue_Int("Amount", self, 10));
 	
-	inputs[3] = nodeValue_Area("Area", self, DEF_AREA);
+	newInput(3, nodeValue_Area("Area", self, DEF_AREA));
 	
-	inputs[4] = nodeValue_Rotation_Random("Direction", self, [ 0, 45, 135, 0, 0 ] );
+	newInput(4, nodeValue_Rotation_Random("Direction", self, [ 0, 45, 135, 0, 0 ] ));
 	
-	inputs[5] = nodeValue_Range("Speed", self, [ 1, 1 ]);
+	newInput(5, nodeValue_Range("Speed", self, [ 1, 1 ]));
 	
-	inputs[6] = nodeValue_Gradient("Color", self, new gradientObject(cola(c_white)));
+	newInput(6, nodeValue_Gradient("Color", self, new gradientObject(cola(c_white))));
 	
-	inputs[7] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11);
+	newInput(7, nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11));
 	
 	inputs[8] = nodeValue_Int("Seed", self, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[8].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
-	inputs[9] = nodeValue_Range("Angular speed", self, [ -45, 45 ]);
+	newInput(9, nodeValue_Range("Angular speed", self, [ -45, 45 ]));
 	
-	inputs[10] = nodeValue_Range("Angular acceleration", self, [ -2, 2 ]);
+	newInput(10, nodeValue_Range("Angular acceleration", self, [ -2, 2 ]));
 		
-	inputs[11] = nodeValue_Bool("Turn", self, false);
+	newInput(11, nodeValue_Bool("Turn", self, false));
 	
-	inputs[12] = nodeValue_Dimension(self);
+	newInput(12, nodeValue_Dimension(self));
 		
-	inputs[13] = nodeValue_Range("Size", self, [ 1, 1 ], { linked : true });
+	newInput(13, nodeValue_Range("Size", self, [ 1, 1 ], { linked : true }));
 		
 	outputs[0] = nodeValue_Output("Output", self, VALUE_TYPE.surface, noone);
 	

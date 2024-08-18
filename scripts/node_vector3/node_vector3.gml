@@ -12,7 +12,7 @@ function Node_Vector3(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	inputs[2] = nodeValue_Float("z", self, 0)
 		.setVisible(true, true);
 	
-	inputs[3] = nodeValue_Bool("Integer", self, false);
+	newInput(3, nodeValue_Bool("Integer", self, false));
 	
 	outputs[0] = nodeValue_Output("Vector", self, VALUE_TYPE.float, [ 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);

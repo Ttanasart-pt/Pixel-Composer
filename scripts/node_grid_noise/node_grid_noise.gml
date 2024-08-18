@@ -1,12 +1,12 @@
 function Node_Grid_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Grid Noise";
 	
-	inputs[0] = nodeValue_Dimension(self);
+	newInput(0, nodeValue_Dimension(self));
 	
 	inputs[1] = nodeValue_Vec2("Position", self, [ 0, 0 ])
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	inputs[2] = nodeValue_Vec2("Scale", self, [ 8, 8 ]);
+	newInput(2, nodeValue_Vec2("Scale", self, [ 8, 8 ]));
 	
 	inputs[3] = nodeValue_Float("Seed", self, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[3].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
@@ -14,17 +14,17 @@ function Node_Grid_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	inputs[4] = nodeValue_Float("Shift", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-0.5, 0.5, 0.01] });
 		
-	inputs[5] = nodeValue_Surface("Texture sample", self);
+	newInput(5, nodeValue_Surface("Texture sample", self));
 	
-	inputs[6] = nodeValue_Enum_Button("Shift axis", self,  0, ["x", "y"]);
+	newInput(6, nodeValue_Enum_Button("Shift axis", self,  0, ["x", "y"]));
 	
-	inputs[7] = nodeValue_Enum_Button("Color mode", self,  0, [ "Greyscale", "RGB", "HSV" ]);
+	newInput(7, nodeValue_Enum_Button("Color mode", self,  0, [ "Greyscale", "RGB", "HSV" ]));
 	
-	inputs[8] = nodeValue_Slider_Range("Color R range", self, [ 0, 1 ]);
+	newInput(8, nodeValue_Slider_Range("Color R range", self, [ 0, 1 ]));
 	
-	inputs[9] = nodeValue_Slider_Range("Color G range", self, [ 0, 1 ]);
+	newInput(9, nodeValue_Slider_Range("Color G range", self, [ 0, 1 ]));
 	
-	inputs[10] = nodeValue_Slider_Range("Color B range", self, [ 0, 1 ]);
+	newInput(10, nodeValue_Slider_Range("Color B range", self, [ 0, 1 ]));
 	
 	input_display_list = [
 		["Output",	false], 0,

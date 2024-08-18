@@ -1,8 +1,8 @@
 function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Replace Colors";
 	
-	inputs[0] = nodeValue_Surface("Surface in", self);
-	inputs[1] = nodeValue_Palette("Palette from", self, []);
+	newInput(0, nodeValue_Surface("Surface in", self));
+	newInput(1, nodeValue_Palette("Palette from", self, []));
 	
 	inputs[2] = nodeValue_Palette("Palette to", self, [])
 		.setVisible(false, false);
@@ -10,12 +10,12 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	inputs[3] = nodeValue_Float("Threshold", self, 0.1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[4] = nodeValue_Surface("Mask", self);
+	newInput(4, nodeValue_Surface("Mask", self));
 	
 	inputs[5] = nodeValue_Float("Mix", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[6] = nodeValue_Bool("Active", self, true);
+	newInput(6, nodeValue_Bool("Active", self, true));
 		active_index = 6;
 		
 	__init_mask_modifier(4); // inputs 7, 8, 

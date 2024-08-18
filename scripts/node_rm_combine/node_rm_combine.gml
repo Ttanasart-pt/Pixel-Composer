@@ -1,34 +1,34 @@
 function Node_RM_Combine(_x, _y, _group = noone) : Node_RM(_x, _y, _group) constructor {
 	name  = "RM Combine";
 	
-	inputs[0] = nodeValue_Dimension(self);
+	newInput(0, nodeValue_Dimension(self));
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[1] = nodeValue_Enum_Button("Projection", self,  0, [ "Perspective", "Orthographic" ]);
+	newInput(1, nodeValue_Enum_Button("Projection", self,  0, [ "Perspective", "Orthographic" ]));
 	
 	inputs[2] = nodeValue_Float("FOV", self, 30)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 90, 1 ] });
 	
 	inputs[3] = nodeValue_Float("Ortho Scale", self, 5.)
 	
-	inputs[4] = nodeValue_Vec2("View Range", self, [ 3, 6 ]);
+	newInput(4, nodeValue_Vec2("View Range", self, [ 3, 6 ]));
 	
 	inputs[5] = nodeValue_Float("Depth", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[6] = nodeValue_Bool("Draw BG", self, false);
+	newInput(6, nodeValue_Bool("Draw BG", self, false));
 	
-	inputs[7] = nodeValue_Color("Background", self, c_black);
+	newInput(7, nodeValue_Color("Background", self, c_black));
 	
 	inputs[8] = nodeValue_Float("Ambient Level", self, 0.2)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[9] = nodeValue_Vec3("Light Position", self, [ -.4, -.5, 1 ]);
+	newInput(9, nodeValue_Vec3("Light Position", self, [ -.4, -.5, 1 ]));
 	
-	inputs[10] = nodeValue_Surface("Environment", self);
+	newInput(10, nodeValue_Surface("Environment", self));
 	
-	inputs[11] = nodeValue_Vec3("Camera Rotation", self, [ 30, 45, 0 ]);
+	newInput(11, nodeValue_Vec3("Camera Rotation", self, [ 30, 45, 0 ]));
 	
 	inputs[12] = nodeValue_Float("Camera Scale", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01 ] });
@@ -43,14 +43,14 @@ function Node_RM_Combine(_x, _y, _group = noone) : Node_RM(_x, _y, _group) const
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[15] = nodeValue_Enum_Scroll("Type", self,  0, [ "Place", "Union", "Subtract", "Intersect" ]);
+	newInput(15, nodeValue_Enum_Scroll("Type", self,  0, [ "Place", "Union", "Subtract", "Intersect" ]));
 	
 	inputs[16] = nodeValue_Float("Merge", self, 0.1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[17] = nodeValue_Bool("Render", self, true);
+	newInput(17, nodeValue_Bool("Render", self, true));
 	
-	inputs[18] = nodeValue_Bool("Env Interpolation", self, false);
+	newInput(18, nodeValue_Bool("Env Interpolation", self, false));
 	
 	outputs[0] = nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone);
 	

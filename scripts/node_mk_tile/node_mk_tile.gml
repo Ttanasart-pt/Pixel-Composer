@@ -2,30 +2,30 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	name = "MK Tile";
 	dimension_index = -1;
 	
-	inputs[0] = nodeValue_Surface("Texture", self);
+	newInput(0, nodeValue_Surface("Texture", self));
 	
-	inputs[1] = nodeValue_Surface("Background texture", self);
+	newInput(1, nodeValue_Surface("Background texture", self));
 	
-	inputs[2] = nodeValue_Enum_Button("Type", self,  0, [ "GMS Corner (18 sprites)", "GMS Corner + Side (55 sprites)", "Godot Blob (48 sprites)" ] );
+	newInput(2, nodeValue_Enum_Button("Type", self,  0, [ "GMS Corner (18 sprites)", "GMS Corner + Side (55 sprites)", "Godot Blob (48 sprites)" ] ));
 	
-	inputs[3] = nodeValue_Enum_Button("Output type", self,  0, [ "Sheet", "Array" ] );
+	newInput(3, nodeValue_Enum_Button("Output type", self,  0, [ "Sheet", "Array" ] ));
 	
-	inputs[4] = nodeValue_Padding("Crop", self, [ 8, 8, 8, 8 ]);
+	newInput(4, nodeValue_Padding("Crop", self, [ 8, 8, 8, 8 ]));
 	
-	inputs[5] = nodeValue_Enum_Button("Edge type", self,  0, [ "Uniform", "Individual" ] );
+	newInput(5, nodeValue_Enum_Button("Edge type", self,  0, [ "Uniform", "Individual" ] ));
 	
-	inputs[6] = nodeValue_Surface("Edge",			self);
-	inputs[7] = nodeValue_Surface("Edge bottom",	self);
-	inputs[8] = nodeValue_Surface("Edge left",	self);
-	inputs[9] = nodeValue_Surface("Edge right",	self);
+	newInput(6, nodeValue_Surface("Edge",			self));
+	newInput(7, nodeValue_Surface("Edge bottom",	self));
+	newInput(8, nodeValue_Surface("Edge left",	self));
+	newInput(9, nodeValue_Surface("Edge right",	self));
 	
-	inputs[10] = nodeValue_Padding("Edge shift", self, [ 0, 0, 0, 0 ]);
+	newInput(10, nodeValue_Padding("Edge shift", self, [ 0, 0, 0, 0 ]));
 		
-	inputs[11] = nodeValue_Toggle("Full edge", self, 0, { data: [ "T", "B", "L", "R" ] });
+	newInput(11, nodeValue_Toggle("Full edge", self, 0, { data: [ "T", "B", "L", "R" ] }));
 	
-	inputs[12] = nodeValue_Enum_Scroll("Edge sprite", self,  0, [ "Single", "Side + Center", "Side + Center + Side" ] );
+	newInput(12, nodeValue_Enum_Scroll("Edge sprite", self,  0, [ "Single", "Side + Center", "Side + Center + Side" ] ));
 	
-	inputs[13] = nodeValue_Enum_Button("Edge transform", self,  0, [ "Flip", "Rotate" ] );
+	newInput(13, nodeValue_Enum_Button("Edge transform", self,  0, [ "Flip", "Rotate" ] ));
 		
 	inputs[14] = nodeValue_Bool("Sort array by bit", self, true)
 		

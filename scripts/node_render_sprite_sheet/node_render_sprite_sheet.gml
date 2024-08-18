@@ -15,7 +15,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 	name		= "Render Spritesheet";
 	anim_drawn	= array_create(TOTAL_FRAMES + 1, false);
 	
-	inputs[0] = nodeValue_Surface("Sprites", self);
+	newInput(0, nodeValue_Surface("Sprites", self));
 	
 	inputs[1] = nodeValue_Enum_Scroll("Sprite set", self,  0, [ "Animation", "Sprite array" ])
 		.rejectArray();
@@ -34,18 +34,18 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 	inputs[5] = nodeValue_Enum_Button("Alignment", self,  0, [ "First", "Middle", "Last" ])
 		.rejectArray();
 	
-	inputs[6] = nodeValue_Int("Spacing", self, 0);
+	newInput(6, nodeValue_Int("Spacing", self, 0));
 	
 	inputs[7] = nodeValue_Padding("Padding", self, [ 0, 0, 0, 0 ])
 	
 	inputs[8] = nodeValue_Slider_Range("Range", self, [ 0, 0 ])
 		.setTooltip("Starting/ending frames, set end to 0 to default to last frame.")
 		
-	inputs[9] = nodeValue_Vec2("Spacing", self, [ 0, 0 ]);
+	newInput(9, nodeValue_Vec2("Spacing", self, [ 0, 0 ]));
 	
-	inputs[10] = nodeValue_Bool("Overlappable", self, false);
+	newInput(10, nodeValue_Bool("Overlappable", self, false));
 	
-	inputs[11] = nodeValue_Bool("Custom Range", self, false);
+	newInput(11, nodeValue_Bool("Custom Range", self, false));
 	
 	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 		

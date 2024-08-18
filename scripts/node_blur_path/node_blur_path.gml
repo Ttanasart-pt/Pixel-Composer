@@ -1,29 +1,29 @@
 function Node_Blur_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Path Blur";
 	
-	inputs[0] = nodeValue_Surface("Surface in", self);
+	newInput(0, nodeValue_Surface("Surface in", self));
 	inputs[1] = nodeValue_PathNode("Blur Path", self, noone)
 		.setVisible(true, true);
 	
-	inputs[2] = nodeValue_Int("Resolution", self, 32);
+	newInput(2, nodeValue_Int("Resolution", self, 32));
 	
-	inputs[3] = nodeValue_Surface("Mask", self);
+	newInput(3, nodeValue_Surface("Mask", self));
 	
 	inputs[4] = nodeValue_Float("Mix", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[5] = nodeValue_Bool("Active", self, true);
+	newInput(5, nodeValue_Bool("Active", self, true));
 		active_index = 5;
 	
-	inputs[6] = nodeValue_Toggle("Channel", self, 0b1111, { data: array_create(4, THEME.inspector_channel) });
+	newInput(6, nodeValue_Toggle("Channel", self, 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	__init_mask_modifier(3); // inputs 7, 8
 	
-	inputs[9] = nodeValue_Float("Intensity", self, 1);
+	newInput(9, nodeValue_Float("Intensity", self, 1));
 	
-	inputs[10] = nodeValue("Intensity Along Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11);
+	newInput(10, nodeValue("Intensity Along Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11));
 	
-	inputs[11] = nodeValue_Slider_Range("Range", self, [ 0, 1 ]);
+	newInput(11, nodeValue_Slider_Range("Range", self, [ 0, 1 ]));
 	
 	inputs[12] = nodeValue_Float("Path Origin", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider);

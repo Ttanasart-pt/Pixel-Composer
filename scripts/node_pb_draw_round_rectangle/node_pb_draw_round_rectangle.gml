@@ -1,16 +1,16 @@
 function Node_PB_Draw_Round_Rectangle(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _group) constructor {
 	name = "Round Rectangle";
 	
-	inputs[3] = nodeValue_Enum_Scroll("Type", self,  0 , [ "Uniform", "Per Corner" ]);
+	newInput(3, nodeValue_Enum_Scroll("Type", self,  0 , [ "Uniform", "Per Corner" ]));
 	
-	inputs[4] = nodeValue_Int("Corner Radius", self, 1 );
+	newInput(4, nodeValue_Int("Corner Radius", self, 1 ));
 	
 	inputs[5] = nodeValue_Corner("Corner Radius", self, [ 1, 1, 1, 1 ] )
 		.setArrayDepth(1);
 	
-	inputs[6] = nodeValue_Bool("Relative", self, false );
+	newInput(6, nodeValue_Bool("Relative", self, false ));
 	
-	inputs[7] = nodeValue_Bool("Cut Corner", self, false );
+	newInput(7, nodeValue_Bool("Cut Corner", self, false ));
 	
 	input_display_list = [
 		["Draw",	false], 0, 1, 2, 

@@ -4,7 +4,7 @@ function Node_PB_Draw_Trapezoid(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _
 	inputs[3] = nodeValue_Enum_Scroll("Axis", self,  0 , [ new scrollItem("Horizontal", s_node_alignment, 0), 
 												 new scrollItem("Vertical",   s_node_alignment, 1), ]);
 	
-	inputs[4] = nodeValue_Enum_Scroll("Type", self,  0 , [ "Symmetric", "Independent" ]);
+	newInput(4, nodeValue_Enum_Scroll("Type", self,  0 , [ "Symmetric", "Independent" ]));
 	
 	inputs[5] = nodeValue_Float("Bevel", self, 0.5 )
 		.setDisplay(VALUE_DISPLAY.slider);
@@ -15,7 +15,7 @@ function Node_PB_Draw_Trapezoid(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _
 	inputs[7] = nodeValue_Float("Bevel 2", self, 0.5 )
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[8] = nodeValue_Bool("Invert", self, false );
+	newInput(8, nodeValue_Bool("Invert", self, false ));
 	
 	input_display_list = [
 		["Draw",	false], 0, 1, 2, 

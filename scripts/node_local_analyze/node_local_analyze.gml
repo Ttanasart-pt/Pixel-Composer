@@ -1,9 +1,9 @@
 function Node_Local_Analyze(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Local Analyze";
 	
-	inputs[0] = nodeValue_Surface("Surface in", self);
+	newInput(0, nodeValue_Surface("Surface in", self));
 	
-	inputs[1] = nodeValue_Enum_Scroll("Algorithm", self,  0, [ "Average (Blur)", "Maximum", "Minimum" ]);
+	newInput(1, nodeValue_Enum_Scroll("Algorithm", self,  0, [ "Average (Blur)", "Maximum", "Minimum" ]));
 	
 	inputs[2] = nodeValue_Float("Size", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 1, 16, 0.1] });
@@ -15,15 +15,15 @@ function Node_Local_Analyze(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 												 new scrollItem("Circle",  s_node_shape_circle,    0), 
 												 new scrollItem("Diamond", s_node_shape_misc, 0) ]);
 		
-	inputs[5] = nodeValue_Surface("Mask", self);
+	newInput(5, nodeValue_Surface("Mask", self));
 	
 	inputs[6] = nodeValue_Float("Mix", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[7] = nodeValue_Bool("Active", self, true);
+	newInput(7, nodeValue_Bool("Active", self, true));
 		active_index = 7;
 	
-	inputs[8] = nodeValue_Toggle("Channel", self, 0b1111, { data: array_create(4, THEME.inspector_channel) });
+	newInput(8, nodeValue_Toggle("Channel", self, 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 		
 	__init_mask_modifier(5); // inputs 9, 10
 	

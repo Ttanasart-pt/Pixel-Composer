@@ -25,15 +25,15 @@ function Node_Shard_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y
 			
 	//////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[ 6] = nodeValueMap("Scale map", self);		addShaderProp();
+	newInput( 6, nodeValueMap("Scale map", self));		addShaderProp();
 	
-	inputs[ 7] = nodeValueMap("Sharpness map", self);	addShaderProp();
+	newInput( 7, nodeValueMap("Sharpness map", self));	addShaderProp();
 	
-	inputs[ 8] = nodeValueMap("Progress map", self); addShaderProp();
+	newInput( 8, nodeValueMap("Progress map", self)); addShaderProp();
 	
 	//////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[9] = nodeValue_Rotation("Rotation", self, 0);
+	newInput(9, nodeValue_Rotation("Rotation", self, 0));
 		addShaderProp(SHADER_UNIFORM.float, "rotation");
 			
 	input_display_list = [

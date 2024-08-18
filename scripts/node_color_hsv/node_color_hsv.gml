@@ -14,7 +14,7 @@ function Node_Color_HSV(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setVisible(true, true);
 	
-	inputs[3] = nodeValue_Bool("Normalized", self, 1);
+	newInput(3, nodeValue_Bool("Normalized", self, 1));
 	
 	inputs[4] = nodeValue_Float("Alpha", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);

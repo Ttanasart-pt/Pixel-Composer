@@ -1,14 +1,14 @@
 //function Node_3D_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 //	name = "3D Render";
 	
-//	inputs[2] = nodeValue_Dimension(self);
+//	newInput(2, nodeValue_Dimension(self));
 	
 //	inputs[3] = nodeValue_Vec2("Render position", self, [ 0.5, 0.5 ])
 //		.setUnitRef( function() { return getInputData(2); }, VALUE_UNIT.reference);
 		
-//	inputs[4] = nodeValue_Vec3("Render rotation", self, [ 0, 0, 0 ]);
+//	newInput(4, nodeValue_Vec3("Render rotation", self, [ 0, 0, 0 ]));
 	
-//	inputs[5] = nodeValue_Vec2("Render scale", self, [ 1, 1 ]);
+//	newInput(5, nodeValue_Vec2("Render scale", self, [ 1, 1 ]));
 		
 //	inputs[6] = nodeValue_Float("Light direction", self, 0)
 //		.setDisplay(VALUE_DISPLAY.rotation)
@@ -81,7 +81,7 @@
 	
 //	function createMaterial(m_index) {
 //		var index = array_length(inputs);
-//		inputs[index] = nodeValue_Surface(materialNames[m_index] + " texture", self, tex_surface);
+//		newInput(index, nodeValue_Surface(materialNames[m_index] + " texture", self, tex_surface));
 //		inputs[index].setVisible(true);
 		
 //		input_display_list[input_display_len + m_index] = index;

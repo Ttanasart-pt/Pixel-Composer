@@ -6,20 +6,20 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	for( var i = 0, n = array_length(shapesArray); i < n; i++ ) 
 		shapesArray[i] = new scrollItem(shapesArray[i], s_node_shape_poly_type, i);
 		
-	inputs[0] = nodeValue_Dimension(self);
+	newInput(0, nodeValue_Dimension(self));
 	
-	inputs[1] = nodeValue_Bool("Background", self, false);
+	newInput(1, nodeValue_Bool("Background", self, false));
 	
-	inputs[2] = nodeValue_Color("Background color", self, c_black);
+	newInput(2, nodeValue_Color("Background color", self, c_black));
 	
-	inputs[3] = nodeValue_Color("Shape color", self, c_white);
+	newInput(3, nodeValue_Color("Shape color", self, c_white));
 	
-	inputs[4] = nodeValue_Enum_Scroll("Shape", self,  0, shapesArray);
+	newInput(4, nodeValue_Enum_Scroll("Shape", self,  0, shapesArray));
 	
 	inputs[5] = nodeValue_Vec2("Position", self, [ 0.5, 0.5 ])
 		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
 	
-	inputs[6] = nodeValue_Rotation("Rotation", self, 0);
+	newInput(6, nodeValue_Rotation("Rotation", self, 0));
 	
 	inputs[7] = nodeValue_Vec2("Scale", self, [ 0.5, 0.5 ])
 		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
@@ -42,9 +42,9 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	inputs[13] = nodeValue_Float("Teeth taper", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-0.5, 0.5, 0.01] });
 	
-	inputs[14] = nodeValue_Rotation_Range("Angle range", self, [ 0, 360 ]);
+	newInput(14, nodeValue_Rotation_Range("Angle range", self, [ 0, 360 ]));
 	
-	inputs[15] = nodeValue_Bool("Round cap", self, false);
+	newInput(15, nodeValue_Bool("Round cap", self, false));
 	
 	inputs[16] = nodeValue("Mesh", self, JUNCTION_CONNECT.input, VALUE_TYPE.mesh, noone)
 		.setVisible(true, true);

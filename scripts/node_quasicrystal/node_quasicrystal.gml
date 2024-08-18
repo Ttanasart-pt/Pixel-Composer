@@ -1,7 +1,7 @@
 function Node_Quasicrystal(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Quasicrystal";
 	
-	inputs[0] = nodeValue_Dimension(self);
+	newInput(0, nodeValue_Dimension(self));
 	
 	inputs[1] = nodeValue_Float("Scale", self, 16)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 64, 0.1] })
@@ -13,15 +13,15 @@ function Node_Quasicrystal(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	inputs[3] = nodeValue_Vec2("Position", self, [ 0, 0 ] )
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	inputs[4] = nodeValue_Color("Color 1", self, c_white);
+	newInput(4, nodeValue_Color("Color 1", self, c_white));
 	
-	inputs[5] = nodeValue_Color("Color 2", self, c_black);
+	newInput(5, nodeValue_Color("Color 2", self, c_black));
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[6] = nodeValueMap("Scale map", self);
+	newInput(6, nodeValueMap("Scale map", self));
 	
-	inputs[7] = nodeValueMap("Angle map", self);
+	newInput(7, nodeValueMap("Angle map", self));
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -29,9 +29,9 @@ function Node_Quasicrystal(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(8);
 	
-	inputs[9] = nodeValueMap("Phasemap", self);
+	newInput(9, nodeValueMap("Phasemap", self));
 	
-	inputs[10] = nodeValue_Rotation_Range("Angle Range", self, [ 0, 180 ]);
+	newInput(10, nodeValue_Rotation_Range("Angle Range", self, [ 0, 180 ]));
 		
 	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	

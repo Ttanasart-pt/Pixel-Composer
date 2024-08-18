@@ -1,15 +1,15 @@
 function Node_Solid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Solid";
 	
-	inputs[0] = nodeValue_Dimension(self);
+	newInput(0, nodeValue_Dimension(self));
 	
-	inputs[1] = nodeValue_Color("Color", self, cola(c_white));
+	newInput(1, nodeValue_Color("Color", self, cola(c_white)));
 	
-	inputs[2] = nodeValue_Bool("Empty", self, false);
+	newInput(2, nodeValue_Bool("Empty", self, false));
 	
-	inputs[3] = nodeValue_Surface("Mask", self);
+	newInput(3, nodeValue_Surface("Mask", self));
 	
-	inputs[4] = nodeValue_Bool("Use mask dimension", self, true);
+	newInput(4, nodeValue_Bool("Use mask dimension", self, true));
 	
 	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	

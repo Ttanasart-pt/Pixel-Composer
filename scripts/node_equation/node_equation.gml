@@ -39,7 +39,7 @@ function Node_Equation(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	attributes.size = 0;
 	
-	inputs[0] = nodeValue_Text("Equation", self, "");
+	newInput(0, nodeValue_Text("Equation", self, ""));
 	
 	outputs[0] = nodeValue_Output("Result", self, VALUE_TYPE.float, 0);
 	

@@ -4,7 +4,7 @@ function Node_PCX_Equation(_x, _y, _group = noone) : Node_PCX(_x, _y, _group) co
 	setDimension(96, 48);
 	ast = noone;
 	
-	inputs[0] = nodeValue_Text("Equation", self, "");
+	newInput(0, nodeValue_Text("Equation", self, ""));
 	
 	outputs[0] = nodeValue_Output("Result", self, VALUE_TYPE.PCXnode, noone );
 	

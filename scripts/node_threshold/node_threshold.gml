@@ -1,9 +1,9 @@
 function Node_Threshold(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Threshold";
 	
-	inputs[0] = nodeValue_Surface("Surface in", self);
+	newInput(0, nodeValue_Surface("Surface in", self));
 	
-	inputs[1] = nodeValue_Bool("Brightness", self, false);
+	newInput(1, nodeValue_Bool("Brightness", self, false));
 		
 	inputs[2] = nodeValue_Float("Brightness Threshold", self, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider)
@@ -12,15 +12,15 @@ function Node_Threshold(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	inputs[3] = nodeValue_Float("Brightness Smoothness", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[4] = nodeValue_Surface("Mask", self);
+	newInput(4, nodeValue_Surface("Mask", self));
 	
 	inputs[5] = nodeValue_Float("Mix", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[6] = nodeValue_Bool("Active", self, true);
+	newInput(6, nodeValue_Bool("Active", self, true));
 		active_index = 6;
 	
-	inputs[7] = nodeValue_Bool("Alpha", self, false);
+	newInput(7, nodeValue_Bool("Alpha", self, false));
 	
 	inputs[8] = nodeValue_Float("Alpha Threshold", self, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider)
@@ -29,15 +29,15 @@ function Node_Threshold(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	inputs[9] = nodeValue_Float("Alpha Smoothness", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[10] = nodeValue_Toggle("Channel", self, 0b1111, { data: array_create(4, THEME.inspector_channel) });
+	newInput(10, nodeValue_Toggle("Channel", self, 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	__init_mask_modifier(4); // inputs 11, 12
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[13] = nodeValueMap("Brightness map", self);
+	newInput(13, nodeValueMap("Brightness map", self));
 	
-	inputs[14] = nodeValueMap("Alpha map", self);
+	newInput(14, nodeValueMap("Alpha map", self));
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	

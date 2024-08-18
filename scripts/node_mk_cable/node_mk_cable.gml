@@ -1,11 +1,11 @@
 function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "MK Cable";
 	
-	inputs[0] = nodeValue_Dimension(self);
+	newInput(0, nodeValue_Dimension(self));
 	
-	inputs[1] = nodeValue_Vec2("Point 1", self, [ 0, 0 ]);
+	newInput(1, nodeValue_Vec2("Point 1", self, [ 0, 0 ]));
 	
-	inputs[2] = nodeValue_Vec2("Point 2", self, [ 16, 16 ]);
+	newInput(2, nodeValue_Vec2("Point 2", self, [ 16, 16 ]));
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 0, 
 		["Saber",		false], 1, 2, 

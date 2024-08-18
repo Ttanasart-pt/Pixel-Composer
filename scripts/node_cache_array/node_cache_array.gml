@@ -2,13 +2,13 @@ function Node_Cache_Array(_x, _y, _group = noone) : __Node_Cache(_x, _y, _group)
 	name	  = "Cache Array";
 	use_cache = CACHE_USE.manual;
 	
-	inputs[0] = nodeValue_Surface("Surface in", self);
+	newInput(0, nodeValue_Surface("Surface in", self));
 	
-	inputs[1] = nodeValue_Int("Start frame", self, -1, "Frame index to start caching, set to -1 to start at the first frame.");
+	newInput(1, nodeValue_Int("Start frame", self, -1, "Frame index to start caching, set to -1 to start at the first frame."));
 	
-	inputs[2] = nodeValue_Int("Stop frame", self, -1, "Frame index to stop caching (inclusive), set to -1 to stop at the last frame.");
+	newInput(2, nodeValue_Int("Stop frame", self, -1, "Frame index to stop caching (inclusive), set to -1 to stop at the last frame."));
 	
-	inputs[3] = nodeValue_Int("Step", self, 1, "Cache every N frames, set to 1 to cache every frame.");
+	newInput(3, nodeValue_Int("Step", self, 1, "Cache every N frames, set to 1 to cache every frame."));
 	
 	outputs[0] = nodeValue_Output("Cache array", self, VALUE_TYPE.surface, []);
 	

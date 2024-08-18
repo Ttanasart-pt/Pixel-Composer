@@ -2,11 +2,11 @@ function Node_Repeat_Texture(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	name = "Repeat Texture";
 	dimension_index = 1;
 	
-	inputs[0] = nodeValue_Surface("Surface in", self);
+	newInput(0, nodeValue_Surface("Surface in", self));
 	
-	inputs[1] = nodeValue_Vec2("Target dimension", self, DEF_SURF);
+	newInput(1, nodeValue_Vec2("Target dimension", self, DEF_SURF));
 		
-	inputs[2] = nodeValue_Enum_Scroll("Type", self,  1, [ "Tile", "Scatter", "Cell" ]);
+	newInput(2, nodeValue_Enum_Scroll("Type", self,  1, [ "Tile", "Scatter", "Cell" ]));
 	
 	inputs[3] = nodeValue_Float("Seed", self, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[3].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) })

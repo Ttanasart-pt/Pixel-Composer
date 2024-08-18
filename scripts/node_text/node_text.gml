@@ -8,60 +8,60 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	inputs[1] = nodeValue_Text("Font", self, "")
 		.setDisplay(VALUE_DISPLAY.path_font);
 	
-	inputs[2] = nodeValue_Int("Size", self, 16);
+	newInput(2, nodeValue_Int("Size", self, 16));
 	
-	inputs[3] = nodeValue_Bool("Anti-Aliasing ", self, false);
+	newInput(3, nodeValue_Bool("Anti-Aliasing ", self, false));
 	
-	inputs[4] = nodeValue_Vec2("Character range", self, [ 32, 128 ]);
+	newInput(4, nodeValue_Vec2("Character range", self, [ 32, 128 ]));
 	
-	inputs[5] = nodeValue_Color("Color", self, c_white);
+	newInput(5, nodeValue_Color("Color", self, c_white));
 	
 	inputs[6] = nodeValue_Vec2("Fixed dimension", self, DEF_SURF )
 		.setVisible(true, false);
 	
-	inputs[7] = nodeValue_Enum_Button("Horizontal alignment", self,  0 , [ THEME.inspector_text_halign, THEME.inspector_text_halign, THEME.inspector_text_halign]);
+	newInput(7, nodeValue_Enum_Button("Horizontal alignment", self,  0 , [ THEME.inspector_text_halign, THEME.inspector_text_halign, THEME.inspector_text_halign]));
 	
-	inputs[8] = nodeValue_Enum_Button("Vertical alignment", self,  0 , [ THEME.inspector_text_valign, THEME.inspector_text_valign, THEME.inspector_text_valign ]);
+	newInput(8, nodeValue_Enum_Button("Vertical alignment", self,  0 , [ THEME.inspector_text_valign, THEME.inspector_text_valign, THEME.inspector_text_valign ]));
 	
-	inputs[9] = nodeValue_Enum_Scroll("Output dimension", self,  1 , [ "Fixed", "Dynamic" ]);
+	newInput(9, nodeValue_Enum_Scroll("Output dimension", self,  1 , [ "Fixed", "Dynamic" ]));
 	
-	inputs[10] = nodeValue_Padding("Padding", self, [0, 0, 0, 0]);
+	newInput(10, nodeValue_Padding("Padding", self, [0, 0, 0, 0]));
 	
-	inputs[11] = nodeValue_Float("Letter spacing", self, 0);
+	newInput(11, nodeValue_Float("Letter spacing", self, 0));
 	
-	inputs[12] = nodeValue_Float("Line height", self, 0);
+	newInput(12, nodeValue_Float("Line height", self, 0));
 	
 	inputs[13] = nodeValue_PathNode("Path", self, noone)
 		.setVisible(true, true);
 	
-	inputs[14] = nodeValue_Float("Path shift", self, 0);
+	newInput(14, nodeValue_Float("Path shift", self, 0));
 	
-	inputs[15] = nodeValue_Bool("Scale to fit", self, false);
+	newInput(15, nodeValue_Bool("Scale to fit", self, false));
 	
-	inputs[16] = nodeValue_Bool("Render background", self, false);
+	newInput(16, nodeValue_Bool("Render background", self, false));
 	
-	inputs[17] = nodeValue_Color("BG Color", self, c_black);
+	newInput(17, nodeValue_Color("BG Color", self, c_black));
 	
-	inputs[18] = nodeValue_Bool("Wave", self, false);
+	newInput(18, nodeValue_Bool("Wave", self, false));
 	
-	inputs[19] = nodeValue_Float("Wave amplitude", self, 4);
+	newInput(19, nodeValue_Float("Wave amplitude", self, 4));
 	
-	inputs[20] = nodeValue_Float("Wave scale", self, 30);
+	newInput(20, nodeValue_Float("Wave scale", self, 30));
 	
-	inputs[21] = nodeValue_Rotation("Wave phase", self, 0);
+	newInput(21, nodeValue_Rotation("Wave phase", self, 0));
 	
 	inputs[22] = nodeValue_Float("Wave shape", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 3, 0.01 ] });
 	
-	inputs[23] = nodeValue_Bool("Typewriter", self, false);
+	newInput(23, nodeValue_Bool("Typewriter", self, false));
 	
-	inputs[24] = nodeValue_Slider_Range("Range", self, [ 0, 1 ]);
+	newInput(24, nodeValue_Slider_Range("Range", self, [ 0, 1 ]));
 	
-	inputs[25] = nodeValue_Enum_Button("Trim type", self,  0 , [ "Character", "Word", "Line" ]);
+	newInput(25, nodeValue_Enum_Button("Trim type", self,  0 , [ "Character", "Word", "Line" ]));
 	
-	inputs[26] = nodeValue_Bool("Use full text size", self, true );
+	newInput(26, nodeValue_Bool("Use full text size", self, true ));
 	
-	inputs[27] = nodeValue_Int("Max line width", self, 0 );
+	newInput(27, nodeValue_Int("Max line width", self, 0 ));
 		
 	input_display_list = [
 		["Output",		true],	9,  6, 10,

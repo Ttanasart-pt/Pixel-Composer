@@ -1,30 +1,30 @@
 function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Region Fill";
 	
-	inputs[0] = nodeValue_Surface("Surface in", self);
+	newInput(0, nodeValue_Surface("Surface in", self));
 	
-	inputs[1] = nodeValue_Surface("Mask", self);
+	newInput(1, nodeValue_Surface("Mask", self));
 	
-	inputs[2] = nodeValue_Palette("Fill Colors", self, array_clone(DEF_PALETTE));
+	newInput(2, nodeValue_Palette("Fill Colors", self, array_clone(DEF_PALETTE)));
 	
-	inputs[3] = nodeValue_Bool("Fill", self, true);
+	newInput(3, nodeValue_Bool("Fill", self, true));
 	
 	inputs[4] = nodeValue_Int("Seed", self, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[4].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
-	inputs[5] = nodeValue_Color("Target Color", self, c_white);
+	newInput(5, nodeValue_Color("Target Color", self, c_white));
 	
-	inputs[6] = nodeValue_Bool("Inner only", self, false, "Only fill regions with surrounding pixels.");
+	newInput(6, nodeValue_Bool("Inner only", self, false, "Only fill regions with surrounding pixels."));
 	
-	inputs[7] = nodeValue_Enum_Scroll("Draw original", self,  0, [ "None", "Above", "Behind" ]);
+	newInput(7, nodeValue_Enum_Scroll("Draw original", self,  0, [ "None", "Above", "Behind" ]));
 	
-	inputs[8] = nodeValue_Enum_Scroll("Fill type", self,  0, [ "Random", "Color map", "Texture map" ]);
+	newInput(8, nodeValue_Enum_Scroll("Fill type", self,  0, [ "Random", "Color map", "Texture map" ]));
 	
-	inputs[9] = nodeValue_Surface("Color map", self);
+	newInput(9, nodeValue_Surface("Color map", self));
 	
-	inputs[10] = nodeValue_Surface("Texture map", self);
+	newInput(10, nodeValue_Surface("Texture map", self));
 	
-	inputs[11] = nodeValue_Bool("Color Filter", self, false);
+	newInput(11, nodeValue_Bool("Color Filter", self, false));
 	
 	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	

@@ -30,15 +30,15 @@ output.color = surfaceColor;")
 		.setDisplay(VALUE_DISPLAY.codeHLSL)
 		.rejectArray();
 	
-	inputs[2] = nodeValue_Surface("Base Texture", self);
+	newInput(2, nodeValue_Surface("Base Texture", self));
 	
 	outputs[0] = nodeValue_Output("Surface", self, VALUE_TYPE.surface, noone );
 	
 	static createNewInput = function() {
 		var index = array_length(inputs);
-		inputs[index + 0] = nodeValue_Text("Argument name", self, "" );
+		newInput(index + 0, nodeValue_Text("Argument name", self, "" ));
 		
-		inputs[index + 1] = nodeValue_Enum_Scroll("Argument type", self,  0 , { data: [ "Float", "Int", "Vec2", "Vec3", "Vec4", "Mat3", "Mat4", "Sampler2D", "Color" ], update_hover: false });
+		newInput(index + 1, nodeValue_Enum_Scroll("Argument type", self,  0 , { data: [ "Float", "Int", "Vec2", "Vec3", "Vec4", "Mat3", "Mat4", "Sampler2D", "Color" ], update_hover: false }));
 		inputs[index + 1].editWidget.interactable = false;
 		
 		inputs[index + 2] = nodeValue("Argument value", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )

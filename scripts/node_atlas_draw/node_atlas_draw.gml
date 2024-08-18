@@ -2,7 +2,7 @@ function Node_Atlas_Draw(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	name = "Draw Atlas";
 	previewable = true;
 	
-	inputs[0] = nodeValue_Dimension(self);
+	newInput(0, nodeValue_Dimension(self));
 	
 	inputs[1] = nodeValue_Surface("Atlas", self)
 		.setVisible(true, true);

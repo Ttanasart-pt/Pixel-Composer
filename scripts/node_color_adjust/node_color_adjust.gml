@@ -2,7 +2,7 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	name = "Color Adjust";
 	batch_output = false;
 	
-	inputs[0] = nodeValue_Surface("Surface in", self);
+	newInput(0, nodeValue_Surface("Surface in", self));
 	
 	inputs[1] = nodeValue_Float("Brightness", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] })
@@ -24,13 +24,13 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] })
 		.setMappable(22);
 	
-	inputs[6] = nodeValue_Color("Blend",   self, cola(c_white));
+	newInput(6, nodeValue_Color("Blend",   self, cola(c_white)));
 	
 	inputs[7] = nodeValue_Float("Blend amount",  self, 0)
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(23);
 	
-	inputs[8] = nodeValue_Surface("Mask", self);
+	newInput(8, nodeValue_Surface("Mask", self));
 	
 	inputs[9] = nodeValue_Float("Alpha", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider)
@@ -40,19 +40,19 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01 ] })
 		.setMappable(25);
 	
-	inputs[11] = nodeValue_Bool("Active", self, true);
+	newInput(11, nodeValue_Bool("Active", self, true));
 		active_index = 11;
 		
-	inputs[12] = nodeValue_Enum_Button("Input Type", self,  0, [ "Surface", "Color" ]);
+	newInput(12, nodeValue_Enum_Button("Input Type", self,  0, [ "Surface", "Color" ]));
 	
 	inputs[13] = nodeValue_Palette("Color", self, array_clone(DEF_PALETTE))
 		.setVisible(true, true);
 	
-	inputs[14] = nodeValue_Enum_Scroll("Blend mode", self,  0, BLEND_TYPES);
+	newInput(14, nodeValue_Enum_Scroll("Blend mode", self,  0, BLEND_TYPES));
 		
-	inputs[15] = nodeValue_Toggle("Channel", self, 0b1111, { data: array_create(4, THEME.inspector_channel) });
+	newInput(15, nodeValue_Toggle("Channel", self, 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
-	inputs[16] = nodeValue_Bool("Invert mask", self, false);
+	newInput(16, nodeValue_Bool("Invert mask", self, false));
 	
 	inputs[17] = nodeValue_Float("Mask feather", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] });

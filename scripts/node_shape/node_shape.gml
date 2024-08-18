@@ -33,9 +33,9 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	onSurfaceSize = function() { return getInputData(0, DEF_SURF); };
 	
-	inputs[0] = nodeValue_Dimension(self);
+	newInput(0, nodeValue_Dimension(self));
 	
-	inputs[1] = nodeValue_Bool("Background", self, false);
+	newInput(1, nodeValue_Bool("Background", self, false));
 	
 	shape_types     = [ 
 		"Rectangle", "Diamond", "Trapezoid", "Parallelogram", 
@@ -52,7 +52,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	for( var i = 0, n = array_length(shape_types); i < n; i++ )
 		shape_types_str[i] = shape_types[i] == -1? -1 : new scrollItem(shape_types[i], s_node_shape_type, _ind++);
 	
-	inputs[2] = nodeValue_Enum_Scroll("Shape", self,  0, { data: shape_types_str, horizontal: true, text_pad: ui(16) });
+	newInput(2, nodeValue_Enum_Scroll("Shape", self,  0, { data: shape_types_str, horizontal: true, text_pad: ui(16) }));
 	
 	inputs[3] = nodeValue_Area("Position", self, DEF_AREA_REF, { onSurfaceSize, useShape : false })
 		.setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
@@ -64,22 +64,22 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setVisible(false);
 	
-	inputs[6] = nodeValue_Bool("Anti-aliasing", self, false);
+	newInput(6, nodeValue_Bool("Anti-aliasing", self, false));
 	
-	inputs[7] = nodeValue_Rotation("Rotation", self, 0);
+	newInput(7, nodeValue_Rotation("Rotation", self, 0));
 	
-	inputs[8] = nodeValue_Rotation_Range("Angle range", self, [ 0, 180 ]);
+	newInput(8, nodeValue_Rotation_Range("Angle range", self, [ 0, 180 ]));
 	
 	inputs[9] = nodeValue_Float("Corner radius", self, 0)
 		.setValidator(VV_clamp(0, .5))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 0.5, 0.001] });
 	inputs[9].overlay_draw_text = false;
 	
-	inputs[10] = nodeValue_Color("Shape color", self, c_white);
+	newInput(10, nodeValue_Color("Shape color", self, c_white));
 	
-	inputs[11] = nodeValue_Color("Background color", self, c_black);
+	newInput(11, nodeValue_Color("Background color", self, c_black));
 	
-	inputs[12] = nodeValue_Bool("Height", self, false);
+	newInput(12, nodeValue_Bool("Height", self, false));
 	
 	inputs[13] = nodeValue_Float("Start radius", self, 0.1)
 		.setDisplay(VALUE_DISPLAY.slider)
@@ -96,26 +96,26 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	inputs[17] = nodeValue_Vec2("Half Size", self, [ DEF_SURF_W / 2, DEF_SURF_H / 2 ] )
 		.setUnitRef(onSurfaceSize);
 		
-	inputs[18] = nodeValue_Bool("Tile", self, false);
+	newInput(18, nodeValue_Bool("Tile", self, false));
 	
-	inputs[19] = nodeValue_Rotation("Shape rotation", self, 0);
+	newInput(19, nodeValue_Rotation("Shape rotation", self, 0));
 		
-	inputs[20] = nodeValue_Slider_Range("Level", self, [ 0, 1 ]);
+	newInput(20, nodeValue_Slider_Range("Level", self, [ 0, 1 ]));
 		
-	inputs[21] = nodeValue_Slider_Range("Angles", self, [ 0.5, 1.0 ]);
+	newInput(21, nodeValue_Slider_Range("Angles", self, [ 0.5, 1.0 ]));
 		
 	inputs[22] = nodeValue_Float("Skew", self, 0.5 )
 		.setDisplay(VALUE_DISPLAY.slider);
 		
-	inputs[23] = nodeValue_Slider_Range("Arrow Sizes", self, [ 0.2, 0.3 ] );
+	newInput(23, nodeValue_Slider_Range("Arrow Sizes", self, [ 0.2, 0.3 ] ));
 		
-	inputs[24] = nodeValue_Float("Arrow Head", self, 3 );
+	newInput(24, nodeValue_Float("Arrow Head", self, 3 ));
 		
-	inputs[25] = nodeValue_Int("Teeth Amount", self, 6 );
+	newInput(25, nodeValue_Int("Teeth Amount", self, 6 ));
 		
-	inputs[26] = nodeValue_Vec2("Teeth Size", self, [ 0.2, 0.2 ] , { slideSpeed : 0.01 });
+	newInput(26, nodeValue_Vec2("Teeth Size", self, [ 0.2, 0.2 ] , { slideSpeed : 0.01 }));
 		
-	inputs[27] = nodeValue_Rotation("Teeth Rotation", self, 0);
+	newInput(27, nodeValue_Rotation("Teeth Rotation", self, 0));
 		
 	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	

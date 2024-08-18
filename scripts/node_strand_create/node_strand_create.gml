@@ -7,22 +7,22 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	update_on_frame      = true;
 	manual_ungroupable	 = false;
 	
-	inputs[0] = nodeValue_Enum_Scroll("Type", self,  0, [ "Point", "Path", "Mesh" ]);
+	newInput(0, nodeValue_Enum_Scroll("Type", self,  0, [ "Point", "Path", "Mesh" ]));
 	
-	inputs[1] = nodeValue_Int("Density", self, 8, "How many strands to generate.");
+	newInput(1, nodeValue_Int("Density", self, 8, "How many strands to generate."));
 	
-	inputs[2] = nodeValue_Vec2("Length", self, [ 4, 4 ]);
+	newInput(2, nodeValue_Vec2("Length", self, [ 4, 4 ]));
 	
-	inputs[3] = nodeValue_Int("Segment", self, 4);
+	newInput(3, nodeValue_Int("Segment", self, 4));
 	
 	inputs[4] = nodeValue_Float("Elasticity", self, 0.05, "Length preservation, the higher the value the easier it is to stretch each segment.")
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[5] = nodeValue_PathNode("Path", self, noone);
+	newInput(5, nodeValue_PathNode("Path", self, noone));
 	
-	inputs[6] = nodeValue_Vec2("Position", self, [ 0, 0 ]);
+	newInput(6, nodeValue_Vec2("Position", self, [ 0, 0 ]));
 	
-	inputs[7] = nodeValue_Enum_Button("Side", self,  0, [ "Inner", "Outer", "Both" ]);
+	newInput(7, nodeValue_Enum_Button("Side", self,  0, [ "Inner", "Outer", "Both" ]));
 	
 	inputs[8] = nodeValue_Float("Spring", self, 0.8, "Angular stiffness, the higher the value the easier it is to bend each segment.")
 		.setDisplay(VALUE_DISPLAY.slider);
@@ -33,14 +33,14 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	inputs[10] = nodeValue_Int("Seed", self, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[10].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
-	inputs[11] = nodeValue_Float("Curl frequency", self, 0);
+	newInput(11, nodeValue_Float("Curl frequency", self, 0));
 	
 	inputs[12] = nodeValue_Float("Curliness", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[13] = nodeValue("Mesh", self, JUNCTION_CONNECT.input, VALUE_TYPE.mesh, noone);
+	newInput(13, nodeValue("Mesh", self, JUNCTION_CONNECT.input, VALUE_TYPE.mesh, noone));
 	
-	inputs[14] = nodeValue_Enum_Scroll("Distribution", self,  0, [ "Uniform", "Random" ]);
+	newInput(14, nodeValue_Enum_Scroll("Distribution", self,  0, [ "Uniform", "Random" ]));
 	
 	inputs[15] = nodeValue_Trigger("Bake hair", self, false, "Prevent strand reseting to apply manual modification. Unbaking will remove all changes.")
 		.setDisplay(VALUE_DISPLAY.button, { name: "Bake", UI : true, onClick: function() { 
@@ -50,7 +50,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			strandUpdate(true);
 		} });
 	
-	inputs[16] = nodeValue_Bool("View fix hair", self, false);
+	newInput(16, nodeValue_Bool("View fix hair", self, false));
 	
 	inputs[17] = nodeValue_Vec2("Root strength", self, [-1, -1])
 		.setTooltip("The force required to break strand from its root. Set to -1 to make strand infinitely strong.");

@@ -11,28 +11,28 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	inputs[1] = nodeValue_Float("Merge threshold", self, 0.75)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[2] = nodeValue_Range("Lifespan", self, [ 0, 0 ], { linked : true });
+	newInput(2, nodeValue_Range("Lifespan", self, [ 0, 0 ], { linked : true }));
 	
-	inputs[3] = nodeValue_Float("Particle expansion", self, 20);
+	newInput(3, nodeValue_Float("Particle expansion", self, 20));
 	
-	inputs[4] = nodeValue_Bool("Draw obstracles", self, true);
+	newInput(4, nodeValue_Bool("Draw obstracles", self, true));
 	
-	inputs[5] = nodeValue_Surface("Fluid particle", self);
+	newInput(5, nodeValue_Surface("Fluid particle", self));
 	
 	inputs[6] = nodeValue_Enum_Scroll("Render type", self,  0, [ new scrollItem("Particle", s_node_flip_render, 0), 
 												 new scrollItem("Line",     s_node_flip_render, 1), ] );
 	
-	inputs[7] = nodeValue_Bool("Threshold", self, true);
+	newInput(7, nodeValue_Bool("Threshold", self, true));
 	
-	inputs[8] = nodeValue_Bool("Additive", self, true);
+	newInput(8, nodeValue_Bool("Additive", self, true));
 	
-	inputs[9] = nodeValue_Slider_Range("Alpha", self, [ 1, 1 ]);
+	newInput(9, nodeValue_Slider_Range("Alpha", self, [ 1, 1 ]));
 	
-	inputs[10] = nodeValue_Int("Segments", self, 1);
+	newInput(10, nodeValue_Int("Segments", self, 1));
 	
-	inputs[11] = nodeValue_Gradient("Color Over Velocity", self, new gradientObject(cola(c_white)));
+	newInput(11, nodeValue_Gradient("Color Over Velocity", self, new gradientObject(cola(c_white))));
 	
-	inputs[12] = nodeValue_Range("Velocity Map", self, [ 0, 10 ]);
+	newInput(12, nodeValue_Range("Velocity Map", self, [ 0, 10 ]));
 	
 	input_display_list = [ 0, 5, 
 		["Rendering", false], 6, 10, 3, 4, 9, 

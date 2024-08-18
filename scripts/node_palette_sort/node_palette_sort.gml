@@ -8,7 +8,7 @@ function Node_Palette_Sort(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	inputs[1] = nodeValue_Enum_Button("Order", self,  0, [ "Brightness", -1, "Hue (HSV)", "Saturation (SHV)", "Value (VHS)", -1, "Red (RGB)", "Green (GBR)", "Blue (BRG)", -1, "Custom" ])
 		.rejectArray();
 	
-	inputs[2] = nodeValue_Bool("Reverse", self, false);
+	newInput(2, nodeValue_Bool("Reverse", self, false));
 	
 	inputs[3] = nodeValue_Text("Sort Order", self, "RGB", @"Compose sorting algorithm using string.
     - RGB: Red/Green/Blur channel

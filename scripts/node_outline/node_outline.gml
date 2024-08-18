@@ -12,24 +12,24 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		triggerRender();
 	});
 	
-	inputs[0] = nodeValue_Surface("Surface in", self);
+	newInput(0, nodeValue_Surface("Surface in", self));
 	
 	inputs[1] = nodeValue_Int("Width",   self, 0)
 		.setDisplay(VALUE_DISPLAY._default, { front_button : filter_button })
 		.setValidator(VV_min(0))
 		.setMappable(15);
 	
-	inputs[2] = nodeValue_Color("Color",   self, c_white);
+	newInput(2, nodeValue_Color("Color",   self, c_white));
 	
-	inputs[3] = nodeValue_Bool("Blend",   self, 0, "Blend outline color with the original color.");
+	newInput(3, nodeValue_Bool("Blend",   self, 0, "Blend outline color with the original color."));
 	
 	inputs[4] = nodeValue_Float("Blend alpha",   self, 1)
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(16);
 	
-	inputs[5] = nodeValue_Enum_Button("Position",   self,  1, ["Inside", "Outside"]);
+	newInput(5, nodeValue_Enum_Button("Position",   self,  1, ["Inside", "Outside"]));
 	
-	inputs[6] = nodeValue_Bool("Anti aliasing",   self, 0);
+	newInput(6, nodeValue_Bool("Anti aliasing",   self, 0));
 	
 	inputs[7] = nodeValue_Enum_Scroll("Oversample mode", self,  0, [ "Empty", "Clamp", "Repeat" ])
 		.setTooltip("How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.");
@@ -37,25 +37,25 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	inputs[8] = nodeValue_Int("Start",   self, 0, "Shift outline inside, outside the shape.")
 		.setMappable(17);
 	
-	inputs[9] = nodeValue_Surface("Mask", self);
+	newInput(9, nodeValue_Surface("Mask", self));
 	
 	inputs[10] = nodeValue_Float("Mix", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[11] = nodeValue_Bool("Active", self, true);
+	newInput(11, nodeValue_Bool("Active", self, true));
 		active_index = 11;
 	
-	inputs[12] = nodeValue_Bool("Crop border", self, false);
+	newInput(12, nodeValue_Bool("Crop border", self, false));
 	
 	__init_mask_modifier(9); // inputs 13, 14
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[15] = nodeValueMap("Width map", self);
+	newInput(15, nodeValueMap("Width map", self));
 	
-	inputs[16] = nodeValueMap("Blend alpha map", self);
+	newInput(16, nodeValueMap("Blend alpha map", self));
 	
-	inputs[17] = nodeValueMap("Start map", self);
+	newInput(17, nodeValueMap("Start map", self));
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	

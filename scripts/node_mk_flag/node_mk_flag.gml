@@ -2,17 +2,17 @@ function Node_MK_Flag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	name = "MK Flag";
 	update_on_frame = true;
 	
-	inputs[0] = nodeValue_Dimension(self);
+	newInput(0, nodeValue_Dimension(self));
 	
-	inputs[1] = nodeValue_Surface("Texture", self);
+	newInput(1, nodeValue_Surface("Texture", self));
 	
-	inputs[2] = nodeValue_Vec2("Position", self, [ 0, 0 ]);
+	newInput(2, nodeValue_Vec2("Position", self, [ 0, 0 ]));
 	
-	inputs[3] = nodeValue_Enum_Button("Pin side", self,  0, [ "Left", "Right", "Up", "Down" ]);
+	newInput(3, nodeValue_Enum_Button("Pin side", self,  0, [ "Left", "Right", "Up", "Down" ]));
 	
-	inputs[4] = nodeValue_Int("Subdivision", self, 8);
+	newInput(4, nodeValue_Int("Subdivision", self, 8));
 	
-	inputs[5] = nodeValue_Float("Wind speed", self, 2);
+	newInput(5, nodeValue_Float("Wind speed", self, 2));
 	
 	inputs[6] = nodeValue_Float("Wave width", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 4, 0.1] });
@@ -32,7 +32,7 @@ function Node_MK_Flag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	inputs[11] = nodeValue_Float("Shadow threshold", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-0.1, 0.1, 0.001] });
 	
-	inputs[12] = nodeValue_Bool("Invert shadow", self, 0);
+	newInput(12, nodeValue_Bool("Invert shadow", self, 0));
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 0, 
 		["Flag",	    false], 4, 1, 2, 3, 

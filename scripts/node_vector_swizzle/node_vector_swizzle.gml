@@ -7,7 +7,7 @@ function Node_Vector_Swizzle(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		.setArrayDepth(1)
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Text("Swizzle", self, "");
+	newInput(1, nodeValue_Text("Swizzle", self, ""));
 		
 	outputs[0] = nodeValue_Output("Result", self, VALUE_TYPE.float, [] );
 	

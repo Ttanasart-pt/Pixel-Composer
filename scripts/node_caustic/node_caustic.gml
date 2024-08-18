@@ -6,7 +6,7 @@ function Node_Caustic(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y, _g
 		.setUnitRef(function(index) { return getDimension(index); });
 		addShaderProp(SHADER_UNIFORM.float, "position");
 		
-	inputs[2] = nodeValue_Vec2("Scale", self, [ 4, 4 ]);
+	newInput(2, nodeValue_Vec2("Scale", self, [ 4, 4 ]));
 		addShaderProp(SHADER_UNIFORM.float, "scale");
 				
 	inputs[3] = nodeValue_Float("Seed", self, seed_random(6))

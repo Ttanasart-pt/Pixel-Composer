@@ -8,11 +8,11 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 	preview_channel = 0;
 	apply_anchor    = false;
 	
-	inputs[0] = nodeValue_Vec3("Position", self, [ 0, 0, 0 ], { linkable: false });
+	newInput(0, nodeValue_Vec3("Position", self, [ 0, 0, 0 ], { linkable: false }));
 	
-	inputs[1] = nodeValue_Quaternion("Rotation", self, [ 0, 0, 0, 1 ]);
+	newInput(1, nodeValue_Quaternion("Rotation", self, [ 0, 0, 0, 1 ]));
 	
-	inputs[2] = nodeValue_Vec3("Scale", self, [ 1, 1, 1 ]);
+	newInput(2, nodeValue_Vec3("Scale", self, [ 1, 1, 1 ]));
 	
 	inputs[3] = nodeValue_Vec3("Anchor", self, [ 0, 0, 0 ], { 
 			linkable: false, 

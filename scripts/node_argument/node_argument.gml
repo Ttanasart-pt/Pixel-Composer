@@ -4,11 +4,11 @@ function Node_Argument(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	
 	draw_padding = 8;
 	
-	inputs[0] = nodeValue_Text("Tag", self, "");
+	newInput(0, nodeValue_Text("Tag", self, ""));
 	
-	inputs[1] = nodeValue_Enum_Scroll("Type", self, 0, [ "String", "Number" ]);
+	newInput(1, nodeValue_Enum_Scroll("Type", self, 0, [ "String", "Number" ]));
 	
-	inputs[2] = nodeValue_Text("Default value", self, "");
+	newInput(2, nodeValue_Text("Default value", self, ""));
 	
 	outputs[0] = nodeValue_Output("Value", self, VALUE_TYPE.text, "");
 	

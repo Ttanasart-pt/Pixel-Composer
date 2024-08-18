@@ -35,9 +35,9 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	inputs[1]  = nodeValue_Trigger("Generate layers", self, false )
 		.setDisplay(VALUE_DISPLAY.button, { name: "Generate", UI : true, onClick: function() { refreshLayers(); } });
 	
-	inputs[2]  = nodeValue_Text("Current tag", self, "");
+	newInput(2, nodeValue_Text("Current tag", self, ""));
 	
-	inputs[3]  = nodeValue_Bool("Use cel dimension", self, false);
+	newInput(3, nodeValue_Bool("Use cel dimension", self, false));
 	
 	outputs[0] = nodeValue_Output("Output", self, VALUE_TYPE.surface, noone);
 	

@@ -9,7 +9,7 @@ function Node_Smoke_Update(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 	inputs[0] = nodeValue("Domain", self, JUNCTION_CONNECT.input, VALUE_TYPE.sdomain, noone)
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Bool("Active", self, true);
+	newInput(1, nodeValue_Bool("Active", self, true));
 	
 	input_display_list = [
 		["Domain",	false], 0,

@@ -10,17 +10,17 @@ function Node_Rigid_Override(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	inputs[0] = nodeValue("Object", self, JUNCTION_CONNECT.input, VALUE_TYPE.rigid, noone )
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Vec2("Positions", self, [0, 0] );
+	newInput(1, nodeValue_Vec2("Positions", self, [0, 0] ));
 	
-	inputs[2] = nodeValue_Vec2("Scales", self, [0, 0] );
+	newInput(2, nodeValue_Vec2("Scales", self, [0, 0] ));
 	
-	inputs[3] = nodeValue_Float("Rotations", self, 0 );
+	newInput(3, nodeValue_Float("Rotations", self, 0 ));
 	
-	inputs[4] = nodeValue_Color("Blends", self, 0 );
+	newInput(4, nodeValue_Color("Blends", self, 0 ));
 	
-	inputs[5] = nodeValue_Float("Alpha", self, 0 );
+	newInput(5, nodeValue_Float("Alpha", self, 0 ));
 	
-	inputs[6] = nodeValue_Vec2("Velocity", self, [0, 0] );
+	newInput(6, nodeValue_Vec2("Velocity", self, [0, 0] ));
 		
 	outputs[0] = nodeValue_Output("Object", self, VALUE_TYPE.rigid, noone );
 	

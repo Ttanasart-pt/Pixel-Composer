@@ -6,20 +6,20 @@ function __Node_3D_Sphere(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	inputs[0] = nodeValue_Vec2("Subdivisions", self, [8, 4])
 		.setTooltip("Amount of polygon in X and Y axis.");
 	
-	inputs[1] = nodeValue_Dimension(self);
+	newInput(1, nodeValue_Dimension(self));
 	
 	inputs[2] = nodeValue_Vec2("Render position", self, [ 0.5, 0.5 ])
 		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
 	
-	inputs[3] = nodeValue_Vec3("Render rotation", self, [ 0, 0, 0 ]);
+	newInput(3, nodeValue_Vec3("Render rotation", self, [ 0, 0, 0 ]));
 	
-	inputs[4] = nodeValue_Vec2("Render scale", self, [ 1, 1 ]);
+	newInput(4, nodeValue_Vec2("Render scale", self, [ 1, 1 ]));
 	
-	inputs[5] = nodeValue_Surface("Textures",	self);
+	newInput(5, nodeValue_Surface("Textures",	self));
 	
-	inputs[6] = nodeValue_Vec3("Object scale", self, [ 1, 1, 1 ]);
+	newInput(6, nodeValue_Vec3("Object scale", self, [ 1, 1, 1 ]));
 	
-	inputs[7] = nodeValue_Rotation("Light direction", self, 0);
+	newInput(7, nodeValue_Rotation("Light direction", self, 0));
 		
 	inputs[8] = nodeValue_Float("Light height", self, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-1, 1, 0.01] });
@@ -27,12 +27,12 @@ function __Node_3D_Sphere(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	inputs[9] = nodeValue_Float("Light intensity", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[10] = nodeValue_Color("Light color", self, c_white);
-	inputs[11] = nodeValue_Color("Ambient color", self, c_grey);
+	newInput(10, nodeValue_Color("Light color", self, c_white));
+	newInput(11, nodeValue_Color("Ambient color", self, c_grey));
 	
-	inputs[12] = nodeValue_Vec3("Object rotation", self, [ 0, 0, 0 ]);
+	newInput(12, nodeValue_Vec3("Object rotation", self, [ 0, 0, 0 ]));
 		
-	inputs[13] = nodeValue_Vec3("Object position", self, [ 0, 0, 0 ]);
+	newInput(13, nodeValue_Vec3("Object position", self, [ 0, 0, 0 ]));
 	
 	inputs[14] = nodeValue_Enum_Button("Projection", self,  0, [ "Orthographic", "Perspective" ])
 		.rejectArray();

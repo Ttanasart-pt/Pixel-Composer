@@ -7,13 +7,13 @@ function Node_Move_Point(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	inputs[0] = nodeValue_Vec2("Point", self, [ 0, 0, ])
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Enum_Scroll("Mode", self,  0, [ "XY Shift", "Direction + Distance" ]);
+	newInput(1, nodeValue_Enum_Scroll("Mode", self,  0, [ "XY Shift", "Direction + Distance" ]));
 	
-	inputs[2] = nodeValue_Vec2("Shift", self, [ 0, 0 ]);
+	newInput(2, nodeValue_Vec2("Shift", self, [ 0, 0 ]));
 	
-	inputs[3] = nodeValue_Rotation("Direction", self, 0);
+	newInput(3, nodeValue_Rotation("Direction", self, 0));
 	
-	inputs[4] = nodeValue_Float("Distance", self, 4 );
+	newInput(4, nodeValue_Float("Distance", self, 4 ));
 	
 	outputs[0] = nodeValue_Output("Result", self, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);

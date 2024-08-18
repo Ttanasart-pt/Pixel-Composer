@@ -4,7 +4,7 @@ function Node_VFX_Attract(_x, _y, _group = noone) : Node_VFX_effector(_x, _y, _g
 	
 	inputs[4].setVisible(false, false);
 	
-	inputs[effector_input_length + 0] = nodeValue_Bool("Destroy when reach middle", self, false );
+	newInput(effector_input_length + 0, nodeValue_Bool("Destroy when reach middle", self, false ));
 		
 	array_push(input_display_list, effector_input_length + 0);
 	

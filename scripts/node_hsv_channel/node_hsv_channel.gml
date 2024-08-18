@@ -2,9 +2,9 @@ function Node_HSV_Channel(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	name = "HSV Extract";
 	batch_output = false;
 	
-	inputs[0] = nodeValue_Surface("Surface in", self);
+	newInput(0, nodeValue_Surface("Surface in", self));
 	
-	inputs[1] = nodeValue_Bool("Output Array", self, false);
+	newInput(1, nodeValue_Bool("Output Array", self, false));
 	
 	outputs[0] = nodeValue_Output("Hue",        self, VALUE_TYPE.surface, noone);
 	outputs[1] = nodeValue_Output("Saturation", self, VALUE_TYPE.surface, noone);

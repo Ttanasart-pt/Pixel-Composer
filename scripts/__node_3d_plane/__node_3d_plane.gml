@@ -2,23 +2,23 @@ function __Node_3D_Plane(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	name = "3D Plane";
 	batch_output = false;
 	
-	inputs[0] = nodeValue_Surface("Surface in", self);
+	newInput(0, nodeValue_Surface("Surface in", self));
 	
 	inputs[1] = nodeValue_Vec2("Render position", self, [ 0.5, 0.5 ])
 		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
 	
-	inputs[2] = nodeValue_Vec3("Object rotation", self, [ 0, 0, 0 ]);
+	newInput(2, nodeValue_Vec3("Object rotation", self, [ 0, 0, 0 ]));
 	
-	inputs[3] = nodeValue_Vec2("Render scale", self, [ 1, 1 ]);
+	newInput(3, nodeValue_Vec2("Render scale", self, [ 1, 1 ]));
 	
 	inputs[4] = nodeValue_Enum_Scroll("Output dimension", self, OUTPUT_SCALING.same_as_input, [ "Same as input", "Constant", "Relative to input" ])
 		.rejectArray();
 	
-	inputs[5] = nodeValue_Vec2("Constant dimension", self, DEF_SURF);
+	newInput(5, nodeValue_Vec2("Constant dimension", self, DEF_SURF));
 	
-	inputs[6] = nodeValue_Vec3("Object position", self, [ 0, 0, 0 ]);
+	newInput(6, nodeValue_Vec3("Object position", self, [ 0, 0, 0 ]));
 	
-	inputs[7] = nodeValue_Vec3("Object scale", self, [ 1, 1, 1 ]);
+	newInput(7, nodeValue_Vec3("Object scale", self, [ 1, 1, 1 ]));
 	
 	inputs[8] = nodeValue_Enum_Button("Projection", self, 0, [ "Orthographic", "Perspective" ])
 		.rejectArray();
@@ -26,13 +26,13 @@ function __Node_3D_Plane(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	inputs[9] = nodeValue_Float("Field of view", self, 60)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 1, 90, 0.1 ] });
 	
-	inputs[10] = nodeValue_Vec2("Texture scale", self, [ 1, 1 ]);
+	newInput(10, nodeValue_Vec2("Texture scale", self, [ 1, 1 ]));
 	
-	inputs[11] = nodeValue_Vec2("Texture shift", self, [ 0, 0 ]);
+	newInput(11, nodeValue_Vec2("Texture shift", self, [ 0, 0 ]));
 		
 	inputs[12] = nodeValue_Int("Subdiviion", self, 1)
 		
-	inputs[13] = nodeValue_Enum_Button("Normal axis", self, 2, [ "X", "Y", "Z" ]);
+	newInput(13, nodeValue_Enum_Button("Normal axis", self, 2, [ "X", "Y", "Z" ]));
 	
 	input_display_list = [0, 
 		["Geometry",		  true], 13, 12, 

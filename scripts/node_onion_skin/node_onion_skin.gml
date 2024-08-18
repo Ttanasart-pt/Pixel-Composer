@@ -3,9 +3,9 @@ function Node_Onion_Skin(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	use_cache   = CACHE_USE.manual;
 	clearCacheOnChange = false;
 	
-	inputs[0] = nodeValue_Surface("Surface in", self);
+	newInput(0, nodeValue_Surface("Surface in", self));
 	
-	inputs[1] = nodeValue_Slider_Range("Range", self, [-1, 1], { range: [ -16, 16, 0.1 ] });
+	newInput(1, nodeValue_Slider_Range("Range", self, [-1, 1], { range: [ -16, 16, 0.1 ] }));
 	
 	inputs[2] = nodeValue_Float("Alpha", self, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider);

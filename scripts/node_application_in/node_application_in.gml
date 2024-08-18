@@ -2,7 +2,7 @@ function Node_Application_In(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	name = "GUI In";
 	update_on_frame = true;
 	
-	inputs[0] = nodeValue_Surface("GUI", self);
+	newInput(0, nodeValue_Surface("GUI", self));
 	
 	APP_SURF_OVERRIDE = true;
 	

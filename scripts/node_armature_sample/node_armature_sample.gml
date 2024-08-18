@@ -6,7 +6,7 @@ function Node_Armature_Sample(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		.setVisible(true, true)
 		.rejectArray();
 		
-	inputs[1] = nodeValue_Text("Bone name", self, "");
+	newInput(1, nodeValue_Text("Bone name", self, ""));
 		
 	inputs[2] = nodeValue_Float("Sample point", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider);

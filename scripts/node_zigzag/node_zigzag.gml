@@ -1,7 +1,7 @@
 function Node_Zigzag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Zigzag";
 	
-	inputs[0] = nodeValue_Dimension(self);
+	newInput(0, nodeValue_Dimension(self));
 	
 	inputs[1] = nodeValue_Int("Amount", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] })
@@ -10,17 +10,17 @@ function Node_Zigzag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	inputs[2] = nodeValue_Vec2("Position", self, [0, 0] )
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	inputs[3] = nodeValue_Color("Color 1", self, c_white);
+	newInput(3, nodeValue_Color("Color 1", self, c_white));
 	
-	inputs[4] = nodeValue_Color("Color 2", self, c_black);
+	newInput(4, nodeValue_Color("Color 2", self, c_black));
 	
-	inputs[5] = nodeValue_Enum_Button("Type", self,  0, [ "Solid", "Smooth", "AA" ]);
+	newInput(5, nodeValue_Enum_Button("Type", self,  0, [ "Solid", "Smooth", "AA" ]));
 	
 	//////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[6] = nodeValueMap("Amount map", self);
+	newInput(6, nodeValueMap("Amount map", self));
 	
-	inputs[7] = nodeValueMap("Angle map", self);
+	newInput(7, nodeValueMap("Angle map", self));
 	
 	//////////////////////////////////////////////////////////////////////////////////
 	

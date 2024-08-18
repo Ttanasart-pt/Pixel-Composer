@@ -2,7 +2,7 @@ function Node_Fn_Math(_x, _y, _group = noone) : Node_Fn(_x, _y, _group) construc
 	name       = "Math";
 	time_based = false;
 	
-	inputs[inl + 0] = nodeValue_Enum_Scroll("Operation", self,  2 , [ "Add", "Minus", "Multiply" ] );
+	newInput(inl + 0, nodeValue_Enum_Scroll("Operation", self,  2 , [ "Add", "Minus", "Multiply" ] ));
 	
 	inputs[inl + 1] = nodeValue_Float("Value 1", self, 0 )
 		.setVisible(true, true);

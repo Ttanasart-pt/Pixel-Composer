@@ -1,11 +1,11 @@
 function Node_RM_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "RM CLoud";
 	
-	inputs[0] = nodeValue_Dimension(self);
+	newInput(0, nodeValue_Dimension(self));
 	
-	inputs[1] = nodeValue_Vec3("Position", self, [ 0, 0, 0 ]);
+	newInput(1, nodeValue_Vec3("Position", self, [ 0, 0, 0 ]));
 	
-	inputs[2] = nodeValue_Vec3("Rotation", self, [ 0, 0, 0 ]);
+	newInput(2, nodeValue_Vec3("Rotation", self, [ 0, 0, 0 ]));
 	
 	inputs[3] = nodeValue_Float("Scale", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01 ] });
@@ -13,22 +13,22 @@ function Node_RM_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	inputs[4] = nodeValue_Float("FOV", self, 30)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 90, 1 ] });
 	
-	inputs[5] = nodeValue_Vec2("View Range", self, [ 0, 6 ]);
+	newInput(5, nodeValue_Vec2("View Range", self, [ 0, 6 ]));
 	
 	inputs[6] = nodeValue_Float("Density", self, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[7] = nodeValue_Int("Detail", self, 8);
+	newInput(7, nodeValue_Int("Detail", self, 8));
 	
 	inputs[8] = nodeValue_Float("Threshold", self, 0.4)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[9] = nodeValue_Float("Detail Scaling", self, 2.);
+	newInput(9, nodeValue_Float("Detail Scaling", self, 2.));
 	
 	inputs[10] = nodeValue_Float("Detail Attenuation", self, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[11] = nodeValue_Enum_Scroll("Shape", self,  0, [ "Volume", "Plane" ]);
+	newInput(11, nodeValue_Enum_Scroll("Shape", self,  0, [ "Volume", "Plane" ]));
 	
 	inputs[12] = nodeValue_Bool("Use Fog", self, 0)
 	

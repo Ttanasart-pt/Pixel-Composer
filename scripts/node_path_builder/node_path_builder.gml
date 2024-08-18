@@ -21,7 +21,7 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		.setVisible(true, true)
 		.setArrayDepth(2);
 	
-	inputs[1] = nodeValue_Bool("Loop", self, false);
+	newInput(1, nodeValue_Bool("Loop", self, false));
 	
 	outputs[0] = nodeValue_Output("Path", self, VALUE_TYPE.pathnode, self);
 	

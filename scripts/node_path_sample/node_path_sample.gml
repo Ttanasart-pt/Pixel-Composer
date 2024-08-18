@@ -6,9 +6,9 @@ function Node_Path_Sample(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	inputs[0] = nodeValue_PathNode("Path", self, noone)
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Float("Ratio", self, 0);
+	newInput(1, nodeValue_Float("Ratio", self, 0));
 	
-	inputs[2] = nodeValue_Enum_Scroll("Type", self,  0, [ "Loop", "Ping pong" ]);
+	newInput(2, nodeValue_Enum_Scroll("Type", self,  0, [ "Loop", "Ping pong" ]));
 	
 	outputs[0] = nodeValue_Output("Position", self, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);

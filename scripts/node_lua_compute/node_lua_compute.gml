@@ -2,9 +2,9 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	name = "Lua Compute";
 	update_on_frame = true;
 	
-	inputs[0]  = nodeValue_Text("Function name", self, "render" + string(irandom_range(100000, 999999)));
+	newInput(0, nodeValue_Text("Function name", self, "render" + string(irandom_range(100000, 999999))));
 	
-	inputs[1]  = nodeValue_Enum_Scroll("Return type", self,  0, { data: [ "Number", "String", "Struct" ], update_hover: false });
+	newInput(1, nodeValue_Enum_Scroll("Return type", self,  0, { data: [ "Number", "String", "Struct" ], update_hover: false }));
 	
 	inputs[2]  = nodeValue_Text("Lua code", self, "", o_dialog_lua_reference)
 		.setDisplay(VALUE_DISPLAY.codeLUA);

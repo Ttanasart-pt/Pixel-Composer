@@ -6,9 +6,9 @@ function Node_Mesh_Create_Path(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	inputs[0] = nodeValue_PathNode("Path", self, noone)
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Int("Sample", self, 8);
+	newInput(1, nodeValue_Int("Sample", self, 8));
 	
-	inputs[2] = nodeValue_Enum_Scroll("Algorithm", self,  0, [ "Ear Clipping", "Convex Fan", "Delaunay" ]);
+	newInput(2, nodeValue_Enum_Scroll("Algorithm", self,  0, [ "Ear Clipping", "Convex Fan", "Delaunay" ]));
 	
 	outputs[0] = nodeValue_Output("Mesh", self, VALUE_TYPE.mesh, noone);
 	

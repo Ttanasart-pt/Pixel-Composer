@@ -8,7 +8,7 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	//use_cache = CACHE_USE.auto;
 	update_on_frame = true;
 	
-	inputs[0] = nodeValue_Vec2("Render dimension", self, DEF_SURF);
+	newInput(0, nodeValue_Vec2("Render dimension", self, DEF_SURF));
 		
 	inputs[1] = nodeValue_Bool("Round position", self, false)
 	

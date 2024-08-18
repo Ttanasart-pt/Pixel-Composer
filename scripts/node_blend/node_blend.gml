@@ -34,27 +34,27 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	name = "Blend";
 	manage_atlas = false;
 	
-	inputs[0] = nodeValue_Surface("Background", self);
-	inputs[1] = nodeValue_Surface("Foreground", self);
+	newInput(0, nodeValue_Surface("Background", self));
+	newInput(1, nodeValue_Surface("Foreground", self));
 	
-	inputs[2] = nodeValue_Enum_Scroll("Blend mode", self, 0, BLEND_TYPES );
+	newInput(2, nodeValue_Enum_Scroll("Blend mode", self, 0, BLEND_TYPES ));
 	
 	inputs[3] = nodeValue_Float("Opacity", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[4] = nodeValue_Surface("Mask", self);
+	newInput(4, nodeValue_Surface("Mask", self));
 	
-	inputs[5] = nodeValue_Enum_Scroll("Fill mode", self, 0, [ "None", "Stretch", "Tile" ]);
+	newInput(5, nodeValue_Enum_Scroll("Fill mode", self, 0, [ "None", "Stretch", "Tile" ]));
 	
 	inputs[6] = nodeValue_Enum_Scroll("Output dimension", self, 0, [ "Background", "Forground", "Mask", "Maximum", "Constant" ])
 		.rejectArray();
 	
-	inputs[7] = nodeValue_Vec2("Constant dimension", self, DEF_SURF);
+	newInput(7, nodeValue_Vec2("Constant dimension", self, DEF_SURF));
 	
-	inputs[8] = nodeValue_Bool("Active", self, true);
+	newInput(8, nodeValue_Bool("Active", self, true));
 		active_index = 8;
 		
-	inputs[9] = nodeValue_Bool("Preserve alpha", self, false);
+	newInput(9, nodeValue_Bool("Preserve alpha", self, false));
 		
 	inputs[10] = nodeValue_Enum_Button("Horizontal Align", self, 0, 
 		[ THEME.inspector_surface_halign, THEME.inspector_surface_halign, THEME.inspector_surface_halign]);
@@ -62,12 +62,12 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	inputs[11] = nodeValue_Enum_Button("Vertical Align", self, 0, 
 		[ THEME.inspector_surface_valign, THEME.inspector_surface_valign, THEME.inspector_surface_valign]);
 	
-	inputs[12] = nodeValue_Bool("Invert mask", self, false);
+	newInput(12, nodeValue_Bool("Invert mask", self, false));
 	
 	inputs[13] = nodeValue_Float("Mask feather", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] });
 	
-	inputs[14] = nodeValue_Vec2("Position", self, [ 0.5, 0.5 ]);
+	newInput(14, nodeValue_Vec2("Position", self, [ 0.5, 0.5 ]));
 		
 	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	

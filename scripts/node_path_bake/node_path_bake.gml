@@ -5,9 +5,9 @@ function Node_Path_Bake(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	inputs[0] = nodeValue_PathNode("Path", self, noone)
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Float("Segment length", self, 1);
+	newInput(1, nodeValue_Float("Segment length", self, 1));
 	
-	inputs[2] = nodeValue_Bool("Spread single path", self, true);
+	newInput(2, nodeValue_Bool("Spread single path", self, true));
 	
 	outputs[0] = nodeValue_Output("Segments", self, VALUE_TYPE.float, [[]])
 		.setDisplay(VALUE_DISPLAY.vector)

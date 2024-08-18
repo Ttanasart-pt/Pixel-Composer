@@ -1,7 +1,7 @@
 function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Warp";
 	
-	inputs[0] = nodeValue_Surface("Surface in", self);
+	newInput(0, nodeValue_Surface("Surface in", self));
 	
 	inputs[1] = nodeValue_Vec2("Top left", self, [ 0, 0 ] )
 		.setUnitRef(function(index) { return getDimension(index); });
@@ -15,12 +15,12 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	inputs[4] = nodeValue_Vec2("Bottom right", self, DEF_SURF )
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	inputs[5] = nodeValue_Bool("Active", self, true);
+	newInput(5, nodeValue_Bool("Active", self, true));
 		active_index = 5;
 	
-	inputs[6] = nodeValue_Bool("Use custom dimension", self, false);
+	newInput(6, nodeValue_Bool("Use custom dimension", self, false));
 	
-	inputs[7] = nodeValue_Dimension(self);
+	newInput(7, nodeValue_Dimension(self));
 	
 	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	

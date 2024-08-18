@@ -14,18 +14,18 @@ function Node_VFX_Triangulate(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	
 	manual_ungroupable	 = false;
 	
-	inputs[0] = nodeValue_Vec2("Output dimension", self, DEF_SURF );
+	newInput(0, nodeValue_Vec2("Output dimension", self, DEF_SURF ));
 		
 	inputs[1] = nodeValue_Particle("Particles", self, -1 )
 		.setVisible(true, true);
 		
-	inputs[2] = nodeValue_Float("Thickness", self, 1 );
+	newInput(2, nodeValue_Float("Thickness", self, 1 ));
 		
-	inputs[3] = nodeValue_Color("Color", self, c_white );
+	newInput(3, nodeValue_Color("Color", self, c_white ));
 		
-	inputs[4] = nodeValue_Bool("Inherit Thickness", self, false );
+	newInput(4, nodeValue_Bool("Inherit Thickness", self, false ));
 		
-	inputs[5] = nodeValue_Bool("Inherit Color", self, false );
+	newInput(5, nodeValue_Bool("Inherit Color", self, false ));
 	
 	outputs[0] = nodeValue_Output("Triangles", self, VALUE_TYPE.surface, noone);
 	

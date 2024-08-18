@@ -1,7 +1,7 @@
 function Node_Pytagorean_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Pytagorean Tile";
 	
-	inputs[0] = nodeValue_Dimension(self);
+	newInput(0, nodeValue_Dimension(self));
 	
 	inputs[1] = nodeValue_Vec2("Position", self, [ 0, 0 ])
 		.setUnitRef(function(index) { return getDimension(index); });
@@ -19,47 +19,47 @@ function Node_Pytagorean_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	inputs[5] = nodeValue_Gradient("Tile color", self, new gradientObject(cola(c_white)))	
 		.setMappable(18);
 	
-	inputs[6] = nodeValue_Color("Gap color", self, c_black);
+	newInput(6, nodeValue_Color("Gap color", self, c_black));
 	
-	inputs[7] = nodeValue_Enum_Scroll("Render type", self,  0, ["Colored tile", "Height map", "Texture grid"]);
+	newInput(7, nodeValue_Enum_Scroll("Render type", self,  0, ["Colored tile", "Height map", "Texture grid"]));
 		
 	inputs[8] = nodeValue_Float("Seed", self, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[8].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 		
-	inputs[9] = nodeValue_Surface("Texture", self);
+	newInput(9, nodeValue_Surface("Texture", self));
 	
-	inputs[10] = nodeValue_Bool("Anti aliasing", self, false);
-	
-	//////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	inputs[11] = nodeValueMap("Scale map", self);
-	
-	inputs[12] = nodeValueMap("Angle map", self);
-	
-	inputs[13] = nodeValueMap("Gap map", self);
+	newInput(10, nodeValue_Bool("Anti aliasing", self, false));
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[14] = nodeValue_Bool("Truchet", self, false);
+	newInput(11, nodeValueMap("Scale map", self));
 	
-	inputs[15] = nodeValue_Int("Truchet seed", self, seed_random());
+	newInput(12, nodeValueMap("Angle map", self));
+	
+	newInput(13, nodeValueMap("Gap map", self));
+	
+	//////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	newInput(14, nodeValue_Bool("Truchet", self, false));
+	
+	newInput(15, nodeValue_Int("Truchet seed", self, seed_random()));
 	
 	inputs[16] = nodeValue_Float("Truchet threshold", self, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider)
 		
-	inputs[17] = nodeValue_Rotation("Phase", self, 90);
+	newInput(17, nodeValue_Rotation("Phase", self, 90));
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[18] = nodeValueMap("Gradient map", self);
+	newInput(18, nodeValueMap("Gradient map", self));
 	
-	inputs[19] = nodeValueGradientRange("Gradient map range", self, inputs[5]);
+	newInput(19, nodeValueGradientRange("Gradient map range", self, inputs[5]));
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[20] = nodeValue_Rotation_Range("Texture angle", self, [ 0, 0 ]);
+	newInput(20, nodeValue_Rotation_Range("Texture angle", self, [ 0, 0 ]));
 			
-	inputs[21] = nodeValue_Slider_Range("Level", self, [ 0, 1 ]);
+	newInput(21, nodeValue_Slider_Range("Level", self, [ 0, 1 ]));
 	
 	input_display_list = [
 		["Output",  false], 0,

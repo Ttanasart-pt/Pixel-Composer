@@ -7,11 +7,11 @@ function Node_PCX_fn_Math(_x, _y, _group = noone) : Node_PCX(_x, _y, _group) con
 												 "Min",   "Max",      "Clamp",    -1, 
 												 "Lerp" ]);
 	
-	inputs[1] = nodeValue("x", self, JUNCTION_CONNECT.input, VALUE_TYPE.PCXnode, noone);
+	newInput(1, nodeValue("x", self, JUNCTION_CONNECT.input, VALUE_TYPE.PCXnode, noone));
 	
-	inputs[2] = nodeValue("y", self, JUNCTION_CONNECT.input, VALUE_TYPE.PCXnode, noone);
+	newInput(2, nodeValue("y", self, JUNCTION_CONNECT.input, VALUE_TYPE.PCXnode, noone));
 	
-	inputs[3] = nodeValue("z", self, JUNCTION_CONNECT.input, VALUE_TYPE.PCXnode, noone);
+	newInput(3, nodeValue("z", self, JUNCTION_CONNECT.input, VALUE_TYPE.PCXnode, noone));
 	
 	outputs[0] = nodeValue_Output("PCX", self, VALUE_TYPE.PCXnode, noone);
 	

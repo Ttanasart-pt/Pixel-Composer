@@ -2,29 +2,29 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	name = "Sprite Stack";
 	dimension_index = 1;
 	
-	inputs[0] = nodeValue_Surface("Base shape", self);
+	newInput(0, nodeValue_Surface("Base shape", self));
 	
-	inputs[1] = nodeValue_Dimension(self);
+	newInput(1, nodeValue_Dimension(self));
 	
-	inputs[2] = nodeValue_Int("Stack amount", self, 4);
+	newInput(2, nodeValue_Int("Stack amount", self, 4));
 	
-	inputs[3] = nodeValue_Vec2("Stack shift", self, [ 0, 1 ] );
+	newInput(3, nodeValue_Vec2("Stack shift", self, [ 0, 1 ] ));
 	
 	inputs[4] = nodeValue_Vec2("Position", self, [ 0, 0 ] )
 		.setUnitRef(function(index) { return getDimension(index); });
 		
-	inputs[5] = nodeValue_Rotation("Rotation", self, 0);
+	newInput(5, nodeValue_Rotation("Rotation", self, 0));
 	
-	inputs[6] = nodeValue_Color("Stack blend", self, c_white );
+	newInput(6, nodeValue_Color("Stack blend", self, c_white ));
 	
 	inputs[7] = nodeValue_Float("Alpha end", self, 1, "Alpha value for the last copy." )
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[8] = nodeValue_Bool("Move base", self, false, "Make each copy move the original image." );
+	newInput(8, nodeValue_Bool("Move base", self, false, "Make each copy move the original image." ));
 	
-	inputs[9] = nodeValue_Enum_Scroll("Highlight", self,  0, [ "None", "Color", "Inner pixel" ]);
+	newInput(9, nodeValue_Enum_Scroll("Highlight", self,  0, [ "None", "Color", "Inner pixel" ]));
 	
-	inputs[10] = nodeValue_Color("Highlight color", self, c_white);
+	newInput(10, nodeValue_Color("Highlight color", self, c_white));
 	
 	inputs[11] = nodeValue_Float("Highlight alpha", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);

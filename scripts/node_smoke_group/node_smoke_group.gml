@@ -12,23 +12,23 @@ function Node_Smoke_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _gro
 	
 	outputNode = noone;
 	
-	inputs[0] = nodeValue_Dimension(self);
+	newInput(0, nodeValue_Dimension(self));
 	
-	inputs[1] = nodeValue_Surface("Collision", self);
+	newInput(1, nodeValue_Surface("Collision", self));
 	
-	inputs[2] = nodeValue_Enum_Button("Material dissipation type", self,  1, [ "Multiply", "Subtract" ]);
+	newInput(2, nodeValue_Enum_Button("Material dissipation type", self,  1, [ "Multiply", "Subtract" ]));
 	
 	inputs[3] = nodeValue_Float("Material dissipation", self, 0.02)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 0.1, 0.01 ] });
 	
-	inputs[4] = nodeValue_Enum_Button("Velocity dissipation type", self,  1, [ "Multiply", "Subtract" ]);
+	newInput(4, nodeValue_Enum_Button("Velocity dissipation type", self,  1, [ "Multiply", "Subtract" ]));
 	
 	inputs[5] = nodeValue_Float("Velocity dissipation", self, 0.00)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 0.1, 0.01 ] });
 	
-	inputs[6] = nodeValue_Vec2("Acceleration", self, [ 0, 0 ]);
+	newInput(6, nodeValue_Vec2("Acceleration", self, [ 0, 0 ]));
 	
-	inputs[7] = nodeValue_Vec2("Material intertia", self, [ 1, -0.2 ]);
+	newInput(7, nodeValue_Vec2("Material intertia", self, [ 1, -0.2 ]));
 	
 	inputs[8] = nodeValue_Float("Initial pressure", self, 0.75)
 		.setDisplay(VALUE_DISPLAY.slider);
@@ -39,7 +39,7 @@ function Node_Smoke_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _gro
 	inputs[10] = nodeValue_Float("Velocity Maccormack weight", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[11] = nodeValue_Bool("Wrap", self, false);
+	newInput(11, nodeValue_Bool("Wrap", self, false));
 	
 	input_display_list_def = [ 
 		["Domain",		false], 0, 11, 1,

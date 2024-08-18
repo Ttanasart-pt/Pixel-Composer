@@ -1,17 +1,17 @@
 function Node_Alpha_Cutoff(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Alpha Cutoff";
 	
-	inputs[0] = nodeValue_Surface("Surface in", self);
+	newInput(0, nodeValue_Surface("Surface in", self));
 	
 	inputs[1] = nodeValue_Float("Minimum", self, 0.2, "Any pixel with less alpha (more transparent) than this will be removed.")
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[2] = nodeValue_Surface("Mask", self);
+	newInput(2, nodeValue_Surface("Mask", self));
 	
 	inputs[3] = nodeValue_Float("Mix", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[4] = nodeValue_Bool("Active", self, true);
+	newInput(4, nodeValue_Bool("Active", self, true));
 		active_index = 4;
 	
 	__init_mask_modifier(2); // inputs 5, 6, 

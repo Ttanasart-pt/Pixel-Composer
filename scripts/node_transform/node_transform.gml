@@ -8,7 +8,7 @@ enum OUTPUT_SCALING {
 function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Transform";
 	
-	inputs[0] = nodeValue_Surface("Surface in", self);
+	newInput(0, nodeValue_Surface("Surface in", self));
 	
 	inputs[1] = nodeValue_Vec2("Output dimension", self, [ 1, 1 ])
 		.setVisible(false);
@@ -35,27 +35,27 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			}) 
 		});
 	
-	inputs[4] = nodeValue_Bool("Relative anchor", self, true);
+	newInput(4, nodeValue_Bool("Relative anchor", self, true));
 	
-	inputs[5] = nodeValue_Rotation("Rotation", self, 0);
+	newInput(5, nodeValue_Rotation("Rotation", self, 0));
 	
-	inputs[6] = nodeValue_Vec2("Scale", self, [ 1, 1 ]);
+	newInput(6, nodeValue_Vec2("Scale", self, [ 1, 1 ]));
 	
-	inputs[7] = nodeValue_Enum_Button("Render Mode", self, 0, [ "Normal", "Tile", "Wrap" ]);
+	newInput(7, nodeValue_Enum_Button("Render Mode", self, 0, [ "Normal", "Tile", "Wrap" ]));
 	
 	inputs[8] = nodeValue_Float("Rotate by velocity", self, 0, "Make the surface rotates to follow its movement.")
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[9] = nodeValue_Enum_Scroll("Output dimension type", self, OUTPUT_SCALING.same_as_input, [ "Same as input", "Constant", "Relative to input", "Transformed" ]);
+	newInput(9, nodeValue_Enum_Scroll("Output dimension type", self, OUTPUT_SCALING.same_as_input, [ "Same as input", "Constant", "Relative to input", "Transformed" ]));
 	
-	inputs[10] = nodeValue_Bool("Round position", self, false, "Round position to the nearest integer value to avoid jittering.");
+	newInput(10, nodeValue_Bool("Round position", self, false, "Round position to the nearest integer value to avoid jittering."));
 	
-	inputs[11] = nodeValue_Bool("Active", self, true);
+	newInput(11, nodeValue_Bool("Active", self, true));
 		active_index = 11;
 	
-	inputs[12] = nodeValue_Bool("Echo", self, false);
+	newInput(12, nodeValue_Bool("Echo", self, false));
 	
-	inputs[13] = nodeValue_Int("Echo amount", self, 8);
+	newInput(13, nodeValue_Int("Echo amount", self, 8));
 	
 	inputs[14] = nodeValue_Float("Alpha", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);

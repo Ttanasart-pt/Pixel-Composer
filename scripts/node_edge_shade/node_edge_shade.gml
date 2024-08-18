@@ -1,9 +1,9 @@
 function Node_Edge_Shade(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Edge Shade";
 	
-	inputs[0] = nodeValue_Surface("Surface in", self);
+	newInput(0, nodeValue_Surface("Surface in", self));
 	
-	inputs[1] = nodeValue_Bool("Active", self, true);
+	newInput(1, nodeValue_Bool("Active", self, true));
 		active_index = 1;
 	
 	inputs[2] = nodeValue_Gradient("Colors", self, new gradientObject( [ cola(c_black), cola(c_white) ] ))
@@ -11,9 +11,9 @@ function Node_Edge_Shade(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	//////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[3] = nodeValueMap("Gradient map", self);
+	newInput(3, nodeValueMap("Gradient map", self));
 	
-	inputs[4] = nodeValueGradientRange("Gradient map range", self, inputs[2]);
+	newInput(4, nodeValueGradientRange("Gradient map range", self, inputs[2]));
 	
 	//////////////////////////////////////////////////////////////////////////////////
 	

@@ -2,7 +2,7 @@ function Node_PB_Layer(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	name = "PB Layer";
 	icon = THEME.pixel_builder;
 	
-	inputs[0] = nodeValue_Int("Layer", self, 0 );
+	newInput(0, nodeValue_Int("Layer", self, 0 ));
 	
 	outputs[0] = nodeValue_Output("pBox", self, VALUE_TYPE.pbBox, noone );
 	

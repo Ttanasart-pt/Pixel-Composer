@@ -5,9 +5,9 @@ function Node_Gradient_Replace_Color(_x, _y, _group = noone) : Node_Processor(_x
 	inputs[0] = nodeValue_Gradient("Gradient", self, new gradientObject(cola(c_white)))
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Palette("Color from", self, array_clone(DEF_PALETTE));
+	newInput(1, nodeValue_Palette("Color from", self, array_clone(DEF_PALETTE)));
 	
-	inputs[2] = nodeValue_Palette("Color to", self, array_clone(DEF_PALETTE));
+	newInput(2, nodeValue_Palette("Color to", self, array_clone(DEF_PALETTE)));
 	
 	inputs[3] = nodeValue_Float("Threshold", self, 0.1)
 		.setDisplay(VALUE_DISPLAY.slider);

@@ -6,7 +6,7 @@ function Node_FFT(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 		.setArrayDepth(1)
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Enum_Scroll("Preprocess Function", self,  0, [ "None", "Hann" ]);
+	newInput(1, nodeValue_Enum_Scroll("Preprocess Function", self,  0, [ "None", "Hann" ]));
 		
 	outputs[0] = nodeValue_Output("Array", self, VALUE_TYPE.float, [])
 		.setArrayDepth(1);

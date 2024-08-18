@@ -10,12 +10,12 @@ function Node_Level(_x, _y) : Node_Processor(_x, _y) constructor {
 	uniform_black = shader_get_uniform(sh_level, "black");
 	uniform_white = shader_get_uniform(sh_level, "white");
 	
-	inputs[| 0] = new NodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	newInput(| 0, NodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0));
 	
-	inputs[| 1] = new NodeValue_Float(1, "Black", self, 0);
+	newInput(| 1, NodeValue_Float(1, "Black", self, 0));
 	inputs[| 1].setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01]);
 	
-	inputs[| 2] = new NodeValue_Float(2, "White",   self, 1);
+	newInput(| 2, NodeValue_Float(2, "White",   self, 1));
 	inputs[| 2].setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01]);
 	
 	outputs[| 0] = new nodeValue_Output(0, "Surface out", self, VALUE_TYPE.surface, surface_create(1, 1));

@@ -1,12 +1,12 @@
 function Node_Vignette(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Vignette";
 	
-	inputs[0] = nodeValue_Surface("Surface in", self);
+	newInput(0, nodeValue_Surface("Surface in", self));
 	
-	inputs[1] = nodeValue_Bool("Active", self, true);
+	newInput(1, nodeValue_Bool("Active", self, true));
 		active_index = 1;
 	
-	inputs[2] = nodeValue_Float("Exposure", self, 15);
+	newInput(2, nodeValue_Float("Exposure", self, 15));
 	
 	inputs[3] = nodeValue_Float("Strength", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 2, 0.01 ] });

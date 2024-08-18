@@ -1,7 +1,7 @@
 function Node_RD(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Reaction Diffusion";
 	
-	inputs[0] = nodeValue_Surface("Seed", self);
+	newInput(0, nodeValue_Surface("Seed", self));
 	
 	inputs[1] = nodeValue_Float("Kill rate", self, 0.058)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 0.1, 0.001] })
@@ -14,7 +14,7 @@ function Node_RD(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	inputs[3] = nodeValue_Float("Timestep", self, 1)
 		.setMappable(10);
 	
-	inputs[4] = nodeValue_Int("Iteration", self, 16);
+	newInput(4, nodeValue_Int("Iteration", self, 16));
 	
 	inputs[5] = nodeValue_Float("Diffusion A", self, 1.)
 		.setDisplay(VALUE_DISPLAY.slider)
@@ -24,7 +24,7 @@ function Node_RD(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(12);
 	
-	inputs[7] = nodeValue_Surface("Add B", self);
+	newInput(7, nodeValue_Surface("Add B", self));
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
 	

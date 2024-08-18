@@ -1,7 +1,7 @@
 function Node_Surface_From_Color(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name	= "Surface from Color";
 	
-	inputs[0] = nodeValue_Palette("Color", self, array_clone(DEF_PALETTE));
+	newInput(0, nodeValue_Palette("Color", self, array_clone(DEF_PALETTE)));
 	
 	outputs[0] = nodeValue_Output("Surface", self, VALUE_TYPE.surface, noone);
 	

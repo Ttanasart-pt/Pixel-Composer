@@ -1,9 +1,9 @@
 function Node_Spout_Send(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name	= "Spout Send";
 	
-	inputs[0] = nodeValue_Text("Sender name", self, "PixelComposer");
+	newInput(0, nodeValue_Text("Sender name", self, "PixelComposer"));
 	
-	inputs[1] = nodeValue_Surface("Surface", self);
+	newInput(1, nodeValue_Surface("Surface", self));
 	
 	outputs[0] = nodeValue_Output("Surface", self, VALUE_TYPE.surface, noone)
 		.setVisible(false);

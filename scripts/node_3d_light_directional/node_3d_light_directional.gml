@@ -3,13 +3,13 @@ function Node_3D_Light_Directional(_x, _y, _group = noone) : Node_3D_Light(_x, _
 	
 	object_class = __3dLightDirectional;
 	
-	inputs[in_light + 0] = nodeValue_Bool("Cast Shadow", self, false);
+	newInput(in_light + 0, nodeValue_Bool("Cast Shadow", self, false));
 	
-	inputs[in_light + 1] = nodeValue_Int("Shadow Map Size", self, 1024);
+	newInput(in_light + 1, nodeValue_Int("Shadow Map Size", self, 1024));
 	
-	inputs[in_light + 2] = nodeValue_Int("Shadow Map Scale", self, 4);
+	newInput(in_light + 2, nodeValue_Int("Shadow Map Scale", self, 4));
 	
-	inputs[in_light + 3] = nodeValue_Float("Shadow Bias", self, .001);
+	newInput(in_light + 3, nodeValue_Float("Shadow Bias", self, .001));
 	
 	input_display_list = [
 		["Transform", false], 0,

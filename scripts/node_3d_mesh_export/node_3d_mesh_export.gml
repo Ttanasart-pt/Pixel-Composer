@@ -8,9 +8,9 @@ function Node_3D_Mesh_Export(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		.setDisplay(VALUE_DISPLAY.path_save, { filter: "Obj (.obj)|*.obj" })
 		.setVisible(true);
 	
-	inputs[2] = nodeValue_Bool("Export Texture", self, true);
+	newInput(2, nodeValue_Bool("Export Texture", self, true));
 	
-	inputs[3] = nodeValue_Bool("Invert UV", self, false);
+	newInput(3, nodeValue_Bool("Invert UV", self, false));
 	
 	input_display_list = [ 0, 
 		["Export", false], 1, 2, 3, 

@@ -18,26 +18,26 @@ function Node_Noise_Strand(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 		.setDisplay(VALUE_DISPLAY.slider);
 		addShaderProp(SHADER_UNIFORM.float, "slope");
 				
-	inputs[5] = nodeValue_Slider_Range("Curve", self, [ 0, 0 ] , { range: [ 0, 4, 0.01 ] });
+	newInput(5, nodeValue_Slider_Range("Curve", self, [ 0, 0 ] , { range: [ 0, 4, 0.01 ] }));
 		addShaderProp(SHADER_UNIFORM.float, "curve");
 				
-	inputs[6] = nodeValue_Float("Curve scale", self, 1 );
+	newInput(6, nodeValue_Float("Curve scale", self, 1 ));
 		addShaderProp(SHADER_UNIFORM.float, "curveDetail");
 		
 	inputs[7] = nodeValue_Float("Thickness", self, 0 )
 		.setDisplay(VALUE_DISPLAY.slider);
 		addShaderProp(SHADER_UNIFORM.float, "thickness");
 		
-	inputs[8] = nodeValue_Float("Curve shift", self, 0 );
+	newInput(8, nodeValue_Float("Curve shift", self, 0 ));
 		addShaderProp(SHADER_UNIFORM.float, "curveShift");
 		
-	inputs[9] = nodeValue_Enum_Button("Axis", self,  0 , [ "x", "y" ] );
+	newInput(9, nodeValue_Enum_Button("Axis", self,  0 , [ "x", "y" ] ));
 		addShaderProp(SHADER_UNIFORM.integer, "axis");
 		
-	inputs[10] = nodeValue_Enum_Button("Mode", self,  0 , [ "Line", "Area" ] );
+	newInput(10, nodeValue_Enum_Button("Mode", self,  0 , [ "Line", "Area" ] ));
 		addShaderProp(SHADER_UNIFORM.integer, "mode");
 		
-	inputs[11] = nodeValue_Slider_Range("Opacity", self, [ 0., 1. ] );
+	newInput(11, nodeValue_Slider_Range("Opacity", self, [ 0., 1. ] ));
 		addShaderProp(SHADER_UNIFORM.float, "alpha");
 		
 	input_display_list = [ 3, 

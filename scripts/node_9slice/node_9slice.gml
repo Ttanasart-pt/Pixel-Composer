@@ -1,14 +1,14 @@
 function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Nine Slice";
 	
-	inputs[0] = nodeValue_Surface("Surface in", self);
+	newInput(0, nodeValue_Surface("Surface in", self));
 	
-	inputs[1] = nodeValue_Dimension(self);
+	newInput(1, nodeValue_Dimension(self));
 	
 	inputs[2] = nodeValue_Padding("Splice", self, [ 0, 0, 0, 0 ])
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	inputs[3] = nodeValue_Enum_Scroll("Filling modes", self, 0, [ "Scale", "Repeat" ]);
+	newInput(3, nodeValue_Enum_Scroll("Filling modes", self, 0, [ "Scale", "Repeat" ]));
 	
 	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	

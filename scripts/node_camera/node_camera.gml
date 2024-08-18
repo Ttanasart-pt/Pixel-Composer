@@ -3,18 +3,18 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	preview_alpha = 0.5;
 	
 	onSurfaceSize = function() { return surface_get_dimension(getInputData(0)); };
-	inputs[0] = nodeValue_Area("Focus area", self, DEF_AREA, { onSurfaceSize, useShape : false });
+	newInput(0, nodeValue_Area("Focus area", self, DEF_AREA, { onSurfaceSize, useShape : false }));
 	
 	inputs[1] = nodeValue_Float("Zoom", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0.01, 4, 0.01 ] });
 	
-	inputs[2] = nodeValue_Bool("Depth of Field", self, false);
+	newInput(2, nodeValue_Bool("Depth of Field", self, false));
 	
-	inputs[3] = nodeValue_Float("Focal distance", self, 0);
+	newInput(3, nodeValue_Float("Focal distance", self, 0));
 	
-	inputs[4] = nodeValue_Float("Defocus", self, 1);
+	newInput(4, nodeValue_Float("Defocus", self, 1));
 	
-	inputs[5] = nodeValue_Float("Focal range", self, 0);
+	newInput(5, nodeValue_Float("Focal range", self, 0));
 	
 	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
@@ -34,9 +34,9 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 		if(_s) array_push(input_display_list, new Inspector_Spacer(20, true));
 		
-		inputs[index + 0] = nodeValue_Surface($"Element {_s}", self, noone);
+		newInput(index + 0, nodeValue_Surface($"Element {_s}", self, noone));
 		
-		inputs[index + 1] = nodeValue_Enum_Button($"Positioning {_s}", self,  false, [ "Space", "Camera" ]);
+		newInput(index + 1, nodeValue_Enum_Button($"Positioning {_s}", self,  false, [ "Space", "Camera" ]));
 	
 		inputs[index + 2] = nodeValue_Vec2($"Position {_s}", self, [ 0, 0 ] )
 			.setUnitRef(function(index) { return getDimension(index); });
@@ -46,9 +46,9 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 													 new scrollItem("Repeat X", s_node_camera_repeat, 2), 
 													 new scrollItem("Repeat Y", s_node_camera_repeat, 3), ]);
 		
-		inputs[index + 4] = nodeValue_Vec2($"Parallax {_s}", self, [ 0, 0 ]);
+		newInput(index + 4, nodeValue_Vec2($"Parallax {_s}", self, [ 0, 0 ]));
 		
-		inputs[index + 5] = nodeValue($"Depth {_s}", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
+		newInput(index + 5, nodeValue($"Depth {_s}", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0));
 		
 		for( var i = 0; i < data_length; i++ ) array_push(input_display_list, index + i);
 		

@@ -6,7 +6,7 @@ function Node_3D_Mesh_Plane(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _grou
 	inputs[in_mesh + 0] = nodeValue_D3Material("Material", self, new __d3dMaterial())
 		.setVisible(true, true);
 	
-	inputs[in_mesh + 1] = nodeValue_Enum_Button("Normal", self,  2 , [ "X", "Y", "Z" ]);
+	newInput(in_mesh + 1, nodeValue_Enum_Button("Normal", self,  2 , [ "X", "Y", "Z" ]));
 	
 	inputs[in_mesh + 2] = nodeValue_Bool("Both side", self, false )
 		.rejectArray();

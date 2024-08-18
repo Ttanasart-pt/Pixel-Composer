@@ -4,9 +4,9 @@ function Node_Counter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	setDimension(96, 48);
 	
-	inputs[0] = nodeValue_Float("Start", self, 1);
+	newInput(0, nodeValue_Float("Start", self, 1));
 	
-	inputs[1] = nodeValue_Float("Speed", self, 1);
+	newInput(1, nodeValue_Float("Speed", self, 1));
 	
 	inputs[2] = nodeValue_Int("Mode", self, 0, @"Counting mode
     - Frame count: Count value up/down per frame.

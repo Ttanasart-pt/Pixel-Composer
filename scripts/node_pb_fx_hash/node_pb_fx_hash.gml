@@ -1,18 +1,18 @@
 function Node_PB_Fx_Hash(_x, _y, _group = noone) : Node_PB_Fx(_x, _y, _group) constructor {
 	name = "Hash";
 	
-	inputs[1] = nodeValue_Color("Color", self, c_white );
+	newInput(1, nodeValue_Color("Color", self, c_white ));
 	
-	inputs[2] = nodeValue_Float("Hash", self, 2. );
+	newInput(2, nodeValue_Float("Hash", self, 2. ));
 	
-	inputs[3] = nodeValue_Bool("Invert", self, false );
+	newInput(3, nodeValue_Bool("Invert", self, false ));
 	
 	inputs[4] = nodeValue_Float("Dissolve", self, 0. )
 		.setDisplay(VALUE_DISPLAY.slider)
 	
 	inputs[5] = nodeValue_Int("Detail", self, 1 )
 	
-	inputs[6] = nodeValue_Vec2("Dissolve Scale", self, [ 4, 4 ] );
+	newInput(6, nodeValue_Vec2("Dissolve Scale", self, [ 4, 4 ] ));
 	
 	input_display_list = [ 0,
 		["Effect",	 false], 2, 1, 3, 

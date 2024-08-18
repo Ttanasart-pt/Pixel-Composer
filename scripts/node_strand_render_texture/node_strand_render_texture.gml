@@ -6,16 +6,16 @@ function Node_Strand_Render_Texture(_x, _y, _group = noone) : Node(_x, _y, _grou
 	
 	manual_ungroupable	 = false;
 	
-	inputs[0] = nodeValue_Dimension(self);
+	newInput(0, nodeValue_Dimension(self));
 	
 	inputs[1] = nodeValue("Strand", self, JUNCTION_CONNECT.input, VALUE_TYPE.strands, noone)
 		.setVisible(true, true);
 	
-	inputs[2] = nodeValue_Range("Thickness", self, [ 8, 8 ], { linked : true });
+	newInput(2, nodeValue_Range("Thickness", self, [ 8, 8 ], { linked : true }));
 	
-	inputs[3] = nodeValue_Gradient("Random color", self, new gradientObject(cola(c_white)));
+	newInput(3, nodeValue_Gradient("Random color", self, new gradientObject(cola(c_white))));
 	
-	inputs[4] = nodeValue_Surface("Texture", self);
+	newInput(4, nodeValue_Surface("Texture", self));
 	
 	inputs[5] = nodeValue_Float("Seed", self, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[5].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });

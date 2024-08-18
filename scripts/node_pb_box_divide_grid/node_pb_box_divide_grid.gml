@@ -4,9 +4,9 @@ function Node_PB_Box_Divide_Grid(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _
 	inputs[1] = nodeValue("pBox", self, JUNCTION_CONNECT.input, VALUE_TYPE.pbBox, noone )
 		.setVisible(true, true);
 		
-	inputs[2] = nodeValue_Vec2("Amount", self, [ 2, 2 ] );
+	newInput(2, nodeValue_Vec2("Amount", self, [ 2, 2 ] ));
 		
-	inputs[3] = nodeValue_Int("Spacing", self, 1 );
+	newInput(3, nodeValue_Int("Spacing", self, 1 ));
 	
 	inputs[4] = nodeValue_Bool("Mirror", self, 0 )
 	

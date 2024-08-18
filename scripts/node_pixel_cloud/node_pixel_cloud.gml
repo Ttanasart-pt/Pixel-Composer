@@ -1,7 +1,7 @@
 function Node_Pixel_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Pixel Cloud";
 	
-	inputs[0] = nodeValue_Surface("Surface in", self);
+	newInput(0, nodeValue_Surface("Surface in", self));
 	
 	inputs[1] = nodeValue_Int("Seed", self, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[1].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
@@ -9,26 +9,26 @@ function Node_Pixel_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	inputs[2] = nodeValue_Float("Strength", self, 0.1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 2, 0.01] });
 	
-	inputs[3] = nodeValue_Surface("Strength map", self);
+	newInput(3, nodeValue_Surface("Strength map", self));
 	
 	inputs[4] = nodeValue_Gradient("Color over lifetime", self, new gradientObject(cola(c_white)))
 		.setMappable(9);
 	
-	inputs[5] = nodeValue_Float("Distance", self, 1);
+	newInput(5, nodeValue_Float("Distance", self, 1));
 	
-	inputs[6] = nodeValue("Alpha over lifetime", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11);
+	newInput(6, nodeValue("Alpha over lifetime", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11));
 	
 	inputs[7] = nodeValue_Float("Random blending", self, 0.1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[8] = nodeValue_Bool("Active", self, true);
+	newInput(8, nodeValue_Bool("Active", self, true));
 		active_index = 8;
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[9] = nodeValueMap("Gradient map", self);
+	newInput(9, nodeValueMap("Gradient map", self));
 	
-	inputs[10] = nodeValueGradientRange("Gradient map range", self, inputs[4]);
+	newInput(10, nodeValueGradientRange("Gradient map range", self, inputs[4]));
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	

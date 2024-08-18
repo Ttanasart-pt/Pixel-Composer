@@ -1,9 +1,9 @@
 function Node_Warp_Perspective(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Perspective Warp";
 	
-	inputs[0] = nodeValue_Surface("Surface in", self);
+	newInput(0, nodeValue_Surface("Surface in", self));
 	
-	inputs[1] = nodeValue_Bool("Active", self, true);
+	newInput(1, nodeValue_Bool("Active", self, true));
 		active_index = 1;
 		
 	inputs[2] = nodeValue_Vec2("Top left", self, [ 0, 0 ] )

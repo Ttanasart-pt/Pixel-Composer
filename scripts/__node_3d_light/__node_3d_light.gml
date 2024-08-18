@@ -4,9 +4,9 @@ function Node_3D_Light(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group) 
 	if(!LOADING && !APPENDING)
 		inputs[0].setValue([ 0, 0, 1 ]);
 	
-	inputs[in_d3d + 0] = nodeValue_Bool("Active", self, true);
+	newInput(in_d3d + 0, nodeValue_Bool("Active", self, true));
 	
-	inputs[in_d3d + 1] = nodeValue_Color("Color", self, c_white);
+	newInput(in_d3d + 1, nodeValue_Color("Color", self, c_white));
 	
 	inputs[in_d3d + 2] = nodeValue_Float("Intensity", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);

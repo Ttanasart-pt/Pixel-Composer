@@ -22,15 +22,15 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	inputs[0] = nodeValue_Float("Value", self, 0)
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Bool("Integer", self, false);
+	newInput(1, nodeValue_Bool("Integer", self, false));
 	
-	inputs[2] = nodeValue_Enum_Scroll("Display", self, 0, { data: [ "Number", "Slider", "Rotator" ], update_hover: false });
+	newInput(2, nodeValue_Enum_Scroll("Display", self, 0, { data: [ "Number", "Slider", "Rotator" ], update_hover: false }));
 	
-	inputs[3] = nodeValue_Range("Range", self, [ 0, 1 ]);
+	newInput(3, nodeValue_Range("Range", self, [ 0, 1 ]));
 	
-	inputs[4] = nodeValue_Float("Step", self, 0.01);
+	newInput(4, nodeValue_Float("Step", self, 0.01));
 	
-	inputs[5] = nodeValue_Bool("Clamp to range", self, true);
+	newInput(5, nodeValue_Bool("Clamp to range", self, true));
 	
 	outputs[0] = nodeValue_Output("Number", self, VALUE_TYPE.float, 0);
 	

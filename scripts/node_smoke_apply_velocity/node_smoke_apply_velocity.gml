@@ -7,13 +7,13 @@ function Node_Smoke_Apply_Velocity(_x, _y, _group = noone) : Node_Smoke(_x, _y, 
 	inputs[0] = nodeValue("Domain", self, JUNCTION_CONNECT.input, VALUE_TYPE.sdomain, noone)
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Surface("Brush", self);
+	newInput(1, nodeValue_Surface("Brush", self));
 	
-	inputs[2] = nodeValue_Vec2("Position", self, [0, 0]);
+	newInput(2, nodeValue_Vec2("Position", self, [0, 0]));
 	
-	inputs[3] = nodeValue_Vec2("Velocity", self, [0, 0]);
+	newInput(3, nodeValue_Vec2("Velocity", self, [0, 0]));
 	
-	inputs[4] = nodeValue_Bool("Active", self, true);
+	newInput(4, nodeValue_Bool("Active", self, true));
 	
 	input_display_list = [ 
 		["Domain",		false], 0, 

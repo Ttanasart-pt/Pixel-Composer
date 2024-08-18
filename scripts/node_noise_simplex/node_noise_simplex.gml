@@ -1,9 +1,9 @@
 function Node_Noise_Simplex(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Simplex Noise";
 	
-	inputs[0] = nodeValue_Dimension(self);
+	newInput(0, nodeValue_Dimension(self));
 	
-	inputs[1] = nodeValue_Vec3("Position", self, [ 0, 0, 0 ] );
+	newInput(1, nodeValue_Vec3("Position", self, [ 0, 0, 0 ] ));
 	
 	inputs[2] = nodeValue_Vec2("Scale", self, [ 1, 1 ] )
 		.setMappable(8);
@@ -12,23 +12,23 @@ function Node_Noise_Simplex(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] })
 		.setMappable(9);
 	
-	inputs[4] = nodeValue_Enum_Button("Color mode", self,  0, [ "Greyscale", "RGB", "HSV" ]);
+	newInput(4, nodeValue_Enum_Button("Color mode", self,  0, [ "Greyscale", "RGB", "HSV" ]));
 	
-	inputs[5] = nodeValue_Slider_Range("Color R range", self, [ 0, 1 ]);
+	newInput(5, nodeValue_Slider_Range("Color R range", self, [ 0, 1 ]));
 	
-	inputs[6] = nodeValue_Slider_Range("Color G range", self, [ 0, 1 ]);
+	newInput(6, nodeValue_Slider_Range("Color G range", self, [ 0, 1 ]));
 	
-	inputs[7] = nodeValue_Slider_Range("Color B range", self, [ 0, 1 ]);
+	newInput(7, nodeValue_Slider_Range("Color B range", self, [ 0, 1 ]));
 	
 	//////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[8] = nodeValueMap("Scale map", self);
+	newInput(8, nodeValueMap("Scale map", self));
 	
-	inputs[9] = nodeValueMap("Iteration map", self);
+	newInput(9, nodeValueMap("Iteration map", self));
 	
 	//////////////////////////////////////////////////////////////////////////////////
 		
-	inputs[10] = nodeValue_Rotation("Rotation", self, 0);
+	newInput(10, nodeValue_Rotation("Rotation", self, 0));
 		
 	input_display_list = [
 		["Output",	false], 0, 

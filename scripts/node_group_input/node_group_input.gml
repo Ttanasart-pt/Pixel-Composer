@@ -78,12 +78,12 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	skipDefault();
 	setDimension(96, 32 + 24);
 	
-	inputs[0] = nodeValue_Enum_Scroll("Display type", self,  0, { data: GROUP_IO_DISPLAY[11], update_hover: false });
+	newInput(0, nodeValue_Enum_Scroll("Display type", self,  0, { data: GROUP_IO_DISPLAY[11], update_hover: false }));
 	
 	inputs[1] = nodeValue_Range("Range", self, [ 0, 1 ])
 		.setVisible(false);
 	
-	inputs[2] = nodeValue_Enum_Scroll("Input type", self,  11, { data: GROUP_IO_TYPE_NAME, update_hover: false });
+	newInput(2, nodeValue_Enum_Scroll("Input type", self,  11, { data: GROUP_IO_TYPE_NAME, update_hover: false }));
 	
 	inputs[3] = nodeValue_Text("Enum label", self, "")
 		.setVisible(false);
@@ -91,9 +91,9 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	inputs[4] = nodeValue_Enum_Button("Vector size", self,  0, [ "2", "3", "4" ])
 		.setVisible(false);
 	
-	inputs[5] = nodeValue_Int("Order", self, 0);
+	newInput(5, nodeValue_Int("Order", self, 0));
 	
-	inputs[6] = nodeValue_Bool("Display preview gizmo", self, true);
+	newInput(6, nodeValue_Bool("Display preview gizmo", self, true));
 		
 	inputs[7] = nodeValue_Float("Step", self, 0.01)
 		.setVisible(false);
@@ -108,9 +108,9 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 												        		 /* 6 */ new scrollItem("Lesser",			s_node_condition_type, 2), 
 												        		 /* 7 */ new scrollItem("Lesser or equal",	s_node_condition_type, 3), ]);
 	
-	inputs[10] = nodeValue_Float("Visible Check", self, 0);
+	newInput(10, nodeValue_Float("Visible Check", self, 0));
 	
-	inputs[11] = nodeValue_Float("Visible Check To", self, 0);
+	newInput(11, nodeValue_Float("Visible Check To", self, 0));
 	
 	inputs[10].setFrom_condition = function(_valueFrom) {
 		if(is_instanceof(_valueFrom.node, Node_Group_Input)) return true;

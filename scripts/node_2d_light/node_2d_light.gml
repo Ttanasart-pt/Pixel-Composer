@@ -15,7 +15,7 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	uniform_band = shader_get_uniform(shader, "band");
 	uniform_attn = shader_get_uniform(shader, "atten");
 	
-	inputs[0] = nodeValue_Surface("Surface in", self);
+	newInput(0, nodeValue_Surface("Surface in", self));
 	
 	inputs[1] = nodeValue_Enum_Scroll("Light shape", self, 0, [	new scrollItem("Point",           s_node_2d_light_shape, 0), 
 																	new scrollItem("Line",            s_node_2d_light_shape, 1), 
@@ -25,16 +25,16 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	inputs[2] = nodeValue_Vec2("Center", self, [ 16, 16 ])
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	inputs[3] = nodeValue_Float("Range", self, 16);
+	newInput(3, nodeValue_Float("Range", self, 16));
 	
 	inputs[4] = nodeValue_Float("Intensity", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[5] = nodeValue_Color("Color", self, c_white);
+	newInput(5, nodeValue_Color("Color", self, c_white));
 	
-	inputs[6] = nodeValue_Vec2("Start", self, [ 16, 16 ]);
+	newInput(6, nodeValue_Vec2("Start", self, [ 16, 16 ]));
 	
-	inputs[7] = nodeValue_Vec2("Finish", self, [ 32, 16 ]);
+	newInput(7, nodeValue_Vec2("Finish", self, [ 32, 16 ]));
 	
 	inputs[8] = nodeValue_Int("Sweep", self, 15)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-80, 80, 0.1] });
@@ -54,12 +54,12 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	inputs[12] = nodeValue_Int("Radial banding", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 16, 0.1] });
 	
-	inputs[13] = nodeValue_Rotation("Radial start", self, 0);
+	newInput(13, nodeValue_Rotation("Radial start", self, 0));
 	
 	inputs[14] = nodeValue_Float("Radial band ratio", self, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[15] = nodeValue_Bool("Active", self, true);
+	newInput(15, nodeValue_Bool("Active", self, true));
 		active_index = 15;
 		
 	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);

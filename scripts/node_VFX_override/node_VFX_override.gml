@@ -10,15 +10,15 @@ function Node_VFX_Override(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	inputs[0] = nodeValue_Particle("Particles", self, -1 )
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Float("Positions", self, noone );
+	newInput(1, nodeValue_Float("Positions", self, noone ));
 	
-	inputs[2] = nodeValue_Float("Rotations", self, noone );
+	newInput(2, nodeValue_Float("Rotations", self, noone ));
 	
-	inputs[3] = nodeValue_Float("Scales", self, noone );
+	newInput(3, nodeValue_Float("Scales", self, noone ));
 	
-	inputs[4] = nodeValue_Color("Blend", self, noone );
+	newInput(4, nodeValue_Color("Blend", self, noone ));
 	
-	inputs[5] = nodeValue_Float("Alpha", self, noone );
+	newInput(5, nodeValue_Float("Alpha", self, noone ));
 	
 	inputs[6] = nodeValue_Surface("Surface", self)
 		.setVisible(true, false);

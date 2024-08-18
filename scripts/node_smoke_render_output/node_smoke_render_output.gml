@@ -11,13 +11,13 @@ function Node_Smoke_Render_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 	inputs[0] = nodeValue("Domain", self, JUNCTION_CONNECT.input, VALUE_TYPE.sdomain, noone)
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Dimension(self);
+	newInput(1, nodeValue_Dimension(self));
 		
-	inputs[2] = nodeValue_Bool("Interpolate", self, false);
+	newInput(2, nodeValue_Bool("Interpolate", self, false));
 		
-	inputs[3] = nodeValue_Bool("Draw Domain", self, false);
+	newInput(3, nodeValue_Bool("Draw Domain", self, false));
 		
-	inputs[4] = nodeValue_Bool("Auto Update", self, true);
+	newInput(4, nodeValue_Bool("Auto Update", self, true));
 	
 	input_display_list = [
 		["Domain",	false], 0, 

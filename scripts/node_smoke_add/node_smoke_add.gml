@@ -9,11 +9,11 @@ function Node_Smoke_Add(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) con
 	inputs[0] = nodeValue("Domain", self, JUNCTION_CONNECT.input, VALUE_TYPE.sdomain, noone)
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Surface("Fluid brush", self);
+	newInput(1, nodeValue_Surface("Fluid brush", self));
 	
-	inputs[2] = nodeValue_Vec2("Position", self, [0, 0]);
+	newInput(2, nodeValue_Vec2("Position", self, [0, 0]));
 	
-	inputs[3] = nodeValue_Bool("Active", self, true);
+	newInput(3, nodeValue_Bool("Active", self, true));
 	
 	inputs[4] = nodeValue_Float("Inherit velocity", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] });
@@ -21,9 +21,9 @@ function Node_Smoke_Add(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) con
 	inputs[5] = nodeValue_Float("Density", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[6] = nodeValue_Int("Expand velocity mask", self, 0);
+	newInput(6, nodeValue_Int("Expand velocity mask", self, 0));
 	
-	inputs[7] = nodeValue_Vec2("Velocity", self, [0, 0]);
+	newInput(7, nodeValue_Vec2("Velocity", self, [0, 0]));
 	
 	input_display_list = [ 
 		["Domain",	 false], 0, 

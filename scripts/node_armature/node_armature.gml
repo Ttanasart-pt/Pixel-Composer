@@ -2,7 +2,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	name = "Armature Create";
 	setDimension(96, 72);
 	
-	//inputs[0] = nodeValue_Int("Axis", self, 0);
+	//newInput(0, nodeValue_Int("Axis", self, 0));
 	
 	bone_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { #region
 		var _b  = attributes.bones;

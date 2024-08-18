@@ -1,7 +1,7 @@
 function Node_Convolution(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Convolution";
 	
-	inputs[0] = nodeValue_Surface("Surface in", self);
+	newInput(0, nodeValue_Surface("Surface in", self));
 	
 	inputs[1] = nodeValue_Float("Kernel", self, array_create(9))
 		.setDisplay(VALUE_DISPLAY.matrix, { size: 3 });
@@ -9,15 +9,15 @@ function Node_Convolution(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	inputs[2] = nodeValue_Enum_Scroll("Oversample mode", self, 0, [ "Empty", "Clamp", "Repeat" ])
 		.setTooltip("How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.");
 	
-	inputs[3] = nodeValue_Surface("Mask", self);
+	newInput(3, nodeValue_Surface("Mask", self));
 	
 	inputs[4] = nodeValue_Float("Mix", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[5] = nodeValue_Bool("Active", self, true);
+	newInput(5, nodeValue_Bool("Active", self, true));
 		active_index = 5;
 	
-	inputs[6] = nodeValue_Toggle("Channel", self, 0b1111, { data: array_create(4, THEME.inspector_channel) });
+	newInput(6, nodeValue_Toggle("Channel", self, 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	__init_mask_modifier(3); // inputs 7, 8, 
 	

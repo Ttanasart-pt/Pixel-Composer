@@ -1,7 +1,7 @@
 function __init_mask_modifier(_mask_index) { #region
 	var _ind = array_length(inputs);
 	
-	inputs[_ind + 0] = nodeValue_Bool("Invert mask", self, false);
+	newInput(_ind + 0, nodeValue_Bool("Invert mask", self, false));
 	
 	inputs[_ind + 1] = nodeValue_Float("Mask feather", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 32, 0.1] });

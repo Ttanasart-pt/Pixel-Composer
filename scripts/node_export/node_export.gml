@@ -46,7 +46,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	_format_still = { filter: "Portable Network Graphics (.png)|*.png|Joint Photographic Experts Group (.jpg)|*.jpg" };
 	_format_anim  = { filter: "Graphics Interchange Format (.gif)|*.gif|Animated WebP (.webp)|*.webp" };
 	
-	inputs[0] = nodeValue_Surface("Surface", self);
+	newInput(0, nodeValue_Surface("Surface", self));
 	
 	inputs[1] = nodeValue_Path("Paths",   self, "")
 		.setDisplay(VALUE_DISPLAY.path_save, _format_still)
@@ -63,7 +63,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	inputs[3] = nodeValue_Enum_Scroll("Type", self,  0, { data: format_single, update_hover: false })
 		.rejectArray();
 	
-	inputs[4] = nodeValue_Int("Template guides", self, 0);
+	newInput(4, nodeValue_Int("Template guides", self, 0));
 
 	inputs[5] = nodeValue_Bool("Loop", self, true)
 		.setVisible(false)
@@ -91,14 +91,14 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 100, 0.1 ] })
 		.rejectArray();
 	
-	inputs[11] = nodeValue_Int("Sequence begin", self, 0);
+	newInput(11, nodeValue_Int("Sequence begin", self, 0));
 	
-	inputs[12] = nodeValue_Slider_Range("Frame range", self, [0, -1], { range: [0, TOTAL_FRAMES, 0.1] });
+	newInput(12, nodeValue_Slider_Range("Frame range", self, [0, -1], { range: [0, TOTAL_FRAMES, 0.1] }));
 	
 	png_format   = [ "INDEX4", "INDEX8", "Default (PNG32)" ];
-	inputs[13] = nodeValue_Enum_Scroll("Subformat", self,  2, { data: png_format, update_hover: false });
+	newInput(13, nodeValue_Enum_Scroll("Subformat", self,  2, { data: png_format, update_hover: false }));
 	
-	inputs[14] = nodeValue_Int("Frame step", self, 1);
+	newInput(14, nodeValue_Int("Frame step", self, 1));
 	
 	inputs[15] = nodeValue_Bool("Custom Range", self, false)
 		.rejectArray();

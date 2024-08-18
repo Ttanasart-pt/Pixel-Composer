@@ -3,19 +3,19 @@ function Node_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	use_cache   = CACHE_USE.manual;
 	clearCacheOnChange = false;
 	
-	inputs[0] = nodeValue_Surface("Surface in",		self);
+	newInput(0, nodeValue_Surface("Surface in",		self));
 	
-	inputs[1] = nodeValue_Int("Max life",			self, 5);
+	newInput(1, nodeValue_Int("Max life",			self, 5));
 	
-	inputs[2] = nodeValue_Bool("Loop",				self, false);
+	newInput(2, nodeValue_Bool("Loop",				self, false));
 	
-	inputs[3] = nodeValue_Int("Max distance",		self, -1, "Maximum distance to search for movement, set to -1 to search the entire image.");
+	newInput(3, nodeValue_Int("Max distance",		self, -1, "Maximum distance to search for movement, set to -1 to search the entire image."));
 	
-	inputs[4] = nodeValue_Bool("Match color",		self, true, "Make trail track pixels of the same color, instead of the closet pixels.");
+	newInput(4, nodeValue_Bool("Match color",		self, true, "Make trail track pixels of the same color, instead of the closet pixels."));
 	
-	inputs[5] = nodeValue_Bool("Blend color",		self, true, "Blend color between two pixel smoothly.");
+	newInput(5, nodeValue_Bool("Blend color",		self, true, "Blend color between two pixel smoothly."));
 	
-	inputs[6] = nodeValue("Alpha over life",	self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11);
+	newInput(6, nodeValue("Alpha over life",	self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11));
 	
 	outputs[0] = nodeValue_Output("Surface out",		self, VALUE_TYPE.surface, noone);
 	

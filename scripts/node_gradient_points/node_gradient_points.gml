@@ -1,27 +1,27 @@
 function Node_Gradient_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Draw 4 Points Gradient";
 	
-	inputs[0] = nodeValue_Dimension(self);
+	newInput(0, nodeValue_Dimension(self));
 	
 	inputs[1] = nodeValue_Vec2("Center 1", self, [ 0, 0 ] )
 		.setUnitRef(function(index) { return getDimension(index); });
-	inputs[2] = nodeValue_Color("Color 1", self, c_white );
+	newInput(2, nodeValue_Color("Color 1", self, c_white ));
 	
 	inputs[3] = nodeValue_Vec2("Center 2", self, [ DEF_SURF_W, 0 ] )
 		.setUnitRef(function(index) { return getDimension(index); });
-	inputs[4] = nodeValue_Color("Color 2", self, c_white );
+	newInput(4, nodeValue_Color("Color 2", self, c_white ));
 	
 	inputs[5] = nodeValue_Vec2("Center 3", self, [ 0, DEF_SURF_H ] )
 		.setUnitRef(function(index) { return getDimension(index); });
-	inputs[6] = nodeValue_Color("Color 3", self, c_white );
+	newInput(6, nodeValue_Color("Color 3", self, c_white ));
 	
 	inputs[7] = nodeValue_Vec2("Center 4", self, DEF_SURF , { useGlobal : false })
 		.setUnitRef(function(index) { return getDimension(index); });
-	inputs[8] = nodeValue_Color("Color 4", self, c_white );
+	newInput(8, nodeValue_Color("Color 4", self, c_white ));
 	
-	inputs[9] = nodeValue_Bool("Use palette", self, false );
+	newInput(9, nodeValue_Bool("Use palette", self, false ));
 	
-	inputs[10] = nodeValue_Palette("Palette", self, array_clone(DEF_PALETTE));
+	newInput(10, nodeValue_Palette("Palette", self, array_clone(DEF_PALETTE)));
 	
 	inputs[11] = nodeValue_Float("Falloff 1", self, 6 )
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 32, 0.1 ] });

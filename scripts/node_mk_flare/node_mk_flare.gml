@@ -25,12 +25,12 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	name = "MK Lens Flare";
 	batch_output = false;
 	
-	inputs[0] = nodeValue_Surface("Background", self);
+	newInput(0, nodeValue_Surface("Background", self));
 	
 	inputs[1] = nodeValue_Vec2("Origin", self, [ 0, 0 ])
 		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
 	
-	inputs[2] = nodeValue_Dimension(self);
+	newInput(2, nodeValue_Dimension(self));
 		
 	inputs[3] = nodeValue_Float("Scale", self, 1)
 		

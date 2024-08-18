@@ -6,9 +6,9 @@ function Node_Struct_Set(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	inputs[0] = nodeValue_Struct("Struct", self, {})
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Text("Key", self, "");
+	newInput(1, nodeValue_Text("Key", self, ""));
 	
-	inputs[2] = nodeValue("Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0);
+	newInput(2, nodeValue("Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0));
 	
 	outputs[0] = nodeValue_Output("Struct", self, VALUE_TYPE.struct, {});
 	

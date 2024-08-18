@@ -7,11 +7,11 @@ function Node_Segment_Filter(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		.setVisible(true, true)
 		.setArrayDepth(1);
 	
-	inputs[1] = nodeValue_Rotation("Angle", self, 0);
+	newInput(1, nodeValue_Rotation("Angle", self, 0));
 	
-	inputs[2] = nodeValue_Float("Spread", self, 15);
+	newInput(2, nodeValue_Float("Spread", self, 15));
 	
-	inputs[3] = nodeValue_Bool("Both side", self, true);
+	newInput(3, nodeValue_Bool("Both side", self, true));
 		
 	outputs[0] = nodeValue_Output("Segments", self, VALUE_TYPE.float, [[]])
 		.setDisplay(VALUE_DISPLAY.vector)

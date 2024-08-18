@@ -6,14 +6,14 @@ function Node_MK_Sparkle(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	dimension_index = -1;
 	update_on_frame = true;
 	
-	inputs[0] = nodeValue_Int("Size", self, 5);
+	newInput(0, nodeValue_Int("Size", self, 5));
 	
-	inputs[1] = nodeValueSeed(self, VALUE_TYPE.float);
+	newInput(1, nodeValueSeed(self, VALUE_TYPE.float));
 	
 	inputs[2] = nodeValue_Float("Speed", self, 1)	
 		.setDisplay(VALUE_DISPLAY.slider)
 	
-	inputs[3] = nodeValue_Bool("Shade", self, false);
+	newInput(3, nodeValue_Bool("Shade", self, false));
 	
 	inputs[4] = nodeValue_Float("Amount", self, 0.5)	
 		.setDisplay(VALUE_DISPLAY.slider)
@@ -149,7 +149,7 @@ function __Node_MK_Sparkle(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	dimension_index = -1;
 	update_on_frame = true;
 	
-	inputs[0] = nodeValue_Int("Size", self, 5);
+	newInput(0, nodeValue_Int("Size", self, 5));
 	
 	inputs[1] = nodeValue_Float("Sparkle", self, [ 
 			[ MKSPARK_DIRR.main, 0,  0, 2, 1, 0, 0 ], 
@@ -158,9 +158,9 @@ function __Node_MK_Sparkle(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		.setArrayDepth(2)
 		.setArrayDynamic();
 	
-	inputs[2] = nodeValue_Int("Start frame", self, 0);
+	newInput(2, nodeValue_Int("Start frame", self, 0));
 	
-	inputs[3] = nodeValue_Float("Speed", self, 1);
+	newInput(3, nodeValue_Float("Speed", self, 1));
 	
 	inputs[4] = nodeValue_Int("Loop", self, [])
 		.setArrayDepth(1)

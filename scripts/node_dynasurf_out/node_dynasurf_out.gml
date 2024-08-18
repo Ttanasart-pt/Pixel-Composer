@@ -5,21 +5,21 @@ function Node_DynaSurf_Out(_x, _y, _group = noone) : Node_PCX(_x, _y, _group) co
 	manual_deletable	 = false;
 	destroy_when_upgroup = true;
 	
-	inputs[0] = nodeValue("Surface", self, JUNCTION_CONNECT.input, VALUE_TYPE.PCXnode, noone);
+	newInput(0, nodeValue("Surface", self, JUNCTION_CONNECT.input, VALUE_TYPE.PCXnode, noone));
 	
-	inputs[1] = nodeValue("x", self, JUNCTION_CONNECT.input, VALUE_TYPE.PCXnode, noone);
+	newInput(1, nodeValue("x", self, JUNCTION_CONNECT.input, VALUE_TYPE.PCXnode, noone));
 	
-	inputs[2] = nodeValue("y", self, JUNCTION_CONNECT.input, VALUE_TYPE.PCXnode, noone);
+	newInput(2, nodeValue("y", self, JUNCTION_CONNECT.input, VALUE_TYPE.PCXnode, noone));
 	
-	inputs[3] = nodeValue("sx", self, JUNCTION_CONNECT.input, VALUE_TYPE.PCXnode, noone);
+	newInput(3, nodeValue("sx", self, JUNCTION_CONNECT.input, VALUE_TYPE.PCXnode, noone));
 	
-	inputs[4] = nodeValue("sy", self, JUNCTION_CONNECT.input, VALUE_TYPE.PCXnode, noone);
+	newInput(4, nodeValue("sy", self, JUNCTION_CONNECT.input, VALUE_TYPE.PCXnode, noone));
 	
-	inputs[5] = nodeValue("angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.PCXnode, noone);
+	newInput(5, nodeValue("angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.PCXnode, noone));
 	
-	inputs[6] = nodeValue("color", self, JUNCTION_CONNECT.input, VALUE_TYPE.PCXnode, noone);
+	newInput(6, nodeValue("color", self, JUNCTION_CONNECT.input, VALUE_TYPE.PCXnode, noone));
 	
-	inputs[7] = nodeValue("alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.PCXnode, noone);
+	newInput(7, nodeValue("alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.PCXnode, noone));
 	 
 	outputs[0] = nodeValue_Output("PCX", self, VALUE_TYPE.PCXnode, noone)
 		.setVisible(false);

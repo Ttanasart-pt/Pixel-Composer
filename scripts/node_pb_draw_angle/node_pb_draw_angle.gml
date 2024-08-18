@@ -1,7 +1,7 @@
 function Node_PB_Draw_Angle(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _group) constructor {
 	name = "Angle";
 	
-	inputs[3] = nodeValue_Enum_Button("Side", self,  0 , array_create(4, THEME.obj_angle) );
+	newInput(3, nodeValue_Enum_Button("Side", self,  0 , array_create(4, THEME.obj_angle) ));
 	
 	inputs[4] = nodeValue_Bool("Round", self, false )
 	

@@ -11,9 +11,9 @@ function Node_Boolean(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	inputs[0] = nodeValue_Bool("Value", self, false)
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Bool("Hide Background", self, false);
+	newInput(1, nodeValue_Bool("Hide Background", self, false));
 	
-	inputs[2] = nodeValue_Enum_Button("Name location", self,  1, [ "Top", "Bottom" ]);
+	newInput(2, nodeValue_Enum_Button("Name location", self,  1, [ "Top", "Bottom" ]));
 	
 	outputs[0] = nodeValue_Output("Boolean", self, VALUE_TYPE.boolean, false);
 	

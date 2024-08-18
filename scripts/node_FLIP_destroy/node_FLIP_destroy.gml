@@ -12,12 +12,12 @@ function Node_FLIP_Destroy(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	inputs[1] = nodeValue_Vec2("Position", self, [ 0, 0 ] )
 		.setUnitRef(function(index) { return getDimension(); });
 	
-	inputs[2] = nodeValue_Enum_Scroll("Shape", self,  0 , [ new scrollItem("Circle", s_node_shape_circle, 0), new scrollItem("Rectangle", s_node_shape_rectangle, 0), ]);
+	newInput(2, nodeValue_Enum_Scroll("Shape", self,  0 , [ new scrollItem("Circle", s_node_shape_circle, 0), new scrollItem("Rectangle", s_node_shape_rectangle, 0), ]));
 		
 	inputs[3] = nodeValue_Float("Radius", self, 4 )	
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] });
 		
-	inputs[4] = nodeValue_Vec2("Size", self, [ 4, 4 ] );
+	newInput(4, nodeValue_Vec2("Size", self, [ 4, 4 ] ));
 		
 	inputs[5] = nodeValue_Float("Ratio", self, 1 )
 		.setDisplay(VALUE_DISPLAY.slider);

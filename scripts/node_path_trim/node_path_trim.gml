@@ -5,7 +5,7 @@ function Node_Path_Trim(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	inputs[0] = nodeValue_PathNode("Path", self, noone)
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Slider_Range("Range", self, [ 0, 1 ]);
+	newInput(1, nodeValue_Slider_Range("Range", self, [ 0, 1 ]));
 	
 	outputs[0] = nodeValue_Output("Path", self, VALUE_TYPE.pathnode, self);
 	

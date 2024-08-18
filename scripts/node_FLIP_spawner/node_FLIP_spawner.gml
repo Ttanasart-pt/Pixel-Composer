@@ -9,20 +9,20 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	inputs[0] = nodeValue_Fdomain("Domain", self, noone )
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Enum_Scroll("Spawn Shape", self,  0 , [ new scrollItem("Circle", s_node_shape_circle, 0), new scrollItem("Rectangle", s_node_shape_rectangle, 0), "Surface" ]);
+	newInput(1, nodeValue_Enum_Scroll("Spawn Shape", self,  0 , [ new scrollItem("Circle", s_node_shape_circle, 0), new scrollItem("Rectangle", s_node_shape_rectangle, 0), "Surface" ]));
 	
 	inputs[2] = nodeValue_Vec2("Spawn Position", self, [ 0.5, 0.25 ] )
 		.setUnitRef(function(index) { return getDimension(); }, VALUE_UNIT.reference);
 	
-	inputs[3] = nodeValue_Enum_Button("Spawn Type", self,  0 , [ "Stream", "Splash" ]);
+	newInput(3, nodeValue_Enum_Button("Spawn Type", self,  0 , [ "Stream", "Splash" ]));
 	
-	inputs[4] = nodeValue_Int("Spawn Frame", self, 0 );
+	newInput(4, nodeValue_Int("Spawn Frame", self, 0 ));
 	
-	inputs[5] = nodeValue_Float("Spawn Amount", self, 8 );
+	newInput(5, nodeValue_Float("Spawn Amount", self, 8 ));
 	
-	inputs[6] = nodeValue_Range("Spawn Velocity", self, [ 0, 0 ] );
+	newInput(6, nodeValue_Range("Spawn Velocity", self, [ 0, 0 ] ));
 	
-	inputs[7] = nodeValue_Surface("Spawn Surface", self);
+	newInput(7, nodeValue_Surface("Spawn Surface", self));
 	
 	inputs[8] = nodeValue_Float("Spawn Radius", self, 2 )	
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] });
@@ -30,14 +30,14 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	inputs[9] = nodeValue_Int("Seed", self, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[9].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
-	inputs[10] = nodeValue_Rotation_Random("Spawn Direction", self, [ 0, 45, 135, 0, 0 ] );
+	newInput(10, nodeValue_Rotation_Random("Spawn Direction", self, [ 0, 45, 135, 0, 0 ] ));
 		
 	inputs[11] = nodeValue_Float("Inherit Velocity", self, 0 )	
 		.setDisplay(VALUE_DISPLAY.slider);
 		
-	inputs[12] = nodeValue_Int("Spawn Duration", self, 1 );
+	newInput(12, nodeValue_Int("Spawn Duration", self, 1 ));
 	
-	inputs[13] = nodeValue_Vec2("Spawn Szie", self, [ 2, 2 ] );
+	newInput(13, nodeValue_Vec2("Spawn Szie", self, [ 2, 2 ] ));
 	
 	input_display_list = [ 0, 9, 
 		["Spawner",	false], 1, 7, 8, 13, 2, 3, 4, 12, 5, 

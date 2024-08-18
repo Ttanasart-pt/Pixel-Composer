@@ -15,9 +15,9 @@ function Node_3D_Mesh_Path_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 	inputs[in_mesh + 3] = nodeValue_D3Material("Material Cap", self, new __d3dMaterial())
 		.setVisible(true, true);
 	
-	inputs[in_mesh + 4] = nodeValue_Bool("Smooth", self, false );
+	newInput(in_mesh + 4, nodeValue_Bool("Smooth", self, false ));
 	
-	inputs[in_mesh + 5] = nodeValue_Bool("End caps", self, true );
+	newInput(in_mesh + 5, nodeValue_Bool("End caps", self, true ));
 	
 	inputs[in_mesh + 6] = nodeValue_Int("Subdivision", self, 8 )
 		.setValidator(VV_min(2));
@@ -25,13 +25,13 @@ function Node_3D_Mesh_Path_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 	inputs[in_mesh + 7] = nodeValue_Float("Radius", self, 0.25 )
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[in_mesh + 8] = nodeValue("Radius Over Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11 );
+	newInput(in_mesh + 8, nodeValue("Radius Over Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11 ));
 	
-	inputs[in_mesh + 9] = nodeValue_Vec2("Texture Scale", self, [ 1, 1 ] );
+	newInput(in_mesh + 9, nodeValue_Vec2("Texture Scale", self, [ 1, 1 ] ));
 	
-	inputs[in_mesh + 10] = nodeValue_Bool("Loop", self, false );
+	newInput(in_mesh + 10, nodeValue_Bool("Loop", self, false ));
 	
-	inputs[in_mesh + 11] = nodeValue_Bool("Inverted", self, false );
+	newInput(in_mesh + 11, nodeValue_Bool("Inverted", self, false ));
 	
 	input_display_list = [
 		["Path",		false], 	in_mesh + 0, in_mesh + 10,

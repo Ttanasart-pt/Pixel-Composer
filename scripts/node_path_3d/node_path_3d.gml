@@ -114,7 +114,7 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		
 		var index = array_length(inputs);
 		
-		inputs[index] = nodeValue_Path_Anchor_3D("Anchor", self, [ _x, _y, _z, _dxx, _dxy, _dxz, _dyx, _dyy, _dyz, false ]);
+		newInput(index, nodeValue_Path_Anchor_3D("Anchor", self, [ _x, _y, _z, _dxx, _dxy, _dxz, _dyx, _dyy, _dyz, false ]));
 		
 		if(!rec) return inputs[index];
 		

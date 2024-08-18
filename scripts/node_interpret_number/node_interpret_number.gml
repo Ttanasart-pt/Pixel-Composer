@@ -6,18 +6,18 @@ function Node_Interpret_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 		.setVisible(true, true)
 		.setArrayDepth(1);
 	
-	inputs[1] = nodeValue_Enum_Button("Mode", self,  0, [ "Greyscale", "Gradient" ]);
+	newInput(1, nodeValue_Enum_Button("Mode", self,  0, [ "Greyscale", "Gradient" ]));
 	
-	inputs[2] = nodeValue_Range("Range", self, [ 0, 1 ] );
+	newInput(2, nodeValue_Range("Range", self, [ 0, 1 ] ));
 	
 	inputs[3] = nodeValue_Gradient("Gradient", self, new gradientObject(cola(c_white)))
 		.setMappable(4);
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[4] = nodeValueMap("Gradient map", self);
+	newInput(4, nodeValueMap("Gradient map", self));
 	
-	inputs[5] = nodeValueGradientRange("Gradient map range", self, inputs[3]);
+	newInput(5, nodeValueGradientRange("Gradient map range", self, inputs[3]));
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	

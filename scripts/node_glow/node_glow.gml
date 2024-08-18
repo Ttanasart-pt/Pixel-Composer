@@ -1,7 +1,7 @@
 function Node_Glow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Glow";
 	
-	inputs[0] = nodeValue_Surface("Surface in", self);
+	newInput(0, nodeValue_Surface("Surface in", self));
 	
 	inputs[1] = nodeValue_Float("Border", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 4, 0.1] });
@@ -12,23 +12,23 @@ function Node_Glow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	inputs[3] = nodeValue_Float("Strength", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01 ]});
 	
-	inputs[4] = nodeValue_Color("Color",   self, c_white);
+	newInput(4, nodeValue_Color("Color",   self, c_white));
 	
-	inputs[5] = nodeValue_Surface("Mask", self);
+	newInput(5, nodeValue_Surface("Mask", self));
 	
 	inputs[6] = nodeValue_Float("Mix", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[7] = nodeValue_Bool("Active", self, true);
+	newInput(7, nodeValue_Bool("Active", self, true));
 		active_index = 7;
 	
 	__init_mask_modifier(5); // inputs 8, 9, 
 	
-	inputs[10] = nodeValue_Enum_Button("Mode", self,  0, [ "Greyscale", "Alpha" ]);
+	newInput(10, nodeValue_Enum_Button("Mode", self,  0, [ "Greyscale", "Alpha" ]));
 		
-	inputs[11] = nodeValue_Bool("Draw original", self, true);
+	newInput(11, nodeValue_Bool("Draw original", self, true));
 	
-	inputs[12] = nodeValue_Enum_Button("Side", self,  0, [ "Outer", "Inner" ]);
+	newInput(12, nodeValue_Enum_Button("Side", self,  0, [ "Outer", "Inner" ]));
 		
 	input_display_list = [ 7, 
 		["Surfaces", true], 0, 5, 6, 8, 9, 

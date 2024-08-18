@@ -37,7 +37,7 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			TOTAL_FRAMES = max(1, ceil(content.duration * PROJECT.animator.framerate));
 		} });
 		
-	inputs[2]  = nodeValue_Bool("Mono", self, false);
+	newInput(2, nodeValue_Bool("Mono", self, false));
 		
 	outputs[0] = nodeValue_Output("Data", self, VALUE_TYPE.audioBit, noone)
 		.setArrayDepth(1);

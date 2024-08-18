@@ -5,9 +5,9 @@ function Node_PB_Box_Inset(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _group)
 	inputs[1] = nodeValue("pBox", self, JUNCTION_CONNECT.input, VALUE_TYPE.pbBox, noone )
 		.setVisible(true, true);
 		
-	inputs[2] = nodeValue_Padding("Inset", self, [ 2, 2, 2, 2 ] );
+	newInput(2, nodeValue_Padding("Inset", self, [ 2, 2, 2, 2 ] ));
 		
-	inputs[3] = nodeValue_Enum_Scroll("Type", self,  0 , [ "Padding", "Ratio" ]);
+	newInput(3, nodeValue_Enum_Scroll("Type", self,  0 , [ "Padding", "Ratio" ]));
 		
 	inputs[4] = nodeValue_Float("Width", self, 0.5 )
 		.setDisplay(VALUE_DISPLAY.slider);

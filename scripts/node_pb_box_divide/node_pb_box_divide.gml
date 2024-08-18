@@ -5,15 +5,15 @@ function Node_PB_Box_Divide(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _group
 	inputs[1] = nodeValue("pBox", self, JUNCTION_CONNECT.input, VALUE_TYPE.pbBox, noone )
 		.setVisible(true, true);
 		
-	inputs[2] = nodeValue_Int("Amount", self, 2 );
+	newInput(2, nodeValue_Int("Amount", self, 2 ));
 		
-	inputs[3] = nodeValue_Int("Spacing", self, 1 );
+	newInput(3, nodeValue_Int("Spacing", self, 1 ));
 	
-	inputs[4] = nodeValue_Enum_Button("Axis", self,  0 , [ "X", "Y" ]);
+	newInput(4, nodeValue_Enum_Button("Axis", self,  0 , [ "X", "Y" ]));
 		
 	inputs[5] = nodeValue_Bool("Mirror", self, 0 )
 		
-	inputs[6] = nodeValue_Enum_Button("Spacing", self,  0 , [ "Space Between", "Space Around", "Begin", "End" ]);
+	newInput(6, nodeValue_Enum_Button("Spacing", self,  0 , [ "Space Between", "Space Around", "Begin", "End" ]));
 	
 	outputs[0] = nodeValue_Output("pBox Content", self, VALUE_TYPE.pbBox, [ noone ] );
 		

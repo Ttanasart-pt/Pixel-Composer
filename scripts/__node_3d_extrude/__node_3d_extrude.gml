@@ -2,27 +2,27 @@ function __Node_3D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	name = "3D Extrude";
 	batch_output = false;
 	
-	inputs[0] = nodeValue_Surface("Surface in", self);
+	newInput(0, nodeValue_Surface("Surface in", self));
 	
-	inputs[1] = nodeValue_Dimension(self);
+	newInput(1, nodeValue_Dimension(self));
 	
-	inputs[2] = nodeValue_Vec3("Object position", self, [ 0, 0, 0 ]);
+	newInput(2, nodeValue_Vec3("Object position", self, [ 0, 0, 0 ]));
 	
-	inputs[3] = nodeValue_Vec3("Object rotation", self, [ 0, 180, 0 ]);
+	newInput(3, nodeValue_Vec3("Object rotation", self, [ 0, 180, 0 ]));
 	
-	inputs[4] = nodeValue_Vec3("Object scale", self, [ 1, 1, 0.1 ]);
+	newInput(4, nodeValue_Vec3("Object scale", self, [ 1, 1, 0.1 ]));
 	
 	inputs[5] = nodeValue_Vec2("Render position", self, [ 0.5, 0.5 ])
 		.setUnitRef( function() { return getInputData(1); }, VALUE_UNIT.reference);
 		
-	inputs[6] = nodeValue_Vec3("Render rotation", self, [ 0, 0, 0 ]);
+	newInput(6, nodeValue_Vec3("Render rotation", self, [ 0, 0, 0 ]));
 	
-	inputs[7] = nodeValue_Vec2("Render scale", self, [ 1, 1 ]);
+	newInput(7, nodeValue_Vec2("Render scale", self, [ 1, 1 ]));
 	
 	inputs[8] = nodeValue_Trigger("Manual generate", self, false )
 		.setDisplay(VALUE_DISPLAY.button, { name: "Generate", UI : true, onClick: function() { generateMesh(); doUpdate(); } });
 		
-	inputs[9] = nodeValue_Rotation("Light direction", self, 0);
+	newInput(9, nodeValue_Rotation("Light direction", self, 0));
 		
 	inputs[10] = nodeValue_Float("Light height", self, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-1, 1, 0.01] });
@@ -30,12 +30,12 @@ function __Node_3D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	inputs[11] = nodeValue_Float("Light intensity", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[12] = nodeValue_Color("Light color", self, c_white);
-	inputs[13] = nodeValue_Color("Ambient color", self, c_grey);
+	newInput(12, nodeValue_Color("Light color", self, c_white));
+	newInput(13, nodeValue_Color("Ambient color", self, c_grey));
 	
-	inputs[14] = nodeValue_Surface("Height map", self);
+	newInput(14, nodeValue_Surface("Height map", self));
 	
-	inputs[15] = nodeValue_Bool("Always update", self, false);
+	newInput(15, nodeValue_Bool("Always update", self, false));
 	
 	inputs[16] = nodeValue_Enum_Button("Projection", self,  0, [ "Orthographic", "Perspective" ])
 		.rejectArray();

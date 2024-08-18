@@ -1,9 +1,9 @@
 function Node_Brush_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Brush";
 	
-	inputs[0] = nodeValue_Surface("Surface in", self);
+	newInput(0, nodeValue_Surface("Surface in", self));
 	
-	inputs[1] = nodeValue_Bool("Active", self, true);
+	newInput(1, nodeValue_Bool("Active", self, true));
 		active_index = 1;
 	
 	inputs[2] = nodeValue_Int("Iteration", self, 10)
@@ -12,7 +12,7 @@ function Node_Brush_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	inputs[3] = nodeValue_Float("Seed", self, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[3].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) })
 	
-	inputs[4] = nodeValue_Float("Length", self, 10);
+	newInput(4, nodeValue_Float("Length", self, 10));
 	
 	inputs[5] = nodeValue_Float("Attenuation", self, 0.99)
 		.setDisplay(VALUE_DISPLAY.slider);
@@ -20,12 +20,12 @@ function Node_Brush_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	inputs[6] = nodeValue_Float("Circulation", self, 0.8)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[7] = nodeValue_Surface("Mask", self);
+	newInput(7, nodeValue_Surface("Mask", self));
 	
 	inputs[8] = nodeValue_Float("Mix", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[9] = nodeValue_Toggle("Channel", self, 0b1111, { data: array_create(4, THEME.inspector_channel) });
+	newInput(9, nodeValue_Toggle("Channel", self, 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	__init_mask_modifier(7); // inputs 10, 11
 	

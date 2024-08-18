@@ -1,7 +1,7 @@
 function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Draw Gradient";
 	
-	inputs[0] = nodeValue_Dimension(self);
+	newInput(0, nodeValue_Dimension(self));
 	
 	inputs[1] = nodeValue_Gradient("Gradient", self, new gradientObject([ cola(c_black), cola(c_white) ]))
 		.setMappable(15);
@@ -23,9 +23,9 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	inputs[6] = nodeValue_Vec2("Center", self, [ 0.5, 0.5 ])
 		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
 	
-	inputs[7] = nodeValue_Enum_Button("Loop", self,  0, [ "None", "Loop", "Pingpong" ]);
+	newInput(7, nodeValue_Enum_Button("Loop", self,  0, [ "None", "Loop", "Pingpong" ]));
 	
-	inputs[8] = nodeValue_Surface("Mask", self);
+	newInput(8, nodeValue_Surface("Mask", self));
 	
 	inputs[9] = nodeValue_Float("Scale", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 2, 0.01] })
@@ -33,23 +33,23 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[10] = nodeValueMap("Angle map", self);
+	newInput(10, nodeValueMap("Angle map", self));
 	
-	inputs[11] = nodeValueMap("Radius map", self);
+	newInput(11, nodeValueMap("Radius map", self));
 	
-	inputs[12] = nodeValueMap("Shift map", self);
+	newInput(12, nodeValueMap("Shift map", self));
 	
-	inputs[13] = nodeValueMap("Scale map", self);
-	
-	//////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	inputs[14] = nodeValue_Bool("Uniform ratio", self, true);
+	newInput(13, nodeValueMap("Scale map", self));
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[15] = nodeValueMap("Gradient map", self);
+	newInput(14, nodeValue_Bool("Uniform ratio", self, true));
 	
-	inputs[16] = nodeValueGradientRange("Gradient map range", self, inputs[1]);
+	//////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	newInput(15, nodeValueMap("Gradient map", self));
+	
+	newInput(16, nodeValueGradientRange("Gradient map range", self, inputs[1]));
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	

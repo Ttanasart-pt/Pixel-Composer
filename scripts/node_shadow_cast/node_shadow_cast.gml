@@ -2,9 +2,9 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	name = "Cast Shadow";
 	batch_output = false;
 	
-	inputs[0] = nodeValue_Surface("Background", self);
+	newInput(0, nodeValue_Surface("Background", self));
 	
-	inputs[1] = nodeValue_Surface("Solid", self);
+	newInput(1, nodeValue_Surface("Solid", self));
 	
 	inputs[2] = nodeValue_Vec2("Light Position", self, [ 0, 0 ])
 		.setUnitRef(function(index) { 
@@ -30,15 +30,15 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	inputs[5] = nodeValue_Enum_Scroll("Light type", self,  0, [ new scrollItem("Point", s_node_shadow_type, 0), 
 												 new scrollItem("Sun",   s_node_shadow_type, 1) ]);
 	
-	inputs[6] = nodeValue_Color("Ambient color", self, c_grey);
+	newInput(6, nodeValue_Color("Ambient color", self, c_grey));
 	
-	inputs[7] = nodeValue_Color("Light color", self, c_white);
+	newInput(7, nodeValue_Color("Light color", self, c_white));
 	
-	inputs[8] = nodeValue_Float("Light radius", self, 16);
+	newInput(8, nodeValue_Float("Light radius", self, 16));
 	
-	inputs[9] = nodeValue_Bool("Render solid", self, true);
+	newInput(9, nodeValue_Bool("Render solid", self, true));
 	
-	inputs[10] = nodeValue_Bool("Use BG color", self, false, "If checked, background color will be used as shadow caster.");
+	newInput(10, nodeValue_Bool("Use BG color", self, false, "If checked, background color will be used as shadow caster."));
 	
 	inputs[11] = nodeValue_Float("BG threshold", self, 0.1)
 		.setDisplay(VALUE_DISPLAY.slider);
@@ -60,7 +60,7 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	inputs[16] = nodeValue_Float("Ambient occlusion strength", self, 0.1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 0.5, 0.001] });
 	
-	inputs[17] = nodeValue_Bool("Active", self, true);
+	newInput(17, nodeValue_Bool("Active", self, true));
 		active_index = 17;
 	
 	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);

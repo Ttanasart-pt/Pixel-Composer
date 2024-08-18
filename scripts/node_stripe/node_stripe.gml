@@ -1,7 +1,7 @@
 function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Stripe";
 	
-	inputs[0] = nodeValue_Dimension(self);
+	newInput(0, nodeValue_Dimension(self));
 	
 	inputs[1] = nodeValue_Float("Amount", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] })
@@ -10,7 +10,7 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	inputs[2] = nodeValue_Rotation("Angle", self, 0)
 		.setMappable(12);
 	
-	inputs[3] = nodeValue_Enum_Button("Type", self,  0, [ "Solid", "Smooth", "AA" ]);
+	newInput(3, nodeValue_Enum_Button("Type", self,  0, [ "Solid", "Smooth", "AA" ]));
 	
 	inputs[4] = nodeValue_Vec2("Position", self, [ 0, 0 ] )
 		.setUnitRef(function(index) { return getDimension(index); });
@@ -19,14 +19,14 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(13);
 		
-	inputs[6] = nodeValue_Enum_Button("Coloring", self,  0, [ "Alternate", "Palette", "Random" ]);
+	newInput(6, nodeValue_Enum_Button("Coloring", self,  0, [ "Alternate", "Palette", "Random" ]));
 	
 	inputs[7] = nodeValue_Gradient("Colors", self, new gradientObject(cola(c_white)))
 		.setMappable(15);
 	
-	inputs[8] = nodeValue_Color("Color 1", self, c_white);
+	newInput(8, nodeValue_Color("Color 1", self, c_white));
 	
-	inputs[9] = nodeValue_Color("Color 2", self, c_black);
+	newInput(9, nodeValue_Color("Color 2", self, c_black));
 	
 	inputs[10] = nodeValue_Float("Strip ratio", self, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider)
@@ -34,26 +34,26 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[11] = nodeValueMap("Amount map", self);
+	newInput(11, nodeValueMap("Amount map", self));
 	
-	inputs[12] = nodeValueMap("Angle map", self);
+	newInput(12, nodeValueMap("Angle map", self));
 	
-	inputs[13] = nodeValueMap("Random map", self);
+	newInput(13, nodeValueMap("Random map", self));
 	
-	inputs[14] = nodeValueMap("Ratio map", self);
+	newInput(14, nodeValueMap("Ratio map", self));
 	
-	inputs[15] = nodeValueMap("Gradient map", self);
+	newInput(15, nodeValueMap("Gradient map", self));
 	
-	inputs[16] = nodeValueGradientRange("Gradient map range", self, inputs[7]);
+	newInput(16, nodeValueGradientRange("Gradient map range", self, inputs[7]));
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	inputs[17] = nodeValue_Float("Progress", self, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider);
 		
-	inputs[18] = nodeValue_Palette("Colors", self, [ c_black, c_white ] );
+	newInput(18, nodeValue_Palette("Colors", self, [ c_black, c_white ] ));
 		
-	inputs[19] = nodeValueSeed(self, VALUE_TYPE.float);
+	newInput(19, nodeValueSeed(self, VALUE_TYPE.float));
 		
 	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	

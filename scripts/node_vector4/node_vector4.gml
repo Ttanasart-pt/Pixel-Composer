@@ -15,7 +15,7 @@ function Node_Vector4(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	inputs[3] = nodeValue_Float("w", self, 0)
 		.setVisible(true, true);
 	
-	inputs[4] = nodeValue_Bool("Integer", self, false);
+	newInput(4, nodeValue_Bool("Integer", self, false));
 	
 	outputs[0] = nodeValue_Output("Vector", self, VALUE_TYPE.float, [ 0, 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);

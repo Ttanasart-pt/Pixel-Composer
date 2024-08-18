@@ -6,18 +6,18 @@ function Node_3D_Mesh_Terrain(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 	inputs[in_mesh + 0] = nodeValue_D3Material("Material", self, new __d3dMaterial())
 		.setVisible(true, true);
 	
-	inputs[in_mesh + 1] = nodeValue_Enum_Button("Input type", self,  0 , [ "Surface", "Array" ]);
+	newInput(in_mesh + 1, nodeValue_Enum_Button("Input type", self,  0 , [ "Surface", "Array" ]));
 	
-	inputs[in_mesh + 2] = nodeValue_Surface("Height map", self);
+	newInput(in_mesh + 2, nodeValue_Surface("Height map", self));
 	
-	inputs[in_mesh + 3] = nodeValue_Int("Subdivision", self, 4 );
+	newInput(in_mesh + 3, nodeValue_Int("Subdivision", self, 4 ));
 	
 	inputs[in_mesh + 4] = nodeValue_Float("Height array", self, [] )
 		.setArrayDepth(2);
 		
-	inputs[in_mesh + 5] = nodeValue_Bool("Smooth", self, false );
+	newInput(in_mesh + 5, nodeValue_Bool("Smooth", self, false ));
 	
-	inputs[in_mesh + 6] = nodeValue_Slider_Range("Front Height Level", self, [ 0, 1 ]);
+	newInput(in_mesh + 6, nodeValue_Slider_Range("Front Height Level", self, [ 0, 1 ]));
 	
 	input_display_list = [
 		__d3d_input_list_transform,

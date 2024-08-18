@@ -2,14 +2,14 @@ function Node_Mirror(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	name = "Mirror";
 	batch_output = false;
 	
-	inputs[0] = nodeValue_Surface("Surface in", self);
+	newInput(0, nodeValue_Surface("Surface in", self));
 	
 	inputs[1] = nodeValue_Vec2("Position", self, [ 0.5, 0.5 ])
 		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
 	
-	inputs[2] = nodeValue_Rotation("Angle", self, 0);
+	newInput(2, nodeValue_Rotation("Angle", self, 0));
 	
-	inputs[3] = nodeValue_Bool("Active", self, true);
+	newInput(3, nodeValue_Bool("Active", self, true));
 		active_index = 3;
 	
 	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);

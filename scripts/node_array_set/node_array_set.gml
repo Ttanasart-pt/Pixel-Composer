@@ -5,7 +5,7 @@ function Node_Array_Set(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	inputs[0] = nodeValue("Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0)
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Int("Index", self, 0);
+	newInput(1, nodeValue_Int("Index", self, 0));
 	
 	inputs[2] = nodeValue("Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0)
 		.setVisible(true, true);

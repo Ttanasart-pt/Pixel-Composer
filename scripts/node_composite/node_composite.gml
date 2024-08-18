@@ -13,9 +13,9 @@ enum COMPOSE_OUTPUT_SCALING {
 function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Composite";
 	
-	inputs[0] = nodeValue_Padding("Padding", self, [ 0, 0, 0, 0 ]);
+	newInput(0, nodeValue_Padding("Padding", self, [ 0, 0, 0, 0 ]));
 	
-	inputs[1] = nodeValue_Enum_Scroll("Output dimension", self,  COMPOSE_OUTPUT_SCALING.first, [ "First surface", "Largest surface", "Constant" ]);
+	newInput(1, nodeValue_Enum_Scroll("Output dimension", self,  COMPOSE_OUTPUT_SCALING.first, [ "First surface", "Largest surface", "Constant" ]));
 	
 	inputs[2] = nodeValue_Dimension(self)
 		.setVisible(false);
@@ -412,17 +412,17 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var index = array_length(inputs);
 		var _s    = floor((index - input_fix_len) / data_length);
 		
-		inputs[index + 0] = nodeValue_Surface($"Surface {_s}", self, noone);
+		newInput(index + 0, nodeValue_Surface($"Surface {_s}", self, noone));
 		inputs[index + 0].hover_effect  = 0;
 		
 		inputs[index + 1] = nodeValue_Vec2($"Position {_s}", self, [ 0, 0 ] )
 			.setUnitRef(function(index) { return [ overlay_w, overlay_h ]; });
 		
-		inputs[index + 2] = nodeValue_Rotation($"Rotation {_s}", self, 0);
+		newInput(index + 2, nodeValue_Rotation($"Rotation {_s}", self, 0));
 		
-		inputs[index + 3] = nodeValue_Vec2($"Scale {_s}", self, [ 1, 1 ] );
+		newInput(index + 3, nodeValue_Vec2($"Scale {_s}", self, [ 1, 1 ] ));
 		
-		inputs[index + 4] = nodeValue_Enum_Scroll($"Blend {_s}", self,  0, BLEND_TYPES );
+		newInput(index + 4, nodeValue_Enum_Scroll($"Blend {_s}", self,  0, BLEND_TYPES ));
 		
 		inputs[index + 5] = nodeValue_Float($"Opacity {_s}", self, 1)
 			.setDisplay(VALUE_DISPLAY.slider);

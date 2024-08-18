@@ -2,25 +2,25 @@ function Node_Padding(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	name = "Padding";
 	dimension_index = -1;
 	
-	inputs[0] = nodeValue_Surface("Surface in", self);
+	newInput(0, nodeValue_Surface("Surface in", self));
 	
 	inputs[1] = nodeValue_Padding("Padding", self, [0, 0, 0, 0])
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	inputs[2] = nodeValue_Enum_Scroll("Fill method", self,  0, [ "Empty", "Solid" ]);
+	newInput(2, nodeValue_Enum_Scroll("Fill method", self,  0, [ "Empty", "Solid" ]));
 	
-	inputs[3] = nodeValue_Color("Fill color", self, c_black);
+	newInput(3, nodeValue_Color("Fill color", self, c_black));
 	
-	inputs[4] = nodeValue_Bool("Active", self, true);
+	newInput(4, nodeValue_Bool("Active", self, true));
 		active_index = 4;
 		
-	inputs[5] = nodeValue_Enum_Button("Pad mode", self,  0, [ "Pad out", "Pad to size" ]);
+	newInput(5, nodeValue_Enum_Button("Pad mode", self,  0, [ "Pad out", "Pad to size" ]));
 	
 	inputs[6] = nodeValue_Vec2("Target dimension", self, DEF_SURF)
 	
-	inputs[7] = nodeValue_Enum_Button("Horizontal alignment", self,  0 , [ THEME.inspector_surface_halign, THEME.inspector_surface_halign, THEME.inspector_surface_halign]);
+	newInput(7, nodeValue_Enum_Button("Horizontal alignment", self,  0 , [ THEME.inspector_surface_halign, THEME.inspector_surface_halign, THEME.inspector_surface_halign]));
 	
-	inputs[8] = nodeValue_Enum_Button("Vertical alignment", self,  0 , [ THEME.inspector_surface_valign, THEME.inspector_surface_valign, THEME.inspector_surface_valign ]);
+	newInput(8, nodeValue_Enum_Button("Vertical alignment", self,  0 , [ THEME.inspector_surface_valign, THEME.inspector_surface_valign, THEME.inspector_surface_valign ]));
 		
 	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	

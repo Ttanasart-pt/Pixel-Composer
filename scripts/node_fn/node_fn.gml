@@ -4,7 +4,7 @@ function Node_Fn(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 	update_on_frame = true;
 	setDimension(96, 96);
 	
-	inputs[0] = nodeValue_Enum_Scroll("Display", self,  1 , [ "Number", "Graph" ]);
+	newInput(0, nodeValue_Enum_Scroll("Display", self,  1 , [ "Number", "Graph" ]));
 	
 	outputs[0] = nodeValue_Output("Output", self, VALUE_TYPE.float, 0);
 	

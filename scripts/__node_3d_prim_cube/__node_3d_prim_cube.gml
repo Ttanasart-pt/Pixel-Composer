@@ -3,29 +3,29 @@ function __Node_3D_Cube(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	batch_output = false;
 	dimension_index = 1;
 	
-	inputs[0] = nodeValue_Surface("Main texture", self);
+	newInput(0, nodeValue_Surface("Main texture", self));
 	
-	inputs[1] = nodeValue_Dimension(self);
+	newInput(1, nodeValue_Dimension(self));
 	
 	inputs[2] = nodeValue_Vec2("Render position", self, [ 0.5, 0.5 ])
 		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
 	
-	inputs[3] = nodeValue_Vec3("Render rotation", self, [ 0, 0, 0 ]);
+	newInput(3, nodeValue_Vec3("Render rotation", self, [ 0, 0, 0 ]));
 	
-	inputs[4] = nodeValue_Vec2("Render scale", self, [ 1, 1 ]);
+	newInput(4, nodeValue_Vec2("Render scale", self, [ 1, 1 ]));
 	
-	inputs[5] = nodeValue_Bool("Textures per face", self, false);
+	newInput(5, nodeValue_Bool("Textures per face", self, false));
 	
-	inputs[ 6] = nodeValue_Surface("Textures 0", self).setVisible(false);
-	inputs[ 7] = nodeValue_Surface("Textures 1", self).setVisible(false);
-	inputs[ 8] = nodeValue_Surface("Textures 2", self).setVisible(false);
-	inputs[ 9] = nodeValue_Surface("Textures 3", self).setVisible(false);
-	inputs[10] = nodeValue_Surface("Textures 4", self).setVisible(false);
-	inputs[11] = nodeValue_Surface("Textures 5", self).setVisible(false);
+	newInput( 6, nodeValue_Surface("Textures 0", self).setVisible(false));
+	newInput( 7, nodeValue_Surface("Textures 1", self).setVisible(false));
+	newInput( 8, nodeValue_Surface("Textures 2", self).setVisible(false));
+	newInput( 9, nodeValue_Surface("Textures 3", self).setVisible(false));
+	newInput(10, nodeValue_Surface("Textures 4", self).setVisible(false));
+	newInput(11, nodeValue_Surface("Textures 5", self).setVisible(false));
 	
-	inputs[12] = nodeValue_Vec3("Object scale", self, [ 1, 1, 1 ]);
+	newInput(12, nodeValue_Vec3("Object scale", self, [ 1, 1, 1 ]));
 		
-	inputs[13] = nodeValue_Rotation("Light direction", self, 0);
+	newInput(13, nodeValue_Rotation("Light direction", self, 0));
 		
 	inputs[14] = nodeValue_Float("Light height", self, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-1, 1, 0.01] });
@@ -33,13 +33,13 @@ function __Node_3D_Cube(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	inputs[15] = nodeValue_Float("Light intensity", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[16] = nodeValue_Color("Light color", self, c_white);
+	newInput(16, nodeValue_Color("Light color", self, c_white));
 	
-	inputs[17] = nodeValue_Color("Ambient color", self, c_grey);
+	newInput(17, nodeValue_Color("Ambient color", self, c_grey));
 	
-	inputs[18] = nodeValue_Vec3("Object rotation", self, [ 0, 0, 0 ]);
+	newInput(18, nodeValue_Vec3("Object rotation", self, [ 0, 0, 0 ]));
 		
-	inputs[19] = nodeValue_Vec3("Object position", self, [ 0, 0, 0 ]);
+	newInput(19, nodeValue_Vec3("Object position", self, [ 0, 0, 0 ]));
 	
 	inputs[20] = nodeValue_Enum_Button("Projection", self,  0, [ "Orthographic", "Perspective" ])
 		.rejectArray();

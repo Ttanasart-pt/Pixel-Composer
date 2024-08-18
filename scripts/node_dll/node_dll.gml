@@ -6,9 +6,9 @@ function Node_DLL(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		.setDisplay(VALUE_DISPLAY.path_load, { filter: "Dynamic-link library (.dll)|*.dll" })
 		.setVisible(true, false);
 	
-	inputs[1] = nodeValue_Text("Function name", self, "");
+	newInput(1, nodeValue_Text("Function name", self, ""));
 	
-	inputs[2] = nodeValue_Enum_Button("Return type", self,  0, [ "Number", "Buffer" ]);
+	newInput(2, nodeValue_Enum_Button("Return type", self,  0, [ "Number", "Buffer" ]));
 	
 	outputs[0] = nodeValue_Output("Return Value", self, VALUE_TYPE.float, 0);
 	
@@ -45,7 +45,7 @@ function Node_DLL(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	static createNewInput = function() {
 		var index = array_length(inputs);
 		
-		inputs[index + 0] = nodeValue_Enum_Button("Parameter type", self,  0, [ "Number", "Buffer" ]);
+		newInput(index + 0, nodeValue_Enum_Button("Parameter type", self,  0, [ "Number", "Buffer" ]));
 		
 		inputs[index + 1] = nodeValue_Float("Parameter value", self, 0 )
 			.setVisible(true, true);

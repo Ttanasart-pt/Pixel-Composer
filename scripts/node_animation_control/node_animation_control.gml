@@ -2,19 +2,19 @@ function Node_Animation_Control(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	name = "Animation Control";
 	setDimension(96, 96);
 	
-	inputs[0] = nodeValue_Trigger("Toggle Play / Pause", self, false );
+	newInput(0, nodeValue_Trigger("Toggle Play / Pause", self, false ));
 	
-	inputs[1] = nodeValue_Trigger("Pause", self, false );
+	newInput(1, nodeValue_Trigger("Pause", self, false ));
 	
-	inputs[2] = nodeValue_Trigger("Resume", self, false );
+	newInput(2, nodeValue_Trigger("Resume", self, false ));
 	
-	inputs[3] = nodeValue_Trigger("Play From Beginning", self, false );
+	newInput(3, nodeValue_Trigger("Play From Beginning", self, false ));
 	
-	inputs[4] = nodeValue_Trigger("Play once", self, false );
+	newInput(4, nodeValue_Trigger("Play once", self, false ));
 	
-	inputs[5] = nodeValue_Trigger("Skip Frames", self, false );
+	newInput(5, nodeValue_Trigger("Skip Frames", self, false ));
 	
-	inputs[6] = nodeValue_Int("Skip Frames Count", self, 1);
+	newInput(6, nodeValue_Int("Skip Frames Count", self, 1));
 	
 	static step = function() { 
 		if(getInputData(0))

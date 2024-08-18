@@ -1,29 +1,29 @@
 function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Normal Light";
 	
-	inputs[0] = nodeValue_Surface("Surface in", self);
+	newInput(0, nodeValue_Surface("Surface in", self));
 	
-	inputs[1] = nodeValue_Surface("Normal map", self);
+	newInput(1, nodeValue_Surface("Normal map", self));
 	
-	inputs[2] = nodeValue_Float("Normal intensity", self, 1);
+	newInput(2, nodeValue_Float("Normal intensity", self, 1));
 	
-	inputs[3] = nodeValue_Color("Ambient", self, c_black);
+	newInput(3, nodeValue_Color("Ambient", self, c_black));
 	
 	inputs[4] = nodeValue_Vec2("Light position", self, [ 0, 0 ])
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	inputs[5] = nodeValue_Float("Light range", self, 16);
+	newInput(5, nodeValue_Float("Light range", self, 16));
 	
-	inputs[6] = nodeValue_Float("Light intensity", self, 32);
+	newInput(6, nodeValue_Float("Light intensity", self, 32));
 	
-	inputs[7] = nodeValue_Color("Light color", self, c_white);
+	newInput(7, nodeValue_Color("Light color", self, c_white));
 	
-	inputs[8] = nodeValue_Enum_Button("Light type", self,  0, ["Point", "Sun"]);
+	newInput(8, nodeValue_Enum_Button("Light type", self,  0, ["Point", "Sun"]));
 	
-	inputs[9] = nodeValue_Bool("Active", self, true);
+	newInput(9, nodeValue_Bool("Active", self, true));
 		active_index = 9;
 		
-	inputs[10] = nodeValue_Float("Light height", self, 1);
+	newInput(10, nodeValue_Float("Light height", self, 1));
 	
 	input_display_list = [ 9, 0, 
 		["Normal",	false], 1, 2, 

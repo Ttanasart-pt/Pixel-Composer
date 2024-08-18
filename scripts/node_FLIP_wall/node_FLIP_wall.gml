@@ -9,7 +9,7 @@ function Node_FLIP_Wall(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	inputs[0] = nodeValue_Fdomain("Domain", self, noone )
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Area("Area", self, DEF_AREA , { useShape : false });
+	newInput(1, nodeValue_Area("Area", self, DEF_AREA , { useShape : false }));
 	
 	input_display_list = [ 0, 
 		["Collider",	false], 1

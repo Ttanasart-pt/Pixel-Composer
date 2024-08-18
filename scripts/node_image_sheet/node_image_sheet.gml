@@ -1,22 +1,22 @@
 function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Splice Spritesheet";
 	
-	inputs[0] = nodeValue_Surface("Surface in", self);
+	newInput(0, nodeValue_Surface("Surface in", self));
 	
-	inputs[1]  = nodeValue_Vec2("Sprite size", self, [ 32, 32 ]);
+	newInput(1, nodeValue_Vec2("Sprite size", self, [ 32, 32 ]));
 	
-	inputs[2]  = nodeValue_Int("Row", self, 1); //unused
-	inputs[3]  = nodeValue_Vec2("Amount", self, [ 1, 1 ]);
+	newInput(2, nodeValue_Int("Row", self, 1)); //unused
+	newInput(3, nodeValue_Vec2("Amount", self, [ 1, 1 ]));
 	
-	inputs[4]  = nodeValue_Vec2("Offset", self, [ 0, 0 ]);
+	newInput(4, nodeValue_Vec2("Offset", self, [ 0, 0 ]));
 	
-	inputs[5]  = nodeValue_Vec2("Spacing", self, [ 0, 0 ]);
+	newInput(5, nodeValue_Vec2("Spacing", self, [ 0, 0 ]));
 	
-	inputs[6]  = nodeValue_Padding("Padding", self, [0, 0, 0, 0]);
+	newInput(6, nodeValue_Padding("Padding", self, [0, 0, 0, 0]));
 	
-	inputs[7]  = nodeValue_Enum_Scroll("Output", self,  1, [ "Animation", "Array" ]);
+	newInput(7, nodeValue_Enum_Scroll("Output", self,  1, [ "Animation", "Array" ]));
 	
-	inputs[8]  = nodeValue_Float("Animation speed", self, 1);
+	newInput(8, nodeValue_Float("Animation speed", self, 1));
 	
 	inputs[9]  = nodeValue_Enum_Scroll("Main Axis", self,  0, [ new scrollItem("Horizontal", s_node_alignment, 0), 
 												 new scrollItem("Vertical",   s_node_alignment, 1), ]);
@@ -50,9 +50,9 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			TOTAL_FRAMES = max(1, _spd == 0? 1 : ceil(array_length(_atl) / _spd));
 		} });
 		
-	inputs[12] = nodeValue_Bool("Filter empty output", self, false);
+	newInput(12, nodeValue_Bool("Filter empty output", self, false));
 		
-	inputs[13] = nodeValue_Enum_Scroll("Filtered Pixel", self,  0, [ "Transparent", "Color" ]);
+	newInput(13, nodeValue_Enum_Scroll("Filtered Pixel", self,  0, [ "Transparent", "Color" ]));
 	
 	inputs[14] = nodeValue_Color("Filtered Color", self, c_black)
 	

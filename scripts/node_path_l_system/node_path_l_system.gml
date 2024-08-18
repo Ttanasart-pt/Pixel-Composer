@@ -14,27 +14,27 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	name		= "L System";
 	setDimension(96, 48);
 	
-	inputs[0] = nodeValue_Float("Length", self, 8);
+	newInput(0, nodeValue_Float("Length", self, 8));
 	
-	inputs[1] = nodeValue_Rotation("Angle", self, 45);
+	newInput(1, nodeValue_Rotation("Angle", self, 45));
 		
-	inputs[2] = nodeValue_Vec2("Starting position", self, [ DEF_SURF_W / 2, DEF_SURF_H / 2 ]);
+	newInput(2, nodeValue_Vec2("Starting position", self, [ DEF_SURF_W / 2, DEF_SURF_H / 2 ]));
 	
-	inputs[3] = nodeValue_Int("Iteration", self, 4);
+	newInput(3, nodeValue_Int("Iteration", self, 4));
 	
-	inputs[4] = nodeValue_Text("Starting rule", self, "", o_dialog_l_system);
+	newInput(4, nodeValue_Text("Starting rule", self, "", o_dialog_l_system));
 	
-	inputs[5] = nodeValue_Text("End replacement", self, "", "Replace symbol of the last generated rule, for example a=F to replace all a with F. Use comma to separate different replacements.");
+	newInput(5, nodeValue_Text("End replacement", self, "", "Replace symbol of the last generated rule, for example a=F to replace all a with F. Use comma to separate different replacements."));
 	
-	inputs[6] = nodeValue_Rotation("Starting Angle", self, 90);
+	newInput(6, nodeValue_Rotation("Starting Angle", self, 90));
 	
 	inputs[7] = nodeValue_Int("Seed", self, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[7].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
 	static createNewInput = function() {
 		var index = array_length(inputs);
-		inputs[index + 0] = nodeValue_Text("Name " + string(index - input_fix_len), self, "" );
-		inputs[index + 1] = nodeValue_Text("Rule " + string(index - input_fix_len), self, "" );
+		newInput(index + 0, nodeValue_Text("Name " + string(index - input_fix_len), self, "" ));
+		newInput(index + 1, nodeValue_Text("Rule " + string(index - input_fix_len), self, "" ));
 		
 		return inputs[index + 0];
 	}

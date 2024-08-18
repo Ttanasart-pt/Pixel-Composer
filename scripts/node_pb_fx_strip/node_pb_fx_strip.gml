@@ -1,13 +1,13 @@
 function Node_PB_Fx_Strip(_x, _y, _group = noone) : Node_PB_Fx(_x, _y, _group) constructor {
 	name = "Strip";
 	
-	inputs[1] = nodeValue_Int("Scale", self, 1 );
+	newInput(1, nodeValue_Int("Scale", self, 1 ));
 		
-	inputs[2] = nodeValue_Color("Color", self, c_white );
+	newInput(2, nodeValue_Color("Color", self, c_white ));
 		
-	inputs[3] = nodeValue_Int("Shift", self, 0 );
+	newInput(3, nodeValue_Int("Shift", self, 0 ));
 		
-	inputs[4] = nodeValue_Enum_Button("Axis", self,  0 , [ "X", "Y" ]);
+	newInput(4, nodeValue_Enum_Button("Axis", self,  0 , [ "X", "Y" ]));
 	
 	input_display_list = [ 0, 
 		["Effect",	false], 1, 4, 2, 3, 

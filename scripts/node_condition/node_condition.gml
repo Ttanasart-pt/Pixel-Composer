@@ -30,9 +30,9 @@ function Node_Condition(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		.setVisible(true, true)
 		.rejectArray();
 	
-	inputs[7] = nodeValue_Text("Text 1", self, "" );
+	newInput(7, nodeValue_Text("Text 1", self, "" ));
 	
-	inputs[8] = nodeValue_Text("Text 2", self, "" );
+	newInput(8, nodeValue_Text("Text 2", self, "" ));
 		
 	input_display_list = [ 5,
 		["Condition", false], 0, 1, 2, 6, 7, 8, 

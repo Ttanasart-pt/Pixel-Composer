@@ -14,7 +14,7 @@ function Node_Alpha_Hash(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 						  15, 47,  7, 39, 13, 45,  5, 37,
 						  63, 31, 55, 23, 61, 29, 53, 21];
 						  
-	inputs[0] = nodeValue_Surface("Surface in", self);
+	newInput(0, nodeValue_Surface("Surface in", self));
 	
 	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	

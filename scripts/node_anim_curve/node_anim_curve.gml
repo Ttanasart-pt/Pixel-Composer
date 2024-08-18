@@ -4,14 +4,14 @@ function Node_Anim_Curve(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	setDimension(96, 48);
 	
-	inputs[0] = nodeValue("Curve",   self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_01);
+	newInput(0, nodeValue("Curve",   self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_01));
 	inputs[1] = nodeValue_Float("Progress", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[2] = nodeValue_Float("Minimum", self, 0);
-	inputs[3] = nodeValue_Float("Maximum", self, 1);
+	newInput(2, nodeValue_Float("Minimum", self, 0));
+	newInput(3, nodeValue_Float("Maximum", self, 1));
 	
-	inputs[4] = nodeValue_Bool("Animated", self, false);
+	newInput(4, nodeValue_Bool("Animated", self, false));
 	
 	outputs[0] = nodeValue_Output("Curve", self, VALUE_TYPE.float, []);
 	

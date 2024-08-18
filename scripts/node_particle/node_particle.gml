@@ -7,17 +7,17 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 		return [ _inp[0], _inp[1] ];
 	};
 	
-	inputs[input_len + 0] = nodeValue_Vec2("Output dimension", self, DEF_SURF);
+	newInput(input_len + 0, nodeValue_Vec2("Output dimension", self, DEF_SURF));
 		
-	inputs[input_len + 1] = nodeValue_Bool("Round position", self, true, "Round position to the closest integer value to avoid jittering.");
+	newInput(input_len + 1, nodeValue_Bool("Round position", self, true, "Round position to the closest integer value to avoid jittering."));
 	
-	inputs[input_len + 2] = nodeValue_Enum_Scroll("Blend mode", self,  0 , [ "Normal", "Alpha", "Additive" ]);
+	newInput(input_len + 2, nodeValue_Enum_Scroll("Blend mode", self,  0 , [ "Normal", "Alpha", "Additive" ]));
 	
-	inputs[input_len + 3] = nodeValue_Surface("Background", self);
+	newInput(input_len + 3, nodeValue_Surface("Background", self));
 	
-	inputs[input_len + 4] = nodeValue_Enum_Button("Render Type", self,  PARTICLE_RENDER_TYPE.surface , [ "Surface", "Line" ]);
+	newInput(input_len + 4, nodeValue_Enum_Button("Render Type", self,  PARTICLE_RENDER_TYPE.surface , [ "Surface", "Line" ]));
 	
-	inputs[input_len + 5] = nodeValue_Int("Line life", self, 4 );
+	newInput(input_len + 5, nodeValue_Int("Line life", self, 4 ));
 	
 	inputs[3].setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
 	inputs[3].setDefValue( DEF_AREA_REF );

@@ -8,7 +8,7 @@ function Node_IsoSurf(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		.setVisible(true, true)
 		.setArrayDepth(1);
 	
-	inputs[2] = nodeValue_Rotation("Angle Shift", self, 0);
+	newInput(2, nodeValue_Rotation("Angle Shift", self, 0));
 	
 	inputs[3] = nodeValue_Float("Angle Split", self, [ 0 * 90, 1 * 90, 2 * 90, 3 * 90 ])
 		.setArrayDynamic()

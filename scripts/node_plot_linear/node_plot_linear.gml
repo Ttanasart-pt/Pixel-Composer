@@ -19,56 +19,56 @@
 function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Draw Bar / Graph";
 	
-	inputs[0] = nodeValue_Dimension(self);
+	newInput(0, nodeValue_Dimension(self));
 	
 	inputs[1] = nodeValue_Float("Data", self, [])
 		.setArrayDepth(1)
 		.setVisible(true, true);
 		
-	inputs[2] = nodeValue_Slider_Range("Range", self, [ 0, 1 ]);
+	newInput(2, nodeValue_Slider_Range("Range", self, [ 0, 1 ]));
 		
-	inputs[3] = nodeValue_Float("Sample frequency", self, 1);
+	newInput(3, nodeValue_Float("Sample frequency", self, 1));
 	
-	inputs[4] = nodeValue_Vec2("Origin", self, [ 0, DEF_SURF_H / 2 ]);
+	newInput(4, nodeValue_Vec2("Origin", self, [ 0, DEF_SURF_H / 2 ]));
 		
-	inputs[5] = nodeValue_Float("Scale", self, DEF_SURF_W / 2);
+	newInput(5, nodeValue_Float("Scale", self, DEF_SURF_W / 2));
 	
-	inputs[6] = nodeValue_Color("Base Color", self, c_white);
+	newInput(6, nodeValue_Color("Base Color", self, c_white));
 		
-	inputs[7] = nodeValue_Float("Graph Thickness", self, 1);
+	newInput(7, nodeValue_Float("Graph Thickness", self, 1));
 	
-	inputs[8] = nodeValue_Bool("Background", self, false);
+	newInput(8, nodeValue_Bool("Background", self, false));
 		
-	inputs[9] = nodeValue_Color("Background color", self, c_black);
+	newInput(9, nodeValue_Color("Background color", self, c_black));
 	
-	inputs[10] = nodeValue_Rotation("Direction", self, 0);
+	newInput(10, nodeValue_Rotation("Direction", self, 0));
 	
 	inputs[11] = nodeValue_Enum_Scroll("Type", self,  0, [ new scrollItem("Bar chart", s_node_plot_linear_type, 0), 
 												 new scrollItem("Graph",	 s_node_plot_linear_type, 1), ]);
 	
-	inputs[12] = nodeValue_Float("Value Offset", self, 0);
+	newInput(12, nodeValue_Float("Value Offset", self, 0));
 	
 	inputs[13] = nodeValue_Gradient("Color Over Sample", self, new gradientObject(cola(c_white)))
 		.setMappable(27);
 	
-	inputs[14] = nodeValue_Enum_Scroll("Trim mode", self,  0, [ "Range", "Window" ]);
+	newInput(14, nodeValue_Enum_Scroll("Trim mode", self,  0, [ "Range", "Window" ]));
 	
-	inputs[15] = nodeValue_Int("Window Size", self, 8);
+	newInput(15, nodeValue_Int("Window Size", self, 8));
 	
-	inputs[16] = nodeValue_Float("Window Offset", self, 0);
+	newInput(16, nodeValue_Float("Window Offset", self, 0));
 	
-	inputs[17] = nodeValue_Float("Spacing", self, 1);
+	newInput(17, nodeValue_Float("Spacing", self, 1));
 	
-	inputs[18] = nodeValue_Float("Bar Width", self, 4);
+	newInput(18, nodeValue_Float("Bar Width", self, 4));
 	
-	inputs[19] = nodeValue_Bool("Rounded Bar", self, false);
+	newInput(19, nodeValue_Bool("Rounded Bar", self, false));
 	
 	inputs[20] = nodeValue_PathNode("Path", self, noone)
 		.setVisible(true, true);
 	
-	inputs[21] = nodeValue_Bool("Flip Value", self, false);
+	newInput(21, nodeValue_Bool("Flip Value", self, false));
 	
-	inputs[22] = nodeValue_Bool("Loop", self, false);
+	newInput(22, nodeValue_Bool("Loop", self, false));
 	
 	inputs[23] = nodeValue_Float("Smooth", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider);
@@ -76,19 +76,19 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	inputs[24] = nodeValue_Gradient("Color Over Value", self, new gradientObject(cola(c_white)))
 		.setMappable(29);
 		
-	inputs[25] = nodeValue_Range("Value range", self, [ 0, 1 ] );
+	newInput(25, nodeValue_Range("Value range", self, [ 0, 1 ] ));
 	
-	inputs[26] = nodeValue_Bool("Absolute", self, false);
+	newInput(26, nodeValue_Bool("Absolute", self, false));
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[27] = nodeValueMap("Sample Gradient map", self);
+	newInput(27, nodeValueMap("Sample Gradient map", self));
 	
-	inputs[28] = nodeValueGradientRange("Sample Gradient map range", self, inputs[13]);
+	newInput(28, nodeValueGradientRange("Sample Gradient map range", self, inputs[13]));
 	
-	inputs[29] = nodeValueMap("Value Gradient map", self);
+	newInput(29, nodeValueMap("Value Gradient map", self));
 	
-	inputs[30] = nodeValueGradientRange("Value Gradient map range", self, inputs[24]);
+	newInput(30, nodeValueGradientRange("Value Gradient map range", self, inputs[24]));
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	

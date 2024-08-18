@@ -6,7 +6,7 @@ function Node_Struct_Get(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	inputs[0] = nodeValue_Struct("Struct", self, {})
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Text("Key", self, "");
+	newInput(1, nodeValue_Text("Key", self, ""));
 	
 	outputs[0] = nodeValue_Output("Struct", self, VALUE_TYPE.struct, {});
 	

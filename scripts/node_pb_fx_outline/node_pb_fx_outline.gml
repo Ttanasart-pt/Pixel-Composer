@@ -1,11 +1,11 @@
 function Node_PB_Fx_Outline(_x, _y, _group = noone) : Node_PB_Fx(_x, _y, _group) constructor {
 	name = "Outline";
 	
-	inputs[1] = nodeValue_Bool("Corner", self, false );
+	newInput(1, nodeValue_Bool("Corner", self, false ));
 		
-	inputs[2] = nodeValue_Color("Color", self, c_white );
+	newInput(2, nodeValue_Color("Color", self, c_white ));
 	
-	inputs[3] = nodeValue_Enum_Button("Side", self,  0, [ "Inside", "Outside" ]);
+	newInput(3, nodeValue_Enum_Button("Side", self,  0, [ "Inside", "Outside" ]));
 	
 	input_display_list = [ 0, 
 		["Effect",	false], 3, 1, 2, 

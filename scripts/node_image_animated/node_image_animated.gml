@@ -59,9 +59,9 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				TOTAL_FRAMES = array_length(spr);
 			} });
 	
-	inputs[6]  = nodeValue_Bool("Custom frame order", self, false);
+	newInput(6, nodeValue_Bool("Custom frame order", self, false));
 	
-	inputs[7]  = nodeValue_Int("Frame", self, 0);
+	newInput(7, nodeValue_Int("Frame", self, 0));
 
 	inputs[8] = nodeValue_Enum_Scroll("Canvas size", self,  2, [ "First", "Minimum", "Maximum" ])
 		.rejectArray();

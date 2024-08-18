@@ -8,7 +8,7 @@ function Node_Array_Remove(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	inputs[1] = nodeValue_Enum_Button("Type", self,  0, [ "Index", "Value" ])
 		.rejectArray();
 	
-	inputs[2] = nodeValue_Int("Index", self, 0);
+	newInput(2, nodeValue_Int("Index", self, 0));
 	
 	inputs[3] = nodeValue("Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0)
 		.setVisible(true, true);

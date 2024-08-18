@@ -2,9 +2,9 @@ function Node_HTTP_request(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	name = "HTTP";
 	setDimension(96, 72);
 	
-	inputs[0] = nodeValue_Text("Address", self, "");
+	newInput(0, nodeValue_Text("Address", self, ""));
 	
-	inputs[1] = nodeValue_Enum_Scroll("Type", self,  0, [ "Get", "Post" ]);
+	newInput(1, nodeValue_Enum_Scroll("Type", self,  0, [ "Get", "Post" ]));
 	
 	inputs[2] = nodeValue_Text("Content", self, "")
 	

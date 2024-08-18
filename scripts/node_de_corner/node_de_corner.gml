@@ -1,9 +1,9 @@
 function Node_De_Corner(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "De-Corner";
 	
-	inputs[0] = nodeValue_Surface("Surface in", self);
+	newInput(0, nodeValue_Surface("Surface in", self));
 	
-	inputs[1] = nodeValue_Bool("Active", self, true);
+	newInput(1, nodeValue_Bool("Active", self, true));
 		active_index = 1;
 	
 	inputs[2] = nodeValue_Float("Tolerance", self, 0)
@@ -11,16 +11,16 @@ function Node_De_Corner(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	inputs[3] = nodeValue_Int("Iteration", self, 2)
 	
-	inputs[4] = nodeValue_Enum_Button("Type", self,  0, [ "Double", "Diagonal" ]);
+	newInput(4, nodeValue_Enum_Button("Type", self,  0, [ "Double", "Diagonal" ]));
 	
-	inputs[5] = nodeValue_Surface("Mask", self);
+	newInput(5, nodeValue_Surface("Mask", self));
 	
 	inputs[6] = nodeValue_Float("Mix", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	__init_mask_modifier(5); // inputs 7, 8, 
 	
-	inputs[9] = nodeValue_Toggle("Include", self, 0b11, { data: [ "Inner", "Side" ] });
+	newInput(9, nodeValue_Toggle("Include", self, 0b11, { data: [ "Inner", "Side" ] }));
 	
 	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	

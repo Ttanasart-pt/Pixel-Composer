@@ -12,7 +12,7 @@ function Node_FLIP_Vortex(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	inputs[1] = nodeValue_Vec2("Position", self, [ 0, 0 ] )
 		.setUnitRef(function(index) { return getDimension(); });
 	
-	inputs[2] = nodeValue_Float("Radius", self, 4 );
+	newInput(2, nodeValue_Float("Radius", self, 4 ));
 	
 	inputs[3] = nodeValue_Float("Strength", self, 4 )
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -8, 8, 0.01 ] });

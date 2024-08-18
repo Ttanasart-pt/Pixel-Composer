@@ -20,7 +20,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	inputs[0] = nodeValue_Color("Color", self, c_white )
 		.rejectArray();
 	
-	inputs[1] = nodeValue_Text("Text", self, "Text");
+	newInput(1, nodeValue_Text("Text", self, "Text"));
 	
 	inputs[2] = nodeValue_Enum_Scroll("Style", self,  2, [ "Header", "Sub header", "Normal" ])
 		.rejectArray();

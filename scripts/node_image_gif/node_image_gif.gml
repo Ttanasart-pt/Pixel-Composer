@@ -40,18 +40,18 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				PROJECT.animator.framerate = 12;
 			} });
 	
-	inputs[2]  = nodeValue_Bool("Output as array", self, false);
+	newInput(2, nodeValue_Bool("Output as array", self, false));
 	
 	inputs[3]  = nodeValue_Enum_Scroll("Loop modes", self,  0, ["Loop", "Ping pong", "Hold last frame", "Hide"])
 		.rejectArray();
 	
-	inputs[4]  = nodeValue_Int("Start frame", self, 0);
+	newInput(4, nodeValue_Int("Start frame", self, 0));
 	
-	inputs[5]  = nodeValue_Bool("Custom frame order", self, false);
+	newInput(5, nodeValue_Bool("Custom frame order", self, false));
 	
-	inputs[6]  = nodeValue_Int("Frame", self, 0);
+	newInput(6, nodeValue_Int("Frame", self, 0));
 	
-	inputs[7]  = nodeValue_Float("Animation speed", self, 1);
+	newInput(7, nodeValue_Float("Animation speed", self, 1));
 	
 	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	outputs[1] = nodeValue_Output("Path", self, VALUE_TYPE.path, "")

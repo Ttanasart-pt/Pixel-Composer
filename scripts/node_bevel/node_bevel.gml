@@ -1,25 +1,25 @@
 function Node_Bevel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Bevel";
 	
-	inputs[0] = nodeValue_Surface("Surface in", self);
+	newInput(0, nodeValue_Surface("Surface in", self));
 	
 	inputs[1] = nodeValue_Int("Height", self, 4)
 		.setMappable(11);
 	
-	inputs[2] = nodeValue_Vec2("Shift", self, [ 0, 0 ]);
+	newInput(2, nodeValue_Vec2("Shift", self, [ 0, 0 ]));
 	
-	inputs[3] = nodeValue_Vec2("Scale", self, [ 1, 1 ] );
+	newInput(3, nodeValue_Vec2("Scale", self, [ 1, 1 ] ));
 	
 	inputs[4] = nodeValue_Enum_Scroll("Slope", self, 0, [ new scrollItem("Linear",   s_node_curve, 2), 
 												            new scrollItem("Smooth",   s_node_curve, 4), 
 												            new scrollItem("Circular", s_node_curve, 5), ]);
 	
-	inputs[5] = nodeValue_Surface("Mask", self);
+	newInput(5, nodeValue_Surface("Mask", self));
 	
 	inputs[6] = nodeValue_Float("Mix", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[7] = nodeValue_Bool("Active", self, true);
+	newInput(7, nodeValue_Bool("Active", self, true));
 		active_index = 7;
 		
 	inputs[8] = nodeValue_Enum_Scroll("Oversample mode", self, 0, [ "Empty", "Clamp", "Repeat" ])
@@ -29,7 +29,7 @@ function Node_Bevel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[11] = nodeValueMap("Height map", self);
+	newInput(11, nodeValueMap("Height map", self));
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	

@@ -1,9 +1,9 @@
 function Node_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Displace";
 	
-	inputs[0] = nodeValue_Surface("Surface in", self);
+	newInput(0, nodeValue_Surface("Surface in", self));
 	
-	inputs[1] = nodeValue_Surface("Displace map", self);
+	newInput(1, nodeValue_Surface("Displace map", self));
 	
 	inputs[2] = nodeValue_Vec2("Position", self, [ 1, 0 ] )
 		.setTooltip("Vector to displace pixel by.")
@@ -28,17 +28,17 @@ If set, then strength value control how many times the effect applies on itself.
 	inputs[7] = nodeValue_Enum_Scroll("Oversample mode", self,  0, [ "Empty", "Clamp", "Repeat" ])
 		.setTooltip("How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.");
 	
-	inputs[8] = nodeValue_Surface("Mask", self);
+	newInput(8, nodeValue_Surface("Mask", self));
 	
 	inputs[9] = nodeValue_Float("Mix", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[10] = nodeValue_Bool("Active", self, true);
+	newInput(10, nodeValue_Bool("Active", self, true));
 		active_index = 10;
 	
-	inputs[11] = nodeValue_Enum_Scroll("Blend mode", self,  0, [ "Overwrite", "Min", "Max" ]);
+	newInput(11, nodeValue_Enum_Scroll("Blend mode", self,  0, [ "Overwrite", "Min", "Max" ]));
 		
-	inputs[12] = nodeValue_Toggle("Channel", self, 0b1111, { data: array_create(4, THEME.inspector_channel) });
+	newInput(12, nodeValue_Toggle("Channel", self, 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	__init_mask_modifier(8); // inputs 13, 14
 	
@@ -49,9 +49,9 @@ If set, then strength value control how many times the effect applies on itself.
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[16] = nodeValue_Bool("Separate axis", self, false);
+	newInput(16, nodeValue_Bool("Separate axis", self, false));
 	
-	inputs[17] = nodeValue_Surface("Displace map 2", self);
+	newInput(17, nodeValue_Surface("Displace map 2", self));
 	
 	input_display_list = [ 10, 12, 
 		["Surfaces",	  true], 0, 8, 9, 13, 14, 

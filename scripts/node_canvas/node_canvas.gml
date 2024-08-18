@@ -3,47 +3,47 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	color	= COLORS.node_blend_canvas;
 	setAlwaysTimeline(new timelineItemNode_Canvas(self));
 	
-	inputs[ 0] = nodeValue_Dimension(self);
+	newInput( 0, nodeValue_Dimension(self));
 	
-	inputs[ 1] = nodeValue_Color("Color", self, c_white );
+	newInput( 1, nodeValue_Color("Color", self, c_white ));
 	inputs[ 2] = nodeValue_Int("Brush size", self, 1 )
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 32, 0.1] });
 	
 	inputs[ 3] = nodeValue_Float("Fill threshold", self, 0.)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[ 4] = nodeValue_Enum_Scroll("Fill type", self,  0, ["4 connect", "8 connect", "Entire canvas"]);
+	newInput( 4, nodeValue_Enum_Scroll("Fill type", self,  0, ["4 connect", "8 connect", "Entire canvas"]));
 	
-	inputs[ 5] = nodeValue_Bool("Draw preview overlay", self, true);
+	newInput( 5, nodeValue_Bool("Draw preview overlay", self, true));
 	
 	inputs[ 6] = nodeValue_Surface("Brush", self)
 		.setVisible(true, false);
 	
-	inputs[ 7] = nodeValue_Int("Surface amount", self, 1);
+	newInput( 7, nodeValue_Int("Surface amount", self, 1));
 	
-	inputs[ 8] = nodeValue_Surface("Background", self);
+	newInput( 8, nodeValue_Surface("Background", self));
 	
 	inputs[ 9] = nodeValue_Float("Background alpha", self, 1.)
 		.setDisplay(VALUE_DISPLAY.slider);
 		
-	inputs[10] = nodeValue_Bool("Render background", self, true);
+	newInput(10, nodeValue_Bool("Render background", self, true));
 	
 	inputs[11] = nodeValue_Float("Alpha", self, 1 )
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[12] = nodeValue_Bool("Frames animation", self, true );
+	newInput(12, nodeValue_Bool("Frames animation", self, true ));
 	
-	inputs[13] = nodeValue_Float("Animation speed", self, 1 );
+	newInput(13, nodeValue_Float("Animation speed", self, 1 ));
 	
-	inputs[14] = nodeValue_Bool("Use background dimension", self, true );
+	newInput(14, nodeValue_Bool("Use background dimension", self, true ));
 	
-	inputs[15] = nodeValue_Range("Brush distance", self, [ 1, 1 ] , { linked : true });
+	newInput(15, nodeValue_Range("Brush distance", self, [ 1, 1 ] , { linked : true }));
 	
-	inputs[16] = nodeValue_Bool("Rotate brush by direction", self, false );
+	newInput(16, nodeValue_Bool("Rotate brush by direction", self, false ));
 	
-	inputs[17] = nodeValue_Rotation_Random("Random direction", self, [ 0, 0, 0, 0, 0 ] );
+	newInput(17, nodeValue_Rotation_Random("Random direction", self, [ 0, 0, 0, 0, 0 ] ));
 	
-	inputs[18] = nodeValue_Enum_Scroll("Animation Type", self,  0, [ "Loop", "Hold", "Clear" ]);
+	newInput(18, nodeValue_Enum_Scroll("Animation Type", self,  0, [ "Loop", "Hold", "Clear" ]));
 	
 	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	

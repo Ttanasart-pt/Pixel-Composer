@@ -1,26 +1,26 @@
 function Node_MK_Saber(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "MK Saber";
 	
-	inputs[0] = nodeValue_Dimension(self);
+	newInput(0, nodeValue_Dimension(self));
 	
-	inputs[1] = nodeValue_Vec2("Point 1", self, [ 0, 0 ]);
+	newInput(1, nodeValue_Vec2("Point 1", self, [ 0, 0 ]));
 	
-	inputs[2] = nodeValue_Vec2("Point 2", self, [ 16, 16 ]);
+	newInput(2, nodeValue_Vec2("Point 2", self, [ 16, 16 ]));
 	
 	inputs[3] = nodeValue_Int("Thickness", self, 2)
 	
 	inputs[4] = nodeValue_Gradient("Color", self, new gradientObject(cola(c_white)))
 	
-	inputs[5] = nodeValue_Int("Trace", self, 0);
+	newInput(5, nodeValue_Int("Trace", self, 0));
 	
-	inputs[6] = nodeValue_Bool("Fix length", self, false);
+	newInput(6, nodeValue_Bool("Fix length", self, false));
 	
-	inputs[7] = nodeValue_Int("Gradient step", self, 1);
+	newInput(7, nodeValue_Int("Gradient step", self, 1));
 	
 	inputs[8] = nodeValue_Float("Glow intensity", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[9] = nodeValue_Int("Glow radius", self, 0);
+	newInput(9, nodeValue_Int("Glow radius", self, 0));
 	
 	inputs[10] = nodeValue_Surface("Trace texture", self)
 		.setVisible(true, true);

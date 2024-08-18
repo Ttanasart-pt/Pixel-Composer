@@ -9,11 +9,11 @@ function Node_FLIP_Update(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	inputs[0] = nodeValue_Fdomain("Domain", self, noone)
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Bool("Update", self, true);
+	newInput(1, nodeValue_Bool("Update", self, true));
 	
-	inputs[2] = nodeValue_Bool("Override timestep", self, false);
+	newInput(2, nodeValue_Bool("Override timestep", self, false));
 	
-	inputs[3] = nodeValue_Float("Timestep", self, 0.01);
+	newInput(3, nodeValue_Float("Timestep", self, 0.01));
 	
 	input_display_list = [ 0, 1,
 		["Timestep", false], 2, 3, 

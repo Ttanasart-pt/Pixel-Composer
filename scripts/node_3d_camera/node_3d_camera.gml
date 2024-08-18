@@ -21,46 +21,46 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	inputs[in_d3d + 0] = nodeValue_Int("FOV", self, 60 )
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 10, 90, 0.1 ] });
 	
-	inputs[in_d3d + 1] = nodeValue_Vec2("Clipping Distance", self, [ 1, 10 ] );
+	newInput(in_d3d + 1, nodeValue_Vec2("Clipping Distance", self, [ 1, 10 ] ));
 	 
-	inputs[in_d3d + 2] = nodeValue_Dimension(self);
+	newInput(in_d3d + 2, nodeValue_Dimension(self));
 	
-	inputs[in_d3d + 3] = nodeValue_Enum_Button("Projection", self,  1 , [ "Perspective", "Orthographic" ]);
+	newInput(in_d3d + 3, nodeValue_Enum_Button("Projection", self,  1 , [ "Perspective", "Orthographic" ]));
 	
 	inputs[in_d3d + 4] = nodeValue_D3Scene("Scene", self, noone )
 		.setVisible(true, true);
 	
-	inputs[in_d3d + 5] = nodeValue_Color("Ambient Light", self, c_dkgrey );
+	newInput(in_d3d + 5, nodeValue_Color("Ambient Light", self, c_dkgrey ));
 	
-	inputs[in_d3d + 6] = nodeValue_Bool("Show Background", self, false );
+	newInput(in_d3d + 6, nodeValue_Bool("Show Background", self, false ));
 	
-	inputs[in_d3d + 7] = nodeValue_Enum_Button("Backface Culling", self,  2 , [ "None", "CW", "CCW" ]);
+	newInput(in_d3d + 7, nodeValue_Enum_Button("Backface Culling", self,  2 , [ "None", "CW", "CCW" ]));
 	
 	inputs[in_d3d + 8] = nodeValue_Float("Orthographic Scale", self, 0.5 )
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0.01, 4, 0.01 ] });
 	
-	inputs[in_d3d + 9] = nodeValue_Enum_Scroll("Postioning Mode", self, 2, [ "Position + Rotation", "Position + Lookat", "Lookat + Rotation" ] );
+	newInput(in_d3d + 9, nodeValue_Enum_Scroll("Postioning Mode", self, 2, [ "Position + Rotation", "Position + Lookat", "Lookat + Rotation" ] ));
 	
-	inputs[in_d3d + 10] = nodeValue_Vec3("Lookat Position", self, [ 0, 0, 0 ] );
+	newInput(in_d3d + 10, nodeValue_Vec3("Lookat Position", self, [ 0, 0, 0 ] ));
 	
-	inputs[in_d3d + 11] = nodeValue_Rotation("Roll", self, 0);
+	newInput(in_d3d + 11, nodeValue_Rotation("Roll", self, 0));
 	
-	inputs[in_d3d + 12] = nodeValue_Rotation("Horizontal Angle", self, 45 );
+	newInput(in_d3d + 12, nodeValue_Rotation("Horizontal Angle", self, 45 ));
 	
 	inputs[in_d3d + 13] = nodeValue_Float("Vertical Angle", self, 30 )
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 90, 0.1] });
 	
-	inputs[in_d3d + 14] = nodeValue_Float("Distance", self, 4 );
+	newInput(in_d3d + 14, nodeValue_Float("Distance", self, 4 ));
 	
-	inputs[in_d3d + 15] = nodeValue_Bool("Gamma Adjust", self, false );
+	newInput(in_d3d + 15, nodeValue_Bool("Gamma Adjust", self, false ));
 	
-	inputs[in_d3d + 16] = nodeValue_Surface("Environment Texture", self);
+	newInput(in_d3d + 16, nodeValue_Surface("Environment Texture", self));
 	
-	inputs[in_d3d + 17] = nodeValue_Bool("Ambient Occlusion", self, false );
+	newInput(in_d3d + 17, nodeValue_Bool("Ambient Occlusion", self, false ));
 	
-	inputs[in_d3d + 18] = nodeValue_Float("AO Radius", self, 0.25 );
+	newInput(in_d3d + 18, nodeValue_Float("AO Radius", self, 0.25 ));
 	
-	inputs[in_d3d + 19] = nodeValue_Float("AO Bias", self, 0.05 );
+	newInput(in_d3d + 19, nodeValue_Float("AO Bias", self, 0.05 ));
 	
 	inputs[in_d3d + 20] = nodeValue_Float("AO Strength", self, 1. )
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0.01, 4, 0.01 ] });
@@ -68,7 +68,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	inputs[in_d3d + 21] = nodeValue_Int("Round Normal", self, 0 )
 		.setWindows();
 	
-	inputs[in_d3d + 22] = nodeValue_Enum_Button("Blend mode", self,  0 , [ "Normal", "Additive" ]);
+	newInput(in_d3d + 22, nodeValue_Enum_Button("Blend mode", self,  0 , [ "Normal", "Additive" ]));
 		
 	in_cam = array_length(inputs);
 	

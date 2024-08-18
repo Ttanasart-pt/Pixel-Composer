@@ -154,7 +154,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	anchor_drag_mx  = -1;
 	anchor_drag_my  = -1;
 	
-	inputs[0] = nodeValue_Surface("Surface in", self);
+	newInput(0, nodeValue_Surface("Surface in", self));
 	
 	inputs[1] = nodeValue_Int("Sample", self, 8, "Amount of grid subdivision. Higher number means more grid, detail.")
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 2, 32, 0.1 ] });
@@ -165,15 +165,15 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	inputs[3] = nodeValue_Trigger("Mesh", self, false )
 		.setDisplay(VALUE_DISPLAY.button, { name: "Generate", UI : true, onClick: function() { Mesh_setTriangle(); } });
 	
-	inputs[4] = nodeValue_Bool("Diagonal Link", self, false, "Include diagonal link to prevent drastic grid deformation.");
+	newInput(4, nodeValue_Bool("Diagonal Link", self, false, "Include diagonal link to prevent drastic grid deformation."));
 	
-	inputs[5] = nodeValue_Bool("Active", self, true);
+	newInput(5, nodeValue_Bool("Active", self, true));
 		active_index = 5;
 	
 	inputs[6] = nodeValue_Float("Link Strength", self, 0, "Link length preservation, setting it to 1 will prevent any stretching, contraction.")
 		.setDisplay(VALUE_DISPLAY.slider);
 		
-	inputs[7] = nodeValue_Bool("Full Mesh", self, false);
+	newInput(7, nodeValue_Bool("Full Mesh", self, false));
 		
 	inputs[8] = nodeValue_Enum_Scroll("Mesh Type", self,  0, [ new scrollItem("Grid",   s_node_mesh_type, 0), 
 												 new scrollItem("Custom", s_node_mesh_type, 1), ] );

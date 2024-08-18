@@ -6,9 +6,9 @@ function Node_Array_Copy(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		.setArrayDepth(1)
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Int("Starting Index", self, 0);
+	newInput(1, nodeValue_Int("Starting Index", self, 0));
 	
-	inputs[2] = nodeValue_Int("Size", self, 1);
+	newInput(2, nodeValue_Int("Size", self, 1));
 	
 	outputs[0] = nodeValue_Output("Array", self, VALUE_TYPE.any, 0)
 		.setArrayDepth(1);

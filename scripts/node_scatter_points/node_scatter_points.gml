@@ -24,17 +24,17 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[5].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) })
 		.rejectArray();
 	
-	inputs[6] = nodeValue_Bool("Fixed position", self, false, "Fix point position, and only select point in the area.");
+	newInput(6, nodeValue_Bool("Fixed position", self, false, "Fix point position, and only select point in the area."));
 	
-	inputs[7] = nodeValue_Vec2("Reference dimension", self, DEF_SURF);
+	newInput(7, nodeValue_Vec2("Reference dimension", self, DEF_SURF));
 	
-	inputs[8] = nodeValue_Surface("Reference value", self);
+	newInput(8, nodeValue_Surface("Reference value", self));
 	
-	inputs[9] = nodeValue_Bool("Output 3D", self, false);
+	newInput(9, nodeValue_Bool("Output 3D", self, false));
 	
-	inputs[10] = nodeValue_Enum_Button("Normal", self,  0, [ "X", "Y", "Z" ]);
+	newInput(10, nodeValue_Enum_Button("Normal", self,  0, [ "X", "Y", "Z" ]));
 	
-	inputs[11] = nodeValue_Float("Plane position", self, 0);
+	newInput(11, nodeValue_Float("Plane position", self, 0));
 	
 	input_display_list = [ 
 		["Base",	false], 5, 6, 7, 

@@ -1,24 +1,24 @@
 function Node_MK_GridFlip(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "MK GridFlip";
 	
-	inputs[0] = nodeValue_Surface("Surface front", self);
+	newInput(0, nodeValue_Surface("Surface front", self));
 	
-	inputs[1] = nodeValue_Dimension(self);
+	newInput(1, nodeValue_Dimension(self));
 	
-	inputs[2] = nodeValue_Vec2("Amount", self, [ 4, 4 ]);
+	newInput(2, nodeValue_Vec2("Amount", self, [ 4, 4 ]));
 		
 	inputs[3] = nodeValue_Int("Seed", self, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[3].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
-	inputs[4] = nodeValue_Surface("Surface back", self);
+	newInput(4, nodeValue_Surface("Surface back", self));
 	
-	inputs[5] = nodeValue_Rotation("Rotation", self, 0);
+	newInput(5, nodeValue_Rotation("Rotation", self, 0));
 	
-	inputs[6] = nodeValue_Enum_Button("Axis", self,  0, [ "X", "Y" ]);
+	newInput(6, nodeValue_Enum_Button("Axis", self,  0, [ "X", "Y" ]));
 	
-	inputs[7] = nodeValue_Float("Sweep", self, 0);
+	newInput(7, nodeValue_Float("Sweep", self, 0));
 	
-	inputs[8] = nodeValue_Rotation("Sweep direction", self, 0);
+	newInput(8, nodeValue_Rotation("Sweep direction", self, 0));
 		
 	inputs[9] = nodeValue_Float("Sweep shift", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] });

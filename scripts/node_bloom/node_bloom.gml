@@ -1,7 +1,7 @@
 function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Bloom";
 	
-	inputs[0] = nodeValue_Surface("Surface in", self);
+	newInput(0, nodeValue_Surface("Surface in", self));
 	inputs[1] = nodeValue_Float("Size", self, 3, "Bloom blur radius.")
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 32, 0.1] });
 	
@@ -11,26 +11,26 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	inputs[3] = nodeValue_Float("Strength", self, .25, "Blend intensity.")
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 2, 0.01] });
 		
-	inputs[4] = nodeValue_Surface("Bloom mask", self);
+	newInput(4, nodeValue_Surface("Bloom mask", self));
 	
-	inputs[5] = nodeValue_Surface("Mask", self);
+	newInput(5, nodeValue_Surface("Mask", self));
 	
 	inputs[6] = nodeValue_Float("Mix", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[7] = nodeValue_Bool("Active", self, true);
+	newInput(7, nodeValue_Bool("Active", self, true));
 		active_index = 7;
 	
-	inputs[8] = nodeValue_Toggle("Channel", self, 0b1111, { data: array_create(4, THEME.inspector_channel) });
+	newInput(8, nodeValue_Toggle("Channel", self, 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	__init_mask_modifier(5); // inputs 9, 10
 	
 	inputs[11] = nodeValue_Float("Aspect Ratio", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[12] = nodeValue_Rotation("Direction", self, 0);
+	newInput(12, nodeValue_Rotation("Direction", self, 0));
 	
-	inputs[13] = nodeValue_Enum_Scroll("Types", self, 0, [ "Gaussian", "Zoom" ]);
+	newInput(13, nodeValue_Enum_Scroll("Types", self, 0, [ "Gaussian", "Zoom" ]));
 	
 	inputs[14] = nodeValue_Vec2("Zoom Origin", self, [ 0.5, 0.5 ])
 		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);

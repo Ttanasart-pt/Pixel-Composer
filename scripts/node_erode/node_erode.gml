@@ -1,25 +1,25 @@
 function Node_Erode(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Erode";
 	
-	inputs[0] = nodeValue_Surface("Surface in", self);
+	newInput(0, nodeValue_Surface("Surface in", self));
 	
 	inputs[1] = nodeValue_Int("Width", self, 1)
 		.setValidator(VV_min(0))
 		.setMappable(10);
 	
-	inputs[2] = nodeValue_Bool("Preserve border",self, false);
+	newInput(2, nodeValue_Bool("Preserve border",self, false));
 	
-	inputs[3] = nodeValue_Bool("Use alpha", self, true);
+	newInput(3, nodeValue_Bool("Use alpha", self, true));
 	
-	inputs[4] = nodeValue_Surface("Mask", self);
+	newInput(4, nodeValue_Surface("Mask", self));
 	
 	inputs[5] = nodeValue_Float("Mix", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[6] = nodeValue_Bool("Active", self, true);
+	newInput(6, nodeValue_Bool("Active", self, true));
 		active_index = 6;
 	
-	inputs[7] = nodeValue_Toggle("Channel", self, 0b1111, { data: array_create(4, THEME.inspector_channel) });
+	newInput(7, nodeValue_Toggle("Channel", self, 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	__init_mask_modifier(4); // inputs 8, 9, 
 	

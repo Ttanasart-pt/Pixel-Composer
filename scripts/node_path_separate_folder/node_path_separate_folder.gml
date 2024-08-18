@@ -6,7 +6,7 @@ function Node_Path_Separate_Folder(_x, _y, _group = noone) : Node_Processor(_x, 
 	inputs[0] = nodeValue_Path("Path", self, "")
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Bool("Keep extension", self, true);
+	newInput(1, nodeValue_Bool("Keep extension", self, true));
 	
 	outputs[0] = nodeValue_Output("Directory", self, VALUE_TYPE.path, "");
 	

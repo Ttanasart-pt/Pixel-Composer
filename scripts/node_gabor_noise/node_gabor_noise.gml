@@ -24,7 +24,7 @@ function Node_Gabor_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y
 		.setMappable(10);
 		addShaderProp(SHADER_UNIFORM.float, "sharpness");
 				
-	inputs[6] = nodeValue_Vec2("Augment", self, [ 11, 31 ]);
+	newInput(6, nodeValue_Vec2("Augment", self, [ 11, 31 ]));
 		addShaderProp(SHADER_UNIFORM.float, "augment");
 		
 	inputs[7] = nodeValue_Rotation("Phase", self, 0)
@@ -33,17 +33,17 @@ function Node_Gabor_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y
 		
 	//////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[ 8] = nodeValueMap("Scale map", self);		addShaderProp();
+	newInput( 8, nodeValueMap("Scale map", self));		addShaderProp();
 	
-	inputs[ 9] = nodeValueMap("Density map", self);	addShaderProp();
+	newInput( 9, nodeValueMap("Density map", self));	addShaderProp();
 	
-	inputs[10] = nodeValueMap("Sharpness map", self); addShaderProp();
+	newInput(10, nodeValueMap("Sharpness map", self)); addShaderProp();
 	
-	inputs[11] = nodeValueMap("Phase map", self);		addShaderProp();
+	newInput(11, nodeValueMap("Phase map", self));		addShaderProp();
 		
 	//////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[12] = nodeValue_Rotation("Rotation", self, 0);
+	newInput(12, nodeValue_Rotation("Rotation", self, 0));
 		addShaderProp(SHADER_UNIFORM.float, "trRotation");
 			
 	input_display_list = [

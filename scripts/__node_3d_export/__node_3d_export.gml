@@ -7,7 +7,7 @@ function __Node_3D_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	inputs[1] = nodeValue_Path("Path", self, "", "Export location without '.obj' extension." )
 		.setDisplay(VALUE_DISPLAY.path_save, { filter: "3d object|*.obj" });
 	
-	inputs[2] = nodeValue_Bool("Export texture", self, true );
+	newInput(2, nodeValue_Bool("Export texture", self, true ));
 	
 	input_display_list = [ 0,
 		["Export",	false], 1, 2, 

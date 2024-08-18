@@ -6,9 +6,9 @@ function Node_String_Regex_Replace(_x, _y, _group = noone) : Node_Processor(_x, 
 	inputs[0] = nodeValue_Text("Text", self, "")
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Text("Regex", self, "");
+	newInput(1, nodeValue_Text("Regex", self, ""));
 	
-	inputs[2] = nodeValue_Text("Replacement", self, "");
+	newInput(2, nodeValue_Text("Replacement", self, ""));
 	
 	outputs[0] = nodeValue_Output("Results", self, VALUE_TYPE.text, "");
 	

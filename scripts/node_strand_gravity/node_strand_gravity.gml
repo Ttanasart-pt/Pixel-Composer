@@ -9,9 +9,9 @@ function Node_Strand_Gravity(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	inputs[0] = nodeValue("Strand", self, JUNCTION_CONNECT.input, VALUE_TYPE.strands, noone)
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Float("Gravity", self, 1);
+	newInput(1, nodeValue_Float("Gravity", self, 1));
 	
-	inputs[2] = nodeValue_Rotation("Direction", self, 0);
+	newInput(2, nodeValue_Rotation("Direction", self, 0));
 	
 	outputs[0] = nodeValue_Output("Strand", self, VALUE_TYPE.strands, noone);
 	

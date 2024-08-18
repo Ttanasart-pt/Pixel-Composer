@@ -5,7 +5,7 @@ function Node_Array_CSV_Parse(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	inputs[0] = nodeValue_Text("CSV string", self, 0)
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Int("Skip line", self, 0);
+	newInput(1, nodeValue_Int("Skip line", self, 0));
 	
 	outputs[0] = nodeValue_Output("Array", self, VALUE_TYPE.any, 0)
 		.setArrayDepth(1);

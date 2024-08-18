@@ -2,7 +2,7 @@ function Node_PCX_fn_var(_x, _y, _group = noone) : Node_PCX(_x, _y, _group) cons
 	name = "Fn Variable";
 	w    = 64;
 	
-	inputs[0] = nodeValue("Default Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0);
+	newInput(0, nodeValue("Default Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0));
 	
 	outputs[0] = nodeValue_Output("PCX", self, VALUE_TYPE.PCXnode, noone);
 	

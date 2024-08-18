@@ -2,7 +2,7 @@ function Node_3D_Mesh_Cube(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 	name = "3D Cube";
 	object_class = noone;
 	
-	inputs[in_mesh + 0] = nodeValue_Bool("Material per side", self, false );
+	newInput(in_mesh + 0, nodeValue_Bool("Material per side", self, false ));
 	
 	inputs[in_mesh + 1] = nodeValue_D3Material("Material", self, new __d3dMaterial())
 		.setVisible(true, true);

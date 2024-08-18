@@ -4,7 +4,7 @@ function Node_Fn_WaveTable(_x, _y, _group = noone) : Node_Fn(_x, _y, _group) con
 	inputs[inl + 0] = nodeValue_Float("Pattern", self, 0 )
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 3, 0.01] });
 		
-	inputs[inl + 1] = nodeValue_Vec2("Range", self, [ 0, 1 ]);
+	newInput(inl + 1, nodeValue_Vec2("Range", self, [ 0, 1 ]));
 	
 	inputs[inl + 2] = nodeValue_Float("Frequency", self, 2 )
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 8, 0.01] });

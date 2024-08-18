@@ -11,18 +11,18 @@ function Node_Noise_Tri(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	uniform_sam    = shader_get_uniform(shader, "useSampler");
 	uniform_samTyp = shader_get_uniform(shader, "sampleMode");
 	
-	inputs[0] = nodeValue_Dimension(self);
+	newInput(0, nodeValue_Dimension(self));
 	
 	inputs[1] = nodeValue_Float("Seed", self, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[1].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
-	inputs[2] = nodeValue_Vec2("Position", self, [ 0, 0] );
+	newInput(2, nodeValue_Vec2("Position", self, [ 0, 0] ));
 	
-	inputs[3] = nodeValue_Vec2("Scale", self, [ 4, 4 ] );
+	newInput(3, nodeValue_Vec2("Scale", self, [ 4, 4 ] ));
 	
-	inputs[4] = nodeValue_Surface("Texture sample", self);
+	newInput(4, nodeValue_Surface("Texture sample", self));
 		
-	inputs[5] = nodeValue_Enum_Scroll("Oversample mode", self,  2, [ "Empty", "Clamp", "Repeat" ]);
+	newInput(5, nodeValue_Enum_Scroll("Oversample mode", self,  2, [ "Empty", "Clamp", "Repeat" ]));
 	
 	input_display_list = [
 		["Output",	false], 0, 

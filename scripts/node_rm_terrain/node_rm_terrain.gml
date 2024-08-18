@@ -1,13 +1,13 @@
 function Node_RM_Terrain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "RM Terrain";
 	
-	inputs[0] = nodeValue_Dimension(self);
+	newInput(0, nodeValue_Dimension(self));
 	
-	inputs[1] = nodeValue_Surface("Surface", self);
+	newInput(1, nodeValue_Surface("Surface", self));
 	
-	inputs[2] = nodeValue_Vec3("Position", self, [ 0, 0, 0 ]);
+	newInput(2, nodeValue_Vec3("Position", self, [ 0, 0, 0 ]));
 	
-	inputs[3] = nodeValue_Vec3("Rotation", self, [ 30, 45, 0 ]);
+	newInput(3, nodeValue_Vec3("Rotation", self, [ 30, 45, 0 ]));
 	
 	inputs[4] = nodeValue_Float("Scale", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01 ] });
@@ -15,25 +15,25 @@ function Node_RM_Terrain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	inputs[5] = nodeValue_Float("FOV", self, 30)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 90, 1 ] });
 	
-	inputs[6] = nodeValue_Vec2("View Range", self, [ 0, 6 ]);
+	newInput(6, nodeValue_Vec2("View Range", self, [ 0, 6 ]));
 	
 	inputs[7] = nodeValue_Float("BG Bleed", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[8] = nodeValue_Color("Ambient", self, c_white);
+	newInput(8, nodeValue_Color("Ambient", self, c_white));
 	
 	inputs[9] = nodeValue_Float("Height", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01 ] });
 	
 	inputs[10] = nodeValue_Bool("Tile", self, true)
 	
-	inputs[11] = nodeValue_Surface("Texture", self);
+	newInput(11, nodeValue_Surface("Texture", self));
 	
-	inputs[12] = nodeValue_Color("Background", self, c_black);
+	newInput(12, nodeValue_Color("Background", self, c_black));
 	
-	inputs[13] = nodeValue_Surface("Reflection", self);
+	newInput(13, nodeValue_Surface("Reflection", self));
 	
-	inputs[14] = nodeValue_Vec3("Sun Position", self, [ .5, 1, .5 ]);
+	newInput(14, nodeValue_Vec3("Sun Position", self, [ .5, 1, .5 ]));
 	
 	inputs[15] = nodeValue_Float("Shadow", self, 0.2)
 		.setDisplay(VALUE_DISPLAY.slider);

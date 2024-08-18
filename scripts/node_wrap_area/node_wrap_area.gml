@@ -1,13 +1,13 @@
 function Node_Wrap_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Area Warp";
 	
-	inputs[0] = nodeValue_Surface("Surface in", self);
+	newInput(0, nodeValue_Surface("Surface in", self));
 
 	onSurfaceSize = function() { return surface_get_dimension(getInputData(0)); };
 	inputs[1] = nodeValue_Area("Area", self, DEF_AREA_REF, { onSurfaceSize, useShape : false })
 		.setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
 	
-	inputs[2] = nodeValue_Bool("Active", self, true);
+	newInput(2, nodeValue_Bool("Active", self, true));
 		active_index = 2;
 		
 	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);

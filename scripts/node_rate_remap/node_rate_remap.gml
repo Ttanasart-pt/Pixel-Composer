@@ -2,12 +2,12 @@ function Node_Rate_Remap(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	name = "Rate Remap";
 	use_cache = CACHE_USE.manual;
 	
-	inputs[0] = nodeValue_Surface("Surface", self);
+	newInput(0, nodeValue_Surface("Surface", self));
 	
 	inputs[1] = nodeValue_Float("Framerate", self, 10)
 		.setValidator(VV_min(1));
 	
-	inputs[2] = nodeValue_Bool("Active", self, true);
+	newInput(2, nodeValue_Bool("Active", self, true));
 		active_index = 2;
 	
 	outputs[0] = nodeValue_Output("Surface", self, VALUE_TYPE.surface, noone);

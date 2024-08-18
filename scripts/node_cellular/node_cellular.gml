@@ -1,7 +1,7 @@
 function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Cellular Noise";
 	
-	inputs[0] = nodeValue_Dimension(self);
+	newInput(0, nodeValue_Dimension(self));
 	
 	inputs[1] = nodeValue_Vec2("Position", self, [ DEF_SURF_W / 2, DEF_SURF_H / 2])
 		.setUnitRef(function(index) { return getDimension(index); });
@@ -12,12 +12,12 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	inputs[3] = nodeValue_Float("Seed", self, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[3].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
-	inputs[4] = nodeValue_Enum_Scroll("Type", self,  0, [ "Point", "Edge", "Cell", "Crystal" ]);
+	newInput(4, nodeValue_Enum_Scroll("Type", self,  0, [ "Point", "Edge", "Cell", "Crystal" ]));
 	
 	inputs[5] = nodeValue_Float("Contrast", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 4, 0.01] });
 	
-	inputs[6] = nodeValue_Enum_Button("Pattern", self,  0, [ "Tiled", "Uniform", "Radial" ]);
+	newInput(6, nodeValue_Enum_Button("Pattern", self,  0, [ "Tiled", "Uniform", "Radial" ]));
 	
 	inputs[7] = nodeValue_Float("Middle", self, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0., 1., 0.01] });
@@ -33,11 +33,11 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	//////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[11] = nodeValueMap("Scale map", self);
+	newInput(11, nodeValueMap("Scale map", self));
 	
 	//////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[12] = nodeValue_Rotation("Rotation", self, 0);
+	newInput(12, nodeValue_Rotation("Rotation", self, 0));
 		
 	input_display_list = [
 		["Output",		false], 0, 

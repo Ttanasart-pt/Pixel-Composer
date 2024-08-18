@@ -5,7 +5,7 @@ function Node_Pixel_Builder(_x, _y, _group = noone) : Node_Collection(_x, _y, _g
 	
 	reset_all_child = true;
 	
-	inputs[0] = nodeValue_Dimension(self);
+	newInput(0, nodeValue_Dimension(self));
 	
 	outputs[0] = nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone);
 	

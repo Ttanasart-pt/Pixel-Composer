@@ -2,53 +2,53 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	name = "MK Fall";
 	update_on_frame = true;
 	
-	inputs[0] = nodeValue_Surface("Background", self);
+	newInput(0, nodeValue_Surface("Background", self));
 	
-	inputs[1] = nodeValue_Dimension(self);
+	newInput(1, nodeValue_Dimension(self));
 		
 	inputs[2] = nodeValue_Int("Seed", self, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[2].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
-	inputs[3] = nodeValue_Area("Area", self, DEF_AREA);
+	newInput(3, nodeValue_Area("Area", self, DEF_AREA));
 	
-	inputs[4] = nodeValue_Int("Amount", self, 10);
+	newInput(4, nodeValue_Int("Amount", self, 10));
 	
-	inputs[5] = nodeValue_Float("Gravity", self, 0);
+	newInput(5, nodeValue_Float("Gravity", self, 0));
 	
-	inputs[6] = nodeValue_Range("X Swing", self, [ 1, 1 ], { linked : true });
+	newInput(6, nodeValue_Range("X Swing", self, [ 1, 1 ], { linked : true }));
 	
-	inputs[7] = nodeValue_Range("Y Swing", self, [ 0.25, 0.25 ], { linked : true });
+	newInput(7, nodeValue_Range("Y Swing", self, [ 0.25, 0.25 ], { linked : true }));
 	
-	inputs[8] = nodeValue_Range("Swing frequency", self, [ 1, 1 ], { linked : true });
+	newInput(8, nodeValue_Range("Swing frequency", self, [ 1, 1 ], { linked : true }));
 	
-	inputs[9] = nodeValue_Vec2("Size", self, [ 4, 2 ]);
+	newInput(9, nodeValue_Vec2("Size", self, [ 4, 2 ]));
 	
-	inputs[10] = nodeValue_Range("Speed", self, [ 1, 1 ], { linked : true });
+	newInput(10, nodeValue_Range("Speed", self, [ 1, 1 ], { linked : true }));
 	
-	inputs[11] = nodeValue_Range("X Momentum", self, [ 0, 0 ], { linked : true });
+	newInput(11, nodeValue_Range("X Momentum", self, [ 0, 0 ], { linked : true }));
 	
-	inputs[12] = nodeValue_Vec2("Wind", self, [ 0, 0 ]);
+	newInput(12, nodeValue_Vec2("Wind", self, [ 0, 0 ]));
 	
 	inputs[13] = nodeValue_Gradient("Color", self, new gradientObject(cola(c_white)))
 	
-	inputs[14] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11);
+	newInput(14, nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11));
 	
-	inputs[15] = nodeValue_Bool("Ground", self, false);
+	newInput(15, nodeValue_Bool("Ground", self, false));
 	
-	inputs[16] = nodeValue_Range("Ground levels", self, [ DEF_SURF_H / 2, DEF_SURF_H ]);
+	newInput(16, nodeValue_Range("Ground levels", self, [ DEF_SURF_H / 2, DEF_SURF_H ]));
 	
-	inputs[17] = nodeValue_Range("Y Momentum", self, [ 0, 0 ], { linked : true });
+	newInput(17, nodeValue_Range("Y Momentum", self, [ 0, 0 ], { linked : true }));
 		
-	inputs[18] = nodeValue_Bool("Twist", self, false);
+	newInput(18, nodeValue_Bool("Twist", self, false));
 		
 	inputs[19] = nodeValue_Float("Twist Rate", self, 0.1)
 		.setDisplay(VALUE_DISPLAY.slider);
 		
-	inputs[20] = nodeValue_Range("Twist Speed", self, [ 5, 10 ]);
+	newInput(20, nodeValue_Range("Twist Speed", self, [ 5, 10 ]));
 		
-	inputs[21] = nodeValue_Range("Scale", self, [ 1, 1 ], { linked : true });
+	newInput(21, nodeValue_Range("Scale", self, [ 1, 1 ], { linked : true }));
 	
-	inputs[22] = nodeValue_Enum_Scroll("Render Type", self,  0, [ new scrollItem("Leaf", s_node_shape_leaf, 0), new scrollItem("Circle", s_node_shape_circle, 0) ]);
+	newInput(22, nodeValue_Enum_Scroll("Render Type", self,  0, [ new scrollItem("Leaf", s_node_shape_leaf, 0), new scrollItem("Circle", s_node_shape_circle, 0) ]));
 	
 	inputs[23] = nodeValue_Float("Twist Radius", self, 0.7)
 		.setDisplay(VALUE_DISPLAY.slider);

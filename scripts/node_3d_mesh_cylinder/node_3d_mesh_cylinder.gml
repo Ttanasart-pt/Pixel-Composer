@@ -15,9 +15,9 @@ function Node_3D_Mesh_Cylinder(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _g
 	inputs[in_mesh + 3] = nodeValue_D3Material("Material Side", self, new __d3dMaterial())
 		.setVisible(true, true);
 	
-	inputs[in_mesh + 4] = nodeValue_Bool("Smooth Side", self, false );
+	newInput(in_mesh + 4, nodeValue_Bool("Smooth Side", self, false ));
 	
-	inputs[in_mesh + 5] = nodeValue_Bool("End caps", self, true );
+	newInput(in_mesh + 5, nodeValue_Bool("End caps", self, true ));
 	
 	input_display_list = [
 		__d3d_input_list_mesh, in_mesh + 0, in_mesh + 4, in_mesh + 5, 

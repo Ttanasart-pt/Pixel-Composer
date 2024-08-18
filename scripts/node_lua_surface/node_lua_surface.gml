@@ -3,9 +3,9 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	preview_channel = 1;
 	update_on_frame = true;
 	
-	inputs[0]  = nodeValue_Text("Function name", self, "render" + string(irandom_range(100000, 999999)));
+	newInput(0, nodeValue_Text("Function name", self, "render" + string(irandom_range(100000, 999999))));
 	
-	inputs[1]  = nodeValue_Vec2("Output dimension", self, DEF_SURF);
+	newInput(1, nodeValue_Vec2("Output dimension", self, DEF_SURF));
 		
 	inputs[2]  = nodeValue_Text("Lua code", self, "", o_dialog_lua_reference)
 		.setDisplay(VALUE_DISPLAY.codeLUA);

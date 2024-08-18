@@ -1,24 +1,24 @@
 function Node_Path_Profile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Draw Path Profile";
 	
-	inputs[0] = nodeValue_Dimension(self);
+	newInput(0, nodeValue_Dimension(self));
 	
 	inputs[1] = nodeValue_PathNode("Path", self, noone )
 		.setVisible(true, true);
 	
-	inputs[2] = nodeValue_Int("Resolution", self, 64 );
+	newInput(2, nodeValue_Int("Resolution", self, 64 ));
 	
-	inputs[3] = nodeValue_Enum_Button("Side", self,  0 , [ "L", "R", "T", "D" ]);
+	newInput(3, nodeValue_Enum_Button("Side", self,  0 , [ "L", "R", "T", "D" ]));
 	
-	inputs[4] = nodeValue_Bool("Mirror", self, false );
+	newInput(4, nodeValue_Bool("Mirror", self, false ));
 	
-	inputs[5] = nodeValue_Color("Color", self, c_white );
+	newInput(5, nodeValue_Color("Color", self, c_white ));
 	
-	inputs[6] = nodeValue_Bool("Anti Aliasing", self, false );
+	newInput(6, nodeValue_Bool("Anti Aliasing", self, false ));
 	
-	inputs[7] = nodeValue_Bool("Background", self, false );
+	newInput(7, nodeValue_Bool("Background", self, false ));
 	
-	inputs[8] = nodeValue_Color("BG Color", self, c_black );
+	newInput(8, nodeValue_Color("BG Color", self, c_black ));
 	
 	outputs[0] = nodeValue_Output("Output", self, VALUE_TYPE.surface, noone );
 	

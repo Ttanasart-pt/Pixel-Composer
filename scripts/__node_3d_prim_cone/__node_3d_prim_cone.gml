@@ -2,18 +2,18 @@ function __Node_3D_Cone(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	name = "3D Cone";
 	batch_output = false;
 	
-	inputs[0] = nodeValue_Dimension(self);
+	newInput(0, nodeValue_Dimension(self));
 	
 	inputs[1] = nodeValue_Vec2("Render position", self, [ 0.5, 0.5 ])
 		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
 	
-	inputs[2] = nodeValue_Vec3("Render rotation", self, [ 0, 0, 0 ]);
+	newInput(2, nodeValue_Vec3("Render rotation", self, [ 0, 0, 0 ]));
 	
-	inputs[3] = nodeValue_Vec2("Render scale", self, [ 1, 1 ]);
+	newInput(3, nodeValue_Vec2("Render scale", self, [ 1, 1 ]));
 	
-	inputs[4] = nodeValue_Vec3("Object scale", self, [ 1, 1, 1 ]);
+	newInput(4, nodeValue_Vec3("Object scale", self, [ 1, 1, 1 ]));
 	
-	inputs[5] = nodeValue_Rotation("Light direction", self, 0);
+	newInput(5, nodeValue_Rotation("Light direction", self, 0));
 		
 	inputs[6] = nodeValue_Float("Light height", self, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-1, 1, 0.01] });
@@ -21,12 +21,12 @@ function __Node_3D_Cone(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	inputs[7] = nodeValue_Float("Light intensity", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[8] = nodeValue_Color("Light color", self, c_white);
-	inputs[9] = nodeValue_Color("Ambient color", self, c_grey);
+	newInput(8, nodeValue_Color("Light color", self, c_white));
+	newInput(9, nodeValue_Color("Ambient color", self, c_grey));
 	
-	inputs[10] = nodeValue_Vec3("Object rotation", self, [ 0, 0, 0 ]);
+	newInput(10, nodeValue_Vec3("Object rotation", self, [ 0, 0, 0 ]));
 		
-	inputs[11] = nodeValue_Vec3("Object position", self, [ 0, 0, 0 ]);
+	newInput(11, nodeValue_Vec3("Object position", self, [ 0, 0, 0 ]));
 	
 	inputs[12] = nodeValue_Enum_Button("Projection", self,  0, [ "Orthographic", "Perspective" ])
 		.rejectArray();
@@ -34,11 +34,11 @@ function __Node_3D_Cone(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	inputs[13] = nodeValue_Float("Field of view", self, 60)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 1, 90, 0.1 ] });
 	
-	inputs[14] = nodeValue_Int("Sides", self, 16);
+	newInput(14, nodeValue_Int("Sides", self, 16));
 	
-	inputs[15] = nodeValue_Surface("Textures base",	self);
+	newInput(15, nodeValue_Surface("Textures base",	self));
 	
-	inputs[16] = nodeValue_Surface("Textures side", self);
+	newInput(16, nodeValue_Surface("Textures side", self));
 	
 	inputs[17] = nodeValue_Bool("Scale view with dimension", self, true)
 	

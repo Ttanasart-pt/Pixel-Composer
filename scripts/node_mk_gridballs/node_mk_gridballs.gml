@@ -1,15 +1,15 @@
 function Node_MK_GridBalls(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "MK GridBalls";
 	
-	inputs[0] = nodeValue_Surface("Surface in", self);
+	newInput(0, nodeValue_Surface("Surface in", self));
 	
-	inputs[1] = nodeValue_Dimension(self);
+	newInput(1, nodeValue_Dimension(self));
 	
-	inputs[2] = nodeValue_Vec2("Amount", self, [ 4, 4 ]);
+	newInput(2, nodeValue_Vec2("Amount", self, [ 4, 4 ]));
 	
-	inputs[3] = nodeValue_Rotation("Light", self, 0);
+	newInput(3, nodeValue_Rotation("Light", self, 0));
 	
-	inputs[4] = nodeValue_Float("Scatter", self, 0);
+	newInput(4, nodeValue_Float("Scatter", self, 0));
 	
 	inputs[5] = nodeValue_Int("Seed", self, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[5].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
@@ -17,13 +17,13 @@ function Node_MK_GridBalls(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	inputs[6] = nodeValue_Float("Shading", self, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider);
 		
-	inputs[7] = nodeValue_Rotation("Scatter direction", self, 0);
+	newInput(7, nodeValue_Rotation("Scatter direction", self, 0));
 		
-	inputs[8] = nodeValue_Vec2("Shift", self, [ 0, 0 ]);
+	newInput(8, nodeValue_Vec2("Shift", self, [ 0, 0 ]));
 	
-	inputs[9] = nodeValue_Float("Stretch", self, 0);
+	newInput(9, nodeValue_Float("Stretch", self, 0));
 	
-	inputs[10] = nodeValue_Rotation("Stretch direction", self, 0);
+	newInput(10, nodeValue_Rotation("Stretch direction", self, 0));
 		
 	inputs[11] = nodeValue_Float("Stretch shift", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] });
@@ -31,9 +31,9 @@ function Node_MK_GridBalls(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	inputs[12] = nodeValue_Float("Roundness", self, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[13] = nodeValue_Float("Twist", self, 0);
+	newInput(13, nodeValue_Float("Twist", self, 0));
 	
-	inputs[14] = nodeValue_Rotation("Twist axis", self, 0);
+	newInput(14, nodeValue_Rotation("Twist axis", self, 0));
 		
 	inputs[15] = nodeValue_Float("Twist shift", self, 0)
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] });

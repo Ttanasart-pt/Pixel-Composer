@@ -5,24 +5,24 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	inputs[0] = nodeValue_PathNode("Path", self, noone)
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Range("Frequency", self, [ 4, 4 ], { linked : true });
+	newInput(1, nodeValue_Range("Frequency", self, [ 4, 4 ], { linked : true }));
 	
-	inputs[2] = nodeValue_Range("Amplitude", self, [ 4, 4 ], { linked : true });
+	newInput(2, nodeValue_Range("Amplitude", self, [ 4, 4 ], { linked : true }));
 	
-	inputs[3] = nodeValue_Range("Shift", self, [ 0, 0 ], { linked : true });
+	newInput(3, nodeValue_Range("Shift", self, [ 0, 0 ], { linked : true }));
 	
-	inputs[4] = nodeValue_Bool("Smooth", self, false);
+	newInput(4, nodeValue_Bool("Smooth", self, false));
 	
 	inputs[5] = nodeValue_Float("Seed", self, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[5].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
-	inputs[6] = nodeValue_Bool("Wiggle", self, false);
+	newInput(6, nodeValue_Bool("Wiggle", self, false));
 	
-	inputs[7] = nodeValue_Range("Wiggle Amplitude", self, [ -2, 2 ]);
+	newInput(7, nodeValue_Range("Wiggle Amplitude", self, [ -2, 2 ]));
 	
-	inputs[8] = nodeValue_Float("Wiggle Frequency", self, 8);
+	newInput(8, nodeValue_Float("Wiggle Frequency", self, 8));
 	
-	inputs[9] = nodeValue("Amplitude over length", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11);
+	newInput(9, nodeValue("Amplitude over length", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11));
 	
 	outputs[0] = nodeValue_Output("Path", self, VALUE_TYPE.pathnode, self);
 	

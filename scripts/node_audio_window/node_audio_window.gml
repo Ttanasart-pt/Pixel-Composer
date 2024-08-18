@@ -4,7 +4,7 @@ function Node_Audio_Window(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	inputs[0] = nodeValue_AudioBit("Audio data", self, noone)
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Int("Width", self, 4096, "Amount of bits to extract.");
+	newInput(1, nodeValue_Int("Width", self, 4096, "Amount of bits to extract."));
 	
 	inputs[2] = nodeValue_Float("Location", self, 0)
 		.setDisplay(VALUE_DISPLAY._default, { unit: 0, side_button: button(function() { 
@@ -16,11 +16,11 @@ function Node_Audio_Window(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			}
 		);
 		
-	inputs[3] = nodeValue_Enum_Button("Cursor location", self,  1, [ "Start", "Middle", "End" ]);
+	newInput(3, nodeValue_Enum_Button("Cursor location", self,  1, [ "Start", "Middle", "End" ]));
 	
-	inputs[4] = nodeValue_Int("Step", self, 16);
+	newInput(4, nodeValue_Int("Step", self, 16));
 	
-	inputs[5] = nodeValue_Bool("Match timeline", self, true, "Set window cursor to match animation timeline.");
+	newInput(5, nodeValue_Bool("Match timeline", self, true, "Set window cursor to match animation timeline."));
 	
 	outputs[0] = nodeValue_Output("Bit Array", self, VALUE_TYPE.float, [])
 		.setArrayDepth(1);

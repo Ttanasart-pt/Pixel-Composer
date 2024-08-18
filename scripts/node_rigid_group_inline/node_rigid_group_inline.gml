@@ -6,7 +6,7 @@ function Node_Rigid_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inlin
 	is_simulation      = true;
 	manual_ungroupable = false;
 	
-	inputs[0] = nodeValue_Vec2("Gravity", self, [ 0, 10 ]);
+	newInput(0, nodeValue_Vec2("Gravity", self, [ 0, 10 ]));
 	
 	if(NODE_NEW_MANUAL) {
 		var _object = nodeBuild("Node_Rigid_Object", x,       y);

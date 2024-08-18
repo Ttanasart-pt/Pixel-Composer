@@ -90,11 +90,11 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	inputs[2] = nodeValue_Float("b", self, 0)
 		.setVisible(true, true);
 		
-	inputs[3] = nodeValue_Bool("Degree angle", self, true);
+	newInput(3, nodeValue_Bool("Degree angle", self, true));
 	
-	inputs[4] = nodeValue_Bool("To integer", self, false);
+	newInput(4, nodeValue_Bool("To integer", self, false));
 	
-	inputs[5] = nodeValue_Float("Amount", self, 0);
+	newInput(5, nodeValue_Float("Amount", self, 0));
 	
 	input_display_list = [
 		0, 1, 2, 5, 3, 4,

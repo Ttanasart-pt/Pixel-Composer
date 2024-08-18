@@ -5,19 +5,19 @@ function Node_Atlas_Set(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	inputs[0] = nodeValue_Surface("Atlas", self)
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Surface("Surface", self);
+	newInput(1, nodeValue_Surface("Surface", self));
 	
-	inputs[2] = nodeValue_Vec2("Position", self, [ 0, 0 ]);
+	newInput(2, nodeValue_Vec2("Position", self, [ 0, 0 ]));
 	
-	inputs[3] = nodeValue_Rotation("Rotation", self, 0);
+	newInput(3, nodeValue_Rotation("Rotation", self, 0));
 	
-	inputs[4] = nodeValue_Vec2("Scale", self, [ 0, 0 ]);
+	newInput(4, nodeValue_Vec2("Scale", self, [ 0, 0 ]));
 		
-	inputs[5] = nodeValue_Color("Blend", self, c_white);
+	newInput(5, nodeValue_Color("Blend", self, c_white));
 		
-	inputs[6] = nodeValue_Float("Alpha", self, 1);
+	newInput(6, nodeValue_Float("Alpha", self, 1));
 	
-	inputs[7] = nodeValue_Bool("Recalculate Position", self, true);
+	newInput(7, nodeValue_Bool("Recalculate Position", self, true));
 	
 	outputs[0] = nodeValue_Output("Atlas", self, VALUE_TYPE.surface, noone);
 	

@@ -13,9 +13,9 @@ function Node_VFX_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	inputs[0] = nodeValue_Particle("Particles", self, -1 )
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Int("Life", self, 4 );
+	newInput(1, nodeValue_Int("Life", self, 4 ));
 	
-	inputs[2] = nodeValue_Bool("Color", self, false );
+	newInput(2, nodeValue_Bool("Color", self, false ));
 	
 	outputs[0] = nodeValue_Output("Path", self, VALUE_TYPE.pathnode, self);
 	

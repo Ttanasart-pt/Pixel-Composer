@@ -4,9 +4,9 @@ function Node_Print(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	draw_padding = 8;
 	
-	inputs[0] = nodeValue_Bool("Active", self, true);
+	newInput(0, nodeValue_Bool("Active", self, true));
 	
-	inputs[1] = nodeValue_Text("Text", self, "");
+	newInput(1, nodeValue_Text("Text", self, ""));
 	
 	static update = function() { 
 		var act = getInputData(0);

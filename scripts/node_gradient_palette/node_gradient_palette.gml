@@ -5,13 +5,13 @@ function Node_Gradient_Palette(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	inputs[0] = nodeValue_Palette("Palette", self, array_clone(DEF_PALETTE))
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Bool("Custom positions", self, false);
+	newInput(1, nodeValue_Bool("Custom positions", self, false));
 	
 	inputs[2] = nodeValue_Float("Positions", self, [], "Array of number indicating color position (0 - 1).")
 		.setVisible(true, true);
 	inputs[2].array_depth = 1;
 	
-	inputs[3] = nodeValue_Enum_Button("Interpolation", self,  1, [ "None", "RGB", "HSV", "OKLAB", "sRGB" ]);
+	newInput(3, nodeValue_Enum_Button("Interpolation", self,  1, [ "None", "RGB", "HSV", "OKLAB", "sRGB" ]));
 	
 	outputs[0] = nodeValue_Output("Gradient", self, VALUE_TYPE.gradient, new gradientObject(cola(c_white)) )
 	

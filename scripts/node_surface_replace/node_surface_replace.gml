@@ -1,7 +1,7 @@
 function Node_Surface_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Replace Image";
 	
-	inputs[0] = nodeValue_Surface("Base Image", self);
+	newInput(0, nodeValue_Surface("Base Image", self));
 	
 	inputs[1] = nodeValue_Surface("Target Image", self)
 		.setArrayDepth(1);
@@ -12,14 +12,14 @@ function Node_Surface_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	inputs[3] = nodeValue_Float("Color Threshold", self, 0.1, "How similiar the color need to be in order to be count as matched." )
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[4] = nodeValue_Bool("Draw Base Image", self, true );
+	newInput(4, nodeValue_Bool("Draw Base Image", self, true ));
 	
-	inputs[5] = nodeValue_Bool("Fast Mode", self, true );
+	newInput(5, nodeValue_Bool("Fast Mode", self, true ));
 	
 	inputs[6] = nodeValue_Float("Pixel Threshold", self, 0.1, "How many pixel need to me matched to replace with replacement image." )
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[7] = nodeValue_Enum_Scroll("Array mode", self,  0, { data: [ "Match index", "Randomized" ], update_hover: false });
+	newInput(7, nodeValue_Enum_Scroll("Array mode", self,  0, { data: [ "Match index", "Randomized" ], update_hover: false }));
 	
 	inputs[8] = nodeValue_Float("Seed", self, seed_random(6))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[8].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
