@@ -819,4 +819,9 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		sprite_index = -1;
 		return _h;
 	} #endregion
+	
+	static clone = function() { 
+		var cln = new textBox(input, onModify); 
+		return cln;
+	}
 }
