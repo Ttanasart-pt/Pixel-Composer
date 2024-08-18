@@ -94,23 +94,27 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		is_anim		= false;
 		sep_axis	= false;
 		animable    = true;
-		sepable		= is_array(_value) && array_length(_value) > 1;
-		animator	= new valueAnimator(_value, self, false);
-		animators	= [];
-		
-		if(is_array(_value))
-		for( var i = 0, n = array_length(_value); i < n; i++ ) {
-			animators[i] = new valueAnimator(_value[i], self, true);
-			animators[i].index = i;
-		}
 		
 		on_end		= KEYFRAME_END.hold;
 		loop_range  = -1;
 	#endregion
 	
 	#region ---- value ----
+		static setDefValue = function(_value) {
+			sepable		= is_array(_value) && array_length(_value) > 1;
+			animator	= new valueAnimator(_value, self, false);
+			animators	= [];
+			
+			if(is_array(_value))
+			for( var i = 0, n = array_length(_value); i < n; i++ ) {
+				animators[i] = new valueAnimator(_value[i], self, true);
+				animators[i].index = i;
+			}
+			
+			def_val	= array_clone(_value);
+		}
 		
-		def_val	      = array_clone(_value);
+		setDefValue(_value);
 		def_length    = is_array(def_val)? array_length(def_val) : 0;
 		def_depth     = array_get_depth(def_val);
 		unit		  = new nodeValueUnit(self);
@@ -323,9 +327,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static setUnitRef = function(ref, mode = VALUE_UNIT.constant) { #region
 		express_edit.side_button = unit.triggerButton;
+		display_data.onSurfaceSize = ref;
 		
 		if(editWidget) {
 			editWidget.unit = unit;
+			editWidget.onSurfaceSize = ref;
 			
 			if(is_instanceof(editWidget, textBox))
 				editWidget.side_button = unit.triggerButton;
