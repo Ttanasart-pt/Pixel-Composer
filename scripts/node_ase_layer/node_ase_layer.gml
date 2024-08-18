@@ -1,11 +1,11 @@
 function Node_ASE_layer(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "ASE Layer";
 	
-	inputs[0] = nodeValue("ASE data", self, JUNCTION_CONNECT.input, VALUE_TYPE.object, noone)
+	newInput(0, nodeValue("ASE data", self, JUNCTION_CONNECT.input, VALUE_TYPE.object, noone))
 		.setVisible(false, true)
 		.rejectArray();
 	
-	inputs[1] = nodeValue_Bool("Crop Output", self, false)
+	newInput(1, nodeValue_Bool("Crop Output", self, false))
 		.rejectArray();
 	
 	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);

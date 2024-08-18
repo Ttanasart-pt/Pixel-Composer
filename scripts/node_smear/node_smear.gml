@@ -3,16 +3,16 @@ function Node_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	newInput(0, nodeValue_Surface("Surface in", self));
 	
-	inputs[1] = nodeValue_Float("Strength", self, 0.2)
+	newInput(1, nodeValue_Float("Strength", self, 0.2))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 0.5, 0.001] })
 		.setMappable(9);
 	
-	inputs[2] = nodeValue_Rotation("Direction", self, 0)
+	newInput(2, nodeValue_Rotation("Direction", self, 0))
 		.setMappable(10);
 	
 	newInput(3, nodeValue_Surface("Mask", self));
 	
-	inputs[4] = nodeValue_Float("Mix", self, 1)
+	newInput(4, nodeValue_Float("Mix", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(5, nodeValue_Bool("Active", self, true));
@@ -34,7 +34,7 @@ function Node_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	newInput(12, nodeValue_Enum_Button("Modulate strength", self,  0, [ "Distance", "Color", "None" ]));
 	
-	inputs[13] = nodeValue_Int("Spread", self, 0)
+	newInput(13, nodeValue_Int("Spread", self, 0))
 		.setDisplay(VALUE_DISPLAY.slider, { range : [ 0, 30, 1 ] });
 	
 	newInput(14, nodeValue_Bool("Invert", self, false));

@@ -8,7 +8,7 @@ function Node_Boolean(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	wd_checkBox = new checkBox( function() { inputs[0].setValue(!getInputData(0)); } );
 	
-	inputs[0] = nodeValue_Bool("Value", self, false)
+	newInput(0, nodeValue_Bool("Value", self, false))
 		.setVisible(true, true);
 	
 	newInput(1, nodeValue_Bool("Hide Background", self, false));

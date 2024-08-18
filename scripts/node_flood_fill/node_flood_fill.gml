@@ -5,7 +5,7 @@ function Node_Flood_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		
 	newInput(1, nodeValue_Surface("Mask", self));
 	
-	inputs[2] = nodeValue_Float("Mix", self, 1)
+	newInput(2, nodeValue_Float("Mix", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(3, nodeValue_Bool("Active", self, true));
@@ -15,7 +15,7 @@ function Node_Flood_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		
 	newInput(5, nodeValue_Color("Colors", self, cola(c_black) ));
 	
-	inputs[6] = nodeValue_Float("Threshold", self, 0.1)
+	newInput(6, nodeValue_Float("Threshold", self, 0.1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(7, nodeValue_Bool("Diagonal", self, false));

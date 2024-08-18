@@ -2,10 +2,10 @@ function Node_Palette_Sort(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	name = "Sort Palette";	
 	setDimension(96);
 	
-	inputs[0] = nodeValue_Palette("Palette in", self, array_clone(DEF_PALETTE))
+	newInput(0, nodeValue_Palette("Palette in", self, array_clone(DEF_PALETTE)))
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Enum_Button("Order", self,  0, [ "Brightness", -1, "Hue (HSV)", "Saturation (SHV)", "Value (VHS)", -1, "Red (RGB)", "Green (GBR)", "Blue (BRG)", -1, "Custom" ])
+	newInput(1, nodeValue_Enum_Button("Order", self,  0, [ "Brightness", -1, "Hue (HSV)", "Saturation (SHV)", "Value (VHS)", -1, "Red (RGB)", "Green (GBR)", "Blue (BRG)", -1, "Custom" ]))
 		.rejectArray();
 	
 	newInput(2, nodeValue_Bool("Reverse", self, false));

@@ -3,11 +3,11 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	setDimension(96, 48);
 	
-	inputs[0] = nodeValue_Text("Index", self, "" )
+	newInput(0, nodeValue_Text("Index", self, "" ))
 		.setVisible(true, true)
 		.rejectArray();
 	
-	inputs[1] = nodeValue("Default value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0 )
+	newInput(1, nodeValue("Default value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0 ))
 		.setVisible(false, true);
 	
 	size_adjust_tool = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { #region

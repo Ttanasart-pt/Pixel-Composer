@@ -15,53 +15,53 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	object = [];
 	attributes.mesh = [];
 	
-	inputs[0] = nodeValue_Bool("Affect by force", self, true)
+	newInput(0, nodeValue_Bool("Affect by force", self, true))
 		.rejectArray()
 		.setAnimable(false);
 	
-	inputs[1] = nodeValue_Float("Weight", self, 0.5)
+	newInput(1, nodeValue_Float("Weight", self, 0.5))
 		.rejectArray()
 		.setAnimable(false);
 	
-	inputs[2] = nodeValue_Float("Contact friction", self, 0.2)
+	newInput(2, nodeValue_Float("Contact friction", self, 0.2))
 		.rejectArray()
 		.setAnimable(false);
 	
-	inputs[3] = nodeValue_Float("Air resistance", self, 0.2)
+	newInput(3, nodeValue_Float("Air resistance", self, 0.2))
 		.rejectArray()
 		.setAnimable(false);
 	
-	inputs[4] = nodeValue_Float("Rotation resistance", self, 0.2)
+	newInput(4, nodeValue_Float("Rotation resistance", self, 0.2))
 		.rejectArray()
 		.setAnimable(false);
 	
-	inputs[5] = nodeValue_Enum_Scroll("Shape", self,  0, [ new scrollItem("Box", s_node_shape_rectangle, 0), new scrollItem("Circle", s_node_shape_circle, 0), new scrollItem("Custom", s_node_shape_misc, 1) ])
+	newInput(5, nodeValue_Enum_Scroll("Shape", self,  0, [ new scrollItem("Box", s_node_shape_rectangle, 0), new scrollItem("Circle", s_node_shape_circle, 0), new scrollItem("Custom", s_node_shape_misc, 1) ]))
 		.rejectArray()
 		.setAnimable(false);
 	
-	inputs[6] = nodeValue_Surface("Texture", self)
+	newInput(6, nodeValue_Surface("Texture", self))
 		.setAnimable(false);
 	
-	inputs[7] = nodeValue_Vec2("Start position", self, [ 16, 16 ])
+	newInput(7, nodeValue_Vec2("Start position", self, [ 16, 16 ]))
 		.setAnimable(false);
 	
-	inputs[8] = nodeValue_Bool("Spawn", self, true, "Make object spawn when start.")
+	newInput(8, nodeValue_Bool("Spawn", self, true, "Make object spawn when start."))
 		.rejectArray()
 		.setAnimable(false);
 	
-	inputs[9] = nodeValue_Trigger("Generate mesh", self, false )
+	newInput(9, nodeValue_Trigger("Generate mesh", self, false ))
 		.setDisplay(VALUE_DISPLAY.button, { name: "Generate", UI : true, onClick: function() { generateAllMesh(); } });
 	
-	inputs[10] = nodeValue_Float("Mesh expansion", self, 0)
+	newInput(10, nodeValue_Float("Mesh expansion", self, 0))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -2, 2, 0.1 ] })
 		.rejectArray()
 		.setAnimable(false);
 	
-	inputs[11] = nodeValue_Bool("Add pixel collider", self, true)
+	newInput(11, nodeValue_Bool("Add pixel collider", self, true))
 		.rejectArray()
 		.setAnimable(false);
 		
-	inputs[12] = nodeValue_Int("Collision group", self, 1)
+	newInput(12, nodeValue_Int("Collision group", self, 1))
 		.rejectArray()
 		
 	outputs[0] = nodeValue_Output("Object", self, VALUE_TYPE.rigid, object);

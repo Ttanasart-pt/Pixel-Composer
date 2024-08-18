@@ -2,10 +2,10 @@ function Node_Blur_Simple(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	name = "Non-Uniform Blur";
 	
 	newInput(0, nodeValue_Surface("Surface in", self));
-	inputs[1] = nodeValue_Float("Size", self, 3)
+	newInput(1, nodeValue_Float("Size", self, 3))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 32, 0.1] });
 	
-	inputs[2] = nodeValue_Enum_Scroll("Oversample mode", self,  0, [ "Empty", "Clamp", "Repeat" ])
+	newInput(2, nodeValue_Enum_Scroll("Oversample mode", self,  0, [ "Empty", "Clamp", "Repeat" ]))
 		.setTooltip("How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.");
 	
 	newInput(3, nodeValue_Surface("Blur mask", self));
@@ -16,7 +16,7 @@ function Node_Blur_Simple(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	newInput(6, nodeValue_Surface("Mask", self));
 	
-	inputs[7] = nodeValue_Float("Mix", self, 1)
+	newInput(7, nodeValue_Float("Mix", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(8, nodeValue_Bool("Active", self, true));
@@ -26,7 +26,7 @@ function Node_Blur_Simple(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	__init_mask_modifier(6); // inputs 10, 11, 
 	
-	inputs[12] = nodeValue_Gradient("Gradient", self, new gradientObject([ cola(c_black), cola(c_white) ]))
+	newInput(12, nodeValue_Gradient("Gradient", self, new gradientObject([ cola(c_black), cola(c_white) ])))
 		.setMappable(13);
 	
 	newInput(13, nodeValueMap("Gradient map", self));

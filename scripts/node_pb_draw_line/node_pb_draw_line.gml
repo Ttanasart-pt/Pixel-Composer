@@ -3,7 +3,7 @@ function Node_PB_Draw_Line(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _group
 	
 	newInput(3, nodeValue_Enum_Button("Direction", self,  0 , [ THEME.obj_draw_line, THEME.obj_draw_line, THEME.obj_draw_line, THEME.obj_draw_line ] ));
 	
-	inputs[4] = nodeValue_Int("Thickness", self, 2 )
+	newInput(4, nodeValue_Int("Thickness", self, 2 ))
 	
 	input_display_list = [
 		["Draw",	false], 0, 1, 2, 

@@ -2,19 +2,19 @@ function Node_Noise_Strand(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 	name   = "Strand Noise";
 	shader = sh_noise_strand;
 	
-	inputs[1] = nodeValue_Vec2("Position", self, [ 0, 0 ])
+	newInput(1, nodeValue_Vec2("Position", self, [ 0, 0 ]))
 		.setUnitRef(function(index) { return getDimension(index); });
 		addShaderProp(SHADER_UNIFORM.float, "position");
 		
-	inputs[2] = nodeValue_Float("Density", self, 0.5 )
+	newInput(2, nodeValue_Float("Density", self, 0.5 ))
 		.setDisplay(VALUE_DISPLAY.slider);
 		addShaderProp(SHADER_UNIFORM.float, "density");
 		
-	inputs[3] = nodeValue_Float("Seed", self, seed_random(6))
+	newInput(3, nodeValue_Float("Seed", self, seed_random(6)))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[3].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 		addShaderProp(SHADER_UNIFORM.float, "seed");
 				
-	inputs[4] = nodeValue_Float("Slope", self, 0.5 )
+	newInput(4, nodeValue_Float("Slope", self, 0.5 ))
 		.setDisplay(VALUE_DISPLAY.slider);
 		addShaderProp(SHADER_UNIFORM.float, "slope");
 				
@@ -24,7 +24,7 @@ function Node_Noise_Strand(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 	newInput(6, nodeValue_Float("Curve scale", self, 1 ));
 		addShaderProp(SHADER_UNIFORM.float, "curveDetail");
 		
-	inputs[7] = nodeValue_Float("Thickness", self, 0 )
+	newInput(7, nodeValue_Float("Thickness", self, 0 ))
 		.setDisplay(VALUE_DISPLAY.slider);
 		addShaderProp(SHADER_UNIFORM.float, "thickness");
 		

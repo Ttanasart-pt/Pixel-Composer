@@ -6,7 +6,7 @@ function Node_Edge_Shade(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newInput(1, nodeValue_Bool("Active", self, true));
 		active_index = 1;
 	
-	inputs[2] = nodeValue_Gradient("Colors", self, new gradientObject( [ cola(c_black), cola(c_white) ] ))
+	newInput(2, nodeValue_Gradient("Colors", self, new gradientObject( [ cola(c_black), cola(c_white) ] )))
 		.setMappable(3);
 	
 	//////////////////////////////////////////////////////////////////////////////////

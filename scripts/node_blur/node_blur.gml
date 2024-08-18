@@ -2,10 +2,10 @@ function Node_Blur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	name = "Blur";
 	
 	newInput(0, nodeValue_Surface("Surface in", self));
-	inputs[1] = nodeValue_Int("Size", self, 3)
+	newInput(1, nodeValue_Int("Size", self, 3))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 1, 32, 0.1 ] });
 	
-	inputs[2] = nodeValue_Enum_Scroll("Oversample mode", self,  0, [ "Empty", "Clamp", "Repeat" ])
+	newInput(2, nodeValue_Enum_Scroll("Oversample mode", self,  0, [ "Empty", "Clamp", "Repeat" ]))
 		.setTooltip("How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.");
 		
 	newInput(3, nodeValue_Bool("Override color", self, false, "Replace all color while keeping the alpha. Used to\nfix grey outline when bluring transparent pixel."));
@@ -14,7 +14,7 @@ function Node_Blur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	newInput(5, nodeValue_Surface("Mask", self));
 	
-	inputs[6] = nodeValue_Float("Mix", self, 1)
+	newInput(6, nodeValue_Float("Mix", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(7, nodeValue_Bool("Active", self, true));
@@ -26,7 +26,7 @@ function Node_Blur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	newInput(11, nodeValue_Bool("Gamma Correction", self, false));
 	
-	inputs[12] = nodeValue_Float("Aspect Ratio", self, 1)
+	newInput(12, nodeValue_Float("Aspect Ratio", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(13, nodeValue_Rotation("Direction", self, 0));

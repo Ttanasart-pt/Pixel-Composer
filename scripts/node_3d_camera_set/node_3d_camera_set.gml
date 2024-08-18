@@ -5,31 +5,31 @@ function Node_3D_Camera_Set(_x, _y, _group = noone) : Node_3D_Camera(_x, _y, _gr
 	light_key  = new __3dLightDirectional();
 	light_fill = new __3dLightDirectional();
 	
-	inputs[in_cam + 0] = nodeValue_Rotation("L1 H angle", self, 30)
+	newInput(in_cam + 0, nodeValue_Rotation("L1 H angle", self, 30))
 		.setName("Horizontal angle");
 	
-	inputs[in_cam + 1] = nodeValue_Float("L1 V angle", self, 45 )
+	newInput(in_cam + 1, nodeValue_Float("L1 V angle", self, 45 ))
 		.setName("Vertical angle")
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 90, 0.1] });
 	
-	inputs[in_cam + 2] = nodeValue_Color("L1 Color", self, c_white )
+	newInput(in_cam + 2, nodeValue_Color("L1 Color", self, c_white ))
 		.setName("Color")
 	
-	inputs[in_cam + 3] = nodeValue_Float("L1 Intensity", self, 1 )
+	newInput(in_cam + 3, nodeValue_Float("L1 Intensity", self, 1 ))
 		.setName("Intensity")
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[in_cam + 4] = nodeValue_Rotation("L2 H angle", self, -45)
+	newInput(in_cam + 4, nodeValue_Rotation("L2 H angle", self, -45))
 		.setName("Horizontal angle");
 	
-	inputs[in_cam + 5] = nodeValue_Float("L2 V angle", self, 45 )
+	newInput(in_cam + 5, nodeValue_Float("L2 V angle", self, 45 ))
 		.setName("Vertical angle")
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 90, 0.1] });
 	
-	inputs[in_cam + 6] = nodeValue_Color("L2 Color", self, c_white )
+	newInput(in_cam + 6, nodeValue_Color("L2 Color", self, c_white ))
 		.setName("Color")
 	
-	inputs[in_cam + 7] = nodeValue_Float("L2 Intensity", self, 0.25 )
+	newInput(in_cam + 7, nodeValue_Float("L2 Intensity", self, 0.25 ))
 		.setName("Intensity")
 		.setDisplay(VALUE_DISPLAY.slider);
 	

@@ -2,7 +2,7 @@ function Node_Honeycomb_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x
 	name   = "Honeycomb Noise";
 	shader = sh_noise_honey;
 	
-	inputs[1] = nodeValue_Vec2("Position", self, [ 0, 0 ])
+	newInput(1, nodeValue_Vec2("Position", self, [ 0, 0 ]))
 		.setUnitRef(function(index) { return getDimension(index); });
 		addShaderProp(SHADER_UNIFORM.float, "position");
 		
@@ -15,7 +15,7 @@ function Node_Honeycomb_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x
 	newInput(4, nodeValue_Enum_Button("Mode", self,  0, [ "Hexagon", "Star" ]));
 		addShaderProp(SHADER_UNIFORM.integer, "mode");
 	
-	inputs[5] = nodeValue_Float("Seed", self, seed_random(6))
+	newInput(5, nodeValue_Float("Seed", self, seed_random(6)))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[5].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) })
 		addShaderProp(SHADER_UNIFORM.float, "seed");
 		

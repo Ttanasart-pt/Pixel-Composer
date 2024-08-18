@@ -3,22 +3,22 @@ function Node_Dilate(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	newInput(0, nodeValue_Surface("Surface in", self));
 	
-	inputs[1] = nodeValue_Vec2("Center", self, [ 0, 0 ])
+	newInput(1, nodeValue_Vec2("Center", self, [ 0, 0 ]))
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	inputs[2] = nodeValue_Float("Strength", self, 1)
+	newInput(2, nodeValue_Float("Strength", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-3, 3, 0.01] })
 		.setMappable(11);
 	
-	inputs[3] = nodeValue_Float("Radius", self, 16)
+	newInput(3, nodeValue_Float("Radius", self, 16))
 		.setMappable(12);
 	
-	inputs[4] = nodeValue_Enum_Scroll("Oversample mode", self,  0, [ "Empty", "Clamp", "Repeat" ])
+	newInput(4, nodeValue_Enum_Scroll("Oversample mode", self,  0, [ "Empty", "Clamp", "Repeat" ]))
 		.setTooltip("How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.");
 	
 	newInput(5, nodeValue_Surface("Mask", self));
 	
-	inputs[6] = nodeValue_Float("Mix", self, 1)
+	newInput(6, nodeValue_Float("Mix", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(7, nodeValue_Bool("Active", self, true));
@@ -30,10 +30,10 @@ function Node_Dilate(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[11] = nodeValue_Surface("Strength map", self)
+	newInput(11, nodeValue_Surface("Strength map", self))
 		.setVisible(false, false);
 	
-	inputs[12] = nodeValue_Surface("Radius map", self)
+	newInput(12, nodeValue_Surface("Radius map", self))
 		.setVisible(false, false);
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////

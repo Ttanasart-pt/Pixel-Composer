@@ -2,7 +2,7 @@ function Node_String_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	name = "Split Text";
 	setDimension(96, 48);
 	
-	inputs[0] = nodeValue_Text("Text", self, "")
+	newInput(0, nodeValue_Text("Text", self, ""))
 		.setVisible(true, true);
 	newInput(1, nodeValue_Text("Delimiter", self, " ", "Character that used to split text,\nleave blank to create character array."));
 	inputs[1].editWidget.format = TEXT_AREA_FORMAT.delimiter;

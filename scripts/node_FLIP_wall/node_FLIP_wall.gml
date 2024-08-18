@@ -6,7 +6,7 @@ function Node_FLIP_Wall(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	manual_ungroupable = false;
 	
-	inputs[0] = nodeValue_Fdomain("Domain", self, noone )
+	newInput(0, nodeValue_Fdomain("Domain", self, noone ))
 		.setVisible(true, true);
 	
 	newInput(1, nodeValue_Area("Area", self, DEF_AREA , { useShape : false }));

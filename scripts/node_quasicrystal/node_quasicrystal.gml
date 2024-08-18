@@ -3,14 +3,14 @@ function Node_Quasicrystal(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	newInput(0, nodeValue_Dimension(self));
 	
-	inputs[1] = nodeValue_Float("Scale", self, 16)
+	newInput(1, nodeValue_Float("Scale", self, 16))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 64, 0.1] })
 		.setMappable(6);
 	
-	inputs[2] = nodeValue_Rotation("Angle", self, 0)
+	newInput(2, nodeValue_Rotation("Angle", self, 0))
 		.setMappable(7);
 	
-	inputs[3] = nodeValue_Vec2("Position", self, [ 0, 0 ] )
+	newInput(3, nodeValue_Vec2("Position", self, [ 0, 0 ] ))
 		.setUnitRef(function(index) { return getDimension(index); });
 	
 	newInput(4, nodeValue_Color("Color 1", self, c_white));
@@ -25,7 +25,7 @@ function Node_Quasicrystal(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[8] = nodeValue_Float("Phase", self, 0)
+	newInput(8, nodeValue_Float("Phase", self, 0))
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(8);
 	

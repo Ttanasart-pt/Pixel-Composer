@@ -6,13 +6,13 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 												 new scrollItem("On top",     s_node_alignment, 3), ])
 		.rejectArray();
 	
-	inputs[1] = nodeValue_Enum_Button("Align", self,  1, [ "Start", "Middle", "End"])
+	newInput(1, nodeValue_Enum_Button("Align", self,  1, [ "Start", "Middle", "End"]))
 		.rejectArray();
 	
-	inputs[2] = nodeValue_Int("Spacing", self, 0)
+	newInput(2, nodeValue_Int("Spacing", self, 0))
 		.rejectArray();
 	
-	inputs[3] = nodeValue_Padding("Padding", self, [ 0, 0, 0, 0 ])
+	newInput(3, nodeValue_Padding("Padding", self, [ 0, 0, 0, 0 ]))
 		.rejectArray();
 	
 	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
@@ -23,7 +23,7 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	static createNewInput = function() {
 		var index = array_length(inputs);
-		inputs[index] = nodeValue_Surface("Input", self)
+		newInput(index, nodeValue_Surface("Input", self))
 			.setVisible(true, true);
 			
 		return inputs[index];

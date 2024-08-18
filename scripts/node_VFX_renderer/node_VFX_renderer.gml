@@ -8,13 +8,13 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	newInput(0, nodeValue_Vec2("Output dimension", self, DEF_SURF ));
 		
-	inputs[1] = nodeValue_Bool("Round position", self, true, "Round position to the closest integer value to avoid jittering.")
+	newInput(1, nodeValue_Bool("Round position", self, true, "Round position to the closest integer value to avoid jittering."))
 		.rejectArray();
 	
-	inputs[2] = nodeValue_Enum_Button("Render Type", self,  PARTICLE_RENDER_TYPE.surface , [ "Surface", "Line" ])
+	newInput(2, nodeValue_Enum_Button("Render Type", self,  PARTICLE_RENDER_TYPE.surface , [ "Surface", "Line" ]))
 		.rejectArray();
 	
-	inputs[3] = nodeValue_Int("Line life", self, 4 )
+	newInput(3, nodeValue_Int("Line life", self, 4 ))
 		.rejectArray();
 		
 	input_display_list = [ 
@@ -28,10 +28,10 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	static createNewInput = function() {
 		var index = array_length(inputs);
 		
-		inputs[index + 0] = nodeValue_Enum_Scroll("Blend mode", self,  0 , [ "Normal", "Alpha", "Additive" ])
+		newInput(index + 0, nodeValue_Enum_Scroll("Blend mode", self,  0 , [ "Normal", "Alpha", "Additive" ]))
 			.rejectArray();
 		
-		inputs[index + 1] = nodeValue_Particle("Particles", self, noone )
+		newInput(index + 1, nodeValue_Particle("Particles", self, noone ))
 			.setVisible(true, true);
 		
 		array_push(input_display_list, ["Particle", false], index + 0, index + 1);

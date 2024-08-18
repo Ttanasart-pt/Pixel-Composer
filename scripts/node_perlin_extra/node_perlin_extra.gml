@@ -2,11 +2,11 @@ function Node_Perlin_Extra(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 	name   = "Extra Perlins";
 	shader = sh_perlin_extra;
 	
-	inputs[1] = nodeValue_Vec2("Position", self, [ 0, 0 ])
+	newInput(1, nodeValue_Vec2("Position", self, [ 0, 0 ]))
 		.setUnitRef(function(index) { return getDimension(index); });
 		addShaderProp(SHADER_UNIFORM.float, "position");
 		
-	inputs[2] = nodeValue_Vec2("Scale", self, [ 4, 4 ])
+	newInput(2, nodeValue_Vec2("Scale", self, [ 4, 4 ]))
 		.setMappable(13);
 		addShaderProp(SHADER_UNIFORM.float, "scale");
 	
@@ -16,7 +16,7 @@ function Node_Perlin_Extra(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 	newInput(4, nodeValue_Bool("Tile", self, true, "Tiling only works with integer scale, and some effect type doesn't support tiling."));
 		addShaderProp(SHADER_UNIFORM.integer, "tile");
 			
-	inputs[5] = nodeValue_Float("Seed", self, seed_random(6))
+	newInput(5, nodeValue_Float("Seed", self, seed_random(6)))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[5].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 		addShaderProp(SHADER_UNIFORM.float, "seed");
 		
@@ -35,12 +35,12 @@ function Node_Perlin_Extra(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 	newInput(10, nodeValue_Enum_Scroll("Noise type", self,  0, [ "Absolute worley", "Fluid", "Noisy", "Camo", "Blocky", "Max", "Vine" ]));
 		addShaderProp(SHADER_UNIFORM.integer, "type");
 		
-	inputs[11] = nodeValue_Float("Parameter A", self, 0)
+	newInput(11, nodeValue_Float("Parameter A", self, 0))
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(14);
 		addShaderProp(SHADER_UNIFORM.float, "paramA");
 		
-	inputs[12] = nodeValue_Float("Parameter B", self, 1)
+	newInput(12, nodeValue_Float("Parameter B", self, 1))
 		.setMappable(15);
 		addShaderProp(SHADER_UNIFORM.float, "paramB");
 		

@@ -7,13 +7,13 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	newInput(1, nodeValue_Vec2("Output dimension", self, DEF_SURF));
 		
-	inputs[2]  = nodeValue_Text("Lua code", self, "", o_dialog_lua_reference)
+	newInput(2, nodeValue_Text("Lua code", self, "", o_dialog_lua_reference))
 		.setDisplay(VALUE_DISPLAY.codeLUA);
 	
-	inputs[3]  = nodeValue("Execution thread", self, JUNCTION_CONNECT.input, VALUE_TYPE.node, noone)
+	newInput(3, nodeValue("Execution thread", self, JUNCTION_CONNECT.input, VALUE_TYPE.node, noone))
 		.setVisible(false, true);
 	
-	inputs[4]  = nodeValue_Bool("Execute on frame", self, true)
+	newInput(4, nodeValue_Bool("Execute on frame", self, true))
 	
 	outputs[0] = nodeValue_Output("Execution thread", self, VALUE_TYPE.node, noone );
 	

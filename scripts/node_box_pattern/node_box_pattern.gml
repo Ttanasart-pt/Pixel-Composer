@@ -3,14 +3,14 @@ function Node_Box_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	newInput(0, nodeValue_Dimension(self));
 	
-	inputs[1] = nodeValue_Float("Scale", self, 2)
+	newInput(1, nodeValue_Float("Scale", self, 2))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] })
 		.setMappable(6);
 	
-	inputs[2] = nodeValue_Rotation("Angle", self, 0)
+	newInput(2, nodeValue_Rotation("Angle", self, 0))
 		.setMappable(7);
 	
-	inputs[3] = nodeValue_Vec2("Position", self, [0, 0] )
+	newInput(3, nodeValue_Vec2("Position", self, [0, 0] ))
 		.setUnitRef(function(index) { return getDimension(index); });
 	
 	newInput(4, nodeValue_Color("Color 1", self, c_white));
@@ -27,7 +27,7 @@ function Node_Box_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	newInput(8, nodeValue_Enum_Button("Type", self,  0, [ "Solid", "Smooth", "AA" ]));
 	
-	inputs[9] = nodeValue_Float("Width", self, 0.25)
+	newInput(9, nodeValue_Float("Width", self, 0.25))
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(10);
 	
@@ -35,7 +35,7 @@ function Node_Box_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	newInput(11, nodeValue_Enum_Button("Pattern", self,  0, [ "Cross", "Xor" ]));
 	
-	inputs[12] = nodeValue_Int("Iteration", self, 4)
+	newInput(12, nodeValue_Int("Iteration", self, 4))
 	
 	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	

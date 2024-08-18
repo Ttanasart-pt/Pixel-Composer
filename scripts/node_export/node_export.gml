@@ -48,11 +48,11 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	newInput(0, nodeValue_Surface("Surface", self));
 	
-	inputs[1] = nodeValue_Path("Paths",   self, "")
+	newInput(1, nodeValue_Path("Paths",   self, ""))
 		.setDisplay(VALUE_DISPLAY.path_save, _format_still)
 		.setVisible(true);
 	
-	inputs[2] = nodeValue_Text("Template",  self, "%d%n")
+	newInput(2, nodeValue_Text("Template",  self, "%d%n"))
 		.rejectArray();
 	inputs[2].editWidget.format		= TEXT_AREA_FORMAT.path_template;
 	inputs[2].editWidget.auto_update	= true;
@@ -60,34 +60,34 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	format_single = ["Single image", "Image sequence", "Animation"];
 	format_array  = ["Multiple images", "Image sequences", "Animations"];
 	
-	inputs[3] = nodeValue_Enum_Scroll("Type", self,  0, { data: format_single, update_hover: false })
+	newInput(3, nodeValue_Enum_Scroll("Type", self,  0, { data: format_single, update_hover: false }))
 		.rejectArray();
 	
 	newInput(4, nodeValue_Int("Template guides", self, 0));
 
-	inputs[5] = nodeValue_Bool("Loop", self, true)
+	newInput(5, nodeValue_Bool("Loop", self, true))
 		.setVisible(false)
 		.rejectArray();
 	
-	inputs[6] = nodeValue_Bool("Frame optimization", self, false)
+	newInput(6, nodeValue_Bool("Frame optimization", self, false))
 		.setVisible(false)
 		.rejectArray();
 	
-	inputs[7] = nodeValue_Float("Color merge", self, 0.02)
+	newInput(7, nodeValue_Float("Color merge", self, 0.02))
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setVisible(false)
 		.rejectArray();
 	
-	inputs[8] = nodeValue_Int("Framerate", self, 30)
+	newInput(8, nodeValue_Int("Framerate", self, 30))
 		.rejectArray();
 	
 	format_image     = [ ".png", ".jpg", ".webp" ];
 	format_animation = [ ".gif", ".apng", ".webp", ".mp4" ];
 	
-	inputs[9] = nodeValue_Enum_Scroll("Format", self,  0, { data: format_image, update_hover: false })
+	newInput(9, nodeValue_Enum_Scroll("Format", self,  0, { data: format_image, update_hover: false }))
 		.rejectArray();
 	
-	inputs[10] = nodeValue_Float("Quality", self, 23)
+	newInput(10, nodeValue_Float("Quality", self, 23))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 100, 0.1 ] })
 		.rejectArray();
 	
@@ -100,10 +100,10 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	newInput(14, nodeValue_Int("Frame step", self, 1));
 	
-	inputs[15] = nodeValue_Bool("Custom Range", self, false)
+	newInput(15, nodeValue_Bool("Custom Range", self, false))
 		.rejectArray();
 	
-	inputs[16] = nodeValue_Bool("Export on Save", self, false)
+	newInput(16, nodeValue_Bool("Export on Save", self, false))
 	
 	outputs[0] = nodeValue_Output("Preview", self, VALUE_TYPE.surface, noone);
 	

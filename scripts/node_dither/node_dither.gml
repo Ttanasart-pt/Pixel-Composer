@@ -22,10 +22,10 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	newInput(2, nodeValue_Enum_Scroll("Pattern", self,  0, [ "2 x 2 Bayer", "4 x 4 Bayer", "8 x 8 Bayer", "White Noise", "Custom" ]));
 	
-	inputs[3] = nodeValue_Surface("Dither map", self)
+	newInput(3, nodeValue_Surface("Dither map", self))
 		.setVisible(false);
 	
-	inputs[4] = nodeValue_Float("Contrast", self, 1)
+	newInput(4, nodeValue_Float("Contrast", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 5, 0.1] });
 	
 	newInput(5, nodeValue_Surface("Contrast map", self));
@@ -34,7 +34,7 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	newInput(7, nodeValue_Surface("Mask", self));
 	
-	inputs[8] = nodeValue_Float("Mix", self, 1)
+	newInput(8, nodeValue_Float("Mix", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(9, nodeValue_Bool("Active", self, true));
@@ -44,12 +44,12 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	__init_mask_modifier(7); // inputs 11, 12, 
 	
-	inputs[13] = nodeValue_Int("Seed", self, seed_random(6))
+	newInput(13, nodeValue_Int("Seed", self, seed_random(6)))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[13].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 		
 	newInput(14, nodeValue_Bool("Use palette", self, true));
 	
-	inputs[15] = nodeValue_Int("Steps", self, 4)
+	newInput(15, nodeValue_Int("Steps", self, 4))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [2, 16, 0.1] });
 	
 	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);

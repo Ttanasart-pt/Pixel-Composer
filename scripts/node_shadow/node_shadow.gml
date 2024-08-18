@@ -4,21 +4,21 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(0, nodeValue_Surface("Surface in", self));
 	newInput(1, nodeValue_Color("Color",   self, c_black));
 	
-	inputs[2] = nodeValue_Float("Strength", self, .5)
+	newInput(2, nodeValue_Float("Strength", self, .5))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 2, 0.01] });
 	
-	inputs[3] = nodeValue_Vec2("Shift", self, [ 4, 4 ])
+	newInput(3, nodeValue_Vec2("Shift", self, [ 4, 4 ]))
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	inputs[4] = nodeValue_Float("Grow", self, 3)
+	newInput(4, nodeValue_Float("Grow", self, 3))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 16, 0.1] });
 	
-	inputs[5] = nodeValue_Float("Blur", self, 3)
+	newInput(5, nodeValue_Float("Blur", self, 3))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] });
 	
 	newInput(6, nodeValue_Surface("Mask", self));
 	
-	inputs[7] = nodeValue_Float("Mix", self, 1)
+	newInput(7, nodeValue_Float("Mix", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(8, nodeValue_Bool("Active", self, true));
@@ -28,7 +28,7 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	newInput(11, nodeValue_Enum_Scroll("Positioning", self,  0, [ "Shift", "Light" ]));
 	
-	inputs[12] = nodeValue_Vec2("Light Position", self, [ 0, 0 ])
+	newInput(12, nodeValue_Vec2("Light Position", self, [ 0, 0 ]))
 		.setUnitRef(function(index) { return getDimension(index); });
 		
 	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);

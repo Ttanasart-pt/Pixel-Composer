@@ -3,10 +3,10 @@ function Node_Array_Sort(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	setDimension(96, 48);
 	
-	inputs[0] = nodeValue("Array in", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, [])
+	newInput(0, nodeValue("Array in", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, []))
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Enum_Button("Order", self,  0, [ "Ascending", "Descending" ])
+	newInput(1, nodeValue_Enum_Button("Order", self,  0, [ "Ascending", "Descending" ]))
 		.rejectArray();
 	
 	outputs[0] = nodeValue_Output("Sorted array", self, VALUE_TYPE.any, []);

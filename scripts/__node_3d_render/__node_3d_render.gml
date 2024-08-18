@@ -3,39 +3,39 @@
 	
 //	newInput(2, nodeValue_Dimension(self));
 	
-//	inputs[3] = nodeValue_Vec2("Render position", self, [ 0.5, 0.5 ])
+//	newInput(3, nodeValue_Vec2("Render position", self, [ 0.5, 0.5 ]))
 //		.setUnitRef( function() { return getInputData(2); }, VALUE_UNIT.reference);
 		
 //	newInput(4, nodeValue_Vec3("Render rotation", self, [ 0, 0, 0 ]));
 	
 //	newInput(5, nodeValue_Vec2("Render scale", self, [ 1, 1 ]));
 		
-//	inputs[6] = nodeValue_Float("Light direction", self, 0)
+//	newInput(6, nodeValue_Float("Light direction", self, 0))
 //		.setDisplay(VALUE_DISPLAY.rotation)
 //		.rejectArray();
 		
-//	inputs[7] = nodeValue_Float("Light height", self, 0.5)
+//	newInput(7, nodeValue_Float("Light height", self, 0.5))
 //		.setDisplay(VALUE_DISPLAY.slider, { range: [-1, 1, 0.01] })
 //		.rejectArray();
 		
-//	inputs[8] = nodeValue_Float("Light intensity", self, 1)
+//	newInput(8, nodeValue_Float("Light intensity", self, 1))
 //		.setDisplay(VALUE_DISPLAY.slider)
 //		.rejectArray();
 	
-//	inputs[9] = nodeValue_Color("Light color", self, c_white)
+//	newInput(9, nodeValue_Color("Light color", self, c_white))
 //		.rejectArray();
 	
-//	inputs[10] = nodeValue_Color("Ambient color", self, c_grey)
+//	newInput(10, nodeValue_Color("Ambient color", self, c_grey))
 //		.rejectArray();
 	
-//	inputs[15] = nodeValue_Enum_Button("Projection", self,  0, [ "Orthographic", "Perspective" ])
+//	newInput(15, nodeValue_Enum_Button("Projection", self,  0, [ "Orthographic", "Perspective" ]))
 //		.rejectArray();
 		
-//	inputs[16] = nodeValue_Float("Field of view", self, 60)
+//	newInput(16, nodeValue_Float("Field of view", self, 60))
 //		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 90, 1 ] })
 //		.rejectArray();
 	
-//	inputs[17] = nodeValue_Bool("Scale view with dimension", self, true)
+//	newInput(17, nodeValue_Bool("Scale view with dimension", self, true))
 	
 //	input_display_list = [ 
 //		["Output", 				false], 2, 17, 

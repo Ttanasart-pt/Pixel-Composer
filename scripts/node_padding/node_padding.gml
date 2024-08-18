@@ -4,7 +4,7 @@ function Node_Padding(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	newInput(0, nodeValue_Surface("Surface in", self));
 	
-	inputs[1] = nodeValue_Padding("Padding", self, [0, 0, 0, 0])
+	newInput(1, nodeValue_Padding("Padding", self, [0, 0, 0, 0]))
 		.setUnitRef(function(index) { return getDimension(index); });
 	
 	newInput(2, nodeValue_Enum_Scroll("Fill method", self,  0, [ "Empty", "Solid" ]));
@@ -16,7 +16,7 @@ function Node_Padding(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 	newInput(5, nodeValue_Enum_Button("Pad mode", self,  0, [ "Pad out", "Pad to size" ]));
 	
-	inputs[6] = nodeValue_Vec2("Target dimension", self, DEF_SURF)
+	newInput(6, nodeValue_Vec2("Target dimension", self, DEF_SURF))
 	
 	newInput(7, nodeValue_Enum_Button("Horizontal alignment", self,  0 , [ THEME.inspector_surface_halign, THEME.inspector_surface_halign, THEME.inspector_surface_halign]));
 	

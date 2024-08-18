@@ -162,7 +162,7 @@ function __Node_MK_Sparkle(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	newInput(3, nodeValue_Float("Speed", self, 1));
 	
-	inputs[4] = nodeValue_Int("Loop", self, [])
+	newInput(4, nodeValue_Int("Loop", self, []))
 		.setArrayDepth(1)
 		.setArrayDynamic();
 	

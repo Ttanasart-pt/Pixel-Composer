@@ -3,12 +3,12 @@ function Node_WAV_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	color = COLORS.node_blend_input;
 	setDimension(, 72);
 	
-	inputs[0]  = nodeValue_Path("Path", self, "")
+	newInput(0, nodeValue_Path("Path", self, ""))
 		.setDisplay(VALUE_DISPLAY.path_save, { filter: "audio file|*.wav" })
 		.rejectArray()
 		.setVisible(true);
 	
-	inputs[1]  = nodeValue_Float("Audio Data", self, [[]])
+	newInput(1, nodeValue_Float("Audio Data", self, [[]]))
 		.setArrayDepth(1)
 		.setVisible(true, true);
 	
@@ -16,7 +16,7 @@ function Node_WAV_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	newInput(3, nodeValue_Enum_Scroll("Bit Depth", self,  0, [ "8 bit positive", "16 bit integer" ]));
 		
-	inputs[4]  = nodeValue_Bool("Remap Data", self, false)
+	newInput(4, nodeValue_Bool("Remap Data", self, false))
 	
 	newInput(5, nodeValue_Vec2("Data Range", self, [ 0, 1 ]));
 	

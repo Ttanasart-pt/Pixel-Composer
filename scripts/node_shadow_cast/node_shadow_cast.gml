@@ -6,7 +6,7 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	newInput(1, nodeValue_Surface("Solid", self));
 	
-	inputs[2] = nodeValue_Vec2("Light Position", self, [ 0, 0 ])
+	newInput(2, nodeValue_Vec2("Light Position", self, [ 0, 0 ]))
 		.setUnitRef(function(index) { 
 			var _surf = getInputData(0);
 			if(is_array(_surf) && array_length(_surf) == 0)
@@ -21,10 +21,10 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			return [ surface_get_width_safe(_surf), surface_get_height_safe(_surf) ];
 		}, VALUE_UNIT.reference);
 		
-	inputs[3] = nodeValue_Float("Soft light radius", self, 1)
+	newInput(3, nodeValue_Float("Soft light radius", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 2, 0.01] });
 	
-	inputs[4] = nodeValue_Int("Light density", self, 1)
+	newInput(4, nodeValue_Int("Light density", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] });
 	
 	inputs[5] = nodeValue_Enum_Scroll("Light type", self,  0, [ new scrollItem("Point", s_node_shadow_type, 0), 
@@ -40,13 +40,13 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	newInput(10, nodeValue_Bool("Use BG color", self, false, "If checked, background color will be used as shadow caster."));
 	
-	inputs[11] = nodeValue_Float("BG threshold", self, 0.1)
+	newInput(11, nodeValue_Float("BG threshold", self, 0.1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[12] = nodeValue_Float("Light intensity", self, 1)
+	newInput(12, nodeValue_Float("Light intensity", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 2, 0.01] });
 	
-	inputs[13] = nodeValue_Int("Banding", self, 0)
+	newInput(13, nodeValue_Int("Banding", self, 0))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 16, 0.1] });
 	
 	inputs[14] = nodeValue_Enum_Scroll("Attenuation", self,  0, [ new scrollItem("Quadratic",			s_node_curve, 0),
@@ -54,10 +54,10 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 																	new scrollItem("Linear",			s_node_curve, 2), ])
 		.setTooltip("Control how light fade out over distance.");
 	
-	inputs[15] = nodeValue_Int("Ambient occlusion", self, 0)
+	newInput(15, nodeValue_Int("Ambient occlusion", self, 0))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 16, 0.1] });
 		
-	inputs[16] = nodeValue_Float("Ambient occlusion strength", self, 0.1)
+	newInput(16, nodeValue_Float("Ambient occlusion strength", self, 0.1))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 0.5, 0.001] });
 	
 	newInput(17, nodeValue_Bool("Active", self, true));

@@ -2,13 +2,13 @@ function Node_Array_Range(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	name = "Array Range";
 	setDimension(96, 48);
 	
-	inputs[0] = nodeValue_Float("Start", self, 0)
+	newInput(0, nodeValue_Float("Start", self, 0))
 		.rejectArray();
 	
-	inputs[1] = nodeValue_Float("End", self, 10)
+	newInput(1, nodeValue_Float("End", self, 10))
 		.rejectArray();
 	
-	inputs[2] = nodeValue_Float("Step", self, 1)
+	newInput(2, nodeValue_Float("Step", self, 1))
 		.rejectArray();
 	
 	outputs[0] = nodeValue_Output("Array", self, VALUE_TYPE.float, []);

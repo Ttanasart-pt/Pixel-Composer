@@ -5,7 +5,7 @@ function Node_Polar(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	newInput(1, nodeValue_Surface("Mask", self));
 	
-	inputs[2] = nodeValue_Float("Mix", self, 1)
+	newInput(2, nodeValue_Float("Mix", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(3, nodeValue_Bool("Active", self, true));
@@ -13,9 +13,9 @@ function Node_Polar(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		
 	newInput(4, nodeValue_Toggle("Channel", self, 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
-	inputs[5] = nodeValue_Bool("Invert", self, false)
+	newInput(5, nodeValue_Bool("Invert", self, false))
 	
-	inputs[6] = nodeValue_Float("Blend", self, 1)
+	newInput(6, nodeValue_Float("Blend", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(11);
 	
@@ -25,7 +25,7 @@ function Node_Polar(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 												 new scrollItem("Inverse Square", s_node_curve, 1), 
 												 new scrollItem("Logarithm",      s_node_curve, 3), ]);
 	
-	inputs[10] = nodeValue_Bool("Swap", self, false)
+	newInput(10, nodeValue_Bool("Swap", self, false))
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	

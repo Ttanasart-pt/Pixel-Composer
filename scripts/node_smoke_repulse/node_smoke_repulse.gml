@@ -4,14 +4,14 @@ function Node_Smoke_Repulse(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group)
 	
 	manual_ungroupable	 = false;
 	
-	inputs[0] = nodeValue("Domain", self, JUNCTION_CONNECT.input, VALUE_TYPE.sdomain, noone)
+	newInput(0, nodeValue("Domain", self, JUNCTION_CONNECT.input, VALUE_TYPE.sdomain, noone))
 		.setVisible(true, true);
 	
 	newInput(1, nodeValue_Vec2("Position", self, [0, 0]));
 	
 	newInput(2, nodeValue_Float("Radius", self, 8));
 	
-	inputs[3] = nodeValue_Float("Strength", self, 0.10)
+	newInput(3, nodeValue_Float("Strength", self, 0.10))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-1, 1, 0.01] });
 	
 	newInput(4, nodeValue_Enum_Button("Mode", self,  0, [ "Override", "Add" ]));

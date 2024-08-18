@@ -26,14 +26,14 @@ function Node_Directory_Search(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	name  = "Directory Search";
 	color = COLORS.node_blend_input;
 	
-	inputs[0]  = nodeValue_Path("Path", self, "")
+	newInput(0, nodeValue_Path("Path", self, ""))
 		.setDisplay(VALUE_DISPLAY.path_load, { filter: "dir" });
 		
 	newInput(1, nodeValue_Text("Extensions", self, ".png"));
 	
 	newInput(2, nodeValue_Enum_Scroll("Type", self,  0, [ "Surface", "Text" ]));
 	
-	inputs[3]  = nodeValue_Bool("Recursive", self, false)
+	newInput(3, nodeValue_Bool("Recursive", self, false))
 		
 	outputs[0] = nodeValue_Output("Outputs", self, VALUE_TYPE.surface, [])
 		.setVisible(true, true);

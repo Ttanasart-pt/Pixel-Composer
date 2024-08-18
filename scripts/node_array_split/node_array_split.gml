@@ -4,7 +4,7 @@ function Node_Array_Split(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	draw_padding = 4;
 	
-	inputs[0] = nodeValue("Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, [])
+	newInput(0, nodeValue("Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, []))
 		.setVisible(true, true);
 	
 	outputs[0] = nodeValue_Output("val 0", self, VALUE_TYPE.any, 0);

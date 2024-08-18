@@ -3,13 +3,13 @@ function Node_Sequence_Anim(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	update_on_frame = true;
 	setAlwaysTimeline(new timelineItemNode_Sequence_Anim(self));
 	
-	inputs[0] = nodeValue_Surface("Surface in", self, [])
+	newInput(0, nodeValue_Surface("Surface in", self, []))
 		.setArrayDepth(1);
 	
-	inputs[1] = nodeValue_Float("Speed", self, 1)
+	newInput(1, nodeValue_Float("Speed", self, 1))
 		.rejectArray();
 		
-	inputs[2] = nodeValue_Int("Sequence", self, [])
+	newInput(2, nodeValue_Int("Sequence", self, []))
 		.setVisible(true, true)
 		.setArrayDepth(1);
 		

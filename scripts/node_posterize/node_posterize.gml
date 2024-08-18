@@ -7,10 +7,10 @@ function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	newInput(2, nodeValue_Bool("Use palette", self, true));
 	
-	inputs[3] = nodeValue_Int("Steps", self, 4)
+	newInput(3, nodeValue_Int("Steps", self, 4))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [2, 16, 0.1] });
 	
-	inputs[4] = nodeValue_Float("Gamma", self, 1)
+	newInput(4, nodeValue_Float("Gamma", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 2, 0.01] })
 		.setMappable(7);
 	

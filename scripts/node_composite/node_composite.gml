@@ -17,7 +17,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	newInput(1, nodeValue_Enum_Scroll("Output dimension", self,  COMPOSE_OUTPUT_SCALING.first, [ "First surface", "Largest surface", "Constant" ]));
 	
-	inputs[2] = nodeValue_Dimension(self)
+	newInput(2, nodeValue_Dimension(self))
 		.setVisible(false);
 	
 	attribute_surface_depth();
@@ -415,7 +415,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		newInput(index + 0, nodeValue_Surface($"Surface {_s}", self, noone));
 		inputs[index + 0].hover_effect  = 0;
 		
-		inputs[index + 1] = nodeValue_Vec2($"Position {_s}", self, [ 0, 0 ] )
+		newInput(index + 1, nodeValue_Vec2($"Position {_s}", self, [ 0, 0 ] ))
 			.setUnitRef(function(index) { return [ overlay_w, overlay_h ]; });
 		
 		newInput(index + 2, nodeValue_Rotation($"Rotation {_s}", self, 0));
@@ -424,7 +424,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		newInput(index + 4, nodeValue_Enum_Scroll($"Blend {_s}", self,  0, BLEND_TYPES ));
 		
-		inputs[index + 5] = nodeValue_Float($"Opacity {_s}", self, 1)
+		newInput(index + 5, nodeValue_Float($"Opacity {_s}", self, 1))
 			.setDisplay(VALUE_DISPLAY.slider);
 		
 		for( var i = 0; i < data_length; i++ ) {

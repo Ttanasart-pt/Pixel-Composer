@@ -4,7 +4,7 @@ function __Node_3D_Cone(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	newInput(0, nodeValue_Dimension(self));
 	
-	inputs[1] = nodeValue_Vec2("Render position", self, [ 0.5, 0.5 ])
+	newInput(1, nodeValue_Vec2("Render position", self, [ 0.5, 0.5 ]))
 		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
 	
 	newInput(2, nodeValue_Vec3("Render rotation", self, [ 0, 0, 0 ]));
@@ -15,10 +15,10 @@ function __Node_3D_Cone(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	newInput(5, nodeValue_Rotation("Light direction", self, 0));
 		
-	inputs[6] = nodeValue_Float("Light height", self, 0.5)
+	newInput(6, nodeValue_Float("Light height", self, 0.5))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-1, 1, 0.01] });
 		
-	inputs[7] = nodeValue_Float("Light intensity", self, 1)
+	newInput(7, nodeValue_Float("Light intensity", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(8, nodeValue_Color("Light color", self, c_white));
@@ -28,10 +28,10 @@ function __Node_3D_Cone(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 	newInput(11, nodeValue_Vec3("Object position", self, [ 0, 0, 0 ]));
 	
-	inputs[12] = nodeValue_Enum_Button("Projection", self,  0, [ "Orthographic", "Perspective" ])
+	newInput(12, nodeValue_Enum_Button("Projection", self,  0, [ "Orthographic", "Perspective" ]))
 		.rejectArray();
 		
-	inputs[13] = nodeValue_Float("Field of view", self, 60)
+	newInput(13, nodeValue_Float("Field of view", self, 60))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 1, 90, 0.1 ] });
 	
 	newInput(14, nodeValue_Int("Sides", self, 16));
@@ -40,7 +40,7 @@ function __Node_3D_Cone(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	newInput(16, nodeValue_Surface("Textures side", self));
 	
-	inputs[17] = nodeValue_Bool("Scale view with dimension", self, true)
+	newInput(17, nodeValue_Bool("Scale view with dimension", self, true))
 	
 	input_display_list = [
 		["Output", 				false], 0, 17, 

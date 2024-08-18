@@ -3,7 +3,7 @@ function Node_3D_Mesh_Terrain(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 	
 	object_class = __3dTerrain;
 	
-	inputs[in_mesh + 0] = nodeValue_D3Material("Material", self, new __d3dMaterial())
+	newInput(in_mesh + 0, nodeValue_D3Material("Material", self, new __d3dMaterial()))
 		.setVisible(true, true);
 	
 	newInput(in_mesh + 1, nodeValue_Enum_Button("Input type", self,  0 , [ "Surface", "Array" ]));
@@ -12,7 +12,7 @@ function Node_3D_Mesh_Terrain(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 	
 	newInput(in_mesh + 3, nodeValue_Int("Subdivision", self, 4 ));
 	
-	inputs[in_mesh + 4] = nodeValue_Float("Height array", self, [] )
+	newInput(in_mesh + 4, nodeValue_Float("Height array", self, [] ))
 		.setArrayDepth(2);
 		
 	newInput(in_mesh + 5, nodeValue_Bool("Smooth", self, false ));

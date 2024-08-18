@@ -3,10 +3,10 @@ function Node_Chromatic_Aberration(_x, _y, _group = noone) : Node_Processor(_x, 
 	
 	newInput(0, nodeValue_Surface("Surface in", self));
 	
-	inputs[1] = nodeValue_Vec2("Center", self, [ 0.5, 0.5 ])
+	newInput(1, nodeValue_Vec2("Center", self, [ 0.5, 0.5 ]))
 		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
 	
-	inputs[2] = nodeValue_Float("Strength", self, 1)
+	newInput(2, nodeValue_Float("Strength", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-16, 16, 0.01] })
 		.setMappable(4);
 	

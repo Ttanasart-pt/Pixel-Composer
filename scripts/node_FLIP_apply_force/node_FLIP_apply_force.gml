@@ -22,10 +22,10 @@ function Node_FLIP_Apply_Force(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	manual_ungroupable = false;
 	
-	inputs[0] = nodeValue_Fdomain("Domain", self, noone )
+	newInput(0, nodeValue_Fdomain("Domain", self, noone ))
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Vec2("Position", self, [ 0, 0 ] )
+	newInput(1, nodeValue_Vec2("Position", self, [ 0, 0 ] ))
 		.setUnitRef(function(index) { return getDimension(); });
 	
 	inputs[2] = nodeValue_Float("Radius", self, 4 )	
@@ -35,7 +35,7 @@ function Node_FLIP_Apply_Force(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		
 	newInput(4, nodeValue_Vec2("Size", self, [ 4, 4 ] ));
 		
-	inputs[5] = nodeValue_Surface("Texture", self)
+	newInput(5, nodeValue_Surface("Texture", self))
 	
 	input_display_list = [ 0, 
 		["Collider",	false], 3, 2, 4, 

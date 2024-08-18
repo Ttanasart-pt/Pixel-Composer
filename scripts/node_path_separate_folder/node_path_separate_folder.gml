@@ -3,7 +3,7 @@ function Node_Path_Separate_Folder(_x, _y, _group = noone) : Node_Processor(_x, 
 	
 	setDimension(96, 48);
 	
-	inputs[0] = nodeValue_Path("Path", self, "")
+	newInput(0, nodeValue_Path("Path", self, ""))
 		.setVisible(true, true);
 	
 	newInput(1, nodeValue_Bool("Keep extension", self, true));

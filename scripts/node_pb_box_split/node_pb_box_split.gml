@@ -2,19 +2,19 @@ function Node_PB_Box_Split(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _group)
 	name = "Split";
 	batch_output = false;
 	
-	inputs[1] = nodeValue("pBox", self, JUNCTION_CONNECT.input, VALUE_TYPE.pbBox, noone )
+	newInput(1, nodeValue("pBox", self, JUNCTION_CONNECT.input, VALUE_TYPE.pbBox, noone ))
 		.setVisible(true, true);
 		
 	newInput(2, nodeValue_Enum_Scroll("Type", self,  0 , [ "Ratio", "Fix Left", "Fix Right" ]));
 	
-	inputs[3] = nodeValue_Float("Ratio", self, 0.5 )
+	newInput(3, nodeValue_Float("Ratio", self, 0.5 ))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[4] = nodeValue_Int("Fix width", self, 8 )
+	newInput(4, nodeValue_Int("Fix width", self, 8 ))
 	
 	newInput(5, nodeValue_Enum_Button("Axis", self,  0 , [ "X", "Y" ]));
 	
-	inputs[6] = nodeValue_Bool("Mirror", self, 0 )
+	newInput(6, nodeValue_Bool("Mirror", self, 0 ))
 	
 	outputs[0] = nodeValue_Output("pBox Left", self, VALUE_TYPE.pbBox, noone );
 	

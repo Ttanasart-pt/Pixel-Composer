@@ -80,25 +80,25 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	newInput(0, nodeValue_Enum_Scroll("Display type", self,  0, { data: GROUP_IO_DISPLAY[11], update_hover: false }));
 	
-	inputs[1] = nodeValue_Range("Range", self, [ 0, 1 ])
+	newInput(1, nodeValue_Range("Range", self, [ 0, 1 ]))
 		.setVisible(false);
 	
 	newInput(2, nodeValue_Enum_Scroll("Input type", self,  11, { data: GROUP_IO_TYPE_NAME, update_hover: false }));
 	
-	inputs[3] = nodeValue_Text("Enum label", self, "")
+	newInput(3, nodeValue_Text("Enum label", self, ""))
 		.setVisible(false);
 	
-	inputs[4] = nodeValue_Enum_Button("Vector size", self,  0, [ "2", "3", "4" ])
+	newInput(4, nodeValue_Enum_Button("Vector size", self,  0, [ "2", "3", "4" ]))
 		.setVisible(false);
 	
 	newInput(5, nodeValue_Int("Order", self, 0));
 	
 	newInput(6, nodeValue_Bool("Display preview gizmo", self, true));
 		
-	inputs[7] = nodeValue_Float("Step", self, 0.01)
+	newInput(7, nodeValue_Float("Step", self, 0.01))
 		.setVisible(false);
 		
-	inputs[8] = nodeValue_Text("Button Label", self, "Trigger")
+	newInput(8, nodeValue_Text("Button Label", self, "Trigger"))
 		.setVisible(false);
 	
 	inputs[9] = nodeValue_Enum_Scroll("Visible Condition", self,  0, [ "Show", "Hide", /* 2 */ new scrollItem("Equal",			s_node_condition_type, 0), 

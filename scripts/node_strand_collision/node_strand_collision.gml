@@ -6,10 +6,10 @@ function Node_Strand_Collision(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	manual_ungroupable	 = false;
 	
-	inputs[0] = nodeValue("Strand", self, JUNCTION_CONNECT.input, VALUE_TYPE.strands, noone)
+	newInput(0, nodeValue("Strand", self, JUNCTION_CONNECT.input, VALUE_TYPE.strands, noone))
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue("Collision mesh", self, JUNCTION_CONNECT.input, VALUE_TYPE.mesh, noone)
+	newInput(1, nodeValue("Collision mesh", self, JUNCTION_CONNECT.input, VALUE_TYPE.mesh, noone))
 		.setVisible(true, true);
 	
 	outputs[0] = nodeValue_Output("Strand", self, VALUE_TYPE.strands, noone);

@@ -17,7 +17,7 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		lines = [];
 	#endregion
 	
-	inputs[0] = nodeValue_Float("Point array", self, [])
+	newInput(0, nodeValue_Float("Point array", self, []))
 		.setVisible(true, true)
 		.setArrayDepth(2);
 	

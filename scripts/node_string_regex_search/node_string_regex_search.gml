@@ -3,7 +3,7 @@ function Node_String_Regex_Search(_x, _y, _group = noone) : Node_Processor(_x, _
 	
 	setDimension(96, 48);
 	
-	inputs[0] = nodeValue_Text("Text", self, "")
+	newInput(0, nodeValue_Text("Text", self, ""))
 		.setVisible(true, true);
 	
 	newInput(1, nodeValue_Text("Regex", self, ""));

@@ -5,12 +5,12 @@ function Node_Palette_Shift(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	newInput(1, nodeValue_Palette("Palette", self, array_clone(DEF_PALETTE)));
 	
-	inputs[2] = nodeValue_Int("Shift", self, 0)
+	newInput(2, nodeValue_Int("Shift", self, 0))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-1, 1, 0.1] });
 	
 	newInput(3, nodeValue_Surface("Mask", self));
 	
-	inputs[4] = nodeValue_Float("Mix", self, 1)
+	newInput(4, nodeValue_Float("Mix", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(5, nodeValue_Bool("Active", self, true));

@@ -3,7 +3,7 @@ function Node_Blur_Slope(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	newInput(0, nodeValue_Surface("Surface in", self));
 	
-	inputs[1] = nodeValue_Float("Strength", self, 4)
+	newInput(1, nodeValue_Float("Strength", self, 4))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 1, 32, 0.1 ] })
 		.setMappable(9);
 	
@@ -11,7 +11,7 @@ function Node_Blur_Slope(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	newInput(3, nodeValue_Surface("Mask", self));
 	
-	inputs[4] = nodeValue_Float("Mix", self, 1)
+	newInput(4, nodeValue_Float("Mix", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(5, nodeValue_Bool("Active", self, true));
@@ -27,7 +27,7 @@ function Node_Blur_Slope(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[10] = nodeValue_Float("Step", self, 0.1)
+	newInput(10, nodeValue_Float("Step", self, 0.1))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 1, 0.01] });
 		
 	newInput(11, nodeValue_Bool("Gamma Correction", self, false));

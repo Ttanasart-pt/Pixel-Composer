@@ -30,12 +30,12 @@ function Node_Statistic(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	setDimension(96, 48);
 	
-	inputs[0] = nodeValue_Enum_Scroll("Type", self,  0, [ "Sum", "Mean", "Median", "Max", "Min" ])
+	newInput(0, nodeValue_Enum_Scroll("Type", self,  0, [ "Sum", "Mean", "Median", "Max", "Min" ]))
 		.rejectArray();
 	
 	static createNewInput = function() {
 		var index = array_length(inputs);
-		inputs[index] = nodeValue_Float("Input", self, -1 )
+		newInput(index, nodeValue_Float("Input", self, -1 ))
 			.setVisible(false, true);
 			
 		return inputs[index];

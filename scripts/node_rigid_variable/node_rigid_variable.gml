@@ -8,7 +8,7 @@ function Node_Rigid_Variable(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	setDimension(96, 48);
 	
-	inputs[0] = nodeValue("Object", self, JUNCTION_CONNECT.input, VALUE_TYPE.rigid, noone )
+	newInput(0, nodeValue("Object", self, JUNCTION_CONNECT.input, VALUE_TYPE.rigid, noone ))
 		.setVisible(true, true);
 	
 	input_display_list = [ 0 ];

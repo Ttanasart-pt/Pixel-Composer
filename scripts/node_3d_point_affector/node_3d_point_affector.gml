@@ -5,7 +5,7 @@ function Node_3D_Point_Affector(_x, _y, _group = noone) : Node_3D_Object(_x, _y,
 	gizmo_plane  = [ new __3dGizmoPlaneFalloff(,, 0.75) ];
 	gizmo_object = noone;
 	
-	inputs[in_d3d + 0] = nodeValue_Vec3("Points", self, [ 0, 0, 0 ])
+	newInput(in_d3d + 0, nodeValue_Vec3("Points", self, [ 0, 0, 0 ]))
 		.setVisible(true, true);
 	
 	newInput(in_d3d + 1, nodeValue_Vec3("Initial value", self, [ 0, 0, 0 ]));

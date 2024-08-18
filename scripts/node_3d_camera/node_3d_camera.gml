@@ -18,7 +18,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	
 	global.SKY_SPHERE = new __3dUVSphere(0.5, 16, 8, true);
 	
-	inputs[in_d3d + 0] = nodeValue_Int("FOV", self, 60 )
+	newInput(in_d3d + 0, nodeValue_Int("FOV", self, 60 ))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 10, 90, 0.1 ] });
 	
 	newInput(in_d3d + 1, nodeValue_Vec2("Clipping Distance", self, [ 1, 10 ] ));
@@ -27,7 +27,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	
 	newInput(in_d3d + 3, nodeValue_Enum_Button("Projection", self,  1 , [ "Perspective", "Orthographic" ]));
 	
-	inputs[in_d3d + 4] = nodeValue_D3Scene("Scene", self, noone )
+	newInput(in_d3d + 4, nodeValue_D3Scene("Scene", self, noone ))
 		.setVisible(true, true);
 	
 	newInput(in_d3d + 5, nodeValue_Color("Ambient Light", self, c_dkgrey ));
@@ -36,7 +36,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	
 	newInput(in_d3d + 7, nodeValue_Enum_Button("Backface Culling", self,  2 , [ "None", "CW", "CCW" ]));
 	
-	inputs[in_d3d + 8] = nodeValue_Float("Orthographic Scale", self, 0.5 )
+	newInput(in_d3d + 8, nodeValue_Float("Orthographic Scale", self, 0.5 ))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0.01, 4, 0.01 ] });
 	
 	newInput(in_d3d + 9, nodeValue_Enum_Scroll("Postioning Mode", self, 2, [ "Position + Rotation", "Position + Lookat", "Lookat + Rotation" ] ));
@@ -47,7 +47,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	
 	newInput(in_d3d + 12, nodeValue_Rotation("Horizontal Angle", self, 45 ));
 	
-	inputs[in_d3d + 13] = nodeValue_Float("Vertical Angle", self, 30 )
+	newInput(in_d3d + 13, nodeValue_Float("Vertical Angle", self, 30 ))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 90, 0.1] });
 	
 	newInput(in_d3d + 14, nodeValue_Float("Distance", self, 4 ));
@@ -62,10 +62,10 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	
 	newInput(in_d3d + 19, nodeValue_Float("AO Bias", self, 0.05 ));
 	
-	inputs[in_d3d + 20] = nodeValue_Float("AO Strength", self, 1. )
+	newInput(in_d3d + 20, nodeValue_Float("AO Strength", self, 1. ))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0.01, 4, 0.01 ] });
 	
-	inputs[in_d3d + 21] = nodeValue_Int("Round Normal", self, 0 )
+	newInput(in_d3d + 21, nodeValue_Int("Round Normal", self, 0 ))
 		.setWindows();
 	
 	newInput(in_d3d + 22, nodeValue_Enum_Button("Blend mode", self,  0 , [ "Normal", "Additive" ]));

@@ -2,10 +2,10 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	name = "Draw Text";
 	font = f_p0;
 	
-	inputs[0] = nodeValue_Text("Text", self, "")
+	newInput(0, nodeValue_Text("Text", self, ""))
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Text("Font", self, "")
+	newInput(1, nodeValue_Text("Font", self, ""))
 		.setDisplay(VALUE_DISPLAY.path_font);
 	
 	newInput(2, nodeValue_Int("Size", self, 16));
@@ -16,7 +16,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	newInput(5, nodeValue_Color("Color", self, c_white));
 	
-	inputs[6] = nodeValue_Vec2("Fixed dimension", self, DEF_SURF )
+	newInput(6, nodeValue_Vec2("Fixed dimension", self, DEF_SURF ))
 		.setVisible(true, false);
 	
 	newInput(7, nodeValue_Enum_Button("Horizontal alignment", self,  0 , [ THEME.inspector_text_halign, THEME.inspector_text_halign, THEME.inspector_text_halign]));
@@ -31,7 +31,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	newInput(12, nodeValue_Float("Line height", self, 0));
 	
-	inputs[13] = nodeValue_PathNode("Path", self, noone)
+	newInput(13, nodeValue_PathNode("Path", self, noone))
 		.setVisible(true, true);
 	
 	newInput(14, nodeValue_Float("Path shift", self, 0));
@@ -50,7 +50,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	newInput(21, nodeValue_Rotation("Wave phase", self, 0));
 	
-	inputs[22] = nodeValue_Float("Wave shape", self, 0)
+	newInput(22, nodeValue_Float("Wave shape", self, 0))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 3, 0.01 ] });
 	
 	newInput(23, nodeValue_Bool("Typewriter", self, false));

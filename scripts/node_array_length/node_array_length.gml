@@ -2,7 +2,7 @@ function Node_Array_Length(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	name = "Array Length";
 	setDimension(96, 32 + 24);
 	
-	inputs[0] = nodeValue("Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0)
+	newInput(0, nodeValue("Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0))
 		.setVisible(true, true);
 	
 	outputs[0] = nodeValue_Output("Size", self, VALUE_TYPE.integer, 0);

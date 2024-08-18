@@ -6,32 +6,32 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	
 	manual_ungroupable	 = false;
 	
-	inputs[0] = nodeValue("Object", self, JUNCTION_CONNECT.input, VALUE_TYPE.rigid, noone)
+	newInput(0, nodeValue("Object", self, JUNCTION_CONNECT.input, VALUE_TYPE.rigid, noone))
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Enum_Scroll("Force type", self,  0, [ "Constant", "Impulse", "Torque", "Explode" ])
+	newInput(1, nodeValue_Enum_Scroll("Force type", self,  0, [ "Constant", "Impulse", "Torque", "Explode" ]))
 		.rejectArray();
 	
-	inputs[2] = nodeValue_Vec2("Position", self, [ 0, 0 ])
+	newInput(2, nodeValue_Vec2("Position", self, [ 0, 0 ]))
 		.rejectArray();
 	
-	inputs[3] = nodeValue_Float("Torque", self, 0)
+	newInput(3, nodeValue_Float("Torque", self, 0))
 		.rejectArray();
 	
-	inputs[4] = nodeValue_Int("Apply frame", self, 0, "Frame index to apply force.")
+	newInput(4, nodeValue_Int("Apply frame", self, 0, "Frame index to apply force."))
 		.rejectArray();
 	
-	inputs[5] = nodeValue_Vec2("Force", self, [ 0.1, 0 ])
+	newInput(5, nodeValue_Vec2("Force", self, [ 0.1, 0 ]))
 		.rejectArray();
 	
-	inputs[6] = nodeValue_Enum_Button("Scope", self,  0, [ "Global", "Local" ])
+	newInput(6, nodeValue_Enum_Button("Scope", self,  0, [ "Global", "Local" ]))
 		.rejectArray();
 	
-	inputs[7] = nodeValue_Float("Strength", self, 1)
+	newInput(7, nodeValue_Float("Strength", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 16, 0.01] })
 		.rejectArray();
 	
-	inputs[8] = nodeValue_Float("Range", self, 8)
+	newInput(8, nodeValue_Float("Range", self, 8))
 		.rejectArray();
 		
 	outputs[0] = nodeValue_Output("Object", self, VALUE_TYPE.rigid, noone);

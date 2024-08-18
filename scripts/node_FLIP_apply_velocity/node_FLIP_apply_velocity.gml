@@ -6,10 +6,10 @@ function Node_FLIP_Apply_Velocity(_x, _y, _group = noone) : Node(_x, _y, _group)
 	
 	manual_ungroupable = false;
 	
-	inputs[0] = nodeValue_Fdomain("Domain", self, noone )
+	newInput(0, nodeValue_Fdomain("Domain", self, noone ))
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Vec2("Position", self, [ 0, 0 ] )
+	newInput(1, nodeValue_Vec2("Position", self, [ 0, 0 ] ))
 		.setUnitRef(function(index) { return getDimension(); });
 	
 	inputs[2] = nodeValue_Float("Radius", self, 4 )	

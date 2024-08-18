@@ -19,16 +19,16 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	
 	setDimension(96, 48);
 	
-	inputs[0] = nodeValue_Float("Path progress", self, 0, "Sample position from path.")
+	newInput(0, nodeValue_Float("Path progress", self, 0, "Sample position from path."))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[1] = nodeValue_Bool("Loop", self, false)
+	newInput(1, nodeValue_Bool("Loop", self, false))
 		.rejectArray();
 	
-	inputs[2] = nodeValue_Enum_Scroll("Progress mode", self,  0, ["Entire line", "Segment"])
+	newInput(2, nodeValue_Enum_Scroll("Progress mode", self,  0, ["Entire line", "Segment"]))
 		.rejectArray();
 	
-	inputs[3] = nodeValue_Bool("Round anchor", self, false)
+	newInput(3, nodeValue_Bool("Round anchor", self, false))
 		.rejectArray();
 		
 	outputs[0] = nodeValue_Output("Position out", self, VALUE_TYPE.float, [ 0, 0 ])

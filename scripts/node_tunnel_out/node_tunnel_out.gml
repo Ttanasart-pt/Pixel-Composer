@@ -18,7 +18,7 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	if(!LOADING && !APPENDING && !ds_map_empty(TUNNELS_IN))
 		tname = ds_map_find_first(TUNNELS_IN);
 	
-	inputs[0] = nodeValue_Text("Name", self, tname )
+	newInput(0, nodeValue_Text("Name", self, tname ))
 		.setDisplay(VALUE_DISPLAY.text_tunnel)
 		.rejectArray();
 	

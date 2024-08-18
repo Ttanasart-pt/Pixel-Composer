@@ -21,7 +21,7 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	newInput(0, nodeValue_Dimension(self));
 	
-	inputs[1] = nodeValue_Float("Data", self, [])
+	newInput(1, nodeValue_Float("Data", self, []))
 		.setArrayDepth(1)
 		.setVisible(true, true);
 		
@@ -48,7 +48,7 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	newInput(12, nodeValue_Float("Value Offset", self, 0));
 	
-	inputs[13] = nodeValue_Gradient("Color Over Sample", self, new gradientObject(cola(c_white)))
+	newInput(13, nodeValue_Gradient("Color Over Sample", self, new gradientObject(cola(c_white))))
 		.setMappable(27);
 	
 	newInput(14, nodeValue_Enum_Scroll("Trim mode", self,  0, [ "Range", "Window" ]));
@@ -63,17 +63,17 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	newInput(19, nodeValue_Bool("Rounded Bar", self, false));
 	
-	inputs[20] = nodeValue_PathNode("Path", self, noone)
+	newInput(20, nodeValue_PathNode("Path", self, noone))
 		.setVisible(true, true);
 	
 	newInput(21, nodeValue_Bool("Flip Value", self, false));
 	
 	newInput(22, nodeValue_Bool("Loop", self, false));
 	
-	inputs[23] = nodeValue_Float("Smooth", self, 0)
+	newInput(23, nodeValue_Float("Smooth", self, 0))
 		.setDisplay(VALUE_DISPLAY.slider);
 		
-	inputs[24] = nodeValue_Gradient("Color Over Value", self, new gradientObject(cola(c_white)))
+	newInput(24, nodeValue_Gradient("Color Over Value", self, new gradientObject(cola(c_white))))
 		.setMappable(29);
 		
 	newInput(25, nodeValue_Range("Value range", self, [ 0, 1 ] ));

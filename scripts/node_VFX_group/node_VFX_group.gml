@@ -15,7 +15,7 @@ function Node_VFX_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _group
 	preview_node = noone;
 	allCached    = false;
 	
-	inputs[0] = nodeValue_Bool("Loop", self, true )
+	newInput(0, nodeValue_Bool("Loop", self, true ))
 		.rejectArray();
 	
 	custom_input_index = array_length(inputs);

@@ -5,7 +5,7 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	onSurfaceSize = function() { return surface_get_dimension(getInputData(0)); };
 	newInput(0, nodeValue_Area("Focus area", self, DEF_AREA, { onSurfaceSize, useShape : false }));
 	
-	inputs[1] = nodeValue_Float("Zoom", self, 1)
+	newInput(1, nodeValue_Float("Zoom", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0.01, 4, 0.01 ] });
 	
 	newInput(2, nodeValue_Bool("Depth of Field", self, false));
@@ -38,7 +38,7 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 		newInput(index + 1, nodeValue_Enum_Button($"Positioning {_s}", self,  false, [ "Space", "Camera" ]));
 	
-		inputs[index + 2] = nodeValue_Vec2($"Position {_s}", self, [ 0, 0 ] )
+		newInput(index + 2, nodeValue_Vec2($"Position {_s}", self, [ 0, 0 ] ))
 			.setUnitRef(function(index) { return getDimension(index); });
 		
 		inputs[index + 3] = nodeValue_Enum_Scroll($"Oversample {_s}", self,  0, [ new scrollItem("Empty ",   s_node_camera_repeat, 0), 

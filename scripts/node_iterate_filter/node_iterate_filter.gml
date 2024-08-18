@@ -1,7 +1,7 @@
 function Node_Iterate_Filter(_x, _y, _group = noone) : Node_Iterator(_x, _y, _group) constructor {
 	name  = "Filter Array";
 	
-	inputs[0] = nodeValue("Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, [] )
+	newInput(0, nodeValue("Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, [] ))
 		.setVisible(true, true);
 	
 	outputs[0] = nodeValue_Output("Array", self, VALUE_TYPE.any, noone );

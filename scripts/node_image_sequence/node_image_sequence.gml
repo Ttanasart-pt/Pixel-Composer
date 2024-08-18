@@ -39,16 +39,16 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	spr   = [];
 	color = COLORS.node_blend_input;
 	
-	inputs[0]  = nodeValue_Path("Paths", self, [])
+	newInput(0, nodeValue_Path("Paths", self, []))
 		.setDisplay(VALUE_DISPLAY.path_array, { filter: ["image|*.png;*.jpg", ""] });
 	
-	inputs[1]  = nodeValue_Padding("Padding", self, [0, 0, 0, 0])
+	newInput(1, nodeValue_Padding("Padding", self, [0, 0, 0, 0]))
 		.rejectArray();
 	
-	inputs[2] = nodeValue_Enum_Scroll("Canvas size", self,  0, [ "Individual", "Minimum", "Maximum" ])
+	newInput(2, nodeValue_Enum_Scroll("Canvas size", self,  0, [ "Individual", "Minimum", "Maximum" ]))
 		.rejectArray();
 	
-	inputs[3] = nodeValue_Enum_Scroll("Sizing method", self,  0, [ "Padding / Crop", "Scale" ])
+	newInput(3, nodeValue_Enum_Scroll("Sizing method", self,  0, [ "Padding / Crop", "Scale" ]))
 		.rejectArray();
 	
 	input_display_list = [

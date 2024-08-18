@@ -3,31 +3,31 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	newInput(0, nodeValue_Dimension(self));
 	
-	inputs[1] = nodeValue_Gradient("Gradient", self, new gradientObject([ cola(c_black), cola(c_white) ]))
+	newInput(1, nodeValue_Gradient("Gradient", self, new gradientObject([ cola(c_black), cola(c_white) ])))
 		.setMappable(15);
 	
 	inputs[2] = nodeValue_Enum_Scroll("Type", self,  0, [ new scrollItem("Linear",   s_node_gradient_type, 0),
 												 new scrollItem("Circular", s_node_gradient_type, 1),
 												 new scrollItem("Radial",   s_node_gradient_type, 2) ]);
 	
-	inputs[3] = nodeValue_Rotation("Angle", self, 0)
+	newInput(3, nodeValue_Rotation("Angle", self, 0))
 		.setMappable(10);
 
-	inputs[4] = nodeValue_Float("Radius", self, .5)
+	newInput(4, nodeValue_Float("Radius", self, .5))
 		.setMappable(11);
 		
-	inputs[5] = nodeValue_Float("Shift", self, 0)
+	newInput(5, nodeValue_Float("Shift", self, 0))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-2, 2, 0.01] })
 		.setMappable(12);
 	
-	inputs[6] = nodeValue_Vec2("Center", self, [ 0.5, 0.5 ])
+	newInput(6, nodeValue_Vec2("Center", self, [ 0.5, 0.5 ]))
 		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
 	
 	newInput(7, nodeValue_Enum_Button("Loop", self,  0, [ "None", "Loop", "Pingpong" ]));
 	
 	newInput(8, nodeValue_Surface("Mask", self));
 	
-	inputs[9] = nodeValue_Float("Scale", self, 1)
+	newInput(9, nodeValue_Float("Scale", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 2, 0.01] })
 		.setMappable(13);
 	

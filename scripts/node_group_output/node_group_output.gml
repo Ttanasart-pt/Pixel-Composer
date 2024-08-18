@@ -7,7 +7,7 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	skipDefault();
 	setDimension(96, 32 + 24);
 	
-	inputs[0] = nodeValue("Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, -1)
+	newInput(0, nodeValue("Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, -1))
 		.uncache()
 		.setVisible(true, true);
 	inputs[0].onSetFrom = function(juncFrom) /*=>*/ { if(attributes.inherit_name && !LOADING && !APPENDING) setDisplayName(juncFrom.name); }

@@ -15,7 +15,7 @@ function Node_Shape_Map(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	newInput(5, nodeValue_Int("Sides", self, 4));
 	
-	inputs[6] = nodeValue_Float("Scale", self, 1)
+	newInput(6, nodeValue_Float("Scale", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 2, 0.01 ] });
 	
 	newInput(7, nodeValue_Rotation("Angle", self, 0));

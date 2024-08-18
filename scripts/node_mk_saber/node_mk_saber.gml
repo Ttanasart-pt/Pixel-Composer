@@ -7,9 +7,9 @@ function Node_MK_Saber(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	newInput(2, nodeValue_Vec2("Point 2", self, [ 16, 16 ]));
 	
-	inputs[3] = nodeValue_Int("Thickness", self, 2)
+	newInput(3, nodeValue_Int("Thickness", self, 2))
 	
-	inputs[4] = nodeValue_Gradient("Color", self, new gradientObject(cola(c_white)))
+	newInput(4, nodeValue_Gradient("Color", self, new gradientObject(cola(c_white))))
 	
 	newInput(5, nodeValue_Int("Trace", self, 0));
 	
@@ -17,12 +17,12 @@ function Node_MK_Saber(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	newInput(7, nodeValue_Int("Gradient step", self, 1));
 	
-	inputs[8] = nodeValue_Float("Glow intensity", self, 0)
+	newInput(8, nodeValue_Float("Glow intensity", self, 0))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(9, nodeValue_Int("Glow radius", self, 0));
 	
-	inputs[10] = nodeValue_Surface("Trace texture", self)
+	newInput(10, nodeValue_Surface("Trace texture", self))
 		.setVisible(true, true);
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 0, 

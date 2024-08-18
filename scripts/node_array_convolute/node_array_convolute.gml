@@ -2,11 +2,11 @@ function Node_Array_Convolute(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	name = "Array Convolute";
 	setDimension(96, 32 + 24);
 	
-	inputs[0] = nodeValue_Float("Array", self, 0)
+	newInput(0, nodeValue_Float("Array", self, 0))
 		.setArrayDepth(1)
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Float("Kernel", self, [])
+	newInput(1, nodeValue_Float("Kernel", self, []))
 		.setArrayDepth(1)
 		.setVisible(true, true);
 	

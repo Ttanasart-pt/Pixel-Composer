@@ -4,17 +4,17 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	
 	newInput(0, nodeValue_Surface("Surface in", self));
 	
-	inputs[1] = nodeValue_Int("Max colors", self, 5, "Amount of color in a palette.")
+	newInput(1, nodeValue_Int("Max colors", self, 5, "Amount of color in a palette."))
 		.rejectArray();
 	
-	inputs[2] = nodeValue_Int("Seed", self, seed_random(6), "Random seed to be used to initialize K-mean algorithm.")
+	newInput(2, nodeValue_Int("Seed", self, seed_random(6), "Random seed to be used to initialize K-mean algorithm."))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[2].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) })
 		.rejectArray();
 	
-	inputs[3] = nodeValue_Enum_Scroll("Algorithm", self,  0, { data: [ "K-mean", "Frequency", "All colors" ], update_hover: false })
+	newInput(3, nodeValue_Enum_Scroll("Algorithm", self,  0, { data: [ "K-mean", "Frequency", "All colors" ], update_hover: false }))
 		.rejectArray();
 	
-	inputs[4] = nodeValue_Enum_Scroll("Color Space", self,  1, { data: [ "RGB", "HSV" ], update_hover: false })
+	newInput(4, nodeValue_Enum_Scroll("Color Space", self,  1, { data: [ "RGB", "HSV" ], update_hover: false }))
 		.rejectArray();
 	
 	outputs[0] = nodeValue_Output("Palette", self, VALUE_TYPE.color, [ ])

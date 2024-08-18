@@ -4,7 +4,7 @@ function Node_Base_Convert(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	setDimension(96, 48);
 	
-	inputs[0] = nodeValue_Text("Value", self, "")
+	newInput(0, nodeValue_Text("Value", self, ""))
 		.setVisible(true, true);
 	
 	newInput(1, nodeValue_Int("Base from", self, 10));

@@ -6,7 +6,7 @@ function Node_HTTP_request(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	newInput(1, nodeValue_Enum_Scroll("Type", self,  0, [ "Get", "Post" ]));
 	
-	inputs[2] = nodeValue_Text("Content", self, "")
+	newInput(2, nodeValue_Text("Content", self, ""))
 	
 	outputs[0] = nodeValue_Output("Result", self, VALUE_TYPE.text, "");
 	

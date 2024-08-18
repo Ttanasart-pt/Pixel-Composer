@@ -1,12 +1,12 @@
 function Node_Audio_Window(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Audio Window";
 	
-	inputs[0] = nodeValue_AudioBit("Audio data", self, noone)
+	newInput(0, nodeValue_AudioBit("Audio data", self, noone))
 		.setVisible(true, true);
 	
 	newInput(1, nodeValue_Int("Width", self, 4096, "Amount of bits to extract."));
 	
-	inputs[2] = nodeValue_Float("Location", self, 0)
+	newInput(2, nodeValue_Float("Location", self, 0))
 		.setDisplay(VALUE_DISPLAY._default, { unit: 0, side_button: button(function() { 
 					inputs[2].display_data.unit = (inputs[2].display_data.unit + 1) % 3; 
 					inputs[2].display_data.side_button.tooltip.index = inputs[2].display_data.unit; 

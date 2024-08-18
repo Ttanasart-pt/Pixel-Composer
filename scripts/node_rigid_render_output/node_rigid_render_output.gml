@@ -7,10 +7,10 @@ function Node_Rigid_Render_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 	
 	previewable = true;
 	
-	inputs[0] = nodeValue_Vec2("Render dimension", self, DEF_SURF)
+	newInput(0, nodeValue_Vec2("Render dimension", self, DEF_SURF))
 		.rejectArray();
 		
-	inputs[1] = nodeValue_Bool("Round position", self, false)
+	newInput(1, nodeValue_Bool("Round position", self, false))
 	
 	attribute_surface_depth();
 	
@@ -23,7 +23,7 @@ function Node_Rigid_Render_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 	
 	static createNewInput = function() {
 		var index = array_length(inputs);
-		inputs[index] = nodeValue("Object", self, JUNCTION_CONNECT.input, VALUE_TYPE.rigid, noone )
+		newInput(index, nodeValue("Object", self, JUNCTION_CONNECT.input, VALUE_TYPE.rigid, noone ))
 			.setVisible(true, true);
 			
 		return inputs[index];

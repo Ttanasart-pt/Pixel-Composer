@@ -2,7 +2,7 @@ function Node_PB_Box_Divide(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _group
 	name = "Divide";
 	batch_output = false;
 	
-	inputs[1] = nodeValue("pBox", self, JUNCTION_CONNECT.input, VALUE_TYPE.pbBox, noone )
+	newInput(1, nodeValue("pBox", self, JUNCTION_CONNECT.input, VALUE_TYPE.pbBox, noone ))
 		.setVisible(true, true);
 		
 	newInput(2, nodeValue_Int("Amount", self, 2 ));
@@ -11,7 +11,7 @@ function Node_PB_Box_Divide(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _group
 	
 	newInput(4, nodeValue_Enum_Button("Axis", self,  0 , [ "X", "Y" ]));
 		
-	inputs[5] = nodeValue_Bool("Mirror", self, 0 )
+	newInput(5, nodeValue_Bool("Mirror", self, 0 ))
 		
 	newInput(6, nodeValue_Enum_Button("Spacing", self,  0 , [ "Space Between", "Space Around", "Begin", "End" ]));
 	

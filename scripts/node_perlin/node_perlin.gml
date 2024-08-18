@@ -3,17 +3,17 @@ function Node_Perlin(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	newInput(0, nodeValue_Dimension(self));
 	
-	inputs[1] = nodeValue_Vec2("Position", self, [ 0, 0 ])
+	newInput(1, nodeValue_Vec2("Position", self, [ 0, 0 ]))
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	inputs[2] = nodeValue_Vec2("Scale", self, [ 5, 5 ])
+	newInput(2, nodeValue_Vec2("Scale", self, [ 5, 5 ]))
 		.setMappable(10);
 	
 	newInput(3, nodeValue_Int("Iteration", self, 4));
 	
 	newInput(4, nodeValue_Bool("Tile", self, true));
 		
-	inputs[5] = nodeValue_Float("Seed", self, seed_random(6))
+	newInput(5, nodeValue_Float("Seed", self, seed_random(6)))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[5].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 		
 	newInput(6, nodeValue_Enum_Button("Color mode", self,  0, [ "Greyscale", "RGB", "HSV" ]));

@@ -27,7 +27,7 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	newInput(13, nodeValue_Enum_Button("Edge transform", self,  0, [ "Flip", "Rotate" ] ));
 		
-	inputs[14] = nodeValue_Bool("Sort array by bit", self, true)
+	newInput(14, nodeValue_Bool("Sort array by bit", self, true))
 		
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 
 		["Surfaces",	  true], 0, 1, 

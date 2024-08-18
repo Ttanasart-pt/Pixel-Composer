@@ -3,7 +3,7 @@ function Node_Path_Sample(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	batch_output = false;
 	setDimension(96, 48);
 	
-	inputs[0] = nodeValue_PathNode("Path", self, noone)
+	newInput(0, nodeValue_PathNode("Path", self, noone))
 		.setVisible(true, true);
 	
 	newInput(1, nodeValue_Float("Ratio", self, 0));

@@ -5,10 +5,10 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	manual_ungroupable = false;
 	
-	inputs[0] = nodeValue_Fdomain("Domain", self, noone)
+	newInput(0, nodeValue_Fdomain("Domain", self, noone))
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Float("Merge threshold", self, 0.75)
+	newInput(1, nodeValue_Float("Merge threshold", self, 0.75))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(2, nodeValue_Range("Lifespan", self, [ 0, 0 ], { linked : true }));

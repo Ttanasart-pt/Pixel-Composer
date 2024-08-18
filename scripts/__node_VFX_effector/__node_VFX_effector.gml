@@ -20,31 +20,31 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	setDimension(96, 48);
 	seed  = 1;
 	
-	inputs[0] = nodeValue_Particle("Particles", self, -1 )
+	newInput(0, nodeValue_Particle("Particles", self, -1 ))
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Area("Area", self, DEF_AREA)
+	newInput(1, nodeValue_Area("Area", self, DEF_AREA))
 		.rejectArray();
 	
-	inputs[2] = nodeValue("Falloff", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_01 )
+	newInput(2, nodeValue("Falloff", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_01 ))
 		.rejectArray();
 	
-	inputs[3] = nodeValue_Float("Falloff distance", self, 4 )
+	newInput(3, nodeValue_Float("Falloff distance", self, 4 ))
 		.rejectArray();
 	
-	inputs[4] = nodeValue_Vec2("Effect Vector", self, [ -1, 0 ] )
+	newInput(4, nodeValue_Vec2("Effect Vector", self, [ -1, 0 ] ))
 		.rejectArray();
 	
-	inputs[5] = nodeValue_Float("Strength", self, 1 )
+	newInput(5, nodeValue_Float("Strength", self, 1 ))
 		.rejectArray();
 	
-	inputs[6] = nodeValue_Rotation_Range("Rotate particle", self, [ 0, 0 ] )
+	newInput(6, nodeValue_Rotation_Range("Rotate particle", self, [ 0, 0 ] ))
 		.rejectArray();
 	
-	inputs[7] = nodeValue_Vec2_Range("Scale particle", self, [ 0, 0, 0, 0 ] , { linked : true })
+	newInput(7, nodeValue_Vec2_Range("Scale particle", self, [ 0, 0, 0, 0 ] , { linked : true }))
 		.rejectArray();
 	
-	inputs[8] = nodeValue_Int("Seed", self, seed_random(6))
+	newInput(8, nodeValue_Int("Seed", self, seed_random(6)))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[8].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) })
 		.rejectArray();
 		

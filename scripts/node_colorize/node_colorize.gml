@@ -3,16 +3,16 @@ function Node_Colorize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	newInput(0, nodeValue_Surface("Surface in", self));
 	
-	inputs[1] = nodeValue_Gradient("Gradient", self, new gradientObject([ cola(c_black), cola(c_white) ]))
+	newInput(1, nodeValue_Gradient("Gradient", self, new gradientObject([ cola(c_black), cola(c_white) ])))
 		.setMappable(11);
 		
-	inputs[2] = nodeValue_Float("Gradient shift", self, 0)
+	newInput(2, nodeValue_Float("Gradient shift", self, 0))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, .01 ] })
 		.setMappable(10);
 	
 	newInput(3, nodeValue_Surface("Mask", self));
 	
-	inputs[4] = nodeValue_Float("Mix", self, 1)
+	newInput(4, nodeValue_Float("Mix", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(5, nodeValue_Bool("Active", self, true));

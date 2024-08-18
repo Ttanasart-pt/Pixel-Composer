@@ -6,7 +6,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	newInput(1, nodeValue_Int("Spawn delay", self, 4, "Frames delay between each particle spawn." ));
 	
-	inputs[2] = nodeValue_Range("Spawn amount", self, [ 2, 2 ] , { linked : true })
+	newInput(2, nodeValue_Range("Spawn amount", self, [ 2, 2 ] , { linked : true }))
 		.setTooltip("Amount of particle spawn in that frame.");
 	
 	newInput(3, nodeValue_Area("Spawn area", self, DEF_AREA ));
@@ -47,20 +47,20 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	newInput(21, nodeValue_Bool("Loop", self, true ));
 	
-	inputs[22] = nodeValue_Enum_Scroll("Surface array", self, 0, [ "Random", "Order", "Animation", "Scale" ])
+	newInput(22, nodeValue_Enum_Scroll("Surface array", self, 0, [ "Random", "Order", "Animation", "Scale" ]))
 		.setTooltip("Whether to select image from an array in order, at random, or treat array as animation.")
 		.setVisible(false);
 	
-	inputs[23] = nodeValue_Range("Animation speed", self, [ 1, 1 ] , { linked : true })
+	newInput(23, nodeValue_Range("Animation speed", self, [ 1, 1 ] , { linked : true }))
 		.setVisible(false);
 	
 	newInput(24, nodeValue_Enum_Button("Scatter", self,  1, [ "Uniform", "Random" ]));
 	
-	inputs[25] = nodeValue_Int("Boundary data", self, [])
+	newInput(25, nodeValue_Int("Boundary data", self, []))
 		.setArrayDepth(1)
 		.setVisible(false, true);
 	
-	inputs[26] = nodeValue_Enum_Button("On animation end", self,  ANIM_END_ACTION.loop, [ "Loop", "Ping pong", "Destroy" ])
+	newInput(26, nodeValue_Enum_Button("On animation end", self,  ANIM_END_ACTION.loop, [ "Loop", "Ping pong", "Destroy" ]))
 		.setVisible(false);
 		
 	newInput(27, nodeValue_Bool("Spawn", self, true));
@@ -69,12 +69,12 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		
 	newInput(29, nodeValue_Bool("Directed from center", self, false, "Make particle move away from the spawn center."));
 	
-	inputs[30] = nodeValue_Surface("Distribution map", self)
+	newInput(30, nodeValue_Surface("Distribution map", self))
 	
-	inputs[31] = nodeValue_Surface("Atlas", self,  [])
+	newInput(31, nodeValue_Surface("Atlas", self,  []))
 		.setArrayDepth(1);
 	
-	inputs[32] = nodeValue_Float("Seed", self, seed_random(6))
+	newInput(32, nodeValue_Float("Seed", self, seed_random(6)))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[32].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
 	newInput(33, nodeValue_Rotation("Gravity direction", self, -90));
@@ -89,10 +89,10 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	newInput(38, nodeValue_Float("Ground offset", self, 0 ));
 	
-	inputs[39] = nodeValue_Float("Bounce amount", self, 0.5 )
+	newInput(39, nodeValue_Float("Bounce amount", self, 0.5 ))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[40] = nodeValue_Float("Bounce friction", self, 0.1, "Apply horizontal friction once particle stop bouncing." )
+	newInput(40, nodeValue_Float("Bounce friction", self, 0.1, "Apply horizontal friction once particle stop bouncing." ))
 		.setDisplay(VALUE_DISPLAY.slider);
 		
 	newInput(41, nodeValue_Vec2("Position wiggle", self, [ 0, 0 ] , { label: [ "Amplitude", "Period" ], linkable: false, per_line: true }));
@@ -101,7 +101,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		
 	newInput(43, nodeValue_Vec2("Scale wiggle", self, [ 0, 0 ] , { label: [ "Amplitude", "Period" ], linkable: false, per_line: true }));
 		
-	inputs[44] = nodeValue_Trigger("Spawn", self,  false )
+	newInput(44, nodeValue_Trigger("Spawn", self,  false ))
 		.setDisplay(VALUE_DISPLAY.button, { name: "Trigger" });
 	
 	newInput(45, nodeValue_Bool("Follow Path", self, false ));
@@ -110,7 +110,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	newInput(47, nodeValue("Path Deviation", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11 ));
 	
-	inputs[48] = nodeValue_Trigger("Reset Seed", self, false )
+	newInput(48, nodeValue_Trigger("Reset Seed", self, false ))
 		.setDisplay(VALUE_DISPLAY.button, { name: "Trigger" })
 	
 	newInput(49, nodeValue_Bool("Stretch Animation", self, false ));

@@ -1,10 +1,10 @@
 function Node_PB_Draw_Blob(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _group) constructor {
 	name = "Blob";
 	
-	inputs[3] = nodeValue_Float("Top", self, 0.5 )
+	newInput(3, nodeValue_Float("Top", self, 0.5 ))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[4] = nodeValue_Float("Bottom", self, 1 )
+	newInput(4, nodeValue_Float("Bottom", self, 1 ))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	input_display_list = [

@@ -9,7 +9,7 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	static createNewInput = function() {
 		var index = array_length(inputs);
 		
-		inputs[index] = nodeValue_PathNode("Path", self, noone )
+		newInput(index, nodeValue_PathNode("Path", self, noone ))
 			.setVisible(true, true);
 		
 		return inputs[index];

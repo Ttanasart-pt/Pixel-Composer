@@ -3,19 +3,19 @@ function Node_De_Stray(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	newInput(0, nodeValue_Surface("Surface in", self));
 	
-	inputs[1] = nodeValue_Float("Tolerance", self, 0)
+	newInput(1, nodeValue_Float("Tolerance", self, 0))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(2, nodeValue_Bool("Active", self, true));
 		active_index = 2;
 	
-	inputs[3] = nodeValue_Int("Iteration", self, 2)
+	newInput(3, nodeValue_Int("Iteration", self, 2))
 	
 	newInput(4, nodeValue_Enum_Button("Strictness", self,  0, [ "Low", "High", "Stray-only" ]));
 	
 	newInput(5, nodeValue_Surface("Mask", self));
 	
-	inputs[6] = nodeValue_Float("Mix", self, 1)
+	newInput(6, nodeValue_Float("Mix", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	__init_mask_modifier(5); // inputs 7, 8, 

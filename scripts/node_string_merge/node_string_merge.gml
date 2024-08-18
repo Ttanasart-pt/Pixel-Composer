@@ -8,7 +8,7 @@ function Node_String_Merge(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	static createNewInput = function() {
 		var index = array_length(inputs);
 		
-		inputs[index] = nodeValue_Text("Text", self, "" )
+		newInput(index, nodeValue_Text("Text", self, "" ))
 			.setVisible(true, true);
 		
 		return inputs[index];

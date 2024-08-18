@@ -5,10 +5,10 @@ function Node_Noise_Simplex(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	newInput(1, nodeValue_Vec3("Position", self, [ 0, 0, 0 ] ));
 	
-	inputs[2] = nodeValue_Vec2("Scale", self, [ 1, 1 ] )
+	newInput(2, nodeValue_Vec2("Scale", self, [ 1, 1 ] ))
 		.setMappable(8);
 	
-	inputs[3] = nodeValue_Int("Iteration", self, 1 )
+	newInput(3, nodeValue_Int("Iteration", self, 1 ))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] })
 		.setMappable(9);
 	

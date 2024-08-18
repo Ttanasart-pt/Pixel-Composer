@@ -8,7 +8,7 @@ function Node_Iterator_Each_Inline_Output(_x, _y, _group = noone) : Node(_x, _y,
 	inline_parent_object = "Node_Iterate_Each_Inline";
 	manual_ungroupable	 = false;
 	
-	inputs[0] = nodeValue("Value out", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0 )
+	newInput(0, nodeValue("Value out", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0 ))
 		.setVisible(true, true);
 	
 	outputs[0] = nodeValue_Output("Array out", self, VALUE_TYPE.any, [] );

@@ -24,14 +24,14 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	newInput(1, nodeValue_Dimension(self));
 	
-	inputs[2] = nodeValue_Int("Amount", self, 2)
+	newInput(2, nodeValue_Int("Amount", self, 2))
 		.rejectArray();
 	
 	inputs[3] = nodeValue_Enum_Scroll("Pattern", self,  0, [ new scrollItem("Linear",   s_node_repeat_axis, 0), 
 												 new scrollItem("Grid",     s_node_repeat_axis, 1), 
 												 new scrollItem("Circular", s_node_repeat_axis, 2), ]);
 	
-	inputs[4] = nodeValue_Vec2("Shift position", self, [ DEF_SURF_W / 2, 0 ])
+	newInput(4, nodeValue_Vec2("Shift position", self, [ DEF_SURF_W / 2, 0 ]))
 		.setUnitRef(function() { return getDimension(); });
 	
 	newInput(5, nodeValue_Rotation_Range("Repeat rotation", self, [0, 0]));
@@ -42,39 +42,39 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	newInput(8, nodeValue_Float("Radius", self, 1));
 		
-	inputs[9] = nodeValue_Vec2("Start position", self, [0, 0])
+	newInput(9, nodeValue_Vec2("Start position", self, [0, 0]))
 		.setUnitRef(function(index) { return getInputData(1); });
 		
 	newInput(10, nodeValue("Scale over copy", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11 ));
 	
-	inputs[11] = nodeValue_PathNode("Path", self, noone, "Make each copy follow along path." )
+	newInput(11, nodeValue_PathNode("Path", self, noone, "Make each copy follow along path." ))
 		.setVisible(true, true);
 	
-	inputs[12] = nodeValue_Slider_Range("Path range", self, [0, 1])
+	newInput(12, nodeValue_Slider_Range("Path range", self, [0, 1]))
 		.setTooltip("Range of the path to follow.");
 	
 	newInput(13, nodeValue_Float("Path shift", self, 0));
 	
-	inputs[14] = nodeValue_Gradient("Color over copy", self, new gradientObject(cola(c_white)))
+	newInput(14, nodeValue_Gradient("Color over copy", self, new gradientObject(cola(c_white))))
 		.setMappable(30);
 		
 	newInput(15, nodeValue("Alpha over copy", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11 ));
 	
-	inputs[16] = nodeValue_Enum_Button("Array select", self, 0, [ "Order", "Random", "Spread" ])
+	newInput(16, nodeValue_Enum_Button("Array select", self, 0, [ "Order", "Random", "Spread" ]))
 		.setTooltip("Whether to select image from an array in order, at random, or spread or each image to one output.");
 	
-	inputs[17] = nodeValue_Int("Seed", self, seed_random(6))
+	newInput(17, nodeValue_Int("Seed", self, seed_random(6)))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[17].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
 	newInput(18, nodeValue_Int("Column", self, 4));
 	
-	inputs[19] = nodeValue_Vec2("Column shift", self, [0, DEF_SURF_H / 2])
+	newInput(19, nodeValue_Vec2("Column shift", self, [0, DEF_SURF_H / 2]))
 		.setUnitRef(function() { return getDimension(); });
 	
-	inputs[20] = nodeValue_Float("Animator midpoint", self, 0.5)
+	newInput(20, nodeValue_Float("Animator midpoint", self, 0.5))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-1, 2, 0.01] });
 	
-	inputs[21] = nodeValue_Float("Animator range", self, 0.1)
+	newInput(21, nodeValue_Float("Animator range", self, 0.1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(22, nodeValue_Vec2("Animator position", self, [ 0, 0 ]));
@@ -85,15 +85,15 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 	newInput(25, nodeValue("Animator falloff", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_10));
 	 
-	inputs[26] = nodeValue_Enum_Button("Stack", self,  0, [ "None", "X", "Y" ])
+	newInput(26, nodeValue_Enum_Button("Stack", self,  0, [ "None", "X", "Y" ]))
 		.setTooltip("Place each copy next to each other, taking surface dimension into account.");
 	
 	newInput(27, nodeValue_Color("Animator blend", self, cola(c_white)));
 	
-	inputs[28] = nodeValue_Float("Animator alpha", self, 1)
+	newInput(28, nodeValue_Float("Animator alpha", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[29] = nodeValue_Bool("Animator", self, false)
+	newInput(29, nodeValue_Bool("Animator", self, false))
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	

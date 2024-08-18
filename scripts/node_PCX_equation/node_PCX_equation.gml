@@ -50,10 +50,10 @@ function Node_PCX_Equation(_x, _y, _group = noone) : Node_PCX(_x, _y, _group) co
 	
 	static createNewInput = function() {
 		var index = array_length(inputs);
-		inputs[index + 0] = nodeValue_Text("Argument name", self, "" )
+		newInput(index + 0, nodeValue_Text("Argument name", self, "" ))
 			.setDisplay(VALUE_DISPLAY.text_box);
 		
-		inputs[index + 1] = nodeValue("Argument value", self, JUNCTION_CONNECT.input, VALUE_TYPE.PCXnode, noone )
+		newInput(index + 1, nodeValue("Argument value", self, JUNCTION_CONNECT.input, VALUE_TYPE.PCXnode, noone ))
 			.setVisible(true, true);
 		inputs[index + 1].editWidget.interactable = false;
 		

@@ -3,15 +3,15 @@ function Node_Grid_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	newInput(0, nodeValue_Dimension(self));
 	
-	inputs[1] = nodeValue_Vec2("Position", self, [ 0, 0 ])
+	newInput(1, nodeValue_Vec2("Position", self, [ 0, 0 ]))
 		.setUnitRef(function(index) { return getDimension(index); });
 	
 	newInput(2, nodeValue_Vec2("Scale", self, [ 8, 8 ]));
 	
-	inputs[3] = nodeValue_Float("Seed", self, seed_random(6))
+	newInput(3, nodeValue_Float("Seed", self, seed_random(6)))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[3].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
-	inputs[4] = nodeValue_Float("Shift", self, 0)
+	newInput(4, nodeValue_Float("Shift", self, 0))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-0.5, 0.5, 0.01] });
 		
 	newInput(5, nodeValue_Surface("Texture sample", self));

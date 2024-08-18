@@ -6,12 +6,12 @@ function Node_Strand_Force_Apply(_x, _y, _group = noone) : _Node_Strand_Affector
 	
 	manual_ungroupable	 = false;
 	
-	inputs[input_fix_len + 0] = nodeValue_Float("Strength", self, 1)
+	newInput(input_fix_len + 0, nodeValue_Float("Strength", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 5, 0.01 ] });
 	
 	newInput(input_fix_len + 1, nodeValue_Float("Turbulence", self, 0));
 		
-	inputs[input_fix_len + 2] = nodeValue_Int("Seed", self, seed_random(6))
+	newInput(input_fix_len + 2, nodeValue_Int("Seed", self, seed_random(6)))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[input_fix_len + 2].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
 	newInput(input_fix_len + 3, nodeValue_Float("Turbulence frequency", self, 0.5));

@@ -2,7 +2,7 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	name = "Wave Path";
 	setDimension(96, 48);;
 	
-	inputs[0] = nodeValue_PathNode("Path", self, noone)
+	newInput(0, nodeValue_PathNode("Path", self, noone))
 		.setVisible(true, true);
 	
 	newInput(1, nodeValue_Range("Frequency", self, [ 4, 4 ], { linked : true }));
@@ -13,7 +13,7 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	newInput(4, nodeValue_Bool("Smooth", self, false));
 	
-	inputs[5] = nodeValue_Float("Seed", self, seed_random(6))
+	newInput(5, nodeValue_Float("Seed", self, seed_random(6)))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[5].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
 	newInput(6, nodeValue_Bool("Wiggle", self, false));

@@ -13,7 +13,7 @@ function Node_MIDI_In(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	for( var i = 0; i < inps; i++ ) 
 		_miniNames[i] = rtmidi_name_in(i);
 	
-	inputs[0] = nodeValue_Enum_Scroll("Input", self,  0, { data: _miniNames, update_hover: false })
+	newInput(0, nodeValue_Enum_Scroll("Input", self,  0, { data: _miniNames, update_hover: false }))
 		.rejectArray();
 		
 	outputs[0] = nodeValue_Output("Raw Message", self, VALUE_TYPE.float, []);

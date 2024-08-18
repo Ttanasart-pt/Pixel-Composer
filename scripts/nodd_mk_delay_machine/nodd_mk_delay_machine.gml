@@ -16,7 +16,7 @@ function Node_MK_Delay_Machine(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	newInput(5, nodeValue_Enum_Scroll("Palette Select", self, 0, [ "Loop", "Pingpong", "Random" ]));
 	
-	inputs[6] = nodeValue_Int("Seed", self, seed_random(6))
+	newInput(6, nodeValue_Int("Seed", self, seed_random(6)))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[6].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
 	outputs[0] = nodeValue_Output("Surface", self, VALUE_TYPE.surface, noone);

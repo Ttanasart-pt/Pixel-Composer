@@ -3,19 +3,19 @@ function Node_Noise_Aniso(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	newInput(0, nodeValue_Dimension(self));
 	
-	inputs[1] = nodeValue_Float("X Amount", self, 2)
+	newInput(1, nodeValue_Float("X Amount", self, 2))
 		.setMappable(6);
 	
-	inputs[2] = nodeValue_Float("Seed", self, seed_random(6))
+	newInput(2, nodeValue_Float("Seed", self, seed_random(6)))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[2].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
-	inputs[3] = nodeValue_Vec2("Position", self, [ 0, 0 ])
+	newInput(3, nodeValue_Vec2("Position", self, [ 0, 0 ]))
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	inputs[4] = nodeValue_Rotation("Rotation", self, 0)
+	newInput(4, nodeValue_Rotation("Rotation", self, 0))
 		.setMappable(8);
 	
-	inputs[5] = nodeValue_Float("Y Amount", self, 16)
+	newInput(5, nodeValue_Float("Y Amount", self, 16))
 		.setMappable(7);
 		
 	//////////////////////////////////////////////////////////////////////////////////////////////////
@@ -28,7 +28,7 @@ function Node_Noise_Aniso(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[9] = nodeValue_Enum_Scroll("Render mode", self,  0, [ "Blend", "Waterfall" ] )
+	newInput(9, nodeValue_Enum_Scroll("Render mode", self,  0, [ "Blend", "Waterfall" ] ))
 		
 	input_display_list = [
 		["Output",	false], 0, 

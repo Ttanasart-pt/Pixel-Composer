@@ -2,7 +2,7 @@ function Node_Atlas_Get(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	name = "Atlas Get";
 	previewable = true;
 	
-	inputs[0] = nodeValue_Surface("Atlas", self)
+	newInput(0, nodeValue_Surface("Atlas", self))
 		.setVisible(true, true);
 	
 	outputs[0] = nodeValue_Output("Surface", self, VALUE_TYPE.surface, [])

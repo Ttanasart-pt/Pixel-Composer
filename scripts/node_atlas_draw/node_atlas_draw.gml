@@ -4,7 +4,7 @@ function Node_Atlas_Draw(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	newInput(0, nodeValue_Dimension(self));
 	
-	inputs[1] = nodeValue_Surface("Atlas", self)
+	newInput(1, nodeValue_Surface("Atlas", self))
 		.setVisible(true, true);
 	
 	outputs[0] = nodeValue_Output("Surface", self, VALUE_TYPE.surface, noone);

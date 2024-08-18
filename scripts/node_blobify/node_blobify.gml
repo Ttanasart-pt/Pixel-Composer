@@ -5,10 +5,10 @@ function Node_Blobify(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	newInput(1, nodeValue_Bool("Active", self, true));
 	
-	inputs[2] = nodeValue_Int("Radius", self, 3)
+	newInput(2, nodeValue_Int("Radius", self, 3))
 		.setValidator(VV_min(0));
 	
-	inputs[3] = nodeValue_Float("Threshold", self, 0.5)
+	newInput(3, nodeValue_Float("Threshold", self, 0.5))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	active_index = 1;

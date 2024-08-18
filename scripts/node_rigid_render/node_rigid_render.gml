@@ -10,7 +10,7 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	newInput(0, nodeValue_Vec2("Render dimension", self, DEF_SURF));
 		
-	inputs[1] = nodeValue_Bool("Round position", self, false)
+	newInput(1, nodeValue_Bool("Round position", self, false))
 	
 	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
@@ -30,7 +30,7 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	static createNewInput = function() {
 		var index = array_length(inputs);
-		inputs[index] = nodeValue("Object", self, JUNCTION_CONNECT.input, VALUE_TYPE.rigid, noone )
+		newInput(index, nodeValue("Object", self, JUNCTION_CONNECT.input, VALUE_TYPE.rigid, noone ))
 			.setVisible(true, true);
 		
 		return inputs[index];	

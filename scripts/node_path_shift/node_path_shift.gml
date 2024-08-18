@@ -2,7 +2,7 @@ function Node_Path_Shift(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	name = "Shift Path";
 	setDimension(96, 48);;
 	
-	inputs[0] = nodeValue_PathNode("Path", self, noone)
+	newInput(0, nodeValue_PathNode("Path", self, noone))
 		.setVisible(true, true);
 	
 	newInput(1, nodeValue_Float("Distance", self, 0));

@@ -2,7 +2,7 @@ function Node_Interpret_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	name = "Interpret Number";
 	dimension_index = -1;
 	
-	inputs[0] = nodeValue_Float("Number", self, [] )
+	newInput(0, nodeValue_Float("Number", self, [] ))
 		.setVisible(true, true)
 		.setArrayDepth(1);
 	
@@ -10,7 +10,7 @@ function Node_Interpret_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	
 	newInput(2, nodeValue_Range("Range", self, [ 0, 1 ] ));
 	
-	inputs[3] = nodeValue_Gradient("Gradient", self, new gradientObject(cola(c_white)))
+	newInput(3, nodeValue_Gradient("Gradient", self, new gradientObject(cola(c_white))))
 		.setMappable(4);
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////

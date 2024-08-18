@@ -10,14 +10,14 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	newInput(3, nodeValue_Vec2("Stack shift", self, [ 0, 1 ] ));
 	
-	inputs[4] = nodeValue_Vec2("Position", self, [ 0, 0 ] )
+	newInput(4, nodeValue_Vec2("Position", self, [ 0, 0 ] ))
 		.setUnitRef(function(index) { return getDimension(index); });
 		
 	newInput(5, nodeValue_Rotation("Rotation", self, 0));
 	
 	newInput(6, nodeValue_Color("Stack blend", self, c_white ));
 	
-	inputs[7] = nodeValue_Float("Alpha end", self, 1, "Alpha value for the last copy." )
+	newInput(7, nodeValue_Float("Alpha end", self, 1, "Alpha value for the last copy." ))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(8, nodeValue_Bool("Move base", self, false, "Make each copy move the original image." ));
@@ -26,10 +26,10 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	newInput(10, nodeValue_Color("Highlight color", self, c_white));
 	
-	inputs[11] = nodeValue_Float("Highlight alpha", self, 1)
+	newInput(11, nodeValue_Float("Highlight alpha", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[12] = nodeValue_Float("Array process", self, 1)
+	newInput(12, nodeValue_Float("Array process", self, 1))
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Individual", "Combined" ]);
 	
 	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);

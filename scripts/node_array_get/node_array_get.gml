@@ -2,13 +2,13 @@ function Node_Array_Get(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	name = "Array Get";
 	setDimension(96, 32 + 24);
 	
-	inputs[0] = nodeValue("Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0)
+	newInput(0, nodeValue("Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0))
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Int("Index", self, 0)
+	newInput(1, nodeValue_Int("Index", self, 0))
 		.setVisible(true, true);
 	
-	inputs[2] = nodeValue_Enum_Scroll("Overflow", self, 0, [ "Clamp", "Loop", "Ping Pong" ])
+	newInput(2, nodeValue_Enum_Scroll("Overflow", self, 0, [ "Clamp", "Loop", "Ping Pong" ]))
 		.rejectArray();
 	
 	outputs[0] = nodeValue_Output("Value", self, VALUE_TYPE.any, 0);

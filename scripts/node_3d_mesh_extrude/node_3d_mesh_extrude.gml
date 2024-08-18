@@ -3,18 +3,18 @@ function Node_3D_Mesh_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 	
 	object_class = __3dSurfaceExtrude;
 	
-	inputs[in_mesh + 0] = nodeValue_D3Material("Front Surface", self, new __d3dMaterial())
+	newInput(in_mesh + 0, nodeValue_D3Material("Front Surface", self, new __d3dMaterial()))
 		.setVisible(true, true);
 	
 	newInput(in_mesh + 1, nodeValue_Surface("Front Height", self));
 	
-	inputs[in_mesh + 2] = nodeValue_Bool("Smooth", self, false)
+	newInput(in_mesh + 2, nodeValue_Bool("Smooth", self, false))
 	
 	newInput(in_mesh + 3, nodeValue_Bool("Always update", self, false));
 	
 	newInput(in_mesh + 4, nodeValue_Bool("Double Side", self, false));
 	
-	inputs[in_mesh + 5] = nodeValue_D3Material("Back Surface", self, new __d3dMaterial())
+	newInput(in_mesh + 5, nodeValue_D3Material("Back Surface", self, new __d3dMaterial()))
 		.setVisible(true, true);
 	
 	newInput(in_mesh + 6, nodeValue_Surface("Back Height", self));

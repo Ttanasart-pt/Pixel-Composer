@@ -1,11 +1,11 @@
 function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constructor {
 	name  = "3D Repeat";
 		
-	inputs[0] = nodeValue_D3Mesh("Objects", self, noone)
+	newInput(0, nodeValue_D3Mesh("Objects", self, noone))
 		.setArrayDepth(1)
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Enum_Button("Object Mode", self,  0 , [ "Duplicate", "Array" ] )
+	newInput(1, nodeValue_Enum_Button("Object Mode", self,  0 , [ "Duplicate", "Array" ] ))
 		.rejectArray();
 	
 	newInput(2, nodeValue_Int("Amount", self, 1 ));
@@ -22,16 +22,16 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 	
 	newInput(8, nodeValue_Vec3("Shift Scale", self, [ 0, 0, 0 ] ));
 	
-	inputs[9] = nodeValue_Float("Positions", self, [] )
+	newInput(9, nodeValue_Float("Positions", self, [] ))
 		.setArrayDepth(2);
 	
-	inputs[10] = nodeValue_Float("Rotations", self, [] )
+	newInput(10, nodeValue_Float("Rotations", self, [] ))
 		.setArrayDepth(2);
 	
-	inputs[11] = nodeValue_Float("Scales", self, [] )
+	newInput(11, nodeValue_Float("Scales", self, [] ))
 		.setArrayDepth(2);
 	
-	inputs[12] = nodeValue_Bool("Use Instance", self, true )
+	newInput(12, nodeValue_Bool("Use Instance", self, true ))
 	
 	outputs[0] = nodeValue_Output("Scene", self, VALUE_TYPE.d3Scene, noone);
 	

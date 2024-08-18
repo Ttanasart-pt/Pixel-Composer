@@ -2,10 +2,10 @@ function Node_Array_Add(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	name = "Array Add";
 	setDimension(96, 32 + 24);
 	
-	inputs[0] = nodeValue("Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0)
+	newInput(0, nodeValue("Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0))
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Bool("Spread array", self, false )
+	newInput(1, nodeValue_Bool("Spread array", self, false ))
 		.rejectArray();
 	
 	outputs[0] = nodeValue_Output("Output", self, VALUE_TYPE.integer, 0);
@@ -15,7 +15,7 @@ function Node_Array_Add(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static createNewInput = function() {
 		var index = array_length(inputs);
 		
-		inputs[index] = nodeValue("Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, -1 )
+		newInput(index, nodeValue("Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, -1 ))
 			.setVisible(true, true);
 		
 		array_push(input_display_list, index);

@@ -10,37 +10,37 @@ function __Node_3D_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	newInput(3, nodeValue_Vec3("Object scale", self, [ 1, 1, 1 ]));
 	
-	inputs[4] = nodeValue_Vec2("Render position", self, [ 0.5, 0.5 ])
+	newInput(4, nodeValue_Vec2("Render position", self, [ 0.5, 0.5 ]))
 		.setUnitRef( function() { return getInputData(0); }, VALUE_UNIT.reference);
 	
 	newInput(5, nodeValue_Vec2("Render scale", self, [ 1, 1 ]));
 		
 	newInput(6, nodeValue_Rotation("Light direction", self, 0));
 		
-	inputs[7] = nodeValue_Float("Light height", self, 0.5)
+	newInput(7, nodeValue_Float("Light height", self, 0.5))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-1, 1, 0.01] });
 		
-	inputs[8] = nodeValue_Float("Light intensity", self, 1)
+	newInput(8, nodeValue_Float("Light intensity", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(9, nodeValue_Color("Light color", self, c_white));
 	
 	newInput(10, nodeValue_Color("Ambient color", self, c_grey));
 	
-	inputs[11] = nodeValue("3D vertex", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3vertex, [])
+	newInput(11, nodeValue("3D vertex", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3vertex, []))
 		.setVisible(true, true);
 		
-	inputs[12] = nodeValue_Enum_Button("Projection", self,  0, [ "Orthographic", "Perspective" ])
+	newInput(12, nodeValue_Enum_Button("Projection", self,  0, [ "Orthographic", "Perspective" ]))
 		.rejectArray();
 		
-	inputs[13] = nodeValue_Float("Field of view", self, 60)
+	newInput(13, nodeValue_Float("Field of view", self, 60))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 1, 90, 0.1 ] });
 	
 	newInput(14, nodeValue_Bool("Scale view with dimension", self, true));
 	
 	newInput(15, nodeValue_Surface("Displacement map", self));
 	
-	inputs[16] = nodeValue_Float("Strength", self, 1)
+	newInput(16, nodeValue_Float("Strength", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01 ] });
 	
 	input_display_list = [ 11,

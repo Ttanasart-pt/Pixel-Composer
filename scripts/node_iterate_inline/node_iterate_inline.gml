@@ -6,7 +6,7 @@ function Node_Iterate_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 	
 	is_root     = false;
 	
-	inputs[0] = nodeValue_Int("Repeat", self, 1 )
+	newInput(0, nodeValue_Int("Repeat", self, 1 ))
 		.uncache();
 		
 	managedRenderOrder = true;

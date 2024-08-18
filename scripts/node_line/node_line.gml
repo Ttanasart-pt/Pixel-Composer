@@ -5,22 +5,22 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	newInput(1, nodeValue_Bool("Background", self, false));
 	
-	inputs[2] = nodeValue_Int("Segment", self, 1)
+	newInput(2, nodeValue_Int("Segment", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 32, 0.1] });
 	
 	newInput(3, nodeValue_Vec2("Width", self, [ 2, 2 ]));
 	
-	inputs[4] = nodeValue_Float("Wiggle", self, 0)
+	newInput(4, nodeValue_Float("Wiggle", self, 0))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 16, 0.01] });
 	
 	newInput(5, nodeValue_Float("Random seed", self, 0));
 	
 	newInput(6, nodeValue_Rotation("Rotation", self, 0));
 	
-	inputs[7] = nodeValue_PathNode("Path", self, noone, "Draw line along path.")
+	newInput(7, nodeValue_PathNode("Path", self, noone, "Draw line along path."))
 		.setVisible(true, true);
 	
-	inputs[8] = nodeValue_Slider_Range("Range", self, [0, 1])
+	newInput(8, nodeValue_Slider_Range("Range", self, [0, 1]))
 		.setTooltip("Range of the path to draw.");
 	
 	newInput(9, nodeValue_Float("Shift", self, 0));
@@ -33,7 +33,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		
 	newInput(13, nodeValue_Bool("Round cap", self, false));
 	
-	inputs[14] = nodeValue_Int("Round segment", self, 4)
+	newInput(14, nodeValue_Int("Round segment", self, 4))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [2, 16, 0.1] });
 	
 	newInput(15, nodeValue_Bool("Span color over path", self, false, "Apply the full 'color over length' to the trimmed path."));
@@ -62,14 +62,14 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	newInput(27, nodeValue_Enum_Scroll("Data Type", self,  1, [ "None", "Path", "Segments" ]));
 	
-	inputs[28] = nodeValue_Vector("Segments", self, [[]])
+	newInput(28, nodeValue_Vector("Segments", self, [[]]))
 		.setArrayDepth(2);
 		
 	newInput(29, nodeValue_Bool("Scale texture to length", self, true ));
 	
 	newInput(30, nodeValue_Bool("Use Path Bounding box", self, false ));
 	
-	inputs[31] = nodeValue_Padding("Padding", self, [ 0, 0, 0, 0 ])
+	newInput(31, nodeValue_Padding("Padding", self, [ 0, 0, 0, 0 ]))
 		
 	input_display_list = [
 		["Output",			true],	0, 1, 30, 31, 

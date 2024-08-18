@@ -2,11 +2,11 @@ function Node_Array_Shift(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	name = "Array Shift";
 	setDimension(96, 32 + 24);
 	
-	inputs[0] = nodeValue("Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0)
+	newInput(0, nodeValue("Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0))
 		.setArrayDepth(99)
 		.setVisible(true, true);
 		
-	inputs[1] = nodeValue_Int("Shift", self, 0)
+	newInput(1, nodeValue_Int("Shift", self, 0))
 	
 	outputs[0] = nodeValue_Output("Array", self, VALUE_TYPE.any, 0);
 	

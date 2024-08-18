@@ -6,16 +6,16 @@ function Node_De_Corner(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput(1, nodeValue_Bool("Active", self, true));
 		active_index = 1;
 	
-	inputs[2] = nodeValue_Float("Tolerance", self, 0)
+	newInput(2, nodeValue_Float("Tolerance", self, 0))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[3] = nodeValue_Int("Iteration", self, 2)
+	newInput(3, nodeValue_Int("Iteration", self, 2))
 	
 	newInput(4, nodeValue_Enum_Button("Type", self,  0, [ "Double", "Diagonal" ]));
 	
 	newInput(5, nodeValue_Surface("Mask", self));
 	
-	inputs[6] = nodeValue_Float("Mix", self, 1)
+	newInput(6, nodeValue_Float("Mix", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	__init_mask_modifier(5); // inputs 7, 8, 

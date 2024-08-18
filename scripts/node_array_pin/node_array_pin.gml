@@ -17,7 +17,7 @@ function Node_Array_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static createNewInput = function() {
 		var index = array_length(inputs);
 		
-		inputs[index] = nodeValue("Input", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, -1 )
+		newInput(index, nodeValue("Input", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, -1 ))
 			.setVisible(true, true);
 		
 		return inputs[index];

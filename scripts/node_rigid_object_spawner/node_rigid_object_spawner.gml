@@ -8,28 +8,28 @@ function Node_Rigid_Object_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group
 	
 	object = [];
 	
-	inputs[0] = nodeValue("Object", self, JUNCTION_CONNECT.input, VALUE_TYPE.rigid, noone)
+	newInput(0, nodeValue("Object", self, JUNCTION_CONNECT.input, VALUE_TYPE.rigid, noone))
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Area("Spawn area", self, DEF_AREA)
+	newInput(1, nodeValue_Area("Spawn area", self, DEF_AREA))
 		.rejectArray();
 	
-	inputs[2] = nodeValue_Enum_Button("Spawn type", self,  0, [ "Stream", "Burst" ])
+	newInput(2, nodeValue_Enum_Button("Spawn type", self,  0, [ "Stream", "Burst" ]))
 		.rejectArray();
 	
-	inputs[3] = nodeValue_Int("Spawn delay", self, 4)
+	newInput(3, nodeValue_Int("Spawn delay", self, 4))
 		.rejectArray();
 	
-	inputs[4] = nodeValue_Int("Spawn amount", self, 1)
+	newInput(4, nodeValue_Int("Spawn amount", self, 1))
 		.rejectArray();
 	
-	inputs[5] = nodeValue_Int("Spawn frame", self, 0)
+	newInput(5, nodeValue_Int("Spawn frame", self, 0))
 		.rejectArray();
 	
-	inputs[6] = nodeValue_Bool("Spawn", self, true)
+	newInput(6, nodeValue_Bool("Spawn", self, true))
 		.rejectArray();
 	
-	inputs[7] = nodeValue_Int("Seed", self, seed_random(6))
+	newInput(7, nodeValue_Int("Seed", self, seed_random(6)))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[7].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
 	outputs[0] = nodeValue_Output("Object", self, VALUE_TYPE.rigid, object);

@@ -16,37 +16,37 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	newInput(4, nodeValue_Enum_Scroll("Shape", self,  0, shapesArray));
 	
-	inputs[5] = nodeValue_Vec2("Position", self, [ 0.5, 0.5 ])
+	newInput(5, nodeValue_Vec2("Position", self, [ 0.5, 0.5 ]))
 		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
 	
 	newInput(6, nodeValue_Rotation("Rotation", self, 0));
 	
-	inputs[7] = nodeValue_Vec2("Scale", self, [ 0.5, 0.5 ])
+	newInput(7, nodeValue_Vec2("Scale", self, [ 0.5, 0.5 ]))
 		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
 	
-	inputs[8] = nodeValue_Int("Sides", self, 16)
+	newInput(8, nodeValue_Int("Sides", self, 16))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [2, 64, 0.1] });
 	
-	inputs[9] = nodeValue_Float("Inner radius", self, 0.5)
+	newInput(9, nodeValue_Float("Inner radius", self, 0.5))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[10] = nodeValue_Float("Radius", self, 0.5)
+	newInput(10, nodeValue_Float("Radius", self, 0.5))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[11] = nodeValue_Int("Teeth", self, 6)
+	newInput(11, nodeValue_Int("Teeth", self, 6))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [3, 16, 0.1] });
 	
-	inputs[12] = nodeValue_Float("Teeth height", self, 0.2)
+	newInput(12, nodeValue_Float("Teeth height", self, 0.2))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[13] = nodeValue_Float("Teeth taper", self, 0)
+	newInput(13, nodeValue_Float("Teeth taper", self, 0))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-0.5, 0.5, 0.01] });
 	
 	newInput(14, nodeValue_Rotation_Range("Angle range", self, [ 0, 360 ]));
 	
 	newInput(15, nodeValue_Bool("Round cap", self, false));
 	
-	inputs[16] = nodeValue("Mesh", self, JUNCTION_CONNECT.input, VALUE_TYPE.mesh, noone)
+	newInput(16, nodeValue("Mesh", self, JUNCTION_CONNECT.input, VALUE_TYPE.mesh, noone))
 		.setVisible(true, true);
 		
 	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);

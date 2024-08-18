@@ -11,7 +11,7 @@ function Node_Curve_HSV(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	newInput(4, nodeValue_Surface("Mask", self));
 	
-	inputs[5] = nodeValue_Float("Mix", self, 1)
+	newInput(5, nodeValue_Float("Mix", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(6, nodeValue_Bool("Active", self, true));

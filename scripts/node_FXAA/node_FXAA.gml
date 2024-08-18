@@ -5,10 +5,10 @@ function Node_FXAA(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	newInput(1, nodeValue_Bool("Active", self, true));
 	
-	inputs[2] = nodeValue_Float("Distance", self, 0.5)
+	newInput(2, nodeValue_Float("Distance", self, 0.5))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[3] = nodeValue_Float("Mix", self, 1)
+	newInput(3, nodeValue_Float("Mix", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	active_index = 1;

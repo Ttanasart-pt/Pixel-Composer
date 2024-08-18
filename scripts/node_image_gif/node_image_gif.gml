@@ -29,10 +29,10 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	update_on_frame = true;
 	setAlwaysTimeline(new timelineItemNode_Image_gif(self));
 	
-	inputs[0] = nodeValue_Path("Path", self, "")
+	newInput(0, nodeValue_Path("Path", self, ""))
 		.setDisplay(VALUE_DISPLAY.path_load, { filter: "Animated gif|*.gif" });
 		
-	inputs[1] = nodeValue_Trigger("Set animation length to gif", self, false )
+	newInput(1, nodeValue_Trigger("Set animation length to gif", self, false ))
 		.setDisplay(VALUE_DISPLAY.button, { name: "Match length", UI : true, onClick: function() { 
 				if(!spr) return;
 				if(!sprite_exists(spr)) return;
@@ -42,7 +42,7 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	newInput(2, nodeValue_Bool("Output as array", self, false));
 	
-	inputs[3]  = nodeValue_Enum_Scroll("Loop modes", self,  0, ["Loop", "Ping pong", "Hold last frame", "Hide"])
+	newInput(3, nodeValue_Enum_Scroll("Loop modes", self,  0, ["Loop", "Ping pong", "Hold last frame", "Hide"]))
 		.rejectArray();
 	
 	newInput(4, nodeValue_Int("Start frame", self, 0));

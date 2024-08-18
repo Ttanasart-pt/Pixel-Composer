@@ -22,12 +22,12 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 																	new scrollItem("Line asymmetric", s_node_2d_light_shape, 2), 
 																	new scrollItem("Spot",            s_node_2d_light_shape, 3), ]);
 	
-	inputs[2] = nodeValue_Vec2("Center", self, [ 16, 16 ])
+	newInput(2, nodeValue_Vec2("Center", self, [ 16, 16 ]))
 		.setUnitRef(function(index) { return getDimension(index); });
 	
 	newInput(3, nodeValue_Float("Range", self, 16));
 	
-	inputs[4] = nodeValue_Float("Intensity", self, 1)
+	newInput(4, nodeValue_Float("Intensity", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(5, nodeValue_Color("Color", self, c_white));
@@ -36,13 +36,13 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	newInput(7, nodeValue_Vec2("Finish", self, [ 32, 16 ]));
 	
-	inputs[8] = nodeValue_Int("Sweep", self, 15)
+	newInput(8, nodeValue_Int("Sweep", self, 15))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-80, 80, 0.1] });
 	
-	inputs[9] = nodeValue_Int("Sweep end", self, 0)
+	newInput(9, nodeValue_Int("Sweep end", self, 0))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-80, 80, 0.1] });
 	
-	inputs[10] = nodeValue_Int("Banding", self, 0)
+	newInput(10, nodeValue_Int("Banding", self, 0))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 16, 0.1] });
 	
 	inputs[11] = nodeValue_Enum_Scroll("Attenuation", self, 0, 
@@ -51,12 +51,12 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 												 new scrollItem("Linear",			s_node_curve, 2), ])
 		 .setTooltip("Control how light fade out over distance.");
 	
-	inputs[12] = nodeValue_Int("Radial banding", self, 0)
+	newInput(12, nodeValue_Int("Radial banding", self, 0))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 16, 0.1] });
 	
 	newInput(13, nodeValue_Rotation("Radial start", self, 0));
 	
-	inputs[14] = nodeValue_Float("Radial band ratio", self, 0.5)
+	newInput(14, nodeValue_Float("Radial band ratio", self, 0.5))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(15, nodeValue_Bool("Active", self, true));

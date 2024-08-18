@@ -11,7 +11,7 @@ function Node_SVG(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "SVG";
 	color = COLORS.node_blend_input;
 	
-	inputs[0]  = nodeValue_Path("Path", self, "")
+	newInput(0, nodeValue_Path("Path", self, ""))
 		.setDisplay(VALUE_DISPLAY.path_load, { filter: "Scalable Vector Graphics|*.svg" });
 		
 	newInput(1, nodeValue_Float("Scale", self, 1));

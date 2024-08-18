@@ -8,16 +8,16 @@ function Node_Time_Remap(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	uniform_min = shader_get_uniform(shader, "vMin");
 	uniform_max = shader_get_uniform(shader, "vMax");
 	
-	inputs[0] = nodeValue_Surface("Surface in", self)
+	newInput(0, nodeValue_Surface("Surface in", self))
 		.rejectArray();
 	
-	inputs[1] = nodeValue_Surface("Map", self)
+	newInput(1, nodeValue_Surface("Map", self))
 		.rejectArray();
 	
-	inputs[2] = nodeValue_Int("Max life",   self, 3)
+	newInput(2, nodeValue_Int("Max life",   self, 3))
 		.rejectArray();
 	
-	inputs[3] = nodeValue_Bool("Loop", self, false)
+	newInput(3, nodeValue_Bool("Loop", self, false))
 	
 	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	

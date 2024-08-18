@@ -3,21 +3,21 @@ function Node_Color_RGB(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	setDimension(96, 48);
 	
-	inputs[0] = nodeValue_Float("Red", self, 1)
+	newInput(0, nodeValue_Float("Red", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Float("Green", self, 1)
+	newInput(1, nodeValue_Float("Green", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setVisible(true, true);
 	
-	inputs[2] = nodeValue_Float("Blue", self, 1)
+	newInput(2, nodeValue_Float("Blue", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setVisible(true, true);
 	
 	newInput(3, nodeValue_Bool("Normalized", self, 1));
 	
-	inputs[4] = nodeValue_Float("Alpha", self, 1)
+	newInput(4, nodeValue_Float("Alpha", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	outputs[0] = nodeValue_Output("Color", self, VALUE_TYPE.color, c_white);

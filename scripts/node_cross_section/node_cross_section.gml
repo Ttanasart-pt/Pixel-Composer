@@ -5,7 +5,7 @@ function Node_Cross_Section(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	newInput(1, nodeValue_Enum_Button("Axis", self,  0 , [ "X", "Y" ]));
 	
-	inputs[2] = nodeValue_Float("Position", self, 0 )
+	newInput(2, nodeValue_Float("Position", self, 0 ))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(3, nodeValue_Bool("Anti Aliasing", self, false ));

@@ -9,10 +9,10 @@ function Node_PB_Fx_Brick(_x, _y, _group = noone) : Node_PB_Fx(_x, _y, _group) c
 	
 	newInput(4, nodeValue_Color("Color", self, c_white ));
 	
-	inputs[5] = nodeValue_Float("Dissolve", self, 0. )
+	newInput(5, nodeValue_Float("Dissolve", self, 0. ))
 		.setDisplay(VALUE_DISPLAY.slider)
 	
-	inputs[6] = nodeValue_Int("Detail", self, 1 )
+	newInput(6, nodeValue_Int("Detail", self, 1 ))
 	
 	newInput(7, nodeValue_Vec2("Dissolve Scale", self, [ 4, 4 ] ));
 		

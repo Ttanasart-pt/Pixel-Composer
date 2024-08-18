@@ -3,27 +3,27 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	newInput(0, nodeValue_Dimension(self));
 	
-	inputs[1] = nodeValue_Vec2("Position", self, [ 0, 0 ])
+	newInput(1, nodeValue_Vec2("Position", self, [ 0, 0 ]))
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	inputs[2] = nodeValue_Vec2("Grid Size", self, [ 8, 8 ])
+	newInput(2, nodeValue_Vec2("Grid Size", self, [ 8, 8 ]))
 		.setMappable(13);
 	
-	inputs[3] = nodeValue_Float("Gap", self, 0.2)
+	newInput(3, nodeValue_Float("Gap", self, 0.2))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 0.5, 0.001] })
 		.setMappable(14);
 	
-	inputs[4] = nodeValue_Rotation("Angle", self, 0)
+	newInput(4, nodeValue_Rotation("Angle", self, 0))
 		.setMappable(15);
 		
-	inputs[5] = nodeValue_Gradient("Tile color", self, new gradientObject(cola(c_white)))
+	newInput(5, nodeValue_Gradient("Tile color", self, new gradientObject(cola(c_white))))
 		.setMappable(20);
 		
 	newInput(6, nodeValue_Color("Gap color",  self, c_black));
 	
 	newInput(7, nodeValue_Surface("Texture", self));
 	
-	inputs[8] = nodeValue_Float("Shift", self, 0)
+	newInput(8, nodeValue_Float("Shift", self, 0))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-0.5, 0.5, 0.01] })
 		.setMappable(16);
 		
@@ -31,7 +31,7 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		
 	newInput(10, nodeValue_Enum_Scroll("Render type", self,  0, ["Colored tile", "Colored tile (Accurate)", "Height map", "Texture grid", "Texture sample"]));
 		
-	inputs[11] = nodeValue_Float("Seed", self, seed_random(6))
+	newInput(11, nodeValue_Float("Seed", self, seed_random(6)))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[11].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
 	newInput(12, nodeValue_Bool("Anti aliasing", self, false));
@@ -48,14 +48,14 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	newInput(18, nodeValue_Int("Truchet seed", self, seed_random()));
 	
-	inputs[19] = nodeValue_Float("Flip horizontal", self, 0.5)
+	newInput(19, nodeValue_Float("Flip horizontal", self, 0.5))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 		newInput(20, nodeValueMap("Gradient map", self));
 	
 		newInput(21, nodeValueGradientRange("Gradient map range", self, inputs[5]));
 	
-	inputs[22] = nodeValue_Float("Flip vertical", self, 0.5)
+	newInput(22, nodeValue_Float("Flip vertical", self, 0.5))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(23, nodeValue_Rotation_Range("Texture angle", self, [ 0, 0 ]));

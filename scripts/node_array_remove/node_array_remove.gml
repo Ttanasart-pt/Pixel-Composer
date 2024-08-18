@@ -2,18 +2,18 @@ function Node_Array_Remove(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	name = "Array Remove";
 	setDimension(96, 32 + 24);
 	
-	inputs[0] = nodeValue("Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0)
+	newInput(0, nodeValue("Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0))
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Enum_Button("Type", self,  0, [ "Index", "Value" ])
+	newInput(1, nodeValue_Enum_Button("Type", self,  0, [ "Index", "Value" ]))
 		.rejectArray();
 	
 	newInput(2, nodeValue_Int("Index", self, 0));
 	
-	inputs[3] = nodeValue("Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0)
+	newInput(3, nodeValue("Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0))
 		.setVisible(true, true);
 	
-	inputs[4] = nodeValue_Bool("Spread array", self, false )
+	newInput(4, nodeValue_Bool("Spread array", self, false ))
 		.rejectArray();
 		
 	outputs[0] = nodeValue_Output("Array", self, VALUE_TYPE.any, 0);

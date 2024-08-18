@@ -4,7 +4,7 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	newInput(0, nodeValue_Surface("Surface in", self));
 	
-	inputs[1] = nodeValue_Padding("Crop", self, [ 0, 0, 0, 0 ])
+	newInput(1, nodeValue_Padding("Crop", self, [ 0, 0, 0, 0 ]))
 		.setUnitRef(function(index) { return getDimension(index); });
 	
 	newInput(2, nodeValue_Bool("Active", self, true));
@@ -14,7 +14,7 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		
 	newInput(4, nodeValue_Vec2("Ratio", self, [ 1, 1 ]));
 	
-	inputs[5] = nodeValue_Vec2("Center", self, [ .5, .5 ])
+	newInput(5, nodeValue_Vec2("Center", self, [ .5, .5 ]))
 		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
 		
 	newInput(6, nodeValue_Float("Width", self, 8 ));

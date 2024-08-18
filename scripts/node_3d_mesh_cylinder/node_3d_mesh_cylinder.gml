@@ -3,16 +3,16 @@ function Node_3D_Mesh_Cylinder(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _g
 	
 	object_class = __3dCylinder;
 	
-	inputs[in_mesh + 0] = nodeValue_Int("Side", self, 8 )
+	newInput(in_mesh + 0, nodeValue_Int("Side", self, 8 ))
 		.setValidator(VV_min(3));
 	
-	inputs[in_mesh + 1] = nodeValue_D3Material("Material Top", self, new __d3dMaterial())
+	newInput(in_mesh + 1, nodeValue_D3Material("Material Top", self, new __d3dMaterial()))
 		.setVisible(true, true);
 	
-	inputs[in_mesh + 2] = nodeValue_D3Material("Material Bottom", self, new __d3dMaterial())
+	newInput(in_mesh + 2, nodeValue_D3Material("Material Bottom", self, new __d3dMaterial()))
 		.setVisible(true, true);
 	
-	inputs[in_mesh + 3] = nodeValue_D3Material("Material Side", self, new __d3dMaterial())
+	newInput(in_mesh + 3, nodeValue_D3Material("Material Side", self, new __d3dMaterial()))
 		.setVisible(true, true);
 	
 	newInput(in_mesh + 4, nodeValue_Bool("Smooth Side", self, false ));

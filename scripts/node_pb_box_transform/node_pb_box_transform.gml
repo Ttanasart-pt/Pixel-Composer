@@ -1,7 +1,7 @@
 function Node_PB_Box_Transform(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _group) constructor {
 	name = "Transform";
 	
-	inputs[1] = nodeValue("pBox", self, JUNCTION_CONNECT.input, VALUE_TYPE.pbBox, noone )
+	newInput(1, nodeValue("pBox", self, JUNCTION_CONNECT.input, VALUE_TYPE.pbBox, noone ))
 		.setVisible(true, true);
 		
 	newInput(2, nodeValue_Vec2("Translate", self, [ 0, 0 ] ));

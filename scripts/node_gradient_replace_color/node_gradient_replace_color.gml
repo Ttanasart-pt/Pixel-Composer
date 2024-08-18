@@ -2,14 +2,14 @@ function Node_Gradient_Replace_Color(_x, _y, _group = noone) : Node_Processor(_x
 	name = "Gradient Replace";
 	setDimension(96, 48);;
 	
-	inputs[0] = nodeValue_Gradient("Gradient", self, new gradientObject(cola(c_white)))
+	newInput(0, nodeValue_Gradient("Gradient", self, new gradientObject(cola(c_white))))
 		.setVisible(true, true);
 	
 	newInput(1, nodeValue_Palette("Color from", self, array_clone(DEF_PALETTE)));
 	
 	newInput(2, nodeValue_Palette("Color to", self, array_clone(DEF_PALETTE)));
 	
-	inputs[3] = nodeValue_Float("Threshold", self, 0.1)
+	newInput(3, nodeValue_Float("Threshold", self, 0.1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	outputs[0] = nodeValue_Output("Gradient", self, VALUE_TYPE.gradient, new gradientObject(cola(c_white)) );

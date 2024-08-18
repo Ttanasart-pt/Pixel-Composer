@@ -11,10 +11,10 @@ function Node_MK_GridBalls(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	newInput(4, nodeValue_Float("Scatter", self, 0));
 	
-	inputs[5] = nodeValue_Int("Seed", self, seed_random(6))
+	newInput(5, nodeValue_Int("Seed", self, seed_random(6)))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[5].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 		
-	inputs[6] = nodeValue_Float("Shading", self, 0.5)
+	newInput(6, nodeValue_Float("Shading", self, 0.5))
 		.setDisplay(VALUE_DISPLAY.slider);
 		
 	newInput(7, nodeValue_Rotation("Scatter direction", self, 0));
@@ -25,17 +25,17 @@ function Node_MK_GridBalls(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	newInput(10, nodeValue_Rotation("Stretch direction", self, 0));
 		
-	inputs[11] = nodeValue_Float("Stretch shift", self, 0)
+	newInput(11, nodeValue_Float("Stretch shift", self, 0))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] });
 	
-	inputs[12] = nodeValue_Float("Roundness", self, 1)
+	newInput(12, nodeValue_Float("Roundness", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(13, nodeValue_Float("Twist", self, 0));
 	
 	newInput(14, nodeValue_Rotation("Twist axis", self, 0));
 		
-	inputs[15] = nodeValue_Float("Twist shift", self, 0)
+	newInput(15, nodeValue_Float("Twist shift", self, 0))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] });
 		
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 5, 1, 

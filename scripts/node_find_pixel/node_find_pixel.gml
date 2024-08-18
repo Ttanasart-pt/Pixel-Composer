@@ -6,14 +6,14 @@ function Node_Find_Pixel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	newInput(1, nodeValue_Color("Search color", self, c_black));
 	
-	inputs[2] = nodeValue_Float("Tolerance", self, 0)
+	newInput(2, nodeValue_Float("Tolerance", self, 0))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(3, nodeValue_Bool("Find all", self, false));
 	
 	newInput(4, nodeValue_Bool("Include alpha", self, false));
 	
-	inputs[5] = nodeValue_Float("Alpha tolerance", self, 0.2)
+	newInput(5, nodeValue_Float("Alpha tolerance", self, 0.2))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	// newInput(6, nodeValue_Enum_Button("Axis", self,  1, [ "X", "Y" ]));

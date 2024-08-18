@@ -2,12 +2,12 @@ function Node_Array_Set(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	name = "Array Set";
 	setDimension(96, 32 + 24);
 	
-	inputs[0] = nodeValue("Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0)
+	newInput(0, nodeValue("Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0))
 		.setVisible(true, true);
 	
 	newInput(1, nodeValue_Int("Index", self, 0));
 	
-	inputs[2] = nodeValue("Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0)
+	newInput(2, nodeValue("Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0))
 		.setVisible(true, true);
 	
 	outputs[0] = nodeValue_Output("Array", self, VALUE_TYPE.any, 0);

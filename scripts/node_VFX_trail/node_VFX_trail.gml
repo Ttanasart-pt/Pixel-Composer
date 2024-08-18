@@ -10,7 +10,7 @@ function Node_VFX_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	lineLength = [];
 	lineData   = [];
 	
-	inputs[0] = nodeValue_Particle("Particles", self, -1 )
+	newInput(0, nodeValue_Particle("Particles", self, -1 ))
 		.setVisible(true, true);
 	
 	newInput(1, nodeValue_Int("Life", self, 4 ));

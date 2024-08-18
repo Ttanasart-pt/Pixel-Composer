@@ -156,13 +156,13 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	newInput(0, nodeValue_Surface("Surface in", self));
 	
-	inputs[1] = nodeValue_Int("Sample", self, 8, "Amount of grid subdivision. Higher number means more grid, detail.")
+	newInput(1, nodeValue_Int("Sample", self, 8, "Amount of grid subdivision. Higher number means more grid, detail."))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 2, 32, 0.1 ] });
 	
-	inputs[2] = nodeValue_Float("Spring Force", self, 0.5)
+	newInput(2, nodeValue_Float("Spring Force", self, 0.5))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[3] = nodeValue_Trigger("Mesh", self, false )
+	newInput(3, nodeValue_Trigger("Mesh", self, false ))
 		.setDisplay(VALUE_DISPLAY.button, { name: "Generate", UI : true, onClick: function() { Mesh_setTriangle(); } });
 	
 	newInput(4, nodeValue_Bool("Diagonal Link", self, false, "Include diagonal link to prevent drastic grid deformation."));
@@ -170,7 +170,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput(5, nodeValue_Bool("Active", self, true));
 		active_index = 5;
 	
-	inputs[6] = nodeValue_Float("Link Strength", self, 0, "Link length preservation, setting it to 1 will prevent any stretching, contraction.")
+	newInput(6, nodeValue_Float("Link Strength", self, 0, "Link length preservation, setting it to 1 will prevent any stretching, contraction."))
 		.setDisplay(VALUE_DISPLAY.slider);
 		
 	newInput(7, nodeValue_Bool("Full Mesh", self, false));
@@ -178,7 +178,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	inputs[8] = nodeValue_Enum_Scroll("Mesh Type", self,  0, [ new scrollItem("Grid",   s_node_mesh_type, 0), 
 												 new scrollItem("Custom", s_node_mesh_type, 1), ] );
 	
-	inputs[9] = nodeValue_Int("Seed", self, seed_random(6))
+	newInput(9, nodeValue_Int("Seed", self, seed_random(6)))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[9].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -197,7 +197,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	function createControl() { #region
 		var index = array_length(inputs);
-		inputs[index] = nodeValue_Float("Control point", self, [ PUPPET_FORCE_MODE.move, 16, 16, 8, 0, 8, 8 ])
+		newInput(index, nodeValue_Float("Control point", self, [ PUPPET_FORCE_MODE.move, 16, 16, 8, 0, 8, 8 ]))
 			.setDisplay(VALUE_DISPLAY.puppet_control)
 		
 		array_push(input_display_list, index);

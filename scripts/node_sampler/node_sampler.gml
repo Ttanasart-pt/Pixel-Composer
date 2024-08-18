@@ -4,10 +4,10 @@ function Node_Sampler(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	newInput(0, nodeValue_Surface("Surface in", self));
 	
-	inputs[1] = nodeValue_Vec2("Position", self, [ 0, 0 ])
+	newInput(1, nodeValue_Vec2("Position", self, [ 0, 0 ]))
 		.setUnitRef(function(index) { return getDimension(index); });
 		
-	inputs[2] = nodeValue_Int("Sampling size", self, 1, "Size of square around the position to sample and average pixel color.")
+	newInput(2, nodeValue_Int("Sampling size", self, 1, "Size of square around the position to sample and average pixel color."))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 3, 0.1] });
 	
 	newInput(3, nodeValue_Bool("Alpha", self, false));

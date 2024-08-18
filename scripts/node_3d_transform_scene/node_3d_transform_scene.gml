@@ -1,16 +1,16 @@
 function Node_3D_Transform_Scene(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constructor {
 	name = "Transform Scene";
 	
-	inputs[0] = nodeValue_D3Scene("Scene", self, noone)
+	newInput(0, nodeValue_D3Scene("Scene", self, noone))
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Float("Position", self, [])
+	newInput(1, nodeValue_Float("Position", self, []))
 		.setArrayDepth(2);
 	
-	inputs[2] = nodeValue_Float("Rotation", self, [])
+	newInput(2, nodeValue_Float("Rotation", self, []))
 		.setArrayDepth(2);
 	
-	inputs[3] = nodeValue_Float("Scale", self, [])
+	newInput(3, nodeValue_Float("Scale", self, []))
 		.setArrayDepth(2);
 		
 	newInput(4, nodeValue_Enum_Scroll("Positioning type", self, 0, [ "Additive", "Override" ]));

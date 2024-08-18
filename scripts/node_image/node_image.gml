@@ -26,7 +26,7 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Image";
 	color = COLORS.node_blend_input;
 	
-	inputs[0]  = nodeValue_Path("Path", self, "")
+	newInput(0, nodeValue_Path("Path", self, ""))
 		.setDisplay(VALUE_DISPLAY.path_load, { filter: "image|*.png;*.jpg" });
 		
 	newInput(1, nodeValue_Padding("Padding", self, [0, 0, 0, 0]));

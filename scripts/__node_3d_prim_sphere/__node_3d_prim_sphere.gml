@@ -3,12 +3,12 @@ function __Node_3D_Sphere(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	batch_output = false;
 	dimension_index = 1;
 	
-	inputs[0] = nodeValue_Vec2("Subdivisions", self, [8, 4])
+	newInput(0, nodeValue_Vec2("Subdivisions", self, [8, 4]))
 		.setTooltip("Amount of polygon in X and Y axis.");
 	
 	newInput(1, nodeValue_Dimension(self));
 	
-	inputs[2] = nodeValue_Vec2("Render position", self, [ 0.5, 0.5 ])
+	newInput(2, nodeValue_Vec2("Render position", self, [ 0.5, 0.5 ]))
 		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
 	
 	newInput(3, nodeValue_Vec3("Render rotation", self, [ 0, 0, 0 ]));
@@ -21,10 +21,10 @@ function __Node_3D_Sphere(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	newInput(7, nodeValue_Rotation("Light direction", self, 0));
 		
-	inputs[8] = nodeValue_Float("Light height", self, 0.5)
+	newInput(8, nodeValue_Float("Light height", self, 0.5))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-1, 1, 0.01] });
 		
-	inputs[9] = nodeValue_Float("Light intensity", self, 1)
+	newInput(9, nodeValue_Float("Light intensity", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(10, nodeValue_Color("Light color", self, c_white));
@@ -34,13 +34,13 @@ function __Node_3D_Sphere(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		
 	newInput(13, nodeValue_Vec3("Object position", self, [ 0, 0, 0 ]));
 	
-	inputs[14] = nodeValue_Enum_Button("Projection", self,  0, [ "Orthographic", "Perspective" ])
+	newInput(14, nodeValue_Enum_Button("Projection", self,  0, [ "Orthographic", "Perspective" ]))
 		.rejectArray();
 		
-	inputs[15] = nodeValue_Float("Field of view", self, 60)
+	newInput(15, nodeValue_Float("Field of view", self, 60))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 1, 90, 0.1 ] });
 	
-	inputs[16] = nodeValue_Bool("Scale view with dimension", self, true)
+	newInput(16, nodeValue_Bool("Scale view with dimension", self, true))
 	
 	input_display_list = [
 		["Output",				false], 1, 16, 

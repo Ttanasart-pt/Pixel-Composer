@@ -29,11 +29,11 @@ function Node_CSV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	w = 128;
 	
-	inputs[0]  = nodeValue_Path("Path", self, "")
+	newInput(0, nodeValue_Path("Path", self, ""))
 		.setDisplay(VALUE_DISPLAY.path_load, { filter: "CSV file|*.csv" })
 		.rejectArray();
 		
-	inputs[1]  = nodeValue_Bool("Convert to number", self, false)
+	newInput(1, nodeValue_Bool("Convert to number", self, false))
 		.rejectArray();
 	
 	outputs[0] = nodeValue_Output("Content", self, VALUE_TYPE.text, "");

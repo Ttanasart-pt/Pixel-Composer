@@ -8,7 +8,7 @@ function Node_Smoke_Render_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 	
 	manual_ungroupable	 = false;
 	
-	inputs[0] = nodeValue("Domain", self, JUNCTION_CONNECT.input, VALUE_TYPE.sdomain, noone)
+	newInput(0, nodeValue("Domain", self, JUNCTION_CONNECT.input, VALUE_TYPE.sdomain, noone))
 		.setVisible(true, true);
 	
 	newInput(1, nodeValue_Dimension(self));

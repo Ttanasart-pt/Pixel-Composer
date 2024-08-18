@@ -40,10 +40,10 @@ function Node_Compare(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 												 new scrollItem("Lesser",			s_node_condition_type, 2), 
 												 new scrollItem("Lesser or equal",	s_node_condition_type, 3), ]);
 	
-	inputs[1] = nodeValue_Float("a", self, 0)
+	newInput(1, nodeValue_Float("a", self, 0))
 		.setVisible(true, true);
 		
-	inputs[2] = nodeValue_Float("b", self, 0)
+	newInput(2, nodeValue_Float("b", self, 0))
 		.setVisible(true, true);
 	
 	outputs[0] = nodeValue_Output("Result", self, VALUE_TYPE.boolean, false);

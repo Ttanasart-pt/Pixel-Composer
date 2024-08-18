@@ -14,17 +14,17 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	newInput(0, nodeValue_Dimension(self));
 	
-	inputs[1] = nodeValue_Armature("Armature", self, noone)
+	newInput(1, nodeValue_Armature("Armature", self, noone))
 		.setVisible(true, true)
 		.rejectArray();
 		
-	inputs[2] = nodeValue_Struct("Bind data", self, noone)
+	newInput(2, nodeValue_Struct("Bind data", self, noone))
 		.setVisible(true, true)
 		.setArrayDepth(1); 
 		
 	newInput(3, nodeValue_Vec2("Bone transform", self, [ 0, 0 ]));
 		
-	inputs[4] = nodeValue_Float("Bone scale", self, 1)
+	newInput(4, nodeValue_Float("Bone scale", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0.1, 2, 0.01 ] });
 	
 	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
@@ -400,7 +400,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		inputs[index + 0].hover_effect  = 0;
 		inputs[index + 0].display_data.bone_id = "";
 		
-		inputs[index + 1] = nodeValue_Float("Transform", self, [ 0, 0, 0, 1, 1 ] )
+		newInput(index + 1, nodeValue_Float("Transform", self, [ 0, 0, 0, 1, 1 ] ))
 			.setDisplay(VALUE_DISPLAY.transform);
 		newInput(index + 2, nodeValue_Bool("Inherit Rotation", self, true ));
 		newInput(index + 3, nodeValue_Bool("Apply Bone Rotation", self, false ));

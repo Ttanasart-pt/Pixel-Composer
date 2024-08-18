@@ -9,7 +9,7 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	newInput(3, nodeValue_Bool("Fill", self, true));
 	
-	inputs[4] = nodeValue_Int("Seed", self, seed_random(6))
+	newInput(4, nodeValue_Int("Seed", self, seed_random(6)))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[4].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
 	newInput(5, nodeValue_Color("Target Color", self, c_white));

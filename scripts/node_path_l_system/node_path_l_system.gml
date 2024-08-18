@@ -28,7 +28,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	newInput(6, nodeValue_Rotation("Starting Angle", self, 90));
 	
-	inputs[7] = nodeValue_Int("Seed", self, seed_random(6))
+	newInput(7, nodeValue_Int("Seed", self, seed_random(6)))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[7].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
 	static createNewInput = function() {

@@ -16,7 +16,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	newInput(1, nodeValue_Dimension(self));
 	
-	inputs[2] = nodeValue_Int("Amount", self, 8)
+	newInput(2, nodeValue_Int("Amount", self, 8))
 		.setValidator(VV_min(0));
 	
 	newInput(3, nodeValue_Vec2_Range("Scale", self, [ 1, 1, 1, 1 ] , { linked : true }));
@@ -24,7 +24,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(4, nodeValue_Rotation_Random("Angle", self, [ 0, 0, 0, 0, 0 ] ));
 	
 	onSurfaceSize = function() { return getInputData(1, DEF_SURF); };
-	inputs[5] = nodeValue_Area("Area", self, DEF_AREA_REF, { onSurfaceSize })
+	newInput(5, nodeValue_Area("Area", self, DEF_AREA_REF, { onSurfaceSize }))
 		.setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
 	
 	newInput(6, nodeValue_Enum_Scroll("Distribution", self,  5, [ "Area", "Border", "Map", "Direct Data", "Path", "Full image + Tile" ]));
@@ -35,10 +35,10 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	newInput(9, nodeValue_Enum_Button("Scatter", self,  1, [ "Uniform", "Random" ]));
 	
-	inputs[10] = nodeValue_Float("Seed", self, seed_random(6))
+	newInput(10, nodeValue_Float("Seed", self, seed_random(6)))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[10].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
-	inputs[11] = nodeValue_Gradient("Random blend", self, new gradientObject(cola(c_white)))
+	newInput(11, nodeValue_Gradient("Random blend", self, new gradientObject(cola(c_white))))
 		.setMappable(28);
 	
 	newInput(12, nodeValue_Slider_Range("Alpha", self, [ 1, 1 ]));
@@ -55,7 +55,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 	newInput(16, nodeValue_Bool("Multiply alpha", self, true));
 		
-	inputs[17] = nodeValue_Text("Use value", self, [ "Scale" ], "Apply the third value in each data point (if exist) on given properties.")
+	newInput(17, nodeValue_Text("Use value", self, [ "Scale" ], "Apply the third value in each data point (if exist) on given properties."))
 		.setDisplay(VALUE_DISPLAY.text_array, { data: [ "Scale",  "Rotation", "Color" ] });
 		
 	newInput(18, nodeValue_Enum_Scroll("Blend mode", self,  0, [ "Normal", "Add", "Max" ]));
@@ -64,14 +64,14 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 	newInput(20, nodeValue_Bool("Rotate along path", self, true));
 		
-	inputs[21] = nodeValue_Float("Path Shift", self, 0)
+	newInput(21, nodeValue_Float("Path Shift", self, 0))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(22, nodeValue_Float("Scatter Distance", self, 0));
 	
 	newInput(23, nodeValue_Bool("Sort Y", self, false));
 	
-	inputs[24] = nodeValue_Int("Array indices", self, [])
+	newInput(24, nodeValue_Int("Array indices", self, []))
 		.setArrayDepth(1);
 	
 	newInput(25, nodeValue_Surface("Array texture", self));
@@ -102,7 +102,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	newInput(36, nodeValue_Vec2("Shift position", self, [ 0, 0 ]));
 	
-	inputs[37] = nodeValue_Bool("Exact", self,  false)
+	newInput(37, nodeValue_Bool("Exact", self,  false))
 	
 	newInput(38, nodeValue_Enum_Button("Spacing", self,   0, [ "After", "Between", "Around" ]));
 	

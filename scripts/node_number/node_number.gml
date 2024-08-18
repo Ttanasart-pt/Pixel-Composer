@@ -19,7 +19,7 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	rotator_p = 0;
 	rotator_m = 0;
 	
-	inputs[0] = nodeValue_Float("Value", self, 0)
+	newInput(0, nodeValue_Float("Value", self, 0))
 		.setVisible(true, true);
 	
 	newInput(1, nodeValue_Bool("Integer", self, false));

@@ -6,7 +6,7 @@ function Node_FLIP_Update(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	manual_ungroupable = false;
 	
-	inputs[0] = nodeValue_Fdomain("Domain", self, noone)
+	newInput(0, nodeValue_Fdomain("Domain", self, noone))
 		.setVisible(true, true);
 	
 	newInput(1, nodeValue_Bool("Update", self, true));

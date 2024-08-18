@@ -5,7 +5,7 @@ function Node_Anim_Curve(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	setDimension(96, 48);
 	
 	newInput(0, nodeValue("Curve",   self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_01));
-	inputs[1] = nodeValue_Float("Progress", self, 0)
+	newInput(1, nodeValue_Float("Progress", self, 0))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(2, nodeValue_Float("Minimum", self, 0));

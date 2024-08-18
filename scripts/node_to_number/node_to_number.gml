@@ -4,7 +4,7 @@ function Node_To_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	setDimension(96, 48);
 	
-	inputs[0] = nodeValue_Text("Text", self, "")
+	newInput(0, nodeValue_Text("Text", self, ""))
 		.setVisible(true, true);
 	
 	outputs[0] = nodeValue_Output("Number", self, VALUE_TYPE.float, 0);

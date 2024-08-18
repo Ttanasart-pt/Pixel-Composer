@@ -7,32 +7,32 @@ function Node_RM_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	newInput(2, nodeValue_Vec3("Rotation", self, [ 0, 0, 0 ]));
 	
-	inputs[3] = nodeValue_Float("Scale", self, 1)
+	newInput(3, nodeValue_Float("Scale", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01 ] });
 	
-	inputs[4] = nodeValue_Float("FOV", self, 30)
+	newInput(4, nodeValue_Float("FOV", self, 30))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 90, 1 ] });
 	
 	newInput(5, nodeValue_Vec2("View Range", self, [ 0, 6 ]));
 	
-	inputs[6] = nodeValue_Float("Density", self, 0.5)
+	newInput(6, nodeValue_Float("Density", self, 0.5))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(7, nodeValue_Int("Detail", self, 8));
 	
-	inputs[8] = nodeValue_Float("Threshold", self, 0.4)
+	newInput(8, nodeValue_Float("Threshold", self, 0.4))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(9, nodeValue_Float("Detail Scaling", self, 2.));
 	
-	inputs[10] = nodeValue_Float("Detail Attenuation", self, 0.5)
+	newInput(10, nodeValue_Float("Detail Attenuation", self, 0.5))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(11, nodeValue_Enum_Scroll("Shape", self,  0, [ "Volume", "Plane" ]));
 	
-	inputs[12] = nodeValue_Bool("Use Fog", self, 0)
+	newInput(12, nodeValue_Bool("Use Fog", self, 0))
 	
-	inputs[13] = nodeValue_Gradient("Colors", self, new gradientObject([ cola(c_black), cola(c_white) ]))
+	newInput(13, nodeValue_Gradient("Colors", self, new gradientObject([ cola(c_black), cola(c_white) ])))
 	
 	outputs[0] = nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone);
 	

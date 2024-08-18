@@ -3,24 +3,24 @@ function Node_RD(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	newInput(0, nodeValue_Surface("Seed", self));
 	
-	inputs[1] = nodeValue_Float("Kill rate", self, 0.058)
+	newInput(1, nodeValue_Float("Kill rate", self, 0.058))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 0.1, 0.001] })
 		.setMappable(8);
 	
-	inputs[2] = nodeValue_Float("Feed rate", self, 0.043)
+	newInput(2, nodeValue_Float("Feed rate", self, 0.043))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 0.1, 0.001] })
 		.setMappable(9);
 	
-	inputs[3] = nodeValue_Float("Timestep", self, 1)
+	newInput(3, nodeValue_Float("Timestep", self, 1))
 		.setMappable(10);
 	
 	newInput(4, nodeValue_Int("Iteration", self, 16));
 	
-	inputs[5] = nodeValue_Float("Diffusion A", self, 1.)
+	newInput(5, nodeValue_Float("Diffusion A", self, 1.))
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(11);
 	
-	inputs[6] = nodeValue_Float("Diffusion B", self, .2)
+	newInput(6, nodeValue_Float("Diffusion B", self, .2))
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(12);
 	
@@ -28,24 +28,24 @@ function Node_RD(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[8] = nodeValue_Surface("Kill map", self)
+	newInput(8, nodeValue_Surface("Kill map", self))
 		.setVisible(false, false);
 	
-	inputs[9] = nodeValue_Surface("Feed map", self)
+	newInput(9, nodeValue_Surface("Feed map", self))
 		.setVisible(false, false);
 	
-	inputs[10] = nodeValue_Surface("Time map", self)
+	newInput(10, nodeValue_Surface("Time map", self))
 		.setVisible(false, false);
 	
-	inputs[11] = nodeValue_Surface("DfA map", self)
+	newInput(11, nodeValue_Surface("DfA map", self))
 		.setVisible(false, false);
 	
-	inputs[12] = nodeValue_Surface("DfB map", self)
+	newInput(12, nodeValue_Surface("DfB map", self))
 		.setVisible(false, false);
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[13] = nodeValue_Float("Diffusion", self, 1.)
+	newInput(13, nodeValue_Float("Diffusion", self, 1.))
 		.setDisplay(VALUE_DISPLAY.slider)
 		
 	outputs[0] = nodeValue_Output("Reacted", self, VALUE_TYPE.surface, noone);

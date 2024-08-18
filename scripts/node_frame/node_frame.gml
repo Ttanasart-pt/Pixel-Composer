@@ -34,21 +34,21 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	draw_y1 = 0;
 	
 	
-	inputs[0] = nodeValue_Vec2("Size", self, [ 240, 160 ] )
+	newInput(0, nodeValue_Vec2("Size", self, [ 240, 160 ] ))
 		.rejectArray();
 	
-	inputs[1] = nodeValue_Color("Color", self, cola(c_white) )
+	newInput(1, nodeValue_Color("Color", self, cola(c_white) ))
 		.rejectArray();
 	
-	inputs[2] = nodeValue_Float("Alpha", self, 0.75 )
+	newInput(2, nodeValue_Float("Alpha", self, 0.75 ))
 		.setDisplay(VALUE_DISPLAY.slider)
 		.rejectArray();
 	
-	inputs[3] = nodeValue_Float("Label size", self, global.__FRAME_LABEL_SCALE )
+	newInput(3, nodeValue_Float("Label size", self, global.__FRAME_LABEL_SCALE ))
 		.setDisplay(VALUE_DISPLAY.slider)
 		.rejectArray();
 		
-	inputs[4] = nodeValue_Float("Blend label", self, 0 )
+	newInput(4, nodeValue_Float("Blend label", self, 0 ))
 		.setDisplay(VALUE_DISPLAY.slider)
 		.rejectArray();
 	

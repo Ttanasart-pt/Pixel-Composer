@@ -5,17 +5,17 @@ function Node_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	newInput(1, nodeValue_Surface("Displace map", self));
 	
-	inputs[2] = nodeValue_Vec2("Position", self, [ 1, 0 ] )
+	newInput(2, nodeValue_Vec2("Position", self, [ 1, 0 ] ))
 		.setTooltip("Vector to displace pixel by.")
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	inputs[3] = nodeValue_Float("Strength",   self, 1)
+	newInput(3, nodeValue_Float("Strength",   self, 1))
 		.setMappable(15);
 	
-	inputs[4] = nodeValue_Float("Mid value",  self, 0., "Brightness value to be use as a basis for 'no displacement'.")
+	newInput(4, nodeValue_Float("Mid value",  self, 0., "Brightness value to be use as a basis for 'no displacement'."))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[5] = nodeValue_Enum_Button("Mode", self, 0, [ "Linear", "Vector", "Angle", "Gradient" ])
+	newInput(5, nodeValue_Enum_Button("Mode", self, 0, [ "Linear", "Vector", "Angle", "Gradient" ]))
 		.setTooltip(@"Use color data for extra information.
     - Linear: Displace along a single line (defined by the position value).
     - Vector: Use red as X displacement, green as Y displacement.
@@ -25,12 +25,12 @@ function Node_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	inputs[6] = nodeValue_Bool("Iterate",  self, false, @"If not set, then strength value is multiplied directly to the displacement.
 If set, then strength value control how many times the effect applies on itself.");
 	
-	inputs[7] = nodeValue_Enum_Scroll("Oversample mode", self,  0, [ "Empty", "Clamp", "Repeat" ])
+	newInput(7, nodeValue_Enum_Scroll("Oversample mode", self,  0, [ "Empty", "Clamp", "Repeat" ]))
 		.setTooltip("How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.");
 	
 	newInput(8, nodeValue_Surface("Mask", self));
 	
-	inputs[9] = nodeValue_Float("Mix", self, 1)
+	newInput(9, nodeValue_Float("Mix", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(10, nodeValue_Bool("Active", self, true));
@@ -44,7 +44,7 @@ If set, then strength value control how many times the effect applies on itself.
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[15] = nodeValue_Surface("Strength map",   self)
+	newInput(15, nodeValue_Surface("Strength map",   self))
 		.setVisible(false, false);
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////

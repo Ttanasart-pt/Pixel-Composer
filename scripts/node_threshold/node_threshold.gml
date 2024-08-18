@@ -5,16 +5,16 @@ function Node_Threshold(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	newInput(1, nodeValue_Bool("Brightness", self, false));
 		
-	inputs[2] = nodeValue_Float("Brightness Threshold", self, 0.5)
+	newInput(2, nodeValue_Float("Brightness Threshold", self, 0.5))
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(13);
 		
-	inputs[3] = nodeValue_Float("Brightness Smoothness", self, 0)
+	newInput(3, nodeValue_Float("Brightness Smoothness", self, 0))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(4, nodeValue_Surface("Mask", self));
 	
-	inputs[5] = nodeValue_Float("Mix", self, 1)
+	newInput(5, nodeValue_Float("Mix", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(6, nodeValue_Bool("Active", self, true));
@@ -22,11 +22,11 @@ function Node_Threshold(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	newInput(7, nodeValue_Bool("Alpha", self, false));
 	
-	inputs[8] = nodeValue_Float("Alpha Threshold", self, 0.5)
+	newInput(8, nodeValue_Float("Alpha Threshold", self, 0.5))
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(14);
 		
-	inputs[9] = nodeValue_Float("Alpha Smoothness", self, 0)
+	newInput(9, nodeValue_Float("Alpha Smoothness", self, 0))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(10, nodeValue_Toggle("Channel", self, 0b1111, { data: array_create(4, THEME.inspector_channel) }));

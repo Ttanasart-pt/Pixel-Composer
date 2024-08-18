@@ -3,7 +3,7 @@ function Node_3D_Instancer(_x, _y, _group = noone) : Node_3D_Modifier(_x, _y, _g
 	
 	newInput(in_mesh + 0, nodeValue_Int("Amounts", self, 1));
 	
-	inputs[in_mesh + 1] = nodeValue_Vec3("Positions", self, [ 0, 0, 0 ])
+	newInput(in_mesh + 1, nodeValue_Vec3("Positions", self, [ 0, 0, 0 ]))
 		.setArrayDepth(1);
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) {

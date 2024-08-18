@@ -3,7 +3,7 @@ function Node_Path_Profile(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	newInput(0, nodeValue_Dimension(self));
 	
-	inputs[1] = nodeValue_PathNode("Path", self, noone )
+	newInput(1, nodeValue_PathNode("Path", self, noone ))
 		.setVisible(true, true);
 	
 	newInput(2, nodeValue_Int("Resolution", self, 64 ));

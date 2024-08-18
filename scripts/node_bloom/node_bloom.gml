@@ -2,20 +2,20 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	name = "Bloom";
 	
 	newInput(0, nodeValue_Surface("Surface in", self));
-	inputs[1] = nodeValue_Float("Size", self, 3, "Bloom blur radius.")
+	newInput(1, nodeValue_Float("Size", self, 3, "Bloom blur radius."))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 32, 0.1] });
 	
-	inputs[2] = nodeValue_Float("Tolerance", self, 0.5, "How bright a pixel should be to start blooming.")
+	newInput(2, nodeValue_Float("Tolerance", self, 0.5, "How bright a pixel should be to start blooming."))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[3] = nodeValue_Float("Strength", self, .25, "Blend intensity.")
+	newInput(3, nodeValue_Float("Strength", self, .25, "Blend intensity."))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 2, 0.01] });
 		
 	newInput(4, nodeValue_Surface("Bloom mask", self));
 	
 	newInput(5, nodeValue_Surface("Mask", self));
 	
-	inputs[6] = nodeValue_Float("Mix", self, 1)
+	newInput(6, nodeValue_Float("Mix", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(7, nodeValue_Bool("Active", self, true));
@@ -25,14 +25,14 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	__init_mask_modifier(5); // inputs 9, 10
 	
-	inputs[11] = nodeValue_Float("Aspect Ratio", self, 1)
+	newInput(11, nodeValue_Float("Aspect Ratio", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(12, nodeValue_Rotation("Direction", self, 0));
 	
 	newInput(13, nodeValue_Enum_Scroll("Types", self, 0, [ "Gaussian", "Zoom" ]));
 	
-	inputs[14] = nodeValue_Vec2("Zoom Origin", self, [ 0.5, 0.5 ])
+	newInput(14, nodeValue_Vec2("Zoom Origin", self, [ 0.5, 0.5 ]))
 		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
 		
 	input_display_list = [ 7, 8, 

@@ -7,7 +7,7 @@ function Node_3D_Scene(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constru
 	
 	static createNewInput = function() {
 		var index = array_length(inputs);
-		inputs[index] = nodeValue_D3Mesh("Object", self, noone)
+		newInput(index, nodeValue_D3Mesh("Object", self, noone))
 			.setVisible(true, true);
 		
 		return inputs[index];

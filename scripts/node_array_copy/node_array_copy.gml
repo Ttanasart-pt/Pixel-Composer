@@ -2,7 +2,7 @@ function Node_Array_Copy(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	name = "Array Copy";
 	setDimension(96, 32 + 24);
 	
-	inputs[0] = nodeValue("Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0)
+	newInput(0, nodeValue("Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0))
 		.setArrayDepth(1)
 		.setVisible(true, true);
 	

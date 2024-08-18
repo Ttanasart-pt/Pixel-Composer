@@ -1,10 +1,10 @@
 function Node_3D_Mesh_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Mesh Export";
 	
-	inputs[0] = nodeValue_D3Mesh("Mesh", self, noone)
+	newInput(0, nodeValue_D3Mesh("Mesh", self, noone))
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Path("Paths",   self, "")
+	newInput(1, nodeValue_Path("Paths",   self, ""))
 		.setDisplay(VALUE_DISPLAY.path_save, { filter: "Obj (.obj)|*.obj" })
 		.setVisible(true);
 	

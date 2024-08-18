@@ -5,22 +5,22 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	setDimension(96, 48);
 	
 	onSurfaceSize = function() { return getInputData(7, DEF_SURF); };
-	inputs[0] = nodeValue_Area("Point area", self, DEF_AREA_REF, { onSurfaceSize } )
+	newInput(0, nodeValue_Area("Point area", self, DEF_AREA_REF, { onSurfaceSize } ))
 		.setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
 	
-	inputs[1] = nodeValue_Enum_Button("Point distribution", self,  0, [ "Area", "Border", "Map" ])
+	newInput(1, nodeValue_Enum_Button("Point distribution", self,  0, [ "Area", "Border", "Map" ]))
 		.rejectArray();
 	
-	inputs[2] = nodeValue_Enum_Button("Scatter", self,  1, [ "Uniform", "Random" ])
+	newInput(2, nodeValue_Enum_Button("Scatter", self,  1, [ "Uniform", "Random" ]))
 		.rejectArray();
 	
-	inputs[3] = nodeValue_Int("Point amount", self, 2, "Amount of particle spawn in that frame.")
+	newInput(3, nodeValue_Int("Point amount", self, 2, "Amount of particle spawn in that frame."))
 		.rejectArray();
 	
-	inputs[4] = nodeValue_Surface("Distribution map", self)
+	newInput(4, nodeValue_Surface("Distribution map", self))
 		.rejectArray();
 	
-	inputs[5] = nodeValue_Float("Seed", self, seed_random(6))
+	newInput(5, nodeValue_Float("Seed", self, seed_random(6)))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[5].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) })
 		.rejectArray();
 	

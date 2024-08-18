@@ -17,10 +17,10 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 	
 	newInput(0, nodeValue_Surface("Sprites", self));
 	
-	inputs[1] = nodeValue_Enum_Scroll("Sprite set", self,  0, [ "Animation", "Sprite array" ])
+	newInput(1, nodeValue_Enum_Scroll("Sprite set", self,  0, [ "Animation", "Sprite array" ]))
 		.rejectArray();
 	
-	inputs[2] = nodeValue_Int("Frame step", self, 1, "Number of frames until next sprite. Can be seen as (Step - 1) frame skip.")
+	newInput(2, nodeValue_Int("Frame step", self, 1, "Number of frames until next sprite. Can be seen as (Step - 1) frame skip."))
 		.rejectArray();
 	
 	inputs[3] = nodeValue_Enum_Scroll("Packing type", self,  0, [ new scrollItem("Horizontal", s_node_alignment, 0), 
@@ -28,17 +28,17 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 												 new scrollItem("Grid",       s_node_alignment, 2), ])
 		.rejectArray();
 		
-	inputs[4] = nodeValue_Int("Grid column", self, 4)
+	newInput(4, nodeValue_Int("Grid column", self, 4))
 		.rejectArray();
 	
-	inputs[5] = nodeValue_Enum_Button("Alignment", self,  0, [ "First", "Middle", "Last" ])
+	newInput(5, nodeValue_Enum_Button("Alignment", self,  0, [ "First", "Middle", "Last" ]))
 		.rejectArray();
 	
 	newInput(6, nodeValue_Int("Spacing", self, 0));
 	
-	inputs[7] = nodeValue_Padding("Padding", self, [ 0, 0, 0, 0 ])
+	newInput(7, nodeValue_Padding("Padding", self, [ 0, 0, 0, 0 ]))
 	
-	inputs[8] = nodeValue_Slider_Range("Range", self, [ 0, 0 ])
+	newInput(8, nodeValue_Slider_Range("Range", self, [ 0, 0 ]))
 		.setTooltip("Starting/ending frames, set end to 0 to default to last frame.")
 		
 	newInput(9, nodeValue_Vec2("Spacing", self, [ 0, 0 ]));

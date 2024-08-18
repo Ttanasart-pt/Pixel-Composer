@@ -4,10 +4,10 @@ function Node_Vector_Cross_2D(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	
 	setDimension(96, 48);
 	
-	inputs[0] = nodeValue_Vec2("Point 1", self, [ 0, 0 ])
+	newInput(0, nodeValue_Vec2("Point 1", self, [ 0, 0 ]))
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Vec2("Point 2", self, [ 0, 0 ])
+	newInput(1, nodeValue_Vec2("Point 2", self, [ 0, 0 ]))
 		.setVisible(true, true);
 		
 	outputs[0] = nodeValue_Output("Result", self, VALUE_TYPE.float, 0 );

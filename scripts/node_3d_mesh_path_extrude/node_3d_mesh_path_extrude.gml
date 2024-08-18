@@ -3,26 +3,26 @@ function Node_3D_Mesh_Path_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 	
 	object_class = __3dPathExtrude;
 	
-	inputs[in_mesh + 0] = nodeValue_PathNode("Path", self, noone )
+	newInput(in_mesh + 0, nodeValue_PathNode("Path", self, noone ))
 		.setVisible(true, true);
 	
-	inputs[in_mesh + 1] = nodeValue_Int("Side", self, 8 )
+	newInput(in_mesh + 1, nodeValue_Int("Side", self, 8 ))
 		.setValidator(VV_min(2));
 	
-	inputs[in_mesh + 2] = nodeValue_D3Material("Material Side", self, new __d3dMaterial())
+	newInput(in_mesh + 2, nodeValue_D3Material("Material Side", self, new __d3dMaterial()))
 		.setVisible(true, true);
 	
-	inputs[in_mesh + 3] = nodeValue_D3Material("Material Cap", self, new __d3dMaterial())
+	newInput(in_mesh + 3, nodeValue_D3Material("Material Cap", self, new __d3dMaterial()))
 		.setVisible(true, true);
 	
 	newInput(in_mesh + 4, nodeValue_Bool("Smooth", self, false ));
 	
 	newInput(in_mesh + 5, nodeValue_Bool("End caps", self, true ));
 	
-	inputs[in_mesh + 6] = nodeValue_Int("Subdivision", self, 8 )
+	newInput(in_mesh + 6, nodeValue_Int("Subdivision", self, 8 ))
 		.setValidator(VV_min(2));
 	
-	inputs[in_mesh + 7] = nodeValue_Float("Radius", self, 0.25 )
+	newInput(in_mesh + 7, nodeValue_Float("Radius", self, 0.25 ))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(in_mesh + 8, nodeValue("Radius Over Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11 ));

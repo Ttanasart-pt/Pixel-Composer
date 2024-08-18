@@ -5,10 +5,10 @@ function Node_Iterator_Filter_Output(_x, _y, _group = noone) : Node(_x, _y, _gro
 	
 	manual_deletable = false;
 	
-	inputs[0] = nodeValue("Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, false )
+	newInput(0, nodeValue("Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, false ))
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Bool("Result", self, false )
+	newInput(1, nodeValue_Bool("Result", self, false ))
 		.setVisible(true, true);
 		
 	static getNextNodes = function() {

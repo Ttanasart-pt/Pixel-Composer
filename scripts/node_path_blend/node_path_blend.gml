@@ -3,15 +3,15 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	setDimension(96, 48);;
 	length = 0;
 	
-	inputs[0] = nodeValue_PathNode("Path 1", self, noone)
+	newInput(0, nodeValue_PathNode("Path 1", self, noone))
 		.setVisible(true, true)
 		.rejectArray();
 	
-	inputs[1] = nodeValue_PathNode("Path 2", self, noone)
+	newInput(1, nodeValue_PathNode("Path 2", self, noone))
 		.setVisible(true, true)
 		.rejectArray();
 	
-	inputs[2] = nodeValue_Float("Ratio", self, 0)
+	newInput(2, nodeValue_Float("Ratio", self, 0))
 		.setDisplay(VALUE_DISPLAY.slider)
 		.rejectArray();
 	

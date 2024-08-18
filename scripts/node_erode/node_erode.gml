@@ -3,7 +3,7 @@ function Node_Erode(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	newInput(0, nodeValue_Surface("Surface in", self));
 	
-	inputs[1] = nodeValue_Int("Width", self, 1)
+	newInput(1, nodeValue_Int("Width", self, 1))
 		.setValidator(VV_min(0))
 		.setMappable(10);
 	
@@ -13,7 +13,7 @@ function Node_Erode(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	newInput(4, nodeValue_Surface("Mask", self));
 	
-	inputs[5] = nodeValue_Float("Mix", self, 1)
+	newInput(5, nodeValue_Float("Mix", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(6, nodeValue_Bool("Active", self, true));
@@ -25,7 +25,7 @@ function Node_Erode(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[10] = nodeValue_Surface("Width map", self)
+	newInput(10, nodeValue_Surface("Width map", self))
 		.setVisible(false, false);
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////

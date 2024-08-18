@@ -3,13 +3,13 @@ function Node_3D_Mesh_Sphere_UV(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _
 	
 	object_class = __3dUVSphere;
 	
-	inputs[in_mesh + 0] = nodeValue_Int("Horizontal Slices", self, 8 )
+	newInput(in_mesh + 0, nodeValue_Int("Horizontal Slices", self, 8 ))
 		.setValidator(VV_min(2));
 	
-	inputs[in_mesh + 1] = nodeValue_Int("Vertical Slices", self, 16 )
+	newInput(in_mesh + 1, nodeValue_Int("Vertical Slices", self, 16 ))
 		.setValidator(VV_min(3));
 	
-	inputs[in_mesh + 2] = nodeValue_D3Material("Material", self, new __d3dMaterial())
+	newInput(in_mesh + 2, nodeValue_D3Material("Material", self, new __d3dMaterial()))
 		.setVisible(true, true);
 	
 	newInput(in_mesh + 3, nodeValue_Bool("Smooth Normal", self, false ));

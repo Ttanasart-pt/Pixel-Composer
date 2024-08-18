@@ -7,7 +7,7 @@ function Node_VFX_Override(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	manual_ungroupable = false;
 	setDimension(96, 48);
 	
-	inputs[0] = nodeValue_Particle("Particles", self, -1 )
+	newInput(0, nodeValue_Particle("Particles", self, -1 ))
 		.setVisible(true, true);
 	
 	newInput(1, nodeValue_Float("Positions", self, noone ));
@@ -20,7 +20,7 @@ function Node_VFX_Override(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	newInput(5, nodeValue_Float("Alpha", self, noone ));
 	
-	inputs[6] = nodeValue_Surface("Surface", self)
+	newInput(6, nodeValue_Surface("Surface", self))
 		.setVisible(true, false);
 	
 	outputs[0] = nodeValue_Output("Particles", self, VALUE_TYPE.particle, -1 );

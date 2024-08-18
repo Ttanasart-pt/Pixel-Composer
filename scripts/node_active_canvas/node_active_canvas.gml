@@ -13,7 +13,7 @@ function Node_Active_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	newInput(5, nodeValue_Color("Color", self, c_white ));
 	
-	inputs[6] = nodeValue_Float("Alpha", self, 1 )
+	newInput(6, nodeValue_Float("Alpha", self, 1 ))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(7, nodeValue_Bool("Active", self, true ));

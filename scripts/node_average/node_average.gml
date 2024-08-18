@@ -5,7 +5,7 @@ function Node_Average(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	newInput(1, nodeValue_Surface("Mask", self));
 	
-	inputs[2] = nodeValue_Float("Mix", self, 1)
+	newInput(2, nodeValue_Float("Mix", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(3, nodeValue_Bool("Active", self, true));

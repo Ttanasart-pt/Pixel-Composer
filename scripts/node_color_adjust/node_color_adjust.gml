@@ -4,39 +4,39 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	newInput(0, nodeValue_Surface("Surface in", self));
 	
-	inputs[1] = nodeValue_Float("Brightness", self, 0)
+	newInput(1, nodeValue_Float("Brightness", self, 0))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] })
 		.setMappable(18);
 	
-	inputs[2] = nodeValue_Float("Contrast",   self, 0.5)
+	newInput(2, nodeValue_Float("Contrast",   self, 0.5))
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(19);
 	
-	inputs[3] = nodeValue_Float("Hue",        self, 0)
+	newInput(3, nodeValue_Float("Hue",        self, 0))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] })
 		.setMappable(20);
 	
-	inputs[4] = nodeValue_Float("Saturation", self, 0)
+	newInput(4, nodeValue_Float("Saturation", self, 0))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] })
 		.setMappable(21);
 	
-	inputs[5] = nodeValue_Float("Value",      self, 0)
+	newInput(5, nodeValue_Float("Value",      self, 0))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] })
 		.setMappable(22);
 	
 	newInput(6, nodeValue_Color("Blend",   self, cola(c_white)));
 	
-	inputs[7] = nodeValue_Float("Blend amount",  self, 0)
+	newInput(7, nodeValue_Float("Blend amount",  self, 0))
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(23);
 	
 	newInput(8, nodeValue_Surface("Mask", self));
 	
-	inputs[9] = nodeValue_Float("Alpha", self, 1)
+	newInput(9, nodeValue_Float("Alpha", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(24);
 	
-	inputs[10] = nodeValue_Float("Exposure", self, 1)
+	newInput(10, nodeValue_Float("Exposure", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01 ] })
 		.setMappable(25);
 	
@@ -45,7 +45,7 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		
 	newInput(12, nodeValue_Enum_Button("Input Type", self,  0, [ "Surface", "Color" ]));
 	
-	inputs[13] = nodeValue_Palette("Color", self, array_clone(DEF_PALETTE))
+	newInput(13, nodeValue_Palette("Color", self, array_clone(DEF_PALETTE)))
 		.setVisible(true, true);
 	
 	newInput(14, nodeValue_Enum_Scroll("Blend mode", self,  0, BLEND_TYPES));
@@ -54,33 +54,33 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	newInput(16, nodeValue_Bool("Invert mask", self, false));
 	
-	inputs[17] = nodeValue_Float("Mask feather", self, 1)
+	newInput(17, nodeValue_Float("Mask feather", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] });
 	
 	////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[18] = nodeValue_Surface("Brightness map", self)
+	newInput(18, nodeValue_Surface("Brightness map", self))
 		.setVisible(false, false);
 	
-	inputs[19] = nodeValue_Surface("Contrast map", self)
+	newInput(19, nodeValue_Surface("Contrast map", self))
 		.setVisible(false, false);
 	
-	inputs[20] = nodeValue_Surface("Hue map", self)
+	newInput(20, nodeValue_Surface("Hue map", self))
 		.setVisible(false, false);
 	
-	inputs[21] = nodeValue_Surface("Saturation map", self)
+	newInput(21, nodeValue_Surface("Saturation map", self))
 		.setVisible(false, false);
 	
-	inputs[22] = nodeValue_Surface("Value map", self)
+	newInput(22, nodeValue_Surface("Value map", self))
 		.setVisible(false, false);
 	
-	inputs[23] = nodeValue_Surface("Blend map", self)
+	newInput(23, nodeValue_Surface("Blend map", self))
 		.setVisible(false, false);
 	
-	inputs[24] = nodeValue_Surface("Alpha map", self)
+	newInput(24, nodeValue_Surface("Alpha map", self))
 		.setVisible(false, false);
 	
-	inputs[25] = nodeValue_Surface("Exposure map", self)
+	newInput(25, nodeValue_Surface("Exposure map", self))
 		.setVisible(false, false);
 		
 	////////////////////////////////////////////////////////////////////////////////////////

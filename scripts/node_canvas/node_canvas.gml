@@ -6,29 +6,29 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	newInput( 0, nodeValue_Dimension(self));
 	
 	newInput( 1, nodeValue_Color("Color", self, c_white ));
-	inputs[ 2] = nodeValue_Int("Brush size", self, 1 )
+	newInput( 2, nodeValue_Int("Brush size", self, 1 ))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 32, 0.1] });
 	
-	inputs[ 3] = nodeValue_Float("Fill threshold", self, 0.)
+	newInput( 3, nodeValue_Float("Fill threshold", self, 0.))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput( 4, nodeValue_Enum_Scroll("Fill type", self,  0, ["4 connect", "8 connect", "Entire canvas"]));
 	
 	newInput( 5, nodeValue_Bool("Draw preview overlay", self, true));
 	
-	inputs[ 6] = nodeValue_Surface("Brush", self)
+	newInput( 6, nodeValue_Surface("Brush", self))
 		.setVisible(true, false);
 	
 	newInput( 7, nodeValue_Int("Surface amount", self, 1));
 	
 	newInput( 8, nodeValue_Surface("Background", self));
 	
-	inputs[ 9] = nodeValue_Float("Background alpha", self, 1.)
+	newInput( 9, nodeValue_Float("Background alpha", self, 1.))
 		.setDisplay(VALUE_DISPLAY.slider);
 		
 	newInput(10, nodeValue_Bool("Render background", self, true));
 	
-	inputs[11] = nodeValue_Float("Alpha", self, 1 )
+	newInput(11, nodeValue_Float("Alpha", self, 1 ))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(12, nodeValue_Bool("Frames animation", self, true ));

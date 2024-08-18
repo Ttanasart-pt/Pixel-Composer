@@ -2,7 +2,7 @@ function Node_Armature_Path(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	name = "Armature Path";
 	setDimension(96, 72);
 	
-	inputs[0] = nodeValue_Armature("Armature", self, noone)
+	newInput(0, nodeValue_Armature("Armature", self, noone))
 		.setVisible(true, true)
 		.rejectArray();
 	

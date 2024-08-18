@@ -17,10 +17,10 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	var tname = "";
 	if(!LOADING && !APPENDING) tname = $"tunnel{ds_map_size(TUNNELS_IN_MAP)}";
 	
-	inputs[0] = nodeValue_Text("Name", self, tname )
+	newInput(0, nodeValue_Text("Name", self, tname ))
 		.rejectArray();
 		
-	inputs[1] = nodeValue("Value in", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, noone )
+	newInput(1, nodeValue("Value in", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, noone ))
 		.setVisible(true, true);
 	
 	error_notification = noone;

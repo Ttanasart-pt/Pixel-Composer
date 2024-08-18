@@ -6,7 +6,7 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	
 	newInput(1, nodeValue_Dimension(self));
 		
-	inputs[2] = nodeValue_Int("Seed", self, seed_random(6))
+	newInput(2, nodeValue_Int("Seed", self, seed_random(6)))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[2].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
 	newInput(3, nodeValue_Area("Area", self, DEF_AREA));
@@ -29,7 +29,7 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	
 	newInput(12, nodeValue_Vec2("Wind", self, [ 0, 0 ]));
 	
-	inputs[13] = nodeValue_Gradient("Color", self, new gradientObject(cola(c_white)))
+	newInput(13, nodeValue_Gradient("Color", self, new gradientObject(cola(c_white))))
 	
 	newInput(14, nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11));
 	
@@ -41,7 +41,7 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		
 	newInput(18, nodeValue_Bool("Twist", self, false));
 		
-	inputs[19] = nodeValue_Float("Twist Rate", self, 0.1)
+	newInput(19, nodeValue_Float("Twist Rate", self, 0.1))
 		.setDisplay(VALUE_DISPLAY.slider);
 		
 	newInput(20, nodeValue_Range("Twist Speed", self, [ 5, 10 ]));
@@ -50,7 +50,7 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	
 	newInput(22, nodeValue_Enum_Scroll("Render Type", self,  0, [ new scrollItem("Leaf", s_node_shape_leaf, 0), new scrollItem("Circle", s_node_shape_circle, 0) ]));
 	
-	inputs[23] = nodeValue_Float("Twist Radius", self, 0.7)
+	newInput(23, nodeValue_Float("Twist Radius", self, 0.7))
 		.setDisplay(VALUE_DISPLAY.slider);
 		
 	outputs[0] = nodeValue_Output("Output", self, VALUE_TYPE.surface, noone);

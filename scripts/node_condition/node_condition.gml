@@ -3,7 +3,7 @@ function Node_Condition(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	setDimension(96, 48);
 	
-	inputs[0] = nodeValue_Float("Check value", self, 0 )
+	newInput(0, nodeValue_Float("Check value", self, 0 ))
 		.setVisible(true, true);
 		
 	inputs[1] = nodeValue_Enum_Scroll("Condition", self,  0 , [ new scrollItem("Equal",			s_node_condition_type, 0), 
@@ -14,19 +14,19 @@ function Node_Condition(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 												 new scrollItem("Greater or equal", s_node_condition_type, 5), ])
 		.rejectArray();
 		
-	inputs[2] = nodeValue_Float("Compare to", self, 0 )
+	newInput(2, nodeValue_Float("Compare to", self, 0 ))
 		.rejectArray();
 	
-	inputs[3] = nodeValue("True", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, -1 )
+	newInput(3, nodeValue("True", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, -1 ))
 		.setVisible(true, true);
 		
-	inputs[4] = nodeValue("False", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, -1 )
+	newInput(4, nodeValue("False", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, -1 ))
 		.setVisible(true, true);
 	
-	inputs[5] = nodeValue_Enum_Scroll("Eval mode", self,  0 , ["Boolean", "Number compare", "Text compare" ])
+	newInput(5, nodeValue_Enum_Scroll("Eval mode", self,  0 , ["Boolean", "Number compare", "Text compare" ]))
 		.rejectArray();
 	
-	inputs[6] = nodeValue_Bool("Boolean", self, false )
+	newInput(6, nodeValue_Bool("Boolean", self, false ))
 		.setVisible(true, true)
 		.rejectArray();
 	

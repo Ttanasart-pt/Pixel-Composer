@@ -38,22 +38,22 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	update_on_frame = true;
 	
-	inputs[0]  = nodeValue_Path("Path", self, [])
+	newInput(0, nodeValue_Path("Path", self, []))
 		.setDisplay(VALUE_DISPLAY.path_array, { filter: ["image|*.png;*.jpg", ""] });
 	
-	inputs[1]  = nodeValue_Padding("Padding", self, [0, 0, 0, 0])
+	newInput(1, nodeValue_Padding("Padding", self, [0, 0, 0, 0]))
 		.rejectArray();
 		
-	inputs[2] = nodeValue_Bool("Stretch frame", self, false, "Stretch animation speed to match project length.")
+	newInput(2, nodeValue_Bool("Stretch frame", self, false, "Stretch animation speed to match project length."))
 		.rejectArray();
 	
-	inputs[3] = nodeValue_Float("Animation speed", self, 1)
+	newInput(3, nodeValue_Float("Animation speed", self, 1))
 		.rejectArray();
 		
-	inputs[4] = nodeValue_Enum_Scroll("Loop modes", self,  0, ["Loop", "Ping pong", "Hold last frame", "Hide"])
+	newInput(4, nodeValue_Enum_Scroll("Loop modes", self,  0, ["Loop", "Ping pong", "Hold last frame", "Hide"]))
 		.rejectArray();
 		
-	inputs[5] = nodeValue_Trigger("Set animation length to match", self, false )
+	newInput(5, nodeValue_Trigger("Set animation length to match", self, false ))
 		.setDisplay(VALUE_DISPLAY.button, { name: "Match length", UI : true, onClick: function() { 
 				if(array_length(spr) == 0) return;
 				TOTAL_FRAMES = array_length(spr);
@@ -63,7 +63,7 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	newInput(7, nodeValue_Int("Frame", self, 0));
 
-	inputs[8] = nodeValue_Enum_Scroll("Canvas size", self,  2, [ "First", "Minimum", "Maximum" ])
+	newInput(8, nodeValue_Enum_Scroll("Canvas size", self,  2, [ "First", "Minimum", "Maximum" ]))
 		.rejectArray();
 		
 	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);

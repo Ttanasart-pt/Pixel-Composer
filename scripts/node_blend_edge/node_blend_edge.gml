@@ -3,7 +3,7 @@ function Node_Blend_Edge(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	newInput(0, nodeValue_Surface("Surface in", self));
 	
-	inputs[1] = nodeValue_Float("Width", self, 0.1)
+	newInput(1, nodeValue_Float("Width", self, 0.1))
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(5);
 	
@@ -16,15 +16,15 @@ function Node_Blend_Edge(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[5] = nodeValue_Surface("Width map", self)
+	newInput(5, nodeValue_Surface("Width map", self))
 		.setVisible(false, false);
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	inputs[6] = nodeValue_Float("Blending", self, 1)
+	newInput(6, nodeValue_Float("Blending", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 		
-	inputs[7] = nodeValue_Float("Smoothness", self, 0)
+	newInput(7, nodeValue_Float("Smoothness", self, 0))
 		.setDisplay(VALUE_DISPLAY.slider);
 		
 	input_display_list = [ 3, 4, 

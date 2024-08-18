@@ -5,10 +5,10 @@ function Node_Local_Analyze(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	newInput(1, nodeValue_Enum_Scroll("Algorithm", self,  0, [ "Average (Blur)", "Maximum", "Minimum" ]));
 	
-	inputs[2] = nodeValue_Float("Size", self, 1)
+	newInput(2, nodeValue_Float("Size", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 1, 16, 0.1] });
 	
-	inputs[3] = nodeValue_Enum_Scroll("Oversample mode", self,  0, [ "Empty", "Clamp", "Repeat" ])
+	newInput(3, nodeValue_Enum_Scroll("Oversample mode", self,  0, [ "Empty", "Clamp", "Repeat" ]))
 		.setTooltip("How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.");
 	
 	inputs[4] = nodeValue_Enum_Scroll("Shape", self,  0, [ new scrollItem("Square",  s_node_shape_rectangle, 0), 
@@ -17,7 +17,7 @@ function Node_Local_Analyze(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		
 	newInput(5, nodeValue_Surface("Mask", self));
 	
-	inputs[6] = nodeValue_Float("Mix", self, 1)
+	newInput(6, nodeValue_Float("Mix", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(7, nodeValue_Bool("Active", self, true));

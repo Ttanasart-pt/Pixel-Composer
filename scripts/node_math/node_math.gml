@@ -84,10 +84,10 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			/*10 - 20*/ "Floor", "Ceil", "Round", "Lerp", "Abs", "Clamp", "Snap" ])
 		.rejectArray();
 	
-	inputs[1] = nodeValue_Float("a", self, 0)
+	newInput(1, nodeValue_Float("a", self, 0))
 		.setVisible(true, true);
 		
-	inputs[2] = nodeValue_Float("b", self, 0)
+	newInput(2, nodeValue_Float("b", self, 0))
 		.setVisible(true, true);
 		
 	newInput(3, nodeValue_Bool("Degree angle", self, true));

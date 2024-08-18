@@ -39,14 +39,14 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	newInput(2, nodeValue_Enum_Scroll("Blend mode", self, 0, BLEND_TYPES ));
 	
-	inputs[3] = nodeValue_Float("Opacity", self, 1)
+	newInput(3, nodeValue_Float("Opacity", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(4, nodeValue_Surface("Mask", self));
 	
 	newInput(5, nodeValue_Enum_Scroll("Fill mode", self, 0, [ "None", "Stretch", "Tile" ]));
 	
-	inputs[6] = nodeValue_Enum_Scroll("Output dimension", self, 0, [ "Background", "Forground", "Mask", "Maximum", "Constant" ])
+	newInput(6, nodeValue_Enum_Scroll("Output dimension", self, 0, [ "Background", "Forground", "Mask", "Maximum", "Constant" ]))
 		.rejectArray();
 	
 	newInput(7, nodeValue_Vec2("Constant dimension", self, DEF_SURF));
@@ -64,7 +64,7 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	newInput(12, nodeValue_Bool("Invert mask", self, false));
 	
-	inputs[13] = nodeValue_Float("Mask feather", self, 1)
+	newInput(13, nodeValue_Float("Mask feather", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] });
 	
 	newInput(14, nodeValue_Vec2("Position", self, [ 0.5, 0.5 ]));

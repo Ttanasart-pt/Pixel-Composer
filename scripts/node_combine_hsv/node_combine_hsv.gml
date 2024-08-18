@@ -8,7 +8,7 @@ function Node_Combine_HSV(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	newInput(4, nodeValue_Bool("Array Input", self, false));
 	
-	inputs[5] = nodeValue_Surface("HSV Array", self, [])
+	newInput(5, nodeValue_Surface("HSV Array", self, []))
 		.setArrayDepth(1);
 	
 	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);

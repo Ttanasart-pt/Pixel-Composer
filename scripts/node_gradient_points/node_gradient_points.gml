@@ -3,19 +3,19 @@ function Node_Gradient_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	
 	newInput(0, nodeValue_Dimension(self));
 	
-	inputs[1] = nodeValue_Vec2("Center 1", self, [ 0, 0 ] )
+	newInput(1, nodeValue_Vec2("Center 1", self, [ 0, 0 ] ))
 		.setUnitRef(function(index) { return getDimension(index); });
 	newInput(2, nodeValue_Color("Color 1", self, c_white ));
 	
-	inputs[3] = nodeValue_Vec2("Center 2", self, [ DEF_SURF_W, 0 ] )
+	newInput(3, nodeValue_Vec2("Center 2", self, [ DEF_SURF_W, 0 ] ))
 		.setUnitRef(function(index) { return getDimension(index); });
 	newInput(4, nodeValue_Color("Color 2", self, c_white ));
 	
-	inputs[5] = nodeValue_Vec2("Center 3", self, [ 0, DEF_SURF_H ] )
+	newInput(5, nodeValue_Vec2("Center 3", self, [ 0, DEF_SURF_H ] ))
 		.setUnitRef(function(index) { return getDimension(index); });
 	newInput(6, nodeValue_Color("Color 3", self, c_white ));
 	
-	inputs[7] = nodeValue_Vec2("Center 4", self, DEF_SURF , { useGlobal : false })
+	newInput(7, nodeValue_Vec2("Center 4", self, DEF_SURF , { useGlobal : false }))
 		.setUnitRef(function(index) { return getDimension(index); });
 	newInput(8, nodeValue_Color("Color 4", self, c_white ));
 	
@@ -23,19 +23,19 @@ function Node_Gradient_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	
 	newInput(10, nodeValue_Palette("Palette", self, array_clone(DEF_PALETTE)));
 	
-	inputs[11] = nodeValue_Float("Falloff 1", self, 6 )
+	newInput(11, nodeValue_Float("Falloff 1", self, 6 ))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 32, 0.1 ] });
 	
-	inputs[12] = nodeValue_Float("Falloff 2", self, 6 )
+	newInput(12, nodeValue_Float("Falloff 2", self, 6 ))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 32, 0.1 ] });
 	
-	inputs[13] = nodeValue_Float("Falloff 3", self, 6 )
+	newInput(13, nodeValue_Float("Falloff 3", self, 6 ))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 32, 0.1 ] });
 	
-	inputs[14] = nodeValue_Float("Falloff 4", self, 6 )
+	newInput(14, nodeValue_Float("Falloff 4", self, 6 ))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 32, 0.1 ] });
 		
-	inputs[15] = nodeValue_Bool("Normalize weight", self, false )
+	newInput(15, nodeValue_Bool("Normalize weight", self, false ))
 	
 	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	

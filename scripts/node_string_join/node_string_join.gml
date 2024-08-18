@@ -3,10 +3,10 @@ function Node_String_Join(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	setDimension(96, 48);
 	
-	inputs[0] = nodeValue_Text("Text array", self, [])
+	newInput(0, nodeValue_Text("Text array", self, []))
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Text("Divider", self, "")
+	newInput(1, nodeValue_Text("Divider", self, ""))
 		.rejectArray();
 		
 	inputs[1].editWidget.format = TEXT_AREA_FORMAT.delimiter;

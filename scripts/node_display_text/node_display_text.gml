@@ -17,25 +17,25 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	ta_editor   = new textArea(TEXTBOX_INPUT.text, function(val) { inputs[1].setValue(val); })
 	
-	inputs[0] = nodeValue_Color("Color", self, c_white )
+	newInput(0, nodeValue_Color("Color", self, c_white ))
 		.rejectArray();
 	
 	newInput(1, nodeValue_Text("Text", self, "Text"));
 	
-	inputs[2] = nodeValue_Enum_Scroll("Style", self,  2, [ "Header", "Sub header", "Normal" ])
+	newInput(2, nodeValue_Enum_Scroll("Style", self,  2, [ "Header", "Sub header", "Normal" ]))
 		.rejectArray();
 	
-	inputs[3] = nodeValue_Float("Alpha", self, 0.75)
+	newInput(3, nodeValue_Float("Alpha", self, 0.75))
 		.setDisplay(VALUE_DISPLAY.slider)
 		.rejectArray();
 	
-	inputs[4] = nodeValue_Float("Line width", self, -1)
+	newInput(4, nodeValue_Float("Line width", self, -1))
 		.rejectArray();
 	
-	inputs[5]  = nodeValue_Vec2("Position", self, [ x, y ])
+	newInput(5, nodeValue_Vec2("Position", self, [ x, y ]))
 		.rejectArray();
 	
-	inputs[6] = nodeValue_Float("Line height", self, 0)
+	newInput(6, nodeValue_Float("Line height", self, 0))
 		.rejectArray();
 		
 	input_display_list = [1, 

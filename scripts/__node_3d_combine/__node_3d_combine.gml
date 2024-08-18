@@ -1,50 +1,50 @@
 function __Node_3D_Combine(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "3D Combine";
 	
-	inputs[0] = nodeValue_Dimension(self)
+	newInput(0, nodeValue_Dimension(self))
 		.rejectArray();
 	
-	inputs[1] = nodeValue_Vec3("Object position", self, [ 0, 0, 0 ])
+	newInput(1, nodeValue_Vec3("Object position", self, [ 0, 0, 0 ]))
 		.rejectArray();
 	
-	inputs[2] = nodeValue_Vec3("Object rotation", self, [ 0, 0, 0 ])
+	newInput(2, nodeValue_Vec3("Object rotation", self, [ 0, 0, 0 ]))
 		.rejectArray();
 	
-	inputs[3] = nodeValue_Vec3("Object scale", self, [ 1, 1, 1 ])
+	newInput(3, nodeValue_Vec3("Object scale", self, [ 1, 1, 1 ]))
 		.rejectArray();
 	
-	inputs[4] = nodeValue_Vec2("Render position", self, [ 0.5, 0.5 ])
+	newInput(4, nodeValue_Vec2("Render position", self, [ 0.5, 0.5 ]))
 		.setUnitRef( function() { return getInputData(2); }, VALUE_UNIT.reference)
 		.rejectArray();
 	
-	inputs[5] = nodeValue_Vec2("Render scale", self, [ 1, 1 ])
+	newInput(5, nodeValue_Vec2("Render scale", self, [ 1, 1 ]))
 		.rejectArray();
 		
-	inputs[6] = nodeValue_Rotation("Light direction", self, 0)
+	newInput(6, nodeValue_Rotation("Light direction", self, 0))
 		.rejectArray();
 		
-	inputs[7] = nodeValue_Float("Light height", self, 0.5)
+	newInput(7, nodeValue_Float("Light height", self, 0.5))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-1, 1, 0.01] })
 		.rejectArray();
 		
-	inputs[8] = nodeValue_Float("Light intensity", self, 1)
+	newInput(8, nodeValue_Float("Light intensity", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider)
 		.rejectArray();
 	
-	inputs[9] = nodeValue_Color("Light color", self, c_white)
+	newInput(9, nodeValue_Color("Light color", self, c_white))
 		.rejectArray();
 	
-	inputs[10] = nodeValue_Color("Ambient color", self, c_grey)
+	newInput(10, nodeValue_Color("Ambient color", self, c_grey))
 		.rejectArray();
 		
-	inputs[11] = nodeValue_Enum_Button("Projection", self,  0, [ "Orthographic", "Perspective" ])
+	newInput(11, nodeValue_Enum_Button("Projection", self,  0, [ "Orthographic", "Perspective" ]))
 		.rejectArray();
 		
-	inputs[12] = nodeValue_Float("Field of view", self, 60)
+	newInput(12, nodeValue_Float("Field of view", self, 60))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 90, 0.1 ] })
 		.rejectArray();
 	
-	inputs[13] = nodeValue_Bool("Scale view with dimension", self, true)
+	newInput(13, nodeValue_Bool("Scale view with dimension", self, true))
 	
 	input_display_list = [ 
 		["Output",				false], 0, 13, 
@@ -66,7 +66,7 @@ function __Node_3D_Combine(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	static createNewInput = function() {
 		var index = array_length(inputs);
-		inputs[index] = nodeValue("3D object", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3object, noone )
+		newInput(index, nodeValue("3D object", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3object, noone ))
 			.setVisible(true, true);
 			
 		array_push(input_display_list, index);

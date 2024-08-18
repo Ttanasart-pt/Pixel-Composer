@@ -2,13 +2,13 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	name = "Smooth Path";
 	setDimension(96, 48);;
 	
-	inputs[0] = nodeValue_Bool("Loop", self, false)
+	newInput(0, nodeValue_Bool("Loop", self, false))
 		.rejectArray();
 	
-	inputs[1] = nodeValue_Bool("Round anchor", self, false)
+	newInput(1, nodeValue_Bool("Round anchor", self, false))
 		.rejectArray();
 	
-	inputs[2] = nodeValue_Float("Smoothness", self, 3)
+	newInput(2, nodeValue_Float("Smoothness", self, 3))
 		.setDisplay(VALUE_DISPLAY.slider, { range : [ 1, 5, 0.01 ] } );
 	
 	outputs[0] = nodeValue_Output("Path data", self, VALUE_TYPE.pathnode, self);

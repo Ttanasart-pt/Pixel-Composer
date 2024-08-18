@@ -5,7 +5,7 @@ function Node_PB_Draw_Round_Rectangle(_x, _y, _group = noone) : Node_PB_Draw(_x,
 	
 	newInput(4, nodeValue_Int("Corner Radius", self, 1 ));
 	
-	inputs[5] = nodeValue_Corner("Corner Radius", self, [ 1, 1, 1, 1 ] )
+	newInput(5, nodeValue_Corner("Corner Radius", self, [ 1, 1, 1, 1 ] ))
 		.setArrayDepth(1);
 	
 	newInput(6, nodeValue_Bool("Relative", self, false ));

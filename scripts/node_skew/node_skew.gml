@@ -4,22 +4,20 @@ function Node_Skew(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	inputs[0] = nodeValue_Surface("Surface in", self);
 	inputs[1] = nodeValue_Enum_Button("Axis", self,  0, ["x", "y"]);
 	
-	inputs[2] = nodeValue_Float("Strength", self, 0)
+	newInput(2, nodeValue_Float("Strength", self, 0))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-1, 1, 0.01] })
 		.setMappable(12);
 		
 	inputs[3] = nodeValue_Bool("Wrap", self, false);
 	
-	inputs[4] = nodeValue_Vec2("Center", self, [0, 0] , { side_button : button(function() { centerAnchor(); })
-															.setIcon(THEME.anchor)
-															.setTooltip(__txt("Set to center")) });
+	newInput(4, nodeValue_Vec2("Center", self, [0, 0] , { side_button : button(function() { centerAnchor(); }).setIcon(THEME.anchor).setTooltip(__txt("Set to center")) }));
 	
-	inputs[5] = nodeValue_Enum_Scroll("Oversample mode", self,  0, [ "Empty", "Clamp", "Repeat" ])
+	newInput(5, nodeValue_Enum_Scroll("Oversample mode", self,  0, [ "Empty", "Clamp", "Repeat" ]))
 		.setTooltip("How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.");
 	
 	inputs[6] = nodeValue_Surface("Mask", self);
 	
-	inputs[7] = nodeValue_Float("Mix", self, 1)
+	newInput(7, nodeValue_Float("Mix", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[8] = nodeValue_Bool("Active", self, true);

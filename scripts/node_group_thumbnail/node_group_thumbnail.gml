@@ -3,7 +3,7 @@ function Node_Group_Thumbnail(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	destroy_when_upgroup = true;
 	color = COLORS.node_blend_collection;
 	
-	inputs[0] = nodeValue_Surface("Input", self)
+	newInput(0, nodeValue_Surface("Input", self))
 		.setVisible(true, true);
 	
 	outputs[0] = nodeValue_Surface("Output", self)

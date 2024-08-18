@@ -16,7 +16,7 @@ function Node_VFX_Triangulate(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	
 	newInput(0, nodeValue_Vec2("Output dimension", self, DEF_SURF ));
 		
-	inputs[1] = nodeValue_Particle("Particles", self, -1 )
+	newInput(1, nodeValue_Particle("Particles", self, -1 ))
 		.setVisible(true, true);
 		
 	newInput(2, nodeValue_Float("Thickness", self, 1 ));

@@ -3,12 +3,12 @@ function Node_3DSurf(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	cached_object = [];
 	object_class  = dynaSurf_3d;
 	
-	inputs[0] = nodeValue_D3Scene("Scene", self, noone)
+	newInput(0, nodeValue_D3Scene("Scene", self, noone))
 		.setVisible(true, true);
 	
 	newInput(1, nodeValue_Vec2("Base Dimension", self, DEF_SURF));
 	
-	inputs[2] = nodeValue_Float("Vertical Angle", self, 45 )
+	newInput(2, nodeValue_Float("Vertical Angle", self, 45 ))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 90, 0.1] });
 	
 	newInput(3, nodeValue_Float("Distance", self, 4 ));

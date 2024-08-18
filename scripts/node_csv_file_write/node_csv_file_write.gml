@@ -14,11 +14,11 @@ function Node_CSV_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	w = 128;
 	
-	inputs[0]  = nodeValue_Path("Path", self, "")
+	newInput(0, nodeValue_Path("Path", self, ""))
 		.setDisplay(VALUE_DISPLAY.path_save, { filter: "csv file|*.csv" })
 		.rejectArray();
 	
-	inputs[1]  = nodeValue("Content", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, "")
+	newInput(1, nodeValue("Content", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, ""))
 		.setVisible(true, true);
 	
 	static writeFile = function() { #region

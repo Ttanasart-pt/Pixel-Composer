@@ -5,14 +5,14 @@ function Node_Image_Grid(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 												 new scrollItem("Vertical",   s_node_alignment, 1) ])
 		.rejectArray();
 	
-	inputs[1] = nodeValue_Int("Column", self, 4)
+	newInput(1, nodeValue_Int("Column", self, 4))
 		.setValidator(VV_min(1))
 		.rejectArray();
 	
-	inputs[2] = nodeValue_Vec2("Spacing", self, [ 0, 0 ])
+	newInput(2, nodeValue_Vec2("Spacing", self, [ 0, 0 ]))
 		.rejectArray();
 	
-	inputs[3] = nodeValue_Padding("Padding", self, [ 0, 0, 0, 0 ])
+	newInput(3, nodeValue_Padding("Padding", self, [ 0, 0, 0, 0 ]))
 		.rejectArray();
 	
 	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
@@ -23,7 +23,7 @@ function Node_Image_Grid(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	static createNewInput = function() {
 		var index = array_length(inputs);
-		inputs[index] = nodeValue_Surface("Input", self)
+		newInput(index, nodeValue_Surface("Input", self))
 			.setVisible(true, true);
 			
 		return inputs[index];

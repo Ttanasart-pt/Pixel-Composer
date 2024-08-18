@@ -1,23 +1,23 @@
 function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "Separate Shape";
 	
-	inputs[0] = nodeValue_Surface("Surface in", self)
+	newInput(0, nodeValue_Surface("Surface in", self))
 		.rejectArray();
 	
-	inputs[1] = nodeValue_Float("Tolerance", self, 0.2)
+	newInput(1, nodeValue_Float("Tolerance", self, 0.2))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 1, 0.01 ], update_stat: SLIDER_UPDATE.release })
 		.rejectArray();
 		
-	inputs[2] = nodeValue_Bool("Override color", self, false)
+	newInput(2, nodeValue_Bool("Override color", self, false))
 		.rejectArray();
 	
-	inputs[3] = nodeValue_Color("Color", self, c_white)
+	newInput(3, nodeValue_Color("Color", self, c_white))
 		.rejectArray();
 	
-	inputs[4] = nodeValue_Bool("Ignore blank", self, true, "Skip empty and black shape.")
+	newInput(4, nodeValue_Bool("Ignore blank", self, true, "Skip empty and black shape."))
 		.rejectArray();
 	
-	inputs[5] = nodeValue_Enum_Button("Mode", self,  0 , [ "Greyscale", "Alpha" ] )
+	newInput(5, nodeValue_Enum_Button("Mode", self,  0 , [ "Greyscale", "Alpha" ] ))
 		
 	outputs[0] = nodeValue_Output("Surface out",	self, VALUE_TYPE.surface, noone);
 	

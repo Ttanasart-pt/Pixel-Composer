@@ -6,13 +6,13 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	newInput(1, nodeValue_Enum_Scroll("Return type", self,  0, { data: [ "Number", "String", "Struct" ], update_hover: false }));
 	
-	inputs[2]  = nodeValue_Text("Lua code", self, "", o_dialog_lua_reference)
+	newInput(2, nodeValue_Text("Lua code", self, "", o_dialog_lua_reference))
 		.setDisplay(VALUE_DISPLAY.codeLUA);
 	
-	inputs[3]  = nodeValue("Execution thread", self, JUNCTION_CONNECT.input, VALUE_TYPE.node, noone)
+	newInput(3, nodeValue("Execution thread", self, JUNCTION_CONNECT.input, VALUE_TYPE.node, noone))
 		.setVisible(false, true);
 	
-	inputs[4]  = nodeValue_Bool("Execute on frame", self, true)
+	newInput(4, nodeValue_Bool("Execute on frame", self, true))
 	
 	outputs[0] = nodeValue_Output("Execution thread", self, VALUE_TYPE.node, noone );
 	

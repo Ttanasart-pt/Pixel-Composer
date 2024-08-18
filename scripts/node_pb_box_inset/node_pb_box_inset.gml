@@ -2,23 +2,23 @@ function Node_PB_Box_Inset(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _group)
 	name = "Inset";
 	batch_output = false;
 	
-	inputs[1] = nodeValue("pBox", self, JUNCTION_CONNECT.input, VALUE_TYPE.pbBox, noone )
+	newInput(1, nodeValue("pBox", self, JUNCTION_CONNECT.input, VALUE_TYPE.pbBox, noone ))
 		.setVisible(true, true);
 		
 	newInput(2, nodeValue_Padding("Inset", self, [ 2, 2, 2, 2 ] ));
 		
 	newInput(3, nodeValue_Enum_Scroll("Type", self,  0 , [ "Padding", "Ratio" ]));
 		
-	inputs[4] = nodeValue_Float("Width", self, 0.5 )
+	newInput(4, nodeValue_Float("Width", self, 0.5 ))
 		.setDisplay(VALUE_DISPLAY.slider);
 		
-	inputs[5] = nodeValue_Float("Height", self, 0.5 )
+	newInput(5, nodeValue_Float("Height", self, 0.5 ))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[6] = nodeValue_Float("Horizontal alignment", self, 0.5 )
+	newInput(6, nodeValue_Float("Horizontal alignment", self, 0.5 ))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[7] = nodeValue_Float("Vertical alignment", self, 0.5 )
+	newInput(7, nodeValue_Float("Vertical alignment", self, 0.5 ))
 		.setDisplay(VALUE_DISPLAY.slider);
 		
 	outputs[0] = nodeValue_Output("pBox Inset", self, VALUE_TYPE.pbBox, noone );

@@ -3,7 +3,7 @@ function Node_Segment_Filter(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	setDimension(96, 48);
 	
-	inputs[0] = nodeValue_Vector("Segments", self, [[]])
+	newInput(0, nodeValue_Vector("Segments", self, [[]]))
 		.setVisible(true, true)
 		.setArrayDepth(1);
 	

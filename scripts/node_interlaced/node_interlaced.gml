@@ -8,7 +8,7 @@ function Node_Interlaced(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	newInput(2, nodeValue_Surface("Mask", self));
 	
-	inputs[3] = nodeValue_Float("Mix", self, 1)
+	newInput(3, nodeValue_Float("Mix", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(4, nodeValue_Toggle("Channel", self, 0b1111, { data: array_create(4, THEME.inspector_channel) }));

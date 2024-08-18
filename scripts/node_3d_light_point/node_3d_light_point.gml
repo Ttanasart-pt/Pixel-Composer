@@ -3,15 +3,15 @@ function Node_3D_Light_Point(_x, _y, _group = noone) : Node_3D_Light(_x, _y, _gr
 	
 	object_class = __3dLightPoint;
 	
-	inputs[in_light + 0] = nodeValue_Float("Radius", self, 4)
+	newInput(in_light + 0, nodeValue_Float("Radius", self, 4))
 	
-	inputs[in_light + 1] = nodeValue_Bool("Cast Shadow", self, false)
+	newInput(in_light + 1, nodeValue_Bool("Cast Shadow", self, false))
 		.setWindows();
 	
-	inputs[in_light + 2] = nodeValue_Int("Shadow Map Size", self, 1024)
+	newInput(in_light + 2, nodeValue_Int("Shadow Map Size", self, 1024))
 		.setWindows();
 	
-	inputs[in_light + 3] = nodeValue_Float("Shadow Bias", self, .001)
+	newInput(in_light + 3, nodeValue_Float("Shadow Bias", self, .001))
 		.setWindows();
 	
 	input_display_list = [

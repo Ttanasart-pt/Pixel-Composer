@@ -13,7 +13,7 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	bg_spr_add = 0;
 	
-	inputs[0] = nodeValue("In", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0 )
+	newInput(0, nodeValue("In", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0 ))
 		.setVisible(true, true);
 	
 	outputs[0] = nodeValue_Output("Out", self, VALUE_TYPE.any, 0);

@@ -24,32 +24,32 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 	
 	newInput(3, nodeValue_Vec3("Rotation", self, [ 0, 0, 0 ]));
 	
-	inputs[4] = nodeValue_Float("Scale", self, 1)
+	newInput(4, nodeValue_Float("Scale", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01 ] });
 	
-	inputs[5] = nodeValue_Float("FOV", self, 30)
+	newInput(5, nodeValue_Float("FOV", self, 30))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 90, 1 ] });
 	
 	newInput(6, nodeValue_Vec2("View Range", self, [ 3, 6 ]));
 	
-	inputs[7] = nodeValue_Float("Depth", self, 0)
+	newInput(7, nodeValue_Float("Depth", self, 0))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(8, nodeValue_Vec3("Light Position", self, [ -.4, -.5, 1 ]));
 	
 	newInput(9, nodeValue_Color("Base Color", self, c_white));
 	
-	inputs[10] = nodeValue_Float("Ambient Level", self, 0.2)
+	newInput(10, nodeValue_Float("Ambient Level", self, 0.2))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(11, nodeValue_Vec3("Elongate", self, [ 0, 0, 0 ]));
 	
-	inputs[12] = nodeValue_Float("Rounded", self, 0.)
+	newInput(12, nodeValue_Float("Rounded", self, 0.))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(13, nodeValue_Enum_Button("Projection", self,  0, [ "Perspective", "Orthographic" ]));
 	
-	inputs[14] = nodeValue_Float("Ortho Scale", self, 1.)
+	newInput(14, nodeValue_Float("Ortho Scale", self, 1.))
 	
 	newInput(15, nodeValue_Vec3("Wave Amplitude", self, [ 4, 4, 4 ]));
 	
@@ -59,7 +59,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 	
 	newInput(18, nodeValue_Enum_Button("Twist Axis", self,  0, [ "X", "Y", "Z" ]));
 	
-	inputs[19] = nodeValue_Float("Twist Amount", self, 0)
+	newInput(19, nodeValue_Float("Twist Amount", self, 0))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 8, 0.1 ] });
 	
 	newInput(20, nodeValue_Vec3("Tile Distance", self, [ 1, 1, 1 ]));
@@ -68,23 +68,23 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 	
 	newInput(21, nodeValue_Vec3("Size", self, [ 1, 1, 1 ]));
 	
-	inputs[22] = nodeValue_Float("Radius", self, .7)
+	newInput(22, nodeValue_Float("Radius", self, .7))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[23] = nodeValue_Float("Thickness", self, .2)
+	newInput(23, nodeValue_Float("Thickness", self, .2))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[24] = nodeValue_Float("Crop", self, 0.)
+	newInput(24, nodeValue_Float("Crop", self, 0.))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] });
 	
 	newInput(25, nodeValue_Rotation("Angle", self, 30));
 	
-	inputs[26] = nodeValue_Float("Height", self, .5)
+	newInput(26, nodeValue_Float("Height", self, .5))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(27, nodeValue_Slider_Range("Radius Range", self, [ .7, .1 ]));
 	
-	inputs[28] = nodeValue_Float("Uniform Size", self, 1)
+	newInput(28, nodeValue_Float("Uniform Size", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -99,17 +99,17 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 	
 	newInput(32, nodeValue_Bool("Volumetric", self, false));
 	
-	inputs[33] = nodeValue_Float("Density", self, 0.3)
+	newInput(33, nodeValue_Float("Density", self, 0.3))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(34, nodeValue_Surface("Environment", self));
 	
-	inputs[35] = nodeValue_Float("Reflective", self, 0.)
+	newInput(35, nodeValue_Float("Reflective", self, 0.))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(36, nodeValue_Surface("Texture", self));
 	
-	inputs[37] = nodeValue_Float("Triplanar Smoothing", self, 1.)
+	newInput(37, nodeValue_Float("Triplanar Smoothing", self, 1.))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 10, 0.1 ] });
 	
 	newInput(38, nodeValue_Float("Texture Scale", self, 1.));
@@ -124,7 +124,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 		
 	newInput(42, nodeValue_Vec3("Camera Rotation", self, [ 30, 45, 0 ]));
 	
-	inputs[43] = nodeValue_Float("Camera Scale", self, 1)
+	newInput(43, nodeValue_Float("Camera Scale", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01 ] });
 	
 	newInput(44, nodeValue_Bool("Render", self, true));

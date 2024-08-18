@@ -2,10 +2,10 @@ function Node_Path_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	name = "Scatter Path";
 	setDimension(96, 48);
 	
-	inputs[0] = nodeValue_PathNode("Base Path", self, noone)
+	newInput(0, nodeValue_PathNode("Base Path", self, noone))
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_PathNode("Scatter Path", self, noone)
+	newInput(1, nodeValue_PathNode("Scatter Path", self, noone))
 		.setVisible(true, true);
 	
 	newInput(2, nodeValue_Slider_Range("Range", self, [ 0, 1 ]));
@@ -14,7 +14,7 @@ function Node_Path_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	newInput(4, nodeValue_Slider_Range("Scale", self, [ 0.5, 1 ]));
 	
-	inputs[5] = nodeValue_Float("Seed", self, seed_random(6))
+	newInput(5, nodeValue_Float("Seed", self, seed_random(6)))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[5].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
 	newInput(6, nodeValue("Scale over Length", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11));
@@ -25,7 +25,7 @@ function Node_Path_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	newInput(9, nodeValue("Trim over Length", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11));
 	
-	inputs[10] = nodeValue_Float("Range", self, 1)
+	newInput(10, nodeValue_Float("Range", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(11, nodeValue_Bool("Flip if Negative", self, false ));

@@ -2,7 +2,7 @@ function Node_Path_Reverse(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	name = "Reverse Path";
 	setDimension(96, 48);;
 	
-	inputs[0] = nodeValue_PathNode("Path", self, noone)
+	newInput(0, nodeValue_PathNode("Path", self, noone))
 		.setVisible(true, true);
 	
 	outputs[0] = nodeValue_Output("Path", self, VALUE_TYPE.pathnode, self);

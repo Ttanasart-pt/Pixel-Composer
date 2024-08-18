@@ -4,11 +4,11 @@ function Node_Array_Rearrange(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	draw_pad_w  = 10;
 	setDimension(96, 48);
 	
-	inputs[0] = nodeValue("Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0)
+	newInput(0, nodeValue("Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0))
 		.setArrayDepth(1)
 		.setVisible(true, true);
 	
-	inputs[1] = nodeValue_Int("Orders", self, [])
+	newInput(1, nodeValue_Int("Orders", self, []))
 		.setArrayDepth(1);
 	
 	outputs[0] = nodeValue_Output("Array", self, VALUE_TYPE.any, 0)

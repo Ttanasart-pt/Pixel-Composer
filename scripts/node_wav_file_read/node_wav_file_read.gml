@@ -27,11 +27,11 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	name  = "WAV File In";
 	color = COLORS.node_blend_input;
 	
-	inputs[0]  = nodeValue_Path("Path", self, "")
+	newInput(0, nodeValue_Path("Path", self, ""))
 		.setDisplay(VALUE_DISPLAY.path_load, { filter: "audio|*.wav" })
 		.rejectArray();
 	
-	inputs[1]  = nodeValue_Trigger("Sync length", self, false )
+	newInput(1, nodeValue_Trigger("Sync length", self, false ))
 		.setDisplay(VALUE_DISPLAY.button, { name: "Sync", UI : true, onClick: function() { 
 			if(content == noone) return;
 			TOTAL_FRAMES = max(1, ceil(content.duration * PROJECT.animator.framerate));

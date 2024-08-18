@@ -5,7 +5,7 @@ function Node_Crop_Content(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	newInput(1, nodeValue_Bool("Active", self, true));
 	
-	inputs[2] = nodeValue_Enum_Scroll("Array Sizing", self,  1, [ "Largest, same size", "Independent" ])
+	newInput(2, nodeValue_Enum_Scroll("Array Sizing", self,  1, [ "Largest, same size", "Independent" ]))
 		.setTooltip("Cropping mode for dealing with image array.");
 	
 	newInput(3, nodeValue_Padding("Padding", self, [ 0, 0, 0, 0 ], "Add padding back after crop."));

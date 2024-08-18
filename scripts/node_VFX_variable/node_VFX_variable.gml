@@ -8,7 +8,7 @@ function Node_VFX_Variable(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	manual_ungroupable	 = false;
 	
 	
-	inputs[0] = nodeValue_Particle("Particles", self, -1 )
+	newInput(0, nodeValue_Particle("Particles", self, -1 ))
 		.setVisible(true, true);
 	
 	input_display_list = [ 0 ];

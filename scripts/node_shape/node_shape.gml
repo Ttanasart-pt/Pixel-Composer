@@ -54,13 +54,13 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	newInput(2, nodeValue_Enum_Scroll("Shape", self,  0, { data: shape_types_str, horizontal: true, text_pad: ui(16) }));
 	
-	inputs[3] = nodeValue_Area("Position", self, DEF_AREA_REF, { onSurfaceSize, useShape : false })
+	newInput(3, nodeValue_Area("Position", self, DEF_AREA_REF, { onSurfaceSize, useShape : false }))
 		.setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
 	
-	inputs[4] = nodeValue_Int("Sides", self, 3)
+	newInput(4, nodeValue_Int("Sides", self, 3))
 		.setVisible(false);
 	
-	inputs[5] = nodeValue_Float("Inner radius", self, 0.5)
+	newInput(5, nodeValue_Float("Inner radius", self, 0.5))
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setVisible(false);
 	
@@ -70,7 +70,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	newInput(8, nodeValue_Rotation_Range("Angle range", self, [ 0, 180 ]));
 	
-	inputs[9] = nodeValue_Float("Corner radius", self, 0)
+	newInput(9, nodeValue_Float("Corner radius", self, 0))
 		.setValidator(VV_clamp(0, .5))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 0.5, 0.001] });
 	inputs[9].overlay_draw_text = false;
@@ -81,19 +81,19 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	newInput(12, nodeValue_Bool("Height", self, false));
 	
-	inputs[13] = nodeValue_Float("Start radius", self, 0.1)
+	newInput(13, nodeValue_Float("Start radius", self, 0.1))
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setVisible(false);
 	
-	inputs[14] = nodeValue_PathNode("Shape path", self, noone)
+	newInput(14, nodeValue_PathNode("Shape path", self, noone))
 		.setVisible(true, true);
 	
-	inputs[15] = nodeValue_Enum_Scroll("Positioning Mode", self,  0, [ "Area", "Center + Scale", "Full Image" ])
+	newInput(15, nodeValue_Enum_Scroll("Positioning Mode", self,  0, [ "Area", "Center + Scale", "Full Image" ]))
 		
-	inputs[16] = nodeValue_Vec2("Center", self, [ DEF_SURF_W / 2, DEF_SURF_H / 2 ] )
+	newInput(16, nodeValue_Vec2("Center", self, [ DEF_SURF_W / 2, DEF_SURF_H / 2 ] ))
 		.setUnitRef(onSurfaceSize);
 		
-	inputs[17] = nodeValue_Vec2("Half Size", self, [ DEF_SURF_W / 2, DEF_SURF_H / 2 ] )
+	newInput(17, nodeValue_Vec2("Half Size", self, [ DEF_SURF_W / 2, DEF_SURF_H / 2 ] ))
 		.setUnitRef(onSurfaceSize);
 		
 	newInput(18, nodeValue_Bool("Tile", self, false));
@@ -104,7 +104,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		
 	newInput(21, nodeValue_Slider_Range("Angles", self, [ 0.5, 1.0 ]));
 		
-	inputs[22] = nodeValue_Float("Skew", self, 0.5 )
+	newInput(22, nodeValue_Float("Skew", self, 0.5 ))
 		.setDisplay(VALUE_DISPLAY.slider);
 		
 	newInput(23, nodeValue_Slider_Range("Arrow Sizes", self, [ 0.2, 0.3 ] ));

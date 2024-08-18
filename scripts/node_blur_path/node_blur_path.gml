@@ -2,14 +2,14 @@ function Node_Blur_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	name = "Path Blur";
 	
 	newInput(0, nodeValue_Surface("Surface in", self));
-	inputs[1] = nodeValue_PathNode("Blur Path", self, noone)
+	newInput(1, nodeValue_PathNode("Blur Path", self, noone))
 		.setVisible(true, true);
 	
 	newInput(2, nodeValue_Int("Resolution", self, 32));
 	
 	newInput(3, nodeValue_Surface("Mask", self));
 	
-	inputs[4] = nodeValue_Float("Mix", self, 1)
+	newInput(4, nodeValue_Float("Mix", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(5, nodeValue_Bool("Active", self, true));
@@ -25,7 +25,7 @@ function Node_Blur_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	newInput(11, nodeValue_Slider_Range("Range", self, [ 0, 1 ]));
 	
-	inputs[12] = nodeValue_Float("Path Origin", self, 0)
+	newInput(12, nodeValue_Float("Path Origin", self, 0))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	input_display_list = [ 5, 6, 

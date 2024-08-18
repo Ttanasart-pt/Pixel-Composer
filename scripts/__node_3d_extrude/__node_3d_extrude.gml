@@ -12,22 +12,22 @@ function __Node_3D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	newInput(4, nodeValue_Vec3("Object scale", self, [ 1, 1, 0.1 ]));
 	
-	inputs[5] = nodeValue_Vec2("Render position", self, [ 0.5, 0.5 ])
+	newInput(5, nodeValue_Vec2("Render position", self, [ 0.5, 0.5 ]))
 		.setUnitRef( function() { return getInputData(1); }, VALUE_UNIT.reference);
 		
 	newInput(6, nodeValue_Vec3("Render rotation", self, [ 0, 0, 0 ]));
 	
 	newInput(7, nodeValue_Vec2("Render scale", self, [ 1, 1 ]));
 	
-	inputs[8] = nodeValue_Trigger("Manual generate", self, false )
+	newInput(8, nodeValue_Trigger("Manual generate", self, false ))
 		.setDisplay(VALUE_DISPLAY.button, { name: "Generate", UI : true, onClick: function() { generateMesh(); doUpdate(); } });
 		
 	newInput(9, nodeValue_Rotation("Light direction", self, 0));
 		
-	inputs[10] = nodeValue_Float("Light height", self, 0.5)
+	newInput(10, nodeValue_Float("Light height", self, 0.5))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-1, 1, 0.01] });
 		
-	inputs[11] = nodeValue_Float("Light intensity", self, 1)
+	newInput(11, nodeValue_Float("Light intensity", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(12, nodeValue_Color("Light color", self, c_white));
@@ -37,15 +37,15 @@ function __Node_3D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	newInput(15, nodeValue_Bool("Always update", self, false));
 	
-	inputs[16] = nodeValue_Enum_Button("Projection", self,  0, [ "Orthographic", "Perspective" ])
+	newInput(16, nodeValue_Enum_Button("Projection", self,  0, [ "Orthographic", "Perspective" ]))
 		.rejectArray();
 		
-	inputs[17] = nodeValue_Float("Field of view", self, 60)
+	newInput(17, nodeValue_Float("Field of view", self, 60))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 1, 90, 0.1 ] });
 	
-	inputs[18] = nodeValue_Bool("Scale view with dimension", self, true)
+	newInput(18, nodeValue_Bool("Scale view with dimension", self, true))
 	
-	inputs[19] = nodeValue_Bool("Smooth", self, false)
+	newInput(19, nodeValue_Bool("Smooth", self, false))
 	
 	input_display_list = [
 		["Output",			 false], 1, 18, 

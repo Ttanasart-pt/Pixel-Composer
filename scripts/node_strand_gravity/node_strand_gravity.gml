@@ -6,7 +6,7 @@ function Node_Strand_Gravity(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	manual_ungroupable	 = false;
 	
-	inputs[0] = nodeValue("Strand", self, JUNCTION_CONNECT.input, VALUE_TYPE.strands, noone)
+	newInput(0, nodeValue("Strand", self, JUNCTION_CONNECT.input, VALUE_TYPE.strands, noone))
 		.setVisible(true, true);
 	
 	newInput(1, nodeValue_Float("Gravity", self, 1));
