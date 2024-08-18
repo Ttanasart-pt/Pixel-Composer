@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"dynaSurf_circle_fill",
   "isCompatibility":false,
   "isDnD":false,

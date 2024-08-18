@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"ase_reader",
   "isCompatibility":false,
   "isDnD":false,

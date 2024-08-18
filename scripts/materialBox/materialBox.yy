@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"materialBox",
   "isCompatibility":false,
   "isDnD":false,

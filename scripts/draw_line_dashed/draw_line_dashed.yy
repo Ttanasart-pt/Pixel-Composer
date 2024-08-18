@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"draw_line_dashed",
   "isCompatibility":false,
   "isDnD":false,

@@ -19,10 +19,8 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 	
 	inputs[input_len + 5] = nodeValue_Int("Line life", self, 4 );
 	
-	inputs[3] = nodeValue_Area("Spawn area", self, DEF_AREA_REF )
-		    		.setUnitRef(onSurfaceSize, VALUE_UNIT.reference)
-		    		.rejectArray()
-	inputs[3].index = 3;
+	inputs[3].setValue( DEF_AREA_REF );
+	inputs[3].setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
 	
 	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	

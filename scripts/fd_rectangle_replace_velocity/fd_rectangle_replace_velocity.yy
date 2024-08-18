@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"fd_rectangle_replace_velocity",
   "isCompatibility":false,
   "isDnD":false,

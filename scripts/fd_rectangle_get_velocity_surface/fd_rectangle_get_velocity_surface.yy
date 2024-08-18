@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"fd_rectangle_get_velocity_surface",
   "isCompatibility":false,
   "isDnD":false,

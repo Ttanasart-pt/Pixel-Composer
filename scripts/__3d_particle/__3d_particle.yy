@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"__3d_particle",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_vector_magnitude",
   "isCompatibility":false,
   "isDnD":false,

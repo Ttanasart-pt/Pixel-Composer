@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_pb_draw_round_rectangle",
   "isCompatibility":false,
   "isDnD":false,

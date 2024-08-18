@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_9slice",
   "isCompatibility":false,
   "isDnD":false,

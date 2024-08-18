@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_rigid_wall",
   "isCompatibility":false,
   "isDnD":false,

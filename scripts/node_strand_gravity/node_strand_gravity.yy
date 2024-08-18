@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_strand_gravity",
   "isCompatibility":false,
   "isDnD":false,

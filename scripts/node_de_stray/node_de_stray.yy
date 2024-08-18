@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_de_stray",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"d3d_icosphere",
   "isCompatibility":false,
   "isDnD":false,

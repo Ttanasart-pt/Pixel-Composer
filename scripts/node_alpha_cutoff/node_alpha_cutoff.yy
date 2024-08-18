@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_alpha_cutoff",
   "isCompatibility":false,
   "isDnD":false,

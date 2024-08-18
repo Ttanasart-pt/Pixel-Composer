@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"line_intersect",
   "isCompatibility":false,
   "isDnD":false,

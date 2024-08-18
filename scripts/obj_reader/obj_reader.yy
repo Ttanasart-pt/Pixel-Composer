@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"obj_reader",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_cache_array",
   "isCompatibility":false,
   "isDnD":false,

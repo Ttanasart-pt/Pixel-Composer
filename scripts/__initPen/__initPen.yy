@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"__initPen",
   "isCompatibility":false,
   "isDnD":false,

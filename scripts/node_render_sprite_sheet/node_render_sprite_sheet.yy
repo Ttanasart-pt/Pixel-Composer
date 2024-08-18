@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_render_sprite_sheet",
   "isCompatibility":false,
   "isDnD":false,

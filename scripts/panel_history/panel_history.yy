@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"panel_history",
   "isCompatibility":false,
   "isDnD":false,

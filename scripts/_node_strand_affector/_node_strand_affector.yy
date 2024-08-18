@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"_node_strand_affector",
   "isCompatibility":false,
   "isDnD":false,

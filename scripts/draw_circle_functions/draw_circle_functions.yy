@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"draw_circle_functions",
   "isCompatibility":false,
   "isDnD":false,

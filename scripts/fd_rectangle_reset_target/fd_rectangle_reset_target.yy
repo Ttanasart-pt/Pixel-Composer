@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"fd_rectangle_reset_target",
   "isCompatibility":false,
   "isDnD":false,

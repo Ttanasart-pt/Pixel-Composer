@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"transformBox",
   "isCompatibility":false,
   "isDnD":false,

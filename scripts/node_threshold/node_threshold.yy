@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_threshold",
   "isCompatibility":false,
   "isDnD":false,

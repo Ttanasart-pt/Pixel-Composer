@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_smoke_group_inline",
   "isCompatibility":false,
   "isDnD":false,

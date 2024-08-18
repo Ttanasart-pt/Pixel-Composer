@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"toggleGroup",
   "isCompatibility":false,
   "isDnD":false,

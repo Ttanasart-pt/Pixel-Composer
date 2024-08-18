@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"fd_rectangle_assure_surfaces_exist",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"panel_action_create",
   "isCompatibility":false,
   "isDnD":false,

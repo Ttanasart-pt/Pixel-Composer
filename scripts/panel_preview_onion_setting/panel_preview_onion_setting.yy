@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"panel_preview_onion_setting",
   "isCompatibility":false,
   "isDnD":false,

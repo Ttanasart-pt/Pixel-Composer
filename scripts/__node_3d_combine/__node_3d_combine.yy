@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"__node_3d_combine",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"buttonGradient",
   "isCompatibility":false,
   "isDnD":false,

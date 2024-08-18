@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_vector_split",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"panel_graph_grid_settings",
   "isCompatibility":false,
   "isDnD":false,

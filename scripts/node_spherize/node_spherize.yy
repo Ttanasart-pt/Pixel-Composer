@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_spherize",
   "isCompatibility":false,
   "isDnD":false,

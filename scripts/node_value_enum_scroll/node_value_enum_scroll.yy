@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_value_enum_scroll",
   "isCompatibility":false,
   "isDnD":false,

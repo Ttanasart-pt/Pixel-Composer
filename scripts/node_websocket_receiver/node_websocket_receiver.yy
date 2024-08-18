@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_websocket_receiver",
   "isCompatibility":false,
   "isDnD":false,

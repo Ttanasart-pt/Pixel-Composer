@@ -22,10 +22,13 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	attribute_surface_depth();
 	argumentRenderer(global.lua_arguments);
 	
+	lb_pre = new Inspector_Label("", _f_code_s);
+	lb_pos = new Inspector_Label("", _f_code_s);
+	
 	input_display_list = [ 3, 4, 
 		["Function",	false], 0, 1,
 		["Arguments",	false], argument_renderer,
-		["Script",		false], 2,
+		["Script",		false], lb_pre, 2, lb_pos,
 		["Inputs",		 true], 
 	];
 
@@ -36,12 +39,12 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	static createNewInput = function() {
 		var index = array_length(inputs);
-		inputs[index + 0] = nodeValue_Text("Argument name", self, "" );
+		newInput(index + 0, nodeValue_Text("Argument name", self, "" ));
 		
-		inputs[index + 1] = nodeValue_Enum_Scroll("Argument type", self,  0 , { data: [ "Number", "String", "Surface", "Struct" ], update_hover: false });
+		newInput(index + 1, nodeValue_Enum_Scroll("Argument type", self,  0 , { data: [ "Number", "String", "Surface", "Struct" ], update_hover: false }));
 		inputs[index + 1].editWidget.interactable = false;
 		
-		inputs[index + 2] = nodeValue_Float("Argument value", self, 0 )
+		newInput(index + 2, nodeValue("Argument value", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 ))
 			.setVisible(true, true);
 		inputs[index + 2].editWidget.interactable = false;
 		
@@ -66,7 +69,7 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		array_resize(input_display_list, input_display_len);
 		
 		for( var i = input_fix_len; i < array_length(inputs); i += data_length ) {
-			if(getInputData(i) != "") {
+			if(getInputDataForce(i) != "") {
 				array_push(_in, inputs[i + 0]);
 				array_push(_in, inputs[i + 1]);
 				array_push(_in, inputs[i + 2]);
@@ -152,9 +155,8 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _code = getInputData(2);
 		argument_name = [];
 		
-		for( var i = input_fix_len; i < array_length(inputs) - data_length; i += data_length ) {
-			array_push(argument_name, getInputData(i + 0));
-		}
+		for( var i = input_fix_len; i < array_length(inputs) - data_length; i += data_length )
+			if(getInputData(i) != "") array_push(argument_name, getInputData(i));
 		
 		var lua_code = $"function {_func}(";
 		for( var i = 0, n = array_length(argument_name); i < n; i++ ) {
@@ -162,7 +164,10 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			lua_code += argument_name[i];
 		}
 		
-		lua_code += $")\n{_code}\nend";
+		lb_pre.text = lua_code + ")";
+		lb_pos.text = "end";
+		
+		lua_code   += $")\n{_code}\nend";
 		
 		lua_add_code(getState(), lua_code);
 	}
@@ -177,8 +182,8 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			inputs[i + 2].name = name;
 			
 			switch(type) {
-				case 0 : inputs[i + 2].setType(VALUE_TYPE.float);		break;
-				case 1 : inputs[i + 2].setType(VALUE_TYPE.text);		break;
+				case 0 : inputs[i + 2].setType(VALUE_TYPE.float);	break;
+				case 1 : inputs[i + 2].setType(VALUE_TYPE.text);	break;
 				case 2 : inputs[i + 2].setType(VALUE_TYPE.surface);	break;
 				case 3 : inputs[i + 2].setType(VALUE_TYPE.struct);	break;
 			}
@@ -188,11 +193,6 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 	}
 	
-	static onDestroy = function() {
-		lua_state_destroy(lua_state);
-	}
-	
-	static onRestore = function() {
-		lua_state = lua_create();
-	}
+	static onDestroy = function() { lua_state_destroy(lua_state); }
+	static onRestore = function() { lua_state = lua_create();     }
 }

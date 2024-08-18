@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"folderArrayBox",
   "isCompatibility":false,
   "isDnD":false,

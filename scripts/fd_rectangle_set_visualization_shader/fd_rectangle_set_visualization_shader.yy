@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"fd_rectangle_set_visualization_shader",
   "isCompatibility":false,
   "isDnD":false,

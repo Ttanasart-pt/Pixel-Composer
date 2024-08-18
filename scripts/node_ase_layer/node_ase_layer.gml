@@ -18,7 +18,7 @@ function Node_ASE_layer(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static findLayer = function() {
 		layer_object = noone;
 		
-		var data = getInputData(0);
+		var data = getInputDataForce(0);
 		if(data == noone) return;
 		
 		for( var i = 0, n = array_length(data.layers); i < n; i++ ) {

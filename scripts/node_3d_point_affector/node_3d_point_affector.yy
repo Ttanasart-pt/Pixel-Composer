@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_3d_point_affector",
   "isCompatibility":false,
   "isDnD":false,

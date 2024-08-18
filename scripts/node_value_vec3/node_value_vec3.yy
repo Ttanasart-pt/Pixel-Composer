@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_value_vec3",
   "isCompatibility":false,
   "isDnD":false,

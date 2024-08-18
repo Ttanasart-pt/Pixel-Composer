@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_spout_send",
   "isCompatibility":false,
   "isDnD":false,

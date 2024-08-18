@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"panel_graph_export_image_dialog",
   "isCompatibility":false,
   "isDnD":false,

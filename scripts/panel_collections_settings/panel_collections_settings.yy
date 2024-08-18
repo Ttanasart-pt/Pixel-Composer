@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"panel_collections_settings",
   "isCompatibility":false,
   "isDnD":false,

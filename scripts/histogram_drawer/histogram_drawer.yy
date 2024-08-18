@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"histogram_drawer",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"windowManager",
   "isCompatibility":false,
   "isDnD":false,

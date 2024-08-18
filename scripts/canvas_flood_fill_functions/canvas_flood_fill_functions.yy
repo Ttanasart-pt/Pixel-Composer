@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"canvas_flood_fill_functions",
   "isCompatibility":false,
   "isDnD":false,

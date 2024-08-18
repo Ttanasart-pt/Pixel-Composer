@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_VFX_group_inline",
   "isCompatibility":false,
   "isDnD":false,

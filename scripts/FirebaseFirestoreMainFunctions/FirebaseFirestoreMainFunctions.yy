@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"FirebaseFirestoreMainFunctions",
   "isCompatibility":false,
   "isDnD":false,

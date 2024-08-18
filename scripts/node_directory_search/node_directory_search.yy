@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_directory_search",
   "isCompatibility":false,
   "isDnD":false,

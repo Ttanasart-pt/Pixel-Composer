@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_lua_compute",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_hsv_channel",
   "isCompatibility":false,
   "isDnD":false,

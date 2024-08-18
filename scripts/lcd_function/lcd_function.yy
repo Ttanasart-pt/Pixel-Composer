@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"lcd_function",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"fd_rectangle_get_velocity_dissipation_type",
   "isCompatibility":false,
   "isDnD":false,

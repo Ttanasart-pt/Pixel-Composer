@@ -134,8 +134,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		fullUpdate    = false;
 		attributes    = {};
 		
-		node.inputs_data[index]              = _value;
-		node.input_value_map[$ internalName] = _value;
+		if(_connect == JUNCTION_CONNECT.input) {
+			node.inputs_data[index]              = _value;
+			node.input_value_map[$ internalName] = _value;
+		}
 		
 		__curr_get_val = [ 0, 0 ];
 		validator      = noone;

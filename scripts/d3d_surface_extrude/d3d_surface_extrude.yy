@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"d3d_surface_extrude",
   "isCompatibility":false,
   "isDnD":false,

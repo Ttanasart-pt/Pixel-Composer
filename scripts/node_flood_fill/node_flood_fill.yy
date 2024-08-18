@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_flood_fill",
   "isCompatibility":false,
   "isDnD":false,

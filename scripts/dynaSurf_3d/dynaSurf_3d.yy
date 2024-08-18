@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"dynaSurf_3d",
   "isCompatibility":false,
   "isDnD":false,

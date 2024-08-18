@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"fd_rectangle_set_collision_mask_sprite",
   "isCompatibility":false,
   "isDnD":false,

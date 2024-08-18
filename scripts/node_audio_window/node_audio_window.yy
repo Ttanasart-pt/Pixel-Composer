@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_audio_window",
   "isCompatibility":false,
   "isDnD":false,

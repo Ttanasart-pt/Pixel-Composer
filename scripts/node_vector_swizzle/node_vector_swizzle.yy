@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_vector_swizzle",
   "isCompatibility":false,
   "isDnD":false,

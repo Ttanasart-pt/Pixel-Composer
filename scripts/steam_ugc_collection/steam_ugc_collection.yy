@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"steam_ugc_collection",
   "isCompatibility":false,
   "isDnD":false,

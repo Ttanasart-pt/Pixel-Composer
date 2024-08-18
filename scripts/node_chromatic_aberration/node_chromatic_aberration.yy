@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_chromatic_aberration",
   "isCompatibility":false,
   "isDnD":false,

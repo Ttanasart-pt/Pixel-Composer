@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"object_get_depth",
   "isCompatibility":true,
   "isDnD":false,

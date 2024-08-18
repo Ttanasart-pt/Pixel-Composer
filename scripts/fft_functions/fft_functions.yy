@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"fft_functions",
   "isCompatibility":false,
   "isDnD":false,

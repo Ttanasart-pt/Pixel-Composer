@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"FirebaseREST_Firestore_headerToken",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"draw_arc",
   "isCompatibility":false,
   "isDnD":false,

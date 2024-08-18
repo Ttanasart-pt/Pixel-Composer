@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_segment_filter",
   "isCompatibility":false,
   "isDnD":false,

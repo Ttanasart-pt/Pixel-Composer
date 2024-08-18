@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_scatter_points",
   "isCompatibility":false,
   "isDnD":false,

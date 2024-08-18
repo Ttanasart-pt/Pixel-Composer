@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_value_struct",
   "isCompatibility":false,
   "isDnD":false,

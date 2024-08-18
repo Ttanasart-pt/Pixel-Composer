@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"d3d_group",
   "isCompatibility":false,
   "isDnD":false,

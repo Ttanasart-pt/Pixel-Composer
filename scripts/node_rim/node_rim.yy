@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_rim",
   "isCompatibility":false,
   "isDnD":false,

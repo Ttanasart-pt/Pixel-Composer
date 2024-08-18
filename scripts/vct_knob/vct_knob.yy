@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"vct_knob",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"__node_3d_extrude",
   "isCompatibility":false,
   "isDnD":false,

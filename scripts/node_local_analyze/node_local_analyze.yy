@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_local_analyze",
   "isCompatibility":false,
   "isDnD":false,

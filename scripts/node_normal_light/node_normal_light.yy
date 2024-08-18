@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_normal_light",
   "isCompatibility":false,
   "isDnD":false,

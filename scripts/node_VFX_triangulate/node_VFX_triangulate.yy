@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_VFX_triangulate",
   "isCompatibility":false,
   "isDnD":false,

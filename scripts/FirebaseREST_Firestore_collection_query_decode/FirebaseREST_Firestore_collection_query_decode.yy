@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"FirebaseREST_Firestore_collection_query_decode",
   "isCompatibility":false,
   "isDnD":false,

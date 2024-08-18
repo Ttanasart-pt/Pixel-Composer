@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_processor",
   "isCompatibility":false,
   "isDnD":false,

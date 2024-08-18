@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"panel_text_editor",
   "isCompatibility":false,
   "isDnD":false,

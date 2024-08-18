@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"point_rect_overlap",
   "isCompatibility":false,
   "isDnD":false,

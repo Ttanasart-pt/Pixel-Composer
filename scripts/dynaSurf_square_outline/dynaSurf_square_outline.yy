@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"dynaSurf_square_outline",
   "isCompatibility":false,
   "isDnD":false,

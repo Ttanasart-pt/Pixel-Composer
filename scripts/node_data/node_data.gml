@@ -592,6 +592,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	/////========== JUNCTIONS ==========
 	
+	static newInput = function(index, junction) { inputs[index] = junction; return junction;  }
+	
 	static getInputJunctionIndex = function(index) {
 		INLINE 
 		
@@ -817,7 +819,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		targ.setFrom(junctionFrom);
 	}
 	
-	static getInputData = function(index, def = 0) { return array_safe_get_fast(inputs_data, index, def); }
+	static getInputData      = function(index, def = 0) { return array_safe_get_fast(inputs_data, index, def); }
+	static getInputDataForce = function(index, def = 0) { return inputs[index].getValue(); }
 	
 	// static setInputData = function(index, value) {
 	// 	var _inp = inputs[index];

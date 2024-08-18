@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_smoke_domain_queue",
   "isCompatibility":false,
   "isDnD":false,

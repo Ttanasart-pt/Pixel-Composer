@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"fd_rectangle_get_pressure_height",
   "isCompatibility":false,
   "isDnD":false,

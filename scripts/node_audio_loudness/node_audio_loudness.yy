@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_audio_loudness",
   "isCompatibility":false,
   "isDnD":false,

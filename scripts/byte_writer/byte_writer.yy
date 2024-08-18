@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"byte_writer",
   "isCompatibility":false,
   "isDnD":false,

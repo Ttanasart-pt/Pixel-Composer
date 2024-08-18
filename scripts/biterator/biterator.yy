@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"biterator",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_twirl",
   "isCompatibility":false,
   "isDnD":false,

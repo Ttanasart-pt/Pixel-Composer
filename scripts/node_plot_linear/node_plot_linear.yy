@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_plot_linear",
   "isCompatibility":false,
   "isDnD":false,

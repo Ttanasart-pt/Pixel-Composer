@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"panel_image_array_editor",
   "isCompatibility":false,
   "isDnD":false,

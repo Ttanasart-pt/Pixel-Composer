@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"fd_rectangle_draw_part",
   "isCompatibility":false,
   "isDnD":false,

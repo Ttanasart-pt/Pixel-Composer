@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_string_regex_replace",
   "isCompatibility":false,
   "isDnD":false,

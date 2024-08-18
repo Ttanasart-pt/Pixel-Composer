@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"cross_product",
   "isCompatibility":false,
   "isDnD":false,

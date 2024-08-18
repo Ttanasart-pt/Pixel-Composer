@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_http_request",
   "isCompatibility":false,
   "isDnD":false,

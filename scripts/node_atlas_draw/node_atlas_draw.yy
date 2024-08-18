@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_atlas_draw",
   "isCompatibility":false,
   "isDnD":false,

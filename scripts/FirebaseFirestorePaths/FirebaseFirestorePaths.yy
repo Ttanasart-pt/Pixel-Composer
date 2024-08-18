@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"FirebaseFirestorePaths",
   "isCompatibility":false,
   "isDnD":false,

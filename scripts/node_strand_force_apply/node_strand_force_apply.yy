@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_strand_force_apply",
   "isCompatibility":false,
   "isDnD":false,

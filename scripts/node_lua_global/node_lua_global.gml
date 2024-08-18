@@ -19,12 +19,12 @@ function Node_Lua_Global(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	lua_state    = lua_create();
 	is_beginning = false;
 	
-	static getState = function() { #region
+	static getState = function() {
 		if(inputs[2].value_from == noone) return lua_state;
 		return inputs[2].value_from.node.getState();
-	} #endregion
+	}
 	
-	static update = function(frame = CURRENT_FRAME) { #region
+	static update = function(frame = CURRENT_FRAME) {
 		var _code = getInputData(0);
 		var _type = getInputData(1);
 		update_on_frame = _type;
@@ -33,13 +33,8 @@ function Node_Lua_Global(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		try		 { lua_add_code(getState(), _code);         }
 		catch(e) { noti_warning(exception_print(e),, self); }
-	} #endregion
-	
-	static onDestroy = function() {
-		lua_state_destroy(lua_state);
 	}
 	
-	static onRestore = function() {
-		lua_state = lua_create();
-	}
+	static onDestroy = function() { lua_state_destroy(lua_state); }
+	static onRestore = function() { lua_state = lua_create(); }
 }

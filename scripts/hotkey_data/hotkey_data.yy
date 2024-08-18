@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"hotkey_data",
   "isCompatibility":false,
   "isDnD":false,

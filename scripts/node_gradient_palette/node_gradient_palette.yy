@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_gradient_palette",
   "isCompatibility":false,
   "isDnD":false,

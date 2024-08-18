@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"__background_set_element",
   "isCompatibility":true,
   "isDnD":false,

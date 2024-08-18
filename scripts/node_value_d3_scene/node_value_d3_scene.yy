@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"node_value_d3_scene",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"pack_corner",
   "isCompatibility":false,
   "isDnD":false,

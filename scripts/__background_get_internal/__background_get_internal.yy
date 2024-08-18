@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"__background_get_internal",
   "isCompatibility":true,
   "isDnD":false,
