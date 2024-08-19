@@ -252,7 +252,6 @@
 		json_save_struct(DIRECTORY + "keys.json",       		PREFERENCES);
 		json_save_struct(DIRECTORY + "Nodes/fav.json",			global.FAV_NODES);
 		json_save_struct(DIRECTORY + "Nodes/recent.json",		global.RECENT_NODES);
-		json_save_struct(DIRECTORY + "key_nodes.json",  		HOTKEYS_CUSTOM);
 		json_save_struct(DIRECTORY + "default_project.json",    PROJECT_ATTRIBUTES);
 		
 		hotkey_serialize();
@@ -269,9 +268,6 @@
 		if(!directory_exists($"{DIRECTORY}Themes/{PREFERENCES.theme}"))
 			PREFERENCES.theme = "default";
 			
-		var f = json_load_struct(DIRECTORY + "key_nodes.json");
-		struct_override_nested(HOTKEYS_CUSTOM, f);
-		
 		LOCALE_DEF = PREFERENCES.local == "en";
 		THEME_DEF  = PREFERENCES.theme == "default";
 		FONT_DEF   = PREFERENCES.theme == "default" && PREFERENCES.local == "en" && PREFERENCES.display_scaling == 1;

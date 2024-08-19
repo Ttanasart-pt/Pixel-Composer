@@ -1359,8 +1359,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static unitConvert = function(mode) {
 		var _v = animator.values;
 		
-		for( var i = 0; i < ds_list_size(_v); i++ )
-			_v[| i].value = unit.convertUnit(_v[| i].value, mode);
+		for( var i = 0; i < array_length(_v); i++ ) 
+			_v[i].value = unit.convertUnit(_v[i].value, mode);
 	}
 	
 	static isDynamicArray = function() {

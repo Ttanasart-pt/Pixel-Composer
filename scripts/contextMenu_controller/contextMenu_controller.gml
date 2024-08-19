@@ -61,10 +61,10 @@ function fileNameCall(path, onModify, _x = mouse_mx + 8, _y = mouse_my + 8) {
 	return dia;
 }
 
-function menuItem(     name, func, spr = noone, hotkey = noone, toggle = noone, params = {}) { return new MenuItem(name, func, spr, hotkey, toggle, params); }
-function menuItemShelf(name, func, spr = noone, hotkey = noone, toggle = noone, params = {}) { return new MenuItem(name, func, spr, hotkey, toggle, params).setIsShelf(); }
+function menuItem(     name, func, spr = noone, hotkey = noone, toggle = noone, params = noone) { return new MenuItem(name, func, spr, hotkey, toggle, params); }
+function menuItemShelf(name, func, spr = noone, hotkey = noone, toggle = noone, params = noone) { return new MenuItem(name, func, spr, hotkey, toggle, params).setIsShelf(); }
 
-function MenuItem(_name, _func, _spr = noone, _hotkey = noone, _toggle = noone, _params = {}) constructor {
+function MenuItem(_name, _func, _spr = noone, _hotkey = noone, _toggle = noone, _params = noone) constructor {
 	active	= true;
 	name	= _name;
 	func	= _func;

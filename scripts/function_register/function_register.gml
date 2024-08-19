@@ -1,5 +1,5 @@
 #region macros
-	gml_pragma("global", "__fnInit()");
+	// gml_pragma("global", "__fnInit()");
 	
 	#macro ARG  new __fnArgument
 	#macro CALL _args = []; for(i = 0; i < argument_count; i++) _args[i] = argument[i]; callStatusFunction
@@ -10,8 +10,9 @@
 		self.fn   = fn;
 	}
 	
+	globalvar CMD_FUNCTIONS, MENU_ITEMS, FUNCTIONS, RECENT_COMMANDS;
+	
 	function __fnInit() {
-		globalvar CMD_FUNCTIONS, MENU_ITEMS, FUNCTIONS, RECENT_COMMANDS;
 		
 		FUNCTIONS       = {};
 		CMD_FUNCTIONS   = {};

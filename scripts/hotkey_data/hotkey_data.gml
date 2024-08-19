@@ -236,7 +236,6 @@ function hotkey_draw(keyStr, _x, _y, _status = 0) {
 }
 
 function hotkey_serialize() {
-	
 	var _context = [];
 	for(var i = 0, n = ds_list_size(HOTKEY_CONTEXT); i < n; i++) {
 		var ll = HOTKEYS[? HOTKEY_CONTEXT[| i]];

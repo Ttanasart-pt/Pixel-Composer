@@ -55,8 +55,9 @@
 #region Set up
 	var t = current_time;
 	
-	if(!IS_CMD) { __initHotKey();               log_message("SESSION", $"> init Hotkeys       | complete in {get_timer() - t}");    t = get_timer(); }
 	              PREF_LOAD();                  log_message("SESSION", $"> init Preferences   | complete in {get_timer() - t}");    t = get_timer();
+	if(!IS_CMD) { __initHotKey();               log_message("SESSION", $"> init Hotkeys       | complete in {get_timer() - t}");    t = get_timer(); }
+	              __fnInit();
 	
 	var dir  = string(DIRECTORY) + "log";
 	directory_verify(dir);
