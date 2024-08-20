@@ -18,7 +18,7 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	newInput(7, nodeValue_Enum_Scroll("Draw original", self,  0, [ "None", "Above", "Behind" ]));
 	
-	newInput(8, nodeValue_Enum_Scroll("Fill type", self,  0, [ "Random", "Color map", "Texture map" ]));
+	newInput(8, nodeValue_Enum_Scroll("Fill type", self,  0, [ "Random", "Color map", "Texture map", "Texture Coord" ]));
 	
 	newInput(9, nodeValue_Surface("Color map", self));
 	
@@ -29,10 +29,10 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 4, 
-		["Surfaces", false], 0, 1, 
-		["Regions",  false, 11], 5, 6, 
-		["Fill",	 false], 8, 2, 9, 10, 
-		["Render",	 false], 7, 
+		["Surfaces",        false], 0, 1, 
+		["Regions Filter",  false, 11], 5, 6, 
+		["Fill",	        false], 8, 2, 9, 10, 
+		["Render",	        false], 7, 
 	];
 	
 	temp_surface = array_create(3);
@@ -48,7 +48,7 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		inputs[ 5].setVisible(_fclr);
 		inputs[ 6].setVisible(_fclr);
 	}
-		
+	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _surf = _data[0];
 		var _mask = _data[1];
@@ -197,6 +197,12 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 					shader_set(sh_region_fill_rg_map);
 						shader_set_surface("textureMap", _tmap);
 						
+						draw_surface_safe(cmap);
+					shader_reset();
+					break;
+				
+				case 3 : // Texture Map
+					shader_set(sh_region_fill_rg_coord);
 						draw_surface_safe(cmap);
 					shader_reset();
 					break;

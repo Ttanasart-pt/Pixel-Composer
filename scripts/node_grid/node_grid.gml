@@ -70,11 +70,17 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	newInput(28, nodeValue_Bool("Uniform height", self, true));
 	
+	newInput(29, nodeValue_Float("Secondary Scale", self, 0));
+	
+	newInput(30, nodeValue_Float("Secondary Shift", self, 0))
+		.setDisplay(VALUE_DISPLAY.slider);
+	
 	input_display_list = [
-		["Output",  false], 0,
-		["Pattern",	false], 1, 4, 15, 2, 13, 28, 3, 26, 27, 14, 9, 8, 16,
-		["Render",	false], 10, 11, 5, 20, 6, 7, 25, 12, 24, 
-		["Truchet",  true, 17], 18, 19, 22, 23, 
+		["Output",    false], 0,
+		["Pattern",	  false], 1, 4, 15, 2, 13, 28, 3, 26, 27, 14, 9, 8, 16,
+		["Secondary", false], 30, 29, 
+		["Render",	  false], 10, 11, 5, 20, 6, 7, 25, 12, 24, 
+		["Truchet",    true, 17], 18, 19, 22, 23, 
 	];
 	
 	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
@@ -93,13 +99,13 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		return hov;
 	}
 	
-	static step = function() { #region
+	static step = function() {
 		inputs[2].mappableStep();
 		inputs[3].mappableStep();
 		inputs[4].mappableStep();
 		inputs[5].mappableStep();
 		inputs[8].mappableStep();
-	} #endregion
+	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _dim  = _data[ 0];
@@ -150,6 +156,8 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			shader_set_f("gapAcc",         _data[26]);
 			shader_set_i("diagonal",       _data[27]);
 			shader_set_i("uniformSize",    _data[28]);
+			shader_set_f("secScale", 	   _data[29]);
+			shader_set_f("secShift", 	   _data[30]);
 			
 			shader_set_color("gapCol",  _col_gap);
 			

@@ -24,6 +24,8 @@ uniform vec2      shift;
 uniform int       shiftUseSurf;
 uniform sampler2D shiftSurf;
 
+uniform float secScale;
+uniform float secShift;
 uniform float gapAcc;
 uniform vec4  gapCol;
 uniform int   gradient_use;
@@ -175,7 +177,7 @@ float random (in vec2 st) { return fract(sin(dot(st.xy + vec2(85.456034, 64.5406
 	
 #endregion //////////////////////////////////// GRADIENT ////////////////////////////////////
 
-void main() { #region
+void main() {
 	#region params
 		vec2 sca = scale;
 		if(scaleUseSurf == 1) {
@@ -247,16 +249,20 @@ void main() { #region
 		shf /= sca.x;
 		
 		float cellY  = floor(_pos.y * sca.y);
-		float shiftX = mod(cellY, 2.) * shf;
+		float _sec   = mod(cellY, 2.);
+		float shiftX = _sec * shf;
 		
-		_pos.x += shiftX;
+		_pos.x += shiftX + _sec * secShift;
+		 sca.x *= 1.     + _sec * secScale;
 	} else {
 		shf /= sca.y;
 		
 		float cellX  = floor(_pos.x * sca.x);
-		float shiftY = mod(cellX, 2.) * shf;
+		float _sec   = mod(cellX, 2.);
+		float shiftY = _sec * shf;
 	
-		_pos.y += shiftY;
+		_pos.y += shiftY + _sec * secShift;
+		 sca.y *= 1.     + _sec * secScale;
 	}
 	
 	vec2 sqSt  = floor(_pos * sca) / sca;
@@ -299,4 +305,4 @@ void main() { #region
 	
 	float _aa = 4. / max(dimension.x, dimension.y);
 	gl_FragColor = mix(gapCol, colr, aa == 1? smoothstep(wid - _aa, wid, dist) : step(wid, dist));
-} #endregion
+}

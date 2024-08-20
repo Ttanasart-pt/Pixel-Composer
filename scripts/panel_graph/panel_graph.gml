@@ -2046,6 +2046,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         for(var i = -1, n = array_length(node_context); i < n; i++) {
             if(i == -1) {
                 tt = __txt("Global");
+                
             } else {
                 var _cnt = node_context[i];
                 tt = _cnt.renamed? _cnt.display_name : _cnt.name;

@@ -2334,6 +2334,7 @@
     {"id":{"name":"sh_region_fill_inner_remove","path":"shaders/sh_region_fill_inner_remove/sh_region_fill_inner_remove.yy",},},
     {"id":{"name":"sh_region_fill_inner","path":"shaders/sh_region_fill_inner/sh_region_fill_inner.yy",},},
     {"id":{"name":"sh_region_fill_map","path":"shaders/sh_region_fill_map/sh_region_fill_map.yy",},},
+    {"id":{"name":"sh_region_fill_rg_coord","path":"shaders/sh_region_fill_rg_coord/sh_region_fill_rg_coord.yy",},},
     {"id":{"name":"sh_region_fill_rg_map","path":"shaders/sh_region_fill_rg_map/sh_region_fill_rg_map.yy",},},
     {"id":{"name":"sh_remove_black","path":"shaders/sh_remove_black/sh_remove_black.yy",},},
     {"id":{"name":"sh_replace_color","path":"shaders/sh_replace_color/sh_replace_color.yy",},},

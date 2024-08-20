@@ -67,9 +67,10 @@
 #endregion
 
 function Inspector_Custom_Renderer(drawFn, registerFn = noone) : widget() constructor {
-    h = 64;
-    node = noone;
     self.draw = drawFn;
+    node      = noone;
+    panel     = noone;
+    h = 64;
     
     if(registerFn != noone) register = registerFn;
     else {
@@ -775,10 +776,11 @@ function Panel_Inspector() : PanelContent() constructor {
                 
             } else if(is_instanceof(jun, Inspector_Custom_Renderer)) {
                 jun.register(contentPane);
+                jun.panel = self;
                 jun.rx = ui(16) + x;
                 jun.ry = top_bar_h + y;
                 
-                var _wdh = jun.draw(ui(6), yy, con_w - ui(12), _m, _hover, pFOCUS) + ui(8);
+                var _wdh = jun.draw(ui(6), yy, con_w - ui(12), _m, _hover, pFOCUS, self) + ui(8);
                 if(!is_undefined(_wdh)) hh += _wdh;
                 continue;
                 
