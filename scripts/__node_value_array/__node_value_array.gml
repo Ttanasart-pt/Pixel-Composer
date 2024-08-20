@@ -10,7 +10,7 @@ function nodeValue_Vector(_name, _node, _value, _data = {}) {
 	return new NodeValue_Array(_name, _node, _value, "", _len);
 }
 
-function NodeValue_Array(_name, _node, _value, _tooltip = "", _length = 2) : NodeValue(_name, _node, JUNCTION_CONNECT.input, VALUE_TYPE.float, _value, _tooltip) constructor {
+function NodeValue_Array(_name, _node, _value, _tooltip = "", _length = 2) : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.float, _value, _tooltip) constructor {
 	
 	data_array_length = _length;
 	

@@ -8,7 +8,7 @@
 	global.displaySuffix_Axis		= [ "x", "y", "z", "w" ];
 #endregion
 
-enum JUNCTION_CONNECT {
+enum CONNECT_TYPE {
 	input,
 	output
 }

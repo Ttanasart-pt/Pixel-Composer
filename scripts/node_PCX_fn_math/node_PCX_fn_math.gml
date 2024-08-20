@@ -1,17 +1,17 @@
 function Node_PCX_fn_Math(_x, _y, _group = noone) : Node_PCX(_x, _y, _group) constructor {
 	name = "Math";
 	
-	inputs[0] = nodeValue_Enum_Scroll("Operator", self,  0, [ "Add",   "Subtract", "Multiply", "Divide", "Power",  "Modulo", "Absolute", -1, 
-												 "Round", "Floor",    "Ceil",      -1, 
-												 "Sin",   "Cos",      "Tan",      "Arcsin", "Arccos", "Arctan", -1, 
-												 "Min",   "Max",      "Clamp",    -1, 
-												 "Lerp" ]);
+	newInput(0, nodeValue_Enum_Scroll("Operator", self,  0, [ "Add",   "Subtract", "Multiply", "Divide", "Power",  "Modulo", "Absolute", -1, 
+												              "Round", "Floor",    "Ceil",      -1, 
+												              "Sin",   "Cos",      "Tan",      "Arcsin", "Arccos", "Arctan", -1, 
+												              "Min",   "Max",      "Clamp",    -1, 
+												              "Lerp" ]));
 	
-	newInput(1, nodeValue("x", self, JUNCTION_CONNECT.input, VALUE_TYPE.PCXnode, noone));
+	newInput(1, nodeValue("x", self, CONNECT_TYPE.input, VALUE_TYPE.PCXnode, noone));
 	
-	newInput(2, nodeValue("y", self, JUNCTION_CONNECT.input, VALUE_TYPE.PCXnode, noone));
+	newInput(2, nodeValue("y", self, CONNECT_TYPE.input, VALUE_TYPE.PCXnode, noone));
 	
-	newInput(3, nodeValue("z", self, JUNCTION_CONNECT.input, VALUE_TYPE.PCXnode, noone));
+	newInput(3, nodeValue("z", self, CONNECT_TYPE.input, VALUE_TYPE.PCXnode, noone));
 	
 	outputs[0] = nodeValue_Output("PCX", self, VALUE_TYPE.PCXnode, noone);
 	

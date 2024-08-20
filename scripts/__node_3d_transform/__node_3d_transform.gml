@@ -27,7 +27,7 @@ function __Node_3D_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	
 	newInput(10, nodeValue_Color("Ambient color", self, c_grey));
 	
-	newInput(11, nodeValue("3D object", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3object, noone))
+	newInput(11, nodeValue("3D object", self, CONNECT_TYPE.input, VALUE_TYPE.d3object, noone))
 		.setVisible(true, true);
 		
 	newInput(12, nodeValue_Enum_Button("Projection", self,  0, [ "Orthographic", "Perspective" ]))

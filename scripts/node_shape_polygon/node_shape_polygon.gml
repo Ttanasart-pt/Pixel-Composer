@@ -46,7 +46,7 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	newInput(15, nodeValue_Bool("Round cap", self, false));
 	
-	newInput(16, nodeValue("Mesh", self, JUNCTION_CONNECT.input, VALUE_TYPE.mesh, noone))
+	newInput(16, nodeValue("Mesh", self, CONNECT_TYPE.input, VALUE_TYPE.mesh, noone))
 		.setVisible(true, true);
 		
 	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);

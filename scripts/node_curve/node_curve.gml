@@ -3,13 +3,13 @@ function Node_Curve(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	newInput(0, nodeValue_Surface("Surface in", self));
 	
-	newInput(1, nodeValue("Brightness", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_01));
+	newInput(1, nodeValue("Brightness", self, CONNECT_TYPE.input, VALUE_TYPE.curve, CURVE_DEF_01));
 	
-	newInput(2, nodeValue("Red", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_01));
+	newInput(2, nodeValue("Red", self, CONNECT_TYPE.input, VALUE_TYPE.curve, CURVE_DEF_01));
 	
-	newInput(3, nodeValue("Green", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_01));
+	newInput(3, nodeValue("Green", self, CONNECT_TYPE.input, VALUE_TYPE.curve, CURVE_DEF_01));
 	
-	newInput(4, nodeValue("Blue", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_01));
+	newInput(4, nodeValue("Blue", self, CONNECT_TYPE.input, VALUE_TYPE.curve, CURVE_DEF_01));
 	
 	newInput(5, nodeValue_Surface("Mask", self));
 	
@@ -23,7 +23,7 @@ function Node_Curve(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	__init_mask_modifier(5); // inputs 9, 10
 	
-	newInput(11, nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_01));
+	newInput(11, nodeValue("Alpha", self, CONNECT_TYPE.input, VALUE_TYPE.curve, CURVE_DEF_01));
 	
 	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	

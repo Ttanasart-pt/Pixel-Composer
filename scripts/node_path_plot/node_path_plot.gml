@@ -5,8 +5,8 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	newInput(0, nodeValue_Vec2("Output scale", self, [ 8, 8 ]));
 	
-	inputs[1] = nodeValue_Enum_Scroll("Coordinate", self,  0, [ new scrollItem("Cartesian", s_node_axis_type, 0), 
-												 new scrollItem("Polar",     s_node_axis_type, 1),  ]);
+	newInput(1, nodeValue_Enum_Scroll("Coordinate", self,  0, [ new scrollItem("Cartesian", s_node_axis_type, 0), 
+												                new scrollItem("Polar",     s_node_axis_type, 1),  ]));
 	
 	eq_type_car = [ "x function", "y function", "parametric" ];
 	eq_type_pol = [ "r function", "O function", "parametric" ];

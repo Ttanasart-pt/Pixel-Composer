@@ -53,7 +53,7 @@
 	
 	bx -= bw + ui(4);
 	
-	var txt  = __txtx("cancel", "Cancel");
+	var txt  = __txt("Cancel");
 	var icon = THEME.cross;
 	var clr  = COLORS._main_value_negative;
 	

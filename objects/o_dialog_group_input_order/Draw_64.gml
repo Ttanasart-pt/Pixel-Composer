@@ -23,7 +23,7 @@ if !ready exit;
 	var bx = dialog_x + dialog_w - ui(32 + 16);
 	var by = dialog_y + ui(16);
 	
-	if(type == JUNCTION_CONNECT.input) { 
+	if(type == CONNECT_TYPE.input) { 
 		var _txt = __txtx("dialog_group_order_add", "Add separator");
 		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), mouse_ui, sFOCUS, sHOVER, _txt, THEME.add_16, 1, COLORS._main_value_positive) == 2) {
 			array_push(node.attributes.input_display_list, [ "Separator", false ]);

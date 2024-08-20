@@ -1,6 +1,6 @@
 function nodeValue_Enum_Button(_name, _node, _value, _data) { return new NodeValue_Enum_Button(_name, _node, _value, _data); }
 
-function NodeValue_Enum_Button(_name, _node, _value, _data) : NodeValue(_name, _node, JUNCTION_CONNECT.input, VALUE_TYPE.integer, _value, "") constructor {
+function NodeValue_Enum_Button(_name, _node, _value, _data) : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.integer, _value, "") constructor {
 	setDisplay(VALUE_DISPLAY.enum_button, _data);
 	
 	/////============== GET =============
@@ -21,5 +21,5 @@ function NodeValue_Enum_Button(_name, _node, _value, _data) : NodeValue(_name, _
 }
 
 //Replacement regex 
-// (nodeValue)(.*self,\s*)(JUNCTION_CONNECT\.input, VALUE_TYPE\.integer,)(.*(?=\)))(.*\n.*)(\.setDisplay\(VALUE_DISPLAY\.enum_button)
+// (nodeValue)(.*self,\s*)(CONNECT_TYPE\.input, VALUE_TYPE\.integer,)(.*(?=\)))(.*\n.*)(\.setDisplay\(VALUE_DISPLAY\.enum_button)
 // nodeValue_Enum_Button$2$4

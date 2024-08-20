@@ -22,8 +22,8 @@ function Node_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
     - Angle: Use red as angle, green as distance.
     - Gradient: Displace down the brightness value defined by the Displace map.");
 	
-	inputs[6] = nodeValue_Bool("Iterate",  self, false, @"If not set, then strength value is multiplied directly to the displacement.
-If set, then strength value control how many times the effect applies on itself.");
+	newInput(6, nodeValue_Bool("Iterate",  self, false, @"If not set, then strength value is multiplied directly to the displacement.
+If set, then strength value control how many times the effect applies on itself."));
 	
 	newInput(7, nodeValue_Enum_Scroll("Oversample mode", self,  0, [ "Empty", "Clamp", "Repeat" ]))
 		.setTooltip("How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.");

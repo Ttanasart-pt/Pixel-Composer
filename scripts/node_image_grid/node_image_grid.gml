@@ -1,8 +1,8 @@
 function Node_Image_Grid(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Image Grid";
 	
-	inputs[0] = nodeValue_Enum_Scroll("Main Axis", self,  0, [ new scrollItem("Horizontal", s_node_alignment, 0), 
-												 new scrollItem("Vertical",   s_node_alignment, 1) ])
+	newInput(0, nodeValue_Enum_Scroll("Main Axis", self,  0, [ new scrollItem("Horizontal", s_node_alignment, 0), 
+												               new scrollItem("Vertical",   s_node_alignment, 1) ]))
 		.rejectArray();
 	
 	newInput(1, nodeValue_Int("Column", self, 4))

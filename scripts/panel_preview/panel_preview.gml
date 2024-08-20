@@ -366,7 +366,7 @@ function Panel_Preview() : PanelContent() constructor {
             [ 
                 THEME.icon_grid_setting,
                 function() /*=>*/ {return 0},
-                function() /*=>*/ {return new tooltipHotkey(__txtx("grid_title", "Grid setting"), "Preview", "Grid Settings")}, 
+                function() /*=>*/ {return new tooltipHotkey(__txtx("grid_title", "Grid settings"), "Preview", "Grid Settings")}, 
                 function(param) /*=>*/ { dialogPanelCall(new Panel_Preview_Grid_Setting(), param.x, param.y, { anchor: ANCHOR.bottom | ANCHOR.left }); } 
             ],
             [ 

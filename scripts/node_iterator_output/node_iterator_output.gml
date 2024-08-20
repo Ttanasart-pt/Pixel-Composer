@@ -16,7 +16,7 @@ function Node_Iterator_Output(_x, _y, _group = noone) : Node_Group_Output(_x, _y
 		return true;
 	}
 	
-	newInput(1, nodeValue("Loop exit", self, JUNCTION_CONNECT.input, VALUE_TYPE.node, -1))
+	newInput(1, nodeValue("Loop exit", self, CONNECT_TYPE.input, VALUE_TYPE.node, -1))
 		.uncache()
 		.setVisible(true, true);
 	

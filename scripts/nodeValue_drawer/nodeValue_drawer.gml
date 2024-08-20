@@ -34,7 +34,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 	}
 	
 	var butx = xx;
-	if(jun.connect_type == JUNCTION_CONNECT.input && jun.isAnimable() && !jun.expUse) { // animation
+	if(jun.connect_type == CONNECT_TYPE.input && jun.isAnimable() && !jun.expUse) { // animation
 		var index = jun.hasJunctionFrom()? 2 : jun.is_anim;
 		
 		var cc = c_white;
@@ -160,7 +160,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 	#endregion
 			
 	#region anim
-		if(jun.connect_type == JUNCTION_CONNECT.input && breakLine && jun.is_anim) {
+		if(jun.connect_type == CONNECT_TYPE.input && breakLine && jun.is_anim) {
 			var _anim = jun.animator;
 			
 			var bx = xx + ww - ui(12);
@@ -242,7 +242,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 	#endregion
 		
 	#region right buttons
-		if(jun.connect_type == JUNCTION_CONNECT.input && breakLine && !jun.is_anim && !global_var) {
+		if(jun.connect_type == CONNECT_TYPE.input && breakLine && !jun.is_anim && !global_var) {
 			var bx  = xx + ww + ui(16);
 			var by  = lb_y;
 			var bs  = ui(24);
@@ -339,7 +339,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 	} else if(wid && jun.display_type != VALUE_DISPLAY.none) { // edit widget
 		wid.setFocusHover(_focus, _hover);
 		
-		if(jun.connect_type == JUNCTION_CONNECT.input) {
+		if(jun.connect_type == CONNECT_TYPE.input) {
 			wid.setInteract(!jun.hasJunctionFrom());
 			if(_focus) wid.register(_scrollPane);
 			

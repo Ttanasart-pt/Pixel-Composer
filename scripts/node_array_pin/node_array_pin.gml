@@ -17,7 +17,7 @@ function Node_Array_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static createNewInput = function() {
 		var index = array_length(inputs);
 		
-		newInput(index, nodeValue("Input", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, -1 ))
+		newInput(index, nodeValue("Input", self, CONNECT_TYPE.input, VALUE_TYPE.any, -1 ))
 			.setVisible(true, true);
 		
 		return inputs[index];
@@ -68,7 +68,7 @@ function Node_Array_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	static drawJunctions = function(_x, _y, _mx, _my, _s) {
 		var _dval = PANEL_GRAPH.value_dragging;
-		var hover = _dval == noone || _dval.connect_type == JUNCTION_CONNECT.input? outputs[0] : dummy_input;
+		var hover = _dval == noone || _dval.connect_type == CONNECT_TYPE.input? outputs[0] : dummy_input;
 		var xx	  = x * _s + _x;
 		var yy	  = y * _s + _y;
 		isHovering = point_in_circle(_mx, _my, xx, yy, _s * 24);

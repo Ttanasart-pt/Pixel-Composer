@@ -40,7 +40,7 @@ function _Node_Strand_Affector(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	icon  = THEME.strandSim;
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue("Strand", self, JUNCTION_CONNECT.input, VALUE_TYPE.strands, noone))
+	newInput(0, nodeValue("Strand", self, CONNECT_TYPE.input, VALUE_TYPE.strands, noone))
 		.setVisible(true, true);
 	
 	newInput(1, nodeValue_Enum_Scroll("Shape", self, 0, [ "Point", "Band" ]));

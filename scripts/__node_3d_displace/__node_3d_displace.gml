@@ -27,7 +27,7 @@ function __Node_3D_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	newInput(10, nodeValue_Color("Ambient color", self, c_grey));
 	
-	newInput(11, nodeValue("3D vertex", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3vertex, []))
+	newInput(11, nodeValue("3D vertex", self, CONNECT_TYPE.input, VALUE_TYPE.d3vertex, []))
 		.setVisible(true, true);
 		
 	newInput(12, nodeValue_Enum_Button("Projection", self,  0, [ "Orthographic", "Perspective" ]))

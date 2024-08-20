@@ -6,9 +6,9 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(1, nodeValue_Gradient("Gradient", self, new gradientObject([ cola(c_black), cola(c_white) ])))
 		.setMappable(15);
 	
-	inputs[2] = nodeValue_Enum_Scroll("Type", self,  0, [ new scrollItem("Linear",   s_node_gradient_type, 0),
-												 new scrollItem("Circular", s_node_gradient_type, 1),
-												 new scrollItem("Radial",   s_node_gradient_type, 2) ]);
+	newInput(2, nodeValue_Enum_Scroll("Type", self,  0, [ new scrollItem("Linear",   s_node_gradient_type, 0),
+												          new scrollItem("Circular", s_node_gradient_type, 1),
+												          new scrollItem("Radial",   s_node_gradient_type, 2) ]));
 	
 	newInput(3, nodeValue_Rotation("Angle", self, 0))
 		.setMappable(10);

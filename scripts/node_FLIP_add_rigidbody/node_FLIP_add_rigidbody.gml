@@ -9,7 +9,7 @@ function Node_FLIP_Add_Rigidbody(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	newInput(0, nodeValue_Fdomain("Domain", self, noone ))
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue("Objects", self, JUNCTION_CONNECT.input, VALUE_TYPE.rigid, [] ))
+	newInput(1, nodeValue("Objects", self, CONNECT_TYPE.input, VALUE_TYPE.rigid, [] ))
 		.setVisible(true, true);
 	
 	input_display_list = [ 0, 

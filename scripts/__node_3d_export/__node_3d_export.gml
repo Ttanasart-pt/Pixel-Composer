@@ -1,7 +1,7 @@
 function __Node_3D_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "3D Export";
 	
-	newInput(0, nodeValue("Vertex data", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3vertex, [] ))
+	newInput(0, nodeValue("Vertex data", self, CONNECT_TYPE.input, VALUE_TYPE.d3vertex, [] ))
 		.setVisible(true, true);
 	
 	newInput(1, nodeValue_Path("Path", self, "", "Export location without '.obj' extension." ))

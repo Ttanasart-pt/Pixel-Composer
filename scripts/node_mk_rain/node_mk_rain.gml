@@ -21,9 +21,9 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(8, nodeValue_Int("Seed", self, seed_random(6)))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[8].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
-	inputs[9] = nodeValue_Enum_Scroll("Shape", self,  0, [ new scrollItem("Rain",    s_node_mk_rain_type, 0),
-												             new scrollItem("Snow",    s_node_mk_rain_type, 1),
-												             new scrollItem("Texture", s_node_mk_rain_type, 2) ]);
+	newInput(9, nodeValue_Enum_Scroll("Shape", self,  0, [ new scrollItem("Rain",    s_node_mk_rain_type, 0),
+												           new scrollItem("Snow",    s_node_mk_rain_type, 1),
+												           new scrollItem("Texture", s_node_mk_rain_type, 2) ]));
 	
 	newInput(10, nodeValue_Range("Snow size", self, [ 3, 4 ]));
 	
@@ -31,14 +31,14 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	newInput(12, nodeValue_Slider_Range("Track extension", self, [ 0, 0 ], { range: [ 0, 10, 0.01 ] }));
 	
-	newInput(13, nodeValue("Size over lifetime", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11));
+	newInput(13, nodeValue("Size over lifetime", self, CONNECT_TYPE.input, VALUE_TYPE.curve, CURVE_DEF_11));
 	
 	newInput(14, nodeValue_Bool("Limited lifespan", self, false));
 	
 	newInput(15, nodeValue_Slider_Range("Lifespan", self, [ 0, 1 ]))
 		.setTooltip("Lifespan of a droplet as a ratio of the entire animation.");
 		
-	newInput(16, nodeValue("Alpha over lifetime", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11));
+	newInput(16, nodeValue("Alpha over lifetime", self, CONNECT_TYPE.input, VALUE_TYPE.curve, CURVE_DEF_11));
 		
 	newInput(17, nodeValue_Bool("Fade alpha", self, false));
 		

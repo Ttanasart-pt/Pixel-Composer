@@ -5,7 +5,7 @@ function __generate_node_data() { #region
 	var amo = ds_map_size(ALL_NODES);
 	var k = ds_map_find_first(ALL_NODES);
 	
-	CLONING = true;
+	CLONING      = true;
 	NODE_EXTRACT = true;
 	
 	var dir  = DIRECTORY + "Nodes/";

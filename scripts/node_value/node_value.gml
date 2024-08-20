@@ -1,10 +1,10 @@
 function nodeValue(_name, _node, _connect, _type, _value, _tooltip = "") { return new NodeValue(_name, _node, _connect, _type, _value, _tooltip); }
-function nodeValueMap(_name, _node, _junc = noone)						 { return new NodeValue(_name, _node, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone).setVisible(false, false).setMapped(_junc); }
-function nodeValueGradientRange(_name, _node, _junc = noone)			 { return new NodeValue(_name, _node, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 1, 0 ])
+function nodeValueMap(_name, _node, _junc = noone)						 { return new NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.surface, noone).setVisible(false, false).setMapped(_junc); }
+function nodeValueGradientRange(_name, _node, _junc = noone)			 { return new NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.float, [ 0, 0, 1, 0 ])
 																						.setDisplay(VALUE_DISPLAY.gradient_range).setVisible(false, false).setMapped(_junc); }
 																						
 function nodeValueSeed(_node, _type) { 
-	var _val = new NodeValue("Seed", _node, JUNCTION_CONNECT.input, _type, seed_random(6), "");
+	var _val = new NodeValue("Seed", _node, CONNECT_TYPE.input, _type, seed_random(6), "");
 	__node_seed_input_value = _val;
 	_val.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() /*=>*/ { randomize(); __node_seed_input_value.setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	return _val; 
@@ -40,8 +40,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		name_custom = false;
 		
 		if(struct_has(node, "inputMap")) {
-				 if(_connect == JUNCTION_CONNECT.input)  node.inputMap[?  internalName] = self;
-			else if(_connect == JUNCTION_CONNECT.output) node.outputMap[? internalName] = self;
+				 if(_connect == CONNECT_TYPE.input)  node.inputMap[?  internalName] = self;
+			else if(_connect == CONNECT_TYPE.output) node.outputMap[? internalName] = self;
 		}
 		
 		tooltip        = _tooltip;
@@ -60,7 +60,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		bypass_junc    = noone;
 		
-		if(_connect == JUNCTION_CONNECT.input) {
+		if(_connect == CONNECT_TYPE.input) {
 			bypass_junc = new NodeValue_Input_Bypass(self, _name, _node, _type, index);
 			node.input_bypass[index] = bypass_junc;
 		}
@@ -138,7 +138,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		fullUpdate    = false;
 		attributes    = {};
 		
-		if(_connect == JUNCTION_CONNECT.input) {
+		if(_connect == CONNECT_TYPE.input) {
 			node.inputs_data[index]              = _value;
 			node.input_value_map[$ internalName] = _value;
 		}
@@ -191,7 +191,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	#endregion
 	
 	#region ---- inspector ----
-		visible = _connect == JUNCTION_CONNECT.output || _type == VALUE_TYPE.surface || _type == VALUE_TYPE.path || _type == VALUE_TYPE.PCXnode;
+		visible = _connect == CONNECT_TYPE.output || _type == VALUE_TYPE.surface || _type == VALUE_TYPE.path || _type == VALUE_TYPE.PCXnode;
 		visible_manual    = 0;
 		show_in_inspector = true;
 		visible_in_list   = true;
@@ -505,7 +505,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static setVisible = function(inspector) {
 		var v = visible;
 		
-		if(connect_type == JUNCTION_CONNECT.input) {
+		if(connect_type == CONNECT_TYPE.input) {
 			show_in_inspector = inspector;
 			visible = argument_count > 1? argument[1] : visible;
 		} else 
@@ -527,7 +527,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static isVisible = function() {
 		if(!node.active) return false;
 		
-		if(connect_type == JUNCTION_CONNECT.output) {
+		if(connect_type == CONNECT_TYPE.output) {
 			if(!array_empty(value_to)) return true;
 			if(visible_manual != 0)    return visible_manual == 1;
 			
@@ -616,7 +616,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 								extract_node = [ "Node_Vector2", "Node_Path" ];
 								
 								if(_dim && array_equals(def_val, DEF_SURF)) {
-									value_tag = "dimension";
 									node.attributes.use_project_dimension = true;
 									
 									editWidget.side_button = button(function() /*=>*/ {
@@ -1121,14 +1120,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			if(typeFrom == VALUE_TYPE.text) value = toNumber(value);
 			
 			value = applyUnit? unit.apply(value, arrIndex) : value;
-			
-			if(value_tag == "dimension") for( var i = 0, n = array_length(value); i < n; i++ ) value[i] = clamp(value[i], 0, 8192);
 			if(validator != noone) value = validator.validate(value);
 			
 			return value;
 		}
 		
-		if(type == VALUE_TYPE.surface && connect_type == JUNCTION_CONNECT.input && !is_surface(value) && def_val == USE_DEF)
+		if(type == VALUE_TYPE.surface && connect_type == CONNECT_TYPE.input && !is_surface(value) && def_val == USE_DEF)
 			return DEF_SURFACE;
 		
 		return value;
@@ -1146,7 +1143,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			cache_hit &= !isActiveDynamic(_time) || cache_value[1] == _time;
 			cache_hit &= cache_value[2] != undefined;
 			cache_hit &= cache_value[3] == applyUnit;
-			cache_hit &= connect_type == JUNCTION_CONNECT.input;
+			cache_hit &= connect_type == CONNECT_TYPE.input;
 			cache_hit &= unit.reference == noone || unit.mode == VALUE_UNIT.constant;
 			
 			if(cache_hit) return cache_value[2];
@@ -1183,7 +1180,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var typ = nod.type;
 		var dis = nod.display_type;
 		
-		if(connect_type == JUNCTION_CONNECT.output) return val;
+		if(connect_type == CONNECT_TYPE.output) return val;
 		
 		if(typ == VALUE_TYPE.surface && (type == VALUE_TYPE.integer || type == VALUE_TYPE.float)) { // Dimension conversion
 			if(is_array(val)) {
@@ -1308,8 +1305,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	static __getAnimValue = function(_time = CURRENT_FRAME) {
-		
-		if(value_tag == "dimension" && node.attributes.use_project_dimension) return PROJECT.attributes.surface_dimension;
 		
 		if(!is_anim) {
 			if(sep_axis) {
@@ -1513,7 +1508,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		is_modified = true;
 		var updated = false;
 		var _val    = val;
-		var _inp    = connect_type == JUNCTION_CONNECT.input;
+		var _inp    = connect_type == CONNECT_TYPE.input;
 		
 		record &= record_value & _inp;
 		
@@ -1540,14 +1535,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(!updated) return false; /////////////////////////////////////////////////////////////////////////////////
 		
-		if(connect_type == JUNCTION_CONNECT.input && self.index >= 0) {
+		if(connect_type == CONNECT_TYPE.input && self.index >= 0) {
 			var _val = animator.getValue(time);
 			
 			node.inputs_data[self.index]         = _val; // setInputData(self.index, _val);
 			node.input_value_map[$ internalName] = _val;
 		}
-		
-		if(value_tag == "dimension") node.attributes.use_project_dimension = false;
 		
 		draw_junction_index = type;
 		if(type == VALUE_TYPE.surface) {
@@ -1559,7 +1552,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				draw_junction_index = VALUE_TYPE.atlas;
 		}
 		
-		if(connect_type == JUNCTION_CONNECT.output) {
+		if(connect_type == CONNECT_TYPE.output) {
 			if(self.index == 0) {
 				node.preview_value = getValue();
 				node.preview_array = $"[{array_shape(node.preview_value)}]";
@@ -1593,7 +1586,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	static setString = function(str) {
-		if(connect_type == JUNCTION_CONNECT.output) return;
+		if(connect_type == CONNECT_TYPE.output) return;
 		if(type == VALUE_TYPE.text) { setValue(str); return; }
 		
 		var _dat = json_try_parse(str);
@@ -1696,7 +1689,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		array_push(_valueFrom.value_to, self);
 		
 		node.valueUpdate(index, _o);
-		if(_update && connect_type == JUNCTION_CONNECT.input) {
+		if(_update && connect_type == CONNECT_TYPE.input) {
 			node.valueFromUpdate(index);
 			node.triggerRender();
 			node.clearCacheForward();
@@ -1729,7 +1722,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			array_remove(value_from.value_to, self);	
 		value_from = noone;
 		
-		if(connect_type == JUNCTION_CONNECT.input)
+		if(connect_type == CONNECT_TYPE.input)
 			node.valueFromUpdate(index);
 		node.clearCacheForward();
 		
@@ -1930,7 +1923,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			var tx = x;
 			draw_sprite_stretched_ext(THEME.node_junction_name_bg, 0, tx - tw / 2, y - th, tw, th, c_white, 0.5);
 			
-		} else if(connect_type == JUNCTION_CONNECT.input) {
+		} else if(connect_type == CONNECT_TYPE.input) {
 			var tx = x - 12 * _s;
 			draw_sprite_stretched_ext(THEME.node_junction_name_bg, 0, tx - tw + 16, y - th / 2, tw, th, c_white, 0.5);
 			
@@ -1955,7 +1948,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			draw_set_text(_f, fa_center, fa_center, _draw_cc);
 			draw_text_add(tx, y - (line_get_height() + 16) / 2, name);
 			
-		} else if(connect_type == JUNCTION_CONNECT.input) {
+		} else if(connect_type == CONNECT_TYPE.input) {
 			var tx = x - 12 * _s;
 			draw_set_halign(fa_right);
 			draw_text_add(tx, y, name);
@@ -2002,7 +1995,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		draw_set_color(col);
 		
 		var _action = type == VALUE_TYPE.action;
-		var _output = connect_type == JUNCTION_CONNECT.output;
+		var _output = connect_type == CONNECT_TYPE.output;
 		
 		switch(PREFERENCES.curve_connection_line) {
 			case 0 : draw_line_width(sx, sy, _mx, _my, th); break;
@@ -2066,7 +2059,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		_map.visible_manual = visible_manual;
 		_map.color  		= color;
 		
-		if(connect_type == JUNCTION_CONNECT.output) 
+		if(connect_type == CONNECT_TYPE.output) 
 			return _map;
 		
 		_map.name		= name;
@@ -2115,7 +2108,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		visible_manual = struct_try_get(_map, "visible_manual", visible_manual);
 		color   	   = struct_try_get(_map, "color", -1);
 		
-		if(connect_type == JUNCTION_CONNECT.output) 
+		if(connect_type == CONNECT_TYPE.output) 
 			return;
 		
 		//print($"        > Applying deserialize to junction {name} 0");
@@ -2157,7 +2150,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				struct_try_override(display_data, _map.display_data, DISPLAY_DATA_KEYS[i]);
 		}
 		
-		if(connect_type == JUNCTION_CONNECT.input && index >= 0) {
+		if(connect_type == CONNECT_TYPE.input && index >= 0) {
 			var _value = animator.getValue(0);
 			node.inputs_data[index] = _value;
 			node.input_value_map[$ internalName] = _value;
@@ -2293,7 +2286,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			DRAGGING.data.getSpr();
 		}
 		
-		if(connect_type == JUNCTION_CONNECT.input)
+		if(connect_type == CONNECT_TYPE.input)
 			DRAGGING.from = self;
 	} #endregion
 	
@@ -2306,7 +2299,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static cleanUp = function() {}
 		
-	static toString = function() { return (connect_type == JUNCTION_CONNECT.input? "Input" : "Output") + $" junction {index} of [{name}]: {node}"; }
+	static toString = function() { return (connect_type == CONNECT_TYPE.input? "Input" : "Output") + $" junction {index} of [{name}]: {node}"; }
 	
 }
 

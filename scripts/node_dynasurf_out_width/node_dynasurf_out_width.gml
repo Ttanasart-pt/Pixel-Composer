@@ -5,7 +5,7 @@ function Node_DynaSurf_Out_Width(_x, _y, _group = noone) : Node_PCX(_x, _y, _gro
 	manual_deletable	 = false;
 	destroy_when_upgroup = true;
 	
-	newInput(0, nodeValue("Width", self, JUNCTION_CONNECT.input, VALUE_TYPE.PCXnode, noone));
+	newInput(0, nodeValue("Width", self, CONNECT_TYPE.input, VALUE_TYPE.PCXnode, noone));
 	
 	outputs[0] = nodeValue_Output("PCX", self, VALUE_TYPE.PCXnode, noone)
 		.setVisible(false);

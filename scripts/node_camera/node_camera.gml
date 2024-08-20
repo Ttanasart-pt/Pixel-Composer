@@ -41,14 +41,14 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		newInput(index + 2, nodeValue_Vec2($"Position {_s}", self, [ 0, 0 ] ))
 			.setUnitRef(function(index) { return getDimension(index); });
 		
-		inputs[index + 3] = nodeValue_Enum_Scroll($"Oversample {_s}", self,  0, [ new scrollItem("Empty ",   s_node_camera_repeat, 0), 
-													 new scrollItem("Repeat ",  s_node_camera_repeat, 1), 
-													 new scrollItem("Repeat X", s_node_camera_repeat, 2), 
-													 new scrollItem("Repeat Y", s_node_camera_repeat, 3), ]);
+		newInput(index + 3, nodeValue_Enum_Scroll($"Oversample {_s}", self,  0, [ new scrollItem("Empty ",   s_node_camera_repeat, 0), 
+													                              new scrollItem("Repeat ",  s_node_camera_repeat, 1), 
+													                              new scrollItem("Repeat X", s_node_camera_repeat, 2), 
+													                              new scrollItem("Repeat Y", s_node_camera_repeat, 3), ]));
 		
 		newInput(index + 4, nodeValue_Vec2($"Parallax {_s}", self, [ 0, 0 ]));
 		
-		newInput(index + 5, nodeValue($"Depth {_s}", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0));
+		newInput(index + 5, nodeValue($"Depth {_s}", self, CONNECT_TYPE.input, VALUE_TYPE.float, 0));
 		
 		for( var i = 0; i < data_length; i++ ) array_push(input_display_list, index + i);
 		

@@ -2,7 +2,7 @@ function Node_Array_Zip(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	name = "Array Zip";
 	setDimension(96, 32 + 24);
 	
-	newInput(0, nodeValue("Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0))
+	newInput(0, nodeValue("Array", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0))
 		.setVisible(true, true);
 	
 	outputs[0] = nodeValue_Output("Output", self, VALUE_TYPE.integer, 0);
@@ -10,7 +10,7 @@ function Node_Array_Zip(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static createNewInput = function() {
 		var index = array_length(inputs);
 		
-		newInput(index, nodeValue("Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, -1 ))
+		newInput(index, nodeValue("Value", self, CONNECT_TYPE.input, VALUE_TYPE.any, -1 ))
 			.setVisible(true, true);
 		
 		return inputs[index];

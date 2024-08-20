@@ -27,8 +27,8 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput(4, nodeValue_Int("Light density", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] });
 	
-	inputs[5] = nodeValue_Enum_Scroll("Light type", self,  0, [ new scrollItem("Point", s_node_shadow_type, 0), 
-												 new scrollItem("Sun",   s_node_shadow_type, 1) ]);
+	newInput(5, nodeValue_Enum_Scroll("Light type", self,  0, [ new scrollItem("Point", s_node_shadow_type, 0), 
+												                new scrollItem("Sun",   s_node_shadow_type, 1) ]));
 	
 	newInput(6, nodeValue_Color("Ambient color", self, c_grey));
 	
@@ -49,9 +49,9 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput(13, nodeValue_Int("Banding", self, 0))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 16, 0.1] });
 	
-	inputs[14] = nodeValue_Enum_Scroll("Attenuation", self,  0, [ new scrollItem("Quadratic",			s_node_curve, 0),
-																	new scrollItem("Invert quadratic",	s_node_curve, 1),
-																	new scrollItem("Linear",			s_node_curve, 2), ])
+	newInput(14, nodeValue_Enum_Scroll("Attenuation", self,  0, [ new scrollItem("Quadratic",			s_node_curve, 0),
+																  new scrollItem("Invert quadratic",	s_node_curve, 1),
+																  new scrollItem("Linear",			    s_node_curve, 2), ]))
 		.setTooltip("Control how light fade out over distance.");
 	
 	newInput(15, nodeValue_Int("Ambient occlusion", self, 0))

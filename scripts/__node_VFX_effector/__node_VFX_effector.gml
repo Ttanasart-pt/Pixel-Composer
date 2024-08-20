@@ -26,7 +26,7 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(1, nodeValue_Area("Area", self, DEF_AREA))
 		.rejectArray();
 	
-	newInput(2, nodeValue("Falloff", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_01 ))
+	newInput(2, nodeValue("Falloff", self, CONNECT_TYPE.input, VALUE_TYPE.curve, CURVE_DEF_01 ))
 		.rejectArray();
 	
 	newInput(3, nodeValue_Float("Falloff distance", self, 4 ))

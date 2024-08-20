@@ -1,6 +1,6 @@
 function nodeValue_Bool(_name, _node, _value, _tooltip = "") { return new NodeValue_Bool(_name, _node, _value, _tooltip); }
 
-function NodeValue_Bool(_name, _node, _value, _tooltip = "") : NodeValue(_name, _node, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, _value, _tooltip) constructor {
+function NodeValue_Bool(_name, _node, _value, _tooltip = "") : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.boolean, _value, _tooltip) constructor {
 	
 	/////============== GET =============
 	

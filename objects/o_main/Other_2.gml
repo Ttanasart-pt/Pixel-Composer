@@ -56,6 +56,7 @@
 	var t = current_time;
 	
 	              PREF_LOAD();                  log_message("SESSION", $"> init Preferences   | complete in {get_timer() - t}");    t = get_timer();
+	if(!IS_CMD) { __initLocale();               log_message("SESSION", $"> init Locale        | complete in {get_timer() - t}");    t = get_timer(); }
 	if(!IS_CMD) { __initHotKey();               log_message("SESSION", $"> init Hotkeys       | complete in {get_timer() - t}");    t = get_timer(); }
 	              __fnInit();
 	
@@ -75,7 +76,6 @@
 				  __initKeys()
 				  __initPatreon();              log_message("SESSION", $"> init Patreon       | complete in {get_timer() - t}");    t = get_timer();
     if(!IS_CMD) { __initTheme();                log_message("SESSION", $"> init Theme         | complete in {get_timer() - t}");    t = get_timer(); }
-    if(!IS_CMD) { __initLocale();               log_message("SESSION", $"> init Locale        | complete in {get_timer() - t}");    t = get_timer(); }
     if(!IS_CMD) { loadFonts();                  log_message("SESSION", $"> init Font          | complete in {get_timer() - t}");    t = get_timer(); }
 	if(!IS_CMD) { __initProject();              log_message("SESSION", $"> init Project       | complete in {get_timer() - t}");    t = get_timer(); }
 	

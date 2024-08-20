@@ -38,7 +38,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	newInput(12, nodeValue_Float("Curliness", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(13, nodeValue("Mesh", self, JUNCTION_CONNECT.input, VALUE_TYPE.mesh, noone));
+	newInput(13, nodeValue("Mesh", self, CONNECT_TYPE.input, VALUE_TYPE.mesh, noone));
 	
 	newInput(14, nodeValue_Enum_Scroll("Distribution", self,  0, [ "Uniform", "Random" ]));
 	

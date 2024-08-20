@@ -18,7 +18,7 @@ function Node_CSV_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		.setDisplay(VALUE_DISPLAY.path_save, { filter: "csv file|*.csv" })
 		.rejectArray();
 	
-	newInput(1, nodeValue("Content", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, ""))
+	newInput(1, nodeValue("Content", self, CONNECT_TYPE.input, VALUE_TYPE.any, ""))
 		.setVisible(true, true);
 	
 	static writeFile = function() { #region

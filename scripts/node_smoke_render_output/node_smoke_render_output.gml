@@ -8,7 +8,7 @@ function Node_Smoke_Render_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 	
 	manual_ungroupable	 = false;
 	
-	newInput(0, nodeValue("Domain", self, JUNCTION_CONNECT.input, VALUE_TYPE.sdomain, noone))
+	newInput(0, nodeValue("Domain", self, CONNECT_TYPE.input, VALUE_TYPE.sdomain, noone))
 		.setVisible(true, true);
 	
 	newInput(1, nodeValue_Dimension(self));
@@ -40,7 +40,7 @@ function Node_Smoke_Render_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 		if(!is_undefined(outParent))
 			array_remove(group.outputs, outParent);
 			
-		outParent = nodeValue("Rendered", group, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone)
+		outParent = nodeValue("Rendered", group, CONNECT_TYPE.output, VALUE_TYPE.surface, noone)
 			.uncache()
 			.setVisible(true, true);
 		outParent.from = self;

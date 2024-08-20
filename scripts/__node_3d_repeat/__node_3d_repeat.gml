@@ -26,7 +26,7 @@ function __Node_3D_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	newInput(10, nodeValue_Color("Ambient color", self, c_grey));
 		
-	newInput(11, nodeValue("3D object", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3object, noone))
+	newInput(11, nodeValue("3D object", self, CONNECT_TYPE.input, VALUE_TYPE.d3object, noone))
 		.setVisible(true, true);
 	
 	newInput(12, nodeValue_Int("Repeat", self, 1, "Amount of copies to be generated."));

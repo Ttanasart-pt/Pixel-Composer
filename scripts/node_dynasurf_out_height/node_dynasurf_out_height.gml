@@ -5,7 +5,7 @@ function Node_DynaSurf_Out_Height(_x, _y, _group = noone) : Node_PCX(_x, _y, _gr
 	manual_deletable	 = false;
 	destroy_when_upgroup = true;
 	
-	newInput(0, nodeValue("Height", self, JUNCTION_CONNECT.input, VALUE_TYPE.PCXnode, noone));
+	newInput(0, nodeValue("Height", self, CONNECT_TYPE.input, VALUE_TYPE.PCXnode, noone));
 	
 	outputs[0] = nodeValue_Output("PCX", self, VALUE_TYPE.PCXnode, noone)
 		.setVisible(false);

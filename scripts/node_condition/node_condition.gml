@@ -6,21 +6,21 @@ function Node_Condition(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	newInput(0, nodeValue_Float("Check value", self, 0 ))
 		.setVisible(true, true);
 		
-	inputs[1] = nodeValue_Enum_Scroll("Condition", self,  0 , [ new scrollItem("Equal",			s_node_condition_type, 0), 
-												 new scrollItem("Not equal",		s_node_condition_type, 1), 
-												 new scrollItem("Less ",			s_node_condition_type, 2), 
-												 new scrollItem("Less or equal ",	s_node_condition_type, 3), 
-												 new scrollItem("Greater ",			s_node_condition_type, 4), 
-												 new scrollItem("Greater or equal", s_node_condition_type, 5), ])
+	newInput(1, nodeValue_Enum_Scroll("Condition", self,  0 , [ new scrollItem("Equal",             s_node_condition_type, 0), 
+												                new scrollItem("Not equal",         s_node_condition_type, 1), 
+												                new scrollItem("Less ",             s_node_condition_type, 2), 
+												                new scrollItem("Less or equal ",	s_node_condition_type, 3), 
+												                new scrollItem("Greater ",			s_node_condition_type, 4), 
+												                new scrollItem("Greater or equal",  s_node_condition_type, 5), ]))
 		.rejectArray();
 		
 	newInput(2, nodeValue_Float("Compare to", self, 0 ))
 		.rejectArray();
 	
-	newInput(3, nodeValue("True", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, -1 ))
+	newInput(3, nodeValue("True", self, CONNECT_TYPE.input, VALUE_TYPE.any, -1 ))
 		.setVisible(true, true);
 		
-	newInput(4, nodeValue("False", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, -1 ))
+	newInput(4, nodeValue("False", self, CONNECT_TYPE.input, VALUE_TYPE.any, -1 ))
 		.setVisible(true, true);
 	
 	newInput(5, nodeValue_Enum_Scroll("Eval mode", self,  0 , ["Boolean", "Number compare", "Text compare" ]))

@@ -9,7 +9,7 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	newInput(2, nodeValue_Text("Lua code", self, "", o_dialog_lua_reference))
 		.setDisplay(VALUE_DISPLAY.codeLUA);
 	
-	newInput(3, nodeValue("Execution thread", self, JUNCTION_CONNECT.input, VALUE_TYPE.node, noone))
+	newInput(3, nodeValue("Execution thread", self, CONNECT_TYPE.input, VALUE_TYPE.node, noone))
 		.setVisible(false, true);
 	
 	newInput(4, nodeValue_Bool("Execute on frame", self, true))
@@ -42,7 +42,7 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		newInput(index + 1, nodeValue_Enum_Scroll("Argument type", self,  0 , { data: [ "Number", "String", "Surface", "Struct" ], update_hover: false }));
 		inputs[index + 1].editWidget.interactable = false;
 		
-		newInput(index + 2, nodeValue("Argument value", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 ))
+		newInput(index + 2, nodeValue("Argument value", self, CONNECT_TYPE.input, VALUE_TYPE.float, 0 ))
 			.setVisible(true, true);
 		inputs[index + 2].editWidget.interactable = false;
 		

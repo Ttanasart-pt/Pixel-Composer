@@ -9,7 +9,7 @@ function Node_Smoke_Domain_Queue(_x, _y, _group = noone) : Node_Smoke(_x, _y, _g
 	static createNewInput = function() {
 		var index = array_length(inputs);
 		
-		newInput(index, nodeValue("Input", self, JUNCTION_CONNECT.input, VALUE_TYPE.sdomain, noone ))
+		newInput(index, nodeValue("Input", self, CONNECT_TYPE.input, VALUE_TYPE.sdomain, noone ))
 			.setVisible(true, true);
 		
 		return inputs[index];

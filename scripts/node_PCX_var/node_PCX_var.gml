@@ -3,7 +3,7 @@ function Node_PCX_var(_x, _y, _group = noone) : Node_PCX(_x, _y, _group) constru
 	
 	newInput(0, nodeValue_Text("Name", self, ""));
 	
-	newInput(1, nodeValue("Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, -1));
+	newInput(1, nodeValue("Value", self, CONNECT_TYPE.input, VALUE_TYPE.any, -1));
 	
 	outputs[0] = nodeValue_Output("PCX", self, VALUE_TYPE.PCXnode, noone);
 	

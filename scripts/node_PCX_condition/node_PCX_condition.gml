@@ -1,11 +1,11 @@
 function Node_PCX_Condition(_x, _y, _group = noone) : Node_PCX(_x, _y, _group) constructor {
 	name  = "Condition";
 	
-	newInput(0, nodeValue("Condition", self, JUNCTION_CONNECT.input, VALUE_TYPE.PCXnode, noone));
+	newInput(0, nodeValue("Condition", self, CONNECT_TYPE.input, VALUE_TYPE.PCXnode, noone));
 	
-	newInput(1, nodeValue("True", self, JUNCTION_CONNECT.input, VALUE_TYPE.PCXnode, noone));
+	newInput(1, nodeValue("True", self, CONNECT_TYPE.input, VALUE_TYPE.PCXnode, noone));
 	
-	newInput(2, nodeValue("False", self, JUNCTION_CONNECT.input, VALUE_TYPE.PCXnode, noone));
+	newInput(2, nodeValue("False", self, CONNECT_TYPE.input, VALUE_TYPE.PCXnode, noone));
 	
 	outputs[0] = nodeValue_Output("PCX", self, VALUE_TYPE.PCXnode, noone);
 	

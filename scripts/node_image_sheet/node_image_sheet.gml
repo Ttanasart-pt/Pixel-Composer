@@ -18,8 +18,8 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	newInput(8, nodeValue_Float("Animation speed", self, 1));
 	
-	inputs[9]  = nodeValue_Enum_Scroll("Main Axis", self,  0, [ new scrollItem("Horizontal", s_node_alignment, 0), 
-												 new scrollItem("Vertical",   s_node_alignment, 1), ]);
+	newInput(9, nodeValue_Enum_Scroll("Main Axis", self,  0, [ new scrollItem("Horizontal", s_node_alignment, 0), 
+												               new scrollItem("Vertical",   s_node_alignment, 1), ]));
 	
 	newInput(10, nodeValue_Trigger("Auto fill", self, false, "Automatically set amount based on sprite size."))
 		.setDisplay(VALUE_DISPLAY.button, { name: "Auto fill", UI : true, onClick: function() { #region

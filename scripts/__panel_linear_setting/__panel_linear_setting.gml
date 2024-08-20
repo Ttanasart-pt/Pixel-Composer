@@ -79,9 +79,11 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 				_widg.setFocusHover(pFOCUS, pHOVER);
 				_widg.register();
 				
+				var _whover = false;
 				if(pHOVER && point_in_rectangle(mx, my, 0, yy - th / 2, w, yy + th / 2)) {
 					bg_y_to = yy - th / 2;
 					_hov    = true;
+					_whover = true;
 				}
 				
 				draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
@@ -104,7 +106,7 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 				if(_prop.action != noone) {
 					var _key = _prop.action.hotkey;
 					
-					if(_hov && !_widg.inBBOX([ mx, my ]) && mouse_press(mb_right)) {
+					if(_whover && !_widg.inBBOX([ mx, my ]) && mouse_press(mb_right)) {
 						selecting_menu = _key;
 						
 						var context_menu_settings = [

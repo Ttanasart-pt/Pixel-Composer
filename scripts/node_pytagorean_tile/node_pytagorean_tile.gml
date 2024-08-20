@@ -16,7 +16,7 @@ function Node_Pytagorean_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 0.5, 0.001] })
 		.setMappable(13);
 	
-	inputs[5] = nodeValue_Gradient("Tile color", self, new gradientObject(cola(c_white)))	
+	newInput(5, nodeValue_Gradient("Tile color", self, new gradientObject(cola(c_white))))
 		.setMappable(18);
 	
 	newInput(6, nodeValue_Color("Gap color", self, c_black));

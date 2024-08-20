@@ -3,7 +3,7 @@ function Node_Array_Sort(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue("Array in", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, []))
+	newInput(0, nodeValue("Array in", self, CONNECT_TYPE.input, VALUE_TYPE.any, []))
 		.setVisible(true, true);
 	
 	newInput(1, nodeValue_Enum_Button("Order", self,  0, [ "Ascending", "Descending" ]))

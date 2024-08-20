@@ -152,13 +152,13 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		inspector_display_list	= -1;
 		is_dynamic_output		= false;
 		
-		inspectInput1           = nodeValue("Toggle execution", self, JUNCTION_CONNECT.input, VALUE_TYPE.action, false).setVisible(true, true);
+		inspectInput1           = nodeValue("Toggle execution", self, CONNECT_TYPE.input, VALUE_TYPE.action, false).setVisible(true, true);
 		inspectInput1.index     = -1;
 		
-		inspectInput2           = nodeValue("Toggle execution", self, JUNCTION_CONNECT.input, VALUE_TYPE.action, false).setVisible(true, true);
+		inspectInput2           = nodeValue("Toggle execution", self, CONNECT_TYPE.input, VALUE_TYPE.action, false).setVisible(true, true);
 		inspectInput2.index     = -1;
 		
-		updatedInTrigger        = nodeValue("Update",  self, JUNCTION_CONNECT.input,  VALUE_TYPE.trigger, false).setVisible(true, true);
+		updatedInTrigger        = nodeValue("Update",  self, CONNECT_TYPE.input,  VALUE_TYPE.trigger, false).setVisible(true, true);
 		updatedInTrigger.index  = -1;
 		updatedInTrigger.tags   = VALUE_TAG.updateInTrigger;
 		
@@ -391,7 +391,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		dynamic_input_cond  = _dynamic_input_cond;
 		
 		if(auto_input) {
-			dummy_input = nodeValue("Add value", self, JUNCTION_CONNECT.input, dummy_type, 0)
+			dummy_input = nodeValue("Add value", self, CONNECT_TYPE.input, dummy_type, 0)
 						.setDummy(function() /*=>*/ {return createNewInput()})
 						.setVisible(false, true);
 		}
@@ -1544,8 +1544,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		show_output_name &= point_in_rectangle(_mx, _my, xx + (w - 12) * _s, _y0, xx + (w + 12) * _s, _y1);
 		
 		if(PANEL_GRAPH.value_dragging && PANEL_GRAPH.node_hovering == self) {
-			if(PANEL_GRAPH.value_dragging.connect_type == JUNCTION_CONNECT.input)  show_output_name = true;
-			if(PANEL_GRAPH.value_dragging.connect_type == JUNCTION_CONNECT.output) show_input_name = true;
+			if(PANEL_GRAPH.value_dragging.connect_type == CONNECT_TYPE.input)  show_output_name = true;
+			if(PANEL_GRAPH.value_dragging.connect_type == CONNECT_TYPE.output) show_input_name = true;
 		}
 		
 		if(show_input_name) {
@@ -1674,15 +1674,14 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return hovering;
 	}
 	
-	static getGraphPreviewSurface = function() {
+	static getGraphPreviewSurface = function() { 
 		var _node = array_safe_get(outputs, preview_channel);
 		if(!is_instanceof(_node, NodeValue)) return noone;
 		
 		switch(_node.type) {
 			case VALUE_TYPE.surface :
 			case VALUE_TYPE.dynaSurface :
-				var val = _node.showValue();
-				return val;
+				return _node.showValue();
 		}
 		
 		return noone;

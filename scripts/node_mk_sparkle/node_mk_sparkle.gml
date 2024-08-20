@@ -10,22 +10,22 @@ function Node_MK_Sparkle(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	newInput(1, nodeValueSeed(self, VALUE_TYPE.float));
 	
-	inputs[2] = nodeValue_Float("Speed", self, 1)	
+	newInput(2, nodeValue_Float("Speed", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider)
 	
 	newInput(3, nodeValue_Bool("Shade", self, false));
 	
-	inputs[4] = nodeValue_Float("Amount", self, 0.5)	
+	newInput(4, nodeValue_Float("Amount", self, 0.5))
 		.setDisplay(VALUE_DISPLAY.slider)
 		
-	inputs[5] = nodeValue_Float("Scatter", self, 0.5)	
+	newInput(5, nodeValue_Float("Scatter", self, 0.5))
 		.setDisplay(VALUE_DISPLAY.slider)
 		
-	inputs[6] = nodeValue_Palette("Colors", self, [ cola(c_black), cola(c_white) ])	
+	newInput(6, nodeValue_Palette("Colors", self, [ cola(c_black), cola(c_white) ]))
 		
-	inputs[7] = nodeValue_Bool("Additive", self, false)	
+	newInput(7, nodeValue_Bool("Additive", self, false))
 		
-	inputs[8] = nodeValue_Float("Diagonal", self, 0.2)	
+	newInput(8, nodeValue_Float("Diagonal", self, 0.2))
 		.setDisplay(VALUE_DISPLAY.slider)
 		
 	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
@@ -151,10 +151,10 @@ function __Node_MK_Sparkle(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	newInput(0, nodeValue_Int("Size", self, 5));
 	
-	inputs[1] = nodeValue_Float("Sparkle", self, [ 
+	newInput(1, nodeValue_Float("Sparkle", self, [ 
 			[ MKSPARK_DIRR.main, 0,  0, 2, 1, 0, 0 ], 
 			[ MKSPARK_DIRR.main, 0, -1, 1, 1, 0, 0 ], 
-		])
+		]))
 		.setArrayDepth(2)
 		.setArrayDynamic();
 	

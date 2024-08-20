@@ -1,9 +1,9 @@
 function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Stack";
 	
-	inputs[0] = nodeValue_Enum_Scroll("Axis", self,  0, [ new scrollItem("Horizontal", s_node_alignment, 0), 
-												 new scrollItem("Vertical",   s_node_alignment, 1), 
-												 new scrollItem("On top",     s_node_alignment, 3), ])
+	newInput(0, nodeValue_Enum_Scroll("Axis", self,  0, [ new scrollItem("Horizontal", s_node_alignment, 0), 
+												          new scrollItem("Vertical",   s_node_alignment, 1), 
+												          new scrollItem("On top",     s_node_alignment, 3), ]))
 		.rejectArray();
 	
 	newInput(1, nodeValue_Enum_Button("Align", self,  1, [ "Start", "Middle", "End"]))

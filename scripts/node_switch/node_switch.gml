@@ -7,7 +7,7 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		.setVisible(true, true)
 		.rejectArray();
 	
-	newInput(1, nodeValue("Default value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0 ))
+	newInput(1, nodeValue("Default value", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0 ))
 		.setVisible(false, true);
 	
 	size_adjust_tool = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { #region
@@ -43,7 +43,7 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				.setAnimable(false);
 			bDel.setContext(list[index + 0]);
 			
-			list[index + 1] = nodeValue("value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0 )
+			list[index + 1] = nodeValue("value", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0 )
 				.setVisible(false, false);
 			
 			return list[index + 0];

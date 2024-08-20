@@ -6,7 +6,7 @@ function Node_Iterate_Sort(_x, _y, _group = noone) : Node_Collection(_x, _y, _gr
 	reset_all_child     = true;
 	managedRenderOrder  = true;
 	
-	newInput(0, nodeValue("Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, [] ))
+	newInput(0, nodeValue("Array", self, CONNECT_TYPE.input, VALUE_TYPE.any, [] ))
 		.setVisible(true, true);
 	
 	outputs[0] = nodeValue_Output("Array", self, VALUE_TYPE.any, noone );

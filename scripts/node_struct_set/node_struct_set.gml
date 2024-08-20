@@ -8,7 +8,7 @@ function Node_Struct_Set(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	newInput(1, nodeValue_Text("Key", self, ""));
 	
-	newInput(2, nodeValue("Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0));
+	newInput(2, nodeValue("Value", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0));
 	
 	outputs[0] = nodeValue_Output("Struct", self, VALUE_TYPE.struct, {});
 	

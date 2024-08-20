@@ -1,6 +1,6 @@
 function nodeValue_Vec2(_name, _node, _value, _data = {}) { return new NodeValue_Vec2(_name, _node, _value, _data); }
 
-function NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _node, JUNCTION_CONNECT.input, VALUE_TYPE.float, _value, "") constructor {
+function NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.float, _value, "") constructor {
 	setDisplay(VALUE_DISPLAY.vector, _data);
 	
 	/////============== GET =============

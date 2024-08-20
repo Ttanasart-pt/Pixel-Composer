@@ -3,7 +3,7 @@ function Node_Vector_Swizzle(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	color = COLORS.node_blend_number;
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue("Vector", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, []))
+	newInput(0, nodeValue("Vector", self, CONNECT_TYPE.input, VALUE_TYPE.float, []))
 		.setArrayDepth(1)
 		.setVisible(true, true);
 	

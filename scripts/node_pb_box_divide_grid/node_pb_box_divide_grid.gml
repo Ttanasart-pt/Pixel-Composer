@@ -1,7 +1,7 @@
 function Node_PB_Box_Divide_Grid(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _group) constructor {
 	name = "Divide Grid";
 	
-	newInput(1, nodeValue("pBox", self, JUNCTION_CONNECT.input, VALUE_TYPE.pbBox, noone ))
+	newInput(1, nodeValue("pBox", self, CONNECT_TYPE.input, VALUE_TYPE.pbBox, noone ))
 		.setVisible(true, true);
 		
 	newInput(2, nodeValue_Vec2("Amount", self, [ 2, 2 ] ));

@@ -6,7 +6,7 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	
 	manual_ungroupable	 = false;
 	
-	newInput(0, nodeValue("Object", self, JUNCTION_CONNECT.input, VALUE_TYPE.rigid, noone))
+	newInput(0, nodeValue("Object", self, CONNECT_TYPE.input, VALUE_TYPE.rigid, noone))
 		.setVisible(true, true);
 	
 	newInput(1, nodeValue_Enum_Scroll("Force type", self,  0, [ "Constant", "Impulse", "Torque", "Explode" ]))

@@ -10,11 +10,11 @@ function Node_Palette_Sort(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	newInput(2, nodeValue_Bool("Reverse", self, false));
 	
-	inputs[3] = nodeValue_Text("Sort Order", self, "RGB", @"Compose sorting algorithm using string.
+	newInput(3, nodeValue_Text("Sort Order", self, "RGB", @"Compose sorting algorithm using string.
     - RGB: Red/Green/Blur channel
     - HSV: Hue/Saturation/Value
     - L:   Brightness
-    - Use small letter for ascending, capital letter for descending order.");
+    - Use small letter for ascending, capital letter for descending order."));
 	
 	outputs[0] = nodeValue_Output("Sorted palette", self, VALUE_TYPE.color, [])
 		.setDisplay(VALUE_DISPLAY.palette);

@@ -23,9 +23,9 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 	newInput(2, nodeValue_Int("Frame step", self, 1, "Number of frames until next sprite. Can be seen as (Step - 1) frame skip."))
 		.rejectArray();
 	
-	inputs[3] = nodeValue_Enum_Scroll("Packing type", self,  0, [ new scrollItem("Horizontal", s_node_alignment, 0), 
-												 new scrollItem("Vertical",   s_node_alignment, 1), 
-												 new scrollItem("Grid",       s_node_alignment, 2), ])
+	newInput(3, nodeValue_Enum_Scroll("Packing type", self,  0, [ new scrollItem("Horizontal", s_node_alignment, 0), 
+												                  new scrollItem("Vertical",   s_node_alignment, 1), 
+												                  new scrollItem("Grid",       s_node_alignment, 2), ]))
 		.rejectArray();
 		
 	newInput(4, nodeValue_Int("Grid column", self, 4))

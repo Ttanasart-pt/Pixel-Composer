@@ -3,11 +3,11 @@ function Node_Curve_HSV(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	newInput(0, nodeValue_Surface("Surface in", self));
 	
-	newInput(1, nodeValue("Hue", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_01));
+	newInput(1, nodeValue("Hue", self, CONNECT_TYPE.input, VALUE_TYPE.curve, CURVE_DEF_01));
 	
-	newInput(2, nodeValue("Saturation", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_01));
+	newInput(2, nodeValue("Saturation", self, CONNECT_TYPE.input, VALUE_TYPE.curve, CURVE_DEF_01));
 	
-	newInput(3, nodeValue("Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_01));
+	newInput(3, nodeValue("Value", self, CONNECT_TYPE.input, VALUE_TYPE.curve, CURVE_DEF_01));
 	
 	newInput(4, nodeValue_Surface("Mask", self));
 	

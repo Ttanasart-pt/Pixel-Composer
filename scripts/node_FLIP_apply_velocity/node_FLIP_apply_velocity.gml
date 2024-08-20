@@ -12,7 +12,7 @@ function Node_FLIP_Apply_Velocity(_x, _y, _group = noone) : Node(_x, _y, _group)
 	newInput(1, nodeValue_Vec2("Position", self, [ 0, 0 ] ))
 		.setUnitRef(function(index) { return getDimension(); });
 	
-	inputs[2] = nodeValue_Float("Radius", self, 4 )	
+	newInput(2, nodeValue_Float("Radius", self, 4 ))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] });
 	
 	newInput(3, nodeValue_Vec2("Velocity", self, [ 0, 0 ] ));

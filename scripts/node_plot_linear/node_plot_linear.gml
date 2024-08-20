@@ -43,8 +43,8 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	newInput(10, nodeValue_Rotation("Direction", self, 0));
 	
-	inputs[11] = nodeValue_Enum_Scroll("Type", self,  0, [ new scrollItem("Bar chart", s_node_plot_linear_type, 0), 
-												 new scrollItem("Graph",	 s_node_plot_linear_type, 1), ]);
+	newInput(11, nodeValue_Enum_Scroll("Type", self,  0, [ new scrollItem("Bar chart", s_node_plot_linear_type, 0), 
+												           new scrollItem("Graph",	   s_node_plot_linear_type, 1), ]));
 	
 	newInput(12, nodeValue_Float("Value Offset", self, 0));
 	

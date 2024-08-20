@@ -6,7 +6,7 @@ function Node_Strand_Update(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	manual_ungroupable	 = false;
 	
-	newInput(0, nodeValue("Strand", self, JUNCTION_CONNECT.input, VALUE_TYPE.strands, noone))
+	newInput(0, nodeValue("Strand", self, CONNECT_TYPE.input, VALUE_TYPE.strands, noone))
 		.setVisible(true, true);
 	
 	newInput(1, nodeValue_Int("Step", self, 4))

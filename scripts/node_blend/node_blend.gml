@@ -56,11 +56,9 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		
 	newInput(9, nodeValue_Bool("Preserve alpha", self, false));
 		
-	inputs[10] = nodeValue_Enum_Button("Horizontal Align", self, 0, 
-		[ THEME.inspector_surface_halign, THEME.inspector_surface_halign, THEME.inspector_surface_halign]);
+	newInput(10, nodeValue_Enum_Button("Horizontal Align", self, 0, [ THEME.inspector_surface_halign, THEME.inspector_surface_halign, THEME.inspector_surface_halign]));
 		
-	inputs[11] = nodeValue_Enum_Button("Vertical Align", self, 0, 
-		[ THEME.inspector_surface_valign, THEME.inspector_surface_valign, THEME.inspector_surface_valign]);
+	newInput(11, nodeValue_Enum_Button("Vertical Align", self, 0, [ THEME.inspector_surface_valign, THEME.inspector_surface_valign, THEME.inspector_surface_valign]));
 	
 	newInput(12, nodeValue_Bool("Invert mask", self, false));
 	

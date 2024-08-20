@@ -27,7 +27,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	static createNewInput = function(bone = noone) {
 		var index = array_length(inputs);
 		
-		newInput(index, nodeValue(bone != noone? bone.name : "bone", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0, 1 ] ))
+		newInput(index, nodeValue(bone != noone? bone.name : "bone", self, CONNECT_TYPE.input, VALUE_TYPE.float, [ 0, 0, 0, 1 ] ))
 			.setDisplay(VALUE_DISPLAY.transform);
 		inputs[index].display_data.bone_id = bone != noone? bone.ID : noone;
 		

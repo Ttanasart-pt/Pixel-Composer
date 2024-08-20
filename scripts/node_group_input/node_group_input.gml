@@ -101,12 +101,12 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	newInput(8, nodeValue_Text("Button Label", self, "Trigger"))
 		.setVisible(false);
 	
-	inputs[9] = nodeValue_Enum_Scroll("Visible Condition", self,  0, [ "Show", "Hide", /* 2 */ new scrollItem("Equal",			s_node_condition_type, 0), 
-												        		 /* 3 */ new scrollItem("Not equal",		s_node_condition_type, 1), 
-												        		 /* 4 */ new scrollItem("Greater ",			s_node_condition_type, 4), 
-												        		 /* 5 */ new scrollItem("Greater or equal",	s_node_condition_type, 5), 
-												        		 /* 6 */ new scrollItem("Lesser",			s_node_condition_type, 2), 
-												        		 /* 7 */ new scrollItem("Lesser or equal",	s_node_condition_type, 3), ]);
+	newInput(9, nodeValue_Enum_Scroll("Visible Condition", self,  0, [ "Show", "Hide", /* 2 */ new scrollItem("Equal",              s_node_condition_type, 0), 
+												        		                       /* 3 */ new scrollItem("Not equal",          s_node_condition_type, 1), 
+												        		                       /* 4 */ new scrollItem("Greater ",           s_node_condition_type, 4), 
+												        		                       /* 5 */ new scrollItem("Greater or equal",   s_node_condition_type, 5), 
+												        		                       /* 6 */ new scrollItem("Lesser",             s_node_condition_type, 2), 
+												        		                       /* 7 */ new scrollItem("Lesser or equal",    s_node_condition_type, 3), ]));
 	
 	newInput(10, nodeValue_Float("Visible Check", self, 0));
 	
@@ -376,7 +376,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		if(!is_undefined(inParent))
 			array_remove(group.inputs, inParent);
 		
-		inParent = nodeValue("Value", group, JUNCTION_CONNECT.input, VALUE_TYPE.any, -1)
+		inParent = nodeValue("Value", group, CONNECT_TYPE.input, VALUE_TYPE.any, -1)
 			.uncache()
 			.setVisible(true, true);
 		inParent.from = self;

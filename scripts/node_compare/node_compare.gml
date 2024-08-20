@@ -33,12 +33,12 @@ function Node_Compare(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	
 	setDimension(96, 48);
 	
-	inputs[0] = nodeValue_Enum_Scroll("Type", self,  0, [ new scrollItem("Equal",			s_node_condition_type, 0), 
-												 new scrollItem("Not equal",		s_node_condition_type, 1), 
-												 new scrollItem("Greater ",			s_node_condition_type, 4), 
-												 new scrollItem("Greater or equal", s_node_condition_type, 5), 
-												 new scrollItem("Lesser",			s_node_condition_type, 2), 
-												 new scrollItem("Lesser or equal",	s_node_condition_type, 3), ]);
+	newInput(0, nodeValue_Enum_Scroll("Type", self,  0, [ new scrollItem("Equal",            s_node_condition_type, 0), 
+												          new scrollItem("Not equal",        s_node_condition_type, 1), 
+												          new scrollItem("Greater ",         s_node_condition_type, 4), 
+												          new scrollItem("Greater or equal", s_node_condition_type, 5), 
+												          new scrollItem("Lesser",           s_node_condition_type, 2), 
+												          new scrollItem("Lesser or equal",  s_node_condition_type, 3), ]));
 	
 	newInput(1, nodeValue_Float("a", self, 0))
 		.setVisible(true, true);

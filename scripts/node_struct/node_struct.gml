@@ -3,7 +3,7 @@ function Node_Struct(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	setDimension(96, 48);
 	
-	size_adjust_tool = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { #region
+	size_adjust_tool = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		var _h = ui(48);
 		
 		var bw = _w / 2 - ui(4);
@@ -16,7 +16,7 @@ function Node_Struct(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			deleteInput(array_length(inputs) - data_length);
 		
 		return _h;
-	}); #endregion
+	});
 	
 	input_display_list = [ size_adjust_tool, ];
 	
@@ -35,7 +35,7 @@ function Node_Struct(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				.setAnimable(false);
 			bDel.setContext(list[| index + 0]);
 			
-			list[| index + 1] = nodeValue("value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0 )
+			list[| index + 1] = nodeValue("value", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0 )
 				.setVisible(false, false);
 				
 			return list[| index + 0];
@@ -149,7 +149,7 @@ function Node_Struct(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		draw_set_text(f_sdf, fa_left, fa_center, COLORS._main_text);
 		
 		for(var i = input_fix_len; i < array_length(inputs); i += data_length) {
-			var key = getInputData(i + 0, "");
+			var key = getInputData(i, "");
 			var val = inputs[i + 1];
 			if(!val.visible) continue;
 			
@@ -158,7 +158,6 @@ function Node_Struct(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			draw_set_color(value_color(val.type));
 			draw_text_transformed(bbox.x0 + 6 * _s, val.y, key, _ss, _ss, 0);
 		}
-		
 	}
 	
 	static doApplyDeserialize = function() {

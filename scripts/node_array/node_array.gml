@@ -36,7 +36,7 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var index = array_length(inputs);
 		var _typ  = getType();
 		
-		newInput(index, nodeValue("Input", self, JUNCTION_CONNECT.input, _typ, -1 ))
+		newInput(index, nodeValue("Input", self, CONNECT_TYPE.input, _typ, -1 ))
 			.setVisible(true, true);
 		array_push(input_display_list, index);
 		
@@ -156,4 +156,23 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	}
 	
 	static postConnect = function() { updateType(false); }
+	
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+		if(outputs[0].type == VALUE_TYPE.surface) return;
+		
+		var bbox = drawGetBbox(xx, yy, _s);
+		
+		draw_set_text(f_sdf, fa_left, fa_center, COLORS._main_text);
+		
+		for(var i = input_fix_len; i < array_length(inputs); i += data_length) {
+			var val = inputs[i];
+			var key = getInputData(i, "");
+			if(!val.visible) continue;
+			
+			var _ss = min(_s * .4, string_scale(key, bbox.w - 12 * _s, 9999));
+			
+			draw_set_color(value_color(val.type));
+			draw_text_transformed(bbox.x0 + 6 * _s, val.y, key, _ss, _ss, 0);
+		}
+	}
 }

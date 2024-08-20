@@ -4,7 +4,7 @@ function Node_Feedback_Output(_x, _y, _group = noone) : Node_Group_Output(_x, _y
 	is_group_io = true;
 	setDimension(96, 32 + 24 * 2);
 	
-	newInput(1, nodeValue("Feedback loop", self, JUNCTION_CONNECT.input, VALUE_TYPE.node, -1))
+	newInput(1, nodeValue("Feedback loop", self, CONNECT_TYPE.input, VALUE_TYPE.node, -1))
 		.setVisible(true, true);
 	
 	cache_value = -1;

@@ -3,7 +3,7 @@ function Node_Mesh_To_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue("Mesh", self, JUNCTION_CONNECT.input, VALUE_TYPE.mesh, noone))
+	newInput(0, nodeValue("Mesh", self, CONNECT_TYPE.input, VALUE_TYPE.mesh, noone))
 		.setVisible(true, true);
 	
 	outputs[0] = nodeValue_Output("Path", self, VALUE_TYPE.pathnode, noone);

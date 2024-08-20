@@ -115,13 +115,13 @@ function __test_load_current_collections() { #region
 } #endregion
 
 function __test_load_all_nodes() { #region
-	var amo = ds_map_size(ALL_NODES);
-	var k = ds_map_find_first(ALL_NODES);
-	var xx = 0;
-	var yy = 0;
-	var col = 10;
-	var ind = 0;
-	var sel = PANEL_GRAPH.getFocusingNode();
+	var amo  = ds_map_size(ALL_NODES);
+	var k    = ds_map_find_first(ALL_NODES);
+	var xx   = 0;
+	var yy   = 0;
+	var col  = 10;
+	var ind  = 0;
+	var sel  = PANEL_GRAPH.getFocusingNode();
 	var outj = sel == noone? noone : sel.outputs[0];
 	
 	var index = 0;

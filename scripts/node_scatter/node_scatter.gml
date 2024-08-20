@@ -48,9 +48,9 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(14, nodeValue_Vector("Distribution data", self, []));
 	inputs[14].array_depth = 1;
 	
-	inputs[15] = nodeValue_Int("Array", self, 0, @"What to do when input array of surface.
+	newInput(15, nodeValue_Int("Array", self, 0, @"What to do when input array of surface.
 - Spread: Create Array of output each scattering single surface.
-- Mixed: Create single output scattering multiple images.")
+- Mixed: Create single output scattering multiple images."))
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Spread output", "Index", "Random", "Data", "Texture" ]);
 		
 	newInput(16, nodeValue_Bool("Multiply alpha", self, true));

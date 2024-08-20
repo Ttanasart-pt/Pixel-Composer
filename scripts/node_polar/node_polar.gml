@@ -21,9 +21,9 @@ function Node_Polar(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	__init_mask_modifier(1); // inputs 7, 8, 
 	
-	inputs[9] = nodeValue_Enum_Scroll("Radius mode", self,  0, [ new scrollItem("Linear",         s_node_curve, 2), 
-												 new scrollItem("Inverse Square", s_node_curve, 1), 
-												 new scrollItem("Logarithm",      s_node_curve, 3), ]);
+	newInput(9, nodeValue_Enum_Scroll("Radius mode", self,  0, [ new scrollItem("Linear",         s_node_curve, 2), 
+												                 new scrollItem("Inverse Square", s_node_curve, 1), 
+												                 new scrollItem("Logarithm",      s_node_curve, 3), ]));
 	
 	newInput(10, nodeValue_Bool("Swap", self, false))
 	

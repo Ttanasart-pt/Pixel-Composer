@@ -7,7 +7,7 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	skipDefault();
 	setDimension(96, 32 + 24);
 	
-	newInput(0, nodeValue("Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, -1))
+	newInput(0, nodeValue("Value", self, CONNECT_TYPE.input, VALUE_TYPE.any, -1))
 		.uncache()
 		.setVisible(true, true);
 	inputs[0].onSetFrom = function(juncFrom) /*=>*/ { if(attributes.inherit_name && !LOADING && !APPENDING) setDisplayName(juncFrom.name); }
@@ -49,12 +49,12 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	}
 	
 	static createOutput = function() {
-		if(group == noone) return;
+		if(group == noone)    return;
 		if(!is_struct(group)) return;
 		
 		if(!is_undefined(outParent)) array_remove(group.outputs, outParent);
 			
-		outParent = nodeValue("Value", group, JUNCTION_CONNECT.output, VALUE_TYPE.any, -1)
+		outParent = nodeValue("Value", group, CONNECT_TYPE.output, VALUE_TYPE.any, -1)
 			.uncache()
 			.setVisible(true, true);
 		outParent.from = self;
@@ -83,7 +83,10 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		_in0.display_type = _dis;
 		
 		outParent.setType(_in0.type);
-		outParent.display_type = _in0.display_type;
+		outParent.display_type  = _in0.display_type;
+		outParent.color_display = _in0.color_display;
+		outParent.draw_bg       = _in0.draw_bg;
+		outParent.draw_fg       = _in0.draw_fg;
 		
 		if(group && _pty != _typ) group.setHeight();
 	}

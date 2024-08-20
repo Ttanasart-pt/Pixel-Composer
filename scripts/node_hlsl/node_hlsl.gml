@@ -24,9 +24,9 @@ function Node_HLSL(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		.setDisplay(VALUE_DISPLAY.codeHLSL)
 		.rejectArray();
 	
-	inputs[1] = nodeValue_Text("Fragment", self, 
+	newInput(1, nodeValue_Text("Fragment", self, 
 @"float4 surfaceColor = gm_BaseTextureObject.Sample(gm_BaseTexture, input.uv);
-output.color = surfaceColor;")
+output.color = surfaceColor;"))
 		.setDisplay(VALUE_DISPLAY.codeHLSL)
 		.rejectArray();
 	
@@ -41,7 +41,7 @@ output.color = surfaceColor;")
 		newInput(index + 1, nodeValue_Enum_Scroll("Argument type", self,  0 , { data: [ "Float", "Int", "Vec2", "Vec3", "Vec4", "Mat3", "Mat4", "Sampler2D", "Color" ], update_hover: false }));
 		inputs[index + 1].editWidget.interactable = false;
 		
-		newInput(index + 2, nodeValue("Argument value", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 ))
+		newInput(index + 2, nodeValue("Argument value", self, CONNECT_TYPE.input, VALUE_TYPE.float, 0 ))
 			.setVisible(true, true);
 		inputs[index + 2].editWidget.interactable = false;
 	}

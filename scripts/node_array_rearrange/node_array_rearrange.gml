@@ -4,7 +4,7 @@ function Node_Array_Rearrange(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	draw_pad_w  = 10;
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue("Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0))
+	newInput(0, nodeValue("Array", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0))
 		.setArrayDepth(1)
 		.setVisible(true, true);
 	

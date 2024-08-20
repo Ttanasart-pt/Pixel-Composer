@@ -2,7 +2,7 @@ function Node_Array_Remove(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	name = "Array Remove";
 	setDimension(96, 32 + 24);
 	
-	newInput(0, nodeValue("Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0))
+	newInput(0, nodeValue("Array", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0))
 		.setVisible(true, true);
 	
 	newInput(1, nodeValue_Enum_Button("Type", self,  0, [ "Index", "Value" ]))
@@ -10,7 +10,7 @@ function Node_Array_Remove(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	newInput(2, nodeValue_Int("Index", self, 0));
 	
-	newInput(3, nodeValue("Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0))
+	newInput(3, nodeValue("Value", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0))
 		.setVisible(true, true);
 	
 	newInput(4, nodeValue_Bool("Spread array", self, false ))

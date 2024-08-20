@@ -30,8 +30,8 @@ event_inherited();
 	function setNode(node, type) {
 		self.node = node;
 		self.type = type;
-		self.display_list  = type == JUNCTION_CONNECT.input? node.attributes.input_display_list : node.attributes.output_display_list;
-		self.junction_list = type == JUNCTION_CONNECT.input? node.inputs : node.outputs;
+		self.display_list  = type == CONNECT_TYPE.input? node.attributes.input_display_list : node.attributes.output_display_list;
+		self.junction_list = type == CONNECT_TYPE.input? node.inputs : node.outputs;
 	}
 #endregion
 

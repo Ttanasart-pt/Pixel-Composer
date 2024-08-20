@@ -1,5 +1,4 @@
 {
-    "safe_mode":    "SAFE MODE",
 
     "anim_length":      "Animation length",
     "anim_frame_rate":  "Preview frame rate",
@@ -404,8 +403,6 @@
     "pref_ui_font": "Overwrite UI font",
     "panel_menu_node_credit": "Node credit dialog",
 
-    "panel_collection_update_thumbnail": "Update thumbnail",
-    "panel_collection_workshop_upload": "Upload to Steam Workshop",
     "panel_graph_toggle_parameter" : "Toggle node parameters", 
     "panel_graph_group_require_shift" : "Hold Shift to enter group", 
     "pref_add_node_remember" : "Remember add node position", 
@@ -425,7 +422,7 @@
     "panel_driver" : "Driver...", 
     "panel_preview_lock_preview" : "Lock previewing node", 
 
-    // 1.19
+    // 1.16
     "global_variables": "Global Variables",
     "panel_animation_keyframe_edit": "Edit Value...",
     "panel_graph_hide_disconnected": "Hide stray junctions",

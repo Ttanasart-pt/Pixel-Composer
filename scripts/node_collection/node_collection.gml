@@ -199,7 +199,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	skipDefault();
 	
 	draw_dummy  = false;
-	dummy_input = nodeValue("Add to group", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0);
+	dummy_input = nodeValue("Add to group", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0);
 	
 	dummy_input.setDummy(function() /*=>*/ { var input = nodeBuild("Node_Group_Input", 0, 0, self); return input.inParent; },
 		function(_junc) /*=>*/ { _junc.from.destroy() }
@@ -226,8 +226,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	tool_node = noone;
 	draw_input_overlay = true;
 	
-	array_push(attributeEditors, ["Edit Input Display",  function() /*=>*/ {return 0}, button(function() { dialogCall(o_dialog_group_input_order).setNode(self, JUNCTION_CONNECT.input);  }) ]);
-	array_push(attributeEditors, ["Edit Output Display", function() /*=>*/ {return 0}, button(function() { dialogCall(o_dialog_group_input_order).setNode(self, JUNCTION_CONNECT.output); }) ]);
+	array_push(attributeEditors, ["Edit Input Display",  function() /*=>*/ {return 0}, button(function() { dialogCall(o_dialog_group_input_order).setNode(self, CONNECT_TYPE.input);  }) ]);
+	array_push(attributeEditors, ["Edit Output Display", function() /*=>*/ {return 0}, button(function() { dialogCall(o_dialog_group_input_order).setNode(self, CONNECT_TYPE.output); }) ]);
 	
 	/////========== INSPECTOR ===========
 	
@@ -567,17 +567,18 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	/////============ PREVIEW ============
 	
-	static getGraphPreviewSurface = function() {
+	static getGraphPreviewSurface = function() { 
 		for( var i = 0, n = array_length(nodes); i < n; i++ ) {
 			if(!nodes[i].active) continue;
 			if(is_instanceof(nodes[i], Node_Group_Thumbnail))
 				return nodes[i].inputs[0].getValue();
 		}
 		
-		var _oj = outputs[preview_channel];
-		if(is_undefined(_oj)) return noone;
+		var _oj = array_safe_get(outputs, preview_channel);
+		if(!is_instanceof(_oj, NodeValue)) return noone;
 		
-		var _fr = _oj.from.inputs[0];
+		if(_oj.from == noone) return noone;
+		var _fr = array_safe_get(_oj.from.inputs, 0);
 		return _fr.value_from == noone? noone : _fr.value_from.node.getGraphPreviewSurface();
 	}
 	

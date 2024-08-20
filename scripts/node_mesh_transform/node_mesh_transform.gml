@@ -2,7 +2,7 @@ function Node_Mesh_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	name = "Mesh Transform";
 	setDimension(96, 48);;
 	
-	newInput(0, nodeValue("Mesh", self, JUNCTION_CONNECT.input, VALUE_TYPE.mesh, noone))
+	newInput(0, nodeValue("Mesh", self, CONNECT_TYPE.input, VALUE_TYPE.mesh, noone))
 		.setVisible(true, true);
 	
 	newInput(1, nodeValue_Vec2("Position", self, [ 0, 0 ]));

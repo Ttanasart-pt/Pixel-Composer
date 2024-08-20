@@ -2,7 +2,7 @@ function Node_PB_Box_Contract(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _gro
 	name = "Split";
 	batch_output = false;
 	
-	newInput(1, nodeValue("pBox", self, JUNCTION_CONNECT.input, VALUE_TYPE.pbBox, noone ))
+	newInput(1, nodeValue("pBox", self, CONNECT_TYPE.input, VALUE_TYPE.pbBox, noone ))
 		.setVisible(true, true);
 		
 	newInput(2, nodeValue_Enum_Scroll("Type", self,  0 , [ "Ratio", "Fix" ]));

@@ -1,8 +1,8 @@
 function Node_PB_Draw_Trapezoid(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _group) constructor {
 	name = "Trapezoid";
 	
-	inputs[3] = nodeValue_Enum_Scroll("Axis", self,  0 , [ new scrollItem("Horizontal", s_node_alignment, 0), 
-												 new scrollItem("Vertical",   s_node_alignment, 1), ]);
+	newInput(3, nodeValue_Enum_Scroll("Axis", self,  0 , [ new scrollItem("Horizontal", s_node_alignment, 0), 
+												           new scrollItem("Vertical",   s_node_alignment, 1), ]));
 	
 	newInput(4, nodeValue_Enum_Scroll("Type", self,  0 , [ "Symmetric", "Independent" ]));
 	

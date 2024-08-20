@@ -96,7 +96,7 @@
         registerFunction("Graph", "Copy to Canvas",        "C", MOD_KEY.ctrl | MOD_KEY.shift,    panel_graph_canvas_copy         ).setMenu("graph_canvas_copy")
         registerFunction("Graph", "Blend Canvas",          "C", MOD_KEY.ctrl | MOD_KEY.alt,      panel_graph_canvas_blend        ).setMenu("graph_canvas_blend")
         registerFunction("Graph", "Canvas",                "",  MOD_KEY.none,                    
-            function(_dat) { return submenuCall(_dat, [ MENU_ITEMS.graph_canvas_copy, MENU_ITEMS.graph_canvas_blend ]); }        ).setMenu("graph_canvas",, true)
+        	function(_dat) /*=>*/ {return submenuCall(_dat, [ MENU_ITEMS.graph_canvas_copy, MENU_ITEMS.graph_canvas_blend ])}).setMenu("graph_canvas",, true)
 		
         registerFunction("Graph", "Delete (break)",        vk_delete, MOD_KEY.shift,             panel_graph_delete_break        ).setMenu("graph_delete_break",    THEME.cross)
         registerFunction("Graph", "Delete (merge)",        vk_delete, MOD_KEY.none,              panel_graph_delete_merge        ).setMenu("graph_delete_merge",    THEME.cross)
@@ -142,7 +142,7 @@
         registerFunction("Graph", "Export As Image",     "",  MOD_KEY.none,    function() /*=>*/ { dialogPanelCall(new Panel_Graph_Export_Image(PANEL_GRAPH)) }).setMenu("graph_export_image")
         registerFunction("Graph", "Connection Settings", "",  MOD_KEY.none,    function() /*=>*/ { dialogPanelCall(new Panel_Graph_Connection_Setting())      }).setMenu("graph_connection_settings")
         registerFunction("Graph", "Grid Settings",       "",  MOD_KEY.none,    function() /*=>*/ { dialogPanelCall(new Panel_Graph_Grid_Setting())            }).setMenu("graph_grid_settings")
-        registerFunction("Graph", "View Settiings",      "",  MOD_KEY.none,    function() /*=>*/ { dialogPanelCall(new Panel_Graph_View_Setting(PANEL_GRAPH, PANEL_GRAPH.display_parameter)) }).setMenu("graph_view_settings")
+        registerFunction("Graph", "View Settings",       "",  MOD_KEY.none,    function() /*=>*/ { dialogPanelCall(new Panel_Graph_View_Setting(PANEL_GRAPH, PANEL_GRAPH.display_parameter)) }).setMenu("graph_view_settings")
         
         __fnGroupInit_Graph()
     }
@@ -297,9 +297,9 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         graph_pan_y_to  = 0;
         graph_pan_speed = 32;
         
-        scale      = [ 0.01, 0.02, 0.05, 0.10, 0.15, 0.20, 0.25, 0.33, 0.50, 0.65, 0.80, 1, 1.2, 1.35, 1.5, 2.0 ];
-        graph_s    = 1;
-        graph_s_to = graph_s;
+        scale           = [ 0.01, 0.02, 0.05, 0.10, 0.15, 0.20, 0.25, 0.33, 0.50, 0.65, 0.80, 1, 1.2, 1.35, 1.5, 2.0 ];
+        graph_s         = 1;
+        graph_s_to      = graph_s;
         
         graph_dragging_key = false;
         graph_zooming_key  = false;
@@ -326,15 +326,15 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
     #endregion
     
     #region // ---- mouse ----
-        mouse_graph_x  = 0;
-        mouse_graph_y  = 0;
-        mouse_grid_x   = 0;
-        mouse_grid_y   = 0;
-        
-        mouse_create_x  = undefined;
-        mouse_create_y  = undefined;
-        mouse_create_sx = undefined;
-        mouse_create_sy = undefined;
+        mouse_graph_x    = 0;
+        mouse_graph_y    = 0;
+        mouse_grid_x     = 0;
+        mouse_grid_y     = 0;
+         
+        mouse_create_x   = undefined;
+        mouse_create_y   = undefined;
+        mouse_create_sx  = undefined;
+        mouse_create_sy  = undefined;
         
         mouse_on_graph   = false;
         node_bg_hovering = false;
@@ -352,32 +352,32 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         node_drag_ox  = 0;
         node_drag_oy  = 0;
     
-        selection_block        = 0;
-        nodes_selecting        = [];
-        nodes_selecting_jun = [];
-        nodes_select_anchor = noone;
-        nodes_select_drag   = 0;
-        nodes_select_frame  = 0;
-        nodes_select_mx     = 0;
-        nodes_select_my     = 0;
-    
-        nodes_junction_d    = noone;
-        nodes_junction_dx   = 0;
-        nodes_junction_dy   = 0;
+        selection_block      = 0;
+        nodes_selecting      = [];
+        nodes_selecting_jun  = [];
+        nodes_select_anchor  = noone;
+        nodes_select_drag    = 0;
+        nodes_select_frame   = 0;
+        nodes_select_mx      = 0;
+        nodes_select_my      = 0;
+     
+        nodes_junction_d     = noone;
+        nodes_junction_dx    = 0;
+        nodes_junction_dy    = 0;
     
         node_hovering        = noone;
-        node_hover            = noone;
+        node_hover           = noone;
         
-        junction_hovering      = noone;
-        add_node_draw_junc      = false;
-        add_node_draw_x_fix   = 0;
-        add_node_draw_y_fix   = 0;
-        add_node_draw_x = 0;
-        add_node_draw_y = 0;
+        junction_hovering    = noone;
+        add_node_draw_junc   = false;
+        add_node_draw_x_fix  = 0;
+        add_node_draw_y_fix  = 0;
+        add_node_draw_x      = 0;
+        add_node_draw_y      = 0;
         
-        connection_aa = 2;
-        connection_surface    = surface_create(1, 1);
-        connection_surface_aa = surface_create(1, 1);
+        connection_aa          = 2;
+        connection_surface     = surface_create(1, 1);
+        connection_surface_aa  = surface_create(1, 1);
         
         connection_draw_mouse  = noone;
         connection_draw_target = noone;
@@ -1339,7 +1339,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                         
                         var menu = [ menu_junc_color ];
                         
-                        if(value_focus.connect_type == JUNCTION_CONNECT.output) {
+                        if(value_focus.connect_type == CONNECT_TYPE.output) {
                             var sep = false;
                             
                             for( var i = 0, n = array_length(value_focus.value_to); i < n; i++ ) {
@@ -1501,7 +1501,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                 
                     for( var i = 0, n = array_length(value_draggings); i < n; i++ ) {
                         var _dmx = _cmx;
-                        var _dmy = value_draggings[i].connect_type == JUNCTION_CONNECT.output? _cmy + (i - _stIndex) * 24 * graph_s : _cmy;
+                        var _dmy = value_draggings[i].connect_type == CONNECT_TYPE.output? _cmy + (i - _stIndex) * 24 * graph_s : _cmy;
                     
                         value_draggings[i].drawConnectionMouse(param, _dmx, _dmy, _cmt);
                     }
@@ -1740,13 +1740,13 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
             
             if(target.connect_type == value_dragging.connect_type) {
                 
-                if(value_dragging.connect_type == JUNCTION_CONNECT.input) {
+                if(value_dragging.connect_type == CONNECT_TYPE.input) {
                     if(target.value_from) {
                         value_dragging.setFrom(target.value_from);
                         target.removeFrom();
                     }
                     
-                } else if(value_dragging.connect_type == JUNCTION_CONNECT.output) {
+                } else if(value_dragging.connect_type == CONNECT_TYPE.output) {
                     var _tos = target.getJunctionTo();
                     
                     for (var i = 0, n = array_length(_tos); i < n; i++)
@@ -1754,9 +1754,9 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                 }
                 
             } else {
-                var _addInput = target.value_from == noone && target.connect_type == JUNCTION_CONNECT.input && target.node.auto_input;
+                var _addInput = target.value_from == noone && target.connect_type == CONNECT_TYPE.input && target.node.auto_input;
                 
-                if(value_dragging.connect_type == JUNCTION_CONNECT.input) {
+                if(value_dragging.connect_type == CONNECT_TYPE.input) {
                     if(array_empty(value_draggings))
                         _connect = [ value_dragging.setFrom(target), value_dragging, target ];
                         
@@ -1790,7 +1790,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
             }
             
         } else {
-            if(value_dragging.connect_type == JUNCTION_CONNECT.input)
+            if(value_dragging.connect_type == CONNECT_TYPE.input)
                 value_dragging.removeFrom();
             value_dragging.node.triggerRender();
             
@@ -1856,8 +1856,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         
         if(key_mod_double(SHIFT)) {
             var _n = value_dragging.node;
-            var _l = value_dragging.connect_type == JUNCTION_CONNECT.input? _n.inputs : _n.outputs;
-            var _i = value_dragging.connect_type == JUNCTION_CONNECT.input? _n.inputs_index : _n.outputs_index;
+            var _l = value_dragging.connect_type == CONNECT_TYPE.input? _n.inputs : _n.outputs;
+            var _i = value_dragging.connect_type == CONNECT_TYPE.input? _n.inputs_index : _n.outputs_index;
             
             array_push_unique(value_draggings, value_dragging);
             
@@ -1902,7 +1902,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                 target = value_focus;
                 
             else if(!key_mod_press(CTRL) && node_hovering != noone) {
-                if(value_dragging.connect_type == JUNCTION_CONNECT.input) {
+                if(value_dragging.connect_type == CONNECT_TYPE.input) {
                     target = node_hovering.getOutput(my, value_dragging);
                     if(target != noone) node_hovering.active_draw_index = 1;
                         
@@ -1926,9 +1926,9 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
             var _inline_ctx = value_dragging.node.inline_context;
             
             if(_inline_ctx) {
-                if(is_instanceof(value_dragging.node, _inline_ctx.input_node_type) && value_dragging.connect_type == JUNCTION_CONNECT.input)
+                if(is_instanceof(value_dragging.node, _inline_ctx.input_node_type) && value_dragging.connect_type == CONNECT_TYPE.input)
                     _inline_ctx = noone;
-                else if(is_instanceof(value_dragging.node, _inline_ctx.output_node_type) && value_dragging.connect_type == JUNCTION_CONNECT.output)
+                else if(is_instanceof(value_dragging.node, _inline_ctx.output_node_type) && value_dragging.connect_type == CONNECT_TYPE.output)
                     _inline_ctx = noone;
                 
                 if(!_inline_ctx.modifiable)
@@ -1956,7 +1956,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
             value_draggings = [];
             value_drag_from = noone;
             
-            if(value_dragging.connect_type == JUNCTION_CONNECT.output) {
+            if(value_dragging.connect_type == CONNECT_TYPE.output) {
                 if(key_mod_press(CTRL)) {
                     var _to = value_dragging.getJunctionTo();
                     
@@ -1996,7 +1996,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                 }
             } 
             
-            if(value_dragging.connect_type == JUNCTION_CONNECT.input) {
+            if(value_dragging.connect_type == CONNECT_TYPE.input) {
                 if(key_mod_press(CTRL) && value_dragging.value_from) {
                     value_drag_from = value_dragging;
                     
@@ -2043,7 +2043,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         var bh  = toolbar_height - ui(12);
         var tbh = h - toolbar_height / 2;
         
-        for(var i = -1; i < array_length(node_context); i++) {
+        for(var i = -1, n = array_length(node_context); i < n; i++) {
             if(i == -1) {
                 tt = __txt("Global");
             } else {
@@ -2081,7 +2081,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
             
             draw_set_color(COLORS._main_text);
             draw_set_alpha(i < array_length(node_context) - 1? 0.33 : 1);
-            draw_text(xx, tbh, tt);
+            draw_text_add(xx, tbh, tt);
             draw_set_alpha(1);
             
             xx += tw + ui(32);
@@ -2547,7 +2547,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         
         if(value_dragging == noone) return;
             
-        if(value_dragging.connect_type == JUNCTION_CONNECT.output) {
+        if(value_dragging.connect_type == CONNECT_TYPE.output) {
             if(node.input_display_list != -1) {
                 for (var i = 0, n = array_length(node.input_display_list); i < n; i++) {
                     if(!is_real(node.input_display_list[i])) continue;
@@ -2559,7 +2559,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                     if(node.inputs[i].setFrom(value_dragging)) break;
             }
             
-        } else if(value_dragging.connect_type == JUNCTION_CONNECT.input) {
+        } else if(value_dragging.connect_type == CONNECT_TYPE.input) {
             for (var i = 0, n = array_length(node.outputs); i < n; i++)
                 if(value_dragging.setFrom(node.outputs[i])) break;
                 

@@ -48,7 +48,7 @@ function __txtx(key, def = "") {
 	if(TEST_LOCALE) {
 		if(key != "" && !struct_has(LOCALE.word, key) && !struct_has(LOCALE.ui, key)) {
 			global.missing_locale[$ key] = def;
-			show_debug_message($"LOCALE: {global.missing_locale}");
+			show_debug_message($"LOCALE: {global.missing_locale}\n");
 			return def;
 		}
 		return "";
@@ -65,13 +65,12 @@ function __txt(txt, prefix = "") {
 	
 	if(LOCALE_DEF && !TEST_LOCALE) return txt;
 	
-	var key = string_lower(txt);
-	    key = string_replace_all(key, " ", "_");
+	var key = string_replace_all(string_lower(txt), " ", "_");
 		
 	if(TEST_LOCALE) {
 		if(key != "" && !struct_has(LOCALE.word, key) && !struct_has(LOCALE.ui, key)) {
 			global.missing_locale[$ key] = txt;
-			show_debug_message($"LOCALE: {global.missing_locale}");
+			show_debug_message($"LOCALE: {global.missing_locale}\n");
 			return txt;
 		}	
 		return "";
@@ -143,7 +142,7 @@ function __txt_junction_name(node, type, index, def = "") {
 		return def;
 	
 	var nde = LOCALE.node[$ node];
-	var lst = type == JUNCTION_CONNECT.input? nde.inputs : nde.outputs;
+	var lst = type == CONNECT_TYPE.input? nde.inputs : nde.outputs;
 	if(index >= array_length(lst)) return def;
 	
 	return lst[index].name;
@@ -166,7 +165,7 @@ function __txt_junction_tooltip(node, type, index, def = "") {
 		return def;
 	
 	var nde = LOCALE.node[$ node];
-	var lst = type == JUNCTION_CONNECT.input? nde.inputs : nde.outputs;
+	var lst = type == CONNECT_TYPE.input? nde.inputs : nde.outputs;
 	if(index >= array_length(lst)) return def;
 	
 	return lst[index].tooltip;
@@ -189,7 +188,7 @@ function __txt_junction_data(node, type, index, def = []) {
 		return def;
 		
 	var nde = LOCALE.node[$ node];
-	var lst = type == JUNCTION_CONNECT.input? nde.inputs : nde.outputs;
+	var lst = type == CONNECT_TYPE.input? nde.inputs : nde.outputs;
 	if(index >= array_length(lst)) return def;
 	
 	if(!struct_has(lst[index], "display_data"))

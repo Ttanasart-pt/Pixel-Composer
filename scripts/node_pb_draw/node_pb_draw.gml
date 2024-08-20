@@ -1,7 +1,7 @@
 function Node_PB_Draw(_x, _y, _group = noone) : Node_PB(_x, _y, _group) constructor {
 	name = "PB Draw";
 	
-	newInput(0, nodeValue("pBox", self, JUNCTION_CONNECT.input, VALUE_TYPE.pbBox, noone ))
+	newInput(0, nodeValue("pBox", self, CONNECT_TYPE.input, VALUE_TYPE.pbBox, noone ))
 		.setVisible(true, true);
 	
 	newInput(1, nodeValue_Color("Color", self, c_white ));

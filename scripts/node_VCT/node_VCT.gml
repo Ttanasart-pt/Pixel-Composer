@@ -22,7 +22,7 @@ function Node_VCT(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 		
 		var _var  = vct[$ key];
 		
-		newInput(index, nodeValue(name, self, JUNCTION_CONNECT.input, _var.type, 0))
+		newInput(index, nodeValue(name, self, CONNECT_TYPE.input, _var.type, 0))
 			.setDisplay(_var.disp, _var.disp_data);
 		inputs[index].display_data.key = key;
 		

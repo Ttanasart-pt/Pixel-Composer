@@ -8,7 +8,7 @@ function Node_Strand_Render_Texture(_x, _y, _group = noone) : Node(_x, _y, _grou
 	
 	newInput(0, nodeValue_Dimension(self));
 	
-	newInput(1, nodeValue("Strand", self, JUNCTION_CONNECT.input, VALUE_TYPE.strands, noone))
+	newInput(1, nodeValue("Strand", self, CONNECT_TYPE.input, VALUE_TYPE.strands, noone))
 		.setVisible(true, true);
 	
 	newInput(2, nodeValue_Range("Thickness", self, [ 8, 8 ], { linked : true }));

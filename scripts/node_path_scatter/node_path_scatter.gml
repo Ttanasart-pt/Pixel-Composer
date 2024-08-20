@@ -17,13 +17,13 @@ function Node_Path_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	newInput(5, nodeValue_Float("Seed", self, seed_random(6)))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[5].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
-	newInput(6, nodeValue("Scale over Length", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11));
+	newInput(6, nodeValue("Scale over Length", self, CONNECT_TYPE.input, VALUE_TYPE.curve, CURVE_DEF_11));
 	
 	newInput(7, nodeValue_Rotation_Random("Rotation", self, [ 0, 45, 135, 0, 0 ] ));
 	
 	newInput(8, nodeValue_Enum_Scroll("Distribution", self,  0 , [ "Uniform", "Random" ]));
 	
-	newInput(9, nodeValue("Trim over Length", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11));
+	newInput(9, nodeValue("Trim over Length", self, CONNECT_TYPE.input, VALUE_TYPE.curve, CURVE_DEF_11));
 	
 	newInput(10, nodeValue_Float("Range", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider);

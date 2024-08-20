@@ -1,7 +1,7 @@
 function Node_Module_SubModule(parent) : NodeModule(parent) constructor {
 	newInput(0, nodeValue_Surface("Module input 0", parent));
 
-	newInput(1, nodeValue("Module input 1", parent, JUNCTION_CONNECT.input, VALUE_TYPE.text, ""));
+	newInput(1, nodeValue("Module input 1", parent, CONNECT_TYPE.input, VALUE_TYPE.text, ""));
 }
 
 function Node_Module_Test(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {

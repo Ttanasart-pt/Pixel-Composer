@@ -2,7 +2,7 @@ function Node_Array_Reverse(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	name = "Array Reverse";
 	setDimension(96, 32 + 24);
 	
-	newInput(0, nodeValue("Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0))
+	newInput(0, nodeValue("Array", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0))
 		.setVisible(true, true);
 		
 	outputs[0] = nodeValue_Output("Array", self, VALUE_TYPE.any, 0);

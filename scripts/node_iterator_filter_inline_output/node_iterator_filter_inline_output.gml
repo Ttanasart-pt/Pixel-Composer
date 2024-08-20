@@ -8,7 +8,7 @@ function Node_Iterator_Filter_Inline_Output(_x, _y, _group = noone) : Node(_x, _
 	inline_parent_object = "Node_Iterate_Filter_Inline";
 	manual_ungroupable	 = false;
 	
-	newInput(0, nodeValue("Value out", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0 ))
+	newInput(0, nodeValue("Value out", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0 ))
 		.setVisible(true, true);
 	
 	newInput(1, nodeValue_Bool("Filter result", self, false ))

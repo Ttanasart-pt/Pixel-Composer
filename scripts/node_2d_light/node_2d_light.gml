@@ -17,10 +17,10 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	newInput(0, nodeValue_Surface("Surface in", self));
 	
-	inputs[1] = nodeValue_Enum_Scroll("Light shape", self, 0, [	new scrollItem("Point",           s_node_2d_light_shape, 0), 
-																	new scrollItem("Line",            s_node_2d_light_shape, 1), 
-																	new scrollItem("Line asymmetric", s_node_2d_light_shape, 2), 
-																	new scrollItem("Spot",            s_node_2d_light_shape, 3), ]);
+	newInput(1, nodeValue_Enum_Scroll("Light shape", self, 0, [	new scrollItem("Point",           s_node_2d_light_shape, 0), 
+																new scrollItem("Line",            s_node_2d_light_shape, 1), 
+																new scrollItem("Line asymmetric", s_node_2d_light_shape, 2), 
+																new scrollItem("Spot",            s_node_2d_light_shape, 3), ]));
 	
 	newInput(2, nodeValue_Vec2("Center", self, [ 16, 16 ]))
 		.setUnitRef(function(index) { return getDimension(index); });
@@ -45,10 +45,10 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(10, nodeValue_Int("Banding", self, 0))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 16, 0.1] });
 	
-	inputs[11] = nodeValue_Enum_Scroll("Attenuation", self, 0, 
+	newInput(11, nodeValue_Enum_Scroll("Attenuation", self, 0, 
 											   [ new scrollItem("Quadratic",		s_node_curve, 0),
 												 new scrollItem("Invert quadratic", s_node_curve, 1),
-												 new scrollItem("Linear",			s_node_curve, 2), ])
+												 new scrollItem("Linear",			s_node_curve, 2), ]))
 		 .setTooltip("Control how light fade out over distance.");
 	
 	newInput(12, nodeValue_Int("Radial banding", self, 0))

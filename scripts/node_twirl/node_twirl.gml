@@ -10,7 +10,7 @@ function Node_Twirl(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-10, 10, 0.01] })
 		.setMappable(11);
 	
-	inputs[3] = nodeValue_Float("Radius", self, 16)	
+	newInput(3, nodeValue_Float("Radius", self, 16))
 		.setMappable(12);
 	
 	newInput(4, nodeValue_Enum_Scroll("Oversample mode", self,  0, [ "Empty", "Clamp", "Repeat" ]))

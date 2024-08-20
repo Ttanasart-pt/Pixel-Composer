@@ -79,9 +79,9 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	color		= COLORS.node_blend_number;
 	setDimension(96, 48);
 	
-	inputs[0] = nodeValue_Enum_Scroll("Type", self,  0, [ 
+	newInput(0, nodeValue_Enum_Scroll("Type", self,  0, [ 
 			/* 0 -  9*/ "Add", "Subtract", "Multiply", "Divide", "Power", "Root", "Sin", "Cos", "Tan", "Modulo", 
-			/*10 - 20*/ "Floor", "Ceil", "Round", "Lerp", "Abs", "Clamp", "Snap" ])
+			/*10 - 20*/ "Floor", "Ceil", "Round", "Lerp", "Abs", "Clamp", "Snap" ]))
 		.rejectArray();
 	
 	newInput(1, nodeValue_Float("a", self, 0))

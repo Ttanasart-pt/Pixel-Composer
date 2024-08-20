@@ -24,7 +24,7 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	newInput(7, nodeValue_Surface("Spawn Surface", self));
 	
-	inputs[8] = nodeValue_Float("Spawn Radius", self, 2 )	
+	newInput(8, nodeValue_Float("Spawn Radius", self, 2 ))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] });
 	
 	newInput(9, nodeValue_Int("Seed", self, seed_random(6)))
@@ -32,7 +32,7 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	newInput(10, nodeValue_Rotation_Random("Spawn Direction", self, [ 0, 45, 135, 0, 0 ] ));
 		
-	inputs[11] = nodeValue_Float("Inherit Velocity", self, 0 )	
+	newInput(11, nodeValue_Float("Inherit Velocity", self, 0 ))
 		.setDisplay(VALUE_DISPLAY.slider);
 		
 	newInput(12, nodeValue_Int("Spawn Duration", self, 1 ));

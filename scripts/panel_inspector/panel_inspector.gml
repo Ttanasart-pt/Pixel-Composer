@@ -907,7 +907,7 @@ function Panel_Inspector() : PanelContent() constructor {
                 }
             #endregion
             
-            if(jun.connect_type == JUNCTION_CONNECT.input && jun.type == VALUE_TYPE.color && jun.display_type == VALUE_DISPLAY._default) { // color picker
+            if(jun.connect_type == CONNECT_TYPE.input && jun.type == VALUE_TYPE.color && jun.display_type == VALUE_DISPLAY._default) { // color picker
                 pickers[color_picker_index] = jun;
                 color_picker_index++;
             }
@@ -920,7 +920,7 @@ function Panel_Inspector() : PanelContent() constructor {
                 if(hov) {
                     draw_sprite_stretched_ext(THEME.ui_panel, 1, ui(4), _selY, contentPane.surface_w - ui(8), _selH, COLORS._main_value_positive, 1);
                     if(mouse_press(mb_left, NODE_DROPPER_TARGET_CAN)) {
-                        NODE_DROPPER_TARGET.expression += $"{jun.node.internalName}.{jun.connect_type == JUNCTION_CONNECT.input? "inputs" : "outputs"}.{jun.internalName}";
+                        NODE_DROPPER_TARGET.expression += $"{jun.node.internalName}.{jun.connect_type == CONNECT_TYPE.input? "inputs" : "outputs"}.{jun.internalName}";
                         NODE_DROPPER_TARGET.expressionUpdate(); 
                     }
                 } else 
@@ -940,7 +940,7 @@ function Panel_Inspector() : PanelContent() constructor {
                     prop_selecting = jun;
                     
                     var _menuItem = [ menu_junc_color, -1 ];
-                    var _inp = jun.connect_type == JUNCTION_CONNECT.input;
+                    var _inp = jun.connect_type == CONNECT_TYPE.input;
                     
                     if(i < amoIn) {
                         array_push(_menuItem, menu_junc_reset_value, jun.is_anim? menu_junc_rem_anim : menu_junc_add_anim);

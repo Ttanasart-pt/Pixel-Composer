@@ -55,7 +55,7 @@ function Node_VFX_Renderer_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 		if(!is_undefined(outParent))
 			array_remove(group.outputs, outParent);
 			
-		outParent = nodeValue("Rendered", group, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone)
+		outParent = nodeValue("Rendered", group, CONNECT_TYPE.output, VALUE_TYPE.surface, noone)
 			.uncache()
 			.setVisible(true, true);
 		outParent.from = self;

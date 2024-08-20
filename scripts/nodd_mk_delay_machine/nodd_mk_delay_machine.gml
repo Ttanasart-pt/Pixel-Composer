@@ -12,7 +12,7 @@ function Node_MK_Delay_Machine(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	newInput(3, nodeValue_Palette("Blend over Delay", self, [ c_white ]));
 	
-	newInput(4, nodeValue("Alpha over Delay", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11));
+	newInput(4, nodeValue("Alpha over Delay", self, CONNECT_TYPE.input, VALUE_TYPE.curve, CURVE_DEF_11));
 	
 	newInput(5, nodeValue_Enum_Scroll("Palette Select", self, 0, [ "Loop", "Pingpong", "Random" ]));
 	

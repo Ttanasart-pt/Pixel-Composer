@@ -23,7 +23,7 @@ enum AREA_INDEX {
 
 function nodeValue_Area(_name, _node, _value, _data = {}) { return new NodeValue_Area(_name, _node, _value, _data); }
 
-function NodeValue_Area(_name, _node, _value, _data = {}) : NodeValue(_name, _node, JUNCTION_CONNECT.input, VALUE_TYPE.float, _value, "") constructor {
+function NodeValue_Area(_name, _node, _value, _data = {}) : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.float, _value, "") constructor {
 	setDisplay(VALUE_DISPLAY.area, _data);
 	
 	/////============== GET =============

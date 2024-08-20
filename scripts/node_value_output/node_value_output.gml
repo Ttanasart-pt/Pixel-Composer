@@ -1,6 +1,6 @@
 function nodeValue_Output(_name, _node, _type, _value, _tooltip = "") { return new NodeValue_Output(_name, _node, _type, _value, _tooltip); }
 
-function NodeValue_Output(_name, _node, _type, _value, _tooltip = "") : NodeValue(_name, _node, JUNCTION_CONNECT.output, _type, _value, _tooltip) constructor {
+function NodeValue_Output(_name, _node, _type, _value, _tooltip = "") : NodeValue(_name, _node, CONNECT_TYPE.output, _type, _value, _tooltip) constructor {
 	
 	index = array_length(node.outputs);
 	

@@ -98,7 +98,7 @@ event_inherited();
 		var io = global.NODE_GUIDE[$ node.node];
 		
 		if(node_called) {
-			var call_in = node_called.connect_type == JUNCTION_CONNECT.input;
+			var call_in = node_called.connect_type == CONNECT_TYPE.input;
 			var ar = call_in? io.outputs : io.inputs;
 			var typ = node_called.type;
 			
@@ -228,7 +228,7 @@ event_inherited();
 		
 		//try to connect
 		if(node_called != noone) { //dragging from junction
-			var _call_input = node_called.connect_type == JUNCTION_CONNECT.input;
+			var _call_input = node_called.connect_type == CONNECT_TYPE.input;
 			var _junc_list  = _call_input? _outputs : _inputs;
 			
 			for(var i = 0; i < array_length(_junc_list); i++) {
@@ -407,7 +407,7 @@ event_inherited();
 			
 			if(node_called != noone) {
 				array_append(sug, nodeReleatedQuery(
-					node_called.connect_type == JUNCTION_CONNECT.input? "connectTo" : "connectFrom", 
+					node_called.connect_type == CONNECT_TYPE.input? "connectTo" : "connectFrom", 
 					node_called.type
 				));
 			}

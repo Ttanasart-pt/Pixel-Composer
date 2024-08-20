@@ -11,9 +11,9 @@ function Node_Local_Analyze(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput(3, nodeValue_Enum_Scroll("Oversample mode", self,  0, [ "Empty", "Clamp", "Repeat" ]))
 		.setTooltip("How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.");
 	
-	inputs[4] = nodeValue_Enum_Scroll("Shape", self,  0, [ new scrollItem("Square",  s_node_shape_rectangle, 0), 
-												 new scrollItem("Circle",  s_node_shape_circle,    0), 
-												 new scrollItem("Diamond", s_node_shape_misc, 0) ]);
+	newInput(4, nodeValue_Enum_Scroll("Shape", self,  0, [ new scrollItem("Square",  s_node_shape_rectangle, 0), 
+												           new scrollItem("Circle",  s_node_shape_circle,    0), 
+												           new scrollItem("Diamond", s_node_shape_misc,      0) ]));
 		
 	newInput(5, nodeValue_Surface("Mask", self));
 	

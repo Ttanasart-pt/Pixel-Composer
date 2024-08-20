@@ -37,21 +37,21 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(4, nodeValue_Float("Alpha", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[5] = nodeValue_Struct("Flares", self, [
-																							new __FlarePart( FLARE_TYPE.circle,   0,  8,   0.75, 16, false, , [ 0, 1 ] ),
-																							new __FlarePart( FLARE_TYPE.circle,   0, 16,   0.5,  16, false, , [ 0, 1 ] ),
-																							new __FlarePart( FLARE_TYPE.star,     0, 14,   0.3,   8, true,  , [ 0.2, 0.8 ], 2, 0.85 ),
-																							new __FlarePart( FLARE_TYPE.ring,     0,  6,   0.25, 16, false, , [ 0, 0.5 ],,, [ 1, 0.1 ] ),
-																							
-																							new __FlarePart( FLARE_TYPE.circle, 0.7,  2,   0.6,  16, false, , [ 0, 0.25 ] ),
-																							new __FlarePart( FLARE_TYPE.circle, 0.9,  2,   0.6,   6, false, , [ 0, 0.50 ] ),
-																							new __FlarePart( FLARE_TYPE.circle, 1.2,  0.5, 0.5,   4, false, , [ 0, 0.00 ] ),
-																																	  			 
-																							new __FlarePart( FLARE_TYPE.circle, 1.5,  5,   0.6,  16, false, , [ 0, 0.7 ] ),
-																							new __FlarePart( FLARE_TYPE.circle, 1.6,  3,   0.4,   6, false, , [ 0, 0.  ] ),
-																							new __FlarePart( FLARE_TYPE.ring,   1.9,  4,   0.5,  16, false, , [ 0, 0.  ],,, [ 1, 0 ] ),
-																							new __FlarePart( FLARE_TYPE.circle, 1.9,  3,   0.5,  16, false, , [ 0, 0.5 ] ),
-																					   ])
+	newInput(5, nodeValue_Struct("Flares", self, [
+		new __FlarePart( FLARE_TYPE.circle,   0,  8,   0.75, 16, false, , [ 0, 1 ] ),
+		new __FlarePart( FLARE_TYPE.circle,   0, 16,   0.5,  16, false, , [ 0, 1 ] ),
+		new __FlarePart( FLARE_TYPE.star,     0, 14,   0.3,   8, true,  , [ 0.2, 0.8 ], 2, 0.85 ),
+		new __FlarePart( FLARE_TYPE.ring,     0,  6,   0.25, 16, false, , [ 0, 0.5 ],,, [ 1, 0.1 ] ),
+		
+		new __FlarePart( FLARE_TYPE.circle, 0.7,  2,   0.6,  16, false, , [ 0, 0.25 ] ),
+		new __FlarePart( FLARE_TYPE.circle, 0.9,  2,   0.6,   6, false, , [ 0, 0.50 ] ),
+		new __FlarePart( FLARE_TYPE.circle, 1.2,  0.5, 0.5,   4, false, , [ 0, 0.00 ] ),
+												  			 
+		new __FlarePart( FLARE_TYPE.circle, 1.5,  5,   0.6,  16, false, , [ 0, 0.7 ] ),
+		new __FlarePart( FLARE_TYPE.circle, 1.6,  3,   0.4,   6, false, , [ 0, 0.  ] ),
+		new __FlarePart( FLARE_TYPE.ring,   1.9,  4,   0.5,  16, false, , [ 0, 0.  ],,, [ 1, 0 ] ),
+		new __FlarePart( FLARE_TYPE.circle, 1.9,  3,   0.5,  16, false, , [ 0, 0.5 ] ),
+	]))
 		.setArrayDepth(1)
 		.setArrayDynamic();
 		

@@ -20,7 +20,7 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	newInput(0, nodeValue_Text("Name", self, tname ))
 		.rejectArray();
 		
-	newInput(1, nodeValue("Value in", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, noone ))
+	newInput(1, nodeValue("Value in", self, CONNECT_TYPE.input, VALUE_TYPE.any, noone ))
 		.setVisible(true, true);
 	
 	error_notification = noone;

@@ -66,7 +66,7 @@ function __Node_3D_Combine(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	static createNewInput = function() {
 		var index = array_length(inputs);
-		newInput(index, nodeValue("3D object", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3object, noone ))
+		newInput(index, nodeValue("3D object", self, CONNECT_TYPE.input, VALUE_TYPE.d3object, noone ))
 			.setVisible(true, true);
 			
 		array_push(input_display_list, index);

@@ -1,7 +1,7 @@
 function Node_ASE_layer(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "ASE Layer";
 	
-	newInput(0, nodeValue("ASE data", self, JUNCTION_CONNECT.input, VALUE_TYPE.object, noone))
+	newInput(0, nodeValue("ASE data", self, CONNECT_TYPE.input, VALUE_TYPE.object, noone))
 		.setVisible(false, true)
 		.rejectArray();
 	

@@ -27,9 +27,9 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(2, nodeValue_Int("Amount", self, 2))
 		.rejectArray();
 	
-	inputs[3] = nodeValue_Enum_Scroll("Pattern", self,  0, [ new scrollItem("Linear",   s_node_repeat_axis, 0), 
-												 new scrollItem("Grid",     s_node_repeat_axis, 1), 
-												 new scrollItem("Circular", s_node_repeat_axis, 2), ]);
+	newInput(3, nodeValue_Enum_Scroll("Pattern", self,  0, [ new scrollItem("Linear",   s_node_repeat_axis, 0), 
+												             new scrollItem("Grid",     s_node_repeat_axis, 1), 
+												             new scrollItem("Circular", s_node_repeat_axis, 2), ]));
 	
 	newInput(4, nodeValue_Vec2("Shift position", self, [ DEF_SURF_W / 2, 0 ]))
 		.setUnitRef(function() { return getDimension(); });
@@ -45,7 +45,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(9, nodeValue_Vec2("Start position", self, [0, 0]))
 		.setUnitRef(function(index) { return getInputData(1); });
 		
-	newInput(10, nodeValue("Scale over copy", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11 ));
+	newInput(10, nodeValue("Scale over copy", self, CONNECT_TYPE.input, VALUE_TYPE.curve, CURVE_DEF_11 ));
 	
 	newInput(11, nodeValue_PathNode("Path", self, noone, "Make each copy follow along path." ))
 		.setVisible(true, true);
@@ -58,7 +58,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(14, nodeValue_Gradient("Color over copy", self, new gradientObject(cola(c_white))))
 		.setMappable(30);
 		
-	newInput(15, nodeValue("Alpha over copy", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11 ));
+	newInput(15, nodeValue("Alpha over copy", self, CONNECT_TYPE.input, VALUE_TYPE.curve, CURVE_DEF_11 ));
 	
 	newInput(16, nodeValue_Enum_Button("Array select", self, 0, [ "Order", "Random", "Spread" ]))
 		.setTooltip("Whether to select image from an array in order, at random, or spread or each image to one output.");
@@ -83,7 +83,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 	newInput(24, nodeValue_Vec2("Animator scale", self, [ 0, 0 ]));
 		
-	newInput(25, nodeValue("Animator falloff", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_10));
+	newInput(25, nodeValue("Animator falloff", self, CONNECT_TYPE.input, VALUE_TYPE.curve, CURVE_DEF_10));
 	 
 	newInput(26, nodeValue_Enum_Button("Stack", self,  0, [ "None", "X", "Y" ]))
 		.setTooltip("Place each copy next to each other, taking surface dimension into account.");

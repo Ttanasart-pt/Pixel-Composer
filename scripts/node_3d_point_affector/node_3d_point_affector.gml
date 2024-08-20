@@ -14,10 +14,10 @@ function Node_3D_Point_Affector(_x, _y, _group = noone) : Node_3D_Object(_x, _y,
 	
 	newInput(in_d3d + 3, nodeValue_Float("Falloff distance", self, 0.5));
 	
-	newInput(in_d3d + 4, nodeValue("Falloff curve", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_01));
+	newInput(in_d3d + 4, nodeValue("Falloff curve", self, CONNECT_TYPE.input, VALUE_TYPE.curve, CURVE_DEF_01));
 	
-	inputs[in_d3d + 5] = nodeValue_Enum_Scroll("Shape", self, 0, [ new scrollItem("Sphere", s_node_3d_affector_shape, 0), 
-																	 new scrollItem("Plane",  s_node_3d_affector_shape, 1), ]);
+	newInput(in_d3d + 5, nodeValue_Enum_Scroll("Shape", self, 0, [ new scrollItem("Sphere", s_node_3d_affector_shape, 0), 
+																   new scrollItem("Plane",  s_node_3d_affector_shape, 1), ]));
 	
 	outputs[0] = nodeValue_Output("Output", self, VALUE_TYPE.float, [ 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);

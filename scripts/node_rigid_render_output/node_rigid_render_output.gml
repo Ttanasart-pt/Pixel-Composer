@@ -23,7 +23,7 @@ function Node_Rigid_Render_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 	
 	static createNewInput = function() {
 		var index = array_length(inputs);
-		newInput(index, nodeValue("Object", self, JUNCTION_CONNECT.input, VALUE_TYPE.rigid, noone ))
+		newInput(index, nodeValue("Object", self, CONNECT_TYPE.input, VALUE_TYPE.rigid, noone ))
 			.setVisible(true, true);
 			
 		return inputs[index];
@@ -36,7 +36,7 @@ function Node_Rigid_Render_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 		if(!is_undefined(outParent))
 			array_remove(group.outputs, outParent);
 			
-		outParent = nodeValue("Rendered", group, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone)
+		outParent = nodeValue("Rendered", group, CONNECT_TYPE.output, VALUE_TYPE.surface, noone)
 			.uncache()
 			.setVisible(true, true);
 		outParent.from = self;

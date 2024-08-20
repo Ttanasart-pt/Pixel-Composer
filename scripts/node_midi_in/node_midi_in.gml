@@ -100,7 +100,7 @@ function Node_MIDI_In(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		var _inp = nodeValue_Int("Index", self, -1 );
 		_inp.editWidget.slidable = false;
 		array_push(inputs,  _inp);
-		array_push(inputs,  nodeValue("Normalize", self, JUNCTION_CONNECT.input,  VALUE_TYPE.boolean, false ));
+		array_push(inputs,  nodeValue("Normalize", self, CONNECT_TYPE.input,  VALUE_TYPE.boolean, false ));
 		
 		array_push(outputs, nodeValue_Output("Value", self, VALUE_TYPE.float, -1 ));
 		
