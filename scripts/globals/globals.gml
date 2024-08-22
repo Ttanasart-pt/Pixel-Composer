@@ -37,10 +37,10 @@
 	globalvar HOTKEYS, HOTKEY_CONTEXT;
 
 	LATEST_VERSION	= 1_16_00_0;
-	VERSION			= 1_17_10_4;
+	VERSION			= 1_17_11_0;
 	SAVE_VERSION	= 1_17_10_0;
-	VERSION_STRING  = "1.17.10.4";
-	BUILD_NUMBER	= 1_17_10_4;
+	VERSION_STRING  = "1.17.11.001";
+	BUILD_NUMBER	= 1_17_11_0;
 	
 	HOTKEYS			= ds_map_create();
 	HOTKEY_CONTEXT	= ds_list_create();
@@ -59,7 +59,7 @@
 	globalvar DIALOG_CLICK;
 	
 	DOUBLE_CLICK_POS = [ 0, 0 ];
-	DOUBLE_CLICK = false;
+	DOUBLE_CLICK  = false;
 	
 	FOCUS	      = noone;
 	FOCUS_CONTENT = noone;
