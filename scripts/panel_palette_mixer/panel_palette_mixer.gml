@@ -261,6 +261,7 @@ function Panel_Palette_Mixer() : PanelContent() constructor {
 				
 				for (var i = 0, n = array_length(_connections); i < n; i++) {
 					var conn = _connections[i];
+					if(!is_array(conn)) continue;
 					
 					var _fr = _palettes[conn[0]];
 					var _to = _palettes[conn[1]];

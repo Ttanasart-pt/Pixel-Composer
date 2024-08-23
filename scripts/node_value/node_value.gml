@@ -1535,6 +1535,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(!updated) return false; /////////////////////////////////////////////////////////////////////////////////
 		
+		if(is_instanceof(self, NodeValue_Dimension))
+			node.attributes.use_project_dimension = false;
+		
 		if(connect_type == CONNECT_TYPE.input && self.index >= 0) {
 			var _val = animator.getValue(time);
 			

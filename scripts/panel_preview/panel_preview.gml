@@ -1973,22 +1973,15 @@ function Panel_Preview() : PanelContent() constructor {
             }
         
         } else { // color sampler
-            var cx = ui(8);
-            var cy = ui(8);
+            var cx = ui(6);
+            var cy = ui(6);
             var cw = ui(32);
-            var ch = topbar_height - ui(16);
+            var ch = topbar_height - ui(10);
             
             if(sample_color != noone) {
-                draw_set_color(sample_color);
-                draw_set_alpha(1);
-                draw_rectangle(cx, cy, cx + cw, cy + ch, false);
-            }
-        
-            draw_set_color(COLORS.panel_toolbar_outline);
-            draw_rectangle(cx, cy, cx + cw, cy + ch, true);
-            
-            if(sample_color != noone) {
-                var tx = cx + cw + ui(16);
+                drawColor(sample_color, cx, cy, cw, ch);
+                
+                var tx = cx + cw + ui(8);
                 var hx = color_get_hex(sample_color);
                 draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
                 draw_text(tx, cy + ch / 2, hx);

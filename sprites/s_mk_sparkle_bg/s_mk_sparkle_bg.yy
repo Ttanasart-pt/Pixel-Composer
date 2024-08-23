@@ -45,7 +45,7 @@
   "origin":4,
   "parent":{
     "name":"src",
-    "path":"folders/nodes/data/MK_effects/src.yy",
+    "path":"folders/nodes/data/MKFX/src.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

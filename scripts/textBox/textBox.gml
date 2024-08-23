@@ -663,7 +663,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 						}
 					}
 					
-					draw_set_text(f_p0b, fa_center, fa_center, COLORS._main_text_sub);
+					draw_set_text(font, fa_center, fa_center, COLORS._main_text_sub);
 					if(key_mod_press(ALT)) draw_text_add(_x + _w - ui(16), _y + _h / 2, "/2");
 					else                   draw_text_add(_x + _w - ui(16), _y + _h / 2, "x2");
 					draw_set_alpha(1);

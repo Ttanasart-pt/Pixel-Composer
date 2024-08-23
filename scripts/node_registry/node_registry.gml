@@ -669,10 +669,11 @@ function __initNodes() {
 	var d3d = ds_list_create(); 
 	addNodeCatagory("3D", d3d);
 		ds_list_add(d3d, "2D Operations");
-		addNodeObject(d3d, "Normal",			s_node_normal,			"Node_Normal",			[1, Node_Normal],, "Create normal map using greyscale value as height.");
-		addNodeObject(d3d, "Normal Light",		s_node_normal_light,	"Node_Normal_Light",	[1, Node_Normal_Light],, "Light up the image using normal mapping.");
-		addNodeObject(d3d, "Bevel",				s_node_bevel,			"Node_Bevel",			[1, Node_Bevel],, "Apply 2D bevel on the image.");
-		addNodeObject(d3d, "Sprite Stack",		s_node_stack,			"Node_Sprite_Stack",	[1, Node_Sprite_Stack],, "Create sprite stack either from repeating a single image or stacking different images using array.");
+		addNodeObject(d3d, "Normal",			s_node_normal,			"Node_Normal",				[1, Node_Normal],, "Create normal map using greyscale value as height.");
+		addNodeObject(d3d, "Normal Light",		s_node_normal_light,	"Node_Normal_Light",		[1, Node_Normal_Light],, "Light up the image using normal mapping.");
+		addNodeObject(d3d, "Bevel",				s_node_bevel,			"Node_Bevel",				[1, Node_Bevel],, "Apply 2D bevel on the image.");
+		addNodeObject(d3d, "Sprite Stack",		s_node_stack,			"Node_Sprite_Stack",		[1, Node_Sprite_Stack],, "Create sprite stack either from repeating a single image or stacking different images using array.");
+		addNodeObject(d3d, "Ambient Occlusion",	s_node_AO,				"Node_Ambient_Occlusion",	[1, Node_Ambient_Occlusion], ["ao"], "Apply simple 2D AO effect using height map.").patreonExtra();
 		
 		ds_list_add(d3d, "3D");
 		addNodeObject(d3d, "3D Camera",		s_node_3d_camera,			"Node_3D_Camera",			[1, Node_3D_Camera],, "Create 3D camera that render scene to surface.").setVersion(11510);
@@ -810,7 +811,7 @@ function __initNodes() {
 		addNodeObject(generator, "MK Delay Machine",	s_node_mk_delay_machine,	"Node_MK_Delay_Machine",	[1, Node_MK_Delay_Machine],,        	"Combines multiple frames of animation into one.").setVersion(11680);
 		addNodeObject(generator, "MK Fracture",			s_node_mk_fracture,			"Node_MK_Fracture",			[1, Node_MK_Fracture],,             	"Deterministically fracture and image and apply basic physics.").patreonExtra();
 		addNodeObject(generator, "MK Sparkle",			s_node_mk_sparkle,			"Node_MK_Sparkle",			[1, Node_MK_Sparkle],,					"Generate random star animation.").patreonExtra();
-	#endregion
+		addNodeObject(generator, "MK Subpixel",			s_node_mk_subpixel,			"Node_MK_Subpixel",			[1, Node_MK_Subpixel],,					"Apply subpixel filter on top of a surface.").setVersion(1_17_11_0);
 	
 	#region compose
 	var compose = ds_list_create(); 
@@ -846,7 +847,7 @@ function __initNodes() {
 		addNodeObject(values, "Path",			s_node_path,		"Node_Path",			[1, Node_Path]);
 		addNodeObject(values, "Area",			s_node_area,		"Node_Area",			[1, Node_Area]);
 		addNodeObject(values, "Boolean",		s_node_boolean,		"Node_Boolean",			[1, Node_Boolean]).setVersion(1090);
-			
+		
 		ds_list_add(values, "Numbers");
 		addNodeObject(values, "Number",				s_node_number,				"Node_Number",				[1, Node_Number]);
 		addNodeObject(values, "To Number",			s_node_to_number,			"Node_To_Number",			[1, Node_To_Number]).setVersion(1145);

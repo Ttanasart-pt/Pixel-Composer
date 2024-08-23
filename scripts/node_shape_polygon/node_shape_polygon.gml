@@ -53,6 +53,20 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	newInput(18, nodeValue_Rotation("Piece Rotation", self, 0));
 	
+	////////////
+	
+	newInput(19, nodeValue_Color("Vertex Color 1", self, c_white));
+	
+	newInput(20, nodeValue_Color("Vertex Color 2", self, c_white));
+	
+	newInput(21, nodeValue_Color("Vertex Color 3", self, c_white));
+	
+	////////////
+	
+	newInput(22, nodeValue_Float("Piece Scale", self, 1));
+	
+	newInput(23, nodeValue_Palette("Shape Palette", self, [ cola(c_white) ]));
+	
 	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 		
 	outputs[1] = nodeValue_Output("Mesh", self, VALUE_TYPE.mesh, noone);
@@ -62,8 +76,9 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	input_display_list = [ 16, 
 		["Output", 		false], 0, 
 		["Transform",	false], 5, 6, 7, 
-		["Shape",		false], 4, 8, 9, 10, 11, 12, 13, 14, 15, 17, 18, 
-		["Render",		 true],	3, 
+		["Shape",		false], 4, 8, 9, 10, 11, 12, 13, 14, 15, 17, 
+		["Piecewise",	false], 18, 22, 
+		["Render",		 true],	3, 23, 19, 20, 21, 
 		["Background",	 true, 1], 2, 
 	];
 	
@@ -83,12 +98,12 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		path.draw(_x, _y, _s);
 	}
 	
-	static vertex_transform = function(_p, _pos, _rot) {
+	static vertex_apply = function(_p, _pos, _rot, _color = c_white, _alpha = 1) {
 		var p = point_rotate(_p.x, _p.y, 0, 0, _rot);
 		_p.x = _pos[0] + p[0];
 		_p.y = _pos[1] + p[1];
 		
-		draw_vertex(_p.x, _p.y);
+		draw_vertex_color(_p.x, _p.y, _color, _alpha);
 	}
 	
 	mesh = new Mesh();
@@ -114,6 +129,8 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		var _mesh   = _data[16];
 		var _expld  = _data[17];
 		var _prot   = _data[18];
+		var _psca   = _data[22];
+		var _pall   = _data[23];
 		
 		inputs[ 8].setVisible(false);
 		inputs[ 9].setVisible(false);
@@ -173,7 +190,6 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				
 		var _outSurf = surface_verify(_outData[0], _dim[0], _dim[1], attrDepth());
 		
-		print(attributes.use_project_dimension)
 		var data = {
 			side:	   _side,
 			inner:	   _inner,
@@ -186,11 +202,14 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			explode:   _expld,
 		};
 		
+		var tri0 = colorMultiply(_shc, _data[19]); 
+		var tri1 = colorMultiply(_shc, _data[20]); 
+		var tri2 = colorMultiply(_shc, _data[21]);
+		
 		surface_set_target(_outSurf);
 			if(_bg) draw_clear(_bgc);
 			else	DRAW_CLEAR
 			
-			draw_set_color(_shc);
 			draw_primitive_begin(pr_trianglelist);
 			
 			outputs[2].setVisible(_mesh == noone);
@@ -232,9 +251,9 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				var points  = shapeData[0];
 				var segment = shapeData[1];
 				
-				if(_prot != 0)
+				if(_prot != 0 || _psca != 1)
 				for( var i = 0, n = array_length(points); i < n; i++ ) {
-					if(points[i].type != SHAPE_TYPE.triangles) continue;
+					if(points[i].type == SHAPE_TYPE.points) continue;
 					
 					var _tri = points[i].triangles;
 					for( var j = 0; j < array_length(_tri); j++ ) {
@@ -242,14 +261,17 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 						var cx  = (tri[0].x + tri[1].x + tri[2].x) / 3;
 						var cy  = (tri[0].y + tri[1].y + tri[2].y) / 3;
 						
-						var p = point_rotate(tri[0].x, tri[0].y, cx, cy, _prot);
-						tri[0].x = p[0]; tri[0].y = p[1];
+						var p = point_rotate(tri[0].x - cx, tri[0].y - cy, 0, 0, _prot);
+						tri[0].x = cx + _psca * p[0];
+						tri[0].y = cy + _psca * p[1];
 						
-						var p = point_rotate(tri[1].x, tri[1].y, cx, cy, _prot);
-						tri[1].x = p[0]; tri[1].y = p[1];
+						var p = point_rotate(tri[1].x - cx, tri[1].y - cy, 0, 0, _prot);
+						tri[1].x = cx + _psca * p[0];
+						tri[1].y = cy + _psca * p[1];
 						
-						var p = point_rotate(tri[2].x, tri[2].y, cx, cy, _prot);
-						tri[2].x = p[0]; tri[2].y = p[1];
+						var p = point_rotate(tri[2].x - cx, tri[2].y - cy, 0, 0, _prot);
+						tri[2].x = cx + _psca * p[0];
+						tri[2].y = cy + _psca * p[1];
 						
 					}
 				}
@@ -266,21 +288,25 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				for( var i = 0, n = array_length(points); i < n; i++ ) {
 					if(points[i].type == SHAPE_TYPE.points)
 						shapes[i] = polygon_triangulate(points[i].points)[0];
-						
-					else if(points[i].type == SHAPE_TYPE.triangles)
+					else 
 						shapes[i] = points[i].triangles;
 				}
 				
+				var _plen = array_length(_pall);
 				mesh.triangles = [];
 				for( var i = 0, n = array_length(shapes); i < n; i++ ) {
 					var triangles = shapes[i];
+					var shapetyp  = points[i].type;
 					
 					for( var j = 0; j < array_length(triangles); j++ ) {
 						var tri = triangles[j];
 						
-						vertex_transform(tri[0], _pos, _rot);
-						vertex_transform(tri[1], _pos, _rot);
-						vertex_transform(tri[2], _pos, _rot);
+						var shapeind = shapetyp == SHAPE_TYPE.rectangle? floor(j / 2) : j;
+						var trc = array_safe_get(_pall, shapeind % _plen, c_white)
+						
+						vertex_apply(tri[0], _pos, _rot, colorMultiply(trc, tri0));
+						vertex_apply(tri[1], _pos, _rot, colorMultiply(trc, tri1));
+						vertex_apply(tri[2], _pos, _rot, colorMultiply(trc, tri2));
 						
 						array_push(mesh.triangles, tri);
 					}

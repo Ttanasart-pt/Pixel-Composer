@@ -1,0 +1,89 @@
+function Node_MK_Subpixel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
+	name = "MK Subpixel";
+	
+	newInput(0, nodeValue_Dimension(self));
+	
+	newInput(1, nodeValue_Enum_Scroll("Type", self, 0, [ "Hex Disc", "Strip", "Linear Block", "Linear Block offset", "Chevron", "Square", "Square Non-Uniform" ]));
+	
+	newInput(2, nodeValue_Int("Scale", self, 1));
+	
+	newInput(3, nodeValue_Float("Size", self, .6))
+	    .setDisplay(VALUE_DISPLAY.slider);
+	
+	newInput(4, nodeValue_Float("Blur", self, .1))
+	    .setDisplay(VALUE_DISPLAY.slider);
+	
+	newInput(5, nodeValue_Float("Noise", self, .1))
+	    .setDisplay(VALUE_DISPLAY.slider);
+	
+	newInput(6, nodeValue_Float("Intensity", self, 1))
+	    .setDisplay(VALUE_DISPLAY.slider);
+	
+	newInput(7, nodeValue_Surface("Surface", self));
+	
+	newInput(8, nodeValueSeed(self, VALUE_TYPE.float));
+	
+	newInput(9, nodeValue_Float("Ridge amount", self, 8));
+	
+	newInput(10, nodeValue_Float("Ridge Intensity", self, 1))
+	    .setDisplay(VALUE_DISPLAY.slider);
+	
+	newInput(11, nodeValue_Bool("Ridge", self, false));
+	
+	input_display_list = [ new Inspector_Sprite(s_MKFX), 7, 
+		["Subpixel", false], 1, 2, 
+		["Effect",   false], 3, 4, 8, 
+		["Render",   false], 6, 5, 
+		["Ridge",    false, 11], 9, 10, 
+	];
+	
+	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
+		var _type = _data[1];
+		var _scal = _data[2];
+		var _size = _data[3];
+		var _blur = _data[4];
+		var _nise = _data[5];
+		var _ints = _data[6];
+		var _surf = _data[7];
+		var _seed = _data[8];
+		var _rgcn = _data[9];
+		var _rgin = _data[10];
+		var _ruse = _data[11];
+		
+		var _dim = surface_get_dimension(_surf);
+		var sh   = sh_mk_subpixel_hex_disc;
+		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
+		
+		switch(_type) {
+    	    case 0 : sh = sh_mk_subpixel_hex_disc;				break;
+    	    case 1 : sh = sh_mk_subpixel_linear;				break;
+    	    case 2 : sh = sh_mk_subpixel_linear_block;  		break;
+    	    case 3 : sh = sh_mk_subpixel_linear_block_offset;  	break;
+    	    case 4 : sh = sh_mk_subpixel_chevron;  				break;
+    	    case 5 : sh = sh_mk_subpixel_square;  				break;
+    	    case 6 : sh = sh_mk_subpixel_square_non;			break;
+    	    case 7 : sh = sh_mk_subpixel_diagonal;				break;
+    	}
+		
+		surface_set_shader(_outSurf, sh);
+			shader_set_surface("texture", _surf);
+			shader_set_f("dimension",     _dim);
+			shader_set_f("seed",          _seed / 10000);
+			shader_set_f("scale",         _scal);
+			shader_set_f("size",          _size);
+			shader_set_f("blur",          _blur);
+			shader_set_f("noise",         _nise);
+			shader_set_f("intensity",     _ints);
+			
+			shader_set_i("ridgeUse",      _ruse);
+			shader_set_f("ridgeCount",    _rgcn);
+			shader_set_f("ridgeIntens",   _rgin);
+			
+			draw_sprite_stretched(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1]);
+		surface_reset_shader();
+		
+		return _outSurf;
+	}
+}

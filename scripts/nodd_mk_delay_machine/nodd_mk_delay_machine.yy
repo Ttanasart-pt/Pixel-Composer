@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"nodd_mk_delay_machine",
   "parent":{
-    "name":"MK_effects",
-    "path":"folders/nodes/data/MK_effects.yy",
+    "name":"MKFX",
+    "path":"folders/nodes/data/MKFX.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

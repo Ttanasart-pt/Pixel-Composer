@@ -22,12 +22,13 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 												               new scrollItem("Vertical",   s_node_alignment, 1), ]));
 	
 	newInput(10, nodeValue_Trigger("Auto fill", self, false, "Automatically set amount based on sprite size."))
-		.setDisplay(VALUE_DISPLAY.button, { name: "Auto fill", UI : true, onClick: function() { #region
+		.setDisplay(VALUE_DISPLAY.button, { name: "Auto fill", UI : true, onClick: function() /*=>*/ {
 			var _sur = getInputData(0);
 			if(!is_surface(_sur) || _sur == DEF_SURFACE) return;
-			var ww = surface_get_width_safe(_sur);
-			var hh = surface_get_height_safe(_sur);
-		
+			
+			var ww = surface_get_width(_sur);
+			var hh = surface_get_height(_sur);
+			
 			var _size = getInputData(1);
 			var _offs = getInputData(4);
 			var _spac = getInputData(5);
@@ -41,10 +42,10 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			inputs[3].setValue([ fill_w, fill_h ]);
 		
 			doUpdate();
-		} }); #endregion
+		} });
 		
 	newInput(11, nodeValue_Trigger("Sync animation", self, false ))
-		.setDisplay(VALUE_DISPLAY.button, { name: "Sync frames", UI : true, onClick: function() { 
+		.setDisplay(VALUE_DISPLAY.button, { name: "Sync frames", UI : true, onClick: function() /*=>*/ { 
 			var _atl = outputs[1].getValue();
 			var _spd = getInputData(8);
 			TOTAL_FRAMES = max(1, _spd == 0? 1 : ceil(array_length(_atl) / _spd));
@@ -70,23 +71,23 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	attribute_surface_depth();
 	
-	drag_type = 0;	
-	drag_sx   = 0;
-	drag_sy   = 0;
-	drag_mx   = 0;
-	drag_my   = 0;
-	curr_off  = [0, 0];
-	curr_dim  = [0, 0];
-	curr_amo  = [0, 0];
+	drag_type    = 0;	
+	drag_sx      = 0;
+	drag_sy      = 0;
+	drag_mx      = 0;
+	drag_my      = 0;
+	curr_off     = [0, 0];
+	curr_dim     = [0, 0];
+	curr_amo     = [0, 0];
+	  
+	surf_array   = [];
+	atls_array   = [];
 	
-	surf_array = [];
-	atls_array = [];
-	
-	surf_size_w = 1;
-	surf_size_h = 1;
-	
-	surf_space  = 0;
-	surf_axis   = 0;
+	surf_size_w  = 1;
+	surf_size_h  = 1;
+	 
+	surf_space   = 0;
+	surf_axis    = 0;
 	
 	sprite_pos   = [];
 	sprite_valid = [];
@@ -94,8 +95,7 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	temp_surface = [ noone ];
 	
-	static getPreviewValues = function() { return getInputData(0); }
-	
+	static getPreviewValues  = function() { return getInputData(0); }
 	static onValueFromUpdate = function() { _inSurf = noone; }
 	static onValueUpdate     = function() { _inSurf = noone; }
 	
@@ -285,25 +285,24 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	}
 	
 	static spliceSprite = function() {
-		var _inSurf = getInputData(0);
+		var _inSurf  = getInputData(0);
 		if(!is_surface(_inSurf)) return;
 		
-		spliceSurf  = _inSurf;
+		spliceSurf   = _inSurf;
 		
 		var _outSurf = outputs[0].getValue();
 		var _out	 = getInputData(7);
+		var _dim	 = getInputData(1);
+		var _amo	 = getInputData(3);
+		var _off	 = getInputData(4);
+		var _total   = _amo[0] * _amo[1];
+		var _pad	 = getInputData(6);
+		 
+		surf_space   = getInputData(5);
+		surf_axis    = getInputData(9);
 		
-		var _dim	= getInputData(1);
-		var _amo	= getInputData(3);
-		var _off	= getInputData(4);
-		var _total  = _amo[0] * _amo[1];
-		var _pad	= getInputData(6);
-		
-		surf_space  = getInputData(5);
-		surf_axis   = getInputData(9);
-		
-		var ww   = _dim[0] + _pad[0] + _pad[2];
-		var hh   = _dim[1] + _pad[1] + _pad[3];
+		var ww = _dim[0] + _pad[0] + _pad[2];
+		var hh = _dim[1] + _pad[1] + _pad[3];
 		
 		var _resizeSurf = surf_size_w != ww || surf_size_h != hh;
 		
@@ -314,7 +313,7 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _fltp = getInputData(13);
 		var _flcl = getInputData(14);
 		
-		var cDep  = attrDepth();
+		var cDep = attrDepth();
 		curr_dim = _dim;
 		curr_amo = is_array(_amo)? _amo : [1, 1];
 		curr_off = _off;
@@ -325,13 +324,13 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			var filSize = 4;
 			temp_surface[0] = surface_verify(temp_surface[0], surface_get_width_safe(_inSurf), surface_get_height_safe(_inSurf));
 			
-			surface_set_shader(temp_surface[0], sh_slice_spritesheet_empty_scan);
+			surface_set_shader(temp_surface[0], sh_slice_spritesheet_empty_scan, true, BLEND.over);
 				shader_set_dim("dimension",  _inSurf);
-				shader_set_f("paddingStart", _off[0], _off[1]);
-				shader_set_f("spacing",		 surf_space[0], surf_space[1]);
-				shader_set_f("spriteDim",	 _dim[0], _dim[1]);
+				shader_set_f("paddingStart", _off);
+				shader_set_f("spacing",		 surf_space);
+				shader_set_f("spriteDim",	 _dim);
 				shader_set_color("color",	 _flcl);
-				shader_set_i("empty",		 !_fltp);
+				shader_set_i("empty",		!_fltp);
 				
 				draw_surface_safe(_inSurf);
 			surface_reset_shader();
@@ -339,34 +338,24 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		var _atl = array_create(_total);
 		var _sar = array_create(_total);
-		var _arrAmo = 0;
+		var _arrAmo = 0, _s, _a;
 		
 		for(var i = 0; i < _total; i++) 
 			sprite_pos[i] = getSpritePosition(i);
 		
 		for(var i = 0; i < _total; i++) {
-			var _s = array_safe_get_fast(surf_array, i);
+			_s = array_safe_get_fast(surf_array, i);
+		    _s = surface_verify(_s, ww, hh, cDep);
 			
-			if(!is_surface(_s)) 
-				_s = surface_create(ww, hh, cDep);
-				
-			else if(surface_get_format(_s) != cDep) {
-				surface_free(_s);
-				_s = surface_create(ww, hh, cDep);
-				
-			} else if(_resizeSurf) 
-				surface_resize(_s, ww, hh);
-			
-			var _a = array_safe_get_fast(atls_array, i, 0);
+			_a = array_safe_get_fast(atls_array, i, 0);
 			if(_a == 0) _a = new SurfaceAtlas(_s, 0, 0);
 			else        _a.setSurface(_s);
 			
 			var _spr_pos = sprite_pos[i];
 			
-			surface_set_target(_s);
-				DRAW_CLEAR
+			surface_set_shader(_s, noone, true, BLEND.over);
 				draw_surface_part(_inSurf, _spr_pos[0], _spr_pos[1], _dim[0], _dim[1], _pad[2], _pad[1]);
-			surface_reset_target();
+			surface_reset_shader();
 			
 			_a.x = _spr_pos[0];
 			_a.y = _spr_pos[1];

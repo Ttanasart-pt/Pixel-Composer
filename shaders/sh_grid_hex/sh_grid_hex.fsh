@@ -169,16 +169,16 @@ float random (in vec2 st) {	return fract(sin(dot(st.xy + vec2(85.456034, 64.5406
 	
 #endregion //////////////////////////////////// GRADIENT ////////////////////////////////////
 
-float HexDist(vec2 p) { #region
+float HexDist(vec2 p) {
 	p = abs(p);
     
     float c = dot(p, normalize(vec2(1, 1.73)));
     c = max(c, p.x);
     
     return c;
-} #endregion
+}
 
-vec4 HexCoords(vec2 uv) { #region
+vec4 HexCoords(vec2 uv) {
 	vec2 r = vec2(1, sqrt(3.));
     vec2 h = r * .5;
     
@@ -191,9 +191,9 @@ vec4 HexCoords(vec2 uv) { #region
     float y = max(0., .5 - HexDist(gv));
     vec2 id = uv - gv;
     return vec4(x, y, id.x, id.y);
-} #endregion
+}
 
-void main() { #region
+void main() {
 	#region params
 		vec2 sca = scale;
 		if(scaleUseSurf == 1) {
@@ -239,9 +239,6 @@ void main() { #region
 		
 		colr = gradientEval(random(uv));
 	} else if(mode == 2) {
-		//vec2 uv = hc.xy;
-		//uv.x = (uv.x + PI / 2.) / PI;
-		
 		vec2 uv = (pos - hc.zw) + vec2(0.5, 0.5);
 		
 		if(textureTruchet == 1) { //lmao wtf is this code?
@@ -273,4 +270,4 @@ void main() { #region
 	
 	float _aa = 3. / max(dimension.x, dimension.y);
 	gl_FragColor = mix(gapCol, colr, aa == 1? smoothstep(thk - _aa, thk, hc.y) : step(thk, hc.y));
-} #endregion
+}

@@ -18,7 +18,7 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	newInput(7, nodeValue_Enum_Scroll("Draw original", self,  0, [ "None", "Above", "Behind" ]));
 	
-	newInput(8, nodeValue_Enum_Scroll("Fill type", self,  0, [ "Random", "Color map", "Texture map", "Texture Coord" ]));
+	newInput(8, nodeValue_Enum_Scroll("Fill type", self,  0, [ "Random", "Color map", "Texture map", "Texture Coord", "Texture Index" ]));
 	
 	newInput(9, nodeValue_Surface("Color map", self));
 	
@@ -76,14 +76,13 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		var base = 0;
 		var cmap = temp_surface[0];
 		
-		if(_fclr) {
-			#region filter color
-				surface_set_shader(temp_surface[1], sh_region_fill_init);
-					shader_set_color("targetColor", _targ);
-				
-					draw_surface_safe(_surf);
-				surface_reset_shader();
-			#endregion
+		if(_fclr) { // filter color
+			
+			surface_set_shader(temp_surface[1], sh_region_fill_init);
+				shader_set_color("targetColor", _targ);
+			
+				draw_surface_safe(_surf);
+			surface_reset_shader();
 			
 			#region inner region
 				var amo  = _sw;
@@ -140,29 +139,25 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			#endregion
 			
 		} else {
+			surface_set_shader(temp_surface[base], sh_region_fill_coordinate_all_init);
+				draw_surface_safe(_surf);
+			surface_reset_shader();
 			
-			#region coordinate
-				surface_set_shader(temp_surface[base], sh_region_fill_coordinate_all_init);
-					draw_surface_safe(_surf);
+			base = !base;
+			var amo = _sw + _sh;
+			
+			repeat( amo ) {
+				surface_set_shader(temp_surface[base], sh_region_fill_coordinate_all);
+					shader_set_f("dimension",   _sw, _sh);
+					shader_set_surface("base",	_surf);
+					
+					draw_surface_safe(temp_surface[!base]);
 				surface_reset_shader();
 				
 				base = !base;
-				var amo = _sw + _sh;
-				
-				repeat( amo ) {
-					surface_set_shader(temp_surface[base], sh_region_fill_coordinate_all);
-						shader_set_f("dimension",   _sw, _sh);
-						shader_set_surface("base",	_surf);
-						
-						draw_surface_safe(temp_surface[!base]);
-					surface_reset_shader();
-					
-					base = !base;
-				}
-				
-				cmap = temp_surface[!base];
-			#endregion
+			}
 			
+			cmap = temp_surface[!base];
 		}
 				
 		surface_set_target(_outSurf);
@@ -203,6 +198,12 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 				
 				case 3 : // Texture Map
 					shader_set(sh_region_fill_rg_coord);
+						draw_surface_safe(cmap);
+					shader_reset();
+					break;
+					
+				case 4 : // Texture Index
+					shader_set(sh_region_fill_rg_index);
 						draw_surface_safe(cmap);
 					shader_reset();
 					break;

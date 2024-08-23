@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_region_fill_rg_index",
+  "name":"sh_region_fill_rg_index",
+  "parent":{
+    "name":"region",
+    "path":"folders/shader/generator/region.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

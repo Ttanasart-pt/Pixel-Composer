@@ -501,10 +501,10 @@
         registerFunction("", "Nodes Panel",               "", MOD_KEY.none, call_panel_Nodes                  ).setMenuAlt("Nodes",        "nodes_panel")
         registerFunction("", "Tunnels Panel",             "", MOD_KEY.none, call_panel_Tunnels                ).setMenuAlt("Tunnels",      "tunnels_panel")
         
-        registerFunction("", "Color Panel",               "", MOD_KEY.none, call_panel_Color                  ).setMenuAlt("Color",        "color_panel")
-        registerFunction("", "Palettes Panel",            "", MOD_KEY.none, call_panel_Palette                ).setMenuAlt("Palettes",     "palettes_panel")
-        registerFunction("", "Palettes Mixer Panel",      "", MOD_KEY.none, call_panel_Palette_Mixer          ).setMenuAlt("Palettes",     "palettes_mixer_panel")
-        registerFunction("", "Gradients Panel",           "", MOD_KEY.none, call_panel_Gradient               ).setMenuAlt("Gradients",    "gradients_panel")
+        registerFunction("", "Color Panel",               "", MOD_KEY.none, call_panel_Color                  ).setMenuAlt("Color",          "color_panel")
+        registerFunction("", "Palettes Panel",            "", MOD_KEY.none, call_panel_Palette                ).setMenuAlt("Palettes",       "palettes_panel")
+        registerFunction("", "Palettes Mixer Panel",      "", MOD_KEY.none, call_panel_Palette_Mixer          ).setMenuAlt("Palettes Mixer", "palettes_mixer_panel")
+        registerFunction("", "Gradients Panel",           "", MOD_KEY.none, call_panel_Gradient               ).setMenuAlt("Gradients",      "gradients_panel")
         
         registerFunction("", "Console Panel",             "", MOD_KEY.none, call_panel_Console                ).setMenuAlt("Console",      "console_panel")
         registerFunction("", "Globalvar Panel",           "", MOD_KEY.none, call_panel_Globalvar              ).setMenuAlt("Globalvar",    "globalvar_panel")
