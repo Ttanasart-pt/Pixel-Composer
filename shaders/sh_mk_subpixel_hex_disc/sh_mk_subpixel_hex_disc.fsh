@@ -87,7 +87,7 @@ void main() {
     clr *= lig;
     
     vec2 uv = (hex / scs + .5) / vec2(dimension.x / dimension.y, 1.);
-    vec3 baseC = texture2D( texture, uv ).rgb;
+    vec3 baseC = texture2D( gm_BaseTexture, uv ).rgb;
     baseC.rgb *= clr;
     
     gl_FragColor = vec4(baseC, 1.);

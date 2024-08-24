@@ -441,7 +441,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			case VALUE_TYPE.float   : return _val;
 			case VALUE_TYPE.text    : return is_string(_val)?  _val : string_real(_val);
 			case VALUE_TYPE.color   : return is_real(_val)?    cola(_val) : _val;
-			case VALUE_TYPE.surface : return is_string(_val)?  get_asset(_val) : _val;
+			case VALUE_TYPE.surface : return is_string(_val)? get_asset(_val) : _val;
 		}
 		
 		return _val;

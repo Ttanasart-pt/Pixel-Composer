@@ -67,7 +67,7 @@ void main() {
     else if(indx == 2) clr.b = intensity;
     clr *= lig;
     
-    vec3 baseC = texture2D( texture, uv ).rgb;
+    vec3 baseC = texture2D( gm_BaseTexture, uv ).rgb;
     baseC.rgb *= clr;
     
     gl_FragColor = vec4(baseC, 1.);

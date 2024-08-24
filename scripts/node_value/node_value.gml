@@ -1408,7 +1408,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	/////============== SET =============
 	
-	static onValidate = function() { #region
+	static onValidate = function() {
 		if(!validateValue) return;
 		var _val = value_validation, str = "";
 		value_validation = VALIDATION.pass; 
@@ -1465,14 +1465,14 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		#endregion
 		
 		return self;
-	} #endregion
+	}
 	
 	static setValue = function(val = 0, record = true, time = CURRENT_FRAME, _update = true) { ////Set value
 		val = unit.invApply(val);
 		return setValueDirect(val, noone, record, time, _update);
 	}
 	
-	static overrideValue = function(_val) { #region
+	static overrideValue = function(_val) {
 		animator.values = [];
 		array_push(animator.values, new valueKey(0, _val, animator));
 		
@@ -1480,7 +1480,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			animators[i].values = [];
 			array_push(animators[i].values, new valueKey(0, array_safe_get_fast(_val, i), animators[i]));
 		}
-	} #endregion
+	}
 	
 	static setValueInspector = function(_val = 0, index = noone, time = CURRENT_FRAME) {
 		INLINE

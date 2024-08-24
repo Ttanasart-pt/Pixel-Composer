@@ -328,7 +328,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			if(is_instanceof(_s, SurfaceAtlas))
 				_s = _s.surface.get();
 				
-			if(!surface_exists(_s))
+			if(!is_surface(_s))
 				continue;
 			
 			surface_cache[$ surfs[i]] = surface_clone(_s);

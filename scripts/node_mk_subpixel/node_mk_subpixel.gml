@@ -5,7 +5,7 @@ function Node_MK_Subpixel(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	newInput(1, nodeValue_Enum_Scroll("Type", self, 0, [ "Hex Disc", "Strip", "Linear Block", "Linear Block offset", "Chevron", "Square", "Square Non-Uniform" ]));
 	
-	newInput(2, nodeValue_Int("Scale", self, 1));
+	newInput(2, nodeValue_Int("Density", self, 8));
 	
 	newInput(3, nodeValue_Float("Size", self, .6))
 	    .setDisplay(VALUE_DISPLAY.slider);
@@ -30,8 +30,10 @@ function Node_MK_Subpixel(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	newInput(11, nodeValue_Bool("Ridge", self, false));
 	
+	newInput(12, nodeValue_Float("Scene Scale", self, 1));
+	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 7, 
-		["Subpixel", false], 1, 2, 
+		["Subpixel", false], 1, 2, 12, 
 		["Effect",   false], 3, 4, 8, 
 		["Render",   false], 6, 5, 
 		["Ridge",    false, 11], 9, 10, 
@@ -51,6 +53,7 @@ function Node_MK_Subpixel(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		var _rgcn = _data[9];
 		var _rgin = _data[10];
 		var _ruse = _data[11];
+		var _scns = _data[12];
 		
 		var _dim = surface_get_dimension(_surf);
 		var sh   = sh_mk_subpixel_hex_disc;
@@ -81,7 +84,12 @@ function Node_MK_Subpixel(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			shader_set_f("ridgeCount",    _rgcn);
 			shader_set_f("ridgeIntens",   _rgin);
 			
-			draw_sprite_stretched(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1]);
+			var _cx = _dim[0] / 2;
+			var _cy = _dim[1] / 2;
+			var _px = _cx - _dim[0] * _scns / 2;
+			var _py = _cy - _dim[1] * _scns / 2;
+			
+			draw_surface_ext(_surf, _px, _py, _scns, _scns, 0, c_white, 1);
 		surface_reset_shader();
 		
 		return _outSurf;

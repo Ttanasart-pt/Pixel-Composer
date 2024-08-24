@@ -14,13 +14,11 @@ function NodeValue_Surface(_name, _node, _value, _tooltip = "") : NodeValue(_nam
 		draw_junction_index = VALUE_TYPE.surface;
 		if(is_instanceof(val, SurfaceAtlas) || (array_valid(val) && is_instanceof(val[0], SurfaceAtlas))) 
 			draw_junction_index = VALUE_TYPE.atlas;
-				
+		
 		return val;
 	}
 	
-	static __getAnimValue = function(_time = CURRENT_FRAME) {
-		return array_empty(animator.values)? noone : animator.values[0].value;
-	}
+	static __getAnimValue = function(_time = CURRENT_FRAME) { return array_empty(animator.values)? noone : animator.processValue(animator.values[0].value); }
 	
 	static arrayLength = arrayLengthSimple;
 }

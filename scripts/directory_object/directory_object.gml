@@ -235,14 +235,14 @@ function DirectoryObject(name, path) constructor { #region
 			var l_y = _y;
 			for(var i = 0; i < ds_list_size(subDir); i++) {
 				var _hg = subDir[| i].draw(parent, _x + ui(16), _y, _m, _w - ui(16), _hover, _focus, _homedir, _params);
-				draw_set_color(COLORS.collection_tree_line);
-				draw_line(_x + ui(12), _y + hg / 2, _x + ui(16), _y + hg / 2);
+				// draw_set_color(COLORS.collection_tree_line);
+				// draw_line(_x + ui(12), _y + hg / 2, _x + ui(16), _y + hg / 2);
 				
 				hh += _hg;
 				_y += _hg;
 			}
 			draw_set_color(COLORS.collection_tree_line);
-			draw_line(_x + ui(12), l_y, _x + ui(12), _y - hg / 2);
+			draw_line(_x + ui(12), l_y, _x + ui(12), _y - ui(4));
 		}
 		
 		return hh;
