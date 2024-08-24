@@ -587,40 +587,41 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				overlay_drag_sy  = _pos[1];
 			}
 		}
-		
-		#region path
-			if(inputs[2].is_anim && inputs[2].value_from == noone && !inputs[2].sep_axis) {
-				var posInp = inputs[2];
-				var allPos = posInp.animator.values;
-				var ox, oy, nx, ny;
+	
+		if(inputs[2].is_anim && inputs[2].value_from == noone && !inputs[2].sep_axis) { // draw path
+			var posInp = inputs[2];
+			var allPos = posInp.animator.values;
+			var ox, oy, nx, ny;
+			var _val, _px, _py;
 			
-				draw_set_color(COLORS._main_accent);
+			draw_set_color(COLORS._main_accent);
 			
-				for( var i = 0; i < ds_list_size(allPos); i++ ) {
-					var pos  = allPos[| i].value;
-					var _pos = [ pos[0], pos[1] ];
-					
-					if(posInp.unit.mode == VALUE_UNIT.reference) {
-						_pos[0] *= ow;
-						_pos[1] *= oh;
-					}
+			for( var i = 0, n = array_length(allPos); i < n; i++ ) {
+				_val = allPos[i].value;
+				_px  = _val[0];
+				_py  = _val[1];
 				
-					nx = _x + _pos[0] * _s;
-					ny = _y + _pos[1] * _s;
-				
-					draw_set_alpha(1);
-					draw_circle_prec(nx, ny, 4, false);
-					if(i) {
-						draw_set_alpha(0.5);
-						draw_line_dashed(ox, oy, nx, ny);
-					}
-				
-					ox = nx;
-					oy = ny;
+				if(posInp.unit.mode == VALUE_UNIT.reference) {
+					_px *= ow;
+					_py *= oh;
 				}
 			
+				nx = _x + _px * _s;
+				ny = _y + _py * _s;
+				
 				draw_set_alpha(1);
+				draw_circle_prec(nx, ny, 4, false);
+				
+				if(i) {
+					draw_set_alpha(0.5);
+					draw_line_dashed(ox, oy, nx, ny);
+				}
+			
+				ox = nx;
+				oy = ny;
 			}
-		#endregion
+		
+			draw_set_alpha(1);
+		}
 	}
 }
