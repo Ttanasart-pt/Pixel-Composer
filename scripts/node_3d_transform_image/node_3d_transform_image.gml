@@ -20,8 +20,10 @@ function Node_3D_Transform_Image(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, 
 	
 	newInput(in_mesh + 2, nodeValue_Float("FOV", self, 45));
 	
+	newInput(in_mesh + 3, nodeValue_Vec2("Texture Tiling", self, [ 1, 1 ]));
+	
 	input_display_list = [
-		["Material", false], in_mesh + 0,
+		["Material", false], in_mesh + 0, in_mesh + 3, 
 		__d3d_input_list_transform,
 		["Camera",	 false], in_mesh + 1, in_mesh + 2, 
 	]
@@ -30,6 +32,8 @@ function Node_3D_Transform_Image(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, 
 	outputs[1] = nodeValue_Output("Rendered", self, VALUE_TYPE.surface, noone);
 	
 	output_display_list = [ 1 ]
+	
+	attribute_interpolation();
 	
 	static onDrawOverlay3D = function(active, params, _mx, _my, _snx, _sny, _panel) {
 		var _outSurf = outputs[1].getValue();
@@ -57,6 +61,7 @@ function Node_3D_Transform_Image(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, 
 		var _surf = _data[in_mesh + 0];
 		var _proj = _data[in_mesh + 1];
 		var _fov  = _data[in_mesh + 2];
+		var _tile = _data[in_mesh + 3];
 		if(!is_surface(_surf)) return 0;
 		
 		if(_output_index == 0) {
@@ -78,11 +83,13 @@ function Node_3D_Transform_Image(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, 
 										      1, 0, 0);
 			
 			_output = surface_verify(_output, _dim[0], _dim[1]);
-			surface_set_target(_output);
-				DRAW_CLEAR
+			surface_set_shader(_output, sh_d3d_3d_transform);
+				shader_set_2("tiling", _tile);
+				
 				camera_set_view_mat(camera, viewMat);
 				camera_set_proj_mat(camera, projMat);
 				camera_apply(camera);
+				gpu_set_texfilter(attributes.interpolate);
 				
 				object.transform.submitMatrix();
 				matrix_set(matrix_world, matrix_stack_top());
@@ -93,7 +100,8 @@ function Node_3D_Transform_Image(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, 
 				matrix_set(matrix_world, matrix_build_identity());
 				
 				camera_apply(0);
-			surface_reset_target();
+				gpu_set_texfilter(false);
+			surface_reset_shader();
 		
 			return _output;
 		}

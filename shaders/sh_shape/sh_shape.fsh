@@ -9,8 +9,10 @@ uniform int aa;
 uniform int sides;
 uniform int tile;
 
+uniform int  drawBG;
 uniform int  drawDF;
 uniform vec2 dfLevel;
+uniform vec2 dfLevelOut;
 
 uniform float rotation;
 uniform float angle;
@@ -24,10 +26,11 @@ uniform float parall;
 
 uniform vec2 angle_range;
 
-uniform vec2 dimension;
-uniform vec2 center;
-uniform vec2 scale;
-uniform vec2 trep;
+uniform vec2  dimension;
+uniform vec2  center;
+uniform vec2  scale;
+uniform vec2  trep;
+uniform float shapeScale;
 
 uniform int   teeth;
 uniform vec2  teethSize;
@@ -296,7 +299,6 @@ float sdArrow( in vec2 p, float w1, float w2, float k ) { // The arrow goes from
 }
 
 void main() {
-	float color = 0.;
 	vec2  coord = (v_vTexcoord - center) * mat2(cos(rotation), -sin(rotation), sin(rotation), cos(rotation)) / scale;
 	vec2  ratio = dimension / dimension.y;
 	float d;
@@ -318,31 +320,40 @@ void main() {
 	    d = sdStar( coord, 0.9 - corner, sides, 2. + inner * (float(sides) - 2.), angle );
 		d -= corner;
 		
-	} else if(shape ==  4) d = sdArc(			coord, vec2(sin(angle), cos(angle)), angle_range, 0.9 - inner, inner );
-	  else if(shape ==  5) d = sdTearDrop(		coord + vec2(0., 0.5), stRad, edRad, 1. );
-	  else if(shape ==  6) d = sdCross( 		coord, vec2(1. + corner, outer), corner );
-	  else if(shape ==  7) d = sdVesica(		coord, inner, outer );
-	  else if(shape ==  8) d = sdCrescent(		coord, inner, outer, angle );
-	  else if(shape ==  9) d = sdDonut( 		coord, inner );
-	  else if(shape == 10) d = sdRhombus(		coord, vec2(1. - corner) ) - corner;
-	  else if(shape == 11) d = sdTrapezoid( 	coord, trep.x - corner, trep.y - corner, 1. - corner ) - corner;
-	  else if(shape == 12) d = sdParallelogram( coord, 1. - corner - parall, 1. - corner, parall) - corner;
-	  else if(shape == 13) d = sdHeart( 		coord );
-	  else if(shape == 14) d = sdCutDisk( 		coord, 1., inner );
-	  else if(shape == 15) d = sdPie( 			coord, vec2(sin(angle), cos(angle)), 1. );
-	  else if(shape == 16) d = sdRoundedCross( 	coord, 1. - corner ) - corner;
-	  else if(shape == 17) d = sdArrow( 		coord, arrow.x, arrow.y, arrow_head);
-	  else if(shape == 18) d = sdGear( 			coord, inner, teeth, teethSize, teethAngle);
+	} else if(shape ==  4) { d = sdArc(				coord, vec2(sin(angle), cos(angle)), angle_range, 0.9 - inner, inner );	 }
+	  else if(shape ==  5) { d = sdTearDrop(		coord + vec2(0., 0.5), stRad, edRad, 1. );                      		 }
+	  else if(shape ==  6) { d = sdCross( 			coord, vec2(1. + corner, outer), corner );                          	 }
+	  else if(shape ==  7) { d = sdVesica(			coord, inner, outer );                                              	 }
+	  else if(shape ==  8) { d = sdCrescent(		coord, inner, outer, angle );                                   		 }
+	  else if(shape ==  9) { d = sdDonut( 			coord, inner );                                                     	 }
+	  else if(shape == 10) { d = sdRhombus(			coord, vec2(1. - corner) ) - corner;                                	 }
+	  else if(shape == 11) { d = sdTrapezoid( 		coord, trep.x - corner, trep.y - corner, 1. - corner ) - corner;		 }
+	  else if(shape == 12) { d = sdParallelogram(	coord, 1. - corner - parall, 1. - corner, parall) - corner;   			 }
+	  else if(shape == 13) { d = sdHeart( 			coord );                                                            	 }
+	  else if(shape == 14) { d = sdCutDisk( 		coord, 1., inner );                                             		 }
+	  else if(shape == 15) { d = sdPie( 			coord, vec2(sin(angle), cos(angle)), 1. );                          	 }
+	  else if(shape == 16) { d = sdRoundedCross( 	coord, 1. - corner ) - corner;                              			 }
+	  else if(shape == 17) { d = sdArrow( 			coord, arrow.x, arrow.y, arrow_head);                               	 }
+	  else if(shape == 18) { d = sdGear( 			coord, inner, teeth, teethSize, teethAngle);                        	 }
 	
-	if(drawDF == 1) {
-		color = -d;
-		color = (color - dfLevel.x) / (dfLevel.y - dfLevel.x);
-	} else if(aa == 0)
-		color = step(d, 0.0);
+	float cc, color = 0.;
+	
+	if(aa == 0)
+		cc = step(d, 0.0);
 	else {
 		float _aa = 1. / max(dimension.x, dimension.y);
-		color = smoothstep(_aa, -_aa, d);
+		cc = smoothstep(_aa, -_aa, d);
 	}
 	
-	gl_FragColor = mix(bgColor, v_vColour, color);
+	color = cc;
+	if(drawDF == 1) {
+		color  = -d;
+		color  = smoothstep(dfLevelOut[0], dfLevelOut[1], clamp((color - dfLevel.x) / (dfLevel.y - dfLevel.x), 0., 1.));
+		color *= cc;
+	}
+	
+	if(drawBG == 0)
+		gl_FragColor = vec4(v_vColour.rgb, color);
+	else 
+		gl_FragColor = mix(bgColor, v_vColour, color);
 }

@@ -4,7 +4,8 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-uniform vec4  palette[64];
+#define PALETTE_LIMIT 1024
+uniform vec4  palette[PALETTE_LIMIT];
 uniform float paletteAmount;
 
 uniform float shift;

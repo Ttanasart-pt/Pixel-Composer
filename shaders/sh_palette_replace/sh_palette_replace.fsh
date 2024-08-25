@@ -7,9 +7,10 @@ varying vec4 v_vColour;
 uniform int		  useMask;
 uniform sampler2D mask;
 
-uniform vec4	colorFrom[32];
+#define PALETTE_LIMIT 1024
+uniform vec4	colorFrom[PALETTE_LIMIT];
 uniform int		colorFrom_amo;
-uniform vec4	colorTo[32];
+uniform vec4	colorTo[PALETTE_LIMIT];
 uniform int		colorTo_amo;
 
 uniform float   seed;

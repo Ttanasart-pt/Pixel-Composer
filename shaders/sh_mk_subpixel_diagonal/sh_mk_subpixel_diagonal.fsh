@@ -1,3 +1,4 @@
+#define TAU 6.28318530718
 #define s3 1.
 
 varying vec2 v_vTexcoord;
@@ -53,6 +54,26 @@ float fnoise(vec2 pos, float siz, float dist) {
     return lig;
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+uniform int   flickerUse;
+uniform float flickerIntens;
+uniform float flickerCut;
+uniform float flickerTime;
+
+float flick(vec2 id) {
+	if(flickerUse == 0) return 1.;
+    
+	float dl = flickerTime + random(id, seed) * TAU;
+	float ww = .8 * abs(sin(dl)) + 
+	           .2 * sin((dl + random(id, seed + 12.41)) * 2.) + 
+	           .1 * sin((dl + random(id, seed + 65.35)) * 3.);
+	ww = smoothstep(flickerCut, 1., ww);
+	return 1. - ww * flickerIntens;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+
 void main() {
     vec2 scs  = scale * vec2(2.);
     vec2 pos  = v_vTexcoord - .5;
@@ -70,11 +91,12 @@ void main() {
     id = abs(dimension + id);
     if(md(id.y, s3) > s3 / 2.) ind += 2.;
     
+    float ints = intensity * flick(id);
     int indx = int(mod(ind, 3.));
     vec3 clr = vec3(0.);
-         if(indx == 0) clr.r = intensity;
-    else if(indx == 1) clr.g = intensity;
-    else if(indx == 2) clr.b = intensity;
+         if(indx == 0) clr.r = ints;
+    else if(indx == 1) clr.g = ints;
+    else if(indx == 2) clr.b = ints;
     clr *= lig;
     
     vec2 uv = (hex / scs + .5) / vec2(dimension.x / dimension.y, 1.);

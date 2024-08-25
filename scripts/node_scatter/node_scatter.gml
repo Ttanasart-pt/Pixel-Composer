@@ -80,13 +80,13 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	newInput(27, nodeValue_Enum_Scroll("Animated array end", self,  0, [ "Loop", "Ping Pong" ]));
 		
-	//////////////////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	newInput(28, nodeValueMap("Gradient map", self));
 	
 	newInput(29, nodeValueGradientRange("Gradient map range", self, inputs[11]));
 	
-	//////////////////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	newInput(30, nodeValue_Vec2("Uniform amount", self, [ 4, 4 ]));
 	
@@ -106,6 +106,10 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	newInput(38, nodeValue_Enum_Button("Spacing", self,   0, [ "After", "Between", "Around" ]));
 	
+	newInput(39, nodeValue_Range("Shift radial", self, [ 0, 0 ]));
+	
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
 	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 		
 	outputs[1] = nodeValue_Output("Atlas data", self, VALUE_TYPE.surface, [])
@@ -116,7 +120,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		["Surfaces", 	 true], 0, 1, 15, 24, 25, 26, 27, 
 		["Scatter",		false], 6, 5, 13, 14, 17, 9, 31, 2, 30, 35, 
 		["Path",		false], 19, 38, 20, 21, 22, 
-		["Position",	false], 33, 36, 37, 
+		["Position",	false], 33, 36, 37, 39, 
 		["Rotation",	false], 7, 4, 32, 
 		["Scale",	    false], 3, 8, 34, 
 		["Render",		false], 18, 11, 28, 12, 16, 23, 
@@ -134,7 +138,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	scatter_maps = 0;
 	scatter_mapp = [];
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		PROCESSOR_OVERLAY_CHECK
 		
 		var _distType = current_data[6];
@@ -144,18 +148,18 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var hv = inputs[29].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, current_data[1]); active &= !hv; _hov |= hv;
 		
 		return _hov;
-	} #endregion
+	}
 	
-	static onValueUpdate = function(index) { #region
+	static onValueUpdate = function(index) {
 		if(index == 15) {
 			var _arr = getInputData(15);
 			inputs[0].array_depth = _arr;
 			
 			update();
 		}
-	} #endregion
+	}
 	
-	static step = function() { #region
+	static step = function() {
 		var _are = getInputData(5);
 		var _dis = getInputData(6);
 		var _sct = getInputData(9);
@@ -210,11 +214,11 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		}
 		
 		inputs[11].mappableStep();
-	} #endregion
+	}
 	
 	////=========== PROCESS ===========
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		if(_output_index == 1) return scatter_data;
 		
 		var _inSurf = _data[0];
@@ -266,6 +270,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var posShf  = _data[36];
 		var posExt  = _data[37];
 		var pthSpac = _data[38];
+		var shfRad  = _data[39];
 		
 		var _in_w, _in_h;
 		
@@ -359,11 +364,14 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			DRAW_CLEAR
 			switch(blend) {
 				case 0 :
-					if(mulpA) BLEND_ALPHA_MULP;
-					else      BLEND_ALPHA;
+					if(mulpA) BLEND_ALPHA_MULP
+					else      BLEND_ALPHA
 					break;
 					
-				case 1 : BLEND_ADD; break;
+				case 1 : 
+					BLEND_ADD; 
+					break;
+					
 				case 2 : 
 					BLEND_ALPHA_MULP
 					gpu_set_blendequation(bm_eq_max);
@@ -377,8 +385,8 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				var sp = noone, _x = 0, _y = 0;
 				var _v = noone;
 				
-				var _scx = _scaUniX? _scale[0] : random_range(_scale[0], _scale[1]);
-				var _scy = _scaUniY? _scale[2] : random_range(_scale[2], _scale[3]); 
+				var _scx = _scaUniX? _scale[0] : random_range_seed(_scale[0], _scale[1], _sed++);
+				var _scy = _scaUniY? _scale[2] : random_range_seed(_scale[2], _scale[3], _sed++); 
 				
 				switch(_dist) { #region position
 					case NODE_SCATTER_DIST.area : 
@@ -463,13 +471,13 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 							}
 							
 						} else {
-							_pathProgress = random(1);
+							_pathProgress = random_seed(1, _sed++);
 							_pathProgress = frac(_pathProgress + pathShf);
 						}
 						
 						var pp = path.getPointRatio(_pathProgress, path_line_index);
-						_x = pp.x + random_range(-pathDis, pathDis);
-						_y = pp.y + random_range(-pathDis, pathDis);
+						_x = pp.x + random_range_seed(-pathDis, pathDis, _sed++);
+						_y = pp.y + random_range_seed(-pathDis, pathDis, _sed++);
 						break;
 						
 					case NODE_SCATTER_DIST.tile : 
@@ -481,18 +489,24 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 							_y = uniAmo[1] == 1? _dim[1] / 2 : (_arow + 0.5) * _dim[1] / ( uniAmo[1] );
 								
 						} else if(_scat == 1) {
-							_x = random_range(0, _dim[0]);
-							_y = random_range(0, _dim[1]);
+							_x = random_range_seed(0, _dim[0], _sed++);
+							_y = random_range_seed(0, _dim[1], _sed++);
 						}
 						break;
 						
 				} #endregion
 				
-				if(_wigX) _x += random_range(posWig[0], posWig[1]);
-				if(_wigY) _y += random_range(posWig[2], posWig[3]);
+				if(_wigX) _x += random_range_seed(posWig[0], posWig[1], _sed++);
+				if(_wigY) _y += random_range_seed(posWig[2], posWig[3], _sed++);
 				
 				_x += posShf[0] * i;
 				_y += posShf[1] * i;
+				
+				var shrRad = random_range_seed(shfRad[0], shfRad[1], _sed++);
+				var shrAng = point_direction(_x, _y, _area[0], _area[1]);
+				
+				_x -= lengthdir_x(shrRad, shrAng);
+				_y -= lengthdir_y(shrRad, shrAng);
 				
 				if(_unis) {
 					_scy = max(_scx, _scy);
@@ -504,7 +518,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					_scy *= _v;
 				}
 				
-				var _r = (_pint? point_direction(_area[0], _area[1], _x, _y) : 0) + angle_random_eval_fast(_rota);
+				var _r = (_pint? point_direction(_area[0], _area[1], _x, _y) : 0) + angle_random_eval_fast(_rota, _sed++);
 				
 				if(vRot && _v != noone)
 					_r *= _v;
@@ -523,7 +537,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				var surf = _inSurf;
 				var ind  = 0;
 				
-				if(surfArray) { #region
+				if(surfArray) {
 					switch(_arr) { 
 						case 1 : ind  = safe_mod(i, _arrLen);		 break;
 						case 2 : ind  = irandom(_arrLen - 1);		 break;
@@ -549,7 +563,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					}
 					
 					surf = array_safe_get_fast(_inSurf, ind, 0); 
-				} #endregion
+				}
 				
 				if(surf == 0 || !surface_valid_map[? surf]) continue;
 				
@@ -566,17 +580,17 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					_y = _p[1];
 				}
 				
-				var grSamp = random(1);
+				var grSamp = random_seed(1, _sed++);
 				if(vCol && _v != noone)
 					grSamp *= _v;
 				
 				var clr  = _clrUni? _clrSin  : evaluate_gradient_map(grSamp, color, clr_map, clr_rng, inputs[11], true); 
-				var alp  = _alpUni? alpha[0] : random_range(alpha[0], alpha[1]);
+				var alp  = _alpUni? alpha[0] : random_range_seed(alpha[0], alpha[1], _sed++);
 				var _atl = _sct_len >= _datLen? noone : scatter_data[_sct_len];
 				
-				if(posExt) {
-					_x = round(_x);
-					_y = round(_y);
+				if(posExt) { 
+					_x = round(_x); 
+					_y = round(_y); 
 				}
 				
 				if(_useAtl) {
@@ -646,5 +660,5 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		scatter_data = _sct;
 		
 		return _outSurf;
-	} #endregion
+	}
 }

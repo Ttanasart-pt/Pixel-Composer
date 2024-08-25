@@ -4,7 +4,8 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-uniform vec4  colors[32];
+#define PALETTE_LIMIT 1024
+uniform vec4  colors[PALETTE_LIMIT];
 uniform float colorAmount;
 uniform float seed;
 

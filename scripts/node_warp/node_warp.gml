@@ -22,10 +22,12 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	newInput(7, nodeValue_Dimension(self));
 	
+	newInput(8, nodeValue_Bool("Tile", self, false));
+	
 	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 5,
-		["Surfaces", false], 0, 6, 7, 
+		["Surfaces", false], 0, 6, 7, 8, 
 		["Wrap",	 false], 1, 2, 3, 4
 	]
 	
@@ -242,19 +244,22 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		#endregion
 	}
 	
-	static warpSurface = function(surf, warp, sw, sh, tl, tr, bl, br, filt = false) {
+	static warpSurface = function(surf, warp, sw, sh, tl, tr, bl, br, tile = false) {
 		var teq = round(tl[1]) == round(tr[1]);
 		var beq = round(bl[1]) == round(br[1]);
 		var leq = round(tl[0]) == round(bl[0]);
 		var req = round(tr[0]) == round(br[0]);
 		
-		if(teq && beq && leq && req) {
+		var _wdim = surface_get_dimension(warp);
+		
+		if(teq && beq && leq && req) { // rectangle
 			surface_set_shader(surf)
 				shader_set_interpolation(warp);
 				
-				if(filt) gpu_set_tex_filter(true);
-				draw_surface_stretched_safe(warp, tl[0], tl[1], tr[0] - tl[0], bl[1] - tl[1]);
-				if(filt) gpu_set_tex_filter(false);
+				// if(filt) gpu_set_tex_filter(true);
+				if(tile) draw_surface_tiled_ext(warp, tl[0], tl[1], (tr[0] - tl[0]) / _wdim[0], (bl[1] - tl[1]) / _wdim[1], c_white, 1);
+				else     draw_surface_stretched_safe(warp, tl[0], tl[1], tr[0] - tl[0], bl[1] - tl[1]);
+				// if(filt) gpu_set_tex_filter(false);
 			surface_reset_shader();
 			
 		} else {
@@ -266,19 +271,21 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				shader_set_f("p1", tr[0] / sw, tr[1] / sh);
 				shader_set_f("p2", tl[0] / sw, tl[1] / sh);
 				shader_set_f("p3", bl[0] / sw, bl[1] / sh);
+				shader_set_i("tile", tile);
 			
-				if(filt) gpu_set_tex_filter(true);
+				// if(filt) gpu_set_tex_filter(true);
 				draw_surface_stretched(warp, 0, 0, sw, sh);
-				if(filt) gpu_set_tex_filter(false);
+				// if(filt) gpu_set_tex_filter(false);
 			surface_reset_shader();
 		}
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
-		var tl = _data[1];
-		var tr = _data[2];
-		var bl = _data[3];
-		var br = _data[4];
+		var tl   = _data[1];
+		var tr   = _data[2];
+		var bl   = _data[3];
+		var br   = _data[4];
+		var tile = _data[8];
 		
 		var _useDim = _data[6];
 		var _dim    = _data[7];
@@ -288,7 +295,7 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var sw = _useDim? _dim[0] : surface_get_width_safe(_data[0]);
 		var sh = _useDim? _dim[1] : surface_get_height_safe(_data[0]);
 		
-		warpSurface(_outSurf, _data[0], sw, sh, tl, tr, bl, br);
+		warpSurface(_outSurf, _data[0], sw, sh, tl, tr, bl, br, tile);
 		
 		return _outSurf;
 	}

@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_d3d_3d_transform",
+  "name":"sh_d3d_3d_transform",
+  "parent":{
+    "name":"3d",
+    "path":"folders/shader/3d.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

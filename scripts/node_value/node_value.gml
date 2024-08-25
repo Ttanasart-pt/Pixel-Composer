@@ -639,7 +639,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						
 						editWidget = new vectorRangeBox(array_length(val), _txt, function(val, index) { return setValueInspector(val, index); }, unit );
 						
-						
 						if(!struct_has(display_data, "linked")) display_data.linked = false;
 						if(!struct_has(display_data, "ranged")) display_data.ranged = false;
 						

@@ -17,6 +17,7 @@ uniform int	 sampleMode;
 uniform int	 alpha;
 uniform int	 modulateStr;
 uniform int	 inv;
+uniform int	 blend;
 
 vec4 sampleTexture(vec2 pos) { #region
 	if(pos.x >= 0. && pos.y >= 0. && pos.x <= 1. && pos.y <= 1.)
@@ -113,7 +114,8 @@ void main() {
 		vec2  dirr = vec2(sin(r), cos(r)) * str;
 		vec4  smr  = smear(dirr);
 		
-		col = max(col, smr);
+			 if(blend == 0) col  = max(col, smr);
+		else if(blend == 1) col += smr;
 	}
 	
     gl_FragColor = col;

@@ -2128,6 +2128,7 @@
     {"id":{"name":"sh_cross_section","path":"shaders/sh_cross_section/sh_cross_section.yy",},},
     {"id":{"name":"sh_curve_hsv","path":"shaders/sh_curve_hsv/sh_curve_hsv.yy",},},
     {"id":{"name":"sh_curve","path":"shaders/sh_curve/sh_curve.yy",},},
+    {"id":{"name":"sh_d3d_3d_transform","path":"shaders/sh_d3d_3d_transform/sh_d3d_3d_transform.yy",},},
     {"id":{"name":"sh_d3d_background","path":"shaders/sh_d3d_background/sh_d3d_background.yy",},},
     {"id":{"name":"sh_d3d_default","path":"shaders/sh_d3d_default/sh_d3d_default.yy",},},
     {"id":{"name":"sh_d3d_extrude_extends","path":"shaders/sh_d3d_extrude_extends/sh_d3d_extrude_extends.yy",},},

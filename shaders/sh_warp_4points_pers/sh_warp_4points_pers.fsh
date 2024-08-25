@@ -4,10 +4,6 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-uniform vec2 f1;
-uniform vec2 f2;
-uniform vec2 f3;
-uniform vec2 f4;
 uniform vec2 t1;
 uniform vec2 t2;
 uniform vec2 t3;
@@ -87,62 +83,58 @@ vec4 texture2Dintp( sampler2D texture, vec2 uv ) {
 /////////////// SAMPLING ///////////////
 
 mat3 m_inverse(mat3 m) {
-    float a11 = m[0][0], a12 = m[0][1], a13 = m[0][2];
-    float a21 = m[1][0], a22 = m[1][1], a23 = m[1][2];
-    float a31 = m[2][0], a32 = m[2][1], a33 = m[2][2];
+    float a00 = m[0][0], a01 = m[0][1], a02 = m[0][2];
+    float a10 = m[1][0], a11 = m[1][1], a12 = m[1][2];
+    float a20 = m[2][0], a21 = m[2][1], a22 = m[2][2];
 
-    float b11 = a22 * a33 - a23 * a32;
-    float b12 = a13 * a32 - a12 * a33;
-    float b13 = a12 * a23 - a13 * a22;
-    float b21 = a23 * a31 - a21 * a33;
-    float b22 = a11 * a33 - a13 * a31;
-    float b23 = a13 * a21 - a11 * a23;
-    float b31 = a21 * a32 - a22 * a31;
-    float b32 = a12 * a31 - a11 * a32;
-    float b33 = a11 * a22 - a12 * a21;
+    float b01 =  a22 * a11 - a12 * a21;
+    float b11 = -a22 * a10 + a12 * a20;
+    float b21 =  a21 * a10 - a11 * a20;
 
-    float det = a11 * b11 + a12 * b21 + a13 * b31;
+    float det = a00 * b01 + a01 * b11 + a02 * b21;
 
-    mat3 inverse;
-    inverse[0][0] = b11 / det;
-    inverse[0][1] = b12 / det;
-    inverse[0][2] = b13 / det;
-    inverse[1][0] = b21 / det;
-    inverse[1][1] = b22 / det;
-    inverse[1][2] = b23 / det;
-    inverse[2][0] = b31 / det;
-    inverse[2][1] = b32 / det;
-    inverse[2][2] = b33 / det;
+    return mat3(b01, (-a22 * a01 + a02 * a21), ( a12 * a01 - a02 * a11),
+                b11, ( a22 * a00 - a02 * a20), (-a12 * a00 + a02 * a10),
+                b21, (-a21 * a00 + a01 * a20), ( a11 * a00 - a01 * a10)) / det;
+}
 
-    return inverse;
+mat3 computeHomography() {
+    float x0 = 0., y0 = 0.;
+    float x1 = 1., y1 = 0.;
+    float x2 = 0., y2 = 1.;
+    float x3 = 1., y3 = 1.;
+
+    float u0 = t1.x, v0 = t1.y;
+    float u1 = t2.x, v1 = t2.y;
+    float u2 = t3.x, v2 = t3.y;
+    float u3 = t4.x, v3 = t4.y;
+
+    mat3 A = mat3(
+        x0, y0, 1.0,
+        x1, y1, 1.0,
+        x2, y2, 1.0
+    );
+
+    vec3 b1 = vec3(u0, u1, u2);
+    vec3 b2 = vec3(v0, v1, v2);
+
+    vec3 h1 = m_inverse(A) * b1;
+    vec3 h2 = m_inverse(A) * b2;
+
+    mat3 H = mat3(
+        h1.x, h1.y, h1.z,
+        h2.x, h2.y, h2.z,
+        0.0,  0.0,  1.0
+    );
+
+    return H;
 }
 
 void main() {
-	vec3 p1 = vec3(f1, 1.0);
-	vec3 p2 = vec3(f2, 1.0);
-	vec3 p3 = vec3(f3, 1.0);
-	vec3 p4 = vec3(f4, 1.0);
-	vec3 q1 = vec3(t1, 1.0);
-	vec3 q2 = vec3(t2, 1.0);
-	vec3 q3 = vec3(t3, 1.0);
-	vec3 q4 = vec3(t4, 1.0);
-  
-	mat3 A = mat3(p1, p2, p3);
-	vec3 b = p4;
-	vec3 x = m_inverse(A) * b;
-	vec3 h1 = x;
-	vec3 h2 = vec3(q2 - q1);
-	vec3 h3 = cross(h1, h2);
-	vec3 h4 = vec3(q3 - q1);
-	vec3 h5 = cross(h1, h4);
-	vec3 h6 = vec3(q4 - q1);
-	vec3 h7 = cross(h1, h6);
-	mat3 H = mat3(h2 / h3.x, h4 / h5.x, h6 / h7.x);
-	H[2][2] = 1.0 / h3.x;
-	
-	vec3 coord = vec3(v_vTexcoord, 1.0);
-	vec3 newCoord = H * coord;
-	vec2 texCoord = newCoord.xy / newCoord.z;
-	
-	gl_FragColor = texture2Dintp(gm_BaseTexture, texCoord);
+    mat3 H = computeHomography();
+
+    vec3 warpedCoord = H * vec3(v_vTexcoord, 1.0);
+    vec2 finalCoord  = warpedCoord.xy / warpedCoord.z;
+
+    gl_FragColor = texture2D(gm_BaseTexture, finalCoord);
 }

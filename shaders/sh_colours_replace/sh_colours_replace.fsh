@@ -1,13 +1,14 @@
+#define PALETTE_LIMIT 1024
 //
 // Simple passthrough fragment shader
 //
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-uniform vec4 colorFrom[64];
+uniform vec4 colorFrom[PALETTE_LIMIT];
 uniform int  colorFromAmount;
 
-uniform vec4 colorTo[64];
+uniform vec4 colorTo[PALETTE_LIMIT];
 uniform int  colorToAmount;
 
 uniform int  useMask;

@@ -32,11 +32,22 @@ function Node_MK_Subpixel(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	newInput(12, nodeValue_Float("Scene Scale", self, 1));
 	
+	newInput(13, nodeValue_Bool("Flicker", self, false));
+	
+	newInput(14, nodeValue_Float("Flicker Intensity", self, .2))
+		.setDisplay(VALUE_DISPLAY.slider);
+	
+	newInput(15, nodeValue_Float("Flicker Frequency", self, 4))
+	
+	newInput(16, nodeValue_Float("Flicker Cut", self, .5))
+		.setDisplay(VALUE_DISPLAY.slider);
+	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 7, 
-		["Subpixel", false], 1, 2, 12, 
-		["Effect",   false], 3, 4, 8, 
-		["Render",   false], 6, 5, 
-		["Ridge",    false, 11], 9, 10, 
+		["Subpixel", false],      1,  2, 12, 
+		["Effect",   false],      3,  4,  8, 
+		["Ridge",    false, 11],  9, 10, 
+		["Render",   false],      6,  5, 
+		["Flicker",  false, 13], 14, 15, 16, 
 	];
 	
 	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
@@ -54,6 +65,12 @@ function Node_MK_Subpixel(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		var _rgin = _data[10];
 		var _ruse = _data[11];
 		var _scns = _data[12];
+		var _flku = _data[13];
+		var _flki = _data[14];
+		var _flkf = _data[15];
+		var _flkc = _data[16];
+		
+		update_on_frame = _flku;
 		
 		var _dim = surface_get_dimension(_surf);
 		var sh   = sh_mk_subpixel_hex_disc;
@@ -83,6 +100,11 @@ function Node_MK_Subpixel(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			shader_set_i("ridgeUse",      _ruse);
 			shader_set_f("ridgeCount",    _rgcn);
 			shader_set_f("ridgeIntens",   _rgin);
+			
+			shader_set_i("flickerUse",      _flku);
+			shader_set_f("flickerIntens",   _flki);
+			shader_set_f("flickerCut",      _flkc);
+			shader_set_f("flickerTime",     (CURRENT_FRAME / TOTAL_FRAMES) * pi * _flkf);
 			
 			var _cx = _dim[0] / 2;
 			var _cy = _dim[1] / 2;

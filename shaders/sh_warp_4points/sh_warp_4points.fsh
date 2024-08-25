@@ -6,6 +6,7 @@ uniform vec2 p1;
 uniform vec2 p2;
 uniform vec2 p3;
 uniform vec2 dimension;
+uniform int  tile;
 
 #region /////////////// SAMPLING ///////////////
 
@@ -122,6 +123,8 @@ void main() {
 			uv = vec2(1. - u, v);
 		}
 	#endregion
+	
+	if(tile == 1) uv = fract(1. + fract(uv));
 	
 	if(uv.x >= 0. && uv.y >= 0. && uv.x <= 1. && uv.y <= 1.)
 		gl_FragColor = texture2Dintp( gm_BaseTexture, uv );

@@ -10,7 +10,7 @@ function Node_3D_Transform(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _gro
 		["Transform", false], 0, 1, 2,
 	];
 	
-	static processData = function(_output, _data, _output_index, _array_index = 0) { #region
+	static processData = function(_output, _data, _output_index, _array_index = 0) {
 		var _mesh = _data[in_d3d + 0];
 		
 		var _scene = new __3dGroup();
@@ -20,5 +20,5 @@ function Node_3D_Transform(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _gro
 		_scene.addObject(_mesh);
 		
 		return _scene;
-	} #endregion
+	}
 }

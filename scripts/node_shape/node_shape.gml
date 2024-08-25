@@ -1,32 +1,29 @@
-#region create
-	global.node_shape_keys = [ 
-		"rectangle", "ellipse", "regular polygon", "star", "arc", "teardrop", "cross", "leaf", "crescent", "donut", 
-		"square", "circle", "triangle", "pentagon", "hexagon", "ring", "diamond", "trapezoid", "parallelogram", "heart", 
-		"arrow", "gear", 
-	];
+global.node_shape_keys = [ 
+	"rectangle", "ellipse", "regular polygon", "star", "arc", "teardrop", "cross", "leaf", "crescent", "donut", 
+	"square", "circle", "triangle", "pentagon", "hexagon", "ring", "diamond", "trapezoid", "parallelogram", "heart", 
+	"arrow", "gear", 
+];
+
+function Node_create_Shape(_x, _y, _group = noone, _param = {}) {
+	var query = struct_try_get(_param, "query", "");
+	var node  = new Node_Shape(_x, _y, _group).skipDefault();
+	var ind   = -1;
 	
-	function Node_create_Shape(_x, _y, _group = noone, _param = {}) {
-		var query = struct_try_get(_param, "query", "");
-		var node  = new Node_Shape(_x, _y, _group).skipDefault();
-		var ind   = -1;
+	switch(query) {
+		case "square" :   ind = array_find_string(node.shape_types, "rectangle");	break;
+		case "circle" :   ind = array_find_string(node.shape_types, "ellipse"); 	break;
+		case "ring" :     ind = array_find_string(node.shape_types, "donut");		break;
+		case "triangle" : ind = array_find_string(node.shape_types, "regular polygon"); node.inputs[4].setValue(3); break;
+		case "pentagon" : ind = array_find_string(node.shape_types, "regular polygon"); node.inputs[4].setValue(5); break;
+		case "hexagon" :  ind = array_find_string(node.shape_types, "regular polygon"); node.inputs[4].setValue(6); break;
 		
-		switch(query) {
-			case "square" :   ind = array_find_string(node.shape_types, "rectangle");	break;
-			case "circle" :   ind = array_find_string(node.shape_types, "ellipse"); 	break;
-			case "ring" :     ind = array_find_string(node.shape_types, "donut");		break;
-			case "triangle" : ind = array_find_string(node.shape_types, "regular polygon"); node.inputs[4].setValue(3); break;
-			case "pentagon" : ind = array_find_string(node.shape_types, "regular polygon"); node.inputs[4].setValue(5); break;
-			case "hexagon" :  ind = array_find_string(node.shape_types, "regular polygon"); node.inputs[4].setValue(6); break;
-			
-			default : ind = array_find_string(node.shape_types, query);
-		}
-		
-		if(ind >= 0) node.inputs[2].setValue(ind);
-		
-		return node;
+		default : ind = array_find_string(node.shape_types, query);
 	}
 	
-#endregion
+	if(ind >= 0) node.inputs[2].setValue(ind);
+	
+	return node;
+}
 
 function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Draw Shape";
@@ -116,14 +113,19 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput(26, nodeValue_Vec2("Teeth Size", self, [ 0.2, 0.2 ] , { slideSpeed : 0.01 }));
 		
 	newInput(27, nodeValue_Rotation("Teeth Rotation", self, 0));
-		
+	
+	newInput(28, nodeValue_Float("Shape Scale", self, 1))
+		.setDisplay(VALUE_DISPLAY.slider);
+	
+	newInput(29, nodeValue_Slider_Range("Curve", self, [ 0, 1 ]));
+	
 	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
 		["Output",     false], 0, 6, 
-		["Transform",  false], 15, 3, 16, 17, 19, 
+		["Transform",  false], 15, 3, 16, 17, 19, 28, 
 		["Shape",	   false], 14, 2, 9, 4, 13, 5, 7, 8, 21, 22, 23, 24, 25, 26, 27, 
-		["Render",	    true], 10, 12, 20, 18,
+		["Render",	    true], 10, 12, 20, 29, 18,
 		["Background",	true, 1], 11, 
 	];
 	
@@ -239,6 +241,8 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var _tile   = _data[18];
 		var _rotat  = _data[19];
 		var _level  = _data[20];
+		var _levelO = _data[29];
+		var _shpSca = _data[28];
 		
 		var _center = [ 0, 0 ];
 		var _scale  = [ 0, 0 ];
@@ -250,6 +254,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 				_center = [     _area[0] / _dim[0],      _area[1] / _dim[1]  ];
 				_scale  = [ abs(_area[2] / _dim[0]), abs(_area[3] / _dim[1]) ];
 				break;
+				
 			case 1 :
 				var _posit	= _data[16];
 				var _scal 	= _data[17];
@@ -257,11 +262,17 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 				_center = [     _posit[0] / _dim[0],     _posit[1] / _dim[1]  ];
 				_scale  = [  abs(_scal[0] / _dim[0]), abs(_scal[1] / _dim[1]) ];
 				break;
+				
 			case 2 :
 				_center = [ 0.5, 0.5 ];
 				_scale  = [ 0.5, 0.5 ];
 				break;
 		}
+		
+		_scale[0] *= _shpSca;
+		_scale[1] *= _shpSca;
+		
+		_level = [ _level[0] / _shpSca, _level[1] / _shpSca];
 		
 		inputs[ 3].setVisible(_posTyp == 0);
 		inputs[16].setVisible(_posTyp == 1);
@@ -329,8 +340,12 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		}
 		
 		surface_set_shader(_outSurf, sh_shape);
-			if(_bg) draw_clear_alpha(0, 1);
-			else	DRAW_CLEAR
+			if(_bg) {
+				draw_clear_alpha(0, 1);
+			} else {
+				DRAW_CLEAR
+				BLEND_OVERRIDE
+			}
 			
 			inputs[ 4].setVisible(false);
 			inputs[ 5].setVisible(false);
@@ -538,13 +553,16 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			shader_set_f("dimension", _dim);
 			shader_set_f("bgColor",   _bgcol);
 			shader_set_i("aa",        _aa);
+			shader_set_i("drawBG",    _bg);
 			shader_set_i("drawDF",    _df);
 			shader_set_2("dfLevel",    _level);
+			shader_set_2("dfLevelOut", _levelO);
 			shader_set_i("tile",      _tile);
 			shader_set_f("corner",    _corner);
 			
 			shader_set_2("center",    _center);
 			shader_set_2("scale",     _scale );
+			shader_set_f("shapeScale",_shpSca);
 			shader_set_f("rotation",  degtorad(_rotat));
 			
 			draw_sprite_stretched_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], _color, _color_get_alpha(_color));

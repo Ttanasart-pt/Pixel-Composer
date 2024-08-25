@@ -167,14 +167,10 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 				
 			switch(_filt) {
 				case 0 :  // Random colors
-					var _pal = [];
-					for( var i = 0, n = array_length(_colr); i < n; i++ )
-						array_append(_pal, colToVec4(_colr[i]));
-						
+					
 					shader_set(sh_region_fill_color);
-						shader_set_f("colors",		_pal);
+						shader_set_palette(_colr, "color", "colorAmount");
 						shader_set_f("seed",		_seed);
-						shader_set_f("colorAmount", array_length(_colr));
 						
 						draw_surface_safe(cmap);
 					shader_reset();

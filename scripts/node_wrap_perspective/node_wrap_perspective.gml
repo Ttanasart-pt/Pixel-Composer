@@ -7,34 +7,33 @@ function Node_Warp_Perspective(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 		active_index = 1;
 		
 	newInput(2, nodeValue_Vec2("Top left", self, [ 0, 0 ] ))
-		.setUnitRef(function(index) { return getDimension(index); });
+		.setUnitRef(function(index) /*=>*/ {return getDimension(index)}, VALUE_UNIT.reference);
 	
-	newInput(3, nodeValue_Vec2("Top right", self, [ DEF_SURF_W, 0 ] ))
-		.setUnitRef(function(index) { return getDimension(index); });
+	newInput(3, nodeValue_Vec2("Top right", self, [ 1, 0 ] ))
+		.setUnitRef(function(index) /*=>*/ {return getDimension(index)}, VALUE_UNIT.reference);
 	
-	newInput(4, nodeValue_Vec2("Bottom left", self, [ 0, DEF_SURF_H ] ))
-		.setUnitRef(function(index) { return getDimension(index); });
+	newInput(4, nodeValue_Vec2("Bottom left", self, [ 0, 1 ] ))
+		.setUnitRef(function(index) /*=>*/ {return getDimension(index)}, VALUE_UNIT.reference);
 	
-	newInput(5, nodeValue_Vec2("Bottom right", self, DEF_SURF ))
-		.setUnitRef(function(index) { return getDimension(index); });
+	newInput(5, nodeValue_Vec2("Bottom right", self, [ 1, 1 ] ))
+		.setUnitRef(function(index) /*=>*/ {return getDimension(index)}, VALUE_UNIT.reference);
 		
 	newInput(6, nodeValue_Vec2("Top left", self, [ 0, 0 ] ))
-		.setUnitRef(function(index) { return getDimension(index); });
+		.setUnitRef(function(index) /*=>*/ {return getDimension(index)}, VALUE_UNIT.reference);
 	
-	newInput(7, nodeValue_Vec2("Top right", self, [ DEF_SURF_W, 0 ] ))
-		.setUnitRef(function(index) { return getDimension(index); });
+	newInput(7, nodeValue_Vec2("Top right", self, [ 1, 0 ] ))
+		.setUnitRef(function(index) /*=>*/ {return getDimension(index)}, VALUE_UNIT.reference);
 	
-	newInput(8, nodeValue_Vec2("Bottom left", self, [ 0, DEF_SURF_H ] ))
-		.setUnitRef(function(index) { return getDimension(index); });
+	newInput(8, nodeValue_Vec2("Bottom left", self, [ 0, 1 ] ))
+		.setUnitRef(function(index) /*=>*/ {return getDimension(index)}, VALUE_UNIT.reference);
 	
-	newInput(9, nodeValue_Vec2("Bottom right", self, DEF_SURF ))
-		.setUnitRef(function(index) { return getDimension(index); });
+	newInput(9, nodeValue_Vec2("Bottom right", self, [ 1, 1 ] ))
+		.setUnitRef(function(index) /*=>*/ {return getDimension(index)}, VALUE_UNIT.reference);
 		
 	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 1,
 		["Surfaces", false], 0,
-		["Origin",	 false], 2, 3, 4, 5, 
 		["Warp",	 false], 6, 7, 8, 9,
 	]
 	
@@ -42,9 +41,9 @@ function Node_Warp_Perspective(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	attribute_interpolation();
 
 	drag_side = -1;
-	drag_mx = 0;
-	drag_my = 0;
-	drag_s = [[0, 0], [0, 0]];
+	drag_mx   = 0;
+	drag_my   = 0;
+	drag_s    = [[0, 0], [0, 0]];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		PROCESSOR_OVERLAY_CHECK
@@ -187,30 +186,20 @@ function Node_Warp_Perspective(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
-		var Ftl = _data[2];
-		var Ftr = _data[3];
-		var Fbl = _data[4];
-		var Fbr = _data[5];
-		
-		var Ttl = _data[6];
-		var Ttr = _data[7];
-		var Tbl = _data[8];
-		var Tbr = _data[9];
+		var tl = _data[6];
+		var tr = _data[7];
+		var bl = _data[8];
+		var br = _data[9];
 		
 		var sw = surface_get_width_safe(_data[0]);
 		var sh = surface_get_height_safe(_data[0]);
 		
 		surface_set_shader(_outSurf, sh_warp_4points_pers);
 		shader_set_interpolation(_data[0]);
-			shader_set_f("f1", Fbr[0] / sw, Fbr[1] / sh);
-			shader_set_f("f2", Ftr[0] / sw, Ftr[1] / sh);
-			shader_set_f("f3", Ftl[0] / sw, Ftl[1] / sh);
-			shader_set_f("f4", Fbl[0] / sw, Fbl[1] / sh);
-			
-			shader_set_f("t1", Tbr[0] / sw, Tbr[1] / sh);
-			shader_set_f("t2", Ttr[0] / sw, Ttr[1] / sh);
-			shader_set_f("t3", Ttl[0] / sw, Ttl[1] / sh);
-			shader_set_f("t4", Tbl[0] / sw, Tbl[1] / sh);
+			shader_set_f("t1", tl[0] / sw, tl[1] / sh);
+			shader_set_f("t2", tr[0] / sw, tr[1] / sh);
+			shader_set_f("t3", bl[0] / sw, bl[1] / sh);
+			shader_set_f("t4", br[0] / sw, br[1] / sh);
 			
 			draw_surface_safe(_data[0]);
 		surface_reset_shader();

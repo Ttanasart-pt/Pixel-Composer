@@ -39,9 +39,12 @@ function Node_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	newInput(14, nodeValue_Bool("Invert", self, false));
 	
+	newInput(15, nodeValue_Enum_Scroll("Blend Mode", self,  0, [ "Maximum", "Additive" ]));
+	
 	input_display_list = [ 5, 6, 
 		["Surfaces", true], 0, 3, 4, 7, 8, 
 		["Smear",	false], 11, 14, 1, 9, 2, 10, 13, 12, 
+		["Render",  false], 15, 
 	]
 	
 	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
@@ -84,6 +87,7 @@ function Node_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			shader_set_i("sampleMode",	  struct_try_get(attributes, "oversample"));
 			shader_set_i("alpha",	      _data[11]);
 			shader_set_i("inv",	    	  _data[14]);
+			shader_set_i("blend",    	  _data[15]);
 			shader_set_i("modulateStr",   _data[12]);
 			shader_set_f("spread",        _data[13]);
 			

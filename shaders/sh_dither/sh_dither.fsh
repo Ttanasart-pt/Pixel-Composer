@@ -1,6 +1,8 @@
 //
 // Simple passthrough fragment shader
 //
+#define PALETTE_LIMIT 1024
+
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
@@ -15,7 +17,7 @@ uniform int useConMap;
 uniform float ditherSize;
 uniform float dither[64];
 uniform vec2  dimension;
-uniform vec4  palette[1024];
+uniform vec4  palette[PALETTE_LIMIT];
 uniform int   keys;
 uniform float seed;
 
