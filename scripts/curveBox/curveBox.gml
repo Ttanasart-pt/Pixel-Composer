@@ -1,17 +1,18 @@
 function curveBox(_onModify) : widget() constructor {
-	onModify  = _onModify;
-	curr_data = [];
+	onModify   = _onModify;
+	curr_data  = [];
+	anc_mirror = [];
+	h = 200;
 	
 	curve_surface = surface_create(1, 1);
 	node_dragging = -1;
 	node_drag_typ = -1;
+	node_drag_break = false;
 	
-	h = 200;
-	height_drag = false;
-	height_my   = 0;
-	height_ss   = 0;
-	
-	show_coord = false;
+	height_drag   = false;
+	height_my     = 0;
+	height_ss     = 0;
+	show_coord    = false;
 	
 	minx = 0; maxx = 1;
 	miny = 0; maxy = 1;
@@ -30,6 +31,12 @@ function curveBox(_onModify) : widget() constructor {
 	grid_step = 0.10;
 	grid_show = true;
 	
+	scale_control = true;
+	control_zoom  = 64;
+	
+	selecting   = noone;
+	select_type = 0;
+	
 	cw = 0;
 	ch = 0;
 	
@@ -39,7 +46,7 @@ function curveBox(_onModify) : widget() constructor {
 	tb_shift.label = "Shift";
 	tb_scale.label = "Scale";
 	
-	static get_x = function(val) { return cw *      (val - minx) / (maxx - minx); }
+	static get_x = function(val) { return cw *      (val - minx) / (maxx - minx) ; }
 	static get_y = function(val) { return ch * (1 - (val - miny) / (maxy - miny)); }
 	
 	static setInteract = function(interactable = noone) {
@@ -81,8 +88,8 @@ function curveBox(_onModify) : widget() constructor {
 		
 		var _h = h - ui(4);
 		
-		var _amo   = array_length(_data);
-		var _shf   = _amo % 6;
+		var _amo = array_length(_data);
+		    _shf = _amo % 6;
 		var points = (_amo - _shf) / 6;
 		
 		var _shift = 0;
@@ -107,7 +114,7 @@ function curveBox(_onModify) : widget() constructor {
 		
 		curve_surface = surface_verify(curve_surface, cw, ch);
 		
-		if(node_dragging != -1) { #region editing
+		if(node_dragging != -1) { // editing
 			show_coord = true;
 			_data = array_clone(_data);
 			
@@ -153,15 +160,30 @@ function curveBox(_onModify) : widget() constructor {
 				var _my = 1 - (_m[1] - _y) / ch;
 					_my = lerp(miny, maxy, _my);
 				
-				var _w_spc = node_drag_typ > 0? _data[node_dragging + 6] - _px : _px - _data[node_dragging - 6];
-
-				if(key_mod_press(CTRL) || grid_snap) _mx = value_snap(_mx, grid_step);
-				_data[node_dragging - 2] = (_px - _mx) * node_drag_typ / _w_spc;
-				_data[node_dragging + 2] = (_mx - _px) * node_drag_typ / _w_spc;
+				var _scax = scale_control? (node_drag_typ > 0? _data[node_dragging + 6] - _px : _px - _data[node_dragging - 6]) : control_zoom / cw;
+				var _scay = scale_control? _scax : control_zoom / ch;
 				
+				if(key_mod_press(CTRL) || grid_snap) _mx = value_snap(_mx, grid_step);
 				if(key_mod_press(CTRL) || grid_snap) _my = value_snap(_my, grid_step);
-				_data[node_dragging - 1] = clamp(_py - _my, -1, 1) * node_drag_typ / _w_spc;
-				_data[node_dragging + 3] = clamp(_my - _py, -1, 1) * node_drag_typ / _w_spc;
+					
+				if(node_drag_break) {
+					if(node_drag_typ == 1) {
+						_data[node_dragging + 2] = (_mx - _px) * node_drag_typ / _scax;
+						_data[node_dragging + 3] = clamp(_my - _py, -1, 1) * node_drag_typ / _scay;	
+						
+					} else {
+						_data[node_dragging - 2] = (_px - _mx) * node_drag_typ / _scax;
+						_data[node_dragging - 1] = clamp(_py - _my, -1, 1) * node_drag_typ / _scay;
+						
+					}
+					
+				} else {
+					_data[node_dragging - 2] = (_px - _mx) * node_drag_typ / _scax;
+					_data[node_dragging + 2] = (_mx - _px) * node_drag_typ / _scax;
+					
+					_data[node_dragging - 1] = clamp(_py - _my, -1, 1) * node_drag_typ / _scay;
+					_data[node_dragging + 3] = clamp(_my - _py, -1, 1) * node_drag_typ / _scay;
+				}
 				
 				display_pos_x = node_drag_typ? _data[node_dragging - 2] : _data[node_dragging + 2];
 				display_pos_y = node_drag_typ? _data[node_dragging - 1] : _data[node_dragging + 3];
@@ -177,7 +199,7 @@ function curveBox(_onModify) : widget() constructor {
 				
 				UNDO_HOLDING = false;
 			}
-		} #endregion
+		}
 		
 		var node_hovering  = -1;
 		var node_hover_typ = -1;
@@ -234,13 +256,16 @@ function curveBox(_onModify) : widget() constructor {
 					var _x0 = _data[ind + 2];
 					var _y0 = _data[ind + 3];
 					
-					var _w_prev = i > 0?          _x0 - _data[ind - 6 + 2] : 1;
-					var _w_next = i < points - 1? _data[ind + 6 + 2] - _x0 : 1;
+					var _sca_bx = scale_control? (i > 0?          _x0 - _data[ind - 6 + 2] : 1) : control_zoom / cw;
+					var _sca_by = scale_control? _sca_bx : control_zoom / ch;
 					
-					var bx0 = _x0 + _data[ind + 0] * _w_prev;
-					var by0 = _y0 + _data[ind + 1] * _w_prev;
-					var ax0 = _x0 + _data[ind + 4] * _w_next;
-					var ay0 = _y0 + _data[ind + 5] * _w_next;
+					var _sca_ax = scale_control? (i < points - 1? _data[ind + 6 + 2] - _x0 : 1) : control_zoom / cw;
+					var _sca_ay = scale_control? _sca_ax : control_zoom / ch;
+					
+					var bx0 = _x0 + _data[ind + 0] * _sca_bx;
+					var by0 = _y0 + _data[ind + 1] * _sca_by;
+					var ax0 = _x0 + _data[ind + 4] * _sca_ax;
+					var ay0 = _y0 + _data[ind + 5] * _sca_ay;
 					
 					// print($"{_x0}, {_y0} | {_data[ind + 0]}, {_data[ind + 1]} | {_data[ind + 4]}, {_data[ind + 5]}");
 					
@@ -435,7 +460,7 @@ function curveBox(_onModify) : widget() constructor {
 			}
 		#endregion
 		
-		if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + cw, _y + ch)) { #region
+		if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + cw, _y + ch)) {
 			show_coord = true;
 			hovering   = true;
 			
@@ -462,41 +487,86 @@ function curveBox(_onModify) : widget() constructor {
 					node_dragging = node_hovering;
 					node_drag_typ = node_hover_typ;
 					
+					if(node_hover_typ != 0) {
+						var _cax = _data[node_dragging - 2];
+						var _cay = _data[node_dragging - 1];
+						var _cbx = _data[node_dragging + 2];
+						var _cby = _data[node_dragging + 3];
+						
+						node_drag_break = key_mod_press(SHIFT);
+						
+						if(_cax != -_cbx || _cay != -_cby)
+							node_drag_break = true;
+					}
 				}
 				
 			} else if(mouse_press(mb_right, active)) {
-				var node_point = (node_hovering - _shf - 2) / 6;
-				if(node_hover_typ == 0 && node_point > 0 && node_point < points - 1) {
-					array_delete(_data, _shf + node_point * 6, 6);
-					if(onModify(_data))
-						UNDO_HOLDING = true;
-				}
+				// var node_point = (node_hovering - _shf - 2) / 6;
+				// if(node_hover_typ == 0 && node_point > 0 && node_point < points - 1) {
+				// 	array_delete(_data, _shf + node_point * 6, 6);
+				// 	if(onModify(_data)) UNDO_HOLDING = true;
+				// }
 			}
 			
-			if(node_hovering == -1 && mouse_press(mb_right, active)) {
-				menuCall("widget_curve", [
-					menuItemGroup(__txt("Presets"), [ 
-						[ [THEME.curve_presets, 0], function() { onModify(CURVE_DEF_00); } ],
-						[ [THEME.curve_presets, 1], function() { onModify(CURVE_DEF_11); } ],
-						[ [THEME.curve_presets, 2], function() { onModify(CURVE_DEF_01); } ],
-						[ [THEME.curve_presets, 3], function() { onModify(CURVE_DEF_10); } ],
-					]),
-					-1,
-					menuItem(__txt("Reset View"), function() { 
-						minx = 0; maxx = 1;
-						miny = 0; maxy = 1;
-					}),
-					menuItem(grid_show? __txt("Hide grid") : __txt("Show grid"), function() { grid_show = !grid_show; }),
-					menuItem(__txt("Snap to grid"), function() { grid_snap = !grid_snap; },,, function() { return grid_snap } ),
-					menuItemGroup(__txt("Grid size"), [
-						[ "1%",  function() { grid_step = 0.01; } ],
-						[ "5%",  function() { grid_step = 0.05; } ],
-						[ "10%", function() { grid_step = 0.10; } ],
-						[ "25%", function() { grid_step = 0.25; } ],
-					]),
-				], rx + _m[0], ry + _m[1]);
+			if(mouse_press(mb_right, active)) {
+				var rmx = rx + _m[0];
+				var rmy = ry + _m[1];
+				
+				if(node_hovering == -1 || node_hover_typ != 0) {
+					menuCall("widget_curve", [
+						menuItemGroup(__txt("Presets"), [ 
+							[ [THEME.curve_presets, 0], function() /*=>*/ { onModify(CURVE_DEF_00); } ],
+							[ [THEME.curve_presets, 1], function() /*=>*/ { onModify(CURVE_DEF_11); } ],
+							[ [THEME.curve_presets, 2], function() /*=>*/ { onModify(CURVE_DEF_01); } ],
+							[ [THEME.curve_presets, 3], function() /*=>*/ { onModify(CURVE_DEF_10); } ],
+						]),
+						-1,
+						menuItem(__txt("Reset View"), function() /*=>*/ { 
+							minx = 0; maxx = 1;
+							miny = 0; maxy = 1;
+						}),
+						menuItem(__txt("Grid"),         function() /*=>*/ { grid_show = !grid_show; }, noone, noone, function() /*=>*/ {return grid_show}),
+						menuItem(__txt("Snap to grid"), function() /*=>*/ { grid_snap = !grid_snap; }, noone, noone, function() /*=>*/ {return grid_snap}),
+						menuItemGroup(__txt("Grid size"), [
+							[ "1%",  function() /*=>*/ { grid_step = 0.01; } ],
+							[ "5%",  function() /*=>*/ { grid_step = 0.05; } ],
+							[ "10%", function() /*=>*/ { grid_step = 0.10; } ],
+							[ "25%", function() /*=>*/ { grid_step = 0.25; } ],
+						]),
+						menuItem(__txt("Scale Controls"), function() /*=>*/ { scale_control = !scale_control; }, noone, noone, function() /*=>*/ {return scale_control} ),
+					], rmx, rmy);
+					
+				} else {
+					selecting   = node_hovering;
+					select_type = node_hover_typ;
+					select_data = _data;
+					
+					var node_point = (selecting - _shf - 2) / 6;
+					var _menu = [];
+					
+					array_push(_menu, menuItem(__txt("Reset Controls"), function() /*=>*/ { 
+						var node_point = (selecting - _shf - 2) / 6;
+						var _ind  = _shf + node_point * 6;
+						
+						select_data[@ _ind + 0] = -1 / 3;
+						select_data[@ _ind + 1] = 0;
+						select_data[@ _ind + 4] = 1 / 3;
+						select_data[@ _ind + 5] = 0;
+						onModify(select_data);
+					}));
+					
+					if(node_point > 0 && node_point < points - 1) {
+						array_push(_menu, menuItem(__txt("Delete Anchor"), function() /*=>*/ { 
+							var node_point = (selecting - _shf - 2) / 6;
+							array_delete(select_data, _shf + node_point * 6, 6);
+							onModify(select_data);
+						}, THEME.cross));
+					}
+					
+					menuCall("widget_curve", _menu, rmx, rmy);
+				}
 			}
-		} #endregion
+		}
 			
 		draw_surface(curve_surface, _x, _y);
 		

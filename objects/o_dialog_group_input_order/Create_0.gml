@@ -22,9 +22,9 @@ event_inherited();
 	tb_edit.align = fa_left;
 	tb_edit.font  = f_p2;
 	
-	node         = noone;
-	display_list = [];
-	type         = 1;
+	node          = noone;
+	display_list  = [];
+	type          = 1;
 	junction_list = noone;
 	
 	function setNode(node, type) {
@@ -88,7 +88,7 @@ event_inherited();
 					draw_text_add(ed_x + ui(8), _y + hg / 2 - 1, disp[0]);
 				}
 			} else {
-				var ind = junction_list[| disp];
+				var ind = junction_list[disp];
 				draw_set_text(f_p2, fa_left, fa_center, ind.color_display);
 				draw_text_add(hg + ui(8), _y + hg / 2 - 1, ind.name);
 			}

@@ -117,7 +117,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput(28, nodeValue_Float("Shape Scale", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(29, nodeValue_Slider_Range("Curve", self, [ 0, 1 ]));
+	newInput(29, nodeValue("Curve", self, CONNECT_TYPE.input, VALUE_TYPE.curve, CURVE_DEF_01));
 	
 	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
@@ -125,7 +125,8 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		["Output",     false], 0, 6, 
 		["Transform",  false], 15, 3, 16, 17, 19, 28, 
 		["Shape",	   false], 14, 2, 9, 4, 13, 5, 7, 8, 21, 22, 23, 24, 25, 26, 27, 
-		["Render",	    true], 10, 12, 20, 29, 18,
+		["Render",	    true], 10, 18,
+		["Height",	    true, 12], 29, 20, 
 		["Background",	true, 1], 11, 
 	];
 	
@@ -241,7 +242,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var _tile   = _data[18];
 		var _rotat  = _data[19];
 		var _level  = _data[20];
-		var _levelO = _data[29];
+		var _curve  = _data[29];
 		var _shpSca = _data[28];
 		
 		var _center = [ 0, 0 ];
@@ -556,9 +557,10 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			shader_set_i("drawBG",    _bg);
 			shader_set_i("drawDF",    _df);
 			shader_set_2("dfLevel",    _level);
-			shader_set_2("dfLevelOut", _levelO);
 			shader_set_i("tile",      _tile);
 			shader_set_f("corner",    _corner);
+			shader_set_f("w_curve",   _curve);
+			shader_set_i("w_amount",  array_length(_curve));
 			
 			shader_set_2("center",    _center);
 			shader_set_2("scale",     _scale );

@@ -6,7 +6,29 @@
 #macro CURVE_DEF_10 [0, 1, /**/ 0, 0, 0, 1, 1/3, -1/3, /**/ -1/3,  1/3, 1, 0, 0, 0]
 #macro CURVE_DEF_11 [0, 1, /**/ 0, 0, 0, 1, 1/3,    0, /**/ -1/3,    0, 1, 1, 0, 0]
 
-function draw_curve(x0, y0, _w, _h, _bz, minx = 0, maxx = 1, miny = 0, maxy = 1, _shift = 0, _scale = 1) { #region
+//////////////////////////////////////////////////////////////////////////////////////////// DRAW ////////////////////////////////////////////////////////////////////////////////////////////
+
+function eval_curve_segment_t_position(_t, bbz) { 
+	var _t2 = _t * _t;
+	var _t3 = _t * _t * _t;
+	var _T  =  1 - _t;
+	var _T2 = _T * _T;
+	var _T3 = _T * _T * _T;
+	
+	return [ 
+		           _T3       * 0 
+			 + 3 * _T2 * _t  * bbz[1] 
+			 + 3 * _T  * _t2 * bbz[3]
+			 +           _t3 * 1, 
+			 
+			       _T3 *       bbz[0]
+			 + 3 * _T2 * _t  * bbz[2] 
+			 + 3 * _T  * _t2 * bbz[4]
+			 +           _t3 * bbz[5]
+		];
+}
+
+function draw_curve(x0, y0, _w, _h, _bz, minx = 0, maxx = 1, miny = 0, maxy = 1, _shift = 0, _scale = 1) {
 	var _amo = array_length(_bz);
 	var _shf = _amo % 6;
 	
@@ -19,22 +41,15 @@ function draw_curve(x0, y0, _w, _h, _bz, minx = 0, maxx = 1, miny = 0, maxy = 1,
 	for( var i = 0; i < segments; i++ ) {
 		var ind = _shf + i * 6;
 		
-		var _x0 =       _bz[ind + 2];
-		var _y0 =       _bz[ind + 3];
-		var ax0 = _x0 + _bz[ind + 4];
-		var ay0 = _y0 + _bz[ind + 5];
-		
-		var _x1 =       _bz[ind + 6 + 2];
-		var _y1 =       _bz[ind + 6 + 3];
-		var bx1 = _x1 + _bz[ind + 6 + 0];
-		var by1 = _y1 + _bz[ind + 6 + 1];
+		var _x0 = _bz[ind + 2];
+		var _y0 = _bz[ind + 3];
+		var _x1 = _bz[ind + 6 + 2];
+		var _y1 = _bz[ind + 6 + 3];
 		
 		var _xr = _x1 - _x0;
+		var _yr = _y1 - _y0;
 		
-		var smp = ceil(_xr / rngx * 32);
-		var bbz = [ _y0, ax0, ay0, bx1, by1, _y1 ];
-		
-		//if(_x1 < minx) continue;
+		var smp = max(abs(_yr) * _h / 2, ceil(_xr / rngx * 32));
 		
 		if(i == 0) {
 			var _rx = _x0 * _scale + _shift;
@@ -62,6 +77,14 @@ function draw_curve(x0, y0, _w, _h, _bz, minx = 0, maxx = 1, miny = 0, maxy = 1,
 			draw_line(x0 + _w, _ny, _nx, _ny);
 		}
 		
+		var ax0 = _bz[ind + 4] + _x0;
+		var ay0 = _bz[ind + 5] + _y0;
+		
+		var bx1 = _bz[ind + 6 + 0] + _x1;
+		var by1 = _bz[ind + 6 + 1] + _y1;
+		
+		var bbz = [ _y0, ax0, ay0, bx1, by1, _y1 ];
+		// print($"{i}, {bbz}")
 		for(var j = 0; j <= smp; j++) {
 			var t   = j / smp;
 			var _r  = eval_curve_segment_t_position(t, bbz);
@@ -85,36 +108,21 @@ function draw_curve(x0, y0, _w, _h, _bz, minx = 0, maxx = 1, miny = 0, maxy = 1,
 			if(_nx > x0 + _w) return;
 		}
 	}
-} #endregion
+}
 
-function eval_curve_segment_t_position(_t, _bz) { #region
-	var _t2 = _t * _t;
-	var _t3 = _t * _t * _t;
-	var _T  =  1 - _t;
-	var _T2 = _T * _T;
-	var _T3 = _T * _T * _T;
-	
-	return [ 
-		           _T3       * 0 
-			 + 3 * _T2 * _t  * _bz[1] 
-			 + 3 * _T  * _t2 * _bz[3]
-			 +           _t3 * 1, 
-			 
-			       _T3 *       _bz[0]
-			 + 3 * _T2 * _t  * _bz[2] 
-			 + 3 * _T  * _t2 * _bz[4]
-			 +           _t3 * _bz[5]
-		];
-} #endregion
+//////////////////////////////////////////////////////////////////////////////////////////// EVAL ////////////////////////////////////////////////////////////////////////////////////////////
 
-function eval_curve_segment_t(_bz, t) { #region
-	return power(1 - t, 3) * _bz[0]
-			 + 3 * power(1 - t, 2) * t * _bz[2] 
-			 + 3 * (1 - t) * power(t, 2) * _bz[4]
-			 + power(t, 3) * _bz[5];
-} #endregion
+function eval_curve_segment_t(_bz, t) {
+	// if(_bz[1] == 0 && _bz[2] == 0 && _bz[3] == 0 && _bz[4] == 0)
+	// 	return lerp(_bz[0], _bz[5], t);
+		
+	return         power(1 - t, 3)               * _bz[0]
+			 + 3 * power(1 - t, 2) * t           * _bz[2] 
+			 + 3 * (1 - t)         * power(t, 2) * _bz[4]
+			 +                       power(t, 3) * _bz[5];
+}
 
-function eval_curve_x(_bz, _x, _tolr = 0.00001) { #region
+function eval_curve_x(_bz, _x, _tolr = 0.00001) {
 	static _CURVE_DEF_01 = [0, 1, /**/ 0, 0, 0, 0, 1/3,  1/3, /**/ -1/3, -1/3, 1, 1, 0, 0];
 	static _CURVE_DEF_10 = [0, 1, /**/ 0, 0, 0, 1, 1/3, -1/3, /**/ -1/3,  1/3, 1, 0, 0, 0];
 	static _CURVE_DEF_11 = [0, 1, /**/ 0, 0, 0, 1, 1/3,    0, /**/ -1/3,    0, 1, 1, 0, 0];
@@ -160,9 +168,9 @@ function eval_curve_x(_bz, _x, _tolr = 0.00001) { #region
 	}
 	
 	return array_safe_get_fast(_bz, array_length(_bz) - 3);
-} #endregion
+}
 
-function eval_curve_segment_x(_bz, _x, _tolr = 0.00001) { #region
+function eval_curve_segment_x(_bz, _x, _tolr = 0.00001) {
 	var st = 0;
 	var ed = 1;
 	
@@ -172,7 +180,9 @@ function eval_curve_segment_x(_bz, _x, _tolr = 0.00001) { #region
 	if(_x <= 0) return _bz[0];
 	if(_x >= 1) return _bz[5];
 	if(_bz[0] == _bz[2] && _bz[0] == _bz[4] && _bz[0] == _bz[5]) return _bz[0];
-	
+	// if(_bz[1] == 0 && _bz[2] == 0 && _bz[3] == 0 && _bz[4] == 0)
+	// 	return lerp(_bz[0], _bz[5], _x);
+		
 	repeat(_binRep) {
 		var _1xt = 1 - _xt;
 		
@@ -214,7 +224,9 @@ function eval_curve_segment_x(_bz, _x, _tolr = 0.00001) { #region
 	
 	_xt = clamp(_xt, 0, 1);
 	return eval_curve_segment_t(_bz, _xt);
-} #endregion
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////// MISC ////////////////////////////////////////////////////////////////////////////////////////////
 
 function bezier_range(bz) { return [ min(bz[0], bz[2], bz[4], bz[5]), max(bz[0], bz[2], bz[4], bz[5]) ]; }
 
@@ -232,7 +244,7 @@ function curveMap(_bz, _prec = 32, _tolr = 0.00001) constructor {
 	for( var i = 0; i < _prec; i++ ) 
 		map[i] = eval_curve_x(bz, i * size, tolr);
 		
-	static get = function(i) { #region
+	static get = function(i) {
 		INLINE
 		
 		var _ind  = clamp(i, 0, 1) * (prec - 1);
@@ -242,10 +254,10 @@ function curveMap(_bz, _prec = 32, _tolr = 0.00001) constructor {
 		
 		if(_indL == _indH) return map[_ind];
 		return lerp(map[_indL], map[_indH], _indF);
-	} #endregion
+	}
 }
 
-function draw_curve_bezier(x0, y0, cx0, cy0, cx1, cy1, x1, y1, prec = 32) { #region
+function draw_curve_bezier(x0, y0, cx0, cy0, cx1, cy1, x1, y1, prec = 32) {
 	var ox, oy, nx, ny;
 	
 	var _st = 1 / prec;
@@ -269,4 +281,4 @@ function draw_curve_bezier(x0, y0, cx0, cy0, cx1, cy1, x1, y1, prec = 32) { #reg
 		ox = nx;
 		oy = ny;
 	}
-} #endregion
+}

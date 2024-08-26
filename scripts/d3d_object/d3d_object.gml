@@ -34,7 +34,7 @@ function __3dObject() constructor {
 	material_index = [];
 	texture_flip   = false;
 	
-	static checkParameter = function(params = {}, forceUpdate = false) { #region
+	static checkParameter = function(params = {}, forceUpdate = false) {
 		var _keys = struct_get_names(params);
 		var check = false;
 		for( var i = 0, n = array_length(_keys); i < n; i++ ) {
@@ -45,11 +45,11 @@ function __3dObject() constructor {
 		}
 		
 		if(forceUpdate || check) onParameterUpdate();
-	} #endregion
+	}
 	
 	static onParameterUpdate = function() {}
 	
-	static generateNormal = function(_s = normal_draw_size) { #region
+	static generateNormal = function(_s = normal_draw_size) {
 		if(render_type != pr_trianglelist) return;
 		
 		NVB = array_create(object_counts);
@@ -69,9 +69,9 @@ function __3dObject() constructor {
 				}
 			vertex_end(NVB[i]);
 		}
-	} #endregion
+	}
 	
-	static buildVertex = function(_vertex) { #region
+	static buildVertex = function(_vertex) {
 		var _buffer = vertex_create_buffer();
 		vertex_begin(_buffer, VF);
 			switch(VF) {
@@ -96,9 +96,9 @@ function __3dObject() constructor {
 		vertex_end(_buffer);
 		
 		return _buffer;
-	} #endregion
+	}
 	
-	static build = function(_buffer = VB, _vertex = vertex, counts = object_counts) { #region
+	static build = function(_buffer = VB, _vertex = vertex, counts = object_counts) {
 		if(is_array(_buffer)) {
 			for( var i = 0, n = array_length(_buffer); i < n; i++ )
 				if(_buffer[i] != noone) vertex_delete_buffer(_buffer[i])
@@ -111,7 +111,7 @@ function __3dObject() constructor {
 			_res[i] = buildVertex(_vertex[i]);
 		
 		return _res;
-	} #endregion
+	}
 	
 	static preSubmitVertex  = function(scene = {}) {}
 	static postSubmitVertex = function(scene = {}) {}
@@ -126,16 +126,16 @@ function __3dObject() constructor {
 	
 	static submit		= function(scene = {}, shader = noone) { submitVertex(scene, shader); }
 	static submitUI		= function(scene = {}, shader = noone) { submitVertex(scene, shader); }
-	static submitSel	= function(scene = {}, shader = noone) { #region
+	static submitSel	= function(scene = {}, shader = noone) {
 		var _s = variable_clone(scene);
 		_s.show_normal = false;
 		submitVertex(_s, sh_d3d_silhouette); 
-	} #endregion
+	}
 	
 	static submitShader = function(scene = {}, shader = noone) {}
 	static submitShadow = function(scene = {}, object = noone) {}
 	
-	static submitVertex = function(scene = {}, shader = noone, param = defDrawParam) { #region
+	static submitVertex = function(scene = {}, shader = noone, param = defDrawParam) {
 		var _shader = sh_d3d_default;
 		
 		switch(VF) {
@@ -193,7 +193,7 @@ function __3dObject() constructor {
 		
 		shader_reset();
 		
-		if(scene.show_normal) { #region
+		if(scene.show_normal) {
 			if(NVB == noone) generateNormal();
 			if(NVB != noone) {
 				shader_set(sh_d3d_wireframe);
@@ -203,16 +203,16 @@ function __3dObject() constructor {
 					vertex_submit(NVB[i], pr_linelist, -1);
 				shader_reset();
 			}
-		} #endregion
+		}
 		
 		transform.clearMatrix();
 		matrix_set(matrix_world, matrix_build_identity());
 		
 		postSubmitVertex(scene);
 		
-	} #endregion
+	}
 		
-	static clone = function(_vertex = true, cloneBuffer = false) { #region
+	static clone = function(_vertex = true, cloneBuffer = false) {
 		var _obj = new __3dObject();
 		
 		if(_vertex) {
@@ -251,14 +251,14 @@ function __3dObject() constructor {
 		_obj.texture_flip   = texture_flip;
 		
 		return _obj;
-	} #endregion
+	}
 	
-	static destroy = function() { #region
+	static destroy = function() {
 		for( var i = 0, n = array_length(VB); i < n; i++ ) 
 			vertex_delete_buffer(VB[i]);
 		VB = [];
 		onDestroy();
-	} #endregion
+	}
 	
 	static onDestroy = function() { } 
 	

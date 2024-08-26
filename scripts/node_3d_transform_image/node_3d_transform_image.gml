@@ -4,13 +4,14 @@ function Node_3D_Transform_Image(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, 
 	
 	preview_channel = 1;
 	object          = new __3dPlane();
-	object.checkParameter({ normal: 2 });
-	
-	objectPreview = new __3dPlane();
-	objectPreview.checkParameter({ normal: 2 });
+	objectPreview   = new __3dPlane();
 	materialPreview = new __d3dMaterial();
+	
+	object.checkParameter({ normal: 2 });
+	objectPreview.checkParameter({ normal: 2 });
 	objectPreview.materials[0] = materialPreview;
 	
+	camObj  = new __3dCamera_object();
 	camera  = camera_create();
 	
 	newInput(in_mesh + 0, nodeValue_Surface("Surface", self))
@@ -62,6 +63,11 @@ function Node_3D_Transform_Image(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, 
 		var _proj = _data[in_mesh + 1];
 		var _fov  = _data[in_mesh + 2];
 		var _tile = _data[in_mesh + 3];
+		
+		camObj.transform.position.set(new __vec3(0, 0, 2));
+		camObj.transform.rotation = new BBMOD_Quaternion().FromEuler(0, -90, 180);
+		camObj.transform.scale.set(.5, .5, .5);
+		
 		if(!is_surface(_surf)) return 0;
 		
 		if(_output_index == 0) {
@@ -109,10 +115,11 @@ function Node_3D_Transform_Image(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, 
 		return 0;
 	}
 	
-	static getPreviewObject = function() { return objectPreview; }
+	static getPreviewObject  = function() { return objectPreview; }
+	static getPreviewObjects = function() { return [ camObj, objectPreview ]; }
+	static getPreviewValues  = function() { return outputs[1].getValue(); }
 	
-	static getPreviewValues = function() { return outputs[1].getValue(); }
-	
+	static getGraphPreviewSurface = function() { return noone; }
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover = false, _focus = false) {
 		if(!previewable) return;
 		

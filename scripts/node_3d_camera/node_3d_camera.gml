@@ -104,20 +104,20 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	}
 	
 	static drawOverlay3D = function(active, params, _mx, _my, _snx, _sny, _panel) {
-	var _rot = inputs[1].display_data.angle_display;
+		var _rot = inputs[1].display_data.angle_display;
 		tools = _rot == QUARTERNION_DISPLAY.quarterion? tool_quate : tool_euler;
 		if(_rot == QUARTERNION_DISPLAY.euler && isUsingTool("Rotate"))
 			PANEL_PREVIEW.tool_current = noone;
 		
-		var object = getPreviewObjects();
-		if(array_empty(object)) return;
-		object = object[0];
+		var preObj = getPreviewObjects();
+		if(array_empty(preObj)) return;
+		preObj = preObj[0];
 		
 		var _pos  = inputs[0].getValue(,,, true);
 		var _vpos = new __vec3( _pos[0], _pos[1], _pos[2] );
 		
-		if(isUsingTool("Transform"))	drawGizmoPosition(0, object, _vpos, active, params, _mx, _my, _snx, _sny, _panel);
-		else if(isUsingTool("Rotate"))	drawGizmoRotation(1, object, _vpos, active, params, _mx, _my, _snx, _sny, _panel);
+		if(isUsingTool("Transform"))	drawGizmoPosition(0, preObj, _vpos, active, params, _mx, _my, _snx, _sny, _panel);
+		else if(isUsingTool("Rotate"))	drawGizmoRotation(1, preObj, _vpos, active, params, _mx, _my, _snx, _sny, _panel);
 		else if(isUsingTool("Move Target")) {
 			var _lkpos  = inputs[in_d3d + 10].getValue(,,, true);
 			var _lkvpos = new __vec3( _lkpos[0], _lkpos[1], _lkpos[2] );
@@ -157,7 +157,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		if(index == in_d3d + 9) PANEL_PREVIEW.tool_current = noone;
 	}
 		
-	static step = function() { #region
+	static step = function() {
 		var _proj = getInputData(in_d3d +  3);
 		var _posm = getInputData(in_d3d +  9);
 		var _ao   = getInputData(in_d3d + 17);
@@ -190,14 +190,14 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 				tool_attribute.context = 1;
 				break;
 		}	
-	} #endregion
+	}
 	
 	static preProcessData = function(_data) {}
 	
 	static submitShadow = function() {}
 	static submitShader = function() {}
 	
-	static processData = function(_output, _data, _output_index, _array_index = 0) { #region
+	static processData = function(_output, _data, _output_index, _array_index = 0) {
 		#region data
 			var _pos = _data[0];
 			var _rot = _data[1];
@@ -374,18 +374,18 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		surface_depth_disable(true);
 		
 		return [ _finalRender, _normal, _depth ];
-	} #endregion
+	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {}
 	
-	static getPreviewObject = function() { #region 
+	static getPreviewObject = function() { 
 		var _scene = array_safe_get_fast(all_inputs, in_d3d + 4, noone);
 		if(is_array(_scene))
 			_scene = array_safe_get_fast(_scene, preview_index, noone);
 		return _scene;
-	} #endregion
+	}
 	
-	static getPreviewObjects = function() { #region 
+	static getPreviewObjects = function() { 
 		var _posm = getInputData(in_d3d + 9);
 		
 		var _scene = array_safe_get_fast(all_inputs, in_d3d + 4, noone);
@@ -399,18 +399,18 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		}
 		
 		return [ object, _scene ]; 
-	} #endregion
+	}
 	
 	static getPreviewObjectOutline = function() { return isUsingTool("Move Target")? [ lookat ] : [ object ]; }
 	
-	static doSerialize = function(_map) { #region
+	static doSerialize = function(_map) {
 		_map.camera_base_length = in_cam;
-	} #endregion
+	}
 	
-	static postDeserialize = function() { #region
+	static postDeserialize = function() {
 		var _tlen = struct_try_get(load_map, "camera_base_length", in_d3d + 22);
 		
 		for( var i = _tlen; i < in_cam; i++ )
 			array_insert(load_map.inputs, i, noone);
-	} #endregion
+	}
 }
