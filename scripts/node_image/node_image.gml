@@ -45,7 +45,7 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	array_push(attributeEditors, [ "File Watcher", function() { return attributes.file_checker; }, 
 		new checkBox(function() { attributes.file_checker = !attributes.file_checker; }) ]);
 	
-	on_drop_file = function(path) { #region
+	on_drop_file = function(path) {
 		inputs[0].setValue(path);
 		
 		if(updatePaths(path)) {
@@ -54,9 +54,9 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		}
 		
 		return false;
-	} #endregion
+	}
 	
-	function createSprite(path) { #region
+	function createSprite(path) {
 		if(!file_exists(path)) 
 			return noone;
 		
@@ -82,25 +82,25 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		}
 		
 		return noone;
-	} #endregion
+	}
 	
-	function updatePaths(path) { #region
+	function updatePaths(path) {
 		
 		if(sprite_exists(spr))
 			sprite_delete(spr);
 		
 		spr = createSprite(path);
-	} #endregion
+	}
 	
 	insp1UpdateTooltip  = __txt("Refresh");
 	insp1UpdateIcon     = [ THEME.refresh_icon, 1, COLORS._main_value_positive ];
 	
-	static onInspector1Update = function() { #region
+	static onInspector1Update = function() {
 		updatePaths(path_get(getInputData(0)));
 		triggerRender();
-	} #endregion
+	}
 	
-	static step = function() { #region
+	static step = function() {
 		var path = path_get(getInputData(0));
 		
 		if(!file_exists_empty(path)) return;
@@ -109,9 +109,9 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			updatePaths(path);
 			triggerRender();
 		}
-	} #endregion
+	}
 	
-	static update = function(frame = CURRENT_FRAME) { #region
+	static update = function(frame = CURRENT_FRAME) {
 		
 		var path = path_get(getInputData(0));
 		var pad  = getInputData(1);
@@ -157,7 +157,7 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			_splice.inputs[3].setValue([ amo, 1 ]);
 			
 		#endregion
-	} #endregion
+	}
 	
 	static dropPath = function(path) { 
 		if(is_array(path)) path = array_safe_get(path, 0);

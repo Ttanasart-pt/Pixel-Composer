@@ -92,7 +92,8 @@ function Panel_Image_Array_Editor(_junction) : PanelContent() constructor {
 						dragging = index;
 				}
 				
-				var spr = struct_try_get(SPRITE_PATH_MAP, path, noone);
+				var rpath = path_get(path);
+				var spr   = struct_try_get(SPRITE_PATH_MAP, rpath, noone);
 				if(spr == noone || !sprite_exists(spr)) 
 					spr = s_texture_default;
 				
@@ -171,7 +172,26 @@ function Panel_Image_Array_Editor(_junction) : PanelContent() constructor {
     			]);
 		    } else {
 		        menuCall("image_array_edit_menu", [
-    				menuItem(__txt("Remove"), function() /*=>*/ { array_delete(data, menuOn, 1); apply(); }, THEME.cross)
+    				menuItem(__txt("Copy to Project"), function() /*=>*/ { 
+    					var project = PROJECT;
+						if(project.path == "") {
+							noti_warning("Save the current project first.")
+							return;
+						}
+						
+						var _pth = data[menuOn];
+						if(!file_exists(_pth)) return;
+						
+						var _nam = filename_name(_pth);
+						var _dir = filename_dir(project.path);
+						
+						var _newpath = _dir + "/" + _nam;
+						file_copy(_pth, _newpath);
+						data[menuOn] = "./" + _nam;
+						apply();
+						
+    				}, THEME.copy_20),
+    				menuItem(__txt("Remove"), function() /*=>*/ { array_delete(data, menuOn, 1); apply(); }, THEME.cross),
     			]);
 		    }
 		}

@@ -853,6 +853,25 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 							return setValueInspector(path);
 						}, THEME.button_path_icon).setTooltip(__txt("Open Explorer..."));
 						
+						editWidget.front_button = button(function() { 
+							var project = PROJECT;
+							if(project.path == "") {
+								noti_warning("Save the current project first.")
+								return;
+							}
+							
+							var _pth = getValue();
+							if(!file_exists(_pth)) return;
+							
+							var _nam = filename_name(_pth);
+							var _dir = filename_dir(project.path);
+							
+							var _newpath = _dir + "/" + _nam;
+							file_copy(_pth, _newpath);
+							setValue("./" + _nam);
+							
+						}).setIcon(THEME.copy_20, 0, COLORS._main_icon).setTooltip(__txt("Copy to Project"));
+						
 						extract_node = "Node_String";
 						break;
 						
@@ -866,6 +885,20 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 							if(path == "") return noone;
 							return setValueInspector(path);
 						}, THEME.button_path_icon).setTooltip(__txt("Open Explorer..."));
+						
+						editWidget.front_button = button(function() { 
+							var project = PROJECT;
+							if(project.path == "") {
+								noti_warning("Save the current project first.")
+								return;
+							}
+							
+							var _pth = getValue();
+							var _nam = filename_name(_pth);
+							var _dir = filename_dir(project.path);
+							setValue("./" + _nam);
+							
+						}).setIcon(THEME.copy_20, 0, COLORS._main_icon).setTooltip(__txt("Make Relative"));
 						
 						extract_node = "Node_String";
 						break;
