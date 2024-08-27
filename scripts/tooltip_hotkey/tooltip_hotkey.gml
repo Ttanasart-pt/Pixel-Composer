@@ -9,7 +9,7 @@ function tooltipHotkey(text, context = "", name = "") constructor {
 	static drawTooltip = function() {
 		if(keyStr == "") { draw_tooltip_text(text); return; }
 		
-		draw_set_font(f_p0);
+		draw_set_font(f_p1);
 		var _w1 = string_width(text);
 		
 		draw_set_font(f_p1);
@@ -24,7 +24,7 @@ function tooltipHotkey(text, context = "", name = "") constructor {
 		draw_sprite_stretched(THEME.textbox, 3, mx, my, tw + ui(16), th + ui(16));
 		draw_sprite_stretched(THEME.textbox, 0, mx, my, tw + ui(16), th + ui(16));
 		
-		draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
+		draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text);
 		draw_set_color(COLORS._main_text);
 		draw_text_line(mx + ui(8), my + ui(8), text, -1, tw);
 		
@@ -45,7 +45,7 @@ function tooltipHotkey_assign(text, hotkey = "") constructor {
 		draw_set_font(f_p1);
 		var _w1 = string_width(hotkey);
 		
-		draw_set_font(f_p0);
+		draw_set_font(f_p1);
 		var _w2 = 0;
 		var  th = 0;
 		
@@ -66,7 +66,7 @@ function tooltipHotkey_assign(text, hotkey = "") constructor {
 		
 		var txy = my + ui(8);
 		
-		draw_set_text(f_p0, fa_left, fa_top, _uns? COLORS._main_text_sub : COLORS._main_text);
+		draw_set_text(f_p1, fa_left, fa_top, _uns? COLORS._main_text_sub : COLORS._main_text);
 		for (var i = 0, n = array_length(_txt); i < n; i++) {
 			var _t  = _txt[i];
 			var _ts = is_string(_t)? _t : _t.name;

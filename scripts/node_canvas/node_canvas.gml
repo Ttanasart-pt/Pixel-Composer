@@ -53,9 +53,9 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	_selecting_frame     = noone;
 	
 	frame_renderer_content = surface_create(1, 1);
-	frame_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus, _full = true, _fx = frame_renderer_x) { #region frame_renderer
-		var _h = _full? 64 : 48;
-		var _anim  = getInputData(12);
+	frame_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus, _panel = noone, _full = true, _fx = frame_renderer_x) {
+		var _h    = _full? 64 : 48;
+		var _anim = getInputData(12);
 		var _cnt_hover = false;
 		
 		if(_full) {
@@ -170,7 +170,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		return _h + 8 * _full;
 		
-	}).setNode(self); #endregion
+	}).setNode(self);
 	
 	temp_surface = array_create(2);
 	
@@ -1228,7 +1228,7 @@ function timelineItemNode_Canvas(node) : timelineItemNode(node) constructor {
 		var _surfs = node.output_surface;
 		var _surf, _rx, _ry;
 		var _rx0, _ry0;
-		var _h = h - 2;
+		var _h = h;
 		
 		_ry  = _h / 2 + _y;
 		_ry0 = _y;

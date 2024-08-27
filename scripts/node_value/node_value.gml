@@ -2,7 +2,7 @@ function nodeValue(_name, _node, _connect, _type, _value, _tooltip = "") { retur
 function nodeValueMap(_name, _node, _junc = noone)						 { return new NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.surface, noone).setVisible(false, false).setMapped(_junc); }
 function nodeValueGradientRange(_name, _node, _junc = noone)			 { return new NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.float, [ 0, 0, 1, 0 ])
 																						.setDisplay(VALUE_DISPLAY.gradient_range).setVisible(false, false).setMapped(_junc); }
-																						
+
 function nodeValueSeed(_node, _type) { 
 	var _val = new NodeValue("Seed", _node, CONNECT_TYPE.input, _type, seed_random(6), "");
 	__node_seed_input_value = _val;
@@ -556,13 +556,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		editWidget = noone;
 		switch(display_type) {
-			case VALUE_DISPLAY.button : #region
-				var _onClick;
-				
-				if(struct_has(display_data, "onClick"))
-					_onClick = method(node, display_data.onClick);
-				else 
-					_onClick = function() { setAnim(true); setValueDirect(true); };
+			case VALUE_DISPLAY.button :
+				var _onClick = struct_has(display_data, "onClick")? method(node, display_data.onClick) : function() /*=>*/ { setAnim(true); setValueDirect(true); };
 				
 				editWidget   = button(_onClick).setText(struct_try_get(display_data, "name", "Trigger"));
 				runInUI      = struct_try_get(display_data, "UI", false);
@@ -570,7 +565,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				visible = false;
 				rejectArray();
 				
-				return; #endregion
+				return;
 		}
 		
 		switch(type) {
@@ -814,8 +809,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				break;
 				
 			case VALUE_TYPE.boolean :	 #region
-				if(name == "Active") editWidget = new checkBoxActive(function() { return setValueInspector(!animator.getValue()); } );
-				else				 editWidget = new checkBox(      function() { return setValueInspector(!animator.getValue()); } );
+				if(name == "Active") editWidget = new checkBoxActive(function() /*=>*/ {return setValueInspector(!animator.getValue())} );
+				else				 editWidget = new checkBox(      function() /*=>*/ {return setValueInspector(!animator.getValue())} );
 				
 				key_inter    = CURVE_TYPE.cut;
 				extract_node = "Node_Boolean";
@@ -824,48 +819,45 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			case VALUE_TYPE.color :		
 				switch(display_type) {
 					case VALUE_DISPLAY._default :
-						editWidget = new buttonColor(function(color) { return setValueInspector(color); } );
-						
+						editWidget   = new buttonColor(function(color) /*=>*/ {return setValueInspector(color)});
 						graph_h		 = ui(16);
 						extract_node = "Node_Color";
 						break;
 						
 					case VALUE_DISPLAY.palette :
-						editWidget = new buttonPalette(function(color) { return setValueInspector(color); } );
-						
+						editWidget   = new buttonPalette(function(color) /*=>*/ {return setValueInspector(color)});
 						extract_node = "Node_Palette";
 						break;
 				}
 				break;
 				
 			case VALUE_TYPE.gradient :	
-				editWidget = new buttonGradient(function(gradient) { return setValueInspector(gradient); } );
-						
+				editWidget   = new buttonGradient(function(gradient) /*=>*/ {return setValueInspector(gradient)});
 				extract_node = "Node_Gradient_Out";
 				break;
 				
 			case VALUE_TYPE.path :		
 				switch(display_type) {
 					case VALUE_DISPLAY.path_array :
-						editWidget = new pathArrayBox(self, display_data.filter, function(path) { setValueInspector(path); } );
+						editWidget = new pathArrayBox(self, display_data.filter, function(path) /*=>*/ {return setValueInspector(path)});
 						break;
 						
 					case VALUE_DISPLAY.path_load :
-						editWidget = new textBox(TEXTBOX_INPUT.text, function(str) { setValueInspector(str); } );
+						editWidget = new textBox(TEXTBOX_INPUT.text, function(str) /*=>*/ {return setValueInspector(str)});
 							
-						editWidget.align = fa_left;
+						editWidget.align  = fa_left;
 						editWidget.side_button = button(function() { 
 							var path = display_data.filter == "dir"? get_directory("") : get_open_filename_pxc(display_data.filter, "");
 							key_release();
 							if(path == "") return noone;
 							return setValueInspector(path);
-						}, THEME.button_path_icon);
+						}, THEME.button_path_icon).setTooltip(__txt("Open Explorer..."));
 						
 						extract_node = "Node_String";
 						break;
 						
 					case VALUE_DISPLAY.path_save :
-						editWidget = new textBox(TEXTBOX_INPUT.text, function(str) { setValueInspector(str); } );
+						editWidget = new textBox(TEXTBOX_INPUT.text, function(str) /*=>*/ {return setValueInspector(str)});
 						
 						editWidget.align = fa_left;
 						editWidget.side_button = button(function() { 
@@ -873,45 +865,45 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 							key_release();
 							if(path == "") return noone;
 							return setValueInspector(path);
-						}, THEME.button_path_icon);
+						}, THEME.button_path_icon).setTooltip(__txt("Open Explorer..."));
 						
 						extract_node = "Node_String";
 						break;
 						
 					case VALUE_DISPLAY.path_font :
-						editWidget = new fontScrollBox( function(val) { return setValueInspector(FONT_INTERNAL[val]); } );
+						editWidget = new fontScrollBox(function(val) /*=>*/ {return setValueInspector(FONT_INTERNAL[val])});
 						break;
 				}
 				break;
 				
 			case VALUE_TYPE.curve :		
 				display_type = VALUE_DISPLAY.curve;
-				editWidget = new curveBox(function(_modified) { return setValueInspector(_modified); });
+				editWidget  = new curveBox(function(_modified) /*=>*/ {return setValueInspector(_modified)});
 				break;
 				
 			case VALUE_TYPE.text :		
 				switch(display_type) {
 					case VALUE_DISPLAY._default :
-						editWidget = new textArea(TEXTBOX_INPUT.text, function(str) { return setValueInspector(str); });
+						editWidget   = new textArea(TEXTBOX_INPUT.text, function(str) /*=>*/ {return setValueInspector(str)});
 						extract_node = "Node_String";
 						break;
 						
 					case VALUE_DISPLAY.text_box :
-						editWidget = new textBox(TEXTBOX_INPUT.text, function(str) { return setValueInspector(str); });
+						editWidget   = new textBox(TEXTBOX_INPUT.text, function(str) /*=>*/ {return setValueInspector(str)});
 						extract_node = "Node_String";
 						break;
 					
 					case VALUE_DISPLAY.codeLUA :
-						editWidget = new textArea(TEXTBOX_INPUT.text, function(str) { return setValueInspector(str); });
-						
-						editWidget.font = f_code;
-						editWidget.format = TEXT_AREA_FORMAT.codeLUA;
-						editWidget.min_lines = 4;
+						editWidget   = new textArea(TEXTBOX_INPUT.text, function(str) /*=>*/ {return setValueInspector(str)});
 						extract_node = "Node_String";
+						
+						editWidget.font      = f_code;
+						editWidget.format    = TEXT_AREA_FORMAT.codeLUA;
+						editWidget.min_lines = 4;
 						break;
 						
 					case VALUE_DISPLAY.codeHLSL:
-						editWidget = new textArea(TEXTBOX_INPUT.text, function(str) { return setValueInspector(str); });
+						editWidget = new textArea(TEXTBOX_INPUT.text, function(str) /*=>*/ {return setValueInspector(str)});
 						
 						editWidget.autocomplete_server	 = hlsl_autocomplete_server;
 						editWidget.function_guide_server = hlsl_function_guide_server;
@@ -925,20 +917,20 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break;
 						
 					case VALUE_DISPLAY.text_tunnel :
-						editWidget = new textArea(TEXTBOX_INPUT.text, function(str) { return setValueInspector(str); });
-						
-						editWidget.autocomplete_server	 = tunnel_autocomplete_server;
+						editWidget = new textArea(TEXTBOX_INPUT.text, function(str) /*=>*/ {return setValueInspector(str)});
+						editWidget.autocomplete_server = tunnel_autocomplete_server;
 						
 						extract_node = "Node_String";
 						break;
 					
 					case VALUE_DISPLAY.text_array :
-						editWidget = new textArrayBox(function() { return animator.values[0].value; }, display_data.data, function() { node.doUpdate(); });
+						editWidget = new textArrayBox(function() /*=>*/ {return animator.values[0].value}, display_data.data, function() /*=>*/ {return node.doUpdate()});
 						break;
 				}
 				break;
 				
 			case VALUE_TYPE.d3Material :
+				show_in_inspector = true;
 				editWidget = new materialBox(function(ind) { 
 					var res = setValueInspector(ind); 
 					node.triggerRender();
@@ -946,15 +938,14 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				} );
 				
 				if(!struct_has(display_data, "atlas")) display_data.atlas = true;
-				show_in_inspector = true;
 				extract_node = "Node_Canvas";
 				break;
 				
 			case VALUE_TYPE.surface :	
-				editWidget = new surfaceBox(function(ind) { return setValueInspector(ind); } );
+				show_in_inspector = true;
+				editWidget = new surfaceBox(function(ind) /*=>*/ {return setValueInspector(ind)});
 				
 				if(!struct_has(display_data, "atlas")) display_data.atlas = true;
-				show_in_inspector = true;
 				extract_node = "Node_Canvas";
 				break;
 				

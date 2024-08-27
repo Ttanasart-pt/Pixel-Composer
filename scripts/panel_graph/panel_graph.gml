@@ -338,6 +338,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         
         mouse_on_graph   = false;
         node_bg_hovering = false;
+        
+        file_drop_tooltip = new Panel_Graph_Drop_tooltip(self);
     #endregion
     
     #region // ---- nodes ----
@@ -2495,13 +2497,18 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                 if(_n.pointIn(gr_x, gr_y, _mx, _my, graph_s))
                     _node_hover = _n;
             }
+            
+            var _tip = "";
                 
-            if(DRAGGING || FILE_IS_DROPPING)
+            if(DRAGGING || FILE_IS_DROPPING) {
                 draw_sprite_stretched_ext(THEME.ui_panel_selection, 0, 8, 8, w - 16, h - 16, COLORS._main_value_positive, 1);
+                _tip = file_drop_tooltip;
+            }
                 
             if(DRAGGING) { // file dropping
                 if(_node_hover && _node_hover.droppable(DRAGGING)) {
                     _node_hover.draw_droppable = true;
+                    _tip = "Drop on node";
                     if(mouse_release(mb_left)) _node_hover.onDrop(DRAGGING);
                     
                 } else {
@@ -2509,8 +2516,10 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                 }
             }
             
-            if(FILE_IS_DROPPING && _node_hover && _node_hover.dropPath != noone)
+            if(FILE_IS_DROPPING && _node_hover && _node_hover.dropPath != noone) {
                 _node_hover.draw_droppable = true;
+                _tip = "Drop on node";
+            }
             
             if(FILE_DROPPED && !array_empty(FILE_DROPPING)) {
                 if(_node_hover && _node_hover.dropPath != noone) 
@@ -2518,6 +2527,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                 else
                     run_in(1, load_file_path, [ FILE_DROPPING, _gx, _gy ]);
             }
+            
+            if(_tip != "") TOOLTIP = _tip;
         }
         
     } 
@@ -3265,4 +3276,41 @@ function load_file_path(path, _x = undefined, _y = undefined) {
         
         // if(node && !IS_CMD) PANEL_GRAPH.toCenterNode();
     }
+}
+
+function Panel_Graph_Drop_tooltip(panel) constructor {
+	self.panel   = panel;
+	
+	static drawTooltip = function() {
+		var _drop = __txt("Import File");
+		var _shft = __txt("Options...");
+		
+		draw_set_font(f_p1);
+		var w1 = string_width(_drop);
+		var h1 = string_height(_drop);
+		
+		draw_set_font(f_p2);
+		var w2 = string_width(_shft) + string_width("Shift") + ui(16);
+		var h2 = string_height(_shft);
+		
+		var tw = max(w1, w2);
+		var th = h1 + ui(8) + h2;
+		
+		var mx = min(mouse_mxs + ui(16), WIN_W - (tw + ui(16)));
+		var my = min(mouse_mys + ui(16), WIN_H - (th + ui(16)));
+		
+		draw_sprite_stretched(THEME.textbox, 3, mx, my, tw + ui(16), th + ui(16));
+		draw_sprite_stretched(THEME.textbox, 0, mx, my, tw + ui(16), th + ui(16));
+		
+		draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text);
+		draw_text(mx + ui(8), my + ui(8), _drop);
+		
+		draw_set_font(f_p2);
+		var _hx = mx + ui(12) + string_width("Shift");
+		var _hy = my + ui(8) + h1 + ui(4) + h2 / 2 + ui(4);
+		hotkey_draw("Shift", _hx, _hy);
+		
+		draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
+		draw_text(_hx + ui(8), my + ui(8) + h1 + ui(6), _shft);
+	}
 }

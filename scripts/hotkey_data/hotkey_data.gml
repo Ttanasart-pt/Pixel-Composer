@@ -227,12 +227,12 @@ function hotkey_draw(keyStr, _x, _y, _status = 0) {
 			
 	}
 	
-	draw_set_text(f_p1, fa_right, fa_center, tc);
+	draw_set_text(f_p2, fa_right, fa_center, tc);
 	var _tw = string_width( keyStr);
 	var _th = string_height(keyStr);
 	
-	draw_sprite_stretched_ext(THEME.ui_panel, 1, _x - _tw - ui(4), _y - _th / 2 - ui(3), _tw + ui(8), _th + ui(3), bc);
-	draw_text(_x, _y, keyStr);
+	draw_sprite_stretched_ext(THEME.ui_panel, 1, _x - _tw - ui(4), _y - _th / 2 - ui(5), _tw + ui(8), _th + ui(6), bc);
+	draw_text(_x, _y - ui(2), keyStr);
 }
 
 function hotkey_serialize() {

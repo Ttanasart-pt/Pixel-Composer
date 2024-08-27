@@ -45,19 +45,20 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 	
 	static trigger = function() { 
 		var dialog = dialogCall(o_dialog_color_selector, WIN_W / 2, WIN_H / 2);
-		dialog.setDefault(current_color);
-		dialog.selector.onApply = apply;
-		dialog.onApply = apply;
-		dialog.interactable = interactable;
-		dialog.drop_target = self;
 		
-		if(parentDialog) {
-			if(is_instanceof(parentDialog, PanelContent)) {
-				if(parentDialog.panel)
-					parentDialog.panel.addChildren(dialog);
-			} else
-				parentDialog.addChildren(dialog);
-		}
+		dialog.setDefault(is_array(current_color)? array_safe_get(current_color, 0, 0) : current_color);
+		dialog.selector.onApply = apply;
+		dialog.onApply          = apply;
+		dialog.interactable     = interactable;
+		dialog.drop_target      = self;
+		
+		if(parentDialog == noone) return;
+		
+		if(is_instanceof(parentDialog, PanelContent)) {
+			if(parentDialog.panel)
+				parentDialog.panel.addChildren(dialog);
+		} else
+			parentDialog.addChildren(dialog);
 	}
 	
 	static drawParam = function(params) {

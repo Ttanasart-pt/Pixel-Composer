@@ -52,7 +52,7 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 		return _h;
 	});
 	
-	frame_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
+	frame_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus, _panel) {
 		var _h  = 0;
 		var _yy = _y;
 		
@@ -69,7 +69,7 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 		    _frame_render.rx = frame_renderer.rx;
 		    _frame_render.ry = frame_renderer.ry;
 		    
-		    var _wdh = _frame_render.draw(_x, _yy, _w, _m, _hover, _focus, false, frame_renderer_x);
+		    var _wdh = _frame_render.draw(_x, _yy, _w, _m, _hover, _focus, _panel, false, frame_renderer_x);
 			if(is_undefined(_wdh)) continue;
 			
 			frame_renderer_x_max = max(frame_renderer_x_max, _frame_render.node.frame_renderer_x_max);

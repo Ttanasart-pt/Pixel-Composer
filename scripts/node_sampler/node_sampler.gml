@@ -16,7 +16,7 @@ function Node_Sampler(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	static getPreviewValues = function() { return getInputData(0); }
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		PROCESSOR_OVERLAY_CHECK
 		
 		inputs[1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
@@ -46,9 +46,9 @@ function Node_Sampler(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 		draw_set_color(COLORS._main_accent);
 		draw_rectangle(x0, y0, x1, y1, true);
-	} #endregion
+	}
 	
-	static processData = function(_output, _data, _output_index, _array_index = 0) { #region
+	static processData = function(_output, _data, _output_index, _array_index = 0) {
 		var _surf = _data[0];
 		var _pos  = _data[1];
 		var _sam  = _data[2];
@@ -84,10 +84,10 @@ function Node_Sampler(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		b /= amo;
 		a /= amo;
 		
-		return _alp? make_color_rgba(r, g, b, a) : make_color_rgb(r, g, b);
-	} #endregion
+		return make_color_rgba(r, g, b, _alp? a : 255);
+	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
 		var col  = outputs[0].getValue();
 		if(bbox.h <= 0) return;
@@ -98,5 +98,5 @@ function Node_Sampler(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		}
 		
 		drawColor(col, bbox.x0, bbox.y0, bbox.w, bbox.h);
-	} #endregion
+	}
 }

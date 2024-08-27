@@ -1,24 +1,24 @@
-function draw_tooltip_text(txt) { #region
+function draw_tooltip_text(txt) {
 	txt = array_to_string(txt);
 	
 	if(string_length(txt) > 1024)
 		txt = string_copy(txt, 1, 1024) + "...";
 	
-	draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
+	draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text);
 	
 	var tw = min(max(320, WIN_W * 0.4), string_width(txt));
 	var th = string_height_ext(txt, -1, tw);
 		
 	var pd = ui(8);
-	var mx = min(mouse_mx + ui(16), WIN_W - (tw + pd * 2));
-	var my = min(mouse_my + ui(16), WIN_H - (th + pd * 2));
+	var mx = min(mouse_mxs + ui(16), WIN_W - (tw + pd * 2));
+	var my = min(mouse_mys + ui(16), WIN_H - (th + pd * 2));
 		
 	draw_sprite_stretched(THEME.textbox, 3, mx, my, tw + pd * 2, th + pd * 2);
 	draw_sprite_stretched(THEME.textbox, 0, mx, my, tw + pd * 2, th + pd * 2);
 	draw_text_line(mx + pd, my + pd, txt, -1, tw);
-} #endregion
+}
 
-function draw_tooltip_color(clr) { #region
+function draw_tooltip_color(clr) {
 	if(is_array(clr)) {
 		draw_tooltip_palette(clr);
 		return;
@@ -28,17 +28,17 @@ function draw_tooltip_color(clr) { #region
 	var hh = ui(32);
 		
 	var pd = ui(4);
-	var mx = min(mouse_mx + ui(16), WIN_W - (ww + pd * 2));
-	var my = min(mouse_my + ui(16), WIN_H - (hh + pd * 2));
+	var mx = min(mouse_mxs + ui(16), WIN_W - (ww + pd * 2));
+	var my = min(mouse_mys + ui(16), WIN_H - (hh + pd * 2));
 		
 	draw_sprite_stretched(THEME.textbox, 3, mx, my, ww + pd * 2, hh + pd * 2);
 	draw_sprite_stretched(THEME.textbox, 0, mx, my, ww + pd * 2, hh + pd * 2);
 	
 	draw_sprite_stretched_ext(THEME.s_box_r2, 0, mx + pd, my + pd, ww, hh, clr, 1);
 	draw_sprite_stretched_add(THEME.s_box_r2, 1, mx + pd, my + pd, ww, hh, c_white, 0.3);
-} #endregion
+}
 
-function draw_tooltip_palette(clr) { #region
+function draw_tooltip_palette(clr) {
 	if(array_empty(clr)) return;
 	
 	var ph = ui(32);
@@ -52,8 +52,8 @@ function draw_tooltip_palette(clr) { #region
 	var hh = array_length(clr) * ph;
 	
 	var pd = ui(4);
-	var mx = min(mouse_mx + ui(16), WIN_W - (ww + pd * 2));
-	var my = min(mouse_my + ui(16), WIN_H - (hh + pd * 2));
+	var mx = min(mouse_mxs + ui(16), WIN_W - (ww + pd * 2));
+	var my = min(mouse_mys + ui(16), WIN_H - (hh + pd * 2));
 		
 	draw_sprite_stretched(THEME.textbox, 3, mx, my, ww + pd * 2, hh + pd * 2);
 	draw_sprite_stretched(THEME.textbox, 0, mx, my, ww + pd * 2, hh + pd * 2);
@@ -65,9 +65,9 @@ function draw_tooltip_palette(clr) { #region
 	}
 	
 	draw_sprite_stretched_add(THEME.s_box_r2, 1, mx + pd, my + pd, ww, hh, c_white, 0.3);
-} #endregion
+}
 
-function draw_tooltip_gradient(clr) { #region
+function draw_tooltip_gradient(clr) {
 	var gh = ui(32);
 	if(!is_array(clr)) clr = [ clr ];
 	
@@ -75,8 +75,8 @@ function draw_tooltip_gradient(clr) { #region
 	var hh = array_length(clr) * gh;
 		
 	var pd = ui(4);
-	var mx = min(mouse_mx + ui(16), WIN_W - (ww + pd * 2));
-	var my = min(mouse_my + ui(16), WIN_H - (hh + pd * 2));
+	var mx = min(mouse_mxs + ui(16), WIN_W - (ww + pd * 2));
+	var my = min(mouse_mys + ui(16), WIN_H - (hh + pd * 2));
 		
 	draw_sprite_stretched(THEME.textbox, 3, mx, my, ww + pd * 2, hh + pd * 2);
 	draw_sprite_stretched(THEME.textbox, 0, mx, my, ww + pd * 2, hh + pd * 2);
@@ -86,9 +86,9 @@ function draw_tooltip_gradient(clr) { #region
 		clr[i].draw(mx + pd, _y, ui(ww), gh);
 		_y += gh;
 	}
-} #endregion
+}
 
-function draw_tooltip_surface_array(surf) { #region
+function draw_tooltip_surface_array(surf) {
 	if(!is_array(surf) || array_empty(surf)) return;
 	
 	if(is_instanceof(surf[0], SurfaceAtlas)) {
@@ -108,8 +108,8 @@ function draw_tooltip_surface_array(surf) { #region
 	var hh = sh * row;
 	
 	var pd = ui(4);
-	var mx = min(mouse_mx + ui(16), WIN_W - (ww + pd * 2));
-	var my = min(mouse_my + ui(16), WIN_H - (hh + pd * 2));
+	var mx = min(mouse_mxs + ui(16), WIN_W - (ww + pd * 2));
+	var my = min(mouse_mys + ui(16), WIN_H - (hh + pd * 2));
 	
 	draw_sprite_stretched(THEME.textbox, 3, mx, my, ww + pd * 2, hh + pd * 2);
 	draw_sprite_stretched(THEME.textbox, 0, mx, my, ww + pd * 2, hh + pd * 2);
@@ -130,9 +130,9 @@ function draw_tooltip_surface_array(surf) { #region
 		draw_set_color(COLORS._main_icon);
 		draw_rectangle(cx - sw * ss / 2, cy - sh * ss / 2, cx + sw * ss / 2 - 1, cy + sh * ss / 2 - 1, true);
 	}
-} #endregion
+}
 
-function draw_tooltip_surface(surf) { #region
+function draw_tooltip_surface(surf) {
 	if(is_array(surf)) {
 		draw_tooltip_surface_array(array_spread(surf))
 		return;
@@ -154,16 +154,16 @@ function draw_tooltip_surface(surf) { #region
 	var hh = sh * ss;
 	
 	var pd = ui(4);
-	var mx = min(mouse_mx + ui(16), WIN_W - (ww + pd * 2));
-	var my = min(mouse_my + ui(16), WIN_H - (hh + pd * 2));
+	var mx = min(mouse_mxs + ui(16), WIN_W - (ww + pd * 2));
+	var my = min(mouse_mys + ui(16), WIN_H - (hh + pd * 2));
 		
 	draw_sprite_stretched(THEME.textbox, 3, mx, my, ww + pd * 2, hh + pd * 2);
 	draw_sprite_stretched(THEME.textbox, 0, mx, my, ww + pd * 2, hh + pd * 2);
 	
 	draw_surface_ext_safe(surf, mx + pd, my + pd, ss, ss);
-} #endregion
+}
 
-function draw_tooltip_sprite(spr) { #region
+function draw_tooltip_sprite(spr) {
 	if(!sprite_exists(spr)) return;
 	
 	var ox = sprite_get_xoffset(spr);
@@ -179,8 +179,8 @@ function draw_tooltip_sprite(spr) { #region
 	var hh = sh * ss + ui(16);
 	
 	var pd = ui(4);
-	var mx = min(mouse_mx + ui(16), WIN_W - (ww + pd * 2));
-	var my = min(mouse_my + ui(16), WIN_H - (hh + pd * 2));
+	var mx = min(mouse_mxs + ui(16), WIN_W - (ww + pd * 2));
+	var my = min(mouse_mys + ui(16), WIN_H - (hh + pd * 2));
 		
 	draw_sprite_stretched(THEME.textbox, 3, mx, my, ww + pd * 2, hh + pd * 2);
 	draw_sprite_stretched(THEME.textbox, 0, mx, my, ww + pd * 2, hh + pd * 2);
@@ -193,9 +193,9 @@ function draw_tooltip_sprite(spr) { #region
 	
 	draw_set_text(f_p3, fa_center, fa_bottom, COLORS._main_text_sub);
 	draw_text(mx + (ww + pd * 2) / 2, my + hh + pd * 2 - ui(4), $"{sw} x {sh} px");
-} #endregion
+}
 
-function draw_tooltip_atlas(atlas) { #region
+function draw_tooltip_atlas(atlas) {
 	if(!is_array(atlas)) atlas = [ atlas ];
 	
 	var amo = array_length(atlas);
@@ -205,8 +205,8 @@ function draw_tooltip_atlas(atlas) { #region
 	if(amo && is_array(atlas[0])) return;
 	
 	var pd = ui(4);
-	var mx = min(mouse_mx + ui(16), WIN_W - (ww + pd * 2));
-	var my = min(mouse_my + ui(16), WIN_H - (hh + pd * 2));
+	var mx = min(mouse_mxs + ui(16), WIN_W - (ww + pd * 2));
+	var my = min(mouse_mys + ui(16), WIN_H - (hh + pd * 2));
 		
 	draw_sprite_stretched(THEME.textbox, 3, mx, my, ww + pd * 2, hh + pd * 2);
 	draw_sprite_stretched(THEME.textbox, 0, mx, my, ww + pd * 2, hh + pd * 2);
@@ -242,9 +242,9 @@ function draw_tooltip_atlas(atlas) { #region
 		draw_text_add(sx + ui(160), _y + ui(16), atl.rotation);
 		draw_text_add(sx + ui(160), _y + ui(32), $"{atl.sx}, {atl.sy}");
 	}
-} #endregion
+}
 
-function draw_tooltip_buffer(buff) { #region
+function draw_tooltip_buffer(buff) {
 	var txt = buffer_get_string(buff, false, 400);
 	var len = string_length(txt);
 	
@@ -258,8 +258,8 @@ function draw_tooltip_buffer(buff) { #region
 		th += string_height(" ");
 		
 	var pd = ui(8);
-	var mx = min(mouse_mx + ui(16), WIN_W - (tw + pd * 2));
-	var my = min(mouse_my + ui(16), WIN_H - (th + pd * 2));
+	var mx = min(mouse_mxs + ui(16), WIN_W - (tw + pd * 2));
+	var my = min(mouse_mys + ui(16), WIN_H - (th + pd * 2));
 		
 	draw_sprite_stretched(THEME.textbox, 3, mx, my, tw + pd * 2, th + pd * 2);
 	draw_sprite_stretched(THEME.textbox, 0, mx, my, tw + pd * 2, th + pd * 2);
@@ -269,16 +269,16 @@ function draw_tooltip_buffer(buff) { #region
 		draw_set_text(f_code, fa_left, fa_bottom, COLORS._main_text_sub);
 		draw_text(mx + pd, my + th + pd, $"...({buffer_get_size(buff)} bytes)");
 	}
-} #endregion
+}
 
-function draw_tooltip_curve(curve) { #region
+function draw_tooltip_curve(curve) {
 	
 	var ww = ui(160);
 	var hh = ui(160);
 		
 	var pd = ui(8);
-	var mx = min(mouse_mx + ui(16), WIN_W - (ww + pd * 2));
-	var my = min(mouse_my + ui(16), WIN_H - (hh + pd * 2));
+	var mx = min(mouse_mxs + ui(16), WIN_W - (ww + pd * 2));
+	var my = min(mouse_mys + ui(16), WIN_H - (hh + pd * 2));
 		
 	draw_sprite_stretched(THEME.textbox, 3, mx, my, ww + pd * 2, hh + pd * 2);
 	draw_sprite_stretched(THEME.textbox, 0, mx, my, ww + pd * 2, hh + pd * 2);
@@ -309,4 +309,4 @@ function draw_tooltip_curve(curve) { #region
 	draw_set_color(COLORS.widget_curve_outline);
 	draw_rectangle(x0, y0, x1, y1, true);
 	
-} #endregion
+}
