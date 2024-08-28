@@ -1,5 +1,5 @@
 #region preference
-	globalvar PREFERENCES, PREFERENCES_DEF, HOTKEYS_DATA;
+	globalvar PREFERENCES, PREFERENCES_DEF, HOTKEYS_DATA, PREFERENCES_DIR;
 	PREFERENCES  = {};
 	HOTKEYS_DATA = {};
 	
@@ -241,24 +241,67 @@
 #endregion
 
 #region save load
+	globalvar PREF_VERSION, PREF_UPDATES;
+	PREF_VERSION = 1_17_1;
+	PREF_UPDATES = [
+		{
+			version: 0,
+			exists: function() /*=>*/  {return file_exists(DIRECTORY + "keys.json")},
+			update: function() /*=>*/ {
+				var _pth_k = DIRECTORY + "keys.json";
+				var _pth_h = DIRECTORY + "hotkeys.json";
+				var _pth_d = DIRECTORY + "default_project.json";
+				
+				if(file_exists(_pth_k)) file_copy(_pth_k, PREFERENCES_DIR + "keys.json");
+				if(file_exists(_pth_h)) file_copy(_pth_h, PREFERENCES_DIR + "hotkeys.json");
+				if(file_exists(_pth_d)) file_copy(_pth_d, PREFERENCES_DIR + "default_project.json");
+			}
+		}
+	];
+	
+	function PREF_UPDATE() {
+		directory_verify(PREFERENCES_DIR);
+		var _oldest = -1;
+		
+		for (var i = 0, n = array_length(PREF_UPDATES); i < n; i++) {
+			var _pf = PREF_UPDATES[i];
+			if(_pf.exists()) {
+				_oldest = i;
+				break;
+			}
+		}
+		
+		if(_oldest == -1) return;
+		for(var i = _oldest; i >= 0; i--) {
+			var _pf = PREF_UPDATES[i];
+			_pf.update();
+		}
+	}
+	
 	function PREF_SAVE() {
 		if(IS_CMD) return;
+		
+		directory_verify($"{DIRECTORY}Preferences");
+		directory_verify($"{DIRECTORY}Preferences\\{PREF_VERSION}");
 		
 		PREFERENCES.window_maximize	= window_is_maximized;
 		PREFERENCES.window_width	= max(960, window_minimize_size[0]);
 		PREFERENCES.window_height	= max(600, window_minimize_size[1]);
 		PREFERENCES.window_monitor  = window_monitor;
 		
-		json_save_struct(DIRECTORY + "keys.json",       		PREFERENCES);
-		json_save_struct(DIRECTORY + "Nodes/fav.json",			global.FAV_NODES);
-		json_save_struct(DIRECTORY + "Nodes/recent.json",		global.RECENT_NODES);
-		json_save_struct(DIRECTORY + "default_project.json",    PROJECT_ATTRIBUTES);
+		json_save_struct(PREFERENCES_DIR + "keys.json",             PREFERENCES);
+		json_save_struct(PREFERENCES_DIR + "default_project.json",  PROJECT_ATTRIBUTES);
+		json_save_struct(DIRECTORY + "Nodes/fav.json",              global.FAV_NODES);
+		json_save_struct(DIRECTORY + "Nodes/recent.json",           global.RECENT_NODES);
 		
 		hotkey_serialize();
 	}
 	
 	function PREF_LOAD() {
-		var path = DIRECTORY + "keys.json";
+		directory_verify($"{DIRECTORY}Preferences");
+		if(!directory_exists(PREFERENCES_DIR)) PREF_UPDATE();
+		
+		var path = PREFERENCES_DIR + "keys.json";
 		if(file_exists(path)) {
 			var map = json_load_struct(path);
 			if(struct_has(map, "preferences")) struct_override(PREFERENCES, map.preferences);
@@ -276,7 +319,7 @@
 		
 		if(PREFERENCES.move_directory) directory_set_current_working(DIRECTORY);
 		
-		var f = json_load_struct(DIRECTORY + "default_project.json");
+		var f = json_load_struct(PREFERENCES_DIR + "default_project.json");
 		struct_override(PROJECT_ATTRIBUTES, f);
 		
 		hotkey_deserialize();

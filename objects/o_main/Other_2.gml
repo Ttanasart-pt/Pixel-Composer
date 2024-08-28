@@ -42,6 +42,7 @@
 	} else 
 		DIRECTORY = APP_DIRECTORY;
 	
+	PREFERENCES_DIR = $"{DIRECTORY}Preferences\\{PREF_VERSION}\\";
 	directory_verify(DIRECTORY);
 	
 	APP_LOCATION = program_directory;

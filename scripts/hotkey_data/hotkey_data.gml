@@ -264,12 +264,12 @@ function hotkey_serialize() {
 		}
 	}
 	
-	json_save_struct(DIRECTORY + "hotkeys.json", { context: _context, node: _node });
+	json_save_struct(PREFERENCES_DIR + "hotkeys.json", { context: _context, node: _node });
 }
 
 function hotkey_deserialize() {
 	HOTKEYS_DATA = {};
-	var path = DIRECTORY + "hotkeys.json";
+	var path = PREFERENCES_DIR + "hotkeys.json";
 	if(!file_exists(path)) return;
 	
 	var map = json_load_struct(path);

@@ -583,8 +583,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}
 	
 	function getPreviewingNode() {
-		var _oj = outputs[preview_channel];
-		if(is_undefined(_oj)) return self;
+		var _oj = array_safe_get(outputs, preview_channel, noone);
+		if(_oj == noone) return self;
 		
 		switch(_oj.type) {
 			case VALUE_TYPE.d3Mesh   : 
