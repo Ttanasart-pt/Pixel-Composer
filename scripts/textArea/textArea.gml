@@ -646,16 +646,20 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 				case TEXT_AREA_FORMAT._default : 
 					draw_text_add(ch_x, ch_y, _str);
 					break;
+					
 				case TEXT_AREA_FORMAT.delimiter :
 					draw_text_delimiter(ch_x, ch_y, _str);
 					break;
+					
 				case TEXT_AREA_FORMAT.path_template : 
 					draw_text_path(ch_x, ch_y, _str);
 					break;
+					
 				case TEXT_AREA_FORMAT.codeLUA :
 					if(syntax_highlight) draw_code_lua(ch_x, ch_y, _str);
 					else                 draw_text_add(ch_x, ch_y, _str);
 					break;
+					
 				case TEXT_AREA_FORMAT.codeHLSL :
 					if(syntax_highlight) draw_code_hlsl(ch_x, ch_y, _str);
 					else                 draw_text_add(ch_x, ch_y, _str);

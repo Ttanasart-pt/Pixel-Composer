@@ -1,4 +1,4 @@
-function Node_create_Export(_x, _y, _group = noone) { #region
+function Node_create_Export(_x, _y, _group = noone) {
 	var path = "";
 	if(NODE_NEW_MANUAL) {
 		path = get_save_filename_pxc(@"Portable Network Graphics (.png)|*.png|
@@ -28,7 +28,7 @@ function exportAll() {
 		
 		node.doInspectorAction();
 	}
-} #endregion
+}
 
 enum NODE_EXPORT_FORMAT {
 	single,
@@ -54,8 +54,8 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	newInput(2, nodeValue_Text("Template",  self, "%d%n"))
 		.rejectArray();
-	inputs[2].editWidget.format		= TEXT_AREA_FORMAT.path_template;
-	inputs[2].editWidget.auto_update	= true;
+	inputs[2].editWidget.format		 = TEXT_AREA_FORMAT.path_template;
+	inputs[2].editWidget.auto_update = true;
 	
 	format_single = ["Single image", "Image sequence", "Animation"];
 	format_array  = ["Multiple images", "Image sequences", "Animations"];
@@ -114,7 +114,8 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		["%f",  "Frame"],
 		["%i",  "Array index"],
 	];
-	export_template = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { #region
+	
+	export_template = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		var _tx = _x + ui(10);
 		var _ty = _y;
 		var _tw = _w - ui(8);
@@ -183,7 +184,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		}
 		
 		return hh;
-	}); #endregion
+	});
 	
 	input_display_list = [
 		["Export",		false], 0, 1, 2, export_template, 16, 
@@ -209,6 +210,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		if(!file_exists_empty(webp))    noti_warning($"No webp detected at {webp}, please make sure the installation is complete and webp path is set properly in preference.");
 		if(!file_exists_empty(gifski))  noti_warning($"No gifski detected at {gifski}, please make sure the installation is complete and gifski path is set properly in preference.");
 		if(!file_exists_empty(ffmpeg))  noti_warning($"No FFmpeg detected at {ffmpeg}, please make sure the installation is complete and FFmpeg path is set properly in preference.");
+		
 	} else if(OS == os_macosx) {
 		var check_convert = ExecutedProcessReadFromStandardOutput(shell_execute("convert", ""));
 		if(string_pos(check_convert, "not found")) noti_warning($"No ImageMagick installed, please install imagemagick with homebrew or use the provided 'mac-libraries-installer.command'.");
@@ -226,7 +228,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		ffmpeg    = _opt + "ffmpeg";
 	}
 	
-	static onValueUpdate = function(_index) { #region
+	static onValueUpdate = function(_index) {
 		var form = getInputData(3);
 		
 		if(_index == 3) {
@@ -258,9 +260,9 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				case ".webp" : inputs[9].setValue(1); break;
 			}
 		}
-	} #endregion
+	}
 	
-	static extensionCheck = function() { #region
+	static extensionCheck = function() {
 		var _path = getInputData(1);
 		var _ext  = filename_ext(_path);
 			
@@ -283,9 +285,9 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				inputs[9].setValue(1);
 				break;
 		}
-	} #endregion
+	}
 	
-	static renderWebp = function(temp_path, target_path) { #region
+	static renderWebp = function(temp_path, target_path) {
 		var _path  = file_find_first(temp_path + "*.png", 0);
 		var frames = [];
 		
@@ -315,9 +317,9 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		render_process_id = shell_execute_async(webp, cmd, self); 
 		render_type       = "webp";
 		render_target     = target_path;
-	} #endregion
+	}
 	
-	static renderGif = function(temp_path, target_path) { #region
+	static renderGif = function(temp_path, target_path) {
 		var loop = getInputData( 5);
 		var opti = getInputData( 6);
 		var fuzz = getInputData( 7);
@@ -338,9 +340,9 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		render_process_id = shell_execute_async(converter, shell_cmd, self);
 		render_type       = "gif";
 		render_target     = target_path;
-	} #endregion
+	}
 	 
-	static renderMp4 = function(temp_path, target_path) { #region
+	static renderMp4 = function(temp_path, target_path) {
 		var rate = getInputData( 8);
 		var qual = getInputData(10); qual = clamp(qual, 0, 51);
 		if(rate == 0) rate = 1;
@@ -356,9 +358,9 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		render_process_id = shell_execute_async(ffmpeg, shell_cmd, self);
 		render_type       = "mp4";
 		render_target     = target_path;
-	} #endregion
+	}
 	 
-	static renderApng = function(temp_path, target_path) { #region
+	static renderApng = function(temp_path, target_path) {
 		var rate = getInputData( 8);
 		if(rate == 0) rate = 1;
 		
@@ -373,9 +375,9 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		render_process_id = shell_execute_async(ffmpeg, shell_cmd, self);
 		render_type       = "apng";
 		render_target     = target_path;
-	} #endregion
+	}
 	
-	static pathString = function(path, index = 0, _array = false) { #region
+	static pathString = function(path, index = 0, _array = false) {
 		var suff = getInputData( 2);
 		var form = getInputData( 3);
 		var strt = getInputData(11);
@@ -384,83 +386,103 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		var s = _array? [] : "";
 		var i = 1;
-		var ch, ch_s;
 		var len = string_length(suff);
+		var ch, cmd, cmx, par, eli, val, _txt;
 		
 		while(i <= len) {
 			ch = string_char_at(suff, i);
 				
 			if(ch == "%") {
 				i++;
-				var res = false, str = "";
-					
+				
+				par  = "";
+				cmd  = "";
+				cmx  = "";
+				_txt = "";
+				
+				eli = 0;
+				val = 0;
+				
 				do {
-					ch_s = string_char_at(suff, i);
-					switch(ch_s) {
-						case "f" :
-							var _txt = "";
-							var float_str = string_digits(str);
-							if(float_str != "") {
-								var float_val = string_digits(float_str);
-								var str_val = max(float_val - string_length(string(CURRENT_FRAME + 1 + strt)), 0);
-								repeat(str_val)
-									_txt += "0";
-							}
-							
-							_txt += string(CURRENT_FRAME + 1 + strt);
-							if(_array)	array_push(s, [ "f", _txt ]);
-							else		s += _txt;
-							res = true;
-							break;
-						case "i" :
-							var _txt = "";
-							var float_str = string_digits(str);
-							if(float_str != "") {
-								var float_val = string_digits(float_str);
-								var str_val = max(float_val - string_length(string(index)), 0);
-								repeat(str_val)
-									_txt += "0";
-							}
-							
-							_txt += string(index);
-							if(_array)	array_push(s, [ "i", _txt ]);
-							else		s += _txt;
-							res = true;
-							break;
-						case "d" : 
-							var dir  = filename_dir(path) + "/";
-							var _txt = "";
-							
-							var float_str = string_digits(str);
-							if(float_str != "") {
-								var float_val = toNumber(string_digits(float_str)) + 1;
-								var dir_s = "";
-								var sep   = string_splice(dir, "/");
-								
-								for(var j = 0; j < array_length(sep) - float_val; j++)
-									dir_s += sep[j] + "/";
-								_txt += dir_s;
-							} else 
-								_txt += dir;
-							
-							if(_array)	array_push(s, [ "d", _txt ]);
-							else		s += _txt;
-							res = true;
-							break;
-						case "n" : 
-							var ext  = filename_ext(path);
-							var _txt = string_replace(filename_name(path), ext, "");
-							
-							if(_array)	array_push(s, [ "n", _txt ]);
-							else		s += _txt;
-							res = true;
-							break;
-						default :
-							str += ch_s;
-					}
+					var _rawc = string_char_at(suff, i++);
+					
+						 if(_rawc == "{") eli++;
+					else if(_rawc == "}") {
+						eli--;
 						
-					i++;
-				} until(i > string_length(suff) || res);
+						if(eli == 0) {
+							cmx = string_trim(cmx, ["{", "}"]);
+							cmd = string_letters(cmx);
+							break;
+						}
+					}
+					
+					if(eli) {
+						cmx += _rawc;
+					} else {
+						if(string_letters(_rawc) == "")
+							par += _rawc;
+						else {
+							cmd = _rawc;
+							break;
+						}
+					}
+				} until(i > len);
+				
+				par = toNumber(par);
+				
+				switch(cmd) {
+					case "f" :
+					case "i" :
+						
+						switch(cmd) {
+							case "f": val = CURRENT_FRAME + 1 + strt; break;
+							case "i": val = index; break;
+						}
+						
+						if(cmx != "") {
+							cmx = string_replace_all(cmx, "f", string(CURRENT_FRAME + 1 + strt));
+							cmx = string_replace_all(cmx, "i", string(index));
+							
+							val = evaluateFunction(cmx);
+						}
+						
+						val = string(val);
+						
+						if(par) {
+							var str_val = max(par - string_length(val), 0);
+							repeat(str_val) _txt += "0";
+						}
+						
+						_txt += val;
+						if(_array)	array_push(s, [ cmd, _txt ]);
+						else		s += _txt;
+						break;
+						
+					case "d" : 
+						var dir  = filename_dir(path) + "/";
+						
+						if(par) {
+							var dir_s = "";
+							var sep   = string_splice(dir, "/");
+							
+							for(var j = 0; j < array_length(sep) - par; j++)
+								dir_s += sep[j] + "/";
+							_txt += dir_s;
+						} else 
+							_txt += dir;
+						
+						if(_array)	array_push(s, [ "d", _txt ]);
+						else		s += _txt;
+						break;
+						
+					case "n" : 
+						_txt = filename_name_only(path);
+						
+						if(_array)	array_push(s, [ "n", _txt ]);
+						else		s += _txt;
+						break;
+				}
 			} else {
 				if(_array)	array_push(s, ch);
 				else		s += ch;
@@ -475,9 +497,9 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		else		s += _ext;
 		
 		return s;
-	} #endregion
+	}
 	
-	static save_surface = function(_surf, _path) { #region
+	static save_surface = function(_surf, _path) {
 		var form = getInputData(3);
 		// print($">>>>>>>>>>>>>>>>>>>> save surface {_surf} - {_path} <<<<<<<<<<<<<<<<<<<<");
 		
@@ -535,9 +557,9 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		}
 		
 		return _pathOut;
-	} #endregion
+	}
 	
-	static export = function(log = true) { #region
+	static export = function(log = true) {
 		// print($">>>>>>>>>>>>>>>>>>>> export {CURRENT_FRAME} <<<<<<<<<<<<<<<<<<<<");
 		
 		exportLog = log;
@@ -616,9 +638,9 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		}
 		
 		// print($">>>>>>>>>>>>>>>>>>>> export {CURRENT_FRAME} complete <<<<<<<<<<<<<<<<<<<<");
-	} #endregion
+	}
 	
-	static renderCompleted = function() { #region
+	static renderCompleted = function() {
 		var surf = getInputData( 0);
 		var path = getInputData( 1);
 		var suff = getInputData( 2);
@@ -677,7 +699,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		updatedOutTrigger.setValue(true);
 		CLI_EXPORT_AMOUNT++;
-	} #endregion
+	}
 	
 	insp1UpdateTooltip   = "Export";
 	insp1UpdateIcon      = [ THEME.sequence_control, 1, COLORS._main_value_positive ];
@@ -685,7 +707,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	insp2UpdateTooltip = "Export All";
 	insp2UpdateIcon    = [ THEME.play_all, 0, COLORS._main_value_positive ];
 	
-	static onInspector1Update = function(_fromValue = false) { #region
+	static onInspector1Update = function(_fromValue = false) {
 		if(IS_RENDERING) return;
 		
 		if(_fromValue) {
@@ -695,14 +717,14 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		if(isInLoop())	RENDER_ALL
 		else			doInspectorAction();
-	} #endregion
+	}
 	
-	static onInspector2Update = function(_fromValue = false) { #region
+	static onInspector2Update = function(_fromValue = false) {
 		if(IS_RENDERING) return;
 		exportAll(); 
-	} #endregion
+	}
 	
-	static doInspectorAction = function() { #region
+	static doInspectorAction = function() {
 		if(!IS_CMD && (LOADING || APPENDING)) return;
 		
 		var path = getInputData(1);
@@ -727,9 +749,9 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		if(directory_exists(directory))
 			directory_destroy(directory);
 		directory_create(directory);
-	} #endregion
+	}
 	
-	static step = function() { #region
+	static step = function() {
 		insp1UpdateActive  = !IS_RENDERING;
 		insp2UpdateActive  = !IS_RENDERING;
 		
@@ -825,9 +847,9 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				if(IS_CMD) array_remove(PROGRAM_ARGUMENTS._exporting, node_id);
 			}
 		}
-	} #endregion
+	}
 	
-	static update = function(frame = CURRENT_FRAME) { #region
+	static update = function(frame = CURRENT_FRAME) {
 		var anim = getInputData(3);
 		
 		if(anim == NODE_EXPORT_FORMAT.single) {
@@ -846,15 +868,15 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		if(IS_LAST_FRAME && anim == NODE_EXPORT_FORMAT.animation)
 			renderCompleted();
-	} #endregion
+	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		graph_preview_alpha = 1;
 		if(render_process_id != 0) {
 			graph_preview_alpha = 0.5;
 			draw_sprite_ui(THEME.loading, 0, xx + w * _s / 2, yy + h * _s / 2, _s, _s, current_time / 2, COLORS._main_icon, 1);
 		}
-	} #endregion
+	}
 	
 	static doApplyDeserialize = function() { onValueUpdate(3); }
 }
