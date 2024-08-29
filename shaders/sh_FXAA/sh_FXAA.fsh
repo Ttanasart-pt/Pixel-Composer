@@ -69,5 +69,9 @@ vec4 textureFXAA(sampler2D tex, vec2 uv) {
 }
 
 void main() {
-    gl_FragColor = textureFXAA( gm_BaseTexture, v_vTexcoord );
+	vec4 base = texture2D(   gm_BaseTexture, v_vTexcoord );
+	vec4 fxaa = textureFXAA( gm_BaseTexture, v_vTexcoord );
+	
+    gl_FragData[0] = fxaa;
+    gl_FragData[1] = vec4(abs(base.rgb - fxaa.rgb), 1.);
 }
