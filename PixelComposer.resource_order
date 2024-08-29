@@ -1299,6 +1299,7 @@
     {"name":"pcx_parse","order":3,"path":"scripts/pcx_parse/pcx_parse.yy",},
     {"name":"pcx_server","order":2,"path":"scripts/pcx_server/pcx_server.yy",},
     {"name":"perlin_noise","order":5,"path":"scripts/perlin_noise/perlin_noise.yy",},
+    {"name":"png_reader","order":9,"path":"scripts/png_reader/png_reader.yy",},
     {"name":"point_direction_positive","order":4,"path":"scripts/point_direction_positive/point_direction_positive.yy",},
     {"name":"point_rect_overlap","order":2,"path":"scripts/point_rect_overlap/point_rect_overlap.yy",},
     {"name":"point_rotate","order":1,"path":"scripts/point_rotate/point_rotate.yy",},

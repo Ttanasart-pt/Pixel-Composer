@@ -45,18 +45,14 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	array_push(attributeEditors, [ "File Watcher", function() { return attributes.file_checker; }, 
 		new checkBox(function() { attributes.file_checker = !attributes.file_checker; }) ]);
 	
-	on_drop_file = function(path) {
+	static on_drop_file = function(path) {
 		inputs[0].setValue(path);
 		
-		if(updatePaths(path)) {
-			doUpdate();
-			return true;
-		}
-		
+		if(updatePaths(path)) { doUpdate(); return true; }
 		return false;
 	}
 	
-	function createSprite(path) {
+	static createSprite = function(path) {
 		if(!file_exists(path)) 
 			return noone;
 		
@@ -69,7 +65,9 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			case ".jpeg":
 			case ".gif":
 				setDisplayName(_name);
-				var _spr = sprite_add(path, 1, false, false, 0, 0);
+				
+				var _real_path = sprite_path_check_depth(path);
+				var _spr = sprite_add(_real_path, 1, false, false, 0, 0);
 				
 				if(_spr == -1) {
 					var _txt = $"Image node: File not a valid image.";
@@ -84,11 +82,8 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		return noone;
 	}
 	
-	function updatePaths(path) {
-		
-		if(sprite_exists(spr))
-			sprite_delete(spr);
-		
+	static updatePaths = function(path) {
+		if(sprite_exists(spr)) sprite_delete(spr);
 		spr = createSprite(path);
 	}
 	
@@ -134,29 +129,28 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		outputs[0].setValue(_outsurf);
 		
-		#region splice
-			if(!attributes.check_splice) return;
-			attributes.check_splice = false;
+		if(!attributes.check_splice) return;
+		attributes.check_splice = false;
+	
+		//////////////////////////////////////////////// SPLICE ////////////////////////////////////////////////
+	
+		if(LOADING || APPENDING) return;
+		if(string_pos("strip", display_name) == 0) return;
 		
-			if(LOADING || APPENDING) return;
-			if(string_pos("strip", display_name) == 0) return;
+		var sep_pos = string_pos("strip", display_name) + 5;
+		var sep     = string_copy(display_name, sep_pos, string_length(display_name) - sep_pos + 1);
+		var amo		= toNumber(string_digits(sep));
+	
+		if(amo == 0) return;
 		
-			var sep_pos = string_pos("strip", display_name) + 5;
-			var sep     = string_copy(display_name, sep_pos, string_length(display_name) - sep_pos + 1);
-			var amo		= toNumber(string_digits(sep));
-		
-			if(amo == 0) return;
-			
-			var ww = sprite_get_width(spr) / amo;
-			var hh = sprite_get_height(spr);
-					
-			var _splice = nodeBuild("Node_Image_Sheet", x + w + 64, y);
-			_splice.inputs[0].setFrom(outputs[0], false);
-			_splice.inputs[1].setValue([ ww, hh ]);
-			_splice.inputs[2].setValue(amo);
-			_splice.inputs[3].setValue([ amo, 1 ]);
-			
-		#endregion
+		var ww = sprite_get_width(spr) / amo;
+		var hh = sprite_get_height(spr);
+				
+		var _splice = nodeBuild("Node_Image_Sheet", x + w + 64, y);
+		_splice.inputs[0].setFrom(outputs[0], false);
+		_splice.inputs[1].setValue([ ww, hh ]);
+		_splice.inputs[2].setValue(amo);
+		_splice.inputs[3].setValue([ amo, 1 ]);
 	}
 	
 	static dropPath = function(path) { 

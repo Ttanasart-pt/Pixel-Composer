@@ -83,7 +83,7 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	array_push(attributeEditors, [ "File Watcher", function() { return attributes.file_checker; }, 
 		new checkBox(function() { attributes.file_checker = !attributes.file_checker; }) ]);
 	
-	on_drop_file = function(path) { #region
+	on_drop_file = function(path) {
 		if(directory_exists(path)) {
 			with(dialogCall(o_dialog_drag_folder, WIN_W / 2, WIN_H / 2)) {
 				dir_paths = path;
@@ -101,9 +101,9 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		}
 		
 		return false;
-	} #endregion
+	}
 	
-	function updatePaths(paths = path_current) { #region
+	function updatePaths(paths = path_current) {
 		if(!is_array(paths) && ds_exists(paths, ds_type_list))
 			paths = ds_list_to_array(paths);
 		
@@ -128,7 +128,8 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				case ".png"	 :
 				case ".jpg"	 :
 				case ".jpeg" :
-					var _spr = sprite_add(_path, 1, false, false, 0, 0);
+					var _real_path = sprite_path_check_depth(path);
+					var _spr = sprite_add(_real_path, 1, false, false, 0, 0);
 					
 					if(_spr == -1) {
 						var _txt = $"Image node: File not a valid image.";
@@ -143,7 +144,7 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		}
 		
 		return true;
-	} #endregion
+	}
 	
 	insp1UpdateTooltip  = __txt("Refresh");
 	insp1UpdateIcon     = [ THEME.refresh_icon, 1, COLORS._main_value_positive ];

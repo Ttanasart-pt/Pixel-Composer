@@ -1922,6 +1922,7 @@
     {"id":{"name":"pcx_parse","path":"scripts/pcx_parse/pcx_parse.yy",},},
     {"id":{"name":"pcx_server","path":"scripts/pcx_server/pcx_server.yy",},},
     {"id":{"name":"perlin_noise","path":"scripts/perlin_noise/perlin_noise.yy",},},
+    {"id":{"name":"png_reader","path":"scripts/png_reader/png_reader.yy",},},
     {"id":{"name":"point_direction_positive","path":"scripts/point_direction_positive/point_direction_positive.yy",},},
     {"id":{"name":"point_rect_overlap","path":"scripts/point_rect_overlap/point_rect_overlap.yy",},},
     {"id":{"name":"point_rotate","path":"scripts/point_rotate/point_rotate.yy",},},

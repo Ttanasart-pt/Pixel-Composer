@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"png_reader",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"png_reader",
+  "parent":{
+    "name":"importers",
+    "path":"folders/functions/importers.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

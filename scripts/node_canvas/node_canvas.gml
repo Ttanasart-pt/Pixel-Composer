@@ -1161,7 +1161,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	static loadImagePath = function(path, live = false) {
 		if(!file_exists_empty(path)) return noone;
 		
-		var _spr = sprite_add(path, 0, 0, 0, 0, 0);
+		var _spr = sprite_add(sprite_path_check_depth(path), 0, 0, 0, 0, 0);
 		if(_spr == -1) return noone;
 		
 		var _sw = sprite_get_width(_spr);
@@ -1194,7 +1194,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		if(tool_selection.is_selected)
 			tool_selection.apply();
 		
-		var _spr = sprite_add(path, 0, 0, 0, 0, 0);
+		var _spr = sprite_add(sprite_path_check_depth(path), 0, 0, 0, 0, 0);
 		if(_spr == -1) return noone;
 		
 		var _sw = sprite_get_width(_spr);
