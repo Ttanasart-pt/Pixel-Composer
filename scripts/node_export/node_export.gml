@@ -108,11 +108,12 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	outputs[0] = nodeValue_Output("Preview", self, VALUE_TYPE.surface, noone);
 	
 	template_guide = [
-		["%d",  "Directory"],
-		["%1d", "Goes up 1 level"],
-		["%n",  "File name"],
-		["%f",  "Frame"],
-		["%i",  "Array index"],
+		["%d",     "Directory"],
+		["%1d",    "Goes up 1 level"],
+		["%n",     "File name"],
+		["%f",     "Frame"],
+		["%i",     "Array index"],
+		["%{i+1}", "Array index + 1"],
 	];
 	
 	export_template = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {

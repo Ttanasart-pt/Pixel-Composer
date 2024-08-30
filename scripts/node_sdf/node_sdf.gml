@@ -1,13 +1,6 @@
 function Node_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "SDF";
 	
-	uniform_sdf_dim = shader_get_uniform(sh_sdf, "dimension");
-	uniform_sdf_stp = shader_get_uniform(sh_sdf, "stepSize");
-	uniform_sdf_sid = shader_get_uniform(sh_sdf, "side");
-	
-	uniform_dst_sid = shader_get_uniform(sh_sdf_dist, "side");
-	uniform_dst_dst = shader_get_uniform(sh_sdf_dist, "max_distance");
-	
 	newInput(0, nodeValue_Surface("Surface in", self));
 	
 	newInput(1, nodeValue_Bool("Active", self, true));
@@ -18,21 +11,29 @@ function Node_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 	newInput(3, nodeValue_Float("Max distance", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 2, 0.01 ] });
 	
+	newInput(4, nodeValue_Bool("Keep Alpha", self, false));
+	
+	newInput(5, nodeValue_Bool("Invert", self, false));
+	
 	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 1,
 		["Surfaces", false], 0, 
 		["SDF",		 false], 2, 3, 
+		["Render",	 false], 4, 5, 
 	]
 	
 	attribute_surface_depth();
 	
 	temp_surface = [ surface_create(1, 1), surface_create(1, 1) ];
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var inSurf = _data[0];
 		var _side  = _data[2];
 		var _dist  = _data[3];
+		var _alph  = _data[4];
+		var _invt  = _data[5];
+		
 		var sw	   = surface_get_width_safe(inSurf);
 		var sh	   = surface_get_height_safe(inSurf);
 		var _n	   = max(sw, sh);
@@ -55,19 +56,24 @@ function Node_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 			bg = !bg;
 			
 			surface_set_shader(temp_surface[bg], sh_sdf);
-				shader_set_uniform_f(uniform_sdf_dim, _n, _n );
-				shader_set_uniform_f(uniform_sdf_stp, stepSize);
-				shader_set_uniform_i(uniform_sdf_sid, _side);
+				shader_set_f("dimension", _n, _n);
+				shader_set_f("stepSize",  stepSize);
+				shader_set_i("side",     _side);
+				
 				draw_surface_safe(temp_surface[!bg]);
 			surface_reset_shader();
 		}
 		
 		surface_set_shader(_outSurf, sh_sdf_dist);
-			shader_set_uniform_i(uniform_dst_sid, _side);
-			shader_set_uniform_f(uniform_dst_dst, _dist);
+			shader_set_surface("original", inSurf);
+			shader_set_i("side",         _side);
+			shader_set_f("max_distance", _dist);
+			shader_set_i("alpha",        _alph);
+			shader_set_i("invert",       _invt);
+			
 			draw_surface_safe(temp_surface[bg]);
 		surface_reset_shader();
 		
 		return _outSurf;
-	} #endregion
+	}
 }

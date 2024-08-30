@@ -68,7 +68,7 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 		}
 	#endregion
 	
-	static drawGizmoPosition = function(index, object, _vpos, active, params, _mx, _my, _snx, _sny, _panel) { #region
+	static drawGizmoPosition = function(index, object, _vpos, active, params, _mx, _my, _snx, _sny, _panel) {
 		#region ---- main ----
 			var _pos  = inputs[index].getValue(,,, true);
 			var _qrot = object == noone? new BBMOD_Quaternion() : object.transform.rotation;
@@ -278,9 +278,9 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 			drag_val = _pos;
 			drag_original = new __vec3(_pos);
 		} #endregion
-	} #endregion
+	}
 	
-	static drawGizmoRotation = function(index, object, _vpos, active, params, _mx, _my, _snx, _sny, _panel) { #region
+	static drawGizmoRotation = function(index, object, _vpos, active, params, _mx, _my, _snx, _sny, _panel) {
 		#region ---- main ----
 			var _rot  = inputs[index].getValue();
 			var _qrot = object == noone? new BBMOD_Quaternion() : object.transform.rotation;
@@ -389,9 +389,9 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 			
 			drag_rot_axis = undefined;
 		} #endregion
-	} #endregion
+	}
 	
-	static drawGizmoScale = function(index, object, _vpos, active, params, _mx, _my, _snx, _sny, _panel) { #region
+	static drawGizmoScale = function(index, object, _vpos, active, params, _mx, _my, _snx, _sny, _panel) {
 		tool_attribute.context = 0;
 		#region ---- main ----
 			var _sca  = inputs[index].getValue(,,, true);
@@ -581,7 +581,7 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 			drag_val = [ _sca[0], _sca[1], _sca[2] ];
 			drag_original = new __vec3(_sca);
 		} #endregion
-	} #endregion
+	}
 	
 	static drawOverlay3D = function(active, params, _mx, _my, _snx, _sny, _panel) { 
 		var _rot = inputs[1].display_data.angle_display;
@@ -610,7 +610,7 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 	
 	static onDrawOverlay3D = function(active, params, _mx, _my, _snx, _sny, _panel) {}
 	
-	static setTransform = function(object, _data) { #region
+	static setTransform = function(object, _data) {
 		if(object == noone) return;
 		var _pos = _data[0];
 		var _rot = _data[1];
@@ -632,9 +632,9 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 		object.transform.scale.set(		_sca[0], _sca[1], _sca[2]);
 		
 		return object;
-	} #endregion
+	}
 		
-	static getObject = function(index, class = object_class) { #region
+	static getObject = function(index, class = object_class) {
 		var _obj = array_safe_get_fast(cached_object, index, noone);
 		
 		if(_obj == noone) {
@@ -646,7 +646,7 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 		
 		cached_object[index] = _obj;
 		return _obj;
-	} #endregion
+	}
 	
 	static getPreviewObjects		= function() { return [ getPreviewObject(), gizmo ]; }
 	static getPreviewObjectOutline  = function() { return [ getPreviewObject(), gizmo ]; }

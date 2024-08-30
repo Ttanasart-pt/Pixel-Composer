@@ -1,10 +1,11 @@
-//
-// Simple passthrough fragment shader
-//
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
+uniform sampler2D original;
+
 uniform int side;
+uniform int alpha;
+uniform int invert;
 uniform float max_distance;
 
 void main() {
@@ -21,5 +22,10 @@ void main() {
 		return;
 	}
 	
-    gl_FragColor = vec4(vec3(dist), 1.);
+	float aa = 1.;
+	
+	if(alpha == 1)  aa = texture2D( original, v_vTexcoord ).a;
+	if(invert == 1) dist = 1. - dist;
+	
+    gl_FragColor = vec4(vec3(dist), aa);
 }
