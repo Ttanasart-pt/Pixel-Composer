@@ -86,8 +86,9 @@ function __part(_node) : __particleObject() constructor {
 	scx_history = [];
 	scy_history = [];
 	
-	follow	= false;
-	rot_s	= 0;
+	follow 	 = false;
+	rot_base = 0;
+	rot_s	 = 0;
 	
 	path      = noone;
 	pathIndex = 0;
@@ -131,16 +132,16 @@ function __part(_node) : __particleObject() constructor {
 	
 	frame = 0;
 	
-	static reset = function() { #region
+	static reset = function() {
 		INLINE
 		
 		surf  = noone;
 		
 		prevx  = undefined;
 		prevy  = undefined;
-	} #endregion
+	}
 	
-	static create = function(_surf, _x, _y, _life) { #region
+	static create = function(_surf, _x, _y, _life) {
 		INLINE
 		
 		active = true;
@@ -165,9 +166,9 @@ function __part(_node) : __particleObject() constructor {
 		scy_history   = array_create(life);
 		blend_history = array_create(life);
 		alp_history   = array_create(life);
-	} #endregion
+	}
 	
-	static setPhysic = function(_sx, _sy, _ac, _g, _gDir, _turn, _turnSpd) { #region
+	static setPhysic = function(_sx, _sy, _ac, _g, _gDir, _turn, _turnSpd) {
 		INLINE
 		
 		speedx  = _sx;
@@ -183,9 +184,9 @@ function __part(_node) : __particleObject() constructor {
 	
 		spVec[0] = point_distance(0, 0, speedx, speedy);
 		spVec[1] = point_direction(0, 0, speedx, speedy);
-	} #endregion
+	}
 	
-	static setWiggle = function(wiggle_maps) { #region
+	static setWiggle = function(wiggle_maps) {
 		INLINE
 		
 		wig_psx = wiggle_maps.wig_psx;
@@ -194,30 +195,31 @@ function __part(_node) : __particleObject() constructor {
 		wig_scx = wiggle_maps.wig_scx;
 		wig_scy = wiggle_maps.wig_scy;
 		wig_dir = wiggle_maps.wig_dir;
-	} #endregion
+	}
 	
-	static setGround = function(_ground, _ground_offset, _ground_bounce, _ground_frict) { #region
+	static setGround = function(_ground, _ground_offset, _ground_bounce, _ground_frict) {
 		INLINE
 		
 		ground			= _ground;
 		ground_y		= y + _ground_offset;
 		ground_bounce	= _ground_bounce;
 		ground_friction	= clamp(1 - _ground_frict, 0, 1);
-	} #endregion
+	}
 	
-	static setTransform = function(_scx, _scy, _sct, _rot, _rots, _follow) { #region
+	static setTransform = function(_scx, _scy, _sct, _rot, _rots, _follow) {
 		INLINE
 		
 		sc_sx = _scx;
 		sc_sy = _scy;
 		sct   = _sct;
 		
-		rot   = _rot;
-		rot_s = _rots;
-		follow = _follow;
-	} #endregion
+		rot_base = _rot;
+		rot      = _rot;
+		rot_s    = _rots;
+		follow   = _follow;
+	}
 	
-	static setDraw = function(_col, _blend, _alp, _fade) { #region
+	static setDraw = function(_col, _blend, _alp, _fade) {
 		INLINE
 		
 		col      = _col;
@@ -225,24 +227,24 @@ function __part(_node) : __particleObject() constructor {
 		alp      = _alp;
 		alp_draw = _alp;
 		alp_fade = _fade;
-	} #endregion
+	}
 	
-	static setPath = function(_path, _pathDiv) { #region
+	static setPath = function(_path, _pathDiv) {
 		INLINE
 		
 		path    = _path;
 		pathDiv = _pathDiv;
-	} #endregion
+	}
 	
-	static kill = function(callDestroy = true) { #region
+	static kill = function(callDestroy = true) {
 		INLINE
 		
 		active = false;
 		if(callDestroy && node.onPartDestroy != noone)
 			node.onPartDestroy(self);
-	} #endregion
+	}
 	
-	static step = function(frame = 0) { #region
+	static step = function(frame = 0) {
 		INLINE
 		trailLife++;
 		
@@ -281,8 +283,10 @@ function __part(_node) : __particleObject() constructor {
 		speedx = lengthdir_x(diss, dirr) + gravX;
 		speedy = lengthdir_y(diss, dirr) + gravY;
 		
-		if(follow)  rot = spVec[1];
-		else        rot += rot_s;
+		rot_base += rot_s;
+		
+		if(follow)  rot = spVec[1] + rot_base;
+		else        rot = rot_base;
 		
 		if(node.onPartStep != noone && step_int > 0 && safe_mod(life, step_int) == 0) 
 			node.onPartStep(self);
@@ -291,7 +295,8 @@ function __part(_node) : __particleObject() constructor {
 		
 		if(prevx != undefined) {
 			spVec[0] = point_distance(prevx, prevy, x, y);
-			spVec[1] = point_direction(prevx, prevy, x, y);
+			if(spVec[0] > 1)
+				spVec[1] = point_direction(prevx, prevy, x, y);
 		}
 		
 		x_history[life_incr] = drawx;
@@ -312,9 +317,9 @@ function __part(_node) : __particleObject() constructor {
 		drawrot += wig_rot.get(seed + life);
 		drawsx  += wig_scy.get(seed + life);
 		drawsy  += wig_scy.get(seed + life);
-	} #endregion
+	}
 	
-	static draw = function(exact, surf_w, surf_h) { #region
+	static draw = function(exact, surf_w, surf_h) {
 		INLINE
 		
 		if(render_type == PARTICLE_RENDER_TYPE.line) {
@@ -462,19 +467,18 @@ function __part(_node) : __particleObject() constructor {
 				
 				break;
 		}
-	} #endregion
+	}
 	
-	static getPivot = function() { #region
+	static getPivot = function() {
 		INLINE
-		
 		return [x, y];
-	} #endregion
+	}
 		
-	static clone = function() { #region
+	static clone = function() {
 		var _p = new __part(node);
 		struct_override(_p, self);
 		return _p;
-	} #endregion
+	}
 }
 
 #region helper

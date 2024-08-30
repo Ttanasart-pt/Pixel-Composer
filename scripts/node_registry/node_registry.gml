@@ -1008,6 +1008,7 @@ function __initNodes() {
 		addNodeObject(animation, "Rate Remap",		s_node_rate_remap,	"Node_Rate_Remap",	[1, Node_Rate_Remap],, "Remap animation to a new framerate.").setVersion(1147);
 		addNodeObject(animation, "Delay",			s_node_delay,		"Node_Delay",		[1, Node_Delay],,      "Delay the animation by fix amount of frames.").setVersion(11640);
 		addNodeObject(animation, "Stagger",			s_node_stagger,		"Node_Stagger",		[1, Node_Stagger],,    "Delay the animation based on array index.").setVersion(11640);
+		addNodeObject(animation, "Revert",			s_node_revert,		"Node_Revert",		[1, Node_Revert],,     "Cache the entire animation and replay backward.").setVersion(1_17_11_0);
 		
 		ds_list_add(animation, "Value");	
 		addNodeObject(animation, "WaveTable",		s_node_wave,		  "Node_Fn_WaveTable",	[1, Node_Fn_WaveTable],, "Create value changing overtime in wave pattern.").setVersion(11720);

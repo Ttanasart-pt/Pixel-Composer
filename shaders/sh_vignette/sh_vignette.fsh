@@ -5,6 +5,7 @@ uniform float exposure;
 uniform float strength;
 uniform float amplitude;
 uniform float smoothness;
+uniform int   light;
 
 void main() {
 	vec2 uv  = v_vTexcoord;
@@ -24,5 +25,8 @@ void main() {
 	vig = clamp(vig, 0., 1.);
 	
 	vec4 samp = texture2D( gm_BaseTexture, v_vTexcoord );
-    gl_FragColor = vec4(samp.rgb * (1. - ((1. - vig) * strength)), samp.a);
+	float str = (1. - ((1. - vig) * strength));
+	
+	if(light == 1) str = str < 0.001? 10000. : 1. / str;
+    gl_FragColor = vec4(samp.rgb * str, samp.a);
 }

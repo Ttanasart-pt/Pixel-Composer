@@ -7,7 +7,7 @@ uniform float dist;
 uniform int	  useMap;
 uniform sampler2D strengthMap;
 
-uniform float alpha_curve[64];
+uniform float alpha_curve[1024];
 uniform int   curve_amount;
 uniform float randomAmount;
 

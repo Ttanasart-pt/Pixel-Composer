@@ -29,7 +29,7 @@ function Node_Cache_Array(_x, _y, _group = noone) : __Node_Cache(_x, _y, _group)
 		enableNodeGroup();
 	}
 	
-	static step = function() { #region
+	static step = function() {
 		if(!cache_loading) return;
 		
 		var _content = cache_content[cache_loading_progress];
@@ -42,9 +42,9 @@ function Node_Cache_Array(_x, _y, _group = noone) : __Node_Cache(_x, _y, _group)
 			cache_loading = false;
 			update();
 		}
-	} #endregion
+	}
 	
-	static update = function() { #region
+	static update = function() {
 		if(cache_loading) return;
 	
 		if(!inputs[0].value_from) return;
@@ -77,22 +77,22 @@ function Node_Cache_Array(_x, _y, _group = noone) : __Node_Cache(_x, _y, _group)
 		outputs[0].setValue(ss);
 		
 		disableNodeGroup();
-	} #endregion
+	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		if(cache_loading) draw_sprite_ui(THEME.loading, 0, xx + w * _s / 2, yy + h * _s / 2, _s, _s, current_time / 2, COLORS._main_icon, 1);
-	} #endregion
+	}
 	
-	static doSerialize = function(_map) { #region
+	static doSerialize = function(_map) {
 		_map.cache = surface_array_serialize(cached_output);
-	} #endregion
+	}
 	
-	static postDeserialize = function() { #region
+	static postDeserialize = function() {
 		refreshCacheGroup();
 		
 		if(!struct_has(load_map, "cache")) return;
 		cache_content			= json_try_parse(load_map.cache);
 		cache_loading_progress  = 0;
 		cache_loading			= true;
-	} #endregion
+	}
 }

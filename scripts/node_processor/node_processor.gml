@@ -245,10 +245,14 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			
 			if(_os == 1) {
 				data = processData(_out[0], inputs_data, 0, 0);
+				if(data == noone) return;
+				
 				outputs[0].setValue(data);
 				
 			} else {
 				data = processData(_out, inputs_data, 0, 0);
+				if(data == noone) return;
+				
 				for(var i = 0; i < _os; i++) outputs[i].setValue(data[i]);
 			}
 			

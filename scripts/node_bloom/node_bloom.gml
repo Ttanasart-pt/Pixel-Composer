@@ -43,30 +43,32 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
+	outputs[1] = nodeValue_Output("Bloom Mask", self, VALUE_TYPE.surface, noone);
+	
 	temp_surface = [ 0 ];
 	
 	attribute_surface_depth();
 	surface_blur_init();
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _typ = getSingleValue(13);
 		var _hov = false;
 		
 		if(_typ == 1) { var hv = inputs[14].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= hv; }
 		
 		return _hov;
-	} #endregion
+	}
 	
-	static step = function() { #region
+	static step = function() {
 		__step_mask_modifier();
 		
 		var _typ = getSingleValue(13);
 		inputs[11].setVisible(_typ == 0);
 		inputs[12].setVisible(_typ == 0);
 		inputs[14].setVisible(_typ == 1);
-	} #endregion
+	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outData, _data, _output_index, _array_index) {
 		var _surf  = _data[0];
 		var _size  = _data[1];
 		var _tole  = _data[2];
@@ -82,6 +84,8 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var _sh = surface_get_height_safe(_surf);
 		
 		temp_surface[0] = surface_verify(temp_surface[0], _sw, _sh);	
+		var _outSurf    = surface_verify(_outData[0], _sw, _sh);
+		var _maskSurf   = surface_verify(_outData[1], _sw, _sh);
 		
 		surface_set_shader(temp_surface[0], sh_bloom_pass);
 			draw_clear_alpha(c_black, 1);
@@ -106,10 +110,14 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			draw_surface_safe(_surf);
 		surface_reset_shader();
 		
+		surface_set_shader(_maskSurf, noone);
+			draw_surface_safe(pass1blur);
+		surface_reset_shader();
+		
 		__process_mask_modifier(_data);
 		_outSurf = mask_apply(_surf, _outSurf, _data[5], _data[6]);
 		_outSurf = channel_apply(_surf, _outSurf, _data[8]);
 		
-		return _outSurf;
+		return [ _outSurf, _maskSurf ];
 	}
 }

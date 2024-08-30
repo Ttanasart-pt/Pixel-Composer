@@ -115,6 +115,8 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	newInput(49, nodeValue_Bool("Stretch Animation", self, false ));
 	
+	newInput(50, nodeValue_Palette("Color by Index", self, [ cola(c_white) ] ));
+	
 	for (var i = 2, n = array_length(inputs); i < n; i++)
 		inputs[i].rejectArray();
 	
@@ -130,7 +132,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		["Rotation",	true],	15, 8, 9, 
 		["Scale",		true],	10, 17, 11, 
 		["Wiggles",		true],	20, 41, 42, 43, 
-		["Color",		true],	12, 28, 13, 14, 
+		["Color",		true],	12, 28, 50, 13, 14, 
 		["Render",		true],	21, 
 	];
 	
@@ -141,10 +143,11 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	parts        = array_create(attributes.part_amount);
 	parts_runner = 0;
 	
-	seed          = 0;
-	spawn_index   = 0;
-	scatter_index = 0;
-	def_surface   = -1;
+	seed            = 0;
+	spawn_index_raw = 0;
+	spawn_index     = 0;
+	scatter_index   = 0;
+	def_surface     = -1;
 	
 	surface_cache = {};
 	
@@ -194,6 +197,8 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		
 		var _color      	= getInputData(12);
 		var _blend      	= getInputData(28);
+		var _color_idx   	= getInputData(50);
+		var _color_idx_len  = array_length(_color_idx);
 		var _alpha      	= getInputData(13);
 		
 		var _arr_type   	= getInputData(22);
@@ -212,7 +217,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		
 		if(array_empty(_inSurf)) return;
 		
-		random_set_seed(seed); seed++;
+		random_set_seed(seed); seed += 1000;
 		var _amo = irandom_range(_spawn_amount[0], _spawn_amount[1]);
 		if(_distrib == 2) _posDist = get_points_from_dist(_dist_map, _amo, seed);
 		
@@ -247,10 +252,12 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 					xx = _spawn_area[0] + _spr.x + _spr.w / 2;
 					yy = _spawn_area[1] + _spr.y + _spr.h / 2;
 					part.atlas = _spr;
+					
 				} else if(_distrib < 2) {
 					var sp = area_get_random_point(_spawn_area, _distrib, _scatter, spawn_index, _amo);
 					xx = sp[0];
 					yy = sp[1];
+					
 				} else if(_distrib == 2) {
 					var sp = array_safe_get_fast(_posDist, i);
 					if(!is_array(sp)) continue;
@@ -258,6 +265,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 					xx = _spawn_area[0] + _spawn_area[2] * (sp[0] * 2 - 1.);
 					yy = _spawn_area[1] + _spawn_area[3] * (sp[1] * 2 - 1.);
 				}
+				
 			} else {
 				xx = _pos[0];
 				yy = _pos[1];
@@ -268,7 +276,8 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			var _rot	 = angle_random_eval(_rotation);
 			var _rot_spd = random_range(_rotation_speed[0], _rotation_speed[1]);
 			
-			var _dirr	= _directCenter? point_direction(_spawn_area[0], _spawn_area[1], xx, yy) : angle_random_eval(_direction);
+			var _dirRand = angle_random_eval(_direction);
+			var _dirr	 = _directCenter? point_direction(_spawn_area[0], _spawn_area[1], xx, yy) + _dirRand : _dirRand;
 			
 			var _velo	= random_range(_velocity[0], _velocity[1]);
 			var _vx		= lengthdir_x(_velo, _dirr);
@@ -281,6 +290,9 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 				
 			var _alp = random_range(_alpha[0], _alpha[1]);
 			var _bld = _blend.eval(random(1));
+			
+			var _clr_ind = array_safe_get(_color_idx, safe_mod(spawn_index, _color_idx_len), cola(c_white));
+			    _bld = colorMultiply(_bld, _clr_ind);
 			
 			part.seed = irandom_range(100000, 999999);
 			part.create(_spr, xx, yy, _lif);
@@ -305,6 +317,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			onSpawn(_time, part);
 			
 			parts_runner = safe_mod(parts_runner + 1, attributes.part_amount);
+			spawn_index_raw++;
 		}
 	}
 	
@@ -344,8 +357,9 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		surface_cache = {};
 		getSurfaceCache();
 		
-		spawn_index   = 0;
-		scatter_index = 0;
+		spawn_index_raw = 0;
+		spawn_index     = 0;
+		scatter_index   = 0;
 		
 		for(var i = 0; i < array_length(parts); i++) {
 			if(!parts[i].active) continue;
@@ -433,12 +447,9 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		var _inSurf = getInputData(0);
 		var _dist   = getInputData(4);
 		var _scatt  = getInputData(24);
-		var _dirAng = getInputData(29);
 		var _turn   = getInputData(34);
 		var _spwTyp = getInputData(16);
 		var _usePth = getInputData(45);
-		
-		inputs[ 6].setVisible(!_dirAng);
 		
 		inputs[24].setVisible(_dist < 2);
 		

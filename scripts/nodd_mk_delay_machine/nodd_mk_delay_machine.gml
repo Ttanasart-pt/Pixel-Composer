@@ -19,11 +19,15 @@ function Node_MK_Delay_Machine(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	newInput(6, nodeValue_Int("Seed", self, seed_random(6)))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[6].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
+	newInput(7, nodeValue_Bool("Loop", self, false));
+	
+	newInput(8, nodeValue_Enum_Scroll("Blend Mode", self, 0, [ "Normal", "Alpha", "Additive" ]));
+	
 	outputs[0] = nodeValue_Output("Surface", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 0,
 		["Delay",	false], 1, 2, 
-		["Render",	false], 3, 5, 6, 4, 
+		["Render",	false], 3, 5, 6, 4, 7, 8, 
 	];
 	
 	insp2UpdateTooltip = "Clear cache";
@@ -45,6 +49,8 @@ function Node_MK_Delay_Machine(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		var _alpC = getInputData(4);
 		var _psel = getInputData(5);
 		var _seed = getInputData(6);
+		var _loop = getInputData(7);
+		var _blnd = getInputData(8);
 		
 		cacheCurrentFrame(_surf);
 		
@@ -62,8 +68,16 @@ function Node_MK_Delay_Machine(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		surface_set_target(_outSurf);
 			DRAW_CLEAR
 			
+			switch(_blnd) {
+				case 0 : BLEND_NORMAL; break;
+				case 1 : BLEND_ALPHA;  break;
+				case 2 : BLEND_ADD;    break;
+			}
+			
 			for( var i = _amo - 1; i >= 0; i-- ) {
 				var _ff = CURRENT_FRAME - i * _frm;
+				if(_loop) _ff = (_ff + TOTAL_FRAMES) % TOTAL_FRAMES;
+				
 				var _s  = array_safe_get_fast(cached_output, _ff);
 				if(!is_surface(_s)) continue;
 				
@@ -77,6 +91,8 @@ function Node_MK_Delay_Machine(_x, _y, _group = noone) : Node(_x, _y, _group) co
 				
 				draw_surface_ext(_s, 0, 0, 1, 1, 0, cc, aa);
 			}
+			
+			BLEND_NORMAL
 		surface_reset_target();
 		
 		outputs[0].setValue(_outSurf);

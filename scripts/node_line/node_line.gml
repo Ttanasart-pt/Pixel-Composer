@@ -158,7 +158,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _wig   = _data[4];
 			var _sed   = _data[5];
 			var _ang   = _data[6];
-			var _pat   = _data[7]; print(_pat);
+			var _pat   = _data[7]; 
 			var _ratio = _data[8];
 			var _shift = _data[9];
 		

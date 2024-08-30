@@ -13,6 +13,8 @@ void main() {
 	vec4 _col1 = texture2D( fore, v_vTexcoord );
 	
 	vec4 res = _col0 + _col1 * opacity;
+	
+	////////// Alpha
 	float bright = dot(_col1.rgb, vec3(0.2126, 0.7152, 0.0722));
 	float aa = _col0.a + bright * opacity;
 	res.a = aa;

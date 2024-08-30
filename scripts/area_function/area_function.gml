@@ -22,21 +22,27 @@ function area_get_random_point(area, distrib = AREA_DISTRIBUTION.area, scatter =
 	var _area_t = array_safe_get_fast(area, 4);
 	var xx = 0, yy = 0;
 	
+	index = safe_mod(index, total);
+	
 	switch(distrib) {
 		case AREA_DISTRIBUTION.area : 
 			if(scatter == AREA_SCATTER.uniform) {
 				if(_area_t == AREA_SHAPE.rectangle) {
+					
 					var _col = ceil(sqrt(total));
 					var _row = ceil(total / _col);
-				
+					
 					var _iwid = _area_w * 2 / _col;
 					var _ihig = _area_h * 2 / _row;
-	
+					
 					var _irow = floor(index / _col);
 					var _icol = safe_mod(index, _col);
-						
+					
 					xx = _area_x - _area_w + (_icol + 0.5) * _iwid;
 					yy = _area_y - _area_h + (_irow + 0.5) * _ihig;
+					
+					//print($"{yy} = {_area_y} - {_area_h} + ({_irow} + 0.5) * {_ihig}")
+					
 				} else {
 					if(index == 0) {
 						xx = _area_x;
@@ -61,10 +67,12 @@ function area_get_random_point(area, distrib = AREA_DISTRIBUTION.area, scatter =
 					xx = _area_x + lengthdir_x(_sr, _sa);
 					yy = _area_y + lengthdir_y(_sr, _sa) / _a;
 				}
+				
 			} else if(scatter == AREA_SCATTER.random) {
 				if(_area_t == AREA_SHAPE.rectangle) {
 					xx = _area_x + random_range(-_area_w, _area_w);
 					yy = _area_y + random_range(-_area_h, _area_h);
+					
 				} else if(_area_t == AREA_SHAPE.elipse) {
 					var rr = random(360);
 					xx = _area_x + lengthdir_x(1, rr) * random(_area_w);
@@ -109,6 +117,7 @@ function area_get_random_point(area, distrib = AREA_DISTRIBUTION.area, scatter =
 					xx = _area_x + lengthdir_x(_area_w, rr);
 					yy = _area_y + lengthdir_y(_area_h, rr);
 				}
+				
 			} else if(scatter == AREA_SCATTER.random) {
 				if(_area_t == AREA_SHAPE.rectangle) {
 					var perimeter = _area_w * 2 + _area_h * 2;
@@ -126,6 +135,7 @@ function area_get_random_point(area, distrib = AREA_DISTRIBUTION.area, scatter =
 						xx = _area_x + _area_w;
 						yy = _area_y + random_range(-_area_h, _area_h);
 					}
+					
 				} else if(_area_t == AREA_SHAPE.elipse) {
 					var rr = random(360);
 					xx = _area_x + lengthdir_x(_area_w, rr);
