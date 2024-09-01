@@ -57,7 +57,7 @@ function NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _no
 			return sArr;
 			
 		} else if (is_surface(val)) 
-			return [ surface_get_width_safe(val), surface_get_height_safe(val) ];
+			return surface_get_dimension(val);
 			
 		return [ 1, 1 ];
 	}

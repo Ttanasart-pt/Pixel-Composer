@@ -1,13 +1,13 @@
-function Node_Vector_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor { #region
+function Node_Vector_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name  = "Vector Split";
 	color = COLORS.node_blend_number;
 	batch_output = false;
+	draw_padding = 4;
 	
 	setDimension(96, 0);
 	
-	draw_padding = 4;
-	
-	newInput(0, nodeValue_Vec4("Vector", self, [ 0, 0, 0, 0 ]))
+	newInput(0, nodeValue("Vector", self, CONNECT_TYPE.input, VALUE_TYPE.float, [ 0, 0, 0, 0 ]))
+		.setDisplay(VALUE_DISPLAY.vector)
 		.setArrayDynamic()
 		.setVisible(true, true);
 	
@@ -31,11 +31,7 @@ function Node_Vector_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	static processData = function(_output, _data, _output_index, _array_index = 0) {
 		var _arr = _data[0];
 		if(!is_array(_arr)) return _arr;
-		
-		if(_output_index < array_length(_arr))
-			return _arr[_output_index];
-			
-		return 0;
+		return array_safe_get(_arr, _output_index, 0);
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
@@ -49,4 +45,4 @@ function Node_Vector_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var ss	 = string_scale(str, bbox.w, bbox.h);
 		draw_text_transformed(bbox.xc, bbox.yc, str, ss, ss, 0);
 	}
-} #endregion
+}
