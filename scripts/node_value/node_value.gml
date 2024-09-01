@@ -245,7 +245,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	/////============= META =============
 	
-	static setDummy = function(get_node, _dummy_undo = -1, _dummy_redo = -1) { #region
+	static setDummy = function(get_node, _dummy_undo = -1, _dummy_redo = -1) {
 		is_dummy  = true;
 		dummy_get = get_node;
 		
@@ -253,47 +253,47 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		dummy_redo = _dummy_redo;
 		
 		return self;
-	} #endregion
+	}
 	
-	static setActive = function(_active, _tooltip) { #region
+	static setActive = function(_active, _tooltip) {
 		INLINE
 		active = _active;
 		active_tooltip = _tooltip;
 		
 		return self;
-	} #endregion
+	}
 	
-	static setWindows = function() { #region
+	static setWindows = function() {
 		INLINE
 		setActive(OS == os_windows, "Not available on MacOS");
 		
 		return self;
-	} #endregion
+	}
 	
 	static setTooltip = function(_tip) { tooltip = _tip; return self; }
 	
-	static nonValidate = function() { #region
+	static nonValidate = function() {
 		validateValue = false;
 		return self;
-	} #endregion
+	}
 	
-	static nonForward = function() { #region
+	static nonForward = function() {
 		forward = false;
 		return self;
-	} #endregion
+	}
 	
 	/////============= NAME =============
 	
-	static getName = function() { #region
+	static getName = function() {
 		if(name_custom) return name;
 		return __txt_junction_name(instanceof(node), connect_type, index, name);
-	} #endregion
+	}
 	
-	static setName = function(_name) { #region
+	static setName = function(_name) {
 		INLINE
 		name = _name;
 		return self;
-	} #endregion
+	}
 	
 	/////============= VALUE ============
 	
@@ -307,7 +307,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return true;
 	}
 	
-	static setDefault = function(vals) { #region
+	static setDefault = function(vals) {
 		if(LOADING || APPENDING) return self;
 		
 		animator.values = [];
@@ -315,17 +315,17 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			array_push(animator.values, new valueKey(vals[i][0], vals[i][1], animator));
 			
 		return self;
-	} #endregion
+	}
 	
-	static resetValue = function() { #region
+	static resetValue = function() {
 		unit.mode = def_unit;
 		setValue(unit.apply(variable_clone(def_val))); 
 		attributes.mapped = false;
 		
 		is_modified = false; 
-	} #endregion
+	}
 	
-	static setUnitRef = function(ref, mode = VALUE_UNIT.constant) { #region
+	static setUnitRef = function(ref, mode = VALUE_UNIT.constant) {
 		express_edit.side_button = unit.triggerButton;
 		display_data.onSurfaceSize = ref;
 		
@@ -343,7 +343,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		cache_value[0]  = false;
 		
 		return self;
-	} #endregion
+	}
 	
 	static setValidator = function(val) {
 		validator = val;
@@ -355,12 +355,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static setArrayDepth   = function(aDepth) { array_depth = aDepth; return self; }
 	static setArrayDynamic = function()       { dynamic_array = true; return self; }
 	
-	static rejectArrayProcess = function() { #region
+	static rejectArrayProcess = function() {
 		process_array = false;
 		return self;
-	} #endregion
+	}
 	
-	static setDropKey = function() { #region
+	static setDropKey = function() {
 		switch(type) {
 			case VALUE_TYPE.integer		: drop_key = "Number"; break;
 			case VALUE_TYPE.float		: drop_key = "Number"; break;
@@ -380,7 +380,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			default: 
 				drop_key = "None";
 		}
-	} setDropKey(); #endregion
+	} setDropKey();
 	
 	mappedJunc  = noone;
 	mapped_vec4 = false;
@@ -425,13 +425,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return self;
 	}
 	
-	static setMapped = function(junc) { #region
+	static setMapped = function(junc) {
 		mappedJunc = junc;
 		isTimelineVisible = function() { INLINE return is_anim && value_from == noone && mappedJunc.attributes.mapped; }
 		return self;
-	} #endregion
+	}
 	
-	static mappableStep = function() { #region
+	static mappableStep = function() {
 		editWidget = mapWidget && attributes.mapped? mapWidget : editWidgetRaw;
 		setArrayDepth(attributes.mapped);
 		
@@ -443,22 +443,22 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			node.refreshNodeDisplay();
 		}
 		
-	} #endregion
+	}
 	
 	/////========== ANIMATION ==========
 	
-	static setAnimable = function(_anim) { #region
+	static setAnimable = function(_anim) {
 		animable = _anim;
 		return self;
-	} #endregion
+	}
 	
-	static isAnimable = function() { #region
+	static isAnimable = function() {
 		if(type == VALUE_TYPE.PCXnode)				 return false;
 		if(display_type == VALUE_DISPLAY.text_array) return false;
 		return animable;
-	} #endregion
+	}
 	
-	static setAnim = function(anim, record = false) { #region
+	static setAnim = function(anim, record = false) {
 		if(is_anim == anim) return;
 		if(record) {
 			recordAction(ACTION_TYPE.custom, function(data) {
@@ -498,7 +498,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			node.inputs[attributes.map_index + 1].setAnim(anim);
 		
 		node.refreshTimeline();
-	} #endregion
+	}
 		
 	/////============ DISPLAY ===========
 	
@@ -985,6 +985,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			case VALUE_TYPE.pathnode :	
 				extract_node = "Node_Path";
 				break;
+				
+			case VALUE_TYPE.any : 
+				editWidget = new outputBox();
+				break;
 		}
 		
 		if(is_struct(display_data) && struct_has(display_data, "side_button") && editWidget.side_button == noone)
@@ -1062,10 +1066,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	/////============= CACHE ============
 	
-	static uncache = function() { #region
+	static uncache = function() {
 		use_cache = false;
 		return self;
-	} #endregion
+	}
 	
 	static resetCache = function() { cache_value[0] = false; }
 	
@@ -1624,10 +1628,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	/////=========== CONNECT ===========
 	
-	static rejectConnect = function() { #region
+	static rejectConnect = function() {
 		auto_connect = false;
 		return self;
-	} #endregion
+	}
 	
 	static isConnectable = function(_valueFrom, checkRecur = true, _log = false) { 
 		
@@ -1759,21 +1763,21 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return false;
 	}
 	
-	static removeFromLoop = function(_remove_list = true) { #region
+	static removeFromLoop = function(_remove_list = true) {
 		if(value_from_loop != noone)
 			value_from_loop.destroy();
 		
 		PROJECT.modified = true;
-	} #endregion
+	}
 	
-	static checkConnection = function(_remove_list = true) { #region
+	static checkConnection = function(_remove_list = true) {
 		if(value_from == noone) return;
 		if(value_from.node.active) return;
 		
 		removeFrom(_remove_list);
-	} #endregion
+	}
 	
-	static searchNodeBackward = function(_node) { #region
+	static searchNodeBackward = function(_node) {
 		if(node == _node) return true;
 		for(var i = 0; i < array_length(node.inputs); i++) {
 			var _in = node.inputs[i].value_from;
@@ -1781,11 +1785,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				return true;
 		}
 		return false;
-	} #endregion
+	}
 	
 	static hasJunctionFrom = function() { INLINE return value_from != noone || value_from_loop != noone; }
 	
-	static getJunctionTo = function() { #region
+	static getJunctionTo = function() {
 		var _junc_to = [];
 		
 		for(var i = 0; i < array_length(value_to); i++) {
@@ -1797,7 +1801,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		return _junc_to;
-	} #endregion
+	}
 	
 	/////============= DRAW =============
 	
@@ -1815,7 +1819,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		color_display = type == VALUE_TYPE.action? #8fde5d : draw_fg;
 	} updateColor();
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(type != VALUE_TYPE.integer && type != VALUE_TYPE.float) return -1;
 		if(value_from != noone) return -1;
 		if(expUse) return -1;
@@ -1855,7 +1859,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		return -1;
-	} #endregion
+	}
 	
 	static drawJunction_fast = function(_s, _mx, _my) {
 		INLINE
@@ -1995,7 +1999,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return drawJuncConnection(value_from, self, params);
 	}
 	
-	static drawConnectionMouse = function(params, _mx, _my, target) { #region
+	static drawConnectionMouse = function(params, _mx, _my, target) {
 		var ss = params.s;
 		var aa = params.aa; // 1
 		
@@ -2053,32 +2057,32 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				}
 				break;
 		}
-	} #endregion
+	}
 	
 	/////========== EXPRESSION ==========
 	
-	static setUseExpression = function(useExp) { #region
+	static setUseExpression = function(useExp) {
 		INLINE
 		if(expUse == useExp) return;
 		expUse = useExp;
 		node.triggerRender();
-	} #endregion
+	}
 	
-	static setExpression = function(_expression) { #region
+	static setExpression = function(_expression) {
 		expUse = true;
 		expression = _expression;
 		expressionUpdate();
-	} #endregion
+	}
 	
-	static expressionUpdate = function() { #region
+	static expressionUpdate = function() {
 		expTree = evaluateFunctionList(expression);
 		resetCache();
 		node.triggerRender();
-	} #endregion
+	}
 	
 	/////=========== SERIALIZE ===========
 	
-	static serialize = function(scale = false, preset = false) { #region
+	static serialize = function(scale = false, preset = false) {
 		var _map = {};
 		
 		_map.visible		= visible;
@@ -2123,9 +2127,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		_map.bypass       = bypass_junc? bypass_junc.visible : false;
 		
 		return _map;
-	} #endregion
+	}
 	
-	static applyDeserialize = function(_map, scale = false, preset = false) { #region
+	static applyDeserialize = function(_map, scale = false, preset = false) {
 		if(_map == undefined) return;
 		if(_map == noone)     return;
 		if(!is_struct(_map))  return;
@@ -2184,14 +2188,14 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		attributeApply();
 		onValidate();
-	} #endregion
+	}
 	
-	static attributeApply = function() { #region
+	static attributeApply = function() {
 		if(struct_has(attributes, "mapped") && attributes.mapped) 
 			mappableStep();
-	} #endregion
+	}
 	
-	static connect = function(log = false) { #region
+	static connect = function(log = false) {
 		//print($"{node} | {con_node} : {con_index}");
 		
 		if(con_node == -1 || con_index == -1)
@@ -2215,38 +2219,40 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(log) log_warning("LOAD", $"[Connect] Reconnecting {node.name} to {_nd.name}", node);
 		
-		     if(con_index == VALUE_TAG.updateInTrigger)  return setFrom(_nd.updatedInTrigger);
-		else if(con_index == VALUE_TAG.updateOutTrigger) return setFrom(_nd.updatedOutTrigger);
-		else if(con_index < _ol) {
+		if(con_index == VALUE_TAG.updateInTrigger)  return setFrom(_nd.updatedInTrigger);
+		if(con_index == VALUE_TAG.updateOutTrigger) return setFrom(_nd.updatedOutTrigger);
+		
+		if(con_index < _ol) {
 			var _set = setFrom(_nd.outputs[con_index], false, true);
 			if(_set) return true;
 			
-				 if(_set == -1) log_warning("LOAD", $"[Connect] Connection conflict {node.name} to {_nd.name} : Not connectable.", node);
+				 if(_set == -1) log_warning("LOAD", $"[Connect] Connection conflict {node.name} to {_nd.name} : Not connectable.",   node);
 			else if(_set == -2) log_warning("LOAD", $"[Connect] Connection conflict {node.name} to {_nd.name} : Condition not met.", node); 
 			
 			return false;
-			
-		} else if(con_index >= 1000) {
+		} 
+		
+		if(con_index >= 1000) { //connect bypass
 			var _inp = array_safe_get_fast(_nd.inputs, con_index - 1000, noone);
 			if(_inp == noone) return false;
 			
 			var _set = setFrom(_inp.bypass_junc, false, true);
-			
 			if(_set) return true;
 			
-				 if(_set == -1) log_warning("LOAD", $"[Connect] Connection conflict {node.name} to {_nd.name} : Not connectable.", node);
-			else if(_set == -2) log_warning("LOAD", $"[Connect] Connection conflict {node.name} to {_nd.name} : Condition not met.", node); 
+				 if(_set == -1) log_warning("LOAD", $"[Connect] Connection conflict {node.name} to {_nd.name} (bypass) : Not connectable.",   node);
+			else if(_set == -2) log_warning("LOAD", $"[Connect] Connection conflict {node.name} to {_nd.name} (bypass) : Condition not met.", node); 
 			
 			return false;
 		}
 		
 		log_warning("LOAD", $"[Connect] Connection conflict {node.name} to {_nd.name} : Output not exist.", node);
+		
 		return false;
-	} #endregion
+	}
 	
 	/////============= MISC =============
 	
-	static extractNode = function(_type = extract_node) { #region
+	static extractNode = function(_type = extract_node) {
 		if(_type == "") return noone;
 		
 		var ext = nodeBuild(_type, node.x, node.y);
@@ -2297,9 +2303,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		ext.doUpdate();
-	} #endregion
+	}
 	
-	static dragValue = function() { #region
+	static dragValue = function() {
 		if(drop_key == "None") return;
 		
 		DRAGGING = { 
@@ -2314,14 +2320,14 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(connect_type == CONNECT_TYPE.input)
 			DRAGGING.from = self;
-	} #endregion
+	}
 	
-	static destroy = function() { #region
+	static destroy = function() {
 		if(error_notification != noone) {
 			noti_remove(error_notification);
 			error_notification = noone;
 		}	
-	} #endregion
+	}
 	
 	static cleanUp = function() {}
 		
@@ -2331,7 +2337,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 
 /////========== FUNCTIONS ==========
 	
-function drawJuncConnection(from, to, params) { #region
+function drawJuncConnection(from, to, params) {
 	#region parameters
 		var log  = params.log;
 		var high = params.highlight;
@@ -2502,4 +2508,4 @@ function drawJuncConnection(from, to, params) { #region
 	#endregion
 		
 	return hovering;
-} #endregion
+}

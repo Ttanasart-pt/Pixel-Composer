@@ -1856,6 +1856,7 @@
     {"id":{"name":"number_function","path":"scripts/number_function/number_function.yy",},},
     {"id":{"name":"obj_reader","path":"scripts/obj_reader/obj_reader.yy",},},
     {"id":{"name":"object_get_depth","path":"scripts/object_get_depth/object_get_depth.yy",},},
+    {"id":{"name":"outputBox","path":"scripts/outputBox/outputBox.yy",},},
     {"id":{"name":"pack_best_fit","path":"scripts/pack_best_fit/pack_best_fit.yy",},},
     {"id":{"name":"pack_bottom_left","path":"scripts/pack_bottom_left/pack_bottom_left.yy",},},
     {"id":{"name":"pack_corner","path":"scripts/pack_corner/pack_corner.yy",},},

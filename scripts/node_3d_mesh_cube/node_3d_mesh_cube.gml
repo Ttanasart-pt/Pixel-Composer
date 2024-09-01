@@ -28,9 +28,7 @@ function Node_3D_Mesh_Cube(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 		["Material",	false], in_mesh + 0, in_mesh + 1, in_mesh + 2, in_mesh + 3, in_mesh + 4, in_mesh + 5, in_mesh + 6, 
 	]
 	
-	static onDrawOverlay3D = function(active, params, _mx, _my, _snx, _sny, _panel) {
-		
-	}
+	static onDrawOverlay3D = function(active, params, _mx, _my, _snx, _sny, _panel) {}
 	
 	static step = function() { 
 		var _mat_side = getInputData(in_mesh + 0);

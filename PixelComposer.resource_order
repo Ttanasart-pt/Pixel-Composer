@@ -1245,6 +1245,7 @@
     {"name":"notification_system","order":7,"path":"scripts/notification_system/notification_system.yy",},
     {"name":"number_function","order":14,"path":"scripts/number_function/number_function.yy",},
     {"name":"obj_reader","order":2,"path":"scripts/obj_reader/obj_reader.yy",},
+    {"name":"outputBox","order":15,"path":"scripts/outputBox/outputBox.yy",},
     {"name":"pack_bottom_left","order":2,"path":"scripts/pack_bottom_left/pack_bottom_left.yy",},
     {"name":"pack_corner","order":3,"path":"scripts/pack_corner/pack_corner.yy",},
     {"name":"pack_shelf","order":1,"path":"scripts/pack_shelf/pack_shelf.yy",},

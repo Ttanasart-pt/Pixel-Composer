@@ -111,6 +111,8 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			}
 		}
 		
+		// w = _typ == VALUE_TYPE.surface? 128 : 96;
+		
 		refreshDynamicInput();
 	}
 	

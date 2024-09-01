@@ -425,7 +425,6 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	
 	static drawParam = function(params) {
 		setParam(params);
-		
 		return draw(params.x, params.y, params.w, params.h, params.data, params.m, params.halign, params.valign);
 	}
 	

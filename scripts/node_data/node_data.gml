@@ -400,6 +400,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static refreshDynamicInput = function() {
+		if(LOADING || APPENDING) return;
+		
 		var _in = [];
 		
 		for( var i = 0; i < input_fix_len; i++ )
@@ -2068,7 +2070,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static _clearCacheForward = function() {
 		if(!isRenderActive()) return;
 		
-		clearCache();
 		var arr = getNextNodesRaw();
 		for( var i = 0, n = array_length(arr); i < n; i++ )
 			arr[i]._clearCacheForward();
@@ -2265,7 +2266,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(anim_timeline && attributes.show_timeline) refreshTimeline();
 	}
 	
-	static inputBalance = function() { //Cross version compatibility for dynamic input nodes
+	static inputBalance = function() { // Cross-version compatibility for dynamic input nodes
 		if(!struct_has(load_map, "data_length")) 
 			return;
 		
@@ -2286,6 +2287,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		for( var i = _dynamic_inputs; i >= 1; i-- ) {
 			var _ind = _input_fix_len + i * _data_length;
+			
 			if(_pad_dyna > 0)
 				repeat(_pad_dyna) array_insert(load_map.inputs, _ind, noone);
 			else
@@ -2295,10 +2297,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var _pad_fix = input_fix_len - _input_fix_len;
 		repeat(_pad_fix) 
 			array_insert(load_map.inputs, _input_fix_len, noone);
-			
 	}
 	
-	static inputGenerate = function() { //Generate input for dynamic input nodes
+	static inputGenerate = function() { // Generate inputs for dynamic input nodes
 		if(createNewInput == noone) 
 			return;
 		

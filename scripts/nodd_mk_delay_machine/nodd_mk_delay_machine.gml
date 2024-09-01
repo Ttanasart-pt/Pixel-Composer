@@ -53,7 +53,6 @@ function Node_MK_Delay_Machine(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		var _blnd = getInputData(8);
 		
 		cacheCurrentFrame(_surf);
-		
 		random_set_seed(_seed);
 		
 		var _sw = surface_get_width_safe(_surf);

@@ -243,6 +243,7 @@
 				case "input" :	
 					map  = node.inputMap;
 					break;
+					
 				case "outputs" :	
 				case "output" :	
 					map  = node.outputMap;

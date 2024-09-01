@@ -1,6 +1,10 @@
 function Node_Interlaced(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Interlace";
 	
+	update_on_frame    = true;
+	use_cache          = CACHE_USE.manual;
+	clearCacheOnChange = false;
+	
 	newInput(0, nodeValue_Surface("Surface in", self));
 	
 	newInput(1, nodeValue_Bool("Active", self, true));
@@ -23,8 +27,6 @@ function Node_Interlaced(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
-	temp_surface = [ ];
-	
 	input_display_list = [ 1, 
 		["Surface", false], 0, 2, 3, 4, 
 		["Effects", false], 7, 8, 9, 
@@ -32,22 +34,28 @@ function Node_Interlaced(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	attribute_surface_depth();
 	
-	static step = function() { #region
-		__step_mask_modifier();
-		
-	} #endregion
+	insp2UpdateTooltip = "Clear cache";
+	insp2UpdateIcon    = [ THEME.cache, 0, COLORS._main_icon ];
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
+	static onInspector2Update = function() { clearCache(); }
+	
+	static step = function() {
+		__step_mask_modifier();
+	}
+	
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _surf = _data[0];
 		var _axis = _data[7];
 		var _size = _data[8];
 		var _invt = _data[9];
 		
 		var _dim  = surface_get_dimension(_surf);
+		var _prev = array_safe_get_fast(cached_output, CURRENT_FRAME - 1, noone);
 		
 		surface_set_shader(_outSurf, sh_interlaced);
-			shader_set_i("useSurf", CURRENT_FRAME >= 1);
-			shader_set_surface("prevFrame", array_safe_get(temp_surface, _array_index));
+			shader_set_i("useSurf", is_surface(_prev));
+			shader_set_surface("prevFrame", _prev);
+			
 			shader_set_2("dimension", _dim);
 			shader_set_i("axis",      _axis);
 			shader_set_i("invert",    _invt);
@@ -56,15 +64,12 @@ function Node_Interlaced(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			draw_surface_safe(_surf);
 		surface_reset_shader();
 		
-		temp_surface[_array_index] = surface_verify(array_safe_get(temp_surface, _array_index), _dim[0], _dim[1]);
-		surface_set_shader(temp_surface[_array_index], noone);
-			draw_surface_safe(_surf);
-		surface_reset_shader();
+		cacheCurrentFrame(_surf);
 		
 		__process_mask_modifier(_data);
 		_outSurf = mask_apply(_data[0], _outSurf, _data[2], _data[3]);
 		_outSurf = channel_apply(_data[0], _outSurf, _data[4]);
 		
 		return _outSurf;
-	} #endregion
+	}
 }
