@@ -660,7 +660,7 @@ function Panel_Animation() : PanelContent() constructor {
         getTimelineContentFolder(PROJECT.timelines);
     } #endregion
     
-    function drawTimeline() { #region // Draw summary
+    function drawTimeline() { // Draw summary
         var bar_x = tool_width + ui(16);
         var bar_y = h - timeline_h - ui(10);
         var bar_w = timeline_w;
@@ -697,13 +697,15 @@ function Panel_Animation() : PanelContent() constructor {
         #endregion
         
         #region lines
-            if(inspecting)
-                inspecting.drawAnimationTimeline(timeline_shift, bar_w, bar_h, timeline_scale);
+            if(inspecting) inspecting.drawAnimationTimeline(timeline_shift, bar_w, bar_h, timeline_scale);
             
-            var _fr = ceil((bar_w / timeline_scale - timeline_shift) / timeline_separate) * timeline_separate;
+            var _stW = timeline_separate * timeline_scale;
+            var _st  = ceil(-timeline_shift / _stW);
+            var _fr  = _st + ceil(bar_w / _stW);
             
-            for(var i = timeline_separate; i <= _fr; i += timeline_separate) {
-                var bar_line_x = i * timeline_scale + timeline_shift;
+            for(var i = _st; i <= _fr; i++) {
+                var bar_frame  = i * timeline_separate;
+                var bar_line_x = bar_frame * timeline_scale + timeline_shift;
                 
                 if(i > TOTAL_FRAMES) draw_set_alpha(0.5);
                 
@@ -711,16 +713,21 @@ function Panel_Animation() : PanelContent() constructor {
                 draw_line(bar_line_x, ui(12), bar_line_x, bar_h - PANEL_PAD);
                     
                 draw_set_text(f_p2, fa_center, fa_bottom, COLORS._main_text_sub);
-                draw_text_add(bar_line_x, ui(16), string(i));
+                draw_text_add(bar_line_x, ui(16), string(bar_frame));
             }
-                
+            
             draw_set_alpha(1);
             
-            var bar_line_x = TOTAL_FRAMES * timeline_scale + timeline_shift;
             draw_set_color(COLORS.panel_animation_end_line);
             draw_set_alpha(0.5);
-            draw_line_width(bar_line_x, 0, bar_line_x, bar_h, 2);
-            draw_set_alpha(1.0);
+            
+                var bar_line_x = TOTAL_FRAMES * timeline_scale + timeline_shift;
+                draw_line_width(bar_line_x, 0, bar_line_x, bar_h, 2);
+                
+                var bar_line_x = timeline_shift;
+                draw_line_width(bar_line_x, 0, bar_line_x, bar_h, 2);
+            
+            draw_set_alpha(1);
             
             if(FRAME_RANGE != noone) {
                 var _fr_x0 = FRAME_RANGE[0] * timeline_scale + timeline_shift - 6;
@@ -783,9 +790,10 @@ function Panel_Animation() : PanelContent() constructor {
             }
             
             if(timeline_dragging) {
-                timeline_shift_to = clamp(timeline_drag_sx + mx - timeline_drag_mx, -max(bar_total_w - bar_w + 32, 0), 0);
-                timeline_shift = timeline_shift_to;
-                dope_sheet_y_to = clamp(timeline_drag_sy + my - timeline_drag_my, -dope_sheet_y_max, 0);
+                timeline_shift_to = timeline_drag_sx + mx - timeline_drag_mx;
+                // timeline_shift_to = min(0, timeline_shift_to);
+                timeline_shift    = timeline_shift_to;
+                dope_sheet_y_to   = clamp(timeline_drag_sy + my - timeline_drag_my, -dope_sheet_y_max, 0);
                     
                 if(mouse_release(mb_middle))
                     timeline_dragging = false;
@@ -820,11 +828,14 @@ function Panel_Animation() : PanelContent() constructor {
                     var mfb = (mx - bar_x - timeline_shift) / timeline_scale;
                     var mfa = (mx - bar_x - timeline_shift) / ui(sca);
                     
-                    timeline_shift_to = clamp(timeline_shift_to - (mfa - mfb) * timeline_scale, -max(bar_total_w - bar_w + 32, 0), 0);
-                    timeline_shift = timeline_shift_to;
+                    timeline_shift_to = timeline_shift_to - (mfa - mfb) * timeline_scale;
+                    // timeline_shift_to = min(0, timeline_shift_to);
+                    timeline_shift    = timeline_shift_to;
+                    
+                    // print($"Timeline zoooooom {timeline_shift}");
                 }
-                        
-                if(mx < bar_int_x && mouse_press(mb_middle, pFOCUS)) {
+                
+                if(mouse_press(mb_middle, pFOCUS)) {
                     timeline_dragging = true;
                     
                     timeline_drag_sx = timeline_shift;
@@ -864,7 +875,7 @@ function Panel_Animation() : PanelContent() constructor {
             
             timeline_draggable    = true;
         #endregion
-    } #endregion
+    }
     
     function __drawDopesheetGraphLine(animator, key_y, msx, msy, _gy_val_min = 999999, _gy_val_max = -999999) { 
         var bar_total_w = TOTAL_FRAMES * timeline_scale;
@@ -1246,7 +1257,10 @@ function Panel_Animation() : PanelContent() constructor {
         if(point_in_rectangle(msx, msy, 0, _gy0, w, _gy1))
             keyframe_boxable = false;
         
-        var _fr = ceil((bar_w / timeline_scale - timeline_shift) / timeline_separate) * timeline_separate;
+        var _stW = timeline_separate * timeline_scale;
+        var _st  = ceil(-timeline_shift / _stW);
+        var _fr  = _st + ceil(bar_w / _stW);
+        
         var _mmx = msx - 0;
         var _mmy = msy - _gy0;
         
@@ -1254,19 +1268,24 @@ function Panel_Animation() : PanelContent() constructor {
         surface_set_target(keyframe_graph_surface);
             draw_clear(COLORS.panel_animation_timeline_top);
             
-            for(var i = timeline_sep_line; i <= _fr; i += timeline_sep_line) {
-                var bar_line_x = i * timeline_scale + timeline_shift;
+            for(var i = _st; i <= _fr; i++) {
+                var bar_frame  = i * timeline_separate;
+                var bar_line_x = bar_frame * timeline_scale + timeline_shift;
                 
                 draw_set_color(COLORS.panel_animation_frame_divider);
-                draw_set_alpha((i % timeline_separate == 0? 1 : 0.1) * ((i <= TOTAL_FRAMES) * 0.5 + 0.5) * 0.3);
+                draw_set_alpha((i % timeline_separate == 0? 1 : 0.1) * ((bar_frame <= TOTAL_FRAMES) * 0.5 + 0.5) * 0.3);
                 draw_line(bar_line_x, 0, bar_line_x, _gh - PANEL_PAD);
             }
-            draw_set_alpha(1);
             
-            var bar_line_x = TOTAL_FRAMES * timeline_scale + timeline_shift;
             draw_set_color(COLORS.panel_animation_end_line);
             draw_set_alpha(0.5);
-            draw_line_width(bar_line_x, 0, bar_line_x, _gh, 2);
+                
+                var bar_line_x = TOTAL_FRAMES * timeline_scale + timeline_shift;
+                draw_line_width(bar_line_x, 0, bar_line_x, _gh, 2);
+                
+                var bar_line_x = timeline_shift;
+                draw_line_width(bar_line_x, 0, bar_line_x, _gh, 2);
+                
             draw_set_alpha(1);
             
             if(prop.sep_axis) { // draw number graphs
@@ -1802,7 +1821,7 @@ function Panel_Animation() : PanelContent() constructor {
             dope_sheet_y = lerp_float(dope_sheet_y, dope_sheet_y_to, 4);
                 
             if(pHOVER && point_in_rectangle(mx, my, ui(8), ui(8), bar_x, ui(8) + dope_sheet_h)) {
-                if(mouse_wheel_down())    dope_sheet_y_to = clamp(dope_sheet_y_to - ui(32) * SCROLL_SPEED, -dope_sheet_y_max, 0);
+                if(mouse_wheel_down())  dope_sheet_y_to = clamp(dope_sheet_y_to - ui(32) * SCROLL_SPEED, -dope_sheet_y_max, 0);
                 if(mouse_wheel_up())    dope_sheet_y_to = clamp(dope_sheet_y_to + ui(32) * SCROLL_SPEED, -dope_sheet_y_max, 0);
             }
                     
@@ -1930,21 +1949,29 @@ function Panel_Animation() : PanelContent() constructor {
             
             dope_sheet_y_max = max(0, dope_sheet_y_max - dope_sheet_h + ui(48));
             
-            var _fr = ceil((bar_w / timeline_scale - timeline_shift) / timeline_separate) * timeline_separate;
+            var _stW = timeline_separate * timeline_scale;
+            var _st  = ceil(-timeline_shift / _stW);
+            var _fr  = _st + ceil(bar_w / _stW);
             
-            for(var i = timeline_sep_line; i <= _fr; i += timeline_sep_line) {
-                var bar_line_x = i * timeline_scale + timeline_shift;
+            for(var i = _st; i <= _fr; i++) {
+                var bar_frame  = i * timeline_separate;
+                var bar_line_x = bar_frame * timeline_scale + timeline_shift;
                 
                 draw_set_color(COLORS.panel_animation_frame_divider);
-                draw_set_alpha((i % timeline_separate == 0? 1 : 0.1) * ((i <= TOTAL_FRAMES) * 0.5 + 0.5));
+                draw_set_alpha((bar_frame % timeline_separate == 0? 1 : 0.1) * ((bar_frame <= TOTAL_FRAMES) * 0.5 + 0.5));
                 draw_line(bar_line_x, ui(16), bar_line_x, dope_sheet_h - PANEL_PAD);
             }
             draw_set_alpha(1);
             
-            var bar_line_x = TOTAL_FRAMES * timeline_scale + timeline_shift;
             draw_set_color(COLORS.panel_animation_end_line);
             draw_set_alpha(0.5);
-            draw_line_width(bar_line_x, ui(16), bar_line_x, dope_sheet_h, 2);
+                
+                var bar_line_x = TOTAL_FRAMES * timeline_scale + timeline_shift;
+                draw_line_width(bar_line_x, ui(16), bar_line_x, dope_sheet_h, 2);
+                
+                var bar_line_x = timeline_shift;
+                draw_line_width(bar_line_x, ui(16), bar_line_x, dope_sheet_h, 2);
+                
             draw_set_alpha(1);
         #endregion
         
@@ -2261,10 +2288,13 @@ function Panel_Animation() : PanelContent() constructor {
             draw_set_color(COLORS.panel_animation_timeline_top);
             draw_rectangle(0, 0, bar_w, hh, false);
             
-            var _fr = ceil((bar_w / timeline_scale - timeline_shift) / timeline_separate) * timeline_separate;
+            var _stW = timeline_separate * timeline_scale;
+            var _st  = ceil(-timeline_shift / _stW);
+            var _fr  = _st + ceil(bar_w / _stW);
             
-            for(var i = timeline_separate; i <= _fr; i += timeline_separate) {
-                var ln_x = i * timeline_scale + timeline_shift;
+            for(var i = _st; i <= _fr; i++) {
+                var bar_frame = i * timeline_separate;
+                var ln_x      = bar_frame * timeline_scale + timeline_shift;
                 
                 if(i > TOTAL_FRAMES) draw_set_alpha(0.5);
                 
@@ -2272,13 +2302,16 @@ function Panel_Animation() : PanelContent() constructor {
                 draw_line(ln_x, 0, ln_x, hh);
                 
                 draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text_sub);
-                draw_text_add(ln_x, PANEL_PAD, i);
+                draw_text_add(ln_x, PANEL_PAD, bar_frame);
             }
             
             draw_set_alpha(1);
             
-            var end_x = TOTAL_FRAMES * timeline_scale + timeline_shift;
             draw_set_color(COLORS.panel_animation_end_line);
+            var end_x = TOTAL_FRAMES * timeline_scale + timeline_shift;
+            draw_line_width(end_x, 0, end_x, ui(20), 2);
+            
+            var end_x = timeline_shift;
             draw_line_width(end_x, 0, end_x, ui(20), 2);
             
             if(PROJECT.onion_skin.enabled) { //ONION SKIN

@@ -25,11 +25,16 @@ function Node_Interlaced(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	newInput(9, nodeValue_Bool("Invert", self, false));
 	
+	newInput(10, nodeValue_Int("Delay", self, 1));
+	
+	newInput(11, nodeValue_Bool("Loop", self, false));
+	
 	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 1, 
-		["Surface", false], 0, 2, 3, 4, 
-		["Effects", false], 7, 8, 9, 
+		["Surface",   false], 0, 2, 3, 4, 
+		["Frame",     false], 10, 11, 
+		["Pattern",   false], 7, 8, 9, 
 	];
 	
 	attribute_surface_depth();
@@ -44,14 +49,19 @@ function Node_Interlaced(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
-		var _surf = _data[0];
-		var _axis = _data[7];
-		var _size = _data[8];
-		var _invt = _data[9];
+		var _surf = _data[ 0];
+		var _axis = _data[ 7];
+		var _size = _data[ 8];
+		var _invt = _data[ 9];
+		var _back = _data[10];
+		var _loop = _data[11];
 		
 		var _dim  = surface_get_dimension(_surf);
-		var _prev = array_safe_get_fast(cached_output, CURRENT_FRAME - 1, noone);
 		
+		var _fram = CURRENT_FRAME - _back;
+		if(_loop) _fram = (_fram + TOTAL_FRAMES) % TOTAL_FRAMES;
+		var _prev = array_safe_get_fast(cached_output, _fram, noone);
+			
 		surface_set_shader(_outSurf, sh_interlaced);
 			shader_set_i("useSurf", is_surface(_prev));
 			shader_set_surface("prevFrame", _prev);
