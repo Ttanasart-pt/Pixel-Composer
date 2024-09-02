@@ -88,12 +88,12 @@ function Node_Iterate_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 	}
 	
 	static drawConnections = function(params = {}) {
-		if(!active) return;
-		if(!junc_in || !junc_out) return;
-		if(!junc_in.node.active || !junc_out.node.active) return;
+		if(!active) return noone;
+		if(!junc_in || !junc_out) return noone;
+		if(!junc_in.node.active || !junc_out.node.active) return noone;
 		
-		if(drawJuncConnection(junc_out, junc_in, params))
-			return self;
+		drawJuncConnection(junc_out, junc_in, params);
+		return noone;
 	}
 	
 	static postDeserialize = function() {

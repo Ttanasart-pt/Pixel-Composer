@@ -2240,7 +2240,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			return false;
 		}
 		
-		log_warning("LOAD", $"[Connect] Connection conflict {node.name} to {_nd.name} : Output not exist.", node);
+		log_warning("LOAD", $"[Connect] Connection conflict {node.name} to {_nd.name} : Output not exist [{con_index}].", node);
 		
 		return false;
 	}

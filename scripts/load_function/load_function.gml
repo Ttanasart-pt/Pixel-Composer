@@ -76,7 +76,7 @@ function LOAD_PATH(path, readonly = false, safe_mode = false) {
 	return PROJECT;
 }
 
-function LOAD_AT(path, params = new __loadParams()) { #region
+function LOAD_AT(path, params = new __loadParams()) {
 	static log = false;
 	
 	CALL("load");
@@ -176,7 +176,7 @@ function LOAD_AT(path, params = new __loadParams()) { #region
 	ds_queue_clear(CONNECTION_CONFLICT);
 	
 	try {
-		array_foreach(create_list, function(node) { node.loadGroup(); } );
+		array_foreach(create_list, function(node) /*=>*/ {return node.loadGroup()} );
 		
 	} catch(e) {
 		log_warning("LOAD, group", exception_print(e));
@@ -186,7 +186,7 @@ function LOAD_AT(path, params = new __loadParams()) { #region
 	printIf(log, $" > Load group : {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
 	
 	try {
-		array_foreach(create_list, function(node) { node.postDeserialize(); } );
+		array_foreach(create_list, function(node) /*=>*/ {return node.postDeserialize()} );
 	} catch(e) {
 		log_warning("LOAD, deserialize", exception_print(e));
 	}
@@ -194,7 +194,7 @@ function LOAD_AT(path, params = new __loadParams()) { #region
 	printIf(log, $" > Deserialize: {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
 	
 	try {
-		array_foreach(create_list, function(node) { node.applyDeserialize(); } );
+		array_foreach(create_list, function(node) /*=>*/ {return node.applyDeserialize()} );
 	} catch(e) {
 		log_warning("LOAD, apply deserialize", exception_print(e));
 	}
@@ -202,9 +202,9 @@ function LOAD_AT(path, params = new __loadParams()) { #region
 	printIf(log, $" > Apply deserialize : {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
 	
 	try {
-		array_foreach(create_list, function(node) { node.preConnect();  } );
-		array_foreach(create_list, function(node) { node.connect();     } );
-		array_foreach(create_list, function(node) { node.postConnect(); } );
+		array_foreach(create_list, function(node) /*=>*/ {return node.preConnect()}  );
+		array_foreach(create_list, function(node) /*=>*/ {return node.connect()}     );
+		array_foreach(create_list, function(node) /*=>*/ {return node.postConnect()} );
 	} catch(e) {
 		log_warning("LOAD, connect", exception_print(e));
 	}
@@ -275,7 +275,7 @@ function LOAD_AT(path, params = new __loadParams()) { #region
 		LoadPanelStruct(_load_content.layout.panel);
 	
 	return true;
-} #endregion
+}
 
 function __EXPORT_ZIP()	{ exportPortable(PROJECT); }
 function __IMPORT_ZIP() {
