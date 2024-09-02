@@ -136,7 +136,7 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 				var _bx   = _x + _w - _bs;
 				var _by   = _y + h / 2 - _bs / 2;
 			
-				unit.triggerButton.setFocusHover(active, hover);
+				unit.triggerButton.setFocusHover(iactive, ihover);
 				unit.draw(_bx, _by, _bs, _bs, _m);
 				
 				_w -= _bs + ui(4);

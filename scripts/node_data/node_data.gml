@@ -2070,6 +2070,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static _clearCacheForward = function() {
 		if(!isRenderActive()) return;
 		
+		clearCache();
 		var arr = getNextNodesRaw();
 		for( var i = 0, n = array_length(arr); i < n; i++ )
 			arr[i]._clearCacheForward();

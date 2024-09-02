@@ -149,8 +149,8 @@ function __part(_node) : __particleObject() constructor {
 		x	   = _x;
 		y	   = _y;
 		
-		drawx = x;
-		drawy = y;
+		drawx = undefined;
+		drawy = undefined;
 		
 		anim_len = is_array(surf)? array_length(surf) : 1;
 		
@@ -299,9 +299,11 @@ function __part(_node) : __particleObject() constructor {
 				spVec[1] = point_direction(prevx, prevy, x, y);
 		}
 		
-		x_history[life_incr] = drawx;
-		y_history[life_incr] = drawy;
-		life_incr++;
+		if(drawx != undefined) {
+			x_history[life_incr] = drawx;
+			y_history[life_incr] = drawy;
+			life_incr++;
+		}
 		
 		prevx = x;
 		prevy = y;
@@ -317,6 +319,15 @@ function __part(_node) : __particleObject() constructor {
 		drawrot += wig_rot.get(seed + life);
 		drawsx  += wig_scy.get(seed + life);
 		drawsy  += wig_scy.get(seed + life);
+		
+		if(path != noone) {
+			var _lifeRat = clamp(1 - life / life_total, 0., 1.);
+			var _pathDiv = pathDiv.get(_lifeRat);
+			
+			pathPos = path.getPointRatio(clamp(_lifeRat, 0, 0.99), pathIndex, pathPos);
+			drawx   = pathPos.x + drawx * _pathDiv;
+			drawy   = pathPos.y + drawy * _pathDiv;
+		}
 	}
 	
 	static draw = function(exact, surf_w, surf_h) {
@@ -373,29 +384,24 @@ function __part(_node) : __particleObject() constructor {
 			scy = 1;
 		}
 		
-		scx_history[life_incr - 1]   = scx;
-		scy_history[life_incr - 1]   = scy;
-		
-		var _xx, _yy;
-		var s_w = (_useS? surface_get_width_safe(surface)  : 1) * scx;
-		var s_h = (_useS? surface_get_height_safe(surface) : 1) * scy;
-		
-		var _pp = point_rotate(-s_w / 2, -s_h / 2, 0, 0, rot);
-		_xx = drawx + _pp[0];
-		_yy = drawy + _pp[1];
-		
-		if(path != noone) {
-			var _div = pathDiv.get(lifeRat);
-			
-			pathPos = path.getPointRatio(clamp(lifeRat, 0, 0.99), pathIndex, pathPos);
-			_xx = _xx * _div + pathPos.x;
-			_yy = _yy * _div + pathPos.y;
+		if(life_incr) {
+			scx_history[life_incr - 1]   = scx;
+			scy_history[life_incr - 1]   = scy;
 		}
+		
+		var _xx = drawx;
+		var _yy = drawy;
 		
 		if(exact) {
 			_xx = round(_xx);
 			_yy = round(_yy);
 		}
+		
+		var s_w = (_useS? surface_get_width_safe(surface)  : 1) * scx;
+		var s_h = (_useS? surface_get_height_safe(surface) : 1) * scy;
+		var _pp = point_rotate(-s_w / 2, -s_h / 2, 0, 0, rot);
+		_xx += _pp[0];
+		_yy += _pp[1];
 		
 		var x0 = _xx - s_w * 1.5;
 		var y0 = _yy - s_h * 1.5;
@@ -406,8 +412,10 @@ function __part(_node) : __particleObject() constructor {
 		if(blend != c_white) cc = colorMultiply(blend, cc);
 		alp_draw = alp * (alp_fade == noone? 1 : alp_fade.get(lifeRat)) * _color_get_alpha(cc);
 		
-		blend_history[life_incr - 1] = cc;
-		alp_history[life_incr - 1]   = alp_draw;
+		if(life_incr) {
+			blend_history[life_incr - 1] = cc;
+			alp_history[life_incr - 1]   = alp_draw;
+		}
 		
 		currColor = cola(cc, alp_draw);
 		

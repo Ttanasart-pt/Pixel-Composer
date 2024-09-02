@@ -16,6 +16,7 @@
 		PREFERENCES.font_overwrite					= "";
 		
 		PREFERENCES.ui_framerate					= 120;
+		PREFERENCES.ui_framerate_non_focus			= 10;
 		PREFERENCES.path_resolution					= 32;
 		PREFERENCES.move_directory					= false;
 		

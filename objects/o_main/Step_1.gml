@@ -18,11 +18,11 @@ _FILE_DROPPED     = false;
 		window_preminimize_rect = [ window_get_x(), window_get_y(), window_get_width(), window_get_height() ];
 
 	if(minimized) {
-		game_set_speed(PREFERENCES.ui_framerate, gamespeed_fps);
 		window_set_rectangle(window_preminimize_rect[0], window_preminimize_rect[1], window_preminimize_rect[2], window_preminimize_rect[3]);
-		
 		minimized = false;
 	}
+	
+	game_set_speed(window_has_focus() || IS_PLAYING? PREFERENCES.ui_framerate : PREFERENCES.ui_framerate_non_focus, gamespeed_fps);
 #endregion
 
 #region fpss
