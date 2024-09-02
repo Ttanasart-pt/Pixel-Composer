@@ -359,7 +359,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		for(var i = 0; i < _len; i++)
 			all_inputs[i] = array_verify(all_inputs[i], process_amount);
 		
-		for(var l = 0; l < process_amount; l++) #region input preparation
+		for(var l = 0; l < process_amount; l++) // input preparation
 		for(var i = 0; i < _len; i++) { 
 			var _in = inputs_data[i];
 				
@@ -382,7 +382,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			}
 				
 			all_inputs[i][l] = inputs[i].arrayBalance(_in[_index]);
-		} #endregion
+		}
 		
 	}
 	

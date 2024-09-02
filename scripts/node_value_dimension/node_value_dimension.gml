@@ -2,6 +2,7 @@ function nodeValue_Dimension(_node, value = DEF_SURF) { return new NodeValue_Dim
 
 function NodeValue_Dimension(_node, value) : NodeValue("Dimension", _node, CONNECT_TYPE.input, VALUE_TYPE.integer, value, "") constructor {
 	setDisplay(VALUE_DISPLAY.vector);
+	def_length = 2;
 	
 	/////============== GET =============
 	

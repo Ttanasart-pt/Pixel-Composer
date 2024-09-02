@@ -2,6 +2,7 @@ function nodeValue_Padding(_name, _node, _value, _tooltip = "") { return new Nod
 
 function NodeValue_Padding(_name, _node, _value, _tooltip = "") : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.float, _value, _tooltip) constructor {
 	setDisplay(VALUE_DISPLAY.padding);
+	def_length = 4;
 	
 	/////============== GET =============
 	

@@ -298,6 +298,17 @@ function array_spread(arr, _arr = [], _minDepth = 0) {
 	return _arr;
 }
 
+function array_verify_new(arr, length) {
+	INLINE
+	
+	if(!is_array(arr)) return array_create(length);
+	if(array_length(arr) == length) return arr;
+	
+	arr = array_clone(arr, 1);
+	array_resize(arr, length);
+	return arr;
+}
+
 function array_verify(arr, length) {
 	INLINE
 	

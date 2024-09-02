@@ -1313,20 +1313,15 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	static arrayBalance = function(val) {
-		if(!is_array(def_val))
-			return val;
-			
-		if(isDynamicArray()) 
-			return val;
+		if(!is_array(def_val)) return val;
+		if(isDynamicArray())   return val;
+		if(isArray(val))       return val;
+		if(!is_array(val))     return array_create(def_length, val);
 		
-		if(isArray(val))
-			return val;
-		
-		if(!is_array(val))
-			return array_create(def_length, val);
-		
-		if(array_length(val) < def_length)
+		if(array_length(val) < def_length) {
+			val = array_clone(val, 1);
 			array_resize(val, def_length);
+		}
 		
 		return val;
 	}

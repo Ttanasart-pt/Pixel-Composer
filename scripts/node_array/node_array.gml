@@ -146,6 +146,7 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		for( var i = input_fix_len; i < array_length(inputs); i++ ) {
 			var val = getInputData(i);
+			// if(is_array(val)) val = array_clone(val);
 			
 			if(is_array(val) && spd) array_append(res, val);
 			else                     array_push(res, val);
