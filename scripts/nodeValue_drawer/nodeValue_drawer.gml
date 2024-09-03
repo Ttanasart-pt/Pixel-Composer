@@ -46,7 +46,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			cHov  = true;
 			
 			if(anim_hold != noone)
-				jun.setAnim(anim_hold);
+				jun.setAnim(anim_hold, true);
 				
 			draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, 1, index == 2? COLORS._main_accent : c_white, 1);
 			TOOLTIP = jun.hasJunctionFrom()? __txtx("panel_inspector_remove_link", "Remove link") : __txtx("panel_inspector_toggle_anim", "Toggle animation");
@@ -55,8 +55,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				if(jun.value_from != noone)
 					jun.removeFrom();
 				else {
-					recordAction(ACTION_TYPE.var_modify, jun.animator, [ jun.is_anim, "is_anim", _name + " animation" ]);
-					jun.setAnim(!jun.is_anim);
+					jun.setAnim(!jun.is_anim, true);
 					anim_hold = jun.is_anim;
 				}
 			}

@@ -724,7 +724,7 @@ function Panel_Animation() : PanelContent() constructor {
                 var bar_line_x = TOTAL_FRAMES * timeline_scale + timeline_shift;
                 draw_line_width(bar_line_x, 0, bar_line_x, bar_h, 2);
                 
-                var bar_line_x = timeline_shift;
+                var bar_line_x = 0 * timeline_scale + timeline_shift;
                 draw_line_width(bar_line_x, 0, bar_line_x, bar_h, 2);
             
             draw_set_alpha(1);
@@ -1283,7 +1283,7 @@ function Panel_Animation() : PanelContent() constructor {
                 var bar_line_x = TOTAL_FRAMES * timeline_scale + timeline_shift;
                 draw_line_width(bar_line_x, 0, bar_line_x, _gh, 2);
                 
-                var bar_line_x = timeline_shift;
+                var bar_line_x = 0 * timeline_scale + timeline_shift;
                 draw_line_width(bar_line_x, 0, bar_line_x, _gh, 2);
                 
             draw_set_alpha(1);
@@ -1969,7 +1969,7 @@ function Panel_Animation() : PanelContent() constructor {
                 var bar_line_x = TOTAL_FRAMES * timeline_scale + timeline_shift;
                 draw_line_width(bar_line_x, ui(16), bar_line_x, dope_sheet_h, 2);
                 
-                var bar_line_x = timeline_shift;
+                var bar_line_x = 0 * timeline_scale + timeline_shift;
                 draw_line_width(bar_line_x, ui(16), bar_line_x, dope_sheet_h, 2);
                 
             draw_set_alpha(1);

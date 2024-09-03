@@ -219,14 +219,14 @@ function Panel_Inspector() : PanelContent() constructor {
                 nodeCollapseAll(inspectings[i]);
         }
         
-        function junction_reset()              { if(__dialog_junction == noone) return; __dialog_junction.resetValue();      }
-        function junction_add()                { if(__dialog_junction == noone) return; __dialog_junction.setAnim(true);     }
-        function junction_remove()             { if(__dialog_junction == noone) return; __dialog_junction.setAnim(false);    }
-        function junction_axis_combine()       { if(__dialog_junction == noone) return; __dialog_junction.sep_axis = false;  }
-        function junction_axis_separate()      { if(__dialog_junction == noone) return; __dialog_junction.sep_axis = true;   }
-        function junction_use_expression()     { if(__dialog_junction == noone) return; __dialog_junction.expUse = true;     }
-        function junction_disable_expression() { if(__dialog_junction == noone) return; __dialog_junction.expUse = false;    }
-        function junction_extract_single()     { if(__dialog_junction == noone) return; __dialog_junction.extractNode();     }
+        function junction_reset()              { if(__dialog_junction == noone) return; __dialog_junction.resetValue();            }
+        function junction_add()                { if(__dialog_junction == noone) return; __dialog_junction.setAnim(true, true);     }
+        function junction_remove()             { if(__dialog_junction == noone) return; __dialog_junction.setAnim(false, true);    }
+        function junction_axis_combine()       { if(__dialog_junction == noone) return; __dialog_junction.sep_axis = false;        }
+        function junction_axis_separate()      { if(__dialog_junction == noone) return; __dialog_junction.sep_axis = true;         }
+        function junction_use_expression()     { if(__dialog_junction == noone) return; __dialog_junction.expUse = true;           }
+        function junction_disable_expression() { if(__dialog_junction == noone) return; __dialog_junction.expUse = false;          }
+        function junction_extract_single()     { if(__dialog_junction == noone) return; __dialog_junction.extractNode();           }
         function junction_bypass_toggle()      { 
             if(__dialog_junction == noone || __dialog_junction.bypass_junc == noone) return; 
             __dialog_junction.bypass_junc.visible = !__dialog_junction.bypass_junc.visible;
@@ -929,7 +929,7 @@ function Panel_Inspector() : PanelContent() constructor {
                     draw_sprite_stretched_ext(THEME.prop_selecting, 0, ui(4), _selY, contentPane.surface_w - ui(8), _selH, COLORS._main_accent, 1);
                 
                 if(anim_toggling) {
-                    jun.setAnim(!jun.is_anim);
+                    jun.setAnim(!jun.is_anim, true);
                     anim_toggling = false;
                 }
                 

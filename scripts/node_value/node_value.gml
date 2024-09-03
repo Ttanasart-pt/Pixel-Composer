@@ -464,7 +464,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			recordAction(ACTION_TYPE.custom, function(data) {
 				setAnim(data.is_anim);
 				data.is_anim = !data.is_anim;
-			}, { anim: is_anim });
+			}, { is_anim, tooltip : $"Toggle '{name}' animation" });
 		}
 		is_anim = anim;
 		
@@ -557,7 +557,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		editWidget = noone;
 		switch(display_type) {
 			case VALUE_DISPLAY.button :
-				var _onClick = struct_has(display_data, "onClick")? method(node, display_data.onClick) : function() /*=>*/ { setAnim(true); setValueDirect(true); };
+				var _onClick = struct_has(display_data, "onClick")? method(node, display_data.onClick) : function() /*=>*/ { setAnim(true, true); setValueDirect(true); };
 				
 				editWidget   = button(_onClick).setText(struct_try_get(display_data, "name", "Trigger"));
 				runInUI      = struct_try_get(display_data, "UI", false);

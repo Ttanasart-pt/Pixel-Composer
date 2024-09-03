@@ -8,9 +8,9 @@ REDO_STACK		= ds_stack_create();
 
 enum ACTION_TYPE {
 	var_modify,
-	list_modify,
-	list_insert,
-	list_delete,
+	array_modify,
+	array_insert,
+	array_delete,
 	
 	node_added,
 	node_delete,
@@ -51,29 +51,30 @@ function Action(_type, _object, _data, _trigger = 0) constructor {
 				if(is_struct(obj)) {
 					_n = variable_struct_get(obj, data[1]);
 					variable_struct_set(obj, data[1], data[0]);
+					
 				} else if(object_exists(obj)) {
 					_n = variable_instance_get(obj, data[1]);
 					variable_instance_set(obj, data[1], data[0]);
 				}
+				
 				data[0] = _n;
 				break;
 				
-			case ACTION_TYPE.list_insert :
-				if(!ds_exists(obj, ds_type_list)) return;
-				
-				ds_list_delete(obj, data[1]);
+			case ACTION_TYPE.array_insert :
+				if(!is_array(obj)) return;
+				array_delete(obj, data[1], 1);
 				break;
 				
-			case ACTION_TYPE.list_modify :
-				if(!ds_exists(obj, ds_type_list)) return;
+			case ACTION_TYPE.array_modify :
+				if(!is_array(obj)) return;
 				_n = data[0];
-				obj[| data[1]] = data[0];
+				obj[data[1]] = data[0];
 				data[0] = _n;
 				break;
 				
-			case ACTION_TYPE.list_delete :
-				if(!ds_exists(obj, ds_type_list)) return;
-				ds_list_insert(obj, data[1], data[0]);
+			case ACTION_TYPE.array_delete :
+				if(!is_array(obj)) return;
+				array_insert(obj, data[1], data[0]);
 				break;
 				
 			case ACTION_TYPE.node_added :
@@ -85,7 +86,6 @@ function Action(_type, _object, _data, _trigger = 0) constructor {
 				break;
 				
 			case ACTION_TYPE.junction_connect :
-				
 				if(obj.is_dummy) {
 					data[0].setFrom(noone);
 					if(obj.dummy_undo != -1) obj.dummy_undo(data[0]);
@@ -165,28 +165,30 @@ function Action(_type, _object, _data, _trigger = 0) constructor {
 				if(is_struct(obj)) {
 					_n = variable_struct_get(obj, data[1]);
 					variable_struct_set(obj, data[1], data[0]);
+					
 				} else if(object_exists(obj)) {
 					_n = variable_instance_get(obj, data[1]);
 					variable_instance_set(obj, data[1], data[0]);	
 				}
+				
 				data[0] = _n;
 				break;
 				
-			case ACTION_TYPE.list_insert :
-				if(!ds_exists(obj, ds_type_list)) return;
-				ds_list_insert(obj, data[1], data[0]);
+			case ACTION_TYPE.array_insert :
+				if(!is_array(obj)) return;
+				array_insert(obj, data[1], data[0]);
 				break;
 				
-			case ACTION_TYPE.list_modify :
-				if(!ds_exists(obj, ds_type_list)) return;
+			case ACTION_TYPE.array_modify :
+				if(!is_array(obj)) return;
 				_n = data[0];
-				obj[| data[1]] = data[0];
+				obj[data[1]] = data[0];
 				data[0] = _n;
 				break;
 				
-			case ACTION_TYPE.list_delete :
-				if(!ds_exists(obj, ds_type_list)) return;
-				ds_list_delete(obj, data[1]);
+			case ACTION_TYPE.array_delete :
+				if(!is_array(obj)) return;
+				array_delete(obj, data[1], 1);
 				break;
 				
 			case ACTION_TYPE.node_added :
@@ -250,75 +252,26 @@ function Action(_type, _object, _data, _trigger = 0) constructor {
 	}
 	
 	static toString = function() {
-		var ss = "";
+		
 		switch(type) {
-			case ACTION_TYPE.var_modify :
-				if(array_length(data) > 2)
-					ss = $"modify {data[2]}";
-				else 
-					ss = $"modify {data[1]}";
-				break;
-				
-			case ACTION_TYPE.list_insert :
-				if(array_length(data) > 2)
-					ss = data[2];
-				else 
-					ss = $"insert {data[1]} to list {obj}";
-				break;
-				
-			case ACTION_TYPE.list_modify :
-				ss = $"modify {data[1]} of list {obj}";
-				break;
-				
-			case ACTION_TYPE.list_delete :
-				ss = $"delete {data[1]} from list {obj}";
-				break;
-				
-			case ACTION_TYPE.node_added :
-				ss = $"add {obj.name} node";
-				break;
-				
-			case ACTION_TYPE.node_delete :
-				ss = $"deleted {obj.name} node";
-				break;
-				
-			case ACTION_TYPE.junction_connect :
-				ss = $"connect {obj.name}";
-				break;
-				
-			case ACTION_TYPE.junction_disconnect :
-				ss = $"disconnect {obj.name}";
-				break;
-				
-			case ACTION_TYPE.group_added :
-				ss = $"add {obj.name} to group";
-				break;
-				
-			case ACTION_TYPE.group_removed :
-				ss = $"remove {obj.name} from group";
-				break;
-				
-			case ACTION_TYPE.group :
-				ss = $"group {array_length(data.content)} nodes";
-				break;
-				
-			case ACTION_TYPE.ungroup :
-				ss = $"ungroup {obj.name} node";
-				break;
-				
-			case ACTION_TYPE.collection_loaded :
-				ss = $"load {filename_name(data)}";
-				break;
-				
-			case ACTION_TYPE.struct_modify : 
-				ss = $"modify {struct_try_get(obj, "name", "value")}";
-				break;
-				
-			case ACTION_TYPE.custom : 
-				ss = struct_try_get(data, "tooltip", "action");
-				break;
+			case ACTION_TYPE.var_modify :          return $"Modify '{array_length(data) > 2? data[2] : data[1]}'";
+			case ACTION_TYPE.array_insert :        return array_length(data) > 2? data[2] : $"Insert {data[1]} to array {obj}";
+			case ACTION_TYPE.array_modify :        return $"Modify '{data[1]}' of array '{obj}'";
+			case ACTION_TYPE.array_delete :        return $"Delete '{data[1]}' from array '{obj}'";
+			case ACTION_TYPE.node_added :          return $"Add '{obj.name}' node";
+			case ACTION_TYPE.node_delete :         return $"Deleted '{obj.name}' node";
+			case ACTION_TYPE.junction_connect :    return $"Connect '{obj.name}'";
+			case ACTION_TYPE.junction_disconnect : return $"Disconnect '{obj.name}'";
+			case ACTION_TYPE.group_added :         return $"Add '{obj.name}' to group";
+			case ACTION_TYPE.group_removed :       return $"Remove '{obj.name}' from group";
+			case ACTION_TYPE.group :               return $"Group {array_length(data.content)} nodes";
+			case ACTION_TYPE.ungroup :             return $"Ungroup '{obj.name}' node";
+			case ACTION_TYPE.collection_loaded :   return $"Load '{filename_name(data)}'";
+			case ACTION_TYPE.struct_modify :       return $"Modify struct value '{struct_try_get(obj, "name", "value")}'";
+			case ACTION_TYPE.custom :              return struct_try_get(data, "tooltip", "action");
 		}
-		return ss;
+		
+		return "";
 	}
 	
 	static destroy = function() {

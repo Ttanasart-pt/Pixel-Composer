@@ -118,7 +118,7 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		
 		if(!rec) return inputs[index];
 		
-		recordAction(ACTION_TYPE.list_insert, inputs, [ inputs[index], index, $"add path anchor point {index}" ]);
+		recordAction(ACTION_TYPE.array_insert, inputs, [ inputs[index], index, $"add path anchor point {index}" ]);
 		resetDisplayList();
 		
 		return inputs[index];
@@ -390,7 +390,7 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 				
 				if(mouse_press(mb_left, active)) {
 					var _indx = input_fix_len + anchor_hover;
-					recordAction(ACTION_TYPE.list_delete, inputs, [ inputs[_indx], _indx, "remove path anchor point" ]);
+					recordAction(ACTION_TYPE.array_delete, inputs, [ inputs[_indx], _indx, "remove path anchor point" ]);
 					
 					array_delete(inputs, _indx, 1);
 					resetDisplayList();
@@ -456,7 +456,7 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 					ind = input_fix_len + _line_hover + 1;
 				}
 				
-				recordAction(ACTION_TYPE.list_insert, inputs, [ inputs[ind], ind, $"add path anchor point {ind}" ]);
+				recordAction(ACTION_TYPE.array_insert, inputs, [ inputs[ind], ind, $"add path anchor point {ind}" ]);
 				resetDisplayList();
 				UNDO_HOLDING = true;
 				

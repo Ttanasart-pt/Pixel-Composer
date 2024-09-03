@@ -42,12 +42,13 @@ function Panel_History() : PanelContent() constructor {
 		if((ds_list_size(redo_list) != ds_stack_size(REDO_STACK)) || (ds_list_size(undo_list) != ds_stack_size(UNDO_STACK)))
 			refreshList();
 		
-		draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
+		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
 		
 		var lh = line_get_height() + ui(8);
 		var _h = 0, hh;
 		var yy = _y + ui(8);
 		
+		var ww = sc_history.surface_w;
 		var lw = sc_history.surface_w - ui(32 + 2);
 		var red = ds_list_size(redo_list);
 		var amo = ds_list_size(redo_list) + ds_list_size(undo_list) + 1;
@@ -79,7 +80,7 @@ function Panel_History() : PanelContent() constructor {
 			hh = amoDisp * lh;
 			
 			BLEND_OVERRIDE;
-			if(pHOVER && sc_history.hover && point_in_rectangle(_m[0], _m[1], ui(32), yy - ui(4), lw, yy + hh + ui(4) - 1)) {
+			if(pHOVER && sc_history.hover && point_in_rectangle(_m[0], _m[1], ui(32), yy - ui(4), ww, yy + hh + ui(4) - 1)) {
 				sc_history.hover_content = true;
 				draw_sprite_stretched_ext(THEME.node_bg, 0, ui(32), yy - ui(2), lw, hh + ui(4), COLORS._main_icon_light, 1);
 				_hover = i;

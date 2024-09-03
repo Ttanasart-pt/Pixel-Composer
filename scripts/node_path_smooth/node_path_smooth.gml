@@ -59,7 +59,7 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		newInput(index, nodeValue_Vec2("Anchor",  self, [ _x, _y ]));
 		
-		recordAction(ACTION_TYPE.list_insert, inputs, [ inputs[index], index, "add path anchor point" ]);
+		recordAction(ACTION_TYPE.array_insert, inputs, [ inputs[index], index, "add path anchor point" ]);
 		resetDisplayList();
 		
 		return inputs[index];
@@ -122,7 +122,7 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 						array_insert(inputs, input_fix_len + _line_hover + 1, anc);
 					}
 				} else {
-					recordAction(ACTION_TYPE.list_delete, inputs, [ inputs[input_fix_len + _anchor_hover], input_fix_len + _anchor_hover, "remove path anchor point" ]);
+					recordAction(ACTION_TYPE.array_delete, inputs, [ inputs[input_fix_len + _anchor_hover], input_fix_len + _anchor_hover, "remove path anchor point" ]);
 					array_delete(inputs, input_fix_len + _anchor_hover, 1);
 					resetDisplayList();
 				}

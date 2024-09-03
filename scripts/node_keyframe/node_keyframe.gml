@@ -472,7 +472,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 					updateKeyMap();
 					
 					data.undo = !data.undo;
-				}, { overKey : values[i], index : i, undo : true });
+				}, { overKey : values[i], index : i, undo : true, tooltip : $"Set {prop.name} value" });
 				mergeAction(act);
 			}
 			
@@ -489,7 +489,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 				setKeyTime(data.key, data.time, false); 
 				
 				data.time = _prevTime;
-			}, { key : _key, time : _prevTime }, onUndo);
+			}, { key : _key, time : _prevTime, tooltip : $"Set {prop.name} value" }, onUndo);
 			
 			array_insert(values, i, _key);
 			if(_replace) updateKeyMap();
@@ -501,7 +501,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			setKeyTime(data.key, data.time, false); 
 			
 			data.time = _prevTime;
-		}, { key : _key, time : _prevTime }, onUndo);
+		}, { key : _key, time : _prevTime, tooltip : $"Set {prop.name} value" }, onUndo);
 			
 		array_push(values, _key);
 		if(_replace) updateKeyMap();
@@ -543,7 +543,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			if(isEqual(values[0].value, _val)) 
 				return false;
 			
-			if(_record) recordAction(ACTION_TYPE.var_modify, values[0], [ values[0].value, "value", prop.name ], onUndo);
+			if(_record) recordAction_variable_change(values[0], "value", values[0].value, prop.name, onUndo);
 			
 			values[0].value = _val;
 			return true;
@@ -552,7 +552,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		if(array_length(values) == 0) { // Should not be called normally
 			var k = new valueKey(_time, _val, self, ease_in, ease_out);
 			array_push(values, k);
-			if(_record) recordAction(ACTION_TYPE.list_insert, values, [ k, array_length(values) - 1, $"add {prop.name} keyframe" ], onUndo);
+			if(_record) recordAction(ACTION_TYPE.array_insert, values, [ k, array_length(values) - 1, $"add {prop.name} keyframe" ], onUndo);
 			return true;
 		}
 		
@@ -562,7 +562,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 				if(!global.FLAG.keyframe_override) return false;
 				
 				if(_key.value != _val) {
-					if(_record) recordAction(ACTION_TYPE.var_modify, _key, [ _key.value, "value", prop.name ], onUndo);
+					if(_record) recordAction_variable_change(_key, "value", _key.value, prop.name, onUndo);
 					_key.value = _val;
 					return true;
 				}
@@ -570,14 +570,14 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			} else if(_key.time > _time) {
 				var k = new valueKey(_time, _val, self, ease_in, ease_out);
 				array_insert(values, i, k);
-				if(_record) recordAction(ACTION_TYPE.list_insert, values, [k, i, $"add {prop.name} keyframe" ], onUndo);
+				if(_record) recordAction(ACTION_TYPE.array_insert, values, [k, i, $"add {prop.name} keyframe" ], onUndo);
 				updateKeyMap();
 				return true;
 			}
 		}
 		
 		var k = new valueKey(_time, _val, self, ease_in, ease_out);
-		if(_record) recordAction(ACTION_TYPE.list_insert, values, [ k, array_length(values), $"add {prop.name} keyframe" ], onUndo);
+		if(_record) recordAction(ACTION_TYPE.array_insert, values, [ k, array_length(values), $"add {prop.name} keyframe" ], onUndo);
 		array_push(values, k);
 		updateKeyMap();
 		return true;
