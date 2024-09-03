@@ -34,11 +34,11 @@ function Node_Curve(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	attribute_surface_depth();
 	
-	static step = function() { #region
+	static step = function() {
 		__step_mask_modifier();
-	} #endregion
+	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { #region	
+	static processData = function(_outSurf, _data, _output_index, _array_index) {	
 		var _wcur = _data[1];
 		var _rcur = _data[2];
 		var _gcur = _data[3];
@@ -69,5 +69,5 @@ function Node_Curve(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		_outSurf = channel_apply(_data[0], _outSurf, _data[8]);
 		
 		return _outSurf;
-	} #endregion
+	}
 }

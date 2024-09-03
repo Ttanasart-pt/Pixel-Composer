@@ -91,7 +91,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		transform_mx = 0;   transform_my = 0;
 	#endregion
 	
-	static resetDisplayList = function() { #region
+	static resetDisplayList = function() {
 		recordAction(ACTION_TYPE.var_modify,  self, [ array_clone(input_display_list), "input_display_list" ]);
 		
 		input_display_list = array_clone(input_display_list_raw);
@@ -100,12 +100,14 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			array_push(input_display_list, i);
 			inputs[i].name = $"Anchor {i - input_fix_len}";
 		}
-	} #endregion
+	}
 	
-	static createNewInput = function(_x = 0, _y = 0, _dxx = 0, _dxy = 0, _dyx = 0, _dyy = 0, rec = true) { #region
+	static newAnchor = function(_x = 0, _y = 0, _dxx = 0, _dxy = 0, _dyx = 0, _dyy = 0) { return [ _x, _y, _dxx, _dxy, _dyx, _dyy, false ]; }
+	
+	static createNewInput = function(_x = 0, _y = 0, _dxx = 0, _dxy = 0, _dyx = 0, _dyy = 0, rec = true) {
 		var index = array_length(inputs);
 		
-		newInput(index, nodeValue_Path_Anchor("Anchor", self, [ _x, _y, _dxx, _dxy, _dyx, _dyy, false ]));
+		newInput(index, nodeValue_Path_Anchor("Anchor", self, newAnchor( _x, _y, _dxx, _dxy, _dyx, _dyy )));
 		
 		if(rec) {
 			recordAction(ACTION_TYPE.list_insert, inputs, [ inputs[index], index, $"add path anchor point {index}" ]);
@@ -113,27 +115,23 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		}
 		
 		return inputs[index];
-	} #endregion
+	}
 	
-	static onValueUpdate = function(index = 0) { #region
-		if(index == 2) {
-			var type = getInputData(2);	
-			if(type == 0)
-				inputs[0].setDisplay(VALUE_DISPLAY.slider);
-			else if(type == 1)
-				inputs[0].setDisplay(VALUE_DISPLAY._default);
-		}
-	} #endregion
-	
-	static drawPreview = function(_x, _y, _s) { #region
+	static onValueUpdate = function(index = 0) {
+		if(index != 2) return;
 		
-	} #endregion
+		var type = getInputData(2);	
+		inputs[0].setDisplay(type == 0? VALUE_DISPLAY.slider : VALUE_DISPLAY._default);
+	}
+	
+	static drawPreview = function(_x, _y, _s) {}
  
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var ansize = array_length(inputs) - input_fix_len;
 		var edited = false;
 		
 		var pos = outputs[0].getValue();
+		var p/*:_ANCHOR*/;
 		
 		draw_set_color(COLORS._main_accent);
 		draw_circle(_x + pos[0] * _s, _y + pos[1] * _s, 4, false);
@@ -146,7 +144,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			var _transform_maxx = transform_maxx;
 			var _transform_maxy = transform_maxy;
 			
-			if(transform_type == 5) {	#region move
+			if(transform_type == 5) { // move
 				var mx = _mx, my = _my;
 				
 				if(key_mod_press(SHIFT)) {
@@ -161,9 +159,9 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				var dy = my - transform_my;
 				
 				for( var i = input_fix_len; i < array_length(inputs); i++ ) {
-					var  p = array_clone(getInputData(i));
-					p[0] += dx / _s;
-					p[1] += dy / _s;
+					p    = array_clone(getInputData(i));
+					p[@_ANCHOR.x] += dx / _s;
+					p[@_ANCHOR.y] += dy / _s;
 						
 					if(inputs[i].setValue(p))
 						edited = true;
@@ -171,8 +169,8 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				
 				transform_mx = mx;
 				transform_my = my;
-			#endregion
-			} else {					#region scale
+			
+			} else { // scale
 				var mx = (_mx - _x) / _s;
 				var my = (_my - _y) / _s;
 				
@@ -195,6 +193,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 							transform_maxy = transform_cy - (my - transform_cy);
 						}
 						break;
+						
 					case 2 :
 						if(key_mod_press(SHIFT)) {
 							var _dx = mx - _transform_minx;
@@ -213,6 +212,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 							transform_maxy = transform_cy - (my - transform_cy);
 						}
 						break;
+						
 					case 3 :
 						if(key_mod_press(SHIFT)) {
 							var _dx = mx - _transform_maxx;
@@ -231,6 +231,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 							transform_miny = transform_cy - (my - transform_cy);
 						}
 						break;
+						
 					case 4 :
 						if(key_mod_press(SHIFT)) {
 							var _dx = mx - _transform_minx;
@@ -264,100 +265,101 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					var _p4 = p[_ANCHOR.x] + p[_ANCHOR.c2x];
 					var _p5 = p[_ANCHOR.y] + p[_ANCHOR.c2y];
 					
-					p[_ANCHOR.x] = transform_minx + (p[_ANCHOR.x] - _transform_minx) / _tr_rx * tr_rx;
-					p[_ANCHOR.y] = transform_miny + (p[_ANCHOR.y] - _transform_miny) / _tr_ry * tr_ry;
+					p[@_ANCHOR.x] = transform_minx + (p[_ANCHOR.x] - _transform_minx) / _tr_rx * tr_rx;
+					p[@_ANCHOR.y] = transform_miny + (p[_ANCHOR.y] - _transform_miny) / _tr_ry * tr_ry;
 					
 					_p2 = transform_minx + (_p2 - _transform_minx) / _tr_rx * tr_rx;
 					_p3 = transform_miny + (_p3 - _transform_miny) / _tr_ry * tr_ry;
 					_p4 = transform_minx + (_p4 - _transform_minx) / _tr_rx * tr_rx;
 					_p5 = transform_miny + (_p5 - _transform_miny) / _tr_ry * tr_ry;
 					
-					p[_ANCHOR.c1x] = _p2 - p[_ANCHOR.x];
-					p[_ANCHOR.c1y] = _p3 - p[_ANCHOR.y];
-					p[_ANCHOR.c2x] = _p4 - p[_ANCHOR.x];
-					p[_ANCHOR.c2y] = _p5 - p[_ANCHOR.y];
+					p[@_ANCHOR.c1x] = _p2 - p[_ANCHOR.x];
+					p[@_ANCHOR.c1y] = _p3 - p[_ANCHOR.y];
+					p[@_ANCHOR.c2x] = _p4 - p[_ANCHOR.x];
+					p[@_ANCHOR.c2y] = _p5 - p[_ANCHOR.y];
 					
 					if(inputs[i].setValue(p))
 						edited = true;
 				}
-			#endregion
 			}
 			
-			if(edited)
-				UNDO_HOLDING = true;
+			if(edited) UNDO_HOLDING = true;
 				
 			if(mouse_release(mb_left)) {
 				transform_type = 0;
+				UNDO_HOLDING   = false;
 				RENDER_ALL
-				UNDO_HOLDING = false;
 			}
+			
 		} else if(drag_point > -1) { 
 			var dx = value_snap(drag_point_sx + (_mx - drag_point_mx) / _s, _snx);
 			var dy = value_snap(drag_point_sy + (_my - drag_point_my) / _s, _sny);
 			
-			if(drag_type < 2) {				#region move points
+			if(drag_type < 2) { // move points
 				var inp = inputs[input_fix_len + drag_point];
-				var anc = array_clone(inp.getValue());
+				var anc/*:_ANCHOR*/ = array_clone(inp.getValue());
 				
 				if(drag_type != 0 && key_mod_press(SHIFT))
-					anc[_ANCHOR.ind] = !anc[_ANCHOR.ind];
+					anc[@_ANCHOR.ind] = !anc[_ANCHOR.ind];
 				
 				if(drag_type == 0) { //drag anchor point
-					anc[_ANCHOR.x] = dx;
-					anc[_ANCHOR.y] = dy;
+					anc[@_ANCHOR.x] = dx;
+					anc[@_ANCHOR.y] = dy;
 					if(key_mod_press(CTRL)) {
-						anc[_ANCHOR.x] = round(anc[0]);
-						anc[_ANCHOR.y] = round(anc[1]);
+						anc[@_ANCHOR.x] = round(anc[_ANCHOR.x]);
+						anc[@_ANCHOR.y] = round(anc[_ANCHOR.y]);
 					}
+					
 				} else if(drag_type == 1) { //drag control 1
-					anc[_ANCHOR.c1x] = dx - anc[_ANCHOR.x];
-					anc[_ANCHOR.c1y] = dy - anc[_ANCHOR.y];
+					anc[@_ANCHOR.c1x] = dx - anc[_ANCHOR.x];
+					anc[@_ANCHOR.c1y] = dy - anc[_ANCHOR.y];
 					
 					if(!anc[_ANCHOR.ind]) {
-						anc[_ANCHOR.c2x] = -anc[_ANCHOR.c1x];
-						anc[_ANCHOR.c2y] = -anc[_ANCHOR.c1y];
+						anc[@_ANCHOR.c2x] = -anc[_ANCHOR.c1x];
+						anc[@_ANCHOR.c2y] = -anc[_ANCHOR.c1y];
 					}
 					
 					if(key_mod_press(CTRL)) {
-						anc[_ANCHOR.c1x] = round(anc[_ANCHOR.c1x]);
-						anc[_ANCHOR.c1y] = round(anc[_ANCHOR.c1y]);
+						anc[@_ANCHOR.c1x] = round(anc[_ANCHOR.c1x]);
+						anc[@_ANCHOR.c1y] = round(anc[_ANCHOR.c1y]);
 						
 						if(!anc[_ANCHOR.ind]) {
-							anc[_ANCHOR.c2x] = round(anc[_ANCHOR.c2x]);
-							anc[_ANCHOR.c2y] = round(anc[_ANCHOR.c2y]);
+							anc[@_ANCHOR.c2x] = round(anc[_ANCHOR.c2x]);
+							anc[@_ANCHOR.c2y] = round(anc[_ANCHOR.c2y]);
 						}
 					}
+					
 				} else if(drag_type == -1) { //drag control 2
-					anc[_ANCHOR.c2x] = dx - anc[_ANCHOR.x];
-					anc[_ANCHOR.c2y] = dy - anc[_ANCHOR.y];
+					anc[@_ANCHOR.c2x] = dx - anc[_ANCHOR.x];
+					anc[@_ANCHOR.c2y] = dy - anc[_ANCHOR.y];
 					
 					if(!anc[_ANCHOR.ind]) {
-						anc[_ANCHOR.c1x] = -anc[4];
-						anc[_ANCHOR.c1y] = -anc[5];
+						anc[@_ANCHOR.c1x] = -anc[_ANCHOR.c2x];
+						anc[@_ANCHOR.c1y] = -anc[_ANCHOR.c2y];
 					}
 					
 					if(key_mod_press(CTRL)) {
-						anc[_ANCHOR.c2x] = round(anc[_ANCHOR.c2x]);
-						anc[_ANCHOR.c2y] = round(anc[_ANCHOR.c2y]);
+						anc[@_ANCHOR.c2x] = round(anc[_ANCHOR.c2x]);
+						anc[@_ANCHOR.c2y] = round(anc[_ANCHOR.c2y]);
 						
 						if(!anc[_ANCHOR.ind]) {
-							anc[_ANCHOR.c1x] = round(anc[_ANCHOR.c1x]);
-							anc[_ANCHOR.c1y] = round(anc[_ANCHOR.c1y]);
+							anc[@_ANCHOR.c1x] = round(anc[_ANCHOR.c1x]);
+							anc[@_ANCHOR.c1y] = round(anc[_ANCHOR.c1y]);
 						}
 					}
 				} 
 				
 				if(inp.setValue(anc))
 					edited = true;
-			#endregion
-			} else if(drag_type == 2) {		#region pen tools
+			
+			} else if(drag_type == 2) { // pen tools
 				var ox, oy, nx, ny;
 				var pxx = (_mx - _x) / _s;
 				var pxy = (_my - _y) / _s;
 				
 				draw_set_color(COLORS._main_accent);
 				for( var i = 0, n = array_length(drag_points); i < n; i++ ) {
-					var _p  = drag_points[i];
+					var _p/*:_ANCHOR*/ = drag_points[i];
 					nx = _x + _p[_ANCHOR.x] * _s;
 					ny = _y + _p[_ANCHOR.y] * _s;
 					
@@ -395,7 +397,6 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 						
 						for( var j = _p; j < i; j++ ) {
 							var pP = drag_points[j];
-							
 							maxT = max(maxT, distance_to_line(pP[0], pP[1], pF[0], pF[1], pT[0], pT[1]));
 						}
 						
@@ -421,8 +422,8 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 						var dyy  = 0;
 						
 						if(i > 0 && i < amo - 1) {
-							var _p0 = drag_points[points[i - 1]];
-							var _p1 = drag_points[points[i + 1]];
+							var _p0/*:_ANCHOR*/ = drag_points[points[i - 1]];
+							var _p1/*:_ANCHOR*/ = drag_points[points[i + 1]];
 							
 							var d0  = point_direction(_p0[_ANCHOR.x], _p0[_ANCHOR.y],  _p[_ANCHOR.x],  _p[_ANCHOR.y]);
 							var d1  = point_direction( _p[_ANCHOR.x],  _p[_ANCHOR.y], _p1[_ANCHOR.x], _p1[_ANCHOR.y]);
@@ -449,8 +450,8 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 							inputs[input_fix_len + i].setValue(anc);
 					}
 				}
-			#endregion
-			} else if(drag_type == 3) {		#region draw rectangle
+			
+			} else if(drag_type == 3 || drag_type == 4) { // draw rectangle
 				var minx = min((_mx - _x) / _s, (drag_point_mx - _x) / _s);
 				var maxx = max((_mx - _x) / _s, (drag_point_mx - _x) / _s);
 				var miny = min((_my - _y) / _s, (drag_point_my - _y) / _s);
@@ -461,88 +462,51 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				miny = value_snap(miny, _sny);
 				maxy = value_snap(maxy, _sny);
 				
-				if(key_mod_press(SHIFT)) {
+				if(key_mod_press(ALT)) {
+					var _ccx = (drag_point_mx - _x) / _s;
+					var _ccy = (drag_point_my - _y) / _s;
+					
+					var _ww  = (maxx - minx) / 2;
+					var _hh  = (maxy - miny) / 2;
+					
+					if(key_mod_press(SHIFT)) {
+						var _n = max(_ww, _hh);
+						_ww = _n;
+						_hh = _n;
+					}
+					
+					minx = _ccx - _ww;
+					maxx = _ccx + _ww;
+					
+					miny = _ccy - _hh;
+					maxy = _ccy + _hh;
+					
+				} else if(key_mod_press(SHIFT)) {
 					var _n = max(maxx - minx, maxy - miny);
 					maxx = minx + _n;
 					maxy = miny + _n;
 				}
 				
-				var a = [];
-				for( var i = 0; i < 4; i++ ) 
-					a[i] = array_clone(getInputData(input_fix_len + i));
-				
-				a[0][_ANCHOR.x] = minx;
-				a[0][_ANCHOR.y] = miny;
-				
-				a[1][_ANCHOR.x] = maxx;
-				a[1][_ANCHOR.y] = miny;
-				
-				a[2][_ANCHOR.x] = maxx;
-				a[2][_ANCHOR.y] = maxy;
-				
-				a[3][_ANCHOR.x] = minx;
-				a[3][_ANCHOR.y] = maxy;
-				
-				for( var i = 0; i < 4; i++ ) {
-					if(inputs[input_fix_len + i].setValue(a[i]))
-						edited = true;
+				if(drag_type == 3) {
+					edited |= inputs[input_fix_len + 0].setValue(newAnchor(minx, miny));
+					edited |= inputs[input_fix_len + 1].setValue(newAnchor(maxx, miny));
+					edited |= inputs[input_fix_len + 2].setValue(newAnchor(maxx, maxy));
+					edited |= inputs[input_fix_len + 3].setValue(newAnchor(minx, maxy));
+					
+				} else if(drag_type == 4) {
+						
+					var _cnx = (maxx + minx) / 2;
+					var _cny = (maxy + miny) / 2;
+					var _ccx = (maxx - minx) * 0.27614;
+					var _ccy = (maxy - miny) * 0.27614;
+					
+					edited |= inputs[input_fix_len + 0].setValue(newAnchor( _cnx, miny, -_ccx,     0,  _ccx,     0));
+					edited |= inputs[input_fix_len + 1].setValue(newAnchor( maxx, _cny,     0, -_ccy,     0,  _ccy));
+					edited |= inputs[input_fix_len + 2].setValue(newAnchor( _cnx, maxy,  _ccx,     0, -_ccx,     0));
+					edited |= inputs[input_fix_len + 3].setValue(newAnchor( minx, _cny,     0,  _ccy,     0, -_ccy));
+					
 				}
-			#endregion
-			} else if(drag_type == 4) {		#region draw circle
-				var minx = min((_mx - _x) / _s, (drag_point_mx - _x) / _s);
-				var maxx = max((_mx - _x) / _s, (drag_point_mx - _x) / _s);
-				var miny = min((_my - _y) / _s, (drag_point_my - _y) / _s);
-				var maxy = max((_my - _y) / _s, (drag_point_my - _y) / _s);
-				
-				minx = value_snap(minx, _snx);
-				maxx = value_snap(maxx, _snx);
-				miny = value_snap(miny, _sny);
-				maxy = value_snap(maxy, _sny);
-				
-				if(key_mod_press(SHIFT)) {
-					var _n = max(maxx - minx, maxy - miny);
-					maxx = minx + _n;
-					maxy = miny + _n;
-				}
-				
-				var a = [];
-				for( var i = 0; i < 4; i++ ) 
-					a[i] = array_clone(getInputData(input_fix_len + i));
-				
-				a[0][_ANCHOR.x  ] = (minx + maxx) / 2;
-				a[0][_ANCHOR.y  ] = miny;
-				a[0][_ANCHOR.c1x] = -(maxx - minx) * 0.27614;
-				a[0][_ANCHOR.c1y] = 0;
-				a[0][_ANCHOR.c2x] = (maxx - minx) * 0.27614;
-				a[0][_ANCHOR.c2y] = 0;
-				
-				a[1][_ANCHOR.x  ] = maxx;
-				a[1][_ANCHOR.y  ] = (miny + maxy) / 2;
-				a[1][_ANCHOR.c1x] = 0;
-				a[1][_ANCHOR.c1y] = -(maxy - miny) * 0.27614;
-				a[1][_ANCHOR.c2x] = 0;
-				a[1][_ANCHOR.c2y] = (maxy - miny) * 0.27614;
-				
-				a[2][_ANCHOR.x  ] = (minx + maxx) / 2;
-				a[2][_ANCHOR.y  ] = maxy;
-				a[2][_ANCHOR.c1x] = (maxx - minx) * 0.27614;
-				a[2][_ANCHOR.c1y] = 0;
-				a[2][_ANCHOR.c2x] = -(maxx - minx) * 0.27614;
-				a[2][_ANCHOR.c2y] = 0;
-				
-				a[3][_ANCHOR.x  ] = minx;
-				a[3][_ANCHOR.y  ] = (miny + maxy) / 2;
-				a[3][_ANCHOR.c1x] = 0;
-				a[3][_ANCHOR.c1y] = (maxy - miny) * 0.27614;
-				a[3][_ANCHOR.c2x] = 0;
-				a[3][_ANCHOR.c2y] = -(maxy - miny) * 0.27614;
-				
-				for( var i = 0; i < 4; i++ ) {
-					if(inputs[input_fix_len + i].setValue(a[i]))
-						edited = true;
-				}
-			#endregion
-			}
+			} 
 			
 			if(edited) UNDO_HOLDING = true;
 			
@@ -565,10 +529,66 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var minx =  99999, miny =  99999;
 		var maxx = -99999, maxy = -99999;
 				
+		if(isUsingTool(4) || isUsingTool(5)) {
+			draw_set_color(COLORS._main_icon);
+			
+			if(drag_point > -1) { 
+				var minx = min(_mx, drag_point_mx);
+				var maxx = max(_mx, drag_point_mx);
+				var miny = min(_my, drag_point_my);
+				var maxy = max(_my, drag_point_my);
+				
+				if(key_mod_press(ALT)) {
+					var _ccx = drag_point_mx;
+					var _ccy = drag_point_my;
+					
+					var _ww  = (maxx - minx) / 2;
+					var _hh  = (maxy - miny) / 2;
+					
+					if(key_mod_press(SHIFT)) {
+						var _n = max(_ww, _hh);
+						_ww = _n;
+						_hh = _n;
+					}
+					
+					minx = _ccx - _ww;
+					maxx = _ccx + _ww;
+					
+					miny = _ccy - _hh;
+					maxy = _ccy + _hh;
+					
+					draw_set_alpha(0.75);
+					draw_line(_ccx, 0, _ccx, WIN_H);
+					draw_line(0, _ccy, WIN_W, _ccy);
+					draw_set_alpha(1);
+					
+				} else if(key_mod_press(SHIFT)) {
+					var _n = max(maxx - minx, maxy - miny);
+					maxx = minx + _n;
+					maxy = miny + _n;
+				}
+				
+				draw_set_alpha(0.5);
+				draw_line(minx, 0, minx, WIN_H);
+				draw_line(0, miny, WIN_W, miny);
+				
+				draw_line(maxx, 0, maxx, WIN_H);
+				draw_line(0, maxy, WIN_W, maxy);
+				draw_set_alpha(1);
+				
+			} else {
+				draw_set_alpha(0.5);
+				draw_line(_mx, 0, _mx, WIN_H);
+				draw_line(0, _my, WIN_W, _my);
+				draw_set_alpha(1);
+			}
+			
+		}
+				
 		if(!array_empty(anchors)) {
 			draw_set_color(isUsingTool(0)? COLORS._main_icon : COLORS._main_accent);
 			
-			for( var i = 0, n = array_length(segments); i < n; i++ ) { #region draw path
+			for( var i = 0, n = array_length(segments); i < n; i++ ) { // draw path
 				var _seg = segments[i];
 				var _ox  = 0, _oy = 0, _nx = 0, _ny = 0, p = 0;
 					
@@ -588,7 +608,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					_ox = _nx;
 					_oy = _ny;
 				}
-			} #endregion
+			}
 			
 			#region draw anchor
 				if(hover != -1 && !isUsingTool(0))
@@ -648,7 +668,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		/////////////////////////////////////////////////////// TOOLS ///////////////////////////////////////////////////////
 		
-		if(isUsingTool(0)) {								#region transform tools
+		if(isUsingTool(0)) { // transform tools
 			var hov = 0;
 				 if(hover && point_in_circle(_mx, _my, minx, miny, 8)) hov = 1;
 			else if(hover && point_in_circle(_mx, _my, maxx, miny, 8)) hov = 2;
@@ -674,8 +694,8 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				transform_cx   = (transform_minx + transform_maxx) / 2; 
 				transform_cy   = (transform_miny + transform_maxy) / 2;
 			}
-		#endregion
-		} else if(isUsingTool(3)) {							#region pen tools
+		
+		} else if(isUsingTool(3)) {	//pen tools
 			draw_sprite_ui_uniform(THEME.path_tools_draw, 0, _mx + 16, _my + 16);
 			
 			if(mouse_press(mb_left, active)) {
@@ -692,8 +712,8 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				drag_point_mx = (_mx - _x) / _s;
 				drag_point_my = (_my - _y) / _s;
 			}
-		#endregion
-		} else if(isUsingTool(4) || isUsingTool(5)) {		#region shape tools
+		
+		} else if(isUsingTool(4) || isUsingTool(5)) { // shape tools
 			draw_sprite_ui_uniform(THEME.cursor_path_add, 0, _mx + 16, _my + 16);
 			
 			if(mouse_press(mb_left, active)) {
@@ -710,33 +730,33 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				repeat(4)
 					createNewInput(value_snap((_mx - _x) / _s, _snx), value_snap((_my - _y) / _s, _sny));
 			}
-		#endregion
-		} else if(anchor_hover != -1) {						#region no tool, dragging existing point
-			var _a = array_clone(getInputData(input_fix_len + anchor_hover));
+		
+		} else if(anchor_hover != -1) { // no tool, dragging existing point
+			var _a/*:_ANCHOR*/ = array_clone(getInputData(input_fix_len + anchor_hover));
 			if(isUsingTool(2) && hover_type == 0) {
 				draw_sprite_ui_uniform(THEME.cursor_path_anchor, 0, _mx + 16, _my + 16);
 				
 				if(mouse_press(mb_left, active)) {
-					if(_a[2] != 0 || _a[3] != 0 || _a[4] != 0 || _a[5] != 0) {
-						_a[2] = 0;
-						_a[3] = 0;
-						_a[4] = 0;
-						_a[5] = 0;
-						_a[6] = false;
+					if(_a[_ANCHOR.c1x] != 0 || _a[_ANCHOR.c1y] != 0 || _a[_ANCHOR.c2x] != 0 || _a[_ANCHOR.c2y] != 0) {
+						_a[@_ANCHOR.c1x] = 0;
+						_a[@_ANCHOR.c1y] = 0;
+						_a[@_ANCHOR.c2x] = 0;
+						_a[@_ANCHOR.c2y] = 0;
+						_a[@_ANCHOR.ind] = false;
 						inputs[input_fix_len + anchor_hover].setValue(_a);
 					} else {
-						_a[2] = -8;
-						_a[3] = 0;
-						_a[4] = 8;
-						_a[5] = 0;	
-						_a[6] = false;
+						_a[@_ANCHOR.c1x] = -8;
+						_a[@_ANCHOR.c1y] = 0;
+						_a[@_ANCHOR.c2x] = 8;
+						_a[@_ANCHOR.c2y] = 0;	
+						_a[@_ANCHOR.ind] = false;
 						
 						drag_point    = anchor_hover;
 						drag_type     = 1;
 						drag_point_mx = _mx;
 						drag_point_my = _my;
-						drag_point_sx = _a[0];
-						drag_point_sy = _a[1];
+						drag_point_sx = _a[_ANCHOR.x];
+						drag_point_sy = _a[_ANCHOR.y];
 					}
 				}
 			} else if(hover_type == 0 && key_mod_press(SHIFT)) { //remove
@@ -755,7 +775,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				
 				if(mouse_press(mb_left, active)) {
 					if(isUsingTool(2)) {
-						_a[_ANCHOR.ind] = true;
+						_a[@_ANCHOR.ind] = true;
 						inputs[input_fix_len + anchor_hover].setValue(_a);
 					}
 						
@@ -763,20 +783,21 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					drag_type     = hover_type;
 					drag_point_mx = _mx;
 					drag_point_my = _my;
-					drag_point_sx = _a[0];
-					drag_point_sy = _a[1];
+					drag_point_sx = _a[_ANCHOR.x];
+					drag_point_sy = _a[_ANCHOR.y];
 					
 					if(hover_type == 1) {
-						drag_point_sx = _a[0] + _a[2];
-						drag_point_sy = _a[1] + _a[3];	
+						drag_point_sx = _a[_ANCHOR.x] + _a[_ANCHOR.c1x];
+						drag_point_sy = _a[_ANCHOR.y] + _a[_ANCHOR.c1y];	
+						
 					} else if(hover_type == -1) {
-						drag_point_sx = _a[0] + _a[4];
-						drag_point_sy = _a[1] + _a[5];
+						drag_point_sx = _a[_ANCHOR.x] + _a[_ANCHOR.c2x];
+						drag_point_sy = _a[_ANCHOR.y] + _a[_ANCHOR.c2y];
 					} 
 				}
 			}
-		#endregion
-		} else if(key_mod_press(CTRL) || isUsingTool(1)) {	#region anchor edit
+		
+		} else if(key_mod_press(CTRL) || isUsingTool(1)) { // anchor edit
 			draw_sprite_ui_uniform(THEME.cursor_path_add, 0, _mx + 16, _my + 16);
 			
 			if(mouse_press(mb_left, active)) {
@@ -804,11 +825,10 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				
 				RENDER_ALL
 			}
-		#endregion
 		}
-	} #endregion
+	}
 	
-	static updateLength = function() { #region
+	static updateLength = function() {
 		boundary     = new BoundingBox();
 		segments     = [];
 		lengths      = [];
@@ -834,6 +854,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				if(_a0[4] == 0 && _a0[5] == 0 && _a1[2] == 0 && _a1[3] == 0) {
 					_nx = lerp(_a0[0], _a1[0], j / sample);
 					_ny = lerp(_a0[1], _a1[1], j / sample);
+					
 				} else {
 					_nx = eval_bezier_x(j / sample, _a0[0],  _a0[1], _a1[0],  _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
 					_ny = eval_bezier_y(j / sample, _a0[0],  _a0[1], _a1[0],  _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
@@ -899,7 +920,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		surface_reset_shader();
 		
 		surface_free(_surf);
-	} #endregion
+	}
 	
 	static getLineCount		= function() { return 1; }
 	static getSegmentCount	= function() { return array_length(lengths); }
@@ -916,8 +937,8 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		if(ds_map_exists(cached_pos, _cKey)) {
 			var _p = cached_pos[? _cKey];
-			out.x = _p.x;
-			out.y = _p.y;
+			out.x = _p[_ANCHOR.x];
+			out.y = _p[_ANCHOR.y];
 			return out;
 		}
 		
@@ -960,7 +981,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		return getPointDistance(pix, _ind, out);
 	}
 	
-	static getPointSegment = function(_rat) { #region
+	static getPointSegment = function(_rat) {
 		if(array_empty(lengths)) return new __vec2();
 		
 		var loop   = getInputData(1);
@@ -988,9 +1009,9 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		}
 			
 		return new __vec2(px, py);
-	} #endregion
+	}
 	
-	static update = function(frame = CURRENT_FRAME) { #region
+	static update = function(frame = CURRENT_FRAME) {
 		ds_map_clear(cached_pos);
 		
 		var _rat  = getInputData(0);
@@ -1036,9 +1057,9 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			
 			outputs[0].setValue(_out.toArray());
 		}
-	} #endregion
+	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
 		
 		if(array_empty(segments)) {
@@ -1049,7 +1070,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			draw_surface_bbox(path_preview_surface, bbox);
 			gpu_set_tex_filter(false);
 		}
-	} #endregion
+	}
 	
 	static getPreviewBoundingBox = function() { return BBOX().fromBoundingBox(boundary); }
 }
