@@ -8,9 +8,9 @@ function Node_Struct_Get(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	newInput(1, nodeValue_Text("Key", self, ""));
 	
-	outputs[0] = nodeValue_Output("Struct", self, VALUE_TYPE.struct, {});
+	outputs[0] = nodeValue_Output("Value", self, VALUE_TYPE.struct, {});
 	
-	static getStructValue = function(str, keys) { #region
+	static getStructValue = function(str, keys) {
 		var _pnt = str, val = 0;
 		if(!is_struct(_pnt)) return [ VALUE_TYPE.any, val ];
 		
@@ -40,9 +40,9 @@ function Node_Struct_Get(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		}
 		
 		return [ VALUE_TYPE.any, val ];
-	} #endregion
+	}
 	
-	static update = function() { #region
+	static update = function() {
 		var str = getInputData(0);
 		var key = getInputData(1);
 		
@@ -68,14 +68,13 @@ function Node_Struct_Get(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			outputs[0].setType(val[0]);
 			outputs[0].setValue(val[1]);
 		}
-	} #endregion
+	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
 		var str  = getInputData(1);
 		
 		draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
-		var ss	= string_scale(str, bbox.w, bbox.h);
-		draw_text_transformed(bbox.xc, bbox.yc, str, ss, ss, 0);
-	} #endregion
+		draw_text_bbox(bbox, str);
+	}
 }

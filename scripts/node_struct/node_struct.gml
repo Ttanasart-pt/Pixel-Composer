@@ -25,20 +25,19 @@ function Node_Struct(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	#region //////////////////////////////// Dynamic IO ////////////////////////////////
 	
 		static createNewInput = function(list = inputs) {
-			var index = ds_list_size(list);
-			
-			var bDel = button(function() { node.deleteInput(index); })
+			var index = array_length(list);
+			var bDel  = button(function() { node.deleteInput(index); })
 					.setIcon(THEME.minus_16, 0, COLORS._main_icon);
 			
-			list[| index + 0] = nodeValue_Text("Key", self, "" )
+			list[index + 0] = nodeValue_Text("Key", self, "" )
 				.setDisplay(VALUE_DISPLAY.text_box, { side_button : bDel })
 				.setAnimable(false);
-			bDel.setContext(list[| index + 0]);
+			bDel.setContext(list[index + 0]);
 			
-			list[| index + 1] = nodeValue("value", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0 )
+			list[index + 1] = nodeValue("value", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0 )
 				.setVisible(false, false);
 				
-			return list[| index + 0];
+			return list[index + 0];
 		} 
 		
 		setDynamicInput(2, false);
