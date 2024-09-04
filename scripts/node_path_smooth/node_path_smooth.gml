@@ -11,7 +11,7 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	newInput(2, nodeValue_Float("Smoothness", self, 3))
 		.setDisplay(VALUE_DISPLAY.slider, { range : [ 1, 5, 0.01 ] } );
 	
-	outputs[0] = nodeValue_Output("Path data", self, VALUE_TYPE.pathnode, self);
+	newOutput(0, nodeValue_Output("Path data", self, VALUE_TYPE.pathnode, self));
 	
 	input_display_list = [
 		["Path",	false], 0, 1, 2, 

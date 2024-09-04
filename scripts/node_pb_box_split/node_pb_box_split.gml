@@ -16,9 +16,9 @@ function Node_PB_Box_Split(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _group)
 	
 	newInput(6, nodeValue_Bool("Mirror", self, 0 ))
 	
-	outputs[0] = nodeValue_Output("pBox Left", self, VALUE_TYPE.pbBox, noone );
+	newOutput(0, nodeValue_Output("pBox Left", self, VALUE_TYPE.pbBox, noone ));
 	
-	outputs[1] = nodeValue_Output("pBox Right", self, VALUE_TYPE.pbBox, noone );
+	newOutput(1, nodeValue_Output("pBox Right", self, VALUE_TYPE.pbBox, noone ));
 	
 	input_display_list = [ 0, 1,
 		["Split",	false], 5, 2, 3, 4, 6, 

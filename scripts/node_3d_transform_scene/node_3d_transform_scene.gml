@@ -19,7 +19,7 @@ function Node_3D_Transform_Scene(_x, _y, _group = noone) : Node_3D(_x, _y, _grou
 	
 	newInput(6, nodeValue_Enum_Scroll("Scaling type", self, 0, [ "Additive", "Multiplicative", "Override" ]));
 	
-	outputs[0] = nodeValue_Output("Scene", self, VALUE_TYPE.d3Scene, noone);
+	newOutput(0, nodeValue_Output("Scene", self, VALUE_TYPE.d3Scene, noone));
 	
 	input_display_list = [ 0,
 		["Transform", false], 1, 2, 3,

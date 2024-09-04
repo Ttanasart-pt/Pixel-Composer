@@ -33,7 +33,7 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 	
 	newInput(12, nodeValue_Bool("Use Instance", self, true ))
 	
-	outputs[0] = nodeValue_Output("Scene", self, VALUE_TYPE.d3Scene, noone);
+	newOutput(0, nodeValue_Output("Scene", self, VALUE_TYPE.d3Scene, noone));
 	
 	input_display_list = [
 		["Objects",		false], 0, 3, 4, 5, 

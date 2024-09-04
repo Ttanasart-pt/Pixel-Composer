@@ -14,7 +14,7 @@ function Node_Iterator_Filter_Inline_Output(_x, _y, _group = noone) : Node(_x, _
 	newInput(1, nodeValue_Bool("Filter result", self, false ))
 		.setVisible(true, true);
 		
-	outputs[0] = nodeValue_Output("Array out", self, VALUE_TYPE.any, [] );
+	newOutput(0, nodeValue_Output("Array out", self, VALUE_TYPE.any, [] ));
 	
 	static getNextNodes = function() { #region
 		if(loop.bypassNextNode())

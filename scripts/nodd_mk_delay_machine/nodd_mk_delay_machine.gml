@@ -23,7 +23,7 @@ function Node_MK_Delay_Machine(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	newInput(8, nodeValue_Enum_Scroll("Blend Mode", self, 0, [ "Normal", "Alpha", "Additive" ]));
 	
-	outputs[0] = nodeValue_Output("Surface", self, VALUE_TYPE.surface, noone);
+	newOutput(0, nodeValue_Output("Surface", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 0,
 		["Delay",	false], 1, 2, 

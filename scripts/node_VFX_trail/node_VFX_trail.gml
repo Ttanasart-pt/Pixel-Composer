@@ -17,7 +17,7 @@ function Node_VFX_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	newInput(2, nodeValue_Bool("Color", self, false ));
 	
-	outputs[0] = nodeValue_Output("Path", self, VALUE_TYPE.pathnode, self);
+	newOutput(0, nodeValue_Output("Path", self, VALUE_TYPE.pathnode, self));
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		draw_set_color(COLORS._main_accent);

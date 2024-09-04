@@ -32,7 +32,7 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	newInput(12, nodeValue_Float("Array process", self, 1))
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Individual", "Combined" ]);
 	
-	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
 		["Surface",	false],	0, 1, 12, 

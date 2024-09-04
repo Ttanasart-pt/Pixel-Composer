@@ -15,7 +15,7 @@ function Node_Sequence_Anim(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 	newInput(3, nodeValue_Enum_Scroll("Overflow", self,  0, [ "Hold", "Loop", "Ping Pong", "Empty" ]));
 	
-	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
 	
 	sequence_surface = noone;
 	sequence_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {

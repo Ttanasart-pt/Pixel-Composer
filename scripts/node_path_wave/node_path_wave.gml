@@ -24,7 +24,7 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	newInput(9, nodeValue("Amplitude over length", self, CONNECT_TYPE.input, VALUE_TYPE.curve, CURVE_DEF_11));
 	
-	outputs[0] = nodeValue_Output("Path", self, VALUE_TYPE.pathnode, self);
+	newOutput(0, nodeValue_Output("Path", self, VALUE_TYPE.pathnode, self));
 	
 	input_display_list = [ 5, 
 		["Path",	 true], 0,

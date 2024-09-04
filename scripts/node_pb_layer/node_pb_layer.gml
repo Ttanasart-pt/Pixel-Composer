@@ -4,7 +4,7 @@ function Node_PB_Layer(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	
 	newInput(0, nodeValue_Int("Layer", self, 0 ));
 	
-	outputs[0] = nodeValue_Output("pBox", self, VALUE_TYPE.pbBox, noone );
+	newOutput(0, nodeValue_Output("pBox", self, VALUE_TYPE.pbBox, noone ));
 	
 	static update = function() {
 		var _dim = group.getInputData(0);

@@ -4,7 +4,7 @@ function Node_PCX_fn_var(_x, _y, _group = noone) : Node_PCX(_x, _y, _group) cons
 	
 	newInput(0, nodeValue("Default Value", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0));
 	
-	outputs[0] = nodeValue_Output("PCX", self, VALUE_TYPE.PCXnode, noone);
+	newOutput(0, nodeValue_Output("PCX", self, VALUE_TYPE.PCXnode, noone));
 	
 	static update = function() {
 		var _def  = getInputData(0);

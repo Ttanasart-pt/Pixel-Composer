@@ -67,11 +67,11 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	newInput(23, nodeValue_Palette("Shape Palette", self, [ cola(c_white) ]));
 	
-	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
 		
-	outputs[1] = nodeValue_Output("Mesh", self, VALUE_TYPE.mesh, noone);
+	newOutput(1, nodeValue_Output("Mesh", self, VALUE_TYPE.mesh, noone));
 		
-	outputs[2] = nodeValue_Output("Path", self, VALUE_TYPE.pathnode, noone);
+	newOutput(2, nodeValue_Output("Path", self, VALUE_TYPE.pathnode, noone));
 	
 	input_display_list = [ 16, 
 		["Output", 		false], 0, 

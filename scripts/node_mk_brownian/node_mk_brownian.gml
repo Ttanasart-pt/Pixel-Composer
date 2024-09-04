@@ -31,7 +31,7 @@ function Node_MK_Brownian(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 	newInput(13, nodeValue_Range("Size", self, [ 1, 1 ], { linked : true }));
 		
-	outputs[0] = nodeValue_Output("Output", self, VALUE_TYPE.surface, noone);
+	newOutput(0, nodeValue_Output("Output", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 8, 
 		["Dimension", false], 0, 12, 

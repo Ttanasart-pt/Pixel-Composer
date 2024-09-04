@@ -20,7 +20,7 @@ function Node_Shape_Map(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	newInput(7, nodeValue_Rotation("Angle", self, 0));
 	
-	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 1, 
 		["Surfaces",  true], 0,

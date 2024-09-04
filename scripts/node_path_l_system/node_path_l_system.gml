@@ -42,7 +42,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	setDynamicInput(2, false);
 	if(!LOADING && !APPENDING) createNewInput();
 	
-	outputs[0] = nodeValue_Output("Path", self, VALUE_TYPE.pathnode, self);
+	newOutput(0, nodeValue_Output("Path", self, VALUE_TYPE.pathnode, self));
 	
 	rule_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		rule_renderer.x = _x;

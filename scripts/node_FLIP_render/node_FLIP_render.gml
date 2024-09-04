@@ -40,7 +40,7 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		["Post Processing", false], 8, 7, 1, 
 	];
 	
-	outputs[0] = nodeValue_Output("Rendered", self, VALUE_TYPE.surface, noone);
+	newOutput(0, nodeValue_Output("Rendered", self, VALUE_TYPE.surface, noone));
 	
 	seed = irandom_range(100000, 999999);
 	temp_surface = [ noone ];

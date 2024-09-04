@@ -15,7 +15,7 @@ function Node_String_Trim(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput(4, nodeValue_Enum_Scroll("Mode", self,  0, ["Counter", "Progress"]))
 		.setTooltip("Set to progress to use ratio, where 0 means no change and 1 means the entire length of the text.");
 	
-	outputs[0] = nodeValue_Output("Text", self, VALUE_TYPE.text, "");
+	newOutput(0, nodeValue_Output("Text", self, VALUE_TYPE.text, ""));
 	
 	input_display_list = [
 		["Text",	false], 0,

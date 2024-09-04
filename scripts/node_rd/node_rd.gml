@@ -48,9 +48,9 @@ function Node_RD(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	newInput(13, nodeValue_Float("Diffusion", self, 1.))
 		.setDisplay(VALUE_DISPLAY.slider)
 		
-	outputs[0] = nodeValue_Output("Reacted", self, VALUE_TYPE.surface, noone);
+	newOutput(0, nodeValue_Output("Reacted", self, VALUE_TYPE.surface, noone));
 	
-	outputs[1] = nodeValue_Output("Rendered", self, VALUE_TYPE.surface, noone);
+	newOutput(1, nodeValue_Output("Rendered", self, VALUE_TYPE.surface, noone));
 	
 	preview_channel = 1;
 	

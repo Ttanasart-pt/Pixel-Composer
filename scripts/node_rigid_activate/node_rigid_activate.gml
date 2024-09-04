@@ -12,7 +12,7 @@ function Node_Rigid_Activate(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput(1, nodeValue_Bool("Physics activated", self, true))
 		.rejectArray();
 	
-	outputs[0] = nodeValue_Output("Object", self, VALUE_TYPE.rigid, noone);
+	newOutput(0, nodeValue_Output("Object", self, VALUE_TYPE.rigid, noone));
 	
 	input_display_list = [
 		["Object",		 true],	0,

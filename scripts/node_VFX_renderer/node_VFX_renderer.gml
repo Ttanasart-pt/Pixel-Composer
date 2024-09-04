@@ -42,7 +42,7 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	setDynamicInput(2, true, VALUE_TYPE.particle);
 	dyna_input_check_shift = 1;
 		
-	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
 	
 	insp2UpdateTooltip = "Clear cache";
 	insp2UpdateIcon    = [ THEME.cache, 0, COLORS._main_icon ];

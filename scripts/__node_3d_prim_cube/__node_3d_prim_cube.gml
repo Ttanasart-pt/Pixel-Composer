@@ -57,13 +57,13 @@ function __Node_3D_Cube(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		["Light",			 false], 13, 14, 15, 16, 17,
 	];
 	
-	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
 	
-	outputs[1] = nodeValue_Output("3D scene", self, VALUE_TYPE.d3object, function(index) { return submit_vertex(index); });
+	newOutput(1, nodeValue_Output("3D scene", self, VALUE_TYPE.d3object, function(index) { return submit_vertex(index); }));
 	
-	outputs[2] = nodeValue_Output("Normal pass", self, VALUE_TYPE.surface, noone);
+	newOutput(2, nodeValue_Output("Normal pass", self, VALUE_TYPE.surface, noone));
 	
-	outputs[3] = nodeValue_Output("3D vertex", self, VALUE_TYPE.d3vertex, []);
+	newOutput(3, nodeValue_Output("3D vertex", self, VALUE_TYPE.d3vertex, []));
 	
 	output_display_list = [
 		0, 2, 1, 3

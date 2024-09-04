@@ -13,32 +13,32 @@ function Node_Rigid_Variable(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	input_display_list = [ 0 ];
 	
-	outputs[0] = nodeValue_Output("Positions", self, VALUE_TYPE.float, [ 0, 0 ] )
+	newOutput(0, nodeValue_Output("Positions", self, VALUE_TYPE.float, [ 0, 0 ] ))
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setVisible(false);
 	
-	outputs[1] = nodeValue_Output("Scales", self, VALUE_TYPE.float, [ 0, 0 ] )
+	newOutput(1, nodeValue_Output("Scales", self, VALUE_TYPE.float, [ 0, 0 ] ))
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setVisible(false);
 	
-	outputs[2] = nodeValue_Output("Rotations", self, VALUE_TYPE.float, 0 )
+	newOutput(2, nodeValue_Output("Rotations", self, VALUE_TYPE.float, 0 ))
 		.setVisible(false);
 	
-	outputs[3] = nodeValue_Output("Blends", self, VALUE_TYPE.color, 0 )
+	newOutput(3, nodeValue_Output("Blends", self, VALUE_TYPE.color, 0 ))
 		.setVisible(false);
 	
-	outputs[4] = nodeValue_Output("Alpha", self, VALUE_TYPE.float, 0 )
+	newOutput(4, nodeValue_Output("Alpha", self, VALUE_TYPE.float, 0 ))
 		.setVisible(false);
 	
-	outputs[5] = nodeValue_Output("Velocity", self, VALUE_TYPE.float, [ 0, 0 ] )
+	newOutput(5, nodeValue_Output("Velocity", self, VALUE_TYPE.float, [ 0, 0 ] ))
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setVisible(false);
 	
-	outputs[6] = nodeValue_Output("Center of mass", self, VALUE_TYPE.float, [ 0, 0 ] )
+	newOutput(6, nodeValue_Output("Center of mass", self, VALUE_TYPE.float, [ 0, 0 ] ))
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setVisible(false);
 	
-	outputs[7] = nodeValue_Output("Velocity magnitude", self, VALUE_TYPE.float, 0 )
+	newOutput(7, nodeValue_Output("Velocity magnitude", self, VALUE_TYPE.float, 0 ))
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setVisible(false);
 	

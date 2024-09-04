@@ -10,7 +10,7 @@ function Node_Cache_Array(_x, _y, _group = noone) : __Node_Cache(_x, _y, _group)
 	
 	newInput(3, nodeValue_Int("Step", self, 1, "Cache every N frames, set to 1 to cache every frame."));
 	
-	outputs[0] = nodeValue_Output("Cache array", self, VALUE_TYPE.surface, []);
+	newOutput(0, nodeValue_Output("Cache array", self, VALUE_TYPE.surface, []));
 	
 	input_display_list = [
 		["Surfaces",  true], 0, 

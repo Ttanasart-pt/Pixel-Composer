@@ -11,7 +11,7 @@ function Node_Vector_Dot(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		.setArrayDepth(1)
 		.setVisible(true, true);
 		
-	outputs[0] = nodeValue_Output("Result", self, VALUE_TYPE.float, 0 );
+	newOutput(0, nodeValue_Output("Result", self, VALUE_TYPE.float, 0 ));
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) {  
 		var _pnt1 = _data[0];

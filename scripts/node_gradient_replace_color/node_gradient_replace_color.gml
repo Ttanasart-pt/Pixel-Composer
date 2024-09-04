@@ -12,7 +12,7 @@ function Node_Gradient_Replace_Color(_x, _y, _group = noone) : Node_Processor(_x
 	newInput(3, nodeValue_Float("Threshold", self, 0.1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	outputs[0] = nodeValue_Output("Gradient", self, VALUE_TYPE.gradient, new gradientObject(cola(c_white)) );
+	newOutput(0, nodeValue_Output("Gradient", self, VALUE_TYPE.gradient, new gradientObject(cola(c_white)) ));
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
 		var gra  = _data[0];

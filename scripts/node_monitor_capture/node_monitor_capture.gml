@@ -10,7 +10,7 @@ function Node_Monitor_Capture(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	
 	newInput(2, nodeValue_Vec4("Region", self, [ 0, 0, display_get_width(), display_get_height() ]));
 	
-	outputs[0] = nodeValue_Output("GUI", self, VALUE_TYPE.surface, noone);
+	newOutput(0, nodeValue_Output("GUI", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
 		0, 1, 2,

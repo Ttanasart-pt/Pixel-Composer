@@ -5,7 +5,7 @@ function Node_Iterator_Filter_Input(_x, _y, _group = noone) : Node(_x, _y, _grou
 	
 	manual_deletable = false;
 	
-	outputs[0] = nodeValue_Output("Value in", self, VALUE_TYPE.any, 0 );
+	newOutput(0, nodeValue_Output("Value in", self, VALUE_TYPE.any, 0 ));
 	outputs[0].getValueDefault = method(outputs[0], outputs[0].getValueRecursive); //Get value from outside loop
 	outputs[0].getValueRecursive = function(arr) { #region
 		if(!variable_struct_exists(group, "iterated"))

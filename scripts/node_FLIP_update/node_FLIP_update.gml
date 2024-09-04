@@ -19,7 +19,7 @@ function Node_FLIP_Update(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		["Timestep", false], 2, 3, 
 	];
 	
-	outputs[0] = nodeValue_Output("Domain", self, VALUE_TYPE.fdomain, noone);
+	newOutput(0, nodeValue_Output("Domain", self, VALUE_TYPE.fdomain, noone));
 	
 	static update = function(frame = CURRENT_FRAME) {
 		var domain  = getInputData(0);

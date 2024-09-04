@@ -13,7 +13,7 @@ function Node_Mesh_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	newInput(4, nodeValue_Vec2("Anchor", self, [ 0, 0 ]));
 	
-	outputs[0] = nodeValue_Output("Mesh", self, VALUE_TYPE.mesh, noone);
+	newOutput(0, nodeValue_Output("Mesh", self, VALUE_TYPE.mesh, noone));
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var imesh = getInputData(0);

@@ -10,7 +10,7 @@ function Node_Lua_Global(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	newInput(2, nodeValue("Execution thread", self, CONNECT_TYPE.input, VALUE_TYPE.node, noone))
 		.setVisible(false, true);
 	
-	outputs[0] = nodeValue_Output("Execution thread", self, VALUE_TYPE.node, noone );
+	newOutput(0, nodeValue_Output("Execution thread", self, VALUE_TYPE.node, noone ));
 	
 	input_display_list = [ 
 		["Main", false], 2, 1, 0,

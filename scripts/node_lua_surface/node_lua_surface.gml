@@ -15,9 +15,9 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	newInput(4, nodeValue_Bool("Execute on frame", self, true))
 	
-	outputs[0] = nodeValue_Output("Execution thread", self, VALUE_TYPE.node, noone );
+	newOutput(0, nodeValue_Output("Execution thread", self, VALUE_TYPE.node, noone ));
 	
-	outputs[1] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	newOutput(1, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
 	
 	attribute_surface_depth();
 	argumentRenderer(global.lua_arguments);

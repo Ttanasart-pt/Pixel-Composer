@@ -55,7 +55,7 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		["Effect",	false], 8, 4, 5, 6, 7,
 	];
 	
-	outputs[0] = nodeValue_Output("Particles", self, VALUE_TYPE.particle, -1 );
+	newOutput(0, nodeValue_Output("Particles", self, VALUE_TYPE.particle, -1 ));
 	
 	UPDATE_PART_FORWARD
 	

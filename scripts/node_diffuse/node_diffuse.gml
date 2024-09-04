@@ -29,7 +29,7 @@ function Node_Diffuse(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		
 	newInput(11, nodeValue_Rotation("External Direction", self, 0));
 	
-	outputs[0] = nodeValue_Output("Result", self, VALUE_TYPE.surface, noone);
+	newOutput(0, nodeValue_Output("Result", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 0, 6, 
 		["Diffuse",		false], 1, 

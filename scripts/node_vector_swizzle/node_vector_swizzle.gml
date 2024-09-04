@@ -9,7 +9,7 @@ function Node_Vector_Swizzle(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	
 	newInput(1, nodeValue_Text("Swizzle", self, ""));
 		
-	outputs[0] = nodeValue_Output("Result", self, VALUE_TYPE.float, [] );
+	newOutput(0, nodeValue_Output("Result", self, VALUE_TYPE.float, [] ));
 	
 	static char_get_index = function(_chr) {
 		switch(string_lower(_chr)) {

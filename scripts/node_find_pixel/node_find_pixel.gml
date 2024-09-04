@@ -18,7 +18,7 @@ function Node_Find_Pixel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	// newInput(6, nodeValue_Enum_Button("Axis", self,  1, [ "X", "Y" ]));
 	
-	outputs[0] = nodeValue_Output("Position", self, VALUE_TYPE.integer, [ 0, 0 ])
+	newOutput(0, nodeValue_Output("Position", self, VALUE_TYPE.integer, [ 0, 0 ]))
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	input_display_list = [ 0, 

@@ -10,7 +10,7 @@ function Node_Rate_Remap(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newInput(2, nodeValue_Bool("Active", self, true));
 		active_index = 2;
 	
-	outputs[0] = nodeValue_Output("Surface", self, VALUE_TYPE.surface, noone);
+	newOutput(0, nodeValue_Output("Surface", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 2,
 		["Remap",  false], 0, 1

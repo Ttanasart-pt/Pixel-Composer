@@ -4,7 +4,7 @@ function Node_Iterate_Filter(_x, _y, _group = noone) : Node_Iterator(_x, _y, _gr
 	newInput(0, nodeValue("Array", self, CONNECT_TYPE.input, VALUE_TYPE.any, [] ))
 		.setVisible(true, true);
 	
-	outputs[0] = nodeValue_Output("Array", self, VALUE_TYPE.any, noone );
+	newOutput(0, nodeValue_Output("Array", self, VALUE_TYPE.any, noone ));
 	
 	custom_input_index  = array_length(inputs);
 	custom_output_index = array_length(inputs);

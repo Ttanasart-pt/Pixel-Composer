@@ -22,7 +22,7 @@ function Node_Audio_Window(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	newInput(5, nodeValue_Bool("Match timeline", self, true, "Set window cursor to match animation timeline."));
 	
-	outputs[0] = nodeValue_Output("Bit Array", self, VALUE_TYPE.float, [])
+	newOutput(0, nodeValue_Output("Bit Array", self, VALUE_TYPE.float, []))
 		.setArrayDepth(1);
 		
 	input_display_list = [ 0, 

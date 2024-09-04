@@ -25,7 +25,7 @@ function Node_3D_Material(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 	
 	newInput(8, nodeValue_Bool("Anti aliasing", self, false ));
 	
-	outputs[0] = nodeValue_Output("Material", self, VALUE_TYPE.d3Material, noone);
+	newOutput(0, nodeValue_Output("Material", self, VALUE_TYPE.d3Material, noone));
 	
 	input_display_list = [ 0, 8, 
 		["Properties",	false], 1, 2, 3, 4, 7,

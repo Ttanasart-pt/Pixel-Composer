@@ -105,7 +105,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	newInput(16, nodeValue_Bool("Export on Save", self, false))
 	
-	outputs[0] = nodeValue_Output("Preview", self, VALUE_TYPE.surface, noone);
+	newOutput(0, nodeValue_Output("Preview", self, VALUE_TYPE.surface, noone));
 	
 	template_guide = [
 		["%d",     "Directory"],

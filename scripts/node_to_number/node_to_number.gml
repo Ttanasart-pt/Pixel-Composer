@@ -7,7 +7,7 @@ function Node_To_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput(0, nodeValue_Text("Text", self, ""))
 		.setVisible(true, true);
 	
-	outputs[0] = nodeValue_Output("Number", self, VALUE_TYPE.float, 0);
+	newOutput(0, nodeValue_Output("Number", self, VALUE_TYPE.float, 0));
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) {  
 		return toNumber(_data[0]);

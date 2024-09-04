@@ -15,7 +15,7 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		.setDisplay(VALUE_DISPLAY.slider)
 		.rejectArray();
 	
-	outputs[0] = nodeValue_Output("Path", self, VALUE_TYPE.pathnode, self);
+	newOutput(0, nodeValue_Output("Path", self, VALUE_TYPE.pathnode, self));
 	
 	cached_pos = ds_map_create();
 	

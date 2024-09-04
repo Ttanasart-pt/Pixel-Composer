@@ -39,13 +39,13 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	newInput(3, nodeValue_Bool("Use cel dimension", self, false));
 	
-	outputs[0] = nodeValue_Output("Output", self, VALUE_TYPE.surface, noone);
+	newOutput(0, nodeValue_Output("Output", self, VALUE_TYPE.surface, noone));
 	
-	outputs[1] = nodeValue_Output("Content", self, VALUE_TYPE.object, self);
+	newOutput(1, nodeValue_Output("Content", self, VALUE_TYPE.object, self));
 	
-	outputs[2] = nodeValue_Output("Path", self, VALUE_TYPE.path, "");
+	newOutput(2, nodeValue_Output("Path", self, VALUE_TYPE.path, ""));
 	
-	outputs[3] = nodeValue_Output("Palette", self, VALUE_TYPE.color, [])
+	newOutput(3, nodeValue_Output("Palette", self, VALUE_TYPE.color, []))
 		.setDisplay(VALUE_DISPLAY.palette);
 	
 	hold_visibility = true;

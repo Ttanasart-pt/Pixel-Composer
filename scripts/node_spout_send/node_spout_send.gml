@@ -5,7 +5,7 @@ function Node_Spout_Send(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	newInput(1, nodeValue_Surface("Surface", self));
 	
-	outputs[0] = nodeValue_Output("Surface", self, VALUE_TYPE.surface, noone)
+	newOutput(0, nodeValue_Output("Surface", self, VALUE_TYPE.surface, noone))
 		.setVisible(false);
 	
 	spoutIndex = spoutSenderInit();

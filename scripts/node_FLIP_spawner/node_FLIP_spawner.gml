@@ -44,7 +44,7 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		["Physics", false], 10, 6, 11, 
 	]
 	
-	outputs[0] = nodeValue_Output("Domain", self, VALUE_TYPE.fdomain, noone );
+	newOutput(0, nodeValue_Output("Domain", self, VALUE_TYPE.fdomain, noone ));
 	
 	spawn_amo     = 0;
 	prev_position = [ 0, 0 ];

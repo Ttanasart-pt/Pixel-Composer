@@ -6,7 +6,7 @@ function Node_PCX_Equation(_x, _y, _group = noone) : Node_PCX(_x, _y, _group) co
 	
 	newInput(0, nodeValue_Text("Equation", self, ""));
 	
-	outputs[0] = nodeValue_Output("Result", self, VALUE_TYPE.PCXnode, noone );
+	newOutput(0, nodeValue_Output("Result", self, VALUE_TYPE.PCXnode, noone ));
 	
 	argument_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		argument_renderer.x = _x;

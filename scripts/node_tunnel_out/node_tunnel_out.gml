@@ -22,7 +22,7 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		.setDisplay(VALUE_DISPLAY.text_tunnel)
 		.rejectArray();
 	
-	outputs[0] = nodeValue_Output("Value out", self, VALUE_TYPE.any, noone );
+	newOutput(0, nodeValue_Output("Value out", self, VALUE_TYPE.any, noone ));
 	
 	insp2UpdateTooltip = "Goto tunnel in";
 	insp2UpdateIcon    = [ THEME.tunnel, 1, c_white ];

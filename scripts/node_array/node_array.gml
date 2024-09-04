@@ -30,7 +30,7 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	input_display_list = [ 0, 1, ["Contents", false], array_adjust_tool, ];
 	
-	outputs[0] = nodeValue_Output("Array", self, VALUE_TYPE.any, []);
+	newOutput(0, nodeValue_Output("Array", self, VALUE_TYPE.any, []));
 	
 	static createNewInput = function() {
 		var index = array_length(inputs);

@@ -55,7 +55,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	newInput(17, nodeValue_Vec2("Root strength", self, [-1, -1]))
 		.setTooltip("The force required to break strand from its root. Set to -1 to make strand infinitely strong.");
 	
-	outputs[0] = nodeValue_Output("Strand", self, VALUE_TYPE.strands, noone);
+	newOutput(0, nodeValue_Output("Strand", self, VALUE_TYPE.strands, noone));
 	
 	input_display_list = [ 10, 
 		["Generation",	false], 0, 1, 5, 6, 7, 13, 14, 15, 

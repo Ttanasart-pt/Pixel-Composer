@@ -23,7 +23,7 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 	newInput(8, nodeValue_Vec2("Input shift", self, [ 0, 0 ]));
 		
-	outputs[0] = nodeValue_Output("Path", self, VALUE_TYPE.pathnode, self);
+	newOutput(0, nodeValue_Output("Path", self, VALUE_TYPE.pathnode, self));
 	
 	input_display_list = [
 		[ "Variable",  false ], 5, 7, 8, 0, 

@@ -41,7 +41,7 @@ function Node_Equation(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	newInput(0, nodeValue_Text("Equation", self, ""));
 	
-	outputs[0] = nodeValue_Output("Result", self, VALUE_TYPE.float, 0);
+	newOutput(0, nodeValue_Output("Result", self, VALUE_TYPE.float, 0));
 	
 	argument_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		argument_renderer.x = _x;

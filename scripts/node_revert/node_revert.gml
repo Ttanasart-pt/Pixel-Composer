@@ -4,7 +4,7 @@ function Node_Revert(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	newInput(0, nodeValue_Surface("Surface in", self));
 	
-	outputs[0] = nodeValue_Output("Output", self, VALUE_TYPE.surface, noone);
+	newOutput(0, nodeValue_Output("Output", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
 		["Surfaces",  true], 0, 

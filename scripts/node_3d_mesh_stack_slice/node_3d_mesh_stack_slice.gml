@@ -12,7 +12,7 @@ function Node_3D_Mesh_Stack_Slice(_x, _y, _group = noone) : Node(_x, _y, _group)
 	
 	newInput(4, nodeValue_Vec3("BBOX Padding", self, [ 0, 0, 0 ]));
 		
-	outputs[0] = nodeValue_Output("Outputs", self, VALUE_TYPE.surface, [])
+	newOutput(0, nodeValue_Output("Outputs", self, VALUE_TYPE.surface, []))
 		.setArrayDepth(1);
 	
 	mesh_data = new Inspector_Label("", f_code);

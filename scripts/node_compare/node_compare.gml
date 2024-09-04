@@ -46,7 +46,7 @@ function Node_Compare(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	newInput(2, nodeValue_Float("b", self, 0))
 		.setVisible(true, true);
 	
-	outputs[0] = nodeValue_Output("Result", self, VALUE_TYPE.boolean, false);
+	newOutput(0, nodeValue_Output("Result", self, VALUE_TYPE.boolean, false));
 	
 	static _compare = function(mode, a, b) {
 		switch(mode) {

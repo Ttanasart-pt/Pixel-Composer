@@ -5,7 +5,7 @@ function Node_Trigger(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	newInput(0, nodeValue_Trigger("Trigger", self, false ))
 		.setDisplay(VALUE_DISPLAY.button, { name: "Trigger" });
 	
-	outputs[0] = nodeValue_Output("Trigger", self, VALUE_TYPE.trigger, false );
+	newOutput(0, nodeValue_Output("Trigger", self, VALUE_TYPE.trigger, false ));
 	
 	insp2UpdateTooltip   = "Trigger";
 	insp2UpdateIcon      = [ THEME.sequence_control, 1, COLORS._main_value_positive ];

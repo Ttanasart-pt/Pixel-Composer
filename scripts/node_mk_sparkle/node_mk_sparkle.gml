@@ -28,7 +28,7 @@ function Node_MK_Sparkle(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newInput(8, nodeValue_Float("Diagonal", self, 0.2))
 		.setDisplay(VALUE_DISPLAY.slider)
 		
-	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 1, 
 		["Surfaces", false], 0, 
@@ -358,7 +358,7 @@ function __Node_MK_Sparkle(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		sparkleEditor
 	];
 	
-	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
 	
 	temp_surface = [ noone, noone ];
 	

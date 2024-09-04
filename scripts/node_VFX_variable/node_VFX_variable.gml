@@ -13,43 +13,43 @@ function Node_VFX_Variable(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	input_display_list = [ 0 ];
 	
-	outputs[0] = nodeValue_Output("Positions", self, VALUE_TYPE.float, [] )
+	newOutput(0, nodeValue_Output("Positions", self, VALUE_TYPE.float, [] ))
 		.setDisplay(VALUE_DISPLAY.none)
 		.setVisible(false);
 	
-	outputs[1] = nodeValue_Output("Scales", self, VALUE_TYPE.float, [] )
+	newOutput(1, nodeValue_Output("Scales", self, VALUE_TYPE.float, [] ))
 		.setDisplay(VALUE_DISPLAY.none)
 		.setVisible(false);
 	
-	outputs[2] = nodeValue_Output("Rotations", self, VALUE_TYPE.float, 0 )
+	newOutput(2, nodeValue_Output("Rotations", self, VALUE_TYPE.float, 0 ))
 		.setDisplay(VALUE_DISPLAY.none)
 		.setVisible(false);
 	
-	outputs[3] = nodeValue_Output("Blending", self, VALUE_TYPE.color, 0 )
+	newOutput(3, nodeValue_Output("Blending", self, VALUE_TYPE.color, 0 ))
 		.setDisplay(VALUE_DISPLAY.none)
 		.setVisible(false);
 	
-	outputs[4] = nodeValue_Output("Alpha", self, VALUE_TYPE.float, 0 )
+	newOutput(4, nodeValue_Output("Alpha", self, VALUE_TYPE.float, 0 ))
 		.setDisplay(VALUE_DISPLAY.none)
 		.setVisible(false);
 	
-	outputs[5] = nodeValue_Output("Life", self, VALUE_TYPE.float, 0 )
+	newOutput(5, nodeValue_Output("Life", self, VALUE_TYPE.float, 0 ))
 		.setDisplay(VALUE_DISPLAY.none)
 		.setVisible(false);
 	
-	outputs[6] = nodeValue_Output("Max life", self, VALUE_TYPE.float, 0 )
+	newOutput(6, nodeValue_Output("Max life", self, VALUE_TYPE.float, 0 ))
 		.setDisplay(VALUE_DISPLAY.none)
 		.setVisible(false);
 	
-	outputs[7] = nodeValue_Output("Surface", self, VALUE_TYPE.surface, noone )
+	newOutput(7, nodeValue_Output("Surface", self, VALUE_TYPE.surface, noone ))
 		.setDisplay(VALUE_DISPLAY.none)
 		.setVisible(false);
 	
-	outputs[8] = nodeValue_Output("Velocity", self, VALUE_TYPE.float, [] )
+	newOutput(8, nodeValue_Output("Velocity", self, VALUE_TYPE.float, [] ))
 		.setDisplay(VALUE_DISPLAY.none)
 		.setVisible(false);
 	
-	outputs[9] = nodeValue_Output("Seed", self, VALUE_TYPE.float, 0 )
+	newOutput(9, nodeValue_Output("Seed", self, VALUE_TYPE.float, 0 ))
 		.setDisplay(VALUE_DISPLAY.none)
 		.setVisible(false);
 		

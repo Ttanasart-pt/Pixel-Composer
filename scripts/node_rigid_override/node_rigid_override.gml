@@ -22,7 +22,7 @@ function Node_Rigid_Override(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	newInput(6, nodeValue_Vec2("Velocity", self, [0, 0] ));
 		
-	outputs[0] = nodeValue_Output("Object", self, VALUE_TYPE.rigid, noone );
+	newOutput(0, nodeValue_Output("Object", self, VALUE_TYPE.rigid, noone ));
 	
 	static update = function(frame = CURRENT_FRAME) {
 		var objs = getInputData(0);

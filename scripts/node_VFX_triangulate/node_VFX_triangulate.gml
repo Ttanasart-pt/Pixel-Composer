@@ -27,7 +27,7 @@ function Node_VFX_Triangulate(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		
 	newInput(5, nodeValue_Bool("Inherit Color", self, false ));
 	
-	outputs[0] = nodeValue_Output("Triangles", self, VALUE_TYPE.surface, noone);
+	newOutput(0, nodeValue_Output("Triangles", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 0, 
 		[ "Particles", false], 1, 

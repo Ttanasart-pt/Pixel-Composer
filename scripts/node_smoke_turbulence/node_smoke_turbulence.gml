@@ -25,7 +25,7 @@ function Node_Smoke_Turbulence(_x, _y, _group = noone) : Node_Smoke(_x, _y, _gro
 		["Turbulence",	false], 5, 1, 2, 4, 3
 	];
 	
-	outputs[0] = nodeValue_Output("Domain", self, VALUE_TYPE.sdomain, noone);
+	newOutput(0, nodeValue_Output("Domain", self, VALUE_TYPE.sdomain, noone));
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		inputs[1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);

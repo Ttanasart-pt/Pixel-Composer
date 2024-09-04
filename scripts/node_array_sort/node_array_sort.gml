@@ -9,9 +9,9 @@ function Node_Array_Sort(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	newInput(1, nodeValue_Enum_Button("Order", self,  0, [ "Ascending", "Descending" ]))
 		.rejectArray();
 	
-	outputs[0] = nodeValue_Output("Sorted array", self, VALUE_TYPE.any, []);
+	newOutput(0, nodeValue_Output("Sorted array", self, VALUE_TYPE.any, []));
 	
-	outputs[1] = nodeValue_Output("Sorted index", self, VALUE_TYPE.integer, [])
+	newOutput(1, nodeValue_Output("Sorted index", self, VALUE_TYPE.integer, []))
 		.setVisible(false);
 	
 	static sortAcs = function(v1, v2) { return v2.val - v1.val; }

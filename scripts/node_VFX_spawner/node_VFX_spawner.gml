@@ -17,10 +17,10 @@ function Node_VFX_Spawner(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y
 	
 	newInput(input_len + 1, nodeValue_Int("Step interval", self, 1, "How often the 'on step' event is triggered.\nWith 1 being trigger every frame, 2 means triggered once every 2 frames."));
 	
-	outputs[0] = nodeValue_Output("Particles",	self, VALUE_TYPE.particle, [] );
-	outputs[1] = nodeValue_Output("On create",	self, VALUE_TYPE.node, noone );
-	outputs[2] = nodeValue_Output("On step",		self, VALUE_TYPE.node, noone );
-	outputs[3] = nodeValue_Output("On destroy",	self, VALUE_TYPE.node, noone );
+	newOutput(0, nodeValue_Output("Particles",	self, VALUE_TYPE.particle, [] ));
+	newOutput(1, nodeValue_Output("On create",	self, VALUE_TYPE.node, noone ));
+	newOutput(2, nodeValue_Output("On step",		self, VALUE_TYPE.node, noone ));
+	newOutput(3, nodeValue_Output("On destroy",	self, VALUE_TYPE.node, noone ));
 	
 	array_insert(input_display_list, 0, ["Trigger", true], input_len + 0, input_len + 1);
 	

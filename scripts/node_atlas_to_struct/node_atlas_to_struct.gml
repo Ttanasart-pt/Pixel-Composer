@@ -5,7 +5,7 @@ function Node_Atlas_Struct(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(0, nodeValue_Surface("Atlas", self))
 		.setVisible(true, true);
 	
-	outputs[0] = nodeValue_Output("Struct", self, VALUE_TYPE.struct, [])
+	newOutput(0, nodeValue_Output("Struct", self, VALUE_TYPE.struct, []))
 		.setArrayDepth(1);
 		
 	static update = function(frame = CURRENT_FRAME) {

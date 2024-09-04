@@ -5,7 +5,7 @@ function Node_Array_Zip(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	newInput(0, nodeValue("Array", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0))
 		.setVisible(true, true);
 	
-	outputs[0] = nodeValue_Output("Output", self, VALUE_TYPE.integer, 0);
+	newOutput(0, nodeValue_Output("Output", self, VALUE_TYPE.integer, 0));
 	
 	static createNewInput = function() {
 		var index = array_length(inputs);

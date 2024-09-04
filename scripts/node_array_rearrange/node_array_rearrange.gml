@@ -11,7 +11,7 @@ function Node_Array_Rearrange(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	newInput(1, nodeValue_Int("Orders", self, []))
 		.setArrayDepth(1);
 	
-	outputs[0] = nodeValue_Output("Array", self, VALUE_TYPE.any, 0)
+	newOutput(0, nodeValue_Output("Array", self, VALUE_TYPE.any, 0))
 		.setArrayDepth(1);
 	
 	type     = VALUE_TYPE.any;

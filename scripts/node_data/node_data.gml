@@ -585,7 +585,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	/////========== JUNCTIONS ==========
 	
-	static newInput = function(index, junction) { inputs[index] = junction; return junction;  }
+	static newInput  = function(index, junction) { inputs[index]  = junction; return junction;  }
+	static newOutput = function(index, junction) { outputs[index] = junction; return junction;  }
 	
 	static getInputJunctionIndex = function(index) {
 		INLINE 

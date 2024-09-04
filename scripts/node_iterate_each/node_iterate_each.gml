@@ -4,7 +4,7 @@ function Node_Iterate_Each(_x, _y, _group = noone) : Node_Iterator(_x, _y, _grou
 	newInput(0, nodeValue("Array", self, CONNECT_TYPE.input, VALUE_TYPE.any, [] ))
 		.setVisible(true, true);
 	
-	outputs[0] = nodeValue_Output("Array", self, VALUE_TYPE.any, [] );
+	newOutput(0, nodeValue_Output("Array", self, VALUE_TYPE.any, [] ));
 	
 	custom_input_index  = array_length(inputs);
 	custom_output_index = array_length(inputs);

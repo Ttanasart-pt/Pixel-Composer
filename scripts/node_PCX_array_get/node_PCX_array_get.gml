@@ -5,7 +5,7 @@ function Node_PCX_Array_Get(_x, _y, _group = noone) : Node_PCX(_x, _y, _group) c
 	
 	newInput(1, nodeValue("Index", self, CONNECT_TYPE.input, VALUE_TYPE.PCXnode, noone));
 	
-	outputs[0] = nodeValue_Output("PCX", self, VALUE_TYPE.PCXnode, noone);
+	newOutput(0, nodeValue_Output("PCX", self, VALUE_TYPE.PCXnode, noone));
 	
 	static update = function() {
 		var _arr = getInputData(0);

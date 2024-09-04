@@ -4,7 +4,7 @@ function Node_3D_Mesh(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group) c
 	name    = "3D Mesh";
 	in_mesh = array_length(inputs);
 	
-	outputs[0] = nodeValue_Output("Mesh", self, VALUE_TYPE.d3Mesh, noone);
+	newOutput(0, nodeValue_Output("Mesh", self, VALUE_TYPE.d3Mesh, noone));
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) {}
 }

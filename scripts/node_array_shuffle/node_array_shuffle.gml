@@ -10,7 +10,7 @@ function Node_Array_Shuffle(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[1].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) })
 		.rejectArray();
 	
-	outputs[0] = nodeValue_Output("Shuffled array", self, VALUE_TYPE.any, []);
+	newOutput(0, nodeValue_Output("Shuffled array", self, VALUE_TYPE.any, []));
 	
 	static update = function(frame = CURRENT_FRAME) {
 		var arr = getInputData(0);

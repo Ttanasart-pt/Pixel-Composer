@@ -29,7 +29,7 @@ function Node_Interlaced(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	newInput(11, nodeValue_Bool("Loop", self, false));
 	
-	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 1, 
 		["Surface",   false], 0, 2, 3, 4, 

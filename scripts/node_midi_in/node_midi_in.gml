@@ -16,13 +16,13 @@ function Node_MIDI_In(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	newInput(0, nodeValue_Enum_Scroll("Input", self,  0, { data: _miniNames, update_hover: false }))
 		.rejectArray();
 		
-	outputs[0] = nodeValue_Output("Raw Message", self, VALUE_TYPE.float, []);
+	newOutput(0, nodeValue_Output("Raw Message", self, VALUE_TYPE.float, []));
 	
-	outputs[1] = nodeValue_Output("Pressing notes", self, VALUE_TYPE.float, []);
+	newOutput(1, nodeValue_Output("Pressing notes", self, VALUE_TYPE.float, []));
 	
-	outputs[2] = nodeValue_Output("Direct values", self, VALUE_TYPE.struct, {});
+	newOutput(2, nodeValue_Output("Direct values", self, VALUE_TYPE.struct, {}));
 	
-	watcher_controllers = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { #region
+	watcher_controllers = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		var _h = ui(48);
 		
 		var bw = _w / 2 - ui(4);
@@ -87,7 +87,7 @@ function Node_MIDI_In(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		}
 		
 		return _h;
-	}); #endregion
+	});
 	
 	input_display_list = [ 0, 
 		["Watchers", false], watcher_controllers, 
@@ -102,7 +102,8 @@ function Node_MIDI_In(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		array_push(inputs,  _inp);
 		array_push(inputs,  nodeValue("Normalize", self, CONNECT_TYPE.input,  VALUE_TYPE.boolean, false ));
 		
-		array_push(outputs, nodeValue_Output("Value", self, VALUE_TYPE.float, -1 ));
+		var _out = nodeValue_Output("Value", self, VALUE_TYPE.float, -1 );
+		array_push(outputs, _out);
 		
 		return _inp;
 	} setDynamicInput(2, false);
@@ -118,11 +119,11 @@ function Node_MIDI_In(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		new checkBox(function() { attributes.live_update = !attributes.live_update; })]
 	);
 	
-	static step = function() { #region
+	static step = function() {
 		LIVE_UPDATE = attributes.live_update;
-	} #endregion
+	}
 	
-	static update = function() { #region
+	static update = function() {
 		var _inport = inputs[0].getValue();
 		if(_inport != MIDI_INPORT) {
 			rtmidi_set_inport(_inport);
@@ -172,11 +173,11 @@ function Node_MIDI_In(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 			_ind++;
 		}
 		
-	} #endregion
+	}
 	
 	static onDestroy = function() { rtmidi_deinit(); }
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
 		var bx   = bbox.xc;
 		var by   = bbox.y0 + bbox.h * 0.55;
@@ -186,13 +187,9 @@ function Node_MIDI_In(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		
 		draw_set_text(f_sdf, fa_center, fa_center, c_white);
 		var text = string(disp_value);
-			
 		var ss = max(0.5, _s) * 0.5;
 		by = bbox.y0 + bbox.h * 0.25 / 2;
 			
-		draw_set_halign(fa_center);
-		draw_set_valign(fa_center);
-			
 		draw_text_cut(bx, by, text, bbox.w, ss);
-	} #endregion
+	}
 }

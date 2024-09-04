@@ -33,9 +33,9 @@ function Node_XML_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		.setDisplay(VALUE_DISPLAY.path_load, { filter: "XML file|*.xml" })
 		.rejectArray();
 		
-	outputs[0] = nodeValue_Output("Content", self, VALUE_TYPE.struct, {});
+	newOutput(0, nodeValue_Output("Content", self, VALUE_TYPE.struct, {}));
 	
-	outputs[1] = nodeValue_Output("Path", self, VALUE_TYPE.path, "")
+	newOutput(1, nodeValue_Output("Path", self, VALUE_TYPE.path, ""))
 		.setVisible(true, true);
 	
 	content      = {};

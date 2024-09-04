@@ -20,7 +20,7 @@ function Node_Path_Profile(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	newInput(8, nodeValue_Color("BG Color", self, c_black ));
 	
-	outputs[0] = nodeValue_Output("Output", self, VALUE_TYPE.surface, noone );
+	newOutput(0, nodeValue_Output("Output", self, VALUE_TYPE.surface, noone ));
 	
 	input_display_list = [ 0,
 		[ "Profile",    false ], 1, 2, 

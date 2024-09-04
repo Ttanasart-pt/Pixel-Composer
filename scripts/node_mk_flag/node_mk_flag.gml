@@ -40,7 +40,7 @@ function Node_MK_Flag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		["Rendering",	false], 10, 11, 12, 
 	];
 	
-	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
 	
 	attributes.iteration = 4;
 	array_push(attributeEditors, "Verlet solver");

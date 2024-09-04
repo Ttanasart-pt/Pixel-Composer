@@ -4,7 +4,7 @@ function Node_Color(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	newInput(0, nodeValue_Color("Color", self, c_white));
 	
-	outputs[0] = nodeValue_Output("Color", self, VALUE_TYPE.color, c_white);
+	newOutput(0, nodeValue_Output("Color", self, VALUE_TYPE.color, c_white));
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) {  
 		return _data[0];

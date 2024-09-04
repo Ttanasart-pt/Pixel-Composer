@@ -20,7 +20,7 @@ function Node_Struct(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	input_display_list = [ size_adjust_tool, ];
 	
-	outputs[0] = nodeValue_Output("Struct", self, VALUE_TYPE.struct, {});
+	newOutput(0, nodeValue_Output("Struct", self, VALUE_TYPE.struct, {}));
 	
 	#region //////////////////////////////// Dynamic IO ////////////////////////////////
 	

@@ -5,24 +5,24 @@ function Node_Atlas_Get(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	newInput(0, nodeValue_Surface("Atlas", self))
 		.setVisible(true, true);
 	
-	outputs[0] = nodeValue_Output("Surface", self, VALUE_TYPE.surface, [])
+	newOutput(0, nodeValue_Output("Surface", self, VALUE_TYPE.surface, []))
 		.setArrayDepth(1);
 	
-	outputs[1] = nodeValue_Output("Position", self, VALUE_TYPE.float, [])
+	newOutput(1, nodeValue_Output("Position", self, VALUE_TYPE.float, []))
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setArrayDepth(1);
 	
-	outputs[2] = nodeValue_Output("Rotation", self, VALUE_TYPE.float, [])
+	newOutput(2, nodeValue_Output("Rotation", self, VALUE_TYPE.float, []))
 		.setArrayDepth(1);
 	
-	outputs[3] = nodeValue_Output("Scale", self, VALUE_TYPE.float, [])
+	newOutput(3, nodeValue_Output("Scale", self, VALUE_TYPE.float, []))
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setArrayDepth(1);
 		
-	outputs[4] = nodeValue_Output("Blend", self, VALUE_TYPE.color, [])
+	newOutput(4, nodeValue_Output("Blend", self, VALUE_TYPE.color, []))
 		.setArrayDepth(1);
 		
-	outputs[5] = nodeValue_Output("Alpha", self, VALUE_TYPE.float, [])
+	newOutput(5, nodeValue_Output("Alpha", self, VALUE_TYPE.float, []))
 		.setArrayDepth(1);
 	
 	static update = function(frame = CURRENT_FRAME) {

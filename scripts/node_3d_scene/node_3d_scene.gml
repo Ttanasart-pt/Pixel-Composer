@@ -1,7 +1,7 @@
 function Node_3D_Scene(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constructor {
 	name = "3D Scene";
 	
-	outputs[0] = nodeValue_Output("Scene", self, VALUE_TYPE.d3Scene, noone);
+	newOutput(0, nodeValue_Output("Scene", self, VALUE_TYPE.d3Scene, noone));
 	
 	object_lists = [];
 	

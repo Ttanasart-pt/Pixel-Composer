@@ -4,7 +4,7 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	cached_pos = ds_map_create();
 	
-	outputs[0] = nodeValue_Output("Combined Path", self, VALUE_TYPE.pathnode, self);
+	newOutput(0, nodeValue_Output("Combined Path", self, VALUE_TYPE.pathnode, self));
 	
 	static createNewInput = function() {
 		var index = array_length(inputs);

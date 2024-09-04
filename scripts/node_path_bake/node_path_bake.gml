@@ -9,7 +9,7 @@ function Node_Path_Bake(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	newInput(2, nodeValue_Bool("Spread single path", self, true));
 	
-	outputs[0] = nodeValue_Output("Segments", self, VALUE_TYPE.float, [[]])
+	newOutput(0, nodeValue_Output("Segments", self, VALUE_TYPE.float, [[]]))
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setArrayDepth(2);
 	

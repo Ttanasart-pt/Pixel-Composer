@@ -145,9 +145,9 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 	
 	newInput(50, nodeValue_Bool("Texture Interpolation", self, false));
 	
-	outputs[0] = nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone);
+	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
-	outputs[1] = nodeValue_Output("Shape Data", self, VALUE_TYPE.sdf, noone);
+	newOutput(1, nodeValue_Output("Shape Data", self, VALUE_TYPE.sdf, noone));
 	
 	input_display_list = [ 0,
 		["Primitive",  false],  1, 21, 22, 23, 24, 25, 26, 27, 28, 39, 40, 41, 

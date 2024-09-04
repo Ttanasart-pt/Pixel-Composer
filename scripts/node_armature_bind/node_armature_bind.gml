@@ -27,12 +27,12 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput(4, nodeValue_Float("Bone scale", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0.1, 2, 0.01 ] });
 	
-	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
 	
-	outputs[1] = nodeValue_Output("Atlas data", self, VALUE_TYPE.surface, [])
+	newOutput(1, nodeValue_Output("Atlas data", self, VALUE_TYPE.surface, []))
 		.rejectArrayProcess();
 	
-	outputs[2] = nodeValue_Output("Bind data", self, VALUE_TYPE.struct, [])
+	newOutput(2, nodeValue_Output("Bind data", self, VALUE_TYPE.struct, []))
 		.setArrayDepth(1);
 	
 	attribute_surface_depth();

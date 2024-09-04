@@ -35,9 +35,9 @@ function Node_3D_Transform_Image(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, 
 	
 	outputs[0].setVisible(false);
 	
-	outputs[1] = nodeValue_Output("Rendered", self, VALUE_TYPE.surface, noone);
+	newOutput(1, nodeValue_Output("Rendered", self, VALUE_TYPE.surface, noone));
 	
-	outputs[2] = nodeValue_Output("Depth", self, VALUE_TYPE.surface, noone);
+	newOutput(2, nodeValue_Output("Depth", self, VALUE_TYPE.surface, noone));
 	
 	output_display_list = [ 1, 2 ]
 	

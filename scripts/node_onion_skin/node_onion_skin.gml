@@ -18,7 +18,7 @@ function Node_Onion_Skin(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	newInput(6, nodeValue_Bool("On top", self, true, "Render current frame on top of all frames."))
 	
-	outputs[0] = nodeValue_Output("Output", self, VALUE_TYPE.surface, noone);
+	newOutput(0, nodeValue_Output("Output", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
 		["Surface", false], 0, 1, 5,  

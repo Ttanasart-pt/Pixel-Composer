@@ -6,7 +6,7 @@ function Node_Palette(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	newInput(1, nodeValue_Slider_Range("Trim range", self, [ 0, 1 ]));
 	
-	outputs[0] = nodeValue_Output("Palette", self, VALUE_TYPE.color, [])
+	newOutput(0, nodeValue_Output("Palette", self, VALUE_TYPE.color, []))
 		.setDisplay(VALUE_DISPLAY.palette);
 	
 	input_display_list = [0, 

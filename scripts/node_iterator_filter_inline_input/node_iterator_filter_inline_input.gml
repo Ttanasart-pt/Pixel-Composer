@@ -11,7 +11,7 @@ function Node_Iterator_Filter_Inline_Input(_x, _y, _group = noone) : Node(_x, _y
 	newInput(0, nodeValue("Array in", self, CONNECT_TYPE.input, VALUE_TYPE.any, [] ))
 		.setVisible(true, true);
 	
-	outputs[0] = nodeValue_Output("Value in", self, VALUE_TYPE.any, 0 );
+	newOutput(0, nodeValue_Output("Value in", self, VALUE_TYPE.any, 0 ));
 	
 	static onGetPreviousNodes = function(arr) {
 		array_push(arr, loop);

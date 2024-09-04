@@ -138,7 +138,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		return bone;
 	} #endregion
 	
-	outputs[0] = nodeValue_Output("Armature", self, VALUE_TYPE.armature, noone);
+	newOutput(0, nodeValue_Output("Armature", self, VALUE_TYPE.armature, noone));
 	
 	#region ++++ attributes ++++
 	attributes.bones = new __Bone(,,,,, self);

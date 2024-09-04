@@ -16,7 +16,7 @@ function Node_Palette_Sort(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
     - L:   Brightness
     - Use small letter for ascending, capital letter for descending order."));
 	
-	outputs[0] = nodeValue_Output("Sorted palette", self, VALUE_TYPE.color, [])
+	newOutput(0, nodeValue_Output("Sorted palette", self, VALUE_TYPE.color, []))
 		.setDisplay(VALUE_DISPLAY.palette);
 	
 	input_display_list = [

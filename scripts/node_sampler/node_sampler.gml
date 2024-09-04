@@ -12,7 +12,7 @@ function Node_Sampler(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	newInput(3, nodeValue_Bool("Alpha", self, false));
 	
-	outputs[0] = nodeValue_Output("Color", self, VALUE_TYPE.color, c_white);
+	newOutput(0, nodeValue_Output("Color", self, VALUE_TYPE.color, c_white));
 	
 	static getPreviewValues = function() { return getInputData(0); }
 	

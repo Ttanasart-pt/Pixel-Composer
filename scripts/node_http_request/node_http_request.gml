@@ -8,7 +8,7 @@ function Node_HTTP_request(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	newInput(2, nodeValue_Text("Content", self, ""))
 	
-	outputs[0] = nodeValue_Output("Result", self, VALUE_TYPE.text, "");
+	newOutput(0, nodeValue_Output("Result", self, VALUE_TYPE.text, ""));
 	
 	address_domain = "";
 	

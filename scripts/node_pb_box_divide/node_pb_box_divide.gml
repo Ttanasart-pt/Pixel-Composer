@@ -15,9 +15,9 @@ function Node_PB_Box_Divide(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _group
 		
 	newInput(6, nodeValue_Enum_Button("Spacing", self,  0 , [ "Space Between", "Space Around", "Begin", "End" ]));
 	
-	outputs[0] = nodeValue_Output("pBox Content", self, VALUE_TYPE.pbBox, [ noone ] );
+	newOutput(0, nodeValue_Output("pBox Content", self, VALUE_TYPE.pbBox, [ noone ] ));
 		
-	outputs[1] = nodeValue_Output("pBox Space", self, VALUE_TYPE.pbBox, [ noone ] );
+	newOutput(1, nodeValue_Output("pBox Space", self, VALUE_TYPE.pbBox, [ noone ] ));
 	
 	input_display_list = [ 0, 1,
 		["Divide",	false], 4, 2, 3, 6, 5, 

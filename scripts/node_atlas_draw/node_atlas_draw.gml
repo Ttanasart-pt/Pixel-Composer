@@ -7,7 +7,7 @@ function Node_Atlas_Draw(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	newInput(1, nodeValue_Surface("Atlas", self))
 		.setVisible(true, true);
 	
-	outputs[0] = nodeValue_Output("Surface", self, VALUE_TYPE.surface, noone);
+	newOutput(0, nodeValue_Output("Surface", self, VALUE_TYPE.surface, noone));
 	
 	attribute_interpolation(true);
 	

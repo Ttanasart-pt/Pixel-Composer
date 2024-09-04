@@ -32,7 +32,7 @@ output.color = surfaceColor;"))
 	
 	newInput(2, nodeValue_Surface("Base Texture", self));
 	
-	outputs[0] = nodeValue_Output("Surface", self, VALUE_TYPE.surface, noone );
+	newOutput(0, nodeValue_Output("Surface", self, VALUE_TYPE.surface, noone ));
 	
 	static createNewInput = function() {
 		var index = array_length(inputs);

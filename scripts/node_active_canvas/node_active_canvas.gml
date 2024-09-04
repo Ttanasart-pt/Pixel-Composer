@@ -20,7 +20,7 @@ function Node_Active_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	newInput(8, nodeValue_Range("Distance", self, [ 1, 1 ] , { linked : true }));
 	
-	outputs[0] = nodeValue_Output("Output", self, VALUE_TYPE.surface, noone );
+	newOutput(0, nodeValue_Output("Output", self, VALUE_TYPE.surface, noone ));
 	
 	input_display_list = [ 0,
 		[ "Brush transform",  false ], 7, 2, 3, 4,

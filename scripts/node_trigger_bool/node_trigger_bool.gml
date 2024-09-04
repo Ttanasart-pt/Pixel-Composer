@@ -10,7 +10,7 @@ function Node_Trigger_Bool(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 												                       new scrollItem("True to False", s_node_trigger_cond, 2), 
 												                       new scrollItem("Value changed", s_node_trigger_cond, 3), ]));
 	
-	outputs[0] = nodeValue_Output("Trigger", self, VALUE_TYPE.trigger, false);
+	newOutput(0, nodeValue_Output("Trigger", self, VALUE_TYPE.trigger, false));
 	
 	prevVal = false;
 	preview = false;

@@ -9,7 +9,7 @@ function Node_Array_Sample(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(1, nodeValue_Float("Step", self, 1))
 		.setVisible(true, true);
 	
-	outputs[0] = nodeValue_Output("Array", self, VALUE_TYPE.float, 0)
+	newOutput(0, nodeValue_Output("Array", self, VALUE_TYPE.float, 0))
 		.setArrayDepth(1);
 		
 	static sample = function(arr, stp) {

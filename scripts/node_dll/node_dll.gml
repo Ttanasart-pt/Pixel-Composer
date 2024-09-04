@@ -10,7 +10,7 @@ function Node_DLL(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	newInput(2, nodeValue_Enum_Button("Return type", self,  0, [ "Number", "Buffer" ]));
 	
-	outputs[0] = nodeValue_Output("Return Value", self, VALUE_TYPE.float, 0);
+	newOutput(0, nodeValue_Output("Return Value", self, VALUE_TYPE.float, 0));
 	
 	ext_cache       = "";
 	ext_function    = -1;

@@ -42,7 +42,7 @@ function Node_RM_Render(_x, _y, _group = noone) : Node_RM(_x, _y, _group) constr
 	
 	newInput(14, nodeValue_Bool("Env Interpolation", self, false));
 	
-	outputs[0] = nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone);
+	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 0, 13, 
 		["Camera",  false], 11, 12, 1, 2, 3, 4, 5, 

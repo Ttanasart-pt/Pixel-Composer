@@ -8,7 +8,7 @@ function Node_PB_Draw(_x, _y, _group = noone) : Node_PB(_x, _y, _group) construc
 	
 	newInput(2, nodeValue_Bool("Apply Mask", self, true ));
 	
-	outputs[0] = nodeValue_Output("pBox", self, VALUE_TYPE.pbBox, noone);
+	newOutput(0, nodeValue_Output("pBox", self, VALUE_TYPE.pbBox, noone));
 	
 	static getGraphPreviewSurface = function() {
 		var _nbox = outputs[0].getValue();

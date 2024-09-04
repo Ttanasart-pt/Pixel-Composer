@@ -13,7 +13,7 @@ function Node_Path_Map(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		.setValidator(VV_min(2))
 		.rejectArray();
 		
-	outputs[0] = nodeValue_Output("Rendered", self, VALUE_TYPE.surface, noone);
+	newOutput(0, nodeValue_Output("Rendered", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 0, 
 		["Mapping", false], 1, 2, 3, 

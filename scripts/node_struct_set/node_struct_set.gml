@@ -10,7 +10,7 @@ function Node_Struct_Set(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	newInput(2, nodeValue("Value", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0));
 	
-	outputs[0] = nodeValue_Output("Struct", self, VALUE_TYPE.struct, {});
+	newOutput(0, nodeValue_Output("Struct", self, VALUE_TYPE.struct, {}));
 	
 	static update = function() { 
 		var str = getInputData(0);

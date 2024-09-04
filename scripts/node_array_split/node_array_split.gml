@@ -7,7 +7,7 @@ function Node_Array_Split(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	newInput(0, nodeValue("Array", self, CONNECT_TYPE.input, VALUE_TYPE.any, []))
 		.setVisible(true, true);
 	
-	outputs[0] = nodeValue_Output("val 0", self, VALUE_TYPE.any, 0);
+	newOutput(0, nodeValue_Output("val 0", self, VALUE_TYPE.any, 0));
 	
 	attributes.output_amount = 1;
 	
@@ -18,7 +18,6 @@ function Node_Array_Split(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		inputs[0].resetDisplay();
 		
 		if(!is_array(_inp)) {
-			
 			attributes.output_amount = 0;
 			return;
 		}
@@ -27,7 +26,7 @@ function Node_Array_Split(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		for (var i = 0; i < amo; i++) {
 			if(i >= array_length(outputs))
-				outputs[i] = nodeValue_Output($"val {i}", self, type, 0)
+				newOutput(i, nodeValue_Output($"val {i}", self, type, 0))
 			
 			outputs[i].setValue(_inp[i]);
 		}
@@ -49,9 +48,8 @@ function Node_Array_Split(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _outAmo = attributes.output_amount;
 		var _ind = 0;
 		
-		
 		repeat(_outAmo) {
-			array_push(outputs, nodeValue_Output($"val {_ind}", self, VALUE_TYPE.any, 0));
+			newOutput(_ind, nodeValue_Output($"val {_ind}", self, VALUE_TYPE.any, 0));
 			_ind++;
 		}
 	}

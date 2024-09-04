@@ -9,7 +9,7 @@ function Node_FLIP_to_VFX(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	newInput(0, nodeValue_Fdomain("Domain", self, noone))
 		.setVisible(true, true);
 		
-	outputs[0] = nodeValue_Output("Particles",	self, VALUE_TYPE.particle, [] );
+	newOutput(0, nodeValue_Output("Particles",	self, VALUE_TYPE.particle, [] ));
 	
 	attributes.part_amount = 512;
 	array_push(attributeEditors, ["Maximum particles", function() { return attributes.part_amount; },

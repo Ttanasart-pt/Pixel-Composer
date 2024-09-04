@@ -16,7 +16,7 @@ function Node_Smoke_Update(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 		["Update",	false], 1,
 	]
 	
-	outputs[0] = nodeValue_Output("Domain", self, VALUE_TYPE.sdomain, noone);
+	newOutput(0, nodeValue_Output("Domain", self, VALUE_TYPE.sdomain, noone));
 	
 	static update = function(frame = CURRENT_FRAME) {
 		if(!PROJECT.animator.is_playing) return;

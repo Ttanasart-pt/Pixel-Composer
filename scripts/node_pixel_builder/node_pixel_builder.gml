@@ -7,7 +7,7 @@ function Node_Pixel_Builder(_x, _y, _group = noone) : Node_Collection(_x, _y, _g
 	
 	newInput(0, nodeValue_Dimension(self));
 	
-	outputs[0] = nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone);
+	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	custom_input_index  = array_length(inputs);
 	custom_output_index = array_length(outputs);

@@ -10,7 +10,7 @@ function Node_String_Regex_Replace(_x, _y, _group = noone) : Node_Processor(_x, 
 	
 	newInput(2, nodeValue_Text("Replacement", self, ""));
 	
-	outputs[0] = nodeValue_Output("Results", self, VALUE_TYPE.text, "");
+	newOutput(0, nodeValue_Output("Results", self, VALUE_TYPE.text, ""));
 	
 	input_display_list = [
 		0, 1, 2, 

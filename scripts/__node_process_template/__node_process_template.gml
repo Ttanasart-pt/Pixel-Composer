@@ -3,7 +3,7 @@ function Node_Process_Template(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	
 	newInput(0, nodeValue_Surface("", self));
 	
-	outputs[0] = nodeValue_Output("", self, VALUE_TYPE.surface, noone);
+	newOutput(0, nodeValue_Output("", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 0 ];
 	

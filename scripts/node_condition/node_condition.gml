@@ -39,8 +39,8 @@ function Node_Condition(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		["Result",	  true], 3, 4
 	]
 	
-	outputs[0] = nodeValue_Output("Result", self, VALUE_TYPE.any, []);
-	outputs[1] = nodeValue_Output("Bool", self, VALUE_TYPE.boolean, false);
+	newOutput(0, nodeValue_Output("Result", self, VALUE_TYPE.any, []));
+	newOutput(1, nodeValue_Output("Bool", self, VALUE_TYPE.boolean, false));
 	
 	static step = function() { #region
 		var _mode = getInputData(5);

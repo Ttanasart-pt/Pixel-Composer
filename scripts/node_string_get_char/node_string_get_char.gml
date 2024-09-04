@@ -9,7 +9,7 @@ function Node_String_Get_Char(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	
 	newInput(2, nodeValue_Int("Amount", self, 1));
 	
-	outputs[0] = nodeValue_Output("Text", self, VALUE_TYPE.text, "");
+	newOutput(0, nodeValue_Output("Text", self, VALUE_TYPE.text, ""));
 	
 	static processData = function(_output, _data, _index = 0) {
 		return string_copy(_data[0], _data[1], _data[2]);

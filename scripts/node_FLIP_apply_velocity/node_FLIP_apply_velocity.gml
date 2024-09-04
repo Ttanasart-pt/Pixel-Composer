@@ -25,7 +25,7 @@ function Node_FLIP_Apply_Velocity(_x, _y, _group = noone) : Node(_x, _y, _group)
 		["Velocity",	false], 4, 1, 2, 5, 3, 
 	]
 	
-	outputs[0] = nodeValue_Output("Domain", self, VALUE_TYPE.fdomain, noone );
+	newOutput(0, nodeValue_Output("Domain", self, VALUE_TYPE.fdomain, noone ));
 	
 	static getDimension = function() { 
 		var domain = getInputData(0);

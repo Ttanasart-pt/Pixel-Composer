@@ -32,7 +32,7 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	newInput(5, nodeValue_Bool("Clamp to range", self, true));
 	
-	outputs[0] = nodeValue_Output("Number", self, VALUE_TYPE.float, 0);
+	newOutput(0, nodeValue_Output("Number", self, VALUE_TYPE.float, 0));
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var __ax = getInputData(0);

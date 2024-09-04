@@ -31,12 +31,12 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	newInput(3, nodeValue_Bool("Round anchor", self, false))
 		.rejectArray();
 		
-	outputs[0] = nodeValue_Output("Position out", self, VALUE_TYPE.float, [ 0, 0 ])
+	newOutput(0, nodeValue_Output("Position out", self, VALUE_TYPE.float, [ 0, 0 ]))
 		.setDisplay(VALUE_DISPLAY.vector);
 		
-	outputs[1] = nodeValue_Output("Path data", self, VALUE_TYPE.pathnode, self);
+	newOutput(1, nodeValue_Output("Path data", self, VALUE_TYPE.pathnode, self));
 		
-	outputs[2] = nodeValue_Output("Anchors", self, VALUE_TYPE.float, [])
+	newOutput(2, nodeValue_Output("Anchors", self, VALUE_TYPE.float, []))
 		.setVisible(false)
 		.setArrayDepth(1);
 	

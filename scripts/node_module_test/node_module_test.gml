@@ -9,7 +9,7 @@ function Node_Module_Test(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	newInput(0, nodeValue_Float("Static input", self, 0));
 	
-	outputs[0] = nodeValue_Output("Output", self, VALUE_TYPE.float, 0);
+	newOutput(0, nodeValue_Output("Output", self, VALUE_TYPE.float, 0));
 	
 	//input_display_list = [ 0 ];
 	

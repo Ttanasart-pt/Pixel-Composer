@@ -55,8 +55,8 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		["Array settings",	false], 0, 1, 2, 3
 	];
 	
-	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, []);
-	outputs[1] = nodeValue_Output("Paths", self, VALUE_TYPE.path, [] ).
+	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, []));
+	newOutput(1, nodeValue_Output("Paths", self, VALUE_TYPE.path, [] )).
 		setVisible(true, true);
 	
 	attribute_surface_depth();

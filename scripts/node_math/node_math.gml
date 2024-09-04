@@ -100,7 +100,7 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		0, 1, 2, 5, 3, 4,
 	]
 		
-	outputs[0] = nodeValue_Output("Result", self, VALUE_TYPE.float, 0);
+	newOutput(0, nodeValue_Output("Result", self, VALUE_TYPE.float, 0));
 	
 	use_mod = 0;
 	use_deg = false;

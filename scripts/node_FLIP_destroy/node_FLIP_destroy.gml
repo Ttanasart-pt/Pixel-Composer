@@ -22,7 +22,7 @@ function Node_FLIP_Destroy(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(5, nodeValue_Float("Ratio", self, 1 ))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	outputs[0] = nodeValue_Output("Domain", self, VALUE_TYPE.fdomain, noone );
+	newOutput(0, nodeValue_Output("Domain", self, VALUE_TYPE.fdomain, noone ));
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var _pos = getInputData(1);

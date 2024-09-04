@@ -29,7 +29,7 @@ function Node_Brush_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	__init_mask_modifier(7); // inputs 10, 11
 	
-	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 1,
 		["Surface", false], 0, 7, 8, 9, 10, 11, 

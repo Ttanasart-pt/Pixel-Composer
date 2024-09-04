@@ -6,7 +6,7 @@ function Node_PB_Box_Transform(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _gr
 		
 	newInput(2, nodeValue_Vec2("Translate", self, [ 0, 0 ] ));
 		
-	outputs[0] = nodeValue_Output("pBox", self, VALUE_TYPE.pbBox, noone );
+	newOutput(0, nodeValue_Output("pBox", self, VALUE_TYPE.pbBox, noone ));
 	
 	input_display_list = [ 0, 1,
 		["Translate",	false], 2, 

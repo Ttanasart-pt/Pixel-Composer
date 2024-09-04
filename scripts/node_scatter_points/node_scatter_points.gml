@@ -42,7 +42,7 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		["3D",		 true, 9], 10, 11
 	];
 	
-	outputs[0] = nodeValue_Output("Points", self, VALUE_TYPE.float, [ ])
+	newOutput(0, nodeValue_Output("Points", self, VALUE_TYPE.float, [ ]))
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	static step = function() {

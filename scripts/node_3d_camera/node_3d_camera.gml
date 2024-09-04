@@ -72,12 +72,12 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		
 	in_cam = array_length(inputs);
 	
-	outputs[0] = nodeValue_Output("Rendered", self, VALUE_TYPE.surface, noone );
+	newOutput(0, nodeValue_Output("Rendered", self, VALUE_TYPE.surface, noone ));
 	
-	outputs[1] = nodeValue_Output("Normal", self, VALUE_TYPE.surface, noone )
+	newOutput(1, nodeValue_Output("Normal", self, VALUE_TYPE.surface, noone ))
 		.setVisible(false);
 	
-	outputs[2] = nodeValue_Output("Depth", self, VALUE_TYPE.surface, noone )
+	newOutput(2, nodeValue_Output("Depth", self, VALUE_TYPE.surface, noone ))
 		.setVisible(false);
 	
 	input_display_list = [ in_d3d + 4,

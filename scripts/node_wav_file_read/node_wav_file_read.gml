@@ -39,18 +39,18 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 	newInput(2, nodeValue_Bool("Mono", self, false));
 		
-	outputs[0] = nodeValue_Output("Data", self, VALUE_TYPE.audioBit, noone)
+	newOutput(0, nodeValue_Output("Data", self, VALUE_TYPE.audioBit, noone))
 		.setArrayDepth(1);
 	
-	outputs[1] = nodeValue_Output("Path", self, VALUE_TYPE.path, "");
+	newOutput(1, nodeValue_Output("Path", self, VALUE_TYPE.path, ""));
 	
-	outputs[2] = nodeValue_Output("Sample rate", self, VALUE_TYPE.integer, 44100)
+	newOutput(2, nodeValue_Output("Sample rate", self, VALUE_TYPE.integer, 44100))
 		.setVisible(false);
 	
-	outputs[3] = nodeValue_Output("Channels", self, VALUE_TYPE.integer, 2)
+	newOutput(3, nodeValue_Output("Channels", self, VALUE_TYPE.integer, 2))
 		.setVisible(false);
 	
-	outputs[4] = nodeValue_Output("Duration (s)", self, VALUE_TYPE.float, 0)
+	newOutput(4, nodeValue_Output("Duration (s)", self, VALUE_TYPE.float, 0))
 		.setVisible(false);
 	
 	content      = noone;

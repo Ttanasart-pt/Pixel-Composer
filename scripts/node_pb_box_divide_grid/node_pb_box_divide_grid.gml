@@ -10,7 +10,7 @@ function Node_PB_Box_Divide_Grid(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _
 	
 	newInput(4, nodeValue_Bool("Mirror", self, 0 ))
 	
-	outputs[0] = nodeValue_Output("pBox", self, VALUE_TYPE.pbBox, [ noone ] );
+	newOutput(0, nodeValue_Output("pBox", self, VALUE_TYPE.pbBox, [ noone ] ));
 	
 	input_display_list = [ 0, 1, 
 		["Divide",	false], 2, 3, 4, 

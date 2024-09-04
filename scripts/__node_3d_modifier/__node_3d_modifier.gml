@@ -6,7 +6,7 @@ function Node_3D_Modifier(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 	
 	in_mesh = array_length(inputs);
 	
-	outputs[0] = nodeValue_Output("Mesh", self, VALUE_TYPE.d3Mesh, noone);
+	newOutput(0, nodeValue_Output("Mesh", self, VALUE_TYPE.d3Mesh, noone));
 	
 	static modify_object = function(_object, _data, _matrix) { #region
 		return _object;

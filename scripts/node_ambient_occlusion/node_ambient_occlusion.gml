@@ -17,7 +17,7 @@ function Node_Ambient_Occlusion(_x, _y, _group = noone) : Node_Processor(_x, _y,
 		["Effect",		false], 3, 1, 4, 
 	];
 	
-	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
 	
 	attribute_surface_depth();
 	

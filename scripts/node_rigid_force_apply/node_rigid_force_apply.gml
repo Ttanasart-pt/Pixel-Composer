@@ -34,7 +34,7 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	newInput(8, nodeValue_Float("Range", self, 8))
 		.rejectArray();
 		
-	outputs[0] = nodeValue_Output("Object", self, VALUE_TYPE.rigid, noone);
+	newOutput(0, nodeValue_Output("Object", self, VALUE_TYPE.rigid, noone));
 	
 	input_display_list = [
 		["Object",	 true],	0,

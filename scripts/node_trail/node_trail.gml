@@ -17,9 +17,9 @@ function Node_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	newInput(6, nodeValue("Alpha over life",	self, CONNECT_TYPE.input, VALUE_TYPE.curve, CURVE_DEF_11));
 	
-	outputs[0] = nodeValue_Output("Surface out",		self, VALUE_TYPE.surface, noone);
+	newOutput(0, nodeValue_Output("Surface out",		self, VALUE_TYPE.surface, noone));
 	
-	outputs[1] = nodeValue_Output("Trail UV",		self, VALUE_TYPE.surface, noone);
+	newOutput(1, nodeValue_Output("Trail UV",		self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
 		["Surfaces",		 true], 0, 

@@ -34,7 +34,7 @@ function Node_Smoke_Domain(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 	
 	newInput(11, nodeValue_Bool("Wrap", self, false));
 	
-	outputs[0] = nodeValue_Output("Domain", self, VALUE_TYPE.sdomain, noone);
+	newOutput(0, nodeValue_Output("Domain", self, VALUE_TYPE.sdomain, noone));
 	
 	input_display_list = [ 
 		["Domain",		false], 0, 11, 1,

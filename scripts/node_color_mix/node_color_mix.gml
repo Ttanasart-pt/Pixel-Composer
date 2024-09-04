@@ -11,7 +11,7 @@ function Node_Color_Mix(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	newInput(3, nodeValue_Enum_Button("Color space", self,  0, [ "RGB", "HSV", "OKLAB" ]));
 	
-	outputs[0] = nodeValue_Output("Color", self, VALUE_TYPE.color, c_white);
+	newOutput(0, nodeValue_Output("Color", self, VALUE_TYPE.color, c_white));
 	
 	input_display_list = [ 3, 0, 1, 2 ];
 	

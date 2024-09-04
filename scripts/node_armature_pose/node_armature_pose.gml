@@ -9,7 +9,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		["Bones", false]
 	]
 	
-	outputs[0] = nodeValue_Output("Armature", self, VALUE_TYPE.armature, noone);
+	newOutput(0, nodeValue_Output("Armature", self, VALUE_TYPE.armature, noone));
 	
 	boneMap = ds_map_create();
 	

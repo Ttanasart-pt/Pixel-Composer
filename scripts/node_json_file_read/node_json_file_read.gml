@@ -33,10 +33,10 @@ function Node_Json_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		.setDisplay(VALUE_DISPLAY.path_load, { filter: "JSON file|*.json" })
 		.rejectArray();
 	
-	outputs[0] = nodeValue_Output("Path", self, VALUE_TYPE.path, "")
+	newOutput(0, nodeValue_Output("Path", self, VALUE_TYPE.path, ""))
 		.setVisible(true, true);
 	
-	outputs[1] = nodeValue_Output("Struct", self, VALUE_TYPE.struct, {});
+	newOutput(1, nodeValue_Output("Struct", self, VALUE_TYPE.struct, {}));
 	
 	content      = {};
 	path_current = "";

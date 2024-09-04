@@ -10,7 +10,7 @@ function Node_Array_Set(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	newInput(2, nodeValue("Value", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0))
 		.setVisible(true, true);
 	
-	outputs[0] = nodeValue_Output("Array", self, VALUE_TYPE.any, 0);
+	newOutput(0, nodeValue_Output("Array", self, VALUE_TYPE.any, 0));
 	
 	static update = function(frame = CURRENT_FRAME) {
 		var _arr = getInputData(0);

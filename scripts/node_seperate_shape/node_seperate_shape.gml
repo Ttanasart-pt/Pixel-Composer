@@ -19,9 +19,9 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	newInput(5, nodeValue_Enum_Button("Mode", self,  0 , [ "Greyscale", "Alpha" ] ))
 		
-	outputs[0] = nodeValue_Output("Surface out",	self, VALUE_TYPE.surface, noone);
+	newOutput(0, nodeValue_Output("Surface out",	self, VALUE_TYPE.surface, noone));
 	
-	outputs[1] = nodeValue_Output("Atlas",	self, VALUE_TYPE.surface, []);
+	newOutput(1, nodeValue_Output("Atlas",	self, VALUE_TYPE.surface, []));
 	
 	input_display_list = [
 		["Shape",	false], 0, 5, 1, 4,

@@ -10,7 +10,7 @@ function Node_Mesh_Create_Path(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	newInput(2, nodeValue_Enum_Scroll("Algorithm", self,  0, [ "Ear Clipping", "Convex Fan", "Delaunay" ]));
 	
-	outputs[0] = nodeValue_Output("Mesh", self, VALUE_TYPE.mesh, noone);
+	newOutput(0, nodeValue_Output("Mesh", self, VALUE_TYPE.mesh, noone));
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var mesh = outputs[0].getValue();

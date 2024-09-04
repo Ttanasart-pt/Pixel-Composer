@@ -3,7 +3,7 @@ function Node_String_Merge(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	setDimension(96, 48);
 	
-	outputs[0] = nodeValue_Output("Text", self, VALUE_TYPE.text, "");
+	newOutput(0, nodeValue_Output("Text", self, VALUE_TYPE.text, ""));
 	
 	static createNewInput = function() {
 		var index = array_length(inputs);

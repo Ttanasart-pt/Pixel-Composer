@@ -5,7 +5,7 @@ function Node_PB_Fx(_x, _y, _group = noone) : Node_PB(_x, _y, _group) constructo
 	newInput(0, nodeValue("pBox", self, CONNECT_TYPE.input, VALUE_TYPE.pbBox, noone))
 		.setVisible(true, true);
 	
-	outputs[0] = nodeValue_Output("pBox", self, VALUE_TYPE.pbBox, noone);
+	newOutput(0, nodeValue_Output("pBox", self, VALUE_TYPE.pbBox, noone));
 	
 	static getGraphPreviewSurface = function() {
 		var _nbox = outputs[0].getValue();

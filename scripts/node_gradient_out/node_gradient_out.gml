@@ -9,9 +9,9 @@ function Node_Gradient_Out(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		.setDisplay(VALUE_DISPLAY.slider)
 		.rejectArray();
 	
-	outputs[0] = nodeValue_Output("Gradient", self, VALUE_TYPE.gradient, new gradientObject(cola(c_white)) );
+	newOutput(0, nodeValue_Output("Gradient", self, VALUE_TYPE.gradient, new gradientObject(cola(c_white)) ));
 	
-	outputs[1] = nodeValue_Output("Color", self, VALUE_TYPE.color, c_white);
+	newOutput(1, nodeValue_Output("Color", self, VALUE_TYPE.color, c_white));
 	
 	_pal = -1;
 	

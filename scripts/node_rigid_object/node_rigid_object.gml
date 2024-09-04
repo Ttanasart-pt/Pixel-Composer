@@ -64,7 +64,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(12, nodeValue_Int("Collision group", self, 1))
 		.rejectArray()
 		
-	outputs[0] = nodeValue_Output("Object", self, VALUE_TYPE.rigid, object);
+	newOutput(0, nodeValue_Output("Object", self, VALUE_TYPE.rigid, object));
 	
 	input_display_list = [ 8, 12, 
 		["Texture",	false],	6, 

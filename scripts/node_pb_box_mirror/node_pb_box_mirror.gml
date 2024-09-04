@@ -8,7 +8,7 @@ function Node_PB_Box_Mirror(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _group
 		
 	newInput(3, nodeValue_Bool("Vertical", self, false ));
 		
-	outputs[0] = nodeValue_Output("pBox", self, VALUE_TYPE.pbBox, noone );
+	newOutput(0, nodeValue_Output("pBox", self, VALUE_TYPE.pbBox, noone ));
 	
 	input_display_list = [ 0, 1,
 		["Mirror",	false], 2, 3, 

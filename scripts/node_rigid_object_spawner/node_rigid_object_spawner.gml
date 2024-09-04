@@ -32,7 +32,7 @@ function Node_Rigid_Object_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group
 	newInput(7, nodeValue_Int("Seed", self, seed_random(6)))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[7].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
-	outputs[0] = nodeValue_Output("Object", self, VALUE_TYPE.rigid, object);
+	newOutput(0, nodeValue_Output("Object", self, VALUE_TYPE.rigid, object));
 	
 	input_display_list = [ 0, 7, 
 		["Spawn",	false],	6, 1, 2, 3, 5, 4,

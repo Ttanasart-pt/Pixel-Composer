@@ -46,7 +46,7 @@ function Node_FLIP_Domain(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		["Physics", false], 7, 13, 10, 11, 
 	]
 	
-	outputs[0] = nodeValue_Output("Domain", self, VALUE_TYPE.fdomain, noone);
+	newOutput(0, nodeValue_Output("Domain", self, VALUE_TYPE.fdomain, noone));
 	
 	#region attributes
 		array_push(attributeEditors, "FLIP Solver");

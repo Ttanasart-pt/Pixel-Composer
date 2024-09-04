@@ -13,7 +13,7 @@ function Node_Array_Insert(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(3, nodeValue_Bool("Spread array", self, false ))
 		.rejectArray();
 		
-	outputs[0] = nodeValue_Output("Array", self, VALUE_TYPE.any, 0);
+	newOutput(0, nodeValue_Output("Array", self, VALUE_TYPE.any, 0));
 	
 	static update = function(frame = CURRENT_FRAME) {
 		var _arr = getInputData(0);

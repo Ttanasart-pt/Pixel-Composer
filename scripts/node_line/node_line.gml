@@ -80,9 +80,9 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		["Texture",			false], 18, 21, 22, 23, 29, 
 	];
 	
-	outputs[0] = nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone);
+	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
 	
-	outputs[1] = nodeValue_Output("Width Pass", self, VALUE_TYPE.surface, noone);
+	newOutput(1, nodeValue_Output("Width Pass", self, VALUE_TYPE.surface, noone));
 	
 	lines     = [];
 	line_data = [];

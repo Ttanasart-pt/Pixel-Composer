@@ -13,7 +13,7 @@ function Node_Gradient_Palette(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	
 	newInput(3, nodeValue_Enum_Button("Interpolation", self,  1, [ "None", "RGB", "HSV", "OKLAB", "sRGB" ]));
 	
-	outputs[0] = nodeValue_Output("Gradient", self, VALUE_TYPE.gradient, new gradientObject(cola(c_white)) )
+	newOutput(0, nodeValue_Output("Gradient", self, VALUE_TYPE.gradient, new gradientObject(cola(c_white)) ))
 	
 	_pal = -1;
 	

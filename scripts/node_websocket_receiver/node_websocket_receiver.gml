@@ -9,9 +9,9 @@ function Node_Websocket_Receiver(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	
 	newInput(3, nodeValue_Text("Url", self, ""));
 	
-	outputs[0] = nodeValue_Output("Data", self, VALUE_TYPE.struct, {});
+	newOutput(0, nodeValue_Output("Data", self, VALUE_TYPE.struct, {}));
 	
-	outputs[1] = nodeValue_Output("Receive data", self, VALUE_TYPE.trigger, false);
+	newOutput(1, nodeValue_Output("Receive data", self, VALUE_TYPE.trigger, false));
 	
 	input_display_list = [ 1, 2,
 		["Connection", false], 0, 3,

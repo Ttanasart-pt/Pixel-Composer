@@ -6,13 +6,13 @@ function Node_Gradient_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	newInput(0, nodeValue_Gradient("Gradient", self, new gradientObject(cola(c_white))))
 		.setVisible(true, true);
 	
-	outputs[0] = nodeValue_Output("Colors", self, VALUE_TYPE.color, [] )
+	newOutput(0, nodeValue_Output("Colors", self, VALUE_TYPE.color, [] ))
 		.setDisplay(VALUE_DISPLAY.palette);
 	
-	outputs[1] = nodeValue_Output("Positions", self, VALUE_TYPE.float, [] );
+	newOutput(1, nodeValue_Output("Positions", self, VALUE_TYPE.float, [] ));
 	outputs[1].array_depth = 1;
 	
-	outputs[2] = nodeValue_Output("Type", self, VALUE_TYPE.integer, 0 );
+	newOutput(2, nodeValue_Output("Type", self, VALUE_TYPE.integer, 0 ));
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var gra  = _data[0];
