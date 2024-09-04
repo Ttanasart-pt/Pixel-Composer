@@ -22,87 +22,83 @@ function Node_Struct(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	newOutput(0, nodeValue_Output("Struct", self, VALUE_TYPE.struct, {}));
 	
-	#region //////////////////////////////// Dynamic IO ////////////////////////////////
+	static createNewInput = function(list = inputs) {
+		var index = array_length(list);
+		var bDel  = button(function() { node.deleteInput(index); })
+				.setIcon(THEME.minus_16, 0, COLORS._main_icon);
+		
+		list[index + 0] = nodeValue_Text("Key", self, "" )
+			.setDisplay(VALUE_DISPLAY.text_box, { side_button : bDel })
+			.setAnimable(false);
+		bDel.setContext(list[index + 0]);
+		
+		list[index + 1] = nodeValue("value", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0 )
+			.setVisible(false, false);
+			
+		return list[index + 0];
+	} 
 	
-		static createNewInput = function(list = inputs) {
-			var index = array_length(list);
-			var bDel  = button(function() { node.deleteInput(index); })
-					.setIcon(THEME.minus_16, 0, COLORS._main_icon);
-			
-			list[index + 0] = nodeValue_Text("Key", self, "" )
-				.setDisplay(VALUE_DISPLAY.text_box, { side_button : bDel })
-				.setAnimable(false);
-			bDel.setContext(list[index + 0]);
-			
-			list[index + 1] = nodeValue("value", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0 )
-				.setVisible(false, false);
-				
-			return list[index + 0];
-		} 
+	setDynamicInput(2, false);
+	
+	static addInput = function() {
+		var index = array_length(inputs);
 		
-		setDynamicInput(2, false);
+		attributes.size++;
+		createNewInput();
 		
-		static addInput = function() {
-			var index = array_length(inputs);
-			
-			attributes.size++;
-			createNewInput();
-			
-			if(!UNDO_HOLDING) {
-				var _inputs = array_create(data_length);
-				for(var i = 0; i < data_length; i++)
-					_inputs[i] = inputs[index + i];
-				
-				recordAction(ACTION_TYPE.custom, function(data, undo) {
-					if(undo) deleteInput(data.index);
-					else     insertInput(data.index, data.inputs);
-				}, { index, inputs : _inputs });
-			}
-			
-			onInputResize();
-		}
-		
-		static deleteInput = function(index) {
-			if(!UNDO_HOLDING) {
-				var _inputs = array_create(data_length);
-				for(var i = 0; i < data_length; i++)
-					_inputs[i] = inputs[index + i];
-				
-				recordAction(ACTION_TYPE.custom, function(data, undo) {
-					if(undo) insertInput(data.index, data.inputs);
-					else     deleteInput(data.index);
-				}, { index, inputs : _inputs });
-			}
-			
-			attributes.size--;
-			for(var i = data_length - 1; i >= 0; i--)
-				array_delete(inputs, index + i, 1);
-			
-			onInputResize();
-		}
-		
-		static insertInput = function(index, _inputs) {
-			attributes.size++;
-			
+		if(!UNDO_HOLDING) {
+			var _inputs = array_create(data_length);
 			for(var i = 0; i < data_length; i++)
-				array_insert(inputs, index + i, _inputs[i]);
+				_inputs[i] = inputs[index + i];
 			
-			onInputResize();
+			recordAction(ACTION_TYPE.custom, function(data, undo) {
+				if(undo) deleteInput(data.index);
+				else     insertInput(data.index, data.inputs);
+			}, { index, inputs : _inputs });
 		}
 		
-		static refreshDynamicInput = function() {
-			input_display_list = array_clone(input_display_list_raw);
-			
-			for( var i = 0; i < array_length(inputs); i++ ) {
-				inputs[i].index = i;
-				array_push(input_display_list, i);
-			}
-			
-			getJunctionList();
-		}
+		onInputResize();
+	}
 	
-	#endregion //////////////////////////////// Dynamic IO ////////////////////////////////
+	static deleteInput = function(index) {
+		if(!UNDO_HOLDING) {
+			var _inputs = array_create(data_length);
+			for(var i = 0; i < data_length; i++)
+				_inputs[i] = inputs[index + i];
+			
+			recordAction(ACTION_TYPE.custom, function(data, undo) {
+				if(undo) insertInput(data.index, data.inputs);
+				else     deleteInput(data.index);
+			}, { index, inputs : _inputs });
+		}
 		
+		attributes.size--;
+		for(var i = data_length - 1; i >= 0; i--)
+			array_delete(inputs, index + i, 1);
+		
+		onInputResize();
+	}
+	
+	static insertInput = function(index, _inputs) {
+		attributes.size++;
+		
+		for(var i = 0; i < data_length; i++)
+			array_insert(inputs, index + i, _inputs[i]);
+		
+		onInputResize();
+	}
+	
+	static refreshDynamicInput = function() {
+		input_display_list = array_clone(input_display_list_raw);
+		
+		for( var i = 0; i < array_length(inputs); i++ ) {
+			inputs[i].index = i;
+			array_push(input_display_list, i);
+		}
+		
+		getJunctionList();
+	}
+
 	static onValueUpdate = function(index = 0) {
 		if(LOADING || APPENDING) return;
 		if(index < 0) return;

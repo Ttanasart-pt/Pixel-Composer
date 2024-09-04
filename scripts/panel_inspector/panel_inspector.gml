@@ -722,9 +722,12 @@ function Panel_Inspector() : PanelContent() constructor {
             var yy = hh + _y;
             
             if(i < amoIn) { // inputs
-                     if(!is_array(_inspecting.input_display_list))  jun = _inspecting.inputs[i];
-                else if(is_real(_inspecting.input_display_list[i])) jun = _inspecting.inputs[_inspecting.input_display_list[i]];
-                else                                                jun = _inspecting.input_display_list[i];
+                var _dsl = _inspecting.input_display_list;
+                var _dsp = array_safe_get_fast(_dsl, i);
+                
+                     if(!is_array(_dsl))  jun = array_safe_get_fast(_inspecting.inputs, i);
+                else if(is_real(_dsp))    jun = array_safe_get_fast(_inspecting.inputs, _dsp);
+                else                      jun = _dsp;
                 
             } else if(i == amoIn) { // output label
                 hh += ui(8 + 32 + 8);
@@ -736,10 +739,12 @@ function Panel_Inspector() : PanelContent() constructor {
             
             } else { // outputs
                 var _oi = i - amoIn - 1;
+                var _dsl = _inspecting.output_display_list;
+                var _dsp = array_safe_get_fast(_dsl, _oi);
                 
-                     if(!is_array(_inspecting.output_display_list))    jun = _inspecting.outputs[_oi];
-                else if(is_real(_inspecting.output_display_list[_oi])) jun = _inspecting.outputs[_inspecting.output_display_list[_oi]];
-                else                                                   jun = _inspecting.output_display_list[_oi];
+                     if(!is_array(_dsl)) jun = array_safe_get_fast(_inspecting.outputs, _oi);
+                else if(is_real(_dsp))   jun = array_safe_get_fast(_inspecting.outputs, _dsp);
+                else                     jun = _dsp;
             } 
             
             if(is_instanceof(jun, Inspector_Spacer)) {                    // SPACER
