@@ -407,10 +407,15 @@ function typeNumeric(type) {
 	return false;
 }
 
-function typeArray(_type) {
+function typeArray(_value) {
 	INLINE
 	
-	switch(_type) {
+	switch(_value.type) {
+		case VALUE_TYPE.curve :
+			return 1;
+	}
+	
+	switch(_value.display_type) {
 		case VALUE_DISPLAY.range :
 		case VALUE_DISPLAY.vector_range :
 		case VALUE_DISPLAY.rotation_range :

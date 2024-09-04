@@ -53,7 +53,7 @@ function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {
 				return noone;
 			}
 			
-			if(typeArray(self.anim.prop.display_type) != typeArray(anim.prop.display_type)) {
+			if(typeArray(self.anim.prop) != typeArray(anim.prop)) {
 				noti_warning("Type incompatible");
 				return noone;
 			}
@@ -376,7 +376,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 	}
 	
 	static processTypeDefault = function() {
-		if(!sep_axis && typeArray(prop.display_type)) return [];
+		if(!sep_axis && typeArray(prop)) return [];
 		return 0;
 	}
 	
@@ -421,7 +421,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		if(PROJECT.attributes.strict) return processValue(_val);
 		var _res = _val;
 		
-		if(!sep_axis && typeArray(prop.display_type) && is_array(_val)) {
+		if(!sep_axis && typeArray(prop) && is_array(_val)) {
 			for(var i = 0; i < array_length(_val); i++) 
 				_res[i] = processValue(_val[i]);
 		} else 
@@ -604,7 +604,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			} else if(is_struct(val) && struct_has(val, "serialize")) {
 				val = val.serialize();
 				
-			} else if(!sep_axis && typeArray(prop.display_type) && is_array(val)) {
+			} else if(!sep_axis && typeArray(prop) && is_array(val)) {
 				var __v = [];
 				for(var j = 0; j < array_length(val); j++) {
 					if(is_struct(val[j]) && struct_has(val[j], "serialize"))
@@ -695,7 +695,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 				} else 
 					_val = LOADING_VERSION < 11640 && !is_int64(_val)? cola(_val) : int64(_val);
 			
-			} else if(!sep_axis && typeArray(prop.display_type)) {
+			} else if(!sep_axis && typeArray(prop)) {
 				_val = [];
 				
 				if(is_array(value)) {

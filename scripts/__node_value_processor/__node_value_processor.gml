@@ -56,7 +56,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			if(array_length(inputs_data[i]) == 0) continue;
 			if(!inputs[i].isArray(inputs_data[i])) continue;
 			
-			if(typeArray(inputs[i].display_type)) {
+			if(typeArray(inputs[i])) {
 				process_amount = max(process_amount, array_length(inputs_data[i][0]));
 			} else 
 				process_amount = max(process_amount, array_length(inputs_data[i]));

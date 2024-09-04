@@ -122,8 +122,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		dyna_depo     = ds_list_create();
 		value_tag     = "";
 		
-		type_array    = 0;
-		
 		is_modified   = false;
 		cache_value   = [ false, false, undefined, undefined ];
 		cache_array   = [ false, false ];
@@ -204,6 +202,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		display_attribute	= noone;
 		
 		popup_dialog = noone;
+		type_array   = typeArray(self);
 	#endregion
 	
 	#region ---- graph ----
@@ -302,6 +301,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		type = _type;
 		draw_junction_index = type;
+		updateColor();
+		
 		if(bypass_junc) bypass_junc.setType(_type);
 		
 		return true;
@@ -546,7 +547,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static setDisplay = function(_type = VALUE_DISPLAY._default, _data = {}) {
 		display_type = _type;
 		display_data = _data;
-		type_array   = typeArray(display_type);
+		type_array   = typeArray(self);
 		resetDisplay();
 		
 		return self;
