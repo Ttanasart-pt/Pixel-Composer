@@ -6,28 +6,24 @@ function NodeValue_Dimension(_node, value) : NodeValue("Dimension", _node, CONNE
 	
 	/////============== GET =============
 	
-	static valueProcess = function(value, nodeFrom = undefined, applyUnit = true, arrIndex = 0) {
-		var typeFrom = nodeFrom == undefined? VALUE_TYPE.any : nodeFrom.type;
-		
-		if(typeFrom == VALUE_TYPE.text) value = toNumber(value);
-		if(validator != noone)          value = validator.validate(value);
-		
-		return applyUnit? unit.apply(value, arrIndex) : value;
-	}
-	
 	static getValue = function(_time = CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { //// Get value
 		getValueRecursive(self.__curr_get_val, _time);
 		var val = __curr_get_val[0];
 		var nod = __curr_get_val[1];
-		
 		var typ = nod.type;
-		var dis = nod.display_type;
 		
 		if(typ != VALUE_TYPE.surface) {
-			if(!is_array(val))         val = [ val, val ];
-			if(array_length(val) != 2) val = [ array_safe_get_fast(val, 0), array_safe_get_fast(val, 1) ];
+			var _d = array_get_depth(val);
 			
-			return valueProcess(val, nod, applyUnit, arrIndex);
+			__nod       = nod;
+			__applyUnit = applyUnit;
+			__arrIndex  = arrIndex;
+			
+			if(_d == 0) return [ val, val ];
+			if(_d == 1) return array_verify(val, 2);
+			if(_d == 2) return array_map(val, function(v, i) /*=>*/ {return array_verify(v, 2)});
+			
+			return val;
 		}
 		
 		// Dimension conversion
@@ -52,6 +48,7 @@ function NodeValue_Dimension(_node, value) : NodeValue("Dimension", _node, CONNE
 			return sArr;
 		} else if (is_surface(val)) 
 			return [ surface_get_width_safe(val), surface_get_height_safe(val) ];
+			
 		return [ 1, 1 ];
 	}
 	

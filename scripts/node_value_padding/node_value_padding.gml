@@ -19,9 +19,17 @@ function NodeValue_Padding(_name, _node, _value, _tooltip = "") : NodeValue(_nam
 		getValueRecursive(self.__curr_get_val, _time);
 		var val = __curr_get_val[0];
 		var nod = __curr_get_val[1];
+		var _d  = array_get_depth(val);
+					
+		__nod       = nod;
+		__applyUnit = applyUnit;
+		__arrIndex  = arrIndex;
 		
-		val = array_verify(val, 4);
-		return valueProcess(val, nod, applyUnit, arrIndex);
+		if(_d == 0) return valueProcess([ val, val, val, val ], nod, applyUnit, arrIndex);
+		if(_d == 1) return valueProcess(array_verify(val, 4),   nod, applyUnit, arrIndex);
+		if(_d == 2) return array_map(val, function(v, i) /*=>*/ {return valueProcess(array_verify(v, 4), __nod, __applyUnit, __arrIndex)});
+		
+		return val;
 	}
 	
 	static __getAnimValue = function(_time = CURRENT_FRAME) {

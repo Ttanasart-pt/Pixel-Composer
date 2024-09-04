@@ -30,15 +30,11 @@ function NodeValue_Area(_name, _node, _value, _data = {}) : NodeValue(_name, _no
 	
 	/////============== GET =============
 	
-	static getValue = function(_time = CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { //// Get value
-		getValueRecursive(self.__curr_get_val, _time);
-		var val = __curr_get_val[0];
-		var nod = __curr_get_val[1];
-		
+	static valueProcess = function(val, nodeFrom, applyUnit = true, arrIndex = 0) {
 		val = array_verify(val, AREA_ARRAY_LENGTH);
 		
-		if(!is_undefined(nod) && struct_has(nod.display_data, "onSurfaceSize")) {
-			var surf     = nod.display_data.onSurfaceSize();
+		if(!is_undefined(nodeFrom) && struct_has(nodeFrom.display_data, "onSurfaceSize")) {
+			var surf     = nodeFrom.display_data.onSurfaceSize();
 			var dispType = array_safe_get_fast(val, 5, AREA_MODE.area);
 			
 			switch(dispType) {
@@ -69,6 +65,14 @@ function NodeValue_Area(_name, _node, _value, _data = {}) : NodeValue(_name, _no
 		}
 		
 		return applyUnit? unit.apply(val, arrIndex) : val;
+	}
+	
+	static getValue = function(_time = CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { //// Get value
+		getValueRecursive(self.__curr_get_val, _time);
+		var val = __curr_get_val[0];
+		var nod = __curr_get_val[1];
+		
+		return valueProcess(val, nod, applyUnit, arrIndex);
 	}
 	
 	static __getAnimValue = function(_time = CURRENT_FRAME) {

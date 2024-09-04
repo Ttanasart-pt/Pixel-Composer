@@ -1404,20 +1404,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static __arrayLength = function(val = undefined) {
 		val ??= getValue();
 		
-		__is_array = false;
-		type_array = typeArray(display_type);
+		var _vdp = array_depth + type_array;
+		var _dep = array_get_depth(val);
+		__is_array = _dep > 0;
 		
-		if(!is_array(val))				   return -1;
-		
-		__is_array = isArray(val);
-		if(!__is_array)					   return -1;
-		if(array_depth + type_array == 0)  return array_length(val);
-		
-		var ar     = val;
-		var _depth = max(0, array_depth + type_array - 1);
-		repeat(_depth) ar = ar[0];
-		
-		return array_length(ar);
+		return _dep > _vdp? array_length(val) : -1;
 	}
 	
 	static arrayLengthSimple = function(val = undefined) {

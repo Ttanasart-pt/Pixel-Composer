@@ -11,11 +11,12 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	attributes.array_process = ARRAY_PROCESS.loop;
 	current_data	= [];
 	inputs_is_array = [];
-	all_inputs      = [];
+	inputs_index    = [];
 	
+	dimension_index = 0;
 	process_amount	= 0;
 	process_length  = [];
-	dimension_index = 0;
+	process_running = [];
 	
 	manage_atlas = true;
 	atlas_index  = 0;
@@ -40,22 +41,22 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static processData = function(_outSurf, _data, _output_index, _array_index = 0) { return _outSurf; }
 	
 	static getSingleValue = function(_index, _arr = preview_index, output = false) { 
-		var _l  = output? outputs : inputs;
-		if(_index < 0  || _index >= array_length(_l)) return 0;
+		var _l = output? outputs : inputs;
+		if(_index < 0 || _index >= array_length(_l)) return 0;
 		
 		var _n  = _l[_index];
 		var _in = output? _n.getValue() : getInputData(_index);
 		
 		if(!_n.isArray(_in)) return _in;
+		if(!is_array(_in))   return 0;
 		
 		var _aIndex = _arr;
-		if(!is_array(_in)) return 0;
 		
 		switch(attributes.array_process) {
-			case ARRAY_PROCESS.loop :		_aIndex = safe_mod(_arr, array_length(_in));															break;
-			case ARRAY_PROCESS.hold :		_aIndex = min(_arr, array_length(_in) - 1	); 															break;
-			case ARRAY_PROCESS.expand :		_aIndex = floor(_arr / process_length[_index][1]) % process_length[_index][0];							break;
-			case ARRAY_PROCESS.expand_inv : _aIndex = floor(_arr / process_length[array_length(_l) - 1 - _index][1]) % process_length[_index][0];	break;
+			case ARRAY_PROCESS.loop :		_aIndex = safe_mod(_arr, process_length[_index]);													break;
+			case ARRAY_PROCESS.hold :		_aIndex = min(_arr, process_length[_index] - 1	); 													break;
+			case ARRAY_PROCESS.expand :		_aIndex = floor(_arr / process_running[_index]) % process_length[_index];							break;
+			case ARRAY_PROCESS.expand_inv : _aIndex = floor(_arr / process_running[array_length(_l) - 1 - _index]) % process_length[_index];	break;
 		}
 		
 		return array_safe_get_fast(_in, _aIndex);
@@ -153,7 +154,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		for(var l = 0; l < process_amount; l++) {
 			
 			for(var i = array_length(inputs) - 1; i >= 0; i--)
-				_data[i] = all_inputs[i][l];
+				_data[i] = inputs_index[i][l] == -1? inputs_data[i] : inputs_data[i][inputs_index[i][l]];
 				
 			if(_output.type == VALUE_TYPE.surface) { #region						// Output surface verification
 				if(manage_atlas) {
@@ -270,7 +271,9 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			var _outputs = array_create(_os);
 		
 			for( var l = 0; l < process_amount; l++ ) {
-				for(var i = 0; i < _is; i++) _inputs[i] = all_inputs[i][l];
+				for(var i = 0; i < _is; i++) 
+					_inputs[i] = inputs_index[i][l] == -1? inputs_data[i] : inputs_data[i][inputs_index[i][l]];
+					
 				if(l == 0 || l == preview_index) current_data = _inputs;
 				
 				var _dim  = getDimension(l);
@@ -316,8 +319,9 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		process_amount	= 1;
 		inputs_data		= array_verify(inputs_data,		_len);
 		inputs_is_array	= array_verify(inputs_is_array, _len);
-		all_inputs      = array_verify(all_inputs,		_len);
-		process_length  = array_verify_ext(process_length,	_len, function() /*=>*/ {return [ 0, 0 ]});
+		inputs_index    = array_verify(inputs_index,	_len);
+		process_length  = array_verify(process_length,	_len);
+		process_running = array_verify(process_running,	_len);
 		
 		array_foreach(inputs, function(_in, i) /*=>*/ {
 			var raw = _in.getValue();
@@ -327,12 +331,12 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			_in.bypass_junc.setValue(val);
 				 if(amo == 0) val = noone;		//empty array
 			else if(amo == 1) val = raw[0];		//spread single array
+			inputs_is_array[i] = amo > 1;
+			
 			amo = max(1, amo);
 			
-			inputs_data[i] = val;				//setInputData(i, val);
 			input_value_map[$ _in.internalName] = val;
-			
-			inputs_is_array[i] = _in.__is_array;
+			inputs_data[i] = val;				//setInputData(i, val);
 			
 			switch(attributes.array_process) {
 				case ARRAY_PROCESS.loop : 
@@ -346,44 +350,35 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 					break;
 			}
 			
-			process_length[i][0] = amo;
-			process_length[i][1] = process_amount;
+			process_length[i]  = amo;
+			process_running[i] = process_amount;
 		});
 		
 		var amoMax = process_amount;
 		for( var i = 0; i < _len; i++ ) {
-			amoMax /= process_length[i][0];
-			process_length[i][1] = amoMax;
+			amoMax /= process_length[i];
+			process_running[i] = amoMax;
+			
+			inputs_index[i] = array_verify(inputs_index[i], process_amount);
 		}
-		
-		for(var i = 0; i < _len; i++)
-			all_inputs[i] = array_verify(all_inputs[i], process_amount);
 		
 		for(var l = 0; l < process_amount; l++) // input preparation
 		for(var i = 0; i < _len; i++) { 
-			var _in = inputs_data[i];
-				
-			if(!inputs_is_array[i]) {
-				all_inputs[i][l] = _in;
-				continue;
-			}
-				
-			if(array_length(_in) == 0) {
-				all_inputs[i][l] = 0;
-				continue;
-			}
-				
+			inputs_index[i][l] = -1;
+			if(!inputs_is_array[i]) continue;
+			
 			var _index = 0;
 			switch(attributes.array_process) {
-				case ARRAY_PROCESS.loop :		_index = safe_mod(l, array_length(_in)); break;
-				case ARRAY_PROCESS.hold :		_index = min(l, array_length(_in) - 1);  break;
-				case ARRAY_PROCESS.expand :		_index = floor(l / process_length[i][1]) % process_length[i][0]; break;
-				case ARRAY_PROCESS.expand_inv : _index = floor(l / process_length[array_length(inputs) - 1 - i][1]) % process_length[i][0]; break;
+				case ARRAY_PROCESS.loop :		_index = safe_mod(l, process_length[i]); break;
+				case ARRAY_PROCESS.hold :		_index = min(l, process_length[i] - 1);  break;
+				case ARRAY_PROCESS.expand :		_index = floor(l / process_running[i]) % process_length[i]; break;
+				case ARRAY_PROCESS.expand_inv : _index = floor(l / process_running[array_length(inputs) - 1 - i]) % process_length[i]; break;
 			}
-				
-			all_inputs[i][l] = inputs[i].arrayBalance(_in[_index]);
+			
+			inputs_index[i][l] = _index;
 		}
 		
+		// print($"{name}: {process_amount}");
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {

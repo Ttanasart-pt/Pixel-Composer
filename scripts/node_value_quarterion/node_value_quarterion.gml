@@ -21,7 +21,7 @@ function NodeValue_Quaternion(_name, _node, _value, _tooltip = "") : NodeValue_A
 		var _d = array_get_depth(val);
 		
 		if(_d == 1) return quarternionFromEuler(val[0], val[1], val[2]);
-		if(_d == 2) return array_map(val, function(v) /*=>*/ {return quarternionFromEuler(v[0], v[1], v[2])});
+		if(_d == 2) return array_map(val, function(v, i) /*=>*/ {return quarternionFromEuler(v[0], v[1], v[2])});
 		
 		return val;
 	}

@@ -114,5 +114,5 @@ function Node_3D_Mesh_Path_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 		return object;
 	}
 	
-	static getPreviewValues = function() { return array_safe_get_fast(all_inputs, in_mesh + 2, noone); }
+	static getPreviewValues = function() { return getSingleValue(in_mesh + 2); }
 }

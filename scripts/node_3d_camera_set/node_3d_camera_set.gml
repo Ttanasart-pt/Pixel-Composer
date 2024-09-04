@@ -38,17 +38,17 @@ function Node_3D_Camera_Set(_x, _y, _group = noone) : Node_3D_Camera(_x, _y, _gr
 		["Fill light", false], in_cam + 4, in_cam + 5, in_cam + 6, in_cam + 7, 
 	]);
 	
-	static submitShadow = function() { #region
+	static submitShadow = function() {
 		light_key.submitShadow(scene, light_key);
 		light_fill.submitShadow(scene, light_fill);
-	} #endregion
+	}
 	
-	static submitShader = function() { #region
+	static submitShader = function() {
 		scene.submitShader(light_key);
 		scene.submitShader(light_fill);
-	} #endregion
+	}
 	
-	static preProcessData = function(_data) { #region
+	static preProcessData = function(_data) {
 		var _han = _data[in_cam + 0];
 		var _van = _data[in_cam + 1];
 		var _col = _data[in_cam + 2];
@@ -74,13 +74,11 @@ function Node_3D_Camera_Set(_x, _y, _group = noone) : Node_3D_Camera(_x, _y, _gr
 		
 		light_fill.color	 = _col;
 		light_fill.intensity = _int;
-	} #endregion
+	}
 	
-	static getPreviewObjects = function() { #region 
-		var _scene = array_safe_get_fast(all_inputs, in_d3d + 4, noone);
-		if(is_array(_scene)) _scene = array_safe_get_fast(_scene, preview_index, noone);
-		
+	static getPreviewObjects = function() { 
+		var _scene = getSingleValue(in_d3d + 4);
 		return [ object, lookat, lookLine, lookRad, _scene, light_key, light_fill ];
-	} #endregion
+	}
 	
 }

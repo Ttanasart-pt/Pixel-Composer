@@ -19,6 +19,13 @@ function NodeValue_Array(_name, _node, _value, _tooltip = "", _length = 2) : Nod
 	static getValue = function(_time = CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { //// Get value
 		getValueRecursive(self.__curr_get_val, _time);
 		var val = __curr_get_val[0];
+		
+		var _d = array_get_depth(val);
+		
+		if(_d == 0) return array_create(def_length, val);
+		if(_d == 1) return array_verify(val, def_length);
+		if(_d == 2) return array_map(val, function(v, i) /*=>*/ {return array_verify(v, def_length)});
+		
 		return val;
 	}
 	

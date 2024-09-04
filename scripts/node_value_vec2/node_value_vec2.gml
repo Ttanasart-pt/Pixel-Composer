@@ -19,19 +19,18 @@ function NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _no
 		getValueRecursive(self.__curr_get_val, _time);
 		var val = __curr_get_val[0];
 		var nod = __curr_get_val[1];
-		
 		var typ = nod.type;
-		var dis = nod.display_type;
 		
 		if(typ != VALUE_TYPE.surface) {
-			if(!is_array(val)) return [ val, val ];
-			
 			var _d = array_get_depth(val);
+			
+			__nod       = nod;
+			__applyUnit = applyUnit;
+			__arrIndex  = arrIndex;
+			
+			if(_d == 0) return valueProcess([ val, val ], nod, applyUnit, arrIndex);
 			if(_d == 1) return valueProcess(val, nod, applyUnit, arrIndex);
-			if(_d == 2) {
-				for (var i = 0, n = array_length(val); i < n; i++) 
-					val[i] = valueProcess(val[1], nod, applyUnit, arrIndex);
-			}
+			if(_d == 2) return array_map(val, function(v, i) /*=>*/ {return valueProcess(array_verify(v, 2), __nod, __applyUnit, __arrIndex)});
 			
 			return val;
 		}

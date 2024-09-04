@@ -2500,10 +2500,11 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
             
             var _tip = "";
                 
-            if(DRAGGING || FILE_IS_DROPPING) {
+            if(DRAGGING || FILE_IS_DROPPING)
                 draw_sprite_stretched_ext(THEME.ui_panel_selection, 0, 8, 8, w - 16, h - 16, COLORS._main_value_positive, 1);
-                _tip = file_drop_tooltip;
-            }
+            
+            if(FILE_IS_DROPPING)
+            	_tip = file_drop_tooltip;
                 
             if(DRAGGING) { // file dropping
                 if(_node_hover && _node_hover.droppable(DRAGGING)) {
