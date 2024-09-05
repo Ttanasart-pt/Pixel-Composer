@@ -82,16 +82,13 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	_aa_current   = false;
 	seed          = seed_random();
 	
-	static generateFont = function(_path, _size, _aa) { #region
+	static generateFont = function(_path, _size, _aa) {
 		if(PROJECT.animator.is_playing) return;
-		if( font_exists(font)      && 
-			_path == _font_current && 
-			_size == _size_current && 
-			_aa   == _aa_current) return;
-		 
-		_font_current    = _path;
-		_size_current    = _size;
-		_aa_current      = _aa;
+		if(font_exists(font) && _path == _font_current && _size == _size_current && _aa == _aa_current) return;
+		
+		_font_current = _path;
+		_size_current = _size;
+		_aa_current   = _aa;
 		
 		if(!file_exists_empty(_path)) return;
 		
@@ -99,10 +96,10 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			font_delete(font);
 			
 		font_add_enable_aa(_aa);
-		font = _font_add(_path, _size,, true);
-	} #endregion
+		font = font_add(_path, _size, false, false, 0, 127);
+	}
 	
-	static step = function() { #region
+	static step = function() {
 		var _font = getSingleValue(1);
 		var _dimt = getSingleValue(9);
 		var _path = getSingleValue(13);
@@ -120,9 +117,9 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		inputs[ 3].setVisible(_font != "");
 		inputs[11].setVisible(_font != "");
 		inputs[12].setVisible(_font != "");
-	} #endregion
+	}
 	
-	static waveGet = function(_ind) { #region
+	static waveGet = function(_ind) {
 		var _x = __wave_phase + _ind * __wave_scale;
 		
 		var _sine = dsin(_x) * __wave_ampli;
@@ -140,7 +137,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		else if(__wave_shape < 3) return abs(_x) % 360 > 360 * (0.5 - frac(__wave_shape) / 2)? -__wave_ampli : __wave_ampli;
 		
 		return random_range_seed(-1, 1, _x + seed) * __wave_ampli;
-	} #endregion
+	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var str   = _data[0], strRaw = str;

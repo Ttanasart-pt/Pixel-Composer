@@ -1333,6 +1333,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                 
                 if(mouse_press(mb_right, _focus)) { //
                     node_hover = node_hovering;    
+                    __junction_hovering = noone;
                     
                     if(value_focus) {
                         // print($"Right click value focus {value_focus}");
