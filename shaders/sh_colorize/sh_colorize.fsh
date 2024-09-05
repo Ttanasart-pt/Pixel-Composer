@@ -2,6 +2,7 @@ varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 uniform int   multiply_alpha;
+uniform int   keep_alpha;
 
 uniform vec2      gradient_shift;
 uniform int       gradient_shiftUseSurf;
@@ -142,25 +143,25 @@ uniform sampler2D gradient_shiftSurf;
 	
 #endregion //////////////////////////////////// GRADIENT ////////////////////////////////////
 
-void main() { #region
+void main() {
 	float shf = gradient_shift.x;
 	if(gradient_shiftUseSurf == 1) {
 		vec4 _vMap = texture2D( gradient_shiftSurf, v_vTexcoord );
 		shf = mix(gradient_shift.x, gradient_shift.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
 	}
 	
-	vec4 _col  = v_vColour * texture2D( gm_BaseTexture, v_vTexcoord );
+	vec4 _col  = texture2D( gm_BaseTexture, v_vTexcoord );
 	float prog = abs(dot(_col.rgb, vec3(0.2126, 0.7152, 0.0722)) + shf);
+	
 	if(multiply_alpha == 1)
 		prog *= _col.a;
 		
-	if(prog > 1.) {
-		if(prog == floor(prog))
-			prog = 1.;
-		else 
-			prog = fract(prog);
-	}
-		
+	if(prog > 1.)
+		prog = prog == floor(prog)? 1. : fract(prog);
+	
 	vec4 col = gradientEval(prog);
+	if(keep_alpha == 1)
+		col.a = _col.a;
+	
     gl_FragColor = col;
-} #endregion
+}

@@ -39,7 +39,7 @@ function Node_Level(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	attribute_surface_depth();
 	
-	level_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { #region
+	level_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		var _h = 128;
 		var x0 = _x;
 		var x1 = _x + _w;
@@ -70,7 +70,7 @@ function Node_Level(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		draw_rectangle(x0, y0, x1, y1, true);
 		
 		return _h;
-	}); #endregion
+	});
 	
 	input_display_list = [ 8, 9, 
 		level_renderer,
@@ -88,19 +88,19 @@ function Node_Level(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			histogramUpdate(current_data[0]);
 	}
 	
-	static onValueFromUpdate = function(index) { #region
+	static onValueFromUpdate = function(index) {
 		if(index == 0) {
 			doUpdate();
 			if(array_length(current_data) > 0)
 				histogramUpdate(current_data[0]);
 		}
-	} #endregion
+	}
 	
-	static step = function() { #region
+	static step = function() {
 		__step_mask_modifier();
-	} #endregion
+	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { #region	
+	static processData = function(_outSurf, _data, _output_index, _array_index) {	
 		var _wi = _data[1];
 		var _ri = _data[2];
 		var _gi = _data[3];
@@ -113,7 +113,7 @@ function Node_Level(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var _bo = _data[15];
 		var _ao = _data[16];
 		
-		surface_set_shader(_outSurf, sh_level);
+		surface_set_shader(_outSurf, sh_level, true, BLEND.over);
 			shader_set_2("lwi", _wi);
 			shader_set_2("lri", _ri);
 			shader_set_2("lgi", _gi);
@@ -134,5 +134,5 @@ function Node_Level(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		_outSurf = channel_apply(_data[0], _outSurf, _data[9]);
 		
 		return _outSurf;
-	} #endregion
+	}
 }

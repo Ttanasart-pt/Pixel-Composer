@@ -159,7 +159,7 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			shader_set_f("secScale", 	   _data[29]);
 			shader_set_f("secShift", 	   _data[30]);
 			
-			shader_set_color("gapCol",  _col_gap);
+			shader_set_color("gapCol", _col_gap);
 			
 			shader_set_gradient(_data[5], _data[20], _data[21], inputs[5]);
 			

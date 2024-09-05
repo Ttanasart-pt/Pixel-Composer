@@ -764,19 +764,19 @@ function __initNodes() {
 		addNodeObject(generator, "Honeycomb Noise",		s_node_honey,				"Node_Honeycomb_Noise",		[1, Node_Honeycomb_Noise],, "Generate honeycomb noise").patreonExtra();
 		
 		ds_list_add(generator, "Patterns");
-		addNodeObject(generator, "Stripe",				s_node_stripe,				"Node_Stripe",				[1, Node_Stripe],,				"Generate stripe pattern.");
-		addNodeObject(generator, "Zigzag",				s_node_zigzag,				"Node_Zigzag",				[1, Node_Zigzag],,				"Generate zigzag pattern.");
-		addNodeObject(generator, "Checker",				s_node_checker,				"Node_Checker",				[1, Node_Checker],,				"Generate checkerboard pattern.");
-		addNodeObject(generator, "Grid",				s_node_grid,				"Node_Grid",				[1, Node_Grid], ["tile"],		"Generate grid pattern.");
-		addNodeObject(generator, "Triangular Grid",		s_node_grid_tri,			"Node_Grid_Tri",			[1, Node_Grid_Tri],,			"Generate triangular grid pattern.");
-		addNodeObject(generator, "Hexagonal Grid",		s_node_grid_hex,			"Node_Grid_Hex",			[1, Node_Grid_Hex],,			"Generate hexagonal grid pattern.");
-		addNodeObject(generator, "Pentagonal Grid",		s_node_grid_pentagonal,		"Node_Grid_Pentagonal",		[1, Node_Grid_Pentagonal],,		"Generate Pentagonal grid pattern.").patreonExtra();
-		addNodeObject(generator, "Pytagorean Tile",		s_node_pytagorean_tile,		"Node_Pytagorean_Tile",		[1, Node_Pytagorean_Tile],,		"Generate Pytagorean tile pattern.").patreonExtra();
-		addNodeObject(generator, "Herringbone Tile",	s_node_herringbone_tile,	"Node_Herringbone_Tile",	[1, Node_Herringbone_Tile],,	"Generate Herringbone tile pattern.").patreonExtra();
-		addNodeObject(generator, "Random Tile",			s_node_random_tile,			"Node_Random_Tile",			[1, Node_Random_Tile],,			"Generate Random tile pattern.").patreonExtra();
-		addNodeObject(generator, "Box Pattern",			s_node_box_pattern,			"Node_Box_Pattern",			[1, Node_Box_Pattern],,         "Generate square-based patterns..").setVersion(11750);
-		addNodeObject(generator, "Quasicrystal",		s_node_quasicircle,			"Node_Quasicrystal",		[1, Node_Quasicrystal],,        "Generate Quasicrystal pattern.").setVersion(11660);
-		addNodeObject(generator, "Pixel Sampler",		s_node_pixel_sampler,		"Node_Pixel_Sampler",		[1, Node_Pixel_Sampler],,       "Map image on to each individual pixels of another image.").setVersion(11730);
+		addNodeObject(generator, "Stripe",				s_node_stripe,				"Node_Stripe",				[1, Node_Stripe],,	                "Generate stripe pattern.");
+		addNodeObject(generator, "Zigzag",				s_node_zigzag,				"Node_Zigzag",				[1, Node_Zigzag],,	                "Generate zigzag pattern.");
+		addNodeObject(generator, "Checker",				s_node_checker,				"Node_Checker",				[1, Node_Checker],,	                "Generate checkerboard pattern.");
+		addNodeObject(generator, "Grid",				s_node_grid,				"Node_Grid",				[1, Node_Grid], ["tile", "mosaic"],	"Generate grid pattern.");
+		addNodeObject(generator, "Triangular Grid",		s_node_grid_tri,			"Node_Grid_Tri",			[1, Node_Grid_Tri],,                "Generate triangular grid pattern.");
+		addNodeObject(generator, "Hexagonal Grid",		s_node_grid_hex,			"Node_Grid_Hex",			[1, Node_Grid_Hex],,                "Generate hexagonal grid pattern.");
+		addNodeObject(generator, "Pentagonal Grid",		s_node_grid_pentagonal,		"Node_Grid_Pentagonal",		[1, Node_Grid_Pentagonal],,         "Generate Pentagonal grid pattern.").patreonExtra();
+		addNodeObject(generator, "Pytagorean Tile",		s_node_pytagorean_tile,		"Node_Pytagorean_Tile",		[1, Node_Pytagorean_Tile],,         "Generate Pytagorean tile pattern.").patreonExtra();
+		addNodeObject(generator, "Herringbone Tile",	s_node_herringbone_tile,	"Node_Herringbone_Tile",	[1, Node_Herringbone_Tile],         "Generate Herringbone tile pattern.").patreonExtra();
+		addNodeObject(generator, "Random Tile",			s_node_random_tile,			"Node_Random_Tile",			[1, Node_Random_Tile],,             "Generate Random tile pattern.").patreonExtra();
+		addNodeObject(generator, "Box Pattern",			s_node_box_pattern,			"Node_Box_Pattern",			[1, Node_Box_Pattern],,             "Generate square-based patterns..").setVersion(11750);
+		addNodeObject(generator, "Quasicrystal",		s_node_quasicircle,			"Node_Quasicrystal",		[1, Node_Quasicrystal],,            "Generate Quasicrystal pattern.").setVersion(11660);
+		addNodeObject(generator, "Pixel Sampler",		s_node_pixel_sampler,		"Node_Pixel_Sampler",		[1, Node_Pixel_Sampler],,           "Map image on to each individual pixels of another image.").setVersion(11730);
 		
 		ds_list_add(generator, "Populate");
 		addNodeObject(generator, "Repeat",				s_node_repeat,				"Node_Repeat",				[0, Node_create_Repeat], global.node_repeat_keys, "Repeat image multiple times linearly, or in grid pattern.").setVersion(1100);

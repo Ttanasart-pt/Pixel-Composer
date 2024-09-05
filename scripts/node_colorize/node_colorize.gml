@@ -6,7 +6,7 @@ function Node_Colorize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(1, nodeValue_Gradient("Gradient", self, new gradientObject([ cola(c_black), cola(c_white) ])))
 		.setMappable(11);
 		
-	newInput(2, nodeValue_Float("Gradient shift", self, 0))
+	newInput(2, nodeValue_Float("Gradient Shift", self, 0))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, .01 ] })
 		.setMappable(10);
 	
@@ -18,7 +18,7 @@ function Node_Colorize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(5, nodeValue_Bool("Active", self, true));
 		active_index = 5;
 	
-	newInput(6, nodeValue_Bool("Multiply alpha", self, true));
+	newInput(6, nodeValue_Bool("Multiply Alpha", self, true));
 	
 	newInput(7, nodeValue_Toggle("Channel", self, 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
@@ -34,9 +34,11 @@ function Node_Colorize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
+	newInput(13, nodeValue_Bool("Keep Alpha", self, true));
+	
 	input_display_list = [ 5, 7, 
 		["Surfaces",	 true], 0, 3, 4, 8, 9, 
-		["Colorize",	false], 1, 11, 2, 10, 6, 
+		["Colorize",	false], 1, 11, 2, 10, 6, 13, 
 	];
 	
 	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
@@ -58,11 +60,15 @@ function Node_Colorize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
+		var _mlAlp = _data[ 6];
+		var _kpAlp = _data[13];
+		
 		surface_set_shader(_outSurf, sh_colorize);
 			shader_set_gradient(_data[1], _data[11], _data[12], inputs[1]);
 			
 			shader_set_f_map("gradient_shift", _data[2], _data[10], inputs[2]);
-			shader_set_i("multiply_alpha",     _data[6]);
+			shader_set_i("multiply_alpha", _mlAlp);
+			shader_set_i("keep_alpha",     _kpAlp);
 			
 			draw_surface_safe(_data[0]);
 		surface_reset_shader(); 
