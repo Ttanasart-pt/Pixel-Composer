@@ -341,11 +341,11 @@ function shader_set_gradient(gradient, surface, range, junc) {
 }
 	
 function evaluate_gradient_map(_x, gradient, surface, range, junc, fast = false) {
-	if(!is_surface(surface)) return 0;
 	
 	var use_map = junc.attributes.mapped;
 	if(!use_map) return fast? gradient.evalFast(_x) : gradient.eval(_x);
 	
+	if(!is_surface(surface)) return 0;
 	var _sw = surface_get_width(surface);
 	var _sh = surface_get_height(surface);
 		

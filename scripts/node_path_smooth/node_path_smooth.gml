@@ -40,7 +40,7 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		line_hover = noone;
 	#endregion
 	
-	static resetDisplayList = function() { #region
+	static resetDisplayList = function() {
 		recordAction(ACTION_TYPE.var_modify,  self, [ array_clone(input_display_list), "input_display_list" ]);
 		
 		input_display_list = [
@@ -52,9 +52,9 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			array_push(input_display_list, i);
 			inputs[i].name = $"Anchor {i - input_fix_len}";
 		}
-	} #endregion
+	}
 	
-	static createNewInput = function(_x = 0, _y = 0) { #region
+	static createNewInput = function(_x = 0, _y = 0) {
 		var index = array_length(inputs);
 		
 		newInput(index, nodeValue_Vec2("Anchor",  self, [ _x, _y ]));
@@ -63,9 +63,9 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		resetDisplayList();
 		
 		return inputs[index];
-	} #endregion
+	}
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var sample = PREFERENCES.path_resolution;
 		var ansize = array_length(inputs) - input_fix_len;
 		var loop   = getInputData(0);
@@ -77,7 +77,7 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		if(!array_empty(anchors)) {
 			draw_set_color(COLORS._main_accent);
 			
-			for( var i = 0, n = array_length(segments); i < n; i++ ) { #region draw path
+			for( var i = 0, n = array_length(segments); i < n; i++ ) { // draw path
 				var _seg = segments[i];
 				var _ox = 0, _oy = 0, _nx = 0, _ny = 0, p = 0;
 					
@@ -94,22 +94,20 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 					_ox = _nx;
 					_oy = _ny;
 				}
-			} #endregion
+			}
 			
-			#region draw anchor
-				var _act = active && !isUsingTool(0);
-				
-				for(var i = input_fix_len; i < array_length(inputs); i++) {
-					var a = inputs[i].drawOverlay(hover, _act, _x, _y, _s, _mx, _my, _snx, _sny);
-					_act &= !a;
-					if(a) _anchor_hover = i;
-				}
-			#endregion
+			var _act = active && !isUsingTool(0);
+			
+			for(var i = input_fix_len; i < array_length(inputs); i++) {
+				var a = inputs[i].drawOverlay(hover, _act, _x, _y, _s, _mx, _my, _snx, _sny);
+				_act &= !a;
+				if(a) _anchor_hover = i;
+			}
 		}
 		
 		line_hover = _line_hover;
 		
-		if(key_mod_press(CTRL) || isUsingTool(0)) {	#region anchor edit
+		if(key_mod_press(CTRL) || isUsingTool(0)) {	// anchor edit
 			draw_sprite_ui_uniform(_anchor_hover == -1? THEME.cursor_path_add : THEME.cursor_path_remove, 0, _mx + 16, _my + 16);
 			
 			if(mouse_press(mb_left, active)) {
@@ -122,18 +120,18 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 						array_insert(inputs, input_fix_len + _line_hover + 1, anc);
 					}
 				} else {
-					recordAction(ACTION_TYPE.array_delete, inputs, [ inputs[input_fix_len + _anchor_hover], input_fix_len + _anchor_hover, "remove path anchor point" ]);
-					array_delete(inputs, input_fix_len + _anchor_hover, 1);
+					// print($"{array_length(inputs)}: {_anchor_hover}");
+					recordAction(ACTION_TYPE.array_delete, inputs, [ inputs[_anchor_hover], _anchor_hover, "remove path anchor point" ]);
+					array_delete(inputs, _anchor_hover, 1);
 					resetDisplayList();
 				}
 				
 				RENDER_ALL
 			}
-		#endregion
 		}
-	} #endregion
+	}
 	
-	static updateLength = function() { #region
+	static updateLength = function() {
 		var loop    = getInputData(0);
 		
 		segments    = [];
@@ -182,7 +180,7 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			lengthTotal  += l;
 			lengthAccs[i] = lengthTotal;
 		}
-	} #endregion
+	}
 	
 	static getLineCount		= function() { return 1; }
 	static getSegmentCount	= function() { return array_length(lengths); }
@@ -191,7 +189,7 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	static getLength		= function() { return lengthTotal; }
 	static getAccuLength	= function() { return lengthAccs; }
 	
-	static getPointDistance = function(_dist, _ind = 0, out = undefined) { #region
+	static getPointDistance = function(_dist, _ind = 0, out = undefined) {
 		if(out == undefined) out = new __vec2(); else { out.x = 0; out.y = 0; }
 		if(array_empty(lengths)) return out;
 		
@@ -235,14 +233,14 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		}
 		
 		return out;
-	} #endregion
+	}
 	
-	static getPointRatio = function(_rat, _ind = 0, out = undefined) { #region
+	static getPointRatio = function(_rat, _ind = 0, out = undefined) {
 		var pix = frac(_rat) * lengthTotal;
 		return getPointDistance(pix, _ind, out);
-	} #endregion
+	}
 	
-	static update = function(frame = CURRENT_FRAME) { #region
+	static update = function(frame = CURRENT_FRAME) {
 		ds_map_clear(cached_pos);
 		
 		var loop = getInputData(0);
@@ -291,10 +289,10 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		}
 		
 		updateLength();
-	} #endregion
+	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
 		draw_sprite_fit(THEME.node_draw_path, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
-	} #endregion
+	}
 }

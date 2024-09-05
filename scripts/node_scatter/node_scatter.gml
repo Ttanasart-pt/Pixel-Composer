@@ -584,7 +584,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				if(vCol && _v != noone)
 					grSamp *= _v;
 				
-				var clr  = _clrUni? _clrSin  : evaluate_gradient_map(grSamp, color, clr_map, clr_rng, inputs[11], true); 
+				var clr  = _clrUni? _clrSin  : evaluate_gradient_map(grSamp, color, clr_map, clr_rng, inputs[11], true);
 				var alp  = _alpUni? alpha[0] : random_range_seed(alpha[0], alpha[1], _sed++);
 				var _atl = _sct_len >= _datLen? noone : scatter_data[_sct_len];
 				

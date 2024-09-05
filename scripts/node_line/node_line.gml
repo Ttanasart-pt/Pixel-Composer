@@ -33,8 +33,8 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		
 	newInput(13, nodeValue_Bool("Round cap", self, false));
 	
-	newInput(14, nodeValue_Int("Round segment", self, 4))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [2, 16, 0.1] });
+	newInput(14, nodeValue_Int("Round segment", self, 8))
+		.setDisplay(VALUE_DISPLAY.slider, { range: [2, 32, 0.1] });
 	
 	newInput(15, nodeValue_Bool("Span color over path", self, false, "Apply the full 'color over length' to the trimmed path."));
 	

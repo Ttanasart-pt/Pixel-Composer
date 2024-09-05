@@ -47,6 +47,7 @@ void main() {
 		if(mode == 0) {
 			float st = smoothstep(mt - thickness, mt + thickness, 1. - abs(pos.x - _x)) * _a;
 			w = max(w, st);
+			
 		} else if(mode == 1) {
 			float st = smoothstep(mt - thickness, mt + thickness, 1. - max(0., pos.x - _x)) * (1. / float(amo));
 			w += st;
