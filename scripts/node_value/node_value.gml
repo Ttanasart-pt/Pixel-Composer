@@ -987,7 +987,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				extract_node = "Node_Path";
 				break;
 				
-			// case VALUE_TYPE.any : 
+			case VALUE_TYPE.struct : 
+				editWidget = new outputStructBox();
+				break;
+				
 			default :
 				editWidget = new outputBox();
 				break;
