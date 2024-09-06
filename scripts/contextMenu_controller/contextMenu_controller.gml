@@ -104,3 +104,10 @@ function MenuItemGroup(_name, _group, _hotkey = noone) constructor {
 		return self;
 	}
 }
+
+function menuButton(_spr, _onClick, _tooltip = "", _step = noone) constructor {
+	spr     = _spr;
+	onClick = _onClick;
+	tooltip = _tooltip;
+	step    = _step;
+}

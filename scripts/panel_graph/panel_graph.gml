@@ -507,19 +507,19 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
             [ 
                 THEME.icon_curve_connection,
                 function() /*=>*/ {return PREFERENCES.curve_connection_line}, 
-                function() /*=>*/ {return new tooltipHotkey(__txtx("panel_graph_connection_line", "Connection render settings"), "Graph", "Connection Settings")}, 
+                function() /*=>*/ {return new tooltipHotkey(__txtx("panel_graph_connection_line", "Connection render settings") + "...", "Graph", "Connection Settings")}, 
                 function(param) /*=>*/ { dialogPanelCall(new Panel_Graph_Connection_Setting(), param.x, param.y, { anchor: ANCHOR.bottom | ANCHOR.left }); } 
             ],
             [ 
                 THEME.icon_grid_setting,
                 function() /*=>*/ {return 0}, 
-                function() /*=>*/ {return new tooltipHotkey(__txtx("grid_title", "Grid settings"), "Graph", "Grid Settings")}, 
+                function() /*=>*/ {return new tooltipHotkey(__txtx("grid_title", "Grid settings") + "...", "Graph", "Grid Settings")}, 
                 function(param) /*=>*/ { dialogPanelCall(new Panel_Graph_Grid_Setting(), param.x, param.y, { anchor: ANCHOR.bottom | ANCHOR.left }); } 
             ],
             [ 
                 THEME.icon_visibility,
                 function() /*=>*/ {return 0}, 
-                function() /*=>*/ {return new tooltipHotkey(__txtx("graph_visibility_title", "Visibility settings"), "Graph", "View Settiings")}, 
+                function() /*=>*/ {return new tooltipHotkey(__txtx("graph_visibility_title", "Visibility settings") + "...", "Graph", "View Settiings")}, 
                 function(param) /*=>*/ { dialogPanelCall(new Panel_Graph_View_Setting(self, display_parameter), param.x, param.y, { anchor: ANCHOR.bottom | ANCHOR.left }); } 
             ],
         ]; 

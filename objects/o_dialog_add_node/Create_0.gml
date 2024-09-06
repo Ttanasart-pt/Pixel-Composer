@@ -34,10 +34,10 @@ event_inherited();
 	display_list_size_to = display_list_size;
 	
 	right_free = !mouse_click(mb_right);
+	is_global  = PANEL_GRAPH.getCurrentContext() == noone;
 	
-	is_global = PANEL_GRAPH.getCurrentContext() == noone;
-	
-	tooltip_surface = -1;
+	tooltip_surface  = -1;
+	content_hoverable = true;
 	
 	#region ---- category ----
 		category = NODE_CATEGORY;
@@ -285,7 +285,7 @@ event_inherited();
 		}
 	}
 	
-	catagory_pane = new scrollPane(category_width, dialog_h - ui(66), function(_y, _m) { #region catagory_pane
+	catagory_pane = new scrollPane(category_width, dialog_h - ui(66), function(_y, _m) {
 		draw_clear_alpha(COLORS._main_text, 0);
 		
 		var ww = category_width - ui(32);
@@ -376,31 +376,30 @@ event_inherited();
 		}
 		
 		return hh;
-	}); #endregion
+	});
 	
-	content_pane = new scrollPane(dialog_w - category_width - ui(8), dialog_h - ui(66), function(_y, _m) { #region content_pane
+	content_pane = new scrollPane(dialog_w - category_width - ui(8), dialog_h - ui(66), function(_y, _m) {
 		draw_clear_alpha(c_white, 0);
 		var _hover = sHOVER && content_pane.hover;
 		var _list  = node_list;
+		var ww = content_pane.surface_w;
 		var hh = 0;
 		
-		if(ADD_NODE_PAGE == -2) { #region
+		if(ADD_NODE_PAGE == -2) {
 			_list = ds_list_create();
 			for(var i = 0; i < ds_list_size(category); i++) {
 				var cat = category[| i];			
 				if(array_length(cat.filter) && !array_exists(cat.filter, instanceof(context)))
 					continue;
 				
-				for( var j = 0; j < ds_list_size(cat.list); j++ ) {
-					//if(is_string(cat.list[| j])) continue;
+				for( var j = 0; j < ds_list_size(cat.list); j++ )
 					ds_list_add(_list, cat.list[| j]);
-				}
 			}
-		#endregion
-		} else if(ADD_NODE_PAGE == -1) { #region
+	
+		} else if(ADD_NODE_PAGE == -1) {
 			_list = NEW_NODES;
-		#endregion
-		} else if(ADD_NODE_PAGE == NODE_PAGE_DEFAULT && category == NODE_CATEGORY) { #region
+	
+		} else if(ADD_NODE_PAGE == NODE_PAGE_DEFAULT && category == NODE_CATEGORY) {
 			_list = ds_list_create();
 			
 			var sug = [];
@@ -443,7 +442,7 @@ event_inherited();
 				if(_node.show_in_recent) 
 					ds_list_add(_list, _node);
 			}
-		} #endregion
+		}
 		
 		if(_list == noone) {
 			setPage(NODE_PAGE_DEFAULT);
@@ -454,18 +453,21 @@ event_inherited();
 		var group_labels  = [];
 		var _hoverContent = _hover;
 			
-		if(PREFERENCES.dialog_add_node_view == 0) { #region grid
+		if(!content_hoverable) _hoverContent = false;
+		content_hoverable = true;
+			
+		if(PREFERENCES.dialog_add_node_view == 0) { // grid
 			var grid_size  = display_grid_size;
 			var grid_width = grid_size * 1.25;
 			var grid_space = ui(12);
-			var col        = floor(content_pane.surface_w / (grid_width + grid_space));
+			var col        = floor(ww / (grid_width + grid_space));
 			var row        = ceil(node_count / col);
 			var yy         = _y + grid_space;
 			var curr_height = 0;
 			var cProg = 0;
 			hh += grid_space;
 			
-			grid_width   = round(content_pane.surface_w - grid_space) / col - grid_space;
+			grid_width   = round(ww - grid_space) / col - grid_space;
 			
 			for(var index = 0; index < node_count; index++) {
 				var _node = _list[| index];
@@ -519,7 +521,7 @@ event_inherited();
 				}
 				
 				if(_node.getTooltip() != "" || _node.tooltip_spr != noone) {
-					if(point_in_rectangle(_m[0], _m[1], _boxx, yy, _boxx + ui(16), yy + ui(16))) {
+					if(_hoverContent && point_in_rectangle(_m[0], _m[1], _boxx, yy, _boxx + ui(16), yy + ui(16))) {
 						content_pane.hover_content = true;
 						
 						draw_sprite_ui_uniform(THEME.info, 0, _boxx + ui(8), yy + ui(8), 0.7, COLORS._main_icon, 1.0);
@@ -566,8 +568,10 @@ event_inherited();
 				if(len) {
 					gpu_set_blendmode(bm_subtract);
 					draw_set_color(c_white);
-					draw_rectangle(0, 0, content_pane.surface_w, ui(36), false);
+					draw_rectangle(0, 0, ww, ui(36), false);
 					gpu_set_blendmode(bm_normal);
+					
+					content_hoverable &= !point_in_rectangle(_m[0], _m[1], 0, 0, ww, ui(36));
 				}
 				
 				for( var i = 0; i < len; i++ ) {
@@ -575,7 +579,7 @@ event_inherited();
 					var _yy = max(lb.y, i == len - 1? ui(8) : min(ui(8), group_labels[i + 1].y - ui(32)));
 					
 					BLEND_OVERRIDE;
-					draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, ui(16), _yy, content_pane.surface_w - ui(32), ui(24), c_white, 0.3);
+					draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, ui(16), _yy, ww - ui(32), ui(24), c_white, 0.3);
 					BLEND_NORMAL;
 					
 					draw_set_text(f_p2, fa_left, fa_center, CDEF.main_ltgrey);
@@ -592,10 +596,8 @@ event_inherited();
 			}
 			display_grid_size = lerp_float(display_grid_size, display_grid_size_to, 3);
 			
-		#endregion
-		
-		} else if(PREFERENCES.dialog_add_node_view == 1) { #region list
-			var list_width  = content_pane.surface_w;
+		} else if(PREFERENCES.dialog_add_node_view == 1) { // list
+			var list_width  = ww;
 			var list_height = display_list_size;
 			var yy          = _y + list_height / 2;
 			var bg_ind	    = 0;
@@ -680,8 +682,10 @@ event_inherited();
 				if(len) {
 					gpu_set_blendmode(bm_subtract);
 					draw_set_color(c_white);
-					draw_rectangle(0, 0, content_pane.surface_w, ui(36), false);
+					draw_rectangle(0, 0, ww, ui(36), false);
 					gpu_set_blendmode(bm_normal);
+					
+					content_hoverable &= !point_in_rectangle(_m[0], _m[1], 0, 0, ww, ui(36));
 				}
 				
 				for( var i = 0; i < len; i++ ) {
@@ -689,7 +693,7 @@ event_inherited();
 					var _yy = max(lb.y, i == len - 1? ui(8) : min(ui(8), group_labels[i + 1].y - ui(32)));
 				
 					BLEND_OVERRIDE;
-					draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, ui(16), _yy, content_pane.surface_w - ui(32), ui(24), c_white, 0.3);
+					draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, ui(16), _yy, ww - ui(32), ui(24), c_white, 0.3);
 					BLEND_NORMAL;
 					
 					draw_set_text(f_p2, fa_left, fa_center, CDEF.main_ltgrey);
@@ -702,33 +706,28 @@ event_inherited();
 				if(mouse_wheel_up())   display_list_size_to = clamp(display_list_size_to + ui(4), ui(16), ui(64));
 				display_list_size = lerp_float(display_list_size, display_list_size_to, 3);
 			}
-		#endregion
 		}
 		
 		if(ADD_NODE_PAGE == -2) 
 			ds_list_destroy(_list);
 		
 		return hh;
-	}); #endregion
+	});
 	
 	content_pane.always_scroll = true;
 	
+	function setPage(pageIndex) {
+		ADD_NODE_PAGE	= min(pageIndex, ds_list_size(category) - 1);
+		node_list		= pageIndex < 0? noone : category[| ADD_NODE_PAGE].list;
+	}
 	
-	
-	#region ---- set page ----
-		function setPage(pageIndex) {
-			ADD_NODE_PAGE	= min(pageIndex, ds_list_size(category) - 1);
-			node_list		= pageIndex < 0? noone : category[| ADD_NODE_PAGE].list;
-		}
+	if(PREFERENCES.add_node_remember) {
+		content_pane.scroll_y_raw = ADD_NODE_SCROLL;
+		content_pane.scroll_y_to  = ADD_NODE_SCROLL;
+	} else 
+		ADD_NODE_PAGE = 0;
 		
-		if(PREFERENCES.add_node_remember) {
-			content_pane.scroll_y_raw = ADD_NODE_SCROLL;
-			content_pane.scroll_y_to  = ADD_NODE_SCROLL;
-		} else 
-			ADD_NODE_PAGE = 0;
-			
-		setPage(ADD_NODE_PAGE);
-	#endregion
+	setPage(ADD_NODE_PAGE);
 #endregion
 
 #region resize
@@ -828,7 +827,7 @@ event_inherited();
 		
 		var highlight  = PREFERENCES.dialog_add_node_search_high;
 		
-		if(equation) { #region
+		if(equation) {
 			var eq = string_replace(search_string, "=", "");
 			
 			draw_set_text(f_h5, fa_center, fa_bottom, COLORS._main_text_sub);
@@ -842,7 +841,7 @@ event_inherited();
 			if(keyboard_check_pressed(vk_enter))
 				buildNode(ALL_NODES[? "Node_Equation"], { query: eq } );
 			return hh;
-		} #endregion
+		}
 		
 		if(PREFERENCES.dialog_add_node_view == 0) { // grid
 			
@@ -903,7 +902,7 @@ event_inherited();
 					}
 					
 					if(struct_has(_node, "tooltip") && (_node.getTooltip() != "" || _node.tooltip_spr != noone)) {
-						if(point_in_rectangle(_m[0], _m[1], _boxx, yy, _boxx + ui(16), yy + ui(16))) {
+						if(_hover && point_in_rectangle(_m[0], _m[1], _boxx, yy, _boxx + ui(16), yy + ui(16))) {
 							search_pane.hover_content = true;
 							
 							draw_sprite_ui_uniform(THEME.info, 0, _boxx + ui(8), yy + ui(8), 0.7, COLORS._main_icon, 1.0);

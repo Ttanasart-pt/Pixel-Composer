@@ -876,6 +876,8 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			lengthAccs[i] = lengthTotal;
 		}
 		
+		// Surface generate
+		
 		var pad    = min(8, abs(boundary.maxx - boundary.minx) * 0.1, abs(boundary.maxy - boundary.miny) * 0.1);
 		var minx   = boundary.minx - pad, miny = boundary.miny - pad;
 		var maxx   = boundary.maxx + pad, maxy = boundary.maxy + pad;

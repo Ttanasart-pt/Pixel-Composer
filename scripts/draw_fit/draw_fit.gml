@@ -14,5 +14,6 @@ function draw_surface_stretch_fit(surf, xx, yy, w, h, sw = 1, sh = 1) {
 }
 
 function draw_surface_bbox(surf, bbox, color = c_white, alpha = 1) {
+	if(!surface_exists(surf)) return;
 	draw_surface_fit(surf, bbox.xc, bbox.yc, bbox.w, bbox.h, color, alpha);
 }
