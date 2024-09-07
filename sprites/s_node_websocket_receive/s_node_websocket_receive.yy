@@ -3,7 +3,7 @@
   "%Name":"s_node_websocket_receive",
   "bboxMode":0,
   "bbox_bottom":61,
-  "bbox_left":1,
+  "bbox_left":0,
   "bbox_right":59,
   "bbox_top":4,
   "collisionKind":1,

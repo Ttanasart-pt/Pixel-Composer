@@ -2,7 +2,7 @@
   "$GMSprite":"",
   "%Name":"s_node_struct_get",
   "bboxMode":0,
-  "bbox_bottom":58,
+  "bbox_bottom":59,
   "bbox_left":14,
   "bbox_right":49,
   "bbox_top":4,

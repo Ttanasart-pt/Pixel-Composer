@@ -3,7 +3,7 @@
   "%Name":"s_node_rigidSim_force",
   "bboxMode":0,
   "bbox_bottom":46,
-  "bbox_left":4,
+  "bbox_left":3,
   "bbox_right":58,
   "bbox_top":17,
   "collisionKind":1,

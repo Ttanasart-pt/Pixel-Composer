@@ -1860,9 +1860,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		if(attributes.annotation != "") {
 			draw_set_text(f_sdf_medium, fa_left, fa_bottom, COLORS._main_text_sub);
-			var _ts = _s * 0.5;
+			var _ts = _s * 0.4;
 			BLEND_ADD
-			draw_text_ext_transformed(xx, yy - 8  * _s, attributes.annotation, -1, (w + 8) * _s / _ts, _ts, _ts, 0);
+			draw_text_ext_transformed(xx, yy - 4  * _s, attributes.annotation, -1, (w + 8) * _s / _ts, _ts, _ts, 0);
 			BLEND_NORMAL
 		}
 		

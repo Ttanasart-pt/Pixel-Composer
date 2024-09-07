@@ -2715,6 +2715,7 @@
     {"id":{"name":"s_node_2d_light","path":"sprites/s_node_2d_light/s_node_2d_light.yy",},},
     {"id":{"name":"s_node_3d_affector_shape","path":"sprites/s_node_3d_affector_shape/s_node_3d_affector_shape.yy",},},
     {"id":{"name":"s_node_3d_array","path":"sprites/s_node_3d_array/s_node_3d_array.yy",},},
+    {"id":{"name":"s_node_3d_array1035","path":"sprites/s_node_3d_array1035/s_node_3d_array1035.yy",},},
     {"id":{"name":"s_node_3d_camera_set","path":"sprites/s_node_3d_camera_set/s_node_3d_camera_set.yy",},},
     {"id":{"name":"s_node_3d_camera","path":"sprites/s_node_3d_camera/s_node_3d_camera.yy",},},
     {"id":{"name":"s_node_3d_cone","path":"sprites/s_node_3d_cone/s_node_3d_cone.yy",},},

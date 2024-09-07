@@ -3,7 +3,7 @@
   "%Name":"s_node_zoom",
   "bboxMode":0,
   "bbox_bottom":63,
-  "bbox_left":7,
+  "bbox_left":6,
   "bbox_right":63,
   "bbox_top":1,
   "collisionKind":1,

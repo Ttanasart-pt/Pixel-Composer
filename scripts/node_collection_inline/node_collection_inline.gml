@@ -298,4 +298,18 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	static postDeserialize = function() {
 		refreshMember();
 	}
+	
+	static junctionIsInside = function(junc) {
+		
+        if(!modifiable)
+            return false;
+            
+        if(is_instanceof(junc.node, input_node_type) && junc.connect_type == CONNECT_TYPE.input)
+            return false;
+            
+        if(is_instanceof(junc.node, output_node_type) && junc.connect_type == CONNECT_TYPE.output)
+            return false;
+		
+		return true;
+	}
 }

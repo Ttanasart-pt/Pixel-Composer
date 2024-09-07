@@ -4,7 +4,7 @@
   "bboxMode":0,
   "bbox_bottom":53,
   "bbox_left":10,
-  "bbox_right":53,
+  "bbox_right":54,
   "bbox_top":10,
   "collisionKind":1,
   "collisionTolerance":0,
@@ -12,14 +12,14 @@
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"","%Name":"fca72b55-9e1c-4765-810f-aaeada84730a","name":"fca72b55-9e1c-4765-810f-aaeada84730a","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"","%Name":"9e622acf-2d1d-4810-895b-e467525dc0a2","name":"9e622acf-2d1d-4810-895b-e467525dc0a2","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,
   "height":64,
   "HTile":false,
   "layers":[
-    {"$GMImageLayer":"","%Name":"1ea0f4cc-6622-4c0b-8388-1d362182c510","blendMode":0,"displayName":"default","isLocked":false,"name":"1ea0f4cc-6622-4c0b-8388-1d362182c510","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
+    {"$GMImageLayer":"","%Name":"d78a8dcf-5ddd-4f3e-9aa4-513a7aaafc84","blendMode":0,"displayName":"default","isLocked":false,"name":"d78a8dcf-5ddd-4f3e-9aa4-513a7aaafc84","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
   ],
   "name":"s_node_pb_draw_ellipse",
   "nineSlice":null,
@@ -69,8 +69,8 @@
     "tracks":[
       {"$GMSpriteFramesTrack":"","builtinName":0,"events":[],"inheritsTrackColour":true,"interpolation":1,"isCreationTrack":false,"keyframes":{"$KeyframeStore<SpriteFrameKeyframe>":"","Keyframes":[
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"fca72b55-9e1c-4765-810f-aaeada84730a","path":"sprites/s_node_pb_draw_ellipse/s_node_pb_draw_ellipse.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"08e6fd57-4bbb-4660-99d0-d6363b960642","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"9e622acf-2d1d-4810-895b-e467525dc0a2","path":"sprites/s_node_pb_draw_ellipse/s_node_pb_draw_ellipse.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+              },"Disabled":false,"id":"796d7001-d3d5-423f-8c57-85d9dfd48578","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
           ],"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"2.0",},"modifiers":[],"name":"frames","resourceType":"GMSpriteFramesTrack","resourceVersion":"2.0","spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
     ],
     "visibleRange":null,
@@ -79,12 +79,12 @@
     "yorigin":32,
   },
   "swatchColours":null,
-  "swfPrecision":2.525,
+  "swfPrecision":0.5,
   "textureGroupId":{
     "name":"Default",
     "path":"texturegroups/Default",
   },
   "type":0,
   "VTile":false,
-  "width":64,
+  "width":65,
 }

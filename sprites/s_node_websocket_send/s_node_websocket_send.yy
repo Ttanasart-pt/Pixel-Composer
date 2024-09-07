@@ -3,7 +3,7 @@
   "%Name":"s_node_websocket_send",
   "bboxMode":0,
   "bbox_bottom":61,
-  "bbox_left":1,
+  "bbox_left":0,
   "bbox_right":61,
   "bbox_top":2,
   "collisionKind":1,

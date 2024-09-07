@@ -3,7 +3,7 @@
   "%Name":"s_node_smokeSim_render",
   "bboxMode":0,
   "bbox_bottom":56,
-  "bbox_left":5,
+  "bbox_left":6,
   "bbox_right":60,
   "bbox_top":4,
   "collisionKind":1,

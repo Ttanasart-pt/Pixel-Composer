@@ -16,14 +16,14 @@ function Node_Iterator(_x, _y, _group = noone) : Node_Collection(_x, _y, _group)
 	
 	iterated = 0;
 	
-	static isActiveDynamic = function(frame = CURRENT_FRAME) { #region
+	static isActiveDynamic = function(frame = CURRENT_FRAME) {
 		for( var i = 0, n = array_length(nodes); i < n; i++ )
 			if(nodes[i].isActiveDynamic(frame)) return true;
 		
 		return false;
-	} #endregion
+	}
 	
-	static initLoop = function() { #region
+	static initLoop = function() {
 		resetRender();
 		
 		iterated = 0;
@@ -37,15 +37,14 @@ function Node_Iterator(_x, _y, _group = noone) : Node_Collection(_x, _y, _group)
 		}
 		
 		doInitLoop();
-		
 		LOG_LINE_IF(global.FLAG.render, "------------------< Loop begin >------------------");
-	} #endregion
+	}
 	
 	static doInitLoop = function() {}
 	
 	static update = function(frame = CURRENT_FRAME) { initLoop(); }
 	
-	static outputNextNode = function() { #region
+	static outputNextNode = function() {
 		LOG_BLOCK_START();	
 		LOG_IF(global.FLAG.render == 1, "[outputNextNode] Get next node from Loop output");
 		
@@ -79,17 +78,17 @@ function Node_Iterator(_x, _y, _group = noone) : Node_Collection(_x, _y, _group)
 		
 		LOG_BLOCK_END();
 		return _nodes;
-	} #endregion
+	}
 	
 	static getIterationCount = function() { return 0; }
 	
-	static iterationStatus = function() { #region
+	static iterationStatus = function() {
 		if(iterated >= getIterationCount())
 			return ITERATION_STATUS.complete;
 		return ITERATION_STATUS.loop;
-	} #endregion
+	}
 	
-	static iterationUpdate = function() { #region
+	static iterationUpdate = function() {
 		var maxIter = getIterationCount();
 		
 		for( var i = 0; i < array_length(nodes); i++ ) // check if every node is updated
@@ -110,5 +109,5 @@ function Node_Iterator(_x, _y, _group = noone) : Node_Collection(_x, _y, _group)
 			LOG_LINE_IF(global.FLAG.render, $"------------------< Iteration update: {iterated} / {maxIter} [RESTART] >------------------");
 			willRestart = true;
 		}
-	} #endregion
+	}
 }

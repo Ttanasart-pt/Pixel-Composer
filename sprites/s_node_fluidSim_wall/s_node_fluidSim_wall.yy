@@ -2,7 +2,7 @@
   "$GMSprite":"",
   "%Name":"s_node_fluidSim_wall",
   "bboxMode":0,
-  "bbox_bottom":58,
+  "bbox_bottom":59,
   "bbox_left":7,
   "bbox_right":56,
   "bbox_top":8,

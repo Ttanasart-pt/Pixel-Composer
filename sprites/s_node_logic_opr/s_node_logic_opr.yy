@@ -2,7 +2,7 @@
   "$GMSprite":"",
   "%Name":"s_node_logic_opr",
   "bboxMode":0,
-  "bbox_bottom":59,
+  "bbox_bottom":60,
   "bbox_left":6,
   "bbox_right":55,
   "bbox_top":4,

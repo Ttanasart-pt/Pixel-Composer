@@ -3,7 +3,7 @@
   "%Name":"s_node_http",
   "bboxMode":0,
   "bbox_bottom":61,
-  "bbox_left":5,
+  "bbox_left":4,
   "bbox_right":59,
   "bbox_top":3,
   "collisionKind":1,

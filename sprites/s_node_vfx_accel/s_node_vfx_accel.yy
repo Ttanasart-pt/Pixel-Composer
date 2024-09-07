@@ -3,7 +3,7 @@
   "%Name":"s_node_vfx_accel",
   "bboxMode":0,
   "bbox_bottom":44,
-  "bbox_left":4,
+  "bbox_left":3,
   "bbox_right":61,
   "bbox_top":19,
   "collisionKind":1,

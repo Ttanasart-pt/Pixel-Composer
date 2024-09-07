@@ -2,7 +2,7 @@
   "$GMSprite":"",
   "%Name":"s_node_rigidSim_wall",
   "bboxMode":0,
-  "bbox_bottom":59,
+  "bbox_bottom":60,
   "bbox_left":2,
   "bbox_right":62,
   "bbox_top":9,

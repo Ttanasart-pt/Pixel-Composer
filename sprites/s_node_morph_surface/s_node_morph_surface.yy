@@ -3,8 +3,8 @@
   "%Name":"s_node_morph_surface",
   "bboxMode":0,
   "bbox_bottom":61,
-  "bbox_left":1,
-  "bbox_right":61,
+  "bbox_left":2,
+  "bbox_right":62,
   "bbox_top":1,
   "collisionKind":1,
   "collisionTolerance":0,
@@ -12,14 +12,14 @@
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"","%Name":"3f1a7d2b-2007-4c49-be21-12931e1667df","name":"3f1a7d2b-2007-4c49-be21-12931e1667df","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"","%Name":"086facda-4a19-40a0-9d1b-accf1071c919","name":"086facda-4a19-40a0-9d1b-accf1071c919","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,
   "height":64,
   "HTile":false,
   "layers":[
-    {"$GMImageLayer":"","%Name":"cca573c2-d140-461a-8851-7fa9d2325537","blendMode":0,"displayName":"default","isLocked":false,"name":"cca573c2-d140-461a-8851-7fa9d2325537","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
+    {"$GMImageLayer":"","%Name":"c5606867-f568-4525-b941-79d6449ee515","blendMode":0,"displayName":"default","isLocked":false,"name":"c5606867-f568-4525-b941-79d6449ee515","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
   ],
   "name":"s_node_morph_surface",
   "nineSlice":null,
@@ -69,8 +69,8 @@
     "tracks":[
       {"$GMSpriteFramesTrack":"","builtinName":0,"events":[],"inheritsTrackColour":true,"interpolation":1,"isCreationTrack":false,"keyframes":{"$KeyframeStore<SpriteFrameKeyframe>":"","Keyframes":[
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"3f1a7d2b-2007-4c49-be21-12931e1667df","path":"sprites/s_node_morph_surface/s_node_morph_surface.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"757c3be6-712d-40c6-8d8f-588dc24562f8","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"086facda-4a19-40a0-9d1b-accf1071c919","path":"sprites/s_node_morph_surface/s_node_morph_surface.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+              },"Disabled":false,"id":"32c7acc1-3268-4948-9f7d-56858f0c4cbd","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
           ],"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"2.0",},"modifiers":[],"name":"frames","resourceType":"GMSpriteFramesTrack","resourceVersion":"2.0","spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
     ],
     "visibleRange":null,
@@ -86,5 +86,5 @@
   },
   "type":0,
   "VTile":false,
-  "width":64,
+  "width":65,
 }

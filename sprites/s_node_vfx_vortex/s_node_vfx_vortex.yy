@@ -2,7 +2,7 @@
   "$GMSprite":"",
   "%Name":"s_node_vfx_vortex",
   "bboxMode":0,
-  "bbox_bottom":59,
+  "bbox_bottom":58,
   "bbox_left":11,
   "bbox_right":53,
   "bbox_top":4,

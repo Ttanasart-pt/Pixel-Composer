@@ -1799,8 +1799,12 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
             
             if(value_focus != value_dragging) {
                 var ctx = is_instanceof(frame_hovering, Node_Collection_Inline)? frame_hovering : getCurrentContext();
+                
                 if(value_dragging.node.inline_context && !key_mod_press(SHIFT))
                     ctx = value_dragging.node.inline_context;
+                
+                if(is_instanceof(ctx, Node_Collection_Inline) && !ctx.junctionIsInside(value_dragging))
+                	ctx = noone;
                 
                 with(dialogCall(o_dialog_add_node, mouse_mx + 8, mouse_my + 8, { context: ctx })) {    
                     node_target_x     = other.mouse_grid_x;
@@ -1928,16 +1932,9 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
             
             var _inline_ctx = value_dragging.node.inline_context;
             
-            if(_inline_ctx) {
-                if(is_instanceof(value_dragging.node, _inline_ctx.input_node_type) && value_dragging.connect_type == CONNECT_TYPE.input)
-                    _inline_ctx = noone;
-                else if(is_instanceof(value_dragging.node, _inline_ctx.output_node_type) && value_dragging.connect_type == CONNECT_TYPE.output)
-                    _inline_ctx = noone;
-                
-                if(!_inline_ctx.modifiable)
-                    _inline_ctx = noone;
-            }
-                
+            if(_inline_ctx && !_inline_ctx.junctionIsInside(value_dragging))
+                _inline_ctx = noone;
+            
             if(_inline_ctx && !key_mod_press(SHIFT))
                 _inline_ctx.addPoint(mouse_graph_x, mouse_graph_y);
             
