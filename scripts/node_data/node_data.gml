@@ -626,7 +626,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		outputs_amount = output_display_list == -1? array_length(outputs) : array_length(output_display_list);
 		outputs_index  = array_create_ext(outputs_amount, function(index) { return getOutputJunctionIndex(index); });
-	} run_in(1, function() /*=>*/ { updateIO() });
+	} //run_in(1, () => { updateIO() });
 	
 	static setHeight = function() {
 		
@@ -898,7 +898,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(!is_instanceof(self, Node_Collection)) 
 			render_time = get_timer() - render_timer;
 		
-		refreshNodeDisplay();
+		//refreshNodeDisplay();
 		LOG_BLOCK_END();
 	}
 	
@@ -1167,13 +1167,13 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static refreshNodeDisplay = function() {
-		if(IS_PLAYING) return;
-		INLINE
-		
+		// print("refreshNodeDisplay"); printCallStack();
+		// if(IS_PLAYING) return;
 		updateIO();
 		setHeight();
 		getJunctionList();
-	} run_in(1, function() { refreshNodeDisplay(); });
+		
+	} run_in(1, function() /*=>*/ { refreshNodeDisplay(); });
 	
 	static preDraw = function(_x, _y, _s) {
 		
