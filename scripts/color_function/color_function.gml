@@ -165,19 +165,6 @@
 	    var b = min(b1 * b2 / 255, 255);
 	
 	    return (a << 24) | (r << 16) | (g << 8) | b;
-    
-		// var r1 = _color_get_red(c1);
-		// var g1 = _color_get_green(c1);
-		// var b1 = _color_get_blue(c1);
-		// var a1 = _color_get_alpha(c1);
-	
-		// var r2 = _color_get_red(c2);
-		// var g2 = _color_get_green(c2);
-		// var b2 = _color_get_blue(c2);
-		// var a2 = _color_get_alpha(c2);
-	
-		// if(is_real(c1)) return make_color_rgb((r1 * r2) * 255, (g1 * g2) * 255, (b1 * b2) * 255);
-		// return make_color_rgba((r1 * r2) * 255, (g1 * g2) * 255, (b1 * b2) * 255, (a1 * a2) * 255);
 	}
 
 	function colorAdd(c1, c2) {
@@ -227,42 +214,54 @@ function color_diff(c1, c2) {
 #region merge
 	#macro merge_color merge_color_ext
 	#macro __merge_color merge_color
+	//!#mfunc __clamp255 {"args":["v"],"order":[0]}
+#macro __clamp255_mf0  clamp(round(
+#macro __clamp255_mf1 ), 0, 255)
 
 	function merge_color_ext(c0, c1, t) {
 		INLINE
 		if(is_real(c0) && is_real(c1)) return __merge_color(c0, c1, t);
 		
 		return make_color_rgba(
-			clamp(round(lerp(color_get_red(c0),   color_get_red(c1),   t)), 0, 255),
-			clamp(round(lerp(color_get_green(c0), color_get_green(c1), t)), 0, 255),
-			clamp(round(lerp(color_get_blue(c0),  color_get_blue(c1),  t)), 0, 255),
-			clamp(round(lerp(color_get_alpha(c0), color_get_alpha(c1), t)), 0, 255),
+			__clamp255_mf0 lerp(color_get_red(c0),   color_get_red(c1),   t) __clamp255_mf1,
+			__clamp255_mf0 lerp(color_get_green(c0), color_get_green(c1), t) __clamp255_mf1,
+			__clamp255_mf0 lerp(color_get_blue(c0),  color_get_blue(c1),  t) __clamp255_mf1,
+			__clamp255_mf0 lerp(color_get_alpha(c0), color_get_alpha(c1), t) __clamp255_mf1,
 		);
 	}
 	
-	function merge_color_a(c0, c1, t) {
+	function merge_color_rgba(c0, c1, t) {
 		INLINE
 		return make_color_rgba(
-			clamp(round(lerp(color_get_red(c0),   color_get_red(c1),   t)), 0, 255),
-			clamp(round(lerp(color_get_green(c0), color_get_green(c1), t)), 0, 255),
-			clamp(round(lerp(color_get_blue(c0),  color_get_blue(c1),  t)), 0, 255),
-			clamp(round(lerp(color_get_alpha(c0), color_get_alpha(c1), t)), 0, 255),
+			__clamp255_mf0 lerp(color_get_red(c0),   color_get_red(c1),   t) __clamp255_mf1,
+			__clamp255_mf0 lerp(color_get_green(c0), color_get_green(c1), t) __clamp255_mf1,
+			__clamp255_mf0 lerp(color_get_blue(c0),  color_get_blue(c1),  t) __clamp255_mf1,
+			__clamp255_mf0 lerp(color_get_alpha(c0), color_get_alpha(c1), t) __clamp255_mf1,
 		);
 	}
 
+	function merge_color_hsva(c0, c1, t) {
+		return make_color_hsva(
+			__clamp255_mf0 lerp(color_get_hue(c0),        color_get_hue(c1),        t) __clamp255_mf1,
+			__clamp255_mf0 lerp(color_get_saturation(c0), color_get_saturation(c1), t) __clamp255_mf1,
+			__clamp255_mf0 lerp(color_get_value(c0),      color_get_value(c1),      t) __clamp255_mf1,
+			__clamp255_mf0 lerp(color_get_alpha(c0),      color_get_alpha(c1),      t) __clamp255_mf1,
+		);
+	}
+	
 	function merge_color_hsv(c0, c1, t) {
 		INLINE
 		if(is_real(c0)) return make_color_hsv(
-			clamp(round(lerp(color_get_hue(c0),        color_get_hue(c1),        t)), 0, 255),
-			clamp(round(lerp(color_get_saturation(c0), color_get_saturation(c1), t)), 0, 255),
-			clamp(round(lerp(color_get_value(c0),      color_get_value(c1),      t)), 0, 255),
+			__clamp255_mf0 lerp(color_get_hue(c0),        color_get_hue(c1),        t) __clamp255_mf1,
+			__clamp255_mf0 lerp(color_get_saturation(c0), color_get_saturation(c1), t) __clamp255_mf1,
+			__clamp255_mf0 lerp(color_get_value(c0),      color_get_value(c1),      t) __clamp255_mf1,
 		);
 	
 		return make_color_hsva(
-			clamp(round(lerp(color_get_hue(c0),        color_get_hue(c1),        t)), 0, 255),
-			clamp(round(lerp(color_get_saturation(c0), color_get_saturation(c1), t)), 0, 255),
-			clamp(round(lerp(color_get_value(c0),      color_get_value(c1),      t)), 0, 255),
-			clamp(round(lerp(color_get_alpha(c0),      color_get_alpha(c1),      t)), 0, 255),
+			__clamp255_mf0 lerp(color_get_hue(c0),        color_get_hue(c1),        t) __clamp255_mf1,
+			__clamp255_mf0 lerp(color_get_saturation(c0), color_get_saturation(c1), t) __clamp255_mf1,
+			__clamp255_mf0 lerp(color_get_value(c0),      color_get_value(c1),      t) __clamp255_mf1,
+			__clamp255_mf0 lerp(color_get_alpha(c0),      color_get_alpha(c1),      t) __clamp255_mf1,
 		);
 	}
 	
@@ -278,7 +277,7 @@ function color_diff(c1, c2) {
 			lerp(ok0[2], ok1[2], t),
 		];
 		
-		var a = is_real(c0)? 255 : clamp(round(lerp(color_get_alpha(c0), color_get_alpha(c1), t)), 0, 255);
+		var a = __clamp255_mf0 lerp(color_get_alpha(c0), color_get_alpha(c1), t) __clamp255_mf1;
 		
 		return make_color_oklab(ok, a);
 	} 
@@ -295,7 +294,7 @@ function color_diff(c1, c2) {
 			lerp(sr0[2], sr1[2], t),
 		];
 		
-		var a = is_real(c0)? 255 : clamp(round(lerp(color_get_alpha(c0), color_get_alpha(c1), t)), 0, 255);
+		var a = __clamp255_mf0 lerp(color_get_alpha(c0), color_get_alpha(c1), t) __clamp255_mf1;
 		
 		return make_color_srgba(sr, a);
 	} 

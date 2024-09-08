@@ -92,15 +92,15 @@ function gradientObject(color = c_black) constructor {
 			var rat = (position - _pkey.time) / (_key.time - _pkey.time);
 			
 			switch(type) {
-				case GRADIENT_INTER.smooth : return merge_color_a    (_pkey.value, _key.value, rat);
-				case GRADIENT_INTER.hue    : return merge_color_hsv  (_pkey.value, _key.value, rat);
+				case GRADIENT_INTER.smooth : return merge_color_rgba (_pkey.value, _key.value, rat);
+				case GRADIENT_INTER.hue    : return merge_color_hsva (_pkey.value, _key.value, rat);
 				case GRADIENT_INTER.oklab  : return merge_color_oklab(_pkey.value, _key.value, rat);
 				case GRADIENT_INTER.srgb   : return merge_color_srgb (_pkey.value, _key.value, rat);
 				case GRADIENT_INTER.none   : return _pkey.value;
 			}
 		}
 	
-		return keys[array_length(keys) - 1].value; //after last color
+		return keys[_len - 1].value; //after last color
 	}
 	
 	static evalFast = function(position) {
