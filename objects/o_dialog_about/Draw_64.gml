@@ -14,8 +14,13 @@ if !ready exit;
 	draw_sprite_ui_uniform(THEME.icon_64, 0, cx, dialog_y + ui(56));
 	draw_set_text(_f_ico_h5, fa_center, fa_top, COLORS._main_text_accent);
 	draw_text(cx, ly, "Pixel Composer");
-	
 	ly += string_height("l");
+	
+	draw_set_font(f_p3);
+	draw_set_color(COLORS._main_text_sub);
+	draw_text(cx, ly - ui(4), code_is_compiled()? "Native build" : "VM build");
+	ly += string_height("l");
+	
 	draw_set_text(f_p0, fa_center, fa_top, COLORS._main_text_sub);
 	draw_text(cx, ly, "2024, MakhamDev");
 	

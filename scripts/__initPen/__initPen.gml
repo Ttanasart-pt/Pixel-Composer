@@ -19,6 +19,8 @@ PEN_RIGHT_PRESS   = false;
 PEN_RIGHT_RELEASE = false;
 
 function __initPen() {
+	if(OS == os_macosx) return;
+	
 	var c = tabletstuff_get_init_error_code();
 	if (c != tabletstuff_error_none)
 	    show_error("Unable to initialize TabletStuff. Code=" + tabletstuff_error_to_string(c), true);
