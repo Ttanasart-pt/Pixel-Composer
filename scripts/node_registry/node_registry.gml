@@ -48,11 +48,11 @@ function NodeObject(_name, _spr, _node, _create, tooltip = "", tags = []) constr
 		return self;
 	}
 	
-	static setIcon = function(icon) {
+	static setIcon = function(_icon) {
 		INLINE 
 		if(IS_CMD) return self;
 		
-		self.icon = icon;
+		icon = _icon;
 		return self;
 	}
 	

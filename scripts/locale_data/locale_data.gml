@@ -1,12 +1,12 @@
 globalvar LOCALE, TEST_LOCALE, LOCALE_DEF;
+
+TEST_LOCALE = false;
+LOCALE_DEF  =  true;
 LOCALE      = {
 	fontDir: "",
 	config: { per_character_line_break: false },
 };
 global.missing_locale = {}
-
-TEST_LOCALE = false;
-LOCALE_DEF  =  true;
 
 function __initLocale() {
 	var lfile = $"data/Locale/en.zip";
