@@ -99,6 +99,7 @@ function canvas_tool_brush(brush, eraser = false) : canvas_tool() constructor {
 		if(isEraser) draw_set_color(c_white);
 		
 		mouse_line_drawing = false;
+		//print($"Drawing {mouse_cur_x}, {mouse_cur_y}, [{draw_get_color()}, {draw_get_alpha()}] {surface_get_target()}");
 		
 		if(mouse_pre_draw_x != undefined && mouse_pre_draw_y != undefined && key_mod_press(SHIFT)) {
 			

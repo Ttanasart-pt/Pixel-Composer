@@ -1,6 +1,16 @@
-function canvas_draw_point_brush(brush, _x, _y, _draw = false) { #region
-	if(brush.brush_surface == noone) {
+function canvas_draw_point_brush(brush, _x, _y, _draw = false) {
+	
+	if(is_surface(brush.brush_surface)) {
+		var _sw = surface_get_width_safe(brush.brush_surface);
+		var _sh = surface_get_height_safe(brush.brush_surface);
+		var _r  = brush.brush_direction + angle_random_eval(brush.brush_rand_dir, brush.brush_seed);
+		var _p  = point_rotate(-_sw / 2, -_sh / 2, 0, 0, _r);
 			
+		draw_surface_ext_safe(brush.brush_surface, round(_x + _p[0]), round(_y + _p[1]), 1, 1, _r, draw_get_color(), draw_get_alpha());
+			
+		if(_draw) brush.brush_seed = irandom_range(100000, 999999);
+		
+	} else {
 		if(brush.brush_size <= 1) 
 			draw_point(_x, _y);
 				
@@ -11,18 +21,8 @@ function canvas_draw_point_brush(brush, _x, _y, _draw = false) { #region
 					
 		} else
 			draw_circle_prec(_x, _y, brush.brush_size / 2, 0);
-				
-	} else {
-		var _sw = surface_get_width_safe(brush.brush_surface);
-		var _sh = surface_get_height_safe(brush.brush_surface);
-		var _r  = brush.brush_direction + angle_random_eval(brush.brush_rand_dir, brush.brush_seed);
-		var _p  = point_rotate(-_sw / 2, -_sh / 2, 0, 0, _r);
-			
-		draw_surface_ext_safe(brush.brush_surface, round(_x + _p[0]), round(_y + _p[1]), 1, 1, _r, draw_get_color(), draw_get_alpha());
-			
-		if(_draw) brush.brush_seed = irandom_range(100000, 999999);
 	}
-} #endregion
+}
 
 function canvas_draw_line(_x0, _y0, _x1, _y1, _th = 1) {
 	if(_th < global.FIX_POINTS_AMOUNT) {
@@ -46,36 +46,10 @@ function canvas_draw_line(_x0, _y0, _x1, _y1, _th = 1) {
 		draw_line_width(_x0, _y0, _x1, _y1, _th);
 }
 
-function canvas_draw_line_brush(brush, _x0, _y0, _x1, _y1, _draw = false, _cap = false) { #region 
+function canvas_draw_line_brush(brush, _x0, _y0, _x1, _y1, _draw = false, _cap = false) { 
 		
-	if(brush.brush_surface == noone) {
-			
-		if(brush.brush_size < global.FIX_POINTS_AMOUNT) {
-			if(_x1 > _x0) _x0--;
-			if(_x1 < _x0) _x1--;
-			
-			if(_y1 > _y0) _y0--;
-			if(_y1 < _y0) _y1--;
-		}
-			
-		if(brush.brush_size == 1) {
-			draw_line(_x0, _y0, _x1, _y1);
-				
-		} else if(brush.brush_size < global.FIX_POINTS_AMOUNT) { 
-				
-			var fx = global.FIX_POINTS[brush.brush_size];
-			for( var i = 0, n = array_length(fx); i < n; i++ )
-				draw_line(_x0 + fx[i][0], _y0 + fx[i][1], _x1 + fx[i][0], _y1 + fx[i][1]);	
-					
-		} else {
-			draw_line_width(_x0, _y0, _x1, _y1, brush.brush_size);
-			if(_cap) {
-				canvas_draw_point_brush(brush, _x0, _y0, true);
-				canvas_draw_point_brush(brush, _x1, _y1, true);
-			}
-		}
-			
-	} else {
+	if(is_surface(brush.brush_surface)) {
+		
 		var diss  = point_distance(_x0, _y0, _x1, _y1);
 		var dirr  = point_direction(_x0, _y0, _x1, _y1);
 		var st_x  = lengthdir_x(1, dirr);
@@ -102,10 +76,37 @@ function canvas_draw_line_brush(brush, _x0, _y0, _x1, _y1, _draw = false, _cap =
 			
 		if(brush.brush_dist_min == brush.brush_dist_max && brush.brush_dist_min == 1)
 			canvas_draw_point_brush(brush, _x1, _y1, _draw);
+			
+	} else {
+		
+		if(brush.brush_size < global.FIX_POINTS_AMOUNT) {
+			if(_x1 > _x0) _x0--;
+			if(_x1 < _x0) _x1--;
+			
+			if(_y1 > _y0) _y0--;
+			if(_y1 < _y0) _y1--;
+		}
+			
+		if(brush.brush_size == 1) {
+			draw_line(_x0, _y0, _x1, _y1);
+				
+		} else if(brush.brush_size < global.FIX_POINTS_AMOUNT) { 
+				
+			var fx = global.FIX_POINTS[brush.brush_size];
+			for( var i = 0, n = array_length(fx); i < n; i++ )
+				draw_line(_x0 + fx[i][0], _y0 + fx[i][1], _x1 + fx[i][0], _y1 + fx[i][1]);	
+					
+		} else {
+			draw_line_width(_x0, _y0, _x1, _y1, brush.brush_size);
+			if(_cap) {
+				canvas_draw_point_brush(brush, _x0, _y0, true);
+				canvas_draw_point_brush(brush, _x1, _y1, true);
+			}
+		}
 	}
-} #endregion
+}
 	
-function canvas_draw_rect_brush(brush, _x0, _y0, _x1, _y1, _fill) { #region
+function canvas_draw_rect_brush(brush, _x0, _y0, _x1, _y1, _fill) {
 	if(_x0 == _x1 && _y0 == _y1) {
 		canvas_draw_point_brush(brush, _x0, _y0);
 		return;
@@ -130,7 +131,7 @@ function canvas_draw_rect_brush(brush, _x0, _y0, _x1, _y1, _fill) { #region
 		
 	if(_fill) draw_rectangle(_min_x, _min_y, _max_x, _may_y, 0);
 		
-	if(brush.brush_size == 1 && brush.brush_surface == noone)
+	if(brush.brush_size == 1 && !is_surface(brush.brush_surface))
 		draw_rectangle(_min_x + 1, _min_y + 1, _max_x - 1, _may_y - 1, 1);
 	else {
 		canvas_draw_line_brush(brush, _min_x, _min_y, _max_x, _min_y);
@@ -138,9 +139,9 @@ function canvas_draw_rect_brush(brush, _x0, _y0, _x1, _y1, _fill) { #region
 		canvas_draw_line_brush(brush, _max_x, _may_y, _max_x, _min_y);
 		canvas_draw_line_brush(brush, _max_x, _may_y, _min_x, _may_y);
 	}
-} #endregion
+}
 	
-function canvas_draw_ellp_brush(brush, _x0, _y0, _x1, _y1,  _fill) { #region
+function canvas_draw_ellp_brush(brush, _x0, _y0, _x1, _y1,  _fill) {
 	if(_x0 == _x1 && _y0 == _y1) {
 		canvas_draw_point_brush(brush, _x0, _y0);
 		return;
@@ -164,7 +165,7 @@ function canvas_draw_ellp_brush(brush, _x0, _y0, _x1, _y1,  _fill) { #region
 	var _min_y = min(_y0, _y1) - 0.5;
 	var _max_y = max(_y0, _y1) - 0.5;
 	
-	if(brush.brush_surface == noone) {
+	if(!is_surface(brush.brush_surface)) {
 		if(_fill) draw_ellipse(_min_x, _min_y, _max_x, _max_y, 0);
 		
 		if(brush.brush_size == 1) {
@@ -201,9 +202,9 @@ function canvas_draw_ellp_brush(brush, _x0, _y0, _x1, _y1,  _fill) { #region
 		ox = nx;
 		oy = ny;
 	}
-} #endregion
+}
 
-function canvas_draw_curve_brush(brush, x0, y0, cx0, cy0, cx1, cy1, x1, y1, prec = 32) { #region 
+function canvas_draw_curve_brush(brush, x0, y0, cx0, cy0, cx1, cy1, x1, y1, prec = 32) { 
 	var ox, oy, nx, ny;
 	
 	var _st = 1 / prec;
@@ -227,6 +228,6 @@ function canvas_draw_curve_brush(brush, x0, y0, cx0, cy0, cx1, cy1, x1, y1, prec
 		ox = nx;
 		oy = ny;
 	}
-} #endregion
+}
 
 function canvas_draw_triangle(x1, y1, x2, y2, x3, y3, outline = false) { INLINE draw_triangle(round(x1), round(y1), round(x2), round(y2), round(x3), round(y3), outline); }

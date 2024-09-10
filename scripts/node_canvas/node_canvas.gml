@@ -891,7 +891,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					
 				draw_set_alpha(1);
 			surface_reset_shader();
-				
+			
 			draw_surface_ext_safe(preview_draw_surface, _x, _y, _s, _s, 0, isUsingTool("Eraser")? c_red : c_white, isUsingTool("Eraser")? .2 : _alp);
 			
 			surface_set_target(preview_draw_mask);
