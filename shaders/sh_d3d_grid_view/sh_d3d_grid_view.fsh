@@ -1,6 +1,4 @@
-#define MACOS 1
-
-#ifndef MACOS
+#ifdef _YY_HLSL11_
 	#extension GL_OES_standard_derivatives : enable
 #endif
 

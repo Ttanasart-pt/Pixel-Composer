@@ -161,6 +161,7 @@ function shader_set_color(uniform, col, alpha = 1) {
 function shader_set_palette(pal, pal_uni = "palette", amo_uni = "paletteAmount", max_length = 1024) {
 	INLINE
 	
+	if(MAC) max_length = min(max_length, 256);
 	var _amo = min(max_length, array_length(pal));
 	if(_amo == 0) return;
 	

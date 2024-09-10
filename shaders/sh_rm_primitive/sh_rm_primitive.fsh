@@ -1,17 +1,13 @@
 //Inigo Quilez 
 //Oh where would I be without you.
 
-#define MACOS 1
-
-#ifdef MACOS
-	#define MAX_SHAPES 16
-	#define MAX_OP     32
-#else
+#ifdef _YY_HLSL11_
 	#extension GL_OES_standard_derivatives : enable
-	#define MAX_SHAPES 16
-	#define MAX_OP     32
 #endif
 
+#define MAX_SHAPES 16
+#define MAX_OP     32
+	
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
