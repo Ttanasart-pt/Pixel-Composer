@@ -24,6 +24,8 @@
 	globalvar CMD, CMDIN;
 	globalvar FPS_REAL;
 	
+	#macro MAC (OS == os_macosx)
+	
 	OS       = os_type;
 	CMD      = [];
 	CMDIN    = [];
@@ -39,7 +41,7 @@
 	LATEST_VERSION	= 1_17_00;
 	VERSION			= 1_17_12_0;
 	SAVE_VERSION	= 1_17_10_0;
-	VERSION_STRING  = "1.18.rc1.002";
+	VERSION_STRING  = MAC? "1.18.002m" : "1.18.rc1.002";
 	BUILD_NUMBER	= 1_17_12_0;
 	
 	HOTKEYS			= ds_map_create();
@@ -52,7 +54,6 @@
 	globalvar CURRENT_COLOR;
 	CURRENT_COLOR = c_white;
 	
-	#macro MAC (OS == os_macosx)
 #endregion
 
 #region input
