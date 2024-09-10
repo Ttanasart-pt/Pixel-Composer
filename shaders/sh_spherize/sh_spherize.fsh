@@ -129,5 +129,6 @@ void main() {
 	float dist = sqrt(abs(d));
 	vec4  c    = sampleTexture(mix(uv, cen + uv / dist, str));
 	
+	gl_FragColor = vec4(0.);
 	if(d > trim) gl_FragColor = c;
 }
