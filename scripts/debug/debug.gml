@@ -127,7 +127,7 @@ function setException() {
 		} else 
 			show_debug_message(tt);
 		
-		var rep = $"{APP_LOCATION}report\\PXC crash reporter.exe";
+		var rep = $"{APP_LOCATION}report/PXC crash reporter.exe";
 		var pid = shell_execute(rep, DIRECTORY);
 		print($"{rep} [{file_exists(rep)}]: {pid}");
 		

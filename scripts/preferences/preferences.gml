@@ -283,7 +283,7 @@
 		if(IS_CMD) return;
 		
 		directory_verify($"{DIRECTORY}Preferences");
-		directory_verify($"{DIRECTORY}Preferences\\{PREF_VERSION}");
+		directory_verify($"{DIRECTORY}Preferences/{PREF_VERSION}");
 		
 		PREFERENCES.window_maximize	= window_is_maximized;
 		PREFERENCES.window_width	= max(960, window_minimize_size[0]);

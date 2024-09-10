@@ -1,7 +1,8 @@
+#define CURVE_MAX 512
+#define MAX_POINTS 256
+
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
-
-#define MAX_POINTS 256
 
 uniform vec2 dimension;
 uniform int sampleMode;
@@ -12,7 +13,7 @@ uniform float points_x[MAX_POINTS];
 uniform float points_y[MAX_POINTS];
 
 uniform float intensity;
-uniform float i_curve[1024];
+uniform float i_curve[CURVE_MAX];
 uniform int   i_amount;
 
 vec4 sample(vec2 pos) { #region
@@ -88,7 +89,7 @@ float eval_curve_segment_x(in float _y0, in float ax0, in float ay0, in float bx
 	return eval_curve_segment_t(_y0, ax0, ay0, bx1, by1, _y1, _xt);
 }
 
-float curveEval(in float[1024] curve, in int amo, in float _x) {
+float curveEval(in float[CURVE_MAX] curve, in int amo, in float _x) {
 	
 	int   _shf   = amo - int(floor(float(amo) / 6.) * 6.);
 	int   _segs  = (amo - _shf) / 6 - 1;

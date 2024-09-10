@@ -103,7 +103,7 @@ function Panel_Addon() : PanelContent() constructor {
 							array_remove(ADDONS_ON_START, _addon.name);
 						}
 						
-						json_save_struct(DIRECTORY + "Addons\\__init.json", ADDONS_ON_START);
+						json_save_struct(DIRECTORY + "Addons/__init.json", ADDONS_ON_START);
 					}
 				} else
 					draw_sprite_stretched_ext(THEME.checkbox_def, 0, chx0, chy0, ui(28), ui(28), c_white, 1);
@@ -118,7 +118,7 @@ function Panel_Addon() : PanelContent() constructor {
 				
 				var b = buttonInstant(THEME.button_hide, _bx, _by, ui(32), ui(32), _m, pFOCUS, pHOVER, __txt("Open in explorer"), THEME.folder_content);
 				if(b) hover = false;
-				if(b == 2) shellOpenExplorer(DIRECTORY + "Addons\\" + _addon.name);
+				if(b == 2) shellOpenExplorer(DIRECTORY + "Addons/" + _addon.name);
 				
 				_bx -= ui(36)
 				if(_act && buttonInstant(THEME.button_hide, _bx, _by, ui(32), ui(32), _m, pFOCUS, pHOVER, __txt("Addon settings"), THEME.addon_setting) == 2) {

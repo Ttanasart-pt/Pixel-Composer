@@ -64,7 +64,7 @@ function addonActivated(_addon) {
 
 function addonLoad(_addon, _openDialog = true) {
 	var _name = filename_name_only(_addon);
-	var addonPath = DIRECTORY + "Addons\\" + _name;
+	var addonPath = DIRECTORY + "Addons/" + _name;
 	if(!directory_exists(addonPath)) return;
 	
 	with(_addon_custom) if(name == _name) return;
@@ -75,7 +75,7 @@ function addonLoad(_addon, _openDialog = true) {
 
 function addonUnload(_addon) {
 	var _name = filename_name_only(_addon);
-	var addonPath = DIRECTORY + "Addons\\" + _name;
+	var addonPath = DIRECTORY + "Addons/" + _name;
 	if(!directory_exists(addonPath)) return;
 	
 	with(_addon_custom) if(name == _name) instance_destroy();

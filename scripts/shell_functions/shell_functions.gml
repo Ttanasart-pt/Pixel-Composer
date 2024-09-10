@@ -46,7 +46,7 @@ function shell_execute_async(path, command, ref = noone, _log = true) { #region
 function env_user() { #region
 	INLINE
 	
-	if(OS == os_windows) return string(environment_get_variable("userprofile")) + "\\AppData\\Local\\PixelComposer\\";
+	if(OS == os_windows) return string(environment_get_variable("userprofile")) + "/AppData/Local/PixelComposer/";
 	if(OS == os_macosx)  return string(environment_get_variable("HOME")) + "/PixelComposer/";
 	return "";
 } #endregion

@@ -15,7 +15,7 @@ event_inherited();
 		
 		self.directory = directory;
 	
-		var propPath = directory + "\\meta.json";
+		var propPath = directory + "/meta.json";
 		context_menus = {};
 		panels = {};
 		
@@ -51,7 +51,7 @@ event_inherited();
 			}
 		}
 		
-		scriptPath = directory + "\\script.lua";
+		scriptPath = directory + "/script.lua";
 		if(!file_exists_empty(scriptPath)) {
 			noti_warning(title + " Addon error: script.lua not found.");
 			return self;

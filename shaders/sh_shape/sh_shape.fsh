@@ -1,4 +1,5 @@
 // 2D Signed Distance equations by InigoQuilez
+#define CURVE_MAX 512
 
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
@@ -12,7 +13,7 @@ uniform int tile;
 uniform int   drawBG;
 uniform int   drawDF;
 uniform vec2  dfLevel;
-uniform float w_curve[1024];
+uniform float w_curve[CURVE_MAX];
 uniform int   w_amount;
 
 uniform float rotation;
@@ -106,7 +107,7 @@ float eval_curve_segment_x(in float _y0, in float ax0, in float ay0, in float bx
 	return eval_curve_segment_t(_y0, ax0, ay0, bx1, by1, _y1, _xt);
 }
 
-float curveEval(in float[1024] curve, in int amo, in float _x) {
+float curveEval(in float[CURVE_MAX] curve, in int amo, in float _x) {
 	
 	int   _shf   = amo - int(floor(float(amo) / 6.) * 6.);
 	int   _segs  = (amo - _shf) / 6 - 1;

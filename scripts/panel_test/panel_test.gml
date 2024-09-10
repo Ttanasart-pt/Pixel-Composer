@@ -3,7 +3,7 @@ function Panel_Test() : PanelContent() constructor {
 	h = ui(160);
 	title = "Tester";
 	
-	test_dir = "D:\\Project\\MakhamDev\\LTS-PixelComposer\\TEST";
+	test_dir = "D:/Project/MakhamDev/LTS-PixelComposer/TEST";
 	tb_test_dir = new textBox(TEXTBOX_INPUT.text,   function(txt) { test_dir = txt; });
 	tb_index    = new textBox(TEXTBOX_INPUT.number, function(txt) { start_index = txt; });
 	tb_amount   = new textBox(TEXTBOX_INPUT.number, function(txt) { test_amount = txt; });
@@ -17,20 +17,20 @@ function Panel_Test() : PanelContent() constructor {
 	test_button_surface = surface_create(1, 1);
 	
 	function scanDir(dir) {
-		var f = file_find_first(dir + "\\*", fa_none);
+		var f = file_find_first(dir + "/*", fa_none);
 		while(f != "") {
-			var path = dir + "\\" + f;
+			var path = dir + "/" + f;
 			if(filename_ext_raw(path) == "pxc")
 				array_push(test_files, path);
 			f = file_find_next();
 		}
 		file_find_close();
 		
-		var f = file_find_first(dir + "\\*", fa_directory);
+		var f = file_find_first(dir + "/*", fa_directory);
 		var _dir = [];
 		
 		while(f != "") {
-			var path = dir + "\\" + f;
+			var path = dir + "/" + f;
 			array_push(_dir, path);
 			f = file_find_next();
 		}

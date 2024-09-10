@@ -32,7 +32,7 @@ function Node_3D_Mesh_Export(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		
 		var _vbs = _mesh.VB;
 		
-		var _mtlPath = filename_dir(_path) + "\\" + filename_name_only(_path) + ".mtl";
+		var _mtlPath = filename_dir(_path) + "/" + filename_name_only(_path) + ".mtl";
 		var _mtlName = filename_name(_mtlPath);
 		var _mtl     =  "# Pixel Composer\n";
 		var _obj     =  "# Pixel Composer\n";
@@ -55,7 +55,7 @@ function Node_3D_Mesh_Export(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 					_obj += $"usemtl {_matName}\n";
 					
 					if(is_surface(_material.surface)) {
-						var _surfPath = $"{filename_dir(_path)}\\{filename_name_only(_path)}_texture{i}.png";
+						var _surfPath = $"{filename_dir(_path)}/{filename_name_only(_path)}_texture{i}.png";
 						surface_save(_material.surface, _surfPath);
 						_mtl += $"map_Kd {_surfPath}\n";
 					}

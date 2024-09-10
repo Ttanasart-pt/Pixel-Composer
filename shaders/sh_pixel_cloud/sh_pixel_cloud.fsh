@@ -1,3 +1,5 @@
+#define CURVE_MAX 512
+
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
@@ -7,7 +9,7 @@ uniform float dist;
 uniform int	  useMap;
 uniform sampler2D strengthMap;
 
-uniform float alpha_curve[1024];
+uniform float alpha_curve[CURVE_MAX];
 uniform int   curve_amount;
 uniform float randomAmount;
 

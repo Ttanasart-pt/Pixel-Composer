@@ -85,9 +85,9 @@ function ExpDir(path) : ExpFile(path) constructor {
 		
 		if(!directory_exists(path)) return;
 		
-		var f = file_find_first(path + "\\*", fa_directory);
+		var f = file_find_first(path + "/*", fa_directory);
 		while (f != "") {
-			var _fp = $"{path}\\{f}";
+			var _fp = $"{path}/{f}";
 			if(directory_exists(_fp)) {
 				var _fileObj = ExpCreateFile(_fp);
 				_fileObj.parent = self;
@@ -97,9 +97,9 @@ function ExpDir(path) : ExpFile(path) constructor {
 		}
 		
 		file_find_close();
-		var f = file_find_first(path + "\\*", fa_none);
+		var f = file_find_first(path + "/*", fa_none);
 		while (f != "") {
-			var _fp = $"{path}\\{f}";
+			var _fp = $"{path}/{f}";
 			if(file_exists(_fp) && !directory_exists(_fp)) {
 				var _fileObj = ExpCreateFile(_fp);
 				_fileObj.parent = self;

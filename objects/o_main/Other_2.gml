@@ -21,7 +21,7 @@
 	
 	if(DIRECTORY != "") {
 		var _ch = string_char_last(DIRECTORY);
-		if(_ch != "\\" && _ch != "/") DIRECTORY += "\\";
+		if(_ch != "\\" && _ch != "/") DIRECTORY += "/";
 	
 		show_debug_message($"Env directory: {DIRECTORY}");
 		var dir_valid = DIRECTORY != "" && directory_exists(DIRECTORY);
@@ -42,13 +42,13 @@
 	} else 
 		DIRECTORY = APP_DIRECTORY;
 	
-	PREFERENCES_DIR = $"{DIRECTORY}Preferences\\{PREF_VERSION}\\";
+	PREFERENCES_DIR = $"{DIRECTORY}Preferences/{PREF_VERSION}/";
 	directory_verify(DIRECTORY);
 	
 	APP_LOCATION = program_directory;
 	if(OS == os_macosx)
 		APP_LOCATION = string_replace(APP_LOCATION, "/Contents/MacOS/", "/Contents/Resources/");
-	if(string_pos("GameMakerStudio2\\Cache\\runtimes", APP_LOCATION))
+	if(string_pos("GameMakerStudio2/Cache/runtimes", APP_LOCATION))
 		APP_LOCATION = working_directory;
 	print($"===================== WORKING DIRECTORIES =====================\n\t{working_directory}\n\t{DIRECTORY}");
 #endregion

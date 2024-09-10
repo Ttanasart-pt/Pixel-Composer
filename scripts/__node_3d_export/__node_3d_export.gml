@@ -52,7 +52,7 @@ function __Node_3D_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				file_text_write_string(fObj, "vn " + string(v.normals[j][0]) + " " + string(v.normals[j][1]) + " " + string(v.normals[j][2]) + "\n");
 			
 			var mtlName = "material_" + string(i);
-			var mtlPath = filename_dir(mPath) + "\\" + filename_name_only(oPath) + "_material_" + string(i) + ".png";
+			var mtlPath = filename_dir(mPath) + "/" + filename_name_only(oPath) + "_material_" + string(i) + ".png";
 			
 			file_text_write_string(fObj, "\nusemtl " + mtlName + "\n");
 			file_text_write_string(fMtl, "newmtl " + mtlName + "\n");

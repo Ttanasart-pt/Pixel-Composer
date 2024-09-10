@@ -14,13 +14,13 @@ function __initAddon() {
 	directory_verify(dirPath);
 	__addonDefault(dirPath);
 	
-	var f = file_find_first(dirPath + "\\*", fa_directory);
+	var f = file_find_first(dirPath + "/*", fa_directory);
 	var _f = "";
 	
 	while(f != "" && f != _f) {
 		_f = f;
-		var _path = dirPath + "\\" + f;
-		var _meta = _path + "\\meta.json";
+		var _path = dirPath + "/" + f;
+		var _meta = _path + "/meta.json";
 		
 		if(!file_exists_empty(_meta)) {
 			f = file_find_next();
@@ -44,7 +44,7 @@ function __initAddon() {
 }
 
 function loadAddon() {
-	var _path = DIRECTORY + "Addons\\__init.json";
+	var _path = DIRECTORY + "Addons/__init.json";
 	if(!file_exists_empty(_path)) return;
 	
 	ADDONS_ON_START = json_load_struct(_path);
