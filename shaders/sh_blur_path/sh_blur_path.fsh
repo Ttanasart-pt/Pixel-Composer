@@ -1,5 +1,11 @@
-#define CURVE_MAX 512
-#define MAX_POINTS 256
+
+#ifdef _YY_HLSL11_ 
+	#define CURVE_MAX  1024
+	#define MAX_POINTS 256
+#else 
+	#define CURVE_MAX  256
+	#define MAX_POINTS 128
+#endif
 
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;

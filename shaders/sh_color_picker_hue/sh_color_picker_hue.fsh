@@ -5,7 +5,11 @@ varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 uniform float hue;
 
-#define PALETTE_LIMIT 1024
+#ifdef _YY_HLSL11_ 
+	#define PALETTE_LIMIT 1024 
+#else 
+	#define PALETTE_LIMIT 256 
+#endif
 
 uniform int usePalette;
 uniform vec4 palette[PALETTE_LIMIT];

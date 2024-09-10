@@ -1,7 +1,11 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-#define MAXPATH 1024
+#ifdef _YY_HLSL11_ 
+	#define MAXPATH 1024
+#else 
+	#define MAXPATH 256
+#endif
 
 uniform vec4 color;
 uniform vec4 bgColor;

@@ -1,3 +1,9 @@
+#ifdef _YY_HLSL11_ 
+	#define SHAPE_LIMIT 1024 
+#else 
+	#define SHAPE_LIMIT 256 
+#endif
+
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
@@ -11,7 +17,7 @@ void main() {
 	vec2 pxPos = v_vTexcoord * vec2(float(maxShape), 1.) - 0.5;
 	
 	int amo = 0;
-	vec4 list[1024];
+	vec4 list[SHAPE_LIMIT];
 	
 	for(float i = 0.; i <= dimension.x; i++)
 	for(float j = 0.; j <= dimension.y; j++) {

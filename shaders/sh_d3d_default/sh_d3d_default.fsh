@@ -17,7 +17,16 @@ uniform int use_8bit;
 	uniform vec4  light_ambient;
 	uniform float shadowBias;
 	
-	#define LIGHT_DIR_LIMIT 16
+	#ifdef _YY_HLSL11_ 
+		#define LIGHT_DIR_LIMIT  16
+		#define LIGHT_PNT_LIMIT  16
+		#define LIGHT_PNT_LIMIT6 16*6
+	#else  
+		#define LIGHT_DIR_LIMIT  8
+		#define LIGHT_PNT_LIMIT  8
+		#define LIGHT_PNT_LIMIT6 8*6
+	#endif
+
 	uniform int	  light_dir_count;
 	uniform vec3  light_dir_direction[LIGHT_DIR_LIMIT];
 	uniform vec4  light_dir_color[LIGHT_DIR_LIMIT];
@@ -32,14 +41,13 @@ uniform int use_8bit;
 	//uniform sampler2D light_dir_shadowmap_2;
 	//uniform sampler2D light_dir_shadowmap_3;
 	
-	#define LIGHT_PNT_LIMIT 16
 	uniform int	  light_pnt_count;
 	uniform vec3  light_pnt_position[LIGHT_PNT_LIMIT];
 	uniform vec4  light_pnt_color[LIGHT_PNT_LIMIT];
 	uniform float light_pnt_intensity[LIGHT_PNT_LIMIT];
 	uniform float light_pnt_radius[LIGHT_PNT_LIMIT];
 	
-	uniform mat4  light_pnt_view[96];
+	uniform mat4  light_pnt_view[LIGHT_PNT_LIMIT6];
 	uniform mat4  light_pnt_proj[LIGHT_PNT_LIMIT];
 	uniform int   light_pnt_shadow_active[LIGHT_PNT_LIMIT];
 	uniform float light_pnt_shadow_bias[LIGHT_DIR_LIMIT];

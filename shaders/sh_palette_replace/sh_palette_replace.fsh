@@ -7,7 +7,11 @@ varying vec4 v_vColour;
 uniform int		  useMask;
 uniform sampler2D mask;
 
-#define PALETTE_LIMIT 1024
+#ifdef _YY_HLSL11_ 
+	#define PALETTE_LIMIT 1024 
+#else 
+	#define PALETTE_LIMIT 256 
+#endif
 uniform vec4	colorFrom[PALETTE_LIMIT];
 uniform int		colorFrom_amo;
 uniform vec4	colorTo[PALETTE_LIMIT];

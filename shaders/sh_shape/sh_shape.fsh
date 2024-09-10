@@ -1,5 +1,10 @@
 // 2D Signed Distance equations by InigoQuilez
-#define CURVE_MAX 512
+
+#ifdef _YY_HLSL11_ 
+	#define CURVE_MAX 1024
+#else 
+	#define CURVE_MAX 512
+#endif
 
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
