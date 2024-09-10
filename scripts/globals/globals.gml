@@ -51,6 +51,8 @@
 	
 	globalvar CURRENT_COLOR;
 	CURRENT_COLOR = c_white;
+	
+	#macro MAC (OS == os_macosx)
 #endregion
 
 #region input

@@ -339,7 +339,17 @@
 		if(PREFERENCES.use_legacy_exception) resetException();
 		else                                 setException();
 		
-		if(OS != os_macosx && !LOADING) {
+		if(OS == os_macosx) {
+			var ww = PREFERENCES.window_width;
+			var hh = PREFERENCES.window_height;
+			window_minimize_size = [ ww, hh ];
+			
+			window_set_rectangle(display_get_width() / 2 - ww / 2, display_get_height() / 2 - hh / 2, ww, hh);
+			
+			if(PREFERENCES.window_maximize)
+				winMan_Maximize();
+				
+		} else if(!LOADING) {
 			var _monitors = display_measure_all();
 			var _monitor  = noone;
 			

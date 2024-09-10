@@ -248,22 +248,22 @@ function winManDraw() { #region
 	}
 	
 	if(l && u) {
-		CURSOR = cr_size_nwse;
+		CURSOR = MAC? cr_size_all : cr_size_nwse;
 		hv = 0b0110;
 	}
 		
 	if(r && d) {
-		CURSOR = cr_size_nwse;
+		CURSOR = MAC? cr_size_all : cr_size_nwse;
 		hv = 0b1001;
 	}
 	
 	if(l && d) {
-		CURSOR = cr_size_nesw;
+		CURSOR = MAC? cr_size_all : cr_size_nesw;
 		hv = 0b1100;
 	}
 		
 	if(r && u) {
-		CURSOR = cr_size_nesw;
+		CURSOR = MAC? cr_size_all : cr_size_nesw;
 		hv = 0b0011;
 	}
 	
