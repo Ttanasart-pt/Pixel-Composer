@@ -1,10 +1,16 @@
-#extension GL_OES_standard_derivatives : enable
-
 //Inigo Quilez 
 //Oh where would I be without you.
 
-#define MAX_SHAPES 16
-#define MAX_OP     32
+#define MACOS 1
+
+#ifdef MACOS
+	#define MAX_SHAPES 16
+	#define MAX_OP     32
+#else
+	#extension GL_OES_standard_derivatives : enable
+	#define MAX_SHAPES 16
+	#define MAX_OP     32
+#endif
 
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
