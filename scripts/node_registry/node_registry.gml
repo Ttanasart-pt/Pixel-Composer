@@ -10,9 +10,9 @@ function NodeObject(_name, _spr, _node, _create, tooltip = "", tags = []) constr
 	self.tags    = tags;
 	self.tooltip = tooltip;
 	
-	new_node    = false;
-	tooltip_spr = noone;
-	deprecated  = false;
+	new_node     = false;
+	tooltip_spr  = noone;
+	deprecated   = false;
 	
 	show_in_recent = true;
 	show_in_global = true;

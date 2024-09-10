@@ -4,18 +4,21 @@ event_inherited();
 #region data
 	dialog_w = ui(720);
 	dialog_h = ui(480);
+	padding  = ui(12);
 	destroy_on_click_out = true;
 	
 	pages = [ "Release note", "Downloads" ];
 	page  = 0;
 	
+	content_w = dialog_w - (padding + ui(8)) * 2;
+	content_h = dialog_h - ui(48 + 16) - padding;
 #endregion
 
 #region note
 	note_get = http_get($"https://gist.githubusercontent.com/Ttanasart-pt/f21a140906a60c6e12c99ebfecec1645/raw/{VERSION_STRING}");
 	note     = "";
 	
-	sp_note = new scrollPane(dialog_w - ui(80), dialog_h - ui(88), function(_y, _m) {
+	sp_note = new scrollPane(content_w, content_h, function(_y, _m) {
 		draw_clear_alpha(COLORS.dialog_splash_badge, 1);
 		
 		var xx = ui(8);
@@ -116,7 +119,7 @@ event_inherited();
 	dls    = [];
 	downloading = {};
 	
-	sp_dl = new scrollPane(dialog_w - ui(80), dialog_h - ui(88), function(_y, _m) {
+	sp_dl = new scrollPane(content_w, content_h, function(_y, _m) {
 		draw_clear_alpha(COLORS.dialog_splash_badge, 1);
 		
 		var xx = ui(8);

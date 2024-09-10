@@ -10,6 +10,9 @@
 		PREFERENCES.window_height					= 800;
 		PREFERENCES.window_maximize					= false;
 		PREFERENCES.window_monitor					= "";
+		PREFERENCES.window_fix					    = false;
+		PREFERENCES.window_fix_width				= 1600;
+		PREFERENCES.window_fix_height				= 800;
 		
 		PREFERENCES.theme							= "default";
 		PREFERENCES.local							= "en";
@@ -339,10 +342,11 @@
 		if(PREFERENCES.use_legacy_exception) resetException();
 		else                                 setException();
 		
+		var ww = PREFERENCES.window_fix? PREFERENCES.window_fix_width : PREFERENCES.window_width;
+		var hh = PREFERENCES.window_fix? PREFERENCES.window_fix_height : PREFERENCES.window_height;
+		window_minimize_size = [ ww, hh ];
+		
 		if(OS == os_macosx) {
-			var ww = PREFERENCES.window_width;
-			var hh = PREFERENCES.window_height;
-			window_minimize_size = [ ww, hh ];
 			
 			window_set_rectangle(display_get_width() / 2 - ww / 2, display_get_height() / 2 - hh / 2, ww, hh);
 			
@@ -361,10 +365,6 @@
 				if(PREFERENCES.window_monitor == _m[9]) 
 					_monitor = _m;
 			}
-			
-			var ww = PREFERENCES.window_width;
-			var hh = PREFERENCES.window_height;
-			window_minimize_size = [ ww, hh ];
 			
 			if(is_array(_monitor) && array_length(_monitor) >= 8)
 				window_set_rectangle(_monitor[0] + _monitor[2] / 2 - ww / 2, _monitor[1] + _monitor[3] / 2 - hh / 2, ww, hh);

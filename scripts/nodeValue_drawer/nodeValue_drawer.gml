@@ -17,7 +17,7 @@ function drawWidgetInit() {
 function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _focus = false, _scrollPane = noone, rx = 0, ry = 0) { 
 	var con_w     = ww - ui(4);
 	var xc	      = xx + ww / 2;
-	var _font     = viewMode == INSP_VIEW_MODE.spacious? f_p0 : f_p2;
+	var _font     = viewMode == INSP_VIEW_MODE.spacious? f_p1 : f_p2;
 	var breakLine = viewMode == INSP_VIEW_MODE.spacious || jun.expUse;
 	var lb_h      = line_get_height(_font) + ui(6);
 	var lb_y      = yy + lb_h / 2;
@@ -354,7 +354,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		
 		var _show = jun.showValue();
 		var param = new widgetParam(editBoxX, editBoxY, editBoxW, editBoxH, _show, jun.display_data, _m, rx, ry);
-		    param.font = viewMode == INSP_VIEW_MODE.spacious? f_p0 : f_p2;
+		    param.font = viewMode == INSP_VIEW_MODE.spacious? f_p1 : f_p2;
 		    param.sep_axis = jun.sep_axis;
 		
 		switch(jun.type) {

@@ -8,7 +8,6 @@ enum TEXT_AREA_FORMAT {
 }
 
 function textArea(_input, _onModify) : textInput(_input, _onModify) constructor {
-	font     = f_p0;
 	hide     = false;
 	color    = COLORS._main_text;
 	boxColor = c_white;

@@ -157,7 +157,7 @@ event_inherited();
 				var _hx = _dw - ui(6);
 				var _hy = _ty + ui(1);
 				
-				draw_set_font(f_p2);
+				draw_set_text(f_p2, fa_right, fa_center, COLORS._main_accent);
 				
 				var _ktxt = key_get_name(_key.key, _key.modi);
 				var _tw = string_width(_ktxt);
@@ -169,12 +169,12 @@ event_inherited();
 				var _bh = _th + ui(2);
 				
 				if(hk_editing == _key) {
-					draw_set_text(f_p2, fa_right, fa_center, COLORS._main_accent);
-					draw_sprite_stretched_ext(THEME.ui_panel, 1, _bx, _by, _bw, _bh, COLORS._main_text_accent);
+					draw_set_color(COLORS._main_accent);
+					// draw_sprite_stretched_ext(THEME.ui_panel, 1, _bx, _by, _bw, _bh, COLORS._main_text_accent);
 					
 				} else if(_ktxt != "") {
-					draw_set_text(f_p2, fa_right, fa_center, COLORS._main_text_sub);
-					draw_sprite_stretched_ext(THEME.ui_panel, 1, _bx, _by, _bw, _bh, CDEF.main_dkgrey);
+					draw_set_color(COLORS._main_text_sub);
+					// draw_sprite_stretched_ext(THEME.ui_panel, 1, _bx, _by, _bw, _bh, CDEF.main_dkgrey);
 				}
 				
 				draw_text_add(_hx, _hy, _ktxt);

@@ -113,7 +113,7 @@ event_inherited();
 	
 	meta_filter = [];
 	
-	sp_sample = new scrollPane(x1 - x0 - ui(12), y1 - y0 - 1, function(_y, _m) { #region
+	sp_sample = new scrollPane(x1 - x0 - ui(12), y1 - y0 - 1, function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
 		var txt = pages[project_page];
@@ -295,8 +295,10 @@ event_inherited();
 			
 			draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text);
 			name_height = max(name_height, string_height_ext(_name, -1, grid_width) + ui(8));
-			draw_text_ext_add(tx, ty - ui(2), _name, -1, grid_width);
-		
+			BLEND_ALPHA
+			draw_text_ext(tx, ty - ui(2), _name, -1, grid_width);
+			BLEND_NORMAL
+			
 			if(++_cur_col >= col) {
 				if(name_height) {
 					var hght = grid_heigh + name_height + grid_line;
@@ -361,7 +363,10 @@ event_inherited();
 		}
 			
 		return hh + ui(20);
-	}); #endregion
+	});
+	
+	sp_sample.always_scroll = true;
+	
 #endregion
 
 #region contest

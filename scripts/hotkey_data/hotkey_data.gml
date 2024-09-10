@@ -231,7 +231,7 @@ function hotkey_draw(keyStr, _x, _y, _status = 0) {
 	var _tw = string_width( keyStr);
 	var _th = string_height(keyStr);
 	
-	draw_sprite_stretched_ext(THEME.ui_panel, 1, _x - _tw - ui(4), _y - _th / 2 - ui(5), _tw + ui(8), _th + ui(6), bc);
+	// draw_sprite_stretched_ext(THEME.ui_panel, 1, _x - _tw - ui(4), _y - _th / 2 - ui(5), _tw + ui(8), _th + ui(6), bc, 0.5);
 	draw_text(_x, _y - ui(2), keyStr);
 }
 

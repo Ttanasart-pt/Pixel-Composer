@@ -324,7 +324,7 @@ event_inherited();
 				PREF_SAVE();
 			})
 		));
-	
+		
 		locals = [];
 		var f = file_find_first(DIRECTORY + "Locale/*", fa_directory);
 		while(f != "") {
@@ -355,6 +355,33 @@ event_inherited();
 			__txtx("pref_windows_control", "Use Windows style window control."),
 			"panel_menu_right_control",
 			new checkBox(function() /*=>*/ { PREFERENCES.panel_menu_right_control = !PREFERENCES.panel_menu_right_control; PREF_SAVE(); })
+		));
+		
+		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
+			__txtx("pref_ui_fix_window_size", "Fix Window size on start"),
+			"window_fix",
+			new checkBox(function() /*=>*/ { 
+				PREFERENCES.window_fix = !PREFERENCES.window_fix;
+				PREF_SAVE();
+			})
+		));
+		
+		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
+			__txtx("pref_ui_fix_width", "Fix width"),
+			"window_fix_width",
+			new textBox(TEXTBOX_INPUT.number, function(str) /*=>*/ { 
+				PREFERENCES.window_fix_width = max(1, round(real(str)));
+				PREF_SAVE();
+			})
+		));
+		
+		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
+			__txtx("pref_ui_fix_height", "Fix height"),
+			"window_fix_height",
+			new textBox(TEXTBOX_INPUT.number, function(str) /*=>*/ { 
+				PREFERENCES.window_fix_height = max(1, round(real(str)));
+				PREF_SAVE();
+			})
 		));
 		
 	ds_list_add(pref_appr, __txt("Splash"));
@@ -762,12 +789,12 @@ event_inherited();
 			var cc = c_white;
 			
 			if(hk_editing == key) {
-				draw_sprite_stretched_ext(THEME.ui_panel, 1, bx, by, bw, bh, COLORS._main_accent);
+				// draw_sprite_stretched_ext(THEME.ui_panel, 1, bx, by, bw, bh, COLORS._main_accent);
 				cc = COLORS._main_text_accent;
 				
 			} else {
 				if(_hov && point_in_rectangle(_m[0], _m[1], bx, by, bx + bw, by + bh)) {
-					draw_sprite_stretched_ext(THEME.ui_panel, 1, bx, by, bw, bh, CDEF.main_ltgrey);
+					// draw_sprite_stretched_ext(THEME.ui_panel, 1, bx, by, bw, bh, CDEF.main_ltgrey);
 					sp_hotkey.hover_content = true;
 					cc = CDEF.main_white;
 					
@@ -777,7 +804,7 @@ event_inherited();
 					}
 					
 				} else {
-					draw_sprite_stretched_ext(THEME.ui_panel, 1, bx, by, bw, bh, CDEF.main_dkgrey, 1);
+					// draw_sprite_stretched_ext(THEME.ui_panel, 1, bx, by, bw, bh, CDEF.main_dkgrey, 1);
 					cc = CDEF.main_ltgrey;
 				}
 			}

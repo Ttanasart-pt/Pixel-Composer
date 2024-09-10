@@ -20,7 +20,7 @@ function widget() constructor {
 	lua_thread = noone;
 	lua_thread_key = "";
 	
-	font     = f_p0;
+	font     = f_p1;
 	sep_axis = false;
 	unit     = noone;
 	
@@ -124,7 +124,7 @@ function widgetParam(x, y, w, h, data, display_data = {}, m = mouse_ui, rx = 0, 
 	
 	self.display_data = display_data;
 	
-	self.font       = f_p0;
+	self.font       = f_p1;
 	
 	color    = c_white;
 	sep_axis = false;

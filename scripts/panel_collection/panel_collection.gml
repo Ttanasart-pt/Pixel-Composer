@@ -524,7 +524,9 @@ function Panel_Collection() : PanelContent() constructor {
 				onResize();
 			}
 			
-			draw_set_text(f_p0b, fa_left, fa_center, i == page? COLORS._main_text : COLORS._main_text_sub);
+			
+			if(i == page) draw_set_text(f_p0b, fa_left, fa_center, COLORS._main_text);
+			else          draw_set_text(f_p0,  fa_left, fa_center, COLORS._main_text_sub);
 			draw_text(_x, _y, __txt(r[0]));
 			
 			_x += string_width(r[0]) + ui(24);

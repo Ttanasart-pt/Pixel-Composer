@@ -217,16 +217,18 @@ if(!ready) exit;
 			var _bw = _tw + ui(8);
 			var _bh = _th + ui(3);
 			
+			draw_set_text(font, fa_right, fa_center, COLORS._main_accent);
+			
 			if(hk_editing == _menuItem) {
-				draw_set_text(font, fa_right, fa_center, COLORS._main_accent);
-				draw_sprite_stretched_ext(THEME.ui_panel, 1, _bx, _by, _bw, _bh, COLORS._main_text_accent);
+				draw_set_color(COLORS._main_accent);
+				// draw_sprite_stretched_ext(THEME.ui_panel, 1, _bx, _by, _bw, _bh, COLORS._main_text_accent, .5);
 				
 			} else if(_ktxt != "") {
-				draw_set_text(font, fa_right, fa_center, COLORS._main_text_sub);
-				draw_sprite_stretched_ext(THEME.ui_panel, 1, _bx, _by, _bw, _bh, CDEF.main_dkgrey);
+				draw_set_color(COLORS._main_text_sub);
+				// draw_sprite_stretched_ext(THEME.ui_panel, 1, _bx, _by, _bw, _bh, CDEF.main_dkgrey, .5);
 			}
 			
-			draw_text(_hx, _hy, _ktxt);
+			draw_text(_hx, _hy - ui(2), _ktxt);
 		}
 		
 		yy += _h;

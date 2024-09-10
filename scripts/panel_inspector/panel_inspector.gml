@@ -371,7 +371,7 @@ function Panel_Inspector() : PanelContent() constructor {
             
             if(_meta[1]) continue;
             
-            var _font = viewMode == INSP_VIEW_MODE.spacious? f_p0 : f_p2;
+            var _font = viewMode == INSP_VIEW_MODE.spacious? f_p1 : f_p2;
             
             switch(i) {
                 case 0 :
@@ -657,7 +657,7 @@ function Panel_Inspector() : PanelContent() constructor {
                     continue;
                 } 
                 
-                draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
+                draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
                 draw_text_add(ui(8), yy + hg / 2, edt[0]);
                 
                 var _param = new widgetParam(wx0, yy, ww, hg, val, {}, _m, x + contentPane.x, y + contentPane.y);
@@ -872,7 +872,7 @@ function Panel_Inspector() : PanelContent() constructor {
             }
             
             #region ++++ draw widget ++++
-                var _font = viewMode == INSP_VIEW_MODE.spacious? f_p0 : f_p2;
+                var _font = viewMode == INSP_VIEW_MODE.spacious? f_p1 : f_p2;
                 
                 var lb_h = line_get_height(_font) + ui(8);
                 var lb_w = line_get_width(jun.getName(), _font) + ui(16);

@@ -8,7 +8,7 @@ function Panel_Workspace() : PanelContent() constructor {
 	title      = "Workspace";
 	workspaces = [];
 	w = ui(480);
-	h = ui(40);
+	h = ui(32);
 	
 	scroll     = 0;
 	scroll_to  = 0;
@@ -62,24 +62,29 @@ function Panel_Workspace() : PanelContent() constructor {
 		
 		if(hori != _hori) scroll_to = 0;
 		
-		var x0 = hori? ui(6) + scroll : ui(6), x1;
-		var y0 = hori? ui(6) : ui(6) + scroll, y1;
+		var x0 = ui(8) + scroll, x1;
+		var y0, y1;
+		var cx = w / 2;
+		var cy = h / 2;
+		
 		var ww = 0;
 		var hh = 0;
 		var amo = array_length(workspaces);
 		
-		draw_set_text(f_p1, hori? fa_left : fa_center, fa_top, COLORS._main_text_sub);
+		draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text_sub);
 		
 		for( var i = 0; i <= amo; i++ ) {
 			var str = i == amo? "+" : workspaces[i];
-			var tw  = hori? string_width(str) + ui(16) : w - ui(16);
+			var tw  = string_width(str)  + ui(16);
 			var th  = string_height(str) + ui(8);
 			
 			x1 = x0 + tw;
+			
+			y0 = cy - th / 2;
 			y1 = y0 + th;
 			
 			if(pHOVER && point_in_rectangle(mx, my, x0, y0, x1, y1)) {
-				draw_sprite_stretched(THEME.button_hide_fill, 1, x0, y0, x1 - x0, y1 - y0);
+				draw_sprite_stretched(THEME.button_hide_fill, 1, x0, y0, tw, th);
 				
 				if(mouse_press(mb_left, pFOCUS)) {
 					if(i == amo) {
@@ -110,16 +115,16 @@ function Panel_Workspace() : PanelContent() constructor {
 				}
 			}
 			
-			draw_set_color(PREFERENCES.panel_layout_file == str? COLORS._main_text : COLORS._main_text_sub);
-			draw_text_add(hori? x0 + ui(8) : (x0 + x1) / 2, y0 + ui(4), str);
+			if(PREFERENCES.panel_layout_file == str) draw_set_color(COLORS._main_text);    
+			else                                     draw_set_color(COLORS._main_text_sub);
 			
-			if(hori) {
-				x0 += tw + ui(4);
-				ww += tw + ui(4);
-			} else {
-				y0 += th + ui(4);
-				hh += th + ui(4);
-			}
+			var _tx = x0 + tw / 2;
+			var _ty = cy;
+			
+			draw_text_add(_tx, _ty, str);
+			
+			x0 += tw + ui(4);
+			ww += tw + ui(4);
 		}
 		
 		scroll = lerp_float(scroll, scroll_to, 5);

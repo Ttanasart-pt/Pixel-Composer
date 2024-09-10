@@ -124,6 +124,7 @@ function Panel_Menu() : PanelContent() constructor {
     menu_file = [
         MENU_ITEMS.preference,
         MENU_ITEMS.splash_screen,
+        MENU_ITEMS.command_palette,
         -1,
         MENU_ITEMS.addon_menu,
         -1,

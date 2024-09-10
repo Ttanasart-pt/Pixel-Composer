@@ -1,5 +1,5 @@
 globalvar FONT_DEF, FONT_ISLOADED, FONT_CACHE, FONT_CUST_CACHE, GLYPH_MAP;
-globalvar f_h1, f_h2, f_h3, f_h5, f_p0, f_p0b, f_p1, f_p2, f_p3, f_p4;
+globalvar f_h1, f_h2, f_h3, f_h5, f_p0, f_p0b, f_p1, f_p1b, f_p2, f_p2b, f_p3, f_p4;
 globalvar f_code, f_sdf, f_sdf_medium;
 
 global.LINE_HEIGHTS = {};
@@ -18,7 +18,9 @@ global.LINE_HEIGHTS = {};
 	f_p0   = _f_p0;
 	f_p0b  = _f_p0b;
 	f_p1   = _f_p1;
+	f_p1b  = _f_p1b;
 	f_p2   = _f_p2;
+	f_p2b  = _f_p2b;
 	f_p3   = _f_p3;
 	f_p4   = _f_p4;
 	
@@ -45,7 +47,11 @@ function __font_refresh() {
 	__font_add_height(f_p0b);
 		
 	__font_add_height(f_p1);
+	__font_add_height(f_p1b);
+	
 	__font_add_height(f_p2);
+	__font_add_height(f_p2b);
+	
 	__font_add_height(f_p3);
 	__font_add_height(f_p4);
 		
@@ -141,7 +147,11 @@ function loadFonts() {
 		font_clear(f_p0b);
 					
 		font_clear(f_p1);
+		font_clear(f_p1b);
+		
 		font_clear(f_p2);
+		font_clear(f_p2b);
+		
 		font_clear(f_p3);
 		font_clear(f_p4);
 		
@@ -160,7 +170,10 @@ function loadFonts() {
 		f_p0   = _f_p0;
 		f_p0b  = _f_p0b;
 		f_p1   = _f_p1;
+		f_p1b  = _f_p1b;
 		f_p2   = _f_p2;
+		f_p2b  = _f_p2b;
+		
 		f_p3   = _f_p3;
 		f_p4   = _f_p4;
 		
@@ -184,7 +197,9 @@ function loadFonts() {
 	f_p0  = _font_load_from_struct(fontDef, "p0",  _f_p0);
 	f_p0b = _font_load_from_struct(fontDef, "p0b", _f_p0b);
 	
-	f_p1  = _font_load_from_struct(fontDef, "p1", _f_p1);
+	f_p1  = _font_load_from_struct(fontDef, "p1",  _f_p1);
+	// f_p1b = _font_load_from_struct(fontDef, "p1b", _f_p1b);
+	
 	f_p2  = _font_load_from_struct(fontDef, "p2", _f_p2);
 	f_p3  = _font_load_from_struct(fontDef, "p3", _f_p3);
 	f_p4  = _font_load_from_struct(fontDef, "p4", _f_p4);

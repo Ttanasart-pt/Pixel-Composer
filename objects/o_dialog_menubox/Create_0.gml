@@ -12,7 +12,7 @@ event_inherited();
 	alarm[0]   = -1;
 	menu       = 1;
 	font       = f_p1;
-	hght       = line_get_height(font, 12);
+	hght       = line_get_height(font, 10);
 	tooltips   = [];
 	show_icon  = false;
 	context    = noone;
@@ -41,6 +41,7 @@ event_inherited();
 		for( var i = 0, n = array_length(children); i < n; i++ ) 
 			instance_destroy(children[i]);
 		children = [];
+		tooltips = [];
 		
 		draw_set_text(font, fa_center, fa_center, COLORS._main_text);
 		for(var i = 0; i < array_length(menu); i++) {

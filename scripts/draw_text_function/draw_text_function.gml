@@ -11,6 +11,14 @@ function draw_text_add(_x, _y, _text, scale = 1) {
 	BLEND_NORMAL;
 }
 
+function draw_text_alpha(_x, _y, _text, scale = 1) {
+	INLINE
+	BLEND_ALPHA;
+	if(scale == 1) draw_text(round(_x), round(_y), _text);
+	else           draw_text_transformed(round(_x), round(_y), _text, scale, scale, 0);
+	BLEND_NORMAL;
+}
+
 function draw_text_over(_x, _y, _text, scale = 1) {
 	INLINE
 	BLEND_OVERRIDE;
@@ -107,6 +115,14 @@ function draw_text_lang(_x, _y, _text, scale = 1) {
 function draw_text_ext_add(_x, _y, _text, _sep, _w, scale = 1, forceCut = false) {
 	INLINE
 	BLEND_ALPHA_MULP;
+	var h = __draw_text_ext_transformed(_x, _y, _text, _sep, _w, scale, scale, 0, forceCut);
+	BLEND_NORMAL;
+	return h;
+}
+
+function draw_text_ext_alpha(_x, _y, _text, _sep, _w, scale = 1, forceCut = false) {
+	INLINE
+	BLEND_ALPHA;
 	var h = __draw_text_ext_transformed(_x, _y, _text, _sep, _w, scale, scale, 0, forceCut);
 	BLEND_NORMAL;
 	return h;
