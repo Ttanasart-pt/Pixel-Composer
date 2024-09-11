@@ -21,11 +21,11 @@
 	#macro DISPLAY_REFRESH CURRENT_PANEL = panelSerialize(true); display_refresh();
 #endregion
 
-function winManInit() { #region
+function winManInit() { 
 	if(OS == os_macosx) mac_window_init();
 	
 	window_preminimize_rect = [ 0, 0, 1, 1 ];
-} #endregion
+} 
 
 function winMan_getData(curr = true) {
 	INLINE

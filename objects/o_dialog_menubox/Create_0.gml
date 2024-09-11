@@ -84,12 +84,15 @@ event_inherited();
 		if(show_icon)
 			dialog_w += ui(32);
 		
-		var _mon = winMan_getData();
-		dialog_y = min(dialog_y, _mon[7] - WIN_Y - dialog_h - 2);
+		var _mon  = winMan_getData();
+		var _maxw = PREFERENCES.multi_window? _mon[6] - WIN_X : WIN_W;
+		var _maxh = PREFERENCES.multi_window? _mon[7] - WIN_Y : WIN_H;
+		
+		dialog_y = min(dialog_y, _maxh - dialog_h - 2);
 		
 		switch(align) {
-			case fa_left:	dialog_x = round(min(dialog_x, _mon[6] - WIN_X - dialog_w - 2)); break;
-			case fa_center: dialog_x = round(min(dialog_x - dialog_w / 2, _mon[6] - WIN_X - dialog_w - 2)); break;
+			case fa_left:	dialog_x = round(min(dialog_x, _maxw - dialog_w - 2)); break;
+			case fa_center: dialog_x = round(min(dialog_x - dialog_w / 2, _maxw - dialog_w - 2)); break;
 			case fa_right:	dialog_x = round(max(dialog_x - dialog_w, 2)); break;
 		}
 		
@@ -119,6 +122,9 @@ event_inherited();
 			
 			dialog_x = 0;
 			dialog_y = 0;
+			
+		} else if(winwin_exists(window)) {
+			winwin_destroy(window);
 		}
 	}
 #endregion

@@ -54,8 +54,7 @@
 	fpss = array_create(10);
 	fpsr = 0;
 	
-	_cursor_lock = false;
-	
+	_cursor_lock    = false;
 	watcher_surface = surface_create(1, 1);
 	
 	panelInit();
