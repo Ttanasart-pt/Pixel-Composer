@@ -27,7 +27,7 @@ function winManInit() { #region
 	window_preminimize_rect = [ 0, 0, 1, 1 ];
 } #endregion
 
-function winMan_getData(curr = true) { #region
+function winMan_getData(curr = true) {
 	INLINE
 	var _monitors = display_measure_all();
 	if(!is_array(_monitors) || array_empty(_monitors)) 
@@ -52,23 +52,23 @@ function winMan_getData(curr = true) { #region
 	}
 	
 	return _monitors[0];
-} #endregion
+}
 
-function winMan_setRect(_x, _y, _w, _h) { #region
+function winMan_setRect(_x, _y, _w, _h) {
 	INLINE
 	_w = max(window_min_w, _w);
 	_h = max(window_min_h, _h);
 	
 	window_set_rectangle(_x, _y, _w, _h);
-} #endregion
+}
 
-function winMan_isMinimized() { #region
+function winMan_isMinimized() {
 	INLINE
 	if(OS == os_macosx) return false;
 	return gameframe_is_natively_minimized();
-} #endregion
+}
 
-function winMan_Maximize() { #region
+function winMan_Maximize() {
 	INLINE
 	if(gameframe_is_natively_minimized()) return;
 	window_is_maximized = true;
@@ -76,9 +76,9 @@ function winMan_Maximize() { #region
 	var _mon = winMan_getData();
 	winMan_setRect(_mon[4], _mon[5], _mon[6], _mon[7]);
 	gameframe_set_shadow(false);
-} #endregion
+}
 
-function winMan_Unmaximize() { #region
+function winMan_Unmaximize() {
 	INLINE
 	if(gameframe_is_natively_minimized()) return;
 	window_is_maximized = false;
@@ -92,15 +92,15 @@ function winMan_Unmaximize() { #region
 		window_minimize_size[1]
 	);
 	gameframe_set_shadow(true);
-} #endregion
+}
 
-function winMan_Minimize() { #region
+function winMan_Minimize() {
 	INLINE
 	if(gameframe_is_natively_minimized()) return;
 	gameframe_syscommand(61472);
-} #endregion
+}
 
-function winMan_initDrag(_index) { #region
+function winMan_initDrag(_index) {
 	window_drag_status = _index;
 	window_drag_hold   = 0;
 	window_drag_mx     = mouse_raw_x;
@@ -109,9 +109,9 @@ function winMan_initDrag(_index) { #region
 	window_drag_sy	   = window_get_y();
 	window_drag_sw	   = window_get_width();
 	window_drag_sh	   = window_get_height();
-} #endregion
+}
 
-function winMan_setFullscreen(full) { #region
+function winMan_setFullscreen(full) {
 	if(full == window_is_fullscreen) return;
 	window_is_fullscreen = full;
 	
@@ -125,9 +125,9 @@ function winMan_setFullscreen(full) { #region
 	}
 	
 	run_in(5, function() { DISPLAY_REFRESH });
-} #endregion
+}
 
-function winManStep() { #region
+function winManStep() {
 	if(OS == os_macosx) {
 		if(__win_to_dock) {
 			_window_set_showborder(window_handle(), true);
@@ -214,9 +214,9 @@ function winManStep() { #region
 		window_minimize_size = [ sw, sh ];
 		window_drag_status = 0;
 	}
-} #endregion
+}
 
-function winManDraw() { #region
+function winManDraw() {
 	if(window_is_maximized || window_is_fullscreen) return;
 	
 	var pd = window_resize_padding;
@@ -269,4 +269,4 @@ function winManDraw() { #region
 	
 	if(hv > -1 && mouse_press(mb_left))
 		winMan_initDrag(hv);
-} #endregion
+}

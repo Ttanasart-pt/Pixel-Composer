@@ -42,7 +42,7 @@ event_inherited();
 	var y1 = dialog_y + dialog_h - ui(16);
 	
 	sp_recent = new scrollPane(x1 - x0 - ui(12), y1 - y0, function(_y, _m) { #region
-		draw_clear_alpha(COLORS.panel_bg_clear_inner, 0);
+		draw_clear_alpha(COLORS.panel_bg_clear, 1);
 		var expand = PREFERENCES.splash_expand_recent;
 		var ww  = ui(264);
 		var hh	= ui(8);

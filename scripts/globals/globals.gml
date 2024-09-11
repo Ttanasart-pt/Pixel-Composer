@@ -41,7 +41,7 @@
 	LATEST_VERSION	= 1_17_00;
 	VERSION			= 1_17_12_0;
 	SAVE_VERSION	= 1_17_10_0;
-	VERSION_STRING  = MAC? "1.18.002m" : "1.18.rc1.003";
+	VERSION_STRING  = MAC? "1.18.002m" : "1.18.rc1.004";
 	BUILD_NUMBER	= 1_17_12_0;
 	
 	HOTKEYS			= ds_map_create();
@@ -87,6 +87,8 @@
 	
 	#macro NOT_LOAD !LOADING && !APPENDING
 	
+	#macro WIN_X window_get_x()
+	#macro WIN_Y window_get_y()
 	#macro WIN_W window_get_width()
 	#macro WIN_H window_get_height()
 	
@@ -95,8 +97,8 @@
 	
 	#macro UI_SCALE PREFERENCES.display_scaling
 	
-	#macro mouse_mx (PEN_USE? PEN_X : (WINDOW_ACTIVE == noone? device_mouse_x_to_gui(0) : winwin_mouse_get_x(WINDOW_ACTIVE)))
-	#macro mouse_my (PEN_USE? PEN_Y : (WINDOW_ACTIVE == noone? device_mouse_y_to_gui(0) : winwin_mouse_get_y(WINDOW_ACTIVE)))
+	#macro mouse_mx (PEN_USE? PEN_X : winwin_mouse_get_x_safe(WINDOW_ACTIVE))
+	#macro mouse_my (PEN_USE? PEN_Y : winwin_mouse_get_y_safe(WINDOW_ACTIVE))
 	
 	#macro mouse_mxs (FILE_IS_DROPPING? FILE_DROPPING_X : mouse_mx)
 	#macro mouse_mys (FILE_IS_DROPPING? FILE_DROPPING_Y : mouse_my)
@@ -106,7 +108,7 @@
 	#macro mouse_ui [device_mouse_x_to_gui(0), device_mouse_y_to_gui(0)]
 	
 	#macro sFOCUS (FOCUS == self.id)
-	#macro sHOVER (!CURSOR_IS_LOCK && (HOVER == self.id || (WINDOW_ACTIVE != noone && winwin_mouse_is_over(WINDOW_ACTIVE))))
+	#macro sHOVER (!CURSOR_IS_LOCK && (HOVER == self.id || (WINDOW_ACTIVE != noone && winwin_mouse_is_over_safe(WINDOW_ACTIVE))))
 	
 	#macro DELTA_TIME delta_time / 1_000_000
 	

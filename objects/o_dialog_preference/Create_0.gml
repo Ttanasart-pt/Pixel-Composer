@@ -10,6 +10,8 @@ event_inherited();
 	destroy_on_escape    = false;
 	
 	should_restart = false;
+	
+	font = f_p2;
 #endregion
 
 #region size
@@ -592,9 +594,9 @@ event_inherited();
 	sb_theme.align = fa_left;
 	
 	sp_colors = new scrollPane(panel_width, panel_height - ui(40), function(_y, _m, _r) {
-		draw_clear_alpha(COLORS.panel_bg_clear, 0);
+		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
 		var hh	 = 0;
-		var th   = line_get_height(f_p0);
+		var th   = line_get_height(font);
 		var x1	 = sp_colors.surface_w;
 		var yy	 = _y + ui(8);
 		var padd = ui(6);
@@ -623,7 +625,7 @@ event_inherited();
 				category = cat;
 				var _sect = string_title(category);
 				
-				draw_set_text(f_p0b, fa_left, fa_top, COLORS._main_text_sub);
+				draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text_sub);
 				draw_text_add(ui(8), yy - ui(4), _sect);
 				
 				array_push(sect, [ _sect, sp_colors, hh + ui(12) ]);
@@ -642,7 +644,7 @@ event_inherited();
 			keyStr = string_replace(keyStr, cat + " ", "");
 			keyStr = string_title(keyStr);
 			
-			draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
+			draw_set_text(font, fa_left, fa_center, COLORS._main_text);
 			draw_text_add(ui(24), yy + th / 2, keyStr);
 			
 			var b = buttonInstant(THEME.button_def, cx, yy + cp, cw, ch, _m, sFOCUS, sHOVER && sp_colors.hover);
@@ -663,8 +665,8 @@ event_inherited();
 				addChildren(dialog);
 			}
 			
-			yy += th + padd + ui(8);
-			hh += th + padd + ui(8);
+			yy += th + padd + ui(6);
+			hh += th + padd + ui(6);
 			ind++;
 		}
 		
@@ -739,7 +741,7 @@ event_inherited();
 	hk_scroll.align = fa_left;
 	
 	sp_hotkey = new scrollPane(panel_width, hotkey_height, function(_y, _m) {
-		draw_clear_alpha(COLORS.panel_bg_clear, 0);
+		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
 		draw_set_text(f_p2, fa_left, fa_top);
 		
 		var padd	  = ui(6);
@@ -852,9 +854,9 @@ event_inherited();
 	current_list = pref_global;
 	
 	sp_pref = new scrollPane(panel_width, panel_height, function(_y, _m, _r) {
-		draw_clear_alpha(COLORS.panel_bg_clear, 0);
+		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
 		var hh		= 0;
-		var th		= TEXTBOX_HEIGHT;
+		var th		= line_get_height(font, 6);
 		var x1		= sp_pref.surface_w;
 		var yy		= _y + ui(8);
 		var padd	= ui(6);
@@ -875,10 +877,9 @@ event_inherited();
 		
 		for(var i = 0; i < ds_list_size(current_list); i++) {
 			var _pref = current_list[| i];
-			var th    = TEXTBOX_HEIGHT;
 			
 			if(is_string(_pref)) {
-				draw_set_text(f_p0b, fa_left, fa_top, COLORS._main_text_sub);
+				draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text_sub);
 				draw_text_add(ui(8), yy, _pref);
 				
 				array_push(sect, [ _pref, sp_pref, hh + ui(12) ]);
@@ -900,7 +901,7 @@ event_inherited();
 			
 			if(ind % 2 == 0) draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, yy - padd, sp_pref.surface_w, max(_pref.editWidget.h, th) + padd * 2, COLORS.dialog_preference_prop_bg, 1);
 				
-			draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
+			draw_set_text(font, fa_left, fa_center, COLORS._main_text);
 			draw_text_add(ui(24), yy + th / 2, name);
 			
 			if(_pref.is_patreon) {
@@ -930,18 +931,19 @@ event_inherited();
 			if(_pref.getDefault != noone)
 				widget_w -= ui(32 + 8);
 				
-			var params = new widgetParam(widget_x, widget_y, widget_w, widget_h, data, {}, _m, _r[0], _r[1]);
-			params.s   = ui(30);
+			var params  = new widgetParam(widget_x, widget_y, widget_w, widget_h, data, {}, _m, _r[0], _r[1]);
+			params.s    = th;
+			params.font = font;
 			
 			if(instanceof(_pref.editWidget) == "checkBox") params.halign = fa_center;
-			var th     = _pref.editWidget.drawParam(params) ?? 0;
+			var wdh = _pref.editWidget.drawParam(params) ?? 0;
 			if(_pref.editWidget.inBBOX(_m)) sp_pref.hover_content = true;
 			
 			if(_pref.getDefault != noone) {
 				var _defVal = is_method(_pref.getDefault)? _pref.getDefault() : _pref.getDefault;
 				var _bs = ui(32);
 				var _bx = x1 - ui(4) - _bs;
-				var _by = yy + th / 2 - _bs / 2;
+				var _by = yy + wdh / 2 - _bs / 2;
 					
 				if(isEqual(data, _defVal))
 					draw_sprite_ext(THEME.refresh_16, 0, _bx + _bs / 2, _by + _bs / 2, 1, 1, 0, COLORS._main_icon_dark);
@@ -951,8 +953,8 @@ event_inherited();
 				}
 			}
 				
-			yy += th + padd + ui(8);
-			hh += th + padd + ui(8);
+			yy += wdh + padd + ui(6);
+			hh += wdh + padd + ui(6);
 			ind++;
 		}
 		

@@ -1,12 +1,14 @@
 /// @description Insert description here
 event_inherited();
 
-var hov = point_in(mouse_mx, mouse_my);
-	
-for( var i = 0, n = array_length(children); i < n; i++ ) {
-	if(!instance_exists(children[i])) continue; 
-	hov |= children[i].point_in(mouse_mx, mouse_my);
+if(item_sel_submenu) {
+	if(!instance_exists(item_sel_submenu))
+		item_sel_submenu = noone;
+	exit;
 }
+
+var hov = point_in(mouse_raw_x, mouse_raw_y);
+if(submenu) hov |= submenu.point_in(mouse_raw_x, mouse_raw_y);
 	
 _hovering_ch = hov;
 if(!hov && mouse_press(mb_left)) instance_destroy();

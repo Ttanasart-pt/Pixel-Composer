@@ -14,8 +14,8 @@ if !active exit;
 
 #region resize
 	if(window != noone) {
-		dialog_w = winwin_get_width(window);
-		dialog_h = winwin_get_height(window);
+		dialog_w = winwin_get_width_safe(window);
+		dialog_h = winwin_get_height_safe(window);
 	}
 	
 	if(_dialog_h != dialog_h || _dialog_w != dialog_w) {

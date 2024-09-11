@@ -1,13 +1,16 @@
 /// @description init
 if(!ready) exit;
 
+DIALOG_PREDRAW
+winwin_draw_clear(COLORS.panel_bg_clear, 1);
+
 #region draw
 	var yy = dialog_y;
 	var _lclick = sFOCUS && (!mouse_init_inside && mouse_release(mb_left)) || (keyboard_check_pressed(vk_enter) && hk_editing == noone);
 	var _rclick = sFOCUS && !mouse_init_inside && !mouse_init_r_pressed && mouse_release(mb_right);
-	if(!mouse_init_inside && mouse_press(mb_right) && item_selecting) {
-		instance_destroy(item_selecting);
-		item_selecting = noone;
+	if(!mouse_init_inside && mouse_press(mb_right) && item_sel_submenu) {
+		instance_destroy(item_sel_submenu);
+		item_sel_submenu = noone;
 	}
 	
 	draw_sprite_stretched(THEME.s_box_r2_clr, 0, dialog_x, dialog_y, dialog_w, dialog_h);
@@ -52,7 +55,7 @@ if(!ready) exit;
 			var _hc = cc == c_white? COLORS.dialog_menubox_highlight : cc;
 			var _ha = cc == c_white? 0.75 : 0.8;
 			
-			draw_sprite_stretched_ext(THEME.textbox, 3, dialog_x, yy, dialog_w, _h, _hc, _ha);
+			draw_sprite_stretched_ext(THEME.textbox, 3, dialog_x, yy, dialog_w, _h, _hc);
 			
 			if(_hovering_ch && is_instanceof(_menuItem, MenuItem)) {
 				if(_menuItem.active && _lclick) {
@@ -71,18 +74,24 @@ if(!ready) exit;
 					
 					if(_menuItem.isShelf) {
 						var _res = _menuItem.func(_dat);
-						array_push(children, _res.id);      // open child
+						if(submenu) instance_destroy(submenu);
+						submenu  = _res;
 						
 					} else if(remove_parents) {
 						if(_par == noone) _menuItem.func();
 						else              _menuItem.func(_par);
+						
+						DIALOG_POSTDRAW
 						instance_destroy(o_dialog_menubox); // close all
+						exit;
 						
 					} else {
 						if(_par == noone) _menuItem.func();
 						else              _menuItem.func(_par);
-						instance_destroy();					// close self
 						
+						DIALOG_POSTDRAW
+						instance_destroy();
+						exit;
 					}
 				}
 			}
@@ -108,14 +117,13 @@ if(!ready) exit;
 						menuItem(__txt("Edit hotkey"), function() /*=>*/ { hk_editing = selecting_menu; keyboard_lastchar = hk_editing.hoykeyObject.key; }),
 					];
 					
-					item_selecting = submenuCall(_dat, context_menu_settings);
-					item_selecting.remove_parents = false;
-					array_push(children, item_selecting.id);
+					item_sel_submenu = submenuCall(_dat, context_menu_settings);
+					item_sel_submenu.remove_parents = false;
 				}
 			}
 				
 		} else if(cc != c_white)
-			draw_sprite_stretched_ext(THEME.textbox, 3, dialog_x, yy, dialog_w, _h, cc, 0.5);
+			draw_sprite_stretched_ext(THEME.textbox, 3, dialog_x, yy, dialog_w, _h, cc);
 		
 		var _hx = dialog_x + dialog_w - ui(16);
 		var _hy = yy + hght / 2 + ui(2);
@@ -170,7 +178,10 @@ if(!ready) exit;
 					
 					if(mouse_press(mb_left, sFOCUS)) {
 						_submenu[1](_dat);
+						
+						DIALOG_POSTDRAW
 						instance_destroy(o_dialog_menubox);
+						exit;
 					}
 				}
 				
@@ -252,8 +263,11 @@ if(!ready) exit;
 		if(keyboard_check_pressed(vk_down))
 			selecting = safe_mod(selecting + 1, array_length(menu));
 		
-		if(keyboard_check_pressed(vk_escape))
+		if(keyboard_check_pressed(vk_escape)) {
+			DIALOG_POSTDRAW
 			instance_destroy();
+			exit;
+		}
 	}
 	
 	draw_sprite_stretched(THEME.s_box_r2_clr, 1, dialog_x, dialog_y, dialog_w, dialog_h);
@@ -271,3 +285,5 @@ if(!ready) exit;
 		draw_text(dialog_x, dialog_y - ui(2), menu_id);
 	}
 #endregion
+
+DIALOG_POSTDRAW

@@ -513,7 +513,7 @@ function ThemeColor() constructor {
     panel_animation_dope_blend_default  = merge_color(CDEF.blue, CDEF.main_dkblack, 0.5);
     panel_animation_dope_blend          = CDEF.main_dkblack;
 	
-    panel_bg_clear_inner                = CDEF.main_dkblack;
+    panel_bg_clear_inner                = CDEF.main_mdblack;
     panel_bg_clear                      = CDEF.main_black;
     panel_frame                         = CDEF.main_dkgrey;
     panel_prop_bg                       = CDEF.main_ltgrey;

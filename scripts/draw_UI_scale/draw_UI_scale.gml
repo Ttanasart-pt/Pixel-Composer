@@ -21,7 +21,7 @@ function line_get_width(txt, font = noone, offset = 0) {
 }
 
 #region global
-	#macro TEXTBOX_HEIGHT line_get_height(f_p1, 8)
+	#macro TEXTBOX_HEIGHT line_get_height(f_p1, 6)
 	#macro BUTTON_HEIGHT  line_get_height(f_p1, 12)
 	
 	function ui(val) { 

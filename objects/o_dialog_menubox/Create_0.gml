@@ -16,13 +16,14 @@ event_inherited();
 	tooltips   = [];
 	show_icon  = false;
 	context    = noone;
+	submenu    = noone;
 	
 	_hovering_ch  = true;
 	init_pressing = false;
 	
 	setFocus(self.id);
 	
-	item_selecting = noone;
+	item_sel_submenu = noone;
 	remove_parents = true;
 	selecting_menu = noone;
 	hk_editing     = noone;
@@ -38,9 +39,8 @@ event_inherited();
 		dialog_w = 0;
 		dialog_h = 0;
 		
-		for( var i = 0, n = array_length(children); i < n; i++ ) 
-			instance_destroy(children[i]);
-		children = [];
+		if(submenu != noone) instance_destroy(submenu);
+		submenu  = noone;
 		tooltips = [];
 		
 		draw_set_text(font, fa_center, fa_center, COLORS._main_text);
@@ -84,15 +84,41 @@ event_inherited();
 		if(show_icon)
 			dialog_w += ui(32);
 		
-		dialog_y = min(dialog_y, WIN_H - dialog_h - 2);
+		var _mon = winMan_getData();
+		dialog_y = min(dialog_y, _mon[7] - WIN_Y - dialog_h - 2);
 		
 		switch(align) {
-			case fa_left:	dialog_x = round(min(dialog_x, WIN_W - dialog_w - 2)); break;
-			case fa_center: dialog_x = round(min(dialog_x - dialog_w / 2, WIN_W - dialog_w - 2)); break;
+			case fa_left:	dialog_x = round(min(dialog_x, _mon[6] - WIN_X - dialog_w - 2)); break;
+			case fa_center: dialog_x = round(min(dialog_x - dialog_w / 2, _mon[6] - WIN_X - dialog_w - 2)); break;
 			case fa_right:	dialog_x = round(max(dialog_x - dialog_w, 2)); break;
 		}
 		
 		mouse_init_inside = point_in_rectangle(mouse_mx, mouse_my, dialog_x, dialog_y, dialog_x + dialog_w, dialog_y + dialog_h);
 		ready = true;
+		
+		if(PREFERENCES.multi_window) {
+			var _wx = winwin_get_x_safe(WINDOW_ACTIVE) + dialog_x;
+			var _wy = winwin_get_y_safe(WINDOW_ACTIVE) + dialog_y;
+			
+			if(window == noone) {
+				var _wconfig = new winwin_config();
+				    _wconfig.kind            = winwin_kind_borderless;
+				    _wconfig.caption         = "";
+				    _wconfig.topmost         = true;
+				    _wconfig.per_pixel_alpha = true;
+				    _wconfig.resize          = false;
+				    _wconfig.owner           = winwin_main;
+				    _wconfig.taskbar_button  = false;
+				    _wconfig.close_button    = false;
+				
+				window   = winwin_create(_wx, _wy, dialog_w, dialog_h, _wconfig);
+			} else {
+				winwin_set_position_safe(window, _wx, _wy);
+				winwin_set_size_safe(window, dialog_w, dialog_h);
+			}
+			
+			dialog_x = 0;
+			dialog_y = 0;
+		}
 	}
 #endregion

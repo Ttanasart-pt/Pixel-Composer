@@ -4,8 +4,8 @@
 #macro DIALOG_DRAW_FOCUS draw_sprite_stretched_ext(THEME.dialog, 1, dialog_x - 8, dialog_y - 8, dialog_w + 16, dialog_h + 16, COLORS._main_accent, 1);
 
 #macro DIALOG_WINCLEAR if(window != noone) { winwin_draw_clear(COLORS.panel_bg_clear, 0); }
-#macro DIALOG_PREDRAW  if(window != noone) { winwin_draw_begin(window); WINDOW_ACTIVE = window; }
-#macro DIALOG_POSTDRAW if(window != noone) { winwin_draw_end();         WINDOW_ACTIVE = noone;  }
+#macro DIALOG_PREDRAW  if(window != noone) { winwin_draw_begin(window); WINDOW_ACTIVE = window; window_drawing =  true; }
+#macro DIALOG_POSTDRAW if(window != noone) { winwin_draw_end();         WINDOW_ACTIVE = noone;  window_drawing = false; }
 
 #region data
 	on_top    = false;
@@ -27,6 +27,7 @@
 	
 	title  = "dialog";
 	window = noone;
+	window_drawing = false;
 	
 	title_height = 64;
 	padding      = 20;
@@ -72,11 +73,10 @@
 				var _wx = window_get_x();
 				var _wy = window_get_y();
 				
-				if(point_in_rectangle(mouse_raw_x, mouse_raw_y, _wx, _wy, _wx + WIN_W, _wy + WIN_H)) {
-					dialog_x = clamp(_dx, ui(16) - dialog_w, WIN_W - ui(16));
-					dialog_y = clamp(_dy, ui(16) - dialog_h, WIN_H - ui(16));
+				dialog_x = clamp(_dx, ui(16) - dialog_w, WIN_W - ui(16));
+				dialog_y = clamp(_dy, ui(16) - dialog_h, WIN_H - ui(16));
 					
-				} else if(PREFERENCES.multi_window) {
+				if(PREFERENCES.multi_window && !point_in_rectangle(mouse_raw_x, mouse_raw_y, _wx, _wy, _wx + WIN_W, _wy + WIN_H)) {
 					o_main.dialog_popup_to = 1;
 					o_main.dialog_popup_x  = mouse_mx;
 					o_main.dialog_popup_y  = mouse_my;
@@ -117,7 +117,7 @@
 				var _dx = dialog_drag_sx + mouse_raw_x - dialog_drag_mx;
 				var _dy = dialog_drag_sy + mouse_raw_y - dialog_drag_my;
 				
-				winwin_set_position(window, _dx, _dy);
+				winwin_set_position_safe(window, _dx, _dy);
 				
 				if(mouse_release(mb_left))
 					dialog_dragging = false;
@@ -129,8 +129,8 @@
 				
 				if(mouse_press(mb_left, sFOCUS)) {
 					dialog_dragging = true;
-					dialog_drag_sx  = winwin_get_x(window);
-					dialog_drag_sy  = winwin_get_y(window);
+					dialog_drag_sx  = winwin_get_x_safe(window);
+					dialog_drag_sy  = winwin_get_y_safe(window);
 					dialog_drag_mx  = mouse_raw_x;
 					dialog_drag_my  = mouse_raw_y;
 				}
@@ -215,7 +215,7 @@
 			}
 			
 			if(dialog_resizing != 0) {
-				winwin_set_size(window, ww, hh);
+				winwin_set_size_safe(window, ww, hh);
 				if(mouse_release(mb_left)) dialog_resizing = 0;
 			}
 			
@@ -255,8 +255,11 @@
 #endregion
 
 #region focus
-	function point_in(mx, my) {
+	function point_in(raw_x, raw_y) {
 		INLINE
+		
+		var mx = raw_x - winwin_get_x_safe(window);
+		var my = raw_y - winwin_get_y_safe(window);
 		
 		var _r = dialog_resizable * 6;
 		var x0 = dialog_x            - _r;
@@ -272,8 +275,8 @@
 		WINDOW_ACTIVE = window;
 		
 		if(window == noone) {
-			var _mx = FILE_IS_DROPPING? FILE_DROPPING_X : mouse_mx;
-			var _my = FILE_IS_DROPPING? FILE_DROPPING_Y : mouse_my;
+			var _mx = FILE_IS_DROPPING? FILE_DROPPING_X : mouse_raw_x;
+			var _my = FILE_IS_DROPPING? FILE_DROPPING_Y : mouse_raw_y;
 			
 			if(point_in(_mx, _my)) {
 				if(depth < DIALOG_DEPTH_HOVER) {
@@ -281,8 +284,8 @@
 					HOVER = self.id;
 				}
 			}
-		} else {
-			if(winwin_mouse_is_over(window))
+		} else if (winwin_exists(window)) {
+			if(winwin_mouse_is_over_safe(window))
 				HOVER = self.id;
 		}
 		
@@ -340,7 +343,7 @@
 			for( var i = 0, n = array_length(children); i < n; i++ )
 				if(instance_exists(children[i])) return; 
 			
-			if(checkClosable() && destroy_on_click_out && !point_in(mouse_mx, mouse_my)) {
+			if(checkClosable() && destroy_on_click_out && !point_in(mouse_raw_x, mouse_raw_y)) {
 				instance_destroy(self);
 				onDestroy();
 				DIALOG_CLICK = false;
