@@ -864,7 +864,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			var sBase = surface_get_target();	
 			
 			try {
-				update(frame);
+				if(attributes.update_graph) update(frame);
 			} catch(exception) {
 				var sCurr = surface_get_target();
 				while(surface_get_target() != sBase)

@@ -13,6 +13,11 @@ if !active exit;
 #endregion
 
 #region resize
+	if(window != noone) {
+		dialog_w = winwin_get_width(window);
+		dialog_h = winwin_get_height(window);
+	}
+	
 	if(_dialog_h != dialog_h || _dialog_w != dialog_w) {
 		_dialog_h = dialog_h;
 		_dialog_w = dialog_w;
@@ -20,3 +25,4 @@ if !active exit;
 		if(onResize != -1) onResize();
 	}
 #endregion
+

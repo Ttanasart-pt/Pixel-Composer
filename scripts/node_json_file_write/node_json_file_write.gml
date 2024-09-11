@@ -23,7 +23,10 @@ function Node_Json_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		json_save_struct(path, cont);
 	}
 	
-	static update = function(frame = CURRENT_FRAME) { writeFile(); }
+	static update = function(frame = CURRENT_FRAME) { 
+		writeFile(); 
+	}
+	
 	static onInspector1Update = function() { writeFile(); }
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

@@ -7,13 +7,18 @@
 
 function menuCall(menu_id = "", menu = [], _x = 0, _y = 0, align = fa_left, context = noone) {
 	if(array_empty(menu)) return noone;
+		
+	FOCUS_BEFORE = FOCUS;
 	
 	_x = _x == 0? mouse_mx + ui(4) : _x;
 	_y = _y == 0? mouse_my + ui(4) : _y;
 	
-	FOCUS_BEFORE = FOCUS;
-	
 	var dia = dialogCall(o_dialog_menubox, _x, _y);
+	
+	// if(WINDOW_ACTIVE != noone) {
+	// 	dia.window = WINDOW_ACTIVE;
+	// }
+	
 	if(menu_id != "" && ds_map_exists(CONTEXT_MENU_CALLBACK, menu_id)) {
 		var callbacks = CONTEXT_MENU_CALLBACK[? menu_id];
 		

@@ -8,3 +8,5 @@ ds_list_remove(DIALOGS, self);
 if(parent) array_remove(parent.children, id);
 
 if(!passthrough) MOUSE_BLOCK = true;
+
+if(window != noone) winwin_destroy(window);

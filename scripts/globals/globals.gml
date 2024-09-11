@@ -60,6 +60,7 @@
 	globalvar FOCUS, FOCUS_STR, FOCUS_CONTENT, HOVER, HOVERING_ELEMENT, _HOVERING_ELEMENT;
 	globalvar DOUBLE_CLICK, DOUBLE_CLICK_POS;
 	globalvar DIALOG_CLICK;
+	globalvar WINDOW_ACTIVE;
 	
 	DOUBLE_CLICK_POS = [ 0, 0 ];
 	DOUBLE_CLICK  = false;
@@ -78,6 +79,7 @@
 	
 	ADD_NODE_PAGE   = 0;
 	ADD_NODE_SCROLL = 0;
+	WINDOW_ACTIVE   = noone;
 #endregion
 
 #region macro
@@ -93,18 +95,18 @@
 	
 	#macro UI_SCALE PREFERENCES.display_scaling
 	
-	#macro mouse_mx (PEN_USE? PEN_X : device_mouse_x_to_gui(0))
-	#macro mouse_my (PEN_USE? PEN_Y : device_mouse_y_to_gui(0))
+	#macro mouse_mx (PEN_USE? PEN_X : (WINDOW_ACTIVE == noone? device_mouse_x_to_gui(0) : winwin_mouse_get_x(WINDOW_ACTIVE)))
+	#macro mouse_my (PEN_USE? PEN_Y : (WINDOW_ACTIVE == noone? device_mouse_y_to_gui(0) : winwin_mouse_get_y(WINDOW_ACTIVE)))
 	
 	#macro mouse_mxs (FILE_IS_DROPPING? FILE_DROPPING_X : mouse_mx)
 	#macro mouse_mys (FILE_IS_DROPPING? FILE_DROPPING_Y : mouse_my)
 	
-	#macro mouse_raw_x (device_mouse_raw_x(0) + window_get_x())
-	#macro mouse_raw_y (device_mouse_raw_y(0) + window_get_y())
+	#macro mouse_raw_x display_mouse_get_x()
+	#macro mouse_raw_y display_mouse_get_y()
 	#macro mouse_ui [device_mouse_x_to_gui(0), device_mouse_y_to_gui(0)]
 	
 	#macro sFOCUS (FOCUS == self.id)
-	#macro sHOVER (!CURSOR_IS_LOCK && HOVER == self.id)
+	#macro sHOVER (!CURSOR_IS_LOCK && (HOVER == self.id || (WINDOW_ACTIVE != noone && winwin_mouse_is_over(WINDOW_ACTIVE))))
 	
 	#macro DELTA_TIME delta_time / 1_000_000
 	

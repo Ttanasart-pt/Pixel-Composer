@@ -41,8 +41,8 @@ function Panel_Preview_Window() : PanelContent() constructor {
 	
 	function reset() {
 		scale = 0;
-		panx = 0;
-		pany = 0;
+		panx  = 0;
+		pany  = 0;
 	}
 	
 	function changeChannel(_index) {
@@ -115,7 +115,7 @@ function Panel_Preview_Window() : PanelContent() constructor {
 			if(mouse_release(mb_middle)) 
 				panning = false;
 		}
-	
+		
 		if(mouse_press(mb_middle, pFOCUS)) {
 			panning = true;
 			pan_mx = mouse_mx;
@@ -132,6 +132,8 @@ function Panel_Preview_Window() : PanelContent() constructor {
 			else if(scale > 2)		inc = 0.5;
 			else if(scale > 0.25)	inc = 0.25;
 			else					inc = 0.05;
+			
+			//if(WINDOW_ACTIVE != noone) print($"{winwin_mouse_wheel_down(WINDOW_ACTIVE)} : {winwin_mouse_wheel_up(WINDOW_ACTIVE)} : {random(1)}");
 			
 			var s = scale;
 			if(mouse_wheel_down()) {

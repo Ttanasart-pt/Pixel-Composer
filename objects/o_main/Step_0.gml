@@ -1,6 +1,6 @@
 /// @description init
 if(winMan_isMinimized()) exit;
-winManStep()
+winManStep();
 
 //print("===== Step start =====");
 

@@ -658,7 +658,7 @@ function Panel_Inspector() : PanelContent() constructor {
                 } 
                 
                 draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
-                draw_text_add(ui(8), yy + hg / 2, edt[0]);
+                draw_text_alpha(ui(8), yy + hg / 2, edt[0]);
                 
                 var _param = new widgetParam(wx0, yy, ww, hg, val, {}, _m, x + contentPane.x, y + contentPane.y);
                     _param.s = hg;

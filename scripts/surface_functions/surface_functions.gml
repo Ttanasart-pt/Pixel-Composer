@@ -1,3 +1,7 @@
+#macro   surface_reset_target surface_reset_target_override
+#macro __surface_reset_target surface_reset_target
+function surface_reset_target_override() { __surface_reset_target(); winwin_draw_sync(); }
+
 #region ==================================== DRAW ====================================
 
 	function draw_surface_safe(surface, _x = 0, _y = 0) { #region

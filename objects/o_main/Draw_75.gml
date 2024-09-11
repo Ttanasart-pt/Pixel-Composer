@@ -180,6 +180,7 @@ if(winMan_isMinimized()) exit;
 		NODE_DROPPER_TARGET_CAN = false;
 		
 	panelDisplayDraw();
+	dialogGUIDraw();
 #endregion
 
 #region debug

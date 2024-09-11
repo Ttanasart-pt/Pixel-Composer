@@ -1,4 +1,6 @@
 /// @description init
+if(PREFERENCES.multi_window) winwin_update();
+
 global.__debug_runner++;
 global.cache_call = 0;
 global.cache_hit  = 0;
@@ -22,7 +24,11 @@ _FILE_DROPPED     = false;
 		minimized = false;
 	}
 	
-	game_set_speed(window_has_focus() || IS_PLAYING? PREFERENCES.ui_framerate : PREFERENCES.ui_framerate_non_focus, gamespeed_fps);
+	var foc = window_has_focus();
+	if(HOVER && instance_exists(HOVER) && HOVER.window != noone) foc = true;
+	
+	game_set_speed(foc || IS_PLAYING? PREFERENCES.ui_framerate : PREFERENCES.ui_framerate_non_focus, gamespeed_fps);
+	WINDOW_ACTIVE = noone;
 #endregion
 
 #region fpss
@@ -81,17 +87,17 @@ _FILE_DROPPED     = false;
 	if(mouse_release(mb_any)) DIALOG_CLICK = true;
 	
 	HOVER = noone;
-	with(_p_dialog) checkMouse();
+	with(_p_dialog) checkMouse();		WINDOW_ACTIVE = noone;
 	
 	if(PANEL_MAIN != 0) PANEL_MAIN.stepBegin();
 	
 	DIALOG_DEPTH_HOVER = 0;
 	
-	with(_p_dialog) checkFocus();
-	with(_p_dialog) checkDepth();
+	with(_p_dialog) checkFocus();		WINDOW_ACTIVE = noone;
+	with(_p_dialog) checkDepth();		WINDOW_ACTIVE = noone;
 	
-	with(_p_dialog) doDrag();
-	with(_p_dialog) doResize();
+	with(_p_dialog) doDrag();			WINDOW_ACTIVE = noone;
+	with(_p_dialog) doResize();			WINDOW_ACTIVE = noone;
 #endregion
 
 #region auto save
@@ -276,4 +282,4 @@ _FILE_DROPPED     = false;
 #endregion
 
 //if(global.cache_call) print($"CACHE called: {global.cache_call} | hit: {global.cache_hit} ({global.cache_hit / global.cache_call * 100}%)");
-//if(!is_struct(FOCUS)) print(FOCUS);
+// print($"{is_struct(HOVER)? instanceof(HOVER) : HOVER}, {is_struct(FOCUS)? instanceof(FOCUS) : FOCUS}");

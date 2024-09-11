@@ -401,10 +401,14 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 			
 			if(con && point_in_rectangle(_mx, _my, x + ui(2), y + ui(2), x + w - ui(4), y + h - ui(4))) {
 				HOVER = self;
+				// print($"Hovering {instanceof(con)} : {mouse_press(mb_any)} : {random(1)}")
+				
 				if(mouse_press(mb_any))   
 					setFocus(self);
+					
 				if(FOCUS == self && con) 
 					FOCUS_STR = con.context_str;
+					
 			} else {
 				for(var i = 0; i < array_length(childs); i++)
 					childs[i].stepBegin();
@@ -905,6 +909,7 @@ function PanelContent() constructor {
 	
 	dragSurface = surface_create(1, 1);
 	showHeader  = true;
+	window      = noone;
 	
 	title_actions = [];
 	
@@ -942,6 +947,7 @@ function PanelContent() constructor {
 	function onStepBegin() {
 		mx = mouse_mx - x;
 		my = mouse_my - y;
+		window = WINDOW_ACTIVE;
 		
 		stepBegin();
 	}

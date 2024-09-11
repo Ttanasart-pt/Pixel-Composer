@@ -29,7 +29,7 @@
 #endregion
 
 #region functions 
-	function clearPanel() { #region
+	function clearPanel() {
 		delete PANEL_MAIN;
 		delete PANEL_MENU;
 		delete PANEL_INSPECTOR;
@@ -45,9 +45,9 @@
 		PANEL_COLLECTION = {};
 		
 		PANEL_FILE       = 0;
-	} #endregion
+	}
 	
-	function getPanelFromName(name, create = false, focus = true) { #region
+	function getPanelFromName(name, create = false, focus = true) {
 		switch(name) {
 			case "Panel_Menu"       : var p = (create || findPanel(name))? new Panel_Menu()		 : PANEL_MENU;		if(focus) { PANEL_MENU	     = p; } return p;
 			case "Panel_Inspector"  : var p = (create || findPanel(name))? new Panel_Inspector() : PANEL_INSPECTOR; if(focus) { PANEL_INSPECTOR  = p; } return p;
@@ -75,14 +75,14 @@
 		}
 		
 		return noone;
-	} #endregion
+	}
 	
 	function LoadPanelStruct(struct) { 
 		PANEL_MAIN = new Panel(noone, ui(2), ui(2), WIN_SW - ui(4), WIN_SH - ui(4));
 		loadPanelStruct(PANEL_MAIN, struct); 
 	}
 	
-	function loadPanelStruct(panel, str) { #region
+	function loadPanelStruct(panel, str) {
 		var cont = str.content;
 		
 		if(variable_struct_exists(str, "split")) {
@@ -111,14 +111,14 @@
 					_pnCont.deserialize(_content);
 			}
 		}
-	} #endregion
+	}
 	
 	function loadPanel(path) {
 		CURRENT_PANEL = json_load_struct(path);
 		LoadPanelStruct(CURRENT_PANEL.panel);
 	}
 	
-	function checkPanelValid() { #region
+	function checkPanelValid() {
 		var val  = true;
 		var _mst = "";
 		if(!is_instanceof(PANEL_GRAPH.panel, Panel))     { val = false; _mst += "Graph, "     };
@@ -136,16 +136,16 @@
 		}
 		
 		return val;
-	} #endregion
+	}
 	
-	function panelAdd(panel, create = false, focus = true) { #region
+	function panelAdd(panel, create = false, focus = true) {
 		var pan = getPanelFromName(panel, create, focus);
 		if(pan == noone) return noone;
 		
 		return dialogPanelCall(pan, noone, noone, { focus });
-	} #endregion
+	}
 	
-	function panelObjectInit() { #region
+	function panelObjectInit() {
 		PANEL_MAIN       = new Panel(noone, ui(2), ui(2), WIN_SW - ui(4), WIN_SH - ui(4));
 		PANEL_MENU       = new Panel_Menu();
 		PANEL_INSPECTOR  = new Panel_Inspector();
@@ -153,18 +153,18 @@
 		PANEL_PREVIEW    = new Panel_Preview();
 		PANEL_GRAPH      = new Panel_Graph();
 		PANEL_COLLECTION = new Panel_Collection();
-	} #endregion
+	}
 	
-	function resetPanel(check = true) { #region
+	function resetPanel(check = true) {
 		clearPanel();
 		panelObjectInit();
 		loadPanelStruct(PANEL_MAIN, CURRENT_PANEL.panel);
 		PANEL_MAIN.refresh();
 		
 		if(check) checkPanelValid();
-	} #endregion
+	}
 	
-	function __initPanel() { #region
+	function __initPanel() {
 		directory_verify($"{DIRECTORY}layouts");
 		
 		if(check_version($"{DIRECTORY}layouts/version"))
@@ -174,9 +174,9 @@
 		panelDisplayInit();
 		
 		checkPanelValid();
-	} #endregion
+	}
 	
-	function setPanel() { #region
+	function setPanel() {
 		globalvar CURRENT_PANEL;
 		
 		panelObjectInit();
@@ -188,9 +188,9 @@
 		
 		PANEL_MAIN.refresh();
 		PANEL_MAIN.refreshSize();
-	} #endregion
+	}
 	
-	function findPanel(_type, _pane = PANEL_MAIN) { #region
+	function findPanel(_type, _pane = PANEL_MAIN) {
 		var pan = _findPanel(_type, _pane);
 		if(pan) return pan;
 		
@@ -200,9 +200,9 @@
 		}
 		
 		return noone;
-	} #endregion
+	}
 	
-	function _findPanel(_type, _pane, _res = noone) { #region
+	function _findPanel(_type, _pane, _res = noone) {
 		if(instanceof(_pane) != "Panel")
 			return _res;
 		
@@ -218,13 +218,13 @@
 		}
 		
 		return _res;
-	} #endregion
+	}
 	
-	function findPanels(_type, _pane = PANEL_MAIN) { #region
+	function findPanels(_type, _pane = PANEL_MAIN) {
 		return _findPanels(_type, _pane, []);
-	} #endregion
+	}
 	
-	function _findPanels(_type, _pane, _arr = []) { #region
+	function _findPanels(_type, _pane, _arr = []) {
 		if(!is_instanceof(_pane, Panel))
 			return _arr;
 		
@@ -239,9 +239,9 @@
 			_arr = _findPanels(_type, _pane.childs[i], _arr);
 		
 		return _arr;
-	} #endregion
+	}
 	
-	function panelInit() { #region
+	function panelInit() {
 		panel_dragging = noone;
 		panel_hovering = noone;
 		panel_split = 0;
@@ -254,9 +254,14 @@
 		panel_draw_y1 = noone; panel_draw_y1_to = noone;
 		
 		panel_draw_depth = 0;
-	} #endregion
+		
+		dialog_popup    = 0;
+		dialog_popup_to = 0;
+		dialog_popup_x  = 0;
+		dialog_popup_y  = 0;
+	}
 	
-	function panelDraw() { #region
+	function panelDraw() {
 		panel_draw_x0 = panel_draw_x0 == noone? panel_draw_x0_to : lerp_float(panel_draw_x0, panel_draw_x0_to, 3);
 		panel_draw_y0 = panel_draw_y0 == noone? panel_draw_y0_to : lerp_float(panel_draw_y0, panel_draw_y0_to, 3);
 		panel_draw_x1 = panel_draw_x1 == noone? panel_draw_x1_to : lerp_float(panel_draw_x1, panel_draw_x1_to, 3);
@@ -264,25 +269,28 @@
 		
 		panel_draw_depth = lerp_float(panel_draw_depth, panel_split == 4, 3);
 		
+		var _rr = THEME_VALUE.panel_corner_radius;
+		
 		if(panel_draw_x0_to != noone) {
 			draw_set_color(COLORS._main_accent);
 			
 			if(panel_split == 4) {
 				var dist = ui(8) * panel_draw_depth;
 				draw_set_alpha(.2);
-				draw_roundrect_ext(panel_draw_x0 - dist, panel_draw_y0 - dist, panel_draw_x1 - dist, panel_draw_y1 - dist, THEME_VALUE.panel_corner_radius, THEME_VALUE.panel_corner_radius, false);
+				draw_roundrect_ext(panel_draw_x0 - dist, panel_draw_y0 - dist, panel_draw_x1 - dist, panel_draw_y1 - dist, _rr, _rr, false);
 				draw_set_alpha(1.);
-				draw_roundrect_ext(panel_draw_x0 - dist, panel_draw_y0 - dist, panel_draw_x1 - dist, panel_draw_y1 - dist, THEME_VALUE.panel_corner_radius, THEME_VALUE.panel_corner_radius,  true);		
+				draw_roundrect_ext(panel_draw_x0 - dist, panel_draw_y0 - dist, panel_draw_x1 - dist, panel_draw_y1 - dist, _rr, _rr,  true);		
 			
 				draw_set_alpha(.2);
-				draw_roundrect_ext(panel_draw_x0 + dist, panel_draw_y0 + dist, panel_draw_x1 + dist, panel_draw_y1 + dist, THEME_VALUE.panel_corner_radius, THEME_VALUE.panel_corner_radius, false);
+				draw_roundrect_ext(panel_draw_x0 + dist, panel_draw_y0 + dist, panel_draw_x1 + dist, panel_draw_y1 + dist, _rr, _rr, false);
 				draw_set_alpha(1.);
-				draw_roundrect_ext(panel_draw_x0 + dist, panel_draw_y0 + dist, panel_draw_x1 + dist, panel_draw_y1 + dist, THEME_VALUE.panel_corner_radius, THEME_VALUE.panel_corner_radius,  true);		
+				draw_roundrect_ext(panel_draw_x0 + dist, panel_draw_y0 + dist, panel_draw_x1 + dist, panel_draw_y1 + dist, _rr, _rr,  true);		
+				
 			} else {
 				draw_set_alpha(.4);
-				draw_roundrect_ext(panel_draw_x0, panel_draw_y0, panel_draw_x1, panel_draw_y1, THEME_VALUE.panel_corner_radius, THEME_VALUE.panel_corner_radius, false);
+				draw_roundrect_ext(panel_draw_x0, panel_draw_y0, panel_draw_x1, panel_draw_y1, _rr, _rr, false);
 				draw_set_alpha(1.);
-				draw_roundrect_ext(panel_draw_x0, panel_draw_y0, panel_draw_x1, panel_draw_y1, THEME_VALUE.panel_corner_radius, THEME_VALUE.panel_corner_radius,  true);		
+				draw_roundrect_ext(panel_draw_x0, panel_draw_y0, panel_draw_x1, panel_draw_y1, _rr, _rr,  true);	
 			}
 		}
 		
@@ -340,13 +348,33 @@
 				panel_draw_depth = 0;
 			}
 		}
-	} #endregion
+	}
 	
-	function panelSerialize(_content = false) { #region
+	function dialogGUIDraw() {
+		draw_set_color(COLORS._main_accent);
+		dialog_popup = lerp_float(dialog_popup, dialog_popup_to, 5);
+		dialog_popup_to = 0;
+		
+		if(dialog_popup > 0) {
+			var _rr = THEME_VALUE.panel_corner_radius;
+			var dpw = ui(24) * dialog_popup;
+			var dph = ui(24) * dialog_popup;
+			
+			var dpx = clamp(dialog_popup_x, 8 + dpw, WIN_W - 8 - dpw);
+			var dpy = clamp(dialog_popup_y, 8 + dph, WIN_H - 8 - dph);
+			
+			draw_set_alpha(.4);
+			draw_roundrect_ext(dpx - dpw, dpy - dph, dpx + dpw, dpy + dph, _rr, _rr, false);
+			draw_set_alpha(1.);
+			draw_roundrect_ext(dpx - dpw, dpy - dph, dpx + dpw, dpy + dph, _rr, _rr,  true);
+		}
+	}
+	
+	function panelSerialize(_content = false) {
 		return { panel : _panelSerialize(PANEL_MAIN, _content) };
-	} #endregion
+	}
 	
-	function _panelSerialize(_panel, _content = false) { #region
+	function _panelSerialize(_panel, _content = false) {
 		var cont = {};
 		var ind = 0;
 		
@@ -372,13 +400,13 @@
 		}
 		
 		return cont;
-	} #endregion
+	}
 	
-	function panelSerializeArray() { #region
+	function panelSerializeArray() {
 		return _panelSerializeArray(PANEL_MAIN);
-	} #endregion
+	}
 	
-	function _panelSerializeArray(panel) { #region
+	function _panelSerializeArray(panel) {
 		var cont = [];
 		
 		if(!array_empty(panel.childs)) {
@@ -391,7 +419,7 @@
 		}
 		
 		return cont;
-	} #endregion
+	}
 #endregion
 
 #region fullscreen
