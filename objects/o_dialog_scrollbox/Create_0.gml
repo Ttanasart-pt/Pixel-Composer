@@ -77,7 +77,7 @@ event_inherited();
 		var _dw  = sc_content.surface_w;
 		var _h   = 0;
 		var _ly  = _y;
-		var hovering  = "";
+		var hov  = noone;
 		
 		for(var i = 0; i < array_length(data); i++) {
 			var _val = data[i];
@@ -86,8 +86,7 @@ event_inherited();
 			var _tol = is_instanceof(_val, scrollItem) && _val.tooltip != "";
 			
 			var clickable = !string_starts_with(txt, "-");
-			if(!clickable)
-				txt = string_delete(txt, 1, 1);
+			if(!clickable) txt = string_delete(txt, 1, 1);
 			
 			if(data[i] == -1) {
 				draw_set_color(CDEF.main_mdblack);
@@ -102,7 +101,7 @@ event_inherited();
 				if(sc_content.hover && point_in_rectangle(_m[0], _m[1], 0, _ly, _dw, _ly + hght - 1)) {
 					sc_content.hover_content = true;
 					selecting = i;
-					hovering  = data[i];
+					hov       = i;
 					
 					if(_tol) TOOLTIP = _val.tooltip;
 				}
@@ -116,14 +115,19 @@ event_inherited();
 					}
 				}
 			}
-				
-			draw_set_text(font, align, fa_center, clickable? COLORS._main_text : COLORS._main_text_sub);
-			if(align == fa_center) {
-				var _xc = _spr? hght + (_dw - hght) / 2 : _dw / 2;
-				draw_text_cut(_xc, _ly + hght / 2, txt, _dw);
-				
-			} else if(align == fa_left) 
-				draw_text_cut(text_pad + _spr * hght, _ly + hght / 2, txt, _dw);
+			
+			if(is_string(txt)) {
+				draw_set_text(font, align, fa_center, clickable? COLORS._main_text : COLORS._main_text_sub);
+				if(align == fa_center) {
+					var _xc = _spr? hght + (_dw - hght) / 2 : _dw / 2;
+					draw_text_cut(_xc, _ly + hght / 2, txt, _dw);
+					
+				} else if(align == fa_left) 
+					draw_text_cut(text_pad + _spr * hght, _ly + hght / 2, txt, _dw);
+					
+			} else if(sprite_exists(txt)) {
+				draw_sprite_ext(txt, i, _dw / 2, _ly + hght / 2);
+			}
 			
 			if(_spr) draw_sprite_ext(_val.spr, _val.spr_ind, ui(8) + hght / 2, _ly + hght / 2, 1, 1, 0, _val.spr_blend, 1);
 			
@@ -133,10 +137,10 @@ event_inherited();
 		
 		if(update_hover) {
 			UNDO_HOLDING = true;
-			if(hovering != "")
-				scrollbox.onModify(array_find(scrollbox.data, hovering));
-			else if(initVal > -1)
-				scrollbox.onModify(initVal);
+			
+			     if(hov != noone) scrollbox.onModify(hov);
+			else if(initVal > -1) scrollbox.onModify(initVal);
+				
 			UNDO_HOLDING = false;
 		}
 		

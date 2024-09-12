@@ -446,7 +446,7 @@ function Panel_Collection() : PanelContent() constructor {
 		
 		folderPane.resize(group_w - ui(8), content_h);
 		
-		if(page == 2)	contentPane.resize(w - ui(16), content_h);
+		if(page == 2)	contentPane.resize(w - ui(22), content_h);
 		else			contentPane.resize(content_w - ui(6), content_h);
 	} 
 	

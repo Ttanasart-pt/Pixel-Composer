@@ -1,6 +1,9 @@
 /// @description init
 if(PREFERENCES.multi_window) winwin_update();
 
+// print($"{TOOLTIP_WINDOW}, {winwin_get_focus()}");
+// print(keyboard_check(vk_space));
+
 global.__debug_runner++;
 global.cache_call = 0;
 global.cache_hit  = 0;

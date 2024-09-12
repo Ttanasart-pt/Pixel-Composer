@@ -440,7 +440,7 @@ function Panel_Inspector() : PanelContent() constructor {
                     var _wdx = viewMode == INSP_VIEW_MODE.spacious? ui(16) : ui(140);
                     var _wdw = w - ui(48) - _wdx;
                     var _whh = line_get_height(_font);
-                    var _edt = PROJECT.meta.author_steam_id && PROJECT.meta.author_steam_id == STEAM_USER_ID;
+                    var _edt = PROJECT.meta.steam == FILE_STEAM_TYPE.local || PROJECT.meta.author_steam_id == STEAM_USER_ID;
                         
                     for( var j = 0; j < array_length(meta.displays); j++ ) {
                         var display = meta.displays[j];

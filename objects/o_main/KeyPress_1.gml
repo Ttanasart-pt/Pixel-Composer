@@ -5,10 +5,8 @@ kb_hold = false;
 
 KEYBOARD_PRESSED = kb_hkey;
 
-if(keyboard_check(vk_backspace))
-	KEYBOARD_STRING  = string_copy(KEYBOARD_STRING, 1, string_length(KEYBOARD_STRING) - 1);
-else
-	KEYBOARD_STRING += keyboard_lastchar;
+if(keyboard_check(vk_backspace)) KEYBOARD_STRING  = string_copy(KEYBOARD_STRING, 1, string_length(KEYBOARD_STRING) - 1);
+else                             KEYBOARD_STRING += keyboard_lastchar;
 	
 if(KEYBOARD_PRESSED == -1) {
 	for( var i = 0, n = array_length(global.KEYS_VK); i < n; i++ ) {

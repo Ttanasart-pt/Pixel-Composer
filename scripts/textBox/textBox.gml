@@ -247,6 +247,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 					edited = true;
 					cursor_select	= -1;
 					move_cursor(-1);
+					
 				} else if(KEYBOARD_PRESSED == vk_delete || (keyboard_check_pressed(ord("X")) && key_mod_press(CTRL) && cursor_select != -1)) {
 					if(cursor_select == -1) {
 						var str_before	= string_copy(_input_text, 1, cursor);
@@ -266,6 +267,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 					
 					edited = true;
 					cursor_select	= -1;
+					
 				} else if(KEYBOARD_STRING != "") {
 					var ch			= KEYBOARD_STRING;
 					

@@ -36,8 +36,8 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 	static resize = function(_w, _h) {
 		w = _w;
 		h = _h;
-		surface_w   = _w - (always_scroll || is_scroll) * ui(12);
-		surface_h   = _h;
+		surface_w = _w - ui(12);
+		surface_h = _h;
 	}
 	
 	static setScroll = function(_scroll_y) {

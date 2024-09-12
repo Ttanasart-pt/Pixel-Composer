@@ -17,12 +17,8 @@ function buttonGroup(_data, _onClick) : widget() constructor {
 	
 	sb_small = new scrollBox(data, _onClick);
 	
-	static setFont = function(font) {
-		self.font = font;
-		return self;
-	}
-	
-	static setTooltips = function(tt) { tooltips = tt;    return self; } 
+	static setFont     = function(ff) { font        = ff; return self; }
+	static setTooltips = function(tt) { tooltips    = tt; return self; } 
 	static setCollape  = function(cc) { collapsable = cc; return self; } 
 	
 	static trigger = function() {
@@ -141,7 +137,7 @@ function buttonGroup(_data, _onClick) : widget() constructor {
 			}
 		} else {
 			sb_small.setFocusHover(active, hover);
-			sb_small.draw(_x, _y, _w, _h, array_safe_get(data, _selecting, "-"), _m, _rx, _ry);
+			sb_small.draw(_x, _y, _w, _h, _selecting, _m, _rx, _ry);
 		}
 		
 		if(WIDGET_CURRENT == self)

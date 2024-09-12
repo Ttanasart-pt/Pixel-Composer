@@ -45,7 +45,7 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 	static drawSettings = function(panel) {
 		var yy = ui(24);
 		var th = ui(36);
-		var ww = wdgw;
+		var ww = max(wdgw, w * 0.5); 
 		var wh = TEXTBOX_HEIGHT;
 		
 		var _hov = false;

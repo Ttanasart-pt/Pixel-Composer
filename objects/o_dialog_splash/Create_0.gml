@@ -365,8 +365,6 @@ event_inherited();
 		return hh + ui(20);
 	});
 	
-	sp_sample.always_scroll = true;
-	
 #endregion
 
 #region contest

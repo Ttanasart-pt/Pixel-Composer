@@ -2,9 +2,9 @@
 if(winMan_isMinimized()) exit;
 
 #region tooltip
+	
 	if(!_MOUSE_BLOCK) {
 		if(TOOLTIP_WINDOW != noone) {
-			winwin_set_topmost(TOOLTIP_WINDOW, true);
 			winwin_draw_begin(TOOLTIP_WINDOW);
 			winwin_draw_clear(0, 0);
 		}
