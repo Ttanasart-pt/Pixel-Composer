@@ -86,8 +86,8 @@ function MetaDataManager() constructor {
 			_h = string_height(name);
 			_w = string_width(name);
 			
-			var mx = min(mouse_mx + _pd * 2, WIN_W - (_w + _pd * 2));
-			var my = min(mouse_my + _pd * 2, WIN_H - (_h + _pd * 2));
+			var mx = min(__mouse_tx + _pd * 2, __win_tw - (_w + _pd * 2));
+			var my = min(__mouse_ty + _pd * 2, __win_th - (_h + _pd * 2));
 			
 			draw_sprite_stretched(THEME.textbox, 3, mx, my, _w + _pd * 2, _h + _pd * 2);
 			draw_sprite_stretched(THEME.textbox, 0, mx, my, _w + _pd * 2, _h + _pd * 2);
@@ -152,8 +152,8 @@ function MetaDataManager() constructor {
 			_h += th;
 		}
 		
-		var mx = min(mouse_mx + _pd * 2, WIN_W - (_w + _pd * 2));
-		var my = min(mouse_my + _pd * 2, WIN_H - (_h + _pd * 2));
+		var mx = min(__mouse_tx + _pd * 2, __win_tw - (_w + _pd * 2));
+		var my = min(__mouse_ty + _pd * 2, __win_th - (_h + _pd * 2));
 		
 		////////////////////////////////////////////////////////////////////////////////////////////////////
 		

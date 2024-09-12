@@ -3,6 +3,12 @@ if(winMan_isMinimized()) exit;
 
 #region tooltip
 	if(!_MOUSE_BLOCK) {
+		if(TOOLTIP_WINDOW != noone) {
+			winwin_set_topmost(TOOLTIP_WINDOW, true);
+			winwin_draw_begin(TOOLTIP_WINDOW);
+			winwin_draw_clear(0, 0);
+		}
+		
 		if(is_struct(TOOLTIP)) {
 			if(struct_has(TOOLTIP, "drawTooltip"))
 				TOOLTIP.drawTooltip();
@@ -103,6 +109,10 @@ if(winMan_isMinimized()) exit;
 			} 
 		} else if(TOOLTIP != "")
 			draw_tooltip_text(TOOLTIP);
+			
+		if(TOOLTIP_WINDOW != noone) {
+			winwin_draw_end();
+		}
 	}
 	TOOLTIP = "";
 #endregion

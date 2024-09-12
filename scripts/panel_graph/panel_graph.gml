@@ -3295,8 +3295,8 @@ function Panel_Graph_Drop_tooltip(panel) constructor {
 		var tw = max(w1, w2);
 		var th = h1 + ui(8) + h2;
 		
-		var mx = min(mouse_mxs + ui(16), WIN_W - (tw + ui(16)));
-		var my = min(mouse_mys + ui(16), WIN_H - (th + ui(16)));
+		var mx = min(__mouse_tx + ui(16), __win_tw - (tw + ui(16)));
+		var my = min(__mouse_ty + ui(16), __win_th - (th + ui(16)));
 		
 		draw_sprite_stretched(THEME.textbox, 3, mx, my, tw + ui(16), th + ui(16));
 		draw_sprite_stretched(THEME.textbox, 0, mx, my, tw + ui(16), th + ui(16));

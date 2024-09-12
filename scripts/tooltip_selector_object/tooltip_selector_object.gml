@@ -19,8 +19,8 @@ function tooltipSelector(title, data, index = 0) constructor {
 		for( var i = 0, n = array_length(data); i < n; i++ ) 
 			_w = max(_w, ui(8 + 16) + string_width(data[i]));
 		
-		var mx = min(mouse_mx + ui(16), WIN_W - (_w + ui(16) + ui(4)));
-		var my = min(mouse_my + ui(16), WIN_H - (_h + ui(16) + ui(4)));
+		var mx = min(__mouse_tx + ui(16), __win_tw - (_w + ui(16) + ui(4)));
+		var my = min(__mouse_ty + ui(16), __win_th - (_h + ui(16) + ui(4)));
 		
 		draw_sprite_stretched(THEME.textbox, 3, mx, my, _w + ui(16), _h + ui(16));
 		draw_sprite_stretched(THEME.textbox, 0, mx, my, _w + ui(16), _h + ui(16));

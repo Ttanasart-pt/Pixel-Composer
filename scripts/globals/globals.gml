@@ -60,7 +60,7 @@
 	globalvar FOCUS, FOCUS_STR, FOCUS_CONTENT, HOVER, HOVERING_ELEMENT, _HOVERING_ELEMENT;
 	globalvar DOUBLE_CLICK, DOUBLE_CLICK_POS;
 	globalvar DIALOG_CLICK;
-	globalvar WINDOW_ACTIVE;
+	globalvar WINDOW_ACTIVE, TOOLTIP_WINDOW;
 	
 	DOUBLE_CLICK_POS = [ 0, 0 ];
 	DOUBLE_CLICK  = false;
@@ -80,6 +80,7 @@
 	ADD_NODE_PAGE   = 0;
 	ADD_NODE_SCROLL = 0;
 	WINDOW_ACTIVE   = noone;
+	TOOLTIP_WINDOW  = noone;
 #endregion
 
 #region macro
