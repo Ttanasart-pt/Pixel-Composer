@@ -50,6 +50,7 @@
     {"$GMFolder":"","%Name":"inspector","folderPath":"folders/dialog/inspector.yy","name":"inspector","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"menu","folderPath":"folders/dialog/menu.yy","name":"menu","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"widget","folderPath":"folders/dialog/widget.yy","name":"widget","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"Extensions","folderPath":"folders/Extensions.yy","name":"Extensions","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"font","folderPath":"folders/font.yy","name":"font","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"functions","folderPath":"folders/functions.yy","name":"functions","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"3d","folderPath":"folders/functions/3d.yy","name":"3d","resourceType":"GMFolder","resourceVersion":"2.0",},

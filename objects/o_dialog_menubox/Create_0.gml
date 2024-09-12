@@ -11,15 +11,15 @@ event_inherited();
 	menu_id    = "";
 	alarm[0]   = -1;
 	menu       = 1;
-	font       = f_p1;
+	font       = f_p2;
 	hght       = line_get_height(font, 10);
 	tooltips   = [];
 	show_icon  = false;
 	context    = noone;
 	submenu    = noone;
 	
-	_hovering_ch  = true;
-	init_pressing = false;
+	_hovering_ch    = true;
+	init_press_l = MOUSE_POOL.lpress;
 	
 	setFocus(self.id);
 	
@@ -31,7 +31,8 @@ event_inherited();
 	function setMenu(_menu, align = fa_left) {
 		with(_p_dialog) { if(on_top) continue; other.depth = min(depth - 1, other.depth); }
 		
-		menu = _menu;
+		title    = menu_id;
+		menu     = _menu;
 		dialog_x = x;
 		dialog_y = y;
 		
@@ -103,18 +104,10 @@ event_inherited();
 			var _wx = winwin_get_x_safe(WINDOW_ACTIVE) + dialog_x;
 			var _wy = winwin_get_y_safe(WINDOW_ACTIVE) + dialog_y;
 			
-			if(window == noone) {
-				var _wconfig = new winwin_config();
-				    _wconfig.kind            = winwin_kind_borderless;
-				    _wconfig.caption         = "";
-				    _wconfig.topmost         = true;
-				    _wconfig.per_pixel_alpha = true;
-				    _wconfig.resize          = false;
-				    _wconfig.owner           = winwin_main;
-				    _wconfig.taskbar_button  = false;
-				    _wconfig.close_button    = false;
+			if(window == noone || !winwin_exists(window)) {
+				var _cfg = winwin_config_ext("", winwin_kind_borderless, false, false);
+				window   = winwin_create_ext(_wx, _wy, dialog_w, dialog_h, _cfg);
 				
-				window   = winwin_create(_wx, _wy, dialog_w, dialog_h, _wconfig);
 			} else {
 				winwin_set_position_safe(window, _wx, _wy);
 				winwin_set_size_safe(window, dialog_w, dialog_h);
@@ -122,9 +115,6 @@ event_inherited();
 			
 			dialog_x = 0;
 			dialog_y = 0;
-			
-		} else if(winwin_exists(window)) {
-			winwin_destroy(window);
 		}
 	}
 #endregion

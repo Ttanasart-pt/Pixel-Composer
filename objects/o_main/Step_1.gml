@@ -47,6 +47,8 @@ _FILE_DROPPED     = false;
 #region window & mouse
 	//if(keyboard_check_pressed(vk_f12)) DEBUG = !DEBUG;
 	
+	global_mouse_pool_init();
+	
 	if(_cursor != CURSOR) {
 		window_set_cursor(CURSOR);
 		_cursor = CURSOR;

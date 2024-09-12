@@ -963,7 +963,6 @@ function PanelContent() constructor {
 			if(pFOCUS) FOCUS_CONTENT = self;
 		}
 		
-		
 		drawContent(panel);
 	}
 	

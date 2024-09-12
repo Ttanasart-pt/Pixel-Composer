@@ -24,6 +24,7 @@
 	_dialog_h = 320;
 	dialog_x  = 0;
 	dialog_y  = 0;
+	anchor    = ANCHOR.none;
 	
 	title  = "dialog";
 	window = noone;
@@ -40,7 +41,6 @@
 	
 	destroy_on_escape    = true;
 	destroy_on_click_out = false;
-	anchor = ANCHOR.none;
 	
 	init_pressing = mouse_click(mb_left);
 #endregion
@@ -82,15 +82,8 @@
 					o_main.dialog_popup_y  = mouse_my;
 					
 					if(mouse_release(mb_left)) {
-						var _wconfig = new winwin_config();
-						    _wconfig.kind            = winwin_kind_borderless;
-						    _wconfig.caption         = title;
-						    _wconfig.topmost         = true;
-						    _wconfig.per_pixel_alpha = true;
-						    _wconfig.resize          = true;
-						    _wconfig.owner           = winwin_main;
-						
-						window   = winwin_create(_wx + _dx, _wy + _dy, dialog_w, dialog_h, _wconfig);
+						var _cfg = winwin_config_ext(title, winwin_kind_borderless, false, true);
+						window   = winwin_create_ext(_wx + _dx, _wy + _dy, dialog_w, dialog_h, _cfg);
 						dialog_x = 0;
 						dialog_y = 0;
 					}
@@ -334,14 +327,16 @@
 	function checkMouse() {
 		if(!active)       return;
 		if(!DIALOG_CLICK) return;
+		if(init_pressing) return;
 		
-		WINDOW_ACTIVE = window;
-		
-		if(!init_pressing && mouse_press(mb_any)) {
-			if(!isTop())  return;
+		if(MOUSE_POOL.lpress || MOUSE_POOL.rpress) { //print($"Closing {title}");
+			if(!isTop()) {
+				// print($"    > Not close, not on top.")
+				return;
+			}
 			
 			for( var i = 0, n = array_length(children); i < n; i++ )
-				if(instance_exists(children[i])) return; 
+				if(instance_exists(children[i])) return;
 			
 			if(checkClosable() && destroy_on_click_out && !point_in(mouse_raw_x, mouse_raw_y)) {
 				instance_destroy(self);

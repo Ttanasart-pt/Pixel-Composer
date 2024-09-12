@@ -811,7 +811,7 @@ function Panel_Inspector() : PanelContent() constructor {
                     if(mouse_press(mb_left, pFOCUS))
                         jun[@ 1] = !coll;
                     if(mouse_press(mb_right, pFOCUS))
-                        menuCall("inspector_group_menu", group_menu, 0, 0, fa_left, _inspecting);
+                        menuCall("inspector_group_menu", group_menu, 0, 0, fa_left);
                 } else
                     draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, lbx, yy, lbw, lbh, COLORS.panel_inspector_group_bg, 1);
             

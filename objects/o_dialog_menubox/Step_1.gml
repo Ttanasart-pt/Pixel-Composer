@@ -7,8 +7,14 @@ if(item_sel_submenu) {
 	exit;
 }
 
+if(init_press_l) {
+	if(MOUSE_POOL.lrelease) 
+		init_press_l = false;
+	exit;
+}
+
 var hov = point_in(mouse_raw_x, mouse_raw_y);
 if(submenu) hov |= submenu.point_in(mouse_raw_x, mouse_raw_y);
-	
+
 _hovering_ch = hov;
-if(!hov && mouse_press(mb_left)) instance_destroy();
+if(!hov && MOUSE_POOL.lpress) instance_destroy();

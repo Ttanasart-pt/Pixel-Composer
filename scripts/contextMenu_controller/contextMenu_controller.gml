@@ -5,7 +5,7 @@
 	FOCUS_BEFORE = noone;
 #endregion
 
-function menuCall(menu_id = "", menu = [], _x = 0, _y = 0, align = fa_left, context = noone) {
+function menuCall(menu_id = "", menu = [], _x = 0, _y = 0, align = fa_left) {
 	if(array_empty(menu)) return noone;
 		
 	FOCUS_BEFORE = FOCUS;
@@ -22,13 +22,13 @@ function menuCall(menu_id = "", menu = [], _x = 0, _y = 0, align = fa_left, cont
 			array_append(menu, callbacks[i].populate());
 	}
 	
+	dia.context  = self;
 	dia.menu_id  = menu_id;
-	dia.context  = context;
 	dia.setMenu(menu, align);
 	return dia;
 }
 
-function pieMenuCall(menu_id = "", _x = mouse_mx, _y = mouse_my, menu = [], context = noone) {
+function pieMenuCall(menu_id = "", _x = mouse_mx, _y = mouse_my, menu = []) {
 	var dia = instance_create(_x, _y, o_pie_menu);
 	if(menu_id != "" && ds_map_exists(CONTEXT_MENU_CALLBACK, menu_id)) {
 		var callbacks = CONTEXT_MENU_CALLBACK[? menu_id];
@@ -37,8 +37,8 @@ function pieMenuCall(menu_id = "", _x = mouse_mx, _y = mouse_my, menu = [], cont
 			array_append(menu, callbacks[i].populate());
 	}
 	
+	dia.context = self;
 	dia.menu_id = menu_id;
-	dia.context = context;
 	dia.setMenu(menu);
 	return dia;
 }
@@ -46,11 +46,12 @@ function pieMenuCall(menu_id = "", _x = mouse_mx, _y = mouse_my, menu = [], cont
 function submenuCall(_data = undefined, menu = []) {
 	if(is_undefined(_data)) return menuCall("", menu);
 	
-	var dia = instance_create_depth(_data.x - ui(4), _data.y, _data.depth - 1, o_dialog_menubox);
-	dia.context	   = _data.context;
+	var _xx = _data.x - 1;
+	var dia = instance_create_depth(_xx, _data.y, _data.depth - 1, o_dialog_menubox);
+	dia.context = _data.context;
 	dia.setMenu(menu);
 	
-	if(_data.x - ui(4) + dia.dialog_w > WIN_W - ui(2))
+	if(_xx + dia.dialog_w > WIN_W - ui(2))
 		dia.dialog_x = _data._x - dia.dialog_w + ui(4);
 	
 	return dia;

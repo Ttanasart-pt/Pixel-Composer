@@ -15,6 +15,7 @@
     {"name":"addons","order":142,"path":"folders/addons.yy",},
     {"name":"animation_curve","order":143,"path":"folders/animation_curve.yy",},
     {"name":"dialog","order":144,"path":"folders/dialog.yy",},
+    {"name":"Extensions","order":157,"path":"folders/Extensions.yy",},
     {"name":"font","order":145,"path":"folders/font.yy",},
     {"name":"functions","order":146,"path":"folders/functions.yy",},
     {"name":"camera","order":7,"path":"folders/functions/3d/camera.yy",},

@@ -170,7 +170,8 @@ function Panel_Preview_Window() : PanelContent() constructor {
 				array_push(_menu, menuItem(o.name, function(_dat) { changeChannel(_dat.index); }, noone, noone, noone, { index: _chan }));
 				_chan++;
 			}
-			menuCall("preview_window_menu", _menu, 0, 0, fa_left, node_target);
+			
+			menuCall("preview_window_menu", _menu, 0, 0, fa_left);
 		}
 	}
 }

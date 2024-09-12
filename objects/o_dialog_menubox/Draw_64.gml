@@ -73,23 +73,27 @@ winwin_draw_clear(COLORS.panel_bg_clear, 1);
 					};
 					
 					if(_menuItem.isShelf) {
+						FOCUS_CONTENT = context;
+						
 						var _res = _menuItem.func(_dat);
 						if(submenu) instance_destroy(submenu);
 						submenu  = _res;
 						
 					} else if(remove_parents) {
+						DIALOG_POSTDRAW
+						FOCUS_CONTENT = context;
+						
 						if(_par == noone) _menuItem.func();
 						else              _menuItem.func(_par);
-						
-						DIALOG_POSTDRAW
 						instance_destroy(o_dialog_menubox); // close all
 						exit;
 						
 					} else {
+						DIALOG_POSTDRAW
+						FOCUS_CONTENT = context;
+						
 						if(_par == noone) _menuItem.func();
 						else              _menuItem.func(_par);
-						
-						DIALOG_POSTDRAW
 						instance_destroy();
 						exit;
 					}
@@ -155,7 +159,7 @@ winwin_draw_clear(COLORS.panel_bg_clear, 1);
 				
 				if(is_string(_sprs)) {
 					_str = _sprs;
-					draw_set_text(f_p2, fa_center, fa_center, COLORS._main_text);
+					draw_set_text(font, fa_center, fa_center, COLORS._main_text);
 					
 					_sw = string_width(_str) + ui(12);
 					_sh = string_height(_str) + ui(8);
@@ -177,9 +181,9 @@ winwin_draw_clear(COLORS.panel_bg_clear, 1);
 					draw_sprite_stretched_ext(THEME.textbox, 1, _bx - _sw / 2, _by - _sh / 2, _sw, _sh, COLORS.dialog_menubox_highlight, 1);
 					
 					if(mouse_press(mb_left, sFOCUS)) {
-						_submenu[1](_dat);
-						
 						DIALOG_POSTDRAW
+						
+						_submenu[1](_dat);
 						instance_destroy(o_dialog_menubox);
 						exit;
 					}
@@ -232,11 +236,10 @@ winwin_draw_clear(COLORS.panel_bg_clear, 1);
 			
 			if(hk_editing == _menuItem) {
 				draw_set_color(COLORS._main_accent);
-				// draw_sprite_stretched_ext(THEME.ui_panel, 1, _bx, _by, _bw, _bh, COLORS._main_text_accent, .5);
+				if(_ktxt == "") _ktxt = "-";
 				
 			} else if(_ktxt != "") {
 				draw_set_color(COLORS._main_text_sub);
-				// draw_sprite_stretched_ext(THEME.ui_panel, 1, _bx, _by, _bw, _bh, CDEF.main_dkgrey, .5);
 			}
 			
 			draw_text(_hx, _hy - ui(2), _ktxt);

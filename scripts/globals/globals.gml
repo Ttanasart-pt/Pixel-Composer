@@ -97,6 +97,7 @@
 	
 	#macro UI_SCALE PREFERENCES.display_scaling
 	
+	#macro mouse_ui [mouse_mx, mouse_my]
 	#macro mouse_mx (PEN_USE? PEN_X : winwin_mouse_get_x_safe(WINDOW_ACTIVE))
 	#macro mouse_my (PEN_USE? PEN_Y : winwin_mouse_get_y_safe(WINDOW_ACTIVE))
 	
@@ -105,7 +106,6 @@
 	
 	#macro mouse_raw_x display_mouse_get_x()
 	#macro mouse_raw_y display_mouse_get_y()
-	#macro mouse_ui [device_mouse_x_to_gui(0), device_mouse_y_to_gui(0)]
 	
 	#macro sFOCUS (FOCUS == self.id)
 	#macro sHOVER (!CURSOR_IS_LOCK && (HOVER == self.id || (WINDOW_ACTIVE != noone && winwin_mouse_is_over_safe(WINDOW_ACTIVE))))

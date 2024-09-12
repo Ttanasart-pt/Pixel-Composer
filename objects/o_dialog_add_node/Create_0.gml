@@ -4,6 +4,7 @@ event_inherited();
 #region data
 	draggable = false;
 	
+	title = "Add node";
 	node_target_x	  = 0;
 	node_target_y	  = 0;
 	node_target_x_raw = 0;
@@ -60,6 +61,8 @@ event_inherited();
 		category_width = maxLen + ui(56);
 	#endregion
 	
+	function isTop() { return true; }
+	
 	function trigger_favourite() {
 		if(node_menu_selecting == noone) return;
 		
@@ -81,7 +84,7 @@ event_inherited();
 			menuItem(fav? __txtx("add_node_remove_favourite", "Remove from favourite") : __txtx("add_node_add_favourite", "Add to favourite"), trigger_favourite, THEME.star)
 		];
 		
-		menuCall("add_node_window_manu", menu, 0, 0, fa_left, node_menu_selecting);
+		menuCall("add_node_window_menu", menu, 0, 0, fa_left);
 	}
 	
 	function filtered(node) {

@@ -1,26 +1,52 @@
 global.__winwin_map = ds_map_create();
+global.winwin_all   = [];
 
 function winwin(_ptr) constructor {
     __ptr__ = _ptr;
 }
 
+function winwin_config_ext(caption = "", kind = winwin_kind_normal, topmost = false, resize = false, owner = winwin_main) {
+	var cnf = new winwin_config();
+	
+	cnf.caption = caption;
+	cnf.kind    = kind;
+	cnf.topmost = topmost;
+	cnf.resize  = resize;
+	cnf.owner   = owner;
+	cnf.per_pixel_alpha = true;
+	
+	return cnf;
+}
+
 function winwin_config() constructor {
-    static caption = "Window";
-    static kind = winwin_kind_normal;
-    static resize = false;
-    static show = true;
-    static topmost = false;
-    static taskbar_button = true; // can only disable for borderless!
-    static clickthrough = false;
-    static noactivate = false;
+    static caption         = "Window";
+    static kind            = winwin_kind_normal;
+    static resize          = false;
+    static show            = true;
+    static topmost         = false;
+    static taskbar_button  = true; // can only disable for borderless!
+    static clickthrough    = false;
+    static noactivate      = false;
     static per_pixel_alpha = false;
-    static thread = false;
-    static vsync = 0;
-    static close_button = 1;
-    static owner = undefined;
+    static thread          = false;
+    static vsync           = 0;
+    static close_button    = 1;
+    static owner           = undefined;
 }
 
 #macro __ww_valid (ww != noone && winwin_exists(ww))
+
+function winwin_create_ext(_x, _y, _w, _h, _conf) {
+    var window = winwin_create(_x, _y, _w, _h, _conf);
+	array_push(global.winwin_all, window);
+	
+	return window;
+}
+
+function winwin_destroy_ext(ww) {
+    if(__ww_valid) winwin_destroy(_ww);
+	array_remove(global.winwin_all, window);
+}
 
 function winwin_get_x_safe(ww) { return __ww_valid? winwin_get_x(ww) : window_get_x(); }
 function winwin_get_y_safe(ww) { return __ww_valid? winwin_get_y(ww) : window_get_y(); }

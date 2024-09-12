@@ -16,10 +16,12 @@ if !ready exit;
 	}
 #endregion
 
-#region base UI
-	DIALOG_DRAW_BG
-	if(sFOCUS) DIALOG_DRAW_FOCUS
-#endregion
+DIALOG_PREDRAW
+DIALOG_WINCLEAR
+
+var _des = false;
+DIALOG_DRAW_BG
+if(sFOCUS) DIALOG_DRAW_FOCUS
 
 #region text
 	var py  = dialog_y + ui(16);
@@ -33,7 +35,7 @@ if !ready exit;
 	draw_text_ext(dialog_x + ui(24), py, txt, -1, dialog_w - ui(48));
 	_dialog_h = ui(118) + string_height_ext(txt, -1, dialog_w - ui(48));
 	
-	var bw = ui(96), bh = BUTTON_HEIGHT;
+	var bw  = ui(96), bh = BUTTON_HEIGHT;
 	var bx1 = dialog_x + dialog_w - ui(16);
 	var by1 = dialog_y + dialog_h - ui(16);
 	var bx0 = bx1 - bw;
@@ -43,7 +45,7 @@ if !ready exit;
 	var b = buttonInstant(THEME.button_def, bx0, by0, bw, bh, mouse_ui, sFOCUS, sHOVER);
 	draw_text(bx0 + bw / 2, by0 + bh / 2, __txt("Cancel"));
 	if(b == 2) 
-		instance_destroy();
+		_des = true;
 	
 	bx0 -= bw + ui(12);
 	var b = buttonInstant(THEME.button_def, bx0, by0, bw, bh, mouse_ui, sFOCUS, sHOVER);
@@ -51,7 +53,7 @@ if !ready exit;
 	if(b == 2) {
 		if(instance_number(o_dialog_exit) == 1) 
 			close_program();
-		instance_destroy();
+		_des = true;
 	}
 	
 	bx0 -= bw + ui(12);
@@ -60,8 +62,12 @@ if !ready exit;
 	if(b == 2 && SAVE(project)) {
 		if(instance_number(o_dialog_exit) == 1) 
 			close_program();
-		instance_destroy();
+		_des = true;
 	}
 	
 	dialog_h = _dialog_h;
 #endregion
+
+DIALOG_POSTDRAW
+
+if(_des) instance_destroy();
