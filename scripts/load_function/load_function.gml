@@ -13,6 +13,7 @@ function LOAD(safe = false) {
 	var path = get_open_filename_pxc("Pixel Composer project (.pxc)|*.pxc;*.cpxc", "");
 	key_release();
 	if(path == "") return;
+	
 	if(!path_is_project(path)) return;
 				
 	gc_collect();
@@ -279,16 +280,17 @@ function LOAD_AT(path, params = new __loadParams()) {
 
 function __EXPORT_ZIP()	{ exportPortable(PROJECT); }
 function __IMPORT_ZIP() {
-	var path = get_open_filename_pxc("Pixel Composer portable project (.zip)|*.zip", "");
+	var _path = get_open_filename_pxc("Pixel Composer portable project (.zip)|*.zip", "");
+	if(!file_exists_empty(_path)) return;
 	
-	var _fname = filename_name_only(path);
-	var _fext  = filename_ext(path);
+	var _fname = filename_name_only(_path);
+	var _fext  = filename_ext(_path);
 	if(_fext != ".zip") return false;
 	
 	directory_verify(TEMPDIR + "proj/");
 	var _dir = TEMPDIR + "proj/" + _fname;
 	directory_create(_dir);
-	zip_unzip(path, _dir);
+	zip_unzip(_path, _dir);
 	
 	var _f    = file_find_first(_dir + "/*.pxc", fa_none);
 	var _proj = $"{_dir}/{_f}";

@@ -11,6 +11,9 @@ if(init_press_l) {
 	exit;
 }
 
+if(submenu != noone && !instance_exists(submenu)) 
+	submenu = noone;
+
 var hov = point_in(mouse_raw_x, mouse_raw_y);
 if(instance_exists(submenu)) 
 	hov |= submenu.point_in(mouse_raw_x, mouse_raw_y);

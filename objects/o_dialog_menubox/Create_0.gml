@@ -17,6 +17,7 @@ event_inherited();
 	show_icon  = false;
 	context    = noone;
 	submenu    = noone;
+	submenuIt  = noone;
 	
 	_hovering_ch    = true;
 	init_press_l = MOUSE_POOL.lpress;

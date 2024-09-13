@@ -1,4 +1,4 @@
-function file_exists_empty(path) { INLINE return path != "" && file_exists(path); }
+function file_exists_empty(path) { INLINE path = string(path); return path != "" && file_exists(path); }
 
 function file_copy_override(src, dest) {
 	if(file_exists_empty(dest)) file_delete(dest);
@@ -43,6 +43,8 @@ function get_save_filename_pxc(filter, name, caption = "Save as") {
 	INLINE
 	
 	var path = get_save_filename_ext(filter, name, PREFERENCES.dialog_path, caption);
+	    path = string(path);
+	    
 	if(path != "") PREFERENCES.dialog_path = filename_dir(path);
 	return path;
 }
@@ -51,6 +53,8 @@ function get_open_filename_pxc(filter, name, caption = "Open") {
 	INLINE
 	
 	var path = get_open_filename_ext(filter, name, PREFERENCES.dialog_path, caption);
+	    path = string(path);
 	if(path != "") PREFERENCES.dialog_path = filename_dir(path);
+	
 	return path;
 }

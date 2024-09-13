@@ -619,27 +619,29 @@ function Panel_Menu() : PanelContent() constructor {
             var sc = merge_color(c_white, COLORS._main_value_positive, min(1, version_name_copy));
             
             if(hori) {
-                draw_set_text(f_p0, fa_center, fa_center, tc);
-                var  ww = string_width(txt) + ui(12);
-                var _x0 = _xx1 - ww;
-                var _y0 = ui(6);
-                var _x1 = _xx1;
-                var _y1 = h - ui(6);
-                
-                if(pHOVER && point_in_rectangle(mx, my, _x0, _y0, _x1, _y1)) {
-                    _draggable = false;
-                    draw_sprite_stretched_ext(THEME.button_hide_fill, 1, _x0, _y0, _x1 - _x0, _y1 - _y0, sc, 1);
+                if(w > 1500) {
+                    draw_set_text(f_p0, fa_center, fa_center, tc);
+                    var  ww = string_width(txt) + ui(12);
+                    var _x0 = _xx1 - ww;
+                    var _y0 = ui(6);
+                    var _x1 = _xx1;
+                    var _y1 = h - ui(6);
                     
-                    if(mouse_press(mb_left, pFOCUS))
-                        dialogCall(o_dialog_release_note); 
-                    if(mouse_press(mb_right, pFOCUS)) {
-                        clipboard_set_text(VERSION_STRING);
-                        version_name_copy = 3;
+                    if(pHOVER && point_in_rectangle(mx, my, _x0, _y0, _x1, _y1)) {
+                        _draggable = false;
+                        draw_sprite_stretched_ext(THEME.button_hide_fill, 1, _x0, _y0, _x1 - _x0, _y1 - _y0, sc, 1);
+                        
+                        if(mouse_press(mb_left, pFOCUS))
+                            dialogCall(o_dialog_release_note); 
+                        if(mouse_press(mb_right, pFOCUS)) {
+                            clipboard_set_text(VERSION_STRING);
+                            version_name_copy = 3;
+                        }
                     }
+                    
+                    draw_text(round((_x0 + _x1) / 2), round((_y0 + _y1) / 2), txt);
+                    _xx1 = _x0 - ui(8);
                 }
-                
-                draw_text(round((_x0 + _x1) / 2), round((_y0 + _y1) / 2), txt);
-                _xx1 = _x0 - ui(8);
             } else {
                 var _xx1 = ui(40);
                 var y1 = h - ui(20);
@@ -667,7 +669,7 @@ function Panel_Menu() : PanelContent() constructor {
             if(PROJECT.safeMode) txt += $"[{__txt("SAFE MODE")}] ";
             if(PROJECT.readonly) txt += $"[{__txt("READ ONLY")}] ";
             
-            txt += PROJECT.path == ""? __txt("Untitled.pxc") : filename_name(PROJECT.path);
+            txt += PROJECT.path == ""? __txt("Untitled") : filename_name_only(PROJECT.path);
             if(PROJECT.modified) txt += "*";
             
             var tx0, tx1, tcx;
@@ -696,6 +698,7 @@ function Panel_Menu() : PanelContent() constructor {
             maxW = abs(tx0 - tx1);
             
             draw_set_font(f_p0b);
+            var full_name = string_width(txt + ".pxc") < maxW;
             var tc = string_cut(txt, maxW);
             var tw = string_width(tc) + ui(16);
             var th = ui(28);
@@ -730,26 +733,45 @@ function Panel_Menu() : PanelContent() constructor {
                 dia.tooltips   = tip;
             }
             
+            
+            draw_set_font(f_p0b);
+            var _tcw = string_width(tc);
+            
             if(hori) {
-                draw_set_text(f_p0b, fa_center, fa_center, COLORS._main_text);
-                draw_text_int(tcx, (ty0 + ty1) / 2, tc);
+                draw_set_text(f_p0b, fa_left, fa_center, COLORS._main_text);
+                draw_text_int(tcx - _tcw / 2, (ty0 + ty1) / 2, tc);
+                
+                if(full_name) {
+                    draw_set_color(COLORS._main_text_sub);
+                    draw_text_int(tcx + _tcw / 2, (ty0 + ty1) / 2, ".pxc");
+                }
+                
             } else {
                 draw_set_text(f_p0b, fa_left, fa_center, COLORS._main_text);
                 draw_text_int(tx0 + ui(8), tby0 + th / 2, tc);
+                
+                if(full_name) {
+                    draw_set_color(COLORS._main_text_sub);
+                    draw_text_int(tx0 + ui(8) + _tcw, tby0 + th / 2, ".pxc");
+                }
+                
             }
             
             if(IS_PATREON && PREFERENCES.show_supporter_icon) {
-                var _tw = string_width(tc);
-                var _th = string_height(tc);
+                var _tw  = string_width(tc);
+                var _th  = string_height(tc);
                 var _cx, _cy;
                 
                 if(hori) {
                     _cx = tcx + _tw / 2;
                     _cy = (ty0 + ty1) / 2 - _th / 2;
+                    
                 } else {
                     _cx = tx0 + ui(8) + _tw;
                     _cy = tby0 + th / 2 - _th / 2;
                 }
+                
+                if(full_name) _cx += string_width(".pxc");
                 
                 _cx += ui(2);
                 _cy += ui(6);

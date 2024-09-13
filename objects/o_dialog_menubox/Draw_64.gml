@@ -14,6 +14,8 @@ DIALOG_WINCLEAR1
 		item_sel_submenu = noone;
 	}
 	
+	var to_del = noone;
+	
 	draw_sprite_stretched(THEME.s_box_r2_clr, 0, dialog_x, dialog_y, dialog_w, dialog_h);
 	
 	for(var i = 0; i < array_length(menu); i++) {
@@ -60,53 +62,50 @@ DIALOG_WINCLEAR1
 			
 			if(_hovering_ch && is_instanceof(_menuItem, MenuItem)) {
 				if(_menuItem.active && _lclick) {
-					
 					var _par = _menuItem.params;
-					var _dat = {
-						_x:      dialog_x,
-						x:       dialog_x + dialog_w,
-						y:       yy,
-						name:    _menuItem.name,
-						index:   i,
-						depth:   depth,
-						context: context,
-						params:  _menuItem.params,
-					};
 					
 					if(_menuItem.isShelf) {
 						FOCUS_CONTENT = context;
 						
 						if(instance_exists(submenu)) {
-							var _sfr = submenu.itemFrom;
 							instance_destroy(submenu);
-							
-							if(_sfr == _menuItem) {
-								submenu = noone;
-								continue;
-							}
+							submenu   = noone;
 						}
+						
+						if(submenuIt == _menuItem) {
+							submenuIt = noone;
+						} else {
+							var _dat = {
+								_x:      dialog_x,
+								x:       dialog_x + dialog_w,
+								y:       yy,
+								name:    _menuItem.name,
+								index:   i,
+								depth:   depth,
+								context: context,
+								params:  _par,
+							};
 							
-						var _res = _menuItem.func(_dat);
-						submenu  = _res;
-						submenu.itemFrom = _menuItem;
+							var _res  = _menuItem.func(_dat);
+							submenu   = _res;
+							submenuIt = _menuItem;
+						}
 						
 					} else if(remove_parents) {
-						DIALOG_POSTDRAW
 						FOCUS_CONTENT = context;
 						
 						if(_par == noone) _menuItem.func();
 						else              _menuItem.func(_par);
-						instance_destroy(o_dialog_menubox); // close all
-						exit;
+						
+						to_del = o_dialog_menubox;
 						
 					} else {
-						DIALOG_POSTDRAW
 						FOCUS_CONTENT = context;
 						
 						if(_par == noone) _menuItem.func();
 						else              _menuItem.func(_par);
-						instance_destroy();
-						exit;
+						
+						to_del = self;
 					}
 				}
 			}
@@ -301,3 +300,5 @@ DIALOG_WINCLEAR1
 #endregion
 
 DIALOG_POSTDRAW
+
+if(to_del != noone) instance_destroy(to_del);
