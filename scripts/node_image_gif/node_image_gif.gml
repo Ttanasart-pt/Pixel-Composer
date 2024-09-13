@@ -56,9 +56,11 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
 	newOutput(1, nodeValue_Output("Path", self, VALUE_TYPE.path, ""))
 		.setVisible(true, true);
-		
+	
+	detail = new Inspector_Label("Gif file");
+	
 	input_display_list = [ 
-		["Image",	  false], 0, 
+		["Image",	  false], 0, detail, 
 		["Output",	  false], 2, 
 		["Animation", false], 1, 3, 4, 7, 
 		["Custom Frame Order", false, 5], 6,
@@ -77,7 +79,7 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	array_push(attributeEditors, [ "File Watcher", function() { return attributes.file_checker; }, 
 		new checkBox(function() { attributes.file_checker = !attributes.file_checker; }) ]);
 	
-	on_drop_file = function(path) { #region
+	on_drop_file = function(path) {
 		inputs[0].setValue(path);
 		
 		if(updatePaths(path)) {
@@ -86,16 +88,16 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		}
 		
 		return false;
-	} #endregion
+	}
 	
 	insp1UpdateTooltip  = __txt("Refresh");
 	insp1UpdateIcon     = [ THEME.refresh_icon, 1, COLORS._main_value_positive ];
 	
-	static onInspector1Update = function() { #region
+	static onInspector1Update = function() {
 		updatePaths(path_get(getInputData(0)));
-	} #endregion
+	}
 	
-	function updatePaths(path = path_current) { #region
+	function updatePaths(path = path_current) {
 		if(path == -1) return false;
 		
 		var ext   = string_lower(filename_ext(path));
@@ -120,9 +122,9 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		edit_time    = max(edit_time, file_get_modify_s(path_current));	
 		
 		return true;
-	} #endregion
+	}
 	
-	static step = function() { #region
+	static step = function() {
 		var _arr = getInputData(2);
 		var _lop = getInputData(3);
 		var _cus = getInputData(5);
@@ -136,6 +138,7 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			surfaces = [];
 			spr = spr_builder._spr;
 			//print($"{spr}: {sprite_get_width(spr)}, {sprite_get_height(spr)}");
+			detail.text = $"{filename_name(path_current)}\n{sprite_get_number(spr)} frames";
 			
 			triggerRender();
 			loading = 0;
@@ -153,9 +156,9 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			}
 			
 		}
-	} #endregion
+	}
 	
-	static update = function(frame = CURRENT_FRAME) { #region
+	static update = function(frame = CURRENT_FRAME) {
 		var path = path_get(getInputData(0));
 		if(path_current != path) updatePaths(path);
 		
@@ -222,15 +225,15 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		surface_set_shader(_outsurf);
 			if(_drw) draw_sprite(spr, _frm, 0, 0);
 		surface_reset_shader();
-	} #endregion
+	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		if(loading) draw_sprite_ui(THEME.loading, 0, xx + w * _s / 2, yy + h * _s / 2, _s, _s, current_time / 2, COLORS._main_icon, 1);
-	} #endregion
+	}
 	
-	static onDestroy = function() { #region
+	static onDestroy = function() {
 		if(sprite_exists(spr)) sprite_flush(spr);
-	} #endregion
+	}
 	
 	static dropPath = function(path) {
 		if(is_array(path)) path = array_safe_get(path, 0);

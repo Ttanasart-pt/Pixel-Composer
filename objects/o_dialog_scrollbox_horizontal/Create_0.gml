@@ -231,4 +231,6 @@ event_inherited();
 		
 		return _h;
 	});
+	
+	sc_content.scroll_resize = false;
 #endregion

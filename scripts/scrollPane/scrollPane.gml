@@ -17,6 +17,7 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 	is_scroll	  = true;
 	always_scroll = true;
 	show_scroll   = true;
+	scroll_resize = true;
 	
 	scroll_step = 64;
 	scroll_lock = false;
@@ -36,7 +37,7 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 	static resize = function(_w, _h) {
 		w = _w;
 		h = _h;
-		surface_w = _w - ui(12);
+		surface_w = _w - ui(12) * (is_scroll || scroll_resize);
 		surface_h = _h;
 	}
 	
@@ -106,7 +107,7 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 			scroll_y_to += pen_scroll_py;
 		}
 		
-		if(show_scroll && (abs(content_h) > 0 || always_scroll)) {
+		if(show_scroll && (abs(content_h) > 0 || (always_scroll && scroll_resize))) {
 			var _p   = PEN_USE && (is_scrolling || point_in_rectangle(x + mx, y + my, x + w - scroll_w - 2, y, x + w, y + surface_h));
 			scroll_w = lerp_float(scroll_w, _p? 12 : scroll_s, 5);
 			

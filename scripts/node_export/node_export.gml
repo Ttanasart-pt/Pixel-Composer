@@ -117,6 +117,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	];
 	
 	export_template = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
+		
 		var _tx = _x + ui(10);
 		var _ty = _y;
 		var _tw = _w - ui(8);
@@ -147,7 +148,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					case "n" :   draw_set_color(COLORS.widget_text_dec_n); break;	
 					case "f" :   draw_set_color(COLORS.widget_text_dec_f); break;	
 					case "i" :   draw_set_color(COLORS.widget_text_dec_i); break;
-					case "ext" : draw_set_color(COLORS._main_text_sub); break;
+					case "ext" : draw_set_color(COLORS._main_text_sub);    break;
 				}
 				
 				_txt = _txt[1];
@@ -172,8 +173,9 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		}
 		draw_set_alpha(1);
 		
-		var hh  = _th + ui(116);
+		var hh  = _th + ui(16 + 20 * array_length(template_guide));
 		var _cy = _y + _th + ui(8);
+		
 		for( var i = 0, n = array_length(template_guide); i < n; i++ ) {
 			var _yy = _cy + ui(20) * i;
 			

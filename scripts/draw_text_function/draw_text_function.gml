@@ -152,9 +152,10 @@ function draw_text_bbox_cut(bbox, text, scale = 1) {
 	draw_text_cut(bbox.xc, bbox.yc, text, bbox.w, ss * scale);
 }
 
-function draw_text_cut(x, y, str, w, scale = 1) {
+function draw_text_cut(x, y, str, w, scale = 1, _add = false) {
 	INLINE
-	BLEND_ALPHA_MULP;
+	if(_add) { BLEND_ADD }
+	else     { BLEND_ALPHA_MULP }
 	draw_text_transformed(round(x), round(y), string_cut(str, w,, scale), scale, scale, 0);
 	BLEND_NORMAL;
 }

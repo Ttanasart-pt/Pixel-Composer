@@ -631,7 +631,7 @@ function Panel_Inspector() : PanelContent() constructor {
                     var lby = yy + ui(12);
                     draw_set_alpha(0.5);
                     draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text_sub);
-                    draw_text_add(xc, lby, edt);
+                    draw_text(xc, lby, edt);
                     
                     var lbw = string_width(edt) / 2;
                     draw_set_color(COLORS._main_text_sub);
@@ -658,7 +658,7 @@ function Panel_Inspector() : PanelContent() constructor {
                 } 
                 
                 draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
-                draw_text_alpha(ui(8), yy + hg / 2, edt[0]);
+                draw_text(ui(8), yy + hg / 2, edt[0]);
                 
                 var _param = new widgetParam(wx0, yy, ww, hg, val, {}, _m, x + contentPane.x, y + contentPane.y);
                     _param.s = hg;
@@ -1015,7 +1015,7 @@ function Panel_Inspector() : PanelContent() constructor {
     contentPane = new scrollPane(content_w, content_h, function(_y, _m) { 
         var con_w  = contentPane.surface_w - ui(4);
         
-        draw_clear_alpha(COLORS.panel_bg_clear, 0);
+        draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
         
         if(point_in_rectangle(_m[0], _m[1], 0, 0, con_w, content_h) && mouse_press(mb_left, pFOCUS))
             prop_selecting = noone;

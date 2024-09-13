@@ -667,10 +667,8 @@ function Panel_Menu() : PanelContent() constructor {
             if(PROJECT.safeMode) txt += $"[{__txt("SAFE MODE")}] ";
             if(PROJECT.readonly) txt += $"[{__txt("READ ONLY")}] ";
             
-            txt += PROJECT.path == ""? __txt("Untitled") : filename_name(PROJECT.path);
+            txt += PROJECT.path == ""? __txt("Untitled.pxc") : filename_name(PROJECT.path);
             if(PROJECT.modified) txt += "*";
-            txt += " - Pixel Composer";
-            if(DEMO)    txt += " DEMO";
             
             var tx0, tx1, tcx;
             var ty0, ty1;
@@ -705,6 +703,7 @@ function Panel_Menu() : PanelContent() constructor {
             if(hori) {
                 tbx0 = tcx - tw / 2;
                 tby0 = ty1 / 2 - ui(14);
+                
             } else {
                 tbx0 = tx0;
                 tby0 = ty0;
@@ -732,10 +731,10 @@ function Panel_Menu() : PanelContent() constructor {
             }
             
             if(hori) {
-                draw_set_text(f_p0b, fa_center, fa_center, COLORS._main_text_sub);
+                draw_set_text(f_p0b, fa_center, fa_center, COLORS._main_text);
                 draw_text_int(tcx, (ty0 + ty1) / 2, tc);
             } else {
-                draw_set_text(f_p0b, fa_left, fa_center, COLORS._main_text_sub);
+                draw_set_text(f_p0b, fa_left, fa_center, COLORS._main_text);
                 draw_text_int(tx0 + ui(8), tby0 + th / 2, tc);
             }
             

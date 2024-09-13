@@ -20,7 +20,7 @@
 #endregion
 
 #region ======================================================================= MAIN =======================================================================
-	globalvar OS, DEBUG, THEME, COLOR_KEYS;
+	globalvar OS, DEBUG, THEME, COLOR_KEYS, RUN_IDE;
 	globalvar CMD, CMDIN;
 	globalvar FPS_REAL;
 	
@@ -30,6 +30,7 @@
 	CMD      = [];
 	CMDIN    = [];
 	FPS_REAL = 0;
+	RUN_IDE  = GM_build_type == "run";
 	
 	DEBUG = false;
 	THEME = new Theme();
