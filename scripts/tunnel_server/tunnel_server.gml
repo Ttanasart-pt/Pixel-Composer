@@ -6,7 +6,7 @@ function tunnel_autocomplete_server(prompt, params = []) {
 	//////////////////////////////////
 	ds_priority_clear(pr_list);
 	
-	var _tkeys = ds_map_keys_to_array(TUNNELS_IN);
+	var _tkeys = ds_map_keys_to_array(PROJECT.tunnels_in);
 	for( var i = 0, n = array_length(_tkeys); i < n; i++ ) {
 		var gl = _tkeys[i];
 		

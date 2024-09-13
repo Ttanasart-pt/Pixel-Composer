@@ -15,7 +15,7 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 	
 	content_h     = 0;
 	is_scroll	  = true;
-	always_scroll = false;
+	always_scroll = true;
 	show_scroll   = true;
 	
 	scroll_step = 64;

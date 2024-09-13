@@ -72,13 +72,6 @@
 	gif_complete_st = ds_stack_create();
 #endregion
 
-#region tunnel
-	globalvar TUNNELS_IN, TUNNELS_IN_MAP, TUNNELS_OUT;
-	TUNNELS_IN     = ds_map_create();
-	TUNNELS_IN_MAP = ds_map_create();
-	TUNNELS_OUT    = ds_map_create();
-#endregion
-
 #region add on callback
 	globalvar ANIMATION_PRE, ANIMATION_POST;
 	

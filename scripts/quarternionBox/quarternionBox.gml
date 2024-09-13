@@ -90,12 +90,10 @@ function quarternionBox(_onModify) : widget() constructor {
 		var _disp = struct_try_get(_display_data, "angle_display");
 		
 		if(_display_data.angle_display == QUARTERNION_DISPLAY.quarterion || (!tb[0].sliding && !tb[1].sliding && !tb[2].sliding)) {
-			current_value[0] = _data[0];
-			current_value[1] = _data[1];
-			current_value[2] = _data[2];
-			
-			if(_display_data.angle_display == QUARTERNION_DISPLAY.quarterion)
-				current_value[3] = _data[3];
+			current_value[0] = array_safe_get(_data, 0);
+			current_value[1] = array_safe_get(_data, 1);
+			current_value[2] = array_safe_get(_data, 2);
+			current_value[3] = array_safe_get(_data, 3);
 		}
 		
 		if((_w - _bs) / 2 > ui(64)) {
@@ -123,7 +121,7 @@ function quarternionBox(_onModify) : widget() constructor {
 		draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, boxColor, 0.5 + 0.5 * interactable);	
 		
 		for(var i = 0; i < size; i++) {
-			var _a = _dispDat[i];
+			var _a = array_safe_get(_dispDat, i, 0);
 			
 			tb[i].hide = true;
 			tb[i].setFocusHover(clickable && active, hover);

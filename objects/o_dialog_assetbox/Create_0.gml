@@ -74,7 +74,7 @@ event_inherited();
 		
 		return hh + 8;
 	});
-	folderPane.always_scroll = true;
+	
 	
 	contentPane = new scrollPane(content_w, content_h, function(_y, _m) {
 		draw_clear_alpha(c_white, 0);

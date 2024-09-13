@@ -84,6 +84,10 @@
 			on_top: true,
 		};
 		
+		tunnels_in     = ds_map_create();
+		tunnels_in_map = ds_map_create();
+		tunnels_out    = ds_map_create();
+		
 		#region =================== ATTRIBUTES ===================
 			attributes = variable_clone(PROJECT_ATTRIBUTES);
 			

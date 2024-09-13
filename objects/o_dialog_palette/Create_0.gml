@@ -135,7 +135,7 @@ event_inherited();
 		return hh;
 	});
 	
-	sp_presets.always_scroll = true;
+	
 #endregion
 
 #region tools

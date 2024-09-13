@@ -41,7 +41,7 @@ event_inherited();
 	var y0 = dialog_y + ui(128);
 	var y1 = dialog_y + dialog_h - ui(16);
 	
-	sp_recent = new scrollPane(x1 - x0 - ui(12), y1 - y0, function(_y, _m) { #region
+	sp_recent = new scrollPane(x1 - x0 - ui(12), y1 - y0, function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 1);
 		var expand = PREFERENCES.splash_expand_recent;
 		var ww  = ui(264);
@@ -106,7 +106,8 @@ event_inherited();
 		}
 		
 		return hh;
-	}); #endregion
+	});
+	sp_recent.always_scroll = false;
 	
 	x0 = x1 + ui(16);
 	x1 = dialog_x + dialog_w - ui(16);
@@ -364,7 +365,7 @@ event_inherited();
 			
 		return hh + ui(20);
 	});
-	
+	sp_sample.always_scroll = false;
 #endregion
 
 #region contest
@@ -664,4 +665,5 @@ event_inherited();
 		
 		return hh;
 	});
+	sp_contest.always_scroll = false;
 #endregion

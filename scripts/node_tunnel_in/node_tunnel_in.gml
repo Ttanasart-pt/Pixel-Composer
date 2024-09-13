@@ -15,7 +15,7 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	preview_scale = 1;
 	
 	var tname = "";
-	if(!LOADING && !APPENDING) tname = $"tunnel{ds_map_size(TUNNELS_IN_MAP)}";
+	if(!LOADING && !APPENDING) tname = $"tunnel{ds_map_size(project.tunnels_in_map)}";
 	
 	newInput(0, nodeValue_Text("Name", self, tname ))
 		.rejectArray();
@@ -37,21 +37,23 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	static resetMap = function() {
 		var _key = inputs[0].getValue();
-		TUNNELS_IN_MAP[? node_id] = _key;
-		TUNNELS_IN[? _key] = inputs[1];
-	} resetMap();
+		project.tunnels_in_map[? node_id] = _key;
+		project.tunnels_in[? _key] = inputs[1];
+	} 
+	
+	resetMap();
 	
 	static checkDuplicate = function() {
 		var _key = inputs[0].getValue();
-		var amo  = ds_map_size(TUNNELS_IN_MAP);
-		var k    = ds_map_find_first(TUNNELS_IN_MAP);
+		var amo  = ds_map_size(project.tunnels_in_map);
+		var k    = ds_map_find_first(project.tunnels_in_map);
 		var dup  = false;
 		
 		repeat(amo) {
-			if(k != node_id && TUNNELS_IN_MAP[? k] == _key)
+			if(k != node_id && project.tunnels_in_map[? k] == _key)
 				dup = true;
 			
-			k = ds_map_find_next(TUNNELS_IN_MAP, k);
+			k = ds_map_find_next(project.tunnels_in_map, k);
 		}
 		
 		if(dup && error_notification == noone) {
@@ -67,19 +69,19 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var _key = inputs[0].getValue();
 		resetMap();
 		
-		var amo = ds_map_size(TUNNELS_IN_MAP);
-		var k   = ds_map_find_first(TUNNELS_IN_MAP);
+		var amo = ds_map_size(project.tunnels_in_map);
+		var k   = ds_map_find_first(project.tunnels_in_map);
 		repeat(amo) {
 			if(ds_map_exists(PROJECT.nodeMap, k) && struct_has(PROJECT.nodeMap[? k], "resetMap")) 
 				PROJECT.nodeMap[? k].resetMap();
-			k = ds_map_find_next(TUNNELS_IN_MAP, k);	
+			k = ds_map_find_next(project.tunnels_in_map, k);	
 		}
 		
-		var k   = ds_map_find_first(TUNNELS_IN_MAP);
+		var k   = ds_map_find_first(project.tunnels_in_map);
 		repeat(amo) {
 			if(ds_map_exists(PROJECT.nodeMap, k) && struct_has(PROJECT.nodeMap[? k], "checkDuplicate")) 
 				PROJECT.nodeMap[? k].checkDuplicate();
-			k = ds_map_find_next(TUNNELS_IN_MAP, k);	
+			k = ds_map_find_next(project.tunnels_in_map, k);	
 		}
 		
 		if(index == 0) { RENDER_ALL_REORDER }
@@ -103,19 +105,19 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var nodes = [];
 		var nodeNames = [];
 		var _key = inputs[0].getValue();
-		var amo  = ds_map_size(TUNNELS_OUT);
-		var k    = ds_map_find_first(TUNNELS_OUT);
+		var amo  = ds_map_size(project.tunnels_out);
+		var k    = ds_map_find_first(project.tunnels_out);
 		
 		LOG_BLOCK_START();
 		LOG_IF(global.FLAG.render == 1, $"→→→→→ Call get next node from: {INAME}");
 		
 		repeat(amo) {
-			if(TUNNELS_OUT[? k] == _key) {
+			if(project.tunnels_out[? k] == _key) {
 				array_push(nodes, PROJECT.nodeMap[? k]);
 				array_push(nodeNames, PROJECT.nodeMap[? k].internalName);
 			}
 			
-			k = ds_map_find_next(TUNNELS_OUT, k);
+			k = ds_map_find_next(project.tunnels_out, k);
 		}
 		
 		LOG_IF(global.FLAG.render == 1, $"→→ Push {nodeNames} to queue.");
@@ -157,7 +159,7 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		if(!hover) return;
 		
 		var _key  = inputs[0].getValue();
-		var _keys = ds_map_keys_to_array(TUNNELS_OUT);
+		var _keys = ds_map_keys_to_array(project.tunnels_out);
 		
 		draw_set_color(inputs[1].color_display);
 		draw_set_alpha(0.5);
@@ -165,7 +167,7 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		for (var i = 0, n = array_length(_keys); i < n; i++) {
 			var _k = _keys[i];
 			
-			if(TUNNELS_OUT[? _k] != _key) continue;
+			if(project.tunnels_out[? _k] != _key) continue;
 			if(!ds_map_exists(PROJECT.nodeMap, _k)) continue;
 			
 			var node = PROJECT.nodeMap[? _k];

@@ -291,7 +291,7 @@
 		
 		WINDOW_ACTIVE = window;
 		
-		if(mouse_press(mb_any)) {
+		if(mouse_press(mb_any, true, true)) {
 			setFocus(self.id, "Dialog");
 			
 			with(_p_dialog) other.depth = min(other.depth, depth - 1);

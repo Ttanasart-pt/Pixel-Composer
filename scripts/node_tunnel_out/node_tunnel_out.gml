@@ -15,8 +15,8 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	preview_scale = 1;
 	
 	var tname = "";
-	if(!LOADING && !APPENDING && !ds_map_empty(TUNNELS_IN))
-		tname = ds_map_find_first(TUNNELS_IN);
+	if(!LOADING && !APPENDING && !ds_map_empty(project.tunnels_in))
+		tname = ds_map_find_first(project.tunnels_in);
 	
 	newInput(0, nodeValue_Text("Name", self, tname ))
 		.setDisplay(VALUE_DISPLAY.text_tunnel)
@@ -29,17 +29,17 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	static onInspector2Update = function() {
 		var _key = inputs[0].getValue();
-		if(!ds_map_exists(TUNNELS_IN, _key)) return;
+		if(!ds_map_exists(project.tunnels_in, _key)) return;
 		
-		var _node = TUNNELS_IN[? _key].node;
+		var _node = project.tunnels_in[? _key].node;
 		graphFocusNode(_node);
 	}
 	
 	static isRenderable = function() {
 		var _key = inputs[0].getValue();
-		if(!ds_map_exists(TUNNELS_IN, _key)) return false;
+		if(!ds_map_exists(project.tunnels_in, _key)) return false;
 		
-		return TUNNELS_IN[? _key].node.rendered;
+		return project.tunnels_in[? _key].node.rendered;
 	}
 	
 	static onValueUpdate = function(index = -1) {
@@ -50,11 +50,11 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	static step = function() {
 		var _key = inputs[0].getValue();
-		TUNNELS_OUT[? node_id] = _key;
+		project.tunnels_out[? node_id] = _key;
 		
-		if(ds_map_exists(TUNNELS_IN, _key)) {
-			outputs[0].setType(TUNNELS_IN[? _key].type);
-			outputs[0].display_type = TUNNELS_IN[? _key].display_type;
+		if(ds_map_exists(project.tunnels_in, _key)) {
+			outputs[0].setType(project.tunnels_in[? _key].type);
+			outputs[0].display_type = project.tunnels_in[? _key].display_type;
 		} else {
 			outputs[0].setType(VALUE_TYPE.any);
 			outputs[0].display_type = VALUE_DISPLAY._default;
@@ -64,8 +64,8 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	static update = function(frame = CURRENT_FRAME) {
 		var _key = inputs[0].getValue();
 		
-		if(ds_map_exists(TUNNELS_IN, _key))
-			outputs[0].setValue(TUNNELS_IN[? _key].getValue());
+		if(ds_map_exists(project.tunnels_in, _key))
+			outputs[0].setValue(project.tunnels_in[? _key].getValue());
 	}
 	
 	/////////////////////////////////////////////////////////////////////////////
@@ -101,9 +101,9 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		if(!hover) return;
 		
 		var _key = inputs[0].getValue();
-		if(!ds_map_exists(TUNNELS_IN, _key)) return;
+		if(!ds_map_exists(project.tunnels_in, _key)) return;
 		
-		var node = TUNNELS_IN[? _key].node;
+		var node = project.tunnels_in[? _key].node;
 		if(node.group != group) return;
 		
 		preview_connecting      = true;

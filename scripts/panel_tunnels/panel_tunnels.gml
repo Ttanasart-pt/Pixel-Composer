@@ -51,10 +51,10 @@ function Panel_Tunnels() : PanelContent() constructor {
 		}
 	}
 	
-	function onResize() { sc_tunnel.resize(w - ui(padding + padding), h - ui(padding + padding) - ui(28)); }
+	function onResize() { sc_tunnel.resize(w - ui(padding + padding), h - ui(padding + padding) - ui(28 + 40)); }
 
-	sc_tunnel = new scrollPane(w - ui(padding + padding), h - ui(padding + padding) - ui(28), function(_y, _m) {
-		draw_clear_alpha(COLORS.panel_bg_clear, 0);
+	sc_tunnel = new scrollPane(w - ui(padding + padding), h - ui(padding + padding) - ui(28 + 40), function(_y, _m) {
+		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
 		var _h  = 0;
 		var ww  = sc_tunnel.surface_w;
 		var hg  = ui(36);
@@ -76,7 +76,7 @@ function Panel_Tunnels() : PanelContent() constructor {
 					tunnel_select = tunnel_select == node? noone : node;
 			} else 
 				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, _y, ww, hg, COLORS._main_icon_light, 1);
-			draw_sprite_stretched_add(THEME.ui_panel, 1, 0, _y, ww, hg, c_white, .3);
+			draw_sprite_stretched_add(THEME.ui_panel, 1, 0, _y, ww, hg, c_white, .1);
 			
 			var key = node.inputs[0].getValue(0);
 			var bw = ui(28);
@@ -97,31 +97,30 @@ function Panel_Tunnels() : PanelContent() constructor {
 			bx -= ui(32);
 		
 			draw_sprite_ui(THEME.tunnel, 1, ui(4 + 16), _y + hg / 2);
-			draw_set_text(f_p0, fa_left, fa_center, key == ""? COLORS._main_text_sub : COLORS._main_text);
-			draw_text(ui(4 + 32 + 4), _y + hg / 2, key == ""? $"[{__txtx("panel_tunnel_no_key", "No key")}]" : key);
+			draw_set_text(f_p2, fa_left, fa_center, key == ""? COLORS._main_text_sub : COLORS._main_text);
+			draw_text_add(ui(4 + 32 + 4), _y + hg / 2, key == ""? $"[{__txtx("panel_tunnel_no_key", "No key")}]" : key);
 		
 			_y += hg + ui(4);
 			_h += hg + ui(4);
 		
 			if(tunnel_select == node) {
-				var amo = ds_map_size(TUNNELS_OUT);
-				var k   = ds_map_find_first(TUNNELS_OUT);
+				var amo = ds_map_size(PROJECT.tunnels_out);
+				var k   = ds_map_find_first(PROJECT.tunnels_out);
 	
 				repeat(amo) { 
 					var _k  = k;
-					k = ds_map_find_next(TUNNELS_OUT, k);
+					k = ds_map_find_next(PROJECT.tunnels_out, k);
 				
-					var out = TUNNELS_OUT[? _k];
+					var out = PROJECT.tunnels_out[? _k];
 					if(out != key || !ds_map_exists(PROJECT.nodeMap, _k)) 
 						continue;
-			
+					
 					var _node = PROJECT.nodeMap[? _k];
-				
+					
 					draw_sprite_ui(THEME.tunnel, 0, ui(32), _y + ui(10), 0.75, 0.75, 0, COLORS._main_icon);
-					draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text_sub);
-					draw_text(ui(32 + 16), _y + ui(10), _node.renamed? _node.display_name : _node.name);
-				
-				
+					draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text_sub);
+					draw_text_add(ui(32 + 16), _y + ui(10), _node.renamed? _node.display_name : _node.name);
+					
 					if(point_in_rectangle(_m[0], _m[1], 0, _y, ww, _y + ui(20))) 
 						tunnel_hover  = _node;
 				
@@ -148,6 +147,7 @@ function Panel_Tunnels() : PanelContent() constructor {
 	
 		draw_sprite_stretched(THEME.ui_panel_bg, 1, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
 		
+		tb_search.setFocusHover(pFOCUS, pHOVER);
 		tb_search.draw(px, py, pw, ui(32), search_string, [mx, my]);
 		if(search_string == "") tb_search.sprite_index = 1;
 	

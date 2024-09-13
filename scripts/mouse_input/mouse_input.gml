@@ -70,17 +70,15 @@ function mouse_click(mouse, focus = true) {
 	return WINDOW_ACTIVE == noone? mouse_check_button(mouse) : winwin_mouse_check_button_safe(WINDOW_ACTIVE, mouse);
 }
 
-function mouse_press(mouse, focus = true) {
+function mouse_press(mouse, focus = true, pass = false) {
 	INLINE
-	if(MOUSE_BLOCK)		return false;
-	if(!focus)			return false;
+	if(!pass && MOUSE_BLOCK) return false;
+	if(!focus)				 return false;
 	
-	if(PEN_RIGHT_PRESS) return mouse == mb_right;
+	if(PEN_RIGHT_PRESS)      return mouse == mb_right;
+	if(mouse == mb_any)      return winwin_mouse_check_button_pressed_safe(WINDOW_ACTIVE, mb_left) || winwin_mouse_check_button_pressed_safe(WINDOW_ACTIVE, mb_right);
 	
-	if(WINDOW_ACTIVE == noone) return mouse_check_button_pressed(mouse);
-	if(mouse != mb_any)        return winwin_mouse_check_button_pressed_safe(WINDOW_ACTIVE, mouse);
-	
-	return winwin_mouse_check_button_pressed_safe(WINDOW_ACTIVE, mb_left) || winwin_mouse_check_button_pressed_safe(WINDOW_ACTIVE, mb_right);
+	return winwin_mouse_check_button_pressed_safe(WINDOW_ACTIVE, mouse);
 }
 
 function mouse_release(mouse, focus = true) {

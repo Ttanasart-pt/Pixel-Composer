@@ -322,9 +322,9 @@ function Panel_Menu() : PanelContent() constructor {
         draw_clear_alpha(COLORS.panel_bg_clear, 1);
         menus[6][1] = STEAM_ENABLED? menu_help_steam : menu_help;
         var hori = w > h;
-        
-        var xx = ui(40);
-        var yy = ui(8);
+        var font = f_p2;
+        var xx   = ui(40);
+        var yy   = ui(8);
         
         #region about icon
             if(hori) {
@@ -360,6 +360,7 @@ function Panel_Menu() : PanelContent() constructor {
         #endregion
         
         #region menu
+            
             if(hori) {
                 if(PREFERENCES.panel_menu_right_control)
                     xx += ui(20);
@@ -370,14 +371,14 @@ function Panel_Menu() : PanelContent() constructor {
                 xx = ui(8);
                 yy = w < vertical_break? ui(72) : ui(40);
             }
-        
+            
             var sx = xx;
             var xc, x0, x1, yc, y0, y1, _mx = xx;
             var row = 1, maxRow = ceil(h / ui(40));
         
             var _ww = 0;
             for(var i = 0; i < array_length(menus) - 1; i++) {
-                draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text);
+                draw_set_text(font, fa_center, fa_center, COLORS._main_text);
                 var ww = string_width(menus[i][0]) + ui(16 + 8);
                 _ww += ww;
                 if(_ww > w * 0.4 - sx) {
@@ -395,7 +396,7 @@ function Panel_Menu() : PanelContent() constructor {
                 var _menu = menus[i];
                 var _name = _menu[0];
                 
-                draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text);
+                draw_set_text(font, fa_center, fa_center, COLORS._main_text);
                 var ww = string_width(_name) + ui(16);
                 var hh = line_get_height() + ui(8);
             
@@ -429,7 +430,7 @@ function Panel_Menu() : PanelContent() constructor {
                     }
                 }
             
-                draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text);
+                draw_set_text(font, fa_center, fa_center, COLORS._main_text);
                 draw_text_add(xc, yc, _name);
             
                 if(hori) {
@@ -449,16 +450,18 @@ function Panel_Menu() : PanelContent() constructor {
         #region notification
             var warning_amo = ds_list_size(WARNING);
             var error_amo   = ds_list_size(ERRORS);
+            var nx0, ny0;
             
             if(hori) {
-                var nx0 = _mx + ui(24);
-                var ny0 = h / 2;
+                nx0 = _mx + ui(8);
+                ny0 = h / 2;
+                
             } else {
-                var nx0 = ui(8);
-                var ny0 = yy + ui(16);
+                nx0 = ui(8);
+                ny0 = yy + ui(16);
             }
             
-            draw_set_text(f_p0, fa_left, fa_center);
+            draw_set_text(font, fa_left, fa_center);
             var wr_w = ui(20) + ui(8) + string_width(string(warning_amo));
             var er_w = ui(20) + ui(8) + string_width(string(error_amo));
             
@@ -469,7 +472,7 @@ function Panel_Menu() : PanelContent() constructor {
                 noti_icon_show = lerp_float(noti_icon_show, 0, 4);
             
             var nw = hori? ui(16) + wr_w + ui(16) + er_w + noti_icon_show * ui(32) : w - ui(16);
-            var nh = ui(32);
+            var nh = ui(28);
             
             noti_flash = lerp_linear(noti_flash, 0, 0.02);
             var ev = animation_curve_eval(ac_flash, noti_flash);
@@ -497,22 +500,22 @@ function Panel_Menu() : PanelContent() constructor {
             draw_set_color(COLORS._main_text_inner);
             var wr_x = hori? nx0 + ui(8) : w / 2 - (wr_w + er_w + ui(16)) / 2;
             draw_sprite_ui_uniform(THEME.noti_icon_warning, warning_amo? 1 : 0, wr_x + ui(10), ny0);
-            draw_text_int(wr_x + ui(28), ny0, warning_amo);
+            draw_text_add(wr_x + ui(28), ny0, warning_amo);
             
             wr_x += wr_w + ui(16);
             draw_sprite_ui_uniform(THEME.noti_icon_error, error_amo? 1 : 0, wr_x + ui(10), ny0);
-            draw_text_int(wr_x + ui(28), ny0, error_amo);
+            draw_text_add(wr_x + ui(28), ny0, error_amo);
             
             if(hori) nx0 += nw + ui(8);
             else     ny0 += nh + ui(8);
         #endregion
         
         #region addons 
-            var wh = ui(32);
+            var wh = ui(28);
             if(!hori) nx0 = ui(8);
             
             if(instance_exists(addon)) {
-                draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
+                draw_set_text(font, fa_left, fa_center, COLORS._main_text);
                 
                 var name = string(instance_number(addon)) + " ";
                 var ww = hori? string_width(name) + ui(40) : w - ui(16);
@@ -525,7 +528,7 @@ function Panel_Menu() : PanelContent() constructor {
                         dialogPanelCall(new Panel_Addon());
                 } else 
                     draw_sprite_stretched(THEME.ui_panel_bg, 1, nx0, ny0 - wh / 2, ww, wh);
-                draw_text_int(nx0 + ui(8), ny0, name);
+                draw_text_add(nx0 + ui(8), ny0, name);
                 draw_sprite_ui(THEME.addon_icon, 0, nx0 + ui(20) + string_width(name), ny0 + ui(1),,,, COLORS._main_icon);
                 
                 if(hori) nx0 += ww + ui(4);

@@ -938,9 +938,9 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var _cKey = _dist;
 		
 		if(ds_map_exists(cached_pos, _cKey)) {
-			var _p = cached_pos[? _cKey];
-			out.x = _p[_ANCHOR.x];
-			out.y = _p[_ANCHOR.y];
+			var _cachep = cached_pos[? _cKey];
+			out.x = _cachep.x;
+			out.y = _cachep.y;
 			return out;
 		}
 		

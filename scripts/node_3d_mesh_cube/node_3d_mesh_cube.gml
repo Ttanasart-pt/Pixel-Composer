@@ -52,9 +52,11 @@ function Node_3D_Mesh_Cube(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 		var _mat_6    = _data[in_mesh + 6];
 		
 		var object;
+		
 		if(_mat_side) {
 			object = getObject(_array_index, __3dCubeFaces);
 			object.materials = [ _mat_1, _mat_2, _mat_3, _mat_4, _mat_5, _mat_6 ];
+			
 		} else {
 			object = getObject(_array_index, __3dCube);
 			object.materials = [ _mat_1 ];

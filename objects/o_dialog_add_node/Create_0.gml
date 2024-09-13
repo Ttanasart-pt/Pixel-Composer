@@ -427,6 +427,7 @@ event_inherited();
 			}
 			
 			ds_list_add(_list, "Favourites");
+			if(is_array(global.FAV_NODES))
 			for( var i = 0, n = array_length(global.FAV_NODES); i < n; i++ ) {
 				var _nodeIndex = global.FAV_NODES[i];
 				if(!ds_map_exists(ALL_NODES, _nodeIndex)) continue;
@@ -437,6 +438,7 @@ event_inherited();
 			}
 			
 			ds_list_add(_list, "Recents");
+			if(is_array(global.RECENT_NODES))
 			for( var i = 0, n = array_length(global.RECENT_NODES); i < n; i++ ) {
 				var _nodeIndex = global.RECENT_NODES[i];
 				if(!ds_map_exists(ALL_NODES, _nodeIndex)) continue;
@@ -717,7 +719,7 @@ event_inherited();
 		return hh;
 	});
 	
-	content_pane.always_scroll = true;
+	
 	
 	function setPage(pageIndex) {
 		ADD_NODE_PAGE	= min(pageIndex, ds_list_size(category) - 1);

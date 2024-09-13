@@ -15,7 +15,7 @@ event_inherited();
 		[ "WebP", "Google" ],
 		[ "FFmpeg", "FFmpeg team" ],
 		[ "File dialog module", "Samuel Venable" ],
-		[ "gif importer\nWindow commands\nApollow LUA compiler", "YellowAfterLife" ],
+		[ "gif importer\nWindow commands\nApollow LUA compiler\nWinwin", "YellowAfterLife" ],
 		
 		[ "The Book of Shaders", "Patricio Gonzalez Vivo & Jen Lowe" ],
 		[ "Many noise and shape shaders", "Inigo Quilez" ],

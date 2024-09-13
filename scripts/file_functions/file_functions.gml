@@ -7,12 +7,12 @@ function file_copy_override(src, dest) {
 
 function filepath_resolve(path) {
 	INLINE
-	var _path = path;
 	
-	_path = string_replace_all(_path, "%DIR%/", DIRECTORY);
-	_path = string_replace_all(_path, "%APP%/", APP_LOCATION);
+	path = string_replace_all(path, "%DIR%/", DIRECTORY);
+	path = string_replace_all(path, "%APP%/", APP_LOCATION);
+	path = string_replace_all(path, "\\", "/");
 	
-	return _path;
+	return path;
 }
 
 function get_open_filenames_compat(ext, sel, caption = "Open") {

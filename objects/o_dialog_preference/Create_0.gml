@@ -109,7 +109,7 @@ event_inherited();
 		return hh;
 	});
 	
-	sp_page.always_scroll = true;
+	
 	sp_page.show_scroll   = false;
 #endregion
 

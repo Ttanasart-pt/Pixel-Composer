@@ -318,7 +318,7 @@
 		
 		if(!directory_exists($"{DIRECTORY}Themes/{PREFERENCES.theme}"))
 			PREFERENCES.theme = "default";
-			
+		
 		LOCALE_DEF = PREFERENCES.local == "en";
 		THEME_DEF  = PREFERENCES.theme == "default";
 		FONT_DEF   = PREFERENCES.theme == "default" && PREFERENCES.local == "en" && PREFERENCES.display_scaling == 1;

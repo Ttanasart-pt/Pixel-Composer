@@ -9,6 +9,7 @@
 	};
 	
 	APP_DIRECTORY = env_user();
+	APP_DIRECTORY = string_replace_all(APP_DIRECTORY, "\\", "/");
 	show_debug_message($"App directory: {APP_DIRECTORY}");
 	
 	directory_verify(APP_DIRECTORY);
@@ -53,6 +54,7 @@
 		APP_LOCATION = working_directory;
 		
 	print($"===================== WORKING DIRECTORIES =====================\n\t{working_directory}\n\t{DIRECTORY}");
+	directory_verify($"{DIRECTORY}log");
 #endregion
 
 #region Set up
@@ -62,9 +64,6 @@
 	if(!IS_CMD) { __initLocale();               log_message("SESSION", $"> init Locale        | complete in {get_timer() - t}");    t = get_timer(); }
 	if(!IS_CMD) { __initHotKey();               log_message("SESSION", $"> init Hotkeys       | complete in {get_timer() - t}");    t = get_timer(); }
 	              __fnInit();
-	
-	var dir  = string(DIRECTORY) + "log";
-	directory_verify(dir);
 	
 	log_clear();
 	log_newline();
@@ -111,11 +110,11 @@
 		if(file_exists_empty("icon.png"))
 			file_copy("icon.png", DIRECTORY + "icon.png");
 	
-		var cmd = ".pxc=\"" + string(program_directory) + "PixelComposer.exe\"";
-		shell_execute_async("assoc", cmd);
+		// var cmd = ".pxc=\"" + string(program_directory) + "PixelComposer.exe\"";
+		// shell_execute_async("assoc", cmd);
 	
-		var cmd = ".pxcc=\"" + string(program_directory) + "PixelComposer.exe\"";
-		shell_execute_async("assoc", cmd);
+		// var cmd = ".pxcc=\"" + string(program_directory) + "PixelComposer.exe\"";
+		// shell_execute_async("assoc", cmd);
 	}
 	
 	directory_set_current_working(DIRECTORY);

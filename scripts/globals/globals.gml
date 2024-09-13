@@ -41,7 +41,7 @@
 	LATEST_VERSION	= 1_17_00;
 	VERSION			= 1_17_12_0;
 	SAVE_VERSION	= 1_17_10_0;
-	VERSION_STRING  = MAC? "1.18.002m" : "1.18.rc1.004";
+	VERSION_STRING  = MAC? "1.18.002m" : "1.18.rc2.001";
 	BUILD_NUMBER	= 1_17_12_0;
 	
 	HOTKEYS			= ds_map_create();
@@ -54,6 +54,7 @@
 	globalvar CURRENT_COLOR;
 	CURRENT_COLOR = cola(c_white);
 	
+	// gml_release_mode(true);
 #endregion
 
 #region input
