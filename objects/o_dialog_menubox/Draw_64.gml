@@ -2,14 +2,15 @@
 if(!ready) exit;
 
 DIALOG_PREDRAW
-winwin_draw_clear(COLORS.panel_bg_clear, 1);
+DIALOG_WINCLEAR1
 
 #region draw
 	var yy = dialog_y;
 	var _lclick = sFOCUS && (!mouse_init_inside && mouse_release(mb_left)) || (keyboard_check_pressed(vk_enter) && hk_editing == noone);
 	var _rclick = sFOCUS && !mouse_init_inside && !mouse_init_r_pressed && mouse_release(mb_right);
 	if(!mouse_init_inside && mouse_press(mb_right) && item_sel_submenu) {
-		instance_destroy(item_sel_submenu);
+		if(instance_exists(item_sel_submenu))
+			instance_destroy(item_sel_submenu);
 		item_sel_submenu = noone;
 	}
 	
@@ -75,9 +76,19 @@ winwin_draw_clear(COLORS.panel_bg_clear, 1);
 					if(_menuItem.isShelf) {
 						FOCUS_CONTENT = context;
 						
+						if(instance_exists(submenu)) {
+							var _sfr = submenu.itemFrom;
+							instance_destroy(submenu);
+							
+							if(_sfr == _menuItem) {
+								submenu = noone;
+								continue;
+							}
+						}
+							
 						var _res = _menuItem.func(_dat);
-						if(submenu) instance_destroy(submenu);
 						submenu  = _res;
+						submenu.itemFrom = _menuItem;
 						
 					} else if(remove_parents) {
 						DIALOG_POSTDRAW

@@ -269,7 +269,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 						
 						var p_arr = [];
 						for( var k = 0; k < array_length(plt); k++ )
-							array_push(p_arr, make_color_rgb(plt[k][0], plt[k][1], plt[k][2]));
+							array_push(p_arr, make_color_rgba(plt[k][0], plt[k][1], plt[k][2], plt[k][3]));
 						
 						outputs[3].setValue(p_arr);
 						break;
@@ -325,7 +325,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		if(file_get_modify_s(path_current) > edit_time) {
 			edit_time = max(edit_time, file_get_modify_s(path_current));
-			run_in(5, function() /*=>*/ { updatePaths(); triggerRender(); });
+			run_in_s(PREFERENCES.file_watcher_delay, function() /*=>*/ { updatePaths(); triggerRender(); });
 		}
 	} 
 	

@@ -552,6 +552,12 @@ event_inherited();
 			new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ { PREFERENCES.node_3d_preview_size = clamp(val, 16, 1024); PREF_SAVE(); })
 		));
 	
+		ds_list_add(pref_node, new __Panel_Linear_Setting_Item_Preference(
+			__txtx("pref_file_watcher_delay", "File watcher delay (s)"),
+			"file_watcher_delay",
+			new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ { PREFERENCES.file_watcher_delay = val; PREF_SAVE(); })
+		));
+	
 #endregion
 
 #region theme
