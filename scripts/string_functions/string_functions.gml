@@ -114,7 +114,7 @@ function string_partial_match(str, key) {
 			consec++;
 			conMax = max(conMax, consec);
 			run++;
-			if(run > string_length(key)) return conMax - misMatch;
+			if(run > string_length(key)) return conMax - misMatch - (amo - i);
 			kchr = string_char_at(key, run);
 			
 		} else {

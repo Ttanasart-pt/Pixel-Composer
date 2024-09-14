@@ -5,6 +5,7 @@ event_inherited();
 	dialog_w   = min(WIN_W - ui(16), ui(1000));
 	dialog_h   = min(WIN_H - ui(16), ui(700));
 	page_width = ui(160);
+	// title_height = 8;
 	
 	destroy_on_click_out = true;
 	destroy_on_escape    = false;
@@ -108,7 +109,6 @@ event_inherited();
 		
 		return hh;
 	});
-	
 	
 	sp_page.show_scroll   = false;
 #endregion
@@ -235,7 +235,7 @@ event_inherited();
 			function(   ) /*=>*/ { return PRESIST_PREF.path; },
 			function(val) /*=>*/ { PRESIST_PREF.path = val; json_save_struct(APP_DIRECTORY + "persistPreference.json", PRESIST_PREF); },
 			APP_DIRECTORY,
-		));
+		).setKey("main_dir_path"));
 		
 		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
 			__txtx("pref_directory_temp", "Temp directory path*"),
@@ -313,7 +313,7 @@ event_inherited();
 				resetScale(PREFERENCES._display_scaling, true); should_restart = true;
 			},
 			1,
-		));
+		).setKey("ui_scale"));
 		
 		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
 			__txtx("pref_ui_frame_rate", "UI frame rate"),
@@ -470,7 +470,7 @@ event_inherited();
 			__txtx("pref_pan_key", "Panning key"),
 			new scrollBox([ "Middle Mouse", "Mouse 4", "Mouse 5" ], function(val) /*=>*/ { PREFERENCES.pan_mouse_key = val + 3; PREF_SAVE(); }),
 			function() /*=>*/ { return PREFERENCES.pan_mouse_key - 3; },
-		));
+		).setKey("panning_key"));
 		
 	ds_list_add(pref_appr, __txt("Preview")); ////////////////////////////////////////////////////////////////////// Preview
 	
@@ -861,12 +861,13 @@ event_inherited();
 	
 	sp_pref = new scrollPane(panel_width, panel_height, function(_y, _m, _r) {
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
-		var hh		= 0;
-		var th		= line_get_height(font, 6);
-		var x1		= sp_pref.surface_w;
-		var yy		= _y + ui(8);
-		var padd	= ui(6);
-		var ind		= 0;
+		var ww   = sp_pref.surface_w;
+		var hh	 = 0;
+		var th	 = line_get_height(font, 6);
+		var x1	 = sp_pref.surface_w;
+		var yy	 = _y + ui(8);
+		var padd = ui(6);
+		var ind	 = 0;
 		
 		for(var i = 0; i < ds_list_size(current_list); i++) {
 			var _pref = current_list[| i];
@@ -905,7 +906,14 @@ event_inherited();
 			if(search_text != "" && string_pos(string_lower(search_text), string_lower(name)) == 0)
 				continue;
 			
-			if(ind % 2 == 0) draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, yy - padd, sp_pref.surface_w, max(_pref.editWidget.h, th) + padd * 2, COLORS.dialog_preference_prop_bg, 1);
+			if(ind % 2 == 0) draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, yy - padd, ww, max(_pref.editWidget.h, th) + padd * 2, COLORS.dialog_preference_prop_bg, 1);
+			
+			if(goto_item == _pref) {
+				if(goto_item_highlight == 2) sp_pref.setScroll(-hh);
+				if(goto_item_highlight == 0) goto_item = noone;
+				
+				draw_sprite_stretched_add(THEME.ui_panel_bg, 0, 0, yy - padd, ww, max(_pref.editWidget.h, th) + padd * 2, COLORS._main_accent, min(1, goto_item_highlight) * 0.5);
+			}
 				
 			draw_set_text(font, fa_left, fa_center, COLORS._main_text);
 			draw_text_add(ui(24), yy + th / 2, name);
@@ -965,6 +973,7 @@ event_inherited();
 		}
 		
 		sections[page_current] = sect;
+		goto_item_highlight    = lerp_float(goto_item_highlight, 0, 30);
 		
 		return hh;
 	});
@@ -975,4 +984,29 @@ event_inherited();
 	tb_search.align	= fa_left;
 	
 	search_text = "";
+	contents    = {};
+	goto_item   = noone;
+	goto_item_highlight = 0;
+	
+	var _pref_lists = [ pref_global, pref_appr, pref_node ];
+	
+	for (var j = 0, m = array_length(_pref_lists); j < m; j++) 
+	for (var i = 0, n = ds_list_size(_pref_lists[j]); i < n; i++) {
+		var _pr = _pref_lists[j][| i];
+		if(!is_struct(_pr)) continue;
+		
+		contents[$ _pr.key] = { page: j, item: _pr };
+	}
+
+	function goto(_tag) {
+		if(!struct_has(contents, _tag)) return self;
+		var _it = contents[$ _tag];
+		
+		if(page_current != _it.page)
+			page_current = _it.page;
+		goto_item = _it.item;
+		goto_item_highlight = 2;
+		
+		return self;
+	}
 #endregion

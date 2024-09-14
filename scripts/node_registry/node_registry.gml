@@ -19,6 +19,9 @@ function NodeObject(_name, _spr, _node, _create, tooltip = "", tags = []) constr
 	
 	is_patreon_extra = false;
 	
+	_fn = registerFunctionLite("New node", _name, function(_node) { PANEL_GRAPH.createNodeHotkey(_node); }, [ _node ]);
+	_fn.spr = _spr;
+	
 	if(!IS_CMD) {
 		var pth = DIRECTORY + $"Nodes/Tooltip/{node}.png";
 		if(file_exists_empty(pth)) tooltip_spr = sprite_add(pth, 0, false, false, 0, 0);
@@ -69,6 +72,7 @@ function NodeObject(_name, _spr, _node, _create, tooltip = "", tags = []) constr
 		if(IS_CMD) return self;
 		
 		show_in_recent = false;
+		variable_struct_remove(FUNCTIONS, _fn.fnName);
 		return self;
 	}
 	
@@ -257,7 +261,7 @@ function addNodeObject(_list, _name, _spr, _node, _fun, _tag = [], tooltip = "")
 		ds_list_add(_list, _n);
 		return _n;
 	}
-		
+	
 	var _n = new NodeObject(_name, _spr, _node, _fun, tooltip, _tag);
 	ALL_NODES[? _node] = _n;
 	

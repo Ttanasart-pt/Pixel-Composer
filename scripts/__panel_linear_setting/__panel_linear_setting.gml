@@ -6,9 +6,11 @@ function __Panel_Linear_Setting_Item(name, editWidget, data, onEdit = noone, get
 	self.onEdit     = onEdit;
 	self.getDefault = getDefault;
 	self.action     = action == noone? noone : struct_try_get(FUNCTIONS, string_to_var2(action[0], action[1]), noone);
+	key = "";
 	
 	self.is_patreon = false;
 	
+	static setKey  = function(_key) { self.key = _key; return self; }
 	static patreon = function() { is_patreon = true; return self; }
 }
 

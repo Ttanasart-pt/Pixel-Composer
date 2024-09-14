@@ -29,24 +29,40 @@
 		__fnInit_Presets();
 		__fnInit_Notification();
 		__fnInit_Preview_Window();
+		
+		__fnInit_Preference();
 	}
 	
 #endregion
 
-function registerFunction(_context, _name, _key, _mod, _action) { return new functionObject(_context, _name, _key, _mod, _action); }
-
-function functionObject(_context, _name, _key, _mod, _action) constructor {
+function registerFunctionLite(_context, _name, _action, _param = noone) { return new functionObjectLite(_context, _name, _action, _param); }
+function functionObjectLite(_context, _name, _action, _param = noone) constructor {
+	context  = _context;
+	name     = _name;
+	action   = _action;
+	params   = _param;
+	fnName   = string_to_var2(_context, _name);
+	menu     = noone;
+	spr      = noone;
+	
+	FUNCTIONS[$ fnName]     = self;
+}
+	
+function registerFunction(_context, _name, _key, _mod, _action, _param = noone) { return new functionObject(_context, _name, _key, _mod, _action, _param); }
+function functionObject(_context, _name, _key, _mod, _action, _param = noone) constructor {
 	hotkey   = addHotkey(_context, _name, _key, _mod, _action);
 	context  = _context;
 	name     = _name;
 	dkey     = _key;
 	dmod     = _mod;
 	action   = _action;
+	params   = _param;
 	hide     = false;
 	
 	fnName   = string_to_var2(_context, _name);
 	menu     = noone;
-		
+	spr      = noone;
+	
 	FUNCTIONS[$ fnName]     = self;
 	CMD_FUNCTIONS[$ fnName] = { action: _action, args: [] };
 	
@@ -89,27 +105,34 @@ function callFunction(name, args) {
 	INLINE
 	
 	var _f = CMD_FUNCTIONS[$ name];
-	
-	switch(array_length(_f.args)) {
-		case  0 : _f.fn();																																						break;
-		case  1 : _f.fn(args[0]);																																				break;
-		case  2 : _f.fn(args[0], args[1]);																																		break;
-		case  3 : _f.fn(args[0], args[1], args[2]);																																break;
-		case  4 : _f.fn(args[0], args[1], args[2], args[3]);																													break;
-		case  5 : _f.fn(args[0], args[1], args[2], args[3], args[4]);																											break;
-		case  6 : _f.fn(args[0], args[1], args[2], args[3], args[4], args[5]);																									break;
-		case  7 : _f.fn(args[0], args[1], args[2], args[3], args[4], args[5], args[6]);																							break;
-		case  8 : _f.fn(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7]);																				break;
-		case  9 : _f.fn(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8]);																		break;
-		case 10 : _f.fn(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9]);																break;
-		case 11 : _f.fn(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10]);													break;
-		case 12 : _f.fn(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10], args[11]);											break;
-		case 13 : _f.fn(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10], args[11], args[12]);								break;
-		case 14 : _f.fn(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10], args[11], args[12], args[13]);						break;
-		case 15 : _f.fn(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10], args[11], args[12], args[13], args[14]);			break;
-		case 16 : _f.fn(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10], args[11], args[12], args[13], args[14], args[15]);	break;
-	}
+	call(_f.fn, args);
 	
 	return true;
 }
 	
+function call(fn, args) {
+	if(!is_array(args)) {
+		fn();
+		return;
+	}
+	
+	switch(array_length(args)) {
+		case  0 : fn();																																						break;
+		case  1 : fn(args[0]);																																				break;
+		case  2 : fn(args[0], args[1]);																																		break;
+		case  3 : fn(args[0], args[1], args[2]);																															break;
+		case  4 : fn(args[0], args[1], args[2], args[3]);																													break;
+		case  5 : fn(args[0], args[1], args[2], args[3], args[4]);																											break;
+		case  6 : fn(args[0], args[1], args[2], args[3], args[4], args[5]);																									break;
+		case  7 : fn(args[0], args[1], args[2], args[3], args[4], args[5], args[6]);																						break;
+		case  8 : fn(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7]);																				break;
+		case  9 : fn(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8]);																		break;
+		case 10 : fn(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9]);																break;
+		case 11 : fn(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10]);													break;
+		case 12 : fn(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10], args[11]);											break;
+		case 13 : fn(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10], args[11], args[12]);								break;
+		case 14 : fn(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10], args[11], args[12], args[13]);						break;
+		case 15 : fn(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10], args[11], args[12], args[13], args[14]);			break;
+		case 16 : fn(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10], args[11], args[12], args[13], args[14], args[15]);	break;
+	}
+}
