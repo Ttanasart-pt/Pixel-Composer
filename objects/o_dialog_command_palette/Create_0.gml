@@ -164,7 +164,7 @@ event_inherited();
 				var ind = is_array(_spr)? _spr[1] : 0;
 				var _ss = hght / max(sprite_get_width(spr), sprite_get_height(spr)) * .7;
 				
-				draw_sprite_ext(spr, ind, ui(16), _ty, _ss, _ss, 0, COLORS._main_icon);
+				draw_sprite_ext(spr, ind, ui(16), _ty, _ss, _ss, 0, COLORS._main_icon_light);
 			}
 			
 			if(_hasKey) {
@@ -174,7 +174,7 @@ event_inherited();
 					var _hx = _dw - ui(6);
 					var _hy = _ty + ui(1);
 					
-					draw_set_text(f_p2, fa_right, fa_center, COLORS._main_accent);
+					draw_set_text(f_p3, fa_right, fa_center, COLORS._main_accent);
 					
 					var _ktxt = key_get_name(_key.key, _key.modi);
 					var _tw = string_width(_ktxt);

@@ -37,7 +37,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	shape_types     = [ 
 		"Rectangle", "Diamond", "Trapezoid", "Parallelogram", 
 		-1, 
-		"Ellipse", "Arc", "Donut", "Crescent", "Disk Segment", "Pie", 
+		"Ellipse", "Arc", "Donut", "Crescent", "Disk Segment", "Pie", "Squircle", 
 		-1, 
 		"Regular polygon", "Star", "Cross", "Rounded Cross",  
 		-1, 
@@ -85,7 +85,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput(14, nodeValue_PathNode("Shape path", self, noone))
 		.setVisible(true, true);
 	
-	newInput(15, nodeValue_Enum_Scroll("Positioning Mode", self,  0, [ "Area", "Center + Scale", "Full Image" ]))
+	newInput(15, nodeValue_Enum_Scroll("Positioning Mode", self,  2, [ "Area", "Center + Scale", "Full Image" ]))
 		
 	newInput(16, nodeValue_Vec2("Center", self, [ DEF_SURF_W / 2, DEF_SURF_H / 2 ] ))
 		.setUnitRef(onSurfaceSize);
@@ -119,12 +119,16 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	newInput(29, nodeValue("Curve", self, CONNECT_TYPE.input, VALUE_TYPE.curve, CURVE_DEF_01));
 	
+	newInput(30, nodeValue_Bool("Caps", self, false));
+	
+	newInput(31, nodeValue_Float("Factor", self, 2.5));
+	
 	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
 		["Output",     false], 0, 6, 
 		["Transform",  false], 15, 3, 16, 17, 19, 28, 
-		["Shape",	   false], 14, 2, 9, 4, 13, 5, 7, 8, 21, 22, 23, 24, 25, 26, 27, 
+		["Shape",	   false], 14, 2, 9, 4, 13, 5, 7, 8, 21, 22, 23, 24, 25, 26, 27, 30, 31, 
 		["Render",	    true], 10, 18,
 		["Height",	    true, 12], 29, 20, 
 		["Background",	true, 1], 11, 
@@ -289,6 +293,8 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		inputs[20].setVisible(_path == noone);
 		inputs[13].setVisible(true);
 		inputs[15].setVisible(true);
+		inputs[30].setVisible(false);
+		inputs[31].setVisible(false);
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		use_path = _path != noone && struct_has(_path, "getPointRatio");
@@ -427,17 +433,19 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 				case "Arc" :
 					inputs[5].setVisible(true);
 					inputs[8].setVisible(true);
+					inputs[30].setVisible(true);
 					
 					inputs[5].name = "Inner radius";
 					
 					var ar = _data[8];
 					var center =  degtorad(ar[0] + ar[1]) / 2;
-					var range  =  degtorad(ar[0] - ar[1]) / 2;
+					var range  =  abs(degtorad(ar[0] - ar[1]) / 2);
 					
-					shader_set_i("shape", 4);
-					shader_set_f("angle", center);
+					shader_set_i("shape",       4);
+					shader_set_i("endcap",      _data[30]);
+					shader_set_f("angle",       center);
 					shader_set_f("angle_range", [ sin(range), cos(range) ] );
-					shader_set_f("inner", _data[5] / 2);
+					shader_set_f("inner",       _data[5] / 2);
 					break;
 					
 				case "Teardrop" :
@@ -547,6 +555,14 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 					shader_set_i("teeth",		_data[25]);
 					shader_set_2("teethSize",	_data[26]);
 					shader_set_f("teethAngle",	_data[27]);
+					break;
+					
+				
+				case "Squircle" :	
+					inputs[31].setVisible(true);
+				
+					shader_set_i("shape", 19);
+					shader_set_f("squircle_factor", abs(_data[31]));
 					break;
 					
 			}

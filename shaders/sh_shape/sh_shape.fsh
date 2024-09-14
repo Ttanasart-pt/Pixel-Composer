@@ -38,6 +38,7 @@ uniform vec2  center;
 uniform vec2  scale;
 uniform vec2  trep;
 uniform float shapeScale;
+uniform int   endcap;
 
 uniform int   teeth;
 uniform vec2  teethSize;
@@ -45,6 +46,7 @@ uniform float teethAngle;
  
 uniform vec2  arrow;
 uniform float arrow_head;
+uniform float squircle_factor;
 
 uniform vec4 bgColor;
 
@@ -185,10 +187,14 @@ float sdStar(in vec2 p, in float r, in int n, in float m, in float ang) { //m=[2
 // sca is the sin/cos of the orientation
 // scb is the sin/cos of the aperture
 float sdArc( in vec2 p, in vec2 sca, in vec2 scb, in float ra, in float rb ) {
+	p = -p;
     p *= mat2(sca.x, sca.y, -sca.y, sca.x);
     p.x = abs(p.x);
-    float k = (scb.y * p.x > scb.x * p.y) ? dot(p.xy,scb) : length(p);
-    return sqrt( dot(p, p) + ra * ra - 2.0 * ra * k ) - rb;
+    
+    bool k = scb.y * p.x > scb.x * p.y;
+    
+    if(endcap == 1) return (k? length(p - scb * ra) : abs(length(p) - ra)) - rb;
+	                return (k? 1. : abs(length(p) - ra)) - rb;
 }
 
 float sdSegment( in vec2 p, in vec2 a, in vec2 b ) {
@@ -422,21 +428,22 @@ void main() {
 	    d = sdStar( coord, 0.9 - corner, sides, 2. + inner * (float(sides) - 2.), angle );
 		d -= corner;
 		
-	} else if(shape ==  4) { d = sdArc(				coord, vec2(sin(angle), cos(angle)), angle_range, 0.9 - inner, inner );	 }
-	  else if(shape ==  5) { d = sdTearDrop(		coord + vec2(0., 0.5), stRad, edRad, 1. );                      		 }
-	  else if(shape ==  6) { d = sdCross( 			coord, vec2(1. + corner, outer), corner );                          	 }
-	  else if(shape ==  7) { d = sdVesica(			coord, inner, outer );                                              	 }
-	  else if(shape ==  8) { d = sdCrescent(		coord, inner, outer, angle );                                   		 }
-	  else if(shape ==  9) { d = sdDonut( 			coord, inner );                                                     	 }
-	  else if(shape == 10) { d = sdRhombus(			coord, vec2(1. - corner) ) - corner;                                	 }
-	  else if(shape == 11) { d = sdTrapezoid( 		coord, trep.x - corner, trep.y - corner, 1. - corner ) - corner;		 }
-	  else if(shape == 12) { d = sdParallelogram(	coord, 1. - corner - parall, 1. - corner, parall) - corner;   			 }
-	  else if(shape == 13) { d = sdHeart( 			coord );                                                            	 }
-	  else if(shape == 14) { d = sdCutDisk( 		coord, 1., inner );                                             		 }
-	  else if(shape == 15) { d = sdPie( 			coord, vec2(sin(angle), cos(angle)), 1. );                          	 }
-	  else if(shape == 16) { d = sdRoundedCross( 	coord, 1. - corner ) - corner;                              			 }
-	  else if(shape == 17) { d = sdArrow( 			coord, arrow.x, arrow.y, arrow_head);                               	 }
-	  else if(shape == 18) { d = sdGear( 			coord, inner, teeth, teethSize, teethAngle);                        	 }
+	} else if(shape ==  4) { d = sdArc(				coord, vec2(sin(angle), cos(angle)), angle_range, 1. - inner, inner );	    }
+	  else if(shape ==  5) { d = sdTearDrop(		coord + vec2(0., 0.5), stRad, edRad, 1. );                      		    }
+	  else if(shape ==  6) { d = sdCross( 			coord, vec2(1. + corner, outer), corner );                          	    }
+	  else if(shape ==  7) { d = sdVesica(			coord, inner, outer );                                              	    }
+	  else if(shape ==  8) { d = sdCrescent(		coord, inner, outer, angle );                                   		    }
+	  else if(shape ==  9) { d = sdDonut( 			coord, inner );                                                     	    }
+	  else if(shape == 10) { d = sdRhombus(			coord, vec2(1. - corner) ) - corner;                                	    }
+	  else if(shape == 11) { d = sdTrapezoid( 		coord, trep.x - corner, trep.y - corner, 1. - corner ) - corner;		    }
+	  else if(shape == 12) { d = sdParallelogram(	coord, 1. - corner - parall, 1. - corner, parall) - corner;   			    }
+	  else if(shape == 13) { d = sdHeart( 			coord );                                                            	    }
+	  else if(shape == 14) { d = sdCutDisk( 		coord, 1., inner );                                             		    }
+	  else if(shape == 15) { d = sdPie( 			coord, vec2(sin(angle), cos(angle)), 1. );                          	    }
+	  else if(shape == 16) { d = sdRoundedCross( 	coord, 1. - corner ) - corner;                              			    }
+	  else if(shape == 17) { d = sdArrow( 			coord, arrow.x, arrow.y, arrow_head);                               	    }
+	  else if(shape == 18) { d = sdGear( 			coord, inner, teeth, teethSize, teethAngle);                        	    }
+	  else if(shape == 19) { d = pow(pow(abs(coord.x), squircle_factor) + pow(abs(coord.y), squircle_factor), 1. / squircle_factor) - 1.; }
 	
 	float cc, color = 0.;
 	

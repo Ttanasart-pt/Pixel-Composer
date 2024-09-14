@@ -712,6 +712,7 @@ function Panel_Menu() : PanelContent() constructor {
                 tby0 = ty0;
             }
             
+            if(full_name) tw += string_width(".pxc");
             var _b   = buttonInstant(THEME.button_hide_fill, tbx0, tby0, tw, th, [mx, my], pFOCUS, pHOVER);
             var _hov = _b > 0;
             
