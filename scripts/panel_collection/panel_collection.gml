@@ -30,8 +30,8 @@ function Panel_Collection() : PanelContent() constructor {
 	group_w_mx       = false;
 	
 	static initSize = function() {
-		content_w = w - ui(8) - group_w;
-		content_h = h - ui(40) - ui(16);
+		content_w = w - ui( 8) - group_w;
+		content_h = h - ui(56);
 	}
 	initSize();
 	
@@ -197,8 +197,8 @@ function Panel_Collection() : PanelContent() constructor {
 	grid_size_to = grid_size;
 	
 	contentView = 0;
-	contentPane = new scrollPane(content_w - ui(6), content_h, function(_y, _m) {
-		draw_clear_alpha(c_white, 0);
+	contentPane = new scrollPane(content_w - ui(8), content_h - ui(4), function(_y, _m) {
+		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
 		
 		var content;
 		var steamNode = [];
@@ -446,8 +446,8 @@ function Panel_Collection() : PanelContent() constructor {
 		
 		folderPane.resize(group_w - ui(8), content_h);
 		
-		if(page == 2)	contentPane.resize(w - ui(22), content_h);
-		else			contentPane.resize(content_w - ui(6), content_h);
+		if(page == 2)	contentPane.resize(w - ui(24),        content_h - ui(4));
+		else			contentPane.resize(content_w - ui(8), content_h - ui(4));
 	} 
 	
 	function setContext(cont) { 
@@ -467,18 +467,19 @@ function Panel_Collection() : PanelContent() constructor {
 		draw_clear_alpha(COLORS.panel_bg_clear, 1);
 		
 		var content_y = ui(48);
+		var ppd = ui(2);
 		
 		if(page == 2) {
 			var pad = ui(8);
 			
 			draw_sprite_stretched(THEME.ui_panel_bg, 1, pad, content_y, w - pad * 2, content_h);
 			contentPane.setFocusHover(pFOCUS, pHOVER);
-			contentPane.draw(pad, content_y, mx - pad, my - content_y);
+			contentPane.draw(pad + ppd, content_y + ppd, mx - pad - ppd, my - content_y - ppd);
 			
 		} else {
 			draw_sprite_stretched(THEME.ui_panel_bg, 1, group_w, content_y, content_w, content_h);
 			contentPane.setFocusHover(pFOCUS, pHOVER);
-			contentPane.draw(group_w, content_y, mx - group_w, my - content_y);
+			contentPane.draw(group_w + ppd, content_y + ppd, mx - group_w - ppd, my - content_y - ppd);
 		
 			folderPane.setFocusHover(pFOCUS, pHOVER);
 			folderPane.draw(0, content_y, mx, my - content_y);
