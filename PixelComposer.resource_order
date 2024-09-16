@@ -2626,7 +2626,6 @@
     {"name":"s_sort_24","order":189,"path":"sprites/s_sort_24/s_sort_24.yy",},
     {"name":"s_splice_draw","order":60,"path":"sprites/s_splice_draw/s_splice_draw.yy",},
     {"name":"s_star","order":190,"path":"sprites/s_star/s_star.yy",},
-    {"name":"s_steam_1","order":192,"path":"sprites/s_steam_1/s_steam_1.yy",},
     {"name":"s_steam_creator","order":193,"path":"sprites/s_steam_creator/s_steam_creator.yy",},
     {"name":"s_steam","order":191,"path":"sprites/s_steam/s_steam.yy",},
     {"name":"s_strand_tool_comb","order":61,"path":"sprites/s_strand_tool_comb/s_strand_tool_comb.yy",},

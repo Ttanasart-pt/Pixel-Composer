@@ -90,4 +90,4 @@ function path_is_backup(path) {
 	return string_letters(ext) != ext;
 }
 
-function filename_ext_raw(path) { return string_lower(string_letters(filename_ext(path))); }
+function filename_ext_raw(path) { return string_lower(string_replace(filename_ext(path), ".", "")); }

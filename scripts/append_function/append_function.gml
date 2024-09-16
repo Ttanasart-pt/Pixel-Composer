@@ -1,4 +1,12 @@
-function APPEND(_path, context = PANEL_GRAPH.getCurrentContext()) { #region
+function GetAppendID(old_id) {
+	if(old_id == noone) return noone;
+	
+	if(ds_map_exists(APPEND_MAP, old_id)) 
+		return APPEND_MAP[? old_id];
+	return noone;
+}
+
+function APPEND(_path, context = PANEL_GRAPH.getCurrentContext()) {
 	CALL("append");
 	
 	if(_path == "") return noone;
@@ -14,9 +22,9 @@ function APPEND(_path, context = PANEL_GRAPH.getCurrentContext()) { #region
 	log_message("FILE", "append file " + _path, THEME.noti_icon_file_load);
 	
 	return node_create;
-} #endregion
+}
 
-function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext(), appended_list = []) { #region
+function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext(), appended_list = []) {
 	static log   = false;
 	UNDO_HOLDING = true;
 	
@@ -154,13 +162,4 @@ function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext(), appended_
 	}
 	
 	return node_create;
-} #endregion
-
-function GetAppendID(old_id) { #region
-	if(old_id == noone) return noone;
-	
-	if(ds_map_exists(APPEND_MAP, old_id)) 
-		return APPEND_MAP[? old_id];
-	// print("Get append ID error: " + string(old_id));
-	return noone;
-} #endregion
+}

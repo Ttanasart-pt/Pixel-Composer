@@ -152,6 +152,22 @@ function SAVE_COLLECTIONS(_list, _path, save_surface = true, metadata = noone, c
 	PANEL_MENU.setNotiIcon(THEME.noti_icon_file_save);
 }
 
+function SAVE_NODE(_arr, _node, dx = 0, dy = 0, scale = false, context = PANEL_GRAPH.getCurrentContext()) {
+	if(struct_has(_node, "nodes")) {
+		for(var i = 0; i < array_length(_node.nodes); i++)
+			SAVE_NODE(_arr, _node.nodes[i], dx, dy, scale, context);
+	}
+	
+	var m = _node.serialize(scale);
+	m.x -= dx;
+	m.y -= dy;
+	
+	var c = context == noone? noone : context.node_id;
+	if(m.group == c) m.group = noone;
+	
+	array_push(_arr, m);
+}
+
 function SAVE_COLLECTION(_node, _path, save_surface = true, metadata = noone, context = PANEL_GRAPH.getCurrentContext()) {
 	if(save_surface) {
 		var preview_surface = PANEL_PREVIEW.getNodePreviewSurface();
@@ -187,18 +203,48 @@ function SAVE_COLLECTION(_node, _path, save_surface = true, metadata = noone, co
 	PANEL_MENU.setNotiIcon(THEME.noti_icon_file_save);
 }
 
-function SAVE_NODE(_arr, _node, dx = 0, dy = 0, scale = false, context = PANEL_GRAPH.getCurrentContext()) {
-	if(struct_has(_node, "nodes")) {
-		for(var i = 0; i < array_length(_node.nodes); i++)
-			SAVE_NODE(_arr, _node.nodes[i], dx, dy, scale, context);
+function SAVE_PXZ_COLLECTION(_node, _path, _surf = noone, metadata = noone, context = PANEL_GRAPH.getCurrentContext()) {
+	var _name = filename_name_only(_path);
+	var _path_icon = "";
+	var _path_node = "";
+	var _path_meta = "";
+	
+	if(is_surface(_surf)) {
+		_path_icon = $"{TEMPDIR}{_name}.png";
+		surface_save_safe(_surf, _path_icon);
 	}
 	
-	var m = _node.serialize(scale);
-	m.x -= dx;
-	m.y -= dy;
+	var _content = {};
+	_content.version = SAVE_VERSION;
 	
-	var c = context == noone? noone : context.node_id;
-	if(m.group == c) m.group = noone;
+	var _nodes = [];
+	SAVE_NODE(_nodes, _node, _node.x, _node.y, true, context);
+	_content.nodes = _nodes;
 	
-	array_push(_arr, m);
+	_path_node = $"{TEMPDIR}{_name}.pxcc";
+	json_save_struct(_path_node, _content, !PREFERENCES.save_file_minify);
+	
+	if(metadata != noone) {
+		var _meta  = metadata.serialize();
+		var _dir   = filename_dir(_path);
+		var _name  = filename_name_only(_path);
+		_path_meta = $"{TEMPDIR}{_name}.meta";
+		
+		_meta.version = SAVE_VERSION;
+		json_save_struct(_path_meta, _meta, true);
+	}
+	
+	print(_path_node);
+	
+	var _z = zip_create();
+	if(_path_icon != "") zip_add_file(_z, $"{_name}.png",  _path_icon);
+	if(_path_node != "") zip_add_file(_z, $"{_name}.pxcc", _path_node);
+	if(_path_meta != "") zip_add_file(_z, $"{_name}.meta", _path_meta);
+	zip_save(_z, _path);
+	
+	var pane = findPanel("Panel_Collection");
+	if(pane) pane.refreshContext();
+	
+	log_message("COLLECTION", "save collection at " + _path, THEME.noti_icon_file_save);
+	PANEL_MENU.setNotiIcon(THEME.noti_icon_file_save);
 }

@@ -52,7 +52,6 @@ function Panel_Collection() : PanelContent() constructor {
 	updated_path  = noone;
 	updated_prog  = 0;
 	data_path     = "";
-	view_tooltip  = new tooltipSelector("View", [ "Grid", "List" ])
 	
 	PANEL_COLLECTION = self;
 	
@@ -510,13 +509,15 @@ function Panel_Collection() : PanelContent() constructor {
 		var bh    = line_get_height(f_p0b, 8);
 		var rootx = 0;
 		
-		draw_set_font(f_p0b);
-		
 		for( var i = 0, n = array_length(roots); i < n; i++ ) {
+			draw_set_font(f_p0b);
+			
 			var r   = roots[i];
 			var _bx = _x - ui(8);
 			var _by = _y - bh / 2;
-			var _bw = string_width(r[0]) + ui(20);
+			
+			var _tx = __txt(r[0]);
+			var _bw = string_width(_tx) + ui(20);
 			
 			if(buttonInstant(THEME.button_hide_fill, _bx, _by, _bw, bh, [ mx, my ], pFOCUS, pHOVER) == 2) {
 				page = i;
@@ -526,11 +527,11 @@ function Panel_Collection() : PanelContent() constructor {
 			}
 			
 			
-			if(i == page) draw_set_text(f_p0b, fa_left, fa_center, COLORS._main_text);
-			else          draw_set_text(f_p0,  fa_left, fa_center, COLORS._main_text_sub);
-			draw_text(_x, _y, __txt(r[0]));
+			if(i == page) draw_set_text(f_p0b, fa_center, fa_center, COLORS._main_text);
+			else          draw_set_text(f_p0,  fa_center, fa_center, COLORS._main_text_sub);
+			draw_text(_bx + _bw / 2, _y, _tx);
 			
-			_x += string_width(r[0]) + ui(24);
+			_x += _bw + ui(4);
 		}
 		
 		rootx = _x;
@@ -540,18 +541,11 @@ function Panel_Collection() : PanelContent() constructor {
 		var bs = ui(32);
 		
 		if(search_string == "") { 
-			if(bx > rootx) {
-				view_tooltip.index = contentView;
-				if(buttonInstant(THEME.button_hide, bx, by, bs, bs, [mx, my], pFOCUS, pHOVER, view_tooltip, THEME.view_mode, contentView) == 2)
-					contentView = !contentView;
-			}
-			bx -= ui(36);
-			
 			if(page == 0 && !DEMO) {
 				if(bx > rootx) {
 					if(context != root) {
 						var txt = __txtx("panel_collection_add_node", "Add selecting node as collection");
-						if(buttonInstant(THEME.button_hide, bx, by, bs, bs, [mx, my], pFOCUS, pHOVER, txt, THEME.add, 0, COLORS._main_value_positive) == 2) {
+						if(buttonInstant(THEME.button_hide, bx, by, bs, bs, [mx, my], pFOCUS, pHOVER, txt, THEME.add_20, 0, COLORS._main_value_positive) == 2) {
 							if(PANEL_INSPECTOR.getInspecting() != noone) {
 								data_path = context.path;
 								var dia = dialogCall(o_dialog_file_name_collection, mouse_mx + ui(8), mouse_my + ui(8));

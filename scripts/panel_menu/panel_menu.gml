@@ -615,17 +615,20 @@ function Panel_Menu() : PanelContent() constructor {
             if(STEAM_ENABLED) txt += " Steam";
             
             version_name_copy = lerp_float(version_name_copy, 0, 10);
-            var tc = merge_color(COLORS._main_text_sub, COLORS._main_value_positive, min(1, version_name_copy));
-            var sc = merge_color(c_white, COLORS._main_value_positive, min(1, version_name_copy));
+            var tc  = merge_color(COLORS._main_text_sub, COLORS._main_value_positive, min(1, version_name_copy));
+            var sc  = merge_color(c_white, COLORS._main_value_positive, min(1, version_name_copy));
+            var fnt = f_p2;
             
             if(hori) {
                 if(w > 1500) {
-                    draw_set_text(f_p0, fa_center, fa_center, tc);
+                    draw_set_text(fnt, fa_center, fa_center, tc);
                     var  ww = string_width(txt) + ui(12);
+                    var  hh = string_height(txt) + ui(8);
                     var _x0 = _xx1 - ww;
-                    var _y0 = ui(6);
                     var _x1 = _xx1;
-                    var _y1 = h - ui(6);
+                    
+                    var _y0 = h / 2 - hh / 2;
+                    var _y1 = h / 2 + hh / 2;
                     
                     if(pHOVER && point_in_rectangle(mx, my, _x0, _y0, _x1, _y1)) {
                         _draggable = false;
@@ -646,7 +649,7 @@ function Panel_Menu() : PanelContent() constructor {
                 var _xx1 = ui(40);
                 var y1 = h - ui(20);
                 
-                draw_set_text(f_p0, fa_left, fa_center, tc);
+                draw_set_text(fnt, fa_left, fa_center, tc);
                 var ww = string_width(txt) + ui(12);
                 if(pHOVER && point_in_rectangle(mx, my, _xx1, y1 - ui(16), _xx1 + ww, y1 + ui(16))) {
                     _draggable = false;

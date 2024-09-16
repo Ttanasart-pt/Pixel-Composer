@@ -1,4 +1,4 @@
-function FileObject(_name, _path) constructor { #region
+function FileObject(_name, _path) constructor {
 	static loadThumbnailAsync = false;
 	
 	name = _name;
@@ -13,18 +13,24 @@ function FileObject(_name, _path) constructor { #region
 	var _mname = filename_name_only(path);
 	meta_path  = $"{_mdir}/{_mname}.meta";	
 	meta	   = noone;
-	type	   = FILE_TYPE.collection;
+	type	   = FILE_TYPE.assets;
 	
-	switch(filename_ext_raw(path)) {
+	var _ext = filename_ext_raw(path);
+	switch(_ext) {
 		case "png" :	
 		case "jpg" :	
 		case "gif" :	
 			type = FILE_TYPE.assets;
 			break;
 			
-		case "pxc" : 
+		case "pxc"  : 
 		case "cpxc" : 
 			type = FILE_TYPE.project;
+			break;
+			
+		case "pxcc" : 
+		case "pxz"  : 
+			type = FILE_TYPE.collection;
 			break;
 	}
 	
@@ -121,9 +127,9 @@ function FileObject(_name, _path) constructor { #region
 		
 		return meta;
 	}
-} #endregion
+}
 
-function DirectoryObject(name, path) constructor { #region
+function DirectoryObject(name, path) constructor {
 	self.name = name;
 	self.path = path;
 	
@@ -247,4 +253,4 @@ function DirectoryObject(name, path) constructor { #region
 		
 		return hh;
 	}
-} #endregion
+}

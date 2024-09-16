@@ -76,7 +76,9 @@ function mouse_press(mouse, focus = true, pass = false) {
 	if(!focus)				 return false;
 	
 	if(PEN_RIGHT_PRESS)      return mouse == mb_right;
-	if(mouse == mb_any)      return winwin_mouse_check_button_pressed_safe(WINDOW_ACTIVE, mb_left) || winwin_mouse_check_button_pressed_safe(WINDOW_ACTIVE, mb_right);
+	if(mouse == mb_any)      return winwin_mouse_check_button_pressed_safe(WINDOW_ACTIVE, mb_left)  || 
+									winwin_mouse_check_button_pressed_safe(WINDOW_ACTIVE, mb_right) || 
+									winwin_mouse_check_button_pressed_safe(WINDOW_ACTIVE, mb_middle);
 	
 	return winwin_mouse_check_button_pressed_safe(WINDOW_ACTIVE, mouse);
 }

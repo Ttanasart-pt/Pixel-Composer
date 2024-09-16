@@ -53,6 +53,12 @@ function filename_name_only(name) {
 	name = filename_name(name);
 	return string_replace(name, filename_ext(name), "")
 }
+
+function filename_ext_verify(_path, _ext) {
+	var _pext = filename_ext(_path);
+	if(_pext == _ext) return _path;
+	return filename_dir(_path) + "/" + filename_name_only(_path) + _ext;
+}
 	
 function string_to_var(str)            { INLINE return string_replace_all(string_replace_all(string_lower(str), " ", "_"), "/", "_"); }
 function string_to_var2(context, name) { INLINE return string_to_var(context == ""? name : $"{context} {name}"); }

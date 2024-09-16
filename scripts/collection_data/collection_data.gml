@@ -4,8 +4,8 @@ function __initCollection() {
 	globalvar COLLECTIONS;
 	COLLECTIONS = -1;
 	
-	var root = DIRECTORY + "Collections";
-	directory_verify(root);
+	var root  = DIRECTORY + "Collections";       directory_verify(root);
+	var rootz = DIRECTORY + "Collections_cache"; directory_verify(rootz);
 	
 	if(check_version($"{root}/version"))
 		zip_unzip("data/Collections.zip", root);
@@ -51,12 +51,19 @@ function searchCollection(_list, _search_str, _clear_list = true) {
 function saveCollection(_node, _path, _name, save_surface = true, metadata = noone) {
 	if(_node == noone) return;
 		
-	var _pre_name = (_path == ""? "" : _path + "/") + _name;
-	var ext = filename_ext(_pre_name);
-	_path = ext == ".pxcc"? _pre_name : _pre_name + ".pxcc";
+	var _pxz  = false;
+	var _file = _path + "/" + filename_name_only(_name);
+	
+	if(_pxz) {
+		_path = _file + ".pxz";
+		SAVE_PXZ_COLLECTION(_node, _path, PANEL_PREVIEW.getNodePreviewSurface(), metadata, _node.group);
 		
-	SAVE_COLLECTION(_node, _path, save_surface, metadata, _node.group);
+	} else {
+		_path = _file + ".pxcc";
+		SAVE_COLLECTION(_node, _path, save_surface, metadata, _node.group);
 		
+	}
+	
 	PANEL_COLLECTION.updated_path = _path;
 	PANEL_COLLECTION.updated_prog = 1;
 	PANEL_COLLECTION.refreshContext();
