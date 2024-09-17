@@ -17,7 +17,7 @@ function winwin_config() constructor {
     static owner           = undefined;
 }
 
-#macro __ww_valid (ww != noone && winwin_exists(ww))
+#macro __ww_valid (OS == os_windows && ww != noone && winwin_exists(ww))
 
 function winwin_create_ext(_x, _y, _w, _h, _conf) {
     var window = winwin_create(_x, _y, _w, _h, _conf);

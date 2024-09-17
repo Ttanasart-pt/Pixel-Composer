@@ -255,6 +255,11 @@
 		var mx = raw_x - winwin_get_x_safe(window);
 		var my = raw_y - winwin_get_y_safe(window);
 		
+		if(MAC) {
+			mx = raw_x;
+			my = raw_y;
+		}
+		
 		var _r = dialog_resizable * 6;
 		var x0 = dialog_x            - _r;
 		var x1 = dialog_x + dialog_w + _r;
@@ -271,6 +276,11 @@
 		if(window == noone) {
 			var _mx = FILE_IS_DROPPING? FILE_DROPPING_X : mouse_raw_x;
 			var _my = FILE_IS_DROPPING? FILE_DROPPING_Y : mouse_raw_y;
+			
+			if(MAC) {
+				_mx = mouse_mx;
+				_my = mouse_my;
+			}
 			
 			if(point_in(_mx, _my)) {
 				if(depth < DIALOG_DEPTH_HOVER) {

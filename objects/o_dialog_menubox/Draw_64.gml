@@ -47,7 +47,8 @@ DIALOG_WINCLEAR1
 		var cc    = struct_try_get(_menuItem, "color", c_white);
 		var _key  = _menuItem.hotkey != noone? find_hotkey(_menuItem.hotkey[0], _menuItem.hotkey[1]) : noone;
 		_menuItem.hoykeyObject = _key;
-				
+		
+		//print($"{i}: {sHOVER} && {point_in_rectangle(mouse_mx, mouse_my, dialog_x, yy + 1, dialog_x + dialog_w, yy + _h - 1)}")
 		if(sHOVER && point_in_rectangle(mouse_mx, mouse_my, dialog_x, yy + 1, dialog_x + dialog_w, yy + _h - 1)) {
 			selecting = i;
 			var tips  = array_safe_get_fast(tooltips, i, noone);
