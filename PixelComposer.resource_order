@@ -246,7 +246,7 @@
     {"name":"patreon_key","order":1,"path":"extensions/patreon_key/patreon_key.yy",},
     {"name":"Regex","order":8,"path":"extensions/Regex/Regex.yy",},
     {"name":"Spout","order":13,"path":"extensions/Spout/Spout.yy",},
-    {"name":"Steamworks","order":2,"path":"extensions/Steamworks/Steamworks.yy",},
+    {"name":"Steamworks","order":4,"path":"extensions/Steamworks/Steamworks.yy",},
     {"name":"TabletStuff","order":15,"path":"extensions/TabletStuff/TabletStuff.yy",},
     {"name":"winwin","order":5,"path":"extensions/winwin/winwin.yy",},
     {"name":"YYFirebaseFirestore","order":1,"path":"extensions/YYFirebaseFirestore/YYFirebaseFirestore.yy",},

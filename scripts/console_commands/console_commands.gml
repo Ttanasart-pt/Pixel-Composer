@@ -5,13 +5,13 @@ CMD_COLOR = {
     OKBLUE  : "\033[94m",
     OKCYAN  : "\033[96m",
     OKGREEN : "\033[92m",
-    WARNING : "\033[93m",
+    WARN    : "\033[93m",
     FAIL    : "\033[91m",
     ENDC    : "\033[0m",
     BOLD    : "\033[1m",
 }
 
-function cmd_submit(command) { #region
+function cmd_submit(command) {
 	if(command == "") return;
 	array_push(CMD, cmdLineIn(command));
 	array_push(CMDIN, command);
@@ -112,9 +112,9 @@ function cmd_submit(command) { #region
 			log_console(_txt, true);
 			break;
 	}
-} #endregion
+}
 
-function cmd_path(path) { #region
+function cmd_path(path) {
 	var params = string_splice(path, ";");
 	var vals   = [];
 			
@@ -142,4 +142,4 @@ function cmd_path(path) { #region
 	}
 	
 	return vals;
-} #endregion
+}

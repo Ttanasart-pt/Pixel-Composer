@@ -588,6 +588,7 @@
     {"$GMIncludedFile":"","%Name":"gifski.h","CopyToMask":-1,"filePath":"datafiles/gifski/win/developer","name":"gifski.h","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"gifski.exe","CopyToMask":-1,"filePath":"datafiles/gifski/win","name":"gifski.exe","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"GMD3D11.dll","CopyToMask":-1,"filePath":"datafiles","name":"GMD3D11.dll","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"GMEXT-Steamworks.html","CopyToMask":0,"filePath":"datafiles","name":"GMEXT-Steamworks.html","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"convert.exe","CopyToMask":-1,"filePath":"datafiles/ImageMagick","name":"convert.exe","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"LICENSE.txt","CopyToMask":-1,"filePath":"datafiles/ImageMagick","name":"LICENSE.txt","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"magick.exe","CopyToMask":-1,"filePath":"datafiles/ImageMagick","name":"magick.exe","resourceType":"GMIncludedFile","resourceVersion":"2.0",},

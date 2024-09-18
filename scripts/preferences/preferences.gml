@@ -388,6 +388,8 @@
 		var grav = struct_try_get(PREFERENCES, "physics_gravity", [ 0, 10 ]);
 		physics_world_gravity(array_safe_get_fast(grav, 0, 0), array_safe_get_fast(grav, 1, 10));
 		
+		if(MAC) PREFERENCES.multi_window = false;
+		
 		if(PREFERENCES.multi_window) {
 			var _cfg = winwin_config_ext("", winwin_kind_borderless, true, false, winwin_main);
 			    _cfg.clickthrough = true;
