@@ -155,7 +155,7 @@ function NodeObject(_name, _spr, _node, _create, tooltip = "", tags = []) constr
 	
 	static drawList = function(_x, _y, _mx, _my, list_height, _param = {}) {
 		var fav = array_exists(global.FAV_NODES, node);
-		if(fav) draw_sprite_ui_uniform(THEME.star, 0, ui(32), yy + list_height / 2, 0.7, COLORS._main_accent, 1.);
+		if(fav) draw_sprite_ui_uniform(THEME.star, 0, ui(32), _y + list_height / 2, 0.7, COLORS._main_accent, 1.);
 				
 		var spr_x = list_height / 2 + ui(44);
 		var spr_y = _y + list_height / 2;

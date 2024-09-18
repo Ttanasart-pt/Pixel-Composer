@@ -661,6 +661,7 @@ event_inherited();
 				
 				if(is_instanceof(_node, NodeObject)) {
 					tx = _node.drawList(0, yy, _m[0], _m[1], list_height);
+					
 				} else {
 					var spr_x = list_height / 2 + ui(44);
 					var spr_y = yy + list_height / 2;
