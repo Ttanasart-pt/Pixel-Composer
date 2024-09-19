@@ -336,7 +336,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		__action_rotate_90_ccw = method(self, function() { if(tool_selection.is_selected) tool_selection.rotate90ccw() else canvas_action_rotate( 90); });
 		__action_flip_h        = method(self, function() { if(tool_selection.is_selected) tool_selection.flipH()       else canvas_action_flip(1); });
 		__action_flip_v        = method(self, function() { if(tool_selection.is_selected) tool_selection.flipV()       else canvas_action_flip(0); });
-		__action_add_node      = method(self, function(ctx) { dialogCall(o_dialog_add_node, mouse_mx + 8, mouse_my + 8, { context: ctx }); });
+		__action_add_node      = method(self, function(ctx) { var dia = dialogCall(o_dialog_add_node, mouse_mx + 8, mouse_my + 8, { context: ctx }); dia.canvas = true; });
 		__action_make_brush    = method(self, function() { 
 			if(brush.brush_use_surface) {
 				brush.brush_surface = noone;

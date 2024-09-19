@@ -25,7 +25,7 @@ function Panel_Gradient() : PanelContent() constructor {
 			for(var j = 0; j < col; j++) {
 				var ind = i * col + j;
 				if(ind >= amo) break;
-			
+				
 				var xx  = j * gw;
 				var gww = gw - ui(8);
 				var _py = yy + ui(18);

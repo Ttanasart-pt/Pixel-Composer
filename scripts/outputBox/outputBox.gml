@@ -15,6 +15,13 @@ function outputBox() : widget() constructor {
 		
 		draw_set_text(font, fa_left, fa_top, COLORS._main_text_sub);
 		
+		// if(typeof(_value) == "ref") {
+		// 	var _hh = ui(96);
+			
+			
+		// 	return _hh;
+		// }
+		
 		var _txt = string(_value);
 		var _bh  = string_height("l");
         var _sh  = string_height_ext(_txt, -1, w - ui(16));

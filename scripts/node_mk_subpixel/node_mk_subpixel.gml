@@ -72,6 +72,8 @@ function Node_MK_Subpixel(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		
 		update_on_frame = _flku;
 		
+		if(!is_surface(_surf)) return _outSurf;
+		
 		var _dim = surface_get_dimension(_surf);
 		var sh   = sh_mk_subpixel_hex_disc;
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);

@@ -40,6 +40,8 @@ event_inherited();
 	tooltip_surface  = -1;
 	content_hoverable = true;
 	
+	canvas = false;
+	
 	#region ---- category ----
 		category = NODE_CATEGORY;
 		switch(instanceof(context)) {
@@ -146,7 +148,7 @@ event_inherited();
 		
 		if(!_node) return;
 		
-		if(is_instanceof(context, Node_Canvas) || is_instanceof(context, Node_Canvas_Group)) {
+		if(canvas) {
 			UNDO_HOLDING = true;
 			context.nodeTool = new canvas_tool_node(context, _node).init();
 			UNDO_HOLDING = false;

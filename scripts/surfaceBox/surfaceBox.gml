@@ -140,9 +140,9 @@ function surfaceBox(_onModify, def_path = "") : widget() constructor {
 		return h;
 	}
 	
-	static clone = function() { #region
+	static clone = function() {
 		var cln = new surfaceBox(onModify, def_path);
 		
 		return cln;
-	} #endregion
+	}
 }
