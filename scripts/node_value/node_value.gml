@@ -1285,7 +1285,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			arr[@ 1] = self;
 		}
 		
-		if(!expUse || !expTree.validate()) return;
+		if(!expUse || expTree == noone || !expTree.validate()) return;
 			
 		if(global.EVALUATE_HEAD == self)  {
 			noti_warning($"Expression evaluation error : recursive call detected.");

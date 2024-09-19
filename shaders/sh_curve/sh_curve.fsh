@@ -1,6 +1,6 @@
 
 #ifdef _YY_HLSL11_ 
-	#define CURVE_MAX 1024
+	#define CURVE_MAX 256
 #else 
 	#define CURVE_MAX 256
 #endif

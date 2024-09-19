@@ -45,7 +45,7 @@ function Panel_Notification() : PanelContent() constructor {
 	sp_noti = new scrollPane(w - ui(padding + padding), h - ui(padding + padding), function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
 		
-		var hh  = 32;
+		var hh  = ui(8);
 		var yy  = _y;
 		var txw = sp_noti.surface_w - ui(48);
 		if(show_time) txw -= ui(68);

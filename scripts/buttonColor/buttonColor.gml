@@ -140,14 +140,9 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 			var _htg = ui(12);
 			var _bcc = COLORS._main_icon;
 			
-			if(ihover && hover_hex > 0) {
-				var _dis = false;
-				if(ihover && point_in_rectangle(_m[0], _m[1], _bx + _bww, _y, _bx + _bw, _y + _h)) {
+			if(hover_hex > 0) {
+				if(ihover && point_in_rectangle(_m[0], _m[1], _bx + _bw - ui(24), _y, _bx + _bw, _y + _h)) {
 					_htg = _bw - _bh;
-					_dis = true;
-				}
-				
-				if(_dis && point_in_rectangle(_m[0], _m[1], _bx + _bw - ui(24), _y, _bx + _bw, _y + _h)) {
 					_baa = 1.;
 				
 					if(mouse_press(mb_left, iactive)) {
@@ -162,15 +157,14 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 					if(mouse_click(mb_left, iactive))
 						_bcc = COLORS._main_icon_light;
 				}
-			}
-			
-			hover_wid = lerp_float(hover_wid, _htg, 5);
-			if(hover_hex > 0) {
+				
 				draw_set_text(f_p1, fa_right, fa_center, COLORS._main_text_sub);
 				draw_text_add(_bx + _bw - ui(28), _y + _h / 2 + ui(1), color_get_hex(current_color));
 				
 				draw_sprite_ext(interactable && key_mod_press(SHIFT)? THEME.paste_20 : THEME.copy_20, 0, _bcx, _bcy, 1, 1, 0, _bcc, _baa);
 			}
+			
+			hover_wid = lerp_float(hover_wid, _htg, 5);
 			
 			var _a = _color_get_alpha(current_color);
 			if(_a == 1) {

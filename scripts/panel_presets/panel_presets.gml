@@ -76,7 +76,7 @@ function Panel_Presets(_node) : PanelContent() constructor {
 	function onResize() { sc_presets.resize(w - ui(padding + padding), h - ui(padding + padding) - ui(28)); }
 	
 	sc_presets = new scrollPane(w - ui(padding + padding), h - ui(padding + padding) - ui(28), function(_y, _m) {
-		draw_clear_alpha(COLORS.panel_bg_clear, 0);
+		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
 		
 		var _ww = sc_presets.surface_w;
 		var _h  = 0;

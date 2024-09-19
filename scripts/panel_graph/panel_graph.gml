@@ -2284,7 +2284,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         var y1 = y0 + hh;
         
         draw_sprite_stretched(    THEME.ui_panel_bg, 3, x0, y0, ww, hh);
-        draw_sprite_stretched_add(THEME.ui_panel, 1, x0, y0, ww, hh, c_white, 0.25);
+        // draw_sprite_stretched_add(THEME.ui_panel, 1, x0, y0, ww, hh, c_white, 0.1);
         draw_sprite_stretched(    THEME.button_hide_fill, 1, x0 + pd, y0 + pd, tw, th);
         
         tb_search.font = f_p2;

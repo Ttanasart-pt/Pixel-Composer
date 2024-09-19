@@ -60,7 +60,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	newInput(26, nodeValue_Bool("Clamp range", self, false ));
 	
-	newInput(27, nodeValue_Enum_Scroll("Data Type", self,  1, [ "None", "Path", "Segments" ]));
+	newInput(27, nodeValue_Enum_Scroll("Data Type", self, 1, [ "None", "Path", "Segments", "Two points" ]));
 	
 	newInput(28, nodeValue_Vector("Segments", self, [[]]))
 		.setArrayDepth(2);
@@ -71,9 +71,15 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	newInput(31, nodeValue_Padding("Padding", self, [ 0, 0, 0, 0 ]))
 		
+	newInput(32, nodeValue_Vec2("Start Point", self, [ 0, 0.5 ]))
+		.setUnitRef(function(index) /*=>*/ {return getDimension(index)}, VALUE_UNIT.reference);
+		
+	newInput(33, nodeValue_Vec2("End Point", self, [ 1, 0.5 ]))
+		.setUnitRef(function(index) /*=>*/ {return getDimension(index)}, VALUE_UNIT.reference);
+		
 	input_display_list = [
 		["Output",			true],	0, 1, 30, 31, 
-		["Line data",		false], 27, 6, 7, 28, 19, 2, 20, 
+		["Line data",		false], 27, 6, 7, 28, 32, 33, 19, 2, 20, 
 		["Line settings",	false], 17, 3, 11, 12, 8, 25, 9, 26, 13, 14, 
 		["Wiggle",			false], 4, 5, 
 		["Render",			false], 10, 24, 15, 16, 
@@ -110,10 +116,18 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				y1 = _y + y1 * _s;
 				
 				draw_line(x0, y0, x1, y1);
-				
-				// draw_circle(x0, y0, 4, false);
 			}
 		}
+		
+		var _dtype = getInputData(27);
+		var _hov   = false;
+		
+		if(_dtype == 3) {
+			 var hv = inputs[32].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= bool(hv);
+			 var hv = inputs[33].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= bool(hv);
+		}
+		
+		return _hov;
 	}
 	
 	static step = function() {
@@ -134,15 +148,26 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		inputs[ 2].setVisible(!_flen);
 		inputs[20].setVisible( _flen);
 		
+		var _pat   = getInputData( 7);
 		var _dtype = getInputData(27);
+		var _segs  = getInputData(28);
 		var _pbbox = getInputData(30);
+		
+		if(_dtype == 1 && _pat == noone) 
+			_dtype = 0;
+			
+		if(_dtype == 2 && (array_invalid(_segs) || array_invalid(_segs[0]))) 
+			_dtype = 0; 
 		
 		inputs[ 6].setVisible(_dtype == 0);
 		inputs[ 7].setVisible(_dtype == 1, _dtype == 1);
 		inputs[28].setVisible(_dtype == 2, _dtype == 2);
 		
-		inputs[30].setVisible(_dtype);
-		inputs[31].setVisible(_dtype && _pbbox);
+		inputs[30].setVisible( _dtype == 1 || _dtype == 2);
+		inputs[31].setVisible((_dtype == 1 || _dtype == 2) && _pbbox);
+		
+		inputs[32].setVisible(_dtype == 3);
+		inputs[33].setVisible(_dtype == 3);
 	}
 	
 	static onValueUpdate = function(index = 0) {
@@ -191,12 +216,18 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			
 			var _pbbox = _data[30];
 			var _ppadd = _data[31];
+			
+			var _pnt0 = _data[32];
+			var _pnt1 = _data[33];
 		#endregion
 		
-		/////// Guard clauses
+		/////// Check data
 		
-		if(_dtype == 1 && _pat == noone) return _outData;
-		if(_dtype == 2 && (array_invalid(_segs) || array_invalid(_segs[0]))) return _outData; 
+		if(_dtype == 1 && _pat == noone) 
+			_dtype = 0;
+			
+		if(_dtype == 2 && (array_invalid(_segs) || array_invalid(_segs[0]))) 
+			_dtype = 0; 
 		
 		/////// Data
 		
@@ -228,13 +259,25 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		
 		switch(_dtype) {
 			case 0 :
-				_ang = (_ang % 360 + 360) % 360;
-			
+			case 3 :
 				var x0, y0, x1, y1;
-				var _0 = point_rectangle_overlap(_dim[0], _dim[1], (_ang + 180) % 360);
-				var _1 = point_rectangle_overlap(_dim[0], _dim[1], _ang);
-				x0 = _0[0]; y0 = _0[1];
-				x1 = _1[0]; y1 = _1[1];
+				
+				if(_dtype == 0) {
+					_ang = (_ang % 360 + 360) % 360;
+				
+					var _0 = point_rectangle_overlap(_dim[0], _dim[1], (_ang + 180) % 360);
+					var _1 = point_rectangle_overlap(_dim[0], _dim[1], _ang);
+					x0 = _0[0]; 
+					y0 = _0[1];
+					x1 = _1[0]; 
+					y1 = _1[1];
+					
+				} else if(_dtype == 3) {
+					x0 = _pnt0[0]; 
+					y0 = _pnt0[1];
+					x1 = _pnt1[0]; 
+					y1 = _pnt1[1];
+				}
 				
 				var _l = point_distance(x0, y0, x1, y1);
 				var _d = point_direction(x0, y0, x1, y1);
@@ -480,6 +523,8 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				
 				if(_pbbox) _surfDim = [ max(1, maxx - minx + _ppadd[0] + _ppadd[2]), max(1, maxy - miny + _ppadd[1] + _ppadd[3]) ];
 				break;
+				
+				
 		}
 		
 		/////// Draw
