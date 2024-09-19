@@ -84,7 +84,7 @@ function RM_Object() constructor {
 		shader_set_i("shapeAmount",      shapeAmount);
 		if(shapeAmount <= 0) return;
 		
-		shader_set_i("operations",       opmap);
+		shader_set_i("operations",       opmap); //print(opmap);
 		shader_set_f("opArgument",       oparg);
 		shader_set_i("opLength",         array_safe_length(opmap));
 		

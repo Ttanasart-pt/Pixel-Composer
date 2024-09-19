@@ -118,7 +118,7 @@
 #endregion
 
 #region lua
-	// if OS == os_windows // lua_error_handler = _lua_error;
+	lua_error_handler = _lua_error;
 #endregion
 
 //print("===== Game Start End =====");

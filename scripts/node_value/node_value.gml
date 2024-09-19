@@ -1678,7 +1678,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static triggerSetFrom = function() { node.valueUpdate(index); }
 	
-	static setFrom = function(_valueFrom, _update = true, checkRecur = true, log = false) { ////Set from
+	static setFrom = function(_valueFrom, _update = true, checkRecur = true, log = false) { //// Set from
 		
 		if(is_dummy && dummy_get != noone) {
 			var _targ    = dummy_get();
@@ -1712,6 +1712,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		node.valueUpdate(index, _o);
 		if(_update && connect_type == CONNECT_TYPE.input) {
 			node.valueFromUpdate(index);
+			node.refreshNodeDisplay();
 			node.triggerRender();
 			node.clearCacheForward();
 			
@@ -1746,6 +1747,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(connect_type == CONNECT_TYPE.input)
 			node.valueFromUpdate(index);
 		node.clearCacheForward();
+		node.refreshNodeDisplay();
 		
 		PROJECT.modified = true;
 						
