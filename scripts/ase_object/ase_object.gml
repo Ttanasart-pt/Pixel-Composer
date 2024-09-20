@@ -50,7 +50,9 @@ function ase_cel(_layer, _data, _file) constructor {
 			
 		} else if(type == 1) {
 			var frTarget = data[$ "Frame position"];
-			var cel = layerTarget.getCel(frTarget);
+			// print($"Get frame {frTarget}")
+			
+			var cel = layerTarget.getCelRaw(frTarget);
 			if(!cel) return noone;
 			return cel.getSurface();
 			
@@ -60,6 +62,19 @@ function ase_cel(_layer, _data, _file) constructor {
 		}
 		
 		return noone;
+	}
+	
+	function toStr() {
+		return {
+			type: data[$ "Cel type"], 
+			link: data[$ "Frame position"]
+		};
+	}
+	
+	function toString() {
+		var st = json_stringify(toStr());
+		
+		return $"[ase cel] {st}";
 	}
 }
 
@@ -71,16 +86,27 @@ function ase_layer(name, type = 0) constructor {
 	
 	static setFrameCel = function(index, cel) { cels[index] = cel; }
 	
+	static getCelRaw = function(index = CURRENT_FRAME) {
+		ind = safe_mod(index, array_length(cels));
+		return array_safe_get_fast(cels, ind);
+	}
+	
 	static getCel = function(index = CURRENT_FRAME) {
-		var ind;
-		
-		if(tag != noone) {
-			var st = tag[$ "Frame start"];
-			var ed = tag[$ "Frame end"];
-			ind = st + safe_mod(index, ed - st + 1);
-		} else 
-			ind = safe_mod(index, array_length(cels));
+		if(tag == noone) return getCelRaw(index);
+			
+		var st  = tag[$ "Frame start"];
+		var ed  = tag[$ "Frame end"];
+		var ind = st + safe_mod(index, ed - st + 1);
 		
 		return array_safe_get_fast(cels, ind);
+	}
+	
+	function toString() {
+		var st = json_stringify({
+			type, 
+			cels : array_map(cels, function(cel) /*=>*/ {return cel.toStr()}),
+		});
+		
+		return $"[ase layer] {st}";
 	}
 }

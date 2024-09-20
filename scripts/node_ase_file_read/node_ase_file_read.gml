@@ -107,6 +107,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			var _yy = by + ui(4) + i * hh;
 			var tag = tags[i];
 			
+			var _tagName = tag[$ "Name"];
 			var cc = tag[$ "Color"];
 			var st = tag[$ "Frame start"];
 			var ed = tag[$ "Frame end"];
@@ -137,11 +138,8 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			if(_hover && point_in_rectangle(_m[0], _m[1], _x + 8, _yy, _x + _w - 8, _yy + hh)) {
 				draw_sprite_stretched_add(THEME.ui_panel, 0, _x + 8, _tgy, _w - 16, _tgh, c_white, 0.1);
 				
-				if(mouse_press(mb_left, _focus)) {
-					var _currTag = getInputData(2);
-					var _tagName = tag[$ "Name"];
-					inputs[2].setValue(_currTag == _tagName? "" : _tagName);
-				}
+				if(mouse_press(mb_left, _focus))
+					inputs[2].setValue(current_tag == _tagName? "" : _tagName);
 			}
 			
 			draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
@@ -370,15 +368,16 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		blend_temp_surface = temp_surface[2];
 		
 		for( var i = 0, n = array_length(layers); i < n; i++ ) {
+			// print($"{i}: {layers[i]}");
+			
 			layers[i].tag = tag;
 			var cel = layers[i].getCel(CURRENT_FRAME - _tag_delay);
 			if(!cel) continue;
 			if(!array_safe_get_fast(vis, i, true)) continue;
 		
 			var _inSurf = cel.getSurface();
-			if(!is_surface(_inSurf)) 
-				continue;
-		
+			if(!is_surface(_inSurf)) continue;
+			
 			var xx = cel.data[$ "X"];
 			var yy = cel.data[$ "Y"];
 			
