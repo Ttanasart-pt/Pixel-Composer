@@ -668,11 +668,8 @@ function Panel_Menu() : PanelContent() constructor {
         #endregion
         
         #region title
-            var txt = "";
-            if(PROJECT.safeMode) txt += $"[{__txt("SAFE MODE")}] ";
-            if(PROJECT.readonly) txt += $"[{__txt("READ ONLY")}] ";
             
-            txt += PROJECT.path == ""? __txt("Untitled") : filename_name_only(PROJECT.path);
+            var txt = PROJECT.path == ""? __txt("Untitled") : filename_name_only(PROJECT.path);
             if(PROJECT.modified) txt += "*";
             
             var tx0, tx1, tcx;
@@ -742,12 +739,35 @@ function Panel_Menu() : PanelContent() constructor {
             var _tcw = string_width(tc);
             
             if(hori) {
+                var _tyc = (ty0 + ty1) / 2;
+                
                 draw_set_text(f_p0b, fa_left, fa_center, COLORS._main_text);
-                draw_text_int(tcx - _tcw / 2, (ty0 + ty1) / 2, tc);
+                draw_text_int(tcx - _tcw / 2, _tyc, tc);
                 
                 if(full_name) {
                     draw_set_color(COLORS._main_text_sub);
-                    draw_text_int(tcx + _tcw / 2, (ty0 + ty1) / 2, ".pxc");
+                    draw_text_int(tcx + _tcw / 2, _tyc, ".pxc");
+                    
+                    if(PROJECT.readonly) {
+                        var _rd_lx = tcx - _tcw / 2 - ui(2);
+                        var _rd_ly = _tyc;
+                        var _rd_t  = "Read only";
+                        
+                        draw_set_font(f_p3);
+                        var _rd_w = string_width(_rd_t)  + ui(8);
+                        var _rd_h = string_height(_rd_t) + ui(4);
+                        
+                        var _rd_x0 = _rd_lx - _rd_w - ui(8);
+                        var _rd_x1 = _rd_x0 + _rd_w;
+                        
+                        var _rd_y0 = _rd_ly - _rd_h / 2;
+                        var _rd_y1 = _rd_ly + _rd_h / 2;
+                        
+                        draw_sprite_stretched_ext(THEME.s_box_r2, 0, _rd_x0, _rd_y0, _rd_w, _rd_h, COLORS._main_icon);
+                        
+                        draw_set_text(f_p3, fa_center, fa_center, COLORS._main_icon_dark);
+                        draw_text(_rd_x0 + _rd_w / 2, _rd_y0 + _rd_h / 2, _rd_t);
+                    }
                 }
                 
             } else {
@@ -760,6 +780,8 @@ function Panel_Menu() : PanelContent() constructor {
                 }
                 
             }
+            
+            draw_set_font(f_p0b);
             
             if(IS_PATREON && PREFERENCES.show_supporter_icon) {
                 var _tw  = string_width(tc);

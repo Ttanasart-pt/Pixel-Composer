@@ -2107,6 +2107,7 @@
     {"name":"s_node_caustic","order":35,"path":"sprites/s_node_caustic/s_node_caustic.yy",},
     {"name":"s_node_chromatic_abarration","order":10,"path":"sprites/s_node_chromatic_abarration/s_node_chromatic_abarration.yy",},
     {"name":"s_node_color_adjust","order":1,"path":"sprites/s_node_color_adjust/s_node_color_adjust.yy",},
+    {"name":"s_node_color_data_label","order":27,"path":"sprites/s_node_color_data_label/s_node_color_data_label.yy",},
     {"name":"s_node_color_data","order":2,"path":"sprites/s_node_color_data/s_node_color_data.yy",},
     {"name":"s_node_color_from_hsv","order":3,"path":"sprites/s_node_color_from_hsv/s_node_color_from_hsv.yy",},
     {"name":"s_node_color_from_rgb","order":4,"path":"sprites/s_node_color_from_rgb/s_node_color_from_rgb.yy",},

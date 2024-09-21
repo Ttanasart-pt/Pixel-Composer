@@ -45,4 +45,25 @@ function Node_Color_Data(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		
 		return _n? val / 255 : val;
 	}
+	
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+		var bbox = drawGetBbox(xx, yy, _s);
+		
+		draw_set_text(f_sdf, fa_right, fa_center, COLORS._main_text);
+		
+		for(var i = 0; i < array_length(outputs); i++) {
+			var val = outputs[i];
+			if(!val.isVisible()) continue;
+			
+			var _bx1 = bbox.x1 -  8 * _s;
+			var _bx0 = _bx1    - 20 * _s;
+			
+			var _by  = val.y;
+			var _by0 = _by - 10 * _s;
+			var _by1 = _by + 10 * _s;
+			
+			draw_sprite_stretched_points(s_node_color_data_label, i, _bx0, _by0, _bx1, _by1);
+		}
+	}
+	
 }

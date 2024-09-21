@@ -1695,6 +1695,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			return removeFrom();
 		
 		run_in(2, function() /*=>*/ { updateColor(getValue()); });
+		
 		var conn = isConnectable(_valueFrom, checkRecur, log);
 		if(conn < 0) return conn;
 		

@@ -283,7 +283,7 @@ function Panel_Collection() : PanelContent() constructor {
 									case FILE_TYPE.project    : _typ = "Project";    break;
 								}
 								
-								DRAGGING = { type : _typ, data : _node }
+								DRAGGING = { type : _typ, data : _node };
 							}
 							
 							if(!DEMO && mouse_press(mb_right, pFOCUS)) {

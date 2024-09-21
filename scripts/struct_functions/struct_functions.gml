@@ -1,7 +1,7 @@
 #macro struct_has variable_struct_exists
 #macro struct_key variable_struct_get_names
 
-function struct_override(original, override) { #region
+function struct_override(original, override) {
 	INLINE
 	
 	var args = variable_struct_get_names(override);
@@ -14,9 +14,9 @@ function struct_override(original, override) { #region
 	}
 	
 	return original;
-} #endregion
+}
 
-function struct_override_nested(original, override) { #region
+function struct_override_nested(original, override) {
 	INLINE
 	
 	var args = variable_struct_get_names(override);
@@ -32,9 +32,9 @@ function struct_override_nested(original, override) { #region
 	}
 	
 	return original;
-} #endregion
+}
 
-function struct_append(original, append) { #region
+function struct_append(original, append) {
 	INLINE
 	
 	var args = variable_struct_get_names(append);
@@ -43,22 +43,22 @@ function struct_append(original, append) { #region
 		original[$ args[i]] = append[$ args[i]];
 	
 	return original;
-} #endregion
+}
 
-function struct_try_get(struct, key, def = 0) { #region
+function struct_try_get(struct, key, def = 0) {
 	INLINE
 	
 	if(struct[$ key] != undefined) return struct[$ key];
 	
 	key = string_replace_all(key, "_", " ");
 	return struct[$ key] ?? def;
-} #endregion
+}
 
-function struct_try_override(original, override, key) { #region
+function struct_try_override(original, override, key) {
 	INLINE
 	
 	if(!is_struct(original) || !is_struct(override)) return;
 	if(!struct_has(override, key)) return;
 	
 	original[$ key] = override[$ key];
-} #endregion
+}

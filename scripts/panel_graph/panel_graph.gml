@@ -2376,11 +2376,14 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         _sl_x = w / 2 - slider_width / 2;
         _sl_y = h - toolbar_height - ui(8) - _sl_h;
         
+        var _dpd = 12;
+        // draw_sprite_stretched(THEME.dialog, 0, _sl_x - _dpd, _sl_y - _dpd, slider_width + _dpd * 2, _sl_h + _dpd * 2);
         draw_sprite_stretched(THEME.ui_panel_bg, 3, _sl_x, _sl_y, slider_width, _sl_h);
         
         if(cur != noone) draw_text_add(round(w / 2), round(_sl_y + ui(8)), cur.slide_title);
         
         var _hv = false;
+        var _sn = ui(8);
         
         for(var i = 0; i < amo; i++) {
             var _sx = _ss_x + ui(16) + i * ui(16);
@@ -2392,7 +2395,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
             
             var slid = struct_try_get(project.slideShow, project.slideShow_keys[i], noone);
             
-            if(pHOVER && point_in_circle(mx, my, _sx, _sy, ui(8))) {
+            if(pHOVER && point_in_rectangle(mx, my, _sx - _sn, _sy - _sn, _sx + _sn, _sy + _sn)) {
                 if(slid) TOOLTIP = slid.slide_title;
                 _hv = true;
                 aa  = 1;
@@ -2414,6 +2417,35 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                 if(mouse_press(mb_left, pFOCUS)) 
                     setSlideShow((ind + 1) % amo);
             }
+        }
+        
+        var _dir = filename_name_only(filename_dir(PROJECT.path));
+        if(_dir == "Getting started") {
+        	var _spx1 = _sl_x - ui(8);
+        	var _spx0 = _spx1 - ui(40);
+        	
+        	var _spy0 = _sl_y;
+        	var _spy1 = _sl_y + _sl_h;
+        	
+        	var _spw = _spx1 - _spx0;
+        	var _sph = _spy1 - _spy0;
+        	
+        	draw_sprite_stretched(THEME.ui_panel_bg, 3, _spx0, _spy0, _spw, _sph);
+        	
+        	if(point_in_rectangle(mx, my, _spx0, _spy0, _spx1, _spy1)) { 
+	            mouse_on_graph = false;
+	            
+	            if(pHOVER && !_hv) {
+	            	TOOLTIP = __txt("Splash screen");
+	                draw_sprite_stretched_add(THEME.ui_panel_bg, 4, _spx0, _spy0, _spw, _sph, COLORS._main_icon, 0.05);
+	                draw_sprite_stretched_add(THEME.ui_panel, 1, _spx0, _spy0, _spw, _sph, c_white, 0.1);
+	                
+	                if(mouse_press(mb_left, pFOCUS)) 
+	                    dialogCall(o_dialog_splash);
+	            }
+	        }
+	        
+	        draw_sprite_ui(THEME.hamburger_s, 0, _spx0 + _spw / 2, _spy0 + _sph / 2, 1, 1, 0, COLORS._main_icon);
         }
     }
     

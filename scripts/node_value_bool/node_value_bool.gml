@@ -8,7 +8,8 @@ function NodeValue_Bool(_name, _node, _value, _tooltip = "") : NodeValue(_name, 
 		getValueRecursive(self.__curr_get_val, _time);
 		var val = __curr_get_val[0];
 		var nod = __curr_get_val[1];
-		return bool(val);
+		
+		return is_array(val)? array_map(val, function(v) /*=>*/ {return bool(v)}) : bool(val);
 	}
 	
 	static __getAnimValue = function(_time = CURRENT_FRAME) {

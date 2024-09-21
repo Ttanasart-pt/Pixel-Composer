@@ -2838,6 +2838,7 @@
     {"id":{"name":"s_node_checker","path":"sprites/s_node_checker/s_node_checker.yy",},},
     {"id":{"name":"s_node_chromatic_abarration","path":"sprites/s_node_chromatic_abarration/s_node_chromatic_abarration.yy",},},
     {"id":{"name":"s_node_color_adjust","path":"sprites/s_node_color_adjust/s_node_color_adjust.yy",},},
+    {"id":{"name":"s_node_color_data_label","path":"sprites/s_node_color_data_label/s_node_color_data_label.yy",},},
     {"id":{"name":"s_node_color_data","path":"sprites/s_node_color_data/s_node_color_data.yy",},},
     {"id":{"name":"s_node_color_from_hsv","path":"sprites/s_node_color_from_hsv/s_node_color_from_hsv.yy",},},
     {"id":{"name":"s_node_color_from_rgb","path":"sprites/s_node_color_from_rgb/s_node_color_from_rgb.yy",},},
