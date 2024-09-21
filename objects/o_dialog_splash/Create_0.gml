@@ -232,6 +232,12 @@ event_inherited();
 			
 			if(yy > -grid_heigh && yy < sp_sample.surface_h) {
 				draw_sprite_stretched(THEME.node_bg, 0, _boxx, yy, grid_width, grid_heigh);
+				
+				if(_project.path == PROJECT.path) {
+					draw_sprite_stretched_ext(THEME.node_bg, 0, _boxx, yy, grid_width, grid_heigh, COLORS._main_accent, 1);
+					draw_sprite_stretched_add(THEME.node_bg, 1, _boxx, yy, grid_width, grid_heigh, COLORS._main_accent, 0.25);
+				}
+					
 				if(sHOVER && sp_sample.hover && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_heigh)) {
 					sp_sample.hover_content = true;
 					
