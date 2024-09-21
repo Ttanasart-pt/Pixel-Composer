@@ -50,7 +50,7 @@ function LOAD_PATH(path, readonly = false, safe_mode = false) {
 	if(_PROJECT == noone) {
 		PROJECTS = [ PROJECT ];
 		
-	} else if(!_rep && _PROJECT.path == "" && !_PROJECT.modified) {
+	} else if(!_rep && ((_PROJECT.path == "" || _PROJECT.readonly) && !_PROJECT.modified)) {
 		var ind = array_find(PROJECTS, _PROJECT);
 		if(ind == -1) ind = 0;
 		PROJECTS[ind] = PROJECT;

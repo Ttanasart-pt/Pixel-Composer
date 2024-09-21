@@ -83,16 +83,16 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	array_push(attributeEditors, [ "File Watcher", function() { return attributes.file_checker; }, 
 		new checkBox(function() { attributes.file_checker = !attributes.file_checker; }) ]);
 	
-	on_drop_file = function(path) {
-		if(directory_exists(path)) {
+	on_drop_file = function(_path) {
+		if(directory_exists(_path)) {
 			with(dialogCall(o_dialog_drag_folder, WIN_W / 2, WIN_H / 2)) {
-				dir_paths = path;
+				dir_paths = _path;
 				target    = other;
 			}
 			return true;
 		}
 		
-		var paths = paths_to_array_ext(path);
+		var paths = paths_to_array_ext(_path);
 		
 		inputs[0].setValue(paths);
 		if(updatePaths(paths)) {
@@ -128,7 +128,7 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				case ".png"	 :
 				case ".jpg"	 :
 				case ".jpeg" :
-					var _real_path = sprite_path_check_depth(path);
+					var _real_path = sprite_path_check_depth(_path);
 					var _spr = sprite_add(_real_path, 1, false, false, 0, 0);
 					
 					if(_spr == -1) {

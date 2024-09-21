@@ -24,8 +24,8 @@ function sprite_path_check_depth(path, noti = true) {
 	if(filename_ext(path) != ".png") return path;
 	
 	var _data = read_png_header(path, noti);
-	if(_data == noone) return path;
-	if(_data.depth == 8) return path;
+	if(_data == noone)   return path;
+	if(_data.depth <= 8) return path;
 	
 	if(noti) noti_warning($"{_data.depth} bits image is not supported. Proxy will be used.");
 	
