@@ -225,7 +225,10 @@ void main(in VertexShaderOutput _input, out PixelShaderOutput output) {
 	insp1UpdateTooltip  = __txt("Compile");
 	insp1UpdateIcon     = [ THEME.refresh_icon, 1, COLORS._main_value_positive ];
 	
-	static onInspector1Update = function() { refreshShader(); }
+	static onInspector1Update = function() { 
+		refreshShader();
+		triggerRender();
+	}
 	
 	static step = function() { argument_renderer.showValue = input_display_list[9][1]; }
 	

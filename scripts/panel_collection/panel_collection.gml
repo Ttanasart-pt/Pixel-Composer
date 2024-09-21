@@ -297,7 +297,7 @@ function Panel_Collection() : PanelContent() constructor {
 						}
 						
 						if(_node.path == updated_path && updated_prog > 0) 
-							draw_sprite_stretched_ext(THEME.node_glow_border, 0, _boxx - 9, yy - 9, grid_size + 18, grid_size + 18, COLORS._main_value_positive, updated_prog);
+							draw_sprite_stretched_ext(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size, COLORS._main_value_positive, updated_prog);
 						
 						if(variable_struct_exists(_node, "getSpr")) _node.getSpr();
 						
