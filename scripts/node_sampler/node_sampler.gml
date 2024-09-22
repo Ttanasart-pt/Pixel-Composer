@@ -14,6 +14,9 @@ function Node_Sampler(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	newOutput(0, nodeValue_Output("Color", self, VALUE_TYPE.color, c_white));
 	
+	attribute_oversample(true);
+	attributes.oversample = 1;
+	
 	static getPreviewValues = function() { return getInputData(0); }
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
@@ -65,10 +68,27 @@ function Node_Sampler(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		for( var j = -_sam; j <= _sam; j++ ) {
 			var px = _pos[0] + i;
 			var py = _pos[1] + j;
-			if(px < 0) continue;
-			if(py < 0) continue;
-			if(px >= ww) continue;
-			if(py >= hh) continue;
+			
+			if(px < 0 || py < 0 || px >= ww || py >= hh) {
+				switch(attributes.oversample) {
+					case 0 : continue;
+					
+					case 1 :
+						px = clamp(px, 0, ww - 1);	
+						py = clamp(py, 0, hh - 1);
+						break;
+						
+					case 2 :
+						px = safe_mod(px, ww - 1);	
+						py = safe_mod(py, hh - 1);
+						break;
+						
+					case 3 : 
+						a += 255;
+						amo++;
+						continue;
+				}
+			}
 			
 			var cc = int64(surface_get_pixel_ext(_surf, px, py));
 			
@@ -79,10 +99,12 @@ function Node_Sampler(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			amo++;
 		}
 		
-		r /= amo;
-		g /= amo;
-		b /= amo;
-		a /= amo;
+		if(amo > 0) {
+			r /= amo;
+			g /= amo;
+			b /= amo;
+			a /= amo;
+		}
 		
 		return make_color_rgba(r, g, b, _alp? a : 255);
 	}

@@ -57,7 +57,7 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		}
 		
 		if(dup && error_notification == noone) {
-			error_notification = noti_error("Duplicated key: " + string(_key));
+			error_notification = noti_error($"Duplicated key: {_key}");
 			error_notification.onClick = function() { PANEL_GRAPH.focusNode(self); };
 		} else if(!dup && error_notification) {
 			noti_remove(error_notification);
@@ -72,15 +72,19 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var amo = ds_map_size(project.tunnels_in_map);
 		var k   = ds_map_find_first(project.tunnels_in_map);
 		repeat(amo) {
-			if(ds_map_exists(PROJECT.nodeMap, k) && struct_has(PROJECT.nodeMap[? k], "resetMap")) 
-				PROJECT.nodeMap[? k].resetMap();
+			var _n = project.nodeMap[? k];
+			if(_n.active && is_instanceof(_n, Node_Tunnel_In)) 
+				_n.resetMap();
+				
 			k = ds_map_find_next(project.tunnels_in_map, k);	
 		}
 		
 		var k   = ds_map_find_first(project.tunnels_in_map);
 		repeat(amo) {
-			if(ds_map_exists(PROJECT.nodeMap, k) && struct_has(PROJECT.nodeMap[? k], "checkDuplicate")) 
-				PROJECT.nodeMap[? k].checkDuplicate();
+			var _n = project.nodeMap[? k];
+			if(_n.active && is_instanceof(_n, Node_Tunnel_In)) 
+				_n.checkDuplicate();
+			
 			k = ds_map_find_next(project.tunnels_in_map, k);	
 		}
 		
@@ -102,11 +106,11 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	}
 	
 	static getNextNodes = function() {
-		var nodes = [];
+		var nodes     = [];
 		var nodeNames = [];
-		var _key = inputs[0].getValue();
-		var amo  = ds_map_size(project.tunnels_out);
-		var k    = ds_map_find_first(project.tunnels_out);
+		var _key      = inputs[0].getValue();
+		var amo       = ds_map_size(project.tunnels_out);
+		var k         = ds_map_find_first(project.tunnels_out);
 		
 		LOG_BLOCK_START();
 		LOG_IF(global.FLAG.render == 1, $"→→→→→ Call get next node from: {INAME}");
@@ -255,5 +259,15 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static onDestroy = function() {
 		if(error_notification != noone)
 			noti_remove(error_notification);
+	
+		var _key = inputs[0].getValue();
+		
+		ds_map_delete(project.tunnels_in_map,  node_id);
+		ds_map_delete(project.tunnels_in,     _key);
 	}
+	
+	static onRestore = function() {
+		resetMap();
+	}
+	
 }
