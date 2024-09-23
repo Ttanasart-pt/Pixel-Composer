@@ -18,8 +18,7 @@ function Node_Atlas_Draw(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		if(atl == noone) return;
 		if(is_array(atl) && array_length(atl) == 0) return;
 		
-		if(!is_array(atl))
-			atl = [ atl ];
+		if(!is_array(atl)) atl = [ atl ];
 		
 		var outSurf = outputs[0].getValue();
 		outSurf = surface_verify(outSurf, dim[0], dim[1]);
@@ -27,8 +26,11 @@ function Node_Atlas_Draw(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		surface_set_shader(outSurf,,, BLEND.alpha);
 			for( var i = 0, n = array_length(atl); i < n; i++ ) {
-				shader_set_interpolation(atl[i].getSurface())
-				atl[i].draw();
+				var _a = atl[i];
+				if(!is_instanceof(_a, Atlas)) continue;
+				
+				shader_set_interpolation(_a.getSurface())
+				_a.draw();
 			}
 		surface_reset_shader();
 	}

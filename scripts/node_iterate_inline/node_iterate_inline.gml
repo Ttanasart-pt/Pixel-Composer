@@ -92,7 +92,10 @@ function Node_Iterate_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 		if(!junc_in || !junc_out) return noone;
 		if(!junc_in.node.active || !junc_out.node.active) return noone;
 		
+		params.dashed = true; params.loop   = true;
 		drawJuncConnection(junc_out, junc_in, params);
+		params.dashed = false; params.loop   = false;
+		
 		return noone;
 	}
 	

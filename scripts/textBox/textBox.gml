@@ -207,7 +207,9 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				}
 			} else {
 				if(key_mod_press(CTRL) && keyboard_check_pressed(ord("V"))) {
-					KEYBOARD_STRING = clipboard_get_text();
+					var _ctxt = clipboard_get_text();
+					    _ctxt = string_replace_all(_ctxt, "\t", "    ");
+					KEYBOARD_STRING = _ctxt;
 					edited = true;
 				}
 					

@@ -6,11 +6,11 @@ function Node_Application_In(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	APP_SURF_OVERRIDE = true;
 	
-	static step = function() { #region
+	static step = function() {
 		LIVE_UPDATE = true;
-	} #endregion
+	}
 	
-	static update = function() { #region
+	static update = function() {
 		var s = inputs[0].getValue();
 		
 		if(!is_surface(s)) return;
@@ -20,5 +20,5 @@ function Node_Application_In(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			draw_surface_stretched(s, 0, 0, WIN_W, WIN_H);
 			BLEND_NORMAL
 		surface_reset_target();
-	} #endregion
+	}
 }

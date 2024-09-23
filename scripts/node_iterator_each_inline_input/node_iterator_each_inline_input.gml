@@ -17,7 +17,7 @@ function Node_Iterator_Each_Inline_Input(_x, _y, _group = noone) : Node(_x, _y, 
 		array_push(arr, loop);
 	}
 	
-	static update = function() { #region
+	static update = function() {
 		if(!is_instanceof(loop, Node_Iterate_Each_Inline)) return;
 		
 		var _typ = inputs[0].value_from == noone? VALUE_TYPE.any : inputs[0].value_from.type;
@@ -30,5 +30,5 @@ function Node_Iterator_Each_Inline_Input(_x, _y, _group = noone) : Node(_x, _y, 
 		if(!is_array(val)) return;
 		
 		outputs[0].setValue(array_safe_get_fast(val, itr));
-	} #endregion
+	}
 }

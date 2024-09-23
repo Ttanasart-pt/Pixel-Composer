@@ -30,10 +30,13 @@ function Node_Noise_Aniso(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	newInput(9, nodeValue_Enum_Scroll("Render mode", self,  0, [ "Blend", "Waterfall" ] ))
 		
+	newInput(10, nodeValue_Float("Color Seed", self, seed_random(6)))
+		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[2].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
+	
 	input_display_list = [
 		["Output",	false], 0, 
 		["Noise",	false], 2, 1, 6, 5, 7, 3, 4, 8, 
-		["Render",	false], 9, 
+		["Render",	false], 9, 10, 
 	];
 	
 	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
@@ -47,27 +50,31 @@ function Node_Noise_Aniso(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		return _hov;
 	}
 	
-	static step = function() { #region
+	static step = function() {
 		inputs[1].mappableStep();
 		inputs[4].mappableStep();
 		inputs[5].mappableStep();
-	} #endregion
+	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _dim = _data[0];
 		var _pos = _data[3];
+		var _mod = _data[9];
+		
+		inputs[10].setVisible(_mod == 0);
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
 		surface_set_shader(_outSurf, sh_ani_noise);
 			shader_set_f("position",	_pos[0] / _dim[0], _pos[1] / _dim[1]);
 			shader_set_f("seed",		_data[2]);
+			shader_set_f("colrSeed",	_data[10]);
 			
 			shader_set_f_map("noiseX",  _data[1], _data[6], inputs[1]);
 			shader_set_f_map("noiseY",  _data[5], _data[7], inputs[5]);
 			shader_set_f_map("angle",	_data[4], _data[8], inputs[4]);
 			
-			shader_set_i("mode",		_data[9]);
+			shader_set_i("mode",		_mod);
 			
 			draw_sprite_stretched(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1]);
 		surface_reset_shader();

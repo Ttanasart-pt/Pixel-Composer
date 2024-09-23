@@ -410,8 +410,11 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 					clipboard_set_text(string_copy(_input_text, minc + 1, maxc - minc));
 				}
 			} else {
-				if(key_mod_press(CTRL) && keyboard_check_pressed(ord("V")))
-					KEYBOARD_STRING = clipboard_get_text();
+				if(key_mod_press(CTRL) && keyboard_check_pressed(ord("V"))) {
+					var _ctxt = clipboard_get_text();
+					    _ctxt = string_replace_all(_ctxt, "\t", "    ");
+					KEYBOARD_STRING = _ctxt;
+				}
 				
 				if(keyboard_check_pressed(vk_escape)) {
 				} else if(keyboard_check_pressed(vk_tab)) {

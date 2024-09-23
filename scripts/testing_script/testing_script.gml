@@ -133,7 +133,12 @@ function __test_load_all_nodes() {
 		if(index > inded) break;
 		if(index > indst) {
 			var node = ALL_NODES[? k];
+			k = ds_map_find_next(ALL_NODES, k);
+			
+			if(!node.testable) continue;
+			
 			print($"==== Building {node.node} ====");
+			
 			var b = node.build(xx, yy);
 			
 			if(++ind > col) {
@@ -153,7 +158,6 @@ function __test_load_all_nodes() {
 		}
 		
 		index++;
-		k = ds_map_find_next(ALL_NODES, k);
 	}
 	LOADING = false;
 }

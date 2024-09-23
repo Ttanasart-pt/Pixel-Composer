@@ -2384,7 +2384,6 @@ function drawJuncConnection(from, to, params) {
 		to.draw_line_shift_hover = false;
 			
 		var downDirection = to.type == VALUE_TYPE.action || from.type == VALUE_TYPE.action;
-		// if(downDirection) print($"{to} : {from}");
 	#endregion
 	
 	#region +++++ CHECK HOVER +++++

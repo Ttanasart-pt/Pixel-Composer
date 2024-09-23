@@ -238,8 +238,12 @@ function Render(partial = false, runAction = false) { #region
 				
 				var nextNodes = rendering.getNextNodes();
 				for( var i = 0, n = array_length(nextNodes); i < n; i++ ) {
-					if(nextNodes[i].isRenderable())
-						RENDER_QUEUE.enqueue(nextNodes[i]);
+					var nextNode = nextNodes[i];
+					
+					if(!is_instanceof(nextNode, __Node_Base)) continue;
+					if(!nextNode.isRenderable()) continue;
+					
+					RENDER_QUEUE.enqueue(nextNode);
 				}
 				
 				if(runAction && rendering.hasInspector1Update())

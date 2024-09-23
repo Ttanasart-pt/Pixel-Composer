@@ -12,11 +12,11 @@ function Node_Application_Out(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	
 	APP_SURF_OVERRIDE = true;
 	
-	static step = function() { #region
+	static step = function() {
 		LIVE_UPDATE = true;
-	} #endregion
+	}
 	
-	static update = function() { #region
+	static update = function() {
 		outputs[0].setValue(PRE_APP_SURF);
-	} #endregion
+	}
 }

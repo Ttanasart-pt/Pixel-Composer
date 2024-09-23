@@ -18,6 +18,7 @@ function NodeObject(_name, _spr, _node, _create, tooltip = "", tags = []) constr
 	show_in_global = true;
 	
 	is_patreon_extra = false;
+	testable = true;
 	
 	_fn = registerFunctionLite("New node", _name, function(_node) { PANEL_GRAPH.createNodeHotkey(_node); }, [ _node ]);
 	_fn.spr = _spr;
@@ -72,9 +73,12 @@ function NodeObject(_name, _spr, _node, _create, tooltip = "", tags = []) constr
 		if(IS_CMD) return self;
 		
 		show_in_recent = false;
+		testable       = false;
 		variable_struct_remove(FUNCTIONS, _fn.fnName);
 		return self;
 	}
+	
+	static notTest = function() { testable = false; return self; }
 	
 	static hideGlobal = function() {
 		INLINE 
@@ -539,7 +543,7 @@ function __initNodes() {
 		addNodeObject(input, "Websocket Receiver",	s_node_websocket_receive,	"Node_Websocket_Receiver",	[1, Node_Websocket_Receiver],, "Create websocket server to receive data from the network.").setVersion(1145);
 		addNodeObject(input, "Websocket Sender",	s_node_websocket_send,		"Node_Websocket_Sender",	[1, Node_Websocket_Sender],, "Create websocket server to send data to the network.").setVersion(1145);
 		addNodeObject(input, "Spout Sender",		s_node_spout,				"Node_Spout_Send",			[1, Node_Spout_Send],, "Send surface through Spout.").setVersion(11600);
-		addNodeObject(input, "MIDI In",				s_node_midi,				"Node_MIDI_In",				[1, Node_MIDI_In],, "Receive MIDI message.").setVersion(11630);
+		addNodeObject(input, "MIDI In",				s_node_midi,				"Node_MIDI_In",				[1, Node_MIDI_In],, "Receive MIDI message.").setVersion(11630).notTest();
 		addNodeObject(input, "HTTP",				s_node_http,				"Node_HTTP_request",		[1, Node_HTTP_request],, "Request data from the internet.").setVersion(11780);
 	#endregion
 	
@@ -1082,9 +1086,9 @@ function __initNodes() {
 		addNodeObject(node, "Argument",			s_node_argument,			"Node_Argument",			[1, Node_Argument]).setVersion(11660);
 		addNodeObject(node, "Terminal trigger",	s_node_terminal_trigger,	"Node_Terminal_Trigger",	[1, Node_Terminal_Trigger]).setVersion(11660);
 		addNodeObject(node, "Execute Shell",	s_node_shell_excecute,		"Node_Shell",				[1, Node_Shell], ["terminal", "execute", "run"], "Execute shell script.").setVersion(11530);
-		addNodeObject(node, "Monitor Capture",	s_node_monitor_capture,		"Node_Monitor_Capture",		[1, Node_Monitor_Capture]);
-		addNodeObject(node, "GUI In",			s_node_gui_in,				"Node_Application_In",		[1, Node_Application_In]);
-		addNodeObject(node, "GUI Out",			s_node_gui_out,				"Node_Application_Out",		[1, Node_Application_Out]);
+		addNodeObject(node, "Monitor Capture",	s_node_monitor_capture,		"Node_Monitor_Capture",		[1, Node_Monitor_Capture]).notTest();
+		addNodeObject(node, "GUI In",			s_node_gui_in,				"Node_Application_In",		[1, Node_Application_In]).notTest();
+		addNodeObject(node, "GUI Out",			s_node_gui_out,				"Node_Application_Out",		[1, Node_Application_Out]).notTest();
 		// addNodeObject(node, "DLL",				s_node_gui_out,				"Node_DLL",					[1, Node_DLL]).setVersion(11750);
 	#endregion
 	
