@@ -1791,6 +1791,7 @@
     {"name":"s_button_bottom_right","order":1,"path":"sprites/s_button_bottom_right/s_button_bottom_right.yy",},
     {"name":"s_button_hide_circle_28","order":2,"path":"sprites/s_button_hide_circle_28/s_button_hide_circle_28.yy",},
     {"name":"s_button_hide_fill","order":3,"path":"sprites/s_button_hide_fill/s_button_hide_fill.yy",},
+    {"name":"s_button_hide_fill1036","order":157,"path":"sprites/s_button_hide_fill1036/s_button_hide_fill1036.yy",},
     {"name":"s_button_hide_left","order":4,"path":"sprites/s_button_hide_left/s_button_hide_left.yy",},
     {"name":"s_button_hide_middle","order":5,"path":"sprites/s_button_hide_middle/s_button_hide_middle.yy",},
     {"name":"s_button_hide_right","order":6,"path":"sprites/s_button_hide_right/s_button_hide_right.yy",},

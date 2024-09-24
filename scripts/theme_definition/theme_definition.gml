@@ -363,7 +363,7 @@ function Theme() constructor {
     button_hide_left                = s_button_hide_left;
     button_hide_middle              = s_button_hide_middle;
     button_hide_right               = s_button_hide_right;
-    button_hide                     = s_button_hide;
+    button_hide                     = s_button_hide_fill;
     button_left                     = s_button_left;
     button_lime                     = s_button_lime;
     button_middle                   = s_button_middle;

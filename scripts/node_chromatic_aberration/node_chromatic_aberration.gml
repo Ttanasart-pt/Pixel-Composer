@@ -19,17 +19,19 @@ function Node_Chromatic_Aberration(_x, _y, _group = noone) : Node_Processor(_x, 
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
+	newInput(5, nodeValue_Enum_Scroll("Type", self, 0, [ "Spherical", "Scale" ]));
+	
 	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 3, 
 		["Surface",  false], 0, 
 		["Effect",   false], 1, 2, 4, 
-	]
+	];
 	
 	attribute_surface_depth();
 	attribute_interpolation();
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var pos  = getInputData(1);
 		var px   = _x + pos[0] * _s;
 		var py   = _y + pos[1] * _s;
@@ -38,22 +40,24 @@ function Node_Chromatic_Aberration(_x, _y, _group = noone) : Node_Processor(_x, 
 		var hv = inputs[1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= hv;
 		
 		return _hov;
-	} #endregion
+	}
 	
-	static step = function() { #region
+	static step = function() {
 		inputs[2].mappableStep();
-	} #endregion
+	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		
 		surface_set_shader(_outSurf, sh_chromatic_aberration);
-		shader_set_interpolation(_data[0]);
-			shader_set_f("dimension", surface_get_width_safe(_data[0]), surface_get_height_safe(_data[0]));
+			shader_set_interpolation(    _data[0]);
+			shader_set_dim("dimension",  _data[0]);
+			// shader_set_i("type",         _data[5]);
 			shader_set_2("center",       _data[1]);
 			shader_set_f_map("strength", _data[2], _data[4], inputs[2]);
+			
 			draw_surface_safe(_data[0]);
 		surface_reset_shader();
 		
 		return _outSurf;
-	} #endregion
+	}
 }

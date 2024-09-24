@@ -4,6 +4,7 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
+uniform int  type;
 uniform vec2 dimension;
 uniform vec2 center;
 
@@ -91,24 +92,23 @@ void main() {
 		str = mix(strength.x, strength.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
 	}
 	
-	vec2 texel = 1.0 / dimension;
-    vec2 coords = (v_vTexcoord - center / dimension) * 2.0;
-    float coordDot = dot(coords, coords);
+	gl_FragColor = vec4(0.);
+	vec2 tx = 1.0 / dimension;
+    vec2 coords = (v_vTexcoord - center * tx) * 2.0;
     
-    vec2 precompute = str * coordDot * coords;
-    vec2 uvR = v_vTexcoord - texel.xy * precompute;
-    vec2 uvB = v_vTexcoord + texel.xy * precompute;
-    
-    vec4 color;
+    vec2 pcp = vec2(0.), uvR, uvB;
+
+	pcp = dot(coords, coords) * coords;
+	// else if(type == 1) pcp = vec2(pow(coords.x, 3.), pow(coords.y, 3.));
+	
+	pcp *= str * tx;
+	
+    uvR = v_vTexcoord - pcp;
+    uvB = v_vTexcoord + pcp;
     
     vec4 cr = texture2Dintp(gm_BaseTexture, uvR);
     vec4 cb = texture2Dintp(gm_BaseTexture, uvB);
     vec4 cv = texture2Dintp(gm_BaseTexture, v_vTexcoord);
     
-    color.r = cr.r;
-    color.g = cv.g;
-    color.b = cb.b;
-    color.a = cv.a + cr.a + cb.a;
-	
-	gl_FragColor = color;
+    gl_FragColor = vec4(cr.r, cv.g, cb.b, cv.a + cr.a + cb.a);
 }

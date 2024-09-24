@@ -8,10 +8,10 @@
 	global.HLSL_VB_PLANE = vertex_create_buffer();
 	vertex_begin(global.HLSL_VB_PLANE, global.HLSL_VB_FORMAT);
 		
-		vertex_add_2pct(global.HLSL_VB_PLANE, 0, 0, 0, 1, c_white);
-		vertex_add_2pct(global.HLSL_VB_PLANE, 0, 1, 0, 0, c_white);
-		vertex_add_2pct(global.HLSL_VB_PLANE, 1, 0, 1, 1, c_white);
-		vertex_add_2pct(global.HLSL_VB_PLANE, 1, 1, 1, 0, c_white);
+		vertex_add_2pct(global.HLSL_VB_PLANE, 0, 0, 0, 0, c_white);
+		vertex_add_2pct(global.HLSL_VB_PLANE, 0, 1, 0, 1, c_white);
+		vertex_add_2pct(global.HLSL_VB_PLANE, 1, 0, 1, 0, c_white);
+		vertex_add_2pct(global.HLSL_VB_PLANE, 1, 1, 1, 1, c_white);
 		
 	vertex_end(global.HLSL_VB_PLANE);
 #endregion
@@ -311,6 +311,7 @@ void main(in VertexShaderOutput _input, out PixelShaderOutput output) {
 			
 		surface_set_target(_output);
 			DRAW_CLEAR
+			BLEND_OVERRIDE
 			
 			// ############################ SET SHADER ############################
 			d3d11_shader_override_vs(shader.vs);
@@ -392,7 +393,8 @@ void main(in VertexShaderOutput _input, out PixelShaderOutput output) {
 		
 			d3d11_shader_override_vs(-1);
 			d3d11_shader_override_ps(-1);
-		
+			
+			BLEND_NORMAL
 		surface_reset_target();
 		
 		return _output;

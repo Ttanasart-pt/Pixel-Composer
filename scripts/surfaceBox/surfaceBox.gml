@@ -92,6 +92,8 @@ function surfaceBox(_onModify, def_path = "") : widget() constructor {
 			else if(is_instanceof(_surface, dynaSurf)) _surface = array_safe_get_fast(_surface.surfaces, 0, noone);
 			else if(is_instanceof(_surface, Atlas))    _surface = _surface.getSurface();
 			
+			ui_rect(sx0, sy0, sx1, sy1, COLORS.widget_surface_frame);
+			
 			if(surface_exists(_surface)) {
 				var sfw = surface_get_width(_surface);	
 				var sfh = surface_get_height(_surface);	
@@ -115,12 +117,10 @@ function surfaceBox(_onModify, def_path = "") : widget() constructor {
 				var _th = 14;
 				var _nx = sx1 - _tw;
 				var _ny = sy1 - _th;
-						
+				
 				draw_sprite_stretched_ext(THEME.ui_panel, 0, _nx, _ny, _tw, _th, COLORS.panel_bg_clear_inner, 0.85);
 				draw_text_add(sx1 - ui(3), sy1 + ui(1), _txt);
 			}
-			
-			ui_rect(sx0, sy0, sx1, sy1, COLORS.widget_surface_frame);
 			
 			if(_type == VALUE_TYPE.surface)
 				draw_sprite_ui_uniform(THEME.scroll_box_arrow, 0, _x + _w - min(_h / 2, ui(20)), _y + _h / 2, min(1, _h / 64), COLORS._main_icon, 0.5 + 0.5 * interactable);

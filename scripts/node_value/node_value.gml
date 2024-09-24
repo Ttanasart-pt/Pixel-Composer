@@ -820,13 +820,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			case VALUE_TYPE.color :		
 				switch(display_type) {
 					case VALUE_DISPLAY._default :
-						editWidget   = new buttonColor(function(color) /*=>*/ {return setValueInspector(color)});
+						editWidget   = new buttonColor(function(_color) /*=>*/ {return setValueInspector(_color)});
 						graph_h		 = ui(16);
 						extract_node = "Node_Color";
 						break;
 						
 					case VALUE_DISPLAY.palette :
-						editWidget   = new buttonPalette(function(color) /*=>*/ {return setValueInspector(color)});
+						editWidget   = new buttonPalette(function(_color) /*=>*/ {return setValueInspector(_color)});
 						extract_node = "Node_Palette";
 						break;
 				}
@@ -1799,12 +1799,19 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	/////============= DRAW =============
 	
+	static setColor = function(_color) {
+		color = _color;
+		updateColor();
+		return self;
+	}
+	
 	static updateColor = function(val = undefined) {
 		INLINE
 		
 		if(color == -1) {
 			draw_bg = is_array(val)? value_color_bg_array(draw_junction_index) : value_color_bg(draw_junction_index);
 			draw_fg = value_color(draw_junction_index);
+			
 		} else {
 			draw_bg = is_array(val)? merge_color(color, colorMultiply(color, CDEF.main_dkgrey), 0.5) : value_color_bg(draw_junction_index);
 			draw_fg = color;

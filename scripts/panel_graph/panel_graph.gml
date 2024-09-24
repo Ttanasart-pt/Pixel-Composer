@@ -755,15 +755,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
             if(__junction_hovering == noone) return; 
             __junction_hovering.setColor(color);
             
-            for(var i = 0; i < array_length(nodes_selecting); i++) {
-                var _node = nodes_selecting[i];
-                
-                for( var j = 0, m = array_length(_node.inputs); j < m; j++ ) {
-                    var _input = _node.inputs[j];
-                    if(_input.value_from == noone) continue;
-                    _input.setColor(color);
-                }
-            }
+            if(__junction_hovering.value_from != noone)
+            	__junction_hovering.value_from.setColor(color);
         }
     #endregion
     

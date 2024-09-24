@@ -73,19 +73,23 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var k   = ds_map_find_first(project.tunnels_in_map);
 		repeat(amo) {
 			var _n = project.nodeMap[? k];
-			if(_n.active && is_instanceof(_n, Node_Tunnel_In)) 
-				_n.resetMap();
-				
-			k = ds_map_find_next(project.tunnels_in_map, k);	
+			k = ds_map_find_next(project.tunnels_in_map, k);
+			
+			if(!is_instanceof(_n, Node_Tunnel_In)) continue;
+			if(!_n.active) continue;
+			
+			_n.resetMap();
 		}
 		
 		var k   = ds_map_find_first(project.tunnels_in_map);
 		repeat(amo) {
 			var _n = project.nodeMap[? k];
-			if(_n.active && is_instanceof(_n, Node_Tunnel_In)) 
-				_n.checkDuplicate();
+			k = ds_map_find_next(project.tunnels_in_map, k);
 			
-			k = ds_map_find_next(project.tunnels_in_map, k);	
+			if(!is_instanceof(_n, Node_Tunnel_In)) continue;
+			if(!_n.active) continue;
+			
+			_n.checkDuplicate();
 		}
 		
 		if(index == 0) { RENDER_ALL_REORDER }

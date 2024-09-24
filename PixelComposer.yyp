@@ -2502,6 +2502,7 @@
     {"id":{"name":"s_button_bottom_right","path":"sprites/s_button_bottom_right/s_button_bottom_right.yy",},},
     {"id":{"name":"s_button_hide_circle_28","path":"sprites/s_button_hide_circle_28/s_button_hide_circle_28.yy",},},
     {"id":{"name":"s_button_hide_fill","path":"sprites/s_button_hide_fill/s_button_hide_fill.yy",},},
+    {"id":{"name":"s_button_hide_fill1036","path":"sprites/s_button_hide_fill1036/s_button_hide_fill1036.yy",},},
     {"id":{"name":"s_button_hide_left","path":"sprites/s_button_hide_left/s_button_hide_left.yy",},},
     {"id":{"name":"s_button_hide_middle","path":"sprites/s_button_hide_middle/s_button_hide_middle.yy",},},
     {"id":{"name":"s_button_hide_right","path":"sprites/s_button_hide_right/s_button_hide_right.yy",},},
