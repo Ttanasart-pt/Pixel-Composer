@@ -46,8 +46,9 @@ void main() {
 		float ang = rotation;
 	#endregion
 	
+	vec2 ntx   = v_vTexcoord * vec2(1., dimension.y / dimension.x);
 	vec2 pos   = position / dimension;
-    vec2 st    = (v_vTexcoord - pos) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * sca;
+    vec2 st    = (ntx - pos) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * sca;
     vec3 color = vec3(.0);
 
     vec2 i_st = floor(st);
@@ -80,7 +81,7 @@ void main() {
 				float rad  = pow(float(j) / sca, radiusScale) * sca * .5 + random(vec2(ang)) * 0.1;
 				vec2 point = vec2(cos(ang) * rad, sin(ang) * rad) + pos;
 				
-			    vec2 _diff = point - v_vTexcoord;
+			    vec2 _diff = point - ntx;
 			    float dist = length(_diff);
 			    
 				if(dist < m_dist) {

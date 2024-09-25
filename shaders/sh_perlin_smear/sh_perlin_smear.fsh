@@ -4,7 +4,7 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-uniform vec2  u_resolution;
+uniform vec2  dimension;
 uniform vec2  position;
 uniform float rotation;
 uniform vec2  scale;
@@ -49,7 +49,7 @@ float noise (in vec2 st) {
 
 void main() {
 	float ang = radians(rotation);
-	vec2 pos  = position / u_resolution;
+	vec2 pos  = position / dimension;
 	vec2 st   = (v_vTexcoord - pos) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * scale;
 	
 	float amp = bright;

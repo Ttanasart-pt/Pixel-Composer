@@ -2,7 +2,7 @@ varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 uniform vec2  position;
-uniform vec2  u_resolution;
+uniform vec2  dimension;
 uniform float rotation;
 
 uniform vec2      scale;
@@ -88,7 +88,7 @@ void main() { #region
 		}
 	#endregion
 	
-	vec2 pos  = position / u_resolution;
+	vec2 pos  = position / dimension;
 	float ang = rotation;
 	vec2 st   = (v_vTexcoord - pos) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * sca;
 	

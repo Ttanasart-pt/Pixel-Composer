@@ -79,13 +79,13 @@ function Node_Perlin(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
 		surface_set_shader(_outSurf, sh_perlin_tiled);
-			shader_set_f("u_resolution", _dim);
-			shader_set_2("position",     _pos);
-			shader_set_f("rotation",     degtorad(_rot));
-			shader_set_f_map("scale",    _data[2], _data[10], inputs[2]);
-			shader_set_f("seed",         _sed);
-			shader_set_i("tile",         _til);
-			shader_set_i("iteration",    _ite);
+			shader_set_2("dimension",  _dim);
+			shader_set_2("position",   _pos);
+			shader_set_f("rotation",   degtorad(_rot));
+			shader_set_f_map("scale",  _data[2], _data[10], inputs[2]);
+			shader_set_f("seed",       _sed);
+			shader_set_i("tile",       _til);
+			shader_set_i("iteration",  _ite);
 		
 			shader_set_i("colored",   _col);
 			shader_set_2("colorRanR", _clr);

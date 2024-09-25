@@ -8,6 +8,8 @@ const int MAX_MARCHING_STEPS = 200;
 const float EPSILON = 1e-6;
 const float PI = 3.14159265358979323846;
 
+uniform vec2  dimension;
+
 uniform vec3  position;
 uniform vec3  rotation;
 uniform float objectScale;
@@ -354,14 +356,16 @@ vec3 marchDensity(in vec3 camera, in vec3 direction, out vec3 hitPos) {
 }
 
 void main() {
+	vec2 ntx = v_vTexcoord * vec2(1., dimension.y / dimension.x);
+	
 	mat3 rx = rotateX(rotation.x);
     mat3 ry = rotateY(rotation.y);
     mat3 rz = rotateZ(rotation.z);
     rotMatrix  = rx * ry * rz;
     irotMatrix = inverse(rotMatrix);
-	 
+	
     float z = 1. / tan(radians(fov) / 2.);
-    dir = normalize(vec3((v_vTexcoord - .5) * 2., -z));
+    dir = normalize(vec3((ntx - .5) * 2., -z));
     eye = vec3(0., 0., 5.);
 	
 	dir  = normalize(irotMatrix * dir) / objectScale;

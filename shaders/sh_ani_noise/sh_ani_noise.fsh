@@ -1,6 +1,7 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
+uniform vec2  dimension;
 uniform float seed;
 uniform float colrSeed;
 uniform vec2  position;
@@ -44,7 +45,8 @@ void main() {
 		ang = radians(ang);
 	#endregion
 	
-	vec2 pos = (v_vTexcoord - position) * mat2(cos(ang), - sin(ang), sin(ang), cos(ang));
+	vec2 ntx = v_vTexcoord * vec2(1., dimension.y / dimension.x);
+	vec2 pos = (ntx - position) * mat2(cos(ang), - sin(ang), sin(ang), cos(ang));
 	
 	float yy = floor(pos.y * nsy);
 	float xx = (pos.x + random(vec2(1., yy), seed)) * nsx;

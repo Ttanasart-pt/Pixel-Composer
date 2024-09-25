@@ -2,7 +2,7 @@ function Node_Shader_Generator(_x, _y, _group = noone) : Node_Shader(_x, _y, _gr
 	name = "";
 	
 	newInput(0, nodeValue_Dimension(self));
-		addShaderProp(SHADER_UNIFORM.float, "u_resolution");
+		addShaderProp(SHADER_UNIFORM.float, "dimension");
 	
 	attribute_surface_depth();
 	

@@ -7,7 +7,7 @@ uniform float seed;
 uniform float progress;
 uniform float detail;
 
-uniform vec2  u_resolution;
+uniform vec2  dimension;
 uniform vec2  position;
 uniform vec2  scale;
 
@@ -82,7 +82,7 @@ vec4 snoise(vec3 v) {
 
 void main() {
 	vec2 p    = v_vTexcoord - .5;
-	     p.x *= (u_resolution.x / u_resolution.y);
+	     p.x *= (dimension.x / dimension.y);
          p    = (p + position) * scale / 2.;
 	
     vec3 pos = vec3(p.x, progress, p.y);

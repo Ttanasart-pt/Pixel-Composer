@@ -4,7 +4,7 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-uniform vec2  u_resolution;
+uniform vec2  dimension;
 uniform vec2  position;
 uniform float rotation;
 uniform vec2  scale;
@@ -92,9 +92,10 @@ vec3 iterateNoise ( vec2 pos, int iteration ) {
 }
 
 void main() {
+	vec2  ntx = v_vTexcoord * vec2(1., dimension.y / dimension.x);
 	float ang = radians(rotation);
-    vec2 pos  = (v_vTexcoord - position / u_resolution) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * scale * 4.;
-	vec3 col  = iterateNoise(pos, iteration);
+    vec2  pos = (ntx - position / dimension) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * scale * 4.;
+	vec3  col = iterateNoise(pos, iteration);
 	
 	   //  if(mode == 0) col = vec3(noiseHoneycomb(pos));
     // else if(mode == 1) col = vec3(noiseHoneycombStar(pos));

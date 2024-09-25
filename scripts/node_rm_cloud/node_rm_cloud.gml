@@ -74,6 +74,7 @@ function Node_RM_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		
 		surface_set_shader(_outSurf, sh_rm_cloud);
 		
+			shader_set_2("dimension",   _dim);
 			shader_set_3("position",    _pos);
 			shader_set_3("rotation",    _rot);
 			shader_set_f("objectScale", _sca * 4);

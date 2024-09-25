@@ -42,12 +42,12 @@ function Node_Perlin_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
 		surface_set_shader(_outSurf, sh_perlin_smear);
-			shader_set_f("u_resolution", _dim);
-			shader_set_2("position",	 _pos);
-			shader_set_2("scale",		 _sca);
-			shader_set_f("bright",		 _bri);
-			shader_set_i("iteration",	 _ite);
-			shader_set_f("rotation",	 degtorad(_rot));
+			shader_set_f("dimension", _dim);
+			shader_set_2("position",  _pos);
+			shader_set_2("scale",	  _sca);
+			shader_set_f("bright",	  _bri);
+			shader_set_i("iteration", _ite);
+			shader_set_f("rotation",  degtorad(_rot));
 			
 			draw_sprite_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], 0, c_white, 1);
 		surface_reset_shader();

@@ -1,9 +1,9 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-uniform vec2 dimension;
-uniform vec2 position;
-uniform int  blend;
+uniform vec2  dimension;
+uniform vec2  position;
+uniform int   blend;
 uniform float rotation;
 
 uniform vec2      amount;
@@ -32,8 +32,8 @@ void main() {
 		ang = radians(ang);
 	#endregion
 	
-		
-	vec2 pos     = v_vTexcoord - position;
+	vec2 ntx     = v_vTexcoord * vec2(1., dimension.y / dimension.x);
+	vec2 pos     = ntx - position;
 	float _cell  = 1. / (amo * 2.); 
 	pos.y -= _cell / 2.;
 	pos   *= mat2(cos(ang), -sin(ang), sin(ang), cos(ang));

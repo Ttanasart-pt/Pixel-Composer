@@ -3,7 +3,7 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-uniform vec2  u_resolution;
+uniform vec2  dimension;
 uniform float density;
 uniform float seed;
 uniform vec2  scale;
@@ -16,11 +16,12 @@ uniform float thickness;
 float random  (in vec2 st) { return fract(sin(dot(st.xy + vec2(1., 6.), vec2(2., 7.))) * (1. + seed / 100.)); }
 
 void main() {
-	vec2 tx  = 1. / u_resolution;
-	vec2 ps  = v_vTexcoord;
+	vec2 ntx = v_vTexcoord * vec2(1., dimension.y / dimension.x);
+	vec2 tx  = 1. / dimension;
+	vec2 ps  = ntx;
 	float w  = 0.;
 	
-	vec2 dim = u_resolution;
+	vec2 dim = dimension;
 	vec2 pos = ps;
 	
 	float _t  = min(tx.x, tx.y) / 2.;

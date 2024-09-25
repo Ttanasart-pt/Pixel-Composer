@@ -147,22 +147,24 @@ float simplex(in vec2 st) {
 }
 
 void main() {
+	vec2 ntx = v_vTexcoord * vec2(1., dimension.y / dimension.x);
+	
 	sca = scale;
 	if(scaleUseSurf == 1) {
-		vec4 _vMap = texture2D( scaleSurf, v_vTexcoord );
+		vec4 _vMap = texture2D( scaleSurf, ntx );
 		sca = vec2(mix(scale.x, scale.y, (_vMap.r + _vMap.g + _vMap.b) / 3.));
 	}
 	
 	itr    = iteration.x;
 	itrMax = max(iteration.x, iteration.y);
 	if(iterationUseSurf == 1) {
-		vec4 _vMap = texture2D( iterationSurf, v_vTexcoord );
+		vec4 _vMap = texture2D( iterationSurf, ntx );
 		itr = mix(iteration.x, iteration.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
 	}
 	
 	vec2 pos  = position.xy / dimension;
 	float ang = rotation;
-	vec2 st   = (v_vTexcoord - pos) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * sca;
+	vec2 st   = (ntx - pos) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * sca;
 	
 	if(colored == 0) {
 		gl_FragColor = vec4(vec3(simplex(st)), 1.0);

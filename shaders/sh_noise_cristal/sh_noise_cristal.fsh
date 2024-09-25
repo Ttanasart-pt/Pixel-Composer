@@ -7,7 +7,7 @@ varying vec4 v_vColour;
 #define PI 3.141592
 #define TAU 6.283184
 
-uniform vec2  u_resolution;
+uniform vec2  dimension;
 
 uniform vec2  scale;
 uniform vec2  position;
@@ -60,7 +60,8 @@ vec3 Oilnoise(in vec2 pos, in vec3 RGB) {
 
 
 void main() {
-    vec2 pos = v_vTexcoord * scale + position;
+    vec2 ntx = v_vTexcoord * vec2(1., dimension.y / dimension.x);
+    vec2 pos = ntx * scale + position;
     vec3 col = Oilnoise(pos, color.rgb * gamma);
     gl_FragColor = vec4(col, 1.0);
 }

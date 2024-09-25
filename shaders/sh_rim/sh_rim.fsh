@@ -1,17 +1,17 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-uniform vec2  u_resolution;
+uniform vec2  dimension;
 uniform float rotation;
 
 float d(vec4 c) { return (c.r + c.g + c.b) / 3. * c.a; }
 
 void main() {
-	vec2 tx = 1. / u_resolution;
+	vec2 tx = 1. / dimension;
 	vec4 cc = texture2D( gm_BaseTexture, v_vTexcoord );
 	int emp = 0;
 	
-	vec2 px = v_vTexcoord * u_resolution;
+	vec2 px = v_vTexcoord * dimension;
 	
 	gl_FragColor = vec4(0.);
 	

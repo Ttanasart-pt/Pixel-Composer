@@ -205,8 +205,10 @@ void main() {
 		}
 	#endregion
 	
+	vec2 ntx = v_vTexcoord * vec2(1., dimension.y / dimension.x);
+	
 	if(mode == 1) {
-		vec2 px = floor((v_vTexcoord - position) * dimension);
+		vec2 px = floor((ntx - position) * dimension);
 		
 		sca = floor(sca);
 		vec2 scaG = sca - (gapAcc + 1.);
@@ -240,7 +242,7 @@ void main() {
 	
 	sca = dimension / sca;
 	
-	vec2 pos = v_vTexcoord - position, _pos;
+	vec2 pos = ntx - position, _pos;
 	float ratio = dimension.x / dimension.y;
 	_pos.x = pos.x * ratio * cos(ang) - pos.y * sin(ang);
 	_pos.y = pos.x * ratio * sin(ang) + pos.y * cos(ang);

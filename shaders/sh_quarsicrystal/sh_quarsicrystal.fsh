@@ -46,7 +46,8 @@ void main() { #region
 		
 	#endregion
 	
-	vec2 pos = (v_vTexcoord - position) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * amo;
+	vec2 ntx = v_vTexcoord * vec2(1., dimension.y / dimension.x);
+	vec2 pos = (ntx - position) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * amo;
 	
     float value = 0.0;
     int   num = 4;

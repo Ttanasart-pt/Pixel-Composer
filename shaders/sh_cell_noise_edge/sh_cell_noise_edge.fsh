@@ -37,8 +37,9 @@ void main() {
 		float ang = rotation;
 	#endregion
 	
+	vec2 ntx = v_vTexcoord * vec2(1., dimension.y / dimension.x);
 	vec2 pos = position / dimension;
-    vec2 st  = (v_vTexcoord - pos) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * sca;
+    vec2 st  = (ntx - pos) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * sca;
 	
     float md = 8.;
     vec2 mg, mr;
@@ -83,7 +84,7 @@ void main() {
 				vec2 neighbor = vec2(cos(ang) * rad, sin(ang) * rad);
 				vec2 point = neighbor + pos;
 				
-			    vec2 _diff = point - v_vTexcoord;
+			    vec2 _diff = point - ntx;
 			    float dist = length(_diff);
 			    
 				if(dist < md) {
@@ -103,7 +104,7 @@ void main() {
 				vec2 neighbor = vec2(cos(ang) * rad, sin(ang) * rad);
 				vec2 point = neighbor + pos;
 			
-			    vec2 r = point - v_vTexcoord;
+			    vec2 r = point - ntx;
 				if(dot(mr - r, mr - r) > .0001)
 					md = min( md, dot( 0.5 * (mr + r), normalize(r - mr)) );
 			}

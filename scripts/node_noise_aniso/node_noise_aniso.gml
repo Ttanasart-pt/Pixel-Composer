@@ -66,6 +66,7 @@ function Node_Noise_Aniso(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
 		surface_set_shader(_outSurf, sh_ani_noise);
+			shader_set_2("dimension",   _dim);
 			shader_set_f("position",	_pos[0] / _dim[0], _pos[1] / _dim[1]);
 			shader_set_f("seed",		_data[2]);
 			shader_set_f("colrSeed",	_data[10]);

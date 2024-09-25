@@ -59,8 +59,9 @@ void main() {
 		float ang = rotation;
 	#endregion
 	
+	vec2 ntx = v_vTexcoord * vec2(1., dimension.y / dimension.x);
 	vec2 pos = position / dimension;
-	vec2 st  = (v_vTexcoord - pos) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * sca * 0.75;
+	vec2 st  = (ntx - pos) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * sca * 0.75;
 	
     float n = voronoi3d(vec3(st, seed), sca);
 	      n = middle + (n - middle) * contrast;

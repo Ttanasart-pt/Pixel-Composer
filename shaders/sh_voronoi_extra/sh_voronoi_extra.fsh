@@ -7,10 +7,11 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
+uniform vec2  dimension;
+
 uniform float seed;
 uniform float progress;
 uniform float paramA;
-uniform vec2  u_resolution;
 uniform vec2  position;
 uniform float rotation;
 uniform vec2  scale;
@@ -213,17 +214,20 @@ vec3 squareVoronoi( in vec2 x ) { #region // IQ classic voronoi - shadertoy.com/
 	}
 #endregion
 
-void main() { #region
+void main() {
 	
+	vec2  ntx = v_vTexcoord * vec2(1., dimension.y / dimension.x);
 	float ang = radians(rotation);
-    vec2 pos  = (v_vTexcoord - position / u_resolution) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * scale / 4.;
+    vec2  pos = (ntx - position / dimension) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * scale / 4.;
     
 	if(mode == 0) {
 		gl_FragColor = vec4(vec3(.1 + blockVoronoi(pos * vec2(1., -1.))), 1.0);
+		
 	} else if(mode == 1) {
 		vec3 v = vec3(triangleVoronoi(pos * 2.));
 		gl_FragColor = vec4(vec3(v.r), 1.0);
+		
 	} else if(mode == 2) {
 		gl_FragColor = vec4(vec3(squareVoronoi(pos * 4.).r), 1.0);
 	} 
-} #endregion
+}

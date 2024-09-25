@@ -4,6 +4,7 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
+uniform vec2 dimension;
 uniform vec2 position;
 uniform float scale;
 uniform float time;
@@ -14,7 +15,8 @@ vec2 random2( vec2 p ) {
 }
 
 void main() {
-    vec2 st = v_vTexcoord + position;
+	vec2 ntx   = v_vTexcoord * vec2(1., dimension.y / dimension.x);
+    vec2 st    = ntx + position;
     vec3 color = vec3(.0);
 
     // Scale

@@ -20,7 +20,7 @@ uniform vec2      scale;
 uniform int       scaleUseSurf;
 uniform sampler2D scaleSurf;
 		
-uniform vec2  u_resolution;
+uniform vec2  dimension;
 uniform vec2  position;
 uniform float rotation;
 
@@ -77,8 +77,9 @@ void main() {
 		}
 	#endregion
 	
+	vec2  ntx = v_vTexcoord * vec2(1., dimension.y / dimension.x);
 	float ang = radians(rotation);
-    vec2  pos = (v_vTexcoord - position / u_resolution) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * sca / 16.;
+    vec2  pos = (ntx - position / dimension) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * sca / 16.;
     
 	prog      /= 100.;
     vec3 uv    = vec3( pos + prog, prog * .5 );

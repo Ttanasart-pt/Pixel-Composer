@@ -1,7 +1,7 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-uniform vec2  u_resolution;
+uniform vec2  dimension;
 uniform vec2  position;
 uniform float scale;
 uniform int   iteration;
@@ -39,7 +39,8 @@ float perlin ( vec2 pos, int iteration ) {
 ///////////////////// PERLIN END /////////////////////
 
 void main() {
-    vec2 pos = position + v_vTexcoord * scale;
+	vec2 ntx = v_vTexcoord * vec2(1., dimension.y / dimension.x);
+    vec2 pos = position + ntx * scale;
 	float n  = perlin(pos, iteration);
 	
     gl_FragColor = vec4(vec3(n), 1.0);
