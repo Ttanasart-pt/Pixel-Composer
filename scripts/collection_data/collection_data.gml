@@ -25,8 +25,11 @@ function refreshCollections() {
 function searchCollection(_list, _search_str, _clear_list = true) {
 	if(_search_str == "") return;
 	var search_lower = string_lower(_search_str);
-		
+	
 	var st = ds_stack_create();
+	var ll = ds_priority_create();
+	
+	ds_list_clear(_list);
 	ds_stack_push(st, COLLECTIONS);
 		
 	while(!ds_stack_empty(st)) {
@@ -37,14 +40,17 @@ function searchCollection(_list, _search_str, _clear_list = true) {
 			var match = string_partial_match(string_lower(_nd.name), search_lower);
 			if(match == -9999) continue;
 			
-			ds_priority_add(_list, _nd, match);
+			ds_priority_add(ll, _nd, match);
 		}
 			
-		for( var i = 0; i < ds_list_size(_st.subDir); i++ ) {
+		for( var i = 0; i < ds_list_size(_st.subDir); i++ )
 			ds_stack_push(st, _st.subDir[| i]);
-		}
 	}
 	
+	repeat(ds_priority_size(ll))
+		ds_list_add(_list, ds_priority_delete_max(ll));
+	
+	ds_priority_destroy(ll);
 	ds_stack_destroy(st);
 }
 

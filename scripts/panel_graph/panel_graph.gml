@@ -3055,6 +3055,10 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                 run_in(1, function(path) { LOAD_PATH(path); }, [ DRAGGING.data.path ]);
                 break;
                 
+            case "Node":
+                node = DRAGGING.data.build(mouse_grid_x, mouse_grid_y, getCurrentContext());
+                nodes_selecting = [ node ];
+                break;
         }
             
         if(!key_mod_press(SHIFT) && node && struct_has(DRAGGING, "from") && DRAGGING.from.value_from == noone) {

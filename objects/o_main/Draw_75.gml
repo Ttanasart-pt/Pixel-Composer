@@ -150,6 +150,7 @@ if(winMan_isMinimized()) exit;
 			case "Asset" :
 			case "Project" :
 			case "Collection" :
+			case "Node" :
 				if(DRAGGING.data.spr) {
 					var ss = ui(48) / max(sprite_get_width(DRAGGING.data.spr), sprite_get_height(DRAGGING.data.spr))
 					draw_sprite_ext(DRAGGING.data.spr, 0, mx, my, ss, ss, 0, c_white, 1);
