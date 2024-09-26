@@ -22,14 +22,13 @@ function refreshCollections() {
 	COLLECTIONS.open = true;
 }
 
-function searchCollection(_list, _search_str, _clear_list = true) {
+function searchCollection(_list, _search_str, _toList = true) {
 	if(_search_str == "") return;
 	var search_lower = string_lower(_search_str);
 	
 	var st = ds_stack_create();
-	var ll = ds_priority_create();
+	var ll = _toList? ds_priority_create() : _list;
 	
-	ds_list_clear(_list);
 	ds_stack_push(st, COLLECTIONS);
 		
 	while(!ds_stack_empty(st)) {
@@ -47,10 +46,13 @@ function searchCollection(_list, _search_str, _clear_list = true) {
 			ds_stack_push(st, _st.subDir[| i]);
 	}
 	
-	repeat(ds_priority_size(ll))
-		ds_list_add(_list, ds_priority_delete_max(ll));
+	if(_toList) {
+		repeat(ds_priority_size(ll))
+			ds_list_add(_list, ds_priority_delete_max(ll));
+		
+		ds_priority_destroy(ll);
+	}
 	
-	ds_priority_destroy(ll);
 	ds_stack_destroy(st);
 }
 

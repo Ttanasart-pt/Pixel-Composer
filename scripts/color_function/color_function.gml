@@ -2,6 +2,8 @@
 	function cola(color, alpha = 1) { INLINE return int64((color & 0xFFFFFF) + (round(alpha * 255) << 24)); }
 	function _cola(color, alpha)    { INLINE return int64((color & 0xFFFFFF) + (alpha << 24)); }
 	
+	function color_real(color)      { INLINE return make_color_rgb(color_get_red(color), color_get_green(color), color_get_blue(color)); }
+	
 	function color_get_alpha(color)  { INLINE return (color & (0xFF << 24)) >> 24; }
 	function _color_get_alpha(color) { INLINE return color_get_alpha(color) / 255; }
 

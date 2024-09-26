@@ -18,6 +18,20 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	newOutput(0, nodeValue_Output("Out", self, VALUE_TYPE.any, 0));
 	
+	inputs[0].setColor = function(_color) {
+		inputs[0].color = color_real(_color); outputs[0].color = color_real(_color);
+		inputs[0].updateColor();              outputs[0].updateColor();
+		
+		return inputs[0];
+	}
+	
+	outputs[0].setColor = function(_color) {
+		inputs[0].color = color_real(_color); outputs[0].color = color_real(_color);
+		inputs[0].updateColor();              outputs[0].updateColor();
+		
+		return outputs[0];
+	}
+	
 	static update = function() {
 		if(inputs[0].value_from != noone) {
 		

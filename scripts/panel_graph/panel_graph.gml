@@ -171,7 +171,7 @@
         for( var i = 0, n = array_length(_clrs); i < n; i++ ) {
             _item[i] = [ 
                 [ THEME.timeline_color, i > 0, _clrs[i] ], 
-                function(_data) {  PANEL_GRAPH.setSelectingNodeColor(_data.color); }, "", { color: i == 0? -1 : _clrs[i] }
+                function(_data) /*=>*/ {  PANEL_GRAPH.setSelectingNodeColor(_data.color); }, "", { color: i == 0? -1 : _clrs[i] }
             ];
         }
 
@@ -188,7 +188,7 @@
         for( var i = 0, n = array_length(_clrs); i < n; i++ ) {
             _item[i] = [ 
                 [ THEME.timeline_color, i > 0, _clrs[i] ], 
-                function(_data) { PANEL_GRAPH.setSelectingJuncColor(_data.color); }, "", { color: i == 0? -1 : _clrs[i] }
+                function(_data) /*=>*/ { PANEL_GRAPH.setSelectingJuncColor(_data.color); }, "", { color: i == 0? -1 : _clrs[i] }
             ];
         }
 
@@ -751,7 +751,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
             array_foreach(nodes_selecting, function(node) { node.attributes.color = __temp_color; });
         }
         
-        function setSelectingJuncColor(color) { 
+        function setSelectingJuncColor(color) {
             if(__junction_hovering == noone) return; 
             __junction_hovering.setColor(color);
             

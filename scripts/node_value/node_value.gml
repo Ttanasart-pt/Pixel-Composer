@@ -1800,7 +1800,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	/////============= DRAW =============
 	
 	static setColor = function(_color) {
-		color = _color;
+		color = color_real(_color);
 		updateColor();
 		return self;
 	}
@@ -2505,6 +2505,8 @@ function drawJuncConnection(from, to, params) {
 					break;
 			} 
 		}
+		
+		draw_set_alpha(1);
 	#endregion
 		
 	return hovering;
