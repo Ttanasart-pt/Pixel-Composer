@@ -282,6 +282,8 @@ function Panel_Collection() : PanelContent() constructor {
 	grid_size    = ui(48);
 	grid_size_to = grid_size;
 	
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
 	contentView = 0;
 	contentPane = new scrollPane(content_w - ui(8), content_h - ui(4), function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
@@ -525,8 +527,33 @@ function Panel_Collection() : PanelContent() constructor {
 		return hh + ui(28);
 	});
 	
-	nodeListPane_page = 0;
-	node_temp_list    = ds_list_create();
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	nodeListPane_page   = 0;
+	node_temp_list      = ds_list_create();
+	node_menu_selecting = noone;
+	
+	function trigger_favourite() {
+		if(node_menu_selecting == noone) return;
+		
+		var _node = node_menu_selecting.node;
+		if(struct_exists(global.FAV_NODES, _node))	struct_remove(global.FAV_NODES, _node);
+		else										global.FAV_NODES[$ _node] = 1;
+		
+		PREF_SAVE();
+	}
+	
+	function rightClickNode(node) {
+		if(!is_instanceof(node, NodeObject)) return;
+		
+		node_menu_selecting = node;
+		var fav  = struct_exists(global.FAV_NODES, node.node);
+		var menu = [
+			menuItem(fav? __txtx("add_node_remove_favourite", "Remove from favourite") : __txtx("add_node_add_favourite", "Add to favourite"), trigger_favourite, THEME.star)
+		];
+		
+		menuCall("add_node_window_menu", menu, 0, 0, fa_left);
+	}
 	
 	nodeListPane = new scrollPane(group_w - ui(8), content_h, function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 1);
@@ -578,8 +605,9 @@ function Panel_Collection() : PanelContent() constructor {
 		} else if(nodeListPane_page == 0) {
 			ds_list_clear(node_temp_list);
 			
-			for( var i = 0, n = array_length(global.FAV_NODES); i < n; i++ ) {
-				var _nodeIndex = global.FAV_NODES[i];
+			var _favs = struct_get_names(global.FAV_NODES);
+			for( var i = 0, n = array_length(_favs); i < n; i++ ) {
+				var _nodeIndex = _favs[i];
 				if(!ds_map_exists(ALL_NODES, _nodeIndex)) continue;
 				
 				var _node = ALL_NODES[? _nodeIndex];
@@ -633,17 +661,23 @@ function Panel_Collection() : PanelContent() constructor {
 					nodecontentPane.hover_content = true;
 					draw_sprite_stretched_ext(THEME.node_bg, 1, _boxx, yy, grid_size, grid_size, COLORS._main_accent, 1);
 					
-					if(mouse_press(mb_left, pFOCUS))
-						DRAGGING = { type : "Node", data : _node };
+					if(pFOCUS) {
+						if(mouse_press(mb_left))  DRAGGING = { type : "Node", data : _node };
+						if(mouse_press(mb_right)) rightClickNode(_node);
+					}
 				}
 				
-				var ss = grid_size / 80;
+				var ss = grid_size / 96;
 				var sx = _boxx + grid_size / 2;
 				var sy = yy + grid_size / 2;
 				
 				BLEND_ALPHA_MULP
 				draw_sprite_ext(_node.spr, 0, sx, sy, ss, ss, 0, c_white, 1);
 				BLEND_NORMAL
+				
+				var fav = struct_exists(global.FAV_NODES, _node.node);
+				if(fav) draw_sprite_ui_uniform(THEME.star, 0, _boxx + grid_size - ui(8), yy + grid_size - ui(8), 0.7, COLORS._main_accent, 1.);
+				
 			}
 			
 			draw_set_text(font, fa_center, fa_top, COLORS._main_text_inner);
@@ -671,6 +705,8 @@ function Panel_Collection() : PanelContent() constructor {
 		
 		return hh + ui(16);
 	});
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	function setPage(i) {
 		page    = i;
@@ -827,25 +863,27 @@ function Panel_Collection() : PanelContent() constructor {
 			bx -= ui(36);
 		}
 	
-		if(bx < rootx) return;
-		var txt = __txtx("panel_collection_open_file", "Open in file explorer");
-		if(buttonInstant(THEME.button_hide, bx, by, bs, bs, [mx, my], pFOCUS, pHOVER, txt, THEME.path_open) == 2)
-			shellOpenExplorer(context.path);
-		draw_sprite_ui_uniform(THEME.path_open, 1, bx + bs / 2, by + bs / 2, 1, c_white);
-		bx -= ui(36);
+		if(pageStr[page] != "Nodes") {
+			if(bx < rootx) return;
+			var txt = __txtx("panel_collection_open_file", "Open in file explorer");
+			if(buttonInstant(THEME.button_hide, bx, by, bs, bs, [mx, my], pFOCUS, pHOVER, txt, THEME.path_open) == 2)
+				shellOpenExplorer(context.path);
+			draw_sprite_ui_uniform(THEME.path_open, 1, bx + bs / 2, by + bs / 2, 1, c_white);
+			bx -= ui(36);
+			
+			if(bx < rootx) return;
+			var txt = __txt("Refresh");
+			if(buttonInstant(THEME.button_hide, bx, by, bs, bs, [mx, my], pFOCUS, pHOVER, txt, THEME.refresh_icon) == 2)
+				refreshContext();
+			bx -= ui(36);
+			
+			if(bx < rootx) return;
+			var txt = __txt("Settings");
+			if(buttonInstant(THEME.button_hide, bx, by, bs, bs, [mx, my], pFOCUS, pHOVER, txt, THEME.gear) == 2)
+				dialogPanelCall(new Panel_Collections_Setting(), x + bx, y + by - 8, { anchor: ANCHOR.bottom | ANCHOR.left }); 
+			bx -= ui(36);
 		
-		if(bx < rootx) return;
-		var txt = __txt("Refresh");
-		if(buttonInstant(THEME.button_hide, bx, by, bs, bs, [mx, my], pFOCUS, pHOVER, txt, THEME.refresh_icon) == 2)
-			refreshContext();
-		bx -= ui(36);
-		
-		if(bx < rootx) return;
-		var txt = __txt("Settings");
-		if(buttonInstant(THEME.button_hide, bx, by, bs, bs, [mx, my], pFOCUS, pHOVER, txt, THEME.gear) == 2)
-			dialogPanelCall(new Panel_Collections_Setting(), x + bx, y + by - 8, { anchor: ANCHOR.bottom | ANCHOR.left }); 
-		bx -= ui(36);
-	
+		}
 	}
 		
 }

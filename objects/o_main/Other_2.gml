@@ -45,6 +45,7 @@
 	
 	PREFERENCES_DIR = $"{DIRECTORY}Preferences/{PREF_VERSION}/";
 	directory_verify(DIRECTORY);
+	directory_verify($"{DIRECTORY}Cache");
 	
 	APP_LOCATION = program_directory;
 	if(OS == os_macosx) APP_LOCATION = string_replace(APP_LOCATION, "/Contents/MacOS/", "/Contents/Resources/");

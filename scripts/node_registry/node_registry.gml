@@ -18,7 +18,7 @@ function NodeObject(_name, _spr, _node, _create, tooltip = "", tags = []) constr
 	show_in_global = true;
 	
 	is_patreon_extra = false;
-	testable = true;
+	testable   = true;
 	
 	_fn = registerFunctionLite("New node", _name, function(_node) { PANEL_GRAPH.createNodeHotkey(_node); }, [ _node ]);
 	_fn.spr = _spr;
@@ -136,7 +136,7 @@ function NodeObject(_name, _spr, _node, _create, tooltip = "", tags = []) constr
 			draw_sprite_ui_uniform(THEME.node_deprecated_badge, 1, _x + grid_size - ui(12), _y + ui(6));
 		}
 		
-		var fav = array_exists(global.FAV_NODES, node);
+		var fav = struct_exists(global.FAV_NODES, node);
 		if(fav) draw_sprite_ui_uniform(THEME.star, 0, _x + grid_size - ui(10), _y + grid_size - ui(10), 0.7, COLORS._main_accent, 1.);
 		
 		var spr_x = _x + grid_size - 4;
@@ -158,7 +158,7 @@ function NodeObject(_name, _spr, _node, _create, tooltip = "", tags = []) constr
 	}
 	
 	static drawList = function(_x, _y, _mx, _my, list_height, _param = {}) {
-		var fav = array_exists(global.FAV_NODES, node);
+		var fav = struct_exists(global.FAV_NODES, node);
 		if(fav) draw_sprite_ui_uniform(THEME.star, 0, ui(32), _y + list_height / 2, 0.7, COLORS._main_accent, 1.);
 				
 		var spr_x = list_height / 2 + ui(44);
@@ -279,12 +279,16 @@ function addNodePCXCatagory( name, list, filter = [])                { ds_list_a
 
 function __initNodes() {
 	global.__currPage  = "";
-	global.__startPage = 0;
+	global.__startPage =  0;
+	global.FAV_NODES   = {};
 	
 	if(!IS_CMD) {
 		var favPath = DIRECTORY + "Nodes/fav.json";
-		global.FAV_NODES = file_exists_empty(favPath)? json_load_struct(favPath) : [];
-		if(!is_array(global.FAV_NODES)) global.FAV_NODES = [];
+		if(file_exists_empty(favPath)) {
+			var favs = json_load_struct(favPath);
+			for (var i = 0, n = array_length(favs); i < n; i++)
+				global.FAV_NODES[$ favs[i]] = 1;
+		}
 		
 		var recPath = DIRECTORY + "Nodes/recent.json";
 		global.RECENT_NODES = file_exists_empty(recPath)? json_load_struct(recPath) : [];

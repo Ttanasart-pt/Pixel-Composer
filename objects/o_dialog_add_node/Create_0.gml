@@ -69,10 +69,10 @@ event_inherited();
 		if(node_menu_selecting == noone) return;
 		
 		var _node = node_menu_selecting.node;
-		if(!is_array(global.FAV_NODES)) global.FAV_NODES = [];
+		if(struct_exists(global.FAV_NODES, _node))	struct_remove(global.FAV_NODES, _node);
+		else										global.FAV_NODES[$ _node] = 1;
 		
-		if(array_exists(global.FAV_NODES, _node))	array_remove(global.FAV_NODES, _node);
-		else										array_push(global.FAV_NODES, _node);
+		PREF_SAVE();
 	}
 	
 	registerFunction("Add Node", "Trigger Favourite",	"",	   MOD_KEY.none,	trigger_favourite);
@@ -81,7 +81,7 @@ event_inherited();
 		if(!is_instanceof(node, NodeObject)) return;
 		
 		node_menu_selecting = node;
-		var fav  = array_exists(global.FAV_NODES, node.node);
+		var fav  = struct_exists(global.FAV_NODES, node.node);
 		var menu = [
 			menuItem(fav? __txtx("add_node_remove_favourite", "Remove from favourite") : __txtx("add_node_add_favourite", "Add to favourite"), trigger_favourite, THEME.star)
 		];
@@ -429,9 +429,9 @@ event_inherited();
 			}
 			
 			ds_list_add(_list, "Favourites");
-			if(is_array(global.FAV_NODES))
-			for( var i = 0, n = array_length(global.FAV_NODES); i < n; i++ ) {
-				var _nodeIndex = global.FAV_NODES[i];
+			var _favs = struct_get_names(global.FAV_NODES);
+			for( var i = 0, n = array_length(_favs); i < n; i++ ) {
+				var _nodeIndex = _favs[i];
 				if(!ds_map_exists(ALL_NODES, _nodeIndex)) continue;
 				
 				var _node = ALL_NODES[? _nodeIndex];

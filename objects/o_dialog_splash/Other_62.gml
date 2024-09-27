@@ -1,5 +1,7 @@
 /// @description 
-if(async_load[? "id"] == contest_req) { //get contests
+var _id = async_load[? "id"];
+
+if(_id == contest_req) { 
 	var r_str = async_load[? "result"];
 	if(is_undefined(r_str)) exit;
 	
@@ -8,7 +10,6 @@ if(async_load[? "id"] == contest_req) { //get contests
 	
 	if(struct_has(thr_str, "threads")) {
 		var thrs = thr_str.threads;
-		
 		for( var i = 0, n = array_length(thrs); i < n; i++ ) {
 			var thr = thrs[i];
 			if(thr.parent_id != "1113080578351312906") continue; //not in contest channel
@@ -27,6 +28,47 @@ if(async_load[? "id"] == contest_req) { //get contests
 		project_page++;
 	}
 	
+	exit;
+}
+
+if(_id == news_req) { 
+	var r_str = async_load[? "result"];
+	if(is_undefined(r_str)) exit;
+	
+	var thr_str = json_try_parse(r_str, noone);
+	if(!is_array(thr_str)) exit;
+	
+	for (var i = 0, n = array_length(thr_str); i < n; i++) {
+		var _inf = thr_str[i];
+	    _inf.img     = noone;
+		
+		if(_inf.img_url != "") {
+			var _fil = $"{DIRECTORY}Cache/{_inf.header}.png";
+			
+			if(file_exists_empty(_fil)) {
+				_inf.img = sprite_add(_fil, 0, false, false, 0, 0);
+				
+			} else {
+				var _rid = http_get_file(_inf.img_url, _fil);
+				news_requests[$ _rid] = _inf;
+			}
+		}
+		
+		news_content[i] = _inf;
+	}
+	
+	exit;
+}
+
+if(struct_has(news_requests, _id)) {
+	var _status = ds_map_find_value(async_load, "status");
+    if (_status != 0) exit;
+    
+    var _path = ds_map_find_value(async_load, "result");
+    var _inf  = news_requests[$ _id];
+    
+    if(file_exists_empty(_path))
+    	_inf.img = sprite_add(_path, 0, false, false, 0, 0);
 	exit;
 }
 

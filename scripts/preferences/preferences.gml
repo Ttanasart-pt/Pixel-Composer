@@ -300,7 +300,7 @@
 		
 		json_save_struct(PREFERENCES_DIR + "keys.json",             PREFERENCES);
 		json_save_struct(PREFERENCES_DIR + "default_project.json",  PROJECT_ATTRIBUTES);
-		json_save_struct(DIRECTORY + "Nodes/fav.json",              global.FAV_NODES);
+		json_save_struct(DIRECTORY + "Nodes/fav.json",              variable_struct_get_names(global.FAV_NODES));
 		json_save_struct(DIRECTORY + "Nodes/recent.json",           global.RECENT_NODES);
 		
 		hotkey_serialize();

@@ -87,21 +87,27 @@ if !ready exit;
 	var tab_cover = noone;
 	var th = ui(36) + THEME_VALUE.panel_tab_extend;
 	
-	for( var i = 0, n = array_length(pages); i < n; i++ ) { #region
+	for( var i = 0, n = array_length(pages); i < n; i++ ) {
 		draw_set_text(f_p0, fa_left, fa_bottom, project_page == i? COLORS._main_text : COLORS._main_text_sub);
 		var txt  = pages[i];
 		var dtxt = __txt(txt);
 		var amo  = 0;
+		var tw   = ui(16) + string_width(dtxt);
 		
 		switch(txt) {
-			case "Welcome Files" : break;
-			case "Workshop" :	   amo = ds_list_size(STEAM_PROJECTS);  break;
-			case "Contests" :	   dtxt = ""; break;
+			case "Workshop" :
+				amo = ds_list_size(STEAM_PROJECTS);  
+				break;
+				
+			case "Contests" :
+			case "News" :
+				dtxt = ""; 
+				tw   = ui(32 + 8);
+				amo  = 0;
+				break;
 		}
 		
-		var tw = ui(16) + string_width(dtxt);
 		if(amo) tw += ui(8) + string_width(amo) + ui(6);
-		if(txt == "Contests") tw = ui(32 + 8);
 		
 		var _x1 = min(bx + tw, x1);
 		var _tabW = _x1 - bx;
@@ -127,13 +133,24 @@ if !ready exit;
 			draw_sprite_stretched_ext(THEME.ui_panel_tab, 0, bx, y0 - ui(32), _tabW, th, COLORS.panel_tab_inactive, 1);
 		
 		var _btx = bx + ui(8);
-		if(txt == "Contests") {
-			draw_sprite_ui(THEME.trophy, 0, _btx + ui(12), y0 - ui(14),,,, COLORS._main_icon);
-			_btx += ui(32);
-		}
+		var cc   = COLORS._main_text_sub;
+		if(project_page == i) cc = COLORS._main_text;
 		
-		var cc = COLORS._main_text_sub;
-		if(project_page == i) cc = txt == "Contests"? CDEF.yellow : COLORS._main_text;
+		switch(txt) {
+			case "Contests" :
+				if(project_page == i) cc = CDEF.yellow;
+				
+				draw_sprite_ui(THEME.trophy, 0, _btx + ui(12), y0 - ui(14),,,, COLORS._main_icon);
+				_btx += ui(32);
+				break;
+				
+			case "News" :
+				if(project_page == i) cc = CDEF.cyan;
+				
+				draw_sprite_ui(THEME.globe, 0, _btx + ui(12), y0 - ui(16),,,, COLORS._main_icon);
+				_btx += ui(32);
+				break;
+		}
 		
 		draw_set_color(cc);
 		draw_text_cut(_btx, y0 - ui(4), dtxt, _tabW - ui(16));
@@ -154,7 +171,7 @@ if !ready exit;
 		}
 		
 		bx += _tabW;
-	} #endregion
+	}
 	
 	draw_sprite_stretched(THEME.ui_panel_bg, 0, x0, y0, x1 - x0, y1 - y0);
 	draw_sprite_stretched_ext(THEME.ui_panel, 1, x0, y0, x1 - x0, y1 - y0, COLORS.panel_frame);
@@ -185,6 +202,11 @@ if !ready exit;
 		case "Contests" : 
 			sp_contest.setFocusHover(sFOCUS, sHOVER);
 			sp_contest.draw(x0 + ui(6), y0 + 1);
+			break;
+			
+		case "News" : 
+			sp_news.setFocusHover(sFOCUS, sHOVER);
+			sp_news.draw(x0 + ui(6), y0 + 1);
 			break;
 	}
 	
