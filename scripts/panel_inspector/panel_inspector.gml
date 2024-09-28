@@ -889,7 +889,7 @@ function Panel_Inspector() : PanelContent() constructor {
                 var lbHov = point_in_rectangle(_m[0], _m[1], lb_x, _selY + ui(2), lb_x + lb_w, _selY + lb_h - ui(4));
                 if(lbHov) {
                     contentPane.hover_content = true;
-                    draw_sprite_stretched_ext(THEME.button_hide, 1, lb_x, _selY + ui(2), lb_w, lb_h - ui(4), COLORS._main_icon, 1);
+                    draw_sprite_stretched_ext(THEME.s_box_r2_clr, 1, lb_x, _selY + ui(2), lb_w, lb_h - ui(4), c_white, 1);
                 }
                 
                 if(widHov) contentPane.hover_content = true;
