@@ -1891,7 +1891,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
             array_push_unique(value_draggings, value_dragging);
             
             for (var i = 0, n = array_length(_i); i < n; i++) {
-                var _j = _l[| _i[i]];
+                var _j = _l[_i[i]];
                 if(_j.type == value_dragging.type)
                     array_push_unique(value_draggings, _j);
             }
