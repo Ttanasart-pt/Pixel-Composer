@@ -6,13 +6,16 @@ function Node_Array_Shift(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		.setArrayDepth(99)
 		.setVisible(true, true);
 		
-	newInput(1, nodeValue_Int("Shift", self, 0))
+	newInput(1, nodeValue_Int("Shift", self, 0));
+	
+	newInput(2, nodeValue_Enum_Scroll("Overflow", self, 0, [ "Wrap", "Zero", "Ignore" ]));
 	
 	newOutput(0, nodeValue_Output("Array", self, VALUE_TYPE.any, 0));
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _arr = _data[0];
 		var _shf = _data[1];
+		var _ovf = _data[2];
 		
 		inputs[ 0].setType(VALUE_TYPE.any);
 		outputs[0].setType(VALUE_TYPE.any);
@@ -26,8 +29,26 @@ function Node_Array_Shift(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		}
 		
 		var arr = [];
-		for( var i = 0, n = array_length(_arr); i < n; i++ )
-			arr[i] = array_safe_get(_arr, i - _shf,, ARRAY_OVERFLOW.loop);
+		var len = array_length(_arr);
+		
+		if(_ovf == 0) {
+			for( var i = 0, n = len; i < n; i++ )
+				arr[i] = array_safe_get(_arr, i - _shf,, ARRAY_OVERFLOW.loop);
+				
+		} else if(_ovf == 1) {
+			for( var i = 0, n = len; i < n; i++ ) {
+				var _i = i - _shf;
+				arr[i] = array_safe_get(_arr, _i, 0);
+			}
+				
+		} else if(_ovf == 2) {
+			for( var i = 0, n = len; i < n; i++ ) {
+				var _i = i - _shf;
+				if(_i < 0 || _i >= len) continue;
+				
+				array_push(arr, array_safe_get(_arr, _i));
+			}
+		}
 		
 		return arr;
 	}
