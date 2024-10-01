@@ -12,7 +12,8 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	hover_alpha    = 0;
 	
 	preview_connecting = false;
-	preview_scale = 1;
+	preview_scale  = 1;
+	junction_hover = false;
 	
 	var tname = "";
 	if(!LOADING && !APPENDING && !ds_map_empty(project.tunnels_in))
@@ -124,11 +125,11 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		var yy = y * _s + _y;
 		isHovering = point_in_circle(_mx, _my, xx, yy, _s * 24);
 		
-		var jhov = outputs[0].drawJunction(_s, _mx, _my);
+		junction_hover = outputs[0].drawJunction(_s, _mx, _my);
 		if(!isHovering) return noone;
 		
 		hover_scale_to = 1;
-		return jhov? outputs[0] : noone;
+		return junction_hover? outputs[0] : noone;
 	}
 	
 	static drawNode = function(_x, _y, _mx, _my, _s) {
@@ -174,7 +175,7 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			shader_reset();
 		}
 		
-		hover_scale    = lerp_float(hover_scale, hover_scale_to, 3);
+		hover_scale    = lerp_float(hover_scale, hover_scale_to && !junction_hover, 3);
 		hover_scale_to = 0;
 		
 		draw_set_text(f_sdf, fa_center, fa_bottom, COLORS._main_text);

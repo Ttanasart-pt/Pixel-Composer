@@ -12,7 +12,8 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	hover_alpha    = 0;
 	
 	preview_connecting = false;
-	preview_scale = 1;
+	preview_scale  = 1;
+	junction_hover = false;
 	
 	var tname = "";
 	if(!LOADING && !APPENDING) tname = $"tunnel{ds_map_size(project.tunnels_in_map)}";
@@ -29,8 +30,10 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	insp2UpdateIcon    = [ THEME.tunnel, 0, c_white ];
 	
 	static onInspector2Update = function() {
-		var _node = nodeBuild("Node_Tunnel_Out", x + 128, y);
-		_node.inputs[0].setValue(inputs[0].getValue());
+		var _node = nodeBuild("Node_Tunnel_Out", x + 128, y).skipDefault();
+		var _key  = inputs[0].getValue();
+		
+		_node.inputs[0].setValue(_key);
 	}
 	
 	static update = function(frame = CURRENT_FRAME) { onValueUpdate(); }
@@ -197,11 +200,11 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var yy = y * _s + _y;
 		isHovering = point_in_circle(_mx, _my, xx, yy, _s * 24);
 		
-		var jhov = inputs[1].drawJunction(_s, _mx, _my);
+		junction_hover = inputs[1].drawJunction(_s, _mx, _my);
 		if(!isHovering) return noone;
 		
 		hover_scale_to = 1;
-		return jhov? inputs[1] : noone;
+		return junction_hover? inputs[1] : noone;
 	}
 	
 	static drawNode = function(_x, _y, _mx, _my, _s) {
@@ -247,7 +250,7 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			shader_reset();
 		}
 		
-		hover_scale    = lerp_float(hover_scale, hover_scale_to, 3);
+		hover_scale    = lerp_float(hover_scale, hover_scale_to && !junction_hover, 3);
 		hover_scale_to = 0;
 		
 		draw_set_text(f_sdf, fa_center, fa_bottom, COLORS._main_text);
