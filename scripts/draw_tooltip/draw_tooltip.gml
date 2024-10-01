@@ -315,3 +315,47 @@ function draw_tooltip_curve(curve) {
 	draw_rectangle(x0, y0, x1, y1, true);
 	
 }
+
+function tooltip_modifiers(title, keys) constructor {
+	self.title = title;
+	self.keys  = keys;
+	
+	static drawTooltip = function() {
+		
+		draw_set_font(f_p1);
+		var w1 = string_width(title);
+		var h1 = string_height(title);
+		
+		draw_set_font(f_p2);
+		var w2 = 0;
+		var h2 = 0;
+		
+		for( var i = 0, n = array_length(keys); i < n; i++ ) {
+			w2  = max(w2, string_width(keys[i][0]) + string_width(keys[i][1]) + ui(16));
+			h2 += line_get_height();
+		}
+		
+		var tw = max(w1, w2);
+		var th = h1 + ui(8) + h2;
+		
+		var mx = min(__mouse_tx + ui(16), __win_tw - (tw + ui(16)));
+		var my = min(__mouse_ty + ui(16), __win_th - (th + ui(16)));
+		
+		draw_sprite_stretched(THEME.textbox, 3, mx, my, tw + ui(16), th + ui(16));
+		draw_sprite_stretched(THEME.textbox, 0, mx, my, tw + ui(16), th + ui(16));
+		
+		draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text);
+		draw_text(mx + ui(8), my + ui(8), title);
+		
+		draw_set_font(f_p2);
+		
+		for( var i = 0, n = array_length(keys); i < n; i++ ) {
+			var _hx = mx + ui(12) + string_width(keys[i][0]);
+			var _hy = my + ui(8) + h1 + ui(4) + h2 / 2 + ui(4);
+			hotkey_draw(keys[i][0], _hx, _hy);
+			
+			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text);
+			draw_text(_hx + ui(8), my + ui(8) + h1 + ui(6), keys[i][1]);
+		}
+	}
+}

@@ -12,12 +12,15 @@ function Node_String_Merge(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			.setVisible(true, true);
 		
 		return inputs[index];
-	} setDynamicInput(1, true, VALUE_TYPE.text);
+	} 
+	
+	setDynamicInput(1, true, VALUE_TYPE.text);
 	
 	static processData = function(_output, _data, _index = 0) { 
 		var _str = "";
+		
 		for( var i = 0, n = array_length(_data); i < n; i++ ) 
-			_str += _data[i];
+			_str += string(_data[i]);
 		
 		return _str;
 	}

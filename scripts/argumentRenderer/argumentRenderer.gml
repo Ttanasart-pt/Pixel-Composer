@@ -8,8 +8,8 @@ function argumentRenderer(_typeArray = []) {
 		var tx  = _x;
 		var ty  = _y + ui(8);
 		var hh  = ui(8);
-		var _fn = f_p1;
-		var _th = line_get_height(f_p0, 12);
+		var _fn = spc? f_p1 : f_p2;
+		var _th = spc? line_get_height(f_p0, 12) : line_get_height(f_p2, 12);
 		
 		for( var i = input_fix_len; i < array_length(inputs); i += data_length ) {
 			var _jType = inputs[i + 1];
@@ -31,7 +31,7 @@ function argumentRenderer(_typeArray = []) {
 				draw_set_text(_fn, fa_left, fa_top, COLORS._main_text_sub);
 				draw_text_add(tx + ui(8), ty + _th + ui(8 + 6), __txt("Value"));
 				
-				var params = new widgetParam(tx + ui(64), ty + _th + ui(10), _w - ui(64), TEXTBOX_HEIGHT, _jValue.showValue(), {}, _m, argument_renderer.rx, argument_renderer.ry);
+				var params = new widgetParam(tx + ui(64), ty + _th + ui(10), _w - ui(64), _th, _jValue.showValue(), {}, _m, argument_renderer.rx, argument_renderer.ry);
 				    params.font = _fn;
 				
 				_jValue.editWidget.setFocusHover(_focus, _hover);

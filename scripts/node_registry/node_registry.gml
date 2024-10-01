@@ -314,7 +314,7 @@ function __initNodes() {
 	
 	#region for
 	var iter = ds_list_create(); 
-	NODE_ADD_CAT("Loop", iter, ["Node_Iterate"], COLORS.node_blend_loop);
+	NODE_ADD_CAT("Loop", iter, ["Node_Iterate"], COLORS.node_blend_loop); //#For
 		ds_list_add(iter, "Groups");
 		addNodeObject(iter, "Loop Input",	s_node_loop_input,		"Node_Iterator_Input",	[1, Node_Iterator_Input]).hideRecent();
 		addNodeObject(iter, "Loop Output",	s_node_loop_output,		"Node_Iterator_Output",	[1, Node_Iterator_Output]).hideRecent();
@@ -329,7 +329,7 @@ function __initNodes() {
 	
 	#region for inline
 	var iter_il = ds_list_create(); 
-	NODE_ADD_CAT("Loop", iter_il, ["Node_Iterate_Inline"], COLORS.node_blend_loop);
+	NODE_ADD_CAT("Loop", iter_il, ["Node_Iterate_Inline"], COLORS.node_blend_loop); //#For inline
 		ds_list_add(iter_il, "Loops");
 		addNodeObject(iter_il, "Index",			s_node_iterator_index,	"Node_Iterator_Index",	[1, Node_Iterator_Index]).hideRecent();
 		addNodeObject(iter_il, "Loop amount",	s_node_iterator_amount,	"Node_Iterator_Length",	[1, Node_Iterator_Length]).hideRecent();
@@ -337,7 +337,7 @@ function __initNodes() {
 	
 	#region for each
 	var itere = ds_list_create(); 
-	NODE_ADD_CAT("Loop", itere, ["Node_Iterate_Each"], COLORS.node_blend_loop);
+	NODE_ADD_CAT("Loop", itere, ["Node_Iterate_Each"], COLORS.node_blend_loop); //#Foreach
 		ds_list_add(itere, "Groups");
 		addNodeObject(itere, "Input",		s_node_group_input,		"Node_Group_Input",		[1, Node_Group_Input]).hideRecent();
 		addNodeObject(itere, "Output",		s_node_group_output,	"Node_Group_Output",	[1, Node_Group_Output]).hideRecent();
@@ -350,7 +350,7 @@ function __initNodes() {
 	
 	#region for each inline
 	var itere_il = ds_list_create(); 
-	NODE_ADD_CAT("Loop", itere_il, ["Node_Iterate_Each_Inline"], COLORS.node_blend_loop);
+	NODE_ADD_CAT("Loop", itere_il, ["Node_Iterate_Each_Inline"], COLORS.node_blend_loop); //#Foreach inline
 		ds_list_add(itere_il, "Loops");
 		addNodeObject(itere_il, "Index",		s_node_iterator_index,	"Node_Iterator_Index",	[1, Node_Iterator_Index]).hideRecent();
 		addNodeObject(itere_il, "Array Length",	s_node_iterator_length,	"Node_Iterator_Length",	[1, Node_Iterator_Length]).hideRecent();
@@ -358,7 +358,7 @@ function __initNodes() {
 	
 	#region iterate filter
 	var filter = ds_list_create(); 
-	NODE_ADD_CAT("Filter", filter, ["Node_Iterate_Filter"], COLORS.node_blend_loop);
+	NODE_ADD_CAT("Filter", filter, ["Node_Iterate_Filter"], COLORS.node_blend_loop); //#Loop filter
 		ds_list_add(filter, "Groups");
 		addNodeObject(filter, "Input",		s_node_group_input,		"Node_Group_Input",		[1, Node_Group_Input]).hideRecent();
 		addNodeObject(filter, "Output",		s_node_group_output,	"Node_Group_Output",	[1, Node_Group_Output]).hideRecent();
@@ -371,7 +371,7 @@ function __initNodes() {
 	
 	#region iterate filter inline
 	var filter_il = ds_list_create(); 
-	NODE_ADD_CAT("Filter", filter_il, ["Node_Iterate_Filter_Inline"], COLORS.node_blend_loop);
+	NODE_ADD_CAT("Filter", filter_il, ["Node_Iterate_Filter_Inline"], COLORS.node_blend_loop); //#Loop filter inline
 		ds_list_add(filter_il, "Loops");
 		addNodeObject(filter_il, "Index",			s_node_iterator_index,	"Node_Iterator_Index",	[1, Node_Iterator_Index]).hideRecent();
 		addNodeObject(filter_il, "Array Length",	s_node_iterator_length,	"Node_Iterator_Length",	[1, Node_Iterator_Length]).hideRecent();
@@ -379,7 +379,7 @@ function __initNodes() {
 	
 	#region iterate feedback
 	var feed = ds_list_create(); 
-	NODE_ADD_CAT("Feedback", feed, ["Node_Feedback"], COLORS.node_blend_feedback);
+	NODE_ADD_CAT("Feedback", feed, ["Node_Feedback"], COLORS.node_blend_feedback); //#Feedback
 		ds_list_add(feed, "Groups");
 		addNodeObject(feed, "Input",		s_node_feedback_input,	"Node_Feedback_Input",	[1, Node_Feedback_Input]).hideRecent();
 		addNodeObject(feed, "Output",		s_node_feedback_output,	"Node_Feedback_Output",	[1, Node_Feedback_Output]).hideRecent();
@@ -582,8 +582,6 @@ function __initNodes() {
 	#region filter
 	var filter = ds_list_create(); 
 	addNodeCatagory("Filter", filter);
-		//ds_list_add(filter, "Seasonal");
-		//addNodeObject(filter, "Lovify",				s_node_lovify,			 "Node_Lovify",			  [1, Node_Lovify],, "Add love to your image.").setIcon(s_lovify_icon);
 		
 		ds_list_add(filter, "Combines");
 		addNodeObject(filter, "Blend",				s_node_blend,			 "Node_Blend",			  [0, Node_create_Blend], global.node_blend_keys, "Blend 2 images using different blend modes.");
@@ -891,7 +889,7 @@ function __initNodes() {
 		addNodeObject(values, "To Text",			s_node_to_text,				"Node_To_Text",					[1, Node_To_Text]).setVersion(1145);
 		addNodeObject(values, "Unicode",			s_node_unicode,				"Node_Unicode",					[1, Node_Unicode]);
 		addNodeObject(values, "Text Length",		s_node_text_length,			"Node_String_Length",			[1, Node_String_Length]).setVersion(1138);
-		addNodeObject(values, "Combine Text",		s_node_text_combine,		"Node_String_Merge",			[1, Node_String_Merge]);
+		addNodeObject(values, "Combine Text",		s_node_text_combine,		"Node_String_Merge",			[1, Node_String_Merge], ["join text", "concatenate text"]);
 		addNodeObject(values, "Join Text",			s_node_text_join,			"Node_String_Join",				[1, Node_String_Join]).setVersion(1120);
 		addNodeObject(values, "Split Text",			s_node_text_splice,			"Node_String_Split",			[1, Node_String_Split]);
 		addNodeObject(values, "Trim Text",			s_node_text_trim,			"Node_String_Trim",				[1, Node_String_Trim]).setVersion(1080);
@@ -924,7 +922,7 @@ function __initNodes() {
 		addNodeObject(values, "Shuffle Array",		s_node_array_shuffle,	"Node_Array_Shuffle",			[1, Node_Array_Shuffle], ["array shuffle"]).setVersion(1120);
 		addNodeObject(values, "Loop Array",			s_node_loop_array,		"Node_Iterate_Each_Inline",		[1, Node_Iterate_Each_Inline], ["iterate each", "for each", "array loop"], "Create group that iterate to each member in an array.");
 		addNodeObject(values, "Filter Array",		s_node_filter_array,	"Node_Iterate_Filter_Inline",	[1, Node_Iterate_Filter_Inline], ["array filter"], "Filter array using condition.").setVersion(1140);
-		addNodeObject(values, "Sort Array (inline)",s_node_sort_array,		"Node_Iterate_Sort_Inline",		[1, Node_Iterate_Sort_Inline], ["array sort"], "Sort array using node graph.").setVersion(1143);
+		addNodeObject(values, "Sort Array Inline",  s_node_sort_array,		"Node_Iterate_Sort_Inline",		[1, Node_Iterate_Sort_Inline], ["array sort"], "Sort array using node graph.").setVersion(1143);
 		addNodeObject(values, "Parse CSV",			s_node_csv_parse,		"Node_Array_CSV_Parse",			[1, Node_Array_CSV_Parse]).setVersion(1145);
 		
 		ds_list_add(values, "Paths");
@@ -1115,7 +1113,7 @@ function __initNodes() {
 	
 	#region pb_group
 	var pb_group = ds_list_create(); 
-	addNodePBCatagory("Group", pb_group); 
+	addNodePBCatagory("Group", pb_group); //#PB Group
 		ds_list_add(pb_group, "Groups");
 		addNodeObject(pb_group, "Input",		s_node_group_input,		"Node_Group_Input",		[1, Node_Group_Input]).hideRecent();
 		addNodeObject(pb_group, "Output",		s_node_group_output,	"Node_Group_Output",	[1, Node_Group_Output]).hideRecent();
@@ -1123,7 +1121,7 @@ function __initNodes() {
 	
 	#region pb_draw
 	var pb_draw = ds_list_create(); 
-	addNodePBCatagory("Draw", pb_draw);
+	addNodePBCatagory("Draw", pb_draw); //#PB Draw
 		ds_list_add(pb_draw, "Fill");
 		addNodeObject(pb_draw, "Fill",				s_node_pb_draw_fill,	"Node_PB_Draw_Fill",			[1, Node_PB_Draw_Fill]).hideRecent();
 			
@@ -1141,7 +1139,7 @@ function __initNodes() {
 	
 	#region pb_box
 	var pb_box = ds_list_create(); 
-	addNodePBCatagory("Box", pb_box);
+	addNodePBCatagory("Box", pb_box); //#PB Box
 		ds_list_add(pb_box, "Layer");
 		addNodeObject(pb_box, "Layer",		s_node_pb_layer,	"Node_PB_Layer",		[1, Node_PB_Layer]).hideRecent();
 			
@@ -1157,7 +1155,7 @@ function __initNodes() {
 	
 	#region pb_fx
 	var pb_fx = ds_list_create(); 
-	addNodePBCatagory("Effects", pb_fx);
+	addNodePBCatagory("Effects", pb_fx); //#PB Effects
 		ds_list_add(pb_fx, "Effect");
 		addNodeObject(pb_fx, "Outline",			s_node_pb_fx_outline,	"Node_PB_Fx_Outline",		[1, Node_PB_Fx_Outline]).hideRecent();
 		addNodeObject(pb_fx, "Stack",			s_node_pb_fx_stack,		"Node_PB_Fx_Stack",			[1, Node_PB_Fx_Stack]).hideRecent();
@@ -1180,7 +1178,7 @@ function __initNodes() {
 	
 	#region pb_arr
 	var pb_arr = ds_list_create(); 
-	addNodePBCatagory("Array", pb_arr);
+	addNodePBCatagory("Array", pb_arr); //#PB Array 
 		addNodeObject(pb_arr, "Array",			s_node_array,			"Node_Array",			[1, Node_Array]).hideRecent();
 		addNodeObject(pb_arr, "Array Get",		s_node_array_get,		"Node_Array_Get",		[1, Node_Array_Get], ["get array"]).hideRecent();
 		addNodeObject(pb_arr, "Array Set",		s_node_array_set,		"Node_Array_Set",		[1, Node_Array_Set], ["set array"]).hideRecent().setVersion(1120);
@@ -1192,14 +1190,14 @@ function __initNodes() {
 	
 	#region pcx_var
 	var pcx_var = ds_list_create(); 
-	addNodePCXCatagory("Variable", pcx_var);
+	addNodePCXCatagory("Variable", pcx_var); //#PCX Variable
 		addNodeObject(pcx_var, "Variable",		s_node_array,	"Node_PCX_var",		[1, Node_PCX_var]).hideRecent();
 		addNodeObject(pcx_var, "Fn Variable",	s_node_array,	"Node_PCX_fn_var",	[1, Node_PCX_fn_var]).hideRecent();
 	#endregion
 	
 	#region pcx_fn
 	var pcx_fn = ds_list_create(); 
-	addNodePCXCatagory("Functions", pcx_fn);
+	addNodePCXCatagory("Functions", pcx_fn); //#PCX Functions
 		addNodeObject(pcx_fn, "Equation",	s_node_array,	"Node_PCX_Equation",		[1, Node_PCX_Equation]).hideRecent();
 			
 		ds_list_add(pcx_fn, "Numbers");
@@ -1217,7 +1215,7 @@ function __initNodes() {
 	
 	#region pcx_flow
 	var pcx_flow = ds_list_create(); 
-	addNodePCXCatagory("Flow Control", pcx_flow);
+	addNodePCXCatagory("Flow Control", pcx_flow); //#PCX flow control
 		addNodeObject(pcx_flow, "Condition",		s_node_array,	"Node_PCX_Condition",		[1, Node_PCX_Condition]).hideRecent();
 	#endregion
 	

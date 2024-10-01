@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"nodd_mk_delay_machine",
+  "%Name":"node_mk_delay_machine",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"nodd_mk_delay_machine",
+  "name":"node_mk_delay_machine",
   "parent":{
     "name":"MKFX",
     "path":"folders/nodes/data/MKFX.yy",

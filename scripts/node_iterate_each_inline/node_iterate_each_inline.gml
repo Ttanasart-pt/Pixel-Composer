@@ -63,12 +63,12 @@ function Node_Iterate_Each_Inline(_x, _y, _group = noone) : Node_Collection_Inli
 		nodes = [];
 		
 		for( var i = 0, n = array_length(attributes.members); i < n; i++ ) {
-			if(!ds_map_exists(PROJECT.nodeMap, attributes.members[i])) {
-				print($"Node not found {attributes.members[i]}");
-				continue;
-			}
+			var m = attributes.members[i];
 			
-			var _node = PROJECT.nodeMap[? attributes.members[i]];
+			if(!ds_map_exists(PROJECT.nodeMap, m))
+				continue;
+			
+			var _node = PROJECT.nodeMap[? m];
 			_node.inline_context = self;
 			
 			array_push(nodes, _node);

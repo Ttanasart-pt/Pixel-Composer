@@ -10,7 +10,7 @@ function Node_Iterate_Filter_Inline(_x, _y, _group = noone) : Node_Collection_In
 	output_node_type = Node_Iterator_Filter_Inline_Output;
 	iterated         = 0;
 	
-	if(!LOADING && !APPENDING) { #region
+	if(!LOADING && !APPENDING) {
 		var input  = nodeBuild("Node_Iterator_Filter_Inline_Input",  x,       y);
 		var output = nodeBuild("Node_Iterator_Filter_Inline_Output", x + 256, y);
 		
@@ -31,18 +31,18 @@ function Node_Iterate_Filter_Inline(_x, _y, _group = noone) : Node_Collection_In
 			
 			array_push(APPEND_LIST, input, output);
 		}
-	} #endregion
+	}
 	
-	static getIterationCount = function() { #region
+	static getIterationCount = function() {
 		var _arr = input_node.inputs[0].getValue();
 		return array_length(_arr);
-	} #endregion
+	}
 	
-	static bypassNextNode = function() { #region
+	static bypassNextNode = function() {
 		return iterated < getIterationCount();
-	} #endregion
+	}
 	
-	static getNextNodes = function() { #region
+	static getNextNodes = function() {
 		LOG_BLOCK_START();	
 		LOG_IF(global.FLAG.render == 1, "[outputNextNode] Get next node from inline iterate");
 		
@@ -55,18 +55,18 @@ function Node_Iterate_Filter_Inline(_x, _y, _group = noone) : Node_Collection_In
 		LOG_BLOCK_END();
 		
 		return _nodes;
-	} #endregion
+	}
 	
-	static refreshMember = function() { #region
+	static refreshMember = function() {
 		nodes = [];
 		
 		for( var i = 0, n = array_length(attributes.members); i < n; i++ ) {
-			if(!ds_map_exists(PROJECT.nodeMap, attributes.members[i])) {
-				print($"Node not found {attributes.members[i]}");
-				continue;
-			}
+			var m = attributes.members[i];
 			
-			var _node = PROJECT.nodeMap[? attributes.members[i]];
+			if(!ds_map_exists(PROJECT.nodeMap, m))
+				continue;
+			
+			var _node = PROJECT.nodeMap[? m];
 			_node.inline_context = self;
 			array_push(nodes, _node);
 			
@@ -86,9 +86,9 @@ function Node_Iterate_Filter_Inline(_x, _y, _group = noone) : Node_Collection_In
 			if(output_node) output_node.destroy();
 			destroy();
 		}
-	} #endregion
+	}
 	
-	static update = function() { #region
+	static update = function() {
 		if(input_node == noone || output_node == noone) {
 			if(input_node)  input_node.destroy();
 			if(output_node) output_node.destroy();
@@ -98,6 +98,6 @@ function Node_Iterate_Filter_Inline(_x, _y, _group = noone) : Node_Collection_In
 		
 		iterated = 0;
 		output_node.outputs[0].setValue([]);
-	} #endregion
+	}
 	
 }

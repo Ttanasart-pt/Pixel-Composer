@@ -33,11 +33,11 @@ function Node_De_Corner(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	temp_surface = [ noone, noone ];
 	
-	static step = function() { #region
+	static step = function() {
 		__step_mask_modifier();
-	} #endregion
+	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var surf = _data[0];
 		var _tol = _data[2];
 		var _itr = _data[3];
@@ -76,6 +76,6 @@ function Node_De_Corner(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		_outSurf = mask_apply(_data[0], _outSurf, _data[5], _data[6]);
 		
 		return _outSurf;
-	} #endregion
+	}
 	
 }

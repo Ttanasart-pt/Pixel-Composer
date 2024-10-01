@@ -50,7 +50,7 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	newOutput(3, nodeValue_Output("Channels", self, VALUE_TYPE.integer, 2))
 		.setVisible(false);
 	
-	newOutput(4, nodeValue_Output("Duration (s)", self, VALUE_TYPE.float, 0))
+	newOutput(4, nodeValue_Output("Duration", self, VALUE_TYPE.float, 0))
 		.setVisible(false);
 	
 	content      = noone;

@@ -14,7 +14,7 @@ function Node_Iterate_Sort_Inline(_x, _y, _group = noone) : Node_Collection_Inli
 	output_node_type = Node_Iterator_Sort_Inline_Output;
 	iterated         = 0;
 	
-	if(!LOADING && !APPENDING) { #region
+	if(!LOADING && !APPENDING) {
 		var input  = nodeBuild("Node_Iterator_Sort_Inline_Input",  x,       y);
 		var output = nodeBuild("Node_Iterator_Sort_Inline_Output", x + 256, y);
 		
@@ -33,29 +33,29 @@ function Node_Iterate_Sort_Inline(_x, _y, _group = noone) : Node_Collection_Inli
 			
 			array_push(APPEND_LIST, input, output);
 		}
-	} #endregion
+	}
 	
-	static isActiveDynamic = function(frame = CURRENT_FRAME) { #region
+	static isActiveDynamic = function(frame = CURRENT_FRAME) {
 		for( var i = 0, n = array_length(nodes); i < n; i++ )
 			if(nodes[i].isActiveDynamic(frame)) return true;
 		
 		return false;
-	} #endregion
+	}
 	
-	static getNextNodes = function() { #region
+	static getNextNodes = function() {
 		return output_node.getNextNodes();
-	} #endregion
+	}
 	
-	static refreshMember = function() { #region
+	static refreshMember = function() {
 		nodes = [];
 		
 		for( var i = 0, n = array_length(attributes.members); i < n; i++ ) {
-			if(!ds_map_exists(PROJECT.nodeMap, attributes.members[i])) {
-				print($"Node not found {attributes.members[i]}");
-				continue;
-			}
+			var m = attributes.members[i];
 			
-			var _node = PROJECT.nodeMap[? attributes.members[i]];
+			if(!ds_map_exists(PROJECT.nodeMap, m))
+				continue;
+			
+			var _node = PROJECT.nodeMap[? m];
 			_node.inline_context = self;
 			array_push(nodes, _node);
 			
@@ -75,9 +75,9 @@ function Node_Iterate_Sort_Inline(_x, _y, _group = noone) : Node_Collection_Inli
 			if(output_node) output_node.destroy();
 			destroy();
 		}
-	} #endregion
+	}
 	
-	static update = function(frame = CURRENT_FRAME) { #region
+	static update = function(frame = CURRENT_FRAME) {
 		if(input_node == noone || output_node == noone) {
 			if(input_node)  input_node.destroy();
 			if(output_node) output_node.destroy();
@@ -91,17 +91,17 @@ function Node_Iterate_Sort_Inline(_x, _y, _group = noone) : Node_Collection_Inli
 		
 		input_node.startSort = true;
 		//sortArray();
-	} #endregion
+	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	static swap = function(arr, a, b) { #region
+	static swap = function(arr, a, b) {
 		var temp = arr[a];
 		arr[@ a] = arr[b];
 		arr[@ b] = temp;
-	} #endregion
+	}
 	
-	static compareValue = function(val1, val2) { #region
+	static compareValue = function(val1, val2) {
 		input_node.outputs[0].setValue(val1,,, false);
 		input_node.outputs[1].setValue(val2,,, false);
 		
@@ -112,9 +112,9 @@ function Node_Iterate_Sort_Inline(_x, _y, _group = noone) : Node_Collection_Inli
 		//print($"Comparing value {val1}, {val2} > [{res}]");
 		
 		return res;
-	} #endregion
+	}
 	
-	static partition = function(arr, low, high) { #region
+	static partition = function(arr, low, high) {
 		var pv = arr[high]; 
 		var i  = low - 1;
 		
@@ -127,18 +127,18 @@ function Node_Iterate_Sort_Inline(_x, _y, _group = noone) : Node_Collection_Inli
 		
 		swap(arr, i + 1, high);
 		return i + 1;
-	} #endregion
+	}
 	
-	static quickSort = function(arr, low, high) { #region
+	static quickSort = function(arr, low, high) {
 		if(low >= high) return;
 		
 		var p = partition(arr, low, high);
 		
 		quickSort(arr, low, p - 1);
 		quickSort(arr, p + 1, high);
-	} #endregion
+	}
 	
-	static sortArray = function() { #region
+	static sortArray = function() {
 		iterated = 0;
 		loop_start_time = get_timer();
 		
@@ -160,6 +160,6 @@ function Node_Iterate_Sort_Inline(_x, _y, _group = noone) : Node_Collection_Inli
 		
 		quickSort(arrOut, 0, array_length(arrOut) - 1);
 		output_node.outputs[0].setValue(arrOut);
-	} #endregion
+	}
 	
 }

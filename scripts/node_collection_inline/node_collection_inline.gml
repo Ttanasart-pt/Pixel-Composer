@@ -75,15 +75,7 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	
 	static refreshMember = function() {
 		nodes = [];
-		
-		for( var i = 0, n = array_length(attributes.members); i < n; i++ ) {
-			if(!ds_map_exists(PROJECT.nodeMap, attributes.members[i])) {
-				print($"Node not found {attributes.members[i]}");
-				continue;
-			}
-			
-			addNode(PROJECT.nodeMap[? attributes.members[i]]);
-		}
+		array_foreach(attributes.members, function(m) /*=>*/ { if(ds_map_exists(PROJECT.nodeMap, m)) addNode(PROJECT.nodeMap[? m]); })
 	}
 	
 	static refreshGroupBG = function() {
@@ -184,8 +176,10 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		
 		if(PANEL_GRAPH.node_dragging && PANEL_GRAPH.frame_hovering == self) {
 			var _list = PANEL_GRAPH.nodes_selecting;
-		
-			if(key_mod_press(SHIFT)) {
+			
+			PANEL_GRAPH.addKeyOverlay("Inline group", [[ "Shift", "Add/remove" ]]);
+			
+			if(key_mod_down(SHIFT)) {
 				if(group_hovering) {
 					group_adding = true;
 					for( var i = 0, n = array_length(_list); i < n; i++ ) {

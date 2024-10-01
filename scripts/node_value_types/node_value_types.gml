@@ -559,8 +559,13 @@ function nodeValueUnit(_nodeValue) constructor {
 		} else if(is_array(value)) {
 			if(inv) {
 				base = [
-					base[0] == 0? 0 : 1 / base[0],
-					base[1] == 0? 0 : 1 / base[1],	
+					base[0] == 0? 0 : 1 / array_safe_get(base, 0),
+					base[1] == 0? 0 : 1 / array_safe_get(base, 1),	
+				];
+			} else {
+				base = [
+					array_safe_get(base, 0),
+					array_safe_get(base, 1)
 				];
 			}
 			
@@ -569,15 +574,20 @@ function nodeValueUnit(_nodeValue) constructor {
 				case VALUE_DISPLAY.vector :
 				case VALUE_DISPLAY.vector_range :
 					var _val = array_create(array_length(value));
+					
 					for( var i = 0, n = array_length(value); i < n; i++ )
-						_val[i] = value[i] * base[i % 2];
+						_val[i] = is_real(value[i])? value[i] * base[i % 2] : value[i];
+						
 					return _val;
 					
 				case VALUE_DISPLAY.area :
-					var _val = array_clone(value);
+					var _val = array_create(array_length(value));
+					
 					for( var i = 0; i < 4; i++ )
-						_val[i] = value[i] * base[i % 2];
+						_val[i] = is_real(value[i])? value[i] * base[i % 2] : value[i];
 						
+					_val[4] = array_safe_get(value, 4);
+					
 					return _val;
 			}
 		}

@@ -2,7 +2,7 @@ function Node_Array_Convolute(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	name = "Array Convolute";
 	setDimension(96, 32 + 24);
 	
-	newInput(0, nodeValue_Float("Array", self, 0))
+	newInput(0, nodeValue_Float("Array", self, []))
 		.setArrayDepth(1)
 		.setVisible(true, true);
 	
@@ -10,36 +10,65 @@ function Node_Array_Convolute(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		.setArrayDepth(1)
 		.setVisible(true, true);
 	
+	newInput(2, nodeValue_Enum_Scroll("Boundary", self, 0, [ "Zero", "Wrap", "Skip" ]))
+		.setArrayDepth(1);
+	
 	newOutput(0, nodeValue_Output("Array", self, VALUE_TYPE.float, 0))
 		.setArrayDepth(1);
 		
 	static convolute = function(arr, ker) {
-		__tmp_ker = ker;
-		__tmp_arr = arr;
-		__tmp_len = array_length(ker);
-		__tmp_arn = array_length(arr);
-		__tmp_st  = floor((__tmp_len - 1) / 2);
+		var _bnd = getInputData(2);
 		
-		return array_map(arr, function(val, ind) {
-			var ret = 0;
+		var _len = array_length(ker);
+		var _arn = array_length(arr);
+		var _st  = floor((_len - 1) / 2);
+		var r, _a;
+		
+		if(_bnd == 2) {
+			var _ll = _arn - _len + 1;
+			_a = array_create(_ll);
 			
-			for(var i = 0; i < __tmp_len; i++) {
-				var _ind = ind + i - __tmp_st;
-				if(_ind < 0) continue;
-				if(_ind >= __tmp_arn) continue;
+			for(var i = 0; i < _ll; i++ ) {
+				r = 0;
 				
-				ret += __tmp_arr[_ind] * __tmp_ker[i];
+				for(var j = 0; j < _len; j++) {
+					var _ind = i + j;
+					if(_ind < 0 || _ind >= _arn) continue;
+					
+					r += arr[_ind] * ker[j];
+				}
+				
+				_a[i] = r;
 			}
 			
-			return ret;
-		});
+		} else {
+			_a = array_create(_arn);
+			
+			for( var i = 0; i < _arn; i++ ) {
+				r = 0;
+				
+				for(var j = 0; j < _len; j++) {
+					var _ind = i + j - _st;
+					if(_ind < 0 || _ind >= _arn) {
+						if(_bnd == 0) continue;
+						_ind = safe_mod(_ind + _arn, _arn);
+					}
+					
+					r += arr[_ind] * ker[j];
+				}
+				
+				_a[i] = r;
+			}
+		}
+		
+		return _a;
 	}
 		
 	static update = function(frame = CURRENT_FRAME) {
 		var _arr = getInputData(0);
 		var _ker = getInputData(1);
 		
-		if(!is_array(_arr) || !is_array(_ker)) return;
+		if(!is_array(_arr) || !is_array(_ker))     return;
 		if(array_empty(_arr) || array_empty(_ker)) return;
 		
 		var res;

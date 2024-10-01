@@ -284,6 +284,17 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         bg_color = c_black;
         
         slider_width = 0;
+        
+        tooltip_overlay = {};
+        
+        function addKeyOverlay(title, keys) {
+        	if(struct_has(tooltip_overlay, title)) {
+        		array_append(tooltip_overlay[$ title], keys);
+        		return;
+        	}
+        	
+        	tooltip_overlay[$ title] = keys;
+        }
     #endregion
     
     #region // ---- position ----
@@ -1239,7 +1250,13 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         
         // ++++++++++++ interaction ++++++++++++
             if(mouse_on_graph && pHOVER) {
-                
+            	if(node_dragging == noone && value_dragging == noone) {
+        			if(value_focus)
+            			addKeyOverlay("Select junction(s)", [[ "Shift", "Peek content" ]]);
+            		else if(node_hovering)
+	            		addKeyOverlay("Select node(s)", [[ "Shift", "Toggle selection" ]]);
+            	}
+                	
                 // select
                     var _anc = nodes_select_anchor;
                     if(mouse_press(mb_left, _focus)) _anc = noone;
@@ -1251,6 +1268,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                             NODE_DROPPER_TARGET.expressionUpdate(); 
                         }
                     } else if(mouse_press(mb_left, _focus)) {
+                    	
                         if(key_mod_press(SHIFT)) {
                             if(node_hovering) {
                                 if(array_exists(nodes_selecting, node_hovering))
@@ -1268,6 +1286,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                                 
                         } else {
                             if(is_instanceof(node_hovering, Node_Frame)) {
+                            	addKeyOverlay("Frames selection", [[ "Ctrl", "Exclude contents" ]]);
+				
                                 var fx0 = (node_hovering.x + graph_x) * graph_s;
                                 var fy0 = (node_hovering.y + graph_y) * graph_s;
                                 var fx1 = fx0 + node_hovering.w * graph_s;
@@ -1581,6 +1601,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                 nodes_list[i].groupCheck(gr_x, gr_y, graph_s, mx, my);
             
             if(node_dragging && !key_mod_press(ALT)) {
+                addKeyOverlay("Dragging node(s)", [[ "Ctrl", "Disable snapping" ]]);
+                
                 var nx = node_drag_sx + (mouse_graph_x - node_drag_mx);
                 var ny = node_drag_sy + (mouse_graph_y - node_drag_my);
                     
@@ -1588,7 +1610,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                     nx = round(nx / project.graphGrid.size) * project.graphGrid.size;
                     ny = round(ny / project.graphGrid.size) * project.graphGrid.size;
                 }
-                    
+                
                 if(node_drag_ox == -1 || node_drag_oy == -1) {
                     node_drag_ox = nx;
                     node_drag_oy = ny;
@@ -1791,10 +1813,15 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
             value_dragging.node.triggerRender();
             
             if(value_focus != value_dragging) {
+            					
                 var ctx = is_instanceof(frame_hovering, Node_Collection_Inline)? frame_hovering : getCurrentContext();
                 
-                if(value_dragging.node.inline_context && !key_mod_press(SHIFT))
-                    ctx = value_dragging.node.inline_context;
+                if(value_dragging.node.inline_context) {
+                	addKeyOverlay("Connecting (inline)", [[ "Alt", "Connect to outside" ]]);
+                	
+					if(!key_mod_press(ALT))
+                    	ctx = value_dragging.node.inline_context;
+                }
                 
                 if(is_instanceof(ctx, Node_Collection_Inline) && !ctx.junctionIsInside(value_dragging))
                 	ctx = noone;
@@ -1854,6 +1881,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
             return; 
         }
         
+        addKeyOverlay("Connecting", [[ "Ctrl", "Disable auto connect" ], [ "Shift", "Select multiple" ], [ "Double Shift", "Select all of same type" ]]);
+								
         if(key_mod_double(SHIFT)) {
             var _n = value_dragging.node;
             var _l = value_dragging.connect_type == CONNECT_TYPE.input? _n.inputs : _n.outputs;
@@ -2501,7 +2530,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         
         drawSlideShow();
         
-        ////////////////////////////////// File drop //////////////////////////////////
+        ///////////////////////////////////// File drop /////////////////////////////////////
         
         if(pHOVER) {
             var gr_x = graph_x * graph_s;
@@ -2527,7 +2556,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                 draw_sprite_stretched_ext(THEME.ui_panel_selection, 0, 8, 8, w - 16, h - 16, COLORS._main_value_positive, 1);
             
             if(FILE_IS_DROPPING)
-            	_tip = file_drop_tooltip;
+            	addKeyOverlay("Droping file(s)", [[ "Shift", "Options..." ]]);
                 
             if(DRAGGING) { // file dropping
                 if(_node_hover && _node_hover.droppable(DRAGGING)) {
@@ -2555,6 +2584,48 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
             if(_tip != "") TOOLTIP = _tip;
         }
         
+        ////////////////////////////////// Tooltip Overlay //////////////////////////////////
+        
+        var _over = variable_struct_get_names(tooltip_overlay);
+        if(!array_empty(_over)) {
+        	var _tx    = ui(16);
+        	var _ty    = h - toolbar_height - ui(10);
+        	
+        	for( var j = 0, m = array_length(_over); j < m; j++ ) {
+        		var _title = _over[j];
+	        	var _keys  = tooltip_overlay[$ _title];
+	        	
+	        	draw_set_text(f_p2, fa_left, fa_bottom, COLORS._main_text);
+				
+				var _tw = 0;
+				for( var i = 0, n = array_length(_keys); i < n; i++ ) 
+					_tw = max(_tw, string_width(_keys[i][0]));
+				var _ttx = _tx + _tw + ui(16);
+				
+				for( var i = array_length(_keys) - 1; i >= 0; i-- ) {
+					draw_set_color(COLORS._main_icon);
+					draw_set_alpha(0.5);
+					draw_text_add(_tx, _ty, _keys[i][0]);
+					
+					draw_set_color(COLORS._main_text);
+					draw_set_alpha(0.5);
+					draw_text_add(_ttx, _ty, _keys[i][1]);
+					
+					_ty -= line_get_height();
+				}
+				
+				_ty -= ui(4);
+				draw_set_text(f_p1b, fa_left, fa_bottom, COLORS._main_text);
+				draw_set_alpha(0.5);
+				draw_text_add(_tx, _ty, _title);
+				
+				_ty -= line_get_height() + ui(8);
+        	}
+			
+			draw_set_alpha(1);
+        }
+        
+        tooltip_overlay = {};
     } 
     
     //// ============ Action ============
@@ -3311,7 +3382,7 @@ function Panel_Graph_Drop_tooltip(panel) constructor {
 	
 	static drawTooltip = function() {
 		var _drop = __txt("Import File");
-		var _shft = __txt("Options...");
+		var _shft = __txt("Options") + "...";
 		
 		draw_set_font(f_p1);
 		var w1 = string_width(_drop);
@@ -3338,7 +3409,7 @@ function Panel_Graph_Drop_tooltip(panel) constructor {
 		var _hy = my + ui(8) + h1 + ui(4) + h2 / 2 + ui(4);
 		hotkey_draw("Shift", _hx, _hy);
 		
-		draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
+		draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text);
 		draw_text(_hx + ui(8), my + ui(8) + h1 + ui(6), _shft);
 	}
 }
