@@ -17,16 +17,17 @@ function Node_Array_Range(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		var st  = _data[0];
 		var ed  = _data[1];
 		var stp = _data[2];
-		var arr = [];
 		
-		if(st == ed) {
-			arr = array_create(stp, st);
-		} else if(sign(stp) == sign(ed - st)) {
-			var _amo = floor(abs((ed - st) / stp));
-			
-			for( var i = 0; i < _amo; i++ )
-				array_push(arr, st + i * stp);
-		}
+		if(st == ed)
+			return array_create(abs(stp), st);
+		
+		stp = abs(stp) * sign(ed - st);
+		
+		var _amo = floor(abs((ed - st) / stp));
+		var  arr = array_create(_amo);
+		
+		for( var i = 0; i < _amo; i++ )
+			arr[i] = st + i * stp;
 		
 		return arr;
 	}
