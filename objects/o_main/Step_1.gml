@@ -29,6 +29,7 @@ _FILE_DROPPED     = false;
 	
 	var foc = window_has_focus();
 	//if(HOVER && instance_exists(HOVER) && HOVER.window != noone) 
+	if(PREFERENCES.multi_window)
 		foc = true;
 	
 	game_set_speed(foc || IS_PLAYING? PREFERENCES.ui_framerate : PREFERENCES.ui_framerate_non_focus, gamespeed_fps);
