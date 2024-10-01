@@ -1,9 +1,9 @@
-function draw_circle_prec(x, y, r, border, precision = 32) { #region
+function draw_circle_prec(x, y, r, border, precision = 32) {
 	draw_set_circle_precision(precision);
 	draw_circle(x, y, r, border);
-} #endregion
+}
 
-function draw_polygon(x, y, r, sides, a = 0) { #region
+function draw_polygon(x, y, r, sides, a = 0) {
 	draw_primitive_begin(pr_trianglelist);
 		for( var i = 0; i < sides; i++ ) {
 			var a0 = (i + 0) / sides * 360 + a;
@@ -14,9 +14,9 @@ function draw_polygon(x, y, r, sides, a = 0) { #region
 			draw_vertex(x + lengthdir_x(r, a1), y + lengthdir_y(r, a1));
 		}
 	draw_primitive_end();
-} #endregion
+}
 
-function draw_circle_color_alpha(_x, _y, _r, colI, colO, alpI, alpO) { #region
+function draw_circle_color_alpha(_x, _y, _r, colI, colO, alpI, alpO) {
 	var _step = 32;
 	var angle_step = 360 / _step;
 	
@@ -35,9 +35,9 @@ function draw_circle_color_alpha(_x, _y, _r, colI, colO, alpI, alpO) { #region
 		draw_vertex_color(p1x, p1y, colO, alpO);
 	}
 	draw_primitive_end();
-} #endregion
+}
 
-function draw_circle_border(xx, yy, r, w) { #region
+function draw_circle_border(xx, yy, r, w) {
 	var _step = 32;
 	var angle_step = 360 / _step;
 	
@@ -52,9 +52,9 @@ function draw_circle_border(xx, yy, r, w) { #region
 		draw_vertex(p1x, p1y);
 	}
 	draw_primitive_end();
-} #endregion
+}
 
-function draw_ellipse_border(x0, y0, x1, y1, w) { #region
+function draw_ellipse_border(x0, y0, x1, y1, w) {
 	var step = 32;
 	var angle_step = 360 / step;
 	
@@ -75,9 +75,89 @@ function draw_ellipse_border(x0, y0, x1, y1, w) { #region
 		_px = px;
 		_py = py;
 	}
-} #endregion
+}
 
-function draw_circle_angle(_x, _y, _r, _angSt, _angEd, precision = 32) { #region
+function draw_ellipse_angle_color(cx, cy, rx, ry, ang, color0, color1) {
+    var n    = ceil(max(cx, cy));
+    var step = 360 / n;
+    var ox, oy, nx, ny;
+    
+    draw_primitive_begin(pr_trianglelist);
+    for (var i = 0; i <= n; i++) {
+        var nx = cx + rx * dcos(i * step);
+        var ny = cy + ry * dsin(i * step);
+        
+        var p0 = point_rotate(nx, ny, cx, cy, ang);
+        nx = p0[0];
+        ny = p0[1];
+        
+        if(i) {
+	        draw_vertex_color(cx, cy, color0, 1);
+	        draw_vertex_color(ox, oy, color1, 1);
+	        draw_vertex_color(nx, ny, color1, 1);
+        }
+		
+		ox = nx;
+		oy = ny;
+    }
+    draw_primitive_end();
+}
+
+function draw_ellipse_width(x0, y0, x1, y1, th = 1) {
+	var cx = (x0 + x1) / 2;
+	var cy = (y0 + y1) / 2;
+	var ww = abs(x0 - x1) / 2;
+	var hh = abs(y0 - y1) / 2;
+	
+	var samp = 32;
+	var ox, oy, nx, ny;
+	
+	for( var i = 0; i < samp; i++ ) {
+		nx = cx + lengthdir_x(ww, i * 360 / samp);
+		ny = cy + lengthdir_y(hh, i * 360 / samp);
+		
+		if(i)
+			draw_line_width(ox, oy, nx, ny, th);
+		
+		ox = nx;
+		oy = ny;
+	}
+}
+
+function draw_ellipse_dash(cx, cy, ww, hh, th = 1, dash = 8, ang = 0) {
+	var rd = max(ww, hh);
+	
+	var dash_dist = 0, is_dash = true;
+	var samp = dash * max(cx, cy);
+	var ox, oy, nx, ny;
+	
+	for( var i = 0; i < samp; i++ ) {
+		nx = cx + lengthdir_x(ww, i * 360 / samp);
+		ny = cy + lengthdir_y(hh, i * 360 / samp);
+		
+        var p0 = point_rotate(nx, ny, cx, cy, ang);
+        nx = p0[0];
+        ny = p0[1];
+        
+		if(i) {
+			dash_dist += point_distance(ox, oy, nx, ny);
+			if(dash_dist >= dash) {
+				dash_dist -= dash;
+				is_dash = !is_dash;
+			}
+			
+			if(is_dash)
+				draw_line_width(ox, oy, nx, ny, th);
+		}
+		
+		ox = nx;
+		oy = ny;
+	}
+}
+
+function draw_circle_dash(_x, _y, rad, th = 1, dash = 8, ang = 0) { draw_ellipse_dash(_x, _y, rad, rad, th, dash, ang); }
+
+function draw_circle_angle(_x, _y, _r, _angSt, _angEd, precision = 32) {
 	var ox, oy, nx, ny, oa, na;
 	
 	draw_primitive_begin(pr_trianglelist);
@@ -99,9 +179,9 @@ function draw_circle_angle(_x, _y, _r, _angSt, _angEd, precision = 32) { #region
 	}
 	
 	draw_primitive_end();
-} #endregion
+}
 
-function draw_arc_width(_x, _y, _r, _th, _angSt, _angEd) { #region
+function draw_arc_width(_x, _y, _r, _th, _angSt, _angEd) {
 	draw_primitive_begin(pr_trianglelist);
 	var oxI, oyI, oxO, oyO;
 	
@@ -133,9 +213,9 @@ function draw_arc_width(_x, _y, _r, _th, _angSt, _angEd) { #region
 	}
 	
 	draw_primitive_end();
-} #endregion
+}
 
-function draw_arc_forward(_x, _y, _r, _th, _angSt, _angEd) { #region
+function draw_arc_forward(_x, _y, _r, _th, _angSt, _angEd) {
 	draw_primitive_begin(pr_trianglelist);
 	var oxI, oyI, oxO, oyO;
 	
@@ -167,7 +247,7 @@ function draw_arc_forward(_x, _y, _r, _th, _angSt, _angEd) { #region
 	}
 	
 	draw_primitive_end();
-} #endregion
+}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

@@ -80,17 +80,9 @@ function _Node_Strand_Affector(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		if(_typ == 0) {
 			draw_circle_prec(px, py, _ran, true);
 			
-			var x0 = px - (_ran + fal);
-			var y0 = py - (_ran + fal);
-			var x1 = px + (_ran + fal);
-			var y1 = py + (_ran + fal);
-			draw_ellipse_dash(x0, y0, x1, y1);
-		
-			var x0 = px - (_ran - fal);
-			var y0 = py - (_ran - fal);
-			var x1 = px + (_ran - fal);
-			var y1 = py + (_ran - fal);
-			draw_ellipse_dash(x0, y0, x1, y1);
+			draw_circle_dash(px, py, _ran + fal);
+			draw_circle_dash(px, py, _ran - fal);
+			
 		} else if(_typ == 1) {
 			_dir += 90;
 			

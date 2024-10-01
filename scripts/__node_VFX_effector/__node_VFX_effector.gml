@@ -79,7 +79,7 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			draw_set_color(COLORS._main_accent);
 			draw_set_alpha(0.5);
 			switch(cs) {
-				case AREA_SHAPE.elipse :	draw_ellipse_dash(x0, y0, x1, y1); break;	
+				case AREA_SHAPE.elipse :	draw_ellipse_dash(cx, cy, cw + fall * 2, ch + fall * 2); break;	
 				case AREA_SHAPE.rectangle :	draw_rectangle_dashed(x0, y0, x1, y1); break;	
 			}
 			draw_set_alpha(1);
@@ -94,7 +94,7 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			draw_set_color(COLORS._main_accent);
 			draw_set_alpha(0.5);
 			switch(cs) {
-				case AREA_SHAPE.elipse :	draw_ellipse_dash(x0, y0, x1, y1); break;	
+				case AREA_SHAPE.elipse :	draw_ellipse_dash(cx, cy, cw + fall * 2, ch + fall * 2); break;	
 				case AREA_SHAPE.rectangle :	draw_rectangle_dashed(x0, y0, x1, y1); break;	
 			}
 			draw_set_alpha(1);

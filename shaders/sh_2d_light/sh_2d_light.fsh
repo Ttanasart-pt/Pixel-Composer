@@ -4,7 +4,7 @@
 //varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-uniform vec3 color;
+uniform vec4  color;
 uniform float intensity;
 uniform float band;
 uniform float atten;
@@ -25,5 +25,5 @@ void main() {
 	if(band > 0.)
 		bright = ceil(bright * band) / band;
 	
-    gl_FragColor = vec4(color, 1.) * bright;
+    gl_FragColor = color * bright;
 }
