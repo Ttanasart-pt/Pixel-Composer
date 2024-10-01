@@ -2209,9 +2209,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	/////========== DESERIALIZE ==========
 	
 	static deserialize = function(_map, scale = false, preset = false) {
+		
 		load_map   = _map;
 		load_scale = scale;
 		renamed    = struct_try_get(load_map, "renamed", false);
+		
+		preDeserialize();
 		
 		if(!preset) {
 			if(APPENDING) APPEND_MAP[? load_map.id] = node_id;
@@ -2305,7 +2308,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(createNewInput == noone) 
 			return;
 		
-		var _dynamic_inputs = (array_length(load_map.inputs) - input_fix_len) / data_length;
+		var _dynamic_inputs = ceil((array_length(load_map.inputs) - input_fix_len) / data_length);
 		repeat(_dynamic_inputs)
 			createNewInput();
 	}
@@ -2315,6 +2318,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static processDeserialize = function() {}
+	static preDeserialize     = function() {}
 	static postDeserialize    = function() {}
 	
 	static applyDeserialize = function(preset = false) {
