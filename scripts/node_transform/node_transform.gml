@@ -46,7 +46,12 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput(8, nodeValue_Float("Rotate by velocity", self, 0, "Make the surface rotates to follow its movement."))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(9, nodeValue_Enum_Scroll("Output dimension type", self, OUTPUT_SCALING.same_as_input, [ "Same as input", "Constant", "Relative to input", "Transformed" ]));
+	newInput(9, nodeValue_Enum_Scroll("Output dimension type", self, OUTPUT_SCALING.same_as_input, [
+																			new scrollItem("Same as input"),
+																			new scrollItem("Constant"),
+																			new scrollItem("Relative to input").setTooltip("Set dimension as a multiple of input surface."),
+																			new scrollItem("Fit content").setTooltip("Automatically set dimension to fit content."),
+																		]));
 	
 	newInput(10, nodeValue_Bool("Round position", self, false, "Round position to the nearest integer value to avoid jittering."));
 	
@@ -216,20 +221,23 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		if(_ww <= 1 && _hh <= 1) return _outRes;
 		
-		switch(out_type) { #region output dimension
+		switch(out_type) { // output dimension
 			case OUTPUT_SCALING.same_as_input :
 				inputs[1].setVisible(false);
 				break;
+				
 			case OUTPUT_SCALING.constant :	
 				inputs[1].setVisible(true);
 				_ww  = out[0];
 				_hh  = out[1];
 				break;
+				
 			case OUTPUT_SCALING.relative : 
 				inputs[1].setVisible(true);
 				_ww = ww * out[0];
 				_hh = hh * out[1];
 				break;
+				
 			case OUTPUT_SCALING.scale : 
 				inputs[1].setVisible(false);
 				_ww = ww * sca[0];
@@ -248,7 +256,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				_ww = maxx - minx;
 				_hh = maxy - miny;
 				break;
-		} #endregion
+		}
 		
 		_outRes[1] = [ ww, hh ];
 		

@@ -7,6 +7,8 @@ function scrollItem(name, spr = noone, spr_ind = 0, spr_blend = COLORS._main_ico
 	self.spr_blend = spr_blend;
 	
 	tooltip = "";
+	
+	static setTooltip = function(_tt) { tooltip = _tt; return self; }
 }
 
 function scrollBox(_data, _onModify, update_hover = true) : widget() constructor {

@@ -214,7 +214,7 @@ function curveBox(_onModify) : widget() constructor {
 				DRAW_CLEAR
 				
 				draw_set_color(COLORS.widget_curve_line);
-				draw_set_alpha(0.75);
+				draw_set_alpha(0.5);
 				
 				if(grid_show) {
 					var st = max(grid_step, 0.02);
@@ -243,8 +243,6 @@ function curveBox(_onModify) : widget() constructor {
 					draw_set_color(COLORS.widget_curve_line);
 					draw_line(_px, 0, _px, ch);
 				}
-				
-				// print("");
 				
 				if(_shf) {
 					draw_set_color(merge_color(COLORS._main_icon, COLORS._main_icon_dark, 0.5));

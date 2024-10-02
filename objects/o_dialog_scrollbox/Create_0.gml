@@ -97,13 +97,13 @@ event_inherited();
 				continue;
 			}
 			
+			var _yy  = _ly + hght / 2;
+			
 			if(clickable) {
 				if(sc_content.hover && point_in_rectangle(_m[0], _m[1], 0, _ly, _dw, _ly + hght - 1)) {
 					sc_content.hover_content = true;
 					selecting = i;
 					hov       = i;
-					
-					if(_tol) TOOLTIP = _val.tooltip;
 				}
 			
 				if(selecting == i) {
@@ -116,20 +116,32 @@ event_inherited();
 				}
 			}
 			
+			if(_tol) {
+				var tx = _dw - ui(12);
+				var ty = _yy;
+				
+				if(point_in_circle(_m[0], _m[1], tx, ty, ui(10))) {
+					TOOLTIP = _val.tooltip;
+					draw_sprite_ui(THEME.info, 0, tx, ty, .75, .75, 0, COLORS._main_icon, 1);
+					
+				} else 
+					draw_sprite_ui(THEME.info, 0, tx, ty, .75, .75, 0, COLORS._main_icon, 0.75);
+			}
+			
 			if(is_string(txt)) {
 				draw_set_text(font, align, fa_center, clickable? COLORS._main_text : COLORS._main_text_sub);
 				if(align == fa_center) {
 					var _xc = _spr? hght + (_dw - hght) / 2 : _dw / 2;
-					draw_text_add(_xc, _ly + hght / 2, txt);
+					draw_text_add(_xc, _yy, txt);
 					
 				} else if(align == fa_left) 
-					draw_text_add(text_pad + _spr * hght, _ly + hght / 2, txt);
+					draw_text_add(text_pad + _spr * hght, _yy, txt);
 					
 			} else if(sprite_exists(txt)) {
-				draw_sprite_ext(txt, i, _dw / 2, _ly + hght / 2);
+				draw_sprite_ext(txt, i, _dw / 2, _yy);
 			}
 			
-			if(_spr) draw_sprite_ext(_val.spr, _val.spr_ind, ui(8) + hght / 2, _ly + hght / 2, 1, 1, 0, _val.spr_blend, 1);
+			if(_spr) draw_sprite_ext(_val.spr, _val.spr_ind, ui(8) + hght / 2, _yy, 1, 1, 0, _val.spr_blend, 1);
 			
 			_ly += hght;
 			_h  += hght;
