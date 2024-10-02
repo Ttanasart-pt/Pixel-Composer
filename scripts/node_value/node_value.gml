@@ -176,8 +176,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		draw_blend       = 1;
 		draw_blend_color = 1;
 		
-		__overlay_hover   = [];
-		overlay_draw_text = true;
+		__overlay_hover     = [];
+		overlay_draw_text   = true;
+		overlay_text_valign = fa_top;
 		
 		graph_selecting   = false;
 	#endregion
@@ -2187,9 +2188,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			node.input_value_map[$ internalName] = _value;
 		}
 		
+		doApplyDeserialize();
 		attributeApply();
 		onValidate();
 	}
+	
+	static doApplyDeserialize = function() {}
 	
 	static attributeApply = function() {
 		if(struct_has(attributes, "mapped") && attributes.mapped) 

@@ -1,20 +1,11 @@
 function draw_line_round(x1, y1, x2, y2, w, stCap = true, edCap = true, sample = 8) {
 	draw_line_width(x1, y1, x2, y2, w);
 	
-	draw_set_circle_precision(8);
+	draw_set_circle_precision(sample);
 	
 	var dir = point_direction(x1, y1, x2, y2) + 90;
-	if(stCap) {
-		draw_circle(x1, y1, w/2, false);
-		//draw_circle_angle(x1 + 1, y1 + 1, w / 2, dir, dir + 90, sample / 2);
-		//draw_circle_angle(x1 + 1, y1 + 1, w / 2, dir + 90, dir + 180, sample / 2);
-	}
-	
-	if(edCap) {
-		draw_circle(x2, y2, w/2, false);
-		//draw_circle_angle(x2 + 1, y2 + 1, w / 2, dir, dir - 90, sample / 2);
-		//draw_circle_angle(x2 + 1, y2 + 1, w / 2, dir - 90, dir - 180, 4, sample / 2);
-	}
+	if(stCap) draw_circle(x1, y1, w/2, false);
+	if(edCap) draw_circle(x2, y2, w/2, false);
 }
 
 function draw_line_round_color(x1, y1, x2, y2, w, c1, c2, stCap = true, edCap = true) {

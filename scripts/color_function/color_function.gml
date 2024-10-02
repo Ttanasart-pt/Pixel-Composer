@@ -19,6 +19,8 @@
 #endregion
 
 #region conversions
+	function _make_color_rgb(r, g, b) {    INLINE return make_color_rgb(r * 255, g * 255, b * 255); }
+	
 	function make_color_rgba(r, g, b, a) { INLINE return int64(round(r) + (round(g) << 8) + (round(b) << 16) + (round(a) << 24)); }
 	
 	function make_color_hsva(h, s, v, a) { INLINE return _cola(make_color_hsv(h, s, v), a); }

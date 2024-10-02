@@ -147,7 +147,7 @@ function timelineItemNode_Sequence_Anim(node) : timelineItemNode(node) construct
 			_surf = _arr[i];
 			if(_useq) {
 				if(_surf < 0) continue;
-				_surf = _surfs[_surf];
+				_surf = array_safe_get(_surfs, _surf);
 			}
 			
 			if(!surface_exists(_surf)) continue;

@@ -1,9 +1,11 @@
 enum LIGHT_SHAPE_2D {
 	point,
+	ellipse,
 	line,
 	line_asym,
+	saber,
 	spot,
-	ellipse,
+	flame,
 }
 
 function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
@@ -17,11 +19,25 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		var _index = array_length(inputs);
 		light_inspecting = getInputAmount();
 		
-		newInput(_index + 0, nodeValue_Enum_Scroll("Light shape", self, 0, [ new scrollItem("Point",           s_node_2d_light_shape, 0), 
-																			 new scrollItem("Line",            s_node_2d_light_shape, 1), 
-																			 new scrollItem("Line asymmetric", s_node_2d_light_shape, 2), 
-																			 new scrollItem("Spot",            s_node_2d_light_shape, 3), 
-																			 new scrollItem("Ellipse",         s_node_2d_light_shape, 4), ]));
+		typeList = [ 
+						new scrollItem("Point",           s_node_2d_light_shape, 0), 
+						new scrollItem("Ellipse",         s_node_2d_light_shape, 1), 
+						new scrollItem("Line",            s_node_2d_light_shape, 2), 
+						new scrollItem("Line asymmetric", s_node_2d_light_shape, 3), 
+						new scrollItem("Saber",           s_node_2d_light_shape, 4), 
+						new scrollItem("Spot",            s_node_2d_light_shape, 5), 
+						new scrollItem("Flame",           s_node_2d_light_shape, 6), 
+		];
+		typeListStr = array_create_ext(array_length(typeList), function(i) /*=>*/ {return typeList[i].name});
+		
+		var _val = nodeValue_Enum_Scroll("Light shape", self, 0, typeList);
+			_val.options_histories = [ typeListStr,
+				{
+					cond: function() /*=>*/ {return LOADING_VERSION < 1_18_00_0},
+					list: [ "Point", "Line", "Line asymmetric", "Spot" ]
+				}
+			];	 
+		newInput(_index + 0, _val);
 		
 		newInput(_index + 1, nodeValue_Vec2("Center", self, [ 16, 16 ]))
 			.setUnitRef(function(index) { return getDimension(index); });
@@ -73,6 +89,8 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			
 		newInput(_index + 20, nodeValue_Bool("Two sides", self, false));
 		
+		newInput(_index + 21, nodeValue_Float("Thickness", self, 2));
+		
 		resetDisplay();
 		return inputs[_index];
 	} 
@@ -80,19 +98,11 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
 	newOutput(1, nodeValue_Output("Light only", self, VALUE_TYPE.surface, noone));
 	
-	light_type_names = [
-		"Point light",
-		"Line light",
-		"Asymmetric line light",
-		"Spot light",
-		"Ellipse light",
-	];
-	
 	lights_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		
-		var bx = _x;
-		var by = _y;
 		var bs = ui(24);
+		var bx = _x + ui(20);
+		var by = _y;
 		if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, _focus, _hover, "", THEME.add_16, 0, COLORS._main_value_positive) == 2) {
 			createNewInput();
 			triggerRender();
@@ -107,7 +117,7 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, yy, _w, _h, COLORS.node_composite_bg_blend, 1);
 		
 		for(var i = 0; i < amo; i++) {
-			var _x0 = ui(24);
+			var _x0 = _x + ui(24);
 			var _x1 = _x + _w - ui(16);
 			var _yy = ui(4) + yy + i * lh + lh / 2;
 			
@@ -129,14 +139,14 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			draw_sprite_ext(s_node_2d_light_shape, _typ, _x0 + ui(8), _yy, 1, 1, 0, cc);
 			
 			draw_set_text(f_p2, fa_left, fa_center, tc);
-			draw_text_add(_x0 + ui(28), _yy, light_type_names[_typ]);
+			draw_text_add(_x0 + ui(28), _yy, typeListStr[_typ]);
 			
-			if(amo > 1 && hov) {
+			if(amo > 1) {
 				var bs = ui(24);
 				var bx = _x1 - bs;
 				var by = _yy - bs / 2;
-				if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, _focus, _hover, "", THEME.minus_16, 0, COLORS._main_value_negative) == 2) 
-					del_light = i;		
+				if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, _focus, _hover, "", THEME.minus_16, 0, hov? COLORS._main_value_negative : COLORS._main_icon) == 2) 
+					del_light = i;	
 			}
 		}
 		
@@ -147,7 +157,7 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	});
 	
 	input_display_light = [ // 14, 
-		["Shape",	false], 0, 1, 5, 6, 7, 8, 15, 16, 17, 20, 
+		["Shape",	false], 0, 1, 5, 6, 7, 8, 15, 16, 17, 20, 21,
 		["Light",	false], 2, 3, 4, 11, 12, 13,
 		["Render",	false], 10, 9, 18, 19, 
 	];
@@ -172,7 +182,7 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		}
 	}
 	
-	setDynamicInput(21, false);
+	setDynamicInput(22, false);
 	if(!LOADING && !APPENDING) createNewInput();
 	
 	static deleteLight = function(index) {
@@ -194,6 +204,8 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		
 		var _shape = current_data[_ind + 0];
 		var _hov   = false;
+		
+		draw_set_circle_precision(64);
 		
 		switch(_shape) {
 			case LIGHT_SHAPE_2D.point :
@@ -232,11 +244,34 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				var hv = inputs[_ind + 17].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny);           _hov |= bool(hv); hover &= !hv;
 				break;
 			
-			case LIGHT_SHAPE_2D.line :
+			case LIGHT_SHAPE_2D.line      :
 			case LIGHT_SHAPE_2D.line_asym :
-			case LIGHT_SHAPE_2D.spot :
+			case LIGHT_SHAPE_2D.spot      :
+			case LIGHT_SHAPE_2D.flame     :
 				var hv = inputs[_ind + 5].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= bool(hv); hover &= !hv;
 				var hv = inputs[_ind + 6].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= bool(hv); hover &= !hv;
+				break;
+				
+			case LIGHT_SHAPE_2D.saber     :
+				var hv = inputs[_ind + 5].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= bool(hv); hover &= !hv;
+				var hv = inputs[_ind + 6].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= bool(hv); hover &= !hv;
+				
+				var pos = current_data[_ind +  5];
+				var rad = current_data[_ind +  2];
+				var thk = current_data[_ind + 21];
+				
+				var px = _x + pos[0] * _s;
+				var py = _y + pos[1] * _s;
+				
+				draw_set_color(COLORS._main_accent);
+				draw_set_alpha(0.5);
+				draw_circle(px, py, thk * _s, 1);
+				draw_circle_dash(px, py, rad * _s, 1, 8);
+				draw_set_alpha(1);
+				
+				inputs[_ind + 21].overlay_text_valign = fa_bottom;
+				var hv = inputs[_ind +  2].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny); _hov |= bool(hv); hover &= !hv;
+				var hv = inputs[_ind + 21].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny); _hov |= bool(hv); hover &= !hv;
 				break;
 		}
 		
@@ -271,6 +306,7 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		var _expo  = _data[_ind + 18];
 		var _aa    = _data[_ind + 19];
 		var _both  = _data[_ind + 20];
+		var _thick = _data[_ind + 21];
 		
 		surface_set_shader(temp_surface[0], noone);
 			draw_clear(c_black);
@@ -341,23 +377,91 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 						draw_primitive_end();
 						
 					}
+					break;	
+				
+				case LIGHT_SHAPE_2D.saber :
+					draw_set_color(c_white);
+					draw_line_round(_start[0], _start[1], _finis[0], _finis[1], _thick * 2, true, true, 64);
+					
+					var _r  = _range + _thick;
+					var dir = point_direction(_start[0], _start[1], _finis[0], _finis[1]) + 90;
+					
+					draw_primitive_begin(pr_trianglestrip);
+					draw_vertex_color(_start[0],                        _start[1],                        c_white, 1);
+					draw_vertex_color(_finis[0],                        _finis[1],                        c_white, 1);
+					draw_vertex_color(_start[0] + lengthdir_x(_r, dir), _start[1] + lengthdir_y(_r, dir), c_black, 1);
+					draw_vertex_color(_finis[0] + lengthdir_x(_r, dir), _finis[1] + lengthdir_y(_r, dir), c_black, 1);
+					draw_primitive_end();
+					
+					draw_primitive_begin(pr_trianglelist);
+					var ox, oy, nx, ny;
+					for( var i = 0; i <= 90; i++ ) {
+						var _d = dir + i * 2;
+						nx = _start[0] + lengthdir_x(_r, _d);
+						ny = _start[1] + lengthdir_y(_r, _d);
+						
+						if(i) {
+							draw_vertex_color(_start[0], _start[1], c_white, 1);
+							draw_vertex_color(ox, oy, c_black, 1);
+							draw_vertex_color(nx, ny, c_black, 1);
+						}
+						
+						ox = nx;
+						oy = ny;
+					}
+					draw_primitive_end();
+					
+					dir += 180;
+					draw_primitive_begin(pr_trianglestrip);
+					draw_vertex_color(_start[0],                        _start[1],                        c_white, 1);
+					draw_vertex_color(_finis[0],                        _finis[1],                        c_white, 1);
+					draw_vertex_color(_start[0] + lengthdir_x(_r, dir), _start[1] + lengthdir_y(_r, dir), c_black, 1);
+					draw_vertex_color(_finis[0] + lengthdir_x(_r, dir), _finis[1] + lengthdir_y(_r, dir), c_black, 1);
+					draw_primitive_end();
+					
+					draw_primitive_begin(pr_trianglelist);
+					var ox, oy, nx, ny;
+					for( var i = 0; i <= 90; i++ ) {
+						var _d = dir + i * 2;
+						nx = _finis[0] + lengthdir_x(_r, _d);
+						ny = _finis[1] + lengthdir_y(_r, _d);
+						
+						if(i) {
+							draw_vertex_color(_finis[0], _finis[1], c_white, 1);
+							draw_vertex_color(ox, oy, c_black, 1);
+							draw_vertex_color(nx, ny, c_black, 1);
+						}
+						
+						ox = nx;
+						oy = ny;
+					}
+					draw_primitive_end();
 					
 					break;	
 					
 				case LIGHT_SHAPE_2D.spot :
+				case LIGHT_SHAPE_2D.flame :
 					var dir  = point_direction(_start[0], _start[1], _finis[0], _finis[1]);
 					var astr = dir - _sweep;
 					var aend = dir + _sweep;
-					var stp  = 3;
+					var stp  = 2;
 					var amo  = ceil(_sweep * 2 / stp);
 					var ran  = point_distance(_start[0], _start[1], _finis[0], _finis[1]);
+					var cc;
 					
 					draw_primitive_begin(pr_trianglelist);
 						for( var i = 0; i < amo; i++ )  {
-							var a0 = clamp(astr + (i) * stp, astr, aend);
+							var a0 = clamp(astr + (i    ) * stp, astr, aend);
 							var a1 = clamp(astr + (i + 1) * stp, astr, aend);
 							
-							draw_vertex_color(_start[0], _start[1], c_white, 1);
+							if(_shape == LIGHT_SHAPE_2D.spot)
+								cc = c_white;
+							else {
+								var aa = amo > 2? 1. - abs(i / (amo - 1) - .5) * 2 : 1;
+								    cc = _make_color_rgb(aa, aa, aa);
+							}
+							
+							draw_vertex_color(_start[0],                        _start[1],                        cc,      1);
 							draw_vertex_color(_start[0] + lengthdir_x(ran, a0), _start[1] + lengthdir_y(ran, a0), c_black, 1);
 							draw_vertex_color(_start[0] + lengthdir_x(ran, a1), _start[1] + lengthdir_y(ran, a1), c_black, 1);
 						}
@@ -409,62 +513,71 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		
 		if(getInputAmount() == 0) return;
 		
-		light_inspecting = clamp(light_inspecting, 0, getInputAmount() - 1);
-		var _ind = input_fix_len + light_inspecting * data_length;
-		
-		var _shape = _data[_ind +  0];
-		var _attn  = _data[_ind + 10];
-		
-		inputs[_ind +  1].setVisible(false);
-		inputs[_ind +  2].setVisible(false);
-		inputs[_ind +  5].setVisible(false);
-		inputs[_ind +  6].setVisible(false);
-		inputs[_ind +  7].setVisible(false);
-		inputs[_ind +  8].setVisible(false);
-		inputs[_ind + 11].setVisible(false);
-		inputs[_ind + 12].setVisible(false);
-		inputs[_ind + 13].setVisible(false);
-		inputs[_ind + 15].setVisible(false);
-		inputs[_ind + 16].setVisible(false);
-		inputs[_ind + 17].setVisible(false);
-		inputs[_ind + 20].setVisible(false);
-		
-		switch(_shape) {
-			case LIGHT_SHAPE_2D.point :
-				inputs[_ind +  1].setVisible(true);
-				inputs[_ind +  2].setVisible(true);
-				inputs[_ind + 11].setVisible(true);
-				inputs[_ind + 12].setVisible(true);
-				inputs[_ind + 13].setVisible(true);
-				break;
+		#region visibility
+			light_inspecting = clamp(light_inspecting, 0, getInputAmount() - 1);
+			var _ind = input_fix_len + light_inspecting * data_length;
+			
+			var _shape = _data[_ind +  0];
+			var _attn  = _data[_ind + 10];
+			
+			inputs[_ind +  1].setVisible(false);
+			inputs[_ind +  2].setVisible(false);
+			inputs[_ind +  5].setVisible(false);
+			inputs[_ind +  6].setVisible(false);
+			inputs[_ind +  7].setVisible(false);
+			inputs[_ind +  8].setVisible(false);
+			inputs[_ind + 11].setVisible(false);
+			inputs[_ind + 12].setVisible(false);
+			inputs[_ind + 13].setVisible(false);
+			inputs[_ind + 15].setVisible(false);
+			inputs[_ind + 16].setVisible(false);
+			inputs[_ind + 17].setVisible(false);
+			inputs[_ind + 20].setVisible(false);
+			inputs[_ind + 21].setVisible(false);
+			
+			switch(_shape) {
+				case LIGHT_SHAPE_2D.point :
+					inputs[_ind +  1].setVisible(true);
+					inputs[_ind +  2].setVisible(true);
+					inputs[_ind + 11].setVisible(true);
+					inputs[_ind + 12].setVisible(true);
+					inputs[_ind + 13].setVisible(true);
+					break;
+					
+				case LIGHT_SHAPE_2D.ellipse :
+					inputs[_ind +  1].setVisible(true);
+					inputs[_ind + 15].setVisible(true);
+					inputs[_ind + 16].setVisible(true);
+					inputs[_ind + 17].setVisible(true);
+					break;
+					
+				case LIGHT_SHAPE_2D.line :
+				case LIGHT_SHAPE_2D.line_asym :
+					inputs[_ind +  2].setVisible(true);
+					inputs[_ind +  5].setVisible(true);
+					inputs[_ind +  6].setVisible(true);
+					inputs[_ind +  7].setVisible(true);
+					inputs[_ind +  8].setVisible(_shape == LIGHT_SHAPE_2D.line_asym);
+					inputs[_ind + 20].setVisible(true);
+					break;
 				
-			case LIGHT_SHAPE_2D.ellipse :
-				inputs[_ind +  1].setVisible(true);
-				inputs[_ind + 15].setVisible(true);
-				inputs[_ind + 16].setVisible(true);
-				inputs[_ind + 17].setVisible(true);
-				break;
-				
-			case LIGHT_SHAPE_2D.line :
-			case LIGHT_SHAPE_2D.line_asym :
-				inputs[_ind +  2].setVisible(true);
-				inputs[_ind +  5].setVisible(true);
-				inputs[_ind +  6].setVisible(true);
-				inputs[_ind +  7].setVisible(true);
-				inputs[_ind +  8].setVisible(_shape == LIGHT_SHAPE_2D.line_asym);
-				inputs[_ind + 20].setVisible(true);
-				break;
-				
-			case LIGHT_SHAPE_2D.spot :
-				inputs[_ind + 5].setVisible(true);
-				inputs[_ind + 6].setVisible(true);
-				inputs[_ind + 7].setVisible(true);
-				break;
-		}
-		
-		inputs[_ind + 18].setVisible(_attn == 0 || _attn == 1);
-		
-		/////////////////////////////////////////
+				case LIGHT_SHAPE_2D.saber :
+					inputs[_ind +  2].setVisible(true);
+					inputs[_ind +  5].setVisible(true);
+					inputs[_ind +  6].setVisible(true);
+					inputs[_ind + 21].setVisible(true);
+					break;
+					
+				case LIGHT_SHAPE_2D.spot :
+				case LIGHT_SHAPE_2D.flame :
+					inputs[_ind + 5].setVisible(true);
+					inputs[_ind + 6].setVisible(true);
+					inputs[_ind + 7].setVisible(true);
+					break;
+			}
+			
+			inputs[_ind + 18].setVisible(_attn == 0 || _attn == 1);
+		#endregion
 		
 		if(!is_surface(_surf)) return _outData;
 		
@@ -494,8 +607,4 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		return [ _outSurf, _lightSurf ];
 	}
 	
-	static preDeserialize     = function() {
-		// if(LOADING_VERSION < 1_18_00_0)
-		// 	load_map.data_length = 1;
-	}
 }
