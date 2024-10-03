@@ -375,8 +375,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	dummy_input = noone;
 	auto_input  = false;
-	dyna_input_check_shift = 0;
-	static createNewInput  = -1;
+	dyna_input_check_shift   = 0;
+	input_display_dynamic    = [];
+	dynamic_input_inspecting = 0;
+	static createNewInput    = -1;
 	
 	static setDynamicInput = function(_data_length = 1, _auto_input = true, _dummy_type = VALUE_TYPE.any, _dynamic_input_cond = DYNA_INPUT_COND.connection) {
 		is_dynamic_input	= true;						
@@ -449,6 +451,27 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 	}
 
+	static refreshDynamicDisplay = function() {
+		array_resize(input_display_list, array_length(input_display_list_raw));
+		
+		var _amo = getInputAmount();
+		if(_amo == 0) {
+			dynamic_input_inspecting = 0;
+			return;
+		}
+		
+		dynamic_input_inspecting = clamp(dynamic_input_inspecting, 0, getInputAmount() - 1);
+		
+		var _ind = input_fix_len + dynamic_input_inspecting * data_length;
+		
+		for( var i = 0, n = array_length(input_display_dynamic); i < n; i++ ) {
+			var v = input_display_dynamic[i];
+			if(is_real(v)) v += _ind;
+			
+			array_push(input_display_list, v);
+		}
+	}
+	
 	static getInputAmount = function() { return (array_length(inputs) - input_fix_len) / data_length; }
 	
 	function onInputResize() { refreshDynamicInput(); triggerRender(); }
@@ -499,6 +522,15 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return _targ;
 	}
 	
+	static deleteDynamicInput = function(index) {
+		var _ind = input_fix_len + index * data_length;
+		
+		array_delete(inputs, _ind, data_length);
+		dynamic_input_inspecting = clamp(dynamic_input_inspecting, 0, getInputAmount() - 1);
+		refreshDynamicDisplay();
+		triggerRender();
+	}
+		
 	/////========== INSPECTOR ===========
 	
 	static onInspector1Update  = noone;

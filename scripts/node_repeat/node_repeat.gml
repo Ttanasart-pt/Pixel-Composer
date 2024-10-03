@@ -20,8 +20,6 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	name = "Repeat";
 	dimension_index = 1;
 	
-	animator_inspecting = 0;
-	
 	newInput(0, nodeValue_Surface("Surface in", self));
 	
 	newInput(1, nodeValue_Dimension(self));
@@ -124,13 +122,13 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
 	
-	typeList = [ "Transform", "Blending" ]
+	typeList = [ "Transform", "Blending" ];
 	
 	static createNewInput = function() {
 		var _index = array_length(inputs);
-		animator_inspecting = getInputAmount();
+		dynamic_input_inspecting = getInputAmount();
 		
-		newInput(_index + 0, nodeValue_Enum_Scroll("Animated property", self, 0, typeList));
+		newInput(_index + 0, nodeValue_Enum_Scroll("Animator type", self, 0, typeList));
 		
 		newInput(_index + 1, nodeValue_Enum_Scroll("Select mode", self, 0, [ new scrollItem("Index",   s_node_repeat_selection_types, 0), 
 																			 new scrollItem("Area",    s_node_repeat_selection_types, 1),
@@ -165,7 +163,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 		newInput(_index + 14, nodeValue_Surface("Selection surface", self, noone));
 		
-		resetDisplay();
+		refreshDynamicDisplay();
 		return inputs[_index];
 	} 
 	
@@ -181,10 +179,10 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 		draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text_sub);
 		draw_text_add(bx + bx + ui(8), by + bs / 2, "Animators");
-			
+		
 		var amo = getInputAmount();
 		var lh  = ui(28);
-		var _h  = ui(8) + lh * amo;
+		var _h  = ui(12) + lh * amo;
 		var yy  = _y + bs + ui(4);
 		
 		var del_animator = -1;
@@ -193,21 +191,21 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		for(var i = 0; i < amo; i++) {
 			var _x0 = _x + ui(24);
 			var _x1 = _x + _w - ui(16);
-			var _yy = ui(4) + yy + i * lh + lh / 2;
+			var _yy = ui(6) + yy + i * lh + lh / 2;
 			
 			var _ind  = input_fix_len + i * data_length;
 			var _dtyp = current_data[_ind + 0];
 			var _styp = current_data[_ind + 1];
-			var cc    = i == animator_inspecting? COLORS._main_icon : COLORS._main_icon;
-			var tc    = i == animator_inspecting? COLORS._main_text_accent : COLORS._main_icon;
+			var cc    = i == dynamic_input_inspecting? COLORS._main_icon : COLORS._main_icon;
+			var tc    = i == dynamic_input_inspecting? COLORS._main_text_accent : COLORS._main_icon;
 			var hov   = _hover && point_in_rectangle(_m[0], _m[1], _x0, _yy - lh / 2, _x1, _yy + lh / 2 - 1);
 			
 			if(hov && _m[0] < _x1 - ui(32)) {
 				tc = COLORS._main_text;
 				
 				if(mouse_press(mb_left, _focus)) {
-					animator_inspecting = i;
-					resetDisplay();
+					dynamic_input_inspecting = i;
+					refreshDynamicDisplay();
 				}
 			}
 			
@@ -216,22 +214,20 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			draw_set_text(f_p2, fa_left, fa_center, tc);
 			draw_text_add(_x0 + ui(28), _yy, typeList[_dtyp]);
 			
-			if(amo > 1) {
-				var bs = ui(24);
-				var bx = _x1 - bs;
-				var by = _yy - bs / 2;
-				if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, _focus, _hover, "", THEME.minus_16, 0, hov? COLORS._main_value_negative : COLORS._main_icon) == 2) 
-					del_animator = i;	
-			}
+			var bs = ui(24);
+			var bx = _x1 - bs;
+			var by = _yy - bs / 2;
+			if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, _focus, _hover, "", THEME.minus_16, 0, hov? COLORS._main_value_negative : COLORS._main_icon) == 2) 
+				del_animator = i;	
 		}
 		
 		if(del_animator > -1) 
-			deleteAnimator(del_animator);
+			deleteDynamicInput(del_animator);
 		
 		return ui(32) + _h;
 	});
 	
-	input_display_animator = [ 
+	input_display_dynamic = [ 
 		["Selection", false], 1, 9, 10, 11, 12, 13, 14, 
 		["Effects",   false], 0, 2, 3, 4, 5, 6, 7, 8, 
 	];
@@ -251,30 +247,6 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	setDynamicInput(15, false);
 	
-	static resetDisplay = function() {
-		array_resize(input_display_list, array_length(input_display_list_raw));
-		
-		if(getInputAmount()) animator_inspecting = clamp(animator_inspecting, 0, getInputAmount() - 1);
-		
-		var _ind = input_fix_len + animator_inspecting * data_length;
-		
-		for( var i = 0, n = array_length(input_display_animator); i < n; i++ ) {
-			var v = input_display_animator[i];
-			if(is_real(v)) v += _ind;
-			
-			array_push(input_display_list, v);
-		}
-	}
-	
-	static deleteAnimator = function(index) {
-		var _ind = input_fix_len + index * data_length;
-		
-		array_delete(inputs, _ind, data_length);
-		animator_inspecting = clamp(animator_inspecting, 0, getInputAmount() - 1);
-		resetDisplay();
-		triggerRender();
-	}
-		
 	attribute_surface_depth();
 	attribute_interpolation();
 	
@@ -298,8 +270,8 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _ani_amo = getInputAmount();
 		if(_ani_amo == 0) return _hov;
 		
-		animator_inspecting = clamp(animator_inspecting, 0, getInputAmount() - 1);
-		var _ind = input_fix_len + animator_inspecting * data_length;
+		dynamic_input_inspecting = clamp(dynamic_input_inspecting, 0, getInputAmount() - 1);
+		var _ind = input_fix_len + dynamic_input_inspecting * data_length;
 		
 		var _prop = current_data[_ind + 0];
 		var _selc = current_data[_ind + 1];
@@ -375,8 +347,8 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _ani_amo = getInputAmount();
 		
 		if(_ani_amo > 0) { // animator visibility
-			animator_inspecting = clamp(animator_inspecting, 0, getInputAmount() - 1);
-			var _ind = input_fix_len + animator_inspecting * data_length;
+			dynamic_input_inspecting = clamp(dynamic_input_inspecting, 0, getInputAmount() - 1);
+			var _ind = input_fix_len + dynamic_input_inspecting * data_length;
 			
 			var _prop = _data[_ind + 0];
 			var _selc = _data[_ind + 1];
@@ -511,6 +483,9 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			var _x = _a.x;
 			var _y = _a.y;
 			
+			var _sw = surface_get_width_safe(_surf);
+			var _sh = surface_get_height_safe(_surf);
+			
 			for( var j = 0; j < _ani_amo; j++ ) {
 				var _ii = input_fix_len + j * data_length;
 				
@@ -557,16 +532,6 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				if(_inf == 0) continue;
 				
 				if(_an_prop == 0) { // transform
-					if(_an_anct == 0) { // global
-						_ax = _an_ancp[0];
-						_ay = _an_ancp[1];
-						
-					} else if(_an_anct == 1) { // local
-						var _surf_dim = surface_get_dimension(_surf);
-						_ax = _x + (_an_ancp[0] - .5) * _surf_dim[0];
-						_ay = _y + (_an_ancp[1] - .5) * _surf_dim[1];
-						
-					}
 					
 					_x += _inf * _an_posi[0];
 					_y += _inf * _an_posi[1];
@@ -574,6 +539,16 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 					var _dr = _inf * _an_rota;
 					if(_dr != 0) {
 						_a.rot += _dr;
+						
+						if(_an_anct == 0) { // global
+							_ax = _an_ancp[0];
+							_ay = _an_ancp[1];
+							
+						} else if(_an_anct == 1) { // local
+							_ax = _x + _an_ancp[0] * _sw;
+							_ay = _y + _an_ancp[1] * _sh;
+							
+						}
 						
 						__temp_p = point_rotate(_x, _y, _ax, _ay, _dr, __temp_p);
 						_x = __temp_p[0];
@@ -583,6 +558,16 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 					var _dsx = _inf * _an_scal[0];
 					var _dsy = _inf * _an_scal[1];
 					if(_dsx != 0 || _dsy != 0) {
+						if(_an_anct == 0) { // global
+							_ax = _an_ancp[0];
+							_ay = _an_ancp[1];
+							
+						} else if(_an_anct == 1) { // local
+							_ax = _x + (_an_ancp[0] - .5) * _sw;
+							_ay = _y + (_an_ancp[1] - .5) * _sh;
+							
+						}
+						
 						_a.sx  += _inf * _an_scal[0];
 						_a.sy  += _inf * _an_scal[1];
 						
@@ -598,8 +583,6 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				
 			}
 			
-			var _sw = surface_get_width_safe(_surf);
-			var _sh = surface_get_height_safe(_surf);
 			var  sw = _sw * _a.sx;
 			var  sh = _sh * _a.sy;
 			var pos = point_rotate(-sw / 2, -sh / 2, 0, 0, rot);

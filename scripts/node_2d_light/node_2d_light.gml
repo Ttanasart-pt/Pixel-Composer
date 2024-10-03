@@ -11,8 +11,6 @@ enum LIGHT_SHAPE_2D {
 function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "2D Light";
 	
-	light_inspecting = 0;
-	
 	newInput(0, nodeValue_Surface("Surface in", self));
 	
 	typeList = [ 
@@ -28,7 +26,7 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	static createNewInput = function() {
 		var _index = array_length(inputs);
-		light_inspecting = getInputAmount();
+		dynamic_input_inspecting = getInputAmount();
 		
 		var _val = nodeValue_Enum_Scroll("Light shape", self, 0, typeList);
 			_val.options_histories = [ typeListStr,
@@ -91,7 +89,7 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		
 		newInput(_index + 21, nodeValue_Float("Thickness", self, 2));
 		
-		resetDisplay();
+		refreshDynamicDisplay();
 		return inputs[_index];
 	} 
 	
@@ -111,7 +109,7 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			
 		var amo = getInputAmount();
 		var lh  = ui(28);
-		var _h  = ui(8) + lh * amo;
+		var _h  = ui(12) + lh * amo;
 		var yy  = _y + bs + ui(4);
 		
 		var del_light = -1;
@@ -120,20 +118,20 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		for(var i = 0; i < amo; i++) {
 			var _x0 = _x + ui(24);
 			var _x1 = _x + _w - ui(16);
-			var _yy = ui(4) + yy + i * lh + lh / 2;
+			var _yy = ui(6) + yy + i * lh + lh / 2;
 			
 			var _ind = input_fix_len + i * data_length;
 			var _typ = current_data[_ind + 0];
-			var cc   = i == light_inspecting? COLORS._main_text_accent : COLORS._main_icon;
-			var tc   = i == light_inspecting? COLORS._main_text_accent : COLORS._main_icon;
+			var cc   = i == dynamic_input_inspecting? COLORS._main_text_accent : COLORS._main_icon;
+			var tc   = i == dynamic_input_inspecting? COLORS._main_text_accent : COLORS._main_icon;
 			var hov  = _hover && point_in_rectangle(_m[0], _m[1], _x0, _yy - lh / 2, _x1, _yy + lh / 2 - 1);
 			
 			if(hov && _m[0] < _x1 - ui(32)) {
 				tc = COLORS._main_text;
 				
 				if(mouse_press(mb_left, _focus)) {
-					light_inspecting = i;
-					resetDisplay();
+					dynamic_input_inspecting = i;
+					refreshDynamicDisplay();
 				}
 			}
 			
@@ -152,12 +150,12 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		}
 		
 		if(del_light > -1) 
-			deleteLight(del_light);
+			deleteDynamicInput(del_light);
 		
 		return ui(32) + _h;
 	});
 	
-	input_display_light = [ // 14, 
+	input_display_dynamic = [ // 14, 
 		["Shape",	false], 0, 1, 5, 6, 7, 8, 15, 16, 17, 20, 21,
 		["Light",	false], 2, 3, 4, 11, 12, 13,
 		["Render",	false], 10, 9, 18, 19, 
@@ -168,40 +166,16 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	attribute_surface_depth();
 	temp_surface = [ 0, 0, 0 ];
 	
-	static resetDisplay = function() {
-		input_display_list = array_clone(input_display_list_raw);
-		
-		if(getInputAmount()) light_inspecting = clamp(light_inspecting, 0, getInputAmount() - 1);
-		
-		var _ind = input_fix_len + light_inspecting * data_length;
-		
-		for( var i = 0, n = array_length(input_display_light); i < n; i++ ) {
-			var v = input_display_light[i];
-			if(is_real(v)) v += _ind;
-			
-			array_push(input_display_list, v);
-		}
-	}
-	
 	setDynamicInput(22, false);
 	if(!LOADING && !APPENDING) createNewInput();
 	
-	static deleteLight = function(index) {
-		var _ind = input_fix_len + index * data_length;
-		
-		array_delete(inputs, _ind, data_length);
-		light_inspecting = clamp(light_inspecting, 0, getInputAmount() - 1);
-		resetDisplay();
-		triggerRender();
-	}
-		
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		PROCESSOR_OVERLAY_CHECK
 		
 		if(getInputAmount() == 0) return;
 		
-		light_inspecting = clamp(light_inspecting, 0, getInputAmount() - 1);
-		var _ind = input_fix_len + light_inspecting * data_length;
+		dynamic_input_inspecting = clamp(dynamic_input_inspecting, 0, getInputAmount() - 1);
+		var _ind = input_fix_len + dynamic_input_inspecting * data_length;
 		
 		var _shape = current_data[_ind + 0];
 		var _hov   = false;
@@ -515,8 +489,8 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		if(getInputAmount() == 0) return;
 		
 		#region visibility
-			light_inspecting = clamp(light_inspecting, 0, getInputAmount() - 1);
-			var _ind = input_fix_len + light_inspecting * data_length;
+			dynamic_input_inspecting = clamp(dynamic_input_inspecting, 0, getInputAmount() - 1);
+			var _ind = input_fix_len + dynamic_input_inspecting * data_length;
 			
 			var _shape = _data[_ind +  0];
 			var _attn  = _data[_ind + 10];
