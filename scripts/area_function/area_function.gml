@@ -147,3 +147,72 @@ function area_get_random_point(area, distrib = AREA_DISTRIBUTION.area, scatter =
 	
 	return [xx, yy];
 }
+
+function area_point_in(_area, _x, _y) {
+	var _area_x = _area[0];
+	var _area_y = _area[1];
+	var _area_w = _area[2];
+	var _area_h = _area[3];
+	var _area_t = _area[4];
+	
+	var _area_x0 = _area_x - _area_w;
+	var _area_x1 = _area_x + _area_w;
+	var _area_y0 = _area_y - _area_h;
+	var _area_y1 = _area_y + _area_h;
+	
+	var in = false;
+	
+	if(_area_t == AREA_SHAPE.rectangle) {
+		in = point_in_rectangle(_x, _y, _area_x0, _area_y0, _area_x1, _area_y1);
+	} else if(_area_t == AREA_SHAPE.elipse) {
+		var _dirr = point_direction(_area_x, _area_y, _x, _y);
+		var _epx = _area_x + lengthdir_x(_area_w, _dirr);
+		var _epy = _area_y + lengthdir_y(_area_h, _dirr);
+		
+		in = point_distance(_area_x, _area_y, _x, _y) < point_distance(_area_x, _area_y, _epx, _epy);
+	}
+	
+	return in;
+}
+
+function area_point_in_fallout(_area, _x, _y, _fall_distance) {
+	if(_fall_distance == 0) return area_point_in(_area, _x, _y);
+	
+	var _area_x = _area[0];
+	var _area_y = _area[1];
+	var _area_w = _area[2];
+	var _area_h = _area[3];
+	var _area_t = _area[4];
+	
+	var _area_x0 = _area_x - _area_w;
+	var _area_x1 = _area_x + _area_w;
+	var _area_y0 = _area_y - _area_h;
+	var _area_y1 = _area_y + _area_h;
+	
+	var str = 0, in, _dst;
+	
+	if(_area_t == AREA_SHAPE.rectangle) {
+		in = point_in_rectangle(_x, _y, _area_x0, _area_y0, _area_x1, _area_y1)
+		_dst = min(	distance_to_line(_x, _y, _area_x0, _area_y0, _area_x1, _area_y0), 
+					distance_to_line(_x, _y, _area_x0, _area_y1, _area_x1, _area_y1), 
+					distance_to_line(_x, _y, _area_x0, _area_y0, _area_x0, _area_y1), 
+					distance_to_line(_x, _y, _area_x1, _area_y0, _area_x1, _area_y1));
+					
+	} else if(_area_t == AREA_SHAPE.elipse) {
+		var _dirr = point_direction(_area_x, _area_y, _x, _y);
+		var _epx = _area_x + lengthdir_x(_area_w, _dirr);
+		var _epy = _area_y + lengthdir_y(_area_h, _dirr);
+		
+		in   = point_distance(_area_x, _area_y, _x, _y) < point_distance(_area_x, _area_y, _epx, _epy);
+		_dst = point_distance(_x, _y, _epx, _epy);
+	}
+	
+	if(_dst <= _fall_distance) {
+		var inf = in? 0.5 + _dst / _fall_distance : 0.5 - _dst / _fall_distance;
+		str = clamp(inf, 0., 1.);
+		
+	} else if(in)
+		str = 1;
+	
+	return str;
+}

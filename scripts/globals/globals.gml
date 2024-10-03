@@ -42,7 +42,7 @@
 	LATEST_VERSION	= 1_18_00;
 	VERSION			= 1_18_00_0;
 	SAVE_VERSION	= 1_18_00_0;
-	VERSION_STRING  = MAC? "1.18.003m" : "1.18.1.001";
+	VERSION_STRING  = MAC? "1.18.003m" : "1.18.1.002";
 	BUILD_NUMBER	= 1_18_00_1;
 	
 	HOTKEYS			= ds_map_create();
@@ -116,6 +116,7 @@
 	#macro DELTA_TIME delta_time / 1_000_000
 	
 	#macro INLINE gml_pragma("forceinline");
+	#macro IS is_instanceof
 	
 	#macro CONF_TESTING false
 	globalvar TESTING, TEST_ERROR;

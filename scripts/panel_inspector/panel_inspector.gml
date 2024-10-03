@@ -85,9 +85,18 @@ function Inspector_Custom_Renderer(drawFn, registerFn = noone) : widget() constr
     static toString = function() { return $"Custon renderer"; }
 }
 
-function Inspector_Sprite(spr)                  constructor { self.spr = spr; }
-function Inspector_Spacer(height, line = false) constructor { self.h = height;  self.line = line; }
-function Inspector_Label( text, font = f_p3)    constructor { self.text = text; self.font = font; }
+function Inspector_Sprite(spr) constructor { self.spr = spr; }
+
+function Inspector_Label( text, font = f_p3) constructor { 
+    self.text = text; 
+    self.font = font; 
+}
+
+function Inspector_Spacer(height, line = false, coll = true) constructor { 
+    self.h = height;  
+    self.line = line; 
+    self.coll = coll; 
+}
 
 function Panel_Inspector() : PanelContent() constructor {
     #region ---- main ----
@@ -810,6 +819,7 @@ function Panel_Inspector() : PanelContent() constructor {
                 
                     if(mouse_press(mb_left, pFOCUS))
                         jun[@ 1] = !coll;
+                        
                     if(mouse_press(mb_right, pFOCUS))
                         menuCall("inspector_group_menu", group_menu, 0, 0, fa_left);
                 } else
@@ -851,8 +861,9 @@ function Panel_Inspector() : PanelContent() constructor {
                     
                     while(j < _len) {
                         var j_jun = _inspecting.input_display_list[j];
-                        if(is_array(j_jun))
-                            break;
+                        if(is_array(j_jun)) break;
+                        if(IS(j_jun, Inspector_Spacer) && !j_jun.coll) break;
+                        
                         j++;
                     }
                     

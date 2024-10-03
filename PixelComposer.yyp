@@ -3131,6 +3131,7 @@
     {"id":{"name":"s_node_regex_search","path":"sprites/s_node_regex_search/s_node_regex_search.yy",},},
     {"id":{"name":"s_node_region_fill","path":"sprites/s_node_region_fill/s_node_region_fill.yy",},},
     {"id":{"name":"s_node_repeat_axis","path":"sprites/s_node_repeat_axis/s_node_repeat_axis.yy",},},
+    {"id":{"name":"s_node_repeat_selection_types","path":"sprites/s_node_repeat_selection_types/s_node_repeat_selection_types.yy",},},
     {"id":{"name":"s_node_repeat_texture","path":"sprites/s_node_repeat_texture/s_node_repeat_texture.yy",},},
     {"id":{"name":"s_node_repeat","path":"sprites/s_node_repeat/s_node_repeat.yy",},},
     {"id":{"name":"s_node_replace_palette","path":"sprites/s_node_replace_palette/s_node_replace_palette.yy",},},

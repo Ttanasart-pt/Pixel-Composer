@@ -59,7 +59,7 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	UPDATE_PART_FORWARD
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		inputs[1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 		
 		var area = getInputData(1);
@@ -99,19 +99,19 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			}
 			draw_set_alpha(1);
 		}
-	} #endregion
+	}
 	
-	function reset() { #region
+	function reset() {
 		resetSeed();
-	} #endregion
+	}
 	
-	static resetSeed = function() { #region
+	static resetSeed = function() {
 		seed = getInputData(8);
-	} #endregion
+	}
 	
 	function onAffect(part, str) {}
 	
-	function affect(part) { #region
+	function affect(part) {
 		if(!part.active) return;
 		
 		var _area = getInputData(1);
@@ -158,9 +158,9 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		if(str == 0) return;
 		
 		onAffect(part, str);
-	} #endregion
+	}
 	
-	static update = function(frame = CURRENT_FRAME) { #region
+	static update = function(frame = CURRENT_FRAME) {
 		var val = getInputData(0);
 		outputs[0].setValue(val);
 		if(val == -1) return;
@@ -177,12 +177,12 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			if(jun.value_to[j].value_from == jun)
 				jun.value_to[j].node.doUpdate();
 		}
-	} #endregion
+	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
 		draw_sprite_fit(node_draw_icon, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
-	} #endregion
+	}
 	
 	getPreviewingNode = VFX_PREVIEW_NODE;
 }
