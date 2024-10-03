@@ -24,10 +24,8 @@ function line_get_width(txt, font = noone, offset = 0) {
 	#macro TEXTBOX_HEIGHT line_get_height(f_p1, 6)
 	#macro BUTTON_HEIGHT  line_get_height(f_p1, 12)
 	
-	function ui(val) { 
-		INLINE
-		return round(val * UI_SCALE); 
-	}
+	function  ui(val) { INLINE return round(val * UI_SCALE); }
+	function _ui(val) { INLINE return val / UI_SCALE; }
 	
 	function resetScale(scale, willResize = false) {
 		if(PREFERENCES.display_scaling == scale) return;

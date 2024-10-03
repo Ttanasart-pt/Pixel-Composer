@@ -150,26 +150,8 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	}
 	
 	static step = function() {
-		var pos = getSingleValue(2);
-		var anc = getSingleValue(3);
-		
-		var _b = inputs[3].editWidget.side_button;
-		var _a = anc[0] * 2 + anc[1] * 20;
-		
-		switch(_a) {
-			case  0 : _b.index = 0; break;
-			case  1 : _b.index = 1; break;
-			case  2 : _b.index = 2; break;
-			case 10 : _b.index = 3; break;
-			case 11 : _b.index = 4; break;
-			case 12 : _b.index = 5; break;
-			case 20 : _b.index = 6; break;
-			case 21 : _b.index = 7; break;
-			case 22 : _b.index = 8; break;
-			default : _b.index = -1; 
-		}
-		
 		if(!PROJECT.animator.frame_progress) return;
+		var pos = getSingleValue(2);
 		
 		if(IS_FIRST_FRAME) {
 			vel = 0;

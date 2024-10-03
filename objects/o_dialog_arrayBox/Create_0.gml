@@ -2,21 +2,23 @@
 event_inherited();
 
 #region 
-	max_h = 640;
-	align = fa_left;
-	draggable = false;
 	destroy_on_click_out = true;
+	max_h     = 640;
+	align     = fa_left;
+	draggable = false;
 	selecting = -1;
 	
+	font     = f_p1;
 	arrayBox = noone;
 	
 	anchor = ANCHOR.top | ANCHOR.left;
 	
 	sc_content = new scrollPane(0, 0, function(_y, _m) {
-		draw_clear_alpha(COLORS.panel_bg_clear, 0);
-		var hght = line_get_height(f_p0, 8);
-		var _h   = array_length(arrayBox.data) * hght;
-		var _dw  = sc_content.surface_w;
+		draw_clear(COLORS.panel_bg_clear);
+		
+		var hght  = line_get_height(font, 8);
+		var _h    = array_length(arrayBox.data) * hght;
+		var _dw   = sc_content.surface_w;
 		var array = arrayBox.arraySet;
 		
 		for(var i = 0; i < array_length(arrayBox.data); i++) {
@@ -48,13 +50,12 @@ event_inherited();
 				}
 			}
 			
-			var bs = ui(22);
+			var bs = hght - ui(8);
 			draw_sprite_stretched(THEME.checkbox_def, ind, ui(20) - bs / 2, yc - bs / 2, bs, bs);
-			if(exists)
-				draw_sprite_stretched_ext(THEME.checkbox_def, 2, ui(20) - bs / 2, yc - bs / 2, bs, bs, COLORS._main_accent, 1);
+			if(exists) draw_sprite_stretched_ext(THEME.checkbox_def, 2, ui(20) - bs / 2, yc - bs / 2, bs, bs, COLORS._main_accent, 1);
 			
-			draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
-			draw_text_cut(ui(40), yc, arrayBox.data[i], _dw);
+			draw_set_text(font, fa_left, fa_center, COLORS._main_text);
+			draw_text(ui(40), yc, arrayBox.data[i]);
 		}
 		
 		if(sFOCUS) {

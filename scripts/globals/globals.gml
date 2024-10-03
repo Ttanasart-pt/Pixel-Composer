@@ -116,7 +116,7 @@
 	#macro DELTA_TIME delta_time / 1_000_000
 	
 	#macro INLINE gml_pragma("forceinline");
-	#macro IS is_instanceof
+	#macro is is_instanceof
 	
 	#macro CONF_TESTING false
 	globalvar TESTING, TEST_ERROR;

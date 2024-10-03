@@ -383,11 +383,11 @@
 			cont.split = _panel.split;
 			if(_panel.split == "h") {
 				ind = _panel.childs[1].w < _panel.childs[0].w;
-				cont.width = _panel.childs[ind].w * (_panel.childs[ind].x == _panel.x? 1 : -1);
+				cont.width = _ui(_panel.childs[ind].w * (_panel.childs[ind].x == _panel.x? 1 : -1));
 				
 			} else {
 				ind = _panel.childs[1].h < _panel.childs[0].h;
-				cont.width = _panel.childs[ind].h * (_panel.childs[ind].y == _panel.y? 1 : -1);
+				cont.width = _ui(_panel.childs[ind].h * (_panel.childs[ind].y == _panel.y? 1 : -1));
 			}
 			
 			ind = _panel.childs[1].x == _panel.x && _panel.childs[1].y == _panel.y;

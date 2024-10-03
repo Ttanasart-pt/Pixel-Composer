@@ -1,17 +1,10 @@
 function nodeValue_Vector(_name, _node, _value, _data = {}) {
-	var _len = array_length(_value);
-	
-	switch(_len) {
-		case 2 : return new NodeValue_Vec2(_name, _node, _value, _data);
-		case 3 : return new NodeValue_Vec3(_name, _node, _value, _data);
-		case 4 : return new NodeValue_Vec4(_name, _node, _value, _data);
-	}
-	
-	return new NodeValue_Array(_name, _node, _value, "", _len);
+	return new NodeValue_Array(_name, _node, _value, "", -1);
 }
 
 function NodeValue_Array(_name, _node, _value, _tooltip = "", _length = 2) : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.float, _value, _tooltip) constructor {
 	
+	type_array = 1;
 	def_length = _length;
 	
 	/////============== GET =============
@@ -22,9 +15,11 @@ function NodeValue_Array(_name, _node, _value, _tooltip = "", _length = 2) : Nod
 		
 		var _d = array_get_depth(val);
 		
-		if(_d == 0) return array_create(def_length, val);
-		if(_d == 1) return array_verify(val, def_length);
-		if(_d == 2) return array_map(val, function(v, i) /*=>*/ {return array_verify(v, def_length)});
+		if(def_length > -1) {
+			if(_d == 0) return array_create(def_length, val);
+			if(_d == 1) return array_verify(val, def_length);
+			if(_d == 2) return array_map(val, function(v, i) /*=>*/ {return array_verify(v, def_length)});
+		}
 		
 		return val;
 	}

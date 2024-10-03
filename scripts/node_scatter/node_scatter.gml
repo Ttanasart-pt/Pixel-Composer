@@ -9,7 +9,6 @@ enum NODE_SCATTER_DIST {
 
 function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Scatter";
-	batch_output = false;
 	dimension_index = 1;
 	
 	newInput(0, nodeValue_Surface("Surface in", self));
@@ -55,8 +54,8 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 	newInput(16, nodeValue_Bool("Multiply alpha", self, true));
 		
-	newInput(17, nodeValue_Text("Use value", self, [ "Scale" ], "Apply the third value in each data point (if exist) on given properties."))
-		.setDisplay(VALUE_DISPLAY.text_array, { data: [ "Scale",  "Rotation", "Color" ] });
+	newInput(17, nodeValue_Text("Use extra value", self, [ "Scale" ], "Apply the third value in each data point (if exist) on given properties."))
+		.setDisplay(VALUE_DISPLAY.text_array, { data: [ "Scale", "Rotation", "Color" ] });
 		
 	newInput(18, nodeValue_Enum_Scroll("Blend mode", self,  0, [ "Normal", "Add", "Max" ]));
 		
@@ -108,6 +107,25 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	newInput(39, nodeValue_Range("Shift radial", self, [ 0, 0 ]));
 	
+	newInput(40, nodeValue_Vec2("Anchor", self, [ 0.5, 0.5 ]))
+		.setDisplay(VALUE_DISPLAY.vector, {
+			side_button : new buttonAnchor(function(ind) { 
+				switch(ind) {
+					case 0 : inputs[40].setValue([ 0.0, 0.0 ]); break;
+					case 1 : inputs[40].setValue([ 0.5, 0.0 ]); break;
+					case 2 : inputs[40].setValue([ 1.0, 0.0 ]); break;
+					
+					case 3 : inputs[40].setValue([ 0.0, 0.5 ]); break;
+					case 4 : inputs[40].setValue([ 0.5, 0.5 ]); break;
+					case 5 : inputs[40].setValue([ 1.0, 0.5 ]); break;
+					
+					case 6 : inputs[40].setValue([ 0.0, 1.0 ]); break;
+					case 7 : inputs[40].setValue([ 0.5, 1.0 ]); break;
+					case 8 : inputs[40].setValue([ 1.0, 1.0 ]); break;
+				}
+			}) 
+		});
+	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
@@ -120,7 +138,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		["Surfaces", 	 true], 0, 1, 15, 24, 25, 26, 27, 
 		["Scatter",		false], 6, 5, 13, 14, 17, 9, 31, 2, 30, 35, 
 		["Path",		false], 19, 38, 20, 21, 22, 
-		["Position",	false], 33, 36, 37, 39, 
+		["Position",	false], 40, 33, 36, 37, 39, 
 		["Rotation",	false], 7, 4, 32, 
 		["Scale",	    false], 3, 8, 34, 
 		["Render",		false], 18, 11, 28, 12, 16, 23, 
@@ -218,13 +236,8 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	////=========== PROCESS ===========
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {
-		if(_output_index == 1) return scatter_data;
-		
+	static processData = function(_outData, _data, _output_index, _array_index) { 
 		var _inSurf = _data[0];
-		if(_inSurf == 0)
-			return;
-		
 		var _dim	= _data[1];
 		var _amount	= _data[2];
 		var _scale	= _data[3];
@@ -271,15 +284,18 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var posExt  = _data[37];
 		var pthSpac = _data[38];
 		var shfRad  = _data[39];
+		var anchor  = _data[40];
 		
 		var _in_w, _in_h;
+		
+		var _outSurf = _outData[0];
 		
 		var vSca = array_exists(useV, "Scale");
 		var vRot = array_exists(useV, "Rotation");
 		var vCol = array_exists(useV, "Color");
 		
 		var surfArray = is_array(_inSurf);
-		if(surfArray && array_empty(_inSurf)) return;
+		if(surfArray && array_empty(_inSurf)) return _outData;
 		
 		#region cache value
 			ds_map_clear(surface_size_map);
@@ -302,11 +318,9 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var _posDist = [];
 			if(_dist == NODE_SCATTER_DIST.map) {
 				if(!is_surface(_distMap))
-					return _outSurf;
+					return _outData;
 				
-				// if(scatter_map != _distMap || scatter_maps != seed || scatter_mapa != _amount)
-					scatter_mapp = get_points_from_dist(_distMap, _amount, seed);
-				
+				scatter_mapp = get_points_from_dist(_distMap, _amount, seed);
 				scatter_map  = _distMap;
 				scatter_maps = seed;
 				scatter_mapa = _amount;
@@ -321,7 +335,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			} else if(_dist == NODE_SCATTER_DIST.path) { // Path
 				var path_valid    = path != noone && struct_has(path, "getPointRatio");
 			
-				if(!path_valid) return _outSurf;
+				if(!path_valid) return _outData;
 			
 				var _pathProgress = 0;
 				var path_amount   = struct_has(path, "getLineCount")? path.getLineCount() : 1;
@@ -539,8 +553,8 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				
 				if(surfArray) {
 					switch(_arr) { 
-						case 1 : ind  = safe_mod(i, _arrLen);		 break;
-						case 2 : ind  = irandom(_arrLen - 1);		 break;
+						case 1 : ind  = safe_mod(i, _arrLen);             break;
+						case 2 : ind  = irandom(_arrLen - 1);             break;
 						case 3 : ind  = array_safe_get_fast(arrId, i, 0); break;
 						case 4 : if(useArrTex) ind = colorBrightness(surface_get_pixel(arrTex, _x, _y)) * (_arrLen - 1); break;
 					}
@@ -571,11 +585,15 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				var sw  = dim[0];
 				var sh  = dim[1];
 				
+				var _shf_x = sw * _scx * anchor[0];
+				var _shf_y = sh * _scy * anchor[1];
+				
 				if(_r == 0) {
-					_x -= sw * _scx / 2;
-					_y -= sh * _scy / 2;
+					_x -= _shf_x;
+					_y -= _shf_y;
+					
 				} else {
-					_p = point_rotate(_x - sw / 2 * _scx, _y - sh * _scy / 2, _x, _y, _r, _p);
+					_p = point_rotate(_x - _shf_x, _y - _shf_y, _x, _y, _r, _p);
 					_x = _p[0];
 					_y = _p[1];
 				}
@@ -622,7 +640,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			}
 			
 			array_resize(_sct, _sct_len);
-			if(sortY) array_sort(_sct, function(a1, a2) { return a1.y - a2.y; });
+			if(sortY) array_sort(_sct, function(a1, a2) /*=>*/ {return a1.y - a2.y});
 			
 			for( var i = 0; i < _sct_len; i++ ) {
 				var _atl = _sct[i];
@@ -659,6 +677,6 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 		scatter_data = _sct;
 		
-		return _outSurf;
+		return [ _outSurf, _sct ];
 	}
 }

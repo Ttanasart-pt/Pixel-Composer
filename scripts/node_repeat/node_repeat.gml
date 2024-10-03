@@ -122,7 +122,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
 	
-	typeList = [ "Transform", "Blending" ];
+	typeList = [ "Linear Transform", "Blending" ];
 	
 	static createNewInput = function() {
 		var _index = array_length(inputs);
@@ -162,6 +162,9 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		newInput(_index + 13, nodeValue("Selection falloff curve", self, CONNECT_TYPE.input, VALUE_TYPE.curve, CURVE_DEF_10));
 		
 		newInput(_index + 14, nodeValue_Surface("Selection surface", self, noone));
+		
+		newInput(_index + 15, nodeValue_Float("Strength", self, 0))
+			.setDisplay(VALUE_DISPLAY.slider, { range : [ -1, 1, 0.01 ] });
 		
 		refreshDynamicDisplay();
 		return inputs[_index];
@@ -229,7 +232,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	input_display_dynamic = [ 
 		["Selection", false], 1, 9, 10, 11, 12, 13, 14, 
-		["Effects",   false], 0, 2, 3, 4, 5, 6, 7, 8, 
+		["Effects",   false], 0, 2, 3, 4, 5, 6, 7, 8, 15, 
 	];
 	
 	input_display_list = [
@@ -245,7 +248,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		animator_renderer, 
 	];
 	
-	setDynamicInput(15, false);
+	setDynamicInput(16, false);
 	
 	attribute_surface_depth();
 	attribute_interpolation();
@@ -360,6 +363,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			inputs[_ind +  6].setVisible(_prop == 0);
 			inputs[_ind +  7].setVisible(_prop == 1);
 			inputs[_ind +  8].setVisible(_prop == 1);
+			// inputs[_ind + 15].setVisible(_prop == 2);
 			
 			inputs[_ind +  9].setVisible(_selc == 1);
 			inputs[_ind + 10].setVisible(_selc == 0);
@@ -506,6 +510,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				var _an_sfal = _data[_ii + 12];
 				var _an_sfcr = _data[_ii + 13];
 				var _an_ssrf = _data[_ii + 14];
+				// var _an_strn = _data[_ii + 15];
 				
 				var _inf = 0;
 				var _ax = 0, _ay = 0;
@@ -531,54 +536,55 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				_inf = eval_curve_x(_an_sfcr, _inf);
 				if(_inf == 0) continue;
 				
-				if(_an_prop == 0) { // transform
-					
-					_x += _inf * _an_posi[0];
-					_y += _inf * _an_posi[1];
-					
-					var _dr = _inf * _an_rota;
-					if(_dr != 0) {
-						_a.rot += _dr;
+				switch(_an_prop) {
+					case 0 : // transform
+						_x += _inf * _an_posi[0];
+						_y += _inf * _an_posi[1];
 						
-						if(_an_anct == 0) { // global
-							_ax = _an_ancp[0];
-							_ay = _an_ancp[1];
+						var _dr = _inf * _an_rota;
+						if(_dr != 0) {
+							_a.rot += _dr;
 							
-						} else if(_an_anct == 1) { // local
-							_ax = _x + _an_ancp[0] * _sw;
-							_ay = _y + _an_ancp[1] * _sh;
+							if(_an_anct == 0) { // global
+								_ax = _an_ancp[0];
+								_ay = _an_ancp[1];
+								
+							} else if(_an_anct == 1) { // local
+								_ax = _x + _an_ancp[0] * _sw;
+								_ay = _y + _an_ancp[1] * _sh;
+								
+							}
 							
+							__temp_p = point_rotate(_x, _y, _ax, _ay, _dr, __temp_p);
+							_x = __temp_p[0];
+							_y = __temp_p[1];
 						}
 						
-						__temp_p = point_rotate(_x, _y, _ax, _ay, _dr, __temp_p);
-						_x = __temp_p[0];
-						_y = __temp_p[1];
-					}
-					
-					var _dsx = _inf * _an_scal[0];
-					var _dsy = _inf * _an_scal[1];
-					if(_dsx != 0 || _dsy != 0) {
-						if(_an_anct == 0) { // global
-							_ax = _an_ancp[0];
-							_ay = _an_ancp[1];
+						var _dsx = _inf * _an_scal[0];
+						var _dsy = _inf * _an_scal[1];
+						if(_dsx != 0 || _dsy != 0) {
+							if(_an_anct == 0) { // global
+								_ax = _an_ancp[0];
+								_ay = _an_ancp[1];
+								
+							} else if(_an_anct == 1) { // local
+								_ax = _x + (_an_ancp[0] - .5) * _sw;
+								_ay = _y + (_an_ancp[1] - .5) * _sh;
+								
+							}
 							
-						} else if(_an_anct == 1) { // local
-							_ax = _x + (_an_ancp[0] - .5) * _sw;
-							_ay = _y + (_an_ancp[1] - .5) * _sh;
+							_a.sx  += _inf * _an_scal[0];
+							_a.sy  += _inf * _an_scal[1];
 							
+							_x += _dsx * (_x - _ax);
+							_y += _dsy * (_y - _ay);
 						}
+						break;
 						
-						_a.sx  += _inf * _an_scal[0];
-						_a.sy  += _inf * _an_scal[1];
-						
-						_x += _dsx * (_x - _ax);
-						_y += _dsy * (_y - _ay);
-					}
-					
-				} else if(_an_prop == 1) { // blending
-					_a.color  = merge_color(_a.color, _an_colr, _inf);
-					_a.alpha += _inf * _an_alph;
-					
+					case 1 : 
+						_a.color  = merge_color(_a.color, _an_colr, _inf);
+						_a.alpha += _inf * _an_alph;
+						break;
 				}
 				
 			}

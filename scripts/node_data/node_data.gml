@@ -452,6 +452,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 
 	static refreshDynamicDisplay = function() {
+		if(array_empty(input_display_dynamic)) return;
 		array_resize(input_display_list, array_length(input_display_list_raw));
 		
 		var _amo = getInputAmount();

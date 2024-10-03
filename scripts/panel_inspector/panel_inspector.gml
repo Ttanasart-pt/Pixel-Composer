@@ -862,7 +862,7 @@ function Panel_Inspector() : PanelContent() constructor {
                     while(j < _len) {
                         var j_jun = _inspecting.input_display_list[j];
                         if(is_array(j_jun)) break;
-                        if(IS(j_jun, Inspector_Spacer) && !j_jun.coll) break;
+                        if(is(j_jun, Inspector_Spacer) && !j_jun.coll) break;
                         
                         j++;
                     }
