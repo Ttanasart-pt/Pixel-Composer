@@ -569,19 +569,27 @@ function nodeValueUnit(_nodeValue) constructor {
 				];
 			}
 			
+			var _len = array_length(value);
+			
 			switch(disp) {
 				case VALUE_DISPLAY.padding :
 				case VALUE_DISPLAY.vector :
 				case VALUE_DISPLAY.vector_range :
-					var _val = array_create(array_length(value));
+					var _val = array_clone(_len, 1);
 					
-					for( var i = 0, n = array_length(value); i < n; i++ )
-						_val[i] = is_real(value[i])? value[i] * base[i % 2] : value[i];
+					if(_len % 2 == 0) {
+						for( var i = 0, n = _len; i < n; i++ )
+							_val[i] = is_real(value[i])? value[i] * base[i % 2] : value[i];
+							
+					} else if(_len > 2) {
+						_val[0] = is_real(value[0])? value[0] * base[0] : value[0];
+						_val[1] = is_real(value[1])? value[1] * base[1] : value[1];
+					}
 						
 					return _val;
 					
 				case VALUE_DISPLAY.area :
-					var _val = array_create(array_length(value));
+					var _val = array_create(_len);
 					
 					for( var i = 0; i < 4; i++ )
 						_val[i] = is_real(value[i])? value[i] * base[i % 2] : value[i];

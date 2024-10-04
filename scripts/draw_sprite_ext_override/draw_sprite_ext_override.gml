@@ -113,3 +113,13 @@ function draw_anchor_line(_index, _x, _y, _r, _a, _type = 0) {
 		draw_sprite_stretched(s_fx_pixel, 0, _x - _r, _y - _r, _r * 2, _r * 2);
 	shader_reset();
 }
+
+function draw_empty() {
+	var _s = surface_get_target();
+	if(_s == -1) return;
+	
+	var _w = surface_get_width(_s);
+	var _h = surface_get_height(_s);
+	
+	draw_sprite_stretched(s_fx_pixel, 0, 0, 0, _w, _h);
+}

@@ -122,7 +122,8 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			
 			var _ind = input_fix_len + i * data_length;
 			var _typ = current_data[_ind + 0];
-			var cc   = i == dynamic_input_inspecting? COLORS._main_text_accent : COLORS._main_icon;
+			var _col = current_data[_ind + 4];
+			
 			var tc   = i == dynamic_input_inspecting? COLORS._main_text_accent : COLORS._main_icon;
 			var hov  = _hover && point_in_rectangle(_m[0], _m[1], _x0, _yy - lh / 2, _x1, _yy + lh / 2 - 1);
 			
@@ -135,7 +136,7 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				}
 			}
 			
-			draw_sprite_ext(s_node_2d_light_shape, _typ, _x0 + ui(8), _yy, 1, 1, 0, cc);
+			draw_sprite_ext(s_node_2d_light_shape, _typ, _x0 + ui(8), _yy, 1, 1, 0, _col, .5 + .5 * (i == dynamic_input_inspecting));
 			
 			draw_set_text(f_p2, fa_left, fa_center, tc);
 			draw_text_add(_x0 + ui(28), _yy, typeListStr[_typ]);
@@ -163,11 +164,11 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	input_display_list = [ 0, lights_renderer ];
 	
-	attribute_surface_depth();
-	temp_surface = [ 0, 0, 0 ];
-	
 	setDynamicInput(22, false);
 	if(!LOADING && !APPENDING) createNewInput();
+	
+	attribute_surface_depth();
+	temp_surface = [ 0, 0, 0 ];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		PROCESSOR_OVERLAY_CHECK
