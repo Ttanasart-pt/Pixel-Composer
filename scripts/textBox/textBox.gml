@@ -82,7 +82,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			if(use_range) value = clamp(value, range_min, range_max);
 		}
 		
-		onModify(value);
+		if(onModifyParam == noone) onModify(value);
+		else onModify(value, onModifyParam);
 	}
 	
 	static setSlideType  = function(_slide_int = false) { slide_int   = _slide_int;   return self; }
@@ -177,7 +178,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			}
 		} else {
 			if(is_callable(onModify)) {
-				var _modi = onModify(_val);
+				var _modi = onModifyParam == noone? onModify(_val) : onModify(_val, onModifyParam);
+				
 				if(_modi && IS_PATREON) shake_amount = PREFERENCES.textbox_shake / 4;
 				return _modi;
 			}
@@ -813,8 +815,10 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		
 		if(DRAGGING && (DRAGGING.type == "Text" || DRAGGING.type == "Number") && hover && hoverRect) {
 			draw_sprite_stretched_ext(THEME.ui_panel, 1, _x, _y, _w, _h, COLORS._main_value_positive, 1);
-			if(mouse_release(mb_left))
-				onModify(DRAGGING.data);
+			if(mouse_release(mb_left)) {
+				if(onModifyParam == noone) onModify(DRAGGING.data);
+				else onModify(DRAGGING.data, onModifyParam);
+			}
 		}
 		
 		selecting = self == WIDGET_CURRENT;

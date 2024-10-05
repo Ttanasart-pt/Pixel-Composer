@@ -31,6 +31,11 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		case "controlPointBox" : 
 		case "transformBox" : 
 			breakLine = true;
+			break;
+			
+		case "matrixGrid" :
+			breakLine = wid.size > 5;
+			break;
 	}
 	
 	var butx = xx;

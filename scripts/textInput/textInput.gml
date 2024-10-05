@@ -1,10 +1,11 @@
 function textInput(_input, _onModify) : widget() constructor {
-	input		= _input;
-	onModify	= _onModify;
-	selecting   = false;
-	auto_update = false;
+	input		  = _input;
+	onModify	  = _onModify;
+	onModifyParam = noone;
+	selecting     = false;
+	auto_update   = false;
 	
-	typing      = false;
+	typing = false;
 	
 	parser_server = noone;
 	

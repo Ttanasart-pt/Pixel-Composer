@@ -4,9 +4,11 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-uniform vec2 dimension;
-uniform float kernel[9];
-uniform int sampleMode;
+uniform int   size;
+uniform vec2  dimension;
+uniform float kernel[256];
+uniform int   sampleMode;
+uniform int   normalized;
 
 vec4 sampleTexture(vec2 pos) {
 	if(pos.x >= 0. && pos.y >= 0. && pos.x <= 1. && pos.y <= 1.)
@@ -28,18 +30,25 @@ vec4 sampleTexture(vec2 pos) {
 }
 
 void main() {
-	vec2 tex = 1. / dimension;
-	vec4 c = + kernel[0] * sampleTexture( v_vTexcoord + vec2(-tex.x, -tex.y) )
-		     + kernel[1] * sampleTexture( v_vTexcoord + vec2(    0., -tex.y) )
-		     + kernel[2] * sampleTexture( v_vTexcoord + vec2( tex.x, -tex.y) )
-			
-		     + kernel[3] * sampleTexture( v_vTexcoord + vec2(-tex.x, 0.) )
-		     + kernel[4] * sampleTexture( v_vTexcoord + vec2(    0., 0.) )
-		     + kernel[5] * sampleTexture( v_vTexcoord + vec2( tex.x, 0.) )
-			
-			 + kernel[6] * sampleTexture( v_vTexcoord + vec2(-tex.x, tex.y) )
-		     + kernel[7] * sampleTexture( v_vTexcoord + vec2(    0., tex.y) )
-		     + kernel[8] * sampleTexture( v_vTexcoord + vec2( tex.x, tex.y) );
+	vec2  tex = 1. / dimension;
+	float sum = 1.;
 	
-    gl_FragColor = vec4(c.rgb, 1.);
+	if(normalized == 1) {
+		sum = 0.;
+		int amo = size * size;
+		for(int i = 0; i < amo; i++) sum += kernel[i];
+	}
+	
+	float st = -(float(size) - 1.) / 2.;
+	vec4  c  = vec4(0.);
+	
+	for(int i = 0; i < size; i++)
+	for(int j = 0; j < size; j++) {
+		int  index = i * size + j;
+		vec2 px    = v_vTexcoord + vec2((float(j) + st) * tex.x, (float(i) + st) * tex.y);
+		
+		c += kernel[index] * sampleTexture(px) / sum;
+	}
+	
+    gl_FragColor = c;
 }
