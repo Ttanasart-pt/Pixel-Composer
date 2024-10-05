@@ -15,12 +15,23 @@ function outputBox() : widget() constructor {
 		
 		draw_set_text(font, fa_left, fa_top, COLORS._main_text_sub);
 		
-		// if(typeof(_value) == "ref") {
-		// 	var _hh = ui(96);
+		if(typeof(_value) == "ref" && string_starts_with(string(_value), "ref surface")) {
+			var _hh = ui(64);
+			draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _y, _w, _hh, COLORS._main_icon_light);
 			
+			var _sw = _w  - ui(8);
+			var _sh = _hh - ui(8);
 			
-		// 	return _hh;
-		// }
+			var sfw = surface_get_width(_value);	
+			var sfh = surface_get_height(_value);	
+			var ss  = min(_sw / sfw, _sh / sfh);
+			var _sx = _x + _w  / 2 - ss * sfw / 2;
+			var _sy = _y + _hh / 2 - ss * sfh / 2;
+			
+			draw_surface_ext_safe(_value, _sx, _sy, ss, ss, 0, c_white, 1);
+			
+			return _hh;
+		}
 		
 		var _txt = string(_value);
 		var _bh  = string_height("l");

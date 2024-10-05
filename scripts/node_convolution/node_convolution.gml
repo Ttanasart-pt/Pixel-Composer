@@ -24,6 +24,7 @@ function Node_Convolution(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput(9, nodeValue_Bool("Normalize", self, false));
 	
 	newInput(10, nodeValue_Int("Size", self, 3))
+		.setValidator(VV_clamp(3, 16))
 	
 	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
 	
