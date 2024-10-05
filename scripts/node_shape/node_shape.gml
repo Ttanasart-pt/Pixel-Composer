@@ -117,7 +117,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput(28, nodeValue_Float("Shape Scale", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(29, nodeValue("Curve", self, CONNECT_TYPE.input, VALUE_TYPE.curve, CURVE_DEF_01));
+	newInput(29, nodeValue_Curve("Curve", self, CURVE_DEF_01));
 	
 	newInput(30, nodeValue_Bool("Caps", self, false));
 	

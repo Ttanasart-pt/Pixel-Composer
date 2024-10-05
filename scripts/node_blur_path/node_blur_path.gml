@@ -21,7 +21,7 @@ function Node_Blur_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	newInput(9, nodeValue_Float("Intensity", self, 1));
 	
-	newInput(10, nodeValue("Intensity Along Path", self, CONNECT_TYPE.input, VALUE_TYPE.curve, CURVE_DEF_11));
+	newInput(10, nodeValue_Curve("Intensity Along Path", self, CURVE_DEF_11));
 	
 	newInput(11, nodeValue_Slider_Range("Range", self, [ 0, 1 ]));
 	

@@ -25,13 +25,13 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	newInput(10, nodeValue_Vec2_Range("Spawn scale", self, [ 1, 1, 1, 1 ] , { linked : true }));
 	
-	newInput(11, nodeValue("Scale over time", self, CONNECT_TYPE.input, VALUE_TYPE.curve, CURVE_DEF_11 ));
+	newInput(11, nodeValue_Curve("Scale over time", self, CURVE_DEF_11 ));
 	
 	newInput(12, nodeValue_Gradient("Color over lifetime", self, new gradientObject(cola(c_white))));
 	
 	newInput(13, nodeValue_Range("Alpha", self, [ 1, 1 ], { linked : true }));
 	
-	newInput(14, nodeValue("Alpha over time", self, CONNECT_TYPE.input, VALUE_TYPE.curve, CURVE_DEF_11));
+	newInput(14, nodeValue_Curve("Alpha over time", self, CURVE_DEF_11));
 	
 	newInput(15, nodeValue_Bool("Rotate by direction", self, false, "Make the particle rotates to follow its movement."));
 	
@@ -108,7 +108,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	newInput(46, nodeValue_PathNode("Path", self, noone ));
 	
-	newInput(47, nodeValue("Path Deviation", self, CONNECT_TYPE.input, VALUE_TYPE.curve, CURVE_DEF_11 ));
+	newInput(47, nodeValue_Curve("Path Deviation", self, CURVE_DEF_11 ));
 	
 	newInput(48, nodeValue_Trigger("Reset Seed", self, false ))
 		.setDisplay(VALUE_DISPLAY.button, { name: "Trigger" })

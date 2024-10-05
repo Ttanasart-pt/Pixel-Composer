@@ -16,7 +16,7 @@ function Node_MK_Brownian(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	newInput(6, nodeValue_Gradient("Color", self, new gradientObject(cola(c_white))));
 	
-	newInput(7, nodeValue("Alpha", self, CONNECT_TYPE.input, VALUE_TYPE.curve, CURVE_DEF_11));
+	newInput(7, nodeValue_Curve("Alpha", self, CURVE_DEF_11));
 	
 	newInput(8, nodeValue_Int("Seed", self, seed_random(6)))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[8].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });

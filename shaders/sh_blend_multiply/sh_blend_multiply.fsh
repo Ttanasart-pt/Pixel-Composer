@@ -21,18 +21,15 @@ float sampleMask() {
 
 void main() {
 	vec4 _col0 = texture2D( gm_BaseTexture, v_vTexcoord );
+	vec2 _frtx = tile_type == 1? fract(v_vTexcoord * dimension) : v_vTexcoord;
+	vec4 _col1 = texture2D( fore, _frtx );
+	_col1.a   *= opacity * sampleMask();
 	
-	vec2 fore_tex = v_vTexcoord;
-	if(tile_type == 0) {
-		fore_tex = v_vTexcoord;
-	} else if(tile_type == 1) {
-		fore_tex = fract(v_vTexcoord * dimension);
-	}
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	vec4 _col1 = texture2D( fore, fore_tex );
-	_col1.a *= opacity * sampleMask();
+		vec4 blend = (_col0 * (1. - opacity)) + (_col0 * _col1 * opacity);
 	
-	vec4 blend = (_col0 * (1. - opacity)) + (_col0 * _col1 * opacity);
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	float po = preserveAlpha == 1? _col1.a : opacity;
 	float al = _col1.a + _col0.a * (1. - _col1.a);

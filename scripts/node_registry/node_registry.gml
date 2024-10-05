@@ -637,7 +637,7 @@ function __initNodes() {
 		addNodeObject(filter, "Replace Image",		s_node_image_replace,	"Node_Surface_Replace",	[1, Node_Surface_Replace], ["image replace"], "Replace instances of an image with a new one.").setVersion(1140);
 		addNodeObject(filter, "Chromatic Aberration",s_node_chromatic_abarration,	"Node_Chromatic_Aberration",	[1, Node_Chromatic_Aberration],, "Apply chromatic aberration effect to the image.");
 		addNodeObject(filter, "Vignette",			s_node_vignette,		"Node_Vignette",		[1, Node_Vignette],, "Apply vignette effect to the border.").setVersion(11630);
-		addNodeObject(filter, "FXAA",				s_node_FXAA,			"Node_FXAA",			[1, Node_FXAA],, "Apply fast approximate anti-aliasing to te image.");
+		addNodeObject(filter, "FXAA",				s_node_FXAA,			"Node_FXAA",			[1, Node_FXAA], ["anti aliasing"], "Apply fast approximate anti-aliasing to te image.");
 		addNodeObject(filter, "JPEG",				s_node_JPEG,			"Node_JPEG",			[1, Node_JPEG],, "Apply JPEG compression to the image.").setVersion(11730);
 		addNodeObject(filter, "Interlace",			s_node_interlace,		"Node_Interlaced",		[1, Node_Interlaced],, "Apply interlace effect to an image.").setVersion(11760);
 		addNodeObject(filter, "Blend Edge",			s_node_blend_edge,		"Node_Blend_Edge",		[1, Node_Blend_Edge],, "Blend the edges of an image to create tilable patterns.").setVersion(11740);

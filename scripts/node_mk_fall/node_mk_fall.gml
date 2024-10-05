@@ -31,7 +31,7 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	
 	newInput(13, nodeValue_Gradient("Color", self, new gradientObject(cola(c_white))))
 	
-	newInput(14, nodeValue("Alpha", self, CONNECT_TYPE.input, VALUE_TYPE.curve, CURVE_DEF_11));
+	newInput(14, nodeValue_Curve("Alpha", self, CURVE_DEF_11));
 	
 	newInput(15, nodeValue_Bool("Ground", self, false));
 	

@@ -22,7 +22,7 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	newInput(8, nodeValue_Float("Wiggle Frequency", self, 8));
 	
-	newInput(9, nodeValue("Amplitude over length", self, CONNECT_TYPE.input, VALUE_TYPE.curve, CURVE_DEF_11));
+	newInput(9, nodeValue_Curve("Amplitude over length", self, CURVE_DEF_11));
 	
 	newOutput(0, nodeValue_Output("Path", self, VALUE_TYPE.pathnode, self));
 	

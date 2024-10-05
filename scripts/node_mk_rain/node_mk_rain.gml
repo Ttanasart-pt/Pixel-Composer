@@ -31,14 +31,14 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	newInput(12, nodeValue_Slider_Range("Track extension", self, [ 0, 0 ], { range: [ 0, 10, 0.01 ] }));
 	
-	newInput(13, nodeValue("Size over lifetime", self, CONNECT_TYPE.input, VALUE_TYPE.curve, CURVE_DEF_11));
+	newInput(13, nodeValue_Curve("Size over lifetime", self, CURVE_DEF_11));
 	
 	newInput(14, nodeValue_Bool("Limited lifespan", self, false));
 	
 	newInput(15, nodeValue_Slider_Range("Lifespan", self, [ 0, 1 ]))
 		.setTooltip("Lifespan of a droplet as a ratio of the entire animation.");
 		
-	newInput(16, nodeValue("Alpha over lifetime", self, CONNECT_TYPE.input, VALUE_TYPE.curve, CURVE_DEF_11));
+	newInput(16, nodeValue_Curve("Alpha over lifetime", self, CURVE_DEF_11));
 		
 	newInput(17, nodeValue_Bool("Fade alpha", self, false));
 		

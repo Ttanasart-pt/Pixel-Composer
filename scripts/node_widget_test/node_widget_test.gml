@@ -34,7 +34,7 @@ function Node_Widget_Test(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	newInput(25, nodeValue("pathSave", self, CONNECT_TYPE.input, VALUE_TYPE.path, "")                                      .setDisplay(VALUE_DISPLAY.path_save))
 	newInput(26, nodeValue("fontScrollBox", self, CONNECT_TYPE.input, VALUE_TYPE.path, "")                                .setDisplay(VALUE_DISPLAY.path_font))
 
-	newInput(27, nodeValue("curveBox", self, CONNECT_TYPE.input, VALUE_TYPE.curve, CURVE_DEF_11)                          .setDisplay(VALUE_DISPLAY._default))
+	newInput(27, nodeValue_Curve("curveBox", self, CURVE_DEF_11)                          .setDisplay(VALUE_DISPLAY._default))
 
 	newInput(28, nodeValue_Text("textArea", self, "")                                     .setDisplay(VALUE_DISPLAY._default))
 	newInput(29, nodeValue_Text("textBox", self, "")                                      .setDisplay(VALUE_DISPLAY.text_box))

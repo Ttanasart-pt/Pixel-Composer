@@ -13,7 +13,7 @@ function Node_Strand_Render(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	newInput(2, nodeValue_Range("Thickness", self, [ 1, 1 ], { linked : true }));
 	
-	newInput(3, nodeValue("Thickness over length", self, CONNECT_TYPE.input, VALUE_TYPE.curve, CURVE_DEF_11));
+	newInput(3, nodeValue_Curve("Thickness over length", self, CURVE_DEF_11));
 	
 	newInput(4, nodeValue_Gradient("Random color", self, new gradientObject(cola(c_white))));
 	

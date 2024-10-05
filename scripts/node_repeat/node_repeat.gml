@@ -45,7 +45,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(9, nodeValue_Vec2("Start position", self, [0, 0]))
 		.setUnitRef(function(index) { return getInputData(1); });
 		
-	newInput(10, nodeValue("Scale over copy", self, CONNECT_TYPE.input, VALUE_TYPE.curve, CURVE_DEF_11 ));
+	newInput(10, nodeValue_Curve("Scale over copy", self, CURVE_DEF_11 ));
 	
 	newInput(11, nodeValue_PathNode("Path", self, noone, "Make each copy follow along path." ))
 		.setVisible(true, true);
@@ -58,7 +58,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(14, nodeValue_Gradient("Color over copy", self, new gradientObject(cola(c_white))))
 		.setMappable(30);
 		
-	newInput(15, nodeValue("Alpha over copy", self, CONNECT_TYPE.input, VALUE_TYPE.curve, CURVE_DEF_11 ));
+	newInput(15, nodeValue_Curve("Alpha over copy", self, CURVE_DEF_11 ));
 	
 	newInput(16, nodeValue_Enum_Button("Array select", self, 0, [ "Order", "Random", "Spread" ]))
 		.setTooltip("Whether to select image from an array in order, at random, or spread each image to its own output.");
@@ -83,7 +83,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 	/* deprecated */ newInput(24, nodeValue_Vec2("Animator scale", self, [ 0, 0 ]));                                        
 		
-	/* deprecated */ newInput(25, nodeValue("Animator falloff", self, CONNECT_TYPE.input, VALUE_TYPE.curve, CURVE_DEF_10)); 
+	/* deprecated */ newInput(25, nodeValue_Curve("Animator falloff", self, CURVE_DEF_10)); 
 	 
 	newInput(26, nodeValue_Enum_Button("Stack", self,  0, [ "None", "X", "Y" ]))
 		.setTooltip("Place each copy next to each other, taking surface dimension into account.");
@@ -159,7 +159,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 		newInput(_index + 12, nodeValue_Float("Selection falloff", self, 0));
 		
-		newInput(_index + 13, nodeValue("Selection falloff curve", self, CONNECT_TYPE.input, VALUE_TYPE.curve, CURVE_DEF_10));
+		newInput(_index + 13, nodeValue_Curve("Selection falloff curve", self, CURVE_DEF_10));
 		
 		newInput(_index + 14, nodeValue_Surface("Selection surface", self, noone));
 		

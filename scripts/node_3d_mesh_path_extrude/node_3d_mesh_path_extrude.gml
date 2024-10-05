@@ -25,7 +25,7 @@ function Node_3D_Mesh_Path_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 	newInput(in_mesh + 7, nodeValue_Float("Radius", self, 0.25 ))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(in_mesh + 8, nodeValue("Radius Over Path", self, CONNECT_TYPE.input, VALUE_TYPE.curve, CURVE_DEF_11 ));
+	newInput(in_mesh + 8, nodeValue_Curve("Radius Over Path", self, CURVE_DEF_11 ));
 	
 	newInput(in_mesh + 9, nodeValue_Vec2("Texture Scale", self, [ 1, 1 ] ));
 	

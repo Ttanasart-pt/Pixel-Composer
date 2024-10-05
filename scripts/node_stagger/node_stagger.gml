@@ -7,7 +7,7 @@ function Node_Stagger(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	newInput(2, nodeValue_Int("Delay Amount", self, 1));
 	
-	newInput(3, nodeValue("Stagger Curve", self, CONNECT_TYPE.input, VALUE_TYPE.curve, CURVE_DEF_01));
+	newInput(3, nodeValue_Curve("Stagger Curve", self, CURVE_DEF_01));
 	
 	newInput(4, nodeValue_Enum_Button("Overflow", self,  0, [ "Hide", "Clamp" ]));
 	

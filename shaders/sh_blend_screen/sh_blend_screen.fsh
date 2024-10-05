@@ -22,16 +22,10 @@ float sampleMask() {
 void main() {
 	vec4 _col0 = texture2D( gm_BaseTexture, v_vTexcoord );
 	
-	vec2 fore_tex = v_vTexcoord;
-	if(tile_type == 0) {
-		fore_tex = v_vTexcoord;
-	} else if(tile_type == 1) {
-		fore_tex = fract(v_vTexcoord * dimension);
-	}
+	vec2 _frtx = tile_type == 1? fract(v_vTexcoord * dimension) : v_vTexcoord;
+	vec4 _col1 = texture2D( fore, _frtx );
 	
-	vec4 _col1 = texture2D( fore, fore_tex );
-	
-	float o = opacity *  sampleMask();
+	float o = opacity * sampleMask();
 	
 	_col1.a *= o;
 	_col1.rgb *= _col1.a;

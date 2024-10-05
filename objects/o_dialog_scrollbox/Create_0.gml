@@ -72,7 +72,8 @@ event_inherited();
 	}
 	
 	sc_content = new scrollPane(0, 0, function(_y, _m) {
-		draw_clear_alpha(COLORS.panel_bg_clear, 0);
+		draw_clear_alpha(COLORS.panel_bg_clear, 1);
+		
 		var hght = line_get_height(font) + item_pad;
 		var _dw  = sc_content.surface_w;
 		var _h   = 0;

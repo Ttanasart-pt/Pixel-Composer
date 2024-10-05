@@ -419,6 +419,9 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			.setUnitRef(function(index) { return [ overlay_w, overlay_h ]; });
 		
 		newInput(index + 2, nodeValue_Rotation($"Rotation {_s}", self, 0));
+		inputs[index + 2].options_histories = [ BLEND_TYPES,
+			{ cond: function() /*=>*/ {return LOADING_VERSION < 1_18_00_0}, list: global.BLEND_TYPES_18 }
+		];
 		
 		newInput(index + 3, nodeValue_Vec2($"Scale {_s}", self, [ 1, 1 ] ));
 		

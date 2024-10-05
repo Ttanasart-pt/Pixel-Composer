@@ -1,9 +1,4 @@
 #region create
-	global.node_blend_keys = [ 
-		"normal",  "add",     "subtract",   "multiply",   "screen", 
-		"overlay", "hue",     "saturation", "luminosity", "maximum", 
-		"minimum", "replace", "difference" 
-	];
 	
 	function Node_create_Blend(_x, _y, _group = noone, _param = {}) {
 		var node  = new Node_Blend(_x, _y, _group).skipDefault();
@@ -290,4 +285,10 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		
 		return _outSurf;
 	}
+
+	///////////////////////
+	
+	inputs[2].options_histories = [ BLEND_TYPES,
+		{ cond: function() /*=>*/ {return LOADING_VERSION < 1_18_00_0}, list: global.BLEND_TYPES_18 }
+	];
 }

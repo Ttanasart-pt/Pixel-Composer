@@ -74,6 +74,7 @@ function draw_line_elbow_diag_color(x0, y0, x1, y1, cx = noone, cy = noone, _s =
 				if(cS)  draw_corner(xx1, y1 - cS * iy, xx1, y1, xx1 + cS, y1, thick, c2, sample);
 				if(xcr) draw_corner(x1s - xcr, y0, x1s, y0, x1s + _xcr, y0 + _xcr * iy, thick, cm, sample);
 				if(ycr) draw_corner(xx1 - _ycr, y1s - _ycr * iy, xx1, y1s, xx1, y1s + ycr * iy, thick, cm, sample);
+				
 			} else if(bot) {
 				__line(x0, y0, xx0 - cS, y0, thick, c1, c1, __dash);
 				__line(xx1, y1, x1, y1, thick, c2, c2, __dash);
@@ -95,6 +96,7 @@ function draw_line_elbow_diag_color(x0, y0, x1, y1, cx = noone, cy = noone, _s =
 				if(cS)  draw_corner(xx0 - cS, y0, xx0, y0, xx0, y0 + cS * iy, thick, c1, sample);
 				if(xcr) draw_corner(x1s - _xcr, y1 - _xcr * iy, x1s, y1, x1s + xcr, y1, thick, cm, sample);
 				if(ycr) draw_corner(xx0, y1s - ycr * iy, xx0, y1s, xx0 + _ycr, y1s + _ycr * iy, thick, cm, sample);
+				
 			} else {
 				__line(x0, y0, xx0 - cS0, y0, thick, c1, c1, __dash);
 				__line(xx1 + cS1, y1, x1, y1, thick, c2, c2, __dash);
@@ -119,6 +121,7 @@ function draw_line_elbow_diag_color(x0, y0, x1, y1, cx = noone, cy = noone, _s =
 				
 				if(corY0) draw_corner(xx0, yC0 - corY0 * iy, xx0, yC0, xx0 + _corY0, yC0 + _corY0 * iy, thick, cm, sample);
 				if(corY1) draw_corner(xx1, yC1 + corY1 * iy, xx1, yC1, xx1 - _corY1, yC1 - _corY1 * iy, thick, cm, sample);
+				
 			}
 		} else {
 			var cR0 = min(cS, abs(y0 - cy) / 2);
