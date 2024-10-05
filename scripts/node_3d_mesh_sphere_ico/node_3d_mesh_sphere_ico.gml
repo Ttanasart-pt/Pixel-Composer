@@ -12,9 +12,9 @@ function Node_3D_Mesh_Sphere_Ico(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, 
 	newInput(in_mesh + 2, nodeValue_Bool("Smooth Normal", self, false ));
 	
 	input_display_list = [
-		__d3d_input_list_mesh, in_mesh + 0, in_mesh + 2, 
+		__d3d_input_list_mesh, in_mesh + 0, 
 		__d3d_input_list_transform,
-		["Material",	false], in_mesh + 1, 
+		["Material",	false], in_mesh + 2, in_mesh + 1, 
 	]
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) { #region

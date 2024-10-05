@@ -15,9 +15,9 @@ function Node_3D_Mesh_Cone(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 	newInput(in_mesh + 3, nodeValue_Bool("Smooth Side", self, false ));
 	
 	input_display_list = [
-		__d3d_input_list_mesh, in_mesh + 0, in_mesh + 3, 
+		__d3d_input_list_mesh, in_mesh + 0, 
 		__d3d_input_list_transform,
-		["Material",	false], in_mesh + 1, in_mesh + 2, 
+		["Material",	false], in_mesh + 3, in_mesh + 1, in_mesh + 2, 
 	]
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) { #region

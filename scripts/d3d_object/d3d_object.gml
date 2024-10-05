@@ -174,14 +174,13 @@ function __3dObject() constructor {
 						shader_set_f("mat_shine",      1);
 						shader_set_i("mat_metalic",    0);
 						shader_set_f("mat_reflective", 0);
+						shader_set_f("mat_texScale",   [ 1, 1 ] );
 					}
 					
 					vertex_submit(VB[i], render_type, _tex);
 				} else if(_shader == sh_d3d_geometry) {
-					if(_useMat)
-						_mat.submitGeometry();
-					else 
-						shader_set_i("use_normal", 0);
+					if(_useMat) _mat.submitGeometry();
+					else        shader_set_i("use_normal", 0);
 					
 					vertex_submit(VB[i], render_type, _tex);
 				} else

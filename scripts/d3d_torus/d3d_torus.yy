@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"d3d_uvsphere",
+  "%Name":"d3d_torus",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"d3d_uvsphere",
+  "name":"d3d_torus",
   "parent":{
     "name":"mesh",
     "path":"folders/nodes/data/3D/d3d_mesh/mesh.yy",

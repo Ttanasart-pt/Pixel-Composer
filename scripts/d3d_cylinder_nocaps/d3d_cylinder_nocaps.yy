@@ -6,7 +6,7 @@
   "name":"d3d_cylinder_nocaps",
   "parent":{
     "name":"mesh",
-    "path":"folders/functions/3d/mesh.yy",
+    "path":"folders/nodes/data/3D/d3d_mesh/mesh.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

@@ -5,6 +5,8 @@ function __d3dMaterial(surface = noone) constructor {
 	specular  = 0;
 	metalic   = false;
 	shine     = 1;
+	texScale  = [ 1, 1 ];
+	texShift  = [ 0, 0 ];
 	
 	normal    = noone;
 	normalStr = 1;
@@ -28,6 +30,8 @@ function __d3dMaterial(surface = noone) constructor {
 		shader_set_f("mat_specular", specular );
 		shader_set_f("mat_shine",    shine    );
 		shader_set_i("mat_metalic",  metalic  );
+		shader_set_f("mat_texScale", texScale  );
+		shader_set_f("mat_texShift", texShift  );
 		
 		shader_set_f("mat_reflective", reflective);
 		gpu_set_tex_filter(texFilter);

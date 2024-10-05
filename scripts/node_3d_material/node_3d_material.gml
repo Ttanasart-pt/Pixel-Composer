@@ -25,11 +25,16 @@ function Node_3D_Material(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 	
 	newInput(8, nodeValue_Bool("Anti aliasing", self, false ));
 	
+	newInput(9, nodeValue_Vec2("Scale", self, [ 1, 1 ] ));
+	
+	newInput(10, nodeValue_Vec2("Shift", self, [ 0, 0 ] ));
+	
 	newOutput(0, nodeValue_Output("Material", self, VALUE_TYPE.d3Material, noone));
 	
-	input_display_list = [ 0, 8, 
+	input_display_list = [  
+		["Texture",		false], 0, 8, 9, 10, 
 		["Properties",	false], 1, 2, 3, 4, 7,
-		["Normal",		false], 5, 6, 
+		["Normal",		false], 5, 6,
 	];
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) {
@@ -42,6 +47,8 @@ function Node_3D_Material(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 		var _norS = _data[6];
 		var _roug = _data[7];
 		var _aa   = _data[8];
+		var _scal = _data[9];
+		var _shft = _data[10];
 		
 		if(!is_surface(_surf)) {
 			solid_surf = surface_verify(solid_surf, 1, 1);
@@ -54,6 +61,8 @@ function Node_3D_Material(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 		_mat.shine     = _shin;
 		_mat.metalic   = _metl;
 		_mat.texFilter = _aa;
+		_mat.texScale  = _scal;
+		_mat.texShift  = _shft;
 		
 		_mat.normal    = _nor;
 		_mat.normalStr = _norS;

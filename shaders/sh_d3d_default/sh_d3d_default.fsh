@@ -65,6 +65,8 @@ uniform int use_8bit;
 	uniform float mat_shine;
 	uniform int   mat_metalic;
 	uniform float mat_reflective;
+	uniform vec2  mat_texScale;
+	uniform vec2  mat_texShift;
 	
 	uniform int		  mat_defer_normal;
 	uniform float	  mat_normal_strength;
@@ -174,6 +176,7 @@ void main() {
 	vec2 uv_coord = v_vTexcoord;
 	if(mat_flip == 1) uv_coord.y = -uv_coord.y;
 	
+	uv_coord = fract(uv_coord * mat_texScale + mat_texShift);
 	mat_baseColor = texture2D( gm_BaseTexture, uv_coord );
 	mat_baseColor *= v_vColour;
 	
