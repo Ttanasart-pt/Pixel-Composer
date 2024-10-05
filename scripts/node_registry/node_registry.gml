@@ -703,8 +703,9 @@ function __initNodes() {
 		addNodeObject(d3d, "3D UV Sphere",	s_node_3d_sphere_uv,	"Node_3D_Mesh_Sphere_UV",	[1, Node_3D_Mesh_Sphere_UV]).setVersion(11510);
 		addNodeObject(d3d, "3D Icosphere",	s_node_3d_sphere_ico,	"Node_3D_Mesh_Sphere_Ico",	[1, Node_3D_Mesh_Sphere_Ico]).setVersion(11510);
 		addNodeObject(d3d, "3D Cone",		s_node_3d_cone,			"Node_3D_Mesh_Cone",		[1, Node_3D_Mesh_Cone]).setVersion(11510);
-		addNodeObject(d3d, "3D Torus",		s_node_3d_torus,			"Node_3D_Mesh_Torus",		[1, Node_3D_Mesh_Torus]).setVersion(1_18_01_0);
+		addNodeObject(d3d, "3D Torus",		s_node_3d_torus,		"Node_3D_Mesh_Torus",		[1, Node_3D_Mesh_Torus]).setVersion(1_18_01_0);
 		addNodeObject(d3d, "3D Terrain",	s_node_3d_displace,		"Node_3D_Mesh_Terrain",		[1, Node_3D_Mesh_Terrain],, "Create 3D terrain from height map.").setVersion(11560);
+		addNodeObject(d3d, "3D Wall Builder",	s_node_3d_wall,		"Node_3D_Mesh_Wall_Builder",[1, Node_3D_Mesh_Wall_Builder]).setVersion(1_18_01_0);
 		addNodeObject(d3d, "Surface Extrude",	s_node_3d_extrude,	"Node_3D_Mesh_Extrude",		[1, Node_3D_Mesh_Extrude],, "Extrude 2D image into 3D object.").setVersion(11510);
 		addNodeObject(d3d, "Path Extrude",	s_node_3d_path_extrude,	"Node_3D_Mesh_Path_Extrude",[1, Node_3D_Mesh_Path_Extrude],, "Extrude path into 3D object.").setVersion(11750);
 		

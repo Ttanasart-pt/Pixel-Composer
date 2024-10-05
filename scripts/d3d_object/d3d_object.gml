@@ -36,6 +36,13 @@ function __3dObject() constructor {
 	
 	static checkParameter = function(params = {}, forceUpdate = false) {
 		var _keys = struct_get_names(params);
+		
+		if(forceUpdate) {
+			struct_override(self, params);
+			onParameterUpdate();
+			return;
+		}
+		
 		var check = false;
 		for( var i = 0, n = array_length(_keys); i < n; i++ ) {
 			var key = _keys[i];
@@ -44,7 +51,7 @@ function __3dObject() constructor {
 			self[$ key] = params[$ key];
 		}
 		
-		if(forceUpdate || check) onParameterUpdate();
+		if(check) onParameterUpdate();
 	}
 	
 	static onParameterUpdate = function() {}

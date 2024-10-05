@@ -20,7 +20,7 @@ function Node_3D_Mesh_Cone(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 		["Material",	false], in_mesh + 3, in_mesh + 1, in_mesh + 2, 
 	]
 	
-	static processData = function(_output, _data, _output_index, _array_index = 0) { #region
+	static processData = function(_output, _data, _output_index, _array_index = 0) {
 		var _side     = _data[in_mesh + 0];
 		var _mat_bot  = _data[in_mesh + 1];
 		var _mat_sid  = _data[in_mesh + 2];
@@ -33,7 +33,7 @@ function Node_3D_Mesh_Cone(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 		setTransform(object, _data);
 		
 		return object;
-	} #endregion
+	}
 	
 	static getPreviewValues = function() { return getSingleValue(in_mesh + 1); }
 }
