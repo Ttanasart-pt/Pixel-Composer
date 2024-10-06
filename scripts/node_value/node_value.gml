@@ -526,7 +526,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return self;
 	}
 	
-	static isVisible = function() {
+	static isVisible = function() { 
 		if(!node.active) return false;
 		
 		if(connect_type == CONNECT_TYPE.output) {

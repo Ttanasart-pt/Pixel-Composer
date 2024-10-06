@@ -188,7 +188,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		in_cache_len     = 0;
 		inputDisplayList = [];
 		
-		outputs_amount = 0;
 		outputs_index  = [];
 		out_cache_len  = 0;
 		
@@ -621,6 +620,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static newInput  = function(index, junction) { inputs[index]  = junction; return junction;  }
 	static newOutput = function(index, junction) { outputs[index] = junction; return junction;  }
 	
+	static getInputJunctionAmount = function() { return (input_display_list == -1 || !use_display_list)? array_length(inputs) : array_length(input_display_list); }
 	static getInputJunctionIndex = function(index) {
 		INLINE 
 		
@@ -642,7 +642,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		for( var i = 0, n = array_length(inputs); i < n; i++ )
 			inputs[i].visible_in_list = false;
 		
-		inputs_amount = (input_display_list == -1 || !use_display_list)? array_length(inputs) : array_length(input_display_list);
+		inputs_amount = getInputJunctionAmount();
 		inputs_index  = [];
 		
 		for( var i = 0; i < inputs_amount; i++ ) {
@@ -657,8 +657,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 		inputs_amount = array_length(inputs_index);
 		
-		outputs_amount = output_display_list == -1? array_length(outputs) : array_length(output_display_list);
-		outputs_index  = array_create_ext(outputs_amount, function(index) { return getOutputJunctionIndex(index); });
+		outputs_index  = array_create_ext(getOutputJunctionAmount(), function(index) { return getOutputJunctionIndex(index); });
 	} //run_in(1, () => { updateIO() });
 	
 	static setHeight = function() {
@@ -1277,7 +1276,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var ry  = y + _junRy;
 		var idx;
 		
-		for(var i = 0; i < outputs_amount; i++) {
+		var _oamo = getOutputJunctionAmount();
+		for(var i = 0; i < _oamo; i++) {
 			idx = outputs_index[i];
 			jun = outputs[idx];
 			

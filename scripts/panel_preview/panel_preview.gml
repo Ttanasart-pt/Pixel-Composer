@@ -249,7 +249,10 @@ function Panel_Preview() : PanelContent() constructor {
             var node = __getNodePreview();
             if(node == noone) return;
             
-            node.preview_channel = sbChannelIndex[index].index; 
+            var _ind = array_safe_get(sbChannelIndex, index, -1);
+            if(_ind == -1) return;
+            
+            node.preview_channel = _ind; 
             node.setHeight();
         });
         
@@ -776,19 +779,20 @@ function Panel_Preview() : PanelContent() constructor {
         
         var currName = _node.outputs[_node.preview_channel].name;
         draw_set_text(sbChannel.font, fa_center, fa_center);
+        
         var ww  = 0;
         var hh  = TEXTBOX_HEIGHT - ui(2);
-        var _am = _node.getOutputJunctionAmount();
+        var amo = _node.getOutputJunctionAmount();
         
-        for( var i = 0; i < _am; i++ ) {
+        for( var i = 0; i < amo; i++ ) {
             var _outi = _node.getOutputJunctionIndex(i);
             var _outj = _node.outputs[_outi];
             
             array_push(chName, _outj.name);
-            array_push(sbChannelIndex, _outj);
+            array_push(sbChannelIndex, _outi);
+            
             ww = max(ww, string_width(_outj.name) + ui(40));
         }
-        
         
         if(!array_empty(chName)) {
             sbChannel.data_list = chName;

@@ -379,9 +379,13 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		inParent = nodeValue("Value", group, CONNECT_TYPE.input, VALUE_TYPE.any, -1)
 			.uncache()
 			.setVisible(true, true);
+		
 		inParent.from = self;
+		inParent.index = array_length(group.inputs);
 		
 		array_push(group.inputs, inParent);
+		if(is_array(group.input_display_list))
+			array_push(group.input_display_list, inParent.index);
 		
 		if(!LOADING && !APPENDING) {
 			group.refreshNodeDisplay();

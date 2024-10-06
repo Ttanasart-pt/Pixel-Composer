@@ -57,9 +57,13 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		outParent = nodeValue("Value", group, CONNECT_TYPE.output, VALUE_TYPE.any, -1)
 			.uncache()
 			.setVisible(true, true);
-		outParent.from = self;
+		
+		outParent.from  = self;
+		outParent.index = array_length(group.outputs);
 		
 		array_push(group.outputs, outParent);
+		if(is_array(group.output_display_list))
+			array_push(group.output_display_list, outParent.index);
 		
 		if(!LOADING && !APPENDING) {
 			group.refreshNodeDisplay();
