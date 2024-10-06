@@ -193,21 +193,18 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	group_output_display_list		= [];
 	attributes.input_display_list   = [];
 	attributes.output_display_list  = [];
+	attributes.lock_input           = false;
 	
 	managedRenderOrder = false;
 	
 	skipDefault();
 	
-	draw_dummy  = false;
-	dummy_input = nodeValue("Add to group", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0);
+	__dummy_input = nodeValue("Add to group", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0);
+	__dummy_input.setDummy(function() /*=>*/ { var input = nodeBuild("Node_Group_Input", 0, 0, self); return input.inParent; }, function(_junc) /*=>*/ { _junc.from.destroy() } );
 	
-	dummy_input.setDummy(function() /*=>*/ { var input = nodeBuild("Node_Group_Input", 0, 0, self); return input.inParent; },
-		function(_junc) /*=>*/ { _junc.from.destroy() }
-	);
-	
-	dummy_input.onSetFrom = function(juncFrom) {
-		array_remove(juncFrom.value_to, dummy_input);
-		dummy_input.value_from = noone;
+	__dummy_input.onSetFrom = function(juncFrom) {
+		array_remove(juncFrom.value_to, __dummy_input);
+		__dummy_input.value_from = noone;
 		
 		var input = nodeBuild("Node_Group_Input", 0, 0, self);
 		var _type = juncFrom.type;
@@ -226,8 +223,9 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	tool_node = noone;
 	draw_input_overlay = true;
 	
-	array_push(attributeEditors, ["Edit Input Display",  function() /*=>*/ {return 0}, button(function() { dialogCall(o_dialog_group_input_order).setNode(self, CONNECT_TYPE.input);  }) ]);
-	array_push(attributeEditors, ["Edit Output Display", function() /*=>*/ {return 0}, button(function() { dialogCall(o_dialog_group_input_order).setNode(self, CONNECT_TYPE.output); }) ]);
+	array_push(attributeEditors, ["Lock Input",          function() /*=>*/ {return attributes.lock_input}, new checkBox(function() /*=>*/ { attributes.lock_input = !attributes.lock_input   }) ]);
+	array_push(attributeEditors, ["Edit Input Display",  function() /*=>*/ {return 0}, button(function() /*=>*/ { dialogCall(o_dialog_group_input_order).setNode(self, CONNECT_TYPE.input);  }) ]);
+	array_push(attributeEditors, ["Edit Output Display", function() /*=>*/ {return 0}, button(function() /*=>*/ { dialogCall(o_dialog_group_input_order).setNode(self, CONNECT_TYPE.output); }) ]);
 	
 	/////========== INSPECTOR ===========
 	
@@ -316,6 +314,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	/////============= STEP ==============
 	
 	static stepBegin = function() {
+		dummy_input = attributes.lock_input? noone : __dummy_input;
+		
 		if(will_refresh) refreshNodes();
 		doStepBegin(); 
 	}
@@ -515,8 +515,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
 		
-		dummy_input.x = xx;
-		dummy_input.y = _iny;
+		__dummy_input.x = xx;
+		__dummy_input.y = _iny;
 		
 		var _hv = PANEL_GRAPH.pHOVER && PANEL_GRAPH.node_hovering == self && (!PREFERENCES.panel_graph_group_require_shift || key_mod_press(SHIFT));
 		bg_spr_add = 0.1 + (0.1 * _hv);
@@ -542,17 +542,6 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		if(_hv && PANEL_GRAPH.pFOCUS && mouse_press(mb_left))
 			panelSetContext(PANEL_GRAPH);
-	}
-	
-	static onDrawJunctions = function(_x, _y, _mx, _my, _s) {
-		dummy_input.visible = false;
-		
-		if(draw_dummy) {
-			dummy_input.visible = true;
-			dummy_input.drawJunction(_s, _mx, _my);
-		}
-		
-		draw_dummy = false;
 	}
 	
 	static getTool = function() {

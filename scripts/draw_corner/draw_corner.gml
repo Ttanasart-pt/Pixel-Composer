@@ -1,10 +1,10 @@
-function draw_corner(x1, y1, xc, yc, x3, y3, thick = 1, col = c_white, sample = 10) { #region
+function draw_corner(x1, y1, xc, yc, x3, y3, thick = 1, col = c_white, sample = 10) {
 	var dir0 = point_direction(x1, y1, xc, yc);
 	var dir1 = point_direction(x3, y3, xc, yc);
 	
 	var dis  = point_distance(x1, y1, x3, y3);
 	if(dis < 8) {
-		draw_set_color(col);
+		__draw_set_color(col);
 		draw_line_width(x1, y1, x3, y3, thick);
 		return;
 	}
@@ -27,7 +27,7 @@ function draw_corner(x1, y1, xc, yc, x3, y3, thick = 1, col = c_white, sample = 
 	var d0 = point_direction(px, py, x1, y1);
 	var d1 = point_direction(px, py, x3, y3);
 		
-	draw_set_color(col);
+	__draw_set_color(col);
 	draw_primitive_begin(pr_trianglestrip);
 	
 	var ox, oy, nx, ny;
@@ -46,9 +46,9 @@ function draw_corner(x1, y1, xc, yc, x3, y3, thick = 1, col = c_white, sample = 
 	}
 	
 	draw_primitive_end();
-} #endregion
+}
 
-function get_corner(x1, y1, xc, yc, x3, y3, sample = 10) { #region
+function get_corner(x1, y1, xc, yc, x3, y3, sample = 10) {
 	var dir0 = point_direction(x1, y1, xc, yc);
 	var dir1 = point_direction(x3, y3, xc, yc);
 	
@@ -87,4 +87,4 @@ function get_corner(x1, y1, xc, yc, x3, y3, sample = 10) { #region
 	}
 	
 	return pnt;
-} #endregion
+}

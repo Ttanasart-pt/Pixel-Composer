@@ -621,7 +621,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static newOutput = function(index, junction) { outputs[index] = junction; return junction;  }
 	
 	static getInputJunctionAmount = function() { return (input_display_list == -1 || !use_display_list)? array_length(inputs) : array_length(input_display_list); }
-	static getInputJunctionIndex = function(index) {
+	static getInputJunctionIndex  = function(index) {
 		INLINE 
 		
 		if(input_display_list == -1 || !use_display_list)

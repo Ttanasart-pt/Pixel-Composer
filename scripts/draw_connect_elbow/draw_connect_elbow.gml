@@ -27,8 +27,8 @@ function draw_line_elbow_color(x0, y0, x1, y1, cx = noone, cy = noone, _s = 1, t
 		corner = min(corner, abs(cy - y0) / 2, abs(cy - y1) / 2, abs(xx1 - xx0) / 2);
 		
 		if(type == LINE_STYLE.solid) {
-			draw_set_color(col1);	draw_line_width(x0, y0, xx0 - corns, y0, thick);
-			draw_set_color(col2);	draw_line_width(xx1 + corns, y1, x1, y1, thick);
+			__draw_set_color(col1);	draw_line_width(x0, y0, xx0 - corns, y0, thick);
+			__draw_set_color(col2);	draw_line_width(xx1 + corns, y1, x1, y1, thick);
 		
 			draw_line_width_color(xx0, y0 + corns * iy0, xx0, cy - corner * iy0, thick, col1,   cm);
 			draw_line_width_color(xx0 - corner * sign(xx0 - xx1), cy, xx1 + corner * sign(xx0 - xx1), cy, thick,   cm,   cm);
@@ -44,8 +44,8 @@ function draw_line_elbow_color(x0, y0, x1, y1, cx = noone, cy = noone, _s = 1, t
 				draw_corner(xx1 + corner, cy, xx1, cy, xx1, cy + corner * iy1, thick, cm, sample);
 			}
 		} else {
-			draw_set_color(col1);	draw_line_width(x0, y0, xx0, y0, thick);
-			draw_set_color(col2);	draw_line_width(xx1, y1, x1, y1, thick);
+			__draw_set_color(col1);	draw_line_width(x0, y0, xx0, y0, thick);
+			__draw_set_color(col2);	draw_line_width(xx1, y1, x1, y1, thick);
 		
 			draw_line_dashed_color(xx0, y0, xx0, cy, thick, col1,   cm, 6 * _s);
 			draw_line_dashed_color(xx0, cy, xx1, cy, thick,   cm,   cm, 6 * _s);
