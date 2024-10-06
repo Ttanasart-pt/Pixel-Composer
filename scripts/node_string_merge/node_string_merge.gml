@@ -1,6 +1,5 @@
 function Node_String_Merge(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
-	name = "Combine Text";
-	
+	name = "Combine Texts";
 	setDimension(96, 48);
 	
 	newOutput(0, nodeValue_Output("Text", self, VALUE_TYPE.text, ""));

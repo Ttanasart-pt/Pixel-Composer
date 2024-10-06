@@ -1,3 +1,24 @@
+global.node_rm_primitive_keys = [ 
+	"plane", "box", "box frame", "box round", "cube", 
+	"sphere", "ellipse", "cut sphere", "cut hollow sphere", "torus", "capped torus",
+	"cylinder", "prism", "capsule", "cone", "capped cone", "round cone", "3d arc", "pie", 
+	"octahedron", "pyramid", 
+];
+
+function Node_create_RM_Primitive(_x, _y, _group = noone, _param = {}) {
+	var query = struct_try_get(_param, "query", "");
+	var node  = new Node_RM_Primitive(_x, _y, _group).skipDefault();
+	
+	switch(query) {
+		case "cube" :   ind = array_find_string(node.shape_types, "box");	break;
+		
+		default : ind = array_find_string(node.shape_types, query);
+	}
+	
+	if(ind >= 0) node.inputs[1].setValue(ind);
+	return node;
+}
+
 function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) constructor {
 	name  = "RM Primitive";
 	

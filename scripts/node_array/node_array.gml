@@ -160,21 +160,39 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	static postConnect = function() { updateType(false); }
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		if(outputs[0].type == VALUE_TYPE.surface) return;
-		
 		var bbox = drawGetBbox(xx, yy, _s);
+		var jh   = (junction_draw_hei_y - 4) * _s;
 		
-		draw_set_text(f_sdf, fa_left, fa_center, COLORS._main_text);
+		var x0 = bbox.x0 + 6 * _s;
+		var ww = bbox.w - 12 * _s;
 		
 		for(var i = input_fix_len; i < array_length(inputs); i += data_length) {
 			var val = inputs[i];
-			var key = getInputData(i, "");
 			if(!val.visible) continue;
 			
-			var _ss = min(_s * .4, string_scale(key, bbox.w - 12 * _s, 9999));
+			var key = getInputData(i, "");
 			
-			draw_set_color(value_color(val.type));
-			draw_text_transformed(bbox.x0 + 6 * _s, val.y, key, _ss, _ss, 0);
+			switch(val.type) {
+				case VALUE_TYPE.integer :
+				case VALUE_TYPE.float :
+				case VALUE_TYPE.boolean :
+				case VALUE_TYPE.text :
+				case VALUE_TYPE.path :
+					draw_set_text(f_sdf, fa_left, fa_center, value_color(val.type));
+					var _ss = min(_s * .4, string_scale(key, ww, 9999));
+					draw_text_transformed(x0, val.y, key, _ss, _ss, 0);
+					break;
+				
+				case VALUE_TYPE.color :
+					if(is_array(key))	drawPalette(key, x0, val.y - jh / 2, ww, jh);
+					else				drawColor(key, x0, val.y - jh / 2, ww, jh);
+					break;
+					
+				case VALUE_TYPE.gradient :
+					if(is(key, gradientObject))
+						key.draw(key, x0, val.y - jh / 2, ww, jh);
+					break;
+			}
 		}
 	}
 }

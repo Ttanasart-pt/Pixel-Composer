@@ -23,8 +23,6 @@ function string_decimal(str) {
 }
 
 function toNumber(str) {
-	INLINE
-	
 	if(is_numeric(str)) return str;
 	
 	try { return real(str); } 
@@ -33,25 +31,23 @@ function toNumber(str) {
 	return 0;
 }
 
-//function toNumber(str) {
-//	INLINE
+function toNumberFull(str) {
+	if(is_real(str))   return str;
 	
-//	if(is_real(str))   return str;
-//	if(!isNumber(str)) return 0;
+	var expo = 0;
+	if(string_pos("e", str)) {
+		var pos = string_pos("e", str);
+		expo = real(string_copy(str, pos + 1, string_length(str) - pos));
+		str  = string_copy(str, 1, pos - 1);
+	}
 	
-//	var expo = 0;
-//	if(string_pos("e", str)) {
-//		var pos = string_pos("e", str);
-//		expo = real(string_copy(str, pos + 1, string_length(str) - pos));
-//	}
+	str = string_decimal(str);
+	if(str == "")  return 0;
+	if(str == ".") return 0;
+	if(str == "-") return 0;
 	
-//	str = string_replace_all(str, ",", ".");
-//	str = string_decimal(str);
-//	if(str == "") return 0;
-//	if(str == ".") return 0;
-//	if(str == "-") return 0;
-//	return real(str) * power(10, expo);
-//}
+	return real(str) * power(10, expo);
+}
 
 function isNumber(str) {
 	if(is_real(str)) return true;

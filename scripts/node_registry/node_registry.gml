@@ -527,21 +527,21 @@ function __initNodes() {
 		if(!DEMO) addNodeObject(input, "Export",	s_node_export,			"Node_Export",					[0, Node_create_Export],, "Export image, image array to file, image sequence, animation.");
 		
 		ds_list_add(input, "Files");
-		addNodeObject(input, "Text File In",		s_node_text_file_read,	"Node_Text_File_Read",		[1, Node_Text_File_Read],  ["txt"], "Load .txt in as text.").setVersion(1080);
-		addNodeObject(input, "Text File Out",		s_node_text_file_write,	"Node_Text_File_Write",		[1, Node_Text_File_Write], ["txt"], "Save text as a .txt file.").setVersion(1090);
-		addNodeObject(input, "CSV File In",			s_node_csv_file_read,	"Node_CSV_File_Read",		[1, Node_CSV_File_Read],  ["comma separated value"], "Load .csv as text, number array.").setVersion(1090);
-		addNodeObject(input, "CSV File Out",		s_node_csv_file_write,	"Node_CSV_File_Write",		[1, Node_CSV_File_Write], ["comma separated value"], "Save array as .csv file.").setVersion(1090);
-		addNodeObject(input, "JSON File In",		s_node_json_file_read,	"Node_Json_File_Read",		[1, Node_Json_File_Read],,  "Load .json file using keys.").setVersion(1090);
-		addNodeObject(input, "JSON File Out",		s_node_json_file_write,	"Node_Json_File_Write",		[1, Node_Json_File_Write],, "Save data to .json file.").setVersion(1090);
-		addNodeObject(input, "ASE File In",			s_node_ase_file,		"Node_ASE_File_Read",		[0, Node_create_ASE_File_Read],, "Load Aseprite file with support for layers, tags.").setVersion(1100);
-		addNodeObject(input, "ASE Layer",			s_node_ase_layer,		"Node_ASE_layer",			[1, Node_ASE_layer],, "Load Aseprite project file").setVersion(1100);
-		addNodeObject(input, "WAV File In",			s_node_wav_file_read,	"Node_WAV_File_Read",		[0, Node_create_WAV_File_Read],, "Load wav audio file.").setVersion(1144);
-		addNodeObject(input, "WAV File Out",		s_node_wav_file_write,	"Node_WAV_File_Write",		[1, Node_WAV_File_Write],, "Save wav audio file.").setVersion(1145);
-		addNodeObject(input, "XML File In",			s_node_xml_file_read,	"Node_XML_File_Read",		[0, Node_create_XML_File_Read],, "Load xml file.").setVersion(11720);
-		addNodeObject(input, "XML File Out",		s_node_xml_file_write,	"Node_XML_File_Write",		[1, Node_XML_File_Write],, "Write struct to xml file.").setVersion(11720);
-		addNodeObject(input, "Byte File In",		s_node_byte_file_read,	"Node_Byte_File_Read",		[1, Node_Byte_File_Read],,  "Load any file to buffer.").setVersion(11670);
-		addNodeObject(input, "Byte File Out",		s_node_byte_file_write,	"Node_Byte_File_Write",		[1, Node_Byte_File_Write],, "Save buffer content to a file.").setVersion(11670);
-		addNodeObject(input, "Directory Search",	s_node_directory,		"Node_Directory_Search",	[0, Node_create_Directory_Search],, "Search for files in directory.").setVersion(11710);
+		addNodeObject(input, "Text File In",		s_node_text_file_read,	"Node_Text_File_Read",			[1, Node_Text_File_Read],  ["txt"], "Load .txt in as text.").setVersion(1080);
+		addNodeObject(input, "Text File Out",		s_node_text_file_write,	"Node_Text_File_Write",			[1, Node_Text_File_Write], ["txt"], "Save text as a .txt file.").setVersion(1090);
+		addNodeObject(input, "CSV File In",			s_node_csv_file_read,	"Node_CSV_File_Read",			[1, Node_CSV_File_Read],  ["comma separated value"], "Load .csv as text, number array.").setVersion(1090);
+		addNodeObject(input, "CSV File Out",		s_node_csv_file_write,	"Node_CSV_File_Write",			[1, Node_CSV_File_Write], ["comma separated value"], "Save array as .csv file.").setVersion(1090);
+		addNodeObject(input, "JSON File In",		s_node_json_file_read,	"Node_Json_File_Read",			[1, Node_Json_File_Read],,  "Load .json file using keys.").setVersion(1090);
+		addNodeObject(input, "JSON File Out",		s_node_json_file_write,	"Node_Json_File_Write",			[1, Node_Json_File_Write],, "Save data to .json file.").setVersion(1090);
+		addNodeObject(input, "ASE File In",			s_node_ase_file,		"Node_ASE_File_Read",			[0, Node_create_ASE_File_Read],, "Load Aseprite file with support for layers, tags.").setVersion(1100);
+		addNodeObject(input, "ASE Layer",			s_node_ase_layer,		"Node_ASE_layer",				[1, Node_ASE_layer],, "Load Aseprite project file").setVersion(1100);
+		addNodeObject(input, "WAV File In",			s_node_wav_file_read,	"Node_WAV_File_Read",			[0, Node_create_WAV_File_Read],, "Load wav audio file.").setVersion(1144);
+		addNodeObject(input, "WAV File Out",		s_node_wav_file_write,	"Node_WAV_File_Write",			[1, Node_WAV_File_Write],, "Save wav audio file.").setVersion(1145);
+		addNodeObject(input, "XML File In",			s_node_xml_file_read,	"Node_XML_File_Read",			[0, Node_create_XML_File_Read],, "Load xml file.").setVersion(11720);
+		addNodeObject(input, "XML File Out",		s_node_xml_file_write,	"Node_XML_File_Write",			[1, Node_XML_File_Write],, "Write struct to xml file.").setVersion(11720);
+		addNodeObject(input, "Byte File In",		s_node_byte_file_read,	"Node_Byte_File_Read",			[1, Node_Byte_File_Read],,  "Load any file to buffer.").setVersion(11670);
+		addNodeObject(input, "Byte File Out",		s_node_byte_file_write,	"Node_Byte_File_Write",			[1, Node_Byte_File_Write],, "Save buffer content to a file.").setVersion(11670);
+		addNodeObject(input, "Directory Search",	s_node_directory,		"Node_Directory_Search",		[0, Node_create_Directory_Search],, "Search for files in directory.").setVersion(11710);
 			
 		ds_list_add(input, "External");
 		addNodeObject(input, "Websocket Receiver",	s_node_websocket_receive,	"Node_Websocket_Receiver",	[1, Node_Websocket_Receiver],, "Create websocket server to receive data from the network.").setVersion(1145);
@@ -559,7 +559,7 @@ function __initNodes() {
 		addNodeObject(transform, "Scale",			s_node_scale,			"Node_Scale",			[1, Node_Scale], ["resize"], "Simple node for scaling image.");
 		addNodeObject(transform, "Scale Algorithm",	s_node_scale_algo,		"Node_Scale_Algo",		[0, Node_create_Scale_Algo], ["scale2x", "scale3x", "cleanshape"], "Scale image using scale2x, scale3x algorithm.");
 		addNodeObject(transform, "Flip",			s_node_flip,			"Node_Flip",			[1, Node_Flip], ["mirror"], "Flip image horizontally or vertically.");
-		addNodeObject(transform, "Offset",			s_node_offset,			"Node_Offset",			[1, Node_Offset],, "Shift image with tiling.");
+		addNodeObject(transform, "Offset",			s_node_offset,			"Node_Offset",			[1, Node_Offset], ["shift"], "Shift image with tiling.");
 		
 		ds_list_add(transform, "Warps");
 		addNodeObject(transform, "Crop",			s_node_crop,			"Node_Crop",			[1, Node_Crop],, "Crop out image to create smaller ones.");
@@ -652,7 +652,7 @@ function __initNodes() {
 		addNodeObject(filter, "Color Adjust",		s_node_color_adjust,	"Node_Color_adjust",	[1, Node_Color_adjust], ["brightness", "contrast", "hue", "saturation", "value", "color blend", "alpha"], "Adjust brightness, contrast, hue, saturation, value, alpha, and blend image with color.");
 		addNodeObject(filter, "Palette Shift",		s_node_palette_shift,	"Node_Palette_Shift",	[1, Node_Palette_Shift],, "Shift the order of color in palette.").setVersion(1147);
 		addNodeObject(filter, "BW",					s_node_BW,				"Node_BW",				[1, Node_BW], ["black and white"], "Convert color image to black and white.");
-		addNodeObject(filter, "Greyscale",			s_node_greyscale,		"Node_Greyscale",		[1, Node_Greyscale],, "Convert color image to greyscale.");
+		addNodeObject(filter, "Greyscale",			s_node_greyscale,		"Node_Greyscale",		[1, Node_Greyscale], ["grayscale"], "Convert color image to greyscale.");
 		addNodeObject(filter, "Invert",				s_node_invert,			"Node_Invert",			[1, Node_Invert], ["negate"], "Invert color.");
 		addNodeObject(filter, "Level",				s_node_level,			"Node_Level",			[1, Node_Level],, "Adjust brightness of an image by changing its brightness range.");
 		addNodeObject(filter, "Level Selector",		s_node_level_selector,	"Node_Level_Selector",	[1, Node_Level_Selector],, "Isolate part of the image that falls in the selected brightness range.");
@@ -661,15 +661,15 @@ function __initNodes() {
 		addNodeObject(filter, "Threshold",			s_node_threshold,		"Node_Threshold",		[1, Node_Threshold],, "Set a threshold where pixel darker will becomes black, and brighter to white. Also works with alpha.").setVersion(1080);
 		addNodeObject(filter, "Alpha Cutoff",		s_node_alpha_cut,		"Node_Alpha_Cutoff",	[1, Node_Alpha_Cutoff], ["remove alpha"], "Remove pixel with low alpha value.");
 		addNodeObject(filter, "Normalize",			s_node_normalize,		"Node_Normalize",		[1, Node_Normalize],, "Normalize image ranges (brightness, RGB channels) in to [0, 1] range.").setVersion(11710);
-		addNodeObject(filter, "Gamma Map",			s_node_gamma_map,		"Node_Gamma_Map",		[1, Node_Gamma_Map],, "Apply gamma approximation (pow(2.2)) to an image.").setVersion(11660);
+		addNodeObject(filter, "Gamma Map",			s_node_gamma_map,		"Node_Gamma_Map",		[1, Node_Gamma_Map], ["srgb"], "Apply gamma approximation (pow(2.2)) to an image.").setVersion(11660);
 		addNodeObject(filter, "Grain",				s_node_grain,			"Node_Grain",			[1, Node_Grain],, "Add noise pattern to the image.").setVersion(11770);
 		addNodeObject(filter, "ACE",				s_node_ace,				"Node_Tonemap_ACE",		[1, Node_Tonemap_ACE],, "Apply ACE tonemapping.").setVersion(11710);
 		
 		ds_list_add(filter, "Conversions");
 		addNodeObject(filter, "RGBA Extract",		s_node_RGB,				"Node_RGB_Channel",		[1, Node_RGB_Channel], ["channel extract"], "Extract RGBA channel on an image, each channel becomes its own image.");
 		addNodeObject(filter, "HSV Extract",		s_node_HSV,				"Node_HSV_Channel",		[1, Node_HSV_Channel],, "Extract HSVA channel on an image, each channel becomes its own image.").setVersion(1070);
-		addNodeObject(filter, "Alpha to Grey",		s_node_alpha_grey,		"Node_Alpha_Grey",		[1, Node_Alpha_Grey],, "Convert alpha value into solid greyscale.");
-		addNodeObject(filter, "Grey to Alpha",		s_node_grey_alpha,		"Node_Grey_Alpha",		[1, Node_Grey_Alpha],, "Convert greyscale to alpha value.");
+		addNodeObject(filter, "Alpha to Grey",		s_node_alpha_grey,		"Node_Alpha_Grey",		[1, Node_Alpha_Grey], ["alpha to gray"], "Convert alpha value into solid greyscale.");
+		addNodeObject(filter, "Grey to Alpha",		s_node_grey_alpha,		"Node_Grey_Alpha",		[1, Node_Grey_Alpha], ["gray to alpha"], "Convert greyscale to alpha value.");
 		
 		ds_list_add(filter, "Fixes");
 		addNodeObject(filter, "De-Corner",			s_node_decorner,		"Node_De_Corner",		[1, Node_De_Corner], ["decorner"], "Attempt to remove single pixel corner from the image.");
@@ -727,7 +727,7 @@ function __initNodes() {
 		addNodeObject(d3d, "Point Affector",	s_node_3d_point_affector,	"Node_3D_Point_Affector",	[1, Node_3D_Point_Affector],, "Generate array of 3D points interpolating between two values based on the distance.").setVersion(11570);
 		
 		ds_list_add(d3d, "Ray Marching");
-		addNodeObject(d3d, "RM Primitive",		s_node_rm_primitive,		"Node_RM_Primitive",		[1, Node_RM_Primitive], ["ray marching", "rm object"]).setVersion(11720);
+		addNodeObject(d3d, "RM Primitive",		s_node_rm_primitive,		"Node_RM_Primitive",		[0, Node_create_RM_Primitive], global.node_rm_primitive_keys).setVersion(11720);
 		addNodeObject(d3d, "RM Terrain",		s_node_rm_terrain,			"Node_RM_Terrain",			[1, Node_RM_Terrain],   ["ray marching"]).setVersion(11720);
 		addNodeObject(d3d, "RM Combine",		s_node_rm_combine,			"Node_RM_Combine",			[1, Node_RM_Combine],   ["ray marching", "rm boolean"]).setVersion(11740);
 		addNodeObject(d3d, "RM Render",			s_node_rm_render,			"Node_RM_Render",			[1, Node_RM_Render],	["ray marching"]).setVersion(11740);
@@ -855,77 +855,77 @@ function __initNodes() {
 	var values = ds_list_create(); 
 	addNodeCatagory("Values", values);
 		ds_list_add(values, "Raw data");
-		addNodeObject(values, "Number",			s_node_number,		"Node_Number",			[1, Node_Number]);
-		addNodeObject(values, "Text",			s_node_text,		"Node_String",			[1, Node_String]);
-		addNodeObject(values, "Path",			s_node_path,		"Node_Path",			[1, Node_Path]);
-		addNodeObject(values, "Area",			s_node_area,		"Node_Area",			[1, Node_Area]);
-		addNodeObject(values, "Boolean",		s_node_boolean,		"Node_Boolean",			[1, Node_Boolean]).setVersion(1090);
+		addNodeObject(values, "Number",			s_node_number,		"Node_Number",			[1, Node_Number],, "Generate number data.");
+		addNodeObject(values, "Text",			s_node_text,		"Node_String",			[1, Node_String],, "Generate text/string data.");
+		addNodeObject(values, "Path",			s_node_path,		"Node_Path",			[1, Node_Path],, "Generate path.");
+		addNodeObject(values, "Area",			s_node_area,		"Node_Area",			[1, Node_Area],, "Generate area data.");
+		addNodeObject(values, "Boolean",		s_node_boolean,		"Node_Boolean",			[1, Node_Boolean],, "Generate boolean (true, false) data.").setVersion(1090);
 		
 		ds_list_add(values, "Numbers");
-		addNodeObject(values, "Number",				s_node_number,				"Node_Number",				[1, Node_Number]);
-		addNodeObject(values, "To Number",			s_node_to_number,			"Node_To_Number",			[1, Node_To_Number]).setVersion(1145);
-		addNodeObject(values, "Math",				s_node_math,				"Node_Math",				[0, Node_create_Math], global.node_math_keys);
+		addNodeObject(values, "Number",				s_node_number,				"Node_Number",				[1, Node_Number],, "Generate number data.");
+		addNodeObject(values, "To Number",			s_node_to_number,			"Node_To_Number",			[1, Node_To_Number],, "Convert string to number, supports scientific format (e.g. 1e-2 = 0.02).").setVersion(1145);
+		addNodeObject(values, "Math",				s_node_math,				"Node_Math",				[0, Node_create_Math], global.node_math_keys, "Apply mathematical function to number(s).");
 		addNodeObject(values, "Equation",			s_node_equation,			"Node_Equation",			[0, Node_create_Equation],, "Evaluate string of equation. With an option for setting variables.");
-		addNodeObject(values, "Random",				s_node_random,				"Node_Random",				[1, Node_Random]);
-		addNodeObject(values, "Statistic",			s_node_statistic,			"Node_Statistic",			[0, Node_create_Statistic], global.node_statistic_keys);
+		addNodeObject(values, "Random",				s_node_random,				"Node_Random",				[1, Node_Random],, "Generate pseudorandom value based on seed.");
+		addNodeObject(values, "Statistic",			s_node_statistic,			"Node_Statistic",			[0, Node_create_Statistic], global.node_statistic_keys, "Apply statistical operation (sum, average, median, etc.) to array of numbers.");
 		addNodeObject(values, "Convert Base",		s_node_base_conversion,		"Node_Base_Convert",		[1, Node_Base_Convert], ["base convert", "binary", "hexadecimal"]).setVersion(1140);
-		addNodeObject(values, "Scatter Points",		s_node_scatter_point,		"Node_Scatter_Points",		[1, Node_Scatter_Points],, "Generate array of vector 2 points for scattering.").setVersion(1120);
-		addNodeObject(values, "Translate Point",	s_node_translate_point,		"Node_Move_Point",			[1, Node_Move_Point]).setVersion(1141);
+		addNodeObject(values, "Scatter Points",		s_node_scatter_point,		"Node_Scatter_Points",		[1, Node_Scatter_Points],, "Generate array of vector 2 points.").setVersion(1120);
+		addNodeObject(values, "Translate Point",	s_node_translate_point,		"Node_Move_Point",			[1, Node_Move_Point],, "Translate array of points.").setVersion(1141);
 		addNodeObject(values, "FFT",				s_node_FFT,					"Node_FFT",					[1, Node_FFT], ["frequency analysis"], "Perform fourier transform on number array.").setVersion(1144);
-		addNodeObject(values, "Transform Array",	s_node_transform_array,		"Node_Transform_Array",		[1, Node_Transform_Array]).setVersion(1146);
-		addNodeObject(values, "Point in Area",		s_node_point_in_area,		"Node_Point_In_Area",		[1, Node_Point_In_Area]).setVersion(1_17_10_0);
+		addNodeObject(values, "Transform Array",	s_node_transform_array,		"Node_Transform_Array",		[1, Node_Transform_Array],, "Generate transfomation array.").setVersion(1146);
+		addNodeObject(values, "Point in Area",		s_node_point_in_area,		"Node_Point_In_Area",		[1, Node_Point_In_Area],, "Check whether a point lies in an area.").setVersion(1_17_10_0);
 		
 		ds_list_add(values, "Vector");
-		addNodeObject(values, "Vector2",			s_node_vec2,				"Node_Vector2",				[1, Node_Vector2]);
-		addNodeObject(values, "Vector3",			s_node_vec3,				"Node_Vector3",				[1, Node_Vector3]);
-		addNodeObject(values, "Vector4",			s_node_vec4,				"Node_Vector4",				[1, Node_Vector4]);
-		addNodeObject(values, "Vector Split",		s_node_vec_split,			"Node_Vector_Split",		[1, Node_Vector_Split]);
-		addNodeObject(values, "Magnitude",	        s_node_magnitude,	        "Node_Vector_Magnitude",    [1, Node_Vector_Magnitude], ["vector length", "vector magnitude"]).setVersion(1_17_10_0);
-		addNodeObject(values, "Dot product",		s_node_dot_product,			"Node_Vector_Dot",			[1, Node_Vector_Dot]).setVersion(1141);
-		addNodeObject(values, "Cross product 3D",	s_node_cross_product_2d,	"Node_Vector_Cross_3D",		[1, Node_Vector_Cross_3D]).setVersion(1141);
-		addNodeObject(values, "Cross product 2D",	s_node_cross_product_3d,	"Node_Vector_Cross_2D",		[1, Node_Vector_Cross_2D]).setVersion(1141);
-		addNodeObject(values, "Swizzle",            s_node_swizzle,             "Node_Vector_Swizzle",      [1, Node_Vector_Swizzle], ["swap axis"]).setVersion(1_17_10_0);
+		addNodeObject(values, "Vector2",			s_node_vec2,				"Node_Vector2",				[1, Node_Vector2],, "Genearte vector composite of 2 members.");
+		addNodeObject(values, "Vector3",			s_node_vec3,				"Node_Vector3",				[1, Node_Vector3],, "Genearte vector composite of 3 members.");
+		addNodeObject(values, "Vector4",			s_node_vec4,				"Node_Vector4",				[1, Node_Vector4],, "Genearte vector composite of 4 members.");
+		addNodeObject(values, "Vector Split",		s_node_vec_split,			"Node_Vector_Split",		[1, Node_Vector_Split],, "Split vector (up to 4) into individual components.");
+		addNodeObject(values, "Magnitude",	        s_node_magnitude,	        "Node_Vector_Magnitude",    [1, Node_Vector_Magnitude], ["vector length", "vector magnitude"], "Calculate magnitude (length) of a vector.").setVersion(1_17_10_0);
+		addNodeObject(values, "Dot product",		s_node_dot_product,			"Node_Vector_Dot",			[1, Node_Vector_Dot],, "Calculate dot product between vectors.").setVersion(1141);
+		addNodeObject(values, "Cross product 3D",	s_node_cross_product_2d,	"Node_Vector_Cross_3D",		[1, Node_Vector_Cross_3D],, "Calculate cross product of 2 vec3s.").setVersion(1141);
+		addNodeObject(values, "Cross product 2D",	s_node_cross_product_3d,	"Node_Vector_Cross_2D",		[1, Node_Vector_Cross_2D],, "Calculate cross product of 2 vec2s.").setVersion(1141);
+		addNodeObject(values, "Swizzle",            s_node_swizzle,             "Node_Vector_Swizzle",      [1, Node_Vector_Swizzle], ["swap axis"], "Rearrange vector using string containing axis indicies (x, y, z, w).").setVersion(1_17_10_0);
 		
 		ds_list_add(values, "Texts");
-		addNodeObject(values, "Text",				s_node_text,				"Node_String",					[1, Node_String]);
+		addNodeObject(values, "Text",				s_node_text,				"Node_String",					[1, Node_String],, "Generate text/string data.");
 		addNodeObject(values, "To Text",			s_node_to_text,				"Node_To_Text",					[1, Node_To_Text]).setVersion(1145);
-		addNodeObject(values, "Unicode",			s_node_unicode,				"Node_Unicode",					[1, Node_Unicode]);
-		addNodeObject(values, "Text Length",		s_node_text_length,			"Node_String_Length",			[1, Node_String_Length]).setVersion(1138);
-		addNodeObject(values, "Combine Text",		s_node_text_combine,		"Node_String_Merge",			[1, Node_String_Merge], ["join text", "concatenate text"]);
-		addNodeObject(values, "Join Text",			s_node_text_join,			"Node_String_Join",				[1, Node_String_Join]).setVersion(1120);
-		addNodeObject(values, "Split Text",			s_node_text_splice,			"Node_String_Split",			[1, Node_String_Split]);
-		addNodeObject(values, "Trim Text",			s_node_text_trim,			"Node_String_Trim",				[1, Node_String_Trim]).setVersion(1080);
-		addNodeObject(values, "Get Character",		s_node_text_char_get,		"Node_String_Get_Char",			[1, Node_String_Get_Char]).setVersion(1100);
-		addNodeObject(values, "RegEx Match",		s_node_regex_match,			"Node_String_Regex_Match",		[1, Node_String_Regex_Match]).setVersion(1140);
-		addNodeObject(values, "RegEx Search",		s_node_regex_search,		"Node_String_Regex_Search",		[1, Node_String_Regex_Search]).setVersion(1140);
-		addNodeObject(values, "RegEx Replace",		s_node_regex_replace,		"Node_String_Regex_Replace",	[1, Node_String_Regex_Replace]).setVersion(1140);
-		addNodeObject(values, "Separate File Path",	s_node_separate_file_path,	"Node_Path_Separate_Folder",	[1, Node_Path_Separate_Folder]).setVersion(1145);
+		addNodeObject(values, "Unicode",			s_node_unicode,				"Node_Unicode",					[1, Node_Unicode],, "Convert unicode id into string.");
+		addNodeObject(values, "Text Length",		s_node_text_length,			"Node_String_Length",			[1, Node_String_Length],, "Return number of character in a string.").setVersion(1138);
+		addNodeObject(values, "Combine Texts",		s_node_text_combine,		"Node_String_Merge",			[1, Node_String_Merge], ["join text", "concatenate text"], "Combine multiple strings into one long string.");
+		addNodeObject(values, "Join Text Array",	s_node_text_join,			"Node_String_Join",				[1, Node_String_Join],, "Combine string array with an option to add extra string in-between.").setVersion(1120);
+		addNodeObject(values, "Split Text",			s_node_text_splice,			"Node_String_Split",			[1, Node_String_Split],, "Split string into arrays of substring based on delimiter.");
+		addNodeObject(values, "Trim Text",			s_node_text_trim,			"Node_String_Trim",				[1, Node_String_Trim],, "Remove first and last n character(s) from a string.").setVersion(1080);
+		addNodeObject(values, "Get Character",		s_node_text_char_get,		"Node_String_Get_Char",			[1, Node_String_Get_Char],, "Get a nth character in a string.").setVersion(1100);
+		addNodeObject(values, "RegEx Match",		s_node_regex_match,			"Node_String_Regex_Match",		[1, Node_String_Regex_Match],, "Check whether regular expression pattern exist in a string.").setVersion(1140);
+		addNodeObject(values, "RegEx Search",		s_node_regex_search,		"Node_String_Regex_Search",		[1, Node_String_Regex_Search],, "Search for instances in a string using regular expression.").setVersion(1140);
+		addNodeObject(values, "RegEx Replace",		s_node_regex_replace,		"Node_String_Regex_Replace",	[1, Node_String_Regex_Replace],, "Replace instances of a string with another using regular expression.").setVersion(1140);
+		addNodeObject(values, "Separate File Path",	s_node_separate_file_path,	"Node_Path_Separate_Folder",	[1, Node_Path_Separate_Folder],, "Separate path string into a pair of directory and filename.").setVersion(1145);
 		
 		ds_list_add(values, "Arrays");
-		addNodeObject(values, "Array",				s_node_array,			"Node_Array",					[1, Node_Array]);
-		addNodeObject(values, "Array Split",		s_node_array_split,		"Node_Array_Split",				[1, Node_Array_Split]);
+		addNodeObject(values, "Array",				s_node_array,			"Node_Array",					[1, Node_Array],, "Create an array.");
+		addNodeObject(values, "Array Split",		s_node_array_split,		"Node_Array_Split",				[1, Node_Array_Split],, "Split array members into individual outputs.");
 		addNodeObject(values, "Array Range",		s_node_array_range,		"Node_Array_Range",				[1, Node_Array_Range],, "Create array of numbers by setting start, end and step length.");
-		addNodeObject(values, "Array Add",			s_node_array_add,		"Node_Array_Add",				[1, Node_Array_Add], ["add array"]);
-		addNodeObject(values, "Array Length",		s_node_array_length,	"Node_Array_Length",			[1, Node_Array_Length]);
-		addNodeObject(values, "Array Get",			s_node_array_get,		"Node_Array_Get",				[1, Node_Array_Get], ["get array"]);
-		addNodeObject(values, "Array Set",			s_node_array_set,		"Node_Array_Set",				[1, Node_Array_Set], ["set array"]).setVersion(1120);
-		addNodeObject(values, "Array Find",			s_node_array_find,		"Node_Array_Find",				[1, Node_Array_Find], ["find array"]).setVersion(1120);
-		addNodeObject(values, "Array Insert",		s_node_array_insert,	"Node_Array_Insert",			[1, Node_Array_Insert], ["insert array"]).setVersion(1120);
-		addNodeObject(values, "Array Remove",		s_node_array_remove,	"Node_Array_Remove",			[1, Node_Array_Remove], ["remove array", "delete array", "array delete"]).setVersion(1120);
-		addNodeObject(values, "Array Reverse",		s_node_array_reverse,	"Node_Array_Reverse",			[1, Node_Array_Reverse], ["reverse array"]).setVersion(1120);
-		addNodeObject(values, "Array Shift",		s_node_array_shift,		"Node_Array_Shift",				[1, Node_Array_Shift]).setVersion(1137);
-		addNodeObject(values, "Array Rearrange",	s_node_array_rearrange,	"Node_Array_Rearrange",			[1, Node_Array_Rearrange]).setVersion(11640);
-		addNodeObject(values, "Array Zip",			s_node_array_zip,		"Node_Array_Zip",				[1, Node_Array_Zip]).setVersion(1138);
-		addNodeObject(values, "Array Copy",			s_node_array_copy,		"Node_Array_Copy",				[1, Node_Array_Copy]).setVersion(1144);
-		addNodeObject(values, "Array Convolute",	s_node_array_convolute,	"Node_Array_Convolute",			[1, Node_Array_Convolute]).setVersion(11540);
-		addNodeObject(values, "Array Composite",	s_node_array_composite,	"Node_Array_Composite",			[1, Node_Array_Composite]).setVersion(11540);
-		addNodeObject(values, "Array Sample",		s_node_array_sample,	"Node_Array_Sample",			[1, Node_Array_Sample]).setVersion(11540);
-		addNodeObject(values, "Sort Array",			s_node_array_sort,		"Node_Array_Sort",				[1, Node_Array_Sort], ["array sort"]).setVersion(1120);
-		addNodeObject(values, "Shuffle Array",		s_node_array_shuffle,	"Node_Array_Shuffle",			[1, Node_Array_Shuffle], ["array shuffle"]).setVersion(1120);
+		addNodeObject(values, "Array Add",			s_node_array_add,		"Node_Array_Add",				[1, Node_Array_Add], ["add array"], "Add elements into an array.");
+		addNodeObject(values, "Array Length",		s_node_array_length,	"Node_Array_Length",			[1, Node_Array_Length],, "Returns number of members in an array.");
+		addNodeObject(values, "Array Get",			s_node_array_get,		"Node_Array_Get",				[1, Node_Array_Get], ["get array"], "Returns nth member in an array.");
+		addNodeObject(values, "Array Set",			s_node_array_set,		"Node_Array_Set",				[1, Node_Array_Set], ["set array"], "Set array member based on index.").setVersion(1120);
+		addNodeObject(values, "Array Find",			s_node_array_find,		"Node_Array_Find",				[1, Node_Array_Find], ["find array"], "Returns index of an array member that match a condition.").setVersion(1120);
+		addNodeObject(values, "Array Insert",		s_node_array_insert,	"Node_Array_Insert",			[1, Node_Array_Insert], ["insert array"], "Insert member into an array at any position.").setVersion(1120);
+		addNodeObject(values, "Array Remove",		s_node_array_remove,	"Node_Array_Remove",			[1, Node_Array_Remove], ["remove array", "delete array", "array delete"], "Remove member in an array.").setVersion(1120);
+		addNodeObject(values, "Array Reverse",		s_node_array_reverse,	"Node_Array_Reverse",			[1, Node_Array_Reverse], ["reverse array"], "Reverse array order").setVersion(1120);
+		addNodeObject(values, "Array Shift",		s_node_array_shift,		"Node_Array_Shift",				[1, Node_Array_Shift],, "Shift all member in an array.").setVersion(1137);
+		addNodeObject(values, "Array Rearrange",	s_node_array_rearrange,	"Node_Array_Rearrange",			[1, Node_Array_Rearrange],, "Rearrange array member manually.").setVersion(11640);
+		addNodeObject(values, "Array Zip",			s_node_array_zip,		"Node_Array_Zip",				[1, Node_Array_Zip],, "Combine multiple arrays into higher dimension array by grouping member of the same indicies.").setVersion(1138);
+		addNodeObject(values, "Array Copy",			s_node_array_copy,		"Node_Array_Copy",				[1, Node_Array_Copy],, "Copy array or subarray.").setVersion(1144);
+		addNodeObject(values, "Array Convolute",	s_node_array_convolute,	"Node_Array_Convolute",			[1, Node_Array_Convolute],, "Apply convolution between 2 number arrays.").setVersion(11540);
+		addNodeObject(values, "Array Composite",	s_node_array_composite,	"Node_Array_Composite",			[1, Node_Array_Composite],, "Create 2D array by multiplying each member in the first 1D array with the second 1D array.").setVersion(11540);
+		addNodeObject(values, "Array Sample",		s_node_array_sample,	"Node_Array_Sample",			[1, Node_Array_Sample],, "Sample member from an array to create smaller one.").setVersion(11540);
+		addNodeObject(values, "Sort Array",			s_node_array_sort,		"Node_Array_Sort",				[1, Node_Array_Sort], ["array sort"], "Sort array using default comparison.").setVersion(1120);
+		addNodeObject(values, "Shuffle Array",		s_node_array_shuffle,	"Node_Array_Shuffle",			[1, Node_Array_Shuffle], ["array shuffle"], "Randomly rearrange the array members.").setVersion(1120);
 		addNodeObject(values, "Loop Array",			s_node_loop_array,		"Node_Iterate_Each_Inline",		[1, Node_Iterate_Each_Inline], ["iterate each", "for each", "array loop"], "Create group that iterate to each member in an array.");
 		addNodeObject(values, "Filter Array",		s_node_filter_array,	"Node_Iterate_Filter_Inline",	[1, Node_Iterate_Filter_Inline], ["array filter"], "Filter array using condition.").setVersion(1140);
 		addNodeObject(values, "Sort Array Inline",  s_node_sort_array,		"Node_Iterate_Sort_Inline",		[1, Node_Iterate_Sort_Inline], ["array sort"], "Sort array using node graph.").setVersion(1143);
-		addNodeObject(values, "Parse CSV",			s_node_csv_parse,		"Node_Array_CSV_Parse",			[1, Node_Array_CSV_Parse]).setVersion(1145);
+		addNodeObject(values, "Parse CSV",			s_node_csv_parse,		"Node_Array_CSV_Parse",			[1, Node_Array_CSV_Parse],, "Parse CSV string into array.").setVersion(1145);
 		
 		ds_list_add(values, "Paths");
 		addNodeObject(values, "Path",			s_node_path,			"Node_Path",			[1, Node_Path],, "Create path using bezier curve.");
@@ -953,36 +953,36 @@ function __initNodes() {
 		
 		ds_list_add(values, "Boolean");
 		addNodeObject(values, "Boolean",		s_node_boolean,		"Node_Boolean",		[1, Node_Boolean]);
-		addNodeObject(values, "Compare",		s_node_compare,		"Node_Compare",		[0, Node_create_Compare], global.node_compare_keys);
-		addNodeObject(values, "Logic Opr",		s_node_logic_opr,	"Node_Logic",		[0, Node_create_Logic],   global.node_logic_keys);
+		addNodeObject(values, "Compare",		s_node_compare,		"Node_Compare",		[0, Node_create_Compare], global.node_compare_keys, "Compare 2 numbers.");
+		addNodeObject(values, "Logic Opr",		s_node_logic_opr,	"Node_Logic",		[0, Node_create_Logic],   global.node_logic_keys, "Apply logic operation (and, or, not, etc.) to boolean(s).");
 			
 		ds_list_add(values, "Trigger");
-		addNodeObject(values, "Trigger",			s_node_trigger,			"Node_Trigger",			[1, Node_Trigger]).setVersion(1140);
-		addNodeObject(values, "Boolean Trigger",	s_node_trigger_bool,	"Node_Trigger_Bool",	[1, Node_Trigger_Bool], ["trigger boolean"]).setVersion(1140);
+		addNodeObject(values, "Trigger",			s_node_trigger,			"Node_Trigger",			[1, Node_Trigger],, "Create trigger value.").setVersion(1140);
+		addNodeObject(values, "Boolean Trigger",	s_node_trigger_bool,	"Node_Trigger_Bool",	[1, Node_Trigger_Bool], ["trigger boolean"], "Create trigger based on boolean condition.").setVersion(1140);
 			
 		ds_list_add(values, "Struct");
-		addNodeObject(values, "Struct",			s_node_struct,		"Node_Struct",				[1, Node_Struct]);
-		addNodeObject(values, "Struct Get",		s_node_struct_get,	"Node_Struct_Get",			[1, Node_Struct_Get]);
-		//addNodeObject(values, "Struct Set",		s_node_struct_get,	"Node_Struct_Set",			[1, Node_Struct_Set]);
-		addNodeObject(values, "Parse JSON",		s_node_json_parse,	"Node_Struct_JSON_Parse",	[1, Node_Struct_JSON_Parse]).setVersion(1145);
+		addNodeObject(values, "Struct",			s_node_struct,		"Node_Struct",				[1, Node_Struct],, "Create key-value pair struct.");
+		addNodeObject(values, "Struct Get",		s_node_struct_get,	"Node_Struct_Get",			[1, Node_Struct_Get],, "Get value from struct and key.");
+		addNodeObject(values, "Struct Set",		s_node_struct_get,	"Node_Struct_Set",			[1, Node_Struct_Set],, "Modify struct");
+		addNodeObject(values, "Parse JSON",		s_node_json_parse,	"Node_Struct_JSON_Parse",	[1, Node_Struct_JSON_Parse],, "Parse json string into struct/array.").setVersion(1145);
 			
 		ds_list_add(values, "Mesh");
 		addNodeObject(values, "Path to Mesh",	s_node_mesh_path,		"Node_Mesh_Create_Path",	[1, Node_Mesh_Create_Path],, "Create mesh from path.").setVersion(1140);
-		addNodeObject(values, "Mesh Transform",	s_node_mesh_transform,	"Node_Mesh_Transform",		[1, Node_Mesh_Transform]).setVersion(1140);
+		addNodeObject(values, "Mesh Transform",	s_node_mesh_transform,	"Node_Mesh_Transform",		[1, Node_Mesh_Transform],, "Transform (move, rotate, scale) mesh.").setVersion(1140);
 			
 		ds_list_add(values, "Atlas");
 		addNodeObject(values, "Draw Atlas",			s_node_draw_atlas,		"Node_Atlas_Draw",		[1, Node_Atlas_Draw],, "Render image atlas to a surface.").setVersion(1141);
-		addNodeObject(values, "Atlas Get",			s_node_atlas_get,		"Node_Atlas_Get",		[1, Node_Atlas_Get]).setVersion(1141);
-		addNodeObject(values, "Atlas Set",			s_node_atlas_set,		"Node_Atlas_Set",		[1, Node_Atlas_Set]).setVersion(1141);
-		addNodeObject(values, "Atlas to Struct",	s_node_atlas_struct,	"Node_Atlas_Struct",	[1, Node_Atlas_Struct]).setVersion(11710);
+		addNodeObject(values, "Atlas Get",			s_node_atlas_get,		"Node_Atlas_Get",		[1, Node_Atlas_Get],, "Extract atlas data.").setVersion(1141);
+		addNodeObject(values, "Atlas Set",			s_node_atlas_set,		"Node_Atlas_Set",		[1, Node_Atlas_Set],, "Modify atlas data.").setVersion(1141);
+		addNodeObject(values, "Atlas to Struct",	s_node_atlas_struct,	"Node_Atlas_Struct",	[1, Node_Atlas_Struct],, "Convert atlas into generic struct.").setVersion(11710);
 			
 		ds_list_add(values, "Surface");
 		//addNodeObject(values, "Dynamic Surface",		s_node_dynasurf,			"Node_dynaSurf",	[1, Node_dynaSurf]).setVersion(11520);
 		addNodeObject(values, "IsoSurf",				s_node_isosurf,				"Node_IsoSurf",		[1, Node_IsoSurf],, "Create a dynamic surface that changes its texture based on rotation.").setVersion(11520);
-		addNodeObject(values, "Surface from Buffer",	s_node_surface_from_buffer,	"Node_Surface_From_Buffer",	[1, Node_Surface_From_Buffer], ["buffer to surface"], "Create surface from buffer.").setVersion(1146);
+		addNodeObject(values, "Surface from Buffer",	s_node_surface_from_buffer,	"Node_Surface_From_Buffer",	[1, Node_Surface_From_Buffer], ["buffer to surface"], "Create surface from a valid buffer.").setVersion(1146);
 			
 		ds_list_add(values, "Buffer");
-		addNodeObject(values, "Buffer from Surface",	s_node_surface_to_buffer,	"Node_Surface_To_Buffer",	[1, Node_Surface_To_Buffer], ["surface to buffer"], "Create buffer from surface.").setVersion(1146);
+		addNodeObject(values, "Buffer from Surface",	s_node_surface_to_buffer,	"Node_Surface_To_Buffer",	[1, Node_Surface_To_Buffer], ["surface to buffer"], "Create buffer from a surface.").setVersion(1146);
 	#endregion
 	
 	#region color
@@ -1055,9 +1055,9 @@ function __initNodes() {
 		
 		if(OS == os_windows) {
 			ds_list_add(node, "Lua");
-			addNodeObject(node, "Lua Global",		s_node_lua_global,	"Node_Lua_Global",		[1, Node_Lua_Global]).setVersion(1090);
-			addNodeObject(node, "Lua Surface",		s_node_lua_surface,	"Node_Lua_Surface",		[1, Node_Lua_Surface]).setVersion(1090);
-			addNodeObject(node, "Lua Compute",		s_node_lua_compute,	"Node_Lua_Compute",		[1, Node_Lua_Compute]).setVersion(1090);
+			addNodeObject(node, "Lua Global",		s_node_lua_global,	"Node_Lua_Global",		[1, Node_Lua_Global],, "Execute lua script in global scope without returning any data.").setVersion(1090);
+			addNodeObject(node, "Lua Surface",		s_node_lua_surface,	"Node_Lua_Surface",		[1, Node_Lua_Surface],, "Execute lua script on a surface.").setVersion(1090);
+			addNodeObject(node, "Lua Compute",		s_node_lua_compute,	"Node_Lua_Compute",		[1, Node_Lua_Compute],, "Execute lua function and returns a data.").setVersion(1090);
 		
 			ds_list_add(node, "Shader");
 			addNodeObject(node, "HLSL",				s_node_hlsl,		"Node_HLSL",			[1, Node_HLSL],, "Execute HLSL shader on a surface.").setVersion(11520);

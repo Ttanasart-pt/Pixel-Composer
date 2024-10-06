@@ -772,14 +772,18 @@ function Panel_Preview() : PanelContent() constructor {
     }
     
     function drawNodeChannel(_node, _x, _y) {
-        if(array_length(_node.outputs) < 2) return 0;
+       if(array_length(_node.outputs) < 2) {
+			_node.preview_channel = 0;
+			return 0;
+		}
         
-        var chName = [];
         sbChannelIndex = [];
+        var chName = [];
         
+		_node.preview_channel = min(_node.preview_channel, array_length(_node.outputs) - 1);
         var currName = _node.outputs[_node.preview_channel].name;
-        draw_set_text(sbChannel.font, fa_center, fa_center);
         
+        draw_set_text(sbChannel.font, fa_center, fa_center);
         var ww  = 0;
         var hh  = TEXTBOX_HEIGHT - ui(2);
         var amo = _node.getOutputJunctionAmount();
