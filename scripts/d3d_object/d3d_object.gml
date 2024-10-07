@@ -152,52 +152,47 @@ function __3dObject() constructor {
 		
 		if(custom_shader != noone) _shader = custom_shader;
 		if(shader != noone)        _shader = shader;
-
-		shader_set(_shader);
+		
+		if(!is_undefined(shader)) shader_set(_shader);
 		
 		preSubmitVertex(scene);
-		
 		transform.submitMatrix();
-		
 		matrix_set(matrix_world, matrix_stack_top());
 		
-		#region ++++ Submit & Material ++++
-			gpu_set_tex_repeat(true);
+		gpu_set_tex_repeat(true);
+		
+		for( var i = 0, n = array_length(VB); i < n; i++ ) {
+			var _ind = array_safe_get_fast(material_index, i, i);
+			var _mat = array_safe_get_fast(materials, _ind, noone);
+			var _useMat = is_instanceof(_mat, __d3dMaterial);
 			
-			for( var i = 0, n = array_length(VB); i < n; i++ ) {
-				var _ind = array_safe_get_fast(material_index, i, i);
-				var _mat = array_safe_get_fast(materials, _ind, noone);
-				var _useMat = is_instanceof(_mat, __d3dMaterial);
+			shader_set_i("mat_flip", texture_flip);
+			var _tex = _useMat? _mat.getTexture() : -1;
 				
-				shader_set_i("mat_flip", texture_flip);
-				var _tex = _useMat? _mat.getTexture() : -1;
-					
-				if(_shader == sh_d3d_default) {
-					if(_useMat) {
-						_mat.submitShader();
-					} else {
-						shader_set_f("mat_diffuse",    1);
-						shader_set_f("mat_specular",   0);
-						shader_set_f("mat_shine",      1);
-						shader_set_i("mat_metalic",    0);
-						shader_set_f("mat_reflective", 0);
-						shader_set_f("mat_texScale",   [ 1, 1 ] );
-					}
-					
-					vertex_submit(VB[i], render_type, _tex);
-				} else if(_shader == sh_d3d_geometry) {
-					if(_useMat) _mat.submitGeometry();
-					else        shader_set_i("use_normal", 0);
-					
-					vertex_submit(VB[i], render_type, _tex);
-				} else
-					vertex_submit(VB[i], render_type, _tex);
+			if(_shader == sh_d3d_default) {
+				if(_useMat) {
+					_mat.submitShader();
+				} else {
+					shader_set_f("mat_diffuse",    1);
+					shader_set_f("mat_specular",   0);
+					shader_set_f("mat_shine",      1);
+					shader_set_i("mat_metalic",    0);
+					shader_set_f("mat_reflective", 0);
+					shader_set_f("mat_texScale",   [ 1, 1 ] );
+				}
+				
+			} else if(_shader == sh_d3d_geometry) {
+				if(_useMat) _mat.submitGeometry();
+				else        shader_set_i("use_normal", 0);
+				
 			}
 			
-			gpu_set_tex_repeat(false);
-		#endregion
+			vertex_submit(VB[i], render_type, _tex);
+		}
 		
-		shader_reset();
+		gpu_set_tex_repeat(false);
+		
+		if(!is_undefined(shader)) shader_reset();
 		
 		if(scene.show_normal) {
 			if(NVB == noone) generateNormal();
@@ -213,7 +208,6 @@ function __3dObject() constructor {
 		
 		transform.clearMatrix();
 		matrix_set(matrix_world, matrix_build_identity());
-		
 		postSubmitVertex(scene);
 		
 	}

@@ -15,5 +15,5 @@ void main() {
 	float d = v_LightDepth;
 	
 	if(use_8bit == 1) gl_FragColor = vec4(floatToUnorm(d), 1.);
-	else              gl_FragColor = vec4(vec3(d), 1.);
+	else              gl_FragColor = vec4(d, 0., 0., 1.);
 }

@@ -1,7 +1,8 @@
 global.node_shape_keys = [ 
-	"rectangle", "ellipse", "regular polygon", "star", "arc", "teardrop", "cross", "leaf", "crescent", "donut", 
-	"square", "circle", "triangle", "pentagon", "hexagon", "ring", "diamond", "trapezoid", "parallelogram", "heart", 
-	"arrow", "gear", "squircle", 
+	"rectangle", "square", "diamond", "trapezoid", "parallelogram", 
+	"circle", "ellipse", "arc", "donut", "crescent", "ring", "squircle", 
+	"regular polygon", "triangle", "pentagon", "hexagon", "star", "cross", 
+	"teardrop", "leaf", "heart", "arrow", "gear", 
 ];
 
 function Node_create_Shape(_x, _y, _group = noone, _param = {}) {

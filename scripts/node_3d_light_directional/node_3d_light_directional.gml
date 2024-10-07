@@ -7,9 +7,9 @@ function Node_3D_Light_Directional(_x, _y, _group = noone) : Node_3D_Light(_x, _
 	
 	newInput(in_light + 1, nodeValue_Int("Shadow Map Size", self, 1024));
 	
-	newInput(in_light + 2, nodeValue_Int("Shadow Map Scale", self, 4));
+	newInput(in_light + 2, nodeValue_Int("Shadow Map Scale", self, 16));
 	
-	newInput(in_light + 3, nodeValue_Float("Shadow Bias", self, .001));
+	newInput(in_light + 3, nodeValue_Float("Shadow Bias", self, 0.01));
 	
 	input_display_list = [
 		["Transform", false], 0,

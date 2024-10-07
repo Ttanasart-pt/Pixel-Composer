@@ -126,12 +126,14 @@ uniform int use_8bit;
 		//else if(index == 2) d = texture2D(light_dir_shadowmap_2, position);
 		//else if(index == 3) d = texture2D(light_dir_shadowmap_3, position);
 		
-		if(use_8bit == 1) 
-			return unormToFloat(d.rgb);
+		if(use_8bit == 1) return unormToFloat(d.rgb);
 		return d.r;
 	}
 
 	float samplePntShadowMap(int index, vec2 position, int side) {
+		// -x, x, -y, y, -z, z
+		// r0, b0, g0, r1, g1, b1
+			
 		float d = 0.;
 		
 		position.x /= 2.;
@@ -241,24 +243,22 @@ void main() {
 				vec3 lightVector   = normalize(light_dir_direction[i]);
 				
 				if(light_dir_shadow_active[i] == 1) { //use shadow
-					vec4 cameraSpace = light_dir_view[i] * v_worldPosition;
-					vec4 screenSpace = light_dir_proj[i] * cameraSpace;
+					vec4  l_cameraSpace   = light_dir_view[i] * v_worldPosition;
+					vec4  l_screenSpace   = light_dir_proj[i] * l_cameraSpace;
+					float l_lightDistance = l_screenSpace.z;
+					vec2  lightMapUV      = (l_screenSpace.xy / l_screenSpace.w * 0.5) + 0.5;
 					
-					float v_lightDistance = screenSpace.z / screenSpace.w;
-					vec2 lightMapPosition = (screenSpace.xy / screenSpace.w * 0.5) + 0.5;
-					
-					if(lightMapPosition.x >= 0. && lightMapPosition.x <= 1. && lightMapPosition.y >= 0. && lightMapPosition.y <= 1.) {
-						light_map_depth = sampleDirShadowMap(shadow_map_index, lightMapPosition);
+					if(lightMapUV.x >= 0. && lightMapUV.x <= 1. && lightMapUV.y >= 0. && lightMapUV.y <= 1.) {
+						light_map_depth = sampleDirShadowMap(shadow_map_index, lightMapUV);
 						
-						//gl_FragData[0] = texture2D(light_dir_shadowmap_0, lightMapPosition);
+						//gl_FragData[0] = texture2D(light_dir_shadowmap_0, lightMapUV);
 						//return;
 						
 						shadow_map_index++;
-						lightDistance = v_lightDistance;
 						float shadowFactor = dot(normal, lightVector);
 						float bias = mix(light_dir_shadow_bias[i], 0., shadowFactor);
 						
-						if(lightDistance > light_map_depth + bias)
+						if(l_lightDistance > light_map_depth + bias)
 							continue;
 					}
 				} 
@@ -275,41 +275,47 @@ void main() {
 		
 			shadow_map_index = 0;
 			for(int i = 0; i < light_pnt_count; i++) {
-				vec3 lightVector   = normalize(light_pnt_position[i] - v_worldPosition.xyz);
+				vec3 lightVector   = light_pnt_position[i] - v_worldPosition.xyz;
 				
 				light_distance = length(lightVector);
-				if(light_distance > light_pnt_radius[i])
-					continue;
-			
+				if(light_distance > light_pnt_radius[i]) {
+					gl_FragData[0] = vec4(1., 0., 0., .5);
+					return;
+					// continue;
+				}
+				
+				lightVector = normalize(lightVector);
+				
 				if(light_pnt_shadow_active[i] == 1) { //use shadow
 					vec3 dirAbs = abs(lightVector);
-					int side    = dirAbs.x > dirAbs.y ?
-								  (dirAbs.x > dirAbs.z ? 0 : 2) :
-								  (dirAbs.y > dirAbs.z ? 1 : 2);
+					int side    = dirAbs.x > dirAbs.y ? (dirAbs.x > dirAbs.z ? 0 : 2) : (dirAbs.y > dirAbs.z ? 1 : 2);
 					side *= 2;
 					     if(side == 0 && lightVector.x > 0.) side += 1;
 					else if(side == 2 && lightVector.y > 0.) side += 1;
 					else if(side == 4 && lightVector.z > 0.) side += 1;
 					
-					vec4 cameraSpace      = light_pnt_view[i * 6 + side] * v_worldPosition;
-					vec4 screenSpace      = light_pnt_proj[i] * cameraSpace;
-					float v_lightDistance = screenSpace.z / screenSpace.w;
-					vec2 lightMapPosition = (screenSpace.xy / screenSpace.w * 0.5) + 0.5;
+					vec4  l_cameraSpace   = light_pnt_view[i * 6 + side] * v_worldPosition;
+					vec4  l_screenSpace   = light_pnt_proj[i] * l_cameraSpace;
+					float l_lightDistance = l_screenSpace.z;
+					vec2  lightMapUV      = (l_screenSpace.xy / l_screenSpace.w * 0.5) + 0.5;
 					
-					if(lightMapPosition.x >= 0. && lightMapPosition.x <= 1. && lightMapPosition.y >= 0. && lightMapPosition.y <= 1.) {
+					if(lightMapUV.x >= 0. && lightMapUV.x <= 1. && lightMapUV.y >= 0. && lightMapUV.y <= 1.) {
+						
 						float shadowFactor = dot(normal, lightVector);
 						float bias = mix(light_pnt_shadow_bias[i], 0., shadowFactor);
 					
-						light_map_depth = samplePntShadowMap(shadow_map_index, lightMapPosition, side);
+						light_map_depth = samplePntShadowMap(shadow_map_index, lightMapUV, side);
 						shadow_map_index++;
-					
-						if(v_lightDistance > light_map_depth + bias)
+						
+						// gl_FragData[0] = vec4((l_lightDistance - (light_map_depth + bias)) * 10., ((light_map_depth + bias) - l_lightDistance) * 10., 0., 1.);
+						// return;
+						
+						if(l_lightDistance > light_map_depth + bias)
 							continue;
 					}
 				} 
 				
 				light_attenuation = 1. - pow(light_distance / light_pnt_radius[i], 2.);
-				
 				vec3 light_phong = phongLight(normal, lightVector, viewDirection, light_pnt_color[i].rgb * light_attenuation);
 				
 				light_effect += light_phong * light_pnt_intensity[i];

@@ -61,7 +61,7 @@ function __3dScene(camera, name = "New scene") constructor {
 	ssao_bias     = 0.1;
 	ssao_strength = 1.;
 	
-	static reset = function() { #region
+	static reset = function() {
 		lightDir_count     = 0;
 		lightDir_direction = [];
 		lightDir_color     = [];
@@ -86,14 +86,14 @@ function __3dScene(camera, name = "New scene") constructor {
 		lightPnt_viewMat      = [];
 		lightPnt_projMat      = [];
 		lightPnt_shadowBias   = [];
-	} reset(); #endregion
+	} reset();
 	
 	static submit		= function(object, shader = noone) { D3DSCENE_PRESUBMIT object.submit		(self, shader); D3DSCENE_POSTSUBMIT }
 	static submitUI		= function(object, shader = noone) { D3DSCENE_PRESUBMIT object.submitUI		(self, shader); D3DSCENE_POSTSUBMIT }
 	static submitSel	= function(object, shader = noone) { D3DSCENE_PRESUBMIT object.submitSel	(self, shader); D3DSCENE_POSTSUBMIT }
 	static submitShader	= function(object, shader = noone) { D3DSCENE_PRESUBMIT object.submitShader (self, shader); D3DSCENE_POSTSUBMIT }
 	
-	static deferPass = function(object, w, h, deferData = noone) { #region
+	static deferPass = function(object, w, h, deferData = noone) {
 		if(deferData == noone) deferData = {
 			geometry_data: [ noone, noone, noone ],
 			ssao : noone,
@@ -103,9 +103,9 @@ function __3dScene(camera, name = "New scene") constructor {
 		ssaoPass(deferData);
 		
 		return deferData;
-	} #endregion
+	}
 	
-	static renderBackground = function(w, h, surf = noone) { #region
+	static renderBackground = function(w, h, surf = noone) {
 		surf = surface_verify(surf, w, h);
 		surface_set_shader(surf, sh_d3d_background);
 			shader_set_color("light_ambient",	lightAmbient);
@@ -126,12 +126,12 @@ function __3dScene(camera, name = "New scene") constructor {
 		surface_reset_shader();
 		
 		return surf;
-	} #endregion
+	}
 	
-	static geometryPass = function(deferData, object, w = 512, h = 512) { #region
-		deferData.geometry_data[0] = surface_verify(deferData.geometry_data[0], w, h, OS == os_macosx? surface_rgba8unorm : surface_rgba32float);
-		deferData.geometry_data[1] = surface_verify(deferData.geometry_data[1], w, h, OS == os_macosx? surface_rgba8unorm : surface_rgba32float);
-		deferData.geometry_data[2] = surface_verify(deferData.geometry_data[2], w, h, OS == os_macosx? surface_rgba8unorm : surface_rgba32float);
+	static geometryPass = function(deferData, object, w = 512, h = 512) {
+		deferData.geometry_data[0] = surface_verify(deferData.geometry_data[0], w, h, surface_rgba32float);
+		deferData.geometry_data[1] = surface_verify(deferData.geometry_data[1], w, h, surface_rgba32float);
+		deferData.geometry_data[2] = surface_verify(deferData.geometry_data[2], w, h, surface_rgba32float);
 		
 		surface_set_target_ext(0, deferData.geometry_data[0]);
 		surface_set_target_ext(1, deferData.geometry_data[1]);
@@ -162,21 +162,21 @@ function __3dScene(camera, name = "New scene") constructor {
 		surface_reset_target();
 		
 		if(defer_normal_radius) {
-			var _normal_blurred = surface_create_size(deferData.geometry_data[2], OS == os_macosx? surface_rgba8unorm : surface_rgba32float);
+			var _normal_blurred = surface_create_size(deferData.geometry_data[2], surface_rgba32float);
 			surface_set_shader(_normal_blurred, sh_d3d_normal_blur);
 				shader_set_f("radius", defer_normal_radius);
 				shader_set_i("use_8bit",  OS == os_macosx);
 				shader_set_dim("dimension", deferData.geometry_data[2]);
 				
-				draw_surface_safe(deferData.geometry_data[2]);
+				draw_surface(deferData.geometry_data[2], 0, 0);
 			surface_reset_shader();
 		
 			surface_free(deferData.geometry_data[2]);
 			deferData.geometry_data[2] = _normal_blurred;
 		}
-	} #endregion
+	}
 	
-	static ssaoPass = function(deferData) { #region
+	static ssaoPass = function(deferData) {
 		if(!ssao_enabled) {
 			surface_free(deferData.ssao);
 			return;
@@ -204,13 +204,13 @@ function __3dScene(camera, name = "New scene") constructor {
 			shader_set_f("dimension", _sw, _sh);
 			shader_set_surface("vNormal",   deferData.geometry_data[2]);
 			
-			draw_surface_safe(_ssao_surf);
+			draw_surface(_ssao_surf, 0, 0);
 		surface_reset_shader();
 		
 		surface_free(_ssao_surf);
-	} #endregion
+	}
 	
-	static apply = function(deferData = noone) { #region
+	static apply = function(deferData = noone) {
 		shader_set(sh_d3d_default);
 		shader_set_i("use_8bit",  OS == os_macosx);
 			
@@ -222,22 +222,21 @@ function __3dScene(camera, name = "New scene") constructor {
 				if(deferData != noone) shader_set_surface("ao_map",		deferData.ssao );
 			#endregion
 			
-			shader_set_i("light_dir_count",		lightDir_count); #region
+			shader_set_i("light_dir_count",		lightDir_count);
 			if(lightDir_count) {
 				shader_set_f("light_dir_direction", lightDir_direction);
 				shader_set_f("light_dir_color",		lightDir_color);
 				shader_set_f("light_dir_intensity", lightDir_intensity);
 				shader_set_i("light_dir_shadow_active", lightDir_shadow);
-				for( var i = 0, n = array_length(lightDir_shadowMap); i < n; i++ ) {
+				for( var i = 0, n = array_length(lightDir_shadowMap); i < n; i++ )
 					var _sid = shader_set_surface($"light_dir_shadowmap_{i}", lightDir_shadowMap[i], true);
-					gpu_set_tex_repeat_ext(_sid, false);
-				}
+				
 				shader_set_f("light_dir_view",		lightDir_viewMat);
 				shader_set_f("light_dir_proj",		lightDir_projMat);
 				shader_set_f("light_dir_shadow_bias", lightDir_shadowBias);
-			} #endregion
+			}
 			
-			shader_set_i("light_pnt_count",		lightPnt_count); #region
+			shader_set_i("light_pnt_count",		lightPnt_count);
 			if(lightPnt_count) {
 				shader_set_f("light_pnt_position",  lightPnt_position);
 				shader_set_f("light_pnt_color",		lightPnt_color);
@@ -246,16 +245,13 @@ function __3dScene(camera, name = "New scene") constructor {
 				
 				shader_set_i("light_pnt_shadow_active", lightPnt_shadow);
 				
-				if(OS == os_windows) {
-					for( var i = 0, n = array_length(lightPnt_shadowMap); i < n; i++ ) {
-						var _sid = shader_set_surface($"light_pnt_shadowmap_{i}", lightPnt_shadowMap[i], true, true);
-						gpu_set_tex_repeat_ext(_sid, false);
-					}
-					shader_set_f("light_pnt_view",		lightPnt_viewMat);
-					shader_set_f("light_pnt_proj",		lightPnt_projMat);
-					shader_set_f("light_pnt_shadow_bias", lightPnt_shadowBias);
-				}
-			} #endregion
+				for( var i = 0, n = array_length(lightPnt_shadowMap); i < n; i++ )
+					var _sid = shader_set_surface($"light_pnt_shadowmap_{i}", lightPnt_shadowMap[i], true, false);
+				
+				shader_set_f("light_pnt_view",		lightPnt_viewMat);
+				shader_set_f("light_pnt_proj",		lightPnt_projMat);
+				shader_set_f("light_pnt_shadow_bias", lightPnt_shadowBias);
+			}
 			
 			if(OS == os_windows && defer_normal && deferData != noone && array_length(deferData.geometry_data) > 2) {
 				shader_set_i("mat_defer_normal", 1);
@@ -274,9 +270,9 @@ function __3dScene(camera, name = "New scene") constructor {
 			
 			//print($"Submitting scene with {lightDir_count} dir, {lightPnt_count} pnt lights.");
 		shader_reset();
-	} #endregion
+	}
 	
-	static addLightDirectional = function(light) { #region
+	static addLightDirectional = function(light) {
 		if(lightDir_count >= lightDir_max) {
 			noti_warning("Direction light limit exceeded");
 			return self;
@@ -301,9 +297,9 @@ function __3dScene(camera, name = "New scene") constructor {
 		lightDir_count++;
 		
 		return self;
-	} #endregion
+	}
 	
-	static addLightPoint = function(light) { #region
+	static addLightPoint = function(light) {
 		if(lightPnt_count >= lightPnt_max) {
 			noti_warning("Point light limit exceeded");
 			return self;
@@ -314,7 +310,7 @@ function __3dScene(camera, name = "New scene") constructor {
 		
 		array_push(lightPnt_intensity, light.intensity);
 		array_push(lightPnt_radius,    light.radius);
-		array_push(lightPnt_shadow,    OS == os_windows && light.shadow_active);
+		array_push(lightPnt_shadow,    light.shadow_active);
 		
 		if(light.shadow_active) {
 			if(lightPnt_shadow_count < lightPnt_shadow_max) {
@@ -329,9 +325,7 @@ function __3dScene(camera, name = "New scene") constructor {
 		lightPnt_count++;
 		
 		return self;
-	} #endregion
+	}
 		
-	static toString = function() { #region
-		return $"[3D Scene] {name}";
-	} #endregion
+	static toString = function() { return $"[3D Scene] {name}"; }
 }

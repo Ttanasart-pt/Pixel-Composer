@@ -11,7 +11,7 @@ function Node_3D_Light_Point(_x, _y, _group = noone) : Node_3D_Light(_x, _y, _gr
 	newInput(in_light + 2, nodeValue_Int("Shadow Map Size", self, 1024))
 		.setWindows();
 	
-	newInput(in_light + 3, nodeValue_Float("Shadow Bias", self, .001))
+	newInput(in_light + 3, nodeValue_Float("Shadow Bias", self, 0.01))
 		.setWindows();
 	
 	input_display_list = [
@@ -24,7 +24,7 @@ function Node_3D_Light_Point(_x, _y, _group = noone) : Node_3D_Light(_x, _y, _gr
 	tool_settings = [];
 	tool_attribute.context = 1;
 	
-	static processData = function(_output, _data, _output_index, _array_index = 0) { #region
+	static processData = function(_output, _data, _output_index, _array_index = 0) {
 		var _active = _data[in_d3d + 0];
 		if(!_active) return noone;
 		
@@ -33,14 +33,24 @@ function Node_3D_Light_Point(_x, _y, _group = noone) : Node_3D_Light(_x, _y, _gr
 		var _shadow_map_size = _data[in_light + 2];
 		var _shadow_bias     = _data[in_light + 3];
 		
-		var object = getObject(_array_index);
+		var _object = getObject(_array_index);
 		
-		setTransform(object, _data);
-		setLight(object, _data);
-		object.setShadow(_shadow_active, _shadow_map_size);
-		object.radius = _radius;
-		object.shadow_bias = _shadow_bias;
+		setTransform(_object, _data);
+		setLight(_object, _data);
+		_object.setShadow(_shadow_active, _shadow_map_size);
+		_object.radius = _radius;
+		_object.shadow_bias = _shadow_bias * 100;
 		
-		return object;
-	} #endregion
+		return _object;
+	}
+	
+	// static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+	// 	var bbox    = drawGetBbox(xx, yy, _s);
+	// 	var _object = getObject(0);
+		
+	// 	if(_object == noone) return;
+		
+	// 	var __smap = _object.shadow_map;
+	// 	draw_surface_ext_safe(__smap, bbox.x0, bbox.y0, .5 * _s, .5 * _s);
+	// }
 }

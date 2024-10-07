@@ -22,23 +22,23 @@ function __3dLight() : __3dObject() constructor {
 	
 	static submit    = function(scene = {}, shader = noone) {}
 	
-	static setShadow = function(active, shadowMapSize, shadowMapScale = shadow_map_scale) { #region
+	static setShadow = function(active, shadowMapSize, shadowMapScale = shadow_map_scale) {
 		shadow_active    = active;
 		shadow_map_size  = shadowMapSize;
 		shadow_map_scale = shadowMapScale;
 		
 		return self;
-	} #endregion
+	}
 	
 	static shadowProjectBegin = function() {}
 	
 	static shadowProjectEnd = function() {} 
 	
-	static submitShadow = function(scene, objects) { #region
+	static submitShadow = function(scene, objects) {
 		if(!shadow_active) return;
 		
 		shadowProjectBegin();
 		objects.submit(scene, shadow_mapper);
 		shadowProjectEnd();
-	} #endregion
+	}
 }

@@ -2125,6 +2125,7 @@
     {"id":{"name":"sh_channel_R2A","path":"shaders/sh_channel_R2A/sh_channel_R2A.yy",},},
     {"id":{"name":"sh_channel_R2B","path":"shaders/sh_channel_R2B/sh_channel_R2B.yy",},},
     {"id":{"name":"sh_channel_R2G","path":"shaders/sh_channel_R2G/sh_channel_R2G.yy",},},
+    {"id":{"name":"sh_channel_R2R","path":"shaders/sh_channel_R2R/sh_channel_R2R.yy",},},
     {"id":{"name":"sh_channel_S","path":"shaders/sh_channel_S/sh_channel_S.yy",},},
     {"id":{"name":"sh_channel_V","path":"shaders/sh_channel_V/sh_channel_V.yy",},},
     {"id":{"name":"sh_checkerboard","path":"shaders/sh_checkerboard/sh_checkerboard.yy",},},
