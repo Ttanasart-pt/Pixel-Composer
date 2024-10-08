@@ -107,13 +107,15 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
-		var val  = getInputData(0);
+		var raw  = getInputData(0);
 		var _int = getInputData(1);
 		var disp = getInputData(2);
 		var rang = getInputData(3);
 		var stp  = getInputData(4);
 		var cmp  = getInputData(5);
 		var _col = getColor();
+		
+		var val  = outputs[0].getValue();
 		
 		if(disp == 0 || inputs[0].value_from != noone || bbox.h < line_get_height(f_p2)) {
 			draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
@@ -125,7 +127,7 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			
 			case 1 :
 				draw_set_text(f_sdf, fa_center, fa_center, _col);
-				draw_text_transformed(bbox.xc, bbox.y0 + 16 * _s, string(_int? round(val) : val), _s * 0.5, _s * 0.5, 0);
+				draw_text_transformed(bbox.xc, bbox.y0 + 16 * _s, string(val), _s * 0.5, _s * 0.5, 0);
 				
 				var sl_w = bbox.w - 8 * _s;
 				var sl_h = _s * 40;
@@ -142,7 +144,7 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				var _maxx = rang[1];
 					
 				slider_surface = surface_verify(slider_surface, sl_w, sl_h);
-				slider_value   = slider_value == -1? val : lerp_float(slider_value, val, 2.5);
+				slider_value   = slider_value == -1? raw : lerp_float(slider_value, raw, 2.5);
 				
 				surface_set_shader(slider_surface, sh_ui_slider);
 					shader_set_color("c0", c0);
@@ -175,10 +177,10 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					slider_m = lerp_float(slider_m, 0, 5);
 				
 				if(_hover && point_in_rectangle(_mx, _my, sl_x0, sl_y0, sl_x1, sl_y1)) {
-					if(mouse_press(mb_left, _focus) && is_real(val)) {
+					if(mouse_press(mb_left, _focus) && is_real(raw)) {
 						slider_dragging = true;
 						slider_mx = _mx;
-						slider_sx = val;
+						slider_sx = raw;
 					}
 					
 					draggable = false;
@@ -199,7 +201,7 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				surface_set_shader(rotator_surface, sh_ui_rotator);
 					shader_set_color("c0", c0);
 					shader_set_color("c1", c1);
-					shader_set_f("angle", degtorad(val));
+					shader_set_f("angle", degtorad(raw));
 					shader_set_f("mouse", (_mx - _x0) / _ss, (_my - _y0) / _ss);
 					shader_set_f("mouseProg", animation_curve_eval(ac_ripple, rotator_m));
 					
@@ -214,7 +216,7 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					var dx  = angle_difference(dir, rotator_p);
 					rotator_p = dir;
 					
-					if(inputs[0].setValue(val + dx))
+					if(inputs[0].setValue(raw + dx))
 						UNDO_HOLDING = true;
 					
 					if(mouse_release(mb_left)) {
@@ -225,9 +227,9 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					rotator_m = lerp_float(rotator_m, 0, 5);
 				
 				if(_hover && point_in_circle(_mx, _my, bbox.xc, bbox.yc, _ss / 2)) {
-					if(mouse_press(mb_left, _focus) && is_real(val)) {
+					if(mouse_press(mb_left, _focus) && is_real(raw)) {
 						rotator_dragging = true;
-						rotator_s = val;
+						rotator_s = raw;
 						rotator_p = point_direction(bbox.xc, bbox.yc, _mx, _my);
 					}
 					
@@ -235,7 +237,7 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				}
 				
 				draw_set_text(f_sdf, fa_center, fa_center, colorMultiply(CDEF.main_white, _col));
-				draw_text_transformed(bbox.xc, bbox.yc, _int? string(round(val)) : string_format(val, -1, 2), _s * .5, _s * .5, 0);
+				draw_text_transformed(bbox.xc, bbox.yc, val, _s * .5, _s * .5, 0);
 				break;
 		}
 	}
