@@ -13,24 +13,17 @@ uniform int   normalized;
 vec4 sampleTexture(vec2 pos) {
 	if(pos.x >= 0. && pos.y >= 0. && pos.x <= 1. && pos.y <= 1.)
 		return texture2D(gm_BaseTexture, pos);
-	
-	if(sampleMode == 0) 
-		return vec4(0.);
 		
-	else if(sampleMode == 1) 
-		return texture2D(gm_BaseTexture, clamp(pos, 0., 1.));
-		
-	else if(sampleMode == 2) 
-		return texture2D(gm_BaseTexture, fract(pos));
-	
-	else if(sampleMode == 3) 
-		return vec4(vec3(0.), 1.);
+		 if(sampleMode == 0) return vec4(0.);
+	else if(sampleMode == 1) return texture2D(gm_BaseTexture, clamp(pos, 0., 1.));
+	else if(sampleMode == 2) return texture2D(gm_BaseTexture, fract(pos));
+	else if(sampleMode == 3) return vec4(vec3(0.), 1.);
 		
 	return vec4(0.);
 }
 
 void main() {
-	vec2  tex = 1. / dimension;
+	vec2  tx  = 1. / dimension;
 	float sum = 1.;
 	
 	if(normalized == 1) {
@@ -47,9 +40,12 @@ void main() {
 	for(int i = 0; i < size; i++)
 	for(int j = 0; j < size; j++) {
 		int  index = i * size + j;
-		vec2 px    = v_vTexcoord + vec2((float(j) + st) * tex.x, (float(i) + st) * tex.y);
+		vec2 px    = v_vTexcoord + vec2((float(j) + st) * tx.x, (float(i) + st) * tx.y);
 		
-		c += kernel[index] * sampleTexture(px) / sum;
+		float w = kernel[index];
+		if(w == 0.) continue;
+		
+		c += w * sampleTexture(px) / sum;
 	}
 	
     gl_FragColor = c;

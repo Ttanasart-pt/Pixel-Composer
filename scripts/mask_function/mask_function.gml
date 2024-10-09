@@ -1,4 +1,4 @@
-function __init_mask_modifier(_mask_index) { #region
+function __init_mask_modifier(_mask_index) {
 	var _ind = array_length(inputs);
 	
 	newInput(_ind + 0, nodeValue_Bool("Invert mask", self, false));
@@ -10,20 +10,20 @@ function __init_mask_modifier(_mask_index) { #region
 	__mask_mod_index = _ind;
 	__mask_invert    = false;
 	__mask_feather   = 0;
-} #endregion
+}
 
-function __step_mask_modifier() { #region
+function __step_mask_modifier() {
 	var _msk = is_surface(getSingleValue(__mask_index));
 	inputs[__mask_mod_index + 0].setVisible(_msk);
 	inputs[__mask_mod_index + 1].setVisible(_msk);
-} #endregion
+}
 
-function __process_mask_modifier(data) { #region
+function __process_mask_modifier(data) {
 	__mask_invert  = data[__mask_mod_index + 0];
 	__mask_feather = data[__mask_mod_index + 1];
-} #endregion
+}
 
-function mask_modify(mask, invert = false, feather = 0) { #region
+function mask_modify(mask, invert = false, feather = 0) {
 	if(!is_surface(mask)) return mask; 
 	if(!invert && feather == 0) return mask;
 	
@@ -42,9 +42,9 @@ function mask_modify(mask, invert = false, feather = 0) { #region
 	}
 	
 	return __temp_mask;
-} #endregion
+}
 
-function mask_apply(original, edited, mask, mix = 1) { #region
+function mask_apply(original, edited, mask, mix = 1) {
 	if(!is_surface(mask) && mix == 1) return edited;
 	
 	var _f = surface_get_format(edited);
@@ -69,9 +69,9 @@ function mask_apply(original, edited, mask, mix = 1) { #region
 	
 	surface_free(edited);
 	return _s;
-} #endregion
+}
 
-function channel_apply(original, edited, channel) { #region
+function channel_apply(original, edited, channel) {
 	if(channel == 0b1111) return edited;
 	
 	var _f = surface_get_format(edited);
@@ -79,13 +79,13 @@ function channel_apply(original, edited, channel) { #region
 	
 	surface_set_target(_s);
 		DRAW_CLEAR
-		BLEND_ADD
+		BLEND_ADD_ONE
 		
 		gpu_set_colorwriteenable(!(channel & 0b0001), !(channel & 0b0010), !(channel & 0b0100), !(channel & 0b1000));
-		draw_surface_safe(original);
+		draw_surface(original, 0, 0);
 		
 		gpu_set_colorwriteenable(channel & 0b0001, channel & 0b0010, channel & 0b0100, channel & 0b1000);
-		draw_surface_safe(edited);
+		draw_surface(edited, 0, 0);
 		
 		gpu_set_colorwriteenable(1, 1, 1, 1);
 		BLEND_NORMAL
@@ -93,4 +93,4 @@ function channel_apply(original, edited, channel) { #region
 	
 	surface_free(edited);
 	return _s;
-} #endregion
+}
