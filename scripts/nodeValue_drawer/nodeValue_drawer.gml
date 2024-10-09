@@ -34,7 +34,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			break;
 			
 		case "matrixGrid" :
-			breakLine = wid.size > 5;
+			breakLine |= wid.size > 5;
 			break;
 	}
 	

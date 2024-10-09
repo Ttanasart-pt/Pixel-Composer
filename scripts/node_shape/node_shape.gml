@@ -36,13 +36,10 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput(1, nodeValue_Bool("Background", self, false));
 	
 	shape_types     = [ 
-		"Rectangle", "Diamond", "Trapezoid", "Parallelogram", 
-		-1, 
-		"Ellipse", "Arc", "Donut", "Crescent", "Disk Segment", "Pie", "Squircle", 
-		-1, 
-		"Regular polygon", "Star", "Cross", "Rounded Cross",  
-		-1, 
-		"Teardrop", "Leaf", "Heart", "Arrow", "Gear", 
+		    "Rectangle", "Diamond", "Trapezoid", "Parallelogram", 
+		-1, "Ellipse", "Arc", "Donut", "Crescent", "Disk Segment", "Pie", "Squircle", 
+		-1, "Regular polygon", "Star", "Cross", "Rounded Cross",  
+		-1, "Teardrop", "Leaf", "Heart", "Arrow", "Gear", 
 	];
 	shape_types_str = [];
 	

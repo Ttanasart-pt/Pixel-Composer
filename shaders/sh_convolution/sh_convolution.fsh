@@ -37,6 +37,8 @@ void main() {
 		sum = 0.;
 		int amo = size * size;
 		for(int i = 0; i < amo; i++) sum += kernel[i];
+		
+		if(sum == 0.) sum = 1.;
 	}
 	
 	float st = -(float(size) - 1.) / 2.;
