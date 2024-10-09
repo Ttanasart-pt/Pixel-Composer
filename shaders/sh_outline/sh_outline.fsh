@@ -5,6 +5,8 @@ varying vec4 v_vColour;
 
 uniform vec2  dimension;
 
+uniform int profile;
+
 uniform vec2      borderStart;
 uniform int       borderStartUseSurf;
 uniform sampler2D borderStartSurf;
@@ -81,6 +83,34 @@ bool angleFiltered(float angle) {
 	return filter[_ind] == 0;
 }
 
+bool  isOutline		  = false;
+bool  closetCollected = false;
+vec4  closetColor     = vec4(0.);
+float closetDistance  = 99999.;
+
+void checkPixel(vec2 px, vec2 p) {
+	vec2 txs = p / dimension;
+	vec2 pxs = floor(p) + 0.5;
+	if(side == 0 && crop_border == 1 && (txs.x < 0. || txs.x > 1. || txs.y < 0. || txs.y > 1.)) return;
+	
+	vec4 sam = sampleTexture( txs );
+	if(side == 0 && sam.a > 0.) return; //inside border,  skip if current pixel is filled
+	if(side == 1 && sam.a < 1.) return; //outside border, skip if current pixel is empty
+	
+	isOutline = true;
+	
+	float dist = 0.;
+	
+		 if(profile == 0) dist = distance(px, pxs);
+	else if(profile == 1) dist = max(abs(px.x - pxs.x), abs(px.y - pxs.y));
+	else if(profile == 2) dist = abs(px.x - pxs.x) + abs(px.y - pxs.y);
+	
+	if(dist < closetDistance) {
+		closetDistance = dist;
+		closetColor    = sam;
+	}
+}
+
 void main() {
 	#region params
 		float bStr = borderStart.x;
@@ -106,11 +136,7 @@ void main() {
 	vec2 pixelPosition = v_vTexcoord * dimension;
 	vec4 baseColor = texture2D( gm_BaseTexture, v_vTexcoord );
 	vec4 col = outline_only == 0? baseColor : vec4(0.);
-	
-	bool  isOutline			= false;
-	bool  closetCollected	= false;
-	vec4  closetColor;
-	float closetDistance = 9999.;
+	gl_FragColor = col;
 	
 	#region filter out filled ot empty pixel
 		bool isBorder = false;
@@ -125,42 +151,45 @@ void main() {
 	
 	if(bSiz + bStr > 0.) {
 		float itr = bStr + bSiz + float(is_aa);
-		float atr = highRes == 1? 256. : 64.;
 		
-		for(float i = 1.; i <= itr; i++) {
-			// if(i > bStr + bSiz + float(is_aa)) break;
+		if(profile == 0) {
+			float atr = highRes == 1? 256. : 64.;
 			
-			float base = 1.;
-			float top  = 0.;
-			for(float j = 0.; j <= atr; j++) {
-				float ang = top / base * TAU;
-				top += 2.;
-				if(top >= base) {
-					top = 1.;
-					base *= 2.;
+			for(float i = 1.; i <= itr; i++) {
+				float base = 1.;
+				float top  = 0.;
+				
+				for(float j = 0.; j <= atr; j++) {
+					float ang = top / base * TAU;
+					top += 2.;
+					if(top >= base) {
+						top   = 1.;
+						base *= 2.;
+					}
+					
+					if(angleFiltered(ang)) continue;
+					
+					vec2 pxs = pixelPosition + vec2( cos(ang),  sin(ang)) * i;
+					checkPixel(pixelPosition, pxs);
 				}
-				
-				if(angleFiltered(ang)) continue;
-				vec2 pxs = pixelPosition + vec2( cos(ang),  sin(ang)) * i;
-				vec2 txs = pxs / dimension;
-				     pxs = floor(pxs) + 0.5;
-				
-				if(side == 0 && crop_border == 1 && (txs.x < 0. || txs.x > 1. || txs.y < 0. || txs.y > 1.)) continue;
-				
-				vec4 sam = sampleTexture( txs );
-				if(side == 0 && sam.a > 0.) continue; //inside border,  skip if current pixel is filled
-				if(side == 1 && sam.a < 1.) continue; //outside border, skip if current pixel is empty
-				
-				isOutline = true;
-				
-				float dist = distance(pixelPosition, pxs);
-				if(dist < closetDistance) {
-					closetDistance = dist;
-					closetColor    = sam;
-				}
-				
+			}
+			
+		} else if(profile == 1) {
+			for(float i = -itr; i <= itr; i++)
+			for(float j = -itr; j <= itr; j++) {
+				if(i == 0. && j == 0.) continue;
+				checkPixel(pixelPosition, pixelPosition + vec2(j, i));
+			}
+			
+		} else if(profile == 2) {
+			for(float i = 1.; i <= itr; i++) {
+				for(float j = 0.; j < itr; j++) { if(j >= i) break; checkPixel(pixelPosition, pixelPosition + vec2( j, i - j)); }
+				for(float j = 0.; j < itr; j++) { if(j >= i) break; checkPixel(pixelPosition, pixelPosition - vec2( j, i - j)); }
+				for(float j = 0.; j < itr; j++) { if(j >= i) break; checkPixel(pixelPosition, pixelPosition + vec2(-j, i - j)); }
+				for(float j = 0.; j < itr; j++) { if(j >= i) break; checkPixel(pixelPosition, pixelPosition - vec2(-j, i - j)); }
 			}
 		}
+	
 	} else {
 		closetDistance = 0.;
 		
@@ -185,13 +214,13 @@ void main() {
 		}
 	}
 	
-	gl_FragColor = col;
 	if(!isOutline) return;
 	
 	float _aa = 1.;
 	
 	if(is_aa == 1) _aa = min(smoothstep(bSiz + bStr + 1., bSiz + bStr, closetDistance), smoothstep(bStr - 1., bStr, closetDistance));
 	else           _aa = min(step(-(bSiz + bStr + 0.5), -closetDistance), step(bStr - 0.5, closetDistance));
+	
 	if(_aa == 0.) return;
 	
 	if(is_blend == 0) col = blendColor(baseColor, borderColor, _aa);

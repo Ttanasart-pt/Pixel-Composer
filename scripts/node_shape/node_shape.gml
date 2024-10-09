@@ -1,8 +1,9 @@
 global.node_shape_keys = [ 
-	"rectangle", "square", "diamond", "trapezoid", "parallelogram", 
+	"rectangle", "square", "diamond", "trapezoid", "parallelogram", "half", 
 	"circle", "ellipse", "arc", "donut", "crescent", "ring", "squircle", 
 	"regular polygon", "triangle", "pentagon", "hexagon", "star", "cross", 
-	"teardrop", "leaf", "heart", "arrow", "gear", 
+	"line", "arrow", 
+	"teardrop", "leaf", "heart", "gear", 
 ];
 
 function Node_create_Shape(_x, _y, _group = noone, _param = {}) {
@@ -36,7 +37,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput(1, nodeValue_Bool("Background", self, false));
 	
 	shape_types     = [ 
-		    "Rectangle", "Diamond", "Trapezoid", "Parallelogram", 
+		    "Rectangle", "Diamond", "Trapezoid", "Parallelogram", "Half", 
 		-1, "Ellipse", "Arc", "Donut", "Crescent", "Disk Segment", "Pie", "Squircle", 
 		-1, "Regular polygon", "Star", "Cross", "Rounded Cross",  
 		-1, "Line", "Arrow", 
@@ -196,6 +197,10 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			case "Line"	:
 				hv = inputs[32].drawOverlay(_int, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= hv; _int &= !_hov;
 				hv = inputs[33].drawOverlay(_int, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= hv; _int &= !_hov;
+				return _hov;
+				
+			case "Half"	:
+				hv = inputs[32].drawOverlay(_int, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= hv; _int &= !_hov;
 				return _hov;
 		}
 		
@@ -602,6 +607,13 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 				
 					shader_set_i("shape", 19);
 					shader_set_f("squircle_factor", abs(_data[31]));
+					break;
+					
+				case "Half":
+					inputs[32].setVisible(true);
+					
+					shader_set_i("shape", 21);
+					shader_set_2("point1",	 _data[32]);
 					break;
 					
 			}

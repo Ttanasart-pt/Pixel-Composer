@@ -404,6 +404,12 @@ float sdArrow( in vec2 p, vec2 a, vec2 b, float w1, float w2, float k ) { // The
     return si * sqrt(di);
 }
 
+float sdHalf(vec2 p, vec2 point, float angle) {
+    p -= point;
+    p = mat2(cos(angle), -sin(angle), sin(angle), cos(angle)) * p;
+    return -p.y;
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void main() {
@@ -449,6 +455,7 @@ void main() {
 	else if(shape == 19) { d = pow(pow(abs(coord.x), squircle_factor) + pow(abs(coord.y), squircle_factor), 1. / squircle_factor) - 1.;                   }
 	else if(shape == 17) { d = sdArrow(  v_vTexcoord, p1, p2, thickness, arrow, arrow_head);                               	                              }
 	else if(shape == 20) { d = sdSegment(v_vTexcoord, p1, p2) - thickness;                                                                                }
+	else if(shape == 21) { d = sdHalf(v_vTexcoord, p1, -rotation);                                                                                        }
 	
 	float cc, color = 0.;
 	

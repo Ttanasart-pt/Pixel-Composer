@@ -59,13 +59,15 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
+	newInput(18, nodeValue_Enum_Scroll("Profile", self,  0, [ "Circle", "Square", "Diamond" ]));
+	
 	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
 	
 	newOutput(1, nodeValue_Output("Outline", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 11, 
 		["Surfaces", true], 0, 9, 10, 13, 14, 
-		["Outline",	false], 1, 15, 5, 8, 17, 12, 
+		["Outline",	false], 18, 1, 15, 5, 8, 17, 12, 
 		["Render",	false], 2, 6,
 		["Blend",	 true, 3], 4, 16,
 	];
@@ -73,7 +75,7 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	attribute_surface_depth();
 	attribute_oversample();
 	
-	static step = function() { #region
+	static step = function() {
 		var _wid  = getInputData(1);
 		var _side = getInputData(5);
 		
@@ -86,9 +88,9 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		inputs[8].mappableStep();
 		
 		filter_button.index = attributes.filter;
-	} #endregion
+	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var ww = surface_get_width_safe(_data[0]);
 		var hh = surface_get_height_safe(_data[0]);
 		var cl = _data[2];
@@ -105,6 +107,7 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			shader_set_f_map("borderStart", _data[8], _data[17], inputs[8]);
 			shader_set_color("borderColor", cl);
 			
+			shader_set_i("profile",         _data[18]);
 			shader_set_i("side",            side);
 			shader_set_i("highRes",         0);
 			shader_set_i("is_aa",           aa);
@@ -122,5 +125,5 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		_outSurf = mask_apply(_data[0], _outSurf, _data[9], _data[10]);
 		
 		return _outSurf;  
-	} #endregion
+	}
 }

@@ -82,7 +82,7 @@ event_inherited();
 			var _spr = is_instanceof(_val, scrollItem) && _val.spr;
 			
 			if(horizon) {
-				if(_val == -1 || i == n - 1) {
+				if(_val == -1) {
 					if(_emp) {
 						array_push(widths, 0);
 					} else {	
@@ -106,6 +106,10 @@ event_inherited();
 			lw  = max(lw, tw + _tpad * 2);
 			lh += hght;
 		}
+		
+		array_push(widths, _emp? 0 : lw);
+		ww += lw;
+		hh  = max(hh, lh);
 		
 		if(horizon) {
 			dialog_w = max(scrollbox.w, ww) + _tpad * 2;
@@ -138,7 +142,7 @@ event_inherited();
 			var _val = data[i];
 			
 			if(horizon) {
-				if(_val == -1 || i == n -1) {
+				if(_val == -1) {
 					_lx += _dw;
 					_ly  = _y;
 					_col++;
