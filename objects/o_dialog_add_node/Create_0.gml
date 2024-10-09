@@ -190,6 +190,8 @@ event_inherited();
 			for( var i = 0, n = array_length(_new_node.outputs); i < n; i++ ) 
 				array_push(_outputs, _new_node.outputs[i]);
 			
+			PANEL_INSPECTOR.setInspecting(_new_node);
+			
 		} else if(is_instanceof(_node, NodeAction)) {  // NOT IMPLEMENTED
 			_node.build(node_target_x, node_target_y,, _param);
 			return;

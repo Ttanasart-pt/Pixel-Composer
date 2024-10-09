@@ -27,9 +27,9 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 	var cHov      = false;
 	
 	switch(instanceof(wid)) {
-		case "textArea" : 
+		case "textArea"        : 
 		case "controlPointBox" : 
-		case "transformBox" : 
+		case "transformBox"    : 
 			breakLine = true;
 			break;
 			

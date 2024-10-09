@@ -39,7 +39,8 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		    "Rectangle", "Diamond", "Trapezoid", "Parallelogram", 
 		-1, "Ellipse", "Arc", "Donut", "Crescent", "Disk Segment", "Pie", "Squircle", 
 		-1, "Regular polygon", "Star", "Cross", "Rounded Cross",  
-		-1, "Teardrop", "Leaf", "Heart", "Arrow", "Gear", 
+		-1, "Line", "Arrow", 
+		-1, "Teardrop", "Leaf", "Heart", "Gear", 
 	];
 	shape_types_str = [];
 	
@@ -48,6 +49,8 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		shape_types_str[i] = shape_types[i] == -1? -1 : new scrollItem(shape_types[i], s_node_shape_type, _ind++);
 	
 	newInput(2, nodeValue_Enum_Scroll("Shape", self,  0, { data: shape_types_str, horizontal: true, text_pad: ui(16) }));
+	
+	inputs[2].options_histories = [ shape_types, { cond: function() /*=>*/ {return LOADING_VERSION < 1_18_00_0}, list: global.node_shape_keys_18 } ];	 
 	
 	newInput(3, nodeValue_Area("Position", self, DEF_AREA_REF, { onSurfaceSize, useShape : false }))
 		.setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
@@ -102,9 +105,9 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput(22, nodeValue_Float("Skew", self, 0.5 ))
 		.setDisplay(VALUE_DISPLAY.slider);
 		
-	newInput(23, nodeValue_Slider_Range("Arrow Sizes", self, [ 0.2, 0.3 ] ));
-		
-	newInput(24, nodeValue_Float("Arrow Head", self, 3 ));
+	newInput(23, nodeValue_Float("Arrow Sizes", self, 0.3 ));
+	
+	newInput(24, nodeValue_Float("Arrow Head", self, 1 ));
 		
 	newInput(25, nodeValue_Int("Teeth Amount", self, 6 ));
 		
@@ -121,12 +124,24 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	newInput(31, nodeValue_Float("Factor", self, 2.5));
 	
+	newInput(32, nodeValue_Vec2("Point 1", self, [ 0, 0 ]))
+		.setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
+	
+	newInput(33, nodeValue_Vec2("Point 2", self, [ 1, 1 ]))
+		.setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
+	
+	newInput(34, nodeValue_Float("Thickness", self, 0.1))
+		.setDisplay(VALUE_DISPLAY.slider);
+	
+	newInput(35, nodeValue_Vec2("Point 3", self, [ 1, 0 ]))
+		.setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
+	
 	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
 		["Output",     false], 0, 6, 
 		["Transform",  false], 15, 3, 16, 17, 19, 28, 
-		["Shape",	   false], 14, 2, 9, 4, 13, 5, 7, 8, 21, 22, 23, 24, 25, 26, 27, 30, 31, 
+		["Shape",	   false], 14, 2, 32, 33, 35, 34, /**/ 9, 4, 13, 5, 7, 8, 21, 22, 23, 24, 25, 26, 27, 30, 31, 
 		["Render",	    true], 10, 18,
 		["Height",	    true, 12], 29, 20, 
 		["Background",	true, 1], 11, 
@@ -163,7 +178,8 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			return _hov;
 		}
 		
-		var _type = current_data[15];
+		var _shape   = current_data[ 2];
+		var _posMode = current_data[15];
 		var _pos  = [ 0, 0 ];
 		var _sca  = [ 1, 1 ];
 		var _px, _py;
@@ -172,51 +188,60 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var _hov = false;
 		var _int = hover;
 		
-		if(_type == 0) {
+		var _shp = array_safe_get(shape_types, _shape, "");
+		if(is_struct(_shp)) _shp = _shp.data;
+		
+		switch(_shp) {
+			case "Arrow"	:
+			case "Line"	:
+				hv = inputs[32].drawOverlay(_int, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= hv; _int &= !_hov;
+				hv = inputs[33].drawOverlay(_int, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= hv; _int &= !_hov;
+				return _hov;
+		}
+		
+		if(_posMode == 0) {
 			_pos = [ current_data[3][0], current_data[3][1] ];
 			_sca = [ current_data[3][2], current_data[3][3] ];
 			
-		} else if(_type == 1) {
+		} else if(_posMode == 1) {
 			_pos = current_data[16];
 			_sca = current_data[17];
 			
 		}
 		
-		if(_type != 2) {
-			if(inputs[9].show_in_inspector) {
-				var _px = _x  + _pos[0] * _s;
-				var _py = _y  + _pos[1] * _s;
-				
-				var _x0 = _px - _sca[0] * _s;
-				var _y0 = _py - _sca[1] * _s;
-				var _x1 = _px + _sca[0] * _s;
-				var _y1 = _py + _sca[1] * _s;
-				
-				var aa = -45;
-				var ar = 90;
-				
-					 if(_sca[0] < 0 && _sca[1] < 0) { aa =  135; ar = -90; }
-				else if(_sca[0] < 0 && _sca[1] > 0) { aa = -135; ar =   0; }
-				else if(_sca[0] > 0 && _sca[1] < 0) { aa =   45; ar = 180; }
-				
-				var _max_s = max(abs(_sca[0]), abs(_sca[1]));
-				var _corr  = current_data[9] * _s * _max_s;
-				var _cor   = _corr / (sqrt(2) - 1);
-				
-				var cx = _x0 + lengthdir_x(_cor, aa);
-				var cy = _y0 + lengthdir_y(_cor, aa);
-				
-				draw_set_color(COLORS._main_accent);
-				draw_arc(cx, cy, _cor - _corr, ar, ar + 90, 2);
-				
-				hv = inputs[9].drawOverlay(_int, active, _x0, _y0, _s, _mx, _my, _snx, _sny, aa, _max_s, 1); _hov |= hv; _int &= !_hov;
-			}
+		if(inputs[9].show_in_inspector && _posMode != 2) { // corner
+			var _px = _x  + _pos[0] * _s;
+			var _py = _y  + _pos[1] * _s;
+			
+			var _x0 = _px - _sca[0] * _s;
+			var _y0 = _py - _sca[1] * _s;
+			var _x1 = _px + _sca[0] * _s;
+			var _y1 = _py + _sca[1] * _s;
+			
+			var aa = -45;
+			var ar = 90;
+			
+				 if(_sca[0] < 0 && _sca[1] < 0) { aa =  135; ar = -90; }
+			else if(_sca[0] < 0 && _sca[1] > 0) { aa = -135; ar =   0; }
+			else if(_sca[0] > 0 && _sca[1] < 0) { aa =   45; ar = 180; }
+			
+			var _max_s = max(abs(_sca[0]), abs(_sca[1]));
+			var _corr  = current_data[9] * _s * _max_s;
+			var _cor   = _corr / (sqrt(2) - 1);
+			
+			var cx = _x0 + lengthdir_x(_cor, aa);
+			var cy = _y0 + lengthdir_y(_cor, aa);
+			
+			draw_set_color(COLORS._main_accent);
+			draw_arc(cx, cy, _cor - _corr, ar, ar + 90, 2);
+			
+			hv = inputs[9].drawOverlay(_int, active, _x0, _y0, _s, _mx, _my, _snx, _sny, aa, _max_s, 1); _hov |= hv; _int &= !_hov;
 		}
 		
-		if(_type == 0) {
+		if(_posMode == 0) {
 			hv = inputs[3].drawOverlay(_int, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= hv; _int &= !_hov;
 			
-		} else if(_type == 1) {
+		} else if(_posMode == 1) {
 			_px  = _x + _pos[0] * _s;
 			_py  = _y + _pos[1] * _s;
 			
@@ -281,18 +306,17 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		inputs[16].setVisible(_posTyp == 1);
 		inputs[17].setVisible(_posTyp == 1);
 		
-		inputs[ 4].setVisible(true);
-		inputs[ 5].setVisible(true);
 		inputs[ 6].setVisible(_path == noone);
-		inputs[ 7].setVisible(true);
-		inputs[ 8].setVisible(true);
-		inputs[ 9].setVisible(true);
 		inputs[12].setVisible(_path == noone);
 		inputs[20].setVisible(_path == noone);
-		inputs[13].setVisible(true);
 		inputs[15].setVisible(true);
+		
 		inputs[30].setVisible(false);
 		inputs[31].setVisible(false);
+		inputs[32].setVisible(false);
+		inputs[33].setVisible(false);
+		inputs[34].setVisible(false);
+		inputs[35].setVisible(false);
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		use_path = _path != noone && struct_has(_path, "getPointRatio");
@@ -533,10 +557,28 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 				case "Arrow":
 					inputs[23].setVisible(true);
 					inputs[24].setVisible(true);
+					inputs[32].setVisible(true);
+					inputs[33].setVisible(true);
+					inputs[34].setVisible(true);
 					
 					shader_set_i("shape", 17);
-					shader_set_2("arrow",      _data[23]);
+					shader_set_f("arrow",      _data[23] / _data[24]);
 					shader_set_f("arrow_head", _data[24]);
+					
+					shader_set_2("point1",	   _data[32]);
+					shader_set_2("point2",	   _data[33]);
+					shader_set_f("thickness",  _data[34]);
+					break;
+					
+				case "Line":
+					inputs[32].setVisible(true);
+					inputs[33].setVisible(true);
+					inputs[34].setVisible(true);
+					
+					shader_set_i("shape", 20);
+					shader_set_2("point1",	  _data[32]);
+					shader_set_2("point2",	  _data[33]);
+					shader_set_f("thickness", _data[34]);
 					break;
 					
 				case "Gear":
@@ -555,7 +597,6 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 					shader_set_f("teethAngle",	_data[27]);
 					break;
 					
-				
 				case "Squircle" :	
 					inputs[31].setVisible(true);
 				
@@ -586,4 +627,19 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		
 		return _outSurf;
 	}
+	
+	static postDeserialize = function() {
+		if(LOADING_VERSION < 1_18_01_0) {
+			var _dat = load_map.inputs[23].raw_value;
+			for( var i = 0, n = array_length(_dat); i < n; i++ )
+				_dat[i][1] = is_array(_dat[i][1])? array_safe_get(_dat[i][1], 1) : _dat[i][1];
+		}
+	}
 }
+
+global.node_shape_keys_18 = [ 
+	    "Rectangle", "Diamond", "Trapezoid", "Parallelogram", 
+	-1, "Ellipse", "Arc", "Donut", "Crescent", "Disk Segment", "Pie", "Squircle", 
+	-1, "Regular polygon", "Star", "Cross", "Rounded Cross",  
+	-1, "Teardrop", "Leaf", "Heart", "Arrow", "Gear", 
+];

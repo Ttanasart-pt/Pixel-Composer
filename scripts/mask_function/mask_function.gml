@@ -64,7 +64,7 @@ function mask_apply(original, edited, mask, mix = 1) {
 		shader_set_i("invMask",  __mask_invert);
 		shader_set_f("mixRatio", mix);
 		
-		draw_sprite_stretched(s_fx_pixel, 0, 0, 0, surface_get_width_safe(original), surface_get_height_safe(original));
+		draw_empty();
 	surface_reset_shader();
 	
 	surface_free(edited);

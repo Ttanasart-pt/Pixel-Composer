@@ -49,7 +49,7 @@ function Node_Convolution(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		inputs[1].editWidget.setSize(_siz);
 		_ker = array_verify(_ker, _siz * _siz);
 		
-		surface_set_shader(_outSurf, sh_convolution);
+		surface_set_shader(_outSurf, sh_convolution, true, BLEND.over);
 			shader_set_dim("dimension", _outSurf);
 			shader_set_f("kernel",      _ker);
 			shader_set_i("size",        _siz);
