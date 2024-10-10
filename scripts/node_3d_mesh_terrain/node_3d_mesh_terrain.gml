@@ -21,18 +21,18 @@ function Node_3D_Mesh_Terrain(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 	
 	input_display_list = [
 		__d3d_input_list_transform,
-		["Terrain",		false], in_mesh + 3, in_mesh + 1, in_mesh + 2, in_mesh + 4, in_mesh + 5, in_mesh + 6, 
-		["Material",	false], in_mesh + 0, 
+		["Mesh",		false], in_mesh + 3, in_mesh + 1, in_mesh + 2, in_mesh + 4, in_mesh + 6, 
+		["Material",	false], in_mesh + 5, in_mesh + 0, 
 	]
 	
-	static step = function() { #region
+	static step = function() {
 		var _inT = getInputData(in_mesh + 1);
 		
 		inputs[in_mesh + 2].setVisible(_inT == 0, _inT == 0);
 		inputs[in_mesh + 4].setVisible(_inT == 1, _inT == 1);
-	} #endregion
+	}
 	
-	static processData = function(_output, _data, _output_index, _array_index = 0) { #region
+	static processData = function(_output, _data, _output_index, _array_index = 0) {
 		var _mat = _data[in_mesh + 0];
 		var _inT = _data[in_mesh + 1];
 		var _sub = _data[in_mesh + 3];
@@ -68,9 +68,9 @@ function Node_3D_Mesh_Terrain(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 			}
 			
 			buffer_delete(_bf);
+			
 		} else if(_inT == 1 && !array_empty(_hia)) {
 			if(is_array(_hia[0])) _hia = array_spread(_hia);
-			
 			array_copy(_h, 0, _hia, 0, min(array_length(_h), array_length(_hia)));
 		}
 		
@@ -81,7 +81,7 @@ function Node_3D_Mesh_Terrain(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 		setTransform(object, _data);
 		
 		return object;
-	} #endregion
+	}
 	
 	static getPreviewValues = function() { return getSingleValue(in_mesh + 0); }
 }

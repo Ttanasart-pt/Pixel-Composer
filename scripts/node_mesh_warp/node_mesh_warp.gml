@@ -195,14 +195,14 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	control_index = array_length(inputs);
 	
-	function createControl() { #region
+	function createControl() {
 		var index = array_length(inputs);
 		newInput(index, nodeValue_Float("Control point", self, [ PUPPET_FORCE_MODE.move, 16, 16, 8, 0, 8, 8 ]))
 			.setDisplay(VALUE_DISPLAY.puppet_control)
 		
 		array_push(input_display_list, index);
 		return inputs[index];
-	} #endregion
+	}
 	
 	attribute_surface_depth();
 	attribute_interpolation();
@@ -422,10 +422,10 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	static Mesh_regularTri = function(surf) { #region
+	static Mesh_regularTri = function(surf) {
 		if(is_array(surf)) surf = array_safe_get_fast(surf, 0);
 		
-		if(!is_surface(surf))       return;
+		if(!is_surface(surf))     return;
 		if(!inputs[0].value_from) return;
 		
 		var sample = getInputData(1);
@@ -440,7 +440,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var gh   = hh / sample;
 		var cont = noone;
 		
-		if(!fullmh) { #region alpha filter
+		if(!fullmh) { // alpha filter
 			cont = surface_create_valid(ww, hh);
 			
 			surface_set_target(cont);
@@ -453,7 +453,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				draw_surface_safe(surf);
 				shader_reset();
 			surface_reset_target();
-		} #endregion
+		}
 		
 		var _sam = sample + 1;
 		
@@ -461,7 +461,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		var ind = 0;
 		for(var i = 0; i < _sam; i++) 
-		for(var j = 0; j < _sam; j++) { #region mesh
+		for(var j = 0; j < _sam; j++) { // mesh
 			var fill = false;
 			
 			if(fullmh) {
@@ -496,10 +496,10 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				
 			if(j < sample && mesh_data.points[(i - 1) * _sam + j] != 0 && mesh_data.points[(i - 1) * _sam + j + 1] != 0)
 				array_push(mesh_data.tris, new _Triangle(mesh_data.points[(i - 1) * _sam + j], mesh_data.points[(i - 1) * _sam + j + 1], mesh_data.points[i * _sam + j]));
-		} #endregion
+		}
 		
 		for(var i = 0; i < _sam; i++)
-		for(var j = 0; j < _sam; j++) { #region diagonal
+		for(var j = 0; j < _sam; j++) { // diagonal
 			var p0 = i && j? mesh_data.points[ (i - 1) * _sam + j - 1 ] : 0;
 			var p1 = i?      mesh_data.points[ (i - 1) * _sam + j     ] : 0;
 			var p2 =      j? mesh_data.points[ (i    ) * _sam + j - 1 ] : 0;
@@ -515,12 +515,12 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				if(d0) array_push(mesh_data.links, new _Link(p0, p3, spring));
 				if(d1) array_push(mesh_data.links, new _Link(p1, p2, spring));
 			}
-		} #endregion
+		}
 		
 		if(is_surface(cont)) surface_free(cont);
-	} #endregion
+	}
 	
-	static Mesh_triangulate = function(surf) { #region
+	static Mesh_triangulate = function(surf) {
 		var sample = getInputData(1);
 		var seed   = getInputData(9);
 		
@@ -588,9 +588,9 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			array_push(mesh_data.links, new _Link(t[1], t[2]));
 			array_push(mesh_data.links, new _Link(t[2], t[0]));
 		}
-	} #endregion
+	}
 	
-	static Mesh_setTriangle = function() { #region
+	static Mesh_setTriangle = function() {
 		var _inSurf = getInputData(0);
 		var _type   = getInputData(8);
 		
@@ -615,9 +615,9 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			}
 			loadPin = noone;
 		}
-	} #endregion
+	}
 	
-	static Control_affectPoint = function(c, p) { #region
+	static Control_affectPoint = function(c, p) {
 		var mode = c[PUPPET_CONTROL.mode];
 		var cx   = c[PUPPET_CONTROL.cx];
 		var cy   = c[PUPPET_CONTROL.cy];
@@ -647,7 +647,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				p.planMove(lengthdir_x(fx * inf, fy), lengthdir_y(fx * inf, fy));
 				break;
 		}
-	} #endregion
+	}
 	
 	static control = function() {
 		var lStr = getInputData(6);
@@ -698,7 +698,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		}
 	}
 	
-	static processData = function(_outData, _data, _output_index, _array_index) { #region
+	static processData = function(_outData, _data, _output_index, _array_index) {
 		if(will_triangluate) {
 			Mesh_setTriangle();
 			will_triangluate = false;
@@ -736,7 +736,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		surface_reset_shader();	
 		
 		return [ _outSurf, mesh_data ];
-	} #endregion
+	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -771,7 +771,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		struct_append(attributes, attr);
 		
 		if(struct_has(attr, "pin"))			loadPin = attr.pin;
-		if(struct_has(attr, "mesh_bound"))  attributes.mesh_bound = attr.mesh_bound;;
+		if(struct_has(attr, "mesh_bound"))  attributes.mesh_bound = attr.mesh_bound;
 	}
 	
 	static postLoad = function() {

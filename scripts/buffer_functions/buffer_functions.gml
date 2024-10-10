@@ -1,11 +1,11 @@
-function buffer_get_color(buffer, _x, _y, w, h) { #region
+function buffer_get_color(buffer, _x, _y, w, h) {
 	buffer_seek(buffer, buffer_seek_start, (w * _y + _x) * 4);
 	var c = buffer_read(buffer, buffer_u32);
 	
 	return c;
-} #endregion
+}
 
-function buffer_get_string(buffer, text = true, limit = 400) { #region
+function buffer_get_string(buffer, text = true, limit = 400) {
 	if(is_array(buffer)) return "[buffer array]";
 	if(!buffer_exists(buffer)) return "";
 
@@ -21,9 +21,9 @@ function buffer_get_string(buffer, text = true, limit = 400) { #region
 	}
     
     return ss;
-} #endregion
+}
 
-function buffer_to_string(buffer) { #region
+function buffer_to_string(buffer) {
 	if(!buffer_exists(buffer)) return "";
 
 	buffer_seek(buffer, buffer_seek_start, 0);
@@ -36,16 +36,16 @@ function buffer_to_string(buffer) { #region
 	}
     
     return ss;
-} #endregion
+}
 
-function buffer_from_string(str) { #region
+function buffer_from_string(str) {
 	var _b = buffer_create(string_length(str) * 1, buffer_fast, 1);
 	for( var i = 1; i <= string_length(str); i++ ) 
 		buffer_write(_b, buffer_u8, ord(string_char_at(str, i)));
 	return _b;
-} #endregion
+}
 
-function buffer_from_surface(surface, header = true) { #region
+function buffer_from_surface(surface, header = true) {
 	static header_length = 24;
 	if(!is_surface(surface)) return noone;
 	
@@ -61,27 +61,27 @@ function buffer_from_surface(surface, header = true) { #region
 	
 	buffer_get_surface(_b, surface, header_length * header);
 	return _b;
-} #endregion
+}
 
-function buffer_from_file(path) { #region
+function buffer_from_file(path) {
 	if(!file_exists_empty(path)) return;
 	var _b = buffer_load(path);
 	return _b;
-} #endregion
+}
 
-function buffer_read_at(buffer, position, type) { #region
+function buffer_read_at(buffer, position, type) {
 	INLINE
 	buffer_seek(buffer, buffer_seek_start, position);
 	return buffer_read(buffer, type);
-} #endregion
+}
 
-function buffer_write_at(buffer, position, type, data) { #region
+function buffer_write_at(buffer, position, type, data) {
 	INLINE
 	buffer_seek(buffer, buffer_seek_start, position);
 	return buffer_write(buffer, type, data);
-} #endregion
+}
 
-function buffer_serialize(buffer, compress = true) { #region
+function buffer_serialize(buffer, compress = true) {
 	INLINE
 	if(!buffer_exists(buffer)) return "";
 	
@@ -91,37 +91,37 @@ function buffer_serialize(buffer, compress = true) { #region
 	}
 	
 	return buffer_base64_encode(buffer, 0, buffer_get_size(buffer));
-} #endregion
+}
 
-function buffer_deserialize(buffer, compress = true) { #region
+function buffer_deserialize(buffer, compress = true) {
 	INLINE
 	var buff = buffer_base64_decode(buffer);
 	
 	if(!compress) return buff;
 	return buffer_decompress(buff);
-} #endregion
+}
 	
-function buffer_getPixel(buffer, _w, _h, _x, _y) { #region
+function buffer_getPixel(buffer, _w, _h, _x, _y) {
 	if(_x < 0 || _y < 0 || _x >= _w || _y >= _h) return 0;
 	
 	buffer_seek(buffer, buffer_seek_start, (_w * _y + _x) * 4);
 	return buffer_read(buffer, buffer_u32);
-} #endregion
+}
 	
-function buffer_setPixel(buffer, _w, _h, _x, _y, _c) { #region
+function buffer_setPixel(buffer, _w, _h, _x, _y, _c) {
 	if(_x < 0 || _y < 0 || _x >= _w || _y >= _h) return 0;
 	
 	buffer_seek(buffer, buffer_seek_start, (_w * _y + _x) * 4);
 	buffer_write(buffer, buffer_u32, _c);
-} #endregion
+}
 	
-function buffer_compress_string(str) { #region
+function buffer_compress_string(str) {
 	var _len   = string_length(str);
 	var buffer = buffer_create(1, buffer_grow, 1);
 	
 	buffer_write(buffer, buffer_string, str);
 	return buffer_compress(buffer, 0, buffer_get_size(buffer));
-} #endregion
+}
 
 function buffer_to_start(buff) { INLINE buffer_seek(buff, buffer_seek_start, 0); }
 

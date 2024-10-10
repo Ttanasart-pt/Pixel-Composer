@@ -375,7 +375,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	dummy_input = noone;
 	auto_input  = false;
 	dyna_input_check_shift   = 0;
-	input_display_dynamic    = [];
+	input_display_dynamic    = -1;
 	dynamic_input_inspecting = 0;
 	static createNewInput    = -1;
 	
@@ -451,7 +451,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 
 	static refreshDynamicDisplay = function() {
-		if(array_empty(input_display_dynamic)) return;
+		if(input_display_dynamic == -1) return;
 		array_resize(input_display_list, array_length(input_display_list_raw));
 		
 		var _amo = getInputAmount();
@@ -461,7 +461,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 		
 		dynamic_input_inspecting = clamp(dynamic_input_inspecting, 0, getInputAmount() - 1);
-		
 		var _ind = input_fix_len + dynamic_input_inspecting * data_length;
 		
 		for( var i = 0, n = array_length(input_display_dynamic); i < n; i++ ) {
@@ -724,19 +723,52 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static getJunctionList = function() { ////getJunctionList
-	
-		var amo = input_display_list == -1? array_length(inputs) : array_length(input_display_list);
 		inputDisplayList = [];
 		
-		for(var i = 0; i < amo; i++) {
-			var ind = getInputJunctionIndex(i);
-			if(ind == noone) continue;
+		var iamo = getInputAmount();
+		if(iamo && input_display_dynamic != -1) {
 			
-			var jun = array_safe_get(inputs, ind, noone);
-			if(jun == noone || is_undefined(jun)) continue;
-			if(!jun.isVisible()) continue;
+			for(var i = 0; i < array_length(input_display_list_raw); i++) {
+				var ind = input_display_list_raw[i];
+				if(!is_real(ind)) continue;
+				
+				var jun = array_safe_get(inputs, ind, noone);
+				if(jun == noone || is_undefined(jun)) continue;
+				if(!jun.isVisible()) continue;
+				
+				array_push(inputDisplayList, jun);
+			}
 			
-			array_push(inputDisplayList, jun);
+			for( var i = 0; i < iamo; i++ ) {
+				var ind = input_fix_len + i * data_length;
+				
+				for( var j = 0, n = array_length(input_display_dynamic); j < n; j++ ) {
+					if(!is_real(input_display_dynamic[j])) continue;
+					
+					var _in_ind = ind + input_display_dynamic[j];
+					
+					var jun = array_safe_get(inputs, _in_ind, noone);
+					if(jun == noone || is_undefined(jun)) continue;
+					if(!jun.isVisible()) continue;
+					
+					array_push(inputDisplayList, jun);
+				}
+			}
+			
+		} else {
+			var amo = input_display_list == -1? array_length(inputs) : array_length(input_display_list);
+			
+			for(var i = 0; i < amo; i++) {
+				var ind = getInputJunctionIndex(i);
+				if(ind == noone) continue;
+				
+				var jun = array_safe_get(inputs, ind, noone);
+				if(jun == noone || is_undefined(jun)) continue;
+				if(!jun.isVisible()) continue;
+				
+				array_push(inputDisplayList, jun);
+			}
+			
 		}
 		
 		if(auto_input && dummy_input) array_push(inputDisplayList, dummy_input);
@@ -1482,22 +1514,22 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(!active) return;
 		var hover = noone;
 		
-		for(var i = 0, n = array_length(inputDisplayList); i < n; i++) {
+		for(var i = 0, n = array_length(inputDisplayList); i < n; i++) { //inputs
 			var jun = inputDisplayList[i];
 			
 			if(jun.drawJunction(_s, _mx, _my)) hover = jun;
 		}
 		
-		for(var i = 0; i < array_length(outputs); i++) {
+		for(var i = 0; i < array_length(outputs); i++) { // outputs
 			var jun = outputs[i];
 			
 			if(!jun.isVisible()) continue;
 			if(jun.drawJunction(_s, _mx, _my)) hover = jun;
 		}
 		
-		for( var i = 0; i < array_length(inputs); i++ ) {
+		for( var i = 0; i < array_length(inputs); i++ ) { // bypass
 			var _inp = inputs[i];
-			var jun = _inp.bypass_junc;
+			var  jun = _inp.bypass_junc;
 			
 			if(jun == noone || !jun.visible) continue;
 			if(jun.drawJunction(_s, _mx, _my)) hover = jun;

@@ -715,6 +715,7 @@ function __initNodes() {
 			
 		ds_list_add(d3d, "Modify");
 		addNodeObject(d3d, "Discretize vertex",	s_node_3d_discretize,		"Node_3D_Round_Vertex",		[1, Node_3D_Round_Vertex],, "Round out vertex position to a specified step.").setVersion(11560);
+		addNodeObject(d3d, "3D Displace",		s_node_3d_displace,			"Node_3D_Displace",			[1, Node_3D_Displace],, "").setVersion(1_18_01_0);
 		addNodeObject(d3d, "Set Material",		s_node_3d_set_material,		"Node_3D_Set_Material",		[1, Node_3D_Set_Material],, "Replace mesh material with a new one.").setVersion(11560);
 		addNodeObject(d3d, "Transform",			s_node_3d_transform,		"Node_3D_Transform",		[1, Node_3D_Transform],, "Transform 3D object.").setVersion(11570);
 		addNodeObject(d3d, "Transform Scene",	s_node_3d_transform_scene,	"Node_3D_Transform_Scene",	[1, Node_3D_Transform_Scene],, "Transform 3D scene, accepts array of transformations for each objects.").setVersion(11570);

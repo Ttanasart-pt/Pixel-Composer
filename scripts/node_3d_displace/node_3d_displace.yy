@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"node_mesh_warp",
+  "%Name":"node_3d_displace",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"node_mesh_warp",
+  "name":"node_3d_displace",
   "parent":{
-    "name":"warps",
-    "path":"folders/nodes/data/filter/warps.yy",
+    "name":"d3d_modifier",
+    "path":"folders/nodes/data/3D/d3d_modifier.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

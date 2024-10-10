@@ -195,7 +195,11 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				
 				if(_junc_canvas) hover &= _m[0] > _txx + ui(8 + 16);
 				
-				draw_set_text(f_p1, fa_left, fa_center, hover? COLORS._main_text_accent : COLORS._main_text);
+				var tc = i == dynamic_input_inspecting? COLORS._main_text_accent : COLORS._main_icon;
+				if(hover) tc = COLORS._main_text;
+					
+				draw_set_text(f_p1, fa_left, fa_center, tc);
+				
 				if(canvas_draw != noone && _junc_canvas)
 					_txt = _junc_canvas.display_name;
 				
@@ -228,6 +232,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 						draw_set_alpha(aa);
 						draw_text(_txx + ui(8 + 16), _txy, _txt);
 						draw_set_alpha(1);
+						
 					} else {
 						draw_set_alpha(aa);
 						draw_text(_txx, _txy, _txt);
@@ -286,6 +291,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 					draw_set_color(COLORS._main_accent);
 					if(layer_dragging > ind)
 						draw_line_width(_x + ui(16), _cy + lh + 2, _x + _w - ui(16), _cy + lh + ui(2), 2);
+						
 					else if(layer_dragging < ind)
 						draw_line_width(_x + ui(16), _cy - 2, _x + _w - ui(16), _cy - ui(2), 2);
 				}
@@ -316,8 +322,11 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				}
 				
 				if(mouse_press(mb_left, _focus)) {
-					layer_dragging = ind;
+					layer_dragging    = ind;
 					surface_selecting = index;
+					
+					dynamic_input_inspecting = i;
+					refreshDynamicDisplay();
 				}
 			}
 			
@@ -365,14 +374,6 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		return layer_height;
 	});
-	
-	input_display_list = [
-		["Output",	 true],	0, 1, 2,
-		["Layers",	false],	layer_renderer,
-		["Surfaces", true],	
-	];
-	
-	input_display_list_len = array_length(input_display_list);
 	
 	function deleteLayer(index) {
 		var idx = input_fix_len + index * data_length;
@@ -441,8 +442,19 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		while(_s >= array_length(attributes.layer_selectable))
 			array_push(attributes.layer_selectable, true);
 		
+		refreshDynamicDisplay();
 		return inputs[index + 0];
 	} 
+	
+	input_display_dynamic = [ 
+		["Surface",   false], 0, 4, 5, 
+		["Transform", false], 1, 2, 3, 
+	];
+	
+	input_display_list = [
+		["Output",	 true],	0, 1, 2,
+		["Layers",	false],	layer_renderer,
+	];
 	
 	setDynamicInput(6, true, VALUE_TYPE.surface);
 	
@@ -685,8 +697,12 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			}
 		}
 		
-		if(mouse_press(mb_left, active))
+		if(mouse_press(mb_left, active)) {
 			surface_selecting = hovering;
+			dynamic_input_inspecting = hovering;
+			refreshDynamicDisplay();
+		}
+			
 		if(surface_selecting != noone) {
 			var a = array_safe_get_fast(anchors, surface_selecting, noone);
 			if(!is_struct(a)) surface_selecting = noone;
@@ -756,7 +772,9 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	static processData = function(_outData, _data, _output_index, _array_index) {
 		var _outSurf  = _outData[0];
 		
-		if(array_length(_data) <= input_fix_len) return [ _outSurf, noone, [1, 1] ];
+		if(getInputAmount() == 0) return _outData;
+		
+		dynamic_input_inspecting = clamp(dynamic_input_inspecting, 0, getInputAmount() - 1);
 		
 		var _pad	  = _data[0];
 		var _dim_type = _data[1];

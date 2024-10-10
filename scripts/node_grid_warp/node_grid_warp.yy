@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"node_mesh_warp",
+  "%Name":"node_grid_warp",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"node_mesh_warp",
+  "name":"node_grid_warp",
   "parent":{
     "name":"warps",
     "path":"folders/nodes/data/filter/warps.yy",

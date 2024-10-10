@@ -82,13 +82,13 @@ function __3dCylinder(radius = 0.5, height = 1, sides = 8, smooth = false) : __3
 				var _h0 = -_h + _j0 * _h * 2;
 				var _h1 = -_h + _j1 * _h * 2;
 				
-				vs[_ix++] = new __vertex(x2, y2, _h1).setNormal(nx0, ny0, 0).setUV(ux0, _j0);
-				vs[_ix++] = new __vertex(x0, y0, _h0).setNormal(nx0, ny0, 0).setUV(ux0, _j1);
-				vs[_ix++] = new __vertex(x3, y3, _h1).setNormal(nx1, ny1, 0).setUV(ux1, _j0);
+				vs[_ix++] = new __vertex(x2, y2, _h1).setNormal(nx0, ny0, 0).setUV(ux0, _j1);
+				vs[_ix++] = new __vertex(x0, y0, _h0).setNormal(nx0, ny0, 0).setUV(ux0, _j0);
+				vs[_ix++] = new __vertex(x3, y3, _h1).setNormal(nx1, ny1, 0).setUV(ux1, _j1);
 															  					  
-				vs[_ix++] = new __vertex(x0, y0, _h0).setNormal(nx0, ny0, 0).setUV(ux0, _j1);
-				vs[_ix++] = new __vertex(x1, y1, _h0).setNormal(nx1, ny1, 0).setUV(ux1, _j1);
-				vs[_ix++] = new __vertex(x3, y3, _h1).setNormal(nx1, ny1, 0).setUV(ux1, _j0);
+				vs[_ix++] = new __vertex(x0, y0, _h0).setNormal(nx0, ny0, 0).setUV(ux0, _j0);
+				vs[_ix++] = new __vertex(x1, y1, _h0).setNormal(nx1, ny1, 0).setUV(ux1, _j0);
+				vs[_ix++] = new __vertex(x3, y3, _h1).setNormal(nx1, ny1, 0).setUV(ux1, _j1);
 			}
 		}
 		

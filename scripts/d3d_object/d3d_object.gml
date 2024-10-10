@@ -236,7 +236,7 @@ function __3dObject() constructor {
 				_obj.VB[i] = vertex_create_buffer_from_buffer(_buff, VF);
 			}
 		} else {
-			_obj.VB  = VB;
+			_obj.VB  = [];
 		}
 		
 		_obj.NVB            = NVB;
