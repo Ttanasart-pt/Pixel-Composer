@@ -1,6 +1,6 @@
-function nodeValue_Trigger(_name, _node, _value, _tooltip = "") { return new NodeValue_Trigger(_name, _node, _value, _tooltip); }
+function nodeValue_Trigger(_name, _node, _value, _tooltip = "") { return new __NodeValue_Trigger(_name, _node, _value, _tooltip); }
 
-function NodeValue_Trigger(_name, _node, _value, _tooltip = "") : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.trigger, _value, _tooltip) constructor {
+function __NodeValue_Trigger(_name, _node, _value, _tooltip = "") : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.trigger, _value, _tooltip) constructor {
 	
 	/////============== GET =============
 	

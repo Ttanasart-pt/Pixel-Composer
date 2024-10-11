@@ -61,7 +61,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		bypass_junc    = noone;
 		
 		if(_connect == CONNECT_TYPE.input) {
-			bypass_junc = new NodeValue_Input_Bypass(self, _name, _node, _type, index);
+			bypass_junc = new __NodeValue_Input_Bypass(self, _name, _node, _type, index);
 			node.input_bypass[index] = bypass_junc;
 		}
 	#endregion
@@ -1554,7 +1554,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(!updated) return false; /////////////////////////////////////////////////////////////////////////////////
 		
-		if(is_instanceof(self, NodeValue_Dimension))
+		if(is_instanceof(self, __NodeValue_Dimension))
 			node.attributes.use_project_dimension = false;
 		
 		if(connect_type == CONNECT_TYPE.input && self.index >= 0) {

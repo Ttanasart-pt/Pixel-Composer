@@ -1,6 +1,6 @@
-function nodeValue_Curve(_name, _node, _value) { return new NodeValue_Curve(_name, _node, _value); }
+function nodeValue_Curve(_name, _node, _value) { return new __NodeValue_Curve(_name, _node, _value); }
 
-function NodeValue_Curve(_name, _node, _value) : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.curve, _value, "") constructor {
+function __NodeValue_Curve(_name, _node, _value) : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.curve, _value, "") constructor {
 	
 	/////============== GET =============
 	

@@ -1,6 +1,6 @@
-function nodeValue_Surface(_name, _node, _value = noone, _tooltip = "") { return new NodeValue_Surface(_name, _node, _value, _tooltip); }
+function nodeValue_Surface(_name, _node, _value = noone, _tooltip = "") { return new __NodeValue_Surface(_name, _node, _value, _tooltip); }
 
-function NodeValue_Surface(_name, _node, _value, _tooltip = "") : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.surface, _value, _tooltip) constructor {
+function __NodeValue_Surface(_name, _node, _value, _tooltip = "") : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.surface, _value, _tooltip) constructor {
 	
 	animable = false;
 	

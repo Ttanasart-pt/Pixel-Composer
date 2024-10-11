@@ -1,6 +1,6 @@
-function nodeValue_Enum_Button(_name, _node, _value, _data) { return new NodeValue_Enum_Button(_name, _node, _value, _data); }
+function nodeValue_Enum_Button(_name, _node, _value, _data) { return new __NodeValue_Enum_Button(_name, _node, _value, _data); }
 
-function NodeValue_Enum_Button(_name, _node, _value, _data) : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.integer, _value, "") constructor {
+function __NodeValue_Enum_Button(_name, _node, _value, _data) : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.integer, _value, "") constructor {
 	setDisplay(VALUE_DISPLAY.enum_button, _data);
 	
 	/////============== GET =============

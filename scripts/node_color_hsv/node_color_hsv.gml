@@ -23,18 +23,18 @@ function Node_Color_HSV(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	input_display_list = [ 3, 0, 1, 2, 4 ];
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var nor = _data[3];
 		
 		return make_color_hsva(
-				nor? _data[0] * 255 : _data[0], 
-				nor? _data[1] * 255 : _data[1], 
-				nor? _data[2] * 255 : _data[2],
-				nor? _data[4] * 255 : _data[4],
+				nor? clamp(_data[0], 0, 1) * 255 : clamp(_data[0], 0, 1),
+				nor? clamp(_data[1], 0, 1) * 255 : clamp(_data[1], 0, 1),
+				nor? clamp(_data[2], 0, 1) * 255 : clamp(_data[2], 0, 1),
+				nor? clamp(_data[4], 0, 1) * 255 : clamp(_data[4], 0, 1),
 			);
-	} #endregion
+	}
 	
-	static onValueUpdate = function(index = 0) { #region
+	static onValueUpdate = function(index = 0) {
 		if(index == 3) {
 			var _nor = getInputData(3);
 			
@@ -64,9 +64,9 @@ function Node_Color_HSV(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				inputs[4].setDisplay(VALUE_DISPLAY.slider, { range: [0, 255, 0.1] });
 			}
 		}
-	} #endregion
+	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
 		if(bbox.h < 1) return;
 		
@@ -78,9 +78,9 @@ function Node_Color_HSV(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		}
 		
 		drawColor(col, bbox.x0, bbox.y0, bbox.w, bbox.h);
-	} #endregion
+	}
 	
-	static doApplyDeserialize = function() { #region
+	static doApplyDeserialize = function() {
 		onValueUpdate(3);
-	} #endregion
+	}
 }

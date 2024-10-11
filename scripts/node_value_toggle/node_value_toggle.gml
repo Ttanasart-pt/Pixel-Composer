@@ -1,6 +1,6 @@
-function nodeValue_Toggle(_name, _node, _value, _data = {}) { return new NodeValue_Toggle(_name, _node, _value, _data); }
+function nodeValue_Toggle(_name, _node, _value, _data = {}) { return new __NodeValue_Toggle(_name, _node, _value, _data); }
 
-function NodeValue_Toggle(_name, _node, _value, _data = {}) : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.integer, _value, "") constructor {
+function __NodeValue_Toggle(_name, _node, _value, _data = {}) : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.integer, _value, "") constructor {
 	
 	setDisplay(VALUE_DISPLAY.toggle, _data);
 	

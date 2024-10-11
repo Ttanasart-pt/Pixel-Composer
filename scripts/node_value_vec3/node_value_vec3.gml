@@ -1,5 +1,5 @@
-function nodeValue_Vec3(_name, _node, _value, _data = {}) { return new NodeValue_Vec3(_name, _node, _value, _data); }
+function nodeValue_Vec3(_name, _node, _value, _data = {}) { return new __NodeValue_Vec3(_name, _node, _value, _data); }
 
-function NodeValue_Vec3(_name, _node, _value, _data = {}) : NodeValue_Array(_name, _node, _value, "", 3) constructor {
+function __NodeValue_Vec3(_name, _node, _value, _data = {}) : __NodeValue_Array(_name, _node, _value, "", 3) constructor {
 	setDisplay(VALUE_DISPLAY.vector, _data);
 }

@@ -1,6 +1,6 @@
-function nodeValue_Output(_name, _node, _type, _value, _tooltip = "") { return new NodeValue_Output(_name, _node, _type, _value, _tooltip); }
+function nodeValue_Output(_name, _node, _type, _value, _tooltip = "") { return new __NodeValue_Output(_name, _node, _type, _value, _tooltip); }
 
-function NodeValue_Output(_name, _node, _type, _value, _tooltip = "") : NodeValue(_name, _node, CONNECT_TYPE.output, _type, _value, _tooltip) constructor {
+function __NodeValue_Output(_name, _node, _type, _value, _tooltip = "") : NodeValue(_name, _node, CONNECT_TYPE.output, _type, _value, _tooltip) constructor {
 	
 	index = array_length(node.outputs);
 	
@@ -37,7 +37,7 @@ function NodeValue_Output(_name, _node, _type, _value, _tooltip = "") : NodeValu
 	}
 }
 
-function NodeValue_Input_Bypass(_from, _name, _node, _type, _index) : NodeValue_Output(_name, _node, _type, 0, "") constructor {
+function __NodeValue_Input_Bypass(_from, _name, _node, _type, _index) : __NodeValue_Output(_name, _node, _type, 0, "") constructor {
 	from_junc = _from;
 	visible   = false;
 	index     = 1000 + _index;

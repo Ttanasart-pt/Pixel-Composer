@@ -1,9 +1,9 @@
-function nodeValue_Path_Anchor(_name, _node, _value, _tooltip = "") { return new NodeValue_Path_Anchor(_name, _node, _value, _tooltip); }
-function NodeValue_Path_Anchor(_name, _node, _value, _tooltip = "") : NodeValue_Array(_name, _node, _value, _tooltip, _ANCHOR.amount) constructor {
+function nodeValue_Path_Anchor(_name, _node, _value, _tooltip = "") { return new __NodeValue_Path_Anchor(_name, _node, _value, _tooltip); }
+function __NodeValue_Path_Anchor(_name, _node, _value, _tooltip = "") : __NodeValue_Array(_name, _node, _value, _tooltip, _ANCHOR.amount) constructor {
 	setDisplay(VALUE_DISPLAY.path_anchor);
 }
 
-function nodeValue_Path_Anchor_3D(_name, _node, _value, _tooltip = "") { return new NodeValue_Path_Anchor_3D(_name, _node, _value, _tooltip); }
-function NodeValue_Path_Anchor_3D(_name, _node, _value, _tooltip = "") : NodeValue_Array(_name, _node, _value, _tooltip, _ANCHOR3.amount) constructor {
+function nodeValue_Path_Anchor_3D(_name, _node, _value, _tooltip = "") { return new __NodeValue_Path_Anchor_3D(_name, _node, _value, _tooltip); }
+function __NodeValue_Path_Anchor_3D(_name, _node, _value, _tooltip = "") : __NodeValue_Array(_name, _node, _value, _tooltip, _ANCHOR3.amount) constructor {
 	setDisplay(VALUE_DISPLAY.path_anchor);
 }

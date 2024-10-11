@@ -39,10 +39,12 @@ function Panel_Patreon() : PanelContent() constructor {
 			return;
 		}
 		
-		var key = keys[0];
+		var key    = keys[0];
 		var member = map[$ key];
+		var stat   = string_replace_all(string_lower(member.status), " ", "_");
+		print(stat);
 		
-		if(member.status == "active_patron") {
+		if(string_pos("active", stat) > 0) {
 			var _mail   = member.email;
 			var _code   = patreon_generate_activation_key(_mail); //yea we doing this on client now. 
 			verify_code = _code;

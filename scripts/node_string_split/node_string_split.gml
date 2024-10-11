@@ -4,6 +4,7 @@ function Node_String_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	newInput(0, nodeValue_Text("Text", self, ""))
 		.setVisible(true, true);
+		
 	newInput(1, nodeValue_Text("Delimiter", self, " ", "Character that used to split text,\nleave blank to create character array."));
 	inputs[1].editWidget.format = TEXT_AREA_FORMAT.delimiter;
 	
@@ -20,10 +21,10 @@ function Node_String_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var str = getInputData(1);
+		var str  = getInputData(1);
 		var bbox = drawGetBbox(xx, yy, _s);
-		var cx = bbox.xc;
-		var cy = bbox.yc;
+		var cx   = bbox.xc;
+		var cy   = bbox.yc;
 		
 		if(string_length(str) == 0) {
 			draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text_sub);
@@ -34,7 +35,8 @@ function Node_String_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		_s *= 0.5;
 		
 		draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
-		draw_text_cut(cx, cy, str, bbox.w, _s);
+		str = string_cut(str, bbox.w - _s * 32, "...", _s);
+		draw_text_add(cx, cy, str, _s);
 		
 		var ww = (string_width(str) / 2) * _s;
 		draw_set_text(f_sdf, fa_right, fa_center, COLORS._main_text_sub);
