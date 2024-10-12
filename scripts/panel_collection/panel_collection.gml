@@ -279,7 +279,7 @@ function Panel_Collection() : PanelContent() constructor {
 	tb_search = new textBox(TEXTBOX_INPUT.text, function(str) /*=>*/ { search_string = string(str); doSearch(); });
 	tb_search.auto_update = true;
 	
-	grid_size    = ui(48);
+	grid_size    = ui(56);
 	grid_size_to = grid_size;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -667,7 +667,7 @@ function Panel_Collection() : PanelContent() constructor {
 					}
 				}
 				
-				var ss = grid_size / 96;
+				var ss = grid_size / (max(sprite_get_width(_node.spr), sprite_get_height(_node.spr)) + 16);
 				var sx = _boxx + grid_size / 2;
 				var sy = yy + grid_size / 2;
 				

@@ -44,16 +44,15 @@ function Node_Convolution(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		var _ker = _data[1];
 		var _nrm = _data[9];
 		var _siz = max(3, _data[10]);
-		var _sam = struct_try_get(attributes, "oversample");
 		
 		inputs[1].editWidget.setSize(_siz);
 		_ker = array_verify(_ker, _siz * _siz);
 		
 		surface_set_shader(_outSurf, sh_convolution, true, BLEND.over);
+			shader_set_i("sampleMode",  attributes.oversample);
 			shader_set_dim("dimension", _outSurf);
 			shader_set_f("kernel",      _ker);
 			shader_set_i("size",        _siz);
-			shader_set_i("sampleMode",  _sam);
 			shader_set_i("normalized",  _nrm);
 			
 			draw_surface_safe(_data[0]);

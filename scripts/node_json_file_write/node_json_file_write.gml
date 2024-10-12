@@ -11,16 +11,21 @@ function Node_Json_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	newInput(1, nodeValue_Struct("Struct", self, {}))
 		.setVisible(true, true);
 	
-	input_display_list = [ 0, 1 ]
+	newInput(2, nodeValue_Bool("Pretty print", self, false));
+	
+	input_display_list = [ 0, 1, 2 ]
 	
 	static writeFile = function() {
 		var path = getInputData(0);
+		
 		if(path == "") return;
 		if(filename_ext(path) != ".json")
 			path += ".json";
 		
 		var cont = getInputData(1);
-		json_save_struct(path, cont);
+		var pret = getInputData(2);
+		
+		json_save_struct(path, cont, pret);
 	}
 	
 	static update = function(frame = CURRENT_FRAME) { 

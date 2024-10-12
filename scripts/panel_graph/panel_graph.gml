@@ -271,7 +271,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
             show_dimension  : true,
             show_compute    : true,
         
-            avoid_label     : true,
+            avoid_label     : false,
             preview_scale   : 100,
             highlight       : false,
             
@@ -295,6 +295,22 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         	
         	tooltip_overlay[$ title] = keys;
         }
+        
+        tb_zoom_level = new textBox(TEXTBOX_INPUT.number, function(z) /*=>*/ { 
+        	var _s = graph_s;
+                
+            graph_s_to = clamp(z, 0.01, 2); 
+        	graph_s    = graph_s_to; 
+            
+            if(_s != graph_s) {
+				graph_x += w / 2 * ((1 / graph_s) - (1 / _s));
+				graph_y += h / 2 * ((1 / graph_s) - (1 / _s));
+            }
+        });
+        tb_zoom_level.color  = c_white;
+        tb_zoom_level.align  = fa_right;
+        tb_zoom_level.hide   = 3;
+        tb_zoom_level.font   = f_p2;
     #endregion
     
     #region // ---- position ----
@@ -382,9 +398,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         node_hover           = noone;
         
         junction_hovering    = noone;
-        add_node_draw_junc   = false;
-        add_node_draw_x_fix  = 0;
-        add_node_draw_y_fix  = 0;
+        add_node_draw_junc   = noone;
         add_node_draw_x      = 0;
         add_node_draw_y      = 0;
         
@@ -1478,179 +1492,189 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         printIf(log, $"Draw active: {get_timer() - t}"); t = get_timer();
         
         // draw connections
-            var aa = floor(min(8192 / w, 8192 / h, PREFERENCES.connection_line_aa));
-            
-            connection_surface    = surface_verify(connection_surface, w * aa, h * aa);
-            connection_surface_aa = surface_verify(connection_surface_aa, w, h);
-            surface_set_target(connection_surface);
-            DRAW_CLEAR
+        var aa = floor(min(8192 / w, 8192 / h, PREFERENCES.connection_line_aa));
         
-            var hov       = noone;
-            var hoverable = !bool(node_dragging) && pHOVER;
-            var param     = connection_param;
-            
-            param.active    = hoverable;
-            param.setPos(gr_x, gr_y, graph_s, mx, my);
-            param.setBoundary(-64, -64, w + 64, h + 64);
-            param.setProp(array_length(nodes_list), display_parameter.highlight);
-            param.setDraw(aa, bg_color);
-            
-            for(var i = 0; i < array_length(nodes_list); i++) {
-                var _node = nodes_list[i];
-                if(!display_parameter.show_control && _node.is_controller) continue;
-                
-                param.cur_layer = i + 1;
-                
-                var _hov = _node.drawConnections(param);
-                if(_hov != noone && is_struct(_hov)) hov = _hov;
-            }
+        connection_surface    = surface_verify(connection_surface, w * aa, h * aa);
+        connection_surface_aa = surface_verify(connection_surface_aa, w, h);
+        surface_set_target(connection_surface);
+        DRAW_CLEAR
+    
+        var hov       = noone;
+        var hoverable = !bool(node_dragging) && pHOVER;
+        var param     = connection_param;
         
-            if(value_dragging && connection_draw_mouse != noone && !key_mod_press(SHIFT)) {
-                var _cmx = connection_draw_mouse[0];
-                var _cmy = connection_draw_mouse[1];
-                var _cmt = connection_draw_target;
+        param.active    = hoverable;
+        param.setPos(gr_x, gr_y, graph_s, mx, my);
+        param.setBoundary(-64, -64, w + 64, h + 64);
+        param.setProp(array_length(nodes_list), display_parameter.highlight);
+        param.setDraw(aa, bg_color);
+        
+        for(var i = 0; i < array_length(nodes_list); i++) {
+            var _node = nodes_list[i];
+            if(!display_parameter.show_control && _node.is_controller) continue;
+            
+            param.cur_layer = i + 1;
+            
+            var _hov = _node.drawConnections(param);
+            if(_hov != noone && is_struct(_hov)) hov = _hov;
+        }
+    
+        if(value_dragging && connection_draw_mouse != noone && !key_mod_press(SHIFT)) {
+            var _cmx = connection_draw_mouse[0];
+            var _cmy = connection_draw_mouse[1];
+            var _cmt = connection_draw_target;
+            
+            if(array_empty(value_draggings))
+                value_dragging.drawConnectionMouse(param, _cmx, _cmy, _cmt);
+            else {
+                var _stIndex = array_find(value_draggings, value_dragging);
+            
+                for( var i = 0, n = array_length(value_draggings); i < n; i++ ) {
+                    var _dmx = _cmx;
+                    var _dmy = value_draggings[i].connect_type == CONNECT_TYPE.output? _cmy + (i - _stIndex) * 24 * graph_s : _cmy;
                 
-                if(array_empty(value_draggings))
-                    value_dragging.drawConnectionMouse(param, _cmx, _cmy, _cmt);
-                else {
-                    var _stIndex = array_find(value_draggings, value_dragging);
-                
-                    for( var i = 0, n = array_length(value_draggings); i < n; i++ ) {
-                        var _dmx = _cmx;
-                        var _dmy = value_draggings[i].connect_type == CONNECT_TYPE.output? _cmy + (i - _stIndex) * 24 * graph_s : _cmy;
-                    
-                        value_draggings[i].drawConnectionMouse(param, _dmx, _dmy, _cmt);
-                    }
+                    value_draggings[i].drawConnectionMouse(param, _dmx, _dmy, _cmt);
                 }
             }
-            
-            surface_reset_target();
-            
-            gpu_set_texfilter(true);
-            surface_set_shader(connection_surface_aa, sh_downsample);
-                shader_set_f("down", aa);
-                shader_set_dim("dimension", connection_surface);
-                draw_surface_safe(connection_surface);
-            surface_reset_shader();
-            gpu_set_texfilter(false);
-            
-            BLEND_ALPHA_MULP
-            draw_surface_safe(connection_surface_aa);
-            BLEND_NORMAL
-            
-            junction_hovering = node_hovering == noone? hov : noone;
+        } else if(add_node_draw_junc != noone) {
+        	
+        	if(!instance_exists(o_dialog_add_node))
+        		add_node_draw_junc = noone;
+        	else {
+        		var _amx = gr_x + add_node_draw_x * graph_s;
+        		var _amy = gr_y + add_node_draw_y * graph_s;
+        		
+        		add_node_draw_junc.drawConnectionMouse(param, _amx, _amy);
+        	}
+        }
+        
+        surface_reset_target();
+        
+        gpu_set_texfilter(true);
+        surface_set_shader(connection_surface_aa, sh_downsample);
+            shader_set_f("down", aa);
+            shader_set_dim("dimension", connection_surface);
+            draw_surface_safe(connection_surface);
+        surface_reset_shader();
+        gpu_set_texfilter(false);
+        
+        BLEND_ALPHA_MULP
+        draw_surface_safe(connection_surface_aa);
+        BLEND_NORMAL
+        
+        junction_hovering = node_hovering == noone? hov : noone;
         
         printIf(log, $"Draw connection: {get_timer() - t}"); t = get_timer();
         
         // draw node
-            _value_focus = value_focus;
-             value_focus = noone;
-             
-            var t = get_timer();
-            for(var i = 0; i < array_length(nodes_list); i++) {
-                var _node = nodes_list[i];
-                
-                if(!display_parameter.show_control && _node.is_controller) continue;
-                nodes_list[i].drawNodeBehind(gr_x, gr_y, mx, my, graph_s);
-            }
+        _value_focus = value_focus;
+         value_focus = noone;
+         
+        var t = get_timer();
+        for(var i = 0; i < array_length(nodes_list); i++) {
+            var _node = nodes_list[i];
             
-            for( var i = 0, n = array_length(value_draggings); i < n; i++ )
-                value_draggings[i].graph_selecting = true;
-            
-            for(var i = 0; i < array_length(nodes_list); i++) {
-                var _node = nodes_list[i];
-                
-                if(!display_parameter.show_control && _node.is_controller) continue;
-                if(is_instanceof(_node, Node_Frame)) continue;
-                try {
-                    var val = _node.drawNode(gr_x, gr_y, mx, my, graph_s, display_parameter, self);
-                    if(val) {
-                        value_focus = val;
-                        if(key_mod_press(SHIFT)) TOOLTIP = [ val.getValue(), val.type ];
-                    }
-                } catch(e) {
-                    log_warning("NODE DRAW", exception_print(e));
-                }
-            }
-            
-            for(var i = 0; i < array_length(nodes_list); i++) {
-                var _node = nodes_list[i];
-                
-                if(!display_parameter.show_control && _node.is_controller) continue;
-                if(!is_instanceof(nodes_list[i], Node_Frame)) 
-                    nodes_list[i].drawBadge(gr_x, gr_y, graph_s);
-            }
-                
-            for(var i = 0; i < array_length(nodes_list); i++) {
-                var _node = nodes_list[i];
-                
-                if(!display_parameter.show_control && _node.is_controller) continue;
-                nodes_list[i].drawNodeFG(gr_x, gr_y, mx, my, graph_s, display_parameter, self);
-            }
-            
-            if(PANEL_INSPECTOR && PANEL_INSPECTOR.prop_hover != noone)
-                value_focus = PANEL_INSPECTOR.prop_hover;
+            if(!display_parameter.show_control && _node.is_controller) continue;
+            nodes_list[i].drawNodeBehind(gr_x, gr_y, mx, my, graph_s);
+        }
         
+        for( var i = 0, n = array_length(value_draggings); i < n; i++ )
+            value_draggings[i].graph_selecting = true;
+        
+        for(var i = 0; i < array_length(nodes_list); i++) {
+            var _node = nodes_list[i];
+            
+            if(!display_parameter.show_control && _node.is_controller) continue;
+            if(is_instanceof(_node, Node_Frame)) continue;
+            try {
+                var val = _node.drawNode(gr_x, gr_y, mx, my, graph_s, display_parameter, self);
+                if(val) {
+                    value_focus = val;
+                    if(key_mod_press(SHIFT)) TOOLTIP = [ val.getValue(), val.type ];
+                }
+            } catch(e) {
+                log_warning("NODE DRAW", exception_print(e));
+            }
+        }
+        
+        for(var i = 0; i < array_length(nodes_list); i++) {
+            var _node = nodes_list[i];
+            
+            if(!display_parameter.show_control && _node.is_controller) continue;
+            if(!is_instanceof(nodes_list[i], Node_Frame)) 
+                nodes_list[i].drawBadge(gr_x, gr_y, graph_s);
+        }
+            
+        for(var i = 0; i < array_length(nodes_list); i++) {
+            var _node = nodes_list[i];
+            
+            if(!display_parameter.show_control && _node.is_controller) continue;
+            nodes_list[i].drawNodeFG(gr_x, gr_y, mx, my, graph_s, display_parameter, self);
+        }
+        
+        if(PANEL_INSPECTOR && PANEL_INSPECTOR.prop_hover != noone)
+            value_focus = PANEL_INSPECTOR.prop_hover;
+    
         printIf(log, $"Draw node: {get_timer() - t}"); t = get_timer();
         
         // dragging
-            if(mouse_press(mb_left))
-                node_dragging = noone;
+        if(mouse_press(mb_left))
+            node_dragging = noone;
+        
+        for(var i = 0; i < array_length(nodes_list); i++)
+            nodes_list[i].groupCheck(gr_x, gr_y, graph_s, mx, my);
+        
+        if(node_dragging && !key_mod_press(ALT)) {
+            addKeyOverlay("Dragging node(s)", [[ "Ctrl", "Disable snapping" ]]);
             
-            for(var i = 0; i < array_length(nodes_list); i++)
-                nodes_list[i].groupCheck(gr_x, gr_y, graph_s, mx, my);
-            
-            if(node_dragging && !key_mod_press(ALT)) {
-                addKeyOverlay("Dragging node(s)", [[ "Ctrl", "Disable snapping" ]]);
+            var nx = node_drag_sx + (mouse_graph_x - node_drag_mx);
+            var ny = node_drag_sy + (mouse_graph_y - node_drag_my);
                 
-                var nx = node_drag_sx + (mouse_graph_x - node_drag_mx);
-                var ny = node_drag_sy + (mouse_graph_y - node_drag_my);
-                    
-                if(!key_mod_press(CTRL) && project.graphGrid.snap) {
-                    nx = round(nx / project.graphGrid.size) * project.graphGrid.size;
-                    ny = round(ny / project.graphGrid.size) * project.graphGrid.size;
-                }
-                
-                if(node_drag_ox == -1 || node_drag_oy == -1) {
-                    node_drag_ox = nx;
-                    node_drag_oy = ny;
-                } else if(nx != node_drag_ox || ny != node_drag_oy) {
-                    var dx = nx - node_drag_ox;
-                    var dy = ny - node_drag_oy;
-                        
-                    for(var i = 0; i < array_length(nodes_selecting); i++) {
-                        var _node = nodes_selecting[i];
-                        var _nx = _node.x + dx;
-                        var _ny = _node.y + dy;
-                            
-                        if(!key_mod_press(CTRL) && project.graphGrid.snap) {
-                            _nx = round(_nx / project.graphGrid.size) * project.graphGrid.size;
-                            _ny = round(_ny / project.graphGrid.size) * project.graphGrid.size;
-                        }
-                            
-                        _node.move(_nx, _ny, graph_s);
-                    }
-                        
-                    node_drag_ox = nx;
-                    node_drag_oy = ny;
-                }
-                    
-                if(mouse_release(mb_left) && (nx != node_drag_sx || ny != node_drag_sy)) {
-                    var shfx = node_drag_sx - nx;
-                    var shfy = node_drag_sy - ny;
-                    
-                    UNDO_HOLDING = false;    
-                    for(var i = 0; i < array_length(nodes_selecting); i++) {
-                        var _n = nodes_selecting[i];
-                        if(_n == noone) continue;
-                        recordAction(ACTION_TYPE.var_modify, _n, [ _n.x + shfx, "x", "node x position" ]);
-                        recordAction(ACTION_TYPE.var_modify, _n, [ _n.y + shfy, "y", "node y position" ]);
-                    }
-                }
+            if(!key_mod_press(CTRL) && project.graphGrid.snap) {
+                nx = round(nx / project.graphGrid.size) * project.graphGrid.size;
+                ny = round(ny / project.graphGrid.size) * project.graphGrid.size;
             }
             
-            if(mouse_release(mb_left))
-                node_dragging = noone;
+            if(node_drag_ox == -1 || node_drag_oy == -1) {
+                node_drag_ox = nx;
+                node_drag_oy = ny;
+            } else if(nx != node_drag_ox || ny != node_drag_oy) {
+                var dx = nx - node_drag_ox;
+                var dy = ny - node_drag_oy;
+                    
+                for(var i = 0; i < array_length(nodes_selecting); i++) {
+                    var _node = nodes_selecting[i];
+                    var _nx = _node.x + dx;
+                    var _ny = _node.y + dy;
+                        
+                    if(!key_mod_press(CTRL) && project.graphGrid.snap) {
+                        _nx = round(_nx / project.graphGrid.size) * project.graphGrid.size;
+                        _ny = round(_ny / project.graphGrid.size) * project.graphGrid.size;
+                    }
+                        
+                    _node.move(_nx, _ny, graph_s);
+                }
+                    
+                node_drag_ox = nx;
+                node_drag_oy = ny;
+            }
+                
+            if(mouse_release(mb_left) && (nx != node_drag_sx || ny != node_drag_sy)) {
+                var shfx = node_drag_sx - nx;
+                var shfy = node_drag_sy - ny;
+                
+                UNDO_HOLDING = false;    
+                for(var i = 0; i < array_length(nodes_selecting); i++) {
+                    var _n = nodes_selecting[i];
+                    if(_n == noone) continue;
+                    recordAction(ACTION_TYPE.var_modify, _n, [ _n.x + shfx, "x", "node x position" ]);
+                    recordAction(ACTION_TYPE.var_modify, _n, [ _n.y + shfy, "y", "node y position" ]);
+                }
+            }
+        }
+        
+        if(mouse_release(mb_left))
+            node_dragging = noone;
         
         printIf(log, $"Drag node time : {get_timer() - t}"); t = get_timer();
         
@@ -1680,70 +1704,70 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         } 
         
         // draw selection frame
-            if(nodes_select_drag) {
-                if(point_distance(nodes_select_mx, nodes_select_my, mx, my) > 16)
-                    nodes_select_drag = 2;
+        if(nodes_select_drag) {
+            if(point_distance(nodes_select_mx, nodes_select_my, mx, my) > 16)
+                nodes_select_drag = 2;
+            
+            if(nodes_select_drag == 2) {
+                draw_sprite_stretched_points_clamp(THEME.ui_selection, 0, nodes_select_mx, nodes_select_my, mx, my, COLORS._main_accent);
                 
-                if(nodes_select_drag == 2) {
-                    draw_sprite_stretched_points_clamp(THEME.ui_selection, 0, nodes_select_mx, nodes_select_my, mx, my, COLORS._main_accent);
+                for(var i = 0; i < array_length(nodes_list); i++) {
+                    var _node = nodes_list[i];
                     
-                    for(var i = 0; i < array_length(nodes_list); i++) {
-                        var _node = nodes_list[i];
-                        
-                        if(!display_parameter.show_control && _node.is_controller) continue;
-                        if(!_node.selectable) continue;
-                        if(is_instanceof(_node, Node_Frame) && !nodes_select_frame) continue;
-                        
-                        var _x = (_node.x + graph_x) * graph_s;
-                        var _y = (_node.y + graph_y) * graph_s;
-                        var _w = _node.w * graph_s;
-                        var _h = _node.h * graph_s;
-                        
-                        var _sel = _w && _h && rectangle_in_rectangle(_x, _y, _x + _w, _y + _h, nodes_select_mx, nodes_select_my, mx, my);
-                        
-                        if(!array_exists(nodes_selecting, _node) && _sel)
-                            array_push(nodes_selecting, _node);    
-                        if(array_exists(nodes_selecting, _node) && !_sel)
-                            array_remove(nodes_selecting, _node);    
-                    }
+                    if(!display_parameter.show_control && _node.is_controller) continue;
+                    if(!_node.selectable) continue;
+                    if(is_instanceof(_node, Node_Frame) && !nodes_select_frame) continue;
+                    
+                    var _x = (_node.x + graph_x) * graph_s;
+                    var _y = (_node.y + graph_y) * graph_s;
+                    var _w = _node.w * graph_s;
+                    var _h = _node.h * graph_s;
+                    
+                    var _sel = _w && _h && rectangle_in_rectangle(_x, _y, _x + _w, _y + _h, nodes_select_mx, nodes_select_my, mx, my);
+                    
+                    if(!array_exists(nodes_selecting, _node) && _sel)
+                        array_push(nodes_selecting, _node);    
+                    if(array_exists(nodes_selecting, _node) && !_sel)
+                        array_remove(nodes_selecting, _node);    
                 }
-            
-                if(mouse_release(mb_left))
-                    nodes_select_drag = 0;
             }
+        
+            if(mouse_release(mb_left))
+                nodes_select_drag = 0;
+        }
+        
+        if(nodes_junction_d != noone) {
+            var shx = nodes_junction_dx + (mx - nodes_select_mx) / graph_s;
+            var shy = nodes_junction_dy + (my - nodes_select_my) / graph_s;
             
-            if(nodes_junction_d != noone) {
-                var shx = nodes_junction_dx + (mx - nodes_select_mx) / graph_s;
-                var shy = nodes_junction_dy + (my - nodes_select_my) / graph_s;
+            shx = value_snap(shx, key_mod_press(CTRL)? 1 : 4);
+            shy = value_snap(shy, key_mod_press(CTRL)? 1 : 4);
+            
+            nodes_junction_d.draw_line_shift_x = shx;
+            nodes_junction_d.draw_line_shift_y = shy;
+            
+            if(mouse_release(mb_left))
+                nodes_junction_d = noone;
+        }
+        
+        if(mouse_on_graph && !node_bg_hovering && mouse_press(mb_left, _focus) && !graph_dragging_key && !graph_zooming_key) {
+            if(is_instanceof(junction_hovering, NodeValue) && junction_hovering.draw_line_shift_hover) {
+                nodes_select_mx        = mx;
+                nodes_select_my        = my;
+                nodes_junction_d    = junction_hovering;
+                nodes_junction_dx    = junction_hovering.draw_line_shift_x;
+                nodes_junction_dy    = junction_hovering.draw_line_shift_y;
                 
-                shx = value_snap(shx, key_mod_press(CTRL)? 1 : 4);
-                shy = value_snap(shy, key_mod_press(CTRL)? 1 : 4);
+            } else if(array_empty(nodes_selecting) && !value_focus && !drag_locking) {
+                nodes_select_drag  = 1;
+                nodes_select_frame = frame_hovering == noone;
                 
-                nodes_junction_d.draw_line_shift_x = shx;
-                nodes_junction_d.draw_line_shift_y = shy;
-                
-                if(mouse_release(mb_left))
-                    nodes_junction_d = noone;
+                nodes_select_mx = mx;
+                nodes_select_my = my;
             }
-            
-            if(mouse_on_graph && !node_bg_hovering && mouse_press(mb_left, _focus) && !graph_dragging_key && !graph_zooming_key) {
-                if(is_instanceof(junction_hovering, NodeValue) && junction_hovering.draw_line_shift_hover) {
-                    nodes_select_mx        = mx;
-                    nodes_select_my        = my;
-                    nodes_junction_d    = junction_hovering;
-                    nodes_junction_dx    = junction_hovering.draw_line_shift_x;
-                    nodes_junction_dy    = junction_hovering.draw_line_shift_y;
-                    
-                } else if(array_empty(nodes_selecting) && !value_focus && !drag_locking) {
-                    nodes_select_drag  = 1;
-                    nodes_select_frame = frame_hovering == noone;
-                    
-                    nodes_select_mx = mx;
-                    nodes_select_my = my;
-                }
-                drag_locking = false;
-            }
-            
+            drag_locking = false;
+        }
+        
         
         printIf(log, $"Draw selection frame : {get_timer() - t}"); t = get_timer();
     } 
@@ -1835,6 +1859,10 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                     
                     alarm[0] = 1;
                 }
+                
+                add_node_draw_junc = value_dragging;
+                add_node_draw_x    = mouse_grid_x;
+                add_node_draw_y    = mouse_grid_y;
             }
         }
         
@@ -2501,13 +2529,31 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         
         drawNodes();
         
-        draw_set_text(f_p2, fa_right, fa_top, COLORS._main_text_sub);
-        draw_text_add(w - ui(8), ovy, $"x{graph_s_to}");
-        
         drawJunctionConnect();
         drawContextFrame();
-        
         mouse_on_graph = true;
+        
+        #region draw metadata
+	        draw_set_text(f_p2, fa_right, fa_top, COLORS._main_text_sub);
+	        
+	        var _zms = $"x{graph_s_to}";
+	        var _zmw = string_width(_zms) + ui(16);
+	        var _zmh = string_height(_zms);
+	        var _zmx = w;
+	        var _zmc = tb_zoom_level.selecting || tb_zoom_level.hovering || tb_zoom_level.sliding? COLORS._main_text : COLORS._main_text_sub;
+	        if(tb_zoom_level.hovering) mouse_on_graph = false;
+	        
+	        tb_zoom_level.rx = x;
+	        tb_zoom_level.ry = y;
+	        tb_zoom_level.setFocusHover(pFOCUS, pHOVER);
+	        tb_zoom_level.postBlend = _zmc;
+	        tb_zoom_level.draw(_zmx, ovy, _zmw, _zmh, string(graph_s_to), [ mx, my ], fa_right);
+	        
+	    	draw_set_text(f_p2, fa_right, fa_top, _zmc);
+	        if(!tb_zoom_level.selecting && !tb_zoom_level.sliding)
+		    	draw_text(_zmx - _zmw + ui(14), ovy + ui(1), "x");
+    	#endregion
+    	
         drawToolBar();
         drawMinimap();
         

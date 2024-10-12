@@ -11,6 +11,7 @@ uniform vec2  tile;
 uniform vec2      blend;
 uniform int       blendUseSurf;
 uniform sampler2D blendSurf;
+uniform vec2      range;
 
 #region /////////////// SAMPLING ///////////////
 
@@ -88,7 +89,8 @@ vec4 texture2Dintp( sampler2D texture, vec2 uv ) {
 void main() {
 	vec2 center = vec2(0.5, 0.5);
 	vec2 coord;
-	vec2 _tile = swap == 1? tile.yx : tile;
+	vec2 til   = tile/* * vec2(1., PI * 2.)*/;
+	vec2 _tile = swap == 1? til.yx : til;
 	
 	float bld = blend.x;
 	if(blendUseSurf == 1) {
@@ -96,23 +98,37 @@ void main() {
 		bld = mix(blend.x, blend.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
 	}
 	
+	float rad0 = radians(range.x);
+	float rad1 = radians(range.y);
+	float radr = (range.y - range.x) / 360.;
+	
+	gl_FragColor = vec4(0.);
+	
 	if(invert == 0) {
 		float dist = distance(v_vTexcoord, center) / (sqrt(2.) * .5);
 		if(distMode == 1)      dist = sqrt(dist);
 		else if(distMode == 2) dist = log(dist);
 		
 		vec2  cenPos = v_vTexcoord - center;
-		float angle	 = (atan(cenPos.y, cenPos.x) / PI + 1.) / 2.;
+		float angle	 = atan(cenPos.y, -cenPos.x) + PI;
 		
+		angle = (angle - rad0) / radr;
+		if(angle < rad0 || angle > rad1) return;
+		
+		angle /= PI * 2.;
 		coord = fract(vec2(dist, angle) * _tile);
+		
 	} else if(invert == 1) {
 		float dist = v_vTexcoord.x * 0.5;
 		if(distMode == 1)      dist = sqrt(dist);
 		else if(distMode == 2) dist = log(dist);
 		
-		float ang  = v_vTexcoord.y * PI * 2.;
+		float angle = v_vTexcoord.y * PI * 2.;
 		
-		coord = fract(center + vec2(cos(ang), sin(ang)) * dist * _tile);
+		angle = (angle - rad0) / radr;
+		if(angle < rad0 || angle > rad1) return;
+		
+		coord = fract(center + vec2(cos(angle), sin(angle)) * dist * _tile);
 	}
 	
 	if(swap == 1) coord.xy = coord.yx;

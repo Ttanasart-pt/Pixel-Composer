@@ -25,7 +25,7 @@ function Node_Polar(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 												                 new scrollItem("Inverse Square", s_node_curve, 1), 
 												                 new scrollItem("Logarithm",      s_node_curve, 3), ]));
 	
-	newInput(10, nodeValue_Bool("Swap", self, false))
+	newInput(10, nodeValue_Bool("Swap", self, false));
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -35,21 +35,22 @@ function Node_Polar(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	newInput(12, nodeValue_Vec2("Tile", self, [ 1, 1 ] ));
 	
+	newInput(13, nodeValue_Rotation_Range("Range", self, [ 0, 360 ]));
+	
 	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 3, 4,
 		["Surfaces", false], 0, 1, 2, 7, 8, 12, 
-		["Effect",   false], 5, 6, 11, 9, 10, 
+		["Effect",   false], 5, 6, 11, 9, 10, 13, 
 	]
 	
 	attribute_surface_depth();
 	attribute_interpolation();
 	
-	static step = function() { #region
+	static step = function() {
 		__step_mask_modifier();
-		
 		inputs[6].mappableStep();
-	} #endregion
+	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		
@@ -60,6 +61,7 @@ function Node_Polar(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			shader_set_f_map("blend", _data[6], _data[11], inputs[6]);
 			shader_set_i("swap",      _data[10]);
 			shader_set_2("tile",      _data[12]);
+			shader_set_2("range",     _data[13]);
 			
 			draw_surface_safe(_data[0]);
 		surface_reset_shader();

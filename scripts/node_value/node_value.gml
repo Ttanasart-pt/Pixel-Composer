@@ -2001,7 +2001,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return drawJuncConnection(value_from, self, params);
 	}
 	
-	static drawConnectionMouse = function(params, _mx, _my, target) {
+	static drawConnectionMouse = function(params, _mx, _my, target = noone) {
 		var ss = params.s;
 		var aa = params.aa; // 1
 		
@@ -2023,7 +2023,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		_mx *= aa;
 		_my *= aa;
 		
-		var col = color_display;
+		var _fade = PREFERENCES.connection_line_highlight_fade;
+		var  col  = merge_color(_fade, color_display, .5);
 		draw_set_color(col);
 		
 		var _action = type == VALUE_TYPE.action;
@@ -2031,6 +2032,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		switch(PREFERENCES.curve_connection_line) {
 			case 0 : draw_line_width(sx, sy, _mx, _my, th); break;
+			
 			case 1 : 
 				if(drawCorner) {
 					if(_action)	draw_line_curve_corner(_mx, _my, sx, sy, ss, th, col, col);
@@ -2040,6 +2042,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					else		draw_line_curve_color(sx, sy, _mx, _my,,, ss, th, col, col);
 				}
 				break;
+				
 			case 2 : 
 				if(drawCorner) {
 					if(_action)	draw_line_elbow_corner(_mx, _my, sx, sy, ss, th, col, col, corner);
@@ -2049,6 +2052,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					else		draw_line_elbow_color(_mx, _my, sx, sy,,, ss, th, col, col, corner);
 				}
 				break;
+				
 			case 3 : 
 				if(drawCorner) {
 					if(_action)	draw_line_elbow_diag_corner(_mx, _my, sx, sy, ss, th, col, col, corner);
@@ -2059,6 +2063,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				}
 				break;
 		}
+		
+		__draw_sprite_ext(THEME.node_junctions_bg_x2,      draw_junction_index, _mx, _my, ss / 2, ss / 2, 0, draw_bg, 1);
+		__draw_sprite_ext(THEME.node_junctions_outline_x2, draw_junction_index, _mx, _my, ss / 2, ss / 2, 0, col, 1);
 	}
 	
 	/////========== EXPRESSION ==========

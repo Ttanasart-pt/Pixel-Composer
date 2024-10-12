@@ -192,7 +192,7 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 				s = clamp(s * (_sat + 1), 0, 1);
 				
 				_c = make_color_hsva(h * 255, s * 255, v * 255, a);
-				_c = merge_color_a(_c, _bl, _bla);
+				_c = merge_color(_c, _bl, _bla);
 				_col[i] = _c;
 			}
 			

@@ -7,6 +7,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	hide      = false;
 	color     = COLORS._main_text;
 	boxColor  = c_white;
+	postBlend = c_white;
+	postAlpha = 1;
 	format    = TEXT_AREA_FORMAT._default;
 	precision = 5;
 	padding   = ui(8);
@@ -380,7 +382,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				draw_text_add(_tx, _y, "."); _tx += _dt_w;
 				draw_text_add(_tx, _y, _dc);
 				
-			} else if(sliding == 2) {
+			} else if(sliding == 2 && align == fa_center) {
 				var _wh_w = string_width(_text);
 				draw_text_add(_w / 2 - _wh_w - padding, _y, _text);
 				
@@ -434,7 +436,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		return draw(params.x, params.y, params.w, params.h, params.data, params.m, params.halign, params.valign);
 	}
 	
-	static draw = function(_x, _y, _w, _h, _text = "", _m = mouse_ui, halign = fa_left, valign = fa_top) { #region
+	static draw = function(_x, _y, _w, _h, _text = "", _m = mouse_ui, halign = fa_left, valign = fa_top) {
 		x = _x;
 		y = _y;
 		w = _w;
@@ -516,7 +518,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		}
 		
 		if(_w > ui(48)) {
-			if(sliding == 2) {
+			if(sliding == 2 && hide < 3) {
 				var _ax0 = _x + ui(10);
 				var _ax1 = _x + _w - ui(10);
 				var _ay  = _y + _h / 2;
@@ -561,14 +563,23 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				}
 				
 				sliding = 2;
-				slider_object = instance_create_depth(rx + _x, ry + _y, -16000, slider_Slider, { w: _w, h: _h });
-				slider_object.text = self;
+				if(hide < 3) {
+					slider_object = instance_create_depth(rx + _x, ry + _y, -16000, slider_Slider, { w: _w, h: _h });
+					slider_object.text = self;
+				}
 			}
 	
 			var _mdx = slidePen? PEN_X_DELTA : window_mouse_get_delta_x();
 			var _mdy = slidePen? PEN_Y_DELTA : window_mouse_get_delta_y();
 			
 			if(sliding == 2) {
+				if(slider_object) {
+					slider_object.x = rx + _x;
+					slider_object.y = ry + _y;
+					slider_object.w = slider_object.w;
+					slider_object.h = slider_object.h;
+				}
+				
 				if(!slidePen && PREFERENCES.slider_lock_mouse) CURSOR_LOCK = true;
 				
 				if(abs(_mdy) > abs(_mdx))
@@ -741,7 +752,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				}
 				
 				BLEND_ALPHA
-				draw_surface(text_surface, tb_surf_x, tb_surf_y);
+				draw_surface_ext(text_surface, tb_surf_x, tb_surf_y, 1, 1, 0, postBlend, postAlpha);
 				BLEND_NORMAL
 				
 				draw_set_color(COLORS._main_text_accent);
@@ -761,8 +772,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			
 			if(hover && hoverRect) {
 				hovering = true;
-				draw_sprite_stretched_ext(THEME.textbox, 1, _x, _y, _w, _h, boxColor, 0.5 + (0.5 * interactable));	
-					
+				if(hide < 3) draw_sprite_stretched_ext(THEME.textbox, 1, _x, _y, _w, _h, boxColor, 0.5 + (0.5 * interactable));	
+				
 				if(mouse_press(mb_left, active))
 					activate();
 				
@@ -806,9 +817,9 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 						display_text(tx - tb_surf_x, _h / 2 - th / 2, _display_text, _w - ui(4));
 					surface_reset_shader();
 				}
-			
+				
 				BLEND_ALPHA
-				draw_surface(text_surface, tb_surf_x, tb_surf_y);
+				draw_surface_ext(text_surface, tb_surf_x, tb_surf_y, 1, 1, 0, postBlend, postAlpha);
 				BLEND_NORMAL
 			}
 		}
@@ -825,7 +836,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		resetFocus();		
 		sprite_index = -1;
 		return _h;
-	} #endregion
+	}
 	
 	static clone = function() { 
 		var cln = new textBox(input, onModify); 

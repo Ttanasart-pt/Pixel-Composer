@@ -219,6 +219,24 @@ function Panel_Preview() : PanelContent() constructor {
         show_view_control   = 1;
         
         resetViewOnDoubleClick = true;
+        
+        tb_zoom_level = new textBox(TEXTBOX_INPUT.number, function(z) /*=>*/ { 
+        	var _s = canvas_s;
+        	canvas_s = clamp(z, 0.10, 64); 
+        	
+            if(_s != canvas_s) {
+                var dx = (canvas_s - _s) * ((w / 2 - canvas_x) / _s);
+                var dy = (canvas_s - _s) * ((h / 2 - canvas_y) / _s);
+                canvas_x -= dx;
+                canvas_y -= dy;
+            }
+        });
+        tb_zoom_level.color  = c_white;
+        tb_zoom_level.align  = fa_right;
+        tb_zoom_level.hide   = 3;
+        tb_zoom_level.font   = f_p2;
+        
+	    tb_framerate = new textBox(TEXTBOX_INPUT.number, function(val) { preview_rate = real(val); });
     #endregion
     
     #region ---- tool ----
@@ -322,8 +340,6 @@ function Panel_Preview() : PanelContent() constructor {
             d3_tool_snap_rotation = 15;
         #endregion
     #endregion
-    
-    tb_framerate = new textBox(TEXTBOX_INPUT.number, function(val) { preview_rate = real(val); });
     
     #region ++++ toolbars & actions ++++
         static set_tile_off        = function() /*=>*/ { tileMode = 0; }
@@ -1401,8 +1417,25 @@ function Panel_Preview() : PanelContent() constructor {
             
                 if(d3_active == NODE_3D.none) {
                     right_menu_y += _lh;
-                    draw_text(right_menu_x, right_menu_y, $"x{canvas_s}");
-                
+                    
+                    var _zms = $"x{canvas_s}";
+                    var _zmw = string_width(_zms) + ui(16);
+                    var _zmx = right_menu_x + ui(8);
+                    var _zmc = tb_zoom_level.selecting || tb_zoom_level.hovering || tb_zoom_level.sliding? COLORS._main_text : COLORS._main_text_sub;
+                    if(tb_zoom_level.hovering) mouse_on_preview = false;
+                    
+                    tb_zoom_level.rx = x;
+                    tb_zoom_level.ry = y;
+                    tb_zoom_level.setFocusHover(pFOCUS, pHOVER);
+                    tb_zoom_level.postBlend = _zmc;
+                    tb_zoom_level.draw(_zmx, right_menu_y, _zmw, _lh, string(canvas_s), [ mx, my ], fa_right);
+                    
+                	draw_set_text(f_p2, fa_right, fa_top, _zmc);
+                    if(!tb_zoom_level.selecting && !tb_zoom_level.sliding)
+	                	draw_text(_zmx - _zmw + ui(14), right_menu_y + ui(1), "x");
+                    
+                	draw_set_color(COLORS._main_text_sub);
+                	
                     if(pHOVER) {
                         right_menu_y += _lh;
                         var mpx = floor((mx - canvas_x) / canvas_s);
@@ -1784,7 +1817,7 @@ function Panel_Preview() : PanelContent() constructor {
                 if(pFOCUS && WIDGET_CURRENT == noone) {
                     var _key = tool.checkHotkey();
                     
-                    if(keyboard_check_pressed(ord(string(i + 1))) || (_key != noone && _key.isPressing()))
+                    if(_key != noone && _key.isPressing())
                         tool.toggleKeyboard();
                 }
                 
@@ -1897,7 +1930,7 @@ function Panel_Preview() : PanelContent() constructor {
                     
                     if(pFOCUS && WIDGET_CURRENT == noone) {
                         var _key = tool.checkHotkey();
-                        if(keyboard_check_pressed(ord(string(i + 1))) || (_key != noone && _key.isPressing()))
+                        if(_key != noone && _key.isPressing())
                             tool.toggleKeyboard();
                     }
                     
@@ -1906,7 +1939,7 @@ function Panel_Preview() : PanelContent() constructor {
                         draw_sprite_stretched_ext(THEME.button_hide, 3, _x0 + pd, _y0 + pd, tool_size - pd * 2, tool_size - pd * 2, COLORS._main_accent, 1);
                     }
                 
-                    if(tool.subtools > 0)    draw_sprite_colored(tool.spr[tool.selecting], 0, xx, yy);
+                    if(tool.subtools > 0)   draw_sprite_colored(tool.spr[tool.selecting], 0, xx, yy);
                     else                    draw_sprite_colored(tool.spr, 0, xx, yy);
                 
                 }

@@ -340,8 +340,8 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _grad_map   = _data[30];
 		var _grad_range = _data[31];
 		
-		var _arr = _data[16];
-		var _sed = _data[17];
+		var _arr    = _data[16];
+		var _sed    = _data[17];
 		
 		var _col    = _data[18];
 		var _cls    = _data[19];
@@ -517,11 +517,11 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				
 				if(_an_selt == 0) { // index
 					if(i < _an_sind - _an_srng - _an_sfal || i > _an_sind + _an_srng + _an_sfal)
-						_inf = 0;
-					else if (_an_sfal > 0 && (i < _an_sind - _an_srng || i > _an_sind + _an_srng))
-						_inf = 1 - clamp(min(abs(i - (_an_sind - _an_srng)), abs(i - (_an_sind + _an_srng))) / _an_sfal, 0, 1);
-					else 
 						_inf = 1;
+					else if (_an_sfal > 0 && (i < _an_sind - _an_srng || i > _an_sind + _an_srng))
+						_inf = clamp(min(abs(i - (_an_sind - _an_srng)), abs(i - (_an_sind + _an_srng))) / _an_sfal, 0, 1);
+					else 
+						_inf = 0;
 					
 				} else if(_an_selt == 1) { // area
 					_inf = 1 - area_point_in_fallout(_an_sare, _x, _y, _an_sfal);

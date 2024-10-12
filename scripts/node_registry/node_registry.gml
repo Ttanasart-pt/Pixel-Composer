@@ -508,7 +508,7 @@ function __initNodes() {
 	
 	//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 	
-	global.__startPage = ds_list_size(NODE_CATEGORY);
+	global.__startPage = ds_list_size(NODE_CATEGORY); 
 	
 	#region io
 	var input = ds_list_create(); 
@@ -568,6 +568,7 @@ function __initNodes() {
 		addNodeObject(transform, "Warp",			s_node_warp,			"Node_Warp",			[1, Node_Warp], ["warp corner"], "Warp image by freely moving the corners.");
 		// addNodeObject(transform, "Perspective Warp",s_node_warp,			"Node_Warp_Perspective",[1, Node_Warp_Perspective], ["warp perspective"], "Warp image by modifying perspective.");
 		addNodeObject(transform, "Skew",			s_node_skew,			"Node_Skew",			[1, Node_Skew], ["shear"], "Skew image horizontally, or vertically.");
+		// addNodeObject(transform, "Grid Warp",		s_node_warp_mesh,		"Node_Grid_Warp",		[1, Node_Grid_Warp], ["grid wrap"], "Wrap image by modifying mesh lacttice.");
 		addNodeObject(transform, "Mesh Warp",		s_node_warp_mesh,		"Node_Mesh_Warp",		[1, Node_Mesh_Warp], ["mesh wrap"], "Wrap image by converting it to mesh, and using control points.");
 		addNodeObject(transform, "Polar",			s_node_polar,			"Node_Polar",			[1, Node_Polar],, "Convert image to polar coordinate.");
 		addNodeObject(transform, "Area Warp",		s_node_warp_area,		"Node_Wrap_Area",		[1, Node_Wrap_Area],, "Wrap image to fit area value (x, y, w, h).");
@@ -603,6 +604,7 @@ function __initNodes() {
 		addNodeObject(filter, "Average",			s_node_average,			"Node_Average",			[1, Node_Average],, "Average color of every pixels in the image.").setVersion(1110);
 		addNodeObject(filter, "Smear",				s_node_smear,			"Node_Smear",			[1, Node_Smear],, "Stretch out brighter pixel in one direction.").setVersion(11670);
 		addNodeObject(filter, "Kuwahara",			s_node_kuwahara,		"Node_Kuwahara",		[1, Node_Kuwahara],, "Apply Kuwahara filter. Creating a watercolor-like effect.").setVersion(11660);
+		addNodeObject(filter, "High Pass",			s_node_high_pass,		"Node_High_Pass",		[1, Node_High_Pass], ["sharpen"], "Apply high pass filter").setVersion(1_18_01_0);
 		addNodeObject(filter, "Brush",				s_node_brush_linear,	"Node_Brush_Linear",	[1, Node_Brush_Linear],, "Apply brush effect.").patreonExtra();
 		
 		ds_list_add(filter, "Warps");

@@ -1352,8 +1352,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static drawNodeOverlay = function(xx, yy, _mx, _my, _s) {}
 	
 	__draw_bbox = BBOX();
-	static drawGetBbox = function(xx, yy, _s) {
-		var pad_label = draw_name && display_parameter.avoid_label;
+	static drawGetBbox = function(xx, yy, _s, label = true) {
+		var pad_label = (display_parameter.avoid_label || label) && draw_name;
 		
 		var x0 = xx;
 		var x1 = xx + w * _s;
@@ -1394,8 +1394,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var aa = (.25 + .5 * renderActive) * (.25 + .75 * isHighlightingInGraph());
 		var cc = getColor();
 		var nh = previewable? name_height * _s : h * _s;
+		var ba = aa;
 		
-		draw_sprite_stretched_ext(THEME.node_bg, 2, xx, yy, w * _s, nh, cc, aa);
+		if(_panel && _panel.node_hovering == self) ba = .1;
+		draw_sprite_stretched_ext(THEME.node_bg, 2, xx, yy, w * _s, nh, cc, ba);
 		
 		var cc = COLORS._main_text;
 		if(PREFERENCES.node_show_render_status && !rendered)
@@ -1428,7 +1430,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		draw_set_text(f_sdf, fa_left, fa_center, cc, aa);
 			var _txt = string_cut(_name, tw, "...", _ts);
 			BLEND_ALPHA_MULP
-			draw_text_transformed(_tx, _ty, _txt, _ts, _ts, 0);
+			
+			draw_set_color(0);  draw_set_alpha(1); draw_text_transformed(_tx + 1, _ty + 1, _txt, _ts, _ts, 0);
+			draw_set_color(cc); draw_set_alpha(1); draw_text_transformed(_tx, _ty, _txt, _ts, _ts, 0);
+			
 			BLEND_NORMAL
 		draw_set_alpha(1);
 		
@@ -1789,7 +1794,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		__preview_sw   = surface_get_width_safe(preview_surface);
 		__preview_sh   = surface_get_height_safe(preview_surface);
 		
-		var bbox = drawGetBbox(xx, yy, _s);
+		var bbox = drawGetBbox(xx, yy, _s, false);
 		var aa   = 0.5 + 0.5 * renderActive;
 		if(!isHighlightingInGraph()) aa *= 0.25;
 		

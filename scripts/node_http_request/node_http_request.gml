@@ -12,19 +12,17 @@ function Node_HTTP_request(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	address_domain = "";
 	
-	static update = function() {
+	insp1UpdateTooltip   = "Trigger";
+	insp1UpdateIcon      = [ THEME.sequence_control, 1, COLORS._main_value_positive ];
+	
+	static onInspector1Update = function() {
+		request();
+	}
+	
+	static request = function() {
 		var _addr = getInputData(0);
 		var _type = getInputData(1);
 		var _post = getInputData(2);
-		
-		inputs[2].setVisible(_type == 1, _type == 1);
-		
-		if(_addr == "") return;
-		
-		var _addrs = string_split(_addr, "/", true);
-		address_domain = array_safe_get(_addrs, 1, "");
-		draw_set_font(f_p0);
-		address_domain = string_cut_line(address_domain, 128);
 		
 		switch(_type) {
 			case 0 :
@@ -43,6 +41,21 @@ function Node_HTTP_request(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				});
 				break;
 		}
+	}
+	
+	static update = function() {
+		var _addr = getInputData(0);
+		var _type = getInputData(1);
+		var _post = getInputData(2);
+		
+		inputs[2].setVisible(_type == 1, _type == 1);
+		
+		if(_addr == "") return;
+		
+		draw_set_font(f_p0);
+		var _addrs = string_split(_addr, "/", true);
+		address_domain = array_safe_get(_addrs, 1, "");
+		address_domain = string_cut_line(address_domain, 128);
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
