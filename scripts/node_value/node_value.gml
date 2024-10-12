@@ -992,6 +992,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				editWidget = new outputStructBox();
 				break;
 				
+			case VALUE_TYPE.particle : 
+				editWidget = noone;
+				break;
+				
 			default :
 				editWidget = new outputBox();
 				break;

@@ -15,6 +15,14 @@ function outputBox() : widget() constructor {
 		
 		draw_set_text(font, fa_left, fa_top, COLORS._main_text_sub);
 		
+		if(string_length(_value) > 512) {
+			var _hh  = string_height("l") + ui(16);
+			
+	        draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _y, _w, _hh, COLORS._main_icon_light);
+	        draw_text_add(_x + ui(8), _y + ui(8), "Output...");
+	        return _hh;
+		}
+		
 		if(typeof(_value) == "ref" && string_starts_with(string(_value), "ref surface")) {
 			var _hh = ui(64);
 			draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _y, _w, _hh, COLORS._main_icon_light);

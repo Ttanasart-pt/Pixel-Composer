@@ -394,7 +394,7 @@ function __initNodes() {
 		addNodeObject(vfx, "Output",		s_node_vfx_output,			"Node_Group_Output",		[1, Node_Group_Output]).hideRecent().hideGlobal();
 		addNodeObject(vfx, "Renderer",		s_node_vfx_render_output,	"Node_VFX_Renderer_Output",	[1, Node_VFX_Renderer_Output]).hideRecent().hideGlobal();
 			
-		ds_list_add(vfx, "VFXs");
+		ds_list_add(vfx, "Main");
 		addNodeObject(vfx, "Spawner",		s_node_vfx_spawn,	"Node_VFX_Spawner",		[1, Node_VFX_Spawner],, "Spawn new particles.").hideRecent();
 		addNodeObject(vfx, "Renderer",		s_node_vfx_render,	"Node_VFX_Renderer",	[1, Node_VFX_Renderer],, "Render particle objects to surface.").hideRecent();
 			
@@ -407,8 +407,9 @@ function __initNodes() {
 		addNodeObject(vfx, "Turbulence",	s_node_vfx_turb,	"Node_VFX_Turbulence",	[1, Node_VFX_Turbulence],, "Move particle in range randomly.").hideRecent();
 		addNodeObject(vfx, "Repel",			s_node_vfx_repel,	"Node_VFX_Repel",		[1, Node_VFX_Repel],, "Move particle away from point.").hideRecent();
 		addNodeObject(vfx, "Oscillate",		s_node_vfx_osc,		"Node_VFX_Oscillate",	[1, Node_VFX_Oscillate],, "Swing particle around its original trajectory.").hideRecent().setVersion(11560);
+		addNodeObject(vfx, "Boids",			s_node_vfx_boid,	"Node_VFX_Boids",		[1, Node_VFX_Boids],, "Apply boids algorithm to create a flock behaviour.").hideRecent().setVersion(1_18_01_0);
 			
-		ds_list_add(vfx, "Effects");
+		ds_list_add(vfx, "Generates");
 		addNodeObject(vfx, "VFX Trail",		  s_node_vfx_trail,			"Node_VFX_Trail",		[1, Node_VFX_Trail],, "Generate path from particle movement.").hideRecent().setVersion(11560);
 		addNodeObject(vfx, "VFX Triangulate", s_node_vfx_triangulate,	"Node_VFX_Triangulate",	[1, Node_VFX_Triangulate],, "Render line between particles.").hideRecent().setVersion(11670);
 			

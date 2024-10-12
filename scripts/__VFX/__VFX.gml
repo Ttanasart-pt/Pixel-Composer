@@ -36,7 +36,7 @@ function __particleObject() constructor {
 	static step = function() {}
 	
 	__temp_pt = [ 0, 0 ];
-	static draw = function(exact, surf_w, surf_h) { #region
+	static draw = function(exact, surf_w, surf_h) {
 		if(!surface_exists(surf)) return;
 		
 		var _sw = surface_get_width(surf)  * scx;
@@ -44,13 +44,13 @@ function __particleObject() constructor {
 		
 		point_rotate(-_sw / 2, -_sh / 2, 0, 0, rot, __temp_pt);
 		draw_surface_ext(surf, x + __temp_pt[0], y + __temp_pt[1], scx, scy, rot, blend, alp);
-	} #endregion
+	}
 	
-	static clone = function() { #region
+	static clone = function() {
 		var _p = new __particleObject();
 		struct_override(_p, self);
 		return _p;
-	} #endregion
+	}
 }
 
 function __part(_node) : __particleObject() constructor {
@@ -385,8 +385,8 @@ function __part(_node) : __particleObject() constructor {
 		}
 		
 		if(life_incr) {
-			scx_history[life_incr - 1]   = scx;
-			scy_history[life_incr - 1]   = scy;
+			scx_history[life_incr - 1] = scx;
+			scy_history[life_incr - 1] = scy;
 		}
 		
 		var _xx = drawx;

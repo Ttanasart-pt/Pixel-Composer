@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"node_VFX_trail",
   "parent":{
-    "name":"effects",
-    "path":"folders/nodes/data/simulation/VFX/effects.yy",
+    "name":"generators",
+    "path":"folders/nodes/data/simulation/VFX/generators.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
