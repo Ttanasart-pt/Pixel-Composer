@@ -415,6 +415,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         value_draggings = [];
         value_drag_from = noone;
         
+        node_drag_search = false;
+        
         frame_hovering  = noone;
         _frame_hovering = noone;
     #endregion
@@ -1992,6 +1994,14 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                 connectDraggingValueTo(target);
         } 
         
+        // if(keyboard_check_pressed(vk_anykey)) {
+        // 	var k = keyboard_lastkey;
+        	
+        // 	if(k >= ord("A") && k <= ord("z") && !node_drag_search) {
+        // 		node_drag_search = true;
+        // 	}
+        // }
+        
         if(mouse_release(mb_left)) value_draggings = [];
     }
     
@@ -2000,6 +2010,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         
         if(value_dragging)
             draggingValue();
+		else 
+			node_drag_search = false;
         
         if(value_dragging == noone && value_focus && mouse_press(mb_left, _focus) && !key_mod_press(ALT)) {
             value_dragging  = value_focus;
@@ -2677,6 +2689,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
     //// ============ Action ============
     
     function createNodeHotkey(_node, _param = noone) {
+    	// if(value_dragging != noone) return;
+    	
         var node;
         
         if(mouse_create_x == undefined || mouse_create_sx != mouse_grid_x || mouse_create_sy != mouse_grid_y) {

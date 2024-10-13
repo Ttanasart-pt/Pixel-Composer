@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_pixel_math",
+  "name":"sh_pixel_math",
+  "parent":{
+    "name":"filter",
+    "path":"folders/shader/filter.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

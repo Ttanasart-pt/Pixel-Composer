@@ -29,15 +29,34 @@ function Node_VFX_Boids(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	newInput(7, nodeValue_Float("Speed amplification", self, 1 ));
 	
+	newInput(8, nodeValue_Bool("Follow point", self, false ));
+	
+	newInput(9, nodeValue_Vec2("Point", self, [ 0, 0 ] ));
+		
+	newInput(10, nodeValue_Float("Fol. influence", self, 0.1 ))
+		.setDisplay(VALUE_DISPLAY.slider);
+	
 	input_display_list = [ 0, 7, 
 		["Separation",	false], 1, 2, 
 		["Alignment",	false], 3, 4, 
 		["Grouping",	false], 5, 6, 
+		["Follow point", true, 8], 9, 10, 
 	];
 	
 	newOutput(0, nodeValue_Output("Particles", self, VALUE_TYPE.particle, -1 ));
 	
 	UPDATE_PART_FORWARD
+	
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		var _fol_pnt = getInputData(8);
+		var _hov = false;
+		
+		if(_fol_pnt) {
+			var hv = inputs[9].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, 0, 64);	_hov |= hv;
+		}
+		
+		return _hov;
+	}
 	
 	static update = function(frame = CURRENT_FRAME) {
 		var parts = getInputData(0);
@@ -66,11 +85,18 @@ function Node_VFX_Boids(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var _grp_amo = getInputData(6);
 		var _spd_amp = getInputData(7);
 		
+		var _fol_pnt = getInputData( 8);
+		var _pnt_tar = getInputData( 9);
+		var _fol_inf = getInputData(10);
+		
 		var amo = array_length(_allparts);
 		var p0, p0x, p0y, p0vx, p0vy;
 		var p1, p1x, p1y, p1vx, p1vy;
 		var avx, avy, avc;
 		var ax, ay, ac;
+		
+		var tarx = _pnt_tar[0];
+		var tary = _pnt_tar[1];
 		
 		var max_rad2 = max(_sep_rad2, _ali_rad2, _grp_rad2);
 		
@@ -140,6 +166,11 @@ function Node_VFX_Boids(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				
 				p0x += (ax - p0x) * _grp_amo;
 				p0y += (ay - p0y) * _grp_amo;
+			}
+			
+			if(_fol_pnt) {
+				p0x += (tarx - p0x) * _fol_inf;
+				p0y += (tary - p0y) * _fol_inf;
 			}
 			
 			var dir   = point_direction(p0.x, p0.y, p0x, p0y);

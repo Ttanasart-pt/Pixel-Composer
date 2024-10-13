@@ -3,8 +3,8 @@
   "%Name":"s_node_pb_draw_semi_ellipse",
   "bboxMode":0,
   "bbox_bottom":53,
-  "bbox_left":0,
-  "bbox_right":64,
+  "bbox_left":10,
+  "bbox_right":53,
   "bbox_top":10,
   "collisionKind":1,
   "collisionTolerance":0,
@@ -12,14 +12,14 @@
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"","%Name":"8609cdda-6bcf-4e38-9e4e-14b0b2a78f00","name":"8609cdda-6bcf-4e38-9e4e-14b0b2a78f00","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"","%Name":"08c27be6-6694-435f-a1cc-6aa9969b1790","name":"08c27be6-6694-435f-a1cc-6aa9969b1790","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,
   "height":64,
   "HTile":false,
   "layers":[
-    {"$GMImageLayer":"","%Name":"f4778376-618f-46d2-a959-816900676bb3","blendMode":0,"displayName":"default","isLocked":false,"name":"f4778376-618f-46d2-a959-816900676bb3","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
+    {"$GMImageLayer":"","%Name":"312ce63b-ad30-4856-97f6-063e47031749","blendMode":0,"displayName":"default","isLocked":false,"name":"312ce63b-ad30-4856-97f6-063e47031749","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
   ],
   "name":"s_node_pb_draw_semi_ellipse",
   "nineSlice":null,
@@ -69,8 +69,8 @@
     "tracks":[
       {"$GMSpriteFramesTrack":"","builtinName":0,"events":[],"inheritsTrackColour":true,"interpolation":1,"isCreationTrack":false,"keyframes":{"$KeyframeStore<SpriteFrameKeyframe>":"","Keyframes":[
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"8609cdda-6bcf-4e38-9e4e-14b0b2a78f00","path":"sprites/s_node_pb_draw_semi_ellipse/s_node_pb_draw_semi_ellipse.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"0489b7a3-5b50-428c-9564-149b2fc885b5","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"08c27be6-6694-435f-a1cc-6aa9969b1790","path":"sprites/s_node_pb_draw_semi_ellipse/s_node_pb_draw_semi_ellipse.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+              },"Disabled":false,"id":"e4f211b3-a997-4f7f-8bf9-82867c558d36","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
           ],"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"2.0",},"modifiers":[],"name":"frames","resourceType":"GMSpriteFramesTrack","resourceVersion":"2.0","spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
     ],
     "visibleRange":null,
@@ -86,5 +86,5 @@
   },
   "type":0,
   "VTile":false,
-  "width":65,
+  "width":64,
 }

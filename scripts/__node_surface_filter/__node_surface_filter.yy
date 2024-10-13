@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"__node_surface_filter",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"__node_surface_filter",
+  "parent":{
+    "name":"__base__",
+    "path":"folders/nodes/__base__.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

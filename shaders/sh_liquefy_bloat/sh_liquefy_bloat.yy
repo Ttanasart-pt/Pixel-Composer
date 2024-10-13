@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_liquefy_bloat",
+  "name":"sh_liquefy_bloat",
+  "parent":{
+    "name":"liquefy",
+    "path":"folders/shader/filter/liquefy.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

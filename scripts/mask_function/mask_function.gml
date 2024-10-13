@@ -73,6 +73,7 @@ function mask_apply(original, edited, mask, mix = 1) {
 
 function channel_apply(original, edited, channel) {
 	if(channel == 0b1111) return edited;
+	if(!surface_exists(original)) return edited;
 	
 	var _f = surface_get_format(edited);
 	var _s = surface_create_size(original, _f);

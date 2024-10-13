@@ -618,6 +618,7 @@ function __initNodes() {
 		addNodeObject(filter, "Time Remap",			s_node_time_map,		"Node_Time_Remap",		[1, Node_Time_Remap],, "Remap image using texture as time map. Where brighter pixel means using pixel from an older frame.");
 		addNodeObject(filter, "Shape Map",			s_node_shape_map,		"Node_Shape_Map",		[1, Node_Shape_Map],, "Map image into shapes.").setVersion(11660);
 		addNodeObject(filter, "Morph Surface",		s_node_morph_surface,	"Node_Morph_Surface",	[1, Node_Morph_Surface],, "Morph pixel between two surfaces.").setVersion(1141);
+		addNodeObject(filter, "Liquefy",			s_node_liquefy,			"Node_Liquefy",			[1, Node_Liquefy],, "Distort image using variety of tools.").setVersion(1_18_02_0);
 		
 		ds_list_add(filter, "Effects");
 		addNodeObject(filter, "Outline",			s_node_border,			"Node_Outline",			[1, Node_Outline], ["border"], "Add border to the image.");
@@ -644,6 +645,7 @@ function __initNodes() {
 		addNodeObject(filter, "JPEG",				s_node_JPEG,			"Node_JPEG",			[1, Node_JPEG],, "Apply JPEG compression to the image.").setVersion(11730);
 		addNodeObject(filter, "Interlace",			s_node_interlace,		"Node_Interlaced",		[1, Node_Interlaced],, "Apply interlace effect to an image.").setVersion(11760);
 		addNodeObject(filter, "Blend Edge",			s_node_blend_edge,		"Node_Blend_Edge",		[1, Node_Blend_Edge],, "Blend the edges of an image to create tilable patterns.").setVersion(11740);
+		addNodeObject(filter, "Pixel Math",			s_node_pixel_math,		"Node_Pixel_Math",		[1, Node_Pixel_Math],, "Apply mathematical operation directly on RGBA value.").setVersion(1_18_02_0);
 		
 		ds_list_add(filter, "Colors");
 		addNodeObject(filter, "Replace Palette",	s_node_replace_palette,	"Node_Color_replace",	[1, Node_Color_replace], ["isolate color", "select color", "palette swap", "color replace"], "Match image to a palette then remap it to another palette.");
