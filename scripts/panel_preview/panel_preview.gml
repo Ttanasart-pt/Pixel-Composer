@@ -1412,17 +1412,21 @@ function Panel_Preview() : PanelContent() constructor {
                 draw_text(right_menu_x, right_menu_y, txt);
                 right_menu_y += _lh;
             
-                draw_set_color(COLORS._main_text_sub);
-                draw_text(right_menu_x, right_menu_y, $"{__txt("Frame")} {CURRENT_FRAME + 1}/{TOTAL_FRAMES}");
+                var _cur_frame = CURRENT_FRAME + 1;
+                draw_set_color(frac(_cur_frame) == 0? COLORS._main_text_sub : COLORS._main_value_negative);
+                draw_text(right_menu_x, right_menu_y, $"{__txt("Frame")} {_cur_frame}/{TOTAL_FRAMES}");
             
                 if(d3_active == NODE_3D.none) {
                     right_menu_y += _lh;
                     
-                    var _zms = $"x{canvas_s}";
-                    var _zmw = string_width(_zms) + ui(16);
-                    var _zmx = right_menu_x + ui(8);
-                    var _zmc = tb_zoom_level.selecting || tb_zoom_level.hovering || tb_zoom_level.sliding? COLORS._main_text : COLORS._main_text_sub;
+                    var _zmsl = tb_zoom_level.selecting || tb_zoom_level.hovering || tb_zoom_level.sliding;
+                    var _zms  = $"x{canvas_s}";
+                    var _zmw  = string_width(_zms) + ui(16);
+                    var _zmx  = right_menu_x + ui(8);
+                    var _zmc  = _zmsl? COLORS._main_text : COLORS._main_text_sub;
                     if(tb_zoom_level.hovering) mouse_on_preview = false;
+                    
+                    if(_zmsl) draw_sprite_stretched(THEME.textbox, 3, _zmx - _zmw + ui(4), right_menu_y + ui(2), _zmw - ui(10), _lh - ui(2));
                     
                     tb_zoom_level.rx = x;
                     tb_zoom_level.ry = y;

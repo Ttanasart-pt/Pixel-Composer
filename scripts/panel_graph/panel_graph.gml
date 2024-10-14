@@ -2548,13 +2548,16 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         #region draw metadata
 	        draw_set_text(f_p2, fa_right, fa_top, COLORS._main_text_sub);
 	        
-	        var _zms = $"x{graph_s_to}";
-	        var _zmw = string_width(_zms) + ui(16);
-	        var _zmh = string_height(_zms);
-	        var _zmx = w;
-	        var _zmc = tb_zoom_level.selecting || tb_zoom_level.hovering || tb_zoom_level.sliding? COLORS._main_text : COLORS._main_text_sub;
+	        var _zmsl = tb_zoom_level.selecting || tb_zoom_level.hovering || tb_zoom_level.sliding;
+	        var _zms  = $"x{graph_s_to}";
+	        var _zmw  = string_width(_zms) + ui(16);
+	        var _zmh  = string_height(_zms);
+	        var _zmx  = w;
+	        var _zmc  = _zmsl? COLORS._main_text : COLORS._main_text_sub;
 	        if(tb_zoom_level.hovering) mouse_on_graph = false;
 	        
+            if(_zmsl) draw_sprite_stretched(THEME.textbox, 3, _zmx - _zmw + ui(4), ovy + ui(2), _zmw - ui(10), _zmh - ui(2));
+                    
 	        tb_zoom_level.rx = x;
 	        tb_zoom_level.ry = y;
 	        tb_zoom_level.setFocusHover(pFOCUS, pHOVER);

@@ -4,7 +4,6 @@ function Panel_History() : PanelContent() constructor {
 	w       = ui(400);
 	h       = ui(480);
 	
-	anchor = ANCHOR.left | ANCHOR.top;
 	hold = false;
 	
 	w_min = 320;
@@ -14,6 +13,9 @@ function Panel_History() : PanelContent() constructor {
 	redo_list  = ds_list_create();
 	undo_list  = ds_list_create();
 	click_hold = noone;
+	
+	sep_y    = 0;
+	sep_y_to = 0;
 	
 	function refreshList() {
 		ds_list_clear(redo_list);
@@ -59,8 +61,8 @@ function Panel_History() : PanelContent() constructor {
 		
 		for( var i = 0; i < amo; i++ ) {
 			if(i == red) {
-				draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, 0, yy, sc_history.surface_w, ui(4), COLORS._main_accent, 1);
-				connect_line_st = yy + ui(2);
+				sep_y_to = yy;
+				connect_line_st = sep_y + ui(2);
 				
 				_h += ui(4 + 8);
 				yy += ui(4 + 8);
@@ -114,10 +116,10 @@ function Panel_History() : PanelContent() constructor {
 			for( var j = 0; j < amoDisp; j++ ) {
 				var _ty = yy + lh * (j + 0.5);
 				if(j == 3) {
-					draw_set_color(COLORS._main_text_sub);
+					draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text_sub);
 					draw_text_add(ui(32 + 12), _ty, string(array_length(item) - 3) + __txtx("more_actions", " more actions..."));
 				} else {
-					draw_set_color(COLORS._main_text);
+					draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
 					draw_text_add(ui(32 + 12), _ty, item[j].toString());
 				}
 			}
@@ -127,9 +129,23 @@ function Panel_History() : PanelContent() constructor {
 		}
 		
 		if(hovering > -1) {
-			draw_set_color(COLORS._main_accent);
+			draw_set_text(f_p2, fa_left, fa_center, COLORS._main_accent);
 			draw_line_width(ui(16), connect_line_st, ui(16), connect_line_ed, ui(3));
 		}
+		
+		sep_y = lerp_float(sep_y, sep_y_to, 5);
+		
+		if(red < amo - 1) {
+			draw_set_text(f_p2b, fa_right, fa_top, COLORS._main_text_sub);
+			draw_text_transformed(ui(0), sep_y + ui(2 + 8), __txt("Past"), 1, 1, 90);
+		}
+		
+		if(red > 0) {
+			draw_set_text(f_p2b, fa_left, fa_top, COLORS._main_text_sub);
+			draw_text_transformed(ui(0), sep_y + ui(2 - 8), __txt("Future"), 1, 1, 90);
+		}
+		
+		draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, 0, sep_y, sc_history.surface_w, ui(4), COLORS._main_accent, 1);
 		
 		if(mouse_release(mb_left)) 
 			click_hold = noone;
