@@ -1,10 +1,4 @@
 function canvas_brush() constructor {
-	brush_sizing    = false;
-	brush_sizing_s  = 0;
-	brush_sizing_mx = 0;
-	brush_sizing_my = 0;
-	brush_sizing_dx = 0;
-	brush_sizing_dy = 0;
 	
 	brush_use_surface = false;
 	brush_surface   = noone;
@@ -15,6 +9,13 @@ function canvas_brush() constructor {
 	brush_rand_dir  = [ 0, 0, 0, 0, 0 ];
 	brush_seed      = irandom_range(100000, 999999);
 	brush_next_dist = 0;
+	
+	brush_sizing    = false;
+	brush_sizing_s  = 0;
+	brush_sizing_mx = 0;
+	brush_sizing_my = 0;
+	brush_sizing_dx = 0;
+	brush_sizing_dy = 0;
 	
 	mouse_pre_dir_x = undefined;
 	mouse_pre_dir_y = undefined;

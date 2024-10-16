@@ -84,13 +84,7 @@ function buffer_write_at(buffer, position, type, data) {
 function buffer_serialize(buffer, compress = true) {
 	INLINE
 	if(!buffer_exists(buffer)) return "";
-	
-	if(compress) {
-		var comp = buffer_compress(buffer, 0, buffer_get_size(buffer));
-		return buffer_base64_encode(comp, 0, buffer_get_size(comp));
-	}
-	
-	return buffer_base64_encode(buffer, 0, buffer_get_size(buffer));
+	return compress? buffer_compress_all(buffer) : buffer_base64_encode(buffer, 0, buffer_get_size(buffer));
 }
 
 function buffer_deserialize(buffer, compress = true) {
@@ -121,6 +115,11 @@ function buffer_compress_string(str) {
 	
 	buffer_write(buffer, buffer_string, str);
 	return buffer_compress(buffer, 0, buffer_get_size(buffer));
+}
+
+function buffer_compress_all(buff) {
+	var comp = buffer_compress(buff, 0, buffer_get_size(buff));
+	return buffer_base64_encode(comp, 0, buffer_get_size(comp));
 }
 
 function buffer_to_start(buff) { INLINE buffer_seek(buff, buffer_seek_start, 0); }

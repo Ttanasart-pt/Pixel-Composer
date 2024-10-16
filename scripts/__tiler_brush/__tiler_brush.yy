@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"__tiler_brush",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"__tiler_brush",
+  "parent":{
+    "name":"tools",
+    "path":"folders/nodes/data/tiler/tools.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

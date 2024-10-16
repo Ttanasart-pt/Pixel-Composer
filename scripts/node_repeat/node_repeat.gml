@@ -34,15 +34,15 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(4, nodeValue_Vec2("Shift position", self, [ DEF_SURF_W / 2, 0 ]))
 		.setUnitRef(function() /*=>*/ {return getDimension()});
 	
-	newInput(5, nodeValue_Rotation_Range("Repeat rotation", self, [0, 0]));
+	newInput(5, nodeValue_Rotation_Range("Repeat rotation", self, [ 0, 0 ]));
 	
 	newInput(6, nodeValue_Float("Scale multiply", self, 1));
 	
-	newInput(7, nodeValue_Rotation_Range("Angle range", self, [0, 360]));
+	newInput(7, nodeValue_Rotation_Range("Angle range", self, [ 0, 360 ]));
 	
 	newInput(8, nodeValue_Float("Radius", self, 1));
 		
-	newInput(9, nodeValue_Vec2("Start position", self, [0, 0]))
+	newInput(9, nodeValue_Vec2("Start position", self, [ 0, 0 ]))
 		.setUnitRef(function(index) { return getInputData(1); });
 		
 	newInput(10, nodeValue_Curve("Scale over copy", self, CURVE_DEF_11 ));
@@ -105,7 +105,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	newInput(32, nodeValue_Rotation("Start rotation", self, 0));
 		
-	newInput(33, nodeValue_Rotation("Rotation", self, 0));
+	newInput(33, nodeValue_Rotation("Base rotation", self, 0));
 		
 	newInput(34, nodeValue_Enum_Scroll("Blend Mode", self,  0, [ "Normal", "Additive", "Maximum" ]));
 	
@@ -429,7 +429,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			
 			scax = eval_curve_x(_msca, i / (_amo - 1)) * _rsca;
 			scay = scax;
-			rot = _rots + _rrot[0] + (_rrot[1] - _rrot[0]) * i / _amo;
+			rot = _rots + lerp(_rrot[0], _rrot[1], i / _amo);
 			
 			var _surf = _iSrf;
 			if(is_array(_iSrf)) {
@@ -477,10 +477,9 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			if(_rsta == 2)	runy += _sh / 2;
 		}
 		
-		array_resize(atlases, atlas_i);
 		var __temp_p = [ 0,0 ];
 		
-		for( var i = 0, n = array_length(atlases); i < n; i++ ) { // animators
+		for( var i = 0, n = atlas_i; i < n; i++ ) { // animators
 			var _a    = atlases[i];
 			var _surf = _a.surface;
 			
@@ -591,7 +590,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			
 			var  sw = _sw * _a.sx;
 			var  sh = _sh * _a.sy;
-			var pos = point_rotate(-sw / 2, -sh / 2, 0, 0, rot);
+			var pos = point_rotate(-sw / 2, -sh / 2, 0, 0, _a.rot);
 			
 			minx = min(minx, _x + pos[0], _x - pos[0], _x + pos[1], _x - pos[1]);
 			miny = min(miny, _y + pos[0], _y - pos[0], _y + pos[1], _y - pos[1]);
@@ -646,7 +645,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			else if(_bld_md == 1) { BLEND_ADD        }
 			else if(_bld_md == 2) { BLEND_MAX        }
 			
-			for( var i = 0, n = array_length(atlases); i < n; i++ ) {
+			for( var i = 0, n = atlas_i; i < n; i++ ) {
 				var _a = atlases[i];
 				
 				shader_set_interpolation(_a.surface);

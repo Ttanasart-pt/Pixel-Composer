@@ -360,6 +360,8 @@ if palette == 0 exit;
 	if(array_length(palette) > 1) {
 		if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, interactable && sFOCUS, sHOVER, "", THEME.minus) == 2) {
 			array_delete(palette, index_selecting[0], index_selecting[1]);
+			if(array_empty(palette))
+				palette = [ c_black ];
 			index_selecting = [ 0, 0 ];
 			
 			onApply(palette);

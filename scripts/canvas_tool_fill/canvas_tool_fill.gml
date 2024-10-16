@@ -31,8 +31,4 @@ function canvas_tool_fill(toolAttr) : canvas_tool() constructor {
 		}
 			
 	}
-	
-	function drawPreview(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		
-	}
 }

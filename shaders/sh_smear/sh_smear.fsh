@@ -18,6 +18,7 @@ uniform int	 alpha;
 uniform int	 modulateStr;
 uniform int	 inv;
 uniform int	 blend;
+uniform int	 normalized;
 
 vec4 sampleTexture(vec2 pos) { #region
 	if(pos.x >= 0. && pos.y >= 0. && pos.x <= 1. && pos.y <= 1.)
@@ -43,11 +44,12 @@ vec4 smear(vec2 shift) {
 	
 	vec4  base = sampleTexture( v_vTexcoord );
 	float mBri = (base.r + base.g + base.b) / 3. * base.a;
-    vec4  res  = base;
-    vec4  col, rcol;
+    vec4  res, col, rcol;
 	float bright, rbright, dist = 0.;
 	
 	if(inv == 0) {
+		res  = base;
+		
 		for(float i = 0.; i <= 1.0; i += delta) {
 			col = sampleTexture( v_vTexcoord - shift * i);
 			
@@ -87,7 +89,9 @@ vec4 smear(vec2 shift) {
 			}
 			
 			mBri   = bright;
-			res    = alpha == 0? vec4(vec3(i), 1.) : vec4(vec3(1.), i);
+			
+			float _i = normalized == 1? i / bright : i;
+			res    = alpha == 0? vec4(vec3(_i), 1.) : vec4(vec3(1.), _i);
 		}
 	}
 	

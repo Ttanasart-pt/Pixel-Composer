@@ -1,7 +1,7 @@
 {
   "$GMShader":"",
-  "%Name":"sh_draw_tile",
-  "name":"sh_draw_tile",
+  "%Name":"sh_draw_tile_apply",
+  "name":"sh_draw_tile_apply",
   "parent":{
     "name":"tiler",
     "path":"folders/shader/draw/tiler.yy",

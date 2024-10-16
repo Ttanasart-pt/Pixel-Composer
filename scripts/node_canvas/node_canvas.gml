@@ -749,7 +749,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			
 			prev_surface 		  = surface_verify(prev_surface,		  _dim[0], _dim[1]);
 			preview_draw_surface  = surface_verify(preview_draw_surface,  _dim[0], _dim[1]);
-			preview_draw_mask     = surface_verify(preview_draw_mask, _sw, _sh);
+			preview_draw_mask     = surface_verify(preview_draw_mask,     _sw,     _sh);
 		#endregion
 		
 		#region tool

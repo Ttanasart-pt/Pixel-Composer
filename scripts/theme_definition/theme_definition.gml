@@ -516,6 +516,7 @@ function ThemeColor() constructor {
 	
     panel_bg_clear_inner                = CDEF.main_mdblack;
     panel_bg_clear                      = CDEF.main_black;
+    panel_select_border					= CDEF.main_grey;
     panel_frame                         = CDEF.main_dkgrey;
     panel_prop_bg                       = CDEF.main_ltgrey;
     panel_tab                           = CDEF.white;

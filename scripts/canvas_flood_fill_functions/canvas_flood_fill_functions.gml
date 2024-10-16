@@ -1,13 +1,12 @@
 function _ff_getPixel(_x, _y) { return buffer_read_at(_ff_buff, (_y * _ff_w + _x) * 4, buffer_u32); }
 	
-function canvas_ff_fillable(colorBase, colorFill, _x, _y, _thres) { #region
+function canvas_ff_fillable(colorBase, colorFill, _x, _y, _thres) {
 	var c = _ff_getPixel(_x, _y);
 	var d = color_diff_alpha(colorBase, c);
-	 //print($"Checking [{_x}, {_y}]: {colorBase} - {c} : {_color_get_alpha(colorBase)} - {_color_get_alpha(c)} | {d}");
 	return d <= _thres && c != colorFill;
-} #endregion
+}
 
-function canvas_flood_fill_scanline(_surf, _x, _y, _thres, _corner = false) { #region
+function canvas_flood_fill_scanline(_surf, _x, _y, _thres, _corner = false) {
 
 	var colorFill = CURRENT_COLOR;
 	var colorBase = int64(surface_getpixel_ext(_surf, _x, _y));
@@ -95,9 +94,9 @@ function canvas_flood_fill_scanline(_surf, _x, _y, _thres, _corner = false) { #r
 		
 	draw_set_alpha(1);
 	buffer_delete(_ff_buff);
-} #endregion
+}
 
-function canvas_flood_fill_all(_surf, _x, _y, _thres) { #region
+function canvas_flood_fill_all(_surf, _x, _y, _thres) {
 	
 	var colorBase = surface_getpixel_ext(_surf, _x, _y);
 	var colorFill = colorBase;
@@ -134,4 +133,4 @@ function canvas_flood_fill_all(_surf, _x, _y, _thres) { #region
 	buffer_delete(_ff_buff);
 	
 	return [ sel_x0, sel_y0, sel_x1, sel_y1 ];
-} #endregion
+}

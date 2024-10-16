@@ -413,6 +413,7 @@ function colorSelector(onApply = noone) constructor {
 		draw_sprite_stretched_ext(THEME.color_picker_box, 1, cx - ui(18), cy - ui(18), ui(36), ui(36), current_color, aa);
 		
 		cx += ui(48);
+		if(interactable)
 		if(buttonInstant(THEME.button_hide, cx - ui(18), cy - ui(18), ui(36), ui(36), mouse_ui, focus, hover, "", THEME.color_picker_dropper, 0, c_white) == 2)
 			dropper_active = true;
 	}

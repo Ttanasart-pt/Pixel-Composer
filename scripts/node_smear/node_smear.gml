@@ -41,10 +41,12 @@ function Node_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	newInput(15, nodeValue_Enum_Scroll("Blend Mode", self,  0, [ "Maximum", "Additive" ]));
 	
+	newInput(16, nodeValue_Bool("Normalize", self, false));
+	
 	input_display_list = [ 5, 6, 
 		["Surfaces", true], 0, 3, 4, 7, 8, 
 		["Smear",	false], 11, 14, 1, 9, 2, 10, 13, 12, 
-		["Render",  false], 15, 
+		["Render",  false], 16, 15, 
 	]
 	
 	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
@@ -90,6 +92,7 @@ function Node_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			shader_set_i("blend",    	  _data[15]);
 			shader_set_i("modulateStr",   _data[12]);
 			shader_set_f("spread",        _data[13]);
+			shader_set_i("normalized",    _data[16]);
 			
 			draw_surface_safe(_data[0]);
 		surface_reset_shader();

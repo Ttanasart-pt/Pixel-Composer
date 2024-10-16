@@ -525,7 +525,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				
 				if(i == content_index) {
 					foc = FOCUS == self;
-					var cc = foc? COLORS._main_accent : COLORS.panel_tab;
+					var cc = foc? (PREFERENCES.panel_outline_accent? COLORS._main_accent : COLORS.panel_select_border) : COLORS.panel_tab;
 					draw_sprite_stretched_ext(THEME.ui_panel_tab, 1 + foc, _tbx, tby, tbw, _tdh, cc, 1);
 					if(!foc)
 						tab_cover = BBOX().fromWH(tsx + _tbx, tsy + tby + tbh - ui(3), tbw, THEME_VALUE.panel_tab_extend);
@@ -598,7 +598,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				var tbw  = string_width(txt) + ui(16 + 16);
 				if(icn != noone) tbw += ui(16 + 4);
 				
-				draw_sprite_stretched_ext(THEME.ui_panel_tab, 2, _tbx, tby, tbw, tbh, COLORS._main_accent, 1);
+				draw_sprite_stretched_ext(THEME.ui_panel_tab, 2, _tbx, tby, tbw, tbh, PREFERENCES.panel_outline_accent? COLORS._main_accent : COLORS.panel_select_border, 1);
 				draw_sprite_ui(THEME.tab_exit, 0, _tbx + tbw - ui(12), tab_height / 2 + 1,,,, COLORS.panel_tab_icon);
 				
 				if(icn != noone) {
@@ -713,7 +713,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		if(tab) draw_sprite_bbox(THEME.ui_panel_tab, 3, tab_cover);
 		
 		if(FOCUS == self && parent != noone) {
-			draw_sprite_stretched_ext(THEME.ui_panel, 1, tx + padding, ty + padding, tw - padding * 2, th - padding * 2, COLORS._main_accent, 1);	
+			draw_sprite_stretched_ext(THEME.ui_panel, 1, tx + padding, ty + padding, tw - padding * 2, th - padding * 2, PREFERENCES.panel_outline_accent? COLORS._main_accent : COLORS.panel_select_border, 1);	
 			
 			if(hasContent() && !m_in && m_ot) {
 				draw_sprite_stretched_ext(THEME.ui_panel, 1, tx + padding, ty + padding, tw - padding * 2, th - padding * 2, c_white, 0.4);

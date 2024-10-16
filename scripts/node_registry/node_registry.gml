@@ -515,9 +515,6 @@ function __initNodes() {
 	var input = ds_list_create(); 
 	addNodeCatagory("IO", input);
 		ds_list_add(input, "Images");
-		addNodeObject(input, "Canvas",				s_node_canvas,			"Node_Canvas",					[1, Node_Canvas], ["draw"], "Draw on surface using brush, eraser, etc.");
-		addNodeObject(input, "Canvas Group",		s_node_canvas_group,	"Node_Canvas_Group",			[1, Node_Canvas_Group],, "Create a group that combines multiple canvas nodes a layers.").setVersion(11740);
-		addNodeObject(input, "Active Canvas",		s_node_active_canvas,	"Node_Active_Canvas",			[1, Node_Active_Canvas], ["draw"], "Draw using parameterized brush.").setVersion(11570);
 		addNodeObject(input, "Image",				s_node_image,			"Node_Image",					[0, Node_create_Image],, "Load a single image from your computer.");
 		addNodeObject(input, "Image GIF",			s_node_image_gif,		"Node_Image_gif",				[0, Node_create_Image_gif],, "Load animated .gif from your computer.");
 		addNodeObject(input, "Splice Spritesheet",	s_node_image_sheet,		"Node_Image_Sheet",				[1, Node_Image_Sheet],, "Cut up spritesheet into animation or image array.");
@@ -526,6 +523,12 @@ function __initNodes() {
 		addNodeObject(input, "Array to Anim",		s_node_image_sequence_to_anim, "Node_Sequence_Anim",	[1, Node_Sequence_Anim],, "Convert array of images into animation.");
 		addNodeObject(input, "SVG",					s_node_svg, 			"Node_SVG",						[1, Node_SVG],, "Load a SVG file.");
 		if(!DEMO) addNodeObject(input, "Export",	s_node_export,			"Node_Export",					[0, Node_create_Export],, "Export image, image array to file, image sequence, animation.");
+		
+		ds_list_add(input, "Draw");
+		addNodeObject(input, "Canvas",				s_node_canvas,			"Node_Canvas",					[1, Node_Canvas], ["draw"], "Draw on surface using brush, eraser, etc.");
+		addNodeObject(input, "Canvas Group",		s_node_canvas_group,	"Node_Canvas_Group",			[1, Node_Canvas_Group],, "Create a group that combines multiple canvas nodes a layers.").setVersion(11740);
+		addNodeObject(input, "Active Canvas",		s_node_active_canvas,	"Node_Active_Canvas",			[1, Node_Active_Canvas], ["draw"], "Draw using parameterized brush.").setVersion(11570);
+		/**/ addNodeObject(input, "Tile Drawer",			s_node_svg, 			"Node_Tile_Drawer",				[1, Node_Tile_Drawer],, "Draw using tileset.").setVersion(1_18_02_0);
 		
 		ds_list_add(input, "Files");
 		addNodeObject(input, "Text File In",		s_node_text_file_read,	"Node_Text_File_Read",			[1, Node_Text_File_Read],  ["txt"], "Load .txt in as text.").setVersion(1080);

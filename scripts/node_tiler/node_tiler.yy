@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_tiler",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_tiler",
+  "parent":{
+    "name":"tiler",
+    "path":"folders/nodes/data/tiler.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

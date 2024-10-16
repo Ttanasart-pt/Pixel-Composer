@@ -873,12 +873,17 @@ function Panel_Preview() : PanelContent() constructor {
         
     }
     
+    preview_surface_width  = 0;
+    preview_surface_height = 0;
+    
     function drawNodePreview() {
         var ss   = canvas_s;
         var psx  = 0, psy  = 0;
         var psw  = 0, psh  = 0;
-        var pswd = 0, pshd = 0;
         var psx1 = 0, psy1 = 0;
+        
+        preview_surface_width  = 0;
+    	preview_surface_height = 0;
         
         var ssx = 0, ssy = 0;
         var ssw = 0, ssh = 0;
@@ -889,11 +894,11 @@ function Panel_Preview() : PanelContent() constructor {
             
             psw = surface_get_width_safe(preview_surfaces[0]);
             psh = surface_get_height_safe(preview_surfaces[0]);
-            pswd = psw * ss;
-            pshd = psh * ss;
+            preview_surface_width  = psw * ss;
+            preview_surface_height = psh * ss;
             
-            psx1 = psx + pswd;
-            psy1 = psy + pshd;    
+            psx1 = psx + preview_surface_width;
+            psy1 = psy + preview_surface_height;    
         }
         
         if(is_surface(preview_surfaces[1])) {
@@ -1043,8 +1048,8 @@ function Panel_Preview() : PanelContent() constructor {
         if(is_surface(preview_surfaces[0])) { // outline
             if(PROJECT.previewGrid.pixel && canvas_s >= 16) {
                 
-                var gw = pswd / canvas_s;
-                var gh = pshd / canvas_s;
+                var gw = preview_surface_width  / canvas_s;
+                var gh = preview_surface_height / canvas_s;
                 
                 var cx = canvas_x;
                 var cy = canvas_y;
@@ -1054,46 +1059,50 @@ function Panel_Preview() : PanelContent() constructor {
                 
                 for( var i = 1; i < gw; i++ ) {
                     var _xx = cx + i * canvas_s;
-                    draw_line(_xx, cy, _xx, cy + pshd);
+                    draw_line(_xx, cy, _xx, cy + preview_surface_height);
                 }
             
                 for( var i = 1; i < gh; i++ ) {
                     var _yy = cy + i * canvas_s;
-                    draw_line(cx, _yy - 1, cx + pswd, _yy - 1);
+                    draw_line(cx, _yy - 1, cx + preview_surface_width, _yy - 1);
                 }
                 
                 draw_set_alpha(1);
             }
             
-            if(PROJECT.previewGrid.show) {
-                var _gw = PROJECT.previewGrid.size[0] * canvas_s;
-                var _gh = PROJECT.previewGrid.size[1] * canvas_s;
-                
-                var gw = pswd / _gw;
-                var gh = pshd / _gh;
-            
-                var cx = canvas_x;
-                var cy = canvas_y;
-            
-                draw_set_color(PROJECT.previewGrid.color);
-                draw_set_alpha(PROJECT.previewGrid.opacity);
-                
-                for( var i = 1; i < gw; i++ ) {
-                    var _xx = cx + i * _gw;
-                    draw_line(_xx, cy, _xx, cy + pshd);
-                }
-            
-                for( var i = 1; i < gh; i++ ) {
-                    var _yy = cy + i * _gh;
-                    draw_line(cx, _yy, cx + pswd, _yy);
-                }
-                
-                draw_set_alpha(1);
-            }
-        
             draw_set_color(COLORS.panel_preview_surface_outline);
-            draw_rectangle(psx, psy, psx + pswd - 1, psy + pshd - 1, true);
+            draw_rectangle(psx, psy, psx + preview_surface_width - 1, psy + preview_surface_height - 1, true);
         }
+        
+        if(!struct_try_get(_node, "bypass_grid", false)) drawNodeGrid();
+    }
+    
+    function drawNodeGrid() {
+        if(!PROJECT.previewGrid.show) return;
+        
+        var _gw = PROJECT.previewGrid.size[0] * canvas_s;
+        var _gh = PROJECT.previewGrid.size[1] * canvas_s;
+        
+        var gw = preview_surface_width  / _gw;
+        var gh = preview_surface_height / _gh;
+    	
+        var cx = canvas_x;
+        var cy = canvas_y;
+    
+        draw_set_color(PROJECT.previewGrid.color);
+        draw_set_alpha(PROJECT.previewGrid.opacity);
+        
+        for( var i = 1; i < gw; i++ ) {
+            var _xx = cx + i * _gw;
+            draw_line(_xx, cy, _xx, cy + preview_surface_height);
+        }
+    
+        for( var i = 1; i < gh; i++ ) {
+            var _yy = cy + i * _gh;
+            draw_line(cx, _yy, cx + preview_surface_width, _yy);
+        }
+        
+        draw_set_alpha(1);
     }
     
     function draw3DPolygon(_node) {
@@ -1696,7 +1705,9 @@ function Panel_Preview() : PanelContent() constructor {
         
         var overActive =  active && overHover;
             
-        var params     = { w, h, toolbar_height };
+        var params = { w, h, toolbar_height };
+        params.panel = self;
+        
         var mouse_free = false;
         
         if(_node.is_3D == NODE_3D.none) {
@@ -1904,8 +1915,6 @@ function Panel_Preview() : PanelContent() constructor {
                         var _sx1  = _sxx + tool_size / 2;
                         var _sy1  = _syy + tool_size / 2;
                         
-                        draw_sprite_colored(stool[_sind], 0, _sxx, _syy);
-                        
                         if(point_in_rectangle(_mx, _my, _sx0, _sy0 + 1, _sx1, _sy1 - 1)) {
                             TOOLTIP = tool.getDisplayName(_sind);
                             draw_sprite_stretched(THEME.button_hide, 1, _sx0 + pd, _sy0 + pd, tool_size - pd * 2, tool_size - pd * 2);
@@ -1918,6 +1927,9 @@ function Panel_Preview() : PanelContent() constructor {
                             draw_sprite_stretched_ext(THEME.button_hide, 2, _sx0 + pd, _sy0 + pd, tool_size - pd * 2, tool_size - pd * 2, COLORS.panel_preview_grid, 1);
                             draw_sprite_stretched_ext(THEME.button_hide, 3, _sx0 + pd, _sy0 + pd, tool_size - pd * 2, tool_size - pd * 2, COLORS._main_accent, 1);
                         }
+                        
+                        draw_sprite_colored(stool[_sind], 0, _sxx, _syy);
+                        
                     }
                     
                     if(point_in_rectangle(_mx, _my, tx, _y0 + 1, tx + s_ww, _y1 - 1))
@@ -2023,7 +2035,7 @@ function Panel_Preview() : PanelContent() constructor {
                         break;
                 }
                 
-                var params = new widgetParam(tolx, toly, tolw, tolh, atr[$ key],, [ mx, my ])
+                var params = new widgetParam(tolx, toly, tolw, tolh, atr[$ key], , [ mx, my ], x, y);
                 params.s    = tolh;
                 params.font = _tool_font;
                 
@@ -2173,7 +2185,7 @@ function Panel_Preview() : PanelContent() constructor {
         }
     }
     
-    function drawContent(panel) { #region >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> MAIN DRAW <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    function drawContent(panel) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> MAIN DRAW <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
         mouse_on_preview = pHOVER && point_in_rectangle(mx, my, 0, topbar_height, w, h - toolbar_height);
         
         if(do_fullView) run_in(1, fullView);
@@ -2266,7 +2278,7 @@ function Panel_Preview() : PanelContent() constructor {
             }
         }
         
-    } #endregion
+    }
     
     ////=========== ACTION ===========
     

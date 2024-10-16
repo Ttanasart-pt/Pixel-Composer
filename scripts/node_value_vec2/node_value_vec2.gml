@@ -1,4 +1,5 @@
-function nodeValue_Vec2(_name, _node, _value, _data = {}) { return new __NodeValue_Vec2(_name, _node, _value, _data); }
+function nodeValue_Vec2( _name, _node, _value, _data = {}) { return new __NodeValue_Vec2( _name, _node, _value, _data); }
+function nodeValue_IVec2(_name, _node, _value, _data = {}) { return new __NodeValue_IVec2(_name, _node, _value, _data); }
 
 function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.float, _value, "") constructor {
 	setDisplay(VALUE_DISPLAY.vector, _data);
@@ -75,4 +76,9 @@ function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _
 		
 		return animator.getValue(_time);
 	}
+}
+
+function __NodeValue_IVec2(_name, _node, _value, _data = {}) : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.integer, _value, "") constructor {
+	setDisplay(VALUE_DISPLAY.vector, _data);
+	def_length = 2;
 }
