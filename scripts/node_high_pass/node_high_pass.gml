@@ -41,7 +41,7 @@ function Node_High_Pass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 		
 		surface_set_shader(_outSurf, sh_high_pass, true, BLEND.over);
-			shader_set_i("sampleMode", attributes.oversample);
+			shader_set_i("sampleMode", getAttribute("oversample"));
 			shader_set_2("dimension",  _dim);
 			shader_set_f("radius",     _rad);
 			shader_set_f("intensity",  _int);

@@ -186,10 +186,10 @@ function shader_set_palette(pal, pal_uni = "palette", amo_uni = "paletteAmount",
 	function shader_preset_interpolation(shader = sh_sample) {
 		INLINE
 		
-		var intp   = attributes.interpolate;
+		var intp   = getAttribute("interpolate");
 		
 		shader_set_uniform_i(shader_get_uniform(shader, "interpolation"),	intp);
-		shader_set_uniform_i(shader_get_uniform(shader, "sampleMode"),		attributes.oversample);
+		shader_set_uniform_i(shader_get_uniform(shader, "sampleMode"),		getAttribute("oversample"));
 	}
 
 	function shader_postset_interpolation() {
@@ -207,11 +207,11 @@ function shader_set_palette(pal, pal_uni = "palette", amo_uni = "paletteAmount",
 	function shader_set_interpolation(surface, _dim = noone) {
 		INLINE
 		
-		var intp   = attributes.interpolate;
+		var intp   = getAttribute("interpolate");
 		
 		shader_set_i("interpolation",	intp);
 		shader_set_f("sampleDimension", _dim == noone? surface_get_dimension(surface) : _dim);
-		shader_set_i("sampleMode",		attributes.oversample);
+		shader_set_i("sampleMode",		getAttribute("oversample"));
 	}
 	
 	function surface_set_shader(surface, shader = sh_sample, clear = true, blend = BLEND.alpha) {

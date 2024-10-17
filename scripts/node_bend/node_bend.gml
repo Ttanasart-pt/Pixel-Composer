@@ -248,7 +248,7 @@ function Node_Bend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			
 				var  n = array_length(mesh);
 			
-				gpu_set_texfilter(attributes.interpolate);
+				gpu_set_texfilter(getAttribute("interpolate"));
 				for( var k = 0; k < n; k += 100 ) {
 					draw_primitive_begin_texture(pr_trianglelist, surface_get_texture(_surf));
 				

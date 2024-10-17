@@ -373,7 +373,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		#endregion
 		
 		surface_set_target(_outSurf);
-			gpu_set_tex_filter(attributes.interpolate);
+			gpu_set_tex_filter(getAttribute("interpolate"));
 			
 			DRAW_CLEAR
 			switch(blend) {

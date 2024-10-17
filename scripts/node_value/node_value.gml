@@ -1505,7 +1505,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 	}
 	
-	static setValueInspector = function(_val = 0, index = noone, time = CURRENT_FRAME) {
+	static setValueInspector = function(_val = 0, index = noone, time = CURRENT_FRAME) { // This should be in panel_graph not here. 
 		INLINE
 		
 		var res = false;

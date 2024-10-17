@@ -167,8 +167,8 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	];
 	
 	attributes.layer_visible = [];
-	attributes.interpolate   = 0;
-	attributes.oversample    = 0;
+	attributes.interpolate   = 1;
+	attributes.oversample    = 1;
 	
 	edit_time = 0;
 	attributes.file_checker = true;

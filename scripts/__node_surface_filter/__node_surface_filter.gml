@@ -38,7 +38,7 @@ function Node_(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) construc
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 		
 		surface_set_shader(_outSurf, SHADER, true, BLEND.over);
-			shader_set_i("sampleMode", attributes.oversample);
+			shader_set_i("sampleMode", getAttribute("oversample"));
 			shader_set_2("dimension",  _dim);
 			
 			draw_surface_safe(_data[0]);

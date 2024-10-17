@@ -15,7 +15,6 @@ function Node_Sampler(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newOutput(0, nodeValue_Output("Color", self, VALUE_TYPE.color, c_white));
 	
 	attribute_oversample(true);
-	attributes.oversample = 1;
 	
 	static getPreviewValues = function() { return getInputData(0); }
 	
@@ -70,7 +69,7 @@ function Node_Sampler(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var py = _pos[1] + j;
 			
 			if(px < 0 || py < 0 || px >= ww || py >= hh) {
-				switch(attributes.oversample) {
+				switch(getAttribute("oversample")) {
 					case 0 : continue;
 					
 					case 1 :

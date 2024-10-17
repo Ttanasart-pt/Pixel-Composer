@@ -76,8 +76,7 @@ function scrollBox(_data, _onModify, update_hover = true) : widget() constructor
 		if(is_numeric(_val)) _selVal = array_safe_get_fast(data, _val);
 		
 		var _text = is_instanceof(_selVal, scrollItem)? _selVal.name : _selVal;
-		if(is_string(_text))
-			_text = string_trim_start(_text, ["-", ">", " "]);
+		if(is_string(_text)) _text = string_trim_start(_text, ["-", ">", " "]);
 		curr_text = _text;
 		
 		w = _w;
@@ -106,9 +105,8 @@ function scrollBox(_data, _onModify, update_hover = true) : widget() constructor
 			if(mouse_press(mb_left, active))
 				trigger();
 				
-			if(mouse_click(mb_left, active)) {
+			if(mouse_click(mb_left, active))
 				draw_sprite_stretched_ext(THEME.textbox, 2, _x, _y, w, _h, COLORS._main_accent, 1);	
-			}
 			
 			if(is_array(data_list) && key_mod_press(SHIFT)) {
 				var ind = array_find(data_list, _text);

@@ -108,7 +108,7 @@ function Node_3D_Transform_Image(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, 
 			camera_set_view_mat(camera, viewMat);
 			camera_set_proj_mat(camera, projMat);
 			camera_apply(camera);
-			gpu_set_texfilter(attributes.interpolate);
+			gpu_set_texfilter(getAttribute("interpolate"));
 			
 			object.transform.submitMatrix();
 			matrix_set(matrix_world, matrix_stack_top());

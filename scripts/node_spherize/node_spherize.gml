@@ -53,7 +53,7 @@ function Node_Spherize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	attribute_oversample();
 	attribute_interpolation();
 	
-	attributes.oversample  = 2;
+	attributes.oversample  = 3;
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		PROCESSOR_OVERLAY_CHECK
