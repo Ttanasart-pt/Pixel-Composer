@@ -636,7 +636,7 @@ function Panel_Inspector() : PanelContent() constructor {
             for( var i = 0, n = array_length(_inspecting.attributeEditors); i < n; i++ ) {
                 var edt = _inspecting.attributeEditors[i];
                 
-                if(is_string(edt)) {
+                if(is_string(edt)) { // label
                     var lby = yy + ui(12);
                     draw_set_alpha(0.5);
                     draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text_sub);
@@ -653,28 +653,31 @@ function Panel_Inspector() : PanelContent() constructor {
                     continue;
                 }
                 
-                var val = edt[1]();
-                edt[2].setFocusHover(pFOCUS, pHOVER);
+                var _att_name = edt[0];
+                var _att_val  = edt[1]();
+                var _att_wid  = edt[2];
                 
-                if(instanceof(edt[2]) == "buttonClass") {
-                    edt[2].text = edt[0];
-                    edt[2].draw(ui(8), yy, con_w - ui(16), hg, _m); 
+                _att_wid.setFocusHover(pFOCUS, pHOVER);
+                
+                if(instanceof(_att_wid) == "buttonClass") {
+                    _att_wid.text = _att_name;
+                    _att_wid.draw(ui(8), yy, con_w - ui(16), hg, _m); 
                     
-                    if(edt[2].inBBOX(_m)) contentPane.hover_content = true;
+                    if(_att_wid.inBBOX(_m)) contentPane.hover_content = true;
                     yy += hg + ui(8);
                     hh += hg + ui(8);
                     continue;
                 } 
                 
                 draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
-                draw_text_add(ui(8), yy + hg / 2, edt[0]);
+                draw_text_add(ui(8), yy + hg / 2, _att_name);
                 
-                var _param = new widgetParam(wx0, yy, ww, hg, val, {}, _m, x + contentPane.x, y + contentPane.y);
+                var _param = new widgetParam(wx0, yy, ww, hg, _att_val, {}, _m, x + contentPane.x, y + contentPane.y);
                     _param.s = hg;
-                var _wh = edt[2].drawParam(_param);
+                var _wh = _att_wid.drawParam(_param);
                 var _hg = max(hg, _wh);
                 
-                if(edt[2].inBBOX(_m)) contentPane.hover_content = true;
+                if(_att_wid.inBBOX(_m)) contentPane.hover_content = true;
                 yy += _hg + ui(8);
                 hh += _hg + ui(8);
             }

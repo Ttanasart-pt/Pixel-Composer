@@ -2,10 +2,11 @@ function Node_3D_Displace(_x, _y, _group = noone) : Node_3D_Modifier(_x, _y, _gr
 	name = "Displace vertex";
 	
 	newInput(in_mesh + 0, nodeValue_D3Material("Displace Texture", self, new __d3dMaterial()))
+		.setVisible(true, true);
 	
-	newInput(in_mesh + 1, nodeValue_Float("Height", self, .1))
+	newInput(in_mesh + 1, nodeValue_Float("Height", self, .1));
 	
-	newInput(in_mesh + 2, nodeValue_Float("Subobjects", self, -1))
+	newInput(in_mesh + 2, nodeValue_Float("Subobjects", self, -1));
 	
 	input_display_list = [ 
 		["Mesh",     false], 0, in_mesh + 2, 
@@ -21,8 +22,11 @@ function Node_3D_Displace(_x, _y, _group = noone) : Node_3D_Modifier(_x, _y, _gr
 		if(!is_instanceof(_obj, __3dObject))    return noone;
 		if(!is_instanceof(_tex, __d3dMaterial)) return noone;
 		
-		var _tsc = _tex.texScale;
-		var _tif = _tex.texShift;
+		var _tsc  = _tex.texScale;
+		var _tif  = _tex.texShift;
+		var _surf = _tex.surface;
+		
+		if(!is_surface(_surf)) return _obj;
 		
 		var dim  = surface_get_dimension(_tex.surface);
 		var _sw  = dim[0] - 1;

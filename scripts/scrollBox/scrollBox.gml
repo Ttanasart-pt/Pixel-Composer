@@ -35,8 +35,7 @@ function scrollBox(_data, _onModify, update_hover = true) : widget() constructor
 	type = 0;
 	
 	static trigger = function() {
-		if(is_method(data_list)) data = data_list();
-		else					 data = data_list;
+		data = is_method(data_list)? data_list() : data_list;
 		
 		var ind = array_find(data, curr_text);
 		open    = true;
@@ -67,8 +66,7 @@ function scrollBox(_data, _onModify, update_hover = true) : widget() constructor
 		open_ry = _ry;
 		h = _h;
 		
-		if(is_method(data_list)) data = data_list();
-		else					 data = data_list;
+		data = is_method(data_list)? data_list() : data_list;
 		
 		var _selVal = _val;
 		
@@ -164,7 +162,6 @@ function scrollBox(_data, _onModify, update_hover = true) : widget() constructor
 	
 	static clone = function() {
 		var cln = new scrollBox(data, onModify, update_hover);
-		
 		return cln;
 	}
 }

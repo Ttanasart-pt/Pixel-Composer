@@ -52,7 +52,7 @@ function groupNodes(nodeArray, _group = noone, record = true, check_connect = tr
 		_content[i] = _ctx_nodes[i];
 	}
 	
-	if(check_connect) { #region IO creation
+	if(check_connect) { // IO creation
 		var _io = { inputs: {}, outputs: {}, map: {} };
 		
 		for(var i = 0; i < array_length(nodeArray); i++)
@@ -112,8 +112,7 @@ function groupNodes(nodeArray, _group = noone, record = true, check_connect = tr
 				_to.setFrom(_n.outParent);
 			}
 		}
-		
-	} #endregion
+	}
 	
 	UNDO_HOLDING = false;	
 	if(record) recordAction(ACTION_TYPE.group, _group, { content: _content });

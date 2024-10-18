@@ -583,6 +583,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		if(is_3D == NODE_3D.polygon) USE_DEPTH = true;
 		if(is_simulation) PROJECT.animator.is_simulating = true;
+		
 	}
 	
 	static doStepBegin = function() {}
@@ -2387,9 +2388,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		struct_append(attributes, attr); 
 		
 		if(LOADING_VERSION < 1_18_02_0) {
-			if(struct_has(attributes, "color_depth")) attributes.color_depth += inputs[0].type == VALUE_TYPE.surface? 1 : 2;
-			if(struct_has(attributes, "interpolate")) attributes.interpolate++;
-			if(struct_has(attributes, "oversample"))  attributes.oversample++;
+			if(struct_has(attr, "color_depth")) attributes.color_depth += (!array_empty(inputs) && inputs[0].type == VALUE_TYPE.surface)? 1 : 2;
+			if(struct_has(attr, "interpolate")) attributes.interpolate++;
+			if(struct_has(attr, "oversample"))  attributes.oversample++;
 		}
 	}
 	
@@ -2711,10 +2712,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 					
 					if(_lin != -1) {
 						_wid.data_list[_lin] = "-Group";
+						
 						var _key = _att[3];
 						
 						if(attributes[$ _key] == _lin)
-							attributes[$ _key] = 1;
+							attributes[$ _key] = _att[0] == "Color depth"? 3 : 1;
 					}
 				}
 			}
@@ -2730,13 +2732,15 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 					var _l   = _wid.data_list;
 					var _lin = array_get_index(_l, "-Group");
 					
-					if(_lin != -1) _wid.data_list[_lin] = "Group";
+					if(_lin != -1) {
+						_wid.data_list[_lin] = "Group";
+					}
 				}
 			}
 			
 		}
 			
-	} checkGroup();
+	} run_in(1, function() /*=>*/ { checkGroup(); });
 	
 	static toString = function() { return $"Node [{internalName}]: {node_id}"; }
 }

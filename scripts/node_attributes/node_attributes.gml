@@ -71,7 +71,7 @@
 	}
 	
 	function attribute_surface_depth(label = true) {
-		attr_depth_array = global.SURFACE_FORMAT_NAME;
+		attr_depth_array = array_clone(global.SURFACE_FORMAT_NAME);
 		if(!array_empty(inputs) && inputs[0].type == VALUE_TYPE.surface)
 			attr_depth_array[0] = "Input";
 		
@@ -83,21 +83,23 @@
 	}
 	
 	function attribute_interpolation(label = false) {
+		attr_interpolate_array = array_clone(global.SURFACE_INTERPOLATION);
 		attributes.interpolate = 1;
 		attributes.oversample  = 1;
 		
 		if(label) array_push(attributeEditors, "Surface");
 		array_push(attributeEditors, ["Texture interpolation", function() /*=>*/ {return attributes.interpolate}, 
-			new scrollBox(global.SURFACE_INTERPOLATION, function(val) /*=>*/ { attribute_set("interpolate", val); }, false), "interpolate"]);
+			new scrollBox(attr_interpolate_array, function(val) /*=>*/ { attribute_set("interpolate", val); }, false), "interpolate"]);
 	}
 	
 	function attribute_oversample(label = false) {
+		attr_oversample_array = array_clone(global.SURFACE_OVERSAMPLE);
 		attributes.interpolate = 1;
 		attributes.oversample  = 1;
 		
 		if(label) array_push(attributeEditors, "Surface");
 		array_push(attributeEditors, ["Oversample", function() /*=>*/ {return attributes.oversample}, 
-			new scrollBox(global.SURFACE_OVERSAMPLE, function(val) /*=>*/ { attribute_set("oversample", val); }, false), "oversample"]);
+			new scrollBox(attr_oversample_array, function(val) /*=>*/ { attribute_set("oversample", val); }, false), "oversample"]);
 	}
 	
 	function attribute_auto_execute(label = false) {

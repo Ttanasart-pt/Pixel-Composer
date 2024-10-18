@@ -10,10 +10,15 @@ function Node_HTTP_request(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	newOutput(0, nodeValue_Output("Result", self, VALUE_TYPE.text, ""));
 	
-	address_domain = "";
+	address_domain  = "";
+	downloaded_size = 0;
 	
 	insp1UpdateTooltip   = "Trigger";
 	insp1UpdateIcon      = [ THEME.sequence_control, 1, COLORS._main_value_positive ];
+	
+	attributes.max_file_size = 10000;
+	array_push(attributeEditors, "HTTP");
+	array_push(attributeEditors, ["Max request size", function() { return attributes.max_file_size; }, new textBox(TEXTBOX_INPUT.number, function(val) { attributes.max_file_size = val; }) ]);
 	
 	static onInspector1Update = function() {
 		request();
@@ -24,20 +29,39 @@ function Node_HTTP_request(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var _type = getInputData(1);
 		var _post = getInputData(2);
 		
+		downloaded_size = 0;
+		
 		switch(_type) {
 			case 0 :
 				asyncCall(http_get(_addr), function(param, data) /*=>*/ {
+					var sta = data[? "status"];
 					var res = data[? "result"];
-					outputs[0].setValue(res);
-					triggerRender(false);
+					
+					if(sta == 0) {
+						if(downloaded_size > attributes.max_file_size) {
+							noti_warning($"HTTP request: Requesed file to large ({downloaded_size} B).");
+							outputs[0].setValue("");
+						} else
+							outputs[0].setValue(res);
+							
+						triggerRender(true);
+						
+					} else if(sta == 1) {
+						var _siz = data[? "contentLength"];
+						var _dow = data[? "sizeDownloaded"];
+						
+						downloaded_size = _dow;
+					}
 				});
 				break;
 			
 			case 1 :
 				asyncCall(http_post_string(_addr, _post), function(param, data) /*=>*/ {
+					var sta = data[? "status"];
 					var res = data[? "result"];
+					
 					outputs[0].setValue(res);
-					triggerRender(false);
+					triggerRender(true);
 				});
 				break;
 		}
