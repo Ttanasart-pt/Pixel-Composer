@@ -51,11 +51,13 @@ function tiler_brush(node) constructor {
 	}
 }
 
-function tiler_draw_point_brush(brush, _x, _y) {
+function tiler_draw_point_brush(brush, _x, _y, _shader = true) {
 	if(brush.brush_height * brush.brush_width == 0) return;
 	
-	shader_set(sh_draw_tile_brush);
-	BLEND_OVERRIDE
+	if(_shader) {
+		shader_set(sh_draw_tile_brush);
+		BLEND_OVERRIDE
+	}
 	
 	for( var i = 0, n = brush.brush_height; i < n; i++ ) 
 	for( var j = 0, m = brush.brush_width;  j < m; j++ ) {
@@ -64,27 +66,30 @@ function tiler_draw_point_brush(brush, _x, _y) {
     	var _xx = _x + j;
     	var _yy = _y + i;
     	
-    	if(brush.brush_size <= 1) 
+    	if(brush.brush_size <= 1) {
     		draw_point(_xx, _yy);
     	
-    	else if(brush.brush_size < global.FIX_POINTS_AMOUNT) { 
+    	} else if(brush.brush_size < global.FIX_POINTS_AMOUNT) { 
     		var fx = global.FIX_POINTS[brush.brush_size];
+    		
     		for( var i = 0, n = array_length(fx); i < n; i++ )
-    			draw_point(_xx + fx[i][0], _yy + fx[i][1]);	
-        
-    	} else
-    		draw_circle_prec(_xx, _yy, brush.brush_size / 2, 0);
+    			draw_point(_xx + fx[i][0], _yy + fx[i][1]);
+    	}
 	}
 	
-	BLEND_NORMAL
-	shader_reset();
+	if(_shader) {
+		BLEND_NORMAL
+		shader_reset();
+	}
 }
 
-function tiler_draw_line_brush(brush, _x0, _y0, _x1, _y1) { 
+function tiler_draw_line_brush(brush, _x0, _y0, _x1, _y1, _shader = true) { 
 	if(brush.brush_height * brush.brush_width == 0) return;
 	
-	shader_set(sh_draw_tile_brush);
-	BLEND_OVERRIDE
+	if(_shader) {
+		shader_set(sh_draw_tile_brush);
+		BLEND_OVERRIDE
+	}
 	
 	for( var i = 0, n = brush.brush_height; i < n; i++ ) 
 	for( var j = 0, m = brush.brush_width;  j < m; j++ ) {
@@ -117,25 +122,27 @@ function tiler_draw_line_brush(brush, _x0, _y0, _x1, _y1) {
     	}
 	}
 	
-	BLEND_NORMAL
-	shader_reset();
+	if(_shader) {
+		BLEND_NORMAL
+		shader_reset();
+	}
 }
 
-function tiler_draw_rect_brush(brush, _x0, _y0, _x1, _y1, _fill) {
+function tiler_draw_rect_brush(brush, _x0, _y0, _x1, _y1, _fill, _shader = true) {
 	if(_x0 == _x1 && _y0 == _y1) {
-		tiler_draw_point_brush(brush, _x0, _y0);
+		tiler_draw_point_brush(brush, _x0, _y0, _shader);
 		return;
 		
 	} else if(_x0 == _x1) {
-		tiler_draw_point_brush(brush, _x0, _y0);
-		tiler_draw_point_brush(brush, _x1, _y1);
-		tiler_draw_line_brush(brush, _x0, _y0, _x0, _y1);
+		tiler_draw_point_brush(brush, _x0, _y0, _shader);
+		tiler_draw_point_brush(brush, _x1, _y1, _shader);
+		tiler_draw_line_brush(brush, _x0, _y0, _x0, _y1, _shader);
 		return;
 		
 	} else if(_y0 == _y1) {
-		tiler_draw_point_brush(brush, _x0, _y0);
-		tiler_draw_point_brush(brush, _x1, _y1);
-		tiler_draw_line_brush(brush, _x0, _y0, _x1, _y0);
+		tiler_draw_point_brush(brush, _x0, _y0, _shader);
+		tiler_draw_point_brush(brush, _x1, _y1, _shader);
+		tiler_draw_line_brush(brush, _x0, _y0, _x1, _y0, _shader);
 		return;
 	}
 		
@@ -149,28 +156,28 @@ function tiler_draw_rect_brush(brush, _x0, _y0, _x1, _y1, _fill) {
 	if(brush.brush_size == 1 && !is_surface(brush.brush_surface))
 		draw_rectangle(_min_x + 1, _min_y + 1, _max_x - 1, _may_y - 1, 1);
 	else {
-		tiler_draw_line_brush(brush, _min_x, _min_y, _max_x, _min_y);
-		tiler_draw_line_brush(brush, _min_x, _min_y, _min_x, _may_y);
-		tiler_draw_line_brush(brush, _max_x, _may_y, _max_x, _min_y);
-		tiler_draw_line_brush(brush, _max_x, _may_y, _min_x, _may_y);
+		tiler_draw_line_brush(brush, _min_x, _min_y, _max_x, _min_y, _shader);
+		tiler_draw_line_brush(brush, _min_x, _min_y, _min_x, _may_y, _shader);
+		tiler_draw_line_brush(brush, _max_x, _may_y, _max_x, _min_y, _shader);
+		tiler_draw_line_brush(brush, _max_x, _may_y, _min_x, _may_y, _shader);
 	}
 }
 	
-function tiler_draw_ellp_brush(brush, _x0, _y0, _x1, _y1,  _fill) {
+function tiler_draw_ellp_brush(brush, _x0, _y0, _x1, _y1, _fill, _shader = true) {
 	if(_x0 == _x1 && _y0 == _y1) {
-		tiler_draw_point_brush(brush, _x0, _y0);
+		tiler_draw_point_brush(brush, _x0, _y0, _shader);
 		return;
 		
 	} else if(_x0 == _x1) {
-		tiler_draw_point_brush(brush, _x0, _y0);
-		tiler_draw_point_brush(brush, _x1, _y1);
-		tiler_draw_line_brush(brush, _x0, _y0, _x0, _y1);
+		tiler_draw_point_brush(brush, _x0, _y0, _shader);
+		tiler_draw_point_brush(brush, _x1, _y1, _shader);
+		tiler_draw_line_brush(brush, _x0, _y0, _x0, _y1, _shader);
 		return;
 		
 	} else if(_y0 == _y1) {
-		tiler_draw_point_brush(brush, _x0, _y0);
-		tiler_draw_point_brush(brush, _x1, _y1);
-		tiler_draw_line_brush(brush, _x0, _y0, _x1, _y0);
+		tiler_draw_point_brush(brush, _x0, _y0, _shader);
+		tiler_draw_point_brush(brush, _x1, _y1, _shader);
+		tiler_draw_line_brush(brush, _x0, _y0, _x1, _y0, _shader);
 		return;
 	}
 		
@@ -212,7 +219,7 @@ function tiler_draw_ellp_brush(brush, _x0, _y0, _x1, _y1,  _fill) {
 		nx = round(cx + lengthdir_x(rx, 360 / samp * i));
 		ny = round(cy + lengthdir_y(ry, 360 / samp * i));
 				
-		if(i) tiler_draw_line_brush(brush, ox, oy, nx, ny);
+		if(i) tiler_draw_line_brush(brush, ox, oy, nx, ny, _shader);
 				
 		ox = nx;
 		oy = ny;

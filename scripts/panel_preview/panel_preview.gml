@@ -177,6 +177,7 @@ function Panel_Preview() : PanelContent() constructor {
         view_pan_tool       = false;
         view_zoom_tool      = false;
         
+        sample_color_raw    = noone;
         sample_color        = noone;
         sample_x            = noone;
         sample_y            = noone;
@@ -1028,9 +1029,10 @@ function Panel_Preview() : PanelContent() constructor {
         #endregion
         
         if(!instance_exists(o_dialog_menubox)) { // color sample
-            sample_color = noone;
-            sample_x = noone;
-            sample_y = noone;
+            sample_color_raw = noone;
+            sample_color     = noone;
+            sample_x         = noone;
+            sample_y         = noone;
         
             if(mouse_on_preview && (mouse_press(mb_right) || key_mod_press(CTRL))) {
                 var _sx = sample_x;
@@ -1039,9 +1041,11 @@ function Panel_Preview() : PanelContent() constructor {
                 sample_x = floor((mx - canvas_x) / canvas_s);
                 sample_y = floor((my - canvas_y) / canvas_s);
                 var surf = getNodePreviewSurface();
-                sample_color = surface_get_pixel_ext(surf, sample_x, sample_y);
-                
-                //print($"{dec_to_hex(sample_color)}: {color_get_alpha(int64(sample_color))}");
+                sample_color_raw = surface_getpixel_ext(surf, sample_x, sample_y);
+                sample_color     = is_array(sample_color_raw)? make_color_rgba(clamp(sample_color_raw[0] * 255, 0, 255), 
+                															   clamp(sample_color_raw[1] * 255, 0, 255), 
+                															   clamp(sample_color_raw[2] * 255, 0, 255), 
+                															   clamp(sample_color_raw[3] * 255, 0, 255)) : sample_color_raw;
             }
         }
         
@@ -2061,13 +2065,19 @@ function Panel_Preview() : PanelContent() constructor {
                 drawColor(sample_color, cx, cy, cw, ch);
                 
                 var tx = cx + cw + ui(8);
-                var hx = color_get_hex(sample_color);
                 draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
-                draw_text(tx, cy + ch / 2, hx);
-            
-                tx += string_width(hx) + ui(8);
-                draw_set_color(COLORS._main_text_sub);
-                draw_text(tx, cy + ch / 2, $"({color_get_alpha(sample_color)})");
+                
+                if(is_array(sample_color_raw)) {
+                	draw_text(tx, cy + ch / 2, sample_color_raw);
+                	
+                } else {
+	                var hx = color_get_hex(sample_color);
+	                draw_text(tx, cy + ch / 2, hx);
+	            
+	                tx += string_width(hx) + ui(8);
+	                draw_set_color(COLORS._main_text_sub);
+	                draw_text(tx, cy + ch / 2, $"({color_get_alpha(sample_color)})");
+                }
             }
         }
         

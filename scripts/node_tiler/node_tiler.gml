@@ -31,6 +31,8 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	    tile_selecting = false;
 	    tile_select_ss = [ 0, 0 ];
 	    
+	    autotile_selector_mask = 0;
+	    
 	    grid_draw = true;
 	    
 	    tile_selector = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus, _panel = noone) {
@@ -45,8 +47,9 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	    	var _sh = _h - _pd * 2;
 	    	
 	    	draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _y, _w, _h, c_white, 1);
-	    	tile_selector_surface = surface_verify(tile_selector_surface, _sw, _sh);
-	    	tile_selector_mask    = surface_verify(tile_selector_mask,    _sw, _sh);
+	    	tile_selector_surface  = surface_verify(tile_selector_surface,  _sw, _sh);
+	    	tile_selector_mask     = surface_verify(tile_selector_mask,     _sw, _sh);
+	    	autotile_selector_mask = surface_verify(autotile_selector_mask, _sw, _sh);
 	    	
 	    	if(!is_surface(_tileSet)) return _h;
 	    	
@@ -54,8 +57,8 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	    	
 	    	var _tileAmo = [ floor(_tdim[0] / _tileSiz[0]), floor(_tdim[1] / _tileSiz[1]) ];
 	    	
-	    	var _tileSel_w =_tileSiz[0] * tile_selector_s;
-	    	var _tileSel_h =_tileSiz[1] * tile_selector_s;
+	    	var _tileSel_w = _tileSiz[0] * tile_selector_s;
+	    	var _tileSel_h = _tileSiz[1] * tile_selector_s;
 	    	
 	    	var _msx = _m[0] - _sx - tile_selector_x;
 	    	var _msy = _m[1] - _sy - tile_selector_y;
@@ -106,6 +109,7 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	    		
 	    		draw_set_color(c_white);
 	    		draw_rectangle_width(_tileHov_x - 1, _tileHov_y - 1, _tileHov_x + _tileSel_w, _tileHov_y + _tileSel_h, 1);
+	    		
 	    		draw_set_color(c_black);
 	    		draw_rectangle_width(_tileHov_x, _tileHov_y, _tileHov_x + _tileSel_w - 1, _tileHov_y + _tileSel_h - 1, 1);
 	    		
@@ -174,9 +178,9 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		    		}
 		    		
 		    		var _s = tile_selector_s;
-		    		if(mouse_wheel_up())   { tile_selector_s_to = clamp(tile_selector_s_to * 1.1, 0.5, 4); }
-		    		if(mouse_wheel_down()) { tile_selector_s_to = clamp(tile_selector_s_to / 1.1, 0.5, 4); }
-		    		tile_selector_s = lerp_float(tile_selector_s, tile_selector_s_to, 3);
+		    		if(mouse_wheel_up())   { tile_selector_s_to = clamp(tile_selector_s_to * 1.2, 0.5, 4); }
+		    		if(mouse_wheel_down()) { tile_selector_s_to = clamp(tile_selector_s_to / 1.2, 0.5, 4); }
+		    		tile_selector_s = lerp_float(tile_selector_s, tile_selector_s_to, 2);
 		    		
 		    		if(_s != tile_selector_s) {
 		    			var _ds  = tile_selector_s - _s;
@@ -206,23 +210,47 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 				draw_surface(tile_selector_mask, _sx, _sy);
 			shader_reset();
 			
+			#region autotile
+				
+				for( var i = 0, n = array_length(autotiles); i < n; i++ ) {
+					var _att = autotiles[i];
+					
+			    	surface_set_target(autotile_selector_mask);
+			    		DRAW_CLEAR
+			    		
+			    		draw_set_color(c_white);
+			    		for( var j = 0, m = array_length(_att.index); j < m; j++ ) {
+			    			var _bindex      = _att.index[j];
+					    	var _tileSel_row = floor(_bindex / _tileAmo[0]);
+					    	var _tileSel_col = safe_mod(_bindex, _tileAmo[0]);
+				    		var _tileSel_x   = tile_selector_x + _tileSel_col * _tileSiz[0] * tile_selector_s;
+				    		var _tileSel_y   = tile_selector_y + _tileSel_row * _tileSiz[1] * tile_selector_s;
+				    		draw_rectangle(_tileSel_x, _tileSel_y, _tileSel_x + _tileSel_w, _tileSel_y + _tileSel_h, false);
+			    		}
+			    	surface_reset_target();
+			    	
+					shader_set(sh_brush_outline);
+						shader_set_f("dimension", _sw, _sh);
+						draw_surface_ext(autotile_selector_mask, _sx, _sy, 1, 1, 0, COLORS._main_accent, 1);
+					shader_reset();
+					
+				}
+			#endregion
+				
 	    	return _h;
 	    });
     #endregion
     
     #region ++++ auto tile ++++
     	autotiles = [
-			{
-				type: AUTOTILE_TYPE.box3_3,
-				indexes: [
-					0, 1, 2, 
-					3, 4, 5, 
-					6, 7, 8, 
-				],
-			}
+    		new tiler_brush_autotile(AUTOTILE_TYPE.box3_3, [
+				 0,  1,  2, 
+				11, 12, 13, 
+				22, 23, 24, 
+			]),
 		];
 		
-		autotile_selecting = noone;
+		autotile_selecting = 0;
 		
     	autotile_selector = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus, _panel = noone) {
     		var _hh = 0;
@@ -458,6 +486,8 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			shader_reset();
 			
 	    #endregion
+	    
+	    if(autotiles[0].mask_surface) draw_surface_ext(autotiles[0].mask_surface, 32, 32, 8, 8, 0, c_white, 1);
     }
     
 	static processData = function(_outData, _data, _output_index, _array_index) {

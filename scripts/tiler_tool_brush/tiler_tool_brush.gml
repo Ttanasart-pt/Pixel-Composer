@@ -24,6 +24,8 @@ function tiler_tool_brush(node, _brush, eraser = false) : tiler_tool(node) const
 		mouse_cur_x = floor(round((_mx - _x) / _s - 0.5) / tile_size[0]);
 		mouse_cur_y = floor(round((_my - _y) / _s - 0.5) / tile_size[1]);
 		
+		var _auto = brush.autotiler;
+		
 		if(mouse_pre_draw_x != undefined && mouse_pre_draw_y != undefined && key_mod_presses(SHIFT, CTRL)) {
 			
 			var _dx = mouse_cur_x - mouse_pre_draw_x;
@@ -53,12 +55,25 @@ function tiler_tool_brush(node, _brush, eraser = false) : tiler_tool(node) const
 			surface_set_target(drawing_surface);
 				tiler_draw_point_brush(brush, mouse_cur_x, mouse_cur_y);
 			surface_reset_target();
-				
+			
+			if(_auto != noone) {
+				_auto.drawing_start(drawing_surface, isEraser);
+				tiler_draw_point_brush(brush, mouse_cur_x, mouse_cur_y, false);
+				_auto.drawing_end();
+			}
+					
 			mouse_holding = true;
 			if(mouse_pre_draw_x != undefined && mouse_pre_draw_y != undefined && key_mod_press(SHIFT)) { 
 				surface_set_target(drawing_surface);
 					tiler_draw_line_brush(brush, mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y);
 				surface_reset_target();
+				
+				if(_auto != noone) {
+					_auto.drawing_start(drawing_surface, isEraser);
+					tiler_draw_line_brush(brush, mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y, false);
+					_auto.drawing_end();
+				}
+				
 				mouse_holding = false;
 				
 				apply_draw_surface();
@@ -73,6 +88,13 @@ function tiler_tool_brush(node, _brush, eraser = false) : tiler_tool(node) const
 				surface_set_target(drawing_surface);
 					tiler_draw_line_brush(brush, mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y);
 				surface_reset_target();
+				
+				if(_auto != noone) {
+					_auto.drawing_start(drawing_surface, isEraser);
+					tiler_draw_line_brush(brush, mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y, false);
+					_auto.drawing_end();
+				}
+				
 			}
 				
 			mouse_pre_draw_x = mouse_cur_x;
