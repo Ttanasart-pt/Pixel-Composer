@@ -82,12 +82,19 @@ event_inherited();
 		
 		for(var i = 0; i < array_length(data); i++) {
 			var _val = data[i];
-			var txt  = is_instanceof(_val, scrollItem)? _val.name : _val;
-			var _spr = is_instanceof(_val, scrollItem) && _val.spr;
-			var _tol = is_instanceof(_val, scrollItem) && _val.tooltip != "";
+			var _txt = _val, _spr = noone, _tol = false, _act = true, _sub = false;
 			
-			var clickable = !string_starts_with(txt, "-");
-			if(!clickable) txt = string_delete(txt, 1, 1);
+			if(is(_val, scrollItem)) {
+				_act = _val.active;
+				_txt = _val.name;
+				_spr = _val.spr;
+				_tol = _val.tooltip != "";
+				
+			} else {
+				_act = !string_starts_with(_txt, "-");
+				_sub =  string_starts_with(_txt, ">");
+				_txt =  string_trim_start(_txt, ["-", ">", " "]);
+			}
 			
 			if(data[i] == -1) {
 				draw_set_color(CDEF.main_mdblack);
@@ -100,7 +107,7 @@ event_inherited();
 			
 			var _yy  = _ly + hght / 2;
 			
-			if(clickable) {
+			if(_act) {
 				if(sc_content.hover && point_in_rectangle(_m[0], _m[1], 0, _ly, _dw, _ly + hght - 1)) {
 					sc_content.hover_content = true;
 					selecting = i;
@@ -129,17 +136,17 @@ event_inherited();
 					draw_sprite_ui(THEME.info, 0, tx, ty, .75, .75, 0, COLORS._main_icon, 0.75);
 			}
 			
-			if(is_string(txt)) {
-				draw_set_text(font, align, fa_center, clickable? COLORS._main_text : COLORS._main_text_sub);
+			if(is_string(_txt)) {
+				draw_set_text(font, align, fa_center, _act? COLORS._main_text : COLORS._main_text_sub);
 				if(align == fa_center) {
 					var _xc = _spr? hght + (_dw - hght) / 2 : _dw / 2;
-					draw_text_add(_xc, _yy, txt);
+					draw_text_add(_xc, _yy, _txt);
 					
 				} else if(align == fa_left) 
-					draw_text_add(text_pad + _spr * hght, _yy, txt);
+					draw_text_add(text_pad + _spr * hght, _yy, _txt);
 					
-			} else if(sprite_exists(txt)) {
-				draw_sprite_ext(txt, i, _dw / 2, _yy);
+			} else if(sprite_exists(_txt)) {
+				draw_sprite_ext(_txt, i, _dw / 2, _yy);
 			}
 			
 			if(_spr) draw_sprite_ext(_val.spr, _val.spr_ind, ui(8) + hght / 2, _yy, 1, 1, 0, _val.spr_blend, 1);

@@ -166,17 +166,23 @@ event_inherited();
 				continue;
 			}
 			
-			var  txt = is_instanceof(_val, scrollItem)? _val.name : _val;
-			var _spr = is_instanceof(_val, scrollItem) && _val.spr;
-			var _tol = is_instanceof(_val, scrollItem) && _val.tooltip != "";
+			var _txt = _val, _spr = noone, _tol = false, _act = true, _sub = false;
 			
-			var clickable = !string_starts_with(txt, "-");
-			var subitem   =  string_starts_with(txt, ">");
-			txt = string_trim_start(txt, ["-", ">", " "]);
+			if(is(_val, scrollItem)) {
+				_act = _val.active;
+				_txt = _val.name;
+				_spr = _val.spr;
+				_tol = _val.tooltip != "";
+				
+			} else {
+				_act = !string_starts_with(_txt, "-");
+				_sub =  string_starts_with(_txt, ">");
+				_txt =  string_trim_start(_txt, ["-", ">", " "]);
+			}
 			
 			var _hov = false;
 			
-			if(clickable) {
+			if(_act) {
 				if(sc_content.hover && point_in_rectangle(_m[0], _m[1], _lx, _ly, _lx + _dw, _ly + hght - 1)) {
 					sc_content.hover_content = true;
 					_hov = true;
@@ -198,13 +204,13 @@ event_inherited();
 				
 			align = fa_left;
 			
-			draw_set_text(font, align, fa_center, subitem? COLORS._main_text_sub : COLORS._main_text);
+			draw_set_text(font, align, fa_center, _sub? COLORS._main_text_sub : COLORS._main_text);
 			if(align == fa_center) {
 				var _xc = _spr? hght + (_dw - hght) / 2 : _dw / 2;
-				draw_text_add(_lx + _xc, _ly + hght / 2, txt);
+				draw_text_add(_lx + _xc, _ly + hght / 2, _txt);
 				
 			} else if(align == fa_left) 
-				draw_text_add(_tpad + _lx + _spr * (_tpad * 2 + hght), _ly + hght / 2, txt);
+				draw_text_add(_tpad + _lx + _spr * (_tpad * 2 + hght), _ly + hght / 2, _txt);
 			
 			if(_spr) draw_sprite_ext(_val.spr, _val.spr_ind, _lx + ui(8) + hght / 2, _ly + hght / 2, 1, 1, 0, _val.spr_blend, 1);
 			

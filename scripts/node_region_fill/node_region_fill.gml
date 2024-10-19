@@ -30,7 +30,7 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	input_display_list = [ 4, 
 		["Surfaces",        false], 0, 1, 
-		["Regions Filter",  false, 11], 5, 6, 
+		["Region Filter",   false, 11], 5, 6, 
 		["Fill",	        false], 8, 2, 9, 10, 
 		["Render",	        false], 7, 
 	];
@@ -169,7 +169,7 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 				case 0 :  // Random colors
 					
 					shader_set(sh_region_fill_color);
-						shader_set_palette(_colr, "color", "colorAmount");
+						shader_set_palette(_colr, "colors", "colorAmount");
 						shader_set_f("seed",		_seed);
 						
 						draw_surface_safe(cmap);

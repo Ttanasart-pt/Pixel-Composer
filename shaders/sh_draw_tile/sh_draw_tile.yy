@@ -3,8 +3,8 @@
   "%Name":"sh_draw_tile",
   "name":"sh_draw_tile",
   "parent":{
-    "name":"tiler",
-    "path":"folders/shader/draw/tiler.yy",
+    "name":"shaders",
+    "path":"folders/nodes/data/tiler/shaders.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

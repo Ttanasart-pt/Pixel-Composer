@@ -6,8 +6,10 @@ function scrollItem(name, spr = noone, spr_ind = 0, spr_blend = COLORS._main_ico
 	self.spr_ind   = spr_ind;
 	self.spr_blend = spr_blend;
 	
+	active  = true;
 	tooltip = "";
 	
+	static setActive  = function(_ac) { active  = _ac; return self; }
 	static setTooltip = function(_tt) { tooltip = _tt; return self; }
 }
 

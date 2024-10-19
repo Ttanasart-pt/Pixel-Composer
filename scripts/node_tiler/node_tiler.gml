@@ -1,3 +1,7 @@
+enum AUTOTILE_TYPE {
+	box3_3,
+}
+
 function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
     name = "Tile Drawer";
     bypass_grid = true;
@@ -100,6 +104,8 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	    		draw_set_color(COLORS.panel_preview_surface_outline);
             	draw_rectangle(tile_selector_x, tile_selector_y, tile_selector_x + _tdim[0] * tile_selector_s - 1, tile_selector_y + _tdim[1] * tile_selector_s - 1, true);
 	    		
+	    		draw_set_color(c_white);
+	    		draw_rectangle_width(_tileHov_x - 1, _tileHov_y - 1, _tileHov_x + _tileSel_w, _tileHov_y + _tileSel_h, 1);
 	    		draw_set_color(c_black);
 	    		draw_rectangle_width(_tileHov_x, _tileHov_y, _tileHov_x + _tileSel_w - 1, _tileHov_y + _tileSel_h - 1, 1);
 	    		
@@ -204,10 +210,32 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	    });
     #endregion
     
+    #region ++++ auto tile ++++
+    	autotiles = [
+			{
+				type: AUTOTILE_TYPE.box3_3,
+				indexes: [
+					0, 1, 2, 
+					3, 4, 5, 
+					6, 7, 8, 
+				],
+			}
+		];
+		
+		autotile_selecting = noone;
+		
+    	autotile_selector = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus, _panel = noone) {
+    		var _hh = 0;
+    		
+    		return _hh;
+    	});
+    #endregion
+    
 	input_display_list = [ 
 		["Tileset",  false], 0, 2, 
 		["Map",      false], 1, 
 		["Tiles",    false], tile_selector, 
+		["Autotiles",false], autotile_selector, 
 	]
 	
 	newOutput(0, nodeValue_Output("Tile output", self, VALUE_TYPE.surface, noone));
@@ -232,7 +260,17 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		preview_draw_mask         = surface_create_empty(1, 1);
 		
 		attributes.dimension = [ 1, 1 ];
-		temp_surface = [ 0 ];
+		temp_surface         = [ 0 ];
+		
+		selection_mask       = noone;
+	#endregion
+	
+	#region ++++ selection ++++
+		selecting   = false;
+		selection_x = 0;
+		selection_y = 0;
+		
+		selection_mask = noone;
 	#endregion
 	
 	#region ++++ tool object ++++
@@ -241,6 +279,9 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		tool_brush     = new tiler_tool_brush(self, brush, false);
 		tool_eraser    = new tiler_tool_brush(self, brush, true);
 		tool_fill      = new tiler_tool_fill( self, brush, tool_attribute);
+		
+		tool_rectangle = new tiler_tool_shape(self, brush, CANVAS_TOOL_SHAPE.rectangle);
+		tool_ellipse   = new tiler_tool_shape(self, brush, CANVAS_TOOL_SHAPE.ellipse);
 	#endregion
 	
 	#region ++++ tools ++++
@@ -266,6 +307,14 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 				.setSetting(tool_size)
 				.setToolObject(tool_eraser),
 				
+			new NodeTool( "Rectangle",	[ THEME.canvas_tools_rect,  THEME.canvas_tools_rect_fill  ])
+				.setSetting(tool_size)
+				.setToolObject(tool_rectangle),
+					
+			new NodeTool( "Ellipse",	[ THEME.canvas_tools_ellip, THEME.canvas_tools_ellip_fill ])
+				.setSetting(tool_size)
+				.setToolObject(tool_ellipse),
+			
 			new NodeTool( "Fill",		  THEME.canvas_tools_bucket)
 				.setSetting(tool_fil8)
 				.setToolObject(tool_fill),
@@ -276,9 +325,17 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		if(!is_surface(canvas_surface)) return;
 		if(!is_surface(drawing_surface)) return;
 		
-		surface_set_shader(canvas_surface, noone, true, BLEND.over);
-			draw_surface(drawing_surface, 0, 0);
-		surface_reset_shader();
+		if(selecting) {
+			surface_set_shader(canvas_surface, sh_draw_tile_apply_selection, true, BLEND.over);
+				shader_set_surface("selectionMask", selection_mask);
+				draw_surface(drawing_surface, 0, 0);
+			surface_reset_shader();
+			
+		} else {
+			surface_set_shader(canvas_surface, sh_draw_tile_apply, true, BLEND.over);
+				draw_surface(drawing_surface, 0, 0);
+			surface_reset_shader();
+		}
 		
 		triggerRender();
 	}
@@ -318,6 +375,7 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	    	var _tool     = _currTool == noone? noone : _currTool.getToolObject();
 	    	
 	    	brush.brush_size = tool_attribute.size;
+	    	brush.autotiler  = autotile_selecting == noone? noone : autotiles[autotile_selecting];
 	    	
 			if(_tool) {
 				_tool.subtool            = _currTool.selecting;
@@ -329,12 +387,12 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 				
 				surface_set_target(preview_draw_overlay);
 					DRAW_CLEAR
-					_tool.drawPreview();
+					_tool.drawPreview(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 				surface_reset_target();
 				
 				surface_set_target(_preview_draw_mask);
 					DRAW_CLEAR
-					_tool.drawMask();
+					_tool.drawMask(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 				surface_reset_target();
 				
 				surface_set_target(preview_draw_mask);

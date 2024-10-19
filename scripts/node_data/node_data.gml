@@ -2699,47 +2699,27 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static checkGroup = function() {
 		
-		if(group == noone) {
-			for( var i = 0, n = array_length(attributeEditors); i < n; i++ ) {
-				var _att = attributeEditors[i];
-				if(!is_array(_att)) continue;
-				
-				var _wid = _att[2];
-				
-				if(is(_wid, scrollBox)) {
-					var _l   = _wid.data_list;
-					var _lin = array_get_index(_l, "Group");
-					
-					if(_lin != -1) {
-						_wid.data_list[_lin] = "-Group";
-						
-						var _key = _att[3];
-						
-						if(attributes[$ _key] == _lin)
-							attributes[$ _key] = _att[0] == "Color depth"? 3 : 1;
-					}
-				}
-			}
+		for( var i = 0, n = array_length(attributeEditors); i < n; i++ ) {
+			var _att = attributeEditors[i];
+			if(!is_array(_att)) continue;
 			
-		} else {
-			for( var i = 0, n = array_length(attributeEditors); i < n; i++ ) {
-				var _att = attributeEditors[i];
-				if(!is_array(_att)) continue;
-				
-				var _wid = _att[2];
-				
-				if(is(_wid, scrollBox)) {
-					var _l   = _wid.data_list;
-					var _lin = array_get_index(_l, "-Group");
-					
-					if(_lin != -1) {
-						_wid.data_list[_lin] = "Group";
-					}
-				}
-			}
+			var _wid = _att[2];
+			if(!is(_wid, scrollBox)) continue;
 			
+			var _key = array_safe_get(_att, 3, "");
+			var _l   = _wid.data_list;
+			
+			for( var j = 0, m = array_length(_l); j < m; j++ ) {
+				var _scl = _l[j];
+				if(!is(_scl, scrollItem)) continue;
+				if(_scl.name != "Group")  continue;
+				
+				_scl.active = group != noone;
+				if(!_scl.active && attributes[$ _key] == j) attributes[$ _key] = _att[0] == "Color depth"? 3 : 1;
+				break;
+			}
 		}
-			
+		
 	} run_in(1, function() /*=>*/ { checkGroup(); });
 	
 	static toString = function() { return $"Node [{internalName}]: {node_id}"; }

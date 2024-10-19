@@ -1,18 +1,18 @@
 #region attribute
 	global.SURFACE_INTERPOLATION = [
-		"-Group",
-		"Pixel", 
-		"Bilinear", 
-		"Bicubic", 
-		"radSin"
+		new scrollItem("Group").setTooltip("Inherit from parent group.").setActive(false),
+		new scrollItem("Pixel"),
+		new scrollItem("Bilinear"),
+		new scrollItem("Bicubic"),
+		new scrollItem("radSin"),
 	];
 	
 	global.SURFACE_OVERSAMPLE = [
-		"-Group",
-		"Empty", 
-		"Clamp", 
-		"Repeat",
-		"Black"
+		new scrollItem("Group").setTooltip("Inherit from parent group.").setActive(false),
+		new scrollItem("Empty"), 
+		new scrollItem("Clamp"), 
+		new scrollItem("Repeat"),
+		new scrollItem("Black"),
 	];
 	
 	function __initSurfaceFormat() {
@@ -29,15 +29,15 @@
 		];
 	
 		var surface_format_name = [
-			"-Input",
-			"-Group",
-			"4 bit RGBA", 
-			"8 bit RGBA", 
-			"16 bit RGBA", 
-			"32 bit RGBA", 
-			"8 bit Greyscale", 
-			"16 bit Greyscale", 
-			"32 bit Greyscale"
+			new scrollItem("Input"           ).setTooltip("Inherit from input surface.").setActive(false),
+			new scrollItem("Group"           ).setTooltip("Inherit from parent group.").setActive(false),
+			new scrollItem("4 bit RGBA"      ).setTooltip("Normalized 4 bit, 4 channels RGBA"), 
+			new scrollItem("8 bit RGBA"      ).setTooltip("Normalized 8 bit, 4 channels RGBA"), 
+			new scrollItem("16 bit RGBA"     ).setTooltip("16 bit float, 4 channels RGBA"), 
+			new scrollItem("32 bit RGBA"     ).setTooltip("32 bit float, 4 channels RGBA"), 
+			new scrollItem("8 bit Greyscale" ).setTooltip("Normalized 8 bit, single channel"), 
+			new scrollItem("16 bit Greyscale").setTooltip("16 bit float, single channel"), 
+			new scrollItem("32 bit Greyscale").setTooltip("32 bit float, single channel"),
 		];
 	
 		global.SURFACE_FORMAT		= [];
@@ -48,9 +48,12 @@
 			var _supp = _form < 0 || surface_format_is_supported(_form);
 			
 			array_push(global.SURFACE_FORMAT, _form);
-			array_push(global.SURFACE_FORMAT_NAME, (_supp? "" : "-") + surface_format_name[i]);
+			array_push(global.SURFACE_FORMAT_NAME, surface_format_name[i]);
 			
-			if(!_supp) log_message("WARNING", $"Surface format [{surface_format_name[i]}] not supported in this device.");
+			if(!_supp) {
+				log_message("WARNING", $"Surface format [{surface_format_name[i].name}] not supported in this device.");
+				surface_format_name[i].setActive(false);
+			}
 		}
 	}
 	
@@ -71,10 +74,8 @@
 	}
 	
 	function attribute_surface_depth(label = true) {
-		attr_depth_array = array_clone(global.SURFACE_FORMAT_NAME);
-		if(!array_empty(inputs) && inputs[0].type == VALUE_TYPE.surface)
-			attr_depth_array[0] = "Input";
-		
+		attr_depth_array = variable_clone(global.SURFACE_FORMAT_NAME);
+		attr_depth_array[0].setActive(!array_empty(inputs) && inputs[0].type == VALUE_TYPE.surface);
 		attributes.color_depth = 3;
 		
 		if(label) array_push(attributeEditors, "Surface");
@@ -83,7 +84,7 @@
 	}
 	
 	function attribute_interpolation(label = false) {
-		attr_interpolate_array = array_clone(global.SURFACE_INTERPOLATION);
+		attr_interpolate_array = variable_clone(global.SURFACE_INTERPOLATION);
 		attributes.interpolate = 1;
 		attributes.oversample  = 1;
 		
@@ -93,7 +94,7 @@
 	}
 	
 	function attribute_oversample(label = false) {
-		attr_oversample_array = array_clone(global.SURFACE_OVERSAMPLE);
+		attr_oversample_array = variable_clone(global.SURFACE_OVERSAMPLE);
 		attributes.interpolate = 1;
 		attributes.oversample  = 1;
 		

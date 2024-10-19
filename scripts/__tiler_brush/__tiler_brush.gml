@@ -3,9 +3,9 @@ function tiler_brush(node) constructor {
     brush_indices = [[]];
     brush_width   = 0;
     brush_height  = 0;
-    
     brush_surface = noone;
     brush_erase   = false;
+	autotiler     = noone;
     
     brush_sizing    = false;
 	brush_sizing_s  = 0;
@@ -119,4 +119,102 @@ function tiler_draw_line_brush(brush, _x0, _y0, _x1, _y1) {
 	
 	BLEND_NORMAL
 	shader_reset();
+}
+
+function tiler_draw_rect_brush(brush, _x0, _y0, _x1, _y1, _fill) {
+	if(_x0 == _x1 && _y0 == _y1) {
+		tiler_draw_point_brush(brush, _x0, _y0);
+		return;
+		
+	} else if(_x0 == _x1) {
+		tiler_draw_point_brush(brush, _x0, _y0);
+		tiler_draw_point_brush(brush, _x1, _y1);
+		tiler_draw_line_brush(brush, _x0, _y0, _x0, _y1);
+		return;
+		
+	} else if(_y0 == _y1) {
+		tiler_draw_point_brush(brush, _x0, _y0);
+		tiler_draw_point_brush(brush, _x1, _y1);
+		tiler_draw_line_brush(brush, _x0, _y0, _x1, _y0);
+		return;
+	}
+		
+	var _min_x = min(_x0, _x1);
+	var _max_x = max(_x0, _x1);
+	var _min_y = min(_y0, _y1);
+	var _may_y = max(_y0, _y1);
+		
+	if(_fill) draw_rectangle(_min_x, _min_y, _max_x, _may_y, 0);
+		
+	if(brush.brush_size == 1 && !is_surface(brush.brush_surface))
+		draw_rectangle(_min_x + 1, _min_y + 1, _max_x - 1, _may_y - 1, 1);
+	else {
+		tiler_draw_line_brush(brush, _min_x, _min_y, _max_x, _min_y);
+		tiler_draw_line_brush(brush, _min_x, _min_y, _min_x, _may_y);
+		tiler_draw_line_brush(brush, _max_x, _may_y, _max_x, _min_y);
+		tiler_draw_line_brush(brush, _max_x, _may_y, _min_x, _may_y);
+	}
+}
+	
+function tiler_draw_ellp_brush(brush, _x0, _y0, _x1, _y1,  _fill) {
+	if(_x0 == _x1 && _y0 == _y1) {
+		tiler_draw_point_brush(brush, _x0, _y0);
+		return;
+		
+	} else if(_x0 == _x1) {
+		tiler_draw_point_brush(brush, _x0, _y0);
+		tiler_draw_point_brush(brush, _x1, _y1);
+		tiler_draw_line_brush(brush, _x0, _y0, _x0, _y1);
+		return;
+		
+	} else if(_y0 == _y1) {
+		tiler_draw_point_brush(brush, _x0, _y0);
+		tiler_draw_point_brush(brush, _x1, _y1);
+		tiler_draw_line_brush(brush, _x0, _y0, _x1, _y0);
+		return;
+	}
+		
+	draw_set_circle_precision(64);
+	var _min_x = min(_x0, _x1) - 0.5;
+	var _max_x = max(_x0, _x1) - 0.5;
+	var _min_y = min(_y0, _y1) - 0.5;
+	var _max_y = max(_y0, _y1) - 0.5;
+	
+	if(!is_surface(brush.brush_surface)) {
+		if(_fill) draw_ellipse(_min_x, _min_y, _max_x, _max_y, 0);
+		
+		if(brush.brush_size == 1) {
+			draw_ellipse(_min_x, _min_y, _max_x, _max_y, 1);
+			
+		} else if(brush.brush_size < global.FIX_POINTS_AMOUNT) {
+			
+			var fx = global.FIX_POINTS[brush.brush_size];
+			for( var i = 0, n = array_length(fx); i < n; i++ )
+				draw_ellipse(_min_x + fx[i][0], _min_y + fx[i][1], _max_x + fx[i][0], _max_y + fx[i][1], 1);
+			
+		} else {
+			draw_ellipse(_min_x, _min_y, _max_x, _max_y, brush.brush_size);
+			
+		}
+		return;
+	}
+	
+	if(_fill) draw_ellipse(_min_x, _min_y, _max_x, _max_y, 0);
+		
+	var samp = 64;
+	var cx = (_min_x + _max_x) / 2;
+	var cy = (_min_y + _max_y) / 2;
+	var rx = abs(_x0 - _x1) / 2;
+	var ry = abs(_y0 - _y1) / 2;
+			
+	var ox, oy, nx, ny;
+	for( var i = 0; i <= samp; i++ ) {
+		nx = round(cx + lengthdir_x(rx, 360 / samp * i));
+		ny = round(cy + lengthdir_y(ry, 360 / samp * i));
+				
+		if(i) tiler_draw_line_brush(brush, ox, oy, nx, ny);
+				
+		ox = nx;
+		oy = ny;
+	}
 }
