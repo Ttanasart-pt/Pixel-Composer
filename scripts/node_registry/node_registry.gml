@@ -752,6 +752,7 @@ function __initNodes() {
 		addNodeObject(generator, "Solid",					s_node_solid,				"Node_Solid",				[1, Node_Solid],,			"Create image of a single color.");
 		addNodeObject(generator, "Draw Gradient",			s_node_gradient,			"Node_Gradient",			[1, Node_Gradient],,		"Create image from gradient.");
 		addNodeObject(generator, "Draw 4 Points Gradient",	s_node_gradient_4points,	"Node_Gradient_Points",		[1, Node_Gradient_Points],, "Create image from 4 color points.");
+		/**/ addNodeObject(generator, "Sky",						s_node_gradient_4points,	"Node_Sky",					[1, Node_Sky],, "Generate sky texture using different model.");
 		
 		ds_list_add(generator, "Drawer");
 		addNodeObject(generator, "Draw Line",			s_node_line,				"Node_Line",				[1, Node_Line],,										"Draw line on an image. Connect path data to it to draw line from path.");
