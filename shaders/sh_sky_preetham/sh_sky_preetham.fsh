@@ -1,15 +1,17 @@
+// Preetham Sky
+// By Althar
+// https://www.shadertoy.com/view/llSSDR
+
 #define PI     3.14159265359
 
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 uniform vec2  dimension;
-uniform vec2  position;
-uniform vec2  scale;
+uniform int   mapping;
 
 uniform float turbidity;
-uniform float azimuth;
-uniform float inclination;
+uniform vec2  sunPosition;
 
 float saturatedDot( in vec3 a, in vec3 b ) {
 	return max( dot( a, b ), 0.0 );   
@@ -43,7 +45,6 @@ vec3 XYZToRGB( in vec3 XYZ ) {
 
 	return XYZ * M;
 }
-
 
 vec3 YxyToRGB( in vec3 Yxy ) {
 	vec3 XYZ = YxyToXYZ( Yxy );
@@ -105,9 +106,30 @@ vec3 calculateSkyLuminanceRGB( in vec3 s, in vec3 e, in float t ) {
 
 void main() {
     vec2 uv = v_vTexcoord;
-    uv   = (uv - position / dimension);
-    uv.y = 1. - uv.y;
-    uv  /= scale;
+    vec2 sun = sunPosition / dimension;
+    
+    // if(mapping == 0) {
+	    uv.y  = 1. - uv.y;
+	    sun.y = 1. - sun.y;
+	    
+  //  } else if(mapping == 1) {
+  //  	float sun_angle    = atan(sun.x, sun.y);
+		// float sun_distance = clamp(length(sun) * PI, 0.0, PI / 2.0 - 0.1);
+	
+		// float uv_angle    = atan(uv.x,uv.y);
+		// float uv_distance = length(uv) * PI;
+	
+		// if (uv_distance > PI / 2.0) {
+		// 	gl_FragColor = vec4(vec3(0.0), 1.0);
+		// 	return;
+		// }
+		
+		// uv  = vec2(uv_angle, uv_distance);
+		// sun = vec2(sun_angle, sun_distance);
+  //  }
+    
+    float azimuth       = PI + 2. * PI * sun.x;
+    float inclination   = PI - sun.y * PI;
     
     vec3 sunDir     	= normalize( vec3( sin( inclination ) * cos( azimuth ), cos( inclination ), sin( inclination ) * sin(azimuth) ) );
     vec3 viewDir  		= -computeSphericalCoordinates( uv ).xzy;
