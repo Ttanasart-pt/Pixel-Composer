@@ -8,7 +8,7 @@ function Node_String_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	newInput(1, nodeValue_Text("Delimiter", self, " ", "Character that used to split text,\nleave blank to create character array."));
 	inputs[1].editWidget.format = TEXT_AREA_FORMAT.delimiter;
 	
-	newInput(2, nodeValue_Enum_Scroll("Mode", self, 0, [ "Delimiter", "Periordic" ]))
+	newInput(2, nodeValue_Enum_Scroll("Mode", self, 0, [ "Delimiter", "Periodic" ]))
 	
 	newInput(3, nodeValue_Int("Period", self, 1));
 	
@@ -85,7 +85,16 @@ function Node_String_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			
 		} else if(_mode == 1) {
 			
+			_s *= 0.5;
 			
+			draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
+			draw_text_add(cx, cy, _peri, _s);
+			
+			var ww = string_width(_peri)  * _s / 2 + 8 * _s;
+			var hh = string_height(_peri) * _s / 2 - 6 * _s;
+			
+			draw_set_color(COLORS._main_text_sub);
+			draw_line_round(cx - ww, cy + hh, cx + ww, cy + hh, 6 * _s);
 		}
 	}
 }
