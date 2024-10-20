@@ -22,6 +22,9 @@ event_inherited();
 			["-", "Rotate to the right"],
 			["[", "Save current state in a stack."],
 			["]", "Restore state from the top of the stack."],
+			
+			["*", "Rotate the secondary angle positively"],
+			["/", "Rotate the secondary angle negatively"],
 		],
 		"Move distance and turn angle is fixed.",
 		"Rules is generate by repeatedly replace a letter with another letter/string. For example.",

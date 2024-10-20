@@ -1041,11 +1041,14 @@ function Panel_Preview() : PanelContent() constructor {
                 sample_x = floor((mx - canvas_x) / canvas_s);
                 sample_y = floor((my - canvas_y) / canvas_s);
                 var surf = getNodePreviewSurface();
-                sample_color_raw = surface_getpixel_ext(surf, sample_x, sample_y);
-                sample_color     = is_array(sample_color_raw)? make_color_rgba(clamp(sample_color_raw[0] * 255, 0, 255), 
-                															   clamp(sample_color_raw[1] * 255, 0, 255), 
-                															   clamp(sample_color_raw[2] * 255, 0, 255), 
-                															   clamp(sample_color_raw[3] * 255, 0, 255)) : sample_color_raw;
+                
+                if(is_surface(surf)) {
+	                sample_color_raw = surface_getpixel_ext(surf, sample_x, sample_y);
+	                sample_color     = is_array(sample_color_raw)? make_color_rgba(clamp(sample_color_raw[0] * 255, 0, 255), 
+	                															   clamp(sample_color_raw[1] * 255, 0, 255), 
+	                															   clamp(sample_color_raw[2] * 255, 0, 255), 
+	                															   clamp(sample_color_raw[3] * 255, 0, 255)) : sample_color_raw;
+                }
             }
         }
         

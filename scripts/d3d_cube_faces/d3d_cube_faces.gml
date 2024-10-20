@@ -3,66 +3,65 @@ function __3dCubeFaces() : __3dObject() constructor {
 	render_type = pr_trianglelist;
 	object_counts = 6;
 	
-	static initModel = function(size) {
-		size /= 2;
+	static initModel = function() {
 		
 		vertex = [
 			[
-				new __vertex(-size, -size,  size).setNormal(0, 0, 1).setUV(1, 1), 
-				new __vertex( size,  size,  size).setNormal(0, 0, 1).setUV(0, 0), 
-				new __vertex( size, -size,  size).setNormal(0, 0, 1).setUV(0, 1),
+				new __vertex(-.5, -.5,  .5).setNormal(0, 0, 1).setUV(1, 1), 
+				new __vertex( .5,  .5,  .5).setNormal(0, 0, 1).setUV(0, 0), 
+				new __vertex( .5, -.5,  .5).setNormal(0, 0, 1).setUV(0, 1),
 		    																  
-				new __vertex(-size, -size,  size).setNormal(0, 0, 1).setUV(1, 1), 
-				new __vertex(-size,  size,  size).setNormal(0, 0, 1).setUV(1, 0), 
-				new __vertex( size,  size,  size).setNormal(0, 0, 1).setUV(0, 0),
+				new __vertex(-.5, -.5,  .5).setNormal(0, 0, 1).setUV(1, 1), 
+				new __vertex(-.5,  .5,  .5).setNormal(0, 0, 1).setUV(1, 0), 
+				new __vertex( .5,  .5,  .5).setNormal(0, 0, 1).setUV(0, 0),
 			],	
 			[  
-				new __vertex(-size, -size, -size).setNormal(0, 0, -1).setUV(1, 1), 
-				new __vertex( size, -size, -size).setNormal(0, 0, -1).setUV(0, 1), 
-				new __vertex( size,  size, -size).setNormal(0, 0, -1).setUV(0, 0),
+				new __vertex(-.5, -.5, -.5).setNormal(0, 0, -1).setUV(1, 1), 
+				new __vertex( .5, -.5, -.5).setNormal(0, 0, -1).setUV(0, 1), 
+				new __vertex( .5,  .5, -.5).setNormal(0, 0, -1).setUV(0, 0),
 		    																   
-				new __vertex(-size, -size, -size).setNormal(0, 0, -1).setUV(1, 1), 
-				new __vertex( size,  size, -size).setNormal(0, 0, -1).setUV(0, 0), 
-				new __vertex(-size,  size, -size).setNormal(0, 0, -1).setUV(1, 0),
+				new __vertex(-.5, -.5, -.5).setNormal(0, 0, -1).setUV(1, 1), 
+				new __vertex( .5,  .5, -.5).setNormal(0, 0, -1).setUV(0, 0), 
+				new __vertex(-.5,  .5, -.5).setNormal(0, 0, -1).setUV(1, 0),
 			],	
 			[  
-				new __vertex(-size, -size,  size).setNormal(-1, 0, 0).setUV(1, 0), 
-				new __vertex(-size,  size, -size).setNormal(-1, 0, 0).setUV(0, 1), 
-				new __vertex(-size,  size,  size).setNormal(-1, 0, 0).setUV(0, 0),
+				new __vertex(-.5, -.5,  .5).setNormal(-1, 0, 0).setUV(1, 0), 
+				new __vertex(-.5,  .5, -.5).setNormal(-1, 0, 0).setUV(0, 1), 
+				new __vertex(-.5,  .5,  .5).setNormal(-1, 0, 0).setUV(0, 0),
 		    																   
-				new __vertex(-size, -size,  size).setNormal(-1, 0, 0).setUV(1, 0), 
-				new __vertex(-size, -size, -size).setNormal(-1, 0, 0).setUV(1, 1), 
-				new __vertex(-size,  size, -size).setNormal(-1, 0, 0).setUV(0, 1),
+				new __vertex(-.5, -.5,  .5).setNormal(-1, 0, 0).setUV(1, 0), 
+				new __vertex(-.5, -.5, -.5).setNormal(-1, 0, 0).setUV(1, 1), 
+				new __vertex(-.5,  .5, -.5).setNormal(-1, 0, 0).setUV(0, 1),
 			],	
 			[  
-				new __vertex( size, -size,  size).setNormal(1, 0, 0).setUV(0, 0), 
-				new __vertex( size,  size,  size).setNormal(1, 0, 0).setUV(1, 0), 
-				new __vertex( size,  size, -size).setNormal(1, 0, 0).setUV(1, 1),
+				new __vertex( .5, -.5,  .5).setNormal(1, 0, 0).setUV(0, 0), 
+				new __vertex( .5,  .5,  .5).setNormal(1, 0, 0).setUV(1, 0), 
+				new __vertex( .5,  .5, -.5).setNormal(1, 0, 0).setUV(1, 1),
 		    																  
-				new __vertex( size, -size,  size).setNormal(1, 0, 0).setUV(0, 0), 
-				new __vertex( size,  size, -size).setNormal(1, 0, 0).setUV(1, 1), 
-				new __vertex( size, -size, -size).setNormal(1, 0, 0).setUV(0, 1),
+				new __vertex( .5, -.5,  .5).setNormal(1, 0, 0).setUV(0, 0), 
+				new __vertex( .5,  .5, -.5).setNormal(1, 0, 0).setUV(1, 1), 
+				new __vertex( .5, -.5, -.5).setNormal(1, 0, 0).setUV(0, 1),
 			],	
 			[  
-				new __vertex(-size,  size,  size).setNormal(0, 1, 0).setUV(1, 0), 
-				new __vertex( size,  size, -size).setNormal(0, 1, 0).setUV(0, 1), 
-				new __vertex( size,  size,  size).setNormal(0, 1, 0).setUV(0, 0),
+				new __vertex(-.5,  .5,  .5).setNormal(0, 1, 0).setUV(1, 0), 
+				new __vertex( .5,  .5, -.5).setNormal(0, 1, 0).setUV(0, 1), 
+				new __vertex( .5,  .5,  .5).setNormal(0, 1, 0).setUV(0, 0),
 		    																  
-				new __vertex(-size,  size,  size).setNormal(0, 1, 0).setUV(1, 0), 
-				new __vertex(-size,  size, -size).setNormal(0, 1, 0).setUV(1, 1), 
-				new __vertex( size,  size, -size).setNormal(0, 1, 0).setUV(0, 1),
+				new __vertex(-.5,  .5,  .5).setNormal(0, 1, 0).setUV(1, 0), 
+				new __vertex(-.5,  .5, -.5).setNormal(0, 1, 0).setUV(1, 1), 
+				new __vertex( .5,  .5, -.5).setNormal(0, 1, 0).setUV(0, 1),
 			],	
 			[  
-				new __vertex(-size, -size,  size).setNormal(0, -1, 0).setUV(0, 0), 
-				new __vertex( size, -size,  size).setNormal(0, -1, 0).setUV(1, 0), 
-				new __vertex( size, -size, -size).setNormal(0, -1, 0).setUV(1, 1),
+				new __vertex(-.5, -.5,  .5).setNormal(0, -1, 0).setUV(0, 0), 
+				new __vertex( .5, -.5,  .5).setNormal(0, -1, 0).setUV(1, 0), 
+				new __vertex( .5, -.5, -.5).setNormal(0, -1, 0).setUV(1, 1),
 		    															   	   
-				new __vertex(-size, -size,  size).setNormal(0, -1, 0).setUV(0, 0), 
-				new __vertex( size, -size, -size).setNormal(0, -1, 0).setUV(1, 1), 
-				new __vertex(-size, -size, -size).setNormal(0, -1, 0).setUV(0, 1), 
+				new __vertex(-.5, -.5,  .5).setNormal(0, -1, 0).setUV(0, 0), 
+				new __vertex( .5, -.5, -.5).setNormal(0, -1, 0).setUV(1, 1), 
+				new __vertex(-.5, -.5, -.5).setNormal(0, -1, 0).setUV(0, 1), 
 			]
 		];
 		
 		VB = build();
-	} initModel(1);
+	} initModel();
 }

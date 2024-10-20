@@ -1,13 +1,18 @@
-function L_Turtle(x = 0, y = 0, ang = 90, w = 1, color = c_white, itr = 0) constructor {
+function L_Turtle(x = 0, y = 0, z = 0, ang = 90, w = 1, color = c_white, itr = 0) constructor {
 	self.x     = x;
 	self.y     = y;
+	self.z     = z;
 	self.ang   = ang;
+	self.vang  = 0;
 	self.w     = w;
 	self.color = color;
-	
 	self.itr   = itr;
 	
-	static clone = function() { return new L_Turtle(x, y, ang, w, color, itr); }
+	static clone = function() { 
+		var t = new L_Turtle(x, y, z, ang, w, color, itr); 
+		t.vang = vang;
+		return t;
+	}
 }
 
 function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
@@ -31,10 +36,20 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput(7, nodeValue_Int("Seed", self, seed_random(6)))
 		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[7].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	
+	newInput(8, nodeValue_Bool("3D", self, false));
+	
+	newInput(9, nodeValue_Enum_Button("Forward", self, 1, [ "X", "Y", "Z" ]));
+	
+	newInput(10, nodeValue_Vec3("Starting position", self, [ 0, 0, 0 ]));
+	
+	newInput(11, nodeValue_Rotation("Subangle", self, 45));
+	
 	static createNewInput = function() {
 		var index = array_length(inputs);
-		newInput(index + 0, nodeValue_Text("Name " + string(index - input_fix_len), self, "" ));
-		newInput(index + 1, nodeValue_Text("Rule " + string(index - input_fix_len), self, "" ));
+		var _idx  = index - input_fix_len;
+		
+		newInput(index + 0, nodeValue_Text($"Name {_idx}", self, "" ));
+		newInput(index + 1, nodeValue_Text($"Rule {_idx}", self, "" ));
 		
 		return inputs[index + 0];
 	}
@@ -42,7 +57,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	setDynamicInput(2, false);
 	if(!LOADING && !APPENDING) createNewInput();
 	
-	newOutput(0, nodeValue_Output("Path", self, VALUE_TYPE.pathnode, self));
+	newOutput(0, nodeValue_Output("Path", self, VALUE_TYPE.pathnode, noone));
 	
 	rule_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		rule_renderer.x = _x;
@@ -77,6 +92,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		
 		return hh;
 	}, 
+	
 	function(parent = noone) {
 		for( var i = input_fix_len; i < array_length(inputs); i += data_length ) {
 			var _name = inputs[i + 0];
@@ -88,9 +104,10 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	});
 	
 	input_display_list = [
-		["Origin",		false], 2, 6, 
-		["Properties",  false], 0, 1, 7, 
-		["Rules",		false], 3, 4, rule_renderer, 5, 
+		["Origin",		false],    2, 10, 6, 
+		["Properties",  false],    0, 1, 7, 
+		["3D",          false, 8], 9, 11, 
+		["Rules",		false],    3, 4, rule_renderer, 5, 
 	];
 	
 	attributes.rule_length_limit = 10000;
@@ -102,13 +119,14 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			triggerRender();
 		}) ]);
 	
+	path_3d = false;
 	cache_data = {
 		start     : "",
 		rules     : {},
 		end_rule  : "",
 		iteration : 0,
 		seed      : 0,
-		result    : ""
+		result    : "",
 	}
 	
 	static refreshDynamicInput = function() {
@@ -166,12 +184,49 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		}
 	}
 	
+	static drawOverlay3D = function(active, params, _mx, _my, _snx, _sny, _panel) {
+		
+		var _out = getSingleValue(0, preview_index, true);
+		if(!is_struct(_out)) return;
+		
+		var _qinv  = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(1, 0, 0), 90);
+		
+		var _camera = params.camera;
+		var _qview  = new BBMOD_Quaternion().FromEuler(_camera.focus_angle_y, -_camera.focus_angle_x, 0);
+		var ray     = _camera.viewPointToWorldRay(_mx, _my);
+		
+		var _v3 = new __vec3();
+		var _ox = 0, _oy = 0;
+		var _nx = 0, _ny = 0;
+		
+		draw_set_color(COLORS._main_accent);
+		for( var i = 0, n = array_length(_out.lines); i < n; i++ ) {
+			var p0 = _out.lines[i][0];
+			var p1 = _out.lines[i][1];
+			
+			_v3.x = p0[0];
+			_v3.y = p0[1];
+			_v3.z = p0[2];
+			
+			var _posView = _camera.worldPointToViewPoint(_v3);
+			_nx = _posView.x;
+			_ny = _posView.y;
+			
+			if(i) draw_line(_ox, _oy, _nx, _ny);
+			
+			_ox = _nx;
+			_oy = _ny;
+		}
+		
+	}
+	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	function Path_LSystem() constructor {
 		lines          = [];
 		current_length = 0;
 		boundary       = new BoundingBox();
+		path_3d        = false;
 		
 		static getLineCount		= function() { return array_length(lines); }
 		static getSegmentCount	= function() { return 1; }
@@ -190,11 +245,12 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			if(!is_array(_p0) || array_length(_p0) < 2) return 1;
 			if(!is_array(_p1) || array_length(_p1) < 2) return 1;
 			
-			return lerp(_p0[2], _p1[2], _rat);
+			return lerp(_p0[3], _p1[3], _rat);
 		}
 		
 		static getPointRatio = function(_rat, _ind = 0, out = undefined) {
-			if(out == undefined) out = new __vec2(); else { out.x = 0; out.y = 0; }
+			if(out == undefined) out = path_3d? new __vec3() : new __vec2(); 
+			else { out.x = 0; out.y = 0; if(path_3d) out.z = 0; }
 			
 			var _p0 = lines[_ind][0];
 			var _p1 = lines[_ind][1];
@@ -204,6 +260,8 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			
 			out.x  = lerp(_p0[0], _p1[0], _rat);
 			out.y  = lerp(_p0[1], _p1[1], _rat);
+			
+			if(path_3d) out.z  = lerp(_p0[2], _p1[2], _rat);
 			
 			return out;
 		}
@@ -270,19 +328,28 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	__curr_path = noone;
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		
-		var _len = _data[0];
-		var _ang = _data[1];
-		var _pos = _data[2];
-		var _itr = _data[3];
-		var _sta = _data[4];
-		var _end = _data[5];
-		var _san = _data[6];
-		var _sad = _data[7];
+		var _len  = _data[0];
+		var _ang  = _data[1];
+		var _itr  = _data[3];
+		var _sta  = _data[4];
+		var _end  = _data[5];
+		var _san  = _data[6];
+		var _sad  = _data[7];
+		path_3d   = _data[8];
+		var _for  = _data[9];
+		var _pos  = path_3d? _data[10] : _data[2];
+		var _vang = _data[11];
+		
+		inputs[ 2].setVisible(!path_3d);
+		inputs[10].setVisible( path_3d);
+		
+		is_3D    = path_3d? NODE_3D.polygon : NODE_3D.none;
 		lineq    = ds_queue_create();
 		
 		random_set_seed(_sad);
 		__curr_path = new Path_LSystem();
 		__curr_path.current_length = _len;
+		__curr_path.path_3d        = path_3d;
 		
 		if(array_length(inputs) < input_fix_len + 2) return __curr_path;
 		
@@ -301,46 +368,97 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		l_system(_sta, rules, _end, _itr, _sad);
 		itr    = _itr;
 		ang    = _ang;
+		vang   = _vang;
 		len    = _len;
+		forw   = _for;
 		st     = ds_stack_create();
-		t      = new L_Turtle(_pos[0], _pos[1], _san);
+		t      = new L_Turtle(_pos[0], _pos[1], path_3d? _pos[2] : 0, _san);
 		maxItr = 0;
+		
+		var nx, ny, nz;
+		_llen = _len / 25;
 		
 		string_foreach(cache_data.result, function(_ch, _) {
 			switch(_ch) {
 				case "F": 
-					var nx = t.x + lengthdir_x(len, t.ang);
-					var ny = t.y + lengthdir_y(len, t.ang);
-					
-					ds_queue_enqueue(lineq, [ [ t.x, t.y, t.w, t.itr ], [ nx, ny, t.w, t.itr + 1 ] ]);
+					if(path_3d) {
+						nx = t.x + _llen * dcos(t.vang) * dcos(t.ang);
+						ny = t.y + _llen * dcos(t.vang) * dsin(t.ang);
+						nz = t.z + _llen * dsin(t.vang);
+						
+						switch(forw) {
+							case 0 : ds_queue_enqueue(lineq, [ [ t.y, t.x, t.z, t.w, t.itr ], [ ny, nx, nz, t.w, t.itr + 1 ] ]); break;
+							case 1 : ds_queue_enqueue(lineq, [ [ t.x, t.y, t.z, t.w, t.itr ], [ nx, ny, nz, t.w, t.itr + 1 ] ]); break;
+							case 2 : ds_queue_enqueue(lineq, [ [ t.x, t.z, t.y, t.w, t.itr ], [ nx, nz, ny, t.w, t.itr + 1 ] ]); break;
+						}
+						
+					} else {
+						nx = t.x + lengthdir_x(len, t.ang);
+						ny = t.y + lengthdir_y(len, t.ang);
+						nz = t.z;
+						ds_queue_enqueue(lineq, [ [ t.x, t.y, t.z, t.w, t.itr ], [ nx, ny, nz, t.w, t.itr + 1 ] ]);
+						
+					}
 					
 					t.x = nx;
 					t.y = ny;
+					t.z = nz;
 					t.itr++;
 					maxItr = max(maxItr, t.itr);
 					
 					break;
 					
 				case "G": 
-					t.x = t.x + lengthdir_x(len, t.ang);
-					t.y = t.y + lengthdir_y(len, t.ang);
-					break;
-					
-				case "f": 
-					var nx = t.x + lengthdir_x(len * frac(itr), t.ang);
-					var ny = t.y + lengthdir_y(len * frac(itr), t.ang);
-					
-					ds_queue_enqueue(lineq, [ [ t.x, t.y, t.w, t.itr ], [ nx, ny, t.w, t.itr + 1 ] ]);
+					if(path_3d) {
+						nx = t.x + _llen * dcos(t.vang) * dcos(t.ang);
+						ny = t.y + _llen * dcos(t.vang) * dsin(t.ang);
+						nz = t.z + _llen * dsin(t.vang);
+						
+					} else {
+						nx = t.x + lengthdir_x(len, t.ang);
+						ny = t.y + lengthdir_y(len, t.ang);
+						nz = t.z;
+					}
 					
 					t.x = nx;
 					t.y = ny;
+					break;
+					
+				case "f": 
+					var _ll = _llen * frac(itr);
+					
+					if(path_3d) {
+						nx = t.x + _ll * dcos(t.vang) * dcos(t.ang);
+						ny = t.y + _ll * dcos(t.vang) * dsin(t.ang);
+						nz = t.z + _ll * dsin(t.vang);
+						
+						switch(forw) {
+							case 0 : ds_queue_enqueue(lineq, [ [ t.y, t.x, t.z, t.w, t.itr ], [ ny, nx, nz, t.w, t.itr + 1 ] ]); break;
+							case 1 : ds_queue_enqueue(lineq, [ [ t.x, t.y, t.z, t.w, t.itr ], [ nx, ny, nz, t.w, t.itr + 1 ] ]); break;
+							case 2 : ds_queue_enqueue(lineq, [ [ t.x, t.z, t.y, t.w, t.itr ], [ nx, nz, ny, t.w, t.itr + 1 ] ]); break;
+						}
+						
+					} else {
+						nx = t.x + lengthdir_x(_ll, t.ang);
+						ny = t.y + lengthdir_y(_ll, t.ang);
+						nz = t.z;
+						ds_queue_enqueue(lineq, [ [ t.x, t.y, t.z, t.w, t.itr ], [ nx, ny, nz, t.w, t.itr + 1 ] ]);
+						
+					}
+					
+					t.x = nx;
+					t.y = ny;
+					t.z = nz;
 					t.itr++;
 					maxItr = max(maxItr, t.itr);
 					break;
 					
-				case "+": t.ang += ang; break;
-				case "-": t.ang -= ang; break;
-				case "|": t.ang += 180; break;
+				case "+": t.ang  += ang; break;
+				case "-": t.ang  -= ang; break;
+				case "|": t.ang  += 180; break;
+				
+				case "*": t.vang += vang; break;
+				case "/": t.vang -= vang; break;
 				
 				case "[": ds_stack_push(st, t.clone()); break;
 				case "]": 
@@ -351,7 +469,6 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				case ">": t.w += 0.1; break;
 				case "<": t.w -= 0.1; break;
 				
-				// default : noti_warning($"L-system: Invalid rule '{_ch}'"); 
 			}
 		});
 		
@@ -379,4 +496,9 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		var bbox = drawGetBbox(xx, yy, _s);
 		draw_sprite_fit(s_node_path_l_system, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
+	
+	static getPreviewObject 		= function() { return noone; }
+	static getPreviewObjects		= function() { return []; }
+	static getPreviewObjectOutline  = function() { return []; }
+	
 }
