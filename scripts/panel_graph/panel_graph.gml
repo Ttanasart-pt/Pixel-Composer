@@ -2922,35 +2922,85 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
     } 
 
     function doBlend() { //
-        if(array_length(nodes_selecting) != 2) return;
+        if(array_empty(nodes_selecting)) {
+        	nodeBuild("Node_Blend", mouse_grid_x, mouse_grid_y, getCurrentContext()).skipDefault();
+        	return;
+        }
+    	
+    	if(array_empty(nodes_selecting[0].outputs)) return;
+    	var _jj = nodes_selecting[0].outputs[0];
+    	var _ty = "";
+    	
+			 if(value_bit(_jj.type) & (1 << 15) || is(nodes_selecting[0], Node_Path)) doCompose();
+		else if(value_bit(_jj.type) & (1 << 5))  _ty = "Node_Blend";
+		else if(value_bit(_jj.type) & (1 << 3))  doCompose();
+		else if(value_bit(_jj.type) & (1 << 1))  _ty = "Node_Math";
+		else if(value_bit(_jj.type) & (1 << 29)) doCompose();
+        
+        if(_ty = "") return;
+        
+        if(array_length(nodes_selecting) == 1) {
+        	
+	        var _nodex = nodes_selecting[0].x + 160;
+	        var _nodey = nodes_selecting[0].y;
+	        var _blend = nodeBuild(_ty, _nodex, _nodey, getCurrentContext()).skipDefault();
+            
+            switch(_ty) {
+            	case "Node_Blend" :    _blend.inputs[0].setFrom(_jj); break;
+            	case "Node_Math" :     _blend.inputs[1].setFrom(_jj); break;
+            }
+        	
+        	return;
+        }
         
         var _n0 = nodes_selecting[0].y < nodes_selecting[1].y? nodes_selecting[0] : nodes_selecting[1];
         var _n1 = nodes_selecting[0].y < nodes_selecting[1].y? nodes_selecting[1] : nodes_selecting[0];
         
-        var cx = max(_n0.x, _n1.x) + 160;
-        var cy = round((_n0.y + _n1.y) / 2 / 32) * 32;
+        if(array_empty(_n0.outputs)) return;
+        if(array_empty(_n1.outputs)) return;
+        
+        var _nodex = max(_n0.x, _n1.x) + 160;
+        var _nodey = round((_n0.y + _n1.y) / 2 / 32) * 32;
+        var _blend = nodeBuild(_ty, _nodex, _nodey, getCurrentContext()).skipDefault();
         
         var _j0 = _n0.outputs[0]; 
         var _j1 = _n1.outputs[0]; 
-            
-        if(_j0.type == VALUE_TYPE.surface && _j1.type == VALUE_TYPE.surface) {
-            var _blend = nodeBuild("Node_Blend", cx, cy, getCurrentContext()).skipDefault().skipDefault();
-            _blend.inputs[0].setFrom(_j0);
-            _blend.inputs[1].setFrom(_j1);
-            
-        } else if((_j0.type == VALUE_TYPE.integer || _j0.type == VALUE_TYPE.float) && (_j1.type == VALUE_TYPE.integer || _j1.type == VALUE_TYPE.float)) {
-            var _blend = nodeBuild("Node_Math", cx, cy, getCurrentContext()).skipDefault().skipDefault();
-            _blend.inputs[1].setFrom(_j0);
-            _blend.inputs[2].setFrom(_j1);
-            
-        }
         
+        switch(_ty) {
+        	case "Node_Blend" :    
+        		_blend.inputs[0].setFrom(_j0);
+            	_blend.inputs[1].setFrom(_j1);
+        		break;
+        		
+        	case "Node_Math" :    
+	            _blend.inputs[1].setFrom(_j0);
+	            _blend.inputs[2].setFrom(_j1); 
+        		break;
+        		
+        }
+    	
         nodes_selecting = [];
     } 
     
     function doCompose() { //
-        if(array_empty(nodes_selecting)) return;
+        if(array_empty(nodes_selecting)) {
+        	nodeBuild("Node_Composite", mouse_grid_x, mouse_grid_y, getCurrentContext()).skipDefault();
+        	nodes_selecting = [];
+        	return;
+        }
     
+    	if(array_empty(nodes_selecting[0].outputs)) return;
+    	var _jj = nodes_selecting[0].outputs[0];
+    	var _ty = "";
+    	
+    	     if(value_bit(_jj.type) & (1 << 15) || is(nodes_selecting[0], Node_Path)) _ty = "Node_Path_Array";
+		else if(value_bit(_jj.type) & (1 <<  5))   _ty = "Node_Composite";
+		else if(value_bit(_jj.type) & (1 <<  3))   _ty = "Node_Logic";
+		else if(value_bit(_jj.type) & (1 <<  1))   _ty = "Node_Statistic";
+		else if(value_bit(_jj.type) & (1 << 29))   _ty = "Node_3D_Scene";
+        
+        if(_ty = "") return;
+        
         var cx   = nodes_selecting[0].x;
         var cy   = 0;
         var pr   = ds_priority_create();
@@ -2959,25 +3009,37 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         
         for(var i = 0; i < amo; i++) {
             var _node = nodes_selecting[i];
-            if(array_length(_node.outputs) == 0) continue;
+            if(array_empty(_node.outputs)) continue;
             
-            if(_node.outputs[0].type != VALUE_TYPE.surface) continue;
+            var _jj = _node.outputs[0];
+            
+            switch(_ty) {
+	        	case "Node_Composite" : if((value_bit(_jj.type) & (1 <<  5)) == 0) continue; break;
+	        	case "Node_Logic"     : if((value_bit(_jj.type) & (1 <<  3)) == 0) continue; break;
+	        	case "Node_Statistic" : if((value_bit(_jj.type) & (1 <<  1)) == 0) continue; break;
+	        	case "Node_3D_Scene"  : if((value_bit(_jj.type) & (1 << 29)) == 0) continue; break;
+	        	
+	        	case "Node_Path_Array": 
+	        		if(is(nodes_selecting[0], Node_Path)) _jj = _node.outputs[1];
+	        		if((value_bit(_jj.type) & (1 << 15)) == 0) continue; 
+        		break;
+	        }
             
             cx = max(cx, _node.x);
             cy += _node.y;
             
-            ds_priority_add(pr, _node, _node.y);
+            ds_priority_add(pr, _jj, _node.y);
             len++;
         }
         
         cx = cx + 160;
         cy = round(cy / len / 32) * 32;
         
-        var _compose = nodeBuild("Node_Composite", cx, cy, getCurrentContext()).skipDefault();
+        var _compose = nodeBuild(_ty, cx, cy, getCurrentContext()).skipDefault();
         
         repeat(len) {
-            var _node = ds_priority_delete_min(pr);
-            _compose.addInput(_node.outputs[0]);
+            var _outp = ds_priority_delete_min(pr);
+            _compose.addInput(_outp);
         }
         
         nodes_selecting = [];

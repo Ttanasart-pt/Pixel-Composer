@@ -229,8 +229,8 @@ void main() {
 	#endregion
 	
 	#region ++++ light ++++
-		int shadow_map_index = 0;
-		vec3 light_effect = light_ambient.rgb;
+		int   shadow_map_index = 0;
+		vec3  light_effect     = light_ambient.rgb;
 		float val = 0.;
 		
 		#region ++++ directional ++++
@@ -279,9 +279,9 @@ void main() {
 				
 				light_distance = length(lightVector);
 				if(light_distance > light_pnt_radius[i]) {
-					gl_FragData[0] = vec4(1., 0., 0., .5);
-					return;
-					// continue;
+					// gl_FragData[0] = vec4(1., 0., 0., .5);
+					// return;
+					continue;
 				}
 				
 				lightVector = normalize(lightVector);
