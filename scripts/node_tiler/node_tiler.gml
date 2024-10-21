@@ -1,7 +1,3 @@
-enum AUTOTILE_TYPE {
-	box3_3,
-}
-
 function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
     name = "Tile Drawer";
     bypass_grid = true;
@@ -242,13 +238,7 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
     #endregion
     
     #region ++++ auto tile ++++
-    	autotiles = [
-    		new tiler_brush_autotile(AUTOTILE_TYPE.box3_3, [
-				 0,  1,  2, 
-				11, 12, 13, 
-				22, 23, 24, 
-			]),
-		];
+    	autotiles = [];
 		
 		autotile_selecting = 0;
 		

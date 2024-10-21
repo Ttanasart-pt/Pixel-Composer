@@ -1,3 +1,9 @@
+enum AUTOTILE_TYPE {
+	box9,
+	side15,
+	top48,
+}
+
 function tiler_brush_autotile(_type, _index) constructor {
     type  = _type;
     index = _index;
@@ -7,14 +13,14 @@ function tiler_brush_autotile(_type, _index) constructor {
     drawing_surface = noone;
     target_surface  = noone;
     eraseMode       = false;
+    bitmask = [];
     
     switch(type) {
-        case AUTOTILE_TYPE.box3_3 : 
+        case AUTOTILE_TYPE.box9 : 
             // - 1 - | 0 1 2 
             // 2 x 4 | 3 4 5 
             // - 8 - | 6 7 8
             
-            bitmask_type = 4;
             bitmask      = [ 4, 
                 /* 1 */ 7, 
                 /* 2 */ 5, 8, 
@@ -65,7 +71,7 @@ function tiler_brush_autotile(_type, _index) constructor {
             shader_set_surface("maskSurface", mask_surface);   
             shader_set_i("bitmask",      bitmask);
             shader_set_i("bitmaskSize",  array_length(bitmask));
-            shader_set_i("bitmaskType",  bitmask_type);
+            shader_set_i("bitmaskType",  type);
             
             shader_set_i("indexes",   index);
             shader_set_i("indexSize", array_length(index));
