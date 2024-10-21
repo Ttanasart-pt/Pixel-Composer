@@ -68,6 +68,13 @@ function Panel_Notification() : PanelContent() constructor {
 			var _h = ui(12) + string_height_ext(noti.txt, -1, txw);
 			_h += pad * 2;
 			
+			if(i) {
+				draw_set_color(COLORS._main_icon);
+				draw_set_alpha(.15);
+				draw_line(ui(16), yy - ui(1), _w - ui(16), yy - ui(1));
+				draw_set_alpha(1);
+			}
+			
 			if(yy >= -_h && yy <= sp_noti.h) {
 				
 				if(pHOVER && pHOVER && point_in_rectangle(_m[0], _m[1], 0, yy, _w, yy + _h)) {

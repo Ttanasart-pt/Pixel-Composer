@@ -206,11 +206,11 @@ event_inherited();
 			
 			draw_set_text(font, align, fa_center, _sub? COLORS._main_text_sub : COLORS._main_text);
 			if(align == fa_center) {
-				var _xc = _spr? hght + (_dw - hght) / 2 : _dw / 2;
+				var _xc = _spr != noone? hght + (_dw - hght) / 2 : _dw / 2;
 				draw_text_add(_lx + _xc, _ly + hght / 2, _txt);
 				
 			} else if(align == fa_left) 
-				draw_text_add(_tpad + _lx + _spr * (_tpad * 2 + hght), _ly + hght / 2, _txt);
+				draw_text_add(_tpad + _lx + (_spr != noone) * (_tpad * 2 + hght), _ly + hght / 2, _txt);
 			
 			if(_spr) draw_sprite_ext(_val.spr, _val.spr_ind, _lx + ui(8) + hght / 2, _ly + hght / 2, 1, 1, 0, _val.spr_blend, 1);
 			

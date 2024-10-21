@@ -297,10 +297,10 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		while(_path != "") {
 		    var _frame    = string_quote(temp_path + string_replace_all(_path, ".png", "") + ".webp");
 			var _pathTemp = string_quote(temp_path + _path);
-			var shell_cmd = _pathTemp + " -define webp:lossless=true " + _frame;
+			var shell_cmd = $"{_pathTemp} -define webp:lossless=true {_frame}";
 			
 			array_push(frames, _frame);
-			shell_execute_async(magick, shell_cmd, self, false);
+			shell_execute(magick, shell_cmd, self, false);
 			
 		    _path = file_find_next();
 		}

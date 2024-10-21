@@ -139,11 +139,11 @@ event_inherited();
 			if(is_string(_txt)) {
 				draw_set_text(font, align, fa_center, _act? COLORS._main_text : COLORS._main_text_sub);
 				if(align == fa_center) {
-					var _xc = _spr? hght + (_dw - hght) / 2 : _dw / 2;
+					var _xc = _spr != noone? hght + (_dw - hght) / 2 : _dw / 2;
 					draw_text_add(_xc, _yy, _txt);
 					
 				} else if(align == fa_left) 
-					draw_text_add(text_pad + _spr * hght, _yy, _txt);
+					draw_text_add(text_pad + (_spr != noone) * hght, _yy, _txt);
 					
 			} else if(sprite_exists(_txt)) {
 				draw_sprite_ext(_txt, i, _dw / 2, _yy);
