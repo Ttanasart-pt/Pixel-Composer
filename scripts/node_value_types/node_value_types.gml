@@ -503,6 +503,7 @@ function nodeValueUnit(_nodeValue) constructor {
 		_nodeValue.unitConvert(mode);
 		_nodeValue.node.doUpdate();
 	});
+	
 	triggerButton.icon_blend = COLORS._main_icon_light;
 	triggerButton.icon       = THEME.unit_ref;
 	triggerButton.tooltip    = new tooltipSelector("Unit", ["Pixel", "Fraction"]);
@@ -520,7 +521,6 @@ function nodeValueUnit(_nodeValue) constructor {
 	static draw = function(_x, _y, _w, _h, _m) {
 		triggerButton.icon_index = mode;
 		triggerButton.tooltip.index = mode;
-		
 		triggerButton.draw(_x, _y, _w, _h, _m, THEME.button_hide);
 	}
 	
@@ -555,8 +555,9 @@ function nodeValueUnit(_nodeValue) constructor {
 			for( var i = 0, n = array_length(value); i < n; i++ )
 				_val[i] = value[i] * base;
 			return _val;
-			
-		} else if(is_array(value)) {
+		}
+		
+		if(is_array(value)) {
 			if(inv) {
 				base = [
 					base[0] == 0? 0 : 1 / array_safe_get(base, 0),
@@ -598,6 +599,11 @@ function nodeValueUnit(_nodeValue) constructor {
 					
 					return _val;
 			}
+			
+		} else {
+			base = array_safe_get(base, 0, 1);
+			if(inv) base = base == 0? 0 : 1 / base;
+			return value * base;
 		}
 		
 		return value;

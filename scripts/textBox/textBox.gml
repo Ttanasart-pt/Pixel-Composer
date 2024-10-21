@@ -13,6 +13,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	precision = 5;
 	padding   = ui(8);
 	
+	unit   = noone;
 	suffix = "";
 	
 	no_empty    = true;
@@ -470,6 +471,12 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			front_button.draw(_x, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide);
 			
 			_x += _bs + ui(4);
+			_w -= _bs + ui(4);
+		}
+		
+		if(unit != noone && unit.reference != noone) {
+			unit.triggerButton.setFocusHover(iactive, ihover);
+			unit.draw(_x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m);
 			_w -= _bs + ui(4);
 		}
 		

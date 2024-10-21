@@ -334,9 +334,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(editWidget) {
 			editWidget.unit = unit;
 			editWidget.onSurfaceSize = ref;
-			
-			if(is_instanceof(editWidget, textBox))
-				editWidget.side_button = unit.triggerButton;
 		}
 		
 		unit.reference  = ref;

@@ -4,6 +4,12 @@ function __NodeValue_Int(_name, _node, _value, _tooltip = "") : NodeValue(_name,
 	
 	/////============== GET =============
 	
+	static valueProcess = function(value, nodeFrom = undefined, applyUnit = true, arrIndex = 0) {
+		if(validator != noone) value = validator.validate(value);
+		value = applyUnit? unit.apply(value, arrIndex) : value;
+		return round(value);
+	}
+	
 	static getValue = function(_time = CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { //// Get value
 		getValueRecursive(self.__curr_get_val, _time);
 		var val = __curr_get_val[0];
@@ -14,9 +20,7 @@ function __NodeValue_Int(_name, _node, _value, _tooltip = "") : NodeValue(_name,
 		
 		if(typ != VALUE_TYPE.surface) {
 			if(typ == VALUE_TYPE.text) val = toNumber(val);
-			if(validator != noone)     val = validator.validate(val);
-		
-			return val;
+			return valueProcess(val, nod, applyUnit);
 		}
 		
 		// Dimension conversion
@@ -39,8 +43,10 @@ function __NodeValue_Int(_name, _node, _value, _tooltip = "") : NodeValue(_name,
 			
 			if(eqSize) return _osZ;
 			return sArr;
+			
 		} else if (is_surface(val)) 
 			return [ surface_get_width_safe(val), surface_get_height_safe(val) ];
+			
 		return [ 1, 1 ];
 	}
 	
