@@ -275,9 +275,9 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		var _rbns  = _data[_ind + 12];
 		var _rbnr  = _data[_ind + 13];
 		
-		var _rngx  = _data[_ind + 14];
-		var _rngy  = _data[_ind + 15];
-		var _anng  = _data[_ind + 16];
+		var _rngx  = _data[_ind + 15];
+		var _rngy  = _data[_ind + 16];
+		var _anng  = _data[_ind + 17];
 		
 		var _expo  = _data[_ind + 18];
 		var _aa    = _data[_ind + 19];
