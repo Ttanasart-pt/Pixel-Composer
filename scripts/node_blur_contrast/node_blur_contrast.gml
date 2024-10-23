@@ -4,7 +4,8 @@ function Node_Blur_Contrast(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput(0, nodeValue_Surface("Surface in", self));
 	
 	newInput(1, nodeValue_Float("Size", self, 3))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 32, 0.1] });
+		.setValidator(VV_min(0))
+		.setUnitRef(function(index) /*=>*/ {return getDimension(index)});
 	
 	newInput(2, nodeValue_Float("Threshold", self, 0.2, "Brightness different to be blur together."))
 		.setDisplay(VALUE_DISPLAY.slider);
@@ -34,11 +35,11 @@ function Node_Blur_Contrast(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	attribute_surface_depth();
 	
-	static step = function() { #region
+	static step = function() {
 		__step_mask_modifier();
-	} #endregion
+	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _surf = _data[0];
 		var _size = _data[1];
 		var _tres = _data[2];
@@ -63,5 +64,5 @@ function Node_Blur_Contrast(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		_outSurf = channel_apply(_data[0], _outSurf, _data[6]);
 		
 		return _outSurf;
-	} #endregion
+	}
 }

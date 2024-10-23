@@ -200,6 +200,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 		prev_surface		  = surface_create_empty(1, 1);
 		preview_draw_surface  = surface_create_empty(1, 1);
+		preview_draw_tile     = surface_create_empty(1, 1);
 		preview_draw_mask     = surface_create_empty(1, 1);
 		
 		draw_stack = ds_list_create();
@@ -718,10 +719,13 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 	}
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { 
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, params) { 
 		if(instance_exists(o_dialog_color_picker)) return;
 		
-		brush.node = self;
+		var _panel = params.panel;
+		
+		brush.node     = self;
+		brush.tileMode = _panel.tileMode
 		brush.step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 		
 		if(!tool_selection.is_selected && active && key_mod_press(ALT)) { // color selector
@@ -892,7 +896,32 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				draw_set_alpha(1);
 			surface_reset_shader();
 			
-			draw_surface_ext_safe(preview_draw_surface, _x, _y, _s, _s, 0, isUsingTool("Eraser")? c_red : c_white, isUsingTool("Eraser")? .2 : _alp);
+			var _pcc = isUsingTool("Eraser")? c_red : c_white;
+			var _paa = isUsingTool("Eraser")? .2 : _alp;
+			
+			switch(_panel.tileMode) {
+				case 0 : draw_surface_ext_safe(preview_draw_surface, _x, _y, _s, _s, 0, _pcc, _paa); break;
+				
+				case 1 : 
+                    preview_draw_tile = surface_verify(preview_draw_tile, _panel.w, _dim[1] * _s);
+                    surface_set_target(preview_draw_tile);
+                        DRAW_CLEAR
+                        draw_surface_tiled_ext_safe(preview_draw_surface, _x, 0, _s, _s, 0, _pcc, _paa); 
+                    surface_reset_target();
+                    draw_surface_safe(preview_draw_tile, 0, _y);
+                    break;
+                    
+                case 2 : 
+                    preview_draw_tile = surface_verify(preview_draw_tile, _dim[0] * _s, _panel.h);
+                    surface_set_target(preview_draw_tile);
+                        DRAW_CLEAR
+                        draw_surface_tiled_ext_safe(preview_draw_surface, 0, _y, _s, _s, 0, _pcc, _paa); 
+                    surface_reset_target();
+                    draw_surface_safe(preview_draw_tile, _x, 0);
+                    break;
+                    
+                case 3 : draw_surface_tiled_ext_safe(preview_draw_surface, _x, _y, _s, _s, 0, _pcc, _paa); break;
+			}
 			
 			surface_set_target(preview_draw_mask);
 				DRAW_CLEAR

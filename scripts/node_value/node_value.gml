@@ -1506,7 +1506,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		INLINE
 		
 		var res = false;
-		var val = unit.invApply(_val);
+		// _val = unit.invApply(_val);
 		
 		if(PANEL_INSPECTOR && PANEL_INSPECTOR.inspectGroup == 1) {
 			var ind = self.index;
@@ -1515,11 +1515,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				var _node = PANEL_INSPECTOR.inspectings[i];
 				if(ind >= array_length(_node.inputs)) continue;
 				
-				var r = _node.inputs[ind].setValueDirect(val, index, true, time);
+				var r = _node.inputs[ind].setValueDirect(_val, index, true, time);
 				if(_node == node) res = r;
 			}
 		} else
-			res = setValueDirect(val, index, true, time);
+			res = setValueDirect(_val, index, true, time);
 		
 		return res;
 	}

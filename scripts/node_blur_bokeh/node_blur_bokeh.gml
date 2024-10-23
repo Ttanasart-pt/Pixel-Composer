@@ -4,7 +4,6 @@ function Node_Blur_Bokeh(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newInput(0, nodeValue_Surface("Surface in", self));
 	
 	newInput(1, nodeValue_Float("Strength", self, 0.2))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 16, 0.01] })
 		.setMappable(8);
 	
 	newInput(2, nodeValue_Surface("Mask", self));
@@ -34,13 +33,13 @@ function Node_Blur_Bokeh(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	attribute_surface_depth();
 	
-	static step = function() { #region
+	static step = function() {
 		__step_mask_modifier();
 		
 		inputs[1].mappableStep();
-	} #endregion
+	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		
 		surface_set_shader(_outSurf, sh_blur_bokeh);
 			shader_set_f("dimension", surface_get_width_safe(_data[0]), surface_get_height_safe(_data[0]));
@@ -54,5 +53,5 @@ function Node_Blur_Bokeh(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		_outSurf = channel_apply(_data[0], _outSurf, _data[5]);
 		
 		return _outSurf;
-	} #endregion
+	}
 }

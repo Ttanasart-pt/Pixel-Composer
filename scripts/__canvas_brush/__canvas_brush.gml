@@ -9,6 +9,7 @@ function canvas_brush() constructor {
 	brush_rand_dir  = [ 0, 0, 0, 0, 0 ];
 	brush_seed      = irandom_range(100000, 999999);
 	brush_next_dist = 0;
+	brush_range     = 0;
 	
 	brush_sizing    = false;
 	brush_sizing_s  = 0;
@@ -20,7 +21,8 @@ function canvas_brush() constructor {
 	mouse_pre_dir_x = undefined;
 	mouse_pre_dir_y = undefined;
 	
-	node = noone;
+	tileMode = 0;
+	node     = noone;
 	
 	colors = [ c_white, c_black ];
 	
@@ -49,6 +51,7 @@ function canvas_brush() constructor {
 			}
 		} else
 			brush_surface = is_surface(_brushSurf)? _brushSurf : noone;
+		brush_range = brush_surface == noone? ceil(brush_size / 2) : max(surface_get_width_safe(brush_surface), surface_get_height_safe(brush_surface)) / 2;
 		
 		if(!_brushRotD) 
 			brush_direction = 0;

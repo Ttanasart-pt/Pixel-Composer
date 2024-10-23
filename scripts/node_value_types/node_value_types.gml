@@ -525,10 +525,8 @@ function nodeValueUnit(_nodeValue) constructor {
 	}
 	
 	static invApply = function(value, index = 0) {
-		if(mode == VALUE_UNIT.constant) 
-			return value;
-		if(reference == noone)
-			return value;
+		if(mode == VALUE_UNIT.constant) return value;
+		if(reference == noone)          return value;
 		
 		return convertUnit(value, VALUE_UNIT.reference, index);
 	}
