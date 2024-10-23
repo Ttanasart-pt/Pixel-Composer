@@ -117,6 +117,7 @@
         registerFunction("Preview", "Toggle Show Info",         "",    MOD_KEY.none,                 panel_preview_show_info                 ).setMenu("preview_show_info")
         registerFunction("Preview", "Toggle Lock",              "",    MOD_KEY.none,                 panel_preview_toggle_lock               ).setMenu("preview_toggle_lock")
         
+        registerFunction("Preview", "Popup",            		"",    MOD_KEY.none,   function() /*=>*/ { create_preview_window(PANEL_PREVIEW.getNodePreview());           }).setMenu("preview_popup")
         registerFunction("Preview", "Grid Settings",            "",    MOD_KEY.none,   function() /*=>*/ { dialogPanelCall(new Panel_Preview_Grid_Setting())                }).setMenu("preview_grid_settings")
         registerFunction("Preview", "Onion Skin Settings",      "",    MOD_KEY.none,   function() /*=>*/ { dialogPanelCall(new Panel_Preview_Onion_Setting())               }).setMenu("preview_onion_settings")
         registerFunction("Preview", "3D View Settings",         "",    MOD_KEY.none,   function() /*=>*/ { dialogPanelCall(new Panel_Preview_3D_Setting(PANEL_PREVIEW))     }).setMenu("preview_3D_settings")
@@ -472,7 +473,13 @@ function Panel_Preview() : PanelContent() constructor {
             [ 
                 THEME.icon_visibility,
                 new tooltipHotkey(__txtx("graph_visibility_title", "Visibility settings") + "...", "Preview", "View Settings"), 
-                function(param) /*=>*/ { dialogPanelCall(new Panel_Preview_View_Setting(self), param.x, param.y, { anchor: ANCHOR.bottom | ANCHOR.left }); },
+                function(param) /*=>*/ { dialogPanelCall(new Panel_Preview_View_Setting(self), param.x, param.y, { anchor: ANCHOR}); },
+                function() /*=>*/ {return 0},
+            ],
+            [ 
+                THEME.node_goto,
+                new tooltipHotkey(__txtx("panel_preview_windows", "Pop up as Preview window"), "Preview", "Popup"), 
+                function() /*=>*/ { create_preview_window(PANEL_PREVIEW.getNodePreview()); },
                 function() /*=>*/ {return 0},
             ],
         ];
@@ -527,7 +534,7 @@ function Panel_Preview() : PanelContent() constructor {
     function getNodePreviewSurface()    { return preview_surfaces[splitView? splitSelection : 0]; }
     function getNodePreviewSequence()    { return preview_sequence[splitView? splitSelection : 0]; }
     
-    function getPreviewData() { #region
+    function getPreviewData() {
         preview_surfaces = [ noone, noone ];
         preview_sequence = [ noone, noone ];
         
@@ -562,7 +569,7 @@ function Panel_Preview() : PanelContent() constructor {
             canvas_w = surface_get_width_safe(prevS);
             canvas_h = surface_get_height_safe(prevS);    
         }
-    } #endregion
+    }
     
     function onFocusBegin() { PANEL_PREVIEW = self; }
     
