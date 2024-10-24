@@ -15,17 +15,25 @@ function tiler_tool_fill(node, _brush, toolAttr) : tiler_tool(node) constructor 
 		surface_w	= surface_get_width(drawing_surface);
 		surface_h	= surface_get_height(drawing_surface);
 		
+		var _auto = brush.autotiler;
+		
 		if(mouse_press(mb_left, active) && point_in_rectangle(mouse_cur_x, mouse_cur_y, 0, 0, surface_w - 1, surface_h - 1)) {
 			surface_set_target(drawing_surface);
 				tiler_flood_fill_scanline(drawing_surface, mouse_cur_x, mouse_cur_y, brush, tool_attribute.fillType);
 			surface_reset_target();
 			
+			if(_auto != noone) {
+				_auto.drawing_start(drawing_surface, isEraser);
+				tiler_flood_fill_scanline(drawing_surface, mouse_cur_x, mouse_cur_y, brush, tool_attribute.fillType);
+				_auto.drawing_end();
+			}
+				
 			apply_draw_surface();
 		}
 	}
 }
 
-function _tiler_ff_getPixel(_x, _y) { return round(buffer_read_at(_ff_buff, (_y * _ff_w + _x) * 2, buffer_f16)); }
+function _tiler_ff_getPixel(_x, _y) { return round(buffer_read_at(_ff_buff, (_y * _ff_w + _x) * 8, buffer_f16)); }
 
 function tiler_flood_fill_scanline(_surf, _x, _y, brush, _corner = false) {
 	if(brush.brush_height * brush.brush_width == 0) return;
@@ -38,7 +46,7 @@ function tiler_flood_fill_scanline(_surf, _x, _y, brush, _corner = false) {
 	
 	_ff_w    = surface_get_width(_surf);
 	_ff_h    = surface_get_height(_surf);
-	_ff_buff = buffer_create(_ff_w * _ff_h * 2, buffer_fixed, 2);
+	_ff_buff = buffer_create(_ff_w * _ff_h * 8, buffer_fixed, 2);
 	buffer_get_surface(_ff_buff, _surf, 0);
 	
 	var x1, y1, x_start;
@@ -71,7 +79,7 @@ function tiler_flood_fill_scanline(_surf, _x, _y, brush, _corner = false) {
 		
 		while(x1 < surface_w && colorBase == _tiler_ff_getPixel(x1, y1)) {
 			draw_point(x1, y1);
-			buffer_write_at(_ff_buff, (y1 * _ff_w + x1) * 2, buffer_f16, _index);
+			buffer_write_at(_ff_buff, (y1 * _ff_w + x1) * 8, buffer_f16, _index);
 			
 // 			print($"----Filling {x1}, {y1}")
 			

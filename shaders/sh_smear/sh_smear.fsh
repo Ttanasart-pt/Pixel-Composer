@@ -1,3 +1,21 @@
+#pragma use(sampler_simple)
+
+#region -- sampler_simple -- [1729740692.1417658]
+    uniform int  sampleMode;
+    
+    vec4 sampleTexture( sampler2D texture, vec2 pos) {
+        if(pos.x >= 0. && pos.y >= 0. && pos.x <= 1. && pos.y <= 1.)
+            return texture2D(texture, pos);
+        
+             if(sampleMode <= 1) return vec4(0.);
+        else if(sampleMode == 2) return texture2D(texture, clamp(pos, 0., 1.));
+        else if(sampleMode == 3) return texture2D(texture, fract(pos));
+        else if(sampleMode == 4) return vec4(vec3(0.), 1.);
+        
+        return vec4(0.);
+    }
+#endregion -- sampler_simple --
+
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
@@ -13,36 +31,16 @@ uniform int       strengthUseSurf;
 uniform sampler2D strengthSurf;
 
 uniform vec2 dimension;
-uniform int	 sampleMode;
 uniform int	 alpha;
 uniform int	 modulateStr;
 uniform int	 inv;
 uniform int	 blend;
 uniform int	 normalized;
 
-vec4 sampleTexture(vec2 pos) { #region
-	if(pos.x >= 0. && pos.y >= 0. && pos.x <= 1. && pos.y <= 1.)
-		return texture2D(gm_BaseTexture, pos);
-	
-	if(sampleMode == 0) 
-		return vec4(0.);
-		
-	else if(sampleMode == 1) 
-		return texture2D(gm_BaseTexture, clamp(pos, 0., 1.));
-		
-	else if(sampleMode == 2) 
-		return texture2D(gm_BaseTexture, fract(pos));
-	
-	else if(sampleMode == 3) 
-		return vec4(vec3(0.), 1.);
-		
-	return vec4(0.);
-} #endregion
-
 vec4 smear(vec2 shift) {
 	float delta  = 1. / size;
 	
-	vec4  base = sampleTexture( v_vTexcoord );
+	vec4  base = sampleTexture( gm_BaseTexture, v_vTexcoord );
 	float mBri = (base.r + base.g + base.b) / 3. * base.a;
     vec4  res, col, rcol;
 	float bright, rbright, dist = 0.;
@@ -51,14 +49,14 @@ vec4 smear(vec2 shift) {
 		res  = base;
 		
 		for(float i = 0.; i <= 1.0; i += delta) {
-			col = sampleTexture( v_vTexcoord - shift * i);
+			col = sampleTexture( gm_BaseTexture, v_vTexcoord - shift * i);
 			
 			if(modulateStr != 2) {
 				if(alpha == 0) col.rgb *= 1. - i;
 				else           col.a   *= 1. - i;
 			}
 				  
-		 bright = (col.r + col.g + col.b) / 3. * col.a;
+			bright = (col.r + col.g + col.b) / 3. * col.a;
 			
 			if(bright > mBri) {
 				mBri = bright;
@@ -77,7 +75,7 @@ vec4 smear(vec2 shift) {
 	    res  = base;
 		
 		for(float i = 0.; i <= 1.; i += delta) {
-			col    = sampleTexture( v_vTexcoord + shift * i);
+			col    = sampleTexture( gm_BaseTexture, v_vTexcoord + shift * i);
 			bright = (col.r + col.g + col.b) / 3. * col.a;
 			
 			if(bright == 0.) continue;

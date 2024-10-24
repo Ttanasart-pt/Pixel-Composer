@@ -1,3 +1,21 @@
+#pragma use(sampler_simple)
+
+#region -- sampler_simple -- [1729740692.1417658]
+    uniform int  sampleMode;
+    
+    vec4 sampleTexture( sampler2D texture, vec2 pos) {
+        if(pos.x >= 0. && pos.y >= 0. && pos.x <= 1. && pos.y <= 1.)
+            return texture2D(texture, pos);
+        
+             if(sampleMode <= 1) return vec4(0.);
+        else if(sampleMode == 2) return texture2D(texture, clamp(pos, 0., 1.));
+        else if(sampleMode == 3) return texture2D(texture, fract(pos));
+        else if(sampleMode == 4) return vec4(vec3(0.), 1.);
+        
+        return vec4(0.);
+    }
+#endregion -- sampler_simple --
+
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
@@ -6,7 +24,6 @@ uniform vec2 dimension;
 
 uniform int useMask;
 uniform sampler2D mask;
-uniform int sampleMode;
 uniform int gamma;
 
 uniform int overrideColor;
@@ -155,25 +172,6 @@ float sampleMask() { #region
 	return (m.r + m.g + m.b) / 3. * m.a;
 } #endregion
 
-vec4 sampleTexture(vec2 pos) { #region
-	if(pos.x >= 0. && pos.y >= 0. && pos.x <= 1. && pos.y <= 1.)
-		return texture2D(gm_BaseTexture, pos);
-	
-	if(sampleMode == 0) 
-		return vec4(0.);
-		
-	else if(sampleMode == 1) 
-		return texture2D(gm_BaseTexture, clamp(pos, 0., 1.));
-		
-	else if(sampleMode == 2) 
-		return texture2D(gm_BaseTexture, fract(pos));
-	
-	else if(sampleMode == 3) 
-		return vec4(vec3(0.), 1.);
-		
-	return vec4(0.);
-} #endregion
-
 void main() { #region
 	vec4 clr = vec4(0.);
 	float totalWeight = 0.;
@@ -183,7 +181,7 @@ void main() { #region
 	realSize *= sampleMask();
 	
 	if(realSize < 1.) {
-		gl_FragColor = sampleTexture( v_vTexcoord );
+		gl_FragColor = sampleTexture( gm_BaseTexture, v_vTexcoord );
 		return;
 	} else if(realSize < 2.)
 		realSize = 1.;
@@ -196,7 +194,7 @@ void main() { #region
 	for( float j = -cel; j <= cel; j++ ) {
 		if(abs(i + j) >= cel * 2.) continue;
 		
-		vec4  sam = sampleTexture( v_vTexcoord + vec2(i, j) * texel );
+		vec4  sam = sampleTexture( gm_BaseTexture, v_vTexcoord + vec2(i, j) * texel );
 		if(gamma == 1) sam.rgb = pow(sam.rgb, vec3(2.2));
 		
 		float wei = 1. - (abs(i) + abs(j)) / (realSize * 2.);

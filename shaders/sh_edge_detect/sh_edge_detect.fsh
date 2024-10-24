@@ -1,31 +1,26 @@
-//
-// Simple passthrough fragment shader
-//
+#pragma use(sampler_simple)
+
+#region -- sampler_simple -- [1729740692.1417658]
+    uniform int  sampleMode;
+    
+    vec4 sampleTexture( sampler2D texture, vec2 pos) {
+        if(pos.x >= 0. && pos.y >= 0. && pos.x <= 1. && pos.y <= 1.)
+            return texture2D(texture, pos);
+        
+             if(sampleMode <= 1) return vec4(0.);
+        else if(sampleMode == 2) return texture2D(texture, clamp(pos, 0., 1.));
+        else if(sampleMode == 3) return texture2D(texture, fract(pos));
+        else if(sampleMode == 4) return vec4(vec3(0.), 1.);
+        
+        return vec4(0.);
+    }
+#endregion -- sampler_simple --
+
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 uniform vec2 dimension;
 uniform int filter;
-uniform int sampleMode;
-
-vec4 sampleTexture(vec2 pos) {
-	if(pos.x >= 0. && pos.y >= 0. && pos.x <= 1. && pos.y <= 1.)
-		return texture2D(gm_BaseTexture, pos);
-	
-	if(sampleMode == 0) 
-		return vec4(0.);
-		
-	else if(sampleMode == 1) 
-		return texture2D(gm_BaseTexture, clamp(pos, 0., 1.));
-	
-	else if(sampleMode == 2) 
-		return texture2D(gm_BaseTexture, fract(pos));
-	
-	else if(sampleMode == 3) 
-		return vec4(vec3(0.), 1.);
-		
-	return vec4(0.);
-}
 
 const mat3 sobel = mat3( -1., -2., -1., 
 						  0.,  0.,  0., 
@@ -79,7 +74,7 @@ float bright(in vec4 col) {
 
 void main() {
 	vec2 texel = vec2(1.) / dimension;
-	vec4 point = sampleTexture( v_vTexcoord );
+	vec4 point = sampleTexture( gm_BaseTexture, v_vTexcoord );
 	vec4 hColor = vec4(0.);
 	vec4 vColor = vec4(0.);
 	
@@ -100,7 +95,7 @@ void main() {
 			
 			int ii = int(1. + i);
 			int jj = int(1. + j);
-			vec4 sam = sampleTexture( pxs );
+			vec4 sam = sampleTexture( gm_BaseTexture, pxs );
 			
 			hColor0 += sam * laplac_r0[jj][ii];
 			//hColor1 += sam * laplac_r1[jj][ii];
@@ -133,13 +128,15 @@ void main() {
 			int jj = int(1. + j);
 			
 			if(filter == 0) {
-				hColor += sampleTexture( pxs ) * sobel[jj][ii];
-				vColor += sampleTexture( pxs ) * sobel[ii][jj];
+				hColor += sampleTexture( gm_BaseTexture, pxs ) * sobel[jj][ii];
+				vColor += sampleTexture( gm_BaseTexture, pxs ) * sobel[ii][jj];
+				
 			} else if(filter == 1) {
-				hColor += sampleTexture( pxs ) * prewit[jj][ii];
-				vColor += sampleTexture( pxs ) * prewit[ii][jj];	
+				hColor += sampleTexture( gm_BaseTexture, pxs ) * prewit[jj][ii];
+				vColor += sampleTexture( gm_BaseTexture, pxs ) * prewit[ii][jj];	
+				
 			} else if(filter == 2) {
-				hColor += sampleTexture( pxs ) * laplac[jj][ii];
+				hColor += sampleTexture( gm_BaseTexture, pxs ) * laplac[jj][ii];
 			}
 		}
 	}

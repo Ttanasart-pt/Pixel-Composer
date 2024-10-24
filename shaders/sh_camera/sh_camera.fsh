@@ -1,3 +1,21 @@
+#pragma use(sampler_simple)
+
+#region -- sampler_simple -- [1729740692.1417658]
+    uniform int  sampleMode;
+    
+    vec4 sampleTexture( sampler2D texture, vec2 pos) {
+        if(pos.x >= 0. && pos.y >= 0. && pos.x <= 1. && pos.y <= 1.)
+            return texture2D(texture, pos);
+        
+             if(sampleMode <= 1) return vec4(0.);
+        else if(sampleMode == 2) return texture2D(texture, clamp(pos, 0., 1.));
+        else if(sampleMode == 3) return texture2D(texture, fract(pos));
+        else if(sampleMode == 4) return vec4(vec3(0.), 1.);
+        
+        return vec4(0.);
+    }
+#endregion -- sampler_simple --
+
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
@@ -8,7 +26,6 @@ uniform vec2 camDimension;
 
 uniform vec2  position;
 uniform float zoom;
-uniform int   sampleMode;
 uniform float bokehStrength;
 
 const float GoldenAngle = 2.39996323;
@@ -17,25 +34,6 @@ const float Iterations = 400.0;
 const float ContrastAmount = 150.0;
 const vec3  ContrastFactor = vec3(9.0);
 const float Smooth = 2.0;
-
-vec4 sampleTexture(sampler2D samp, vec2 pos) { #region
-	if(pos.x >= 0. && pos.y >= 0. && pos.x <= 1. && pos.y <= 1.)
-		return texture2D(samp, pos);
-	
-	if(sampleMode == 0) 
-		return vec4(0.);
-		
-	else if(sampleMode == 1) 
-		return texture2D(samp, fract(pos));
-		
-	else if(sampleMode == 2) 
-		return texture2D(samp, vec2(fract(pos.x), pos.y));
-		
-	else if(sampleMode == 3) 
-		return texture2D(samp, vec2(pos.x, fract(pos.y)));
-	
-	return vec4(0.);
-} #endregion
 
 vec4 bokeh(sampler2D tex, vec2 uv, float radius) { #region ref. sh_blur_bokeh
 	vec3  num, weight;
@@ -55,7 +53,7 @@ vec4 bokeh(sampler2D tex, vec2 uv, float radius) { #region ref. sh_blur_bokeh
         
         vec2 offset	  = (rec - 1.0) * horizontalAngle;
         vec2 sampleUV = uv + aspect * offset;
-		vec4 sam = sampleTexture(tex, sampleUV);
+		vec4 sam = sampleTexture( tex, sampleUV );
         vec3 col = sam.rgb * sam.a;
         
         // increase contrast and smooth

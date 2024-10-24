@@ -4,7 +4,8 @@
 		new scrollItem("Pixel"),
 		new scrollItem("Bilinear"),
 		new scrollItem("Bicubic"),
-		new scrollItem("radSin"),
+		// new scrollItem("RadSin"),
+		new scrollItem("Lanczos3"),
 	];
 	
 	global.SURFACE_OVERSAMPLE = [

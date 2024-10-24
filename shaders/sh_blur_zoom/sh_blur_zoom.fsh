@@ -1,11 +1,25 @@
-//
-// Simple passthrough fragment shader
-//
+#pragma use(sampler_simple)
+
+#region -- sampler_simple -- [1729740692.1417658]
+    uniform int  sampleMode;
+    
+    vec4 sampleTexture( sampler2D texture, vec2 pos) {
+        if(pos.x >= 0. && pos.y >= 0. && pos.x <= 1. && pos.y <= 1.)
+            return texture2D(texture, pos);
+        
+             if(sampleMode <= 1) return vec4(0.);
+        else if(sampleMode == 2) return texture2D(texture, clamp(pos, 0., 1.));
+        else if(sampleMode == 3) return texture2D(texture, fract(pos));
+        else if(sampleMode == 4) return vec4(vec3(0.), 1.);
+        
+        return vec4(0.);
+    }
+#endregion -- sampler_simple --
+
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 uniform vec2  center;
-uniform int   sampleMode;
 uniform int   blurMode;
 uniform int   gamma;
 
@@ -41,25 +55,6 @@ float sampleMask() { #region
 	return (m.r + m.g + m.b) / 3. * m.a;
 } #endregion
 
-vec4 sampleTexture(vec2 pos) { #region
-	if(pos.x >= 0. && pos.y >= 0. && pos.x <= 1. && pos.y <= 1.)
-		return texture2D(gm_BaseTexture, pos);
-	
-	if(sampleMode == 0) 
-		return vec4(0.);
-		
-	else if(sampleMode == 1) 
-		return texture2D(gm_BaseTexture, clamp(pos, 0., 1.));
-		
-	else if(sampleMode == 2) 
-		return texture2D(gm_BaseTexture, fract(pos));
-	
-	else if(sampleMode == 3) 
-		return vec4(vec3(0.), 1.);
-		
-	return vec4(0.);
-} #endregion
-
 void main() { #region
 	float str = strength.x;
 	if(strengthUseSurf == 1) {
@@ -83,7 +78,7 @@ void main() { #region
         float scale = 1.0 + ((blrStart + i) * scale_factor);
 		vec2 pos    = uv * scale + center;
 		
-		vec4 col = sampleTexture(pos);
+		vec4 col = sampleTexture( gm_BaseTexture, pos );
 		if(gamma == 1) col.rgb = pow(col.rgb, vec3(2.2));
 		color += col;
     }

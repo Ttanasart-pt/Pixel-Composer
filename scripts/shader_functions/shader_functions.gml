@@ -209,6 +209,7 @@ function shader_set_palette(pal, pal_uni = "palette", amo_uni = "paletteAmount",
 		
 		var intp   = getAttribute("interpolate");
 		
+		gpu_set_tex_filter(bool(intp));
 		shader_set_i("interpolation",	intp);
 		shader_set_f("sampleDimension", _dim == noone? surface_get_dimension(surface) : _dim);
 		shader_set_i("sampleMode",		getAttribute("oversample"));

@@ -1,3 +1,21 @@
+#pragma use(sampler_simple)
+
+#region -- sampler_simple -- [1729740692.1417658]
+    uniform int  sampleMode;
+    
+    vec4 sampleTexture( sampler2D texture, vec2 pos) {
+        if(pos.x >= 0. && pos.y >= 0. && pos.x <= 1. && pos.y <= 1.)
+            return texture2D(texture, pos);
+        
+             if(sampleMode <= 1) return vec4(0.);
+        else if(sampleMode == 2) return texture2D(texture, clamp(pos, 0., 1.));
+        else if(sampleMode == 3) return texture2D(texture, fract(pos));
+        else if(sampleMode == 4) return vec4(vec3(0.), 1.);
+        
+        return vec4(0.);
+    }
+#endregion -- sampler_simple --
+
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
@@ -26,7 +44,6 @@ uniform vec2      blend_alpha;
 uniform int       blend_alphaUseSurf;
 uniform sampler2D blend_alphaSurf;
 
-uniform int sampleMode;
 uniform int outline_only;
 uniform int highRes;
 
@@ -34,25 +51,6 @@ vec2 round(in vec2 v) {
 	v.x = fract(v.x) > 0.5? ceil(v.x) : floor(v.x);	
 	v.y = fract(v.y) > 0.5? ceil(v.y) : floor(v.y);	
 	return v;
-}
-
-vec4 sampleTexture(vec2 pos) {
-	if(pos.x >= 0. && pos.y >= 0. && pos.x <= 1. && pos.y <= 1.)
-		return texture2D(gm_BaseTexture, pos);
-	
-	if(sampleMode == 0) 
-		return vec4(0.);
-		
-	else if(sampleMode == 1) 
-		return texture2D(gm_BaseTexture, clamp(pos, 0., 1.));
-		
-	else if(sampleMode == 2) 
-		return texture2D(gm_BaseTexture, fract(pos));
-	
-	else if(sampleMode == 3) 
-		return vec4(vec3(0.), 1.);
-		
-	return vec4(0.);
 }
 
 vec4 blendColor(vec4 base, vec4 colr, float alpha) {
@@ -93,7 +91,7 @@ void checkPixel(vec2 px, vec2 p) {
 	vec2 pxs = floor(p) + 0.5;
 	if(side == 0 && crop_border == 1 && (txs.x < 0. || txs.x > 1. || txs.y < 0. || txs.y > 1.)) return;
 	
-	vec4 sam = sampleTexture( txs );
+	vec4 sam = sampleTexture( gm_BaseTexture, txs );
 	if(side == 0 && sam.a > 0.) return; //inside border,  skip if current pixel is filled
 	if(side == 1 && sam.a < 1.) return; //outside border, skip if current pixel is empty
 	
@@ -201,7 +199,7 @@ void main() {
 			vec2 pxs = (pixelPosition + vec2( cos(ang),  sin(ang)) ) / dimension;
 			if(side == 0 && crop_border == 1 && (pxs.x < 0. || pxs.x > 1. || pxs.y < 0. || pxs.y > 1.)) continue;
 			
-			vec4 sam = sampleTexture( pxs );
+			vec4 sam = sampleTexture( gm_BaseTexture, pxs );
 				
 			if((side == 0 && sam.a == 0.) || (side == 1 && sam.a > 0.)) {
 				isOutline = true;

@@ -1,3 +1,21 @@
+#pragma use(sampler_simple)
+
+#region -- sampler_simple -- [1729740692.1417658]
+    uniform int  sampleMode;
+    
+    vec4 sampleTexture( sampler2D texture, vec2 pos) {
+        if(pos.x >= 0. && pos.y >= 0. && pos.x <= 1. && pos.y <= 1.)
+            return texture2D(texture, pos);
+        
+             if(sampleMode <= 1) return vec4(0.);
+        else if(sampleMode == 2) return texture2D(texture, clamp(pos, 0., 1.));
+        else if(sampleMode == 3) return texture2D(texture, fract(pos));
+        else if(sampleMode == 4) return vec4(vec3(0.), 1.);
+        
+        return vec4(0.);
+    }
+#endregion -- sampler_simple --
+
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
@@ -7,36 +25,16 @@ uniform int  horizontal;
 uniform float weight[128];
 uniform int	  size;
 uniform float angle;
-uniform int	  sampleMode;
 
 uniform int  overrideColor;
 uniform vec4 overColor;
 
 uniform int  gamma;
 
-vec4 sampleTexture(vec2 pos) {
-	if(pos.x >= 0. && pos.y >= 0. && pos.x <= 1. && pos.y <= 1.)
-		return texture2D(gm_BaseTexture, pos);
-	
-	if(sampleMode == 0) 
-		return vec4(0.);
-		
-	else if(sampleMode == 1) 
-		return texture2D(gm_BaseTexture, clamp(pos, 0., 1.));
-		
-	else if(sampleMode == 2) 
-		return texture2D(gm_BaseTexture, fract(pos));
-	
-	else if(sampleMode == 3) 
-		return vec4(vec3(0.), 1.);
-	
-	return vec4(0.);
-}
-
 float wgh = 0.;
 
 vec4 sample(in vec2 pos, in int index) {
-	vec4 col = sampleTexture( pos );
+	vec4 col = sampleTexture( gm_BaseTexture, pos );
 	if(gamma == 1) col.rgb = pow(col.rgb, vec3(2.2));
 	
 	col.rgb *= weight[index] * col.a;
