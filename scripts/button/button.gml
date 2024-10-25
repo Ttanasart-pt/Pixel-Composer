@@ -20,6 +20,8 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 	toggled = false;
 	context = noone;
 	
+	base_spr = THEME.button_def;
+	
 	static setContext = function(struct) { onClick = method(struct, onClick); return self; }
 	
 	static setLua = function(_lua_thread, _lua_key, _lua_func) {
@@ -53,6 +55,11 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 		return self; 
 	}
 	
+	static setBaseSprite = function(_baseSpr) {
+		base_spr = _baseSpr;
+		return self; 
+	}
+	
 	static setText    = function(_text) { text    = _text; return self; }
 	static setTooltip = function(_tip)  { tooltip = _tip;  return self; }
 	
@@ -62,7 +69,7 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 		return draw(params.x, params.y, params.w, params.h, params.m);
 	}
 	
-	static draw = function(_x, _y, _w, _h, _m, spr = THEME.button_def, blend = c_white) {
+	static draw = function(_x, _y, _w, _h, _m, spr = base_spr, blend = c_white) {
 		x = _x;
 		y = _y;
 		w = _w;

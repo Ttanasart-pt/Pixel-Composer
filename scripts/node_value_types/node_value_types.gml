@@ -59,6 +59,8 @@ enum VALUE_TYPE {
 	fdomain     = 34,
 	sdf         = 35,
 	
+	tileset     = 36,
+	
 	action	    = 99,
 }
 
@@ -189,6 +191,7 @@ function value_color(i) {
 		#8fde5d, //audiobit
 		#4da6ff, //flipfluid
 		#c1007c, //3D SDF
+		#ff6b97, //tileset
 	];
 	static JUNCTION_COLORS_LENGTH = array_length(JUNCTION_COLORS);
 	
@@ -238,6 +241,7 @@ function value_color_bg_array(i) {
 		#83839b, //PCX
 		#3ca370, //audiobit
 		#4b5bab, //3D SDF
+		#bd4882, //tileset
 	];
 	
 	if(i == 99) return $5dde8f;
@@ -289,6 +293,7 @@ function value_bit(i) {
 		case VALUE_TYPE.audioBit	: return 1 << 35;
 		case VALUE_TYPE.fdomain 	: return 1 << 36;
 		case VALUE_TYPE.sdf 		: return 1 << 37;
+		case VALUE_TYPE.tileset		: return 1 << 38;
 		
 		case VALUE_TYPE.curve 		: return 1 << 38;
 		
@@ -371,6 +376,7 @@ function value_type_from_string(str) {
 		case "audioBit"	   : return VALUE_TYPE.audioBit;
 		case "fDomain"	   : return VALUE_TYPE.fdomain;
 		case "sdf"		   : return VALUE_TYPE.sdf;
+		case "tileset"	   : return VALUE_TYPE.tileset;
 		
 		case "action"	: return VALUE_TYPE.action;
 	}

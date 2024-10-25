@@ -28,6 +28,8 @@ function tiler_brush_autotile(_type, _index) constructor {
         var _dim        = surface_get_dimension(surface);
         drawing_surface = surface_verify(drawing_surface, _dim[0], _dim[1], surface_r8unorm);
         
+        //print($"Drawing start {surface} | {drawing_surface}");
+        
         draw_set_color(c_white);
         surface_set_target(drawing_surface);
         DRAW_CLEAR

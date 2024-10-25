@@ -68,9 +68,14 @@
 
 function Inspector_Custom_Renderer(drawFn, registerFn = noone) : widget() constructor {
     self.draw = drawFn;
-    node      = noone;
-    panel     = noone;
+    node  = noone;
+    panel = noone;
+    
+    popupPanel  = noone;
+    popupDialog = noone;
+    
     h = 64;
+    fixHeight = -1;
     
     if(registerFn != noone) register = registerFn;
     else {
@@ -80,9 +85,34 @@ function Inspector_Custom_Renderer(drawFn, registerFn = noone) : widget() constr
         }
     }
     
-    static setNode = function(node) { self.node = node; return self; }
+    static setNode  = function(node) { self.node = node; return self; }
+    static toString = function()     { return $"Custon renderer"; }
     
-    static toString = function() { return $"Custon renderer"; }
+    static togglePopup = function(_title) { 
+        if(popupPanel == noone) {
+            popupPanel  = new Panel_Custom_Inspector(_title, self);
+            popupDialog = dialogPanelCall(popupPanel);
+            return;
+        }
+        
+        if(instance_exists(popupDialog))
+            instance_destroy(popupDialog);
+            
+        if(is_instanceof(popupPanel, PanelContent))
+            popupPanel.close();
+        
+        popupPanel = noone;
+    }
+    
+    static clone    = function() { 
+        var _n = new Inspector_Custom_Renderer(draw, register);
+        var _key = variable_instance_get_names(self);
+        
+        for( var i = 0, n = array_length(_key); i < n; i++ ) 
+            _n[$ _key[i]] = self[$ _key[i]];
+        
+        return _n;
+    }
 }
 
 function Inspector_Sprite(spr) constructor { self.spr = spr; }
@@ -535,59 +565,6 @@ function Panel_Inspector() : PanelContent() constructor {
                     
                     yy += gvh + ui(8);
                     hh += gvh + ui(8);
-                
-                    // var bh = ui(36);
-                    // var bx = ui(16);
-                    // var by = yy;
-                    // var bbw = contentPane.surface_w - ui(24);
-                
-                    // if(var_editing) {
-                    //     var bw = bbw / 2 - ui(4);
-                    
-                    //     if(buttonInstant(THEME.button_hide, bx, by, bw, bh, _m, pFOCUS, _hover) == 2)
-                    //         var_editing = !var_editing;
-        
-                    //     var txt  = __txt("Apply");
-                    //     var icon = THEME.accept;
-                    //     var colr = COLORS._main_value_positive;
-                    
-                    //     draw_set_text(f_p0b, fa_left, fa_center, COLORS._main_icon)
-                    //     var bxc = bx + bw / 2 - (string_width(txt) + ui(48)) / 2;
-                    //     var byc = by + bh / 2;
-                    //     draw_sprite_ui(icon, 0, bxc + ui(24), byc,,,, colr);
-                    //     draw_text_over(bxc + ui(48), byc, txt);
-                        
-                    //     bx += bw + ui(4);
-                        
-                    //     if(buttonInstant(THEME.button_hide, bx, by, bw, bh, _m, pFOCUS, _hover) == 2)
-                    //         PROJECT.globalNode.createValue();
-                    
-                    //     var txt  = __txt("Add");
-                    //     var icon = THEME.add;
-                
-                    //     draw_set_text(f_p0b, fa_left, fa_center, COLORS._main_icon)
-                    //     var bxc = bx + bw / 2 - (string_width(txt) + ui(48)) / 2;
-                    //     var byc = by + bh / 2;
-                    //     draw_sprite_ui(icon, 0, bxc + ui(24), byc,,,, colr);
-                    //     draw_text_over(bxc + ui(48), byc, txt);
-                        
-                    // } else {
-                    //     var bw = bbw;
-                    
-                    //     if(buttonInstant(THEME.button_hide, bx, by, bw, bh, _m, pFOCUS, _hover) == 2)
-                    //         var_editing = !var_editing;
-                        
-                    //     var txt  = __txt("Edit");
-                    //     var icon = THEME.gear;
-                    //     var colr = COLORS._main_icon;
-                    
-                    //     draw_set_text(f_p0b, fa_left, fa_center, colr)
-                    //     var bxc = bx + bw / 2 - (string_width(txt) + ui(48)) / 2;
-                    //     var byc = by + bh / 2;
-                    //     draw_sprite_ui(icon, 0, bxc + ui(24), byc,,,, colr);
-                    //     draw_text_over(bxc + ui(48), byc, txt);
-                    // }
-                    
                     break;
                     
                 case 3 :
@@ -792,12 +769,31 @@ function Panel_Inspector() : PanelContent() constructor {
                 continue;
                 
             } else if(is_instanceof(jun, Inspector_Custom_Renderer)) {
+                if(jun.popupPanel != noone) {
+                    // draw_sprite_stretched_ext(THEME.ui_panel, 0, ui(16), yy, con_w - ui(32), ui(24), COLORS._main_icon, .05);
+                    // draw_sprite_stretched_ext(THEME.ui_panel, 1, ui(16), yy, con_w - ui(32), ui(24), COLORS._main_icon, .2);
+        			draw_set_text(f_p2, fa_center, fa_center, COLORS._main_icon, .5);
+        			draw_text_add(con_w / 2, yy + ui(24) / 2 - ui(2), __txt("Pop-up content"));
+        			draw_set_alpha(1);
+        			
+        			hh += ui(24 + 2);
+                    continue;
+                }
+                
+                jun.fixHeight = -1;
+                jun.panel     = self;
+                jun.rx        = ui(16) + x;
+                jun.ry        = top_bar_h + y;
                 jun.register(contentPane);
-                jun.panel = self;
-                jun.rx = ui(16) + x;
-                jun.ry = top_bar_h + y;
                 
                 var _wdh = jun.draw(ui(6), yy, con_w - ui(12), _m, _hover, pFOCUS, self) + ui(8);
+                if(!is_undefined(_wdh)) hh += _wdh;
+                continue;
+                
+            } else if(is_instanceof(jun, widget)) {
+                jun.setFocusHover(pFOCUS, pHOVER);
+                var param = new widgetParam(ui(6), yy, con_w - ui(12), TEXTBOX_HEIGHT, noone, {}, _m, x, y);
+                var _wdh = jun.drawParam(param);
                 if(!is_undefined(_wdh)) hh += _wdh;
                 continue;
                 
@@ -808,15 +804,33 @@ function Panel_Inspector() : PanelContent() constructor {
                 
                 var txt  = __txt(jun[0]);
                 var coll = jun[1] && filter_text == "";
-                var lbh  = viewMode? ui(32) : ui(26);
+                
+                var lbx = 0;
+                var lbh = viewMode? ui(32) : ui(26);
+                var lbw = con_w;
+                
                 var togl = array_safe_get_fast(jun, 2, noone);
-                if(togl != noone) var toging = _inspecting.getInputData(togl);
+                if(togl != noone) {
+                    lbx += ui(40);
+                    lbw -= ui(40);
+                    var toging = _inspecting.getInputData(togl);
+                }
                 
-                var lbx = (togl != noone) * ui(40);
-                var lbw = con_w - lbx;
-                var ltx = lbx + ui(32);
+                var righ = array_safe_get_fast(jun, 3, noone);
+                if(righ != noone) {
+                    lbw -= ui(40);
+                    
+                    var _bx = lbx + lbw + ui(8);
+                    var _by = yy;
+                    var _bw = ui(32);
+                    var _bh = lbh;
+                    
+                    draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, _bx, _by, _bw, _bh, COLORS.panel_inspector_group_bg, 1);
+                    righ.setFocusHover(pFOCUS, pHOVER);
+                    righ.draw(_bx + ui(2), _by + ui(2), _bw - ui(4), _bh - ui(4), _m, THEME.button_hide_fill);
+                }
                 
-                if(_hover && point_in_rectangle(_m[0], _m[1], lbx, yy, con_w, yy + lbh)) {
+                if(_hover && point_in_rectangle(_m[0], _m[1], lbx, yy, lbx + lbw, yy + lbh)) {
                     contentPane.hover_content = true;
                     draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, lbx, yy, lbw, lbh, COLORS.panel_inspector_group_hover, 1);
                 
@@ -850,6 +864,8 @@ function Panel_Inspector() : PanelContent() constructor {
                     if(toging) 
                         draw_sprite_ui(THEME.inspector_checkbox, 1, ui(16), yy + lbh / 2, 1, 1, 0, cc, 1);
                 }
+                
+                var ltx = lbx + ui(32);
                 
                 draw_set_text(viewMode? f_p0 : f_p1, fa_left, fa_center, COLORS._main_text, aa);
                 draw_text_add(ltx, yy + lbh / 2, txt);

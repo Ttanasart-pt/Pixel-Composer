@@ -3,7 +3,6 @@ function tiler_brush(node) constructor {
     brush_indices = [[]];
     brush_width   = 0;
     brush_height  = 0;
-    brush_varient = 0;
     brush_surface = noone;
     brush_erase   = false;
 	autotiler     = noone;
@@ -59,8 +58,10 @@ function tiler_draw_point_brush(brush, _x, _y, _shader = true) {
 	
 	for( var i = 0, n = brush.brush_height; i < n; i++ ) 
 	for( var j = 0, m = brush.brush_width;  j < m; j++ ) {
-		shader_set_f("index",   brush.brush_erase? -1 : brush.brush_indices[i][j]);
-    	shader_set_f("varient", brush.brush_erase?  0 : brush.brush_varient);
+		var _b = brush.brush_indices[i][j];
+		
+		shader_set_f("index",   brush.brush_erase? -1 : _b[0]);
+    	shader_set_f("varient", brush.brush_erase?  0 : _b[1]);
     	
     	var _xx = _x + j;
     	var _yy = _y + i;
@@ -86,8 +87,10 @@ function tiler_draw_line_brush(brush, _x0, _y0, _x1, _y1, _shader = true) {
 	
 	for( var i = 0, n = brush.brush_height; i < n; i++ ) 
 	for( var j = 0, m = brush.brush_width;  j < m; j++ ) {
-		shader_set_f("index",   brush.brush_erase? -1 : brush.brush_indices[i][j]);
-    	shader_set_f("varient", brush.brush_erase?  0 : brush.brush_varient);
+		var _b = brush.brush_indices[i][j];
+		
+		shader_set_f("index",   brush.brush_erase? -1 : _b[0]);
+    	shader_set_f("varient", brush.brush_erase?  0 : _b[1]);
     	
     	var _xx0 = _x0 + j;
     	var _yy0 = _y0 + i;
@@ -143,13 +146,29 @@ function tiler_draw_rect_brush(brush, _x0, _y0, _x1, _y1, _fill, _shader = true)
 	var _may_y = max(_y0, _y1);
 	
 	if(_fill) {
-		if(_shader) { shader_set(sh_draw_tile_brush); BLEND_OVERRIDE shader_set_f("index", brush.brush_indices[0][0]); shader_set_f("varient", brush.brush_varient); }
+		if(_shader) { 
+			shader_set(sh_draw_tile_brush); 
+			BLEND_OVERRIDE 
+			var _b = brush.brush_indices[0][0];
+		
+			shader_set_f("index",   brush.brush_erase? -1 : _b[0]);
+	    	shader_set_f("varient", brush.brush_erase?  0 : _b[1]);
+		}
+		
 		draw_rectangle(_min_x, _min_y, _max_x, _may_y, 0);
 		if(_shader) { BLEND_NORMAL shader_reset(); }
 	}
 		
 	if(brush.brush_size == 1) {
-		if(_shader) { shader_set(sh_draw_tile_brush); BLEND_OVERRIDE shader_set_f("index", brush.brush_indices[0][0]); shader_set_f("varient", brush.brush_varient); }
+		if(_shader) { 
+			shader_set(sh_draw_tile_brush); 
+			BLEND_OVERRIDE 
+			var _b = brush.brush_indices[0][0];
+		
+			shader_set_f("index",   brush.brush_erase? -1 : _b[0]);
+	    	shader_set_f("varient", brush.brush_erase?  0 : _b[1]);
+		}
+		
 		draw_rectangle(_min_x + 1, _min_y + 1, _max_x - 1, _may_y - 1, 1);
 		if(_shader) { BLEND_NORMAL shader_reset(); }
 		
@@ -185,7 +204,14 @@ function tiler_draw_ellp_brush(brush, _x0, _y0, _x1, _y1, _fill, _shader = true)
 	var _min_y = min(_y0, _y1) - 0.5;
 	var _max_y = max(_y0, _y1) - 0.5;
 	
-	if(_shader) { shader_set(sh_draw_tile_brush); BLEND_OVERRIDE shader_set_f("index", brush.brush_indices[0][0]); shader_set_f("varient", brush.brush_varient); }
+	if(_shader) { 
+		shader_set(sh_draw_tile_brush); 
+		BLEND_OVERRIDE 
+		var _b = brush.brush_indices[0][0];
+	
+		shader_set_f("index",   brush.brush_erase? -1 : _b[0]);
+    	shader_set_f("varient", brush.brush_erase?  0 : _b[1]);
+	}
 	
 	if(_fill) draw_ellipse(_min_x, _min_y, _max_x, _max_y, 0);
 	

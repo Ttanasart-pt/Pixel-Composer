@@ -1,0 +1,14 @@
+{
+  "$GMScript":"v1",
+  "%Name":"__tiler_animated",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"__tiler_animated",
+  "parent":{
+    "name":"tools",
+    "path":"folders/nodes/data/tiler/tools.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+  "tags":[],
+}
