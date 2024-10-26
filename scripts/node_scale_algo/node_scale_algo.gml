@@ -3,9 +3,9 @@ function Node_create_Scale_Algo(_x, _y, _group = noone, _param = {}) {
 	var node  = new Node_Scale_Algo(_x, _y, _group).skipDefault();
 	
 	switch(query) {
-		case "scale2x" :    node.inputs[1].setValue(0); break;	
-		case "scale3x" :    node.inputs[1].setValue(1); break;	
-		case "cleanshape" : node.inputs[1].setValue(2); break;	
+		case "scale2x" :   node.inputs[1].setValue(0); break;	
+		case "scale3x" :   node.inputs[1].setValue(1); break;	
+		case "cleanedge" : node.inputs[1].setValue(2); break;	
 	}
 	
 	return node;
@@ -30,11 +30,13 @@ function Node_Scale_Algo(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	newInput(5, nodeValue_Float("Scale", self, 4));
 		
+	newInput(6, nodeValue_Rotation("Rotation", self, 0));
+		
 	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 3,
 		["Surfaces", false], 0, 
-		["Scale",	 false], 1, 2, 4, 5, 
+		["Scale",	 false], 1, 2, 4, 5, 6, 
 	]
 	
 	attribute_surface_depth();
@@ -46,6 +48,7 @@ function Node_Scale_Algo(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		var _atlas = is_instanceof(_surf, SurfaceAtlas);
 		inputs[4].setVisible(_atlas);
 		inputs[5].setVisible(_type == 2);
+		inputs[6].setVisible(_type == 2);
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
@@ -53,6 +56,7 @@ function Node_Scale_Algo(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		var algo   = _data[1];
 		var _atlS  = _data[4];
 		var _scal  = _data[5];
+		var _rota  = _data[6];
 		var ww     = surface_get_width_safe(inSurf);
 		var hh     = surface_get_height_safe(inSurf);
 		var cDep   = attrDepth();
@@ -73,6 +77,7 @@ function Node_Scale_Algo(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 				
 				_surf = surface_verify(_surf, sw, sh, cDep);
 				break;
+				
 			case 1 :
 				shader = sh_scale3x;
 				sc = 3;
@@ -81,6 +86,7 @@ function Node_Scale_Algo(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 				
 				_surf = surface_verify(_surf, sw, sh, cDep);
 				break;
+				
 			case 2 :
 				shader = sh_scale_cleanedge;
 				sc  = _scal;
@@ -88,15 +94,16 @@ function Node_Scale_Algo(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 				hh *= sc;
 				
 				_surf = surface_verify(_surf, ww, hh, cDep);
-				// gpu_set_texfilter(true);
 				break;
+				
 		}
 		
 		surface_set_shader(_surf, shader);
 			shader_set_f("dimension",        [ ww, hh ]);
 			shader_set_f("tol",     		 _data[2]);
 			shader_set_f("similarThreshold", _data[2]);
-			shader_set_f("scale",   		 _data[5]);
+			shader_set_f("scale",   		 _scal);
+			shader_set_f("rotation",   		 degtorad(_rota));
 			
 			draw_surface_ext_safe(_data[0], 0, 0, sc, sc, 0, c_white, 1);
 		surface_reset_shader();

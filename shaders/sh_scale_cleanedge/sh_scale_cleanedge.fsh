@@ -34,6 +34,7 @@ varying vec4 v_vColour;
 
 uniform vec2  dimension;
 uniform float scale;
+uniform float rotation;
 
 //the color with the highest priority.
 // other colors will be tested based on distance to this
@@ -295,8 +296,11 @@ float round(float val) { return fract(val) > 0.5? ceil(val) : floor(val); }
 vec2  round(vec2 vec)  { return vec2(round(vec.x), round(vec.y)); }
 
 void main() {
+	float ang  = rotation;
     vec2 size  = dimension + 0.0001;
-	vec2 px    = v_vTexcoord * size / scale;
+    vec2 px    = (v_vTexcoord - .5) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) + .5;
+	     px    = px * size / scale;
+	     
 	vec2 local = fract(px);
 	px = ceil(px);
 	
