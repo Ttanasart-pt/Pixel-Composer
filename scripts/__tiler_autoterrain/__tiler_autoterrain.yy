@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"__tiler_autotile",
+  "%Name":"__tiler_autoterrain",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"__tiler_autotile",
+  "name":"__tiler_autoterrain",
   "parent":{
     "name":"tools",
     "path":"folders/nodes/data/tiler/tools.yy",

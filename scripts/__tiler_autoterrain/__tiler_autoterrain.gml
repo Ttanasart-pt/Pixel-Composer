@@ -1,13 +1,14 @@
-enum AUTOTILE_TYPE {
+enum AUTOTERRAIN_TYPE {
 	box9,
 	side15,
 	top48,
 	top55,
 }
 
-function tiler_brush_autotile(_type, _index) constructor {
-	name  = "autotile";
-    type  = _type;
+global.autoterrain_amount = [ 9, 15, 48, 55, ];
+
+function tiler_brush_autoterrain(_type, _index) constructor {
+	name  = "autoterrain";
     index = _index;
     
     mask_surface    = noone;
@@ -20,6 +21,21 @@ function tiler_brush_autotile(_type, _index) constructor {
     preview_surface_tile = noone;
     
     open = false;
+    
+    sc_type = new scrollBox(["Simple box (3x3)", "Side platform (5x3)", "Godot tile (12x4)", "Gamemaker tileset (11x5)"], function(ind) /*=>*/ { setType(ind); });
+    sc_type.font = f_p3;
+    
+    static setType = function(_type) {
+    	type  = _type;
+    	
+    	switch(type) {
+    		case 0 : index = array_verify_ext(index,  9, function() /*=>*/ {return -1}); break;
+    		case 1 : index = array_verify_ext(index, 15, function() /*=>*/ {return -1}); break;
+    		case 2 : index = array_verify_ext(index, 48, function() /*=>*/ {return -1}); break;
+    		case 3 : index = array_verify_ext(index, 55, function() /*=>*/ {return -1}); break;
+    	}
+    	
+    } setType(_type);
     
     static drawing_start = function(surface, _erase = false) {
         target_surface  = surface;
@@ -45,12 +61,12 @@ function tiler_brush_autotile(_type, _index) constructor {
         mask_surface   = surface_verify(mask_surface,   _dim[0], _dim[1], surface_r8unorm);
         update_surface = surface_verify(update_surface, _dim[0], _dim[1], surface_rgba16float);
         
-        // autotile mask
-        // #000000 : not part of autotile
-        // #808080 : part of autotile, read only
-        // #FFFFFF : part of autotile, writable
+        // autoterrain mask
+        // #000000 : not part of autoterrain
+        // #808080 : part of autoterrain, read only
+        // #FFFFFF : part of autoterrain, writable
         
-        surface_set_shader(mask_surface, sh_tiler_autotile_mask); 
+        surface_set_shader(mask_surface, sh_tiler_autoterrain_mask); 
             shader_set_surface("drawSurface", drawing_surface);
             shader_set_i("indexes",   index);
             shader_set_i("indexSize", array_length(index));
@@ -58,7 +74,7 @@ function tiler_brush_autotile(_type, _index) constructor {
             draw_surface(target_surface, 0, 0);
         surface_reset_shader();
         
-        surface_set_shader(update_surface, sh_tiler_autotile_apply); 
+        surface_set_shader(update_surface, sh_tiler_autoterrain_apply); 
             shader_set_2("dimension",    _dim);
             
             shader_set_surface("maskSurface", mask_surface);   

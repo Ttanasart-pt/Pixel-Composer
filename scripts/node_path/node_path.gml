@@ -663,7 +663,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			#endregion
 		}
 		
-		if(hover == -1) return;
+		if(hover == -1) return false;
 		line_hover = _line_hover;
 		
 		/////////////////////////////////////////////////////// TOOLS ///////////////////////////////////////////////////////
@@ -826,6 +826,8 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				RENDER_ALL
 			}
 		}
+		
+		return true;
 	}
 	
 	static updateLength = function() {
@@ -956,12 +958,13 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			_a0 = anchors[(i + 0) % ansize];
 			_a1 = anchors[(i + 1) % ansize];
 			
-			if(_dist > lengths[i]) {
-				_dist -= lengths[i];
+			var _l = array_safe_get(lengths, i, 0, ARRAY_OVERFLOW.clamp);
+			if(_dist > _l) {
+				_dist -= _l;
 				continue;
 			}
 			
-			var _t = lengths[i] == 0? 0 : _dist / lengths[i];
+			var _t = _l == 0? 0 : _dist / _l;
 			
 			if(_a0[4] == 0 && _a0[5] == 0 && _a1[2] == 0 && _a1[3] == 0) {
 				out.x = lerp(_a0[0], _a1[0], _t);

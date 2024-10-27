@@ -52,7 +52,8 @@ function array_resize_fill(arr, size, fill = 0) {
 enum ARRAY_OVERFLOW {
 	_default,
 	loop,
-	pingpong
+	pingpong,
+	clamp
 }
 
 #macro aGetF array_safe_get_fast
@@ -71,7 +72,10 @@ function array_safe_get(arr, index, def = 0, overflow = ARRAY_OVERFLOW._default)
 	var len = array_length(arr);
 	if(len == 0) return def;
 	
-	if(overflow == ARRAY_OVERFLOW.loop) {
+	if(overflow == ARRAY_OVERFLOW.clamp) {
+		index = clamp(index, 0, len - 1);
+		
+	} else if(overflow == ARRAY_OVERFLOW.loop) {
 		if(index < 0)
 			index = len - safe_mod(abs(index), len);
 		index = index % len;

@@ -269,7 +269,8 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		else if(_pat == 2)         { var hv = inputs[8].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny); active &= !hv; _hov |= hv; }
 		
 		var hv = inputs[31].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, current_data[1]); active &= !hv; _hov |= hv;
-		
+		var hv = inputs[11].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);                  active &= !hv; _hov |= hv;
+	
 		var _ani_amo = getInputAmount();
 		if(_ani_amo == 0) return _hov;
 		
@@ -279,15 +280,16 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _prop = current_data[_ind + 0];
 		var _selc = current_data[_ind + 1];
 		
-		if(_selc == 0) {
-			
-			
-		} else if(_selc == 1) {
+		if(_selc == 1) {
 			var hv = inputs[_ind + 9].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); active &= !hv; _hov |= hv;
-			
 		}
 		
 		return _hov;
+	}
+	
+	static getTool = function() { 
+		var _path = getInputData(11);
+		return is_instanceof(_path, Node)? _path : self; 
 	}
 	
 	static preGetInputs = function() {

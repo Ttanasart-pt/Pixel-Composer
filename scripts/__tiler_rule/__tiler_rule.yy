@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"__tiler_rule",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"__tiler_rule",
+  "parent":{
+    "name":"tools",
+    "path":"folders/nodes/data/tiler/tools.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

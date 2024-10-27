@@ -7,7 +7,7 @@ function __NodeValue_Int(_name, _node, _value, _tooltip = "") : NodeValue(_name,
 	static valueProcess = function(value, nodeFrom = undefined, applyUnit = true, arrIndex = 0) {
 		if(validator != noone) value = validator.validate(value);
 		value = applyUnit? unit.apply(value, arrIndex) : value;
-		return round(value);
+		return is_real(value)? round(value) : value;
 	}
 	
 	static getValue = function(_time = CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { //// Get value

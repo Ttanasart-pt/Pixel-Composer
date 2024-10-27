@@ -2387,7 +2387,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static attributeDeserialize = function(attr) {
 		struct_append(attributes, attr); 
 		
-		if(LOADING_VERSION < 1_18_02_0) {
+		if(!CLONING && LOADING_VERSION < 1_18_02_0) {
 			if(struct_has(attr, "color_depth")) attributes.color_depth += (!array_empty(inputs) && inputs[0].type == VALUE_TYPE.surface)? 1 : 2;
 			if(struct_has(attr, "interpolate")) attributes.interpolate++;
 			if(struct_has(attr, "oversample"))  attributes.oversample++;

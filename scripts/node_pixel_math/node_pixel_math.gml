@@ -1,3 +1,14 @@
+function Node_create_Pixel_Math(_x, _y, _group = noone, _param = {}) {
+	var query = struct_try_get(_param, "query", "");
+	var node  = new Node_Pixel_Math(_x, _y, _group).skipDefault();
+
+	var ind = array_find(global.node_math_keys, query);
+	if(ind != -1) node.inputs[7].setValue(global.node_math_keys_map[ind]);
+
+	return node;
+}
+
+
 function Node_Pixel_Math(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Pixel Math";
 	
@@ -15,9 +26,7 @@ function Node_Pixel_Math(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	__init_mask_modifier(2); // inputs 5, 6, 
 	
-	oprList = [ "Add", "Subtract", "Multiply", "Divide", "Power", "Root", "Sin", "Cos", "Tan", "Modulo", 
-				"Floor", "Ceil", "Round", "Abs", "Clamp" ];
-	newInput(7, nodeValue_Enum_Scroll("Operator", self, 0, oprList));
+	newInput(7, nodeValue_Enum_Scroll("Operator", self, 0, global.node_math_scroll));
 	
 	newInput(8, nodeValue_Vec4("Operand", self, [ 0, 0, 0, 0 ]));
 	
@@ -27,11 +36,14 @@ function Node_Pixel_Math(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	newInput(11, nodeValue_Surface("Operand surface", self));
 	
+	newInput(12, nodeValue_Float("Mix", self, .5))
+		.setDisplay(VALUE_DISPLAY.slider);
+	
 	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 1, 4, 
 		["Surfaces",  false], 0, 2, 3, 5, 6, 
-		["Operation", false], 7, 10, 8, 9, 11, 
+		["Operation", false], 7, 10, 8, 9, 12, 11, 
 	]
 	
 	attribute_surface_depth();
@@ -46,54 +58,41 @@ function Node_Pixel_Math(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		var op2  = _data[9];
 		var opType = _data[10];
 		var opS    = _data[11];
+		var mixAmo = _data[12];
 		
-		var _oprand = oprList[type];
+		var _oprand = global.node_math_scroll[type];
 		setDisplayName(_oprand);
 		
+		inputs[ 8].setVisible(false);
+		inputs[ 9].setVisible(false);
+		inputs[11].setVisible(opType, opType);
+		inputs[12].setVisible(type == MATH_OPERATOR.lerp);
+		
 		if(opType == 0) {
-			switch(_oprand) {
-				case "Add" :
-				case "Subtract" :
-				case "Multiply" :
-				case "Divide" :
-				case "Power" :
-				case "Root" :
-				case "Modulo" :
+			switch(type) {
+				case MATH_OPERATOR.add      :
+				case MATH_OPERATOR.subtract :
+				case MATH_OPERATOR.multiply :
+				case MATH_OPERATOR.divide   :
+				case MATH_OPERATOR.power    :
+				case MATH_OPERATOR.root     :
+				case MATH_OPERATOR.modulo   :
+				case MATH_OPERATOR.snap     :
 					inputs[8].setVisible( true);
-					inputs[9].setVisible(false);
 					break;
 					
-				case "Sin" :
-				case "Cos" :
-				case "Tan" :
-				
-				case "Floor" :
-				case "Ceil" :
-				case "Round" :
-				case "Abs" :
-					inputs[8].setVisible(false);
-					inputs[9].setVisible(false);
-					break;
-					
-				case "Clamp" :
-					inputs[8].setVisible(false);
+				case MATH_OPERATOR.clamp :
 					inputs[9].setVisible( true);
 					break;
 					
 			}
-			
-			inputs[11].setVisible(false, false);
-			
-		} else {
-			inputs[ 8].setVisible(false);
-			inputs[ 9].setVisible(false);
-			inputs[11].setVisible(true, true);
 		}
 		
 		surface_set_shader(_outSurf, sh_pixel_math);
 			shader_set_i("operator", type);
 			
 			shader_set_i("operandType", opType );
+			shader_set_f("mixAmount",   mixAmo );
 			shader_set_surface("operandSurf", opS );
 			shader_set_4("operand",  _oprand == "Clamp"? [ op2[0], op2[1], 0, 0]  : op4 );
 			

@@ -1,7 +1,7 @@
 {
   "$GMShader":"",
-  "%Name":"sh_tiler_autotile_mask",
-  "name":"sh_tiler_autotile_mask",
+  "%Name":"sh_tiler_autoterrain_apply",
+  "name":"sh_tiler_autoterrain_apply",
   "parent":{
     "name":"shaders",
     "path":"folders/nodes/data/tiler/shaders.yy",

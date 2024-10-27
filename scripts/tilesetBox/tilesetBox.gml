@@ -2,11 +2,14 @@ function tilesetBox(_junction) : widget() constructor {
 	self.junction = _junction;
 	
     b_newTileset = button(function() /*=>*/ { 
-    	var b = nodeBuild("Node_Tile_Tileset", junction.node.x - 160, junction.node.y);
+    	var b = nodeBuild("Node_Tile_Tileset", junction.node.x - 160, junction.ry - 32);
     	junction.setFrom(b.outputs[0]);
 	});
 	
-	b_newTileset.text = __txt("New tileset");
+	b_newTileset.text       = __txt("New tileset");
+	b_newTileset.icon       = THEME.add_16;
+	b_newTileset.icon_size  = .75;
+	b_newTileset.icon_blend = COLORS._main_value_positive;
     
 	static trigger = function() { }
 	
@@ -27,11 +30,38 @@ function tilesetBox(_junction) : widget() constructor {
             b_newTileset.drawParam(param);
             
         } else {
-            draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, x, y, w, h, COLORS._main_icon_light);
+           var ic = s_node_tileset;
+        	
+        	switch(instanceof(_tileset)) {
+        		case "Node_Tile_Tileset" : ic = s_node_tileset; break;
+        	}
+        	
+        	var iw = ui(24);
+        	var _s = (iw - ui(8)) / max(sprite_get_width(ic), sprite_get_height(ic));
+        	var bi = 0;
+        	
+        	if(ihover && point_in_rectangle(_m[0], _m[1], x, y, x + iw, y + h)) {
+        		TOOLTIP = __txt("Go to node");
+        		bi = 1;
+        		
+        		if(mouse_click(mb_left, iactive))
+        			bi = 2;
+        			
+        		if(mouse_press(mb_left, iactive))
+        			PANEL_GRAPH.setFocusingNode(_tileset);
+        	}
+        	
+        	draw_sprite_stretched_ext(THEME.button_def, bi, x, y, iw, h);
+        	
+            draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, x + iw + ui(4), y, w - iw - ui(4), h, COLORS._main_icon_light);
+            draw_sprite_ext(ic, 0, x + iw / 2, y + h / 2, _s, _s);
+            
+            draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text_sub);
+	        draw_text_add(x + iw + ui(4 + 8), y + h / 2, _tileset.getDisplayName());
         }
         
 		return h;
 	}
 	
-	static clone = function() { return new outputBox(); }
+	static clone = function() { return new tilesetBox(); }
 }

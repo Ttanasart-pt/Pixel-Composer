@@ -15,7 +15,7 @@ function tiler_tool_shape(node, _brush, _shape) : tiler_tool(node) constructor {
 		mouse_cur_x = floor(round((_mx - _x) / _s - 0.5) / tile_size[0]);
 		mouse_cur_y = floor(round((_my - _y) / _s - 0.5) / tile_size[1]);
 		
-		var _auto = brush.autotiler;
+		var _auto = brush.autoterrain;
 		
 		if(mouse_holding && key_mod_press(SHIFT)) {
 			var ww = mouse_cur_x - mouse_pre_x;

@@ -162,10 +162,17 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var _distType = current_data[6];
 		var _hov = false;
 		
-		if(_distType < 3) { var hv = inputs[5].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); active &= !hv; _hov |= hv; }
+		if(_distType <  3) { var hv = inputs[ 5].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); active &= !hv; _hov |= hv; }
+		if(_distType == 4) { var hv = inputs[19].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); active &= !hv; _hov |= hv; }
+		
 		var hv = inputs[29].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, current_data[1]); active &= !hv; _hov |= hv;
 		
 		return _hov;
+	}
+	
+	static getTool = function() { 
+		var _path = getInputData(19);
+		return is_instanceof(_path, Node)? _path : self; 
 	}
 	
 	static onValueUpdate = function(index) {

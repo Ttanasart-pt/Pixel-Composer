@@ -276,6 +276,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
             highlight       : false,
             
             show_control    : false,
+            show_tooltip    : true, 
         }
         
         connection_param  = new connectionParameter();
@@ -692,6 +693,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         _blend.inputs[0].setFrom(_outp);
         _blend.inputs[1].setFrom(_canvas.outputs[0]);
     }
+    
+    function setFocusingNode(_node) { nodes_selecting = [ _node ]; return self; }
     
     function getFocusingNode() { return array_empty(nodes_selecting)? noone : nodes_selecting[0]; }
     
@@ -2647,43 +2650,45 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         
         ////////////////////////////////// Tooltip Overlay //////////////////////////////////
         
-        var _over = variable_struct_get_names(tooltip_overlay);
-        if(!array_empty(_over)) {
-        	var _tx    = ui(16);
-        	var _ty    = h - toolbar_height - ui(10);
-        	
-        	for( var j = 0, m = array_length(_over); j < m; j++ ) {
-        		var _title = _over[j];
-	        	var _keys  = tooltip_overlay[$ _title];
+        if(display_parameter.show_tooltip) {
+	        var _over = variable_struct_get_names(tooltip_overlay);
+	        if(!array_empty(_over)) {
+	        	var _tx    = ui(16);
+	        	var _ty    = h - toolbar_height - ui(10);
 	        	
-	        	draw_set_text(f_p2, fa_left, fa_bottom, COLORS._main_text);
-				
-				var _tw = 0;
-				for( var i = 0, n = array_length(_keys); i < n; i++ ) 
-					_tw = max(_tw, string_width(_keys[i][0]));
-				var _ttx = _tx + _tw + ui(16);
-				
-				for( var i = array_length(_keys) - 1; i >= 0; i-- ) {
-					draw_set_color(COLORS._main_icon);
-					draw_set_alpha(0.5);
-					draw_text_add(_tx, _ty, _keys[i][0]);
+	        	for( var j = 0, m = array_length(_over); j < m; j++ ) {
+	        		var _title = _over[j];
+		        	var _keys  = tooltip_overlay[$ _title];
+		        	
+		        	draw_set_text(f_p2, fa_left, fa_bottom, COLORS._main_text);
 					
-					draw_set_color(COLORS._main_text);
-					draw_set_alpha(0.5);
-					draw_text_add(_ttx, _ty, _keys[i][1]);
+					var _tw = 0;
+					for( var i = 0, n = array_length(_keys); i < n; i++ ) 
+						_tw = max(_tw, string_width(_keys[i][0]));
+					var _ttx = _tx + _tw + ui(16);
 					
-					_ty -= line_get_height();
-				}
+					for( var i = array_length(_keys) - 1; i >= 0; i-- ) {
+						draw_set_color(COLORS._main_icon);
+						draw_set_alpha(0.5);
+						draw_text_add(_tx, _ty, _keys[i][0]);
+						
+						draw_set_color(COLORS._main_text);
+						draw_set_alpha(0.5);
+						draw_text_add(_ttx, _ty, _keys[i][1]);
+						
+						_ty -= line_get_height();
+					}
+					
+					_ty -= ui(4);
+					draw_set_text(f_p1b, fa_left, fa_bottom, COLORS._main_text);
+					draw_set_alpha(0.5);
+					draw_text_add(_tx, _ty, _title);
+					
+					_ty -= line_get_height() + ui(8);
+	        	}
 				
-				_ty -= ui(4);
-				draw_set_text(f_p1b, fa_left, fa_bottom, COLORS._main_text);
-				draw_set_alpha(0.5);
-				draw_text_add(_tx, _ty, _title);
-				
-				_ty -= line_get_height() + ui(8);
-        	}
-			
-			draw_set_alpha(1);
+				draw_set_alpha(1);
+	        }
         }
         
         tooltip_overlay = {};

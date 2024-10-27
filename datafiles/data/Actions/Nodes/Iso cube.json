@@ -11,7 +11,7 @@
                          { "index": "orthographic_scale", "value": 0.5 }, 
                          { "index": "postioning_mode", "value": 2 }, 
                          { "index": "horizontal_angle", "value": 45 }, 
-                         { "index": "vertical_angle", "value": 30 },
+                         { "index": "vertical_angle", "value": 35.264 },
                          { "index": "l1_h_angle", "value": 0 },
                          { "index": "l1_v_angle", "value": 75 },
                          { "index": "l2_intensity", "value": 0 }

@@ -1,3 +1,13 @@
+function buffer_verify(buffer, _size, buffer_kind = buffer_fixed) {
+	if(buffer <= 0)            return buffer_create(_size, buffer_kind, 1);
+	if(!buffer_exists(buffer)) return buffer_create(_size, buffer_kind, 1);
+	
+	var _s = buffer_get_size(buffer);
+	if(_s != _size) buffer_resize(buffer, _size);
+	
+	return buffer;
+}
+
 function buffer_get_color(buffer, _x, _y, w, h) {
 	buffer_seek(buffer, buffer_seek_start, (w * _y + _x) * 4);
 	var c = buffer_read(buffer, buffer_u32);
@@ -45,13 +55,13 @@ function buffer_from_string(str) {
 	return _b;
 }
 
-function buffer_from_surface(surface, header = true) {
+function buffer_from_surface(surface, header = true, buffer_kind = buffer_fixed) {
 	static header_length = 24;
 	if(!is_surface(surface)) return noone;
 	
 	var bitSize = surface_format_get_bytes(surface_get_format(surface));
 	
-	var _b = buffer_create((header_length * header) + surface_get_width_safe(surface) * surface_get_height_safe(surface) * bitSize, buffer_fixed, 1);
+	var _b = buffer_create((header_length * header) + surface_get_width_safe(surface) * surface_get_height_safe(surface) * bitSize, buffer_kind, 1);
 	if(header) {
 		buffer_write(_b, buffer_text, "PXCS");
 		buffer_write(_b, buffer_u16, surface_get_width_safe(surface));

@@ -111,7 +111,7 @@ event_inherited();
 				if(sc_content.hover && point_in_rectangle(_m[0], _m[1], 0, _ly, _dw, _ly + hght - 1)) {
 					sc_content.hover_content = true;
 					selecting = i;
-					hov       = i;
+					hov       = _val;
 				}
 			
 				if(selecting == i) {
@@ -158,7 +158,7 @@ event_inherited();
 		if(update_hover) {
 			UNDO_HOLDING = true;
 			
-			     if(hov != noone) scrollbox.onModify(hov);
+			     if(hov != noone) scrollbox.onModify(array_find(scrollbox.data, hov));
 			else if(initVal > -1) scrollbox.onModify(initVal);
 				
 			UNDO_HOLDING = false;

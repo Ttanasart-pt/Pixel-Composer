@@ -4,7 +4,7 @@ function surface_reset_target_override() { __surface_reset_target(); winwin_draw
 
 #region ==================================== DRAW ====================================
 
-	function draw_surface_safe(surface, _x = 0, _y = 0) { #region
+	function draw_surface_safe(surface, _x = 0, _y = 0) {
 		INLINE
 	
 		if(is_struct(surface)) {
@@ -19,9 +19,9 @@ function surface_reset_target_override() { __surface_reset_target(); winwin_draw
 		__channel_pre(surface);
 			draw_surface(surface, _x, _y);
 		__channel_pos(surface);
-	} #endregion
+	}
 
-	function draw_surface_stretched_safe(surface, _x, _y, _w, _h) { #region
+	function draw_surface_stretched_safe(surface, _x, _y, _w, _h) {
 		INLINE
 	
 		if(is_struct(surface)) {
@@ -36,9 +36,9 @@ function surface_reset_target_override() { __surface_reset_target(); winwin_draw
 		__channel_pre(surface);
 			draw_surface_stretched(surface, _x, _y, _w, _h);
 		__channel_pos(surface);
-	} #endregion
+	}
 
-	function draw_surface_ext_safe(surface, _x = 0, _y = 0, _xs = 1, _ys = 1, _rot = 0, _col = c_white, _alpha = 1) { #region
+	function draw_surface_ext_safe(surface, _x = 0, _y = 0, _xs = 1, _ys = 1, _rot = 0, _col = c_white, _alpha = 1) {
 		INLINE
 	
 		if(is_struct(surface)) {
@@ -54,9 +54,9 @@ function surface_reset_target_override() { __surface_reset_target(); winwin_draw
 		__channel_pre(surface);
 			draw_surface_ext(surface, _x, _y, _xs, _ys, _rot, _col, _alpha);
 		__channel_pos(surface);
-	} #endregion
+	}
 
-	function draw_surface_tiled_safe(surface, _x = 0, _y = 0) { #region
+	function draw_surface_tiled_safe(surface, _x = 0, _y = 0) {
 		INLINE
 	
 		if(is_struct(surface)) {
@@ -71,9 +71,9 @@ function surface_reset_target_override() { __surface_reset_target(); winwin_draw
 		__channel_pre(surface);
 			draw_surface_tiled(surface, _x, _y);
 		__channel_pos(surface);
-	} #endregion
+	}
 
-	function draw_surface_tiled_ext_safe(surface, _x = 0, _y = 0, _xs = 1, _ys = 1, _rot = 0, _col = c_white, _alpha = 1) { #region
+	function draw_surface_tiled_ext_safe(surface, _x = 0, _y = 0, _xs = 1, _ys = 1, _rot = 0, _col = c_white, _alpha = 1) {
 		INLINE
 	
 		if(is_struct(surface)) {
@@ -97,30 +97,30 @@ function surface_reset_target_override() { __surface_reset_target(); winwin_draw
 		
 			draw_surface_stretched_ext(surface, 0, 0, bdim[0], bdim[1], _col, _alpha);
 		shader_reset();
-	} #endregion
-
-	function draw_surface_part_ext_safe(surface, _l, _t, _w, _h, _x, _y, _xs = 1, _ys = 1, _rot = 0, _col = c_white, _alpha = 1) { #region
-	INLINE
-	
-	if(is_struct(surface)) {
-		if(is_instanceof(surface, dynaSurf)) {
-			surface.drawPart(_l, _t, _w, _h, _x, _y, _xs, _ys, _rot, _col, _alpha);
-			return;
-		} else if(is_instanceof(surface, SurfaceAtlas))
-			surface = surface.getSurface();
 	}
-	if(is_array(surface) || !surface_exists(surface)) return;
-	
-	__channel_pre(surface);
-		draw_surface_part_ext(surface, _l, _t, _w, _h, _x, _y, _xs, _ys, _col, _alpha);
-	__channel_pos(surface);
-} #endregion
+
+	function draw_surface_part_ext_safe(surface, _l, _t, _w, _h, _x, _y, _xs = 1, _ys = 1, _rot = 0, _col = c_white, _alpha = 1) {
+		INLINE
 		
+		if(is_struct(surface)) {
+			if(is_instanceof(surface, dynaSurf)) {
+				surface.drawPart(_l, _t, _w, _h, _x, _y, _xs, _ys, _rot, _col, _alpha);
+				return;
+			} else if(is_instanceof(surface, SurfaceAtlas))
+				surface = surface.getSurface();
+		}
+		if(is_array(surface) || !surface_exists(surface)) return;
+		
+		__channel_pre(surface);
+			draw_surface_part_ext(surface, _l, _t, _w, _h, _x, _y, _xs, _ys, _col, _alpha);
+		__channel_pos(surface);
+	}
+
 #endregion ==================================== DRAW ====================================
 
 #region ==================================== CHECK ===================================
 
-	function is_surface(s) { #region
+	function is_surface(s) {
 		INLINE
 		
 		return !is_array(s) && (
@@ -129,16 +129,16 @@ function surface_reset_target_override() { __surface_reset_target(); winwin_draw
 			(is_numeric(s) && s > 0 && surface_exists(s))
 		);
 		
-	} #endregion
+	}
 
-	function surface_verify(surf, w, h, format = surface_rgba8unorm) { #region
+	function surface_verify(surf, w, h, format = surface_rgba8unorm) {
 		INLINE
 	
 		if(!is_surface(surf)) return surface_create_valid(w, h, format);
 		return surface_size_to(surf, w, h, format, true);
-	} #endregion
+	}
 
-	function surface_valid(surf, w, h, format = surface_rgba8unorm) { #region
+	function surface_valid(surf, w, h, format = surface_rgba8unorm) {
 		INLINE
 		
 		if(!is_surface(surf)) return false;
@@ -146,14 +146,14 @@ function surface_reset_target_override() { __surface_reset_target(); winwin_draw
 		var _sh = surface_get_height(surf);
 		var _f  = surface_get_format(surf);
 	
-	return _sw == w && _sh == h && _f == format;
-} #endregion
+		return _sw == w && _sh == h && _f == format;
+	}
 
 #endregion ==================================== CHECK ====================================
 
 #region ==================================== GET =====================================
 
-	function surface_get_width_safe(s, crop = true) { #region
+	function surface_get_width_safe(s, crop = true) {
 		INLINE
 	
 		if(!is_surface(s)) return 1;
@@ -164,9 +164,9 @@ function surface_reset_target_override() { __surface_reset_target(); winwin_draw
 		}
 	
 		return surface_get_width(s);
-	} #endregion
+	}
 
-	function surface_get_height_safe(s, crop = true) { #region
+	function surface_get_height_safe(s, crop = true) {
 		INLINE
 	
 		if(!is_surface(s)) return 1;
@@ -177,9 +177,9 @@ function surface_reset_target_override() { __surface_reset_target(); winwin_draw
 		}
 	
 		return surface_get_height(s);
-	} #endregion
+	}
 
-	function surface_get_format_safe(s, crop = true) { #region
+	function surface_get_format_safe(s, crop = true) {
 		INLINE
 	
 		if(is_struct(s)) {
@@ -189,16 +189,16 @@ function surface_reset_target_override() { __surface_reset_target(); winwin_draw
 		}
 	
 		return surface_get_format(s);
-	} #endregion
+	}
 
-	function surface_get_dimension(s) { #region
+	function surface_get_dimension(s) {
 		INLINE
 	
 		if(!is_surface(s)) return [ 1, 1 ];
 		return [ surface_get_width_safe(s), surface_get_height_safe(s) ];
-	} #endregion
+	}
 
-	function surface_get_pixel(surface, _x, _y) { #region
+	function surface_get_pixel(surface, _x, _y) {
 		INLINE
 	
 		if(!is_surface(surface)) return;
@@ -223,9 +223,9 @@ function surface_reset_target_override() { __surface_reset_target(); winwin_draw
 				   merge_color(p2, p3, rx),
 		       ry);
 	
-	} #endregion
+	}
 
-	function surface_get_pixel_ext(surface, _x, _y) { #region
+	function surface_get_pixel_ext(surface, _x, _y) {
 		INLINE
 		
 		if(is_instanceof(surface, SurfaceAtlas)) surface = surface.surface.get();
@@ -234,42 +234,42 @@ function surface_reset_target_override() { __surface_reset_target(); winwin_draw
 	
 		if(is_numeric(px)) return int64(px);
 		return round(px[0] * (255 * power(256, 0))) + round(px[1] * (255 * power(256, 1))) + round(px[2] * (255 * power(256, 2))) + round(px[3] * (255 * power(256, 3)));
-	} #endregion
+	}
 
 #endregion ==================================== GET ====================================
 
 #region =================================== CREATE ===================================
 
-	function surface_create_empty(w, h, format = surface_rgba8unorm) { #region
+	function surface_create_empty(w, h, format = surface_rgba8unorm) {
 		INLINE
 	
 		var s = surface_create(w, h, format);
 		surface_clear(s);
 		return s;
-	} #endregion
+	}
 
-	function surface_create_size(surface, format = surface_rgba8unorm) { #region
+	function surface_create_size(surface, format = surface_rgba8unorm) {
 		INLINE
 	
 		return surface_create_valid(surface_get_width_safe(surface), surface_get_height_safe(surface), format);
-	} #endregion
+	}
 
-	function surface_create_valid(w, h, format = surface_rgba8unorm) { #region
+	function surface_create_valid(w, h, format = surface_rgba8unorm) {
 		INLINE
 	
 		return surface_create_empty(surface_valid_size(w), surface_valid_size(h), format);
-	} #endregion
+	}
 
-	function surface_create_from_buffer(w, h, buff, format = surface_rgba8unorm) { #region
+	function surface_create_from_buffer(w, h, buff, format = surface_rgba8unorm) {
 		INLINE
 	
 		if(buff < 0) return;
 		var s = surface_create_valid(surface_valid_size(w), surface_valid_size(h), format);
 		buffer_set_surface(buff, s, 0);
 		return s;
-	} #endregion
+	}
 
-	function surface_from_buffer(buff) { #region
+	function surface_from_buffer(buff) {
 		static header_length = 24;
 		
 		if(!buffer_exists(buff))					return noone;
@@ -288,9 +288,9 @@ function surface_reset_target_override() { __surface_reset_target(); winwin_draw
 		var s = surface_create(w, h, format);
 		buffer_set_surface(buff, s, header_length);
 		return s;
-	} #endregion
+	}
 
-	function surface_create_from_sprite(spr) { #region
+	function surface_create_from_sprite(spr) {
 		if(!sprite_exists(spr)) return noone;
 	
 		if(sprite_get_number(spr) == 1)
@@ -302,9 +302,9 @@ function surface_reset_target_override() { __surface_reset_target(); winwin_draw
 		}
 	
 		return s;
-	} #endregion
+	}
 
-	function surface_create_from_sprite_ext(spr, ind, format = surface_rgba8unorm) { #region
+	function surface_create_from_sprite_ext(spr, ind, format = surface_rgba8unorm) {
 		if(!sprite_exists(spr)) return noone;
 		var sw = sprite_get_width(spr);
 		var sh = sprite_get_height(spr);
@@ -318,9 +318,9 @@ function surface_reset_target_override() { __surface_reset_target(); winwin_draw
 		surface_reset_target();
 	
 		return s;
-	} #endregion
+	}
 
-	function surface_size_lim(surface, width, height) { #region
+	function surface_size_lim(surface, width, height) {
 		var sw = surface_get_width_safe(surface);
 		var sh = surface_get_height_safe(surface);
 		if(sw <= width && sh <= height) return surface;
@@ -332,9 +332,9 @@ function surface_reset_target_override() { __surface_reset_target(); winwin_draw
 		draw_surface_ext_safe(surface, 0, 0, ss, ss, 0, c_white, 1);
 		surface_reset_target();
 		return s;
-	} #endregion
+	}
 
-	function surface_size_to(surface, width, height, format = noone, skipCheck = false) { #region
+	function surface_size_to(surface, width, height, format = noone, skipCheck = false) {
 		INLINE 
 		if(!skipCheck && !is_surface(surface))			return surface;
 		if(!is_numeric(width) || !is_numeric(height))	return surface;
@@ -357,18 +357,18 @@ function surface_reset_target_override() { __surface_reset_target(); winwin_draw
 		//surface_clear(surface);
 	
 		return surface;
-	} #endregion
+	}
 
-	function surface_clear(surface) { #region
+	function surface_clear(surface) {
 		INLINE
 	
 		if(!is_surface(surface)) return;
 		surface_set_target(surface);
 			DRAW_CLEAR
 		surface_reset_target();
-	} #endregion
+	}
 
-	function surface_copy_from(dst, src, format = noone) { #region
+	function surface_copy_from(dst, src, format = noone) {
 		INLINE
 	
 		surface_set_target(dst);
@@ -377,9 +377,9 @@ function surface_reset_target_override() { __surface_reset_target(); winwin_draw
 			draw_surface_safe(src);
 		BLEND_NORMAL
 		surface_reset_target();
-	} #endregion
+	}
 
-	function surface_clone(surface, destination = noone, format = noone) { #region
+	function surface_clone(surface, destination = noone, format = noone) {
 		INLINE
 	
 		if(is_struct(surface) && is_instanceof(surface, dynaSurf)) 
@@ -396,13 +396,13 @@ function surface_reset_target_override() { __surface_reset_target(); winwin_draw
 		surface_reset_target();
 	
 		return destination;
-	} #endregion
+	}
 
 #endregion ==================================== CREATE ====================================
 
 #region =================================== MODIFY ===================================
 
-	function surface_stretch(surf, _w, _h) { #region
+	function surface_stretch(surf, _w, _h) {
 		INLINE
 	
 		if(!is_surface(surf)) return noone;
@@ -418,9 +418,9 @@ function surface_reset_target_override() { __surface_reset_target(); winwin_draw
 	
 		surface_free(surf);
 		return _surf;
-	} #endregion
+	}
 
-	function surface_mirror(surf, _h, _v) { #region
+	function surface_mirror(surf, _h, _v) {
 		INLINE
 	
 		if(!is_surface(surf)) return noone;
@@ -437,9 +437,9 @@ function surface_reset_target_override() { __surface_reset_target(); winwin_draw
 		surface_free(surf);
 	
 		return _surf;
-	} #endregion
+	}
 
-	function surface_project_posterize(surf) { #region
+	function surface_project_posterize(surf) {
 		INLINE
 	
 		if(!PROJECT.attributes.palette_fix) return surf;
@@ -458,13 +458,13 @@ function surface_reset_target_override() { __surface_reset_target(); winwin_draw
 		surface_free(surf);
 	
 		return _surf;
-	} #endregion
+	}
 
 #endregion ==================================== MODIFY ====================================
 
 #region =================================== OTHERS ===================================
 
-	function surface_copy_size(dest, source, format = noone) { #region
+	function surface_copy_size(dest, source, format = noone) {
 		INLINE
 	
 		if(!is_surface(dest))   return;
@@ -476,17 +476,17 @@ function surface_reset_target_override() { __surface_reset_target(); winwin_draw
 		surface_reset_target();
 	
 		surface_copy_from(dest, source);
-	} #endregion
+	}
 
-	function surface_valid_size(s) { #region
+	function surface_valid_size(s) {
 		INLINE
 	
 		if(!is_numeric(s)) return 1;
 		if(is_infinity(s)) return 1;
 		return clamp(round(s), 1, 8192);
-	} #endregion
+	}
 
-	function surface_array_free(arr) { #region
+	function surface_array_free(arr) {
 		INLINE
 	
 		if(!is_array(arr)) {
@@ -496,9 +496,9 @@ function surface_reset_target_override() { __surface_reset_target(); winwin_draw
 	
 		for( var i = 0, n = array_length(arr); i < n; i++ ) 
 			surface_array_free(arr[i]);
-	} #endregion
+	}
 
-	function surface_array_clone(arr) { #region
+	function surface_array_clone(arr) {
 		if(!is_array(arr)) {
 			if(is_surface(arr)) 
 				return surface_clone(arr);
@@ -512,83 +512,9 @@ function surface_reset_target_override() { __surface_reset_target(); winwin_draw
 			_arr[i] = surface_array_clone(arr[i]);
 	
 		return _arr;
-	} #endregion
+	}
 
-	function surface_array_serialize(arr) { #region
-		INLINE
-	
-		var _arr = __surface_array_serialize(arr);
-		return json_stringify(_arr);
-	} #endregion
-
-	function __surface_array_serialize(arr) { #region
-		if(!is_array(arr)) {
-			if(is_surface(arr)) {
-				var buff = buffer_create(surface_get_width_safe(arr) * surface_get_height_safe(arr) * 4, buffer_fixed, 1);
-				buffer_get_surface(buff, arr, 0);
-				var comp = buffer_compress(buff, 0, buffer_get_size(buff));
-				var enc  = buffer_base64_encode(comp, 0, buffer_get_size(comp));
-				buffer_delete(buff);
-				return { width: surface_get_width_safe(arr), height: surface_get_height_safe(arr), buffer: enc };
-			} else
-				return arr;
-		}
-	
-		var _arr = [];
-	
-		for( var i = 0, n = array_length(arr); i < n; i++ ) 
-			_arr[i] = __surface_array_serialize(arr[i]);
-	
-		return _arr;
-	} #endregion
-
-	function surface_array_deserialize(arr, index = -1) { #region
-		INLINE
-	
-		var _arr = json_try_parse(arr);
-		return index == -1? __surface_array_deserialize(_arr) : __surface_array_deserialize(_arr[index]);
-	} #endregion
-	
-	function __surface_array_deserialize(arr) { #region
-		if(!is_array(arr)) {
-			if(!is_struct(arr) || !struct_has(arr, "buffer")) 
-				return noone;
-			
-			var buff = buffer_base64_decode(arr.buffer);
-			    buff = buffer_decompress(buff);
-			return surface_create_from_buffer(arr.width, arr.height, buff);
-		}
-	
-		var _arr = [];
-	
-		for( var i = 0, n = array_length(arr); i < n; i++ ) 
-			_arr[i] = __surface_array_deserialize(arr[i]);
-	
-		return _arr;
-	} #endregion
-
-	function surface_encode(surface, stringify = true) { #region
-		if(is_instanceof(surface, SurfaceAtlas)) surface = surface.surface.get();
-		if(is_array(surface) || !surface_exists(surface)) return "";
-	
-		var buff = buffer_create(surface_get_width_safe(surface) * surface_get_height_safe(surface) * 4, buffer_fixed, 1);
-		
-		buffer_get_surface(buff, surface, 0);
-		var comp = buffer_compress(buff, 0, buffer_get_size(buff));
-		var enc  = buffer_base64_encode(comp, 0, buffer_get_size(comp));
-		var str  = { width: surface_get_width_safe(surface), height: surface_get_height_safe(surface), buffer: enc };
-		buffer_delete(buff);
-		
-		return stringify? json_stringify(str) : str;
-	} #endregion
-
-	function surface_decode(_struct) { #region
-		var buff = buffer_base64_decode(_struct.buffer);
-		var buff = buffer_decompress(buff);
-		return surface_create_from_buffer(_struct.width, _struct.height, buff);
-	} #endregion
-
-	function surface_format_get_bytes(format) { #region
+	function surface_format_get_bytes(format) {
 		switch(format) {
 			case surface_rgba4unorm :  return 4 * 0.5; break;
 			case surface_rgba8unorm :  return 4 * 1; break;
@@ -600,35 +526,35 @@ function surface_reset_target_override() { __surface_reset_target(); winwin_draw
 			case surface_r32float : return 1 * 3; break;
 		}
 		return 1;
-	} #endregion
+	}
 
-	function surface_get_size(surface) { #region
+	function surface_get_size(surface) {
 		INLINE
 	
 		var sw = surface_get_width_safe(surface);
 		var sh = surface_get_height_safe(surface);
 		var sz = sw * sh * surface_format_get_bytes(surface_get_format(surface));
 		return sz;
-	} #endregion
+	}
 
-	function surface_texture(surface) { #region
+	function surface_texture(surface) {
 		INLINE
 	
 		if(!is_surface(surface)) return -1;
 		return surface_get_texture(surface);
-	} #endregion
+	}
 
 	#macro surface_free surface_free_safe
 	#macro __surface_free surface_free 
 
-	function surface_free_safe(surface) { #region
+	function surface_free_safe(surface) {
 		INLINE
 	
 		if(!is_surface(surface)) return;
 		__surface_free(surface);
-	} #endregion
+	}
 
-	function surface_save_safe(surface, path) { #region
+	function surface_save_safe(surface, path) {
 		if(!is_surface(surface)) return;
 		
 		     if(is_instanceof(surface, SurfaceAtlas))     surface = surface.surface.get();
@@ -671,32 +597,124 @@ function surface_reset_target_override() { __surface_reset_target(); winwin_draw
 		surface_save(s, path);
 		surface_free(s);
 		return;
-	} #endregion
-
-	function surface_cvt_8unorm(target, surface) { #region
-	if(!is_surface(surface)) return target;
-	
-	target = surface_verify(target, surface_get_width_safe(surface), surface_get_height_safe(surface));
-	var _typ = surface_get_format(surface);
-	
-	switch(_typ) {
-		case surface_rgba4unorm  :
-		case surface_rgba8unorm	 :
-		case surface_rgba16float :
-		case surface_rgba32float :
-			surface_set_shader(target, sh_draw_normal);
-			break;
-		case surface_r8unorm	 :	
-		case surface_r16float	 :	
-		case surface_r32float	 :	
-			surface_set_shader(target, sh_draw_single_channel);
-			break;
 	}
-			
-	draw_surface_safe(surface);
-	surface_reset_shader();
-	
-	return target;
-} #endregion
+
+	function surface_cvt_8unorm(target, surface) {
+		if(!is_surface(surface)) return target;
+		
+		target = surface_verify(target, surface_get_width_safe(surface), surface_get_height_safe(surface));
+		var _typ = surface_get_format(surface);
+		
+		switch(_typ) {
+			case surface_rgba4unorm  :
+			case surface_rgba8unorm	 :
+			case surface_rgba16float :
+			case surface_rgba32float :
+				surface_set_shader(target, sh_draw_normal);
+				break;
+			case surface_r8unorm	 :	
+			case surface_r16float	 :	
+			case surface_r32float	 :	
+				surface_set_shader(target, sh_draw_single_channel);
+				break;
+		}
+				
+		draw_surface_safe(surface);
+		surface_reset_shader();
+		
+		return target;
+	}
 
 #endregion =================================== OTHERS ===================================
+
+#region ================================= SERIALIZE ==================================
+
+	function surface_array_serialize(arr) {
+		INLINE
+	
+		var _arr = __surface_array_serialize(arr);
+		return json_stringify(_arr);
+	}
+
+	function __surface_array_serialize(arr) {
+		if(!is_array(arr)) {
+			if(is_surface(arr)) {
+				var buff = buffer_create(surface_get_width_safe(arr) * surface_get_height_safe(arr) * 4, buffer_fixed, 1);
+				buffer_get_surface(buff, arr, 0);
+				var comp = buffer_compress(buff, 0, buffer_get_size(buff));
+				var enc  = buffer_base64_encode(comp, 0, buffer_get_size(comp));
+				buffer_delete(buff);
+				return { width: surface_get_width_safe(arr), height: surface_get_height_safe(arr), buffer: enc };
+			} else
+				return arr;
+		}
+	
+		var _arr = [];
+	
+		for( var i = 0, n = array_length(arr); i < n; i++ ) 
+			_arr[i] = __surface_array_serialize(arr[i]);
+	
+		return _arr;
+	}
+
+	function surface_array_deserialize(arr, index = -1) {
+		INLINE
+	
+		var _arr = json_try_parse(arr);
+		return index == -1? __surface_array_deserialize(_arr) : __surface_array_deserialize(_arr[index]);
+	}
+	
+	function __surface_array_deserialize(arr) {
+		if(!is_array(arr)) {
+			if(!is_struct(arr) || !struct_has(arr, "buffer")) 
+				return noone;
+			
+			var buff = buffer_base64_decode(arr.buffer);
+			    buff = buffer_decompress(buff);
+			return surface_create_from_buffer(arr.width, arr.height, buff);
+		}
+	
+		var _arr = [];
+	
+		for( var i = 0, n = array_length(arr); i < n; i++ ) 
+			_arr[i] = __surface_array_deserialize(arr[i]);
+	
+		return _arr;
+	}
+
+	function surface_encode(surface, stringify = true) {
+		if(is_instanceof(surface, SurfaceAtlas)) surface = surface.surface.get();
+		if(is_array(surface) || !surface_exists(surface)) return "";
+	
+		var _sw  = surface_get_width_safe(surface); 
+		var _sh  = surface_get_height_safe(surface); 
+		var _sf  = surface_get_format(surface);
+		var buff = buffer_create(_sw * _sh * surface_format_get_bytes(_sf), buffer_fixed, 1);
+		
+		buffer_get_surface(buff, surface, 0);
+		var comp = buffer_compress(buff, 0, buffer_get_size(buff));
+		var enc  = buffer_base64_encode(comp, 0, buffer_get_size(comp));
+		var str  = { 
+			width: _sw, 
+			height: _sh, 
+			buffer: enc,
+			format: _sf,
+		};
+		
+		buffer_delete(buff);
+		
+		return stringify? json_stringify(str) : str;
+	}
+
+	function surface_decode(_struct) {
+		if(is_string(_struct)) _struct = json_try_parse(_struct);
+		if(!is_struct(_struct))            return noone;
+		if(!struct_has(_struct, "buffer")) return noone;
+		
+		var buff = buffer_base64_decode(_struct.buffer);
+		var buff = buffer_decompress(buff);
+		var form = struct_try_get(_struct, "format", surface_rgba8unorm);
+		return surface_create_from_buffer(_struct.width, _struct.height, buff, form);
+	}
+
+#endregion ================================= SERIALIZE =================================

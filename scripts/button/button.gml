@@ -102,16 +102,22 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 		}
 		
 		var aa = interactable * 0.25 + 0.75;
-		if(icon) {
-			var ind = is_array(icon_index)? icon_index[0]() : icon_index;
-			draw_sprite_ui_uniform(icon, ind, _x + _w / 2, _y + _h / 2, icon_size, icon_blend, aa);
-		}
+		var bx = _x + _w / 2;
 		
 		if(text != "") {
-			draw_set_alpha(aa);
-			draw_set_text(font, fa_center, fa_center, COLORS._main_text);
-			draw_text_add(_x + _w / 2, _y + _h / 2, text);
+			var tx = _x + _w / 2;
+			if(icon) tx += ui(8);
+			
+			draw_set_text(font, fa_center, fa_center, COLORS._main_text, aa);
+			draw_text_add(tx, _y + _h / 2, text);
 			draw_set_alpha(1);
+			
+			bx = tx - string_width(text) / 2 - ui(12);
+		}
+		
+		if(icon) {
+			var ind = is_array(icon_index)? icon_index[0]() : icon_index;
+			draw_sprite_ui_uniform(icon, ind, bx, _y + _h / 2, icon_size, icon_blend, aa);
 		}
 		
 		if(WIDGET_CURRENT == self) draw_sprite_stretched_ext(THEME.widget_selecting, 0, _x - ui(3), _y - ui(3), _w + ui(6), _h + ui(6), COLORS._main_accent, 1);

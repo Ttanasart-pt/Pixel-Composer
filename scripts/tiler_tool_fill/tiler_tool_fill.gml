@@ -15,7 +15,7 @@ function tiler_tool_fill(node, _brush, toolAttr) : tiler_tool(node) constructor 
 		surface_w	= surface_get_width(drawing_surface);
 		surface_h	= surface_get_height(drawing_surface);
 		
-		var _auto = brush.autotiler;
+		var _auto = brush.autoterrain;
 		
 		if(mouse_press(mb_left, active) && point_in_rectangle(mouse_cur_x, mouse_cur_y, 0, 0, surface_w - 1, surface_h - 1)) {
 			surface_set_target(drawing_surface);

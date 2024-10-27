@@ -1,8 +1,9 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-uniform int  operator;
-uniform vec4 operand;
+uniform int   operator;
+uniform vec4  operand;
+uniform float mixAmount;
 
 uniform int operandType;
 uniform sampler2D operandSurf;
@@ -72,16 +73,34 @@ void main() {
         res.a = round(res.a);
         
     } else if(operator == 13) { 
+        res.r = mix(res.r, op.r, mixAmount);
+        res.g = mix(res.g, op.g, mixAmount);
+        res.b = mix(res.b, op.b, mixAmount);
+        res.a = mix(res.a, op.a, mixAmount);
+        
+    } else if(operator == 14) { 
         res.r = abs(res.r);
         res.g = abs(res.g);
         res.b = abs(res.b);
         res.a = abs(res.a);
         
-    } else if(operator == 14) { 
+    } else if(operator == 15) { 
         res.r = clamp(res.r, op.x, op.y);
         res.g = clamp(res.g, op.x, op.y);
         res.b = clamp(res.b, op.x, op.y);
         res.a = clamp(res.a, op.x, op.y);
+        
+    } else if(operator == 16) { 
+        res.r = floor(res.r / op.r) * op.r;
+        res.g = floor(res.g / op.g) * op.g;
+        res.b = floor(res.b / op.b) * op.b;
+        res.a = floor(res.a / op.a) * op.a;
+        
+    } else if(operator == 17) { 
+        res.r = fract(res.r);
+        res.g = fract(res.g);
+        res.b = fract(res.b);
+        res.a = fract(res.a);
         
     }
     

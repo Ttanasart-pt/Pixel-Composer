@@ -5,7 +5,7 @@ function tiler_brush(node) constructor {
     brush_height  = 0;
     brush_surface = noone;
     brush_erase   = false;
-	autotiler     = noone;
+	autoterrain   = noone;
     
     brush_sizing    = false;
 	brush_sizing_s  = 0;

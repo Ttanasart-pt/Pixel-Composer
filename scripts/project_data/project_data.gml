@@ -71,6 +71,7 @@
 			highlight       : false,
 			
 			show_control    : false,
+			show_tooltip    : true,
 		}
 		
 		addons = {};

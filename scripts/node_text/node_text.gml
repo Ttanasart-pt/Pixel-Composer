@@ -139,6 +139,18 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		return random_range_seed(-1, 1, _x + seed) * __wave_ampli;
 	}
 	
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		var _hov = false;
+		var  hv  = inputs[13].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= bool(hv);
+		
+		return _hov;
+	}
+	
+	static getTool = function() { 
+		var _path = getInputData(13);
+		return is_instanceof(_path, Node)? _path : self; 
+	}
+	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var str   = _data[0], strRaw = str;
 		var _font = _data[1];

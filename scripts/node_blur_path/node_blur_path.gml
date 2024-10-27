@@ -43,6 +43,18 @@ function Node_Blur_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		__step_mask_modifier();
 	}
 	
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		var _hov = false;
+		var  hv  = inputs[1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= bool(hv);
+		
+		return _hov;
+	}
+	
+	static getTool = function() { 
+		var _path = getInputData(1);
+		return is_instanceof(_path, Node)? _path : self; 
+	}
+	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		if(!is_surface(_data[0])) return _outSurf;
 		

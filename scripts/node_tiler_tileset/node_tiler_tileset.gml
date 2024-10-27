@@ -1,9 +1,11 @@
 function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-    name = "Tileset";
+    name  = "Tileset";
+    min_h = 128;
+    bypass_grid = true;
     
     renaming       = noone;
 	rename_text    = "";
-	tb_rename = new textBox(TEXTBOX_INPUT.text, function(_name) { 
+	tb_rename      = new textBox(TEXTBOX_INPUT.text, function(_name) { 
 		if(renaming == noone) return;
 		renaming.name  = _name;
 		renaming       = noone;
@@ -39,7 +41,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    selecting_surface      = noone;
 	    selecting_surface_tile = noone;
 	    
-	    autotile_selector_mask = 0;
+	    autoterrain_selector_mask = 0;
 	    
 	    grid_draw = true;
 	    brush     = new tiler_brush(self);
@@ -90,7 +92,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    	draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _yy, _w, _tsh, COLORS.node_composite_bg_blend, 1);
 	    	tile_selector_surface  = surface_verify(tile_selector_surface,  _sw, _sh);
 	    	tile_selector_mask     = surface_verify(tile_selector_mask,     _sw, _sh);
-	    	autotile_selector_mask = surface_verify(autotile_selector_mask, _sw, _sh);
+	    	autoterrain_selector_mask = surface_verify(autoterrain_selector_mask, _sw, _sh);
 	    	
 	    	if(!is_surface(_tileSet)) return _h;
 	    	var _tdim    = surface_get_dimension(_tileSet);
@@ -156,18 +158,18 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		    		draw_rectangle_width(_tileHov_x, _tileHov_y, _tileHov_x + _tileSel_w - 1, _tileHov_y + _tileSel_h - 1, 1);
 		    		
 	    			if(mouse_press(mb_left, _focus)) {
-		    			if(autotile_subtile_selecting == noone) {
-			    			autotile_selecting = noone;
+		    			if(autoterrain_subtile_selecting == noone) {
+			    			autoterrain_selecting = noone;
 			    			animated_selecting = noone;
 			    			
 		    				tile_selecting = true;
 		    				tile_select_ss = [ _mtx, _mty ];
 		    				
 		    			} else {
-		    				autotiles[autotile_selecting].index[autotile_subtile_selecting] = _mid;
-		    				autotile_subtile_selecting++;
-		    				if(autotile_subtile_selecting >= array_length(autotiles[autotile_selecting].index))
-		    					autotile_subtile_selecting = noone;
+		    				autoterrain[autoterrain_selecting].index[autoterrain_subtile_selecting] = _mid;
+		    				autoterrain_subtile_selecting++;
+		    				if(autoterrain_subtile_selecting >= array_length(autoterrain[autoterrain_selecting].index))
+		    					autoterrain_subtile_selecting = noone;
 		    			}
 		    			
 		    			palette_using = false;
@@ -275,10 +277,10 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				draw_surface_ext(tile_selector_mask, _sx, _sy, 1, 1, 0, _cc, 1);
 			shader_reset();
 			
-			if(autotile_selecting != noone) { // autotile
-				var _att = autotiles[autotile_selecting];
+			if(autoterrain_selecting != noone) { // autoterrain
+				var _att = autoterrain[autoterrain_selecting];
 				
-		    	surface_set_target(autotile_selector_mask);
+		    	surface_set_target(autoterrain_selector_mask);
 		    		DRAW_CLEAR
 		    		
 		    		draw_set_color(c_white);
@@ -294,7 +296,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		    	
 				shader_set(sh_brush_outline);
 					shader_set_f("dimension", _sw, _sh);
-					draw_surface_ext(autotile_selector_mask, _sx, _sy, 1, 1, 0, COLORS._main_accent, 1);
+					draw_surface_ext(autoterrain_selector_mask, _sx, _sy, 1, 1, 0, COLORS._main_accent, 1);
 				shader_reset();
 			}
 			
@@ -368,15 +370,15 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    });
     #endregion
     
-    #region ++++ auto tile ++++
-    	autotiles = [];
+    #region ++++ auto terrain ++++
+    	autoterrain = [];
 		
-		autotile_selecting  = noone;
-		autotile_selector_h = 0;
+		autoterrain_selecting  = noone;
+		autoterrain_selector_h = 0;
 		
-		autotile_subtile_selecting = noone;
+		autoterrain_subtile_selecting = noone;
 		
-    	autotile_selector = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus, _panel = noone) {
+    	autoterrain_selector = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus, _panel = noone) {
 	    	var _yy = _y;
 	    	var _h  = 0;
 	    	
@@ -393,12 +395,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var _brush_tiles = brush.brush_width * brush.brush_height;
 			var _fromSel = (_brush_tiles ==  9 || _brush_tiles == 15 || _brush_tiles == 48 || _brush_tiles == 55);
 			
-			if(!_fromSel) {
-			    draw_sprite_uniform(THEME.add_16, 0, bx + bs / 2, by + bs / 2, 1, COLORS._main_icon);
-			    if(_hover && point_in_rectangle(_m[0], _m[1], bx, by, bx + bs, by + bs))
-			        TOOLTIP = "Select region with valid size for autotiling (3x3, 5x3, 12x4, 11x5).";
-			    
-			} else if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, _focus, _hover, "New autotile from selection", THEME.add_16, 0, COLORS._main_value_positive) == 2) {
+			if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, _focus, _hover, _fromSel? "New autoterrain from selection" : "New autoterrain", THEME.add_16, 0, COLORS._main_value_positive) == 2) {
 				var _new_at = noone;
 				var _indx   = array_create(brush.brush_width * brush.brush_height);
 				
@@ -406,16 +403,17 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    		for( var j = 0, m = brush.brush_width;  j < m; j++ ) 
 	    			_indx[i * brush.brush_width + j] = brush.brush_indices[i][j][0];
 	    		
-				     if(_brush_tiles ==  9) _new_at = new tiler_brush_autotile(AUTOTILE_TYPE.box9,   _indx);
-				else if(_brush_tiles == 15) _new_at = new tiler_brush_autotile(AUTOTILE_TYPE.side15, _indx);
-				else if(_brush_tiles == 48) _new_at = new tiler_brush_autotile(AUTOTILE_TYPE.top48,  _indx);
-				else if(_brush_tiles == 55) _new_at = new tiler_brush_autotile(AUTOTILE_TYPE.top55,  _indx);
+				     if(_brush_tiles ==  9) _new_at = new tiler_brush_autoterrain(AUTOTERRAIN_TYPE.box9,   _indx);
+				else if(_brush_tiles == 15) _new_at = new tiler_brush_autoterrain(AUTOTERRAIN_TYPE.side15, _indx);
+				else if(_brush_tiles == 48) _new_at = new tiler_brush_autoterrain(AUTOTERRAIN_TYPE.top48,  _indx);
+				else if(_brush_tiles == 55) _new_at = new tiler_brush_autoterrain(AUTOTERRAIN_TYPE.top55,  _indx);
+				else                        _new_at = new tiler_brush_autoterrain(AUTOTERRAIN_TYPE.box9,   _indx);
 				
-				if(_new_at != noone) {
-					autotile_selecting = array_length(autotiles);
-					animated_selecting = noone;
-					array_push(autotiles, _new_at);
-					
+				autoterrain_selecting = array_length(autoterrain);
+				animated_selecting = noone;
+				array_push(autoterrain, _new_at);
+				
+				if(!array_empty(_indx)) {
 					brush.brush_indices = [[ [ _new_at.index[0], 0 ] ]];
 	    			brush.brush_width   = 1;
 					brush.brush_height  = 1;
@@ -429,13 +427,13 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    	var _ah = _pd * 2;
 	    	var del = -1;
 	    	
-	    	draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _yy, _w, autotile_selector_h, COLORS.node_composite_bg_blend, 1);
+	    	draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _yy, _w, autoterrain_selector_h, COLORS.node_composite_bg_blend, 1);
 	    	
 	    	_yy += _pd;
 	    	
-	    	for( var i = 0, n = array_length(autotiles); i < n; i++ ) {
+	    	for( var i = 0, n = array_length(autoterrain); i < n; i++ ) {
 	    		var _hg = ui(32);
-	    		var _at = autotiles[i];
+	    		var _at = autoterrain[i];
 	    		
 	    		var _pw = ui(24);
 	    		var _ph = ui(24);
@@ -447,6 +445,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    		if(_prin == noone) {
 		    		draw_set_color(COLORS._main_icon);
 		    		draw_rectangle(_px, _py, _px + _pw, _py + _ph, true);
+		    		
 	    		} else {
 	    			var _prc = safe_mod(_prin, _tileAmo[0]);
 	    			var _prr = floor(_prin / _tileAmo[0]);
@@ -462,7 +461,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    		
 	    		var _tx  = _px + _pw + ui(8);
 	    		var _hov = _hover && point_in_rectangle(_m[0], _m[1], _x, _yy, _x + _w, _yy + _hg - 1);
-	    		var _cc  = i == autotile_selecting? COLORS._main_accent : (_hov? COLORS._main_text : COLORS._main_text_sub);
+	    		var _cc  = i == autoterrain_selecting? COLORS._main_accent : (_hov? COLORS._main_text : COLORS._main_text_sub);
 	    		
 	    		if(renaming == _at) {
 					tb_rename.setFocusHover(_focus, _hover);
@@ -473,33 +472,36 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		    		draw_text_add(_tx, _yy + _hg / 2, _at.name);
 		    		
 		    		var bs = ui(24);
-					var bx = _w  - bs;
+					var bx = _w  - bs - ui(4);
 					var by = _yy + _hg / 2 - bs / 2;
 					if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, _focus, _hover, "", THEME.minus_16, 0, _hov? COLORS._main_value_negative : COLORS._main_icon) == 2) 
 						del = i;	
 				}
 				
 	    		if(_hov && _m[0] < _x + _w - ui(32)) {
-	    			if(DOUBLE_CLICK && _focus) {
-						renaming    = _at;
-						rename_text = _at.name;
-						
-						tb_rename._current_text = _at.name;
-						tb_rename.activate();
-	    				
-	    			}  else if(mouse_press(mb_left, _focus)) {
-	    				if(_m[0] > _tx) {
-		    				autotile_selecting = autotile_selecting == i? noone : i;
+	    			if(_m[0] > _tx) {
+		    			if(DOUBLE_CLICK && _focus) {
+							renaming    = _at;
+							rename_text = _at.name;
+							
+							tb_rename._current_text = _at.name;
+							tb_rename.activate();
+		    				
+		    			} else if(mouse_press(mb_left, _focus)) {
+		    				autoterrain_selecting = autoterrain_selecting == i? noone : i;
 		    				animated_selecting = noone;
 			    			
 		    				brush.brush_indices = [[ [ _prin, 0 ] ]];
 			    			brush.brush_width   = 1;
 		    				brush.brush_height  = 1;
 		    				palette_using = false;
-		    				
-	    				} else {
-	    					_at.open = !_at.open;
-	    				}
+		    			}
+	    			} else {
+	    				draw_set_color(COLORS._main_accent);
+		    			draw_rectangle(_px, _py, _px + _pw, _py + _ph, true);
+		    			
+		    			if(mouse_press(mb_left, _focus))
+		    				_at.open = !_at.open;
 	    			}
 	    		}
 	    		
@@ -510,24 +512,36 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		    		_yy += ui(4);
 		    		_ah += ui(4);
 		    		
+		    		var _atWid = _at.sc_type;
+		    		var _scx = _x + ui(8);
+		    		var _scy = _yy;
+		    		var _scw = ui(200);
+		    		var _sch = ui(24);
+		    		
+		    		_atWid.setFocusHover(_focus, _hover);
+		    		_atWid.draw(_scx, _scy, _scw, _sch, _at.type, _m, autoterrain_selector.rx, autoterrain_selector.ry);
+		    		
+		    		_yy += _sch + ui(8);
+		    		_ah += _sch + ui(8);
+		    		
 	    			var _atIdx = _at.index;
 	    			var _coll  = floor(_w - ui(16)) / _tileSiz[0];
+	    			var _over  = noone;
+	    			var _roww;
 	    			
 	    			switch(_at.type) {
-	    				case AUTOTILE_TYPE.box9   : _coll =  3; break;
-	    				case AUTOTILE_TYPE.side15 : _coll =  5; break;
-	    				case AUTOTILE_TYPE.top48  : _coll =  8; break;
-	    				case AUTOTILE_TYPE.top55  : _coll = 11; break;
+	    				case AUTOTERRAIN_TYPE.box9   : _coll =  3; _roww = 3; _over = s_autoterrain_3x3;  break;
+	    				case AUTOTERRAIN_TYPE.side15 : _coll =  5; _roww = 3; _over = s_autoterrain_5x3;  break;
+	    				case AUTOTERRAIN_TYPE.top48  : _coll = 12; _roww = 4; _over = s_autoterrain_8x6;  break;
+	    				case AUTOTERRAIN_TYPE.top55  : _coll = 11; _roww = 5; _over = s_autoterrain_11x5; break;
 	    			}
-	    			
-	    			var _roww  = ceil(array_length(_atIdx) / _coll);
 	    			
 	    			var _pre_sx = _x + ui(8);
 	    			var _pre_sy = _yy;
 	    			var _pre_sw = _coll * _tileSiz[0];
 	    			var _pre_sh = _roww * _tileSiz[1];
 	    			
-	    			var _ss = (_w - ui(16)) / _pre_sw;
+	    			var _ss = min((_w - ui(16)) / _pre_sw, ui(64) / _tileSiz[1]);
 	    			
 	    			var _bw = power(2, ceil(log2(_coll)));
 					var _bh = power(2, ceil(log2(_roww)));
@@ -547,8 +561,6 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    			}
 			    	surface_reset_shader();
 	    			    	
-				    var _tileSetDim = surface_get_dimension(_tileSet);
-				    
 				    surface_set_shader(_at.preview_surface_tile, sh_draw_tile_map, true, BLEND.over);
 				        shader_set_2("dimension", surface_get_dimension(_at.preview_surface_tile));
 				        
@@ -560,8 +572,35 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				        draw_empty();
 				    surface_reset_shader();
 	    			
+	    			if(_over != noone) draw_sprite_ext(_over, 0, _pre_sx, _pre_sy, _ss * _tileSiz[0] / 4, _ss * _tileSiz[1] / 4, 0, COLORS._main_icon, 0.5);
 		    		draw_surface_ext(_at.preview_surface_tile, _pre_sx, _pre_sy, _ss, _ss, 0, c_white, 1);
 	    			
+		    		if(grid_draw) {
+		    			var _gw = _tileSiz[0] * _ss;
+				        var _gh = _tileSiz[1] * _ss;
+				        
+				        var gw = _pre_sw / _tileSiz[0];
+				        var gh = _pre_sh / _tileSiz[1];
+				    	
+				        var cx = _pre_sx - 1;
+				        var cy = _pre_sy - 1;
+				    
+				        draw_set_color(PROJECT.previewGrid.color);
+				        draw_set_alpha(PROJECT.previewGrid.opacity);
+				        
+				        for( var j = 1; j < gw; j++ ) {
+				            var _lxx = cx + j * _gw;
+				            draw_line(_lxx, cy, _lxx, cy + _pre_sh * _ss);
+				        }
+				    
+				        for( var j = 1; j < gh; j++ ) {
+				            var _lyy = cy + j * _gh;
+				            draw_line(cx, _lyy, cx + _pre_sw * _ss, _lyy);
+				        }
+				        
+				        draw_set_alpha(1);
+		    		}
+		    		
 	    			draw_set_color(COLORS._main_icon);
 	    			draw_rectangle(_pre_sx, _pre_sy, _pre_sx + _pre_sw * _ss, _pre_sy + _pre_sh * _ss, true);
 	    			
@@ -581,9 +620,9 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    					draw_rectangle(_at_c_sx, _at_c_sy, _at_c_sx + _dtile_w, _at_c_sy + _dtile_h, true);
 	    					
 	    					if(mouse_press(mb_left, _focus)) {
-    							autotile_selecting = i;
+    							autoterrain_selecting = i;
     							animated_selecting = noone;
-    							autotile_subtile_selecting = autotile_subtile_selecting == _at_id? noone : _at_id;
+    							autoterrain_subtile_selecting = autoterrain_subtile_selecting == _at_id? noone : _at_id;
 	    					}
 	    					
 	    					if(mouse_press(mb_right, _focus))
@@ -591,9 +630,9 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    				}
 	    			}
 	    			
-	    			if(autotile_selecting == i && autotile_subtile_selecting != noone) {
-	    				var _at_sl_x = autotile_subtile_selecting % _coll;
-	    				var _at_sl_y = floor(autotile_subtile_selecting / _coll);
+	    			if(autoterrain_selecting == i && autoterrain_subtile_selecting != noone) {
+	    				var _at_sl_x = autoterrain_subtile_selecting % _coll;
+	    				var _at_sl_y = floor(autoterrain_subtile_selecting / _coll);
 	    				
 	    				var _at_c_sx = _pre_sx + _at_sl_x * _dtile_w;
     					var _at_c_sy = _pre_sy + _at_sl_y * _dtile_h;
@@ -609,11 +648,11 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    	}
 	    	
 	    	if(del != -1) {
-	    		array_delete(autotiles, del, 1);
-	    		autotile_selecting = noone;
+	    		array_delete(autoterrain, del, 1);
+	    		autoterrain_selecting = noone;
 	    	}
 	    	
-	    	autotile_selector_h = max(ui(12), _ah);
+	    	autoterrain_selector_h = max(ui(12), _ah);
     		return _h + _ah;
     	});
     #endregion
@@ -621,7 +660,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
     #region ++++ brush palette ++++
     	brush_palette_h    = ui(320);
     	
-    	brush_palette           = surface_create(16, 16, surface_rgba16float);
+    	brush_palette           = surface_create(64, 64, surface_rgba16float);
     	brush_palette_buffer    = noone;
     	brush_palette_tile      = noone;
     	brush_palette_prev      = noone;
@@ -707,7 +746,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    		if(brush_palette_buffer && buffer_exists(brush_palette_buffer))
 	    			brush_palette = surface_from_buffer(brush_palette_buffer);
 	    		else 
-	    			brush_palette = surface_create(16, 16, surface_rgba16float);
+	    			brush_palette = surface_create(64, 64, surface_rgba16float);
 	    	}
 	    	
     		var _bpdim      = surface_get_dimension(brush_palette);
@@ -765,8 +804,8 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			        var gw = _tdim[0] / _tileSiz[0];
 			        var gh = _tdim[1] / _tileSiz[1];
 			    	
-			        var cx = palette_selector_x;
-			        var cy = palette_selector_y;
+			        var cx = palette_selector_x - 1;
+			        var cy = palette_selector_y - 1;
 			    
 			        draw_set_color(PROJECT.previewGrid.color);
 			        draw_set_alpha(PROJECT.previewGrid.opacity);
@@ -798,7 +837,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		    		}
 		    		
 	    			if(palette_tool == 0 && mouse_press(mb_left, _focus)) {
-		    			autotile_selecting = noone;
+		    			autoterrain_selecting = noone;
 		    			animated_selecting = noone;
 	    				palette_selecting  = true;
 	    				palette_using      = true;
@@ -1074,7 +1113,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    		
 				if(_new_at != noone) {
 					animated_selecting = array_length(animatedTiles);
-					autotile_selecting = noone;
+					autoterrain_selecting = noone;
 					array_push(animatedTiles, _new_at);
 					
 					brush.brush_indices = [[ [ -(animated_selecting + 2), 0 ] ]];
@@ -1137,7 +1176,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		    		draw_text_add(_tx, _yy + _hg / 2, _at.name);
 		    		
 		    		var bs = ui(24);
-					var bx = _w  - bs;
+					var bx = _w  - bs - ui(4);
 					var by = _yy + _hg / 2 - bs / 2;
 					if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, _focus, _hover, "", THEME.minus_16, 0, _hov? COLORS._main_value_negative : COLORS._main_icon) == 2) 
 						del = i;	
@@ -1154,7 +1193,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    			}  else if(mouse_press(mb_left, _focus)) {
 	    				if(_m[0] > _tx) {
 		    				animated_selecting  = animated_selecting == i? noone : i;
-		    				autotile_selecting = noone;
+		    				autoterrain_selecting = noone;
 			    			
 		    				brush.brush_indices = [[ [ - (i + 2), 0 ] ]];
 			    			brush.brush_width   = 1;
@@ -1238,7 +1277,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    					
 	    					if(mouse_press(mb_left, _focus)) {
     							animated_selecting = i;
-    							autotile_selecting = noone;
+    							autoterrain_selecting = noone;
     							
     							animated_subtile_selecting = animated_subtile_selecting == _at_id? noone : _at_id;
 	    					}
@@ -1276,19 +1315,139 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
     	});
     #endregion
     
+    #region ++++ rules ++++
+    	ruleTiles = [];
+		
+		rule_selecting         = noone;
+		rule_selector_h        = 0;
+		rule_subtile_selecting = noone;
+		
+		rules_viewer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus, _panel = noone) {
+			var _yy = _y;
+	    	var _h  = 0;
+	    	
+	    	var _tileSet = getInputData(0);
+	    	var _tileSiz = getInputData(1);
+	    	
+	    	if(!is_surface(_tileSet)) return _h;
+	    	var _tdim    = surface_get_dimension(_tileSet);
+	    	var _tileAmo = [ floor(_tdim[0] / _tileSiz[0]), floor(_tdim[1] / _tileSiz[1]) ];
+	    	
+			var bx = _x;
+			var by = _yy;
+			var bs = ui(24);
+			
+			if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, _focus, _hover, "New rule", THEME.add_16, 0, COLORS._main_value_positive) == 2) {
+				var _new_rl = new tiler_rule();
+	    		array_push(ruleTiles, _new_rl);
+			}
+			
+			_h  += bs + ui(4);
+			_yy += bs + ui(4);
+			
+	    	var _pd = ui(4);
+	    	var _ah = _pd * 2;
+	    	var del = -1;
+	    	
+	    	draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _yy, _w, rule_selector_h, COLORS.node_composite_bg_blend, 1);
+	    	
+	    	_yy += _pd;
+	    	
+	    	for( var i = 0, n = array_length(ruleTiles); i < n; i++ ) {
+	    		var _hg = ui(32);
+	    		var _rl = ruleTiles[i];
+	    		
+	    		var _pw = ui(24);
+	    		var _ph = ui(24);
+	    		var _px = _x + ui(8);
+	    		var _py = _yy + ui(4);
+	    		
+	    		var _prin = 0;
+	    		
+	    		if(_prin == noone) {
+		    		draw_set_color(COLORS._main_icon);
+		    		draw_rectangle(_px, _py, _px + _pw, _py + _ph, true);
+		    		
+	    		} else {
+	    			var _prc = safe_mod(_prin, _tileAmo[0]);
+	    			var _prr = floor(_prin / _tileAmo[0]);
+	    			
+	    			var _pr_tx = _prc * _tileSiz[0];
+	    			var _pr_ty = _prr * _tileSiz[1];
+	    			
+	    			var _pr_sx = _pw / _tileSiz[0];
+	    			var _pr_sy = _ph / _tileSiz[1];
+	    			
+	    			draw_surface_part_ext(_tileSet, _pr_tx, _pr_ty, _tileSiz[0], _tileSiz[1], _px, _py, _pr_sx, _pr_sy, c_white, 1);
+	    		}
+	    		
+	    		var _tx  = _px + _pw + ui(8);
+	    		var _hov = _hover && point_in_rectangle(_m[0], _m[1], _x, _yy, _x + _w, _yy + _hg - 1);
+	    		var _cc  = _hov? COLORS._main_text : COLORS._main_text_sub;
+	    		
+	    		if(renaming == _rl) {
+					tb_rename.setFocusHover(_focus, _hover);
+					tb_rename.draw(_tx, _yy, _w - _pw - ui(8), _hg, rename_text, _m);
+				
+				} else {
+		    		draw_set_text(f_p2, fa_left, fa_center, _cc);
+		    		draw_text_add(_tx, _yy + _hg / 2, _rl.name);
+		    		
+		    		var bs = ui(24);
+					var bx = _w  - bs - ui(4);
+					var by = _yy + _hg / 2 - bs / 2;
+					if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, _focus, _hover, "", THEME.minus_16, 0, _hov? COLORS._main_value_negative : COLORS._main_icon) == 2) 
+						del = i;	
+				}
+				
+	    		if(_hov && _m[0] < _x + _w - ui(32)) {
+	    			if(DOUBLE_CLICK && _focus) {
+						renaming    = _rl;
+						rename_text = _rl.name;
+						
+						tb_rename._current_text = _rl.name;
+						tb_rename.activate();
+	    				
+	    			}  else if(mouse_press(mb_left, _focus)) {
+	    				if(_m[0] > _tx) {
+		    				
+	    				} else {
+	    					_rl.open = !_rl.open;
+	    				}
+	    			}
+	    		}
+	    		
+	    		_yy += _hg;
+	    		_ah += _hg;
+	    		
+	    		if(_at.open) {
+		    		_yy += ui(4);
+		    		_ah += ui(4);
+	    		}
+	    	}
+	    	
+	    	if(del != -1) array_delete(ruleTiles, del, 1);
+	    	
+	    	rule_selector_h = max(ui(12), _ah);
+    		return _h + _ah;
+		});
+    #endregion
+    
     texture  = noone;
     tileSize = [ 1, 1 ];
         
-    tile_selector_toggler     = button(function() /*=>*/ { tile_selector.togglePopup("Tileset");         }).setIcon(THEME.node_goto, 0, COLORS._main_icon, .75);
-    autotile_selector_toggler = button(function() /*=>*/ { autotile_selector.togglePopup("Autotile");    }).setIcon(THEME.node_goto, 0, COLORS._main_icon, .75);
-    palette_viewer_toggler    = button(function() /*=>*/ { palette_viewer.togglePopup("Tile Palette");   }).setIcon(THEME.node_goto, 0, COLORS._main_icon, .75);
-    animated_viewer_toggler   = button(function() /*=>*/ { animated_viewer.togglePopup("Animated Tile"); }).setIcon(THEME.node_goto, 0, COLORS._main_icon, .75);
+    tile_selector_toggler        = button(function() /*=>*/ { tile_selector.togglePopup("Tileset");            }).setIcon(THEME.node_goto, 0, COLORS._main_icon, .75);
+    autoterrain_selector_toggler = button(function() /*=>*/ { autoterrain_selector.togglePopup("Autoterrain"); }).setIcon(THEME.node_goto, 0, COLORS._main_icon, .75);
+    palette_viewer_toggler       = button(function() /*=>*/ { palette_viewer.togglePopup("Tile Palette");      }).setIcon(THEME.node_goto, 0, COLORS._main_icon, .75);
+    animated_viewer_toggler      = button(function() /*=>*/ { animated_viewer.togglePopup("Animated Tile");    }).setIcon(THEME.node_goto, 0, COLORS._main_icon, .75);
+    rules_viewer_toggler         = button(function() /*=>*/ { rules_viewer.togglePopup("Tile Riles");         }).setIcon(THEME.node_goto, 0, COLORS._main_icon, .75);
     
 	input_display_list = [ 1, 0, 
-		["Tileset",   false, noone, tile_selector_toggler     ], tile_selector, 
-		["Autotiles",  true, noone, autotile_selector_toggler ], autotile_selector, 
-		["Palette",    true, noone, palette_viewer_toggler    ], palette_viewer,
-		["Animated",   true,     2, animated_viewer_toggler   ], animated_viewer,
+		["Tileset",     false, noone, tile_selector_toggler        ], tile_selector, 
+		["Autoterrain",  true, noone, autoterrain_selector_toggler ], autoterrain_selector, 
+		["Palette",      true, noone, palette_viewer_toggler       ], palette_viewer,
+		["Animated",     true,     2, animated_viewer_toggler      ], animated_viewer,
+		["Rules",        true, noone, rules_viewer_toggler         ], rules_viewer,
 	];
 	
 	static shader_submit = function() {
@@ -1303,10 +1462,11 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	}
 	
 	static step = function() {
-	    tile_selector_toggler.icon_blend     = tile_selector.popupPanel     == noone? COLORS._main_icon : COLORS._main_accent;
-	    autotile_selector_toggler.icon_blend = autotile_selector.popupPanel == noone? COLORS._main_icon : COLORS._main_accent;
-	    palette_viewer_toggler.icon_blend    = palette_viewer.popupPanel    == noone? COLORS._main_icon : COLORS._main_accent;
-	    animated_viewer_toggler.icon_blend   = animated_viewer.popupPanel   == noone? COLORS._main_icon : COLORS._main_accent;
+	    tile_selector_toggler.icon_blend        = tile_selector.popupPanel        == noone? COLORS._main_icon : COLORS._main_accent;
+	    autoterrain_selector_toggler.icon_blend = autoterrain_selector.popupPanel == noone? COLORS._main_icon : COLORS._main_accent;
+	    palette_viewer_toggler.icon_blend       = palette_viewer.popupPanel       == noone? COLORS._main_icon : COLORS._main_accent;
+	    animated_viewer_toggler.icon_blend      = animated_viewer.popupPanel      == noone? COLORS._main_icon : COLORS._main_accent;
+	    rules_viewer_toggler.icon_blend         = rules_viewer.popupPanel         == noone? COLORS._main_icon : COLORS._main_accent;
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
@@ -1321,21 +1481,24 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	static attributeSerialize = function() {
 		var _attr = {
-			autotiles, animatedTiles, 
-			palette: buffer_from_surface(brush_palette),
+			autoterrain, 
+			animatedTiles, 
+			ruleTiles,
+			palette: surface_encode(brush_palette),
 		};
 		
 		return _attr; 
 	}
 	
 	static attributeDeserialize = function(attr) {
-		var _auto = struct_try_get(attr, "autotiles",     []);
+		var _auto = struct_try_get(attr, "autoterrain",   []);
 		var _anim = struct_try_get(attr, "animatedTiles", []);
-		var _palt = struct_try_get(attr, "palette", noone);
+		var _rule = struct_try_get(attr, "ruleTiles",     []);
+		var _palt = struct_try_get(attr, "palette",       noone);
 		
 		for( var i = 0, n = array_length(_auto); i < n; i++ ) {
-			autotiles[i] = new tiler_brush_autotile(_auto[i].type, _auto[i].index);
-			autotiles[i].name = _auto[i].name;
+			autoterrain[i] = new tiler_brush_autoterrain(_auto[i].type, _auto[i].index);
+			autoterrain[i].name = _auto[i].name;
 		}
 		
 		for( var i = 0, n = array_length(_anim); i < n; i++ ) {
@@ -1343,12 +1506,19 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			animatedTiles[i].name = _anim[i].name;
 		}
 		
-		if(_palt) {
+		for( var i = 0, n = array_length(_rule); i < n; i++ )
+			ruleTiles[i] = new tiler_rule().deserialize(_rule[i]);
+		
+		if(_palt != noone) {
 			surface_free_safe(brush_palette);
-			brush_palette_buffer = _palt;
-			brush_palette = surface_from_buffer(_palt);
+			brush_palette = surface_decode(_palt);
+			
+			var _dim = surface_get_dimension(brush_palette);
+			buffer_delete_safe(brush_palette_buffer);
+			brush_palette_buffer  = buffer_from_surface(brush_palette, false, buffer_grow);
 		}
 		
 		refreshAnimatedData();
 	}
+	
 }

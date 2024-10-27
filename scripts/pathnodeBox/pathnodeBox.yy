@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"pathnodeBox",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"pathnodeBox",
+  "parent":{
+    "name":"widgets",
+    "path":"folders/widgets.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

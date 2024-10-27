@@ -12,10 +12,11 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
     newInput( 2, nodeValue_Bool("Animated", self, false));
     
 	input_display_list = [ 1, 0 ];
-	input_display_list_tileset   = ["Tileset",   false, noone, noone];
-	input_display_list_autotiles = ["Autotiles",  true, noone, noone];
-	input_display_list_palette   = ["Palette",    true, noone, noone];
-	input_display_list_animated  = ["Animated",   true,     2, noone];
+	input_display_list_tileset      = ["Tileset",     false, noone, noone];
+	input_display_list_autoterrains = ["Autoterrain",  true, noone, noone];
+	input_display_list_palette      = ["Palette",      true, noone, noone];
+	input_display_list_animated     = ["Animated",     true,     2, noone];
+	input_display_list_rule         = ["Rule",         true, noone, noone];
 	
 	newOutput(0, nodeValue_Output("Tile output", self, VALUE_TYPE.surface, noone));
 	
@@ -24,9 +25,11 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newOutput(2, nodeValue_Output("Index array", self, VALUE_TYPE.integer, []))
 	    .setArrayDepth(1);
 	
+	output_display_list = [ 0, 1 ];
+	
 	#region ++++ data ++++
 		canvas_surface   = surface_create_empty(1, 1, surface_rgba16float);
-		canvas_buffer    = buffer_create(1 * 1 * 2, buffer_grow, 2);
+		canvas_buffer    = buffer_create(1, buffer_grow, 4);
 	    
 		drawing_surface  = noone;
 		draw_stack       = ds_list_create();
@@ -163,9 +166,9 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			if(_tool) {
 				var brush = tileset.brush;
 	    	
-	    		brush.node       = self;
-		    	brush.brush_size = tool_attribute.size;
-		    	brush.autotiler  = array_safe_get(tileset.autotiles, tileset.autotile_selecting, noone);
+	    		brush.node        = self;
+		    	brush.brush_size  = tool_attribute.size;
+		    	brush.autoterrain = array_safe_get(tileset.autoterrains, tileset.autoterrain_selecting, noone);
 	    		
 				_tool.brush              = brush;
 				_tool.subtool            = _currTool.selecting;
@@ -242,7 +245,7 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			
 	    #endregion
 	    
-	    //if(!array_empty(autotiles)) draw_surface_ext(autotiles[0].mask_surface, 32, 32, 8, 8, 0, c_white, 1);
+	    //if(!array_empty(autoterrains)) draw_surface_ext(autoterrains[0].mask_surface, 32, 32, 8, 8, 0, c_white, 1);
 	    // draw_surface_ext(canvas_surface,   32, 32, 8, 8, 0, c_white, 1);
 	    // draw_surface_ext(drawing_surface, 232, 32, 8, 8, 0, c_white, 1);
 	    // draw_surface_ext(preview_draw_overlay, 432, 32, 8, 8, 0, c_white, 1);
@@ -256,16 +259,18 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			return _outData;
 	    }
 	    
-	    input_display_list_tileset[3]   = tileset.tile_selector_toggler;
-		input_display_list_autotiles[3] = tileset.autotile_selector_toggler;
-		input_display_list_palette[3]   = tileset.palette_viewer_toggler;
-		input_display_list_animated[3]  = tileset.animated_viewer_toggler;
+	    input_display_list_tileset[3]      = tileset.tile_selector_toggler;
+		input_display_list_autoterrains[3] = tileset.autoterrain_selector_toggler;
+		input_display_list_palette[3]      = tileset.palette_viewer_toggler;
+		input_display_list_animated[3]     = tileset.animated_viewer_toggler;
+		input_display_list_rule[3]         = tileset.rules_viewer_toggler;
 	    
 		input_display_list = [ 1, 0, 
-			input_display_list_tileset,   tileset.tile_selector, 
-			input_display_list_autotiles, tileset.autotile_selector, 
-			input_display_list_palette,   tileset.palette_viewer,
-			input_display_list_animated,  tileset.animated_viewer,
+			input_display_list_tileset,      tileset.tile_selector, 
+			input_display_list_autoterrains, tileset.autoterrain_selector, 
+			input_display_list_palette,      tileset.palette_viewer,
+			input_display_list_animated,     tileset.animated_viewer,
+			input_display_list_rule,         tileset.rules_viewer,
 		]
 		
 		var _tileSet  = tileset.texture;
@@ -290,17 +295,13 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		
 	    if(!is_surface(_tileSet)) return _outData;
 	    
-	    var _tileOut = _outData[0];
-	    var _tileMap = _outData[1];
-	    var _arrIndx = _outData[2];
-	    
 	    var _outDim   = [ _tileSiz[0] * _mapSize[0], _tileSiz[1] * _mapSize[1] ];
 	    
-	    _tileOut = surface_verify(_tileOut, _outDim[0],  _outDim[1]);
-	    _tileMap = surface_verify(_tileMap, _mapSize[0], _mapSize[1], surface_rgba16float);
-	    _arrIndx = array_verify(_arrIndx, _mapSize[0] * _mapSize[1]);
+	    var _tileOut = surface_verify(_outData[0], _outDim[0],  _outDim[1]);
+	    var _tileMap = surface_verify(_outData[1], _mapSize[0], _mapSize[1], surface_rgba16float);
+	    var _arrIndx = array_verify(  _outData[2], _mapSize[0] * _mapSize[1]);
 	    
-	    buffer_resize(canvas_buffer, _mapSize[0] * _mapSize[1] * 2);
+	    canvas_buffer = buffer_verify(canvas_buffer, _mapSize[0] * _mapSize[1] * 8);
 	    buffer_get_surface(canvas_buffer, canvas_surface, 0);
 	    
 	    surface_set_shader(_tileMap, sh_sample, true, BLEND.over);
@@ -329,33 +330,22 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
-	static doSerialize = function(_map) {
-		_map.surface = buffer_serialize(canvas_buffer);
-	}
-	
-	static doApplyDeserialize = function() {
-	     canvas_buffer   = buffer_deserialize(load_map.surface);
-	     canvas_surface  = surface_verify(canvas_surface,  attributes.dimension[0], attributes.dimension[1], surface_rgba16float);
-	     drawing_surface = surface_verify(drawing_surface, attributes.dimension[0], attributes.dimension[1], surface_rgba16float);
-	     
-	     buffer_set_surface(canvas_buffer, canvas_surface,  0);
-	     buffer_set_surface(canvas_buffer, drawing_surface, 0);
-	}
-	
 	static attributeSerialize = function() {
-		var _attr = {
-			canvas:  buffer_from_surface(canvas_surface)
-		};
+		attributes.canvas = surface_encode(canvas_surface);
 		
-		return _attr; 
+		return attributes; 
 	}
 	
 	static attributeDeserialize = function(attr) {
 		var _canv = struct_try_get(attr, "canvas",  noone);
 		
-		if(_canv) {
+		if(_canv != noone) {
 			surface_free_safe(canvas_surface);
-			canvas_surface = surface_from_buffer(_canv);
+			canvas_surface = surface_decode(_canv);
+			
+			var _dim = surface_get_dimension(canvas_surface);
+			buffer_delete_safe(canvas_buffer);
+			canvas_buffer  = buffer_from_surface(canvas_surface, false, buffer_grow);
 		}
 	}
 }

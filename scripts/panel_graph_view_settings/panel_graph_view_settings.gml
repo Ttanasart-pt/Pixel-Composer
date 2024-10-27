@@ -62,6 +62,14 @@ function Panel_Graph_View_Setting(graphPanel, display) : Panel_Linear_Setting() 
 			function(val) /*=>*/ { graphPanel.show_view_control = val; },
 			1,
 		),
+		new __Panel_Linear_Setting_Item(
+			__txtx("graph_visibility_tooltip", "Show Tooltip"),
+			new checkBox(function() /*=>*/ { display_parameter.show_tooltip = !display_parameter.show_tooltip; }),
+			function()    /*=>*/   {return display_parameter.show_tooltip},
+			function(val) /*=>*/ { display_parameter.show_tooltip = val; },
+			true,
+			[ "Graph", "Toggle Tooltip" ],
+		),
 	];
 	
 	setHeight();

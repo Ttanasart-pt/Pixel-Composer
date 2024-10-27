@@ -115,7 +115,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		tool_grabbing = [];
 	#endregion
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _typ = getInputData(0);
 		var _pre = getInputData(16);
 		if(!attributes.use_groom) 
@@ -418,9 +418,9 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		tool_dmx = __mx;
 		tool_dmy = __my;
-	} #endregion
+	}
 	
-	static step = function() { #region
+	static step = function() {
 		var _typ = getInputData(0);
 		
 		inputs[ 5].setVisible(_typ == 1, _typ == 1);
@@ -430,9 +430,9 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		inputs[15].editWidget.text  = attributes.use_groom? "Unbake" : "Bake";
 		inputs[15].editWidget.blend = attributes.use_groom? COLORS._main_value_negative : COLORS._main_value_positive;
-	} #endregion
+	}
 	
-	static strandUpdate = function(willReset = false) { #region
+	static strandUpdate = function(willReset = false) {
 		var _typ = getInputData(0);
 		var _den = getInputData(1);
 		var _len = getInputData(2);
@@ -531,30 +531,30 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			
 			ind++;
 		}
-	} #endregion
+	}
 	
-	static update = function(frame = CURRENT_FRAME) { #region
+	static update = function(frame = CURRENT_FRAME) {
 		strandUpdate(IS_FIRST_FRAME);
-	} #endregion
+	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
 		draw_sprite_fit(s_node_strandSim_create, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
-	} #endregion
+	}
 	
-	static attributeSerialize = function() { #region
+	static attributeSerialize = function() {
 		var att = {};
 		att.use_groom = attributes.use_groom;
 		att.fixStrand = groomed.serialize();
 		return att;
-	} #endregion
+	}
 	
-	static attributeDeserialize = function(attr) { #region
+	static attributeDeserialize = function(attr) {
 		struct_append(attributes, attr); 
 		
 		if(struct_has(attr, "fixStrand"))
 			groomed.deserialize(attr.fixStrand);
 			
 		attributes.use_groom = struct_try_get(attr, "use_groom", false);
-	} #endregion
+	}
 }

@@ -120,14 +120,22 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		}
 		
 		var _dtype = getInputData(27);
-		var _hov   = false;
+		var hv, _hov = false;
 		
-		if(_dtype == 3) {
-			 var hv = inputs[32].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= bool(hv);
-			 var hv = inputs[33].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= bool(hv);
+		if(_dtype == 1) {
+			hv = inputs[7].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= bool(hv);
+			
+		} else if(_dtype == 3) {
+			hv = inputs[32].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= bool(hv);
+			hv = inputs[33].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= bool(hv);
 		}
 		
 		return _hov;
+	}
+	
+	static getTool = function() { 
+		var _path = getInputData(7);
+		return is_instanceof(_path, Node)? _path : self; 
 	}
 	
 	static step = function() {
