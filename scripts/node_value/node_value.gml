@@ -1512,7 +1512,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		INLINE
 		
 		var res = false;
-		// _val = unit.invApply(_val);
 		
 		if(PANEL_INSPECTOR && PANEL_INSPECTOR.inspectGroup == 1) {
 			var ind = self.index;

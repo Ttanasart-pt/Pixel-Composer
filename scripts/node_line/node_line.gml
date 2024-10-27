@@ -76,13 +76,15 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		
 	newInput(33, nodeValue_Vec2("End Point", self, [ 1, 0.5 ]))
 		.setUnitRef(function(index) /*=>*/ {return getDimension(index)}, VALUE_UNIT.reference);
-		
+	
+	newInput(34, nodeValue_Enum_Scroll("SSAA", self, 0, [ "None", "2x", "4x", "8x" ]));
+	
 	input_display_list = [
 		["Output",			true],	0, 1, 30, 31, 
 		["Line data",		false], 27, 6, 7, 28, 32, 33, 19, 2, 20, 
 		["Line settings",	false], 17, 3, 11, 12, 8, 25, 9, 26, 13, 14, 
 		["Wiggle",			false], 4, 5, 
-		["Render",			false], 10, 24, 15, 16, 
+		["Render",			false], 10, 24, 15, 16, 34, 
 		["Texture",			false], 18, 21, 22, 23, 29, 
 	];
 	
@@ -92,6 +94,8 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	lines     = [];
 	line_data = [];
+	
+	temp_surfaces = [ noone ];
 	
 	widthMap = ds_map_create();
 	
@@ -221,6 +225,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			
 			var _pnt0 = _data[32];
 			var _pnt1 = _data[33];
+			var _aa   = power(2, _data[34]);
 		#endregion
 		
 		/////// Check data
@@ -536,7 +541,10 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var _padx = _pbbox * (_ppadd[2] - minx);
 		var _pady = _pbbox * (_ppadd[1] - miny);
 		
-		surface_set_target(_colorPass);
+		temp_surfaces[0] = surface_verify(temp_surfaces[0], _surfDim[0] * _aa, _surfDim[1] * _aa, attrDepth());
+		var _cPassAA = temp_surfaces[0];
+		
+		surface_set_target(_cPassAA);
 			if(_bg) draw_clear_alpha(0, 1);
 			else	DRAW_CLEAR
 			
@@ -607,7 +615,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						if(j) {
 							var dst = point_distance(_ox, _oy, _nx, _ny);
 							if(dst <= 1 && i < array_length(points) - 1) continue;
-							draw_line_color(_ox, _oy, _nx, _ny, _oc, _nc);
+							draw_line_color(_ox * _aa, _oy * _aa, _nx * _aa, _ny * _aa, _oc, _nc);
 						}
 						
 						_ox = _nx;
@@ -642,13 +650,13 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 								var nx1 = _nx + lengthdir_x(_nw / 2, _nd + 90 + 180);
 								var ny1 = _ny + lengthdir_y(_nw / 2, _nd + 90 + 180);
 								
-								draw_vertex_texture_color(ox0, oy0, 0, (j - 1) / _len, _oc, 1);
-								draw_vertex_texture_color(ox1, oy1, 1, (j - 1) / _len, _oc, 1);
-								draw_vertex_texture_color(nx0, ny0, 0, (j - 0) / _len, _nc, 1);
-								draw_vertex_texture_color(nx1, ny1, 1, (j - 0) / _len, _nc, 1);
+								draw_vertex_texture_color(ox0 * _aa, oy0 * _aa, 0, (j - 1) / _len, _oc, 1);
+								draw_vertex_texture_color(ox1 * _aa, oy1 * _aa, 1, (j - 1) / _len, _oc, 1);
+								draw_vertex_texture_color(nx0 * _aa, ny0 * _aa, 0, (j - 0) / _len, _nc, 1);
+								draw_vertex_texture_color(nx1 * _aa, ny1 * _aa, 1, (j - 0) / _len, _nc, 1);
 								
 							} else
-								draw_line_width2_angle(_ox, _oy, _nx, _ny, _ow, _nw, _od + 90, _nd + 90, _oc, _nc);
+								draw_line_width2_angle(_ox * _aa, _oy * _aa, _nx * _aa, _ny * _aa, _ow * _aa, _nw * _aa, _od + 90, _nd + 90, _oc, _nc);
 						} else {
 							var p1   = points[j + 1];
 							_nd = point_direction(_nx, _ny, p1.x + _padx, p1.y + _pady);
@@ -675,15 +683,20 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				for( var j = 0, m = array_length(_caps); j < m; j++ ) {
 					var _cps = _caps[j];
 					draw_set_color(_cps[0]);
-					draw_circle_angle(_cps[1], _cps[2], _cps[3], _cps[4], _cps[5], _capP);
+					draw_circle_angle(_cps[1] * _aa, _cps[2] * _aa, _cps[3] * _aa, _cps[4], _cps[5], _capP);
 				}
 			}
 			
 			if(_useTex) shader_reset();
 		surface_reset_target();
 		
+		surface_set_shader(_colorPass, sh_downsample, true, BLEND.over);
+			shader_set_dim("dimension", _cPassAA);
+			shader_set_f("down", _aa);
+			draw_surface(_cPassAA, 0, 0);
+		surface_reset_shader();
+		
 		if(_colW && !_1px) {
-			
 			surface_set_target(_widthPass);
 				if(_bg) draw_clear_alpha(0, 1);
 				else	DRAW_CLEAR

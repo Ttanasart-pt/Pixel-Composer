@@ -20,7 +20,7 @@ function preview_overlay_scalar(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 			_dist = round(_dist);
 		_dist *= _sign;
 		
-		if(setValueInspector( _dist ))
+		if(setValueInspector( unit.invApply(_dist) ))
 			UNDO_HOLDING = true;
 							
 		if(mouse_release(mb_left)) {

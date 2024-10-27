@@ -52,7 +52,7 @@ function pathnodeBox(_junction) : widget() constructor {
         		if(mouse_click(mb_left, iactive))
         			bi = 2;
         			
-        		if(mouse_press(mb_left, iactive))
+        		if(mouse_press(mb_left, iactive) && is(_path, Node))
         			PANEL_GRAPH.setFocusingNode(_path);
         	}
         	
@@ -62,7 +62,7 @@ function pathnodeBox(_junction) : widget() constructor {
             draw_sprite_ext(ic, 0, x + iw / 2, y + h / 2, _s, _s);
             
             draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text_sub);
-	        draw_text_add(x + iw + ui(4 + 8), y + h / 2, _path.getDisplayName());
+            draw_text_add(x + iw + ui(4 + 8), y + h / 2, is(_path, Node)? _path.getDisplayName() : "Path");
         }
         
 		return h;
