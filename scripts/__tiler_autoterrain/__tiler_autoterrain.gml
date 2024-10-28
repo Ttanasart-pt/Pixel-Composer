@@ -1,11 +1,12 @@
 enum AUTOTERRAIN_TYPE {
 	box9,
+	box25,
 	side15,
 	top48,
 	top55,
 }
 
-global.autoterrain_amount = [ 9, 15, 48, 55, ];
+global.autoterrain_amount = [ 9, 16, 15, 48, 55, ];
 
 function tiler_brush_autoterrain(_type, _index) constructor {
 	name  = "autoterrain";
@@ -22,17 +23,20 @@ function tiler_brush_autoterrain(_type, _index) constructor {
     
     open = false;
     
-    sc_type = new scrollBox(["Simple box (3x3)", "Side platform (5x3)", "Godot tile (12x4)", "Gamemaker tileset (11x5)"], function(ind) /*=>*/ { setType(ind); });
+    sc_type = new scrollBox(["Simple box (3x3)", "Corner box (5x5)", "Side platform (5x3)", "Godot tile (12x4)", "Gamemaker tileset (11x5)"], function(ind) /*=>*/ { setType(ind); });
     sc_type.font = f_p3;
+    
+    static indexMap48 = [ 8, 10, 11, 0, 1, 6, 5, 3, 2, 34, 12, 20, 33, 35, 12, 28, 30, 29, 31, 46, 21, 12, 44, 45, 47, 24, 16, 18, 17, 19, 9, 43, 40, 37, 38, 39, 36, 25, 42, 41, 27, 26, 7, 4, 13, 23, 32, 15, 14, 12 ];
     
     static setType = function(_type) {
     	type  = _type;
     	
     	switch(type) {
     		case 0 : index = array_verify_ext(index,  9, function() /*=>*/ {return -1}); break;
-    		case 1 : index = array_verify_ext(index, 15, function() /*=>*/ {return -1}); break;
-    		case 2 : index = array_verify_ext(index, 48, function() /*=>*/ {return -1}); break;
-    		case 3 : index = array_verify_ext(index, 55, function() /*=>*/ {return -1}); break;
+    		case 1 : index = array_verify_ext(index, 25, function() /*=>*/ {return -1}); break;
+    		case 2 : index = array_verify_ext(index, 15, function() /*=>*/ {return -1}); break;
+    		case 3 : index = array_verify_ext(index, 48, function() /*=>*/ {return -1}); break;
+    		case 4 : index = array_verify_ext(index, 55, function() /*=>*/ {return -1}); break;
     	}
     	
     } setType(_type);
@@ -78,7 +82,8 @@ function tiler_brush_autoterrain(_type, _index) constructor {
             shader_set_2("dimension",    _dim);
             
             shader_set_surface("maskSurface", mask_surface);   
-            shader_set_i("bitmaskType",  type);
+            shader_set_i("bitmaskType",   type);
+            shader_set_i("indexMapper48", indexMap48);
             
             shader_set_i("indexes",   index);
             shader_set_i("indexSize", array_length(index));

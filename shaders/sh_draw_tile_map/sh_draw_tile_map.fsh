@@ -21,12 +21,11 @@ void main() {
     gl_FragColor = vec4(0.);
     
     vec2  px = v_vTexcoord * dimension;
-    vec2  tileTx = mod(px, tileSize) / tileSize;
-    vec2  texTx;
+    vec2  tileTx, texTx;
     float index = 0.;
     
-    vec2 tileAmo = floor(tileTextureDim / tileSize);
-    vec4 samIdx  = texture2D( indexTexture, floor(px / tileSize) / indexTextureDim );
+    vec2 tileAmo  = floor(tileTextureDim / tileSize);
+    vec4 samIdx   = texture2D( indexTexture, floor(px / tileSize) / (indexTextureDim - 1.) );
     if(samIdx.r == 0.) return;
     
     if(samIdx.r > 0.) {

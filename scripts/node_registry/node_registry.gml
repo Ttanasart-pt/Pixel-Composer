@@ -528,8 +528,9 @@ function __initNodes() {
 		addNodeObject(input, "Canvas",				s_node_canvas,			"Node_Canvas",					[1, Node_Canvas], ["draw"], "Draw on surface using brush, eraser, etc.");
 		addNodeObject(input, "Canvas Group",		s_node_canvas_group,	"Node_Canvas_Group",			[1, Node_Canvas_Group],, "Create a group that combines multiple canvas nodes a layers.").setVersion(11740);
 		addNodeObject(input, "Active Canvas",		s_node_active_canvas,	"Node_Active_Canvas",			[1, Node_Active_Canvas], ["draw"], "Draw using parameterized brush.").setVersion(11570);
-		addNodeObject(input, "Tileset",				s_node_tileset, 		"Node_Tile_Tileset",			[1, Node_Tile_Tileset],, "Create tileset object.").setVersion(1_18_02_0);
-		addNodeObject(input, "Tile Drawer",			s_node_tileset_drawer, 	"Node_Tile_Drawer",				[1, Node_Tile_Drawer],, "Draw using tileset.").setVersion(1_18_02_0);
+		addNodeObject(input, "Tileset",				s_node_tileset, 		"Node_Tile_Tileset",			[1, Node_Tile_Tileset],, "Create tileset object.").setVersion(1_18_03_0);
+		addNodeObject(input, "Tile Drawer",			s_node_tileset_drawer, 	"Node_Tile_Drawer",				[1, Node_Tile_Drawer],, "Draw using tileset.").setVersion(1_18_03_0);
+		addNodeObject(input, "Export Tilemap",		s_node_tileset_export, 	"Node_Tile_Tilemap_Export",		[1, Node_Tile_Tilemap_Export],, "Export tilemap to file.").setVersion(1_18_03_0);
 		
 		ds_list_add(input, "Files");
 		addNodeObject(input, "Text File In",		s_node_text_file_read,	"Node_Text_File_Read",			[1, Node_Text_File_Read],  ["txt"], "Load .txt in as text.").setVersion(1080);

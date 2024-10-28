@@ -1,4 +1,4 @@
-function file_read_all(path) { #region
+function file_read_all(path) {
 	INLINE
 	
 	var f = file_text_open_read(path);
@@ -9,9 +9,9 @@ function file_read_all(path) { #region
 		s += string(file_text_readln(f));
 	file_text_close(f);
 	return s;
-} #endregion
+}
 
-function file_text_read_all_lines(path) { #region
+function file_text_read_all_lines(path) {
 	INLINE
 	
 	var f = file_text_open_read(path);
@@ -22,9 +22,9 @@ function file_text_read_all_lines(path) { #region
 		array_push(s, file_text_readln(f));
 	file_text_close(f);
 	return s;
-} #endregion
+}
 
-function file_text_write_all(path, str) { #region
+function file_text_write_all(path, str) {
 	INLINE
 	
 	if(file_exists_empty(path)) file_delete(path);
@@ -34,4 +34,4 @@ function file_text_write_all(path, str) { #region
 	
 	file_text_write_string(f, str);
 	file_text_close(f);
-} #endregion
+}

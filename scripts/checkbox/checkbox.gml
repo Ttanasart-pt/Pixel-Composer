@@ -1,7 +1,7 @@
 function checkBox(_onClick) : widget() constructor {
-	onClick = _onClick;
-	spr = THEME.checkbox_def;
+	onClick   = _onClick;
 	triggered = false;
+	spr       = THEME.checkbox_def;
 	
 	static setLua = function(_lua_thread, _lua_key, _lua_func) { 
 		lua_thread = _lua_thread;

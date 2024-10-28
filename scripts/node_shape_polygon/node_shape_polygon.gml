@@ -90,7 +90,7 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	node_draw_transform_init();
 	
-	temp_surfaces = [ noone ];
+	temp_surface = [ noone ];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(array_length(current_data) != array_length(inputs)) return;
@@ -197,8 +197,8 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				
 		var _outSurf = surface_verify(_outData[0], _dim[0], _dim[1], attrDepth());
 		
-		temp_surfaces[0] = surface_verify(temp_surfaces[0], _dim[0] * _aa, _dim[1] * _aa, attrDepth());
-		var _cPassAA = temp_surfaces[0];
+		temp_surface[0] = surface_verify(temp_surface[0], _dim[0] * _aa, _dim[1] * _aa, attrDepth());
+		var _cPassAA = temp_surface[0];
 		
 		var data = {
 			side:	   _side,

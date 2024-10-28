@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_tile_rule_select",
+  "name":"sh_tile_rule_select",
+  "parent":{
+    "name":"shaders",
+    "path":"folders/nodes/data/tiler/shaders.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

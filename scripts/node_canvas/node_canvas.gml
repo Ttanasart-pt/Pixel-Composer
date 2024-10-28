@@ -770,14 +770,16 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			else if(_currTool != noone) {
 				_tool = _currTool.getToolObject();
 				
-				if(_tool) {
+				if(is(_tool, canvas_tool)) {
 					_tool.node = self;
+					
 					_tool = _tool.getTool();
 					_tool.subtool = _currTool.selecting;
 					array_append(rightTools, _tool.rightTools);
 					
 					use_color_3d = _tool.use_color_3d;
-				}
+				} else 
+					_tool = noone;
 			}
 			
 			tool_selection.drawing_surface    = drawing_surface;

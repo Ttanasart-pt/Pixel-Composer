@@ -62,6 +62,13 @@ float dot2(in vec2 v ) { return dot(v,v); }
 
 mat2 rot(in float ang) { return mat2(cos(ang), - sin(ang), sin(ang), cos(ang)); }
 
+float smin( float a, float b, float k ) {
+	if(k == 0.) return min(a, b);
+    k *= 1.0/(1.0-sqrt(0.5));
+    float h = max( k-abs(a-b), 0.0 )/k;
+    return min(a,b) - k*0.5*(1.0+h-sqrt(1.0-h*(h-2.0)));
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 float eval_curve_segment_t(in float _y0, in float ax0, in float ay0, in float bx1, in float by1, in float _y1, in float prog) {
@@ -260,7 +267,7 @@ float sdDonut(vec2 p, float s) {
 	return max(o, -i);
 }
 
-float sdGear(vec2 p, float s, int teeth, vec2 teethSize, float teethAngle) {
+float sdGear(vec2 p, float s, int teeth, vec2 teethSize, float teethAngle, float corner) {
 	
 	float teeth_w = teethSize.y;
 	float teeth_h = teethSize.x;
@@ -272,14 +279,17 @@ float sdGear(vec2 p, float s, int teeth, vec2 teethSize, float teethAngle) {
 	float i = length(p) / (rad * s) - 1.;
 	float d = o;
 	
-	float _angSt  = TAU / float(teeth);
+	float _angSt = TAU / float(teeth);
+	float irad   = corner / max(dimension.x, dimension.y) * 16.;
+	
 	for(int i = 0; i < teeth; i++) {
 		_p = p;
 		_p = _p * rot(radians(teethAngle) + float(i) * _angSt);
 		_p = _p - vec2(1. - teeth_w, .0);
 		
-		s1 = sdBox(_p, vec2(teeth_w, teeth_h));
-		d  = min(d, s1);
+		s1 = sdRoundBox(_p, vec2(teeth_w, teeth_h), vec4(corner / 2., corner / 2., 0., 0.));
+		// d  = min(d, s1);
+		d  = smin(d, s1, irad);
 	}
 	
 	d = max(d, -i);
@@ -451,7 +461,7 @@ void main() {
 	else if(shape == 14) { d = sdCutDisk( 		coord, 1., inner );                                             		                                  }
 	else if(shape == 15) { d = sdPie( 			coord, vec2(sin(angle), cos(angle)), 1. );                          	                                  }
 	else if(shape == 16) { d = sdRoundedCross( 	coord, 1. - corner ) - corner;                              			                                  }
-	else if(shape == 18) { d = sdGear(          coord, inner, teeth, teethSize, teethAngle);                        	                                  }
+	else if(shape == 18) { d = sdGear(          coord, inner, teeth, teethSize, teethAngle, corner);                        	                          }
 	else if(shape == 19) { d = pow(pow(abs(coord.x), squircle_factor) + pow(abs(coord.y), squircle_factor), 1. / squircle_factor) - 1.;                   }
 	else if(shape == 17) { d = sdArrow(  v_vTexcoord, p1, p2, thickness, arrow, arrow_head);                               	                              }
 	else if(shape == 20) { d = sdSegment(v_vTexcoord, p1, p2) - thickness;                                                                                }

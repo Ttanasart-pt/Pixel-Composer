@@ -60,6 +60,8 @@ function tiler_tool_brush(node, _brush, eraser = false) : tiler_tool(node) const
 				_auto.drawing_start(drawing_surface, isEraser);
 				tiler_draw_point_brush(brush, mouse_cur_x, mouse_cur_y, false);
 				_auto.drawing_end();
+				
+				apply_draw_surface();
 			}
 					
 			mouse_holding = true;
@@ -75,7 +77,6 @@ function tiler_tool_brush(node, _brush, eraser = false) : tiler_tool(node) const
 				}
 				
 				mouse_holding = false;
-				
 				apply_draw_surface();
 			}
 			
@@ -95,6 +96,7 @@ function tiler_tool_brush(node, _brush, eraser = false) : tiler_tool(node) const
 					_auto.drawing_end();
 				}
 				
+				apply_draw_surface();
 			}
 				
 			mouse_pre_draw_x = mouse_cur_x;

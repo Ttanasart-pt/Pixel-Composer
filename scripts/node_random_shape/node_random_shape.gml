@@ -16,7 +16,7 @@ function Node_Random_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		["Render",	 false], 2,
 	]
 	
-	temp_surfaces = [ noone ];
+	temp_surface = [ noone ];
 	
 	function surfaceContentRatio(_surf) {
 		var s     = 0;
@@ -139,8 +139,8 @@ function Node_Random_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		
 		var _corn = surface_create(_dim[0], _dim[1]);
 		
-		temp_surfaces[0] = surface_verify(temp_surfaces[0], _adim[0], _adim[1]);
-		var _cPassAA = temp_surfaces[0];
+		temp_surface[0] = surface_verify(temp_surface[0], _adim[0], _adim[1]);
+		var _cPassAA = temp_surface[0];
 		
 		surface_set_shader(_cPassAA, sh_rsh_corner, true, BLEND.add);
 			shader_set_f("dimension", _adim[0], _adim[1]);

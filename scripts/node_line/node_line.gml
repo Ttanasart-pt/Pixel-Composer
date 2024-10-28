@@ -95,7 +95,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	lines     = [];
 	line_data = [];
 	
-	temp_surfaces = [ noone ];
+	temp_surface = [ noone ];
 	
 	widthMap = ds_map_create();
 	
@@ -541,8 +541,8 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var _padx = _pbbox * (_ppadd[2] - minx);
 		var _pady = _pbbox * (_ppadd[1] - miny);
 		
-		temp_surfaces[0] = surface_verify(temp_surfaces[0], _surfDim[0] * _aa, _surfDim[1] * _aa, attrDepth());
-		var _cPassAA = temp_surfaces[0];
+		temp_surface[0] = surface_verify(temp_surface[0], _surfDim[0] * _aa, _surfDim[1] * _aa, attrDepth());
+		var _cPassAA = temp_surface[0];
 		
 		surface_set_target(_cPassAA);
 			if(_bg) draw_clear_alpha(0, 1);

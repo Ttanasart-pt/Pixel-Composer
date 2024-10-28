@@ -595,6 +595,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 					break;
 					
 				case "Gear":
+					inputs[ 9].setVisible(true);
 					inputs[13].setVisible(true);
 					inputs[25].setVisible(true);
 					inputs[26].setVisible(true);

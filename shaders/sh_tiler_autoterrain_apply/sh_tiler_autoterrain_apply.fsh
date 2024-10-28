@@ -15,6 +15,7 @@ uniform int   bitmaskType;
 uniform int   indexes[1024];
 uniform int   indexSize;
 uniform int   erase;
+uniform int   indexMapper48[64];
 
 vec2 tx = 1. / dimension;
 
@@ -79,6 +80,61 @@ void main() {
         if(_1(i1) && _1(i3) && _1(i5) && _0(i7)) index =  7;
         
     } else if(bitmaskType == 1) {
+        index = 12;
+        
+        if(_A(i0) && _0(i1) && _A(i2) &&
+           _1(i3) &&           _1(i5) &&
+           _A(i6) && _1(i7) && _A(i8)) index = 2;
+           
+        if(_A(i0) && _1(i1) && _A(i2) &&
+           _0(i3) &&           _1(i5) &&
+           _A(i6) && _1(i7) && _A(i8)) index = 10;
+           
+        if(_A(i0) && _1(i1) && _A(i2) &&
+           _1(i3) &&           _0(i5) &&
+           _A(i6) && _1(i7) && _A(i8)) index = 14;
+           
+        if(_A(i0) && _1(i1) && _A(i2) &&
+           _1(i3) &&           _1(i5) &&
+           _A(i6) && _0(i7) && _A(i8)) index = 22;
+           
+    //////////////////////////////////////////////////////////////////////////////////////////////////
+        
+        if(_A(i0) && _0(i1) && _A(i2) &&
+           _0(i3) &&           _1(i5) &&
+           _A(i6) && _1(i7) && _A(i8)) index = 1;
+           
+        if(_A(i0) && _0(i1) && _A(i2) &&
+           _1(i3) &&           _0(i5) &&
+           _A(i6) && _1(i7) && _A(i8)) index = 3;
+           
+        if(_A(i0) && _1(i1) && _A(i2) &&
+           _0(i3) &&           _1(i5) &&
+           _A(i6) && _0(i7) && _A(i8)) index = 21;
+           
+        if(_A(i0) && _1(i1) && _A(i2) &&
+           _1(i3) &&           _0(i5) &&
+           _A(i6) && _0(i7) && _A(i8)) index = 23;
+           
+    //////////////////////////////////////////////////////////////////////////////////////////////////
+           
+        if(_0(i0) && _1(i1) && _A(i2) &&
+           _1(i3) &&           _1(i5) &&
+           _A(i6) && _1(i7) && _A(i8)) index = 6;
+           
+        if(_A(i0) && _1(i1) && _0(i2) &&
+           _1(i3) &&           _1(i5) &&
+           _A(i6) && _1(i7) && _A(i8)) index = 8;
+           
+        if(_A(i0) && _1(i1) && _A(i2) &&
+           _1(i3) &&           _1(i5) &&
+           _0(i6) && _1(i7) && _A(i8)) index = 16;
+           
+        if(_A(i0) && _1(i1) && _A(i2) &&
+           _1(i3) &&           _1(i5) &&
+           _A(i6) && _1(i7) && _0(i8)) index = 18;
+           
+    } else if(bitmaskType == 2) {
         index = 6;
         
         if(_0(i1) && _0(i3) && _1(i5) && _1(i7)) index =  0;
@@ -103,7 +159,7 @@ void main() {
             if(_0(i0) && _0(i8)) index = 14;
         }
         
-    } else if(bitmaskType == 2 || bitmaskType == 3) {
+    } else if(bitmaskType == 3 || bitmaskType == 4) {
         index = 12;
         
         if(_A(i0) && _0(i1) && _A(i2) &&
@@ -314,10 +370,7 @@ void main() {
            _1(i3) &&           _1(i5) &&
            _0(i6) && _1(i7) && _0(i8)) index = 52;
        
-        if(bitmaskType == 2) {
-                 if(index == 0) index == 0;
-            else if(index == 0) index == 0;
-        }
+        if(bitmaskType == 2) index = indexMapper48[index];
     }
     
     float res = float(indexes[index]);

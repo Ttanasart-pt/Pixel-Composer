@@ -63,8 +63,8 @@ function draw_sprite_bbox_uniform(spr, ind, _bbox, _col = c_white, _alp = 1) {
 	__draw_sprite_stretched_ext(spr, ind, _bbox.xc - _minS / 2, _bbox.yc - _minS / 2, _minS, _minS, _col, _alp);
 }
 
-function draw_sprite_uniform(spr, ind, _x, _y, scale, color = c_white) {
-	INLINE draw_sprite_ext(spr, ind, _x, _y, scale, scale, 0, color, 1);
+function draw_sprite_uniform(spr, ind, _x, _y, scale, color = c_white, alpha = 1) {
+	INLINE draw_sprite_ext(spr, ind, _x, _y, scale, scale, 0, color, alpha);
 }
 
 function draw_sprite_ui(spr, ind, _x, _y, xscale = 1, yscale = 1, rot = 0, color = c_white, alpha = 1) {
