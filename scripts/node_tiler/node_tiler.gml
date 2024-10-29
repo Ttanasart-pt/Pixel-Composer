@@ -372,9 +372,11 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
 	static attributeSerialize = function() {
-		attributes.canvas = surface_encode(canvas_surface);
+		var _attr = {
+			canvas : surface_encode(canvas_surface),
+		}
 		
-		return attributes; 
+		return _attr; 
 	}
 	
 	static attributeDeserialize = function(attr) {

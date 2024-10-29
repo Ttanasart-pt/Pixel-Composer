@@ -208,6 +208,16 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			input_button_length = array_length(input_buttons);
 		});
 		
+		junc_meta = [
+			nodeValue_Output("Name",     self, VALUE_TYPE.text,  ""),
+			nodeValue_Output("Position", self, VALUE_TYPE.float, [ 0, 0 ])
+				.setDisplay(VALUE_DISPLAY.vector),
+		];
+		
+		for( var i = 0, n = array_length(junc_meta); i < n; i++ ) {
+			junc_meta[i].index = i;
+			junc_meta[i].tags  = VALUE_TAG.matadata;
+		}
 	#endregion
 	
 	#region --- attributes ----
@@ -215,15 +225,17 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		attributes.node_width  = 0;
 		attributes.node_height = 0;
 		attributes.annotation  = "";
+		attributes.outp_meta   = false;
 		
 		attributeEditors = [
 			"Display",
-			["Annotation",   function() { return attributes.annotation; },       new textArea(TEXTBOX_INPUT.text,  function(val) { attributes.annotation = val; }) ],
-			["Params Width", function() { return attributes.node_param_width; }, new textBox(TEXTBOX_INPUT.number, function(val) { attributes.node_param_width = val; refreshNodeDisplay(); }) ],
+			["Annotation",   function() /*=>*/ {return attributes.annotation},       new textArea(TEXTBOX_INPUT.text,  function(val) /*=>*/ { attributes.annotation = val; }) ],
+			["Params Width", function() /*=>*/ {return attributes.node_param_width}, new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ { attributes.node_param_width = val; refreshNodeDisplay(); }) ],
 			
-			"Node update",
-			["Auto update",    function() { return attributes.update_graph; },		  new checkBox(function() { attributes.update_graph = !attributes.update_graph; }) ],
-			["Update trigger", function() { return attributes.show_update_trigger; }, new checkBox(function() { attributes.show_update_trigger = !attributes.show_update_trigger; }) ],
+			"Node",
+			["Auto update",     function() /*=>*/ {return attributes.update_graph},		  new checkBox(function() /*=>*/ { attributes.update_graph        = !attributes.update_graph;           }) ],
+			["Update trigger",  function() /*=>*/ {return attributes.show_update_trigger}, new checkBox(function() /*=>*/ { attributes.show_update_trigger = !attributes.show_update_trigger;    }) ],
+			["Output metadata", function() /*=>*/ {return attributes.outp_meta},           new checkBox(function() /*=>*/ { attributes.outp_meta           = !attributes.outp_meta; setHeight(); }) ],
 		];
 		
 		bufferStore = {};
@@ -584,6 +596,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(is_3D == NODE_3D.polygon) USE_DEPTH = true;
 		if(is_simulation) PROJECT.animator.is_simulating = true;
 		
+		if(attributes.outp_meta) {
+			junc_meta[0].setValue(getDisplayName());
+			junc_meta[1].setValue([ x, y ]);
+		}
 	}
 	
 	static doStepBegin = function() {}
@@ -716,6 +732,13 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			if(_byp == noone) continue;
 			
 			_ho += junction_draw_hei_y * _byp.visible;
+		}
+		
+		if(attributes.outp_meta) {
+			for( var i = 0; i < array_length(junc_meta); i++ ) {
+				if(!junc_meta[i].isVisible()) continue;
+				_ho += junction_draw_hei_y;
+			}
 		}
 		
 		h = max(min_h, _prev_surf * 128, _hi, _ho);
@@ -1333,6 +1356,16 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			ry  += junction_draw_hei_y * jun.visible;
 		}
 		
+		for( var i = 0, n = array_length(junc_meta); i < n; i++ ) {
+			var jun  = junc_meta[i];
+			
+			jun.x = _ox; jun.rx = rx;
+			jun.y = _oy; jun.ry = ry;
+			
+			_oy += junction_draw_hei_y * jun.isVisible() * _s;
+			ry  += junction_draw_hei_y * jun.isVisible();
+		}
+		
 		if(SHOW_PARAM) h = h_param;
 		
 		onPreDraw(_x, _y, _s, _iy, _oy);
@@ -1549,6 +1582,15 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			if(updatedOutTrigger.drawJunction(_s, _mx, _my)) hover = updatedOutTrigger;
 		}
 		
+		if(attributes.outp_meta) {
+			for(var i = 0; i < array_length(junc_meta); i++) { // outputs
+				var jun = junc_meta[i];
+				
+				if(!jun.isVisible()) continue;
+				if(jun.drawJunction(_s, _mx, _my)) hover = jun;
+			}
+		}
+		
 		onDrawJunctions(_x, _y, _mx, _my, _s);
 		
 		return hover;
@@ -1587,6 +1629,15 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(attributes.show_update_trigger) {
 			if(updatedInTrigger.drawJunction_fast(_s, _mx, _my))  hover = updatedInTrigger;
 			if(updatedOutTrigger.drawJunction_fast(_s, _mx, _my)) hover = updatedOutTrigger;
+		}
+		
+		if(attributes.outp_meta) {
+			for(var i = 0; i < array_length(junc_meta); i++) { // outputs
+				var jun = junc_meta[i];
+				
+				if(!jun.isVisible()) continue;
+				if(jun.drawJunction_fast(_s, _mx, _my)) hover = jun;
+			}
 		}
 		
 		onDrawJunctions(_x, _y, _mx, _my, _s);
@@ -1652,6 +1703,17 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				if(jun == noone || !jun.visible) continue;
 				jun.drawName(_s, _mx, _my);
 			}
+			
+			if(attributes.outp_meta) {
+				for(var i = 0; i < array_length(junc_meta); i++) {
+					var jun = junc_meta[i];
+					
+					if(!jun.isVisible()) continue;
+					jun.drawNameBG(_s);
+					jun.drawName(_s, _mx, _my);
+				}
+			}
+			
 		}
 		
 		if(hasInspector1Update() && PANEL_GRAPH.pHOVER && point_in_circle(_mx, _my, inspectInput1.x, inspectInput1.y, 10)) {
@@ -2235,7 +2297,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			_map.show_parameter = show_parameter;
 		}
 		
-		_map.attri = attributeSerialize();
+		var _attr  = attributeSerialize();
+		_map.attri = struct_append(attributes, _attr); 
 		
 		if(is_dynamic_input) {
 			_map.input_fix_len  = input_fix_len;
@@ -2258,7 +2321,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		array_push(_trigger, updatedInTrigger.serialize(scale, preset));
 		array_push(_trigger, updatedOutTrigger.serialize(scale, preset));
 		
+		var _outMeta = [];
+		for(var i = 0; i < array_length(junc_meta); i++)
+			_outData[i] = junc_meta[i].serialize(scale, preset);
+		
 		_map.inspectInputs = _trigger;
+		_map.outputMeta    = _outMeta;
 		_map.renamed       = renamed;
 		
 		_map.buffer = {};
@@ -2273,7 +2341,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return _map;
 	}
 	
-	static attributeSerialize = function() { return attributes; }
+	static attributeSerialize = function() { return {}; }
 	static doSerialize		  = function(_map) {}
 	static processSerialize   = function(_map) {}
 	
@@ -2431,6 +2499,13 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 			if(array_length(insInp) > 2) updatedInTrigger.applyDeserialize(insInp[2], load_scale, preset);
 			if(array_length(insInp) > 3) updatedOutTrigger.applyDeserialize(insInp[3], load_scale, preset);
+		}
+		
+		if(struct_has(load_map, "outputMeta")) {
+			var _outMeta = load_map.outputMeta;
+			
+			for(var i = 0; i < min(array_length(_outMeta), array_length(junc_meta)); i++)
+				junc_meta[i].applyDeserialize(_outMeta[i], load_scale, preset);
 		}
 		
 		//print($"Applying deserialzie for {name} complete");

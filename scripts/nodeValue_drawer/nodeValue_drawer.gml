@@ -19,7 +19,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 	var xc	      = xx + ww / 2;
 	var _font     = viewMode == INSP_VIEW_MODE.spacious? f_p1 : f_p2;
 	var breakLine = viewMode == INSP_VIEW_MODE.spacious || jun.expUse;
-	var lb_h      = line_get_height(_font) + ui(6);
+	var lb_h      = line_get_height(_font, 6);
 	var lb_y      = yy + lb_h / 2;
 	
 	var _name     = jun.getName();

@@ -64,7 +64,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	layer_dragging	= noone;
 	layer_remove	= -1;
 	
-	layer_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { #region 
+	layer_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { 
 		ds_map_clear(surfMap);
 		
 		var index = -1;
@@ -84,7 +84,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				surfMap[? _id] = [ [ index, _surf ] ];
 		}
 		
-		#region draw bones
+	 #region draw bones
 			var _b  = bone;
 			if(_b == noone) return 0;
 			var amo = _b.childCount();
@@ -333,7 +333,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			}
 		#endregion
 		
-		if(layer_dragging != noone && mouse_release(mb_left)) { #region
+		if(layer_dragging != noone && mouse_release(mb_left)) {
 			if(layer_dragging != hoverIndex && hoverIndex != noone) {
 				var index = input_fix_len + layer_dragging * data_length;
 				var targt = input_fix_len + hoverIndex * data_length;
@@ -362,11 +362,11 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			}
 			
 			layer_dragging = noone;
-		} #endregion
+		}
 		
 		layer_renderer.h = bh + ui(40) + sh;
 		return layer_renderer.h;
-	#endregion
+
 	});
 	
 	input_display_list = [ 1, 2, 
@@ -441,12 +441,12 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	bone = noone;
 	surface_selecting = noone;
 	
-	static getInputIndex = function(index) { #region
+	static getInputIndex = function(index) {
 		if(index < input_fix_len) return index;
 		return input_fix_len + (index - input_fix_len) * data_length;
-	} #endregion
+	}
 	
-	static setBone = function() { #region
+	static setBone = function() {
 		ds_map_clear(boneMap);
 		
 		var _b = getInputData(1);
@@ -467,9 +467,9 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		}
 		
 		ds_stack_destroy(_bst);
-	} #endregion
+	}
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var dim   = getInputData(0);
 		var _bind = getInputData(2);
 		
@@ -499,7 +499,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		var y0  = _y;
 		var y1  = _y + hh * _s;
 		
-		if(surf_dragging > -1) { #region
+		if(surf_dragging > -1) {
 			var _surf = current_data[surf_dragging + 0];
 			var _tran = current_data[surf_dragging + 1];
 			var _aang = current_data[surf_dragging + 2];
@@ -564,7 +564,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				surf_dragging = -1;
 				UNDO_HOLDING = false;
 			}
-		} #endregion
+		}
 		
 		var hovering = noone;
 		var hovering_type = noone;
@@ -574,7 +574,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		var amo = (array_length(inputs) - input_fix_len) / data_length;
 		var anchors = array_create(array_length(inputs));
 		
-		for(var i = 0; i < amo; i++) { #region
+		for(var i = 0; i < amo; i++) {
 			var index = input_fix_len + i * data_length;
 			var _surf = array_safe_get_fast(current_data, index);
 			if(!_surf || is_array(_surf)) continue;
@@ -632,9 +632,9 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				
 				rot: _rot,
 			}
-		} #endregion
+		}
 		
-		for(var i = 0; i < amo; i++) { #region
+		for(var i = 0; i < amo; i++) {
 			var vis = array_safe_get_fast(_vis, i);
 			var sel = array_safe_get_fast(_sel, i);
 			if(!vis) continue;
@@ -675,7 +675,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				hovering = index;
 				hovering_type = NODE_COMPOSE_DRAG.move;
 			}
-		} #endregion
+		}
 		
 		if(mouse_press(mb_left, active))
 			surface_selecting = hovering;
@@ -704,7 +704,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			draw_line(a.d3[0], a.d3[1], a.d2[0], a.d2[1]);
 		}
 		
-		if(hovering != noone && hovering_type != noone && mouse_press(mb_left, active)) { #region
+		if(hovering != noone && hovering_type != noone && mouse_press(mb_left, active)) {
 			var _tran = current_data[hovering + 1];
 			var _aang = current_data[hovering + 2];
 			var _asca = current_data[hovering + 3];
@@ -731,15 +731,15 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				dragging_mx		= (a.d0[0] + a.d3[0]) / 2;
 				dragging_my		= (a.d0[1] + a.d3[1]) / 2;
 			}
-		} #endregion
+		}
 		
 		if(layer_remove > -1) {
 			deleteLayer(layer_remove);
 			layer_remove = -1;
 		}
-	} #endregion
+	}
 	
-	static step = function() { #region
+	static step = function() {
 		var _dim_type = getSingleValue(1);
 		inputs[2].setVisible(_dim_type == COMPOSE_OUTPUT_SCALING.constant);
 		
@@ -747,9 +747,9 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			inputs[i + 3].setVisible(current_data[i + 2]);
 			inputs[i + 5].setVisible(current_data[i + 4]);
 		}
-	} #endregion
+	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		if(_output_index == 1) return atlas_data;
 		if(_output_index == 2) return bind_data;
 		if(_output_index == 0 && _array_index == 0) {
@@ -853,9 +853,9 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		surface_reset_shader();
 		
 		return _outSurf;
-	} #endregion
+	}
 	
-	static resetTransform = function(surfIndex) { #region
+	static resetTransform = function(surfIndex) {
 		var _bind = getInputData(2);
 		var use_data = _bind != noone;
 		
@@ -876,17 +876,17 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		
 		var _tr  = [ _cx - _anc.x, _cy - _anc.y, _rot, 1, 1 ];
 		inputs[surfIndex + 1].setValue(_tr);
-	} #endregion
+	}
 	
-	static attributeSerialize = function() { #region
+	static attributeSerialize = function() {
 		var att = {};
 		att.layer_visible    = attributes.layer_visible;
 		att.layer_selectable = attributes.layer_selectable;
 		
 		return att;
-	} #endregion
+	}
 	
-	static attributeDeserialize = function(attr) { #region
+	static attributeDeserialize = function(attr) {
 		struct_append(attributes, attr); 
 		
 		if(struct_has(attributes, "use_project_dimension") && !struct_has(attr, "use_project_dimension"))
@@ -897,10 +897,10 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			
 		if(struct_has(attr, "layer_selectable"))
 			attributes.layer_selectable = attr.layer_selectable;
-	} #endregion
+	}
 	
-	static doApplyDeserialize = function() { #region
+	static doApplyDeserialize = function() {
 		setBone();
-	} #endregion
+	}
 }
 

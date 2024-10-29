@@ -141,9 +141,10 @@ enum VALUE_UNIT {
 }
 
 enum VALUE_TAG {
-	updateInTrigger		= -2,
-	updateOutTrigger	= -3,
-	none				= 0
+	updateInTrigger	 = -2,
+	updateOutTrigger = -3,
+	matadata         = -4,
+	none			 =  0,
 }
 
 enum LINE_STYLE {

@@ -381,7 +381,14 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				draw_sprite_uniform(THEME.cross, 0, _sx + _sw / 2, _sy + _sh / 2, 1, COLORS._main_icon, _aa);
 				
 				if(_shov) {
-					if(is(object_selecting, tiler_rule)) {
+					if(object_selecting == noone) {
+						if(mouse_press(mb_left, _focus)) {
+							brush.brush_indices = [[[ -1, 0 ]]];
+			    			brush.brush_width   = 1;
+							brush.brush_height  = 1;
+						}
+						
+					} else if(is(object_selecting, tiler_rule)) {
 						TOOLTIP = "Set Rule selector";
 						
 						if(mouse_press(mb_left, _focus)) {

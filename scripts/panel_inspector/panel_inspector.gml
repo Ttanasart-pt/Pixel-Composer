@@ -609,6 +609,7 @@ function Panel_Inspector() : PanelContent() constructor {
             var wx1 = con_w - ui(8);
             var ww  = max(ui(180), con_w / 3);
             var wx0 = wx1 - ww;
+            var font  = viewMode == INSP_VIEW_MODE.spacious? f_p1 : f_p2;
             
             for( var i = 0, n = array_length(_inspecting.attributeEditors); i < n; i++ ) {
                 var edt = _inspecting.attributeEditors[i];
@@ -633,28 +634,33 @@ function Panel_Inspector() : PanelContent() constructor {
                 var _att_name = edt[0];
                 var _att_val  = edt[1]();
                 var _att_wid  = edt[2];
+                var _att_h    = viewMode == INSP_VIEW_MODE.spacious? hg : line_get_height(font, 8);
                 
+                _att_wid.font = font;
                 _att_wid.setFocusHover(pFOCUS, pHOVER);
                 
                 if(instanceof(_att_wid) == "buttonClass") {
                     _att_wid.text = _att_name;
-                    _att_wid.draw(ui(8), yy, con_w - ui(16), hg, _m); 
+                    _att_wid.draw(ui(8), yy, con_w - ui(16), _att_h, _m); 
                     
                     if(_att_wid.inBBOX(_m)) contentPane.hover_content = true;
-                    yy += hg + ui(8);
-                    hh += hg + ui(8);
+                    yy += _att_h + ui(8);
+                    hh += _att_h + ui(8);
                     continue;
                 } 
                 
-                draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
-                draw_text_add(ui(8), yy + hg / 2, _att_name);
+                draw_set_text(font, fa_left, fa_center, COLORS._main_text);
+                draw_text_add(ui(8), yy + _att_h / 2, _att_name);
                 
-                var _param = new widgetParam(wx0, yy, ww, hg, _att_val, {}, _m, x + contentPane.x, y + contentPane.y);
-                    _param.s = hg;
+                var _param = new widgetParam(wx0, yy, ww, _att_h, _att_val, {}, _m, x + contentPane.x, y + contentPane.y);
+                    _param.s    = _att_h;
+                    _param.font = font;
+                    
                 var _wh = _att_wid.drawParam(_param);
-                var _hg = max(hg, _wh);
                 
                 if(_att_wid.inBBOX(_m)) contentPane.hover_content = true;
+                
+                var _hg = max(_att_h, _wh);
                 yy += _hg + ui(8);
                 hh += _hg + ui(8);
             }
@@ -701,7 +707,9 @@ function Panel_Inspector() : PanelContent() constructor {
         var jun     = noone;
         var amoIn   = is_array(_inspecting.input_display_list)?  array_length(_inspecting.input_display_list)  : array_length(_inspecting.inputs);
         var amoOut  = is_array(_inspecting.output_display_list)? array_length(_inspecting.output_display_list) : array_length(_inspecting.outputs);
-        var amo     = inspectGroup == 0? amoIn + 1 + amoOut : amoIn;
+        var amoMeta = _inspecting.attributes.outp_meta? array_length(_inspecting.junc_meta) : 0;
+        
+        var amo     = inspectGroup == 0? amoIn + 1 + amoOut + amoMeta : amoIn;
         
         var color_picker_index = 0;
         var pickers            = [];
@@ -726,7 +734,7 @@ function Panel_Inspector() : PanelContent() constructor {
                 draw_text_add(xc, yy + ui(8 + 16), __txt("Outputs"));
                 continue;
             
-            } else { // outputs
+            } else if(i < amoIn + 1 + amoOut) { // outputs
                 var _oi = i - amoIn - 1;
                 var _dsl = _inspecting.output_display_list;
                 var _dsp = array_safe_get_fast(_dsl, _oi);
@@ -734,7 +742,11 @@ function Panel_Inspector() : PanelContent() constructor {
                      if(!is_array(_dsl)) jun = array_safe_get_fast(_inspecting.outputs, _oi);
                 else if(is_real(_dsp))   jun = array_safe_get_fast(_inspecting.outputs, _dsp);
                 else                     jun = _dsp;
-            } 
+                
+            } else { // metadata
+                jun = _inspecting.junc_meta[i - (amoIn + 1 + amoOut)];
+                
+            }
             
             if(is_instanceof(jun, Inspector_Spacer)) {                    // SPACER
                 var _hh = ui(jun.h);

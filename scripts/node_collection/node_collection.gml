@@ -611,7 +611,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	static attributeSerialize = function() {
 		sortIO();
 		
-		var _attr = variable_clone(attributes);
+		var _attr = {};
 		
 		_attr.custom_input_list = [];
 		for( var i = custom_input_index, n = array_length(inputs); i < n; i++ ) {

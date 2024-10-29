@@ -751,7 +751,6 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	static attributeSerialize = function() {
 		var att = {};
-		struct_append(att, attributes);
 		
 		var pinList = [];
 		for( var j = 0; j < array_length(mesh_data.points); j++ ) {
