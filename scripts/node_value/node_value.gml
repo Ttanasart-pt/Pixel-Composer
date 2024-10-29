@@ -3,8 +3,8 @@ function nodeValueMap(_name, _node, _junc = noone)						 { return new NodeValue(
 function nodeValueGradientRange(_name, _node, _junc = noone)			 { return new NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.float, [ 0, 0, 1, 0 ])
 																						.setDisplay(VALUE_DISPLAY.gradient_range).setVisible(false, false).setMapped(_junc); }
 
-function nodeValueSeed(_node, _type) { 
-	var _val = new NodeValue("Seed", _node, CONNECT_TYPE.input, _type, seed_random(6), "");
+function nodeValueSeed(_node, _type, _name = "Seed") { 
+	var _val = new NodeValue(_name, _node, CONNECT_TYPE.input, _type, seed_random(6), "");
 	__node_seed_input_value = _val;
 	_val.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() /*=>*/ { randomize(); __node_seed_input_value.setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
 	return _val; 

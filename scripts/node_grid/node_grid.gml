@@ -68,17 +68,28 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	newInput(27, nodeValue_Bool("Diagonal", self, false));
 	
-	newInput(28, nodeValue_Bool("Uniform height", self, true));
+	newInput(28, nodeValue_Bool("Uniform gap", self, true));
 	
 	newInput(29, nodeValue_Float("Secondary Scale", self, 0));
 	
 	newInput(30, nodeValue_Float("Secondary Shift", self, 0))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
+	newInput(31, nodeValue_Float("Random Shift", self, 0))
+		.setDisplay(VALUE_DISPLAY.slider);
+	
+	newInput(32, nodeValueSeed(self, VALUE_TYPE.float, "Shift Seed"));
+	
+	newInput(33, nodeValue_Float("Random Scale", self, 0))
+		.setDisplay(VALUE_DISPLAY.slider);
+	
+	newInput(34, nodeValueSeed(self, VALUE_TYPE.float, "Scale Seed"));
+	
 	input_display_list = [
 		["Output",    false], 0,
-		["Pattern",	  false], 1, 4, 15, 2, 13, 28, 3, 26, 27, 14, 9, 8, 16,
-		["Secondary", false], 30, 29, 
+		["Pattern",	  false], 1, 4, 15, 2, 13, 28, 3, 26, 27, 14, 
+		["Shift",	  false], 9, 8, 16, 31, 32, 30, 
+		["Scale",     false], 29, 33, 34, 
 		["Render",	  false], 10, 11, 5, 20, 6, 7, 25, 12, 24, 
 		["Truchet",    true, 17], 18, 19, 22, 23, 
 	];
@@ -158,6 +169,11 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			shader_set_i("uniformSize",    _data[28]);
 			shader_set_f("secScale", 	   _data[29]);
 			shader_set_f("secShift", 	   _data[30]);
+			
+			shader_set_f("randShift", 	   _data[31]);
+			shader_set_f("randShiftSeed",  _data[32]);
+			shader_set_f("randScale", 	   _data[33]);
+			shader_set_f("randScaleSeed",  _data[34]);
 			
 			shader_set_color("gapCol", _col_gap);
 			

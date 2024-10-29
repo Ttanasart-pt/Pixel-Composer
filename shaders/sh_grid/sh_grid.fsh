@@ -40,6 +40,11 @@ uniform float truchetThresX;
 uniform float truchetThresY;
 uniform vec2  truchetAngle;
 
+uniform float randShift;
+uniform float randShiftSeed;
+uniform float randScale;
+uniform float randScaleSeed;
+
 float random (in vec2 st) { return fract(sin(dot(st.xy + vec2(85.456034, 64.54065), vec2(12.9898, 78.233))) * (43758.5453123 + seed) ); }
 
 #region //////////////////////////////////// GRADIENT ////////////////////////////////////
@@ -247,26 +252,22 @@ void main() {
 	_pos.x = pos.x * ratio * cos(ang) - pos.y * sin(ang);
 	_pos.y = pos.x * ratio * sin(ang) + pos.y * cos(ang);
 	
-	if(shiftAxis == 0) {
-		shf /= sca.x;
-		
-		float cellY  = floor(_pos.y * sca.y);
-		float _sec   = mod(cellY, 2.);
-		float shiftX = _sec * shf;
-		
-		_pos.x += shiftX + _sec * secShift;
-		 sca.x *= 1.     + _sec * secScale;
-	} else {
-		shf /= sca.y;
-		
-		float cellX  = floor(_pos.x * sca.x);
-		float _sec   = mod(cellX, 2.);
-		float shiftY = _sec * shf;
+	shf /= sca[shiftAxis];
+	int antiAxis = shiftAxis == 0? 1 : 0;
 	
-		_pos.y += shiftY + _sec * secShift;
-		 sca.y *= 1.     + _sec * secScale;
-	}
+	float cell  = floor(_pos[antiAxis] * sca[antiAxis]);
+	float _sec  = mod(cell, 2.);
+	float _shft = (_sec * secShift) + (_sec * shf);
+	float _rdsh = randShift * (random(randShiftSeed / 1000. + vec2(cell / dimension.x)) * 2. - 1.);
+	_shft += _rdsh;
 	
+	float _scas = (_sec * secScale) + (1.);
+	float _rdsc = randScale * (random(randScaleSeed / 1000. + vec2(cell / dimension.x)) * 2. - 1.);
+	_scas += _rdsc;
+	
+		 if(shiftAxis == 0) { _pos.x += _shft; sca.x *= _scas; } 
+	else if(shiftAxis == 1) { _pos.y += _shft; sca.y *= _scas; }
+		 
 	vec2 sqSt  = floor(_pos * sca) / sca;
 	vec2 _dist = _pos - sqSt;
 	vec2 nPos  = abs(_dist * sca - vec2(0.5)) * 2.; //distance in x, y axis
