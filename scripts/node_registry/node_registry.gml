@@ -1013,6 +1013,7 @@ function __initNodes() {
 		ds_list_add(color, "Palettes");
 		addNodeObject(color, "Palette",			s_node_palette,			"Node_Palette",			[1, Node_Palette],,			"Create palette value. Note that palette is simple an array of colors.");
 		addNodeObject(color, "Sort Palette",	s_node_palette_sort,	"Node_Palette_Sort",	[1, Node_Palette_Sort],,	"Sort palette with specified order.").setVersion(1130);
+		addNodeObject(color, "Shrink Palette",	s_node_palette_shrink,	"Node_Palette_Shrink",	[1, Node_Palette_Shrink],,	"Reduce palette size by collapsing similiar colors.").setVersion(1_18_03_0);
 		addNodeObject(color, "Palette Extract",	s_node_palette_extract,	"Node_Palette_Extract",	[1, Node_Palette_Extract],, "Extract palette from an image.").setVersion(1100);
 		addNodeObject(color, "Palette Replace",	s_node_palette_replace,	"Node_Palette_Replace",	[1, Node_Palette_Replace],, "Replace colors in a palette with new one.").setVersion(1120);
 			

@@ -43,7 +43,7 @@
 	VERSION			= 1_18_01_0;
 	SAVE_VERSION	= 1_18_02_0;
 	VERSION_STRING  = MAC? "1.18.003m" : "1.18.3.007";
-	BUILD_NUMBER	= 1_18_01_0;
+	BUILD_NUMBER	= 1_18_03_0;
 	
 	HOTKEYS			= ds_map_create();
 	HOTKEY_CONTEXT	= ds_list_create();

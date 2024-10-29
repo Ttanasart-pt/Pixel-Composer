@@ -257,7 +257,7 @@ void main() {
 	
 	float cell  = floor(_pos[antiAxis] * sca[antiAxis]);
 	float _sec  = mod(cell, 2.);
-	float _shft = (_sec * secShift) + (_sec * shf);
+	float _shft = (_sec * secShift) + (cell * shf);
 	float _rdsh = randShift * (random(randShiftSeed / 1000. + vec2(cell / dimension.x)) * 2. - 1.);
 	_shft += _rdsh;
 	

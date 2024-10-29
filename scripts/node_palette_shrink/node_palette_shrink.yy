@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_palette_shrink",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_palette_shrink",
+  "parent":{
+    "name":"color",
+    "path":"folders/nodes/data/value/color.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

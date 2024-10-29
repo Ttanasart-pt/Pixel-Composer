@@ -86,11 +86,11 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(34, nodeValueSeed(self, VALUE_TYPE.float, "Scale Seed"));
 	
 	input_display_list = [
-		["Output",    false], 0,
-		["Pattern",	  false], 1, 4, 15, 2, 13, 28, 3, 26, 27, 14, 
-		["Shift",	  false], 9, 8, 16, 31, 32, 30, 
-		["Scale",     false], 29, 33, 34, 
-		["Render",	  false], 10, 11, 5, 20, 6, 7, 25, 12, 24, 
+		["Output",    false],  0,
+		["Pattern",	  false],  1,  4, 15,  2, 13, 28,  3, 26, 27, 14, 
+		["Shift",	  false],  9,  8, 16, 31, 32, 30, 
+		["Scale",     false], 33, 34, 29, 
+		["Render",	  false], 10, 11,  5, 20,  6,  7, 25, 12, 24, 
 		["Truchet",    true, 17], 18, 19, 22, 23, 
 	];
 	
