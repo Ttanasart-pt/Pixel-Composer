@@ -36,9 +36,8 @@
 		globalNode	   = new Node_Global();
 		nodeController = new __Node_Controller(self);
 		
-		load_layout = false;
-		
-		previewNode   = "";
+		load_layout    = false;
+		previewNode    = "";
 		inspectingNode = "";
 		
 		previewGrid = {
@@ -88,6 +87,14 @@
 		tunnels_in     = ds_map_create();
 		tunnels_in_map = ds_map_create();
 		tunnels_out    = ds_map_create();
+		
+		#region ===================== BINDERS ====================
+			bind_gamemaker_path = "";
+			bind_godot_path     = "";
+			
+			bind_gamemaker = noone;
+			bind_godot     = noone;
+		#endregion
 		
 		#region =================== ATTRIBUTES ===================
 			attributes = variable_clone(PROJECT_ATTRIBUTES);
@@ -259,6 +266,9 @@
 			}
 			_map.addon = _addon;
 			
+			_map.bind_gamemaker_path = bind_gamemaker_path;
+			_map.bind_godot_path     = bind_godot_path;
+			
 			return _map;
 		}
 		
@@ -313,6 +323,9 @@
 				var _node = nodeMap[? inspectingNode];
 				if(_node) PANEL_INSPECTOR.setInspecting(_node);
 			}
+			
+			if(struct_has(_map, "bind_gamemaker_path"))	bind_gamemaker_path = _map.bind_gamemaker_path;
+			if(struct_has(_map, "bind_godot_path"))	    bind_godot_path     = _map.bind_godot_path;
 		}
 		
 		static postDeserialize = function() {

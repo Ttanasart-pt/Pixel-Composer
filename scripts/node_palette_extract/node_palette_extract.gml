@@ -28,7 +28,11 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	]
 	
 	current_palette = [];
-	current_color = 0;
+	current_color   = 0;
+	
+	extraction_step    = 0;
+	extraction_total   = 0;
+	extraction_current = 0;
 	
 	attribute_surface_depth();
 	
@@ -73,8 +77,8 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 			draw_surface_stretched_safe(_surfFull, 0, 0, ww, hh);
 		surface_reset_shader();
 		
-		var c_buffer = buffer_create(ww * hh * 4, buffer_fixed, 2);
-		var colors   = [];
+		var c_buffer = buffer_create(ww * hh * 4, buffer_fixed, 4);
+		var colors   = array_create(ww * hh), ind = 0;
 		
 		buffer_get_surface(c_buffer, _surf, 0);
 		buffer_seek(c_buffer, buffer_seek_start, 0);
@@ -95,17 +99,18 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 				case 2 : col = [ _color_get_hue(c), _color_get_saturation(c), _color_get_value(c), 0 ]; break;
 			}
 			
-			array_push(colors, col);
+			colors[ind++] = col;
 			
 			_min[0] = min(_min[0], col[0]); _max[0] = max(_max[0], col[0]);
 			_min[1] = min(_min[1], col[1]); _max[1] = max(_max[1], col[1]);
 			_min[2] = min(_min[2], col[2]); _max[2] = max(_max[2], col[2]);
 		}
-			
+		
+		array_resize(colors, ind);
 		buffer_delete(c_buffer);
 		
 		random_set_seed(_seed);
-		cnt = array_create_ext(_size, function() /*=>*/ {return [ random(1), random(1), random(1), 0 ]});
+		var cnt = array_create_ext(_size, function() /*=>*/ {return [ random(1), random(1), random(1), 0 ]});
 		
 		repeat(8) {
 			// var _cnt = array_create_ext(_size, (i) => [ cnt[i][0], cnt[i][1], cnt[i][2], 0 ]);
@@ -152,7 +157,7 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 			// if(del < 0.001) break;
 		}
 		
-		var palette = [];
+		var palette = array_create(_size), ind = 0;
 		var clr; 
 		
 		for( var i = 0; i < _size; i++ ) {
@@ -178,10 +183,13 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 				case 2 : clr = make_color_hsva(_cc[0] * 255, _cc[1] * 255, _cc[2] * 255, 255); break;
 			}
 			
-			array_push_unique(palette, clr);
+			palette[ind++] = clr;
 		}
 		
 		surface_free(_surf);
+		
+		var palLen = array_unique_ext(palette, 0, ind);
+		array_resize(palette, palLen);
 		sortPalette(palette);
 		
 		return palette;
@@ -191,25 +199,25 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 		var ww = surface_get_width_safe(_surfFull);
 		var hh = surface_get_height_safe(_surfFull);
 		
-		var c_buffer = buffer_create(ww * hh * 4, buffer_fixed, 2);
+		var c_buffer = buffer_create(ww * hh * 4, buffer_fixed, 4);
 		
 		buffer_get_surface(c_buffer, _surfFull, 0);
 		buffer_seek(c_buffer, buffer_seek_start, 0);
 		
-		var palette = [];
+		var amo     = ww * hh;
+		var palette = array_create(amo), ind = 0;
+		var bm      = 0b11111111 << 24;
 		
-		for( var i = 0; i < ww * hh; i++ ) {
-			var b = buffer_read(c_buffer, buffer_u32);
-			var c = b;
-			var a = b & (0b11111111 << 24);
-			if(a == 0) continue;
-			
-			c = make_color_rgba(color_get_red(c), color_get_green(c), color_get_blue(c), color_get_alpha(c));
-			if(!array_exists(palette, c)) 
-				array_push(palette, c);
+		for( var i = 0; i < amo; i++ ) {
+			var c = buffer_read(c_buffer, buffer_u32);
+			if(c & bm == 0) continue;
+			palette[ind++] = c;
 		}
 		
 		buffer_delete(c_buffer);
+		
+		var palLen = array_unique_ext(palette, 0, ind);
+		array_resize(palette, palLen);
 		return palette;
 	}
 	
@@ -261,7 +269,7 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 		var amo = min(_size, ds_priority_size(pr));
 		var pal = array_create(amo), ind = 0;
 		repeat(amo) { pal[ind++] = ds_priority_delete_max(pr); }
-			
+		
 		ds_priority_destroy(pr);
 		ds_map_destroy(clrs);
 		

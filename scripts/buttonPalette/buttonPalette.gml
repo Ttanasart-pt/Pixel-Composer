@@ -8,12 +8,12 @@ function buttonPalette(_onApply, dialog = noone) : widget() constructor {
 	expanded         = false;
 	edit_color_index = -1;
 	
-	function apply(value) { #region
+	function apply(value) {
 		if(!interactable) return;
 		onApply(value);
-	} #endregion
+	}
 	
-	static trigger = function() { #region
+	static trigger = function() {
 		var dialog = dialogCall(o_dialog_palette, WIN_W / 2, WIN_H / 2);
 		dialog.setDefault(current_palette);
 		dialog.onApply      = apply;
@@ -22,9 +22,9 @@ function buttonPalette(_onApply, dialog = noone) : widget() constructor {
 		
 		if(parentDialog)
 			parentDialog.addChildren(dialog);
-	} #endregion
+	}
 	
-	static triggerSingle = function(_index) { #region
+	static triggerSingle = function(_index) {
 		edit_color_index = _index;
 		current_palette  = array_clone(current_palette);
 		
@@ -33,17 +33,17 @@ function buttonPalette(_onApply, dialog = noone) : widget() constructor {
 		dialog.selector.onApply = editColor;
 		dialog.onApply = editColor;
 		dialog.interactable = interactable;
-	} #endregion
+	}
 	
-	function editColor(col) { #region
+	function editColor(col) {
 		if(edit_color_index == -1) return;
 		current_palette[edit_color_index] = col;
 		apply(current_palette);
-	} #endregion
+	}
 	
 	static drawParam = function(params) { return draw(params.x, params.y, params.w, params.h, params.data, params.m); }
 	
-	static draw = function(_x, _y, _w, _h, _color, _m) { #region
+	static draw = function(_x, _y, _w, _h, _color, _m) {
 		x = _x;
 		y = _y;
 		w = _w;
@@ -183,39 +183,43 @@ function buttonPalette(_onApply, dialog = noone) : widget() constructor {
 		resetFocus();
 		
 		return h;
-	} #endregion
+	}
 	
-	static clone = function() { #region
+	static clone = function() {
 		var cln = new buttonPalette(onApply, parentDialog);
 		return cln;
-	} #endregion
+	}
 }
 
-function drawPalette(_pal, _x, _y, _w, _h, _a = 1) { #region
-	var aa = array_length(_pal);
+function drawPalette(_pal, _x, _y, _w, _h, _a = 1) {
+	var am = array_length(_pal);
 	
-	if(aa == 1) {
+	if(am == 1) {
 		draw_sprite_stretched_ext(THEME.palette_mask, 1, _x, _y, _w, _h, _pal[0], _a);
 		return;
 	}
+	
+	var aa = min(am, 64);
+	var st = am / aa;
 	
 	var ww  = _w / aa;
 	var _x0 = _x;
 	var _in;
 	
-	for(var i = 0; i < aa; i++) {
-		if(!is_numeric(_pal[i])) continue;
+	for(var i = 0; i < am; i += st) {
+		var _p = _pal[floor(i)];
+		if(!is_numeric(_p)) continue;
 		
 		     if(i == 0)      _in = 2;
 		else if(i == aa - 1) _in = 3;
 		else                 _in = 0;
 		
-		var _ca = _color_get_alpha(_pal[i]);
+		var _ca = _color_get_alpha(_p);
 		
 		if(_ca == 1) {
-			draw_sprite_stretched_ext(THEME.palette_mask, _in, floor(_x0), _y, ceil(ww), _h, _pal[i], _a);
+			draw_sprite_stretched_ext(THEME.palette_mask, _in, floor(_x0), _y, ceil(ww), _h, _p, _a);
 		} else {
-			draw_sprite_stretched_ext(THEME.palette_mask, _in, floor(_x0), _y, ceil(ww), _h - ui(8), _pal[i], _a);
+			draw_sprite_stretched_ext(THEME.palette_mask, _in, floor(_x0), _y, ceil(ww), _h - ui(8), _p, _a);
 			
 			draw_sprite_stretched_ext(THEME.palette_mask, 1, floor(_x0), _y + _h - ui(6), ceil(ww), ui(6), c_black, _a);
 			draw_sprite_stretched_ext(THEME.palette_mask, 1, floor(_x0), _y + _h - ui(6), ceil(ww) * _ca, ui(6), c_white, _a);
@@ -223,9 +227,9 @@ function drawPalette(_pal, _x, _y, _w, _h, _a = 1) { #region
 		
 		_x0 += ww;
 	}
-} #endregion
+}
 
-function drawPaletteGrid(_pal, _x, _y, _w, _gs = 24, params = {}) { #region
+function drawPaletteGrid(_pal, _x, _y, _w, _gs = 24, params = {}) {
 	var c_color  = struct_try_get(params, "color",   -1);
 	var _stretch = struct_try_get(params, "stretch", true);
 	var _mx      = struct_try_get(params, "mx",      -1);
@@ -301,4 +305,4 @@ function drawPaletteGrid(_pal, _x, _y, _w, _gs = 24, params = {}) { #region
 		hoverColor: _hcc,
 		hoverBBOX: [ hvx, hvy, hvw, hvh ],
 	};
-} #endregion
+}

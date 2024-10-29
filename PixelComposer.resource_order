@@ -31,6 +31,7 @@
     {"name":"dynamic_surface","order":8,"path":"folders/functions/surface/dynamic_surface.yy",},
     {"name":"svg","order":47,"path":"folders/functions/svg.yy",},
     {"name":"main","order":147,"path":"folders/main.yy",},
+    {"name":"binder","order":2,"path":"folders/main/binder.yy",},
     {"name":"misc","order":148,"path":"folders/misc.yy",},
     {"name":"nodes","order":149,"path":"folders/nodes.yy",},
     {"name":"__base__","order":2,"path":"folders/nodes/__base__.yy",},
