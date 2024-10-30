@@ -220,10 +220,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 							_icc = COLORS._main_icon_light;
 							_ica = 1;
 							
-							if(DOUBLE_CLICK) {
-								var pan = panelAdd("Panel_Inspector", true);
-								pan.content.setInspecting(_junc_canvas, true);
-							}
+							if(DOUBLE_CLICK) New_Inspect_Node_Panel(_junc_canvas, false);
 						}
 				
 						draw_sprite_ui_uniform(THEME.icon_canvas, 0, _icx, _icy, 1, _icc, _ica);

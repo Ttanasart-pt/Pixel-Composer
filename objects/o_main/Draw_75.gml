@@ -157,6 +157,24 @@ if(winMan_isMinimized()) exit;
 				}
 				break;
 				
+			case "GMSprite" :
+				var _spr = DRAGGING.data.thumbnail;
+				if(_spr) {
+					var ss = ui(48) / max(sprite_get_width(_spr), sprite_get_height(_spr))
+					draw_sprite_ext(_spr, 0, mx, my, ss, ss, 0, c_white, 1);
+				}
+				break;
+				
+			case "GMTileSet" :
+				var _spm = struct_try_get(DRAGGING.data.gmBinder.resourcesMap, DRAGGING.data.sprite, noone);
+                var _spr = _spm == noone? noone : _spm.thumbnail;
+                    
+				if(_spr) {
+					var ss = ui(48) / max(sprite_get_width(_spr), sprite_get_height(_spr))
+					draw_sprite_ext(_spr, 0, mx, my, ss, ss, 0, c_white, 1);
+				}
+				break;
+				
 			default:
 				draw_set_alpha(0.5);
 				draw_set_text(f_h3, fa_center, fa_center, COLORS._main_text);

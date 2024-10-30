@@ -1368,7 +1368,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static isTimelineVisible = function() { INLINE return is_anim && value_from == noone; }
 	
 	show_val = [];
-	static showValue = function() { ////showValue
+	static __showValue = function() {
 		INLINE
 		
 		var val = 0;
@@ -1385,6 +1385,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			val = array_empty(animator.values)? 0 : animator.processType(animator.values[0].value);
 		
 		return val;
+	}
+	
+	static showValue = function() { ////showValue
+		return __showValue();
 	}
 	
 	static unitConvert = function(mode) {

@@ -7,10 +7,10 @@ function Panel_Addon() : PanelContent() constructor {
 		w = ui(400);
 		h = ui(480);
 		
-		search_string = "";
+		search_string     = "";
 		keyboard_lastchar = "";
-		KEYBOARD_STRING = "";
-		keyboard_lastkey = -1;
+		KEYBOARD_STRING   = "";
+		keyboard_lastkey  = -1;
 		
 		search_res = [];
 		tb_search = new textBox(TEXTBOX_INPUT.text, function(str) { 

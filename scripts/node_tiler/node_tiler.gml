@@ -20,14 +20,13 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	input_display_list_animated     = ["Animated tiles",true,     2, noone];
 	input_display_list_rule         = ["Rules",         true, noone, noone];
 	
-	newOutput(0, nodeValue_Output("Tile output", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Rendered", self, VALUE_TYPE.surface, noone));
 	
-	newOutput(1, nodeValue_Output("Tile map", self, VALUE_TYPE.surface, noone));
+	newOutput(1, nodeValue_Output("Tilemap", self, VALUE_TYPE.surface, noone));
 	
-	// newOutput(2, nodeValue_Output("Index array", self, VALUE_TYPE.integer, []))
-	//     .setArrayDepth(1);
+	newOutput(2, nodeValue_Output("Tileset", self, VALUE_TYPE.tileset, noone));
 	
-	output_display_list = [ 0, 1 ];
+	output_display_list = [ 2, 1, 0 ];
 	
 	#region ++++ data ++++
 		canvas_surface   = surface_create_empty(1, 1, surface_rgba16float);
@@ -255,24 +254,25 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
     
 	static processData = function(_outData, _data, _output_index, _array_index) {
 	    tileset = _data[0];
+	    _outData[2] = tileset;
 	    
 	    if(tileset == noone) {
 			input_display_list = [ 3, 1, 0 ];
 			return _outData;
 	    }
 	    
-	    input_display_list_tileset[3]      = tileset.tile_selector_toggler;
-		input_display_list_autoterrains[3] = tileset.autoterrain_selector_toggler;
-		input_display_list_palette[3]      = tileset.palette_viewer_toggler;
-		input_display_list_animated[3]     = tileset.animated_viewer_toggler;
-		input_display_list_rule[3]         = tileset.rules_viewer_toggler;
+	    input_display_list_tileset[3]      = tileset.tile_selector.b_toggle;
+		input_display_list_autoterrains[3] = tileset.autoterrain_selector.b_toggle;
+		input_display_list_palette[3]      = tileset.palette_viewer.b_toggle;
+		input_display_list_animated[3]     = tileset.animated_viewer.b_toggle;
+		input_display_list_rule[3]         = tileset.rules.b_toggle;
 	    
 		input_display_list = [ 3, 1, 0, 
 			input_display_list_tileset,      tileset.tile_selector, 
 			input_display_list_autoterrains, tileset.autoterrain_selector, 
 			input_display_list_palette,      tileset.palette_viewer,
 			input_display_list_animated,     tileset.animated_viewer,
-			input_display_list_rule,         tileset.rules_viewer,
+			input_display_list_rule,         tileset.rules,
 		]
 		
 		var _tileSet  = tileset.texture;
@@ -302,50 +302,15 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	    
 	    var _tileOut = surface_verify(_outData[0], _outDim[0],  _outDim[1]);
 	    var _tileMap = surface_verify(_outData[1], _mapSize[0], _mapSize[1], surface_rgba16float);
-	    // var _arrIndx = array_verify(  _outData[2], _mapSize[0] * _mapSize[1]);
 	    
 	    canvas_buffer = buffer_verify(canvas_buffer, _mapSize[0] * _mapSize[1] * 8);
 	    buffer_get_surface(canvas_buffer, canvas_surface, 0);
 	    
-	    #region rules
-	    	surface_set_shader(temp_surface[1], sh_sample, true, BLEND.over);
-		        draw_surface(canvas_surface, 0, 0);
-		    surface_reset_shader();
-		    
-		    var bg = 0;
-		    
-		    for( var i = 0, n = array_length(tileset.ruleTiles); i < n; i++ ) {
-		    	var _rule = tileset.ruleTiles[i];
-		    	
-		    	if(!_rule.active) continue;
-		    	if(array_empty(_rule.replacements)) continue;
-		    	
-		    	surface_set_shader(temp_surface[2], sh_tile_rule_select, true, BLEND.over);
-		    		shader_set_2("dimension", _mapSize);
-		    		_rule.shader_select(tileset);
-		    		
-		    		draw_surface(canvas_surface, 0, 0);
-			    surface_reset_shader();
-			    
-		    	surface_set_shader(temp_surface[bg], sh_tile_rule_apply, true, BLEND.over);
-		    		shader_set_2("dimension",    _mapSize);
-		    		shader_set_f("seed",         _seed);
-		    		shader_set_surface("group",  temp_surface[2]);
-		    		_rule.shader_submit(tileset);
-		    		
-			        draw_surface(temp_surface[!bg], 0, 0);
-			    surface_reset_shader();
-		    	
-		    	bg = !bg;
-		    }
-		    
-	    #endregion
+	    var _applied = tileset.rules.apply(canvas_surface, _seed);
 	    
 	    surface_set_shader(_tileMap, sh_sample, true, BLEND.over);
-	        draw_surface(temp_surface[!bg], 0, 0);
+	        draw_surface(_applied, 0, 0);
 	    surface_reset_shader();
-	    
-	    var _tileSetDim = surface_get_dimension(_tileSet);
 	    
 	    surface_set_shader(_tileOut, sh_draw_tile_map, true, BLEND.over);
 	        shader_set_2("dimension", _outDim);
@@ -359,15 +324,8 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	        draw_empty();
 	    surface_reset_shader();
 	    
-	    return [ _tileOut, _tileMap ];
+	    return [ _tileOut, _tileMap, tileset ];
 	}
-	
-    // static getPreviewValues       = function() { 
-    // 	return getSingleValue(0, preview_index, true);
-    // 	return preview_drawing_tile; 
-    // }
- 
-    // static getGraphPreviewSurface = function() { return getSingleValue(0, preview_index, true); }
 	
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     

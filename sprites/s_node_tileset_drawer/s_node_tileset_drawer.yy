@@ -25,8 +25,8 @@
   "nineSlice":null,
   "origin":4,
   "parent":{
-    "name":"IO",
-    "path":"folders/nodes/icons/IO.yy",
+    "name":"tiler",
+    "path":"folders/nodes/icons/tiler.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

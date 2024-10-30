@@ -3260,6 +3260,15 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                 node = DRAGGING.data.build(mouse_grid_x, mouse_grid_y, getCurrentContext());
                 nodes_selecting = [ node ];
                 break;
+                
+            case "GMSprite" :
+				node = Node_create_Image_path(mouse_grid_x, mouse_grid_y, DRAGGING.data.thumbnailPath);
+				break;
+				
+            case "GMTileSet" :
+				node = nodeBuild("Node_Tile_Tileset", mouse_grid_x, mouse_grid_y).skipDefault();
+				node.gmTile = DRAGGING.data;
+				break;
         }
             
         if(!key_mod_press(SHIFT) && node && struct_has(DRAGGING, "from") && DRAGGING.from.value_from == noone) {

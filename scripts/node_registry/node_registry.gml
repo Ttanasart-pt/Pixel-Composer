@@ -524,12 +524,16 @@ function __initNodes() {
 		addNodeObject(input, "SVG",					s_node_svg, 			"Node_SVG",						[1, Node_SVG],, "Load a SVG file.");
 		if(!DEMO) addNodeObject(input, "Export",	s_node_export,			"Node_Export",					[0, Node_create_Export],, "Export image, image array to file, image sequence, animation.");
 		
-		ds_list_add(input, "Draw");
+		ds_list_add(input, "Canvas");
 		addNodeObject(input, "Canvas",				s_node_canvas,			"Node_Canvas",					[1, Node_Canvas], ["draw"], "Draw on surface using brush, eraser, etc.");
 		addNodeObject(input, "Canvas Group",		s_node_canvas_group,	"Node_Canvas_Group",			[1, Node_Canvas_Group],, "Create a group that combines multiple canvas nodes a layers.").setVersion(11740);
 		addNodeObject(input, "Active Canvas",		s_node_active_canvas,	"Node_Active_Canvas",			[1, Node_Active_Canvas], ["draw"], "Draw using parameterized brush.").setVersion(11570);
+		
+		ds_list_add(input, "Tileset");
 		addNodeObject(input, "Tileset",				s_node_tileset, 		"Node_Tile_Tileset",			[1, Node_Tile_Tileset],, "Create tileset object.").setVersion(1_18_03_0);
 		addNodeObject(input, "Tile Drawer",			s_node_tileset_drawer, 	"Node_Tile_Drawer",				[1, Node_Tile_Drawer],, "Draw using tileset.").setVersion(1_18_03_0);
+		addNodeObject(input, "Tile Rule",			s_node_tileset_rule, 	"Node_Tile_Rule",				[1, Node_Tile_Rule],, "Apply tileset rules.").setVersion(1_18_03_0);
+		addNodeObject(input, "Render Tilemap",		s_node_tileset_render, 	"Node_Tile_Render",				[1, Node_Tile_Render],, "Render tilemap to image.").setVersion(1_18_03_0);
 		addNodeObject(input, "Export Tilemap",		s_node_tileset_export, 	"Node_Tile_Tilemap_Export",		[1, Node_Tile_Tilemap_Export],, "Export tilemap to file.").setVersion(1_18_03_0);
 		
 		ds_list_add(input, "Files");
@@ -767,6 +771,7 @@ function __initNodes() {
 		addNodeObject(generator, "Draw Cross Section",	s_node_cross_section,		"Node_Cross_Section",		[1, Node_Cross_Section],, "Map the brightness of pixels on a linear axis into a surface.").setVersion(11710);
 		addNodeObject(generator, "Interpret Number",	s_node_interpret_number,	"Node_Interpret_Number",	[1, Node_Interpret_Number],,							"Convert array of number into surface.").setVersion(11530);
 		addNodeObject(generator, "Pixel Builder",		s_node_pixel_builder,		"Node_Pixel_Builder",		[1, Node_Pixel_Builder],, "Will break, do not create. please. Why is it here??").setVersion(11540);
+		addNodeObject(generator, "Tile Drawer",			s_node_tileset_drawer, 		"Node_Tile_Drawer",			[1, Node_Tile_Drawer]).setVersion(1_18_03_0);
 		
 		ds_list_add(generator, "Noises");
 		addNodeObject(generator, "Noise",				s_node_noise,				"Node_Noise",				[1, Node_Noise],,							"Generate white noise.");

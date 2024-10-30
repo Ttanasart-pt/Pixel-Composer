@@ -41,14 +41,14 @@ function tilesetBox(_junction) : widget() constructor {
         	var bi = 0;
         	
         	if(ihover && point_in_rectangle(_m[0], _m[1], x, y, x + iw, y + h)) {
-        		TOOLTIP = __txt("Go to node");
+        		TOOLTIP = __txt("View node");
         		bi = 1;
         		
         		if(mouse_click(mb_left, iactive))
         			bi = 2;
         			
-        		if(mouse_press(mb_left, iactive))
-        			PANEL_GRAPH.setFocusingNode(_tileset);
+        		if(mouse_press(mb_left, iactive) && is(_tileset, Node))
+        			New_Inspect_Node_Panel(_tileset);
         	}
         	
         	draw_sprite_stretched_ext(THEME.button_def, bi, x, y, iw, h);

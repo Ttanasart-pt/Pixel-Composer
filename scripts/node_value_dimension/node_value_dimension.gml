@@ -53,7 +53,8 @@ function __NodeValue_Dimension(_node, value) : NodeValue("Dimension", _node, CON
 	}
 	
 	static __getAnimValue = function(_time = CURRENT_FRAME) {
-		if(node.attributes.use_project_dimension) return PROJECT.attributes.surface_dimension;
+		if(node.attributes.use_project_dimension) 
+			return PROJECT.attributes.surface_dimension;
 		
 		if(!is_anim) {
 			if(sep_axis) return array_create_ext(2, function(i) /*=>*/ {return animators[i].processType(animators[i].values[0].value)});
@@ -67,4 +68,12 @@ function __NodeValue_Dimension(_node, value) : NodeValue("Dimension", _node, CON
 		
 		return animator.getValue(_time);
 	}
+	
+	static showValue = function() { ////showValue
+		if(node.attributes.use_project_dimension) 
+			return PROJECT.attributes.surface_dimension;
+			
+		return __showValue();
+	}
+	
 }

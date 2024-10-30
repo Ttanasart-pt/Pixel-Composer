@@ -40,7 +40,8 @@ event_inherited();
 	tooltip_surface  = -1;
 	content_hoverable = true;
 	
-	canvas = false;
+	canvas    = false;
+	collapsed = ds_map_create();
 	
 	#region ---- category ----
 		category = NODE_CATEGORY;
@@ -48,7 +49,7 @@ event_inherited();
 			case "Node_Pixel_Builder" : category = NODE_PB_CATEGORY;  break;
 			case "Node_DynaSurf" :      category = NODE_PCX_CATEGORY; break;
 		}
-	
+		
 		draw_set_font(f_p0);
 		var maxLen = 0;
 		for(var i = 0; i < ds_list_size(category); i++) {
@@ -388,6 +389,7 @@ event_inherited();
 	content_pane = new scrollPane(dialog_w - category_width - ui(8), dialog_h - ui(66), function(_y, _m) {
 		draw_clear_alpha(c_white, 0);
 		var _hover = sHOVER && content_pane.hover;
+		var _focus = sFOCUS && content_pane.active;
 		var _list  = node_list;
 		var ww = content_pane.surface_w;
 		var hh = 0;
@@ -489,16 +491,26 @@ event_inherited();
 				if(is_string(_node)) {
 					if(!PREFERENCES.dialog_add_node_grouping)
 						continue;
+					
 					hh += curr_height;
 					yy += curr_height;
 					
 					cProg = 0;
 					curr_height = 0;
+					var _key = $"{ADD_NODE_PAGE}:{index}";
 					
-					array_push(group_labels, { y: yy, text: __txt(_node) });
+					array_push(group_labels, { y: yy, text: __txt(_node), key: _key });
 					
-					hh += ui(24 + 12);
-					yy += ui(24 + 12);
+					if(ds_map_exists(collapsed, _key)) {
+						hh += ui(24 + 4);
+						yy += ui(24 + 4);
+						
+						while(index + 1 < node_count && !is_string(_list[| index + 1]))
+							index++;
+					} else {
+						hh += ui(24 + 12);
+						yy += ui(24 + 12);
+					}
 					continue;
 				}
 				
@@ -583,17 +595,42 @@ event_inherited();
 					content_hoverable &= !point_in_rectangle(_m[0], _m[1], 0, 0, ww, ui(36));
 				}
 				
+				var _lbh  = ui(24);
+				var _cAll = 0;
+				
 				for( var i = 0; i < len; i++ ) {
-					var lb = group_labels[i];
-					var _yy = max(lb.y, i == len - 1? ui(8) : min(ui(8), group_labels[i + 1].y - ui(32)));
+					var lb    = group_labels[i];
+					var _name = lb.text;
+					var _key  = lb.key;
+					var _coll = ds_map_exists(collapsed, _key);
+					
+					var _yy  = max(lb.y, i == len - 1? ui(8) : min(ui(8), group_labels[i + 1].y - ui(32)));
 					
 					BLEND_OVERRIDE;
-					draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, ui(16), _yy, ww - ui(32), ui(24), c_white, 0.3);
+					if(_hover && point_in_rectangle(_m[0], _m[1], 0, _yy, ww, _yy + _lbh)) {
+                        draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, ui(16), _yy, ww - ui(32), _lbh, COLORS.panel_inspector_group_hover, 1);
+                        if(_focus) {
+                        	if(DOUBLE_CLICK) {
+                        		_cAll = _coll? -1 : 1;
+                        		
+                        	} else if(mouse_press(mb_left)) {
+	                        	if(_coll) ds_map_delete(collapsed, _key);
+	                        	else      ds_map_add(collapsed, _key, 1);
+	                        }
+                        }
+                        
+                    } else
+                        draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, ui(16), _yy, ww - ui(32), _lbh, COLORS.panel_inspector_group_bg, 1);
 					BLEND_NORMAL;
 					
+					draw_sprite_ui(THEME.arrow, _coll? 0 : 3, ui(16 + 16), _yy + _lbh / 2, 1, 1, 0, CDEF.main_ltgrey, 1);    
+					
 					draw_set_text(f_p2, fa_left, fa_center, CDEF.main_ltgrey);
-					draw_text_add(ui(16 + 16), _yy + ui(12), lb.text);
+					draw_text_add(ui(16 + 28), _yy + _lbh / 2, _name);
 				}
+				
+					 if(_cAll ==  1) { for( var i = 0; i < len; i++ ) ds_map_delete(collapsed, group_labels[i].key); } 
+				else if(_cAll == -1) { for( var i = 0; i < len; i++ ) ds_map_add(collapsed, group_labels[i].key, 1); }
 			}
 			
 			hh += curr_height;
@@ -627,13 +664,20 @@ event_inherited();
 					hh += ui(8);
 					yy += ui(8);
 					
-					array_push(group_labels, {
-						y: yy,
-						text: __txt(_node)
-					});
+					var _key = $"{ADD_NODE_PAGE}:{i}";
 					
-					hh += ui(32);
-					yy += ui(32);
+					array_push(group_labels, { y: yy, text: __txt(_node), key: _key });
+					
+					if(ds_map_exists(collapsed, _key)) {
+						hh += ui(24);
+						yy += ui(24);
+						
+						while(i + 1 < node_count && !is_string(_list[| i + 1]))
+							i++;
+					} else {
+						hh += ui(32);
+						yy += ui(32);
+					}
 					continue;
 				}
 				
@@ -698,17 +742,41 @@ event_inherited();
 					content_hoverable &= !point_in_rectangle(_m[0], _m[1], 0, 0, ww, ui(36));
 				}
 				
+				var _lbh  = ui(24);
+				var _cAll = 0;
+				
 				for( var i = 0; i < len; i++ ) {
 					var lb = group_labels[i];
+					var _name = lb.text;
+					var _key  = lb.key;
+					var _coll = ds_map_exists(collapsed, _key);
 					var _yy = max(lb.y, i == len - 1? ui(8) : min(ui(8), group_labels[i + 1].y - ui(32)));
 				
 					BLEND_OVERRIDE;
-					draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, ui(16), _yy, ww - ui(32), ui(24), c_white, 0.3);
+					if(_hover && point_in_rectangle(_m[0], _m[1], 0, _yy, ww, _yy + _lbh)) {
+                        draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, ui(16), _yy, ww - ui(32), _lbh, COLORS.panel_inspector_group_hover, 1);
+                        if(_focus) {
+                        	if(DOUBLE_CLICK) {
+                        		_cAll = _coll? -1 : 1;
+                        		
+                        	} else if(mouse_press(mb_left)) {
+	                        	if(_coll) ds_map_delete(collapsed, _key);
+	                        	else      ds_map_add(collapsed, _key, 1);
+	                        }
+                        }
+                        
+                    } else
+                        draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, ui(16), _yy, ww - ui(32), _lbh, COLORS.panel_inspector_group_bg, 1);
 					BLEND_NORMAL;
 					
+					draw_sprite_ui(THEME.arrow, _coll? 0 : 3, ui(16 + 16), _yy + _lbh / 2, 1, 1, 0, CDEF.main_ltgrey, 1);    
+					
 					draw_set_text(f_p2, fa_left, fa_center, CDEF.main_ltgrey);
-					draw_text_add(ui(16 + 16), _yy + ui(12), lb.text);
+					draw_text_add(ui(16 + 28), _yy + _lbh / 2, _name);
 				}
+				
+					 if(_cAll ==  1) { for( var i = 0; i < len; i++ ) ds_map_delete(collapsed, group_labels[i].key); } 
+				else if(_cAll == -1) { for( var i = 0; i < len; i++ ) ds_map_add(collapsed, group_labels[i].key, 1); }
 			}
 			
 			if(sHOVER && key_mod_press(CTRL)) {
@@ -723,8 +791,6 @@ event_inherited();
 		
 		return hh;
 	});
-	
-	
 	
 	function setPage(pageIndex) {
 		ADD_NODE_PAGE	= min(pageIndex, ds_list_size(category) - 1);

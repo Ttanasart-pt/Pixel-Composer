@@ -70,6 +70,7 @@ function Inspector_Custom_Renderer(drawFn, registerFn = noone) : widget() constr
     self.draw = drawFn;
     node  = noone;
     panel = noone;
+    name  = "";
     
     popupPanel  = noone;
     popupDialog = noone;
@@ -85,8 +86,15 @@ function Inspector_Custom_Renderer(drawFn, registerFn = noone) : widget() constr
         }
     }
     
+    b_toggle = button(function() /*=>*/ { togglePopup(name); }).setIcon(THEME.node_goto, 0, COLORS._main_icon, .75);
+    
+    static setName  = function(name) { self.name = name; return self; }
     static setNode  = function(node) { self.node = node; return self; }
-    static toString = function()     { return $"Custon renderer"; }
+    static toString = function()     { return $"Custon renderer: {name}"; }
+    
+    static step = function() {
+        b_toggle.icon_blend = popupPanel == noone? COLORS._main_icon : COLORS._main_accent;
+    }
     
     static togglePopup = function(_title) { 
         if(popupPanel == noone) {
@@ -346,6 +354,7 @@ function Panel_Inspector() : PanelContent() constructor {
         var rx  = x + ui(16);
         var ry  = y + top_bar_h;
         var lbh = viewMode? ui(32) : ui(26);
+        var _cAll = 0;
         
         attribute_hovering = noone;
         
@@ -382,7 +391,11 @@ function Panel_Inspector() : PanelContent() constructor {
                     _x1 -= ui(4);
                     if(_hover && point_in_rectangle(_m[0], _m[1], 0, yy, _x1, yy + lbh)) {
                         draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, 0, yy, _x1, lbh, COLORS.panel_inspector_group_hover, 1);
-                        if(mouse_press(mb_left, pFOCUS)) _meta[1] = !_meta[1];
+                        
+                        if(pFOCUS) {
+	                        	 if(DOUBLE_CLICK) _cAll = _meta[1]? -1 : 1;
+	                        else if(mouse_press(mb_left)) _meta[1] = !_meta[1];
+                        }
                         
                     } else
                         draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, 0, yy, _x1, lbh, COLORS.panel_inspector_group_bg, 1);
@@ -394,7 +407,11 @@ function Panel_Inspector() : PanelContent() constructor {
                     
                     if(_hover && point_in_rectangle(_m[0], _m[1], 0, yy, _x1, yy + lbh)) {
                         draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, 0, yy, con_w, lbh, COLORS.panel_inspector_group_hover, 1);
-                        if(mouse_press(mb_left, pFOCUS)) _meta[1] = !_meta[1];
+                        
+                        if(pFOCUS) {
+	                        	 if(DOUBLE_CLICK) _cAll = _meta[1]? -1 : 1;
+	                        else if(mouse_press(mb_left)) _meta[1] = !_meta[1];
+                        }
                         
                     } else
                         draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, 0, yy, con_w, lbh, COLORS.panel_inspector_group_bg, 1);
@@ -418,16 +435,16 @@ function Panel_Inspector() : PanelContent() constructor {
                     var _lh, wh;
                     
                     for( var j = 0; j < array_length(_edt); j++ ) {
-                        var title = _edt[j][0];
-                        var param = _edt[j][1];
-                        var editW = _edt[j][2];
-                        var drpFn = _edt[j][3];
-                    
+                        var title = array_safe_get(_edt[j], 0, noone);
+                        var param = array_safe_get(_edt[j], 1, noone);
+                        var editW = array_safe_get(_edt[j], 2, noone);
+                        var drpFn = array_safe_get(_edt[j], 3, noone);
+                        
                         var widx = ui(8);
                         var widy = yy;
                         
                         draw_set_text(_font, fa_left, fa_top, COLORS._main_text_inner);
-                        draw_text_over(ui(16), viewMode == INSP_VIEW_MODE.spacious? yy : yy + ui(3), __txt(title));
+                        draw_text_add(ui(16), viewMode == INSP_VIEW_MODE.spacious? yy : yy + ui(3), __txt(title));
                         
                         if(viewMode == INSP_VIEW_MODE.spacious) {
                             _lh = line_get_height();
@@ -458,7 +475,7 @@ function Panel_Inspector() : PanelContent() constructor {
                         var widw = con_w - ui(16);
                         var widh = viewMode == INSP_VIEW_MODE.spacious? _lh + ui(6) + wh + ui(4) : max(wh, _lh);
                         
-                        if(jun != noone && _hover && point_in_rectangle(_m[0], _m[1], widx, widy, widx + widw, widy + widh)) {
+                        if(jun != noone && drpFn != noone && _hover && point_in_rectangle(_m[0], _m[1], widx, widy, widx + widw, widy + widh)) {
                             draw_sprite_stretched_ext(THEME.ui_panel, 1, widx, widy, widw, widh, COLORS._main_value_positive, 1);
                             attribute_hovering = drpFn;
                         }
@@ -486,7 +503,7 @@ function Panel_Inspector() : PanelContent() constructor {
                         var _wdgt   = meta_tb[j];
                         
                         draw_set_text(_font, fa_left, fa_top, COLORS._main_text_inner);
-                        draw_text_over(ui(16), viewMode == INSP_VIEW_MODE.spacious? yy : yy + ui(3), __txt(display[0]));
+                        draw_text_add(ui(16), viewMode == INSP_VIEW_MODE.spacious? yy : yy + ui(3), __txt(display[0]));
                         
                         if(viewMode == INSP_VIEW_MODE.spacious) {
                             _lh = line_get_height();
@@ -580,6 +597,9 @@ function Panel_Inspector() : PanelContent() constructor {
             hh += ui(viewMode? 4 : 2);
         }
         
+        	 if(_cAll ==  1) { for( var i = 0, n = array_length(meta_display); i < n; i++ ) meta_display[i][1] = false; }
+		else if(_cAll == -1) { for( var i = 0, n = array_length(meta_display); i < n; i++ ) meta_display[i][1] =  true; }
+		
         return hh;
     }
     
@@ -714,6 +734,7 @@ function Panel_Inspector() : PanelContent() constructor {
         var color_picker_index = 0;
         var pickers            = [];
         var _colsp             = false;
+        var _cAll = 0;
         
         for(var i = 0; i < amo; i++) {
             var yy = hh + _y;
@@ -792,6 +813,7 @@ function Panel_Inspector() : PanelContent() constructor {
                     continue;
                 }
                 
+                jun.step();
                 jun.fixHeight = -1;
                 jun.panel     = self;
                 jun.rx        = ui(16) + x;
@@ -835,12 +857,12 @@ function Panel_Inspector() : PanelContent() constructor {
                 if(_hover && point_in_rectangle(_m[0], _m[1], lbx, yy, lbx + lbw, yy + lbh)) {
                     contentPane.hover_content = true;
                     draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, lbx, yy, con_w - lbx, lbh, COLORS.panel_inspector_group_hover, 1);
-                
-                    if(mouse_press(mb_left, pFOCUS))
-                        jun[@ 1] = !coll;
-                        
-                    if(mouse_press(mb_right, pFOCUS))
-                        menuCall("inspector_group_menu", group_menu, 0, 0, fa_left);
+                	
+                	if(pFOCUS) {
+	                		if(DOUBLE_CLICK) _cAll = jun[@ 1]? -1 : 1;
+                       else if(mouse_press(mb_left)) jun[@ 1] = !coll;
+		               else if(mouse_press(mb_right, pFOCUS)) menuCall("inspector_group_menu", group_menu, 0, 0, fa_left);
+                	}
                 } else
                     draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, lbx, yy, con_w - lbx, lbh, COLORS.panel_inspector_group_bg, 1);
             
@@ -1025,6 +1047,10 @@ function Panel_Inspector() : PanelContent() constructor {
                 }
             } 
         }
+        
+        	 if(_cAll ==  1) { section_expand_all();   }
+		else if(_cAll == -1) { section_collapse_all(); }
+		
         
         if(MESSAGE != noone && MESSAGE.type == "Color") {
             var inp = array_safe_get_fast(pickers, picker_index, 0);
@@ -1332,4 +1358,12 @@ function Panel_Inspector() : PanelContent() constructor {
         return self; 
     }
     
+}
+
+function New_Inspect_Node_Panel(node, pin = true) {
+    panel = panelAdd("Panel_Inspector", true, false);
+	panel.content.setInspecting(node, true, false);
+	panel.destroy_on_click_out = !pin;
+	
+	return panel;
 }

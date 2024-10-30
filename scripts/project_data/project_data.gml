@@ -89,16 +89,17 @@
 		tunnels_out    = ds_map_create();
 		
 		#region ===================== BINDERS ====================
-			bind_gamemaker_path = "";
-			bind_godot_path     = "";
-			
 			bind_gamemaker = noone;
 			bind_godot     = noone;
+			
+			gamemaker_editWidget = new gamemakerPathBox(self);
 		#endregion
 		
 		#region =================== ATTRIBUTES ===================
 			attributes = variable_clone(PROJECT_ATTRIBUTES);
-			
+			attributes.bind_gamemaker_path = "";
+			attributes.bind_godot_path     = "";
+				
 			attributeEditor = [
 				[ "Default Surface", "surface_dimension", new vectorBox(2, 
 					function(val, index) { 
@@ -148,7 +149,7 @@
 					} 
 				],
 				
-				//[ "Strict",	"strict", new checkBox(function() { attributes.strict = !attributes.strict; RENDER_ALL return true; }), function() {} ],
+				// [ "Gamemaker Link", "bind_gamemaker_path", gamemaker_editWidget, noone ],
 			];
 			
 			static setPalette = function(pal = noone) { 
@@ -266,9 +267,6 @@
 			}
 			_map.addon = _addon;
 			
-			_map.bind_gamemaker_path = bind_gamemaker_path;
-			_map.bind_godot_path     = bind_godot_path;
-			
 			return _map;
 		}
 		
@@ -324,8 +322,8 @@
 				if(_node) PANEL_INSPECTOR.setInspecting(_node);
 			}
 			
-			if(struct_has(_map, "bind_gamemaker_path"))	bind_gamemaker_path = _map.bind_gamemaker_path;
-			if(struct_has(_map, "bind_godot_path"))	    bind_godot_path     = _map.bind_godot_path;
+			bind_gamemaker = Binder_Gamemaker(attributes.bind_gamemaker_path);
+			if(bind_gamemaker == noone) attributes.bind_gamemaker_path = "";
 		}
 		
 		static postDeserialize = function() {

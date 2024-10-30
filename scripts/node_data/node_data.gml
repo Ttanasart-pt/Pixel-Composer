@@ -1452,7 +1452,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				
 		if(icon) {
 			tx += _s * 6;
-			draw_sprite_ui_uniform(icon, 0, round(tx), round(yy + nh / 2), _s, c_white, aa);
+			draw_sprite_ui_uniform(icon, 0, round(tx) + 1, round(yy + nh / 2) + 1, _s, c_black, 1);
+			draw_sprite_ui_uniform(icon, 0, round(tx),     round(yy + nh / 2),     _s, c_white, 1);
 			tx += _s *  12;
 			tw -= _s * (12 + 6);
 		}
