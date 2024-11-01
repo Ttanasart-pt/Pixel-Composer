@@ -13,6 +13,7 @@ void main() {
     vec4 res = vec4(0.);
     
     for(int i = 0; i < indexSize; i++) {
+        if(indexes[i] == -1) continue;
         if(ss == indexes[i])
             res[0] = .5;
     }

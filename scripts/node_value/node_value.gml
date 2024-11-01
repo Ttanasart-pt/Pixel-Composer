@@ -181,6 +181,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		overlay_text_valign = fa_top;
 		
 		graph_selecting   = false;
+		
+		custom_icon  = noone;
+		custom_color = noone;
 	#endregion
 	
 	#region ---- timeline ----
@@ -272,6 +275,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	static setTooltip = function(_tip) { tooltip = _tip; return self; }
+	
+	static setIcon = function(_ico, _colr) { custom_icon = _ico; custom_color = _colr; return self; }
 	
 	static nonValidate = function() {
 		validateValue = false;
@@ -905,6 +910,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						
 					case VALUE_DISPLAY.path_font :
 						editWidget = new fontScrollBox(function(val) /*=>*/ {return setValueInspector(FONT_INTERNAL[val])});
+						break;
+						
+					default :
+						editWidget = new textBox(TEXTBOX_INPUT.text, function(str) /*=>*/ {return setValueInspector(str)});
 						break;
 				}
 				break;
@@ -1893,7 +1902,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var _aa  = 0.75 + (!is_dummy * 0.25);
 		hover_in_graph = _hov;
 		
-		draw_set_color(draw_fg);
+		draw_set_color(custom_color == noone? draw_fg : custom_color);
 		draw_set_alpha(_aa);
 		
 		if(node.previewable)
@@ -1919,7 +1928,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var is_hover   = hov && point_in_rectangle(_mx, _my, x - _d, y - _d, x + _d - 1, y + _d - 1);
 		hover_in_graph = is_hover;
 		
-		if(is_dummy) {
+		if(custom_icon != noone) {
+			__draw_sprite_ext(custom_icon, 0, x, y, _s, _s, 0, c_white, 1);
+			
+		} else if(is_dummy) {
 			__draw_sprite_ext(THEME.node_junction_add, is_hover, x, y, _s, _s, 0, c_white, 0.5 + 0.5 * is_hover);
 			
 		} else if(type == VALUE_TYPE.action) {
@@ -2045,7 +2057,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		_my *= aa;
 		
 		var _fade = PREFERENCES.connection_line_highlight_fade;
-		var  col  = merge_color(_fade, color_display, .5);
+		var  col  = custom_color == noone? merge_color(_fade, color_display, .5) : custom_color;
 		draw_set_color(col);
 		
 		var _action = type == VALUE_TYPE.action;
@@ -2085,8 +2097,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				break;
 		}
 		
-		__draw_sprite_ext(THEME.node_junctions_bg_x2,      draw_junction_index, _mx, _my, ss / 2, ss / 2, 0, draw_bg, 1);
-		__draw_sprite_ext(THEME.node_junctions_outline_x2, draw_junction_index, _mx, _my, ss / 2, ss / 2, 0, col, 1);
+		if(custom_icon == noone) {
+			__draw_sprite_ext(THEME.node_junctions_bg_x2,      draw_junction_index, _mx, _my, ss / 2, ss / 2, 0, draw_bg, 1);
+			__draw_sprite_ext(THEME.node_junctions_outline_x2, draw_junction_index, _mx, _my, ss / 2, ss / 2, 0, col, 1);
+		} else 
+			__draw_sprite_ext(custom_icon, draw_junction_index, _mx, _my, ss / 2, ss / 2, 0, c_white, 1);
 	}
 	
 	/////========== EXPRESSION ==========
@@ -2492,15 +2507,15 @@ function drawJuncConnection(from, to, params) {
 			var _fade = PREFERENCES.connection_line_highlight_fade;
 			var _colr = _selc? 1 : _fade;
 			
-			c0 = merge_color(bg, from.color_display, _colr);
-			c1 = merge_color(bg, to.color_display,	 _colr);
+			c0 = merge_color(bg, from.custom_color == noone? from.color_display : from.custom_color, _colr);
+			c1 = merge_color(bg,   to.custom_color == noone?   to.color_display :   to.custom_color, _colr);
 			
 			to.draw_blend_color = bg;
 			to.draw_blend       = _colr;
 			from.draw_blend     = max(from.draw_blend, _colr);
 		} else {
-			c0 = from.color_display;
-			c1 = to.color_display;
+			c0 = from.custom_color == noone? from.color_display : from.custom_color;
+			c1 =   to.custom_color == noone?   to.color_display :   to.custom_color;
 			
 			to.draw_blend_color = bg;
 			to.draw_blend       = -1;

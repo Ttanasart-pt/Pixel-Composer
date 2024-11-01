@@ -19,6 +19,12 @@ function __initHotKey() {
 	hotkeySimple("Node_Canvas",         	"Skew",                 "S", MOD_KEY.alt);
 	hotkeySimple("Node_Canvas",         	"Corner",               "C", MOD_KEY.alt);
 	  
+	hotkeySimple("Node_Tile_Drawer",       	"Pencil",               "B");
+	hotkeySimple("Node_Tile_Drawer",       	"Eraser",               "E");
+	hotkeySimple("Node_Tile_Drawer",       	"Rectangle",            "N");
+	hotkeySimple("Node_Tile_Drawer",       	"Ellipse",              "M");
+	hotkeySimple("Node_Tile_Drawer",       	"Fill",                 "G");
+	
 	hotkeySimple("Node_Mesh_Warp",          "Edit control point",   "V");
 	hotkeySimple("Node_Mesh_Warp",          "Pin mesh",             "P");
 	hotkeySimple("Node_Mesh_Warp",          "Mesh edit",            "M");

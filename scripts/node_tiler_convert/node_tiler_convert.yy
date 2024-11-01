@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"node_ase_file_read",
+  "%Name":"node_tiler_convert",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"node_ase_file_read",
+  "name":"node_tiler_convert",
   "parent":{
-    "name":"aseprite",
-    "path":"folders/nodes/data/io/aseprite.yy",
+    "name":"tiler",
+    "path":"folders/nodes/data/tiler.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

@@ -8,8 +8,6 @@ function Node_Tile_Rule(_x, _y, _group = noone) : Node(_x, _y, _group) construct
     
     newInput( 2, nodeValueSeed(self, VALUE_TYPE.float));
     
-    newInput( 3, nodeValue_Bool("Animated", self, false));
-    
 	newOutput(0, nodeValue_Output("Rendered", self, VALUE_TYPE.surface, noone));
 	
 	newOutput(1, nodeValue_Output("Tilemap", self, VALUE_TYPE.surface, noone));
@@ -19,7 +17,7 @@ function Node_Tile_Rule(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	rules = new Tileset_Rule(noone);
 	
 	input_display_list = [ 2, 
-	    ["Tile data", false], 0, 1, 3, 
+	    ["Tile data", false], 0, 1, 
 		["Rules",     false, noone, rules.b_toggle ], rules,
 	];
 	

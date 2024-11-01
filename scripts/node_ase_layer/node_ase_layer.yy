@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"node_ase_layer",
   "parent":{
-    "name":"io",
-    "path":"folders/nodes/data/io.yy",
+    "name":"aseprite",
+    "path":"folders/nodes/data/io/aseprite.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

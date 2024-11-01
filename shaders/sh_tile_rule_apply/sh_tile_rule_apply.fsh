@@ -8,6 +8,7 @@ uniform float seed;
 uniform float probability;
 
 uniform vec2  size;
+uniform vec2  scanSize;
 uniform int   range;
 uniform float selection[64];
 
@@ -53,12 +54,23 @@ void main() {
     vec2 origin = v_vTexcoord;
     int  repShf = -1;
     
-    for(int i = 0; i < int(size.y); i++)
-    for(int j = 0; j < int(size.x); j++) {
-        vec2 o = v_vTexcoord - vec2(j, i) * tx;
+    vec2 px         = floor(v_vTexcoord * dimension);
+    vec2 blockCoord = mod(px, scanSize);
+    vec2 scanLeft   = max(vec2(0.), size - scanSize) + 1.;
+    
+    // for(int i = 0; i < int(scanSize.y); i++)
+    // for(int j = 0; j < int(scanSize.x); j++) {
+        // vec2 o = v_vTexcoord - vec2(j, i) * tx;
+    
+    for(int i = 0; i < int(scanLeft.y); i++)
+    for(int j = 0; j < int(scanLeft.x); j++) {
+        vec2 shfCoord = blockCoord + vec2(j, i);
+        if(shfCoord.x >= size.x || shfCoord.y >= size.y) continue;
+        
+        vec2 o = v_vTexcoord - shfCoord * tx;
         if(match(o)) {
             origin = o;
-            repShf = i * int(size.x) + j;
+            repShf = int(shfCoord.y * size.x + shfCoord.x);
             break;
         }
     }

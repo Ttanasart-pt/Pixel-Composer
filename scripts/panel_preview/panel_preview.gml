@@ -1780,7 +1780,7 @@ function Panel_Preview() : PanelContent() constructor {
         var thov = pHOVER && point_in_rectangle(mx, my, 0, toolbar_height, toolbar_width, h - toolbar_height);
         if(thov) canvas_hover = false;
         
-        for(var i = 0; i < array_length(_node.tools); i++) { // left tools
+        for(var i = 0; i < array_length(_node.tools); i++) { //// left tools
             var tool = _node.tools[i];
             var _x0  = xx - tool_size / 2;
             var _y0  = yy - tool_size / 2;
@@ -1890,7 +1890,7 @@ function Panel_Preview() : PanelContent() constructor {
             var thov = pHOVER && point_in_rectangle(mx, my, _tbx, toolbar_height, w, h - toolbar_height);
             if(thov) canvas_hover = false;
             
-            for(var i = 0; i < array_length(_node.rightTools); i++) { // right tools
+            for(var i = 0; i < array_length(_node.rightTools); i++) { //// right tools
                 var tool = _node.rightTools[i];
                 var _x0  = xx - tool_size / 2;
                 var _y0  = yy - tool_size / 2;

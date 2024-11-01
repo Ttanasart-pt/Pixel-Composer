@@ -77,10 +77,12 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 									.setCollape(false);
 		tool_fil8           	= [ "Fill", tool_fil8_edit, "fillType", tool_attribute ];
 		
-		tools = [
-			new NodeTool( "Pencil",		  THEME.canvas_tools_pencil)
+		tool_pencil = new NodeTool( "Pencil",		  THEME.canvas_tools_pencil)
 				.setSetting(tool_size)
-				.setToolObject(tool_brush),
+				.setToolObject(tool_brush);
+		
+		tools = [
+			tool_pencil,
 			
 			new NodeTool( "Eraser",		  THEME.canvas_tools_eraser)
 				.setSetting(tool_size)
@@ -100,21 +102,12 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		];
 	#endregion
 	
-	function apply_draw_surface() {
-		if(!is_surface(canvas_surface))  return;
-		if(!is_surface(drawing_surface)) return;
+	function apply_draw_surface() { 
+		if(!is_surface(canvas_surface) || !is_surface(drawing_surface)) return;
 		
-		if(selecting) {
-			surface_set_shader(canvas_surface, sh_draw_tile_apply_selection, true, BLEND.over);
-				shader_set_surface("selectionMask", selection_mask);
-				draw_surface(drawing_surface, 0, 0);
-			surface_reset_shader();
-			
-		} else {
-			surface_set_shader(canvas_surface, sh_draw_tile_apply, true, BLEND.over);
-				draw_surface(drawing_surface, 0, 0);
-			surface_reset_shader();
-		}
+		surface_set_shader(canvas_surface, sh_draw_tile_apply, true, BLEND.over);
+			draw_surface(drawing_surface, 0, 0);
+		surface_reset_shader();
 		
 		triggerRender();
 	}
@@ -125,7 +118,7 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		surface_reset_shader();
 	}
 	
-    static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, params) {
+    static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, params) { 
         if(tileset == noone) return;
         
         var _mapSize = current_data[1];
@@ -133,13 +126,7 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	    
 	    canvas_surface = surface_verify(canvas_surface, _mapSize[0], _mapSize[1], surface_rgba16float);
 	    
-        if(!surface_valid(drawing_surface, _mapSize[0], _mapSize[1], surface_rgba16float)) {
-        	drawing_surface = surface_verify(drawing_surface, _mapSize[0], _mapSize[1], surface_rgba16float);
-	    	
-		    surface_set_shader(drawing_surface, noone, true, BLEND.over);
-				draw_surface(canvas_surface, 0, 0);
-			surface_reset_shader();
-        }
+        if(!surface_valid(drawing_surface, _mapSize[0], _mapSize[1], surface_rgba16float)) return false;
         
 	    #region surfaces
 	    	var _outDim   = [ _tileSiz[0] * _mapSize[0], _tileSiz[1] * _mapSize[1] ];
@@ -157,71 +144,51 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			
 	    #endregion
 	    
-	    #region tools
-	    	var _currTool = PANEL_PREVIEW.tool_current;
-	    	var _tool     = _currTool == noone? noone : _currTool.getToolObject();
-	    	
-	    	if(!is(_tool, tiler_tool))
-	    		_tool = noone;
-	    	
-			if(_tool) {
-				var brush = tileset.brush;
-	    	
-	    		brush.node        = self;
-		    	brush.brush_size  = tool_attribute.size;
-		    	brush.autoterrain = is(tileset.object_selecting, tiler_brush_autoterrain)? tileset.object_selecting : noone;
-	    		
-				_tool.brush              = brush;
-				_tool.subtool            = _currTool.selecting;
-				_tool.apply_draw_surface = apply_draw_surface;
-				_tool.drawing_surface    = drawing_surface;
-				_tool.tile_size          = _tileSiz;
-				
-				_tool.step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-				
-				surface_set_target(preview_draw_overlay);
-					DRAW_CLEAR
-					_tool.drawPreview(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-				surface_reset_target();
-				
-				surface_set_target(_preview_draw_mask);
-					DRAW_CLEAR
-					_tool.drawMask(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-				surface_reset_target();
-				
-				surface_set_target(preview_draw_mask);
-					DRAW_CLEAR
-					draw_surface_ext(_preview_draw_mask, _x, _y, _s * _tileSiz[0], _s * _tileSiz[1], 0, c_white, 1);
-				surface_reset_target();
-				
-				if(_tool.brush_resizable) { 
-					if(hover && key_mod_press(CTRL)) {
-						if(mouse_wheel_down()) tool_attribute.size = max( 1, tool_attribute.size - 1);
-						if(mouse_wheel_up())   tool_attribute.size = min(64, tool_attribute.size + 1);
-					}
-					
-					brush.sizing(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-				} 
-			}
-	    #endregion
-	    
-	    #region draw preview surfaces
+    	var _currTool = PANEL_PREVIEW.tool_current;
+    	var _tool     = _currTool == noone? noone : _currTool.getToolObject();
+    	
+    	if(!is(_tool, tiler_tool))
+    		_tool = noone;
+    	
+		if(_tool) { // tool action
+			var brush = tileset.brush;
+    	
+    		brush.node        = self;
+	    	brush.brush_size  = tool_attribute.size;
+	    	brush.autoterrain = is(tileset.object_selecting, tiler_brush_autoterrain)? tileset.object_selecting : noone;
+    		
+			_tool.brush              = brush;
+			_tool.subtool            = _currTool.selecting;
+			_tool.apply_draw_surface = apply_draw_surface;
+			_tool.drawing_surface    = drawing_surface;
+			_tool.tile_size          = _tileSiz;
 			
-		  //  surface_set_shader(preview_drawing_tile, sh_draw_tile_map, true, BLEND.over);
-		  //      shader_set_2("dimension", _outDim);
-		        
-		  //      shader_set_surface("indexTexture", drawing_surface);
-		  //      shader_set_2("indexTextureDim", surface_get_dimension(drawing_surface));
-		        
-				// tileset.shader_submit();
+			_tool.step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+			
+			surface_set_target(preview_draw_overlay);
+				DRAW_CLEAR
+				_tool.drawPreview(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+			surface_reset_target();
+			
+			surface_set_target(_preview_draw_mask);
+				DRAW_CLEAR
+				_tool.drawMask(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+			surface_reset_target();
+			
+			surface_set_target(preview_draw_mask);
+				DRAW_CLEAR
+				draw_surface_ext(_preview_draw_mask, _x, _y, _s * _tileSiz[0], _s * _tileSiz[1], 0, c_white, 1);
+			surface_reset_target();
+			
+			if(_tool.brush_resizable) { 
+				if(hover && key_mod_press(CTRL)) {
+					if(mouse_wheel_down()) tool_attribute.size = max( 1, tool_attribute.size - 1);
+					if(mouse_wheel_up())   tool_attribute.size = min(64, tool_attribute.size + 1);
+				}
 				
-		  //      draw_empty();
-		  //  surface_reset_shader();
-		    
-	   // 	draw_surface_ext(preview_drawing_tile, _x, _y, _s, _s, 0, c_white, 1);
-	    	
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	    	
+				brush.sizing(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+			} 
+			
 		    surface_set_shader(preview_draw_overlay_tile, sh_draw_tile_map, true, BLEND.over);
 		        shader_set_2("dimension", _outDim);
 		        
@@ -237,16 +204,15 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	    	
 	    	params.panel.drawNodeGrid();
 	    	
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	    	
 			shader_set(sh_brush_outline);
 				shader_set_f("dimension", _sw, _sh);
 				draw_surface(preview_draw_mask, 0, 0);
 			shader_reset();
-			
-	    #endregion
+		}
 	    
-	    // if(!array_empty(autoterrains)) draw_surface_ext(autoterrains[0].mask_surface, 32, 32, 8, 8, 0, c_white, 1);
+	    // if(!array_empty(tileset.autoterrain)) {
+	    // 	draw_surface_ext_safe(tileset.autoterrain[0].mask_surface, 32, 32, 8, 8, 0, c_white, 1);
+	    // }
 	    // if(surface_exists(canvas_surface))  draw_surface_ext(canvas_surface,   32, 32, 8, 8, 0, c_white, 1);
 	    // if(surface_exists(drawing_surface)) draw_surface_ext(drawing_surface, 232, 32, 8, 8, 0, c_white, 1);
 	    // draw_surface_ext(preview_draw_overlay, 432, 32, 8, 8, 0, c_white, 1);
@@ -282,7 +248,7 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	    var _seed     = _data[3];
 	    update_on_frame = _animated;
 	    
-	    if(!is_surface(canvas_surface) && buffer_exists(canvas_buffer)) {
+	    if(!is_surface(canvas_surface) && buffer_exists(canvas_buffer)) { 
 	    	canvas_surface = surface_create(_mapSize[0], _mapSize[1], surface_rgba16float);
 	    	buffer_set_surface(canvas_buffer, canvas_surface, 0);
 	    } else 
@@ -307,6 +273,7 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	    buffer_get_surface(canvas_buffer, canvas_surface, 0);
 	    
 	    var _applied = tileset.rules.apply(canvas_surface, _seed);
+	    // var _applied = canvas_surface;
 	    
 	    surface_set_shader(_tileMap, sh_sample, true, BLEND.over);
 	        draw_surface(_applied, 0, 0);

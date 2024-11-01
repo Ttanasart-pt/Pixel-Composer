@@ -2,7 +2,8 @@ varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 uniform vec2  dimension;
-uniform int   range;
+
+uniform int   selectionSize;
 uniform float selection[64];
 uniform float selectionGroup[640];
 
@@ -14,20 +15,18 @@ void main() {
     
     if(bs == -1.) return;
     
-    int  _r = range * 2 + 1;
-    for(int i = 0; i < _r; i++)
-    for(int j = 0; j < _r; j++) {
-        float selInd = selection[i * _r + j];
+    for(int i = 0; i < selectionSize; i++) {
+        float selInd = selection[i];
         if(selInd < 10000.) continue;
         
         int _arr = int(selInd - 10000.);
         int _len = int(selectionGroup[_arr * 64]);
         
         for(int k = 0; k < _len; k++) {
-            float _selInd = selectionGroup[_arr * 64 + 1 + k];
-            if(_selInd == -1.) continue;
+            float _subI = selectionGroup[_arr * 64 + 1 + k];
+            if(_subI == -1.) continue;
             
-            if(bs == _selInd) {
+            if(bs == _subI) {
                 gl_FragColor = vec4(selInd, 0., 0., 1.);
                 return;
             }

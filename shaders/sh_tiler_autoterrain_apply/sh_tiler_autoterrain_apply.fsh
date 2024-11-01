@@ -326,7 +326,7 @@ void main() {
             
         if(_1(i0) && _1(i1) && _1(i2) &&
            _1(i3) &&           _1(i5) &&
-           _0(i6) && _1(i7) && _0(i8)) index = 8;
+           _0(i6) && _1(i7) && _0(i8)) index = 19;
             
         if(_0(i0) && _1(i1) && _0(i2) &&
            _1(i3) &&           _1(i5) &&
@@ -370,7 +370,7 @@ void main() {
            _1(i3) &&           _1(i5) &&
            _0(i6) && _1(i7) && _0(i8)) index = 52;
        
-        if(bitmaskType == 2) index = indexMapper48[index];
+        if(bitmaskType == 3) index = indexMapper48[index];
     }
     
     float res = float(indexes[index]);

@@ -803,8 +803,6 @@ function Panel_Inspector() : PanelContent() constructor {
                 
             } else if(is_instanceof(jun, Inspector_Custom_Renderer)) {
                 if(jun.popupPanel != noone) {
-                    // draw_sprite_stretched_ext(THEME.ui_panel, 0, ui(16), yy, con_w - ui(32), ui(24), COLORS._main_icon, .05);
-                    // draw_sprite_stretched_ext(THEME.ui_panel, 1, ui(16), yy, con_w - ui(32), ui(24), COLORS._main_icon, .2);
         			draw_set_text(f_p2, fa_center, fa_center, COLORS._main_icon, .5);
         			draw_text_add(con_w / 2, yy + ui(24) / 2 - ui(2), __txt("Pop-up content"));
         			draw_set_alpha(1);
@@ -930,7 +928,7 @@ function Panel_Inspector() : PanelContent() constructor {
         
             if(!is_instanceof(jun, NodeValue)) continue;
             
-            if(!jun.show_in_inspector || jun.type == VALUE_TYPE.object) continue;
+            if(!jun.show_in_inspector) continue;
             if(filter_text != "") {
                 var pos = string_pos(filter_text, string_lower(jun.getName()));
                 if(pos == 0) continue;

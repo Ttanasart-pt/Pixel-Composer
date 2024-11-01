@@ -108,6 +108,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		h_param = h;
 		will_setHeight = false;
+		preserve_height_for_preview = false;
 		
 		selectable   = true;
 		clonable     = true;
@@ -384,11 +385,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	/////========== DYNAMIC IO ==========
 	
-	dummy_input = noone;
-	auto_input  = false;
-	dyna_input_check_shift   = 0;
+	dummy_input              = noone;
+	auto_input               = false;
+	dyna_input_check_shift   =  0;
 	input_display_dynamic    = -1;
-	dynamic_input_inspecting = 0;
+	dynamic_input_inspecting =  0;
 	static createNewInput    = -1;
 	
 	static setDynamicInput = function(_data_length = 1, _auto_input = true, _dummy_type = VALUE_TYPE.any, _dynamic_input_cond = DYNA_INPUT_COND.connection) {
@@ -681,8 +682,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		w = SHOW_PARAM? attributes.node_param_width : min_w;
 		if(!auto_height) return;
 		
-		var _ss = getGraphPreviewSurface();
-		var _ps = is_surface(_ss);
+		var _ps = is_surface(getGraphPreviewSurface()) || preserve_height_for_preview;
 		var _ou = preview_channel >= 0 && preview_channel < array_length(outputs) && outputs[preview_channel].type == VALUE_TYPE.surface;
 		var _prev_surf = previewable && preview_draw && (_ps || _ou);
 		

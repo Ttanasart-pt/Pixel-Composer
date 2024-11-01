@@ -194,7 +194,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				
 				if(_junc_canvas) hover &= _m[0] > _txx + ui(8 + 16);
 				
-				var tc = i == dynamic_input_inspecting? COLORS._main_text_accent : COLORS._main_icon;
+				var tc = ind == dynamic_input_inspecting? COLORS._main_text_accent : COLORS._main_icon;
 				if(hover) tc = COLORS._main_text;
 					
 				draw_set_text(f_p1, fa_left, fa_center, tc);
@@ -321,7 +321,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 					layer_dragging    = ind;
 					surface_selecting = index;
 					
-					dynamic_input_inspecting = i;
+					dynamic_input_inspecting = ind;
 					refreshDynamicDisplay();
 				}
 			}
@@ -358,6 +358,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			
 			layer_dragging = noone;
 			if(canvas_group) canvas_group.onLayerChanged();
+			refreshDynamicDisplay();
 		}
 		
 		layer_height     = max(ui(16), _h);
@@ -365,6 +366,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		if(layer_remove > -1) {
 			deleteLayer(layer_remove);
+			refreshDynamicDisplay();
 			layer_remove = -1;
 		}
 		
@@ -695,7 +697,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		if(mouse_press(mb_left, active)) {
 			surface_selecting = hovering;
-			dynamic_input_inspecting = hovering;
+			// dynamic_input_inspecting = hovering;
 			refreshDynamicDisplay();
 		}
 			

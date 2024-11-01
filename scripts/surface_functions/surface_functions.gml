@@ -353,9 +353,9 @@ function surface_reset_target_override() { __surface_reset_target(); winwin_draw
 	
 		if(ww == width && hh == height) return surface;
 	
-		surface_resize(surface, width, height);
-		//surface_clear(surface);
-	
+		surface_free(surface);
+		surface = surface_create(width, height, format == noone? surface_rgba8unorm : format);
+		
 		return surface;
 	}
 

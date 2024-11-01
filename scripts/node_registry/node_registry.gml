@@ -534,6 +534,7 @@ function __initNodes() {
 		addNodeObject(input, "Tile Drawer",			s_node_tileset_drawer, 	"Node_Tile_Drawer",				[1, Node_Tile_Drawer],, "Draw using tileset.").setVersion(1_18_03_0);
 		addNodeObject(input, "Tile Rule",			s_node_tileset_rule, 	"Node_Tile_Rule",				[1, Node_Tile_Rule],, "Apply tileset rules.").setVersion(1_18_03_0);
 		addNodeObject(input, "Render Tilemap",		s_node_tileset_render, 	"Node_Tile_Render",				[1, Node_Tile_Render],, "Render tilemap to image.").setVersion(1_18_03_0);
+		addNodeObject(input, "Convert to Tilemap",	s_node_tileset_convert, "Node_Tile_Convert",			[1, Node_Tile_Convert],, "Render tilemap to image.").setVersion(1_18_03_0);
 		addNodeObject(input, "Export Tilemap",		s_node_tileset_export, 	"Node_Tile_Tilemap_Export",		[1, Node_Tile_Tilemap_Export],, "Export tilemap to file.").setVersion(1_18_03_0);
 		
 		ds_list_add(input, "Files");
@@ -543,8 +544,6 @@ function __initNodes() {
 		addNodeObject(input, "CSV File Out",		s_node_csv_file_write,	"Node_CSV_File_Write",			[1, Node_CSV_File_Write], ["comma separated value"], "Save array as .csv file.").setVersion(1090);
 		addNodeObject(input, "JSON File In",		s_node_json_file_read,	"Node_Json_File_Read",			[1, Node_Json_File_Read],,  "Load .json file using keys.").setVersion(1090);
 		addNodeObject(input, "JSON File Out",		s_node_json_file_write,	"Node_Json_File_Write",			[1, Node_Json_File_Write],, "Save data to .json file.").setVersion(1090);
-		addNodeObject(input, "ASE File In",			s_node_ase_file,		"Node_ASE_File_Read",			[0, Node_create_ASE_File_Read],, "Load Aseprite file with support for layers, tags.").setVersion(1100);
-		addNodeObject(input, "ASE Layer",			s_node_ase_layer,		"Node_ASE_layer",				[1, Node_ASE_layer],, "Load Aseprite project file").setVersion(1100);
 		addNodeObject(input, "WAV File In",			s_node_wav_file_read,	"Node_WAV_File_Read",			[0, Node_create_WAV_File_Read],, "Load wav audio file.").setVersion(1144);
 		addNodeObject(input, "WAV File Out",		s_node_wav_file_write,	"Node_WAV_File_Write",			[1, Node_WAV_File_Write],, "Save wav audio file.").setVersion(1145);
 		addNodeObject(input, "XML File In",			s_node_xml_file_read,	"Node_XML_File_Read",			[0, Node_create_XML_File_Read],, "Load xml file.").setVersion(11720);
@@ -552,6 +551,11 @@ function __initNodes() {
 		addNodeObject(input, "Byte File In",		s_node_byte_file_read,	"Node_Byte_File_Read",			[1, Node_Byte_File_Read],,  "Load any file to buffer.").setVersion(11670);
 		addNodeObject(input, "Byte File Out",		s_node_byte_file_write,	"Node_Byte_File_Write",			[1, Node_Byte_File_Write],, "Save buffer content to a file.").setVersion(11670);
 		addNodeObject(input, "Directory Search",	s_node_directory,		"Node_Directory_Search",		[0, Node_create_Directory_Search],, "Search for files in directory.").setVersion(11710);
+		
+		ds_list_add(input, "Aseprite");
+		addNodeObject(input, "ASE File In",			s_node_ase_file,		"Node_ASE_File_Read",			[0, Node_create_ASE_File_Read],, "Load Aseprite file with support for layers, tags.").setVersion(1100);
+		addNodeObject(input, "ASE Layer",			s_node_ase_layer,		"Node_ASE_layer",				[1, Node_ASE_layer],, "Load Aseprite project file").setVersion(1100);
+		addNodeObject(input, "ASE Tag",				s_node_ase_layer,		"Node_ASE_Tag",					[1, Node_ASE_Tag],, "Read tag from ASE file.").setVersion(1_18_03_0);
 			
 		ds_list_add(input, "External");
 		addNodeObject(input, "Websocket Receiver",	s_node_websocket_receive,	"Node_Websocket_Receiver",	[1, Node_Websocket_Receiver],, "Create websocket server to receive data from the network.").setVersion(1145);

@@ -366,7 +366,7 @@ function Panel_File_Explorer() : PanelContent() constructor {
 					} 
 					
 					if(!_dropped)
-						o_main.load_file_path(path_dragging);
+						load_file_path(path_dragging);
 				}
 				
 				if(_file_focus != file_focus)
@@ -551,7 +551,7 @@ function Panel_File_Explorer() : PanelContent() constructor {
 					}
 					
 					if(pFOCUS && DOUBLE_CLICK)
-						o_main.load_file_path([ _fil.path ], _graph_x, _graph_y);
+						load_file_path([ _fil.path ], _graph_x, _graph_y);
 				}
 				
 				if(sprite_exists(_th)) {
@@ -631,7 +631,7 @@ function Panel_File_Explorer() : PanelContent() constructor {
 					}
 					
 					if(pFOCUS && DOUBLE_CLICK)
-						o_main.load_file_path([ _fil.path ], _graph_x, _graph_y);
+						load_file_path([ _fil.path ], _graph_x, _graph_y);
 				}
 				
 				if(sprite_exists(_th)) {

@@ -25,9 +25,8 @@ function Node_create_ASE_File_Read_path(_x, _y, path) {
 
 function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "ASE File In";
+	w    = 128;
 	update_on_frame = false;
-	
-	w = 128;
 	
 	newInput(0, nodeValue_Path("Path", self, ""))
 		.setDisplay(VALUE_DISPLAY.path_load, { filter: "Aseprite file|*.ase;*.aseprite" });
@@ -41,7 +40,8 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	newOutput(0, nodeValue_Output("Output", self, VALUE_TYPE.surface, noone));
 	
-	newOutput(1, nodeValue_Output("Content", self, VALUE_TYPE.object, self));
+	newOutput(1, nodeValue_Output("Content", self, VALUE_TYPE.object, self))
+		.setIcon(s_junc_aseprite, c_white);
 	
 	newOutput(2, nodeValue_Output("Path", self, VALUE_TYPE.path, ""));
 	
@@ -50,22 +50,16 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	hold_visibility = true;
 	layer_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { 
-		var amo = array_length(layers);
-		var hh = 28;
-		var _h = hh * amo + 16;
 		var _vis = attributes.layer_visible;
+		var _amo = array_length(layers);
+		var hh   = 24;
+		var _h   = hh * _amo + 16;
 		
 		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _y, _w, _h, COLORS.node_composite_bg_blend, 1);
 		for( var i = 0, n = array_length(layers); i < n; i++ ) {
 			var _yy = _y + 8 + i * hh;
-			var _layer = layers[i];
-			
-			if(i) {
-				draw_set_color(COLORS.node_composite_separator);
-				draw_line(_x + 16, _yy - 2, _x + _w - 16, _yy - 2);
-			}
-			
 			var _bx = _x + 24;
+			var _layer = layers[i];
 			
 			if(_layer.type == 0) {
 				var vis = array_safe_get_fast(_vis, i, true);
@@ -85,8 +79,8 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			} else if(_layer.type == 1)
 				draw_sprite_ui_uniform(THEME.folder_16, 0, _bx, _yy + hh / 2, 1, COLORS._main_icon);
 			
-			draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
-			draw_text(_bx + 16, _yy + hh / 2, _layer.name);
+			draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
+			draw_text_add(_bx + 16, _yy + hh / 2, _layer.name);
 		}
 		
 		return _h;
@@ -160,8 +154,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	temp_surface = [ 0, 0, 0 ];
 	blend_temp_surface = noone;
 	
-	input_display_list = [
-		["File",	 true], 0,
+	input_display_list = [ 0, 
 		["Layers",	false], 1, 3, layer_renderer, 
 		["Tags",	false], 2, tag_renderer,
 	];
@@ -241,7 +234,6 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		content = read_ase(path);
 		if(content == noone) return false;
-		// print(json_stringify(content));
 		
 		layers     = [];
 		var vis    = attributes.layer_visible;
@@ -368,8 +360,6 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		blend_temp_surface = temp_surface[2];
 		
 		for( var i = 0, n = array_length(layers); i < n; i++ ) {
-			// print($"{i}: {layers[i]}");
-			
 			layers[i].tag = tag;
 			var cel = layers[i].getCel(CURRENT_FRAME - _tag_delay);
 			if(!cel) continue;
