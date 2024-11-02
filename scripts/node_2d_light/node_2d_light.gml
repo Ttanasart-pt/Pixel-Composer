@@ -31,7 +31,7 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		var _val = nodeValue_Enum_Scroll("Light shape", self, 0, typeList);
 			_val.options_histories = [ typeListStr,
 				{
-					cond: function() /*=>*/ {return LOADING_VERSION < 1_18_00_0},
+					cond: function() /*=>*/ {return LOADING_VERSION < 1_18_00_0 && !CLONING},
 					list: [ "Point", "Line", "Line asymmetric", "Spot" ]
 				}
 			];	 
