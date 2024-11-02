@@ -1,4 +1,4 @@
-function preview_overlay_area_padding(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag, display_data) { #region
+function preview_overlay_area_padding(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag, display_data) {
 	var _val  = array_clone(getValue());
 	var hover = -1;
 	
@@ -128,9 +128,9 @@ function preview_overlay_area_padding(interact, active, _x, _y, _s, _mx, _my, _s
 	//draw_text_add((x0 + x1) / 2, (y0 + y1) / 2, name);
 	
 	return hover;
-} #endregion
+}
 
-function preview_overlay_area_two_point(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag) { #region
+function preview_overlay_area_two_point(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag) {
 	var _val  = array_clone(getValue());
 	var hover = -1;
 	
@@ -276,12 +276,13 @@ function preview_overlay_area_two_point(interact, active, _x, _y, _s, _mx, _my, 
 	//draw_text_add((x0 + x1) / 2, (y0 + y1) / 2 - 4, name);
 	
 	return hover;
-} #endregion
+}
 
-function preview_overlay_area_span(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag) { #region
+function preview_overlay_area_span(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag) {
 	var _val  = array_clone(getValue());
 	var hover = -1;
-	
+	var _ref  = unit.mode == VALUE_UNIT.reference? unit.reference() : [ 1, 1 ];
+
 	var __ax = array_safe_get_fast(_val, 0);
 	var __ay = array_safe_get_fast(_val, 1);
 	var __aw = array_safe_get_fast(_val, 2);
@@ -332,7 +333,12 @@ function preview_overlay_area_span(interact, active, _x, _y, _s, _mx, _my, _snx,
 			_val[0] = _xx;
 			_val[1] = _yy;
 		}
-							
+		
+		_val[0] /= _ref[0];
+		_val[1] /= _ref[1];
+		_val[2] /= _ref[0];
+		_val[3] /= _ref[1];
+		
 		if(setValueInspector(_val))
 			UNDO_HOLDING = true;
 							
@@ -356,7 +362,12 @@ function preview_overlay_area_span(interact, active, _x, _y, _s, _mx, _my, _snx,
 			_val[2] = max(_dx, _dy);
 			_val[3] = max(_dx, _dy);
 		}
-							
+				
+		_val[0] /= _ref[0];
+		_val[1] /= _ref[1];
+		_val[2] /= _ref[0];
+		_val[3] /= _ref[1];
+					
 		if(setValueInspector(_val))
 			UNDO_HOLDING = true;
 			
@@ -386,11 +397,8 @@ function preview_overlay_area_span(interact, active, _x, _y, _s, _mx, _my, _snx,
 		}
 	}
 	
-	//draw_set_text(_f_p2b, fa_center, fa_bottom, COLORS._main_accent);
-	//draw_text_add(round(_ax), round(_ay - 4), name);
-	
 	return hover;
-} #endregion
+}
 
 function preview_overlay_area(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag, display_data) {
 	var _val  = array_clone(getValue());

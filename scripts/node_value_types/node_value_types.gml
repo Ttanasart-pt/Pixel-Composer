@@ -601,7 +601,6 @@ function nodeValueUnit(_nodeValue) constructor {
 						_val[i] = is_real(value[i])? value[i] * base[i % 2] : value[i];
 						
 					_val[4] = array_safe_get(value, 4);
-					
 					return _val;
 			}
 			
