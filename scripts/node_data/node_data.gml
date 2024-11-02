@@ -1177,6 +1177,17 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			}
 		}	
 		
+		for(var i = 0; i < array_length(junc_meta); i++) {
+			var _ot  = junc_meta[i];
+			var _tos = _ot.getJunctionTo();
+			
+			for( var j = 0; j < array_length(_tos); j++ ) {
+				var _to = _tos[j];
+				array_push(nodes, _to.node);
+				array_push(nodeNames, _to.node.internalName);
+			}
+		}
+		
 		for(var i = 0; i < array_length(inputs); i++) {
 			var _in = inputs[i];
 			if(_in.bypass_junc == noone) continue;

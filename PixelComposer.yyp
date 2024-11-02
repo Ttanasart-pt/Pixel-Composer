@@ -363,6 +363,8 @@
     {"$GMIncludedFile":"","%Name":"icons.afdesign","CopyToMask":-1,"filePath":"datafiles/data/Actions","name":"icons.afdesign","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"Armature Build.json","CopyToMask":-1,"filePath":"datafiles/data/Actions/Nodes","name":"Armature Build.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"Armature Build.png","CopyToMask":-1,"filePath":"datafiles/data/Actions/Nodes","name":"Armature Build.png","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"Create Tilemap.json","CopyToMask":-1,"filePath":"datafiles/data/Actions/Nodes","name":"Create Tilemap.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"Create Tilemap.png","CopyToMask":-1,"filePath":"datafiles/data/Actions/Nodes","name":"Create Tilemap.png","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"Follow Path.json","CopyToMask":-1,"filePath":"datafiles/data/Actions/Nodes","name":"Follow Path.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"Follow Path.png","CopyToMask":-1,"filePath":"datafiles/data/Actions/Nodes","name":"Follow Path.png","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"Iso cube.json","CopyToMask":-1,"filePath":"datafiles/data/Actions/Nodes","name":"Iso cube.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},

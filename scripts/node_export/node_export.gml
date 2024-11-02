@@ -295,7 +295,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var frames = [];
 		
 		while(_path != "") {
-		    var _frame    = string_quote(temp_path + string_replace_all(_path, ".png", "") + ".webp");
+			var _frame    = string_quote(temp_path + string_replace_all(_path, ".png", "") + ".webp");
 			var _pathTemp = string_quote(temp_path + _path);
 			var shell_cmd = $"{_pathTemp} -define webp:lossless=true {_frame}";
 			
@@ -565,6 +565,8 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	static export = function(log = true) {
 		// print($">>>>>>>>>>>>>>>>>>>> export {CURRENT_FRAME} <<<<<<<<<<<<<<<<<<<<");
 		
+		randomize();
+		directory = $"{TEMPDIR}{irandom_range(100000, 999999)}";
 		exportLog = log;
 		
 		var surf = getInputData( 0);

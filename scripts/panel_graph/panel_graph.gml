@@ -1935,19 +1935,6 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
             if(value_focus) 
                 array_push_unique(value_draggings, value_focus);
             
-            for (var i = 0, n = array_length(value_draggings); i < n; i++) {
-                var _v = value_draggings[i];
-                var xx = _v.x - 1;
-                var yy = _v.y - 1;
-                
-                shader_set(sh_node_circle);
-                    shader_set_color("color", COLORS._main_accent);
-                    shader_set_f("thickness", 0.05);
-                    shader_set_f("antialias", 0.05);
-                    draw_rectangle(xx - 12 * graph_s, yy - 12 * graph_s, xx + 12 * graph_s, yy + 12 * graph_s, false);
-                shader_reset();
-            }
-            
             if(mouse_release(mb_left)) {
                 value_dragging        = noone;
                 connection_draw_mouse = noone;
@@ -2240,7 +2227,9 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         }
         
         surface_set_target(minimap_surface);
-        draw_clear_alpha(COLORS.panel_bg_clear_inner, 0.75);
+        DRAW_CLEAR
+    	draw_sprite_stretched_ext(THEME.ui_panel, 0, 0, 0, minimap_w, minimap_h, COLORS.panel_bg_clear_inner, .75 + .25 * hover);
+    	
         if(!array_empty(nodes_list)) {
             var minx =  99999;
             var maxx = -99999;
@@ -2262,7 +2251,6 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
             var sph = maxy - miny;
             var ss  = min(minimap_w / spw, minimap_h / sph);
             
-            draw_set_alpha(0.4);
             for(var i = 0; i < array_length(nodes_list); i++) {
                 var _node = nodes_list[i];
                 
@@ -2276,16 +2264,14 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                 draw_rectangle(nx, ny, nx + nw, ny + nh, false);
                 draw_set_alpha(1);
             }
-            draw_set_alpha(1);
             
             var gx = minimap_w / 2 - (graph_x + cx) * ss;
             var gy = minimap_h / 2 - (graph_y + cy) * ss;
             var gw = w / graph_s * ss;
             var gh = h / graph_s * ss;
             
-            draw_set_color(COLORS.panel_graph_minimap_focus);
-            draw_rectangle(gx, gy, gx + gw, gy + gh, 1);
-            
+            draw_sprite_stretched_ext(THEME.ui_panel, 1, gx, gy, gw, gh, COLORS._main_icon_light, 1);
+		    
             if(minimap_panning) {
                 graph_x = -((mx - mx0 - gw / 2) - minimap_w / 2) / ss - cx;
                 graph_y = -((my - my0 - gh / 2) - minimap_h / 2) / ss - cy;
@@ -2301,11 +2287,14 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                 minimap_panning = true;
         }
         
+        BLEND_MULTIPLY
+        draw_sprite_stretched_ext(THEME.ui_panel, 0, 0, 0, minimap_w, minimap_h, c_white, 1);
+        BLEND_NORMAL
+        
         surface_reset_target();
         
-        draw_surface_ext_safe(minimap_surface, mx0, my0, 1, 1, 0, c_white, 0.5 + 0.35 * hover);
-        draw_set_color(COLORS.panel_graph_minimap_outline);
-        draw_rectangle(mx0, my0, mx1 - 1, my1 - 1, true);
+        draw_surface_ext_safe(minimap_surface, mx0, my0, 1, 1, 0, c_white, .75 + .25 * hover);
+        draw_sprite_stretched_add(THEME.ui_panel, 1, mx0, my0, minimap_w, minimap_h, COLORS.panel_graph_minimap_outline, .5);
         
         if(minimap_dragging) {
             mouse_on_graph = false;

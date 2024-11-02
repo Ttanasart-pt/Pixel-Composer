@@ -61,13 +61,14 @@ function tiler_rule() constructor {
     			array_push(__sel, _s);
     	}
     	
-    	scanSize = [ max(1, maxX - minX + 1), max(1, maxY - minY + 1) ];
+    	scanSize = minX < maxX? [ max(1, maxX - minX + 1), max(1, maxY - minY + 1) ] : size;
     	// print($"{maxX}, {minX} | {maxY}, {minY} | {scanSize}");
     	
     	autI = array_unique(autI);
     	for( var i = 0, n = array_length(autI); i < n; i++ ) {
     		var _i = autI[i];
-    		var _t = tileset.autoterrain[_i];
+    		var _t = array_safe_get(tileset.autoterrain, _i, noone);
+    		if(_t == noone) continue;
     		
     		var _ind = 64 * i;
     		__aut[_ind] = array_length(_t.index);
@@ -332,8 +333,9 @@ function Tileset_Rule(_tileset) : Inspector_Custom_Renderer(noone, noone) constr
 	    			var _aa = _rl_selected? 1 : .5 + _rl_hov * .5;
 	    			
 	    			if(is_array(_rl_sel)) {
-	    				var _autt = tileset.autoterrain[_rl_sel[1]];
-	    				tileset.drawTile(_autt.index[0], _rl_x + ui(2), _rl_y + ui(2), _sls - ui(4), _sls - ui(4));
+	    				var _autt = array_safe_get(tileset.autoterrain, _rl_sel[1], noone);
+	    				
+	    				tileset.drawTile(_autt == noone? 0 : _autt.index[0], _rl_x + ui(2), _rl_y + ui(2), _sls - ui(4), _sls - ui(4));
 	    				draw_sprite_uniform(THEME.circle, 0, _rl_x + _sls - ui(8), _rl_y + _sls - ui(8), 1, COLORS._main_accent);
 	    				
 	    			} else if (_rl_sel == -10000) {

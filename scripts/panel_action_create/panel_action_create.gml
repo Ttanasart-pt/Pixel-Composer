@@ -86,7 +86,7 @@ function Panel_Action_Create() : PanelContent() constructor {
 	
 	#region content
 		sc_node_content = new scrollPane(w - padding * 2 - ui(320) - ui(16), h - padding * 2 - ui(16), function(_y, _m) {
-			draw_clear_alpha(COLORS.panel_bg_clear, 0);
+			draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
 			var _w  = sc_node_content.surface_w;
 			var _h  = ui(16);
 			var yy  = _y;

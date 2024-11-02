@@ -209,12 +209,14 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			}
 			
 			if(_node == noone)
-				_node = nodeBuild("Node_ASE_layer", nx, ny + i * _nh);
+				_node = nodeBuild("Node_ASE_layer", nx, ny + i * _nh).skipDefault();
+			
+			_node.inputs[0].setFrom(outputs[1]);
+			_node.inputs[1].setValue(use_cel);
+			_node.inputs[2].setValue(_name);
+			_node.setDisplayName(_name);
 			
 			lvs[i] = _node;
-			lvs[i].inputs[0].setFrom(outputs[1]);
-			lvs[i].inputs[1].setValue(use_cel);
-			lvs[i].setDisplayName(_name);
 		}
 	} 
 	

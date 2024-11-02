@@ -157,6 +157,8 @@ function Panel_Preview() : PanelContent() constructor {
         canvas_h    = ui(128);
         canvas_a    = 0;
         canvas_bg   = -1;
+        canvas_mx   = 0;
+        canvas_my   = 0;
         do_fullView = false;
         
         canvas_hover        = true;
@@ -343,6 +345,20 @@ function Panel_Preview() : PanelContent() constructor {
         #endregion
     #endregion
     
+    #region // ---- minimap ----
+        minimap_show     = false;
+        minimap_w        = ui(160);
+        minimap_h        = ui(160);
+        minimap_surface  = -1;
+    
+        minimap_panning  = false;
+        minimap_dragging = false;
+        minimap_drag_sx  = 0;
+        minimap_drag_sy  = 0;
+        minimap_drag_mx  = 0;
+        minimap_drag_my  = 0;
+    #endregion
+    
     #region ++++ toolbars & actions ++++
         static set_tile_off        = function() /*=>*/ { tileMode = 0; }
         static set_tile_horizontal = function() /*=>*/ { tileMode = 1; }
@@ -453,22 +469,28 @@ function Panel_Preview() : PanelContent() constructor {
         
         actions = [
             [ 
-                THEME.lock,
-                new tooltipHotkey(__txtx("panel_preview_lock_preview", "Lock previewing node"), "Preview", "Toggle Lock"), 
-                toggle_lock,
-                function() /*=>*/ {return !locked},
-            ],
-            [ 
                 THEME.icon_preview_export,
                 new tooltipHotkey(__txtx("panel_preview_export_canvas", "Export canvas"), "Preview", "Save current frame"), 
                 function() /*=>*/ { saveCurrentFrame(); },
                 function() /*=>*/ {return 0},
             ],
             [ 
+                THEME.lock,
+                new tooltipHotkey(__txtx("panel_preview_lock_preview", "Lock previewing node"), "Preview", "Toggle Lock"), 
+                toggle_lock,
+                function() /*=>*/ {return !locked},
+            ],
+            [ 
                 THEME.icon_center_canvas,
                 new tooltipHotkey(__txtx("panel_preview_center_canvas", "Center canvas"), "Preview", "Focus content"), 
                 function() /*=>*/ { fullView(); },
                 function() /*=>*/ {return 0},
+            ],
+            [ 
+                THEME.icon_minimap,
+                new tooltipHotkey(__txtx("panel_graph_toggle_minimap", "Toggle minimap"), "Graph", "Toggle Minimap"), 
+                function(param) /*=>*/ { minimap_show = !minimap_show; }, 
+                function() /*=>*/ {return minimap_show}, 
             ],
             [ 
                 THEME.icon_visibility,
@@ -2249,6 +2271,9 @@ function Panel_Preview() : PanelContent() constructor {
         tool_side_draw_l = false;
         tool_side_draw_r = false;
         
+        canvas_mx = (mx - canvas_x) / canvas_s;
+        canvas_my = (my - canvas_y) / canvas_s;
+        
         if(PANEL_PREVIEW == self) {
             if(inspect_node) {
                 tool = inspect_node.getTool();
@@ -2260,6 +2285,7 @@ function Panel_Preview() : PanelContent() constructor {
         if(d3_active == NODE_3D.none) drawSplitView();
         
         drawToolBar(tool, _prev_node);
+        drawMinimap();
         
         if(mouse_on_preview && mouse_press(mb_right, pFOCUS) && !key_mod_press(SHIFT)) {
             menuCall("preview_context_menu", [ 
@@ -2299,6 +2325,130 @@ function Panel_Preview() : PanelContent() constructor {
         }
         
     }
+    
+    function drawMinimap() { //
+        if(!minimap_show) return;
+        
+        var mx1 = w - ui(8);
+        var my1 = h - toolbar_height - ui(8);
+        var mx0 = mx1 - minimap_w;
+        var my0 = my1 - minimap_h;
+        
+        minimap_w = min(minimap_w, w - ui(16));
+        minimap_h = min(minimap_h, h - ui(16) - toolbar_height);
+        
+        var mini_hover = false;
+        if(pHOVER && point_in_rectangle(mx, my, mx0, my0, mx1, my1)) {
+            mouse_on_preview = false;
+            mini_hover = true;
+        }
+        
+        var hover = mini_hover && !point_in_rectangle(mx, my, mx0, my0, mx0 + ui(16), my0 + ui(16)) && !minimap_dragging;
+        minimap_surface = surface_verify(minimap_surface, minimap_w, minimap_h);
+        
+        surface_set_target(minimap_surface);
+        DRAW_CLEAR
+    	draw_sprite_stretched_ext(THEME.ui_panel, 0, 0, 0, minimap_w, minimap_h, COLORS.panel_bg_clear_inner, .75 + .25 * hover);
+    	
+        	var _surf = getNodePreviewSurface();
+        	var minx, maxx, miny, maxy;
+            var _dim;
+            
+        	if(is_surface(_surf)) {
+        		_dim = surface_get_dimension(_surf);
+        		
+        		minx = -32;
+	            maxx =  32 + _dim[0];
+	            miny = -32;
+	            maxy =  32 + _dim[1];
+	            
+        	} else {
+        		minx = -32;
+        		maxx =  32;
+        		miny = -32;
+        		maxy =  32;
+        	}
+        	
+        	var cx  = (minx + maxx) / 2;
+            var cy  = (miny + maxy) / 2;
+            var spw = maxx - minx;
+            var sph = maxy - miny;
+            var ss  = min(minimap_w / spw, minimap_h / sph);
+            
+            var nx0 = minimap_w / 2 + (0       - cx) * ss;
+            var ny0 = minimap_h / 2 + (0       - cy) * ss;
+            var nx1 = minimap_w / 2 + (_dim[0] - cx) * ss;
+            var ny1 = minimap_h / 2 + (_dim[1] - cy) * ss;
+            
+            var vx0 = (-canvas_x    ) / canvas_s;
+			var vy0 = (-canvas_y    ) / canvas_s;
+			var vx1 = (-canvas_x + w) / canvas_s;
+			var vy1 = (-canvas_y + h) / canvas_s;
+			
+            var gx0 = minimap_w / 2 + (vx0 - cx) * ss;
+            var gy0 = minimap_h / 2 + (vy0 - cy) * ss;
+            var gx1 = minimap_w / 2 + (vx1 - cx) * ss;
+            var gy1 = minimap_h / 2 + (vy1 - cy) * ss;
+            var gw  = gx1 - gx0;
+            var gh  = gy1 - gy0;
+            
+            if(is_surface(_surf)) {
+            	draw_surface_ext(_surf, nx0, ny0, ss, ss, 0, c_white, 1);
+            	
+            	// draw_set_color(COLORS.panel_graph_minimap_focus);
+            	// draw_rectangle(nx0, ny0, nx1, ny1, 1);
+            	
+            }
+            
+            draw_sprite_stretched_ext(THEME.ui_panel, 1, gx0, gy0, gw, gh, COLORS._main_icon_light, 1);
+		     
+	        var _mini_mx = minx + (mx - mx0) / minimap_w * spw;
+	        var _mini_my = miny + (my - my0) / minimap_h * sph;
+	        
+	        if(minimap_panning) {
+	            canvas_x = w / 2 - _mini_mx * canvas_s;
+	            canvas_y = h / 2 - _mini_my * canvas_s;
+	            
+	            if(mouse_release(mb_left))
+	                minimap_panning = false;
+	        }
+	        
+	        if(mouse_click(mb_left, hover))
+	            minimap_panning = true;
+	            
+        BLEND_MULTIPLY
+        draw_sprite_stretched_ext(THEME.ui_panel, 0, 0, 0, minimap_w, minimap_h, c_white, 1);
+        BLEND_NORMAL
+        
+        surface_reset_target();
+                
+        draw_surface_ext_safe(minimap_surface, mx0, my0, 1, 1, 0, c_white, 1);
+        draw_sprite_stretched_add(THEME.ui_panel, 1, mx0, my0, minimap_w, minimap_h, COLORS.panel_graph_minimap_outline, .5);
+        
+        if(minimap_dragging) {
+            mouse_on_graph = false;
+            var sw = minimap_drag_sx + minimap_drag_mx - mx;
+            var sh = minimap_drag_sy + minimap_drag_my - my;
+            
+            minimap_w = max(ui(64), sw);
+            minimap_h = max(ui(64), sh);
+            
+            if(mouse_release(mb_left))
+                minimap_dragging = false;
+        }
+        
+        if(pHOVER && point_in_rectangle(mx, my, mx0, my0, mx0 + ui(16), my0 + ui(16))) {
+            draw_sprite_ui(THEME.node_resize, 0, mx0 + ui(10), my0 + ui(10), 0.5, 0.5, 180, c_white, 0.75);
+            if(mouse_press(mb_left, pFOCUS)) {
+                minimap_dragging = true;
+                minimap_drag_sx = minimap_w;
+                minimap_drag_sy = minimap_h;
+                minimap_drag_mx = mx;
+                minimap_drag_my = my;
+            }
+        } else 
+            draw_sprite_ui(THEME.node_resize, 0, mx0 + ui(10), my0 + ui(10), 0.5, 0.5, 180, c_white, 0.3);
+    } 
     
     ////=========== ACTION ===========
     

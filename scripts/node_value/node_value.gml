@@ -1963,8 +1963,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				_s  *= 2;
 			}
 			
-			if(graph_selecting)
-				__draw_sprite_ext(THEME.node_junction_selecting, 0, x, y, _s, _s, 0, _cfg, .8);
+			if(graph_selecting) __draw_sprite_ext(THEME.node_junction_selecting, 0, x, y, _s, _s, 0, _cfg, .8);
 			graph_selecting   = false;
 			
 			__draw_sprite_ext(_bgS, draw_junction_index, x, y, _s, _s, 0, _cbg, 1);

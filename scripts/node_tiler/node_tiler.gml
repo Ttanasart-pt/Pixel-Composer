@@ -256,7 +256,7 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	    drawing_surface = surface_verify(drawing_surface, _mapSize[0], _mapSize[1], surface_rgba16float);
 	    temp_surface[0] = surface_verify(temp_surface[0], _mapSize[0], _mapSize[1], surface_rgba16float);
 	    temp_surface[1] = surface_verify(temp_surface[1], _mapSize[0], _mapSize[1], surface_rgba16float);
-	    temp_surface[2] = surface_verify(temp_surface[2], _mapSize[0], _mapSize[1], surface_r16float);
+	    temp_surface[2] = surface_verify(temp_surface[2], _mapSize[0], _mapSize[1], surface_rgba16float);
 	    
 	    surface_set_shader(drawing_surface, noone, true, BLEND.over);
 			draw_surface(canvas_surface, 0, 0);
@@ -272,8 +272,11 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	    canvas_buffer = buffer_verify(canvas_buffer, _mapSize[0] * _mapSize[1] * 8);
 	    buffer_get_surface(canvas_buffer, canvas_surface, 0);
 	    
-	    var _applied = tileset.rules.apply(canvas_surface, _seed);
-	    // var _applied = canvas_surface;
+	    surface_set_shader(temp_surface[2], sh_sample, true, BLEND.over);
+	        draw_surface(canvas_surface, 0, 0);
+	    surface_reset_shader();
+	    
+	    var _applied = tileset.rules.apply(temp_surface[2], _seed);
 	    
 	    surface_set_shader(_tileMap, sh_sample, true, BLEND.over);
 	        draw_surface(_applied, 0, 0);

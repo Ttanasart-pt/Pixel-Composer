@@ -22,6 +22,8 @@
 		
 		static build = function(_x = 0, _y = 0, _group = PANEL_GRAPH.getCurrentContext(), _param = {}) {
 			var _n = {};
+			var _node_in  = noone;
+			var _node_out = noone;
 			
 			for( var i = 0, n = array_length(nodes); i < n; i++ ) {
 				var __n = nodes[i];
@@ -62,6 +64,9 @@
 						}
 					}
 				}
+				
+				if(i == inputNode)  _node_in  = _node;
+				if(i == outputNode) _node_out = _node;
 			}
 		
 			for( var i = 0, n = array_length(connections); i < n; i++ ) {
@@ -77,7 +82,7 @@
 				_toI.setFrom(_frO);
 			}
 		
-			return _n;
+			return { nodes: _n, inputNode: _node_in, outputNode: _node_out };
 		}
 	
 		static serialize = function() {
@@ -94,7 +99,7 @@
 			nodes		= struct_try_get(map, "nodes", []);
 			connections	= struct_try_get(map, "connections", []);
 			
-			inputNode	= struct_try_get(map, "inputNode", noone);
+			inputNode	= struct_try_get(map, "inputNode",  noone);
 			outputNode	= struct_try_get(map, "outputNode", noone);
 			
 			location	= struct_try_get(map, "location", noone);

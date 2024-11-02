@@ -45,7 +45,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	static setPencil = function() {
 		var _n = PANEL_INSPECTOR.getInspecting(); 
-		if(!is(_n, Node_Tile_Drawer)) continue;
+		if(!is(_n, Node_Tile_Drawer)) return;
 		if(PANEL_PREVIEW.tool_current != _n.tool_pencil) 
 			_n.tool_pencil.toggle();
 	}

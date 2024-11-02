@@ -194,8 +194,17 @@ event_inherited();
 			PANEL_INSPECTOR.setInspecting(_new_node);
 			
 		} else if(is_instanceof(_node, NodeAction)) {  // NOT IMPLEMENTED
-			_node.build(node_target_x, node_target_y,, _param);
-			return;
+			var _dat = _node.build(node_target_x, node_target_y,, _param);
+			var _node_in  = _dat.inputNode;
+			var _node_out = _dat.outputNode;
+			
+			if(_node_in != noone)
+			for( var i = 0, n = array_length(_node_in.inputs); i < n; i++ ) 
+				array_push(_inputs, _node_in.inputs[i]);
+			
+			if(_node_out != noone)
+			for( var i = 0, n = array_length(_node_out.outputs); i < n; i++ ) 
+				array_push(_outputs, _node_out.outputs[i]);
 			
 		} else {
 			var _new_list = APPEND(_node.path);
