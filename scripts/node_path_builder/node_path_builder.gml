@@ -97,7 +97,7 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				segments[p][i]   = sg;
 				lengths[p][i]    = l;
 				lengthTotal[p]  += l;
-				lengthAccs[p][i] = lengthTotal;
+				lengthAccs[p][i] = lengthTotal[p];
 			}
 		}
 	}

@@ -14,26 +14,29 @@ function Node_3D_Mesh_Sphere_UV(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _
 	
 	newInput(in_mesh + 3, nodeValue_Bool("Smooth Normal", self, false ));
 	
+	newInput(in_mesh + 4, nodeValue_Enum_Scroll("Projection", self, 0, [ "Lambert", "Equirectangular" ] ));
+	
 	input_display_list = [
-		__d3d_input_list_mesh, in_mesh + 0, in_mesh + 1, 
+		__d3d_input_list_mesh, in_mesh + 0, in_mesh + 1, in_mesh + 4,  
 		__d3d_input_list_transform,
 		["Material",	false], in_mesh + 3, in_mesh + 2, 
 	]
 	
-	static processData = function(_output, _data, _output_index, _array_index = 0) { #region
+	static processData = function(_output, _data, _output_index, _array_index = 0) {
 		var _sideH = _data[in_mesh + 0];
 		var _sideV = _data[in_mesh + 1];
 		var _mat   = _data[in_mesh + 2];
 		var _smt   = _data[in_mesh + 3];
+		var _proj  = _data[in_mesh + 4];
 		
 		var object = getObject(_array_index);
-		object.checkParameter({ hori: _sideH, vert: _sideV, smooth: _smt });
+		object.checkParameter({ hori: _sideH, vert: _sideV, smooth: _smt, projection: _proj });
 		object.materials = [ _mat ];
 		
 		setTransform(object, _data);
 		
 		return object;
-	} #endregion
+	}
 	
 	static getPreviewValues = function() { return getSingleValue(in_mesh + 1); }
 }

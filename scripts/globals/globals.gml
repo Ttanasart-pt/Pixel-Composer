@@ -40,10 +40,10 @@
 	globalvar HOTKEYS, HOTKEY_CONTEXT;
 
 	LATEST_VERSION	= 1_18_00_0;
-	VERSION			= 1_18_01_0;
+	VERSION			= 1_18_03_1;
 	SAVE_VERSION	= 1_18_02_0;
-	VERSION_STRING  = MAC? "1.18.003m" : "1.18.3";
-	BUILD_NUMBER	= 1_18_03_0;
+	VERSION_STRING  = MAC? "1.18.003m" : "1.18.3.1";
+	BUILD_NUMBER	= 1_18_03_1;
 	
 	HOTKEYS			= ds_map_create();
 	HOTKEY_CONTEXT	= ds_list_create();

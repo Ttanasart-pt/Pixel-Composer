@@ -566,7 +566,6 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		// print($">>>>>>>>>>>>>>>>>>>> export {CURRENT_FRAME} <<<<<<<<<<<<<<<<<<<<");
 		
 		randomize();
-		directory = $"{TEMPDIR}{irandom_range(100000, 999999)}";
 		exportLog = log;
 		
 		var surf = getInputData( 0);
@@ -731,6 +730,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	static doInspectorAction = function() {
 		if(!IS_CMD && (LOADING || APPENDING)) return;
+		directory = $"{TEMPDIR}{irandom_range(100000, 999999)}";
 		
 		var path = getInputData(1);
 		if(path == "") return;

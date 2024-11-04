@@ -2419,7 +2419,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			postLoad();
 		}
 		
-		if(anim_timeline && attributes.show_timeline) refreshTimeline();
+		anim_timeline = attributes.show_timeline;
+		if(anim_timeline) refreshTimeline();
 	}
 	
 	static inputBalance = function() { // Cross-version compatibility for dynamic input nodes
@@ -2756,9 +2757,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		switch(_key) {
 			case "interpolate" :
 			case "oversample" :
-				if(group && _val == 0) return group.getAttribute(_key);
-				_val--;
-				break;
+				if(_val == 0 && group != noone) return group.getAttribute(_key);
+				return _val;
 		}
 		
 		return _val;

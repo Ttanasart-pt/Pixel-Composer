@@ -19,9 +19,12 @@ function Node_Array_Rearrange(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	order_i  = noone;
 	order_y  = 0;
 	
-	rearranger = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { #region
+	rearranger = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		var _arr = inputs[0].getValue();
 		var _ord = inputs[1].getValue();
+		
+		if(!is_array(_arr)) return 0;
+		if(!is_array(_ord) || array_length(_ord) != array_length(_arr)) return 0;
 		
 		var amo  = array_length(_arr);
 		var _fx  = _x;
@@ -68,6 +71,12 @@ function Node_Array_Rearrange(_x, _y, _group = noone) : Node(_x, _y, _group) con
 					draw_set_color(COLORS.node_composite_bg);
 					break;
 					
+				case VALUE_TYPE.color :
+					if(is_numeric(_val)) {
+						drawColor(_val, _fx + ui(40), _ffy + ui(4), _w - ui(40 + 8), _fsh - ui(8));
+						break;
+					}
+					
 				default :
 					draw_set_text(f_p2, fa_center, fa_center, COLORS._main_text);
 					draw_text(_ffcx, _ffy + _fsh / 2, string(_val));
@@ -88,6 +97,7 @@ function Node_Array_Rearrange(_x, _y, _group = noone) : Node(_x, _y, _group) con
 			array_remove(_ord, ordering);
 			array_insert(_ord, _hov, ordering);
 			inputs[1].setValue(_ord);
+			triggerRender();
 			
 			if(mouse_release(mb_left)) {
 				ordering = noone;
@@ -97,21 +107,19 @@ function Node_Array_Rearrange(_x, _y, _group = noone) : Node(_x, _y, _group) con
 			order_y = lerp_float(order_y, 0, 5);
 		
 		return _h;
-	}); #endregion
+	});
 	
 	input_display_list = [ 0, ["Rearranger", false], rearranger ];
 	
-	static onValueFromUpdate = function(index = 0) { #region
+	static onValueFromUpdate = function(index = 0) {
 		if(LOADING || APPENDING) return;
 		
 		var _arr = inputs[0].getValue();
-		var _val = array_create(array_length(_arr));
-		for( var i = 0, n = array_length(_arr); i < n; i++ ) 
-			_val[i] = i;
+		var _val = array_create_ext(array_length(_arr), function(i) /*=>*/ {return i});
 		inputs[1].setValue(_val);
-	} #endregion
+	}
 	
-	static step = function() { #region
+	static step = function() {
 		var _typ = VALUE_TYPE.any;
 		if(inputs[0].value_from != noone) _typ = inputs[0].value_from.type;
 		
@@ -127,13 +135,19 @@ function Node_Array_Rearrange(_x, _y, _group = noone) : Node(_x, _y, _group) con
 			type = _typ;
 			will_setHeight = true;
 		}
-	} #endregion
+	}
 	
-	static update = function(frame = CURRENT_FRAME) { #region
+	static update = function(frame = CURRENT_FRAME) {
 		var _arr = getInputData(0);
 		var _ord = getInputData(1);
 		
 		if(!is_array(_arr)) return;
+		
+		if(!is_array(_ord) || array_length(_ord) != array_length(_arr)) {
+			_ord = array_create_ext(array_length(_arr), function(i) /*=>*/ {return i});
+			inputs[1].setValue(_ord);
+		}
+		
 		var res = [];
 		
 		for( var i = 0; i < array_length(_arr); i++ ) {
@@ -142,13 +156,25 @@ function Node_Array_Rearrange(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		}
 		
 		outputs[0].setValue(res);
-	} #endregion
+	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
-		draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
-		var str  = outputs[0].getValue();
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
-		draw_text_bbox(bbox, str);
-	} #endregion
+		var val  = outputs[0].getValue();
+	
+		switch(inputs[0].type) {
+			case VALUE_TYPE.surface :
+				
+				break;
+				
+			case VALUE_TYPE.color :
+				drawPalette(val, bbox.x0, bbox.y0, bbox.w, bbox.h);
+				break;
+				
+			default :
+				draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
+				draw_text_bbox(bbox, val);
+		}
+	}
 	
 }

@@ -6,6 +6,7 @@ function __3dUVSphere(radius = 0.5, hori = 16, vert = 8, smt = false) : __3dObje
 	self.hori   = hori;
 	self.vert   = vert;
 	self.smooth = smt;
+	projection  = 0;
 	
 	static initModel = function() { // swap H, V because fuck me
 		vertex  = [ array_create(vert * hori * 2 * 3) ];
@@ -39,17 +40,10 @@ function __3dUVSphere(radius = 0.5, hori = 16, vert = 8, smt = false) : __3dObje
 			var hy3 = dsin(ha1) * r1;
 			var hz3 = h1;
 			
-			var u0 = ha0 / 360;
-			var v0 = 0.5 - 0.5 * dsin(va0);
-			
-			var u1 = ha1 / 360;
-			var v1 = 0.5 - 0.5 * dsin(va0);
-			
-			var u2 = ha0 / 360;
-			var v2 = 0.5 - 0.5 * dsin(va1);
-			
-			var u3 = ha1 / 360;
-			var v3 = 0.5 - 0.5 * dsin(va1);
+			var u0 = ha0 / 360, v0;
+			var u1 = ha1 / 360, v1;
+			var u2 = ha0 / 360, v2;
+			var u3 = ha1 / 360, v3;
 			
 			var ind = (i * hori + j) * 6;
 			
@@ -81,6 +75,29 @@ function __3dUVSphere(radius = 0.5, hori = 16, vert = 8, smt = false) : __3dObje
 				vertex[0][ind + 4].setNormal(nor[0], nor[1], nor[2]);
 				vertex[0][ind + 5].setNormal(nor[0], nor[1], nor[2]);
 			}
+			
+			switch(projection) {
+				case 0 :
+					v0 = dsin(va0);
+					v2 = dsin(va1);
+					break;
+					
+				case 1 :
+					v0 = va0 / 90;
+					v2 = va1 / 90;
+					break;
+					
+				case 2 :
+					v0 = (2 * arctan(exp(degtorad(va0))) - pi / 2) / (pi / 2); 
+					v2 = (2 * arctan(exp(degtorad(va1))) - pi / 2) / (pi / 2); 
+					break;
+			}
+			
+			v0 = 0.5 - 0.5 * v0;
+			v2 = 0.5 - 0.5 * v2;
+			
+			v1 = v0;
+			v3 = v2;
 			
 			vertex[0][ind + 0].setUV(u0, v0);
 			vertex[0][ind + 1].setUV(u1, v1);

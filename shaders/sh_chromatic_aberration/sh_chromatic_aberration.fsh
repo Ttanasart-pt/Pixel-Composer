@@ -1,6 +1,6 @@
 #pragma use(sampler)
 
-#region -- sampler -- [1729740697.9444373]
+#region -- sampler -- [1730686036.7372286]
 	uniform int  interpolation;
 	uniform vec2 sampleDimension;
 	uniform int  sampleMode;
@@ -69,9 +69,9 @@
 	}
 
 	vec4 texture2Dintp( sampler2D texture, vec2 uv ) {
-			 if(interpolation <= 1)	return texture2D(          texture, uv );
-		else if(interpolation == 2)	return texture2D_bicubic(  texture, uv );
-		else if(interpolation == 3)	return texture2D_lanczos3( texture, uv );
+			 if(interpolation <= 2)	return texture2D(          texture, uv );
+		else if(interpolation == 3)	return texture2D_bicubic(  texture, uv );
+		else if(interpolation == 4)	return texture2D_lanczos3( texture, uv );
 		
 		return texture2D( texture, uv );
 	}

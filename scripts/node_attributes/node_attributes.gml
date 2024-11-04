@@ -4,7 +4,6 @@
 		new scrollItem("Pixel"),
 		new scrollItem("Bilinear"),
 		new scrollItem("Bicubic"),
-		// new scrollItem("RadSin"),
 		new scrollItem("Lanczos3"),
 	];
 	
@@ -26,7 +25,7 @@
 			surface_rgba32float,
 			surface_r8unorm,
 			surface_r16float,
-			surface_r32float
+			surface_r32float,
 		];
 	
 		var surface_format_name = [

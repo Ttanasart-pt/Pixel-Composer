@@ -60,7 +60,7 @@ function Node_Pixel_Math(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		var opS    = _data[11];
 		var mixAmo = _data[12];
 		
-		var _oprand = global.node_math_scroll[type];
+		var _oprand = global.node_math_names[type];
 		setDisplayName(_oprand);
 		
 		inputs[ 8].setVisible(false);
