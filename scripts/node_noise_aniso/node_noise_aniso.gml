@@ -6,8 +6,7 @@ function Node_Noise_Aniso(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput(1, nodeValue_Float("X Amount", self, 2))
 		.setMappable(6);
 	
-	newInput(2, nodeValue_Float("Seed", self, seed_random(6)))
-		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[2].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
+	newInput(2, nodeValueSeed(self));
 	
 	newInput(3, nodeValue_Vec2("Position", self, [ 0, 0 ]))
 		.setUnitRef(function(index) { return getDimension(index); });
@@ -30,8 +29,7 @@ function Node_Noise_Aniso(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	newInput(9, nodeValue_Enum_Scroll("Render mode", self,  0, [ "Blend", "Waterfall" ] ))
 		
-	newInput(10, nodeValue_Float("Color Seed", self, seed_random(6)))
-		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[2].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
+	newInput(10, nodeValueSeed(self));
 	
 	input_display_list = [
 		["Output",	false], 0, 

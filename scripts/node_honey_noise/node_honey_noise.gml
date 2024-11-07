@@ -15,8 +15,7 @@ function Node_Honeycomb_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x
 	newInput(4, nodeValue_Enum_Button("Mode", self,  0, [ "Hexagon", "Star" ]));
 		addShaderProp(SHADER_UNIFORM.integer, "mode");
 	
-	newInput(5, nodeValue_Float("Seed", self, seed_random(6)))
-		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[5].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) })
+	newInput(5, nodeValueSeed(self));
 		addShaderProp(SHADER_UNIFORM.float, "seed");
 		
 	newInput(6, nodeValue_Int("Iteration", self, 1));

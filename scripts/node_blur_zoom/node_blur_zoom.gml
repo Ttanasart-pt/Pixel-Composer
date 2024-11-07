@@ -65,7 +65,7 @@ function Node_Blur_Zoom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
-		var _sam = struct_try_get(attributes, "oversample");
+		var _sam = getAttribute("oversample");
 		
 		var _cen = array_clone(_data[2]);
 		_cen[0] /= surface_get_width_safe(_outSurf);

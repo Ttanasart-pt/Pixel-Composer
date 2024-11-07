@@ -45,7 +45,7 @@ function Node_Local_Analyze(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		var _alg = _data[1];
 		var _siz = _data[2];
 		var _shp = _data[4];
-		var _sam = struct_try_get(attributes, "oversample");
+		var _sam = getAttribute("oversample");
 		
 		surface_set_shader(_outSurf, sh_local_analyze);
 			shader_set_f("dimension" , surface_get_dimension(_data[0]));

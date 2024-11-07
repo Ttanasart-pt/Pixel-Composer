@@ -34,8 +34,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	newInput(9, nodeValue_Enum_Button("Scatter", self,  1, [ "Uniform", "Random" ]));
 	
-	newInput(10, nodeValue_Float("Seed", self, seed_random(6)))
-		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[10].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
+	newInput(10, nodeValueSeed(self));
 	
 	newInput(11, nodeValue_Gradient("Random blend", self, new gradientObject(cola(c_white))))
 		.setMappable(28);

@@ -19,8 +19,7 @@ function Node_Strand_Render(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	newInput(5, nodeValue_Gradient("Color over length", self, new gradientObject(cola(c_white))));
 	
-	newInput(6, nodeValue_Float("Seed", self, seed_random(6)))
-		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[6].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
+	newInput(6, nodeValueSeed(self));
 	
 	newInput(7, nodeValue_Float("Child", self, 0, "Render extra strands between the real strands."));
 	

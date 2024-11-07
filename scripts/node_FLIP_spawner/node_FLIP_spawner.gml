@@ -27,8 +27,7 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(8, nodeValue_Float("Spawn Radius", self, 2 ))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] });
 	
-	newInput(9, nodeValue_Int("Seed", self, seed_random(6)))
-		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[9].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
+	newInput(9, nodeValueSeed(self));
 	
 	newInput(10, nodeValue_Rotation_Random("Spawn Direction", self, [ 0, 45, 135, 0, 0 ] ));
 		

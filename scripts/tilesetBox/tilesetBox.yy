@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"tilesetBox",
   "parent":{
-    "name":"widgets",
-    "path":"folders/widgets.yy",
+    "name":"object",
+    "path":"folders/widgets/object.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

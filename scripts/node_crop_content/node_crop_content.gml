@@ -9,11 +9,13 @@ function Node_Crop_Content(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		.setTooltip("Cropping mode for dealing with image array.");
 	
 	newInput(3, nodeValue_Padding("Padding", self, [ 0, 0, 0, 0 ], "Add padding back after crop."));
+	
+	newInput(4, nodeValue_Color("Background", self, cola(c_black, 0)));
 		
 	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 1,
-		["Surfaces", false], 0, 2, 
+		["Surfaces", false], 0, 2, 4, 
 		["Padding",	 false], 3, 
 	]
 	
@@ -24,13 +26,14 @@ function Node_Crop_Content(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	drag_my   = 0;
 	drag_sv   = 0;
 	
-	temp_surface = [ surface_create(1, 1, surface_r32float), surface_create(1, 1, surface_r32float) ];
+	temp_surface = [ 0, 0 ];
 	
 	static update = function() {
 		var _inSurf	= getInputData(0);
 		var _active	= getInputData(1);
 		var _array	= getInputData(2);
 		var _padd	= getInputData(3);
+		var _bg 	= getInputData(4);
 		
 		var _outSurf = outputs[0].getValue();
 		surface_array_free(_outSurf);
@@ -38,7 +41,6 @@ function Node_Crop_Content(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		if(!_active) {			
 			_outSurf = surface_array_clone(_inSurf);
 			outputs[0].setValue(_outSurf);
-			
 			return;
 		}
 		
@@ -63,23 +65,33 @@ function Node_Crop_Content(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var _dim  = [ surface_get_width_safe(_surf), surface_get_height_safe(_surf) ]; 
 			var _minx = 0, _miny = 0, _maxx = _dim[0] - 1, _maxy = _dim[1] - 1;
 			
-			temp_surface[0] = surface_verify(temp_surface[0], _dim[0], _dim[1], surface_r32float);
-			temp_surface[1] = surface_verify(temp_surface[1], _dim[0], _dim[1], surface_r32float);
+			temp_surface[0] = surface_verify(temp_surface[0], _dim[0], _dim[1], surface_r8unorm);
+			temp_surface[1] = surface_verify(temp_surface[1], _dim[0], _dim[1], surface_r8unorm);
 			
 			surface_set_shader(temp_surface[0], sh_find_boundary_stretch_x);
+				shader_set_color("background", _bg);
 				shader_set_f("dimension", _dim);
+				
 				draw_surface_safe(_surf);
 			surface_reset_shader();
 			
 			surface_set_shader(temp_surface[1], sh_find_boundary_stretch_y);
+				shader_set_color("background", _bg);
 				shader_set_f("dimension", _dim);
+				
 				draw_surface_safe(_surf);
 			surface_reset_shader();
 			
-			for( ; _minx < _dim[0]; _minx++ ) if(surface_get_pixel(temp_surface[0], _minx, 0) > 0) break;
-			for( ; _maxx >= 0; _maxx-- )      if(surface_get_pixel(temp_surface[0], _maxx, 0) > 0) break;
-			for( ; _miny < _dim[1]; _miny++ ) if(surface_get_pixel(temp_surface[1], 0, _miny) > 0) break;
-			for( ; _maxy >= 0; _maxy-- )      if(surface_get_pixel(temp_surface[1], 0, _maxy) > 0) break;
+			var _buff0 = buffer_from_surface(temp_surface[0], false);
+			var _buff1 = buffer_from_surface(temp_surface[1], false);
+			
+			for( ; _minx < _dim[0]; _minx++ ) if(buffer_read_at(_buff0, _minx, buffer_u8) > 0) break;
+			for( ; _maxx >= 0; _maxx-- )      if(buffer_read_at(_buff0, _maxx, buffer_u8) > 0) break;
+			for( ; _miny < _dim[1]; _miny++ ) if(buffer_read_at(_buff1, _dim[0] * _miny, buffer_u8) > 0) break;
+			for( ; _maxy >= 0; _maxy-- )      if(buffer_read_at(_buff1, _dim[0] * _maxy, buffer_u8) > 0) break;
+			
+			buffer_delete(_buff0);
+			buffer_delete(_buff1);
 			
 			if(_array) {
 				minx[j] = _minx;

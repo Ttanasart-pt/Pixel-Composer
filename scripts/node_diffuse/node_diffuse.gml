@@ -15,8 +15,7 @@ function Node_Diffuse(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	
 	newInput(5, nodeValue_Slider_Range("Threshold", self, [ 0.5, 0.7 ]));
 		
-	newInput(6, nodeValue_Int("Seed", self, seed_random(6)))
-		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[6].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
+	newInput(6, nodeValueSeed(self));
 	
 	newInput(7, nodeValue_Surface("External", self));
 	

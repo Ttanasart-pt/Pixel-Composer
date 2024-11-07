@@ -63,8 +63,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(16, nodeValue_Enum_Button("Array select", self, 0, [ "Order", "Random", "Spread" ]))
 		.setTooltip("Whether to select image from an array in order, at random, or spread each image to its own output.");
 	
-	newInput(17, nodeValue_Int("Seed", self, seed_random(6)))
-		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[17].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
+	newInput(17, nodeValueSeed(self));
 	
 	newInput(18, nodeValue_Int("Column", self, 4));
 	
@@ -659,6 +658,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 					_y += _padd[1] - miny;
 				}
 				
+				// print(dec_to_hex(color_real(_a.color)));
 				draw_surface_ext_safe(_a.surface, _x, _y, _a.sx, _a.sy, _a.rot, _a.color, _a.alpha);
 			}
 			

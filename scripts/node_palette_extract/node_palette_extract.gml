@@ -7,8 +7,7 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	newInput(1, nodeValue_Int("Max colors", self, 5, "Amount of color in a palette."))
 		.rejectArray();
 	
-	newInput(2, nodeValue_Int("Seed", self, seed_random(6), "Random seed to be used to initialize K-mean algorithm."))
-		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[2].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) })
+	newInput(2, nodeValueSeed(self))
 		.rejectArray();
 	
 	newInput(3, nodeValue_Enum_Scroll("Algorithm", self,  0, { data: [ "K-mean", "Frequency", "All colors" ], update_hover: false }))

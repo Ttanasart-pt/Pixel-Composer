@@ -79,32 +79,35 @@ function transformBox(_onModify) : widget() constructor {
 		var lbw = _lab? string_width(__txt("Position")) + ui(8) : 0;
 		var tbw = (_w - lbw) / 2;
 		var tbh = _h;
+		var tbx = _x + lbw;
 		
 		if(_lab) draw_text_add(_x, _y + tbh / 2, __txt("Position"));
 		
-		draw_sprite_stretched_ext(THEME.textbox, 3, _x + lbw, _y, _w - lbw, tbh, boxColor, 1);
-		draw_sprite_stretched_ext(THEME.textbox, 0, _x + lbw, _y, _w - lbw, tbh, boxColor, 0.5 + 0.5 * interactable);	
+		draw_sprite_stretched_ext(THEME.textbox, 3, tbx, _y, _w - lbw, tbh, boxColor, 1);
+		draw_sprite_stretched_ext(THEME.textbox, 0, tbx, _y, _w - lbw, tbh, boxColor, 0.5 + 0.5 * interactable);	
 		
-		tb[TRANSFORM.pos_x].draw(_x + lbw,		 _y, tbw, tbh, _data[TRANSFORM.pos_x], _m);
-		tb[TRANSFORM.pos_y].draw(_x + lbw + tbw, _y, tbw, tbh, _data[TRANSFORM.pos_y], _m);
+		tb[TRANSFORM.pos_x].draw(tbx,		 _y, tbw, tbh, _data[TRANSFORM.pos_x], _m);
+		tb[TRANSFORM.pos_y].draw(tbx + tbw, _y, tbw, tbh, _data[TRANSFORM.pos_y], _m);
 		
 		_y += tbh + ui(4);
 		
-		rot.draw(_x, _y, _w, tbh, _data[TRANSFORM.rot], _m);
+		draw_set_text(font, fa_left, fa_center, CDEF.main_dkgrey);
+		if(_lab) draw_text_add(_x, _y + tbh / 2, __txt("Rotation"));
+		rot.draw(tbx, _y, _w - lbw, tbh, _data[TRANSFORM.rot], _m);
 		
 		_y += tbh + ui(4);
 		
 		draw_set_text(font, fa_left, fa_center, CDEF.main_dkgrey);
 		if(_lab) draw_text_add(_x, _y + tbh / 2, __txt("Scale"));
 		
-		draw_sprite_stretched_ext(THEME.textbox, 3, _x + lbw, _y, _w - lbw, tbh, boxColor, 1);
-		draw_sprite_stretched_ext(THEME.textbox, 0, _x + lbw, _y, _w - lbw, tbh, boxColor, 0.5 + 0.5 * interactable);	
+		draw_sprite_stretched_ext(THEME.textbox, 3, tbx, _y, _w - lbw, tbh, boxColor, 1);
+		draw_sprite_stretched_ext(THEME.textbox, 0, tbx, _y, _w - lbw, tbh, boxColor, 0.5 + 0.5 * interactable);	
 		
 		tbw = array_length(_data) > 4? (_w - lbw) / 2 : _w - lbw;
 		
-		tb[TRANSFORM.sca_x].draw(_x + lbw, _y, tbw, tbh, _data[TRANSFORM.sca_x], _m);
+		tb[TRANSFORM.sca_x].draw(tbx, _y, tbw, tbh, _data[TRANSFORM.sca_x], _m);
 		if(array_length(_data) > 4)
-			tb[TRANSFORM.sca_y].draw(_x + lbw + tbw, _y, tbw, tbh, _data[TRANSFORM.sca_y], _m);
+			tb[TRANSFORM.sca_y].draw(tbx + tbw, _y, tbw, tbh, _data[TRANSFORM.sca_y], _m);
 		
 		resetFocus();
 		

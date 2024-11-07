@@ -29,7 +29,7 @@ function Node_Color_replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	newInput(13, nodeValue_Enum_Scroll("Mode", self,  0, [ "Closet", "Random" ]));
 	
-	newInput(14, nodeValueSeed(self, VALUE_TYPE.float));
+	newInput(14, nodeValueSeed(self));
 	
 	input_display_list = [ 9, 10, 14, 
 		["Surfaces",	 true], 0, 7, 8, 11, 12, 

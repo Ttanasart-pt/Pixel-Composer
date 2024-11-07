@@ -36,7 +36,9 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		_node.inputs[0].setValue(_key);
 	}
 	
-	static update = function(frame = CURRENT_FRAME) { onValueUpdate(); }
+	static update = function(frame = CURRENT_FRAME) {
+		onValueUpdate(); 
+	}
 	
 	static resetMap = function() {
 		var _key = inputs[0].getValue();
@@ -98,18 +100,16 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		if(index == 0) { RENDER_ALL_REORDER }
 	}
 	
+	static onValueFromUpdate = function(index) {
+		var _frm = inputs[1].value_from;
+		
+		inputs[1].setType(   _frm? _frm.type         : VALUE_TYPE.any);
+		inputs[1].setDisplay(_frm? _frm.display_type : VALUE_DISPLAY._default);
+		
+	}
+	
 	static step = function() {
-		var _key = inputs[0].getValue();
-		
 		value_validation[VALIDATION.error] = error_notification != noone;
-		
-		if(inputs[1].value_from == noone) {
-			inputs[1].setType(VALUE_TYPE.any);
-			inputs[1].display_type = VALUE_DISPLAY._default;
-		} else {
-			inputs[1].setType(inputs[1].value_from.type);
-			inputs[1].display_type = inputs[1].value_from.display_type;
-		}
 	}
 	
 	static getNextNodes = function() {
@@ -261,7 +261,10 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	static onClone = function() { onValueUpdate(0); }
 	
-	static postConnect = function() { step(); onValueUpdate(0); }
+	static postConnect = function() { 
+		onValueUpdate(0); 
+		onValueFromUpdate(0);
+	}
 	
 	static onDestroy = function() {
 		if(error_notification != noone)

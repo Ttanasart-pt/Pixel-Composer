@@ -296,7 +296,7 @@ function Node_Liquefy(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var _amo = getInputAmount();
 		if(_amo == 0) return _outSurf;
 		
-		var  sam  = struct_try_get(attributes, "oversample");
+		var  sam  = getAttribute("oversample");
 		var _surf = _data[0];
 		
 		if(!is_surface(_surf)) return _outSurf;

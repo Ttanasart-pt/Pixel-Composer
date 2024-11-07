@@ -8,7 +8,7 @@ function Node_MK_Sparkle(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	newInput(0, nodeValue_Int("Size", self, 5));
 	
-	newInput(1, nodeValueSeed(self, VALUE_TYPE.float));
+	newInput(1, nodeValueSeed(self));
 	
 	newInput(2, nodeValue_Float("Speed", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider)

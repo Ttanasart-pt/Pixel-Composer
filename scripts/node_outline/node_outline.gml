@@ -98,7 +98,7 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var blend = _data[3];
 		var side  = _data[5];
 		var aa    = _data[6];
-		var sam   = struct_try_get(attributes, "oversample");
+		var sam   = getAttribute("oversample");
 		var _crop = _data[12];
 		
 		surface_set_shader(_outSurf, sh_outline);

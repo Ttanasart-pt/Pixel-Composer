@@ -46,20 +46,20 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 		direction = parent.angle;
 	}
 	
-	static addChild = function(bone) { #region
+	static addChild = function(bone) {
 		array_push(childs, bone);
 		bone.parent = self;
 		return self;
-	} #endregion
+	}
 	
-	static childCount = function() { #region
+	static childCount = function() {
 		var amo = array_length(childs);
 		for( var i = 0, n = array_length(childs); i < n; i++ )
 			amo += childs[i].childCount();
 		return amo;
-	} #endregion
+	}
 	
-	static freeze = function() { #region
+	static freeze = function() {
 		freeze_data = {
 			angle: angle,
 			length: length,
@@ -69,9 +69,9 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 		
 		for( var i = 0, n = array_length(childs); i < n; i++ )
 			childs[i].freeze();
-	} #endregion
+	}
 	
-	static findBone = function(_id) { #region
+	static findBone = function(_id) {
 		if(ID == _id) 
 			return self;
 		
@@ -82,9 +82,9 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 		}
 		
 		return noone;
-	} #endregion
+	}
 	
-	static findBoneByName = function(_name) { #region
+	static findBoneByName = function(_name) {
 		//print($"Print {string_length(string_trim(name))} : {string_length(string_trim(_name))}");
 		if(string_trim(name) == string_trim(_name)) 
 			return self;
@@ -96,9 +96,9 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 		}
 		
 		return noone;
-	} #endregion
+	}
 	
-	static getPoint = function(progress, pose = true) { #region
+	static getPoint = function(progress, pose = true) {
 		var _len = pose? length : init_length;
 		var _ang = pose? angle  : init_angle;
 		
@@ -118,18 +118,18 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 					  .addElement(lengthdir_x(distance, direction), lengthdir_y(distance, direction))
 					  .addElement(lengthdir_x(len, _ang), lengthdir_y(len, _ang))
 		return p;
-	} #endregion
+	}
 	
-	static draw = function(attributes, edit = false, _x = 0, _y = 0, _s = 1, _mx = 0, _my = 0, hovering = noone, selecting = noone) { #region
+	static draw = function(attributes, edit = false, _x = 0, _y = 0, _s = 1, _mx = 0, _my = 0, hovering = noone, selecting = noone) {
 		var hover = _drawBone(attributes, edit, _x, _y, _s, _mx, _my, hovering, selecting);
 		drawControl(attributes);
 		return hover;
-	} #endregion
+	}
 	
 	control_x0 = 0; control_y0 = 0; control_i0 = 0;
 	control_x1 = 0; control_y1 = 0; control_i1 = 0;
 	
-	static _drawBone = function(attributes, edit = false, _x = 0, _y = 0, _s = 1, _mx = 0, _my = 0, hovering = noone, selecting = noone) { #region
+	static _drawBone = function(attributes, edit = false, _x = 0, _y = 0, _s = 1, _mx = 0, _my = 0, hovering = noone, selecting = noone) {
 		var hover = noone;
 		
 		var p0 = getPoint(0);
@@ -166,11 +166,31 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 				if(attributes.display_bone == 0) {
 					var _ppx = lerp(p0.x, p1.x, 0.2);
 					var _ppy = lerp(p0.y, p1.y, 0.2);
-					draw_line_width2(p0.x, p0.y, _ppx, _ppy,  2 * pose_scale, 12 * pose_scale);
-					draw_line_width2(_ppx, _ppy, p1.x, p1.y, 12 * pose_scale,  2 * pose_scale);
+					var _prr = point_direction(p0.x, p0.y, p1.x, p1.y) + 90;
+					var _prx = lengthdir_x(6 * pose_scale, _prr);
+					var _pry = lengthdir_y(6 * pose_scale, _prr);
+					
+					draw_primitive_begin(pr_trianglelist);
+						draw_vertex(p0.x, p0.y);
+						draw_vertex(_ppx, _ppy);
+						draw_vertex(_ppx + _prx, _ppy + _pry);
+						
+						draw_vertex(p0.x, p0.y);
+						draw_vertex(_ppx, _ppy);
+						draw_vertex(_ppx - _prx, _ppy - _pry);
+						
+						draw_vertex(p1.x, p1.y);
+						draw_vertex(_ppx, _ppy);
+						draw_vertex(_ppx + _prx, _ppy + _pry);
+						
+						draw_vertex(p1.x, p1.y);
+						draw_vertex(_ppx, _ppy);
+						draw_vertex(_ppx - _prx, _ppy - _pry);
+					draw_primitive_end();
 					
 					if((edit & 0b100) && distance_to_line(_mx, _my, p0.x, p0.y, p1.x, p1.y) <= 12) //drag bone
 						hover = [ self, 2, p0 ];
+						
 				} else if(attributes.display_bone == 1) {
 					draw_line_width(p0.x, p0.y, p1.x, p1.y, 3);
 					
@@ -225,9 +245,9 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 		}
 		
 		return hover;
-	} #endregion
+	}
 	
-	static drawControl = function(attributes) { #region
+	static drawControl = function(attributes) {
 		if(parent != noone && IKlength == 0) {
 			var spr, ind0, ind1;
 			if(attributes.display_bone == 0) {
@@ -243,23 +263,23 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 		
 		for( var i = 0, n = array_length(childs); i < n; i++ )
 			childs[i].drawControl(attributes);
-	} #endregion
+	}
 	
-	static resetPose = function() { #region
+	static resetPose = function() {
 		pose_angle = 0;
 		pose_scale = 1;
 		pose_posit = [ 0, 0 ];
 		
 		for( var i = 0, n = array_length(childs); i < n; i++ )
 			childs[i].resetPose();
-	} #endregion
+	}
 	
-	static setPose = function(_position = [ 0, 0 ], _angle = 0, _scale = 1) { #region
+	static setPose = function(_position = [ 0, 0 ], _angle = 0, _scale = 1) {
 		setPoseTransform(_position, _angle, _scale);
 		setIKconstrain();
-	} #endregion
+	}
 	
-	static setPoseTransform = function(_position = [ 0, 0 ], _angle = 0, _scale = 1) { #region
+	static setPoseTransform = function(_position = [ 0, 0 ], _angle = 0, _scale = 1) {
 		if(is_main) {
 			for( var i = 0, n = array_length(childs); i < n; i++ )
 				childs[i].setPoseTransform(_position, _angle, _scale);
@@ -288,9 +308,9 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 		
 		for( var i = 0, n = array_length(childs); i < n; i++ )
 			childs[i].setPoseTransform(_position, pose_angle, pose_scale);
-	} #endregion
+	}
 	
-	static setIKconstrain = function() { #region
+	static setIKconstrain = function() {
 		if(IKlength > 0 && IKTarget != noone) {
 			var points  = array_create(IKlength + 1);
 			var lengths = array_create(IKlength);
@@ -329,10 +349,10 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 		
 		for( var i = 0, n = array_length(childs); i < n; i++ )
 			childs[i].setIKconstrain();
-	} #endregion
+	}
 	
 	FABRIK_result = [];
-	static FABRIK = function(bones, points, lengths, dx, dy) { #region
+	static FABRIK = function(bones, points, lengths, dx, dy) {
 		var threshold = 0.01;
 		var _bo = array_create(array_length(points));
 		for( var i = 0, n = array_length(points); i < n; i++ )
@@ -368,9 +388,9 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 		}
 		
 		FABRIK_result[i] = p1;
-	} #endregion
+	}
 	
-	static FABRIK_backward = function(points, lengths, dx, dy) { #region
+	static FABRIK_backward = function(points, lengths, dx, dy) {
 		var tx = dx;
 		var ty = dy;
 		
@@ -389,9 +409,9 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 			tx = p0.x;
 			ty = p0.y;
 		}
-	} #endregion
+	}
 	
-	static FABRIK_forward = function(points, lengths, sx, sy) { #region
+	static FABRIK_forward = function(points, lengths, sx, sy) {
 		var tx = sx;
 		var ty = sy;
 		
@@ -410,9 +430,9 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 			tx = p1.x;
 			ty = p1.y;
 		}
-	} #endregion
+	}
 	
-	static __getBBOX = function() { #region
+	static __getBBOX = function() {
 		var p0 = getPoint(0);
 		var p1 = getPoint(1);
 		
@@ -422,9 +442,9 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 		var y1 = max(p0.y, p1.y);
 		
 		return [ x0, y0, x1, y1 ];
-	} #endregion
+	}
 	
-	static bbox = function() { #region
+	static bbox = function() {
 		var _bbox = __getBBOX();
 		//print($"BBOX: {_bbox}")
 		
@@ -439,9 +459,9 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 		}
 		
 		return _bbox;
-	} #endregion
+	}
 	
-	static serialize = function() { #region
+	static serialize = function() {
 		var bone = {};
 		
 		bone.ID			= ID;
@@ -465,9 +485,9 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 			bone.childs[i] = childs[i].serialize();
 			
 		return bone;
-	} #endregion
+	}
 	
-	static deserialize = function(bone, node) { #region
+	static deserialize = function(bone, node) {
 		ID			= bone.ID;
 		name		= bone.name;
 		distance	= bone.distance;
@@ -493,18 +513,18 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 		}
 		
 		return self;
-	} #endregion
+	}
 	
-	static connect = function() { #region
+	static connect = function() {
 		IKTarget = noone;
 		if(parent != noone && IKTargetID != "") 
 			IKTarget = parent.findBone(IKTargetID);
 		
 		for( var i = 0, n = array_length(childs); i < n; i++ )
 			childs[i].connect();
-	} #endregion
+	}
 	
-	static clone = function() { #region
+	static clone = function() {
 		var _b = new __Bone(parent, distance, direction, angle, length);
 		_b.ID		= ID;
 		_b.name		= name;
@@ -521,7 +541,7 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 			_b.addChild(childs[i].clone());
 		
 		return _b;
-	} #endregion
+	}
 	
 	static toString = function() { return $"Bone {name} [{ID}]"; }
 }

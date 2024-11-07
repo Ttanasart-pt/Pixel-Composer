@@ -44,8 +44,7 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	__init_mask_modifier(7); // inputs 11, 12, 
 	
-	newInput(13, nodeValue_Int("Seed", self, seed_random(6)))
-		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[13].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
+	newInput(13, nodeValueSeed(self));
 		
 	newInput(14, nodeValue_Bool("Use palette", self, true));
 	

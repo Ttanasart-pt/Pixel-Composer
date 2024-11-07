@@ -354,9 +354,9 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 					var sample  = quality * segCount;
 					var _step   = 1 / sample;
 					
-					path_points = array_verify(path_points, sample);
+					path_points = array_verify_ext(path_points, sample, function() /*=>*/ {return new __vec2()});
 					for( var i = 0; i < sample; i++ ) 
-						path_points[i] = _path.getPointRatio(i * _step, array_safe_get(path_points, i, undefined));
+						path_points[i] = _path.getPointRatio(i * _step, 0, array_safe_get(path_points, i, undefined));
 					
 					var tri = polygon_triangulate(path_points);
 					triangles  = tri[0];

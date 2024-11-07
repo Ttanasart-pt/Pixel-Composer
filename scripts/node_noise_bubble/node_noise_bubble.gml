@@ -6,8 +6,7 @@ function Node_Noise_Bubble(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 		.setDisplay(VALUE_DISPLAY.slider);
 		addShaderProp(SHADER_UNIFORM.float, "density");
 		
-	newInput(2, nodeValue_Float("Seed", self, seed_random(6)))
-		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[2].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
+	newInput(2, nodeValueSeed(self));
 		addShaderProp(SHADER_UNIFORM.float, "seed");
 				
 	newInput(3, nodeValue_Slider_Range("Scale", self, [ 0.5, 0.8 ] ));

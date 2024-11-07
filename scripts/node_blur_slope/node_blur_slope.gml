@@ -57,7 +57,7 @@ function Node_Blur_Slope(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			shader_set_f("stepSize",       _data[10]);
 			shader_set_surface("slopeMap", _data[2]);
 			shader_set_f("slopeMapDim",    surface_get_dimension(_data[2]));
-			shader_set_i("sampleMode",	  struct_try_get(attributes, "oversample"));
+			shader_set_i("sampleMode",	  getAttribute("oversample"));
 			shader_set_i("gamma",          _data[11]);
 			
 			draw_surface_safe(_data[0]);

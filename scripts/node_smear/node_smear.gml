@@ -86,7 +86,7 @@ function Node_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			
 			shader_set_f_map("strength",  _data[ 1], _data[ 9], inputs[ 1]);
 			shader_set_f_map("direction", _data[ 2], _data[10], inputs[ 2]);
-			shader_set_i("sampleMode",	  struct_try_get(attributes, "oversample"));
+			shader_set_i("sampleMode",	  getAttribute("oversample"));
 			shader_set_i("alpha",	      _data[11]);
 			shader_set_i("inv",	    	  _data[14]);
 			shader_set_i("blend",    	  _data[15]);

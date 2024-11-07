@@ -30,8 +30,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	newInput(9, nodeValue_Float("Structure", self, 0.2, "The ability to keep its original shape."))
 		.setDisplay(VALUE_DISPLAY.slider);
 		
-	newInput(10, nodeValue_Int("Seed", self, seed_random(6)))
-		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[10].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
+	newInput(10, nodeValueSeed(self));
 	
 	newInput(11, nodeValue_Float("Curl frequency", self, 0));
 	

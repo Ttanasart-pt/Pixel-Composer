@@ -74,8 +74,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	newInput(31, nodeValue_Surface("Atlas", self,  []))
 		.setArrayDepth(1);
 	
-	newInput(32, nodeValue_Float("Seed", self, seed_random(6)))
-		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[32].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
+	newInput(32, nodeValueSeed(self));
 	
 	newInput(33, nodeValue_Rotation("Gravity direction", self, -90));
 	

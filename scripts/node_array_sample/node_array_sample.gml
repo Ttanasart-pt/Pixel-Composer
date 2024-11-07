@@ -12,7 +12,7 @@ function Node_Array_Sample(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	newInput(3, nodeValue_Int("Shift", self, 0))
 	
-	newInput(4, nodeValueSeed(self, VALUE_TYPE.float));
+	newInput(4, nodeValueSeed(self));
 	
 	newInput(5, nodeValue_Int("Amount", self, 4))
 	

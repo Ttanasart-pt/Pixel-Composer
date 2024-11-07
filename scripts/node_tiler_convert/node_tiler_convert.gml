@@ -17,7 +17,7 @@ function Node_Tile_Convert(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
     
     newInput( 2, nodeValue_Bool("Animated", self, false));
     
-    newInput( 3, nodeValueSeed(self, VALUE_TYPE.float));
+    newInput( 3, nodeValueSeed(self));
     
 	newOutput(0, nodeValue_Output("Rendered", self, VALUE_TYPE.surface, noone));
 	

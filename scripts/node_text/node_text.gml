@@ -63,9 +63,9 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	newInput(27, nodeValue_Int("Max line width", self, 0 ));
 		
-	input_display_list = [
+	input_display_list = [ 0, 
 		["Output",		true],	9,  6, 10,
-		["Text",		false], 0, 13, 14, 7, 8, 27, 
+		["Alignment",	false], 13, 14, 7, 8, 27, 
 		["Font",		false], 1,  2, 15, 3, 11, 12, 
 		["Rendering",	false], 5, 
 		["Background",   true, 16], 17, 

@@ -75,7 +75,7 @@ function Node_Blur_Directional(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 			shader_set_f_map("direction", _data[ 2], _data[10], inputs[ 2]);
 			shader_set_i("scale",         _data[11]);
 			shader_set_i("gamma",         _data[12]);
-			shader_set_i("sampleMode",	  struct_try_get(attributes, "oversample"));
+			shader_set_i("sampleMode",	  getAttribute("oversample"));
 			
 			draw_surface_safe(_data[0]);
 		surface_reset_shader();

@@ -299,6 +299,7 @@ function Theme() constructor {
     bone_tool_detach                = s_bone_tool_detach;
     bone_tool_IK                    = s_bone_tool_IK;
     bone_tool_move                  = s_bone_tool_move;
+    bone_tool_pose                  = s_bone_tool_pose;
     bone_tool_remove                = s_bone_tool_remove;
     bone_tool_scale                 = s_bone_tool_scale;
     canvas_draw_layer               = s_canvas_draw_layer;

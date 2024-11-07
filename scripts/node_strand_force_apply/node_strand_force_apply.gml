@@ -11,8 +11,7 @@ function Node_Strand_Force_Apply(_x, _y, _group = noone) : _Node_Strand_Affector
 	
 	newInput(input_fix_len + 1, nodeValue_Float("Turbulence", self, 0));
 		
-	newInput(input_fix_len + 2, nodeValue_Int("Seed", self, seed_random(6)))
-		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[input_fix_len + 2].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
+	newInput(input_fix_len + 2, nodeValueSeed(self));
 	
 	newInput(input_fix_len + 3, nodeValue_Float("Turbulence frequency", self, 0.5));
 	

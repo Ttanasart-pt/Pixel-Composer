@@ -44,8 +44,7 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(7, nodeValue_Vec2_Range("Scale particle", self, [ 0, 0, 0, 0 ] , { linked : true }))
 		.rejectArray();
 	
-	newInput(8, nodeValue_Int("Seed", self, seed_random(6)))
-		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[8].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) })
+	newInput(8, nodeValueSeed(self))
 		.rejectArray();
 		
 	effector_input_length = array_length(inputs);

@@ -15,8 +15,7 @@ function Node_Smoke_Turbulence(_x, _y, _group = noone) : Node_Smoke(_x, _y, _gro
 	newInput(3, nodeValue_Float("Scale", self, 4))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.01] });
 	
-	newInput(4, nodeValue_Float("Seed", self, seed_random(6)))
-		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[4].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
+	newInput(4, nodeValueSeed(self));
 	
 	newInput(5, nodeValue_Enum_Button("Mode", self,  0, [ "Override", "Add" ]));
 	

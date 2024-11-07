@@ -170,6 +170,7 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 			if(_a == 1) {
 				draw_sprite_stretched_ext(THEME.palette_mask, 1, _bx, _by, _bww, _bh, current_color, 1);
 			} else {
+				// draw_sprite_stretched_ext(THEME.button_def,   0, _bx, _by, _bww, _bh, boxColor, 1);
 				draw_sprite_stretched_ext(THEME.palette_mask, 1, _bx, _by, _bww, _bh - ui(8), current_color, 1);
 			
 				draw_sprite_stretched_ext(THEME.palette_mask, 1, _bx, _by + _bh - ui(6), _bww,      ui(6), c_black, 1);
@@ -190,10 +191,10 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 		return h;
 	}
 	
-	static clone = function() { #region
+	static clone = function() {
 		var cln = new buttonColor(onApply, parentDialog);
 		return cln;
-	} #endregion
+	}
 }
 
 function drawColor(color, _x, _y, _w, _h, _alp = true, _ind = 1) {

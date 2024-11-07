@@ -21,8 +21,7 @@ function Node_Grain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	newInput(8, nodeValueMap("Brightness map", self));
 	
-	newInput(9, nodeValue_Float("Seed", self, seed_random(6)))
-		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[9].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
+	newInput(9, nodeValueSeed(self));
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	

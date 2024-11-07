@@ -5,22 +5,20 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	//newInput(0, nodeValue_Int("Axis", self, 0));
 	
 	bone_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { 
-		var _b  = attributes.bones;
+		var _b  = bones;
 		if(_b == noone) return 0;
 		var amo = _b.childCount();
 		var _hh = ui(28);
 		var bh  = ui(32 + 16) + amo * _hh;
 		var ty  = _y;
 			
-		draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
+		draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
 		draw_text_add(_x + ui(16), ty + ui(4), __txt("Bones"));
-			
-		ty += ui(32);
+		ty += ui(28);
 		
 		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, ty, _w, bh - ui(32), COLORS.node_composite_bg_blend, 1);
-		draw_set_color(COLORS.node_composite_separator);
-		draw_line(_x + 16, ty + ui(8), _x + _w - 16, ty + ui(8));
-		
+		// draw_set_color(COLORS.node_composite_separator);
+		// draw_line(_x + 16, ty + ui(8), _x + _w - 16, ty + ui(8));
 		ty += ui(8);
 		
 		var hovering = noone;
@@ -42,8 +40,10 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			
 			if(bone.parent_anchor) 
 				draw_sprite_ui(THEME.bone, 1, __x + 12, ty + 14,,,, COLORS._main_icon);
+				
 			else if(bone.IKlength) 
 				draw_sprite_ui(THEME.bone, 2, __x + 12, ty + 14,,,, COLORS._main_icon);
+				
 			else {
 				if(_hover && point_in_circle(_m[0], _m[1], __x + 12, ty + 12, 12)) {
 					draw_sprite_ui(THEME.bone, 0, __x + 12, ty + 14,,,, COLORS._main_icon_light);
@@ -98,8 +98,10 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			
 			ty += _hh;
 				
-			draw_set_color(COLORS.node_composite_separator);
-			draw_line(_x + 16, ty, _x + _w - 16, ty);
+			if(!ds_stack_empty(_bst)) {
+				draw_set_color(COLORS.node_composite_separator);
+				draw_line(_x + 16, ty, _x + _w - 16, ty);
+			}
 		}
 		
 		ds_stack_destroy(_bst);
@@ -109,7 +111,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			
 		if(bone_remove != noone) {
 			var _par = bone_remove.parent;
-			recordAction(ACTION_TYPE.struct_modify, attributes.bones, attributes.bones.serialize());
+			recordAction(ACTION_TYPE.struct_modify, bones, bones.serialize());
 			array_remove(_par.childs, bone_remove);
 				
 			for( var i = 0, n = array_length(bone_remove.childs); i < n; i++ ) {
@@ -128,12 +130,12 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	];
 	
 	static createBone = function(parent, distance, direction) { 
-		recordAction(ACTION_TYPE.struct_modify, attributes.bones, attributes.bones.serialize());
+		recordAction(ACTION_TYPE.struct_modify, bones, bones.serialize());
 		
 		var bone  = new __Bone(parent, distance, direction,,, self);
 		parent.addChild(bone);
 		
-		if(parent == attributes.bones) 
+		if(parent == bones) 
 			bone.parent_anchor = false;
 		return bone;
 	} 
@@ -141,10 +143,10 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	newOutput(0, nodeValue_Output("Armature", self, VALUE_TYPE.armature, noone));
 	
 	#region ++++ attributes ++++
-		attributes.bones = new __Bone(,,,,, self);
-		attributes.bones.name = "Main";
-		attributes.bones.is_main = true;
-		attributes.bones.node = self;
+		bones = new __Bone(,,,,, self);
+		bones.name = "Main";
+		bones.is_main = true;
+		bones.node = self;
 		
 		attributes.display_name = true;
 		attributes.display_bone = 0;
@@ -192,7 +194,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		var smx = value_snap(mx, _snx);
 		var smy = value_snap(my, _sny);
 		
-		var _b = attributes.bones;
+		var _b = bones;
 		
 		if(builder_bone != noone) { 
 			anchor_selecting = _b.draw(attributes, false, _x, _y, _s, _mx, _my, anchor_selecting);
@@ -291,7 +293,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 					var _len = point_distance(p0.x, p0.y, p1.x, p1.y);
 					var _ang = point_direction(p0.x, p0.y, p1.x, p1.y);
 					
-					recordAction(ACTION_TYPE.struct_modify, attributes.bones, attributes.bones.serialize());
+					recordAction(ACTION_TYPE.struct_modify, bones, bones.serialize());
 					
 					var IKbone = new __Bone(anc, _len, _ang, ik_dragging.angle + 90, 0, self);
 					anc.addChild(IKbone);
@@ -349,7 +351,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 						builder_mx = mx;
 						builder_my = my;
 						
-						recordAction(ACTION_TYPE.struct_modify, attributes.bones, attributes.bones.serialize());
+						recordAction(ACTION_TYPE.struct_modify, bones, bones.serialize());
 					}
 				} else
 					draw_set_color(c_white);
@@ -422,7 +424,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 					builder_mx = _mx;
 					builder_my = _my;
 					
-					recordAction(ACTION_TYPE.struct_modify, attributes.bones, attributes.bones.serialize());
+					recordAction(ACTION_TYPE.struct_modify, bones, bones.serialize());
 				}
 			}
 		
@@ -432,7 +434,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			
 			if(mouse_press(mb_left, active)) {
 				if(anchor_selecting == noone) {
-					builder_bone = createBone(attributes.bones, point_distance(0, 0, smx, smy), point_direction(0, 0, smx, smy));
+					builder_bone = createBone(bones, point_distance(0, 0, smx, smy), point_direction(0, 0, smx, smy));
 					builder_type = 1;
 					builder_sx = smx;
 					builder_sy = smy;
@@ -447,7 +449,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 					
 				} else if(anchor_selecting[1] == 2) {
 					var _pr = anchor_selecting[0];
-					recordAction(ACTION_TYPE.struct_modify, attributes.bones, attributes.bones.serialize());
+					recordAction(ACTION_TYPE.struct_modify, bones, bones.serialize());
 					
 					var _md = new __Bone(noone, 0, 0, _pr.angle, _pr.length / 2, self);
 					_pr.length = _md.length;
@@ -464,7 +466,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			}
 			
 			if(anchor_selecting == noone)
-				draw_sprite_ext(THEME.bone_tool_add, 1, _mx + 24, _my + 24, 1, 1, 0, c_white, 1);
+				draw_sprite_ext(THEME.bone_tool_add, 1, _mx + 16, _my + 16, 1, 1, 0, c_white, 1);
 			else if(anchor_selecting[1] == 1) {
 				draw_sprite_ext(THEME.bone_tool_add, 0, _mx + 24, _my + 24, 1, 1, 0, c_white, 1);
 				draw_sprite_ext(THEME.bone_tool_add, 1, _mx + 24, _my + 24, 1, 1, 0, c_white, 1);
@@ -531,7 +533,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 				builder_bone = anchor_selecting[0];
 				builder_type = anchor_selecting[1];
 				
-				recordAction(ACTION_TYPE.struct_modify, attributes.bones, attributes.bones.serialize());
+				recordAction(ACTION_TYPE.struct_modify, bones, bones.serialize());
 				
 				if(builder_type == 0) {
 					var orig = builder_bone.parent.getPoint(0);
@@ -562,7 +564,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	static step = function() {}
 	
 	static update = function(frame = CURRENT_FRAME) { 
-		outputs[0].setValue(attributes.bones);
+		outputs[0].setValue(bones);
 	} 
 	
 	static getPreviewBoundingBox = function() { 
@@ -571,7 +573,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		var maxx = -9999999;
 		var maxy = -9999999;
 		
-		var _b = attributes.bones;
+		var _b = bones;
 		var _bst = ds_stack_create();
 		ds_stack_push(_bst, _b);
 		
@@ -599,16 +601,15 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	} 
 	
 	static doSerialize = function(_map) { 
-		_map.bones = attributes.bones.serialize();
+		_map.bones = bones.serialize();
 	} 
 	
-	// static attributeDeserialize = function() {}
-	
 	static postDeserialize = function() { 
+		if(struct_has(attributes, "bones")) struct_remove(attributes, "bones");
 		if(!struct_has(load_map, "bones")) return;
-		attributes.bones = new __Bone(,,,,, self);
-		attributes.bones.deserialize(load_map.bones, self);
-		attributes.bones.connect();
+		bones = new __Bone(,,,,, self);
+		bones.deserialize(load_map.bones, self);
+		bones.connect();
 	} 
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { 

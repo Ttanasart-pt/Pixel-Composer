@@ -226,12 +226,12 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 						draw_sprite_ui_uniform(THEME.icon_canvas, 0, _icx, _icy, 1, _icc, _ica);
 						
 						draw_set_alpha(aa);
-						draw_text(_txx + ui(8 + 16), _txy, _txt);
+						draw_text_add(_txx + ui(8 + 16), _txy, _txt);
 						draw_set_alpha(1);
 						
 					} else {
 						draw_set_alpha(aa);
-						draw_text(_txx, _txy, _txt);
+						draw_text_add(_txx, _txy, _txt);
 						draw_set_alpha(1);
 					}
 				}
@@ -428,11 +428,6 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		newInput(index + 5, nodeValue_Float($"Opacity {_s}", self, 1))
 			.setDisplay(VALUE_DISPLAY.slider);
-		
-		for( var i = 0; i < data_length; i++ ) {
-			array_push(input_display_list, index + i);
-			inputs[index + i].surface_index = index;
-		}
 		
 		while(_s >= array_length(attributes.layer_visible))
 			array_push(attributes.layer_visible, true);
@@ -771,7 +766,6 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _outSurf  = _outData[0];
 		
 		if(getInputAmount() == 0) return _outData;
-		
 		dynamic_input_inspecting = clamp(dynamic_input_inspecting, 0, getInputAmount() - 1);
 		
 		var _pad	  = _data[0];

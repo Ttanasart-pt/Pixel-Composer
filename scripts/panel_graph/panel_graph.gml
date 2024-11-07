@@ -1088,8 +1088,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         var gr_x  = graph_x * graph_s;
         var gr_y  = graph_y * graph_s;
         var gr_ls = gls * graph_s;
-        var xx = -gr_ls, xs = safe_mod(gr_x, gr_ls);
-        var yy = -gr_ls, ys = safe_mod(gr_y, gr_ls);
+        var xx = -gr_ls - 1, xs = safe_mod(gr_x, gr_ls);
+        var yy = -gr_ls - 1, ys = safe_mod(gr_y, gr_ls);
         
         draw_set_color(project.graphGrid.color);
         var aa = 0.5;

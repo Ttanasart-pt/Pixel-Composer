@@ -50,10 +50,7 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 		tool_pos = new NodeTool( "Transform", THEME.tools_3d_transform, "Node_3D_Object" );
 		tool_rot = new NodeTool( "Rotate", THEME.tools_3d_rotate, "Node_3D_Object" );
 		tool_sca = new NodeTool( "Scale", THEME.tools_3d_scale, "Node_3D_Object" );
-		
-		tool_euler = [ tool_pos, tool_sca ];
-		tool_quate = [ tool_pos, tool_rot, tool_sca ];
-		tools      = tool_quate;
+		tools    = [ tool_pos, tool_rot, tool_sca ];
 		
 		tool_axis_edit = new scrollBox([ "local", "global" ], function(val) { tool_attribute.context = val; });
 		tool_attribute.context = 0;
@@ -198,7 +195,7 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 			axis_hover = _hover;
 		#endregion display
 		
-		if(drag_axis != noone) { #region editing
+		if(drag_axis != noone) { // editing
 			if(!MOUSE_WRAPPING) {
 				drag_mx += _mx - drag_px;
 				drag_my += _my - drag_py;
@@ -263,9 +260,9 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 			setMouseWrap();
 			drag_px = _mx;
 			drag_py = _my;
-		} #endregion
+		}
 			
-		if(_hover != noone && mouse_press(mb_left, active)) { #region
+		if(_hover != noone && mouse_press(mb_left, active)) {
 			drag_axis = _hover;
 			drag_prev = undefined;
 			drag_mx	= _mx;
@@ -277,7 +274,7 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 			
 			drag_val = _pos;
 			drag_original = new __vec3(_pos);
-		} #endregion
+		}
 	}
 	
 	static drawGizmoRotation = function(index, object, _vpos, active, params, _mx, _my, _snx, _sny, _panel) {
@@ -290,7 +287,8 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 			var _qview  = new BBMOD_Quaternion().FromEuler(_camera.focus_angle_y, -_camera.focus_angle_x, 0);
 		
 			var _ang    = inputs[index].display_data.angle_display;
-			var _global = _ang == QUARTERNION_DISPLAY.quarterion? tool_attribute.context : 1;
+			var _quat   = _ang == QUARTERNION_DISPLAY.quarterion;
+			var _global = _quat? tool_attribute.context : 1;
 			
 			var _hover     = noone;
 			var _hoverDist = 10;
@@ -322,8 +320,8 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 					
 					switch(i) {
 						case 0 : np = new BBMOD_Vec3(0, lengthdir_x(size, ang), lengthdir_y(size, ang)); break;
-						case 1 : np = new BBMOD_Vec3(lengthdir_x(size, ang), lengthdir_y(size, ang), 0); break;
-						case 2 : np = new BBMOD_Vec3(lengthdir_x(size, ang), 0, lengthdir_y(size, ang)); break;
+						case 1 : np = new BBMOD_Vec3(lengthdir_x(size, ang), 0, lengthdir_y(size, ang)); break;
+						case 2 : np = new BBMOD_Vec3(lengthdir_x(size, ang), lengthdir_y(size, ang), 0); break;
 					}
 					
 					if(_global) np = _qview.Rotate(_qinv.Rotate(np));
@@ -344,51 +342,77 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 			axis_hover = _hover;
 		#endregion
 			
-		if(drag_axis != noone) { #region
-			var mAng = point_direction(cx, cy, _mx, _my);
-			
-			if(drag_rot_axis == undefined) {
-				drag_rot_axis = BBMOD_VEC3_FORWARD;
+		if(_quat) {
+			if(drag_axis != noone) {
+				var mAng = point_direction(cx, cy, _mx, _my);
 				
-				switch(drag_axis) {
-					case 0 : drag_rot_axis = new BBMOD_Vec3(-1,  0,  0); break;
-					case 1 : drag_rot_axis = new BBMOD_Vec3( 0,  0, -1); break;
-					case 2 : drag_rot_axis = new BBMOD_Vec3( 0, -1,  0); break;
+				if(drag_rot_axis == undefined) {
+					drag_rot_axis = BBMOD_VEC3_FORWARD;
+					
+					switch(drag_axis) {
+						case 0 : drag_rot_axis = new BBMOD_Vec3(-1,  0,  0); break;
+						case 1 : drag_rot_axis = new BBMOD_Vec3( 0, -1,  0); break;
+						case 2 : drag_rot_axis = new BBMOD_Vec3( 0,  0, -1); break;
+					}
+				
+					if(!_global) drag_rot_axis = _qrot.Rotate(drag_rot_axis).Normalize();
 				}
-			
-				if(!_global) drag_rot_axis = _qrot.Rotate(drag_rot_axis).Normalize();
+				
+				var _nv = _qview.Rotate(_qinv.Rotate(drag_rot_axis));
+				draw_line_round(cx, cy, cx + _nv.X * 100, cy + _nv.Y * 100, 2);
+					
+				if(drag_prev != undefined) {
+					var _rd    = (mAng - drag_prev) * (_nv.Z > 0? 1 : -1);
+					drag_dist += _rd;
+					var _dist  = value_snap(drag_dist, _sny);
+					
+					var _currR = new BBMOD_Quaternion().FromAxisAngle(drag_rot_axis, _dist);
+					var _val   = _currR.Mul(drag_val);
+					var _Nrot  = _val.ToArray();
+					
+					if(inputs[index].setValue(_Nrot))
+						UNDO_HOLDING = true;
+				} 
+					
+				draw_set_color(COLORS._main_accent);
+				draw_line_dashed(cx, cy, _mx, _my, 1, 4);
+					
+				drag_prev = mAng;
+			}
+				
+			if(_hover != noone && mouse_press(mb_left, active)) {
+				drag_axis = _hover;
+				drag_prev = undefined;
+				drag_val  = _qrot.Clone();
+				drag_dist = 0;
+				
+				drag_rot_axis = undefined;
 			}
 			
-			var _nv = _qview.Rotate(_qinv.Rotate(drag_rot_axis));
-			draw_line_round(cx, cy, cx + _nv.X * 100, cy + _nv.Y * 100, 2);
+		} else {
+			if(drag_axis != noone) {
+				var mAng = point_direction(cx, cy, _mx, _my);
 				
-			if(drag_prev != undefined) {
-				var _rd    = (mAng - drag_prev) * (_nv.Z > 0? 1 : -1);
-				drag_dist += _rd;
-				var _dist  = value_snap(drag_dist, _sny);
+				if(drag_prev != undefined) {
+					drag_dist += drag_prev - mAng;
+					
+					var _Nrot = array_clone(drag_val);
+					_Nrot[drag_axis] += drag_dist;
+					
+					if(inputs[index].setValue(_Nrot))
+						UNDO_HOLDING = true;
+				}
 				
-				var _currR = new BBMOD_Quaternion().FromAxisAngle(drag_rot_axis, _dist);
-				var _val   = _currR.Mul(drag_val);
-				var _Nrot  = _ang == QUARTERNION_DISPLAY.quarterion? _val.ToArray() : _val.ToEuler(true);
-				
-				if(inputs[index].setValue(_Nrot))
-					UNDO_HOLDING = true;
-			} 
-				
-			draw_set_color(COLORS._main_accent);
-			draw_line_dashed(cx, cy, _mx, _my, 1, 4);
-				
-			drag_prev = mAng;
-		} #endregion
+				drag_prev = mAng;
+			}
 			
-		if(_hover != noone && mouse_press(mb_left, active)) { #region
-			drag_axis = _hover;
-			drag_prev = undefined;
-			drag_val  = _qrot.Clone();
-			drag_dist = 0;
-			
-			drag_rot_axis = undefined;
-		} #endregion
+			if(_hover != noone && mouse_press(mb_left, active)) {
+				drag_axis = _hover;
+				drag_prev = undefined;
+				drag_val  = inputs[index].getValue(CURRENT_FRAME, false);
+				drag_dist = 0;
+			}
+		}
 	}
 	
 	static drawGizmoScale = function(index, object, _vpos, active, params, _mx, _my, _snx, _sny, _panel) {
@@ -507,7 +531,7 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 			axis_hover = _hover;
 		#endregion
 			
-		if(drag_axis != noone) { #region editing
+		if(drag_axis != noone) { // editing
 			if(!MOUSE_WRAPPING) {
 				drag_mx += _mx - drag_px;
 				drag_my += _my - drag_py;
@@ -566,9 +590,9 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 			setMouseWrap();
 			drag_px = _mx;
 			drag_py = _my;
-		} #endregion
+		}
 			
-		if(_hover != noone && mouse_press(mb_left, active)) { #region
+		if(_hover != noone && mouse_press(mb_left, active)) {
 			drag_axis = _hover;
 			drag_prev = undefined;
 			drag_mx	= _mx;
@@ -580,15 +604,10 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 				
 			drag_val = [ _sca[0], _sca[1], _sca[2] ];
 			drag_original = new __vec3(_sca);
-		} #endregion
+		}
 	}
 	
 	static drawOverlay3D = function(active, params, _mx, _my, _snx, _sny, _panel) { 
-		var _rot = inputs[1].display_data.angle_display;
-		tools = _rot == QUARTERNION_DISPLAY.quarterion? tool_quate : tool_euler;
-		if(_rot == QUARTERNION_DISPLAY.euler && isUsingTool("Rotate"))
-			PANEL_PREVIEW.tool_current = noone;
-		
 		var object = getPreviewObjects();
 		if(array_empty(object)) return;
 		object = object[0];

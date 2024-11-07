@@ -71,7 +71,7 @@ function Node_Twirl(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region	
-		var sam    = struct_try_get(attributes, "oversample");
+		var sam    = getAttribute("oversample");
 		
 		surface_set_shader(_outSurf, sh_twirl);
 		shader_set_interpolation(_data[0]);

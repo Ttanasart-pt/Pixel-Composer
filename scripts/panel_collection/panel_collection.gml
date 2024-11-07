@@ -710,8 +710,10 @@ function Panel_Collection() : PanelContent() constructor {
 	
 	function setPage(i) {
 		page    = i;
+		title   = roots[i][0];
 		root    = roots[i][1];
 		context = root;
+		
 		onResize();
 	}
 	

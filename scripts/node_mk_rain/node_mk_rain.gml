@@ -18,8 +18,7 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 	newInput(7, nodeValue_Range("Velocity", self, [ 1, 2 ]));
 	
-	newInput(8, nodeValue_Int("Seed", self, seed_random(6)))
-		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[8].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
+	newInput(8, nodeValueSeed(self));
 	
 	newInput(9, nodeValue_Enum_Scroll("Shape", self,  0, [ new scrollItem("Rain",    s_node_mk_rain_type, 0),
 												           new scrollItem("Snow",    s_node_mk_rain_type, 1),

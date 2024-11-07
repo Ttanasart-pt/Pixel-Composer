@@ -104,11 +104,6 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	}
 	
 	static drawOverlay3D = function(active, params, _mx, _my, _snx, _sny, _panel) {
-		var _rot = inputs[1].display_data.angle_display;
-		tools = _rot == QUARTERNION_DISPLAY.quarterion? tool_quate : tool_euler;
-		if(_rot == QUARTERNION_DISPLAY.euler && isUsingTool("Rotate"))
-			PANEL_PREVIEW.tool_current = noone;
-		
 		var preObj = getPreviewObjects();
 		if(array_empty(preObj)) return;
 		preObj = preObj[0];

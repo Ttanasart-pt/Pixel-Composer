@@ -10,7 +10,7 @@ function Node_Palette_Shrink(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	
 	newInput(2, nodeValue_Int("Amount", self, 4));
 	
-	newInput(3, nodeValueSeed(self, VALUE_TYPE.float));
+	newInput(3, nodeValueSeed(self));
 	
 	newInput(4, nodeValue_Enum_Button("Color Space", self, 0, [ "RGB", "HSV" ]))
 	

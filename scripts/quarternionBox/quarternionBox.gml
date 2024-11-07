@@ -104,6 +104,7 @@ function quarternionBox(_onModify) : widget() constructor {
 			if(buttonInstant(THEME.button_hide, bx, by, _bs, _bs, _m, iactive, ihover, tooltip, THEME.unit_angle, _disp, c_white) == 2) {
 				clickable = false;
 				_display_data.angle_display = (_disp + 1) % 2;
+				onModify([ 0, 0, 0, 1 ]);
 			}
 			_w -= _bs + ui(8);
 		}

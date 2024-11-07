@@ -6,7 +6,7 @@ function Node_Tile_Rule(_x, _y, _group = noone) : Node(_x, _y, _group) construct
     
     newInput( 1, nodeValue_Surface("Tilemap", self, noone));
     
-    newInput( 2, nodeValueSeed(self, VALUE_TYPE.float));
+    newInput( 2, nodeValueSeed(self));
     
 	newOutput(0, nodeValue_Output("Rendered", self, VALUE_TYPE.surface, noone));
 	

@@ -13,8 +13,7 @@ function Node_Noise_Tri(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	newInput(0, nodeValue_Dimension(self));
 	
-	newInput(1, nodeValue_Float("Seed", self, seed_random(6)))
-		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[1].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
+	newInput(1, nodeValueSeed(self));
 	
 	newInput(2, nodeValue_Vec2("Position", self, [ 0, 0] ));
 	
@@ -48,7 +47,7 @@ function Node_Noise_Tri(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _pos = _data[2];
 		var _sca = _data[3];
 		var _sam = _data[4];
-		var _samTyp = struct_try_get(attributes, "oversample");
+		var _samTyp = getAttribute("oversample");
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		

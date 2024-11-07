@@ -10,8 +10,7 @@ function Node_Noise_Strand(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 		.setDisplay(VALUE_DISPLAY.slider);
 		addShaderProp(SHADER_UNIFORM.float, "density");
 		
-	newInput(3, nodeValue_Float("Seed", self, seed_random(6)))
-		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[3].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
+	newInput(3, nodeValueSeed(self));
 		addShaderProp(SHADER_UNIFORM.float, "seed");
 				
 	newInput(4, nodeValue_Float("Slope", self, 0.5 ))

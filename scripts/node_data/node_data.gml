@@ -2419,7 +2419,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			postLoad();
 		}
 		
-		anim_timeline = attributes.show_timeline;
+		anim_timeline = struct_try_get(attributes, "show_timeline", false);
 		if(anim_timeline) refreshTimeline();
 	}
 	

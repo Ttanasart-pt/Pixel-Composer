@@ -58,7 +58,7 @@ function Node_Blur_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		if(!is_surface(_data[0])) return _outSurf;
 		
-		var _samp = struct_try_get(attributes, "oversample");
+		var _samp = getAttribute("oversample");
 		var _surf = _data[0];
 		var _path = _data[1];
 		var _reso = _data[2];

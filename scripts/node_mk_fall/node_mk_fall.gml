@@ -6,8 +6,7 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	
 	newInput(1, nodeValue_Dimension(self));
 		
-	newInput(2, nodeValue_Int("Seed", self, seed_random(6)))
-		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[2].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
+	newInput(2, nodeValueSeed(self));
 	
 	newInput(3, nodeValue_Area("Area", self, DEF_AREA));
 	

@@ -33,8 +33,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	newInput(6, nodeValue_Rotation("Starting Angle", self, 90));
 	
-	newInput(7, nodeValue_Int("Seed", self, seed_random(6)))
-		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[7].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
+	newInput(7, nodeValueSeed(self));
 	
 	newInput(8, nodeValue_Bool("3D", self, false));
 	

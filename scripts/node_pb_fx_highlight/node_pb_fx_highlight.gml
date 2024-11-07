@@ -13,8 +13,7 @@ function Node_PB_Fx_Highlight(_x, _y, _group = noone) : Node_PB_Fx(_x, _y, _grou
 		
 	newInput(5, nodeValue_Float("Roughness Scale", self, 1 ));
 		
-	newInput(6, nodeValue_Float("Seed", self, seed_random(6)))
-		.setDisplay(VALUE_DISPLAY._default, { side_button : button(function() { randomize(); inputs[6].setValue(seed_random(6)); }).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
+	newInput(6, nodeValueSeed(self));
 	
 	holding_side = noone;
 	
