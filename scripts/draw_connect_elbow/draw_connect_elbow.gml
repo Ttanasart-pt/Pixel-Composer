@@ -1,12 +1,17 @@
-function draw_line_elbow_color(x0, y0, x1, y1, cx = noone, cy = noone, _s = 1, thick = 1, col1 = c_white, col2 = c_white, corner = 0, indexIn = 1, indexOut = 1, type = LINE_STYLE.solid) {
+function draw_line_elbow_color(x0, y0, x1, y1, cx = noone, cy = noone, _s = 1, thick = 1, col1 = c_white, col2 = c_white, params = {}) {
+	var extend    = params.extend;
+    var corner    = min(extend, params.corner);
+	var indexIn   = params.fromIndex;
+	var indexOut  = params.toIndex;
+	var type      = params.type;
 	
 	if(cx == noone) cx = (x0 + x1) / 2;
 	if(cy == noone) cy = (y0 + y1) / 2;
 	
-	var _x0  = min(x0, x1);	
-	var _x1  = max(x0, x1);
-	var _y0  = min(y0, y1);	
-	var _y1  = max(y0, y1);
+	var _x0 = min(x0, x1);	
+	var _x1 = max(x0, x1);
+	var _y0 = min(y0, y1);	
+	var _y1 = max(y0, y1);
 	var th  = thick / 2;
 	var inv = x1 - 16 * indexOut * _s <= x0 + 16 * indexIn * _s;
 	var rat = inv?  (_y1 == _y0? 0.5 : (cy - _y0) / (_y1 - _y0)) : 
@@ -71,9 +76,14 @@ function draw_line_elbow_color(x0, y0, x1, y1, cx = noone, cy = noone, _s = 1, t
 	}
 }
 
-function draw_line_elbow_corner(x0, y0, x1, y1, _s = 1, thick = 1, col1 = c_white, col2 = c_white, corner = 0, indexIn = 1, indexOut = 1, type = LINE_STYLE.solid) {
-	var sample = corner / 4;
-	sample = clamp(sample, 1, 8);
+function draw_line_elbow_corner(x0, y0, x1, y1, _s = 1, thick = 1, col1 = c_white, col2 = c_white, params = {}) {
+	var extend    = params.extend;
+    var corner    = min(extend, params.corner);
+	var indexIn   = params.fromIndex;
+	var indexOut  = params.toIndex;
+	var type      = params.type;
+	
+	var sample = clamp(corner / 4, 1, 8);
 	
 	var rat  = abs(x0 - x1) / (abs(x0 - x1) + abs(y0 - y1));
 	var colc = merge_color(col1, col2, rat);
@@ -87,10 +97,14 @@ function draw_line_elbow_corner(x0, y0, x1, y1, _s = 1, thick = 1, col1 = c_whit
 	draw_corner(x1 - corner * sx, y0, x1, y0, x1, y0 + corner * sy, thick, colc, sample);
 }
 
-function distance_to_elbow(mx, my, x0, y0, x1, y1, cx, cy, _s, indexIn = 1, indexOut = 1) {
-	var inv = x1 - 16 * _s * indexOut <= x0 + 16 * _s * indexIn;
-	var xx0 = x0 + 16 * _s * indexIn;
-	var xx1 = x1 - 16 * _s * indexOut;
+function distance_to_elbow(mx, my, x0, y0, x1, y1, cx, cy, _s, params = {}) {
+	var extend    = params.extend;
+	var indexIn   = params.fromIndex;
+	var indexOut  = params.toIndex;
+	
+	var inv = x1 - extend * _s * indexOut <= x0 + extend * _s * indexIn;
+	var xx0 = x0 + extend * _s * indexIn;
+	var xx1 = x1 - extend * _s * indexOut;
 		
 	if(y0 != y1 && inv) {
 		var dist =	     distance_to_line(mx, my, xx0, y0, xx0, cy);

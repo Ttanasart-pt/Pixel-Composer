@@ -18,7 +18,11 @@ function draw_corner(x1, y1, xc, yc, x3, y3, thick = 1, col = c_white, sample = 
 	var y4 = p4[1];
 	
 	var ra = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
-	if(ra == 0) return;
+	if(ra == 0) {
+		__draw_set_color(col);
+		draw_line_width(x1, y1, x3, y3, thick);
+		return;
+	}
 	
 	var px = ((x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)) / ra;
 	var py = ((x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)) / ra;

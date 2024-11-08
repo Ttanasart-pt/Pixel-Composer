@@ -108,6 +108,7 @@
 		PREFERENCES.connection_line_highlight		= 0;
 		PREFERENCES.connection_line_highlight_fade	= 0.75;
 		PREFERENCES.connection_line_highlight_all	= false;
+		PREFERENCES.connection_line_extend			= 16;
 		PREFERENCES.curve_connection_line			= 1;
 		
 		PREFERENCES.collection_animated				= true;

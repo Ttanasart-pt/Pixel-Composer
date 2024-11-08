@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"draw_connect_line",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"draw_connect_line",
+  "parent":{
+    "name":"connection",
+    "path":"folders/functions/connection.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

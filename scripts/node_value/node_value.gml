@@ -2049,9 +2049,22 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		var _action = type == VALUE_TYPE.action;
 		var _output = connect_type == CONNECT_TYPE.output;
+		var _drawParam = {
+			corner :    corner,
+			extend :    PREFERENCES.connection_line_extend,
+			fromIndex : 1,
+			toIndex :   1,
+			type :      LINE_STYLE.solid,
+		}
 		
 		switch(PREFERENCES.curve_connection_line) {
-			case 0 : draw_line_width(sx, sy, _mx, _my, th); break;
+			case 0 : 
+				if(drawCorner) draw_line_width(sx, sy, _mx, _my, th); 
+				else {
+					if(_output) draw_line_connect(sx, sy, _mx, _my, ss, th, col, col, _drawParam);
+					else		draw_line_connect(_mx, _my, sx, sy, ss, th, col, col, _drawParam);
+				}
+				break;
 			
 			case 1 : 
 				if(drawCorner) {
@@ -2065,21 +2078,21 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				
 			case 2 : 
 				if(drawCorner) {
-					if(_action)	draw_line_elbow_corner(_mx, _my, sx, sy, ss, th, col, col, corner);
-					else		draw_line_elbow_corner(sx, sy, _mx, _my, ss, th, col, col, corner);
+					if(_action)	draw_line_elbow_corner(_mx, _my, sx, sy, ss, th, col, col, _drawParam);
+					else		draw_line_elbow_corner(sx, sy, _mx, _my, ss, th, col, col, _drawParam);
 				} else {
-					if(_output)	draw_line_elbow_color(sx, sy, _mx, _my,,, ss, th, col, col, corner);
-					else		draw_line_elbow_color(_mx, _my, sx, sy,,, ss, th, col, col, corner);
+					if(_output)	draw_line_elbow_color(sx, sy, _mx, _my,,, ss, th, col, col, _drawParam);
+					else		draw_line_elbow_color(_mx, _my, sx, sy,,, ss, th, col, col, _drawParam);
 				}
 				break;
 				
 			case 3 : 
 				if(drawCorner) {
-					if(_action)	draw_line_elbow_diag_corner(_mx, _my, sx, sy, ss, th, col, col, corner);
-					else		draw_line_elbow_diag_corner(sx, sy, _mx, _my, ss, th, col, col, corner);
+					if(_action)	draw_line_elbow_diag_corner(_mx, _my, sx, sy, ss, th, col, col, _drawParam);
+					else		draw_line_elbow_diag_corner(sx, sy, _mx, _my, ss, th, col, col, _drawParam);
 				} else {
-					if(_output)	draw_line_elbow_diag_color(sx, sy, _mx, _my,,, ss, th, col, col, corner);
-					else		draw_line_elbow_diag_color(_mx, _my, sx, sy,,, ss, th, col, col, corner);
+					if(_output)	draw_line_elbow_diag_color(sx, sy, _mx, _my,,, ss, th, col, col, _drawParam);
+					else		draw_line_elbow_diag_color(_mx, _my, sx, sy,,, ss, th, col, col, _drawParam);
 				}
 				break;
 		}
@@ -2434,38 +2447,45 @@ function drawJuncConnection(from, to, params) {
 	#endregion
 	
 	#region +++++ CHECK HOVER +++++
+		var _drawParam = {
+			extend :    PREFERENCES.connection_line_extend,
+			fromIndex : fromIndex,
+			toIndex :   toIndex,
+		}
 		var hovDist = max(th * 2, 6);
 		
 		if(PANEL_GRAPH.pHOVER) {
 			if(_loop || from.node == to.node) {
 				hover = distance_line_feedback(mx, my, jx, jy, frx, fry, _s) < hovDist;
+				
 			} else {
+				var _hdist = 999999;
+				
 				switch(PREFERENCES.curve_connection_line) { 
 					case 0 : 
-						hover = distance_to_line(mx, my, jx, jy, frx, fry) < hovDist;
+						if(downDirection) _hdist = distance_to_line(mx, my, jx, jy, frx, fry);
+						else              _hdist = distance_to_linear_connection(mx, my, jx, jy, frx, fry, _s, _drawParam);
 						break;
-					case 1 : 
-						if(downDirection) hover = distance_to_curve_corner(mx, my, jx, jy, frx, fry, _s) < hovDist;
-						else              hover = distance_to_curve(mx, my, jx, jy, frx, fry, cx, cy, _s) < hovDist;
 						
-						if(PANEL_GRAPH.value_focus == noone)
-							to.draw_line_shift_hover = hover;
+					case 1 : 
+						if(downDirection) _hdist = distance_to_curve_corner(mx, my, jx, jy, frx, fry, _s);
+						else              _hdist = distance_to_curve(mx, my, jx, jy, frx, fry, cx, cy, _s);
 						break;
+						
 					case 2 : 
-						if(downDirection) hover = distance_to_elbow_corner(mx, my, frx, fry, jx, jy) < hovDist;
-						else              hover = distance_to_elbow(mx, my, frx, fry, jx, jy, cx, cy, _s, fromIndex, toIndex) < hovDist;
-					
-						if(PANEL_GRAPH.value_focus == noone)
-							to.draw_line_shift_hover = hover;
+						if(downDirection) _hdist = distance_to_elbow_corner(mx, my, frx, fry, jx, jy);
+						else              _hdist = distance_to_elbow(mx, my, frx, fry, jx, jy, cx, cy, _s, _drawParam);
 						break;
+						
 					case 3 :
-						if(downDirection) hover  = distance_to_elbow_diag_corner(mx, my, frx, fry, jx, jy) < hovDist;
-						else              hover  = distance_to_elbow_diag(mx, my, frx, fry, jx, jy, cx, cy, _s, fromIndex, toIndex) < hovDist;
-					
-						if(PANEL_GRAPH.value_focus == noone)
-							to.draw_line_shift_hover = hover;
+						if(downDirection) _hdist = distance_to_elbow_diag_corner(mx, my, frx, fry, jx, jy);
+						else              _hdist = distance_to_elbow_diag(mx, my, frx, fry, jx, jy, cx, cy, _s, _drawParam);
 						break;
+						
 				}
+				
+				hover = _hdist < hovDist;
+				if(PANEL_GRAPH.value_focus == noone) to.draw_line_shift_hover = hover;
 			} 
 		}
 				
@@ -2526,23 +2546,30 @@ function drawJuncConnection(from, to, params) {
 		if(_loop || from.node == to.node) {
 			draw_line_feedback(jx, jy, frx, fry, th, c1, c0, ss);
 		} else {
+			_drawParam.corner = corner;
+			_drawParam.type   = ty;
+			
 			switch(PREFERENCES.curve_connection_line) { 
 				case 0 : 
-					if(ty == LINE_STYLE.solid)	draw_line_width_color(jx, jy, frx, fry, th, c1, c0);
-					else						draw_line_dashed_color(jx, jy, frx, fry, th, c1, c0, 6 * ss);
+					if(downDirection)   draw_line_width_color(jx, jy, frx, fry, th, c1, c0);
+					else                draw_line_connect(frx, fry, jx, jy, ss, th, c1, c0, _drawParam);
 					break;
+					
 				case 1 : 
 					if(downDirection)	draw_line_curve_corner(jx, jy, frx, fry, ss, th, c0, c1); 
 					else				draw_line_curve_color(jx, jy, frx, fry, cx, cy, ss, th, c0, c1, ty); 
 					break;
+					
 				case 2 : 
-					if(downDirection)	draw_line_elbow_corner(frx, fry, jx, jy, ss, th, c0, c1, corner, fromIndex, toIndex, ty); 
-					else				draw_line_elbow_color(frx, fry, jx, jy, cx, cy, ss, th, c0, c1, corner, fromIndex, toIndex, ty); 
+					if(downDirection)	draw_line_elbow_corner(frx, fry, jx, jy, ss, th, c0, c1, _drawParam); 
+					else				draw_line_elbow_color(frx, fry, jx, jy, cx, cy, ss, th, c0, c1, _drawParam); 
 					break;
+					
 				case 3 : 
-					if(downDirection)	draw_line_elbow_diag_corner(frx, fry, jx, jy, ss, th, c0, c1, corner, fromIndex, toIndex, ty); 
-					else				draw_line_elbow_diag_color(frx, fry, jx, jy, cx, cy, ss, th, c0, c1, corner, fromIndex, toIndex, ty); 
+					if(downDirection)	draw_line_elbow_diag_corner(frx, fry, jx, jy, ss, th, c0, c1, _drawParam); 
+					else				draw_line_elbow_diag_color(frx, fry, jx, jy, cx, cy, ss, th, c0, c1, _drawParam); 
 					break;
+					
 			} 
 		}
 		

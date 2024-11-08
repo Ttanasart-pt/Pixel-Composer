@@ -538,6 +538,7 @@
     {"name":"draw_circle_functions","order":3,"path":"scripts/draw_circle_functions/draw_circle_functions.yy",},
     {"name":"draw_connect_elbow_diag","order":2,"path":"scripts/draw_connect_elbow_diag/draw_connect_elbow_diag.yy",},
     {"name":"draw_connect_elbow","order":1,"path":"scripts/draw_connect_elbow/draw_connect_elbow.yy",},
+    {"name":"draw_connect_line","order":4,"path":"scripts/draw_connect_line/draw_connect_line.yy",},
     {"name":"draw_connect_linear","order":3,"path":"scripts/draw_connect_linear/draw_connect_linear.yy",},
     {"name":"draw_corner","order":13,"path":"scripts/draw_corner/draw_corner.yy",},
     {"name":"draw_fit","order":11,"path":"scripts/draw_fit/draw_fit.yy",},

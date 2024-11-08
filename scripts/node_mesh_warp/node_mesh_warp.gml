@@ -723,7 +723,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		for(var i = control_index; i < array_length(inputs); i++) {
 			var c = getInputData(i);
 			
-			if(c[0] == PUPPET_FORCE_MODE.puppet) 
+			if(c[0] == PUPPET_FORCE_MODE.puppet)
 				array_push(mesh_data.controls, c);
 		}
 		

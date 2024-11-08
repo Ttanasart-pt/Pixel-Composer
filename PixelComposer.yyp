@@ -1060,6 +1060,7 @@
     {"id":{"name":"draw_connect_curve","path":"scripts/draw_connect_curve/draw_connect_curve.yy",},},
     {"id":{"name":"draw_connect_elbow_diag","path":"scripts/draw_connect_elbow_diag/draw_connect_elbow_diag.yy",},},
     {"id":{"name":"draw_connect_elbow","path":"scripts/draw_connect_elbow/draw_connect_elbow.yy",},},
+    {"id":{"name":"draw_connect_line","path":"scripts/draw_connect_line/draw_connect_line.yy",},},
     {"id":{"name":"draw_connect_linear","path":"scripts/draw_connect_linear/draw_connect_linear.yy",},},
     {"id":{"name":"draw_corner","path":"scripts/draw_corner/draw_corner.yy",},},
     {"id":{"name":"draw_enable_alphablend","path":"scripts/draw_enable_alphablend/draw_enable_alphablend.yy",},},
