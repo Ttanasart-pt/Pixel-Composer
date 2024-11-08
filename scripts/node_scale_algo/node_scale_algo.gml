@@ -13,7 +13,6 @@ function Node_create_Scale_Algo(_x, _y, _group = noone, _param = {}) {
 
 function Node_Scale_Algo(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Scale Algorithm";
-	
 	manage_atlas = false;
 	
 	newInput(0, nodeValue_Surface("Surface in", self));
@@ -60,20 +59,21 @@ function Node_Scale_Algo(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		var ww     = surface_get_width_safe(inSurf);
 		var hh     = surface_get_height_safe(inSurf);
 		var cDep   = attrDepth();
+		var sc = 2, sw, sh;
 		var shader;
-		var sc = 2;
 		
 		var isAtlas = is_instanceof(_data[0], SurfaceAtlas);
 		if(isAtlas && !is_instanceof(_outSurf, SurfaceAtlas))
 			_outSurf = _data[0].clone(true);
+			
 		var _surf = isAtlas? _outSurf.getSurface() : _outSurf;
 		
 		switch(algo) {
 			case 0 :
 				shader = sh_scale2x;
 				sc = 2;
-				var sw = ww * 2;
-				var sh = hh * 2;
+				sw = ww * 2;
+				sh = hh * 2;
 				
 				_surf = surface_verify(_surf, sw, sh, cDep);
 				break;
@@ -81,8 +81,8 @@ function Node_Scale_Algo(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			case 1 :
 				shader = sh_scale3x;
 				sc = 3;
-				var sw = ww * 3;
-				var sh = hh * 3;
+				sw = ww * 3;
+				sh = hh * 3;
 				
 				_surf = surface_verify(_surf, sw, sh, cDep);
 				break;
@@ -119,6 +119,9 @@ function Node_Scale_Algo(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			}
 			
 			_outSurf.setSurface(_surf);
+			
+		} else {
+			_outSurf = _surf;
 		}
 		
 		return _outSurf;

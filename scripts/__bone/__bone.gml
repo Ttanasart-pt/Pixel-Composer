@@ -1,34 +1,30 @@
 function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length = 0, node = noone) constructor {
 	ID = UUID_generate();
 	self.name = "New bone";
-	self.distance	= distance;
-	self.direction	= direction;
-	self.angle		= angle;
-	self.length		= length;
-	self.node		= node;
+	self.distance	 = distance;
+	self.direction	 = direction;
+	self.angle		 = angle;
+	self.length		 = length;
+	self.node		 = node;
 	
-	init_length = length;
-	init_angle  = angle;
+	init_length      = length;
+	init_angle       = angle;
 	
-	pose_angle = 0;
-	pose_scale = 1;
-	pose_posit = [ 0, 0 ];
+	pose_angle       = 0;
+	pose_scale       = 1;
+	pose_posit       = [ 0, 0 ];
 	pose_local_angle = 0;
 	pose_local_scale = 1;
 	pose_local_posit = [ 0, 0 ];
 	
-	apply_scale    = true;
-	apply_rotation = true;
+	apply_scale      = true;
+	apply_rotation   = true;
 	
-	self.is_main = false;
-	self.parent_anchor = true;
-	self.childs = [];
+	childs  = [];
+	is_main = false;
+	parent_anchor = true;
 	
-	tb_name = new textBox(TEXTBOX_INPUT.text, 
-		function(_name) { 
-			name = _name; 
-			if(node) node.triggerRender();
-		});
+	tb_name = new textBox(TEXTBOX_INPUT.text, function(_name) /*=>*/ { name = _name; if(node) node.triggerRender(); });
 	tb_name.font = f_p2;
 	tb_name.hide = true;
 	
@@ -544,4 +540,12 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 	}
 	
 	static toString = function() { return $"Bone {name} [{ID}]"; }
+	
+	static toArray = function(arr = []) {
+		array_push(arr, self);
+		for( var i = 0, n = array_length(childs); i < n; i++ )
+			childs[i].toArray(arr);
+			
+		return arr;
+	}
 }

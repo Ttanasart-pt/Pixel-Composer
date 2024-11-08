@@ -1,151 +1,161 @@
+function MeshedSurface() constructor {
+	surface  = noone;
+	points   = [];
+	tris     = [];
+	links    = [];
+	controls = [];
+}
+
+function MeshedPoint(node, index, _x, _y) constructor {
+	self.index = index;
+	self.node  = node;
+	x  = _x;
+	y  = _y;
+	xp = x;
+	yp = y;
+	
+	node.points[index] = self;
+	
+	ndx = 0;
+	ndy = 0;
+	
+	sx  = x;
+	sy  = y;
+	pin = false;
+	
+	u = 0;
+	v = 0;
+	
+	controlWeights = [];
+	
+	static reset = function(_mesh_data) {
+		x  = sx; 
+		y  = sy;
+		xp = x;  
+		yp = y;
+		
+		var dist = 0;
+		
+		for( var i = 0, n = array_length(_mesh_data.controls); i < n; i++ ) {
+			var c = _mesh_data.controls[i];
+			var d = point_distance(x, y, c[PUPPET_CONTROL.cx], c[PUPPET_CONTROL.cy]);
+			
+			controlWeights[i] = 1 / d;
+			dist += 1 / d;
+		}
+		
+		for( var i = 0, n = array_length(controlWeights); i < n; i++ )
+			controlWeights[i] /= dist;
+	}
+	
+	static draw = function(_x, _y, _s) {
+		if(pin) {
+			draw_set_color(COLORS._main_accent);
+			draw_circle_prec(_x + x * _s, _y + y * _s, 3, false);
+		} else {
+			draw_set_color(COLORS.node_overlay_gizmo_inactive);
+			draw_circle_prec(_x + x * _s, _y + y * _s, 2, false);
+		}
+	}
+	
+	static mapTexture = function(ww, hh) { u = x / ww; v = y / hh;                     }
+	
+	static move       = function(dx, dy) { if(pin) return;   x += dx;   y += dy;       }
+	static planMove   = function(dx, dy) { if(pin) return; ndx += dx; ndy += dy;       }
+	static stepMove   = function(rat)    { if(pin) return; move(ndx * rat, ndy * rat); }
+	static clearMove  = function(rat)    { if(pin) return; ndx = 0; ndy = 0;           }
+	
+	static setPin     = function(pin)    { self.pin = pin;                             }
+	static equal      = function(point)  { return x == point.x && y == point.y;        }
+}
+
+function MeshedLink(_p0, _p1, _k = 1) constructor {
+	p0 = _p0;
+	p1 = _p1;
+	k  = _k;
+
+	len = point_distance(p0.x, p0.y, p1.x, p1.y);
+	
+	static resolve = function(strength = 1) {
+		INLINE
+		
+		var _len = point_distance(p0.x, p0.y, p1.x, p1.y);
+		var _dir = point_direction(p0.x, p0.y, p1.x, p1.y);
+		
+		var _slen = lerp(_len, len, strength);
+		var f     = k * (_len - _slen);
+		var dx    = lengthdir_x(f, _dir);
+		var dy    = lengthdir_y(f, _dir);
+		
+		p0.move( dx / 2,  dy / 2);
+		p1.move(-dx / 2, -dy / 2);
+	}
+	
+	static draw = function(_x, _y, _s) {
+		INLINE
+		
+		draw_set_color(c_red);
+		draw_line(_x + p0.x * _s, _y + p0.y * _s, _x + p1.x * _s, _y + p1.y * _s);
+	}
+}
+
+function MeshedTriangle(_p0, _p1, _p2) constructor {
+	p0 = _p0;
+	p1 = _p1;
+	p2 = _p2;
+	
+	static reset = function(_mesh_data) {
+		INLINE
+		
+		p0.reset(_mesh_data);
+		p1.reset(_mesh_data);
+		p2.reset(_mesh_data);
+	}
+	
+	static initSurface = function(surf) {
+		INLINE
+		
+		p0.mapTexture(surface_get_width_safe(surf), surface_get_height_safe(surf));
+		p1.mapTexture(surface_get_width_safe(surf), surface_get_height_safe(surf));
+		p2.mapTexture(surface_get_width_safe(surf), surface_get_height_safe(surf));	
+	}
+	
+	static drawSurface = function(surf) {
+		INLINE
+		
+		draw_set_color(c_white);
+		draw_set_alpha(1);
+		
+		draw_primitive_begin_texture(pr_trianglelist, surface_get_texture(surf));
+		draw_vertex_texture(p0.x, p0.y, p0.u, p0.v);
+		draw_vertex_texture(p1.x, p1.y, p1.u, p1.v);
+		draw_vertex_texture(p2.x, p2.y, p2.u, p2.v);
+		draw_primitive_end();
+	}
+	
+	static drawPoints = function(_x, _y, _s) {
+		INLINE
+		
+		p0.draw(_x, _y, _s);
+		p1.draw(_x, _y, _s);
+		p2.draw(_x, _y, _s);
+	}
+	
+	static contain = function(p) {
+		INLINE
+		
+		return p == p0 || p == p1 || p == p2;
+	}
+}
+
 function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Mesh Warp";
 	
 	attributes.mesh_bound  = [];
 	
 	points    = [];
-	mesh_data = { points : [], tris : [], links : [], controls: [] };
-	
-	function _Point(node, index, _x, _y) constructor {
-		self.index = index;
-		self.node  = node;
-		x  = _x;
-		y  = _y;
-		xp = x;
-		yp = y;
-		
-		node.points[index] = self;
-		
-		ndx = 0;
-		ndy = 0;
-		
-		sx  = x;
-		sy  = y;
-		pin = false;
-		
-		u = 0;
-		v = 0;
-		
-		controlWeights = [];
-		
-		static reset = function(_mesh_data) {
-			x  = sx; 
-			y  = sy;
-			xp = x;  
-			yp = y;
-			
-			var dist = 0;
-			
-			for( var i = 0, n = array_length(_mesh_data.controls); i < n; i++ ) {
-				var c = _mesh_data.controls[i];
-				var d = point_distance(x, y, c[PUPPET_CONTROL.cx], c[PUPPET_CONTROL.cy]);
-				
-				controlWeights[i] = 1 / d;
-				dist += 1 / d;
-			}
-			
-			for( var i = 0, n = array_length(controlWeights); i < n; i++ )
-				controlWeights[i] /= dist;
-		}
-		
-		static draw = function(_x, _y, _s) {
-			if(pin) {
-				draw_set_color(COLORS._main_accent);
-				draw_circle_prec(_x + x * _s, _y + y * _s, 3, false);
-			} else {
-				draw_set_color(COLORS.node_overlay_gizmo_inactive);
-				draw_circle_prec(_x + x * _s, _y + y * _s, 2, false);
-			}
-		}
-		
-		static mapTexture = function(ww, hh) { u = x / ww; v = y / hh; }
-		static move       = function(dx, dy) { if(pin) return;   x += dx;   y += dy; }
-		static planMove   = function(dx, dy) { if(pin) return; ndx += dx; ndy += dy; }
-		static stepMove   = function(rat)    { if(pin) return; move(ndx * rat, ndy * rat); }
-		static clearMove  = function(rat)    { if(pin) return; ndx = 0; ndy = 0; }
-		static setPin     = function(pin)    { self.pin = pin; }
-		static equal      = function(point)  { return x == point.x && y == point.y; }
-	}
-	
-	function _Link(_p0, _p1, _k = 1) constructor {
-		p0 = _p0;
-		p1 = _p1;
-		k  = _k;
-	
-		len = point_distance(p0.x, p0.y, p1.x, p1.y);
-		
-		static resolve = function(strength = 1) {
-			INLINE
-			
-			var _len = point_distance(p0.x, p0.y, p1.x, p1.y);
-			var _dir = point_direction(p0.x, p0.y, p1.x, p1.y);
-			
-			var _slen = lerp(_len, len, strength);
-			var f     = k * (_len - _slen);
-			var dx    = lengthdir_x(f, _dir);
-			var dy    = lengthdir_y(f, _dir);
-			
-			p0.move( dx / 2,  dy / 2);
-			p1.move(-dx / 2, -dy / 2);
-		}
-		
-		static draw = function(_x, _y, _s) {
-			INLINE
-			
-			draw_set_color(c_red);
-			draw_line(_x + p0.x * _s, _y + p0.y * _s, _x + p1.x * _s, _y + p1.y * _s);
-		}
-	}
-	
-	function _Triangle(_p0, _p1, _p2) constructor {
-		p0 = _p0;
-		p1 = _p1;
-		p2 = _p2;
-		
-		static reset = function(_mesh_data) {
-			INLINE
-			
-			p0.reset(_mesh_data);
-			p1.reset(_mesh_data);
-			p2.reset(_mesh_data);
-		}
-		
-		static initSurface = function(surf) {
-			INLINE
-			
-			p0.mapTexture(surface_get_width_safe(surf), surface_get_height_safe(surf));
-			p1.mapTexture(surface_get_width_safe(surf), surface_get_height_safe(surf));
-			p2.mapTexture(surface_get_width_safe(surf), surface_get_height_safe(surf));	
-		}
-		
-		static drawSurface = function(surf) {
-			INLINE
-			
-			draw_set_color(c_white);
-			draw_set_alpha(1);
-			
-			draw_primitive_begin_texture(pr_trianglelist, surface_get_texture(surf));
-			draw_vertex_texture(p0.x, p0.y, p0.u, p0.v);
-			draw_vertex_texture(p1.x, p1.y, p1.u, p1.v);
-			draw_vertex_texture(p2.x, p2.y, p2.u, p2.v);
-			draw_primitive_end();
-		}
-		
-		static drawPoints = function(_x, _y, _s) {
-			INLINE
-			
-			p0.draw(_x, _y, _s);
-			p1.draw(_x, _y, _s);
-			p2.draw(_x, _y, _s);
-		}
-		
-		static contain = function(p) {
-			INLINE
-			
-			return p == p0 || p == p1 || p == p2;
-		}
-	}
-	
+	mesh_data = new MeshedSurface();
+
 	is_convex       = true;
 	hover           = -1;
 	anchor_dragging = -1;
@@ -163,7 +173,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(3, nodeValue_Trigger("Mesh", self, false ))
-		.setDisplay(VALUE_DISPLAY.button, { name: "Generate", UI : true, onClick: function() { Mesh_setTriangle(); } });
+		.setDisplay(VALUE_DISPLAY.button, { name: "Generate", UI : true, onClick: function() /*=>*/ {return Mesh_build()} });
 	
 	newInput(4, nodeValue_Bool("Diagonal Link", self, false, "Include diagonal link to prevent drastic grid deformation."));
 	
@@ -184,7 +194,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
 	
-	newOutput(1, nodeValue_Output("Mesh data", self, VALUE_TYPE.object, mesh_data));
+	newOutput(1, nodeValue_Output("Mesh data", self, VALUE_TYPE.mesh, mesh_data));
 	
 	input_display_list = [ 5, 
 		["Mesh",			false],	0, 8, 9, 1, 7, 3, 
@@ -210,7 +220,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	#region ============ attributes & tools ============
 		array_push(attributeEditors, "Warp");
-	
+		
 		attributes.iteration = 4;
 		array_push(attributeEditors, ["Iteration", function() { return attributes.iteration; }, 
 			new textBox(TEXTBOX_INPUT.number, function(val) { 
@@ -237,14 +247,13 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	insp1UpdateIcon    = [ THEME.refresh_icon, 1, COLORS._main_value_positive ];
 	will_triangluate   = false;
 	
-	static onInspector1Update = function() {
-		Mesh_setTriangle();
-	}
+	static onInspector1Update = function() { Mesh_build(); }
 	
 	static onValueFromUpdate = function(index) {
 		if(LOADING || APPENDING) return;
+		
 		if(index == 0 && array_empty(mesh_data.tris))
-			Mesh_setTriangle();
+			Mesh_build();
 	}
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
@@ -310,7 +319,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			
 				attributes.mesh_bound[anchor_dragging][0] = dx;
 				attributes.mesh_bound[anchor_dragging][1] = dy;
-				Mesh_setTriangle();
+				Mesh_build();
 			
 				if(mouse_release(mb_left))
 					anchor_dragging = -1;
@@ -327,7 +336,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 					} else if(isUsingTool("Mesh anchor remove")) {
 						if(array_length(mesh) > 3) {
 							array_delete(mesh, hover, 1);
-							Mesh_setTriangle();
+							Mesh_build();
 						}
 					}
 				} else if(isUsingTool("Mesh edit")) {
@@ -345,6 +354,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		for(var i = 0; i < array_length(mesh_data.links); i++)
 			mesh_data.links[i].draw(_x, _y, _s);
+			
 		for(var i = 0; i < array_length(mesh_data.tris); i++)
 			mesh_data.tris[i].drawPoints(_x, _y, _s);
 		
@@ -410,8 +420,8 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		inputs[4].setVisible(_type == 0);
 		inputs[7].setVisible(_type == 0);
 		
-		if(_type == 0)		 tools = tools_edit;
-		else if (_type == 1) tools = tools_mesh;
+			 if(_type == 0) tools = tools_edit;
+		else if(_type == 1) tools = tools_mesh;
 	}
 	
 	static reset = function() {
@@ -421,7 +431,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	static Mesh_regularTri = function(surf) {
+	static Mesh_build_RegularTri = function(surf) {
 		if(is_array(surf)) surf = array_safe_get_fast(surf, 0);
 		
 		if(!is_surface(surf))     return;
@@ -487,14 +497,14 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var px = min(j * gw, ww);
 			var py = min(i * gh, hh);
 			
-			mesh_data.points[i * _sam + j] = new _Point(self, ind++, px, py);
+			mesh_data.points[i * _sam + j] = new MeshedPoint(self, ind++, px, py);
 			if(i == 0) continue;
 				
 			if(j && mesh_data.points[(i - 1) * _sam + j] != 0 && mesh_data.points[i * _sam + j - 1] != 0) 
-				array_push(mesh_data.tris, new _Triangle(mesh_data.points[(i - 1) * _sam + j], mesh_data.points[i * _sam + j - 1], mesh_data.points[i * _sam + j]));
+				array_push(mesh_data.tris, new MeshedTriangle(mesh_data.points[(i - 1) * _sam + j], mesh_data.points[i * _sam + j - 1], mesh_data.points[i * _sam + j]));
 				
 			if(j < sample && mesh_data.points[(i - 1) * _sam + j] != 0 && mesh_data.points[(i - 1) * _sam + j + 1] != 0)
-				array_push(mesh_data.tris, new _Triangle(mesh_data.points[(i - 1) * _sam + j], mesh_data.points[(i - 1) * _sam + j + 1], mesh_data.points[i * _sam + j]));
+				array_push(mesh_data.tris, new MeshedTriangle(mesh_data.points[(i - 1) * _sam + j], mesh_data.points[(i - 1) * _sam + j + 1], mesh_data.points[i * _sam + j]));
 		}
 		
 		for(var i = 0; i < _sam; i++)
@@ -504,22 +514,22 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var p2 =      j? mesh_data.points[ (i    ) * _sam + j - 1 ] : 0;
 			var p3 =         mesh_data.points[ (i    ) * _sam + j     ];
 			
-			if(p3 && p1) array_push(mesh_data.links, new _Link(p3, p1));
-			if(p3 && p2) array_push(mesh_data.links, new _Link(p3, p2));
+			if(p3 && p1) array_push(mesh_data.links, new MeshedLink(p3, p1));
+			if(p3 && p2) array_push(mesh_data.links, new MeshedLink(p3, p2));
 			
 			var d0 = p0 && p3;
 			var d1 = p1 && p2;
 			
 			if(diagon || d0 ^ d1) {
-				if(d0) array_push(mesh_data.links, new _Link(p0, p3, spring));
-				if(d1) array_push(mesh_data.links, new _Link(p1, p2, spring));
+				if(d0) array_push(mesh_data.links, new MeshedLink(p0, p3, spring));
+				if(d1) array_push(mesh_data.links, new MeshedLink(p1, p2, spring));
 			}
 		}
 		
 		if(is_surface(cont)) surface_free(cont);
 	}
 	
-	static Mesh_triangulate = function(surf) {
+	static Mesh_build_Triangulate = function(surf) {
 		var sample = getInputData(1);
 		var seed   = getInputData(9);
 		
@@ -573,32 +583,32 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		mesh_data.points = array_create(_mb + array_length(_p));
 		
 		for( var i = 0, n = _mb; i < n; i++ )
-			mesh_data.points[i] = new _Point(self, ind++, _m[i][0], _m[i][1]);
+			mesh_data.points[i] = new MeshedPoint(self, ind++, _m[i][0], _m[i][1]);
 		for( var i = 0, n = array_length(_p); i < n; i++ )
-			mesh_data.points[_mb + i] = new _Point(self, ind++, _p[i][0], _p[i][1]);
+			mesh_data.points[_mb + i] = new MeshedPoint(self, ind++, _p[i][0], _p[i][1]);
 		
 		var _t = delaunay_triangulation(mesh_data.points);
 		
 		for( var i = 0, n = array_length(_t); i < n; i++ ) {
 			var t = _t[i];
-			array_push(mesh_data.tris,  new _Triangle(t[0], t[1], t[2]));
+			array_push(mesh_data.tris,  new MeshedTriangle(t[0], t[1], t[2]));
 			
-			array_push(mesh_data.links, new _Link(t[0], t[1]));
-			array_push(mesh_data.links, new _Link(t[1], t[2]));
-			array_push(mesh_data.links, new _Link(t[2], t[0]));
+			array_push(mesh_data.links, new MeshedLink(t[0], t[1]));
+			array_push(mesh_data.links, new MeshedLink(t[1], t[2]));
+			array_push(mesh_data.links, new MeshedLink(t[2], t[0]));
 		}
 	}
 	
-	static Mesh_setTriangle = function() {
+	static Mesh_build = function() {
 		var _inSurf = getInputData(0);
 		var _type   = getInputData(8);
 		
-		points = [];
-		mesh_data   = { points : [], tris : [], links : [], controls: [] };
+		points    = [];
+		mesh_data = new MeshedSurface();
 		
 		switch(_type) {
-			case 0 : Mesh_regularTri(_inSurf);   break;
-			case 1 : Mesh_triangulate(_inSurf);	break;
+			case 0 : Mesh_build_RegularTri(_inSurf);   break;
+			case 1 : Mesh_build_Triangulate(_inSurf);	break;
 		}
 		
 		for(var i = 0; i < array_length(mesh_data.tris); i++)
@@ -616,7 +626,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		}
 	}
 	
-	static Control_affectPoint = function(c, p) {
+	static control_affectPoint = function(c, p) {
 		var mode = c[PUPPET_CONTROL.mode];
 		var cx   = c[PUPPET_CONTROL.cx];
 		var cy   = c[PUPPET_CONTROL.cy];
@@ -656,7 +666,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			
 			for( var j = 0, m = array_length(mesh_data.points); j < m; j++ ) {
 				if(mesh_data.points[j] == 0) continue;
-				Control_affectPoint(c, mesh_data.points[j]);
+				control_affectPoint(c, mesh_data.points[j]);
 			}
 		}
 		
@@ -699,12 +709,14 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	static processData = function(_outData, _data, _output_index, _array_index) {
 		if(will_triangluate) {
-			Mesh_setTriangle();
+			Mesh_build();
 			will_triangluate = false;
 		}
 		
 		var _outSurf = _outData[0];
 		var _inSurf  = _data[0];
+		
+		mesh_data.surface = inputs_data[0];
 		if(!is_surface(_inSurf)) return [ _outSurf, mesh_data ];
 		
 		mesh_data.controls = [];

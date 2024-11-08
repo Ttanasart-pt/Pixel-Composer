@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_value_mesh",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_value_mesh",
+  "parent":{
+    "name":"3d",
+    "path":"folders/nodes/values/types/3d.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

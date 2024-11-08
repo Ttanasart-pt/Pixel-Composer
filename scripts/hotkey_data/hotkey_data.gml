@@ -60,6 +60,8 @@ function __initHotKey() {
 	hotkeySimple("Node_3D_Object",          "Scale",                "S");
 	                  
 	hotkeySimple("Node_3D_Camera",          "Move Target",          "T");
+	
+	hotkeySimple("Node_Armature_Bind",      "Pose",                 "P");
 }
 
 function getToolHotkey(_group, _key) {
