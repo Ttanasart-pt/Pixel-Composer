@@ -275,7 +275,6 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var _color  = _data[10];
 		var _df		= _data[12];
 		var _path	= _data[14];
-		var _bgC    = _data[11];
 		var _bgcol  = _bg? colToVec4(_data[11]) : [0, 0, 0, 0];
 		
 		var _posTyp	= _data[15];
@@ -345,7 +344,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			inputs[15].setVisible(false);
 			
 			surface_set_target(_outSurf);
-				if(_bg) draw_clear_alpha(0, 1);
+				if(_bg) draw_clear_alpha(_data[11], 1);
 				else	DRAW_CLEAR
 				
 				var segCount = _path.getSegmentCount();

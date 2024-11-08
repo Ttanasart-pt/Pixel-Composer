@@ -115,8 +115,6 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		
 		inputs[ 2].setVisible(_font != "");
 		inputs[ 3].setVisible(_font != "");
-		inputs[11].setVisible(_font != "");
-		inputs[12].setVisible(_font != "");
 	}
 	
 	static waveGet = function(_ind) {
@@ -152,23 +150,25 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
-		var str   = _data[0], strRaw = str;
-		var _font = _data[1];
-		var _size = _data[2];
-		var _aa   = _data[3];
-		var _col  = _data[5];
-		var _dim  = _data[6];
-		var _hali = _data[7];
-		var _vali = _data[8];
-		var _dim_type = _data[9];
-		var _padd = _data[10];
-		var _trck = _data[11];
-		var _line = _data[12];
-		var _path = _data[13];
-		var _pthS = _data[14];
-		var _scaF = _data[15];
-		var _ubg  = _data[16];
-		var _bgc  = _data[17];
+		var str    = _data[ 0];
+		var strRaw = str;
+		
+		var _font  = _data[ 1];
+		var _size  = _data[ 2];
+		var _aa    = _data[ 3];
+		var _col   = _data[ 5];
+		var _dim   = _data[ 6];
+		var _hali  = _data[ 7];
+		var _vali  = _data[ 8];
+		var _dimt  = _data[ 9];
+		var _padd  = _data[10];
+		var _trck  = _data[11];
+		var _line  = _data[12];
+		var _path  = _data[13];
+		var _pthS  = _data[14];
+		var _scaF  = _data[15];
+		var _ubg   = _data[16];
+		var _bgc   = _data[17];
 		
 		var _wave  = _data[18];
 		var _waveA = _data[19];
@@ -268,6 +268,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			for( var i = 0, n = array_length(_str_lines); i < n; i++ ) {
 				_max_ww  = max(_max_ww, _line_widths[i]);
 				_max_hh += string_height(_str_lines[i]);
+				if(i) _max_hh += _line
 			}
 		#endregion
 		
@@ -281,7 +282,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _use_path = _path != noone && struct_has(_path, "getPointDistance");
 			var _ss = 1;
 		
-			if(_use_path || _dim_type == 0) {
+			if(_use_path || _dimt == 0) {
 				_sw = _dim[0];
 				_sh = _dim[1];
 			} else {
@@ -289,7 +290,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				_sh = hh;
 			}
 		
-			if(_dim_type == 0 && !_use_path && _scaF)
+			if(_dimt == 0 && !_use_path && _scaF)
 				_ss = min(_sw / ww, _sh / hh);
 			
 			if(_wave) _sh += abs(_waveA) * 2;
@@ -301,7 +302,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		
 		#region position
 			var tx = 0, ty = _padd[PADDING.top], _ty = 0;
-			if(_dim_type == 0) {
+			if(_dimt == 0) {
 				switch(_vali) {
 					case 0 : ty = _padd[PADDING.top];						break;
 					case 1 : ty = (_sh - hh * _ss) / 2;						break;
@@ -321,91 +322,98 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		#endregion
 		
 		surface_set_shader(_outSurf, noone,, BLEND.alpha);
-			if(_ubg) {
-				draw_clear(_bgc);
-				BLEND_ALPHA_MULP
+		if(_ubg) {
+			draw_clear(_bgc);
+			BLEND_ALPHA_MULP
+		}
+		
+		__temp_pt   = _path;
+		__temp_ss   = _ss;
+		__temp_trck = _trck;
+		
+		if(_use_path) {
+			var _pthl = _path.getLength(0), va;
+			
+			switch(_vali) {
+				case 0 : ty = 0;                							va = fa_top;         break;
+				case 1 : ty = (_max_hh - line_get_height(font)) / 2;    	va = fa_center;      break;
+				case 2 : ty = _max_hh;          							va = fa_top;         break;
 			}
 			
-			for( var i = 0, n = array_length(_str_lines); i < n; i++ ) { #region draw
+			for( var i = 0, n = array_length(_str_lines); i < n; i++ ) {
 				var _str_line   = _str_lines[i];
 				var _line_width = _line_widths[i];
+				draw_set_text(font, fa_left, va, _col);
 				
-				if(_use_path) {
-					draw_set_text(font, fa_left, fa_bottom, _col);
-					tx = _pthS;
-					ty = 0;
-					
-					switch(_hali) {
-						case 0 : tx = _pthS;					break;
-						case 1 : tx = _pthS - _line_width / 2;	break;
-						case 2 : tx = _line_width - _pthS;		break;
-					}
-					
-					switch(_vali) {
-						case 0 : ty = _ty;				break;
-						case 1 : ty = -hh / 2 + _ty;	break;
-						case 2 : ty = -hh + _ty;		break;
-					}
-					
-					__temp_tx = tx;
-					__temp_ty = ty;
-					__temp_pt = _path;
-					
-					string_foreach(_str_line, function(_chr, _ind) {
-						var _pos = __temp_pt.getPointDistance(__temp_tx);
-						var _p2  = __temp_pt.getPointDistance(__temp_tx + 0.1);
-						var _nor = point_direction(_pos.x, _pos.y, _p2.x, _p2.y);
-						
-						var _line_ang = _nor - 90;
-						var _dx = lengthdir_x(__temp_ty, _line_ang);
-						var _dy = lengthdir_y(__temp_ty, _line_ang);
-						
-						var _tx = _pos.x + _dx;
-						var _ty = _pos.y + _dy;
-						
-						if(__wave) {
-							var _wd = waveGet(_ind);
-							_tx += lengthdir_x(_wd, _line_ang + 90);
-							_ty += lengthdir_y(_wd, _line_ang + 90);
-						}
-						
-						draw_text_transformed(_tx, _ty, _chr, 1, 1, _nor);
-						__temp_tx += string_width(_chr) + __temp_trck;
-					});
-					
-					_ty += string_height("l") + _line;
-				} else {
-					draw_set_text(font, fa_left, fa_top, _col);
-					tx = _padd[PADDING.left];
-					
-					if(_dim_type == 0) 
-					switch(_hali) {
-						case 0 : tx = _padd[PADDING.left];								break;
-						case 1 : tx = (_sw - _line_width * _ss) / 2;					break;
-						case 2 : tx = _sw - _padd[PADDING.right] - _line_width * _ss;	break;
-					}
-					
-					__temp_tx   = tx;
-					__temp_ty   = ty;
-					__temp_ss   = _ss;
-					__temp_trck = _trck;
-				
-					string_foreach(_str_line, function(_chr, _ind) {
-						var _tx = __temp_tx;
-						var _ty = __temp_ty;
-						
-						if(__wave) {
-							var _wd = waveGet(_ind);
-							_ty += _wd;
-						}
-						
-						draw_text_transformed(_tx, _ty, _chr, __temp_ss, __temp_ss, 0);
-						__temp_tx += (string_width(_chr) + __temp_trck) * __temp_ss;
-					});
-				
-					ty += (string_height("l") + _line) * _ss;
+				switch(_hali) {
+					case 0 : tx = 0;                           break;
+					case 1 : tx = _pthl / 2 - _line_width / 2; break;
+					case 2 : tx = _pthl     - _line_width;     break;
 				}
-			} #endregion
+				
+				__temp_tx = tx + _pthS;
+				__temp_ty = ty;
+				__temp_p0 = new __vec2();
+				__temp_p1 = new __vec2();
+				
+				string_foreach(_str_line, function(_chr, _ind) {
+					var _p1  = __temp_pt.getPointDistance(__temp_tx,      0, __temp_p0);
+					var _p2  = __temp_pt.getPointDistance(__temp_tx + .1, 0, __temp_p1);
+					var _nor = point_direction(_p1.x, _p1.y, _p2.x, _p2.y);
+					
+					var _line_ang = _nor + 90;
+					var _dx = lengthdir_x(__temp_ty, _line_ang);
+					var _dy = lengthdir_y(__temp_ty, _line_ang);
+					
+					var _tx = _p1.x + _dx;
+					var _ty = _p1.y + _dy;
+					
+					if(__wave) {
+						var _wd = waveGet(_ind);
+						_tx += lengthdir_x(_wd, _line_ang + 90);
+						_ty += lengthdir_y(_wd, _line_ang + 90);
+					}
+					
+					draw_text_transformed(_tx, _ty, _chr, 1, 1, _nor);
+					__temp_tx += string_width(_chr) + __temp_trck;
+				});
+				
+				ty -= string_height(_str_line) + _line;
+			}
+			
+		} else {
+			for( var i = 0, n = array_length(_str_lines); i < n; i++ ) {
+				var _str_line   = _str_lines[i];
+				var _line_width = _line_widths[i];
+				draw_set_text(font, fa_left, fa_top, _col);
+				tx = _padd[PADDING.left];
+				
+				if(_dimt == 0) 
+				switch(_hali) {
+					case 0 : tx = _padd[PADDING.left];								break;
+					case 1 : tx = (_sw - _line_width * _ss) / 2;					break;
+					case 2 : tx = _sw - _padd[PADDING.right] - _line_width * _ss;	break;
+				}
+				
+				__temp_tx = tx;
+				__temp_ty = ty;
+			
+				string_foreach(_str_line, function(_chr, _ind) {
+					var _tx = __temp_tx;
+					var _ty = __temp_ty;
+					
+					if(__wave) {
+						var _wd = waveGet(_ind);
+						_ty += _wd;
+					}
+					
+					draw_text_transformed(_tx, _ty, _chr, __temp_ss, __temp_ss, 0);
+					__temp_tx += (string_width(_chr) + __temp_trck) * __temp_ss;
+				});
+			
+				ty += (string_height(_str_line) + _line) * _ss;
+			}
+		}
 		surface_reset_shader();
 		
 		return _outSurf;
