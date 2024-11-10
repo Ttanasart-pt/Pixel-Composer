@@ -385,8 +385,9 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				}
 				break;
 				
-			case VALUE_TYPE.d3Material : 
 			case VALUE_TYPE.surface : 
+			case VALUE_TYPE.d3Material : 
+			case VALUE_TYPE.dynaSurface : 
 				param.h = widExtend? ui(96) : ui(48);
 				break;
 			

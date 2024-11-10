@@ -39,13 +39,13 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	attribute_surface_depth();
 	attribute_interpolation();
 	
+	anchor_selecting = noone;
+	
 	attributes.layer_visible	= [];
 	attributes.layer_selectable = [];
 	
 	attributes.display_name = true;
 	attributes.display_bone = 0;
-	
-	anchor_selecting = noone;
 	
 	array_push(attributeEditors, "Display");
 	array_push(attributeEditors, ["Display name", function() /*=>*/ {return attributes.display_name}, new checkBox(function() /*=>*/ { attributes.display_name = !attributes.display_name; })]);
@@ -75,7 +75,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		var _surfAmo = getInputAmount();
 		
 		for(var i = 0; i < _surfAmo; i++) {
-			var _surf = current_data[input_fix_len + i * data_length];
+			var _surf = getInputData(input_fix_len + i * data_length);
 			var _id   = array_safe_get(boneIDMap, i, "");
 			if(_id == "") continue;
 			
@@ -157,7 +157,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 						_sx += _sw * _ss + 4;
 					}
 				}
-					
+				
 				if(point_in_rectangle(_m[0], _m[1], _x, ty, _x + _w, ty + _hh - 1)) {
 					if(layer_dragging != noone) {
 						draw_sprite_stretched_ext(THEME.ui_panel, 1, _x, ty, _w, _hh, COLORS._main_accent, 1);
@@ -166,7 +166,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 						                                         
 					anchor_selecting = [ _bone, 2 ];
 				}
-					
+				
 				ty += _hh;
 				
 				if(!ds_stack_empty(_bst)) {
@@ -217,6 +217,10 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				var _ind   = amo - i - 1;
 				var _inp   = input_fix_len + _ind * data_length;
 				var _surf  = current_data[_inp];
+				var _mesh  = is(_surf, RiggedMeshedSurface); 
+				
+				if(_mesh) _surf = _surf.getSurface();
+				
 				var binded = array_safe_get(boneIDMap, _ind, "") != "";
 				
 				var _bx = _x + _w - 24;
@@ -293,9 +297,21 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				var tc = _ins? COLORS._main_text_accent : COLORS._main_icon;
 				if(hov) tc = COLORS._main_text;
 				
+				var _tx = _sx1 + 12;
+				var _ty = _cy + lh / 2;
+				
+				if(_mesh) {
+					var _mshx = _tx + 6;
+					var _mshy = _ty;
+					
+					draw_sprite_ext(s_node_armature_mesh, 0, _mshx, _mshy, 1, 1, 0, COLORS._main_icon, 1);
+					
+					_tx += 22;
+				}
+				
 				draw_set_text(f_p2, fa_left, fa_center, tc);
 				draw_set_alpha(aa);
-				draw_text_add(_sx1 + 12, _cy + lh / 2, inputs[_inp].name);
+				draw_text_add(_tx, _ty, inputs[_inp].name);
 				draw_set_alpha(1);
 				
 				if(_hover && point_in_rectangle(_m[0], _m[1], _x, _cy, _x + _w, _cy + lh)) {
@@ -479,7 +495,6 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		
 		bone.draw(attributes, false, _x + _dpos[0] * _s, _y + _dpos[1] * _s, _s * _dsca, _mx, _my, anchor_selecting);
 		inputs[3].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-		//inputs[4].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 		
 		var mx = (_mx - _x) / _s;
 		var my = (_my - _y) / _s;
@@ -576,6 +591,14 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		for(var i = 0; i < amo; i++) {
 			var index = input_fix_len + i * data_length;
 			var _surf = array_safe_get_fast(current_data, index);
+			
+			if(is(_surf, RiggedMeshedSurface)) {
+				var _mesh = _surf.mesh;
+				for(var j = 0; j < array_length(_mesh.links); j++)
+					_mesh.links[j].draw(_x, _y, _s);
+				continue;
+			}
+			
 			if(!_surf || is_array(_surf)) continue;
 			
 			var _bone = array_safe_get(boneIDMap, i, "");
@@ -740,9 +763,67 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		inputs[2].setVisible(_dim_type == COMPOSE_OUTPUT_SCALING.constant);
 		
 		for( var i = input_fix_len, n = array_length(inputs); i < n; i += data_length ) {
-			inputs[i + 3].setVisible(current_data[i + 2]);
-			inputs[i + 5].setVisible(current_data[i + 4]);
+			inputs[i + 3].setVisible(getInputData(i + 2));
+			inputs[i + 5].setVisible(getInputData(i + 4));
 		}
+	}
+	
+	static meshBind = function(_s, _bg) {
+		_mesh = _s.mesh;
+		_rmap = _s.rigMap;
+		_surf = _s.getSurface();
+		if(!is_surface(_surf)) return;
+		
+		_rbon  = _s.boneMap == noone? boneMap : _s.boneMap;
+		_rbid  = struct_get_names(_rmap);
+		_rbidL = array_length(_rbid);
+		_ar    = [ 0, 0 ];
+		
+		array_foreach(_mesh.points, function(_p, i) /*=>*/ {
+			if(!is(_p, MeshedPoint)) return;
+			
+			var _px = _p.sx;
+			var _py = _p.sy;
+			
+			for( var j = 0; j < _rbidL; j++ ) {
+				var _rBoneID = _rbid[j];
+				if(!ds_map_exists(boneMap, _rBoneID)) continue;
+				
+				var _rmapp   = _rmap[$ _rBoneID];
+				var _weight  = array_safe_get_fast(_rmapp, i, 0);
+				if(_weight == 0) continue;
+				
+				var _bm = _rbon[? _rBoneID];
+				var _b  = boneMap[? _rBoneID];
+				
+				var _ax = _p.sx - _bm.bone_head_pose.x;
+				var _ay = _p.sy - _bm.bone_head_pose.y;
+				
+				point_rotate_origin(_ax, _ay, _b.pose_angle - _bm.pose_angle, _ar);
+				var _nx = _b.bone_head_pose.x + _ar[0] * _b.pose_scale / _bm.pose_scale;
+				var _ny = _b.bone_head_pose.y + _ar[1] * _b.pose_scale / _bm.pose_scale;
+				
+				var _dx = _nx - _p.sx;
+				var _dy = _ny - _p.sy;
+				
+				_px += _dx * _weight;
+				_py += _dy * _weight;
+			}
+			
+			_p.x = _px;
+			_p.y = _py;
+		});
+		
+		surface_set_shader(temp_surface[!_bg], sh_sample, false, BLEND.alphamulp);
+			draw_set_color(c_white);
+			draw_set_alpha(1);
+			
+			array_foreach(_mesh.tris, function(_t) /*=>*/ { _t.drawSurface(_surf); });
+		surface_reset_shader();
+		
+		surface_set_shader(temp_surface[_bg], noone, true, BLEND.over);
+			draw_surface(temp_surface[!_bg], 0, 0);
+		surface_reset_shader();
 	}
 	
 	static processData = function(_outData, _data, _output_index, _array_index) {
@@ -772,26 +853,27 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		}
 		
 		var use_data  = _bind != noone;
-		var res_index = 0;
-		var bg		  = 0;
 		var imageAmo  = use_data? array_length(_bind) : (array_length(inputs) - input_fix_len) / data_length;
 		var _vis	  = attributes.layer_visible;
-		var _bg  = 0, _s;
+		var _bg = 0, _s, _i;
 		
 		for(var i = 0; i < imageAmo; i++) {
-			var vis  = array_safe_get_fast(_vis, i, true);
-			if(!vis) continue;
+			if(!array_safe_get_fast(_vis, i, true)) continue;
 			
-			var datInd = input_fix_len + i * data_length;
+			_i = input_fix_len + i * data_length;
 			_s = noone;
 			
 			if(use_data) {
-				var _bindData = array_safe_get(_bind, i);
-				if(is_instanceof(_bindData, __armature_bind_data))
-					_s = _bindData.surface.get();
-					
-			} else {
-				_s = array_safe_get(_data, datInd);
+				var _bdat = array_safe_get_fast(_bind, i);
+				if(is(_bdat, __armature_bind_data))
+					_s = _bdat.surface.get();
+				
+			} else
+				_s = array_safe_get_fast(_data, _i);
+			
+			if(is(_s, RiggedMeshedSurface)) {
+				meshBind(_s, _bg);
+				continue;
 			}
 			
 			if(!is_surface(_s)) continue;
@@ -801,11 +883,11 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			
 			_b = boneMap[? _b];
 			
-			var _tran = use_data? _bind[i].transform : _data[datInd + 1];
-			var _aang = use_data? _bind[i].applyRot  : _data[datInd + 2];
-			var _pang = use_data? _bind[i].applyRotl : _data[datInd + 3];
-			var _asca = use_data? _bind[i].applySca  : _data[datInd + 4];
-			var _psca = use_data? _bind[i].applyScal : _data[datInd + 5];
+			var _tran = use_data? _bind[i].transform : _data[_i + 1];
+			var _aang = use_data? _bind[i].applyRot  : _data[_i + 2];
+			var _pang = use_data? _bind[i].applyRotl : _data[_i + 3];
+			var _asca = use_data? _bind[i].applySca  : _data[_i + 4];
+			var _psca = use_data? _bind[i].applyScal : _data[_i + 5];
 			
 			var _rot  = _aang * (_pang? _b.angle : _b.pose_local_angle) + _tran[TRANSFORM.rot];
 			var _anc  = _b.getPoint(0.5);
@@ -871,10 +953,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	}
 	
 	static attributeSerialize = function() {
-		var att = {
-			boneIDMap,
-		};
-		
+		var att = { boneIDMap };
 		return att;
 	}
 	

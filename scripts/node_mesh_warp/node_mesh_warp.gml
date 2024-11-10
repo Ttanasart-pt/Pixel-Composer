@@ -4,17 +4,32 @@ function MeshedSurface() constructor {
 	tris     = [];
 	links    = [];
 	controls = [];
+	
+	static clone = function() {
+		var n = new MeshedSurface();
+		n.surface  = surface;
+		n.controls = controls;
+		
+		p = array_create_ext(array_length(points), function(i) /*=>*/ { return is(points[i], MeshedPoint)? points[i].clone() : points[i]; });
+		n.points = p;
+		
+		var l = array_create_ext(array_length(links), function(i) /*=>*/ {return links[i].clone(p)});
+		n.links = l;
+		
+		var t = array_create_ext(array_length(tris), function(i) /*=>*/ {return tris[i].clone(p)});
+		n.tris = t;
+		
+		return n;
+	}
 }
 
-function MeshedPoint(node, index, _x, _y) constructor {
+function MeshedPoint(index, _x, _y) constructor {
 	self.index = index;
-	self.node  = node;
+	
 	x  = _x;
 	y  = _y;
 	xp = x;
 	yp = y;
-	
-	node.points[index] = self;
 	
 	ndx = 0;
 	ndy = 0;
@@ -25,6 +40,12 @@ function MeshedPoint(node, index, _x, _y) constructor {
 	
 	u = 0;
 	v = 0;
+	
+	drx = 0;
+	dry = 0;
+	
+	weight = 0;
+	color  = c_white;
 	
 	controlWeights = [];
 	
@@ -49,6 +70,8 @@ function MeshedPoint(node, index, _x, _y) constructor {
 	}
 	
 	static draw = function(_x, _y, _s) {
+		draw_set_circle_precision(4);
+		
 		if(pin) {
 			draw_set_color(COLORS._main_accent);
 			draw_circle_prec(_x + x * _s, _y + y * _s, 3, false);
@@ -67,6 +90,14 @@ function MeshedPoint(node, index, _x, _y) constructor {
 	
 	static setPin     = function(pin)    { self.pin = pin;                             }
 	static equal      = function(point)  { return x == point.x && y == point.y;        }
+	
+	static clone = function() { 
+		var p = new MeshedPoint(index, x, y);
+		p.u = u;
+		p.v = v;
+		
+		return p;
+	}
 }
 
 function MeshedLink(_p0, _p1, _k = 1) constructor {
@@ -94,8 +125,14 @@ function MeshedLink(_p0, _p1, _k = 1) constructor {
 	static draw = function(_x, _y, _s) {
 		INLINE
 		
-		draw_set_color(c_red);
+		draw_set_color(COLORS._main_accent);
 		draw_line(_x + p0.x * _s, _y + p0.y * _s, _x + p1.x * _s, _y + p1.y * _s);
+	}
+	
+	static clone = function(pointArr) {
+		var _p0 = pointArr[p0.index];
+		var _p1 = pointArr[p1.index];
+		return new MeshedLink(_p0, _p1, k);
 	}
 }
 
@@ -143,8 +180,15 @@ function MeshedTriangle(_p0, _p1, _p2) constructor {
 	
 	static contain = function(p) {
 		INLINE
-		
 		return p == p0 || p == p1 || p == p2;
+	}
+	
+	static clone = function(pointArr) {
+		var _p0 = pointArr[p0.index];
+		var _p1 = pointArr[p1.index];
+		var _p2 = pointArr[p2.index];
+		
+		return new MeshedTriangle(_p0, _p1, _p2);
 	}
 }
 
@@ -497,7 +541,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var px = min(j * gw, ww);
 			var py = min(i * gh, hh);
 			
-			mesh_data.points[i * _sam + j] = new MeshedPoint(self, ind++, px, py);
+			mesh_data.points[i * _sam + j] = new MeshedPoint(i * _sam + j, px, py);
 			if(i == 0) continue;
 				
 			if(j && mesh_data.points[(i - 1) * _sam + j] != 0 && mesh_data.points[i * _sam + j - 1] != 0) 
@@ -583,9 +627,10 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		mesh_data.points = array_create(_mb + array_length(_p));
 		
 		for( var i = 0, n = _mb; i < n; i++ )
-			mesh_data.points[i] = new MeshedPoint(self, ind++, _m[i][0], _m[i][1]);
+			mesh_data.points[i] = new MeshedPoint(i, _m[i][0], _m[i][1]);
+			
 		for( var i = 0, n = array_length(_p); i < n; i++ )
-			mesh_data.points[_mb + i] = new MeshedPoint(self, ind++, _p[i][0], _p[i][1]);
+			mesh_data.points[_mb + i] = new MeshedPoint(_mb + i, _p[i][0], _p[i][1]);
 		
 		var _t = delaunay_triangulation(mesh_data.points);
 		
@@ -599,7 +644,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		}
 	}
 	
-	static Mesh_build = function() {
+	static Mesh_build = function(_render = true) {
 		var _inSurf = getInputData(0);
 		var _type   = getInputData(8);
 		
@@ -614,7 +659,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		for(var i = 0; i < array_length(mesh_data.tris); i++)
 			mesh_data.tris[i].initSurface(is_array(_inSurf)? _inSurf[0] : _inSurf);
 		
-		triggerRender();
+		if(_render) triggerRender();
 		
 		if(loadPin != noone) {
 			for( var i = 0, n = array_length(loadPin); i < n; i++ ) {
@@ -709,7 +754,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	static processData = function(_outData, _data, _output_index, _array_index) {
 		if(will_triangluate) {
-			Mesh_build();
+			Mesh_build(false);
 			will_triangluate = false;
 		}
 		

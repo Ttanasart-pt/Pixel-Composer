@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_2d_light_apply",
+  "name":"sh_2d_light_apply",
+  "parent":{
+    "name":"generator",
+    "path":"folders/shader/generator.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

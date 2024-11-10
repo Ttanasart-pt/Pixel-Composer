@@ -31,6 +31,8 @@ function dynaSurf() constructor {
 		onFree();
 	}
 	
+	static getSurfacePreview = function() { return array_safe_get_fast(surfaces, 0); }
+	
 	static clone = function() { return noone; }
 	static destroy = function() {}
 }

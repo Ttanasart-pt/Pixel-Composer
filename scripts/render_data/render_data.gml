@@ -243,6 +243,7 @@ function Render(partial = false, runAction = false) { #region
 					if(!is_instanceof(nextNode, __Node_Base)) continue;
 					if(!nextNode.isRenderable()) continue;
 					
+					LOG_IF(global.FLAG.render == 1, $"→→ Push {nextNode.internalName} to queue.");
 					RENDER_QUEUE.enqueue(nextNode);
 				}
 				

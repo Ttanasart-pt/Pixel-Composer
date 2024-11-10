@@ -79,6 +79,7 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var jhov = hover.drawJunction(_s, _mx, _my);
 		
 		if(!isHovering) return noone;
+		if(!jhov) draw_sprite_ext(THEME.view_pan, 0, _mx + ui(16), _my + ui(24), 1, 1, 0, COLORS._main_accent);
 		
 		hover_junction = jhov? hover : noone; 
 		hover_scale_to = 1;

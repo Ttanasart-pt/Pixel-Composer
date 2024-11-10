@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"meshBox",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"meshBox",
+  "parent":{
+    "name":"object",
+    "path":"folders/widgets/object.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -861,11 +861,12 @@ function __initNodes() {
 		addNodeObject(compose, "Pack Sprites",			s_node_pack_sprite,		"Node_Pack_Sprites",		[1, Node_Pack_Sprites],,		"Combine array of images with different dimension using different algorithms.").setVersion(1140);
 			
 		ds_list_add(compose, "Armature");
-		addNodeObject(compose, "Armature Create",	s_node_armature_create,	"Node_Armature",		[1, Node_Armature], ["rigging", "bone"],		"Create new armature system.").setVersion(1146);
-		addNodeObject(compose, "Armature Pose",		s_node_armature_pose,	"Node_Armature_Pose",	[1, Node_Armature_Pose], ["rigging", "bone"],	"Pose armature system.").setVersion(1146);
-		addNodeObject(compose, "Armature Bind",		s_node_armature_bind,	"Node_Armature_Bind",	[1, Node_Armature_Bind], ["rigging", "bone"],	"Bind and render image to an armature system.").setVersion(1146);
-		addNodeObject(compose, "Armature Path",		s_node_armature_path,	"Node_Armature_Path",	[1, Node_Armature_Path], ["rigging", "bone"],	"Generate path from armature system.").setVersion(1146);
-		addNodeObject(compose, "Armature Sample",	s_node_armature_sample,	"Node_Armature_Sample",	[1, Node_Armature_Sample], ["rigging", "bone"], "Sample point from armature system.").setVersion(1147);
+		addNodeObject(compose, "Armature Create",	s_node_armature_create,		"Node_Armature",			[1, Node_Armature], 		 ["rigging", "bone"], "Create new armature system.").setVersion(1146);
+		addNodeObject(compose, "Armature Pose",		s_node_armature_pose,		"Node_Armature_Pose",		[1, Node_Armature_Pose],	 ["rigging", "bone"], "Pose armature system.").setVersion(1146);
+		addNodeObject(compose, "Armature Bind",		s_node_armature_bind,		"Node_Armature_Bind",		[1, Node_Armature_Bind],	 ["rigging", "bone"], "Bind and render image to an armature system.").setVersion(1146);
+		addNodeObject(compose, "Armature Path",		s_node_armature_path,		"Node_Armature_Path",		[1, Node_Armature_Path],	 ["rigging", "bone"], "Generate path from armature system.").setVersion(1146);
+		addNodeObject(compose, "Armature Mesh Rig",	s_node_armature_mesh_rig,	"Node_Armature_Mesh_Rig",	[1, Node_Armature_Mesh_Rig], ["rigging", "bone"], "Rig mesh to armature system.").setVersion(1_18_04_0);
+		addNodeObject(compose, "Armature Sample",	s_node_armature_sample,		"Node_Armature_Sample",		[1, Node_Armature_Sample],	 ["rigging", "bone"], "Sample point from armature system.").setVersion(1147);
 			
 		if(!DEMO) {
 			ds_list_add(compose, "Export");

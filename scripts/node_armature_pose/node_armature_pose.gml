@@ -92,14 +92,14 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	tools = [];
 	
 	anchor_selecting = noone;
-	posing_bone  = noone;
-	posing_input = 0;
-	posing_type  = 0;
-	posing_sx = 0;
-	posing_sy = 0;
-	posing_sz = 0;
-	posing_mx = 0;
-	posing_my = 0;
+	posing_bone      = noone;
+	posing_input     = 0;
+	posing_type      = 0;
+	posing_sx   = 0;
+	posing_sy   = 0;
+	posing_sz   = 0;
+	posing_mx   = 0;
+	posing_my   = 0;
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _b = outputs[0].getValue();
@@ -129,7 +129,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				
 			} else if(posing_type == 1) { //scale
 				var ss  = point_distance(posing_mx, posing_my, smx, smy) / posing_sx;
-				var ori = posing_bone.getPoint(0);
+				var ori = posing_bone.getHead();
 				var ang = point_direction(ori.x, ori.y, smx, smy);
 				var rot = ang - posing_sy - posing_bone.parent.pose_angle;
 				
@@ -141,7 +141,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 					UNDO_HOLDING = true;
 				
 			} else if(posing_type == 2) { //rotate
-				var ori = posing_bone.getPoint(0);
+				var ori = posing_bone.getHead();
 				var ang = point_direction(ori.x, ori.y, mx, my);
 				var rot = angle_difference(ang, posing_sy);
 				posing_sy = ang;
@@ -162,11 +162,12 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		}
 		
 		if(anchor_selecting != noone && mouse_press(mb_left, active)) {
+			posing_bone = anchor_selecting[0];
+			if(!ds_map_exists(boneMap, posing_bone.ID)) setBone();
+			posing_input = boneMap[? posing_bone.ID];
+			
 			if(anchor_selecting[1] == 0 || anchor_selecting[0].IKlength) { // move
-				posing_bone = anchor_selecting[0];
-				if(!ds_map_exists(boneMap, posing_bone.ID))
-					setBone();
-				posing_input = boneMap[? posing_bone.ID];
+				
 				posing_type = 0;
 				
 				var val = posing_input.getValue();
@@ -174,34 +175,28 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				posing_sy = val[TRANSFORM.pos_y];
 				
 				var _p = anchor_selecting[2];
-				posing_mx = (_p.x - _x) / _s;
-				posing_my = (_p.y - _y) / _s;
+				posing_mx = _p.x;
+				posing_my = _p.y;
 				
 			} else if(anchor_selecting[1] == 1) { // scale
-				posing_bone = anchor_selecting[0];
-				if(!ds_map_exists(boneMap, posing_bone.ID))
-					setBone();
-				posing_input = boneMap[? posing_bone.ID];
+				
 				posing_type = 1;
 				
-				var ori = posing_bone.getPoint(0);
+				var ori = posing_bone.getHead();
 				var val = posing_input.getValue();
 				posing_sx = posing_bone.length / posing_bone.pose_scale * posing_bone.parent.pose_scale;
 				posing_sy = posing_bone.angle - posing_bone.pose_local_angle;
 				posing_sz = point_direction(ori.x, ori.y, smx, smy);
 				
-				var pnt = posing_bone.getPoint(0);
+				var pnt = posing_bone.getHead();
 				posing_mx = pnt.x;
 				posing_my = pnt.y;
 				
 			} else if(anchor_selecting[1] == 2) { // rotate
-				posing_bone = anchor_selecting[0];
-				if(!ds_map_exists(boneMap, posing_bone.ID))
-					setBone();
-				posing_input = boneMap[? posing_bone.ID];
+				
 				posing_type = 2;
 				
-				var ori = posing_bone.getPoint(0);
+				var ori = posing_bone.getHead();
 				var val = posing_input.getValue();
 				posing_sx = val[TRANSFORM.rot];
 				posing_sy = point_direction(ori.x, ori.y, mx, my);
@@ -232,8 +227,8 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		var _bone_pose = _b.clone();
 		_bone_pose.connect();
-		
 		_bone_pose.resetPose();
+		
 		var _bst = ds_stack_create();
 		ds_stack_push(_bst, _bone_pose);
 		
@@ -257,6 +252,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		}
 		
 		ds_stack_destroy(_bst);
+		
 		_bone_pose.setPose();
 		
 		outputs[0].setValue(_bone_pose);
@@ -278,8 +274,8 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			var __b = ds_stack_pop(_bst);
 			
 			for( var i = 0, n = array_length(__b.childs); i < n; i++ ) {
-				var p0 = __b.childs[i].getPoint(0);
-				var p1 = __b.childs[i].getPoint(1);
+				var p0 = __b.childs[i].getHead();
+				var p1 = __b.childs[i].getTail();
 				
 				minx = min(minx, p0.x); miny = min(miny, p0.y);
 				maxx = max(maxx, p0.x); maxy = max(maxy, p0.y);

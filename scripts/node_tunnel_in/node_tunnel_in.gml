@@ -201,9 +201,12 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		isHovering = point_in_circle(_mx, _my, xx, yy, _s * 24);
 		
 		junction_hover = inputs[1].drawJunction(_s, _mx, _my);
+		
 		if(!isHovering) return noone;
+		if(!junction_hover) draw_sprite_ext(THEME.view_pan, 0, _mx + ui(16), _my + ui(24), 1, 1, 0, COLORS._main_accent);
 		
 		hover_scale_to = 1;
+		
 		return junction_hover? inputs[1] : noone;
 	}
 	

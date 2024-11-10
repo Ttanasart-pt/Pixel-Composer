@@ -84,14 +84,14 @@ function Node_Armature_Path(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			if(bone.IKlength) continue;
 			
 			if(!bone.is_main) {
-				var _p0  = bone.getPoint(0);
-				var _p1  = bone.getPoint(1);
+				var _p0  = bone.getHead();
+				var _p1  = bone.getTail();
 			
 				array_push(lines, [ 
 					[_p0.x, _p0.y, 1], 
 					[_p1.x, _p1.y, 1], 
 				]);
-			
+				
 				current_length += point_distance(_p0.x, _p0.y, _p1.x, _p1.y);
 			}
 			

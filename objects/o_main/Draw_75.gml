@@ -34,7 +34,6 @@ if(winMan_isMinimized()) exit;
 					break;
 					
 				case VALUE_TYPE.curve :
-					// draw_tooltip_text($"[{__txt("Curve Object")}]");
 					draw_tooltip_curve(content);
 					break;
 					
@@ -83,8 +82,7 @@ if(winMan_isMinimized()) exit;
 					
 				case VALUE_TYPE.mesh :
 					var txt = __txt("Mesh Object");
-					if(is_struct(content))
-						txt += $" (triangles: {array_length(content.triangles)})";
+					if(is(content, MeshedSurface)) txt += $" (triangles: {array_length(content.tris)})";
 					draw_tooltip_text($"[{txt}]");
 					break;
 					

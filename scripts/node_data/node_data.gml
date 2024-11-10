@@ -1101,8 +1101,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static isRenderable = function(log = false) { //Check if every input is ready (updated)
 		if(!active || !isRenderActive()) return false;
 		
-		for(var j = 0; j < array_length(inputs); j++)
-			if(!inputs[j].isRendered()) return false;
+		for(var j = 0; j < array_length(inputs); j++) {
+			if(!inputs[j].isRendered()) {
+				LOG_IF(global.FLAG.render == 1, $"→→ x Node {internalName} {inputs[j]} not rendered.");
+				return false;
+			}
+		}
 		
 		return true;
 	}
@@ -1200,8 +1204,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				array_push(nodeNames, _to.node.internalName);
 			}
 		}
-		
-		LOG_IF(global.FLAG.render == 1, $"→→ Push {nodeNames} to queue.");
 		
 		LOG_BLOCK_END();
 		return nodes;
@@ -1453,11 +1455,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var tx = xx     + 6 * _s;
 		var tw = w * _s - 8 * _s;
 		
-		if(!previewable) {
-			tx += _s * 4;
-			tw -= _s * 4;
-		}
-		
 		if(_panel && _panel.is_searching && _panel.search_string != "" && search_match == -9999)
 			aa *= .15;
 				
@@ -1482,8 +1479,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 			BLEND_NORMAL
 		draw_set_alpha(1);
-		
-		// draw_line_width(_tx, _ty, _tx + tw, _ty, 4);
 	}
 	
 	static drawJunctionWidget = function(_x, _y, _mx, _my, _s, _hover, _focus) {

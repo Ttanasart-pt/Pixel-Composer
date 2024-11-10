@@ -993,11 +993,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				extract_node = "Node_Canvas";
 				break;
 				
-			case VALUE_TYPE.pathnode :	editWidget = new pathnodeBox(self);	extract_node = "Node_Path"; 			break;
-			case VALUE_TYPE.tileset :   editWidget = new tilesetBox(self);  extract_node = "Node_Tile_Tileset"; 	break;
-			case VALUE_TYPE.armature :  editWidget = new armatureBox(self); 										break;
-			case VALUE_TYPE.struct :    editWidget = new outputStructBox(); 										break;
-			case VALUE_TYPE.particle :  editWidget = noone; 														break;
+			case VALUE_TYPE.dynaSurface : editWidget = new surfaceDynaBox();										break;
+			case VALUE_TYPE.pathnode :	  editWidget = new pathnodeBox(self); extract_node = "Node_Path"; 			break;
+			case VALUE_TYPE.tileset :     editWidget = new tilesetBox(self);  extract_node = "Node_Tile_Tileset"; 	break;
+			case VALUE_TYPE.armature :    editWidget = new armatureBox(self); 										break;
+			case VALUE_TYPE.mesh :        editWidget = new meshBox(self); 											break;
+			case VALUE_TYPE.struct :      editWidget = new outputStructBox(); 										break;
+			case VALUE_TYPE.particle :    editWidget = noone; 														break;
 				
 			default : editWidget = new outputBox(); break;
 		}
@@ -1022,8 +1024,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static isRendered = function() {
 		if(type == VALUE_TYPE.node)	return true;
-		
-		if(value_from == noone) return true;
+		if(value_from == noone)     return true;
 		
 		var controlNode = value_from.from? value_from.from : value_from.node;
 		if(!controlNode.active)			  return true;
@@ -2464,7 +2465,7 @@ function drawJuncConnection(from, to, params) {
 				switch(PREFERENCES.curve_connection_line) { 
 					case 0 : 
 						if(downDirection) _hdist = distance_to_line(mx, my, jx, jy, frx, fry);
-						else              _hdist = distance_to_linear_connection(mx, my, jx, jy, frx, fry, _s, _drawParam);
+						else              _hdist = distance_to_linear_connection(mx, my, frx, fry, jx, jy, _s, _drawParam);
 						break;
 						
 					case 1 : 

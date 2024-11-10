@@ -14,13 +14,13 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(0, nodeValue_Surface("Surface in", self));
 	
 	typeList = [ 
-					new scrollItem("Point",           s_node_2d_light_shape, 0), 
-					new scrollItem("Ellipse",         s_node_2d_light_shape, 1), 
-					new scrollItem("Line",            s_node_2d_light_shape, 2), 
-					new scrollItem("Line asymmetric", s_node_2d_light_shape, 3), 
-					new scrollItem("Saber",           s_node_2d_light_shape, 4), 
-					new scrollItem("Spot",            s_node_2d_light_shape, 5), 
-					new scrollItem("Flame",           s_node_2d_light_shape, 6), 
+		new scrollItem("Point",           s_node_2d_light_shape, 0), 
+		new scrollItem("Ellipse",         s_node_2d_light_shape, 1), 
+		new scrollItem("Line",            s_node_2d_light_shape, 2), 
+		new scrollItem("Line asymmetric", s_node_2d_light_shape, 3), 
+		new scrollItem("Saber",           s_node_2d_light_shape, 4), 
+		new scrollItem("Spot",            s_node_2d_light_shape, 5), 
+		new scrollItem("Flame",           s_node_2d_light_shape, 6), 
 	];
 	typeListStr = array_create_ext(array_length(typeList), function(i) /*=>*/ {return typeList[i].name});
 	
@@ -573,12 +573,12 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			applyLight(_data, _ind, _lightSurf);
 		}
 		
-		surface_set_target(_outSurf);
-			DRAW_CLEAR
-			BLEND_OVERRIDE draw_surface_safe(_surf);
-			BLEND_ADD      draw_surface_safe(_lightSurf);
-			BLEND_NORMAL
-		surface_reset_target(); 
+		surface_set_shader(_outSurf, sh_2d_light_apply, true, BLEND.over);
+			shader_set_surface("base",  _surf);
+			shader_set_surface("light", _lightSurf);
+			
+			draw_empty();
+		surface_reset_shader(); 
 		
 		return [ _outSurf, _lightSurf ];
 	}
