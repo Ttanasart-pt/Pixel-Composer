@@ -50,7 +50,7 @@ function Node_DynaSurf_In(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		createInput(false);
 	} #endregion
 	
-	static doApplyDeserialize = function() { #region
+	static postApplyDeserialize = function() { #region
 		if(group == noone) return;
 		group.sortIO();
 	} #endregion

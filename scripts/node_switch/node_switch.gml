@@ -206,5 +206,5 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		}
 	} #endregion
 	
-	static doApplyDeserialize = function() { refreshDynamicInput(); }
+	static postApplyDeserialize = function() { refreshDynamicInput(); }
 }

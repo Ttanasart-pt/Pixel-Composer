@@ -23,7 +23,7 @@ function __NodeValue_Enum_Scroll(_name, _node, _value, _data) : NodeValue(_name,
 	
 	options_histories = [];
 	
-	static doApplyDeserialize = function() {
+	static postApplyDeserialize = function() {
 		if(is_anim) return;
 		if(CLONING) return;
 		if(array_empty(options_histories)) return;

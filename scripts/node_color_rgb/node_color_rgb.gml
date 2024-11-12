@@ -84,7 +84,7 @@ function Node_Color_RGB(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		drawColor(col, bbox.x0, bbox.y0, bbox.w, bbox.h);
 	}
 	
-	static doApplyDeserialize = function() {
+	static postApplyDeserialize = function() {
 		onValueUpdate(3);
 	}
 }

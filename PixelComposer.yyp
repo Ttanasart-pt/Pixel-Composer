@@ -3510,6 +3510,7 @@
     {"id":{"name":"s_strand_tool_stretch","path":"sprites/s_strand_tool_stretch/s_strand_tool_stretch.yy",},},
     {"id":{"name":"s_strandSim","path":"sprites/s_strandSim/s_strandSim.yy",},},
     {"id":{"name":"s_tab_exit","path":"sprites/s_tab_exit/s_tab_exit.yy",},},
+    {"id":{"name":"s_tag","path":"sprites/s_tag/s_tag.yy",},},
     {"id":{"name":"s_text_box_header","path":"sprites/s_text_box_header/s_text_box_header.yy",},},
     {"id":{"name":"s_text_bullet","path":"sprites/s_text_bullet/s_text_bullet.yy",},},
     {"id":{"name":"s_text_popup","path":"sprites/s_text_popup/s_text_popup.yy",},},

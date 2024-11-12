@@ -65,7 +65,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 
 	static onInspector1Update = function(updateAll = true) { initSurface(true); PROJECT.animator.render(); }
 	
-	static step = function() { #region
+	static step = function() {
 		var inpt = getInputData(0);
 		var grup = getInputData(1);
 		var pack = getInputData(3);
@@ -91,27 +91,27 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		}
 		
 		update_on_frame = grup == 0;
-	} #endregion
+	}
 	
-	static update = function(frame = CURRENT_FRAME) { #region
+	static update = function(frame = CURRENT_FRAME) {
 		if(IS_FIRST_FRAME) initSurface();
 		
 		var grup = getInputData(1);
 		
 		if(grup == SPRITE_ANIM_GROUP.animation) animationRender();
 		else									arrayRender();
-	} #endregion
+	}
 	
-	static initSurface = function(clear = false) { #region
+	static initSurface = function(clear = false) {
 		for(var i = 0; i < TOTAL_FRAMES; i++) anim_drawn[i] = false;
 		
 		var grup = getInputData(1);
 		
 		if(grup == SPRITE_ANIM_GROUP.animation) animationInit(clear);
 		else									arrayRender();
-	} #endregion
+	}
 	
-	static arrayRender = function() { #region
+	static arrayRender = function() {
 		var inpt = getInputData(0);
 		var grup = getInputData(1);
 		var pack = getInputData(3);
@@ -310,12 +310,12 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		
 		outputs[0].setValue(_surf);
 		outputs[1].setValue(array_spread(atlases));
-	} #endregion
+	}
 	
 	anim_curr_w = -1;
 	anim_curr_h = -1;
 	
-	static animationInit = function(clear = false) { #region
+	static animationInit = function(clear = false) {
 		var inpt = getInputData(0);
 		var skip = getInputData(2);
 		var pack = getInputData(3);
@@ -401,9 +401,9 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		outputs[1].setValue(array_spread(atlases));
 				
 		printIf(log, $"Surface generated [{ww}, {hh}]");
-	} #endregion
+	}
 	
-	static animationRender = function() { #region
+	static animationRender = function() {
 		var inpt = getInputData(0);
 		var skip = getInputData(2);
 		var pack = getInputData(3);
@@ -461,7 +461,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		var px = padd[2];
 		var py = padd[1];
 		
-		for(var i = 0; i < array_length(inpt); i++) { #region
+		for(var i = 0; i < array_length(inpt); i++) {
 			var _surfi = inpt[i];
 			
 			if(!is_surface(_surfi)) {
@@ -541,9 +541,9 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 			surface_reset_shader();
 			
 			drawn = true;
-		} #endregion
+		}
 		
 		if(drawn) array_safe_set(anim_drawn, CURRENT_FRAME, true);
 		outputs[1].setValue(array_spread(atlases));
-	} #endregion
+	}
 }

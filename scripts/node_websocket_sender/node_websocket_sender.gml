@@ -155,7 +155,7 @@ function Node_Websocket_Sender(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		draw_sprite_fit(THEME.node_websocket_send, 0, bbox.xc, (_y0 + _y1) / 2, bbox.w, _y1 - _y0, cc, aa);
 	} #endregion
 		
-	static doApplyDeserialize = function() { #region
+	static postApplyDeserialize = function() { #region
 		if(struct_has(attributes, "network_timeout")) network_set_config(network_config_connect_timeout, attributes.network_timeout);
 	} #endregion
 }

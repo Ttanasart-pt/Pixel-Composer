@@ -186,5 +186,5 @@ function Node_Equation(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		draw_text_transformed(bbox.xc, bbox.yc, str, ss, ss, 0);
 	}
 	
-	static doApplyDeserialize = function() { refreshDynamicInput(); }
+	static postApplyDeserialize = function() { refreshDynamicInput(); }
 }

@@ -293,7 +293,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		return BBOX().fromPoints(minx, miny, maxx, maxy);
 	}
 	
-	static doApplyDeserialize = function() {
+	static postApplyDeserialize = function() {
 		for( var i = input_fix_len; i < array_length(inputs); i += data_length ) {
 			var inp = inputs[i];
 			var idx = struct_try_get(inp.display_data, "bone_id");

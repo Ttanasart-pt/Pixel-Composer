@@ -1152,7 +1152,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		_map.surfaces = _buff;
 	}
 	
-	static doApplyDeserialize = function() {
+	static postApplyDeserialize = function() {
 		var _dim     = struct_has(attributes, "dimension")? attributes.dimension : getInputData(0);
 		
 		if(!struct_has(load_map, "surfaces")) {

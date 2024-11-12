@@ -136,6 +136,8 @@ function buttonGroup(_data, _onClick) : widget() constructor {
 				}
 			}
 		} else {
+			sb_small.data      = data;
+			sb_small.data_list = data;
 			sb_small.setFocusHover(active, hover);
 			sb_small.draw(_x, _y, _w, _h, _selecting, _m, _rx, _ry);
 		}
@@ -148,8 +150,8 @@ function buttonGroup(_data, _onClick) : widget() constructor {
 		return h;
 	}
 	
-	static clone = function() { #region
+	static clone = function() {
 		var cln = new buttonGroup(data, onClick);
 		return cln;
-	} #endregion
+	}
 }

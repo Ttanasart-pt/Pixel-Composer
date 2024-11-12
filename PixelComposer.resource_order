@@ -2748,6 +2748,7 @@
     {"name":"s_strand_tool_stretch","order":65,"path":"sprites/s_strand_tool_stretch/s_strand_tool_stretch.yy",},
     {"name":"s_strandSim","order":194,"path":"sprites/s_strandSim/s_strandSim.yy",},
     {"name":"s_tab_exit","order":195,"path":"sprites/s_tab_exit/s_tab_exit.yy",},
+    {"name":"s_tag","order":234,"path":"sprites/s_tag/s_tag.yy",},
     {"name":"s_text_box_header","order":22,"path":"sprites/s_text_box_header/s_text_box_header.yy",},
     {"name":"s_text_bullet","order":196,"path":"sprites/s_text_bullet/s_text_bullet.yy",},
     {"name":"s_text_popup","order":197,"path":"sprites/s_text_popup/s_text_popup.yy",},

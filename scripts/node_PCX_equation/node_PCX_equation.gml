@@ -133,5 +133,5 @@ function Node_PCX_Equation(_x, _y, _group = noone) : Node_PCX(_x, _y, _group) co
 		draw_text_transformed(bbox.xc, bbox.yc, str, ss, ss, 0);
 	}
 	
-	static doApplyDeserialize = function() { refreshDynamicInput(); }
+	static postApplyDeserialize = function() { refreshDynamicInput(); }
 }

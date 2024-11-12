@@ -2531,11 +2531,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		//print($"Applying deserialzie for {name} complete");
 		
-		doApplyDeserialize();
+		postApplyDeserialize();
 	}
 	
 	static preApplyDeserialize = function() {}
-	static doApplyDeserialize  = function() {}
+	static postApplyDeserialize  = function() {}
 	
 	static loadGroup = function(context = noone) {
 		if(load_group == noone) {

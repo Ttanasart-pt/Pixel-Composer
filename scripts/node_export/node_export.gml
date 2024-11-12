@@ -883,5 +883,5 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		}
 	}
 	
-	static doApplyDeserialize = function() { onValueUpdate(3); }
+	static postApplyDeserialize = function() { onValueUpdate(3); }
 }

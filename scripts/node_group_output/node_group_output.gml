@@ -101,7 +101,7 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	static getGraphPreviewSurface = function() { return inputs[0].getValue(); }
 	static postDeserialize		  = function() { if(group == noone) return; createOutput(false); }
-	static doApplyDeserialize	  = function() {}
+	static postApplyDeserialize	  = function() {}
 	
 	static onDestroy = function() {
 		if(is_undefined(outParent)) return;

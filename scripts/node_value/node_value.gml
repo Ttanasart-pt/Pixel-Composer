@@ -2233,12 +2233,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			node.input_value_map[$ internalName] = _value;
 		}
 		
-		doApplyDeserialize();
+		postApplyDeserialize();
 		attributeApply();
 		onValidate();
 	}
 	
-	static doApplyDeserialize = function() {}
+	static postApplyDeserialize = function() {}
 	
 	static attributeApply = function() {
 		if(struct_has(attributes, "mapped") && attributes.mapped) 

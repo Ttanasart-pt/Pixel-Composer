@@ -471,7 +471,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	static postDeserialize = function() { createInput(false); }
 	
-	static doApplyDeserialize = function() {
+	static postApplyDeserialize = function() {
 		if(inParent == undefined) return;
 		if(group == noone) return;
 		

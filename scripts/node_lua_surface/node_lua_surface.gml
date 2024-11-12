@@ -172,7 +172,7 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		lua_add_code(getState(), lua_code);
 	}
 	
-	static doApplyDeserialize = function() {
+	static postApplyDeserialize = function() {
 		refreshDynamicInput();
 		
 		for( var i = input_fix_len; i < array_length(inputs) - data_length; i += data_length ) {

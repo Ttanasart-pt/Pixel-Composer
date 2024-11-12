@@ -169,6 +169,7 @@ function Theme() constructor {
     steam                           = s_steam;
     strandSim                       = s_strandSim;
     tab_exit                        = s_tab_exit;
+    tag 							= s_tag;
     text_bullet                     = s_text_bullet;
     text_popup                      = s_text_popup;
     text                            = s_name;
