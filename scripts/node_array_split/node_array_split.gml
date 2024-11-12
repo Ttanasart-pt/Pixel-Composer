@@ -35,6 +35,7 @@ function Node_Array_Split(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			array_delete(outputs, array_length(outputs) - 1, 1);
 		
 		for (var i = 0, n = amo; i < n; i++) {
+			outputs[i].index = i;
 			outputs[i].setType(type);
 			outputs[i].resetDisplay();
 		}

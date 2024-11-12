@@ -31,6 +31,8 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		if(node.inline_context == self)
 			node.inline_context = noone;
 		onRemoveNode(node); 
+		
+		// print($"Pose remove node : {array_length(nodes)}");
 	}
 	
 	static onRemoveNode = function(node) {}
@@ -42,8 +44,11 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		
 		array_push_unique(attributes.members, node.node_id);
 		array_push_unique(nodes, node);
+		refreshGroupBG();
 		
 		onAddNode(node);
+		
+		// print($"Pose add node : {array_length(nodes)}");
 	}
 	
 	static addPoint = function(_x, _y) {
@@ -182,25 +187,13 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			if(key_mod_down(SHIFT)) {
 				if(group_hovering) {
 					group_adding = true;
-					for( var i = 0, n = array_length(_list); i < n; i++ ) {
-						if(_list[i].manual_ungroupable)
-							addNode(_list[i]);
-					}
+					for( var i = 0, n = array_length(_list); i < n; i++ )
+						if(_list[i].manual_ungroupable) addNode(_list[i]);
+					
 				} else {
-					for( var i = 0, n = array_length(_list); i < n; i++ ) {
-						if(_list[i].manual_ungroupable)
-							removeNode(_list[i]);
-					}
+					for( var i = 0, n = array_length(_list); i < n; i++ )
+						if(_list[i].manual_ungroupable) removeNode(_list[i]);
 				}
-			}
-			
-			if(keyboard_check_pressed(vk_shift)) {
-				for( var i = 0, n = array_length(_list); i < n; i++ ) {
-					if(_list[i].manual_ungroupable)
-						removeNode(_list[i]);
-				}
-				refreshMember();
-				refreshGroupBG();
 			}
 		}
 		

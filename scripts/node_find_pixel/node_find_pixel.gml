@@ -16,27 +16,19 @@ function Node_Find_Pixel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newInput(5, nodeValue_Float("Alpha tolerance", self, 0.2))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	// newInput(6, nodeValue_Enum_Button("Axis", self,  1, [ "X", "Y" ]));
-	
 	newOutput(0, nodeValue_Output("Position", self, VALUE_TYPE.integer, [ 0, 0 ]))
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	input_display_list = [ 0, 
-		["Search", false], 1, 2, 3, 
+		["Search", false   ], 1, 2, 3, 
 		["Alpha",   true, 4], 5, 
 	]
 	
-	static getPreviewValues = function() { return getInputData(0); }
-	
 	temp_surface = [ surface_create(1, 1) ];
 	
-	static step = function() { #region
-		// var _all  = getInputData(3);
-		
-		// inputs[6].setVisible(_all);
-	} #endregion
+	static getPreviewValues = function() { return getInputData(0); }
 	
-	static processData = function(_output, _data, _output_index, _array_index = 0) { #region
+	static processData = function(_output, _data, _output_index, _array_index = 0) {
 		var _surf = _data[0];
 		var _col  = _data[1];
 		var _tol  = _data[2];
@@ -44,7 +36,6 @@ function Node_Find_Pixel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		
 		var _alp  = _data[4];
 		var _alpT = _data[5];
-		// var _axis = _data[6];
 		
 		if(!is_surface(_surf)) return [0, 0];
 		
@@ -81,9 +72,9 @@ function Node_Find_Pixel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		
 		buffer_delete(_buff);
 		return _all? res : [ -1, -1 ];
-	} #endregion
+	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
 		var col = getInputData(1);
 		
@@ -95,5 +86,5 @@ function Node_Find_Pixel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		}
 		
 		drawColor(col, bbox.x0, bbox.y0, bbox.w, bbox.h);
-	} #endregion
+	}
 }

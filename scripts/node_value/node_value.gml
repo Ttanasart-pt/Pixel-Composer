@@ -2246,10 +2246,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	static connect = function(log = false) {
-		//print($"{node} | {con_node} : {con_index}");
-		
-		if(con_node == -1 || con_index == -1)
-			return true;
+		if(con_node == -1 || con_index == -1) return true;
+		// print($"{node} | {con_node} : {con_index}");
 		
 		var _node = con_node;
 		if(APPENDING) {
@@ -2552,8 +2550,8 @@ function drawJuncConnection(from, to, params) {
 			
 			switch(PREFERENCES.curve_connection_line) { 
 				case 0 : 
-					if(downDirection)   draw_line_width_color(jx, jy, frx, fry, th, c1, c0);
-					else                draw_line_connect(frx, fry, jx, jy, ss, th, c1, c0, _drawParam);
+					if(downDirection)   draw_line_width_color(jx, jy, frx, fry, th, c0, c1);
+					else                draw_line_connect(frx, fry, jx, jy, ss, th, c0, c1, _drawParam);
 					break;
 					
 				case 1 : 

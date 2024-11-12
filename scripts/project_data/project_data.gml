@@ -50,13 +50,13 @@
 		}
 		
 		graphGrid = {
-			show	: true,
+			show	    : true,
 			show_origin : false,
-			snap	: true,
-			size	: 16,
-			opacity : 0.05,
-			color   : cola(c_white),
-			highlight : 12,
+			snap	    : true,
+			size	    : 16,
+			color       : cola(c_white),
+			opacity     : 0.05,
+			highlight   : 12,
 		}
 		
 		graph_display_parameter = {
@@ -75,12 +75,12 @@
 		addons = {};
 		
 		onion_skin = {
-			enabled: false,
-			range: [ -1, 1 ],
-			step: 1,
-			color: [ cola(c_red), cola(c_blue) ],
-			alpha: 0.5,
-			on_top: true,
+			enabled : false,
+			range   : [ -1, 1 ],
+			step    : 1,
+			color   : [ cola(c_red), cola(c_blue) ],
+			alpha   : 0.5,
+			on_top  : true,
 		};
 		
 		tunnels_in     = ds_map_create();
