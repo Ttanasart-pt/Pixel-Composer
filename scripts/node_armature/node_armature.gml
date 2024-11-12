@@ -294,7 +294,8 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 					var p0t = anc.getTail();
 					var _px = _x + p0t.x * _s;
 					var _py = _y + p0t.y * _s;
-					draw_line_dashed(_px, _py, p1x, p1y, 1);
+					draw_line_dashed(_px, _py, p1x, p1y, 2, 8);
+					draw_sprite_ui(THEME.preview_bone_IK, 1, _px, _py, 1, 1, 0, COLORS._main_accent, 1);
 					
 					if(mouse_release(mb_left)) {
 						var _len = point_distance(p0.x, p0.y, p1.x, p1.y);
@@ -314,10 +315,10 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 					}
 				}
 				
-				draw_sprite_ui(THEME.preview_bone_IK, 0, p1x, p1y, 1, 1, 0, _reach? COLORS._main_value_positive : COLORS._main_accent, 0.5);
+				draw_sprite_ui(THEME.preview_bone_IK, 0, p1x, p1y, 1, 1, 0, _reach? COLORS._main_value_positive : COLORS._main_accent, 1);
 				
 			} else
-				draw_sprite_ui(THEME.preview_bone_IK, 0, p1x, p1y, 1, 1, 0, COLORS._main_accent, 0.25);
+				draw_sprite_ui(THEME.preview_bone_IK, 0, p1x, p1y, 1, 1, 0, COLORS._main_accent, 0.5);
 			
 			if(mouse_release(mb_left)) {
 				ik_dragging  = noone;

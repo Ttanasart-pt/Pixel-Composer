@@ -11,7 +11,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	newOutput(0, nodeValue_Output("Armature", self, VALUE_TYPE.armature, noone));
 	
-	boneMap = ds_map_create();
+	boneMap = {};
 	
 	attributes.display_name = true;
 	attributes.display_bone = 0;
@@ -31,7 +31,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			.setDisplay(VALUE_DISPLAY.transform);
 		inputs[index].display_data.bone_id = bone != noone? bone.ID : noone;
 		
-		if(bone != noone) boneMap[? bone.ID] = inputs[index];
+		if(bone != noone) boneMap[$ bone.ID] = inputs[index];
 		
 		array_push(input_display_list, index);
 		
@@ -72,8 +72,8 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			array_push(_input_display_list, _idx);
 			//print($"  > Adding bone ID: {bone.ID}");
 			
-			if(ds_map_exists(boneMap, bone.ID)) {
-				var _inp = boneMap[? bone.ID];
+			if(struct_exists(boneMap, bone.ID)) {
+				var _inp = boneMap[$ bone.ID];
 				
 				_inp.index = _idx;
 				array_push(_inputs, _inp);
@@ -163,8 +163,8 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		if(anchor_selecting != noone && mouse_press(mb_left, active)) {
 			posing_bone = anchor_selecting[0];
-			if(!ds_map_exists(boneMap, posing_bone.ID)) setBone();
-			posing_input = boneMap[? posing_bone.ID];
+			if(!struct_exists(boneMap, posing_bone.ID)) setBone();
+			posing_input = boneMap[$ posing_bone.ID];
 			
 			if(anchor_selecting[1] == 0 || anchor_selecting[0].IKlength) { // move
 				
@@ -236,8 +236,8 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			var bone = ds_stack_pop(_bst);
 			var _id  = bone.ID;
 			
-			if(ds_map_exists(boneMap, _id)) {
-				var _inp  = boneMap[? _id];
+			if(struct_exists(boneMap, _id)) {
+				var _inp  = boneMap[$ _id];
 				_inp.updateName(bone.name);
 				
 				var _trn  = _inp.getValue();
@@ -298,7 +298,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			var inp = inputs[i];
 			var idx = struct_try_get(inp.display_data, "bone_id");
 			
-			boneMap[? idx] = inp;
+			boneMap[$ idx] = inp;
 		}
 		
 		setBone();

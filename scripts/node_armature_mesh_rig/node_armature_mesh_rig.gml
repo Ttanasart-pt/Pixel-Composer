@@ -376,7 +376,7 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
         if(!is(_bones, __Bone))        return;
         if(!is(_mesh,  MeshedSurface)) return;
         
-        var _map  = ds_map_create();
+        var _map  = {};
         
         bone_posed   = _bones.clone();
 		current_bone = _bones;
@@ -388,7 +388,7 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		for( var i = 0, n = array_length(_barr); i < n; i++ ) {
 			var _b = _barr[i];
 			
-			_map[? _b.ID] = _b;
+			_map[$ _b.ID] = _b;
 			if(!struct_has(attributes.bonePoseData, _b.ID)) continue;
 			
 			var _trn  = attributes.bonePoseData[$ _b.ID];

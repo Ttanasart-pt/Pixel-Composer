@@ -867,7 +867,7 @@ function __initNodes() {
 		addNodeObject(compose, "Armature Path",		s_node_armature_path,		"Node_Armature_Path",		[1, Node_Armature_Path],	 ["rigging", "bone"], "Generate path from armature system.").setVersion(1146);
 		addNodeObject(compose, "Armature Mesh Rig",	s_node_armature_mesh_rig,	"Node_Armature_Mesh_Rig",	[1, Node_Armature_Mesh_Rig], ["rigging", "bone"], "Rig mesh to armature system.").setVersion(1_18_04_0);
 		addNodeObject(compose, "Armature Sample",	s_node_armature_sample,		"Node_Armature_Sample",		[1, Node_Armature_Sample],	 ["rigging", "bone"], "Sample point from armature system.").setVersion(1147);
-			
+		
 		if(!DEMO) {
 			ds_list_add(compose, "Export");
 			addNodeObject(compose, "Export",	s_node_export,		"Node_Export",			[0, Node_create_Export],, "Export image/animation to file(s).");

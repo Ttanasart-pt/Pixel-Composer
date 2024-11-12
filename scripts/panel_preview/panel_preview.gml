@@ -180,6 +180,7 @@ function Panel_Preview() : PanelContent() constructor {
         view_pan_tool       = false;
         view_zoom_tool      = false;
         
+        sample_data         = noone;
         sample_color_raw    = noone;
         sample_color        = noone;
         sample_x            = noone;
@@ -1077,6 +1078,12 @@ function Panel_Preview() : PanelContent() constructor {
 	                															   clamp(sample_color_raw[1] * 255, 0, 255), 
 	                															   clamp(sample_color_raw[2] * 255, 0, 255), 
 	                															   clamp(sample_color_raw[3] * 255, 0, 255)) : sample_color_raw;
+					
+					sample_data = {
+						type:  "color",
+						data:  sample_color_raw,
+						color: sample_color,
+					};
                 }
             }
         }
@@ -2014,7 +2021,51 @@ function Panel_Preview() : PanelContent() constructor {
         draw_sprite_stretched_ext(THEME.toolbar, 1, 0,  0, w, topbar_height, c_white, aa);
         draw_sprite_stretched_ext(THEME.toolbar, 0, 0, ty, w, toolbar_height, c_white, aa);
         
-        if(_tool && tool_current != noone) { // tool settings
+        if(sample_data != noone) {
+            var cx = ui(6);
+            var cy = ui(6);
+            var cw = ui(32);
+            var ch = topbar_height - ui(10);
+            
+            var _ty = sample_data.type;
+            
+            if(_ty == "color") {
+            	var _da = sample_data.data;
+            	var _cc = sample_data.color;
+	            drawColor(_cc, cx, cy, cw, ch);
+	            draw_sprite_stretched_add(THEME.s_box_r2, 1, cx, cy, cw, ch, c_white, 0.3);
+	            
+	            var tx = cx + cw + ui(8);
+	            draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
+	            
+	            if(is_array(_da)) {
+	            	draw_text(tx, cy + ch / 2, _da);
+	            	
+	            } else {
+	                var hx = color_get_hex(_cc);
+	                draw_text(tx, cy + ch / 2, hx);
+	            
+	                tx += string_width(hx) + ui(8);
+	                draw_set_color(COLORS._main_text_sub);
+	                draw_text(tx, cy + ch / 2, $"({color_get_alpha(_cc)})");
+	            }
+	            
+            } else if(_ty == "tileset") {
+            	cw = ch;
+            	
+            	var _dr = sample_data.drawFn;
+				var _in = sample_data.index;
+				
+				_dr(_in, cx, cy, cw, ch);
+				draw_sprite_stretched_add(THEME.s_box_r2, 1, cx, cy, cw, ch, c_white, 0.3);
+				
+				var tx = cx + cw + ui(8);
+				draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
+				
+				draw_text(tx, cy + ch / 2, $"Tile {_in}");
+            }
+            
+        } else if(_tool && tool_current != noone) { // tool settings
             var settings = array_merge(_tool.getToolSettings(), tool_current.settings);
             
             tool_x = lerp_float(tool_x, tool_x_to, 5);
@@ -2086,32 +2137,9 @@ function Panel_Preview() : PanelContent() constructor {
                 if(mouse_wheel_up())   tool_x_to = clamp(tool_x_to + ui(64) * SCROLL_SPEED, -tol_max_w, 0);
                 if(mouse_wheel_down()) tool_x_to = clamp(tool_x_to - ui(64) * SCROLL_SPEED, -tol_max_w, 0);
             }
-        
-        } else { // color sampler
-            var cx = ui(6);
-            var cy = ui(6);
-            var cw = ui(32);
-            var ch = topbar_height - ui(10);
-            
-            if(sample_color != noone) {
-                drawColor(sample_color, cx, cy, cw, ch);
-                
-                var tx = cx + cw + ui(8);
-                draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
-                
-                if(is_array(sample_color_raw)) {
-                	draw_text(tx, cy + ch / 2, sample_color_raw);
-                	
-                } else {
-	                var hx = color_get_hex(sample_color);
-	                draw_text(tx, cy + ch / 2, hx);
-	            
-	                tx += string_width(hx) + ui(8);
-	                draw_set_color(COLORS._main_text_sub);
-	                draw_text(tx, cy + ch / 2, $"({color_get_alpha(sample_color)})");
-                }
-            }
         }
+        
+        sample_data = noone;
         
         var tbx = toolbar_height / 2;
         var tby = ty + toolbar_height / 2;

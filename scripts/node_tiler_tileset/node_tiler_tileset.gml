@@ -20,7 +20,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
     
 	newOutput(0, nodeValue_Output("Tileset", self, VALUE_TYPE.tileset, self));
 	
-	static drawTile = function(index, _x, _y, _w, _h) {
+	function drawTile(index, _x, _y, _w, _h) {
 		if(index < -1) { // animated
 			var _an = -index - 2;
 			var _at = array_safe_get(animatedTiles, _an, noone);

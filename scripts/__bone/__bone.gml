@@ -21,6 +21,8 @@ function __Bone(_parent = noone, distance = 0, direction = 0, angle = 0, length 
 	pose_local_scale = 1;
 	pose_local_posit = [ 0, 0 ];
 	
+	angular_constrain = -1;
+	
 	bone_head_init  = new __vec2();
 	bone_head_pose  = new __vec2();
 	bone_tail_init  = new __vec2();
@@ -179,11 +181,38 @@ function __Bone(_parent = noone, distance = 0, direction = 0, angle = 0, length 
 		}
 		
 		if(IKlength == 0) {
+			if(angular_constrain != -1) {
+				var _a0 = init_angle - angular_constrain;
+				var _a1 = init_angle + angular_constrain;
+				var ox, oy, nx, ny;
+				
+				for( var i = 0; i <= 32; i++ ) {
+					var _t = lerp(_a0, _a1, i / 32);
+					
+					nx = p0x + lengthdir_x(32 * _s, _t);
+					ny = p0y + lengthdir_y(32 * _s, _t);
+					
+					if(i == 0)  draw_line(p0x, p0y, nx, ny);
+					if(i == 32) draw_line(p0x, p0y, nx, ny);
+					if(i)       draw_line(ox, oy, nx, ny);
+					
+					ox = nx;
+					oy = ny;
+				}
+			}
+			
+			if(pose_angle != 0) {
+				var nx = p0x + lengthdir_x(16, angle + pose_angle);
+				var ny = p0y + lengthdir_y(16, angle + pose_angle);
+				
+				draw_line_width(p0x, p0y, nx, ny, 2);
+			}
+			
 			if(!parent_anchor && parent.parent != noone) {
 				var _p  = parent.getHead();
 				var _px = _x + _p.x * _s;
 				var _py = _y + _p.y * _s;
-				draw_line_dashed(_px, _py, p0x, p0y, 1);
+				draw_line_dashed(_px, _py, p0x, p0y, 2, 8);
 			}
 			
 			if(attributes.display_bone == 0) {
@@ -308,7 +337,10 @@ function __Bone(_parent = noone, distance = 0, direction = 0, angle = 0, length 
 	static setPose = function(_position = [ 0, 0 ], _angle = 0, _scale = 1, _ik = true) {
 		setPosition();
 			setPoseTransform(_position, _angle, _scale);
-			if(_ik) setIKconstrain();
+			if(_ik) {
+				setPosition();
+				setIKconstrain();
+			}
 		setPosition();
 	}
 	
@@ -323,6 +355,8 @@ function __Bone(_parent = noone, distance = 0, direction = 0, angle = 0, length 
 		pose_posit[1] += _position[1];
 		if(apply_rotation)	pose_angle += _angle;
 		if(apply_scale)		pose_scale *= _scale;
+		
+		if(angular_constrain != -1) pose_angle = clamp(pose_angle, -angular_constrain, angular_constrain);
 		
 		pose_local_angle = pose_angle;
 		pose_local_scale = pose_scale;
@@ -391,8 +425,8 @@ function __Bone(_parent = noone, distance = 0, direction = 0, angle = 0, length 
 		var itr = 0;
 		
 		do {
-			FABRIK_backward(points, lengths, dx, dy);
-			FABRIK_forward(points, lengths, sx, sy);
+			FABRIK_backward(bones, points, lengths, dx, dy);
+			FABRIK_forward(bones, points, lengths, sx, sy);
 			
 			var delta = 0;
 			var _bn = array_create(array_length(points));
@@ -416,8 +450,10 @@ function __Bone(_parent = noone, distance = 0, direction = 0, angle = 0, length 
 			// _b.pose_scale = dis / _b.init_length;
 			// _b.length     = dis;
 			
-			_b.pose_angle = dir - _b.init_angle;
-			_b.angle      = dir;
+			// _b.pose_angle = dir - _b.init_angle;
+			// _b.angle      = _b.init_angle + _b.pose_angle;
+			
+			_b.angle = dir;
 		
 			FABRIK_result[i] = p0;
 		}
@@ -426,7 +462,7 @@ function __Bone(_parent = noone, distance = 0, direction = 0, angle = 0, length 
 		
 	}
 	
-	static FABRIK_backward = function(points, lengths, dx, dy) {
+	static FABRIK_backward = function(bones, points, lengths, dx, dy) {
 		var tx = dx;
 		var ty = dy;
 		
@@ -447,15 +483,18 @@ function __Bone(_parent = noone, distance = 0, direction = 0, angle = 0, length 
 		}
 	}
 	
-	static FABRIK_forward = function(points, lengths, sx, sy) {
+	static FABRIK_forward = function(bones, points, lengths, sx, sy) {
 		var tx = sx;
 		var ty = sy;
 		
 		for( var i = 0, n = array_length(points) - 1; i < n; i++ ) {
+			var _b  = bones[i];
 			var p0  = points[i];
 			var p1  = points[i + 1];
 			var len = lengths[i];
 			var dir = point_direction(tx, ty, p1.x, p1.y);
+			
+			if(_b.angular_constrain != -1) dir = clamp(dir, _b.init_angle - _b.angular_constrain, _b.init_angle + _b.angular_constrain);
 			
 			p0.x = tx;
 			p0.y = ty;
@@ -516,6 +555,8 @@ function __Bone(_parent = noone, distance = 0, direction = 0, angle = 0, length 
 		bone.apply_rotation	= apply_rotation;
 		bone.apply_scale	= apply_scale;
 		
+		bone.angular_constrain = angular_constrain;
+		
 		bone.childs = [];
 		for( var i = 0, n = array_length(childs); i < n; i++ )
 			bone.childs[i] = childs[i].serialize();
@@ -534,13 +575,16 @@ function __Bone(_parent = noone, distance = 0, direction = 0, angle = 0, length 
 		is_main			= bone.is_main;
 		parent_anchor	= bone.parent_anchor;
 		
-		self.node		= node;
+		self.node	= node;
 		
 		IKlength	= bone.IKlength;
 		IKTargetID	= struct_try_get(bone, "IKTargetID", "");
 		
 		apply_rotation	= bone.apply_rotation;
 		apply_scale		= bone.apply_scale;
+		
+		angular_constrain = struct_try_get(bone, "angular_constrain", -1);
+		angular_constrain = -1;
 		
 		childs = [];
 		for( var i = 0, n = array_length(bone.childs); i < n; i++ ) {
@@ -570,8 +614,9 @@ function __Bone(_parent = noone, distance = 0, direction = 0, angle = 0, length 
 		_b.IKlength		= IKlength;
 		_b.IKTargetID	= IKTargetID;
 		
-		_b.apply_rotation	= apply_rotation;
-		_b.apply_scale		= apply_scale;
+		_b.apply_rotation	 = apply_rotation;
+		_b.apply_scale		 = apply_scale;
+		_b.angular_constrain = angular_constrain;
 		
 		for( var i = 0, n = array_length(childs); i < n; i++ )
 			_b.addChild(childs[i].clone());

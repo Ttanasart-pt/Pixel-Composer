@@ -149,7 +149,7 @@
 					} 
 				],
 				
-				// [ "Gamemaker Link", "bind_gamemaker_path", gamemaker_editWidget, noone ],
+				[ "Gamemaker Link", "bind_gamemaker_path", gamemaker_editWidget, noone ],
 			];
 			
 			static setPalette = function(pal = noone) { 
