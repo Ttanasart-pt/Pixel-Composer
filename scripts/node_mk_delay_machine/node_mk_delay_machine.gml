@@ -86,7 +86,6 @@ function Node_MK_Delay_Machine(_x, _y, _group = noone) : Node(_x, _y, _group) co
 				}
 				
 				aa = eval_curve_x(_alpC, 1 - i / _amo);
-				
 				draw_surface_ext(_s, 0, 0, 1, 1, 0, cc, aa);
 			}
 			

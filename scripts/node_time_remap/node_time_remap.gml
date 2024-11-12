@@ -3,11 +3,6 @@ function Node_Time_Remap(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	use_cache = CACHE_USE.manual;
 	update_on_frame = true;
 	
-	shader = sh_time_remap;
-	uniform_map = shader_get_sampler_index(shader, "map");
-	uniform_min = shader_get_uniform(shader, "vMin");
-	uniform_max = shader_get_uniform(shader, "vMax");
-	
 	newInput(0, nodeValue_Surface("Surface in", self))
 		.rejectArray();
 	
@@ -28,11 +23,12 @@ function Node_Time_Remap(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	attribute_surface_depth();
 	
-	static update = function(frame = CURRENT_FRAME) { #region
+	static update = function(frame = CURRENT_FRAME) {
 		var _inSurf  = getInputData(0);
 		var _map     = getInputData(1);
 		var _life    = getInputData(2);
 		var _loop    = getInputData(3);
+		cacheCurrentFrame(_inSurf);
 		
 		var _surf  = outputs[0].getValue();
 		_surf = surface_verify(_surf, surface_get_width_safe(_inSurf), surface_get_height_safe(_inSurf), attrDepth());
@@ -40,26 +36,22 @@ function Node_Time_Remap(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		var ste = 1 / _life;
 		
-		surface_set_shader(_surf, shader);
-		texture_set_stage(uniform_map, surface_get_texture(_map));
+		surface_set_shader(_surf, sh_time_remap);
+		shader_set_surface("map", _map);
 		
 		for(var i = 0; i <= _life; i++) {
 			var _frame = CURRENT_FRAME - i;
-			if(_loop)
-				_frame = _frame < 0? TOTAL_FRAMES - 1 + _frame : _frame;
-			else 
-				_frame = clamp(_frame, 0, TOTAL_FRAMES - 1);
+			if(_loop) _frame = _frame < 0? TOTAL_FRAMES - 1 + _frame : _frame;
+			else      _frame = clamp(_frame, 0, TOTAL_FRAMES - 1);
 			
 			var s = array_safe_get_fast(cached_output, _frame);
 			if(!is_surface(s)) continue;
 			
-			shader_set_uniform_f(uniform_min, i * ste);	
-			shader_set_uniform_f(uniform_max, i * ste + ste);	
+			shader_set_f("vMin", i * ste);	
+			shader_set_f("vMax", i * ste + ste);	
 			draw_surface_safe(s);
 		}
 		
 		surface_reset_shader();
-		
-		cacheCurrentFrame(_inSurf);
-	} #endregion
+	}
 }

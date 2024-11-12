@@ -2143,17 +2143,30 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		cache_result  = array_verify(cache_result,  TOTAL_FRAMES);
 	}
 	
-	static cacheCurrentFrame = function(_frame) {
+	static cacheCurrentFrame = function(_surface) {
 		cacheArrayCheck();
-		if(CURRENT_FRAME < 0) return;
-		if(CURRENT_FRAME >= array_length(cached_output)) return;
+		var _frame = CURRENT_FRAME;
+		if(_frame < 0) return;
+		if(_frame >= array_length(cached_output)) return;
 		
-		surface_array_free(cached_output[CURRENT_FRAME]);
-		cached_output[CURRENT_FRAME] = surface_array_clone(_frame);
+		if(is_array(_surface)) {
+			surface_array_free(cached_output[_frame]);
+			cached_output[_frame] = surface_array_clone(_surface);
+			
+		} else if(surface_exists(_surface)) {
+			var _sw = surface_get_width(_surface);
+			var _sh = surface_get_height(_surface);
+			
+			cached_output[_frame] = surface_verify(cached_output[_frame], _sw, _sh);
+			surface_set_target(cached_output[_frame]);
+				DRAW_CLEAR BLEND_OVERRIDE
+				draw_surface(_surface, 0, 0);
+			surface_reset_target();
+		}
 		
-		array_safe_set(cache_result, CURRENT_FRAME, true);
+		array_safe_set(cache_result, _frame, true);
 		
-		return cached_output[CURRENT_FRAME];
+		return cached_output[_frame];
 	}
 	
 	static cacheExist = function(frame = CURRENT_FRAME) {

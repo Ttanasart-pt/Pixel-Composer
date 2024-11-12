@@ -60,7 +60,7 @@ function Node_Interlaced(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		
 		var _fram = CURRENT_FRAME - _back;
 		if(_loop) _fram = (_fram + TOTAL_FRAMES) % TOTAL_FRAMES;
-		var _prev = array_safe_get_fast(cached_output, _fram, noone);
+		var _prev = getCacheFrameIndex(_array_index, _fram);
 			
 		surface_set_shader(_outSurf, sh_interlaced);
 			shader_set_i("useSurf", is_surface(_prev));
@@ -74,7 +74,7 @@ function Node_Interlaced(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			draw_surface_safe(_surf);
 		surface_reset_shader();
 		
-		cacheCurrentFrame(_surf);
+		cacheCurrentFrameIndex(_array_index, _surf);
 		
 		__process_mask_modifier(_data);
 		_outSurf = mask_apply(_data[0], _outSurf, _data[2], _data[3]);

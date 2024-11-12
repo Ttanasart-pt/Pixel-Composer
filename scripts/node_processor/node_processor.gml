@@ -411,25 +411,43 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	///////////////////// CACHE /////////////////////
 	
-	static cacheCurrentFrameIndex = function(_frame, index) {
+	static cacheCurrentFrameIndex = function(_aindex, _surface) {
 		cacheArrayCheck();
-		if(CURRENT_FRAME < 0) return;
-		if(CURRENT_FRAME >= array_length(cached_output)) return;
+		var _frame = CURRENT_FRAME;
+		if(_frame < 0) return;
+		if(_frame >= array_length(cached_output)) return;
 		
-		var prev = cached_output[CURRENT_FRAME];
-		surface_array_free(array_safe_get_fast(prev, index));
-		cached_output[CURRENT_FRAME][index] = surface_array_clone(_frame);
+		var _surfs = cached_output[_frame];
+		var _cache = array_safe_get_fast(_surfs, _aindex);
 		
-		array_safe_set(cache_result, CURRENT_FRAME, true);
+		if(is_array(_surface)) {
+			surface_array_free(_cache);
+			_surfs[_aindex] = surface_array_clone(_surface);
+			
+		} else if(surface_exists(_surface)) {
+			var _sw = surface_get_width(_surface);
+			var _sh = surface_get_height(_surface);
+			
+			_cache = surface_verify(_cache, _sw, _sh);
+			surface_set_target(_cache);
+				DRAW_CLEAR BLEND_OVERRIDE
+				draw_surface(_surface, 0, 0);
+			surface_reset_target();
+			
+			_surfs[_aindex] = _cache;
+		}
 		
-		return cached_output[CURRENT_FRAME];
+		cached_output[_frame] = _surfs;
+		array_safe_set(cache_result, _frame, true);
+		
+		return cached_output[_frame];
 	}
 	
-	static getCacheFrameIndex = function(frame = CURRENT_FRAME, index = 0) {
-		if(frame < 0) return false;
-		if(!cacheExist(frame)) return noone;
+	static getCacheFrameIndex = function(_aindex = 0, _frame = CURRENT_FRAME) {
+		if(_frame < 0) return false;
+		if(!cacheExist(_frame)) return noone;
 		
-		var surf = array_safe_get_fast(cached_output, frame);
-		return array_safe_get_fast(surf, index);
+		var surf = array_safe_get_fast(cached_output, _frame);
+		return array_safe_get_fast(surf, _aindex, noone);
 	}
 }

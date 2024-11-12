@@ -23,9 +23,7 @@ function Node_Rate_Remap(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		var _step = PROJECT.animator.framerate / _rate;
 		var _targ = floor(_time / _step) * _step;
 		
-		cacheCurrentFrameIndex(_surf, _array_index);
-		var s = getCacheFrameIndex(_targ, _array_index);
-		
-		return s;
+		cacheCurrentFrameIndex(_array_index, _surf);
+		return getCacheFrameIndex(_array_index, _targ);
 	}
 }

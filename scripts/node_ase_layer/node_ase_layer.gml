@@ -31,25 +31,29 @@ function Node_ASE_layer(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var data = getInputDataForce(0);
 		if(data == noone) return;
 		
-		var name = getInputData(2);
-		setDisplayName(name);
+		var _lname = getInputData(2);
+		setDisplayName(_lname);
 		
 		for( var i = 0, n = array_length(data.layers); i < n; i++ ) {
-			if(data.layers[i].name == name) 
+			if(data.layers[i].name == _lname) 
 				layer_object = data.layers[i];
 		}
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
 		findLayer();
-		if(layer_object == noone) return;
 		
-		var data = getInputData(0);
-		var cel  = layer_object.getCel(CURRENT_FRAME - data._tag_delay);
-		
+		var data   = getInputData(0);
 		var celDim = getInputData(1);
-		var name   = getInputData(2);
+		var _lname = getInputData(2);
+		outputs[1].setValue(_lname);
 		
+		if(layer_object == noone) {
+			logNode($"Layer name {_lname} not found.");
+			return;
+		}
+		
+		var cel  = layer_object.getCel(CURRENT_FRAME - data._tag_delay);
 		var ww = data.content[$ "Width"];
 		var hh = data.content[$ "Height"];
 		var cw = cel? cel.data[$ "Width"]  : 1;
@@ -59,7 +63,8 @@ function Node_ASE_layer(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		if(celDim)	surf = surface_verify(surf, cw, ch);
 		else		surf = surface_verify(surf, ww, hh);
 		outputs[0].setValue(surf);
-		outputs[1].setValue(name);
+		
+		print($"Setting layer name {_lname}");
 		
 		if(cel == 0) { surface_clear(surf); return; }
 		

@@ -30,8 +30,7 @@
 		nodeMap	    = ds_map_create();
 		nodeNameMap = ds_map_create();
 		
-		composer    = noone;
-		
+		composer       = noone;
 		animator	   = new AnimationManager();
 		globalNode	   = new Node_Global();
 		nodeController = new __Node_Controller(self);

@@ -2,6 +2,8 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	name = "Draw Text";
 	font = f_p0;
 	
+	dimension_index = -1;
+	
 	newInput(0, nodeValue_Text("Text", self, ""))
 		.setVisible(true, true);
 	
@@ -282,21 +284,24 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _use_path = _path != noone && struct_has(_path, "getPointDistance");
 			var _ss = 1;
 		
-			if(_use_path || _dimt == 0) {
+			if(_use_path) {
 				_sw = _dim[0];
 				_sh = _dim[1];
+				
+			} else if (_dimt == 0) {
+				_sw = _dim[0];
+				_sh = _dim[1];
+				if(_scaF) _ss = min(_sw / ww, _sh / hh);
+				
 			} else {
 				_sw = ww;
 				_sh = hh;
+				if(_wave) _sh += abs(_waveA) * 2;
 			}
-		
-			if(_dimt == 0 && !_use_path && _scaF)
-				_ss = min(_sw / ww, _sh / hh);
-			
-			if(_wave) _sh += abs(_waveA) * 2;
 			
 			_sw += _padd[PADDING.left] + _padd[PADDING.right];
 			_sh += _padd[PADDING.top] + _padd[PADDING.bottom];
+			
 			_outSurf = surface_verify(_outSurf, _sw, _sh, attrDepth());
 		#endregion
 		

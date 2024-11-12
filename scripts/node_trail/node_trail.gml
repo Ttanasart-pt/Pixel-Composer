@@ -17,7 +17,7 @@ function Node_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	newInput(6, nodeValue_Curve("Alpha over life",	self, CURVE_DEF_11));
 	
-	newOutput(0, nodeValue_Output("Surface out",		self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface out",	self, VALUE_TYPE.surface, noone));
 	
 	newOutput(1, nodeValue_Output("Trail UV",		self, VALUE_TYPE.surface, noone));
 	
@@ -63,7 +63,11 @@ function Node_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var _blend = getInputData(5);
 		var _alpha = getInputData(6);
 		var cDep   = attrDepth();
-		if(!is_surface(_surf)) return;
+		if(!is_surface(_surf)) {
+			logNode($"Surface array not supported.");
+			return;
+		}
+		
 		cacheCurrentFrame(_surf);
 		
 		for( var i = 0, n = array_length(temp_surface); i < n; i++ ) {
