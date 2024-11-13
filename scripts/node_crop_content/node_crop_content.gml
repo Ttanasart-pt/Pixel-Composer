@@ -14,6 +14,9 @@ function Node_Crop_Content(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
 	
+	newOutput(1, nodeValue_Output("Crop distance", self, VALUE_TYPE.integer, [ 0, 0, 0, 0 ]))
+		.setDisplay(VALUE_DISPLAY.padding);
+	
 	input_display_list = [ 1,
 		["Surfaces", false], 0, 2, 4, 
 		["Padding",	 false], 3, 
@@ -108,7 +111,8 @@ function Node_Crop_Content(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			}
 		}
 		
-		var res	= [];
+		var res  = [];
+		var crop = [];
 		
 		for( var i = 0, n = _amo; i < n; i++ ) {
 			var _surf = _inSurf[i];
@@ -118,7 +122,8 @@ function Node_Crop_Content(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				resDim[DIMENSION.width]  += _padd[PADDING.left] + _padd[PADDING.right];
 				resDim[DIMENSION.height] += _padd[PADDING.top] + _padd[PADDING.bottom];
 				
-				res[i] = surface_create_valid(resDim[DIMENSION.width], resDim[DIMENSION.height], cDep);
+				res[i]  = surface_create_valid(resDim[DIMENSION.width], resDim[DIMENSION.height], cDep);
+				crop[i] = [ surface_get_width_safe(_surf) - maxx - 1, miny, minx, surface_get_height_safe(_surf) - maxy - 1 ];
 				
 				surface_set_shader(res[i], noone);
 					draw_surface_safe(_surf, -minx + _padd[PADDING.left], -miny + _padd[PADDING.top]);
@@ -130,14 +135,20 @@ function Node_Crop_Content(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				resDim[DIMENSION.height] += _padd[PADDING.top] + _padd[PADDING.bottom];
 				
 				res[i] = surface_create_valid(resDim[DIMENSION.width], resDim[DIMENSION.height], cDep);
-			
+				crop[i] = [ surface_get_width_safe(_surf) - maxx - 1, miny, minx, surface_get_height_safe(_surf) - maxy - 1 ];
+				
 				surface_set_shader(res[i], noone);
 					draw_surface_safe(_surf, -minx[i] + _padd[PADDING.left], -miny[i] + _padd[PADDING.top]);
 				surface_reset_shader();
 			}
 		}
 		
-		if(!_arr) res = res[0];
+		if(!_arr) {
+			res  = res[0];
+			crop = crop[0];
+		}
+		
 		outputs[0].setValue(res);
+		outputs[1].setValue(crop);
 	}
 }
