@@ -60,9 +60,12 @@ function draw_sprite_bbox_uniform(spr, ind, _bbox, _col = c_white, _alp = 1) {
 	if(_bbox == noone) return;
 	var _sw = sprite_get_width(spr);
     var _sh = sprite_get_height(spr);
+    var _ox = sprite_get_xoffset(spr);
+    var _oy = sprite_get_yoffset(spr);
+    
 	var _minS = min(_bbox.w / _sw, _bbox.h / _sh);
 	
-	__draw_sprite_ext(spr, ind, _bbox.xc - _sw * _minS / 2, _bbox.yc - _sh * _minS / 2, _minS, _minS, 0, _col, _alp);
+	__draw_sprite_ext(spr, ind, _bbox.xc - _sw * _minS / 2 + _ox * _minS, _bbox.yc - _sh * _minS / 2 + _oy * _minS, _minS, _minS, 0, _col, _alp);
 }
 
 function draw_sprite_uniform(spr, ind, _x, _y, scale, color = c_white, alpha = 1) {

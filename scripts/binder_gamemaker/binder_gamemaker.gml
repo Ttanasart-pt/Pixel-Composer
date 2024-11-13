@@ -49,14 +49,14 @@ function GMRoom(_gm, _path, _info) constructor {
 }
 
 function __Binder_Gamemaker(path) constructor {
-    self.path = path;
-    name = filename_name_only(path);
-    dir  = filename_dir(path);
+    self.path   = path;
+    name        = filename_name_only(path);
+    dir         = filename_dir(path);
     projectName = "";
     
     resourcesRaw = [];
     resourcesMap = {};
-    resources = [
+    resources    = [
         { name: "sprites", data : [], closed : false, },
         { name: "tileset", data : [], closed : false, },
         { name: "rooms",   data : [], closed : false, },

@@ -107,6 +107,7 @@
 						RENDER_ALL 
 						return true; 
 					}), 
+					
 					function(junc) {
 						if(!is_struct(junc)) return;
 						if(!is_instanceof(junc, NodeValue)) return;

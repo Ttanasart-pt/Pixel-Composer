@@ -1030,7 +1030,9 @@ function Panel_Inspector() : PanelContent() constructor {
                                 var arr = [];
                                 for(var i = 0; i < array_length(__dialog_junction.extract_node); i++)  {
                                     var _rec = __dialog_junction.extract_node[i];
-                                    array_push(arr, menuItem(_rec, function(_dat) { __dialog_junction.extractNode(_dat.name); }, noone, noone, noone, { name : _rec }));
+                                    var _nod = ALL_NODES[? _rec];
+                                    
+                                    array_push(arr, menuItem(_nod.name, function(_dat) /*=>*/ { __dialog_junction.extractNode(_dat.name); }, noone, noone, noone, { name : _rec }));
                                 }
                                     
                                 return submenuCall(_dat, arr);

@@ -20,7 +20,7 @@ function Node_Find_Pixel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	input_display_list = [ 0, 
-		["Search", false   ], 1, 2, 3, 
+		["Search", false], 1, 2, 3, 
 		["Alpha",   true, 4], 5, 
 	]
 	
@@ -45,13 +45,15 @@ function Node_Find_Pixel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		buffer_seek(_buff, buffer_seek_start, 0);
 		
 		var res = [];
-		var r = _color_get_red(_col);
-		var g = _color_get_green(_col);
-		var b = _color_get_blue(_col);
-		var a = _color_get_alpha(_col);
+		var r = _color_get_r( _col );
+		var g = _color_get_g( _col );
+		var b = _color_get_b( _col );
+		var a = _color_get_a( _col );
 		
-		for( var i = 0; i < _sh; i++ ) 
-		for( var j = 0; j < _sw; j++ ) {
+		var _am = _sw * _sh, _i = -1;
+		
+		repeat(_am) {
+			_i++;
 			var _c = buffer_read(_buff, buffer_u32);
 			
 			var _r = ((_c & 0x000000FF) >>  0) / 255;
@@ -65,9 +67,12 @@ function Node_Find_Pixel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			if(!colMatch) continue;
 			
 			if(!_alp || abs(a - _a) <= _alpT) {
-				if(_all) array_push(res, [ j, i ]);
-				else     return [ j, i ];
+				var _pnt = [ _i % _sw, floor(_i / _sw) ];
+				
+				if(_all) array_push(res, _pnt);
+				else     return _pnt;
 			}
+			
 		}
 		
 		buffer_delete(_buff);

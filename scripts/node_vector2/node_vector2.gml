@@ -1,4 +1,4 @@
-function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor { #region
+function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor { 
 	name  = "Vector2";
 	color = COLORS.node_blend_number;
 	
@@ -54,7 +54,7 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		}),
 	];
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { 
 		PROCESSOR_OVERLAY_CHECK
 		
 		var __ax = current_data[0];
@@ -103,9 +103,9 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				drag_sy   = _ay;
 			}
 		} 
-	} #endregion
+	} 
 	
-	static step = function() { #region
+	static step = function() { 
 		var int  = getInputData(2);
 		var disp = getInputData(3);
 		
@@ -118,17 +118,17 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				
 		if(disp == 1 && inputs[0].value_from == noone && inputs[1].value_from == noone)
 			setDimension(160, 160, false);
-	} #endregion
+	} 
 	
-	static processData = function(_output, _data, _output_index, _array_index = 0) { #region
+	static processData = function(_output, _data, _output_index, _array_index = 0) { 
 		var vec = [ _data[0], _data[1] ];
 		for( var i = 0, n = array_length(vec); i < n; i++ ) 
 			vec[i] = _data[2]? round(vec[i]) : vec[i];
 			
 		return vec;
-	} #endregion
+	} 
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { 
 		var disp = getInputData(3);
 		var vec  = getSingleValue(0,, true);
 		var bbox = drawGetBbox(xx, yy, _s);
@@ -176,13 +176,13 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 		var pin_x = (v0 - wd_minx) / (wd_maxx - wd_minx);
 		var pin_y = (v1 - wd_miny) / (wd_maxy - wd_miny);
-		if(point_in_rectangle(v0, v1, wd_minx, wd_miny, wd_maxx, wd_maxy)) { #region draw pin
+		if(point_in_rectangle(v0, v1, wd_minx, wd_miny, wd_maxx, wd_maxy)) { // draw pin
 			var pin_dx = bbox.x0 + bbox.w * pin_x;
 			var pin_dy = bbox.y1 - bbox.h * pin_y;
 			draw_sprite_ext(THEME.node_coor_pin, 0, pin_dx, pin_dy, 1, 1, 0, c_white, 1);
-		} #endregion
+		} 
 		
-		if(wd_dragging) { #region
+		if(wd_dragging) { 
 			var mx = wd_minx + (_mx - bbox.x0) / bbox.w * (wd_maxx - wd_minx);
 			var my = wd_maxy - (_my - bbox.y0) / bbox.h * (wd_maxy - wd_miny);
 			
@@ -199,8 +199,8 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				wd_dragging  = false;
 				UNDO_HOLDING = false;
 			}
-		#endregion
-		} else if(wd_panning) { #region
+		
+		} else if(wd_panning) { 
 			draw_set_color(color);
 			draw_rectangle(bbox.x0, bbox.y0, bbox.x1, bbox.y1, 1);
 			
@@ -216,10 +216,10 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				
 			if(mouse_release(mb_middle))
 				wd_panning   = false;
-		#endregion
+		
 		}
 		
-		if(_hover && point_in_rectangle(_mx, _my, bbox.x0, bbox.y0, bbox.x1, bbox.y1)) { #region
+		if(_hover && point_in_rectangle(_mx, _my, bbox.x0, bbox.y0, bbox.x1, bbox.y1)) { 
 			draw_set_color(color);
 			draw_rectangle(bbox.x0, bbox.y0, bbox.x1, bbox.y1, 1);
 			
@@ -264,11 +264,11 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			if(mouse_press(mb_right, _focus))
 				menuCall("node_vec2_coordinate", coordinate_menu);
 			
-		} #endregion
+		} 
 		
 		draw_set_text(f_sdf, fa_center, fa_bottom, COLORS._main_text);
 		var str	= $"[{v0}, {v1}]";
 		var ss	= min(1, string_scale(str, bbox.w - 16 * _s, bbox.h));
 		draw_text_transformed(bbox.xc, bbox.y1 - 4, str, ss, ss, 0);
-	} #endregion
-} #endregion
+	} 
+} 

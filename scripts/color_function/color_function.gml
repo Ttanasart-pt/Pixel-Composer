@@ -5,12 +5,17 @@
 	function color_real(color)      { INLINE return make_color_rgb(color_get_red(color), color_get_green(color), color_get_blue(color)); }
 	
 	function color_get_alpha(color)  { INLINE return (color & (0xFF << 24)) >> 24; }
-	function _color_get_alpha(color) { INLINE return color_get_alpha(color) / 255; }
-
+	
+	#macro _color_get_r _color_get_red
+	#macro _color_get_g _color_get_green
+	#macro _color_get_b _color_get_blue
+	#macro _color_get_a _color_get_alpha
+	
 	function _color_get_red(color)   { INLINE return color_get_red(color)   / 255; }
 	function _color_get_green(color) { INLINE return color_get_green(color) / 255; }
 	function _color_get_blue(color)  { INLINE return color_get_blue(color)  / 255; }
-
+	function _color_get_alpha(color) { INLINE return color_get_alpha(color) / 255; }
+	
 	function _color_get_hue(color)        { INLINE return color_get_hue(color)        / 255; }
 	function _color_get_saturation(color) { INLINE return color_get_saturation(color) / 255; }
 	function _color_get_value(color)      { INLINE return color_get_value(color)      / 255; }

@@ -2308,14 +2308,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static extractNode = function(_type = extract_node) {
 		if(_type == "") return noone;
 		
-		var ext = nodeBuild(_type, node.x, node.y);
+		var ext = nodeBuild(_type, node.x, node.y).skipDefault();
 		ext.x -= ext.w + 32;
 		
-		for( var i = 0; i < array_length(ext.outputs); i++ ) {
+		for( var i = 0; i < array_length(ext.outputs); i++ )
 			if(setFrom(ext.outputs[i])) break;
-		}
 		
-		var animFrom = animator.values;
 		var len = 2;
 		
 		switch(_type) {
@@ -2323,39 +2321,29 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			case "Node_Vector3": len++;
 			case "Node_Vector2": 
 				for( var j = 0; j < len; j++ ) {
-					var animTo = ext.inputs[j].animator;
-					var animLs = animTo.values;
+					var _in = ext.inputs[j];
 					
-					ext.inputs[j].setAnim(is_anim);
-					ds_list_clear(animLs);
+					_in.setAnim(is_anim);
+					_in.animator.values = [];
 				}
 				
-				for( var i = 0; i < ds_list_size(animFrom); i++ ) {
+				for( var i = 0; i < array_length(animator.values); i++ ) {
+					var _arrVal = animator.values[i];
+					
 					for( var j = 0; j < len; j++ ) {
-						var animTo = ext.inputs[j].animator;
-						var animLs = animTo.values;
-						var a = animFrom[| i].clone(animTo);
+						var _in   = ext.inputs[j];
+						var _kf   = _arrVal.clone(_in.animator);
+						_kf.value = _kf.value[j];
 						
-						a.value = a.value[j];
-						ds_list_add(animLs, a);
+						array_push(_in.animator.values, _kf);
 					}
+					
 				}
-				break;
-			case "Node_Path": 
-				break;
-			default:
-				var animTo = ext.inputs[0].animator;
-				var animLs = animTo.values;
 				
-				ext.inputs[0].setAnim(is_anim);
-				ds_list_clear(animLs);
-				
-				for( var i = 0; i < ds_list_size(animFrom); i++ )
-					ds_list_add(animLs, animFrom[| i].clone(animTo));
 				break;
 		}
 		
-		ext.doUpdate();
+		ext.triggerRender();
 	}
 	
 	static dragValue = function() {

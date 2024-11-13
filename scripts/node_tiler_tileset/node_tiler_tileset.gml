@@ -1537,6 +1537,8 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		tileAmount = [ floor(_tdim[0] / tileSize[0]), floor(_tdim[1] / tileSize[1]) ];
 		
 		if(gmTile != noone) {
+			inputs[0].setVisible(false, false);
+			
 			var _spm = struct_try_get(gmTile.gmBinder.resourcesMap, gmTile.sprite, noone);
             var _spr = _spm == noone? noone : _spm.thumbnail;
             

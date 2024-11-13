@@ -1,6 +1,6 @@
 function Panel_GM_Explore(gmBinder) : PanelContent() constructor {
     self.gmBinder = gmBinder;
-    title = gmBinder.projectName;
+    title = $"{gmBinder.projectName}.yyc";
     
     auto_pin = true;
     padding  = 8;
@@ -16,11 +16,7 @@ function Panel_GM_Explore(gmBinder) : PanelContent() constructor {
 	keyboard_lastkey  = -1;
 	
 	search_res = [];
-	tb_search = new textBox(TEXTBOX_INPUT.text, function(str) { 
-		search_string = string(str); 
-		searchResource();
-	});
-	
+	tb_search  = new textBox(TEXTBOX_INPUT.text, function(str) /*=>*/ { search_string = string(str); searchResource(); });
 	tb_search.align			= fa_left;
 	tb_search.auto_update	= true;
 	tb_search.boxColor		= COLORS._main_icon_light;
@@ -100,6 +96,7 @@ function Panel_GM_Explore(gmBinder) : PanelContent() constructor {
                 
                 if(_hover && point_in_rectangle(_m[0], _m[1], _asx, _asy, _asx + _ths, _asy + _ths)) {
                     draw_sprite_stretched_ext(THEME.ui_panel, 1, _asx, _asy, _ths, _ths, COLORS._main_icon);
+                    if(_thm) TOOLTIP = [ _thm, "sprite" ];
                     
                     if(mouse_press(mb_left, _focus)) {
                         DRAGGING = { type : _ass.type, data : _ass };
@@ -131,8 +128,19 @@ function Panel_GM_Explore(gmBinder) : PanelContent() constructor {
 		var ph = h - ui(padding + padding);
 		
 		draw_sprite_stretched(THEME.ui_panel_bg, 1, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
-		tb_search.draw(px, py, pw, ui(32), search_string, [mx, my]);
+		
+		var _tw = pw - ui(24 + 4);
+		var _th = ui(24);
+		tb_search.setFocusHover(pFOCUS, pHOVER);
+		tb_search.draw(px, py, _tw, _th, search_string, [mx, my]);
 		if(search_string == "") tb_search.sprite_index = 1;
+		
+		var _bs = _th;
+		var _bx = px + pw - _bs;
+		var _by = py;
+		
+		if(buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, [ mx, my ], pFOCUS, pHOVER, "", THEME.refresh_16) == 2)
+			gmBinder.refreshResources();
 		
 		sc_content.setFocusHover(pFOCUS, pHOVER);
 		sc_content.draw(px, py + ui(40), mx - px, my - (py + ui(40)));
