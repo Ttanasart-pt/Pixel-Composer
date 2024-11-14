@@ -24,3 +24,5 @@ __KEYS_PRIVATE
 scripts/panel_patreon/panel_patreon.gml
 objects/o_dialog_patreon/o_dialog_patreon.yy
 /objects/o_dialog_patreon
+/scripts/patreon_email_check
+/scripts/panel_patreon

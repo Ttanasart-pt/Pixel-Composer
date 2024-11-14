@@ -8,11 +8,12 @@ event_inherited();
 	destroy_on_click_out = false;
 	
 	req_sign_in = "";
+	req_auth    = ""; 
 	
-	var port = 6510;
-	// do {
-		server = network_create_server_raw(network_socket_tcp, port, 32);
-	// } until(server >= 0 || port >= 65535);
+	attmp = 0;
+	do {
+		port = irandom_range(7000, 20000);
+		server = network_create_server_raw(network_socket_ws, port, 32);
+	} until(server >= 0 || attmp++ >= 100);
 	
-	// show_debug_message($"Create new server at {port}");
 #endregion

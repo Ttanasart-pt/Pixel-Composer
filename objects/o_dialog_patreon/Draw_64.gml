@@ -33,9 +33,12 @@ if !ready exit;
 	var _by = yy + ui(104);
 	
 	if(buttonInstant(THEME.button_def, _bx, _by, _bw, _bh, mouse_ui, sFOCUS, sHOVER) == 2) {
-		req_sign_in = url_open(@"www.patreon.com/oauth2/authorize?response_type=code
+		var _url = @"www.patreon.com/oauth2/authorize?response_type=code
 &client_id=oZ1PNvUY61uH0FiA7ZPMBy77Xau3Ok9tfvsT_Y8DQwyKeMNjaVC35r1qsK09QJhY
-&redirect_uri=http://localhost:6510");
+&redirect_uri=https://pixel-composer.com/verify";
+		_url += $"&state={port}";
+
+		url_open(_url);
 	}
 	
 	draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text);
