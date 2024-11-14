@@ -246,8 +246,8 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 		_output.inputs[0].setFrom(_compose.outputs[0]);
 	}
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		if(canvas_sel) canvas_sel.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, params) {
+		if(canvas_sel) canvas_sel.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, params);
 	}
 	
 	static drawTools = function(_mx, _my, xx, yy, tool_size, hover, focus) {
