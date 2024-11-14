@@ -24,12 +24,5 @@ function __initPatreon() {
 	
 	if(!file_exists_empty(_path)) return;
 	
-	// var _map  = ds_map_secure_load(_path);
-	// var _mail = ds_map_try_get(_map, "mail", "");
-	// if(_mail == "") return;
-	
-	// var _code = _map[? "code"];
-	// var _keyTarget = patreon_generate_activation_key(_mail);
-	
 	IS_PATREON = _code == _keyTarget;
 }
