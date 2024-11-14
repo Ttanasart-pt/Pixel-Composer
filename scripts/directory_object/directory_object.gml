@@ -55,9 +55,7 @@ function FileObject(_name, _path) constructor {
 	}
 	
 	static getSpr = function() {
-		if(spr != -1 && sprite_exists(spr))	
-			return spr;
-			
+		if(spr != -1 && sprite_exists(spr))	return spr;
 		if(sprFetchID != noone) return -1;
 		
 		if(array_empty(spr_path)) {

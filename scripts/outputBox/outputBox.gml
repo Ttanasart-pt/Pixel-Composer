@@ -1,5 +1,6 @@
 function outputBox() : widget() constructor {
-	expand = false;
+	expand  = false;
+	shorted = false;
 	
 	static trigger = function() { }
 	
@@ -15,7 +16,7 @@ function outputBox() : widget() constructor {
 		
 		draw_set_text(font, fa_left, fa_top, COLORS._main_text_sub);
 		
-		if(string_length(_value) > 512) {
+		if(shorted || string_length(_value) > 512) {
 			var _hh  = string_height("l") + ui(16);
 			
 	        draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _y, _w, _hh, COLORS._main_icon_light);
@@ -69,7 +70,8 @@ function outputBox() : widget() constructor {
 }
 
 function outputStructBox() : widget() constructor {
-	expand = false;
+	expand  = false;
+	shorted = false;
 	
 	static trigger = function() { }
 	
@@ -84,6 +86,13 @@ function outputStructBox() : widget() constructor {
 		w = _w;
 		
 		draw_set_text(font, fa_left, fa_top, COLORS._main_text_sub);
+		
+		if(shorted) {
+			var _hh  = string_height("l") + ui(16);
+	        draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _y, _w, _hh, COLORS._main_icon_light);
+	        draw_text_add(_x + ui(8), _y + ui(8), "Output...");
+	        return _hh;
+		}
 		
 		var _txt = json_stringify(_value, true);
 		var _bh  = string_height("l");

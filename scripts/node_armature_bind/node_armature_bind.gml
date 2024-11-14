@@ -1,6 +1,6 @@
-function __armature_bind_data(_surface, _bone, _tran, _aang, _pang, _asca, _psca) constructor {
-	surface   =	new Surface(_surface);
-	bone      = _bone.ID;
+function __armature_bind_data(_surface, _bone = noone, _tran = 0, _aang = 0, _pang = 0, _asca = 0, _psca = 0) constructor {
+	surface   =	is_struct(_surface)? _surface : new Surface(_surface);
+	bone      = _bone == noone? noone : _bone.ID;
 	transform =	_tran;
 	applyRot  =	_aang;
 	applyRotl =	_pang;
@@ -19,6 +19,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		
 	newInput(2, nodeValue_Struct("Bind data", self, noone))
 		.setVisible(true, true)
+		.shortenDisplay()
 		.setArrayDepth(1); 
 		
 	newInput(3, nodeValue_Vec2("Bone transform", self, [ 0, 0 ]));
@@ -34,6 +35,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		.rejectArrayProcess();
 	
 	newOutput(2, nodeValue_Output("Bind data", self, VALUE_TYPE.struct, []))
+		.shortenDisplay()
 		.setArrayDepth(1);
 	
 	attribute_surface_depth();
@@ -482,7 +484,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		ds_stack_destroy(_bst);
 	}
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { 
 		if(isUsingTool("Pose")) { 
 			var _arm = inputs[1].value_from;
 			if(_arm == noone) return;
@@ -846,12 +848,13 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		var _dpos = _data[3];
 		var _dsca = _data[4];
 		var cDep  = attrDepth();
+		var use_data  = _bind != noone;
 		
 		setBone();
 		
 		//////////////////////////////////////////
 		
-		if(getInputAmount() == 0) return _outData;
+		if(!use_data && getInputAmount() == 0) return _outData;
 		dynamic_input_inspecting = clamp(dynamic_input_inspecting, 0, getInputAmount() - 1);
 		
 		overlay_w = _dim[0];
@@ -862,7 +865,6 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			surface_clear(temp_surface[i]);
 		}
 		
-		var use_data  = _bind != noone;
 		var imageAmo  = use_data? array_length(_bind) : (array_length(inputs) - input_fix_len) / data_length;
 		var _vis	  = attributes.layer_visible;
 		var _bg = 0, _s, _i;
@@ -876,13 +878,17 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			if(use_data) {
 				var _bdat = array_safe_get_fast(_bind, i);
 				if(is(_bdat, __armature_bind_data))
-					_s = _bdat.surface.get();
+					_s = _bdat.surface;
+					
+				if(is(_s, Surface)) 
+					_s = _s.get();
 				
 			} else
 				_s = array_safe_get_fast(_data, _i);
 			
 			if(is(_s, RiggedMeshedSurface)) {
 				meshBind(_s, _bg);
+				array_push(bind_data, new __armature_bind_data(_s));
 				continue;
 			}
 			
