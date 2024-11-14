@@ -166,3 +166,4 @@ function Panel_Patreon() : PanelContent() constructor {
 		draw_text(w / 2, _yy, result);
 	}
 }
+

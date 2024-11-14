@@ -147,7 +147,7 @@ function Panel_Menu() : PanelContent() constructor {
             zip_unzip("data/Assets.zip", DIRECTORY + "Assets");
         }),
         -1,
-        menuItem(__txtx("panel_menu_connect_patreon", "Connect to Patreon"),               function() { dialogPanelCall(new Panel_Patreon()); }, THEME.patreon),
+        menuItem(__txtx("panel_menu_connect_patreon", "Connect to Patreon"),               function() { dialogCall(o_dialog_patreon); /*dialogPanelCall(new Panel_Patreon());*/ }, THEME.patreon),
     ];
     
     menuItem_undo = MENU_ITEMS.undo;

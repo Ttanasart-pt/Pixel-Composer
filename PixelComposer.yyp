@@ -785,6 +785,7 @@
     {"id":{"name":"o_dialog_output_visibility","path":"objects/o_dialog_output_visibility/o_dialog_output_visibility.yy",},},
     {"id":{"name":"o_dialog_palette","path":"objects/o_dialog_palette/o_dialog_palette.yy",},},
     {"id":{"name":"o_dialog_panel","path":"objects/o_dialog_panel/o_dialog_panel.yy",},},
+    {"id":{"name":"o_dialog_patreon","path":"objects/o_dialog_patreon/o_dialog_patreon.yy",},},
     {"id":{"name":"o_dialog_preference","path":"objects/o_dialog_preference/o_dialog_preference.yy",},},
     {"id":{"name":"o_dialog_preset","path":"objects/o_dialog_preset/o_dialog_preset.yy",},},
     {"id":{"name":"o_dialog_release_note","path":"objects/o_dialog_release_note/o_dialog_release_note.yy",},},

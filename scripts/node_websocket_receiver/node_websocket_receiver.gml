@@ -25,7 +25,7 @@ function Node_Websocket_Receiver(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	socket = noone;
 	client = noone;
 	
-	function setPort() { #region
+	function setPort() {
 		
 		var _port = getInputData(0);
 		var _mode = getInputData(2);
@@ -55,11 +55,11 @@ function Node_Websocket_Receiver(_x, _y, _group = noone) : Node(_x, _y, _group) 
 			socket = network_create_server_raw(network_socket_ws, port, 16);
 			if(socket) NETWORK_SERVERS[? port] = socket;
 		}
-	} #endregion
+	}
 	
 	setInspector(1, __txt("Refresh Server"), [ THEME.refresh_icon, 1, COLORS._main_value_positive ], function() { setPort(); });
 	
-	static asyncPackets = function(_async_load) { #region
+	static asyncPackets = function(_async_load) {
 		if(!active) return;
 		
 		var _active = getInputData(1);
@@ -95,9 +95,9 @@ function Node_Websocket_Receiver(_x, _y, _group = noone) : Node(_x, _y, _group) 
 				network_trigger = true;
 				break;
 		}
-	} #endregion
+	}
 	
-	static step = function() { #region
+	static step = function() {
 		var _mode = getInputData(2);
 		
 		inputs[3].setVisible(_mode == 0);
@@ -109,14 +109,14 @@ function Node_Websocket_Receiver(_x, _y, _group = noone) : Node(_x, _y, _group) 
 			outputs[1].setValue(0);
 			network_trigger = 0;
 		}
-	} #endregion
+	}
 	
-	static update = function(frame = CURRENT_FRAME) { #region
+	static update = function(frame = CURRENT_FRAME) {
 		if(CLONING) return;
 		setPort();
-	} #endregion
+	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var _active = getInputData(1);
 		var bbox    = drawGetBbox(xx, yy, _s);
 		var network = ds_map_try_get(NETWORK_SERVERS, port, noone);
@@ -129,13 +129,14 @@ function Node_Websocket_Receiver(_x, _y, _group = noone) : Node(_x, _y, _group) 
 		var _y1 = bbox.y1 - ui(16);
 		var _ts = _s * 0.75;
 		
-		draw_set_text(f_code, fa_center, fa_top, COLORS._main_text);
-		draw_set_alpha(0.75);
+		draw_set_text(f_code, fa_center, fa_top, COLORS._main_text, 0.75);
 		draw_text_add(bbox.xc, bbox.y0, $"Port {port}", _ts);
+		
 		draw_set_valign(fa_bottom)
 		draw_text_add(bbox.xc, bbox.y1, $"{connected_device} " + __txt("Connected"), _ts);
+		
 		draw_set_alpha(1);
 		
 		draw_sprite_fit(THEME.node_websocket_receive, 0, bbox.xc, (_y0 + _y1) / 2, bbox.w, _y1 - _y0, cc, aa);
-	} #endregion
+	}
 }

@@ -107,12 +107,21 @@
 		
 		if(file_exists_empty("icon.png"))
 			file_copy("icon.png", DIRECTORY + "icon.png");
-	
+		
+		var _prg_path = $"{program_directory}PixelComposer.exe";
 		// var cmd = ".pxc=\"" + string(program_directory) + "PixelComposer.exe\"";
 		// shell_execute_async("assoc", cmd);
 	
 		// var cmd = ".pxcc=\"" + string(program_directory) + "PixelComposer.exe\"";
 		// shell_execute_async("assoc", cmd);
+		
+		// shell_execute_async("reg",  "ADD HKCU\\Software\\Classes\\pxc");
+		// shell_execute_async("reg",  "ADD HKCU\\Software\\Classes\\pxc /v \"URL Protocol\" /t REG_SZ");
+		// shell_execute_async("reg",  "ADD HKCU\\Software\\Classes\\pxc\\shell");
+		// shell_execute_async("reg",  "ADD HKCU\\Software\\Classes\\pxc\\shell\\open");
+		
+		// shell_execute_async("reg", $"DELETE HKCU\\Software\\Classes\\pxc\\shell\\open\\command");
+		// shell_execute_async("reg", $"ADD HKCU\\Software\\Classes\\pxc\\shell\\open\\command /t REG_SZ /d \"{_prg_path} -m %1\"");
 	}
 	
 	directory_set_current_working(DIRECTORY);

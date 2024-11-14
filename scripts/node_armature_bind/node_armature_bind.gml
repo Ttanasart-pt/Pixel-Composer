@@ -311,9 +311,12 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 					_tx += 22;
 				}
 				
-				draw_set_text(f_p2, fa_left, fa_center, tc);
-				draw_set_alpha(aa);
-				draw_text_add(_tx, _ty, inputs[_inp].name);
+				var _nam = inputs[_inp].name;
+				if(inputs[_inp].value_from != noone)
+					_nam = inputs[_inp].value_from.node.getDisplayName();
+				
+				draw_set_text(f_p2, fa_left, fa_center, tc, aa);
+				draw_text_add(_tx, _ty, _nam);
 				draw_set_alpha(1);
 				
 				if(_hover && point_in_rectangle(_m[0], _m[1], _x, _cy, _x + _w, _cy + lh)) {
