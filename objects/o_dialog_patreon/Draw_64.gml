@@ -32,15 +32,14 @@ if !ready exit;
 	var _bx = cx - _bw / 2;
 	var _by = yy + ui(104);
 	
-	if(buttonInstant(THEME.button_def, _bx, _by, _bw, _bh, mouse_ui, sFOCUS, sHOVER) == 2) {
-		var _url = @"www.patreon.com/oauth2/authorize?response_type=code
-&client_id=oZ1PNvUY61uH0FiA7ZPMBy77Xau3Ok9tfvsT_Y8DQwyKeMNjaVC35r1qsK09QJhY
-&redirect_uri=https://pixel-composer.com/verify";
-		_url += $"&state={port}";
-
-		url_open(_url);
-	}
+	// if(buttonInstant(THEME.button_def, _bx, _by, _bw, _bh, mouse_ui, sFOCUS, sHOVER) == 2) {}
 	
-	draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text);
-	draw_text(cx, _by + _bh / 2, "Sign-in with Patreon");
+	if(IS_PATREON) {
+		draw_set_text(f_p1, fa_center, fa_center, COLORS._main_value_positive);
+		draw_text(cx, _by + _bh / 2, "Patreon verified, thank you for supporting Pixel Composer!\nRestart to see new contents.");
+		
+	} else {
+		draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text);
+		draw_text(cx, _by + _bh / 2, "Sign-in to Patreon on browser");
+	}
 #endregion
