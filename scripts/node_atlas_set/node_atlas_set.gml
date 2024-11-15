@@ -19,7 +19,7 @@ function Node_Atlas_Set(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	newInput(7, nodeValue_Bool("Recalculate Position", self, true));
 	
-	newOutput(0, nodeValue_Output("Atlas", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Atlas", self, VALUE_TYPE.atlas, noone));
 	
 	input_display_list = [
 		0, 1, 2, 3, 7, 4, 5, 6, 

@@ -12,6 +12,7 @@ enum COMPOSE_OUTPUT_SCALING {
 
 function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Composite";
+	dimension_index = -1;
 	
 	newInput(0, nodeValue_Padding("Padding", self, [ 0, 0, 0, 0 ]));
 	
@@ -774,7 +775,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var base	  = _data[3];
 		var cDep	  = attrDepth();
 		
-		if(!is_surface(base)) return [ _outSurf, noone, [1, 1] ];
+		if(!is_surface(base)) return _outData;
 		
 		#region dimension 
 			var ww = 0, hh = 0;
@@ -784,6 +785,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 					ww = surface_get_width_safe(base);
 					hh = surface_get_height_safe(base);
 					break;
+					
 				case COMPOSE_OUTPUT_SCALING.largest :
 					for(var i = input_fix_len; i < array_length(_data) - data_length; i += data_length) {
 						var _s = _data[i];
@@ -791,6 +793,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 						hh = max(hh, surface_get_height_safe(_s));
 					}
 					break;
+					
 				case COMPOSE_OUTPUT_SCALING.constant :	
 					ww = _dim[0];
 					hh = _dim[1];
@@ -856,7 +859,10 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			draw_surface_safe(temp_surface[!_bg]);
 		surface_reset_shader();
 		
-		return [ _outSurf, _atlas, [ww, hh] ];
+		_outData[0] = _outSurf;
+		_outData[1] = _atlas;
+		_outData[2] = [ww, hh];
+		return _outData;
 	}
 	
 	static attributeSerialize = function() {

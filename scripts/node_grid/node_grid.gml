@@ -117,8 +117,20 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		inputs[8].mappableStep();
 	}
 	
+	static getDimension = function(_arr = 0) {
+		var _dim = getSingleValue( 0, _arr);
+		var _sam = getSingleValue( 7, _arr);
+		var _mod = getSingleValue(10, _arr);
+		var _txd = getSingleValue(25, _arr);
+		var _tex = _mod == 3 || _mod == 4;
+		
+		if(is_surface(_sam) && _tex && _txd) 
+			return surface_get_dimension(_sam);
+		return _dim;
+	}
+	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
-		var _dim  = _data[ 0];
+		var _dim  = surface_get_dimension(_outSurf);
 		var _pos  = _data[ 1];
 		var _sam  = _data[ 7];
 		var _mode = _data[10];
@@ -138,11 +150,6 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		
 		inputs[ 7].setVisible(_tex_mode, _tex_mode);
 		inputs[25].setVisible(_tex_mode, _tex_mode);
-		
-		var _tex_dim = is_surface(_sam) && _tex_mode && _data[25];
-		if(_tex_dim) _dim = surface_get_dimension(_sam);
-		
-		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
 		surface_set_shader(_outSurf, sh_grid);
 			shader_set_f("position",	_pos[0] / _dim[0], _pos[1] / _dim[1]);

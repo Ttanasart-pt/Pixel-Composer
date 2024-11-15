@@ -129,7 +129,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
 		
-	newOutput(1, nodeValue_Output("Atlas data", self, VALUE_TYPE.surface, []))
+	newOutput(1, nodeValue_Output("Atlas data", self, VALUE_TYPE.atlas, []))
 		.setVisible(false)
 		.rejectArrayProcess();
 	
@@ -146,8 +146,8 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	attribute_surface_depth();
 	attribute_interpolation();
 	
-	surface_size_map  = ds_map_create();
-	surface_valid_map = ds_map_create();
+	surface_size_map  = {};
+	surface_valid_map = {};
 	
 	scatter_data = [];
 	scatter_map  = noone;
@@ -294,8 +294,6 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 		var _in_w, _in_h;
 		
-		var _outSurf = _outData[0];
-		
 		var vSca = array_exists(useV, "Scale");
 		var vRot = array_exists(useV, "Rotation");
 		var vCol = array_exists(useV, "Color");
@@ -304,16 +302,16 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		if(surfArray && array_empty(_inSurf)) return _outData;
 		
 		#region cache value
-			ds_map_clear(surface_size_map);
-			ds_map_clear(surface_valid_map);
+			surface_size_map  = {};
+			surface_valid_map = {};
 			
 			if(!surfArray) {
-				surface_size_map[? _inSurf]  = surface_get_dimension(_inSurf);
-				surface_valid_map[? _inSurf] = is_surface(_inSurf);
+				surface_size_map[$ _inSurf]  = surface_get_dimension(_inSurf);
+				surface_valid_map[$ _inSurf] = is_surface(_inSurf);
 			} else {
 				for( var i = 0, n = array_length(_inSurf); i < n; i++ ) {
-					surface_size_map[? _inSurf[i]]  = surface_get_dimension(_inSurf[i]);
-					surface_valid_map[? _inSurf[i]] = is_surface(_inSurf[i]);
+					surface_size_map[$ _inSurf[i]]  = surface_get_dimension(_inSurf[i]);
+					surface_valid_map[$ _inSurf[i]] = is_surface(_inSurf[i]);
 				}
 			}
 			
@@ -354,7 +352,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			}
 		
 			var _sed     = seed;
-			var _sct     = array_create(_amount);
+			var _sct     = array_verify(_outData[1], _amount);
 			var _sct_len = 0;
 			var _arrLen  = array_safe_length(_inSurf);
 		
@@ -372,11 +370,12 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var _clrSin = color.evalFast(0);
 			
 			var _useAtl = outputs[1].visible;
-			
 			var _datLen = array_length(scatter_data);
 			
 			var _p = [ 0, 0 ];
 		#endregion
+		
+		var _outSurf = _outData[0];
 		
 		surface_set_target(_outSurf);
 			gpu_set_tex_filter(getAttribute("interpolate"));
@@ -408,7 +407,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				var _scx = _scaUniX? _scale[0] : random_range_seed(_scale[0], _scale[1], _sed++);
 				var _scy = _scaUniY? _scale[2] : random_range_seed(_scale[2], _scale[3], _sed++); 
 				
-				switch(_dist) { #region position
+				switch(_dist) { // position
 					case NODE_SCATTER_DIST.area : 
 						if(_scat == 0) {
 							var _axc = _area[AREA_INDEX.center_x];
@@ -513,8 +512,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 							_y = random_range_seed(0, _dim[1], _sed++);
 						}
 						break;
-						
-				} #endregion
+				}
 				
 				if(_wigX) _x += random_range_seed(posWig[0], posWig[1], _sed++);
 				if(_wigY) _y += random_range_seed(posWig[2], posWig[3], _sed++);
@@ -585,9 +583,9 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					surf = array_safe_get_fast(_inSurf, ind, 0); 
 				}
 				
-				if(surf == 0 || !surface_valid_map[? surf]) continue;
+				if(surf == 0 || !surface_valid_map[$ surf]) continue;
 				
-				var dim = surface_size_map[? surf];
+				var dim = surface_size_map[$ surf];
 				var sw  = dim[0];
 				var sh  = dim[1];
 				
@@ -683,6 +681,9 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 		scatter_data = _sct;
 		
-		return [ _outSurf, _sct ];
+		_outData[0] = _outSurf;
+		_outData[1] = _sct;
+		
+		return _outData;
 	}
 }

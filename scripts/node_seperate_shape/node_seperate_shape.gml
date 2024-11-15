@@ -21,7 +21,7 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		
 	newOutput(0, nodeValue_Output("Surface out",	self, VALUE_TYPE.surface, noone));
 	
-	newOutput(1, nodeValue_Output("Atlas",	self, VALUE_TYPE.surface, []));
+	newOutput(1, nodeValue_Output("Atlas",	self, VALUE_TYPE.atlas, []));
 	
 	input_display_list = [
 		["Shape",	false], 0, 5, 1, 4,

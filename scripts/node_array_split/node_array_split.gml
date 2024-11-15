@@ -26,13 +26,19 @@ function Node_Array_Split(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		for (var i = 0; i < amo; i++) {
 			if(i >= array_length(outputs))
-				newOutput(i, nodeValue_Output($"val {i}", self, type, 0))
-			
+				newOutput(i, nodeValue_Output($"val {i}", self, type, 0));
 			outputs[i].setValue(_inp[i]);
 		}
 		
-		while(array_length(outputs) > amo)
-			array_delete(outputs, array_length(outputs) - 1, 1);
+		var _rem = array_length(outputs);
+		for(var i = amo; i < _rem; i++) {
+			var _to = outputs[i].getJunctionTo();
+			
+			for( var j = 0, m = array_length(_to); j < m; j++ ) 
+				_to[j].removeFrom();
+		}
+		
+		array_resize(outputs, amo);
 		
 		for (var i = 0, n = amo; i < n; i++) {
 			outputs[i].index = i;
@@ -46,10 +52,10 @@ function Node_Array_Split(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	static preApplyDeserialize = function() {
 		if(!struct_has(attributes, "output_amount")) return;
 		
-		var _outAmo = attributes.output_amount;
+		var _amo = attributes.output_amount;
 		var _ind = 0;
 		
-		repeat(_outAmo) {
+		repeat(_amo) {
 			newOutput(_ind, nodeValue_Output($"val {_ind}", self, VALUE_TYPE.any, 0));
 			_ind++;
 		}

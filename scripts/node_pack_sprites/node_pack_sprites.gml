@@ -13,7 +13,7 @@ function Node_Pack_Sprites(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	newOutput(0, nodeValue_Output("Packed image", self, VALUE_TYPE.surface, noone));
 	
-	newOutput(1, nodeValue_Output("Atlas data", self, VALUE_TYPE.surface, []));
+	newOutput(1, nodeValue_Output("Atlas data", self, VALUE_TYPE.atlas, []));
 	
 	input_display_list = [ 0, 4, 1, 2, 3 ];
 	

@@ -88,6 +88,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var _atlas  = false;
 		var _pAtl   = noone;
 		var _data   = [];
+		var _dep    = attrDepth();
 		
 		if(process_amount == 1) { // render single data
 			if(_output.type == VALUE_TYPE.d3object) //passing 3D vertex call
@@ -112,6 +113,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 							_sh = surface_get_height_safe(surf);
 						} else 
 							return noone;
+							
 					} else if(is_array(surf)) {
 						_sw = array_safe_get_fast(surf, 0, 1);
 						_sh = array_safe_get_fast(surf, 1, 1);
@@ -120,10 +122,10 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 					if(is_instanceof(_out, SurfaceAtlas)) {
 						if(manage_atlas) {
 							surface_free_safe(_out.getSurface())
-							_out = surface_verify(_out.getSurface(), _sw, _sh, attrDepth());
+							_out = surface_verify(_out.getSurface(), _sw, _sh, _dep);
 						}
 					} else
-						_out = surface_verify(_out, _sw, _sh, attrDepth());
+						_out = surface_verify(_out, _sw, _sh, _dep);
 				}
 			}
 			
@@ -184,11 +186,11 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 					if(is_instanceof(_out[l], SurfaceAtlas)) {
 						if(manage_atlas) {
 							surface_free_safe(_out[l].surface.surface)
-							_out[l] = surface_verify(_out[l].getSurface(), _sw, _sh, attrDepth());
+							_out[l] = surface_verify(_out[l].getSurface(), _sw, _sh, _dep);
 						}
 						
 					} else
-						_out[l] = surface_verify(_out[l], _sw, _sh, attrDepth());
+						_out[l] = surface_verify(_out[l], _sw, _sh, _dep);
 				}
 			} #endregion
 			
@@ -242,9 +244,10 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			
 			if(dimension_index > -1) {
 				var _dim = getDimension();
-				
 				for(var i = 0; i < _os; i++) {
-					if(outputs[i].type == VALUE_TYPE.surface) _out[i] = surface_verify(_out[i], _dim[0], _dim[1], _dep);
+					if(outputs[i].type != VALUE_TYPE.surface) continue;
+					
+					_out[i] = surface_verify(_out[i], _dim[0], _dim[1], _dep);
 				}
 			}
 			
@@ -280,13 +283,16 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 					
 				if(l == 0 || l == preview_index) current_data = _inputs;
 				
-				var _dim  = getDimension(l);
 				var _outa = array_create(_os);
-				
+				var _dim  = getDimension(l);
+					
 				for(var i = 0; i < _os; i++) {
 					_outa[i] = array_safe_get(_out[i], l);
-					if(outputs[i].type == VALUE_TYPE.surface) 
-						_outa[i] = surface_verify(_outa[i], _dim[0], _dim[1], _dep);
+					
+					if(dimension_index == -1) continue;
+					if(outputs[i].type != VALUE_TYPE.surface) continue;
+					
+					_outa[i] = surface_verify(_outa[i], _dim[0], _dim[1], _dep);
 				}
 				
 				if(_os == 1) {
