@@ -1,4 +1,4 @@
-function draw_line_curve_color(x0, y0, x1, y1, xc = noone, yc = noone, _s = 1, thick = 1, col1 = c_white, col2 = c_white, type = LINE_STYLE.solid) { #region
+function draw_line_curve_color(x0, y0, x1, y1, xc = noone, yc = noone, _s = 1, thick = 1, col1 = c_white, col2 = c_white, type = LINE_STYLE.solid) {
 	if(xc == noone) xc = (x0 + x1) / 2;
 	if(yc == noone) yc = (y0 + y1) / 2;
 	
@@ -48,9 +48,9 @@ function draw_line_curve_color(x0, y0, x1, y1, xc = noone, yc = noone, _s = 1, t
 		oy = ny;
 		oc = nc;
 	}
-} #endregion
+}
 
-function draw_line_curve_corner(x0, y0, x1, y1, _s = 1, thick = 1, col1 = c_white, col2 = c_white) { #region
+function draw_line_curve_corner(x0, y0, x1, y1, _s = 1, thick = 1, col1 = c_white, col2 = c_white) {
 	var sample = ceil((abs(x0 - x1) + abs(y0 - y1)) / 32 * PREFERENCES.connection_line_sample);
 	sample = clamp(sample, 2, 128);
 	
@@ -84,9 +84,9 @@ function draw_line_curve_corner(x0, y0, x1, y1, _s = 1, thick = 1, col1 = c_whit
 		oy = ny;
 		oc = nc;
 	}
-} #endregion
+}
 
-function distance_to_curve(mx, my, x0, y0, x1, y1, xc, yc, _s) { #region
+function distance_to_curve(mx, my, x0, y0, x1, y1, xc, yc, _s) {
 	var sample = ceil((abs(x0 - x1) + abs(y0 - y1)) / 32 * PREFERENCES.connection_line_sample);
 	sample = clamp(sample, 2, 128);
 	
@@ -122,9 +122,9 @@ function distance_to_curve(mx, my, x0, y0, x1, y1, xc, yc, _s) { #region
 	}
 	
 	return dist;
-} #endregion
+}
 
-function distance_to_curve_corner(mx, my, x0, y0, x1, y1, _s) { #region
+function distance_to_curve_corner(mx, my, x0, y0, x1, y1, _s) {
 	var sample = ceil((abs(x0 - x1) + abs(y0 - y1)) / 32 * PREFERENCES.connection_line_sample);
 	sample = clamp(sample, 2, 128);
 	
@@ -158,4 +158,4 @@ function distance_to_curve_corner(mx, my, x0, y0, x1, y1, _s) { #region
 	}
 	
 	return dist;
-} #endregion
+}

@@ -27,19 +27,30 @@ if !ready exit;
 	
 	draw_sprite(s_patreon_banner, 0, cx, yy);
 	
-	var _bw = ui(172);
+	var _bw = ui(100);
 	var _bh = ui(32);
 	var _bx = cx - _bw / 2;
-	var _by = yy + ui(104);
+	var _by = dialog_y + dialog_h - ui(16 + 32);
 	
-	// if(buttonInstant(THEME.button_def, _bx, _by, _bw, _bh, mouse_ui, sFOCUS, sHOVER) == 2) {}
+	var _ty = yy + ui(120);
 	
 	if(IS_PATREON) {
 		draw_set_text(f_p1, fa_center, fa_center, COLORS._main_value_positive);
-		draw_text(cx, _by + _bh / 2, "Patreon verified, thank you for supporting Pixel Composer!\nRestart to see new contents.");
+		draw_text(cx, _ty, txt);
+		
+		if(buttonInstant(THEME.button_def, _bx, _by, _bw, _bh, mouse_ui, sFOCUS, sHOVER) == 2) {
+			var _path = DIRECTORY + "patreon";
+			file_delete(_path);
+			IS_PATREON = false;
+			
+			instance_destroy();
+		}
+		
+		draw_set_text(f_p2, fa_center, fa_center, COLORS._main_text);
+		draw_text(cx, _by + _bh / 2, "Unredeem");
 		
 	} else {
-		draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text);
-		draw_text(cx, _by + _bh / 2, "Sign-in to Patreon on browser");
+		draw_set_text(f_p1, fa_center, fa_center, status == 0? COLORS._main_text : COLORS._main_value_negative);
+		draw_text(cx, _ty, txt);
 	}
 #endregion

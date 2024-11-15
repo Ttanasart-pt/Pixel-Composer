@@ -184,16 +184,18 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			
 			PANEL_GRAPH.addKeyOverlay("Inline group", [[ "Shift", "Add/remove" ]]);
 			
-			if(key_mod_down(SHIFT)) {
-				if(group_hovering) {
+			if(!array_empty(_list) && key_mod_down(SHIFT)) {
+				var _remove = _list[0].inline_context == self;
+				
+				if(_remove) {
+					for( var i = 0, n = array_length(_list); i < n; i++ )
+						if(_list[i].manual_ungroupable) removeNode(_list[i]);
+				} else {
 					group_adding = true;
 					for( var i = 0, n = array_length(_list); i < n; i++ )
 						if(_list[i].manual_ungroupable) addNode(_list[i]);
 					
-				} else {
-					for( var i = 0, n = array_length(_list); i < n; i++ )
-						if(_list[i].manual_ungroupable) removeNode(_list[i]);
-				}
+				} 
 			}
 		}
 		

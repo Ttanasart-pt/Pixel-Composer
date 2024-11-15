@@ -20,11 +20,13 @@ function Node_Path_Profile(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	newInput(8, nodeValue_Color("BG Color", self, c_black ));
 	
+	newInput(9, nodeValue_Enum_Button("Fill", self, 0, [ "Odd", "All" ] ));
+	
 	newOutput(0, nodeValue_Output("Output", self, VALUE_TYPE.surface, noone ));
 	
 	input_display_list = [ 0,
 		[ "Profile",    false ], 1, 2, 
-		[ "Render",     false ], 3, 5, 4, 6, 
+		[ "Render",     false ], 9, 3, 5, 4, 6, 
 		[ "Background", false, 7 ], 8, 
 	];
 	
@@ -48,6 +50,7 @@ function Node_Path_Profile(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var _aa   = _data[6];
 		var _bg   = _data[7];
 		var _bgC  = _data[8];
+		var _mode = _data[9];
 		
 		if(_path == noone) return;
 		
@@ -72,6 +75,7 @@ function Node_Path_Profile(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			shader_set_i("aa",		   _aa);
 			shader_set_color("color",  _colr);
 			shader_set_i("bg",		   _bg);
+			shader_set_i("mode",	   _mode);
 			shader_set_color("bgColor",_bgC);
 			
 			draw_sprite_stretched(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1]);

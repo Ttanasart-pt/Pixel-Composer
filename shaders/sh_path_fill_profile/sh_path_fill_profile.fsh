@@ -16,6 +16,7 @@ uniform int  side;
 uniform int  mirror;
 uniform int  aa;
 uniform int  bg;
+uniform int  mode;
 
 void main() {
 	vec2  px = v_vTexcoord * dimension;
@@ -60,7 +61,12 @@ void main() {
 		ds = min(ds, abs(px.x - _x));
 	}
 	
-	if(mod(it, 2.) == 1.) {
+	bool fill = false;
+	
+		 if(mode == 0) fill = mod(it, 2.) == 1.;
+	else if(mode == 1) fill = it > 0.;
+	
+	if(fill) {
 		gl_FragColor = color;
 		if(aa == 1) gl_FragColor.a *= min(1., ds);
 	}

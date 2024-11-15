@@ -1,8 +1,6 @@
 function draw_line_elbow_color(x0, y0, x1, y1, cx = noone, cy = noone, _s = 1, thick = 1, col1 = c_white, col2 = c_white, params = {}) {
 	var extend    = params.extend;
     var corner    = min(extend, params.corner);
-	var indexIn   = params.fromIndex;
-	var indexOut  = params.toIndex;
 	var type      = params.type;
 	
 	if(cx == noone) cx = (x0 + x1) / 2;
@@ -13,7 +11,7 @@ function draw_line_elbow_color(x0, y0, x1, y1, cx = noone, cy = noone, _s = 1, t
 	var _y0 = min(y0, y1);	
 	var _y1 = max(y0, y1);
 	var th  = thick / 2;
-	var inv = x1 - 16 * indexOut * _s <= x0 + 16 * indexIn * _s;
+	var inv = x1 <= x0;
 	var rat = inv?  (_y1 == _y0? 0.5 : (cy - _y0) / (_y1 - _y0)) : 
 					(_x1 == _x0? 0.5 : (cx - _x0) / (_x1 - _x0));
 	var cm  = merge_color(col1, col2, clamp(rat, 0, 1));
@@ -26,8 +24,8 @@ function draw_line_elbow_color(x0, y0, x1, y1, cx = noone, cy = noone, _s = 1, t
 	var iy1 = sign(y1 - cy);
 	
 	if(y0 != y1 && inv) {
-		var xx0 = x0 + 16 * _s * indexIn;
-		var xx1 = x1 - 16 * _s * indexOut;
+		var xx0   = x0;
+		var xx1   = x1;
 		var corns = min(corner, 16 * _s); 
 		corner = min(corner, abs(cy - y0) / 2, abs(cy - y1) / 2, abs(xx1 - xx0) / 2);
 		
@@ -79,8 +77,6 @@ function draw_line_elbow_color(x0, y0, x1, y1, cx = noone, cy = noone, _s = 1, t
 function draw_line_elbow_corner(x0, y0, x1, y1, _s = 1, thick = 1, col1 = c_white, col2 = c_white, params = {}) {
 	var extend    = params.extend;
     var corner    = min(extend, params.corner);
-	var indexIn   = params.fromIndex;
-	var indexOut  = params.toIndex;
 	var type      = params.type;
 	
 	var sample = clamp(corner / 4, 1, 8);
@@ -99,12 +95,10 @@ function draw_line_elbow_corner(x0, y0, x1, y1, _s = 1, thick = 1, col1 = c_whit
 
 function distance_to_elbow(mx, my, x0, y0, x1, y1, cx, cy, _s, params = {}) {
 	var extend    = params.extend;
-	var indexIn   = params.fromIndex;
-	var indexOut  = params.toIndex;
 	
-	var inv = x1 - extend * _s * indexOut <= x0 + extend * _s * indexIn;
-	var xx0 = x0 + extend * _s * indexIn;
-	var xx1 = x1 - extend * _s * indexOut;
+	var inv = x1 <= x0;
+	var xx0 = x0;
+	var xx1 = x1;
 		
 	if(y0 != y1 && inv) {
 		var dist =	     distance_to_line(mx, my, xx0, y0, xx0, cy);

@@ -1,8 +1,6 @@
 function draw_line_elbow_diag_color(x0, y0, x1, y1, cx = noone, cy = noone, _s = 1, thick = 1, c1 = c_white, c2 = c_white, params = {}) {
 	var extend    = params.extend;
     var corner    = min(extend, params.corner);
-	var indexIn   = params.fromIndex;
-	var indexOut  = params.toIndex;
 	var type      = params.type;
 	
 	var __dash = 6 * _s;
@@ -19,8 +17,8 @@ function draw_line_elbow_diag_color(x0, y0, x1, y1, cx = noone, cy = noone, _s =
 	
 	var iy  = sign(y1 - y0);
 	
-	var xx0 = x0 + extend * _s * indexIn;
-	var xx1 = x1 - extend * _s * indexOut;
+	var xx0 = x0;
+	var xx1 = x1;
 	var yy0 = y0;
 	var yy1 = y1;
 	
@@ -212,8 +210,6 @@ function draw_line_elbow_diag_color(x0, y0, x1, y1, cx = noone, cy = noone, _s =
 function draw_line_elbow_diag_corner(x0, y0, x1, y1, _s = 1, thick = 1, col1 = c_white, col2 = c_white, params = {}) {
 	var extend    = params.extend;
     var corner    = min(extend, params.corner);
-	var indexIn   = params.fromIndex;
-	var indexOut  = params.toIndex;
 	var type      = params.type;
 	
 	var sample = floor(corner / 8);
@@ -240,12 +236,10 @@ function draw_line_elbow_diag_corner(x0, y0, x1, y1, _s = 1, thick = 1, col1 = c
 
 function distance_to_elbow_diag(mx, my, x0, y0, x1, y1, cx, cy, _s, params = {}) {
 	var extend    = params.extend;
-	var indexIn   = params.fromIndex;
-	var indexOut  = params.toIndex;
 	
 	var iy  = sign(y1 - y0);
-	var xx0 = x0 + extend * _s * indexIn;
-	var xx1 = x1 - extend * _s * indexOut;
+	var xx0 = x0;
+	var xx1 = x1;
 	var yy0 = y0;
 	var yy1 = y1;
 		

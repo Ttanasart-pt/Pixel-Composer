@@ -1715,13 +1715,17 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(setFrom_condition != -1 && !setFrom_condition(_valueFrom)) 
 			return -2;
 		
-		if(value_from != noone)
-			array_remove(value_from.value_to, self);
+		if(value_from != noone) array_remove(value_from.value_to, self);
 		
 		var _o = animator.getValue();
 		recordAction(ACTION_TYPE.junction_connect, self, value_from);
 		value_from = _valueFrom;
 		array_push(_valueFrom.value_to, self);
+		
+		if(_valueFrom.node.inline_context != noone) {
+			var _inline = _valueFrom.node.inline_context;
+			if(node.manual_ungroupable) _inline.addNode(node);
+		}
 		
 		node.valueUpdate(index, _o);
 		if(_update && connect_type == CONNECT_TYPE.input) {
@@ -1736,7 +1740,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		cache_array[0] = false;
 		cache_value[0] = false;
 		
-		if(!LOADING) {
+		if(!LOADING && !APPENDING && !CLONING) {
 			draw_line_shift_x	= 0;
 			draw_line_shift_y	= 0;
 			PROJECT.modified	= true;
@@ -2404,9 +2408,6 @@ function drawJuncConnection(from, to, params) {
 			
 		var frx = from.x;
 		var fry = from.y;
-			
-		var fromIndex = from.drawLineIndex;
-		var toIndex   = to.drawLineIndex;
 		
 		var _loop = struct_try_get(params, "loop");
 		
@@ -2439,8 +2440,6 @@ function drawJuncConnection(from, to, params) {
 	#region +++++ CHECK HOVER +++++
 		var _drawParam = {
 			extend :    PREFERENCES.connection_line_extend,
-			fromIndex : fromIndex,
-			toIndex :   toIndex,
 		}
 		var hovDist = max(th * 2, 6);
 		
