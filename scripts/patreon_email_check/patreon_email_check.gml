@@ -25,6 +25,7 @@ function patreon_create_verification_code(code) {
 	_map[? "code"] = code;
 	
 	ds_map_secure_save(_map, _path);
+	IS_PATREON = true;
 }
 
 function __initPatreon() {

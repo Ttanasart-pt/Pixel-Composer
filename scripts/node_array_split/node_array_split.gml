@@ -11,11 +11,12 @@ function Node_Array_Split(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	attributes.output_amount = 1;
 	
+	io_pool = [];
+	
 	static update = function() {
 		var _inp = getInputData(0);
 		var type = inputs[0].value_from == noone? VALUE_TYPE.any : inputs[0].value_from.type;
 		inputs[0].setType(type);
-		inputs[0].resetDisplay();
 		
 		if(!is_array(_inp)) {
 			attributes.output_amount = 0;
@@ -25,8 +26,15 @@ function Node_Array_Split(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var amo = array_length(_inp);
 		
 		for (var i = 0; i < amo; i++) {
-			if(i >= array_length(outputs))
-				newOutput(i, nodeValue_Output($"val {i}", self, type, 0));
+			if(i >= array_length(outputs)) {
+				var _pl = array_safe_get(io_pool, i, 0);
+				if(_pl == 0) _pl = nodeValue_Output($"val {i}", self, type, 0);
+				
+				newOutput(i, _pl);
+				io_pool[i] = _pl;
+			}
+			
+			outputs[i].setType(type);
 			outputs[i].setValue(_inp[i]);
 		}
 		
@@ -56,7 +64,9 @@ function Node_Array_Split(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _ind = 0;
 		
 		repeat(_amo) {
-			newOutput(_ind, nodeValue_Output($"val {_ind}", self, VALUE_TYPE.any, 0));
+			var _pl = nodeValue_Output($"val {_ind}", self, VALUE_TYPE.any, 0);
+			newOutput(_ind, _pl);
+			io_pool[_ind] = _pl;
 			_ind++;
 		}
 	}

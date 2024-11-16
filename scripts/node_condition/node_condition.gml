@@ -4,7 +4,8 @@ function Node_Condition(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	setDimension(96, 48);
 	
 	newInput(0, nodeValue_Float("Check value", self, 0 ))
-		.setVisible(true, true);
+		.setVisible(true, true)
+		.rejectArray();
 		
 	newInput(1, nodeValue_Enum_Scroll("Condition", self,  0 , [ new scrollItem("Equal",             s_node_condition_type, 0), 
 												                new scrollItem("Not equal",         s_node_condition_type, 1), 
@@ -42,7 +43,7 @@ function Node_Condition(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	newOutput(0, nodeValue_Output("Result", self, VALUE_TYPE.any, []));
 	newOutput(1, nodeValue_Output("Bool", self, VALUE_TYPE.boolean, false));
 	
-	static step = function() { #region
+	static step = function() {
 		var _mode = getInputData(5);
 		
 		inputs[0].setVisible(_mode == 1, _mode == 1);
@@ -54,9 +55,9 @@ function Node_Condition(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		inputs[3].setType(inputs[3].value_from == noone? VALUE_TYPE.any : inputs[3].value_from.type);
 		inputs[4].setType(inputs[4].value_from == noone? VALUE_TYPE.any : inputs[4].value_from.type);
-	} #endregion
+	}
 	
-	static update = function(frame = CURRENT_FRAME) { #region
+	static update = function(frame = CURRENT_FRAME) {
 		var _true = getInputData(3);
 		var _fals = getInputData(4);
 		
@@ -97,9 +98,9 @@ function Node_Condition(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		}
 		
 		outputs[1].setValue(res);
-	} #endregion
+	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var val = outputs[1].getValue();
 		var frm = val? inputs[3] : inputs[4];
 		var to  = outputs[0];
@@ -109,5 +110,5 @@ function Node_Condition(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		draw_set_alpha(0.5);
 		draw_line_width(frm.x, frm.y, to.x, to.y, _s * 4);
 		draw_set_alpha(1);
-	} #endregion
+	}
 }

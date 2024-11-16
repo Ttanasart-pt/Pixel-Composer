@@ -774,7 +774,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		__temp_panel = panel;
 		
 		if(PREFERENCES.graph_open_group_in_tab) 
-			run_in(1, function() { __temp_panel.openGroupTab(self) });
+			run_in(1, function() /*=>*/ { __temp_panel.open_group_tab(self) });
 		else
 			panel.addContext(self);
 	}

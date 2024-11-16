@@ -106,11 +106,13 @@ function setException() {
 		
 		var tt = "";
 		tt += $"\n-------------------------- Pixel Composer {VERSION_STRING} Crashed --------------------------\n";
-		tt += "\n" + ex.longMessage;
-		tt += "\n" + ex.script;
+		tt += $"\n{ex.longMessage}";
+		tt += $"\n{ex.script}";
+		
 		tt += "\n\n-------------------------- STACK TRACE --------------------------\n\n";
 		for( var i = 0, n = array_length(ex.stacktrace); i < n; i++ )
-			tt += ex.stacktrace[i] + "\n";
+			tt += $"{ex.stacktrace[i]}\n";
+			
 		tt += "\n\n\n\n-------------------------- Device Info --------------------------\n";
 		tt += $"\nVersion: {VERSION_STRING} ({VERSION})";
 		tt += $"\nOperating system: {os_type_sting()} ({os_version})"

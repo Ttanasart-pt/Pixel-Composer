@@ -10,6 +10,7 @@ event_inherited();
 	campaign_id  = "2263128";
 	req_patreon  = "";
 	req_user     = "";
+	req_member   = {};
 	access_token = "";
 	
 	status = 0;
@@ -27,9 +28,12 @@ event_inherited();
 			server = network_create_server_raw(network_socket_ws, port, 32);
 		} until(server >= 0 || attmp++ >= 100);
 		
-		var _url = @"www.patreon.com/oauth2/authorize?response_type=code
-&client_id=oZ1PNvUY61uH0FiA7ZPMBy77Xau3Ok9tfvsT_Y8DQwyKeMNjaVC35r1qsK09QJhY
-&redirect_uri=https://pixel-composer.com/verify";
+		var _url = @"www.patreon.com/oauth2/authorize";
+		
+		_url +=  "?response_type=code";
+		_url +=  "&client_id=oZ1PNvUY61uH0FiA7ZPMBy77Xau3Ok9tfvsT_Y8DQwyKeMNjaVC35r1qsK09QJhY";
+		_url +=  "&redirect_uri=https://pixel-composer.com/verify";
+		_url +=  "&scope=identity campaigns.members";
 		_url += $"&state={port}";
 		
 		url_open(_url);

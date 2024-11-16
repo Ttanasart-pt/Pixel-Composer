@@ -148,8 +148,10 @@ function Panel_Patreon() : PanelContent() constructor {
 					if(code == verify_code) {
 						result = "Patreon verified, thank you for suporting Pixel Composer!";
 						result_color = COLORS._main_value_positive;
-						patreon_create_verification_key(mail, verify_code);
-						IS_PATREON = true;
+						
+						patreon_create_verification_code($"pxc_legacy");
+				    	IS_PATREON = true;
+				    	
 					} else {
 						result = "Incorrect code.";
 						result_color = COLORS._main_value_negative;
