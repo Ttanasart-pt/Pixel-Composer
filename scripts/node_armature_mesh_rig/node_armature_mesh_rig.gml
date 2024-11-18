@@ -50,14 +50,14 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		
 		var amo = _b.childCount();
 		var _hh = ui(28);
-		var bh  = ui(32 + 16) + amo * _hh;
+		var _bh = ui(32 + 16) + amo * _hh;
 		var ty  = _y;
 		
 		draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
 		draw_text_add(_x + ui(16), ty + ui(4), __txt("Bones"));
 		ty += ui(28);
 		
-		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, ty, _w, bh - ui(32), COLORS.node_composite_bg_blend, 1);
+		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, ty, _w, _bh - ui(32), COLORS.node_composite_bg_blend, 1);
 		ty += ui(8);
 		
 		var hovering = noone;
@@ -116,7 +116,7 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		
 		ds_stack_destroy(_bst);
 		
-		layer_renderer.h = bh;
+		layer_renderer.h = _bh;
 		return layer_renderer.h;
 
 	});

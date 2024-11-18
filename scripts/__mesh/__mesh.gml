@@ -2,7 +2,7 @@ function Mesh() constructor {
 	triangles = [];
 	center    = [ 0, 0 ];
 	
-	static getRandomPoint = function(seed) { #region
+	static getRandomPoint = function(seed) {
 		random_set_seed(seed);
 		if(array_length(triangles) == 0) return [ 0, 0 ];
 		
@@ -18,9 +18,9 @@ function Mesh() constructor {
 		var _y = (1 - sqrt(a1)) * p0.y + (sqrt(a1) * (1 - a2)) * p1.y + (sqrt(a1) * a2) * p2.y;
 		
 		return new __vec2( _x, _y );
-	} #endregion
+	}
 	
-	static draw = function(_x, _y, _s) { #region
+	static draw = function(_x, _y, _s) {
 		for( var i = 0, n = array_length(triangles); i < n; i++ ) {
 			var t = triangles[i];
 			
@@ -28,9 +28,9 @@ function Mesh() constructor {
 			draw_line(_x + t[1].x * _s, _y + t[1].y * _s, _x + t[2].x * _s, _y + t[2].y * _s);
 			draw_line(_x + t[0].x * _s, _y + t[0].y * _s, _x + t[2].x * _s, _y + t[2].y * _s);
 		}
-	} #endregion
+	}
 	
-	static pointIn = function(_x, _y) { #region
+	static pointIn = function(_x, _y) {
 		for( var i = 0, n = array_length(triangles); i < n; i++ ) {
 			var t = triangles[i];
 			
@@ -39,9 +39,9 @@ function Mesh() constructor {
 		}
 		
 		return false;
-	} #endregion
+	}
 	
-	static mergePath = function() { #region
+	static mergePath = function() {
 		if(array_length(triangles) == 0) return [];
 		
 		var segments	= [];
@@ -96,9 +96,9 @@ function Mesh() constructor {
 		
 		ds_map_destroy(pointsPairs);
 		return path;
-	} #endregion
+	}
 	
-	static clone = function() { #region
+	static clone = function() {
 		var msh = new Mesh();
 		
 		for( var i = 0, n = array_length(triangles); i < n; i++ ) {
@@ -112,9 +112,9 @@ function Mesh() constructor {
 		msh.center = [ center[0], center[1] ];
 		
 		return msh;
-	} #endregion
+	}
 	
-	static calcCoM = function() { #region
+	static calcCoM = function() {
 		var _ax = 0, _ay = 0;
 		var _p  = 0;
 		
@@ -132,7 +132,7 @@ function Mesh() constructor {
 		if(_p == 0) return;
 		
 		center = [ _ax / _p, _ay / _p ];
-	} #endregion
+	}
 	
 	static serialize   = function()  { return ""; }
 	static deserialize = function(s) { return self; }

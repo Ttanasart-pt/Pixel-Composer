@@ -409,10 +409,8 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		}
 		
 		if(isUsingTool("Edit control point")) {
-			if(key_mod_press(SHIFT))
-				draw_sprite_ui_uniform(THEME.cursor_path_remove, 0, _mx + 16, _my + 16);
-			else
-				draw_sprite_ui_uniform(THEME.cursor_path_add, 0, _mx + 16, _my + 16);
+			if(key_mod_press(SHIFT)) draw_sprite_ui_uniform(THEME.cursor_path_remove, 0, _mx + 16, _my + 16);
+			else                     draw_sprite_ui_uniform(THEME.cursor_path_add,    0, _mx + 16, _my + 16);
 			
 			if(mouse_press(mb_left, active)) {
 				if(_hover == -1) {
@@ -439,17 +437,17 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			draw_circle_prec(_mx, _my, rad, true);
 			var _xx = (_mx - _x) / _s;
 			var _yy = (_my - _y) / _s;
+			var _rr = rad / _s;
 			
 			if(mouse_click(mb_left, active)) {
+				var _pin = !key_mod_press(SHIFT);
+				
 				for(var j = 0; j < array_length(mesh_data.tris); j++) {
 					var t = mesh_data.tris[j];
 					
-					if(point_in_circle(t.p0.x, t.p0.y, _xx, _yy, rad / _s))
-						t.p0.setPin(!key_mod_press(SHIFT));
-					if(point_in_circle(t.p1.x, t.p1.y, _xx, _yy, rad / _s))
-						t.p1.setPin(!key_mod_press(SHIFT));
-					if(point_in_circle(t.p2.x, t.p2.y, _xx, _yy, rad / _s))
-						t.p2.setPin(!key_mod_press(SHIFT));
+					if(point_in_circle(t.p0.x, t.p0.y, _xx, _yy, _rr)) t.p0.setPin(_pin);
+					if(point_in_circle(t.p1.x, t.p1.y, _xx, _yy, _rr)) t.p1.setPin(_pin);
+					if(point_in_circle(t.p2.x, t.p2.y, _xx, _yy, _rr)) t.p2.setPin(_pin);
 				}
 			}
 		} 

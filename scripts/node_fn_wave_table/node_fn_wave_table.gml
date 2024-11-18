@@ -105,7 +105,7 @@ function Node_Fn_WaveTable(_x, _y, _group = noone) : Node_Fn(_x, _y, _group) con
 		draw_set_color(COLORS._main_accent);
 		draw_set_alpha(1);
 		
-		var _ind = safe_mod(pattern, _len) / _len * yr;
+		var _ind = safe_mod(abs(pattern), _len) / _len * yr;
 		
 		var _crv   = wavetable_display_curent;
 		var _gra_y = ys - _gra_l * _ind;
@@ -202,6 +202,7 @@ function Node_Fn_WaveTable(_x, _y, _group = noone) : Node_Fn(_x, _y, _group) con
 	function getPattern(_patt, _x) {
 		var _len = array_length(attributes.wavetable);
 		var _ind = safe_mod(_patt, _len);
+		if(_ind < 0) _ind = abs(_ind);
 		
 		switch(attributes.wavetable[_ind]) {
 			case WAVETABLE_FN.sine   : return sin(_x * pi * 2);
@@ -240,6 +241,8 @@ function Node_Fn_WaveTable(_x, _y, _group = noone) : Node_Fn(_x, _y, _group) con
 	} resetDisplayTable();
 	
 	static __evalRaw = function(_patt, _x = 0) {
+		_patt = abs(_patt);
+		
 		var _p0 = floor(_patt);
 		var _p1 = floor(_patt) + 1;
 		var _fr = frac(_patt);
