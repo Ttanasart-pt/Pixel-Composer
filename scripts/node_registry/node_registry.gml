@@ -563,6 +563,9 @@ function __initNodes() {
 		addNodeObject(input, "Spout Sender",		s_node_spout,				"Node_Spout_Send",			[1, Node_Spout_Send],, "Send surface through Spout.").setVersion(11600);
 		addNodeObject(input, "MIDI In",				s_node_midi,				"Node_MIDI_In",				[1, Node_MIDI_In],, "Receive MIDI message.").setVersion(11630).notTest();
 		addNodeObject(input, "HTTP",				s_node_http,				"Node_HTTP_request",		[1, Node_HTTP_request],, "Request data from the internet.").setVersion(11780);
+		
+		ds_list_add(input, "Gamemaker");
+		addNodeObject(input, "GMRoom",				s_gmroom,					"Node_GMRoom",				[1, Node_GMRoom]).setVersion(1_18_04_1);
 	#endregion
 	
 	#region transform
@@ -847,6 +850,7 @@ function __initNodes() {
 		addNodeObject(generator, "MK Fracture",			s_node_mk_fracture,			"Node_MK_Fracture",			[1, Node_MK_Fracture],,             	"Deterministically fracture and image and apply basic physics.").patreonExtra();
 		addNodeObject(generator, "MK Sparkle",			s_node_mk_sparkle,			"Node_MK_Sparkle",			[1, Node_MK_Sparkle],,					"Generate random star animation.").patreonExtra();
 		addNodeObject(generator, "MK Subpixel",			s_node_mk_subpixel,			"Node_MK_Subpixel",			[1, Node_MK_Subpixel],,					"Apply subpixel filter on top of a surface.").setVersion(1_17_11_0);
+	#endregion
 	
 	#region compose
 	var compose = ds_list_create(); 
@@ -1284,5 +1288,4 @@ function __initNodes() {
 		addNodeObject(hid, "getHeight",	s_node_pixel_builder,	"Node_DynaSurf_Out_Height",	[1, Node_DynaSurf_Out_Height]).hideRecent();
 	#endregion
 	
-	// NODE LIST
 }

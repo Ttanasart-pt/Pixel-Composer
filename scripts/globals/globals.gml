@@ -21,7 +21,7 @@
 
 #region ======================================================================= MAIN =======================================================================
 	globalvar OS, DEBUG, THEME, COLOR_KEYS, RUN_IDE;
-	globalvar CMD, CMDIN;
+	globalvar CMD, CMDIN, CMDPRG;
 	globalvar FPS_REAL;
 	
 	#macro MAC (OS == os_macosx)
@@ -29,6 +29,8 @@
 	OS       = os_type;
 	CMD      = [];
 	CMDIN    = [];
+	CMDPRG   = noone;
+	
 	FPS_REAL = 0;
 	RUN_IDE  = GM_build_type == "run";
 	
@@ -42,8 +44,8 @@
 	LATEST_VERSION	= 1_18_00_0;
 	VERSION			= 1_18_04_0;
 	SAVE_VERSION	= 1_18_02_0;
-	VERSION_STRING  = MAC? "1.18.003m" : "1.18.4";
-	BUILD_NUMBER	= 1_18_03_1;
+	VERSION_STRING  = MAC? "1.18.003m" : "1.18.4b";
+	BUILD_NUMBER	= 1_18_04_1;
 	
 	HOTKEYS			= ds_map_create();
 	HOTKEY_CONTEXT	= ds_list_create();

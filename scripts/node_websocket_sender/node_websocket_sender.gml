@@ -33,7 +33,7 @@ function Node_Websocket_Sender(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			network_set_config(network_config_connect_timeout, val);
 		}) ]);
 		
-	static connectTo = function(newPort, newUrl, params) { #region
+	static connectTo = function(newPort, newUrl, params) {
 		logNode($"Connecting to {newUrl}:{newPort}");
 		
 		if(ds_map_exists(PORT_MAP, port))
@@ -58,7 +58,7 @@ function Node_Websocket_Sender(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		NETWORK_CLIENTS[? _conId] = socket;
 		
 		logNode($"Connected to {newUrl}:{newPort}");
-	} #endregion
+	}
 	
 	setInspector(1, __txt("Resend"), [ THEME.refresh_icon, 1, COLORS._main_value_positive ], function() { triggerRender(); });
 	
@@ -78,7 +78,7 @@ function Node_Websocket_Sender(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		}
 	}
 	
-	static asyncPackets = function(_async_load) { #region
+	static asyncPackets = function(_async_load) {
 		if(!active) return;
 		
 		var aid  = async_load[? "id"];
@@ -92,18 +92,18 @@ function Node_Websocket_Sender(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			var callBack = callbackMap[$ aid];
 			sendCall(aid, callBack);
 		}
-	} #endregion
+	}
 	
-	static step = function() { #region
+	static step = function() {
 		var _type = getInputData(1);
 		
 		inputs[2].setVisible(_type == 0, _type == 0);
 		inputs[3].setVisible(_type == 1, _type == 1);
 		inputs[4].setVisible(_type == 2, _type == 2);
 		inputs[6].setVisible(_type == 3, _type == 3);
-	} #endregion
+	}
 	
-	static update = function(frame = CURRENT_FRAME) { #region
+	static update = function(frame = CURRENT_FRAME) {
 		var _port   = getInputData(0);
 		var _target = getInputData(5);
 		
@@ -135,9 +135,9 @@ function Node_Websocket_Sender(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		
 		params.content = _buff;
 		connectTo(_port, _target, params);
-	} #endregion
+	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox    = drawGetBbox(xx, yy, _s);
 		var network = ds_map_try_get(NETWORK_CLIENTS, port, noone);
 		
@@ -153,9 +153,9 @@ function Node_Websocket_Sender(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		draw_set_alpha(1);
 		
 		draw_sprite_fit(THEME.node_websocket_send, 0, bbox.xc, (_y0 + _y1) / 2, bbox.w, _y1 - _y0, cc, aa);
-	} #endregion
+	}
 		
-	static postApplyDeserialize = function() { #region
+	static postApplyDeserialize = function() {
 		if(struct_has(attributes, "network_timeout")) network_set_config(network_config_connect_timeout, attributes.network_timeout);
-	} #endregion
+	}
 }

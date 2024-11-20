@@ -11,6 +11,7 @@ function filepath_resolve(path) {
 	path = string_replace_all(path, "%DIR%/", DIRECTORY);
 	path = string_replace_all(path, "%APP%/", APP_LOCATION);
 	path = string_replace_all(path, "\\", "/");
+	if(PROJECT) path = string_replace_all(path, "./", filename_dir(PROJECT.path) + "/");
 	
 	return path;
 }

@@ -22,7 +22,9 @@ function Panel_Console() : PanelContent() constructor {
 	scroll_y  = 0;
 	prevFocus = false;
 	
-	function drawHistory(_y) { #region
+	function setCommand(_com) { command = _com; keyboard_string = _com; }
+	
+	function drawHistory(_y) {
 		var _x = ui(32 + 8);
 		var _w = w - ui(16 + 32);
 		
@@ -69,9 +71,9 @@ function Panel_Console() : PanelContent() constructor {
 			if(mouse_wheel_up())    scroll_y = clamp(scroll_y + 1, 0, array_length(CMD) - 1);
 			if(mouse_wheel_down())  scroll_y = clamp(scroll_y - 1, 0, array_length(CMD) - 1);
 		}
-	} #endregion
+	}
 	
-	function drawContent(panel) { #region
+	function drawContent(panel) {
 		if(pFOCUS) {
 			if(prevFocus == false)
 				keyboard_string = command;
@@ -92,37 +94,65 @@ function Panel_Console() : PanelContent() constructor {
 		
 		var hy = h - ui(32);
 		drawHistory(hy);
-			
-		draw_set_text(f_code, fa_right, fa_bottom, CDEF.main_dkgrey);
-		draw_text(ui(32 - 4), h - ui(4), ">");
+		
+		var ty = ui(10);
+		
+		draw_set_text(f_code, fa_left, fa_bottom, CDEF.main_dkgrey);
+		var _curs = CMDPRG? CMDPRG.title + ":" : ">";
+		if(CMDPRG) draw_set_color(CMDPRG.color);
+		
+		var _curw = string_width(_curs);
+		draw_text(ty, h - ui(4), _curs);
+		ty += _curw + ui(4);
 		
 		draw_set_text(f_code, fa_left, fa_bottom, COLORS._main_text);
-		draw_text(ui(32 + 8), h - ui(4), command);
+		draw_text(ty, h - ui(4), command);
+		ty += string_width(command);
 		
 		draw_set_color(COLORS._main_text_sub);
-		draw_text(ui(32 + 8) + string_width(command), h - ui(4), "_");
+		draw_text(ty, h - ui(4), "_");
 		
-		if(pFOCUS) {
-			if(keyboard_check_pressed(vk_enter)) { 
-				cmd_submit(command);
-				
-				command = "";
-				keyboard_string = "";
-				
-			} else if(keyboard_check_pressed(vk_up)) {
-				cmd_index = max(0, cmd_index - 1); 
-			
-				var his = array_safe_get_fast(CMDIN, cmd_index, "");
-				command = is_instanceof(his, __cmdLine)? his.txt : his;
-				keyboard_string = command;
-			
-			} else if(keyboard_check_pressed(vk_escape)) {
-				command = "";
-				keyboard_string = "";
-				
-			} else if(keyboard_check_pressed(vk_anykey)) {
-				cmd_index = array_length(CMDIN);
+		if(!pFOCUS) return;
+		
+		if(keyboard_check(vk_control)) { 
+			if(keyboard_check_pressed(ord("V"))) { 
+				setCommand(clipboard_get_text());
 			}
+			
+		} else if(keyboard_check_pressed(vk_enter)) { 
+			if(CMDPRG) {
+				var res = CMDPRG.submit(command);
+				if(res) CMDPRG = noone;
+				
+			} else {
+				var prg = cmd_submit(command);
+				if(prg) {
+					CMDPRG = prg;
+					CMDPRG.console = self;
+				}
+			}
+			
+			setCommand("");
+			cmd_index = array_length(CMDIN);
+			
+		} else if(keyboard_check_pressed(vk_up)) {
+			cmd_index = max(0, cmd_index - 1); 
+			
+			var his = array_safe_get_fast(CMDIN, cmd_index, "");
+			setCommand(is_instanceof(his, __cmdLine)? his.txt : his);
+		
+		} else if(keyboard_check_pressed(vk_down)) {
+			cmd_index = min(cmd_index + 1, array_length(CMDIN)); 
+		
+			var his = array_safe_get_fast(CMDIN, cmd_index, "");
+			setCommand(is_instanceof(his, __cmdLine)? his.txt : his);
+		
+		} else if(keyboard_check_pressed(vk_escape)) {
+			if(CMDPRG) CMDPRG = noone;
+			setCommand("");
+			
+		} else if(keyboard_check_pressed(vk_anykey)) {
+			cmd_index = array_length(CMDIN);
 		}
-	} #endregion
+	}
 }

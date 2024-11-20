@@ -5,14 +5,16 @@ function Binder_Gamemaker(path) {
     return new __Binder_Gamemaker(path);
 }
 
-function GMSprite(_gm, _path, _info) constructor {
+function GMObject(_gm, _path, _info) constructor {
     gmBinder  = _gm;
     path      = $"{_gm.dir}/{_path}";
     key       = _path;
     raw       = _info;
     type      = _info.resourceType;
     thumbnail = noone;
-    
+}
+
+function GMSprite(_gm, _path, _info) : GMObject(_gm, _path, _info) constructor {
     var _dirr   = filename_dir(path);
     var _frame  = raw.frames;
     var _layers = raw.layers;
@@ -27,25 +29,8 @@ function GMSprite(_gm, _path, _info) constructor {
     }
 }
 
-function GMTileset(_gm, _path, _info) constructor {
-    gmBinder  = _gm;
-    path      = $"{_gm.dir}/{_path}";
-    key       = _path;
-    raw       = _info;
-    type      = _info.resourceType;
-    thumbnail = noone;
-    
+function GMTileset(_gm, _path, _info) : GMObject(_gm, _path, _info) constructor {
     sprite    = raw.spriteId.path;
-}
-
-function GMRoom(_gm, _path, _info) constructor {
-    gmBinder  = _gm;
-    path      = $"{_gm.dir}/{_path}";
-    key       = _path;
-    raw       = _info;
-    type      = _info.resourceType;
-    thumbnail = noone;
-    
 }
 
 function __Binder_Gamemaker(path) constructor {

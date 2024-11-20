@@ -1,5 +1,9 @@
 /// @description 
 var _id = async_load[? "id"];
+var _nid = $"net_{struct_names_count(NETWORK_LOG_DATA)}";
+
+NETWORK_LOG_DATA[$ _nid] = ds_map_print(async_load);
+array_push(NETWORK_LOG, new notification(NOTI_TYPE.internal, $"Received network event {_nid}"));
 
 if(_id == TCP_SERVER) {
 	var t = async_load[? "type"];

@@ -83,10 +83,14 @@ function Panel_GM_Explore(gmBinder) : PanelContent() constructor {
                 var _raw = _ass.raw;
                 var _thm = noone;
                 
-                if(_ass.type == "GMSprite") _thm = _ass.thumbnail;
-                else if(_ass.type == "GMTileSet") {
-                    var _spm = struct_try_get(gmBinder.resourcesMap, _ass.sprite, noone);
-                    _thm = _spm == noone? noone : _spm.thumbnail;
+                switch(_ass.type) {
+                	case "GMSprite" : _thm = _ass.thumbnail; break;
+                	case "GMRoom"   : _thm = s_gmroom;       break;
+                	
+                	case "GMTileSet" : 
+                		var _spm = struct_try_get(gmBinder.resourcesMap, _ass.sprite, noone);
+	                    _thm = _spm == noone? noone : _spm.thumbnail;
+	                    break;
                 }
                 
                 if(sprite_exists(_thm)) draw_sprite_bbox_uniform(_thm, 0, BBOX().fromWH(_asx + ui(2), _asy + ui(2), _ths - ui(4), _ths - ui(4)));

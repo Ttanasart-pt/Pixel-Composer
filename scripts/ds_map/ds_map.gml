@@ -58,9 +58,20 @@ function ds_map_print(map) {
 	var k = ds_map_find_first(map);
 	
 	repeat(ds_map_size(map)) {
-		txt += string(k) + " : " + string(map[? k]) + ", ";
+		txt += $"{k} : {map[? k]}, ";
 		k = ds_map_find_next(map, k);
 	}
 	txt += "}";
 	return txt;
+}
+
+function ds_map_to_struct(map) {
+	var _s = {};
+	var k = ds_map_find_first(map);
+	
+	repeat(ds_map_size(map)) {
+		_s[$ k] = map[? k];
+		k = ds_map_find_next(map, k);
+	}
+	return _s;
 }

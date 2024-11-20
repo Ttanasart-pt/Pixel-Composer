@@ -156,6 +156,7 @@
 	asyncInit();
 	
 	network_set_config(network_config_use_non_blocking_socket, 0);
+	if(!os_is_network_connected()) array_push(NETWORK_LOG, new notification(NOTI_TYPE.internal, $"Network offline"));
 #endregion
 
 #region steam

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"binder_gamemaker_room",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"binder_gamemaker_room",
+  "parent":{
+    "name":"binder",
+    "path":"folders/main/binder.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

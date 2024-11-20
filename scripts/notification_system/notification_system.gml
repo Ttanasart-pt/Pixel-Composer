@@ -8,9 +8,10 @@
 
 #region classes
 	enum NOTI_TYPE {
-		log		= 1 << 0,
-		warning = 1 << 1,
-		error	= 1 << 2,
+		log		 = 1 << 0,
+		warning  = 1 << 1,
+		error    = 1 << 2,
+		internal = 1 << 3,
 	}
 	
 	function notification(type, str, icon = noone, color = c_ui_blue_dkgrey, life = -1) constructor {
@@ -28,8 +29,7 @@
 		self.icon_end = noone;
 		
 		self.amount = 1;
-		
-		self.time = $"{string_lead_zero(current_hour, 2)}:{string_lead_zero(current_minute, 2)}.{string_lead_zero(current_second, 2)}";
+		self.time   = $"{string_lead_zero(current_hour, 2)}:{string_lead_zero(current_minute, 2)}.{string_lead_zero(current_second, 2)}";
 		
 		static setOnClick = function(onClick, tooltip = "", icon_end = noone) {
 			self.onClick  = method(self, onClick);
@@ -39,7 +39,7 @@
 			return self;
 		}
 		
-		array_push(CMD, self);
+		if(type != NOTI_TYPE.internal) array_push(CMD, self);
 	}
 	
 	function noti_status(str, icon = noone, flash = false, ref = noone) {

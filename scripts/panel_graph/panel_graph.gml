@@ -3258,6 +3258,11 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				node = nodeBuild("Node_Tile_Tileset", mouse_grid_x, mouse_grid_y).skipDefault();
 				node.gmTile = DRAGGING.data;
 				break;
+				
+            case "GMRoom" :
+				node = nodeBuild("Node_GMRoom", mouse_grid_x, mouse_grid_y).skipDefault();
+				node.gmRoom = DRAGGING.data;
+				break;
         }
             
         if(!key_mod_press(SHIFT) && node && struct_has(DRAGGING, "from") && DRAGGING.from.value_from == noone) {

@@ -3,6 +3,87 @@ globalvar IS_PATREON;
 
 #macro FIRESTORE_ID "pixelcomposer-f9cef"
 
+function cmd_program_patreon_legacy(mail) : cmd_program() constructor {
+	title = "Patreon";
+	color = CDEF.pink;
+	
+	array_push(CMD, cmdLine($"Patreon legacy verifier", CDEF.pink) );
+	array_push(CMD, cmdLine($"> Checking email: {mail}", COLORS._main_text_sub) );
+	
+	mail_checking = true;
+	
+	function mailCallback(response) {
+		mail_checking = false;
+		
+		if (response[? "status"] != 200) {
+			array_push(CMD, cmdLine($"X Request error.", COLORS._main_value_negative) );
+			CMDPRG = noone;
+			return;
+		}
+		
+		var val = response[? "value"];
+		var map = json_try_parse(val);
+		
+		var keys = struct_get_names(map);
+		if(array_empty(keys)) {
+			array_push(CMD, cmdLine($"X Patreon email not found.", COLORS._main_value_negative) );
+			CMDPRG = noone;
+			return;
+		}
+		
+		var key    = keys[0];
+		var member = map[$ key];
+		var stat   = string_replace_all(string_lower(member.status), " ", "_");
+		
+		if(string_pos("active", stat) > 0) {
+			var _mail   = member.email;
+			var _code   = patreon_generate_activation_key(_mail); //yea we doing this on client now. 
+			global.PATREON_VERIFY_CODE = _code;
+			
+			var _map = ds_map_create();
+			
+			_map[? "Api-Token"]    = patreon_get_email_token();
+			_map[? "Content-Type"] = "application/json";
+			
+			var _body = {
+				from: {
+				    email: "verify@pixel-composer.com",
+				    name: "Pixel Composer"
+				},
+				to: [ { email: _mail } ],
+				template_uuid: "82b77e89-0343-4a20-a63d-063f4f8dcdfe",
+				template_variables: { verification_code: _code }
+			};
+			
+			http_request("https://send.api.mailtrap.io/api/send", "POST", _map, json_stringify(_body));
+			array_push(CMD, cmdLine($"> Verification code has been send to your email.", COLORS._main_text_sub) );
+			array_push(CMD, cmdLine($"> Enter verification code: ", COLORS._main_text) );
+			
+		} else {
+			array_push(CMD, cmdLine($"X Patreon membership not active.", COLORS._main_value_negative) );
+			CMDPRG = noone;
+			
+		}
+	}
+	
+	patreon_email_check(mail, mailCallback);
+	
+	static submit = function(arg) { 
+		if(arg == global.PATREON_VERIFY_CODE) {
+			array_push(CMD, cmdLine($"> Patreon verified, thank you for suporting Pixel Composer!", COLORS._main_value_positive) );
+			return 1;
+			
+		} else {
+			array_push(CMD, cmdLine($"> Incorrect code, please try again.", COLORS._main_value_negative) );
+			array_push(CMD, cmdLine($"> Enter verification code: ", COLORS._main_text) );
+			return 0;
+			
+		}
+		
+		return 0; 
+	}
+}
+
 function patreon_email_check(mail, callback) {
 	PATREON_MAIL_CHECK = FirebaseFirestore("memberships").Where("email", "==", mail).Query();
 	PATREON_MAIL_CALLBACK = callback;

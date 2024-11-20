@@ -1,11 +1,11 @@
+global.PATREON_VERIFY_CODE = undefined;
+
 function Panel_Patreon() : PanelContent() constructor {
 	w = ui(480);
 	h = ui(264);
 	title = "Connect to Patreon";
 	resizable = false;
 	auto_pin  = true;
-	
-	//patreon_email_check("tanasart_pt@outlook.co.th");
 	
 	mail = "";
 	code = "";
@@ -18,7 +18,6 @@ function Panel_Patreon() : PanelContent() constructor {
 	tb_code  = new textBox(TEXTBOX_INPUT.text, function(_code)  { code = _code;  });
 	
 	mail_checking = false;
-	verify_code = "";
 	
 	function mailCallback(response) {
 		mail_checking = false;
@@ -42,12 +41,11 @@ function Panel_Patreon() : PanelContent() constructor {
 		var key    = keys[0];
 		var member = map[$ key];
 		var stat   = string_replace_all(string_lower(member.status), " ", "_");
-		print(stat);
 		
 		if(string_pos("active", stat) > 0) {
 			var _mail   = member.email;
 			var _code   = patreon_generate_activation_key(_mail); //yea we doing this on client now. 
-			verify_code = _code;
+			global.PATREON_VERIFY_CODE = _code;
 			
 			var _map = ds_map_create();
 			
@@ -132,6 +130,7 @@ function Panel_Patreon() : PanelContent() constructor {
 				} else 
 					draw_sprite_ext(THEME.loading_s, 0, w / 2, _yy + _bh / 2, 1, 1, current_time, COLORS._main_icon, 1);
 				break;
+				
 			case 1 :
 				draw_set_text(f_p0, fa_center, fa_center, COLORS._main_text_inner);
 				draw_text(w / 2, _yy, "Enter verification code:");
@@ -145,7 +144,7 @@ function Panel_Patreon() : PanelContent() constructor {
 				
 				_yy += TEXTBOX_HEIGHT + 12;
 				if(buttonInstant(THEME.button_def, _bx, _yy, _bw, _bh, [ mx, my ], pFOCUS, pHOVER) == 2) {
-					if(code == verify_code) {
+					if(code == global.PATREON_VERIFY_CODE) {
 						result = "Patreon verified, thank you for suporting Pixel Composer!";
 						result_color = COLORS._main_value_positive;
 						

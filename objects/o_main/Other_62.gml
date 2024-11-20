@@ -1,5 +1,5 @@
 /// @description network
-var _id = async_load[? "id"];
+var _id  = async_load[? "id"];
 
 if(ds_map_exists(global.FILE_LOAD_ASYNC, async_load[? "id"])) {
 	var cb = global.FILE_LOAD_ASYNC[? async_load[? "id"]];
