@@ -47,13 +47,12 @@ function Node_Smoke_Render(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 		var _drw = getInputData(3);
 		var _upd = getInputData(4);
 		
-		FLUID_DOMAIN_CHECK
+		SMOKE_DOMAIN_CHECK
 		
-		var fSurf = _dom.sf_material_0;
+		var fSurf = _dom.sf_material;
 		if(!is_surface(fSurf)) return;
 		
-		if(_upd) fd_rectangle_update(_dom);
-		texture_set_interpolation(false);
+		if(_upd) _dom.update();
 		
 		outputs[1].setValue(_dom.sf_world);
 		
@@ -62,10 +61,9 @@ function Node_Smoke_Render(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 			draw_surface_stretched_safe(fSurf, 0, 0, _dim[0], _dim[1]);
 			gpu_set_texfilter(false);
 			
-			if(_drw && is_surface(_dom.sf_world)) 
-				draw_surface_stretched_safe(_dom.sf_world, 0, 0, _dim[0], _dim[1]);
+			// if(_drw) draw_surface_stretched_safe(_dom.sf_world, 0, 0, _dim[0], _dim[1]);
 		surface_reset_shader();
 		
-		var frm = cacheCurrentFrame(_outSurf);
+		cacheCurrentFrame(_outSurf);
 	}
 }

@@ -1,7 +1,7 @@
 {
   "$GMShader":"",
-  "%Name":"sh_fd_advect_material_a_16_glsl",
-  "name":"sh_fd_advect_material_a_16_glsl",
+  "%Name":"sh_fd_clear_surface",
+  "name":"sh_fd_clear_surface",
   "parent":{
     "name":"Shaders",
     "path":"folders/nodes/data/simulation/smokeSim/Shaders.yy",

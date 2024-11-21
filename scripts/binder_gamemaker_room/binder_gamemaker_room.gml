@@ -1,5 +1,7 @@
 function GMRoom(_gm, _path, _info) : GMObject(_gm, _path, _info) constructor {
     layers = GMRoom_create_layers(raw.layers);
+    
+    roomSettings = raw.roomSettings;
 }
 
 function GMRoom_create_layers(layers) {

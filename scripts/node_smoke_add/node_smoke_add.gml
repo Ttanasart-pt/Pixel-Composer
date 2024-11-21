@@ -2,7 +2,7 @@ function Node_Smoke_Add(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) con
 	name  = "Add Emitter";
 	color = COLORS.node_blend_smoke;
 	icon  = THEME.smoke_sim;
-	setDimension(96, 96);
+	// setDimension(96, 96);
 	
 	manual_ungroupable	 = false;
 	
@@ -37,7 +37,7 @@ function Node_Smoke_Add(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) con
 	
 	temp_surface = [ surface_create(1, 1) ];
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _mat = getInputData(1);
 		var _pos = getInputData(2);
 		
@@ -51,7 +51,7 @@ function Node_Smoke_Add(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) con
 		}
 		
 		inputs[2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-	} #endregion
+	}
 	
 	static update = function(frame = CURRENT_FRAME) {
 		var _dom = getInputData(0);
@@ -63,7 +63,7 @@ function Node_Smoke_Add(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) con
 		var _msk = getInputData(6);
 		var _vel = getInputData(7);
 		
-		FLUID_DOMAIN_CHECK
+		SMOKE_DOMAIN_CHECK
 		outputs[0].setValue(_dom);
 		
 		if(!_act) return;
@@ -87,7 +87,7 @@ function Node_Smoke_Add(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) con
 			
 		if(dx != 0 || dy != 0) {
 			if(_msk == 0) 
-				fd_rectangle_add_velocity_surface(_dom, temp_surface[0], _pos[0] - sw / 2, _pos[1] - sh / 2, 1, 1, dx, dy);
+				_dom.addVelocity(temp_surface[0], _pos[0] - sw / 2, _pos[1] - sh / 2, 1, 1, dx, dy);
 			else {
 				var _vw = sw + max(0, _msk * 2);
 				var _vh = sh + max(0, _msk * 2);
@@ -100,18 +100,18 @@ function Node_Smoke_Add(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) con
 				var vel_mask = surface_create(_vw, _vh);
 				surface_set_shader(vel_mask, sh_mask_expand);
 					shader_set_f("dimension", _vw, _vh);
-					shader_set_f("amount", _msk);
+					shader_set_f("amount",    _msk);
 					draw_surface_safe(_vmask);
 				surface_reset_shader();
 				
-				fd_rectangle_add_velocity_surface(_dom, vel_mask, _pos[0] - _vw / 2, _pos[1] - _vh / 2, 1, 1, dx, dy);
+				_dom.addVelocity(vel_mask, _pos[0] - _vw / 2, _pos[1] - _vh / 2, 1, 1, dx, dy);
 				
 				surface_free(_vmask);
 				surface_free(vel_mask);
 			}
 		}
 		
-		fd_rectangle_add_material_surface(_dom, temp_surface[0], _pos[0] - sw / 2, _pos[1] - sh / 2, 1, 1, c_white, _den);
+		_dom.addMaterial(temp_surface[0], _pos[0] - sw / 2, _pos[1] - sh / 2, 1, 1, c_white, _den);
 		
 		_prevPos[0] = _pos[0];
 		_prevPos[1] = _pos[1];

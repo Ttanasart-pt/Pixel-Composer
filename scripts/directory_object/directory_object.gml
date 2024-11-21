@@ -210,8 +210,11 @@ function DirectoryObject(name, path) constructor {
 			}
 		}
 		
-		if(_hover && point_in_rectangle(_m[0], _m[1], _x + ui(32), _y, _w, _y + hg - 1)) {
-			draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _x + ui(28), _y, _w - ui(36), hg, CDEF.main_white, 1);
+		var _bx = _x + ui(28);
+		var _bw = _w - ui(36);
+		
+		if(_hover && point_in_rectangle(_m[0], _m[1], _bx, _y, _bx + _bw, _y + hg - 1)) {
+			draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _bx, _y, _bw, hg, CDEF.main_white, 1);
 			if(!triggered && mouse_press(mb_left, _focus)) {
 				if(!ds_list_empty(subDir)) {
 					open = !open;

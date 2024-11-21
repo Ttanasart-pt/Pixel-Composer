@@ -3,8 +3,8 @@
   "%Name":"sh_fd_turbulence",
   "name":"sh_fd_turbulence",
   "parent":{
-    "name":"Shaders",
-    "path":"folders/functions/smokesim/Shaders.yy",
+    "name":"Effectors",
+    "path":"folders/nodes/data/simulation/smokeSim/Effectors.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

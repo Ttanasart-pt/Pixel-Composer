@@ -48,7 +48,7 @@ function Node_Smoke_Vortex(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 		var _aio = getInputData(4);
 		var _mod = getInputData(5);
 		
-		FLUID_DOMAIN_CHECK
+		SMOKE_DOMAIN_CHECK
 		outputs[0].setValue(_dom);
 		
 		_rad = max(_rad, 1);
@@ -59,20 +59,17 @@ function Node_Smoke_Vortex(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 			shader_set(sh_fd_vortex);
 			BLEND_OVERRIDE;
 		
-			shader_set_uniform_f(shader_get_uniform(sh_fd_vortex, "vortex"), _str);
-			shader_set_uniform_f(shader_get_uniform(sh_fd_vortex, "angleIO"), _aio);
+			shader_set_f("vortex",  _str);
+			shader_set_f("angleIO", _aio);
 			draw_sprite_stretched(s_fx_pixel, 0, _pos[0] - _rad, _pos[1] - _rad, _rad * 2, _rad * 2);
 			BLEND_NORMAL;
 			shader_reset();
 		surface_reset_target();
 		
-		with(_dom) {
-			fd_rectangle_set_target(id, _mod? FD_TARGET_TYPE.ADD_VELOCITY : FD_TARGET_TYPE.REPLACE_VELOCITY);
-			draw_surface_safe(vSurface);
-			fd_rectangle_reset_target(id);
-		}
+		_dom.setTarget(_mod? FD_TARGET_TYPE.ADD_VELOCITY : FD_TARGET_TYPE.REPLACE_VELOCITY);
+		draw_surface_safe(vSurface);
+		_dom.resetTarget();
 		
-		//surface_free(vSurface);
 		outputs[1].setValue(vSurface);
 	}
 	

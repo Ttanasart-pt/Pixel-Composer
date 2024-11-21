@@ -3,8 +3,8 @@
   "%Name":"sh_fluid_bleach",
   "name":"sh_fluid_bleach",
   "parent":{
-    "name":"fluid",
-    "path":"folders/nodes/data/simulation/fluid.yy",
+    "name":"Shaders",
+    "path":"folders/nodes/data/simulation/smokeSim/Shaders.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

@@ -40,7 +40,7 @@ function Node_Smoke_Add_Collider(_x, _y, _group = noone) : Node_Smoke(_x, _y, _g
 		var _mat  = getInputData(1);
 		var _area = getInputData(2);
 		
-		FLUID_DOMAIN_CHECK
+		SMOKE_DOMAIN_CHECK
 		outputs[0].setValue(_dom);
 		
 		if(!is_surface(_mat)) return;

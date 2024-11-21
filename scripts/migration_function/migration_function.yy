@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"migration_function",
   "parent":{
-    "name":"migration",
-    "path":"folders/functions/migration.yy",
+    "name":"compat",
+    "path":"folders/functions/compat.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

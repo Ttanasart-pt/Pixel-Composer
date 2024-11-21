@@ -20,7 +20,8 @@ function Node_Smoke_Domain_Queue(_x, _y, _group = noone) : Node_Smoke(_x, _y, _g
 	static update = function() {
 		for( var i = 0; i < array_length(inputs); i++ ) {
 			var _dom = getInputData(i);
-			if(_dom != noone && instance_exists(_dom))
+			
+			if(is(_dom, smokeSim_Domain))
 				outputs[0].setValue(_dom);
 		}
 	}

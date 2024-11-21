@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"instance_create",
+  "%Name":"_smokeSim_domain",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"instance_create",
+  "name":"_smokeSim_domain",
   "parent":{
-    "name":"compat",
-    "path":"folders/functions/compat.yy",
+    "name":"smokeSim",
+    "path":"folders/nodes/data/simulation/smokeSim.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

@@ -68,21 +68,19 @@ function Node_Smoke_Render_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 		var _drw = getInputData(3);
 		var _upd = getInputData(4);
 		
-		FLUID_DOMAIN_CHECK
+		SMOKE_DOMAIN_CHECK
 		
-		var fSurf = _dom.sf_material_0;
+		var fSurf = _dom.sf_material;
 		if(!is_surface(fSurf)) return;
 		
-		if(_upd) fd_rectangle_update(_dom);
-		texture_set_interpolation(false);
+		if(_upd) _dom.update();
 		
 		surface_set_shader(_outSurf, sh_fd_visualize_colorize_glsl);
 			gpu_set_texfilter(_int);
 			draw_surface_stretched_safe(fSurf, 0, 0, _dim[0], _dim[1]);
 			gpu_set_texfilter(false);
 			
-			if(_drw && is_surface(_dom.sf_world)) 
-				draw_surface_stretched_safe(_dom.sf_world, 0, 0, _dim[0], _dim[1]);
+			if(_drw) draw_surface_stretched_safe(_dom.sf_world, 0, 0, _dim[0], _dim[1]);
 		surface_reset_shader();
 		
 		group.outputNode = self;

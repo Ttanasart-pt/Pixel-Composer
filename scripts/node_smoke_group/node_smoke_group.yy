@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"node_smoke_group",
   "parent":{
-    "name":"smokeSim",
-    "path":"folders/nodes/data/simulation/smokeSim.yy",
+    "name":"legacy",
+    "path":"folders/nodes/data/simulation/smokeSim/legacy.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

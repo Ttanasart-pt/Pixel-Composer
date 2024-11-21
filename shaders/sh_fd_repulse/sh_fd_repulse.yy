@@ -3,8 +3,8 @@
   "%Name":"sh_fd_repulse",
   "name":"sh_fd_repulse",
   "parent":{
-    "name":"Shaders",
-    "path":"folders/functions/smokesim/Shaders.yy",
+    "name":"Effectors",
+    "path":"folders/nodes/data/simulation/smokeSim/Effectors.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

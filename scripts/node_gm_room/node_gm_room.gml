@@ -3,6 +3,10 @@ function Node_GMRoom(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	color  = COLORS.node_blend_input;
     gmRoom = noone;
     
+    newInput( 0, nodeValue_Vec2("Room size", self, [ 16, 16 ]));
+    
+    newInput( 1, nodeValue_Bool("Persistance", self, false));
+    
     attributes.exposed_layer = [];
     
     layer_selecting = noone;
@@ -55,7 +59,9 @@ function Node_GMRoom(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		return _h;
 	}); 
 	
-    input_display_list = [
+    input_display_list = [ 
+    	["Room settings", false], 0, 1, 
+    	["Layers",        false], 
     	layers_renderer,
     	new Inspector_Spacer(ui(4)), 
     	layer_renderer,

@@ -38,7 +38,7 @@ function Node_Smoke_Turbulence(_x, _y, _group = noone) : Node_Smoke(_x, _y, _gro
 		var _sed = getInputData(4);
 		var _mod = getInputData(5);
 		
-		FLUID_DOMAIN_CHECK
+		SMOKE_DOMAIN_CHECK
 		outputs[0].setValue(_dom);
 		
 		var vSurface = surface_create_size(_dom.sf_velocity);
@@ -48,17 +48,17 @@ function Node_Smoke_Turbulence(_x, _y, _group = noone) : Node_Smoke(_x, _y, _gro
 			shader_set(sh_fd_turbulence);
 			BLEND_OVERRIDE;
 			
-			shader_set_uniform_f(shader_get_uniform(sh_fd_turbulence, "scale"),    _sca);
-			shader_set_uniform_f(shader_get_uniform(sh_fd_turbulence, "seed"),     _sed);
-			shader_set_uniform_f(shader_get_uniform(sh_fd_turbulence, "strength"), _str);
+			shader_set_f("scale",    _sca);
+			shader_set_f("seed",     _sed);
+			shader_set_f("strength", _str);
 			draw_sprite_stretched(s_fx_pixel, 0, _are[0] - _are[2], _are[1] - _are[3], _are[2] * 2, _are[3] * 2);
 			BLEND_NORMAL;
 			shader_reset();
 		surface_reset_target();
 		
-		fd_rectangle_set_target(_dom, _mod? FD_TARGET_TYPE.ADD_VELOCITY : FD_TARGET_TYPE.REPLACE_VELOCITY);
+		_dom.setTarget(_mod? FD_TARGET_TYPE.ADD_VELOCITY : FD_TARGET_TYPE.REPLACE_VELOCITY);
 		draw_surface_safe(vSurface);
-		fd_rectangle_reset_target(_dom);
+		_dom.resetTarget();
 		
 		surface_free(vSurface);
 	}

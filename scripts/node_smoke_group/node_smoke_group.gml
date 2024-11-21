@@ -1,4 +1,4 @@
-#macro FLUID_DOMAIN_CHECK if(!instance_exists(_dom) && is_instanceof(group, Node_Smoke_Group)) _dom = group.domain; if(_dom == noone || !instance_exists(_dom)) return;
+#macro SMOKE_DOMAIN_CHECK if(!is(_dom, smokeSim_Domain) && is_instanceof(group, Node_Smoke_Group)) _dom = group.domain; if(!is(_dom, smokeSim_Domain)) return;
 
 function Node_Smoke_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _group) constructor {
 	name  = "SmokeSim";
@@ -51,10 +51,10 @@ function Node_Smoke_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _gro
 	
 	custom_input_index = array_length(inputs);
 	
-	domain = fd_rectangle_create(PROJECT.attributes.surface_dimension[0], PROJECT.attributes.surface_dimension[1]);
+	domain = new smokeSim_Domain(PROJECT.attributes.surface_dimension[0], PROJECT.attributes.surface_dimension[1]);
 	
 	if(NODE_NEW_MANUAL) {
-		var _render = nodeBuild("Node_Smoke_Render_Output",  128, -32, self);
+		nodeBuild("Node_Smoke_Render_Output",  128, -32, self);
 	}
 	
 	static update = function() {
@@ -77,36 +77,21 @@ function Node_Smoke_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _gro
 		var wrap	= getInputData(11);
 		
 		if(IS_FIRST_FRAME || !is_surface(domain.sf_world)) {
-			fd_rectangle_clear(domain);
-			fd_rectangle_destroy(domain);
-			domain = fd_rectangle_create(_dim[0], _dim[1]);
-			
-			fd_rectangle_set_visualization_shader(domain, FD_VISUALIZATION_SHADER.COLORIZE);
-			fd_rectangle_set_material_type(domain, FD_MATERIAL_TYPE.A_16);
-			fd_rectangle_set_velocity_time_step(domain, 1);
-			fd_rectangle_set_material_time_step(domain, 1);
-			
-	        fd_rectangle_set_pressure_iteration_type(domain, -2);
-			fd_rectangle_set_initial_value_pressure(domain, inPress);
+			domain.resetSize(_dim[0], _dim[1]);
+			domain.initial_value_pressure  = inPress;
 		}
 		
 		surface_set_target(domain.sf_world);
 			draw_clear_alpha($00FFFF, 0);
-			if(is_surface(coll)) draw_surface_stretched_safe(coll, 0, 0, _dim[0], _dim[1]);
+			draw_surface_stretched_safe(coll, 0, 0, _dim[0], _dim[1]);
 		surface_reset_target();
 		
-		fd_rectangle_set_material_dissipation_type(domain, mdisTyp);
-		fd_rectangle_set_material_dissipation_value(domain, mdis);
+		domain.setAcceleration(acc[0], acc[1], matInr[0], matInr[1]);
+		domain.setMaterial(mdisTyp, mdis);
+		domain.setVelocity(vdisTyp, vdis);
+		domain.setMaccormack(vMac, mMac);
 		
-		fd_rectangle_set_velocity_dissipation_type(domain, vdisTyp);
-		fd_rectangle_set_velocity_dissipation_value(domain, vdis);
-			
-		fd_rectangle_set_acceleration(domain, acc[0], acc[1], matInr[0], matInr[1]);
-		
-		fd_rectangle_set_velocity_maccormack_weight(domain, vMac);
-	    fd_rectangle_set_material_maccormack_weight(domain, mMac);
-		
-		fd_rectangle_set_repeat(domain, wrap);
+		domain.texture_repeat = wrap;
 	}
 	
 	static getAnimationCacheExist = function(frame) { 

@@ -24,13 +24,10 @@ function Node_Smoke_Update(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 		var _dom = inputs[0].getValue(frame);
 		var _act = inputs[1].getValue(frame);
 		
-		FLUID_DOMAIN_CHECK
+		SMOKE_DOMAIN_CHECK
 		outputs[0].setValue(_dom);
 		
-		if(!_act) return;
-		if(is_surface(_dom.sf_world)) 
-			fd_rectangle_update(_dom);
-		texture_set_interpolation(false);
+		if(_act) _dom.update();
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

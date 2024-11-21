@@ -4,7 +4,7 @@
   "name":"sh_fd_add_velocity_glsl",
   "parent":{
     "name":"Shaders",
-    "path":"folders/functions/smokesim/Shaders.yy",
+    "path":"folders/nodes/data/simulation/smokeSim/Shaders.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

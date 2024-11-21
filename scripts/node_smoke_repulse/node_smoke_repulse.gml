@@ -43,7 +43,7 @@ function Node_Smoke_Repulse(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group)
 		var _str = getInputData(3);
 		var _mod = getInputData(4);
 		
-		FLUID_DOMAIN_CHECK
+		SMOKE_DOMAIN_CHECK
 		outputs[0].setValue(_dom);
 		
 		_rad = max(_rad, 1);
@@ -60,11 +60,9 @@ function Node_Smoke_Repulse(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group)
 			shader_reset();
 		surface_reset_target();
 		
-		with(_dom) {
-			fd_rectangle_set_target(id, _mod? FD_TARGET_TYPE.ADD_VELOCITY : FD_TARGET_TYPE.REPLACE_VELOCITY);
-			draw_surface_safe(vSurface);
-			fd_rectangle_reset_target(id);
-		}
+		_dom.setTarget(_mod? FD_TARGET_TYPE.ADD_VELOCITY : FD_TARGET_TYPE.REPLACE_VELOCITY);
+		draw_surface_safe(vSurface);
+		_dom.resetTarget();
 		
 		surface_free(vSurface);
 	}

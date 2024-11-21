@@ -4,8 +4,8 @@ function dialogCall(_dia, _x = noone, _y = noone, param = {}, create = false) {
 	
 	var dia = (!create && instance_exists(_dia))? instance_find(_dia, 0) : instance_create_depth(_x, _y, 0, _dia, param);
 	
-	dia.x = _x;
-	dia.y = _y;
+	dia.x      = _x;
+	dia.y      = _y;
 	dia.xstart = _x;
 	dia.ystart = _y;
 	dia.resetPosition();
@@ -26,11 +26,12 @@ function dialogPanelCall(_panel, _x = noone, _y = noone, params = {}) {
 	variable_instance_set_struct(dia, params);
 	dia.setContent(_panel);
 	
-	dia.x = _x;
-	dia.y = _y;
+	dia.x      = _x;
+	dia.y      = _y;
 	dia.xstart = _x;
 	dia.ystart = _y;
 	dia.anchor = _panel.anchor;
+	
 	dia.resetPosition();
 	
 	if(struct_try_get(params, "focus", true))
