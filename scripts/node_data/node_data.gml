@@ -185,7 +185,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		input_hash_raw	  = "";
 		
 		inputs_amount    = 0;
-		inputs_index     = [];
 		in_cache_len     = 0;
 		inputDisplayList = [];
 		
@@ -660,7 +659,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			inputs[i].visible_in_list = false;
 		
 		inputs_amount = getInputJunctionAmount();
-		inputs_index  = [];
 		
 		for( var i = 0; i < inputs_amount; i++ ) {
 			var _input = getInputJunctionIndex(i);
@@ -669,13 +667,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			var _inp = inputs[_input];
 			if(!is_struct(_inp) || !is_instanceof(_inp, NodeValue)) continue;
 			
-			array_push(inputs_index, _input);
 			_inp.visible_in_list = true;
 		}
-		inputs_amount = array_length(inputs_index);
 		
 		outputs_index  = array_create_ext(getOutputJunctionAmount(), function(index) { return getOutputJunctionIndex(index); });
-	} //run_in(1, () => { updateIO() });
+	}
 	
 	static setHeight = function() {
 		
@@ -781,6 +777,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 		} else {
 			var amo = input_display_list == -1? array_length(inputs) : array_length(input_display_list);
+			// print($"Amo = {amo}");
 			
 			for(var i = 0; i < amo; i++) {
 				var ind = getInputJunctionIndex(i);
@@ -788,11 +785,16 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				
 				var jun = array_safe_get(inputs, ind, noone);
 				if(jun == noone || is_undefined(jun)) continue;
+				
+				// print($"{i}: {jun.isVisible()}");
+				// print($"    {jun.visible_manual}, {jun.visible}, {jun.index}, {jun.visible_in_list}");
+				
 				if(!jun.isVisible()) continue;
 				
 				array_push(inputDisplayList, jun);
 			}
 			
+			// print($"{inputDisplayList}\n");
 		}
 		
 		if(auto_input && dummy_input) array_push(inputDisplayList, dummy_input);

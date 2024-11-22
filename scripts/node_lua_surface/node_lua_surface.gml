@@ -69,7 +69,7 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		array_resize(input_display_list, input_display_len);
 		
 		for( var i = input_fix_len; i < array_length(inputs); i += data_length ) {
-			if(getInputDataForce(i) != "") {
+			if(inputs[i].getValue() != "") {
 				array_push(_in, inputs[i + 0]);
 				array_push(_in, inputs[i + 1]);
 				array_push(_in, inputs[i + 2]);
@@ -94,6 +94,7 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		refreshInputType();
 		createNewInput();
+		refreshNodeDisplay();
 	}
 	
 	static refreshInputType = function() {

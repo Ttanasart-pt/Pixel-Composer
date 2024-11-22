@@ -27,7 +27,8 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	color = COLORS.node_blend_input;
 	
 	newInput(0, nodeValue_Path("Path", self, ""))
-		.setDisplay(VALUE_DISPLAY.path_load, { filter: "image|*.png;*.jpg" });
+		.setDisplay(VALUE_DISPLAY.path_load, { filter: "image|*.png;*.jpg" })
+		.rejectArray();
 		
 	newInput(1, nodeValue_Padding("Padding", self, [0, 0, 0, 0]));
 		
@@ -98,6 +99,7 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	static step = function() {
 		var path = path_get(getInputData(0));
 		
+		if(is_array(path)) return;
 		if(!file_exists_empty(path)) return;
 		
 		if(attributes.file_checker && file_get_modify_s(path) > edit_time) {
@@ -110,6 +112,8 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		var path = path_get(getInputData(0));
 		var pad  = getInputData(1);
+		
+		if(is_array(path)) return;
 		
 		outputs[1].setValue(path);
 		updatePaths(path);
