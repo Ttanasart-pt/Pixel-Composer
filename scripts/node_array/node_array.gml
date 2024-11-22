@@ -168,7 +168,7 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		for(var i = input_fix_len; i < array_length(inputs); i += data_length) {
 			var val = inputs[i];
-			if(!val.visible) continue;
+			if(!val.isVisible()) continue;
 			
 			var key = getInputData(i, "");
 			
