@@ -34,10 +34,10 @@ void main() {
         color = phi_hat_next + (texture2D(gm_BaseTexture, v_vTexcoord).w - phi_hat_now) * precalculated_2.z;
         
         vec2  coord        = floor(from / texel_size + 0.5) * texel_size;
-        float top_left     = clampForce(texture2D(gm_BaseTexture, coord + precalculated_1.zw).w);
-        float bottom_right = clampForce(texture2D(gm_BaseTexture, coord + precalculated_1.xy).w);
-        float top_right    = clampForce(texture2D(gm_BaseTexture, coord + precalculated_1.xw).w);
-        float bottom_left  = clampForce(texture2D(gm_BaseTexture, coord + precalculated_1.zy).w);
+        float top_left     = clamp(texture2D(gm_BaseTexture, coord + precalculated_1.zw).w, 0., 1.);
+        float bottom_right = clamp(texture2D(gm_BaseTexture, coord + precalculated_1.xy).w, 0., 1.);
+        float top_right    = clamp(texture2D(gm_BaseTexture, coord + precalculated_1.xw).w, 0., 1.);
+        float bottom_left  = clamp(texture2D(gm_BaseTexture, coord + precalculated_1.zy).w, 0., 1.);
         
         color = clamp(color, min(min(min(top_left, top_right), bottom_left), bottom_right), max(max(max(top_left, top_right), bottom_left), bottom_right));
     }

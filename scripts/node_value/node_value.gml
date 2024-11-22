@@ -1722,7 +1722,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		value_from = _valueFrom;
 		array_push(_valueFrom.value_to, self);
 		
-		if(_valueFrom.node.inline_context != noone) {
+		if(!LOADING && !APPENDING && _valueFrom.node.inline_context != noone) {
 			var _inline = _valueFrom.node.inline_context;
 			if(node.manual_ungroupable) _inline.addNode(node);
 		}

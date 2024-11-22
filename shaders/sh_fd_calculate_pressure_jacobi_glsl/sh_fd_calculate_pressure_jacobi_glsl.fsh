@@ -11,10 +11,10 @@ void main() {
     gl_FragColor.zw  = texture2D(gm_BaseTexture, v_vTexcoord).zw;
     float divergence = gl_FragColor.y;
     
-    float right      = clampForce(texture2D(gm_BaseTexture, v_vTexcoord + vec2(texel_size.x, 0.0)).x);
-    float left       = clampForce(texture2D(gm_BaseTexture, v_vTexcoord - vec2(texel_size.x, 0.0)).x);
-    float bottom     = clampForce(texture2D(gm_BaseTexture, v_vTexcoord + vec2(0.0, texel_size.y)).x);
-    float top        = clampForce(texture2D(gm_BaseTexture, v_vTexcoord - vec2(0.0, texel_size.y)).x);
+    float right      = texture2D(gm_BaseTexture, v_vTexcoord + vec2(texel_size.x, 0.0)).x;
+    float left       = texture2D(gm_BaseTexture, v_vTexcoord - vec2(texel_size.x, 0.0)).x;
+    float bottom     = texture2D(gm_BaseTexture, v_vTexcoord + vec2(0.0, texel_size.y)).x;
+    float top        = texture2D(gm_BaseTexture, v_vTexcoord - vec2(0.0, texel_size.y)).x;
     
-    gl_FragColor.x  = (left + right + top + bottom - divergence) * 0.25;
+    gl_FragColor.x  = clamp((left + right + top + bottom - divergence) * 0.25, 0., 1.);
 }

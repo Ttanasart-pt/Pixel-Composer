@@ -198,41 +198,23 @@ function smokeSim_Domain(_width, _height) constructor {
             shader_reset();
         surface_reset_target();
     
-        if (pressure_type >= 0) {
-            shader_set(sh_fd_calculate_pressure_jacobi_glsl);
-                shader_set_f("texel_size",       tx_width, tx_height);
-                shader_set_f("max_force",        max_force);
-                
-                repeat (pressure_type) {
-                    surface_set_target(sf_pressure_t);
-                        draw_surface_safe(sf_pressure);
-                    surface_reset_target();
-                    
-                    temporary   = sf_pressure; 
-                    sf_pressure = sf_pressure_t; 
-                    sf_pressure_t = temporary;
-                }
-            shader_reset();
+        shader_set(sh_fd_calculate_pressure_srj_glsl);
+            shader_set_f("texel_size",       tx_width, tx_height);
+            shader_set_f("max_force",        max_force);
             
-        } else {
-            shader_set(sh_fd_calculate_pressure_srj_glsl);
-                shader_set_f("texel_size",       tx_width, tx_height);
-                shader_set_f("max_force",        max_force);
+            var length = array_length(pressure_relax);
+            for (var i = 0; i < length; ++i) {
+                if (pressure_relax[i] != -1) shader_set_f("precalculated", 1 - pressure_relax[i], 0.25 * pressure_relax[i]);
+                surface_set_target(sf_pressure_t);
+                    draw_surface_safe(sf_pressure);
+                surface_reset_target();
                 
-                var length = array_length(pressure_relax);
-                for (var i = 0; i < length; ++i) {
-                    if (pressure_relax[i] != -1) shader_set_f("precalculated", 1 - pressure_relax[i], 0.25 * pressure_relax[i]);
-                    surface_set_target(sf_pressure_t);
-                        draw_surface_safe(sf_pressure);
-                    surface_reset_target();
-                    
-                    temporary   = sf_pressure; 
-                    sf_pressure = sf_pressure_t; 
-                    sf_pressure_t = temporary;
-                }
-            shader_reset();
-        }
-    
+                temporary     = sf_pressure; 
+                sf_pressure   = sf_pressure_t; 
+                sf_pressure_t = temporary;
+            }
+        shader_reset();
+    	
         // Calculates the gradient of pressure and subtracts it from the velocity.
         surface_set_target(sf_velocity_t);
             shader_set(sh_fd_subtract_pressure_gradient_glsl);
