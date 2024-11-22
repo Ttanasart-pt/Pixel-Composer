@@ -75,7 +75,7 @@ function Node_Smoke_Render_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 		
 		if(_upd) _dom.update();
 		
-		surface_set_shader(_outSurf, sh_fd_visualize_colorize_glsl);
+		surface_set_shader(_outSurf, sh_fd_visualize);
 			gpu_set_texfilter(_int);
 			draw_surface_stretched_safe(fSurf, 0, 0, _dim[0], _dim[1]);
 			gpu_set_texfilter(false);

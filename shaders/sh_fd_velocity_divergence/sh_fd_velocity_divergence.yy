@@ -1,7 +1,7 @@
 {
   "$GMShader":"",
-  "%Name":"sh_fd_calculate_pressure_jacobi_glsl",
-  "name":"sh_fd_calculate_pressure_jacobi_glsl",
+  "%Name":"sh_fd_velocity_divergence",
+  "name":"sh_fd_velocity_divergence",
   "parent":{
     "name":"Shaders",
     "path":"folders/nodes/data/simulation/smokeSim/Shaders.yy",

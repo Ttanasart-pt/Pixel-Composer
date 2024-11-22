@@ -1,7 +1,7 @@
 {
   "$GMShader":"",
-  "%Name":"sh_fd_replace_material_advanced_glsl",
-  "name":"sh_fd_replace_material_advanced_glsl",
+  "%Name":"sh_fd_visualize",
+  "name":"sh_fd_visualize",
   "parent":{
     "name":"Shaders",
     "path":"folders/nodes/data/simulation/smokeSim/Shaders.yy",

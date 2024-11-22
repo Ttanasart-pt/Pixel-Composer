@@ -32,7 +32,11 @@ function Node_Smoke_Domain(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 	newInput(10, nodeValue_Float("Velocity Maccormack weight", self, 0))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(11, nodeValue_Bool("Wrap", self, false));
+	newInput(11, nodeValue_Enum_Scroll("Boundary", self, 0, [ "Free", "Wall", "Wrap" ]));
+	
+	newInput(12, nodeValue_Float("Timestep", self, 1));
+	
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	newOutput(0, nodeValue_Output("Domain", self, VALUE_TYPE.sdomain, noone));
 	
@@ -43,13 +47,13 @@ function Node_Smoke_Domain(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 		.setVisible(false);
 	
 	input_display_list = [ 
-		["Domain",		false], 0, 11, 1,
-		["Properties",	false], 8, 6, 7,
-		["Dissipation",	false], 2, 3, 4, 5,
-		["Huh?",		 true], 9, 10, 
+		["Domain",			false], 0, 1, 11, 12, 
+		["Properties",		false], 8, 6, 7,
+		["Dissipation",		false], 3, 5,
+		["Advance Setings",	 true], 2, 4, 9, 10, 
 	];
 	
-	domain = new smokeSim_Domain(256, 256);
+	domain = new smokeSim_Domain(1, 1);
 	_dim_old = [0, 0];
 	
 	static update = function(frame = CURRENT_FRAME) {
@@ -66,7 +70,8 @@ function Node_Smoke_Domain(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 		var inPress = getInputData( 8);
 		var mMac	= getInputData( 9);
 		var vMac	= getInputData(10);
-		var wrap	= getInputData(11);
+		var bound	= getInputData(11);
+		var tstp	= getInputData(12);
 		
 		if(IS_FIRST_FRAME || !is_surface(domain.sf_world)) {
 			domain.resetSize(_dim[0], _dim[1]);
@@ -82,8 +87,8 @@ function Node_Smoke_Domain(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 		domain.setMaterial(mdisTyp, mdis);
 		domain.setVelocity(vdisTyp, vdis);
 		domain.setMaccormack(vMac, mMac);
-		
-		domain.texture_repeat = wrap;
+		domain.setBoundary(bound);
+		domain.time_step = tstp;
 		
 		outputs[0].setValue(domain);
 		outputs[1].setValue(domain.sf_velocity);

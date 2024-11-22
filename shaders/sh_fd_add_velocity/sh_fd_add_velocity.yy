@@ -1,7 +1,7 @@
 {
   "$GMShader":"",
-  "%Name":"sh_fd_advect_material_a_16_glsl",
-  "name":"sh_fd_advect_material_a_16_glsl",
+  "%Name":"sh_fd_add_velocity",
+  "name":"sh_fd_add_velocity",
   "parent":{
     "name":"Shaders",
     "path":"folders/nodes/data/simulation/smokeSim/Shaders.yy",

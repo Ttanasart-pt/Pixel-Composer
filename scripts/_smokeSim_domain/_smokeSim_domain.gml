@@ -5,6 +5,12 @@ enum FD_TARGET_TYPE {
     ADD_VELOCITY,
 }
 
+enum FD_BOUNDARY_TYPE {
+	empty,
+	wall,
+	wrap
+}
+
 function smokeSim_Domain(_width, _height) constructor {
     sf_world        = noone;
 	sf_world_update = true;
@@ -17,22 +23,22 @@ function smokeSim_Domain(_width, _height) constructor {
     acceleration_x    = 0;
     acceleration_y    = 0;
     
+    time_step         = 1;
+    
     initial_value_pressure     = 0.5;
     material_dissipation_type  = 0;
     material_dissipation_value = 1;
     
-    velocity_time_step         = 1;
     velocity_dissipation_type  = 1;
     velocity_dissipation_value = 0;
     velocity_maccormack_weight = 0.5;
+    material_maccormack_weight = 0;
     
     pressure_type  = -3;
     pressure_relax =  0;
     
-    material_time_step         = 1;
-    material_maccormack_weight = 0;
-    
     texture_repeat = false;
+    texture_wall   = false;
     
     sf_world    = 0;
     sf_pressure = 0; sf_pressure_t = 0;
@@ -59,7 +65,7 @@ function smokeSim_Domain(_width, _height) constructor {
     }
     
     static verify = function() {
-    	var _f = surface_rgba16float;
+    	var _f = surface_rgba32float;
         if(!surface_valid(sf_pressure,   width, height, _f)) { sf_pressure   = surface_verify(sf_pressure,   width, height, _f); surface_clear(sf_pressure);   }
         if(!surface_valid(sf_pressure_t, width, height, _f)) { sf_pressure_t = surface_verify(sf_pressure_t, width, height, _f); surface_clear(sf_pressure_t); }
         
@@ -144,16 +150,39 @@ function smokeSim_Domain(_width, _height) constructor {
         }
     }
     
+    static setBoundary = function(boundary) {
+    	switch(boundary) {
+    		case FD_BOUNDARY_TYPE.empty : 
+    			texture_repeat = false;
+    			texture_wall   = false;
+    			break;
+    			
+    		case FD_BOUNDARY_TYPE.wall : 
+    			texture_repeat = false;
+    			texture_wall   = true;
+    			break;
+    			
+    		case FD_BOUNDARY_TYPE.wrap : 
+    			texture_repeat = true;
+    			texture_wall   = false;
+    			break;
+    	}
+    	
+    	return self;
+    }
+    
     static addMaterial = function(surface, _x, _y, xscale, yscale, color, alpha) {
     	setTarget(FD_TARGET_TYPE.ADD_MATERIAL);
 	        draw_surface_ext_safe(surface, _x, _y, xscale, yscale, 0, color, alpha);
 	    resetTarget();
     }
     
-    static addVelocity = function(surface, _x, _y, xscale, yscale, xvelo, yvelo) {
+    static addVelocity = function(surface, _x = 0, _y = 0, xscale = 1, yscale = 1, xvelo = 1, yvelo = 1) {
 	    setTarget(FD_TARGET_TYPE.ADD_VELOCITY);
+	    	shader_set(sh_fd_add_velocity);
 	    	shader_set_f("velo", xvelo, yvelo);
 	        draw_surface_ext_safe(surface, _x, _y, xscale, yscale);
+	        shader_reset();
 	    resetTarget();
     }
     
@@ -171,14 +200,17 @@ function smokeSim_Domain(_width, _height) constructor {
         verify();
     	
         surface_set_target(sf_velocity_t);
-            shader_set(sh_fd_advect_velocity_glsl);
+            shader_set(sh_fd_advect_velocity);
             shader_set_surface("texture_world",    sf_world);
             shader_set_surface("texture_material", sf_material);
             shader_set_f("max_force",              max_force);
             shader_set_i("mode",                   acceleration_type);
-            shader_set_f("precalculated",          velocity_time_step * tx_width, velocity_time_step * tx_height, tx_width, tx_height);
+            shader_set_i("repeat",                 texture_repeat);
+            shader_set_i("wall",                   texture_wall);
+            shader_set_f("precalculated",          time_step * tx_width, time_step * tx_height, tx_width, tx_height);
             shader_set_f("precalculated_1",        velocity_dissipation_type, velocity_dissipation_value, velocity_maccormack_weight * 0.5);
             shader_set_f("acceleration",           acceleration_x, acceleration_y, acceleration_a, acceleration_b);
+            shader_set_f("texel_size",             tx_width, tx_height);
             
             draw_surface_safe(sf_velocity);
             shader_reset();
@@ -190,17 +222,21 @@ function smokeSim_Domain(_width, _height) constructor {
         
         // Calculates divergence of velocity.
         surface_set_target(sf_pressure);
-            shader_set(sh_fd_calculate_velocity_divergence_glsl);
+            shader_set(sh_fd_velocity_divergence);
             	shader_set_f("max_force",              max_force);
+	            shader_set_i("repeat",                 texture_repeat);
+	            shader_set_i("wall",                   texture_wall);
                 shader_set_f("initial_value_pressure", initial_value_pressure);
                 shader_set_f("texel_size",             tx_width, tx_height);
                 draw_surface_safe(sf_velocity);
             shader_reset();
         surface_reset_target();
     
-        shader_set(sh_fd_calculate_pressure_srj_glsl);
+        shader_set(sh_fd_pressure_srj);
             shader_set_f("texel_size",       tx_width, tx_height);
             shader_set_f("max_force",        max_force);
+            shader_set_i("repeat",           texture_repeat);
+            shader_set_i("wall",             texture_wall);
             
             var length = array_length(pressure_relax);
             for (var i = 0; i < length; ++i) {
@@ -217,10 +253,12 @@ function smokeSim_Domain(_width, _height) constructor {
     	
         // Calculates the gradient of pressure and subtracts it from the velocity.
         surface_set_target(sf_velocity_t);
-            shader_set(sh_fd_subtract_pressure_gradient_glsl);
+            shader_set(sh_fd_subtract_pressure_gradient);
                 shader_set_surface("texture_pressure", sf_pressure);
                 shader_set_f("texel_size",             tx_width, tx_height);
                 shader_set_f("max_force",              max_force);
+	            shader_set_i("repeat",                 texture_repeat);
+	            shader_set_i("wall",                   texture_wall);
                 draw_surface_safe(sf_velocity);
             shader_reset();
         surface_reset_target();
@@ -243,12 +281,14 @@ function smokeSim_Domain(_width, _height) constructor {
     	var _scale = .5;
     	
         surface_set_target(sf_material_t);
-        shader_set(sh_fd_advect_material_a_16_glsl);
+        shader_set(sh_fd_advect_material);
             shader_set_surface("texture_velocity", sf_velocity);
             shader_set_surface("texture_world",    sf_world);
+            shader_set_i("repeat",                 texture_repeat);
+            shader_set_i("wall",                   texture_wall);
             shader_set_f("max_force",              max_force);
             shader_set_f("texel_size",             tx_width, tx_height);
-            shader_set_f("precalculated",          material_time_step * tx_width, material_time_step * tx_height);
+            shader_set_f("precalculated",          time_step * tx_width, time_step * tx_height);
             shader_set_f("precalculated_1",        tx_width * _scale, tx_height * _scale, -tx_width * _scale, -tx_height * _scale);
             shader_set_f("precalculated_2",        material_dissipation_type, material_dissipation_value, material_maccormack_weight * 0.5);
             draw_surface_safe(sf_material);
@@ -282,13 +322,8 @@ function smokeSim_Domain(_width, _height) constructor {
 	            break;
             
 	        case FD_TARGET_TYPE.ADD_VELOCITY:
-	            surface_set_target(sf_velocity_t);
-	            gpu_set_blendenable(0);
-	            draw_surface_safe(sf_velocity);
-				
-	            shader_set(sh_fd_add_velocity_glsl);
-	            shader_set_f("addend", 0.5 + 0.5 * tx_width, 0.5 + 0.5 * tx_height);
-	            shader_set_surface("texture_velocity", sf_velocity);
+	            surface_set_target(sf_velocity);
+	            gpu_set_blendmode_ext(bm_one, bm_one);
 	            break;
 	    }
     }
@@ -296,17 +331,6 @@ function smokeSim_Domain(_width, _height) constructor {
     static resetTarget = function() {
 	    surface_reset_target();    
         BLEND_NORMAL 
-
-	    switch (target_type) {
-	        case FD_TARGET_TYPE.ADD_VELOCITY:
-	            shader_reset();
-	            gpu_set_blendenable(1);
-	            
-	            var temporary = sf_velocity_t; 
-	            sf_velocity_t = sf_velocity; 
-	            sf_velocity   = temporary;
-	            break;
-	    }
     }
     
     static free = function() {

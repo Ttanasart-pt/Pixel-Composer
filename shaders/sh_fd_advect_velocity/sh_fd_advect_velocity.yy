@@ -1,7 +1,7 @@
 {
   "$GMShader":"",
-  "%Name":"sh_fluid_bleach",
-  "name":"sh_fluid_bleach",
+  "%Name":"sh_fd_advect_velocity",
+  "name":"sh_fd_advect_velocity",
   "parent":{
     "name":"Shaders",
     "path":"folders/nodes/data/simulation/smokeSim/Shaders.yy",

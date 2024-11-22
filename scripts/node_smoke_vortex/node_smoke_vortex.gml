@@ -17,15 +17,15 @@ function Node_Smoke_Vortex(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 	newInput(4, nodeValue_Float("Attraction", self, 0))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-1, 1, 0.01] });
 	
-	newInput(5, nodeValue_Enum_Button("Mode", self,  0, [ "Override", "Add" ]));
-	
 	input_display_list = [ 
 		["Domain",	false], 0, 
-		["Vortex",	false], 5, 1, 2, 3, 4
+		["Vortex",	false], 1, 2, 3, 4
 	];
 	
 	newOutput(0, nodeValue_Output("Domain", self, VALUE_TYPE.sdomain, noone));
 	newOutput(1, nodeValue_Output("Domain", self, VALUE_TYPE.surface, noone));
+	
+	temp_surface = [ 0 ];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _pos = getInputData(1);
@@ -46,15 +46,14 @@ function Node_Smoke_Vortex(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 		var _rad = getInputData(2);
 		var _str = getInputData(3);
 		var _aio = getInputData(4);
-		var _mod = getInputData(5);
 		
 		SMOKE_DOMAIN_CHECK
 		outputs[0].setValue(_dom);
 		
 		_rad = max(_rad, 1);
-		var vSurface = surface_create_size(_dom.sf_velocity);
+		temp_surface[0] = surface_verify(temp_surface[0], _dom.width, _dom.height, surface_rgba32float);
 		
-		surface_set_target(vSurface)
+		surface_set_target(temp_surface[0])
 			draw_clear_alpha(0., 0.);
 			shader_set(sh_fd_vortex);
 			BLEND_OVERRIDE;
@@ -66,11 +65,9 @@ function Node_Smoke_Vortex(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 			shader_reset();
 		surface_reset_target();
 		
-		_dom.setTarget(_mod? FD_TARGET_TYPE.ADD_VELOCITY : FD_TARGET_TYPE.REPLACE_VELOCITY);
-		draw_surface_safe(vSurface);
-		_dom.resetTarget();
+		_dom.addVelocity(temp_surface[0]);
 		
-		outputs[1].setValue(vSurface);
+		outputs[1].setValue(temp_surface[0]);
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

@@ -4,6 +4,8 @@ uniform sampler2D texture_pressure;
 uniform vec2  texel_size;
 
 uniform float max_force;
+uniform int   repeat;
+uniform int   wall;
 
 float clampForce(float v) { return clamp(v, -max_force, max_force); }
 vec2  clampForce(vec2  v) { return vec2(clampForce(v.x), clampForce(v.y)); }

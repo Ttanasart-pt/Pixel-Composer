@@ -1,25 +1,26 @@
-//
-// Simple passthrough fragment shader
-//
+#define TAU 6.283185307179586
+
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-#define PI 3.14159265359
-
 uniform float strength;
+uniform vec2  center;
+uniform float radius;
+
+uniform float spokes;
+uniform float rotate;
 
 void main() {
-	float inCircle = length(v_vTexcoord - vec2(0.5));
+	vec2  pos   = v_vTexcoord - center;
+	float rad   = length(pos);
+	float dist  = rad * strength;
+	float drad  = smoothstep(radius * strength, 0., dist);
 	
-	if(inCircle > 0.5) {
-		gl_FragColor = vec4(128. / 255., 128. / 255., 0., 0.);
-		return;
+	float angle = atan(pos.y, pos.x);
+	if(spokes != 0.) {
+		float sp = TAU / spokes;
+		angle = floor(angle / sp) * sp + sp * .5 + rotate;
 	}
 	
-	vec2 pos = vec2(0.5) - v_vTexcoord;
-	float rad = inCircle * 2.;
-	float angle = atan(pos.y, pos.x);
-	float dist  = (1. - rad) * strength;
-	
-	gl_FragColor = vec4(128. / 255. + cos(angle) * 0.125 * dist, 128. / 255. + sin(angle) * 0.125 * dist, 0., 1.);
+	gl_FragColor = vec4(cos(angle) * dist * drad, sin(angle) * dist * drad, 0., 1.);
 }

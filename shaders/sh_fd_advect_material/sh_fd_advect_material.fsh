@@ -5,6 +5,8 @@ varying vec2 v_vTexcoord;
 uniform sampler2D texture_velocity;
 uniform sampler2D texture_world;
 
+uniform int  repeat;
+uniform int  wall;
 uniform vec2 texel_size;
 uniform vec2 precalculated; // x: time_step * texel_size.x, y: time_step * texel_size.y.
 uniform vec4 precalculated_1; // x: texel_size.x * 0.5, y: texel_size.y * 0.5, z: texel_size.x * -0.5, w: texel_size.y * -0.5.

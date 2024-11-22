@@ -1,7 +1,7 @@
 {
   "$GMShader":"",
-  "%Name":"sh_fd_subtract_pressure_gradient_glsl",
-  "name":"sh_fd_subtract_pressure_gradient_glsl",
+  "%Name":"sh_fd_advect_material",
+  "name":"sh_fd_advect_material",
   "parent":{
     "name":"Shaders",
     "path":"folders/nodes/data/simulation/smokeSim/Shaders.yy",

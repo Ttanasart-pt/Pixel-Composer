@@ -1,7 +1,7 @@
 {
   "$GMShader":"",
-  "%Name":"sh_fd_advect_velocity_glsl",
-  "name":"sh_fd_advect_velocity_glsl",
+  "%Name":"sh_fd_pressure_srj",
+  "name":"sh_fd_pressure_srj",
   "parent":{
     "name":"Shaders",
     "path":"folders/nodes/data/simulation/smokeSim/Shaders.yy",

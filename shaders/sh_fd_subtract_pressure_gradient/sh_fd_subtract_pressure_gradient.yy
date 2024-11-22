@@ -1,7 +1,7 @@
 {
   "$GMShader":"",
-  "%Name":"sh_fd_calculate_pressure_srj_glsl",
-  "name":"sh_fd_calculate_pressure_srj_glsl",
+  "%Name":"sh_fd_subtract_pressure_gradient",
+  "name":"sh_fd_subtract_pressure_gradient",
   "parent":{
     "name":"Shaders",
     "path":"folders/nodes/data/simulation/smokeSim/Shaders.yy",

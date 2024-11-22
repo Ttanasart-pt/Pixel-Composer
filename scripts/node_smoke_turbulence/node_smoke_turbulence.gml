@@ -17,14 +17,14 @@ function Node_Smoke_Turbulence(_x, _y, _group = noone) : Node_Smoke(_x, _y, _gro
 	
 	newInput(4, nodeValueSeed(self));
 	
-	newInput(5, nodeValue_Enum_Button("Mode", self,  0, [ "Override", "Add" ]));
-	
 	input_display_list = [ 
 		["Domain",		false], 0, 
-		["Turbulence",	false], 5, 1, 2, 4, 3
+		["Turbulence",	false], 1, 2, 4, 3
 	];
 	
 	newOutput(0, nodeValue_Output("Domain", self, VALUE_TYPE.sdomain, noone));
+	
+	temp_surface = [ 0 ];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		inputs[1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
@@ -36,14 +36,12 @@ function Node_Smoke_Turbulence(_x, _y, _group = noone) : Node_Smoke(_x, _y, _gro
 		var _str = getInputData(2);
 		var _sca = getInputData(3);
 		var _sed = getInputData(4);
-		var _mod = getInputData(5);
 		
 		SMOKE_DOMAIN_CHECK
 		outputs[0].setValue(_dom);
+		temp_surface[0] = surface_verify(temp_surface[0], _dom.width, _dom.height, surface_rgba32float);
 		
-		var vSurface = surface_create_size(_dom.sf_velocity);
-		
-		surface_set_target(vSurface)
+		surface_set_target(temp_surface[0])
 			draw_clear_alpha(0., 0.);
 			shader_set(sh_fd_turbulence);
 			BLEND_OVERRIDE;
@@ -56,11 +54,7 @@ function Node_Smoke_Turbulence(_x, _y, _group = noone) : Node_Smoke(_x, _y, _gro
 			shader_reset();
 		surface_reset_target();
 		
-		_dom.setTarget(_mod? FD_TARGET_TYPE.ADD_VELOCITY : FD_TARGET_TYPE.REPLACE_VELOCITY);
-		draw_surface_safe(vSurface);
-		_dom.resetTarget();
-		
-		surface_free(vSurface);
+		_dom.addVelocity(temp_surface[0]);
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

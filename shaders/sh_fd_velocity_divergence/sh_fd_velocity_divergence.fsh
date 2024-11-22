@@ -3,7 +3,9 @@ varying vec2 v_vTexcoord;
 uniform float initial_value_pressure;
 uniform float max_force;
 
-uniform vec2  texel_size;
+uniform int  repeat;
+uniform int  wall;
+uniform vec2 texel_size;
 
 float clampForce(float v) { return clamp(v, -max_force, max_force); }
 vec2  clampForce(vec2  v) { return vec2(clampForce(v.x), clampForce(v.y)); }

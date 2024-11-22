@@ -19,7 +19,7 @@ function Node_Smoke_Render(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 	
 	input_display_list = [
 		["Domain",	false], 0, 
-		["Render",	false], 4, 1, 2, 3,
+		["Render",	false], 4, 2, 3,
 	];
 		
 	newOutput(0, nodeValue_Output("Smoke", self, VALUE_TYPE.surface, noone));
@@ -37,17 +37,16 @@ function Node_Smoke_Render(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 		if(recoverCache() || !PROJECT.animator.is_playing)
 			return;
 		
-		var _dim = getInputData(1);
-		var _outSurf = outputs[0].getValue();
-		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
-		outputs[0].setValue(_outSurf);
-		
 		var _dom = getInputData(0);
 		var _int = getInputData(2);
 		var _drw = getInputData(3);
 		var _upd = getInputData(4);
 		
 		SMOKE_DOMAIN_CHECK
+		
+		var _outSurf = outputs[0].getValue();
+		_outSurf = surface_verify(_outSurf, _dom.width, _dom.height, attrDepth());
+		outputs[0].setValue(_outSurf);
 		
 		var fSurf = _dom.sf_material;
 		if(!is_surface(fSurf)) return;
@@ -56,12 +55,12 @@ function Node_Smoke_Render(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 		
 		outputs[1].setValue(_dom.sf_world);
 		
-		surface_set_shader(_outSurf, sh_fd_visualize_colorize_glsl);
+		surface_set_shader(_outSurf, sh_fd_visualize);
 			gpu_set_texfilter(_int);
-			draw_surface_stretched_safe(fSurf, 0, 0, _dim[0], _dim[1]);
+			draw_surface_stretched_safe(fSurf, 0, 0, _dom.width, _dom.height);
 			gpu_set_texfilter(false);
 			
-			// if(_drw) draw_surface_stretched_safe(_dom.sf_world, 0, 0, _dim[0], _dim[1]);
+			if(_drw) draw_surface_stretched_safe(_dom.sf_world, 0, 0, _dom.width, _dom.height);
 		surface_reset_shader();
 		
 		cacheCurrentFrame(_outSurf);

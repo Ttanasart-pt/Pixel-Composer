@@ -3,6 +3,8 @@ varying vec2 v_vTexcoord;
 uniform vec2  texel_size;
 uniform vec2  precalculated; //x: 1.0 - relaxation_parameter, y: 0.25 * relaxation_parameter.
 
+uniform int   repeat;
+uniform int   wall;
 uniform float max_force;
 
 float clampForce(float v) { return clamp(v, -max_force, max_force); }
