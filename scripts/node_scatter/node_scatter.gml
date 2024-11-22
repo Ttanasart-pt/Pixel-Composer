@@ -378,7 +378,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var _outSurf = _outData[0];
 		
 		surface_set_target(_outSurf);
-			gpu_set_tex_filter(getAttribute("interpolate"));
+			gpu_set_tex_filter(getAttribute("interpolate") > 1);
 			
 			DRAW_CLEAR
 			switch(blend) {
@@ -616,24 +616,16 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				}
 				
 				if(_useAtl) {
-					if(!is_instanceof(_atl, SurfaceAtlasFast))  _atl = new SurfaceAtlasFast(surf, _x, _y, _r, _scx, _scy, clr, alp);
+					if(!is(_atl, SurfaceAtlasFast))  _atl = new SurfaceAtlasFast(surf, _x, _y, _r, _scx, _scy, clr, alp);
 					else										_atl.set(surf, _x, _y, _r, _scx, _scy, clr, alp);
 					
 					_atl.w = sw;
 					_atl.h = sh;
 				} else {
-					if(_atl == noone) _atl = {};
+					if(!is(_atl, SurfaceAtlasFast))  _atl = new SurfaceAtlasFast(surf, _x, _y, _r, _scx, _scy, clr, alp);
 					
-					_atl.surface  = surf ;
-					_atl.x        = _x   ;
-					_atl.y        = _y   ;
-					_atl.rotation = _r   ;
-					_atl.sx       = _scx ;
-					_atl.sy       = _scy ;
-					_atl.blend    = clr  ;
-					_atl.alpha    = alp  ;
-					_atl.w        = sw   ;
-					_atl.h        = sh   ;
+					_atl.w = sw;
+					_atl.h = sh;
 				}
 				
 				_sct[_sct_len] = _atl;
