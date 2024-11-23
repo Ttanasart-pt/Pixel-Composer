@@ -15,7 +15,6 @@ function NEW() {
 
 function SERIALIZE_PROJECT(project = PROJECT) {
 	var _map = project.serialize();
-	_map.layout = panelSerialize(true);
 	
 	return PREFERENCES.save_file_minify? json_stringify_minify(_map) : json_stringify(_map, true);
 }

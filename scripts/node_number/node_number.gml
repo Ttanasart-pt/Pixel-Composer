@@ -4,7 +4,7 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	setDimension(96, 32 + 24 * 1);
 	
-	wd_slider = slider(0, 1, 0.01, function(val) { inputs[0].setValue(val); } );
+	// wd_slider = slider(0, 1, 0.01, function(val) { inputs[0].setValue(val); } );
 	
 	slider_value    = -1;
 	slider_surface  = -1;

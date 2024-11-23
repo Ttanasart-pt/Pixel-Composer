@@ -210,7 +210,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			return _f.lerpTo(_t, _lrp);
 		}
 		
-		if(prop.display_type == VALUE_DISPLAY.d3quarternion && prop.display_data.angle_display == QUARTERNION_DISPLAY.quarterion)
+		if(prop.display_type == VALUE_DISPLAY.d3quarternion && prop.attributes.angle_display == QUARTERNION_DISPLAY.quarterion)
 			return quarternionArraySlerp(_f, _t, _lrp);
 			
 		if(prop.type == VALUE_TYPE.color) {
@@ -596,7 +596,8 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			var _value_list = [];
 			_value_list[0] = scale? values[i].time / (TOTAL_FRAMES - 1) : values[i].time;
 			
-			var val = values[i].value;
+			var _v  = values[i];
+			var val = _v.value;
 			
 			if(prop.type == VALUE_TYPE.struct) {
 				val = json_stringify(val);
@@ -617,21 +618,25 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			}
 			
 			_value_list[1] = val;
-			_value_list[2] = values[i].ease_in;
-			_value_list[3] = values[i].ease_out;
-			_value_list[4] = values[i].ease_in_type;
-			_value_list[5] = values[i].ease_out_type;
-			_value_list[6] = values[i].ease_y_lock;
-			_value_list[7] = values[i].drivers;
+			_value_list[2] = _v.ease_in;
+			_value_list[3] = _v.ease_out;
+			_value_list[4] = _v.ease_in_type;
+			_value_list[5] = _v.ease_out_type;
+			_value_list[6] = _v.ease_y_lock;
+			_value_list[7] = _v.drivers.type == DRIVER_TYPE.none? 0 : _v.drivers;
 			
 			array_push(_data, _value_list);
 		}
 		
+		if(array_length(values) == 1)
+			return { d: _data[0][1] };
 		return _data;
 	}
 	
 	static deserialize = function(_data, scale = false) {
 		values = [];
+		
+		if(is_struct(_data)) _data = [ [ 0, _data.d ] ];
 		
 		if(prop.type == VALUE_TYPE.gradient && LOADING_VERSION < 1340 && !CLONING) { //backward compat: Gradient
 			var _val = [];
@@ -664,12 +669,12 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 				_time = round(_time * (TOTAL_FRAMES - 1));
 			
 			var value		  = array_safe_get_fast(_keyframe, 1);
-			var ease_in		  = array_safe_get_fast(_keyframe, 2);
-			var ease_out	  = array_safe_get_fast(_keyframe, 3);
-			var ease_in_type  = array_safe_get_fast(_keyframe, 4);
-			var ease_out_type = array_safe_get_fast(_keyframe, 5);
-			var ease_y_lock   = array_safe_get_fast(_keyframe, 6, true);
-			var driver        = array_safe_get_fast(_keyframe, 7, {});
+			var ease_in		  = array_safe_get_fast(_keyframe, 2, [0, 1]);
+			var ease_out	  = array_safe_get_fast(_keyframe, 3, [0, 0]);
+			var ease_in_type  = array_safe_get_fast(_keyframe, 4, 0);
+			var ease_out_type = array_safe_get_fast(_keyframe, 5, 0);
+			var ease_y_lock   = array_safe_get_fast(_keyframe, 6, 1);
+			var driver        = array_safe_get_fast(_keyframe, 7, 0);
 			
 			var _val = value;
 			
@@ -718,7 +723,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			vk.ease_in_type  = ease_in_type;
 			vk.ease_out_type = ease_out_type;
 			vk.ease_y_lock   = ease_y_lock;
-			struct_override(vk.drivers, driver);
+			if(is_struct(driver)) struct_override(vk.drivers, driver);
 			
 			array_push(values, vk);
 		}

@@ -40,7 +40,7 @@
 					if(is_array(_setVals)) {
 						for(var j = 0, m = array_length(_setVals); j < m; j++ ) {
 							var _setVal = _setVals[j];
-							var _input  = is_string(_setVal.index)? _node.inputMap[? _setVal.index] : _node.inputs[_setVal.index];
+							var _input  = is_string(_setVal.index)? _node.inputMap[$ _setVal.index] : _node.inputs[_setVal.index];
 							if(_input == undefined) continue;
 							if(!value_type_direct_settable(_input.type)) continue;
 							
@@ -75,8 +75,8 @@
 				var _toN = _n[$ _c.to];
 				if(_frN == undefined || _toN == undefined) continue;
 				
-				var _frO = is_string(_c.fromIndex)? _frN.outputMap[? _c.fromIndex] : _frN.outputs[_c.fromIndex];
-				var _toI = is_string(_c.toIndex)?   _toN.inputMap[? _c.toIndex]    : _toN.inputs[_c.toIndex];
+				var _frO = is_string(_c.fromIndex)? _frN.outputMap[$ _c.fromIndex] : _frN.outputs[_c.fromIndex];
+				var _toI = is_string(_c.toIndex)?   _toN.inputMap[$ _c.toIndex]    : _toN.inputs[_c.toIndex];
 				if(_frO == undefined || _toI == undefined) continue;
 				
 				_toI.setFrom(_frO);

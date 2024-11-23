@@ -8,11 +8,11 @@ function Node_Audio_Window(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	newInput(2, nodeValue_Float("Location", self, 0))
 		.setDisplay(VALUE_DISPLAY._default, { unit: 0, side_button: button(function() { 
-					inputs[2].display_data.unit = (inputs[2].display_data.unit + 1) % 3; 
-					inputs[2].display_data.side_button.tooltip.index = inputs[2].display_data.unit; 
+					inputs[2].attributes.unit = (inputs[2].attributes.unit + 1) % 3; 
+					inputs[2].display_data.side_button.tooltip.index = inputs[2].attributes.unit; 
 					update();
 				}).setTooltip( new tooltipSelector("Unit", [ "Bit", "Second", "Progress" ]) ) 
-				  .setIcon( THEME.unit_audio, [ function() { return inputs[2].display_data.unit; } ], COLORS._main_icon )
+				  .setIcon( THEME.unit_audio, [ function() { return inputs[2].attributes.unit; } ], COLORS._main_icon )
 			}
 		);
 		
@@ -50,7 +50,7 @@ function Node_Audio_Window(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var _stp  = getInputData(4);	_stp = max(1, _stp);
 		var _anim = getInputData(5);
 		
-		var _unit = inputs[2].display_data.unit;
+		var _unit = inputs[2].attributes.unit;
 		var off = 0, st = 0, ed = 1, len = 1;
 		var _ch = _aud.getChannel();
 		

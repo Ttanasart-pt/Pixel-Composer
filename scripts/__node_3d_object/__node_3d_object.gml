@@ -286,7 +286,7 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 			var _camera = params.camera;
 			var _qview  = new BBMOD_Quaternion().FromEuler(_camera.focus_angle_y, -_camera.focus_angle_x, 0);
 		
-			var _ang    = inputs[index].display_data.angle_display;
+			var _ang    = inputs[index].attributes.angle_display;
 			var _quat   = _ang == QUARTERNION_DISPLAY.quarterion;
 			var _global = _quat? tool_attribute.context : 1;
 			

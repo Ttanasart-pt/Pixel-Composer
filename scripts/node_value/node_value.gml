@@ -14,7 +14,7 @@ function nodeValueSeed(_node, _type = VALUE_TYPE.float, _name = "Seed") {
 
 function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constructor {
 	
-	static DISPLAY_DATA_KEYS = [ "linked", "angle_display", "bone_id", "unit", "atlas_crop" ];
+	static DISPLAY_DATA_KEYS = [ "atlas_crop" ];
 	
 	#region ---- main ----
 		active    = true;
@@ -38,8 +38,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		name_custom = false;
 		
 		if(struct_has(node, "inputMap")) {
-				 if(_connect == CONNECT_TYPE.input)  node.inputMap[?  internalName] = self;
-			else if(_connect == CONNECT_TYPE.output) node.outputMap[? internalName] = self;
+				 if(_connect == CONNECT_TYPE.input)  node.inputMap[$ internalName] = self;
+			else if(_connect == CONNECT_TYPE.output) node.outputMap[$ internalName] = self;
 		}
 		
 		tooltip        = _tooltip;
@@ -65,16 +65,16 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	#endregion
 	
 	#region ---- connection ----
-		connect_type    = _connect;
-		value_from      = noone;
-		value_from_loop = noone;
+		connect_type      = _connect;
+		value_from        = noone;
+		value_from_loop   = noone;
 		
-		value_to      = [];
-		value_to_loop = [];
+		value_to          = [];
+		value_to_loop     = [];
 		
-		accept_array = true;
-		array_depth  = 0;
-		auto_connect = true;
+		accept_array      = true;
+		array_depth       = 0;
+		auto_connect      = true;
 		setFrom_condition = -1;
 		
 		onSetFrom = noone;
@@ -87,7 +87,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		is_anim		= false;
 		sep_axis	= false;
 		animable    = true;
-		
 		on_end		= KEYFRAME_END.hold;
 		loop_range  = -1;
 	#endregion
@@ -112,8 +111,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		def_depth     = array_get_depth(def_val);
 		unit		  = new nodeValueUnit(self);
 		def_unit      = VALUE_UNIT.constant;
-		dyna_depo     = ds_list_create();
-		value_tag     = "";
 		
 		is_modified   = false;
 		cache_value   = [ false, false, undefined, undefined ];
@@ -790,7 +787,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						editWidget = new quarternionBox(function(val, index) { return setValueInspector(val, index); });
 						
 						extract_node = "Node_Vector4";
-						display_data.angle_display = QUARTERNION_DISPLAY.euler;
+						attributes.angle_display = QUARTERNION_DISPLAY.euler;
 						break; #endregion
 						
 					case VALUE_DISPLAY.path_anchor :	#region
@@ -1079,7 +1076,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static valueProcess = function(value, nodeFrom = undefined, applyUnit = true, arrIndex = 0) {
 		var typeFrom = nodeFrom == undefined? VALUE_TYPE.any : nodeFrom.type;
 		
-		if(applyUnit && display_type == VALUE_DISPLAY.d3quarternion && display_data.angle_display == QUARTERNION_DISPLAY.euler)
+		if(applyUnit && display_type == VALUE_DISPLAY.d3quarternion && attributes.angle_display == QUARTERNION_DISPLAY.euler)
 			return quarternionFromEuler(value[0], value[1], value[2]);
 		
 		if(type == VALUE_TYPE.gradient && typeFrom == VALUE_TYPE.color) { // color compatibility [ color, palette, gradient ]
@@ -2127,46 +2124,53 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static serialize = function(scale = false, preset = false) {
 		var _map = {};
 		
-		_map.visible		= visible;
-		_map.visible_manual = visible_manual;
-		_map.color  		= color;
+		if(visible)             _map.v              = real(visible);
+		if(visible_manual != 0) _map.visible_manual = visible_manual;
+		if(color != -1)         _map.color          = color;
 		
-		if(connect_type == CONNECT_TYPE.output) 
-			return _map;
+		if(connect_type == CONNECT_TYPE.output) return _map;
 		
-		_map.name		 = name;
-		_map.on_end		 = on_end;
-		_map.loop_range	 = loop_range;
-		_map.unit		 = unit.mode;
-		_map.sep_axis	 = sep_axis;
-		_map.shift_x	 = draw_line_shift_x;
-		_map.shift_y	 = draw_line_shift_y;
-		_map.is_modified = is_modified;
+		if(name_custom)                 _map.name		 = name;
+		if(unit.mode != 0)              _map.unit		 = unit.mode;
+		if(on_end != KEYFRAME_END.hold) _map.on_end		 = on_end;
+		if(loop_range != -1)            _map.loop_range	 = loop_range;
+		if(sep_axis)                    _map.sep_axis	 = sep_axis;
 		
-		_map.from_node   = -1;
-		_map.from_index  = -1;
-		_map.from_tag    =  0;
+		if(draw_line_shift_x != 0) _map.shift_x     = draw_line_shift_x;
+		if(draw_line_shift_y != 0) _map.shift_y     = draw_line_shift_y;
+		if(is_modified == true)    _map.is_modified = is_modified;
 		
 		if(!preset && value_from) {
 			_map.from_node  = value_from.node.node_id;
 			_map.from_index = value_from.index;
-			_map.from_tag   = value_from.tags;
+			if(value_from.tags != 0) 
+				_map.from_tag   = value_from.tags;
 		}
 		
-		_map.global_use = expUse;
-		_map.global_key = expression;
-		_map.anim		= is_anim;
+		if(expUse)           _map.global_use = expUse;
+		if(expression != "") _map.global_key = expression;
+		if(is_anim)          _map.anim       = is_anim;
 		
-		_map.raw_value  = animator.serialize(scale);
+		if(is_modified) _map.raw_value  = animator.serialize(scale);
 		
-		var _anims = [];
-		for( var i = 0, n = array_length(animators); i < n; i++ )
-			array_push(_anims, animators[i].serialize(scale));
-		_map.animators    = _anims;
-		_map.display_data = display_data;
-		_map.attributes   = attributes;
-		_map.name_custom  = name_custom;
-		_map.bypass       = bypass_junc? bypass_junc.visible : false;
+		var _animLen = array_length(animators);
+		if(is_modified && _animLen) {
+			var _anims   = array_create(_animLen);
+			for( var i = 0; i < _animLen; i++ )
+				_anims[i] = animators[i].serialize(scale);
+			_map.animators    = _anims;
+		}
+		
+		if(struct_has(display_data, "linked")) _map.linked       = display_data.linked;
+		if(name_custom)                        _map.name_custom  = name_custom;
+		if(bypass_junc && bypass_junc.visible) _map.bypass       = true;
+		
+		#region attributes
+			attri   = variable_clone(attributes);
+			if(struct_try_get(attri, "mapped") == 0)     struct_remove(attri, "mapped");
+			
+			if(struct_names_count(attri)) _map.attri = attri;
+		#endregion
 		
 		return _map;
 	}
@@ -2176,36 +2180,47 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(_map == noone)     return;
 		if(!is_struct(_map))  return;
 		
-		visible 	   = struct_try_get(_map, "visible", visible);
-		visible_manual = struct_try_get(_map, "visible_manual", visible_manual);
+		visible 	   = struct_try_get(_map, LOADING_VERSION >= 1_18_04_0? "v" : "visible", 0);
+		visible_manual = struct_try_get(_map, "visible_manual", 0);
 		color   	   = struct_try_get(_map, "color", -1);
 		
 		if(connect_type == CONNECT_TYPE.output) 
 			return;
 		
-		//print($"        > Applying deserialize to junction {name} 0");
-		on_end		= struct_try_get(_map, "on_end");
+		on_end		= struct_try_get(_map, "on_end", KEYFRAME_END.hold);
 		loop_range	= struct_try_get(_map, "loop_range", -1);
-		unit.mode	= struct_try_get(_map, "unit");
-		expUse    	= struct_try_get(_map, "global_use");
-		expression	= struct_try_get(_map, "global_key");
+		unit.mode	= struct_try_get(_map, "unit", 0);
+		expUse    	= struct_try_get(_map, "global_use", false);
+		expression	= struct_try_get(_map, "global_key", "");
 		expTree     = evaluateFunctionList(expression); 
 		
-		sep_axis	= struct_try_get(_map, "sep_axis");
-		setAnim(struct_try_get(_map, "anim"));
+		sep_axis	= struct_try_get(_map, "sep_axis", false);
+		setAnim(struct_try_get(_map, "anim", false));
 		
-		draw_line_shift_x = struct_try_get(_map, "shift_x");
-		draw_line_shift_y = struct_try_get(_map, "shift_y");
-		is_modified       = struct_try_get(_map, "is_modified", true);
+		draw_line_shift_x = struct_try_get(_map, "shift_x",     0);
+		draw_line_shift_y = struct_try_get(_map, "shift_y",     0);
+		is_modified       = struct_try_get(_map, "is_modified", false);
 		
-		struct_append(attributes, struct_try_get(_map, "attributes"))
+		if(struct_has(_map, "attri")) {
+			var _lattr = _map.attri;
+			_lattr.mapped = struct_try_get(_lattr, "mapped", 0);
+			
+			struct_append(attri, _lattr);
+		}
+		
+		if(struct_has(_map, "linked")) 
+			display_data.linked = _map.linked;
+			
 		name_custom = struct_try_get(_map, "name_custom", false);
 		if(name_custom) name = struct_try_get(_map, "name", name);
 		
-		animator.deserialize(struct_try_get(_map, "raw_value"), scale);
-		if(bypass_junc) bypass_junc.visible = struct_try_get(_map, "bypass", false);
+		if(is_modified && struct_has(_map, "raw_value")) 
+			animator.deserialize(struct_try_get(_map, "raw_value"), scale);
+			
+		if(bypass_junc) 
+			bypass_junc.visible = struct_try_get(_map, "bypass", false);
 		
-		if(struct_has(_map, "animators")) {
+		if(is_modified && struct_has(_map, "animators")) {
 			var anims = _map.animators;
 			var amo = min(array_length(anims), array_length(animators));
 			for( var i = 0; i < amo; i++ )
@@ -2215,12 +2230,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(!preset) {
 			con_node  = struct_try_get(_map, "from_node",  -1)
 			con_index = struct_try_get(_map, "from_index", -1);
-			con_tag   = struct_try_get(_map, "from_tag",   -1);
-		}
-		
-		if(struct_has(_map, "display_data")) {
-			for( var i = 0, n = array_length(DISPLAY_DATA_KEYS); i < n; i++ )
-				struct_try_override(display_data, _map.display_data, DISPLAY_DATA_KEYS[i]);
+			con_tag   = struct_try_get(_map, "from_tag",    0);
 		}
 		
 		if(connect_type == CONNECT_TYPE.input && index >= 0) {

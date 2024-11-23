@@ -407,14 +407,6 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	static postPostProcess = function() {}
 	
-	static processSerialize = function(_map) {
-		_map.array_process = attributes.array_process;
-	}
-	
-	static processDeserialize = function() {
-		attributes.array_process = struct_try_get(load_map, "array_process", ARRAY_PROCESS.loop);
-	}
-	
 	///////////////////// CACHE /////////////////////
 	
 	static cacheCurrentFrameIndex = function(_aindex, _surface) {

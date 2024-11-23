@@ -818,24 +818,24 @@
 			if(!ds_map_exists(PROJECT.nodeNameMap, nodeId)) return undefined;
 			var node = PROJECT.nodeNameMap[? nodeId];
 			
-			if(!ds_map_exists(node.inputMap, input)) return undefined;
-			return node.inputMap[? input].getValue();
+			if(!struct_has(node.inputMap, input)) return undefined;
+			return node.inputMap[$ input].getValue();
 		}], 
 		
 		[ "node_set_input_value", function(nodeId, input, value) { 
 			if(!ds_map_exists(PROJECT.nodeNameMap, nodeId)) return undefined;
 			var node = PROJECT.nodeNameMap[? nodeId];
 			
-			if(!ds_map_exists(node.inputMap, input)) return undefined;
-			return node.inputMap[? input].setValue(value);
+			if(!struct_has(node.inputMap, input)) return undefined;
+			return node.inputMap[$ input].setValue(value);
 		}], 
 		
 		[ "node_get_output_value", function(nodeId, input) { 
 			if(!ds_map_exists(PROJECT.nodeNameMap, nodeId)) return undefined;
 			var node = PROJECT.nodeNameMap[? nodeId];
 			
-			if(!ds_map_exists(node.outputMap, input)) return undefined;
-			return node.outputMap[? input].getValue();
+			if(!struct_has(node.outputMap, input)) return undefined;
+			return node.outputMap[$ input].getValue();
 		}],
 		
 		[ "element_get", function() {

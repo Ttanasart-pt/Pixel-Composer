@@ -64,12 +64,12 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 	
 	_cl = -1;
 	
-	static setMaxHieght = function(height) { #region
+	static setMaxHieght = function(height) {
 		max_height = height;
 		return self;
-	} #endregion
+	}
 	
-	static activate = function() { #region
+	static activate = function() {
 		WIDGET_CURRENT = self;
 		WIDGET_CURRENT_SCROLL = parent;
 		parentFocus();
@@ -91,9 +91,9 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		undo_delay = 10;
 		
 		if(PEN_USE) keyboard_virtual_show(kbv_type_default, kbv_returnkey_default, kbv_autocapitalize_none, true);
-	} #endregion
+	}
 	
-	static deactivate = function() { #region 
+	static deactivate = function() { 
 		if(WIDGET_CURRENT != self) return;
 		
 		apply();
@@ -101,17 +101,17 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		UNDO_HOLDING = false;
 		
 		if(PEN_USE) keyboard_virtual_hide();
-	} #endregion
+	}
 	
 	static isCodeFormat = function() { INLINE return format == TEXT_AREA_FORMAT.codeLUA || format == TEXT_AREA_FORMAT.codeHLSL; }
 	
-	static breakCharacter = function(ch) { #region
+	static breakCharacter = function(ch) {
 		if(isCodeFormat()) 
 			return ch == "\n" || array_exists(global.CODE_BREAK_TOKEN, ch);	
 		return ch == " " || ch == "\n";	
-	} #endregion
+	}
 	
-	static onModified = function() { #region
+	static onModified = function() {
 		autocomplete_delay = 0;
 		o_dialog_textbox_autocomplete.deactivate(self);
 		o_dialog_textbox_function_guide.deactivate(self);
@@ -170,9 +170,9 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 			o_dialog_textbox_function_guide.prompt   = guide;
 			o_dialog_textbox_function_guide.index    = amo;
 		}
-	} #endregion
+	}
 	
-	static keyboardEnter = function() { #region
+	static keyboardEnter = function() {
 		if(!keyboard_check_pressed(vk_enter)) 
 			return 0;
 		
@@ -180,9 +180,9 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 			return 0;
 		
 		return 1 + ((shift_new_line && key_mod_press(SHIFT)) || (!shift_new_line && !key_mod_press(SHIFT)));
-	} #endregion
+	}
 	
-	static onKey = function(key) { #region
+	static onKey = function(key) {
 		if(key == vk_left) {
 			if(key_mod_press(SHIFT)) {
 				if(cursor_select == -1)
@@ -288,21 +288,21 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 				onModified();
 			}
 		}
-	} #endregion
+	}
 	
-	static apply = function() { #region
+	static apply = function() {
 		if(onModify) onModify(_input_text);
 		UNDO_HOLDING = true;
-	} #endregion
+	}
 	
-	static move_cursor = function(delta) { #region
+	static move_cursor = function(delta) {
 		var ll = string_length(_input_text);
 		cursor = clamp(cursor + delta, 0, ll);
 		
 		onModified();
-	} #endregion
+	}
 	
-	static cut_line = function() { #region
+	static cut_line = function() {
 		_input_text_line = [];
 		_input_text_line_index = [];
 		draw_set_font(font);
@@ -368,9 +368,9 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 				array_push(_input_text_line_index, _iIndex); _iIndex = "";	
 			}
 		}
-	} #endregion
+	}
 	
-	static editText = function() { #region
+	static editText = function() {
 		var _input_text_pre = _input_text;
 		var modified = false;
 		var undoed = true;
@@ -610,9 +610,9 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		} else if(keyboardEnter() == 1) {
 			deactivate();
 		}
-	} #endregion
+	}
 	
-	static display_text = function(_x, _y, _text, _mx = -1, _my = -1, _hover = false) { #region
+	static display_text = function(_x, _y, _text, _mx = -1, _my = -1, _hover = false) {
 		_text = string_real(_text);
 		if(line_width != _prev_width) {
 			_prev_width = line_width;
@@ -741,18 +741,18 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 			if(cursor_select == cursor)
 				cursor_select = -1;
 		}
-	} #endregion
+	}
 	
-	static drawParam = function(params) { #region
+	static drawParam = function(params) {
 		setParam(params);
 		
 		if(format == TEXT_AREA_FORMAT.codeHLSL || format == TEXT_AREA_FORMAT.codeLUA) 
 			font = f_code;
 		
 		return draw(params.x, params.y, params.w, params.h, params.data, params.m);
-	} #endregion
+	}
 	
-	static draw = function(_x, _y, _w, _h, _text, _m) { #region
+	static draw = function(_x, _y, _w, _h, _text, _m) {
 		_h = max_height == -1? _h : min(_h, max_height);
 		
 		x = _x;
@@ -827,127 +827,125 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 			}
 		surface_reset_shader();
 		
-		if(selecting) { 
+		if(selecting) { // draw selecting
 			WIDGET_TAB_BLOCK = true;
 			
 			draw_set_text(font, fa_left, fa_top, COLORS._main_text);
 			editText();
+		
+			var msx = _m[0] - _x;
+			var msy = _m[1] - _y;
 			
-			#region draw selecting
-				var msx = _m[0] - _x;
-				var msy = _m[1] - _y;
+			surface_set_shader(text_surface, noone, false, BLEND.add);
+				draw_set_text(font, fa_left, fa_top, COLORS._main_text);
+			
+				#region draw cursor highlight
+					var _l, _str;
 				
-				surface_set_shader(text_surface, noone, false, BLEND.add);
-					draw_set_text(font, fa_left, fa_top, COLORS._main_text);
+					var ch_x       = tx;
+					var ch_y       = text_y + ui(7);
+					var ch_sel_min = -1;
+					var ch_sel_max = -1;
+					var char_line  = 0;
+					var curs_found = false;
 				
-					#region draw cursor highlight
-						var _l, _str;
-					
-						var ch_x       = tx;
-						var ch_y       = text_y + ui(7);
-						var ch_sel_min = -1;
-						var ch_sel_max = -1;
-						var char_line  = 0;
-						var curs_found = false;
-					
-						char_run = 0;
+					char_run = 0;
+				
+					if(cursor_select != -1) {
+						ch_sel_min = min(cursor_select, cursor);
+						ch_sel_max = max(cursor_select, cursor);
+					}
+				
+					for( var i = 0, n = array_length(_input_text_line); i < n; i++ ) {
+						_str = _input_text_line[i];
+						_l = string_length(_str);
 					
 						if(cursor_select != -1) {
-							ch_sel_min = min(cursor_select, cursor);
-							ch_sel_max = max(cursor_select, cursor);
-						}
-					
-						for( var i = 0, n = array_length(_input_text_line); i < n; i++ ) {
-							_str = _input_text_line[i];
-							_l = string_length(_str);
+							draw_set_color(COLORS.widget_text_highlight);
 						
-							if(cursor_select != -1) {
-								draw_set_color(COLORS.widget_text_highlight);
+							if(char_line <= ch_sel_min && char_line + _l > ch_sel_min) {
+								var _hstr1 = string_copy(_str, 1, ch_sel_min - char_line);
+								var _hstr2 = string_copy(_str, 1, ch_sel_max - char_line);
 							
-								if(char_line <= ch_sel_min && char_line + _l > ch_sel_min) {
-									var _hstr1 = string_copy(_str, 1, ch_sel_min - char_line);
-									var _hstr2 = string_copy(_str, 1, ch_sel_max - char_line);
-								
-									if(format == TEXT_AREA_FORMAT.delimiter) {
-										_hstr1 = string_replace_all(_hstr1, " ", "<space>");
-										_hstr2 = string_replace_all(_hstr2, " ", "<space>");
-									}
-								
-									var x1 = tx + string_width(_hstr1);
-									var x2 = tx + string_width(_hstr2);
-								
-									draw_roundrect_ext(x1, ch_y, x2, ch_y + c_h, THEME_VALUE.highlight_corner_radius, THEME_VALUE.highlight_corner_radius, 0);
-								} else if(char_line >= ch_sel_min && char_line + _l < ch_sel_max) {
-									var _hstr = _str;
-								
-									if(format == TEXT_AREA_FORMAT.delimiter)
-										_hstr = string_replace_all(_hstr, " ", "<space>");
-									
-									var x2 = tx + string_width(_hstr);
-								
-									draw_roundrect_ext(tx, ch_y, x2, ch_y + c_h, THEME_VALUE.highlight_corner_radius, THEME_VALUE.highlight_corner_radius, 0);
-								} else if(char_line > ch_sel_min && char_line <= ch_sel_max && char_line + _l >= ch_sel_max) {
-									var _hstr = string_copy(_str, 1, ch_sel_max - char_line);
-								
-									if(format == TEXT_AREA_FORMAT.delimiter)
-										_hstr = string_replace_all(_hstr, " ", "<space>");
-									
-									var x2 = tx + string_width(_hstr);
-								
-									draw_roundrect_ext(tx, ch_y, x2, ch_y + c_h, THEME_VALUE.highlight_corner_radius, THEME_VALUE.highlight_corner_radius, 0);
-								}
-							}
-						
-							if(!curs_found && char_line <= cursor && cursor < char_line + _l) {
 								if(format == TEXT_AREA_FORMAT.delimiter) {
-									var str_cur = string_copy(_str, 1, cursor - char_line);
-									str_cur = string_replace_all(str_cur, " ", "<space>");
-									cursor_pos_x_to = ch_x + string_width(str_cur);
-								} else 
-									cursor_pos_x_to = ch_x + string_width(string_copy(_str, 1, cursor - char_line));
-								cursor_pos_y_to = ch_y;
-								cursor_line = i;
-								char_run    = char_line;
+									_hstr1 = string_replace_all(_hstr1, " ", "<space>");
+									_hstr2 = string_replace_all(_hstr2, " ", "<space>");
+								}
 							
-								curs_found = true;
+								var x1 = tx + string_width(_hstr1);
+								var x2 = tx + string_width(_hstr2);
+							
+								draw_roundrect_ext(x1, ch_y, x2, ch_y + c_h, THEME_VALUE.highlight_corner_radius, THEME_VALUE.highlight_corner_radius, 0);
+							} else if(char_line >= ch_sel_min && char_line + _l < ch_sel_max) {
+								var _hstr = _str;
+							
+								if(format == TEXT_AREA_FORMAT.delimiter)
+									_hstr = string_replace_all(_hstr, " ", "<space>");
+								
+								var x2 = tx + string_width(_hstr);
+							
+								draw_roundrect_ext(tx, ch_y, x2, ch_y + c_h, THEME_VALUE.highlight_corner_radius, THEME_VALUE.highlight_corner_radius, 0);
+							} else if(char_line > ch_sel_min && char_line <= ch_sel_max && char_line + _l >= ch_sel_max) {
+								var _hstr = string_copy(_str, 1, ch_sel_max - char_line);
+							
+								if(format == TEXT_AREA_FORMAT.delimiter)
+									_hstr = string_replace_all(_hstr, " ", "<space>");
+								
+								var x2 = tx + string_width(_hstr);
+							
+								draw_roundrect_ext(tx, ch_y, x2, ch_y + c_h, THEME_VALUE.highlight_corner_radius, THEME_VALUE.highlight_corner_radius, 0);
 							}
-						
-							char_line += _l;
-							ch_y += line_get_height();
 						}
 					
-						cursor_pos_x = cursor_pos_x == 0? cursor_pos_x_to : lerp_float(cursor_pos_x, cursor_pos_x_to, 1);
-						cursor_pos_y = cursor_pos_y == 0? cursor_pos_y_to : lerp_float(cursor_pos_y, cursor_pos_y_to, 1);
-					#endregion
+						if(!curs_found && char_line <= cursor && cursor < char_line + _l) {
+							if(format == TEXT_AREA_FORMAT.delimiter) {
+								var str_cur = string_copy(_str, 1, cursor - char_line);
+								str_cur = string_replace_all(str_cur, " ", "<space>");
+								cursor_pos_x_to = ch_x + string_width(str_cur);
+							} else 
+								cursor_pos_x_to = ch_x + string_width(string_copy(_str, 1, cursor - char_line));
+							cursor_pos_y_to = ch_y;
+							cursor_line = i;
+							char_run    = char_line;
+						
+							curs_found = true;
+						}
 					
-					display_text(tx, text_y + ui(7), _input_text, msx, msy, hover && hoverRect);
-					
-					if(cursor_pos_y != 0 && cursor_pos_x != 0) {
-						draw_set_color(COLORS._main_text_accent);
-						draw_set_alpha((typing || current_time % (PREFERENCES.caret_blink * 2000) > PREFERENCES.caret_blink * 1000) * 0.75 + 0.25);
-						draw_line_width(cursor_pos_x, cursor_pos_y, cursor_pos_x, cursor_pos_y + c_h, 2);
-						draw_set_alpha(1);
+						char_line += _l;
+						ch_y += line_get_height();
 					}
-				surface_reset_shader();
+				
+					cursor_pos_x = cursor_pos_x == 0? cursor_pos_x_to : lerp_float(cursor_pos_x, cursor_pos_x_to, 1);
+					cursor_pos_y = cursor_pos_y == 0? cursor_pos_y_to : lerp_float(cursor_pos_y, cursor_pos_y_to, 1);
+				#endregion
+				
+				display_text(tx, text_y + ui(7), _input_text, msx, msy, hover && hoverRect);
+				
+				if(cursor_pos_y != 0 && cursor_pos_x != 0) {
+					draw_set_color(COLORS._main_text_accent);
+					draw_set_alpha((typing || current_time % (PREFERENCES.caret_blink * 2000) > PREFERENCES.caret_blink * 1000) * 0.75 + 0.25);
+					draw_line_width(cursor_pos_x, cursor_pos_y, cursor_pos_x, cursor_pos_y + c_h, 2);
+					draw_set_alpha(1);
+				}
+			surface_reset_shader();
+		
+			BLEND_ALPHA
+				draw_surface(text_surface, _x, _y);
+			BLEND_NORMAL
 			
-				BLEND_ALPHA
-					draw_surface(text_surface, _x, _y);
-				BLEND_NORMAL
-				
-				if(typing) typing--;
-				
-				draw_sprite_stretched_ext(THEME.textbox, 2, _x, _y, _w, hh, COLORS._main_accent, 1);
-				
-				if(o_dialog_textbox_autocomplete.textbox == self) {
-					o_dialog_textbox_autocomplete.dialog_x = rx + _x + cursor_pos_x + 1;
-					o_dialog_textbox_autocomplete.dialog_y = ry + _y + cursor_pos_y + line_get_height() + 1;
-				}
-				
-				if(o_dialog_textbox_function_guide.textbox == self) {
-					o_dialog_textbox_function_guide.dialog_x = rx + _x + cursor_pos_x + 1;
-					o_dialog_textbox_function_guide.dialog_y = ry + _y + cursor_pos_y - 12;
-				}
-			#endregion
+			if(typing) typing--;
+			
+			draw_sprite_stretched_ext(THEME.textbox, 2, _x, _y, _w, hh, COLORS._main_accent, 1);
+			
+			if(o_dialog_textbox_autocomplete.textbox == self) {
+				o_dialog_textbox_autocomplete.dialog_x = rx + _x + cursor_pos_x + 1;
+				o_dialog_textbox_autocomplete.dialog_y = ry + _y + cursor_pos_y + line_get_height() + 1;
+			}
+			
+			if(o_dialog_textbox_function_guide.textbox == self) {
+				o_dialog_textbox_function_guide.dialog_x = rx + _x + cursor_pos_x + 1;
+				o_dialog_textbox_function_guide.dialog_y = ry + _y + cursor_pos_y - 12;
+			}
 			
 			if(autocomplete_modi && PREFERENCES.widget_autocomplete_delay >= 0 && autocomplete_delay >= PREFERENCES.widget_autocomplete_delay) {
 				o_dialog_textbox_autocomplete.activate(self);
@@ -981,47 +979,45 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 			o_dialog_textbox_autocomplete.deactivate(self);
 		}
 		
-		#region scroll height
-			if(max_height) {
-				var total_h = text_y_max;
-				text_y_max  = max(0, total_h - hh + 16);
-				text_y      = lerp_float(text_y, text_y_to, 5);
+		if(max_height) { //scroll height
+			var total_h = text_y_max;
+			text_y_max  = max(0, total_h - hh + 16);
+			text_y      = lerp_float(text_y, text_y_to, 5);
+		
+			if(hover) {
+				if(mouse_wheel_down()) text_y_to = clamp(text_y_to - ui(64) * SCROLL_SPEED, -text_y_max, 0);
+				if(mouse_wheel_up())   text_y_to = clamp(text_y_to + ui(64) * SCROLL_SPEED, -text_y_max, 0);
+			}
 			
-				if(hover) {
-					if(mouse_wheel_down()) text_y_to = clamp(text_y_to - ui(64) * SCROLL_SPEED, -text_y_max, 0);
-					if(mouse_wheel_up())   text_y_to = clamp(text_y_to + ui(64) * SCROLL_SPEED, -text_y_max, 0);
-				}
+			var scr_w = ui(sprite_get_width(THEME.ui_scrollbar));
+			var scr_h = hh - (ui(12) - scr_w) * 2;
+			var scr_x = _x + _w - ui(12);
+			var scr_y = _y + ui(12) - scr_w;
 				
-				var scr_w = ui(sprite_get_width(THEME.ui_scrollbar));
-				var scr_h = hh - (ui(12) - scr_w) * 2;
-				var scr_x = _x + _w - ui(12);
-				var scr_y = _y + ui(12) - scr_w;
-					
-				var bar_h = hh / total_h * scr_h;
-				var bar_y = scr_y + (scr_h - bar_h) * abs(text_y / text_y_max);
-					
-				if(text_scrolling) {
-					text_y_to = text_scroll_sy - (_m[1] - text_scroll_my) / bar_h * scr_h;
-					text_y_to = clamp(text_y_to, -text_y_max, 0);
-					
-					if(mouse_release(mb_left))
-						text_scrolling = false;
-				}
+			var bar_h = hh / total_h * scr_h;
+			var bar_y = scr_y + (scr_h - bar_h) * abs(text_y / text_y_max);
 				
-				if(text_y_max) {
-					var hov = hover && point_in_rectangle(_m[0], _m[1], scr_x - 3, _y, _x + _w, _y + _h);
-					
-					draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, scr_x, scr_y, scr_w, scr_h, COLORS.scrollbar_bg,   1);
-					draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, scr_x, bar_y, scr_w, bar_h, hov || text_scrolling? COLORS.scrollbar_hover : COLORS.scrollbar_idle, 1);
-					
-					if(mouse_press(mb_left, hov && active)) {
-						text_scrolling = true;
-						text_scroll_sy = text_y;
-						text_scroll_my = _m[1];
-					}
+			if(text_scrolling) {
+				text_y_to = text_scroll_sy - (_m[1] - text_scroll_my) / bar_h * scr_h;
+				text_y_to = clamp(text_y_to, -text_y_max, 0);
+				
+				if(mouse_release(mb_left))
+					text_scrolling = false;
+			}
+			
+			if(text_y_max) {
+				var hov = hover && point_in_rectangle(_m[0], _m[1], scr_x - 3, _y, _x + _w, _y + _h);
+				
+				draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, scr_x, scr_y, scr_w, scr_h, COLORS.scrollbar_bg,   1);
+				draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, scr_x, bar_y, scr_w, bar_h, hov || text_scrolling? COLORS.scrollbar_hover : COLORS.scrollbar_idle, 1);
+				
+				if(mouse_press(mb_left, hov && active)) {
+					text_scrolling = true;
+					text_scroll_sy = text_y;
+					text_scroll_my = _m[1];
 				}
 			}
-		#endregion
+		}
 		
 		if(DRAGGING && (DRAGGING.type == "Text" || DRAGGING.type == "Number") && hover && hoverRect) {
 			draw_sprite_stretched_ext(THEME.ui_panel, 1, _x, _y, _w, hh, COLORS._main_value_positive, 1);
@@ -1034,7 +1030,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		resetFocus();
 		
 		return hh;
-	} #endregion
+	}
 	
 	static clone = function() { 
 		var cln = new textArea(input, onModify); 

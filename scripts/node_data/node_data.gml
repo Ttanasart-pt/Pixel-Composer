@@ -30,8 +30,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		active       = true;
 		renderActive = true;
 		
-		node_id = UUID_generate();
-		group   = _group;
+		node_id              = UUID_generate();
+		group                = _group;
 		manual_deletable	 = true;
 		manual_ungroupable	 = true;
 		destroy_when_upgroup = false;
@@ -47,10 +47,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		inline_context = noone;
 		inline_parent_object  = "";
 		
-		modifiable    = true;
-		modify_parent = noone;
 		search_match  = -9999;
-		
 		onDoubleClick = -1;
 		is_controller = false;
 	#endregion
@@ -70,10 +67,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		PROJECT.nodeMap[? node_id] = self;
 		PROJECT.modified = true;
 		
-		run_in(1, function() { 
+		run_in(1, function() /*=>*/ { 
 			resetInternalName();
-			
 			if(renamed) return;
+			
 			display_name = __txt_node_name(instanceof(self), name);
 			if(!LOCALE_DEF || TESTING) renamed = true;
 		});
@@ -82,30 +79,29 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	#region ---- display ----
-		color   = c_white;
-		icon    = noone;
-		icon_24 = noone;
-		bg_spr  = THEME.node_bg;
+		color          = c_white;
+		icon           = noone;
+		icon_24        = noone;
+		bg_spr         = THEME.node_bg;
 		bg_spr_add     = 0.1;
 		bg_spr_add_clr = c_white;
 	
-		name = "";
+		name             = "";
 		display_name     = "";
 		internalName     = "";
 		onSetDisplayName = noone;
-		renamed = false;
+		renamed          = false;
+		tooltip          = "";
 		
-		tooltip = "";
 		x = _x;
 		y = _y;
-		
-		name_height = ui(16);
-		w     = 128;
-		h     = 128;
-		min_w = w;
-		con_h = 128;
-		
+		w = 128;
+		h = 128;
+		min_w   = w;
+		con_h   = 128;
 		h_param = h;
+		name_height = ui(16);
+		
 		preserve_height_for_preview = false;
 		
 		selectable   = true;
@@ -141,8 +137,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		inputs           = [];
 		outputs          = [];
 		input_bypass     = [];
-		inputMap         = ds_map_create();
-		outputMap        = ds_map_create();
+		inputMap         = {};
+		outputMap        = {};
 		input_value_map  = {};
 		
 		use_display_list		= true;
@@ -235,8 +231,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			["Update trigger",  function() /*=>*/ {return attributes.show_update_trigger}, new checkBox(function() /*=>*/ { attributes.show_update_trigger = !attributes.show_update_trigger;    }) ],
 			["Output metadata", function() /*=>*/ {return attributes.outp_meta},           new checkBox(function() /*=>*/ { attributes.outp_meta           = !attributes.outp_meta; setHeight(); }) ],
 		];
-		
-		bufferStore = {};
 	#endregion
 	
 	#region ---- preview ----
@@ -245,20 +239,20 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		show_input_name  = false;
 		show_output_name = false;
 	
-		inspecting	  = false;
-		previewing	  = 0;
+		inspecting	     = false;
+		previewing	     = 0;
 		
-		preview_surface	= noone;
-		preview_amount  = 0;
-		previewable		= true;
-		preview_draw    = true;
-		preview_speed	= 0;
-		preview_index	= 0;
-		preview_channel = 0;
-		preview_alpha	= 1;
-		preview_x		= 0;
-		preview_y		= 0;
+		preview_surface	 = noone;
+		preview_amount   = 0;
+		previewable		 = true;
+		preview_draw     = true;
+		preview_speed	 = 0;
+		preview_index	 = 0;
+		preview_channel  = 0;
+		preview_alpha	 = 1;
 		
+		preview_x  = 0;
+		preview_y  = 0;
 		preview_mx = 0;
 		preview_my = 0;
 		
@@ -281,11 +275,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		topoSorted		 = false;
 		temp_surface     = [];
 		force_requeue    = false;
+		
 		is_simulation    = false;
+		is_group_io      = false;
+		in_VFX           = false;
 		
-		in_VFX  = false;
-		
-		is_group_io = false;
 	#endregion
 	
 	#region ---- timeline ----
@@ -296,8 +290,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	#region ---- notification ----
 		value_validation = array_create(3);
-	
-		manual_updated		 = false;
+		manual_updated   = false;
 	#endregion
 	
 	#region ---- tools ----
@@ -2234,21 +2227,38 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		if(!preset) {
 			_map.id	     = node_id;
-			_map.render  = renderActive;
 			_map.name	 = display_name;
 			_map.iname	 = internalName;
 			_map.x		 = x;
 			_map.y		 = y;
 			_map.type    = instanceof(self);
-			_map.group   = group == noone? group : group.node_id;
-			_map.tool    = isTool;
+			if(isTool)         _map.tool  = isTool;
+			if(group != noone) _map.group = group.node_id;
 			
-			_map.previewable    = previewable;
-			_map.show_parameter = show_parameter;
+			if(!renderActive)  _map.render         = renderActive;
+			if(!previewable)   _map.previewable    = previewable;
+			if(show_parameter) _map.show_parameter = show_parameter;
 		}
 		
-		var _attr  = attributeSerialize();
-		_map.attri = struct_append(attributes, _attr); 
+		var _attr = attributeSerialize();
+		var attri = struct_append(variable_clone(attributes), _attr); 
+		
+		#region attribute stripping
+			if(struct_try_get(attri, "color_depth")         == 3)     struct_remove(attri, "color_depth");
+			if(struct_try_get(attri, "interpolate")         == 1)     struct_remove(attri, "interpolate");
+			if(struct_try_get(attri, "oversample")          == 1)     struct_remove(attri, "oversample");
+			if(struct_try_get(attri, "node_width")          == 0)     struct_remove(attri, "node_width");
+			if(struct_try_get(attri, "node_height")         == 0)     struct_remove(attri, "node_height");
+			if(struct_try_get(attri, "node_param_width")    == 192)   struct_remove(attri, "node_param_width");
+			if(struct_try_get(attri, "annotation")          == "")    struct_remove(attri, "annotation");
+			if(struct_try_get(attri, "outp_meta")           == false) struct_remove(attri, "outp_meta");
+			if(struct_try_get(attri, "color")               == -1)    struct_remove(attri, "color");
+			if(struct_try_get(attri, "update_graph")        == true)  struct_remove(attri, "update_graph");
+			if(struct_try_get(attri, "show_update_trigger") == false) struct_remove(attri, "show_update_trigger");
+			if(struct_try_get(attri, "array_process")       == 0)     struct_remove(attri, "array_process");
+			
+			if(struct_names_count(attri)) _map.attri = attri;
+		#endregion	
 		
 		if(is_dynamic_input) {
 			_map.input_fix_len  = input_fix_len;
@@ -2276,15 +2286,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			_outData[i] = junc_meta[i].serialize(scale, preset);
 		
 		_map.inspectInputs = _trigger;
-		_map.outputMeta    = _outMeta;
-		_map.renamed       = renamed;
-		
-		_map.buffer = {};
-		var _bufferKey = struct_key(bufferStore);
-		for( var i = 0, n = array_length(_bufferKey); i < n; i++ ) {
-			var _key = _bufferKey[i];
-			_map.buffer[$ _key] = buffer_serialize(bufferStore[$ _key]);
-		}
+		if(!array_empty(_outMeta)) _map.outputMeta = _outMeta;
+		if(renamed)                _map.renamed    = renamed;
 		
 		doSerialize(_map);
 		processSerialize(_map);
@@ -2324,22 +2327,27 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			x = struct_try_get(load_map, "x");
 			y = struct_try_get(load_map, "y");
 			renderActive   = struct_try_get(load_map, "render", true);
-			previewable    = struct_try_get(load_map, "previewable", previewable);
-			isTool         = struct_try_get(load_map, "tool");
-			show_parameter = struct_try_get(load_map, "show_parameter");
+			previewable    = struct_try_get(load_map, "previewable", true);
+			isTool         = struct_try_get(load_map, "tool", false);
+			show_parameter = struct_try_get(load_map, "show_parameter", false);
 		}
 		
-		if(struct_has(load_map, "attri"))
-			attributeDeserialize(CLONING? variable_clone(load_map.attri) : load_map.attri);
-		
-		if(struct_has(load_map, "buffer")) {
-			var _bufferKey = struct_key(bufferStore);
-			for( var i = 0, n = array_length(_bufferKey); i < n; i++ ) {
-				var _key = _bufferKey[i];
-				if(!struct_has(bufferStore, _key)) continue;
-				
-				bufferStore[$ _key] = buffer_deserialize(load_map.buffer[$ _key]);
-			}
+		if(struct_has(load_map, "attri")) {
+			var _lattr = load_map.attri;
+			_lattr.color_depth         = struct_try_get(_lattr, "color_depth",             3);
+			_lattr.interpolate         = struct_try_get(_lattr, "interpolate",             1);
+			_lattr.oversample          = struct_try_get(_lattr, "oversample",              1);
+			_lattr.node_width          = struct_try_get(_lattr, "node_width",              0);
+			_lattr.node_height         = struct_try_get(_lattr, "node_height",             0);
+			_lattr.node_param_width    = struct_try_get(_lattr, "node_param_width",      192);
+			_lattr.annotation          = struct_try_get(_lattr, "annotation",             "");
+			_lattr.outp_meta           = struct_try_get(_lattr, "outp_meta",           false);
+			_lattr.color               = struct_try_get(_lattr, "color",                  -1);
+			_lattr.update_graph        = struct_try_get(_lattr, "update_graph",         true);
+			_lattr.show_update_trigger = struct_try_get(_lattr, "show_update_trigger", false);
+			_lattr.array_process       = struct_try_get(_lattr, "array_process",           0);
+			
+			attributeDeserialize(CLONING? variable_clone(_lattr) : _lattr);
 		}
 		
 		if(is_dynamic_input) {
@@ -2404,7 +2412,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static attributeDeserialize = function(attr) {
-		struct_append(attributes, attr); 
+		struct_override(attributes, attr); 
 		
 		if(!CLONING && LOADING_VERSION < 1_18_02_0) {
 			if(struct_has(attr, "color_depth")) attributes.color_depth += (!array_empty(inputs) && inputs[0].type == VALUE_TYPE.surface)? 1 : 2;
@@ -2519,9 +2527,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		for( var i = 0; i < array_length(outputs); i++ )
 			outputs[i].cleanUp();
-		
-		ds_map_destroy(inputMap);
-		ds_map_destroy(outputMap);
 		
 		for( var i = 0, n = array_length(temp_surface); i < n; i++ )
 			surface_free(temp_surface[i]);

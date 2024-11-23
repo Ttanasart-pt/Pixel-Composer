@@ -249,6 +249,7 @@
 			
 			_map.composer    = composer;
 			_map.load_layout = load_layout;
+			if(load_layout) _map.layout = panelSerialize(true);
 			
 			_map.graph_display_parameter = graph_display_parameter;
 			

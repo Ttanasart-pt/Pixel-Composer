@@ -175,7 +175,7 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		if(array_length(group_vertex) < 3) return;
 		if(!modifiable) return;
 		
-		var _m       = [ _mx / _s - _x, _my / _s - _y ];
+		var _m = [ _mx / _s - _x, _my / _s - _y ];
 		
 		group_adding = false;
 		

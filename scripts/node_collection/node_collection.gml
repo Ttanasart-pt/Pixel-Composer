@@ -172,6 +172,7 @@ function upgroupNode(collection, record = true) {
 function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) constructor { 
 	nodes       = [];
 	node_length = 0;
+	modifiable  = true;
 	
 	ungroupable			= true;
 	auto_render_time	= false;

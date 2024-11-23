@@ -73,7 +73,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	
 	sprite_index = -1;
 	
-	text_surface = surface_create(1, 1);
+	text_surface = noone;
 	
 	shake_amount = 0;
 	onDeactivate = -1;

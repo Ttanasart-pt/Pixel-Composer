@@ -106,9 +106,6 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 				array_push(canvases, _node);
 			else if(is_instanceof(_node, Node_Composite))
 				composite = _node;
-			
-			_node.modifiable    = false;
-			_node.modify_parent = self;
 		}
 		
 		refreshLayer();
@@ -152,9 +149,6 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 	}
 	
 	static onAdd = function(node) {
-		node.modifiable    = false;
-		node.modify_parent = self;
-		
 	    if(is_instanceof(node, Node_Canvas))    {
      		array_push(canvases, node);
      		node.timeline_item.removeSelf();

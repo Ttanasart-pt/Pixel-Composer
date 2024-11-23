@@ -24,14 +24,14 @@ function Node_VCT(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 		
 		newInput(index, nodeValue(name, self, CONNECT_TYPE.input, _var.type, 0))
 			.setDisplay(_var.disp, _var.disp_data);
-		inputs[index].display_data.key = key;
+		inputs[index].attributes.key = key;
 		
 		array_append(input_display_list, [ index ]);
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		for( var i = 1; i < array_length(_data); i++ )
-			vct[$ inputs[i].display_data.key].setDirect(_data[i]);
+			vct[$ inputs[i].attributes.key].setDirect(_data[i]);
 			
 		var params = {
 			frame: CURRENT_FRAME
@@ -50,8 +50,5 @@ function Node_VCT(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 	
 	static postDeserialize = function() {
 		vct.deserialize(load_map.vct);
-		
-		//for(var i = input_fix_len; i < array_length(_inputs); i += data_length)
-		//	createNewInput(_inputs[i].display_data.key);
 	}
 }

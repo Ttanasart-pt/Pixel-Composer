@@ -410,7 +410,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			
 		if(inParent.name != display_name) {
 			inParent.name = display_name;
-			group.inputMap[? string_replace_all(display_name, " ", "_")] = inParent;
+			group.inputMap[$ string_replace_all(display_name, " ", "_")] = inParent;
 		}
 		
 		if(inParent.type == VALUE_TYPE.trigger) {

@@ -15,7 +15,7 @@ function __NodeValue_Quaternion(_name, _node, _value, _tooltip = "") : __NodeVal
 		
 		if(!is_array(val)) return [ val, val, val, val ];
 		
-		var _convert = applyUnit && display_data.angle_display == QUARTERNION_DISPLAY.euler;
+		var _convert = applyUnit && attributes.angle_display == QUARTERNION_DISPLAY.euler;
 		if(!_convert) return val;
 		
 		var _d = array_get_depth(val);
