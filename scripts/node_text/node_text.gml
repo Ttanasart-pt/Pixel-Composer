@@ -16,7 +16,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	newInput(4, nodeValue_Vec2("Character range", self, [ 32, 128 ]));
 	
-	newInput(5, nodeValue_Color("Color", self, c_white));
+	newInput(5, nodeValue_Color("Color", self, cola(c_white)));
 	
 	newInput(6, nodeValue_Vec2("Fixed dimension", self, DEF_SURF ))
 		.setVisible(true, false);
@@ -42,7 +42,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	newInput(16, nodeValue_Bool("Render background", self, false));
 	
-	newInput(17, nodeValue_Color("BG Color", self, c_black));
+	newInput(17, nodeValue_Color("BG Color", self, cola(c_black)));
 	
 	newInput(18, nodeValue_Bool("Wave", self, false));
 	

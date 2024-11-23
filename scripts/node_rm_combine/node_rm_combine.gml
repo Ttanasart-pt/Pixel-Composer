@@ -19,7 +19,7 @@ function Node_RM_Combine(_x, _y, _group = noone) : Node_RM(_x, _y, _group) const
 	
 	newInput(6, nodeValue_Bool("Draw BG", self, false));
 	
-	newInput(7, nodeValue_Color("Background", self, c_black));
+	newInput(7, nodeValue_Color("Background", self, cola(c_black)));
 	
 	newInput(8, nodeValue_Float("Ambient Level", self, 0.2))
 		.setDisplay(VALUE_DISPLAY.slider);

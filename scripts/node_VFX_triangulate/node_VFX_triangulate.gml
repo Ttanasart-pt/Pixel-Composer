@@ -21,7 +21,7 @@ function Node_VFX_Triangulate(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		
 	newInput(2, nodeValue_Float("Thickness", self, 1 ));
 		
-	newInput(3, nodeValue_Color("Color", self, c_white ));
+	newInput(3, nodeValue_Color("Color", self, cola(c_white) ));
 		
 	newInput(4, nodeValue_Bool("Inherit Thickness", self, false ));
 		

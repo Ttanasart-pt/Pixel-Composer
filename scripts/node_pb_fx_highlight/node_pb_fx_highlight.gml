@@ -4,9 +4,9 @@ function Node_PB_Fx_Highlight(_x, _y, _group = noone) : Node_PB_Fx(_x, _y, _grou
 	newInput(1, nodeValue_Int("Highlight Area", self, array_create(9) ))
 		.setDisplay(VALUE_DISPLAY.matrix, { size: 3 });
 		
-	newInput(2, nodeValue_Color("Light Color", self, c_white ));
+	newInput(2, nodeValue_Color("Light Color", self, cola(c_white) ));
 		
-	newInput(3, nodeValue_Color("Shadow Color", self, c_black ));
+	newInput(3, nodeValue_Color("Shadow Color", self, cola(c_black) ));
 		
 	newInput(4, nodeValue_Float("Roughness", self, 0 ))
 		.setDisplay(VALUE_DISPLAY.slider);

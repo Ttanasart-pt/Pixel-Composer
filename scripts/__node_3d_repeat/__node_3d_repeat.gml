@@ -22,9 +22,9 @@ function __Node_3D_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	newInput(8, nodeValue_Float("Light intensity", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(9, nodeValue_Color("Light color", self, c_white));
+	newInput(9, nodeValue_Color("Light color", self, cola(c_white)));
 	
-	newInput(10, nodeValue_Color("Ambient color", self, c_grey));
+	newInput(10, nodeValue_Color("Ambient color", self, cola(c_grey)));
 		
 	newInput(11, nodeValue("3D object", self, CONNECT_TYPE.input, VALUE_TYPE.d3object, noone))
 		.setVisible(true, true);

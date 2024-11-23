@@ -1225,7 +1225,9 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         var _node_draw = display_parameter.show_control? nodes_list : array_filter(nodes_list, function(_n) /*=>*/ {return !_n.is_controller});
             _node_draw = array_filter( _node_draw, function(_n) /*=>*/ {
             	_n.preDraw(__gr_x, __gr_y, __gr_s, __gr_x, __gr_y);
-            	return _n.cullCheck(__gr_x, __gr_y, __gr_s, -32, -32, __gr_w + 32, __gr_h + 64);
+            	var _cull = _n.cullCheck(__gr_x, __gr_y, __gr_s, -32, -32, __gr_w + 32, __gr_h + 64);
+            	
+            	return _n.active && _cull;
         	});
         
         printIf(log, $"Predraw time: {get_timer() - t}"); t = get_timer();
@@ -1497,12 +1499,12 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	        param.setProp(array_length(nodes_list), display_parameter.highlight);
 	        param.setDraw(aa, bg_color);
 	        
-	        for(var i = 0; i < array_length(nodes_list); i++) {
+	        for( var i = 0, n = array_length(nodes_list); i < n; i++ ) {
 	            var _node = nodes_list[i];
-	            if(!display_parameter.show_control && _node.is_controller) continue;
+	            if(!_node.active || (!display_parameter.show_control && _node.is_controller)) 
+	            	continue;
 	            
 	            param.cur_layer = i + 1;
-	            
 	            var _hov = _node.drawConnections(param);
 	            if(_hov != noone && is_struct(_hov)) hov = _hov;
 	        }

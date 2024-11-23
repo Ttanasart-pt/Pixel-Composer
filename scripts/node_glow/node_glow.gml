@@ -12,7 +12,7 @@ function Node_Glow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(3, nodeValue_Float("Strength", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01 ]});
 	
-	newInput(4, nodeValue_Color("Color",   self, c_white));
+	newInput(4, nodeValue_Color("Color",   self, cola(c_white)));
 	
 	newInput(5, nodeValue_Surface("Mask", self));
 	

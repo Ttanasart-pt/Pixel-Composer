@@ -10,9 +10,9 @@ function Node_Onion_Skin(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	newInput(2, nodeValue_Float("Alpha", self, 0.5))
 		.setDisplay(VALUE_DISPLAY.slider);
 		
-	newInput(3, nodeValue_Color("Color pre", self, c_red))
+	newInput(3, nodeValue_Color("Color pre", self, cola(c_red)))
 	
-	newInput(4, nodeValue_Color("Color post", self, c_blue))
+	newInput(4, nodeValue_Color("Color post", self, cola(c_blue)))
 	
 	newInput(5, nodeValue_Int("Step", self, 1))
 	

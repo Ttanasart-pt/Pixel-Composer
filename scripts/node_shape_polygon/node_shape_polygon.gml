@@ -9,9 +9,9 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	newInput(1, nodeValue_Bool("Background", self, false));
 	
-	newInput(2, nodeValue_Color("Background color", self, c_black));
+	newInput(2, nodeValue_Color("Background color", self, cola(c_black)));
 	
-	newInput(3, nodeValue_Color("Shape color", self, c_white));
+	newInput(3, nodeValue_Color("Shape color", self, cola(c_white)));
 	
 	newInput(4, nodeValue_Enum_Scroll("Shape", self,  0, shapesArray));
 	
@@ -55,11 +55,11 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	////////////
 	
-	newInput(19, nodeValue_Color("Vertex Color 1", self, c_white));
+	newInput(19, nodeValue_Color("Vertex Color 1", self, cola(c_white)));
 	
-	newInput(20, nodeValue_Color("Vertex Color 2", self, c_white));
+	newInput(20, nodeValue_Color("Vertex Color 2", self, cola(c_white)));
 	
-	newInput(21, nodeValue_Color("Vertex Color 3", self, c_white));
+	newInput(21, nodeValue_Color("Vertex Color 3", self, cola(c_white)));
 	
 	////////////
 	

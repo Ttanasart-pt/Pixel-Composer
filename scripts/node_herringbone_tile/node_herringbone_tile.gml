@@ -19,7 +19,7 @@ function Node_Herringbone_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	newInput(5, nodeValue_Gradient("Tile color", self, new gradientObject(cola(c_white))))
 		.setMappable(18);
 	
-	newInput(6, nodeValue_Color("Gap color", self, c_black));
+	newInput(6, nodeValue_Color("Gap color", self, cola(c_black)));
 	
 	newInput(7, nodeValue_Enum_Scroll("Render type", self,  0, ["Colored tile", "Height map", "Texture grid"]));
 		

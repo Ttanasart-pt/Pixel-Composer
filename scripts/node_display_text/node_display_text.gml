@@ -17,7 +17,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	ta_editor   = new textArea(TEXTBOX_INPUT.text, function(val) { inputs[1].setValue(val); })
 	
-	newInput(0, nodeValue_Color("Color", self, c_white ))
+	newInput(0, nodeValue_Color("Color", self, cola(c_white) ))
 		.rejectArray();
 	
 	newInput(1, nodeValue_Text("Text", self, "Text"));

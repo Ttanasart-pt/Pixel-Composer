@@ -12,7 +12,7 @@ function Node_Blur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		
 	newInput(3, nodeValue_Bool("Override color", self, false, "Replace all color while keeping the alpha. Used to\nfix grey outline when bluring transparent pixel."));
 	
-	newInput(4, nodeValue_Color("Color", self, c_black));
+	newInput(4, nodeValue_Color("Color", self, cola(c_black)));
 	
 	newInput(5, nodeValue_Surface("Mask", self));
 	

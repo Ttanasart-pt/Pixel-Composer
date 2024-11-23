@@ -1273,19 +1273,20 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 	} run_in(1, function() /*=>*/ { refreshNodeDisplay(); });
 	
-	__preDraw_data = { _x: undefined, _y: undefined, _s: undefined };
+	__preDraw_data = { _x: undefined, _y: undefined, _s: undefined, _p: undefined, sp: undefined };
 	
 	static preDraw = function(_x, _y, _s) {
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
 		
-		var _upd = __preDraw_data._x != xx || 
-		           __preDraw_data._y != yy || 
-		           __preDraw_data._s != _s;
+		var _upd = __preDraw_data._x != xx || __preDraw_data._y != yy || __preDraw_data._s != _s ||
+		           __preDraw_data._p != previewable || __preDraw_data.sp != show_parameter 
 		
 		__preDraw_data._x = xx;
 		__preDraw_data._y = yy;
 		__preDraw_data._s = _s;
+		__preDraw_data._p = previewable;
+		__preDraw_data.sp = show_parameter;
 		
 		if(!_upd) {
 			if(SHOW_PARAM) h = h_param;
@@ -1525,7 +1526,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static drawJunctions = function(_x, _y, _mx, _my, _s) {
-		if(!active) return;
 		var hover = noone;
 		
 		for(var i = 0, n = array_length(inputDisplayList); i < n; i++) { //inputs
@@ -1572,7 +1572,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static drawJunctions_fast = function(_x, _y, _mx, _my, _s) {
-		if(!active) return;
 		var hover = noone;
 		
 		draw_set_circle_precision(4);
@@ -1623,9 +1622,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static onDrawJunctions = function(_x, _y, _mx, _my, _s) {}
 	
 	static drawJunctionNames = function(_x, _y, _mx, _my, _s) {
-		if(draw_graph_culled) return;
-		if(!active) return;
-		
 		var amo = input_display_list == -1? array_length(inputs) : array_length(input_display_list);
 		var jun;
 		
@@ -1904,12 +1900,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static drawNodeFG = function(_x, _y, _mx, _my, _s, display_parameter = noone, _panel = noone) { }
 	
-	static drawNode = function(_x, _y, _mx, _my, _s, display_parameter = noone, _panel = noone) {
-		if(draw_graph_culled) return;
-		if(!active) return;
-		
-		if(display_parameter != noone)
-			self.display_parameter = display_parameter;
+	static drawNode = function(_x, _y, _mx, _my, _s, display_parameter = noone, _panel = noone) { 
+		if(display_parameter != noone) self.display_parameter = display_parameter;
 		
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
@@ -1973,8 +1965,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static drawNodeBehind = function(_x, _y, _mx, _my, _s) {
-		if(!active) return;
-		
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
 		
@@ -1990,8 +1980,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static drawPreviewBackground = function(_x, _y, _mx, _my, _s) { return false; }
 	
 	static drawBadge = function(_x, _y, _s) {
-		if(!active) return;
-		
 		badgePreview = lerp_float(badgePreview, !!previewing, 2);
 		badgeInspect = lerp_float(badgeInspect,   inspecting, 2);
 		

@@ -33,13 +33,13 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		
 	newInput(5, nodeValue_Float("Scale", self, DEF_SURF_W / 2));
 	
-	newInput(6, nodeValue_Color("Base Color", self, c_white));
+	newInput(6, nodeValue_Color("Base Color", self, cola(c_white)));
 		
 	newInput(7, nodeValue_Float("Graph Thickness", self, 1));
 	
 	newInput(8, nodeValue_Bool("Background", self, false));
 		
-	newInput(9, nodeValue_Color("Background color", self, c_black));
+	newInput(9, nodeValue_Color("Background color", self, cola(c_black)));
 	
 	newInput(10, nodeValue_Rotation("Direction", self, 0));
 	

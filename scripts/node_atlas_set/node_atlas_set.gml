@@ -13,7 +13,7 @@ function Node_Atlas_Set(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	newInput(4, nodeValue_Vec2("Scale", self, [ 0, 0 ]));
 		
-	newInput(5, nodeValue_Color("Blend", self, c_white));
+	newInput(5, nodeValue_Color("Blend", self, cola(c_white)));
 		
 	newInput(6, nodeValue_Float("Alpha", self, 1));
 	

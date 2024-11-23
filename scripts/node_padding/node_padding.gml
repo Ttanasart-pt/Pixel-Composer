@@ -9,7 +9,7 @@ function Node_Padding(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	newInput(2, nodeValue_Enum_Scroll("Fill method", self,  0, [ "Empty", "Solid" ]));
 	
-	newInput(3, nodeValue_Color("Fill color", self, c_black));
+	newInput(3, nodeValue_Color("Fill color", self, cola(c_black)));
 	
 	newInput(4, nodeValue_Bool("Active", self, true));
 		active_index = 4;

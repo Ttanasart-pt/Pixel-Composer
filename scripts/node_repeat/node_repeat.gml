@@ -144,7 +144,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		newInput(_index + 6, nodeValue_Vec2("Anchor Position", self, [ 0.5, 0.5 ]))
 			.setTooltip("Anchor point for transformation, absolute value for global type, relative for local.");
 		
-		newInput(_index + 7, nodeValue_Color("Color", self, c_white));
+		newInput(_index + 7, nodeValue_Color("Color", self, cola(c_white)));
 		
 		newInput(_index + 8, nodeValue_Float("Alpha", self, 0))
 			.setDisplay(VALUE_DISPLAY.slider, { range : [ -1, 1, 0.01 ] });

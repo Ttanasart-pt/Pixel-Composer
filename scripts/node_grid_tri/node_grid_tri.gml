@@ -19,7 +19,7 @@ function Node_Grid_Tri(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(5, nodeValue_Gradient("Tile color", self, new gradientObject(cola(c_white))))
 		.setMappable(17);
 		
-	newInput(6, nodeValue_Color("Gap color",  self, c_black));
+	newInput(6, nodeValue_Color("Gap color",  self, cola(c_black)));
 	
 	newInput(7, nodeValue_Surface("Texture", self));
 	

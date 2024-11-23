@@ -30,8 +30,8 @@ function __Node_3D_Cylinder(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput(12, nodeValue_Float("Light intensity", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(13, nodeValue_Color("Light color", self, c_white));
-	newInput(14, nodeValue_Color("Ambient color", self, c_grey));
+	newInput(13, nodeValue_Color("Light color", self, cola(c_white)));
+	newInput(14, nodeValue_Color("Ambient color", self, cola(c_grey)));
 	
 	newInput(15, nodeValue_Vec3("Object rotation", self, [ 0, 0, 0 ]));
 		

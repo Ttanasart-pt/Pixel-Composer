@@ -3,7 +3,7 @@ function Node_PB_Fx_Strip(_x, _y, _group = noone) : Node_PB_Fx(_x, _y, _group) c
 	
 	newInput(1, nodeValue_Int("Scale", self, 1 ));
 		
-	newInput(2, nodeValue_Color("Color", self, c_white ));
+	newInput(2, nodeValue_Color("Color", self, cola(c_white) ));
 		
 	newInput(3, nodeValue_Int("Shift", self, 0 ));
 		

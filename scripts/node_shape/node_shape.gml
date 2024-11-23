@@ -74,9 +74,9 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 0.5, 0.001] });
 	inputs[9].overlay_draw_text = false;
 	
-	newInput(10, nodeValue_Color("Shape color", self, c_white));
+	newInput(10, nodeValue_Color("Shape color", self, cola(c_white)));
 	
-	newInput(11, nodeValue_Color("Background color", self, c_black));
+	newInput(11, nodeValue_Color("Background color", self, cola(c_black)));
 	
 	newInput(12, nodeValue_Bool("Height", self, false));
 	

@@ -11,7 +11,7 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	newInput(4, nodeValueSeed(self));
 	
-	newInput(5, nodeValue_Color("Target Color", self, c_white));
+	newInput(5, nodeValue_Color("Target Color", self, cola(c_white)));
 	
 	newInput(6, nodeValue_Bool("Inner only", self, false, "Only fill regions with surrounding pixels."));
 	

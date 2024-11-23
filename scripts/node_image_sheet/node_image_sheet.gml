@@ -55,7 +55,7 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 	newInput(13, nodeValue_Enum_Scroll("Filtered Pixel", self,  0, [ "Transparent", "Color" ]));
 	
-	newInput(14, nodeValue_Color("Filtered Color", self, c_black))
+	newInput(14, nodeValue_Color("Filtered Color", self, cola(c_black)))
 	
 	input_display_list = [
 		["Sprite", false],	0, 1, 6, 

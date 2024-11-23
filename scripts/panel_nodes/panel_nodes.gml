@@ -16,7 +16,7 @@ function Panel_Nodes() : PanelContent() constructor {
 	function onResize() { sc_nodes.resize(w - ui(padding + padding), h - ui(padding + padding + 40)); }
 	
 	function drawNodeList(_arr, _x0, _x1, _y, _m) {
-		var ww  = sc_nodes.surface_w;
+		var _hh = sc_nodes.surface_h;
 		var hg  = ui(28);
 		
 		var _h  = 0;
@@ -32,10 +32,24 @@ function Panel_Nodes() : PanelContent() constructor {
 			if(isGroup && !ds_map_exists(node_collapse, node.node_id)) 
 				node_collapse[? node.node_id] = false;
 			
+			var _cull = _y + hg < 0 || _y > _hh;
+			if(_cull) {
+				_y += hg + ui(2);
+				_h += hg + ui(2);
+				
+				if(isGroup && !node_collapse[? node.node_id]) {
+					var hh = drawNodeList(node.nodes, _x0 + ui(16), _x1, _y, _m);
+					_y += hh + ui(2);
+					_h += hh + ui(2);
+				}
+				
+				continue;
+			}
+			
 			if(pHOVER && point_in_rectangle(_m[0], _m[1], _x0, _y, _x1 - _x0 - ui(32), _y + hg)) {
 				sc_nodes.hover_content = true;
 				
-				var cc = merge_color(COLORS._main_icon_light, COLORS._main_icon, 0.25);
+				var cc = merge_color(COLORS._main_icon_light, COLORS._main_icon, 0.75);
 				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _x0, _y, _x1 - _x0, hg, cc, 1);
 				
 				if(sc_nodes.active) {
@@ -49,8 +63,8 @@ function Panel_Nodes() : PanelContent() constructor {
 					} 
 				}
 			} else 
-				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _x0, _y, _x1 - _x0, hg, COLORS._main_icon_light, 1);
-			draw_sprite_stretched_add(THEME.ui_panel, 1, _x0, _y, _x1 - _x0, hg, c_white, .1);
+				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _x0, _y, _x1 - _x0, hg, COLORS._main_icon, 1);
+			draw_sprite_stretched_add(THEME.ui_panel, 1, _x0, _y, _x1 - _x0, hg, COLORS._main_icon, .2);
 			
 			var bw = ui(24);
 			var bh = ui(24);
@@ -64,18 +78,18 @@ function Panel_Nodes() : PanelContent() constructor {
 			var _n  = ALL_NODES[? instanceof(node)];
 			var spr = _n.spr;
 			draw_sprite_ui(spr, 1, _x0 + ui(4 + 16), _y + hg / 2, 0.25, 0.25, 0, c_white, 1);
-			var cc  = COLORS._main_text;
-			draw_set_text(f_p2, fa_left, fa_center, cc);
+			
+			draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
 			draw_text_add(_x0 + hg + ui(8) + (isGroup * ui(20)), _y + hg / 2, name);
 			if(isGroup) draw_sprite_ui(THEME.arrow, (!node_collapse[? node.node_id]) * 3, _x0 + hg + ui(16), _y + hg / 2,,,,, 0.75);
 			
-			_y += hg + ui(4);
-			_h += hg + ui(4);
+			_y += hg + ui(2);
+			_h += hg + ui(2);
 			
 			if(isGroup && !node_collapse[? node.node_id]) {
 				var hh = drawNodeList(node.nodes, _x0 + ui(16), _x1, _y, _m);
-				_y += hh + ui(4);
-				_h += hh + ui(4);
+				_y += hh + ui(2);
+				_h += hh + ui(2);
 			}
 		}
 		

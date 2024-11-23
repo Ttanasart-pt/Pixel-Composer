@@ -1,7 +1,7 @@
 function Node_PB_Fx_Hash(_x, _y, _group = noone) : Node_PB_Fx(_x, _y, _group) constructor {
 	name = "Hash";
 	
-	newInput(1, nodeValue_Color("Color", self, c_white ));
+	newInput(1, nodeValue_Color("Color", self, cola(c_white) ));
 	
 	newInput(2, nodeValue_Float("Hash", self, 2. ));
 	

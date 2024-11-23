@@ -5,19 +5,19 @@ function Node_Gradient_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	
 	newInput(1, nodeValue_Vec2("Center 1", self, [ 0, 0 ] ))
 		.setUnitRef(function(index) { return getDimension(index); });
-	newInput(2, nodeValue_Color("Color 1", self, c_white ));
+	newInput(2, nodeValue_Color("Color 1", self, cola(c_white) ));
 	
 	newInput(3, nodeValue_Vec2("Center 2", self, [ DEF_SURF_W, 0 ] ))
 		.setUnitRef(function(index) { return getDimension(index); });
-	newInput(4, nodeValue_Color("Color 2", self, c_white ));
+	newInput(4, nodeValue_Color("Color 2", self, cola(c_white) ));
 	
 	newInput(5, nodeValue_Vec2("Center 3", self, [ 0, DEF_SURF_H ] ))
 		.setUnitRef(function(index) { return getDimension(index); });
-	newInput(6, nodeValue_Color("Color 3", self, c_white ));
+	newInput(6, nodeValue_Color("Color 3", self, cola(c_white) ));
 	
 	newInput(7, nodeValue_Vec2("Center 4", self, DEF_SURF , { useGlobal : false }))
 		.setUnitRef(function(index) { return getDimension(index); });
-	newInput(8, nodeValue_Color("Color 4", self, c_white ));
+	newInput(8, nodeValue_Color("Color 4", self, cola(c_white) ));
 	
 	newInput(9, nodeValue_Bool("Use palette", self, false ));
 	

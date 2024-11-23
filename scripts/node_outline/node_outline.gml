@@ -19,7 +19,7 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		.setValidator(VV_min(0))
 		.setMappable(15);
 	
-	newInput(2, nodeValue_Color("Color",   self, c_white));
+	newInput(2, nodeValue_Color("Color",   self, cola(c_white)));
 	
 	newInput(3, nodeValue_Bool("Blend",   self, 0, "Blend outline color with the original color."));
 	

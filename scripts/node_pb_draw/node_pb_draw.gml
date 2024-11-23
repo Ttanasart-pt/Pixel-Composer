@@ -4,7 +4,7 @@ function Node_PB_Draw(_x, _y, _group = noone) : Node_PB(_x, _y, _group) construc
 	newInput(0, nodeValue("pBox", self, CONNECT_TYPE.input, VALUE_TYPE.pbBox, noone ))
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_Color("Color", self, c_white ));
+	newInput(1, nodeValue_Color("Color", self, cola(c_white) ));
 	
 	newInput(2, nodeValue_Bool("Apply Mask", self, true ));
 	

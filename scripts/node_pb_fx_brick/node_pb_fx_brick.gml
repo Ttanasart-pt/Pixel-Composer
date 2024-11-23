@@ -7,7 +7,7 @@ function Node_PB_Fx_Brick(_x, _y, _group = noone) : Node_PB_Fx(_x, _y, _group) c
 	
 	newInput(3, nodeValue_Int("Shift", self, 0));
 	
-	newInput(4, nodeValue_Color("Color", self, c_white ));
+	newInput(4, nodeValue_Color("Color", self, cola(c_white) ));
 	
 	newInput(5, nodeValue_Float("Dissolve", self, 0. ))
 		.setDisplay(VALUE_DISPLAY.slider)

@@ -5,11 +5,11 @@ function Node_PB_Fx_Stack(_x, _y, _group = noone) : Node_PB_Fx(_x, _y, _group) c
 	
 	newInput(2, nodeValue_Enum_Button("Direction", self,  0 , array_create(4, THEME.obj_direction) ));
 	
-	newInput(3, nodeValue_Color("Color", self, c_white ));
+	newInput(3, nodeValue_Color("Color", self, cola(c_white) ));
 	
 	newInput(4, nodeValue_Bool("Highlight", self, false ));
 	
-	newInput(5, nodeValue_Color("Highlight Color", self, c_white ));
+	newInput(5, nodeValue_Color("Highlight Color", self, cola(c_white) ));
 	
 	newInput(6, nodeValue_Bool("Invert", self, false ));
 	

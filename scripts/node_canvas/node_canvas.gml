@@ -5,7 +5,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	newInput( 0, nodeValue_Dimension(self));
 	
-	newInput( 1, nodeValue_Color("Color", self, c_white ));
+	newInput( 1, nodeValue_Color("Color", self, cola(c_white) ));
 	newInput( 2, nodeValue_Int("Brush size", self, 1 ))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 32, 0.1] });
 	

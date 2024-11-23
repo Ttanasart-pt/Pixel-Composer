@@ -31,10 +31,10 @@ function __Node_3D_Obj(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		.setDisplay(VALUE_DISPLAY.slider)
 		.rejectArray();
 	
-	newInput(9, nodeValue_Color("Light color", self, c_white))
+	newInput(9, nodeValue_Color("Light color", self, cola(c_white)))
 		.rejectArray();
 	
-	newInput(10, nodeValue_Color("Ambient color", self, c_grey))
+	newInput(10, nodeValue_Color("Ambient color", self, cola(c_grey)))
 		.rejectArray();
 	
 	newInput(11, nodeValue_Vec3("Object scale", self, [ 1, 1, 1 ]));
