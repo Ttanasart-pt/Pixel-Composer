@@ -423,6 +423,10 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				doTrigger = 0;
 			}
 		}
+	}
+	
+	static update = function(frame = CURRENT_FRAME) {
+		if(is_undefined(inParent)) return;
 		
 		var _dstype = getInputData(0);
 		var _data   = getInputData(2);
@@ -458,16 +462,13 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				inputs[4].setVisible(true);
 				break;
 		}
-	}
-	
-	static update = function(frame = CURRENT_FRAME) {
-		if(is_undefined(inParent)) return;
+		
 		visibleCheck();
 		
 		outputs[0].setValue(inParent.getValue());
 	}
 	
-	static getGraphPreviewSurface = function() { return inputs[0].getValue(); }
+	static getGraphPreviewSurface = function() { var _in = array_safe_get(inputs, 0, noone); return _in == noone? noone : _in.getValue(); }
 	
 	static postDeserialize = function() { createInput(false); }
 	

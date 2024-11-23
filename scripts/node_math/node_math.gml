@@ -116,7 +116,43 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		return 0;
 	}
 	
-	static step = function() {
+	function evalArray(a, b, c = 0) {
+		var _as = is_array(a);
+		var _bs = is_array(b);
+		var _cs = is_array(c);
+		
+		if(!_as && !_bs && !_cs)
+			return _eval(a, b, c);
+		
+		if(!_as) a = [ a ];
+		if(!_bs) b = [ b ];
+		if(!_cs) c = [ c ];
+		
+		var al = array_length(a);
+		var bl = array_length(b);
+		var cl = array_length(c);
+		
+		var amo = max(al, bl, cl);
+		var val = array_create(amo);
+		
+		for( var i = 0; i < amo; i++ ) 
+			val[i] = evalArray( 
+				array_safe_get(a, i,, ARRAY_OVERFLOW.loop), 
+				array_safe_get(b, i,, ARRAY_OVERFLOW.loop),
+				array_safe_get(c, i,, ARRAY_OVERFLOW.loop),
+			);
+		
+		return val;
+	}
+	
+	static update = function(frame = CURRENT_FRAME) {
+		use_mod = getInputData(0);
+		use_deg = getInputData(3);
+		
+		var a	= getInputData(1);
+		var b	= getInputData(2);
+		var c	= getInputData(5);
+		
 		var mode = getInputData(0);
 		
 		inputs[2].setVisible(false, false);
@@ -193,44 +229,6 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				
 			default: return;
 		}
-	}
-	
-	function evalArray(a, b, c = 0) {
-		var _as = is_array(a);
-		var _bs = is_array(b);
-		var _cs = is_array(c);
-		
-		if(!_as && !_bs && !_cs)
-			return _eval(a, b, c);
-		
-		if(!_as) a = [ a ];
-		if(!_bs) b = [ b ];
-		if(!_cs) c = [ c ];
-		
-		var al = array_length(a);
-		var bl = array_length(b);
-		var cl = array_length(c);
-		
-		var amo = max(al, bl, cl);
-		var val = array_create(amo);
-		
-		for( var i = 0; i < amo; i++ ) 
-			val[i] = evalArray( 
-				array_safe_get(a, i,, ARRAY_OVERFLOW.loop), 
-				array_safe_get(b, i,, ARRAY_OVERFLOW.loop),
-				array_safe_get(c, i,, ARRAY_OVERFLOW.loop),
-			);
-		
-		return val;
-	}
-	
-	static update = function(frame = CURRENT_FRAME) {
-		use_mod = getInputData(0);
-		use_deg = getInputData(3);
-		
-		var a	= getInputData(1);
-		var b	= getInputData(2);
-		var c	= getInputData(5);
 		
 		var val = evalArray(a, b, c);
 		outputs[0].setValue(val);

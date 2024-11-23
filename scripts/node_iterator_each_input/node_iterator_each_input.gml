@@ -21,15 +21,21 @@ function Node_Iterator_Each_Input(_x, _y, _group = noone) : Node(_x, _y, _group)
 		arr[@ 1] = group.inputs[0];
 	}
 	
-	static step = function() {
-		if(group == noone) return;
-		if(!variable_struct_exists(group, "iterated")) return;
+	static getPreviewValues = function() {
+		if(group == noone) return noone;
 		
-		if(outputs[0].setType(group.inputs[0].type))
-			will_setHeight = true;
+		switch(group.inputs[0].type) {
+			case VALUE_TYPE.surface :
+			case VALUE_TYPE.dynaSurface :
+				break;
+			default :
+				return noone;
+		}
+		
+		return group.getInputData(0);
 	}
 	
-	static getPreviewValues = function() { #region
+	static getGraphPreviewSurface = function() {
 		if(group == noone) return noone;
 		
 		switch(group.inputs[0].type) {
@@ -41,23 +47,9 @@ function Node_Iterator_Each_Input(_x, _y, _group = noone) : Node(_x, _y, _group)
 		}
 		
 		return group.getInputData(0);
-	} #endregion
+	}
 	
-	static getGraphPreviewSurface = function() { #region
-		if(group == noone) return noone;
-		
-		switch(group.inputs[0].type) {
-			case VALUE_TYPE.surface :
-			case VALUE_TYPE.dynaSurface :
-				break;
-			default :
-				return noone;
-		}
-		
-		return group.getInputData(0);
-	} #endregion
-	
-	static onLoadGroup = function() { #region
+	static onLoadGroup = function() {
 		if(group == noone) destroy();
-	} #endregion
+	}
 }

@@ -19,7 +19,11 @@ function Node_Palette_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.color, [ ] ))
 		.setDisplay(VALUE_DISPLAY.palette);
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
+	static processData_prebatch = function() {
+		setDimension(96, process_length[0] * 32);
+	}
+	
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var pal = _data[0];
 		var pfr = _data[1];
 		var pto = _data[2];
@@ -45,9 +49,9 @@ function Node_Palette_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 		}
 		
 		return palo;
-	} #endregion
+	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
 		if(bbox.h < 1) return;
 		
@@ -55,7 +59,6 @@ function Node_Palette_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 		if(array_empty(pal)) return;
 		if(!is_array(pal[0])) pal = [ pal ];
 		
-		var _h = array_length(pal) * 32;
 		var _y = bbox.y0;
 		var gh = bbox.h / array_length(pal);
 			
@@ -63,8 +66,5 @@ function Node_Palette_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 			drawPalette(pal[i], bbox.x0, _y, bbox.w, gh);
 			_y += gh;
 		}
-		
-		if(_h != min_h) will_setHeight = true;
-		min_h = _h;	
-	} #endregion
+	}
 }

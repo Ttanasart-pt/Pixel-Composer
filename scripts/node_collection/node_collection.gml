@@ -331,7 +331,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	static step = function() {
 		if(combine_render_time) {
 			render_time = 0;
-			array_foreach(getNodeList(), function(node) { render_time += node.render_time; });
+			array_foreach(getNodeList(), function(node) /*=>*/ { render_time += node.render_time; });
 		}
 		
 		onStep();

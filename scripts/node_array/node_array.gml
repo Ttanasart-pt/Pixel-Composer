@@ -1,5 +1,6 @@
 function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Array";
+	setDimension(96, 32);
 	
 	attributes.spread_value = false;
 	

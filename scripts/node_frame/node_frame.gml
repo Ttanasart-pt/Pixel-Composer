@@ -56,7 +56,9 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	static onValueUpdate = function(index = 3) { global.__FRAME_LABEL_SCALE = getInputData(3); }
 	
-	static step = function() {
+	static setHeight = function() {}
+	
+	static update = function() {
 		previewable = true;
 		
 		var sz = getInputData(0);
@@ -69,6 +71,9 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		scale  = getInputData(3);
 		lcolor = getInputData(4);
 	}
+	
+	static drawNode  = function() { return noone; }
+	static drawBadge = function() { return noone; }
 	
 	static drawNodeBase = function(xx, yy, _s, _panel) {
 		var px0 =  3;

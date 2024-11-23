@@ -11,24 +11,21 @@ function Node_Iterator_Each_Output(_x, _y, _group = noone) : Node(_x, _y, _group
 	newOutput(0, nodeValue_Output("Preview", self, VALUE_TYPE.any, 0 ))
 		.setVisible(false, false);
 	
-	static getNextNodes = function() { #region
+	static getNextNodes = function() {
 		if(!struct_has(group, "outputNextNode")) return [];
 		return group.outputNextNode();
-	} #endregion
+	}
 	
-	static step = function() { #region
+	static step = function() {
 		if(!variable_struct_exists(group, "iterated")) return;
 		
 		var type = inputs[0].value_from == noone? VALUE_TYPE.any : inputs[0].value_from.type;
 		
 		inputs[0].setType(type);
 		group.outputs[0].setType(type);
-		
-		if(outputs[0].setType(type))
-			will_setHeight = true;
-	} #endregion
+	}
 	
-	static cloneValue = function(_prev_val, _val) { #region
+	static cloneValue = function(_prev_val, _val) {
 		if(inputs[0].value_from == noone) return _prev_val;
 		
 		var is_surf	 = inputs[0].value_from.type == VALUE_TYPE.surface;
@@ -41,9 +38,9 @@ function Node_Iterator_Each_Output(_x, _y, _group = noone) : Node(_x, _y, _group
 		else		_new_val = array_clone(_val);
 		
 		return _new_val;
-	} #endregion
+	}
 	
-	static update = function(frame = CURRENT_FRAME) { #region
+	static update = function(frame = CURRENT_FRAME) {
 		if(inputs[0].value_from == noone) {
 			group.iterationUpdate();
 			return;
@@ -61,9 +58,9 @@ function Node_Iterator_Each_Output(_x, _y, _group = noone) : Node(_x, _y, _group
 		outputs[0].setValue(_val);
 		group.outputs[0].setValue(_val);
 		group.iterationUpdate();
-	} #endregion
+	}
 	
-	static onLoadGroup = function() { #region
+	static onLoadGroup = function() {
 		if(group == noone) destroy();
-	} #endregion
+	}
 }

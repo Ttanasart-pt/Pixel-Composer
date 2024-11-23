@@ -1,5 +1,8 @@
 function draw_line_elbow_diag_color(x0, y0, x1, y1, cx = noone, cy = noone, _s = 1, thick = 1, c1 = c_white, c2 = c_white, params = {}) {
 	var extend    = params.extend;
+	var indexIn   = struct_try_get(params, "fromIndex", 1);
+	var indexOut  = struct_try_get(params, "toIndex",   1);
+	
     var corner    = min(extend, params.corner);
 	var type      = params.type;
 	
@@ -17,8 +20,8 @@ function draw_line_elbow_diag_color(x0, y0, x1, y1, cx = noone, cy = noone, _s =
 	
 	var iy  = sign(y1 - y0);
 	
-	var xx0 = x0;
-	var xx1 = x1;
+	var xx0 = x0 + extend * _s;
+	var xx1 = x1 - extend * _s;
 	var yy0 = y0;
 	var yy1 = y1;
 	
@@ -32,6 +35,9 @@ function draw_line_elbow_diag_color(x0, y0, x1, y1, cx = noone, cy = noone, _s =
 	var rx   = _x1 - _x0;
 	var ry   = _y1 - _y0;
 	
+	xx0 = x0 + extend * _s * indexIn;
+	xx1 = x1 - extend * _s * indexOut;
+
 	if(inv) {
 		var cm   = merge_color(c1, c2, 0.5);
 		
@@ -209,6 +215,9 @@ function draw_line_elbow_diag_color(x0, y0, x1, y1, cx = noone, cy = noone, _s =
 
 function draw_line_elbow_diag_corner(x0, y0, x1, y1, _s = 1, thick = 1, col1 = c_white, col2 = c_white, params = {}) {
 	var extend    = params.extend;
+	var indexIn   = struct_try_get(params, "fromIndex", 1);
+	var indexOut  = struct_try_get(params, "toIndex",   1);
+	
     var corner    = min(extend, params.corner);
 	var type      = params.type;
 	
@@ -236,10 +245,12 @@ function draw_line_elbow_diag_corner(x0, y0, x1, y1, _s = 1, thick = 1, col1 = c
 
 function distance_to_elbow_diag(mx, my, x0, y0, x1, y1, cx, cy, _s, params = {}) {
 	var extend    = params.extend;
+	var indexIn   = struct_try_get(params, "fromIndex", 1);
+	var indexOut  = struct_try_get(params, "toIndex",   1);
 	
 	var iy  = sign(y1 - y0);
-	var xx0 = x0;
-	var xx1 = x1;
+	var xx0 = x0 + extend * _s;
+	var xx1 = x1 - extend * _s;
 	var yy0 = y0;
 	var yy1 = y1;
 		
@@ -252,6 +263,9 @@ function distance_to_elbow_diag(mx, my, x0, y0, x1, y1, cx, cy, _s, params = {})
 	var rx   = _x1 - _x0;	
 	var ry   = _y1 - _y0;
 	
+	xx0 = x0 + extend * _s * indexIn;
+	xx1 = x1 - extend * _s * indexOut;
+
 	var dist = 9999999;
 	if(inv) {
 		var ofl = cy < _y0 || cy > _y1;

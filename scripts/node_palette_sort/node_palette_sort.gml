@@ -23,14 +23,18 @@ function Node_Palette_Sort(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		0, 1, 3, 2, 
 	]
 	
-	static step = function() { #region
+	static step = function() {
 		var _typ = getInputData(1);
 		
 		inputs[3].setVisible(_typ == 10);
-	} #endregion
+	}
+	
+	static processData_prebatch = function() {
+		setDimension(96, process_length[0] * 32);
+	}
 	
 	sort_string = "";
-	static customSort = function(c) { #region
+	static customSort = function(c) {
 		var len = string_length(sort_string);
 		var val = power(256, len - 1);
 		var res = 0;
@@ -55,9 +59,9 @@ function Node_Palette_Sort(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		}
 		
 		return res;
-	} #endregion
+	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _arr = _data[0];
 		var _ord = _data[1];
 		var _rev = _data[2];
@@ -83,9 +87,9 @@ function Node_Palette_Sort(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		if(_rev) _pal = array_reverse(_pal);
 		
 		return _pal;
-	} #endregion
+	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
 		if(bbox.h < 1) return;
 		
@@ -93,7 +97,6 @@ function Node_Palette_Sort(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		if(array_empty(pal)) return;
 		if(!is_array(pal[0])) pal = [ pal ];
 		
-		var _h = array_length(pal) * 32;
 		var _y = bbox.y0;
 		var gh = bbox.h / array_length(pal);
 			
@@ -101,8 +104,5 @@ function Node_Palette_Sort(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			drawPalette(pal[i], bbox.x0, _y, bbox.w, gh);
 			_y += gh;
 		}
-		
-		if(_h != min_h) will_setHeight = true;
-		min_h = _h;	
-	} #endregion
+	}
 }

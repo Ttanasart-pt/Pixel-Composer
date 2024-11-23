@@ -91,7 +91,7 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		.setDisplay(VALUE_DISPLAY.palette);
 	
 	input_display_list = [11, 12, 15, 9, 24, 
-		["Surface",		false], 0, 8, 16, 17, 13, 
+		["Input",		false], 0, 8, 16, 17, 13, 
 		["Brightness",	false], 1, 18, 10, 25, 2, 19, 
 		["HSV",			false], 3, 20, 4, 21, 5, 22, 
 		["Color blend", false], 6, 14, 7, 23, 
@@ -101,22 +101,7 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	attribute_surface_depth();
 	
-	static step = function() { #region
-		var type = getInputData(12);
-		
-		inputs[ 0].setVisible(type == 0, type == 0);
-		inputs[ 8].setVisible(type == 0, type == 0);
-		inputs[ 9].setVisible(type == 0);
-		inputs[13].setVisible(type == 1, type == 1);
-		inputs[14].setVisible(type == 0);
-		
-		outputs[0].setVisible(type == 0, type == 0);
-		outputs[1].setVisible(type == 1, type == 1);
-		
-		var _msk = is_surface(getSingleValue(8));
-		inputs[16].setVisible(_msk);
-		inputs[17].setVisible(_msk);
-		
+	static step = function() {
 		inputs[ 1].mappableStep();
 		inputs[ 2].mappableStep();
 		inputs[ 3].mappableStep();
@@ -125,9 +110,29 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		inputs[ 7].mappableStep();
 		inputs[ 9].mappableStep();
 		inputs[10].mappableStep();
-	} #endregion
+	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
+	static processData_prebatch = function() {
+		var _type = getSingleValue(12);
+		
+		inputs[ 0].setVisible(_type == 0, _type == 0);
+		inputs[ 8].setVisible(_type == 0, _type == 0);
+		inputs[ 9].setVisible(_type == 0);
+		inputs[13].setVisible(_type == 1, _type == 1);
+		inputs[14].setVisible(_type == 0);
+		
+		outputs[0].setVisible(_type == 0, _type == 0);
+		outputs[1].setVisible(_type == 1, _type == 1);
+		
+		inputs[16].setVisible(_type == 0);
+		inputs[17].setVisible(_type == 0);
+		
+		preview_draw = _type == 0;
+			 if(_type == 0) setDimension(128, 128);
+		else if(_type == 1) setDimension(96, process_length[13] * 32);
+	}
+	
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _bri = _data[1];
 		var _con = _data[2];
 		var _hue = _data[3];
@@ -155,7 +160,7 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		
 		_col = array_clone(_col);
 		
-		if(_type == 1) { #region color adjust
+		if(_type == 1) { // single color adjust
 			if(is_array(_bri)) _bri = array_safe_get_fast(_bri, 0);
 			if(is_array(_con)) _con = array_safe_get_fast(_con, 0);
 			if(is_array(_hue)) _hue = array_safe_get_fast(_hue, 0);
@@ -197,7 +202,7 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			}
 			
 			return _col;
-		} #endregion
+		}
 		
 		#region param
 			var sw = surface_get_width_safe(_baseSurf);
@@ -252,15 +257,10 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		#endregion
 		
 		return _outSurf;
-	} #endregion
+	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var type = getInputData(12);
-		if(preview_draw != (type == 0)) { 
-			preview_draw   = (type == 0);
-			will_setHeight = true;
-		}
-		
 		if(type == 0) return;
 		
 		var bbox = drawGetBbox(xx, yy, _s);
@@ -270,7 +270,6 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		if(array_empty(pal)) return;
 		if(!is_array(pal[0])) pal = [ pal ];
 		
-		var _h = array_length(pal) * 32;
 		var _y = bbox.y0;
 		var gh = bbox.h / array_length(pal);
 			
@@ -278,8 +277,5 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			drawPalette(pal[i], bbox.x0, _y, bbox.w, gh);
 			_y += gh;
 		}
-		
-		if(_h != min_h) will_setHeight = true;
-		min_h = _h;	
-	} #endregion
+	}
 }

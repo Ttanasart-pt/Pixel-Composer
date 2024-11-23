@@ -84,8 +84,6 @@ function Node_Logic(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				auto_input = true;
 				return;
 		}
-		
-		will_setHeight = true;
 	}
 	
 	static _eval = function(mode, a, b) {
@@ -102,18 +100,18 @@ function Node_Logic(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	}
 	
 	function evalLogicArray(mode, a, b = false) {
-		var as = is_array(a);
-		var bs = is_array(b);
+		var _as = is_array(a);
+		var _bs = is_array(b);
 		
-		if(!as && !bs)
+		if(!_as && !_bs)
 			return _eval(mode, a, b);
 		
-		var al = as? array_length(a) : 0;
-		var bl = bs? array_length(b) : 0;
+		var al = _as? array_length(a) : 0;
+		var bl = _bs? array_length(b) : 0;
 		
 		var val = [];
-		if(!as) a = [ a ];
-		if(!bs) b = [ b ];
+		if(!_as) a = [ a ];
+		if(!_bs) b = [ b ];
 		
 		for( var i = 0; i < max(al, bl, cl); i++ ) 
 			val[i] = evalLogicArray(mode, 

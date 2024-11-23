@@ -108,7 +108,7 @@ function Panel_Patreon() : PanelContent() constructor {
 		switch(page) {
 			case 0 :
 				draw_set_text(f_p0, fa_center, fa_center, COLORS._main_text_inner);
-				draw_text(w / 2, _yy, "Enter your Pateron email:");
+				draw_text(w / 2, _yy, "Enter your Patreon email:");
 				
 				tb_email.setInteract(!mail_checking);
 				tb_email.setFocusHover(pFOCUS, pHOVER);

@@ -94,9 +94,9 @@ void main(in VertexShaderOutput _input, out PixelShaderOutput output) {
 	
 	input_display_list = [ 2, 
 		["Vertex Shader [read only]", true], new Inspector_Label(vs_string, _f_code_s),
-		["Fragmanet Shader",		 false], preLabel, 1, new Inspector_Label(fs_postString, _f_code_s), 
-		["Arguments",	 false], argument_renderer,
-		["Values",		  true], 
+		["Fragment Shader", false], preLabel, 1, new Inspector_Label(fs_postString, _f_code_s), 
+		["Arguments",	    false], argument_renderer,
+		["Values",		     true], 
 	];
 
 	setDynamicInput(3, false);

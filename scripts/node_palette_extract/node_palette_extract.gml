@@ -1,6 +1,6 @@
 function Node_Palette_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Palette Extract";
-	setDimension(96, 48);;
+	setDimension(96, 48);
 	
 	newInput(0, nodeValue_Surface("Surface in", self));
 	
@@ -34,6 +34,10 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	extraction_current = 0;
 	
 	attribute_surface_depth();
+	
+	static processData_prebatch = function() {
+		setDimension(96, process_length[0] * 32);
+	}
 	
 	function sortPalette(pal) {
 		array_sort(pal, function(c0, c1) {
@@ -312,16 +316,12 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 		if(array_empty(pal)) return;
 		if(!is_array(pal[0])) pal = [ pal ];
 		
-		var _h = array_length(pal) * 32;
 		var _y = bbox.y0;
 		var gh = bbox.h / array_length(pal);
 			
 		for( var i = 0, n = array_length(pal); i < n; i++ ) {
 			drawPalette(pal[i], bbox.x0, _y, bbox.w, gh);
 			_y += gh;
-		}
-		
-		if(_h != min_h) will_setHeight = true;
-		min_h = _h;	
+		}	
 	}
 }

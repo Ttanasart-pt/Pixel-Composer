@@ -41,24 +41,21 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		inputs[0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
-	static step = function() {
+	static setType = function() {
 		var int  = getInputData(1);
 		var disp = getInputData(2);
-		var _ch  = con_h;
 		
-		if(!show_parameter) setDimension(96, 56, false);
+		var _ww = 96, _hh = 56;
 		
 		switch(disp) {
 			case 0 : 
-				min_h = 0;
 				inputs[3].setVisible(false);
 				inputs[4].setVisible(false);
 				inputs[5].setVisible(false);
 				break;
 				
 			case 1 : 
-				if(inputs[0].value_from == noone && !show_parameter) setDimension(160, 96, false);
-				min_h = con_h;
+				_ww = 160; _hh = 96;
 				
 				inputs[3].setVisible(true);
 				inputs[4].setVisible(true);
@@ -66,8 +63,7 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				break;
 				
 			case 2 : 
-				if(inputs[0].value_from == noone && !show_parameter) setDimension(128, 128, false);
-				min_h = con_h;
+				_ww = 128; _hh = 128;
 				
 				inputs[3].setVisible(false);
 				inputs[4].setVisible(false);
@@ -75,7 +71,7 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				break;
 		}
 		
-		if(_ch != con_h) will_setHeight = true;
+		setDimension(_ww, _hh);
 		
 		for( var i = 0; i < 1; i++ )
 			inputs[i].setType(int? VALUE_TYPE.integer : VALUE_TYPE.float);
@@ -95,12 +91,12 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	}
 	
 	static update = function() {
+		setType();
+		
 		var _dat = getInputData(0);
 		outputs[0].setValue(_dat);
 		
-	
 		var _int = getInputData(1);
-		
 		var _res = processNumber(_dat, _int);
 		outputs[0].setValue(_res);
 	}

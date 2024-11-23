@@ -1,6 +1,6 @@
 function Node_Gradient_Replace_Color(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Gradient Replace";
-	setDimension(96, 48);;
+	setDimension(96, 48);
 	
 	newInput(0, nodeValue_Gradient("Gradient", self, new gradientObject(cola(c_white))))
 		.setVisible(true, true);
@@ -14,7 +14,11 @@ function Node_Gradient_Replace_Color(_x, _y, _group = noone) : Node_Processor(_x
 	
 	newOutput(0, nodeValue_Output("Gradient", self, VALUE_TYPE.gradient, new gradientObject(cola(c_white)) ));
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
+	static processData_prebatch = function() {
+		setDimension(96, process_length[0] * 32);
+	}
+	
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var gra  = _data[0];
 		var pfr  = _data[1];
 		var pto  = _data[2];
@@ -43,15 +47,14 @@ function Node_Gradient_Replace_Color(_x, _y, _group = noone) : Node_Processor(_x
 		graO.type = gra.type;
 		
 		return graO;
-	} #endregion
+	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
 		if(bbox.h < 1) return;
 		
 		var grad = outputs[0].getValue();
 		if(!is_array(grad)) grad = [ grad ];
-		var _h = array_length(grad) * 32;
 		
 		var _y = bbox.y0;
 		var gh = bbox.h / array_length(grad);
@@ -60,8 +63,6 @@ function Node_Gradient_Replace_Color(_x, _y, _group = noone) : Node_Processor(_x
 			grad[i].draw(bbox.x0, _y, bbox.w, gh);
 			_y += gh;
 		}
-		
-		if(_h != min_h) will_setHeight = true;
-		min_h = _h;	
-	} #endregion
+			
+	}
 }

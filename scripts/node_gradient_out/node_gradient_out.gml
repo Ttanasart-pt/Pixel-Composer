@@ -15,6 +15,10 @@ function Node_Gradient_Out(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	_pal = -1;
 	
+	static processData_prebatch = function() {
+		setDimension(96, process_length[0] * 32);
+	}
+	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var pal = _data[0];
 		var pos = _data[1];
@@ -32,7 +36,6 @@ function Node_Gradient_Out(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		
 		var grad = outputs[0].getValue();
 		if(!is_array(grad)) grad = [ grad ];
-		var _h = array_length(grad) * 32;
 		
 		var _y = bbox.y0;
 		var gh = bbox.h / array_length(grad);
@@ -41,8 +44,5 @@ function Node_Gradient_Out(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			grad[i].draw(bbox.x0, _y, bbox.w, gh);
 			_y += gh;
 		}
-		
-		if(_h != min_h) will_setHeight = true;
-		min_h = _h;	
 	}
 }

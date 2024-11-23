@@ -21,6 +21,10 @@ function Node_Palette_Shrink(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
         0, 4, 1, 2, 
 	];
 	
+	static processData_prebatch = function() {
+		setDimension(96, process_length[0] * 32);
+	}
+	
 	function kmean(_pal) {
 		_size  = max(1, getInputData(2));
 		_space = getInputData(4);
@@ -187,7 +191,6 @@ function Node_Palette_Shrink(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		if(array_empty(pal)) return;
 		if(!is_array(pal[0])) pal = [ pal ];
 		
-		var _h = array_length(pal) * 32;
 		var _y = bbox.y0;
 		var gh = bbox.h / array_length(pal);
 			
@@ -195,8 +198,5 @@ function Node_Palette_Shrink(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			drawPalette(pal[i], bbox.x0, _y, bbox.w, gh);
 			_y += gh;
 		}
-		
-		if(_h != min_h) will_setHeight = true;
-		min_h = _h;	
 	}
 }

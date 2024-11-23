@@ -1,6 +1,5 @@
 function Node_Color_Data(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Color Data";
-	batch_output = false;
 	setDimension(96, 48);
 	
 	newInput(0, nodeValue_Color("Color", self, c_white))
@@ -19,31 +18,38 @@ function Node_Color_Data(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newOutput(6, nodeValue_Output("Brightness",	self, VALUE_TYPE.float, 0).setVisible(false));
 	newOutput(7, nodeValue_Output("Alpha",		self, VALUE_TYPE.float, 0).setVisible(false));
 	
-	static processData = function(_output, _data, _output_index, _array_index = 0) {  
+	static processData = function(_outData, _data, _output_index, _array_index = 0) {  
 		var _c = _data[0];
 		var _n = _data[1];
 		
-		var val = 0;
-		switch(_output_index) {
-			case 0 : val = color_get_red(_c);			break;
-			case 1 : val = color_get_green(_c);			break;
-			case 2 : val = color_get_blue(_c);			break;
+		if(!is_numeric(_c)) return _outData;
+		
+		if(_n) {
+			_outData[0] = _color_get_red(_c);
+			_outData[1] = _color_get_green(_c);
+			_outData[2] = _color_get_blue(_c);
 			
-			case 3 : val = color_get_hue(_c);			break;
-			case 4 : val = color_get_saturation(_c);	break;
-			case 5 : val = color_get_value(_c);			break;
+			_outData[3] = _color_get_hue(_c);
+			_outData[4] = _color_get_saturation(_c);
+			_outData[5] = _color_get_value(_c);
 			
-			case 6 : 
-				var r = color_get_red(_c);
-				var g = color_get_green(_c);
-				var b = color_get_blue(_c);
-				val   = 0.2126 * r + 0.7152 * g + 0.0722 * b;
-				break;
+			_outData[6] = 0.2126 * _outData[0] + 0.7152 * _outData[1] + 0.0722 * _outData[2];
+			_outData[7] = _color_get_alpha(_c);
 			
-			case 7 : val = color_get_alpha(_c);			break;
+		} else {
+			_outData[0] = color_get_red(_c);
+			_outData[1] = color_get_green(_c);
+			_outData[2] = color_get_blue(_c);
+			
+			_outData[3] = color_get_hue(_c);
+			_outData[4] = color_get_saturation(_c);
+			_outData[5] = color_get_value(_c);
+			
+			_outData[6] = 0.2126 * _outData[0] + 0.7152 * _outData[1] + 0.0722 * _outData[2];
+			_outData[7] = color_get_alpha(_c);
 		}
 		
-		return _n? val / 255 : val;
+		return _outData;
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

@@ -52,21 +52,20 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	static step = function() {
 		var _key = inputs[0].getValue();
 		project.tunnels_out[? node_id] = _key;
-		
-		if(ds_map_exists(project.tunnels_in, _key)) {
-			outputs[0].setType(project.tunnels_in[? _key].type);
-			outputs[0].display_type = project.tunnels_in[? _key].display_type;
-		} else {
-			outputs[0].setType(VALUE_TYPE.any);
-			outputs[0].display_type = VALUE_DISPLAY._default;
-		}
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
 		var _key = inputs[0].getValue();
 		
-		if(ds_map_exists(project.tunnels_in, _key))
+		if(ds_map_exists(project.tunnels_in, _key)) {
+			outputs[0].setType(project.tunnels_in[? _key].type);
+			outputs[0].display_type = project.tunnels_in[? _key].display_type;
 			outputs[0].setValue(project.tunnels_in[? _key].getValue());
+		} else {
+			outputs[0].setType(VALUE_TYPE.any);
+			outputs[0].display_type = VALUE_DISPLAY._default;
+		}
+			
 	}
 	
 	/////////////////////////////////////////////////////////////////////////////

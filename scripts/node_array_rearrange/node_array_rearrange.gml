@@ -119,25 +119,19 @@ function Node_Array_Rearrange(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		inputs[1].setValue(_val);
 	}
 	
-	static step = function() {
-		var _typ = VALUE_TYPE.any;
-		if(inputs[0].value_from != noone) _typ = inputs[0].value_from.type;
+	static update = function(frame = CURRENT_FRAME) {
+		var _typ = inputs[0].value_from == noone? VALUE_TYPE.any : inputs[0].value_from.type;
 		
 		inputs[0].setType(_typ);
 		outputs[0].setType(_typ);
 		
 		if(type != _typ) {
-			if(_typ == VALUE_TYPE.surface)
-				setDimension(128, 128);
-			else
-				setDimension(96, 32 + 24);
+			if(_typ == VALUE_TYPE.surface) setDimension(128, 128);
+			else                           setDimension(96, 32 + 24);
 			
 			type = _typ;
-			will_setHeight = true;
 		}
-	}
-	
-	static update = function(frame = CURRENT_FRAME) {
+		
 		var _arr = getInputData(0);
 		var _ord = getInputData(1);
 		

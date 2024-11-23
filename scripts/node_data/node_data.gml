@@ -103,11 +103,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		w     = 128;
 		h     = 128;
 		min_w = w;
-		min_h = name_height;
 		con_h = 128;
 		
 		h_param = h;
-		will_setHeight = false;
 		preserve_height_for_preview = false;
 		
 		selectable   = true;
@@ -587,12 +585,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			updatedOutTrigger.setValue(false);
 		}
 		
-		if(will_setHeight) { 
-			setHeight();
-			getJunctionList();
-			will_setHeight = false;
-		}
-		
 		if(is_3D == NODE_3D.polygon) USE_DEPTH = true;
 		if(is_simulation) PROJECT.animator.is_simulating = true;
 		
@@ -737,9 +729,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			}
 		}
 		
-		h = max(min_h, _prev_surf * 128, _hi, _ho);
+		h = max(previewable? con_h : name_height, _prev_surf * 128, _hi, _ho);
 		if(attributes.node_height) h = max(h, attributes.node_height);
-		
 	}
 	
 	static getJunctionList = function() { ////getJunctionList
@@ -988,14 +979,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(!is_instanceof(self, Node_Collection)) 
 			render_time = get_timer() - render_timer;
 		
-		//refreshNodeDisplay();
 		LOG_BLOCK_END();
 	}
 	
 	static valueUpdate = function(index) {
 		onValueUpdate(index);
 		
-		if(is_dynamic_input) will_setHeight = true;
 		cacheCheck();
 	}
 	
@@ -1006,7 +995,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(auto_input && !LOADING && !APPENDING) 
 			refreshDynamicInput();
 			
-		if(is_dynamic_input) will_setHeight = true;
 		cacheCheck();
 	}
 	
@@ -1246,6 +1234,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	/////============= DRAW =============
 	
+	static setShowParameter = function(showParam) {
+		show_parameter = showParam;
+		refreshNodeDisplay();
+		return self;
+	}
+	
 	static onInspect = function() {}
 	
 	static pointIn = function(_x, _y, _mx, _my, _s) {
@@ -1267,6 +1261,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		draw_boundary[3] = maxy;
 		
 		draw_graph_culled = !rectangle_in_rectangle(minx, miny, maxx, maxy, x0, y0, x1, y1);
+		return !draw_graph_culled;
 	}
 	
 	static refreshNodeDisplay = function() {
@@ -1278,10 +1273,26 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 	} run_in(1, function() /*=>*/ { refreshNodeDisplay(); });
 	
+	__preDraw_data = { _x: undefined, _y: undefined, _s: undefined };
+	
 	static preDraw = function(_x, _y, _s) {
-		
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
+		
+		var _upd = __preDraw_data._x != xx || 
+		           __preDraw_data._y != yy || 
+		           __preDraw_data._s != _s;
+		
+		__preDraw_data._x = xx;
+		__preDraw_data._y = yy;
+		__preDraw_data._s = _s;
+		
+		if(!_upd) {
+			if(SHOW_PARAM) h = h_param;
+			onPreDraw(_x, _y, _s, _iy, _oy);
+			return;
+		}
+		
 		var jun;
 		
 		var inspCount = hasInspector1Update() + hasInspector2Update();
@@ -1319,70 +1330,23 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			_junSy = yy + _junRy * _s;
 		}
 		
-		var _ix = xx;
-		var _iy = _junSy;
-		var rx  = x;
-		var ry  = y + _junRy;
+		__s = _s;
+		_ix = xx;
+		_iy = _junSy;
 		
-		for( var i = 0, n = array_length(inputs); i < n; i++ ) {
-			jun = inputs[i];
-			
-			jun.x  = _ix; jun.rx = rx;  
-			jun.y  = _iy; jun.ry = ry;
-		}
+		_ox = xx + w * _s;
+		_oy = _junSy;
 		
-		for(var i = 0; i < in_cache_len; i++) {
-			jun = inputDisplayList[i];
-			
-			jun.x = _ix; jun.rx = rx;
-			jun.y = _iy; jun.ry = ry;
-			
-			_iy += junction_draw_hei_y * _s;
-			ry  += junction_draw_hei_y;
-		}
+		array_foreach(inputs,           function(jun) /*=>*/ { jun.x = _ix; jun.y = _iy; });
+		array_foreach(inputDisplayList, function(jun) /*=>*/ { jun.x = _ix; jun.y = _iy; _iy += junction_draw_hei_y * __s; });
 		
-		var _ox = xx + w * _s;
-		var _oy = _junSy;
-		var rx  = x + w;
-		var ry  = y + _junRy;
-		var idx;
+		array_foreach(outputs_index,    function(jun) /*=>*/ { jun = outputs[jun]; jun.x = _ox; jun.y = _oy; _oy += junction_draw_hei_y * jun.isVisible() * __s; });
 		
-		var _oamo = getOutputJunctionAmount();
-		for(var i = 0; i < _oamo; i++) {
-			idx = outputs_index[i];
-			jun = outputs[idx];
-			
-			jun.x = _ox; jun.rx = rx;
-			jun.y = _oy; jun.ry = ry;
-			
-			_oy += junction_draw_hei_y * jun.isVisible() * _s;
-			ry  += junction_draw_hei_y * jun.isVisible();
-		}
-		
-		for( var i = 0; i < array_length(inputs); i++ ) {
-			var _inp = inputs[i];
-			var jun = _inp.bypass_junc;
-			if(jun == noone) continue;
-			
-			jun.x = _ox; jun.rx = rx;
-			jun.y = _oy; jun.ry = ry;
-			
-			_oy += junction_draw_hei_y * jun.visible * _s;
-			ry  += junction_draw_hei_y * jun.visible;
-		}
-		
-		for( var i = 0, n = array_length(junc_meta); i < n; i++ ) {
-			var jun  = junc_meta[i];
-			
-			jun.x = _ox; jun.rx = rx;
-			jun.y = _oy; jun.ry = ry;
-			
-			_oy += junction_draw_hei_y * jun.isVisible() * _s;
-			ry  += junction_draw_hei_y * jun.isVisible();
-		}
+		array_foreach(inputs,           function(jun) /*=>*/ { jun   = jun.bypass_junc; if(!jun.visible) return; 
+		                                           jun.x = _ox; jun.y = _oy; _oy += junction_draw_hei_y * jun.visible * __s; });
+		array_foreach(junc_meta,        function(jun) /*=>*/ { jun.x = _ox; jun.y = _oy; _oy += junction_draw_hei_y * jun.isVisible() * __s; });
 		
 		if(SHOW_PARAM) h = h_param;
-		
 		onPreDraw(_x, _y, _s, _iy, _oy);
 	}
 	
@@ -1396,7 +1360,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static getColor = function() { INLINE return attributes.color == -1? color : attributes.color; }
 	
-	static drawNodeBase = function(xx, yy, _s) { INLINE draw_sprite_stretched_ext(bg_spr, 0, xx, yy, w * _s, h * _s, getColor(), (.25 + .5 * renderActive) * (.25 + .75 * isHighlightingInGraph())); }
+	static drawNodeBase = function(xx, yy, _s) { 
+		draw_sprite_stretched_ext(bg_spr, 0, xx, yy, w * _s, h * _s, getColor(), (.25 + .5 * renderActive) * (.25 + .75 * isHighlightingInGraph())); 
+	}
 	
 	static drawNodeOverlay = function(xx, yy, _mx, _my, _s) {}
 	
@@ -1738,7 +1704,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	__draw_inputs = []
 	static drawConnections = function(params = {}) {
-		if(!active) return;
+		if(!active) return noone;
 		
 		var hovering = noone;
 		var drawLineIndex = 1;
@@ -1746,43 +1712,26 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var high = params.highlight; // 0
 		var bg   = params.bg;        // 0
 		
-		for(var i = 0; i < array_length(outputs); i++) {
+		for(var i = 0, n = array_length(outputs); i < n; i++) {
 			var jun       = outputs[i];
-			var connected = false;
-			
-			for( var j = 0; j < array_length(jun.value_to); j++ ) {
-				if(jun.value_to[j].value_from == jun) 
-					connected = true;
-			}
+			var connected = !array_empty(jun.value_to);
 			
 			if(connected) {
 				jun.drawLineIndex = drawLineIndex;
 				drawLineIndex += 0.5;
 			}
 			
-			if(high) {
-				jun.draw_blend_color = bg;
-				jun.draw_blend       = PREFERENCES.connection_line_highlight_fade;
-			} else {
-				jun.draw_blend_color = bg;
-				jun.draw_blend       = -1;
-			}
-		
+			jun.draw_blend_color = bg;
+			jun.draw_blend       = high? PREFERENCES.connection_line_highlight_fade : -1;
 		}
 		
 		__draw_inputs = array_verify(__draw_inputs, array_length(inputs));
 		var _len = 0;
 		var _jun, _hov;
 		
-		if(hasInspector1Update()) {
-			_hov = inspectInput1.drawConnections(params);
-			if(_hov) hovering = _hov;
-		}
+		if(hasInspector1Update()) { _hov = inspectInput1.drawConnections(params); if(_hov) hovering = _hov; }
 		
-		if(hasInspector2Update()) {
-			_hov = inspectInput2.drawConnections(params);
-			if(_hov) hovering = _hov;
-		}
+		if(hasInspector2Update()) { _hov = inspectInput2.drawConnections(params); if(_hov) hovering = _hov; }
 		
 		var drawLineIndex = 1;
 		for(var i = 0, n = array_length(inputs); i < n; i++) {
@@ -1790,25 +1739,17 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			_jun.draw_blend_color = bg;
 			_jun.draw_blend       = high? PREFERENCES.connection_line_highlight_fade : -1;
 			
-			if( _jun.value_from == noone)    continue;
-			if(!_jun.value_from.node.active) continue;
-			if(!_jun.isVisible())            continue;
+			if(_jun.bypass_junc.visible) _jun.bypass_junc.drawBypass(params);
+			if( _jun.value_from == noone || !_jun.value_from.node.active || !_jun.isVisible()) continue;
 			
-			if(i >= 0) __draw_inputs[_len++] = _jun;
-		}
-		
-		for( var i = 0; i < array_length(inputs); i++ ) {
-			var jun = inputs[i].bypass_junc;
-			if(jun == noone || !jun.visible) continue;
-			jun.drawBypass(params);
+			__draw_inputs[_len++] = _jun;
 		}
 		
 		for( var i = 0; i < _len; i++ ) {
 			_jun = __draw_inputs[i];
 			_jun.drawLineIndex = 1 + (i > _len / 2? (_len - 1 - i) : i) * 0.5;
 			
-			_hov = _jun.drawConnectionsRaw(params);
-			if(_hov) hovering = _hov;
+			_hov = _jun.drawConnectionsRaw(params); if(_hov) hovering = _hov;
 		}
 		
 		if(attributes.show_update_trigger) {
@@ -2032,7 +1973,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static drawNodeBehind = function(_x, _y, _mx, _my, _s) {
-		if(draw_graph_culled) return;
 		if(!active) return;
 		
 		var xx = x * _s + _x;
@@ -2608,10 +2548,14 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static setDimension = function(_w = 128, _h = 128, _apply = true) {
 		INLINE
 		
+		var _oh = con_h;
 		min_w = _w; 
 		con_h = _h;
 		
-		if(_apply) { w = _w; h = _h; }
+		if(!_apply) return;
+		
+		w = max(w, min_w);
+		if(_oh != _h) refreshNodeDisplay();
 	}
 	
 	static move = function(_x, _y, _s) {

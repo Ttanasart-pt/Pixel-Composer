@@ -43,20 +43,6 @@ function Node_Condition(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	newOutput(0, nodeValue_Output("Result", self, VALUE_TYPE.any, []));
 	newOutput(1, nodeValue_Output("Bool", self, VALUE_TYPE.boolean, false));
 	
-	static step = function() {
-		var _mode = getInputData(5);
-		
-		inputs[0].setVisible(_mode == 1, _mode == 1);
-		inputs[1].setVisible(_mode == 1);
-		inputs[2].setVisible(_mode == 1, _mode == 1);
-		inputs[6].setVisible(_mode == 0, _mode == 0);
-		inputs[7].setVisible(_mode == 2, _mode == 2);
-		inputs[8].setVisible(_mode == 2, _mode == 2);
-		
-		inputs[3].setType(inputs[3].value_from == noone? VALUE_TYPE.any : inputs[3].value_from.type);
-		inputs[4].setType(inputs[4].value_from == noone? VALUE_TYPE.any : inputs[4].value_from.type);
-	}
-	
 	static update = function(frame = CURRENT_FRAME) {
 		var _true = getInputData(3);
 		var _fals = getInputData(4);
@@ -69,6 +55,16 @@ function Node_Condition(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var _bool = getInputData(6);
 		var _txt1 = getInputData(7);
 		var _txt2 = getInputData(8);
+		
+		inputs[0].setVisible(_mode == 1, _mode == 1);
+		inputs[1].setVisible(_mode == 1);
+		inputs[2].setVisible(_mode == 1, _mode == 1);
+		inputs[6].setVisible(_mode == 0, _mode == 0);
+		inputs[7].setVisible(_mode == 2, _mode == 2);
+		inputs[8].setVisible(_mode == 2, _mode == 2);
+		
+		inputs[3].setType(inputs[3].value_from == noone? VALUE_TYPE.any : inputs[3].value_from.type);
+		inputs[4].setType(inputs[4].value_from == noone? VALUE_TYPE.any : inputs[4].value_from.type);
 		
 		var res = false;
 		

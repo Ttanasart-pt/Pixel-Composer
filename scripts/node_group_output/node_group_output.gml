@@ -77,7 +77,9 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		if(is_undefined(outParent)) return;
 		
 		outParent.name = display_name; 
-		
+	}
+	
+	static update = function() {
 		var _in0 = inputs[0];
 		var _pty = _in0.type;
 		var _typ = _in0.value_from == noone? VALUE_TYPE.any         : _in0.value_from.type;
@@ -93,13 +95,11 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		outParent.draw_fg       = _in0.draw_fg;
 		
 		if(group && _pty != _typ) group.setHeight();
-	}
-	
-	static update = function() {
+		
 		outParent.setValue(inputs[0].getValue());
 	}
 	
-	static getGraphPreviewSurface = function() { return inputs[0].getValue(); }
+	static getGraphPreviewSurface = function() { var _in = array_safe_get(inputs, 0, noone); return _in == noone? noone : _in.getValue(); }
 	static postDeserialize		  = function() { if(group == noone) return; createOutput(false); }
 	static postApplyDeserialize	  = function() {}
 	

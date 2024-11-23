@@ -13,6 +13,10 @@ function Node_Palette(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		["Trim",	true],	1
 	];
 	
+	static processData_prebatch = function() {
+		setDimension(96, process_length[0] * 32);
+	}
+	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var pal = _data[0];
 		var ran = _data[1];
@@ -35,7 +39,6 @@ function Node_Palette(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		if(array_empty(pal)) return;
 		if(!is_array(pal[0])) pal = [ pal ];
 		
-		var _h = array_length(pal) * 32;
 		var _y = bbox.y0;
 		var gh = bbox.h / array_length(pal);
 			
@@ -43,8 +46,5 @@ function Node_Palette(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			drawPalette(pal[i], bbox.x0, _y, bbox.w, gh);
 			_y += gh;
 		}
-		
-		if(_h != min_h) will_setHeight = true;
-		min_h = _h;	
 	}
 }

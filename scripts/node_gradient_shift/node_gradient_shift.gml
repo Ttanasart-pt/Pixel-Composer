@@ -17,7 +17,11 @@ function Node_Gradient_Shift(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	
 	_pal = -1;
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
+	static processData_prebatch = function() {
+		setDimension(96, process_length[0] * 32);
+	}
+	
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var pal = _data[0];
 		var sft = _data[1];
 		var lop = _data[2];
@@ -42,15 +46,14 @@ function Node_Gradient_Shift(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		
 		_outSurf.type = pal.type;
 		return _outSurf;
-	} #endregion
+	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
 		if(bbox.h < 1) return;
 		
 		var grad = outputs[0].getValue();
 		if(!is_array(grad)) grad = [ grad ];
-		var _h = array_length(grad) * 32;
 		
 		var _y = bbox.y0;
 		var gh = bbox.h / array_length(grad);
@@ -58,9 +61,6 @@ function Node_Gradient_Shift(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		for( var i = 0, n = array_length(grad); i < n; i++ ) {
 			grad[i].draw(bbox.x0, _y, bbox.w, gh);
 			_y += gh;
-		}
-		
-		if(_h != min_h) will_setHeight = true;
-		min_h = _h;	
-	} #endregion
+		}	
+	}
 }
