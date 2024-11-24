@@ -30,8 +30,7 @@ function draw_line_connect(x0, y0, x1, y1, _s = 1, thick = 1, c1 = c_white, c2 =
                 
 }
 
-function distance_to_linear_connection(mx, my, x0, y0, x1, y1, _s, params = {}) {
-    var extend = params.extend;
+function distance_to_linear_connection(mx, my, x0, y0, x1, y1, _s, extend) {
 	var xx0 = x0 + extend * _s;
 	var xx1 = x1 - extend * _s;
 	

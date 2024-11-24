@@ -508,7 +508,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		init_size = false;
 	}
 	
-	static drawJunctions = function(_x, _y, _mx, _my, _s) {
+	static drawJunctions = function(_draw, _x, _y, _mx, _my, _s) {
 		if(!active) return;
 		
 		var hover = noone;
@@ -517,7 +517,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		for(var i = 0, n = array_length(inputDisplayList); i < n; i++) {
 			var jun = inputDisplayList[i];
 			
-			if(jun.drawJunction_fast(_s, _mx, _my))
+			if(jun.drawJunction_fast(_draw, _s, _mx, _my))
 				hover = jun;
 		}
 		
@@ -528,7 +528,9 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		init_size = true;
 	}
 	
-	static drawNode = function(_x, _y, _mx, _my, _s) {
+	static drawNode = function(_draw, _x, _y, _mx, _my, _s) {
+		if(!_draw) return drawJunctions(_draw, _x, _y, _mx, _my, _s);
+		
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
 		
@@ -540,6 +542,6 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			active_draw_index = -1;
 		}
 		
-		return drawJunctions(xx, yy, _mx, _my, _s);
+		return drawJunctions(_draw, xx, yy, _mx, _my, _s);
 	}
 }

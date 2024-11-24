@@ -1720,6 +1720,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			node.triggerRender();
 			node.clearCacheForward();
 			
+			if(PANEL_GRAPH) PANEL_GRAPH.connection_draw_update = true;
 			UPDATE |= RENDER_TYPE.partial;
 		}
 		
@@ -1875,12 +1876,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return -1;
 	}
 	
-	static drawJunction_fast = function(_s, _mx, _my) {
-		INLINE
-		
+	static drawJunction_fast = function(_draw, _s, _mx, _my) {
 		var hov  = PANEL_GRAPH.pHOVER && (PANEL_GRAPH.node_hovering == noone || PANEL_GRAPH.node_hovering == node);
 		var _d   = node.junction_draw_hei_y * _s;
 		var _hov = hov && point_in_rectangle(_mx, _my, x - 6 * _s, y - _d / 2, x + 6 * _s, y + _d / 2 - 1);
+		if(!_draw) return _hov;
+		
 		var _aa  = 0.75 + (!is_dummy * 0.25);
 		hover_in_graph = _hov;
 		
@@ -1902,19 +1903,20 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return _hov;
 	}
 	
-	static drawJunction = function(_s, _mx, _my) {
+	static drawJunction = function(_draw, _s, _mx, _my) {
 		_s /= 2;
 		
-		var hov        = PANEL_GRAPH.pHOVER && (PANEL_GRAPH.node_hovering == noone || PANEL_GRAPH.node_hovering == node);
-		var _d         = node.junction_draw_hei_y * _s;
-		var is_hover   = hov && point_in_rectangle(_mx, _my, x - _d, y - _d, x + _d - 1, y + _d - 1);
-		hover_in_graph = is_hover;
+		var hov  = PANEL_GRAPH.pHOVER && (PANEL_GRAPH.node_hovering == noone || PANEL_GRAPH.node_hovering == node);
+		var _d   = node.junction_draw_hei_y * _s;
+		var _hov = hov && point_in_rectangle(_mx, _my, x - _d, y - _d, x + _d - 1, y + _d - 1);
+		hover_in_graph = _hov;
+		if(!_draw) return _hov;
 		
 		if(custom_icon != noone) {
 			__draw_sprite_ext(custom_icon, 0, x, y, _s, _s, 0, c_white, 1);
 			
 		} else if(is_dummy) {
-			__draw_sprite_ext(THEME.node_junction_add, is_hover, x, y, _s, _s, 0, c_white, 0.5 + 0.5 * is_hover);
+			__draw_sprite_ext(THEME.node_junction_add, _hov, x, y, _s, _s, 0, c_white, 0.5 + 0.5 * _hov);
 			
 		} else if(type == VALUE_TYPE.action) {
 			var _cbg = c_white;
@@ -1922,7 +1924,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			if(draw_blend != -1)
 				_cbg = merge_color(draw_blend_color, _cbg, draw_blend);
 		
-			__draw_sprite_ext(THEME.node_junction_inspector, is_hover, x, y, _s, _s, 0, _cbg, 1);
+			__draw_sprite_ext(THEME.node_junction_inspector, _hov, x, y, _s, _s, 0, _cbg, 1);
 			
 		} else {
 			var _cbg = draw_bg;
@@ -1937,11 +1939,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			
 			if(_s > .5) {
 				_bgS = THEME.node_junctions_bg_x2;
-				_fgS = is_hover? THEME.node_junctions_outline_hover_x2 : THEME.node_junctions_outline_x2;
+				_fgS = _hov? THEME.node_junctions_outline_hover_x2 : THEME.node_junctions_outline_x2;
 				
 			} else {
 				_bgS = THEME.node_junctions_bg;
-				_fgS = is_hover? THEME.node_junctions_outline_hover : THEME.node_junctions_outline;
+				_fgS = _hov? THEME.node_junctions_outline_hover : THEME.node_junctions_outline;
 				_s  *= 2;
 			}
 			
@@ -1955,7 +1957,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			gpu_set_blendmode(bm_normal);
 		}
 		
-		return is_hover;
+		return _hov;
 	}
 	
 	static drawNameBG = function(_s) {
@@ -2009,10 +2011,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		draw_set_alpha(1);
 	}
 	
-	static drawConnectionsRaw = function(params = {}) { return drawJuncConnection(value_from, self, params); }
-	static drawConnections    = function(params = {}) {
+	static drawConnections = function(params = {}, _draw = true) {
 		if(value_from == noone || !value_from.node.active || !isVisible()) return noone;
-		return drawJuncConnection(value_from, self, params);
+		if(_draw) drawJuncConnection(value_from, self, params); 
+		return checkJuncConnection(value_from, self, params);
 	}
 	
 	static drawConnectionMouse = function(params, _mx, _my, target = noone) {
@@ -2380,111 +2382,108 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 
 /////========== FUNCTIONS ==========
 
-function drawJuncConnection(from, to, params) {
-	#region parameters
-		var log  = params.log;
-		var high = params.highlight;
-		var bg   = params.bg;
-		var aa   = params.aa;
+function checkJuncConnection(from, to, params) {
+	if(from == noone || to == noone) return noone;
+	if(!params.active || !PANEL_GRAPH.pHOVER) return noone;
 	
-		var _s	= params.s;
-		var mx	= params.mx;
-		var my	= params.my;
-		var _active   = params.active;
-		var cur_layer = params.cur_layer;
-		var max_layer = params.max_layer;
-		
-		var hovering = noone;
+	to.draw_line_shift_hover = false;
 	
-		var jx  = to.x,   jy  = to.y;
-		var frx = from.x, fry = from.y;
+	var _s	= params.s;
+	var mx	= params.mx;
+	var my	= params.my;
+	
+	var jx  =   to.x, jy  =   to.y;
+	var frx = from.x, fry = from.y;
+	
+	if(params.minx != 0 && params.maxx != 0) {
+		if((jx < params.minx && frx < params.minx) || (jx > params.maxx && frx > params.maxx) || 
+		   (jy < params.miny && fry < params.miny) || (jy > params.maxy && fry > params.maxy)) return noone;
+	}
+
+	var shx = to.draw_line_shift_x * _s;
+	var shy = to.draw_line_shift_y * _s;
+	
+	var cx  = round((frx + jx) / 2 + shx);
+	var cy  = round((fry + jy) / 2 + shy);
+	var th  = max(1, PREFERENCES.connection_line_width * _s);
+	var hover, hovDist = max(th * 2, 6);
+	
+	var _x0 = min(jx, cx, frx) - hovDist, _x1 = max(jx, cx, frx) + hovDist;
+	var _y0 = min(jy, cy, fry) - hovDist, _y1 = max(jy, cy, fry) + hovDist;
+	if(!point_in_rectangle(mx, my, _x0, _y0, _x1, _y1)) return noone;
+	
+	var downDirection = to.type == VALUE_TYPE.action || from.type == VALUE_TYPE.action;
+	var _loop = struct_try_get(params, "loop");
+	
+	if(_loop || from.node == to.node) {
+		hover = distance_line_feedback(mx, my, jx, jy, frx, fry, _s) < hovDist;
 		
-		var fromIndex = from.drawLineIndex;
-		var toIndex   = to.drawLineIndex;
+	} else {
+		var _hdist;
 		
-		var _loop = struct_try_get(params, "loop");
-		
-		if(params.minx != 0 && params.maxx != 0) {
-			var minx = params.minx;
-			var miny = params.miny;
-			var maxx = params.maxx;
-			var maxy = params.maxy;
-		
-			if(jx < minx && frx < minx) return noone;
-			if(jx > maxx && frx > maxx) return noone;
+		switch(PREFERENCES.curve_connection_line) { 
+			case 0 : 
+				if(downDirection) _hdist = distance_to_line(mx, my, jx, jy, frx, fry);
+				else              _hdist = distance_to_linear_connection(mx, my, frx, fry, jx, jy, _s, PREFERENCES.connection_line_extend);
+				break;
 				
-			if(jy < miny && fry < miny) return noone;
-			if(jy > maxy && fry > maxy) return noone;
+			case 1 : 
+				if(downDirection) _hdist = distance_to_curve_corner(mx, my, jx, jy, frx, fry, _s);
+				else              _hdist = distance_to_curve(mx, my, jx, jy, frx, fry, cx, cy, _s);
+				break;
+				
+			case 2 : 
+				if(downDirection) _hdist = distance_to_elbow_corner(mx, my, frx, fry, jx, jy);
+				else              _hdist = distance_to_elbow(mx, my, frx, fry, jx, jy, cx, cy, _s);
+				break;
+				
+			case 3 :
+				if(downDirection) _hdist = distance_to_elbow_diag_corner(mx, my, frx, fry, jx, jy);
+				else              _hdist = distance_to_elbow_diag(mx, my, frx, fry, jx, jy, cx, cy, _s, PREFERENCES.connection_line_extend, from.drawLineIndex, to.drawLineIndex);
+				break;
+				
+			default : return noone;
+				
 		}
-	
-		var shx = to.draw_line_shift_x * _s;
-		var shy = to.draw_line_shift_y * _s;
 		
-		var cx  = round((frx + jx) / 2 + shx);
-		var cy  = round((fry + jy) / 2 + shy);
-			
-		var hover = false;
-		var th    = max(1, PREFERENCES.connection_line_width * _s);
-		to.draw_line_shift_hover = false;
-			
-		var downDirection = to.type == VALUE_TYPE.action || from.type == VALUE_TYPE.action;
-	#endregion
+		hover = _hdist < hovDist;
+	} 
 	
-	#region +++++ CHECK HOVER +++++
-		var _drawParam = {
-			extend :    PREFERENCES.connection_line_extend,
-			fromIndex : fromIndex,
-			toIndex :   toIndex,
-		}
-		var hovDist = max(th * 2, 6);
-		
-		if(PANEL_GRAPH.pHOVER) {
-			if(_loop || from.node == to.node) {
-				hover = distance_line_feedback(mx, my, jx, jy, frx, fry, _s) < hovDist;
-				
-			} else {
-				var _hdist = 999999;
-				
-				switch(PREFERENCES.curve_connection_line) { 
-					case 0 : 
-						if(downDirection) _hdist = distance_to_line(mx, my, jx, jy, frx, fry);
-						else              _hdist = distance_to_linear_connection(mx, my, frx, fry, jx, jy, _s, _drawParam);
-						break;
-						
-					case 1 : 
-						if(downDirection) _hdist = distance_to_curve_corner(mx, my, jx, jy, frx, fry, _s);
-						else              _hdist = distance_to_curve(mx, my, jx, jy, frx, fry, cx, cy, _s);
-						break;
-						
-					case 2 : 
-						if(downDirection) _hdist = distance_to_elbow_corner(mx, my, frx, fry, jx, jy);
-						else              _hdist = distance_to_elbow(mx, my, frx, fry, jx, jy, cx, cy, _s, _drawParam);
-						break;
-						
-					case 3 :
-						if(downDirection) _hdist = distance_to_elbow_diag_corner(mx, my, frx, fry, jx, jy);
-						else              _hdist = distance_to_elbow_diag(mx, my, frx, fry, jx, jy, cx, cy, _s, _drawParam);
-						break;
-						
-				}
-				
-				hover = _hdist < hovDist;
-				if(PANEL_GRAPH.value_focus == noone) to.draw_line_shift_hover = hover;
-			} 
-		}
-				
-		if(_active && hover)
-			hovering = self;
-	#endregion
+	if(PANEL_GRAPH.value_focus == noone) to.draw_line_shift_hover = hover;
+	return hover? self : noone;
+}
+
+function drawJuncConnection(from, to, params, _thick = false) {
+	if(from == noone || to == noone) return noone;
+	
+	static drawParam = {
+		extend :    0,
+		fromIndex : 0,
+		toIndex :   0,
+		corner :    0,
+		type :      0,
+	}
+	
+	var high = params.highlight;
+	var bg   = params.bg;
+	var aa   = params.aa;
+
+	var _s	= params.s;
+	var jx  =   to.x, jy  =   to.y;
+	var frx = from.x, fry = from.y;
+	
+	if(params.minx != 0 && params.maxx != 0) {
+		if((jx < params.minx && frx < params.minx) || (jx > params.maxx && frx > params.maxx) || 
+		   (jy < params.miny && fry < params.miny) || (jy > params.maxy && fry > params.maxy)) return noone;
+	}
+
+	var shx = to.draw_line_shift_x * _s;
+	var shy = to.draw_line_shift_y * _s;
+	var cx  = round((frx + jx) / 2 + shx);
+	var cy  = round((fry + jy) / 2 + shy);
+	var th  = max(1, PREFERENCES.connection_line_width * _s) * (1 + _thick);
 	
 	#region draw parameters	
-		var thicken = false;
-		thicken |= PANEL_GRAPH.nodes_junction_d == self;
-		thicken |= _active && PANEL_GRAPH.junction_hovering == self && PANEL_GRAPH.value_focus == noone;
-		thicken |= instance_exists(o_dialog_add_node) && o_dialog_add_node.junction_hovering == self;
-	
-		th *= thicken? 2 : 1;
-		
 		var corner = PREFERENCES.connection_line_corner * _s;
 		
 		var ty = LINE_STYLE.solid;
@@ -2513,52 +2512,45 @@ function drawJuncConnection(from, to, params) {
 		}
 	#endregion
 		
-	#region +++++ DRAW LINE +++++
-		var ss  = _s * aa;
-		jx  *= aa;
-		jy  *= aa;
-		frx *= aa;
-		fry *= aa;
-		th  *= aa;
-		cx  *= aa;
-		cy  *= aa;
-		corner *= aa;
-		th = max(1, round(th));
-		
-		draw_set_color(c0);
-		
-		if(_loop || from.node == to.node) {
-			draw_line_feedback(jx, jy, frx, fry, th, c1, c0, ss);
-		} else {
-			_drawParam.corner = corner;
-			_drawParam.type   = ty;
+	var ss  = _s * aa;
+	jx  *= aa;
+	jy  *= aa;
+	frx *= aa;
+	fry *= aa;
+	cx  *= aa;
+	cy  *= aa;
+	corner *= aa;
+	th = max(1, round(th * aa));
+	
+	var _loop = struct_try_get(params, "loop");
+	if(_loop) { draw_line_feedback(jx, jy, frx, fry, th, c1, c0, ss); return; }
+	
+	var down = to.type == VALUE_TYPE.action || from.type == VALUE_TYPE.action;
+	drawParam.extend    = PREFERENCES.connection_line_extend;
+	drawParam.fromIndex = from.drawLineIndex;
+	drawParam.toIndex   = to.drawLineIndex;
+	drawParam.corner    = corner;
+	drawParam.type      = ty;
+	
+	switch(PREFERENCES.curve_connection_line) { 
+		case 0 : 
+			if(down)	draw_line_width_color(jx, jy, frx, fry, th, c0, c1);
+			else    	draw_line_connect(frx, fry, jx, jy, ss, th, c0, c1, drawParam);
+			break;
 			
-			switch(PREFERENCES.curve_connection_line) { 
-				case 0 : 
-					if(downDirection)   draw_line_width_color(jx, jy, frx, fry, th, c0, c1);
-					else                draw_line_connect(frx, fry, jx, jy, ss, th, c0, c1, _drawParam);
-					break;
-					
-				case 1 : 
-					if(downDirection)	draw_line_curve_corner(jx, jy, frx, fry, ss, th, c0, c1); 
-					else				draw_line_curve_color(jx, jy, frx, fry, cx, cy, ss, th, c0, c1, ty); 
-					break;
-					
-				case 2 : 
-					if(downDirection)	draw_line_elbow_corner(frx, fry, jx, jy, ss, th, c0, c1, _drawParam); 
-					else				draw_line_elbow_color(frx, fry, jx, jy, cx, cy, ss, th, c0, c1, _drawParam); 
-					break;
-					
-				case 3 : 
-					if(downDirection)	draw_line_elbow_diag_corner(frx, fry, jx, jy, ss, th, c0, c1, _drawParam); 
-					else				draw_line_elbow_diag_color(frx, fry, jx, jy, cx, cy, ss, th, c0, c1, _drawParam); 
-					break;
-					
-			} 
-		}
-		
-		draw_set_alpha(1);
-	#endregion
-		
-	return hovering;
+		case 1 : 
+			if(down)	draw_line_curve_corner(jx, jy, frx, fry, ss, th, c0, c1); 
+			else		draw_line_curve_color(jx, jy, frx, fry, cx, cy, ss, th, c0, c1, ty); 
+			break;
+			
+		case 2 : 
+			if(down)	draw_line_elbow_corner(frx, fry, jx, jy, ss, th, c0, c1, drawParam); 
+			else		draw_line_elbow_color(frx, fry, jx, jy, cx, cy, ss, th, c0, c1, drawParam); 
+			break;
+			
+		case 3 : 
+			if(down)	draw_line_elbow_diag_corner(frx, fry, jx, jy, ss, th, c0, c1, drawParam); 
+			else		draw_line_elbow_diag_color(frx, fry, jx, jy, cx, cy, ss, th, c0, c1, drawParam); 
+			break;
+	} 
 }

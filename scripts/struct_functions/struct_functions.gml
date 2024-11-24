@@ -7,7 +7,7 @@ function struct_override(original, override) {
 	var args = variable_struct_get_names(override);
 	
 	for( var i = 0, n = array_length(args); i < n; i++ ) {
-		var _key = args[i];
+		var _key = array_safe_get(args, i);
 		
 		if(!struct_has(original, _key)) continue;
 		original[$ _key] = override[$ _key];
@@ -22,7 +22,7 @@ function struct_override_nested(original, override) {
 	var args = variable_struct_get_names(override);
 	
 	for( var i = 0, n = array_length(args); i < n; i++ ) {
-		var _key = args[i];
+		var _key = array_safe_get(args, i);
 		
 		if(!struct_has(original, _key)) continue;
 		if(is_struct(original[$ _key]))
@@ -39,8 +39,10 @@ function struct_append(original, append) {
 	
 	var args = variable_struct_get_names(append);
 	
-	for( var i = 0, n = array_length(args); i < n; i++ )
-		original[$ args[i]] = append[$ args[i]];
+	for( var i = 0, n = array_length(args); i < n; i++ ) {
+		var _key = array_safe_get(args, i);
+		original[$ _key] = append[$ _key];
+	}
 	
 	return original;
 }

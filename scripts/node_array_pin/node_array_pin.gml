@@ -66,14 +66,14 @@ function Node_Array_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static drawBadge = function(_x, _y, _s) {}
 	static drawJunctionNames = function(_x, _y, _mx, _my, _s) {}
 	
-	static drawJunctions = function(_x, _y, _mx, _my, _s) {
+	static drawJunctions = function(_draw, _x, _y, _mx, _my, _s) {
 		var _dval = PANEL_GRAPH.value_dragging;
 		var hover = _dval == noone || _dval.connect_type == CONNECT_TYPE.input? outputs[0] : dummy_input;
 		var xx	  = x * _s + _x;
 		var yy	  = y * _s + _y;
 		isHovering = point_in_circle(_mx, _my, xx, yy, _s * 24);
 		
-		var jhov = hover.drawJunction(_s, _mx, _my);
+		var jhov = hover.drawJunction(_draw, _s, _mx, _my);
 		
 		if(!isHovering) return noone;
 		
@@ -81,7 +81,7 @@ function Node_Array_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		return jhov? hover : noone;
 	}
 	
-	static drawNode = function(_x, _y, _mx, _my, _s) {
+	static drawNode = function(_draw, _x, _y, _mx, _my, _s) {
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
 		
@@ -108,6 +108,6 @@ function Node_Array_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			draw_text_transformed(xx, yy - 12 * _s, display_name, _s * 0.4, _s * 0.4, 0);
 		}
 		
-		return drawJunctions(_x, _y, _mx, _my, _s);
+		return drawJunctions(_draw, _x, _y, _mx, _my, _s);
 	}
 }

@@ -66,10 +66,6 @@ function Node_Feedback_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	}
 	
 	static drawConnections = function(params = {}) {
-		if(!active) return noone;
-		if(!junc_in || !junc_out) return noone;
-		if(!junc_in.node.active || !junc_out.node.active) return noone;
-		
 		params.dashed = true; params.loop   = true;
 		drawJuncConnection(junc_out, junc_in, params);
 		params.dashed = false; params.loop   = false;
@@ -77,7 +73,7 @@ function Node_Feedback_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		return noone;
 	}
 	
-	static drawNode = function(_x, _y, _mx, _my, _s, display_parameter = noone) {}
+	static drawNode = function(_draw, _x, _y, _mx, _my, _s, display_parameter = noone) {}
 	
 	static pointIn = function(_x, _y, _mx, _my, _s) { return false; }
 	

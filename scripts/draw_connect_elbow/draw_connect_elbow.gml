@@ -93,9 +93,7 @@ function draw_line_elbow_corner(x0, y0, x1, y1, _s = 1, thick = 1, col1 = c_whit
 	draw_corner(x1 - corner * sx, y0, x1, y0, x1, y0 + corner * sy, thick, colc, sample);
 }
 
-function distance_to_elbow(mx, my, x0, y0, x1, y1, cx, cy, _s, params = {}) {
-	var extend    = params.extend;
-	
+function distance_to_elbow(mx, my, x0, y0, x1, y1, cx, cy, _s) {
 	var inv = x1 <= x0;
 	var xx0 = x0;
 	var xx1 = x1;

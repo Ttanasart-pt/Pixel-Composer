@@ -57,7 +57,7 @@ function Node_Display_Image(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	sca_dx = 1;
 	sca_dy = 1;
 	
-	static move = function(_x, _y, _s) { #region
+	static move = function(_x, _y, _s) {
 		if(x == _x && y == _y) return;
 		if(!LOADING) PROJECT.modified = true;
 		
@@ -66,16 +66,16 @@ function Node_Display_Image(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		if(inputs[1].setValue([ _x, _y ]))
 			UNDO_HOLDING = true;
-	} #endregion
+	}
 	
-	static onInspector1Update = function() { #region
+	static onInspector1Update = function() {
 		var path = getInputData(0);
 		if(path == "") return;
 		updatePaths(path);
 		update(); 
-	} #endregion
+	}
 	
-	function updatePaths(path) { #region
+	function updatePaths(path) {
 		path = path_get(path);
 		if(path == -1) return false;
 		
@@ -99,9 +99,9 @@ function Node_Display_Image(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				return true;
 		}
 		return false;
-	} #endregion
+	}
 	
-	static update = function(frame = CURRENT_FRAME) { #region
+	static update = function(frame = CURRENT_FRAME) {
 		var path = getInputData(0);
 		var posi = getInputData(1);
 		var scal = getInputData(2);
@@ -116,16 +116,16 @@ function Node_Display_Image(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		pos_y = posi[1];
 		sca_x = scal[0];
 		sca_y = scal[1];
-	} #endregion
+	}
 	
-	static drawNodeBase = function(xx, yy, _s) { #region
+	static drawNodeBase = function(xx, yy, _s) {
 		if(!spr || !sprite_exists(spr)) return;
 		
 		draw_sprite_uniform(spr, 0, xx, yy, _s);
-	} #endregion
+	}
 	
-	static drawNode = function(_x, _y, _mx, _my, _s) { #region
-		if(spr == noone) return noone;
+	static drawNode = function(_draw, _x, _y, _mx, _my, _s) {
+		if(!_draw || spr == noone) return noone;
 		
 		x = smooth? lerp_float(x, pos_x, 4) : pos_x;
 		y = smooth? lerp_float(y, pos_y, 4) : pos_y;
@@ -145,5 +145,5 @@ function Node_Display_Image(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			active_draw_index = -1;
 		}
 		return noone;
-	} #endregion
+	}
 }

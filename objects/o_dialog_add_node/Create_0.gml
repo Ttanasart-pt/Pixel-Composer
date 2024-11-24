@@ -41,7 +41,7 @@ event_inherited();
 	content_hoverable = true;
 	
 	canvas    = false;
-	collapsed = ds_map_create();
+	collapsed = {};
 	
 	#region ---- category ----
 		category = NODE_CATEGORY;
@@ -510,7 +510,7 @@ event_inherited();
 					
 					array_push(group_labels, { y: yy, text: __txt(_node), key: _key });
 					
-					if(ds_map_exists(collapsed, _key)) {
+					if(struct_try_get(collapsed, _key, 0)) {
 						hh += ui(24 + 4);
 						yy += ui(24 + 4);
 						
@@ -611,7 +611,7 @@ event_inherited();
 					var lb    = group_labels[i];
 					var _name = lb.text;
 					var _key  = lb.key;
-					var _coll = ds_map_exists(collapsed, _key);
+					var _coll = struct_try_get(collapsed, _key, 0);
 					
 					var _yy  = max(lb.y, i == len - 1? ui(8) : min(ui(8), group_labels[i + 1].y - ui(32)));
 					
@@ -623,8 +623,8 @@ event_inherited();
                         		_cAll = _coll? -1 : 1;
                         		
                         	} else if(mouse_press(mb_left)) {
-	                        	if(_coll) ds_map_delete(collapsed, _key);
-	                        	else      ds_map_add(collapsed, _key, 1);
+	                        	if(_coll) struct_set(collapsed, _key, 0);
+	                        	else      struct_set(collapsed, _key, 1);
 	                        }
                         }
                         
@@ -638,8 +638,8 @@ event_inherited();
 					draw_text_add(ui(16 + 28), _yy + _lbh / 2, _name);
 				}
 				
-					 if(_cAll ==  1) { for( var i = 0; i < len; i++ ) ds_map_delete(collapsed, group_labels[i].key); } 
-				else if(_cAll == -1) { for( var i = 0; i < len; i++ ) ds_map_add(collapsed, group_labels[i].key, 1); }
+					 if(_cAll ==  1) { for( var i = 0; i < len; i++ ) struct_set(collapsed, group_labels[i].key, 0); } 
+				else if(_cAll == -1) { for( var i = 0; i < len; i++ ) struct_set(collapsed, group_labels[i].key, 1); }
 			}
 			
 			hh += curr_height;
@@ -677,7 +677,7 @@ event_inherited();
 					
 					array_push(group_labels, { y: yy, text: __txt(_node), key: _key });
 					
-					if(ds_map_exists(collapsed, _key)) {
+					if(struct_try_get(collapsed, _key, 0)) {
 						hh += ui(24);
 						yy += ui(24);
 						
@@ -758,7 +758,7 @@ event_inherited();
 					var lb = group_labels[i];
 					var _name = lb.text;
 					var _key  = lb.key;
-					var _coll = ds_map_exists(collapsed, _key);
+					var _coll = struct_try_get(collapsed, _key, 0);
 					var _yy = max(lb.y, i == len - 1? ui(8) : min(ui(8), group_labels[i + 1].y - ui(32)));
 				
 					BLEND_OVERRIDE;
@@ -769,8 +769,8 @@ event_inherited();
                         		_cAll = _coll? -1 : 1;
                         		
                         	} else if(mouse_press(mb_left)) {
-	                        	if(_coll) ds_map_delete(collapsed, _key);
-	                        	else      ds_map_add(collapsed, _key, 1);
+	                        	if(_coll) struct_set(collapsed, _key, 0);
+	                        	else      struct_set(collapsed, _key, 1);
 	                        }
                         }
                         
@@ -784,8 +784,8 @@ event_inherited();
 					draw_text_add(ui(16 + 28), _yy + _lbh / 2, _name);
 				}
 				
-					 if(_cAll ==  1) { for( var i = 0; i < len; i++ ) ds_map_delete(collapsed, group_labels[i].key); } 
-				else if(_cAll == -1) { for( var i = 0; i < len; i++ ) ds_map_add(collapsed, group_labels[i].key, 1); }
+					 if(_cAll ==  1) { for( var i = 0; i < len; i++ ) struct_set(collapsed, group_labels[i].key, 0); } 
+				else if(_cAll == -1) { for( var i = 0; i < len; i++ ) struct_set(collapsed, group_labels[i].key, 1); }
 			}
 			
 			if(sHOVER && key_mod_press(CTRL)) {

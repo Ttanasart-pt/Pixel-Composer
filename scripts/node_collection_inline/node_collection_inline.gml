@@ -280,7 +280,7 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		return _hov;
 	}
 	
-	static drawNode = function(_x, _y, _mx, _my, _s, display_parameter = noone) {}
+	static drawNode = function(_draw, _x, _y, _mx, _my, _s, display_parameter = noone) {}
 	
 	static drawBadge = function(_x, _y, _s) {}
 	

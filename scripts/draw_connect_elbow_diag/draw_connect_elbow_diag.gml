@@ -243,11 +243,7 @@ function draw_line_elbow_diag_corner(x0, y0, x1, y1, _s = 1, thick = 1, col1 = c
 	
 }
 
-function distance_to_elbow_diag(mx, my, x0, y0, x1, y1, cx, cy, _s, params = {}) {
-	var extend    = params.extend;
-	var indexIn   = struct_try_get(params, "fromIndex", 1);
-	var indexOut  = struct_try_get(params, "toIndex",   1);
-	
+function distance_to_elbow_diag(mx, my, x0, y0, x1, y1, cx, cy, _s, extend, indexIn, indexOut) {
 	var iy  = sign(y1 - y0);
 	var xx0 = x0 + extend * _s;
 	var xx1 = x1 - extend * _s;

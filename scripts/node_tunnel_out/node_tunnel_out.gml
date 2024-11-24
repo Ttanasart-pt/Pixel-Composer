@@ -119,12 +119,12 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		draw_set_alpha(1);
 	}
 	
-	static drawJunctions = function(_x, _y, _mx, _my, _s) {
+	static drawJunctions = function(_draw, _x, _y, _mx, _my, _s) {
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
 		isHovering = point_in_circle(_mx, _my, xx, yy, _s * 24);
 		
-		junction_hover = outputs[0].drawJunction(_s, _mx, _my);
+		junction_hover = outputs[0].drawJunction(_draw, _s, _mx, _my);
 		
 		if(!isHovering) return noone;
 		if(!junction_hover) draw_sprite_ext(THEME.view_pan, 0, _mx + ui(16), _my + ui(24), 1, 1, 0, COLORS._main_accent);
@@ -133,7 +133,9 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		return junction_hover? outputs[0] : noone;
 	}
 	
-	static drawNode = function(_x, _y, _mx, _my, _s) {
+	static drawNode = function(_draw, _x, _y, _mx, _my, _s) {
+		if(!_draw) return drawJunctions(_draw, _x, _y, _mx, _my, _s);
+		
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
 		
@@ -182,7 +184,7 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		draw_set_text(f_sdf, fa_center, fa_bottom, COLORS._main_text);
 		draw_text_transformed(xx, yy - 12 * _s, string(inputs[0].getValue()), _s * .3, _s * .3, 0);
 		
-		return drawJunctions(_x, _y, _mx, _my, _s);
+		return drawJunctions(_draw, _x, _y, _mx, _my, _s);
 	}
 	
 	static onClone = function() { onValueUpdate(0); }

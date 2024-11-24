@@ -67,7 +67,7 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	static drawBadge = function(_x, _y, _s) {}
 	static drawJunctionNames = function(_x, _y, _mx, _my, _s) {}
 	
-	static drawJunctions = function(_x, _y, _mx, _my, _s) {
+	static drawJunctions = function(_draw, _x, _y, _mx, _my, _s) {
 		var _dval = PANEL_GRAPH.value_dragging;
 		var hover = _dval == noone || _dval.connect_type == CONNECT_TYPE.input? outputs[0] : inputs[0];
 		var xx	  = x * _s + _x;
@@ -76,7 +76,7 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		isHovering     = point_in_circle(_mx, _my, xx, yy, _s * 24);
 		hover_junction = noone;
 		
-		var jhov = hover.drawJunction(_s, _mx, _my);
+		var jhov = hover.drawJunction(_draw, _s, _mx, _my);
 		
 		if(!isHovering) return noone;
 		if(!jhov) draw_sprite_ext(THEME.view_pan, 0, _mx + ui(16), _my + ui(24), 1, 1, 0, COLORS._main_accent);
@@ -87,7 +87,9 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		return hover_junction;
 	}
 	
-	static drawNode = function(_x, _y, _mx, _my, _s) {
+	static drawNode = function(_draw, _x, _y, _mx, _my, _s) {
+		if(!_draw) return drawJunctions(_draw, _x, _y, _mx, _my, _s);
+		
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
 		
@@ -104,9 +106,7 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			shader_set(sh_node_circle);
 				shader_set_color("color", COLORS._main_accent, hover_alpha);
 				shader_set_f("radius", .5 * hover_scale);
-				
 				draw_sprite_stretched(s_fx_pixel, 0, xx - _r, yy - _r, _r * 2, _r * 2);
-				
 				shader_set_f("radius", 0);
 			shader_reset();
 		}
@@ -119,6 +119,6 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			draw_text_transformed(xx, yy - 12 * _s, display_name, _s * 0.4, _s * 0.4, 0);
 		}
 		
-		return drawJunctions(_x, _y, _mx, _my, _s);
+		return drawJunctions(_draw, _x, _y, _mx, _my, _s);
 	}
 }

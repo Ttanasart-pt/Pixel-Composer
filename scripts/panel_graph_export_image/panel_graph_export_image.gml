@@ -86,7 +86,7 @@ function graph_export_image(allList, nodeList, settings = {}) {
 		#region draw frame
 			for(var i = 0; i < array_length(nodeList); i++) {
 				if(instanceof(nodeList[i]) != "Node_Frame") continue;
-				nodeList[i].drawNode(gr_x, gr_y, mx, my, scale);
+				nodeList[i].drawNode(true, gr_x, gr_y, mx, my, scale);
 			}
 		#endregion
 		
@@ -118,7 +118,7 @@ function graph_export_image(allList, nodeList, settings = {}) {
 			for(var i = 0; i < array_length(nodeList); i++) {
 				var _node = nodeList[i];
 				if(instanceof(_node) == "Node_Frame") continue;
-				var val = _node.drawNode(gr_x, gr_y, mx, my, scale, param);
+				var val = _node.drawNode(true, gr_x, gr_y, mx, my, scale, param);
 			}
 		#endregion
 		

@@ -1,4 +1,4 @@
-function draw_line_feedback(x0, y0, x1, y1, th, c1, c0, _s) { #region
+function draw_line_feedback(x0, y0, x1, y1, th, c1, c0, _s) {
 	var _y0 = y0 - 12 * _s;
 	var _y1 = y1 - 12 * _s;
 	
@@ -39,9 +39,9 @@ function draw_line_feedback(x0, y0, x1, y1, th, c1, c0, _s) { #region
 		ox = nx;
 		oy = ny;
 	}
-} #endregion
+}
 
-function distance_line_feedback(mx, my, x0, y0, x1, y1, _s) { #region
+function distance_line_feedback(mx, my, x0, y0, x1, y1, _s) {
 	var _y0 = y0 - 12 * _s;
 	var _y1 = y1 - 12 * _s;
 	
@@ -50,4 +50,4 @@ function distance_line_feedback(mx, my, x0, y0, x1, y1, _s) { #region
 	dd = min(dd, distance_to_line(mx, my, x0, _y0, x1, _y1));
 	
 	return dd;
-} #endregion
+}

@@ -1263,6 +1263,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		updateIO();
 		setHeight();
 		getJunctionList();
+		setJunctionIndex();
 		
 	} run_in(1, function() /*=>*/ { refreshNodeDisplay(); });
 	
@@ -1518,20 +1519,20 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		h_param = h;
 	}
 	
-	static drawJunctions = function(_x, _y, _mx, _my, _s) {
+	static drawJunctions = function(_draw, _x, _y, _mx, _my, _s) {
 		var hover = noone;
 		
 		for(var i = 0, n = array_length(inputDisplayList); i < n; i++) { //inputs
 			var jun = inputDisplayList[i];
 			
-			if(jun.drawJunction(_s, _mx, _my)) hover = jun;
+			if(jun.drawJunction(_draw, _s, _mx, _my)) hover = jun;
 		}
 		
 		for(var i = 0; i < array_length(outputs); i++) { // outputs
 			var jun = outputs[i];
 			
 			if(!jun.isVisible()) continue;
-			if(jun.drawJunction(_s, _mx, _my)) hover = jun;
+			if(jun.drawJunction(_draw, _s, _mx, _my)) hover = jun;
 		}
 		
 		for( var i = 0; i < array_length(inputs); i++ ) { // bypass
@@ -1539,15 +1540,15 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			var  jun = _inp.bypass_junc;
 			
 			if(jun == noone || !jun.visible) continue;
-			if(jun.drawJunction(_s, _mx, _my)) hover = jun;
+			if(jun.drawJunction(_draw, _s, _mx, _my)) hover = jun;
 		}
 		
-		if(hasInspector1Update() && inspectInput1.drawJunction(_s, _mx, _my)) hover = inspectInput1;
-		if(hasInspector2Update() && inspectInput2.drawJunction(_s, _mx, _my)) hover = inspectInput2;
+		if(hasInspector1Update() && inspectInput1.drawJunction(_draw, _s, _mx, _my)) hover = inspectInput1;
+		if(hasInspector2Update() && inspectInput2.drawJunction(_draw, _s, _mx, _my)) hover = inspectInput2;
 		
 		if(attributes.show_update_trigger) {
-			if(updatedInTrigger.drawJunction(_s, _mx, _my))  hover = updatedInTrigger;
-			if(updatedOutTrigger.drawJunction(_s, _mx, _my)) hover = updatedOutTrigger;
+			if(updatedInTrigger.drawJunction(_draw, _s, _mx, _my))  hover = updatedInTrigger;
+			if(updatedOutTrigger.drawJunction(_draw, _s, _mx, _my)) hover = updatedOutTrigger;
 		}
 		
 		if(attributes.outp_meta) {
@@ -1555,7 +1556,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				var jun = junc_meta[i];
 				
 				if(!jun.isVisible()) continue;
-				if(jun.drawJunction(_s, _mx, _my)) hover = jun;
+				if(jun.drawJunction(_draw, _s, _mx, _my)) hover = jun;
 			}
 		}
 		
@@ -1564,7 +1565,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return hover;
 	}
 	
-	static drawJunctions_fast = function(_x, _y, _mx, _my, _s) {
+	static drawJunctions_fast = function(_draw, _x, _y, _mx, _my, _s) {
 		var hover = noone;
 		
 		draw_set_circle_precision(4);
@@ -1572,14 +1573,14 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		for(var i = 0, n = array_length(inputDisplayList); i < n; i++) {
 			var jun = inputDisplayList[i];
 			
-			if(jun.drawJunction_fast(_s, _mx, _my)) hover = jun;
+			if(jun.drawJunction_fast(_draw, _s, _mx, _my)) hover = jun;
 		}
 		
 		for(var i = 0; i < array_length(outputs); i++) {
 			var jun = outputs[i];
 			
 			if(!jun.isVisible()) continue;
-			if(jun.drawJunction_fast(_s, _mx, _my)) hover = jun;
+			if(jun.drawJunction_fast(_draw, _s, _mx, _my)) hover = jun;
 		}
 		
 		for( var i = 0; i < array_length(inputs); i++ ) {
@@ -1587,15 +1588,15 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			var jun = _inp.bypass_junc;
 			
 			if(jun == noone || !jun.visible) continue;
-			if(jun.drawJunction_fast(_s, _mx, _my)) hover = jun;
+			if(jun.drawJunction_fast(_draw, _s, _mx, _my)) hover = jun;
 		}
 		
-		if(hasInspector1Update() && inspectInput1.drawJunction_fast(_s, _mx, _my)) hover = inspectInput1;
-		if(hasInspector2Update() && inspectInput2.drawJunction_fast(_s, _mx, _my)) hover = inspectInput2;
+		if(hasInspector1Update() && inspectInput1.drawJunction_fast(_draw, _s, _mx, _my)) hover = inspectInput1;
+		if(hasInspector2Update() && inspectInput2.drawJunction_fast(_draw, _s, _mx, _my)) hover = inspectInput2;
 		
 		if(attributes.show_update_trigger) {
-			if(updatedInTrigger.drawJunction_fast(_s, _mx, _my))  hover = updatedInTrigger;
-			if(updatedOutTrigger.drawJunction_fast(_s, _mx, _my)) hover = updatedOutTrigger;
+			if(updatedInTrigger.drawJunction_fast(_draw, _s, _mx, _my))  hover = updatedInTrigger;
+			if(updatedOutTrigger.drawJunction_fast(_draw, _s, _mx, _my)) hover = updatedOutTrigger;
 		}
 		
 		if(attributes.outp_meta) {
@@ -1603,7 +1604,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				var jun = junc_meta[i];
 				
 				if(!jun.isVisible()) continue;
-				if(jun.drawJunction_fast(_s, _mx, _my)) hover = jun;
+				if(jun.drawJunction_fast(_draw, _s, _mx, _my)) hover = jun;
 			}
 		}
 		
@@ -1691,15 +1692,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 	}
 	
-	__draw_inputs = []
-	static drawConnections = function(params = {}) {
-		if(!active) return noone;
-		
-		var hovering = noone;
+	__draw_inputs     = [];
+	__draw_inputs_len = 0;
+	
+	static setJunctionIndex = function() {
 		var drawLineIndex = 1;
-		
-		var high = params.highlight; // 0
-		var bg   = params.bg;        // 0
 		
 		for(var i = 0, n = array_length(outputs); i < n; i++) {
 			var jun       = outputs[i];
@@ -1710,40 +1707,49 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				drawLineIndex += 0.5;
 			}
 			
-			jun.draw_blend_color = bg;
-			jun.draw_blend       = high? PREFERENCES.connection_line_highlight_fade : -1;
+			// jun.draw_blend_color = bg;
+			// jun.draw_blend       = high? PREFERENCES.connection_line_highlight_fade : -1;
 		}
 		
 		__draw_inputs = array_verify(__draw_inputs, array_length(inputs));
-		var _len = 0;
-		var _jun, _hov;
-		
-		if(hasInspector1Update()) { _hov = inspectInput1.drawConnections(params); if(_hov) hovering = _hov; }
-		
-		if(hasInspector2Update()) { _hov = inspectInput2.drawConnections(params); if(_hov) hovering = _hov; }
-		
 		var drawLineIndex = 1;
+		__draw_inputs_len = 0;
+		
 		for(var i = 0, n = array_length(inputs); i < n; i++) {
 			_jun = inputs[i];
-			_jun.draw_blend_color = bg;
-			_jun.draw_blend       = high? PREFERENCES.connection_line_highlight_fade : -1;
+			// _jun.draw_blend_color = bg;
+			// _jun.draw_blend       = high? PREFERENCES.connection_line_highlight_fade : -1;
 			
-			if(_jun.bypass_junc.visible) _jun.bypass_junc.drawBypass(params);
 			if( _jun.value_from == noone || !_jun.value_from.node.active || !_jun.isVisible()) continue;
-			
-			__draw_inputs[_len++] = _jun;
+			__draw_inputs[__draw_inputs_len++] = _jun;
 		}
 		
-		for( var i = 0; i < _len; i++ ) {
+		for( var i = 0; i < __draw_inputs_len; i++ ) {
 			_jun = __draw_inputs[i];
-			_jun.drawLineIndex = 1 + (i > _len / 2? (_len - 1 - i) : i) * 0.5;
+			_jun.drawLineIndex = 1 + (i > __draw_inputs_len / 2? (__draw_inputs_len - 1 - i) : i) * 0.5;
+		}
+	}
+	
+	static drawConnections = function(params = {}, _draw = true) { 
+		if(!active) return noone;
+		
+		var _hov, hovering = noone;
+		// var bg       = params.bg;
+		// var high     = params.highlight;
+		
+		if(hasInspector1Update()) { _hov = inspectInput1.drawConnections(params, _draw); if(_hov) hovering = _hov; }
+		if(hasInspector2Update()) { _hov = inspectInput2.drawConnections(params, _draw); if(_hov) hovering = _hov; }
+		
+		for( var i = 0; i < __draw_inputs_len; i++ ) {
+			var _jun = __draw_inputs[i];
 			
-			_hov = _jun.drawConnectionsRaw(params); if(_hov) hovering = _hov;
+			if(_jun.bypass_junc.visible) _jun.bypass_junc.drawBypass(params);
+			_hov = _jun.drawConnections(params, _draw); if(_hov) hovering = _hov;
 		}
 		
 		if(attributes.show_update_trigger) {
-			if(updatedInTrigger.drawConnections(params))  hovering = updatedInTrigger;
-			if(updatedOutTrigger.drawConnections(params)) hovering = updatedOutTrigger;
+			if(updatedInTrigger.drawConnections(params, _draw))  hovering = updatedInTrigger;
+			if(updatedOutTrigger.drawConnections(params, _draw)) hovering = updatedOutTrigger;
 		}
 		
 		return hovering;
@@ -1893,11 +1899,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static drawNodeFG = function(_x, _y, _mx, _my, _s, display_parameter = noone, _panel = noone) { }
 	
-	static drawNode = function(_x, _y, _mx, _my, _s, display_parameter = noone, _panel = noone) { 
+	static drawNode = function(_draw, _x, _y, _mx, _my, _s, display_parameter = noone, _panel = noone) { 
 		if(display_parameter != noone) self.display_parameter = display_parameter;
 		
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
+		if(!_draw) return _s > 0.5? drawJunctions(_draw, xx, yy, _mx, _my, _s) : drawJunctions_fast(_draw, xx, yy, _mx, _my, _s);
 		
 		preview_mx = _mx;
 		preview_my = _my;
@@ -1906,7 +1913,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			draw_sprite_stretched_ext(THEME.node_glow_border, 0, xx - 9, yy - 9, w * _s + 18, h * _s + 18, COLORS._main_value_negative, 1);
 		
 		drawNodeBase(xx, yy, _s);
-		
 		draggable = true;
 		
 		if(previewable) {
@@ -1953,8 +1959,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		drawNodeOverlay(xx, yy, _mx, _my, _s);
 		
-		if(!previewable) return drawJunctions_fast(xx, yy, _mx, _my, _s);
-		return _s > 0.5? drawJunctions(xx, yy, _mx, _my, _s) : drawJunctions_fast(xx, yy, _mx, _my, _s);
+		if(!previewable) return drawJunctions_fast(_draw, xx, yy, _mx, _my, _s);
+		return _s > 0.5? drawJunctions(_draw, xx, yy, _mx, _my, _s) : drawJunctions_fast(_draw, xx, yy, _mx, _my, _s);
 	}
 	
 	static drawNodeBehind = function(_x, _y, _mx, _my, _s) {
@@ -2415,9 +2421,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		struct_override(attributes, attr); 
 		
 		if(!CLONING && LOADING_VERSION < 1_18_02_0) {
-			if(struct_has(attr, "color_depth")) attributes.color_depth += (!array_empty(inputs) && inputs[0].type == VALUE_TYPE.surface)? 1 : 2;
-			if(struct_has(attr, "interpolate")) attributes.interpolate++;
-			if(struct_has(attr, "oversample"))  attributes.oversample++;
+			if(struct_has(attributes, "color_depth")) attributes.color_depth += (!array_empty(inputs) && inputs[0].type == VALUE_TYPE.surface)? 1 : 2;
+			if(struct_has(attributes, "interpolate")) attributes.interpolate++;
+			if(struct_has(attributes, "oversample"))  attributes.oversample++;
 		}
 	}
 	
