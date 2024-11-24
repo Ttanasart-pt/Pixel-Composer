@@ -136,4 +136,8 @@ function matrixGrid(_type, _size, _onModify, _unit = noone) : widget() construct
 		var cln = new matrixGrid(type, size, onModify, unit);
 		return cln;
 	}
+
+	static free = function() {
+		for( var i = 0, n = array_length(tb); i < n; i++ ) tb[i].free();
+	}
 }

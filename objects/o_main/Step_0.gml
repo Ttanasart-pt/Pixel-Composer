@@ -4,7 +4,7 @@ winManStep();
 
 //print("===== Step start =====");
 
-if(PROJECT.active && !PROJECT.safeMode) { //node step
+if(!LOADING && PROJECT.active && !PROJECT.safeMode) { //node step
 	PROJECT.step();
 	LIVE_UPDATE = false;
 	
@@ -143,4 +143,7 @@ if(PROJECT.active && !PROJECT.safeMode) { //node step
 		    buffer_delete(_l_cols);
 		}
 	}
+	
+	// var _s = gc_get_stats();
+	// if(_s.objects_touched) print($"{string_lead_zero(_s.objects_touched, 7, " ")}, {string_lead_zero(_s.objects_collected, 7, " ")}, {string_lead_zero(_s.traversal_time, 6, " ")}");
 #endregion

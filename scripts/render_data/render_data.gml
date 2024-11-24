@@ -17,7 +17,7 @@ enum RENDER_TYPE {
 	global.getvalue_hit = 0;
 #endregion
 
-function ResetAllNodesRender() { #region
+function ResetAllNodesRender() {
 	LOG_IF(global.FLAG.render == 1, $"XXXXXXXXXXXXXXXXXXXX RESETTING ALL NODES [frame {CURRENT_FRAME}] XXXXXXXXXXXXXXXXXXXX");
 	
 	array_foreach(PROJECT.allNodes, function(_node) { 
@@ -29,9 +29,9 @@ function ResetAllNodesRender() { #region
 		return;
 	});
 	
-} #endregion
+}
 
-function NodeTopoSort() { #region
+function NodeTopoSort() {
 	LOG_IF(global.FLAG.render == 1, $"======================= RESET TOPO =======================")
 	
 	var amo  = array_length(PROJECT.allNodes);
@@ -46,9 +46,9 @@ function NodeTopoSort() { #region
 	__topoSort(PROJECT.nodeTopo, PROJECT.nodes);
 	
 	LOG_IF(global.FLAG.render == 1, $"+++++++ Topo Sort Completed: {array_length(PROJECT.nodeTopo)}/{amo} nodes sorted in {(get_timer() - _t) / 1000} ms +++++++");
-} #endregion
+}
 
-function NodeListSort(_nodeList) { #region
+function NodeListSort(_nodeList) {
 	array_foreach(_nodeList, function(node) {
 		node.clearTopoSorted();
 		return 0;
@@ -57,9 +57,9 @@ function NodeListSort(_nodeList) { #region
 	var _arr = [];
 	__topoSort(_arr, _nodeList);
 	return _arr;
-} #endregion
+}
 
-function __sortNode(_arr, _node) { #region
+function __sortNode(_arr, _node) {
 	if(_node.topoSorted) return;
 		
 	var _parents = [];
@@ -86,9 +86,9 @@ function __sortNode(_arr, _node) { #region
 			
 		// print($"        > Adding > {_node.name}");
 	}
-} #endregion
+}
 
-function __topoSort(_arr, _nodeArr) { #region
+function __topoSort(_arr, _nodeArr) {
 	var _root     = [];
 	var _leftOver = [];
 	var _global   = _nodeArr == PROJECT.nodes;
@@ -129,9 +129,11 @@ function __topoSort(_arr, _nodeArr) { #region
 		if(!_leftOver[i].topoSorted)
 			array_insert(_arr, 0, _leftOver[i]);
 	}
-} #endregion
+	
+	__temp_nodeList = [];
+}
 
-function __nodeLeafList(_arr) { #region
+function __nodeLeafList(_arr) {
 	var nodes     = [];
 	var nodeNames = [];
 	
@@ -148,9 +150,9 @@ function __nodeLeafList(_arr) { #region
 	
 	LOG_LINE_IF(global.FLAG.render == 1, $"Push node {nodeNames} to queue");
 	return nodes;
-} #endregion
+}
 
-function __nodeIsRenderLeaf(_node) { #region
+function __nodeIsRenderLeaf(_node) {
 	if(is_undefined(_node))									 { LOG_IF(global.FLAG.render == 1, $"Skip undefiend		  [{_node}]"); return false; }
 	if(!is_instanceof(_node, Node))							 { LOG_IF(global.FLAG.render == 1, $"Skip non-node		  [{_node}]"); return false; }
 	
@@ -166,9 +168,9 @@ function __nodeIsRenderLeaf(_node) { #region
 	if(_node.inline_context != noone && _node.inline_context.managedRenderOrder) return false;
 	
 	return true;
-} #endregion
+}
 
-function Render(partial = false, runAction = false) { #region
+function Render(partial = false, runAction = false) {
 	LOG_END();
 
 	LOG_BLOCK_START();
@@ -274,18 +276,18 @@ function Render(partial = false, runAction = false) { #region
 	
 	LOG_END();
 	
-} #endregion
+}
 
-function __renderListReset(arr) { #region
+function __renderListReset(arr) {
 	for( var i = 0; i < array_length(arr); i++ ) {
 		arr[i].setRenderStatus(false);
 		
 		if(struct_has(arr[i], "nodes"))
 			__renderListReset(arr[i].nodes);
 	}
-} #endregion
+}
 
-function RenderList(arr) { #region
+function RenderList(arr) {
 	LOG_BLOCK_START();
 	LOG_IF(global.FLAG.render == 1, $"=============== RENDER LIST START [{array_length(arr)}] ===============");
 	var queue = ds_queue_create();
@@ -348,4 +350,4 @@ function RenderList(arr) { #region
 	LOG_END();
 	
 	ds_queue_destroy(queue);
-} #endregion
+}

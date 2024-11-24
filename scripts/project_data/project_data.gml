@@ -209,12 +209,16 @@
 			array_foreach(allNodes, function(_node) { 
 				_node.active = false; 
 				_node.cleanUp(); 
+				
+				delete _node;
 			});
 			
 			ds_map_destroy(nodeMap);
 			ds_map_destroy(nodeNameMap);
 			
-			gc_collect();
+			run_in_s(1, function() /*=>*/ { gc_collect(); gc_enable(true); });
+			
+			ds_stack_clear(UNDO_STACK);
 		}
 			
 		static toString = function() { return $"ProjectObject [{path}]"; }

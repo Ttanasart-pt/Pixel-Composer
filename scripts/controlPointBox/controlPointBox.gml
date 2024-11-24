@@ -155,4 +155,15 @@ function controlPointBox(_onModify) : widget() constructor {
 		
 		return cln;
 	}
+
+	static free = function() {
+		tbCx.free();
+		tbCy.free();
+		tbFx.free();
+		tbFy.free();
+		tbW.free();
+		tbH.free();
+		rot.free();
+		sW.free();
+	}
 }

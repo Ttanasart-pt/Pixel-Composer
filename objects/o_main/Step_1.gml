@@ -136,54 +136,56 @@ _FILE_DROPPED     = false;
 		NodeTopoSort();
 	}
 	
-	if(!PROJECT.safeMode) array_foreach(PROJECT.allNodes, function(_node) /*=>*/ { if(!_node.active) return; _node.stepBegin(); });
+	if(!LOADING) {
+		if(!PROJECT.safeMode) array_foreach(PROJECT.allNodes, function(_node) /*=>*/ { if(!_node.active) return; _node.stepBegin(); });
 	
-	if(LIVE_UPDATE)
-		Render();
-	else if(!PROJECT.safeMode) {
-		UPDATE_RENDER_ORDER = false;
-		
-		if(PROJECT.active) {
-			PROJECT.animator.is_simulating = false;
+		if(LIVE_UPDATE)
+			Render();
+		else if(!PROJECT.safeMode) {
+			UPDATE_RENDER_ORDER = false;
 			
-			if(PROGRAM_ARGUMENTS._run) {
-				if(PROJECT != noone && PROJECT.path != "") {
-					exportAll();
-					PROGRAM_ARGUMENTS._run = false;
-				}
-						
-			} else if(IS_PLAYING || IS_RENDERING) {
-				if(PROJECT.animator.frame_progress) {
-					__addon_preAnim();
-					
-					if(IS_FIRST_FRAME)
-						ResetAllNodesRender();
-						
-					if(IS_CMD) Render(false);
-					else       Render(true);
-					
-					__addon_postAnim();
-				}
-				PROJECT.animator.frame_progress = false;
+			if(PROJECT.active) {
+				PROJECT.animator.is_simulating = false;
 				
-			} else {
-				if(UPDATE & RENDER_TYPE.full)
-					Render();
+				if(PROGRAM_ARGUMENTS._run) {
+					if(PROJECT != noone && PROJECT.path != "") {
+						exportAll();
+						PROGRAM_ARGUMENTS._run = false;
+					}
+							
+				} else if(IS_PLAYING || IS_RENDERING) {
+					if(PROJECT.animator.frame_progress) {
+						__addon_preAnim();
+						
+						if(IS_FIRST_FRAME)
+							ResetAllNodesRender();
+							
+						if(IS_CMD) Render(false);
+						else       Render(true);
+						
+						__addon_postAnim();
+					}
+					PROJECT.animator.frame_progress = false;
 					
-				else if(UPDATE & RENDER_TYPE.partial)
-					Render(true);
+				} else {
+					if(UPDATE & RENDER_TYPE.full)
+						Render();
+						
+					else if(UPDATE & RENDER_TYPE.partial)
+						Render(true);
+				}
 			}
 		}
-	}
 	
-	if(PROGRAM_ARGUMENTS._rendering && PROGRAM_ARGUMENTS._run == false && array_empty(PROGRAM_ARGUMENTS._exporting)) {
-		log_console($"Export {CLI_EXPORT_AMOUNT} {CLI_EXPORT_AMOUNT > 1? "files" : "file"} completed");
-		
-		if(PROGRAM_ARGUMENTS._persist) {
-			PROGRAM_ARGUMENTS._rendering = false;
-			cli_wait();
-		} else
-			game_end();
+		if(PROGRAM_ARGUMENTS._rendering && PROGRAM_ARGUMENTS._run == false && array_empty(PROGRAM_ARGUMENTS._exporting)) {
+			log_console($"Export {CLI_EXPORT_AMOUNT} {CLI_EXPORT_AMOUNT > 1? "files" : "file"} completed");
+			
+			if(PROGRAM_ARGUMENTS._persist) {
+				PROGRAM_ARGUMENTS._rendering = false;
+				cli_wait();
+			} else
+				game_end();
+		}
 	}
 	
 	UPDATE = RENDER_TYPE.none;

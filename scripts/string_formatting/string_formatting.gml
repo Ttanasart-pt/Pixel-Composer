@@ -1,9 +1,9 @@
-function string_lead_zero(val, digit) {
+function string_lead_zero(val, digit, _pad = "0") {
 	var len = string_length(string(val));
 	var zer = digit - len;
 	
 	var ss = "";
-	repeat(zer) ss += "0";
+	repeat(zer) ss += _pad;
 	ss += string(val);
 	
 	return ss;

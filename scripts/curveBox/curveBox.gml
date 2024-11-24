@@ -610,4 +610,8 @@ function curveBox(_onModify) : widget() constructor {
 		var cln = new curveBox(onModify);
 		return cln;
 	}
+
+	static free = function() {
+		surface_free_safe(curve_surface);
+	}
 }

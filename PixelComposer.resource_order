@@ -345,6 +345,7 @@
     {"name":"Obj_FirebaseREST_Listener_On_Firestore","order":1,"path":"objects/Obj_FirebaseREST_Listener_On_Firestore/Obj_FirebaseREST_Listener_On_Firestore.yy",},
     {"name":"Obj_FirebaseREST_Listener_Once_Firestore","order":4,"path":"objects/Obj_FirebaseREST_Listener_Once_Firestore/Obj_FirebaseREST_Listener_Once_Firestore.yy",},
     {"name":"oRigidbody","order":13,"path":"objects/oRigidbody/oRigidbody.yy",},
+    {"name":"project_loader","order":4,"path":"objects/project_loader/project_loader.yy",},
     {"name":"rotator_Rotator","order":3,"path":"objects/rotator_Rotator/rotator_Rotator.yy",},
     {"name":"slider_Slider","order":1,"path":"objects/slider_Slider/slider_Slider.yy",},
     {"name":"__3d_particle","order":1,"path":"scripts/__3d_particle/__3d_particle.yy",},

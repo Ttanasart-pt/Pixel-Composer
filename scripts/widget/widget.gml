@@ -105,6 +105,8 @@ function widget() constructor {
 	
 	static drawParam = function(params) {}
 	static draw      = function() {}
+	
+	static free = function() {}
 }
 
 function widgetParam(x, y, w, h, data, display_data = {}, m = mouse_ui, rx = 0, ry = 0) constructor {

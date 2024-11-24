@@ -464,4 +464,11 @@ function rotatorRandom(_onModify) : widget() constructor {
 		var cln = new rotatorRandom(onModify);
 		return cln;
 	}
+
+	static free = function() {
+		tb_min_0.free();
+		tb_max_0.free();
+		tb_min_1.free();
+		tb_max_1.free();
+	}
 }

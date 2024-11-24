@@ -131,4 +131,9 @@ function rotatorRange(_onModify) : widget() constructor {
 		var cln = new rotatorRange(onModify);
 		return cln;
 	}
+
+	static free = function() {
+		tb_min.free();
+		tb_max.free();
+	}
 }

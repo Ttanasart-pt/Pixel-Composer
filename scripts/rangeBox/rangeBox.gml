@@ -125,4 +125,8 @@ function rangeBox(_type, _onModify) : widget() constructor {
 		
 		return cln;
 	} 
+
+	static free = function() {
+		for( var i = 0, n = array_length(tb); i < n; i++ ) tb[i].free();
+	}
 }

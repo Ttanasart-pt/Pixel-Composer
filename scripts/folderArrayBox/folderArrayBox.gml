@@ -1,5 +1,4 @@
 function folderArrayBox(_arr, _onApply) : widget() constructor {
-	
 	onApply = _onApply;
 	array   = _arr;
 	editing = noone;
@@ -100,5 +99,9 @@ function folderArrayBox(_arr, _onApply) : widget() constructor {
 		var cln = new pathArrayBox(target, data, onClick);
 		
 		return cln;
+	}
+
+	static free = function() {
+		tb_edit.free();
 	}
 }

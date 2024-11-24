@@ -36,8 +36,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		manual_ungroupable	 = true;
 		destroy_when_upgroup = false;
 		
-		var l = _group == noone? PROJECT.nodes : _group.getNodeList();
-		array_push(l, self);
+		if(NOT_LOAD) array_push(_group == noone? project.nodes : _group.getNodeList(), self);
 		
 		active_index = -1;
 		active_range = [ 0, TOTAL_FRAMES - 1 ];
@@ -451,6 +450,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		inputs = _in;
 		
+		refreshNodeDisplay();
 	}
 
 	static refreshDynamicDisplay = function() {
@@ -1265,15 +1265,17 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		getJunctionList();
 		setJunctionIndex();
 		
+		__preDraw_data.force = true;
+		
 	} run_in(1, function() /*=>*/ { refreshNodeDisplay(); });
 	
-	__preDraw_data = { _x: undefined, _y: undefined, _s: undefined, _p: undefined, sp: undefined };
+	__preDraw_data = { _x: undefined, _y: undefined, _s: undefined, _p: undefined, sp: undefined, force: false };
 	
 	static preDraw = function(_x, _y, _s) {
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
 		
-		var _upd = __preDraw_data._x != xx || __preDraw_data._y != yy || __preDraw_data._s != _s ||
+		var _upd = __preDraw_data._x != xx || __preDraw_data._y != yy || __preDraw_data._s != _s || __preDraw_data.force || 
 		           __preDraw_data._p != previewable || __preDraw_data.sp != show_parameter 
 		
 		__preDraw_data._x = xx;
@@ -1281,6 +1283,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		__preDraw_data._s = _s;
 		__preDraw_data._p = previewable;
 		__preDraw_data.sp = show_parameter;
+		
+		__preDraw_data.force = false;
 		
 		if(!_upd) {
 			if(SHOW_PARAM) h = h_param;
@@ -1356,7 +1360,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static getColor = function() { INLINE return attributes.color == -1? color : attributes.color; }
 	
 	static drawNodeBase = function(xx, yy, _s) { 
-		draw_sprite_stretched_ext(bg_spr, 0, xx, yy, w * _s, h * _s, getColor(), (.25 + .5 * renderActive) * (.25 + .75 * isHighlightingInGraph())); 
+		draw_sprite_stretched_ext(bg_spr, 0, xx, yy, w * _s, h * _s, getColor(), .75 * (.25 + .75 * isHighlightingInGraph())); 
 	}
 	
 	static drawNodeOverlay = function(xx, yy, _mx, _my, _s) {}
@@ -1409,7 +1413,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(_panel && _panel.node_hovering == self) ba = .1;
 		draw_sprite_stretched_ext(THEME.node_bg, 2, xx, yy, w * _s, nh, cc, ba);
 		
-		var cc = COLORS._main_text;
+		var cc = renderActive? COLORS._main_text : COLORS._main_text_sub;
 		if(PREFERENCES.node_show_render_status && !rendered)
 			cc = isRenderable()? COLORS._main_value_positive : COLORS._main_value_negative;
 		
@@ -1424,7 +1428,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(icon) {
 			tx += _s * 6;
 			draw_sprite_ui_uniform(icon, 0, round(tx) + 1, round(yy + nh / 2) + 1, _s, c_black, 1);
-			draw_sprite_ui_uniform(icon, 0, round(tx),     round(yy + nh / 2),     _s, c_white, 1);
+			draw_sprite_ui_uniform(icon, 0, round(tx),     round(yy + nh / 2),     _s, cc,      1);
 			tx += _s *  12;
 			tw -= _s * (12 + 6);
 		}
@@ -2481,24 +2485,26 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static preApplyDeserialize = function() {}
 	static postApplyDeserialize  = function() {}
 	
-	static loadGroup = function(context = noone) {
+	static loadGroup = function(ctx = noone) { 
 		if(load_group == noone) {
-			if(context != noone) context.add(self);
-		} else {
-			if(APPENDING) load_group = GetAppendID(load_group);
-			
-			if(ds_map_exists(PROJECT.nodeMap, load_group)) {
-				if(struct_has(PROJECT.nodeMap[? load_group], "add"))
-					PROJECT.nodeMap[? load_group].add(self);
-				else {
-					var txt = $"Group load failed. Node ID {load_group} is not a group.";
-					throw(txt);
-				}
-			} else {
-				var txt = $"Group load failed. Can't find node ID {load_group}";
-				throw(txt);
-			}
+			if(ctx) ctx.add(self);
+			else    array_push(project.nodes, self);
+			onLoadGroup();
+			return;
 		}
+		
+		if(APPENDING) load_group = GetAppendID(load_group);
+		
+		if(ds_map_exists(PROJECT.nodeMap, load_group)) {
+			var _grp = PROJECT.nodeMap[? load_group];
+			
+			if(struct_has(_grp, "add"))
+				_grp.add(self);
+			else
+				throw($"Group load failed. Node ID {load_group} is not a group.");
+			
+		} else 
+			throw($"Group load failed. Can't find node ID {load_group}");
 		
 		onLoadGroup();
 	}
@@ -2528,11 +2534,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	/////=========== CLEAN UP ===========
 	
 	static cleanUp = function() {
-		for( var i = 0; i < array_length(inputs); i++ )
-			inputs[i].cleanUp();
-		
-		for( var i = 0; i < array_length(outputs); i++ )
-			outputs[i].cleanUp();
+		for( var i = 0; i < array_length(inputs);  i++ ) { inputs[i].cleanUp();  delete inputs[i];  }
+		for( var i = 0; i < array_length(outputs); i++ ) { outputs[i].cleanUp(); delete outputs[i]; }
 		
 		for( var i = 0, n = array_length(temp_surface); i < n; i++ )
 			surface_free(temp_surface[i]);
@@ -2762,5 +2765,5 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 	} run_in(1, function() /*=>*/ { checkGroup(); });
 	
-	static toString = function() { return $"Node [{internalName}]: {node_id}"; }
+	static toString = function() { return $"Node [{internalName}] [{instanceof(self)}]: {node_id}"; }
 }

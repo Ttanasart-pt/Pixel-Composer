@@ -122,9 +122,10 @@ function array_exists(arr, val) {
 	self.__temp_val = val;
 	
 	if(!is_array(arr)) return false;
-	return array_any(arr, function(_val, _ind) {
-		return isEqual(_val, self.__temp_val);
-	});
+	var _a = array_any(arr, function(_val, _ind) { return isEqual(_val, self.__temp_val); });
+	
+	self.__temp_val = 0;
+	return _a;
 }
 
 function array_overlap(arr0, arr1) {
@@ -134,9 +135,10 @@ function array_overlap(arr0, arr1) {
 	if(!is_array(arr0)) return false;
 	if(!is_array(arr1)) return false;
 	
-	return array_any(arr0, function(_val, _ind) {
-		return array_exists(self.__temp_arr, _val);
-	});
+	var _a = array_any(arr0, function(_val, _ind) { return array_exists(self.__temp_arr, _val); });
+	
+	self.__temp_arr = 0;
+	return _a;
 }
 
 function array_empty(arr)   { INLINE return  is_array(arr) && array_length(arr) == 0; }
@@ -148,7 +150,10 @@ function array_find(arr, val) {
 	self.__temp_val = val;
 	
 	if(!is_array(arr)) return -1;
-	return array_find_index(arr, function(_val, _ind) { return isEqual(_val, self.__temp_val); });
+	var _a = array_find_index(arr, function(_val, _ind) { return isEqual(_val, self.__temp_val); });
+	
+	self.__temp_val = 0;
+	return _a;
 }
 
 function array_find_string(arr, val) {
@@ -156,7 +161,10 @@ function array_find_string(arr, val) {
 	self.__temp_val = string_lower(val);
 	
 	if(!is_array(arr)) return -1;
-	return array_find_index(arr, function(_val, _ind) { return string_lower(_val) == self.__temp_val; });
+	var _a = array_find_index(arr, function(_val, _ind) { return string_lower(_val) == self.__temp_val; });
+	
+	self.__temp_val = 0;
+	return _a;
 }
 
 function array_remove(arr, val) {

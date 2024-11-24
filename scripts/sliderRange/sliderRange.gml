@@ -89,4 +89,9 @@ function sliderRange(_step, _int, _range, _onModify) : widget() constructor {
 		
 		return cln;
 	}
+
+	static free = function() {
+		tb_value_min.free();
+		tb_value_max.free();
+	}
 }

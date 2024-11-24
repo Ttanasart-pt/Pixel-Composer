@@ -485,6 +485,10 @@ function Panel_Menu() : PanelContent() constructor {
             draw_sprite_stretched_ext(THEME.s_box_r2, 0, nx0, ny0 - nh / 2, nw, nh, cc, ev / 2);
             gpu_set_blendmode(bm_normal);
             
+            var _prg = noone;
+            for( var i = 0, n = array_length(STATS_PROGRESS); i < n; i++ ) _prg = max(_prg, STATS_PROGRESS[i].progress);
+            if(_prg > noone) draw_sprite_stretched_ext(THEME.s_box_r2, 0, nx0, ny0 - nh / 2, nw * clamp(_prg, 0, 1), nh, COLORS._main_value_positive, .5);
+            
             if(noti_icon_show > 0)
                 draw_sprite_ui(noti_icon, 0, nx0 + nw - ui(16), ny0,,,,, noti_icon_show);
             

@@ -85,7 +85,10 @@ function pathAnchorBox(_onModify) : widget() constructor {
 	
 	static clone = function() {
 		var cln = new pathAnchorBox(onModify);
-		
 		return cln;
+	}
+	
+	static free = function() {
+		for( var i = 0, n = array_length(tb); i < n; i++ ) tb[i].free();
 	}
 }

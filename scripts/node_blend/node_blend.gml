@@ -283,6 +283,9 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			return _newAtl;
 		}
 		
+		if(is_instanceof(_outSurf, SurfaceAtlas)) _outSurf.surface.surface = _output;
+		else _outSurf = _output;
+		
 		return _outSurf;
 	}
 

@@ -134,7 +134,10 @@ function paddingBox(_onModify, _unit = noone) : widget() constructor {
 	
 	static clone = function() { 
 		var cln = new paddingBox(onModify, unit);
-		
 		return cln;
 	} 
+	
+	static free = function() {
+		for( var i = 0, n = array_length(tb); i < n; i++ ) tb[i].free();
+	}
 }

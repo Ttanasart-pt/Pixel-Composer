@@ -1,9 +1,10 @@
 #region notification
-	globalvar STATUSES, WARNING, ERRORS;
+	globalvar STATUSES, WARNING, ERRORS, STATS_PROGRESS;
 	
 	STATUSES = ds_list_create();
 	WARNING  = ds_list_create();
 	ERRORS   = ds_list_create();
+	STATS_PROGRESS = [];
 #endregion
 
 #region classes
@@ -27,6 +28,8 @@
 		self.onClick  = noone;
 		self.tooltip  = "";
 		self.icon_end = noone;
+		
+		self.progress = noone;
 		
 		self.amount = 1;
 		self.time   = $"{string_lead_zero(current_hour, 2)}:{string_lead_zero(current_minute, 2)}.{string_lead_zero(current_second, 2)}";

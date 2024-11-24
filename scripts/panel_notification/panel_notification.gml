@@ -139,8 +139,6 @@ function Panel_Notification() : PanelContent() constructor {
 					var bx = _w - ui(0) - bw;
 					var by = yy + ui(0) + ui(1);
 					
-					// draw_sprite_stretched_ext(THEME.s_box_r2, 0, bx, by, bw, bh, CDEF.main_dkblack, 0.75);
-					
 					draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text_accent);
 					draw_text(bx + bw / 2, by + bh / 2, noti.amount);
 				}
@@ -152,8 +150,6 @@ function Panel_Notification() : PanelContent() constructor {
 		
 		return hh;
 	});
-	
-	
 	
 	function drawContent(panel) { 
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);

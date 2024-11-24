@@ -78,7 +78,7 @@ function LOAD_PATH(path, readonly = false, safe_mode = false) {
 }
 
 function LOAD_AT(path, params = new __loadParams()) {
-	static log = false;
+	static log = 0;
 	
 	CALL("load");
 	
@@ -122,7 +122,7 @@ function LOAD_AT(path, params = new __loadParams()) {
 	
 	printIf(log, $" > Create temp : {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
 	
-	var _load_content;
+	var content;
 	var _ext = filename_ext_raw(path);
 	var s;
 	
@@ -139,146 +139,10 @@ function LOAD_AT(path, params = new __loadParams()) {
 	
 	buffer_delete(bf);
 	
-	_load_content = json_try_parse(s);
+	content = json_try_parse(s);
+	printIf(log, $" > Load struct : {(get_timer() - t1) / 1000} ms");
 	
-	printIf(log, $" > Load struct : {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
-	
-	if(struct_has(_load_content, "version")) {
-		var _v = _load_content.version;
-		
-		PROJECT.version = _v;
-		LOADING_VERSION = _v;
-		
-		if(PREFERENCES.notify_load_version && floor(_v) != floor(SAVE_VERSION)) {
-			var warn = $"File version mismatch : loading file version {_v} to Pixel Composer {SAVE_VERSION}";
-			log_warning("LOAD", warn);
-		}
-	} else {
-		var warn = $"File version mismatch : loading old format to Pixel Composer {SAVE_VERSION}";
-		log_warning("LOAD", warn);
-	}
-	
-	printIf(log, $" > Load meta : {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
-	
-	var create_list = [];
-	if(struct_has(_load_content, "nodes")) {
-		try {
-			var _node_list = _load_content.nodes;
-			
-			for(var i = 0, n = array_length(_node_list); i < n; i++) {
-				
-				var _node = nodeLoad(_node_list[i]);
-				if(_node) array_push(create_list, _node);
-			}
-		} catch(e) {
-			log_warning("LOAD", exception_print(e));
-		}
-	}
-	
-	PROJECT.deserialize(_load_content);
-	
-	ds_queue_clear(CONNECTION_CONFLICT);
-	
-	try {
-		array_foreach(create_list, function(node) /*=>*/ {return node.loadGroup()} );
-		
-	} catch(e) {
-		log_warning("LOAD, group", exception_print(e));
-		return false;
-	}
-	
-	printIf(log, $" > Load group : {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
-	
-	try {
-		array_foreach(create_list, function(node) /*=>*/ {return node.postDeserialize()} );
-	} catch(e) {
-		log_warning("LOAD, deserialize", exception_print(e));
-	}
-	
-	printIf(log, $" > Deserialize: {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
-	
-	try {
-		array_foreach(create_list, function(node) /*=>*/ {return node.applyDeserialize()} );
-	} catch(e) {
-		log_warning("LOAD, apply deserialize", exception_print(e));
-	}
-	
-	printIf(log, $" > Apply deserialize : {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
-	
-	try {
-		array_foreach(create_list, function(node) /*=>*/ {return node.preConnect()}  );
-		array_foreach(create_list, function(node) /*=>*/ {return node.connect()}     );
-		array_foreach(create_list, function(node) /*=>*/ {return node.postConnect()} );
-	} catch(e) {
-		log_warning("LOAD, connect", exception_print(e));
-	}
-	
-	printIf(log, $" > Connect : {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
-	
-	if(!ds_queue_empty(CONNECTION_CONFLICT)) {
-		var pass = 0;
-		
-		try {
-			while(++pass < 4 && !ds_queue_empty(CONNECTION_CONFLICT)) {
-				var size = ds_queue_size(CONNECTION_CONFLICT);
-				log_message("LOAD", $"[Connect] {size} Connection conflict(s) detected (pass: {pass})");
-				repeat(size) ds_queue_dequeue(CONNECTION_CONFLICT).connect();
-				repeat(size) ds_queue_dequeue(CONNECTION_CONFLICT).postConnect();
-				Render();
-			}
-			
-			if(!ds_queue_empty(CONNECTION_CONFLICT))
-				log_warning("LOAD", "Some connection(s) is unsolved. This may caused by render node not being update properly, or image path is broken.");
-		} catch(e) {
-			log_warning("LOAD, connect solver", exception_print(e));
-		}
-	}
-	
-	printIf(log, $" > Conflict : {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
-	
-	try {
-		array_foreach(create_list, function(node) { node.postLoad(); } );
-	} catch(e) {
-		log_warning("LOAD, connect", exception_print(e));
-	}
-	
-	printIf(log, $" > Post load : {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
-	
-	try {
-		array_foreach(create_list, function(node) { node.clearInputCache(); } );
-	} catch(e) {
-		log_warning("LOAD, connect", exception_print(e));
-	}
-	
-	printIf(log, $" > Clear cache : {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
-	
-	RENDER_ALL_REORDER
-	
-	LOADING = false;
-	PROJECT.modified = false;
-	
-	log_message("FILE", "load " + path, THEME.noti_icon_file_load);
-	log_console("Loaded project: " + path);
-	
-	if(!IS_CMD) PANEL_MENU.setNotiIcon(THEME.noti_icon_file_load);
-	
-	refreshNodeMap();
-	
-	printIf(log, $" > Refresh map : {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
-	
-	if(struct_has(_load_content, "timelines") && !array_empty(_load_content.timelines.contents))
-		PROJECT.timelines.deserialize(_load_content.timelines);
-	
-	printIf(log, $" > Timeline : {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
-	
-	if(!IS_CMD) run_in(1, PANEL_GRAPH.toCenterNode);
-	
-	printIf(log, $"========== Load {array_length(PROJECT.allNodes)} nodes completed in {(get_timer() - t0) / 1000} ms ==========");
-	
-	if((PROJECT.load_layout || PREFERENCES.save_layout) && struct_has(_load_content, "layout"))
-		LoadPanelStruct(_load_content.layout.panel);
-	
-	return true;
+	return instance_create(0, 0, project_loader, { path, content, log, params, t0, t1 });
 }
 
 function __EXPORT_ZIP()	{ exportPortable(PROJECT); }

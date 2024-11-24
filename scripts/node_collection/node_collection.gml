@@ -279,10 +279,11 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	static exitGroup = function() {}
 	
 	static onAdd = function(_node) {}
+	
 	static add = function(_node) {
 		array_push(getNodeList(), _node);
-		var list = _node.group == noone? PANEL_GRAPH.nodes_list : _node.group.getNodeList();
-		array_remove(list, _node);
+		var list = _node.group == noone? project.nodes : _node.group.getNodeList();
+		if(NOT_LOAD) array_remove(list, _node);
 		
 		recordAction(ACTION_TYPE.group_added, self, _node);
 		_node.group = self;

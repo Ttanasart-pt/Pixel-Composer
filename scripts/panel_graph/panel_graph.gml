@@ -2703,6 +2703,17 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         }
         
         tooltip_overlay = {};
+        
+        if(LOADING) {
+        	draw_set_color(CDEF.main_dkblack);
+        	draw_set_alpha(0.3);
+        	draw_rectangle(0, 0, w, h, false);
+        	draw_set_alpha(1);
+        	
+        	gpu_set_tex_filter(true);
+        	draw_sprite_ext(THEME.loading, 0, w / 2, h / 2, 1, 1, current_time / 2, COLORS._main_icon);
+        	gpu_set_tex_filter(false);
+        }
     } 
     
     //// ============ Action ============

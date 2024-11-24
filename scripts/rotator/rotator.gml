@@ -123,7 +123,10 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 	
 	static clone = function() {
 		var cln = new rotator(onModify, valStep);
-		
 		return cln;
+	}
+	
+	static free = function() {
+		tb_value.free();
 	}
 }

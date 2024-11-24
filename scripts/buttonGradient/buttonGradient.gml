@@ -13,12 +13,12 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 	
 	hover_index = 0;
 	
-	function apply(value) { #region
+	function apply(value) {
 		if(!interactable) return;
 		onApply(value);
-	} #endregion
+	}
 	
-	static trigger = function() { #region
+	static trigger = function() {
 		var dialog = dialogCall(o_dialog_gradient, WIN_W / 2, WIN_H / 2);
 		dialog.setDefault(current_gradient.clone());
 		dialog.onApply      = apply;
@@ -27,9 +27,9 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 		
 		if(parentDialog)
 			parentDialog.addChildren(dialog);
-	} #endregion
+	}
 	
-	static triggerSingle = function(_index) { #region
+	static triggerSingle = function(_index) {
 		edit_color_index = _index;
 		
 		var dialog = dialogCall(o_dialog_color_selector, WIN_W / 2, WIN_H / 2);
@@ -37,18 +37,18 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 		dialog.selector.onApply = editColor;
 		dialog.onApply = editColor;
 		dialog.interactable = interactable;
-	} #endregion
+	}
 	
-	function editColor(col) { #region
+	function editColor(col) {
 		if(edit_color_index == -1) return;
 		
 		edit_color_index.value = col;
 		apply(current_gradient);
-	} #endregion
+	}
 	
 	static drawParam = function(params) { return draw(params.x, params.y, params.w, params.h, params.data, params.m); }
 	
-	static draw = function(_x, _y, _w, _h, _gradient, _m) { #region
+	static draw = function(_x, _y, _w, _h, _gradient, _m) {
 		x = _x;
 		y = _y;
 		w = _w;
@@ -252,10 +252,10 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 		
 		resetFocus();
 		return h;
-	} #endregion
+	}
 	
-	static clone = function() { #region
+	static clone = function() {
 		var cln = new buttonGradient(onApply, parentDialog);
 		return cln;
-	} #endregion
+	}
 }

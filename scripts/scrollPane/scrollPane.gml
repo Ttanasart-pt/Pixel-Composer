@@ -170,4 +170,8 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 			}
 		}
 	}
+	
+	static free = function() {
+		surface_free(surface);
+	}
 }

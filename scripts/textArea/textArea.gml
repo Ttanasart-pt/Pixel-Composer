@@ -1036,4 +1036,8 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		var cln = new textArea(input, onModify); 
 		return cln;
 	}
+	
+	static free = function() {
+		surface_free_safe(text_surface);
+	}
 }

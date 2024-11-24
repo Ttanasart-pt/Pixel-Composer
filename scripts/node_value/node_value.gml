@@ -378,6 +378,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 	} setDropKey();
 	
+	mapWidget   = noone;
 	mappedJunc  = noone;
 	mapped_vec4 = false;
 	
@@ -994,7 +995,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			editWidget.side_button = display_data.side_button;
 		
 		editWidgetRaw = editWidget;
-		if(editWidget) graphWidget = editWidget.clone();
+		if(editWidget) {
+			graphWidget = editWidget.clone();
+			
+			editWidget.attributes  = attributes;
+			graphWidget.attributes = attributes;
+		}
 		
 		for( var i = 0, n = array_length(animator.values); i < n; i++ ) {
 			animator.values[i].ease_in_type   = key_inter;
@@ -1755,6 +1761,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		node.refreshNodeDisplay();
 		
 		PROJECT.modified = true;
+		if(PANEL_GRAPH) PANEL_GRAPH.connection_draw_update = true;
 						
 		RENDER_ALL_REORDER
 		
@@ -2374,7 +2381,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}	
 	}
 	
-	static cleanUp = function() {}
+	static cleanUp = function() {
+		if(editWidget)  editWidget.free();
+		if(mapWidget)   mapWidget.free();
+		express_edit.free();
+		
+		if(bypass_junc) { bypass_junc.cleanUp(); delete bypass_junc; }
+	}
 		
 	static toString = function() { return (connect_type == CONNECT_TYPE.input? "Input" : "Output") + $" junction {index} of [{name}]: {node}"; }
 	

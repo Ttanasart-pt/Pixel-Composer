@@ -819,6 +819,7 @@
     {"id":{"name":"Obj_FirebaseREST_Listener_On_Firestore","path":"objects/Obj_FirebaseREST_Listener_On_Firestore/Obj_FirebaseREST_Listener_On_Firestore.yy",},},
     {"id":{"name":"Obj_FirebaseREST_Listener_Once_Firestore","path":"objects/Obj_FirebaseREST_Listener_Once_Firestore/Obj_FirebaseREST_Listener_Once_Firestore.yy",},},
     {"id":{"name":"oRigidbody","path":"objects/oRigidbody/oRigidbody.yy",},},
+    {"id":{"name":"project_loader","path":"objects/project_loader/project_loader.yy",},},
     {"id":{"name":"rotator_Rotator","path":"objects/rotator_Rotator/rotator_Rotator.yy",},},
     {"id":{"name":"slider_Slider","path":"objects/slider_Slider/slider_Slider.yy",},},
     {"id":{"name":"rm_main","path":"rooms/rm_main/rm_main.yy",},},

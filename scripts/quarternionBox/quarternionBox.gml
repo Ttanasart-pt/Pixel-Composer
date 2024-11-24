@@ -141,4 +141,8 @@ function quarternionBox(_onModify) : widget() constructor {
 		var cln = new quarternionBox(onModify);
 		return cln;
 	}
+	
+	static free = function() {
+		for( var i = 0, n = array_length(tb); i < n; i++ ) tb[i].free();
+	}
 }
