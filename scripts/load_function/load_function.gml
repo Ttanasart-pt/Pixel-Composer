@@ -126,15 +126,18 @@ function LOAD_AT(path, params = new __loadParams()) {
 	var _ext = filename_ext_raw(path);
 	var s;
 	
-	if(_ext == "pxc") {
-		var f = file_text_open_read(path);
-		s = file_text_read_all(f);
-		file_text_close(f);
+	var bf = buffer_load(path);
+	var bc = buffer_decompress(bf);
+	
+	if(bc == -1) {
+		s = buffer_read(bf, buffer_string);
 		
-	} else if(_ext == "cpxc") {
-		var b = buffer_decompress(buffer_load(path));
-		s = buffer_read(b, buffer_string);
+	} else {
+		s = buffer_read(bc, buffer_string);
+		buffer_delete(bc);
 	}
+	
+	buffer_delete(bf);
 	
 	_load_content = json_try_parse(s);
 	

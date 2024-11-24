@@ -2201,12 +2201,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		draw_line_shift_y = struct_try_get(_map, "shift_y",     0);
 		is_modified       = struct_try_get(_map, "is_modified", false);
 		
-		if(struct_has(_map, "attri")) {
-			var _lattr = _map.attri;
-			_lattr.mapped = struct_try_get(_lattr, "mapped", 0);
-			
-			struct_append(attri, _lattr);
-		}
+		if(struct_has(_map, "attri"))
+			struct_append(attributes, _map.attri);
 		
 		if(struct_has(_map, "linked")) 
 			display_data.linked = _map.linked;

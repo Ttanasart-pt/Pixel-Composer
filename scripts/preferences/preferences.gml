@@ -51,6 +51,7 @@
 		PREFERENCES.keyboard_double_delay			= 0.25;
 		
 		PREFERENCES.file_watcher_delay              = 0.1;
+		
 	#endregion
 	
 	#region ///////////////////////////////////////////////////////////////////////// DIALOG ////////////////////////////////////////////////////////////////////////
@@ -141,6 +142,7 @@
 		PREFERENCES.save_file_minify				= true;
 		PREFERENCES.save_backup						= 1;
 		PREFERENCES.save_layout						= false;
+		PREFERENCES.save_compress                   = true;
 	
 	#endregion
 	

@@ -181,6 +181,12 @@ event_inherited();
 		));
 		
 		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
+			__txtx("pref_save_file_compress", "Compress save file"),
+			"save_compress",
+			new checkBox(function() /*=>*/ { PREFERENCES.save_compress = !PREFERENCES.save_compress; PREF_SAVE(); })
+		));
+		
+		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
 			__txtx("pref_save_backups", "Backup saves"),
 			"save_backup",
 			new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ { PREFERENCES.save_backup = max(0, val);  PREF_SAVE(); })

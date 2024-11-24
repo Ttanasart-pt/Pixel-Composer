@@ -2243,7 +2243,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var _attr = attributeSerialize();
 		var attri = struct_append(variable_clone(attributes), _attr); 
 		
-		#region attribute stripping
+		#region attribute stripping // TODO : make it an array
 			if(struct_try_get(attri, "color_depth")         == 3)     struct_remove(attri, "color_depth");
 			if(struct_try_get(attri, "interpolate")         == 1)     struct_remove(attri, "interpolate");
 			if(struct_try_get(attri, "oversample")          == 1)     struct_remove(attri, "oversample");

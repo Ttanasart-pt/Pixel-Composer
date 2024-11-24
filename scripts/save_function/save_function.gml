@@ -22,6 +22,7 @@ function SERIALIZE_PROJECT(project = PROJECT) {
 function SET_PATH(project, path) {
 	if(path == "") {
 		project.readonly = false;
+		
 	} else if(!project.readonly) {
 		ds_list_remove(RECENT_FILES, path);
 		ds_list_insert(RECENT_FILES, 0, path);
@@ -29,7 +30,6 @@ function SET_PATH(project, path) {
 			ds_list_delete(RECENT_FILES, ds_list_size(RECENT_FILES) - 1);
 		RECENT_SAVE();
 		RECENT_REFRESH();
-		//project.path = filename_name(path);
 	}
 	
 	project.path = path;
@@ -88,9 +88,10 @@ function SAVE_AT(project = PROJECT, path = "", log = "save at ") {
 	if(file_exists_empty(path)) file_delete(path);
 	var _ext = filename_ext_raw(path);
 	var _prj = SERIALIZE_PROJECT(project);
+	var _cmp = PREFERENCES.save_compress;
 	
-	     if(_ext == "pxc")  file_text_write_all(path, _prj);
-	else if(_ext == "cpxc") buffer_save(buffer_compress_string(_prj), path);
+    if(_cmp) buffer_save(buffer_compress_string(_prj), path);
+	else     file_text_write_all(path, _prj);
 	
 	SAVING = false;
 	project.readonly  = false;
