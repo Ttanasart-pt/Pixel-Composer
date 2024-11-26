@@ -115,7 +115,7 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		if(disp == 0 || inputs[0].value_from != noone || bbox.h < line_get_height(f_p2)) {
 			draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
-			draw_text_bbox(bbox, string(val));
+			draw_text_bbox(bbox, string_real(val));
 			return;
 		}
 		
@@ -123,7 +123,7 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			
 			case 1 :
 				draw_set_text(f_sdf, fa_center, fa_center, _col);
-				draw_text_transformed(bbox.xc, bbox.y0 + 16 * _s, string(val), _s * 0.5, _s * 0.5, 0);
+				draw_text_transformed(bbox.xc, bbox.y0 + 16 * _s, string_real(val), _s * 0.5, _s * 0.5, 0);
 				
 				var sl_w = bbox.w - 8 * _s;
 				var sl_h = _s * 40;
@@ -232,8 +232,8 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					draggable = false;
 				}
 				
-				draw_set_text(f_sdf, fa_center, fa_center, colorMultiply(CDEF.main_white, _col));
-				draw_text_transformed(bbox.xc, bbox.yc, val, _s * .5, _s * .5, 0);
+				draw_set_text(f_sdf, fa_center, fa_center, _col);
+				draw_text_transformed(bbox.xc, bbox.yc, string_real(val, 999, 3), _s * .5, _s * .5, 0);
 				break;
 		}
 	}

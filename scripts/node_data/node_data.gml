@@ -681,8 +681,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var _ou = preview_channel >= 0 && preview_channel < array_length(outputs) && outputs[preview_channel].type == VALUE_TYPE.surface;
 		var _prev_surf = previewable && preview_draw && (_ps || _ou);
 		
-		junction_draw_hei_y = SHOW_PARAM? 32 : 24;
-		junction_draw_pad_y = SHOW_PARAM? 128 : 32;
+		junction_draw_hei_y = SHOW_PARAM? 32 :  16;
+		junction_draw_pad_y = SHOW_PARAM? 128 : 24;
 		
 		var _hi, _ho;
 		
@@ -1247,6 +1247,13 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return self;
 	}
 	
+	static setPreviewable = function(prev) {
+		if(previewable == prev) return;
+		
+		previewable = prev;
+		y += previewable? -16 : 16;
+	}
+	
 	static onInspect = function() {}
 	
 	static pointIn = function(_x, _y, _mx, _my, _s) {
@@ -1554,6 +1561,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static drawJunctions = function(_draw, _x, _y, _mx, _my, _s) {
 		var hover = noone;
+		gpu_set_texfilter(true);
 		
 		for(var i = 0, n = array_length(inputDisplayList); i < n; i++) { //inputs
 			var jun = inputDisplayList[i];
@@ -1595,6 +1603,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		onDrawJunctions(_x, _y, _mx, _my, _s);
 		
+		gpu_set_texfilter(false);
 		return hover;
 	}
 	

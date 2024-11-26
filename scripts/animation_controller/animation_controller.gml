@@ -42,7 +42,7 @@
 		
 		static setFrame = function(_frame, _round = true) {
 			var _c        = current_frame;
-			_frame        = clamp(_frame, 0, frames_total);
+			// _frame        = clamp(_frame, 0, frames_total);
 			real_frame    = _frame;
 			current_frame = _round? round(_frame) : _frame;
 			

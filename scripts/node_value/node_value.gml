@@ -1980,7 +1980,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var _draw_cc = COLORS._main_text;
 		var _draw_aa = 0.6 + hover_in_graph * 0.4;
 		
-		var _f = node.previewable? f_p1 : f_p3;
+		var _f = node.previewable? f_p2 : f_p3;
 		
 		draw_set_text(_f, fa_left, fa_center, _draw_cc);
 		draw_set_alpha(_draw_aa);

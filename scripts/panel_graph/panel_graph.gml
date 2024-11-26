@@ -620,7 +620,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         __temp_show = false;
         array_foreach(nodes_selecting, function(node, index) {
             if(index == 0) __temp_show = !node.previewable;
-            node.previewable = __temp_show;
+            node.setPreviewable(__temp_show);
             node.refreshNodeDisplay();
         });
     }
@@ -1205,7 +1205,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
     function drawCacheCheck(_x, _y, _s, _w, _h) {
     	var _upd = false;
     	
-    	_upd |= pFOCUS && mouse_click(mb_any);
+    	_upd |= pFOCUS && (mouse_click(mb_any) || keyboard_check_pressed(vk_anykey));
     	_upd |= draw_refresh; draw_refresh = false;
     	
     	_upd |= connection_cache[$ "_x"] != _x; connection_cache[$ "_x"] = _x;

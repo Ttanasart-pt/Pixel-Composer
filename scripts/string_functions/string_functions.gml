@@ -87,7 +87,7 @@ function string_compare(s1, s2) {
 }
 
 function array_to_string(arr) {
-	if(!is_array(arr))   return string(arr);
+	if(!is_array(arr))   return string_real(arr);
 	if(array_empty(arr)) return "[]";
 	
 	var s = "[";
