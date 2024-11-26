@@ -17,12 +17,8 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	attributes.display_bone = 0;
 	
 	array_push(attributeEditors, "Display");
-	
-	array_push(attributeEditors, ["Display name", function() { return attributes.display_name; }, 
-		new checkBox(function() { attributes.display_name = !attributes.display_name; })]);
-		
-	array_push(attributeEditors, ["Display bone", function() { return attributes.display_bone; }, 
-		new scrollBox(["Octahedral", "Stick"], function(ind) { attributes.display_bone = ind; })]);
+	array_push(attributeEditors, ["Display name", function() /*=>*/ {return attributes.display_name}, new checkBox(function() /*=>*/ { attributes.display_name = !attributes.display_name; })]);
+	array_push(attributeEditors, ["Display bone", function() /*=>*/ {return attributes.display_bone}, new scrollBox(["Octahedral", "Stick"], function(ind) /*=>*/ { attributes.display_bone = ind; })]);
 	
 	static createNewInput = function(bone = noone) {
 		var index = array_length(inputs);
@@ -32,11 +28,12 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		inputs[index].attributes.bone_id = bone != noone? bone.ID : noone;
 		
 		if(bone != noone) boneMap[$ bone.ID] = inputs[index];
-		
 		array_push(input_display_list, index);
 		
 		return inputs[index];
-	} setDynamicInput(1, false);
+	} 
+	
+	setDynamicInput(1, false);
 	
 	static setBone = function() {
 		//print("Setting dem bones...");
@@ -44,20 +41,19 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		if(_b == noone) return;
 		
 		var _bones = [];
-		var _bst = ds_stack_create();
+		var _bst   = ds_stack_create();
 		ds_stack_push(_bst, _b);
 		
 		while(!ds_stack_empty(_bst)) {
 			var __b = ds_stack_pop(_bst);
 			
 			for( var i = 0, n = array_length(__b.childs); i < n; i++ ) {
-				array_push(_bones, __b.childs[i]);
+				array_push(_bones,  __b.childs[i]);
 				ds_stack_push(_bst, __b.childs[i]);
 			}
 		}
 		
 		ds_stack_destroy(_bst);
-		//print($"Bone counts: {array_length(_bones)}");
 		
 		var _inputs = [ inputs[0] ];
 		
@@ -69,37 +65,37 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		for( var i = 0, n = array_length(_bones); i < n; i++ ) {
 			var bone = _bones[i];
 			var _idx = array_length(_inputs);
+			var _inp;
+			
 			array_push(_input_display_list, _idx);
-			//print($"  > Adding bone ID: {bone.ID}");
 			
 			if(struct_exists(boneMap, bone.ID)) {
-				var _inp = boneMap[$ bone.ID];
-				
+				_inp = boneMap[$ bone.ID];
 				_inp.index = _idx;
 				array_push(_inputs, _inp);
-			} else {
-				var _inp = createNewInput(bone);
-				array_push(_inputs, _inp);
-			}
+				
+			} else
+				_inp = createNewInput(bone);
+			
+			array_push(_inputs, _inp);
 		}
 		
 		inputs = _inputs;
 		input_display_list = _input_display_list;
 		
-		//print(_input_display_list);
 	}
 	
 	tools = [];
 	
 	anchor_selecting = noone;
-	posing_bone      = noone;
-	posing_input     = 0;
-	posing_type      = 0;
-	posing_sx   = 0;
-	posing_sy   = 0;
-	posing_sz   = 0;
-	posing_mx   = 0;
-	posing_my   = 0;
+	posing_bone  = noone;
+	posing_input = 0;
+	posing_type  = 0;
+	posing_sx    = 0;
+	posing_sy    = 0;
+	posing_sz    = 0;
+	posing_mx    = 0;
+	posing_my    = 0;
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _b = outputs[0].getValue();

@@ -2,8 +2,6 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	name = "Armature Create";
 	setDimension(96, 72);
 	
-	//newInput(0, nodeValue_Int("Axis", self, 0));
-	
 	bone_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { 
 		var _b  = bones;
 		if(_b == noone) return 0;
@@ -133,57 +131,55 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		var bone  = new __Bone(parent, distance, direction,,, self);
 		parent.addChild(bone);
 		
-		if(parent == bones) 
-			bone.parent_anchor = false;
+		if(parent == bones) bone.parent_anchor = false;
 		return bone;
 	} 
 	
 	newOutput(0, nodeValue_Output("Armature", self, VALUE_TYPE.armature, noone));
 	
 	#region ++++ attributes ++++
-		bones = new __Bone(,,,,, self);
-		bones.name = "Main";
+		bones         = new __Bone(,,,,, self);
+		bones.name    = "Main";
 		bones.is_main = true;
-		bones.node = self;
+		bones.node    = self;
 		
 		attributes.display_name = true;
 		attributes.display_bone = 0;
 		
 		array_push(attributeEditors, "Display");
-		array_push(attributeEditors, ["Display name", function() { return attributes.display_name; }, 
-			new checkBox(function() { 
-				attributes.display_name = !attributes.display_name;
-			})]);
-		array_push(attributeEditors, ["Display bone", function() { return attributes.display_bone; }, 
-			new scrollBox(["Octahedral", "Stick"], function(ind) { 
-				attributes.display_bone = ind;
-			})]);
+		array_push(attributeEditors, ["Display name", function() /*=>*/ {return attributes.display_name}, new checkBox(function() /*=>*/ { attributes.display_name = !attributes.display_name; })]);
+		array_push(attributeEditors, ["Display bone", function() /*=>*/ {return attributes.display_bone}, new scrollBox(["Octahedral", "Stick"], function(ind) /*=>*/ { attributes.display_bone = ind; })]);
 	#endregion
 	
 	tools = [
-		new NodeTool( [ "Move", "Scale" ], [ THEME.bone_tool_move, THEME.bone_tool_scale ] ),
-		new NodeTool( "Add bones", THEME.bone_tool_add ),
-		new NodeTool( "Remove bones", THEME.bone_tool_remove ),
-		new NodeTool( "Detach bones", THEME.bone_tool_detach ),
-		new NodeTool( "IK", THEME.bone_tool_IK ),
+		new NodeTool( "Transform",           THEME.bone_tool_move ),
+		new NodeTool( "Add bones",           THEME.bone_tool_add    ),
+		new NodeTool( "Remove bones",        THEME.bone_tool_remove ),
+		new NodeTool( "Detach bones",        THEME.bone_tool_detach ),
+		new NodeTool( "IK",                  THEME.bone_tool_IK     ),
 	];
 	
 	anchor_selecting = noone;
 	builder_bone = noone;
 	builder_type = 0;
+	builder_sv   = 0;
 	builder_sx   = 0;
 	builder_sy   = 0;
 	builder_mx   = 0;
 	builder_my   = 0;
 	
-	builder_moving  = false;
-	builder_scaling = false;
-	
 	bone_dragging = noone;
 	ik_dragging   = noone;
 	
-	moving = false;
+	moving  = false;
 	scaling = false;
+	
+	bone_arr        = [];
+	bone_point_maps = [];
+	bone_point_mape = [];
+	
+	bone_transform_bbox = -1;
+	bone_transform_type = -1;
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { 
 		var mx = (_mx - _x) / _s;
@@ -195,20 +191,29 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		var _b = bones;
 		
 		if(builder_bone != noone) { 
-			anchor_selecting = _b.draw(attributes, false, _x, _y, _s, _mx, _my, anchor_selecting);
+			anchor_selecting = _b.draw(attributes, false, _x, _y, _s, _mx, _my, anchor_selecting, builder_bone);
 			
 			var dir = point_direction(builder_sx, builder_sy, smx, smy);
 			var dis = point_distance(builder_sx, builder_sy, smx, smy);
 			
 			if(builder_type == 2) {
-				var bx = builder_sx + (smx - builder_mx);
-				var by = builder_sy + (smy - builder_my);
+				var an = point_direction(builder_sx, builder_sy, mx, my);
+				builder_bone.angle += angle_difference(an, builder_sv);
+				builder_sv = an;
 				
-				if(!builder_bone.parent_anchor) {
-					builder_bone.direction = point_direction(0, 0, bx, by);
-					builder_bone.distance  = point_distance( 0, 0, bx, by);
-				}
+				var _rx = _x + _s * builder_sx;
+				var _ry = _y + _s * builder_sy;
+				draw_sprite_ext(s_bone_rotate, 0, _rx, _ry, 1, 1, builder_bone.angle, COLORS._main_value_positive, 1);
+			
+			} else if(builder_type == 3) {
 				
+				builder_bone.length = point_distance(builder_sx, builder_sy, mx, my) / builder_sv;
+				
+				orig = builder_bone.getPoint(0.75);
+				var _rx = _x + _s * orig.x;
+				var _ry = _y + _s * orig.y;
+				draw_sprite_ext(s_bone_scale,  0, _rx, _ry, 1, 1, builder_bone.angle, COLORS._main_value_positive, 1);
+			
 			} else if(key_mod_press(ALT)) {
 				if(builder_type == 0) {
 					var bo = builder_bone.getTail();
@@ -252,10 +257,22 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 						var inRange = point_in_circle(_mx, _my, par_ancx, par_ancy, 16) && mouse_release(mb_left);
 						if(!builder_bone.parent.is_main && builder_bone.IKlength > 0 && inRange)
 							builder_bone.parent_anchor = true;
+							
 					}
+					
+					orig = builder_bone.getHead();
+					var _rx = _x + _s * orig.x;
+					var _ry = _y + _s * orig.y;
+					draw_sprite_ext(s_bone_move, 0, _rx, _ry, 1, 1, 0, COLORS._main_value_positive, 1);
+					
 				} else if(builder_type == 1) {
 					builder_bone.angle  = dir;
 					builder_bone.length = dis;
+					
+					orig = builder_bone.getTail();
+					var _rx = _x + _s * orig.x;
+					var _ry = _y + _s * orig.y;
+					draw_sprite_ext(s_bone_move, 0, _rx, _ry, 1, 1, 0, COLORS._main_value_positive, 1);
 				}
 			}
 			
@@ -330,115 +347,144 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		
 		} 
 		
-		if(isUsingTool("Move")) { 
+		if(isUsingTool("Transform")) { 
 			_b.draw(attributes, false, _x, _y, _s, _mx, _my);
 			
 			var bbox = _b.bbox();
+			if(!is_array(bbox)) return;
+			
 			var x0 = _x + bbox[0] * _s;
 			var y0 = _y + bbox[1] * _s;
+			
 			var x1 = _x + bbox[2] * _s;
 			var y1 = _y + bbox[3] * _s;
 			
-			if(builder_moving) {
-				var dx = (mx - builder_mx) / _s;
-				var dy = (my - builder_my) / _s;
+			if(bone_transform_type >= 0) {
+				var dx = mx - builder_mx;
+				var dy = my - builder_my;
 				
-				builder_mx = mx;
-				builder_my = my;
+				var ox0 = bone_transform_bbox[0], oy0 = bone_transform_bbox[1];
+				var ox1 = bone_transform_bbox[2], oy1 = bone_transform_bbox[3];
+				var ow  = ox1 - ox0;
+				var oh  = oy1 - oy0;
 				
-				var _bx = lengthdir_x(_b.distance, _b.direction) + dx;
-				var _by = lengthdir_y(_b.distance, _b.direction) + dy;
+				var nx0 = ox0, ny0 = oy0;
+				var nx1 = ox1, ny1 = oy1;
 				
-				_b.distance  = point_distance(0, 0, _bx, _by);
-				_b.direction = point_direction(0, 0, _bx, _by);
+				switch(bone_transform_type) { // transform
+					case 0 :
+						nx0 = ox0 + dx;
+						ny0 = oy0 + dy;
+						break;
+					
+					case 1 :
+						nx1 = ox1 + dx;
+						ny0 = oy0 + dy;
+						break;
+						
+					case 2 :
+						nx0 = ox0 + dx;
+						ny1 = oy1 + dy;
+						break;
+						
+					case 3 :
+						nx1 = ox1 + dx;
+						ny1 = oy1 + dy;
+						break;
+					
+					case 4 :
+						nx0 = ox0 + dx;
+						ny0 = oy0 + dy;
+						nx1 = ox1 + dx;
+						ny1 = oy1 + dy;
+						break;
+				}
+				
+				var nw  = nx1 - nx0;
+				var nh  = ny1 - ny0;
+				
+				for( var i = 0, n = array_length(bone_point_maps); i < n; i++ ) {
+					var _bmap = bone_point_maps[i];
+					var _emap = bone_point_mape[i];
+					
+					_emap[0].x = (_bmap[0].x - ox0) / ow * nw + nx0;
+					_emap[0].y = (_bmap[0].y - oy0) / oh * nh + ny0;
+					
+					_emap[1].x = (_bmap[1].x - ox0) / ow * nw + nx0;
+					_emap[1].y = (_bmap[1].y - oy0) / oh * nh + ny0;
+				}
+				
+				for( var i = 0, n = array_length(bone_arr); i < n; i++ ) {
+					var _bone = bone_arr[i];
+					var _emap = bone_point_mape[i];
+					
+					var _h = _emap[0];
+					var _t = _emap[1];
+					
+					if(!_bone.parent_anchor) {
+						var _ox = 0;
+						var _oy = 0;
+						
+						if(_bone.parent) {
+							var _ph = _bone.parent.getHead();
+							_ox = _ph.x;
+							_oy = _ph.y;
+						}
+						
+						_bone.distance  = point_distance(  _ox, _oy, _h.x, _h.y );
+						_bone.direction = point_direction( _ox, _oy, _h.x, _h.y );
+					}
+					
+					_bone.length    = point_distance(_h.x, _h.y, _t.x, _t.y);
+					_bone.angle     = point_direction(_h.x, _h.y, _t.x, _t.y);
+					
+					_bone.__setPosition();
+				}
 				
 				if(mouse_release(mb_left)) {
-					builder_moving = false;
+					bone_transform_type = -1;
 					UNDO_HOLDING   = false;
 				}
-					
+				
+				triggerRender();
+				
 				draw_set_color(COLORS._main_accent);
 				draw_rectangle(x0, y0, x1, y1, true);
-			} else {
-				if(point_in_rectangle(_mx, _my, x0, y0, x1, y1)) {
-					draw_set_color(COLORS._main_accent);
-					if(mouse_press(mb_left, active)) {
-						builder_moving = true;
-						builder_mx = mx;
-						builder_my = my;
-						
-						recordAction(ACTION_TYPE.struct_modify, bones, bones.serialize());
-					}
-				} else
-					draw_set_color(c_white);
 				
+			} else {
+				var _hov_type = -1;
+				var _r = 8;
+				
+					 if(point_in_circle(_mx, _my, x0, y0, _r + 2))    _hov_type = 0;
+				else if(point_in_circle(_mx, _my, x1, y0, _r + 2))    _hov_type = 1;
+				else if(point_in_circle(_mx, _my, x0, y1, _r + 2))    _hov_type = 2;
+				else if(point_in_circle(_mx, _my, x1, y1, _r + 2))    _hov_type = 3;
+				else if(point_in_rectangle(_mx, _my, x0, y0, x1, y1)) _hov_type = 4;
+				
+				draw_set_color(_hov_type == 4? COLORS._main_accent : c_white);
 				draw_set_alpha(0.5);
 				draw_rectangle(x0, y0, x1, y1, true);
 				draw_set_alpha(1);
-			}
-		
-		} else if(isUsingTool("Scale")) { 
-			_b.draw(attributes, false, _x, _y, _s, _mx, _my);
-			
-			var bbox = _b.bbox();
-			var x0 = _x + bbox[0] * _s;
-			var y0 = _y + bbox[1] * _s;
-			var x1 = _x + bbox[2] * _s;
-			var y1 = _y + bbox[3] * _s;
-			
-			draw_set_color(c_white);
-			draw_set_alpha(0.5);
-			draw_rectangle(x0, y0, x1, y1, true);
-			draw_set_alpha(1);
-			
-			var cx  = (x0 + x1) / 2;
-			var cy  = (y0 + y1) / 2;
-			
-			draw_set_color(COLORS._main_accent);
-			draw_set_alpha(0.5 + builder_scaling * 0.5);
-			draw_line(cx, cy, _mx, _my);
-			draw_set_alpha(1);
-			
-			if(builder_scaling) {
-				var _so = point_distance(cx, cy, builder_mx, builder_my);
-				var _sn = point_distance(cx, cy, _mx, _my);
-				var _ss = 1 + (_sn - _so) / max(_so, 8);
-					
-				builder_mx = _mx;
-				builder_my = _my;
 				
-				var _bst = ds_stack_create();
-				ds_stack_push(_bst, _b);
-		
-				while(!ds_stack_empty(_bst)) {
-					var __b = ds_stack_pop(_bst);			
-					for( var i = 0, n = array_length(__b.childs); i < n; i++ )
-						ds_stack_push(_bst, __b.childs[i]);
+				draw_anchor(_hov_type == 0, x0, y0, _r);
+				draw_anchor(_hov_type == 1, x1, y0, _r);
+				draw_anchor(_hov_type == 2, x0, y1, _r);
+				draw_anchor(_hov_type == 3, x1, y1, _r);
+				
+				if(_hov_type >= -1 && mouse_press(mb_left, active)) {
+					bone_arr = _b.toArray();
+					for( var i = 0, n = array_length(bone_arr); i < n; i++ ) {
+						var _h = bone_arr[i].getHead(); 
+						var _t = bone_arr[i].getTail();
 						
-					__b.distance *= _ss;
-					__b.length   *= _ss;
-				}
-		
-				ds_stack_destroy(_bst);
-				
-				var bbox_n	= _b.bbox();
-				var _ox	= (bbox[0] + bbox[2]) / 2 - (bbox_n[0] + bbox_n[2]) / 2;
-				var _oy	= (bbox[1] + bbox[3]) / 2 - (bbox_n[1] + bbox_n[3]) / 2;
-				
-				var _bx = lengthdir_x(_b.distance, _b.direction) + _ox;
-				var _by = lengthdir_y(_b.distance, _b.direction) + _oy;
-				
-				_b.distance  = point_distance(0, 0, _bx, _by);
-				_b.direction = point_direction(0, 0, _bx, _by);
+						bone_point_maps[i] = [ _h, _t ];
+						bone_point_mape[i] = [ _h.clone(), _t.clone() ];
+					}
 					
-				if(mouse_release(mb_left)) {
-					builder_scaling = false;
-				}
-			} else {
-				if(mouse_press(mb_left, active)) {
-					builder_scaling = true;
-					builder_mx = _mx;
-					builder_my = _my;
+					bone_transform_type = _hov_type;
+					bone_transform_bbox = _b.bbox(); 
+					builder_mx = mx;
+					builder_my = my;
 					
 					recordAction(ACTION_TYPE.struct_modify, bones, bones.serialize());
 				}
@@ -520,18 +566,22 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 				anchor_selecting = _b.draw(attributes, active * 0b100, _x, _y, _s, _mx, _my, anchor_selecting);
 			
 			if(anchor_selecting != noone && anchor_selecting[1] == 2 && mouse_press(mb_left, active)) {
-				builder_bone = anchor_selecting[0];
-				builder_type = anchor_selecting[1];
+				var detach_bone = anchor_selecting[0];
 				
-				var par = builder_bone.parent;
-				if(builder_bone.parent_anchor) {
-					builder_bone.distance  = par.length;
-					builder_bone.direction = par.angle;
+				var par = detach_bone.parent;
+				if(detach_bone.parent_anchor) {
+					detach_bone.distance  = par.length;
+					detach_bone.direction = par.angle;
 				}
-				builder_bone.parent_anchor = false;
+				detach_bone.parent_anchor = false;
 				
-				builder_sx = lengthdir_x(builder_bone.distance, builder_bone.direction);
-				builder_sy = lengthdir_y(builder_bone.distance, builder_bone.direction);
+				builder_bone = detach_bone;
+				builder_type = 0;
+				
+				var head = par.getHead();
+				var tail = par.getTail();
+				builder_sx = head.x + (mx - tail.x);
+				builder_sy = head.y + (my - tail.y);
 				builder_mx = mx;
 				builder_my = my;
 				UNDO_HOLDING = true;
@@ -545,41 +595,82 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 				ik_dragging = anchor_selecting[0];
 			}
 		
-		} else {  //mover
+		} else {  //mo tools
 			if(builder_bone == noone)
 				anchor_selecting = _b.draw(attributes, active * 0b111, _x, _y, _s, _mx, _my, anchor_selecting);
 			
-			if(anchor_selecting != noone && mouse_press(mb_left, active)) {
-				builder_bone = anchor_selecting[0];
-				builder_type = anchor_selecting[1];
+			if(anchor_selecting != noone) {
+				var orig;
+				var _bne = anchor_selecting[0];
+				var _typ = anchor_selecting[1];
 				
-				recordAction(ACTION_TYPE.struct_modify, bones, bones.serialize());
+				gpu_set_texfilter(true);
 				
-				if(builder_type == 0) {
-					var orig = builder_bone.parent.getHead();
-					builder_sx = orig.x;
-					builder_sy = orig.y;
+				if(_typ == 0) { // free move
+					orig = _bne.getHead();
+					draw_sprite_ext(s_bone_move, 0, _x + _s * orig.x, _y + _s * orig.y, 1, 1, 0, COLORS._main_accent, 1);
 					
-				} else if(builder_type == 1) {
-					var orig = builder_bone.getHead();
-					builder_sx = orig.x;
-					builder_sy = orig.y;
+				} else if(_typ == 1) { // bone move
+					orig = _bne.getTail();
+					draw_sprite_ext(s_bone_move, 0, _x + _s * orig.x, _y + _s * orig.y, 1, 1, 0, COLORS._main_accent, 1);
 					
-				} else if(builder_type == 2) {
-					if(builder_bone.parent_anchor) {
-						builder_bone = noone;
+				} else if(_typ == 2) { // bone rotate
+					orig = _bne.getHead();
+					var _rx = _x + _s * orig.x;
+					var _ry = _y + _s * orig.y;
+					
+					orig = _bne.getPoint(0.8);
+					var _sx = _x + _s * orig.x;
+					var _sy = _y + _s * orig.y;
+					
+					if(point_in_circle(_mx, _my, _sx, _sy, 12)) {
+						draw_sprite_ext(s_bone_scale,  0, _sx, _sy, 1, 1, _bne.angle, COLORS._main_accent, 1);
+						draw_sprite_ext(s_bone_rotate, 0, _rx, _ry, 1, 1, _bne.angle, c_white, 1);
+						_typ = 3;
+						
 					} else {
-						var par = builder_bone.parent;
-						builder_sx = lengthdir_x(builder_bone.distance, builder_bone.direction);
-						builder_sy = lengthdir_y(builder_bone.distance, builder_bone.direction);
-						builder_mx = mx;
-						builder_my = my;
+						draw_sprite_ext(s_bone_scale,  0, _sx, _sy, 1, 1, _bne.angle, c_white, 1);
+						draw_sprite_ext(s_bone_rotate, 0, _rx, _ry, 1, 1, _bne.angle, COLORS._main_accent, 1);
+						_typ = 2;
 					}
 				}
 				
-				UNDO_HOLDING = true;
+				gpu_set_texfilter(false);
+				
+				if(mouse_press(mb_left, active)) {
+					builder_bone = _bne;
+					builder_type = _typ;
+					
+					recordAction(ACTION_TYPE.struct_modify, bones, bones.serialize());
+					
+					if(_typ == 0) {
+						orig = _bne.parent.getHead();
+						builder_sx = orig.x;
+						builder_sy = orig.y;
+						
+					} else if(_typ == 1) {
+						orig = _bne.getHead();
+						builder_sx = orig.x;
+						builder_sy = orig.y;
+						
+					} else if(_typ == 2) {
+						orig = _bne.getHead();
+						builder_sv = point_direction(orig.x, orig.y, mx, my);
+						builder_sx = orig.x;
+						builder_sy = orig.y;
+						builder_mx = mx;
+						builder_my = my;
+						
+					} else if(_typ == 3) {
+						orig = _bne.getHead();
+						builder_sv = point_distance(orig.x, orig.y, mx, my) / _bne.length;
+						builder_sx = orig.x;
+						builder_sy = orig.y;
+					} 
+					
+					UNDO_HOLDING = true;
+				}
 			}
-		
 		}
 	} 
 	
@@ -630,6 +721,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	static postDeserialize = function() { 
 		if(struct_has(attributes, "bones")) struct_remove(attributes, "bones");
 		if(!struct_has(load_map, "bones")) return;
+		
 		bones = new __Bone(,,,,, self);
 		bones.deserialize(load_map.bones, self);
 		bones.connect();

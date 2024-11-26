@@ -1,15 +1,15 @@
-function __Bone(_parent = noone, distance = 0, direction = 0, angle = 0, length = 0, node = noone) constructor {
+function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _length = 0, _node = noone) constructor {
 	ID   = UUID_generate();
 	name = "New bone";
 	
-	self.distance	 = distance;
-	self.direction	 = direction;
-	self.angle		 = angle;
-	self.length		 = length;
-	self.node		 = node;
+	self.distance	 = _distance;
+	self.direction	 = _direction;
+	self.angle		 = _angle;
+	self.length		 = _length;
+	self.node		 = _node;
 	
-	init_length      = length;
-	init_angle       = angle;
+	init_length      = _length;
+	init_angle       = _angle;
 	init_direction   = 0;
 	init_distance    = 0;
 	
@@ -53,6 +53,9 @@ function __Bone(_parent = noone, distance = 0, direction = 0, angle = 0, length 
 		direction = parent.angle;
 	}
 	
+	control_x0 = 0; control_y0 = 0; control_i0 = 0;
+	control_x1 = 0; control_y1 = 0; control_i1 = 0;
+	
 	static addChild = function(bone) {
 		array_push(childs, bone);
 		bone.parent = self;
@@ -74,27 +77,23 @@ function __Bone(_parent = noone, distance = 0, direction = 0, angle = 0, length 
 	}
 	
 	static findBone = function(_id) {
-		if(ID == _id) 
-			return self;
+		if(ID == _id) return self;
 		
 		for( var i = 0, n = array_length(childs); i < n; i++ ) {
 			var b = childs[i].findBone(_id);
-			if(b != noone)
-				return b;
+			if(b != noone) return b;
 		}
 		
 		return noone;
 	}
 	
 	static findBoneByName = function(_name) {
-		//print($"Print {string_length(string_trim(name))} : {string_length(string_trim(_name))}");
 		if(string_trim(name) == string_trim(_name)) 
 			return self;
 		
 		for( var i = 0, n = array_length(childs); i < n; i++ ) {
 			var b = childs[i].findBoneByName(_name);
-			if(b != noone)
-				return b;
+			if(b != noone) return b;
 		}
 		
 		return noone;
@@ -104,11 +103,22 @@ function __Bone(_parent = noone, distance = 0, direction = 0, angle = 0, length 
 	static getTail = function(pose = true) { return pose? bone_tail_pose.clone() : bone_tail_init.clone(); }
 	
 	static getPoint = function(progress, pose = true) {
-		var _len = pose? length : init_length;
-		var _ang = pose? angle  : init_angle;
+		var _dir, _dis, _len, _ang;
 		
-		var _dir = pose? direction : init_direction;
-		var _dis = pose? distance  : init_distance;
+		if(pose) {
+			_dir = direction;
+			_dis = distance;
+			
+			_len = length;
+			_ang = angle;
+			
+		} else {
+			_dir = init_direction;
+			_dis = init_distance;
+			
+			_len = init_length;
+			_ang = init_angle;
+		}
 		
 		var len = _len * progress;
 		
@@ -134,9 +144,6 @@ function __Bone(_parent = noone, distance = 0, direction = 0, angle = 0, length 
 		return hover;
 	}
 	
-	control_x0 = 0; control_y0 = 0; control_i0 = 0;
-	control_x1 = 0; control_y1 = 0; control_i1 = 0;
-	
 	static _drawBone = function(attributes, edit = false, _x = 0, _y = 0, _s = 1, _mx = 0, _my = 0, _hover = noone, _select = noone, _blend = c_white, _alpha = 1) {
 		var hover = noone;
 		
@@ -152,8 +159,7 @@ function __Bone(_parent = noone, distance = 0, direction = 0, angle = 0, length 
 		
 		for( var i = 0, n = array_length(childs); i < n; i++ ) {
 			var h = childs[i]._drawBone(attributes, edit, _x, _y, _s, _mx, _my, _hover, _select, _blend, _alpha);
-			if(hover == noone && h != noone)
-				hover = h;
+			if(hover == noone && h != noone) hover = h;
 		}
 		
 		return hover;
@@ -324,11 +330,15 @@ function __Bone(_parent = noone, distance = 0, direction = 0, angle = 0, length 
 			childs[i].resetPose();
 	}
 	
-	static setPosition = function() {
+	static __setPosition = function() {
 		bone_head_init = getPoint(0, false);
 		bone_head_pose = getPoint(0, true);
 		bone_tail_init = getPoint(1, false);
 		bone_tail_pose = getPoint(1, true);
+	}
+		
+	static setPosition = function() {
+		__setPosition();
 		
 		for( var i = 0, n = array_length(childs); i < n; i++ )
 			childs[i].setPosition();
@@ -508,6 +518,8 @@ function __Bone(_parent = noone, distance = 0, direction = 0, angle = 0, length 
 	}
 	
 	static __getBBOX = function() {
+		if(is_main) return noone;
+		
 		var p0 = bone_head_pose;
 		var p1 = bone_tail_pose;
 		
@@ -521,16 +533,17 @@ function __Bone(_parent = noone, distance = 0, direction = 0, angle = 0, length 
 	
 	static bbox = function() {
 		var _bbox = __getBBOX();
-		//print($"BBOX: {_bbox}")
 		
 		for( var i = 0, n = array_length(childs); i < n; i++ ) {
 			var _bbox_ch = childs[i].bbox();
-			//print($"BBOX ch: {_bbox_ch}")
 			
-			_bbox[0] = min(_bbox[0], _bbox_ch[0]);
-			_bbox[1] = min(_bbox[1], _bbox_ch[1]);
-			_bbox[2] = max(_bbox[2], _bbox_ch[2]);
-			_bbox[3] = max(_bbox[3], _bbox_ch[3]);
+			if(is_array(_bbox)) {
+				_bbox[0] = min(_bbox[0], _bbox_ch[0]);
+				_bbox[1] = min(_bbox[1], _bbox_ch[1]);
+				_bbox[2] = max(_bbox[2], _bbox_ch[2]);
+				_bbox[3] = max(_bbox[3], _bbox_ch[3]);
+				
+			} else _bbox = _bbox_ch;
 		}
 		
 		return _bbox;
