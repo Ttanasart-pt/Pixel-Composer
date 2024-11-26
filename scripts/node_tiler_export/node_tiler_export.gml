@@ -33,10 +33,7 @@ function Node_Tile_Tilemap_Export(_x, _y, _group = noone) : Node(_x, _y, _group)
     	["Godot",      true], 8, 
 	];
     
-	insp1UpdateTooltip   = "Export";
-	insp1UpdateIcon      = [ THEME.sequence_control, 1, COLORS._main_value_positive ];
-	
-	static onInspector1Update = function(_fromValue = false) { export(); }
+	setTrigger(1, "Export", [ THEME.sequence_control, 1, COLORS._main_value_positive ], function() /*=>*/ {return export()});
 	
     static export = function() {
 	    var tilemap = inputs[0].getValue();

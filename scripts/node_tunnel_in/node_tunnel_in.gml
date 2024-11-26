@@ -26,8 +26,7 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	error_notification = noone;
 	
-	insp2UpdateTooltip = "Create tunnel out";
-	insp2UpdateIcon    = [ THEME.tunnel, 0, c_white ];
+	setTrigger(2, "Create tunnel out", [ THEME.tunnel, 0, c_white ]);
 	
 	static onInspector2Update = function() {
 		var _node = nodeBuild("Node_Tunnel_Out", x + 128, y).skipDefault();

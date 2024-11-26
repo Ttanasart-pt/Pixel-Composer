@@ -32,15 +32,7 @@ function Node_3D_Mesh_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 	
 	temp_surface = [ noone, noone ];
 	
-	insp1UpdateTooltip   = "Refresh";
-	insp1UpdateIcon      = [ THEME.refresh_20, 0, COLORS._main_value_positive ];
-	
-	static onInspector1Update = function(_fromValue = false) {
-		for(var i = 0; i < process_amount; i++) {
-			var _object = getObject(i);
-			_object.initModel();
-		}
-	}
+	setTrigger(1, "Refresh", [ THEME.refresh_20, 0, COLORS._main_value_positive ], function() /*=>*/ { for(var i = 0; i < process_amount; i++) getObject(i).initModel(); });
 	
 	static step = function() {
 		var _double = getSingleValue(in_mesh + 4);

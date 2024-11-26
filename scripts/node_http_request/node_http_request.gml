@@ -13,16 +13,11 @@ function Node_HTTP_request(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	address_domain  = "";
 	downloaded_size = 0;
 	
-	insp1UpdateTooltip   = "Trigger";
-	insp1UpdateIcon      = [ THEME.sequence_control, 1, COLORS._main_value_positive ];
+	setTrigger(1, "Trigger", [ THEME.sequence_control, 1, COLORS._main_value_positive ], function() /*=>*/ {return request()});
 	
 	attributes.max_file_size = 10000;
 	array_push(attributeEditors, "HTTP");
 	array_push(attributeEditors, ["Max request size", function() { return attributes.max_file_size; }, new textBox(TEXTBOX_INPUT.number, function(val) { attributes.max_file_size = val; }) ]);
-	
-	static onInspector1Update = function() {
-		request();
-	}
 	
 	static request = function() {
 		var _addr = getInputData(0);

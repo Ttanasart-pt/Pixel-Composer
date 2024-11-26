@@ -6,14 +6,13 @@ function Node_Shell(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	newInput(1, nodeValue_Text("Script", self, ""));
 	
-	insp1UpdateTooltip   = "Run";
-	insp1UpdateIcon      = [ THEME.sequence_control, 1, COLORS._main_value_positive ];
+	setTrigger(1, "Run", [ THEME.sequence_control, 1, COLORS._main_value_positive ]);
 	
 	trusted = PROGRAM_ARGUMENTS._trusted;
 	
 	static onValueUpdate = function() { trusted = false; }
 	
-	static onInspector1Update = function() { update(); }
+	setTrigger(1,,, function() /*=>*/ {return update()});
 	
 	static update = function() { 
 		var _pro = getInputData(0);

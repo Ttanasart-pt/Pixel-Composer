@@ -172,7 +172,7 @@ switch(load_process) {
         
         if(!IS_CMD) {
             PANEL_GRAPH.toCenterNode();
-            PANEL_GRAPH.connection_draw_update = true;
+            PANEL_GRAPH.draw_refresh = true;
         }
         
         log_message("FILE", $"load {path} completed in {(get_timer() - t0) / 1000} ms", THEME.noti_icon_file_load);

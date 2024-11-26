@@ -99,7 +99,36 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		outParent.setValue(inputs[0].getValue());
 	}
 	
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 	static getGraphPreviewSurface = function() { var _in = array_safe_get(inputs, 0, noone); return _in == noone? noone : _in.getValue(); }
+	
+	static drawNodeDef = drawNode;
+	
+	static drawNode = function(_draw, _x, _y, _mx, _my, _s, display_parameter = noone, _panel = noone) { 
+		if(_s >= .75) return drawNodeDef(_draw, _x, _y, _mx, _my, _s, display_parameter, _panel);
+		
+		var xx = x * _s + _x;
+		var yy = y * _s + _y;
+		
+		var _name = renamed? display_name : name;
+		var _ts   = _s * 0.5;
+		var _tx   = round(xx + 6 * _s + 2);
+		var _ty   = round(inputs[0].y);
+		
+		draw_set_text(f_sdf, fa_left, fa_center);
+		BLEND_ALPHA_MULP
+		
+		draw_set_color(0);					draw_text_transformed(_tx + 1, _ty + 1, _name, _ts, _ts, 0);
+		draw_set_color(COLORS._main_text);	draw_text_transformed(_tx, _ty, _name, _ts, _ts, 0);
+		
+		BLEND_NORMAL
+		
+		return _s > 0.5? drawJunctions(_draw, xx, yy, _mx, _my, _s) : drawJunctions_fast(_draw, xx, yy, _mx, _my, _s);
+	}
+	
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 	static postDeserialize		  = function() { if(group == noone) return; createOutput(false); }
 	static postApplyDeserialize	  = function() {}
 	

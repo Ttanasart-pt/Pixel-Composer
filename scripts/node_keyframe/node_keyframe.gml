@@ -628,8 +628,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			array_push(_data, _value_list);
 		}
 		
-		if(array_length(values) == 1)
-			return { d: _data[0][1] };
+		if(array_length(values) == 1) return { d: _data[0][1] };
 		return _data;
 	}
 	

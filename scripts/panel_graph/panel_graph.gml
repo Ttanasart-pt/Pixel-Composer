@@ -402,6 +402,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         add_node_draw_x      = 0;
         add_node_draw_y      = 0;
         
+        draw_refresh           = true;
         node_surface           = surface_create(1, 1);
         node_surface_update    = true;
         
@@ -1205,6 +1206,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
     	var _upd = false;
     	
     	_upd |= pFOCUS && mouse_click(mb_any);
+    	_upd |= draw_refresh; draw_refresh = false;
     	
     	_upd |= connection_cache[$ "_x"] != _x; connection_cache[$ "_x"] = _x;
 		_upd |= connection_cache[$ "_y"] != _y; connection_cache[$ "_y"] = _y;
@@ -1609,12 +1611,12 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         
         var t = get_timer();
         
-        node_surface_update |= !surface_valid(node_surface, w, h);
+        // node_surface_update |= !surface_valid(node_surface, w, h);
         node_surface_update |= true;
-        node_surface = surface_verify(node_surface, w, h);
+        // node_surface = surface_verify(node_surface, w, h);
         
-        surface_set_target(node_surface);
-        	if(node_surface_update) draw_clear_alpha(bg_color, 0.);
+        // surface_set_target(node_surface);
+        	// if(node_surface_update) draw_clear_alpha(bg_color, 0.);
         	
         	if(node_surface_update) array_foreach(_node_draw, function(_n) /*=>*/ { _n.drawNodeBehind(__gr_x, __gr_y, __mx, __my, __gr_s); });
 	        array_foreach(value_draggings, function(_v) /*=>*/ { _v.graph_selecting = true; });
@@ -1631,16 +1633,16 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	        
 	        if(node_surface_update) array_foreach(_node_draw, function(_n) /*=>*/ { _n.drawBadge(__gr_x, __gr_y, __gr_s); });
 	        if(node_surface_update) array_foreach(_node_draw, function(_n) /*=>*/ { _n.drawNodeFG(__gr_x, __gr_y, __mx, __my, __gr_s, display_parameter, __self); });
-		surface_reset_target();
+		// surface_reset_target();
 	       
 		node_surface_update = false;
 	       
         if(PANEL_INSPECTOR && PANEL_INSPECTOR.prop_hover != noone)
             value_focus = PANEL_INSPECTOR.prop_hover;
     
-        BLEND_ALPHA_MULP
-        	draw_surface_safe(node_surface);
-        BLEND_NORMAL
+        // BLEND_ALPHA_MULP
+        // 	draw_surface_safe(node_surface);
+        // BLEND_NORMAL
         
         printIf(log, $"Draw node: {get_timer() - t}"); t = get_timer();
         
@@ -2874,8 +2876,11 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         if(array_empty(nodes_selecting)) return;
         clipboard_set_text("");
     
-        var _map   = {};
-        _map.nodes = [];
+        var _map   = {
+        	version: SAVE_VERSION,
+        	nodes: [],
+        };
+        
         for(var i = 0; i < array_length(nodes_selecting); i++)
             SAVE_NODE(_map.nodes, nodes_selecting[i],,,, getCurrentContext());
         

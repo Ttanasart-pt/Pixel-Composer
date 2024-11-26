@@ -17,12 +17,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static DISPLAY_DATA_KEYS = [ "atlas_crop" ];
 	
 	#region ---- main ----
-		active    = true;
-		from      = noone;
-		node      = _node;
-		x	      = node.x;
-		y         = node.y;
-		tags      = VALUE_TAG.none;
+		active = true;
+		from   = noone;
+		node   = _node;
+		tags   = VALUE_TAG.none;
+		
+		x	= node.x; rx  = node.x; 
+		y   = node.y; ry  = node.y;
 		
 		index     = array_length(node.inputs);
 		type      = _type;
@@ -568,17 +569,17 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				var _txt = TEXTBOX_INPUT.number;
 				
 				switch(display_type) { 
-					case VALUE_DISPLAY._default :		#region
-						editWidget = new textBox(_txt, function(val) { return setValueInspector(val); } );
+					case VALUE_DISPLAY._default :	
+						editWidget = new textBox(_txt, function(val) /*=>*/ {return setValueInspector(val)});
 						
 						if(struct_has(display_data, "unit"))		 editWidget.unit			= display_data.unit;
 						if(struct_has(display_data, "front_button")) editWidget.front_button	= display_data.front_button;
 						
 						extract_node = "Node_Number";
-						break; #endregion
+						break;
 						
-					case VALUE_DISPLAY.range :			#region
-						editWidget = new rangeBox(_txt, function(val, index) { return setValueInspector(val, index); } );
+					case VALUE_DISPLAY.range :		
+						editWidget = new rangeBox(_txt, function(val, index) /*=>*/ {return setValueInspector(val, index)});
 						
 						if(!struct_has(display_data, "linked")) display_data.linked = false;
 						
@@ -586,47 +587,36 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 							animators[i].suffix = " " + array_safe_get_fast(global.displaySuffix_Range, i);
 						
 						extract_node = "Node_Number";
-						break; #endregion
+						break;
 						
-					case VALUE_DISPLAY.vector :			#region
+					case VALUE_DISPLAY.vector :		
 						var val = animator.getValue();
 						var len = array_length(val);
 						
 						if(len <= 4) {
-							editWidget = new vectorBox(len, function(val, index) { return setValueInspector(val, index); }, unit );
+							editWidget = new vectorBox(len, function(val, index) /*=>*/ {return setValueInspector(val, index)}, unit );
 							
 							if(struct_has(display_data, "label"))		 editWidget.axis	    = display_data.label;
 							if(struct_has(display_data, "linkable"))	 editWidget.linkable    = display_data.linkable;
 							if(struct_has(display_data, "per_line"))	 editWidget.per_line    = display_data.per_line;
 							if(struct_has(display_data, "linked"))		 editWidget.linked      = display_data.linked;
 							
-							if(len == 2) {
-								var _dim = struct_try_get(display_data, "useGlobal", true);
-								extract_node = [ "Node_Vector2", "Node_Path" ];
-								
-								if(_dim && array_equals(def_val, DEF_SURF)) {
-									node.attributes.use_project_dimension = true;
-									
-									editWidget.side_button = button(function() /*=>*/ {
-										node.attributes.use_project_dimension = !node.attributes.use_project_dimension;
-										node.triggerRender();
-									}).setIcon(THEME.node_use_project, 0, COLORS._main_icon).setTooltip("Use project dimension");
-								}
-							} else if(len == 3)
-								extract_node = "Node_Vector3";
-							else if(len == 4)
-								extract_node = "Node_Vector4";
+							switch(len) {
+								case 2 : extract_node = [ "Node_Vector2", "Node_Path" ]; break;
+								case 3 : extract_node = "Node_Vector3";                  break;
+								case 4 : extract_node = "Node_Vector4";                  break;
+							}
 						}
 						
 						for( var i = 0, n = array_length(animators); i < n; i++ )
-							animators[i].suffix = " " + string(array_safe_get_fast(global.displaySuffix_Axis, i));
+							animators[i].suffix = $" {array_safe_get_fast(global.displaySuffix_Axis, i)}";
 						
-						break; #endregion
+						break;
 						
-					case VALUE_DISPLAY.vector_range :	#region
+					case VALUE_DISPLAY.vector_range :
 						var val = animator.getValue();
 						
-						editWidget = new vectorRangeBox(array_length(val), _txt, function(val, index) { return setValueInspector(val, index); }, unit );
+						editWidget = new vectorRangeBox(array_length(val), _txt, function(val, index) /*=>*/ {return setValueInspector(val, index)}, unit );
 						
 						if(!struct_has(display_data, "linked")) display_data.linked = false;
 						if(!struct_has(display_data, "ranged")) display_data.ranged = false;
@@ -636,100 +626,97 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						else if(array_length(val) == 4) extract_node = "Node_Vector4";
 							
 						for( var i = 0, n = array_length(animators); i < n; i++ )
-							animators[i].suffix = " " + string(array_safe_get_fast(global.displaySuffix_VecRange, i));
+							animators[i].suffix = $" {array_safe_get_fast(global.displaySuffix_VecRange, i)}";
 						
-						break; #endregion
+						break;
 						
-					case VALUE_DISPLAY.rotation :		#region
+					case VALUE_DISPLAY.rotation :	
 						var _step = struct_try_get(display_data, "step", -1); 
 						
-						editWidget = new rotator(function(val) {
-							return setValueInspector(val);
-						}, _step );
+						editWidget   = new rotator(function(val) /*=>*/ {return setValueInspector(val)}, _step);
 						
 						extract_node = "Node_Number";
-						break; #endregion
+						break;
 						
-					case VALUE_DISPLAY.rotation_range : #region
-						editWidget = new rotatorRange(function(val, index) { return setValueInspector(val, index); } );
+					case VALUE_DISPLAY.rotation_range :
+						editWidget = new rotatorRange(function(val, index) /*=>*/ {return setValueInspector(val, index)});
 						
 						for( var i = 0, n = array_length(animators); i < n; i++ )
-							animators[i].suffix = " " + array_safe_get_fast(global.displaySuffix_Range, i);
+							animators[i].suffix = $" {array_safe_get_fast(global.displaySuffix_Range, i)}";
 						
 						extract_node = "Node_Vector2";
-						break; #endregion
+						break;
 						
-					case VALUE_DISPLAY.rotation_random : #region
-						editWidget = new rotatorRandom(function(val, index) { return setValueInspector(val, index); } );
+					case VALUE_DISPLAY.rotation_random :
+						editWidget = new rotatorRandom(function(val, index) /*=>*/ {return setValueInspector(val, index)});
 						
 						extract_node = "Node_Vector2";
-						break; #endregion
+						break;
 						
-					case VALUE_DISPLAY.slider :			#region
+					case VALUE_DISPLAY.slider :		
 						var _range = struct_try_get(display_data, "range", [ 0, 1 ]);
 						
-						editWidget = new textBox(TEXTBOX_INPUT.number, function(val) { return setValueInspector(toNumber(val)); } )
+						editWidget = new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ {return setValueInspector(toNumber(val))})
 										.setSlideRange(_range[0], _range[1]);
 						
 						if(struct_has(display_data, "update_stat"))
 							editWidget.update_stat = display_data.update_stat;
 						
 						extract_node = "Node_Number";
-						break; #endregion
+						break;
 						
-					case VALUE_DISPLAY.slider_range :	#region
+					case VALUE_DISPLAY.slider_range :
 						var _range = struct_try_get(display_data, "range", [ 0, 1, 0.01 ]);
 						
-						editWidget = new sliderRange(_range[2], type == VALUE_TYPE.integer, [ _range[0], _range[1] ], 
-							function(val, index) { return setValueInspector(val, index); } );
+						editWidget = new sliderRange(_range[2], type == VALUE_TYPE.integer, [ _range[0], _range[1] ], function(val, index) /*=>*/ {return setValueInspector(val, index)});
 						
 						for( var i = 0, n = array_length(animators); i < n; i++ )
-							animators[i].suffix = " " + array_safe_get_fast(global.displaySuffix_Range, i);
+							animators[i].suffix = $" {array_safe_get_fast(global.displaySuffix_Range, i)}";
 						
 						extract_node = "Node_Vector2";
-						break; #endregion
+						break;
 						
-					case VALUE_DISPLAY.area :			#region
-						editWidget = new areaBox(function(val, index) { return setValueInspector(val, index); }, unit);
+					case VALUE_DISPLAY.area :		
+						editWidget = new areaBox(function(val, index) /*=>*/ {return setValueInspector(val, index)}, unit);
 						
 						editWidget.onSurfaceSize = struct_try_get(display_data, "onSurfaceSize", noone);
 						editWidget.showShape     = struct_try_get(display_data, "useShape", true);
 						
 						for( var i = 0, n = array_length(animators); i < n; i++ )
-							animators[i].suffix = " " + array_safe_get_fast(global.displaySuffix_Area, i, "");
+							animators[i].suffix = $" {array_safe_get_fast(global.displaySuffix_Area, i, "")}";
 						
 						extract_node = "Node_Area";
-						break; #endregion
+						break;
 						
-					case VALUE_DISPLAY.padding :		#region
-						editWidget = new paddingBox(function(val, index) { return setValueInspector(val, index); }, unit);
-						
-						for( var i = 0, n = array_length(animators); i < n; i++ )
-							animators[i].suffix = " " + array_safe_get_fast(global.displaySuffix_Padding, i);
-						
-						extract_node = "Node_Vector4";
-						break; #endregion
-						
-					case VALUE_DISPLAY.corner :			#region
-						editWidget = new cornerBox(function(val, index) { return setValueInspector(val, index); }, unit);
+					case VALUE_DISPLAY.padding :	
+						editWidget = new paddingBox(function(val, index) /*=>*/ {return setValueInspector(val, index)}, unit);
 						
 						for( var i = 0, n = array_length(animators); i < n; i++ )
-							animators[i].suffix = " " + array_safe_get_fast(global.displaySuffix_Padding, i);
+							animators[i].suffix = $" {array_safe_get_fast(global.displaySuffix_Padding, i)}";
 						
 						extract_node = "Node_Vector4";
-						break; #endregion
+						break;
 						
-					case VALUE_DISPLAY.puppet_control : #region
-						editWidget = new controlPointBox(function(val, index) { return setValueInspector(val, index); });
+					case VALUE_DISPLAY.corner :		
+						editWidget = new cornerBox(function(val, index) /*=>*/ {return setValueInspector(val, index)}, unit);
+						
+						for( var i = 0, n = array_length(animators); i < n; i++ )
+							animators[i].suffix = $" {array_safe_get_fast(global.displaySuffix_Padding, i)}";
+						
+						extract_node = "Node_Vector4";
+						break;
+						
+					case VALUE_DISPLAY.puppet_control :
+						editWidget = new controlPointBox(function(val, index) /*=>*/ {return setValueInspector(val, index)});
 						
 						extract_node = "";
-						break; #endregion
+						break;
 						
-					case VALUE_DISPLAY.enum_scroll :	#region
+					case VALUE_DISPLAY.enum_scroll :
 						if(!is_struct(display_data)) display_data = { data: display_data };
 						var choices = __txt_junction_data(instanceof(node), connect_type, index, display_data.data);
 						
-						editWidget = new scrollBox(choices, function(val) /*=>*/ { if(val == -1) return; return setValueInspector(toNumber(val)); } );
+						editWidget = new scrollBox(choices, function(val) /*=>*/ { return val == -1? undefined : setValueInspector(toNumber(val)); } );
 						
 						if(struct_has(display_data, "update_hover")) editWidget.update_hover = display_data.update_hover;
 						if(struct_has(display_data, "horizontal"))   editWidget.horizontal   = display_data.horizontal;
@@ -739,76 +726,76 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						rejectConnect();
 						key_inter    = CURVE_TYPE.cut;
 						extract_node = "";
-						break; #endregion
+						break;
 						
-					case VALUE_DISPLAY.enum_button :	#region
+					case VALUE_DISPLAY.enum_button :
 						if(!is_struct(display_data)) display_data = { data: display_data };
 						var choices = __txt_junction_data(instanceof(node), connect_type, index, display_data.data);
 						
-						editWidget = new buttonGroup(choices, function(val) { return setValueInspector(val); } );
+						editWidget = new buttonGroup(choices, function(val) /*=>*/ {return setValueInspector(val)});
 						
 						rejectConnect();
 						key_inter    = CURVE_TYPE.cut;
 						extract_node = "";
-						break; #endregion
+						break;
 						
-					case VALUE_DISPLAY.matrix :			#region
-						editWidget = new matrixGrid(_txt, display_data.size, function(val, index) { return setValueInspector(val, index); }, unit );
-						
-						for( var i = 0, n = array_length(animators); i < n; i++ )
-							animators[i].suffix = $" {i}";
-						
-						extract_node = "";
-						break; #endregion
-						
-					case VALUE_DISPLAY.boolean_grid : #region
-						editWidget = new matrixGrid(_txt, display_data.size, function(val, index) { return setValueInspector(val, index); }, unit );
+					case VALUE_DISPLAY.matrix :		
+						editWidget = new matrixGrid(_txt, display_data.size, function(val, index) /*=>*/ {return setValueInspector(val, index)}, unit );
 						
 						for( var i = 0, n = array_length(animators); i < n; i++ )
 							animators[i].suffix = $" {i}";
 						
 						extract_node = "";
-						break; #endregion
+						break;
 						
-					case VALUE_DISPLAY.transform :		#region
-						editWidget = new transformBox(function(val, index) { return setValueInspector(val, index); });
+					case VALUE_DISPLAY.boolean_grid :
+						editWidget = new matrixGrid(_txt, display_data.size, function(val, index) /*=>*/ {return setValueInspector(val, index)}, unit );
+						
+						for( var i = 0, n = array_length(animators); i < n; i++ )
+							animators[i].suffix = $" {i}";
+						
+						extract_node = "";
+						break;
+						
+					case VALUE_DISPLAY.transform :	
+						editWidget = new transformBox(function(val, index) /*=>*/ {return setValueInspector(val, index)});
 						
 						extract_node = "Node_Transform_Array";
-						break; #endregion
+						break;
 						
-					case VALUE_DISPLAY.toggle :			#region
-						editWidget = new toggleGroup(display_data.data, function(val) { return setValueInspector(val); } );
+					case VALUE_DISPLAY.toggle :		
+						editWidget = new toggleGroup(display_data.data, function(val) /*=>*/ {return setValueInspector(val)});
 						
 						rejectConnect();
 						key_inter    = CURVE_TYPE.cut;
 						extract_node = "";
-						break; #endregion
+						break;
 						
-					case VALUE_DISPLAY.d3quarternion :	#region
-						editWidget = new quarternionBox(function(val, index) { return setValueInspector(val, index); });
+					case VALUE_DISPLAY.d3quarternion :
+						editWidget = new quarternionBox(function(val, index) /*=>*/ {return setValueInspector(val, index)});
 						
 						extract_node = "Node_Vector4";
 						attributes.angle_display = QUARTERNION_DISPLAY.euler;
-						break; #endregion
+						break;
 						
-					case VALUE_DISPLAY.path_anchor :	#region
-						editWidget = new pathAnchorBox(function(val, index) { return setValueInspector(val, index); });
+					case VALUE_DISPLAY.path_anchor :
+						editWidget = new pathAnchorBox(function(val, index) /*=>*/ {return setValueInspector(val, index)});
 						
 						extract_node = "Node_Path_Anchor";
-						break; #endregion
+						break;
 						
 				}
 				
 				if(editWidget && struct_has(editWidget, "setSlideType")) editWidget.setSlideType(type == VALUE_TYPE.integer);
 				break;
 				
-			case VALUE_TYPE.boolean :	 #region
+			case VALUE_TYPE.boolean :	
 				if(name == "Active") editWidget = new checkBoxActive(function() /*=>*/ {return setValueInspector(!animator.getValue())} );
 				else				 editWidget = new checkBox(      function() /*=>*/ {return setValueInspector(!animator.getValue())} );
 				
 				key_inter    = CURVE_TYPE.cut;
 				extract_node = "Node_Boolean";
-				break; #endregion
+				break;
 				
 			case VALUE_TYPE.color :		
 				switch(display_type) {
@@ -962,7 +949,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				
 			case VALUE_TYPE.d3Material :
 				show_in_inspector = true;
-				editWidget = new materialBox(function(ind) { 
+				editWidget = new materialBox(function(ind) /*=>*/ { 
 					var res = setValueInspector(ind); 
 					node.triggerRender();
 					return res;
@@ -1556,7 +1543,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(!updated) return false; /////////////////////////////////////////////////////////////////////////////////
 		
 		if(is_instanceof(self, __NodeValue_Dimension))
-			node.attributes.use_project_dimension = false;
+			attributes.use_project_dimension = false;
 		
 		if(connect_type == CONNECT_TYPE.input && self.index >= 0) {
 			var _val = animator.getValue(time);
@@ -2176,7 +2163,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		#region attributes
 			attri   = variable_clone(attributes);
-			if(struct_try_get(attri, "mapped") == 0)     struct_remove(attri, "mapped");
+			if(struct_try_get(attri, "mapped") == 0)    					struct_remove(attri, "mapped");
+			if(struct_try_get(attri, "use_project_dimension") == true)		struct_remove(attri, "use_project_dimension");
 			
 			if(struct_names_count(attri)) _map.attri = attri;
 		#endregion
@@ -2210,8 +2198,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		draw_line_shift_y = struct_try_get(_map, "shift_y",     0);
 		is_modified       = struct_try_get(_map, "is_modified", false);
 		
-		if(struct_has(_map, "attri"))
+		if(struct_has(_map, "attri")) {
 			struct_append(attributes, _map.attri);
+			
+			if(struct_has(attributes, "use_project_dimension") && struct_has(node.attributes, "use_project_dimension"))
+				attributes.use_project_dimension = node.attributes.use_project_dimension;
+		}
 		
 		if(struct_has(_map, "linked")) 
 			display_data.linked = _map.linked;

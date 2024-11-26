@@ -28,8 +28,7 @@ function Node_Smoke_Render(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 	
 	attribute_surface_depth();
 	
-	insp2UpdateTooltip = "Clear cache";
-	insp2UpdateIcon    = [ THEME.cache, 0, COLORS._main_icon ];
+	setTrigger(2, "Clear cache", [ THEME.cache, 0, COLORS._main_icon ]);
 	
 	static onInspector2Update = function() { clearCache(); }
 	

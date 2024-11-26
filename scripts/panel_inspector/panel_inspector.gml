@@ -834,6 +834,9 @@ function Panel_Inspector() : PanelContent() constructor {
                 _colsp  = false;
                 yy += pad;
                 
+                // draw_set_color(COLORS.panel_bg_clear_inner); // clear content below before drawing, animated section collapse, maybe?
+                // draw_rectangle(0, yy, w, h, false);
+                
                 var txt  = __txt(jun[0]);
                 var coll = jun[1] && filter_text == "";
                 

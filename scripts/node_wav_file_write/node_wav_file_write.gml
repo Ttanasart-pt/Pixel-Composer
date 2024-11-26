@@ -25,12 +25,7 @@ function Node_WAV_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		[ "Format",	false], 2, 3, 
 	]
 	
-	insp1UpdateTooltip  = "Export";
-	insp1UpdateIcon     = [ THEME.sequence_control, 1, COLORS._main_value_positive ];
-	
-	static onInspector1Update = function() {
-		export();
-	}
+	setTrigger(1, "Export", [ THEME.sequence_control, 1, COLORS._main_value_positive ], function() /*=>*/ {return export()});
 	
 	static step = function() {
 		var remap = getInputData(4);

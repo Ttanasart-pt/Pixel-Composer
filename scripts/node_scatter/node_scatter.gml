@@ -379,8 +379,8 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 		surface_set_target(_outSurf);
 			gpu_set_tex_filter(getAttribute("interpolate") > 1);
-			
 			DRAW_CLEAR
+			
 			switch(blend) {
 				case 0 :
 					if(mulpA) BLEND_ALPHA_MULP
@@ -501,7 +501,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 						
 					case NODE_SCATTER_DIST.tile : 
 						if(_scat == 0) {
-							var _acol = i % uniAmo[0];
+							var _acol =       i % uniAmo[0];
 							var _arow = floor(i / uniAmo[0]);
 								
 							_x = uniAmo[0] == 1? _dim[0] / 2 : (_acol + 0.5) * _dim[0] / ( uniAmo[0] );
@@ -615,18 +615,11 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					_y = round(_y); 
 				}
 				
-				if(_useAtl) {
-					if(!is(_atl, SurfaceAtlasFast))  _atl = new SurfaceAtlasFast(surf, _x, _y, _r, _scx, _scy, clr, alp);
-					else										_atl.set(surf, _x, _y, _r, _scx, _scy, clr, alp);
-					
-					_atl.w = sw;
-					_atl.h = sh;
-				} else {
-					if(!is(_atl, SurfaceAtlasFast))  _atl = new SurfaceAtlasFast(surf, _x, _y, _r, _scx, _scy, clr, alp);
-					
-					_atl.w = sw;
-					_atl.h = sh;
-				}
+				if(!is(_atl, SurfaceAtlasFast))  _atl = new SurfaceAtlasFast(surf, _x, _y, _r, _scx, _scy, clr, alp);
+				else						     _atl.set(surf, _x, _y, _r, _scx, _scy, clr, alp);
+				
+				_atl.w = sw;
+				_atl.h = sh;
 				
 				_sct[_sct_len] = _atl;
 				_sct_len++;

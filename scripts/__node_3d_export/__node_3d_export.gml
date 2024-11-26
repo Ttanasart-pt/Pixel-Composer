@@ -13,10 +13,7 @@ function __Node_3D_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		["Export",	false], 1, 2, 
 	];
 	
-	insp1UpdateTooltip   = "Export";
-	insp1UpdateIcon      = [ THEME.sequence_control, 1, COLORS._main_value_positive ];
-	
-	static onInspector1Update = function() { export(); }
+	setTrigger(1, "Export", [ THEME.sequence_control, 1, COLORS._main_value_positive ], function() /*=>*/ {return export()});
 	
 	static export = function() { 
 		var vert = getInputData(0);
@@ -25,8 +22,8 @@ function __Node_3D_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		if(array_length(vert) == 0) return;
 		
-		var oPath = path + ".obj";
-		var mPath = path + ".mtl";
+		var oPath = $"{path}.obj";
+		var mPath = $"{path}.mtl";
 		
 		var fObj = file_text_open_write(oPath);
 		var fMtl = file_text_open_write(mPath);
@@ -35,7 +32,7 @@ function __Node_3D_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _t = 1;
 		var _n = 1;
 		
-		file_text_write_string(fObj, "mtllib " + filename_name(mPath) + "\n");
+		file_text_write_string(fObj, $"mtllib {filename_name(mPath)}\n");
 		
 		for( var i = 0, n = array_length(vert); i < n; i++ ) {
 			file_text_write_string(fObj, "\n");
@@ -43,22 +40,22 @@ function __Node_3D_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			var v = vert[i];
 			
 			for( var j = 0; j < array_length(v.positions); j++ )
-				file_text_write_string(fObj, "v " + string_format(v.positions[j][0], 0, 5) + " " + string_format(-v.positions[j][1], 0, 5) + " " + string_format(v.positions[j][2], 0, 5) + "\n");
+				file_text_write_string(fObj, $"v {string_format(v.positions[j][0], 0, 5)} {string_format(-v.positions[j][1], 0, 5)} {string_format(v.positions[j][2], 0, 5)}\n");
 			
 			for( var j = 0; j < array_length(v.textures); j++ ) 
-				file_text_write_string(fObj, "vt " + string_format(v.textures[j][0], 0, 5) + " " + string_format(1 - v.textures[j][1], 0, 5) + "\n");
+				file_text_write_string(fObj, $"vt {string_format(v.textures[j][0], 0, 5)} {string_format(1 - v.textures[j][1], 0, 5)}\n");
 			
 			for( var j = 0; j < array_length(v.normals); j++ ) 
-				file_text_write_string(fObj, "vn " + string(v.normals[j][0]) + " " + string(v.normals[j][1]) + " " + string(v.normals[j][2]) + "\n");
+				file_text_write_string(fObj, $"vn {string(v.normals[j][0])} {string(v.normals[j][1])} {string(v.normals[j][2])}\n");
 			
-			var mtlName = "material_" + string(i);
-			var mtlPath = filename_dir(mPath) + "/" + filename_name_only(oPath) + "_material_" + string(i) + ".png";
+			var mtlName = $"material_{i}";
+			var mtlPath = $"{filename_dir(mPath)}/{filename_name_only(oPath)}_material_{i}.png";
 			
-			file_text_write_string(fObj, "\nusemtl " + mtlName + "\n");
-			file_text_write_string(fMtl, "newmtl " + mtlName + "\n");
+			file_text_write_string(fObj, $"\nusemtl {mtlName}\n");
+			file_text_write_string(fMtl, $"newmtl {mtlName}\n");
 			
 			if(text) {
-				file_text_write_string(fMtl, "map_Kd " + filename_name(mtlPath) + "\n");
+				file_text_write_string(fMtl, $"map_Kd {filename_name(mtlPath)}\n");
 				surface_save_safe(v.renderSurface, mtlPath);
 			}
 			
@@ -67,10 +64,7 @@ function __Node_3D_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				var f1 = v.faces[j + 1];
 				var f2 = v.faces[j + 2];
 				
-				file_text_write_string( fObj, "f " + string(_p + f0[0]) + "/" + string(_t + f0[2]) + "/" + string(_n + f0[1]) + " " + 
-													 string(_p + f1[0]) + "/" + string(_t + f1[2]) + "/" + string(_n + f1[1]) + " " + 
-													 string(_p + f2[0]) + "/" + string(_t + f2[2]) + "/" + string(_n + f2[1]) + " " + "\n"
-									  );
+				file_text_write_string( fObj, $"f {_p + f0[0]}/{_t + f0[2]}/{_n + f0[1]} {_p + f1[0]}/{_t + f1[2]}/{_n + f1[1]} {_p + f2[0]}/{_t + f2[2]}/{_n + f2[1]} \n");
 			}
 			
 			_p += array_length(v.positions);

@@ -22,9 +22,6 @@ function Node_3D_Mesh_Stack_Slice(_x, _y, _group = noone) : Node(_x, _y, _group)
 		["Slices", false], 1, 3, 
 	];
 	
-	insp1UpdateTooltip   = "Export";
-	insp1UpdateIcon      = [ THEME.sequence_control, 1, COLORS._main_value_positive ];
-	
 	params = {
 		mesh : noone,
 		dim  : noone,
@@ -56,13 +53,7 @@ function Node_3D_Mesh_Stack_Slice(_x, _y, _group = noone) : Node(_x, _y, _group)
 	start_time = 0;
 	end_time   = 0;
 	
-	insp1UpdateTooltip   = "Splice";
-	insp1UpdateIcon      = [ THEME.sequence_control, 1, COLORS._main_value_positive ];
-	
-	static onInspector1Update = function(_fromValue = false) { 
-		meshInit();
-		spliceInit(true); 
-	}
+	setTrigger(1, "Splice", [ THEME.sequence_control, 1, COLORS._main_value_positive ], function() /*=>*/ { meshInit(); spliceInit(true); });
 	
 	static meshInit = function() {
 		start_time = get_timer();

@@ -4,6 +4,8 @@
 #macro draw_clear draw_clear_ext_override
 #macro __draw_clear draw_clear
 
+function draw_set_color_alpha(col, alpha = 1) { draw_set_color(col); draw_set_alpha(alpha); }
+
 function draw_set_color_ext(col) {
 	INLINE
 	

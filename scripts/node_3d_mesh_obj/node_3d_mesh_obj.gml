@@ -60,14 +60,8 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 	materialIndex = [];
 	use_normal    = false;
 	
-	insp1UpdateTooltip  = __txt("Refresh");
-	insp1UpdateIcon     = [ THEME.refresh_icon, 1, COLORS._main_value_positive ];
+	setTrigger(1, __txt("Refresh"), [ THEME.refresh_icon, 1, COLORS._main_value_positive ], function() /*=>*/ { current_path = ""; outputs[0].setValue(noone); });
 	
-	static onInspector1Update = function() { 
-		current_path = ""; 
-		outputs[0].setValue(noone);
-	}
-
 	function setPath(path) { inputs[in_mesh + 0].setValue(path); }
 	
 	static createNewInput = function(index = -1) { #region

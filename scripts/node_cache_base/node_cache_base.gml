@@ -11,21 +11,20 @@ function __Node_Cache(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	group_alpha    = 0;
 	vertex_hash    = "";
 	
-	insp1UpdateTooltip = "Generate cache group";
-	insp1UpdateIcon    = [ THEME.cache_group, 0, COLORS._main_icon ];
+	setTrigger(1, "Generate cache group", [ THEME.cache_group, 0, COLORS._main_icon ]);
 	
 	if(NOT_LOAD) run_in(1, function() { onInspector1Update(); });
 	
-	static removeNode = function(node) { #region
+	static removeNode = function(node) {
 		if(node.cache_group != self) return;
 		
 		array_remove(attributes.cache_group, node.node_id);
 		array_remove(cache_group_members, node);
 		
 		node.cache_group = noone;
-	} #endregion
+	}
 	
-	static addNode = function(node) { #region
+	static addNode = function(node) {
 		if(node.cache_group == self) return;
 		if(node.cache_group != noone)
 			node.cache_group.removeNode(node);
@@ -34,15 +33,15 @@ function __Node_Cache(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		array_push(cache_group_members, node);
 		
 		node.cache_group = self;
-	} #endregion
+	}
 	
-	static enableNodeGroup = function() { #region
+	static enableNodeGroup = function() {
 		if(LOADING || APPENDING) return; 
 		
 		for( var i = 0, n = array_length(cache_group_members); i < n; i++ )
 			cache_group_members[i].renderActive = true;
 		clearCache(true);
-	} #endregion
+	}
 	
 	static disableNodeGroup = function() {
 		if(LOADING || APPENDING) return;
@@ -52,7 +51,7 @@ function __Node_Cache(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 			cache_group_members[i].renderActive = false;
 	}
 	
-	static refreshCacheGroup = function() { #region
+	static refreshCacheGroup = function() {
 		cache_group_members = [];
 		
 		for( var i = 0, n = array_length(attributes.cache_group); i < n; i++ ) {
@@ -65,9 +64,9 @@ function __Node_Cache(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 			array_push(cache_group_members, _node);
 			_node.cache_group = self;
 		}
-	} #endregion
+	}
 	
-	static getCacheGroup = function(node) { #region
+	static getCacheGroup = function(node) {
 		if(node != self) addNode(node);
 		
 		for( var i = 0, n = array_length(node.inputs); i < n; i++ ) {
@@ -78,19 +77,19 @@ function __Node_Cache(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 			if(array_exists(attributes.cache_group, _from.node.node_id)) continue;
 			getCacheGroup(_from.node);
 		}
-	} #endregion
+	}
 	
-	static onInspector1Update = function() { #region
+	setTrigger(1,,, function() /*=>*/ {
 		attributes.cache_group = [];
 		cache_group_members    = [];
 		
 		getCacheGroup(self);
 		refreshCacheGroup();
-	} #endregion
+	});
 	
 	static ccw = function(a, b, c) { return (b[0] - a[0]) * (c[1] - a[1]) - (c[0] - a[0]) * (b[1] - a[1]); }
 	
-	static getNodeBorder = function(_i, _vertex, _node) { #region
+	static getNodeBorder = function(_i, _vertex, _node) {
 		var _rad = 4;
 		var _stp = 15;
 		
@@ -104,9 +103,9 @@ function __Node_Cache(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		for( var i =  90; i <= 180; i += _stp ) _vertex[_i * 7 * 4 + _ind++] = [ _nx0 + lengthdir_x(_rad, i), _ny0 + lengthdir_y(_rad, i) ];
 		for( var i = 180; i <= 270; i += _stp ) _vertex[_i * 7 * 4 + _ind++] = [ _nx0 + lengthdir_x(_rad, i), _ny1 + lengthdir_y(_rad, i) ];
 		for( var i = 270; i <= 360; i += _stp ) _vertex[_i * 7 * 4 + _ind++] = [ _nx1 + lengthdir_x(_rad, i), _ny1 + lengthdir_y(_rad, i) ];
-	} #endregion
+	}
 	
-	static refreshGroupBG = function() { #region
+	static refreshGroupBG = function() {
 		var _hash = "";
 		for( var i = -1, n = array_length(cache_group_members); i < n; i++ ) {
 			var _node = i == -1? self : cache_group_members[i];
@@ -159,9 +158,9 @@ function __Node_Cache(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 				array_pop(group_vertex);
 			array_push(group_vertex, _v);
 		}
-	} #endregion
+	}
 	
-	static groupCheck = function(_x, _y, _s, _mx, _my) { #region
+	static groupCheck = function(_x, _y, _s, _mx, _my) {
 		if(array_length(group_vertex) < 3) return;
 		var _inGroup = true;
 		var _m       = [ _mx / _s - _x, _my / _s - _y ];
@@ -205,9 +204,9 @@ function __Node_Cache(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 			
 			group_dragging = false;
 		}
-	} #endregion
+	}
 	
-	static drawNodeBG = function(_x, _y, _mx, _my, _s) { #region
+	static drawNodeBG = function(_x, _y, _mx, _my, _s) {
 		refreshGroupBG();
 		if(array_length(group_vertex) < 3) return;
 		
@@ -243,7 +242,7 @@ function __Node_Cache(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		draw_primitive_end();
 		
 		draw_set_alpha(1);
-	} #endregion
+	}
 		
 	static onDestroy = function() { enableNodeGroup(); }
 }

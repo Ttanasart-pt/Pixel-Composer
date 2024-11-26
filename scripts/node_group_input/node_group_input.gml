@@ -25,43 +25,43 @@ globalvar GROUP_IO_TYPE_NAME, GROUP_IO_TYPE_MAP, GROUP_IO_DISPLAY;
 		
 	/*Integer*/	    [ "Default", "Range", "Rotation", "Rotation range", "Slider", "Slider range", "Padding", "Vector", "Vector range", "Area", "Enum button", "Menu scroll" ],
 	/*Float*/	    [ "Default", "Range", "Rotation", "Rotation range", "Slider", "Slider range", "Padding", "Vector", "Vector range", "Area" ],
-	/*Boolean*/	    0,
+	/*Boolean*/	    [ "Default" ],
 	/*Color*/	    [ "Default", "Gradient", "Palette" ],
-	/*Surface*/	    0,
+	/*Surface*/	    [ "Default" ],
 	    
-	/*Path*/	    0,
-	/*Curve*/	    [ "Curve", ],
-	/*Text*/	    0,
-	/*Object*/	    0,
-	/*Node*/	    0,
+	/*Path*/	    [ "Default" ],
+	/*Curve*/	    [ "Curve",  ],
+	/*Text*/	    [ "Default" ],
+	/*Object*/	    [ "Default" ],
+	/*Node*/	    [ "Default" ],
 	    
-	/*3D*/		    0,
-	/*Any*/		    0,
-	/*Pathnode*/    0,
-	/*Particle*/    0,
-	/*Rigid*/	    0,
+	/*3D*/		    [ "Default" ],
+	/*Any*/		    [ "Default" ],
+	/*Pathnode*/    [ "Default" ],
+	/*Particle*/    [ "Default" ],
+	/*Rigid*/	    [ "Default" ],
 	    
-	/*Sdomain*/	    0,
-	/*Struct*/	    0,
-	/*Strand*/	    0,
-	/*Mesh*/	    0,
-	/*Trigger*/	    0,
+	/*Sdomain*/	    [ "Default" ],
+	/*Struct*/	    [ "Default" ],
+	/*Strand*/	    [ "Default" ],
+	/*Mesh*/	    [ "Default" ],
+	/*Trigger*/	    [ "Default" ],
 	
 	//=========================//
 	
-	/*Noone*/	    0,
-	/*3D Mesh*/     0,
-	/*3D Light*/    0,
-	/*3D Camera*/   0,
-	/*3D Scene*/    0,
+	/*Noone*/	    [ "Default" ],
+	/*3D Mesh*/     [ "Default" ],
+	/*3D Light*/    [ "Default" ],
+	/*3D Camera*/   [ "Default" ],
+	/*3D Scene*/    [ "Default" ],
 	
-	/*3D Material*/ 0,
-	/*noone*/	    0,
-	/*PCX*/         0,
-	/*Audio*/       0,
-	/*Fdomain*/     0,
+	/*3D Material*/ [ "Default" ],
+	/*noone*/	    [ "Default" ],
+	/*PCX*/         [ "Default" ],
+	/*Audio*/       [ "Default" ],
+	/*Fdomain*/     [ "Default" ],
 	
-	/*SDF*/         0,
+	/*SDF*/         [ "Default" ],
 	
 	];
 #endregion
@@ -401,27 +401,23 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	static step = function() {
 		if(is_undefined(inParent)) return;
 		
-		var _type		= getInputData(2);
-		var _dsList     = array_safe_get_fast(GROUP_IO_DISPLAY, _type);
-		if(_dsList == 0) _dsList = [ "Default" ];
-		
-		inputs[0].display_data.data    = _dsList;
-		inputs[0].editWidget.data_list = _dsList;
-			
 		if(inParent.name != display_name) {
 			inParent.name = display_name;
 			group.inputMap[$ string_replace_all(display_name, " ", "_")] = inParent;
 		}
 		
-		if(inParent.type == VALUE_TYPE.trigger) {
-			if(doTrigger == 1) {
+		if(inParent.type != VALUE_TYPE.trigger) return;
+		
+		switch(doTrigger) {
+			case 1 : 
 				outputs[0].setValue(true);
 				doTrigger = -1;
-				
-			} else if(doTrigger == -1) {
+				break;
+			
+			case -1 : 
 				outputs[0].setValue(false);
 				doTrigger = 0;
-			}
+				break;
 		}
 	}
 	
@@ -431,7 +427,12 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _dstype = getInputData(0);
 		var _data   = getInputData(2);
 		var _dsList = array_safe_get_fast(GROUP_IO_DISPLAY, _data);
-		_dstype = _dsList == 0? "Default" : array_safe_get_fast(_dsList, _dstype);
+		if(!is_array(_dsList)) _dsList = [ "Default" ];
+		
+		inputs[0].display_data.data    = _dsList;
+		inputs[0].editWidget.data_list = _dsList;
+			
+		_dstype = array_safe_get_fast(_dsList, _dstype);
 		
 		var _datype = array_safe_get_fast(GROUP_IO_TYPE_MAP, _data, VALUE_TYPE.any);
 		
@@ -468,7 +469,35 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		outputs[0].setValue(inParent.getValue());
 	}
 	
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 	static getGraphPreviewSurface = function() { var _in = array_safe_get(inputs, 0, noone); return _in == noone? noone : _in.getValue(); }
+	
+	static drawNodeDef = drawNode;
+	
+	static drawNode = function(_draw, _x, _y, _mx, _my, _s, display_parameter = noone, _panel = noone) { 
+		if(_s >= .75) return drawNodeDef(_draw, _x, _y, _mx, _my, _s, display_parameter, _panel);
+		
+		var xx = x * _s + _x;
+		var yy = y * _s + _y;
+		
+		var _name = renamed? display_name : name;
+		var _ts   = _s * 0.5;
+		var _tx   = round(xx + (w - 6) * _s - 2);
+		var _ty   = round(outputs[0].y);
+		
+		draw_set_text(f_sdf, fa_right, fa_center);
+		BLEND_ALPHA_MULP
+		
+		draw_set_color(0);					draw_text_transformed(_tx + 1, _ty + 1, _name, _ts, _ts, 0);
+		draw_set_color(COLORS._main_text);	draw_text_transformed(_tx, _ty, _name, _ts, _ts, 0);
+		
+		BLEND_NORMAL
+		
+		return _s > 0.5? drawJunctions(_draw, xx, yy, _mx, _my, _s) : drawJunctions_fast(_draw, xx, yy, _mx, _my, _s);
+	}
+	
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	static postDeserialize = function() { createInput(false); }
 	
@@ -482,6 +511,8 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		group.sortIO();
 	}
+	
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	static onDestroy = function() {
 		if(is_undefined(inParent)) return;

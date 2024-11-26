@@ -37,8 +37,7 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 	curr_dimension = [ 0, 0 ];
 	render_amount  = 0;
 	
-	insp2UpdateTooltip = "Clear cache";
-	insp2UpdateIcon    = [ THEME.cache, 0, COLORS._main_icon ];
+	setTrigger(2, "Clear cache", [ THEME.cache, 0, COLORS._main_icon ]);
 	
 	static onInspector2Update = function() { clearCache(); }
 	

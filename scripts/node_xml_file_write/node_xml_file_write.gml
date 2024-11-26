@@ -25,8 +25,8 @@ function Node_XML_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		file_text_write_all(path, str);
 	}
 	
+	setTrigger(1,,, function() /*=>*/ {return writeFile()});
 	static update = function(frame = CURRENT_FRAME) { writeFile(); }
-	static onInspector1Update = function() { writeFile(); }
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);

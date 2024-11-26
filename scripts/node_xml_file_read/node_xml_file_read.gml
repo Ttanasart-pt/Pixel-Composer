@@ -76,13 +76,7 @@ function Node_XML_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		return true;
 	}
 	
-	insp1UpdateTooltip  = __txt("Refresh");
-	insp1UpdateIcon     = [ THEME.refresh_icon, 1, COLORS._main_value_positive ];
-	
-	static onInspector1Update = function() {
-		updatePaths(getInputData(0));
-		triggerRender();
-	}
+	setTrigger(1, __txt("Refresh"), [ THEME.refresh_icon, 1, COLORS._main_value_positive ], function() /*=>*/ { updatePaths(getInputData(0)); triggerRender(); });
 	
 	static step = function() {
 		if(attributes.file_checker && file_exists_empty(path_current)) {

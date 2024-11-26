@@ -237,20 +237,17 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	/////========== INSPECTOR ===========
 	
 	hasInsp1 = false;
-	insp1UpdateTooltip   = __txtx("panel_inspector_execute", "Execute node contents");
-	insp1UpdateIcon      = [ THEME.sequence_control, 1, COLORS._main_value_positive ];
+	setTrigger(1, __txtx("panel_inspector_execute", "Execute node contents"), [ THEME.sequence_control, 1, COLORS._main_value_positive ], function() /*=>*/ {
+		array_foreach(NodeListSort(nodes), function(n) /*=>*/ { if(n.hasInspector1Update()) n.inspector1Update(); }); 
+	});
 	
 	hasInsp2 = false;
-	insp2UpdateTooltip = "Clear cache";
-	insp2UpdateIcon    = [ THEME.cache, 0, COLORS._main_icon ];
+	setTrigger(2, "Clear cache", [ THEME.cache, 0, COLORS._main_icon ], function() /*=>*/ { 
+		array_foreach(NodeListSort(nodes), function(n) /*=>*/ { if(n.hasInspector2Update()) n.inspector2Update(); }); 
+	});
 	
-	static inspector1Update    = function() { onInspector1Update(); }
-	static onInspector1Update  = function() { array_foreach(NodeListSort(nodes), function(n) { if(n.hasInspector1Update()) n.inspector1Update(); }); }
-	static hasInspector1Update = function() { INLINE return hasInsp1; }
-	
-	static inspector2Update    = function() { onInspector2Update(); }
-	static onInspector2Update  = function() { array_foreach(NodeListSort(nodes), function(n) { if(n.hasInspector2Update()) n.inspector2Update(); }); }
-	static hasInspector2Update = function() { INLINE return hasInsp2; }
+	static hasInspector1Update = function() /*=>*/ {return hasInsp1};
+	static hasInspector2Update = function() /*=>*/ {return hasInsp2};
 	
 	/////============ GROUP =============
 	
@@ -331,10 +328,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}
 	
 	static step = function() {
-		if(combine_render_time) {
-			render_time = 0;
-			array_foreach(getNodeList(), function(node) /*=>*/ { render_time += node.render_time; });
-		}
+		if(combine_render_time) render_time = array_reduce(getNodeList(), function(val, node) /*=>*/ { val += node.render_time; return val; }, 0);
 		
 		onStep();
 	}

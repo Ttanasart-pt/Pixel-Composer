@@ -217,8 +217,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		attributes.node_param_width = PREFERENCES.node_param_width;
 		attributes.node_width  = 0;
 		attributes.node_height = 0;
-		attributes.annotation  = "";
 		attributes.outp_meta   = false;
+		
+		attributes.annotation       = "";
+		attributes.annotation_size  = .4;
+		attributes.annotation_color = COLORS._main_text_sub;
 		
 		attributeEditors = [
 			"Display",
@@ -279,6 +282,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		is_group_io      = false;
 		in_VFX           = false;
 		
+		use_trigger      = false;
 	#endregion
 	
 	#region ---- timeline ----
@@ -543,19 +547,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static inspector2Update    = function() { INLINE onInspector2Update(); }
 	static hasInspector2Update = function() { INLINE return onInspector2Update != noone; }
 	
-	static setInspector = function(index, _tooltip, _icon, _function) {
-		if(index == 1) {
-			insp1UpdateTooltip  = _tooltip;
-			insp1UpdateIcon     = _icon;
-			onInspector1Update  = _function;
-			
-		} else if(index == 2) {
-			insp2UpdateTooltip  = _tooltip;
-			insp2UpdateIcon     = _icon;
-			onInspector2Update  = _function;
-		}
-	}
-	
 	/////============= STEP =============
 	
 	static stepBegin = function() {
@@ -563,9 +554,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(use_cache) cacheArrayCheck();
 		
 		doStepBegin();
-		
-		if(hasInspector1Update()) inspectInput1.name = insp1UpdateTooltip;
-		if(hasInspector2Update()) inspectInput2.name = insp2UpdateTooltip;
 		
 		if(attributes.show_update_trigger) {
 			if(updatedInTrigger.getValue()) { 
@@ -589,26 +577,52 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static doStepBegin = function() {}
 	
-	static triggerCheck = function() {
-		var i = 0;
+	static setTrigger = function(index, tooltip = __txtx("panel_inspector_execute", "Execute"), icon = [ THEME.sequence_control, 1, COLORS._main_value_positive ], _function = undefined) {
+		use_trigger         = true;
 		
-		repeat( input_button_length ) {
-			var _in = input_buttons[i++];
+		if(index == 1) {
+			insp1UpdateTooltip  = tooltip;
+			insp1UpdateIcon     = icon;
+			if(!is_undefined(_function)) onInspector1Update  = _function;
 			
-			if(_in.getStaticValue()) {
-				_in.editWidget.onClick();
-				_in.setValue(false);
+		} else if(index == 2) {
+			insp2UpdateTooltip  = tooltip;
+			insp2UpdateIcon     = icon;
+			if(!is_undefined(_function)) onInspector2Update  = _function;
+		} 
+	}
+	
+	static triggerCheck = function() {
+		if(input_button_length) {
+			var i = 0;
+			repeat( input_button_length ) {
+				var _in = input_buttons[i++];
+				
+				if(_in.getStaticValue()) {
+					_in.editWidget.onClick();
+					_in.setValue(false);
+				}
 			}
 		}
 		
-		if(hasInspector1Update() && inspectInput1.getStaticValue()) {
-			onInspector1Update();
-			inspectInput1.setValue(false);
+		if(!use_trigger) return;
+		
+		if(hasInspector1Update()) {
+			inspectInput1.name = insp1UpdateTooltip;
+			
+			if(inspectInput1.getStaticValue()) {
+				onInspector1Update();
+				inspectInput1.setValue(false);
+			}
 		}
 		
-		if(hasInspector2Update() && inspectInput2.getStaticValue()) {
-			onInspector2Update();
-			inspectInput2.setValue(false);
+		if(hasInspector2Update()) {
+			inspectInput2.name = insp2UpdateTooltip;
+			
+			if(inspectInput2.getStaticValue()) {
+				onInspector2Update();
+				inspectInput2.setValue(false);
+			}
 		}
 	}
 	
@@ -1330,16 +1344,31 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 		
 		__s = _s;
-		_ix = xx;
-		_iy = _junSy;
+		_ix = xx;           _rix = x;
+		_iy = _junSy;       _riy = y + _junRy;
 		
-		_ox = xx + w * _s;
-		_oy = _junSy;
+		_ox = xx + w * _s;  _rox = x + w;
+		_oy = _junSy;       _roy = y + _junRy;
 		
 		array_foreach(inputs,           function(jun) /*=>*/ { jun.x = _ix; jun.y = _iy; });
-		array_foreach(inputDisplayList, function(jun) /*=>*/ { jun.x = _ix; jun.y = _iy; _iy += junction_draw_hei_y * __s; });
 		
-		array_foreach(outputs_index,    function(jun) /*=>*/ { jun = outputs[jun]; jun.x = _ox; jun.y = _oy; _oy += junction_draw_hei_y * jun.isVisible() * __s; });
+		array_foreach(inputDisplayList, function(jun) /*=>*/ { 
+			jun.x = _ix; jun.rx = _rix; 
+			jun.y = _iy; jun.ry = _riy; 
+			
+			_riy += junction_draw_hei_y;
+			_iy  += junction_draw_hei_y * __s;
+		});
+		
+		array_foreach(outputs_index,    function(jun) /*=>*/ { 
+			jun = outputs[jun]; 
+			jun.x = _ox; jun.rx = _rox; 
+			jun.y = _oy; jun.ry = _roy; 
+			
+			var __vis = jun.isVisible();
+			_roy += junction_draw_hei_y * __vis 
+			_oy  += junction_draw_hei_y * __vis * __s; 
+		});
 		
 		array_foreach(inputs,           function(jun) /*=>*/ { jun   = jun.bypass_junc; if(!jun.visible) return; 
 		                                           jun.x = _ox; jun.y = _oy; _oy += junction_draw_hei_y * jun.visible * __s; });
@@ -1937,8 +1966,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if((previewable && _s >= 0.75) || (!previewable && h * _s >= name_height * .5)) drawNodeName(xx, yy, _s, _panel);
 		
 		if(attributes.annotation != "") {
-			draw_set_text(f_sdf_medium, fa_left, fa_bottom, COLORS._main_text_sub);
-			var _ts = _s * 0.4;
+			draw_set_text(f_sdf_medium, fa_left, fa_bottom, attributes.annotation_color);
+			var _ts = _s * attributes.annotation_size;
+			
 			BLEND_ADD
 			draw_text_ext_transformed(xx, yy - 4  * _s, attributes.annotation, -1, (w + 8) * _s / _ts, _ts, _ts, 0);
 			BLEND_NORMAL
@@ -2260,12 +2290,18 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			if(struct_try_get(attri, "node_width")          == 0)     struct_remove(attri, "node_width");
 			if(struct_try_get(attri, "node_height")         == 0)     struct_remove(attri, "node_height");
 			if(struct_try_get(attri, "node_param_width")    == 192)   struct_remove(attri, "node_param_width");
-			if(struct_try_get(attri, "annotation")          == "")    struct_remove(attri, "annotation");
 			if(struct_try_get(attri, "outp_meta")           == false) struct_remove(attri, "outp_meta");
+			
+			if(struct_try_get(attri, "annotation")          == "")                       struct_remove(attri, "annotation");
+			if(struct_try_get(attri, "annotation_size")     == .4)                       struct_remove(attri, "annotation_size");
+			if(struct_try_get(attri, "annotation_color")    == COLORS._main_text_sub)    struct_remove(attri, "annotation_color");
+			
 			if(struct_try_get(attri, "color")               == -1)    struct_remove(attri, "color");
 			if(struct_try_get(attri, "update_graph")        == true)  struct_remove(attri, "update_graph");
 			if(struct_try_get(attri, "show_update_trigger") == false) struct_remove(attri, "show_update_trigger");
 			if(struct_try_get(attri, "array_process")       == 0)     struct_remove(attri, "array_process");
+			
+			if(struct_has(attri, "use_project_dimension"))			  struct_remove(attri, "use_project_dimension");
 			
 			if(struct_names_count(attri)) _map.attri = attri;
 		#endregion	
@@ -2350,8 +2386,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			_lattr.node_width          = struct_try_get(_lattr, "node_width",              0);
 			_lattr.node_height         = struct_try_get(_lattr, "node_height",             0);
 			_lattr.node_param_width    = struct_try_get(_lattr, "node_param_width",      192);
-			_lattr.annotation          = struct_try_get(_lattr, "annotation",             "");
 			_lattr.outp_meta           = struct_try_get(_lattr, "outp_meta",           false);
+		
 			_lattr.color               = struct_try_get(_lattr, "color",                  -1);
 			_lattr.update_graph        = struct_try_get(_lattr, "update_graph",         true);
 			_lattr.show_update_trigger = struct_try_get(_lattr, "show_update_trigger", false);

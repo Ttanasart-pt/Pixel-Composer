@@ -30,8 +30,7 @@ function Node_VFX_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _group
 	
 	static getNextNodes = function() { return allCached? getNextNodesExternal() : getNextNodesInternal(); } 
 	
-	insp2UpdateTooltip = "Clear cache";
-	insp2UpdateIcon    = [ THEME.cache, 0, COLORS._main_icon ];
+	setTrigger(2, "Clear cache", [ THEME.cache, 0, COLORS._main_icon ]);
 	
 	static onInspector2Update = function() { #region
 		for( var i = 0, n = array_length(nodes); i < n; i++ ) {

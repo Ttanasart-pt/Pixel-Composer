@@ -705,13 +705,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		CLI_EXPORT_AMOUNT++;
 	}
 	
-	insp1UpdateTooltip   = "Export";
-	insp1UpdateIcon      = [ THEME.sequence_control, 1, COLORS._main_value_positive ];
-	
-	insp2UpdateTooltip = "Export All";
-	insp2UpdateIcon    = [ THEME.play_all, 0, COLORS._main_value_positive ];
-	
-	static onInspector1Update = function(_fromValue = false) {
+	setTrigger(1, "Export", [ THEME.sequence_control, 1, COLORS._main_value_positive ], function(_fromValue = false) /*=>*/ {
 		if(IS_RENDERING) return;
 		
 		if(_fromValue) {
@@ -721,12 +715,12 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		if(isInLoop())	RENDER_ALL
 		else			doInspectorAction();
-	}
+	});
 	
-	static onInspector2Update = function(_fromValue = false) {
+	setTrigger(2, "Export All", [ THEME.play_all, 0, COLORS._main_value_positive ], function() /*=>*/ {
 		if(IS_RENDERING) return;
 		exportAll(); 
-	}
+	});
 	
 	static doInspectorAction = function() {
 		if(!IS_CMD && (LOADING || APPENDING)) return;

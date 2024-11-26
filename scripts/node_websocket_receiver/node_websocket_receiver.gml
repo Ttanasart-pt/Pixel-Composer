@@ -57,7 +57,7 @@ function Node_Websocket_Receiver(_x, _y, _group = noone) : Node(_x, _y, _group) 
 		}
 	}
 	
-	setInspector(1, __txt("Refresh Server"), [ THEME.refresh_icon, 1, COLORS._main_value_positive ], function() { setPort(); });
+	setTrigger(1, __txt("Refresh Server"), [ THEME.refresh_icon, 1, COLORS._main_value_positive ], function() { setPort(); });
 	
 	static asyncPackets = function(_async_load) {
 		if(!active) return;

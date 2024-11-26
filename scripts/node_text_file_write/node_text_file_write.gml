@@ -24,8 +24,9 @@ function Node_Text_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		file_text_close(f);
 	}
 	
+	setTrigger(1,,, function() /*=>*/ { getInputs(); writeFile(); });
+	
 	static update = function(frame = CURRENT_FRAME) { writeFile(); }
-	static onInspector1Update = function() { getInputs(); writeFile(); }
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);

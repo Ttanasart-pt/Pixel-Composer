@@ -27,8 +27,7 @@ function Node_Strand_Render_Texture(_x, _y, _group = noone) : Node(_x, _y, _grou
 		["Texture", false], 4, 3, 
 	];
 	
-	insp2UpdateTooltip = "Clear cache";
-	insp2UpdateIcon    = [ THEME.cache, 0, COLORS._main_icon ];
+	setTrigger(2, "Clear cache", [ THEME.cache, 0, COLORS._main_icon ]);
 	
 	static onInspector2Update = function() { clearCache(); }
 	

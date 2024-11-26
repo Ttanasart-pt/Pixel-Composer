@@ -143,23 +143,15 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	}
 	
 	#region ++++ inspector ++++
-		insp1UpdateTooltip  = __txt("Refresh");
-		insp1UpdateIcon     = [ THEME.refresh_icon, 1, COLORS._main_value_positive ];
+		setTrigger(1, __txt("Refresh"), [ THEME.refresh_icon, 1, COLORS._main_value_positive ], function() /*=>*/ { 
+			var path = getInputData(0); 
+			if(path == "") return; 
+			updatePaths(path); 
+			update(); 
+		});
 		
-		insp2UpdateTooltip  = __txtx("play_with_timeline", "Play with timeline");
-		insp2UpdateIcon     = [ THEME.play_sound, 1, COLORS._main_icon_light ];
+		setTrigger(2, __txtx("play_with_timeline", "Play with timeline"), [ THEME.play_sound, 1, COLORS._main_icon_light ], function() /*=>*/ { attributes.play = !attributes.play; });
 		attributes.play = true;
-		
-		static onInspector1Update = function() {
-			var path = getInputData(0);
-			if(path == "") return;
-			updatePaths(path);
-			update();
-		}
-		
-		static onInspector2Update = function() {
-			attributes.play = !attributes.play;
-		}
 	#endregion
 	
 	static step = function() {

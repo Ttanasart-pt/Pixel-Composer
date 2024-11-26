@@ -35,7 +35,7 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	_prev_type = -1;
 	
-	static onInspector1Update = function() { separateShape(); }
+	setTrigger(1,,, function() /*=>*/ {return separateShape()});
 	
 	static update = function() {
 		separateShape();

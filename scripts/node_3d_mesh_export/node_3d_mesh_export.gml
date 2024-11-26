@@ -16,10 +16,7 @@ function Node_3D_Mesh_Export(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		["Export", false], 1, 2, 3, 
 	];
 	
-	insp1UpdateTooltip   = "Export";
-	insp1UpdateIcon      = [ THEME.sequence_control, 1, COLORS._main_value_positive ];
-	
-	static onInspector1Update = function() { export(); }
+	setTrigger(1, "Export", [ THEME.sequence_control, 1, COLORS._main_value_positive ], function() /*=>*/ {return export()});
 	
 	static export = function() {
 		var _mesh = getInputData(0);

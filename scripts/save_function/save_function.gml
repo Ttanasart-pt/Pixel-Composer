@@ -162,8 +162,8 @@ function SAVE_NODE(_arr, _node, dx = 0, dy = 0, scale = false, context = PANEL_G
 	m.x -= dx;
 	m.y -= dy;
 	
-	var c = context == noone? noone : context.node_id;
-	if(m.group == c) m.group = noone;
+	if(context != noone && struct_has(m, "group") && m.group == context.node_id) 
+		m.group = noone;
 	
 	array_push(_arr, m);
 }

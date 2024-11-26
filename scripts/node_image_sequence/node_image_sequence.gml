@@ -88,13 +88,7 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		return false;
 	}
 	
-	insp1UpdateTooltip  = __txt("Refresh");
-	insp1UpdateIcon     = [ THEME.refresh_icon, 1, COLORS._main_value_positive ];
-	
-	static onInspector1Update = function() {
-		updatePaths();
-		triggerRender();
-	}
+	setTrigger(1, __txt("Refresh"), [ THEME.refresh_icon, 1, COLORS._main_value_positive ], function() /*=>*/ { updatePaths(); triggerRender(); });
 	
 	function updatePaths() {
 		var _paths   = getInputData(0);

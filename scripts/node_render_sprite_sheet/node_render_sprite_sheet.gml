@@ -63,7 +63,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 	
 	attribute_surface_depth();
 
-	static onInspector1Update = function(updateAll = true) { initSurface(true); PROJECT.animator.render(); }
+	setTrigger(1,,, function() /*=>*/ { initSurface(true); PROJECT.animator.render(); });
 	
 	static step = function() {
 		var inpt = getInputData(0);

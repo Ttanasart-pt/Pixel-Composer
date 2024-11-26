@@ -90,12 +90,7 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		return false;
 	}
 	
-	insp1UpdateTooltip  = __txt("Refresh");
-	insp1UpdateIcon     = [ THEME.refresh_icon, 1, COLORS._main_value_positive ];
-	
-	static onInspector1Update = function() {
-		updatePaths(path_get(getInputData(0)));
-	}
+	setTrigger(1, __txt("Refresh"), [ THEME.refresh_icon, 1, COLORS._main_value_positive ], function() /*=>*/ { updatePaths(path_get(getInputData(0))); });
 	
 	function updatePaths(path = path_current) {
 		if(path == -1) return false;

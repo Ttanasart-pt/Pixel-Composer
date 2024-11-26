@@ -287,11 +287,8 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		];
 	#endregion
 	
-	insp1UpdateTooltip = "Generate";
-	insp1UpdateIcon    = [ THEME.refresh_icon, 1, COLORS._main_value_positive ];
+	setTrigger(1, "Generate", [ THEME.refresh_icon, 1, COLORS._main_value_positive ], function() /*=>*/ {return Mesh_build()});
 	will_triangluate   = false;
-	
-	static onInspector1Update = function() { Mesh_build(); }
 	
 	static onValueFromUpdate = function(index) {
 		if(LOADING || APPENDING) return;

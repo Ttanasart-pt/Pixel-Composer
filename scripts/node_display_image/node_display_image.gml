@@ -68,12 +68,12 @@ function Node_Display_Image(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			UNDO_HOLDING = true;
 	}
 	
-	static onInspector1Update = function() {
+	setTrigger(1,,, function() /*=>*/ {
 		var path = getInputData(0);
 		if(path == "") return;
 		updatePaths(path);
 		update(); 
-	}
+	});
 	
 	function updatePaths(path) {
 		path = path_get(path);

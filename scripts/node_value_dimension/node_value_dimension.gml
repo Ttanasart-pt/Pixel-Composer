@@ -4,6 +4,12 @@ function __NodeValue_Dimension(_node, value) : NodeValue("Dimension", _node, CON
 	setDisplay(VALUE_DISPLAY.vector);
 	def_length = 2;
 	
+	attributes.use_project_dimension = true;
+	editWidget.side_button = button(function() /*=>*/ {
+		attributes.use_project_dimension = !attributes.use_project_dimension;
+		node.triggerRender();
+	}).setIcon(THEME.node_use_project, 0, COLORS._main_icon).setTooltip("Use project dimension");
+	
 	/////============== GET =============
 	
 	static getValue = function(_time = CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { //// Get value
@@ -53,7 +59,7 @@ function __NodeValue_Dimension(_node, value) : NodeValue("Dimension", _node, CON
 	}
 	
 	static __getAnimValue = function(_time = CURRENT_FRAME) {
-		if(node.attributes.use_project_dimension) 
+		if(attributes.use_project_dimension) 
 			return PROJECT.attributes.surface_dimension;
 		
 		if(!is_anim) {
@@ -69,8 +75,8 @@ function __NodeValue_Dimension(_node, value) : NodeValue("Dimension", _node, CON
 		return animator.getValue(_time);
 	}
 	
-	static showValue = function() { ////showValue
-		if(node.attributes.use_project_dimension) 
+	static showValue = function() {
+		if(attributes.use_project_dimension) 
 			return PROJECT.attributes.surface_dimension;
 			
 		return __showValue();
