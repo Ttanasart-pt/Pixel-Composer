@@ -200,7 +200,7 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			
 			if(posing_bone) {
 				if(posing_type == 0 && posing_bone.parent) { //move
-					var ang = posing_bone.parent.pose_angle;
+					var ang = posing_bone.parent.pose_rotate;
 					var pp  = point_rotate(smx - posing_mx, smy - posing_my, 0, 0, -ang);
 					var bx  = posing_sx + pp[0];
 					var by  = posing_sy + pp[1];
@@ -213,7 +213,7 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 					var ss  = point_distance(posing_mx, posing_my, smx, smy) / posing_sx;
 					var ori = posing_bone.getHead();
 					var ang = point_direction(ori.x, ori.y, smx, smy);
-					var rot = ang - posing_sy - posing_bone.parent.pose_angle;
+					var rot = ang - posing_sy - posing_bone.parent.pose_rotate;
 					
 					posing_input[TRANSFORM.sca_x] = ss;
 					posing_input[TRANSFORM.rot]   = rot;
@@ -260,7 +260,7 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 					
 					var ori = posing_bone.getHead();
 					posing_sx = posing_bone.length / posing_bone.pose_scale * posing_bone.parent.pose_scale;
-					posing_sy = posing_bone.angle - posing_bone.pose_local_angle;
+					posing_sy = posing_bone.angle - posing_bone.pose_local_rotate;
 					posing_sz = point_direction(ori.x, ori.y, smx, smy);
 					
 					var pnt = posing_bone.getHead();
@@ -393,11 +393,11 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			
 			var _trn  = attributes.bonePoseData[$ _b.ID];
 			_b.pose_posit = [ _trn[TRANSFORM.pos_x], _trn[TRANSFORM.pos_y] ];
-			_b.pose_angle =   _trn[TRANSFORM.rot];
+			_b.pose_rotate =   _trn[TRANSFORM.rot];
 			_b.pose_scale =   _trn[TRANSFORM.sca_x];
 		}
 		
-		bone_posed.setPose(,,, false);
+		bone_posed.setPose(false);
 		
         if(rigdata == noone) AutoWeightPaint(false);
         

@@ -11,7 +11,9 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	newOutput(0, nodeValue_Output("Armature", self, VALUE_TYPE.armature, noone));
 	
-	boneMap = {};
+	boneHash = "";
+	bonePose = noone;
+	boneMap  = {};
 	
 	attributes.display_name = true;
 	attributes.display_bone = 0;
@@ -36,25 +38,13 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	setDynamicInput(1, false);
 	
 	static setBone = function() {
-		//print("Setting dem bones...");
+		// print("Setting dem bones...");
+		
 		var _b = getInputData(0);
 		if(_b == noone) return;
 		
-		var _bones = [];
-		var _bst   = ds_stack_create();
-		ds_stack_push(_bst, _b);
-		
-		while(!ds_stack_empty(_bst)) {
-			var __b = ds_stack_pop(_bst);
-			
-			for( var i = 0, n = array_length(__b.childs); i < n; i++ ) {
-				array_push(_bones,  __b.childs[i]);
-				ds_stack_push(_bst, __b.childs[i]);
-			}
-		}
-		
-		ds_stack_destroy(_bst);
-		
+		bonePose    = _b.clone().connect();
+		var _bArr   = _b.toArray();
 		var _inputs = [ inputs[0] ];
 		
 		var _input_display_list = [
@@ -62,8 +52,8 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			input_display_list[1]
 		];
 		
-		for( var i = 0, n = array_length(_bones); i < n; i++ ) {
-			var bone = _bones[i];
+		for( var i = 0, n = array_length(_bArr); i < n; i++ ) {
+			var bone = _bArr[i];
 			var _idx = array_length(_inputs);
 			var _inp;
 			
@@ -72,8 +62,6 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			if(struct_exists(boneMap, bone.ID)) {
 				_inp = boneMap[$ bone.ID];
 				_inp.index = _idx;
-				array_push(_inputs, _inp);
-				
 			} else
 				_inp = createNewInput(bone);
 			
@@ -82,7 +70,6 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		inputs = _inputs;
 		input_display_list = _input_display_list;
-		
 	}
 	
 	tools = [];
@@ -91,17 +78,20 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	posing_bone  = noone;
 	posing_input = 0;
 	posing_type  = 0;
+	
 	posing_sx    = 0;
 	posing_sy    = 0;
-	posing_sz    = 0;
 	posing_mx    = 0;
 	posing_my    = 0;
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var _b = outputs[0].getValue();
-		if(_b == noone) return;
+		var _b = inputs[0].getValue();
 		
-		anchor_selecting = _b.draw(attributes, active * 0b111, _x, _y, _s, _mx, _my, anchor_selecting, posing_bone);
+		if(_b == noone) return;
+		if(bonePose == noone) return;
+		
+		anchor_selecting = bonePose.draw(attributes, active * 0b111, _x, _y, _s, _mx, _my, anchor_selecting, posing_bone);
+		bonePose.drawControl(attributes);
 		
 		var mx = (_mx - _x) / _s;
 		var my = (_my - _y) / _s;
@@ -110,32 +100,38 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var smy = value_snap(my, _sny);
 		
 		if(posing_bone) {
-			if(posing_type == 0 && posing_bone.parent) { //move
-				var ang = posing_bone.parent.pose_angle;
+			gpu_set_texfilter(true);
+			var val = array_clone(posing_input.getValue());
+			
+			if(posing_type == 0) { //move
+				var ang = posing_bone.pose_local_rotate; 
 				var pp  = point_rotate(smx - posing_mx, smy - posing_my, 0, 0, -ang);
 				var bx  = posing_sx + pp[0];
 				var by  = posing_sy + pp[1];
 				
-				var val = array_clone(posing_input.getValue());
 				val[TRANSFORM.pos_x] = bx;
 				val[TRANSFORM.pos_y] = by;
 				
-				if(posing_input.setValue(val))
-					UNDO_HOLDING = true;
+				orig = posing_bone.getHead();
+				var _rx = _x + _s * orig.x;
+				var _ry = _y + _s * orig.y;
+				draw_sprite_ext(s_bone_move, 0, _rx, _ry, 1, 1, 0, COLORS._main_value_positive, 1);
 				
-			} else if(posing_type == 1) { //scale
-				var ss  = point_distance(posing_mx, posing_my, smx, smy) / posing_sx;
-				var ori = posing_bone.getHead();
-				var ang = point_direction(ori.x, ori.y, smx, smy);
-				var rot = ang - posing_sy - posing_bone.parent.pose_angle;
+			} else if(posing_type == 1) { //free move
+				var _direction = point_direction(posing_sx, posing_sy, smx, smy);
+				var _distance  = point_distance(posing_sx, posing_sy, smx, smy);
 				
-				var val = array_clone(posing_input.getValue());
-				val[TRANSFORM.sca_x] = ss;
-				val[TRANSFORM.rot]   = rot;
+				var _scale     = _distance  / (posing_bone.length * posing_bone.pose_local_scale);
+				var _rotation  = _direction - (posing_bone.angle  + posing_bone.pose_local_rotate);
 				
-				if(posing_input.setValue(val))
-					UNDO_HOLDING = true;
+				val[TRANSFORM.sca_x] = _scale;
+				val[TRANSFORM.rot]   = _rotation;
 				
+				orig = posing_bone.getTail();
+				var _rx = _x + _s * orig.x;
+				var _ry = _y + _s * orig.y;
+				draw_sprite_ext(s_bone_move, 0, _rx, _ry, 1, 1, 0, COLORS._main_value_positive, 1);
+					
 			} else if(posing_type == 2) { //rotate
 				var ori = posing_bone.getHead();
 				var ang = point_direction(ori.x, ori.y, mx, my);
@@ -143,115 +139,165 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				posing_sy = ang;
 				posing_sx += rot;
 				
-				var val = array_clone(posing_input.getValue());
 				val[TRANSFORM.rot] = posing_sx;
 				
-				if(posing_input.setValue(val))
-					UNDO_HOLDING = true;
-			}
+				orig = posing_bone.getHead();
+				var _rx = _x + _s * orig.x;
+				var _ry = _y + _s * orig.y;
+				draw_sprite_ext(s_bone_rotate, 0, _rx, _ry, 1, 1, posing_bone.pose_angle, COLORS._main_value_positive, 1); 
+			
+			} else if(posing_type == 3) { //scale
+				var ss  = point_distance(posing_mx, posing_my, smx, smy) / posing_sx;
+				
+				val[TRANSFORM.sca_x] = ss;
+				
+				orig = posing_bone.getPoint(0.8);
+				var _rx = _x + _s * orig.x;
+				var _ry = _y + _s * orig.y;
+				draw_sprite_ext(s_bone_scale,  0, _rx, _ry, 1, 1, posing_bone.pose_angle, COLORS._main_value_positive, 1);
+			} 
+			
+			gpu_set_texfilter(false);
+			
+			if(posing_input.setValue(val))
+				UNDO_HOLDING = true;
 			
 			if(mouse_release(mb_left)) {
 				posing_bone = noone;
 				posing_type = noone;
 				UNDO_HOLDING = false;
 			}
-		}
-		
-		if(anchor_selecting != noone && mouse_press(mb_left, active)) {
-			posing_bone = anchor_selecting[0];
-			if(!struct_exists(boneMap, posing_bone.ID)) setBone();
-			posing_input = boneMap[$ posing_bone.ID];
 			
-			if(anchor_selecting[1] == 0 || anchor_selecting[0].IKlength) { // move
+		} else if(anchor_selecting != noone) {
+			var _bne = anchor_selecting[0];
+			var _typ = anchor_selecting[1];
+			
+			if(_bne.IKlength) _typ = 0;
+			
+			gpu_set_texfilter(true);
+			
+			if(_typ == 0) { // free move
+				var orig = _bne.getHead();
+				draw_sprite_ext(s_bone_move, 0, _x + _s * orig.x, _y + _s * orig.y, 1, 1, 0, COLORS._main_accent, 1);
 				
-				posing_type = 0;
+			} else if(_typ == 1) { // bone move
+				var orig = _bne.getTail();
+				draw_sprite_ext(s_bone_move, 0, _x + _s * orig.x, _y + _s * orig.y, 1, 1, 0, COLORS._main_accent, 1);
 				
-				var val = posing_input.getValue();
-				posing_sx = val[TRANSFORM.pos_x];
-				posing_sy = val[TRANSFORM.pos_y];
+			} else if(_typ == 2) { // bone rotate
+				var orig = _bne.getHead();
+				var _rx = _x + _s * orig.x;
+				var _ry = _y + _s * orig.y;
 				
-				var _p = anchor_selecting[2];
-				posing_mx = _p.x;
-				posing_my = _p.y;
+				var orig = _bne.getPoint(0.8);
+				var _sx = _x + _s * orig.x;
+				var _sy = _y + _s * orig.y;
 				
-			} else if(anchor_selecting[1] == 1) { // scale
+				if(point_in_circle(_mx, _my, _sx, _sy, 12)) {
+					draw_sprite_ext(s_bone_scale,  0, _sx, _sy, 1, 1, _bne.pose_angle, COLORS._main_accent, 1);
+					draw_sprite_ext(s_bone_rotate, 0, _rx, _ry, 1, 1, _bne.pose_angle, c_white, 1);
+					_typ = 3;
+					
+				} else {
+					draw_sprite_ext(s_bone_scale,  0, _sx, _sy, 1, 1, _bne.pose_angle, c_white, 1);
+					draw_sprite_ext(s_bone_rotate, 0, _rx, _ry, 1, 1, _bne.pose_angle, COLORS._main_accent, 1);
+					_typ = 2;
+				}
+			}
+			
+			gpu_set_texfilter(false);
 				
-				posing_type = 1;
+			if(mouse_press(mb_left, active)) {
+				posing_bone = _bne;
+				posing_type = _typ;
 				
-				var ori = posing_bone.getHead();
-				var val = posing_input.getValue();
-				posing_sx = posing_bone.length / posing_bone.pose_scale * posing_bone.parent.pose_scale;
-				posing_sy = posing_bone.angle - posing_bone.pose_local_angle;
-				posing_sz = point_direction(ori.x, ori.y, smx, smy);
+				if(!struct_exists(boneMap, _bne.ID)) setBone();
+				posing_input = boneMap[$ _bne.ID];
 				
-				var pnt = posing_bone.getHead();
-				posing_mx = pnt.x;
-				posing_my = pnt.y;
-				
-			} else if(anchor_selecting[1] == 2) { // rotate
-				
-				posing_type = 2;
-				
-				var ori = posing_bone.getHead();
-				var val = posing_input.getValue();
-				posing_sx = val[TRANSFORM.rot];
-				posing_sy = point_direction(ori.x, ori.y, mx, my);
-				
-				posing_mx = mx;
-				posing_my = my;
+				if(_typ == 0) { // move
+					var val   = posing_input.getValue();
+					var _p    = anchor_selecting[2];
+					
+					posing_sx = val[TRANSFORM.pos_x];
+					posing_sy = val[TRANSFORM.pos_y];
+					
+					posing_mx = _p.x;
+					posing_my = _p.y;
+					
+				} else if(_typ == 1) { // free move
+					var orig  = _bne.getHead();
+					
+					posing_sx = orig.x;
+					posing_sy = orig.y;
+					
+				} else if(_typ == 2) { // rotate
+					var orig  = _bne.getHead();
+					var val   = posing_input.getValue();
+					
+					posing_sx = val[TRANSFORM.rot];
+					posing_sy = point_direction(orig.x, orig.y, mx, my);
+					
+					posing_mx = mx;
+					posing_my = my;
+					
+				} else if(_typ == 3) { // scale
+					var orig  = _bne.getHead();
+					
+					var _sca  = point_distance(orig.x, orig.y, mx, my) / _bne.pose_length;
+					posing_sx = _bne.length * _bne.pose_local_scale * _sca;
+					
+					posing_mx = orig.x;
+					posing_my = orig.y;
+					
+				} 
 			}
 		}
-	}
-	
-	bone_prev = noone;
-	static step = function() {
-		var _b = getInputData(0);
-		if(_b == noone) return;
-		if(bone_prev != _b) {
-			setBone();
-			bone_prev = _b;
-			return;
-		}
-		
-		var _boneCount = array_length(inputs) - input_fix_len;
-		if(_boneCount != _b.childCount()) setBone();
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
 		var _b = getInputData(0);
-		if(_b == noone) return;
-		
-		var _bone_pose = _b.clone();
-		_bone_pose.connect();
-		_bone_pose.resetPose();
-		
-		var _bst = ds_stack_create();
-		ds_stack_push(_bst, _bone_pose);
-		
-		while(!ds_stack_empty(_bst)) {
-			var bone = ds_stack_pop(_bst);
-			var _id  = bone.ID;
-			
-			if(struct_exists(boneMap, _id)) {
-				var _inp  = boneMap[$ _id];
-				_inp.updateName(bone.name);
-				
-				var _trn  = _inp.getValue();
-				
-				bone.pose_posit = [ _trn[TRANSFORM.pos_x], _trn[TRANSFORM.pos_y] ];
-				bone.pose_angle = _trn[TRANSFORM.rot];
-				bone.pose_scale = _trn[TRANSFORM.sca_x];
-			}
-			
-			for( var i = 0, n = array_length(bone.childs); i < n; i++ )
-				ds_stack_push(_bst, bone.childs[i]);
+		if(_b == noone) {
+			boneHash = "";
+			return;
 		}
 		
-		ds_stack_destroy(_bst);
+		var _h = _b.getHash();
+		if(boneHash != _h) {
+			boneHash = _h;
+			setBone();
+		}
 		
-		_bone_pose.setPose();
+		bonePose.resetPose()
+			    .setPosition();
 		
-		outputs[0].setValue(_bone_pose);
+		var _bArr = _b.toArray();
+		var  bArr = bonePose.toArray();
+		
+		for( var i = 0, n = array_length(bArr); i < n; i++ ) {
+			var _bone = _bArr[i];
+			var  bone =  bArr[i];
+			var _id   = bone.ID;
+			
+			if(!struct_exists(boneMap, _id)) continue;
+			
+			var _inp  = boneMap[$ _id];
+			_inp.updateName(bone.name);
+			
+			var _trn  = _inp.getValue();
+			
+			bone.angle       = _bone.angle;
+			bone.length      = _bone.length;
+			bone.direction   = _bone.direction;
+			bone.distance    = _bone.distance;
+			
+			bone.pose_posit  = [ _trn[TRANSFORM.pos_x], _trn[TRANSFORM.pos_y] ];
+			bone.pose_rotate =   _trn[TRANSFORM.rot];
+			bone.pose_scale  =   _trn[TRANSFORM.sca_x];
+		}
+		
+		bonePose.setPose();
+		
+		outputs[0].setValue(bonePose);
 	}
 	
 	static getPreviewBoundingBox = function() {

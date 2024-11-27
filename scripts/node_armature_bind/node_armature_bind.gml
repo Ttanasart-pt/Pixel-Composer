@@ -556,7 +556,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				
 				_tran[TRANSFORM.rot] = sa;
 			} else if(drag_type == NODE_COMPOSE_DRAG.scale) {
-				var _rot = _aang * (_pang? _bone.angle : _bone.pose_local_angle) + _tran[TRANSFORM.rot];
+				var _rot = _aang * (_pang? _bone.angle : _bone.pose_local_rotate) + _tran[TRANSFORM.rot];
 				var _sw = surface_get_width_safe(_surf);
 				var _sh = surface_get_height_safe(_surf);
 				
@@ -621,7 +621,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			var _asca = current_data[index + 4];
 			var _psca = current_data[index + 5];
 			
-			var _rot  = _aang * (_pang? _bone.angle : _bone.pose_local_angle) + _tran[TRANSFORM.rot];
+			var _rot  = _aang * (_pang? _bone.angle : _bone.pose_local_rotate) + _tran[TRANSFORM.rot];
 			var _anc  = _bone.getPoint(0.5);
 			var _mov  = point_rotate(_tran[TRANSFORM.pos_x], _tran[TRANSFORM.pos_y], 0, 0, _bone.angle);
 			var _sca  = [ _tran[TRANSFORM.sca_x], _tran[TRANSFORM.sca_y] ];
@@ -811,7 +811,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				var _ax = _p.sx - _bm.bone_head_pose.x;
 				var _ay = _p.sy - _bm.bone_head_pose.y;
 				
-				point_rotate_origin(_ax, _ay, _b.pose_angle - _bm.pose_angle, _ar);
+				point_rotate_origin(_ax, _ay, _b.pose_rotate - _bm.pose_rotate, _ar);
 				var _nx = _b.bone_head_pose.x + _ar[0] * _b.pose_scale / _bm.pose_scale;
 				var _ny = _b.bone_head_pose.y + _ar[1] * _b.pose_scale / _bm.pose_scale;
 				
@@ -905,7 +905,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			var _asca = use_data? _bind[i].applySca  : _data[_i + 4];
 			var _psca = use_data? _bind[i].applyScal : _data[_i + 5];
 			
-			var _rot  = _aang * (_pang? _b.angle : _b.pose_local_angle) + _tran[TRANSFORM.rot];
+			var _rot  = _aang * (_pang? _b.angle : _b.pose_local_rotate) + _tran[TRANSFORM.rot];
 			var _anc  = _b.getPoint(0.5);
 			var _mov  = point_rotate(_tran[TRANSFORM.pos_x], _tran[TRANSFORM.pos_y], 0, 0, _b.angle);
 			var _sca  = [ _tran[TRANSFORM.sca_x], _tran[TRANSFORM.sca_y] ];

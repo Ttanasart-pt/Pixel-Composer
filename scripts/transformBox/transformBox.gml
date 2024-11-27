@@ -48,7 +48,9 @@ function transformBox(_onModify) : widget() constructor {
 	
 	static drawParam = function(params) {
 		setParam(params);
-		rot.setParam(params);
+        rot.setParam(params);
+		rot.tb_value.setParam(params);
+		
 		for(var i = 0; i < 5; i++) tb[i].setParam(params);
 		
 		return draw(params.x, params.y, params.w, params.h, params.data, params.m); 

@@ -16,17 +16,23 @@ void main() {
 		a = smoothstep(.0, .1, dist);
 		c = mix(c, vec4(0., 0., 0., 1.), a);      
 		
-		a = smoothstep(.15, .2, dist);
+		a = smoothstep(.15, .3, dist);
 		c = mix(c, vec4(1., 1., 1., 1.), a);
 		
-		a = smoothstep(.3, .4, dist);
+		a = smoothstep(.4, .5, dist);
 		c = mix(c, color, a);
 		
 	} else if(type == 1) { 
 		a = smoothstep(.3, .4, dist);
 		c = mix(c, color, a);
-	}
-	
+		
+	} else if(type == 2) { 
+		a = smoothstep(.0, .15, dist);
+		c = mix(c, color, a);      
+		
+		a = smoothstep(.25, .35, dist);
+		c = mix(c, vec4(1., 1., 1., 1.), a);
+	} 
 	
 	gl_FragColor = c;
 }
