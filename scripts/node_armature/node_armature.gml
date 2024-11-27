@@ -157,12 +157,11 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	#endregion
 	
 	tools = [
-		new NodeTool( "Transform",           THEME.bone_tool_move   ),
-		new NodeTool( "Add bones",           THEME.bone_tool_add    ),
-		new NodeTool( "Remove bones",        THEME.bone_tool_remove ),
-		new NodeTool( "Detach bones",        THEME.bone_tool_detach ),
-		new NodeTool( "IK",                  THEME.bone_tool_IK     ),
-		new NodeTool( "Mirror bones",        THEME.bone_tool_mirror ),
+		new NodeTool( "Transform",          		    THEME.bone_tool_move   ),
+		new NodeTool( [ "Add bones", "Mirror bones"], [ THEME.bone_tool_add, THEME.bone_tool_mirror ]),
+		new NodeTool( "Remove bones",                   THEME.bone_tool_remove ),
+		new NodeTool( "Detach bones",                   THEME.bone_tool_detach ),
+		new NodeTool( "IK",                             THEME.bone_tool_IK     ),
 	];
 	
 	anchor_selecting = noone;

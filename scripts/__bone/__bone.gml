@@ -153,7 +153,7 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 			
 		} else if(_hover != noone && _hover[0].ID == self.ID && _hover[1] == 2) {
 			draw_set_color(c_white);
-			draw_set_alpha(1 * _alpha);
+			draw_set_alpha(0.75 * _alpha);
 			
 		} else {
 			draw_set_color(COLORS._main_accent);

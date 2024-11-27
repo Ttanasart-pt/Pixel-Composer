@@ -157,8 +157,15 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			
 			gpu_set_texfilter(false);
 			
-			if(posing_input.setValue(val))
-				UNDO_HOLDING = true;
+			if(posing_input.value_from == noone) {
+				if(posing_input.setValue(val)) UNDO_HOLDING = true;
+				
+			} else if(is(posing_input.value_from.node, Node_Vector4)) {
+				var _nod = posing_input.value_from.node;
+				
+				for( var i = 0; i < 4; i++ ) 
+					if(_nod.inputs[i].setValue(val[i])) UNDO_HOLDING = true;
+			}
 			
 			if(mouse_release(mb_left)) {
 				posing_bone = noone;

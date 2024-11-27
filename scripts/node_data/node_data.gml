@@ -681,7 +681,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var _ou = preview_channel >= 0 && preview_channel < array_length(outputs) && outputs[preview_channel].type == VALUE_TYPE.surface;
 		var _prev_surf = previewable && preview_draw && (_ps || _ou);
 		
-		junction_draw_hei_y = SHOW_PARAM? 32 :  16;
+		junction_draw_hei_y = SHOW_PARAM? 32  : 16;
 		junction_draw_pad_y = SHOW_PARAM? 128 : 24;
 		
 		var _hi, _ho;
