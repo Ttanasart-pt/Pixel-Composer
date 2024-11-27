@@ -138,7 +138,7 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _bones = inputs[0].getValue();
-		var _mesh = inputs[1].getValue();
+		var _mesh  = inputs[1].getValue();
 		
 		if(_mesh != noone) {
 			__weights = anchor_selecting == noone? noone : struct_try_get(rigdata, anchor_selecting[0].ID, noone);
@@ -378,11 +378,10 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
         
         var _map  = {};
         
-        bone_posed   = _bones.clone();
 		current_bone = _bones;
-		
-		bone_posed.connect();
-		bone_posed.resetPose();
+        bone_posed   = _bones.clone()
+							 .connect()
+							 .resetPose();
 		
 		var _barr = bone_posed.toArray();
 		for( var i = 0, n = array_length(_barr); i < n; i++ ) {
@@ -391,10 +390,10 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			_map[$ _b.ID] = _b;
 			if(!struct_has(attributes.bonePoseData, _b.ID)) continue;
 			
-			var _trn  = attributes.bonePoseData[$ _b.ID];
-			_b.pose_posit = [ _trn[TRANSFORM.pos_x], _trn[TRANSFORM.pos_y] ];
+			var _trn       = attributes.bonePoseData[$ _b.ID];
+			_b.pose_posit  = [ _trn[TRANSFORM.pos_x], _trn[TRANSFORM.pos_y] ];
 			_b.pose_rotate =   _trn[TRANSFORM.rot];
-			_b.pose_scale =   _trn[TRANSFORM.sca_x];
+			_b.pose_scale  =   _trn[TRANSFORM.sca_x];
 		}
 		
 		bone_posed.setPose(false);

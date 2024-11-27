@@ -396,11 +396,6 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			array_remove(input_display_list, idx + i);
 		}
 		
-		for( var i = input_display_list_len; i < array_length(input_display_list); i++ ) {
-			if(input_display_list[i] > idx)
-				input_display_list[i] = input_display_list[i] - data_length;
-		}
-		
 		doUpdate();
 	}
 	
@@ -485,14 +480,24 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	}
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { 
+		var dim   = getInputData(0);
+		
 		if(isUsingTool("Pose")) { 
+			var _x0 = _x;
+			var _y0 = _y;
+			var _x1 = _x + dim[0] * _s;
+			var _y1 = _y + dim[1] * _s;
+			
+			draw_set_color_alpha(COLORS.panel_bg_clear, .5);
+				draw_rectangle(_x0, _y0, _x1 - 1, _y1 - 1, false);
+			draw_set_alpha(1);
+			
 			var _arm = inputs[1].value_from;
 			if(_arm == noone) return;
 			
 			return _arm.node.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 		}
 		
-		var dim   = getInputData(0);
 		var _bind = getInputData(2);
 		
 		var _dpos = getInputData(3);
@@ -537,7 +542,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				var _dx = smx - dragging_mx;
 				var _dy = smy - dragging_my;
 				
-				var _p  = point_rotate(_dx, _dy, 0, 0, -_bone.angle);
+				var _p  = point_rotate(_dx, _dy, 0, 0, -_bone.pose_angle);
 				
 				var pos_x = dragging_sx + _p[0];
 				var pos_y = dragging_sy + _p[1];
@@ -556,7 +561,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				
 				_tran[TRANSFORM.rot] = sa;
 			} else if(drag_type == NODE_COMPOSE_DRAG.scale) {
-				var _rot = _aang * (_pang? _bone.angle : _bone.pose_local_rotate) + _tran[TRANSFORM.rot];
+				var _rot = _aang * (_pang? _bone.pose_angle : _bone.pose_apply_rotate) + _tran[TRANSFORM.rot];
 				var _sw = surface_get_width_safe(_surf);
 				var _sh = surface_get_height_safe(_surf);
 				
@@ -570,8 +575,8 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				}
 				
 				if(_asca) {
-					sca_x /= _psca? _bone.pose_scale : _bone.pose_local_scale;
-					sca_y /= _psca? _bone.pose_scale : _bone.pose_local_scale;
+					sca_x /= _psca? _bone.pose_scale : _bone.pose_apply_scale;
+					sca_y /= _psca? _bone.pose_scale : _bone.pose_apply_scale;
 				}
 				
 				_tran[TRANSFORM.sca_x] = sca_x;
@@ -621,13 +626,13 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			var _asca = current_data[index + 4];
 			var _psca = current_data[index + 5];
 			
-			var _rot  = _aang * (_pang? _bone.angle : _bone.pose_local_rotate) + _tran[TRANSFORM.rot];
+			var _rot  = _aang * (_pang? _bone.pose_angle : _bone.pose_apply_rotate) + _tran[TRANSFORM.rot];
 			var _anc  = _bone.getPoint(0.5);
-			var _mov  = point_rotate(_tran[TRANSFORM.pos_x], _tran[TRANSFORM.pos_y], 0, 0, _bone.angle);
+			var _mov  = point_rotate(_tran[TRANSFORM.pos_x], _tran[TRANSFORM.pos_y], 0, 0, _bone.pose_angle);
 			var _sca  = [ _tran[TRANSFORM.sca_x], _tran[TRANSFORM.sca_y] ];
 			if(_asca) {
-				_sca[0] *= _psca? _bone.pose_scale : _bone.pose_local_scale;
-				_sca[1] *= _psca? _bone.pose_scale : _bone.pose_local_scale;
+				_sca[0] *= _psca? _bone.pose_scale : _bone.pose_apply_scale;
+				_sca[1] *= _psca? _bone.pose_scale : _bone.pose_apply_scale;
 			}
 			
 			var _ww = surface_get_width_safe(_surf);
@@ -770,7 +775,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		}
 	}
 	
-	static step = function() {
+	static processData_prebatch = function() {
 		var _dim_type = getSingleValue(1);
 		inputs[2].setVisible(_dim_type == COMPOSE_OUTPUT_SCALING.constant);
 		
@@ -805,21 +810,18 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				var _weight  = array_safe_get_fast(_rmapp, i, 0);
 				if(_weight == 0) continue;
 				
-				var _bm = _rbon[$ _rBoneID];
-				var _b  = boneMap[$ _rBoneID];
+				var _bf = _rbon[$ _rBoneID];
+				var _bt = boneMap[$ _rBoneID];
 				
-				var _ax = _p.sx - _bm.bone_head_pose.x;
-				var _ay = _p.sy - _bm.bone_head_pose.y;
+				var _ax = _p.sx - _bf.bone_head_pose.x;
+				var _ay = _p.sy - _bf.bone_head_pose.y;
 				
-				point_rotate_origin(_ax, _ay, _b.pose_rotate - _bm.pose_rotate, _ar);
-				var _nx = _b.bone_head_pose.x + _ar[0] * _b.pose_scale / _bm.pose_scale;
-				var _ny = _b.bone_head_pose.y + _ar[1] * _b.pose_scale / _bm.pose_scale;
+				point_rotate_origin(_ax, _ay, _bt.pose_angle - _bf.pose_angle, _ar);
+				var _nx = _bt.bone_head_pose.x + _ar[0] * _bt.pose_apply_scale / _bf.pose_apply_scale;
+				var _ny = _bt.bone_head_pose.y + _ar[1] * _bt.pose_apply_scale / _bf.pose_apply_scale;
 				
-				var _dx = _nx - _p.sx;
-				var _dy = _ny - _p.sy;
-				
-				_px += _dx * _weight;
-				_py += _dy * _weight;
+				_px += (_nx - _p.sx) * _weight;
+				_py += (_ny - _p.sy) * _weight;
 			}
 			
 			_p.x = _px;
@@ -900,18 +902,18 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			_b = boneMap[$ _b];
 			
 			var _tran = use_data? _bind[i].transform : _data[_i + 1];
-			var _aang = use_data? _bind[i].applyRot  : _data[_i + 2];
-			var _pang = use_data? _bind[i].applyRotl : _data[_i + 3];
-			var _asca = use_data? _bind[i].applySca  : _data[_i + 4];
-			var _psca = use_data? _bind[i].applyScal : _data[_i + 5];
+			var _aang = use_data? _bind[i].applyRot  : _data[_i + 2]; // inherit rotation
+			var _pang = use_data? _bind[i].applyRotl : _data[_i + 3]; // apply bone rotation
+			var _asca = use_data? _bind[i].applySca  : _data[_i + 4]; // inherit scale
+			var _psca = use_data? _bind[i].applyScal : _data[_i + 5]; // apply bone scale
 			
-			var _rot  = _aang * (_pang? _b.angle : _b.pose_local_rotate) + _tran[TRANSFORM.rot];
+			var _rot  = _aang * (_pang? _b.pose_angle : _b.pose_apply_rotate) + _tran[TRANSFORM.rot];
 			var _anc  = _b.getPoint(0.5);
-			var _mov  = point_rotate(_tran[TRANSFORM.pos_x], _tran[TRANSFORM.pos_y], 0, 0, _b.angle);
+			var _mov  = point_rotate(_tran[TRANSFORM.pos_x], _tran[TRANSFORM.pos_y], 0, 0, _b.pose_angle);
 			var _sca  = [ _tran[TRANSFORM.sca_x], _tran[TRANSFORM.sca_y] ];
 			if(_asca) {
-				_sca[0] *= _psca? _b.pose_scale : _b.pose_local_scale;
-				_sca[1] *= _psca? _b.pose_scale : _b.pose_local_scale;
+				_sca[0] *= _psca? _b.pose_scale : _b.pose_apply_scale;
+				_sca[1] *= _psca? _b.pose_scale : _b.pose_apply_scale;
 			}
 			
 			var _ww = surface_get_width_safe(_s);
@@ -962,7 +964,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		var _cy  = surface_get_height_safe(_surf) / 2;
 		
 		var _anc = _b.getPoint(0.5);
-		var _rot = _arot? -_b.angle : 0;
+		var _rot = _arot? -_b.pose_angle : 0;
 		
 		var _tr  = [ _cx - _anc.x, _cy - _anc.y, _rot, 1, 1 ];
 		inputs[surfIndex + 1].setValue(_tr);
