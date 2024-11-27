@@ -5,9 +5,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	newInput(0, nodeValue_Armature("Armature", self, noone))
 		.setVisible(true, true);
 	
-	input_display_list = [ 0,
-		["Bones", false]
-	]
+	input_display_list = [ 0 ]
 	
 	newOutput(0, nodeValue_Output("Armature", self, VALUE_TYPE.armature, noone));
 	

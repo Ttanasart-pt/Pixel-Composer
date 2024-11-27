@@ -303,6 +303,7 @@ function Theme() constructor {
     bone_tool_pose                  = s_bone_tool_pose;
     bone_tool_remove                = s_bone_tool_remove;
     bone_tool_scale                 = s_bone_tool_scale;
+    bone_tool_mirror                = s_bone_tool_mirror;
     canvas_draw_layer               = s_canvas_draw_layer;
     canvas_iso_angle                = s_canvas_iso_angle;
     canvas_fill_type                = s_canvas_fill_type;

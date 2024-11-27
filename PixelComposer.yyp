@@ -2478,6 +2478,7 @@
     {"id":{"name":"s_bone_tool_add","path":"sprites/s_bone_tool_add/s_bone_tool_add.yy",},},
     {"id":{"name":"s_bone_tool_detach","path":"sprites/s_bone_tool_detach/s_bone_tool_detach.yy",},},
     {"id":{"name":"s_bone_tool_IK","path":"sprites/s_bone_tool_IK/s_bone_tool_IK.yy",},},
+    {"id":{"name":"s_bone_tool_mirror","path":"sprites/s_bone_tool_mirror/s_bone_tool_mirror.yy",},},
     {"id":{"name":"s_bone_tool_move","path":"sprites/s_bone_tool_move/s_bone_tool_move.yy",},},
     {"id":{"name":"s_bone_tool_pose","path":"sprites/s_bone_tool_pose/s_bone_tool_pose.yy",},},
     {"id":{"name":"s_bone_tool_remove","path":"sprites/s_bone_tool_remove/s_bone_tool_remove.yy",},},

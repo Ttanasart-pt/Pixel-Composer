@@ -1781,6 +1781,7 @@
     {"name":"s_bone_tool_add","order":4,"path":"sprites/s_bone_tool_add/s_bone_tool_add.yy",},
     {"name":"s_bone_tool_detach","order":5,"path":"sprites/s_bone_tool_detach/s_bone_tool_detach.yy",},
     {"name":"s_bone_tool_IK","order":6,"path":"sprites/s_bone_tool_IK/s_bone_tool_IK.yy",},
+    {"name":"s_bone_tool_mirror","order":70,"path":"sprites/s_bone_tool_mirror/s_bone_tool_mirror.yy",},
     {"name":"s_bone_tool_move","order":7,"path":"sprites/s_bone_tool_move/s_bone_tool_move.yy",},
     {"name":"s_bone_tool_pose","order":69,"path":"sprites/s_bone_tool_pose/s_bone_tool_pose.yy",},
     {"name":"s_bone_tool_remove","order":8,"path":"sprites/s_bone_tool_remove/s_bone_tool_remove.yy",},

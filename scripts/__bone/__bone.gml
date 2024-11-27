@@ -632,7 +632,7 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 		for( var i = 0, n = array_length(childs); i < n; i++ )
 			childHash += childs[i].getHash() + ",";
 		
-		var h = $"[{ID}] : {parent_anchor}, [{IKlength}, {IKTargetID}], [{apply_scale}, {apply_rotation}], [{childHash}]";
+		var h = $"{name} [{ID}] : {parent_anchor}, [{IKlength}, {IKTargetID}], [{apply_scale}, {apply_rotation}], [{childHash}]";
 	    return sha1_string_unicode(h);
 	}
 	

@@ -157,11 +157,12 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	#endregion
 	
 	tools = [
-		new NodeTool( "Transform",           THEME.bone_tool_move ),
+		new NodeTool( "Transform",           THEME.bone_tool_move   ),
 		new NodeTool( "Add bones",           THEME.bone_tool_add    ),
 		new NodeTool( "Remove bones",        THEME.bone_tool_remove ),
 		new NodeTool( "Detach bones",        THEME.bone_tool_detach ),
 		new NodeTool( "IK",                  THEME.bone_tool_IK     ),
+		new NodeTool( "Mirror bones",        THEME.bone_tool_mirror ),
 	];
 	
 	anchor_selecting = noone;
@@ -185,6 +186,8 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	
 	bone_transform_bbox = -1;
 	bone_transform_type = -1;
+	
+	mirroring_bone = noone;
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _panel) { 
 		var mx = (_mx - _x) / _s;
@@ -611,10 +614,58 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			if(ik_dragging == noone)
 				anchor_selecting = _b.draw(attributes, active * 0b100, _x, _y, _s, _mx, _my, anchor_selecting);
 			
-			if(anchor_selecting != noone && anchor_selecting[1] == 2 && mouse_press(mb_left, active)) {
+			if(anchor_selecting != noone && anchor_selecting[1] == 2 && mouse_press(mb_left, active))
 				ik_dragging = anchor_selecting[0];
+			
+		} else if(isUsingTool("Mirror bones")) {
+			if(builder_bone == noone)
+				anchor_selecting = _b.draw(attributes, active * 0b111, _x, _y, _s, _mx, _my, anchor_selecting);
+			
+			if(mirroring_bone != noone) {
+				var _maxis = anchor_selecting == noone || anchor_selecting[0] == mirroring_bone? mirroring_bone.parent.angle : anchor_selecting[0].angle;
+				var _ori   = mirroring_bone.getHead();
+				
+				var _ox = _x + _ori.x * _s;
+				var _oy = _y + _ori.y * _s;
+				
+				var _x0 = _ox + lengthdir_x(64, _maxis);
+				var _y0 = _oy + lengthdir_y(64, _maxis);
+				var _x1 = _ox - lengthdir_x(64, _maxis);
+				var _y1 = _oy - lengthdir_y(64, _maxis);
+				
+				BLEND_ADD
+				draw_set_color(COLORS._main_accent);
+				draw_line_dashed(_x0, _y0, _x1, _y1, 3);
+				BLEND_NORMAL
+				
+				if(mouse_release(mb_left)) {
+					var _mirrored = mirroring_bone.clone();
+					var _mirArr   = _mirrored.toArray();
+					
+					for( var i = 0, n = array_length(_mirArr); i < n; i++ ) {
+						var _bm = _mirArr[i];
+					    _bm.ID  = UUID_generate();
+						
+							 if(string_pos(" L", _bm.name)) _bm.name = string_replace(_bm.name, " L", " R");
+						else if(string_pos(" R", _bm.name)) _bm.name = string_replace(_bm.name, " R", " L");
+						
+						_bm.angle = _maxis + angle_difference(_maxis, _bm.angle);
+					}
+					
+					mirroring_bone.parent.addChild(_mirrored);
+					mirroring_bone = noone;
+					
+					triggerRender();
+				}
+				
+			} else if(anchor_selecting != noone) {
+				var _bne = anchor_selecting[0];
+				var _typ = anchor_selecting[1];
+				
+				if(_bne.parent && mouse_press(mb_left, active))
+					mirroring_bone = _bne;
 			}
-		
+			
 		} else {  // move tools
 			if(builder_bone == noone) {
 				anchor_selecting = _b.draw(attributes, active * 0b111, _x, _y, _s, _mx, _my, anchor_selecting);
