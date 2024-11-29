@@ -10,7 +10,8 @@ function RiggedMeshedSurface() : dynaSurf() constructor {
 
 function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Armature Mesh Rig";
-	setDimension(96, 72);
+	setDimension(96, 96);
+	draw_padding = 8;
 	
 	newInput(0, nodeValue_Armature("Armature", self, noone))
 		.setVisible(true, true);
@@ -30,6 +31,7 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	bone_posed       = noone;
 	rigdata          = noone;
 	anchor_selecting = noone;
+	bone_bbox        = undefined;
 	
 	attributes.bonePoseData = {};
 	attributes.rigBones     = noone;
@@ -287,7 +289,7 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
         for( var i = 0, n = array_length(_boneArr); i < n; i++ ) {
         	var _b = _boneArr[i];
         	var _l = attributes.rigBones == noone || array_exists(attributes.rigBones, _b.ID);
-			_b.__drawBoneUI(attributes, false, _x, _y, _s, _mx, _my, anchor_selecting, noone, c_white, 0.25 + _l * 0.75);
+			_b.drawBone(attributes, false, _x, _y, _s, _mx, _my, anchor_selecting, noone, c_white, 0.25 + _l * 0.75);
         }
 	}
 	
@@ -397,6 +399,7 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		}
 		
 		bone_posed.setPose(false);
+		bone_bbox = bone_posed.bbox();
 		
         if(rigdata == noone) AutoWeightPaint(false);
         
@@ -418,6 +421,19 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
     
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
-		draw_sprite_fit(s_node_armature_mesh_rig, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
+		
+		if(bone_posed != noone) {
+			var _ss = _s * .5;
+			gpu_set_tex_filter(1);
+			draw_sprite_ext(s_node_armature_mesh_rig, 0, bbox.x0 + 24 * _ss, bbox.y1 - 24 * _ss, _ss, _ss, 0, c_white, 0.5);
+			gpu_set_tex_filter(0);
+			
+			bone_posed.drawThumbnail(_s, bbox, bone_bbox);
+			
+		} else {
+			gpu_set_tex_filter(1);
+			draw_sprite_fit(s_node_armature_mesh_rig, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
+			gpu_set_tex_filter(0);
+		}
 	}
 }

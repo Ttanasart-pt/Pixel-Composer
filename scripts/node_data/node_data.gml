@@ -1411,12 +1411,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var y1 = yy + h * _s;
 		
 		if(pad_label)  y0 += name_height * _s;
-		if(SHOW_PARAM) y1  = yy + con_h * _s;
+		if(SHOW_PARAM) y1  = yy + con_h  * _s;
 		
-		x0 += max(draw_padding, draw_pad_w); 
-		x1 -= max(draw_padding, draw_pad_w);
-		y0 += max(draw_padding, draw_pad_h); 
-		y1 -= max(draw_padding, draw_pad_h);
+		x0 += max(draw_padding, draw_pad_w) * _s; 
+		x1 -= max(draw_padding, draw_pad_w) * _s;
+		y0 += max(draw_padding, draw_pad_h) * _s; 
+		y1 -= max(draw_padding, draw_pad_h) * _s;
 		
 		var _w = x1 - x0;
 		var _h = y1 - y0;

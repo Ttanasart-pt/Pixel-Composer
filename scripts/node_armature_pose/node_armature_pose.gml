@@ -1,6 +1,7 @@
 function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Armature Pose";
-	setDimension(96, 72);
+	setDimension(96, 96);
+	draw_padding = 8;
 	
 	newInput(0, nodeValue_Armature("Armature", self, noone))
 		.setVisible(true, true);
@@ -9,9 +10,11 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	newOutput(0, nodeValue_Output("Armature", self, VALUE_TYPE.armature, noone));
 	
-	boneHash = "";
-	bonePose = noone;
-	boneMap  = {};
+	boneHash  = "";
+	bonePose  = noone;
+	bone_bbox = undefined;
+	boneArray = [];
+	boneMap   = {};
 	
 	attributes.display_name = true;
 	attributes.display_bone = 0;
@@ -42,16 +45,12 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		if(_b == noone) return;
 		
 		bonePose    = _b.clone().connect();
-		var _bArr   = _b.toArray();
+		boneArray   = bonePose.toArray();
 		var _inputs = [ inputs[0] ];
+		var _input_display_list = array_clone(input_display_list_raw, 1);
 		
-		var _input_display_list = [
-			input_display_list[0],
-			input_display_list[1]
-		];
-		
-		for( var i = 0, n = array_length(_bArr); i < n; i++ ) {
-			var bone = _bArr[i];
+		for( var i = 0, n = array_length(boneArray); i < n; i++ ) {
+			var bone = boneArray[i];
 			var _idx = array_length(_inputs);
 			var _inp;
 			
@@ -85,11 +84,42 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _b = inputs[0].getValue();
 		
-		if(_b == noone) return;
-		if(bonePose == noone) return;
+		if(_b == noone || bonePose == noone) return;
 		
-		anchor_selecting = bonePose.draw(attributes, active * 0b111, _x, _y, _s, _mx, _my, anchor_selecting, posing_bone);
+		var _hov  = noone, hh, cc, aa;
+		var _bhov = anchor_selecting;
+		
+		for( var i = 0, n = array_length(boneArray); i < n; i++ ) {
+			var  _bne = boneArray[i];
+			var  _sel = false;
+			
+			cc = c_white;
+			
+			if(struct_has(boneMap, _bne.ID)) {
+				var _inp = boneMap[$ _bne.ID];
+				_sel = _inp.value_from == noone || is(_inp.value_from.node, Node_Vector4);
+				
+				if(_bhov == noone && PANEL_INSPECTOR.prop_hover == _inp)
+					_bhov = [ _bne, 2 ];
+			}
+			
+			hh = _bne.drawBone(attributes, _sel * active * 0b111, _x, _y, _s, _mx, _my, _bhov, posing_bone, cc, .5 + .5 * _sel);
+			
+			if(hh != noone && (_hov == noone || _bne.IKlength)) _hov = hh;
+		}
+		
+		anchor_selecting = _hov;
+		bonePose.setControl(_x, _y, _s);
 		bonePose.drawControl(attributes);
+		
+		if(anchor_selecting != noone) {
+			var _bne = anchor_selecting[0];
+			
+			if(struct_has(boneMap, _bne.ID)) {
+				var _inp = boneMap[$ _bne.ID];
+				_inp.editWidget.temp_hovering = true;
+			}
+		}
 		
 		var mx = (_mx - _x) / _s;
 		var my = (_my - _y) / _s;
@@ -301,6 +331,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		}
 		
 		bonePose.setPose();
+		bone_bbox = bonePose.bbox();
 		
 		outputs[0].setValue(bonePose);
 	}
@@ -355,7 +386,19 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
-		draw_sprite_fit(s_node_armature_pose, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
+		if(bonePose != noone) {
+			var _ss = _s * .5;
+			gpu_set_tex_filter(1);
+			draw_sprite_ext(s_node_armature_pose, 0, bbox.x0 + 24 * _ss, bbox.y1 - 24 * _ss, _ss, _ss, 0, c_white, 0.5);
+			gpu_set_tex_filter(0);
+			
+			bonePose.drawThumbnail(_s, bbox, bone_bbox);
+			
+		} else {
+			gpu_set_tex_filter(1);
+			draw_sprite_fit(s_node_armature_pose, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
+			gpu_set_tex_filter(0);
+		}
 	}
 }
 

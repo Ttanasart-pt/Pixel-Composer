@@ -985,6 +985,11 @@ function Panel_Inspector() : PanelContent() constructor {
                 color_picker_index++;
             }
             
+            if(jun.editWidget.temp_hovering) {
+            	draw_sprite_stretched_ext(THEME.prop_selecting, 0, ui(4), _selY, contentPane.surface_w - ui(8), _selH, COLORS._main_accent, 1);
+            	jun.editWidget.temp_hovering = false;
+            }
+            
             if(_hover && point_in_rectangle(_m[0], _m[1], ui(4), _selY, contentPane.surface_w - ui(4), _selY + _selH)) { // mouse in widget
                 _HOVERING_ELEMENT = jun;
                 

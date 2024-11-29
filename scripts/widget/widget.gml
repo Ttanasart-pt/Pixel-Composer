@@ -2,8 +2,12 @@ function widget() constructor {
 	active   = false;
 	hover    = false;
 	hovering = false;
+	
 	iactive  = false;
 	ihover   = false;
+	
+	temp_hovering = false;
+	
 	parent   = noone;
 	keyframe = noone;
 	interactable = true;

@@ -1,6 +1,7 @@
 function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Armature Create";
-	setDimension(96, 72);
+	setDimension(96, 96);
+	draw_padding = 8;
 	
 	bone_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { 
 		var _b  = bones;
@@ -183,6 +184,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	bone_point_maps = [];
 	bone_point_mape = [];
 	
+	bone_bbox = undefined;
 	bone_transform_bbox = -1;
 	bone_transform_type = -1;
 	
@@ -752,6 +754,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	static update = function(frame = CURRENT_FRAME) { 
 		bones.resetPose()
 		     .setPosition();
+		bone_bbox = bones.bbox();
 		
 		outputs[0].setValue(bones);
 	} 
@@ -804,7 +807,13 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { 
 		var bbox = drawGetBbox(xx, yy, _s);
-		draw_sprite_fit(s_node_armature_create, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
+		
+		var _ss = _s * .5;
+		gpu_set_tex_filter(1);
+		draw_sprite_ext(s_node_armature_create, 0, bbox.x0 + 24 * _ss, bbox.y1 - 24 * _ss, _ss, _ss, 0, c_white, 0.5);
+		gpu_set_tex_filter(0);
+		
+		bones.drawThumbnail(_s, bbox, bone_bbox);
 	} 
 }
 

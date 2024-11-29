@@ -39,6 +39,8 @@
 		previewNode    = "";
 		inspectingNode = "";
 		
+		is_nightly     = false;
+		
 		previewGrid = {
 			show	: false,
 			snap	: false,
@@ -225,7 +227,8 @@
 	
 		static serialize = function() {
 			var _map = {};
-			_map.version = SAVE_VERSION;
+			_map.version    = SAVE_VERSION;
+			_map.is_nightly = NIGHTLY;
 			
 			var _anim_map = {};
 			_anim_map.frames_total = animator.frames_total;
@@ -293,6 +296,7 @@
 			
 			if(struct_has(_map, "graph_display_parameter"))	struct_override(graph_display_parameter,  _map.graph_display_parameter);
 			
+			is_nightly	= struct_try_get(_map, "is_nightly",  is_nightly);
 			load_layout	= struct_try_get(_map, "load_layout", load_layout);
 			
 			setPalette();

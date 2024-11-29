@@ -3376,7 +3376,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                     _jun.visible_manual = -1;
             }
             
-            _node.setHeight();
+            _node.refreshNodeDisplay();
         }
     }
     

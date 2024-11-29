@@ -115,31 +115,24 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 	}
 	
 	static draw = function(attributes, edit = false, _x = 0, _y = 0, _s = 1, _mx = 0, _my = 0, _hover = noone, _select = noone, _blend = c_white, _alpha = 1) {
-		return _drawBone(attributes, edit, _x, _y, _s, _mx, _my, _hover, _select, _blend, _alpha);
-	}
-	
-	static _drawBone = function(attributes, edit = false, _x = 0, _y = 0, _s = 1, _mx = 0, _my = 0, _hover = noone, _select = noone, _blend = c_white, _alpha = 1) {
-		var hover = noone;
+		setControl(_x, _y, _s);
 		
-		control_x0 = _x + bone_head_pose.x * _s;
-		control_y0 = _y + bone_head_pose.y * _s;
-		control_x1 = _x + bone_tail_pose.x * _s;
-		control_y1 = _y + bone_tail_pose.y * _s;
+		var hover = noone, h;
 		
 		if(parent != noone) {
-			var h = __drawBoneUI(attributes, edit, _x, _y, _s, _mx, _my, _hover, _select, _blend, _alpha);
+			h = drawBone(attributes, edit, _x, _y, _s, _mx, _my, _hover, _select, _blend, _alpha);
 			if(h != noone) hover = h;
 		}
 		
 		for( var i = 0, n = array_length(childs); i < n; i++ ) {
-			var h = childs[i]._drawBone(attributes, edit, _x, _y, _s, _mx, _my, _hover, _select, _blend, _alpha);
-			if(hover == noone && h != noone) hover = h;
+			h = childs[i].draw(attributes, edit, _x, _y, _s, _mx, _my, _hover, _select, _blend, _alpha);
+			if(h != noone && (hover == noone || IKlength)) hover = h;
 		}
 		
 		return hover;
 	}
 	
-	static __drawBoneUI = function(attributes, edit = false, _x = 0, _y = 0, _s = 1, _mx = 0, _my = 0, _hover = noone, _select = noone, _blend = c_white, _alpha = 1) {
+	static drawBone = function(attributes, edit = false, _x = 0, _y = 0, _s = 1, _mx = 0, _my = 0, _hover = noone, _select = noone, _blend = c_white, _alpha = 1) {
 		var hover = noone;
 		
 		var p0x = _x + bone_head_pose.x * _s;
@@ -274,6 +267,54 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 		return hover;
 	}
 	
+	static drawThumbnail = function(_s, _bbox, _bone_bbox = undefined) {
+		_bone_bbox ??= bbox();
+		
+		if(!is_main && is_array(_bone_bbox)) {
+			var boxs = min(_bbox.w / _bone_bbox[4], _bbox.h / _bone_bbox[5]);
+			
+			_bbox.w = boxs * _bone_bbox[4];
+			_bbox.h = boxs * _bone_bbox[5];
+			
+			_bbox.x0 = _bbox.xc - _bbox.w / 2;
+			_bbox.x1 = _bbox.xc + _bbox.w / 2;
+			
+			_bbox.y0 = _bbox.yc - _bbox.h / 2;
+			_bbox.y1 = _bbox.yc + _bbox.h / 2;
+			
+			var p0x = _bbox.x0 + _bbox.w * (bone_head_pose.x - _bone_bbox[0]) / _bone_bbox[4];
+			var p0y = _bbox.y0 + _bbox.h * (bone_head_pose.y - _bone_bbox[1]) / _bone_bbox[5];
+			var p1x = _bbox.x0 + _bbox.w * (bone_tail_pose.x - _bone_bbox[0]) / _bone_bbox[4];
+			var p1y = _bbox.y0 + _bbox.h * (bone_tail_pose.y - _bone_bbox[1]) / _bone_bbox[5];
+			
+			draw_set_circle_precision(8);
+			
+			draw_set_color(COLORS._main_accent);
+			draw_line_width(p0x, p0y, p1x, p1y, 1.5 * _s);
+			
+			draw_set_color(COLORS._main_icon_dark);
+			draw_circle(p0x, p0y, 4 * _s, false);
+			draw_circle(p1x, p1y, 4 * _s, false);
+			
+			draw_set_color(COLORS._main_accent);
+			draw_circle(p0x, p0y, 2 * _s, false);
+			draw_circle(p1x, p1y, 2 * _s, false);
+		}
+		
+		for( var i = 0, n = array_length(childs); i < n; i++ ) 
+			childs[i].drawThumbnail(_s, _bbox, _bone_bbox);
+	}
+	
+	static setControl = function(_x = 0, _y = 0, _s = 1) {
+		control_x0 = _x + bone_head_pose.x * _s;
+		control_y0 = _y + bone_head_pose.y * _s;
+		control_x1 = _x + bone_tail_pose.x * _s;
+		control_y1 = _y + bone_tail_pose.y * _s;
+		
+		for( var i = 0, n = array_length(childs); i < n; i++ ) 
+			childs[i].setControl(_x, _y, _s);
+	}
+		
 	static drawControl = function(attributes) {
 		if(parent != noone && IKlength == 0) {
 			if(!parent_anchor) 
@@ -502,7 +543,7 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 		var x1 = max(p0.x, p1.x);
 		var y1 = max(p0.y, p1.y);
 		
-		return [ x0, y0, x1, y1 ];
+		return [ x0, y0, x1, y1, 0, 0 ];
 	}
 	
 	static bbox = function() {
@@ -518,6 +559,11 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 				_bbox[3] = max(_bbox[3], _bbox_ch[3]);
 				
 			} else _bbox = _bbox_ch;
+		}
+		
+		if(is_array(_bbox)) {
+			_bbox[4] = _bbox[2] - _bbox[0];
+			_bbox[5] = _bbox[3] - _bbox[1];
 		}
 		
 		return _bbox;
