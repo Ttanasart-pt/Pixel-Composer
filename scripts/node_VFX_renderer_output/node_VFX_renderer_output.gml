@@ -47,7 +47,7 @@ function Node_VFX_Renderer_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 	setDynamicInput(2, true, VALUE_TYPE.particle);
 	dyna_input_check_shift = 1;
 	
-	static createOutput = function() { #region
+	static createOutput = function() {
 		if(group == noone) return;
 		if(!is_struct(group)) return;
 			
@@ -62,9 +62,9 @@ function Node_VFX_Renderer_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 		array_push(group.outputs, outParent);
 		group.refreshNodeDisplay();
 		group.sortIO();
-	} if(!LOADING && !APPENDING) createOutput(); #endregion
+	} if(!LOADING && !APPENDING) createOutput();
 	
-	static step = function() { #region
+	static step = function() {
 		if(outParent == undefined) return;
 		
 		var _dim = getInputData(0);
@@ -78,9 +78,9 @@ function Node_VFX_Renderer_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 		
 		if(previewing && is_instanceof(group, Node_VFX_Group)) 
 			group.preview_node = self;
-	} #endregion
+	}
 	
-	static update = function(_time = CURRENT_FRAME) { #region
+	static update = function(_time = CURRENT_FRAME) {
 		if(!is_instanceof(outParent, NodeValue)) return noone;
 		if(!IS_PLAYING) {
 			recoverCache();
@@ -131,9 +131,9 @@ function Node_VFX_Renderer_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 		surface_reset_shader();
 		
 		cacheCurrentFrame(_outSurf);
-	} #endregion
+	}
 		
-	static recoverCache = function(frame = CURRENT_FRAME) { #region
+	static recoverCache = function(frame = CURRENT_FRAME) {
 		if(!is_instanceof(outParent, NodeValue)) return false;
 		if(!cacheExist(frame)) return false;
 		
@@ -141,17 +141,17 @@ function Node_VFX_Renderer_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 		outParent.setValue(_s);
 			
 		return true;
-	} #endregion
+	}
 	
-	static getGraphPreviewSurface = function() { #region
+	static getGraphPreviewSurface = function() {
 		if(!is_instanceof(outParent, NodeValue)) return noone;
 		return outParent.getValue();
-	} #endregion
+	}
 	
-	static getPreviewValues = function() { #region
+	static getPreviewValues = function() {
 		if(!is_instanceof(outParent, NodeValue)) return noone;
 		return outParent.getValue();
-	} #endregion
+	}
 		
 	getPreviewingNode = VFX_PREVIEW_NODE;
 }

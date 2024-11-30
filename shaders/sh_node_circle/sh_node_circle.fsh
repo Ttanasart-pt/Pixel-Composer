@@ -23,7 +23,7 @@ void main() {
 		a = smoothstep(aa, 0., dist);
 	}
 	
-	vec4  c = mix(vec4(0.), color, a);
+	vec4  c = vec4(color.rgb, color.a * a);
 	
 	gl_FragColor = c;
 }

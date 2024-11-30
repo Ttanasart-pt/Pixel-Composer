@@ -144,7 +144,9 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 	}
 }
 
-function buttonInstant(spr, _x, _y, _w, _h, _m, _act, _hvr, _tip = "", _icon = noone, _icon_index = 0, _icon_blend = COLORS._main_icon, _icon_alpha = 1, _icon_scale = 1) {
+function buttonInstant(spr, _x, _y, _w, _h, _m, _act, _hvr, _tip = "", _icon = noone, _icon_index = 0, _icon_blend = COLORS._main_icon, _icon_alpha = 1, _icon_scale = 1, 
+	_button_blend = c_white) {
+		
 	var res = 0;
 	var cc  = is_array(_icon_blend)? _icon_blend[0] : _icon_blend;
 	
@@ -153,7 +155,7 @@ function buttonInstant(spr, _x, _y, _w, _h, _m, _act, _hvr, _tip = "", _icon = n
 			cc = _icon_blend[1];
 			
 		res = 1;
-		if(spr) draw_sprite_stretched(spr, 1, _x, _y, _w, _h);	
+		if(spr) draw_sprite_stretched_ext(spr, 1, _x, _y, _w, _h, _button_blend);
 		if(_tip != "") TOOLTIP = _tip;
 			
 		if(mouse_press(mb_left, _act))		res = 2;
@@ -163,11 +165,11 @@ function buttonInstant(spr, _x, _y, _w, _h, _m, _act, _hvr, _tip = "", _icon = n
 		if(mouse_release(mb_right, _act))	res = -3;
 			
 		if(spr && mouse_click(mb_left, _act)) {
-			draw_sprite_stretched(spr, 2, _x, _y, _w, _h);	
+			draw_sprite_stretched_ext(spr, 2, _x, _y, _w, _h, _button_blend);	
 			draw_sprite_stretched_ext(spr, 3, _x, _y, _w, _h, COLORS._main_accent, 1);	
 		}
 	} else if(spr)
-		draw_sprite_stretched(spr, 0, _x, _y, _w, _h);		
+		draw_sprite_stretched_ext(spr, 0, _x, _y, _w, _h, _button_blend);
 	
 	if(_icon) draw_sprite_ui_uniform(_icon, _icon_index, _x + _w / 2, _y + _h / 2, _icon_scale, cc, _icon_alpha == 1 || res == 0? _icon_alpha : _icon_alpha + 0.4);
 	

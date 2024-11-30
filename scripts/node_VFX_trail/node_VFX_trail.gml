@@ -19,7 +19,13 @@ function Node_VFX_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	newOutput(0, nodeValue_Output("Path", self, VALUE_TYPE.pathnode, self));
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	input_display_list = [
+		0, 
+		new Inspector_Label("To render trail properly, make sure to enable \"Output all particles\" in the spawner settings."),
+		1, 2, 
+	];
+	
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		draw_set_color(COLORS._main_accent);
 		
 		for( var i = 0, n = array_length(lines); i < n; i++ ) {
@@ -33,14 +39,14 @@ function Node_VFX_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 						  _x + p1[0] * _s, _y + p1[1] * _s);
 			}
 		}
-	} #endregion
+	}
 	
-	static getLineCount		= function()      { return array_length(lines); }
-	static getSegmentCount	= function()      { return array_length(lines); }
-	static getLength		= function(index) { return array_safe_get_fast(length, index); }
+	static getLineCount		= function()      { return array_length(lines);                       }
+	static getSegmentCount	= function()      { return array_length(lines);                       }
+	static getLength		= function(index) { return array_safe_get_fast(length, index);        }
 	static getAccuLength	= function(index) { return array_safe_get_fast(lengthAcc, index, []); }
 	
-	static getPointRatio = function(_rat, _ind = 0, out = undefined) { #region
+	static getPointRatio = function(_rat, _ind = 0, out = undefined) {
 		if(out == undefined) out = new __vec2(); else { out.x = 0; out.y = 0; }
 		
 		var _p0, _p1;
@@ -61,13 +67,13 @@ function Node_VFX_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		out.y = lerp(_p0[1], _p1[1], _fr);
 		
 		return out;
-	} #endregion
+	}
 	
 	static getPointDistance = function(_dist, ind = 0, out = undefined) { return getPointRatio(_dist / length[ind], ind, out); }
 	
 	static getPathData = function() { return lineData; } 
 	
-	static getBoundary = function() { #region
+	static getBoundary = function() {
 		var boundary = new BoundingBox();
 		
 		for( var i = 0, n = array_length(lines); i < n; i++ ) {
@@ -77,21 +83,22 @@ function Node_VFX_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		}
 		
 		return boundary; 
-	} #endregion
+	}
 	
-	static update = function() { #region
+	static update = function() {
 		var _vfxs = getInputData(0);
+		
 		if(array_empty(_vfxs) || !is_array(_vfxs)) return;
 		
 		var _life = getInputData(1); _life = max(_life, 1);
 		var _colr = getInputData(2);
 		
 		var _totlLen = array_length(_vfxs);
-		lines      = array_verify(lines,      _totlLen);
-		length     = array_verify(length,     _totlLen);
-		lengthAcc  = array_verify(lengthAcc,  _totlLen);
-		lineLength = array_verify(lineLength, _totlLen);
-		lineData   = array_verify(lineData,   _totlLen);
+		lines        = array_verify(lines,      _totlLen);
+		length       = array_verify(length,     _totlLen);
+		lengthAcc    = array_verify(lengthAcc,  _totlLen);
+		lineLength   = array_verify(lineLength, _totlLen);
+		lineData     = array_verify(lineData,   _totlLen);
 		
 		var _len = 0;
 		
@@ -147,10 +154,10 @@ function Node_VFX_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		array_resize(lineData,   _len);
 		
 		outputs[0].setValue(self);
-	} #endregion
+	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
 		draw_sprite_fit(s_node_vfx_trail, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
-	} #endregion
+	}
 }

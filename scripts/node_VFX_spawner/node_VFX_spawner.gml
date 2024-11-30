@@ -7,8 +7,8 @@ function Node_VFX_Spawner(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y
 	manual_ungroupable	 = false;
 	
 	attributes.Output_pool = false;
-	array_push(attributeEditors, ["Output all particles", function() { return attributes.Output_pool; },
-		new checkBox(function() { attributes.Output_pool = !attributes.Output_pool; }) ]);
+	array_push(attributeEditors, ["Output all particles", function() /*=>*/ {return attributes.Output_pool},
+		new checkBox(function() /*=>*/ { attributes.Output_pool = !attributes.Output_pool; }) ]);
 	
 	inputs[21].setVisible(false, false);
 	
@@ -19,7 +19,7 @@ function Node_VFX_Spawner(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y
 	
 	newOutput(0, nodeValue_Output("Particles",	self, VALUE_TYPE.particle, [] ));
 	newOutput(1, nodeValue_Output("On create",	self, VALUE_TYPE.node, noone ));
-	newOutput(2, nodeValue_Output("On step",		self, VALUE_TYPE.node, noone ));
+	newOutput(2, nodeValue_Output("On step",	self, VALUE_TYPE.node, noone ));
 	newOutput(3, nodeValue_Output("On destroy",	self, VALUE_TYPE.node, noone ));
 	
 	array_insert(input_display_list, 0, ["Trigger", true], input_len + 0, input_len + 1);
@@ -32,12 +32,14 @@ function Node_VFX_Spawner(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y
 		if(attributes.Output_pool) {
 			outputs[0].setValue(parts);
 			return;
+			
 		} else {
 			var _parts = [];
 			for( var i = 0, n = array_length(parts); i < n; i++ ) {
 				if(!parts[i].active) continue;
 				array_push(_parts, parts[i]);
 			}
+			
 			outputs[0].setValue(_parts);
 		}
 	}
@@ -86,6 +88,14 @@ function Node_VFX_Spawner(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y
 	}
 	
 	static getGraphPreviewSurface = function() { return getInputData(0); }
-		
-	getPreviewingNode = VFX_PREVIEW_NODE;
+	
+	static getPreviewingNode = function() {
+		if(!is(inline_context, Node_VFX_Group_Inline)) return self;
+		return inline_context.getPreviewingNode();
+	}
+	
+	static getPreviewValues = function() {
+		if(!is(inline_context, Node_VFX_Group_Inline)) return self;
+		return inline_context.getPreviewValues();
+	}
 }

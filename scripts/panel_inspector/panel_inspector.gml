@@ -985,7 +985,7 @@ function Panel_Inspector() : PanelContent() constructor {
                 color_picker_index++;
             }
             
-            if(jun.editWidget.temp_hovering) {
+            if(jun.editWidget && jun.editWidget.temp_hovering) {
             	draw_sprite_stretched_ext(THEME.prop_selecting, 0, ui(4), _selY, contentPane.surface_w - ui(8), _selH, COLORS._main_accent, 1);
             	jun.editWidget.temp_hovering = false;
             }

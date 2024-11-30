@@ -15,7 +15,7 @@ function Node_VFX_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 	
 	prev_nodes = [];
 	
-	if(NODE_NEW_MANUAL) { #region
+	if(NODE_NEW_MANUAL) {
 		var input  = nodeBuild("Node_VFX_Spawner",  x,       y);
 		var output = nodeBuild("Node_VFX_Renderer", x + 256, y);
 		
@@ -23,21 +23,21 @@ function Node_VFX_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 		
 		addNode(input);
 		addNode(output);
-	} #endregion
+	}
 	
 	static clearTopoSorted = function() { INLINE topoSorted = false; prev_nodes = []; }
 	
-	static getPreviousNodes = function() { #region
+	static getPreviousNodes = function() {
 		onGetPreviousNodes(prev_nodes);
 		return prev_nodes;
-	} #endregion
+	}
 	
 	static onRemoveNode = function(node) { node.in_VFX = noone; }
 	static onAddNode    = function(node) { node.in_VFX = self;  }
 	
 	static getNextNodes = function() { return __nodeLeafList(nodes); }
 	
-	static reset = function() { #region
+	static reset = function() {
 		for( var i = 0, n = array_length(nodes); i < n; i++ ) {
 			var node = nodes[i];
 			if(!struct_has(node, "reset")) continue;
@@ -66,13 +66,25 @@ function Node_VFX_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 			if(!struct_has(node, "resetSeed")) continue;
 			node.resetSeed();
 		}
-	} #endregion
+	}
 	
-	static update = function() { #region
-		if(IS_FIRST_FRAME) {
-			topoList = NodeListSort(nodes);
-			reset();
-		}
-	} #endregion
+	static update = function() {
+		if(!IS_FIRST_FRAME) return;
+		
+		topoList = NodeListSort(nodes);
+		reset();
+	}
+	
+	static getPreviewingNode = function() {
+		for( var i = 0, n = array_length(nodes); i < n; i++ )
+			if(is(nodes[i], Node_VFX_Renderer)) return nodes[i];
+		return self;
+	}
+	
+	static getPreviewValues = function() {
+		for( var i = 0, n = array_length(nodes); i < n; i++ )
+			if(is(nodes[i], Node_VFX_Renderer)) return nodes[i].getPreviewValues();
+		return noone;
+	}
 	
 }

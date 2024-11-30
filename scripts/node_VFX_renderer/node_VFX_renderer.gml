@@ -17,10 +17,14 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(3, nodeValue_Int("Line life", self, 4 ))
 		.rejectArray();
 		
+	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
+	
 	input_display_list = [ 
 		["Output",    false], 0, 
 		["Rendering", false], 1, 2, 3, 
 	];
+	
+	temp_surface = [ 0 ];
 	
 	attribute_surface_depth();
 	attribute_interpolation();
@@ -41,29 +45,29 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	setDynamicInput(2, true, VALUE_TYPE.particle);
 	dyna_input_check_shift = 1;
-		
-	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
 	
 	setTrigger(2, "Clear cache", [ THEME.cache, 0, COLORS._main_icon ]);
 	
 	static onInspector2Update = function() { clearCache(); }
 	
-	static step = function() { #region
+	static step = function() {
 		var _typ = getInputData(2);
 		
 		inputs[3].setVisible(_typ == PARTICLE_RENDER_TYPE.line);
 		
 		if(previewing && is_instanceof(group, Node_VFX_Group)) 
 			group.preview_node = self;
-	} #endregion
+	}
 	
-	static update = function(_time = CURRENT_FRAME) { #region
+	static update = function(_time = CURRENT_FRAME) {
+		var _dim   = inputs[0].getValue(_time);
+		temp_surface[0] = surface_verify(temp_surface[0], _dim[0], _dim[1]);
+		
 		if(!IS_PLAYING) {
 			recoverCache();
 			return;
 		}
 		
-		var _dim   = inputs[0].getValue(_time);
 		var _exact = inputs[1].getValue(_time);
 		var _type  = inputs[2].getValue(_time);
 		var _llife = inputs[3].getValue(_time);
@@ -110,7 +114,5 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		surface_reset_shader();
 		
 		cacheCurrentFrame(_outSurf);
-	} #endregion
-		
-	getPreviewingNode = VFX_PREVIEW_NODE;
+	}
 }

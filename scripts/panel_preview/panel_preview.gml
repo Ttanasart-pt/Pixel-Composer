@@ -554,8 +554,8 @@ function Panel_Preview() : PanelContent() constructor {
         return _node;
     }
     
-    function getNodePreviewSurface()    { return preview_surfaces[splitView? splitSelection : 0]; }
-    function getNodePreviewSequence()    { return preview_sequence[splitView? splitSelection : 0]; }
+    function getNodePreviewSurface()  { return preview_surfaces[splitView? splitSelection : 0]; }
+    function getNodePreviewSequence() { return preview_sequence[splitView? splitSelection : 0]; }
     
     function getPreviewData() {
         preview_surfaces = [ noone, noone ];

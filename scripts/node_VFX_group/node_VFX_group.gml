@@ -1,7 +1,5 @@
-function VFX_PREVIEW_NODE() {
-	if(!is_instanceof(group, Node_VFX_Group)) return self; 
-	return group.getPreviewingNode();
-}
+function VFX_PREVIEW_NODE()    { return is(group, Node_VFX_Group)? group.getPreviewingNode() : self; }
+function VFX_PREVIEW_SURFACE() { return is(group, Node_VFX_Group)? group.getPreviewValues()  : self; }
 
 function Node_VFX_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _group) constructor {
 	name  = "VFX";
@@ -20,26 +18,26 @@ function Node_VFX_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _group
 	
 	custom_input_index = array_length(inputs);
 	
-	if(NODE_NEW_MANUAL) { #region
+	if(NODE_NEW_MANUAL) {
 		var input  = nodeBuild("Node_VFX_Spawner", -256, -32, self);
 		var output = nodeBuild("Node_VFX_Renderer_Output", 256 + 32 * 5, -32, self);
 		
 		output.inputs[output.input_fix_len + 1].setFrom(input.outputs[0]);
 		preview_node = output;
-	} #endregion
+	}
 	
 	static getNextNodes = function() { return allCached? getNextNodesExternal() : getNextNodesInternal(); } 
 	
 	setTrigger(2, "Clear cache", [ THEME.cache, 0, COLORS._main_icon ]);
 	
-	static onInspector2Update = function() { #region
+	static onInspector2Update = function() {
 		for( var i = 0, n = array_length(nodes); i < n; i++ ) {
 			var node = nodes[i];
 			node.clearCache(); 
 		}
-	} #endregion
+	}
 	
-	static reset = function() { #region
+	static reset = function() {
 		for( var i = 0, n = array_length(nodes); i < n; i++ ) {
 			var node = nodes[i];
 			if(!struct_has(node, "reset")) continue;
@@ -69,9 +67,9 @@ function Node_VFX_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _group
 			if(!struct_has(node, "resetSeed")) continue;
 			node.resetSeed();
 		}
-	} #endregion
+	}
 	
-	static update = function() { #region
+	static update = function() {
 		if(IS_FIRST_FRAME) 
 			topoList = NodeListSort(nodes);
 		
@@ -89,22 +87,22 @@ function Node_VFX_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _group
 				nodes[i].setRenderStatus(true);
 			setRenderStatus(true);
 		}
-	} #endregion
+	}
 	
-	static ononDoubleClick = function(panel) { #region
+	static ononDoubleClick = function(panel) {
 		preview_node = noone;
 		
 		for( var i = 0, n = array_length(nodes); i < n; i++ ) {
 			var node = nodes[i];
-			if(is_instanceof(node, Node_VFX_Renderer_Output) || 
-			   is_instanceof(node, Node_VFX_Renderer)) {
-				   preview_node = node;
-				   break;
-			   }
+			if(is(node, Node_VFX_Renderer_Output) || is(node, Node_VFX_Renderer)) {
+			   preview_node = node;
+			   break;
+		   }
 		}
 		
 		PANEL_PREVIEW.setNodePreview(self);
-	} #endregion
+	}
 	
 	getPreviewingNode = function() { return preview_node; }
+	getPreviewValues  = function() { return preview_node.getPreviewValues(); }
 }

@@ -251,12 +251,12 @@ function draw_arc_forward(_x, _y, _r, _th, _angSt, _angEd) {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function draw_circle_ui(_x, _y, _r, _o, _c = c_white, _a = 1) {
+function draw_circle_ui(_x, _y, _r, _th, _c = c_white, _a = 1) {
 	shader_set(sh_node_circle);
 		shader_set_color("color", _c, _a);
-		shader_set_f("thickness", _o);
+		shader_set_f("thickness", _th);
 		shader_set_f("antialias", 1 / _r);
-		shader_set_i("fill", _o == 0);
+		shader_set_i("fill", _th == 0);
 		
 		draw_sprite_stretched(s_fx_pixel, 0, _x - _r, _y - _r, _r * 2, _r * 2);
 	shader_reset();
