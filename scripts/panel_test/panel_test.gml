@@ -1,7 +1,8 @@
 function Panel_Test() : PanelContent() constructor {
 	w = ui(480);
 	h = ui(160);
-	title = "Tester";
+	title    = "Tester";
+	auto_pin = true;
 	
 	test_dir = "D:/Project/MakhamDev/LTS-PixelComposer/TEST";
 	tb_test_dir = new textBox(TEXTBOX_INPUT.text,   function(txt) { test_dir = txt; });

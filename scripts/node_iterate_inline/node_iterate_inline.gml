@@ -21,7 +21,7 @@ function Node_Iterate_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 	iterated        = 0;
 	
 	static getIterationCount = function() { return getInputData(0); }
-	static bypassConnection  = function() { return iterated > 0 && !is_undefined(value_buffer); }
+	static bypassConnection  = function() { return iterated > 1 && !is_undefined(value_buffer); }
 	static bypassNextNode    = function() { return iterated < getIterationCount(); }
 	
 	static getNextNodes = function() {
@@ -29,12 +29,12 @@ function Node_Iterate_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 		LOG_IF(global.FLAG.render == 1, "[outputNextNode] Get next node from inline iterate");
 		
 		resetRender();
-		LOG_IF(global.FLAG.render == 1, $"Loop restart: iteration {iterated}");
 		var _nodes = __nodeLeafList(nodes);
 		array_push_unique(_nodes, junc_in.node);
 		iterated++;
 		
 		LOG_BLOCK_END();
+		logNodeDebug($"Loop restart: iteration {iterated}");
 		
 		return _nodes;
 	}
@@ -51,8 +51,11 @@ function Node_Iterate_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 		var node_in  = PROJECT.nodeMap[? attributes.junc_in[0]];
 		var node_out = PROJECT.nodeMap[? attributes.junc_out[0]];
 		
-		junc_in  = node_in?  node_in.inputs[attributes.junc_in[1]]   : noone;
-		junc_out = node_out? node_out.outputs[attributes.junc_out[1]] : noone;
+		junc_in  = noone;
+		junc_out = noone;
+		
+		if(node_in)  junc_in  = array_safe_get(node_in.inputs,   attributes.junc_in[1]);
+		if(node_out) junc_out = array_safe_get(node_out.outputs, attributes.junc_out[1]);
 		
 		if(junc_in)  { junc_in.value_from_loop = self;				addNode(junc_in.node);  }
 		if(junc_out) { array_push(junc_out.value_to_loop, self);	addNode(junc_out.node); }
@@ -87,12 +90,34 @@ function Node_Iterate_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 		value_buffer    = undefined;
 	}
 	
-	static drawConnections = function(params = {}) {
+	static drawJunctions = function(_draw, _x, _y, _mx, _my, _s) {
+		var hover = noone;
+		
+		gpu_set_tex_filter(true);
+		var jun = inputs[0];
+	    jun.rx  = junction_x;
+	    jun.ry  = junction_y;
+	    jun.x   = _x + junction_x * _s;
+	    jun.y   = _y + junction_y * _s;
+		
+		if(jun.isVisible() && jun.drawJunction(_draw, _s, _mx, _my)) 
+			hover = jun;
+		gpu_set_tex_filter(false);
+		
+		return hover;
+	}
+	
+	static drawConnections = function(params = {}, _draw = true) {
+		var hovering = noone;
+		
 		params.dashed = true; params.loop   = true;
-		drawJuncConnection(junc_out, junc_in, params);
+		if(junc_out && junc_in) drawJuncConnection(junc_out, junc_in, params);
 		params.dashed = false; params.loop   = false;
 		
-		return noone;
+		var jun  = inputs[0];
+		var _hov = jun.drawConnections(params, _draw); if(_hov) hovering = _hov;
+		
+		return hovering;
 	}
 	
 	static postDeserialize = function() {

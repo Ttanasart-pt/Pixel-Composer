@@ -47,7 +47,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		else if(is_struct(renaming) && is_instanceof(renaming, Node))
 			renaming.setDisplayName(_name) 
 			
-		renaming = noone;
+		renaming       = noone;
 		renaming_index = noone;
 	});
 	tb_rename.font = f_p1;
@@ -479,6 +479,13 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	overlay_h = 0;
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		// var amo     = getInputAmount();
+		// for( var i = 0; i < amo; i++ ) {
+		// 	var index = input_fix_len + i * data_length;
+		// 	var _surf = inputs[index].getValue();
+		// 	draw_surface_ext_safe(_surf, 8 + 128 * i, 64, .5, .5, 0, c_white, 1);
+		// }
+		
 		PROCESSOR_OVERLAY_CHECK
 		
 		var pad = current_data[0];
@@ -833,6 +840,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var _alp = _data[_ind + 5];
 			
 			if(!is_surface(_s)) continue;
+			// print($" < {CURRENT_FRAME}: in {_s}")
 			
 			var _ww = surface_get_width_safe(_s);
 			var _hh = surface_get_height_safe(_s);
@@ -858,6 +866,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		surface_set_shader(_outSurf);
 			draw_surface_safe(temp_surface[!_bg]);
 		surface_reset_shader();
+		
+		// print($" > {CURRENT_FRAME}: out {_outSurf}\n")
 		
 		_outData[0] = _outSurf;
 		_outData[1] = _atlas;

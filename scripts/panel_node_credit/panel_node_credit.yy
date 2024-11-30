@@ -6,7 +6,7 @@
   "name":"panel_node_credit",
   "parent":{
     "name":"what?",
-    "path":"folders/panels/what?.yy",
+    "path":"folders/panels/_others/what?.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

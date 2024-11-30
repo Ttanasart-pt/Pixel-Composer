@@ -1656,31 +1656,38 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         if(node_dragging && !key_mod_press(ALT)) {
             addKeyOverlay("Dragging node(s)", [[ "Ctrl", "Disable snapping" ]]);
             
-            var nx = node_drag_sx + (mouse_graph_x - node_drag_mx);
-            var ny = node_drag_sy + (mouse_graph_y - node_drag_my);
-                
-            if(!key_mod_press(CTRL) && project.graphGrid.snap) {
-                nx = round(nx / project.graphGrid.size) * project.graphGrid.size;
-                ny = round(ny / project.graphGrid.size) * project.graphGrid.size;
+            var _mgx = mouse_graph_x;
+            var _mgy = mouse_graph_y;
+            var _grd = project.graphGrid.size;
+            
+            if(array_length(nodes_selecting) == 1) {
+            	var _node = nodes_selecting[0];
+            	if(_node.custom_grid) _grd = _node.custom_grid;
+            }
+            
+            var nx = node_drag_sx + (_mgx - node_drag_mx);
+            var ny = node_drag_sy + (_mgy - node_drag_my);
+            
+            var sn = !key_mod_press(CTRL) && project.graphGrid.snap;
+            
+            if(sn) {
+                nx = round(nx / _grd) * _grd;
+                ny = round(ny / _grd) * _grd;
             }
             
             if(node_drag_ox == -1 || node_drag_oy == -1) {
                 node_drag_ox = nx;
                 node_drag_oy = ny;
+                
             } else if(nx != node_drag_ox || ny != node_drag_oy) {
                 var dx = nx - node_drag_ox;
                 var dy = ny - node_drag_oy;
-                    
+                
                 for(var i = 0; i < array_length(nodes_selecting); i++) {
                     var _node = nodes_selecting[i];
-                    var _nx = _node.x + dx;
-                    var _ny = _node.y + dy;
-                        
-                    if(!key_mod_press(CTRL) && project.graphGrid.snap) {
-                        _nx = round(_nx / project.graphGrid.size) * project.graphGrid.size;
-                        _ny = round(_ny / project.graphGrid.size) * project.graphGrid.size;
-                    }
-                        
+                    var _nx   = _node.x + dx;
+                    var _ny   = _node.y + dy;
+                    
                     _node.move(_nx, _ny, graph_s);
                 }
                     
@@ -1803,6 +1810,11 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
     
     function connectDraggingValueTo(target) {
         var _connect = [ 0, noone, noone ];
+        if(array_length(value_draggings) == 1) {
+        	value_dragging  = value_draggings[0];
+        	value_draggings = [];
+        	
+        }
         
         if(is_instanceof(PANEL_INSPECTOR, Panel_Inspector) && PANEL_INSPECTOR.attribute_hovering != noone) {
             PANEL_INSPECTOR.attribute_hovering(value_dragging);
@@ -1830,12 +1842,12 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                 if(value_dragging.connect_type == CONNECT_TYPE.input) {
                     if(array_empty(value_draggings))
                         _connect = [ value_dragging.setFrom(target), value_dragging, target ];
-                        
+                    
                     else {
                         for( var i = 0, n = array_length(value_draggings); i < n; i++ )
                             value_draggings[i].setFrom(target);
                     }
-                    
+                   
                 } else if(_addInput && !array_empty(value_draggings)) {
                     for( var i = 0, n = array_length(value_draggings); i < n; i++ )
                         target.node.addInput(value_draggings[i]);
@@ -1846,7 +1858,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                     
                     if(array_empty(value_draggings))
                         _connect = [ target.setFrom(value_dragging), target, value_dragging ];
-                        
+                    
                     else {
                         var _node = target.node;
                         var _indx = target.index;
@@ -1856,7 +1868,6 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                             if(++_indx > array_length(_node.inputs)) break;
                         }
                     }
-                    
                 }
             }
             

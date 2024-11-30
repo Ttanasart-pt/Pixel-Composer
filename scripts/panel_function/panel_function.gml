@@ -56,6 +56,8 @@
 			case "Panel_Graph"      : var p = (create || findPanel(name))? new Panel_Graph()	 : PANEL_GRAPH;		if(focus) { PANEL_GRAPH		 = p; } return p;
 			case "Panel_Collection"	: var p = (create || findPanel(name))? new Panel_Collection(): PANEL_COLLECTION;if(focus) { PANEL_COLLECTION = p; } return p;
 			
+			case "Panel_Preview_Histogram"	: return new Panel_Preview_Histogram();
+			
 			case "Panel_Workspace"		: return new Panel_Workspace();
 			case "Panel_Tunnels"		: return new Panel_Tunnels();
 			case "Panel_History"		: return new Panel_History();
@@ -71,7 +73,7 @@
 			case "Panel_Gradient"		: return new Panel_Gradient();
 			case "Panel_Console"		: return new Panel_Console();
 			
-			case "Panel_Preview_Histogram"	: return new Panel_Preview_Histogram();
+			case "Panel_Profile_Render"	: return new Panel_Profile_Render();
 		}
 		
 		return noone;

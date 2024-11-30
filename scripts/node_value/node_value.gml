@@ -1260,9 +1260,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static getValueRecursive = function(arr = __curr_get_val, _time = CURRENT_FRAME) {
 		
-		if(value_from_loop && value_from_loop.bypassConnection() && value_from_loop.junc_out)
+		if(value_from_loop && value_from_loop.bypassConnection() && value_from_loop.junc_out) {
 			value_from_loop.getValue(arr);
-			
+			arr[@ 0] = surface_array_clone(arr[0]);
+		}
+		
 		else if(value_from && value_from != self)
 			value_from.getValueRecursive(arr, _time);
 		
@@ -1456,7 +1458,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				break;
 		}
 		
-		node.onValidate();
+		if(NOT_LOAD) node.onValidate();
 		
 		if(_val == value_validation) return self;
 		
@@ -2250,7 +2252,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static connect = function(log = false) {
 		if(con_node == -1 || con_index == -1) return true;
-		// print($"{node} | {con_node} : {con_index}");
+		// print($"{node.name} > {con_node} : {con_index}");
 		
 		var _node = con_node;
 		if(APPENDING) {

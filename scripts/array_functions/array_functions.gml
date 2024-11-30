@@ -33,7 +33,7 @@ function array_safe_length(arr) {
 function array_fill(arr, startIndex, endIndex, value = 0) {
 	INLINE
 	
-	for( var i = startIndex; i < endIndex; i++ ) 
+	for( var i = max(0, startIndex); i < endIndex; i++ ) 
 		arr[i] = value;
 }
 

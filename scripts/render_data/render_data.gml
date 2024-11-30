@@ -247,12 +247,16 @@ function Render(partial = false, runAction = false) {
 					
 					LOG_IF(global.FLAG.render == 1, $"→→ Push {nextNode.internalName} to queue.");
 					RENDER_QUEUE.enqueue(nextNode);
+					
+					if(PROFILER_STAT) array_push(rendering.render_report_latest.nextn, nextNode);
 				}
 				
 				if(runAction && rendering.hasInspector1Update())
 					rendering.inspector1Update();
 			} else if(rendering.force_requeue)
 				RENDER_QUEUE.enqueue(rendering);
+			
+			if(PROFILER_STAT) rendering.summarizeReport();
 			
 			LOG_BLOCK_END();
 		}

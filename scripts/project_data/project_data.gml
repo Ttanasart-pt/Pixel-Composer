@@ -14,11 +14,12 @@
 	function Project() constructor {
 		active	= true;
 		
-		meta      = __getdefaultMetaData();	
-		path	  = "";
-		thumbnail = "";													
-		version   = SAVE_VERSION;
-		seed      = irandom_range(100000, 999999);
+		meta       = __getdefaultMetaData();	
+		path	   = "";
+		thumbnail  = "";													
+		version    = SAVE_VERSION;
+		is_nightly = NIGHTLY;
+		seed       = irandom_range(100000, 999999);
 		
 		modified  = false;
 		readonly  = false;
@@ -38,8 +39,6 @@
 		load_layout    = false;
 		previewNode    = "";
 		inspectingNode = "";
-		
-		is_nightly     = false;
 		
 		previewGrid = {
 			show	: false,

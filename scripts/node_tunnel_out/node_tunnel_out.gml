@@ -3,6 +3,7 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	color = COLORS.node_blend_tunnel;
 	is_group_io  = true;
 	preview_draw = false;
+	custom_grid  = 8;
 	
 	setDimension(32, 32);
 	

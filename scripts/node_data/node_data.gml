@@ -100,6 +100,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		con_h   = 128;
 		h_param = h;
 		name_height = ui(16);
+		custom_grid = 0;
 		
 		preserve_height_for_preview = false;
 		
@@ -319,13 +320,33 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	#endregion
 	
 	#region ---- log ----
-		messages = [ ];
+		messages     = [];
 		messages_bub = false;
+		messages_dbg = [];
 		
-		static logNode = function(text) { 
+		render_report_latest = noone;
+		
+		static logNode = function(text, noti = 0) { 
 			var _time = $"{string_lead_zero(current_hour, 2)}:{string_lead_zero(current_minute, 2)}.{string_lead_zero(current_second, 2)}";
 			messages_bub = true;
 			array_push(messages, [ _time, text ]); 
+			
+			switch(noti) {
+				case 1 : noti_status(text,,  self); break;
+				case 2 : noti_warning(text,, self); break;
+			}
+		}
+		
+		static logNodeDebug = function(text, level = 1) { 
+			LOG_IF(global.FLAG.render >= level, text);
+			if(PROFILER_STAT == 0) return;
+			
+			_report = {};
+			_report.type  = "message";
+			_report.node  = self;
+			_report.text  = text;
+			_report.level = level;
+			array_push(PROFILER_DATA, _report); 
 		}
 	#endregion
 	
@@ -799,7 +820,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static onValidate = function() {
-		
 		value_validation[VALIDATION.pass]	 = 0;
 		value_validation[VALIDATION.warning] = 0;
 		value_validation[VALIDATION.error]   = 0;
@@ -808,6 +828,43 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			var jun = inputs[i];
 			if(jun.value_validation)
 				value_validation[jun.value_validation]++;
+		}
+	}
+	
+	static onIOValidate = function() {
+		var _inline_input = noone;
+		for( var i = 0, n = array_length(inputs); i < n; i++ ) {
+			var _j = inputs[i];
+			if(_j.value_from == noone) continue;
+			
+			var _n = _j.value_from.node;
+			if(_n.inline_context == noone) continue;
+			
+			if(_inline_input != noone && _inline_input != _n.inline_context)
+				logNode($"Node {getDisplayName()} connected to multiple inline loop inputs, this can cause render error.", 2);
+				
+			_inline_input = _n.inline_context;
+		}
+		
+		var _inline_output = noone;
+		for( var i = 0, n = array_length(outputs); i < n; i++ ) {
+			var _j = outputs[i];
+			var _t = _j.getJunctionTo();
+			
+			for( var j = 0, m = array_length(_t); j < m; j++ ) {
+				var _n = _t[j].node;
+				if(_n.inline_context == noone) continue;
+			
+				if(_inline_output != noone && _inline_output != _n.inline_context)
+					logNode($"Node {getDisplayName()} connected to multiple inline loop outputs, this can cause render error.", 2);
+					
+				_inline_output = _n.inline_context;
+			}
+		}
+		
+		if(_inline_input != noone && _inline_output != noone && _inline_input != inline_context) {
+			logNode($"Node {getDisplayName()} connected between two inline nodes, but the node itself is not part of the group. The program has automatically add the node back to inline group.", 1);
+			_inline_input.addNode(self);
 		}
 	}
 	
@@ -987,6 +1044,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			render_time = get_timer() - render_timer;
 		
 		LOG_BLOCK_END();
+		
+		render_report_latest = generateNodeRenderReport();
+		if(PROFILER_STAT) array_push(PROFILER_DATA, render_report_latest);
 	}
 	
 	static valueUpdate = function(index) {
@@ -1112,7 +1172,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		INLINE
 		
 		if(rendered == result) return;
-		LOG_LINE_IF(global.FLAG.render == 1, $"Set render status for {self} : {result}");
+		logNodeDebug($"Set render status for {getFullName()} : {result}", 3);
 		
 		rendered = result;
 	}
@@ -1748,9 +1808,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				jun.drawLineIndex = drawLineIndex;
 				drawLineIndex += 0.5;
 			}
-			
-			// jun.draw_blend_color = bg;
-			// jun.draw_blend       = high? PREFERENCES.connection_line_highlight_fade : -1;
 		}
 		
 		__draw_inputs = array_verify(__draw_inputs, array_length(inputs));
@@ -1759,8 +1816,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		for(var i = 0, n = array_length(inputs); i < n; i++) {
 			_jun = inputs[i];
-			// _jun.draw_blend_color = bg;
-			// _jun.draw_blend       = high? PREFERENCES.connection_line_highlight_fade : -1;
 			
 			if( _jun.value_from == noone || !_jun.value_from.node.active || !_jun.isVisible()) continue;
 			__draw_inputs[__draw_inputs_len++] = _jun;
@@ -1776,9 +1831,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(!active) return noone;
 		
 		var _hov, hovering = noone;
-		// var bg       = params.bg;
-		// var high     = params.highlight;
-		
 		if(hasInspector1Update()) { _hov = inspectInput1.drawConnections(params, _draw); if(_hov) hovering = _hov; }
 		if(hasInspector2Update()) { _hov = inspectInput2.drawConnections(params, _draw); if(_hov) hovering = _hov; }
 		
@@ -2809,6 +2861,49 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 		
 	} run_in(1, function() /*=>*/ { checkGroup(); });
+	
+	static generateNodeRenderReport = function() {
+		var _report = {};
+		
+		_report.type = "render";
+		_report.node = self;
+		_report.inputs  = array_create(array_length(inputs));
+		for( var i = 0, n = array_length(inputs); i < n; i++ ) {
+			var _j = inputs[i];
+			_report.inputs[i] = _j.getValue();
+			
+			if(_j.type == VALUE_TYPE.surface)
+				_report.inputs[i] = surface_array_clone(_report.inputs[i]);
+		}
+		
+		_report.outputs = array_create(array_length(outputs));
+		for( var i = 0, n = array_length(outputs); i < n; i++ ) {
+			var _j = outputs[i];
+			_report.outputs[i] = _j.getValue();
+			
+			if(_j.type == VALUE_TYPE.surface)
+				_report.outputs[i] = surface_array_clone(_report.outputs[i]);
+		}
+		
+		_report.logs  = array_clone(messages_dbg);
+		_report.time  = render_time;
+		
+		_report.nextn = [];
+		_report.queue = array_clone(RENDER_QUEUE.data, 1);
+		
+		return _report;
+	}
+	
+	static summarizeReport = function() {
+		var _srcstr = $"{getFullName()}";
+		var _report = render_report_latest;
+		
+		for( var i = 0, n = array_length(_report.nextn); i < n; i++ ) _srcstr += $"{_report.nextn[i].getFullName()}";
+		for( var i = 0, n = array_length(_report.queue); i < n; i++ ) _srcstr += $"{_report.queue[i].getFullName()}";
+		
+		_report.search_string = _srcstr;
+		
+	}
 	
 	static toString = function() { return $"Node [{internalName}] [{instanceof(self)}]: {node_id}"; }
 }

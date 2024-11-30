@@ -29,7 +29,8 @@ function Panel_Node_Data_Gen() : PanelContent() constructor {
 	w = ui(640);
 	h = ui(64);
 	
-	title = "Dump node data";
+	title    = "Dump node data";
+	auto_pin = true;
 	amo = ds_map_size(ALL_NODES);
 	cur = 0;
 	key = ds_map_find_first(ALL_NODES);

@@ -163,6 +163,13 @@ switch(load_process) {
         
         refreshNodeMap();
         
+        for (var i = 0, n = array_length(PROJECT.allNodes); i < n; i++) {
+			var node = PROJECT.allNodes[i];
+			node.onValidate();
+			node.onIOValidate();
+			node.refreshNodeDisplay();
+		}
+		
         printIf(log, $" > Refresh map : {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
         
         if(struct_has(content, "timelines") && !array_empty(content.timelines.contents))
@@ -186,4 +193,5 @@ switch(load_process) {
         array_remove(STATS_PROGRESS, load_noti);
         instance_destroy();
     
+    run_in(1, function() /*=>*/ { PANEL_GRAPH.draw_refresh = true; });
 }

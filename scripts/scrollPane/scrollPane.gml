@@ -57,6 +57,7 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 		surface_set_target(surface);
 			draw_clear(COLORS.panel_bg_clear);
 			var hh = drawFunc(scroll_y, [ mx, my ], [ x, y ]);
+			    hh = real(hh);
 			content_h = max(0, hh - surface_h);
 		surface_reset_target();
 		

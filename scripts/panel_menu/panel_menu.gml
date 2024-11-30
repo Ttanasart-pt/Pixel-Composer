@@ -253,7 +253,8 @@ function Panel_Menu() : PanelContent() constructor {
         array_push(menus, [ __txt("Dev"), [
             MENU_ITEMS.console_panel,
             menuItem(__txtx("panel_debug_overlay", "Debug overlay"),                              function() /*=>*/ { show_debug_overlay(true); }),
-            menuItem(__txtx("panel_menu_tester", "Tester"),                                       function() /*=>*/ { var dia = dialogPanelCall(new Panel_Test()); dia.destroy_on_click_out = false; }),
+            menuItem(__txtx("panel_menu_tester", "Tester"),                                       function() /*=>*/ { var dia = dialogPanelCall(new Panel_Test()); }),
+            menuItem(__txtx("panel_menu_profile_render", "Render Profiler"),                      function() /*=>*/ { var dia = dialogPanelCall(new Panel_Profile_Render()); }),
             -1, 
             
             menuItem(__txtx("panel_menu_test_load_all", "Load all current collections"),          function() /*=>*/ { __test_load_current_collections(); }),
@@ -262,7 +263,7 @@ function Panel_Menu() : PanelContent() constructor {
             menuItem(__txtx("panel_menu_test_update_sam", "Update sample projects"),              function() /*=>*/ { __test_update_sample_projects(); }),
             -1,
             menuItem(__txtx("panel_menu_test_load_nodes", "Load all nodes"),                      function() /*=>*/ { __test_load_all_nodes(); }),
-            menuItem(__txtx("panel_menu_test_gen_guide", "Generate node guide"),                  function() /*=>*/ { var dia = dialogPanelCall(new Panel_Node_Data_Gen()); dia.destroy_on_click_out = false; }),
+            menuItem(__txtx("panel_menu_test_gen_guide", "Generate node guide"),                  function() /*=>*/ { var dia = dialogPanelCall(new Panel_Node_Data_Gen()); }),
             menuItem(__txtx("panel_menu_test_gen_theme", "Generate theme object"),                function() /*=>*/ {  __test_generate_theme(); }),
             -1,
             menuItem(__txtx("panel_menu_test_warning", "Display Warning"),                        function() /*=>*/ { noti_warning("Error message") }),
@@ -621,8 +622,8 @@ function Panel_Menu() : PanelContent() constructor {
             
             if(hori) {
                 if(w > 1500) {
-                    draw_set_text(fnt, fa_center, fa_center, tc);
-                    var  ww = string_width(txt) + ui(12);
+                    draw_set_text(fnt, fa_right, fa_center, tc);
+                    var  ww = string_width(txt) + ui(12) + ui(20) * NIGHTLY;
                     var  hh = string_height(txt) + ui(8);
                     var _x0 = _xx1 - ww;
                     var _x1 = _xx1;
@@ -643,7 +644,9 @@ function Panel_Menu() : PanelContent() constructor {
                         }
                     }
                     
-                    draw_text(round((_x0 + _x1) / 2), round((_y0 + _y1) / 2), txt);
+                    var _ty = (_y0 + _y1) / 2;
+                    draw_text(_x1 - ui(6), round(_ty), txt);
+                    if(NIGHTLY) draw_sprite_ext(s_nightly, 0, _x0 + ui(16), _ty, 1, 1, 0, COLORS._main_icon);
                     _xx1 = _x0 - ui(8);
                 }
                 

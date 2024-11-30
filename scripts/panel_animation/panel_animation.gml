@@ -771,7 +771,7 @@ function Panel_Animation() : PanelContent() constructor {
                 
             if(timeline_scubbing) {
                 var rfrm = (mx - bar_x - timeline_shift) / timeline_scale - 1;
-                    // rfrm = clamp(rfrm, 0, TOTAL_FRAMES - 1);                 // clamp to animating region
+                if(!key_mod_press(CTRL)) rfrm = clamp(rfrm, 0, TOTAL_FRAMES - 1);                 // clamp to animating region
                 PROJECT.animator.setFrame(rfrm, !key_mod_press(ALT));
                 
                 timeline_show_time  = CURRENT_FRAME;
@@ -2545,7 +2545,7 @@ function Panel_Animation() : PanelContent() constructor {
             if(point_in_rectangle(mx, my, ui(8), y0, w - ui(16), y1)) {
                 if(mouse_click(mb_left, pFOCUS)) {
                     var rfrm = (mx - ui(8)) / (w - ui(16)) * TOTAL_FRAMES;
-                    // rfrm = clamp(rfrm, 0, TOTAL_FRAMES - 1);                 // clamp to animating region
+                    if(!key_mod_press(CTRL)) rfrm = clamp(rfrm, 0, TOTAL_FRAMES - 1);                 // clamp to animating region
                     PROJECT.animator.setFrame(rfrm);
                 }
             }

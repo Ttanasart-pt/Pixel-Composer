@@ -528,6 +528,20 @@ function surface_reset_target_override() { __surface_reset_target(); winwin_draw
 		return 1;
 	}
 
+	function surface_format_string(format) {
+		switch(format) {
+			case surface_rgba8unorm	 : return "8bit RGBA"
+			case surface_rgba4unorm	 : return "4bit RGBA"
+			case surface_rgba16float : return "16bit RGBA"
+			case surface_rgba32float : return "32bit RGBA"
+			case surface_r8unorm	 : return "8bit BW"
+			case surface_r16float	 : return "16bit BW"
+			case surface_r32float	 : return "32bit BW"
+		}
+		
+		return "undefined";
+	}
+
 	function surface_get_size(surface) {
 		INLINE
 	

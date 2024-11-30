@@ -19,7 +19,12 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	point_x   = 0;
 	point_y   = 0;
 	
+	junction_x = 0;
+	junction_y = 0;
+	
 	is_root = true;
+	
+	bbox = [ 0, 0, 0, 0 ];
 	
 	static topoSortable = function() { return false; }
 	
@@ -48,7 +53,7 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		
 		onAddNode(node);
 		
-		// print($"Pose add node : {array_length(nodes)}");
+		// print($"Post add node : {array_length(nodes)}");
 	}
 	
 	static addPoint = function(_x, _y) {
@@ -58,6 +63,18 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	}
 	
 	static onAddNode = function(node) {}
+	
+	static resetRender = function(_clearCache = false) {
+		LOG_LINE_IF(global.FLAG.render == 1, $"Reset Render for {INAME}");
+		
+		setRenderStatus(false);
+		if(_clearCache) clearInputCache();
+		
+		for( var i = 0; i < array_length(nodes); i++ )
+			nodes[i].resetRender(_clearCache);
+	}
+	
+	///////////////////////////////////////////////////////////////////////////////////////
 	
 	static ccw = function(a, b, c) { return (b[0] - a[0]) * (c[1] - a[1]) - (c[0] - a[0]) * (b[1] - a[1]); }
 	
@@ -103,8 +120,8 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		_hash = md5_string_utf8(_hash);
 		
 		if(vertex_hash == _hash) return;
-		vertex_hash = _hash;
 		
+		vertex_hash  = _hash;
 		group_vertex = [];
 		
 		if(_ind == 0) return;
@@ -145,6 +162,13 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		array_delete(_vtrx, 1, _linS - 1);
 	
 		group_vertex = [ _vtrx[0], _vtrx[1] ];
+		junction_x   = _vtrx[0][0]; 
+		junction_y   = _vtrx[0][1];
+		
+		var minx   = _vtrx[0][0];
+		var miny   = _vtrx[0][1];
+		var maxx   = _vtrx[0][0];
+		var maxy   = _vtrx[0][1];
 		
 		for( var i = 2, n = array_length(_vtrx); i < n; i++ ) {
 			var _v = _vtrx[i];
@@ -168,7 +192,19 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			
 			if(min(abs(d), abs(d - 180)) <= 2) 
 				array_delete(group_vertex, i, 1);
+			
+			if(v1[0] <= junction_x && v1[1] <= junction_y) {
+				junction_x = v1[0];
+				junction_y = v1[1] + 8;
+			}
+			
+			minx = min(minx, v1[0]);
+			miny = min(miny, v1[1]);
+			maxx = max(maxx, v1[0]);
+			maxy = max(maxy, v1[1]);
 		}
+		
+		bbox = [ minx, miny, maxx, maxy ];
 	}
 	
 	static groupCheck = function(_x, _y, _s, _mx, _my) {
@@ -209,18 +245,22 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	
 	static pointIn = function(_x, _y, _mx, _my, _s) { return false; }
 	
-	static resetRender = function(_clearCache = false) {
-		LOG_LINE_IF(global.FLAG.render == 1, $"Reset Render for {INAME}");
+	static cullCheck = function(_x, _y, _s, minx, miny, maxx, maxy) {
+		var x0 = bbox[0] * _s + _x;
+		var y0 = bbox[1] * _s + _y;
+		var x1 = bbox[2] * _s + _x;
+		var y1 = bbox[3] * _s + _y;
 		
-		setRenderStatus(false);
-		if(_clearCache) clearInputCache();
+		draw_boundary[0] = minx;
+		draw_boundary[1] = miny;
+		draw_boundary[2] = maxx;
+		draw_boundary[3] = maxy;
 		
-		for( var i = 0; i < array_length(nodes); i++ )
-			nodes[i].resetRender(_clearCache);
+		draw_graph_culled = !rectangle_in_rectangle(minx, miny, maxx, maxy, x0, y0, x1, y1);
+		return !draw_graph_culled;
 	}
 	
 	static drawNodeBG = function(_x, _y, _mx, _my, _s) {
-		
 		refreshGroupBG();
 		if(array_length(group_vertex) < 3) return false;
 		
@@ -280,9 +320,15 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		return _hov;
 	}
 	
-	static drawNode = function(_draw, _x, _y, _mx, _my, _s, display_parameter = noone) {}
+	static drawNode = function(_draw, _x, _y, _mx, _my, _s, display_parameter = noone) {
+		var xx = x * _s + _x;
+		var yy = y * _s + _y;
+		return drawJunctions(_draw, xx, yy, _mx, _my, _s)
+	}
 	
 	static drawBadge = function(_x, _y, _s) {}
+	
+	static drawJunctions = function(_draw, _x, _y, _mx, _my, _s) {}
 	
 	static postDeserialize = function() {
 		refreshMember();
