@@ -2278,7 +2278,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			case VALUE_TAG.matadata         : return setFrom(_nd.junc_meta[con_index]);
 			
 			default : 
-				if(con_index < _ol) {
+				if(con_index >= 0 && con_index < _ol) {
 					var _set = setFrom(_nd.outputs[con_index], false, true);
 					if(_set) return true;
 					

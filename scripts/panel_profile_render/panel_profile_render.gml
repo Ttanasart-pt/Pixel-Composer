@@ -31,7 +31,7 @@ function Panel_Profile_Render() : PanelContent() constructor {
 	show_log_level = 1;
 	
 	filter_list_string = "";
-	tb_list = new textBox( TEXTBOX_INPUT.text, function(str) /*=>*/ { filter_list_string = str; })
+	tb_list = new textBox( TEXTBOX_INPUT.text, function(str) /*=>*/ { filter_list_string = str; searchData(); })
 		.setFont(f_p3)
 		.setAutoUpdate()
 		.setEmpty()
@@ -70,7 +70,25 @@ function Panel_Profile_Render() : PanelContent() constructor {
 		
 		draw_text_add(_tx, _ty, $"Size : {sw * sh * surface_format_get_bytes(sd)} bytes");			_ty += ui(16);
 	}
-
+	
+	function searchData() {
+		for( var i = 0, n = array_length(PROFILER_DATA); i < n; i++ ) {
+	        var _report = PROFILER_DATA[i];
+	        _report.search_res = true;
+	        
+	        if(_report.type != "render") continue;
+	        
+	        var _node = _report.node;
+	        
+	        if(filter_node != noone && filter_node != _node) 
+	        	_report.search_res = false;
+	        	
+		    if(filter_list_string != "" && string_pos(string_lower(filter_list_string), string_lower(_report.search_string)) == 0) 
+		    	_report.search_res = false;
+		}
+	}
+	
+	
 	function onResize() {
 		padding = in_dialog? ui(4) : ui(8);
 		
@@ -87,6 +105,7 @@ function Panel_Profile_Render() : PanelContent() constructor {
 	    var _h  = ui(8);
 	    var yy  = _y;
 	    var _ww = sc_profile_list.surface_w;
+	    var _sh = sc_profile_list.surface_h;
 	    var _hovering = sc_profile_list.hover;
 	    
 	    var _wh = ui(24);
@@ -101,31 +120,36 @@ function Panel_Profile_Render() : PanelContent() constructor {
 	        var _sel = report_selecting == _report;
 	        var _hov = point_in_rectangle(_m[0], _m[1], 0, yy, _ww, yy + _wh);
 	        var _cy  = yy + _wh / 2;
+	        var _draw = _cy > -_wh && _cy < _sh + _wh;
 	        
-	        if(_hov || _sel) draw_sprite_stretched_ext(THEME.s_box_r5_clr, 1, 0, yy, _ww, _wh + 1, _sel? CDEF.main_ltgrey : CDEF.main_grey);
+	        if(_draw && (_hov || _sel)) draw_sprite_stretched_ext(THEME.s_box_r5_clr, 1, 0, yy, _ww, _wh + 1, _sel? CDEF.main_ltgrey : CDEF.main_grey);
 	        
 	        if(_rtype == "render") {
+	        	if(_report.search_res == false) continue;
+		        
 		        var _node = _report.node;
 		        var _text = _node.getFullName();
-		        
-		        if(filter_node != noone && filter_node != _node) continue;
-		        if(filter_list_string != "" && string_pos(string_lower(filter_list_string), string_lower(_report.search_string)) == 0) continue;
 		        
 		        var cc = COLORS._main_text_sub;
 		        if(report_selecting != noone && report_selecting.node == _report.node)
 		        	cc = COLORS._main_text;
 		        if(_sel) cc = COLORS._main_text_accent;
 		        
-		        draw_set_text(f_p2, fa_left, fa_center, cc);
-		        draw_text_add(ui(8), _cy, $"Render {_text}");
+		        if(_draw) {
+			        draw_set_text(f_p2, fa_left, fa_center, cc);
+			        draw_text_add(ui(8), _cy, $"Render {_text}");
+		        }
 		        
 	        } else if(_rtype == "message") {
 		        if(_report.level > show_log_level) continue;
-	        	var _text = _report.text;
 		        
-	        	draw_sprite_ext(THEME.noti_icon_log, 0, ui(16), _cy, .75, .75, 0, c_white, 1);
-		        draw_set_text(f_p2, fa_left, fa_center, _sel? COLORS._main_text_accent : COLORS._main_text);
-		        draw_text_add(ui(32), _cy, _text);
+		        if(_draw) {
+		        	var _text = _report.text;
+			        
+		        	draw_sprite_ext(THEME.noti_icon_log, 0, ui(16), _cy, .75, .75, 0, c_white, 1);
+			        draw_set_text(f_p2, fa_left, fa_center, _sel? COLORS._main_text_accent : COLORS._main_text);
+			        draw_text_add(ui(32), _cy, _text);
+		        }
 	        }
 	        
 	        if(_hov) {
@@ -229,7 +253,7 @@ function Panel_Profile_Render() : PanelContent() constructor {
 	            
 	            var _vx = _x0 + ui(8);
 	            var _vy = _yy + ui(16);
-	            var _vw = _iw - ui(8);
+	            var _vw = _iw - ui(16);
 	            
 		        switch(_type) {
 		            case VALUE_TYPE.surface :
@@ -330,6 +354,7 @@ function Panel_Profile_Render() : PanelContent() constructor {
 	        var _qh = ui(20);
 	        var _qx = ui(8);
 	        var _qy = _ty;
+	        var _qhh = _qh;
 	        
 	        _h += _qh + ui(4);
 	        draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text_sub);
@@ -340,9 +365,10 @@ function Panel_Profile_Render() : PanelContent() constructor {
 	        	var _qw = string_width(_n);
 	        	
 	        	if(_qx + _qw > _ww - ui(12)) {
-	        		_qx	 = ui(8);
-	        		_qy += _qh + ui(4);
-	        		_h  += _qh + ui(4);
+	        		_qx	  = ui(8);
+	        		_qy  += _qh + ui(4);
+	        		_h   += _qh + ui(4);
+	        		_qhh += _qh + ui(4);
 	        	}
 	        	
 	        	var cc = COLORS._main_icon;
@@ -356,7 +382,7 @@ function Panel_Profile_Render() : PanelContent() constructor {
 	        	_qx += _qw + ui(12 + 4);
 	        }
 	        
-	        _ty += array_length(_queue)? _qh + ui(16) : ui(4);
+	        _ty += array_length(_queue)? _qhh + ui(16) : ui(4);
 	        
 	        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	        
@@ -367,9 +393,10 @@ function Panel_Profile_Render() : PanelContent() constructor {
 	        
 		    _ty += ui(32); _h += ui(48);
 		    
-	        var _qh = ui(20);
-	        var _qx = ui(8);
-	        var _qy = _ty;
+	        var _qh  = ui(20);
+	        var _qx  = ui(8);
+	        var _qy  = _ty;
+	        var _qhh = _qh;
 	        
 	        _h += _qh + ui(4);
 	        draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text_sub);
@@ -380,9 +407,10 @@ function Panel_Profile_Render() : PanelContent() constructor {
 	        	var _qw = string_width(_n);
 	        	
 	        	if(_qx + _qw > _ww - ui(12)) {
-	        		_qx	 = ui(8);
-	        		_qy += _qh + ui(4);
-	        		_h  += _qh + ui(4);
+	        		_qx	  = ui(8);
+	        		_qy  += _qh + ui(4);
+	        		_h   += _qh + ui(4);
+	        		_qhh += _qh + ui(4);
 	        	}
 	        	
 	        	var cc = COLORS._main_icon;
@@ -396,7 +424,7 @@ function Panel_Profile_Render() : PanelContent() constructor {
 	        	_qx += _qw + ui(12 + 4);
 	        }
 	        
-	        _ty += array_length(_nextx)? _qh + ui(16) : ui(4);
+	        _ty += array_length(_nextx)? _qhh + ui(16) : ui(4);
 	        
 	        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	        
@@ -477,6 +505,7 @@ function Panel_Profile_Render() : PanelContent() constructor {
 			draw_sprite_ext(s_filter_node, 0, _bx + _bs / 2, _by + _bs / 2, 1, 1, 0, COLORS._main_icon, 0.25);
 		else if(buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, [ mx, my ], pFOCUS, pHOVER, "Filter node", s_filter_node, 0, filter_node == noone? COLORS._main_icon : COLORS._main_accent, 1, 1) == 2) {
 		    filter_node = filter_node == report_selecting.node? noone : report_selecting.node;
+		    searchData();
 		}
 		_bx -= _bs + ui(4);
 		

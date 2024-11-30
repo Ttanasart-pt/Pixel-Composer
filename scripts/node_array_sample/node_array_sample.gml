@@ -2,8 +2,7 @@ function Node_Array_Sample(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	name = "Array Sample";
 	setDimension(96, 32 + 24);
 	
-	newInput(0, nodeValue_Float("Array", self, []))
-		.setArrayDepth(1)
+	newInput(0, nodeValue("Array", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0))
 		.setVisible(true, true);
 	
 	newInput(1, nodeValue_Float("Step", self, 1));
@@ -16,7 +15,7 @@ function Node_Array_Sample(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	newInput(5, nodeValue_Int("Amount", self, 4))
 	
-	newOutput(0, nodeValue_Output("Array", self, VALUE_TYPE.float, 0))
+	newOutput(0, nodeValue_Output("Array", self, VALUE_TYPE.any, 0))
 		.setArrayDepth(1);
 		
 	input_display_list = [ 0, 2, 
@@ -24,6 +23,16 @@ function Node_Array_Sample(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		4, 5, 
 	];
 		
+	static step = function() {
+		inputs[0].setType(VALUE_TYPE.any);
+		outputs[0].setType(VALUE_TYPE.any);
+		
+		if(inputs[0].value_from != noone) {
+			inputs[0].setType(inputs[0].value_from.type);
+			outputs[0].setType(inputs[0].type);
+		}
+	}
+	
 	static sample = function(arr) {
 		__temp_arr = arr;
 		

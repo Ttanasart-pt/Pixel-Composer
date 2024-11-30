@@ -2865,6 +2865,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static generateNodeRenderReport = function() {
 		var _report = {};
 		
+		_report.search_res = true;
 		_report.type = "render";
 		_report.node = self;
 		_report.inputs  = array_create(array_length(inputs));

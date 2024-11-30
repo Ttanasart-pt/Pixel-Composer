@@ -7,6 +7,8 @@ function Node_Color_Data(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	newInput(1, nodeValue_Bool("Normalize", self, true));
 	
+	// newInput(2, nodeValue_Enum_Scroll("Brightness Eq", self, 0, [ "Perceived", "" ]));
+	
 	newOutput(0, nodeValue_Output("Red", 		self, VALUE_TYPE.float, 0));
 	newOutput(1, nodeValue_Output("Green",		self, VALUE_TYPE.float, 0));
 	newOutput(2, nodeValue_Output("Blue",		self, VALUE_TYPE.float, 0));
@@ -33,7 +35,7 @@ function Node_Color_Data(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			_outData[4] = _color_get_saturation(_c);
 			_outData[5] = _color_get_value(_c);
 			
-			_outData[6] = 0.2126 * _outData[0] + 0.7152 * _outData[1] + 0.0722 * _outData[2];
+			_outData[6] = sqrt(.241 * _outData[0] * _outData[0] + .691 * _outData[1] * _outData[1] + .068 * _outData[2] * _outData[2]);
 			_outData[7] = _color_get_alpha(_c);
 			
 		} else {
@@ -45,7 +47,7 @@ function Node_Color_Data(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			_outData[4] = color_get_saturation(_c);
 			_outData[5] = color_get_value(_c);
 			
-			_outData[6] = 0.2126 * _outData[0] + 0.7152 * _outData[1] + 0.0722 * _outData[2];
+			_outData[6] = sqrt(.241 * _outData[0] * _outData[0] + .691 * _outData[1] * _outData[1] + .068 * _outData[2] * _outData[2]);
 			_outData[7] = color_get_alpha(_c);
 		}
 		
@@ -65,8 +67,8 @@ function Node_Color_Data(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			var _bx0 = _bx1    - 20 * _s;
 			
 			var _by  = val.y;
-			var _by0 = _by - 10 * _s;
-			var _by1 = _by + 10 * _s;
+			var _by0 = _by - 8 * _s;
+			var _by1 = _by + 8 * _s;
 			
 			draw_sprite_stretched_points(s_node_color_data_label, i, _bx0, _by0, _bx1, _by1);
 		}
