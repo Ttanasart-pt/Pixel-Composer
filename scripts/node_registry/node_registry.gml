@@ -1037,6 +1037,7 @@ function __initNodes() {
 		addNodeObject(color, "Gradient Shift",		s_node_gradient_shift,		"Node_Gradient_Shift",			[1, Node_Gradient_Shift],,			"Move gradients keys.");
 		addNodeObject(color, "Gradient Replace",	s_node_gradient_replace,	"Node_Gradient_Replace_Color",	[1, Node_Gradient_Replace_Color],,	"Replace color inside a gradient.").setVersion(1135);
 		addNodeObject(color, "Gradient Data",		s_node_gradient_data,		"Node_Gradient_Extract",		[1, Node_Gradient_Extract],,		"Get palatte and array of key positions from gradient.").setVersion(1135);
+		addNodeObject(color, "Sample Gradient",		s_node_gradient_sample,		"Node_Gradient_Sample",			[1, Node_Gradient_Sample], ["gradient sample"], "Sample gradient into palette.").setVersion(1_18_04_1);
 	#endregion
 	
 	#region animation
