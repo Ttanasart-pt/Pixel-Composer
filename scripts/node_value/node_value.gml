@@ -137,8 +137,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	#endregion
 	
 	#region ---- draw ----
-		draw_line_shift_x	  = 0;
-		draw_line_shift_y	  = 0;
+		draw_line_shift_x = 0;
+		draw_line_shift_y = 0;
+		draw_line_shift_e = -1;
+		
 		draw_line_thick		  = 1;
 		draw_line_shift_hover = false;
 		draw_line_blend       = 1;
@@ -500,6 +502,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 	/////============ DISPLAY ===========
 	
+	static setVisibleManual = function(v) {
+		visible_manual = v;
+		node.refreshNodeDisplay();
+		return self;
+	}
+	
 	static setVisible = function(inspector) {
 		var v = visible;
 		
@@ -509,6 +517,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			
 		} else 
 			visible = inspector;
+		
+		if(NOT_LOAD) node.toRefreshNodeDisplay = true;
 		
 		return self;
 	}
@@ -2134,9 +2144,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(loop_range != -1)            _map.loop_range	 = loop_range;
 		if(sep_axis)                    _map.sep_axis	 = sep_axis;
 		
-		if(draw_line_shift_x != 0) _map.shift_x     = draw_line_shift_x;
-		if(draw_line_shift_y != 0) _map.shift_y     = draw_line_shift_y;
-		if(is_modified == true)    _map.is_modified = is_modified;
+		if(draw_line_shift_x !=  0) _map.shift_x     = draw_line_shift_x;
+		if(draw_line_shift_y !=  0) _map.shift_y     = draw_line_shift_y;
+		if(draw_line_shift_e != -1) _map.shift_e     = draw_line_shift_e;
+		if(is_modified == true)     _map.is_modified = is_modified;
 		
 		if(!preset && value_from) {
 			_map.from_node  = value_from.node.node_id;
@@ -2179,7 +2190,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(_map == noone)     return;
 		if(!is_struct(_map))  return;
 		
-		visible 	   = struct_try_get(_map, LOADING_VERSION >= 1_18_04_0? "v" : "visible", 0);
+		visible 	   = struct_try_get(_map, LOADING_VERSION >= 1_18_04_0 || CLONING? "v" : "visible", 0);
 		visible_manual = struct_try_get(_map, "visible_manual", 0);
 		color   	   = struct_try_get(_map, "color", -1);
 		
@@ -2198,6 +2209,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		draw_line_shift_x = struct_try_get(_map, "shift_x",     0);
 		draw_line_shift_y = struct_try_get(_map, "shift_y",     0);
+		draw_line_shift_e = struct_try_get(_map, "shift_e",    -1);
 		is_modified       = struct_try_get(_map, "is_modified", false);
 		
 		if(struct_has(_map, "attri")) {
@@ -2415,8 +2427,14 @@ function checkJuncConnection(from, to, params) {
 	var th  = max(1, PREFERENCES.connection_line_width * _s);
 	var hover, hovDist = max(th * 2, 6);
 	
-	var _x0 = min(jx, cx, frx) - hovDist, _x1 = max(jx, cx, frx) + hovDist;
-	var _y0 = min(jy, cy, fry) - hovDist, _y1 = max(jy, cy, fry) + hovDist;
+	var _fin = from.draw_line_shift_e > -1? from.draw_line_shift_e : from.drawLineIndex;
+	var _tin = to.draw_line_shift_e   > -1? to.draw_line_shift_e   : to.drawLineIndex;
+	
+	var _x0 = min(jx, cx, frx) - hovDist - max(_fin, _tin) * PREFERENCES.connection_line_extend;
+	var _y0 = min(jy, cy, fry) - hovDist;
+	
+	var _x1 = max(jx, cx, frx) + hovDist + max(_fin, _tin) * PREFERENCES.connection_line_extend;
+	var _y1 = max(jy, cy, fry) + hovDist;
 	if(!point_in_rectangle(mx, my, _x0, _y0, _x1, _y1)) return noone;
 	
 	var downDirection = to.type == VALUE_TYPE.action || from.type == VALUE_TYPE.action;
@@ -2446,7 +2464,7 @@ function checkJuncConnection(from, to, params) {
 				
 			case 3 :
 				if(downDirection) _hdist = distance_to_elbow_diag_corner(mx, my, frx, fry, jx, jy);
-				else              _hdist = distance_to_elbow_diag(mx, my, frx, fry, jx, jy, cx, cy, _s, PREFERENCES.connection_line_extend, from.drawLineIndex, to.drawLineIndex);
+				else              _hdist = distance_to_elbow_diag(mx, my, frx, fry, jx, jy, cx, cy, _s, PREFERENCES.connection_line_extend, _fin, _tin);
 				break;
 				
 			default : return noone;
@@ -2534,8 +2552,8 @@ function drawJuncConnection(from, to, params, _thick = false) {
 	
 	var down = to.type == VALUE_TYPE.action || from.type == VALUE_TYPE.action;
 	drawParam.extend    = PREFERENCES.connection_line_extend;
-	drawParam.fromIndex = from.drawLineIndex;
-	drawParam.toIndex   = to.drawLineIndex;
+	drawParam.fromIndex = from.draw_line_shift_e > -1? from.draw_line_shift_e : from.drawLineIndex;
+	drawParam.toIndex   = to.draw_line_shift_e   > -1? to.draw_line_shift_e   : to.drawLineIndex;
 	drawParam.corner    = corner;
 	drawParam.type      = ty;
 	

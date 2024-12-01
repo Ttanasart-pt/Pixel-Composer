@@ -1671,8 +1671,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
             var sn = !key_mod_press(CTRL) && project.graphGrid.snap;
             
             if(sn) {
-                nx = round(nx / _grd) * _grd;
-                ny = round(ny / _grd) * _grd;
+                nx = value_snap(nx, _grd);
+                ny = value_snap(ny, _grd);
             }
             
             if(node_drag_ox == -1 || node_drag_oy == -1) {
@@ -1688,9 +1688,14 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                     var _nx   = _node.x + dx;
                     var _ny   = _node.y + dy;
                     
+                    if(sn) {
+		                _nx = value_snap(_nx, _grd);
+		                _ny = value_snap(_ny, _grd);
+		            }
+                    
                     _node.move(_nx, _ny, graph_s);
                 }
-                    
+                   
                 node_drag_ox = nx;
                 node_drag_oy = ny;
             }
@@ -2811,6 +2816,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         
         ds_map_clear(APPEND_MAP);
         APPEND_LIST = [];
+        LOADING_VERSION = SAVE_VERSION;
         
         CLONING    = true;
             var _pmap_keys = variable_struct_get_names(_pmap);
@@ -2886,7 +2892,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
     function doCopy() { //
         if(array_empty(nodes_selecting)) return;
         clipboard_set_text("");
-    
+    	LOADING_VERSION = SAVE_VERSION;
+    	
         var _map   = {
         	version: SAVE_VERSION,
         	nodes: [],
@@ -3376,7 +3383,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                 if(!_jun.isVisible()) continue;
                 
                 if(_jun.value_from == noone)
-                    _jun.visible_manual = -1;
+                    _jun.setVisibleManual(-1);
             }
             
             for(var j = 0; j < array_length(_node.outputs); j++) {
@@ -3384,7 +3391,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                 if(!_jun.isVisible()) continue;
                 
                 if(array_empty(_jun.getJunctionTo()))
-                    _jun.visible_manual = -1;
+                    _jun.setVisibleManual(-1);
             }
             
             _node.refreshNodeDisplay();

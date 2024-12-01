@@ -24,11 +24,15 @@ function Panel_Profile_Render() : PanelContent() constructor {
 	report_selecting = noone;
 	report_clicked   = noone;
 	
-	filter_node = noone;
-	set_selecting_node = false;
+	filter_node         = noone;
+	set_selecting_node  = false;
+	graph_set_latest    = noone;
 	
-	show_io = true;
-	show_log_level = 1;
+	show_io             = true;
+	show_log_level      = 1;
+	
+	count_render_event  = 0;
+	count_message_event = 0;
 	
 	filter_list_string = "";
 	tb_list = new textBox( TEXTBOX_INPUT.text, function(str) /*=>*/ { filter_list_string = str; searchData(); })
@@ -53,7 +57,7 @@ function Panel_Profile_Render() : PanelContent() constructor {
 		var sw = surface_get_width(surf);
 		var sh = surface_get_height(surf);
 		var sd = surface_get_format(surf);
-		var ss = min(w / sw, h / sh);
+		var ss = min((w - ui(144)) / sw, h / sh);
 		var sx = xx;
 		var sy = yy + h / 2 - sh * ss / 2
 		
@@ -88,7 +92,6 @@ function Panel_Profile_Render() : PanelContent() constructor {
 		}
 	}
 	
-	
 	function onResize() {
 		padding = in_dialog? ui(4) : ui(8);
 		
@@ -99,6 +102,14 @@ function Panel_Profile_Render() : PanelContent() constructor {
 	    sc_profile_list.resize(list_w - ui(8), content_h - ui(8)); 
 	    sc_profile_detail.resize(detail_w - ui(8), content_h - ui(8)); 
 	} 
+	
+	function setReport(_report) {
+		report_selecting = _report;
+		
+		if(_report == noone) return;
+		if(_report.type == "render" && set_selecting_node) 
+			PANEL_GRAPH.nodes_selecting = [ _report.node ];
+	}
 	
 	sc_profile_list = new scrollPane(list_w - ui(8), content_h - ui(8), function(_y, _m) {
 	    draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
@@ -154,11 +165,11 @@ function Panel_Profile_Render() : PanelContent() constructor {
 	        
 	        if(_hov) {
 	        	if(mouse_press(mb_left, pFOCUS)) {
-		            report_selecting = _sel? noone : _report;
+		            setReport(_sel? noone : _report);
 		            report_clicked   = _report;
 		            
 	        	} else if(mouse_click(mb_left, pFOCUS) && report_clicked != noone && report_clicked != _report) {
-	        		report_selecting = _report;
+	        		setReport(_report);
 	        		report_clicked   = _report;
 	        	}
 	        }
@@ -190,7 +201,7 @@ function Panel_Profile_Render() : PanelContent() constructor {
 	        var _ty = ui(8);
 	        
 	        draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
-	        draw_text_add(_tx, _ty, $"{array_length(PROFILER_DATA)} render events");
+	        draw_text_add(_tx, _ty, $"{count_render_event} render events");
 	        
 	        _ty += ui(20); _h += ui(20);
 	        draw_text_add(_tx, _ty, $"Render time : {render_time / 1000}ms  ({render_time})");
@@ -211,8 +222,6 @@ function Panel_Profile_Render() : PanelContent() constructor {
 		    
 		    var _tx = ui(8);
 	        var _ty = _y + ui(8);
-	        
-	        if(set_selecting_node) PANEL_GRAPH.nodes_selecting = [_node];
 	        
 	        draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text);
 	        draw_text_add(_tx, _ty, $"Render {_node.getFullName()}");
@@ -458,10 +467,10 @@ function Panel_Profile_Render() : PanelContent() constructor {
 		var _bx = _pd;
 		var _by = _pd;
 		
-		if(buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, [ mx, my ], pFOCUS, pHOVER, "Render", s_run, 1, COLORS._main_value_positive, 1, 1) == 2) {
+		if(buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, [ mx, my ], pFOCUS, pHOVER, "Render all", s_run, 1, COLORS._main_value_positive, 1, 1) == 2) {
 		    PROFILER_STAT = 1;
 		    PROFILER_DATA = [];
-		    report_selecting = noone;
+		    setReport(noone);
 		    
 		    var _t = get_timer();
 		        Render();
@@ -475,7 +484,7 @@ function Panel_Profile_Render() : PanelContent() constructor {
 		if(buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, [ mx, my ], pFOCUS, pHOVER, "Render partial", s_run_partial, 1, COLORS._main_value_positive, 1, 1) == 2) {
 		    PROFILER_STAT = 1;
 		    PROFILER_DATA = [];
-		    report_selecting = noone;
+		    setReport(noone);
 		    
 		    var _t = get_timer();
 		        Render(true);
@@ -543,6 +552,9 @@ function Panel_Profile_Render() : PanelContent() constructor {
 		var _selected_time = 0;
 		var _running_time  = 0;
 		
+		count_render_event  = 0;
+		count_message_event = 0;
+		
 		for( var i = 0, n = array_length(PROFILER_DATA); i < n; i++ ) {
 		    var _report  = PROFILER_DATA[i];
 		    var _rtype  = _report.type;
@@ -550,11 +562,15 @@ function Panel_Profile_Render() : PanelContent() constructor {
 		    if(_report == report_selecting) _selected_time = _running_time;
 		    
 			if(_rtype == "render") {
+				count_render_event++;
 			    var _node    = _report.node;
 			    var _time    = _report.time;
 			    
 			    _total_time   += _time;
 			    _running_time += _time;
+			    
+			} else if(_rtype == "message") {
+				count_message_event++;
 			}
 		}
 		
@@ -583,7 +599,7 @@ function Panel_Profile_Render() : PanelContent() constructor {
 						
 						if(mouse_click(mb_left, pFOCUS) || render_drag) {
 							render_drag = true;
-							report_selecting = _report;
+							setReport(_report);
 						}
 					}
 					
@@ -635,5 +651,21 @@ function Panel_Profile_Render() : PanelContent() constructor {
 		
 		sc_profile_detail.setFocusHover(pFOCUS, pHOVER);
 		sc_profile_detail.draw(ndx + ui(4), ndy + ui(4), mx - ndx - ui(4), my - ndy - ui(4));
+		
+		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		
+		if(set_selecting_node) {
+			var _graph = array_empty(PANEL_GRAPH.nodes_selecting)? noone : PANEL_GRAPH.nodes_selecting[0];
+			if(_graph != noone && graph_set_latest != _graph) {
+				for( var i = 0, n = array_length(PROFILER_DATA); i < n; i++ ) {
+				    var _report  = PROFILER_DATA[i];
+				    if(_report.type == "render" && _report.node == _graph) {
+				    	report_selecting = _report;
+				    	break;
+				    }
+				}
+			}
+			graph_set_latest = _graph;
+		}
 	}
 }

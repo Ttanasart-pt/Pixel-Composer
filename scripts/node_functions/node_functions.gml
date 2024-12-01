@@ -125,11 +125,13 @@
 				dragging_sy = _pos[1];
 				dragging_mx = _mx;
 				dragging_my = _my;
+				
 			} else if(hovering == 1) { //rot
 				dragging_sx = _rot;
 				rot_anc_x	= _x + _pos[0] * _s;
 				rot_anc_y	= _y + _pos[1] * _s;
 				dragging_mx = point_direction(rot_anc_x, rot_anc_y, _mx, _my);
+				
 			} else if(hovering == 2) { //sca
 				dragging_sx = _sca[0];
 				dragging_sy = _sca[1];

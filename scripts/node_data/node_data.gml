@@ -188,6 +188,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		input_buttons       = [];
 		input_button_length = 0;
 		
+		toRefreshNodeDisplay = false;
+		
 		run_in(1, function() {
 			input_buttons   = [];
 			
@@ -594,6 +596,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			junc_meta[0].setValue(getDisplayName());
 			junc_meta[1].setValue([ x, y ]);
 		}
+		
+		if(toRefreshNodeDisplay) {
+			refreshNodeDisplay();
+			toRefreshNodeDisplay = false;
+		}
 	}
 	
 	static doStepBegin = function() {}
@@ -817,6 +824,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 		
 		if(auto_input && dummy_input) array_push(inputDisplayList, dummy_input);
+		
+		// print(inputDisplayList);
 	}
 	
 	static onValidate = function() {
@@ -1798,15 +1807,24 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	__draw_inputs_len = 0;
 	
 	static setJunctionIndex = function() {
-		var drawLineIndex = 1;
+		var drawLineIndex  = 1;
+		__draw_outputs_len = 0;
 		
 		for(var i = 0, n = array_length(outputs); i < n; i++) {
-			var jun       = outputs[i];
-			var connected = !array_empty(jun.value_to);
+			var _jun      = outputs[i];
+			var connected = !array_empty(_jun.value_to);
+			
+			if(connected) __draw_outputs_len++;
+		}
+		
+		var _ind = 0;
+		for(var i = 0, n = array_length(outputs); i < n; i++) {
+			var _jun      = outputs[i];
+			var connected = !array_empty(_jun.value_to);
 			
 			if(connected) {
-				jun.drawLineIndex = drawLineIndex;
-				drawLineIndex += 0.5;
+				_jun.drawLineIndex = 1 + (_ind > __draw_outputs_len / 2? (__draw_outputs_len - 1 - _ind) : _ind) * 0.5;
+				_ind++;
 			}
 		}
 		

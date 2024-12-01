@@ -3,7 +3,8 @@ function draw_line_elbow_diag_color(x0, y0, x1, y1, cx = noone, cy = noone, _s =
 	var indexIn   = struct_try_get(params, "fromIndex", 1);
 	var indexOut  = struct_try_get(params, "toIndex",   1);
 	
-    var corner    = min(extend, params.corner);
+    // var corner    = min(extend, params.corner);
+    var corner    = params.corner;
 	var type      = params.type;
 	
 	var __dash = 6 * _s;

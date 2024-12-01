@@ -1,6 +1,7 @@
 function draw_line_elbow_color(x0, y0, x1, y1, cx = noone, cy = noone, _s = 1, thick = 1, col1 = c_white, col2 = c_white, params = {}) {
 	var extend    = params.extend;
-    var corner    = min(extend, params.corner);
+    // var corner    = min(extend, params.corner);
+    var corner    = params.corner;
 	var type      = params.type;
 	
 	if(cx == noone) cx = (x0 + x1) / 2;

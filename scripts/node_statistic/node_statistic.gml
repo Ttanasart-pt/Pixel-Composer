@@ -7,7 +7,7 @@ enum STAT_OPERATOR {
 }
 
 #region create 
-	global.node_statistic_keys = [ "sum", "mean", "median", "min", "max" ];
+	global.node_statistic_keys = [ "sum", "mean", "median", "max", "min" ];
 	array_append(global.node_statistic_keys, [ "average" ]);
 	
 	function Node_create_Statistic(_x, _y, _group = noone, _param = {}) {

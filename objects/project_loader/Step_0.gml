@@ -17,13 +17,13 @@ switch(load_process) {
         		create_list = array_create(array_length(_node_list));
     		}
     		
-    		for(; load_step < load_total; load_step++) {
-    			
+    		while(load_step < load_total) {
     			var _node = nodeLoad(_node_list[load_step]);
+    			load_step++;
     			if(_node) create_list[node_length++] = _node;
     			
     			var _ts = get_timer() - _t;
-    			if(load_step < load_total - 1 && _ts > load_delay) {
+    			if(_ts > load_delay) {
     			    _skp = true;
     			    break;
     			}

@@ -78,7 +78,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			cHov  = true;
 			
 			if(visi_hold != noone && jun.visible_manual != visi_hold) {
-				jun.visible_manual = visi_hold;
+				jun.setVisibleManual(visi_hold);
 				jun.node.refreshNodeDisplay();
 			}
 			
@@ -86,10 +86,8 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			TOOLTIP = __txt("Visibility");
 				
 			if(mouse_press(mb_left, _focus)) {
-				jun.visible_manual = _visi? -1 : 1;
-				
+				jun.setVisibleManual(_visi? -1 : 1);
 				visi_hold = jun.visible_manual;
-				jun.node.refreshNodeDisplay();
 			}
 		}
 	
