@@ -1735,8 +1735,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
             }
             
             if(DOUBLE_CLICK && junction_hovering != noone) {
-                var _mx = round(mouse_graph_x / project.graphGrid.size) * project.graphGrid.size;
-                var _my = round(mouse_graph_y / project.graphGrid.size) * project.graphGrid.size;
+                var _mx = value_snap(mouse_graph_x, project.graphGrid.size);
+                var _my = value_snap(mouse_graph_y - 8, project.graphGrid.size);
                         
                 var _pin = nodeBuild("Node_Pin", _mx, _my).skipDefault();
                 _pin.inputs[0].setFrom(junction_hovering.value_from);
@@ -3407,8 +3407,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         
         var _key = $"{__junction_hovering.name} {seed_random(3)}";
         
-        var _ti = nodeBuild("Node_Tunnel_In",  _jo.rx + 32, _jo.ry).skipDefault();
-        var _to = nodeBuild("Node_Tunnel_Out", _ji.rx - 32, _ji.ry).skipDefault();
+        var _ti = nodeBuild("Node_Tunnel_In",  _jo.rx + 32, _jo.ry - 8).skipDefault();
+        var _to = nodeBuild("Node_Tunnel_Out", _ji.rx - 32, _ji.ry - 8).skipDefault();
         
         _to.inputs[0].setValue(_key);
         _ti.inputs[0].setValue(_key);
@@ -3418,6 +3418,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         
         _to.inputs[0].updateColor();
         _ti.inputs[1].updateColor();
+        
+        run_in(1, function() /*=>*/ { RENDER_ALL_REORDER });
     }
     
     function createAction() {

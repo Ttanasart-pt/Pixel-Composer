@@ -64,6 +64,8 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(26, nodeValue_Bool("Use full text size", self, true ));
 	
 	newInput(27, nodeValue_Int("Max line width", self, 0 ));
+	
+	newInput(28, nodeValue_Bool("Round position", self, true ));
 		
 	input_display_list = [ 0, 
 		["Output",		true],	9,  6, 10,
@@ -184,6 +186,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var _typeF = _data[26];
 		
 		var _lineW = _data[27];
+		__rnd_pos  = _data[28];
 		
 		generateFont(_font, _size, _aa);
 		draw_set_font(font);
@@ -379,6 +382,8 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						_ty += lengthdir_y(_wd, _line_ang + 90);
 					}
 					
+					if(__rnd_pos) { _tx = round(_tx); _ty = round(_ty); }
+					
 					draw_text_transformed(_tx, _ty, _chr, 1, 1, _nor);
 					__temp_tx += string_width(_chr) + __temp_trck;
 				});
@@ -411,6 +416,8 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						var _wd = waveGet(_ind);
 						_ty += _wd;
 					}
+					
+					if(__rnd_pos) { _tx = round(_tx); _ty = round(_ty); }
 					
 					draw_text_transformed(_tx, _ty, _chr, __temp_ss, __temp_ss, 0);
 					__temp_tx += (string_width(_chr) + __temp_trck) * __temp_ss;

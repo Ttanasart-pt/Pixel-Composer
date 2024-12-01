@@ -23,7 +23,7 @@
 	function _color_get_light(color) { INLINE return 0.299 * _color_get_red(color) + 0.587 * _color_get_green(color) + 0.114 * _color_get_blue(color); }
 #endregion
 
-#region conversions
+#region creation
 	function _make_color_rgb(r, g, b) {    INLINE return make_color_rgb(r * 255, g * 255, b * 255); }
 	
 	function make_color_rgba(r, g, b, a) { INLINE return int64(round(r) + (round(g) << 8) + (round(b) << 16) + (round(a) << 24)); }
@@ -80,21 +80,10 @@
 	}
 #endregion
 
-#region color spaces
-	function color_rgb(col) {
-		INLINE
-		return [ color_get_red(col) / 255, color_get_green(col) / 255, color_get_blue(col) / 255 ];
-	}
-	
-	function color_srgb(col) {
-		INLINE
-		return [ power(color_get_red(col) / 255, 2.2), power(color_get_green(col) / 255, 2.2), power(color_get_blue(col) / 255, 2.2) ];
-	}
-	
-	function color_hsv(col) {
-		INLINE
-		return [ color_get_hue(col) / 255, color_get_saturation(col) / 255, color_get_value(col) / 255 ];
-	}
+#region conversion
+	function color_rgb(col)  { return [ color_get_red(col) / 255,             color_get_green(col) / 255,             color_get_blue(col) / 255 ];             }
+	function color_srgb(col) { return [ power(color_get_red(col) / 255, 2.2), power(color_get_green(col) / 255, 2.2), power(color_get_blue(col) / 255, 2.2) ]; }
+	function color_hsv(col)  { return [ color_get_hue(col) / 255,             color_get_saturation(col) / 255,        color_get_value(col) / 255 ];            }
 	
 	global.CVTMAT_RGB_OKLAB = new __mat3([ 0.4121656120,  0.2118591070,  0.0883097947,
                                            0.5362752080,  0.6807189584,  0.2818474174,

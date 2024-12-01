@@ -3,7 +3,7 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	color = COLORS.node_blend_tunnel;
 	is_group_io  = true;
 	preview_draw = false;
-	custom_grid  = 8;
+	// custom_grid  = 8;
 	
 	setDimension(32, 32);
 	
@@ -38,6 +38,12 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	static update = function(frame = CURRENT_FRAME) {
 		onValueUpdate(); 
+		
+		var _frm = inputs[1].value_from;
+		
+		inputs[1].setType(   _frm? _frm.type         : VALUE_TYPE.any);
+		inputs[1].setDisplay(_frm? _frm.display_type : VALUE_DISPLAY._default);
+		inputs[1].updateColor();
 	}
 	
 	static resetMap = function() {
@@ -100,14 +106,6 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		if(index == 0) { RENDER_ALL_REORDER }
 	}
 	
-	static onValueFromUpdate = function(index) {
-		var _frm = inputs[1].value_from;
-		
-		inputs[1].setType(   _frm? _frm.type         : VALUE_TYPE.any);
-		inputs[1].setDisplay(_frm? _frm.display_type : VALUE_DISPLAY._default);
-		
-	}
-	
 	static step = function() {
 		value_validation[VALIDATION.error] = error_notification != noone;
 	}
@@ -140,15 +138,15 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	/////////////////////////////////////////////////////////////////////////////
 	
 	static pointIn = function(_x, _y, _mx, _my, _s) {
-		var xx = x * _s + _x;
-		var yy = y * _s + _y;
+		var xx =  x      * _s + _x;
+		var yy = (y + 8) * _s + _y;
 		
 		return point_in_circle(_mx, _my, xx, yy, _s * 24);
 	}
 	
 	static preDraw = function(_x, _y, _s) {
-		var xx = x * _s + _x;
-		var yy = y * _s + _y;
+		var xx =  x      * _s + _x;
+		var yy = (y + 8) * _s + _y;
 		
 		inputs[0].x = xx;
 		inputs[0].y = yy;
@@ -161,8 +159,8 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static drawJunctionNames = function(_x, _y, _mx, _my, _s) {}
 	
 	static onDrawNodeBehind = function(_x, _y, _mx, _my, _s) {
-		var xx = _x + x * _s;
-		var yy = _y + y * _s;
+		var xx =  x      * _s + _x;
+		var yy = (y + 8) * _s + _y;
 		
 		var hover = isHovering || hover_alpha == 1;
 		var tun   = findPanel("Panel_Tunnels");
@@ -187,8 +185,8 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			preview_connecting      = true;
 			node.preview_connecting = true;
 			
-			var tox = _x + node.x * _s;
-			var toy = _y + node.y * _s;
+			var tox = _x +  node.x      * _s;
+			var toy = _y + (node.y + 8) * _s;
 			draw_line_dotted(xx, yy, tox, toy, 2 * _s, current_time / 10, 3);
 		}
 		
@@ -196,11 +194,13 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	}
 	
 	static drawJunctions = function(_draw, _x, _y, _mx, _my, _s) {
-		var xx = x * _s + _x;
-		var yy = y * _s + _y;
+		var xx =  x      * _s + _x;
+		var yy = (y + 8) * _s + _y;
 		isHovering = point_in_circle(_mx, _my, xx, yy, _s * 24);
 		
+		gpu_set_tex_filter(true);
 		junction_hover = inputs[1].drawJunction(_draw, _s, _mx, _my);
+		gpu_set_tex_filter(false);
 		
 		if(!isHovering) return noone;
 		if(!junction_hover) draw_sprite_ext(THEME.view_pan, 0, _mx + ui(16), _my + ui(24), 1, 1, 0, COLORS._main_accent);
@@ -213,8 +213,8 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static drawNode = function(_draw, _x, _y, _mx, _my, _s) {
 		if(!_draw) return drawJunctions(_draw, _x, _y, _mx, _my, _s);
 		
-		var xx = x * _s + _x;
-		var yy = y * _s + _y;
+		var xx =  x      * _s + _x;
+		var yy = (y + 8) * _s + _y;
 		
 		hover_alpha = 0.5;
 		if(active_draw_index > -1) {

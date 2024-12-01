@@ -3,7 +3,7 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	color = COLORS.node_blend_tunnel;
 	is_group_io  = true;
 	preview_draw = false;
-	custom_grid  = 8;
+	// custom_grid  = 8;
 	
 	setDimension(32, 32);
 	
@@ -59,27 +59,28 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		if(ds_map_exists(project.tunnels_in, _key)) {
 			outputs[0].setType(project.tunnels_in[? _key].type);
-			outputs[0].display_type = project.tunnels_in[? _key].display_type;
+			outputs[0].setDisplay(project.tunnels_in[? _key].display_type);
 			outputs[0].setValue(project.tunnels_in[? _key].getValue());
 		} else {
 			outputs[0].setType(VALUE_TYPE.any);
-			outputs[0].display_type = VALUE_DISPLAY._default;
+			outputs[0].setDisplay(VALUE_DISPLAY._default);
 		}
-			
+		
+		outputs[0].updateColor();
 	}
 	
 	/////////////////////////////////////////////////////////////////////////////
 	
 	static pointIn = function(_x, _y, _mx, _my, _s) {
-		var xx = x * _s + _x;
-		var yy = y * _s + _y;
+		var xx =  x      * _s + _x;
+		var yy = (y + 8) * _s + _y;
 		
 		return point_in_circle(_mx, _my, xx, yy, _s * 24);
 	}
 	
 	static preDraw = function(_x, _y, _s) {
-		var xx = x * _s + _x;
-		var yy = y * _s + _y;
+		var xx =  x      * _s + _x;
+		var yy = (y + 8) * _s + _y;
 		
 		inputs[0].x = xx;
 		inputs[0].y = yy;
@@ -92,8 +93,8 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	static drawJunctionNames = function(_x, _y, _mx, _my, _s) {}
 	
 	static onDrawNodeBehind = function(_x, _y, _mx, _my, _s) {
-		var xx = _x + x * _s;
-		var yy = _y + y * _s;
+		var xx =  x      * _s + _x;
+		var yy = (y + 8) * _s + _y;
 		
 		var hover = isHovering || hover_alpha == 1;
 		var tun   = findPanel("Panel_Tunnels");
@@ -112,19 +113,21 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		draw_set_color(outputs[0].color_display);
 		draw_set_alpha(0.5);
 		
-		var frx = _x + node.x * _s;
-		var fry = _y + node.y * _s;
+		var frx = _x +  node.x      * _s;
+		var fry = _y + (node.y + 8) * _s;
 		draw_line_dotted(frx, fry, xx, yy, 2 * _s, current_time / 10, 3);
 		
 		draw_set_alpha(1);
 	}
 	
 	static drawJunctions = function(_draw, _x, _y, _mx, _my, _s) {
-		var xx = x * _s + _x;
-		var yy = y * _s + _y;
+		var xx =  x      * _s + _x;
+		var yy = (y + 8) * _s + _y;
 		isHovering = point_in_circle(_mx, _my, xx, yy, _s * 24);
 		
+		gpu_set_tex_filter(true);
 		junction_hover = outputs[0].drawJunction(_draw, _s, _mx, _my);
+		gpu_set_tex_filter(false);
 		
 		if(!isHovering) return noone;
 		if(!junction_hover) draw_sprite_ext(THEME.view_pan, 0, _mx + ui(16), _my + ui(24), 1, 1, 0, COLORS._main_accent);
@@ -136,8 +139,8 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	static drawNode = function(_draw, _x, _y, _mx, _my, _s) {
 		if(!_draw) return drawJunctions(_draw, _x, _y, _mx, _my, _s);
 		
-		var xx = x * _s + _x;
-		var yy = y * _s + _y;
+		var xx =  x      * _s + _x;
+		var yy = (y + 8) * _s + _y;
 		
 		hover_alpha = 0.5;
 		if(active_draw_index > -1) {

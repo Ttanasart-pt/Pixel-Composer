@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_color_oklch",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_color_oklch",
+  "parent":{
+    "name":"color",
+    "path":"folders/nodes/data/value/color.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

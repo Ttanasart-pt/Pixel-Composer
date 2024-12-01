@@ -89,7 +89,7 @@ function Panel_Tunnels() : PanelContent() constructor {
 			bx -= ui(32);
 		
 			if(buttonInstant(THEME.button_hide, bx, by, bw, bh, _m, sc_tunnel.active, sc_tunnel.hover, __txtx("panel_tunnel_create_tunnel", "Create tunnel out"), THEME.tunnel) == 2) {
-				var _node = nodeBuild("Node_Tunnel_Out", build_x, build_y);
+				var _node = nodeBuild("Node_Tunnel_Out", build_x, build_y - 8);
 				_node.inputs[0].setValue(key);
 				
 				if(in_dialog) instance_destroy();
@@ -166,6 +166,6 @@ function Panel_Tunnels() : PanelContent() constructor {
 		draw_text_add(_ww / 2, _by + _add_h / 2, __txtx("panel_tunnel_create_tunnel", "Create tunnel"));
 		
 		if(mouse_press(mb_left, pFOCUS && _hov))
-			nodeBuild("Node_Tunnel_In", build_x, build_y);
+			nodeBuild("Node_Tunnel_In", build_x, build_y - 8);
 	}
 }

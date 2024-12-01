@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"okhsl_function",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"okhsl_function",
+  "parent":{
+    "name":"value",
+    "path":"folders/functions/value.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

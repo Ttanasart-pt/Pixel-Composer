@@ -18,6 +18,7 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	rotator_s = 0;
 	rotator_p = 0;
 	rotator_m = 0;
+	rotate_dx = 0;
 	
 	newInput(0, nodeValue_Float("Value", self, 0))
 		.setVisible(true, true);
@@ -30,14 +31,16 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	newInput(4, nodeValue_Float("Step", self, 0.01));
 	
-	newInput(5, nodeValue_Bool("Clamp to range", self, true));
+	newInput(5, nodeValue_Bool("Clamp to range", self, false));
 	
 	newInput(6, nodeValue_Enum_Button("Style", self, 0, { data: [ "Blob", "Flat" ] }));
+	
+	newInput(7, nodeValue_Float("Rotate speed", self, 1));
 	
 	newOutput(0, nodeValue_Output("Number", self, VALUE_TYPE.float, 0));
 	
 	input_display_list = [ 0, 1, 
-		["Display", false], 2, 6, 3, 4, 5, 
+		["Editor",  false], 2, 6, 3, 5, 4, 7, 
 	]
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
@@ -59,41 +62,28 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		var _ww = 96, _hh = 56;
 		
+		inputs[3].setVisible(disp > 0);
+		inputs[4].setVisible(disp > 0);
+		inputs[5].setVisible(disp > 0);
+		inputs[6].setVisible(disp > 0);
+		inputs[7].setVisible(disp == 2);
+		
 		switch(disp) {
 			case 0 : 
-				inputs[3].setVisible(false);
-				inputs[4].setVisible(false);
-				inputs[5].setVisible(false);
-				inputs[6].setVisible(false);
 				break;
 				
 			case 1 : 
 				_ww = 160; 
 					 if(styl == 0) _hh = 96;
 				else if(styl == 1) _hh = 64;
-				
-				inputs[3].setVisible(true);
-				inputs[4].setVisible(true);
-				inputs[5].setVisible(true);
-				inputs[6].setVisible(true);
 				break;
 				
 			case 2 : 
 				_ww = 128; _hh = 128;
-				
-				inputs[3].setVisible(false);
-				inputs[4].setVisible(false);
-				inputs[5].setVisible(false);
-				inputs[6].setVisible(true);
 				break;
 				
 			case 3 : 
 				_ww = 160; _hh = 64;
-				
-				inputs[3].setVisible(true);
-				inputs[4].setVisible(true);
-				inputs[5].setVisible(true);
-				inputs[6].setVisible(true);
 				break;
 				
 		}
@@ -124,7 +114,6 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var _res = processNumber(_dat, _int);
 		
 		outputs[0].setValue(_res);
-		
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
@@ -135,6 +124,7 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var stp  = getInputData(4);
 		var cmp  = getInputData(5);
 		var sty  = getInputData(6);
+		var spd  = getInputData(7);
 		var _col = getColor();
 		
 		var val  = outputs[0].getValue();
@@ -272,19 +262,24 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					var _r = _ss / 2 - 10 * _s;
 					draw_circle_ui(bbox.xc, bbox.yc, _r, .04, cola(c1));
 					
-					var _knx =  bbox.xc + lengthdir_x(_r - 2 * _s, raw);
-					var _kny =  bbox.yc + lengthdir_y(_r - 2 * _s, raw);
+					var _knx =  bbox.xc + lengthdir_x(_r - 12 * _s, raw);
+					var _kny =  bbox.yc + lengthdir_y(_r - 12 * _s, raw);
 					
-					draw_circle_ui(_knx, _kny, 8 * _s, 0, cola(c0));
+					draw_circle_ui(_knx, _kny, 6 * _s, 0, cola(c0));
 				}
 				
 				if(rotator_dragging) {
 					rotator_m = lerp_float(rotator_m, 1, 4);
 					var dir = point_direction(bbox.xc, bbox.yc, _mx, _my);
 					var dx  = angle_difference(dir, rotator_p);
+					rotate_dx += dx;
 					rotator_p = dir;
 					
-					if(inputs[0].setValue(raw + dx))
+					var _val = rotator_s + rotate_dx * spd;
+					    _val = value_snap(_val, stp);
+					if(cmp) _val = clamp(_val, _minn, _maxx);
+					
+					if(inputs[0].setValue(_val))
 						UNDO_HOLDING = true;
 					
 					if(mouse_release(mb_left)) {
@@ -299,6 +294,7 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 						rotator_dragging = true;
 						rotator_s = raw;
 						rotator_p = point_direction(bbox.xc, bbox.yc, _mx, _my);
+						rotate_dx = 0;
 					}
 					
 					draggable = false;

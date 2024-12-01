@@ -4,7 +4,7 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	auto_height      = false;
 	junction_shift_y = 16;
-	custom_grid      = 8;
+	// custom_grid      = 8;
 	
 	isHovering     = false;
 	hover_scale    = 0;
@@ -48,15 +48,15 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	}
 	
 	static pointIn = function(_x, _y, _mx, _my, _s) {
-		var xx = x * _s + _x;
-		var yy = y * _s + _y;
+		var xx =  x      * _s + _x;
+		var yy = (y + 8) * _s + _y;
 		
 		return point_in_circle(_mx, _my, xx, yy, _s * 24);
 	}
 	
 	static preDraw = function(_x, _y, _s) {
-		var xx = x * _s + _x;
-		var yy = y * _s + _y;
+		var xx =  x      * _s + _x;
+		var yy = (y + 8) * _s + _y;
 		
 		inputs[0].x = xx;
 		inputs[0].y = yy;
@@ -71,8 +71,8 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	static drawJunctions = function(_draw, _x, _y, _mx, _my, _s) {
 		var _dval = PANEL_GRAPH.value_dragging;
 		var hover = _dval == noone || _dval.connect_type == CONNECT_TYPE.input? outputs[0] : inputs[0];
-		var xx	  = x * _s + _x;
-		var yy	  = y * _s + _y;
+		var xx =  x      * _s + _x;
+		var yy = (y + 8) * _s + _y;
 		
 		isHovering     = point_in_circle(_mx, _my, xx, yy, _s * 24);
 		hover_junction = noone;
@@ -91,8 +91,8 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	static drawNode = function(_draw, _x, _y, _mx, _my, _s) {
 		if(!_draw) return drawJunctions(_draw, _x, _y, _mx, _my, _s);
 		
-		var xx = x * _s + _x;
-		var yy = y * _s + _y;
+		var xx =  x      * _s + _x;
+		var yy = (y + 8) * _s + _y;
 		
 		hover_alpha = 0.5;
 		

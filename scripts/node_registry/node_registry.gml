@@ -244,7 +244,7 @@ function NodeObject(_name, _spr, _node, _create, tooltip = "", tags = []) constr
 	
 	#macro NODE_ADD_CAT if(!IS_CMD) addNodeCatagory
 #endregion
-	
+
 function nodeBuild(_name, _x, _y, _group = PANEL_GRAPH.getCurrentContext()) {
 	INLINE
 	
@@ -1017,8 +1017,9 @@ function __initNodes() {
 	addNodeCatagory("Color", color);
 		ds_list_add(color, "Colors");
 		addNodeObject(color, "Color",			s_node_color_out,		"Node_Color",			[1, Node_Color],,		"Create color value.");
-		addNodeObject(color, "RGB Color",		s_node_color_from_rgb,	"Node_Color_RGB",		[1, Node_Color_RGB],,	"Create color from RGB value.");
-		addNodeObject(color, "HSV Color",		s_node_color_from_hsv,	"Node_Color_HSV",		[1, Node_Color_HSV],,	"Create color from HSV value.");
+		addNodeObject(color, "RGB Color",		s_node_color_from_rgb,	"Node_Color_RGB",		[1, Node_Color_RGB],,	"Create (rgb) color from value in RGB color space.");
+		addNodeObject(color, "HSV Color",		s_node_color_from_hsv,	"Node_Color_HSV",		[1, Node_Color_HSV],,	"Create (rgb) color from value in HSV color space.");
+		addNodeObject(color, "OKLCH Color",		s_node_color_from_oklch,"Node_Color_OKLCH",		[1, Node_Color_OKLCH],, ["oklab"],	"Create (rgb) color from value in OKLCH color space.");
 		addNodeObject(color, "Sampler",			s_node_sampler,			"Node_Sampler",			[1, Node_Sampler],,		"Sample color from an image.");
 		addNodeObject(color, "Color Data",		s_node_color_data,		"Node_Color_Data",		[1, Node_Color_Data], ["red", "green", "blue", "alpha", "brightness", "luminance"],	"Get data (rgb, hsv, brightness) from color.");
 		addNodeObject(color, "Find pixel",		s_node_pixel_find,		"Node_Find_Pixel",		[1, Node_Find_Pixel],,	"Get the position of the first pixel with a given color.").setVersion(1130);

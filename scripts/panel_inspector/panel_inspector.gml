@@ -792,6 +792,7 @@ function Panel_Inspector() : PanelContent() constructor {
                 
             } else if(is_instanceof(jun, Inspector_Label)) {            // TEXT
                 var _txt = jun.text;
+                if(_txt == "") continue;
                 
                 draw_set_text(jun.font, fa_left, fa_top, COLORS._main_text_sub);
                 var _sh = string_height_ext(_txt, -1, con_w - ui(16)) + ui(16);
