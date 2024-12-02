@@ -89,13 +89,6 @@ function Node_VFX_Spawner(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y
 	
 	static getGraphPreviewSurface = function() { return getInputData(0); }
 	
-	static getPreviewingNode = function() {
-		if(!is(inline_context, Node_VFX_Group_Inline)) return self;
-		return inline_context.getPreviewingNode();
-	}
-	
-	static getPreviewValues = function() {
-		if(!is(inline_context, Node_VFX_Group_Inline)) return self;
-		return inline_context.getPreviewValues();
-	}
+	static getPreviewingNode = function() { return is(inline_context, Node_VFX_Group_Inline)? inline_context.getPreviewingNode() : self; }
+	static getPreviewValues  = function() { return is(inline_context, Node_VFX_Group_Inline)? inline_context.getPreviewValues()  : self; }
 }

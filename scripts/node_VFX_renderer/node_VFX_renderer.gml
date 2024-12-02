@@ -115,4 +115,9 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		cacheCurrentFrame(_outSurf);
 	}
+
+	static getPreviewValues = function() {
+		var val = outputs[preview_channel].getValue();
+		return is_surface(val)? val : temp_surface[0];
+	}
 }

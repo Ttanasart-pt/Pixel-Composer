@@ -190,6 +190,7 @@
     {"$GMFolder":"","%Name":"VFX","folderPath":"folders/nodes/data/simulation/VFX.yy","name":"VFX","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"affector","folderPath":"folders/nodes/data/simulation/VFX/affector.yy","name":"affector","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"generators","folderPath":"folders/nodes/data/simulation/VFX/generators.yy","name":"generators","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"__legacy","folderPath":"folders/nodes/data/simulation/VFX/__legacy.yy","name":"__legacy","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"tiler","folderPath":"folders/nodes/data/tiler.yy","name":"tiler","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"shaders","folderPath":"folders/nodes/data/tiler/shaders.yy","name":"shaders","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"sprites","folderPath":"folders/nodes/data/tiler/sprites.yy","name":"sprites","resourceType":"GMFolder","resourceVersion":"2.0",},

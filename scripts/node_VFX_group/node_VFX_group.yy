@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"node_VFX_group",
   "parent":{
-    "name":"VFX",
-    "path":"folders/nodes/data/simulation/VFX.yy",
+    "name":"__legacy",
+    "path":"folders/nodes/data/simulation/VFX/__legacy.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

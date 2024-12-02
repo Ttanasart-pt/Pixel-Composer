@@ -4,13 +4,13 @@ function Node_VFX_Triangulate(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	icon  = THEME.vfx;
 	use_cache = CACHE_USE.auto;
 	
-	function _Point(part) constructor { #region
+	function _Point(part) constructor {
 		self.part = part;
 		x  = part.x;
 		y  = part.y;
 		
 		static equal = function(point) { INLINE return x == point.x && y == point.y; }
-	} #endregion
+	}
 	
 	manual_ungroupable	 = false;
 	
@@ -38,15 +38,15 @@ function Node_VFX_Triangulate(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	
 	static onInspector2Update = function() { clearCache(); }
 	
-	static step = function() { #region
+	static step = function() {
 		var _ith = getInputData(4);
 		var _icl = getInputData(5);
 		
 		inputs[2].setVisible(!_ith);
 		inputs[3].setVisible(!_icl);
-	} #endregion
+	}
 	
-	static update = function() { #region
+	static update = function() {
 		var _dim = getInputData(0);
 		var _par = getInputData(1);
 		
@@ -124,5 +124,8 @@ function Node_VFX_Triangulate(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		surface_reset_shader();
 		
 		cacheCurrentFrame(_surf);
-	} #endregion
+	}
+	
+	static getPreviewingNode = function() { return is(inline_context, Node_VFX_Group_Inline)? inline_context.getPreviewingNode() : self; }
+	static getPreviewValues  = function() { return is(inline_context, Node_VFX_Group_Inline)? inline_context.getPreviewValues()  : self; }
 }

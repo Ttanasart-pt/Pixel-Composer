@@ -38,7 +38,7 @@ function Node_FLIP_Domain(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	newInput(12, nodeValue_Float("Wall Elasticity", self, 0.))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 2, 0.01 ] });
 	
-	newInput(13, nodeValue_Rotation("Gravity Direction", self, 0));
+	newInput(13, nodeValue_Rotation("Gravity Direction", self, -90));
 	
 	input_display_list = [
 		["Domain",	false], 0, 1, 9, 12, 

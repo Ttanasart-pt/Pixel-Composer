@@ -16,4 +16,7 @@ function Node_Smoke(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			_to.node.updateForward(frame);
 		}
 	}
+	
+	static getPreviewingNode = function() { return is(inline_context, Node_Smoke_Group_Inline)? inline_context.getPreviewingNode() : self; }
+	static getPreviewValues  = function() { return is(inline_context, Node_Smoke_Group_Inline)? inline_context.getPreviewValues()  : self; }
 }

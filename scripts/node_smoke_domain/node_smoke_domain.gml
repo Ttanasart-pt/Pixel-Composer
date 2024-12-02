@@ -53,12 +53,10 @@ function Node_Smoke_Domain(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 		["Advance Setings",	 true], 2, 4, 9, 10, 
 	];
 	
-	domain = new smokeSim_Domain(1, 1);
+	domain   = new smokeSim_Domain(1, 1);
 	_dim_old = [0, 0];
 	
 	static update = function(frame = CURRENT_FRAME) {
-		RETURN_ON_REST
-		
 		var _dim	= getInputData( 0);
 		var coll	= getInputData( 1);
 		var mdisTyp = getInputData( 2);

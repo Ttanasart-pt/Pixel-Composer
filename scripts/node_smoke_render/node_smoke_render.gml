@@ -2,7 +2,7 @@ function Node_Smoke_Render(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 	name  = "Render Domain";
 	color = COLORS.node_blend_smoke;
 	icon  = THEME.smoke_sim;
-	use_cache = CACHE_USE.auto;
+	use_cache = CACHE_USE.manual;
 	
 	manual_ungroupable	 = false;
 	
@@ -30,13 +30,18 @@ function Node_Smoke_Render(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 	
 	setTrigger(2, "Clear cache", [ THEME.cache, 0, COLORS._main_icon ]);
 	
+	temp_surface = [ 0 ];
+	
 	static onInspector2Update = function() { clearCache(); }
 	
 	static update = function(frame = CURRENT_FRAME) {
+		var _dom = getInputData(0);
+		if(is(_dom, smokeSim_Domain))
+			temp_surface[0] = surface_verify(temp_surface[0], _dom.width, _dom.height, attrDepth());
+		
 		if(recoverCache() || !PROJECT.animator.is_playing)
 			return;
 		
-		var _dom = getInputData(0);
 		var _int = getInputData(2);
 		var _drw = getInputData(3);
 		var _upd = getInputData(4);
@@ -63,5 +68,12 @@ function Node_Smoke_Render(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 		surface_reset_shader();
 		
 		cacheCurrentFrame(_outSurf);
+	}
+	
+	static getPreviewingNode = function() { return self; }
+	
+	static getPreviewValues = function() {
+		var val = outputs[preview_channel].getValue();
+		return is_surface(val)? val : temp_surface[0];
 	}
 }

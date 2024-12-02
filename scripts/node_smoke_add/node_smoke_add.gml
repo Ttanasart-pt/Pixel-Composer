@@ -2,7 +2,6 @@ function Node_Smoke_Add(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) con
 	name  = "Add Emitter";
 	color = COLORS.node_blend_smoke;
 	icon  = THEME.smoke_sim;
-	// setDimension(96, 96);
 	
 	manual_ungroupable	 = false;
 	
@@ -194,9 +193,15 @@ function Node_Smoke_Add(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) con
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
-		var _mat = getInputData(1);
-		if(!is_surface(_mat)) return;
+		var _typ = getInputData(8);
 		
-		draw_surface_fit(_mat, bbox.xc, bbox.yc, bbox.w, bbox.h);
+		if(_typ == 0) {
+			draw_circle_ui(bbox.xc, bbox.yc, min(bbox.w, bbox.h) * .25, 0);
+			
+		} else {
+			var _mat = getInputData(1);
+			if(!is_surface(_mat)) return;
+			draw_surface_fit(_mat, bbox.xc, bbox.yc, bbox.w, bbox.h);
+		}
 	}
 }

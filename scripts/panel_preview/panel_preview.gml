@@ -977,43 +977,42 @@ function Panel_Preview() : PanelContent() constructor {
                 surface_reset_shader();
             }
             
-            switch(splitView) {
-                case 0 :
-                    if(_ps0) {
-                        preview_node[0].previewing = 1;
+            if(splitView == 0 && _ps0) {
+                preview_node[0].previewing = 1;
+                
+                switch(tileMode) {
+                    case 0 :
+                        if(PROJECT.onion_skin.enabled) drawOnionSkin(_node, psx, psy, ss); 
+                        else                           draw_surface_ext(preview_surface[0], psx, psy, ss, ss, 0, c_white, preview_node[0].preview_alpha); 
+                        break;
                         
-                        switch(tileMode) {
-                            case 0 :
-                                if(PROJECT.onion_skin.enabled) drawOnionSkin(_node, psx, psy, ss); 
-                                else                           draw_surface_ext(preview_surface[0], psx, psy, ss, ss, 0, c_white, preview_node[0].preview_alpha); 
-                                break;
-                                
-                            case 1 : 
-                                tile_surface = surface_verify(tile_surface, w, surface_get_height_safe(preview_surface[0]) * ss);
-                                surface_set_target(tile_surface);
-                                    DRAW_CLEAR
-                                    draw_surface_tiled_ext_safe(preview_surface[0], psx, 0, ss, ss, 0, c_white, 1); 
-                                surface_reset_target();
-                                draw_surface_safe(tile_surface, 0, psy);
-                                break;
-                                
-                            case 2 : 
-                                tile_surface = surface_verify(tile_surface, surface_get_width_safe(preview_surface[0]) * ss, h);
-                                surface_set_target(tile_surface);
-                                    DRAW_CLEAR
-                                    draw_surface_tiled_ext_safe(preview_surface[0], 0, psy, ss, ss, 0, c_white, 1); 
-                                surface_reset_target();
-                                draw_surface_safe(tile_surface, psx, 0);
-                                break;
-                                
-                            case 3 : 
-                                draw_surface_tiled_ext_safe(preview_surface[0], psx, psy, ss, ss, 0, c_white, 1); break;
-                        }
-                    }
-                    break;
+                    case 1 : 
+                        tile_surface = surface_verify(tile_surface, w, surface_get_height_safe(preview_surface[0]) * ss);
+                        surface_set_target(tile_surface);
+                            DRAW_CLEAR
+                            draw_surface_tiled_ext_safe(preview_surface[0], psx, 0, ss, ss, 0, c_white, 1); 
+                        surface_reset_target();
+                        draw_surface_safe(tile_surface, 0, psy);
+                        break;
+                        
+                    case 2 : 
+                        tile_surface = surface_verify(tile_surface, surface_get_width_safe(preview_surface[0]) * ss, h);
+                        surface_set_target(tile_surface);
+                            DRAW_CLEAR
+                            draw_surface_tiled_ext_safe(preview_surface[0], 0, psy, ss, ss, 0, c_white, 1); 
+                        surface_reset_target();
+                        draw_surface_safe(tile_surface, psx, 0);
+                        break;
+                        
+                    case 3 : 
+                        draw_surface_tiled_ext_safe(preview_surface[0], psx, psy, ss, ss, 0, c_white, 1); break;
+                }
+            }
+            
+            switch(splitView) {
                 case 1 :
                     var sp = splitPosition * w;
-                
+                	
                     if(_ps0) {
                         preview_node[0].previewing = 2;
                         var maxX = min(sp, psx1);
@@ -1022,7 +1021,7 @@ function Panel_Preview() : PanelContent() constructor {
                         if(sW > 0)
                             draw_surface_part_ext_safe(preview_surface[0], 0, 0, sW, psh, psx, psy, ss, ss, 0, c_white, 1);
                     }
-                
+                	
                     if(_ps1) {
                         preview_node[1].previewing = 3;
                         var minX = max(ssx, sp);
@@ -1033,6 +1032,7 @@ function Panel_Preview() : PanelContent() constructor {
                             draw_surface_part_ext_safe(preview_surface[1], sX, 0, ssw - sX, ssh, spx, ssy, ss, ss, 0, c_white, 1);
                     }
                     break;
+                    
                 case 2 :
                     var sp = splitPosition * h;
                     
@@ -1044,7 +1044,7 @@ function Panel_Preview() : PanelContent() constructor {
                         if(sH > 0)
                             draw_surface_part_ext_safe(preview_surface[0], 0, 0, psw, sH, psx, psy, ss, ss, 0, c_white, 1);
                     }
-                
+                	
                     if(_ps1) {
                         preview_node[1].previewing = 5;
                         var minY = max(ssy, sp);

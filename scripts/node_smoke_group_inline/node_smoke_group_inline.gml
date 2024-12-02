@@ -14,4 +14,17 @@ function Node_Smoke_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inlin
 		addNode(_domain);
 		addNode(_render);
 	}
+	
+	static getPreviewingNode = function() {
+		for( var i = 0, n = array_length(nodes); i < n; i++ )
+			if(is(nodes[i], Node_Smoke_Render)) return nodes[i];
+		return self;
+	}
+	
+	static getPreviewValues = function() {
+		for( var i = 0, n = array_length(nodes); i < n; i++ )
+			if(is(nodes[i], Node_Smoke_Render)) return nodes[i].getPreviewValues();
+		return noone;
+	}
+	
 }

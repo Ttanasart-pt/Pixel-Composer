@@ -422,7 +422,8 @@ function gamut_clip_preserve_chroma(rgb) {
 	if (rgb[0] < 1 && rgb[1] < 1 && rgb[2] < 1 && rgb[0] > 0 && rgb[1] > 0 && rgb[2] > 0)
 		return rgb;
 
-	var lab = linear_srgb_to_oklab(rgb);
+	// var lab = linear_srgb_to_oklab(rgb);
+	var lab = convertLrgbToOklab(rgb2srgbLinear(rgb))
 
 	var L   = lab[0];
 	var eps = 0.00001;
@@ -437,7 +438,8 @@ function gamut_clip_preserve_chroma(rgb) {
 	var L_clipped = L0 * (1 - t) + t * L;
 	var C_clipped = t * C;
 
-	return oklab_to_linear_srgb([ L_clipped, C_clipped * a_, C_clipped * b_ ]);
+	// return oklab_to_linear_srgb([ L_clipped, C_clipped * a_, C_clipped * b_ ]);
+	return srgbLinear2rgb(convertOklabToLrgb([ L_clipped, C_clipped * a_, C_clipped * b_ ]));
 }
 
 function gamut_clip_project_to_0_5(rgb) {
