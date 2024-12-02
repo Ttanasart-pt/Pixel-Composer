@@ -77,7 +77,11 @@ function path_is_project(path, checkExist = true) {
 		case "pxc":
 		case "cpxc":
 			return true;
+			
+		default : 
+			return string_starts_with(ext, "pxc");
 	}
+	
 	return false;
 }
 

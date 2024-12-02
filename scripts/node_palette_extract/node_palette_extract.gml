@@ -16,15 +16,19 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	newInput(4, nodeValue_Enum_Scroll("Color Space", self,  1, { data: [ "RGB", "HSV" ], update_hover: false }))
 		.rejectArray();
 	
+	newInput(5, nodeValue_Surface("Mask", self));
+	
 	newOutput(0, nodeValue_Output("Palette", self, VALUE_TYPE.color, [ ]))
 		.setDisplay(VALUE_DISPLAY.palette);
 	
 	static getPreviewValues = function() { return getInputData(0); }
 	
 	input_display_list = [
-		["Surfaces", true],	0,
+		["Surfaces", true],	0, 5, 
 		["Palette",	false],	3, 4, 1, 2,
 	]
+	
+	temp_surface    = [ 0 ];
 	
 	current_palette = [];
 	current_color   = 0;
@@ -41,12 +45,9 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	
 	function sortPalette(pal) {
 		array_sort(pal, function(c0, c1) {
-			var r0 = _color_get_red(c0);
-			var r1 = _color_get_red(c1);
-			var g0 = _color_get_green(c0);
-			var g1 = _color_get_green(c1);
-			var b0 = _color_get_blue(c0);
-			var b1 = _color_get_blue(c1);
+			var r0 = _color_get_red(c0),   r1 = _color_get_red(c1);
+			var g0 = _color_get_green(c0), g1 = _color_get_green(c1);
+			var b0 = _color_get_blue(c0),  b1 = _color_get_blue(c1);
 			
 			var l0 = sqrt( .241 * r0 + .691 * g0 + .068 * b0 );
 			var l1 = sqrt( .241 * r1 + .691 * g1 + .068 * b1 );
@@ -304,8 +305,26 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 		var _size = _data[1];
 		var _seed = _data[2];
 		var _algo = _data[3];
+		var _mask = _data[5];
 		
-		return extractPalette(_surf, _algo, _size, _seed);
+		if(!is_surface(_surf)) return;
+		if(!is_surface(_mask)) return extractPalette(_surf, _algo, _size, _seed);
+			
+		var _dim = surface_get_dimension(_surf);
+		temp_surface[0] = surface_verify(temp_surface[0], _dim[0], _dim[1]);
+		
+		surface_set_target(temp_surface[0]);
+			DRAW_CLEAR
+			BLEND_OVERRIDE
+			draw_surface(_surf, 0, 0);
+			
+			BLEND_MULTIPLY
+			draw_surface(_mask, 0, 0);
+			
+			BLEND_NORMAL
+		surface_reset_target();
+		
+		return extractPalette(temp_surface[0], _algo, _size, _seed);
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
@@ -314,7 +333,7 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 		
 		var pal = outputs[0].getValue();
 		if(array_empty(pal)) return;
-		if(!is_array(pal[0])) pal = [ pal ];
+		if(!is_array(array_safe_get(pal, 0))) pal = [ pal ];
 		
 		var _y = bbox.y0;
 		var gh = bbox.h / array_length(pal);

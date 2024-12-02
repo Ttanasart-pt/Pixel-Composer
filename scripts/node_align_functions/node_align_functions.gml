@@ -1,6 +1,11 @@
 function node_halign(nodeList, alignment = fa_center) {
 	var amo = array_length(nodeList);
 	
+	for( var i = 0; i < amo; i++ ) {
+		recordAction(ACTION_TYPE.var_modify, nodeList[i], [ nodeList[i].x, "x", "node x position" ]);
+        recordAction(ACTION_TYPE.var_modify, nodeList[i], [ nodeList[i].y, "y", "node y position" ]);
+	}
+	
 	switch(alignment) {
 		case fa_left: 
 			var x0 = 999999;
@@ -10,6 +15,7 @@ function node_halign(nodeList, alignment = fa_center) {
 			for( var i = 0; i < amo; i++ )
 				nodeList[i].x = x0;
 			break;
+			
 		case fa_center: 
 			var xc = 0;
 			for( var i = 0; i < amo; i++ )
@@ -19,6 +25,7 @@ function node_halign(nodeList, alignment = fa_center) {
 			for( var i = 0; i < amo; i++ )
 				nodeList[i].x = xc - nodeList[i].w / 2;
 			break;
+			
 		case fa_right: 
 			var x0 = -999999;
 			for( var i = 0; i < amo; i++ )
@@ -33,6 +40,11 @@ function node_halign(nodeList, alignment = fa_center) {
 function node_valign(nodeList, alignment = fa_middle) {
 	var amo = array_length(nodeList);
 	
+	for( var i = 0; i < amo; i++ ) {
+		recordAction(ACTION_TYPE.var_modify, nodeList[i], [ nodeList[i].x, "x", "node x position" ]);
+        recordAction(ACTION_TYPE.var_modify, nodeList[i], [ nodeList[i].y, "y", "node y position" ]);
+	}
+	
 	switch(alignment) {
 		case fa_top: 
 			var y0 = 999999;
@@ -42,6 +54,7 @@ function node_valign(nodeList, alignment = fa_middle) {
 			for( var i = 0; i < amo; i++ )
 				nodeList[i].y = y0;
 			break;
+			
 		case fa_middle: 
 			var yc = 0;
 			for( var i = 0; i < amo; i++ )
@@ -51,6 +64,7 @@ function node_valign(nodeList, alignment = fa_middle) {
 			for( var i = 0; i < amo; i++ )
 				nodeList[i].y = yc - nodeList[i].h / 2;
 			break;
+			
 		case fa_bottom: 
 			var y0 = -999999;
 			for( var i = 0; i < amo; i++ )
@@ -65,6 +79,11 @@ function node_valign(nodeList, alignment = fa_middle) {
 function node_hdistribute(nodeList) {
 	var amo   = array_length(nodeList);
 	var nodes = ds_priority_create();
+	
+	for( var i = 0; i < amo; i++ ) {
+		recordAction(ACTION_TYPE.var_modify, nodeList[i], [ nodeList[i].x, "x", "node x position" ]);
+        recordAction(ACTION_TYPE.var_modify, nodeList[i], [ nodeList[i].y, "y", "node y position" ]);
+	}
 	
 	var x0 =  999999;
 	var x1 = -999999;
@@ -90,6 +109,11 @@ function node_vdistribute(nodeList) {
 	var amo   = array_length(nodeList);
 	var nodes = ds_priority_create();
 	
+	for( var i = 0; i < amo; i++ ) {
+		recordAction(ACTION_TYPE.var_modify, nodeList[i], [ nodeList[i].x, "x", "node x position" ]);
+        recordAction(ACTION_TYPE.var_modify, nodeList[i], [ nodeList[i].y, "y", "node y position" ]);
+	}
+	
 	var y0 =  999999;
 	var y1 = -999999;
 	for( var i = 0; i < amo; i++ ) {
@@ -113,6 +137,11 @@ function node_vdistribute(nodeList) {
 function node_hdistribute_dist(nodeList, anchor = noone, distance = 0) {
 	var amo   = array_length(nodeList);
 	var nodes = ds_priority_create();
+	
+	for( var i = 0; i < amo; i++ ) {
+		recordAction(ACTION_TYPE.var_modify, nodeList[i], [ nodeList[i].x, "x", "node x position" ]);
+        recordAction(ACTION_TYPE.var_modify, nodeList[i], [ nodeList[i].y, "y", "node y position" ]);
+	}
 	
 	var x0 =  999999;
 	var x1 = -999999;
@@ -149,6 +178,11 @@ function node_hdistribute_dist(nodeList, anchor = noone, distance = 0) {
 function node_vdistribute_dist(nodeList, anchor = noone, distance = 0) {
 	var amo   = array_length(nodeList);
 	var nodes = ds_priority_create();
+	
+	for( var i = 0; i < amo; i++ ) {
+		recordAction(ACTION_TYPE.var_modify, nodeList[i], [ nodeList[i].x, "x", "node x position" ]);
+        recordAction(ACTION_TYPE.var_modify, nodeList[i], [ nodeList[i].y, "y", "node y position" ]);
+	}
 	
 	var y0 =  999999;
 	var y1 = -999999;
@@ -189,6 +223,11 @@ function node_auto_align(nodeList) {
 	var amo = array_length(nodeList);
 	
 	for( var i = 0; i < amo; i++ ) {
+		recordAction(ACTION_TYPE.var_modify, nodeList[i], [ nodeList[i].x, "x", "node x position" ]);
+        recordAction(ACTION_TYPE.var_modify, nodeList[i], [ nodeList[i].y, "y", "node y position" ]);
+	}
+	
+	for( var i = 0; i < amo; i++ ) {
 		var _n = nodeList[i];
 		var _x = _n.x;
 		var _y = _n.y;
@@ -212,6 +251,14 @@ function node_auto_align(nodeList) {
 }
 
 function node_snap_grid(nodeList, spacing = 16) {
+	
+	var amo = array_length(nodeList);
+	
+	for( var i = 0; i < amo; i++ ) {
+		recordAction(ACTION_TYPE.var_modify, nodeList[i], [ nodeList[i].x, "x", "node x position" ]);
+        recordAction(ACTION_TYPE.var_modify, nodeList[i], [ nodeList[i].y, "y", "node y position" ]);
+	}
+	
 	for (var i = 0, n = array_length(nodeList); i < n; i++) {
 		var _node = nodeList[i];
 		

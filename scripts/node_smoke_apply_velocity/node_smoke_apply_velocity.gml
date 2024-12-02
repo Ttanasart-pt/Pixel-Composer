@@ -61,7 +61,8 @@ function Node_Smoke_Apply_Velocity(_x, _y, _group = noone) : Node_Smoke(_x, _y, 
 			}
 		}
 		
-		inputs[2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		var hv = inputs[2].drawOverlay(hover, active,  _x,  _y, _s, _mx, _my, _snx, _sny);       hover &= !hv;
+		var hv = inputs[3].drawOverlay(hover, active, _px, _py, _s, _mx, _my, _snx, _sny, 0, 4); hover &= !hv;
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {

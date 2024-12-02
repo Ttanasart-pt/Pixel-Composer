@@ -1793,12 +1793,15 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         
         if(mouse_on_graph && !node_bg_hovering && mouse_press(mb_left, _focus) && !graph_dragging_key && !graph_zooming_key) {
             if(is_instanceof(junction_hovering, NodeValue) && junction_hovering.draw_line_shift_hover) {
-                nodes_select_mx        = mx;
-                nodes_select_my        = my;
-                nodes_junction_d    = junction_hovering;
-                nodes_junction_dx    = junction_hovering.draw_line_shift_x;
-                nodes_junction_dy    = junction_hovering.draw_line_shift_y;
+                nodes_select_mx   = mx;
+                nodes_select_my   = my;
+                nodes_junction_d  = junction_hovering;
+                nodes_junction_dx = junction_hovering.draw_line_shift_x;
+                nodes_junction_dy = junction_hovering.draw_line_shift_y;
                 
+                recordAction(ACTION_TYPE.var_modify, junction_hovering, [ junction_hovering.draw_line_shift_x, "draw_line_shift_x", "junction anchor x position" ]);
+        		recordAction(ACTION_TYPE.var_modify, junction_hovering, [ junction_hovering.draw_line_shift_y, "draw_line_shift_y", "junction anchor y position" ]);
+        		
             } else if(array_empty(nodes_selecting) && !value_focus && !drag_locking) {
                 nodes_select_drag  = 1;
                 nodes_select_frame = frame_hovering == noone;
@@ -3559,6 +3562,9 @@ function load_file_path(path, _x = undefined, _y = undefined) {
                     node = new Node_Palette(_x, _y, PANEL_GRAPH.getCurrentContext()).skipDefault();
                     node.inputs[0].setValue(loadPalette(p));
                     break;
+                    
+            	default : 
+            		if(string_starts_with(ext, "pxc")) LOAD_PATH(p);
             }
             
             if(!IS_CMD) PANEL_GRAPH.mouse_grid_y += 160;
