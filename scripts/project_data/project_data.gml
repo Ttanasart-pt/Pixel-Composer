@@ -31,6 +31,8 @@
 		nodeMap	    = ds_map_create();
 		nodeNameMap = ds_map_create();
 		
+		pathInputs  = [];
+		
 		composer       = noone;
 		animator	   = new AnimationManager();
 		globalNode	   = new Node_Global();

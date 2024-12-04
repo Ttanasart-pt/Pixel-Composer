@@ -201,6 +201,7 @@ function Panel_Preview() : PanelContent() constructor {
         preview_sequence    = [ 0, 0 ];
         _preview_sequence   = preview_sequence;
         preview_rate        = 10;
+        preview_selecting   = false;
         
         right_menu_x        = 0;
         right_menu_y        = 8;
@@ -1459,8 +1460,11 @@ function Panel_Preview() : PanelContent() constructor {
                 var txt = $"{__txt("fps")} {fps}";
                 if(PREFERENCES.panel_preview_show_real_fps)
                     txt += $" / {FPS_REAL}";
-                    
-                draw_set_color(fps >= PROJECT.animator.framerate? COLORS._main_text_sub : COLORS._main_value_negative);
+                
+                var cc = fps >= PROJECT.animator.framerate? COLORS._main_text_sub : COLORS._main_value_negative;
+                if(!window_has_focus()) cc = COLORS._main_text_sub; 
+                
+                draw_set_color(cc);
                 draw_text(right_menu_x, right_menu_y, txt);
                 right_menu_y += _lh;
             
@@ -1544,6 +1548,8 @@ function Panel_Preview() : PanelContent() constructor {
         #region surface array
             preview_x_max = 0;
             
+            if(mouse_release(mb_left)) preview_selecting = false;
+            
             if(array_length(pseq) > 1) {
                 var _xx = tool_side_draw_l * ui(40);
                 var xx  = _xx + preview_x + ui(8);
@@ -1558,24 +1564,22 @@ function Panel_Preview() : PanelContent() constructor {
                         prev = prev.surface;
                     if(!is_surface(prev)) continue;
                 
-                    var prev_w = surface_get_width_safe(prev);
-                    var prev_h = surface_get_height_safe(prev);
-                    var ss     = prev_size / max(prev_w, prev_h);
+                    var prev_w  = surface_get_width_safe(prev);
+                    var prev_h  = surface_get_height_safe(prev);
+                    var ss      = prev_size / max(prev_w, prev_h);
                     var prev_sw = prev_w * ss;
-            
+            		var _hov    = hoverable && point_in_rectangle(mx, my, xx, yy, xx + prev_sw, yy + prev_h * ss);
+            		
                     draw_set_color(COLORS.panel_preview_surface_outline);
                     draw_rectangle(xx, yy, xx + prev_w * ss, yy + prev_h * ss, true);
-                
-                    if(hoverable && point_in_rectangle(mx, my, xx, yy, xx + prev_sw, yy + prev_h * ss)) {
-                        if(mouse_press(mb_left, pFOCUS)) {
-                            _node.preview_index = i;
-                            _node.onValueUpdate(0);
-                            if(resetViewOnDoubleClick)
-                                do_fullView = true;
-                        }
-                        draw_surface_ext_safe(prev, xx, yy, ss, ss, 0, c_white, 1);
-                    } else {
-                        draw_surface_ext_safe(prev, xx, yy, ss, ss, 0, c_white, 0.5);    
+                	draw_surface_ext_safe(prev, xx, yy, ss, ss, 0, c_white, .5 + .5 * _hov);
+                	
+                    if((_hov && mouse_press(mb_left, pFOCUS)) || (preview_selecting && mx > xx && mx <= xx + prev_sw)) {
+                        _node.preview_index = i;
+                        _node.onValueUpdate(0);
+                        if(resetViewOnDoubleClick) do_fullView = true;
+                        
+                        preview_selecting = true;
                     }
                 
                     if(i == _node.preview_index) {

@@ -37,8 +37,8 @@ function GMRoom_Background(_raw) : GMRoom_Layer(_raw) constructor {
     index  = 0;
     
     x = _raw.x;
-    y = _raw.y;
     
+    y = _raw.y;
     colour = _raw.colour;
 }
 

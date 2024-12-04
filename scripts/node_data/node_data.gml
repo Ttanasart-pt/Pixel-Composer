@@ -709,7 +709,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var _ou = preview_channel >= 0 && preview_channel < array_length(outputs) && outputs[preview_channel].type == VALUE_TYPE.surface;
 		var _prev_surf = previewable && preview_draw && (_ps || _ou);
 		
-		junction_draw_hei_y = SHOW_PARAM? 32  : 16;
+		junction_draw_hei_y = SHOW_PARAM?  32 : 16;
 		junction_draw_pad_y = SHOW_PARAM? 128 : 24;
 		
 		var _hi, _ho;
@@ -732,7 +732,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 		
 		var _p = previewable;
-		for( var i = 0; i < array_length(inputs); i++ ) {
+		for( var i = 0, n = array_length(inputs); i < n; i++ ) {
 			var _inp = inputs[i];
 			if(is_instanceof(_inp, NodeValue) && _inp.isVisible()) {
 				if(_p) _hi += junction_draw_hei_y;
@@ -743,13 +743,13 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(auto_input && dummy_input) _hi += junction_draw_hei_y;
 		var _p = previewable;
 		
-		for( var i = 0; i < array_length(outputs); i++ ) {
+		for( var i = 0, n = array_length(outputs); i < n; i++ ) {
 			if(!outputs[i].isVisible()) continue;
 			if(_p) _ho += junction_draw_hei_y;
 			_p = true;
 		}
 		
-		for( var i = 0; i < array_length(inputs); i++ ) {
+		for( var i = 0, n = array_length(inputs); i < n; i++ ) {
 			var _inp = inputs[i];
 			var _byp = _inp.bypass_junc;
 			if(_byp == noone) continue;
@@ -758,7 +758,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 		
 		if(attributes.outp_meta) {
-			for( var i = 0; i < array_length(junc_meta); i++ ) {
+			for( var i = 0, n = array_length(junc_meta); i < n; i++ ) {
 				if(!junc_meta[i].isVisible()) continue;
 				_ho += junction_draw_hei_y;
 			}
@@ -1359,22 +1359,24 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 	} run_in(1, function() /*=>*/ { refreshNodeDisplay(); });
 	
-	__preDraw_data = { _x: undefined, _y: undefined, _s: undefined, _p: undefined, sp: undefined, force: false };
+	__preDraw_data = { _x: undefined, _y: undefined, _w: undefined, _h: undefined, _s: undefined, _p: undefined, sp: undefined, force: false };
 	
 	static preDraw = function(_x, _y, _s) {
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
 		
-		var _upd = __preDraw_data._x != xx || __preDraw_data._y != yy || __preDraw_data._s != _s || __preDraw_data.force || 
-		           __preDraw_data._p != previewable || __preDraw_data.sp != show_parameter 
+		var _d   = __preDraw_data;
+		var _upd = _d._x != xx || _d._y != yy || _d._s != _s || _d.force || _d._w != w || _d._h != h || _d._p != previewable || _d.sp != show_parameter 
 		
-		__preDraw_data._x = xx;
-		__preDraw_data._y = yy;
-		__preDraw_data._s = _s;
-		__preDraw_data._p = previewable;
-		__preDraw_data.sp = show_parameter;
+		_d._x = xx;
+		_d._y = yy;
+		_d._w = w;
+		_d._h = h;
+		_d._s = _s;
+		_d._p = previewable;
+		_d.sp = show_parameter;
 		
-		__preDraw_data.force = false;
+		_d.force = false;
 		
 		if(!_upd) {
 			if(SHOW_PARAM) h = h_param;
@@ -2042,7 +2044,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(SHOW_PARAM) drawJunctionWidget(xx, yy, _mx, _my, _s, _hover, _focus);
 		
 		draw_name = false;
-		if((previewable && _s >= 0.75) || (!previewable && h * _s >= name_height * .5)) drawNodeName(xx, yy, _s, _panel);
+		if((previewable && _s >= 0.5) || (!previewable && h * _s >= name_height * .5)) drawNodeName(xx, yy, _s, _panel);
 		
 		if(attributes.annotation != "") {
 			draw_set_text(f_sdf_medium, fa_left, fa_bottom, attributes.annotation_color);

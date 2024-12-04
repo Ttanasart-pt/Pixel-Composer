@@ -245,20 +245,7 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	
 	static pointIn = function(_x, _y, _mx, _my, _s) { return false; }
 	
-	static cullCheck = function(_x, _y, _s, minx, miny, maxx, maxy) {
-		var x0 = bbox[0] * _s + _x;
-		var y0 = bbox[1] * _s + _y;
-		var x1 = bbox[2] * _s + _x;
-		var y1 = bbox[3] * _s + _y;
-		
-		draw_boundary[0] = minx;
-		draw_boundary[1] = miny;
-		draw_boundary[2] = maxx;
-		draw_boundary[3] = maxy;
-		
-		draw_graph_culled = !rectangle_in_rectangle(minx, miny, maxx, maxy, x0, y0, x1, y1);
-		return !draw_graph_culled;
-	}
+	static cullCheck = function(_x, _y, _s, minx, miny, maxx, maxy) { return true; }
 	
 	static drawNodeBG = function(_x, _y, _mx, _my, _s) {
 		refreshGroupBG();

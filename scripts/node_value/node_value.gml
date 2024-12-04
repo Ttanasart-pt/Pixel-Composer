@@ -834,28 +834,27 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break;
 						
 					case VALUE_DISPLAY.path_load :
-						editWidget = new textBox(TEXTBOX_INPUT.text, function(str) /*=>*/ {return setValueInspector(str)});
-							
-						editWidget.align  = fa_left;
-						editWidget.side_button = button(function() { 
+						editWidget = new textBox(TEXTBOX_INPUT.text, function(str) /*=>*/ { if(NOT_LOAD) check_directory_redirector(str); setValueInspector(str); });
+						editWidget.align = fa_left;
+						array_append(node.project.pathInputs, self);
+						
+						editWidget.side_button = button(function() /*=>*/ { 
 							var path = display_data.filter == "dir"? get_directory("") : get_open_filename_pxc(display_data.filter, "");
 							key_release();
 							if(path == "") return noone;
+							
+							if(NOT_LOAD) check_directory_redirector(path);
 							return setValueInspector(path);
 						}, THEME.button_path_icon).setTooltip(__txt("Open Explorer..."));
 						
-						editWidget.front_button = button(function() { 
-							var project = PROJECT;
-							if(project.path == "") {
-								noti_warning("Save the current project first.")
-								return;
-							}
+						editWidget.front_button = button(function() /*=>*/ { 
+							if(node.project.path == "") { noti_warning("Save the current project first."); return; }
 							
 							var _pth = getValue();
 							if(!file_exists(_pth)) return;
 							
 							var _nam = filename_name(_pth);
-							var _dir = filename_dir(project.path);
+							var _dir = filename_dir(node.project.path);
 							
 							var _newpath = _dir + "/" + _nam;
 							file_copy(_pth, _newpath);
@@ -1626,6 +1625,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	static isConnectable = function(_valueFrom, checkRecur = true, _log = false) { 
+		if(LOADING || APPENDING) return 1;
 		
 		if(_valueFrom == -1 || _valueFrom == undefined || _valueFrom == noone) {
 			if(_log) noti_warning($"LOAD: Cannot set node connection from {_valueFrom} to {name} of node {node.name}.",, node);
