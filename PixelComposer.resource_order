@@ -697,6 +697,7 @@
     {"name":"node_array","order":5,"path":"scripts/node_array/node_array.yy",},
     {"name":"node_ase_layer","order":1,"path":"scripts/node_ase_layer/node_ase_layer.yy",},
     {"name":"node_ase_tag","order":2,"path":"scripts/node_ase_tag/node_ase_tag.yy",},
+    {"name":"node_assert","order":30,"path":"scripts/node_assert/node_assert.yy",},
     {"name":"node_atlas_get","order":1,"path":"scripts/node_atlas_get/node_atlas_get.yy",},
     {"name":"node_atlas_set","order":2,"path":"scripts/node_atlas_set/node_atlas_set.yy",},
     {"name":"node_atlas_to_struct","order":3,"path":"scripts/node_atlas_to_struct/node_atlas_to_struct.yy",},

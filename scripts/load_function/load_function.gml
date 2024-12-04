@@ -28,7 +28,8 @@ function TEST_PATH(path) {
 	PROJECT = new Project();
 	
 	LOAD_AT(path);
-	PANEL_GRAPH.setProject(PROJECT);
+	Render();
+	closeProject(PROJECT);
 }
 
 function LOAD_PATH(path, readonly = false, safe_mode = false) {

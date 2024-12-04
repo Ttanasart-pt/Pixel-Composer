@@ -61,7 +61,7 @@ function NodeListSort(_nodeList) {
 
 function __sortNode(_arr, _node) {
 	if(_node.topoSorted) return;
-		
+	
 	var _parents = [];
 	var _prev    = _node.getPreviousNodes();
 		

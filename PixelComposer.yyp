@@ -1235,6 +1235,7 @@
     {"id":{"name":"node_ase_file_read","path":"scripts/node_ase_file_read/node_ase_file_read.yy",},},
     {"id":{"name":"node_ase_layer","path":"scripts/node_ase_layer/node_ase_layer.yy",},},
     {"id":{"name":"node_ase_tag","path":"scripts/node_ase_tag/node_ase_tag.yy",},},
+    {"id":{"name":"node_assert","path":"scripts/node_assert/node_assert.yy",},},
     {"id":{"name":"node_atlas_draw","path":"scripts/node_atlas_draw/node_atlas_draw.yy",},},
     {"id":{"name":"node_atlas_get","path":"scripts/node_atlas_get/node_atlas_get.yy",},},
     {"id":{"name":"node_atlas_set","path":"scripts/node_atlas_set/node_atlas_set.yy",},},

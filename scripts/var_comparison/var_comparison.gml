@@ -1,4 +1,4 @@
-function isEqual(val1, val2, struct_expand = false, _depth = 0) { #region
+function isEqual(val1, val2, struct_expand = false, _depth = 0) {
 	INLINE
 	
 	if(_depth > 8) return false;
@@ -10,9 +10,9 @@ function isEqual(val1, val2, struct_expand = false, _depth = 0) { #region
 		return struct_equal(val1, val2, _depth);
 	
 	return val1 == val2;
-} #endregion
+}
 
-function array_member_equal(arr1, arr2, _depth = 0) { #region
+function array_member_equal(arr1, arr2, _depth = 0) {
 	INLINE
 	
 	if(array_length(arr1) != array_length(arr2)) return false;
@@ -21,9 +21,9 @@ function array_member_equal(arr1, arr2, _depth = 0) { #region
 		if(!isEqual(arr1[i], arr2[i],, _depth + 1)) return false;
 	
 	return true;
-} #endregion
+}
 
-function struct_equal(str1, str2, _depth = 0) { #region
+function struct_equal(str1, str2, _depth = 0) {
 	INLINE
 	
 	var key1 = variable_struct_get_names(str1);
@@ -35,4 +35,4 @@ function struct_equal(str1, str2, _depth = 0) { #region
 		if(!isEqual(str1[$ key1[i]], str2[$ key1[i]],, _depth + 1)) return false;
 	
 	return true;
-} #endregion
+}

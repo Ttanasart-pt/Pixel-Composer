@@ -188,6 +188,7 @@
 	}
 	
 	function refreshNodeMap() {
+		if(!ds_exists(PROJECT.nodeNameMap, ds_type_map)) return;
 		ds_map_clear(PROJECT.nodeNameMap);
 		
 		for (var i = 0, n = array_length(PROJECT.allNodes); i < n; i++) {

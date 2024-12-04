@@ -1188,9 +1188,17 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static getPreviousNodes = function() {
 		var prev = [];
+		var prMp = {};
+		var _n;
 		
-		if(attributes.show_update_trigger && updatedInTrigger.value_from) 
-			array_push(prev, updatedInTrigger.value_from.node);
+		if(attributes.show_update_trigger && updatedInTrigger.value_from) {
+			_n = updatedInTrigger.value_from.node;
+			
+			if(!struct_has(prMp, _n.node_id)) {
+				array_push(prev, _n);
+				prMp[$ _n.node_id] = 1;
+			}
+		}
 		
 		for( var i = 0, n = array_length(inputs); i < n; i++ ) {
 			var _in = inputs[i];
@@ -1198,15 +1206,30 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			if(_in.value_from != noone) {
 				if(in_VFX && !_in.value_from.node.in_VFX) {
 					array_push(in_VFX.prev_nodes, _in.value_from.node);
-					array_push(prev, in_VFX);
+					
+					if(!struct_has(prMp, in_VFX.node_id)) {
+						array_push(prev, in_VFX);
+						prMp[$ in_VFX.node_id] = 1;
+					}
+					
 					continue;
 				}
 				
-				array_push_unique(prev, _in.value_from.node);
+				_n = _in.value_from.node;
+				if(!struct_has(prMp, _n.node_id)) {
+					array_push(prev, _n);
+					prMp[$ _n.node_id] = 1;
+				}
+				
 			}
 				
-			if(_in.value_from_loop != noone)
-				array_push_unique(prev, _in.value_from_loop);
+			if(_in.value_from_loop != noone) {
+				_n = _in.value_from_loop;
+				if(!struct_has(prMp, _n.node_id)) {
+					array_push(prev, _n);
+					prMp[$ _n.node_id] = 1;
+				}
+			}
 		}
 		
 		onGetPreviousNodes(prev);

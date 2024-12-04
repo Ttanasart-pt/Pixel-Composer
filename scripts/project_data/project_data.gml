@@ -14,12 +14,13 @@
 	function Project() constructor {
 		active	= true;
 		
+		seed       = irandom_range(100000, 999999);
 		meta       = __getdefaultMetaData();	
 		path	   = "";
 		thumbnail  = "";													
 		version    = SAVE_VERSION;
 		is_nightly = NIGHTLY;
-		seed       = irandom_range(100000, 999999);
+		freeze     = false;
 		
 		modified  = false;
 		readonly  = false;
@@ -230,6 +231,7 @@
 			var _map = {};
 			_map.version    = SAVE_VERSION;
 			_map.is_nightly = NIGHTLY;
+			_map.freeze     = freeze;
 			
 			var _anim_map = {};
 			_anim_map.frames_total = animator.frames_total;
@@ -294,6 +296,7 @@
 			if(struct_has(_map, "attributes"))	struct_override(attributes,  _map.attributes);
 			if(struct_has(_map, "metadata"))	meta.deserialize(_map.metadata);
 			if(struct_has(_map, "composer"))	composer = _map.composer;
+			if(struct_has(_map, "freeze"))	    freeze   = _map.freeze;
 			
 			if(struct_has(_map, "graph_display_parameter"))	struct_override(graph_display_parameter,  _map.graph_display_parameter);
 			

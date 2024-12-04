@@ -15,11 +15,12 @@ function NEW() {
 
 function SERIALIZE_PROJECT(project = PROJECT) {
 	var _map = project.serialize();
-	
 	return PREFERENCES.save_file_minify? json_stringify_minify(_map) : json_stringify(_map, true);
 }
 
 function SET_PATH(project, path) {
+	if(ASSERTING) return;
+	
 	if(path == "") {
 		project.readonly = false;
 		
@@ -43,7 +44,7 @@ function SAVE_ALL() {
 function SAVE(project = PROJECT) {
 	if(DEMO) return false;
 	
-	if(project.path == "" || project.readonly || path_is_backup(project.path))
+	if(project.path == "" || project.freeze || project.readonly || path_is_backup(project.path))
 		return SAVE_AS(project);
 		
 	return SAVE_AT(project, project.path);
@@ -78,10 +79,9 @@ function SAVE_AT(project = PROJECT, path = "", log = "save at ") {
 	if(PREFERENCES.save_backup) {
 		for(var i = PREFERENCES.save_backup - 1; i >= 0; i--) {
 			var _p = path;
-			if(i) _p = $"{path}{string(i)}"
+			if(i) _p = $"{path}{i}"
 			
-			if(file_exists(_p))
-				file_rename(_p, $"{path}{string(i + 1)}");
+			if(file_exists(_p)) file_rename(_p, $"{path}{i + 1}");
 		}
 	}
 	

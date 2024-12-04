@@ -499,13 +499,8 @@ function surface_reset_target_override() { __surface_reset_target(); winwin_draw
 	}
 
 	function surface_array_clone(arr) {
-		if(!is_array(arr)) {
-			if(is_surface(arr)) 
-				return surface_clone(arr);
-			else
-				return arr;
-		}
-	
+		if(!is_array(arr)) return is_surface(arr)? surface_clone(arr) : arr;
+		
 		var _arr = [];
 	
 		for( var i = 0, n = array_length(arr); i < n; i++ ) 

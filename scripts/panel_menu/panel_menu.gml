@@ -253,8 +253,11 @@ function Panel_Menu() : PanelContent() constructor {
         array_push(menus, [ __txt("Dev"), [
             MENU_ITEMS.console_panel,
             menuItem(__txtx("panel_debug_overlay", "Debug overlay"),                              function() /*=>*/ { show_debug_overlay(true); }),
-            menuItem(__txtx("panel_menu_tester", "Tester"),                                       function() /*=>*/ { var dia = dialogPanelCall(new Panel_Test()); }),
             menuItem(__txtx("panel_menu_profile_render", "Render Profiler"),                      function() /*=>*/ { var dia = dialogPanelCall(new Panel_Profile_Render()); }),
+            -1, 
+            
+            menuItem(__txtx("panel_menu_tester", "Save frozen"),                                  function() /*=>*/ { PROJECT.freeze = true; SAVE(); }),
+            menuItem(__txtx("panel_menu_tester", "Tester"),                                       function() /*=>*/ { var dia = dialogPanelCall(new Panel_Test()); }),
             -1, 
             
             menuItem(__txtx("panel_menu_test_load_all", "Load all current collections"),          function() /*=>*/ { __test_load_current_collections(); }),

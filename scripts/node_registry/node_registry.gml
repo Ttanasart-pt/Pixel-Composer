@@ -1068,7 +1068,7 @@ function __initNodes() {
 		addNodeObject(animation, "Audio Volume", s_node_audio_volume,	"Node_Audio_Loudness",	[1, Node_Audio_Loudness],, "Calculate volume of an audio bit array.").setVersion(11540);
 	#endregion
 	
-	#region node
+	#region misc
 	var node = ds_list_create(); 
 	addNodeCatagory("Misc", node);
 		ds_list_add(node, "Control");
@@ -1122,7 +1122,8 @@ function __initNodes() {
 		addNodeObject(node, "Execute Shell",	s_node_shell_excecute,		"Node_Shell",				[1, Node_Shell], ["terminal", "execute", "run"], "Execute shell script.").setVersion(11530);
 		addNodeObject(node, "Monitor Capture",	s_node_monitor_capture,		"Node_Monitor_Capture",		[1, Node_Monitor_Capture]).notTest();
 		addNodeObject(node, "GUI In",			s_node_gui_in,				"Node_Application_In",		[1, Node_Application_In]).notTest();
-		addNodeObject(node, "GUI Out",			s_node_gui_out,				"Node_Application_Out",		[1, Node_Application_Out]).notTest();
+		addNodeObject(node, "GUI Out",			s_node_gui_out,				"Node_Application_Out",     [1, Node_Application_Out]).notTest();
+		addNodeObject(node, "Assert",			s_node_shell_excecute,		"Node_Assert",              [1, Node_Assert]);
 		// addNodeObject(node, "DLL",				s_node_gui_out,				"Node_DLL",					[1, Node_DLL]).setVersion(11750);
 	#endregion
 	
