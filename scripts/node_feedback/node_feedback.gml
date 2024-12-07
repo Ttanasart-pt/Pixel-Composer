@@ -15,7 +15,9 @@ function Node_Feedback(_x, _y, _group = noone) : Node_Collection(_x, _y, _group)
 		output.inputs[1].setFrom(input.outputs[1]);
 	} #endregion
 	
-	static getNextNodes = function() { #region
+	static getNextNodes = function(checkLoop = false) {
+		if(checkLoop) return;
+		
 		var allReady = true;
 		for(var i = custom_input_index; i < array_length(inputs); i++) {
 			var _in = inputs[i].from;
@@ -27,5 +29,5 @@ function Node_Feedback(_x, _y, _group = noone) : Node_Collection(_x, _y, _group)
 		if(!allReady) return [];
 		
 		return __nodeLeafList(getNodeList());
-	} #endregion
+	}
 }

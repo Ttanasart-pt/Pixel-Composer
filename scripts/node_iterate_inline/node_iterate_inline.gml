@@ -18,13 +18,14 @@ function Node_Iterate_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 	junc_out = noone;
 	
 	value_buffer    = undefined;
+	iteration_count = 0;
 	iterated        = 0;
 	
 	static getIterationCount = function() { return getInputData(0); }
 	static bypassConnection  = function() { return iterated > 1 && !is_undefined(value_buffer); }
 	static bypassNextNode    = function() { return iterated < getIterationCount(); }
 	
-	static getNextNodes = function() {
+	static getNextNodes = function(checkLoop = false) {
 		LOG_BLOCK_START();	
 		LOG_IF(global.FLAG.render == 1, "[outputNextNode] Get next node from inline iterate");
 		
@@ -85,7 +86,10 @@ function Node_Iterate_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 	}
 	
 	static update = function() {
-		iteration_count = inputs[0].getValue();
+		var _itc = inputs[0].getValue();
+		if(_itc != iteration_count) RENDER_ALL_REORDER;
+		
+		iteration_count = _itc;
 		iterated        = 0;
 		value_buffer    = undefined;
 	}

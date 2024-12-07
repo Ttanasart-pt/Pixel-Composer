@@ -173,11 +173,15 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	nodes       = [];
 	node_length = 0;
 	modifiable  = true;
+	setDimension(w, 0);
 	
 	ungroupable			= true;
 	auto_render_time	= false;
 	combine_render_time = true;
 	previewable         = true;
+	
+	isPure   = false;
+	nodeTopo = [];
 	
 	reset_all_child 	= false;
 	isInstancer			= false;
@@ -193,7 +197,6 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	group_output_display_list		= [];
 	attributes.input_display_list   = [];
 	attributes.output_display_list  = [];
-	attributes.lock_input           = false;
 	
 	managedRenderOrder = false;
 	
@@ -226,11 +229,15 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	attribute_interpolation();
 	attribute_oversample();
 	
+	attributes.lock_input    = false;
+	attributes.pure_function =  true;
+	
 	tool_node = noone;
 	draw_input_overlay = true;
 	
-	array_push(attributeEditors, "Group IO");
-	array_push(attributeEditors, ["Lock Input",          function() /*=>*/ {return attributes.lock_input}, new checkBox(function() /*=>*/ { attributes.lock_input = !attributes.lock_input   }) ]);
+	array_push(attributeEditors, "Group");
+	array_push(attributeEditors, ["Pure Function",       function() /*=>*/ {return attributes.pure_function}, new checkBox(function() /*=>*/ { attributes.pure_function = !attributes.pure_function   }) ]);
+	array_push(attributeEditors, ["Lock Input",          function() /*=>*/ {return attributes.lock_input},    new checkBox(function() /*=>*/ { attributes.lock_input    = !attributes.lock_input      }) ]);
 	array_push(attributeEditors, ["Edit Input Display",  function() /*=>*/ {return 0}, button(function() /*=>*/ { dialogCall(o_dialog_group_input_order).setNode(self, CONNECT_TYPE.input);  }) ]);
 	array_push(attributeEditors, ["Edit Output Display", function() /*=>*/ {return 0}, button(function() /*=>*/ { dialogCall(o_dialog_group_input_order).setNode(self, CONNECT_TYPE.output); }) ]);
 	
@@ -259,15 +266,28 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		hasInsp2 = false;
 		
 		node_length  = array_length(nodes);
+		checkPureFunction();
+	}
+	
+	static checkPureFunction = function(updateTopo = true) {
+		var p = attributes.pure_function;
 		
-		var i = 0;
-		repeat(node_length) {
-			hasInsp1 |= nodes[i].hasInspector1Update();
-			hasInsp2 |= nodes[i].hasInspector2Update();
+		for( var i = 0, n = array_length(nodes); i < n; i++ ) {
+			var _node = nodes[i];
+			hasInsp1 |= _node.hasInspector1Update();
+			hasInsp2 |= _node.hasInspector2Update();
 			
-			i++;
+			p &= !is(_node, Node_Collection_Inline);
+			p &= !is(_node, Node_Collection);
+			p &= !_node.isAnimated();
 		}
 		
+		icon_blend = p? COLORS._main_value_positive : c_white;
+		
+		if(updateTopo || !isPure && p) nodeTopo = NodeListSort(nodes);
+		isPure = p;
+		
+		if(group) group.checkPureFunction(updateTopo);
 	}
 	
 	static getNodeBase = function() { return instanceBase == noone?  self : instanceBase.getNodeBase(); }
@@ -398,7 +418,18 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	/////========== RENDERING ===========
 	
-	static getNextNodes = function() { return getNextNodesInternal(); } 
+	doUpdate = doUpdateLite;
+	
+	static update = function() {
+		if(!isPure) return;
+		
+		for( var i = 0, n = array_length(nodeTopo); i < n; i++ ) {
+			var _node = nodeTopo[i];
+			_node.doUpdate();
+		}
+	}
+	
+	static getNextNodes = function(checkLoop = false) { return isPure? getNextNodesExternal() : getNextNodesInternal(); } 
 	
 	static getNextNodesInternal = function() { //get node inside the group
 		LOG_BLOCK_START();

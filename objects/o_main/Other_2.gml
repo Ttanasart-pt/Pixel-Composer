@@ -56,7 +56,7 @@
 #endregion
 
 #region Set up
-	var t = current_time;
+	var t = get_timer();
 	
 	              PREF_LOAD();                  log_message("SESSION", $"> init Preferences   | complete in {get_timer() - t}");    t = get_timer();
 	if(!IS_CMD) { __initLocale();               log_message("SESSION", $"> init Locale        | complete in {get_timer() - t}");    t = get_timer(); }

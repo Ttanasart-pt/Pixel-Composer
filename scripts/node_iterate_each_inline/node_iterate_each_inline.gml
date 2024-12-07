@@ -9,9 +9,11 @@ function Node_Iterate_Each_Inline(_x, _y, _group = noone) : Node_Collection_Inli
 	
 	input_node_type  = Node_Iterator_Each_Inline_Input;
 	output_node_type = Node_Iterator_Each_Inline_Output;
+	
+	iteration_count  = 0;
 	iterated         = 0;
 	
-	if(!LOADING && !APPENDING) { #region
+	if(!LOADING && !APPENDING) {
 		var input  = nodeBuild("Node_Iterator_Each_Inline_Input",  x,       y);
 		var output = nodeBuild("Node_Iterator_Each_Inline_Output", x + 256, y);
 		
@@ -32,18 +34,18 @@ function Node_Iterate_Each_Inline(_x, _y, _group = noone) : Node_Collection_Inli
 			
 			array_push(APPEND_LIST, input, output);
 		}
-	} #endregion
+	}
 	
-	static getIterationCount = function() { #region
+	static getIterationCount = function() {
 		var _arr = input_node.inputs[0].getValue();
 		return array_length(_arr);
-	} #endregion
+	}
 	
-	static bypassNextNode = function() { #region
+	static bypassNextNode = function() {
 		return iterated < getIterationCount();
-	} #endregion
+	}
 	
-	static getNextNodes = function() { #region
+	static getNextNodes = function(checkLoop = false) {
 		LOG_BLOCK_START();	
 		LOG_IF(global.FLAG.render == 1, "[outputNextNode] Get next node from inline iterate");
 		
@@ -57,9 +59,9 @@ function Node_Iterate_Each_Inline(_x, _y, _group = noone) : Node_Collection_Inli
 		LOG_BLOCK_END();
 		
 		return _nodes;
-	} #endregion
+	}
 	
-	static refreshMember = function() { #region
+	static refreshMember = function() {
 		nodes = [];
 		
 		for( var i = 0, n = array_length(attributes.members); i < n; i++ ) {
@@ -89,9 +91,9 @@ function Node_Iterate_Each_Inline(_x, _y, _group = noone) : Node_Collection_Inli
 			if(output_node) output_node.destroy();
 			destroy();
 		}
-	} #endregion
+	}
 	
-	static update = function() { #region
+	static update = function() {
 		if(input_node == noone || output_node == noone) {
 			if(input_node)  input_node.destroy();
 			if(output_node) output_node.destroy();
@@ -99,8 +101,12 @@ function Node_Iterate_Each_Inline(_x, _y, _group = noone) : Node_Collection_Inli
 			return;
 		}
 		
-		iterated = 0;
+		var _itc = getIterationCount();
+		if(_itc != iteration_count) RENDER_ALL_REORDER;
+		iteration_count = _itc;
+		iterated        = 0;
+		
 		output_node.outputs[0].setValue([]);
-	} #endregion
+	}
 	
 }

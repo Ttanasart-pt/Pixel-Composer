@@ -26,7 +26,7 @@ function Node_VFX_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _group
 		preview_node = output;
 	}
 	
-	static getNextNodes = function() { return allCached? getNextNodesExternal() : getNextNodesInternal(); } 
+	static getNextNodes = function(checkLoop = false) { return allCached? getNextNodesExternal() : getNextNodesInternal(); } 
 	
 	setTrigger(2, "Clear cache", [ THEME.cache, 0, COLORS._main_icon ]);
 	

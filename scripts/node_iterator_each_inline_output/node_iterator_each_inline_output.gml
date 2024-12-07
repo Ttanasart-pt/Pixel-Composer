@@ -13,13 +13,13 @@ function Node_Iterator_Each_Inline_Output(_x, _y, _group = noone) : Node(_x, _y,
 	
 	newOutput(0, nodeValue_Output("Array out", self, VALUE_TYPE.any, [] ));
 	
-	static getNextNodes = function() { #region
+	static getNextNodes = function(checkLoop = false) {
 		if(loop.bypassNextNode())
 			return loop.getNextNodes();
 		return getNextNodesRaw();
-	} #endregion
+	}
 	
-	static update = function(frame = CURRENT_FRAME) { #region
+	static update = function(frame = CURRENT_FRAME) {
 		if(!is_instanceof(loop, Node_Iterate_Each_Inline)) return;
 		
 		var _typ = inputs[0].value_from == noone? VALUE_TYPE.any : inputs[0].value_from.type;
@@ -46,5 +46,5 @@ function Node_Iterator_Each_Inline_Output(_x, _y, _group = noone) : Node(_x, _y,
 			arr[@ itr] = val;
 			
 		outputs[0].setValue(arr);
-	} #endregion
+	}
 }

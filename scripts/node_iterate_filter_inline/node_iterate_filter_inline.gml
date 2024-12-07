@@ -8,6 +8,8 @@ function Node_Iterate_Filter_Inline(_x, _y, _group = noone) : Node_Collection_In
 	
 	input_node_type  = Node_Iterator_Filter_Inline_Input;
 	output_node_type = Node_Iterator_Filter_Inline_Output;
+	
+	iteration_count  = 0;
 	iterated         = 0;
 	
 	if(!LOADING && !APPENDING) {
@@ -42,7 +44,7 @@ function Node_Iterate_Filter_Inline(_x, _y, _group = noone) : Node_Collection_In
 		return iterated < getIterationCount();
 	}
 	
-	static getNextNodes = function() {
+	static getNextNodes = function(checkLoop = false) {
 		LOG_BLOCK_START();	
 		LOG_IF(global.FLAG.render == 1, "[outputNextNode] Get next node from inline iterate");
 		
@@ -96,7 +98,11 @@ function Node_Iterate_Filter_Inline(_x, _y, _group = noone) : Node_Collection_In
 			return;
 		}
 		
-		iterated = 0;
+		var _itc = getIterationCount();
+		if(_itc != iteration_count) RENDER_ALL_REORDER;
+		iteration_count = _itc;
+		iterated        = 0;
+		
 		output_node.outputs[0].setValue([]);
 	}
 	

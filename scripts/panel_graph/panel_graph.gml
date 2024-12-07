@@ -800,6 +800,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
     static setProject = function(project) {
         self.project = project;
         nodes_list   = project.nodes;
+        connection_draw_update = true;
         
         setTitle();
         run_in(2, function() /*=>*/ { 

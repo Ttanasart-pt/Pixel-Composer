@@ -36,14 +36,23 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		_node.inputs[0].setValue(_key);
 	}
 	
+	__jfrom = noone;
+	__key   = noone;
+	
 	static update = function(frame = CURRENT_FRAME) {
-		onValueUpdate(); 
-		
+		var _key = inputs[0].getValue();
 		var _frm = inputs[1].value_from;
 		
-		inputs[1].setType(   _frm? _frm.type         : VALUE_TYPE.any);
-		inputs[1].setDisplay(_frm? _frm.display_type : VALUE_DISPLAY._default);
-		inputs[1].updateColor();
+		if(_key != __key) onValueUpdate(); 
+		
+		if(_frm != __jfrom) {
+			inputs[1].setType(   _frm? _frm.type         : VALUE_TYPE.any);
+			inputs[1].setDisplay(_frm? _frm.display_type : VALUE_DISPLAY._default);
+			inputs[1].updateColor();
+		}
+		
+		__key   = _key;
+		__jfrom = _frm;
 	}
 	
 	static resetMap = function() {
@@ -110,7 +119,7 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		value_validation[VALIDATION.error] = error_notification != noone;
 	}
 	
-	static getNextNodes = function() {
+	static getNextNodes = function(checkLoop = false) {
 		var nodes     = [];
 		var nodeNames = [];
 		var _key      = inputs[0].getValue();

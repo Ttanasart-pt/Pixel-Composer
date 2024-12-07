@@ -31,9 +31,6 @@ function Panel_Profile_Render() : PanelContent() constructor {
 	show_io             = true;
 	show_log_level      = 1;
 	
-	count_render_event  = 0;
-	count_message_event = 0;
-	
 	filter_list_string = "";
 	tb_list = new textBox( TEXTBOX_INPUT.text, function(str) /*=>*/ { filter_list_string = str; searchData(); })
 		.setFont(f_p3)
@@ -109,6 +106,61 @@ function Panel_Profile_Render() : PanelContent() constructor {
 		if(_report == noone) return;
 		if(_report.type == "render" && set_selecting_node) 
 			PANEL_GRAPH.nodes_selecting = [ _report.node ];
+	}
+	
+	count_render_event    = 0;
+	count_message_event   = 0;
+	node_render_time      = 0;
+	node_render_time_type = {};
+	node_render_rtim_type = {};
+	node_render_time_amo  = {};
+	node_render_time_type_sorted = [];
+	pie_selecting = noone;
+	
+	function summarize() {
+		count_render_event    = 0;
+		count_message_event   = 0;
+		node_render_time      = 0;
+		node_render_time_type = {};
+		node_render_rtim_type = {};
+		node_render_time_amo  = {};
+		node_render_time_type_sorted = [];
+		
+		for( var i = 0, n = array_length(PROFILER_DATA); i < n; i++ ) {
+		    var _report  = PROFILER_DATA[i];
+		    var _rtype  = _report.type;
+		    
+			switch(_rtype) {
+				case "render"  : 
+				    var _node = _report.node;
+				    var _time = _report.time;
+				    node_render_time += _time;
+					
+					count_render_event++;
+					
+					var _typ = instanceof(_node);
+					node_render_time_type[$ _typ] = struct_try_get(node_render_time_type, _typ, 0) + _time;
+					node_render_rtim_type[$ _typ] = struct_try_get(node_render_rtim_type, _typ, 0) + _report.renderTime;
+					node_render_time_amo[$ _typ]  = struct_try_get(node_render_time_amo, _typ, 0) + 1;
+					break;
+					
+				case "message" : count_message_event++; break;
+			}
+		}
+		
+		var _pr = ds_priority_create();
+		var _nods = variable_struct_get_names(node_render_time_type);
+		for( var i = 0, n = array_length(_nods); i < n; i++ ) {
+			var _typ = _nods[i];
+			var _c = make_color_hsv(random(255), 160, 160);
+			ds_priority_add(_pr, [_typ, node_render_time_type[$ _typ], _c], node_render_time_type[$ _typ]);
+		}
+		
+		var sz = ds_priority_size(_pr);
+		var i  = 0;
+		
+		repeat(sz) node_render_time_type_sorted[i++] = ds_priority_delete_max(_pr);
+		ds_priority_destroy(_pr);
 	}
 	
 	sc_profile_list = new scrollPane(list_w - ui(8), content_h - ui(8), function(_y, _m) {
@@ -188,7 +240,10 @@ function Panel_Profile_Render() : PanelContent() constructor {
 	
 	sc_profile_detail = new scrollPane(detail_w - ui(8), content_h - ui(8), function(_y, _m) {
 	    draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
-	    var _h = 0;
+	    var _h   = 0;
+	    var _ww  = sc_profile_detail.surface_w;
+	    var _hh  = sc_profile_detail.surface_h;
+	    var _hov = sc_profile_detail.hover;
 	    
 	    if(report_selecting == noone) {
 	        if(run == 0) {
@@ -198,17 +253,91 @@ function Panel_Profile_Render() : PanelContent() constructor {
 	        }
 	        
 	        var _tx = ui(8);
-	        var _ty = ui(8);
+	        var _ty = _y + ui(8);
 	        
 	        draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
 	        draw_text_add(_tx, _ty, $"{count_render_event} render events");
 	        
 	        _ty += ui(20); _h += ui(20);
-	        draw_text_add(_tx, _ty, $"Render time : {render_time / 1000}ms  ({render_time})");
-            return 0;
+	        draw_text_add(_tx, _ty, $"Render time : {render_time / 1000}ms  ({node_render_time} / {render_time})");
+	        
+	        _ty += ui(28); _h += ui(28);
+	        
+	        var _a = 90;
+	        var pr = ui(120);
+	        var px = ui(16) + pr;
+	        var py = max(ui(8), _ty) + pr;
+	        
+	        var tx_amo  = px + pr + ui(32);
+	        var tx_name = tx_amo  + ui(40);
+	        var tx_time = tx_name + ui(200);
+	        var tx_per  = tx_time + ui(80);
+	        var tx_pern = tx_per  + ui(80);
+	        var tx_rtim = tx_pern + ui(80);
+	        
+	        draw_set_text(f_p3, fa_left, fa_top, COLORS._main_text_sub);
+        	draw_text_add(tx_name, _ty, "type");
+        	
+        	draw_set_halign(fa_right);
+        	draw_text_add(tx_time + ui(80 - 8), _ty, "time (ns)");
+        	draw_text_add(tx_per  + ui(80 - 8), _ty, "%");
+        	draw_text_add(tx_pern + ui(80 - 8), _ty, "time/node");
+        	draw_text_add(tx_rtim + ui(80 - 8), _ty, "render");
+        	
+        	if(_hov && point_in_rectangle(_m[0], _m[1], tx_name, _ty, tx_time,          _ty + ui(19))) TOOLTIP = "Node type";
+        	if(_hov && point_in_rectangle(_m[0], _m[1], tx_time, _ty, tx_per,           _ty + ui(19))) TOOLTIP = "Total processing time (including graph propagation, debug data collection)";
+        	if(_hov && point_in_rectangle(_m[0], _m[1], tx_per,  _ty, tx_pern,          _ty + ui(19))) TOOLTIP = "Total time as percentage";
+        	if(_hov && point_in_rectangle(_m[0], _m[1], tx_pern, _ty, tx_rtim,          _ty + ui(19))) TOOLTIP = "Total time per node";
+        	if(_hov && point_in_rectangle(_m[0], _m[1], tx_rtim, _ty, tx_rtim + ui(80), _ty + ui(19))) TOOLTIP = "Processing time";
+        	_ty += ui(20); _h += ui(20);
+	        
+	        var _pie_selecting = noone;
+	        
+	        for( var i = 0, n = array_length(node_render_time_type_sorted); i < n; i++ ) {
+	        	var _timn = node_render_time_type_sorted[i];
+	        	var _node = _timn[0];
+	        	var _time = _timn[1];
+	        	var _colr = _timn[2];
+	        	
+	        	var _as = _time / node_render_time * 360;
+	        	var _at = _a + _as;
+	        	draw_set_color(_colr);
+	        	if(pie_selecting != noone) draw_set_alpha(0.25 + 0.75 * (_node == pie_selecting));
+	        	draw_circle_angle(px, py, pr, _a, _at);
+	        	draw_set_alpha(1);
+	        	_a = _at;
+	        	
+	        	if(_ty >= -16 && _ty <= _hh + 16) {
+	        		var _amo = node_render_time_amo[$ _node];
+	        		var _rtm = node_render_rtim_type[$ _node];
+	        		
+		        	draw_set_text(f_p3, fa_right, fa_top, COLORS._main_text_sub);
+		        	draw_text_add(tx_amo + ui(40 - 8),  _ty, _amo);
+		        	
+		        	draw_set_color(_node == pie_selecting? COLORS._main_text_accent : COLORS._main_text);
+		        	draw_set_halign(fa_left);
+		        	draw_text_add(tx_name, _ty, _node);
+		        	
+		        	draw_set_halign(fa_right);
+		        	draw_text_add(tx_time + ui(80 - 8), _ty, _time);
+		        	draw_text_add(tx_per  + ui(80 - 8), _ty, _time / node_render_time * 100);
+		        	draw_text_add(tx_pern + ui(80 - 8), _ty, round(_time / _amo));
+		        	draw_text_add(tx_rtim + ui(80 - 8), _ty, _rtm);
+		        	
+		        	if(_hov && point_in_rectangle(_m[0], _m[1], tx_amo, _ty, _ww, _ty + ui(19)))
+		        		_pie_selecting = _node;
+	        	}
+	        	
+	        	_ty += ui(20); _h += ui(20);
+	        }
+	        
+	        pie_selecting = _pie_selecting;
+	        
+	        _ty += ui(20); _h += ui(20);
+	        
+            return _h;
 	    }
 	    
-	    var _ww = sc_profile_detail.surface_w;
 	    var _hovering = sc_profile_detail.hover;
 	    
 	    var _report = report_selecting;
@@ -475,7 +604,8 @@ function Panel_Profile_Render() : PanelContent() constructor {
 		    var _t = get_timer();
 		        Render();
 	        render_time = get_timer() - _t;
-		        
+		    
+		    summarize();
 		    PROFILER_STAT = 0;
 		    run++;
 		}
@@ -489,7 +619,8 @@ function Panel_Profile_Render() : PanelContent() constructor {
 		    var _t = get_timer();
 		        Render(true);
 	        render_time = get_timer() - _t;
-		        
+		    
+		    summarize();
 		    PROFILER_STAT = 0;
 		    run++;
 		}
@@ -548,12 +679,8 @@ function Panel_Profile_Render() : PanelContent() constructor {
 		
 		draw_sprite_stretched_ext(THEME.s_box_r2, 0, _px0, _py0, _pw, _ph, COLORS._main_icon_dark, 1);
 		
-		var _total_time    = 0;
 		var _selected_time = 0;
 		var _running_time  = 0;
-		
-		count_render_event  = 0;
-		count_message_event = 0;
 		
 		for( var i = 0, n = array_length(PROFILER_DATA); i < n; i++ ) {
 		    var _report  = PROFILER_DATA[i];
@@ -562,19 +689,14 @@ function Panel_Profile_Render() : PanelContent() constructor {
 		    if(_report == report_selecting) _selected_time = _running_time;
 		    
 			if(_rtype == "render") {
-				count_render_event++;
 			    var _node    = _report.node;
 			    var _time    = _report.time;
 			    
-			    _total_time   += _time;
 			    _running_time += _time;
-			    
-			} else if(_rtype == "message") {
-				count_message_event++;
 			}
 		}
 		
-		if(_total_time > 0) {
+		if(node_render_time > 0) {
 			var _running_time = 0;
 			
 			if(mouse_release(mb_left)) render_drag = false;
@@ -582,7 +704,7 @@ function Panel_Profile_Render() : PanelContent() constructor {
 			for( var i = 0, n = array_length(PROFILER_DATA); i < n; i++ ) {
 			    var _report  = PROFILER_DATA[i];
 			    var _rtype  = _report.type;
-			    var _rx   = _px0 + (_running_time / _total_time) * _pw;
+			    var _rx   = _px0 + (_running_time / node_render_time) * _pw;
 			    
 				if(_rtype == "render") {
 					draw_set_color(COLORS._main_icon);
@@ -593,7 +715,7 @@ function Panel_Profile_Render() : PanelContent() constructor {
 					var _time = _report.time;
 					_running_time += _time;
 					
-					var _rx1  = _px0 + (_running_time / _total_time) * _pw;
+					var _rx1  = _px0 + (_running_time / node_render_time) * _pw;
 					if((pHOVER && point_in_rectangle(mx, my, _rx, _py0, _rx1, _py1) || (render_drag && mx >= _rx && mx < _rx1))) {
 						TOOLTIP = $"Render {_report.node.getFullName()}";
 						
@@ -622,8 +744,8 @@ function Panel_Profile_Render() : PanelContent() constructor {
 			
 			if(report_selecting != noone && report_selecting.type == "render") {
 				var _time = report_selecting.time;
-			    var _rx   = _px0 + (_selected_time / _total_time) * _pw;
-			    var _rw   = (_time / _total_time) * _pw;
+			    var _rx   = _px0 + (_selected_time / node_render_time) * _pw;
+			    var _rw   = (_time / node_render_time) * _pw;
 			    
 			    draw_sprite_stretched_ext(THEME.s_box_r2, 0, _rx, _py0, _rw, _ph, COLORS._main_icon, 1);
 			}

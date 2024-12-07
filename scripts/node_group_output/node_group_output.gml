@@ -28,7 +28,8 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	static onValueUpdate = function(index = 0) { if(is_undefined(outParent)) return; }
 	
-	static getNextNodes = function() {
+	static getNextNodes = function(checkLoop = false) {
+		if(checkLoop) return;
 		if(is_undefined(outParent)) return [];
 		
 		LOG_BLOCK_START();

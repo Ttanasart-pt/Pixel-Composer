@@ -17,7 +17,7 @@ function Node_Pixel_Builder(_x, _y, _group = noone) : Node_Collection(_x, _y, _g
 		RENDER_ALL 
 	}
 	
-	static getNextNodes = function() { #region
+	static getNextNodes = function(checkLoop = false) { #region
 		var allReady = true;
 		for(var i = custom_input_index; i < array_length(inputs); i++) {
 			var _in = inputs[i].from;

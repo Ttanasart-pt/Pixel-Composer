@@ -44,6 +44,8 @@ if !ready exit;
 	draw_text(x0, y0 - ui(4), __txt("Recent files"));
 	
 	sp_recent.setFocusHover(sFOCUS, sHOVER);
+	sp_recent.rx = x0 + ui(6);
+	sp_recent.ry = y0;
 	sp_recent.draw(x0 + ui(6), y0);
 	draw_sprite_stretched_ext(THEME.ui_panel, 1, x0, y0, x1 - x0, y1 - y0, COLORS.panel_frame);
 	
@@ -55,11 +57,11 @@ if !ready exit;
 		RECENT_SAVE();
 	}
 	
-	bx -= ui(28 + 4);
-	txt = recent_thumbnail? __txtx("splash_hide_thumbnail", "Hide thumbnail") : __txtx("splash_show_thumbnail", "Show thumbnail");
-	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, txt, THEME.splash_thumbnail, recent_thumbnail) == 2) {
-		recent_thumbnail = !recent_thumbnail;
-	}
+	// bx -= ui(28 + 4);
+	// txt = recent_thumbnail? __txtx("splash_hide_thumbnail", "Hide thumbnail") : __txtx("splash_show_thumbnail", "Show thumbnail");
+	// if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, txt, THEME.splash_thumbnail, recent_thumbnail) == 2) {
+	// 	recent_thumbnail = !recent_thumbnail;
+	// }
 	
 	bx -= ui(28 + 4);
 	txt = __txtx("splash_open_autosave", "Open autosave folder");

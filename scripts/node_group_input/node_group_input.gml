@@ -363,7 +363,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		switch(_val_type) {
 			case VALUE_TYPE.trigger : 
 				var bname = getInputData(8);
-				inParent.setDisplay(VALUE_DISPLAY.button, { name: bname, onClick: function() { doTrigger = 1; } });
+				inParent.setDisplay(VALUE_DISPLAY.button, { name: bname, onClick: function() /*=>*/ { doTrigger = 1; } });
 				break;
 		}
 		
@@ -398,32 +398,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	}
 	if(!LOADING && !APPENDING) createInput();
 	
-	static step = function() {
-		if(is_undefined(inParent)) return;
-		
-		if(inParent.name != display_name) {
-			inParent.name = display_name;
-			group.inputMap[$ string_replace_all(display_name, " ", "_")] = inParent;
-		}
-		
-		if(inParent.type != VALUE_TYPE.trigger) return;
-		
-		switch(doTrigger) {
-			case 1 : 
-				outputs[0].setValue(true);
-				doTrigger = -1;
-				break;
-			
-			case -1 : 
-				outputs[0].setValue(false);
-				doTrigger = 0;
-				break;
-		}
-	}
-	
-	static update = function(frame = CURRENT_FRAME) {
-		if(is_undefined(inParent)) return;
-		
+	static updateGroupInput = function() {
 		var _dstype = getInputData(0);
 		var _data   = getInputData(2);
 		var _dsList = array_safe_get_fast(GROUP_IO_DISPLAY, _data);
@@ -431,7 +406,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		inputs[0].display_data.data    = _dsList;
 		inputs[0].editWidget.data_list = _dsList;
-			
+		
 		_dstype = array_safe_get_fast(_dsList, _dstype);
 		
 		var _datype = array_safe_get_fast(GROUP_IO_TYPE_MAP, _data, VALUE_TYPE.any);
@@ -465,8 +440,46 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		}
 		
 		visibleCheck();
+	}
+	
+	static step = function() {
+		if(is_undefined(inParent)) return;
 		
+		if(inParent.name != display_name) {
+			inParent.name = display_name;
+			group.inputMap[$ string_replace_all(display_name, " ", "_")] = inParent;
+		}
+		
+		if(inParent.type != VALUE_TYPE.trigger) return;
+		
+		switch(doTrigger) {
+			case 1 : 
+				outputs[0].setValue(true);
+				doTrigger = -1;
+				break;
+			
+			case -1 : 
+				outputs[0].setValue(false);
+				doTrigger = 0;
+				break;
+		}
+	}
+	
+	doUpdate = doUpdateLite;
+	__dstype = noone;
+	__data   = noone;
+	
+	static update = function(frame = CURRENT_FRAME) {
 		outputs[0].setValue(inParent.getValue());
+		
+		var _dstype = inputs[0].getValue();
+		var _data   = inputs[2].getValue();
+		if(_dstype == __dstype && _data == __data) return;
+		getInputs(frame);
+		updateGroupInput();
+		
+		__dstype = _dstype;
+		__data   = _data;
 	}
 	
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

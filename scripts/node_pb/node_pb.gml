@@ -24,7 +24,7 @@ function Node_PB(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 	
 	static drawOverlayPB = noone;
 	
-	static getNextNodes = function() {
+	static getNextNodes = function(checkLoop = false) {
 		if(!struct_has(group, "checkComplete")) return [];
 		
 		for( var i = 0; i < array_length(outputs); i++ ) {

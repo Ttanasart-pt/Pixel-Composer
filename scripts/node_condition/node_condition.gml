@@ -43,18 +43,19 @@ function Node_Condition(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	newOutput(0, nodeValue_Output("Result", self, VALUE_TYPE.any, []));
 	newOutput(1, nodeValue_Output("Bool", self, VALUE_TYPE.boolean, false));
 	
+	doUpdate = doUpdateLite;
 	static update = function(frame = CURRENT_FRAME) {
-		var _true = getInputData(3);
-		var _fals = getInputData(4);
+		var _true = inputs[3].getValue();
+		var _fals = inputs[4].getValue();
 		
-		var _mode = getInputData(5);
+		var _mode = inputs[5].getValue();
 		
-		var _chck = getInputData(0);
-		var _cond = getInputData(1);
-		var _valu = getInputData(2);
-		var _bool = getInputData(6);
-		var _txt1 = getInputData(7);
-		var _txt2 = getInputData(8);
+		var _chck = inputs[0].getValue();
+		var _cond = inputs[1].getValue();
+		var _valu = inputs[2].getValue();
+		var _bool = inputs[6].getValue();
+		var _txt1 = inputs[7].getValue();
+		var _txt2 = inputs[8].getValue();
 		
 		inputs[0].setVisible(_mode == 1, _mode == 1);
 		inputs[1].setVisible(_mode == 1);

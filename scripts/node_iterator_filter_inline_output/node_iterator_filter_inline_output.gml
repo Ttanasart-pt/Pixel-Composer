@@ -16,7 +16,7 @@ function Node_Iterator_Filter_Inline_Output(_x, _y, _group = noone) : Node(_x, _
 		
 	newOutput(0, nodeValue_Output("Array out", self, VALUE_TYPE.any, [] ));
 	
-	static getNextNodes = function() { #region
+	static getNextNodes = function(checkLoop = false) { #region
 		if(loop.bypassNextNode())
 			return loop.getNextNodes();
 		return getNextNodesRaw();

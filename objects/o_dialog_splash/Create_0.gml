@@ -67,9 +67,9 @@ event_inherited();
 			
 				if(sHOVER && sp_recent.hover && point_in_rectangle(_m[0], _m[1], fx, _y, fx + ww, _y + hg)) {
 					sp_recent.hover_content = true;
-					TOOLTIP = [ _dat.getThumbnail(), VALUE_TYPE.surface ];
-				
-					draw_sprite_stretched_ext(THEME.node_bg, 1, fx, _y, ww, hg, COLORS._main_accent, 1);
+					TOOLTIP = new tooltipRecentFile(_rec, sp_recent.rx + fx, sp_recent.ry + _y, ww, hg);
+					
+					draw_sprite_stretched_ext(THEME.ui_panel, 1, fx, _y, ww, hg, COLORS._main_accent, 1);
 				
 					if(mouse_press(mb_left, sFOCUS)) {
 						LOAD_PATH(_rec);

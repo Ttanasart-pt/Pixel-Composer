@@ -1971,6 +1971,7 @@
     {"id":{"name":"timer_function","path":"scripts/timer_function/timer_function.yy",},},
     {"id":{"name":"toggleGroup","path":"scripts/toggleGroup/toggleGroup.yy",},},
     {"id":{"name":"tooltip_hotkey","path":"scripts/tooltip_hotkey/tooltip_hotkey.yy",},},
+    {"id":{"name":"tooltip_recent_files","path":"scripts/tooltip_recent_files/tooltip_recent_files.yy",},},
     {"id":{"name":"tooltip_selector_object","path":"scripts/tooltip_selector_object/tooltip_selector_object.yy",},},
     {"id":{"name":"transformBox","path":"scripts/transformBox/transformBox.yy",},},
     {"id":{"name":"tunnel_server","path":"scripts/tunnel_server/tunnel_server.yy",},},

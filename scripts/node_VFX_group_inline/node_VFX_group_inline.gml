@@ -35,7 +35,7 @@ function Node_VFX_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 	static onRemoveNode = function(node) { node.in_VFX = noone; }
 	static onAddNode    = function(node) { node.in_VFX = self;  }
 	
-	static getNextNodes = function() { return __nodeLeafList(nodes); }
+	static getNextNodes = function(checkLoop = false) { return __nodeLeafList(nodes); }
 	
 	static reset = function() {
 		for( var i = 0, n = array_length(nodes); i < n; i++ ) {

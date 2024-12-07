@@ -81,6 +81,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		color          = c_white;
 		icon           = noone;
 		icon_24        = noone;
+		icon_blend     = c_white;
 		bg_spr         = THEME.node_bg;
 		bg_spr_add     = 0.1;
 		bg_spr_add_clr = c_white;
@@ -272,6 +273,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	#region ---- rendering ----
 		rendered         = false;
 		update_on_frame  = false;
+		render_timer     = 0;
 		render_time		 = 0;
 		render_cached    = false;
 		auto_render_time = true;
@@ -325,8 +327,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		messages     = [];
 		messages_bub = false;
 		messages_dbg = [];
-		
-		render_report_latest = noone;
 		
 		static logNode = function(text, noti = 0) { 
 			var _time = $"{string_lead_zero(current_hour, 2)}:{string_lead_zero(current_minute, 2)}.{string_lead_zero(current_second, 2)}";
@@ -961,7 +961,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		targ.setFrom(junctionFrom);
 	}
 	
-	static getInputData      = function(index, def = 0) { return array_safe_get_fast(inputs_data, index, def); }
+	static getInputData      = function(index, def = 0) { array_safe_get_fast(inputs_data, index, def); }
 	static getInputDataForce = function(index, def = 0) { return inputs[index].getValue(); }
 	
 	// static setInputData = function(index, value) {
@@ -981,7 +981,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 			var val = _inp.getValue(__frame);
 			
-			_inp.bypass_junc.setValue(val);
+			if(_inp.bypass_junc.visible) _inp.bypass_junc.setValue(val);
 			inputs_data[i] = val;								// setInputData(i, val);
 			input_value_map[$ _inp.internalName] = val;
 		});
@@ -996,12 +996,28 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static postUpdate = function(frame = CURRENT_FRAME) {}
 	
-	static doUpdate = function(frame = CURRENT_FRAME) {
+	static doUpdateLite = function(frame = CURRENT_FRAME) {
+		render_timer = get_timer();
+		setRenderStatus(true);
+		
+		//////////////////////////////////////////////
+		
+		if(attributes.update_graph) {
+			try      { update(frame); } 
+			catch(e) { log_warning("RENDER", exception_print(e), self); }
+		}
+		
+		//////////////////////////////////////////////
+		
+		render_time = get_timer() - render_timer;
+	}
+	
+	static doUpdateFull = function(frame = CURRENT_FRAME) {
 		
 		if(PROJECT.safeMode) return;
 		if(NODE_EXTRACT)     return;
 		
-		var render_timer  = get_timer();
+		render_timer  = get_timer();
 		var _updateRender = !is_instanceof(self, Node_Collection) || !managedRenderOrder;
 		if(_updateRender) setRenderStatus(true);
 		
@@ -1049,14 +1065,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		updatedOutTrigger.setValue(true);
 		
-		if(!is_instanceof(self, Node_Collection)) 
-			render_time = get_timer() - render_timer;
+		if(!is(self, Node_Collection)) render_time = get_timer() - render_timer;
 		
 		LOG_BLOCK_END();
-		
-		render_report_latest = generateNodeRenderReport();
-		if(PROFILER_STAT) array_push(PROFILER_DATA, render_report_latest);
 	}
+	
+	doUpdate = doUpdateFull;
 	
 	static valueUpdate = function(index) {
 		onValueUpdate(index);
@@ -1079,6 +1093,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	/////============ RENDER ============
 	
+	static isAnimated = function(frame = CURRENT_FRAME) {
+		if(update_on_frame) return true;
+		return array_any(inputs, function(inp) /*=>*/ {return inp.is_anim});
+	}
+	
 	static isActiveDynamic = function(frame = CURRENT_FRAME) {
 		if(update_on_frame) return true;
 		if(!rendered)       return true;
@@ -1086,11 +1105,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		force_requeue = false;
 		__temp_frame  = frame;
 		return array_any(inputs, function(inp) /*=>*/ {return inp.isActiveDynamic(__temp_frame)});
-		
-		// for(var i = 0; i < array_length(inputs); i++)
-		// 	if(inputs[i].isActiveDynamic(frame)) return true;
-		
-		// return false;
 	}
 	
 	static triggerRender = function(resetSelf = true) {
@@ -1238,35 +1252,42 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static onGetPreviousNodes = function(arr) {}
 	
-	static getNextNodes = function() {
-		var nodes = [];
-		var nodeNames = [];
+	__nextNodes       = noone;
+	__nextNodesToLoop = noone;
+	
+	static getNextNodes = function(checkLoop = false) {
+		if(checkLoop) {
+			if(__nextNodesToLoop != noone && __nextNodesToLoop.bypassNextNode())
+				__nextNodesToLoop.getNextNodes();
+			return;
+		}
 		
-		LOG_BLOCK_START();
-		LOG_IF(global.FLAG.render == 1, $"→→→→→ Call get next node from: {INAME}");
-		
+		__nextNodesToLoop = noone;
 		for(var i = 0; i < array_length(outputs); i++) {
 			var _ot = outputs[i];
 			if(!_ot.forward) continue;
 			
 			for( var j = 0, n = array_length(_ot.value_to_loop); j < n; j++ ) {
 				var _to = _ot.value_to_loop[j];
-				if(!_to.active) continue; 
-				if(!_to.bypassNextNode()) continue;
+				if(!_to.active) continue;
 				
-				LOG_BLOCK_END();
-		
+				__nextNodesToLoop = _to;
+				if(!_to.bypassNextNode()) continue;
 				return _to.getNextNodes();
 			}
+		}
 		
+		if(__nextNodes != noone) return __nextNodes;
+		var nodes = [];
+		
+		for(var i = 0; i < array_length(outputs); i++) {
+			var _ot = outputs[i];
+			if(!_ot.forward) continue;
+			
 			var _tos = _ot.getJunctionTo();
 			for( var j = 0; j < array_length(_tos); j++ ) {
 				var _to = _tos[j];
-				
 				array_push(nodes, _to.node);
-				array_push(nodeNames, _to.node.internalName);
-				
-				//LOG_IF(global.FLAG.render == 1, $"→→ Check output: {_ot.name} connect to node {_to.node.internalName}");
 			}
 		}	
 		
@@ -1277,7 +1298,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			for( var j = 0; j < array_length(_tos); j++ ) {
 				var _to = _tos[j];
 				array_push(nodes, _to.node);
-				array_push(nodeNames, _to.node.internalName);
 			}
 		}
 		
@@ -1288,13 +1308,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			var _tos = _in.bypass_junc.getJunctionTo();
 			for( var j = 0; j < array_length(_tos); j++ ) {
 				var _to = _tos[j];
-				
 				array_push(nodes, _to.node);
-				array_push(nodeNames, _to.node.internalName);
 			}
 		}
 		
-		LOG_BLOCK_END();
+		__nextNodes = nodes;
 		return nodes;
 	}
 	
@@ -1497,7 +1515,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	__draw_bbox = BBOX();
 	static drawGetBbox = function(xx, yy, _s, label = true) {
-		var pad_label = (display_parameter.avoid_label || label) && draw_name;
+		var pad_label = ((display_parameter.avoid_label || label) && draw_name) || label == 2;
 		
 		var x0 = xx;
 		var x1 = xx + w * _s;
@@ -1557,8 +1575,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				
 		if(icon) {
 			tx += _s * 6;
-			draw_sprite_ui_uniform(icon, 0, round(tx) + 1, round(yy + nh / 2) + 1, _s, c_black, 1);
-			draw_sprite_ui_uniform(icon, 0, round(tx),     round(yy + nh / 2),     _s, cc,      1);
+			draw_sprite_ui_uniform(icon, 0, round(tx) + 1, round(yy + nh / 2) + 1, _s, c_black,    1);
+			draw_sprite_ui_uniform(icon, 0, round(tx),     round(yy + nh / 2),     _s, icon_blend, 1);
 			tx += _s *  12;
 			tw -= _s * (12 + 6);
 		}
@@ -2905,6 +2923,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 	} run_in(1, function() /*=>*/ { checkGroup(); });
 	
+	nextn = [];
 	static generateNodeRenderReport = function() {
 		var _report = {};
 		
@@ -2930,23 +2949,26 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 		
 		_report.logs  = array_clone(messages_dbg);
-		_report.time  = render_time;
 		
-		_report.nextn = [];
+		_report.nextn = nextn;
 		_report.queue = array_clone(RENDER_QUEUE.data, 1);
+		
+		nextn = [];
 		
 		return _report;
 	}
 	
-	static summarizeReport = function() {
+	static summarizeReport = function(_startTime) {
 		var _srcstr = $"{getFullName()}";
-		var _report = render_report_latest;
+		var _report = generateNodeRenderReport();
 		
 		for( var i = 0, n = array_length(_report.nextn); i < n; i++ ) _srcstr += $"{_report.nextn[i].getFullName()}";
 		for( var i = 0, n = array_length(_report.queue); i < n; i++ ) _srcstr += $"{_report.queue[i].getFullName()}";
 		
+		_report.time          = get_timer() - _startTime;
+		_report.renderTime    = render_time;
 		_report.search_string = _srcstr;
-		
+		array_push(PROFILER_DATA, _report);
 	}
 	
 	static toString = function() { return $"Node [{internalName}] [{instanceof(self)}]: {node_id}"; }

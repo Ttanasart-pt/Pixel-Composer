@@ -1339,6 +1339,7 @@
     {"name":"timeline_data","order":18,"path":"scripts/timeline_data/timeline_data.yy",},
     {"name":"toggleGroup","order":7,"path":"scripts/toggleGroup/toggleGroup.yy",},
     {"name":"tooltip_hotkey","order":2,"path":"scripts/tooltip_hotkey/tooltip_hotkey.yy",},
+    {"name":"tooltip_recent_files","order":3,"path":"scripts/tooltip_recent_files/tooltip_recent_files.yy",},
     {"name":"tooltip_selector_object","order":1,"path":"scripts/tooltip_selector_object/tooltip_selector_object.yy",},
     {"name":"transformBox","order":15,"path":"scripts/transformBox/transformBox.yy",},
     {"name":"tunnel_server","order":2,"path":"scripts/tunnel_server/tunnel_server.yy",},

@@ -39,10 +39,13 @@ function NodeTopoSort() {
 	
 	array_foreach(PROJECT.allNodes, function(_node) { 
 		_node.clearTopoSorted();
+		if(is(_node, Node_Collection)) _node.refreshNodes();
 		return 0;
 	});
 	
-	PROJECT.nodeTopo = [];
+	PROJECT.nodeTopo   = [];
+	PROJECT.renderList = [];
+	PROJECT.useRenderList = true;
 	__topoSort(PROJECT.nodeTopo, PROJECT.nodes);
 	
 	LOG_IF(global.FLAG.render == 1, $"+++++++ Topo Sort Completed: {array_length(PROJECT.nodeTopo)}/{amo} nodes sorted in {(get_timer() - _t) / 1000} ms +++++++");
@@ -178,6 +181,20 @@ function Render(partial = false, runAction = false) {
 	
 	// global.getvalue_hit = 0;
 	
+	// if(PROJECT.useRenderList && !array_empty(PROJECT.renderList)) {
+	// 	for( var i = 0, n = array_length(PROJECT.renderList); i < n; i++ ) {
+			
+	// 		var render_pt = get_timer();
+	// 		var rendering = PROJECT.renderList[i];
+			
+	// 		rendering.doUpdate();
+	// 		rendering.getNextNodes(true);
+			
+	// 		if(PROFILER_STAT) rendering.summarizeReport(render_pt);
+	// 	}
+	// 	return;
+	// } 
+	
 	try {
 		var t  = get_timer();
 		var t1 = get_timer();
@@ -205,6 +222,7 @@ function Render(partial = false, runAction = false) {
 		for( var i = 0, n = array_length(PROJECT.nodeTopo); i < n; i++ ) {
 			var _node = PROJECT.nodeTopo[i];
 			_node.passiveDynamic = false;
+			_node.__nextNodes = noone;
 		}
 		
 		for( var i = 0, n = array_length(PROJECT.nodeTopo); i < n; i++ ) {
@@ -226,37 +244,41 @@ function Render(partial = false, runAction = false) {
 		// render forward
 		while(!RENDER_QUEUE.empty()) {
 			LOG_BLOCK_START();
-			LOG_IF(global.FLAG.render == 1, $"➤➤➤➤➤➤ CURRENT RENDER QUEUE {RENDER_QUEUE} [{RENDER_QUEUE.size()}] ");
+			// LOG_IF(global.FLAG.render == 1, $"➤➤➤➤➤➤ CURRENT RENDER QUEUE {RENDER_QUEUE} [{RENDER_QUEUE.size()}] ");
 			
 			rendering  = RENDER_QUEUE.dequeue();
 			renderable = rendering.isRenderable();
 			
-			LOG_IF(global.FLAG.render == 1, $"Rendering {rendering.internalName} ({rendering.display_name}) : {renderable? "Update" : "Pass"} ({rendering.rendered})");
+			if(is(rendering, Node_Iterate_Sort_Inline)) 
+				PROJECT.useRenderList = false;
+			// LOG_IF(global.FLAG.render == 1, $"Rendering {rendering.internalName} ({rendering.display_name}) : {renderable? "Update" : "Pass"} ({rendering.rendered})");
 			
 			if(renderable) {
-				var _render_pt = get_timer();
+				var render_pt = get_timer();
 				rendering.doUpdate(); 
-				_render_time += get_timer() - _render_pt;
+				array_push(PROJECT.renderList, rendering);
+				_render_time += get_timer() - render_pt;
 				
 				var nextNodes = rendering.getNextNodes();
+				
 				for( var i = 0, n = array_length(nextNodes); i < n; i++ ) {
 					var nextNode = nextNodes[i];
 					
-					if(!is_instanceof(nextNode, __Node_Base)) continue;
-					if(!nextNode.isRenderable()) continue;
+					if(!is(nextNode, __Node_Base)) continue;
+					if(!nextNode.isRenderable())   continue;
 					
-					LOG_IF(global.FLAG.render == 1, $"→→ Push {nextNode.internalName} to queue.");
+					// LOG_IF(global.FLAG.render == 1, $"→→ Push {nextNode.internalName} to queue.");
 					RENDER_QUEUE.enqueue(nextNode);
 					
-					if(PROFILER_STAT) array_push(rendering.render_report_latest.nextn, nextNode);
+					if(PROFILER_STAT) array_push(rendering.nextn, nextNode);
 				}
 				
-				if(runAction && rendering.hasInspector1Update())
-					rendering.inspector1Update();
+				// if(runAction && rendering.hasInspector1Update()) rendering.inspector1Update();
+					
+				if(PROFILER_STAT) rendering.summarizeReport(render_pt);
+				
 			} else if(rendering.force_requeue)
 				RENDER_QUEUE.enqueue(rendering);
-			
-			if(PROFILER_STAT) rendering.summarizeReport();
 			
 			LOG_BLOCK_END();
 		}

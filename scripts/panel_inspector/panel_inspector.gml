@@ -1283,8 +1283,9 @@ function Panel_Inspector() : PanelContent() constructor {
             else if(context != noone)
                 txt = context.name;
             
-            draw_set_text(f_h5, fa_center, fa_center, COLORS._main_text);
-            draw_text_add(w / 2, ui(30), txt);
+            draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
+            var ss = min(.5, (w - ui(96)) / string_width(txt));
+            draw_text_add(w / 2, ui(30), txt, ss);
             
             if(PROJECT.meta.steam == FILE_STEAM_TYPE.steamOpen) {
                 var _tw = string_width(txt) / 2;

@@ -95,7 +95,6 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	}
 	
 	static processNumber = function(_val, _int) { 
-		if(is_string(_val))  return _int? round(toNumber(_val)) : toNumber(_val);
 		if(is_numeric(_val)) return _int? round(_val) : _val;
 		
 		if(is_array(_val)) {
@@ -147,9 +146,7 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					slider_value = slider_value == -1? raw : lerp_float(slider_value, raw, 2.5);
 					var _prog = clamp((slider_value - _minn) / (_maxx - _minn), 0., 1.);
 					
-					bbox = drawGetBbox(xx, yy, _s, false);
-					bbox.fromPoints(bbox.x0, bbox.y0 + 16 * _s, bbox.x1, bbox.y1);
-					
+					bbox = drawGetBbox(xx, yy, _s, 2);
 					draw_set_text(f_sdf, fa_center, fa_center, _col);
 					draw_text_transformed(bbox.xc, bbox.y0 + 16 * _s, string_real(val), _s * 0.5, _s * 0.5, 0);
 				

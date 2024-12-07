@@ -97,9 +97,9 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			case MATH_OPERATOR.power :		return power(a, b);
 			case MATH_OPERATOR.root :		return b == 0? 0 : power(a, 1 / b);
 			
-			case MATH_OPERATOR.sin :		return sin(use_deg? degtorad(a) : a) * b;
-			case MATH_OPERATOR.cos :		return cos(use_deg? degtorad(a) : a) * b;
-			case MATH_OPERATOR.tan :		return tan(use_deg? degtorad(a) : a) * b;
+			case MATH_OPERATOR.sin :		return (use_deg? dsin(a) : sin(a)) * b;
+			case MATH_OPERATOR.cos :		return (use_deg? dcos(a) : cos(a)) * b;
+			case MATH_OPERATOR.tan :		return (use_deg? dtan(a) : tan(a)) * b;
 			case MATH_OPERATOR.modulo :		return safe_mod(a, b);
 			
 			case MATH_OPERATOR.floor :		return floor(a);
@@ -145,93 +145,98 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		return val;
 	}
 	
-	static update = function(frame = CURRENT_FRAME) {
-		use_mod = getInputData(0);
-		use_deg = getInputData(3);
+	__mode   = noone;
+	doUpdate = doUpdateLite;
+	static update = function(frame = CURRENT_FRAME) { 
 		
-		var a	= getInputData(1);
-		var b	= getInputData(2);
-		var c	= getInputData(5);
+		use_mod = inputs[0].getValue();
+		use_deg = inputs[3].getValue();
 		
-		var mode = getInputData(0);
-		
-		inputs[2].setVisible(false, false);
-		inputs[3].setVisible(false, false);
-		inputs[5].setVisible(false, false);
-		
-		switch(mode) {
-			case MATH_OPERATOR.sin :
-			case MATH_OPERATOR.cos :
-			case MATH_OPERATOR.tan :
-				inputs[3].setVisible(true);
-				break;
-		}
-		
-		switch(mode) {
-			case MATH_OPERATOR.round :
-			case MATH_OPERATOR.floor :
-			case MATH_OPERATOR.ceiling :
-				inputs[4].setVisible(true);
-				
-				var int = getInputData(4);
-				if(int) outputs[0].setType(VALUE_TYPE.integer);
-				else	outputs[0].setType(VALUE_TYPE.float);
-				break;
-			default:
-				inputs[4].setVisible(false);
-				
-				outputs[0].setType(VALUE_TYPE.float);
-				break;
-		}
-		
-		switch(mode) {
-			case MATH_OPERATOR.add :
-			case MATH_OPERATOR.subtract :
-			case MATH_OPERATOR.multiply :
-			case MATH_OPERATOR.divide :
-			case MATH_OPERATOR.power :
-			case MATH_OPERATOR.root :	
-			case MATH_OPERATOR.modulo :	
-				inputs[2].name = "b";
-				
-				inputs[2].setVisible(true, true);
-				break;
-				
-			case MATH_OPERATOR.sin :
-			case MATH_OPERATOR.cos :
-			case MATH_OPERATOR.tan :
-				inputs[2].name = "Amplitude";
-				
-				inputs[2].setVisible(true, true);
-				break;
-				
-			case MATH_OPERATOR.lerp :
-				inputs[2].name = "To";
-				inputs[5].name = "Amount";
-				
-				inputs[2].setVisible(true, true);
-				inputs[5].setVisible(true, true);
-				break;
-				
-			case MATH_OPERATOR.clamp :
-				inputs[2].name = "Min";
-				inputs[5].name = "Max";
-				
-				inputs[2].setVisible(true, true);
-				inputs[5].setVisible(true, true);
-				break;
-				
-			case MATH_OPERATOR.snap :
-				inputs[2].name = "Snap";
-				
-				inputs[2].setVisible(true, true);
-				break;
-				
-			default: return;
-		}
+		var a	= inputs[1].getValue();
+		var b	= inputs[2].getValue();
+		var c	= inputs[5].getValue();
 		
 		var val = evalArray(a, b, c);
 		outputs[0].setValue(val);
+		
+		if(__mode != use_mod) {
+			inputs[2].setVisible(false, false);
+			inputs[3].setVisible(false, false);
+			inputs[5].setVisible(false, false);
+			
+			switch(use_mod) {
+				case MATH_OPERATOR.sin :
+				case MATH_OPERATOR.cos :
+				case MATH_OPERATOR.tan :
+					inputs[3].setVisible(true);
+					break;
+			}
+			
+			switch(use_mod) {
+				case MATH_OPERATOR.round :
+				case MATH_OPERATOR.floor :
+				case MATH_OPERATOR.ceiling :
+					inputs[4].setVisible(true);
+					
+					var int = getInputData(4);
+					if(int) outputs[0].setType(VALUE_TYPE.integer);
+					else	outputs[0].setType(VALUE_TYPE.float);
+					break;
+				default:
+					inputs[4].setVisible(false);
+					
+					outputs[0].setType(VALUE_TYPE.float);
+					break;
+			}
+			
+			switch(use_mod) {
+				case MATH_OPERATOR.add :
+				case MATH_OPERATOR.subtract :
+				case MATH_OPERATOR.multiply :
+				case MATH_OPERATOR.divide :
+				case MATH_OPERATOR.power :
+				case MATH_OPERATOR.root :	
+				case MATH_OPERATOR.modulo :	
+					inputs[2].name = "b";
+					
+					inputs[2].setVisible(true, true);
+					break;
+					
+				case MATH_OPERATOR.sin :
+				case MATH_OPERATOR.cos :
+				case MATH_OPERATOR.tan :
+					inputs[2].name = "Amplitude";
+					
+					inputs[2].setVisible(true, true);
+					break;
+					
+				case MATH_OPERATOR.lerp :
+					inputs[2].name = "To";
+					inputs[5].name = "Amount";
+					
+					inputs[2].setVisible(true, true);
+					inputs[5].setVisible(true, true);
+					break;
+					
+				case MATH_OPERATOR.clamp :
+					inputs[2].name = "Min";
+					inputs[5].name = "Max";
+					
+					inputs[2].setVisible(true, true);
+					inputs[5].setVisible(true, true);
+					break;
+					
+				case MATH_OPERATOR.snap :
+					inputs[2].name = "Snap";
+					
+					inputs[2].setVisible(true, true);
+					break;
+					
+				default: return;
+			}
+		}
+		__mode = use_mod;
+		
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

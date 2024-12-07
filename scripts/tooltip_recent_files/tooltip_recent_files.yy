@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"tooltip_recent_files",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"tooltip_recent_files",
+  "parent":{
+    "name":"tooltip",
+    "path":"folders/functions/tooltip.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

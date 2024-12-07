@@ -9,7 +9,7 @@ function Node_Iterator_Sort_Output(_x, _y, _group = noone) : Node(_x, _y, _group
 	
 	attributes.sort_inputs = 0;
 	
-	static getNextNodes = function() { return []; }
+	static getNextNodes = function(checkLoop = false) { return []; }
 	
 	static step = function() {}
 	

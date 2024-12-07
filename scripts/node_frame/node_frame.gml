@@ -54,22 +54,29 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	input_display_list = [ 0, 1, 3, 4 ];
 	
-	static onValueUpdate = function(index = 3) { global.__FRAME_LABEL_SCALE = getInputData(3); }
-	
-	static setHeight = function() {}
-	
-	static update = function() {
+	static onValueUpdate = function(index = 3) { 
 		previewable = true;
+		global.__FRAME_LABEL_SCALE = inputs[3].getValue();
 		
-		var sz = getInputData(0);
+		var sz = inputs[0].getValue();
 		w = sz[0];
 		h = sz[1];
 		
-		color  = getInputData(1);
+		color  = inputs[1].getValue();
 		alpha  = _color_get_alpha(color);
 		
-		scale  = getInputData(3);
-		lcolor = getInputData(4);
+		scale  = inputs[3].getValue();
+		lcolor = inputs[4].getValue();
+	}
+	
+	static setHeight = function() {}
+	
+	static isRenderable = function() /*=>*/ {return false};
+	static doUpdate = function() {}
+	static update   = function() {}
+	
+	static postApplyDeserialize  = function() {
+		onValueUpdate();
 	}
 	
 	static drawNode  = function() { return noone; }

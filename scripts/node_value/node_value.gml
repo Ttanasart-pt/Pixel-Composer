@@ -498,6 +498,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			node.inputs[attributes.map_index + 1].setAnim(anim);
 		
 		node.refreshTimeline();
+		if(NOT_LOAD && node.group) node.group.checkPureFunction();
 	}
 		
 	/////============ DISPLAY ===========
@@ -2213,12 +2214,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		draw_line_shift_e = struct_try_get(_map, "shift_e",    -1);
 		is_modified       = struct_try_get(_map, "is_modified", false);
 		
-		if(struct_has(_map, "attri")) {
-			struct_append(attributes, _map.attri);
-			
-			if(struct_has(attributes, "use_project_dimension") && struct_has(node.attributes, "use_project_dimension"))
-				attributes.use_project_dimension = node.attributes.use_project_dimension;
-		}
+		if(struct_has(_map, "attri")) struct_append(attributes, _map.attri);
+		
+		if(struct_has(attributes, "use_project_dimension") && struct_has(node.load_map, "attri") && struct_has(node.load_map.attri, "use_project_dimension"))
+			attributes.use_project_dimension = node.load_map.attri.use_project_dimension;
 		
 		if(struct_has(_map, "linked")) 
 			display_data.linked = _map.linked;

@@ -402,8 +402,12 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	}
 	
 	static onValueUpdate = function(index = 0) {
-		if(index == 1 || index == 4) line_update(getInputData(1), getInputData(4));
+		if(index == 1 || index == 4) line_update(inputs[1].getValue(), inputs[4].getValue());
 	}
+	
+	static isRenderable = function() /*=>*/ {return false};
+	static doUpdate = function() {}
+	static update   = function() {}
 	
 	static preDraw = function(_x, _y, _s) {
 		var xx = (x - 3) * _s + _x;
@@ -434,18 +438,18 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	}
 	
 	static drawNodeBase = function(xx, yy, mx, my, _s) {
-		if(draw_graph_culled && !init_size) return;
+		if(draw_graph_culled) return;
 		
-		var color  = getInputData(0);
-		var txt    = getInputData(1);
+		var color  = inputs[0].getValue();
+		var txt    = inputs[1].getValue();
 		if(txt == "") txt = "..."
 		draw_simple = string_pos("<", txt) == 0;
 		
-		var sty  = getInputData(2);
+		var sty  = inputs[2].getValue();
 		var alp  = _color_get_alpha(color);
-		var wid  = getInputData(4);
-		var posi = getInputData(5);
-		line_h   = getInputData(6);
+		var wid  = inputs[4].getValue();
+		var posi = inputs[5].getValue();
+		line_h   = inputs[6].getValue();
 		
 		pos_x = posi[0];
 		pos_y = posi[1];
@@ -504,8 +508,6 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		draw_scale = _s;
 		w = ww + 8;
 		h = hh + 8;
-		
-		init_size = false;
 	}
 	
 	static drawJunctions = function(_draw, _x, _y, _mx, _my, _s) {
@@ -522,10 +524,6 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		}
 		
 		return hover;
-	}
-	
-	static update = function() {
-		init_size = true;
 	}
 	
 	static drawNode = function(_draw, _x, _y, _mx, _my, _s) {

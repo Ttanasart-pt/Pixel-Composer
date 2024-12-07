@@ -32,7 +32,7 @@ function Node_Iterator_Output(_x, _y, _group = noone) : Node_Group_Output(_x, _y
 	
 	cache_value = -1;
 	
-	static getNextNodes = function() {
+	static getNextNodes = function(checkLoop = false) {
 		if(!struct_has(group, "outputNextNode")) return [];
 		return group.outputNextNode();
 	}

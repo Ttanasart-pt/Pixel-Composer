@@ -32,6 +32,9 @@
 		nodeMap	    = ds_map_create();
 		nodeNameMap = ds_map_create();
 		
+		useRenderList = false;
+		renderList  = [];
+		
 		pathInputs  = [];
 		
 		composer       = noone;
