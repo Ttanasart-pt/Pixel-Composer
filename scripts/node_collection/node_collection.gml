@@ -423,10 +423,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	static update = function() {
 		if(!isPure) return;
 		
-		for( var i = 0, n = array_length(nodeTopo); i < n; i++ ) {
-			var _node = nodeTopo[i];
-			_node.doUpdate();
-		}
+		for( var i = 0, n = array_length(nodeTopo); i < n; i++ )
+			nodeTopo[i].doUpdate();
 	}
 	
 	static getNextNodes = function(checkLoop = false) { return isPure? getNextNodesExternal() : getNextNodesInternal(); } 

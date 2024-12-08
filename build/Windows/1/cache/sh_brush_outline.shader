@@ -1,0 +1,46 @@
+//
+// Simple passthrough vertex shader
+//
+attribute vec3 in_Position;                  // (x,y,z)
+//attribute vec3 in_Normal;                  // (x,y,z)     unused in this shader.
+attribute vec4 in_Colour;                    // (r,g,b,a)
+attribute vec2 in_TextureCoord;              // (u,v)
+
+varying vec2 v_vTexcoord;
+varying vec4 v_vColour;
+
+void main()
+{
+    vec4 object_space_pos = vec4( in_Position.x, in_Position.y, in_Position.z, 1.0);
+    gl_Position = gm_Matrices[MATRIX_WORLD_VIEW_PROJECTION] * object_space_pos;
+    
+    v_vColour = in_Colour;
+    v_vTexcoord = in_TextureCoord;
+}
+
+//######################_==_YOYO_SHADER_MARKER_==_######################@~
+//
+// Simple passthrough fragment shader
+//
+varying vec2 v_vTexcoord;
+varying vec4 v_vColour;
+
+uniform vec2 dimension;
+
+void main() {
+	gl_FragColor = vec4(0.);
+	
+	vec2 tx = 1. / dimension;
+	
+	float p  = texture2D( gm_BaseTexture, v_vTexcoord ).a > 0.? 1. : 0.;
+	float p1 = texture2D( gm_BaseTexture, v_vTexcoord - vec2(0., tx.y) ).a > 0.? 1. : 0.;
+	float p3 = texture2D( gm_BaseTexture, v_vTexcoord - vec2(tx.x, 0.) ).a > 0.? 1. : 0.;
+	float p5 = texture2D( gm_BaseTexture, v_vTexcoord + vec2(tx.x, 0.) ).a > 0.? 1. : 0.;
+	float p7 = texture2D( gm_BaseTexture, v_vTexcoord + vec2(0., tx.y) ).a > 0.? 1. : 0.;
+	
+	if(p1 != p7 || p3 != p5) {
+		if(p == 0.) gl_FragColor = v_vColour;
+		if(p == 1.) gl_FragColor = vec4(0., 0., 0., 1.);
+	}
+}
+

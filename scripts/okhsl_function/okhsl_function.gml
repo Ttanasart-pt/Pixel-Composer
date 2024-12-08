@@ -502,9 +502,12 @@ function gamut_clip_adaptive_L0_0_5(rgb, alpha = 0.05) {
 	var a_ = lab[1] / C;
 	var b_ = lab[2] / C;
 
-	var Ld = L - 0.5;
-	var e1 = 0.5 + abs(Ld) + alpha * C;
-	var L0 = 0.5 *(1. + sign(Ld)*(e1 - sqrt(e1*e1 - 2. * abs(Ld))));
+	var Ld = L - 0.5, L0 = 0;
+	
+	if(!is_nan(Ld)) {
+		var e1 = 0.5 + abs(Ld) + alpha * C;
+		var L0 = 0.5 * (1. + sign(Ld)*(e1 - sqrt(e1 * e1 - 2. * abs(Ld))));
+	}
 
 	var t = find_gamut_intersection(a_, b_, L, C, L0);
 	var L_clipped = L0 * (1. - t) + t * L;

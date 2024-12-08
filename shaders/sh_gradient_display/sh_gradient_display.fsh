@@ -14,14 +14,14 @@ varying vec4 v_vColour;
 	vec3 linearToGamma(vec3 c) { return pow(c, vec3(     2.2)); }
 	vec3 gammaToLinear(vec3 c) { return pow(c, vec3(1. / 2.2)); }
 	
-	vec3 rgbMix(vec3 c1, vec3 c2, float t) { #region
+	vec3 rgbMix(vec3 c1, vec3 c2, float t) {
 		vec3 k1 = linearToGamma(c1);
 		vec3 k2 = linearToGamma(c2);
 		
 		return gammaToLinear(mix(k1, k2, t));
-	} #endregion 
+	} 
 	
-	vec3 rgb2oklab(vec3 c) { #region
+	vec3 rgb2oklab(vec3 c) {
 		const mat3 kCONEtoLMS = mat3(                
 	         0.4121656120,  0.2118591070,  0.0883097947,
 	         0.5362752080,  0.6807189584,  0.2818474174,
@@ -31,9 +31,9 @@ varying vec4 v_vColour;
 		c = pow( kCONEtoLMS * c, vec3(1.0 / 3.0) );
 		
 		return c;
-	} #endregion
+	}
 	
-	vec3 oklab2rgb(vec3 c) { #region
+	vec3 oklab2rgb(vec3 c) {
 		const mat3 kLMStoCONE = mat3(
 	         4.0767245293, -1.2681437731, -0.0041119885,
 	        -3.3072168827,  2.6093323231, -0.7034763098,
@@ -43,16 +43,16 @@ varying vec4 v_vColour;
 		c = pow(c, vec3(1. / 2.2));
 		
 	    return c;
-	} #endregion
+	}
 
-	vec3 oklabMax(vec3 c1, vec3 c2, float t) { #region
+	vec3 oklabMax(vec3 c1, vec3 c2, float t) {
 		vec3 k1 = rgb2oklab(c1);
 		vec3 k2 = rgb2oklab(c2);
 		
 		return oklab2rgb(mix(k1, k2, t));
-	} #endregion 
+	} 
 	
-	vec3 rgb2hsv(vec3 c) { #region
+	vec3 rgb2hsv(vec3 c) {
 		vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
 	    vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));
 	    vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r));
@@ -60,21 +60,21 @@ varying vec4 v_vColour;
 	    float d = q.x - min(q.w, q.y);
 	    float e = 0.0000000001;
 	    return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);
-	} #endregion
+	}
 
-	vec3 hsv2rgb(vec3 c) { #region
+	vec3 hsv2rgb(vec3 c) {
 	    vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
 	    vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
 	    return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
-	} #endregion
+	}
 
-	float hueDist(float a0, float a1, float t) { #region
+	float hueDist(float a0, float a1, float t) {
 		float da = fract(a1 - a0);
 	    float ds = fract(2. * da) - da;
 	    return a0 + ds * t;
-	} #endregion
+	}
 
-	vec3 hsvMix(vec3 c1, vec3 c2, float t) { #region
+	vec3 hsvMix(vec3 c1, vec3 c2, float t) {
 		vec3 h1 = rgb2hsv(c1);
 		vec3 h2 = rgb2hsv(c2);
 	
@@ -84,9 +84,9 @@ varying vec4 v_vColour;
 		h.z = mix(h1.z, h2.z, t);
 	
 		return hsv2rgb(h);
-	} #endregion
+	}
 	
-	vec4 gradientEval(in float prog) { #region
+	vec4 gradientEval(in float prog) {
 		vec4 col = vec4(0.);
 	
 		for(int i = 0; i < GRADIENT_LIMIT; i++) {
@@ -125,7 +125,7 @@ varying vec4 v_vColour;
 		}
 	
 		return col;
-	} #endregion
+	}
 	
 #endregion //////////////////////////////////// GRADIENT ////////////////////////////////////
 

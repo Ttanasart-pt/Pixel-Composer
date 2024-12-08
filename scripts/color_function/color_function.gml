@@ -38,9 +38,9 @@
 		    k.z = power(k.z, 3);
 			
 		var rg   = global.CVTMAT_OKLAB_RGB.multiplyVector(k);
-			rg.x = power(rg.x, 1 / 2.2) * 255;
-		    rg.y = power(rg.y, 1 / 2.2) * 255;
-		    rg.z = power(rg.z, 1 / 2.2) * 255;
+			rg.x = __clamp255_mf0 power(rg.x, 1 / 2.2) * 255 __clamp255_mf1;
+		    rg.y = __clamp255_mf0 power(rg.y, 1 / 2.2) * 255 __clamp255_mf1;
+		    rg.z = __clamp255_mf0 power(rg.z, 1 / 2.2) * 255 __clamp255_mf1;
 			
 		return make_color_rgba(rg.x, rg.y, rg.z, a);
 	}

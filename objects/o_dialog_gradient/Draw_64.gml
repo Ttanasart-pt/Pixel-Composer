@@ -204,7 +204,7 @@ if !ready exit;
 				key_selecting = noone;
 				
 				var tt = clamp((mouse_mx - gr_x) / gr_w, 0, 1);
-				var cc = gradient.eval(tt);
+				var cc = cola(surface_getpixel(gradient.surf, gr_w * tt, gr_h / 2), 1);
 				
 				var _newkey = new gradientKey(tt, cc);
 				gradient.add(_newkey, true);
