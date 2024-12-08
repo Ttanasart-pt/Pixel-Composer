@@ -88,6 +88,7 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		_in0.setType(_typ);
 		_in0.display_type = _dis;
+		if(!is(outParent, NodeValue)) return;
 		
 		outParent.setType(_in0.type);
 		outParent.display_type  = _in0.display_type;

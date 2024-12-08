@@ -92,7 +92,7 @@ function Panel_Test() : PanelContent() constructor {
 			draw_text_add(ui(8), yy + wh / 2, _n);
 			
 			draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text_sub, 0.5);
-			draw_text_add(ui(8 + 144), yy + wh / 2, _d);
+			draw_text_add(ww - ui(100), yy + wh / 2, _d);
 			draw_set_alpha(1);
 			
 			_h += wh;
@@ -177,7 +177,7 @@ function Panel_Test() : PanelContent() constructor {
 		if(!directory_exists(dir)) return;
 		
 		var f = file_find_first($"{dir}/*", fa_none);
-		var v = filename_name_only(dir);
+		var v = filename_name(dir);
 		
 		while(f != "") {
 			var path = $"{dir}/{f}";
