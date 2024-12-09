@@ -86,7 +86,8 @@ function os_type_sting() {
 function exception_print(e) {
 	if(!is_struct(e) || !struct_has(e, "longMessage")) return string(e);
 	
-	var str = $"\n\n==========  Crash log [PXC {VERSION_STRING}] [{os_type_sting()}] ==========\n\n" + e.longMessage;	
+	var str = $"\n\n==========  Crash log [PXC {VERSION_STRING}] [{os_type_sting()}] ==========";
+	str += $"\n\n{e.longMessage}";
 	str += "\n\n========== Stack trace ==========\n\n";	
 	
 	for( var i = 0, n = array_length(e.stacktrace); i < n; i++ )

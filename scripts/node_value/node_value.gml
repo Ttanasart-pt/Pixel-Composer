@@ -240,7 +240,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		con_tag   =  0;
 	#endregion
 	
-	/////============= META =============
+	/////META
 	
 	static setDummy = function(get_node, _dummy_undo = -1, _dummy_redo = -1) {
 		is_dummy  = true;
@@ -281,7 +281,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return self;
 	}
 	
-	/////============= NAME =============
+	/////NAME
 	
 	static getName = function() {
 		if(name_custom) return name;
@@ -294,7 +294,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return self;
 	}
 	
-	/////============= VALUE ============
+	/////VALUE
 	
 	static setType = function(_type) {
 		if(type == _type) return false;
@@ -445,7 +445,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 	}
 	
-	/////========== ANIMATION ==========
+	/////ANIMATION
 	
 	static setAnimable = function(_anim) {
 		animable = _anim;
@@ -501,7 +501,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(NOT_LOAD && node.group) node.group.checkPureFunction();
 	}
 		
-	/////============ DISPLAY ===========
+	/////DISPLAY
 	
 	static setVisibleManual = function(v) {
 		visible_manual = v;
@@ -1009,7 +1009,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	resetDisplay();
 	
-	/////============ RENDER ============
+	/////RENDER
 	
 	static isRendered = function() {
 		if(type == VALUE_TYPE.node)	return true;
@@ -1065,7 +1065,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return is_anim;
 	}
 	
-	/////============= CACHE ============
+	/////CACHE
 	
 	static uncache = function() {
 		use_cache = false;
@@ -1074,7 +1074,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static resetCache = function() { cache_value[0] = false; }
 	
-	/////============== GET =============
+	/////GET
 	
 	static valueProcess = function(value, nodeFrom = undefined, applyUnit = true, arrIndex = 0) {
 		var typeFrom = nodeFrom == undefined? VALUE_TYPE.any : nodeFrom.type;
@@ -1426,7 +1426,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	arrayLength = __arrayLength;
 	
-	/////============== SET =============
+	/////SET
 	
 	static onValidate = function() {
 		if(!validateValue) return;
@@ -1502,7 +1502,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 	}
 	
-	static setValueInspector = function(_val = 0, index = noone, time = CURRENT_FRAME) { // This should be in panel_graph not here. 
+	static setValueInspector = function(_val = 0, index = noone, time = CURRENT_FRAME) { // This should be in panel_inspector not here. 
 		INLINE
 		
 		var res = false;
@@ -1618,7 +1618,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		setValue(_dat);
 	}
 	
-	/////=========== CONNECT ===========
+	/////CONNECT
 	
 	static rejectConnect = function() {
 		auto_connect = false;
@@ -1809,7 +1809,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return _junc_to;
 	}
 	
-	/////============= DRAW =============
+	/////DRAW
 	
 	static setColor = function(_color) {
 		color = color_real(_color);
@@ -2108,7 +2108,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			__draw_sprite_ext(custom_icon, draw_junction_index, _mx, _my, ss / 2, ss / 2, 0, c_white, 1);
 	}
 	
-	/////========== EXPRESSION ==========
+	/////EXPRESSION
 	
 	static setUseExpression = function(useExp) {
 		INLINE
@@ -2129,7 +2129,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		node.triggerRender();
 	}
 	
-	/////=========== SERIALIZE ===========
+	/////SERIALIZE
 	
 	static serialize = function(scale = false, preset = false) {
 		var _map = {};
@@ -2320,7 +2320,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return false;
 	}
 	
-	/////============= MISC =============
+	/////MISC
 	
 	static extractNode = function(_type = extract_node) {
 		if(_type == "") return noone;
@@ -2399,7 +2399,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 }
 
-/////========== FUNCTIONS ==========
+/////FUNCTIONS
 
 function checkJuncConnection(from, to, params) {
 	if(from == noone || to == noone) return noone;

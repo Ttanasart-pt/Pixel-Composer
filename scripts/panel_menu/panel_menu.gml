@@ -741,7 +741,7 @@ function Panel_Menu() : PanelContent() constructor {
                 }
                 
                 var dia = hori? menuCall("title_recent_menu", arr, x + tcx, y + h, fa_center) : menuCall("title_recent_menu", arr, x + w, y + tby0);
-                dia.tooltips   = tip;
+                if(dia) dia.tooltips = tip;
             }
             
             

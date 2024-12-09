@@ -50,7 +50,7 @@ function Node_Smoke_Domain(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 		["Domain",			false], 0, 1, 11, 12, 
 		["Properties",		false], 8, 6, 7,
 		["Dissipation",		false], 3, 5,
-		["Advance Setings",	 true], 2, 4, 9, 10, 
+		["Advance Settings", true], 2, 4, 9, 10, 
 	];
 	
 	domain   = new smokeSim_Domain(1, 1);
