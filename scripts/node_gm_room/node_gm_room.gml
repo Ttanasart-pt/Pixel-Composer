@@ -68,11 +68,11 @@ function Node_GMRoom(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	];
     
     static step = function() {
-    
+    	
     }
     
     static update = function() {
-    		
+    	
     }
     
     ////Serialize
