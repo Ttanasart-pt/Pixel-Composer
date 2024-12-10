@@ -74,7 +74,7 @@ function Node_GMRoom(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
     static update = function() {
     	
     } 
-    
+     
     ////Serialize
     
 	static attributeSerialize = function() {
