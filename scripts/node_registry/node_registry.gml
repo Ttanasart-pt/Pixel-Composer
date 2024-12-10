@@ -326,7 +326,7 @@ function __initNodes() {
 		ds_list_add(iter, "Loops");
 		addNodeObject(iter, "Index",		s_node_iterator_index,	"Node_Iterator_Index",	[1, Node_Iterator_Index]).hideRecent();
 		addNodeObject(iter, "Loop amount",	s_node_iterator_amount,	"Node_Iterator_Length",	[1, Node_Iterator_Length]).hideRecent();
-	#endregion
+	#endregion 
 	
 	#region for inline
 	var iter_il = ds_list_create(); 

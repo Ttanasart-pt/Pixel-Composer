@@ -2818,7 +2818,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static dropPath = noone;
-	
+	 
 	static clone = function(target = PANEL_GRAPH.getCurrentContext()) {
 		CLONING = true;
 		var _type = instanceof(self);
