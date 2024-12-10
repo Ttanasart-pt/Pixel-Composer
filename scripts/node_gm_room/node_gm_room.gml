@@ -60,7 +60,7 @@ function Node_GMRoom(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	}); 
 	
     input_display_list = [ 
-    	["Room settings", false], 0, 1,  
+    	["Room settings", false], 0, 1, 
     	["Layers",        false], 
     	layers_renderer,
     	new Inspector_Spacer(ui(4)), 
