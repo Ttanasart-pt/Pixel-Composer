@@ -6,7 +6,7 @@
   "name":"biterator",
   "parent":{
     "name":"biterator",
-    "path":"folders/VCT/biterator.yy",
+    "path":"folders/_extensions/VCT/biterator.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

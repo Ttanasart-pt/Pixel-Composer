@@ -277,7 +277,8 @@ function addNodeCatagory(    name, list, filter = [], color = noone) { ds_list_a
 function addNodePBCatagory(  name, list, filter = [])                { ds_list_add(NODE_PB_CATEGORY,  { name, list, filter        }); }
 function addNodePCXCatagory( name, list, filter = [])                { ds_list_add(NODE_PCX_CATEGORY, { name, list, filter        }); }
 
-function __initNodes() {
+////Nodes
+function __initNodes() { 
 	global.__currPage  = "";
 	global.__startPage =  0;
 	global.FAV_NODES   = {};

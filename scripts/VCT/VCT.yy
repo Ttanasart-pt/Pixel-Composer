@@ -6,7 +6,7 @@
   "name":"VCT",
   "parent":{
     "name":"VCT",
-    "path":"folders/VCT.yy",
+    "path":"folders/_extensions/VCT.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

@@ -21,17 +21,9 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		.setDisplay(VALUE_DISPLAY.vector, {
 			side_button : new buttonAnchor(function(ind) { 
 				switch(ind) {
-					case 0 : inputs[3].setValue([ 0.0, 0.0 ]); break;
-					case 1 : inputs[3].setValue([ 0.5, 0.0 ]); break;
-					case 2 : inputs[3].setValue([ 1.0, 0.0 ]); break;
-					
-					case 3 : inputs[3].setValue([ 0.0, 0.5 ]); break;
-					case 4 : inputs[3].setValue([ 0.5, 0.5 ]); break;
-					case 5 : inputs[3].setValue([ 1.0, 0.5 ]); break;
-					
-					case 6 : inputs[3].setValue([ 0.0, 1.0 ]); break;
-					case 7 : inputs[3].setValue([ 0.5, 1.0 ]); break;
-					case 8 : inputs[3].setValue([ 1.0, 1.0 ]); break;
+					case 0 : inputs[3].setValue([ 0.0, 0.0 ]); break; case 1 : inputs[3].setValue([ 0.5, 0.0 ]); break; case 2 : inputs[3].setValue([ 1.0, 0.0 ]); break;
+					case 3 : inputs[3].setValue([ 0.0, 0.5 ]); break; case 4 : inputs[3].setValue([ 0.5, 0.5 ]); break; case 5 : inputs[3].setValue([ 1.0, 0.5 ]); break;
+					case 6 : inputs[3].setValue([ 0.0, 1.0 ]); break; case 7 : inputs[3].setValue([ 0.5, 1.0 ]); break; case 8 : inputs[3].setValue([ 1.0, 1.0 ]); break;
 				}
 			}) 
 		});

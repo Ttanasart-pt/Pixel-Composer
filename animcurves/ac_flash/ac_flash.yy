@@ -16,7 +16,7 @@
   "name":"ac_flash",
   "parent":{
     "name":"animation_curve",
-    "path":"folders/animation_curve.yy",
+    "path":"folders/misc/animation_curve.yy",
   },
   "resourceType":"GMAnimCurve",
   "resourceVersion":"2.0",

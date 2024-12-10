@@ -75,6 +75,8 @@ function Node_GMRoom(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
     	
     }
     
+    ////Serialize
+    
 	static attributeSerialize = function() {
 		var _attr = {
 			gm_key: gmRoom == noone? noone : gmRoom.key,

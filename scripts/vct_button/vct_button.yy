@@ -6,7 +6,7 @@
   "name":"vct_button",
   "parent":{
     "name":"widget",
-    "path":"folders/VCT/widget.yy",
+    "path":"folders/_extensions/VCT/widget.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
