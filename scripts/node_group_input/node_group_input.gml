@@ -67,13 +67,13 @@ globalvar GROUP_IO_TYPE_NAME, GROUP_IO_TYPE_MAP, GROUP_IO_DISPLAY;
 #endregion
 
 function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name  = "Group Input";
-	color = COLORS.node_blend_collection;
+	name         = "Group Input";
+	color        = COLORS.node_blend_collection;
 	preview_draw = false;
 	is_group_io  = true;
+	inParent     = undefined;
 	
 	destroy_when_upgroup = true;
-	inParent = undefined;
 	
 	skipDefault();
 	setDimension(96, 32 + 24);
@@ -114,7 +114,6 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	inputs[10].setFrom_condition = function(_valueFrom) {
 		if(is_instanceof(_valueFrom.node, Node_Group_Input)) return true;
-		
 		noti_warning("Group IO visibility must be connected directly to another group input.",, self);
 		return false;
 	}
@@ -155,10 +154,34 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		inputs[2].setValue(ind);
 	}
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		if(inParent.isArray()) return;
-		return inParent.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-	}
+	static createInput = function() {
+		if(group == noone || !is_struct(group)) return noone;
+				
+		if(!is_undefined(inParent))
+			array_remove(group.inputs, inParent);
+		
+		inParent = nodeValue("Value", group, CONNECT_TYPE.input, VALUE_TYPE.any, -1)
+			.uncache()
+			.setVisible(true, true);
+		
+		inParent.from = self;
+		inParent.index = array_length(group.inputs);
+		
+		array_push(group.inputs, inParent);
+		if(is_array(group.input_display_list))
+			array_push(group.input_display_list, inParent.index);
+		
+		if(!LOADING && !APPENDING) {
+			group.refreshNodeDisplay();
+			group.sortIO();
+		}
+			
+		onValueUpdate(0);
+		
+		return inParent;
+	} 
+	
+	////- Render
 	
 	static isRenderable = function(log = false) { //Check if every input is ready (updated)
 		if(!active)	return false;
@@ -370,34 +393,6 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		visibleCheck();
 	}
 	
-	static createInput = function() {
-		if(group == noone || !is_struct(group)) return noone;
-				
-		if(!is_undefined(inParent))
-			array_remove(group.inputs, inParent);
-		
-		inParent = nodeValue("Value", group, CONNECT_TYPE.input, VALUE_TYPE.any, -1)
-			.uncache()
-			.setVisible(true, true);
-		
-		inParent.from = self;
-		inParent.index = array_length(group.inputs);
-		
-		array_push(group.inputs, inParent);
-		if(is_array(group.input_display_list))
-			array_push(group.input_display_list, inParent.index);
-		
-		if(!LOADING && !APPENDING) {
-			group.refreshNodeDisplay();
-			group.sortIO();
-		}
-			
-		onValueUpdate(0);
-		
-		return inParent;
-	}
-	if(!LOADING && !APPENDING) createInput();
-	
 	static updateGroupInput = function() {
 		var _dstype = getInputData(0);
 		var _data   = getInputData(2);
@@ -482,11 +477,16 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		__data   = _data;
 	}
 	
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	////- Draw
 
 	static getGraphPreviewSurface = function() { var _in = array_safe_get(inputs, 0, noone); return _in == noone? noone : _in.getValue(); }
 	
 	static drawNodeDef = drawNode;
+	
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		if(inParent.isArray()) return;
+		return inParent.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+	}
 	
 	static drawNode = function(_draw, _x, _y, _mx, _my, _s, display_parameter = noone, _panel = noone) { 
 		if(_s >= .75) return drawNodeDef(_draw, _x, _y, _mx, _my, _s, display_parameter, _panel);
@@ -510,7 +510,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		return _s > 0.5? drawJunctions(_draw, xx, yy, _mx, _my, _s) : drawJunctions_fast(_draw, xx, yy, _mx, _my, _s);
 	}
 	
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	////- Serialize
 	
 	static postDeserialize = function() { createInput(false); }
 	
@@ -525,7 +525,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		group.sortIO();
 	}
 	
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	////- Actions
 	
 	static onDestroy = function() {
 		if(is_undefined(inParent)) return;
@@ -548,4 +548,5 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 	static onLoadGroup = function() { if(group == noone) destroy(); }
 	
+	if(!LOADING && !APPENDING) createInput();
 }

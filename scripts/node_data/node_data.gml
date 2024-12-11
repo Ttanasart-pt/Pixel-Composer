@@ -358,7 +358,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		load_group = noone;
 	#endregion
 	
-	//// NAME
+	////- NAME
 	
 	static initTooltip = function() { 
 		if(IS_CMD) return;
@@ -399,7 +399,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static getFullName    = function() { return renamed? $"[{name}] " + display_name : name; }
 	static getDisplayName = function() { return renamed? display_name : name; }
 	
-	/////DYNAMIC IO
+	////- DYNAMIC IO
 	
 	dummy_input              = noone;
 	auto_input               = false;
@@ -560,7 +560,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		triggerRender();
 	}
 		
-	/////INSPECTOR
+	////- INSPECTOR
 	
 	static onInspector1Update  = noone;
 	static inspector1Update    = function() { INLINE onInspector1Update(); }
@@ -570,7 +570,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static inspector2Update    = function() { INLINE onInspector2Update(); }
 	static hasInspector2Update = function() { INLINE return onInspector2Update != noone; }
 	
-	/////STEP
+	////- STEP
 	
 	static stepBegin = function() {
 		
@@ -658,7 +658,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static focusStep = function() {}
 	static inspectorStep = function() {}
 	
-	/////JUNCTIONS
+	////- JUNCTIONS
 	
 	static newInput  = function(index, junction) { inputs[index]  = junction; return junction;  }
 	static newOutput = function(index, junction) { outputs[index] = junction; return junction;  }
@@ -924,7 +924,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 	}
 	
-	/////INPUTS
+	////- INPUTS
 	
 	set_default = true;
 	
@@ -987,7 +987,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		});
 	}
 	
-	/////UPDATE
+	////- UPDATE
 	
 	static forceUpdate = function() {
 		input_hash = "";
@@ -1000,14 +1000,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		render_timer = get_timer();
 		setRenderStatus(true);
 		
-		//////////////////////////////////////////////
-		
 		if(attributes.update_graph) {
 			try      { update(frame); } 
 			catch(e) { log_warning("RENDER", exception_print(e), self); }
 		}
-		
-		//////////////////////////////////////////////
 		
 		render_time = get_timer() - render_timer;
 	}
@@ -1091,7 +1087,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static onValueUpdate = function(index = 0) {}
 	static onValueFromUpdate = function(index) {}
 	
-	/////RENDER
+	////- RENDER
 	
 	static isAnimated = function(frame = CURRENT_FRAME) {
 		if(update_on_frame) return true;
@@ -1349,7 +1345,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return nodes;
 	}
 	
-	/////DRAW
+	////- DRAW
 	
 	static setShowParameter = function(showParam) {
 		show_parameter = showParam;
@@ -2182,7 +2178,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static drawAnimationTimeline = function(_w, _h, _s) {}
 	
-	/////PREVIEW
+	////- PREVIEW
 	
 	static getPreviewValues = function() {
 		if(preview_channel >= array_length(outputs)) return noone;
@@ -2207,7 +2203,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return BBOX().fromWH(preview_x, preview_y, surface_get_width_safe(_surf), surface_get_height_safe(_surf));
 	}
 	
-	/////CACHE
+	////- CACHE
 	
 	static cacheCheck = function() {
 		INLINE
@@ -2334,7 +2330,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 	}
 	
-	/////TOOLS
+	////- TOOLS
 	
 	static isUsingTool = function(index = undefined, subtool = noone) {
 		if(tools == -1) 
@@ -2379,7 +2375,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static drawTools = noone;
 	
-	/////SERIALIZE
+	////- SERIALIZE
 	
 	static serialize = function(scale = false, preset = false) {
 		if(!active) return;
@@ -2466,7 +2462,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static doSerialize		  = function(_map) {}
 	static processSerialize   = function(_map) {}
 	
-	/////DESERIALIZE
+	////- DESERIALIZE
 	
 	static deserialize = function(_map, scale = false, preset = false) {
 		
@@ -2689,7 +2685,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static postLoad = function() {}
 	
-	/////CLEAN UP
+	////- CLEAN UP
 	
 	static cleanUp = function() {
 		for( var i = 0; i < array_length(inputs);  i++ ) { inputs[i].cleanUp();  delete inputs[i];  }
@@ -2703,7 +2699,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static onCleanUp = function() {}
 	
-	/////ACTION
+	////- ACTION
 	
 	static setDimension = function(_w = 128, _h = 128, _apply = true) {
 		INLINE
@@ -2848,7 +2844,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static onClone = function(_NewNode, target = PANEL_GRAPH.getCurrentContext()) {}
 	
-	/////MISC
+	////- MISC
 	
 	static isInLoop = function() {
 		return array_exists(global.loop_nodes, instanceof(group));

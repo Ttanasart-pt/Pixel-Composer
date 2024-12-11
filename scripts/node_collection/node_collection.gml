@@ -223,7 +223,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	onNewInputFromGraph = noone;
 	
-	/////========== Attributes ===========
+	////- Attributes
 	
 	attribute_surface_depth();
 	attribute_interpolation();
@@ -241,7 +241,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	array_push(attributeEditors, ["Edit Input Display",  function() /*=>*/ {return 0}, button(function() /*=>*/ { dialogCall(o_dialog_group_input_order).setNode(self, CONNECT_TYPE.input);  }) ]);
 	array_push(attributeEditors, ["Edit Output Display", function() /*=>*/ {return 0}, button(function() /*=>*/ { dialogCall(o_dialog_group_input_order).setNode(self, CONNECT_TYPE.output); }) ]);
 	
-	/////========== INSPECTOR ===========
+	////- INSPECTOR
 	
 	hasInsp1 = false;
 	setTrigger(1, __txtx("panel_inspector_execute", "Execute node contents"), [ THEME.sequence_control, 1, COLORS._main_value_positive ], function() /*=>*/ {
@@ -256,7 +256,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	static hasInspector1Update = function() /*=>*/ {return hasInsp1};
 	static hasInspector2Update = function() /*=>*/ {return hasInsp2};
 	
-	/////============ GROUP =============
+	////- GROUP
 	
 	will_refresh = false;
 	static refreshNodes = function() {
@@ -338,7 +338,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		onRemove(_node);
 	}
 	
-	/////============= STEP ==============
+	////- STEP
 	
 	static stepBegin = function() {
 		dummy_input = attributes.lock_input? noone : __dummy_input;
@@ -355,7 +355,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	static onStep = function() {}
 	
-	/////========== JUNCTIONS ==========
+	////- JUNCTIONS
 	
 	static getOutputNodes = function() {
 		var _nodes = [];
@@ -416,7 +416,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		applyDeserialize();
 	}
 	
-	/////========== RENDERING ===========
+	////- RENDERING
 	
 	doUpdate = doUpdateLite;
 	
@@ -529,7 +529,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			nodes[i].resetRender(_clearCache);
 	}
 	
-	/////============= DRAW =============
+	////- DRAW
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(!draw_input_overlay) return;
@@ -587,7 +587,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		return self;
 	} 
 	
-	/////============ PREVIEW ============
+	////- PREVIEW
 	
 	static getGraphPreviewSurface = function() { 
 		for( var i = 0, n = array_length(nodes); i < n; i++ ) {
@@ -622,16 +622,16 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		return self;
 	}
 	
-	/////============= CACHE =============
+	////- CACHE
 	
 	static clearCache = function() { array_foreach(getNodeList(), function(node) /*=>*/ { node.clearCache(); }); }
 	
-	/////========== INSTANCING ===========
+	////- INSTANCING
 	
 	static setInstance   = function(node) { instanceBase = node; }
 	static resetInstance = function() { instanceBase = noone; }
 	
-	/////========= SERIALIZATION =========
+	////- SERIALIZATION
 	
 	static attributeSerialize = function() {
 		sortIO();
@@ -654,7 +654,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}
 	
 	static preApplyDeserialize = function() {
-		var attr = attributes;
+		var attr = struct_try_get(load_map, "attri", attributes);
 		
 		if(LOADING_VERSION < 11690) {
 			var pr = ds_priority_create();
@@ -746,7 +746,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		_map.instance_base	= instanceBase? instanceBase.node_id : noone;
 	}
 	
-	/////============ ACTION ============
+	////- ACTION
 	
 	static onClone = function(_newNode, target = PANEL_GRAPH.getCurrentContext()) {
 		if(instanceBase != noone) {
