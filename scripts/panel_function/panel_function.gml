@@ -73,7 +73,8 @@
 			case "Panel_Gradient"		: return new Panel_Gradient();
 			case "Panel_Console"		: return new Panel_Console();
 			
-			case "Panel_Profile_Render"	: return new Panel_Profile_Render();
+			case "Panel_Profile_Render"		: return new Panel_Profile_Render();
+			case "Panel_Resource_Monitor"	: return new Panel_Resource_Monitor();
 		}
 		
 		return noone;

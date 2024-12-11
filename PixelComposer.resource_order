@@ -1264,6 +1264,7 @@
     {"name":"panel_preview_view_settings","order":9,"path":"scripts/panel_preview_view_settings/panel_preview_view_settings.yy",},
     {"name":"panel_preview_window","order":1,"path":"scripts/panel_preview_window/panel_preview_window.yy",},
     {"name":"panel_profile_render","order":15,"path":"scripts/panel_profile_render/panel_profile_render.yy",},
+    {"name":"panel_resource_monitor","order":16,"path":"scripts/panel_resource_monitor/panel_resource_monitor.yy",},
     {"name":"panel_test","order":8,"path":"scripts/panel_test/panel_test.yy",},
     {"name":"panel_text_editor","order":9,"path":"scripts/panel_text_editor/panel_text_editor.yy",},
     {"name":"panel_tunnels","order":1,"path":"scripts/panel_tunnels/panel_tunnels.yy",},

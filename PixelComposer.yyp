@@ -1878,6 +1878,7 @@
     {"id":{"name":"panel_preview_window","path":"scripts/panel_preview_window/panel_preview_window.yy",},},
     {"id":{"name":"panel_preview","path":"scripts/panel_preview/panel_preview.yy",},},
     {"id":{"name":"panel_profile_render","path":"scripts/panel_profile_render/panel_profile_render.yy",},},
+    {"id":{"name":"panel_resource_monitor","path":"scripts/panel_resource_monitor/panel_resource_monitor.yy",},},
     {"id":{"name":"panel_test","path":"scripts/panel_test/panel_test.yy",},},
     {"id":{"name":"panel_text_editor","path":"scripts/panel_text_editor/panel_text_editor.yy",},},
     {"id":{"name":"panel_tunnels","path":"scripts/panel_tunnels/panel_tunnels.yy",},},

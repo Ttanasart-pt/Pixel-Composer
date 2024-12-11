@@ -252,29 +252,30 @@ function Panel_Menu() : PanelContent() constructor {
     if(TESTING) {
         array_push(menus, [ __txt("Dev"), [
             MENU_ITEMS.console_panel,
-            menuItem(__txtx("panel_debug_overlay", "Debug overlay"),                              function() /*=>*/ { show_debug_overlay(true); }),
-            menuItem(__txtx("panel_menu_profile_render", "Render Profiler"),                      function() /*=>*/ { var dia = dialogPanelCall(new Panel_Profile_Render()); }),
+            menuItem(__txtx("panel_debug_overlay", "Debug overlay"),                              function() /*=>*/ { show_debug_overlay(true);                      }),
+            menuItem(__txtx("panel_menu_profile_render", "Render Profiler"),                      function() /*=>*/ { dialogPanelCall(new Panel_Profile_Render());   }),
+            menuItem(__txtx("panel_menu_resource_monitor", "Resource Monitor"),                   function() /*=>*/ { dialogPanelCall(new Panel_Resource_Monitor()); }),
             -1, 
             
-            menuItem(__txtx("panel_menu_tester", "Save frozen"),                                  function() /*=>*/ { PROJECT.freeze = true; SAVE(); }),
-            menuItem(__txtx("panel_menu_tester", "Tester"),                                       function() /*=>*/ { var dia = dialogPanelCall(new Panel_Test()); }),
+            menuItem(__txtx("panel_menu_tester", "Save frozen"),                                  function() /*=>*/ { PROJECT.freeze = true; SAVE();                 }),
+            menuItem(__txtx("panel_menu_tester", "Tester"),                                       function() /*=>*/ { dialogPanelCall(new Panel_Test());             }),
             -1, 
             
-            menuItem(__txtx("panel_menu_test_load_all", "Load all current collections"),          function() /*=>*/ { __test_load_current_collections(); }),
-            menuItem(__txtx("panel_menu_test_update_all", "Update all current collections"),      function() /*=>*/ { __test_update_current_collections(); }),
-            menuItem(__txtx("panel_menu_test_add_meta", "Add metadata to current collections"),   function() /*=>*/ { __test_metadata_current_collections(); }),
-            menuItem(__txtx("panel_menu_test_update_sam", "Update sample projects"),              function() /*=>*/ { __test_update_sample_projects(); }),
+            menuItem(__txtx("panel_menu_test_load_all", "Load all current collections"),          function() /*=>*/ { __test_load_current_collections();             }),
+            menuItem(__txtx("panel_menu_test_update_all", "Update all current collections"),      function() /*=>*/ { __test_update_current_collections();           }),
+            menuItem(__txtx("panel_menu_test_add_meta", "Add metadata to current collections"),   function() /*=>*/ { __test_metadata_current_collections();         }),
+            menuItem(__txtx("panel_menu_test_update_sam", "Update sample projects"),              function() /*=>*/ { __test_update_sample_projects();               }),
             -1,
-            menuItem(__txtx("panel_menu_test_load_nodes", "Load all nodes"),                      function() /*=>*/ { __test_load_all_nodes(); }),
-            menuItem(__txtx("panel_menu_test_gen_guide", "Generate node guide"),                  function() /*=>*/ { var dia = dialogPanelCall(new Panel_Node_Data_Gen()); }),
-            menuItem(__txtx("panel_menu_test_gen_theme", "Generate theme object"),                function() /*=>*/ {  __test_generate_theme(); }),
+            menuItem(__txtx("panel_menu_test_load_nodes", "Load all nodes"),                      function() /*=>*/ { __test_load_all_nodes();                       }),
+            menuItem(__txtx("panel_menu_test_gen_guide", "Generate node guide"),                  function() /*=>*/ { dialogPanelCall(new Panel_Node_Data_Gen());    }),
+            menuItem(__txtx("panel_menu_test_gen_theme", "Generate theme object"),                function() /*=>*/ {  __test_generate_theme();                      }),
             -1,
-            menuItem(__txtx("panel_menu_test_warning", "Display Warning"),                        function() /*=>*/ { noti_warning("Error message") }),
-            menuItem(__txtx("panel_menu_test_error", "Display Error"),                            function() /*=>*/ { noti_error("Error message") }),
-            menuItem(__txtx("panel_menu_test_crash", "Force crash"),                              function() /*=>*/ { print(1 + "a"); }),
+            menuItem(__txtx("panel_menu_test_warning", "Display Warning"),                        function() /*=>*/ { noti_warning("Error message")                  }),
+            menuItem(__txtx("panel_menu_test_error", "Display Error"),                            function() /*=>*/ { noti_error("Error message")                    }),
+            menuItem(__txtx("panel_menu_test_crash", "Force crash"),                              function() /*=>*/ { print(1 + "a");                                }),
             -1,
             menuItemShelf(__txt("Misc."), function(_dat) { 
-                return submenuCall(_dat, [ menuItem(__txtx("panel_menu_node_credit", "Node credit dialog"), function() /*=>*/ { var dia = dialogPanelCall(new Panel_Node_Cost()); }), ]);
+                return submenuCall(_dat, [ menuItem(__txtx("panel_menu_node_credit", "Node credit dialog"), function() /*=>*/ { dialogPanelCall(new Panel_Node_Cost()); }), ]);
             }),
         ]]);
     }
