@@ -6,7 +6,7 @@
   "name":"FirebaseListenerUserFunctions_Firestore",
   "parent":{
     "name":"Listeners_Firestore",
-    "path":"folders/_extensions/FireBase/Extensions/Firebase_API/Listeners_Firestore.yy",
+    "path":"folders/__extensions/FireBase/Extensions/Firebase_API/Listeners_Firestore.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

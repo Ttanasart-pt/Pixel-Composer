@@ -6,7 +6,7 @@
   "name":"winwin_utils",
   "parent":{
     "name":"WinMan",
-    "path":"folders/_extensions/WinMan.yy",
+    "path":"folders/__extensions/WinMan.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

@@ -6,7 +6,7 @@
   "name":"BBMOD_DualQuaternion",
   "parent":{
     "name":"Math",
-    "path":"folders/_extensions/BBMOD/Math.yy",
+    "path":"folders/__extensions/BBMOD/Math.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

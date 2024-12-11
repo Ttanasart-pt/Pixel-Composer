@@ -26,7 +26,7 @@
   "origin":1,
   "parent":{
     "name":"patreon",
-    "path":"folders/_extensions/patreon.yy",
+    "path":"folders/__extensions/patreon.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

@@ -6,7 +6,7 @@
   "name":"vct_slider",
   "parent":{
     "name":"widget",
-    "path":"folders/_extensions/VCT/widget.yy",
+    "path":"folders/__extensions/VCT/widget.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

@@ -10,7 +10,7 @@
   "overriddenProperties":[],
   "parent":{
     "name":"CRUD",
-    "path":"folders/_extensions/FireBase/Testing/CRUD.yy",
+    "path":"folders/__extensions/FireBase/Testing/CRUD.yy",
   },
   "parentObjectId":null,
   "persistent":false,

@@ -6,7 +6,7 @@
   "name":"FirebaseREST_asyncCall_Firestore",
   "parent":{
     "name":"Tools",
-    "path":"folders/_extensions/FireBase/Extensions/Firebase_API/Firebase_Firestore/Tools.yy",
+    "path":"folders/__extensions/FireBase/Extensions/Firebase_API/Firebase_Firestore/Tools.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

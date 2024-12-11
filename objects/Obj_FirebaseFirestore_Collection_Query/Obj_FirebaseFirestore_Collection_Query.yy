@@ -11,7 +11,7 @@
   "overriddenProperties":[],
   "parent":{
     "name":"Query",
-    "path":"folders/_extensions/FireBase/Testing/Query.yy",
+    "path":"folders/__extensions/FireBase/Testing/Query.yy",
   },
   "parentObjectId":null,
   "persistent":false,

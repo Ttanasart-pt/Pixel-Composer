@@ -6,7 +6,7 @@
   "name":"__d3d11_shader",
   "parent":{
     "name":"GMD3D11",
-    "path":"folders/_extensions/GMD3D11.yy",
+    "path":"folders/__extensions/GMD3D11.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

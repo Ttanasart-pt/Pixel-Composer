@@ -234,11 +234,11 @@ event_inherited();
 			__txtx("pref_directory", "Main directory path*"),
 			new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ { PRESIST_PREF.path = txt; json_save_struct(APP_DIRECTORY + "persistPreference.json", PRESIST_PREF); })
 				.setSideButton(button(function() /*=>*/ { 
-					PRESIST_PREF.path = get_directory(PRESIST_PREF.path);
+					PRESIST_PREF.path = get_directory(struct_try_get(PRESIST_PREF, "path", ""));
 					json_save_struct(APP_DIRECTORY + "persistPreference.json", PRESIST_PREF);
 				}, THEME.button_path_icon)).setFont(f_p2).setEmpty(),
-				
-			function(   ) /*=>*/ { return PRESIST_PREF.path; },
+			
+			function(   ) /*=>*/ { return struct_try_get(PRESIST_PREF, "path", ""); },
 			function(val) /*=>*/ { PRESIST_PREF.path = val; json_save_struct(APP_DIRECTORY + "persistPreference.json", PRESIST_PREF); },
 			APP_DIRECTORY,
 		).setKey("main_dir_path"));

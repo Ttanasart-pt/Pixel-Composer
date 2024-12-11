@@ -9,7 +9,7 @@
   "overriddenProperties":[],
   "parent":{
     "name":"Query",
-    "path":"folders/_extensions/FireBase/Testing/Query.yy",
+    "path":"folders/__extensions/FireBase/Testing/Query.yy",
   },
   "parentObjectId":{
     "name":"Obj_FirebaseFirestore_Collection_Query_options_value",

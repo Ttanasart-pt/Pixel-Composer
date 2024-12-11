@@ -6,7 +6,7 @@
   "name":"FirebaseFirestoreUserFunctions",
   "parent":{
     "name":"FireBase",
-    "path":"folders/_extensions/FireBase.yy",
+    "path":"folders/__extensions/FireBase.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

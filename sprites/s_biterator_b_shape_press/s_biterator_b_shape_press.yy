@@ -30,7 +30,7 @@
   "origin":0,
   "parent":{
     "name":"biterator",
-    "path":"folders/_extensions/VCT/biterator.yy",
+    "path":"folders/__extensions/VCT/biterator.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

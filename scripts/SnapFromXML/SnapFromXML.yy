@@ -6,7 +6,7 @@
   "name":"SnapFromXML",
   "parent":{
     "name":"XML",
-    "path":"folders/_extensions/SNAP/XML.yy",
+    "path":"folders/__extensions/SNAP/XML.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

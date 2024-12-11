@@ -23,15 +23,13 @@ function GMSprite(_gm, _path, _info) : GMObject(_gm, _path, _info) constructor {
     if(array_empty(_frame) || array_empty(_layers)) return;
     
     thumbnailPath = $"{_dirr}/layers/{_frame[0].name}/{_layers[0].name}.png";
-    if(file_exists(thumbnailPath)) {
-        var _th = sprite_add(thumbnailPath, 0, 0, 0, 0, 0);
-        thumbnail = _th;
-    }
+    if(file_exists(thumbnailPath))
+        thumbnail = sprite_add(thumbnailPath, 0, 0, 0, 0, 0);
 }
 
 function GMTileset(_gm, _path, _info) : GMObject(_gm, _path, _info) constructor {
     sprite    = raw.spriteId.path;
-}
+} 
 
 function __Binder_Gamemaker(path) constructor {
     self.path   = path;

@@ -6,7 +6,7 @@
   "name":"panel_patreon",
   "parent":{
     "name":"patreon",
-    "path":"folders/_extensions/patreon.yy",
+    "path":"folders/__extensions/patreon.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

@@ -15,3 +15,4 @@
 .treeview .dir[data-rel-path="folders/widgets/"] > .header:before { background: url("file:///D:/Project/MakhamDev/LTS-PixelComposer/RESOURCE/data/ide/dir_widgets.png") center/contain no-repeat; }
 .treeview .dir[data-rel-path="folders/nodes/data/"] > .header:before { background: url("file:///D:/Project/MakhamDev/LTS-PixelComposer/RESOURCE/data/ide/dir_nodes.png") center/contain no-repeat; }
 .treeview .dir[data-rel-path="folders/nodes/__base__/"] > .header:before { background: url("file:///D:/Project/MakhamDev/LTS-PixelComposer/RESOURCE/data/ide/dir_empty.png") center/contain no-repeat; }
+.treeview .dir[data-rel-path="folders/__extensions/"] > .header:before { background: url("file:///D:/Project/MakhamDev/LTS-PixelComposer/RESOURCE/data/ide/dir_empty.png") center/contain no-repeat; }

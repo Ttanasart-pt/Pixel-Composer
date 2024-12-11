@@ -12,7 +12,7 @@
   "overriddenProperties":[],
   "parent":{
     "name":"FireBase",
-    "path":"folders/_extensions/FireBase.yy",
+    "path":"folders/__extensions/FireBase.yy",
   },
   "parentObjectId":null,
   "persistent":false,

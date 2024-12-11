@@ -6,7 +6,7 @@
   "name":"steam_ugc_project",
   "parent":{
     "name":"UGC",
-    "path":"folders/_extensions/Steamworks/UGC.yy",
+    "path":"folders/__extensions/Steamworks/UGC.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

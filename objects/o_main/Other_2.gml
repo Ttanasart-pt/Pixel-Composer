@@ -4,9 +4,7 @@
 #region directory
 	globalvar DIRECTORY, APP_DIRECTORY, APP_LOCATION, PRESIST_PREF;
 	DIRECTORY = "";
-	PRESIST_PREF = {
-		path: ""
-	};
+	PRESIST_PREF = { path: "" };
 	
 	APP_DIRECTORY = env_user();
 	APP_DIRECTORY = string_replace_all(APP_DIRECTORY, "\\", "/");
@@ -17,7 +15,7 @@
 	var perstPath = APP_DIRECTORY + "persistPreference.json"; 
 	if(file_exists_empty(perstPath)) {
 		struct_override(PRESIST_PREF, json_load_struct(perstPath));
-		DIRECTORY    = struct_has(PRESIST_PREF, "path")? PRESIST_PREF.path : "";
+		DIRECTORY = struct_has(PRESIST_PREF, "path")? PRESIST_PREF.path : "";
 	}
 	
 	if(DIRECTORY != "") {
