@@ -1,4 +1,4 @@
-#region funtion calls
+#region function calls
     
     function panel_preview_focus_content()              { CALL("preview_focus_content");             PANEL_PREVIEW.fullView();                                                }
     function panel_preview_save_current_frame()         { CALL("preview_save_current_frame");        PANEL_PREVIEW.saveCurrentFrame();                                        }
@@ -1755,8 +1755,6 @@ function Panel_Preview() : PanelContent() constructor {
         var params = { w, h, toolbar_height };
         params.panel = self;
         
-        var mouse_free = false;
-        
         if(_node.is_3D == NODE_3D.none) {
             
             if(key_mod_press(CTRL)) {
@@ -1768,7 +1766,7 @@ function Panel_Preview() : PanelContent() constructor {
                 _sny = PROJECT.previewGrid.size[1];
             }
             
-            mouse_free = _node.drawOverlay(overHover, overActive, cx, cy, canvas_s, _mx, _my, _snx, _sny, params);
+            _node.drawOverlay(overHover, overActive, cx, cy, canvas_s, _mx, _my, _snx, _sny, params);
             
         } else {
             
@@ -1777,7 +1775,7 @@ function Panel_Preview() : PanelContent() constructor {
                 _sny = d3_tool_snap_rotation;
             }
             
-            mouse_free = _node.drawOverlay3D(overActive, d3_scene, _mx, _my, _snx, _sny, params);
+            _node.drawOverlay3D(overActive, d3_scene, _mx, _my, _snx, _sny, params);
         }
         
         #region node overlay
@@ -1888,7 +1886,7 @@ function Panel_Preview() : PanelContent() constructor {
                     draw_sprite_stretched_ext(THEME.button_hide, 3, _x0 + pd, _y0 + pd, tool_size - pd * 2, tool_size - pd * 2, COLORS._main_accent, 1);
                 }
                 
-                if(tool.subtools > 0)    draw_sprite_colored(tool.spr[tool.selecting], 0, xx, yy);
+                if(tool.subtools > 0)   draw_sprite_colored(tool.spr[tool.selecting], 0, xx, yy);
                 else                    draw_sprite_colored(tool.spr, 0, xx, yy);
             }
                 
@@ -2306,12 +2304,14 @@ function Panel_Preview() : PanelContent() constructor {
         canvas_mx = (mx - canvas_x) / canvas_s;
         canvas_my = (my - canvas_y) / canvas_s;
         
-        if(PANEL_PREVIEW == self) {
+        if(PANEL_PREVIEW == self) { //only draw overlay once
             if(inspect_node) {
                 tool = inspect_node.getTool();
                 if(tool) drawNodeTools(pFOCUS, tool);
-            } else 
+                
+            } else {
                 tool_current = noone;
+            }
         }
         
         if(d3_active == NODE_3D.none) drawSplitView();

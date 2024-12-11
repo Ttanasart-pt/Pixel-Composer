@@ -246,7 +246,7 @@ function connectionParameter() constructor {
     }
 } 
 
-//// ========== Graph Panel ==========
+  ////- Graph
     
 function Panel_Graph(project = PROJECT) : PanelContent() constructor {
     title       = __txt("Graph");
@@ -585,7 +585,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         toolbars = [ toolbars_general ];
     #endregion
     
-    //// =========== Get Set ===========
+    ////- Get
     
     function setCurrentPreview(_node = getFocusingNode()) {
         if(!_node) return;
@@ -703,7 +703,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
     
     function getFocusingNode() { return array_empty(nodes_selecting)? noone : nodes_selecting[0]; }
     
-    //// =========== Menus ===========
+    ////- Menus
     
     #region ++++++++++++ Actions ++++++++++++
         function send_to_preview()    { setCurrentPreview(node_hover); }
@@ -751,7 +751,6 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
     menu_open_group         = MENU_ITEMS.graph_enter_group;
     menu_open_group_tab     = MENU_ITEMS.graph_open_in_new_tab;
     menu_group_group        = MENU_ITEMS.graph_group;
-    menu_group_ungroup      = MENU_ITEMS.graph_ungroup;
     menu_group_tool         = MENU_ITEMS.graph_set_as_tool;
                 
     menu_node_delete_cut    = MENU_ITEMS.graph_delete_break;
@@ -795,7 +794,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         }
     #endregion
     
-    //// ============ Project ============
+    ////- Project
     
     static setProject = function(project) {
         self.project = project;
@@ -809,7 +808,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         });
     } 
     
-    //// ============ Views ============
+    ////- Views
     
     function onFocusBegin() {
         PANEL_GRAPH = self; 
@@ -1003,7 +1002,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
             autoPanTo(_tx, _ty, _targ.slide_speed);
     }
     
-    //// =========== Context ==========
+    ////- Context
     
     
     function getCurrentContext() { return array_empty(node_context)? noone : node_context[array_length(node_context) - 1]; }
@@ -1068,7 +1067,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         context_frame_ey        = context_frame_sy + node.h * graph_s;
     }
     
-    //// ============ Step ============
+    ////- Step
     
     function stepBegin() { //
         var gr_x = graph_x * graph_s;
@@ -1084,7 +1083,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         setTitle();
     } 
     
-    //// ============ Draw ============
+    ////- Draw
     
     function drawGrid() { //
         if(!display_parameter.show_grid) return;
@@ -1451,9 +1450,10 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                     
                     if(is_instanceof(node_hover, Node_Collection))
                         array_push(menu, -1, menu_open_group, menu_open_group_tab, menu_group_ungroup);
+					
+					if(node_hover.group != noone)
+                    	array_push(menu, menu_group_tool);
                     
-                    if(node_hover.group != noone)
-                        array_push(menu, menu_group_tool);
                     if(array_length(nodes_selecting) >= 2) 
                         array_push(menu, -1, menu_nodes_group, menu_nodes_frame);
                         
@@ -2547,7 +2547,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         }
     }
     
-    function drawContent(panel) { // //// Main Draw
+    function drawContent(panel) { ////- Main Draw
         if(!project.active) return;
         
         dragGraph();
@@ -2738,7 +2738,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         }
     } 
     
-    //// ============ Action ============
+    ////- Action
     
     function createNodeHotkey(_node, _param = noone) {
     	// if(value_dragging != noone) return;
@@ -3436,7 +3436,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         var dia = dialogPanelCall(pan);
     }
     
-    //// =========== Serialize ===========
+    ////- Serialize
     
     static serialize = function() { 
         _map = { 
@@ -3493,7 +3493,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
     initSize();
 }
 
-//// ========== File Drop ==========
+////- File
     
 function load_file_path(path, _x = undefined, _y = undefined) {
     if(!is_array(path)) path = [ path ];

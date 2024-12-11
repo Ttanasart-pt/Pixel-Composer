@@ -91,7 +91,7 @@ function __Binder_Gamemaker(path) constructor {
         resources[0].data = sprites;
         resources[1].data = tileset;
         resources[2].data = rooms;
-    } 
+    }
     
     refreshResources();
 }

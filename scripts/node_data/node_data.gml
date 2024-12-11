@@ -408,7 +408,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	dynamic_input_inspecting =  0;
 	static createNewInput    = -1;
 	
-	static setDynamicInput = function(_data_length = 1, _auto_input = true, _dummy_type = VALUE_TYPE.any, _dynamic_input_cond = DYNA_INPUT_COND.connection) {
+    static setDynamicInput = function(_data_length = 1, _auto_input = true, _dummy_type = VALUE_TYPE.any, _dynamic_input_cond = DYNA_INPUT_COND.connection) {
 		is_dynamic_input	= true;						
 		auto_input			= _auto_input;
 		dummy_type	 		= _dummy_type;
@@ -961,7 +961,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		targ.setFrom(junctionFrom);
 	}
 	
-	static getInputData      = function(index, def = 0) { return inputs[index].getValue(); }//array_safe_get_fast(inputs_data, index, def); }
+	static getInputData      = function(index, def = 0) { return inputs[index].getValue(); } /// array_safe_get_fast(inputs_data, index, def); }
 	static getInputDataForce = function(index, def = 0) { return inputs[index].getValue(); }
 	
 	// static setInputData = function(index, value) {

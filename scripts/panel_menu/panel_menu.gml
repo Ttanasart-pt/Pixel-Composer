@@ -1,4 +1,4 @@
-#region
+#region function registers
     function global_fullscreen()        { CALL("fullscreen");        winMan_setFullscreen(!window_is_fullscreen);                                        }
     function global_project_close()     { CALL("close_project");     PANEL_GRAPH.close();                                                                }
     function global_project_close_all() { CALL("close_project_all"); for( var i = array_length(PROJECTS) - 1; i >= 0; i-- ) closeProject(PROJECTS[i]);   }

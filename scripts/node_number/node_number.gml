@@ -37,22 +37,27 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	newInput(7, nodeValue_Float("Rotate speed", self, 1));
 	
+	newInput(8, nodeValue_Bool("Show on global", self, false, "Whether to show overlay gizmo when not selecting any nodes."));
+	
 	newOutput(0, nodeValue_Output("Number", self, VALUE_TYPE.float, 0));
 	
 	input_display_list = [ 0, 1, 
-		["Editor",  false], 2, 6, 3, 5, 4, 7, 
+		["Editor",  false], 2, 6, 3, 5, 4, 7,
+		["Gizmo",   false], 8, 
 	]
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _val = getInputData(0);
 		var _dsp = getInputData(2);
-		if(is_array(_val)) return;
+		if(is_array(_val)) return false;
 		
 		if(_dsp == 0 || _dsp == 1) inputs[0].display_type = VALUE_DISPLAY._default;
 		else if(_dsp == 2)	       inputs[0].display_type = VALUE_DISPLAY.rotation;
-			
-		inputs[0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		
+		var _h = inputs[0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 		inputs[0].display_type = VALUE_DISPLAY._default;
+		
+		return _h;
 	}
 	
 	static setType = function() {
@@ -105,6 +110,7 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		return _val;
 	}
 	
+	doUpdate = doUpdateLite;
 	static update = function() {
 		setType();
 		
@@ -331,5 +337,5 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				
 		}
 	}
-
+	
 }

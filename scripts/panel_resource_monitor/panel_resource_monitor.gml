@@ -44,7 +44,7 @@ function Panel_Resource_Monitor() : PanelContent() constructor {
 		draw_set_text(f_code, fa_left, fa_center, COLORS._main_text);
 		
 		var _tx = ui(12);
-		var _ty = h / 2;
+		var _ty = floor(h / 2);
 		draw_set_color(COLORS._main_text_sub); draw_text(_tx,          _ty, $"CPU usage"); 
 		draw_set_color(COLORS._main_text);     draw_text(_tx + ui(80), _ty, $"{_cpu}%"); 
 		

@@ -17,6 +17,7 @@
 	globalvar window_min_h;				window_min_h = 600;
 	
 	globalvar window_preminimize_rect;  window_preminimize_rect = [ 0, 0, 1, 1 ];
+	globalvar __winman_to_ref;          __winman_to_ref = false;
 	
 	#macro DISPLAY_REFRESH CURRENT_PANEL = panelSerialize(true); display_refresh();
 #endregion
@@ -124,7 +125,7 @@ function winMan_setFullscreen(full) {
 		else					winMan_Unmaximize();
 	}
 	
-	run_in(5, function() { DISPLAY_REFRESH });
+	run_in(5, function() /*=>*/ { DISPLAY_REFRESH });
 }
 
 function winManStep() {
@@ -172,11 +173,14 @@ function winManStep() {
 		if(window_drag_hold == 0 && window_is_maximized) {
 			if(point_distance(mx, my, _mx, _my) > 8)
 				window_drag_hold = 1;
+				
 		} else {
 			if(window_is_maximized) {
 				winMan_Unmaximize();
 				window_drag_sw = window_minimize_size[0];
 				window_drag_sh = window_minimize_size[1];
+				__winman_to_ref = true;
+				
 			} else {
 				sx = _sx + (mx - _mx);
 				sy = _sy + (my - _my);
@@ -184,6 +188,12 @@ function winManStep() {
 				winMan_setRect(sx, sy, sw, sh);
 			}
 		}
+		
+		if(__winman_to_ref && mouse_release(mb_left)) {
+			__winman_to_ref = false;
+			DISPLAY_REFRESH
+		}
+			
 	} else {
 		if(window_drag_status & 0b0001) {
 			sw = _sw + (mx - _mx);
@@ -205,9 +215,8 @@ function winManStep() {
 		
 		winMan_setRect(sx, sy, sw, sh);
 		
-		if(mouse_release(mb_left)) {
+		if(mouse_release(mb_left))
 			DISPLAY_REFRESH
-		}
 	}
 	
 	if(mouse_release(mb_left)) {

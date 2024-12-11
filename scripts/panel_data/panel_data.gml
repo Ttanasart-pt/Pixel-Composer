@@ -81,8 +81,8 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	
 	function resetMask() {
 		var tab = array_length(content) > 1;
-		tx = x; ty = y + tab * ui(tab_height);
-		tw = w; th = h - tab * ui(tab_height);
+		tx = x; ty = y + tab * tab_height;
+		tw = w; th = h - tab * tab_height;
 		
 		content_surface = surface_verify(content_surface, tw, th);
 		mask_surface    = surface_verify(mask_surface, tw, th);
@@ -126,8 +126,8 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	
 	function resizable(dw, dh, oppose = ANCHOR.left) {
 		var tab = array_length(content) > 1;
-		tx = x; ty = y + tab * ui(tab_height);
-		tw = w; th = h - tab * ui(tab_height);
+		tx = x; ty = y + tab * tab_height;
+		tw = w; th = h - tab * tab_height;
 		
 		var hori = oppose == ANCHOR.left || oppose == ANCHOR.right;
 		
@@ -150,8 +150,8 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	function refreshSize(recur = true) { //refresh content surface after resize
 		//__debug_counter("refresh size");
 		var tab = array_length(content) > 1;
-		tx = x; ty = y + tab * ui(tab_height);
-		tw = w; th = h - tab * ui(tab_height);
+		tx = x; ty = y + tab * tab_height;
+		tw = w; th = h - tab * tab_height;
 		
 		for( var i = 0, n = array_length(content); i < n; i++ ) {
 			content[i].w = max(tw, content[i].min_w);
@@ -422,25 +422,23 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	}
 	
 	static draw = function() {
-		if(hasContent()) {
-			drawPanel();
-			return;
-		}
+		if(hasContent()) { drawPanel(); return; }
 		
-		if(array_empty(childs)) 
-			return;
+		if(array_empty(childs)) return;
 		
 		var min_w = ui(32);
 		var min_h = ui(32);
+		
 		if(split == "h") {
 			min_w = childs[0].min_w + childs[1].min_w;
 			min_h = max(childs[0].min_h + childs[1].min_h);
+			
 		} else {
 			min_w = max(childs[0].min_w, childs[1].min_w);
 			min_h = childs[0].min_h + childs[1].min_h;
 		}
 		
-		for(var i = 0; i < array_length(childs); i++) {
+		for(var i = 0, n = array_length(childs); i < n; i++) {
 			var _panel = childs[i];
 			_panel.draw();
 			
@@ -658,8 +656,8 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		if(w <= ui(16)) return;
 		
 		var tab = array_length(content) > 1;
-		tx = x; ty = y + tab * ui(tab_height);
-		tw = w; th = h - tab * ui(tab_height);
+		tx = x; ty = y + tab * tab_height;
+		tw = w; th = h - tab * tab_height;
 		if(th < ui(16)) return;
 		
 		var con = getContent();

@@ -417,30 +417,30 @@ event_inherited();
 			new checkBox(function() /*=>*/ { PREFERENCES.add_node_remember = !PREFERENCES.add_node_remember; })
 		));
 		
-		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
-			__txtx("pref_connection_type", "Connection type"),
-			"curve_connection_line",
-			new buttonGroup([ THEME.icon_curve_connection, THEME.icon_curve_connection, THEME.icon_curve_connection, THEME.icon_curve_connection ], 
-			function(val) /*=>*/ { PREFERENCES.curve_connection_line = val; PREF_SAVE(); })
-		));
+		// ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
+		// 	__txtx("pref_connection_type", "Connection type"),
+		// 	"curve_connection_line",
+		// 	new buttonGroup([ THEME.icon_curve_connection, THEME.icon_curve_connection, THEME.icon_curve_connection, THEME.icon_curve_connection ], 
+		// 	(val) => { PREFERENCES.curve_connection_line = val; PREF_SAVE(); })
+		// ));
 		
-		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
-			__txtx("pref_connection_thickness", "Connection thickness"),
-			"connection_line_width",
-			new textBox(TEXTBOX_INPUT.number, function(str) /*=>*/ { PREFERENCES.connection_line_width = real(str); PREF_SAVE(); })
-		));
+		// ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
+		// 	__txtx("pref_connection_thickness", "Connection thickness"),
+		// 	"connection_line_width",
+		// 	new textBox(TEXTBOX_INPUT.number, (str) => { PREFERENCES.connection_line_width = real(str); PREF_SAVE(); })
+		// ));
 		
-		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
-			__txtx("pref_connection_curve_smoothness", "Connection curve smoothness"),
-			"connection_line_sample",
-			new textBox(TEXTBOX_INPUT.number, function(str) /*=>*/ { PREFERENCES.connection_line_sample = real(str); PREF_SAVE(); })
-		));
+		// ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
+		// 	__txtx("pref_connection_curve_smoothness", "Connection curve smoothness"),
+		// 	"connection_line_sample",
+		// 	new textBox(TEXTBOX_INPUT.number, (str) => { PREFERENCES.connection_line_sample = real(str); PREF_SAVE(); })
+		// ));
 		
-		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
-			__txtx("pref_connection_aa", "Connection anti aliasing"),
-			"connection_line_aa",
-			new textBox(TEXTBOX_INPUT.number, function(str) /*=>*/ { PREFERENCES.connection_line_aa = max(1, real(str)); PREF_SAVE(); })
-		));
+		// ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
+		// 	__txtx("pref_connection_aa", "Connection anti aliasing"),
+		// 	"connection_line_aa",
+		// 	new textBox(TEXTBOX_INPUT.number, (str) => { PREFERENCES.connection_line_aa = max(1, real(str)); PREF_SAVE(); })
+		// ));
 		
 		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
 			__txtx("pref_connection_anim", "Connection line animation"),
