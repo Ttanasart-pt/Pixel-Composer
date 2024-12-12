@@ -37,9 +37,6 @@
 
 #macro __err_diffuse_write_grey buffer_seek(_bi, buffer_seek_start, _p); 	\
 		    	           var _o0 = buffer_read(_bi, buffer_s16);          \
-		    	           var _o1 = buffer_read(_bi, buffer_s16);          \
-		    	           var _o2 = buffer_read(_bi, buffer_s16);          \
-		    	           var _o3 = buffer_read(_bi, buffer_s16);          \
 		    	                                                            \
 		    	           var _d0 = _o0 > 128? 255 : 0;                    \
 		    	           var _e0 = _o0 - _d0;                             \
@@ -66,7 +63,7 @@ function Node_Dither_Diffuse(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	
 	__init_mask_modifier(1); // inputs 5, 6, 
 	
-	newInput(7, nodeValue_Enum_Scroll("Type", self, 0, { data: [ "Floyd-Steinberg", "Jarvis, Judice, and Ninke", "Atkinson" ], update_hover: false }));
+	newInput(7, nodeValue_Enum_Scroll("Type", self, 0, { data: [ "Floyd-Steinberg", "Jarvis, Judice, and Ninke", "Atkinson", "Linear" ], update_hover: false }));
 	
 	newInput(8, nodeValueSeed(self));
 	
@@ -98,14 +95,25 @@ function Node_Dither_Diffuse(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		    _outSurf = surface_verify(_outSurf, _sw, _sh);
 		    
 		    var _b  = buffer_from_surface(_surf, false);      buffer_to_start(_b);
-		    var _bi = buffer_create(_a * 8, buffer_fixed, 1); buffer_to_start(_bi);
 		    var _bo = buffer_create(_a * 4, buffer_fixed, 1); buffer_to_start(_bo);
 		    
-		    repeat(_a) {
-		    	buffer_write(_bi, buffer_s16, buffer_read(_b, buffer_u8));
-		    	buffer_write(_bi, buffer_s16, buffer_read(_b, buffer_u8));
-		    	buffer_write(_bi, buffer_s16, buffer_read(_b, buffer_u8));
-		    	buffer_write(_bi, buffer_s16, buffer_read(_b, buffer_u8));
+		    if(_bw) {
+		    	var _bi = buffer_create(_a * 2, buffer_fixed, 1); buffer_to_start(_bi);
+			    
+			    repeat(_a) {
+			    	buffer_write(_bi, buffer_s16, buffer_read(_b, buffer_u8));
+			    	buffer_seek(_b, buffer_seek_relative, 3);
+			    }
+			    
+		    } else {
+			    var _bi = buffer_create(_a * 8, buffer_fixed, 1); buffer_to_start(_bi);
+			    
+			    repeat(_a) {
+			    	buffer_write(_bi, buffer_s16, buffer_read(_b, buffer_u8));
+			    	buffer_write(_bi, buffer_s16, buffer_read(_b, buffer_u8));
+			    	buffer_write(_bi, buffer_s16, buffer_read(_b, buffer_u8));
+			    	buffer_write(_bi, buffer_s16, buffer_read(_b, buffer_u8));
+			    }
 		    }
 		    
 		    buffer_to_start(_b);
@@ -116,9 +124,10 @@ function Node_Dither_Diffuse(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	    var _p = 0, _pl;
 	    var _x = 0;
 	    var _y = 0;
-	    var _s = _sw * 8;
 	    
 	    if(_bw) {
+	    	var _s = _sw * 2;
+	    	
 	    	if(_type == 0) { // Floyd-Steinberg
 		    
 			    var _k1 = 7 / 16, _k2 = 3 / 16, _k3 = 5 / 16, _k4 = 1 / 16;
@@ -126,15 +135,15 @@ function Node_Dither_Diffuse(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			    repeat(_a) {
 			    	__err_diffuse_write_grey
 			    	
-			    	if(_x < _sw - 1) { _pl = _p + 8; __error_diffuse_grey_mf0 _k1 __error_diffuse_grey_mf1; }
+			    	if(_x < _sw - 1) { _pl = _p + 2; __error_diffuse_grey_mf0 _k1 __error_diffuse_grey_mf1; }
 			    	
 			    	if(_y < _sh - 1) {
-			            if(_x > 0) {       _pl = _p + _s - 8; __error_diffuse_grey_mf0 _k2 __error_diffuse_grey_mf1; }
+			            if(_x > 0) {       _pl = _p + _s - 2; __error_diffuse_grey_mf0 _k2 __error_diffuse_grey_mf1; }
 			                               _pl = _p + _s;     __error_diffuse_grey_mf0 _k3 __error_diffuse_grey_mf1;
-			    		if(_x < _sw - 1) { _pl = _p + _s + 8; __error_diffuse_grey_mf0 _k4 __error_diffuse_grey_mf1; }
+			    		if(_x < _sw - 1) { _pl = _p + _s + 2; __error_diffuse_grey_mf0 _k4 __error_diffuse_grey_mf1; }
 			    	}
 			    	
-			    	_p += 8; _x++; if(_x >= _sw) { _x = 0; _y++; }
+			    	_p += 2; _x++; if(_x >= _sw) { _x = 0; _y++; }
 			    }
 			    
 		    } else if(_type == 1) { // Jarvis, Judice, and Ninke
@@ -147,27 +156,27 @@ function Node_Dither_Diffuse(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			    	__err_diffuse_write_grey
 			    	
 			    	if(_x < _sw - 1) {
-			    		                   _pl = _p +  8;  __error_diffuse_grey_mf0 _k1 __error_diffuse_grey_mf1;
-			    		if(_x < _sw - 2) { _pl = _p + 16;  __error_diffuse_grey_mf0 _k2 __error_diffuse_grey_mf1; }
+			    		                   _pl = _p + 2;  __error_diffuse_grey_mf0 _k1 __error_diffuse_grey_mf1;
+			    		if(_x < _sw - 2) { _pl = _p + 4;  __error_diffuse_grey_mf0 _k2 __error_diffuse_grey_mf1; }
 			    	}
 			    	
 			    	if(_y < _sh - 1) {
-			    		if(_x > 1) {       _pl = _p + _s - 16; __error_diffuse_grey_mf0 _k3 __error_diffuse_grey_mf1; }
-			            if(_x > 0) {       _pl = _p + _s -  8; __error_diffuse_grey_mf0 _k4 __error_diffuse_grey_mf1; }
-			    		                   _pl = _p + _s;      __error_diffuse_grey_mf0 _k5 __error_diffuse_grey_mf1;
-			    		if(_x < _sw - 1) { _pl = _p + _s +  8; __error_diffuse_grey_mf0 _k6 __error_diffuse_grey_mf1; }
-			            if(_x < _sw - 2) { _pl = _p + _s + 16; __error_diffuse_grey_mf0 _k7 __error_diffuse_grey_mf1; }
+			    		if(_x > 1) {       _pl = _p + _s - 4; __error_diffuse_grey_mf0 _k3 __error_diffuse_grey_mf1; }
+			            if(_x > 0) {       _pl = _p + _s - 2; __error_diffuse_grey_mf0 _k4 __error_diffuse_grey_mf1; }
+			    		                   _pl = _p + _s;     __error_diffuse_grey_mf0 _k5 __error_diffuse_grey_mf1;
+			    		if(_x < _sw - 1) { _pl = _p + _s + 2; __error_diffuse_grey_mf0 _k6 __error_diffuse_grey_mf1; }
+			            if(_x < _sw - 2) { _pl = _p + _s + 4; __error_diffuse_grey_mf0 _k7 __error_diffuse_grey_mf1; }
 			    	}
 			    	
 			    	if(_y < _sh - 2) {
-			    		if(_x > 1) {       _pl = _p + _s * 2 - 16; __error_diffuse_grey_mf0 _k8 __error_diffuse_grey_mf1; }
-			            if(_x > 0) {       _pl = _p + _s * 2 -  8; __error_diffuse_grey_mf0 _k9 __error_diffuse_grey_mf1; }
-			    		                   _pl = _p + _s * 2;      __error_diffuse_grey_mf0 _k10 __error_diffuse_grey_mf1;
-			    		if(_x < _sw - 1) { _pl = _p + _s * 2 +  8; __error_diffuse_grey_mf0 _k11 __error_diffuse_grey_mf1; }
-			            if(_x < _sw - 2) { _pl = _p + _s * 2 + 16; __error_diffuse_grey_mf0 _k12 __error_diffuse_grey_mf1; }
+			    		if(_x > 1) {       _pl = _p + _s * 2 - 4; __error_diffuse_grey_mf0 _k8 __error_diffuse_grey_mf1; }
+			            if(_x > 0) {       _pl = _p + _s * 2 - 2; __error_diffuse_grey_mf0 _k9 __error_diffuse_grey_mf1; }
+			    		                   _pl = _p + _s * 2;     __error_diffuse_grey_mf0 _k10 __error_diffuse_grey_mf1;
+			    		if(_x < _sw - 1) { _pl = _p + _s * 2 + 2; __error_diffuse_grey_mf0 _k11 __error_diffuse_grey_mf1; }
+			            if(_x < _sw - 2) { _pl = _p + _s * 2 + 4; __error_diffuse_grey_mf0 _k12 __error_diffuse_grey_mf1; }
 			    	}
 			    	
-			    	_p += 8; _x++; if(_x >= _sw) { _x = 0; _y++; }
+			    	_p += 2; _x++; if(_x >= _sw) { _x = 0; _y++; }
 			    }
 			    
 		    } else if(_type == 2) { // Atkinson
@@ -178,24 +187,36 @@ function Node_Dither_Diffuse(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			    	__err_diffuse_write_grey
 			    	
 			    	if(_x < _sw - 1) {
-			    		                   _pl = _p +  8; __error_diffuse_grey_mf0 _k1 __error_diffuse_grey_mf1;
-			    		if(_x < _sw - 2) { _pl = _p + 16; __error_diffuse_grey_mf0 _k1 __error_diffuse_grey_mf1; }
+			    		                   _pl = _p + 2; __error_diffuse_grey_mf0 _k1 __error_diffuse_grey_mf1;
+			    		if(_x < _sw - 2) { _pl = _p + 4; __error_diffuse_grey_mf0 _k1 __error_diffuse_grey_mf1; }
 			    	}
 			    	
 			    	if(_y < _sh - 1) {
-			            if(_x > 0) {       _pl = _p + _s - 8; __error_diffuse_grey_mf0 _k1 __error_diffuse_grey_mf1; }
+			            if(_x > 0) {       _pl = _p + _s - 2; __error_diffuse_grey_mf0 _k1 __error_diffuse_grey_mf1; }
 			    		                   _pl = _p + _s;     __error_diffuse_grey_mf0 _k1 __error_diffuse_grey_mf1;
-			    		if(_x < _sw - 1) { _pl = _p + _s + 8; __error_diffuse_grey_mf0 _k1 __error_diffuse_grey_mf1; }
+			    		if(_x < _sw - 1) { _pl = _p + _s + 2; __error_diffuse_grey_mf0 _k1 __error_diffuse_grey_mf1; }
 			    	}
 			    	
 			    	if(_y < _sh - 2) {     _pl = _p + _s * 2; __error_diffuse_grey_mf0 _k1 __error_diffuse_grey_mf1; }
 			    	
-			    	_p += 8; _x++; if(_x >= _sw) { _x = 0; _y++; }
+			    	_p += 2; _x++; if(_x >= _sw) { _x = 0; _y++; }
 			    }
 			    
-		    }
+		    } else if(_type == 3) { // Linear
+		    	
+			    repeat(_a) {
+			    	__err_diffuse_write_grey
+			    	
+			    	if(_x < _sw - 1) { _pl = _p + 2; __error_diffuse_grey_mf0 1 __error_diffuse_grey_mf1; }
+			    	
+			    	_p += 2; _x++; if(_x >= _sw) { _x = 0; _y++; }
+			    }
+			    
+		    } 
 		    
 	    } else {
+	    	var _s = _sw * 8;
+	    	
 		    if(_type == 0) { // Floyd-Steinberg
 		    
 			    var _k1 = 7 / 16, _k2 = 3 / 16, _k3 = 5 / 16, _k4 = 1 / 16;
@@ -270,7 +291,17 @@ function Node_Dither_Diffuse(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			    	_p += 8; _x++; if(_x >= _sw) { _x = 0; _y++; }
 			    }
 			    
-		    }
+		    } else if(_type == 3) { // Linear
+		    	
+			    repeat(_a) {
+			    	__err_diffuse_write
+			    	
+			    	if(_x < _sw - 1) { _pl = _p + 8; __error_diffuse_mf0 1 __error_diffuse_mf1 1 __error_diffuse_mf2 1 __error_diffuse_mf3 1 __error_diffuse_mf4; }
+			    	
+			    	_p += 8; _x++; if(_x >= _sw) { _x = 0; _y++; }
+			    }
+			    
+		    } 
 	    }
 	    
 	    buffer_set_surface(_bo, _outSurf, 0);
