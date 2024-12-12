@@ -26,7 +26,7 @@
   "origin":0,
   "parent":{
     "name":"theme",
-    "path":"folders/theme.yy",
+    "path":"folders/sprites/theme.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

@@ -1,0 +1,14 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_dither_diffuse",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_dither_diffuse",
+  "parent":{
+    "name":"effects",
+    "path":"folders/nodes/data/filter/effects.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+  "tags":[],
+}

@@ -26,7 +26,7 @@
   "origin":4,
   "parent":{
     "name":"meta",
-    "path":"folders/theme/meta.yy",
+    "path":"folders/sprites/theme/meta.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

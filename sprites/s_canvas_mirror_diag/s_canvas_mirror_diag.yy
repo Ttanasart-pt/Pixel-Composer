@@ -28,7 +28,7 @@
   "origin":4,
   "parent":{
     "name":"tool",
-    "path":"folders/theme/tool.yy",
+    "path":"folders/sprites/theme/tool.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

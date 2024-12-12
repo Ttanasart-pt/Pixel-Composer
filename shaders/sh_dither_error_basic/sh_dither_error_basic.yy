@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_dither_error_basic",
+  "name":"sh_dither_error_basic",
+  "parent":{
+    "name":"dither",
+    "path":"folders/shader/filter/dither.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

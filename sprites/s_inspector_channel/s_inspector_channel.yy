@@ -29,7 +29,7 @@
   "origin":4,
   "parent":{
     "name":"inspector",
-    "path":"folders/theme/inspector.yy",
+    "path":"folders/sprites/theme/inspector.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

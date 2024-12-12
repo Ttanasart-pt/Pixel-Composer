@@ -84,7 +84,6 @@ function __Binder_Gamemaker(path) constructor {
                 case "GMTileSet": _asset = new GMTileset(self, _path, _info); array_push(tileset, _asset); break;
                 case "GMRoom":    _asset = new GMRoom(self, _path, _info);    array_push(rooms,   _asset); break;
             }
-            
             resourcesMap[$ _path] = _asset;
         }
         

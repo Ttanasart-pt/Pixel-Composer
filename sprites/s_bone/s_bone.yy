@@ -30,7 +30,7 @@
   "origin":4,
   "parent":{
     "name":"icon",
-    "path":"folders/theme/icon.yy",
+    "path":"folders/sprites/theme/icon.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

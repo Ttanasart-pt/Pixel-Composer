@@ -29,7 +29,7 @@
   "origin":4,
   "parent":{
     "name":"node",
-    "path":"folders/theme/node.yy",
+    "path":"folders/sprites/theme/node.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

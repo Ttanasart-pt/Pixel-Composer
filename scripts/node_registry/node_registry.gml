@@ -671,6 +671,7 @@ function __initNodes() {
 		addNodeObject(filter, "Colorize",			s_node_colorize,		"Node_Colorize",		[1, Node_Colorize], ["recolor"], "Map brightness of a pixel to a color from a gradient.");
 		addNodeObject(filter, "Posterize",			s_node_posterize,		"Node_Posterize",		[1, Node_Posterize],, "Reduce and remap color to match a palette.");
 		addNodeObject(filter, "Dither",				s_node_dithering,		"Node_Dither",			[1, Node_Dither],, "Reduce color and use dithering to preserve original color.");
+		addNodeObject(filter, "Error Diffuse Dither",s_node_error_diffuse,	"Node_Dither_Diffuse",	[1, Node_Dither_Diffuse],, "Dither image using error diffusion algorithm.");
 		addNodeObject(filter, "Color Adjust",		s_node_color_adjust,	"Node_Color_adjust",	[1, Node_Color_adjust], ["brightness", "contrast", "hue", "saturation", "value", "color blend", "alpha"], "Adjust brightness, contrast, hue, saturation, value, alpha, and blend image with color.");
 		addNodeObject(filter, "Palette Shift",		s_node_palette_shift,	"Node_Palette_Shift",	[1, Node_Palette_Shift],, "Shift the order of color in palette.").setVersion(1147);
 		addNodeObject(filter, "BW",					s_node_BW,				"Node_BW",				[1, Node_BW], ["black and white"], "Convert color image to black and white.");

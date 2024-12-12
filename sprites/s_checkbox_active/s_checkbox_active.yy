@@ -46,7 +46,7 @@
   "origin":4,
   "parent":{
     "name":"widget",
-    "path":"folders/theme/widget.yy",
+    "path":"folders/sprites/theme/widget.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

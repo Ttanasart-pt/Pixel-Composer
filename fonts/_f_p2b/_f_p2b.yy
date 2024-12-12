@@ -120,7 +120,7 @@
   "name":"_f_p2b",
   "parent":{
     "name":"font",
-    "path":"folders/font.yy",
+    "path":"folders/sprites/theme/font.yy",
   },
   "pointRounding":1,
   "ranges":[

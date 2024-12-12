@@ -31,7 +31,7 @@
   "origin":4,
   "parent":{
     "name":"timeline",
-    "path":"folders/theme/timeline.yy",
+    "path":"folders/sprites/theme/timeline.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

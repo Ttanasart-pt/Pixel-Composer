@@ -120,7 +120,7 @@
   "name":"_f_p1",
   "parent":{
     "name":"font",
-    "path":"folders/font.yy",
+    "path":"folders/sprites/theme/font.yy",
   },
   "pointRounding":0,
   "ranges":[

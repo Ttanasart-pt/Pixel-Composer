@@ -26,7 +26,7 @@
   "origin":4,
   "parent":{
     "name":"assets",
-    "path":"folders/theme/node/assets.yy",
+    "path":"folders/sprites/theme/node/assets.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",
