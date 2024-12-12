@@ -229,8 +229,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 	newInput(7, nodeValue_Bool("Full Mesh", self, false));
 		
-	newInput(8, nodeValue_Enum_Scroll("Mesh Type", self,  0, [ new scrollItem("Grid",   s_node_mesh_type, 0), 
-												               new scrollItem("Custom", s_node_mesh_type, 1), ] ));
+	newInput(8, nodeValue_Enum_Button("Mesh Type", self,  0, [ "Grid", "Custom" ] ));
 	
 	newInput(9, nodeValueSeed(self));
 	
