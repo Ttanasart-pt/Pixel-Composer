@@ -234,6 +234,9 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	newInput(9, nodeValueSeed(self));
 	
+	newInput(10, nodeValue_Float("Randomness", self, 0.5))
+		.setDisplay(VALUE_DISPLAY.slider);
+	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
@@ -241,7 +244,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newOutput(1, nodeValue_Output("Mesh data", self, VALUE_TYPE.mesh, mesh_data));
 	
 	input_display_list = [ 5, 
-		["Mesh",			false],	0, 8, 9, 1, 7, 3, 
+		["Mesh",			false],	0, 8, 9, 1, 7, 10, 3, 
 		["Link",			false],	4, 6,
 		["Control points",	false], 
 	];
@@ -396,8 +399,16 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		for(var i = 0; i < array_length(mesh_data.links); i++)
 			mesh_data.links[i].draw(_x, _y, _s);
 			
-		for(var i = 0; i < array_length(mesh_data.tris); i++)
+		for(var i = 0; i < array_length(mesh_data.tris); i++) {
 			mesh_data.tris[i].drawPoints(_x, _y, _s);
+			
+			// var _t = mesh_data.tris[i];
+			// var _in = delaunay_triangle_in_polygon(attributes.mesh_bound, _t);
+			// draw_set_color(_in? c_lime : c_red);
+			// draw_circle(_x + (_t.p0.x + _t.p1.x + _t.p2.x) / 3 * _s, 
+			//             _y + (_t.p0.y + _t.p1.y + _t.p2.y) / 3 * _s,
+			//             4, false);
+		}
 		
 		var _hover = -1;
 		for(var i = control_index; i < array_length(inputs); i++) {
@@ -455,9 +466,10 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	static step = function() {
 		var _type = getInputData(8);
 		
-		inputs[2].setVisible(_type == 0);
-		inputs[4].setVisible(_type == 0);
-		inputs[7].setVisible(_type == 0);
+		inputs[ 2].setVisible(_type == 0);
+		inputs[ 4].setVisible(_type == 0);
+		inputs[ 7].setVisible(_type == 0);
+		inputs[10].setVisible(_type == 1);
 		
 			 if(_type == 0) tools = tools_edit;
 		else if(_type == 1) tools = tools_mesh;
@@ -569,8 +581,9 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	}
 	
 	static Mesh_build_Triangulate = function(surf) {
-		var sample = getInputData(1);
-		var seed   = getInputData(9);
+		var sample = getInputData( 1);
+		var seed   = getInputData( 9);
+		var _rand  = getInputData(10);
 		
 		if(!inputs[0].value_from) return;
 		if(is_array(surf)) surf = surf[0];
@@ -581,8 +594,8 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _m = attributes.mesh_bound;
 		if(array_length(_m) < 3) return;
 		
-		var _mb		= array_length(_m);
-		var ind		= 0;
+		var _mb	= array_length(_m);
+		var ind	= 0;
 		
 		var minX, maxX, minY, maxY;
     
@@ -602,8 +615,8 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	        }
 	    }
 		
-		var gw = ww / sample / 3;
-		var gh = hh / sample / 3;
+		var gw = ww / sample / 3 * _rand;
+		var gh = hh / sample / 3 * _rand;
 		
 		random_set_seed(seed);
 		var _p = [];
@@ -620,14 +633,26 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		}
 		
 		mesh_data.points = array_create(_mb + array_length(_p));
+		var _i = 0;
+		var _sp = min(ww, hh) / sample;
 		
-		for( var i = 0, n = _mb; i < n; i++ )
-			mesh_data.points[i] = new MeshedPoint(i, _m[i][0], _m[i][1]);
+		for( var i = 0, n = _mb; i < n; i++ ) {
+			mesh_data.points[_i] = new MeshedPoint(_i, _m[i][0], _m[i][1]); _i++;
 			
-		for( var i = 0, n = array_length(_p); i < n; i++ )
-			mesh_data.points[_mb + i] = new MeshedPoint(_mb + i, _p[i][0], _p[i][1]);
+			var _p0 = _m[i];
+			var _p1 = _m[(i + 1) % n];
+			var _ds = point_distance(_p0[0], _p0[1], _p1[0], _p1[1]);
+			var _sm = round(_ds / _sp);
+			for( var j = 0; j < _sm; j++ ) {
+				mesh_data.points[_i] = new MeshedPoint(_i, lerp(_p0[0], _p1[0], j / _sm), lerp(_p0[1], _p1[1], j / _sm)); _i++;
+			}
+		}
+			
+		for( var i = 0, n = array_length(_p); i < n; i++ ) {
+			mesh_data.points[_i] = new MeshedPoint(_i, _p[i][0], _p[i][1]); _i++;
+		}
 		
-		var _t = delaunay_triangulation(mesh_data.points);
+		var _t = delaunay_triangulation(mesh_data.points, _m);
 		
 		for( var i = 0, n = array_length(_t); i < n; i++ ) {
 			var t = _t[i];

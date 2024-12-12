@@ -1,4 +1,4 @@
-function delaunay_triangulation(points) { #region
+function delaunay_triangulation(points, polygons = noone) {
 	if(array_length(points) < 3) return [];
 	
     var super_triangle = _create_super_triangle(points);
@@ -11,6 +11,7 @@ function delaunay_triangulation(points) { #region
 
         for (var j = 0; j < array_length(triangles); j++) {
             var _triangle = triangles[j];
+            
             if (_point_in_circumcircle(_point, _triangle))
                 array_push(bad_triangles, _triangle);
         }
@@ -28,9 +29,9 @@ function delaunay_triangulation(points) { #region
 
     for (var i = array_length(triangles) - 1; i >= 0; i--) {
         var _triangle = triangles[i];
-        if (_shares_vertex(super_triangle, _triangle))
+        if (_shares_vertex(super_triangle, _triangle) || (polygons != noone && !delaunay_triangle_in_polygon(polygons, _triangle)))
             array_delete(triangles, i, 1);
     }
 	
     return triangles;
-} #endregion
+}
