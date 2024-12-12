@@ -1,12 +1,13 @@
 {
   "$GMShader":"",
-  "%Name":"sh_kuwahara",
-  "name":"sh_kuwahara",
+  "%Name":"sh_kuwahara_ani_pass2",
+  "name":"sh_kuwahara_ani_pass2",
   "parent":{
     "name":"kuwahara",
     "path":"folders/shader/filter/kuwahara.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",
+  "tags":[],
   "type":1,
 }
