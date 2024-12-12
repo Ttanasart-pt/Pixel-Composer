@@ -305,6 +305,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		tools			= -1;
 		rightTools		= -1;
 		isTool			= false;
+		isGizmoGlobal   = false;
 		tool_settings	= [];
 		tool_attribute	= {};
 	#endregion

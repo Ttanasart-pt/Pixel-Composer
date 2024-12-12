@@ -39,12 +39,35 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	newInput(8, nodeValue_Bool("Show on global", self, false, "Whether to show overlay gizmo when not selecting any nodes."));
 	
+	newInput(9, nodeValue_Vec2("Gizmo offset", self, [ 0, 0 ]));
+	
+	newInput(10, nodeValue_Float("Gizmo scale", self, 1));
+	
+	newInput(11, nodeValue_Enum_Scroll("Gizmo style", self, 0, [ "Default", "Shapes", "Sprite" ]));
+	
+	newInput(12, nodeValue_Enum_Scroll("Gizmo shape", self, 0, [ "Rectangle", "Ellipse", "Arrow" ]));
+	
+	newInput(13, nodeValue_Surface("Gizmo sprite", self, noone));
+	
+	newInput(14, nodeValue_Vec2("Gizmo size", self, [ 32, 32 ]));
+	
 	newOutput(0, nodeValue_Output("Number", self, VALUE_TYPE.float, 0));
 	
 	input_display_list = [ 0, 1, 
 		["Editor",  false], 2, 6, 3, 5, 4, 7,
-		["Gizmo",   false], 8, 
+		["Gizmo",   false], 8, 11, 12, 13, 14, 9, 10,
 	]
+	
+	gz_style  = 0;
+	gz_shape  = 0;
+	gz_sprite = 0;
+	gz_pos    = [ 0, 0 ];
+	gz_size   = [ 0, 0 ];
+	gz_scale  = 1;
+	
+	gz_dragging = false;
+	gz_drag_sx  = 0;
+	gz_drag_mx  = 0;
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _val = getInputData(0);
@@ -54,7 +77,76 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		if(_dsp == 0 || _dsp == 1) inputs[0].display_type = VALUE_DISPLAY._default;
 		else if(_dsp == 2)	       inputs[0].display_type = VALUE_DISPLAY.rotation;
 		
-		var _h = inputs[0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		var _gx = _x + gz_pos[0] * _s;
+		var _gy = _y + gz_pos[1] * _s;
+		var _h = false;
+		
+		if(gz_style == 0) _h = inputs[0].drawOverlay(hover, active, _gx, _gy, _s, _mx, _my, _snx, _sny, 0, gz_scale);
+		else {
+			var val = inputs[0].getValue();
+			
+			if(gz_dragging) {
+				var _nv = gz_drag_sx + (_mx - gz_drag_mx) / (_s * gz_scale);
+				
+				if(inputs[0].setValue(_nv)) 
+					UNDO_HOLDING = true;
+				
+				if(mouse_release(mb_left)) {
+					gz_dragging = false;
+					UNDO_HOLDING = false;
+				}
+			}
+			
+			var _rx  = _gx + val * (_s * gz_scale);
+			var _ry  = _gy;
+			var _rw  = gz_size[0] * _s;
+			var _rh  = gz_size[1] * _s;
+			var _rx0 = _rx - _rw / 2;
+			var _ry0 = _ry - _rh / 2;
+			var _rx1 = _rx + _rw / 2;
+			var _ry1 = _ry + _rh / 2;
+			
+			_h = hover && point_in_rectangle(_mx, _my, _rx0, _ry0, _rx1, _ry1);
+			
+			if(gz_style == 1) {
+				draw_set_color(_h || gz_dragging? COLORS._main_accent : COLORS._main_icon);
+				draw_set_circle_precision(32);
+				
+				switch(gz_shape) {
+					case 0 : draw_rectangle(_rx0, _ry0, _rx1, _ry1, true); break;
+					case 1 : draw_ellipse(_rx0, _ry0, _rx1, _ry1, true);   break;
+					case 2 : 
+						var _ah = min(_rw, _rh) / 4;
+						var _lt = min(_rw, _rh) / 3;
+						
+						draw_primitive_begin(pr_linestrip);
+							draw_vertex(_rx0,       _ry);
+							draw_vertex(_rx0 + _ah, _ry0);
+							draw_vertex(_rx0 + _ah, _ry0 + _lt);
+							draw_vertex(_rx1 - _ah, _ry0 + _lt);
+							draw_vertex(_rx1 - _ah, _ry0);
+							draw_vertex(_rx1,       _ry);
+							draw_vertex(_rx1 - _ah, _ry1);
+							draw_vertex(_rx1 - _ah, _ry1 - _lt);
+							draw_vertex(_rx0 + _ah, _ry1 - _lt);
+							draw_vertex(_rx0 + _ah, _ry1);
+							draw_vertex(_rx0,       _ry);
+						draw_primitive_end();
+						break;
+				}
+				
+			} else if(gz_style == 2) {
+				if(is_surface(gz_sprite)) draw_surface_stretched_ext(gz_sprite, _rx0, _ry0, _rw, _rh, c_white, 0.5 + 0.5 * _h);
+			}
+			
+			if(_h && mouse_press(mb_left, active)) {
+				gz_dragging = true;
+				
+				gz_drag_sx = val;
+				gz_drag_mx = _mx;
+			}
+		}
+		
 		inputs[0].display_type = VALUE_DISPLAY._default;
 		
 		return _h;
@@ -113,9 +205,21 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	doUpdate = doUpdateLite;
 	static update = function() {
 		setType();
+		isGizmoGlobal = getInputData( 8);
+		gz_pos        = getInputData( 9);
+		gz_scale      = getInputData(10);
+		gz_style      = getInputData(11);
+		gz_shape      = getInputData(12);
+		gz_sprite     = getInputData(13);
+		gz_size       = getInputData(14);
+		
+		inputs[12].setVisible(gz_style == 1);
+		inputs[13].setVisible(gz_style == 2, gz_style == 2);
+		inputs[14].setVisible(gz_style != 0);
 		
 		var _dat = getInputData(0);
 		var _int = getInputData(1);
+		
 		var _res = processNumber(_dat, _int);
 		
 		outputs[0].setValue(_res);

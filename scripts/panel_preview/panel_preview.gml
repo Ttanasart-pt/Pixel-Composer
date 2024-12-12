@@ -516,7 +516,7 @@ function Panel_Preview() : PanelContent() constructor {
         static d3_view_action_top    = function() /*=>*/ { d3_camLerp = 1; d3_camLerp_x =   0; d3_camLerp_y =  89; }
     #endregion
     
-    ////============ DATA ============
+    ////- DATA
     
     function setNodePreview(node) {
         if(locked) return;
@@ -597,7 +597,7 @@ function Panel_Preview() : PanelContent() constructor {
     
     function onFocusBegin() { PANEL_PREVIEW = self; }
     
-    ////============ VIEW ============
+    ////- VIEW
     
     function dragCanvas() {
         if(canvas_dragging) {
@@ -858,7 +858,7 @@ function Panel_Preview() : PanelContent() constructor {
     
     static onFullScreen = function() { run_in(1, fullView); }
     
-    ////============ DRAW ============
+    ////- DRAW
     
     function drawOnionSkin(node, psx, psy, ss) {
         var _surf = preview_surfaces[0];
@@ -1727,6 +1727,49 @@ function Panel_Preview() : PanelContent() constructor {
         }
     }
     
+    function drawAllNodeGizmo(active) {
+    	var _mx = mx;
+        var _my = my;
+        var overHover = pHOVER && mouse_on_preview == 1;
+        var tool_size  = ui(32);
+        
+        var cx = canvas_x;
+        var cy = canvas_y;
+        var _snx = 0, _sny = 0;
+        
+        if(key_mod_press(CTRL)) {
+            _snx = PROJECT.previewGrid.show? PROJECT.previewGrid.size[0] : 1;
+            _sny = PROJECT.previewGrid.show? PROJECT.previewGrid.size[1] : 1;
+            
+        } else if(PROJECT.previewGrid.snap) {
+            _snx = PROJECT.previewGrid.size[0];
+            _sny = PROJECT.previewGrid.size[1];
+        }
+            
+        overHover &= !view_hovering;
+        overHover &= tool_hovering == noone && !overlay_hovering;
+        overHover &= !canvas_dragging && !canvas_zooming;
+        overHover &= point_in_rectangle(mx, my, 0, toolbar_height, w, h - toolbar_height);
+        
+        var overActive = active && overHover;
+        var params = { w, h, toolbar_height };
+        params.panel = self;
+        
+        var _nlist = PANEL_GRAPH.nodes_list;
+        for( var i = 0, n = array_length(_nlist); i < n; i++ ) {
+        	var _n = _nlist[i];
+        	if(!is(_n, Node))     continue;
+        	if(!_n.isGizmoGlobal) continue;
+        	
+        	var _h = _n.drawOverlay(overHover, overActive, cx, cy, canvas_s, _mx, _my, _snx, _sny, params);
+        	
+        	if(_h == true) {
+        		overHover = false;
+        		overActive = false;
+        	}
+        }
+    }
+    
     function drawNodeTools(active, _node) {
         var _mx = mx;
         var _my = my;
@@ -1750,8 +1793,7 @@ function Panel_Preview() : PanelContent() constructor {
         overHover &= !canvas_dragging && !canvas_zooming;
         overHover &= point_in_rectangle(mx, my, (_node.tools != -1) * toolbar_width, toolbar_height, w, h - toolbar_height);
         
-        var overActive =  active && overHover;
-            
+        var overActive = active && overHover;
         var params = { w, h, toolbar_height };
         params.panel = self;
         
@@ -2311,6 +2353,7 @@ function Panel_Preview() : PanelContent() constructor {
                 
             } else {
                 tool_current = noone;
+                drawAllNodeGizmo(pFOCUS);
             }
         }
         
@@ -2482,7 +2525,7 @@ function Panel_Preview() : PanelContent() constructor {
             draw_sprite_ui(THEME.node_resize, 0, mx0 + ui(10), my0 + ui(10), 0.5, 0.5, 180, c_white, 0.3);
     } 
     
-    ////=========== ACTION ===========
+    ////- ACTION
     
     function copyCurrentFrame() {
         var prevS = getNodePreviewSurface();
@@ -2561,7 +2604,7 @@ function Panel_Preview() : PanelContent() constructor {
         }
     }
     
-    //// =========== Serialize ===========
+    ////- Serialize
     
     static serialize   = function() { 
         return { 

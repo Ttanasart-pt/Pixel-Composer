@@ -181,6 +181,11 @@ function winManStep() {
 				window_drag_sh = window_minimize_size[1];
 				__winman_to_ref = true;
 				
+				var _rx = mx / _sw;
+				var _nx = _rx * (_sw - window_drag_sw);
+				window_drag_sx = _nx;
+				DISPLAY_REFRESH
+				
 			} else {
 				sx = _sx + (mx - _mx);
 				sy = _sy + (my - _my);

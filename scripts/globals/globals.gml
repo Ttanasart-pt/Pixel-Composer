@@ -41,12 +41,15 @@
 	globalvar VERSION, SAVE_VERSION, VERSION_STRING, BUILD_NUMBER, LATEST_VERSION, NIGHTLY;
 	globalvar HOTKEYS, HOTKEY_CONTEXT;
 	
-	NIGHTLY         = false;
 	LATEST_VERSION	= 1_18_00_0;
 	VERSION			= 1_18_05_1;
 	SAVE_VERSION	= 1_18_05_0;
-	VERSION_STRING  = MAC? "1.18.003m" : "1.18.5.1";
+	VERSION_STRING  = MAC? "1.18.003m" : "1.18.5.1.001";
 	BUILD_NUMBER	= 1_18_05_1;
+	
+	var _vsp = string_split(VERSION_STRING, ".");
+	var _lsp = _vsp[array_length(_vsp) - 1];
+	NIGHTLY  = string_length(_lsp) == 3;
 	
 	HOTKEYS			= ds_map_create();
 	HOTKEY_CONTEXT	= ds_list_create();
