@@ -751,6 +751,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
     menu_open_group         = MENU_ITEMS.graph_enter_group;
     menu_open_group_tab     = MENU_ITEMS.graph_open_in_new_tab;
     menu_group_group        = MENU_ITEMS.graph_group;
+    menu_group_ungroup      = MENU_ITEMS.graph_ungroup;
     menu_group_tool         = MENU_ITEMS.graph_set_as_tool;
                 
     menu_node_delete_cut    = MENU_ITEMS.graph_delete_break;

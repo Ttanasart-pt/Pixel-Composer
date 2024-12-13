@@ -1,6 +1,6 @@
 function Node_Palette(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Palette";
-	setDimension(96);
+	setDimension(96, 48);
 	
 	newInput(0, nodeValue_Palette("Palette", self, array_clone(DEF_PALETTE)));
 	
@@ -14,7 +14,7 @@ function Node_Palette(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	];
 	
 	static processData_prebatch = function() {
-		setDimension(96, process_length[0] * 32);
+		setDimension(96, 16 + process_length[0] * 32);
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
