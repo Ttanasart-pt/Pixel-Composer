@@ -266,3 +266,179 @@ function node_snap_grid(nodeList, spacing = 16) {
 		_node.y = value_snap(_node.y, spacing);
 	}
 }
+
+	////- Auto organize
+
+function node_auto_organize_parameter() constructor {
+	padd_w = 32;
+	padd_h = 16;
+	
+	snap      = true;
+	snap_size = 16;
+	
+	gridmap   = [];
+}
+
+function __node_auto_organize_graph(node) {
+	var children = [];
+	var froms    = node.getNodeFrom();
+	node.__organize_sorted = false;
+	
+	for( var i = 0, n = array_length(froms); i < n; i++ )
+		children[i] = __node_auto_organize_graph(froms[i]);
+	
+	return { node, children, w: 0, h: 0, depth: 0 };
+}
+
+function __node_auto_organize_size(node, param) {
+	if(array_empty(node.children)) {
+		if(node.node == noone) return node;
+		
+		node.w = node.node.w;
+		node.h = node.node.h;
+		return node;
+	}
+	
+	var tw = 0;
+	var th = 0;
+	
+	for( var i = 0, n = array_length(node.children); i < n; i++ ) {
+		var _s = __node_auto_organize_size(node.children[i], param);
+		tw = max(tw, _s.node.w);
+		th += _s.h + param.padd_h * bool(i);
+	}
+	
+	node.w  = tw;
+	node.h  = th;
+	
+	return node;
+}
+
+function __node_auto_organize(node, param, _x = 0, _y = 0, _cap = false) {
+	var ch = [];
+	var tw = node.w;
+	
+	var _sx = _x - tw - param.padd_w;
+	var _sy = _y;
+	
+	if(param.snap) {
+		_sx = value_snap(_sx, param.snap_size);
+		_sy = value_snap(_sy, param.snap_size);
+	}
+	
+	var miny = 0; 
+	var maxy = 0; 
+	
+	for( var i = 0, n = array_length(node.children); i < n; i++ ) {
+		var _n = node.children[i];
+		__node_auto_organize(_n, param, _sx, _sy, _cap);
+		
+		if(!_n.node.__organize_sorted) {
+			_n.node.x = _sx;
+			_n.node.y = _sy;
+		} else {
+			_n.node.x = min(_n.node.x, _sx);
+			_n.node.y = min(_n.node.y, _sy);
+		}
+		
+		miny = i == 0? _n.node.y             : min(miny, _n.node.y);
+		maxy = i == 0? _n.node.y + _n.node.h : max(maxy, _n.node.y + _n.node.h);
+		
+		_n.node.__organize_sorted = true;
+		_sy += _n.h + param.padd_h;
+		
+		if(param.snap) _sy = value_snap(_sy, param.snap_size);
+	}
+	
+	if(_cap && node.node) miny = max(miny, node.node.y);
+	if(n) node.h = maxy - miny;
+	if(node.node) node.h = max(node.h, node.node.h);
+}
+
+function __node_bbox_recal(node, param) {
+	node.bbox = [ 0, 0, 0, 0 ];
+	node.h    = 0;
+	if(node.node) node.node.__organize_sorted = false;
+	
+	if(array_empty(node.children)) {
+		if(node.node == noone) return node;
+		
+		node.bbox[0] = node.node.x;
+		node.bbox[1] = node.node.y;
+		node.bbox[2] = node.node.x + node.node.w;
+		node.bbox[3] = node.node.y + node.node.h;
+		
+		node.h = node.bbox[3] - node.bbox[1];
+		return node;
+	}
+	
+	for( var i = 0, n = array_length(node.children); i < n; i++ ) {
+		var _n = node.children[i];
+		__node_bbox_recal(_n, param);
+		
+		node.bbox[0] = min(node.bbox[0], _n.bbox[0]);
+		node.bbox[1] = min(node.bbox[1], _n.bbox[1]);
+		node.bbox[2] = max(node.bbox[2], _n.bbox[2]);
+		node.bbox[3] = max(node.bbox[3], _n.bbox[3]);
+	}
+	
+	if(node.node) node.bbox[1] = max(node.bbox[1], node.node.y);
+	node.h = node.bbox[3] - node.bbox[1];
+	return node;
+}
+
+function node_auto_organize(nodeList, param = new node_auto_organize_parameter()) {
+	if(array_empty(nodeList)) return;
+	
+	var cx = 0, cy = 0;
+	for( var i = 0, n = array_length(nodeList); i < n; i++ ) {
+		var _n = nodeList[i];
+		cx += _n.x + _n.w / 2;
+		cy += _n.y + _n.h / 2;
+	}
+	cx /= n; cy /= n;
+	
+	var root = { node: noone, children: [], w: 0, h: 0, depth: 0 };
+	
+	for( var i = 0, n = array_length(nodeList); i < n; i++ ) {
+		var _n   = nodeList[i];
+		var _nto = _n.getNodeTo();
+		
+		var _isRoot = array_empty(_nto) || array_empty(array_union(_nto, nodeList));
+		if(_isRoot) array_push(root.children, __node_auto_organize_graph(_n));
+	}
+	
+	array_sort(root.children, function(a, b) /*=>*/ {return a.node.y - b.node.y});
+	
+	__node_auto_organize_size(root, param);
+	__node_auto_organize(root, param, 0, 0);
+	
+	repeat(1) {
+		__node_bbox_recal(root, param);
+		__node_auto_organize(root, param, 0, 0, true);
+	}
+	
+	var ncx = 0, ncy = 0;
+	for( var i = 0, n = array_length(nodeList); i < n; i++ ) {
+		var _n = nodeList[i];
+		ncx += _n.x + _n.w / 2;
+		ncy += _n.y + _n.h / 2;
+	}
+	ncx /= n; ncy /= n;
+	
+	var dx = ncx - cx;
+	var dy = ncy - cy;
+	
+	if(param.snap) {
+		dx = value_snap(dx, param.snap_size);
+		dy = value_snap(dy, param.snap_size);
+	}
+	
+	for( var i = 0, n = array_length(nodeList); i < n; i++ ) {
+		var _n   = nodeList[i];
+		_n.x = _n.x - dx;
+		_n.y = _n.y - dy;
+	}
+	
+	PANEL_GRAPH.draw_refresh = true;
+}

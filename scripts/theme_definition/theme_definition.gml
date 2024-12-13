@@ -287,6 +287,8 @@ function Theme() constructor {
     curve_presets                   = s_inspector_curve_presets;
     inspector_channel               = s_inspector_channel;
     inspector_checkbox              = s_inspector_checkbox;
+    obj_auto_align                  = s_obj_auto_align;
+	obj_auto_organize               = s_obj_auto_organize;
     obj_angle                       = s_inspector_obj_angle;
     obj_direction                   = s_inspector_direction;
     obj_distribute_h                = s_obj_distribute_h;

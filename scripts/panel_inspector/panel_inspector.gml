@@ -845,11 +845,14 @@ function Panel_Inspector() : PanelContent() constructor {
                 var lbh = viewMode? ui(32) : ui(26);
                 var lbw = con_w;
                 
-                var togl = array_safe_get_fast(jun, 2, noone);
+                var togl   = array_safe_get_fast(jun, 2, noone);
+                var toging = false;
+                
                 if(togl != noone) {
                     lbx += ui(40);
                     lbw -= ui(40);
-                    var toging = _inspecting.getInputData(togl);
+                    toging = _inspecting.getInputData(togl);
+                    if(is_array(toging)) toging = false;
                 }
                 
                 var righ = array_safe_get_fast(jun, 3, noone);

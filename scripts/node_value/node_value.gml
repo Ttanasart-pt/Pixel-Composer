@@ -146,6 +146,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		draw_line_blend       = 1;
 		draw_line_feed		  = false;
 		drawLineIndex		  = 1;
+		drawLineIndexRaw	  = 1;
 		draw_line_vb		  = noone;
 		draw_junction_index   = type;
 		

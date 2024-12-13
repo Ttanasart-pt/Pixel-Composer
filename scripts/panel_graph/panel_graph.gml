@@ -39,6 +39,7 @@
     function panel_graph_copy()                    { CALL("graph_copy");                PANEL_GRAPH.doCopy();                                                                           }
     function panel_graph_paste()                   { CALL("graph_paste");               PANEL_GRAPH.doPaste();                                                                          }
     
+    function panel_graph_auto_organize()           { CALL("graph_auto_organize");       node_auto_organize(PANEL_GRAPH.nodes_selecting);                                                }
     function panel_graph_auto_align()              { CALL("graph_auto_align");          node_auto_align(PANEL_GRAPH.nodes_selecting);                                                   }
     function panel_graph_snap_nodes()              { CALL("graph_snap_nodes");          node_snap_grid(PANEL_GRAPH.nodes_selecting, PANEL_GRAPH.project.graphGrid.size);                }
     function panel_graph_search()                  { CALL("graph_search");              PANEL_GRAPH.toggleSearch();                                                                     }
@@ -109,6 +110,7 @@
         registerFunction("Graph", "Zoom",                  "", MOD_KEY.alt | MOD_KEY.ctrl,       panel_graph_zoom                ).setMenu("graph_zoom")
         
         registerFunction("Graph", "Auto Align",            "L", MOD_KEY.none,                    panel_graph_auto_align          ).setMenu("graph_auto_align")
+        registerFunction("Graph", "Auto Organize",         "L", MOD_KEY.ctrl, function() /*=>*/ { dialogPanelCall(new Panel_Graph_Auto_Organize(PANEL_GRAPH.nodes_selecting)) } ).setMenu("graph_auto_organize")
         registerFunction("Graph", "Snap Nodes",            "",  MOD_KEY.none,                    panel_graph_snap_nodes          ).setMenu("graph_snap_nodes")
         registerFunction("Graph", "Search",                "F", MOD_KEY.ctrl,                    panel_graph_search              ).setMenu("graph_search")
         registerFunction("Graph", "Toggle Minimap",        "M", MOD_KEY.ctrl,                    panel_graph_toggle_minimap      ).setMenu("graph_toggle_minimap")
@@ -573,6 +575,11 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         toolbars_distrib = [
             [ THEME.obj_distribute_h, function() /*=>*/ {return 0}, function() /*=>*/ {return ""}, function(param) /*=>*/ { node_hdistribute(nodes_selecting); } ],
             [ THEME.obj_distribute_v, function() /*=>*/ {return 0}, function() /*=>*/ {return ""}, function(param) /*=>*/ { node_vdistribute(nodes_selecting); } ],
+        ];
+        
+        toolbars_auto_arrange = [
+            [ THEME.obj_auto_align,    function() /*=>*/ {return 0}, function() /*=>*/ {return "Auto align"},    function(param) /*=>*/ { node_auto_align(nodes_selecting); } ],
+            [ THEME.obj_auto_organize, function() /*=>*/ {return 0}, function() /*=>*/ {return "Auto organize"}, function(param) /*=>*/ { dialogPanelCall(new Panel_Graph_Auto_Organize(PANEL_GRAPH.nodes_selecting), param.x, param.y, { anchor: ANCHOR.bottom | ANCHOR.left }) } ],
         ];
         
         distribution_spacing = 0;
@@ -2556,9 +2563,9 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         toolbars = [ toolbars_general ];
         if(array_length(nodes_selecting) > 1) {
             if(array_exists(nodes_selecting, nodes_select_anchor))
-                array_push(toolbars, toolbars_halign, toolbars_valign, toolbars_distrib_space);
+                array_push(toolbars, toolbars_halign, toolbars_valign, toolbars_distrib_space, toolbars_auto_arrange);
             else 
-                array_push(toolbars, toolbars_halign, toolbars_valign, toolbars_distrib);
+                array_push(toolbars, toolbars_halign, toolbars_valign, toolbars_distrib, toolbars_auto_arrange);
         }
         
         graph_cx = (w / 2) / graph_s - graph_x;

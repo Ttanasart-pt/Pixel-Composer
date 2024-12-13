@@ -769,7 +769,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(attributes.node_height) h = max(h, attributes.node_height);
 	}
 	
-	static getJunctionList = function() { ////getJunctionList
+	static getJunctionList = function() {
 		inputDisplayList = [];
 		
 		var iamo = getInputAmount();
@@ -884,6 +884,35 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			_vto[j] = array_clone(outputs[j].value_to);
 			
 		return _vto;
+	}
+	
+	static getNodeFrom = function() {
+		var _nodes = [];
+		
+		for(var i = 0, n = array_length(inputDisplayList); i < n; i++) { //inputs
+			var jun = inputDisplayList[i];
+			var _fr = jun.value_from;
+			if(_fr != noone && _fr.node.active) array_push(_nodes, _fr.node);
+		}
+			
+		// for( var i = 0, n = array_length(inputs); i < n; i++ ) {
+		// 	var _fr = inputs[i].value_from;
+		// }
+		
+		return array_unique(_nodes);
+	}
+	
+	static getNodeTo = function() {
+		var _nodes = [];
+		
+		for (var j = 0; j < array_length(outputs); j++) {
+			var _to = outputs[j].value_to;
+			
+			for( var i = 0, n = array_length(_to); i < n; i++ )
+				if(_to[i].node.active) array_push(_nodes, _to[i].node);
+		}
+		
+		return array_unique(_nodes);
 	}
 	
 	static checkConnectGroup = function(_io) {
@@ -1881,6 +1910,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		for( var i = 0; i < __draw_inputs_len; i++ ) {
 			_jun = __draw_inputs[i];
+			_jun.drawLineIndexRaw = i;
 			_jun.drawLineIndex = 1 + (i > __draw_inputs_len / 2? (__draw_inputs_len - 1 - i) : i) * 0.5;
 		}
 	}
