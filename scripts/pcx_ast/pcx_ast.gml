@@ -128,7 +128,7 @@
 		animated
 	}
 	
-	function __funcList() constructor { #region
+	function __funcList() constructor {
 		funcTrees = [];
 		
 		static addFunction = function(fn) {
@@ -159,9 +159,9 @@
 				
 			return val;
 		}
-	} #endregion
+	}
 	
-	function __funcIf() constructor { #region
+	function __funcIf() constructor {
 		condition = noone;
 		if_true   = new __funcList();
 		if_false  = new __funcList();
@@ -192,9 +192,9 @@
 			if(res) return if_true == noone? 0  : if_true.eval(params);
 			else    return if_false == noone? 0 : if_false.eval(params);
 		}
-	} #endregion
+	}
 	
-	function __funcFor() constructor { #region
+	function __funcFor() constructor {
 		itr_array = false;
 		
 		cond_init = noone;
@@ -258,24 +258,24 @@
 				}
 			}
 		}
-	} #endregion
+	}
 	
-	function __funcTree(symbol, l = noone, r = noone) constructor { #region
+	function __funcTree(symbol, l = noone, r = noone) constructor {
 		self.symbol = symbol;
 		self.l = l;
 		self.r = r;
 		dependency = [];
 		anim_stat  = undefined;
 		
-		static _string = function(str) { #region
+		static _string = function(str) {
 			return string_char_at(str, 1) == "\"" &&  string_char_at(str, string_length(str)) == "\"";
-		} #endregion
+		}
 		
-		static _string_trim = function(str) { #region
+		static _string_trim = function(str) {
 			return string_trim(str, [ "\"" ]);
-		} #endregion
+		}
 		
-		static getVal = function(val, params = {}, getRaw = false) { #region
+		static getVal = function(val, params = {}, getRaw = false) {
 			if(is_struct(val))	return val.eval(params, getRaw);
 			if(is_real(val))	return val;
 			if(getRaw)			return val;
@@ -293,9 +293,9 @@
 				return struct_try_get(params.node_values, _str[1]);
 			
 			return nodeGetData(val);
-		} #endregion
+		}
 		
-		static _validate = function(val) { #region
+		static _validate = function(val) {
 			if(is_real(val))   return true;
 			if(is_string(val)) return true;
 			if(is_struct(val)) return val.validate();
@@ -314,9 +314,9 @@
 			
 			array_push_unique(dependency, strs[0]);
 			return true;
-		} #endregion
+		}
 		
-		static validate = function() { #region
+		static validate = function() {
 			dependency = [];
 			
 			if(ds_map_exists(global.PCX_FUNCTIONS, symbol)) {
@@ -333,9 +333,9 @@
 			}
 			
 			return _validate(l) && _validate(r);
-		} #endregion
+		}
 		
-		static _isAnimated = function(val) { #region
+		static _isAnimated = function(val) {
 			if(is_real(val))   return EXPRESS_TREE_ANIM.none;
 			if(is_struct(val)) return val.isDynamic();
 			if(is_array(val)) {
@@ -348,17 +348,17 @@
 			if(val == "value") return EXPRESS_TREE_ANIM.base_value;
 			//var anim = nodeGetDataAnim(val);
 			return EXPRESS_TREE_ANIM.animated;
-		} #endregion
+		}
 		
-		static isDynamic = function() { #region
+		static isDynamic = function() {
 			anim_stat = EXPRESS_TREE_ANIM.none;
 			anim_stat = max(anim_stat, _isAnimated(l));
 			if(symbol != "@") anim_stat = max(anim_stat, _isAnimated(r));
 			
 			return anim_stat;
-		} #endregion
+		}
 		
-		static eval = function(params = {}, isLeft = false) { #region
+		static eval = function(params = {}, isLeft = false) {
 			//print($"{symbol}, {l} | {r}")
 			//print(params);
 			
@@ -477,9 +477,9 @@
 			}
 			
 			return res;
-		} #endregion
+		}
 		
-		static eval_real = function(v1, v2, _symbol = symbol) { #region
+		static eval_real = function(v1, v2, _symbol = symbol) {
 			switch(_symbol) {
 				case "+": 
 				case "⊕": 
@@ -512,15 +512,15 @@
 			}
 			
 			return v1;
-		} #endregion
+		}
 			
-		static toString = function() { #region
+		static toString = function() {
 			return $"[PCX funcTree] \{ symbol: {symbol}, l: {l}, r: {r}\}";
-		} #endregion
-	} #endregion
+		}
+	}
 	
-	function evaluateFunction(fx, params = {}) { #region
+	function evaluateFunction(fx, params = {}) {
 		if(isNumber(fx)) return toNumber(fx);
 		return evaluateFunctionList(fx).eval(params);
-	} #endregion
+	}
 #endregion

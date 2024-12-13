@@ -17,8 +17,6 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 	pose_local_rotate = 0;        pose_apply_rotate = 0;
 	pose_local_scale  = 1;        pose_apply_scale  = 1;
 	
-	angular_constrain = -1;
-	
 	bone_head_init   = new __vec2(); bone_head_pose  = new __vec2();
 	bone_tail_init   = new __vec2(); bone_tail_pose  = new __vec2();
 	
@@ -39,6 +37,8 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 	IKTargetID		 = "";
 	IKTarget		 = noone;
 	
+	constrains       = [];
+	
 	freeze_data      = {};
 	
 	control_x0 = 0; control_y0 = 0; control_i0 = 0;
@@ -51,6 +51,8 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 		freeze_data = { angle, length, distance, direction };
 		array_foreach(childs, function(c) /*=>*/ {return c.freeze()});
 	}
+	
+	////- Find
 	
 	static findBone = function(_id) {
 		if(ID == _id) return self;
@@ -74,6 +76,8 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 		
 		return noone;
 	}
+	
+	////- Get position
 	
 	static getHead = function(pose = true) { return pose? bone_head_pose.clone() : bone_head_init.clone(); }
 	static getTail = function(pose = true) { return pose? bone_tail_pose.clone() : bone_tail_init.clone(); }
@@ -114,6 +118,8 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 				  .addElement(_lx, _ly);
 	}
 	
+	////- Draw
+	
 	static draw = function(attributes, edit = false, _x = 0, _y = 0, _s = 1, _mx = 0, _my = 0, _hover = noone, _select = noone, _blend = c_white, _alpha = 1) {
 		setControl(_x, _y, _s);
 		
@@ -126,7 +132,10 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 		
 		for( var i = 0, n = array_length(childs); i < n; i++ ) {
 			h = childs[i].draw(attributes, edit, _x, _y, _s, _mx, _my, _hover, _select, _blend, _alpha);
-			if(h != noone && (hover == noone || IKlength)) hover = h;
+			if(h == noone) continue;
+			
+			if(hover == noone || IKlength) hover = h;
+			if(h[1] != 2) hover = h;
 		}
 		
 		return hover;
@@ -154,26 +163,6 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 		}
 		
 		if(IKlength == 0) {
-			if(angular_constrain != -1) {
-				var _a0 = angle - angular_constrain;
-				var _a1 = angle + angular_constrain;
-				var ox, oy, nx, ny;
-				
-				for( var i = 0; i <= 32; i++ ) {
-					var _t = lerp(_a0, _a1, i / 32);
-					
-					nx = p0x + lengthdir_x(32 * _s, _t);
-					ny = p0y + lengthdir_y(32 * _s, _t);
-					
-					if(i == 0)  draw_line(p0x, p0y, nx, ny);
-					if(i == 32) draw_line(p0x, p0y, nx, ny);
-					if(i)       draw_line(ox, oy, nx, ny);
-					
-					ox = nx;
-					oy = ny;
-				}
-			}
-			
 			if(pose_rotate != 0) {
 				var nx = p0x + lengthdir_x(16, angle + pose_rotate);
 				var ny = p0y + lengthdir_y(16, angle + pose_rotate);
@@ -326,6 +315,8 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 			childs[i].drawControl(attributes);
 	}
 	
+	////- Pose
+	
 	static resetPose = function() {
 		pose_distance  = distance;
 		pose_direction = direction;
@@ -367,9 +358,12 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 	}
 	
 	static setPose = function(_ik = true) {
+		__c_bone = self;
+		
 		setPosition();
 			setPoseTransform();
 			if(_ik) { setPosition(); setIKconstrain(); }
+			array_foreach(constrains, function(c) /*=>*/ {return c.constrain(__c_bone)});
 		setPosition();
 		
 		return self;
@@ -407,6 +401,8 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 		
 		array_foreach(childs, function(c) /*=>*/ {return c.setPoseTransform()});
 	}
+	
+	////- IK
 	
 	static setIKconstrain = function() {
 		if(IKlength > 0 && IKTarget != noone) {
@@ -519,8 +515,6 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 			var len = lengths[i];
 			var dir = point_direction(tx, ty, p1.x, p1.y);
 			
-			// if(_b.angular_constrain != -1) dir = clamp(dir, _b.angle - _b.angular_constrain, _b.angle + _b.angular_constrain);
-			
 			p0.x = tx;
 			p0.y = ty;
 			
@@ -569,6 +563,8 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 		return _bbox;
 	}
 	
+	////- Serialize
+	
 	static serialize = function() {
 		var bone = {};
 		
@@ -588,7 +584,7 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 		bone.apply_rotation	= apply_rotation;
 		bone.apply_scale	= apply_scale;
 		
-		bone.angular_constrain = angular_constrain;
+		bone.constrains = array_map(constrains, function(c) /*=>*/ {return c.serialize()});
 		
 		bone.childs = [];
 		for( var i = 0, n = array_length(childs); i < n; i++ )
@@ -616,8 +612,10 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 		apply_rotation	= bone.apply_rotation;
 		apply_scale		= bone.apply_scale;
 		
-		angular_constrain = struct_try_get(bone, "angular_constrain", -1);
-		angular_constrain = -1;
+		if(struct_has(bone, "constrains")) {
+			__b = self;
+			constrains = array_filter(array_map(bone.constrains, function(c) /*=>*/ {return new __Bone_Constrain(__b).deserialize(c)}), function(c) /*=>*/ {return c != noone});
+		}
 		
 		childs = [];
 		for( var i = 0, n = array_length(bone.childs); i < n; i++ ) 
@@ -655,13 +653,18 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 		
 		_b.apply_rotation	 = apply_rotation;
 		_b.apply_scale		 = apply_scale;
-		_b.angular_constrain = angular_constrain;
+		
 		
 		for( var i = 0, n = array_length(childs); i < n; i++ )
 			_b.addChild(childs[i].clone());
+			
+		__b = _b;
+		_b.constrains = array_map(constrains, function(c) /*=>*/ {return new __Bone_Constrain(__b).deserialize(c.serialize())});
 		
 		return _b;
 	}
+	
+	////- Actions
 	
 	static toString = function() { return $"Bone {name} [{ID}] : [{direction}, {distance}] / [{angle}, {length}]"; }
 	

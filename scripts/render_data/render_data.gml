@@ -174,6 +174,8 @@ function __nodeIsRenderLeaf(_node) {
 }
 
 function Render(partial = false, runAction = false) {
+	// node_auto_organize(PROJECT.nodes);
+	
 	LOG_END();
 
 	LOG_BLOCK_START();

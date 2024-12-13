@@ -304,6 +304,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		bonePose.resetPose()
 			    .setPosition();
+		bonePose.constrains = _b.constrains;
 		
 		var _bArr = _b.toArray();
 		var  bArr = bonePose.toArray();

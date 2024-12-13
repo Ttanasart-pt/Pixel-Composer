@@ -15,6 +15,7 @@ function Panel_Graph_Auto_Organize(_nodes) : PanelContent() constructor {
 	selecting_menu = noone;
 	
 	static node_organize = function() {
+	    param.snap_size = PANEL_GRAPH.project.graphGrid.size;
 	    node_auto_organize(nodes, param);
 	} node_organize();
 	
@@ -28,6 +29,11 @@ function Panel_Graph_Auto_Organize(_nodes) : PanelContent() constructor {
 			__txt("Vertical padding"),
 			new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ { param.padd_h = v; node_organize(); }),
 			function() /*=>*/ {return param.padd_h}
+		),
+		new __Panel_Linear_Setting_Item(
+			__txt("Snap to grid"),
+			new checkBox(function() /*=>*/ { param.snap = !param.snap; node_organize(); }),
+			function() /*=>*/ {return param.snap}
 		),
 	];
 	

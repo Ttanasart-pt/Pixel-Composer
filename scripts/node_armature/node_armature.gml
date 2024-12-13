@@ -3,19 +3,34 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	setDimension(96, 96);
 	draw_padding = 8;
 	
+	bone_constrain_adding = noone;
+	function addConstain(_c) {
+		if(bone_constrain_adding == noone) return;
+		array_push(bones.constrains, new __Bone_Constrain(bones).build(_c, bone_constrain_adding.ID));
+	}
+	
+	bone_constrain_menu = [
+		new MenuItem("Copy Position",  function() /*=>*/ { addConstain("Copy Position")  }, [ s_bone_constrain, 0, 1, c_white ]),
+		new MenuItem("Copy Rotation",  function() /*=>*/ { addConstain("Copy Rotation")  }, [ s_bone_constrain, 1, 1, c_white ]),
+		new MenuItem("Copy Scale",     function() /*=>*/ { addConstain("Copy Scale")     }, [ s_bone_constrain, 2, 1, c_white ]),
+		-1,
+		new MenuItem("Look At",        function() /*=>*/ { addConstain("Look At")        }, [ s_bone_constrain, 3, 1, c_white ]),
+		new MenuItem("Move To",        function() /*=>*/ { addConstain("Move To")        }, [ s_bone_constrain, 4, 1, c_white ]),
+		new MenuItem("Stretch To",     function() /*=>*/ { addConstain("Stretch To")     }, [ s_bone_constrain, 5, 1, c_white ]),
+		-1, 
+		new MenuItem("Limit Rotation", function() /*=>*/ { addConstain("Limit Rotation") }, [ s_bone_constrain, 6, 1, c_white ]),
+	];
+	
+	bone_array    = [];
 	bone_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { 
 		var _b  = bones;
 		if(_b == noone) return 0;
 		var amo = _b.childCount();
 		var _hh = ui(28);
-		var bh  = ui(32 + 16) + amo * _hh;
+		var bh  = ui(16) + amo * _hh;
 		var ty  = _y;
 			
-		draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
-		draw_text_add(_x + ui(16), ty + ui(4), __txt("Bones"));
-		ty += ui(28);
-		
-		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, ty, _w, bh - ui(32), COLORS.node_composite_bg_blend, 1);
+		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, ty, _w, bh, COLORS.node_composite_bg_blend, 1);
 		ty += ui(8);
 		
 		var hovering = noone;
@@ -70,11 +85,11 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			bone.tb_name.setFocusHover(_focus, _hover);
 			bone.tb_name.draw(__x + 24, ty + 3, ww + 16, _hh - 6, bone.name, _m);
 			
-			var _x0 = __x + 24 + ww + 32;
-			var _y0 = ty + 14;
+			var _x0 = bx - 24;
+			var _y0 = by;
 			var cc  = bone.apply_scale? COLORS._main_icon : COLORS._main_value_negative;
-			if(point_in_circle(_m[0], _m[1], _x0, _y0, 16)) {
-				TOOLTIP = "Apply scale";
+			if(_hover && point_in_circle(_m[0], _m[1], _x0, _y0, 10)) {
+				TOOLTIP = "Apply Scale";
 				draw_sprite_ui(THEME.bone, 3, _x0, _y0,,,, cc, 0.75);
 				
 				if(mouse_press(mb_left, _focus))
@@ -82,16 +97,29 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			} else 
 				draw_sprite_ui(THEME.bone, 3, _x0, _y0,,,, cc, 0.5);
 			
-			_x0 += 20;
+			_x0 -= 20;
 			var cc  = bone.apply_rotation? COLORS._main_icon : COLORS._main_value_negative;
-			if(point_in_circle(_m[0], _m[1], _x0, _y0, 16)) {
-				TOOLTIP = "Apply rotation";
+			if(_hover && point_in_circle(_m[0], _m[1], _x0, _y0, 10)) {
+				TOOLTIP = "Apply Rotation";
 				draw_sprite_ui(THEME.bone, 4, _x0, _y0,,,, cc, 0.75);
 				
 				if(mouse_press(mb_left, _focus))
 					bone.apply_rotation = !bone.apply_rotation;
 			} else 
 				draw_sprite_ui(THEME.bone, 4, _x0, _y0,,,, cc, 0.5);
+			
+			_x0 -= 20;
+			var cc = COLORS._main_icon;
+			if(_hover && point_in_circle(_m[0], _m[1], _x0, _y0, 10)) {
+				TOOLTIP = "Add Constrains";
+				draw_sprite_ui(THEME.bone, 5, _x0, _y0,,,, cc, .75);
+				
+				if(mouse_press(mb_left, _focus)) {
+					bone_constrain_adding = bone;
+					menuCall("bone_constrain_add", bone_constrain_menu);
+				}
+			} else 
+				draw_sprite_ui(THEME.bone, 5, _x0, _y0,,,, cc, .5);
 			
 			ty += _hh;
 				
@@ -122,8 +150,61 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		return bh;
 	}); 
 	
+	constrains_h = 0;
+	constrain_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { 
+		var _b = bones;
+		var hh = 0;
+		if(_b == noone) return 0;
+		
+		var ty  = _y;
+		var constrains = _b.constrains;
+		
+		constrains_h = 0;
+		var _del = -1;
+		
+		var _drawParam = {
+			rx: constrain_renderer.rx, 
+			ry: constrain_renderer.ry,
+			
+			selecting: anchor_selecting,
+			bone_array: bone_array,
+		}
+		
+		for( var i = 0, n = array_length(constrains); i < n; i++ ) {
+			var _con = constrains[i];
+			
+			draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, ty, _w, _con.draw_height + ui(32), COLORS.node_composite_bg_blend, 1);
+			draw_sprite_ui(s_bone_constrain, _con.sindex, _x + ui(4 + 16), ty + ui(16), 1, 1, 0, c_white, 1);
+			
+			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
+			draw_text_add(_x + ui(4 + 32), ty + ui(8), _con.name);
+			
+			var bx = _x + _w - ui(16);
+			var by = ty + ui(16);
+			
+			if(point_in_circle(_m[0], _m[1], bx, by, 16)) {
+				draw_sprite_ui_uniform(THEME.icon_delete, 3, bx, by, 1, COLORS._main_value_negative);
+				
+				if(mouse_press(mb_left, _focus)) _del = i;
+			} else 
+				draw_sprite_ui_uniform(THEME.icon_delete, 3, bx, by, 1, COLORS._main_icon);
+			
+			_con.node = self;
+			var _h = _con.draw_inspector(_x, ty + ui(32), _w, _m, _hover, _focus, _drawParam);
+			
+			_con.draw_height = _h;
+			constrains_h += _h + ui(32 + 4);
+			ty += _h + ui(32 + 4);
+		}
+		
+		if(_del != -1) array_delete(constrains, _del, 1);
+		hh += constrains_h;
+		return hh;
+	}); 
+	
 	input_display_list = [
-		bone_renderer,
+		["Bones",      false], bone_renderer,
+		["Constrains", false], constrain_renderer, 
 	];
 	
 	static createBone = function(parent, distance, direction) { 
@@ -752,11 +833,14 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	static step = function() {}
 	
 	static update = function(frame = CURRENT_FRAME) { 
+		array_foreach(bones.constrains, function(c) /*=>*/ { c.bone = bones; c.init(); });
+		
 		bones.resetPose()
 		     .setPosition();
 		bone_bbox = bones.bbox();
 		
 		outputs[0].setValue(bones);
+		bone_array = bones.toArray();
 	} 
 	
 	static getPreviewBoundingBox = function() { 
@@ -803,6 +887,8 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		bones = new __Bone(,,,,, self);
 		bones.deserialize(load_map.bones, self);
 		bones.connect();
+		
+		bone_array = bones.toArray();
 	} 
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { 

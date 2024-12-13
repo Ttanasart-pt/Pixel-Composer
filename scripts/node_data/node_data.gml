@@ -894,10 +894,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			var _fr = jun.value_from;
 			if(_fr != noone && _fr.node.active) array_push(_nodes, _fr.node);
 		}
-			
-		// for( var i = 0, n = array_length(inputs); i < n; i++ ) {
-		// 	var _fr = inputs[i].value_from;
-		// }
 		
 		return array_unique(_nodes);
 	}

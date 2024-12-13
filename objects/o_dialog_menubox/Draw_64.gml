@@ -209,9 +209,12 @@ DIALOG_WINCLEAR1
 			
 		} else {
 			if(_menuItem.spr != noone) {
-				var spr = is_array(_menuItem.spr)? _menuItem.spr[0] : _menuItem.spr;
-				var ind = is_array(_menuItem.spr)? _menuItem.spr[1] : 0;
-				draw_sprite_ui(spr, ind, dialog_x + ui(24), yy + hght / 2, .8, .8, 0, COLORS._main_icon, _menuItem.active * 0.5 + 0.25);
+				var spr = array_safe_get_fast(_menuItem.spr, 0, _menuItem.spr);
+				var ind = array_safe_get_fast(_menuItem.spr, 1, 0);
+				var sca = array_safe_get_fast(_menuItem.spr, 2, 0.8);
+				var clr = array_safe_get_fast(_menuItem.spr, 3, COLORS._main_icon);
+				
+				draw_sprite_ui(spr, ind, dialog_x + ui(24), yy + hght / 2, sca, sca, 0, clr, _menuItem.active * 0.5 + 0.25);
 			}
 			
 			if(_menuItem.toggle != noone) {

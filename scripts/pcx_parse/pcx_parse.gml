@@ -36,7 +36,7 @@
 #endregion
 
 #region parser
-	function functionStringClean(fx) { #region
+	function functionStringClean(fx) {
 		static __BRACKETS = [ "(", "[", "," ];
 		
 		var ch  = "";
@@ -90,9 +90,9 @@
 		fx = string_trim(fx);
 	
 		return fx;
-	} #endregion
+	}
 	
-	function functionStrip(fx) { #region
+	function functionStrip(fx) {
 		var el_st = 1;
 		var el_ed = 1;
 		
@@ -113,9 +113,9 @@
 		}
 		
 		return string_copy(fx, el_st, el_ed - el_st)
-	} #endregion
+	}
 	
-	function evaluateFunctionList(fx) { #region
+	function evaluateFunctionList(fx) {
 		fx = string_replace_all(fx, "{", "\n{\n");
 		fx = string_replace_all(fx, "}", "\n}\n");
 		
@@ -205,9 +205,9 @@
 		ds_stack_destroy(blok_st);
 		
 		return flist;
-	} #endregion
+	}
 	
-	function evaluateFunctionTree(fx) { #region                  //////////////////////////////////////////// STATEMENT PARSER ////////////////////////////////////////////
+	function evaluateFunctionTree(fx) {                  //////////////////////////////////////////// STATEMENT PARSER ////////////////////////////////////////////
 		static __BRACKETS = [ "(", ")", "[", "]", "］" ];
 		
 		var pres = global.EQUATION_PRES;
@@ -394,9 +394,9 @@
 		printIf(global.LOG_EXPRESSION, "");
 		
 		return tree;
-	} #endregion
+	}
 	
-	function buildFuncTree(operator, vl) { #region
+	function buildFuncTree(operator, vl) {
 		if(ds_stack_empty(vl)) return noone;
 		
 		if(ds_map_exists(global.PCX_FUNCTIONS, operator)) {
@@ -451,5 +451,5 @@
 		}
 		
 		return noone;
-	} #endregion
+	}
 #endregion

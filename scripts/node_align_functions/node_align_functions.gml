@@ -275,8 +275,6 @@ function node_auto_organize_parameter() constructor {
 	
 	snap      = true;
 	snap_size = 16;
-	
-	gridmap   = [];
 }
 
 function __node_auto_organize_graph(node) {

@@ -88,6 +88,7 @@ function MenuItem(_name, _func, _spr = noone, _hotkey = noone, _toggle = noone, 
 	static setActive    = function(_active)		/*=>*/ { INLINE active 		= _active;		return self; }
 	static setColor     = function(_color)		/*=>*/ { INLINE color		= _color;		return self; }
 	static setShiftMenu = function(_shiftMenu)	/*=>*/ { INLINE shiftMenu	= _shiftMenu;	return self; }
+	static setParam     = function(_param)	    /*=>*/ { INLINE params	    = _param;	    return self; }
 }
 
 function menuItemGroup(_name, _group, _hotkey = noone) { return new MenuItemGroup(_name, _group, _hotkey); }
