@@ -44,7 +44,7 @@
 	LATEST_VERSION	= 1_18_00_0;
 	VERSION			= 1_18_05_1;
 	SAVE_VERSION	= 1_18_05_0;
-	VERSION_STRING  = MAC? "1.18.003m" : "1.18.6.001";
+	VERSION_STRING  = MAC? "1.18.003m" : "1.18.6.002";
 	BUILD_NUMBER	= 1_18_05_1;
 	
 	var _vsp = string_split(VERSION_STRING, ".");
@@ -158,21 +158,9 @@
 		#macro c_ui_white			$ffffff
 	#endregion
 	
-	#macro printlog if(log) show_debug_message
-	
 	#macro RETURN_ON_REST if(!PROJECT.animator.is_playing || !PROJECT.animator.frame_progress) return;
 	
 	#macro PANEL_PAD THEME_VALUE.panel_padding
-	
-	function print(str) {
-		INLINE
-		noti_status(string(str));
-	}
-	
-	function printIf(cond, log) {
-		INLINE
-		if(cond) print(log);
-	}
 	
 #endregion
 

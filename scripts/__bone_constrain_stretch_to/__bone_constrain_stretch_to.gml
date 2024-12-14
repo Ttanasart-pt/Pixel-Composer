@@ -11,6 +11,7 @@ function __Bone_Constrain_Stretch_To(_bone, _bid = "", _tid = "") : __Bone_Const
     tb_strength       = new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ { strength = clamp(v, 0, 1); node.triggerRender(); });
     tb_strength.font  = f_p2;
     tb_strength.label = "Strength";
+    tb_strength.boxColor = COLORS._main_icon_light;
     
     static init = function() {
         if(!is(bone, __Bone)) return;
@@ -38,8 +39,8 @@ function __Bone_Constrain_Stretch_To(_bone, _bid = "", _tid = "") : __Bone_Const
         var _wdx =  _x + ui(8);
         var _wdw = (_w - ui(16 + 4)) / 2;
         var _wdh = ui(24);
-        draw_sprite_stretched_ext(THEME.textbox, 3, _wdx,                _y, _wdw, _wdh, c_white, 1);
-        draw_sprite_stretched_ext(THEME.textbox, 3, _wdx + _wdw + ui(4), _y, _wdw, _wdh, c_white, 1);
+        draw_sprite_stretched_ext(THEME.textbox, 3, _wdx,                _y, _wdw, _wdh, COLORS._main_icon_light, 1);
+        draw_sprite_stretched_ext(THEME.textbox, 3, _wdx + _wdw + ui(4), _y, _wdw, _wdh, COLORS._main_icon_light, 1);
         
         if(bone_object != noone) {
             var _bname = bone_object.name;
@@ -64,13 +65,13 @@ function __Bone_Constrain_Stretch_To(_bone, _bid = "", _tid = "") : __Bone_Const
         if(_hover && point_in_rectangle(_m[0], _m[1], _wdx, _y, _wdx + _wdw, _y + _wdh)) {
             draw_sprite_stretched_ext(THEME.textbox, 1, _wdx, _y, _wdw, _wdh, c_white, 1);
             if(mouse_click(mb_left, _focus))
-                menuCall(, array_map(_drawParam.bone_array, function(b) /*=>*/ {return new MenuItem(b.name, function(p) /*=>*/ { bone_id = p.bone.ID; init(); node.triggerRender(); }).setParam({ bone: b })}) );
+                node.boneSelector(function(p) /*=>*/ { bone_id = p.bone.ID; init(); node.triggerRender(); });
         }
         
         if(_hover && point_in_rectangle(_m[0], _m[1], _wdx + _wdw + ui(4), _y, _wdx + _wdw + ui(4) + _wdw, _y + _wdh)) {
             draw_sprite_stretched_ext(THEME.textbox, 1, _wdx + _wdw + ui(4), _y, _wdw, _wdh, c_white, 1);
             if(mouse_click(mb_left, _focus)) 
-                menuCall(, array_map(_drawParam.bone_array, function(b) /*=>*/ {return new MenuItem(b.name, function(p) /*=>*/ { target_id = p.bone.ID; init(); node.triggerRender(); }).setParam({ bone: b })}) );
+                node.boneSelector(function(p) /*=>*/ { target_id = p.bone.ID; init(); node.triggerRender(); });
         }
         
         _y += _wdh + ui(4);

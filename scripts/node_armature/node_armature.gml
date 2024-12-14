@@ -7,6 +7,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	function addConstain(_c) {
 		if(bone_constrain_adding == noone) return;
 		array_push(bones.constrains, new __Bone_Constrain(bones).build(_c, bone_constrain_adding.ID));
+		triggerRender();
 	}
 	
 	bone_constrain_menu = [
@@ -177,7 +178,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			draw_sprite_ui(s_bone_constrain, _con.sindex, _x + ui(4 + 16), ty + ui(16), 1, 1, 0, c_white, 1);
 			
 			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
-			draw_text_add(_x + ui(4 + 32), ty + ui(8), _con.name);
+			draw_text_add(_x + ui(4 + 32), ty + ui(6), _con.name);
 			
 			var bx = _x + _w - ui(16);
 			var by = ty + ui(16);
@@ -843,6 +844,8 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		bone_array = bones.toArray();
 	} 
 	
+	////- Draw
+	
 	static getPreviewBoundingBox = function() { 
 		var minx =  9999999;
 		var miny =  9999999;
@@ -876,6 +879,19 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		return BBOX().fromPoints(minx, miny, maxx, maxy);
 	} 
 	
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { 
+		var bbox = drawGetBbox(xx, yy, _s);
+		
+		var _ss = _s * .5;
+		gpu_set_tex_filter(1);
+		draw_sprite_ext(s_node_armature_create, 0, bbox.x0 + 24 * _ss, bbox.y1 - 24 * _ss, _ss, _ss, 0, c_white, 0.5);
+		gpu_set_tex_filter(0);
+		
+		bones.drawThumbnail(_s, bbox, bone_bbox);
+	} 
+	
+	////- Serialize
+	
 	static doSerialize = function(_map) { 
 		_map.bones = bones.serialize();
 	} 
@@ -891,15 +907,11 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		bone_array = bones.toArray();
 	} 
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { 
-		var bbox = drawGetBbox(xx, yy, _s);
-		
-		var _ss = _s * .5;
-		gpu_set_tex_filter(1);
-		draw_sprite_ext(s_node_armature_create, 0, bbox.x0 + 24 * _ss, bbox.y1 - 24 * _ss, _ss, _ss, 0, c_white, 0.5);
-		gpu_set_tex_filter(0);
-		
-		bones.drawThumbnail(_s, bbox, bone_bbox);
-	} 
+	////- Actions
+	
+	static boneSelector = function(fn) {
+		__bone_fn = fn;
+		menuCall("", array_map(bone_array, function(b) /*=>*/ {return new MenuItem(b.name, __bone_fn, [ THEME.bone, 1, 1 ]).setParam({ bone: b })}) );
+	}
 }
 

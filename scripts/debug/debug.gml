@@ -1,9 +1,19 @@
 #region counter
 	globalvar DEBUG_COUNTER;
 	DEBUG_COUNTER = ds_map_create();
-	
-	// #mfunc log(msg) show_debug_message("[" + @@__FILE__ + ":" + @@__LINE_STR__ + "] " + string(msg))
 #endregion
+
+#macro printlog if(log) show_debug_message
+
+function print(str) { 
+	var _s = "";
+	for(var i = 0; i < argument_count; i++)
+		_s += (i? ", " : "") + string(argument[i]);
+	
+	noti_status(_s); 
+}
+
+function printIf(cond, log) { if(cond) print(log); }
 
 function __debug_counter(key) {
 	if(ds_map_exists(DEBUG_COUNTER, key)) DEBUG_COUNTER[? key]++;
