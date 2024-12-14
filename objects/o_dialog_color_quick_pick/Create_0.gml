@@ -1,5 +1,5 @@
 /// @description 
-depth = -19999;
+depth = -9999;
 
 selecting = noone;
-onApply = noone;
+onApply   = noone;

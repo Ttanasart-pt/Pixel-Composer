@@ -237,6 +237,7 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			_surf = [ _surf ];
 		
 		var _pall = ds_map_create();
+		var _amsk = 0b11111111 << 24;
 		
 		for( var i = 0, n = array_length(_surf); i < n; i++ ) {
 			var _s = _surf[i];
@@ -244,18 +245,17 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			
 			var ww = surface_get_width_safe(_s);
 			var hh = surface_get_height_safe(_s);
-		
-			var c_buffer = buffer_create(ww * hh * 4, buffer_fixed, 2);
+			var aa = ww * hh;
+			var c_buffer = buffer_create(aa * 4, buffer_fixed, 2);
 			
 			buffer_get_surface(c_buffer, _s, 0);
 			buffer_seek(c_buffer, buffer_seek_start, 0);
 		
-			for( var i = 0; i < ww * hh; i++ ) {
+			repeat(aa) {
 				var b = buffer_read(c_buffer, buffer_u32);
-				var c = b & ~(0b11111111 << 24);
-				var a = b &  (0b11111111 << 24);
-				if(a == 0) continue;
-				c = make_color_rgb(color_get_red(c), color_get_green(c), color_get_blue(c));
+				if((b & _amsk) == 0) continue;
+				
+				var c = b | _amsk;
 				_pall[? c] = 1;
 			}
 		
@@ -264,6 +264,8 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		
 		var palette = ds_map_keys_to_array(_pall);
 		ds_map_destroy(_pall);
+		
+		if(array_length(palette) <= 128) array_sort(palette, __sortHue);
 		
 		inputs[1].setValue(palette);
 		inputs[2].setValue(palette);

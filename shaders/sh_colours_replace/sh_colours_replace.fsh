@@ -21,7 +21,7 @@ uniform sampler2D mask;
 void main() {
 	vec4 p = texture2D( gm_BaseTexture, v_vTexcoord );
 	
-	int index = 0;
+	int   index   = 0;
 	float minDist = 999.;
 	
 	for(int i = 0; i < colorFromAmount; i++ ) {

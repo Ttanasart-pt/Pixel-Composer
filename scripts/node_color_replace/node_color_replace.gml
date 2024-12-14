@@ -2,14 +2,14 @@ function Node_Color_replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	name = "Replace Palette";
 	
 	newInput(0, nodeValue_Surface("Surface in", self));
-	newInput(1, nodeValue_Palette("Palette from", self, array_clone(DEF_PALETTE), "Color to be replaced."));
+	newInput(1, nodeValue_Palette("From", self, array_clone(DEF_PALETTE)));
 	
-	newInput(2, nodeValue_Palette("Palette to", self, array_clone(DEF_PALETTE), "Palette to be replaced to."));
+	newInput(2, nodeValue_Palette("To", self, array_clone(DEF_PALETTE)));
 	
 	newInput(3, nodeValue_Float("Threshold", self, 0.1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(4, nodeValue_Bool("Set others to black", self, false, "Set pixel that doesn't match any color in 'palette from' to black."));
+	newInput(4, nodeValue_Bool("Replace Other Colors", self, false));
 	
 	newInput(5, nodeValue_Bool("Multiply alpha", self, true));
 	
@@ -31,11 +31,14 @@ function Node_Color_replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	newInput(14, nodeValueSeed(self));
 	
-	input_display_list = [ 9, 10, 14, 
+	newInput(15, nodeValue_Color("Target Color", self, cola(c_black)));
+	
+	input_display_list = [ 9, 10, 
 		["Surfaces",	 true], 0, 7, 8, 11, 12, 
-		["Palette",		false], 1, 2, 
-		["Comparison",	false], 13, 3, 5, 
-		["Render",		false], 4, 6
+		["Palettes",	false], 1, 2, 
+		["Comparison",	false], 13, 14, 3, 5, 
+		["Replace Others", false, 4], 15, 
+		["Render",		false],  6
 	];
 	
 	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
@@ -50,15 +53,19 @@ function Node_Color_replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		var fr  = _data[ 1];
 		var to  = _data[ 2];
 		var tr  = _data[ 3];
-		var in  = _data[ 4];
 		var alp = _data[ 5];
 		var hrd = _data[ 6];
 		var msk = _data[ 7];
 		var mde = _data[13];
 		var sed = _data[14];
 		
+		var repo = _data[ 4];
+		var oclr = _data[15];
+		
 		var _colorFrom = paletteToArray(fr);
 		var _colorTo   = paletteToArray(to);
+		
+		inputs[14].setVisible(mde == 1);
 		
 		surface_set_shader(_outSurf, sh_palette_replace);
 			shader_set_f("colorFrom",     _colorFrom);
@@ -71,7 +78,9 @@ function Node_Color_replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			shader_set_i("alphacmp",	alp);
 			shader_set_i("hardReplace", hrd);
 			shader_set_f("treshold",	tr);
-			shader_set_i("inverted",	in);
+			
+			shader_set_i("replaceOthers",    repo);
+			shader_set_color("replaceColor", oclr);
 			
 			shader_set_i("useMask", is_surface(msk));
 			shader_set_surface("mask", msk);
@@ -80,7 +89,7 @@ function Node_Color_replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		surface_reset_shader();
 		
 		__process_mask_modifier(_data);
-		if(!in) _outSurf = mask_apply(_data[0], _outSurf, _data[7], _data[8]);
+		_outSurf = mask_apply(_data[0], _outSurf, _data[7], _data[8]);
 		_outSurf = channel_apply(_data[0], _outSurf, _data[10]);
 		
 		return _outSurf;

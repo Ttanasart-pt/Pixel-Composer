@@ -20,10 +20,12 @@ uniform int		colorTo_amo;
 uniform float   seed;
 uniform int		mode;
 
-uniform int		inverted;
 uniform int		alphacmp;
 uniform int		hardReplace;
 uniform float	treshold;
+
+uniform int		replaceOthers;
+uniform vec4	replaceColor;
 
 #region color spaces
 
@@ -76,10 +78,12 @@ float round(float val)    { return fract(val) >= 0.5? ceil(val) : floor(val); }
 void main() {
     vec4 col = texture2D( gm_BaseTexture, v_vTexcoord );
 	vec4 baseColor;
-	if(inverted == 0)
+	
+	if(replaceOthers == 0)
 		baseColor = col;
-	else if(inverted == 1) {
-		baseColor = vec4(vec3(0.), 1.);
+		
+	else if(replaceOthers == 1) {
+		baseColor = replaceColor;
 		
 		if(useMask == 1) {
 			vec4 m = texture2D( mask, v_vTexcoord );
@@ -120,6 +124,6 @@ void main() {
 	} else	
 		gl_FragColor = baseColor;
 	
-	if(inverted == 0)
+	if(replaceOthers == 0)
 		gl_FragColor.a = col.a;
 }
