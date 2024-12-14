@@ -1279,8 +1279,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static getNextNodes = function(checkLoop = false) {
 		if(checkLoop) {
-			if(__nextNodesToLoop != noone && __nextNodesToLoop.bypassNextNode())
-				__nextNodesToLoop.getNextNodes();
+			if(__nextNodesToLoop != noone && __nextNodesToLoop.bypassNextNode()) __nextNodesToLoop.getNextNodes();
 			return;
 		}
 		
@@ -1306,35 +1305,31 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			var _ot = outputs[i];
 			if(!_ot.forward) continue;
 			
-			var _tos = _ot.getJunctionTo();
-			for( var j = 0; j < array_length(_tos); j++ ) {
-				var _to = _tos[j];
-				array_push(nodes, _to.node);
-			}
+			var arr = _ot.getJunctionTo();
+			array_map_ext(arr, function(t) /*=>*/ {return t.node});
+			nodes = array_concat(nodes, arr);
 		}	
 		
 		for(var i = 0; i < array_length(junc_meta); i++) {
 			var _ot  = junc_meta[i];
-			var _tos = _ot.getJunctionTo();
 			
-			for( var j = 0; j < array_length(_tos); j++ ) {
-				var _to = _tos[j];
-				array_push(nodes, _to.node);
-			}
+			var arr = _ot.getJunctionTo();
+			array_map_ext(arr, function(t) /*=>*/ {return t.node});
+			nodes = array_concat(nodes, arr);
 		}
 		
 		for(var i = 0; i < array_length(inputs); i++) {
 			var _in = inputs[i];
 			if(_in.bypass_junc == noone) continue;
 			
-			var _tos = _in.bypass_junc.getJunctionTo();
-			for( var j = 0; j < array_length(_tos); j++ ) {
-				var _to = _tos[j];
-				array_push(nodes, _to.node);
-			}
+			var arr = _in.bypass_junc.getJunctionTo();
+			array_map_ext(arr, function(t) /*=>*/ {return t.node});
+			nodes = array_concat(nodes, arr);
 		}
 		
+		array_unique_ext(nodes);
 		__nextNodes = nodes;
+		
 		return nodes;
 	}
 	

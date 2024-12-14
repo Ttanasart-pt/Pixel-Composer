@@ -391,6 +391,7 @@ function ThemeColorDef() constructor {
 	main_dark    = #4da6ff;
 	main_grey    = #6d6d81;
 	main_ltgrey  = #7e7e8f;
+	main_mdwhite = #9f9fb5;
 	main_white   = #d6d6e8;
 	main_bg      = #1c1c23;
 
@@ -490,8 +491,9 @@ function ThemeColor() constructor {
     node_border_file_drop               = CDEF.cyan;
 
     scrollbar_bg                        = CDEF.main_dkblack;
-    scrollbar_hover                     = CDEF.main_white;
     scrollbar_idle                      = CDEF.main_grey;
+    scrollbar_hover                     = CDEF.main_mdwhite;
+    scrollbar_active                    = CDEF.main_white;
 
     panel_animation_frame_divider       = CDEF.main_black;
     panel_animation_keyframe_ease_line  = CDEF.main_dkgrey;

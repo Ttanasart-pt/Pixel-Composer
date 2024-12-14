@@ -1796,19 +1796,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static hasJunctionFrom = function() { INLINE return value_from != noone || value_from_loop != noone; }
 	
-	static getJunctionTo = function() {
-		var _junc_to = [];
-		
-		for(var i = 0; i < array_length(value_to); i++) {
-			var _to = value_to[i];
-			if(!_to.node.active || _to.value_from == noone) continue; 
-			if(_to.value_from != self) continue;
-			
-			array_push(_junc_to, _to);
-		}
-		
-		return _junc_to;
-	}
+	static getJunctionTo = function() { return array_filter(value_to, function(v) /*=>*/ {return v.value_from == self && v.node.active}); }
 	
 	/////DRAW
 	

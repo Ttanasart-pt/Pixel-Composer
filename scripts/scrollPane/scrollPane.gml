@@ -3,6 +3,9 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 	scroll_y_raw	= 0;
 	scroll_y_to		= 0;
 	
+	whover  = false;
+	wactive = false;
+	
 	x			= 0;
 	y			= 0;
 	w			= _w;
@@ -34,6 +37,11 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 	scroll_s = sprite_get_width(THEME.ui_scrollbar);
 	scroll_w = scroll_s;
 	
+	scroll_color_bg         = COLORS.scrollbar_bg;
+	scroll_color_bar        = COLORS.scrollbar_idle;
+	scroll_color_bar_hover  = COLORS.scrollbar_hover;
+	scroll_color_bar_active = COLORS.scrollbar_active;
+	
 	static resize = function(_w, _h) {
 		w = _w;
 		h = _h;
@@ -47,12 +55,15 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 		self.x = x;
 		self.y = y;
 		
+		whover  = hover;
+		wactive = active;
+		
 		hover  &= point_in_rectangle( mx, my, 0, 0, surface_w, surface_h);
 		hover  &= pen_scrolling != 2;
 		surface = surface_verify(surface, surface_w, surface_h);
 		hover_content = false;
 		
-		//// Draw
+		/// Draw
 		
 		surface_set_target(surface);
 			draw_clear(COLORS.panel_bg_clear);
@@ -65,7 +76,7 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 		is_scroll = hh > surface_h;
 		if(sc != is_scroll) resize(w, h);
 		
-		//// Scrolling
+		/// Scrolling
 		
 		scroll_y_to  = clamp(scroll_y_to, -content_h, 0);
 		scroll_y_raw = lerp_float(scroll_y_raw, scroll_y_to, 4);
@@ -77,7 +88,7 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 			if(mouse_wheel_up())	scroll_y_to += scroll_step * SCROLL_SPEED;
 		}
 		
-		//// Pen scroll
+		/// Pen scroll
 		
 		if(pen_scrolling == 0 && mouse_press(mb_left, !hover_content && hover && PEN_USE)) {
 			pen_scrolling = 1;
@@ -109,14 +120,13 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 			var _p   = PEN_USE && (is_scrolling || point_in_rectangle(x + mx, y + my, x + w - scroll_w - 2, y, x + w, y + surface_h));
 			scroll_w = lerp_float(scroll_w, _p? 12 : scroll_s, 5);
 			
-			draw_scroll(x + w - scroll_w, y + ui(6), true, surface_h - ui(12), -scroll_y / content_h, surface_h / (surface_h + content_h), 
-				COLORS.scrollbar_bg, COLORS.scrollbar_idle, COLORS.scrollbar_hover, x + mx, y + my, scroll_w);
+			draw_scroll(x + w - scroll_w, y + ui(6), true, surface_h - ui(12), -scroll_y / content_h, surface_h / (surface_h + content_h), x + mx, y + my, scroll_w);
 		}
 		
 		scroll_lock     = false;
 	}
 	
-	static draw_scroll = function(scr_x, scr_y, is_vert, scr_s, scr_prog, scr_ratio, bg_col, bar_col, bar_hcol, mx, my, bar_spr_w) {
+	static draw_scroll = function(scr_x, scr_y, is_vert, scr_s, scr_prog, scr_ratio, mx, my, bar_spr_w) {
 		var scr_scale_s = scr_s * scr_ratio;
 		var scr_prog_s  = scr_prog * (scr_s - scr_scale_s);
 		var scr_w, scr_h, bar_w, bar_h, bar_x, bar_y;
@@ -160,16 +170,21 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 		var by1 = clamp(bar_y + bar_h, scr_y, scr_y + scr_h);
 		var hh = by1 - by0;
 		
-		draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, scr_x, scr_y, scr_w, scr_h,  bg_col, 1);
-		draw_sprite_stretched_ext(THEME.ui_scrollbar, 0,   bx0,   by0,    ww,    hh, bar_col, 1);
+		draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, scr_x, scr_y, scr_w, scr_h,  scroll_color_bg, 1);
 		
-		if(active && point_in_rectangle(mx, my, scr_x - 2, scr_y - 2, scr_x + scr_w + 2, scr_y + scr_h + 2) || is_scrolling) {
-			draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, bar_x, bar_y, bar_w, bar_h, bar_hcol, 1);
-			if(mouse_press(mb_left, active)) {
+		var cc = scroll_color_bar;
+		
+		if(whover && point_in_rectangle(mx, my, scr_x - 2, scr_y - 2, scr_x + scr_w + 2, scr_y + scr_h + 2)) {
+			cc = scroll_color_bar_hover;
+			
+			if(mouse_press(mb_left, wactive)) {
 				is_scrolling = true;
 				scroll_ms = is_vert? my : mx;
 			}
 		}
+		
+		if(is_scrolling) cc = scroll_color_bar_active;
+		draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, bx0, by0, ww, hh, cc, 1);
 	}
 	
 	static free = function() {

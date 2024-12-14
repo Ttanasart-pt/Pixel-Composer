@@ -186,5 +186,6 @@ function Node_Directory_Search(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		if(!directory_exists(path)) return;
 		
 		inputs[0].setValue(path); 
+		check_directory_redirector(path);
 	}
 }

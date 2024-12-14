@@ -85,7 +85,8 @@ function __sortNode(_arr, _node) {
 	
 	if(!_node.topoSorted) {
 		array_push(_arr, _node);
-		_node.topoSorted = true;
+		_node.topoSorted  = true;
+		_node.__nextNodes = noone;
 			
 		// print($"        > Adding > {_node.name}");
 	}
@@ -221,23 +222,19 @@ function Render(partial = false, runAction = false) {
 		// get leaf node
 		LOG_IF(global.FLAG.render == 1, $"----- Finding leaf from {array_length(PROJECT.nodeTopo)} nodes -----");
 		RENDER_QUEUE.clear();
-		for( var i = 0, n = array_length(PROJECT.nodeTopo); i < n; i++ ) {
-			var _node = PROJECT.nodeTopo[i];
-			_node.passiveDynamic = false;
-			_node.__nextNodes = noone;
-		}
+		array_foreach(PROJECT.nodeTopo, function(n) /*=>*/ { 
+			n.passiveDynamic = false; 
+			n.__nextNodes    = noone;
+			n.render_time    = 0;
+		});
 		
-		for( var i = 0, n = array_length(PROJECT.nodeTopo); i < n; i++ ) {
-			var _node = PROJECT.nodeTopo[i];
-			_node.render_time = 0;
+		array_foreach(PROJECT.nodeTopo, function(n) /*=>*/ { 
+			if(!__nodeIsRenderLeaf(n)) return;
 			
-			if(!__nodeIsRenderLeaf(_node))
-				continue;
-			
-			LOG_IF(global.FLAG.render == 1, $"    Found leaf [{_node.internalName}]");
-			RENDER_QUEUE.enqueue(_node);
-			_node.forwardPassiveDynamic();
-		}
+			LOG_IF(global.FLAG.render == 1, $"    Found leaf [{n.internalName}]");
+			RENDER_QUEUE.enqueue(n);
+			n.forwardPassiveDynamic();
+		});
 		
 		_leaf_time = get_timer() - t;
 		LOG_IF(global.FLAG.render >= 1, $"Get leaf complete: found {RENDER_QUEUE.size()} leaves in {(get_timer() - t) / 1000} ms."); t = get_timer();
@@ -265,9 +262,7 @@ function Render(partial = false, runAction = false) {
 				
 				for( var i = 0, n = array_length(nextNodes); i < n; i++ ) {
 					var nextNode = nextNodes[i];
-					
-					if(!is(nextNode, __Node_Base)) continue;
-					if(!nextNode.isRenderable())   continue;
+					if(!is(nextNode, __Node_Base) || !nextNode.isRenderable()) continue;
 					
 					// LOG_IF(global.FLAG.render == 1, $"→→ Push {nextNode.internalName} to queue.");
 					RENDER_QUEUE.enqueue(nextNode);

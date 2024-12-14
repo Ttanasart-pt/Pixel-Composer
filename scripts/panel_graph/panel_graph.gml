@@ -268,7 +268,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
     
     #region // ---- display ----
         display_parameter = {
-            show_grid        : true,
+            show_grid       : true,
             show_dimension  : true,
             show_compute    : true,
         

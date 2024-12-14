@@ -156,5 +156,6 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		if(!file_exists_empty(path)) return;
 		
 		inputs[0].setValue(path); 
+		check_directory_redirector(path);
 	}
 }

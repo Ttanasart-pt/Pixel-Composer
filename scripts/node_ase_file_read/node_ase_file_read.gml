@@ -399,5 +399,6 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		if(!file_exists_empty(path)) return;
 		
 		inputs[0].setValue(path); 
+		check_directory_redirector(path);
 	}
 }
