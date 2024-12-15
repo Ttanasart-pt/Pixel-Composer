@@ -20,10 +20,10 @@ event_inherited();
 		if(struct_has(content, "title_height"))
 			title_height = content.title_height;
 		
-		dialog_w = content.w + content.showHeader * padding * 2;
-		dialog_h = content.h + content.showHeader * (padding * 2 + title_height);
-		dialog_w_min = content.min_w;
-		dialog_h_min = content.min_h;
+		dialog_w         = content.w + content.showHeader * padding * 2;
+		dialog_h         = content.h + content.showHeader * (padding * 2 + title_height);
+		dialog_w_min     = content.min_w;
+		dialog_h_min     = content.min_h;
 		dialog_resizable = content.resizable;
 		
 		content.panel     = self;

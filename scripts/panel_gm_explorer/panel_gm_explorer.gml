@@ -100,11 +100,10 @@ function Panel_GM_Explore(gmBinder) : PanelContent() constructor {
                 
                 if(_hover && point_in_rectangle(_m[0], _m[1], _asx, _asy, _asx + _ths, _asy + _ths)) {
                     draw_sprite_stretched_ext(THEME.ui_panel, 1, _asx, _asy, _ths, _ths, COLORS._main_icon);
-                    if(_thm) TOOLTIP = [ _thm, "sprite" ];
+                    if(_thm && _ass.type != "GMRoom") TOOLTIP = [ _thm, "sprite" ];
                     
-                    if(mouse_press(mb_left, _focus)) {
+                    if(mouse_press(mb_left, _focus))
                         DRAGGING = { type : _ass.type, data : _ass };
-                    }
                 }
             }
             

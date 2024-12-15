@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"globals",
   "parent":{
-    "name":"components",
-    "path":"folders/main/components.yy",
+    "name":"main",
+    "path":"folders/main.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

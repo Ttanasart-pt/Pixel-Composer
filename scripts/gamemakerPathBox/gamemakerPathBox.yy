@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"gamemakerPathBox",
   "parent":{
-    "name":"binder",
-    "path":"folders/main/binder.yy",
+    "name":"gamemaker",
+    "path":"folders/functions/gamemaker.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

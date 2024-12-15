@@ -25,6 +25,7 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 	
 	b_quick_pick = button(function() {
 		var pick = instance_create(mouse_mx, mouse_my, o_dialog_color_quick_pick);
+		array_insert(pick.palette, 0, current_color);
 		pick.onApply = onApply;
 	});
 	b_quick_pick.activate_on_press = true;
@@ -81,6 +82,7 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 			_cw -= ui(32);
 			
 			b_picker.setFocusHover(active && !instance_exists(o_dialog_color_quick_pick), hover);
+			
 			b_picker.draw(bx, _y + _h / 2 - _bs / 2, ui(32), _bs, _m, THEME.button_hide);
 			b_picker.icon_blend = c_white;
 			b_picker.icon_index = 0;

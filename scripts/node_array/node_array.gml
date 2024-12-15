@@ -79,7 +79,6 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			array_push(input_display_list, i);
 		}
 		
-
 		inputs = _l;
 		
 		getJunctionList();

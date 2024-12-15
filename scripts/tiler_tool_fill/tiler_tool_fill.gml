@@ -41,8 +41,8 @@ function tiler_flood_fill_scanline(_surf, _x, _y, brush, _corner = false) {
 	var _index = brush.brush_erase? -1 : brush.brush_indices[0][0];
 	var colorBase = surface_getpixel(_surf, _x, _y)[0];
 	
-// 	print($"Filling {_x}, {_y} = {_index} [base: {colorBase}]")
 	if(_index == colorBase) return; //Clicking on the same color as the fill color
+	if(is_array(_index)) return;
 	
 	_ff_w    = surface_get_width(_surf);
 	_ff_h    = surface_get_height(_surf);

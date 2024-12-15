@@ -44,7 +44,7 @@
 	LATEST_VERSION	= 1_18_00_0;
 	VERSION			= 1_18_05_1;
 	SAVE_VERSION	= 1_18_05_0;
-	VERSION_STRING  = MAC? "1.18.003m" : "1.18.6.002";
+	VERSION_STRING  = MAC? "1.18.003m" : "1.18.6.003";
 	BUILD_NUMBER	= 1_18_05_1;
 	
 	var _vsp = string_split(VERSION_STRING, ".");
@@ -159,9 +159,14 @@
 	#endregion
 	
 	#macro RETURN_ON_REST if(!PROJECT.animator.is_playing || !PROJECT.animator.frame_progress) return;
-	
 	#macro PANEL_PAD THEME_VALUE.panel_padding
 	
+	//!#mfunc returnNull {"args":["v"," a"],"order":[0,1,0,0]}
+#macro returnNull_mf0  var 
+#macro returnNull_mf1  = 
+#macro returnNull_mf2 ; if(is_undefined(
+#macro returnNull_mf3 ) || 
+#macro returnNull_mf4  == noone) return;
 #endregion
 
 #region presets

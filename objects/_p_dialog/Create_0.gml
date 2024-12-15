@@ -94,7 +94,7 @@
 					dialog_dragging = false;
 			}
 			
-			if(mouse_draggable && point_in_rectangle(mouse_mx, mouse_my, dialog_x, dialog_y, dialog_x + dialog_w, dialog_y + title_height)) {
+			if(mouse_draggable && !dialog_resizing && point_in_rectangle(mouse_mx, mouse_my, dialog_x, dialog_y, dialog_x + dialog_w, dialog_y + title_height)) {
 				mouse_active = false;
 				if(mouse_press(mb_left, sFOCUS)) {
 					dialog_dragging = true;
@@ -137,58 +137,95 @@
 	
 	dialog_resizable = false;
 	dialog_resizing = 0;
+	dialog_resiz_sx = 0;
+	dialog_resiz_sy = 0;
 	dialog_resiz_sw = 0;
 	dialog_resiz_sh = 0;
 	dialog_resiz_mx = 0;
 	dialog_resiz_my = 0;
-	dialog_w_min = 320;
-	dialog_h_min = 320;
-	dialog_w_max = WIN_W;
-	dialog_h_max = WIN_H;
-	onResize = -1;
+	dialog_w_min    = 320;
+	dialog_h_min    = 320;
+	dialog_w_max    = WIN_W;
+	dialog_h_max    = WIN_H;
+	onResize        = -1;
 	
 	function doResize() {
 		if(!active) return;
 		if(!dialog_resizable) return;
 		
 		if(window == noone) {
-			if(dialog_resizing & 1 << 0 != 0) {
-				var ww = dialog_resiz_sw + (mouse_mx - dialog_resiz_mx);
-				ww = clamp(ww, dialog_w_min, dialog_w_max);
-				dialog_w = ww;
-			} 
-			
-			if(dialog_resizing & 1 << 1 != 0) {
-				var hh = dialog_resiz_sh + (mouse_my - dialog_resiz_my);
-				hh = clamp(hh, dialog_h_min, dialog_h_max);
-				dialog_h = hh;
+			if(dialog_resizing != 0) {
+				
+				if(dialog_resizing & 0b0001) {
+					var ww = dialog_resiz_sw + (mouse_mx - dialog_resiz_mx);
+					    ww = clamp(ww, dialog_w_min, dialog_w_max);
+					dialog_w = ww;
+				} 
+				
+				if(dialog_resizing & 0b0010) {
+					var hh = dialog_resiz_sh + (mouse_my - dialog_resiz_my);
+					    hh = clamp(hh, dialog_h_min, dialog_h_max);
+					dialog_h = hh;
+				}
+				
+				if(dialog_resizing & 0b0100) {
+					var ww = dialog_resiz_sw - (mouse_mx - dialog_resiz_mx);
+					    ww = clamp(ww, dialog_w_min, dialog_w_max);
+					dialog_x = dialog_resiz_sx - (ww - dialog_resiz_sw);
+					dialog_w = ww;
+				} 
+				
+				if(dialog_resizing & 0b1000) {
+					var hh = dialog_resiz_sh - (mouse_my - dialog_resiz_my);
+					    hh = clamp(hh, dialog_h_min, dialog_h_max);
+					
+					dialog_y = dialog_resiz_sy - (hh - dialog_resiz_sh);
+					dialog_h = hh;
+				}
+				
+				switch(dialog_resizing) {
+					case 0b0001 : case 0b0100 : CURSOR = cr_size_we;   break;
+					case 0b0010 : case 0b1000 : CURSOR = cr_size_ns;   break;
+					case 0b0011 : case 0b1100 : CURSOR = cr_size_nwse; break;
+					case 0b1001 : case 0b0110 : CURSOR = cr_size_nesw; break;
+				}
+				
+				if(mouse_release(mb_left)) dialog_resizing = 0;
 			}
 			
-			if(mouse_release(mb_left)) dialog_resizing = 0;
-			
-			if(sHOVER && distance_to_line(mouse_mx, mouse_my, dialog_x + dialog_w, dialog_y, dialog_x + dialog_w, dialog_y + dialog_h) < 12) {
+			if(sHOVER) {
+				var _x0 = dialog_x;
+				var _y0 = dialog_y;
+				var _x1 = dialog_x + dialog_w;
+				var _y1 = dialog_y + dialog_h;
+				var _sel_mask = 0;
 				
-				mouse_active = false;
-				CURSOR = cr_size_we;
-				if(mouse_press(mb_left, sFOCUS)) {
-					dialog_resizing |= 1 << 0;
-					dialog_resiz_sw = dialog_w;
-					dialog_resiz_mx = mouse_mx;
-					dialog_resiz_my = mouse_my;
+				if(point_in_rectangle(mouse_mx, mouse_my, _x0, _y0, _x1, _y1)) {
+					if(distance_to_line(mouse_mx, mouse_my, _x1, _y0, _x1, _y1) < DIALOG_PAD) _sel_mask |= 1 << 0;
+					if(distance_to_line(mouse_mx, mouse_my, _x0, _y1, _x1, _y1) < DIALOG_PAD) _sel_mask |= 1 << 1;
+					if(distance_to_line(mouse_mx, mouse_my, _x0, _y0, _x0, _y1) < DIALOG_PAD) _sel_mask |= 1 << 2;
+					if(distance_to_line(mouse_mx, mouse_my, _x0, _y0, _x1, _y0) < DIALOG_PAD) _sel_mask |= 1 << 3;
 				}
-			} 
 				
-			if(sHOVER && distance_to_line(mouse_mx, mouse_my, dialog_x, dialog_y + dialog_h, dialog_x + dialog_w, dialog_y + dialog_h) < 12) {
-				
-				mouse_active = false;
-				if(CURSOR == cr_size_we) CURSOR = cr_size_nwse;
-				else                     CURSOR = cr_size_ns;
-				
-				if(mouse_press(mb_left, sFOCUS)) {
-					dialog_resizing |= 1 << 1;
-					dialog_resiz_sh = dialog_h;
-					dialog_resiz_mx = mouse_mx;
-					dialog_resiz_my = mouse_my;
+				if(_sel_mask != 0) {
+					mouse_active = false;
+					
+					switch(_sel_mask) {
+						case 0b0001 : case 0b0100 : CURSOR = cr_size_we;   break;
+						case 0b0010 : case 0b1000 : CURSOR = cr_size_ns;   break;
+						case 0b0011 : case 0b1100 : CURSOR = cr_size_nwse; break;
+						case 0b1001 : case 0b0110 : CURSOR = cr_size_nesw; break;
+					}
+					
+					if(mouse_press(mb_left, sFOCUS)) {
+						dialog_resizing = _sel_mask;
+						dialog_resiz_sx = dialog_x;
+						dialog_resiz_sy = dialog_y;
+						dialog_resiz_sw = dialog_w;
+						dialog_resiz_sh = dialog_h;
+						dialog_resiz_mx = mouse_mx;
+						dialog_resiz_my = mouse_my;
+					}
 				}
 			}
 			

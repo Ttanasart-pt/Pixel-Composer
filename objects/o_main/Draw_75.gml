@@ -18,7 +18,7 @@ if(winMan_isMinimized()) exit;
 			var type    = TOOLTIP[1];
 				
 			if(is_method(content)) content = content();
-				
+			
 			switch(type) {
 				
 				case VALUE_TYPE.float   :
@@ -171,6 +171,10 @@ if(winMan_isMinimized()) exit;
 					var ss = ui(48) / max(sprite_get_width(_spr), sprite_get_height(_spr))
 					draw_sprite_ext(_spr, 0, mx, my, ss, ss, 0, c_white, 1);
 				}
+				break;
+				
+			case "GMRoom" :
+				draw_sprite_ext(s_gmroom, 0, mx + ui(32), my + ui(32), 1, 1, 0, c_white, 1);
 				break;
 				
 			default:

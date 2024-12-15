@@ -1,6 +1,6 @@
 /// @description 
 
-var pal = DEF_PALETTE;
+var pal = palette;
 var col = min(array_length(pal), 8);
 var row = ceil(array_length(pal) / col);
 

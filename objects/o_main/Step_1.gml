@@ -103,8 +103,8 @@ _FILE_DROPPED     = false;
 	with(_p_dialog) checkFocus();		WINDOW_ACTIVE = noone;
 	with(_p_dialog) checkDepth();		WINDOW_ACTIVE = noone;
 	
-	with(_p_dialog) doDrag();			WINDOW_ACTIVE = noone;
 	with(_p_dialog) doResize();			WINDOW_ACTIVE = noone;
+	with(_p_dialog) doDrag();			WINDOW_ACTIVE = noone;
 #endregion
 
 #region auto save

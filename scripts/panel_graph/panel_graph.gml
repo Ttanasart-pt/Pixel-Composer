@@ -3324,12 +3324,12 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				
             case "GMTileSet" :
 				node = nodeBuild("Node_Tile_Tileset", mouse_grid_x, mouse_grid_y).skipDefault();
-				node.gmTile = DRAGGING.data;
+				node.bindTile(DRAGGING.data);
 				break;
 				
             case "GMRoom" :
 				node = nodeBuild("Node_GMRoom", mouse_grid_x, mouse_grid_y).skipDefault();
-				node.gmRoom = DRAGGING.data;
+				node.bindRoom(DRAGGING.data);
 				break;
         }
             

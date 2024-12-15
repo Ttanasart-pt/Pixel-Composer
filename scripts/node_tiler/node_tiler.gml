@@ -1,8 +1,9 @@
 function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
-    name = "Tile Drawer";
+    name        = "Tile Drawer";
     bypass_grid = true;
     
-	tileset = noone;
+	tileset     = noone;
+	gmTileLayer = noone;
 	
     newInput( 0, nodeValue_Tileset("Tileset", self, noone))
     	.setVisible(true, true);
@@ -26,11 +27,13 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	newOutput(2, nodeValue_Output("Tileset", self, VALUE_TYPE.tileset, noone));
 	
-	output_display_list = [ 2, 1, 0 ];
+	newOutput(3, nodeValue_Output("Tile Data", self, VALUE_TYPE.integer, 0));
+	
+	output_display_list = [ 2, 1, 0, 3 ];
 	
 	#region ++++ data ++++
 		canvas_surface   = surface_create_empty(1, 1, surface_rgba16float);
-		canvas_buffer    = buffer_create(1, buffer_grow, 4);
+		canvas_buffer    = buffer_create(1, buffer_grow, 1);
 	    
 		drawing_surface  = noone;
 		draw_stack       = ds_list_create();
@@ -257,6 +260,14 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	    // draw_surface_ext(preview_draw_overlay, 432, 32, 8, 8, 0, c_white, 1);
     }
     
+    ////- Update
+    
+    static preGetInputs = function() {
+    	if(gmTileLayer == noone) return;
+    	
+		inputs[1].setValue([ gmTileLayer.amount_w, gmTileLayer.amount_h ]);
+    }
+    
 	static processData = function(_outData, _data, _output_index, _array_index) {
 	    tileset = _data[0];
 	    _outData[2] = tileset;
@@ -265,7 +276,7 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			input_display_list = [ 3, 1, 0 ];
 			return _outData;
 	    }
-	    
+		 
 	    input_display_list_tileset[3]      = tileset.tile_selector.b_toggle;
 		input_display_list_autoterrains[3] = tileset.autoterrain_selector.b_toggle;
 		input_display_list_palette[3]      = tileset.palette_viewer.b_toggle;
@@ -280,11 +291,11 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			input_display_list_rule,         tileset.rules,
 		]
 		
-		var _tileSet  = tileset.texture;
-		var _tileSiz  = tileset.tileSize;
-	    var _mapSize  = _data[1];
-	    var _animated = _data[2];
-	    var _seed     = _data[3];
+		var _tileSet    = tileset.texture;
+		var _tileSiz    = tileset.tileSize;
+	    var _mapSize    = _data[1];
+	    var _animated   = _data[2];
+	    var _seed       = _data[3];
 	    update_on_frame = _animated;
 	    
 	    if(!is_surface(canvas_surface) && buffer_exists(canvas_buffer)) { 
@@ -292,6 +303,7 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	    	buffer_set_surface(canvas_buffer, canvas_surface, 0);
 	    } else 
 	    	canvas_surface = surface_verify(canvas_surface, _mapSize[0], _mapSize[1], surface_rgba16float);
+	    	
 	    drawing_surface = surface_verify(drawing_surface, _mapSize[0], _mapSize[1], surface_rgba16float);
 	    temp_surface[0] = surface_verify(temp_surface[0], _mapSize[0], _mapSize[1], surface_rgba16float);
 	    temp_surface[1] = surface_verify(temp_surface[1], _mapSize[0], _mapSize[1], surface_rgba16float);
@@ -333,14 +345,62 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	        draw_empty();
 	    surface_reset_shader();
 	    
-	    return [ _tileOut, _tileMap, tileset ];
+	    var tileData = _outData[3];
+	    var amo      = _mapSize[0] * _mapSize[1];
+	    
+	    if(gmTileLayer != noone) {
+	    	tileData = array_verify(tileData, amo);
+	    	var i = 0;
+	    	var b;
+	    	
+	    	buffer_to_start(canvas_buffer);
+	    	
+	    	repeat(amo) {
+	    		b = buffer_read(canvas_buffer, buffer_f16);
+	    		    buffer_read(canvas_buffer, buffer_f16);
+				    buffer_read(canvas_buffer, buffer_f16);
+				    buffer_read(canvas_buffer, buffer_f16);
+				
+	    		b = round(b);
+	    		
+	    		switch(b) {
+	    			case 0 :  tileData[i] = 0;     break;
+	    			default : tileData[i] = b - 1; break;
+	    		}
+	    		 
+				i++;
+	    	}
+	    	
+	    }
+	    
+	    return [ _tileOut, _tileMap, tileset, tileData ];
 	}
 	
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////- GM
+    
+    static bindTile = function(_gmTile) {
+    	gmTileLayer = _gmTile;
+    	if(gmTileLayer == noone) {
+    		inputs[0].editable = true;
+    		inputs[1].editable = true;
+    		inputs[2].editable = true;
+    		return;
+    	}
+    	
+    	inputs[0].editable = false;
+		inputs[1].editable = false;
+		inputs[2].editable = false;
+		
+		inputs[1].setValue([ gmTileLayer.amount_w, gmTileLayer.amount_h ]);
+    }
+    
+	////- Serialzie
     
 	static attributeSerialize = function() {
 		var _attr = {
 			canvas : surface_encode(canvas_surface),
+			gm_key:  gmTileLayer == noone? noone : gmTileLayer.room.key,
+			gm_name: gmTileLayer == noone? noone : gmTileLayer.name,
 		}
 		
 		return _attr; 
@@ -357,5 +417,13 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			buffer_delete_safe(canvas_buffer);
 			canvas_buffer  = buffer_from_surface(canvas_surface, false, buffer_grow);
 		}
+		
+		if(struct_has(attr, "gm_key") && project.bind_gamemaker) {
+			var _room = project.bind_gamemaker.getResourceFromPath(attr.gm_key);
+			var _name = attr[$ "gm_name"];
+			if(_room != noone && !is_undefined(_name))
+				bindTile(_room.getLayerFromName(_name));
+		}
+		
 	}
 }

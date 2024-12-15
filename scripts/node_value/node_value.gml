@@ -46,6 +46,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		tooltip        = _tooltip;
 		editWidget     = noone;
 		editWidgetRaw  = noone;
+		editable       = true;
+		
 		graphWidget    = noone;
 		graphWidgetH   = 0;
 		graphWidgetP   = new widgetParam(0, 0, 0, 0, 0);

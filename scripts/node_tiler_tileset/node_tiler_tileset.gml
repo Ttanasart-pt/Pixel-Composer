@@ -1,5 +1,5 @@
 function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-    name  = "Tileset";
+    name        = "Tileset";
     bypass_grid = true;
     preserve_height_for_preview = true;
     
@@ -1529,6 +1529,8 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		shader_set_f("animatedTilesLength", aTilesLength);
 	}
 	
+	////- Update
+	
 	static update = function(frame = CURRENT_FRAME) {
     	texture  = inputs[0].getValue();
 		tileSize = inputs[1].getValue();
@@ -1539,7 +1541,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		if(gmTile != noone) {
 			inputs[0].setVisible(false, false);
 			
-			var _spm = struct_try_get(gmTile.gmBinder.resourcesMap, gmTile.sprite, noone);
+			var _spm = gmTile.spriteObject;
             var _spr = _spm == noone? noone : _spm.thumbnail;
             
             if(_spr) {
@@ -1561,8 +1563,22 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    outputs[0].setValue(self);
 	}
 	
+	////- Draw
+	
 	static getPreviewValues       = function() { return texture; }
 	static getGraphPreviewSurface = function() { return texture; }
+	
+    ////- GM
+    
+    static bindTile = function(_gmTile) {
+    	gmTile = _gmTile;
+    	if(gmTile == noone) {
+    		return;
+    	}
+    	
+    }
+    
+	////- Serialize
 	
 	static attributeSerialize = function() {
 		var _attr = {
@@ -1604,12 +1620,8 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			brush_palette_buffer  = buffer_from_surface(brush_palette, false, buffer_grow);
 		}
 		
-		if(struct_has(attr, "gm_key")) {
-			var _key = attr.gm_key;
-			var _gm  = project.bind_gamemaker;
-			
-			if(_gm != noone) gmTile = struct_try_get(_gm.resourcesMap, _ey, noone);
-		}
+		if(struct_has(attr, "gm_key") && project.bind_gamemaker)
+			bindTile(project.bind_gamemaker.getResourceFromPath(attr.gm_key));
 		
 		refreshAnimatedData();
 	}

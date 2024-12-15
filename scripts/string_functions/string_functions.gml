@@ -65,21 +65,21 @@ function string_to_var2(context, name) { INLINE return string_to_var(context == 
 function string_quote(str)             { INLINE return $"\"{str}\""; }
 
 function string_compare(s1, s2) {
+	    s1 = string_lower(s1);
+	    s2 = string_lower(s2);
     var l1 = string_length(s1);
     var l2 = string_length(s2);
-
+	var l  = min(l1, l2);
+	
     var i = 1;
     var c1, c2;
-
-    repeat(min(l1, l2)) {
-        c1 = string_lower(string_char_at(s1, i));
-        c2 = string_lower(string_char_at(s2, i));
-
-        if(c1 == c2) {
-            i++;
-            continue;
-        }
-        
+	
+    repeat(l) {
+        c1 = string_char_at(s1, i);
+        c2 = string_char_at(s2, i);
+		i++;
+		
+        if(c1 == c2) continue;
         return ord(c1) - ord(c2);
     }
 

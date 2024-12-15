@@ -123,6 +123,7 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			_x2 -= ui(32 + 4);
 			if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), _m, _focus, _hover,, THEME.color_wheel,, c_white) == 2) {
 				var pick = instance_create(mouse_mx, mouse_my, o_dialog_color_quick_pick);
+				array_insert(pick.palette, 0, to);
 				pick.onApply = setColor;
 				palette_select = [ i, i ];
 			}

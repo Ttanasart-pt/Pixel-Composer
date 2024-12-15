@@ -342,7 +342,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		wid.setFocusHover(_focus, _hover);
 		
 		if(jun.connect_type == CONNECT_TYPE.input) {
-			wid.setInteract(!jun.hasJunctionFrom());
+			wid.setInteract(jun.editable && !jun.hasJunctionFrom());
 			if(_focus) wid.register(_scrollPane);
 			
 			if(is_instanceof(jun, __NodeValue_Dimension)) {
