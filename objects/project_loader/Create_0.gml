@@ -21,8 +21,10 @@ if(struct_has(content, "version")) {
 printIf(log, $" > Load meta : {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
 load_process = 1;
 load_delay   = 50_000;
+node_length  = 0;
 
-load_noti    = new notification(NOTI_TYPE.log, noti_status($"Loading {path}..."));
+load_noti = new notification(NOTI_TYPE.log, noti_status($"Loading {path}..."));
 load_noti.progress = 0;
 array_append(STATS_PROGRESS, load_noti);
-node_length  = 0;
+
+PROJECT.deserialize(content);

@@ -13,27 +13,22 @@ function Binder_Gamemaker(path) {
 }
 
 function GMObject(_gm, _rpth, _rawData) constructor {
-    serialize_keys = {};
+    static serialize_bool_keys = {};
     
     gmBinder  = _gm;
     path      = $"{_gm.dir}/{_rpth}";
     key       = _rpth;
     raw       = _rawData;
-    type      = _rawData.resourceType;
+    name      = raw.name;
+    type      = raw.resourceType;
     thumbnail = noone;
     
     static formatPrimitive = function(key, val) {
         if(is_undefined(val)) return "null";
-        var _type = key != "" && struct_has(serialize_keys, key)? serialize_keys[$ key] : (is_string(val)? __GM_FILE_DATATYPE.string : __GM_FILE_DATATYPE.float);
+        if(is_string(val))    return $"\"{val}\"";
         
-        switch(_type) {
-            case __GM_FILE_DATATYPE.float   : return string(val);
-            case __GM_FILE_DATATYPE.integer : return string_format(val, -1, 0);
-            case __GM_FILE_DATATYPE.bool    : return bool(val)? "true" : "false";
-            case __GM_FILE_DATATYPE.string  : return $"\"{val}\"";
-        }
-        
-        return val;
+        if(struct_has(serialize_bool_keys, key)) return bool(val)? "true" : "false";
+        return string(val);
     }
     
     static simple_serialize = function(s, _pad, _depth = 0, _nline = false) {
@@ -115,7 +110,18 @@ function __Binder_Gamemaker(path) constructor {
         { name: "rooms",   data : [], closed : false, },
     ];
     
+    nodeMap = {};
+    
     static getResourceFromPath = function(path) { return struct_try_get(resourcesMap, path, noone); }
+    
+    static getNodeFromPath = function(path, _x, _y) {
+        if(struct_has(nodeMap, path)) return nodeMap[$ path];
+        
+        var _n = nodeBuild("Node_Tile_Tileset", _x, _y).skipDefault();
+	    nodeMap[$ path] = _n;
+	    
+	    return _n;
+    }
     
     static readYY = function(path) {
         var _res = file_read_all(path);

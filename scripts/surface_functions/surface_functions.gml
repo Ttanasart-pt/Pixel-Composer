@@ -593,6 +593,7 @@ function surface_reset_target_override() { __surface_reset_target(); winwin_draw
 				surface_reset_shader();
 				surface_save(s, path);
 				return;
+				
 			case surface_r8unorm	 : s = surface_create(w, h, surface_rgba8unorm);	break;
 			case surface_r16float	 : s = surface_create(w, h, surface_rgba16float);	break;
 			case surface_r32float	 : s = surface_create(w, h, surface_rgba32float);	break;

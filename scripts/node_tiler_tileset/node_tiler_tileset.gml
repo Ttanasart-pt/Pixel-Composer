@@ -592,10 +592,8 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    		
 	    		var _prin = array_safe_get(_at.index, _at.prevInd, undefined);
 	    		
-	    		if(_prin == undefined) 
-	    			draw_sprite_stretched_ext(THEME.ui_panel, 1, _px, _py, _pw, _ph, COLORS._main_icon);
-	    		else
-	    			drawTile(_prin, _px, _py, _pw, _ph);
+	    		if(_prin == undefined) draw_sprite_stretched_ext(THEME.ui_panel, 1, _px, _py, _pw, _ph, COLORS._main_icon);
+	    		else drawTile(_prin, _px, _py, _pw, _ph);
 	    		
 	    		var _tx  = _px + _pw + ui(8);
 	    		var _hov = _hover && point_in_rectangle(_m[0], _m[1], _x, _yy, _x + _w, _yy + _hg - 1);
@@ -1535,9 +1533,6 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
     	texture  = inputs[0].getValue();
 		tileSize = inputs[1].getValue();
 		
-		var _tdim  = surface_get_dimension(texture);
-		tileAmount = [ floor(_tdim[0] / tileSize[0]), floor(_tdim[1] / tileSize[1]) ];
-		
 		if(gmTile != noone) {
 			inputs[0].setVisible(false, false);
 			
@@ -1559,6 +1554,9 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
             
             tileSize = [ gmTile.raw.tileWidth, gmTile.raw.tileHeight ];
 		}
+		
+		var _tdim  = surface_get_dimension(texture);
+		tileAmount = [ floor(_tdim[0] / tileSize[0]), floor(_tdim[1] / tileSize[1]) ];
 		
 	    outputs[0].setValue(self);
 	}

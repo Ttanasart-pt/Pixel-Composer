@@ -37,7 +37,6 @@ switch(load_process) {
         if(_skp) break;
         
 		array_resize(create_list, node_length);
-        PROJECT.deserialize(content);
         
         printIf(log, $" > Load nodes : {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
         load_process = 2;

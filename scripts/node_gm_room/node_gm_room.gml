@@ -19,7 +19,7 @@ function Node_GMRoom(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
     tb_depth.label = "Depth";
     tb_depth.font  = f_p3;
     
-	layers_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
+	layers_renderer  = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		if(gmRoom == noone) {
 			draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _y, _w, ui(28), COLORS.node_composite_bg_blend, 1);	
 			
@@ -34,29 +34,31 @@ function Node_GMRoom(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _y, _w, _h, COLORS.node_composite_bg_blend, 1);
 		for( var i = 0, n = array_length(gmRoom.layers); i < n; i++ ) {
-			var _bx    = _x + ui(24);
-			var _yy    = _y + ui(8) + i * hh;
-			var _layer = gmRoom.layers[i];
+			var _yy = _y + ui(8) + i * hh;
+			var _l  = gmRoom.layers[i];
+			var _exposed = struct_has(inputMap, _l.name);
 			
-			var cc = layer_selecting == _layer? COLORS._main_text_accent : COLORS._main_text_sub;
+			var cc = layer_selecting == _l? COLORS._main_text_accent : COLORS._main_text_sub;
 			
 			if(_hover && point_in_rectangle(_m[0], _m[1], _x, _yy, _x + _w, _yy + hh - 1)) {
 				cc = COLORS._main_text;
 				
 				if(mouse_press(mb_left, _focus))
-					layer_selecting = layer_selecting == _layer? noone : _layer;
+					layer_selecting = layer_selecting == _l? noone : _l;
 			}
 			
-			draw_sprite_ui_uniform(s_gmlayer, _layer.index, _bx, _yy + hh / 2, 1, cc);
+			if(_exposed) draw_sprite_ui_uniform(THEME.animate_clock, 2, _x + ui(20),_yy + hh / 2, 1, COLORS._main_accent);
+			
+			draw_sprite_ui_uniform(s_gmlayer, _l.index, _x + ui(44), _yy + hh / 2, 1, cc);
 			draw_set_text(f_p2, fa_left, fa_center, cc);
-			draw_text_add(_bx + ui(20), _yy + hh / 2, _layer.name);
+			draw_text_add(_x + ui(64), _yy + hh / 2, _l.name);
 		}
 		
 		return _h;
 	}); 
 	
 	layer_renderer_h = 0;
-	layer_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
+	layer_renderer   = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		if(layer_selecting == noone) {
 			draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _y, _w, ui(28), COLORS.node_composite_bg_blend, 1);	
 			draw_set_text(f_p2, fa_center, fa_center, COLORS._main_text_sub);
@@ -66,6 +68,7 @@ function Node_GMRoom(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		var _h = ui(40);
 		var _l = layer_selecting;
+		var _exposed = struct_has(inputMap, _l.name);
 		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _y, _w, layer_renderer_h, COLORS.node_composite_bg_blend, 1);	
 		
 		draw_sprite_ui_uniform(s_gmlayer, _l.index, _x + ui(8 + 16), _y + ui(8 + 16), 1, COLORS._main_icon);
@@ -116,8 +119,8 @@ function Node_GMRoom(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			draw_sprite_stretched_ext(THEME.textbox, 3, _wdx,            _wdy, _wdw / 2, _wdh, COLORS._main_icon_light);
 			draw_sprite_stretched_ext(THEME.textbox, 3, _wdx + _wdw / 2, _wdy, _wdw / 2, _wdh, COLORS._main_icon_light);
 			
-			var _tw    = _l.amount_w;
-			var _th    = _l.amount_h;
+			var _tw    = _l.tiles.SerialiseWidth;
+			var _th    = _l.tiles.SerialiseHeight;
 			
 			draw_set_text(f_p2, fa_center, fa_center, COLORS._main_text);
 			draw_text_add(_wdx +            _wdw / 4, _wdy + _wdh / 2, _tw);
@@ -130,7 +133,6 @@ function Node_GMRoom(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			_wdy = _yy;
 			_wdw = _w - ui(16);
 			
-			var _exposed = struct_has(inputMap, _l.name);
 			if(_exposed) {
 				_wdh = ui(24);
 				draw_sprite_stretched_ext(THEME.textbox, 3, _wdx, _wdy, _wdw, _wdh, COLORS._main_icon_light);
@@ -158,7 +160,7 @@ function Node_GMRoom(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		}
 		
 		layer_renderer_h = _h + ui(8);
-		return _h;
+		return _h + ui(8);
 	}); 
 	
     input_display_list = [ 
@@ -172,25 +174,6 @@ function Node_GMRoom(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
     	["Data",         true], 
 	];
 	
-	static exposeData = function(_layer) {
-		var _inp = createNewInput();
-		_inp.name = _layer.name;
-		
-		if(is(_layer, GMRoom_Tile)) {
-			_inp.setType(VALUE_TYPE.integer);
-			
-			var _tileset = nodeBuild("Node_Tile_Tileset", x - ui(320), y).skipDefault();
-			_tileset.bindTile(_layer.tileset);
-			
-			var _tiler = nodeBuild("Node_Tile_Drawer", x - ui(160), y).skipDefault();
-			_tiler.bindTile(_layer);
-			
-			_tiler.inputs[0].setFrom(_tileset.outputs[0]);
-			_inp.setFrom(_tiler.outputs[3]);
-		}
-		
-	}
-    
 	static createNewInput = function() {
 		var index = array_length(inputs);
 		var _jun  = newInput(index, nodeValue("Data", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0 ));
@@ -199,7 +182,6 @@ function Node_GMRoom(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		return _jun;
 	} 
-	
 	setDynamicInput(1, false);
 	
     ////- GM
@@ -210,11 +192,13 @@ function Node_GMRoom(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
     	layerMap = {};
     	if(_gmRoom == noone) return;
     	
+    	gmRoom.gmBinder.nodeMap[$ gmRoom.key] = self;
+    	
     	layers = gmRoom.layers;
     	for( var i = 0, n = array_length(layers); i < n; i++ ) 
     		layerMap[$ layers[i].name] = layers[i];
     	
-    	var _settings    = gmRoom.roomSettings;
+    	var _settings    = gmRoom.raw.roomSettings;
     	var _width       = _settings.Width;
     	var _height      = _settings.Height;
     	var _persistance = _settings.persistent;
@@ -222,6 +206,26 @@ function Node_GMRoom(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
     	inputs[0].setValue([_width, _height]);
     	inputs[1].setValue(_persistance);
     }
+    
+	static exposeData = function(_layer) {
+		var _in = createNewInput();
+		_in.name = _layer.name;
+		_in.attributes.layerName = _layer.name;
+		
+		if(is(_layer, GMRoom_Tile)) {
+			_in.setType(VALUE_TYPE.integer);
+			
+			var _tileset = gmRoom.gmBinder.getNodeFromPath(_layer.tileset.key, x - ui(320), y);
+			_tileset.bindTile(_layer.tileset);
+			
+			var _tiler = nodeBuild("Node_Tile_Drawer", x - ui(160), y).skipDefault();
+			_tiler.bindTile(_layer);
+			
+			_tiler.inputs[0].setFrom(_tileset.outputs[0]);
+			_in.setFrom(_tiler.outputs[3]);
+		}
+		
+	}
     
     ////- Update
     
@@ -235,12 +239,15 @@ function Node_GMRoom(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
     	for( var i = input_fix_len, n = array_length(inputs); i < n; i++ ) {
     		var _in  = inputs[i];
     		var _val = _in.getValue();
-    		var _lay = layerMap[$ _in.name];
-    		inputMap[$ _in.name] = _in;
+    		var _key = _in.attributes.layerName;
+    		var _lay = layerMap[$ _key];
+    		inputMap[$ _key] = _in;
     		
     		if(is(_lay, GMRoom_Tile)) {
-    			var _tw = _lay.amount_w;
-				var _th = _lay.amount_h;
+    			_in.setType(VALUE_TYPE.integer);
+    			
+    			var _tw = _lay.tiles.SerialiseWidth;
+				var _th = _lay.tiles.SerialiseHeight;
 				var _tile = array_verify(_val, _tw * _th);
 				var _ctil = [];
 				
@@ -268,7 +275,7 @@ function Node_GMRoom(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
     		}
     	}
     	
-    	gmRoom.sync();
+    	// gmRoom.sync();
     }
     
     ////- Serialize
@@ -284,8 +291,12 @@ function Node_GMRoom(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	static attributeDeserialize = function(attr) {
 		if(struct_has(attr, "gm_key") && project.bind_gamemaker)
 			bindRoom(project.bind_gamemaker.getResourceFromPath(attr.gm_key));
-			
-		for( var i = input_fix_len, n = array_length(inputs); i < n; i++ )
-    		inputMap[$ _in.name] = _in;
+	}
+	
+	static postApplyDeserialize = function() {
+		for( var i = input_fix_len, n = array_length(inputs); i < n; i++ ) {
+			var _in = inputs[i];
+    		inputMap[$ _in.attributes.layerName] = _in;
+		}
 	}
 }

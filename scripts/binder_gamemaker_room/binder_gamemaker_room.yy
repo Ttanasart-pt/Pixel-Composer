@@ -6,7 +6,7 @@
   "name":"binder_gamemaker_room",
   "parent":{
     "name":"gamemaker",
-    "path":"folders/functions/gamemaker.yy",
+    "path":"folders/game engines/gamemaker.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

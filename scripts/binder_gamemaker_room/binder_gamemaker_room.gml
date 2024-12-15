@@ -1,34 +1,33 @@
 function GMRoom(_gm, _rpth, _rawData) : GMObject(_gm, _rpth, _rawData) constructor {
-	struct_append(serialize_keys, {
-		effectEnabled:          __GM_FILE_DATATYPE.bool, 
-		inheritSubLayers:       __GM_FILE_DATATYPE.bool, 
-		inheritVisibility:      __GM_FILE_DATATYPE.bool, 
-		visible:                __GM_FILE_DATATYPE.bool, 
-		clearDisplayBuffer:     __GM_FILE_DATATYPE.bool, 
-		inheritCode:            __GM_FILE_DATATYPE.bool, 
-		inheritCreationOrder:   __GM_FILE_DATATYPE.bool, 
-		inheritLayers:          __GM_FILE_DATATYPE.bool, 
-		isDnd:                  __GM_FILE_DATATYPE.bool, 
-		hierarchyFrozen:        __GM_FILE_DATATYPE.bool, 
-		inheritLayerDepth:      __GM_FILE_DATATYPE.bool, 
-		inheritLayerSettings:   __GM_FILE_DATATYPE.bool, 
-		userdefinedDepth:       __GM_FILE_DATATYPE.bool, 
-		htiled:                 __GM_FILE_DATATYPE.bool, 
-		stretch:                __GM_FILE_DATATYPE.bool, 
-		userdefinedAnimFPS:     __GM_FILE_DATATYPE.bool, 
-		vtiled:                 __GM_FILE_DATATYPE.bool, 
-		inheritPhysicsSettings: __GM_FILE_DATATYPE.bool, 
-		PhysicsWorld:           __GM_FILE_DATATYPE.bool, 
-		inheritRoomSettings:    __GM_FILE_DATATYPE.bool, 
-		persistent:             __GM_FILE_DATATYPE.bool, 
-		inherit:                __GM_FILE_DATATYPE.bool, 
-		clearViewBackground:    __GM_FILE_DATATYPE.bool, 
-		enableViews:            __GM_FILE_DATATYPE.bool, 
-		inheritViewSettings:    __GM_FILE_DATATYPE.bool, 
-	})
+	static serialize_bool_keys = {
+		clearDisplayBuffer:     1, 
+		clearViewBackground:    1, 
+		effectEnabled:          1, 
+		enableViews:            1, 
+		hierarchyFrozen:        1, 
+		htiled:                 1, 
+		inherit:                1, 
+		inheritCode:            1, 
+		inheritCreationOrder:   1, 
+		inheritLayerDepth:      1, 
+		inheritLayers:          1, 
+		inheritLayerSettings:   1, 
+		inheritPhysicsSettings: 1, 
+		inheritRoomSettings:    1, 
+		inheritSubLayers:       1, 
+		inheritViewSettings:    1, 
+		inheritVisibility:      1, 
+		isDnd:                  1, 
+		persistent:             1, 
+		PhysicsWorld:           1, 
+		stretch:                1, 
+		userdefinedAnimFPS:     1, 
+		userdefinedDepth:       1, 
+		visible:                1, 
+		vtiled:                 1, 
+	};
 	
     layers = GMRoom_create_layers(self, gmBinder, raw.layers);
-    roomSettings = raw.roomSettings;
     
     static link = function() { array_foreach(layers, function(l) /*=>*/ {return l.link()}); }
     
@@ -96,14 +95,14 @@ function GMRoom_create_layers(_room, _gm, layers) {
 }
 
 function GMRoom_Layer(_room, _gm, _raw) constructor {
-    gmBinder = _gm;
-    room     = _room;
-    raw      = _raw;
-    name     = _raw.name;
-    visible  = _raw.visible;
-    depth    = _raw.depth;
+    gmBinder   = _gm;
+    roomObject = _room;
+    raw        = _raw;
+    name       = _raw.name;
+    visible    = _raw.visible;
+    depth      = _raw.depth;
     
-    layers  = GMRoom_create_layers(_gm, _raw.layers);
+    layers  = GMRoom_create_layers(roomObject, _gm, _raw.layers);
     index   = 6;
     
     static link = function() { array_foreach(layers, function(l) /*=>*/ {return l.link()}); }
@@ -121,25 +120,16 @@ function GMRoom_Layer(_room, _gm, _raw) constructor {
 function GMRoom_Background(_room, _gm, _raw) : GMRoom_Layer(_room, _gm, _raw) constructor {
     index  = 0;
     
-    x = raw.x;
-    y = raw.y;
-    
     colour = raw.colour;
 }
 
 function GMRoom_Tile(_room, _gm, _raw) : GMRoom_Layer(_room, _gm, _raw) constructor {
     index  = 1;
     
-    x = raw.x;
-    y = raw.y;
-    
     tiles     = raw.tiles;
     tilesetId = raw.tilesetId;
     tileset   = noone;
     
-    amount_w  = tiles.SerialiseWidth;
-	amount_h  = tiles.SerialiseHeight;
-	
 	static link = function() { 
 		tileset = gmBinder.getResourceFromPath(struct_try_get(tilesetId, "path", ""));
 		array_foreach(layers, function(l) /*=>*/ {return l.link()});

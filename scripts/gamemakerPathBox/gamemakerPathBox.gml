@@ -21,8 +21,6 @@ function gamemakerPathBox(project) : widget() constructor {
 				
 				project.attributes.bind_gamemaker_path = path;
 				project.bind_gamemaker = Binder_Gamemaker(project.attributes.bind_gamemaker_path);
-				if(project.bind_gamemaker == noone) project.attributes.bind_gamemaker_path = "";
-				else dialogPanelCall(new Panel_GM_Explore(project.bind_gamemaker));
     		}
     		    
     		draw_sprite_uniform(s_gamemaker, 0, _x + ui(16), _y + _h / 2, 1, COLORS._main_icon, 1);
@@ -38,8 +36,8 @@ function gamemakerPathBox(project) : widget() constructor {
 		    if(buttonInstant(THEME.button_def, _x, _y, ui(32), _h, _m, active, hover, "Explore project", s_gamemaker, 0, COLORS._main_icon) == 2) 
 				dialogPanelCall(new Panel_GM_Explore(_gm));
     		
-    		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
-    		draw_text_add(_x + ui(40), _y + _h / 2, _gm.projectName);
+    		draw_set_text(f_p2, fa_center, fa_center, COLORS._main_text);
+    		draw_text_add(_x + _w / 2, _y + _h / 2, _gm.projectName);
     		
     		if(buttonInstant(THEME.button_def, _x + _w - ui(32), _y, ui(32), _h, _m, active, hover, "Disconnect", THEME.cross_12, 0, [ COLORS._main_icon, COLORS._main_value_negative ]) == 2) {
 				project.attributes.bind_gamemaker_path = "";

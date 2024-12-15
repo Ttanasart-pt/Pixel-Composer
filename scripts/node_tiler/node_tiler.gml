@@ -265,7 +265,7 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
     static preGetInputs = function() {
     	if(gmTileLayer == noone) return;
     	
-		inputs[1].setValue([ gmTileLayer.amount_w, gmTileLayer.amount_h ]);
+		inputs[1].setValue([ gmTileLayer.tiles.SerialiseWidth, gmTileLayer.tiles.SerialiseHeight ]);
     }
     
 	static processData = function(_outData, _data, _output_index, _array_index) {
@@ -380,18 +380,61 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
     
     static bindTile = function(_gmTile) {
     	gmTileLayer = _gmTile;
-    	if(gmTileLayer == noone) {
-    		inputs[0].editable = true;
-    		inputs[1].editable = true;
-    		inputs[2].editable = true;
-    		return;
-    	}
     	
-    	inputs[0].editable = false;
-		inputs[1].editable = false;
-		inputs[2].editable = false;
+    	inputs[0].editable = gmTileLayer == noone;
+		inputs[1].editable = gmTileLayer == noone;
+		inputs[2].editable = gmTileLayer == noone;
 		
-		inputs[1].setValue([ gmTileLayer.amount_w, gmTileLayer.amount_h ]);
+		outputs[0].setVisible(gmTileLayer == noone);
+		outputs[1].setVisible(gmTileLayer == noone);
+		outputs[2].setVisible(gmTileLayer == noone);
+		outputs[3].setVisible(gmTileLayer != noone);
+		
+    	if(gmTileLayer == noone) return;
+    	
+		var _w = gmTileLayer.tiles.SerialiseWidth;
+		var _h = gmTileLayer.tiles.SerialiseHeight;
+		inputs[1].setValue([ _w, _h ]);
+		
+		var _form = struct_try_get(gmTileLayer.tiles, "TileDataFormat", 0), _data = [];
+		var _b = buffer_create(_w * _h * 8, buffer_grow, 1);
+		buffer_to_start(_b);
+		
+		if(_form == 0) {
+			_data = gmTileLayer.tiles.TileSerialiseData;
+			
+			for( var i = 0, n = array_length(_data); i < n; i++ ) {
+				buffer_write(_b, buffer_f16, _data[i]);
+				buffer_write(_b, buffer_f16, 0);
+				buffer_write(_b, buffer_f16, 0);
+				buffer_write(_b, buffer_f16, 0);
+			}
+			
+		} else if(_form == 1) {
+			_data = gmTileLayer.tiles.TileCompressedData;
+			
+			var _amo, _til;
+			
+			for( var i = 0, n = array_length(_data); i < n; i += 2 ) {
+				_amo = -_data[i + 0];
+				_til =  _data[i + 1];
+				_til = max(0, _til + bool(_til));
+				
+				repeat(_amo) {
+					buffer_write(_b, buffer_f16, _til);
+					buffer_write(_b, buffer_f16, 0);
+					buffer_write(_b, buffer_f16, 0);
+					buffer_write(_b, buffer_f16, bool(_til));
+				}
+			}
+		}
+		
+		buffer_delete_safe(canvas_buffer);
+		canvas_buffer  = _b;
+		canvas_surface = surface_verify(canvas_surface, _w, _h, surface_rgba16float);
+		buffer_set_surface(canvas_buffer, canvas_surface, 0);
+		
+		triggerRender();
     }
     
 	////- Serialzie
@@ -399,7 +442,7 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	static attributeSerialize = function() {
 		var _attr = {
 			canvas : surface_encode(canvas_surface),
-			gm_key:  gmTileLayer == noone? noone : gmTileLayer.room.key,
+			gm_key:  gmTileLayer == noone? noone : gmTileLayer.roomObject.key,
 			gm_name: gmTileLayer == noone? noone : gmTileLayer.name,
 		}
 		
@@ -407,22 +450,23 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	}
 	
 	static attributeDeserialize = function(attr) {
-		var _canv = struct_try_get(attr, "canvas",  noone);
-		
-		if(_canv != noone) {
-			surface_free_safe(canvas_surface);
-			canvas_surface = surface_decode(_canv);
-			
-			var _dim = surface_get_dimension(canvas_surface);
-			buffer_delete_safe(canvas_buffer);
-			canvas_buffer  = buffer_from_surface(canvas_surface, false, buffer_grow);
-		}
 		
 		if(struct_has(attr, "gm_key") && project.bind_gamemaker) {
 			var _room = project.bind_gamemaker.getResourceFromPath(attr.gm_key);
 			var _name = attr[$ "gm_name"];
 			if(_room != noone && !is_undefined(_name))
 				bindTile(_room.getLayerFromName(_name));
+		}
+		
+		if(struct_has(attr, "canvas")) {
+			var _canv = attr.canvas;
+		
+			surface_free_safe(canvas_surface);
+			canvas_surface = surface_decode(_canv);
+			
+			var _dim = surface_get_dimension(canvas_surface);
+			buffer_delete_safe(canvas_buffer);
+			canvas_buffer  = buffer_from_surface(canvas_surface, false, buffer_grow);
 		}
 		
 	}

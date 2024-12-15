@@ -61,8 +61,18 @@ function widget() constructor {
 		ry   = params.ry;
 		
 		sep_axis = params.sep_axis;
-		
 		boxColor = params.color;
+		
+		if(!is_undefined(params.interact))
+			setInteract(params.interact);
+			
+		if(!is_undefined(params.focus))
+			setFocusHover(params.focus, params.hover);
+			
+		if(!is_undefined(params.scrollpane) && inBBOX(params.m)) {
+			register(params.scrollpane);
+			params.scrollpane.hover_content = true;
+		}
 	}
 	
 	static trigger = function() { }
@@ -134,4 +144,19 @@ function widgetParam(x, y, w, h, data, display_data = {}, m = mouse_ui, rx = 0, 
 	
 	color    = c_white;
 	sep_axis = false;
+	
+	focus      = undefined;
+	hover      = undefined;
+	interact   = undefined;
+	scrollpane = undefined;
+	
+	static setFont       = function(f)    { font = f;             return self; }
+	static setScrollpane = function(s)    { scrollpane = s;       return self; }
+	
+	static setFocusHover = function(f, h, i = undefined) { 
+		focus = f; 
+		hover = h; 
+		interact = i; 
+		return self; 
+	}
 }

@@ -66,11 +66,11 @@ function tiler_brush_autoterrain(_type, _index) constructor {
     	}
     	
     	switch(_type) {
-    		case 0 : index = array_verify_ext(index,  9, function() /*=>*/ {return -1}); prevInd =  4; break;
-    		case 1 : index = array_verify_ext(index, 25, function() /*=>*/ {return -1}); prevInd = 12; break;
-    		case 2 : index = array_verify_ext(index, 15, function() /*=>*/ {return -1}); prevInd =  6; break;
-    		case 3 : index = array_verify_ext(index, 48, function() /*=>*/ {return -1}); prevInd = 33; break;
-    		case 4 : index = array_verify_ext(index, 55, function() /*=>*/ {return -1}); prevInd = 12; break;
+    		case 0 : index = array_verify_ext(index,  9, function() /*=>*/ {return -1}); prevInd = 0; break;
+    		case 1 : index = array_verify_ext(index, 25, function() /*=>*/ {return -1}); prevInd = 1; break;
+    		case 2 : index = array_verify_ext(index, 15, function() /*=>*/ {return -1}); prevInd = 0; break;
+    		case 3 : index = array_verify_ext(index, 48, function() /*=>*/ {return -1}); prevInd = 8; break;
+    		case 4 : index = array_verify_ext(index, 55, function() /*=>*/ {return -1}); prevInd = 0; break;
     	}
     	
     	if(type != -1) {

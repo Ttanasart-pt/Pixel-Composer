@@ -439,7 +439,9 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		}
 		
 		for(var i = 0, n = array_length(childs); i < n; i++) {
-			var _panel = childs[i];
+			var _panel = array_safe_get(childs, i, 0);
+			if(_panel == 0) continue;
+			
 			_panel.draw();
 			
 			if!(HOVER == noone || is_struct(HOVER))

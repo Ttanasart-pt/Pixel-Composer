@@ -15,16 +15,16 @@ function buffer_get_color(buffer, _x, _y, w, h) {
 	return c;
 }
 
-function buffer_get_string(buffer, text = true, limit = 400) {
+function buffer_get_string(buffer, text = true, limit = 400, btype = buffer_u8) {
 	if(is_array(buffer)) return "[buffer array]";
 	if(!buffer_exists(buffer)) return "";
 
 	buffer_seek(buffer, buffer_seek_start, 0);
-	var len = min(limit, buffer_get_size(buffer));
+	var len = min(limit, buffer_get_size(buffer) / buffer_sizeof(btype));
     var ss  = ""; 
     
     for (var i = 0; i < len; i++) {
-		var _r = buffer_read(buffer, buffer_u8);
+		var _r = buffer_read(buffer, btype);
 		var _s = text? chr(_r) : dec_to_hex(_r, 2);
         ss += _s;
 		if(!text && i % 2) ss += " ";

@@ -17,9 +17,10 @@ function buttonGroup(_data, _onClick) : widget() constructor {
 	
 	sb_small = new scrollBox(data, _onClick);
 	
-	static setFont     = function(ff) { font        = ff; return self; }
-	static setTooltips = function(tt) { tooltips    = tt; return self; } 
-	static setCollape  = function(cc) { collapsable = cc; return self; } 
+	static setButton    = function(sp)              { buttonSpr   = sp;       return self; }
+	static setFont      = function(ff, fc = fColor) { font = ff; fColor = fc; return self; }
+	static setTooltips  = function(tt)              { tooltips    = tt;       return self; } 
+	static setCollape   = function(cc)              { collapsable = cc;       return self; } 
 	
 	static trigger = function() {
 		if(current_selecting + 1 >= array_length(data))

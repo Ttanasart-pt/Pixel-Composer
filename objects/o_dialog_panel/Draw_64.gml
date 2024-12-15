@@ -106,6 +106,7 @@ if(sFOCUS) {
 			content.in_dialog = false;
 		
 			instance_destroy();
+			
 		} else if(mouse_press(mb_right)) {
 			menuCall("panel_window_menu", [
 				menuItem(__txt("Move"), function() { 

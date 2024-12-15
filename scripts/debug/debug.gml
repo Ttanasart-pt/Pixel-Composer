@@ -1,6 +1,9 @@
 #region counter
 	globalvar DEBUG_COUNTER;
 	DEBUG_COUNTER = ds_map_create();
+	
+	var _p = $"D:/Project/MakhamDev/LTS-PixelComposer/MISC/temp/";
+	if(directory_exists(_p)) directory_destroy(_p);
 #endregion
 
 #macro printlog if(log) show_debug_message
@@ -11,6 +14,17 @@ function print(str) {
 		_s += (i? ", " : "") + string(argument[i]);
 	
 	noti_status(_s); 
+}
+
+function printSurface(name, surface) { 
+	if(!is_surface(surface)) {
+		noti_status($"{name}|Error: Not a valid surface {surface}"); 
+		return;
+	}
+	
+	var _p = $"D:/Project/MakhamDev/LTS-PixelComposer/MISC/temp/{UUID_generate()}.png";
+	surface_save_safe(surface, _p);
+	noti_status($"{name}|texture|{_p}"); 
 }
 
 function printIf(cond, log) { if(cond) print(log); }

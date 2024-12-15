@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"panel_gm_explorer",
   "parent":{
-    "name":"_others",
-    "path":"folders/panels/_others.yy",
+    "name":"gamemaker",
+    "path":"folders/game engines/gamemaker.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
