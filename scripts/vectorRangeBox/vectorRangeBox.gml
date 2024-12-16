@@ -94,7 +94,7 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 			var by = _y + _h / 2 - _bs / 2;
 			var bc = linked? COLORS._main_accent : COLORS._main_icon;
 			
-			if(buttonInstant(THEME.button_hide, bx, by, _bs, _bs, _m, active, hover, __txt("Link axis"), THEME.value_link, linked, bc) == 2) {
+			if(buttonInstant(THEME.button_hide, bx, by, _bs, _bs, _m, hover, active, __txt("Link axis"), THEME.value_link, linked, bc) == 2) {
 				linked = !linked;
 				_display_data.linked = linked;
 			
@@ -107,7 +107,7 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 			by += _h + ui(4);
 			
 			tooltip_ranged.index = ranged;
-			if(buttonInstant(THEME.button_hide, bx, by, _bs, _bs, _m, active, hover, tooltip_ranged, THEME.value_range, ranged, COLORS._main_icon) == 2) {
+			if(buttonInstant(THEME.button_hide, bx, by, _bs, _bs, _m, hover, active, tooltip_ranged, THEME.value_range, ranged, COLORS._main_icon) == 2) {
 				ranged = !ranged;
 				_display_data.ranged = ranged;
 			

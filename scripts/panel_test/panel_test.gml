@@ -389,7 +389,7 @@ function Panel_Test() : PanelContent() constructor {
 			doTesting();
 			
 		} else {
-			if(buttonInstant(THEME.button_def, bx, by, bw, bh, [ mx, my ], pFOCUS, pHOVER) == 2)
+			if(buttonInstant(THEME.button_def, bx, by, bw, bh, [ mx, my ], pHOVER, pFOCUS) == 2)
 				startTesting();
 				
 			draw_set_text(f_p2, fa_center, fa_center, COLORS._main_text);

@@ -29,7 +29,7 @@
 	var bx = dialog_x + dialog_w - ui(8) - bw;
 	var by = dialog_y + ui(24) - bh / 2;
 	
-	if(buttonInstant(THEME.button_hide, bx, by, bw, bh, mouse_ui, sFOCUS, sHOVER, __txt("Close"), THEME.cross_16, 0, COLORS._main_value_negative) == 2)
+	if(buttonInstant(THEME.button_hide, bx, by, bw, bh, mouse_ui, sHOVER, sFOCUS, __txt("Close"), THEME.cross_16, 0, COLORS._main_value_negative) == 2)
 		instance_destroy();
 	bx -= bw + ui(4);
 		
@@ -59,7 +59,7 @@
 			instance_destroy();
 			
 	} else {
-		if(buttonInstant(THEME.button_hide, bx, by, bw, bh, mouse_ui, sFOCUS, sHOVER, txt, icon, 0, clr) == 2) {
+		if(buttonInstant(THEME.button_hide, bx, by, bw, bh, mouse_ui, sHOVER, sFOCUS, txt, icon, 0, clr) == 2) {
 			if(meta.author_steam_id == 0)
 				meta.author_steam_id = STEAM_USER_ID;
 			
@@ -107,7 +107,7 @@
 	
 	bx -= bw + ui(4);
 	var txt = __txtx("new_collection_meta_edit", "Edit metadata");
-	if(buttonInstant(THEME.button_hide, bx, by, bw, bh, mouse_ui, sFOCUS, sHOVER, txt, THEME.arrow, meta_expand? 3 : 0) == 2)
+	if(buttonInstant(THEME.button_hide, bx, by, bw, bh, mouse_ui, sHOVER, sFOCUS, txt, THEME.arrow, meta_expand? 3 : 0) == 2)
 		doExpand();
 #endregion
 

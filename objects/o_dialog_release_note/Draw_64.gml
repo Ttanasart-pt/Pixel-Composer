@@ -22,7 +22,7 @@ if !ready exit;
 		var r  = __txt(pages[i]);
 		var rw = string_width(r);
 		
-		if(buttonInstant(THEME.button_hide_fill, _x - ui(8), _y - ui(4), rw + ui(16), bh, [ mouse_mx, mouse_my ], sFOCUS, sHOVER) == 2)
+		if(buttonInstant(THEME.button_hide_fill, _x - ui(8), _y - ui(4), rw + ui(16), bh, [ mouse_mx, mouse_my ], sHOVER, sFOCUS) == 2)
 			page = i;
 		
 		draw_set_color(i == page? COLORS._main_text : COLORS._main_text_sub);

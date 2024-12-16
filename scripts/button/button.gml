@@ -144,7 +144,7 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 	}
 }
 
-function buttonInstant(spr, _x, _y, _w, _h, _m, _act, _hvr, _tip = "", _icon = noone, _icon_index = 0, _icon_blend = COLORS._main_icon, _icon_alpha = 1, _icon_scale = 1, 
+function buttonInstant(spr, _x, _y, _w, _h, _m, _hvr, _act, _tip = "", _icon = noone, _icon_index = 0, _icon_blend = COLORS._main_icon, _icon_alpha = 1, _icon_scale = 1, 
 	_button_blend = c_white) {
 		
 	var res = 0;
@@ -179,7 +179,7 @@ function buttonInstant(spr, _x, _y, _w, _h, _m, _act, _hvr, _tip = "", _icon = n
 function buttonTextIconInstant(active, spr, _x, _y, _w, _h, _m, _act, _hvr, _tip = "", _icon = noone, _icon_label = "", _icon_blend = COLORS._main_icon_light, _icon_alpha = 1) {
 	var _b = 0;
 	
-	if(active) _b = buttonInstant(spr, _x, _y, _w, _h, _m, _act, _hvr, _tip);
+	if(active) _b = buttonInstant(spr, _x, _y, _w, _h, _m, _hvr, _act, _tip);
 	
 	draw_set_text(f_p1, fa_left, fa_center, active? COLORS._main_icon_light : COLORS._main_icon);
 	var bxc = _x + _w / 2 - (string_width(_icon_label) + ui(64)) / 2;

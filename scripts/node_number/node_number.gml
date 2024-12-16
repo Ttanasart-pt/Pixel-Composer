@@ -418,7 +418,7 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				var by = bbox.y0 + 4 * _s;
 				var cc = colorMultiply(CDEF.main_white, _col);
 				
-				var b = buttonInstant(THEME.button_def, bx, by, bw, bh, [ _mx, _my ], _focus, _hover, "", THEME.minus, 0, COLORS._main_value_negative, 1, .75 * _s, cc);
+				var b = buttonInstant(THEME.button_def, bx, by, bw, bh, [ _mx, _my ], _hover, _focus, "", THEME.minus, 0, COLORS._main_value_negative, 1, .75 * _s, cc);
 				if(b) draggable = false;
 				if(b == 2) {
 					val -= stp;
@@ -427,7 +427,7 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				}
 				
 				var bx = bbox.x1 - 4 * _s - bw;
-				var b = buttonInstant(THEME.button_def, bx, by, bw, bh, [ _mx, _my ], _focus, _hover, "", THEME.add, 0, COLORS._main_value_positive, 1, .75 * _s, cc);
+				var b = buttonInstant(THEME.button_def, bx, by, bw, bh, [ _mx, _my ], _hover, _focus, "", THEME.add, 0, COLORS._main_value_positive, 1, .75 * _s, cc);
 				if(b) draggable = false;
 				if(b == 2) {
 					val += stp;

@@ -116,12 +116,12 @@ function Panel_Addon() : PanelContent() constructor {
 				var _bx = bx - ui(4);
 				var _by = by + ui(4);
 				
-				var b = buttonInstant(THEME.button_hide, _bx, _by, ui(32), ui(32), _m, pFOCUS, pHOVER, __txt("Open in explorer"), THEME.folder_content);
+				var b = buttonInstant(THEME.button_hide, _bx, _by, ui(32), ui(32), _m, pHOVER, pFOCUS, __txt("Open in explorer"), THEME.folder_content);
 				if(b) hover = false;
 				if(b == 2) shellOpenExplorer(DIRECTORY + "Addons/" + _addon.name);
 				
 				_bx -= ui(36)
-				if(_act && buttonInstant(THEME.button_hide, _bx, _by, ui(32), ui(32), _m, pFOCUS, pHOVER, __txt("Addon settings"), THEME.addon_setting) == 2) {
+				if(_act && buttonInstant(THEME.button_hide, _bx, _by, ui(32), ui(32), _m, pHOVER, pFOCUS, __txt("Addon settings"), THEME.addon_setting) == 2) {
 					var _addObj = noone;
 					with(_addon_custom) if(name == _addon.name) _addObj = self;
 						

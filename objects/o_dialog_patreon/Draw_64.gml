@@ -12,7 +12,7 @@ if !ready exit;
 	var _by = dialog_y + ui(8);
 	var _bs = ui(20);
 	
-	if(buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, [ mouse_mx, mouse_my ], sFOCUS, sHOVER, "", THEME.window_exit) == 2) {
+	if(buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, [ mouse_mx, mouse_my ], sHOVER, sFOCUS, "", THEME.window_exit) == 2) {
 		DIALOG_POSTDRAW
 		onDestroy();
 		instance_destroy();
@@ -38,7 +38,7 @@ if !ready exit;
 		draw_set_text(f_p1, fa_center, fa_center, COLORS._main_value_positive);
 		draw_text(cx, _ty, txt);
 		
-		if(buttonInstant(THEME.button_def, _bx, _by, _bw, _bh, mouse_ui, sFOCUS, sHOVER) == 2) {
+		if(buttonInstant(THEME.button_def, _bx, _by, _bw, _bh, mouse_ui, sHOVER, sFOCUS) == 2) {
 			var _path = DIRECTORY + "patreon";
 			file_delete(_path);
 			IS_PATREON = false;

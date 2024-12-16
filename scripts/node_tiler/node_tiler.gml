@@ -27,7 +27,8 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	newOutput(2, nodeValue_Output("Tileset", self, VALUE_TYPE.tileset, noone));
 	
-	newOutput(3, nodeValue_Output("Tile Data", self, VALUE_TYPE.integer, 0));
+	newOutput(3, nodeValue_Output("Tile Data", self, VALUE_TYPE.struct, {}));
+	outputs[3].editWidget.shorted = true;
 	
 	output_display_list = [ 2, 1, 0, 3 ];
 	
@@ -349,7 +350,7 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	    var amo      = _mapSize[0] * _mapSize[1];
 	    
 	    if(gmTileLayer != noone) {
-	    	tileData = array_verify(tileData, amo);
+	    	var tileArr = array_verify(struct_try_get(tileData, "data"), amo);
 	    	var i = 0;
 	    	var b;
 	    	
@@ -364,13 +365,16 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	    		b = round(b);
 	    		
 	    		switch(b) {
-	    			case 0 :  tileData[i] = 0;     break;
-	    			default : tileData[i] = b - 1; break;
+	    			case 0 :  tileArr[i] = 0;     break;
+	    			default : tileArr[i] = b - 1; break;
 	    		}
 	    		 
 				i++;
 	    	}
 	    	
+	    	tileData.tileset =  tileset;
+	    	tileData.data    =  tileArr;
+	    	tileData.preview = _tileOut;
 	    }
 	    
 	    return [ _tileOut, _tileMap, tileset, tileData ];
@@ -391,6 +395,8 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		outputs[3].setVisible(gmTileLayer != noone);
 		
     	if(gmTileLayer == noone) return;
+    	
+    	display_name = gmTileLayer.name;
     	
 		var _w = gmTileLayer.tiles.SerialiseWidth;
 		var _h = gmTileLayer.tiles.SerialiseHeight;
@@ -433,11 +439,9 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		canvas_buffer  = _b;
 		canvas_surface = surface_verify(canvas_surface, _w, _h, surface_rgba16float);
 		buffer_set_surface(canvas_buffer, canvas_surface, 0);
-		
-		triggerRender();
     }
     
-	////- Serialzie
+	////- Serialize
     
 	static attributeSerialize = function() {
 		var _attr = {
@@ -470,4 +474,29 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		}
 		
 	}
+
+	////- Actions
+	
+	static resizeBBOX = function(bbox) {
+		var _nw =  bbox[2] - bbox[0];
+		var _nh =  bbox[3] - bbox[1];
+		var _dx = -bbox[0];
+		var _dy = -bbox[1];
+		
+		inputs[1].setValue([_nw, _nh]);
+		
+		var _newSurf = surface_create(_nw, _nh, surface_rgba16float);
+		surface_set_target(_newSurf);
+			DRAW_CLEAR
+			BLEND_OVERRIDE
+			draw_surface_safe(canvas_surface, _dx, _dy);
+			BLEND_NORMAL
+		surface_reset_target();
+		
+		surface_free_safe(canvas_surface);
+		canvas_surface = _newSurf;
+		
+		triggerRender();
+	}
+	
 }

@@ -23,7 +23,7 @@ if !ready exit;
 	var bx = dialog_x + dialog_w - ui(32 + 16);
 	var by = dialog_y + ui(16);
 			
-	if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), mouse_ui, sFOCUS, sHOVER, __txtx("preset_new", "New preset"), THEME.add, 1) == 2) {
+	if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), mouse_ui, sHOVER, sFOCUS, __txtx("preset_new", "New preset"), THEME.add, 1) == 2) {
 		adding = !adding;
 		if(adding) tb_add.activate();
 	}

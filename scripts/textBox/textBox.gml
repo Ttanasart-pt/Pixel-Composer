@@ -101,6 +101,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		return self;
 	}
 	
+	static setHide		= function(hide)		{ self.hide 		= hide; 		return self; }
 	static setFont		= function(font)		{ self.font 		= font; 		return self; }
 	static setLabel 	= function(label)		{ self.label		= label;		return self; }
 	static setPrecision = function(precision)	{ self.precision	= precision;	return self; }

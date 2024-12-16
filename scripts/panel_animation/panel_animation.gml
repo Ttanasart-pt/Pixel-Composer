@@ -1544,7 +1544,7 @@ function Panel_Animation() : PanelContent() constructor {
         var _gx = ui(20);
         var _gy = ty;
         if(hov)
-        if(buttonInstant(noone, _gx - ui(10), _gy - ui(9), ui(20), ui(17), [msx, msy], pFOCUS, pHOVER, "", THEME.animate_prop_go, 0, [COLORS._main_icon, COLORS._main_icon_on_inner], 0.75) == 2) {
+        if(buttonInstant(noone, _gx - ui(10), _gy - ui(9), ui(20), ui(17), [msx, msy], pHOVER, pFOCUS, "", THEME.animate_prop_go, 0, [COLORS._main_icon, COLORS._main_icon_on_inner], 0.75) == 2) {
             graphFocusNode(_node);
             PANEL_INSPECTOR.highlightProp(prop);
         }
@@ -1576,7 +1576,7 @@ function Panel_Animation() : PanelContent() constructor {
         
         #region keyframe control
             tx = tool_width - ui(20 + 16 * 3);
-            if(buttonInstant(noone, tx - ui(10), ty - ui(9), ui(20), ui(17), [msx, msy], pFOCUS, pHOVER, "", THEME.prop_keyframe, 0, [COLORS._main_icon, COLORS._main_icon_on_inner], _tool_a) == 2) {
+            if(buttonInstant(noone, tx - ui(10), ty - ui(9), ui(20), ui(17), [msx, msy], pHOVER, pFOCUS, "", THEME.prop_keyframe, 0, [COLORS._main_icon, COLORS._main_icon_on_inner], _tool_a) == 2) {
                 var _t = -1;
                 for(var k = 0; k < array_length(animator.values); k++) {
                     var _key = animator.values[k];
@@ -1587,7 +1587,7 @@ function Panel_Animation() : PanelContent() constructor {
             }
                 
             tx = tool_width - ui(20 + 16 * 1);
-            if(buttonInstant(noone, tx - ui(10), ty - ui(9), ui(20), ui(17), [msx, msy], pFOCUS, pHOVER, "", THEME.prop_keyframe, 2, [COLORS._main_icon, COLORS._main_icon_on_inner], _tool_a) == 2) {
+            if(buttonInstant(noone, tx - ui(10), ty - ui(9), ui(20), ui(17), [msx, msy], pHOVER, pFOCUS, "", THEME.prop_keyframe, 2, [COLORS._main_icon, COLORS._main_icon_on_inner], _tool_a) == 2) {
                 for(var k = 0; k < array_length(animator.values); k++) {
                     var _key = animator.values[k];
                     if(_key.time > CURRENT_FRAME) {
@@ -1600,7 +1600,7 @@ function Panel_Animation() : PanelContent() constructor {
                 
         #region add keyframe
             tx = tool_width - ui(20 + 16 * 2);
-            if(buttonInstant(noone, tx - ui(10), ty - ui(9), ui(20), ui(17), [msx, msy], pFOCUS, pHOVER, "", THEME.prop_keyframe, 1, [COLORS._main_accent, COLORS._main_icon_on_inner], _tool_a) == 2) {
+            if(buttonInstant(noone, tx - ui(10), ty - ui(9), ui(20), ui(17), [msx, msy], pHOVER, pFOCUS, "", THEME.prop_keyframe, 1, [COLORS._main_accent, COLORS._main_icon_on_inner], _tool_a) == 2) {
                 var _add = false;
                 for(var k = 0; k < array_length(animator.values); k++) {
                     var _key = animator.values[k];
@@ -2519,7 +2519,7 @@ function Panel_Animation() : PanelContent() constructor {
                 var cc  = IS_RENDERING? COLORS._main_icon_dark : but[2]();
                 var fnc = but[3];
             
-                if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS && !IS_RENDERING, pHOVER && !IS_RENDERING, txt, THEME.sequence_control, ind, cc) == 2)
+                if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pHOVER && !IS_RENDERING, pFOCUS && !IS_RENDERING, txt, THEME.sequence_control, ind, cc) == 2)
                     fnc();
             
                 bx += ui(36);
@@ -2569,11 +2569,11 @@ function Panel_Animation() : PanelContent() constructor {
         
         by += ui(36);
         bx = w - ui(44);
-        if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, __txtx("panel_animation_animation_settings", "Animation settings"), THEME.gear, 2) == 2)
+        if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pHOVER, pFOCUS, __txtx("panel_animation_animation_settings", "Animation settings"), THEME.gear, 2) == 2)
             dialogPanelCall(new Panel_Animation_Setting(), x + bx + ui(32), y + by - ui(8), { anchor: ANCHOR.right | ANCHOR.bottom }); 
         
         by -= ui(40); if(by < 8) return;
-        if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, __txtx("panel_animation_scale_animation", "Scale animation"), THEME.animation_timing, 2) == 2)
+        if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pHOVER, pFOCUS, __txtx("panel_animation_scale_animation", "Scale animation"), THEME.animation_timing, 2) == 2)
             dialogPanelCall(new Panel_Animation_Scaler(), x + bx + ui(32), y + by - ui(8), { anchor: ANCHOR.right | ANCHOR.bottom }); 
         
         var max_y = by - ui(28);
@@ -2581,7 +2581,7 @@ function Panel_Animation() : PanelContent() constructor {
         by = ui(8);
         
         var txt = __txt("New folder");
-        if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(28), [mx, my], pFOCUS, pHOVER, txt, THEME.folder_content) == 2) {
+        if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(28), [mx, my], pHOVER, pFOCUS, txt, THEME.folder_content) == 2) {
             var _dir = new timelineItemGroup();
             PROJECT.timelines.addItem(_dir);
         }
@@ -2589,21 +2589,21 @@ function Panel_Animation() : PanelContent() constructor {
         by += ui(32); if(by > max_y) return;
         node_name_tooltip.index = node_name_type;
         
-        if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(28), [mx, my], pFOCUS, pHOVER, node_name_tooltip, THEME.node_name_type, node_name_type) == 2)
+        if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(28), [mx, my], pHOVER, pFOCUS, node_name_tooltip, THEME.node_name_type, node_name_type) == 2)
             node_name_type = (node_name_type + 1) % 3;
         
         by += ui(32); if(by > max_y) return;
-        if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(28), [mx, my], pFOCUS, pHOVER, tooltip_toggle_nodes, THEME.junc_visible, show_nodes) == 2)
+        if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(28), [mx, my], pHOVER, pFOCUS, tooltip_toggle_nodes, THEME.junc_visible, show_nodes) == 2)
             show_nodes = !show_nodes;
         
         by += ui(32); if(by > max_y) return;
         txt = __txtx("panel_animation_keyframe_override", "Override Keyframe");
-        if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(28), [mx, my], pFOCUS, pHOVER, txt, THEME.keyframe_override, global.FLAG.keyframe_override) == 2)
+        if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(28), [mx, my], pHOVER, pFOCUS, txt, THEME.keyframe_override, global.FLAG.keyframe_override) == 2)
             global.FLAG.keyframe_override = !global.FLAG.keyframe_override;
         
         by += ui(32); if(by > max_y) return;
         txt = __txt("Onion skin");
-        if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(28), [mx, my], pFOCUS, pHOVER, txt, THEME.onion_skin,, PROJECT.onion_skin.enabled? c_white : COLORS._main_icon) == 2)
+        if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(28), [mx, my], pHOVER, pFOCUS, txt, THEME.onion_skin,, PROJECT.onion_skin.enabled? c_white : COLORS._main_icon) == 2)
             PROJECT.onion_skin.enabled = !PROJECT.onion_skin.enabled;
     }
     

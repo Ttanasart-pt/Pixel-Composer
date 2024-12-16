@@ -1131,19 +1131,15 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static triggerRender = function(resetSelf = true) {
 		LOG_BLOCK_START();
-		LOG_IF(global.FLAG.render == 1, $"Trigger render for {self}");
+		LOG_IF(global.FLAG.render == 1, $"Trigger render for {getFullName()}");
 		
 		if(resetSelf) resetRender(false);
 		RENDER_PARTIAL
 		
-		if(is_instanceof(group, Node_Collection)) {
+		if(is(group, Node_Collection))
 			group.triggerRender();
-		} else {
-			
-			var nodes = getNextNodesRaw();
-			for(var i = 0; i < array_length(nodes); i++)
-				nodes[i].triggerRender();
-		}
+		else
+			array_foreach(getNextNodesRaw(), function(n) /*=>*/ {return n.triggerRender()});
 		
 		LOG_BLOCK_END();
 	}

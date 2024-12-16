@@ -2160,7 +2160,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
             th = string_height(tt);
             
             if(i < array_length(node_context) - 1) {
-                if(buttonInstant(THEME.button_hide_fill, xx - ui(6), tbh - bh / 2, tw + ui(12), bh, [mx, my], pFOCUS, pHOVER) == 2) {
+                if(buttonInstant(THEME.button_hide_fill, xx - ui(6), tbh - bh / 2, tw + ui(12), bh, [mx, my], pHOVER, pFOCUS) == 2) {
                     node_hover          = noone;
                     nodes_selecting = [];
                     PANEL_PREVIEW.resetNodePreview();
@@ -2238,7 +2238,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                     var bs = ui(28);
                     if(tbx - (bs + ui(4)) < cont_x) break;
                     
-                    var b = buttonInstant(THEME.button_hide, tbx - bs, tby - bs / 2, bs, bs, _m, pFOCUS, pHOVER, tbTooltip, tbObj, tbInd);
+                    var b = buttonInstant(THEME.button_hide, tbx - bs, tby - bs / 2, bs, bs, _m, pHOVER, pFOCUS, tbTooltip, tbObj, tbInd);
                     if(b == 2) tb[3]( { x: x + tbx - bs, y: y + tby - bs / 2 } );
                     tbx -= bs + ui(4);
                 }
@@ -2400,13 +2400,13 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         var bs = ui(24);
         var bx = x1 - bs - pd;
         var by = y0 + pd;
-        if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, [ mx, my ], pFOCUS, pHOVER, "", THEME.cross_16) == 2
+        if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, [ mx, my ], pHOVER, pFOCUS, "", THEME.cross_16) == 2
         || keyboard_check_pressed(vk_escape)
         || keyboard_check_pressed(vk_enter))
             is_searching = false;
         
         bx -= bs + ui(4);
-        if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, [ mx, my ], pFOCUS, pHOVER, "", THEME.arrow_wire_16, 0) == 2) {
+        if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, [ mx, my ], pHOVER, pFOCUS, "", THEME.arrow_wire_16, 0) == 2) {
             if(!array_empty(search_result)) {
                 search_index    = safe_mod(search_index + 1, array_length(search_result));
                 nodes_selecting = [ search_result[search_index] ];
@@ -2415,7 +2415,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         }
         
         bx -= bs + ui(4);
-        if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, [ mx, my ], pFOCUS, pHOVER, "", THEME.arrow_wire_16, 2) == 2) {
+        if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, [ mx, my ], pHOVER, pFOCUS, "", THEME.arrow_wire_16, 2) == 2) {
             if(!array_empty(search_result)) {
                 search_index    = safe_mod(search_index - 1 + array_length(search_result), array_length(search_result));
                 nodes_selecting = [ search_result[search_index] ];

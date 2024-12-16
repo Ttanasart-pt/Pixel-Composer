@@ -86,7 +86,7 @@ function timelineItemNode(node) : timelineItem() constructor {
 		var tt = __txtx("panel_animation_goto", "Go to node");
 		var _m = [ _msx, _msy ];
 		
-		if(buttonInstant(noone, tx - ui(9), _y + ui(1), ui(18), ui(18), _m, focus, hover, tt, THEME.animate_node_go, 0, col == -1? COLORS._main_icon_light : col, 0.4) == 2)
+		if(buttonInstant(noone, tx - ui(9), _y + ui(1), ui(18), ui(18), _m, hover, focus, tt, THEME.animate_node_go, 0, col == -1? COLORS._main_icon_light : col, 0.4) == 2)
 			graphFocusNode(node);
 			
 		if(_sel) draw_sprite_stretched_ext(THEME.s_box_r2, 1, _x, _y, _w, lh, COLORS._main_accent, 1);

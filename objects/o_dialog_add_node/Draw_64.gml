@@ -39,14 +39,14 @@ if !ready exit;
 	
 	var bx = dialog_x + dialog_w - ui(44);
 	var by = dialog_y + ui(16);
-	var b = buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, 
+	var b = buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sHOVER, sFOCUS, 
 		PREFERENCES.dialog_add_node_view? __txtx("view_list", "List view") : __txtx("view_grid", "Grid view"), 
 		THEME.view_mode, PREFERENCES.dialog_add_node_view, COLORS._main_icon);
 	if(b == 2) 
 		PREFERENCES.dialog_add_node_view = !PREFERENCES.dialog_add_node_view;
 	
 	bx -= ui(32);
-	var b = buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, 
+	var b = buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sHOVER, sFOCUS, 
 		PREFERENCES.dialog_add_node_grouping? __txtx("add_node_group_enabled", "Group enabled") : __txtx("add_node_group_disabled", "Group disabled"), 
 		THEME.view_group, PREFERENCES.dialog_add_node_grouping, COLORS._main_icon);
 	if(b == 2)
@@ -56,14 +56,14 @@ if !ready exit;
 		var txt = node_show_connectable? __txtx("add_node_show_connect", "Showing connectable") : __txtx("add_node_show_all", "Showing all");
 		var cc  = node_show_connectable? COLORS._main_accent : COLORS._main_icon;
 		bx -= ui(32);
-		if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, txt, THEME.filter_type, node_show_connectable, cc) == 2) 
+		if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sHOVER, sFOCUS, txt, THEME.filter_type, node_show_connectable, cc) == 2) 
 			node_show_connectable = !node_show_connectable;
 	}
 	
 	if(search_string != "") {
 		var txt = __txtx("add_node_highlight", "Hightlight Query");
 		bx -= ui(32);
-		if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, txt, THEME.add_node_search_high, PREFERENCES.dialog_add_node_search_high, COLORS._main_icon) == 2) 
+		if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sHOVER, sFOCUS, txt, THEME.add_node_search_high, PREFERENCES.dialog_add_node_search_high, COLORS._main_icon) == 2) 
 			PREFERENCES.dialog_add_node_search_high = !PREFERENCES.dialog_add_node_search_high;
 	}
 #endregion

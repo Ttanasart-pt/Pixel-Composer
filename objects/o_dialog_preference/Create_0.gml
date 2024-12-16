@@ -659,7 +659,7 @@ event_inherited();
 			draw_set_text(font, fa_left, fa_center, COLORS._main_text);
 			draw_text_add(ui(24), yy + th / 2, keyStr);
 			
-			var b = buttonInstant(THEME.button_def, cx, yy + cp, cw, ch, _m, sFOCUS, sHOVER && sp_colors.hover);
+			var b = buttonInstant(THEME.button_def, cx, yy + cp, cw, ch, _m, sHOVER, sFOCUS && sp_colors.hover);
 			draw_sprite_stretched_ext(THEME.palette_mask, 1, cx + ui(2), yy + ui(2), cw - ui(4), ch - ui(4), val, 1);
 			
 			if(b) sp_colors.hover_content = true;
@@ -838,7 +838,7 @@ event_inherited();
 				modified = true;
 				var bx   = _ww - ui(32);
 				var by   = _yy + th / 2 - ui(12);
-				var b    = buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), _m, sFOCUS, _hov, __txt("Reset"), THEME.refresh_16);
+				var b    = buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), _m, _hov, sFOCUS, __txt("Reset"), THEME.refresh_16);
 				
 				if(b) sp_hotkey.hover_content = true;
 				if(b == 2) {
@@ -968,7 +968,7 @@ event_inherited();
 				if(isEqual(data, _defVal))
 					draw_sprite_ext(THEME.refresh_16, 0, _bx + _bs / 2, _by + _bs / 2, 1, 1, 0, COLORS._main_icon_dark);
 				else {
-					if(buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, _m, sFOCUS, sHOVER && sp_pref.hover, __txt("Reset"), THEME.refresh_16) == 2)
+					if(buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, _m, sHOVER, sFOCUS && sp_pref.hover, __txt("Reset"), THEME.refresh_16) == 2)
 						_pref.onEdit(_defVal);
 				}
 			}

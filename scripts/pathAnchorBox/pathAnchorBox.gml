@@ -76,7 +76,7 @@ function pathAnchorBox(_onModify) : widget() constructor {
 		var bx =  _x +  _w / 2 - _bw / 2 - 2;
 		var by = _ty + _th / 2 - _bw / 2;
 		
-		if(buttonInstant(THEME.button_hide, bx, by, _bw, _bw, _m, active, hover, "Linked", THEME.value_link, !_linked, _blend) == 2)
+		if(buttonInstant(THEME.button_hide, bx, by, _bw, _bw, _m, hover, active, "Linked", THEME.value_link, !_linked, _blend) == 2)
 			onModify(!_linked, 6);
 		
 		resetFocus();

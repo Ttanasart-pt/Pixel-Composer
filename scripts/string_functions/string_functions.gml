@@ -64,6 +64,8 @@ function string_to_var(str)            { INLINE return string_replace_all(string
 function string_to_var2(context, name) { INLINE return string_to_var(context == ""? name : $"{context} {name}"); }
 function string_quote(str)             { INLINE return $"\"{str}\""; }
 
+function string_multiply(str, amo) { var s = ""; repeat(amo) s += str; return s; }
+
 function string_compare(s1, s2) {
 	    s1 = string_lower(s1);
 	    s2 = string_lower(s2);

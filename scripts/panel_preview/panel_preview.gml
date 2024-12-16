@@ -2121,10 +2121,11 @@ function Panel_Preview() : PanelContent() constructor {
             
             for( var i = 0, n = array_length(settings); i < n; i++ ) {
                 var sett = settings[i];
+                
                 var nme  = sett[0];
                 var wdg  = sett[1];
-                var key  = sett[2];
-                var atr  = sett[3];
+                var key  = array_safe_get_fast(sett, 2);
+                var atr  = array_safe_get_fast(sett, 3);
                 
                 if(nme != "") {
                     tolx      += ui(8) + bool(i == 0) * ui(8);
@@ -2210,7 +2211,7 @@ function Panel_Preview() : PanelContent() constructor {
             if(is_instanceof(tbTooltip, tooltipSelector))
                 tbTooltip.index = tbInd;
             
-            var b = buttonInstant(THEME.button_hide, tbx - ui(14), tby - ui(14), ui(28), ui(28), [mx, my], pFOCUS, pHOVER, tooltip, tbSpr, tbInd);
+            var b = buttonInstant(THEME.button_hide, tbx - ui(14), tby - ui(14), ui(28), ui(28), [mx, my], pHOVER, pFOCUS, tooltip, tbSpr, tbInd);
             if(b == 2) tbActive(tbData);
             if(tbRight != 0 && b == 3) tbRight(tbData);
             
@@ -2224,7 +2225,7 @@ function Panel_Preview() : PanelContent() constructor {
             var tbTooltip = tb[1];
             var tbIndex   = tb[3]();
             
-            var b = buttonInstant(THEME.button_hide, tbx - ui(14), tby - ui(14), ui(28), ui(28), [mx, my], pFOCUS, pHOVER, tbTooltip, tbSpr, tbIndex);
+            var b = buttonInstant(THEME.button_hide, tbx - ui(14), tby - ui(14), ui(28), ui(28), [mx, my], pHOVER, pFOCUS, tbTooltip, tbSpr, tbIndex);
             if(b == 2) tb[2]( { x: x + tbx - ui(14), y: y + tby - ui(14) } );
             
             tbx -= ui(32);

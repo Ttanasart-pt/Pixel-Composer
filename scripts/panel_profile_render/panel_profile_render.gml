@@ -596,7 +596,7 @@ function Panel_Profile_Render() : PanelContent() constructor {
 		var _bx = _pd;
 		var _by = _pd;
 		
-		if(buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, [ mx, my ], pFOCUS, pHOVER, "Render all", s_run, 1, COLORS._main_value_positive, 1, 1) == 2) {
+		if(buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, [ mx, my ], pHOVER, pFOCUS, "Render all", s_run, 1, COLORS._main_value_positive, 1, 1) == 2) {
 		    PROFILER_STAT = 1;
 		    PROFILER_DATA = [];
 		    setReport(noone);
@@ -611,7 +611,7 @@ function Panel_Profile_Render() : PanelContent() constructor {
 		}
 		_bx += _bs + ui(2);
 		
-		if(buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, [ mx, my ], pFOCUS, pHOVER, "Render partial", s_run_partial, 1, COLORS._main_value_positive, 1, 1) == 2) {
+		if(buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, [ mx, my ], pHOVER, pFOCUS, "Render partial", s_run_partial, 1, COLORS._main_value_positive, 1, 1) == 2) {
 		    PROFILER_STAT = 1;
 		    PROFILER_DATA = [];
 		    setReport(noone);
@@ -637,19 +637,19 @@ function Panel_Profile_Render() : PanelContent() constructor {
 		var _bx = _pd + list_w - _bs;
 		var _by = _pd;
 		
-		if(buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, [ mx, my ], pFOCUS, pHOVER, $"Log level {show_log_level}", s_filter_log_level, show_log_level, COLORS._main_icon, 1, 1) == 2)
+		if(buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, [ mx, my ], pHOVER, pFOCUS, $"Log level {show_log_level}", s_filter_log_level, show_log_level, COLORS._main_icon, 1, 1) == 2)
 		    show_log_level = (show_log_level + 1) % 5;
 		_bx -= _bs + ui(4);
 		
 		if(report_selecting == noone) 
 			draw_sprite_ext(s_filter_node, 0, _bx + _bs / 2, _by + _bs / 2, 1, 1, 0, COLORS._main_icon, 0.25);
-		else if(buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, [ mx, my ], pFOCUS, pHOVER, "Filter node", s_filter_node, 0, filter_node == noone? COLORS._main_icon : COLORS._main_accent, 1, 1) == 2) {
+		else if(buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, [ mx, my ], pHOVER, pFOCUS, "Filter node", s_filter_node, 0, filter_node == noone? COLORS._main_icon : COLORS._main_accent, 1, 1) == 2) {
 		    filter_node = filter_node == report_selecting.node? noone : report_selecting.node;
 		    searchData();
 		}
 		_bx -= _bs + ui(4);
 		
-		if(buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, [ mx, my ], pFOCUS, pHOVER, "Match selecting", s_filter_node_inspector, 0, set_selecting_node? COLORS._main_accent : COLORS._main_icon, 1, 1) == 2)
+		if(buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, [ mx, my ], pHOVER, pFOCUS, "Match selecting", s_filter_node_inspector, 0, set_selecting_node? COLORS._main_accent : COLORS._main_icon, 1, 1) == 2)
 		    set_selecting_node = !set_selecting_node;
 		
 		_bx -= ui(4);

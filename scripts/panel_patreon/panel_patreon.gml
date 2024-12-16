@@ -90,7 +90,7 @@ function Panel_Patreon() : PanelContent() constructor {
 			var _bh = TEXTBOX_HEIGHT + ui(8);
 			var _bx = w / 2 - _bw / 2;
 		
-			if(buttonInstant(THEME.button_def, _bx, _y, _bw, _bh, [ mx, my ], pFOCUS, pHOVER) == 2) {
+			if(buttonInstant(THEME.button_def, _bx, _y, _bw, _bh, [ mx, my ], pHOVER, pFOCUS) == 2) {
 				var path = DIRECTORY + "patreon";
 				file_delete(path);
 				IS_PATREON = false;
@@ -119,7 +119,7 @@ function Panel_Patreon() : PanelContent() constructor {
 				
 				_yy += TEXTBOX_HEIGHT + 12;
 				if(!mail_checking) {
-					if(buttonInstant(THEME.button_def, _bx, _yy, _bw, _bh, [ mx, my ], pFOCUS, pHOVER) == 2) {
+					if(buttonInstant(THEME.button_def, _bx, _yy, _bw, _bh, [ mx, my ], pHOVER, pFOCUS) == 2) {
 						patreon_email_check(mail, mailCallback);
 						mail_checking = true;
 						result = "";
@@ -143,7 +143,7 @@ function Panel_Patreon() : PanelContent() constructor {
 				tb_code.drawParam(_tb_param);
 				
 				_yy += TEXTBOX_HEIGHT + 12;
-				if(buttonInstant(THEME.button_def, _bx, _yy, _bw, _bh, [ mx, my ], pFOCUS, pHOVER) == 2) {
+				if(buttonInstant(THEME.button_def, _bx, _yy, _bw, _bh, [ mx, my ], pHOVER, pFOCUS) == 2) {
 					if(code == global.PATREON_VERIFY_CODE) {
 						result = "Patreon verified, thank you for suporting Pixel Composer!";
 						result_color = COLORS._main_value_positive;

@@ -84,11 +84,11 @@ function Panel_Tunnels() : PanelContent() constructor {
 			var bx = ww - ui(4) - bw;
 			var by = _y + (hg - bh) / 2;
 		
-			if(buttonInstant(THEME.button_hide, bx, by, bw, bh, _m, sc_tunnel.active, sc_tunnel.hover, __txtx("panel_node_goto", "Go to node"), THEME.node_goto) == 2)
+			if(buttonInstant(THEME.button_hide, bx, by, bw, bh, _m, sc_tunnel.hover, sc_tunnel.active, __txtx("panel_node_goto", "Go to node"), THEME.node_goto) == 2)
 				graphFocusNode(node);
 			bx -= ui(32);
 		
-			if(buttonInstant(THEME.button_hide, bx, by, bw, bh, _m, sc_tunnel.active, sc_tunnel.hover, __txtx("panel_tunnel_create_tunnel", "Create tunnel out"), THEME.tunnel) == 2) {
+			if(buttonInstant(THEME.button_hide, bx, by, bw, bh, _m, sc_tunnel.hover, sc_tunnel.active, __txtx("panel_tunnel_create_tunnel", "Create tunnel out"), THEME.tunnel) == 2) {
 				var _node = nodeBuild("Node_Tunnel_Out", build_x, build_y - 8);
 				_node.inputs[0].setValue(key);
 				

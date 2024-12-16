@@ -167,7 +167,7 @@ function Tileset_Rule(_tileset) : Inspector_Custom_Renderer(noone, noone) constr
 		var by = _yy;
 		var bs = ui(24);
 		
-		if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, _focus, _hover, "New rule", THEME.add_16, 0, COLORS._main_value_positive) == 2) {
+		if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, _hover, _focus, "New rule", THEME.add_16, 0, COLORS._main_value_positive) == 2) {
 			var _new_rl  = new tiler_rule();
 			_new_rl.name = $"rule {array_length(ruleTiles)}"
 			_new_rl.open = true;
@@ -224,7 +224,7 @@ function Tileset_Rule(_tileset) : Inspector_Custom_Renderer(noone, noone) constr
 	    		var bs = ui(24);
 				var bx = _w  - bs - ui(4);
 				var by = _yy + _hg / 2 - bs / 2;
-				if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, _focus, _hover, "", THEME.minus_16, 0, _hov? COLORS._main_value_negative : COLORS._main_icon) == 2) 
+				if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, _hover, _focus, "", THEME.minus_16, 0, _hov? COLORS._main_value_negative : COLORS._main_icon) == 2) 
 					del = i;	
 			}
 			

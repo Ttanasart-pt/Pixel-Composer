@@ -52,7 +52,7 @@ function Panel_GM_Explore(gmBinder) : PanelContent() constructor {
 		var _bx = px + pw - _bs;
 		var _by = py;
 		
-		if(buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, [ mx, my ], pFOCUS, pHOVER, "", THEME.refresh_16) == 2)
+		if(buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, [ mx, my ], pHOVER, pFOCUS, "", THEME.refresh_16) == 2)
 			gmBinder.refreshResources();
 		
 		sc_content.setFocusHover(pFOCUS, pHOVER);

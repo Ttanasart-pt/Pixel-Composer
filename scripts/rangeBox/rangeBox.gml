@@ -82,7 +82,7 @@ function rangeBox(_type, _onModify) : widget() constructor {
 			var bx  = _x;
 			var by  = _y + _h / 2 - _bs / 2;
 		
-			if(buttonInstant(THEME.button_hide, bx, by, _bs, _bs, _m, active, hover, tooltip, THEME.value_link, linked, _icon_blend) == 2) {
+			if(buttonInstant(THEME.button_hide, bx, by, _bs, _bs, _m, hover, active, tooltip, THEME.value_link, linked, _icon_blend) == 2) {
 				linked = !linked;
 				_display_data.linked = linked;
 			

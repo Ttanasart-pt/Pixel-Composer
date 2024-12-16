@@ -30,7 +30,7 @@ function Node_Tile_Convert(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var by = _y;
 		
 		var bs = ui(24);
-		if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, _focus, _hover,, THEME.refresh_16) == 2) 
+		if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, _hover, _focus,, THEME.refresh_16) == 2) 
 			refreshPalette();
 			
 		var _cmap = attributes.colorMap;

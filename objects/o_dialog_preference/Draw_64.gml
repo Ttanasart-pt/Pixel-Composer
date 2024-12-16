@@ -11,7 +11,7 @@ if !ready exit;
 	
 	var bx = dialog_x + ui(24);
 	var by = dialog_y + ui(18);
-	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, destroy_on_click_out? __txt("Pin") : __txt("Unpin"), 
+	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sHOVER, sFOCUS, destroy_on_click_out? __txt("Pin") : __txt("Unpin"), 
 		THEME.pin, !destroy_on_click_out, destroy_on_click_out? COLORS._main_icon : COLORS._main_icon_light) == 2)
 			destroy_on_click_out = !destroy_on_click_out;
 			
@@ -74,7 +74,7 @@ if !ready exit;
 		var _x   = dialog_x + dialog_w - ui(8);
 		var bx   = _x - ui(48);
 		var _txt = __txtx("pref_reset_color", "Reset colors");
-		var b = buttonInstant(THEME.button_hide, bx, py, ui(32), ui(32), mouse_ui, sFOCUS, sHOVER, _txt, THEME.refresh_icon);
+		var b = buttonInstant(THEME.button_hide, bx, py, ui(32), ui(32), mouse_ui, sHOVER, sFOCUS, _txt, THEME.refresh_icon);
 		if(b == 2) {
 			var path = $"{DIRECTORY}Themes/{PREFERENCES.theme}/override.json";
 			if(file_exists_empty(path)) file_delete(path);

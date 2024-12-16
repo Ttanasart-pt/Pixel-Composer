@@ -71,7 +71,7 @@ function Panel_Nodes() : PanelContent() constructor {
 			var bx = _x1 - ui(4) - bw;
 			var by = _y + (hg - bh) / 2;
 			
-			if(buttonInstant(THEME.button_hide, bx, by, bw, bh, _m, sc_nodes.active, sc_nodes.hover, __txtx("panel_node_goto", "Go to node"), THEME.node_goto,, COLORS._main_icon, 0.75, 0.75) == 2)
+			if(buttonInstant(THEME.button_hide, bx, by, bw, bh, _m, sc_nodes.hover, sc_nodes.active, __txtx("panel_node_goto", "Go to node"), THEME.node_goto,, COLORS._main_icon, 0.75, 0.75) == 2)
 				graphFocusNode(node);
 			bx -= ui(32);
 			

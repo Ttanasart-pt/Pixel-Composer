@@ -85,7 +85,7 @@ function rotatorRandom(_onModify) : widget() constructor {
 		if(_drawRot) {
 			if((_w - _r) / 2 > ui(48)) {
 				tooltip.index = mode;
-				if(buttonInstant(noone, _x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m, active, hover, tooltip, THEME.rotator_random_mode, mode, [ COLORS._main_icon, c_white ]) == 2) { #region
+				if(buttonInstant(noone, _x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m, hover, active, tooltip, THEME.rotator_random_mode, mode, [ COLORS._main_icon, c_white ]) == 2) { #region
 					mode = (mode + 1) % 4;
 					onModify(mode, 0);
 			

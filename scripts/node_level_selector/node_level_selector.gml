@@ -62,7 +62,7 @@ function Node_Level_Selector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			var _bx = x1 - 20 - i * 24;
 			var _by = y0;
 			
-			if(buttonInstant(THEME.button_hide, _bx, _by, 20, 20, _m, _focus, _hover) == 2) 
+			if(buttonInstant(THEME.button_hide, _bx, _by, 20, 20, _m, _hover, _focus) == 2) 
 				histShow[i] = !histShow[i];
 			draw_sprite_ui_uniform(THEME.circle, 0, _bx + 10, _by + 10, 1, COLORS.histogram[i], 0.5 + histShow[i] * 0.5);
 		}
