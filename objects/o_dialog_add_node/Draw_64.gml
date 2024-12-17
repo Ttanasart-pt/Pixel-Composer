@@ -14,21 +14,23 @@ if !ready exit;
 	var th = ui(32);
 	var tx = dialog_x + ui(14);
 	var ty = dialog_y + ui(14);
+	var sy = ty + th + ui(6);
 	
 	if(search_string == "") {
 		catagory_pane.setFocusHover(sFOCUS, sHOVER);
-		catagory_pane.draw(dialog_x + ui(14), dialog_y + ui(52));
+		catagory_pane.draw(dialog_x + ui(8), sy);
 		
-		var _x = dialog_x + category_width - ui(12);
-		draw_sprite_stretched(THEME.ui_panel_bg, 1, _x, dialog_y + ui(52), dialog_w - category_width - ui(2), dialog_h - ui(66));
+		var _x = dialog_x + category_width + ui(16);
+		draw_sprite_stretched(THEME.ui_panel_bg, 1, _x, sy, dialog_w - category_width - ui(28), dialog_h - ui(66));
 		content_pane.setFocusHover(sFOCUS, sHOVER);
-		content_pane.draw(_x, dialog_y + ui(52));
+		content_pane.draw(_x, sy);
 		
 		node_selecting = 0;
+		
 	} else {
-		draw_sprite_stretched(THEME.ui_panel_bg, 1, dialog_x + ui(14), dialog_y + ui(52), dialog_w - ui(28), dialog_h - ui(66));
+		draw_sprite_stretched(THEME.ui_panel_bg, 1, dialog_x + ui(14), sy, dialog_w - ui(28), dialog_h - ui(66));
 		search_pane.setFocusHover(sFOCUS, sHOVER);
-		search_pane.draw(dialog_x + ui(16), dialog_y + ui(52));
+		search_pane.draw(dialog_x + ui(16), sy);
 		
 		tw -= ui(32);
 	}

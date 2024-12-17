@@ -204,8 +204,8 @@ function __Binder_Gamemaker(path) constructor {
             if(_asst == noone) continue;
             
             if(struct_has(resourcesMap, _rpth)) {
-            	struct_override(resourcesMap, _asst);
-            	_asst = resourcesMap;
+            	struct_override(resourcesMap[$ _rpth], _asst);
+            	_asst = resourcesMap[$ _rpth];
             }
             
             resMap[$ _rpth] = _asst;

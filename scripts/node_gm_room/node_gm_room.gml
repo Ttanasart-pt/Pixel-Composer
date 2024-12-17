@@ -24,9 +24,10 @@ function Node_GMRoom(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	    
 	    room_resize_apply  = button( function() { applyResizeRoom();     } ).setIcon(THEME.toolbar_check, 0);
 		room_resize_cancel = button( function() { room_resizing = false; } ).setIcon(THEME.toolbar_check, 1);
+		room_resize_grid   = button( function() { room_resizing = false; } ).setIcon(THEME.toolbar_check, 1);
 		
-		tb_room_resize_w = new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ { room_resizing_area[2] = room_resizing_area[0] + round(v); }).setHide(1).setFont(f_p3);
-		tb_room_resize_h = new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ { room_resizing_area[3] = room_resizing_area[1] + round(v); }).setHide(1).setFont(f_p3);
+		tb_room_resize_w    = new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ { room_resizing_area[2] = room_resizing_area[0] + round(v); }).setHide(1).setFont(f_p3);
+		tb_room_resize_h    = new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ { room_resizing_area[3] = room_resizing_area[1] + round(v); }).setHide(1).setFont(f_p3);
     #endregion
     
     room_renderer  = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
@@ -42,7 +43,7 @@ function Node_GMRoom(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text_sub);
 		draw_text_add(_x + ui(16), _wdy + _wdh / 2, "Room Size");
 		
-		var _wdw = _w - ui(128 + 8) - (room_resizing? _wdh * 2 : _wdh);
+		var _wdw = _w - ui(128 + 8) - (room_resizing? _wdh * 2 : _wdh) - ui(8);
 		
 		draw_sprite_stretched_ext(THEME.textbox, 3, _wdx,            _wdy, _wdw / 2, _wdh, COLORS._main_icon_light);
 		draw_sprite_stretched_ext(THEME.textbox, 3, _wdx + _wdw / 2, _wdy, _wdw / 2, _wdh, COLORS._main_icon_light);
@@ -67,8 +68,8 @@ function Node_GMRoom(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		}
 		
 		if(room_resizing) {
-			var _bx = _wdx + _wdw;
-			if(buttonInstant(THEME.button_def, _bx, _wdy, _wdh, _wdh, _m, _hover, _focus, __txt("Cancel"), THEME.toolbar_check, 1, 
+			var _bx = _wdx + _wdw + ui(8);
+			if(buttonInstant(THEME.button_left, _bx, _wdy, _wdh, _wdh, _m, _hover, _focus, __txt("Cancel"), THEME.toolbar_check, 1, 
 			COLORS._main_value_negative, 1, 1, COLORS._main_icon_light) == 2)
 				room_resizing = false;
 			
@@ -77,12 +78,14 @@ function Node_GMRoom(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			var _tooltip = misalign? __txt("Warning: room size not divisible by tile size. May cause tile shifting.") : __txt("Apply");
 			
 			_bx += _wdh;
-			if(buttonInstant(THEME.button_def, _bx, _wdy, _wdh, _wdh, _m, _hover, _focus, _tooltip, THEME.toolbar_check, 0, 
+			if(buttonInstant(THEME.button_right, _bx, _wdy, _wdh, _wdh, _m, _hover, _focus, _tooltip, THEME.toolbar_check, 0, 
 			COLORS._main_value_positive, 1, 1, COLORS._main_icon_light) == 2)
 				applyResizeRoom();
 				
 		} else {
-			if(buttonInstant(THEME.button_def, _wdx + _wdw, _wdy, _wdh, _wdh, _m, _hover, _focus, __txt("Resize"), THEME.canvas_resize, 0, 
+			var _bx = _wdx + _wdw + ui(8);
+			
+			if(buttonInstant(THEME.button_def, _bx, _wdy, _wdh, _wdh, _m, _hover, _focus, __txt("Resize"), THEME.canvas_resize, 0, 
 			COLORS._main_icon_light, 1, 1, COLORS._main_icon_light) == 2) {
 				
 				room_resizing      = true;
@@ -367,15 +370,20 @@ function Node_GMRoom(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
     		_l.refreshPreview();
     	}
     	
-    	triggerRender();
+    	PANEL_PREVIEW.canvas_x -= _dx * _preview_scale;
+    	PANEL_PREVIEW.canvas_y -= _dx * _preview_scale;
+		
+    	run_in(1, function() /*=>*/ {return triggerRender()});
     }
     
     ////- Update
     
+    _preview_scale = 1;
     static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
     	preview_alpha = room_resizing? .5 : 1;
     	if(!room_resizing) return;
     	
+    	_preview_scale = _s;
     	var rw = gmRoom.roomSettings.Width;
 		var rh = gmRoom.roomSettings.Height;
 
@@ -405,6 +413,41 @@ function Node_GMRoom(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
     	
     	draw_set_color(_hov == 4? COLORS._main_accent : COLORS._main_icon);
     	draw_rectangle_dashed(_cx0, _cy0, _cx1, _cy1, 1 + (_hov == 4));
+    	
+    	var _padL = abs(_area[0]);
+    	var _padT = abs(_area[1]);
+    	var _padR = abs(_area[2] - rw);
+    	var _padB = abs(_area[3] - rh);
+    	var _cx   = _x + rw * _s / 2;
+    	var _cy   = _y + rh * _s / 2;
+    	
+    	if(_padL != 0) {
+    		draw_set_color(COLORS._main_icon);
+    		draw_line_dashed(_cx0, _cy, _x0, _cy);
+    		draw_set_text(f_p2, fa_center, fa_center, COLORS._main_icon_light);
+    		draw_text((_cx0 + _x0) / 2, _cy, _padL);
+    	}
+    	
+    	if(_padR != 0) {
+    		draw_set_color(COLORS._main_icon);
+    		draw_line_dashed(_x1, _cy, _cx1, _cy);
+    		draw_set_text(f_p2, fa_center, fa_center, COLORS._main_icon_light);
+    		draw_text((_x1 + _cx1) / 2, _cy, _padR);
+    	}
+    	
+    	if(_padT != 0) {
+    		draw_set_color(COLORS._main_icon);
+    		draw_line_dashed(_cx, _cy0, _cx, _y0);
+    		draw_set_text(f_p2, fa_center, fa_center, COLORS._main_icon_light);
+    		draw_text(_cx, (_cy0 + _y0) / 2, _padT);
+    	}
+    	
+    	if(_padB != 0) {
+    		draw_set_color(COLORS._main_icon);
+    		draw_line_dashed(_cx, _y1, _cx, _cy1);
+    		draw_set_text(f_p2, fa_center, fa_center, COLORS._main_icon_light);
+    		draw_text(_cx, (_y1 + _cy1) / 2, _padB);
+    	}
     	
     	draw_anchor(room_resizing_hov[0], _cx0, _cy0, 10);
     	draw_anchor(room_resizing_hov[1], _cx1, _cy0, 10);
@@ -549,13 +592,12 @@ function Node_GMRoom(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
     	
     	surface_set_target(_prev);
     	DRAW_CLEAR
-    	
-    	for( var i = array_length(layers) - 1; i >= 0; i-- ) {
-    		var _l = layers[i].layer;
-    		var _p = _l.preview;
-    		draw_surface_safe(_p);
-    	}
-    	
+	    	for( var i = array_length(layers) - 1; i >= 0; i-- ) {
+	    		var _l = layers[i].layer;
+	    		if(!is_surface(_l.preview)) _l.refreshPreview();
+	    		
+	    		draw_surface_safe(_l.preview);
+	    	}
     	surface_reset_target();
     	
     	outputs[0].setValue(_prev);

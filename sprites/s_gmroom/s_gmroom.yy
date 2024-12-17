@@ -25,8 +25,8 @@
   "nineSlice":null,
   "origin":4,
   "parent":{
-    "name":"misc",
-    "path":"folders/sprites/misc.yy",
+    "name":"spr",
+    "path":"folders/game engines/gamemaker/spr.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

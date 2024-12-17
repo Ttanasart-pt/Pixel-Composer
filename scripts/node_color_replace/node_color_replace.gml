@@ -27,7 +27,7 @@ function Node_Color_replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		
 	__init_mask_modifier(7); // inputs 11, 12
 	
-	newInput(13, nodeValue_Enum_Scroll("Mode", self,  0, [ "Closet", "Random" ]));
+	newInput(13, nodeValue_Enum_Scroll("Mode", self,  0, [ "Closest", "Random" ]));
 	
 	newInput(14, nodeValueSeed(self));
 	

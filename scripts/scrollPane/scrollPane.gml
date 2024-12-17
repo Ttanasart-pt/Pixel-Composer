@@ -41,6 +41,7 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 	scroll_color_bar        = COLORS.scrollbar_idle;
 	scroll_color_bar_hover  = COLORS.scrollbar_hover;
 	scroll_color_bar_active = COLORS.scrollbar_active;
+	scroll_color_bar_alpha  = 1;
 	
 	static resize = function(_w, _h) {
 		w = _w;
@@ -170,7 +171,8 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 		var by1 = clamp(bar_y + bar_h, scr_y, scr_y + scr_h);
 		var hh = by1 - by0;
 		
-		draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, scr_x, scr_y, scr_w, scr_h,  scroll_color_bg, 1);
+		if(scroll_color_bg != undefined) 
+			draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, scr_x, scr_y, scr_w, scr_h, scroll_color_bg, 1);
 		
 		var cc = scroll_color_bar;
 		
@@ -184,7 +186,7 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 		}
 		
 		if(is_scrolling) cc = scroll_color_bar_active;
-		draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, bx0, by0, ww, hh, cc, 1);
+		draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, bx0, by0, ww, hh, cc, scroll_color_bar_alpha);
 	}
 	
 	static free = function() {

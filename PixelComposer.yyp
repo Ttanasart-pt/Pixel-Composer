@@ -103,6 +103,7 @@
     {"$GMFolder":"","%Name":"window","folderPath":"folders/functions/window.yy","name":"window","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"game engines","folderPath":"folders/game engines.yy","name":"game engines","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"gamemaker","folderPath":"folders/game engines/gamemaker.yy","name":"gamemaker","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"spr","folderPath":"folders/game engines/gamemaker/spr.yy","name":"spr","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"main","folderPath":"folders/main.yy","name":"main","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"components","folderPath":"folders/main/components.yy","name":"components","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"misc","folderPath":"folders/misc.yy","name":"misc","resourceType":"GMFolder","resourceVersion":"2.0",},

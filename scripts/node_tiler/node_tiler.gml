@@ -477,13 +477,14 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 
 	////- Actions
 	
-	static resizeBBOX = function(bbox) {
+	function resizeBBOX(bbox) {
 		var _nw =  bbox[2] - bbox[0];
 		var _nh =  bbox[3] - bbox[1];
 		var _dx = -bbox[0];
 		var _dy = -bbox[1];
 		
-		inputs[1].setValue([_nw, _nh]);
+		gmTileLayer.tiles.SerialiseWidth  = _nw;
+		gmTileLayer.tiles.SerialiseHeight = _nh;
 		
 		var _newSurf = surface_create(_nw, _nh, surface_rgba16float);
 		surface_set_target(_newSurf);

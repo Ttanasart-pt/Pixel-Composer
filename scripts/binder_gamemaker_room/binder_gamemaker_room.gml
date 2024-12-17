@@ -124,15 +124,19 @@ function GMRoom_Background(_room, _gm, _raw) : GMRoom_Layer(_room, _gm, _raw) co
     spr    = noone;
     
 	static link = function() { 
-		spr = gmBinder.getResourceFromPath(struct_try_get(raw.spriteId, "path"));
+		spr = is_struct(raw.spriteId)? gmBinder.getResourceFromPath(struct_try_get(raw.spriteId, "path")) : noone;
 	}
 	
     static doRefreshPreview = function() {
+    	var _c = raw.colour;
+    	
 		if(spr != noone && spr.thumbnail != noone) {
-			if(raw.htiled || raw.vtiled)
-				draw_sprite_tiled(spr.thumbnail, 0, 0, 0);
-			else 
-				draw_sprite(spr.thumbnail, 0, 0, 0);
+			var _t = raw.htiled || raw.vtiled;
+			if(_t) draw_sprite_tiled_ext(spr.thumbnail, 0, 0, 0, 1, 1, _c, 1);
+			else   draw_sprite_ext(spr.thumbnail, 0, 0, 0, 1, 1, 0, _c, 1);
+			
+		} else {
+			draw_clear(_c);
 		}
 	}
 }

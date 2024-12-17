@@ -30,7 +30,6 @@ event_inherited();
 	
 	display_grid_size    = ui(64);
 	display_grid_size_to = display_grid_size;
-	
 	display_list_size    = ui(28);
 	display_list_size_to = display_list_size;
 	
@@ -61,7 +60,8 @@ event_inherited();
 			var name = __txt(cat.name);
 			maxLen   = max(maxLen, string_width(name));
 		}
-		category_width = maxLen + ui(56);
+		
+		category_width = maxLen + ui(32);
 	#endregion
 	
 	function isTop() { return true; }
@@ -305,7 +305,7 @@ event_inherited();
 	catagory_pane = new scrollPane(category_width, dialog_h - ui(66), function(_y, _m) {
 		draw_clear_alpha(COLORS._main_text, 0);
 		
-		var ww = category_width - ui(32);
+		var ww = catagory_pane.surface_w;
 		var hh = 0;
 		var hg = ui(28);
 		
@@ -394,14 +394,17 @@ event_inherited();
 		
 		return hh;
 	});
+	catagory_pane.scroll_color_bg        = undefined;
+	catagory_pane.scroll_color_bar_alpha = .5;
 	
-	content_pane = new scrollPane(dialog_w - category_width - ui(8), dialog_h - ui(66), function(_y, _m) {
+	content_pane = new scrollPane(dialog_w - category_width - ui(34), dialog_h - ui(66), function(_y, _m) {
 		draw_clear_alpha(c_white, 0);
+		
 		var _hover = sHOVER && content_pane.hover;
 		var _focus = sFOCUS && content_pane.active;
 		var _list  = node_list;
-		var ww = content_pane.surface_w;
-		var hh = 0;
+		var ww     = content_pane.surface_w;
+		var hh     = 0;
 		
 		if(ADD_NODE_PAGE == -2) {
 			_list = ds_list_create();
@@ -823,9 +826,11 @@ event_inherited();
 	dialog_h_max = ui(800);
 	
 	onResize = function() {
-		catagory_pane.resize(category_width, dialog_h - ui(66));
-		content_pane.resize(dialog_w - category_width - ui(8), dialog_h - ui(66));
-		search_pane.resize(dialog_w - ui(36), dialog_h - ui(66));
+		var _ch = dialog_h - ui(66);
+		
+		catagory_pane.resize( category_width,                     _ch);
+		content_pane.resize(  dialog_w - category_width - ui(34), _ch);
+		search_pane.resize(   dialog_w - ui(36),                  _ch);
 		
 		PREFERENCES.dialog_add_node_w = dialog_w;
 		PREFERENCES.dialog_add_node_h = dialog_h;
