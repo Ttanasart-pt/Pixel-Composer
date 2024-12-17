@@ -44,7 +44,7 @@
 	LATEST_VERSION	= 1_18_00_0;
 	VERSION			= 1_18_05_1;
 	SAVE_VERSION	= 1_18_05_0;
-	VERSION_STRING  = MAC? "1.18.003m" : "1.18.6.004";
+	VERSION_STRING  = MAC? "1.18.003m" : "1.18.6.005";
 	BUILD_NUMBER	= 1_18_05_1;
 	
 	var _vsp = string_split(VERSION_STRING, ".");

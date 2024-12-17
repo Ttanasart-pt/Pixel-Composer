@@ -33,4 +33,18 @@ function __NodeValue_Gradient(_name, _node, _value, _tooltip = "") : NodeValue(_
 	}
 	
 	static arrayLength = arrayLengthSimple;
+	
+	static setValueRaw = function(_dat) { 
+		if(is(_dat, gradientObject)) {
+			setValue(_dat); 
+			return;
+		}
+		
+		if(is_struct(_dat)) {
+			static_set(_dat, static_get(gradientObject));
+			setValue(_dat);
+			return;
+		}
+	}
+	
 }

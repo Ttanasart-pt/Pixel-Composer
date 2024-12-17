@@ -351,8 +351,15 @@ function Panel_Inspector() : PanelContent() constructor {
         prop_highlight_time = 60;
     }
     
-    function propSelectCopy()  { if(!prop_selecting) return; clipboard_set_text(prop_selecting.getString()); }
-    function propSelectPaste() { if(!prop_selecting) return; prop_selecting.setString(clipboard_get_text()); }
+    function propSelectCopy()  { 
+    	if(!prop_selecting) return; 
+    	clipboard_set_text(prop_selecting.getString()); 
+    }
+    	
+    function propSelectPaste() { 
+    	if(!prop_selecting) return; 
+    	prop_selecting.setString(clipboard_get_text()); 
+    }
     
     ////- DRAW
     
