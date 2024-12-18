@@ -1105,9 +1105,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         var yy = -gr_ls - 1, ys = safe_mod(gr_y, gr_ls);
         
         draw_set_color(project.graphGrid.color);
-        var aa = 0.5;
-        if(graph_s < 0.25) 
-            aa = 0.3;
+        var aa  = graph_s < 0.25? .3 : .5;
         var oa  = project.graphGrid.opacity;
         var ori = project.graphGrid.show_origin;
         var hig = project.graphGrid.highlight;
@@ -1115,18 +1113,21 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         while(xx < w + gr_ls) { 
             draw_set_alpha( oa * aa * (1 + (round((xx + xs - gr_x) / gr_ls) % hig == 0) * 2) );
             draw_line(xx + xs, 0, xx + xs, h);
-            
-            if(ori && xx + xs - gr_x == 0) draw_line_width(xx + xs, 0, xx + xs, h, 3);
             xx += gr_ls;
         }
         
         while(yy < h + gr_ls) {
             draw_set_alpha( oa * aa * (1 + (round((yy + ys - gr_y) / gr_ls) % hig == 0) * 2) );
             draw_line(0, yy + ys, w, yy + ys);
-            
-            if(ori && yy + ys - gr_y == 0) draw_line_width(0, yy + ys, w, yy + ys, 3);
             yy += gr_ls;
         }
+        
+        draw_set_alpha(.2);
+        if(ori) {
+        	draw_line(gr_x, 0, gr_x, h);
+        	draw_line(0, gr_y, w, gr_y);
+        }
+        
         draw_set_alpha(1);
     } 
     

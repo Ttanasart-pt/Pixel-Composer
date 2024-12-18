@@ -397,7 +397,7 @@ event_inherited();
 	catagory_pane.scroll_color_bg        = undefined;
 	catagory_pane.scroll_color_bar_alpha = .5;
 	
-	content_pane = new scrollPane(dialog_w - category_width - ui(34), dialog_h - ui(66), function(_y, _m) {
+	content_pane = new scrollPane(dialog_w - category_width - ui(36), dialog_h - ui(66), function(_y, _m) {
 		draw_clear_alpha(c_white, 0);
 		
 		var _hover = sHOVER && content_pane.hover;
@@ -829,7 +829,7 @@ event_inherited();
 		var _ch = dialog_h - ui(66);
 		
 		catagory_pane.resize( category_width,                     _ch);
-		content_pane.resize(  dialog_w - category_width - ui(34), _ch);
+		content_pane.resize(  dialog_w - category_width - ui(36), _ch);
 		search_pane.resize(   dialog_w - ui(36),                  _ch);
 		
 		PREFERENCES.dialog_add_node_w = dialog_w;

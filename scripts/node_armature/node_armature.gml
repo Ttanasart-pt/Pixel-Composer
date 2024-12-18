@@ -343,21 +343,24 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 					builder_bone.direction = dir;
 					builder_bone.distance  = dis;
 					
-					if(builder_bone.parent) {
-						var par_anc  = builder_bone.parent.getTail();
-						var par_ancx = _x + par_anc.x * _s;
-						var par_ancy = _y + par_anc.y * _s;
-						
-						var inRange = point_in_circle(_mx, _my, par_ancx, par_ancy, 16) && mouse_release(mb_left);
-						if(!builder_bone.parent.is_main && builder_bone.IKlength > 0 && inRange)
-							builder_bone.parent_anchor = true;
-							
-					}
-					
 					orig = builder_bone.getHead();
 					var _rx = _x + _s * orig.x;
 					var _ry = _y + _s * orig.y;
-					draw_sprite_ext(s_bone_move, 0, _rx, _ry, 1, 1, 0, COLORS._main_value_positive, 1);
+					var  cc = COLORS._main_value_positive;
+					
+					if(isUsingTool("Detach bones") && builder_bone.parent) { // re-attach
+						var par_anc = builder_bone.parent.getTail();
+						var pardist = point_distance(orig.x, orig.y, par_anc.x, par_anc.y) * _s;
+						var inRange = pardist < 8 && !builder_bone.parent.is_main;
+						
+						if(inRange) {
+							cc = COLORS._main_accent;
+							if(mouse_release(mb_left)) 
+								builder_bone.parent_anchor = true;
+						}
+					}
+					
+					draw_sprite_ext(s_bone_move, 0, _rx, _ry, 1, 1, 0, cc, 1);
 					
 				} else if(builder_type == 1) {
 					builder_bone.angle  = dir;

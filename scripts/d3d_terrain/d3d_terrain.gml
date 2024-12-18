@@ -293,32 +293,38 @@ function __3dTerrain() : __3dObject() constructor {
 				vertex_normal(     vb, _v0.nx,    _v0.ny,  _v0.nz);
 				vertex_texcoord(   vb, _v0.u,     _v0.v);
 				vertex_color(      vb, _v0.color, _v0.alpha);
+				vertex_float3(     vb, 255, 0, 0);
 				
 				vertex_position_3d(vb, _v1.x,     _v1.y,   _v1.z);
 				vertex_normal(     vb, _v1.nx,    _v1.ny,  _v1.nz);
 				vertex_texcoord(   vb, _v1.u,     _v1.v);
 				vertex_color(      vb, _v1.color, _v1.alpha);
+				vertex_float3(     vb,  0, 255, 0);
 				
 				vertex_position_3d(vb, _v2.x,     _v2.y,   _v2.z);
 				vertex_normal(     vb, _v2.nx,    _v2.ny,  _v2.nz);
 				vertex_texcoord(   vb, _v2.u,     _v2.v);
 				vertex_color(      vb, _v2.color, _v2.alpha);
+				vertex_float3(     vb, 0, 0, 255);
 				
 				
 				vertex_position_3d(vb, _v3.x,     _v3.y,   _v3.z);
 				vertex_normal(     vb, _v3.nx,    _v3.ny,  _v3.nz);
 				vertex_texcoord(   vb, _v3.u,     _v3.v);
 				vertex_color(      vb, _v3.color, _v3.alpha);
+				vertex_float3(     vb, 255, 0, 0);
 				
 				vertex_position_3d(vb, _v4.x,     _v4.y,   _v4.z);
 				vertex_normal(     vb, _v4.nx,    _v4.ny,  _v4.nz);
 				vertex_texcoord(   vb, _v4.u,     _v4.v);
 				vertex_color(      vb, _v4.color, _v4.alpha);
+				vertex_float3(     vb, 0, 255, 0);
 				
 				vertex_position_3d(vb, _v5.x,     _v5.y,   _v5.z);
 				vertex_normal(     vb, _v5.nx,    _v5.ny,  _v5.nz);
 				vertex_texcoord(   vb, _v5.u,     _v5.v);
 				vertex_color(      vb, _v5.color, _v5.alpha);
+				vertex_float3(     vb, 0, 0, 255);
 				
 				_in += 6;
 				
@@ -367,32 +373,38 @@ function __3dTerrain() : __3dObject() constructor {
 				vertex_normal(     vb, _v0.nx,    _v0.ny,  _v0.nz);
 				vertex_texcoord(   vb, _v0.u,     _v0.v);
 				vertex_color(      vb, _v0.color, _v0.alpha);
+				vertex_float3(     vb, 255, 0, 0);
 				
 				vertex_position_3d(vb, _v1.x,     _v1.y,   _v1.z);
 				vertex_normal(     vb, _v1.nx,    _v1.ny,  _v1.nz);
 				vertex_texcoord(   vb, _v1.u,     _v1.v);
 				vertex_color(      vb, _v1.color, _v1.alpha);
+				vertex_float3(     vb, 0, 255, 0);
 				
 				vertex_position_3d(vb, _v2.x,     _v2.y,   _v2.z);
 				vertex_normal(     vb, _v2.nx,    _v2.ny,  _v2.nz);
 				vertex_texcoord(   vb, _v2.u,     _v2.v);
 				vertex_color(      vb, _v2.color, _v2.alpha);
+				vertex_float3(     vb, 0, 0, 255);
 				
 				
 				vertex_position_3d(vb, _v3.x,     _v3.y,   _v3.z);
 				vertex_normal(     vb, _v3.nx,    _v3.ny,  _v3.nz);
 				vertex_texcoord(   vb, _v3.u,     _v3.v);
 				vertex_color(      vb, _v3.color, _v3.alpha);
+				vertex_float3(     vb, 255, 0, 0);
 				
 				vertex_position_3d(vb, _v4.x,     _v4.y,   _v4.z);
 				vertex_normal(     vb, _v4.nx,    _v4.ny,  _v4.nz);
 				vertex_texcoord(   vb, _v4.u,     _v4.v);
 				vertex_color(      vb, _v4.color, _v4.alpha);
+				vertex_float3(     vb, 0, 255, 0);
 				
 				vertex_position_3d(vb, _v5.x,     _v5.y,   _v5.z);
 				vertex_normal(     vb, _v5.nx,    _v5.ny,  _v5.nz);
 				vertex_texcoord(   vb, _v5.u,     _v5.v);
 				vertex_color(      vb, _v5.color, _v5.alpha);
+				vertex_float3(     vb, 0, 0, 255);
 				
 				_in += 6;
 				

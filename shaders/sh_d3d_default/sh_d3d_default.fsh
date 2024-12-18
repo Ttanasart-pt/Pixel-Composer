@@ -184,13 +184,16 @@ uniform int use_8bit;
 
 vec4 wireframeCalc(in vec4 baseColr) {
 	vec3  bc_width    = fwidth(v_barycentric);
-	vec3  aa_width    = wireframe_aa == 1? smoothstep(bc_width * wireframe_width * .9, bc_width * wireframe_width, v_barycentric) : 
-	                                       step(bc_width * wireframe_width, v_barycentric);
+	vec3  baryWidth   = bc_width * wireframe_width;
+	
+	vec3  aa_width    = wireframe_aa == 1? smoothstep(baryWidth * .9, baryWidth, v_barycentric) : 
+	                                       step(baryWidth, v_barycentric);
 	                                       
 	float edge_factor = 1. - min(aa_width.r, min(aa_width.g, aa_width.b));
 	vec4  baseColor   = wireframe_only == 1? vec4(0.) : baseColr;
 	vec4  mixed_color = mix(baseColor, wireframe_color, edge_factor * wireframe_color.a);
 	
+	mixed_color.a *= baseColr.a;
 	return mixed_color;
 }
 

@@ -1260,7 +1260,6 @@ function Panel_Preview() : PanelContent() constructor {
         #region draw
             d3_scene_preview.reset();
             gpu_set_cullmode(d3_scene_preview.cull_mode); 
-            // gpu_set_cullmode(cull_counterclockwise);
             
             var _prev_obj = _node.getPreviewObjects();
             
