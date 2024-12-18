@@ -42,11 +42,26 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 	selecting_menu = noone;
 	properties     = [];
 	
-	static setHeight = function() { h = ui(12 + 36 * array_length(properties)); }
+	prop_height = ui(32);
+	curr_height = 0;
 	
-	static drawSettings = function(panel) {
-		var yy = ui(24);
-		var th = ui(36);
+	static setHeight   = function() { h = prop_height * array_length(properties) + ui(16); }
+	static resetHeight = function(_h) { 
+		if(h == _h) return;
+		
+		if(in_dialog) {
+			panel.dialog_y -= _h - h; 
+			panel.dialog_h  = _h 
+			h = _h; 
+			panel.contentResize();
+		}
+		
+		h = _h; 
+	}
+	
+	static drawSettings = function() {
+		var yy = ui(4);
+		var th = prop_height;
 		var ww = max(wdgw, w * 0.5); 
 		var wh = TEXTBOX_HEIGHT;
 		
@@ -56,17 +71,53 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 		for( var i = 0, n = array_length(properties); i < n; i++ ) {
 			var _prop = properties[i];
 			
+			if(is_array(_prop)) {
+				yy += bool(i) * ui(4);
+				
+				var txt  = __txt(_prop[0]);
+                var coll = _prop[1];
+                
+                var lbx = ui(4);
+                var lby = ui(0);
+                var lbh = th - ui(4);
+                var lbw = w - ui(8);
+                
+                if(pHOVER && point_in_rectangle(mx, my, lbx, yy, lbx + lbw, yy + lbh)) {
+                    draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, lbx, yy, lbw, lbh, COLORS.panel_inspector_group_hover, 1);
+                	if(mouse_press(mb_left, pFOCUS)) _prop[@ 1] = !coll;
+                	
+                } else
+                    draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, lbx, yy, lbw, lbh, CDEF.main_ltgrey, 1);
+            	
+                draw_sprite_ui(THEME.arrow, coll * 3, lbx + ui(16), yy + lbh / 2, 1, 1, 0, COLORS.panel_inspector_group_bg, 1);
+                draw_set_text(f_p2, fa_left, fa_center, COLORS.panel_inspector_group_bg, 1);
+                draw_text_add(lbx + ui(32), yy + lbh / 2, txt);
+                draw_set_alpha(1);
+                
+                if(coll) { // skip 
+                    var j = i + 1;
+                    while(j < n) {
+                        if(is_array(properties[j])) break;
+                        j++;
+                    }
+                    i = j - 1;
+                }
+                
+                yy += lbh + (!coll) * ui(4);
+                continue;
+			}
+			
 			if(is_instanceof(_prop, __Panel_Linear_Setting_Label)) {
 				var _text = _prop.name;
 				var _spr  = _prop.sprite;
 				var _ind  = _prop.index;
 				var _colr = _prop.color;
 				
-				draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, ui(4), yy - th / 2 + ui(2), w - ui(8), th - ui(4), _colr, 1);
-				draw_sprite_ui(_spr, _ind, ui(4) + th / 2, yy);
+				draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, ui(4), yy + ui(2), w - ui(8), th - ui(4), _colr, 1);
+				draw_sprite_ui(_spr, _ind, ui(4) + th / 2, yy + th / 2);
 				
-				draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
-				draw_text_add(ui(4) + th, yy, _text);
+				draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
+				draw_text_add(ui(4) + th, yy + th / 2, _text);
 				
 				yy += th;
 				continue;
@@ -82,14 +133,14 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 				_widg.register();
 				
 				var _whover = false;
-				if(pHOVER && point_in_rectangle(mx, my, 0, yy - th / 2, w, yy + th / 2)) {
-					bg_y_to = yy - th / 2;
+				if(pHOVER && point_in_rectangle(mx, my, 0, yy, w, yy + th)) {
+					bg_y_to = yy;
 					_hov    = true;
 					_whover = true;
 				}
 				
-				draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
-				draw_text_add(ui(16), yy, _text);
+				draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
+				draw_text_add(ui(16), yy + th / 2, _text);
 			
 				var _x1  = w - ui(8);
 				var _wdw = ww;
@@ -97,7 +148,9 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 				if(_prop.getDefault != noone)
 					_wdw -= ui(32 + 8);
 				
-				var params = new widgetParam(_x1 - ww, yy - wh / 2, _wdw, wh, _data, {}, [ mx, my ], x, y);
+				var params = new widgetParam(_x1 - ww, yy + th / 2 - wh / 2, _wdw, wh, _data, {}, [ mx, my ], x, y)
+					.setFont(f_p2);
+					
 				if(is_instanceof(_widg, checkBox)) {
 					params.halign = fa_center;
 					params.valign = fa_center;
@@ -128,7 +181,7 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 						var _th = line_get_height();
 						
 						var _hx = _x1 - ww - ui(16);
-						var _hy = yy + ui(2);
+						var _hy = yy + th / 2 + ui(2);
 							
 						var _bx = _hx - _tw - ui(4);
 						var _by = _hy - _th / 2 - ui(3);
@@ -153,7 +206,7 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 					var _defVal = is_method(_prop.getDefault)? _prop.getDefault() : _prop.getDefault;
 					var _bs = ui(32);
 					var _bx = _x1 - _bs;
-					var _by = yy - _bs / 2;
+					var _by =  yy + th / 2 - _bs / 2;
 					
 					if(isEqual(_data, _defVal))
 						draw_sprite_ext(THEME.refresh_16, 0, _bx + _bs / 2, _by + _bs / 2, 1, 1, 0, COLORS._main_icon_dark);
@@ -169,9 +222,7 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 		}
 		
 		bg_a = lerp_float(bg_a, _hov, 2);
-		
-		if(bg_y == -1) bg_y = bg_y_to;
-		else           bg_y = lerp_float(bg_y, bg_y_to, 2);
+		bg_y = bg_y == -1? bg_y_to : lerp_float(bg_y, bg_y_to, 2);
 		
 		if(hk_editing != noone) { 
 			if(keyboard_check_pressed(vk_enter))  hk_editing = noone;
@@ -179,7 +230,13 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 			
 			if(keyboard_check_pressed(vk_escape)) hk_editing = noone;
 		} 
+		
+		curr_height = yy + ui(4);
 	}
 	
-	function drawContent(panel) { drawSettings(panel); }
+	function drawContent() { drawSettings(); }
+	
+	function preDraw() {
+		resetHeight(curr_height);
+	}
 }

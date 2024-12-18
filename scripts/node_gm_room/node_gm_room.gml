@@ -1,6 +1,7 @@
 function Node_GMRoom(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name   = "GMRoom";
 	color  = COLORS.node_blend_input;
+	icon   = s_gamemaker;
 	
     gmRoom   = noone;
     layers   = [];

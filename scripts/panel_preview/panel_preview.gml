@@ -497,7 +497,7 @@ function Panel_Preview() : PanelContent() constructor {
             [ 
                 THEME.icon_visibility,
                 new tooltipHotkey(__txtx("graph_visibility_title", "Visibility settings") + "...", "Preview", "View Settings"), 
-                function(param) /*=>*/ { dialogPanelCall(new Panel_Preview_View_Setting(self), param.x, param.y, { anchor: ANCHOR}); },
+                function(param) /*=>*/ { dialogPanelCall(new Panel_Preview_View_Setting(self), param.x, param.y, { anchor: ANCHOR.bottom | ANCHOR.left }); },
                 function() /*=>*/ {return 0},
             ],
             [ 
@@ -1259,7 +1259,8 @@ function Panel_Preview() : PanelContent() constructor {
         
         #region draw
             d3_scene_preview.reset();
-            gpu_set_cullmode(cull_counterclockwise);
+            gpu_set_cullmode(d3_scene_preview.cull_mode); 
+            // gpu_set_cullmode(cull_counterclockwise);
             
             var _prev_obj = _node.getPreviewObjects();
             

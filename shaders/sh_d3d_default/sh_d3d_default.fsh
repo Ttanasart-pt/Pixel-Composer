@@ -1,8 +1,9 @@
-// PC3D rendering shader
+#extension GL_OES_standard_derivatives : enable
 
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 varying vec3 v_vNormal;
+varying vec3 v_barycentric;
 
 varying vec4  v_worldPosition;
 varying vec3  v_viewPosition;
@@ -84,6 +85,13 @@ uniform int use_8bit;
 	uniform vec2      env_map_dimension;
 	
 	uniform mat4 viewProjMat;
+	
+	uniform int   show_wireframe;
+	uniform int   wireframe_aa;
+	uniform int   wireframe_shade;
+	uniform int   wireframe_only;
+	uniform float wireframe_width;
+	uniform vec4  wireframe_color;
 #endregion
 
 #region ++++ mapping ++++
@@ -174,55 +182,65 @@ uniform int use_8bit;
 	}
 #endregion
 
+vec4 wireframeCalc(in vec4 baseColr) {
+	vec3  bc_width    = fwidth(v_barycentric);
+	vec3  aa_width    = wireframe_aa == 1? smoothstep(bc_width * wireframe_width * .9, bc_width * wireframe_width, v_barycentric) : 
+	                                       step(bc_width * wireframe_width, v_barycentric);
+	                                       
+	float edge_factor = 1. - min(aa_width.r, min(aa_width.g, aa_width.b));
+	vec4  baseColor   = wireframe_only == 1? vec4(0.) : baseColr;
+	vec4  mixed_color = mix(baseColor, wireframe_color, edge_factor * wireframe_color.a);
+	
+	return mixed_color;
+}
+
 void main() {
 	vec2 uv_coord = v_vTexcoord;
 	if(mat_flip == 1) uv_coord.y = -uv_coord.y;
 	
-	uv_coord = fract(uv_coord * mat_texScale + mat_texShift);
-	mat_baseColor = texture2D( gm_BaseTexture, uv_coord );
-	mat_baseColor *= v_vColour;
+	uv_coord           = fract(uv_coord * mat_texScale + mat_texShift);
+	mat_baseColor      = texture2D( gm_BaseTexture, uv_coord );
+	mat_baseColor     *= v_vColour;
 	
 	vec4 final_color   = mat_baseColor;
+	if(show_wireframe == 1 && wireframe_shade == 1) final_color = wireframeCalc(final_color);
+	
 	vec3 viewDirection = normalize(cameraPosition - v_worldPosition.xyz);
 	
-	vec4 viewProjPos = viewProjMat * vec4(v_worldPosition.xyz, 1.);
-	viewProjPos /= viewProjPos.w;
-	viewProjPos  = viewProjPos * 0.5 + 0.5;
+	vec4 viewProjPos   = viewProjMat * vec4(v_worldPosition.xyz, 1.);
+		 viewProjPos  /= viewProjPos.w;
+		 viewProjPos   = viewProjPos * 0.5 + 0.5;
 		
-	#region ++++ normal ++++
-		vec3 _norm = v_vNormal;
-		
-		if(mat_defer_normal == 1)
-			_norm = texture2D(mat_normal_map, viewProjPos.xy).rgb;
-		
-		vec3 normal = normalize(_norm);
-	#endregion
+	vec3 normal        = mat_defer_normal == 1? texture2D(mat_normal_map, viewProjPos.xy).rgb : v_vNormal;
+		 normal        = normalize(normal);
 	
 	#region ++++ environment ++++
 		if(env_use_mapping == 1 && mat_reflective > 0.) {
-			vec3  reflectDir  = reflect(viewDirection, normal);
 			
-			float refRad      = mix(16., 0., mat_reflective);
-			vec2  tx = 1. / env_map_dimension;
+			vec3  reflectDir         = reflect(viewDirection, normal);
+			float refRad             = mix(16., 0., mat_reflective);
+			vec2  tx                 = 1. / env_map_dimension;
 			vec2  reflect_sample_pos = equirectangularUv(reflectDir);
-			vec4  env_sampled = vec4(0.);
-			float weight = 0.;
+			vec4  env_sampled        = vec4(0.);
+			float weight             = 0.;
 			
 			for(float i = -refRad; i <= refRad; i++)
 			for(float j = -refRad; j <= refRad; j++) {
 				vec2 _map_pos = reflect_sample_pos + vec2(i, j) * tx;
-				if(_map_pos.y < 0.)		 _map_pos.y = -_map_pos.y;
+				
+					 if(_map_pos.y < 0.) _map_pos.y = -_map_pos.y;
 				else if(_map_pos.y > 1.) _map_pos.y = 1. - (_map_pos.y - 1.);
 				
-				vec4 _samp = texture2D(env_map, _map_pos);
+				vec4 _samp   = texture2D(env_map, _map_pos);
 				env_sampled += _samp;
 				weight      += _samp.a;
 			}
-			env_sampled /= weight;
+			
+			env_sampled  /= weight;
 			env_sampled.a = 1.;
 			
-			vec4 env_effect  = mat_metalic == 1? env_sampled * final_color : env_sampled;
-			env_effect = 1. - ( mat_reflective * ( 1. - env_effect ));
+			vec4 env_effect = mat_metalic == 1? env_sampled * final_color : env_sampled;
+				 env_effect = 1. - ( mat_reflective * ( 1. - env_effect ));
 			
 			final_color *= env_effect;
 		}
@@ -333,6 +351,7 @@ void main() {
 		final_color.rgb *= light_effect;
 	#endregion
 	
+	if(show_wireframe == 1 && wireframe_shade == 0) final_color = wireframeCalc(final_color);
 	if(final_color.a < 0.1) discard;
 	
 	gl_FragData[0] = final_color;

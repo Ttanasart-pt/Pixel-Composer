@@ -1,13 +1,16 @@
 attribute vec3 in_Position;
 attribute vec3 in_Normal;
-attribute vec4 in_Colour;
 attribute vec2 in_TextureCoord;
+attribute vec4 in_Colour;
+attribute vec3 in_Barycentric;
 
-varying vec2 v_vTexcoord;
-varying vec4 v_vColour;
-varying vec3 v_vNormal;
-varying vec4 v_worldPosition;
-varying vec3 v_viewPosition;
+varying vec2  v_vTexcoord;
+varying vec4  v_vColour;
+varying vec3  v_vNormal;
+varying vec3  v_barycentric;
+
+varying vec4  v_worldPosition;
+varying vec3  v_viewPosition;
 varying float v_cameraDistance;
 
 uniform float planeNear;
@@ -29,4 +32,6 @@ void main() {
 	float depthRange = abs(planeFar - planeNear);
 	float ndcDepth   = (gl_Position.z - planeNear) / depthRange;
 	v_cameraDistance = ndcDepth * 0.5 + 0.5;
+	
+	v_barycentric = in_Barycentric;
 }

@@ -17,59 +17,72 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	deferData = noone;
 	
 	global.SKY_SPHERE = new __3dUVSphere(0.5, 16, 8, true);
+	var i = in_d3d;
 	
-	newInput(in_d3d + 0, nodeValue_Int("FOV", self, 60 ))
+	newInput(i+0, nodeValue_Int("FOV", self, 60 ))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 10, 90, 0.1 ] });
 	
-	newInput(in_d3d + 1, nodeValue_Vec2("Clipping Distance", self, [ 1, 10 ] ));
+	newInput(i+1, nodeValue_Vec2("Clipping Distance", self, [ 1, 10 ] ));
 	 
-	newInput(in_d3d + 2, nodeValue_Dimension(self));
+	newInput(i+2, nodeValue_Dimension(self));
 	
-	newInput(in_d3d + 3, nodeValue_Enum_Button("Projection", self,  1 , [ "Perspective", "Orthographic" ]));
+	newInput(i+3, nodeValue_Enum_Button("Projection", self,  1 , [ "Perspective", "Orthographic" ]));
 	
-	newInput(in_d3d + 4, nodeValue_D3Scene("Scene", self, noone ))
+	newInput(i+4, nodeValue_D3Scene("Scene", self, noone ))
 		.setVisible(true, true);
 	
-	newInput(in_d3d + 5, nodeValue_Color("Ambient Light", self, c_dkgrey ));
+	newInput(i+5, nodeValue_Color("Ambient Light", self, c_dkgrey ));
 	
-	newInput(in_d3d + 6, nodeValue_Bool("Show Background", self, false ));
+	newInput(i+6, nodeValue_Bool("Show Background", self, false ));
 	
-	newInput(in_d3d + 7, nodeValue_Enum_Button("Backface Culling", self,  2 , [ "None", "CW", "CCW" ]));
+	newInput(i+7, nodeValue_Enum_Button("Backface Culling", self,  2 , [ "None", "CW", "CCW" ]));
 	
-	newInput(in_d3d + 8, nodeValue_Float("Orthographic Scale", self, 0.5 ))
+	newInput(i+8, nodeValue_Float("Orthographic Scale", self, 0.5 ))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0.01, 4, 0.01 ] });
 	
-	newInput(in_d3d + 9, nodeValue_Enum_Scroll("Postioning Mode", self, 2, [ "Position + Rotation", "Position + Lookat", "Lookat + Rotation" ] ));
+	newInput(i+9, nodeValue_Enum_Scroll("Postioning Mode", self, 2, [ "Position + Rotation", "Position + Lookat", "Lookat + Rotation" ] ));
 	
-	newInput(in_d3d + 10, nodeValue_Vec3("Lookat Position", self, [ 0, 0, 0 ] ));
+	newInput(i+10, nodeValue_Vec3("Lookat Position", self, [ 0, 0, 0 ] ));
 	
-	newInput(in_d3d + 11, nodeValue_Rotation("Roll", self, 0));
+	newInput(i+11, nodeValue_Rotation("Roll", self, 0));
 	
-	newInput(in_d3d + 12, nodeValue_Rotation("Horizontal Angle", self, 45 ));
+	newInput(i+12, nodeValue_Rotation("Horizontal Angle", self, 45 ));
 	
-	newInput(in_d3d + 13, nodeValue_Float("Vertical Angle", self, 30 ))
+	newInput(i+13, nodeValue_Float("Vertical Angle", self, 30 ))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 90, 0.1] });
 	
-	newInput(in_d3d + 14, nodeValue_Float("Distance", self, 4 ));
+	newInput(i+14, nodeValue_Float("Distance", self, 4 ));
 	
-	newInput(in_d3d + 15, nodeValue_Bool("Gamma Adjust", self, false ));
+	newInput(i+15, nodeValue_Bool("Gamma Adjust", self, false ));
 	
-	newInput(in_d3d + 16, nodeValue_Surface("Environment Texture", self));
+	newInput(i+16, nodeValue_Surface("Environment Texture", self));
 	
-	newInput(in_d3d + 17, nodeValue_Bool("Ambient Occlusion", self, false ));
+	newInput(i+17, nodeValue_Bool("Ambient Occlusion", self, false ));
 	
-	newInput(in_d3d + 18, nodeValue_Float("AO Radius", self, 0.25 ));
+	newInput(i+18, nodeValue_Float("AO Radius", self, 0.25 ));
 	
-	newInput(in_d3d + 19, nodeValue_Float("AO Bias", self, 0.05 ));
+	newInput(i+19, nodeValue_Float("AO Bias", self, 0.05 ));
 	
-	newInput(in_d3d + 20, nodeValue_Float("AO Strength", self, 1. ))
+	newInput(i+20, nodeValue_Float("AO Strength", self, 1. ))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0.01, 4, 0.01 ] });
 	
-	newInput(in_d3d + 21, nodeValue_Int("Round Normal", self, 0 ))
+	newInput(i+21, nodeValue_Int("Round Normal", self, 0 ))
 		.setWindows();
 	
-	newInput(in_d3d + 22, nodeValue_Enum_Button("Blend mode", self,  0 , [ "Normal", "Additive" ]));
-		
+	newInput(i+22, nodeValue_Enum_Button("Blend mode", self,  0 , [ "Normal", "Additive" ]));
+	
+	newInput(i+23, nodeValue_Bool("Wireframe", self, false));
+	
+	newInput(i+24, nodeValue_Float("Wireframe Thickness", self, 1));
+	
+	newInput(i+25, nodeValue_Color("Wireframe Color", self, cola(c_black)));
+	
+	newInput(i+26, nodeValue_Bool("Wireframe antialias", self, false));
+	
+	newInput(i+27, nodeValue_Bool("Wireframe shading", self, false));
+	
+	newInput(i+28, nodeValue_Bool("Wireframe only", self, false));
+	
 	in_cam = array_length(inputs);
 	
 	newOutput(0, nodeValue_Output("Rendered", self, VALUE_TYPE.surface, noone ));
@@ -80,25 +93,23 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	newOutput(2, nodeValue_Output("Depth", self, VALUE_TYPE.surface, noone ))
 		.setVisible(false);
 	
-	input_display_list = [ in_d3d + 4,
-		["Output",		false], in_d3d + 2,
-		["Transform",	false], in_d3d + 9, 0, 1, in_d3d + 10, in_d3d + 11, in_d3d + 12, in_d3d + 13, in_d3d + 14, 
-		["Camera",		 true], in_d3d + 3, in_d3d + 0, in_d3d + 1, in_d3d + 8, 
-		["Render",		 true], in_d3d + 5, in_d3d + 16, in_d3d + 6, in_d3d + 7, in_d3d + 15, in_d3d + 22, 
-		["Ambient Occlusion",	true], in_d3d + 17, in_d3d + 20, in_d3d + 18, in_d3d + 19, 
-		["Effects",		 true], in_d3d + 21,
+	input_display_list = [ i+4,
+		["Output",				false], i+ 2,
+		["Transform",			false], i+ 9, 0, 1, i+10, i+11, i+12, i+13, i+14, 
+		["Camera",				 true], i+ 3, i+ 0, i+ 1, i+ 8, 
+		["Render",				 true], i+ 5, i+16, i+ 6, i+ 7, i+15, i+22, 
+		["Wireframe",      true, i+23], i+24, i+25, i+26, i+27, i+28, 
+		["Ambient Occlusion",	 true], i+17, i+20, i+18, i+19, 
+		["Effects",				 true], i+21,
 	];
 	
 	tool_lookat = new NodeTool( "Move Target", THEME.tools_3d_transform_object );
 	
+	////- Preview
+	
 	static getToolSettings = function() {
 		var _posm = getInputData(in_d3d + 9);
-		
-		switch(_posm) {
-			case 0 : return tool_settings;
-			case 1 : 
-			case 2 : return [];
-		}
+		if(_posm == 0) return tool_settings;
 		
 		return [];
 	}
@@ -148,6 +159,8 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		#endregion
 	}
 	
+	////- Update
+	
 	static onValueUpdate = function(index) {
 		if(index == in_d3d + 9) PANEL_PREVIEW.tool_current = noone;
 	}
@@ -176,10 +189,12 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 			case 0 : 
 				tools = [ tool_pos, tool_rot ]; 
 				break;
+				
 			case 1 : 
 				tools = [ tool_pos, tool_lookat ]; 
 				tool_attribute.context = 1;
 				break;
+				
 			case 2 : 
 				tools = [ tool_lookat ]; 
 				tool_attribute.context = 1;
@@ -223,6 +238,13 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		
 			var _nrmSmt = _data[in_d3d + 21];
 			var _blend  = _data[in_d3d + 22];
+			
+			var _wire   = _data[in_d3d + 23];
+			var _wiret  = _data[in_d3d + 24];
+			var _wirec  = _data[in_d3d + 25];
+			var _wirea  = _data[in_d3d + 26];
+			var _wires  = _data[in_d3d + 27];
+			var _wireo  = _data[in_d3d + 28];
 		
 			var _qi1  = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(0, 1, 0),  90);
 			var _qi2  = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(1, 0, 0), -90);
@@ -279,23 +301,32 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		#region camera view project
 			camera.projection = _proj;
 			camera.setViewFov(_fov, _clip[0], _clip[1]);
+			
 			if(_proj == 0)		camera.setViewSize(_dim[0], _dim[1]);
 			else if(_proj == 1) camera.setViewSize(1 / _orts, _dim[0] / _dim[1] / _orts);
+			
 			camera.setMatrix();
 		#endregion
 		
 		#region scene setting
-			scene.camera		  = camera;
-			scene.lightAmbient    = _ambt;
-			scene.gammaCorrection = _gamm;
-			scene.enviroment_map  = _env;
-			scene.cull_mode		  = _back;
-			scene.ssao_enabled	  = _aoEn;
-			scene.ssao_radius	  = _aoRa;
-			scene.ssao_bias  	  = _aoBi;
-			scene.ssao_strength   = _aoSr;
-			scene.defer_normal_radius   = _nrmSmt;
-			scene.draw_background   = _dbg;
+			scene.camera		      = camera;
+			scene.lightAmbient        = _ambt;
+			scene.gammaCorrection     = _gamm;
+			scene.enviroment_map      = _env;
+			scene.cull_mode		      = _back;
+			scene.ssao_enabled	      = _aoEn;
+			scene.ssao_radius	      = _aoRa;
+			scene.ssao_bias  	      = _aoBi;
+			scene.ssao_strength       = _aoSr;
+			scene.defer_normal_radius = _nrmSmt;
+			scene.draw_background     = _dbg;
+			
+			scene.show_wireframe      = _wire;
+			scene.wireframe_width     = _wiret;
+			scene.wireframe_color     = _wirec;
+			scene.wireframe_aa        = _wirea;
+			scene.wireframe_shade     = _wires;
+			scene.wireframe_only      = _wireo;
 		#endregion
 		
 		#region submit
@@ -371,11 +402,11 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		return [ _finalRender, _normal, _depth ];
 	}
 	
+	////- Draw
+	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {}
 	
-	static getPreviewObject = function() { 
-		return getSingleValue(in_d3d + 4);
-	}
+	static getPreviewObject = function() {  return getSingleValue(in_d3d + 4); }
 	
 	static getPreviewObjects = function() { 
 		var _posm  = getInputData(in_d3d + 9);
@@ -391,6 +422,8 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	}
 	
 	static getPreviewObjectOutline = function() { return isUsingTool("Move Target")? [ lookat ] : [ object ]; }
+	
+	////- Serialize
 	
 	static doSerialize = function(_map) {
 		_map.camera_base_length = in_cam;

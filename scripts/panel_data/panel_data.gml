@@ -968,6 +968,7 @@ function PanelContent() constructor {
 	
 	function drawContent(panel) {}
 	
+	function preDraw() {}
 	function drawGUI() {}
 	
 	static onFullScreen = function() {}

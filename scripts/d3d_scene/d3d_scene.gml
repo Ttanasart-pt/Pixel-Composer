@@ -35,31 +35,36 @@ function __3dScene(camera, name = "New scene") constructor {
 	self.camera = camera;
 	self.name = name;
 	
-	apply_transform  = false;
-	custom_transform = new __transform();
+	apply_transform     = false;
+	custom_transform    = new __transform();
 	
-	lightAmbient		= c_black;
+	lightAmbient		= cola(c_black, 1);
 	lightDir_max		= 16;
 	lightDir_shadow_max = 4;
 	lightPnt_max		= 16;
 	lightPnt_shadow_max = 4;
 	
-	cull_mode       = cull_noculling;
-	enviroment_map  = noone;
-	gammaCorrection = true;
-	
-	draw_background = false;
+	cull_mode           = cull_noculling;
+	enviroment_map      = noone;
+	gammaCorrection     = true;
 	
 	defer_normal        = true;
 	defer_normal_radius = 0;
 	
-	show_normal  = false;
+	draw_background     = false;
+	show_normal         = false;
+	show_wireframe      = false;
+	wireframe_width     = 1;
+	wireframe_color     = cola(c_black, 1);
+	wireframe_aa        = true;
+	wireframe_shade     = false;
+	wireframe_only      = false;
 	
-	ssao_enabled  = false;
-	ssao_sample   = 32;
-	ssao_radius   = 0.1;
-	ssao_bias     = 0.1;
-	ssao_strength = 1.;
+	ssao_enabled        = false;
+	ssao_sample         = 32;
+	ssao_radius         = 0.1;
+	ssao_bias           = 0.1;
+	ssao_strength       = 1.;
 	
 	static reset = function() {
 		lightDir_count     = 0;
@@ -88,10 +93,14 @@ function __3dScene(camera, name = "New scene") constructor {
 		lightPnt_shadowBias   = [];
 	} reset();
 	
+	////- Submit
+	
 	static submit		= function(object, shader = noone) { D3DSCENE_PRESUBMIT object.submit		(self, shader); D3DSCENE_POSTSUBMIT }
 	static submitUI		= function(object, shader = noone) { D3DSCENE_PRESUBMIT object.submitUI		(self, shader); D3DSCENE_POSTSUBMIT }
 	static submitSel	= function(object, shader = noone) { D3DSCENE_PRESUBMIT object.submitSel	(self, shader); D3DSCENE_POSTSUBMIT }
 	static submitShader	= function(object, shader = noone) { D3DSCENE_PRESUBMIT object.submitShader (self, shader); D3DSCENE_POSTSUBMIT }
+	
+	////- Rendering
 	
 	static deferPass = function(object, w, h, deferData = noone) {
 		if(deferData == noone) deferData = {
@@ -189,11 +198,11 @@ function __3dScene(camera, name = "New scene") constructor {
 		surface_set_shader(_ssao_surf, sh_d3d_ssao);
 			shader_set_surface("vPosition", deferData.geometry_data[0]);
 			shader_set_surface("vNormal",   deferData.geometry_data[2]);
-			shader_set_f("radius",   ssao_radius);
-			shader_set_f("bias",     ssao_bias);
-			shader_set_f("strength", ssao_strength * 2);
-			shader_set_f("projMatrix",     camera.getCombinedMatrix());
-			shader_set_f("cameraPosition", camera.position.toArray());
+			shader_set_f("radius",          ssao_radius);
+			shader_set_f("bias",            ssao_bias);
+			shader_set_f("strength",        ssao_strength * 2);
+			shader_set_f("projMatrix",      camera.getCombinedMatrix());
+			shader_set_f("cameraPosition",  camera.position.toArray());
 			
 			draw_sprite_stretched(s_fx_pixel, 0, 0, 0, _sw, _sh);
 		surface_reset_shader();
@@ -215,42 +224,43 @@ function __3dScene(camera, name = "New scene") constructor {
 		shader_set_i("use_8bit",  OS == os_macosx);
 			
 			#region ---- background ----
-				shader_set_f("light_ambient",		colToVec4(lightAmbient));
-				shader_set_i("env_use_mapping",		is_surface(enviroment_map) );
-				shader_set_surface("env_map",		enviroment_map, false, true );
-				shader_set_dim("env_map_dimension",	enviroment_map );
+				shader_set_f("light_ambient",			colToVec4(lightAmbient));
+				shader_set_i("env_use_mapping",			is_surface(enviroment_map) );
+				shader_set_surface("env_map",			enviroment_map, false, true );
+				shader_set_dim("env_map_dimension",		enviroment_map );
 				if(deferData != noone) shader_set_surface("ao_map",		deferData.ssao );
 			#endregion
 			
-			shader_set_i("light_dir_count",		lightDir_count);
+			shader_set_i("light_dir_count",				lightDir_count);
 			if(lightDir_count) {
-				shader_set_f("light_dir_direction", lightDir_direction);
-				shader_set_f("light_dir_color",		lightDir_color);
-				shader_set_f("light_dir_intensity", lightDir_intensity);
+				shader_set_f("light_dir_direction", 	lightDir_direction);
+				shader_set_f("light_dir_color",			lightDir_color);
+				shader_set_f("light_dir_intensity", 	lightDir_intensity);
 				shader_set_i("light_dir_shadow_active", lightDir_shadow);
+				
 				for( var i = 0, n = array_length(lightDir_shadowMap); i < n; i++ )
 					var _sid = shader_set_surface($"light_dir_shadowmap_{i}", lightDir_shadowMap[i], true);
 				
-				shader_set_f("light_dir_view",		lightDir_viewMat);
-				shader_set_f("light_dir_proj",		lightDir_projMat);
-				shader_set_f("light_dir_shadow_bias", lightDir_shadowBias);
+				shader_set_f("light_dir_view",			lightDir_viewMat);
+				shader_set_f("light_dir_proj",			lightDir_projMat);
+				shader_set_f("light_dir_shadow_bias",	lightDir_shadowBias);
 			}
 			
-			shader_set_i("light_pnt_count",		lightPnt_count);
+			shader_set_i("light_pnt_count",				lightPnt_count);
 			if(lightPnt_count) {
-				shader_set_f("light_pnt_position",  lightPnt_position);
-				shader_set_f("light_pnt_color",		lightPnt_color);
-				shader_set_f("light_pnt_intensity", lightPnt_intensity);
-				shader_set_f("light_pnt_radius",    lightPnt_radius);
+				shader_set_f("light_pnt_position",  	lightPnt_position);
+				shader_set_f("light_pnt_color",			lightPnt_color);
+				shader_set_f("light_pnt_intensity", 	lightPnt_intensity);
+				shader_set_f("light_pnt_radius",    	lightPnt_radius);
 				
 				shader_set_i("light_pnt_shadow_active", lightPnt_shadow);
 				
 				for( var i = 0, n = array_length(lightPnt_shadowMap); i < n; i++ )
 					var _sid = shader_set_surface($"light_pnt_shadowmap_{i}", lightPnt_shadowMap[i], true, false);
 				
-				shader_set_f("light_pnt_view",		lightPnt_viewMat);
-				shader_set_f("light_pnt_proj",		lightPnt_projMat);
-				shader_set_f("light_pnt_shadow_bias", lightPnt_shadowBias);
+				shader_set_f("light_pnt_view",			lightPnt_viewMat);
+				shader_set_f("light_pnt_proj",			lightPnt_projMat);
+				shader_set_f("light_pnt_shadow_bias",	lightPnt_shadowBias);
 			}
 			
 			if(OS == os_windows && defer_normal && deferData != noone && array_length(deferData.geometry_data) > 2) {
@@ -268,9 +278,20 @@ function __3dScene(camera, name = "New scene") constructor {
 				shader_set_f("viewProjMat",		camera.getCombinedMatrix() );
 			#endregion
 			
+			#region ---- wireframe ----
+				shader_set_i("show_wireframe",      show_wireframe);
+				shader_set_i("wireframe_aa",        wireframe_aa);
+				shader_set_i("wireframe_shade",     wireframe_shade);
+				shader_set_i("wireframe_only",      wireframe_only);
+				shader_set_f("wireframe_width",     max(0, wireframe_width));
+				shader_set_color("wireframe_color", wireframe_color);
+			#endregion
+			
 			//print($"Submitting scene with {lightDir_count} dir, {lightPnt_count} pnt lights.");
 		shader_reset();
 	}
+	
+	////- Data
 	
 	static addLightDirectional = function(light) {
 		if(lightDir_count >= lightDir_max) {

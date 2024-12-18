@@ -1,6 +1,9 @@
 /// @description 
 if !ready exit;
 
+if(!is_undefined(content) && content != noone)
+	content.preDraw();
+	
 DIALOG_PREDRAW
 DIALOG_WINCLEAR
 

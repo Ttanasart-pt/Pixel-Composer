@@ -15,7 +15,6 @@ function __vertex(_x = 0, _y = _x, _z = _x, color = c_white, alpha = 1) construc
 	
 	static set = function(_x, _y, _z, _nx, _ny, _nz, _u, _v) {
 		INLINE
-		
 		x = _x;
 		y = _y;
 		z = _z;
@@ -26,26 +25,21 @@ function __vertex(_x = 0, _y = _x, _z = _x, color = c_white, alpha = 1) construc
 		
 		u = _u;
 		v = _v;
-		
 		return self;
 	}
 	
 	static setNormal = function(_nx = 0, _ny = _nx, _nz = _nx) {
 		INLINE
-		
 		nx = _nx;
 		ny = _ny;
 		nz = _nz;
-		
 		return self;
 	}
 	
 	static setUV = function(_u = 0, _v = _u) {
 		INLINE
-		
 		u = _u;
 		v = _v;
-		
 		return self;
 	}
 	
