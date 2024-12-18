@@ -260,10 +260,13 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 		_bone_bbox ??= bbox();
 		
 		if(!is_main && is_array(_bone_bbox)) {
-			var boxs = min(_bbox.w / _bone_bbox[4], _bbox.h / _bone_bbox[5]);
+			var _bw = max(1, _bone_bbox[4]);
+			var _bh = max(1, _bone_bbox[5]);
 			
-			_bbox.w = boxs * _bone_bbox[4];
-			_bbox.h = boxs * _bone_bbox[5];
+			var boxs = min(_bbox.w / _bw, _bbox.h / _bh);
+			
+			_bbox.w = boxs * _bw;
+			_bbox.h = boxs * _bh;
 			
 			_bbox.x0 = _bbox.xc - _bbox.w / 2;
 			_bbox.x1 = _bbox.xc + _bbox.w / 2;
@@ -271,10 +274,10 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 			_bbox.y0 = _bbox.yc - _bbox.h / 2;
 			_bbox.y1 = _bbox.yc + _bbox.h / 2;
 			
-			var p0x = _bbox.x0 + _bbox.w * (bone_head_pose.x - _bone_bbox[0]) / _bone_bbox[4];
-			var p0y = _bbox.y0 + _bbox.h * (bone_head_pose.y - _bone_bbox[1]) / _bone_bbox[5];
-			var p1x = _bbox.x0 + _bbox.w * (bone_tail_pose.x - _bone_bbox[0]) / _bone_bbox[4];
-			var p1y = _bbox.y0 + _bbox.h * (bone_tail_pose.y - _bone_bbox[1]) / _bone_bbox[5];
+			var p0x = _bbox.x0 + _bbox.w * (bone_head_pose.x - _bone_bbox[0]) / _bw;
+			var p0y = _bbox.y0 + _bbox.h * (bone_head_pose.y - _bone_bbox[1]) / _bh;
+			var p1x = _bbox.x0 + _bbox.w * (bone_tail_pose.x - _bone_bbox[0]) / _bw;
+			var p1y = _bbox.y0 + _bbox.h * (bone_tail_pose.y - _bone_bbox[1]) / _bh;
 			
 			draw_set_circle_precision(8);
 			
@@ -381,8 +384,8 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 		
 		if(parent) { // do this instead of recursion.
 			pose_local_posit     = parent.pose_apply_posit;
-			pose_local_rotate    = parent.pose_apply_rotate;
-			pose_local_scale     = parent.pose_apply_scale;
+			pose_local_rotate    = apply_rotation? parent.pose_apply_rotate : 0;
+			pose_local_scale     = apply_scale?    parent.pose_apply_scale  : 1;
 			
 			pose_apply_posit[0] += pose_local_posit[0];
 			pose_apply_posit[1] += pose_local_posit[1];

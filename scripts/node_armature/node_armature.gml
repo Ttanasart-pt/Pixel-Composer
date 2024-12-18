@@ -879,6 +879,9 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		ds_stack_destroy(_bst);
 		
 		if(minx == 9999999) return noone;
+		if(abs(maxx - minx) < 1) maxx = minx + 1;
+		if(abs(maxy - miny) < 1) maxy = miny + 1;
+		
 		return BBOX().fromPoints(minx, miny, maxx, maxy);
 	} 
 	
