@@ -1,4 +1,4 @@
-function file_exists_empty(path) { INLINE path = string(path); return path != "" && file_exists(path); }
+function file_exists_empty(path) { return is_string(path) && path != "" && file_exists(path); }
 
 function file_copy_override(src, dest) {
 	if(file_exists_empty(dest)) file_delete(dest);

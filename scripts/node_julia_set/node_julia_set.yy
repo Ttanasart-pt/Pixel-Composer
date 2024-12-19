@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_julia_set",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_julia_set",
+  "parent":{
+    "name":"generator",
+    "path":"folders/nodes/data/generator.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -12,12 +12,14 @@ function shellOpenExplorer(path) {
 	return 0;
 }
 
+function shell_execute_output(path, command, ref = noone, _log = true) { return ExecutedProcessReadFromStandardOutput(shell_execute(path, command)); }
+
 function shell_execute(path, command, ref = noone, _log = true) {
 	INLINE
 	
 	// if(OS == os_macosx) {
-		path    = string_replace_all(path,    "\\", "/");
-		command = string_replace_all(command, "\\", "/");
+	path    = string_replace_all(path,    "\\", "/");
+	command = string_replace_all(command, "\\", "/");
 	// }
 	
 	var cmd = $"{path} {command}";

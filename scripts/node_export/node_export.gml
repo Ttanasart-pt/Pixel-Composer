@@ -209,26 +209,25 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	ffmpeg    = filepath_resolve(PREFERENCES.ffmpeg_path) 	   + "bin/ffmpeg.exe";
 	
 	if(OS == os_windows) {
-		if(!file_exists_empty(converter) || !file_exists_empty(magick)) noti_warning($"No ImageMagick detected at {magick}, please make sure the installation is complete and ImageMagick path is set properly in preference.");
-		if(!file_exists_empty(webp))    noti_warning($"No webp detected at {webp}, please make sure the installation is complete and webp path is set properly in preference.");
-		if(!file_exists_empty(gifski))  noti_warning($"No gifski detected at {gifski}, please make sure the installation is complete and gifski path is set properly in preference.");
-		if(!file_exists_empty(ffmpeg))  noti_warning($"No FFmpeg detected at {ffmpeg}, please make sure the installation is complete and FFmpeg path is set properly in preference.");
+		var _w = function(str, pth) /*=>*/ {return $"No {str} detected at {pth}, please make sure the installation is complete and {str} path is set correctly in the preference."};
+		
+		if(!file_exists_empty(converter)) noti_warning(_w("ImageMagick", magick));
+		if(!file_exists_empty(magick))    noti_warning(_w("ImageMagick", magick));
+		if(!file_exists_empty(webp))      noti_warning(_w("webp",        webp));
+		if(!file_exists_empty(gifski))    noti_warning(_w("gifski",      gifski));
+		if(!file_exists_empty(ffmpeg))    noti_warning(_w("FFmpeg",      ffmpeg));
 		
 	} else if(OS == os_macosx) {
-		var check_convert = ExecutedProcessReadFromStandardOutput(shell_execute("convert", ""));
-		if(string_pos(check_convert, "not found")) noti_warning($"No ImageMagick installed, please install imagemagick with homebrew or use the provided 'mac-libraries-installer.command'.");
+		var _w = function(str) /*=>*/ {return $"No {str} installed, please install {str} with homebrew or use the provided 'mac-libraries-installer.command'."};
 		
-		var check_webp = ExecutedProcessReadFromStandardOutput(shell_execute("webp", ""));
-		if(string_pos(check_webp, "not found")) noti_warning($"No webp installed, please install webp with homwbrew or use the provided 'mac-libraries-installer.command'.");
+		if(string_pos(shell_execute_output("convert", ""), "not found")) noti_warning(_w("ImageMagick"));
+		if(string_pos(shell_execute_output("webp", ""),    "not found")) noti_warning(_w("webp"));
+		if(string_pos(shell_execute_output("ffmpeg", ""),  "not found")) noti_warning(_w("FFmpeg"));
 		
-		var check_ffmpeg = ExecutedProcessReadFromStandardOutput(shell_execute("ffmpeg", ""));
-		if(string_pos(check_ffmpeg, "not found")) noti_warning($"No FFmpeg installed, please install FFmpeg with homebrew or use the provided 'mac-libraries-installer.command'.");
-		
-		var _opt = "/opt/homebrew/bin/";
-		converter = _opt + "convert";
-		magick    = _opt + "magick";
-		webp      = _opt + "webp";
-		ffmpeg    = _opt + "ffmpeg";
+		converter = "/opt/homebrew/bin/convert";
+		magick    = "/opt/homebrew/bin/magick";
+		webp      = "/opt/homebrew/bin/webp";
+		ffmpeg    = "/opt/homebrew/bin/ffmpeg";
 	}
 	
 	static onValueUpdate = function(_index) {
@@ -239,12 +238,8 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			
 			switch(form) {
 				case 0 : 
-				case 1 : 
-					inputs[1].display_data = _format_still;
-					break;
-				case 2 : 
-					inputs[1].display_data = _format_anim;
-					break;
+				case 1 : inputs[1].display_data = _format_still; break;
+				case 2 : inputs[1].display_data = _format_anim;  break;
 			}
 		}
 		
@@ -274,15 +269,17 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				inputs[3].setValue(0);
 				inputs[9].setValue(0);
 				break;
+				
 			case ".jpg" : 
 				inputs[3].setValue(0);
 				inputs[9].setValue(1);
 				break;
-			
+				
 			case ".gif" : 
 				inputs[3].setValue(2);
 				inputs[9].setValue(0);
 				break;
+				
 			case ".webp" : 
 				inputs[3].setValue(2);
 				inputs[9].setValue(1);

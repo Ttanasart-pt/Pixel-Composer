@@ -220,7 +220,7 @@ function __3dObject() constructor {
 			if(NVB != noone) {
 				shader_set(sh_d3d_wireframe);
 				shader_set_color("blend", c_white);
-				array_foreach(NVB, function(n) /*=>*/ {return vertex_submit(n, pr_linelist, -1)});
+				array_foreach(NVB, function(n) /*=>*/ {vertex_submit(n, pr_linelist, -1)});
 				shader_reset();
 			}
 		}

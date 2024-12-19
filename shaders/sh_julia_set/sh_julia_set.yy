@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_julia_set",
+  "name":"sh_julia_set",
+  "parent":{
+    "name":"generator",
+    "path":"folders/shader/generator.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

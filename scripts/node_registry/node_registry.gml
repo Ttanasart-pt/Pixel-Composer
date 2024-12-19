@@ -817,6 +817,7 @@ function __initNodes() {
 		addNodeObject(generator, "Box Pattern",			s_node_box_pattern,			"Node_Box_Pattern",			[1, Node_Box_Pattern],,             "Generate square-based patterns..").setVersion(11750);
 		addNodeObject(generator, "Quasicrystal",		s_node_quasicircle,			"Node_Quasicrystal",		[1, Node_Quasicrystal],,            "Generate Quasicrystal pattern.").setVersion(11660);
 		addNodeObject(generator, "Pixel Sampler",		s_node_pixel_sampler,		"Node_Pixel_Sampler",		[1, Node_Pixel_Sampler],,           "Map image on to each individual pixels of another image.").setVersion(11730);
+		addNodeObject(generator, "Julia",				s_node_julia,				"Node_Julia_Set",			[1, Node_Julia_Set],,       		"Generate Julia fractal.").setVersion(1_18_05_6);
 		
 		ds_list_add(generator, "Populate");
 		addNodeObject(generator, "Repeat",				s_node_repeat,				"Node_Repeat",				[0, Node_create_Repeat], global.node_repeat_keys, "Repeat image multiple times linearly, or in grid pattern.").setVersion(1100);

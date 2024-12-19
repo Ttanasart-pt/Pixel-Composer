@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"node_module_test",
+  "%Name":"__node_module_test",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"node_module_test",
+  "name":"__node_module_test",
   "parent":{
     "name":"data",
     "path":"folders/nodes/data.yy",
