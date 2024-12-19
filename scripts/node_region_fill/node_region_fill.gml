@@ -25,12 +25,14 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	newInput(11, nodeValue_Bool("Color Filter", self, false));
 	
+	newInput(12, nodeValue_Rotation_Range("Random rotation", self, [ 0, 0 ]));
+	
 	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 4, 
 		["Surfaces",        false], 0, 1, 
 		["Region Filter",   false, 11], 5, 6, 
-		["Fill",	        false], 8, 2, 9, 10, 
+		["Fill",	        false], 8, 2, 9, 10, 12, 
 		["Render",	        false], 7, 
 	];
 	
@@ -43,6 +45,7 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		inputs[ 2].setVisible(_filt == 0);
 		inputs[ 9].setVisible(_filt == 1, _filt == 1);
 		inputs[10].setVisible(_filt == 2, _filt == 2);
+		inputs[12].setVisible(_filt == 2 || _filt == 3);
 		
 		inputs[ 5].setVisible(_fclr);
 		inputs[ 6].setVisible(_fclr);
@@ -63,6 +66,7 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		var _fclr = _data[11];
 		var _targ = _data[5];
 		var _innr = _data[6];
+		var _trot = _data[12];
 		
 		var _sw = surface_get_width_safe(_surf);
 		var _sh = surface_get_height_safe(_surf)
@@ -163,7 +167,7 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			DRAW_CLEAR
 			
 			if(_rnbg == 2) draw_surface_safe(_surf); // render original
-				
+			
 			switch(_filt) {
 				case 0 :  // Random colors
 					
@@ -186,6 +190,8 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 				case 2 : // Texture Map
 					shader_set(sh_region_fill_rg_map);
 						shader_set_surface("textureMap", _tmap);
+						shader_set_2("rotationRandom", [degtorad(_trot[0]), degtorad(_trot[1])]);
+						shader_set_f("seed", _seed)
 						
 						draw_surface_safe(cmap);
 					shader_reset();
@@ -193,6 +199,9 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 				
 				case 3 : // Texture Map
 					shader_set(sh_region_fill_rg_coord);
+						shader_set_2("rotationRandom", [degtorad(_trot[0]), degtorad(_trot[1])]);
+						shader_set_f("seed", _seed)
+						
 						draw_surface_safe(cmap);
 					shader_reset();
 					break;
