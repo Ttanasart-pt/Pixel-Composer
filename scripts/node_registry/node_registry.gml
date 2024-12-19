@@ -823,7 +823,7 @@ function __initNodes() {
 		addNodeObject(generator, "Repeat",				s_node_repeat,				"Node_Repeat",				[0, Node_create_Repeat], global.node_repeat_keys, "Repeat image multiple times linearly, or in grid pattern.").setVersion(1100);
 		addNodeObject(generator, "Scatter",				s_node_scatter,				"Node_Scatter",				[1, Node_Scatter],,				"Scatter image randomly multiple times.");
 		addNodeObject(generator, "Repeat Texture",		s_node_repeat_texture,		"Node_Repeat_Texture",		[1, Node_Repeat_Texture],,		"Repeat texture over larger surface without repeating patterns.");
-			
+		
 		ds_list_add(generator, "Simulation");
 		addNodeObject(generator, "Particle",			s_node_particle,			"Node_Particle",			[1, Node_Particle],,						"Generate particle effect.");
 		addNodeObject(generator, "VFX",					s_node_vfx,					"Node_VFX_Group_Inline",	[1, Node_VFX_Group_Inline],,				"Create VFX group, which generate particles that can be manipulated using different force nodes.");

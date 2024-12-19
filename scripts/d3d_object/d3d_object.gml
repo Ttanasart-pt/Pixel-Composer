@@ -205,7 +205,10 @@ function __3dObject() constructor {
 				
 			} else if(_shader == sh_d3d_geometry) {
 				if(_useMat) _mat.submitGeometry();
-				else        shader_set_i("use_normal", 0);
+				else {
+					shader_set_i("use_normal",   0);
+					shader_set_f("mat_texScale", [ 1, 1 ] );
+				}
 				
 			}
 			

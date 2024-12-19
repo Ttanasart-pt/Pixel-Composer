@@ -3,15 +3,19 @@ varying vec4 v_worldPosition;
 varying vec3 v_viewPosition;
 varying vec3 v_vNormal;
 
-uniform int			mat_flip;
-uniform int			use_normal;
-uniform int         use_8bit;
-uniform float		normal_strength;
-uniform sampler2D	normal_map;
+uniform int       mat_flip;
+uniform int       use_normal;
+uniform int       use_8bit;
+uniform float     normal_strength;
+uniform sampler2D normal_map;
+uniform vec2      mat_texScale;
+uniform vec2      mat_texShift;
 
 void main() {
 	vec2 uv_coord = v_vTexcoord;
 	if(mat_flip == 1) uv_coord.y = -uv_coord.y;
+	uv_coord = fract(uv_coord * mat_texScale + mat_texShift);
+	
 	vec4 mat_baseColor = texture2D( gm_BaseTexture, uv_coord );
 	if(mat_baseColor.a < 0.1) discard;
 	

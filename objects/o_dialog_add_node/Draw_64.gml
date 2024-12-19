@@ -18,7 +18,7 @@ if !ready exit;
 	
 	if(search_string == "") {
 		catagory_pane.setFocusHover(sFOCUS, sHOVER);
-		catagory_pane.draw(dialog_x + ui(8), sy);
+		catagory_pane.draw(dialog_x + ui(12), sy);
 		
 		var _x = dialog_x + category_width + ui(16);
 		draw_sprite_stretched(THEME.ui_panel_bg, 1, _x, sy, dialog_w - category_width - ui(30), dialog_h - ui(66));
