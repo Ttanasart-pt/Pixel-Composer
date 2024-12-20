@@ -53,12 +53,14 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
+	newInput(17, nodeValue_Vec2("Shape", self, [ 1, 1 ]))
+	
 	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
 		["Output",		true],	0, 8, 
 		["Gradient",	false], 1, 15, 5, 12, 9, 13, 7, 
-		["Shape",		false], 2, 3, 10, 4, 11, 6, 14, 
+		["Shape",		false], 2, 3, 10, 4, 11, 6, 14, 17, 
 	];
 	
 	attribute_surface_depth();
@@ -66,7 +68,7 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		PROCESSOR_OVERLAY_CHECK
 		var _hov = false;
-		var a = inputs[6].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);					active &= !a; _hov |= a;
+		var a = inputs[ 6].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);                  active &= !a; _hov |= a;
 		var a = inputs[16].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, current_data[0]); active &= !a; _hov |= a;
 		
 		return _hov;
@@ -78,6 +80,7 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		inputs[ 3].setVisible(_typ != 1);
 		inputs[ 4].setVisible(_typ == 1);
 		inputs[14].setVisible(_typ);
+		inputs[17].setVisible(_typ == 1);
 		
 		inputs[1].mappableStep();
 		inputs[3].mappableStep();
@@ -87,12 +90,13 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
-		var _dim = _data[0];
-		var _typ = _data[2];
-		var _cnt = _data[6];
-		var _lop = _data[7];
-		var _msk = _data[8];
-		var _uni = _data[14];
+		var _dim  = _data[0];
+		var _typ  = _data[2];
+		var _cnt  = _data[6];
+		var _lop  = _data[7];
+		var _msk  = _data[8];
+		var _uni  = _data[14];
+		var _csca = _data[17];
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
@@ -102,9 +106,10 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			shader_set_f("dimension",  _dim);
 			
 			shader_set_i("gradient_loop",  _lop);
-			shader_set_f("center", _cnt[0] / _dim[0], _cnt[1] / _dim[1]);
-			shader_set_i("type",   _typ);
-			shader_set_i("uniAsp", _uni);
+			shader_set_f("center",   _cnt[0] / _dim[0], _cnt[1] / _dim[1]);
+			shader_set_i("type",     _typ);
+			shader_set_i("uniAsp",   _uni);
+			shader_set_2("cirScale", _csca);
 			
 			shader_set_f_map("angle",  _data[3], _data[10], inputs[3]);
 			shader_set_f_map("radius", _data[4], _data[11], inputs[4]);

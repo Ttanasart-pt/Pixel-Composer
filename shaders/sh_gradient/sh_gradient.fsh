@@ -1,10 +1,7 @@
-//
-// Simple passthrough fragment shader
-//
+#define TAU 6.283185307179586
+
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
-
-#define TAU 6.283185307179586
 
 uniform vec2 center;
 uniform vec2 dimension;
@@ -28,6 +25,8 @@ uniform sampler2D scaleSurf;
 uniform int type;
 uniform int gradient_loop;
 uniform int uniAsp;
+
+uniform vec2 cirScale;
 
 #region //////////////////////////////////// GRADIENT ////////////////////////////////////
 	#define GRADIENT_LIMIT 128
@@ -193,14 +192,14 @@ void main() {
 	vec2  asp  = dimension / dimension.y;
 	float prog = 0.;
 	
-	if(type == 0) {
+	if(type == 0) { // linear
 		prog = .5 + (v_vTexcoord.x - center.x) * cos(ang) - (v_vTexcoord.y - center.y) * sin(ang);
 		
-	} else if(type == 1) {
-		if(uniAsp == 0) prog = distance(v_vTexcoord, center) / rad;
-		else            prog = distance(v_vTexcoord * asp, center * asp) / rad;
+	} else if(type == 1) { // circular
+		vec2 _asp = uniAsp == 0? vec2(1.) : asp;
+		prog = length((v_vTexcoord - center) * _asp / cirScale) / rad;
 		
-	} else if(type == 2) {
+	} else if(type == 2) { // radial
 		vec2  _p = v_vTexcoord - center;
 		if(uniAsp == 1) _p *= asp;
 		
