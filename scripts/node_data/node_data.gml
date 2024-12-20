@@ -74,7 +74,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			if(!LOCALE_DEF || TESTING) renamed = true;
 		});
 		
-		RENDER_ALL_REORDER
+		RENDER_PARTIAL_REORDER
 	}
 	
 	#region ---- display ----

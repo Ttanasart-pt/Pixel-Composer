@@ -1744,7 +1744,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			PROJECT.modified	= true;
 		}
 		
-		RENDER_ALL_REORDER
+		RENDER_PARTIAL_REORDER
 		
 		if(onSetFrom != noone)			onSetFrom(_valueFrom);
 		if(_valueFrom.onSetTo != noone) _valueFrom.onSetTo(self);

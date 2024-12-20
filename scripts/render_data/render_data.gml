@@ -10,9 +10,10 @@ enum RENDER_TYPE {
 	LIVE_UPDATE            = false;
 	UPDATE_RENDER_ORDER    = false;
 	
-	#macro RENDER_ALL_REORDER	UPDATE_RENDER_ORDER = true; UPDATE |= RENDER_TYPE.full;
-	#macro RENDER_ALL									    UPDATE |= RENDER_TYPE.full;
-	#macro RENDER_PARTIAL								    UPDATE |= RENDER_TYPE.partial;
+	#macro RENDER_ALL                                         UPDATE |= RENDER_TYPE.full;
+	#macro RENDER_ALL_REORDER	  UPDATE_RENDER_ORDER = true; UPDATE |= RENDER_TYPE.full;
+	#macro RENDER_PARTIAL		   						      UPDATE |= RENDER_TYPE.partial;
+	#macro RENDER_PARTIAL_REORDER UPDATE_RENDER_ORDER = true; UPDATE |= RENDER_TYPE.partial;
 	
 	global.getvalue_hit = 0;
 #endregion

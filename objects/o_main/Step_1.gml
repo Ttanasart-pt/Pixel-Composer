@@ -132,7 +132,7 @@ _FILE_DROPPED     = false;
 	DEF_SURFACE_RESET();
 	
 	if(!PROJECT.safeMode && UPDATE_RENDER_ORDER) {
-		ResetAllNodesRender();
+		// ResetAllNodesRender();
 		NodeTopoSort();
 	}
 	
