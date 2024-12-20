@@ -6,6 +6,7 @@ varying vec4 v_vColour;
 uniform float seed;
 uniform float progress;
 uniform float detail;
+uniform float intensity;
 
 uniform vec2  dimension;
 uniform vec2  position;
@@ -95,6 +96,6 @@ void main() {
     n = snoise( pos );
 
     // noise [-1..+1] -> color
-    float intensity = exp(n.w * 3. - 1.5);
-	gl_FragColor = vec4(vec3(intensity), 1.);
+    float i = exp(n.w * 3. - 1.5) * intensity;
+	gl_FragColor = vec4(vec3(i), 1.);
 }

@@ -19,8 +19,12 @@ function Node_Caustic(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y, _g
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 2, 0.01 ] });
 		addShaderProp(SHADER_UNIFORM.float, "detail");
 			
+	newInput(6, nodeValue_Float("Intensity", self, 1))
+		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01 ] });
+		addShaderProp(SHADER_UNIFORM.float, "intensity");
+			
 	input_display_list = [
 		["Output", 	 true],	0, 
-		["Noise",	false],	1, 2, 4, 5, 
+		["Noise",	false],	1, 2, 6, 4, 5, 
 	];
 }
