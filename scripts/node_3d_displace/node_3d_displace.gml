@@ -1,5 +1,5 @@
 function Node_3D_Displace(_x, _y, _group = noone) : Node_3D_Modifier(_x, _y, _group) constructor {
-	name = "Displace vertex";
+	name = "Displace Vertex";
 	
 	newInput(in_mesh + 0, nodeValue_D3Material("Displace Texture", self, new __d3dMaterial()))
 		.setVisible(true, true);

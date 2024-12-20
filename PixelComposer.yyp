@@ -1168,6 +1168,7 @@
     {"id":{"name":"mtl_reader","path":"scripts/mtl_reader/mtl_reader.yy",},},
     {"id":{"name":"network_data","path":"scripts/network_data/network_data.yy",},},
     {"id":{"name":"node_2d_light","path":"scripts/node_2d_light/node_2d_light.yy",},},
+    {"id":{"name":"node_3d_bend","path":"scripts/node_3d_bend/node_3d_bend.yy",},},
     {"id":{"name":"node_3d_camera_set","path":"scripts/node_3d_camera_set/node_3d_camera_set.yy",},},
     {"id":{"name":"node_3d_camera","path":"scripts/node_3d_camera/node_3d_camera.yy",},},
     {"id":{"name":"node_3d_depth","path":"scripts/node_3d_depth/node_3d_depth.yy",},},

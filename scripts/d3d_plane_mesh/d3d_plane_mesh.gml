@@ -2,8 +2,7 @@ function __3dPlane() : __3dObject() constructor {
 	VF = global.VF_POS_NORM_TEX_COL;
 	render_type = pr_trianglelist;
 	
-	self.normal = 0;
-	
+	normal   = 0;
 	two_side = false;
 	
 	static initModel = function() {
