@@ -33,9 +33,11 @@ function Node_3D_Mesh_Path_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 	
 	newInput(in_mesh + 11, nodeValue_Bool("Inverted", self, false ));
 	
+	newInput(in_mesh + 12, nodeValue_Rotation("Profile Angle", self, 0 ));
+	
 	input_display_list = [
 		["Path",		false], 	in_mesh + 0, in_mesh + 10,
-		__d3d_input_list_mesh,		in_mesh + 6, in_mesh + 1, in_mesh + 7, in_mesh + 8, in_mesh + 5, in_mesh + 11, 
+		__d3d_input_list_mesh,		in_mesh + 6, in_mesh + 1, in_mesh + 12, in_mesh + 7, in_mesh + 8, in_mesh + 5, in_mesh + 11, 
 		__d3d_input_list_transform,
 		["Material",	false], 	in_mesh + 4, in_mesh + 2, in_mesh + 3, in_mesh + 9, 
 	]
@@ -59,6 +61,7 @@ function Node_3D_Mesh_Path_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 		var _uvScale = _data[in_mesh +  9];
 		var _loop    = _data[in_mesh + 10];
 		var _invert  = _data[in_mesh + 11];
+		var _pfrot   = _data[in_mesh + 12];
 		
 		if(_path == noone) return noone;
 		
@@ -102,6 +105,7 @@ function Node_3D_Mesh_Path_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 			radiusOverPath: _radPath, 
 			loop   : _loop,
 			invert : _invert,
+			yaw    : _pfrot,
 			
 			uvProg  : _uvProg, 
 			uvScale : _uvScale,

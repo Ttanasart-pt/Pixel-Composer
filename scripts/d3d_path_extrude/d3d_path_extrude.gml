@@ -15,6 +15,8 @@ function __3dPathExtrude(radius = 0.5, sides = 8, smooth = false) : __3dObject()
 	radiusOverPath = [];
 	uvScale = [ 1, 1 ];
 	
+	yaw = 0;
+	
 	static initModel = function() {
 		var vs = [];
 		var v0 = [];
@@ -47,6 +49,7 @@ function __3dPathExtrude(radius = 0.5, sides = 8, smooth = false) : __3dObject()
 		var _vs = uvScale[1];
 		
 		var firstLoop = array_create(sides * 3);
+		var _iside = 360 / sides;
 		
 		for(var i = 1; i < _subd; i++) {
 			n.x = points[i * 3 + 0];
@@ -76,7 +79,7 @@ function __3dPathExtrude(radius = 0.5, sides = 8, smooth = false) : __3dObject()
 				var _rr = radius * radiusOverPath[0];
 				
 				for(var j = 0; j <= sides; j++) {
-			    	var a0 = j / sides * 360;
+			    	var a0 = yaw + j * _iside;
 			    	
 			    	var _u  = u.multiply(dcos(a0));
 			    	var _w  = w.multiply(dsin(a0));
@@ -96,8 +99,8 @@ function __3dPathExtrude(radius = 0.5, sides = 8, smooth = false) : __3dObject()
 					var cy1 = prevp[j * 3 + 1 + 3];
 					var cz1 = prevp[j * 3 + 2 + 3];
 					
-					var a0 = (j + 0) / sides * 360;
-					var a1 = (j + 1) / sides * 360;
+					var a0 = yaw + (j + 0) * _iside;
+					var a1 = yaw + (j + 1) * _iside;
 			
 					var __u0 = 0.5 + lengthdir_x(0.5, a0);
 					var __v0 = 0.5 + lengthdir_y(0.5, a0);
@@ -137,7 +140,7 @@ function __3dPathExtrude(radius = 0.5, sides = 8, smooth = false) : __3dObject()
 			var __v1 = 1. - uvProg[i  ];
 			
 			for(var j = 0; j <= sides; j++) {
-		    	var a0 = j / sides * 360;
+		    	var a0 = yaw + j * _iside;
 		    	
 		    	var _u  = u.multiply(dcos(a0));
 		    	var _w  = w.multiply(dsin(a0));
@@ -218,8 +221,8 @@ function __3dPathExtrude(radius = 0.5, sides = 8, smooth = false) : __3dObject()
 					var cy1 = prevp[j * 3 + 1 + 3];
 					var cz1 = prevp[j * 3 + 2 + 3];
 					
-					var a0 = (j + 0) / sides * 360;
-					var a1 = (j + 1) / sides * 360;
+					var a0 = yaw + (j + 0) * _iside;
+					var a1 = yaw + (j + 1) * _iside;
 			
 					var __u0 = 0.5 + lengthdir_x(0.5, a0);
 					var __v0 = 0.5 + lengthdir_y(0.5, a0);

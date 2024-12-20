@@ -276,7 +276,7 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 					_oy = _ny;
 				}
 			}
-		
+			
 			if(!isUsingTool(0))
 			for(var i = 0; i < ansize; i++) {
 				var _a = anchors[i];

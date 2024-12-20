@@ -29,6 +29,8 @@ function Panel_Notification() : PanelContent() constructor {
 	show_time = false;
 	
 	rightClickMenu = [ 
+		menuItem(__txtx("noti_copy_message",   "Copy notification message"), function() /*=>*/ { if(noti_selecting == noone) return; clipboard_set_text(noti_selecting.txt); }, THEME.copy), 
+		-1, 
 		MENU_ITEMS.noti_clear_all,
 		MENU_ITEMS.noti_clear_log,
 		MENU_ITEMS.noti_clear_warning,
@@ -87,15 +89,8 @@ function Panel_Notification() : PanelContent() constructor {
 					if(noti.onClick != noone && mouse_press(mb_left, pFOCUS))
 						noti.onClick();
 				
-					if(mouse_press(mb_right, pFOCUS)) {
+					if(mouse_press(mb_right, pFOCUS))
 						noti_selecting = noti;
-						
-						var dia = menuCall("notification_menu", [ 
-							menuItem(__txtx("noti_copy_message",   "Copy notification message"), function() { clipboard_set_text(noti_selecting.txt);   }), 
-							menuItem(__txtx("noti_delete_message", "Delete notification"),       function() { ds_list_remove(STATUSES, noti_selecting); }), 
-						]);
-						
-					}
 				}
 				
 				if(noti.life_max > 0) {
@@ -163,8 +158,7 @@ function Panel_Notification() : PanelContent() constructor {
 		sp_noti.setFocusHover(pFOCUS, pHOVER);
 		sp_noti.draw(px, py, mx - px, my - py);
 		
-		if(mouse_press(mb_right, pFOCUS)) {
+		if(mouse_press(mb_right, pFOCUS))
 			menuCall("notification_log_menu", rightClickMenu);
-		}
 	}
 }
