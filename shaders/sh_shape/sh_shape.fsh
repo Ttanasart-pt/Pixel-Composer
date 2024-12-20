@@ -477,6 +477,7 @@ void main() {
 	}
 	
 	color = cc;
+	
 	if(drawDF == 1) {
 		color  = -d;
 		color  = clamp((color - dfLevel.x) / (dfLevel.y - dfLevel.x), 0., 1.);
@@ -485,6 +486,6 @@ void main() {
 		color *= cc;
 	}
 	
-	if(drawBG == 0) gl_FragColor = vec4(v_vColour.rgb, v_vColour.a * color);
+	if(drawBG == 0) gl_FragColor = vec4(v_vColour.rgb * color, v_vColour.a * cc);
 	else            gl_FragColor = mix(bgColor, v_vColour, color);
 }
