@@ -109,9 +109,21 @@ void main() {
         res.a = 1.;
         
     } else if(operator == 19) { 
+        res.r = res.r <= op.r? 1. : 0.;
+        res.g = res.g <= op.g? 1. : 0.;
+        res.b = res.b <= op.b? 1. : 0.;
+        res.a = 1.;
+        
+    } else if(operator == 20) { 
         res.r = res.r > op.r? 1. : 0.;
         res.g = res.g > op.g? 1. : 0.;
         res.b = res.b > op.b? 1. : 0.;
+        res.a = 1.;
+        
+    } else if(operator == 21) { 
+        res.r = res.r >= op.r? 1. : 0.;
+        res.g = res.g >= op.g? 1. : 0.;
+        res.b = res.b >= op.b? 1. : 0.;
         res.a = 1.;
         
     }

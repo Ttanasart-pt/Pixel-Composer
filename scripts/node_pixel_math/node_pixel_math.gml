@@ -27,7 +27,7 @@ function Node_Pixel_Math(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	__init_mask_modifier(2); // inputs 5, 6, 
 	
 	_scroll = array_clone(global.node_math_scroll, 1);
-	array_append(_scroll, ["Less than", "Greater than"]);
+	array_append(_scroll, ["Less than", "Less than equal", "Greater than", "Greater than equal"]);
 	newInput(7, nodeValue_Enum_Scroll("Operator", self, 0, _scroll));
 	
 	newInput(8, nodeValue_Vec4("Operand", self, [ 0, 0, 0, 0 ]));

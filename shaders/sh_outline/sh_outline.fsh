@@ -92,8 +92,8 @@ void checkPixel(vec2 px, vec2 p) {
 	if(side == 0 && crop_border == 1 && (txs.x < 0. || txs.x > 1. || txs.y < 0. || txs.y > 1.)) return;
 	
 	vec4 sam = sampleTexture( gm_BaseTexture, txs );
-	if(side == 0 && sam.a > 0.) return; //inside border,  skip if current pixel is filled
-	if(side == 1 && sam.a < 1.) return; //outside border, skip if current pixel is empty
+	if(side == 0 && sam.a == 1.) return; //inside border,  skip if current pixel is filled
+	if(side == 1 && sam.a == 0.) return; //outside border, skip if current pixel is empty
 	
 	isOutline = true;
 	
