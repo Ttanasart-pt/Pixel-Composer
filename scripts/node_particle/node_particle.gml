@@ -2,10 +2,7 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 	name = "Particle";
 	use_cache = CACHE_USE.auto;
 
-	onSurfaceSize = function() { 
-		var _inp = getInputData(input_len, DEF_SURF); 
-		return [ _inp[0], _inp[1] ];
-	};
+	onSurfaceSize = function() /*=>*/ {return getInputData(input_len, DEF_SURF)};
 	
 	newInput(input_len + 0, nodeValue_Vec2("Output dimension", self, DEF_SURF));
 		

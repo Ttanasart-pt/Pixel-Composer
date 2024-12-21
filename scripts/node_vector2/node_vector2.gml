@@ -14,14 +14,33 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	newInput(3, nodeValue_Enum_Scroll("Display", self,  0, [ "Number", "Coordinate" ]));
 	
+	newInput(4, nodeValue_Bool("Show on global", self, false, "Whether to show overlay gizmo when not selecting any nodes."));
+	
+	newInput(5, nodeValue_Vec2("Gizmo offset", self, [ 0, 0 ]));
+	
+	newInput(6, nodeValue_Float("Gizmo scale", self, 1));
+	
+	newInput(7, nodeValue_Enum_Scroll("Gizmo style", self, 0, [ "Default", "Shapes", "Sprite" ]));
+	
+	newInput(8, nodeValue_Enum_Scroll("Gizmo shape", self, 0, [ "Rectangle", "Ellipse" ]));
+	
+	newInput(9, nodeValue_Surface("Gizmo sprite", self, noone));
+	
+	newInput(10, nodeValue_Vec2("Gizmo size", self, [ 32, 32 ]));
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
 	newOutput(0, nodeValue_Output("Vector", self, VALUE_TYPE.float, [ 0, 0 ]))
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	drag_type = 0;
-	drag_mx   = 0;
-	drag_my   = 0;
-	drag_sx   = 0;
-	drag_sy   = 0;
+	newOutput(1, nodeValue_Output("x", self, VALUE_TYPE.float, 0))
+		
+	newOutput(2, nodeValue_Output("y", self, VALUE_TYPE.float, 0))
+		
+	input_display_list = [ 0, 1, 2, 
+		["Editor", false], 3, 
+		["Gizmo",  false], 4, 5, 6, 7, 8, 9, 10, 
+	];
 	
 	wd_dragging = false;
 	wd_minx		= -1;
@@ -36,73 +55,96 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	wd_pan_my	= 0;
 	
 	coordinate_menu = [
-		menuItem(__txt("Reset view"),  function() {
-			wd_minx = -1;
-			wd_miny = -1;
-			wd_maxx =  1;
-			wd_maxy =  1;
-		}),
-		
-		menuItem(__txt("Focus value"),  function() {
+		menuItem(__txt("Reset view"),  function() /*=>*/ { wd_minx = -1; wd_miny = -1; wd_maxx = 1; wd_maxy = 1; }),
+		menuItem(__txt("Focus value"),  function() /*=>*/ {
 			var _x = getInputData(0);
 			var _y = getInputData(1);
 			
-			wd_minx	= _x - 1;
-			wd_miny	= _y - 1;
-			wd_maxx	= _x + 1;
-			wd_maxy	= _y + 1;
+			wd_minx	= _x - 1; wd_miny = _y - 1;
+			wd_maxx	= _x + 1; wd_maxy = _y + 1;
 		}),
 	];
 	
+	gz_style  = 0;
+	gz_shape  = 0;
+	gz_sprite = 0;
+	gz_pos    = [ 0, 0 ];
+	gz_size   = [ 0, 0 ];
+	gz_scale  = 1;
+	
+	gz_dragging = false;
+	gz_drag_mx  = 0;
+	gz_drag_my  = 0;
+	gz_drag_sx  = 0;
+	gz_drag_sy  = 0;
+	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { 
 		PROCESSOR_OVERLAY_CHECK
+		if(process_amount > 1) return;
 		
-		var __ax = current_data[0];
-		var __ay = current_data[1];
+		var _hov = false;
+		var _gx  = _x + gz_pos[0] * _s;
+		var _gy  = _y + gz_pos[1] * _s;
 		
-		if(is_array(__ax) || is_array(__ay)) return;
-						
-		var _ax = __ax * _s + _x;
-		var _ay = __ay * _s + _y;
-		var _val;
-		
-		draw_sprite_colored(THEME.anchor_selector, 0, _ax, _ay);
-						
-		if(drag_type) {
-			draw_sprite_colored(THEME.anchor_selector, 1, _ax, _ay);
-			var _nx = value_snap((drag_sx + (_mx - drag_mx) - _x) / _s, _snx);
-			var _ny = value_snap((drag_sy + (_my - drag_my) - _y) / _s, _sny);
-			if(key_mod_press(CTRL)) {
-				_val[0] = round(_nx);
-				_val[1] = round(_ny);
-			} else {
-				_val[0] = _nx;
-				_val[1] = _ny;
-			}
+		var _ax = _gx + current_data[0] * _s;
+		var _ay = _gy + current_data[1] * _s;
+		var _vx, _vy;
+		var _nx, _ny;
+				
+		if(gz_dragging) {
+			_nx = value_snap(gz_drag_sx + (_mx - gz_drag_mx) / _s, _snx);
+			_ny = value_snap(gz_drag_sy + (_my - gz_drag_my) / _s, _sny);
+			_vx = key_mod_press(CTRL)? round(_nx) : _nx;
+			_vy = key_mod_press(CTRL)? round(_ny) : _ny;
 			
-			var s0 = inputs[0].setValue(_val[0]);
-			var s1 = inputs[1].setValue(_val[1]);
+			var s0 = inputs[0].setValue(_vx);
+			var s1 = inputs[1].setValue(_vy);
 			
-			if(s0 || s1)
-				UNDO_HOLDING = true;
+			if(s0 || s1) UNDO_HOLDING = true;
 							
 			if(mouse_release(mb_left)) {
-				drag_type = 0;
+				gz_dragging  = false;
 				UNDO_HOLDING = false;
 			}
 		}
-						
-		if(point_in_circle(_mx, _my, _ax, _ay, 8)) {
-			hover = 1;
-			draw_sprite_colored(THEME.anchor_selector, 1, _ax, _ay);
-			if(mouse_press(mb_left, active)) {
-				drag_type = 1;
-				drag_mx   = _mx;
-				drag_my   = _my;
-				drag_sx   = _ax;
-				drag_sy   = _ay;
-			}
-		} 
+		
+		if(gz_style == 0) {
+			_hov = hover && point_in_circle(_mx, _my, _ax, _ay, 8);
+			draw_anchor(_hov, _ax, _ay, 8);
+			
+		} else {
+			
+			var _rx  = _ax;
+			var _ry  = _ay;
+			var _rw  = gz_size[0] * _s;
+			var _rh  = gz_size[1] * _s;
+			var _rx0 = _rx - _rw / 2;
+			var _ry0 = _ry - _rh / 2;
+			var _rx1 = _rx + _rw / 2;
+			var _ry1 = _ry + _rh / 2;
+			
+			_hov = hover && point_in_rectangle(_mx, _my, _rx0, _ry0, _rx1, _ry1);
+			
+			draw_set_color(_hov || gz_dragging? COLORS._main_accent : COLORS._main_icon);
+			draw_set_circle_precision(32);
+			
+			if(gz_style == 1) {
+				switch(gz_shape) {
+					case 0 : draw_rectangle(_rx0, _ry0, _rx1, _ry1, true); break;
+					case 1 : draw_ellipse(_rx0, _ry0, _rx1, _ry1, true);   break;
+				}
+				
+			} else if(gz_style == 2) 
+				if(is_surface(gz_sprite)) draw_surface_stretched_ext(gz_sprite, _rx0, _ry0, _rw, _rh, c_white, 0.5 + 0.5 * _hov);
+		}
+		
+		if(_hov && mouse_press(mb_left, active)) {
+			gz_dragging = true;
+			gz_drag_mx  = _mx;
+			gz_drag_my  = _my;
+			gz_drag_sx  = current_data[0];
+			gz_drag_sy  = current_data[1];
+		}
 	} 
 	
 	static step = function() { 
@@ -120,12 +162,31 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			setDimension(160, 160, false);
 	} 
 	
-	static processData = function(_output, _data, _output_index, _array_index = 0) { 
-		var vec = [ _data[0], _data[1] ];
-		for( var i = 0, n = array_length(vec); i < n; i++ ) 
-			vec[i] = _data[2]? round(vec[i]) : vec[i];
-			
-		return vec;
+	static processData = function(_outData, _data, _output_index, _array_index = 0) { 
+		var _x   = _data[0];
+		var _y   = _data[1];
+		var _int = _data[2];
+		
+		isGizmoGlobal = _data[4];
+		gz_pos        = _data[5];
+		gz_scale      = _data[6];
+		gz_style      = _data[7];
+		gz_shape      = _data[8];
+		gz_sprite     = _data[9];
+		gz_size       = _data[10];
+		
+		inputs[ 8].setVisible(gz_style == 1);
+		inputs[ 9].setVisible(gz_style == 2, gz_style == 2);
+		inputs[10].setVisible(gz_style != 0);
+		
+		var vec = _outData[0];
+		vec[0] = _int? round(_x) : _x;
+		vec[1] = _int? round(_y) : _y;
+		
+		_outData[1] = vec[0];
+		_outData[2] = vec[1];
+		
+		return _outData;
 	} 
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { 

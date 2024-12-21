@@ -716,7 +716,7 @@ function __initNodes() {
 		addNodeObject(d3d, "3D Material",	s_node_3d_meterial,			"Node_3D_Material",			[1, Node_3D_Material],, "Create 3D material with adjustable parameters.").setVersion(11510);
 		addNodeObject(d3d, "3D Scene",		s_node_3d_scene,			"Node_3D_Scene",			[1, Node_3D_Scene],, "Combine multiple 3D objects into a single junction.").setVersion(11510);
 		addNodeObject(d3d, "3D Repeat",		s_node_3d_array,			"Node_3D_Repeat",			[1, Node_3D_Repeat],, "Repeat the same 3D mesh multiple times.").setVersion(11510);
-		addNodeObject(d3d, "Transform 3D",	s_node_image_transform_3d,	"Node_3D_Transform_Image",	[1, Node_3D_Transform_Image],, "Transform image in 3D space").setVersion(11600);
+		addNodeObject(d3d, "Transform 3D",	s_node_image_transform_3d,	"Node_3D_Transform_Image",	[1, Node_3D_Transform_Image], ["3d transform"], "Transform image in 3D space").setVersion(11600);
 		addNodeObject(d3d, "Mesh Export",	s_node_3d_obj_export,		"Node_3D_Mesh_Export",		[1, Node_3D_Mesh_Export],, "Export 3D mesh as .obj file").setVersion(11740);
 		
 		ds_list_add(d3d, "Mesh");

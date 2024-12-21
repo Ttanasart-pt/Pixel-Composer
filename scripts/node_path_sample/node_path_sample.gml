@@ -15,7 +15,7 @@ function Node_Path_Sample(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	newOutput(1, nodeValue_Output("Direction", self, VALUE_TYPE.float, 0));
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _path = getInputData(0);
 		if(_path && struct_has(_path, "drawOverlay")) _path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 		
@@ -30,9 +30,9 @@ function Node_Path_Sample(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			
 			draw_circle(_px, _py, 4, false);
 		}
-	} #endregion
+	}
 	
-	static processData = function(_output, _data, _output_index, _array_index = 0) { #region
+	static processData = function(_output, _data, _output_index, _array_index = 0) {
 		var _path = _data[0];
 		var _rat  = _data[1];
 		var _mod  = _data[2];
@@ -43,9 +43,8 @@ function Node_Path_Sample(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		var inv = false;
 		
 		switch(_mod) {
-			case 0 : 
-				_rat = frac(_rat);
-				break;
+			case 0 : _rat = frac(_rat); break;
+				
 			case 1 : 
 				var fl = floor(_rat);
 				var fr = frac(_rat);
@@ -70,10 +69,10 @@ function Node_Path_Sample(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			var dir = inv? p1.directionTo(p0) : p0.directionTo(p1);
 			return dir;
 		} 
-	} #endregion
+	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
 		draw_sprite_fit(THEME.node_draw_path, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
-	} #endregion
+	}
 }

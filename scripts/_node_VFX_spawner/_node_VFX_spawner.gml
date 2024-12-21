@@ -20,7 +20,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	newInput(7, nodeValue_Range("Acceleration", self, [ 0, 0 ] , { linked : true }));
 	
 	newInput(8, nodeValue_Rotation_Random("Orientation", self, [ 0, 0, 0, 0, 0 ] ));
-		
+	
 	newInput(9, nodeValue_Range("Rotational speed", self, [ 0, 0 ] , { linked : true }));
 	
 	newInput(10, nodeValue_Vec2_Range("Spawn scale", self, [ 1, 1, 1, 1 ] , { linked : true }));

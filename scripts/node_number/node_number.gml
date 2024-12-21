@@ -56,7 +56,7 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	input_display_list = [ 0, 1, 
 		["Editor",  false], 2, 6, 3, 5, 4, 7,
 		["Gizmo",   false], 8, 11, 12, 13, 14, 9, 10,
-	]
+	];
 	
 	gz_style  = 0;
 	gz_shape  = 0;
@@ -119,7 +119,7 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 						var _ah = min(_rw, _rh) / 4;
 						var _lt = min(_rw, _rh) / 3;
 						
-						draw_primitive_begin(pr_linestrip);
+						draw_primitive_begin(pr_linestrip); // arrow shape
 							draw_vertex(_rx0,       _ry);
 							draw_vertex(_rx0 + _ah, _ry0);
 							draw_vertex(_rx0 + _ah, _ry0 + _lt);
