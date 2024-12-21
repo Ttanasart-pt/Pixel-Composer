@@ -16,6 +16,12 @@
 	vertex_format_add_custom(vertex_type_float3, vertex_usage_texcoord);	// x y z    // 12 // barycentric
 	global.VF_POS_NORM_TEX_COL = vertex_format_end();
 	global.VF_POS_NORM_TEX_COL_size = 48;
+	
+	#macro vertex_pos3 vertex_position_3d
+	#macro vertex_norm vertex_normal
+	#macro vertex_texc vertex_texcoord
+	#macro vertex_colr vertex_color
+	#macro vertex_vec3 vertex_float3
 #endregion
 
 function __3dObject() constructor {
