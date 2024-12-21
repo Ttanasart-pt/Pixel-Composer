@@ -97,9 +97,11 @@ function buttonGroup(_data, _onClick) : widget() constructor {
 			
 			for(var i = 0; i < amo; i++) {
 				var _d = data[i];
-				
 				buttons[i].setFocusHover(active, hover);
 				buttons[i].tooltip = array_safe_get(tooltips, i, "");
+				
+				if(is(_d, scrollItem))
+					_d = _d.spr;
 				
 				var bww = !is_string(_d) && sprite_exists(_d) && _mx? _sw : ww;
 				var spr = i == 0 ? buttonSpr[0] : (i == amo - 1? buttonSpr[2] : buttonSpr[1]);
@@ -107,19 +109,18 @@ function buttonGroup(_data, _onClick) : widget() constructor {
 				if(_selecting == i) {
 					draw_sprite_stretched_ext(spr, 2, floor(bx), _y, ceil(bww), _h, boxColor);
 					draw_sel = [spr, bx];
+					
 				} else {
 					buttons[i].draw(floor(bx), _y, ceil(bww), _h, _m, spr);
 					if(buttons[i].clicked) onClick(i);
 				}
 				
-				if(is_string(data[i])) {
+				if(is_string(_d)) {
 					draw_set_text(font, fa_center, fa_center, fColor);
-					draw_text_add(bx + bww / 2, _y + _h / 2, data[i]);
+					draw_text_add(bx + bww / 2, _y + _h / 2, _d);
 					
-				} else if(sprite_exists(data[i])) {
-					draw_sprite_ui_uniform(data[i], i, bx + bww / 2, _y + _h / 2, 1);
-					
-				}
+				} else if(sprite_exists(_d))
+					draw_sprite_ui_uniform(_d, i, bx + bww / 2, _y + _h / 2, 1);
 				
 				bx += bww;
 			}

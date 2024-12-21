@@ -2347,6 +2347,7 @@
     {"name":"s_node_kuwahara","order":32,"path":"sprites/s_node_kuwahara/s_node_kuwahara.yy",},
     {"name":"s_node_level_selector","order":34,"path":"sprites/s_node_level_selector/s_node_level_selector.yy",},
     {"name":"s_node_level","order":33,"path":"sprites/s_node_level/s_node_level.yy",},
+    {"name":"s_node_line_cap","order":34,"path":"sprites/s_node_line_cap/s_node_line_cap.yy",},
     {"name":"s_node_line","order":7,"path":"sprites/s_node_line/s_node_line.yy",},
     {"name":"s_node_liquefy_type","order":29,"path":"sprites/s_node_liquefy_type/s_node_liquefy_type.yy",},
     {"name":"s_node_liquefy","order":71,"path":"sprites/s_node_liquefy/s_node_liquefy.yy",},

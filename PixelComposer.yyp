@@ -3038,6 +3038,7 @@
     {"id":{"name":"s_node_kuwahara","path":"sprites/s_node_kuwahara/s_node_kuwahara.yy",},},
     {"id":{"name":"s_node_level_selector","path":"sprites/s_node_level_selector/s_node_level_selector.yy",},},
     {"id":{"name":"s_node_level","path":"sprites/s_node_level/s_node_level.yy",},},
+    {"id":{"name":"s_node_line_cap","path":"sprites/s_node_line_cap/s_node_line_cap.yy",},},
     {"id":{"name":"s_node_line","path":"sprites/s_node_line/s_node_line.yy",},},
     {"id":{"name":"s_node_liquefy_type","path":"sprites/s_node_liquefy_type/s_node_liquefy_type.yy",},},
     {"id":{"name":"s_node_liquefy","path":"sprites/s_node_liquefy/s_node_liquefy.yy",},},

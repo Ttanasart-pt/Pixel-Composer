@@ -31,7 +31,9 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	newInput(12, nodeValue_Bool("Span width over path", self, false, "Apply the full 'width over length' to the trimmed path."));
 		
-	newInput(13, nodeValue_Bool("Round cap", self, false));
+	newInput(13, nodeValue_Enum_Button("End cap", self, 0, [ new scrollItem("None",  s_node_line_cap, 0), 
+	                                                         new scrollItem("Round", s_node_line_cap, 1),
+	                                                         new scrollItem("Tri",   s_node_line_cap, 2), ]));
 	
 	newInput(14, nodeValue_Int("Round segment", self, 8))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [2, 32, 0.1] });
@@ -139,7 +141,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	static getTool = function() { 
 		var _path = getInputData(7);
-		return is_instanceof(_path, Node)? _path : self; 
+		return is(_path, Node)? _path : self; 
 	}
 	
 	static step = function() {
@@ -226,17 +228,13 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _pnt0 = _data[32];
 			var _pnt1 = _data[33];
 			var _aa   = power(2, _data[34]);
-		#endregion
-		
-		/////// Check data
-		
-		if(_dtype == 1 && _pat == noone) 
-			_dtype = 0;
 			
-		if(_dtype == 2 && (array_invalid(_segs) || array_invalid(_segs[0]))) 
-			_dtype = 0; 
-		
-		/////// Data
+			if(_dtype == 1 && _pat == noone) 
+				_dtype = 0;
+				
+			if(_dtype == 2 && (array_invalid(_segs) || array_invalid(_segs[0]))) 
+				_dtype = 0; 
+		#endregion
 		
 		if(IS_FIRST_FRAME || inputs[11].is_anim)
 			ds_map_clear(widthMap);
@@ -534,7 +532,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				
 		}
 		
-		/////// Draw
+		////- Draw
 		
 		var _colorPass = surface_verify(_outData[0], _surfDim[0], _surfDim[1], attrDepth());
 		var _widthPass = surface_verify(_outData[1], _surfDim[0], _surfDim[1], attrDepth());
@@ -562,23 +560,21 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			for( var i = 0, n = array_length(lines); i < n; i++ ) {
 				var points = lines[i];
 				if(array_length(points) < 2) continue;
+				random_set_seed(_sed + i);
+				
+				if(_useTex && _scaleTex) shader_set_2("scale", [ _texSca[0] * _len, _texSca[1] ]);
+				if(_useTex) draw_primitive_begin_texture(pr_trianglestrip, tex);
+				else        draw_primitive_begin(pr_trianglestrip);
 				
 				var _ldata = line_data[i];
 				var _len   = _ldata.length;
 				var _caps  = [];
-				
-				if(_useTex && _scaleTex) shader_set_2("scale",    [ _texSca[0] * _len, _texSca[1] ]);
-				
-				if(_useTex) draw_primitive_begin_texture(pr_trianglestrip, tex);
-				else        draw_primitive_begin(pr_trianglestrip);
-				
-				random_set_seed(_sed + i);
-				var pxs = [];
-				var dat = array_safe_get_fast(_pathData, i, noone);
+				var pxs    = [];
+				var dat    = array_safe_get_fast(_pathData, i, noone);
 				
 				var _col_base = dat == noone? _colb.eval(random(1)) : dat.color;
 				
-				for( var j = 0; j < array_length(points); j++ ) {
+				for( var j = 0, m = array_length(points); j < m; j++ ) {
 					var p0   = points[j];
 					var _nx  = p0.x - 0.5 * _1px + _padx;
 					var _ny  = p0.y - 0.5 * _1px + _pady;
@@ -597,24 +593,24 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					
 					_nc = colorMultiply(_col_base, _color.eval(_colP? prog : prgc));
 					
-					if(_cap) { 
+					if(_cap) {
 						if(j == 1) {
 							_d = _dir + 180;
 							_caps[0] = [ _oc, _ox, _oy, _ow / 2, _d - 90, _d ];
 							_caps[1] = [ _oc, _ox, _oy, _ow / 2, _d, _d + 90 ];
 						}
 						
-						if(j == array_length(points) - 1) {
+						if(j == m - 1) {
 							_d = _dir;
 							_caps[2] = [ _nc, _nx, _ny, _nw / 2, _d - 90, _d ];
 							_caps[3] = [ _nc, _nx, _ny, _nw / 2, _d, _d + 90 ];
 						}
-					} 
+					}
 					
 					if(_1px) { 
 						if(j) {
 							var dst = point_distance(_ox, _oy, _nx, _ny);
-							if(dst <= 1 && i < array_length(points) - 1) continue;
+							if(dst <= 1 && i < m - 1) continue;
 							draw_line_color(_ox * _aa, _oy * _aa, _nx * _aa, _ny * _aa, _oc, _nc);
 						}
 						
@@ -627,7 +623,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 							var _nd0 = _dir;
 							var _nd1 = _nd0;
 							
-							if(j < array_length(points) - 1) {
+							if(j < m - 1) {
 								var p2 = points[j + 1];
 								var _nnx = p2.x + _padx;
 								var _nny = p2.y + _pady;
@@ -638,7 +634,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 								_nd = _nd0;
 							
 							if(_useTex) {
-								var _len = array_length(points) - 1;
+								var _len = m - 1;
 								
 								var ox0 = _ox + lengthdir_x(_ow / 2, _od + 90);
 								var oy0 = _oy + lengthdir_y(_ow / 2, _od + 90);
@@ -682,8 +678,23 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				
 				for( var j = 0, m = array_length(_caps); j < m; j++ ) {
 					var _cps = _caps[j];
+					var _cpx = _cps[1] * _aa;
+					var _cpy = _cps[2] * _aa;
+					var _cpr = _cps[3] * _aa;
+					
 					draw_set_color(_cps[0]);
-					draw_circle_angle(_cps[1] * _aa, _cps[2] * _aa, _cps[3] * _aa, _cps[4], _cps[5], _capP);
+					
+					switch(_cap) {
+						case 1 : draw_circle_angle(_cpx, _cpy, _cpr, _cps[4], _cps[5], _capP); break;
+						case 2 : 
+							var _x0 = _cpx + lengthdir_x(_cpr, _cps[4]);
+							var _y0 = _cpy + lengthdir_y(_cpr, _cps[4]);
+							var _x2 = _cpx + lengthdir_x(_cpr, _cps[5]);
+							var _y2 = _cpy + lengthdir_y(_cpr, _cps[5]);
+							
+							draw_triangle(_cpx - 1, _cpy - 1, _x0 - 1, _y0 - 1, _x2 - 1, _y2 - 1, false);
+							break;
+					}
 				}
 			}
 			
@@ -715,7 +726,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					
 					var _col_base = dat == noone? _colb.eval(random(1)) : dat.color;
 					
-					for( var j = 0; j < array_length(points); j++ ) {
+					for( var j = 0, m = array_length(points); j < m; j++ ) {
 						var p0   = points[j];
 						var _nx  = p0.x - 0.5 * _1px + _padx;
 						var _ny  = p0.y - 0.5 * _1px + _pady;
@@ -739,7 +750,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 								_caps[1] = [ c_grey, _ox, _oy, _ow / 2, _d, _d + 90 ];
 							}
 							
-							if(j == array_length(points) - 1) {
+							if(j == m - 1) {
 								_d = _dir;
 								_caps[2] = [ c_grey, _nx, _ny, _nw / 2, _d - 90, _d ];
 								_caps[3] = [ c_grey, _nx, _ny, _nw / 2, _d, _d + 90 ];
@@ -750,7 +761,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 							var _nd0 = _dir;
 							var _nd1 = _nd0;
 							
-							if(j < array_length(points) - 1) {
+							if(j < m - 1) {
 								var p2 = points[j + 1];
 								var _nnx = p2.x + _padx;
 								var _nny = p2.y + _pady;
@@ -781,8 +792,23 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					
 					for( var j = 0, m = array_length(_caps); j < m; j++ ) {
 						var _cps = _caps[j];
+						var _cpx = _cps[1];
+						var _cpy = _cps[2];
+						var _cpr = _cps[3];
+						
 						draw_set_color(_cps[0]);
-						draw_circle_angle(_cps[1], _cps[2], _cps[3], _cps[4], _cps[5], _capP);
+						
+						switch(_cap) {
+							case 1 : draw_circle_angle(_cpx, _cpy, _cpr, _cps[4], _cps[5], _capP); break;
+							case 2 : 
+								var _x0 = _cpx + lengthdir_x(_cpr, _cps[4]);
+								var _y0 = _cpy + lengthdir_y(_cpr, _cps[4]);
+								var _x2 = _cpx + lengthdir_x(_cpr, _cps[5]);
+								var _y2 = _cpy + lengthdir_y(_cpr, _cps[5]);
+								
+								draw_triangle(_cpx - 1, _cpy - 1, _x0 - 1, _y0 - 1, _x2 - 1, _y2 - 1, false);
+								break;
+						}
 					}
 				}
 				
