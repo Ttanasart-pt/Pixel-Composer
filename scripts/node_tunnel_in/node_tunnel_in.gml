@@ -185,11 +185,11 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		for (var i = 0, n = array_length(_keys); i < n; i++) {
 			var _k = _keys[i];
 			
-			if(project.tunnels_out[? _k] != _key) continue;
+			if(project.tunnels_out[? _k] != _key)   continue;
 			if(!ds_map_exists(PROJECT.nodeMap, _k)) continue;
 			
 			var node = PROJECT.nodeMap[? _k];
-			if(node.group != group) continue;
+			if(!node.active || node.group != group) continue;
 			
 			preview_connecting      = true;
 			node.preview_connecting = true;
