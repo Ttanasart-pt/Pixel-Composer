@@ -1,4 +1,4 @@
-function get_point_from_dist(distMap, attempt = 4) { #region
+function get_point_from_dist(distMap, attempt = 4) {
 	if(!is_surface(distMap)) return noone;
 	
 	var w = surface_get_width_safe(distMap);
@@ -20,9 +20,9 @@ function get_point_from_dist(distMap, attempt = 4) { #region
 	}
 	
 	return res;
-} #endregion
+}
 
-function get_points_from_dist(distMap, amount, seed = 0, attempt = 8) { #region
+function get_points_from_dist(distMap, amount, seed = 0, attempt = 8) {
 	if(amount < 1) return [];
 	if(!is_surface(distMap)) return [];
 	
@@ -66,4 +66,4 @@ function get_points_from_dist(distMap, amount, seed = 0, attempt = 8) { #region
 	buffer_delete(b);
 	
 	return pos;
-} #endregion
+}

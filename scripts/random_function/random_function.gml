@@ -1,4 +1,4 @@
-function UUID_generate(length = 32) { #region
+function UUID_generate(length = 32) {
 	randomize();
 	static str =   "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 	static month = "JFRAMJYASOND" 
@@ -14,23 +14,23 @@ function UUID_generate(length = 32) { #region
 	
 	repeat(length - string_length(_id)) _id += string_char_at(str, irandom_range(1, string_length(str)));
 	return _id;
-} #endregion
+}
 
-function irandom_seed(val, seed) { #region
+function irandom_seed(val, seed) {
 	random_set_seed(floor(seed));
 	return irandom(val);
-} #endregion
+}
 
-function irandom_range_seed(from, to, seed) { #region
+function irandom_range_seed(from, to, seed) {
 	random_set_seed(floor(seed));
 	return irandom_range(from, to);
-} #endregion
+}
 
-function seed_random(digits = 6) { #region
+function seed_random(digits = 6) {
 	return irandom_range(power(10, digits - 1), power(10, digits) - 1);
-} #endregion
+}
 
-function random_seed(val, seed) { #region
+function random_seed(val, seed) {
 	random_set_seed(floor(seed));
 	var _s0 = random(val);
 	
@@ -38,9 +38,9 @@ function random_seed(val, seed) { #region
 	var _s1 = random(val);
 	
 	return lerp(_s0, _s1, frac(seed));
-} #endregion
+}
 
-function random_range_seed(from, to, seed) { #region
+function random_range_seed(from, to, seed) {
 	random_set_seed(floor(seed));
 	var _s0 = random_range(from, to);
 	
@@ -48,9 +48,9 @@ function random_range_seed(from, to, seed) { #region
 	var _s1 = random_range(from, to);
 	
 	return lerp(_s0, _s1, frac(seed));
-} #endregion
+}
 
-function random1D(seed, startRange = 0, endRange = 1) { #region
+function random1D(seed, startRange = 0, endRange = 1) {
 	if(startRange == endRange) return startRange;
 	
 	var _f = frac(seed);
@@ -66,9 +66,9 @@ function random1D(seed, startRange = 0, endRange = 1) { #region
 	var f2 = random_range(startRange, endRange);
 	
 	return lerp(f1, f2, _f);
-} #endregion
+}
 
-function __noise(_x) { #region
+function __noise(_x) {
     var i = floor(_x);
     var f = frac(_x);
 	
@@ -78,9 +78,9 @@ function __noise(_x) { #region
     var u = f * f * (3.0 - 2.0 * f);
 
     return lerp(a, b, u);
-} #endregion
+}
 
-function perlin1D(pos, seed, scale = 1, octave = 1, startRange = 0, endRange = 1) { #region
+function perlin1D(pos, seed, scale = 1, octave = 1, startRange = 0, endRange = 1) {
 	var amp = power(2., octave - 1.)  / (power(2., octave) - 1.);
     var n = 0.;
 	
@@ -92,13 +92,13 @@ function perlin1D(pos, seed, scale = 1, octave = 1, startRange = 0, endRange = 1
 	}
 	
 	return lerp(startRange, endRange, n);
-} #endregion
+}
 
-function wiggle(_min = 0, _max = 1, _freq = 1, _time = 0, _seed = 0, _octave = 1) { #region
+function wiggle(_min = 0, _max = 1, _freq = 1, _time = 0, _seed = 0, _octave = 1) {
 	return perlin1D(_time, _seed, _freq, _octave, _min, _max);
-} #endregion
+}
 
-function getWiggle(_min = 0, _max = 1, _freq = 1, _time = 0, _seed = 0, startTime = noone, endTime = noone) { #region
+function getWiggle(_min = 0, _max = 1, _freq = 1, _time = 0, _seed = 0, startTime = noone, endTime = noone) {
 	_freq = max(1, _freq);
 	
 	var sdMin = floor(_time / _freq) * _freq;
@@ -113,9 +113,9 @@ function getWiggle(_min = 0, _max = 1, _freq = 1, _time = 0, _seed = 0, startTim
 	t = -(cos(pi * t) - 1) / 2;
 	var _lrp = lerp(_x0, _x1, t);
 	return lerp(_min, _max, _lrp);
-} #endregion
+}
 
-function wiggleMap(_seed, _freq, _length) constructor { #region
+function wiggleMap(_seed, _freq, _length) constructor {
 	seed = _seed;
 	freq = _freq;
 	len  = _length;
@@ -149,4 +149,4 @@ function wiggleMap(_seed, _freq, _length) constructor { #region
 		if(amp == 0) return 0;
 		return map[abs(i) % len] * amp; 
 	}
-} #endregion
+}

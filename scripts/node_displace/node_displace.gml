@@ -66,7 +66,7 @@ If set, then strength value control how many times the effect applies on itself.
 	attribute_oversample();
 	attribute_interpolation();
 	
-	static step = function() { #region
+	static step = function() {
 		__step_mask_modifier();
 		inputs[3].mappableStep();
 		
@@ -90,9 +90,21 @@ If set, then strength value control how many times the effect applies on itself.
 		} else {
 			inputs[ 1].setName("Displace map");
 		}
-	} #endregion
+	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
+		var _map  = _data[1];
+		var _sep  = _data[16];
+		var _map2 = _data[17];
+		
+		var _mode = _data[5];
+		if(!is_surface(_map) || (_sep && !is_surface(_map2))) {
+			surface_set_shader(_outSurf); 
+				draw_surface_safe(_data[0]);
+			surface_reset_shader()
+			return _outSurf;
+		}
+		
 		var ww = surface_get_width_safe(_data[0]);
 		var hh = surface_get_height_safe(_data[0]);
 		var mw = surface_get_width_safe(_data[1]);
@@ -120,5 +132,5 @@ If set, then strength value control how many times the effect applies on itself.
 		_outSurf = channel_apply(_data[0], _outSurf, _data[12]);
 		
 		return _outSurf;
-	} #endregion
+	}
 }
