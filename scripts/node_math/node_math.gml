@@ -22,6 +22,8 @@ enum MATH_OPERATOR {
 	clamp,    // 15
 	snap,     // 16
 	fract,    // 17
+	
+	length,
 }
 
 global.node_math_keys     = [	"add", "subtract", "multiply", "divide", "power", "root", 

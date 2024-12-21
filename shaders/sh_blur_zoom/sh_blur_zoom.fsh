@@ -18,6 +18,7 @@
 
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
+uniform int  samples;
 
 uniform vec2  center;
 uniform int   blurMode;
@@ -65,7 +66,7 @@ void main() { #region
     vec2 uv = v_vTexcoord - center;
 	
 	float _str         = sampleParameter(0, str) * sampleMask();
-	float nsamples     = 64.;
+	float nsamples     = float(samples);
 	float scale_factor = _str * (1. / (nsamples * 2. - 1.));
 	vec4  color        = vec4(0.0);
     float blrStart     = 0.;

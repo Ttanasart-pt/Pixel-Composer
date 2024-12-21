@@ -36,11 +36,13 @@ function Node_Blur_Zoom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	newInput(13, nodeValue_Bool("Gamma Correction", self, false));
 	
+	newInput(14, nodeValue_Int("Samples", self, 64));
+	
 	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 8, 9,
 		["Surfaces", true],	0, 6, 7, 10, 11, 
-		["Blur",	false],	1, 12, 2, 4, 5, 13
+		["Blur",	false],	1, 12, 2, 4, 5, 13, 14, 
 	];
 	
 	attribute_surface_depth();
@@ -77,6 +79,7 @@ function Node_Blur_Zoom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			shader_set_i("blurMode",     _data[4]);
 			shader_set_i("sampleMode",   _sam);
 			shader_set_i("gamma",        _data[13]);
+			shader_set_i("samples",      _data[14]);
 			
 			shader_set_i("useMask", is_surface(_data[5]));
 			shader_set_surface("mask", _data[5]);

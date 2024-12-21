@@ -25,7 +25,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	newInput(10, nodeValue_Vec2_Range("Spawn scale", self, [ 1, 1, 1, 1 ] , { linked : true }));
 	
-	newInput(11, nodeValue_Curve("Scale over time", self, CURVE_DEF_11 ));
+	newInput(11, nodeValue_Curve("Scale over time", self, CURVE_DEF_11));
 	
 	newInput(12, nodeValue_Gradient("Color over lifetime", self, new gradientObject(cola(c_white))));
 	

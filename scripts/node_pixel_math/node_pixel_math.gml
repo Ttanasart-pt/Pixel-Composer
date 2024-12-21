@@ -26,7 +26,9 @@ function Node_Pixel_Math(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	__init_mask_modifier(2); // inputs 5, 6, 
 	
-	newInput(7, nodeValue_Enum_Scroll("Operator", self, 0, global.node_math_scroll));
+	_scroll = array_clone(global.node_math_scroll, 1);
+	array_append(_scroll, ["Less than", "Greater than"]);
+	newInput(7, nodeValue_Enum_Scroll("Operator", self, 0, _scroll));
 	
 	newInput(8, nodeValue_Vec4("Operand", self, [ 0, 0, 0, 0 ]));
 	
@@ -53,14 +55,14 @@ function Node_Pixel_Math(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
-		var type = _data[7];
-		var op4  = _data[8];
-		var op2  = _data[9];
+		var type   = _data[7];
+		var op4    = _data[8];
+		var op2    = _data[9];
 		var opType = _data[10];
 		var opS    = _data[11];
 		var mixAmo = _data[12];
 		
-		var _oprand = global.node_math_names[type];
+		var _oprand = type < array_length(global.node_math_names)? global.node_math_names[type] : _scroll[type];
 		setDisplayName(_oprand);
 		
 		inputs[ 8].setVisible(false);
@@ -70,14 +72,16 @@ function Node_Pixel_Math(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		
 		if(opType == 0) {
 			switch(type) {
-				case MATH_OPERATOR.add      :
-				case MATH_OPERATOR.subtract :
-				case MATH_OPERATOR.multiply :
-				case MATH_OPERATOR.divide   :
-				case MATH_OPERATOR.power    :
-				case MATH_OPERATOR.root     :
-				case MATH_OPERATOR.modulo   :
-				case MATH_OPERATOR.snap     :
+				case MATH_OPERATOR.add        :
+				case MATH_OPERATOR.subtract   :
+				case MATH_OPERATOR.multiply   :
+				case MATH_OPERATOR.divide     :
+				case MATH_OPERATOR.power      :
+				case MATH_OPERATOR.root       :
+				case MATH_OPERATOR.modulo     :
+				case MATH_OPERATOR.snap       :
+				case MATH_OPERATOR.length + 1 :
+				case MATH_OPERATOR.length + 2 :
 					inputs[8].setVisible( true);
 					break;
 					
@@ -88,7 +92,7 @@ function Node_Pixel_Math(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			}
 		}
 		
-		surface_set_shader(_outSurf, sh_pixel_math);
+		surface_set_shader(_outSurf, sh_pixel_math, true, BLEND.over);
 			shader_set_i("operator", type);
 			
 			shader_set_i("operandType", opType );

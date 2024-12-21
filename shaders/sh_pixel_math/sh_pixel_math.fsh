@@ -102,6 +102,18 @@ void main() {
         res.b = fract(res.b);
         res.a = fract(res.a);
         
+    } else if(operator == 18) { 
+        res.r = res.r < op.r? 1. : 0.;
+        res.g = res.g < op.g? 1. : 0.;
+        res.b = res.b < op.b? 1. : 0.;
+        res.a = 1.;
+        
+    } else if(operator == 19) { 
+        res.r = res.r > op.r? 1. : 0.;
+        res.g = res.g > op.g? 1. : 0.;
+        res.b = res.b > op.b? 1. : 0.;
+        res.a = 1.;
+        
     }
     
     gl_FragColor = res;

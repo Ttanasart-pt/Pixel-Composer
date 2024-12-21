@@ -4,6 +4,8 @@ function Node_3D_Transform(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _gro
 	newInput(in_d3d + 0, nodeValue_D3Mesh("Mesh", self, noone))
 		.setVisible(true, true);
 	
+	// newInput(in_d3d + 1, nodeValue_D3Mesh("Mesh", self, noone));
+	
 	newOutput(0, nodeValue_Output("Mesh", self, VALUE_TYPE.d3Mesh, noone));
 	
 	input_display_list = [ in_d3d + 0, 

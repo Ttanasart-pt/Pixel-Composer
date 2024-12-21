@@ -30,12 +30,13 @@ function vertex_add_pntc(buffer, position, normal, texture, color = c_white, alp
 	vertex_color(buffer, color, alpha);
 }
 
-function __vertex_add_pntc(buffer, _px, _py, _pz, _nx, _ny, _nz, _u, _v, color = c_white, alpha = 1) {
+function __vertex_add_pntc(buffer, _px, _py, _pz, _nx, _ny, _nz, _u, _v, color = c_white, alpha = 1, bx = 1, by = 0, bz = 0) {
 	INLINE
 	vertex_position_3d(buffer, _px, _py, _pz);
 	vertex_normal(buffer, _nx, _ny, _nz);
 	vertex_texcoord(buffer, _u, _v);
 	vertex_color(buffer, color, alpha);
+	vertex_float3(buffer, bx, by, bz);
 }
 
 function vertex_add_2pc(buffer, _x, _y, color, alpha = 1) {
