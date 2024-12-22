@@ -2,9 +2,11 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	name = "Path Shape";
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Vec2("Position", self, [ 0, 0 ]));
+	newInput(0, nodeValue_Vec2("Position", self, [ .5, .5 ]))
+		.setUnitRef(function() /*=>*/ {return DEF_SURF}, VALUE_UNIT.reference);
 	
-	newInput(1, nodeValue_Vec2("Half Size", self, [ 32, 32 ]));
+	newInput(1, nodeValue_Vec2("Half Size", self, [ .5, .5 ]))
+		.setUnitRef(function() /*=>*/ {return DEF_SURF}, VALUE_UNIT.reference);
 	
 	newInput(2, nodeValue_Rotation("Rotation", self, 0));
 	
