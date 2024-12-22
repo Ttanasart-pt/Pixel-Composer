@@ -961,6 +961,7 @@ function __initNodes() {
 		ds_list_add(values, "Paths");
 		addNodeObject(values, "Path",			s_node_path,			"Node_Path",			[1, Node_Path],, "Create path using bezier curve.");
 		addNodeObject(values, "Smooth Path",	s_node_path_smooth,		"Node_Path_Smooth",		[1, Node_Path_Smooth], ["path smooth"], "Create path with automatic smoothness.").setVersion(11640);
+		addNodeObject(values, "Shape Path",		s_node_path_shape,		"Node_Path_Shape",		[1, Node_Path_Shape], ["path shape"], "Create path with predefined shape.").setVersion(1_18_05_6);
 		addNodeObject(values, "Path Anchor",	s_node_path_anchor,		"Node_Path_Anchor",		[1, Node_Path_Anchor],, "Create path anchor data.").setVersion(1140);
 		addNodeObject(values, "Path Combine",	s_node_path_array,		"Node_Path_Array",		[1, Node_Path_Array], ["array path"], "Combine multiple path into one.").setVersion(1137);
 		addNodeObject(values, "Sample Path",	s_node_path_sample,		"Node_Path_Sample",		[1, Node_Path_Sample], ["path sample"], "Sample a 2D position from a path");

@@ -29,3 +29,5 @@ function convertBase(str, fromBase, toBase) {
     
     return newStr;
 }
+
+function saturate(_x) { return clamp(_x, 0, 1); }

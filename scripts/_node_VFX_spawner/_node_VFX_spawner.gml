@@ -118,7 +118,6 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	for (var i = 2, n = array_length(inputs); i < n; i++)
 		inputs[i].rejectArray();
-	
 	input_len = array_length(inputs);
 	
 	input_display_list = [ 32, 48, 
