@@ -11,7 +11,7 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	newInput(3, nodeValue_Range("Shift", self, [ 0, 0 ], { linked : true }));
 	
-	newInput(4, nodeValue_Bool("Smooth", self, false));
+	newInput(4, nodeValue_Enum_Button("Mode", self, 0, [ "Zigzag", "Sine", "Square" ]));
 	
 	newInput(5, nodeValueSeed(self));
 	
@@ -35,7 +35,7 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	fre  = 0; 
 	amp  = 0;
 	shf  = 0;
-	smt  = 0;
+	mode = 0;
 	seed = 0;
 	
 	wig  = 0
@@ -125,7 +125,6 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var _fre  = fre ; 
 		var _amp  = amp ;
 		var _shf  = shf ;
-		var _smt  = smt ;
 		var _seed = seed + ind;
 					
 		var _wig  = wig ;
@@ -159,8 +158,11 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var dir = point_direction(p0.x, p0.y, p1.x, p1.y) + 90;
 		var prg;
 		
-		if(_smt) prg = cos(_t * pi * 2);
-		else	 prg = (abs(frac(_t) * 2 - 1) - 0.5) * 2;
+		switch(mode) {
+			case 0 : prg = (abs(frac(_t) * 2 - 1) - 0.5) * 2; break;
+			case 1 : prg = cos(_t * pi * 2);                  break;
+			case 2 : prg = (frac(_t) > .5) * 2 - 1;           break;
+		}
 		
 		if(amp_curve) prg *= amp_curve.get(_rat);
 		
@@ -184,7 +186,7 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		fre  = getInputData(1); 
 		amp  = getInputData(2);
 		shf  = getInputData(3);
-		smt  = getInputData(4);
+		mode = getInputData(4);
 		seed = getInputData(5);
 	
 		wig  = getInputData(6);

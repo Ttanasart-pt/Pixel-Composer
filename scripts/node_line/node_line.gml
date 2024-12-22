@@ -81,9 +81,11 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	newInput(34, nodeValue_Enum_Scroll("SSAA", self, 0, [ "None", "2x", "4x", "8x" ]));
 	
+	newInput(35, nodeValue_Bool("Force Loop", self, false));
+	
 	input_display_list = [
 		["Output",			true],	0, 1, 30, 31, 
-		["Line data",		false], 27, 6, 7, 28, 32, 33, 19, 2, 20, 
+		["Line data",		false], 27, 6, 7, 28, 32, 33, 35, 19, 2, 20, 
 		["Line settings",	false], 17, 3, 11, 12, 8, 25, 9, 26, 13, 14, 
 		["Wiggle",			false], 4, 5, 
 		["Render",			false], 10, 24, 15, 16, 34, 
@@ -184,50 +186,52 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	static processData = function(_outData, _data, _output_index, _array_index) {
 		#region data
-			var _dim   = _data[0];
-			var _bg    = _data[1];
-			var _seg   = _data[2];
-			var _wid   = _data[3];
-			var _wig   = _data[4];
-			var _sed   = _data[5];
-			var _ang   = _data[6];
-			var _pat   = _data[7]; 
-			var _ratio = _data[8];
-			var _shift = _data[9];
+			var _dim      = _data[0];
+			var _bg       = _data[1];
+			var _seg      = _data[2];
+			var _wid      = _data[3];
+			var _wig      = _data[4];
+			var _sed      = _data[5];
+			var _ang      = _data[6];
+			var _pat      = _data[7]; 
+			var _ratio    = _data[8];
+			var _shift    = _data[9];
 		
-			var _color = _data[10];
-			var _widc  = _data[11];
-			var _widap = _data[12];
+			var _color    = _data[10];
+			var _widc     = _data[11];
+			var _widap    = _data[12];
 		
-			var _cap   = _data[13];
-			var _capP  = _data[14];
-			var _colP  = _data[15];
-			var _colW  = _data[16];
-			var _1px   = _data[17];
-			var _text  = _data[18];
+			var _cap      = _data[13];
+			var _capP     = _data[14];
+			var _colP     = _data[15];
+			var _colW     = _data[16];
+			var _1px      = _data[17];
+			var _text     = _data[18];
+			
+			var _fixL     = _data[19];
+			var _segL     = _data[20];
 		
-			var _fixL  = _data[19];
-			var _segL  = _data[20];
+			var _tex      = _data[18];
+			var _texPos   = _data[21];
+			var _texRot   = _data[22];
+			var _texSca   = _data[23];
 		
-			var _tex    = _data[18];
-			var _texPos = _data[21];
-			var _texRot = _data[22];
-			var _texSca = _data[23];
-		
-			var _colb   = _data[24];
-			var _ratInv = _data[25];
-			var _clamp  = _data[26];
+			var _colb     = _data[24];
+			var _ratInv   = _data[25];
+			var _clamp    = _data[26];
 			
 			var _dtype    = _data[27];
 			var _segs     = _data[28];
 			var _scaleTex = _data[29];
 			
-			var _pbbox = _data[30];
-			var _ppadd = _data[31];
+			var _pbbox    = _data[30];
+			var _ppadd    = _data[31];
 			
-			var _pnt0 = _data[32];
-			var _pnt1 = _data[33];
-			var _aa   = power(2, _data[34]);
+			var _pnt0     = _data[32];
+			var _pnt1     = _data[33];
+			var _aa       = power(2, _data[34]);
+			
+			var _loop     = _data[35];
 			
 			if(_dtype == 1 && _pat == noone) 
 				_dtype = 0;
@@ -457,6 +461,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					}
 					
 					array_resize(points, pointAmo);
+					if(_loop) points[pointAmo] = points[0];
 					
 					lines[_lineAmo]     = points;
 					line_data[_lineAmo] = { length: _pathLength };
@@ -503,23 +508,34 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					
 					if(_uselen) {
 						for (var j = 0; j < m; j++) {
-							_lin[j] = { x: _seg[j][0], y: _seg[j][1], prog: _seg[j][2], progCrop: _seg[j][2], weight: 1 };
-							
-							minx = min(minx, _lin[j].x);
-							miny = min(miny, _lin[j].y);
-							maxx = max(maxx, _lin[j].x);
-							maxy = max(maxy, _lin[j].y);
+							_lin[j] = { 
+								x :        _seg[j][0], 
+								y :        _seg[j][1], 
+								prog :     _seg[j][2], 
+								progCrop : _seg[j][2], 
+								weight :   1,
+							};
 						}
 							
 					} else {
 						for (var j = 0; j < m; j++) {
-							_lin[j] = { x: _seg[j][0], y: _seg[j][1], prog: _len[j] / _lenTotal, progCrop: _len[j] / _lenTotal, weight: 1 };
-							
-							minx = min(minx, _lin[j].x);
-							miny = min(miny, _lin[j].y);
-							maxx = max(maxx, _lin[j].x);
-							maxy = max(maxy, _lin[j].y);
+							_lin[j] = { 
+								x :        _seg[j][0],
+								y :        _seg[j][1],
+								prog :     _len[j] / _lenTotal,
+								progCrop : _len[j] / _lenTotal,
+								weight :   1,
+							};
 						}
+					}
+					
+					if(_loop) _lin[m] = _lin[0];
+					
+					for (var j = 0; j < m; j++) {
+						minx = min(minx, _lin[j].x);
+						miny = min(miny, _lin[j].y);
+						maxx = max(maxx, _lin[j].x);
+						maxy = max(maxy, _lin[j].y);
 					}
 					
 					lines[i]     = _lin;
