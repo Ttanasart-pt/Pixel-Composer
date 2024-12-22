@@ -664,7 +664,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					case VALUE_DISPLAY.rotation_random :
 						editWidget = new rotatorRandom(function(val, index) /*=>*/ {return setValueInspector(val, index)});
 						
-						extract_node = "Node_Vector2";
+						extract_node = "Node_Number";
 						break;
 						
 					case VALUE_DISPLAY.slider :		
