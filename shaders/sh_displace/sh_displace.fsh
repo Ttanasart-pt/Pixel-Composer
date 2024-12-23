@@ -99,10 +99,13 @@ uniform vec2  dimension;
 uniform vec2  map_dimension;
 uniform vec2  displace;
 uniform float middle;
-uniform int   iterate;
 uniform int   mode;
-uniform int   blendMode;
 uniform int   sepAxis;
+
+uniform int   iterate;
+uniform float iteration;
+uniform int   blendMode;
+uniform int   fadeDist;
 
 uniform vec2      strength;
 uniform int       strengthUseSurf;
@@ -110,7 +113,7 @@ uniform sampler2D strengthSurf;
 
 float bright(in vec4 col) { return dot(col.rgb, vec3(0.2126, 0.7152, 0.0722)) * col.a; }
 
-vec2 shiftMap(in vec2 pos, in float str) { #region
+vec2 shiftMap(in vec2 pos, in float str) {
 	vec2  tx   = 1. / dimension;
 	vec4  disP = texture2Dintp( map, pos );
 	vec2  raw_displace = displace * tx;
@@ -161,26 +164,30 @@ vec2 shiftMap(in vec2 pos, in float str) { #region
 	}
 	
 	return sam_pos;
-} #endregion
+}
 
-vec4 blend(in vec4 c0, in vec4 c1) { #region
-	       if(blendMode == 0) return c1;
-	  else if(blendMode == 1) {
+vec4 blend(in vec4 c0, in vec4 c1) {
+	if(blendMode == 0) return c1;
+	
+	if(blendMode == 1) {
 		float b0 = bright(c0);
 		float b1 = bright(c1);
 		return b0 < b1? c0 : c1;
-	} else if(blendMode == 2) {
+	} 
+	
+	if(blendMode == 2) {
 		float b0 = bright(c0);
 		float b1 = bright(c1);
 		return b0 > b1? c0 : c1;
 	}
 	
 	return c1;
-} #endregion
+}
 
-void main() { #region
+void main() {
 	vec2 samPos = v_vTexcoord;
-	vec4 ccol   = sampleTexture( gm_BaseTexture, v_vTexcoord ), ncol;
+	vec4 ccol = sampleTexture( gm_BaseTexture, v_vTexcoord );
+	vec4 ncol = ccol;
 	
 	float stren = strength.x;
 	float stMax = strength.x;
@@ -191,11 +198,17 @@ void main() { #region
 	}
 	
 	if(iterate == 1) {
-		for(float i = 0.; i < stMax; i++) {
-			if(i >= stren) break;
+		float _t = 1. / (iteration - 1.);
+		float str;
+		vec4  c;
+		
+		for(float i = 0.; i < iteration; i++) {
+			str    = stren * (i * _t);
+			samPos = shiftMap(v_vTexcoord, str);
+			c      = sampleTexture( gm_BaseTexture, samPos );
+			if(fadeDist == 1) c.rgb *= 1. - i * _t;
 			
-			samPos = shiftMap(samPos, min(1., stren - i));
-			ncol   = blend(ccol, sampleTexture( gm_BaseTexture, samPos ));
+			ncol   = blend(ncol, c);
 		}
 	} else {
 		samPos = shiftMap(samPos, stren);
@@ -203,4 +216,4 @@ void main() { #region
 	}
 	
     gl_FragColor = blend(ccol, ncol);
-} #endregion
+}

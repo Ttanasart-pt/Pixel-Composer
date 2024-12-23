@@ -255,7 +255,6 @@
 
 #region save load
 	globalvar PREF_VERSION, PREF_UPDATES;
-	PREF_VERSION = 1_17_1;
 	PREF_UPDATES = [
 		{
 			version: 0,

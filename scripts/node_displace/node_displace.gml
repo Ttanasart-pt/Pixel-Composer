@@ -53,11 +53,15 @@ If set, then strength value control how many times the effect applies on itself.
 	
 	newInput(17, nodeValue_Surface("Displace map 2", self));
 	
+	newInput(18, nodeValue_Int("Iteration", self, 32));
+	
+	newInput(19, nodeValue_Bool("Fade distance", self, false));
+	
 	input_display_list = [ 10, 12, 
 		["Surfaces",	  true], 0, 8, 9, 13, 14, 
 		["Strength",	 false], 1, 17, 3, 15, 4,
 		["Displacement", false], 5, 16, 2, 
-		["Algorithm",	  true], 6, 11, 
+		["Algorithm",	  true], 6, 11, 18, 19, 
 	];
 	
 	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
@@ -121,9 +125,12 @@ If set, then strength value control how many times the effect applies on itself.
 			shader_set_f_map("strength",  _data[ 3], _data[15], inputs[3]);
 			shader_set_f("middle",        _data[ 4]);
 			shader_set_i("mode",          _data[ 5]);
+			shader_set_i("sepAxis",       _data[16]);
+			
 			shader_set_i("iterate",       _data[ 6]);
 			shader_set_i("blendMode",     _data[11]);
-			shader_set_i("sepAxis",       _data[16]);
+			shader_set_i("fadeDist",      _data[19]);
+			shader_set_f("iteration",     _data[18]);
 			draw_surface_safe(_data[0]);
 		surface_reset_shader();
 		

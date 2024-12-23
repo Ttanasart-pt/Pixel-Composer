@@ -1,8 +1,4 @@
 function scrollPane(_w, _h, ondraw) : widget() constructor {
-	scroll_y		= 0;
-	scroll_y_raw	= 0;
-	scroll_y_to		= 0;
-	
 	whover  = false;
 	wactive = false;
 	
@@ -22,11 +18,16 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 	show_scroll   = true;
 	scroll_resize = true;
 	
+	scroll_y		= 0;
+	scroll_y_raw	= 0;
+	scroll_y_to		= 0;
+	
 	scroll_step = 64;
 	scroll_lock = false;
 	
-	is_scrolling = false;
-	scroll_ms   = 0;
+	is_scrolling   = false;
+	scroll_ms      = 0;
+	scroll_inertia = 5;
 	
 	pen_scrolling = false;
 	pen_scroll_my = 0;
@@ -80,7 +81,7 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 		/// Scrolling
 		
 		scroll_y_to  = clamp(scroll_y_to, -content_h, 0);
-		scroll_y_raw = lerp_float(scroll_y_raw, scroll_y_to, 4);
+		scroll_y_raw = scroll_inertia > 0? lerp_float(scroll_y_raw, scroll_y_to, scroll_inertia) : scroll_y_to;
 		scroll_y	 = round(scroll_y_raw);
 		draw_surface_safe(surface, x, y);
 		

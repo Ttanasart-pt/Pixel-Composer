@@ -987,7 +987,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		targ.setFrom(junctionFrom);
 	}
 	
-	static getInputData      = function(index, def = 0) { return inputs[index].getValue(); } /// array_safe_get_fast(inputs_data, index, def); }
+	static getInputDataFull  = function(index, def = 0) { return array_safe_get_fast(inputs_data, index, def); }
+	static getInputDataLite  = function(index, def = 0) { return inputs[index].getValue(); }
 	static getInputDataForce = function(index, def = 0) { return inputs[index].getValue(); }
 	
 	// static setInputData = function(index, value) {
@@ -1027,6 +1028,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		setRenderStatus(true);
 		
 		if(attributes.update_graph) {
+			getInputs(frame);
+			
 			try      { update(frame); } 
 			catch(e) { log_warning("RENDER", exception_print(e), self); }
 		}
@@ -1092,7 +1095,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		LOG_BLOCK_END();
 	}
 	
-	doUpdate = doUpdateFull;
+	doUpdate     = doUpdateFull;
+	getInputData = getInputDataFull;
 	
 	static valueUpdate = function(index) {
 		onValueUpdate(index);

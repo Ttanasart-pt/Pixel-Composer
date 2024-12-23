@@ -14,81 +14,87 @@ event_inherited();
 	textbox	  = noone;
 	prompt	  = "";
 	data	  = [];
+	font      = f_code;
+	pre_mx    = 0;
+	pre_my    = 0;
+	
+	show_items = 8;
+	pad_item   = 6;
 	
 	destroy_on_escape    = false;
 	destroy_on_click_out = false;
 	
-	function activate(textbox) { 
-		INLINE
-		self.textbox   = textbox;
-		self.selecting = 0;
+	function activate(_textbox) { 
+		textbox   = _textbox;
+		selecting = 0;
 	}
 	
-	function deactivate(textbox) {
-		INLINE
-		if(textbox != self.textbox) return;
-		
-		self.textbox = noone;
+	function deactivate(_textbox) {
+		if(textbox != _textbox) return;
+		textbox = noone;
 	}
 	
 	sc_content = new scrollPane(dialog_w, dialog_h, function(_y, _m) {
-		draw_clear_alpha(COLORS.panel_bg_clear, 0);
-		var hght = line_get_height(f_p0, 8);
+		draw_clear_alpha(COLORS.panel_bg_clear, 1);
+		var hght = line_get_height(font, pad_item);
 		var _dw  = sc_content.surface_w;
 		var _h   = 0;
 		var _ly  = _y;
+		var _mmove = pre_mx != _m[0] || pre_my != _m[1];
 		
-		for(var i = 0; i < array_length(data); i++) {
+		gpu_set_tex_filter(true);
+		for( var i = 0, n = array_length(data); i < n; i++ ) {
 			var _dat = data[i];
 			
 			if(sHOVER && point_in_rectangle(_m[0], _m[1], 0, _ly + 1, _dw, _ly + hght - 1)) {
-				selecting = i;
-				
-				if(mouse_press(mb_left)) {
-					applyAutoComplete(_dat[3]);
-					MOUSE_BLOCK = true;
-				}
+				if(_mmove) selecting = i;
+				if(mouse_press(mb_left)) { applyAutoComplete(_dat[3]); MOUSE_BLOCK = true; break; }
 			}
 			
 			if(selecting == i) {
 				WIDGET_TAB_BLOCK = true;
-				
 				draw_sprite_stretched_ext(THEME.textbox, 3, 0, _ly, _dw, hght, COLORS.dialog_menubox_highlight, 1);
-				
-				if(keyboard_check_pressed(vk_tab) || keyboard_check_pressed(vk_enter))
-					applyAutoComplete(_dat[3]);
+				if(keyboard_check_pressed(vk_tab) || keyboard_check_pressed(vk_enter)) { applyAutoComplete(_dat[3]); break; }
 			}
 			
 			var icn = _dat[0][0];
-			var ss  = 16 / sprite_get_width(icn);
-			draw_sprite_ext(icn, _dat[0][1], ui(4 + 12), _ly + hght / 2, ss, ss, 0, c_white, 1);
+			if(sprite_exists(icn)) {
+				var ss = (hght - ui(8)) / sprite_get_width(icn);
+				draw_sprite_ext(icn, _dat[0][1], ui(4 + 12), _ly + hght / 2, ss, ss, 0, c_white, 1);
+			}
 			
-			draw_set_text(f_p2, fa_right, fa_center, COLORS._main_text_sub);
-			draw_text_cut(_dw - ui(8), _ly + hght / 2 - ui(2), _dat[2], _dw);
+			BLEND_ALPHA_MULP
+			draw_set_text(font, fa_right, fa_center, COLORS._main_text_sub);
+			draw_text(round(_dw - ui(8)), round(_ly + hght / 2), _dat[2]);
 			
-			draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
-			draw_text_cut(ui(4 + 24 + 4), _ly + hght / 2 - ui(2), _dat[1], _dw);
+			draw_set_text(font, fa_left, fa_center, CDEF.main_white);
+			draw_text(round(ui(4 + 24 + 4)), round(_ly + hght / 2), _dat[1]);
+			BLEND_NORMAL
 			
 			_ly += hght;
 			_h  += hght;
 		}
+		gpu_set_tex_filter(false);
 		
-		if(keyboard_check_pressed(vk_up)) {
-			selecting--;
-			if(selecting < 0) selecting = array_length(data) - 1;
-			
-			sc_content.scroll_y_to = -(selecting - 2) * hght;
+		if(KEYBOARD_PRESSED == vk_up)   { 
+			selecting = (selecting - 1 + n) % n; 
+			sc_content.scroll_y_to = max(sc_content.scroll_y_to, -selecting * hght);
+			if(selecting == n - 1) sc_content.scroll_y_to = -(selecting - show_items + 1) * hght;
 		}
-			
-		if(keyboard_check_pressed(vk_down)) {
-			selecting++
-			if(selecting >= array_length(data) - 1) selecting = 0;
-			
-			sc_content.scroll_y_to = -(selecting - 2) * hght;
+		
+		if(KEYBOARD_PRESSED == vk_down) { 
+			selecting = (selecting + 1) % n; 
+			sc_content.scroll_y_to = min(sc_content.scroll_y_to, -(selecting - show_items + 1) * hght);
+			if(selecting == 0) sc_content.scroll_y_to = -selecting * hght;
 		}
+		
+		pre_mx = _m[0];
+		pre_my = _m[1];
 		
 		return _h;
 	});
+	
+	sc_content.scroll_inertia = 0;
 	
 	function applyAutoComplete(rep) {
 		var _totAmo = string_length(textbox._input_text);
