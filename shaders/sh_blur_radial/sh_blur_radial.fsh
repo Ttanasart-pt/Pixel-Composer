@@ -95,12 +95,11 @@ varying vec4 v_vColour;
 uniform vec2 center;
 uniform vec2 dimension;
 uniform int  gamma;
+uniform int  iteration;
 
 uniform vec2      strength;
 uniform int       strengthUseSurf;
 uniform sampler2D strengthSurf;
-
-#define ITERATION 64.
 
 void main() {
 	float str    = strength.x;

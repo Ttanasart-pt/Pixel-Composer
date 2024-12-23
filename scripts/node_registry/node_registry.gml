@@ -704,11 +704,12 @@ function __initNodes() {
 	var d3d = ds_list_create(); 
 	addNodeCatagory("3D", d3d);
 		ds_list_add(d3d, "2D Operations");
-		addNodeObject(d3d, "Normal",			s_node_normal,			"Node_Normal",				[1, Node_Normal],, "Create normal map using greyscale value as height.");
-		addNodeObject(d3d, "Normal Light",		s_node_normal_light,	"Node_Normal_Light",		[1, Node_Normal_Light],, "Light up the image using normal mapping.");
-		addNodeObject(d3d, "Bevel",				s_node_bevel,			"Node_Bevel",				[1, Node_Bevel],, "Apply 2D bevel on the image.");
-		addNodeObject(d3d, "Sprite Stack",		s_node_stack,			"Node_Sprite_Stack",		[1, Node_Sprite_Stack],, "Create sprite stack either from repeating a single image or stacking different images using array.");
-		addNodeObject(d3d, "Ambient Occlusion",	s_node_AO,				"Node_Ambient_Occlusion",	[1, Node_Ambient_Occlusion], ["ao"], "Apply simple 2D AO effect using height map.").patreonExtra();
+		addNodeObject(d3d, "Transform 3D",		s_node_image_transform_3d,	"Node_3D_Transform_Image",	[1, Node_3D_Transform_Image], ["3d transform"], "Transform image in 3D space").setVersion(11600);
+		addNodeObject(d3d, "Normal",			s_node_normal,				"Node_Normal",				[1, Node_Normal],, "Create normal map using greyscale value as height.");
+		addNodeObject(d3d, "Normal Light",		s_node_normal_light,		"Node_Normal_Light",		[1, Node_Normal_Light],, "Light up the image using normal mapping.");
+		addNodeObject(d3d, "Bevel",				s_node_bevel,				"Node_Bevel",				[1, Node_Bevel],, "Apply 2D bevel on the image.");
+		addNodeObject(d3d, "Sprite Stack",		s_node_stack,				"Node_Sprite_Stack",		[1, Node_Sprite_Stack],, "Create sprite stack either from repeating a single image or stacking different images using array.");
+		addNodeObject(d3d, "Ambient Occlusion",	s_node_AO,					"Node_Ambient_Occlusion",	[1, Node_Ambient_Occlusion], ["ao"], "Apply simple 2D AO effect using height map.").patreonExtra();
 		
 		ds_list_add(d3d, "3D");
 		addNodeObject(d3d, "3D Camera",		s_node_3d_camera,			"Node_3D_Camera",			[1, Node_3D_Camera],, "Create 3D camera that render scene to surface.").setVersion(11510);
@@ -716,7 +717,6 @@ function __initNodes() {
 		addNodeObject(d3d, "3D Material",	s_node_3d_meterial,			"Node_3D_Material",			[1, Node_3D_Material],, "Create 3D material with adjustable parameters.").setVersion(11510);
 		addNodeObject(d3d, "3D Scene",		s_node_3d_scene,			"Node_3D_Scene",			[1, Node_3D_Scene],, "Combine multiple 3D objects into a single junction.").setVersion(11510);
 		addNodeObject(d3d, "3D Repeat",		s_node_3d_array,			"Node_3D_Repeat",			[1, Node_3D_Repeat],, "Repeat the same 3D mesh multiple times.").setVersion(11510);
-		addNodeObject(d3d, "Transform 3D",	s_node_image_transform_3d,	"Node_3D_Transform_Image",	[1, Node_3D_Transform_Image], ["3d transform"], "Transform image in 3D space").setVersion(11600);
 		addNodeObject(d3d, "Mesh Export",	s_node_3d_obj_export,		"Node_3D_Mesh_Export",		[1, Node_3D_Mesh_Export],, "Export 3D mesh as .obj file").setVersion(11740);
 		
 		ds_list_add(d3d, "Mesh");
@@ -967,7 +967,7 @@ function __initNodes() {
 		addNodeObject(values, "Sample Path",	s_node_path_sample,		"Node_Path_Sample",		[1, Node_Path_Sample], ["path sample"], "Sample a 2D position from a path");
 		addNodeObject(values, "Blend Path",		s_node_path_blend,		"Node_Path_Blend",		[1, Node_Path_Blend],, "Blend between 2 paths.");
 		addNodeObject(values, "Remap Path",		s_node_path_map,		"Node_Path_Map_Area",	[1, Node_Path_Map_Area],, "Scale path to fit a given area.").setVersion(1130);
-		addNodeObject(values, "Transform Path",	s_node_path_transform,	"Node_Path_Transform",	[1, Node_Path_Transform],, "Move rotate and scale a path.").setVersion(1130);
+		addNodeObject(values, "Transform Path",	s_node_path_transform,	"Node_Path_Transform",	[1, Node_Path_Transform], ["path transform"], "Move rotate and scale a path.").setVersion(1130);
 		addNodeObject(values, "Shift Path",		s_node_path_shift,		"Node_Path_Shift",		[1, Node_Path_Shift],, "Move path along its normal.").setVersion(1130);
 		addNodeObject(values, "Trim Path",		s_node_path_trim,		"Node_Path_Trim",		[1, Node_Path_Trim],, "Trim path.").setVersion(1130);
 		addNodeObject(values, "Wave Path",		s_node_path_wave,		"Node_Path_Wave",		[1, Node_Path_Wave], ["zigzag path"], "Apply wave effect along the path.").setVersion(1130);
@@ -980,6 +980,7 @@ function __initNodes() {
 		addNodeObject(values, "Bake Path",		s_node_path_bake,		"Node_Path_Bake",		[1, Node_Path_Bake],, "Bake path data into array of vec2 points.").setVersion(11640);
 		addNodeObject(values, "Map Path",		s_node_path_mapp,		"Node_Path_Map",		[1, Node_Path_Map],, "Map a texture between multiple paths.").setVersion(11640);
 		addNodeObject(values, "Scatter Path",	s_node_path_scatter,	"Node_Path_Scatter",	[1, Node_Path_Scatter],, "Scatter paths along another path.").setVersion(11740);
+		addNodeObject(values, "Repeat Path",	s_node_path_repeat,		"Node_Path_Repeat",		[1, Node_Path_Repeat],, "Repeat paths.").setVersion(1_18_05_6);
 		addNodeObject(values, "3D Path",		s_node_path_3d,			"Node_Path_3D",			[1, Node_Path_3D], [ "path 3d" ], "Create path in 3D space.").setVersion(11750);
 		addNodeObject(values, "Filter Segments",s_node_segment_filter,	"Node_Segment_Filter",	[1, Node_Segment_Filter],, "Filter segment (vec2 array) based on a conditions.").setVersion(11780);
 		

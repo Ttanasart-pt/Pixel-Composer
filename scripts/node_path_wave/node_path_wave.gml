@@ -23,11 +23,13 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	newInput(9, nodeValue_Curve("Amplitude over length", self, CURVE_DEF_11));
 	
+	newInput(10, nodeValue_Enum_Button("Post Fn", self, 0, [ "None", "Absolute", "Clamp" ]));
+	
 	newOutput(0, nodeValue_Output("Path", self, VALUE_TYPE.pathnode, self));
 	
 	input_display_list = [ 5, 
 		["Path",	 true], 0,
-		["Wave",	false], 1, 2, 9, 3, 4, 
+		["Wave",	false], 1, 2, 9, 3, 4, 10, 
 		["Wiggle",	 true, 6], 7, 8, 
 	];
 	
@@ -35,8 +37,9 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	fre  = 0; 
 	amp  = 0;
 	shf  = 0;
-	mode = 0;
 	seed = 0;
+	mode = 0;
+	post = 0;
 	
 	wig  = 0
 	wigs = 0
@@ -164,6 +167,12 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			case 2 : prg = (frac(_t) > .5) * 2 - 1;           break;
 		}
 		
+		switch(post) {
+			case 0 : break;
+			case 1 : prg = abs(prg);    break;
+			case 2 : prg = max(prg, 0); break;
+		}
+		
 		if(amp_curve) prg *= amp_curve.get(_rat);
 		
 		out.x = p.x + lengthdir_x(_amp * prg, dir);
@@ -195,6 +204,8 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		var _ampc = getInputData(9);
 		amp_curve = new curveMap(_ampc, 128);
+		
+		post = getInputData(10);
 		
 		outputs[0].setValue(self);
 	}

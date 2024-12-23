@@ -61,10 +61,11 @@ function Node_Path_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		
 		__temp_p = [ 0, 0 ];
 		
-		static getLineCount     = function() { return line_amount; }
-		static getSegmentCount  = function(ind = 0) { return array_safe_get_fast(segment_counts, ind); }
-		static getLength        = function(ind = 0) { return array_safe_get_fast(line_lengths, ind); }
-		static getAccuLength    = function(ind = 0) { return array_safe_get_fast(accu_lengths, ind); }
+		static getLineCount     = function()    /*=>*/ {return line_amount};
+		static getSegmentCount  = function(i=0) /*=>*/ {return array_safe_get_fast(segment_counts, i)};
+		static getLength        = function(i=0) /*=>*/ {return array_safe_get_fast(line_lengths, i)};
+		static getAccuLength    = function(i=0) /*=>*/ {return array_safe_get_fast(accu_lengths, i)};
+		
 		static getPointRatio    = function(_rat,  ind = 0, out = undefined) {
 			if(out == undefined) out = new __vec2(); else { out.x = 0; out.y = 0; }
 			
@@ -129,19 +130,17 @@ function Node_Path_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var _scattered = new Path_Scatter();
 		if(path_base == noone) return _scattered;
 		if(path_scat == noone) return _scattered;
-		var p = new __vec2();
-		
-		random_set_seed(_seed);
 		
 		var _line_amounts = path_scat.getLineCount();
-		var _ind = 0;
-		
 		_scattered.line_amount    = _repeat * _line_amounts;
 		_scattered.paths          = array_create(_scattered.line_amount);
 		_scattered.segment_counts = array_create(_scattered.line_amount);
 		_scattered.line_lengths   = array_create(_scattered.line_amount);
 		_scattered.accu_lengths   = array_create(_scattered.line_amount);
 		
+		random_set_seed(_seed);
+		var _ind = 0;
+		var p = new __vec2();
 		var ori, pos;
 		var _prog_raw, _prog;
 		var _dir, _sca, _rot, _rotW, _trm;

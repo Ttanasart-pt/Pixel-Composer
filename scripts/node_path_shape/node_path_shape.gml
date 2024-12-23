@@ -21,6 +21,9 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	    -1,
 	    new scrollItem("Polygon",       s_node_shape_type, 12), 
 	    new scrollItem("Star",          s_node_shape_type, 13), 
+	    -1,
+	    new scrollItem("Line",          s_node_shape_type, 16), 
+	    new scrollItem("Curve",         s_shape_curve,      0), 
     ];
 	newInput(3, nodeValue_Enum_Scroll("Shape", self, 0, shapeScroll));
 	
@@ -49,6 +52,7 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	boundary    = new BoundingBox();
 	cached_pos  = ds_map_create();
 	
+	loop  = true;
 	shape = 0;
 	posx  = 0; posy  = 0;
 	scax  = 1; scay  = 1;
@@ -57,6 +61,8 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	pa1   = 0;
 	pa2x  = 0; pa2y  = 0;
 	pa3   = 0;
+	
+	preview_surf = noone;
 	
 	static getLineCount		= function() /*=>*/ {return 1};
 	static getSegmentCount	= function() /*=>*/ {return array_length(lengths)};
@@ -98,7 +104,7 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
                 break;
                 
             case "Arc" : 
-                var a = lerp_angle(pa2x, pa2y, _rat);
+                var a = lerp_float_angle(pa2x, pa2y, _rat);
                 out.x = posx + lengthdir_x(scax, a);
                 out.y = posy + lengthdir_y(scay, a);
                 break;
@@ -112,7 +118,10 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
                 break;
                 
             case "Polygon" : 
-            case "Star"    : return getPointDistance(_rat * lengthTotal, _ind, out);
+            case "Star"    : 
+            case "Line"    : 
+            case "Curve"   : 
+            	return getPointDistance(_rat * lengthTotal, _ind, out);
                 
         }
         
@@ -161,7 +170,7 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	        oy = ny;
 	    }
 	    
-	    draw_line(ox, oy, x0, y0);
+	    if(loop) draw_line(ox, oy, x0, y0);
 	    
 	    var _px = _x + posx * _s;
 	    var _py = _y + posy * _s;
@@ -204,6 +213,7 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
                 
         switch(shapeScroll[shape].name) {
             case "Rectangle" : 
+            	loop = true;
                 points  = [ 
                     [ posx - scax, posy - scay ],
                     [ posx + scax, posy - scay ],
@@ -213,6 +223,7 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
                 break;
                 
             case "Trapezoid" : 
+            	loop = true;
                 inputs[4].setVisible(true);
                 
                 points  = [ 
@@ -224,6 +235,7 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
                 break;
                 
             case "Parallelogram" : 
+            	loop = true;
                 inputs[4].setVisible(true);
                 
                 points  = [ 
@@ -235,6 +247,7 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
                 break;
             
             case "Ellipse" : 
+            	loop = true;
                 var _st = 64;
                 var _as = 360 / _st;
                 points  = array_create(_st);
@@ -247,14 +260,15 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
                 break;
                 
             case "Arc" : 
+            	loop = false;
                 inputs[5].setVisible(true);
                 
                 var _st = 64;
-                var _as = 1 / (_st - 63);
+                var _as = 1 / (_st - 1);
                 points  = array_create(_st);
                 
                 for( var i = 0; i < _st; i++ ) {
-                    var a = lerp_angle(_aran[0], _aran[1], i * _as);
+                    var a = lerp_float_angle(_aran[0], _aran[1], i * _as);
                     nx = posx + lengthdir_x(scax, a);
                     ny = posy + lengthdir_y(scay, a);
                     points[i] = [ nx, ny ];
@@ -262,6 +276,7 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
                 break;
                 
             case "Squircle" :
+            	loop = true;
                 inputs[6].setVisible(true);
                 
                 var _st = 64;
@@ -279,6 +294,7 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
                 break;
                 
             case "Polygon" :
+            	loop = true;
                 inputs[7].setVisible(true);
                 
                 var _st = _sid;
@@ -293,6 +309,7 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
                 break;
                 
             case "Star" :
+            	loop = true;
                 inputs[7].setVisible(true);
                 inputs[8].setVisible(true);
                 
@@ -311,10 +328,36 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
                 }
                 break;
                 
+            case "Line":
+            	loop = false;
+            	points = [
+            		[ posx - scax, posy ],
+            		[ posx + scax, posy ],
+        		];
+            	break;
+            	
+            case "Curve":
+            	loop = false;
+            	inputs[6].setVisible(true);
+            	
+            	var _st = 64;
+                var _as = 180 / (_st - 1);
+                var _x0 = posx - scax;
+                var _x1 = posx + scax;
+                var _yy = posy;
+                
+            	points = array_create(_st);
+            	for( var i = 0; i < _st; i++ ) {
+            		points[i] = [ 
+            			lerp(_x0, _x1, i / (_st - 1)),
+            			_yy + dsin(i * _as) * pa3,
+        			]
+            	}
+            	break;
         }
 
         var n   = array_length(points);
-        lengths = array_create(n + 1);
+        lengths = array_create(n + loop);
         
         if(n) {
             for( var i = 0; i < n; i++ ) {
@@ -328,7 +371,7 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
                 oy = ny;
             }
             
-            lengths[n - 1] = point_distance(ox, oy, x0, y0);
+            if(loop) lengths[n - 1] = point_distance(ox, oy, x0, y0);
         }
         
         var _len    = array_length(lengths);
@@ -341,10 +384,40 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
     	}
     	
     	boundary = new BoundingBox(posx - scax, posy - scay, posx + scax, posy + scay);
+    	
+    	preview_surf = surface_verify(preview_surf, 128, 128);
+    	surface_set_target(preview_surf);
+    		DRAW_CLEAR
+    		
+    		var ox, x0;
+		    var oy, y0;
+		    var nx, ny;
+		    var xx = posx - scax;
+		    var yy = posy - scay;
+		    var ww = scax * 2;
+		    var hh = scay * 2;
+		    draw_set_color(COLORS._main_accent);
+		    
+		    if(array_length(points)) {
+			    for( var i = 0, n = array_length(points); i < n; i++ ) {
+			        nx = 4 + (points[i][0] - xx) / ww * 120;
+			        ny = 4 + (points[i][1] - yy) / hh * 120;
+			        
+		            if(i) draw_line_width(ox, oy, nx, ny, 8);
+		            else  { x0 = nx; y0 = ny; }
+			        
+			        ox = nx;
+			        oy = ny;
+			    }
+			    
+			    if(loop) draw_line_width(ox, oy, x0, y0, 8);
+		    }
+    	surface_reset_target();
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
+		draw_surface_bbox(preview_surf, bbox);
 	}
 	
 	static getPreviewBoundingBox = function() { return BBOX().fromBoundingBox(boundary); }
