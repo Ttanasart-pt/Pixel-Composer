@@ -169,7 +169,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 	
 	#region right buttons
 		if(jun.connect_type == CONNECT_TYPE.input && breakLine && jun.is_anim) { // Animation
-			
+			var _anim = jun.animator;
 			var bx = xx + ww - ui(12);
 			var by = lb_y;
 			var b  = buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, _hover, _focus, "", THEME.prop_keyframe, 2)

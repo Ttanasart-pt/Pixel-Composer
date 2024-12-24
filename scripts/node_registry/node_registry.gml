@@ -758,7 +758,6 @@ function __initNodes() {
 		addNodeObject(d3d, "RM Combine",		s_node_rm_combine,			"Node_RM_Combine",			[1, Node_RM_Combine],   ["ray marching", "rm boolean"]).setVersion(11740);
 		addNodeObject(d3d, "RM Render",			s_node_rm_render,			"Node_RM_Render",			[1, Node_RM_Render],	["ray marching"]).setVersion(11740);
 		addNodeObject(d3d, "RM Cloud",			s_node_RM_Cloud,			"Node_RM_Cloud",			[1, Node_RM_Cloud],,	"Generate distance field cloud.").patreonExtra();
-		
 	#endregion
 	
 	#region generator
