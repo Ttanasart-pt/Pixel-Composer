@@ -106,6 +106,7 @@ uniform int   iterate;
 uniform float iteration;
 uniform int   blendMode;
 uniform int   fadeDist;
+uniform int   reposition;
 
 uniform vec2      strength;
 uniform int       strengthUseSurf;
@@ -202,9 +203,11 @@ void main() {
 		float str;
 		vec4  c;
 		
+		if(reposition == 1) stren /= iteration;
+		
 		for(float i = 0.; i < iteration; i++) {
 			str    = stren * (i * _t);
-			samPos = shiftMap(v_vTexcoord, str);
+			samPos = shiftMap(reposition == 1? samPos : v_vTexcoord, str);
 			c      = sampleTexture( gm_BaseTexture, samPos );
 			if(fadeDist == 1) c.rgb *= 1. - i * _t;
 			

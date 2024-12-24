@@ -268,7 +268,7 @@
 				if(file_exists(_pth_h)) file_copy(_pth_h, PREFERENCES_DIR + "hotkeys.json");
 				if(file_exists(_pth_d)) file_copy(_pth_d, PREFERENCES_DIR + "default_project.json");
 			}
-		}
+		},
 	];
 	
 	function PREF_UPDATE() {

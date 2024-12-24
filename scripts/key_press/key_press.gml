@@ -94,7 +94,7 @@
 
 #region get name
 	function key_get_name(_key, _mod) {
-		if(_key <= 0 && _mod == MOD_KEY.none)
+		if(!is_real(_key) || (_key <= 0 && _mod == MOD_KEY.none))
 			return "";
 		
 		var dk = "";

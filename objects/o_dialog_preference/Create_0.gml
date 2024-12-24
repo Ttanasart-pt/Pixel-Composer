@@ -780,9 +780,9 @@ event_inherited();
 		
 		for (var j = 0, m = array_length(_list); j < m; j++) {
 			
-			var key   = _list[j];
-			var name  = __txt(key.name);
-			var dk    = key_get_name(key.key, key.modi);
+			var key  = _list[j];
+			var name = __txt(key.name);
+			var dk   = key_get_name(key.key, key.modi);
 			
 			if(_search != "" && string_pos(_search, string_lower(name)) == 0
 			                 && string_pos(_search, string_lower(dk))   == 0)

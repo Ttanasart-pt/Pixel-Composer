@@ -410,7 +410,6 @@
     {"$GMIncludedFile":"","%Name":"Nodes.zip","CopyToMask":-1,"filePath":"datafiles/data","name":"Nodes.zip","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"related_node.json","CopyToMask":-1,"filePath":"datafiles/data","name":"related_node.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"tileset_gamemaker2_room.yy","CopyToMask":-1,"filePath":"datafiles/data/TemplateStrings","name":"tileset_gamemaker2_room.yy","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
-    {"$GMIncludedFile":"","%Name":"Theme.zip","CopyToMask":-1,"filePath":"datafiles/data","name":"Theme.zip","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"Tooltip.zip","CopyToMask":-1,"filePath":"datafiles/data","name":"Tooltip.zip","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"Node_2D_light.png","CopyToMask":-1,"filePath":"datafiles/data/Tooltip","name":"Node_2D_light.png","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"Node_9Slice.png","CopyToMask":-1,"filePath":"datafiles/data/Tooltip","name":"Node_9Slice.png","resourceType":"GMIncludedFile","resourceVersion":"2.0",},

@@ -148,7 +148,7 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
             break;
 	    }
 	    
-        point_vec2_rotate(out, posx, posy, rot);
+        // point_vec2_rotate(out, posx, posy, rot);
         return out;
 	}
 	
@@ -356,6 +356,7 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
             	break;
         }
 
+		array_map_ext(points, function(p) /*=>*/ {return point_rotate(p[0], p[1], posx, posy, rot, p)});
         var n   = array_length(points);
         lengths = array_create(n + loop);
         

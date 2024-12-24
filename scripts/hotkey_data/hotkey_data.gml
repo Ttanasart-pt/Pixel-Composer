@@ -75,54 +75,42 @@ function getToolHotkey(_group, _key) {
 	return _grp[$ _key];
 }
 
-function hotkeySimple(_context, _name, _key, modi = MOD_KEY.none) {	return new HotkeySimple(_context, _name, _key, modi); }
-function HotkeySimple(_context, _name, _key, modi = MOD_KEY.none) constructor {
+function hotkeySimple(_context, _name, _key, _mod = MOD_KEY.none) {	return new HotkeySimple(_context, _name, _key, _mod); }
+function HotkeySimple(_context, _name, _key, _mod = MOD_KEY.none) constructor {
 	context	= _context;
 	name	= _name;
 	
-	self.key  = key_get_index(_key);
-	self.modi = modi;
-	
-	dKey  = key;
-	dModi = modi;
+	key     = key_get_index(_key);
+	modi    = _mod;
+	dKey    =  key;
+	dModi   = _mod;
 	
 	if(!struct_has(HOTKEYS_CUSTOM, context)) HOTKEYS_CUSTOM[$ context] = {};
 	HOTKEYS_CUSTOM[$ context][$ name] = self;
 	
-	static isPressing = function() { 
-		if(is_string(key)) key = key_get_index(key);
-		return key == noone? false : key_press(key, modi); 
-	}
+	static isPressing  = function()  /*=>*/ {return key == noone? false : key_press(key, modi)};
+	static getName     = function()  /*=>*/ {return key_get_name(key, modi)};
 	
-	static getName = function() {
-		if(is_string(key)) key = key_get_index(key);
-		return key_get_name(key, modi);
-	}
-	
-	static serialize   = function()   {  return { context, name, key, modi } }
-	static deserialize = function(ll) { if(!is_struct(ll)) return; key = ll.key; modi = ll.modi; }
-	
-	var _loadKey = $"{context}_{name}";
-	if(struct_has(HOTKEYS_DATA, _loadKey)) deserialize(HOTKEYS_DATA[$ _loadKey]);
+	static serialize   = function()  /*=>*/ { return { context, name, key, modi } }
+	static deserialize = function(l) /*=>*/ { if(!is_struct(l)) return; key = l.key; modi = l.modi; if(is_string(key)) key = key_get_index(key); }
+	if(struct_has(HOTKEYS_DATA, $"{context}_{name}")) deserialize(HOTKEYS_DATA[$ $"{context}_{name}"]);
 }
 
 function hotkeyObject(_context, _name, _key, _mod = MOD_KEY.none, _action = noone) constructor {
 	context	= _context;
 	name	= _name;
-	key		= _key;
-	modi	= _mod;
 	action	= _action;
 	
+	key		= _key;
+	modi	= _mod;
 	dKey	= _key;
 	dModi	= _mod;
 	
-	static full_name = function() { return string_to_var(context == ""? $"global.{name}" : $"{context}.{name}"); }
+	static full_name   = function() /*=>*/  {return string_to_var(context == ""? $"global.{name}" : $"{context}.{name}")};
 	
-	static serialize   = function()   {  return { context, name, key, modi } }
-	static deserialize = function(ll) { if(!is_struct(ll)) return; key = ll.key; modi = ll.modi; }
-	
-	var _loadKey = $"{context}_{name}";
-	if(struct_has(HOTKEYS_DATA, _loadKey)) deserialize(HOTKEYS_DATA[$ _loadKey]);
+	static serialize   = function() /*=>*/  { return { context, name, key, modi } }
+	static deserialize = function(l) /*=>*/ { if(!is_struct(l)) return; key = l.key; modi = l.modi; }
+	if(struct_has(HOTKEYS_DATA, $"{context}_{name}")) deserialize(HOTKEYS_DATA[$ $"{context}_{name}"]);
 }
 
 function addHotkey(_context, _name, _key, _mod, _action) {
@@ -218,28 +206,12 @@ function hotkey_draw(keyStr, _x, _y, _status = 0) {
 	var tc = c_white;
 	
 	switch(_status) {
-		case 0 :
-			bc = CDEF.main_dkgrey;
-			tc = COLORS._main_text_sub;
-			break;
-		
-		case 1 :
-			bc = CDEF.main_ltgrey;
-			tc = CDEF.main_ltgrey;
-			break;
-			
-		case 2 :
-			bc = COLORS._main_accent;
-			tc = COLORS._main_text_accent;
-			break;
-			
+		case 0 : bc = CDEF.main_dkgrey;    tc = COLORS._main_text_sub;    break;
+		case 1 : bc = CDEF.main_ltgrey;    tc = CDEF.main_ltgrey;         break;
+		case 2 : bc = COLORS._main_accent; tc = COLORS._main_text_accent; break;
 	}
 	
 	draw_set_text(f_p2, fa_right, fa_center, tc);
-	var _tw = string_width( keyStr);
-	var _th = string_height(keyStr);
-	
-	// draw_sprite_stretched_ext(THEME.ui_panel, 1, _x - _tw - ui(4), _y - _th / 2 - ui(5), _tw + ui(8), _th + ui(6), bc, 0.5);
 	draw_text(_x, _y - ui(2), keyStr);
 }
 
@@ -283,25 +255,7 @@ function hotkey_deserialize() {
 	var map = json_load_struct(path);
 	if(!is_struct(map)) return;
 	
-	if(struct_has(map, "context")) {
-		var _ctx = map.context;
-		for(var i = 0; i < array_length(_ctx); i++) {
-			var key_list    = _ctx[i];
-			var _context	= key_list.context;
-			var name		= key_list.name;
-			
-			HOTKEYS_DATA[$ $"{_context}_{name}"] = key_list;
-		}
-	}
-	
-	if(struct_has(map, "node")) {
-		var _ctx = map.node;
-		for(var i = 0; i < array_length(_ctx); i++) {
-			var key_list    = _ctx[i];
-			var _context	= key_list.context;
-			var name		= key_list.name;
-			
-			HOTKEYS_DATA[$ $"{_context}_{name}"] = key_list;
-		}
-	}
+	var fn = function(n) /*=>*/ { HOTKEYS_DATA[$ $"{n.context}_{n.name}"] = n; };
+	if(struct_has(map, "context")) array_foreach(map.context, fn);
+	if(struct_has(map, "node"))    array_foreach(map.node,    fn);
 }
