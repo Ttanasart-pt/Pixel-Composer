@@ -41,47 +41,34 @@ switch(load_process) {
         printIf(log, $" > Load nodes : {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
         load_process = 2;
         load_step    = 0;
-    // break;
+    break;
     
-    // case 2 : 
+    case 2 : 
         ds_queue_clear(CONNECTION_CONFLICT);
         
-        try {
-        	array_foreach(create_list, function(node) /*=>*/ {return node.loadGroup()} );
-        	
-        } catch(e) {
-        	log_warning("LOAD, group", exception_print(e));
-        	return false;
-        }
+        try      { array_foreach(create_list, function(n) /*=>*/ {return n.loadGroup()} ); } 
+        catch(e) { log_warning("LOAD, group", exception_print(e));    }
         
         printIf(log, $" > Load group : {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
         load_process = 3;
     // break;
     
     // case 3 : 
-        try {
-        	array_foreach(create_list, function(node) /*=>*/ {return node.postDeserialize()} );
-        } catch(e) {
-        	log_warning("LOAD, deserialize", exception_print(e));
-        }
+        try      { array_foreach(create_list, function(n) /*=>*/ {return n.postDeserialize()} ); } 
+        catch(e) { log_warning("LOAD, deserialize", exception_print(e));    }
         
         printIf(log, $" > Deserialize: {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
         load_process = 4;
     // break;
     
     // case 4 : 
-    //     var _skp = false;
-// 		var _t   = get_timer();
+        var _skp = false;
+		var _t   = get_timer();
 		
         try {
             for(; load_step < node_length; load_step++) {
                 create_list[load_step].applyDeserialize();
-                
-    // 			var _ts = get_timer() - _t;
-    // 			if(load_step < node_length - 1 && _ts > load_delay) {
-    // 			    _skp = true;
-    // 			    break;
-    // 			}
+     			// if(load_step < node_length - 1 && get_timer() - _t > load_delay) { _skp = true; break; }
             }
             
         } catch(e) {
@@ -99,9 +86,10 @@ switch(load_process) {
     
     // case 5 : 
         try {
-        	array_foreach(create_list, function(node) /*=>*/ {return node.preConnect()}  );
-        	array_foreach(create_list, function(node) /*=>*/ {return node.connect()}     );
-        	array_foreach(create_list, function(node) /*=>*/ {return node.postConnect()} );
+        	array_foreach(create_list, function(n) /*=>*/ {return n.preConnect()}  );
+        	array_foreach(create_list, function(n) /*=>*/ {return n.connect()}     );
+        	array_foreach(create_list, function(n) /*=>*/ {return n.postConnect()} );
+        	
         } catch(e) {
         	log_warning("LOAD, connect", exception_print(e));
         }
@@ -133,19 +121,13 @@ switch(load_process) {
     // break;
     
     // case 6 : 
-        try {
-        	array_foreach(create_list, function(node) { node.postLoad(); } );
-        } catch(e) {
-        	log_warning("LOAD, connect", exception_print(e));
-        }
+        try      { array_foreach(create_list, function(n) /*=>*/ {return n.postLoad()});  } 
+        catch(e) { log_warning("LOAD, connect", exception_print(e)); }
         
         printIf(log, $" > Post load : {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
     
-        try {
-        	array_foreach(create_list, function(node) { node.clearInputCache(); } );
-        } catch(e) {
-        	log_warning("LOAD, connect", exception_print(e));
-        }
+        try      { array_foreach(create_list, function(n) /*=>*/ {return n.clearInputCache()}); } 
+        catch(e) { log_warning("LOAD, connect", exception_print(e));       }
         
         load_noti.progress = 0.95;
         printIf(log, $" > Clear cache : {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
