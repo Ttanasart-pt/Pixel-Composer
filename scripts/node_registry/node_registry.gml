@@ -414,7 +414,7 @@ function __initNodes() {
 		addNodeObject(vfx, "VFX Trail",		  s_node_vfx_trail,			"Node_VFX_Trail",		[1, Node_VFX_Trail],, "Generate path from particle movement.").hideRecent().setVersion(11560);
 		addNodeObject(vfx, "VFX Triangulate", s_node_vfx_triangulate,	"Node_VFX_Triangulate",	[1, Node_VFX_Triangulate],, "Render line between particles.").hideRecent().setVersion(11670);
 			
-		ds_list_add(vfx, "Instance control");
+		ds_list_add(vfx, "Variables");
 		addNodeObject(vfx, "VFX Variable",	s_node_vfx_variable,	"Node_VFX_Variable",	[1, Node_VFX_Variable],, "Extract variable from particle objects.").hideRecent().setVersion(1120);
 		addNodeObject(vfx, "VFX Override",	s_node_vfx_override,	"Node_VFX_Override",	[1, Node_VFX_Override],, "Replace particle variable with a new one.").hideRecent().setVersion(1120);
 	#endregion
@@ -434,9 +434,9 @@ function __initNodes() {
 		addNodeObject(rigidSim, "Wall",				s_node_rigidSim_wall,				"Node_Rigid_Wall",				[1, Node_Rigid_Wall]).hideRecent().setVersion(11680);
 		addNodeObject(rigidSim, "Render",			s_node_rigidSim_renderer,			"Node_Rigid_Render",			[1, Node_Rigid_Render],, "Render rigidbody object to surface.").hideRecent().setVersion(1110);
 		addNodeObject(rigidSim, "Apply Force",		s_node_rigidSim_force,				"Node_Rigid_Force_Apply",		[1, Node_Rigid_Force_Apply],, "Apply force to objects.").hideRecent().setVersion(1110);
+		addNodeObject(rigidSim, "Activate Physics", s_node_rigidSim_activate,			"Node_Rigid_Activate",			[1, Node_Rigid_Activate],, "Enable or disable rigidbody object.").hideRecent().setVersion(1110);
 			
-		ds_list_add(rigidSim, "Instance control");
-		addNodeObject(rigidSim, "Activate Physics",		s_node_rigidSim_activate,	"Node_Rigid_Activate",		[1, Node_Rigid_Activate],, "Enable or disable rigidbody object.").hideRecent().setVersion(1110);
+		ds_list_add(rigidSim, "Variables");
 		addNodeObject(rigidSim, "Rigidbody Variable",	s_node_rigid_variable,		"Node_Rigid_Variable",		[1, Node_Rigid_Variable],, "Extract veriable from rigidbody object.").hideRecent().setVersion(1120);
 		addNodeObject(rigidSim, "Rigidbody Override",	s_node_rigid_override,		"Node_Rigid_Override",		[1, Node_Rigid_Override],, "Replace rigidbody object variable with a new one.").hideRecent().setVersion(1120);
 	#endregion

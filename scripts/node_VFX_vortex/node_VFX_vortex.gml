@@ -12,41 +12,43 @@ function Node_VFX_Vortex(_x, _y, _group = noone) : Node_VFX_effector(_x, _y, _gr
 		
 	array_push(input_display_list, effector_input_length + 0, effector_input_length + 1, effector_input_length + 2);
 	
+	attraction = 0;
+	clockwise  = 0;
+	destroydis = false;
+	
+	static onVFXUpdate = function(frame = CURRENT_FRAME) {
+		attraction = getInputData(effector_input_length + 0);
+		clockwise  = getInputData(effector_input_length + 1);
+		destroydis = getInputData(effector_input_length + 2);
+	}
+	
 	function onAffect(part, str) {
-		var _area      = getInputData(1);
-		var _area_x    = _area[0];
-		var _area_y    = _area[1];
-		
-		var _sten	   = getInputData(5);
-		var _rot_range = getInputData(6);
-		var _sca_range = getInputData(7);
-		var _attr	   = getInputData(effector_input_length + 0);
-		var _clkw	   = getInputData(effector_input_length + 1);
-		var _dest	   = getInputData(effector_input_length + 2);
-		
-		var _rot =   random_range(_rot_range[0], _rot_range[1]);
-		var _sca = [ random_range(_sca_range[0], _sca_range[1]), random_range(_sca_range[2], _sca_range[3]) ];
+		var _rot = random_range(rotateX, rotateY);
+		var _scX = random_range(scaleX0, scaleX1);
+		var _scY = random_range(scaleY0, scaleY1);
 		
 		var pv = part.getPivot();
 		
-		var dirr = point_direction(_area_x, _area_y, pv[0], pv[1]) + (_clkw? 90 : -90);
-		part.x += lengthdir_x(_sten * str, dirr);
-		part.y += lengthdir_y(_sten * str, dirr);
+		var dirr = point_direction(area_x, area_y, pv[0], pv[1]) + (clockwise? 90 : -90);
+		part.x += lengthdir_x(strength * str, dirr);
+		part.y += lengthdir_y(strength * str, dirr);
 		
-		var dirr = point_direction(pv[0], pv[1], _area_x, _area_y);
-		part.x += lengthdir_x(_attr * str, dirr);
-		part.y += lengthdir_y(_attr * str, dirr);
+		var dirr = point_direction(pv[0], pv[1], area_x, area_y);
+		part.x += lengthdir_x(attraction * str, dirr);
+		part.y += lengthdir_y(attraction * str, dirr);
 		
 		part.rot += _rot * str;
 		
-		var scx_s = _sca[0] * str;
-		var scy_s = _sca[1] * str;
+		var scx_s = _scX * str;
+		var scy_s = _scY * str;
+		
 		if(scx_s < 0)	part.scx = lerp_linear(part.scx, 0, abs(scx_s));
 		else			part.scx += sign(part.scx) * scx_s;
+		
 		if(scy_s < 0)	part.scy = lerp_linear(part.scy, 0, abs(scy_s));
 		else			part.scy += sign(part.scy) * scy_s;
 		
-		if(_dest && point_distance(pv[0], pv[1], _area_x, _area_y) <= 1)
+		if(destroydis && point_distance(pv[0], pv[1], area_x, area_y) <= 1)
 			part.kill();
 	}
 }

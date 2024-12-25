@@ -10,30 +10,32 @@ function Node_VFX_Turbulence(_x, _y, _group = noone) : Node_VFX_effector(_x, _y,
 		
 	array_push(input_display_list, effector_input_length + 0, effector_input_length + 1);
 	
+	tscale = 1;
+	conspd = false;
+	
+	static onVFXUpdate = function(frame = CURRENT_FRAME) {
+		tscale = getInputData(effector_input_length + 0);
+		conspd = getInputData(effector_input_length + 1);
+	}
+	
 	function onAffect(part, str) {
-		var _sten      = getInputData(5);
-		var _rot_range = getInputData(6);
-		var _sca_range = getInputData(7);
-		var _rot       = random_range(_rot_range[0], _rot_range[1]);
-		var _sca       = [ random_range(_sca_range[0], _sca_range[1]), random_range(_sca_range[2], _sca_range[3]) ];
+		var _rot = random_range(rotateX, rotateY);
+		var _scX = random_range(scaleX0, scaleX1);
+		var _scY = random_range(scaleY0, scaleY1);
 		
-		var pv = part.getPivot();
+		var  pv   = part.getPivot();
+		var _seed = conspd? seed : part.seed;
 		
-		var t_scale = getInputData(effector_input_length + 0);
-		var con_sed = getInputData(effector_input_length + 1);
+		var perx = (perlin_noise(pv[0] / tscale, pv[1] / tscale, 1, _seed)       - 0.5) * 2;
+		var pery = (perlin_noise(pv[0] / tscale, pv[1] / tscale, 1, _seed + 100) - 0.5) * 2;
 		
-		var _seed = con_sed? seed : part.seed;
-		
-		var perx    = (perlin_noise(pv[0] / t_scale, pv[1] / t_scale, 1, _seed)       - 0.5) * 2;
-		var pery    = (perlin_noise(pv[0] / t_scale, pv[1] / t_scale, 1, _seed + 100) - 0.5) * 2;
-		
-		part.x += perx * str * _sten;
-		part.y += pery * str * _sten;
+		part.x += perx * str * strength;
+		part.y += pery * str * strength;
 		
 		part.rot += _rot * perx;
 		
-		var scx_s = _sca[0] * str;
-		var scy_s = _sca[1] * str;
+		var scx_s = _scX * str;
+		var scy_s = _scY * str;
 		
 		if(scx_s < 0)		part.scx = lerp_linear(part.scx, 0, abs(scx_s));
 		else if(scx_s > 0)	part.scx += sign(part.scx) * scx_s;

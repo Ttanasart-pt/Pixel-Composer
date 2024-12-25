@@ -18,7 +18,6 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	node_draw_icon       = s_node_vfx_accel;
 
 	setDimension(96, 48);
-	seed  = 1;
 	
 	newInput(0, nodeValue_Particle("Particles", self, -1 ))
 		.setVisible(true, true);
@@ -41,7 +40,7 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(6, nodeValue_Rotation_Range("Rotate particle", self, [ 0, 0 ] ))
 		.rejectArray();
 	
-	newInput(7, nodeValue_Vec2_Range("Scale particle", self, [ 0, 0, 0, 0 ] , { linked : true }))
+	newInput(7, nodeValue_Vec2_Range("Scale particle", self, [ 0, 0, 0, 0 ], { linked : true }))
 		.rejectArray();
 	
 	newInput(8, nodeValueSeed(self))
@@ -57,6 +56,33 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newOutput(0, nodeValue_Output("Particles", self, VALUE_TYPE.particle, -1 ));
 	
 	UPDATE_PART_FORWARD
+	
+	//////////////////////////////////////////////////
+		
+		falloff  = CURVE_DEF_01;
+		fallDist = 0;
+		
+		area_x   = 0; area_y   = 0;
+		area_w   = 0; area_h   = 0;
+		area_t   = 0;
+		
+		area_x0  = 0; area_x1  = 0;
+		area_y0  = 0; area_y1  = 0;
+		
+		strength  = 0;
+		effectVec = [ 0, 0 ];
+		effectVx  = 0; effectVy  = 0;
+		
+		rotate  = [ 0, 0 ];
+		rotateX = 0; rotateY = 0;
+		
+		scale   = [ 0, 0, 0, 0 ];
+		scaleX0 = 0; scaleX1 = 0;
+		scaleY0 = 0; scaleY1 = 0;
+		
+		seed      = 1;
+	
+	//////////////////////////////////////////////////
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		inputs[1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
@@ -100,76 +126,85 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		}
 	}
 	
-	function reset() {
-		resetSeed();
-	}
+	function reset() { resetSeed(); }
 	
-	static resetSeed = function() {
-		seed = getInputData(8);
-	}
+	static resetSeed = function() { seed = getInputData(8); }
 	
 	function onAffect(part, str) {}
-	
 	function affect(part) {
 		if(!part.active) return;
 		
-		var _area = getInputData(1);
-		var _fall = getInputData(2);
-		var _fads = getInputData(3);
-		
-		var _area_x = _area[0];
-		var _area_y = _area[1];
-		var _area_w = _area[2];
-		var _area_h = _area[3];
-		var _area_t = _area[4];
-		
-		var _area_x0 = _area_x - _area_w;
-		var _area_x1 = _area_x + _area_w;
-		var _area_y0 = _area_y - _area_h;
-		var _area_y1 = _area_y + _area_h;
-		
-		random_set_seed(part.seed + seed);
-		
-		var str = 0, in, _dst;
+		var _in, _dst;
 		var pv = part.getPivot();
 		
-		if(_area_t == AREA_SHAPE.rectangle) {
-			in = point_in_rectangle(pv[0], pv[1], _area_x0, _area_y0, _area_x1, _area_y1)
-			_dst = min(	distance_to_line(pv[0], pv[1], _area_x0, _area_y0, _area_x1, _area_y0), 
-						distance_to_line(pv[0], pv[1], _area_x0, _area_y1, _area_x1, _area_y1), 
-						distance_to_line(pv[0], pv[1], _area_x0, _area_y0, _area_x0, _area_y1), 
-						distance_to_line(pv[0], pv[1], _area_x1, _area_y0, _area_x1, _area_y1));
-		} else if(_area_t == AREA_SHAPE.elipse) {
-			var _dirr = point_direction(_area_x, _area_y, pv[0], pv[1]);
-			var _epx = _area_x + lengthdir_x(_area_w, _dirr);
-			var _epy = _area_y + lengthdir_y(_area_h, _dirr);
+		if(area_t == AREA_SHAPE.rectangle) {
+			_in  =    point_in_rectangle(pv[0], pv[1], area_x0, area_y0, area_x1, area_y1)
+			_dst = min(	distance_to_line(pv[0], pv[1], area_x0, area_y0, area_x1, area_y0), 
+						distance_to_line(pv[0], pv[1], area_x0, area_y1, area_x1, area_y1), 
+						distance_to_line(pv[0], pv[1], area_x0, area_y0, area_x0, area_y1), 
+						distance_to_line(pv[0], pv[1], area_x1, area_y0, area_x1, area_y1));
+						
+		} else if(area_t == AREA_SHAPE.elipse) {
+			var _dirr = point_direction(area_x, area_y, pv[0], pv[1]);
+			var _epx = area_x + lengthdir_x(area_w, _dirr);
+			var _epy = area_y + lengthdir_y(area_h, _dirr);
 			
-			in   = point_distance(_area_x, _area_y, pv[0], pv[1]) < point_distance(_area_x, _area_y, _epx, _epy);
+			_in  = point_distance(area_x, area_y, pv[0], pv[1]) < point_distance(area_x, area_y, _epx, _epy);
 			_dst = point_distance(pv[0], pv[1], _epx, _epy);
 		}
 		
-		if(_dst <= _fads) {
-			var inf = in? 0.5 + _dst / _fads : 0.5 - _dst / _fads;
-			str = eval_curve_x(_fall, clamp(inf, 0., 1.));
-		} else if(in)
-			str = 1;
+		var str = bool(_in);
+		if(_dst <= fallDist) {
+			var inf = _in? 0.5 + _dst / fallDist : 0.5 - _dst / fallDist;
+			str = eval_curve_x(falloff, clamp(inf, 0., 1.));
+		}
 		
-		if(str == 0) return;
-		
+		if(str <= 0) return;
+		random_set_seed(part.seed + seed);
 		onAffect(part, str);
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
 		var val = getInputData(0);
 		outputs[0].setValue(val);
+		
 		if(val == -1) return;
+		
+		var _area = getInputData(1);
+		falloff   = getInputData(2);
+		fallDist  = getInputData(3);
+		
+		effectVec = getInputData(4);
+		strength  = getInputData(5);
+		rotate    = getInputData(6);
+		scale     = getInputData(7);
+		
+		area_x    = _area[0];
+		area_y    = _area[1];
+		area_w    = _area[2];
+		area_h    = _area[3];
+		area_t    = _area[4];
+		
+		area_x0   = area_x - area_w;
+		area_x1   = area_x + area_w;
+		area_y0   = area_y - area_h;
+		area_y1   = area_y + area_h;
+		
+		effectVx = effectVec[0];	effectVy = effectVec[1];
+		rotateX  = rotate[0];		rotateY  = rotate[1];
+		scaleX0  = scale[0];		scaleX1  = scale[1];
+		scaleY0  = scale[2];		scaleY1  = scale[3];
+		
+		onVFXUpdate(frame);
+		
+		////////////////////////////////////////////////////////////////
 		
 		if(!is_array(val) || array_length(val) == 0) return;
 		if(!is_array(val[0])) val = [ val ];
+		
 		for( var i = 0, n = array_length(val); i < n; i++ )
-		for( var j = 0; j < array_length(val[i]); j++ ) {
+		for( var j = 0; j < array_length(val[i]); j++ )
 			affect(val[i][j]);
-		}
 		
 		var jun = outputs[0];
 		for(var j = 0; j < array_length(jun.value_to); j++) {
@@ -177,6 +212,8 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				jun.value_to[j].node.doUpdate();
 		}
 	}
+	
+	static onVFXUpdate = function(frame = CURRENT_FRAME) {}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
