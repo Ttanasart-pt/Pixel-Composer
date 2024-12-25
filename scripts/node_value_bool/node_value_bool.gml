@@ -4,12 +4,12 @@ function __NodeValue_Bool(_name, _node, _value, _tooltip = "") : NodeValue(_name
 	
 	/////============== GET =============
 	
+	function toBool(a) { return is_array(a)? array_map(a, function(v) /*=>*/ {return toBool(v)}) : bool(a) };
+	
 	static getValue = function(_time = CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { //// Get value
 		getValueRecursive(self.__curr_get_val, _time);
 		var val = __curr_get_val[0];
-		var nod = __curr_get_val[1];
-		
-		return is_array(val)? array_map(val, function(v) /*=>*/ {return bool(v)}) : bool(val);
+		return toBool(val);
 	}
 	
 	static __getAnimValue = function(_time = CURRENT_FRAME) {

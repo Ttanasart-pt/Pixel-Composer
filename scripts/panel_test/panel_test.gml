@@ -136,7 +136,7 @@ function Panel_Test() : PanelContent() constructor {
 					cc = merge_color(COLORS._main_value_negative, c_white, 0.5); 
 					tx = ui(16);
 					
-					if(hv && _f.tooltip != -1) TOOLTIP = _f.tooltip;
+					if(hv) TOOLTIP = _f[$ "tooltip"] ?? "";
 					break;
 					
 				case  0 : 
@@ -397,5 +397,5 @@ function Panel_Test() : PanelContent() constructor {
 		}
 	}
 	
-	setTestDir("D:/Project/MakhamDev/LTS-PixelComposer/TEST/Tester");
+	setTestDir("D:/Project/MakhamDev/LTS-PixelComposer/TEST/Others");
 }
