@@ -274,7 +274,6 @@
     {"name":"FLIP","order":19,"path":"extensions/FLIP/FLIP.yy",},
     {"name":"gameframe_native","order":2,"path":"extensions/gameframe_native/gameframe_native.yy",},
     {"name":"GMSSimpleMIDI","order":17,"path":"extensions/GMSSimpleMIDI/GMSSimpleMIDI.yy",},
-    {"name":"GMSysinfo","order":22,"path":"extensions/GMSysinfo/GMSysinfo.yy",},
     {"name":"libborderless","order":1,"path":"extensions/libborderless/libborderless.yy",},
     {"name":"libdlgmodule","order":15,"path":"extensions/libdlgmodule/libdlgmodule.yy",},
     {"name":"libfilesystem","order":14,"path":"extensions/libfilesystem/libfilesystem.yy",},
