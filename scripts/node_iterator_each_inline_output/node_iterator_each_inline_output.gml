@@ -28,20 +28,15 @@ function Node_Iterator_Each_Inline_Output(_x, _y, _group = noone) : Node(_x, _y,
 		
 		var val = getInputData(0);
 		var arr = outputs[0].getValue();
-		var itr = loop.iterated - 1;
+		var itr = max(0, loop.iterated - 1);
 		
 		if(!is_array(arr)) return;
 		
 		if(_typ == VALUE_TYPE.surface) {
-			if(is_instanceof(val, SurfaceAtlas)) 
-				arr[@ itr] = val.clone();
-				
-			else if(surface_exists(val))
-				arr[@ itr] = surface_clone(val);
-				
-			else 
-				arr[@ itr] = val;
-				
+				 if(is(val, SurfaceAtlas)) arr[@ itr] = val.clone();
+			else if(surface_exists(val))   arr[@ itr] = surface_clone(val);
+			else                           arr[@ itr] = val;
+			
 		} else 
 			arr[@ itr] = val;
 			
