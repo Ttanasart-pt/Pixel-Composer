@@ -165,15 +165,13 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	edit_time = 0;
 	attributes.file_checker = true;
-	array_push(attributeEditors, [ "File Watcher", function() { return attributes.file_checker; }, 
-		new checkBox(function() { attributes.file_checker = !attributes.file_checker; }) ]);
+	array_push(attributeEditors, [ "File Watcher", function() /*=>*/ {return attributes.file_checker}, new checkBox(function() /*=>*/ { attributes.file_checker = !attributes.file_checker; }) ]);
 	
 	content      = noone;
 	layers       = [];
 	tags         = [];
 	_tag_delay   = 0;
 	path_current = "";
-	
 	first_update = false;
 	
 	on_drop_file = function(path) { 
@@ -252,24 +250,30 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				switch(chunk[$ "Type"]) {
 					case 0x2019: //palette
 						var pals = chunk[$ "Palette"];
-						var plt  = [];
+						var pamo = array_length(pals)
+						var plt  = array_create(pamo);
+						var par  = array_create(pamo);
 						
-						for( var k = 0; k < array_length(pals); k++ )
-							array_push(plt, [ pals[k][$ "Red"], pals[k][$ "Green"], pals[k][$ "Blue"], pals[k][$ "Alpha"] ]);
+						for( var k = 0; k < pamo; k++ ) {
+							var _clr = pals[k];
+							var _r   = _clr[$ "Red"]   ?? 0;
+							var _g   = _clr[$ "Green"] ?? 0;
+							var _b   = _clr[$ "Blue"]  ?? 0;
+							var _a   = _clr[$ "Alpha"] ?? 0;
+							
+							plt[k] = [ _r, _g, _b, _a ];
+							par[k] = make_color_rgba(_r, _g, _b, _a);
+						}
 						
 						content[$ "Palette"] = plt;
-						
-						var p_arr = [];
-						for( var k = 0; k < array_length(plt); k++ )
-							array_push(p_arr, make_color_rgba(plt[k][0], plt[k][1], plt[k][2], plt[k][3]));
-						
-						outputs[3].setValue(p_arr);
+						outputs[3].setValue(par);
 						break;
 						
 					case 0x2004: //layer
 						var name = chunk[$ "Name"];
+						var type = chunk[$ "Layer type"];
 						
-						array_push(layers, new ase_layer(name, chunk[$ "Layer type"]));
+						array_push(layers, new ase_layer(name, type));
 						array_push(vis, true);
 						break;
 						

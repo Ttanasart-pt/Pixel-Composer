@@ -156,8 +156,8 @@ globalvar __ase_format_chunk_color_profile; __ase_format_chunk_color_profile = [
 	[_BIN_TYPE.word,	"Flag"], //1: Fix gamma
 	[_BIN_TYPE.fixed,	"Fixed gamma"],
 	[_BIN_TYPE.byte,	"Unused", 8],
-	[_BIN_TYPE.dword,	"ICC Data length", 1, function(chunk) { return chunk[$ "Type"] == 2; }],
-	[_BIN_TYPE.byte,	"ICC Data", "ICC Data length", function(chunk) { return chunk[$ "Type"] == 2; }],
+	[_BIN_TYPE.dword,	"ICC Data length", 1,          function(c) /*=>*/ {return c[$ "Type"] == 2}],
+	[_BIN_TYPE.byte,	"ICC Data", "ICC Data length", function(c) /*=>*/ {return c[$ "Type"] == 2}],
 ];
 
 globalvar __ase_format_chunk_file; __ase_format_chunk_file = [
@@ -201,16 +201,16 @@ globalvar __ase_format_chunk_palette_entry; __ase_format_chunk_palette_entry = [
 	[_BIN_TYPE.byte,	"Green"],
 	[_BIN_TYPE.byte,	"Blue"],
 	[_BIN_TYPE.byte,	"Alpha"],
-	[_BIN_TYPE.string,	"Name", 1, function(chunk) { return chunk[$ "Flag"] & (1 << 0); }],
+	[_BIN_TYPE.string,	"Name", 1, function(c) /*=>*/ {return c[$ "Flag"] & (1 << 0)}],
 ];
 
 globalvar __ase_format_chunk_user_data; __ase_format_chunk_user_data = [
 	[_BIN_TYPE.dword,	"Flag"], //1: Text, 2: Color, 4: Properties
-	[_BIN_TYPE.string,	"Name", 1,  function(chunk) { return chunk[$ "Flag"] & (1 << 0); }],
-	[_BIN_TYPE.byte,	"Red", 1,   function(chunk) { return chunk[$ "Flag"] & (1 << 1); }],
-	[_BIN_TYPE.byte,	"Green", 1, function(chunk) { return chunk[$ "Flag"] & (1 << 1); }],
-	[_BIN_TYPE.byte,	"Blue", 1,  function(chunk) { return chunk[$ "Flag"] & (1 << 1); }],
-	[_BIN_TYPE.byte,	"Alpha", 1, function(chunk) { return chunk[$ "Flag"] & (1 << 1); }],
+	[_BIN_TYPE.string,	"Name",  1, function(c) /*=>*/ {return c[$ "Flag"] & (1 << 0)} ],
+	[_BIN_TYPE.byte,	"Red",   1, function(c) /*=>*/ {return c[$ "Flag"] & (1 << 1)} ],
+	[_BIN_TYPE.byte,	"Green", 1, function(c) /*=>*/ {return c[$ "Flag"] & (1 << 1)} ],
+	[_BIN_TYPE.byte,	"Blue",  1, function(c) /*=>*/ {return c[$ "Flag"] & (1 << 1)} ],
+	[_BIN_TYPE.byte,	"Alpha", 1, function(c) /*=>*/ {return c[$ "Flag"] & (1 << 1)} ],
 ];
 
 globalvar __ase_format_chunk_user_data_prop; __ase_format_chunk_user_data_prop = [
@@ -256,10 +256,10 @@ globalvar __ase_format_chunk_tileset; __ase_format_chunk_tileset = [
 	[_BIN_TYPE.short,	"Base index"],
 	[_BIN_TYPE.byte,	"Reserved", 14],
 	[_BIN_TYPE.string,	"Name"],
-	[_BIN_TYPE.dword,	"ID of external file", 1, function(chunk) { return chunk[$ "Flag"] & (1 << 1); }],
-	[_BIN_TYPE.dword,	"Tileset ID",		   1, function(chunk) { return chunk[$ "Flag"] & (1 << 1); }],
-	[_BIN_TYPE.dword,	"Data length",		   1, function(chunk) { return chunk[$ "Flag"] & (1 << 2); }],
-	[_BIN_TYPE.pixel,	"Compressed image", "Data length", function(chunk) { return chunk[$ "Flag"] & (1 << 2); }],
+	[_BIN_TYPE.dword,	"ID of external file", 1,          function(c) /*=>*/ {return c[$ "Flag"] & (1 << 1)} ],
+	[_BIN_TYPE.dword,	"Tileset ID",		   1,          function(c) /*=>*/ {return c[$ "Flag"] & (1 << 1)} ],
+	[_BIN_TYPE.dword,	"Data length",		   1,          function(c) /*=>*/ {return c[$ "Flag"] & (1 << 2)} ],
+	[_BIN_TYPE.pixel,	"Compressed image", "Data length", function(c) /*=>*/ {return c[$ "Flag"] & (1 << 2)} ],
 ];
 
 function read_format_type(_bin, datType, outMap) {
