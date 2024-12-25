@@ -988,7 +988,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static getInputDataFull  = function(index, def = 0) { return array_safe_get_fast(inputs_data, index, def); }
-	static getInputDataLite  = function(index, def = 0) { return inputs[index].getValue(); }
 	static getInputDataForce = function(index, def = 0) { return inputs[index].getValue(); }
 	
 	// static setInputData = function(index, value) {

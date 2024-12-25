@@ -465,6 +465,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	__data   = noone;
 	
 	static update = function(frame = CURRENT_FRAME) {
+		if(!is(inParent, NodeValue)) return;
 		outputs[0].setValue(inParent.getValue());
 		
 		var _dstype = inputs[0].getValue();

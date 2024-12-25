@@ -413,7 +413,7 @@ function __initNodes() {
 		ds_list_add(vfx, "Generates");
 		addNodeObject(vfx, "VFX Trail",		  s_node_vfx_trail,			"Node_VFX_Trail",		[1, Node_VFX_Trail],, "Generate path from particle movement.").hideRecent().setVersion(11560);
 		addNodeObject(vfx, "VFX Triangulate", s_node_vfx_triangulate,	"Node_VFX_Triangulate",	[1, Node_VFX_Triangulate],, "Render line between particles.").hideRecent().setVersion(11670);
-			
+		
 		ds_list_add(vfx, "Variables");
 		addNodeObject(vfx, "VFX Variable",	s_node_vfx_variable,	"Node_VFX_Variable",	[1, Node_VFX_Variable],, "Extract variable from particle objects.").hideRecent().setVersion(1120);
 		addNodeObject(vfx, "VFX Override",	s_node_vfx_override,	"Node_VFX_Override",	[1, Node_VFX_Override],, "Replace particle variable with a new one.").hideRecent().setVersion(1120);
