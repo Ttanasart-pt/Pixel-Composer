@@ -1206,7 +1206,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		getValueRecursive(self.__curr_get_val, _time);
 		var val = __curr_get_val[0];
-		var nod = __curr_get_val[1]; if(!is(nod, Node)) return val;
+		var nod = __curr_get_val[1]; if(!is(nod, NodeValue)) return val;
 		
 		var typ = nod.type;
 		var dis = nod.display_type;

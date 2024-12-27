@@ -86,10 +86,13 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var oh = hh + _padd[PADDING.top] + _padd[PADDING.bottom]; 
 		
 		var _outSurf = outputs[0].getValue();
-		_outSurf     = surface_verify(_outSurf, ow, oh, attrDepth());
+		    _outSurf = surface_verify(_outSurf, ow, oh, attrDepth());
 		
-		for( var i = 0, n = array_length(temp_surface); i < n; i++ )
+		for( var i = 0, n = array_length(temp_surface); i < n; i++ ) {
 			temp_surface[i] = surface_verify(temp_surface[i], ow, oh, attrDepth());
+			surface_clear(temp_surface[i]);
+		}
+		
 		blend_temp_surface = temp_surface[2];
 		
 		var atlas = [];
@@ -143,9 +146,7 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		surface_set_target(_outSurf);
 			DRAW_CLEAR 
 			BLEND_OVERRIDE
-			
 			draw_surface_safe(temp_surface[ppind]);
-			
 			BLEND_NORMAL
 		surface_reset_target();
 		
