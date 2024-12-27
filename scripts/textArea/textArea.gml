@@ -65,12 +65,16 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 	_cl = -1;
 	
 	context_menu = [
-		menuItem("Copy",  function() /*=>*/ { clipboard_set_text(_current_text) }, THEME.copy),
+		menuItem("Copy",  function() /*=>*/ { clipboard_set_text(_current_text); }, THEME.copy),
 		menuItem("Paste", function() /*=>*/ { var _text = clipboard_get_text(); if(onModify) onModify(_text); }, THEME.paste),
 	];
 	
 	context_menu_selecting = [
-		menuItem("Copy",  function() /*=>*/ { clipboard_set_text(_current_text) }, THEME.copy),
+		menuItem("Copy",  function() /*=>*/ { 
+			var minc = min(cursor, cursor_select);
+			var maxc = max(cursor, cursor_select);
+			clipboard_set_text(string_copy(_input_text, minc + 1, maxc - minc));
+		}, THEME.copy),
 		menuItem("Paste", function() /*=>*/ { var _text = clipboard_get_text(); if(onModify) onModify(_text); }, THEME.paste),
 	];
 	
