@@ -64,6 +64,16 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 	
 	_cl = -1;
 	
+	context_menu = [
+		menuItem("Copy",  function() /*=>*/ { clipboard_set_text(_current_text) }, THEME.copy),
+		menuItem("Paste", function() /*=>*/ { var _text = clipboard_get_text(); if(onModify) onModify(_text); }, THEME.paste),
+	];
+	
+	context_menu_selecting = [
+		menuItem("Copy",  function() /*=>*/ { clipboard_set_text(_current_text) }, THEME.copy),
+		menuItem("Paste", function() /*=>*/ { var _text = clipboard_get_text(); if(onModify) onModify(_text); }, THEME.paste),
+	];
+	
 	static setMaxHieght = function(height) {
 		max_height = height;
 		return self;
@@ -719,19 +729,20 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 			}
 			
 			if(ch_y <= _my && !_found_char) target = char_run - 1;
+			
+			if(mouse_press(mb_right, active))
+				menuCall("textbox_context", context_menu_selecting);
 		}
 		
-		if(target != undefined) {
-			if(!click_block) {
-				if(mouse_press(mb_left, active) && HOVER != o_dialog_textbox_autocomplete.id) {
-					cursor_select = target;
-					cursor		  = target;
-					
-					o_dialog_textbox_autocomplete.deactivate(self);
-					
-				} else if(mouse_click(mb_left, active)) {
-					cursor = target;
-				}
+		if(target != undefined && !click_block) {
+			if(mouse_press(mb_left, active) && HOVER != o_dialog_textbox_autocomplete.id) {
+				cursor_select = target;
+				cursor		  = target;
+				
+				o_dialog_textbox_autocomplete.deactivate(self);
+				
+			} else if(mouse_click(mb_left, active)) {
+				cursor = target;
 			}
 		}
 		
@@ -741,6 +752,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 			if(cursor_select == cursor)
 				cursor_select = -1;
 		}
+		
 	}
 	
 	static drawParam = function(params) {
@@ -755,10 +767,10 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 	static draw = function(_x, _y, _w, _h, _text, _m) {
 		_h = max_height == -1? _h : min(_h, max_height);
 		
-		x = _x;
-		y = _y;
-		w = _w;
-		h = _h;
+		////- Dimension
+		
+		x = _x; y = _y;
+		w = _w; h = _h;
 		
 		hovering = false;
 		
@@ -805,6 +817,8 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 			line_width -= 16;
 		}
 		
+		////- Draw
+		
 		var hoverRect = point_in_rectangle(_m[0], _m[1], _x, _y, _x + _hw, _y + hh);
 		var tsw       = _w;
 		var tsh       = hh;
@@ -827,7 +841,9 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 			}
 		surface_reset_shader();
 		
-		if(selecting) { // draw selecting
+		////- Selecting
+		
+		if(selecting) { 
 			WIDGET_TAB_BLOCK = true;
 			
 			draw_set_text(font, fa_left, fa_top, COLORS._main_text);
@@ -967,19 +983,23 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 			if(hover && hoverRect) {
 				hovering = true;
 				
-				if(hide)
-					draw_sprite_stretched_ext(THEME.textbox, 1, _x, _y, _w, hh, boxColor, 0.5);	
-				else
-					draw_sprite_stretched_ext(THEME.textbox, 1, _x, _y, _w, hh, boxColor, 0.5 + 0.5 * interactable);	
+				draw_sprite_stretched_ext(THEME.textbox, 1, _x, _y, _w, hh, boxColor, 0.5 + 0.5 * (interactable && !hide));
+				
 				if(mouse_press(mb_left, active))
 					activate();
+				
+				if(mouse_press(mb_right, active))
+					menuCall("textbox_context", context_menu);
+					
 			} else if(!hide)
 				draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, hh, boxColor, 0.5 + 0.5 * interactable);
 				
 			o_dialog_textbox_autocomplete.deactivate(self);
 		}
 		
-		if(max_height) { //scroll height
+		////- Text height
+		
+		if(max_height) { 
 			var total_h = text_y_max;
 			text_y_max  = max(0, total_h - hh + 16);
 			text_y      = lerp_float(text_y, text_y_to, 5);
@@ -1018,6 +1038,8 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 				}
 			}
 		}
+		
+		////- Dragging
 		
 		if(DRAGGING && (DRAGGING.type == "Text" || DRAGGING.type == "Number") && hover && hoverRect) {
 			draw_sprite_stretched_ext(THEME.ui_panel, 1, _x, _y, _w, hh, COLORS._main_value_positive, 1);

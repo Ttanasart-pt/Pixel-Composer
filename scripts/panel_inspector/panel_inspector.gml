@@ -218,7 +218,7 @@ function Panel_Inspector() : PanelContent() constructor {
             meta_tb[i].hide = true;
         
         meta_display = [ 
-            [ __txt("Project Settings"),    false, "setting"    ], 
+            [ __txt("Project Settings"),    false, "settings"   ], 
             [ __txt("Metadata"),            true , "metadata"   ], 
             [ __txt("Global variables"),    true , "globalvar"  ], 
             [ __txt("Group Properties"),    true , "group prop" ], 
@@ -510,7 +510,7 @@ function Panel_Inspector() : PanelContent() constructor {
             if(_meta[1]) continue;
             
             switch(_tag) {
-                case "setting" :
+                case "settings" :
                     var _edt = PROJECT.attributeEditor;
                     var _lh, wh;
                     

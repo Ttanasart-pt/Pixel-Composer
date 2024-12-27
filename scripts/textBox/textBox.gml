@@ -38,8 +38,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	slider_cur_del = 0;
 	slider_object  = noone;
 	
-	label      = "";
-	labelColor = COLORS._main_text_sub;
+	label           = "";
+	labelColor      = COLORS._main_text_sub;
 	highlight_color = -1; 
 	highlight_alpha = 1;
 	
@@ -77,6 +77,29 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	
 	shake_amount = 0;
 	onDeactivate = -1;
+	
+	context_menu = [
+		menuItem("Copy",  function() /*=>*/ { clipboard_set_text(_current_text); }, THEME.copy),
+		menuItem("Paste", function() /*=>*/ { 
+			var _text = clipboard_get_text();
+			if(input == TEXTBOX_INPUT.number) _text = toNumber(_text);
+			modifyValue(_text);
+		}, THEME.paste),
+	];
+	
+	context_menu_selecting = [
+		menuItem("Copy",  function() /*=>*/ { 
+			var minc = min(cursor, cursor_select);
+			var maxc = max(cursor, cursor_select);
+			clipboard_set_text(string_copy(cursor_select, minc + 1, maxc - minc));
+		}, THEME.copy),
+		
+		menuItem("Paste", function() /*=>*/ { 
+			var _text = clipboard_get_text();
+			if(input == TEXTBOX_INPUT.number) _text = toNumber(_text);
+			modifyValue(_text);
+		}, THEME.paste),
+	];
 	
 	static setOnRelease = function(release) { onRelease = release; return self; }
 	
@@ -418,18 +441,20 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				_xx += _chw;
 			}
 			
-			if(target != -999) {
-				if(!click_block) {
-					if(mouse_press(mb_left, active)) {
-						cursor_select = target;
-						cursor		  = target;	
-					} else if(mouse_click(mb_left, active) && cursor != target)
-						cursor = target;
-				}
+			if(target != -999 && !click_block) {
+				if(mouse_press(mb_left, active)) {
+					cursor_select = target;
+					cursor		  = target;	
+				} else if(mouse_click(mb_left, active) && cursor != target)
+					cursor = target;
 			}
 		
 			if(mouse_release(mb_left, active))
 				click_block	  = false;
+			
+			if(mouse_press(mb_right, active))
+				menuCall("textbox_context", context_menu_selecting);
+			
 		}
 	}
 	
@@ -453,6 +478,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		
 		var drawText = selecting || _h >= line_get_height(font);
 		
+		////- Positions
+		
 		switch(halign) {
 			case fa_left:   _x = _x;			break;	
 			case fa_center: _x = _x - _w / 2;	break;	
@@ -464,6 +491,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			case fa_center: _y = _y - _h / 2;	break;	
 			case fa_bottom: _y = _y - _h;		break;	
 		}
+		
+		////- Buttons
 		
 		var _bs = min(h, ui(32));
 		
@@ -487,6 +516,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			_w -= _bs + ui(4);
 		}
 		
+		////- Surface
+		
 		var _raw_text = _text;
 		_text         = string_real(_text);
 		_current_text = _text;
@@ -501,10 +532,13 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			case fa_right  : tx = _x + _w - padding; break;
 		}
 		
+		var _update = false;
 		if(drawText) {
-			var _update = !surface_valid(text_surface, _w - padding * 2, _h);
+			_update = !surface_valid(text_surface, _w - padding * 2, _h);
 			if(_update) text_surface = surface_verify(text_surface, _w - padding * 2, _h);
 		}
+		
+		////- Draw
 		
 		if(!hide) {
 			draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, boxColor, 1);
@@ -546,6 +580,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		var _dpx = disp_x;	
 		disp_x = lerp_float(disp_x, disp_x_to, 5);
 		if(_dpx != disp_x) _update = true;
+		
+		////- Slide
 		
 		var hoverRect = point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h);
 		
@@ -663,6 +699,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			}
 		}
 		
+		////- Interaction
+		
 		if(selecting) { 
 			if(hide < 2) {
 				if(sprite_index == -1) draw_sprite_stretched_ext(THEME.textbox, 2, _x, _y, _w, _h, COLORS._main_accent, 1);
@@ -695,10 +733,10 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			#endregion
 			
 			#region draw
-				var txt = _input_text;
 				draw_set_text(font, fa_left, fa_top);
-				var tw = string_width(txt);
-				var th = string_height(txt == ""? "l" : txt);
+				var txt  = _input_text;
+				var tw   = string_width(txt);
+				var th   = string_height(txt == ""? "l" : txt);
 				
 				var cs   = string_copy(txt, 1, cursor);
 				var c_w  = string_width(cs);
@@ -710,20 +748,23 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 						disp_x_min = -max(0, tw - _w + ui(16 + 8));
 						disp_x_max = 0;
 						break;
+						
 					case fa_center : 
 						disp_x_min = -max(0, tw - _w + ui(16 + 8)) / 2;
 						disp_x_max =  max(0, tw - _w + ui(16 + 8)) / 2;
 						tx -= tw / 2;	
 						break;
+						
 					case fa_right  :
 						disp_x_min = 0;
 						disp_x_max = max(0, tw - _w + ui(16 + 8));
 						tx -= tw;		
 						break;
+						
 				}
 				
-				cursor_pos_to	= disp_x + tx + c_w;
-				if(cursor_pos_to < _x)  
+				cursor_pos_to = disp_x + tx + c_w;
+				if(cursor_pos_to < _x) 
 					disp_x_to += _w - padding * 2;
 					
 				if(cursor_pos_to > _x + _w - padding * 2)  
@@ -753,11 +794,9 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				}
 				
 				var _display_text = string_real(txt);
-				if(_update || _display_text != _disp_text) {
-					surface_set_shader(text_surface, noone, true, BLEND.add);
-						display_text(tx - tb_surf_x, _h / 2 - th / 2, _display_text, _w - ui(4), _mx - tb_surf_x);
-					surface_reset_shader();
-				}
+				surface_set_shader(text_surface, noone, true, BLEND.add);
+					display_text(tx - tb_surf_x, _h / 2 - th / 2, _display_text, _w - ui(4), _mx - tb_surf_x);
+				surface_reset_shader();
 				
 				BLEND_ALPHA
 				draw_surface_ext(text_surface, tb_surf_x, tb_surf_y, 1, 1, 0, postBlend, postAlpha);
@@ -772,18 +811,14 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			#endregion
 			
 			disp_x_to = clamp(disp_x_to, disp_x_min, disp_x_max);
-			
 			if(!hoverRect && mouse_press(mb_left)) 
 				deactivate();
-				
+			
 		} else {
 			
 			if(hover && hoverRect) {
 				hovering = true;
 				if(hide < 3) draw_sprite_stretched_ext(THEME.textbox, 1, _x, _y, _w, _h, boxColor, 0.5 + (0.5 * interactable));	
-				
-				if(mouse_press(mb_left, active))
-					activate();
 				
 				if(input == TEXTBOX_INPUT.number && key_mod_press(SHIFT)) {
 					var amo = slide_speed;
@@ -794,10 +829,17 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 					if(mouse_wheel_up())	modifyValue(toNumber(_text) - amo * SCROLL_SPEED);
 				}
 				
-				if(slidable && mouse_press(mb_left, active)) {
-					sliding     = 1;
-					slide_delta = 0;
-				} 
+				if(mouse_press(mb_left, active)) {
+					activate();
+					
+					if(slidable) {
+						sliding     = 1;
+						slide_delta = 0;
+					} 
+				}
+				
+				if(mouse_press(mb_right, active))
+					menuCall("textbox_context", context_menu);
 			
 			} else if(!hide)
 				draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, boxColor, 0.5 + 0.5 * interactable);
@@ -831,6 +873,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				BLEND_NORMAL
 			}
 		}
+		
+		////- Dragging
 		
 		if(DRAGGING && (DRAGGING.type == "Text" || DRAGGING.type == "Number") && hover && hoverRect) {
 			draw_sprite_stretched_ext(THEME.ui_panel, 1, _x, _y, _w, _h, COLORS._main_value_positive, 1);
