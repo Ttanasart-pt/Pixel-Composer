@@ -137,14 +137,14 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput(35, nodeValue_Vec2("Point 3", self, [ 1, 0 ]))
 		.setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
 	
-	// newInput(36, nodeValue_Vec2("Point 3", self, [ 1, 0 ]))
+	newInput(36, nodeValue_Enum_Button("Corner Shape", self, 0, [ "Round", "Cut" ]))
 	
 	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
 		["Output",     false], 0, 6, 
 		["Transform",  false], 15, 3, 16, 17, 19, 28, 
-		["Shape",	   false], 14, 2, 32, 33, 35, 34, /**/ 9, 4, 13, 5, 7, 8, 21, 22, 23, 24, 25, 26, 27, 30, 31, 
+		["Shape",	   false], 14, 2, 32, 33, 35, 34, /**/ 9, 4, 13, 5, 7, 8, 21, 22, 23, 24, 25, 26, 27, 30, 31, 36, 
 		["Render",	    true], 10, 18,
 		["Height",	    true, 12], 29, 20, 
 		["Background",	true, 1], 11, 
@@ -331,6 +331,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		inputs[33].setVisible(false);
 		inputs[34].setVisible(false);
 		inputs[35].setVisible(false);
+		inputs[36].setVisible(false);
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		use_path = _path != noone && struct_has(_path, "getPointRatio");
@@ -412,6 +413,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 				case "Rectangle" :
 					inputs[ 9].setVisible( true);
 					inputs[18].setVisible(false);
+					inputs[36].setVisible( true);
 					
 					shader_set_i("shape", 0);
 					break;
@@ -443,9 +445,10 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 					break;
 					
 				case "Regular polygon" :
-					inputs[4].setVisible(true);
-					inputs[7].setVisible(true);
-					inputs[9].setVisible(true);
+					inputs[ 4].setVisible(true);
+					inputs[ 7].setVisible(true);
+					inputs[ 9].setVisible(true);
+					inputs[36].setVisible(true);
 					
 					shader_set_i("shape", 2);
 					shader_set_i("sides", _data[4]);
@@ -453,10 +456,11 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 					break;
 					
 				case "Star" :
-					inputs[4].setVisible(true);
-					inputs[5].setVisible(true);
-					inputs[7].setVisible(true);
-					inputs[9].setVisible(true);
+					inputs[ 4].setVisible(true);
+					inputs[ 5].setVisible(true);
+					inputs[ 7].setVisible(true);
+					inputs[ 9].setVisible(true);
+					inputs[36].setVisible(true);
 					
 					inputs[5].name = "Inner radius";
 					
@@ -467,8 +471,8 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 					break;
 					
 				case "Arc" :
-					inputs[5].setVisible(true);
-					inputs[8].setVisible(true);
+					inputs[ 5].setVisible(true);
+					inputs[ 8].setVisible(true);
 					inputs[30].setVisible(true);
 					
 					inputs[5].name = "Inner radius";
@@ -499,6 +503,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 				case "Cross" :
 					inputs[ 9].setVisible(true);
 					inputs[13].setVisible(true);
+					inputs[36].setVisible(true);
 					
 					inputs[13].name = "Outer radius";
 					
@@ -588,6 +593,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 					inputs[32].setVisible(true);
 					inputs[33].setVisible(true);
 					inputs[34].setVisible(true);
+					inputs[36].setVisible(true);
 					
 					shader_set_i("shape", 20);
 					shader_set_2("point1",	  _data[32]);
@@ -638,6 +644,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			shader_set_f("corner",    _corner);
 			shader_set_f("w_curve",   _curve);
 			shader_set_i("w_amount",  array_length(_curve));
+			shader_set_i("cornerShape", _data[36]);
 			
 			shader_set_2("center",    _center);
 			shader_set_2("scale",     _scale );

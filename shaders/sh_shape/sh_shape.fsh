@@ -53,6 +53,7 @@ uniform vec2  point2;
 uniform float thickness;
 
 uniform vec4 bgColor;
+uniform int  cornerShape;
 
 #define PI  3.14159265359
 #define TAU 6.283185307179586
@@ -164,17 +165,19 @@ float curveEval(in float[CURVE_MAX] curve, in int amo, in float _x) {
 
 float sdRegularPolygon(in vec2 p, in float r, in int n, in float ang ) {
     // these 4 lines can be precomputed for a given shape
-    float an = PI / float(n);
+    float an  = PI / float(n);
     vec2  acs = vec2(cos(an), sin(an));
 
     // reduce to first sector
     float bn = mod(atan(p.x, p.y) + PI - ang, 2.0 * an) - an;
     p = length(p) * vec2(cos(bn), abs(sin(bn)));
-
+	
     // line sdf
     p -= r * acs;
     p.y += clamp( -p.y, 0.0, r * acs.y);
-    return length(p) * sign(p.x);
+    float c = cornerShape == 0? length(p) : abs(p.x) + abs(p.y);
+    
+    return c * sign(p.x);
 }
 
 // signed distance to a n-star polygon with external angle en
@@ -192,7 +195,9 @@ float sdStar(in vec2 p, in float r, in int n, in float m, in float ang) { //m=[2
     // line sdf
     p -= r * acs;
     p += ecs * clamp( -dot(p, ecs), 0.0, r * acs.y / ecs.y);
-    return length(p)*sign(p.x);
+    float c = cornerShape == 0? length(p) : abs(p.x) + abs(p.y);
+    
+    return c * sign(p.x);
 } 
 
 // sca is the sin/cos of the orientation
@@ -209,9 +214,15 @@ float sdArc( in vec2 p, in vec2 sca, in vec2 scb, in float ra, in float rb ) {
 }
 
 float sdSegment( in vec2 p, in vec2 a, in vec2 b ) {
-    vec2 pa = p - a, ba = b - a;
-    float h = clamp( dot(pa, ba) / dot(ba, ba), 0.0, 1.0 );
-    return length( pa - ba * h );
+    vec2  pa = p - a, ba = b - a;
+    float h  = clamp( dot(pa, ba) / dot(ba, ba), 0.0, 1.0 );
+    vec2  p2  = pa - ba * h;
+    if(cornerShape == 0) return length(p2);
+    
+    float rr = atan(ba.x, ba.y) + PI / 4.;
+    p2 *= mat2(cos(rr), -sin(rr), sin(rr), cos(rr));
+    
+    return abs(p2.x) + abs(p2.y);
 }
 
 float sdRoundBox( in vec2 p, in vec2 b, in vec4 r ) {
@@ -221,9 +232,15 @@ float sdRoundBox( in vec2 p, in vec2 b, in vec4 r ) {
     return min(max(q.x, q.y), 0.0) + length(max(q, 0.0)) - r.x;
 }
 
+float sdCircle(in vec2 p) {
+	return length(p) - 1.;
+}
+
 float sdBox( in vec2 p, in vec2 b ) {
-    vec2 d = abs(p) - b;
-    return length(max(d, 0.0)) + min(max(d.x, d.y), 0.0);
+    vec2  d = abs(p) - b;
+    float c = cornerShape == 0? length(max(d, 0.)) : max(d.x, 0.) + max(d.y, 0.);
+    
+    return c + min(max(d.x, d.y), 0.);
 }
 
 float sdTearDrop( vec2 p, float r1, float r2, float h ) {
@@ -242,7 +259,9 @@ float sdCross( in vec2 p, in vec2 b, float r ) {
     vec2  q = p - b;
     float k = max(q.y, q.x);
     vec2  w = (k > 0.0) ? q : vec2(b.y - p.x, -k);
-    return sign(k) * length(max(w, 0.0)) + r;
+    
+    float c = cornerShape == 0? length(max(w, 0.)) : max(w.x, 0.) + max(w.y, 0.);
+    return sign(k) * c + r;
 }
 
 float sdVesica(vec2 p, float r, float d) {
@@ -288,7 +307,6 @@ float sdGear(vec2 p, float s, int teeth, vec2 teethSize, float teethAngle, float
 		_p = _p - vec2(1. - teeth_w, .0);
 		
 		s1 = sdRoundBox(_p, vec2(teeth_w, teeth_h), vec4(corner / 2., corner / 2., 0., 0.));
-		// d  = min(d, s1);
 		d  = smin(d, s1, irad);
 	}
 	
@@ -302,7 +320,7 @@ float sdRhombus( in vec2 p, in vec2 b )  {
 
     float h = clamp( ndot(b - 2.0 * p,b) / dot(b, b), -1.0, 1.0 );
     float d = length( p - 0.5 * b * vec2(1.0 - h, 1.0 + h) );
-
+	
 	return d * sign( p.x * b.y + p.y * b.x - b.x * b.y );
 }
 
@@ -423,7 +441,8 @@ float sdHalf(vec2 p, vec2 point, float angle) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void main() {
-	vec2  coord = (v_vTexcoord - center) * mat2(cos(rotation), -sin(rotation), sin(rotation), cos(rotation)) / scale;
+	vec2  coordUni = (v_vTexcoord - center) * mat2(cos(rotation), -sin(rotation), sin(rotation), cos(rotation));
+	vec2  coord = coordUni / scale;
 	vec2  ratio = dimension / dimension.y;
 	float d;
 	
@@ -432,22 +451,10 @@ void main() {
 	
 	if(tile == 1) coord = mod(coord + 1., 2.) - 1.;
 	
-	if(shape == 0) {
-		d = sdBox( (v_vTexcoord - center) * mat2(cos(rotation), -sin(rotation), sin(rotation), cos(rotation)) * ratio, (scale * ratio - corner));
-		d -= corner;
-		
-	} else if(shape == 1) {
-		d = length(coord) - 1.;
-		
-	} else if(shape == 2) {
-		d = sdRegularPolygon( coord, 0.9 - corner, sides, angle );
-		d -= corner;
-		
-	} else if(shape == 3) {
-	    d = sdStar( coord, 0.9 - corner, sides, 2. + inner * (float(sides) - 2.), angle );
-		d -= corner;
-		
-	} 
+		 if(shape ==  0) { d = sdBox(           coordUni * ratio, (scale * ratio - corner)) - corner;                                                     } 
+	else if(shape ==  1) { d = sdCircle(        coord);                                                                                                   } 
+	else if(shape ==  2) { d = sdRegularPolygon(coord, 0.9 - corner, sides, angle ) - corner;                                                             } 
+	else if(shape ==  3) { d = sdStar(          coord, 0.9 - corner, sides, 2. + inner * (float(sides) - 2.), angle ) - corner;                           } 
 	else if(shape ==  4) { d = sdArc(           coord, vec2(sin(angle), cos(angle)), angle_range, 1. - inner, inner );	                                  }
 	else if(shape ==  5) { d = sdTearDrop(      coord + vec2(0., 0.5), stRad, edRad, 1. );                      		                                  }
 	else if(shape ==  6) { d = sdCross(         coord, vec2(1. + corner, outer), corner );                          	                                  }
