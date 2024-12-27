@@ -248,7 +248,7 @@ function connectionParameter() constructor {
     }
 } 
 
-  ////- Graph
+	////- Graph
     
 function Panel_Graph(project = PROJECT) : PanelContent() constructor {
     title       = __txt("Graph");
@@ -1131,9 +1131,9 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         draw_set_alpha(1);
     } 
     
-    function drawViewControl() { //
+    function drawViewController() { //
         if(h < ui(96)) return;
-    
+    	
         view_hovering = false;
         if(!show_view_control) return;
         
@@ -1196,6 +1196,10 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         draw_circle_ui(_d3x, _d3y, d3_view_wz, _hv? 0 : 0.04, COLORS._main_icon, 0.3);
         draw_sprite_ui(THEME.view_zoom, 0, _d3x, _d3y, 1, 1, 0, view_zoom_tool? COLORS._main_accent : COLORS._main_icon, 1);
         
+        if(view_hovering && mouse_press(mb_right, pFOCUS)) {
+        	mouse_on_graph = false;
+        	menuCall("preview_view_controller", [ menuItem("Hide view controllers", function() /*=>*/ { show_view_control = 0; }) ]);
+        }
     } 
     
     function drawBasePreview() { //
@@ -2617,7 +2621,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         drawToolBar();
         drawMinimap();
         
-        drawViewControl();
+        drawViewController();
         
         if(pFOCUS && !view_hovering) array_foreach(nodes_selecting, function(node) { node.focusStep(); });
         
@@ -3502,7 +3506,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
     initSize();
 }
 
-////- File
+	////- File
     
 function load_file_path(path, _x = undefined, _y = undefined) {
     if(!is_array(path)) path = [ path ];

@@ -8,16 +8,17 @@ event_inherited();
 	mouse_init_r_pressed = mouse_click(mb_right);
 	selecting   		 = -1;
 	
-	menu_id    = "";
-	alarm[0]   = -1;
-	menu       = 1;
-	font       = f_p2;
-	hght       = line_get_height(font, 10);
-	tooltips   = [];
-	show_icon  = false;
-	context    = noone;
-	submenu    = noone;
-	submenuIt  = noone;
+	parentPanel = noone; 
+	menu_id     = "";
+	alarm[0]    = -1;
+	menu        = 1;
+	font        = f_p2;
+	hght        = line_get_height(font, 10);
+	tooltips    = [];
+	show_icon   = false;
+	context     = noone;
+	submenu     = noone;
+	submenuIt   = noone;
 	
 	_hovering_ch    = true;
 	init_press_l = MOUSE_POOL.lpress;
@@ -83,8 +84,7 @@ event_inherited();
 			dialog_h += hght;
 		}
 		
-		if(show_icon)
-			dialog_w += ui(32);
+		dialog_w += show_icon * ui(32);
 		
 		var _mon  = winMan_getData();
 		var _maxw = PREFERENCES.multi_window? _mon[6] - WIN_X : WIN_W;

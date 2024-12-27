@@ -71,6 +71,42 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	static getContent = function() { return array_safe_get_fast(content, content_index, noone); }
 	static hasContent = function() { return bool(array_length(content)); }
 	
+	////- Content
+	
+	function setContent(_content = noone, _switch = false) {
+		array_append(content, _content);
+		
+		for( var i = 0, n = array_length(content); i < n; i++ ) 
+			content[i].onSetPanel(self);
+			
+		if(_switch) switchContent(_content);
+		refresh();
+	}
+	
+	function switchContent(_content) {
+		var _ind = array_find(content, _content);
+		if(_ind == -1) return;
+		
+		setTab(_ind);
+	}
+	
+	function setTab(tabIndex, forceFocus = false) {
+		if(tabIndex < 0) return;
+		if(tabIndex >= array_length(content)) return;
+		if(content_index == tabIndex) {
+			if(forceFocus) content[tabIndex].onFocusBegin();
+			return;
+		}
+		
+		var prec = array_safe_get_fast(content, content_index);
+		if(prec) prec.onFocusEnd();
+		
+		content_index = tabIndex;
+		
+		var prec = array_safe_get_fast(content, content_index);
+		if(prec) prec.onFocusBegin();
+	}
+	
 	function replacePanel(panel) {
 		setContent(panel.content);
 		childs = panel.childs;
@@ -79,34 +115,18 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		refreshSize();
 	}
 	
-	function resetMask() {
-		var tab = array_length(content) > 1;
-		tx = x; ty = y + tab * tab_height;
-		tw = w; th = h - tab * tab_height;
+	function refresh() {
+		resetMask();
 		
-		content_surface = surface_verify(content_surface, tw, th);
-		mask_surface    = surface_verify(mask_surface, tw, th);
-		surface_set_target(mask_surface);
-		draw_clear(c_black);
-		gpu_set_blendmode(bm_subtract);
-		draw_sprite_stretched(THEME.ui_panel_bg, 0, padding, padding, tw - padding * 2, th - padding * 2);
-		gpu_set_blendmode(bm_normal);
-		surface_reset_target();
-	} resetMask();
+		array_foreach(content, function(c) /*=>*/ { c.refresh(); });
+		array_foreach(childs,  function(c) /*=>*/ { c.refresh(); });
+	}
+	
+	////- Sizing
 	
 	function setPadding(padding) {
 		self.padding = padding;
 		refresh();
-	}
-	
-	function refresh() {
-		resetMask();
-		
-		for( var i = 0, n = array_length(content); i < n; i++ )
-			content[i].refresh();
-			
-		for( var i = 0; i < array_length(childs); i++ )
-			childs[i].refresh();
 	}
 	
 	function move(dx, dy) {
@@ -147,8 +167,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		return childs[ind].resizable(dw, dh, oppose);
 	}
 	
-	function refreshSize(recur = true) { //refresh content surface after resize
-		//__debug_counter("refresh size");
+	function refreshSize(recur = true) { // refresh content surface after resize
 		var tab = array_length(content) > 1;
 		tx = x; ty = y + tab * tab_height;
 		tw = w; th = h - tab * tab_height;
@@ -217,26 +236,6 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		h = max(round(h + dh), min_h);
 		
 		refreshSize(false);
-	}
-	
-	function setContent(_content = noone, _switch = false) {
-		if(is_array(_content))
-			content = array_append(content, _content);
-		else 
-			array_push(content, _content);
-		
-		for( var i = 0, n = array_length(content); i < n; i++ ) 
-			content[i].onSetPanel(self);
-			
-		if(_switch) setTab(array_find(content, _content));
-			
-		refresh();
-	}
-	
-	function switchContent(_content) {
-		var _ind = array_find(content, _content);
-		if(_ind == -1) return;
-		setTab(_ind);
 	}
 	
 	function split_h(_w) {
@@ -309,6 +308,8 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		
 		return [_panelT, _panelB];
 	}
+	
+	////- Step
 	
 	function stepBegin() {
 		var con = getContent();
@@ -421,8 +422,25 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 			childs[i].step();
 	}
 	
+	////- Draw
+	
+	function resetMask() {
+		var tab = array_length(content) > 1;
+		tx = x; ty = y + tab * tab_height;
+		tw = w; th = h - tab * tab_height;
+		
+		content_surface = surface_verify(content_surface, tw, th);
+		mask_surface    = surface_verify(mask_surface, tw, th);
+		surface_set_target(mask_surface);
+			draw_clear(c_black);
+			gpu_set_blendmode(bm_subtract);
+			draw_sprite_stretched(THEME.ui_panel_bg, 0, padding, padding, tw - padding * 2, th - padding * 2);
+			gpu_set_blendmode(bm_normal);
+		surface_reset_target();
+	} resetMask();
+	
 	static draw = function() {
-		if(hasContent()) { drawPanel(); return; }
+		if(hasContent()) { drawContent(); return; }
 		
 		if(array_empty(childs)) return;
 		
@@ -448,6 +466,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				continue;
 			
 			var p = ui(6 - 1);
+			
 			switch(_panel.anchor) {
 				case ANCHOR.left :
 					if(!point_in_rectangle(mouse_mx, mouse_my, _panel.x + _panel.w - p, _panel.y, _panel.x + _panel.w + p, _panel.y + _panel.h))
@@ -637,24 +656,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		draw_surface(tab_surface, tsx, tsy);
 	}
 	
-	function setTab(tabIndex, forceFocus = false) {
-		if(tabIndex < 0) return;
-		if(tabIndex >= array_length(content)) return;
-		if(content_index == tabIndex) {
-			if(forceFocus) content[tabIndex].onFocusBegin();
-			return;
-		}
-		
-		var prec = array_safe_get_fast(content, content_index);
-		if(prec) prec.onFocusEnd();
-		
-		content_index = tabIndex;
-		
-		var prec = array_safe_get_fast(content, content_index);
-		if(prec) prec.onFocusBegin();
-	}
-	
-	function drawPanel() {
+	function drawContent() {
 		if(w <= ui(16)) return;
 		
 		var tab = array_length(content) > 1;
@@ -713,7 +715,8 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		if(tab) draw_sprite_bbox(THEME.ui_panel_tab, 3, tab_cover);
 		
 		if(FOCUS == self && parent != noone) {
-			draw_sprite_stretched_ext(THEME.ui_panel, 1, tx + padding, ty + padding, tw - padding * 2, th - padding * 2, PREFERENCES.panel_outline_accent? COLORS._main_accent : COLORS.panel_select_border, 1);	
+			var _color = PREFERENCES.panel_outline_accent? COLORS._main_accent : COLORS.panel_select_border;
+			draw_sprite_stretched_ext(THEME.ui_panel, 1, tx + padding, ty + padding, tw - padding * 2, th - padding * 2, _color, 1);	
 			
 			if(hasContent() && !m_in && m_ot) {
 				draw_sprite_stretched_ext(THEME.ui_panel, 1, tx + padding, ty + padding, tw - padding * 2, th - padding * 2, c_white, 0.4);
@@ -721,6 +724,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				if(DOUBLE_CLICK) {
 					extract();
 					panel_mouse = 0;
+					
 				} else if(mouse_press(mb_right)) {
 					var menu = array_clone(border_rb_menu);
 					if(instanceof(getContent()) == "Panel_Menu")
@@ -748,6 +752,8 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		if(con == noone) return;
 		con.drawGUI();
 	}
+	
+	////- Actions
 	
 	function extract() {
 		var con = getContent();

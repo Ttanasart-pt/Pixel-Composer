@@ -18,7 +18,7 @@ DIALOG_WINCLEAR1
 	
 	draw_sprite_stretched(THEME.s_box_r2_clr, 0, dialog_x, dialog_y, dialog_w, dialog_h);
 	
-	for(var i = 0; i < array_length(menu); i++) {
+	for( var i = 0, n = array_length(menu); i < n; i++ ) {
 		var _menuItem = menu[i];
 		
 		if(is_string(_menuItem)) {
@@ -64,6 +64,7 @@ DIALOG_WINCLEAR1
 			if(_hovering_ch && is_instanceof(_menuItem, MenuItem)) {
 				if(_menuItem.active && _lclick) {
 					var _par = _menuItem.params;
+					var _p   = _par != noone;
 					
 					if(_menuItem.isShelf) {
 						FOCUS_CONTENT = context;
@@ -92,21 +93,13 @@ DIALOG_WINCLEAR1
 							submenuIt = _menuItem;
 						}
 						
-					} else if(remove_parents) {
-						FOCUS_CONTENT = context;
-						
-						if(_par == noone) _menuItem.func();
-						else              _menuItem.func(_par);
-						
-						to_del = o_dialog_menubox;
-						
 					} else {
 						FOCUS_CONTENT = context;
 						
-						if(_par == noone) _menuItem.func();
-						else              _menuItem.func(_par);
+						if(_p) _menuItem.func(_par);
+						else   _menuItem.func();
 						
-						to_del = self;
+						to_del = remove_parents? o_dialog_menubox : self;
 					}
 				}
 			}
@@ -200,11 +193,8 @@ DIALOG_WINCLEAR1
 					}
 				}
 				
-				if(_spr != noone)
-					draw_sprite_ui_uniform(_spr, _ind, _bx, _by,, _clr);
-				
-				if(_str != "")
-					draw_text(_bx, _by, _str);
+				if(_spr != noone) draw_sprite_ui_uniform(_spr, _ind, _bx, _by, 1, _clr);
+				if(_str != "")    draw_text(_bx, _by, _str);
 			}
 			
 		} else {
@@ -214,7 +204,9 @@ DIALOG_WINCLEAR1
 				var sca = array_safe_get_fast(_menuItem.spr, 2, 0.8);
 				var clr = array_safe_get_fast(_menuItem.spr, 3, COLORS._main_icon);
 				
+				gpu_set_tex_filter(true);
 				draw_sprite_ui(spr, ind, dialog_x + ui(24), yy + hght / 2, sca, sca, 0, clr, _menuItem.active * 0.5 + 0.25);
+				gpu_set_tex_filter(false);
 			}
 			
 			if(_menuItem.toggle != noone) {

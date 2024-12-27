@@ -1603,8 +1603,9 @@ function Panel_Preview() : PanelContent() constructor {
         var _view_x = show_view_control == 1? 
                 tool_side_draw_l * toolbar_width + ui(8) : 
             w - tool_side_draw_r * toolbar_width - ui(8);
+            
         var _view_y = topbar_height + ui(8);
-        var _hab = pHOVER && tool_hovering == noone && !view_pan_tool && !view_zoom_tool;
+        var _hab    = pHOVER && tool_hovering == noone && !view_pan_tool && !view_zoom_tool;
         view_hovering = false;
         
         if(d3_active) { 
@@ -1724,6 +1725,11 @@ function Panel_Preview() : PanelContent() constructor {
             
             draw_circle_ui(_d3x, _d3y, d3_view_wz, _hv? 0 : 0.04, COLORS._main_icon, 0.3);
             draw_sprite_ui(THEME.view_zoom, 0, _d3x, _d3y, 1, 1, 0, view_zoom_tool? COLORS._main_accent : COLORS._main_icon, 1);
+        }
+        
+        if(view_hovering && mouse_press(mb_right, pFOCUS)) {
+        	mouse_on_preview = false;
+        	menuCall("preview_view_controller", [ menuItem("Hide view controllers", function() /*=>*/ { show_view_control = 0; }) ]);
         }
     }
     
