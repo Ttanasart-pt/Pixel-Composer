@@ -20,15 +20,12 @@ event_inherited();
 	
 	search_string	= "";
 	KEYBOARD_STRING	= "";
-	tb_search = new textBox(TEXTBOX_INPUT.text, function(str) { 
-		search_string = string(str); 
-		filterSearch();
-	});
-	tb_search.font	= f_p2;
-	tb_search.color	= COLORS._main_text_sub;
+	tb_search = new textBox(TEXTBOX_INPUT.text, function(s) /*=>*/ { search_string = string(s); filterSearch(); })
+					.setFont(f_p2)
+					.setAutoUpdate();
+	
 	tb_search.align	= fa_left;
-	tb_search.auto_update	= true;
-	WIDGET_CURRENT			= tb_search;
+	WIDGET_CURRENT  = tb_search;
 	
 	anchor = ANCHOR.top | ANCHOR.left;
 	
@@ -49,9 +46,10 @@ event_inherited();
 		data = [];
 		for( var i = 0, n = array_length(scrollbox.data); i < n; i++ ) {
 			var val = scrollbox.data[i];
-			
 			if(val == -1) continue;
-			if(string_pos(string_lower(search_string), string_lower(val)) > 0)
+			
+			var _txt = is(val, scrollItem)? val.name : val;
+			if(string_pos(string_lower(search_string), string_lower(_txt)) > 0)
 				array_push(data, val);
 		}
 		

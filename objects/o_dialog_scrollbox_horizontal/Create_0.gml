@@ -22,15 +22,12 @@ event_inherited();
 	
 	search_string	= "";
 	KEYBOARD_STRING	= "";
-	tb_search = new textBox(TEXTBOX_INPUT.text, function(str) { 
-		search_string = string(str); 
-		filterSearch();
-	});
-	tb_search.font	= f_p2;
-	tb_search.color	= COLORS._main_text_sub;
+	tb_search = new textBox(TEXTBOX_INPUT.text, function(s) /*=>*/ { search_string = string(s); filterSearch(); })
+					.setFont(f_p2)
+					.setAutoUpdate();
+					
 	tb_search.align	= fa_left;
-	tb_search.auto_update	= true;
-	WIDGET_CURRENT			= tb_search;
+	WIDGET_CURRENT	= tb_search;
 	
 	anchor = ANCHOR.top | ANCHOR.left;
 	
@@ -50,9 +47,10 @@ event_inherited();
 		data = [];
 		for( var i = 0, n = array_length(scrollbox.data); i < n; i++ ) {
 			var val = scrollbox.data[i];
-			
 			if(val == -1) continue;
-			if(string_pos(string_lower(search_string), string_lower(val)) > 0)
+			
+			var _txt = is(val, scrollItem)? val.name : val;
+			if(string_pos(string_lower(search_string), string_lower(_txt)) > 0)
 				array_push(data, val);
 		}
 		
@@ -61,7 +59,8 @@ event_inherited();
 	
 	function setSize() {
 		
-		var _tpad = horizon? text_pad : ui(8);
+		var _hori = horizon && search_string == "";
+		var _tpad = _hori? text_pad : ui(8);
 		var hght  = line_get_height(font) + item_pad;
 		var sh    = ui(40);
 		
@@ -81,7 +80,7 @@ event_inherited();
 			var  txt = is_instanceof(_val, scrollItem)? _val.name : _val;
 			var _spr = is_instanceof(_val, scrollItem) && _val.spr;
 			
-			if(horizon) {
+			if(_hori) {
 				if(_val == -1) {
 					if(_emp) {
 						array_push(widths, 0);
@@ -111,9 +110,10 @@ event_inherited();
 		ww += lw;
 		hh  = max(hh, lh);
 		
-		if(horizon) {
+		if(_hori) {
 			dialog_w = max(scrollbox.w, ww) + _tpad * 2;
 			dialog_h = min(max_h, sh + hh);
+			
 		} else {
 			dialog_w = max(scrollbox.w, lw);
 			dialog_h = min(max_h, sh + lh);
@@ -135,13 +135,14 @@ event_inherited();
 		var _h   = 0;
 		var _col = 0;
 		var hovering  = "";
-		var _tpad     = horizon? text_pad : ui(8);
+		var _hori     = horizon && search_string == "";
+		var _tpad     = _hori? text_pad : ui(8);
 		
 		for( var i = 0, n = array_length(data); i < n; i++ ) {
-			var _dw  = horizon? widths[_col] : sc_content.surface_w;
+			var _dw  = _hori? widths[_col] : sc_content.surface_w;
 			var _val = data[i];
 			
-			if(horizon) {
+			if(_hori) {
 				if(_val == -1) {
 					_lx += _dw;
 					_ly  = _y;
@@ -218,7 +219,7 @@ event_inherited();
 			_lh += hght;
 		}
 		
-		if(!horizon) _h = _lh + ui(8);
+		if(!_hori) _h = _lh + ui(8);
 		
 		if(update_hover) {
 			UNDO_HOLDING = true;

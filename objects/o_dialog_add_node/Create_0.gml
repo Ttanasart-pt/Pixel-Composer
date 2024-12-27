@@ -36,7 +36,7 @@ event_inherited();
 	right_free = !mouse_click(mb_right);
 	is_global  = PANEL_GRAPH.getCurrentContext() == noone;
 	
-	tooltip_surface  = -1;
+	tooltip_surface   = -1;
 	content_hoverable = true;
 	
 	canvas    = false;
