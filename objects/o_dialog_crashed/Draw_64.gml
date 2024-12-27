@@ -7,8 +7,7 @@ draw_set_alpha(1);
 
 #region base UI
 	DIALOG_DRAW_BG
-	if(sFOCUS)
-		DIALOG_DRAW_FOCUS
+	if(DIALOG_SHOW_FOCUS) DIALOG_DRAW_FOCUS
 #endregion
 
 #region text

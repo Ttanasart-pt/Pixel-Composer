@@ -21,7 +21,7 @@ DIALOG_WINCLEAR
 
 var _des = false;
 DIALOG_DRAW_BG
-if(sFOCUS) DIALOG_DRAW_FOCUS
+if(DIALOG_SHOW_FOCUS) DIALOG_DRAW_FOCUS
 
 #region text
 	var py  = dialog_y + ui(16);

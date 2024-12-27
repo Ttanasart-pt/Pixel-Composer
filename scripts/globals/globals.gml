@@ -118,6 +118,7 @@
 	#macro mouse_raw_y display_mouse_get_y()
 	
 	#macro sFOCUS (FOCUS == self.id)
+	#macro DIALOG_SHOW_FOCUS (FOCUS == self.id || (instance_exists(o_dialog_menubox) && o_dialog_menubox.getContextPanel() == self))
 	#macro sHOVER (!CURSOR_IS_LOCK && (HOVER == self.id || (WINDOW_ACTIVE != noone && winwin_mouse_is_over_safe(WINDOW_ACTIVE))))
 	
 	#macro DELTA_TIME delta_time / 1_000_000

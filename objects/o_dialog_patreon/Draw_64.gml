@@ -18,7 +18,7 @@ if !ready exit;
 		instance_destroy();
 	}
 	
-	if(sFOCUS) DIALOG_DRAW_FOCUS
+	if(DIALOG_SHOW_FOCUS) DIALOG_DRAW_FOCUS
 #endregion
 
 #region patreon login

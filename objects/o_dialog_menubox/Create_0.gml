@@ -24,7 +24,10 @@ event_inherited();
 	init_press_l = MOUSE_POOL.lpress;
 	
 	setFocus(self.id);
-	
+
+#endregion
+
+#region menu
 	item_sel_submenu = noone;
 	remove_parents = true;
 	selecting_menu = noone;
@@ -117,5 +120,12 @@ event_inherited();
 			dialog_x = 0;
 			dialog_y = 0;
 		}
+	}
+#endregion
+
+#region focus
+	function getContextPanel() {
+		if(is(context, PanelContent)) return context.panel;
+		return context;
 	}
 #endregion

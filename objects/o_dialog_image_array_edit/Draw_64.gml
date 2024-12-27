@@ -4,8 +4,7 @@ if !target exit;
 
 #region base UI
 	DIALOG_DRAW_BG
-	if(sFOCUS)
-		DIALOG_DRAW_FOCUS
+	if(DIALOG_SHOW_FOCUS) DIALOG_DRAW_FOCUS
 	
 	draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
 	draw_text(dialog_x + ui(padding), dialog_y + ui(20), __txtx("array_edit_title", "Image array edit"));

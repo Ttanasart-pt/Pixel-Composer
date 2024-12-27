@@ -714,24 +714,24 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		draw_sprite_stretched_ext(THEME.ui_panel, 1, tx + padding, ty + padding, _tw, _th, COLORS.panel_frame);
 		if(tab) draw_sprite_bbox(THEME.ui_panel_tab, 3, tab_cover);
 		
-		if(FOCUS == self && parent != noone) {
+		if(FOCUS == self || (instance_exists(o_dialog_menubox) && o_dialog_menubox.getContextPanel() == self)) {
 			var _color = PREFERENCES.panel_outline_accent? COLORS._main_accent : COLORS.panel_select_border;
 			draw_sprite_stretched_ext(THEME.ui_panel, 1, tx + padding, ty + padding, tw - padding * 2, th - padding * 2, _color, 1);	
+		}
+		
+		if(FOCUS == self && parent != noone && !m_in && m_ot) {
+			draw_sprite_stretched_ext(THEME.ui_panel, 1, tx + padding, ty + padding, tw - padding * 2, th - padding * 2, c_white, 0.4);
 			
-			if(hasContent() && !m_in && m_ot) {
-				draw_sprite_stretched_ext(THEME.ui_panel, 1, tx + padding, ty + padding, tw - padding * 2, th - padding * 2, c_white, 0.4);
+			if(DOUBLE_CLICK) {
+				extract();
+				panel_mouse = 0;
 				
-				if(DOUBLE_CLICK) {
-					extract();
-					panel_mouse = 0;
+			} else if(mouse_press(mb_right)) {
+				var menu = array_clone(border_rb_menu);
+				if(instanceof(getContent()) == "Panel_Menu")
+					array_remove(menu, border_rb_close);
 					
-				} else if(mouse_press(mb_right)) {
-					var menu = array_clone(border_rb_menu);
-					if(instanceof(getContent()) == "Panel_Menu")
-						array_remove(menu, border_rb_close);
-						
-					menuCall("panel_border_menu", menu);
-				}
+				menuCall("panel_border_menu", menu);
 			}
 		} 
 		

@@ -95,34 +95,31 @@ if(window == noone && instanceof(content) != "Panel_Menu") {
 	if(b == 2) destroy_on_click_out = !destroy_on_click_out;
 }
 
-if(sFOCUS) {
-	DIALOG_DRAW_FOCUS
+if(DIALOG_SHOW_FOCUS) DIALOG_DRAW_FOCUS
+
+if(sFOCUS && window == noone && !m_in && m_ot) {
+	var p  = DIALOG_PAD;
+	var p2 = DIALOG_PAD * 2;
+	draw_sprite_stretched_ext(THEME.dialog, 1, dialog_x - p, dialog_y - p, dialog_w + p2, dialog_h + p2, c_white, 0.4);
+		
+	if(DOUBLE_CLICK) {
+		content.dragSurface = surface_clone(panel);
+		o_main.panel_dragging = content;
+		content.in_dialog = false;
 	
-	if(window == noone && !m_in && m_ot) {
-		var p  = DIALOG_PAD;
-		var p2 = DIALOG_PAD * 2;
-		draw_sprite_stretched_ext(THEME.dialog, 1, dialog_x - p, dialog_y - p, dialog_w + p2, dialog_h + p2, c_white, 0.4);
-			
-		if(DOUBLE_CLICK) {
-			content.dragSurface = surface_clone(panel);
-			o_main.panel_dragging = content;
-			content.in_dialog = false;
+		instance_destroy();
 		
-			instance_destroy();
-			
-		} else if(mouse_press(mb_right)) {
-			menuCall("panel_window_menu", [
-				menuItem(__txt("Move"), function() { 
-					content.dragSurface   = surface_clone(panel);
-					o_main.panel_dragging = content;
-					content.in_dialog     = false;
-					panel_mouse           = 1;
-					
-					instance_destroy();
-				}),
-			]);
-		}
-		
+	} else if(mouse_press(mb_right)) {
+		menuCall("panel_window_menu", [
+			menuItem(__txt("Move"), function() { 
+				content.dragSurface   = surface_clone(panel);
+				o_main.panel_dragging = content;
+				content.in_dialog     = false;
+				panel_mouse           = 1;
+				
+				instance_destroy();
+			}),
+		]);
 	}
 }
 

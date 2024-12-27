@@ -1,8 +1,8 @@
 /// @description init
 #region base UI
 	// DIALOG_DRAW_BG
-	// if(sFOCUS)
-	// 	DIALOG_DRAW_FOCUS
+	// if(DIALOG_SHOW_FOCUS) DIALOG_DRAW_FOCUS
+	
 	draw_sprite_stretched(THEME.textbox, 3, dialog_x, dialog_y, dialog_w, dialog_h);
 	if(sFOCUS) draw_sprite_stretched_ext(THEME.textbox, 2, dialog_x, dialog_y, dialog_w, dialog_h, COLORS._main_accent);
 	else       draw_sprite_stretched(THEME.textbox, 1, dialog_x, dialog_y, dialog_w, dialog_h);
