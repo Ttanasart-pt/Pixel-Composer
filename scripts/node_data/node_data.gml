@@ -279,7 +279,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		auto_render_time = true;
 		updated			 = false;
 		passiveDynamic   = false;
-		topoSorted		 = false;
 		temp_surface     = [];
 		force_requeue    = false;
 		
@@ -1146,8 +1145,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		LOG_BLOCK_END();
 	}
-	
-	static clearTopoSorted = function() { INLINE topoSorted = false; }
 	
 	static forwardPassiveDynamic = function() {
 		rendered = false;

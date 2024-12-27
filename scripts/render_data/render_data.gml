@@ -38,40 +38,32 @@ function NodeTopoSort() {
 	var amo  = array_length(PROJECT.allNodes);
 	var _t   = get_timer();
 	
-	array_foreach(PROJECT.allNodes, function(_node) { 
-		_node.clearTopoSorted();
-		if(is(_node, Node_Collection)) _node.refreshNodes();
-		return 0;
-	});
+	array_foreach(PROJECT.allNodes, function(n) /*=>*/ { if(is(n, Node_Collection)) n.refreshNodes(); });
 	
 	PROJECT.nodeTopo   = [];
 	PROJECT.renderList = [];
 	PROJECT.useRenderList = true;
 	__topoSort(PROJECT.nodeTopo, PROJECT.nodes);
 	
+	// print(PROJECT.nodeTopo);
 	LOG_IF(global.FLAG.render == 1, $"+++++++ Topo Sort Completed: {array_length(PROJECT.nodeTopo)}/{amo} nodes sorted in {(get_timer() - _t) / 1000} ms +++++++");
 }
 
 function NodeListSort(_nodeList) {
-	array_foreach(_nodeList, function(node) {
-		node.clearTopoSorted();
-		return 0;
-	});
-	
 	var _arr = [];
 	__topoSort(_arr, _nodeList);
 	return _arr;
 }
 
-function __sortNode(_arr, _node) {
-	if(_node.topoSorted) return;
+function __sortNode(_arr, _node, _sorted) {
+	if(struct_has(_sorted, _node.node_id)) return;
 	
 	var _parents = [];
 	var _prev    = _node.getPreviousNodes();
 		
 	for( var i = 0, n = array_length(_prev); i < n; i++ ) {
 		var _in = _prev[i];
-		if(_in == noone || _in.topoSorted) continue;
+		if(_in == noone || struct_has(_sorted, _in.node_id)) continue;
 			
 		array_push(_parents, _in);
 	}
@@ -79,21 +71,20 @@ function __sortNode(_arr, _node) {
 	// print($"        > Checking {_node.name}: {array_length(_parents)}");
 		
 	if(is_instanceof(_node, Node_Collection) && !_node.managedRenderOrder)
-		__topoSort(_arr, _node.nodes);
+		__topoSort(_arr, _node.nodes, _sorted);
 	
 	for( var i = 0, n = array_length(_parents); i < n; i++ ) 
-		__sortNode(_arr, _parents[i]);
+		__sortNode(_arr, _parents[i], _sorted);
 	
-	if(!_node.topoSorted) {
-		array_push(_arr, _node);
-		_node.topoSorted  = true;
-		_node.__nextNodes = noone;
-			
-		// print($"        > Adding > {_node.name}");
-	}
+	if(struct_has(_sorted, _node.node_id)) return;
+	array_push(_arr, _node);
+	_sorted[$ _node.node_id] = 1;
+	_node.__nextNodes = noone;
+		
+	// print($"        > Adding > {_node.name} | {_arr}");
 }
 
-function __topoSort(_arr, _nodeArr) {
+function __topoSort(_arr, _nodeArr, _sorted = {}) {
 	var _root     = [];
 	var _leftOver = [];
 	var _global   = _nodeArr == PROJECT.nodes;
@@ -103,10 +94,7 @@ function __topoSort(_arr, _nodeArr) {
 		var _node   = _nodeArr[i];
 		var _isRoot = true;
 		
-		if(is_instanceof(_node, Node_Collection_Inline) && !_node.is_root) {
-			array_push(_leftOver, _node);
-			continue;
-		}
+		if(is_instanceof(_node, Node_Collection_Inline) && !_node.is_root) { array_push(_leftOver, _node); continue; }
 		
 		if(_node.attributes.show_update_trigger && !array_empty(_node.updatedOutTrigger.getJunctionTo())) {
 			_isRoot = false;
@@ -115,8 +103,8 @@ function __topoSort(_arr, _nodeArr) {
 			for( var j = 0, m = array_length(_node.outputs); j < m; j++ ) {
 				var _to = _node.outputs[j].getJunctionTo();
 				
-				if(_global) _isRoot &= array_empty(_to);
-				else        _isRoot &= !array_any(_to, function(_val) { return array_exists(__temp_nodeList, _val.node); } );
+				if(_global) _isRoot &=  array_empty(_to);
+				else        _isRoot &= !array_any(_to, function(_val) /*=>*/ {return array_exists(__temp_nodeList, _val.node)});
 				
 				if(!_isRoot) break;
 			}
@@ -128,10 +116,10 @@ function __topoSort(_arr, _nodeArr) {
 	// print($"Root: {_root}");
 	
 	for( var i = 0, n = array_length(_root); i < n; i++ ) 
-		__sortNode(_arr, _root[i]);
+		__sortNode(_arr, _root[i], _sorted);
 	
 	for( var i = 0, n = array_length(_leftOver); i < n; i++ ) {
-		if(!_leftOver[i].topoSorted)
+		if(!struct_has(_sorted, _leftOver[i].node_id))
 			array_insert(_arr, 0, _leftOver[i]);
 	}
 	

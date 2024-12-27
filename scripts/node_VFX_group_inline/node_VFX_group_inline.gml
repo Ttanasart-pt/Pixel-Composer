@@ -25,12 +25,7 @@ function Node_VFX_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 		addNode(output);
 	}
 	
-	static clearTopoSorted = function() { INLINE topoSorted = false; prev_nodes = []; }
-	
-	static getPreviousNodes = function() {
-		onGetPreviousNodes(prev_nodes);
-		return prev_nodes;
-	}
+	static getPreviousNodes = function() { onGetPreviousNodes(prev_nodes); return prev_nodes; }
 	
 	static onRemoveNode = function(node) { node.in_VFX = noone; }
 	static onAddNode    = function(node) { node.in_VFX = self;  }

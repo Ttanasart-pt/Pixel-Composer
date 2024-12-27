@@ -52,7 +52,6 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	static createOutput = function() {
 		if(group == noone)    return;
 		if(!is_struct(group)) return;
-		
 		if(!is_undefined(outParent)) array_remove(group.outputs, outParent);
 			
 		outParent = nodeValue("Value", group, CONNECT_TYPE.output, VALUE_TYPE.any, -1)
@@ -76,7 +75,6 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	static step = function() {
 		if(is_undefined(outParent)) return;
-		
 		outParent.name = display_name; 
 	}
 	
@@ -89,6 +87,10 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		_in0.setType(_typ);
 		_in0.display_type = _dis;
 		if(!is(outParent, NodeValue)) return;
+		
+		var ww = _typ == VALUE_TYPE.surface? 128 : 96;
+		var hh = _typ == VALUE_TYPE.surface? 128 : 56;
+		setDimension(ww, hh);
 		
 		outParent.setType(_in0.type);
 		outParent.display_type  = _in0.display_type;

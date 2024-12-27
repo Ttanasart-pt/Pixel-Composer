@@ -480,8 +480,6 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		return nextNodes;
 	}
 	
-	static clearTopoSorted = function() { INLINE topoSorted = false; for( var i = 0, n = array_length(nodes); i < n; i++ ) { nodes[i].clearTopoSorted(); } }
-	
 	static setRenderStatus = function(result) {
 		LOG_BLOCK_START();
 		LOG_IF(global.FLAG.render == 1, $"Set render status for {INAME} : {result}");
