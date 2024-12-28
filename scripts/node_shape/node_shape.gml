@@ -50,7 +50,6 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		shape_types_str[i] = shape_types[i] == -1? -1 : new scrollItem(shape_types[i], s_node_shape_type, _ind++);
 	
 	newInput(2, nodeValue_Enum_Scroll("Shape", self,  0, { data: shape_types_str, horizontal: true, text_pad: ui(16) }));
-	
 	inputs[2].options_histories = [ shape_types, { cond: function() /*=>*/ {return LOADING_VERSION < 1_18_00_0}, list: global.node_shape_keys_18 } ];	 
 	
 	newInput(3, nodeValue_Area("Position", self, DEF_AREA_REF, { onSurfaceSize, useShape : false }))
@@ -84,8 +83,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setVisible(false);
 	
-	newInput(14, nodeValue_PathNode("Shape path", self, noone))
-		.setVisible(true, true);
+	newInput(14, nodeValue_PathNode("Shape path", self, noone));
 	
 	newInput(15, nodeValue_Enum_Scroll("Positioning Mode", self,  2, [ "Area", "Center + Scale", "Full Image" ]))
 		
@@ -144,17 +142,13 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	input_display_list = [
 		["Output",     false], 0, 6, 
 		["Transform",  false], 15, 3, 16, 17, 19, 28, 
-		["Shape",	   false], 14, 2, 32, 33, 35, 34, /**/ 9, 4, 13, 5, 7, 8, 21, 22, 23, 24, 25, 26, 27, 30, 31, 36, 
+		["Shape",	   false], 2, 32, 33, 35, 34, /**/ 9, 4, 13, 5, 7, 8, 21, 22, 23, 24, 25, 26, 27, 30, 31, 36, 
 		["Render",	    true], 10, 18,
 		["Height",	    true, 12], 29, 20, 
 		["Background",	true, 1], 11, 
 	];
 	
 	temp_surface = [ noone ];
-	use_path     = false;
-	path_points  = [];
-	point_simp   = [];
-	triangles	 = []; 
 	
 	attribute_surface_depth();
 	
@@ -162,27 +156,6 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		PROCESSOR_OVERLAY_CHECK
 		
 		var _hov = false;
-		
-		if(use_path) {
-			draw_set_text(f_p3, fa_center, fa_top);
-			draw_set_color(COLORS._main_accent);
-			var ox, oy, nx, ny;
-			
-			for (var i = 0, n = array_length(point_simp); i < n; i++) {
-				var p = point_simp[i];
-				nx = _x + p.x * _s;
-				ny = _y + p.y * _s;
-				
-				if(i) draw_line(ox, oy, nx, ny);
-				
-				ox = nx;
-				oy = ny;
-			}
-			
-			var hv = inputs[14].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= bool(hv);
-			
-			return _hov;
-		}
 		
 		var _shape   = current_data[ 2];
 		var _posMode = current_data[15];
@@ -263,11 +236,6 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		return _hov;
 	}
 	
-	static getTool = function() { 
-		var _path = getInputData(14);
-		return is_instanceof(_path, Node)? _path : self; 
-	}
-	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _dim	= _data[0];
 		var _bg		= _data[1];
@@ -276,7 +244,6 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var _corner = _data[9];  _corner = clamp(_corner, 0, .9);
 		var _color  = _data[10];
 		var _df		= _data[12];
-		var _path	= _data[14];
 		var _bgcol  = _bg? colToVec4(_data[11]) : [0, 0, 0, 0];
 		
 		var _posTyp	= _data[15];
@@ -320,9 +287,6 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		inputs[16].setVisible(_posTyp == 1);
 		inputs[17].setVisible(_posTyp == 1);
 		
-		inputs[ 6].setVisible(_path == noone);
-		inputs[12].setVisible(_path == noone);
-		inputs[20].setVisible(_path == noone);
 		inputs[15].setVisible(true);
 		
 		inputs[30].setVisible(false);
@@ -334,54 +298,6 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		inputs[36].setVisible(false);
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
-		use_path = _path != noone && struct_has(_path, "getPointRatio");
-		
-		if(use_path) {
-			inputs[ 3].setVisible(false);
-			inputs[ 4].setVisible(false);
-			inputs[ 5].setVisible(false);
-			inputs[ 7].setVisible(false);
-			inputs[ 8].setVisible(false);
-			inputs[ 9].setVisible(false);
-			inputs[13].setVisible(false);
-			inputs[15].setVisible(false);
-			
-			surface_set_target(_outSurf);
-				if(_bg) draw_clear_alpha(_data[11], 1);
-				else	DRAW_CLEAR
-				
-				var segCount = _path.getSegmentCount();
-				if(segCount) {
-					var quality = 8;
-					var sample  = quality * segCount;
-					var _step   = 1 / sample;
-					
-					path_points = array_verify_ext(path_points, sample, function() /*=>*/ {return new __vec2()});
-					for( var i = 0; i < sample; i++ ) 
-						path_points[i] = _path.getPointRatio(i * _step, 0, array_safe_get(path_points, i, undefined));
-					
-					var tri = polygon_triangulate(path_points);
-					triangles  = tri[0];
-					point_simp = tri[1];
-					
-					draw_set_color(_color);
-					draw_primitive_begin(pr_trianglelist);
-					for( var i = 0, n = array_length(triangles); i < n; i++ ) {
-						var tri = triangles[i];
-						var p0  = tri[0];
-						var p1  = tri[1];
-						var p2  = tri[2];
-						
-						draw_vertex(p0.x, p0.y);
-						draw_vertex(p1.x, p1.y);
-						draw_vertex(p2.x, p2.y);
-					}
-					draw_primitive_end();
-				}
-			surface_reset_target();
-			
-			return _outSurf;
-		}
 		
 		surface_set_shader(_outSurf, sh_shape);
 			if(_bg) {

@@ -1,7 +1,7 @@
 function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name   = "Plot Path";
 	length = 0;
-	setDimension(96, 48);;
+	setDimension(96, 48);
 	
 	newInput(0, nodeValue_Vec2("Output scale", self, [ 8, 8 ]));
 	

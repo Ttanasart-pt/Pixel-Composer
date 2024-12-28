@@ -1,4 +1,4 @@
-function polygon_simplify(points, tolerance = 4) { #region
+function polygon_simplify(points, tolerance = 4) {
 	
 	// Delete duplicated points
 	for( var i = array_length(points) - 1; i >= 1; i-- ) {
@@ -34,9 +34,9 @@ function polygon_simplify(points, tolerance = 4) { #region
 	ds_stack_destroy(remSt);
 	
 	return points;
-} #endregion
+}
 
-function polygon_points_classify(points) { #region
+function polygon_points_classify(points) {
 	var len = array_length(points);
 	
 	var maxx = -99999;
@@ -75,9 +75,9 @@ function polygon_points_classify(points) { #region
 	}
 			
 	return [ convexs, reflects, _side ];
-} #endregion
+}
 
-function polygon_triangulate_convex(points) { #region
+function polygon_triangulate_convex(points) {
 	var triangles = [];
 	
 	var len = array_length(points);
@@ -91,9 +91,9 @@ function polygon_triangulate_convex(points) { #region
 	}
 	
 	return triangles;
-} #endregion
+}
 
-function polygon_triangulate(points, tolerance = 4) { #region // ear clipping
+function polygon_triangulate(points, tolerance = 4) { // ear clipping
 	if(array_length(points) < 3) return [ [], points, 1 ];
 	
 	if(tolerance > 0) points = polygon_simplify(points, tolerance);
@@ -199,9 +199,9 @@ function polygon_triangulate(points, tolerance = 4) { #region // ear clipping
 		array_push(triangles, [ points[pointInd[0]], points[pointInd[1]], points[pointInd[2]] ]);
 	
 	return [ triangles, points, checkSide ];
-} #endregion
+}
 
-function polygon_triangulate_convex_fan(points) { #region
+function polygon_triangulate_convex_fan(points) {
 	var triangles = [];
 	
 	var amo = array_length(points);
@@ -220,4 +220,4 @@ function polygon_triangulate_convex_fan(points) { #region
 		array_push(triangles, [ points[i], points[(i + 1) % amo], pc ]);
 	}
 	return triangles;
-} #endregion
+}

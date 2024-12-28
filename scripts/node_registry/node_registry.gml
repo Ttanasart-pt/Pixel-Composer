@@ -958,29 +958,42 @@ function __initNodes() {
 		addNodeObject(values, "Parse CSV",			s_node_csv_parse,		"Node_Array_CSV_Parse",			[1, Node_Array_CSV_Parse],, "Parse CSV string into array.").setVersion(1145);
 		
 		ds_list_add(values, "Paths");
+		// Creation
 		addNodeObject(values, "Path",			s_node_path,			"Node_Path",			[1, Node_Path],, "Create path using bezier curve.");
 		addNodeObject(values, "Smooth Path",	s_node_path_smooth,		"Node_Path_Smooth",		[1, Node_Path_Smooth], ["path smooth"], "Create path with automatic smoothness.").setVersion(11640);
 		addNodeObject(values, "Shape Path",		s_node_path_shape,		"Node_Path_Shape",		[1, Node_Path_Shape], ["path shape"], "Create path with predefined shape.").setVersion(1_18_05_6);
+		addNodeObject(values, "Path Builder",	s_node_path_builder,	"Node_Path_Builder",	[1, Node_Path_Builder],, "Create path from array of vec2 points.").setVersion(1137);
+		addNodeObject(values, "L system",		s_node_path_l_system,	"Node_Path_L_System",	[1, Node_Path_L_System],, "Generate path using Lindenmayer system.").setVersion(1137);
+		addNodeObject(values, "Path from Mask",	s_node_path_from_mask,	"Node_Path_From_Mask",	[1, Node_Path_From_Mask],, "Create path that wrap around a mask.").setVersion(11640);
+		addNodeObject(values, "Plot Path",		s_node_path_plot,		"Node_Path_Plot",		[1, Node_Path_Plot],, "Create path from parametric equations.").setVersion(1138);
+		addNodeObject(values, "3D Path",		s_node_path_3d,			"Node_Path_3D",			[1, Node_Path_3D], [ "path 3d" ], "Create path in 3D space.").setVersion(11750);
 		addNodeObject(values, "Path Anchor",	s_node_path_anchor,		"Node_Path_Anchor",		[1, Node_Path_Anchor],, "Create path anchor data.").setVersion(1140);
-		addNodeObject(values, "Path Combine",	s_node_path_array,		"Node_Path_Array",		[1, Node_Path_Array], ["array path"], "Combine multiple path into one.").setVersion(1137);
-		addNodeObject(values, "Sample Path",	s_node_path_sample,		"Node_Path_Sample",		[1, Node_Path_Sample], ["path sample"], "Sample a 2D position from a path");
-		addNodeObject(values, "Blend Path",		s_node_path_blend,		"Node_Path_Blend",		[1, Node_Path_Blend],, "Blend between 2 paths.");
-		addNodeObject(values, "Remap Path",		s_node_path_map,		"Node_Path_Map_Area",	[1, Node_Path_Map_Area],, "Scale path to fit a given area.").setVersion(1130);
+		
+		// Modify
 		addNodeObject(values, "Transform Path",	s_node_path_transform,	"Node_Path_Transform",	[1, Node_Path_Transform], ["path transform"], "Move rotate and scale a path.").setVersion(1130);
+		addNodeObject(values, "Remap Path",		s_node_path_map,		"Node_Path_Map_Area",	[1, Node_Path_Map_Area],, "Scale path to fit a given area.").setVersion(1130);
 		addNodeObject(values, "Shift Path",		s_node_path_shift,		"Node_Path_Shift",		[1, Node_Path_Shift],, "Move path along its normal.").setVersion(1130);
 		addNodeObject(values, "Trim Path",		s_node_path_trim,		"Node_Path_Trim",		[1, Node_Path_Trim],, "Trim path.").setVersion(1130);
 		addNodeObject(values, "Wave Path",		s_node_path_wave,		"Node_Path_Wave",		[1, Node_Path_Wave], ["zigzag path"], "Apply wave effect along the path.").setVersion(1130);
+		addNodeObject(values, "Path Combine",	s_node_path_array,		"Node_Path_Array",		[1, Node_Path_Array], ["array path"], "Combine multiple path into one.").setVersion(1137);
 		addNodeObject(values, "Reverse Path",	s_node_path_reverse,	"Node_Path_Reverse",	[1, Node_Path_Reverse],, "Reverse path direction.").setVersion(1130);
-		addNodeObject(values, "Path Builder",	s_node_path_builder,	"Node_Path_Builder",	[1, Node_Path_Builder],, "Create path from array of vec2 points.").setVersion(1137);
-		addNodeObject(values, "L system",		s_node_path_l_system,	"Node_Path_L_System",	[1, Node_Path_L_System],, "Generate path using Lindenmayer system.").setVersion(1137);
-		addNodeObject(values, "Path plot",		s_node_path_plot,		"Node_Path_Plot",		[1, Node_Path_Plot],, "Create path from parametric equations.").setVersion(1138);
-		addNodeObject(values, "Path from Mask",	s_node_path_from_mask,	"Node_Path_From_Mask",	[1, Node_Path_From_Mask],, "Create path that wrap around a mask.").setVersion(11640);
-		addNodeObject(values, "Bridge Path",	s_node_path_bridge,		"Node_Path_Bridge",		[1, Node_Path_Bridge],, "Create new paths that connect multiple paths at the same sample positions.").setVersion(11640);
-		addNodeObject(values, "Bake Path",		s_node_path_bake,		"Node_Path_Bake",		[1, Node_Path_Bake],, "Bake path data into array of vec2 points.").setVersion(11640);
-		addNodeObject(values, "Map Path",		s_node_path_mapp,		"Node_Path_Map",		[1, Node_Path_Map],, "Map a texture between multiple paths.").setVersion(11640);
-		addNodeObject(values, "Scatter Path",	s_node_path_scatter,	"Node_Path_Scatter",	[1, Node_Path_Scatter],, "Scatter paths along another path.").setVersion(11740);
+		
+		// Combine
 		addNodeObject(values, "Repeat Path",	s_node_path_repeat,		"Node_Path_Repeat",		[1, Node_Path_Repeat],, "Repeat paths.").setVersion(1_18_05_6);
-		addNodeObject(values, "3D Path",		s_node_path_3d,			"Node_Path_3D",			[1, Node_Path_3D], [ "path 3d" ], "Create path in 3D space.").setVersion(11750);
+		addNodeObject(values, "Scatter Path",	s_node_path_scatter,	"Node_Path_Scatter",	[1, Node_Path_Scatter],, "Scatter paths along another path.").setVersion(11740);
+		addNodeObject(values, "Bridge Path",	s_node_path_bridge,		"Node_Path_Bridge",		[1, Node_Path_Bridge],, "Create new paths that connect multiple paths at the same sample positions.").setVersion(11640);
+		addNodeObject(values, "Blend Path",		s_node_path_blend,		"Node_Path_Blend",		[1, Node_Path_Blend],, "Blend between 2 paths.");
+		
+		// To number
+		addNodeObject(values, "Sample Path",	s_node_path_sample,		"Node_Path_Sample",		[1, Node_Path_Sample], ["path sample"], "Sample a 2D position from a path");
+		addNodeObject(values, "Bake Path",		s_node_path_bake,		"Node_Path_Bake",		[1, Node_Path_Bake],, "Bake path data into array of vec2 points.").setVersion(11640);
+		
+		// To Surface
+		addNodeObject(values, "Fill Path",		s_node_path_fill,		"Node_Path_Fill",		[1, Node_Path_Fill], ["path fill"], "Fill area inside path.").setVersion(1_18_06_2);
+		addNodeObject(values, "Map Path",		s_node_path_mapp,		"Node_Path_Map",		[1, Node_Path_Map],, "Map a texture between multiple paths.").setVersion(11640);
+		addNodeObject(values, "Morph Path",		s_node_path_morph,		"Node_Path_Morph",		[1, Node_Path_Morph],, "").setVersion(1_18_06_2);
+		
+		// Segments
 		addNodeObject(values, "Filter Segments",s_node_segment_filter,	"Node_Segment_Filter",	[1, Node_Segment_Filter],, "Filter segment (vec2 array) based on a conditions.").setVersion(11780);
 		
 		ds_list_add(values, "Boolean");

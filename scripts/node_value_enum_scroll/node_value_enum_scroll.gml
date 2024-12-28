@@ -33,10 +33,10 @@ function __NodeValue_Enum_Scroll(_name, _node, _value, _data) : NodeValue(_name,
 		
 		for( var i = 1, n = array_length(options_histories); i < n; i++ ) {
 			var _oph = options_histories[i];
-			if(_oph.cond()) {
-				_load = _oph;
-				break;
-			}
+			if(!_oph.cond()) continue;
+			
+			_load = _oph;
+			break;
 		}
 		
 		if(_load == noone) return;
