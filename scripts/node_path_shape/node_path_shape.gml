@@ -79,16 +79,6 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	    _rat = frac(_rat);
 	    
 		switch(shapeScroll[shape].name) {
-            case "Rectangle" : 
-            case "Trapezoid" : 
-            case "Parallelogram" : 
-            	var i = floor(_rat * 4);
-            	var r = (_rat - i * .25) * 4;
-            	
-            	out.x = lerp(points[i * 2][0], points[i * 2 + 1][0], r);
-                out.y = lerp(points[i * 2][1], points[i * 2 + 1][1], r);
-                break;
-                
             case "Ellipse" : 
                 var a = 360 * _rat;
                 out.x = posx + lengthdir_x(scax, a);
@@ -109,6 +99,9 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
                 out.y = posy + lengthdir_y(scay * r, a);
                 break;
                 
+			case "Trapezoid" : 
+            case "Parallelogram" : 
+            case "Rectangle" : 
             case "Polygon" : 
             case "Star"    : 
             case "Line"    : 
@@ -195,7 +188,7 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
         pa2y  = _aran[1];
         pa3   = _pa3;
         
-        corners = _c;
+        corners   = _c;
         
         var ox, oy, nx, ny, x0, y0;
         
@@ -208,66 +201,131 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
                 
         switch(shapeScroll[shape].name) {
             case "Rectangle" : 
+            	loop = true;
             	inputs[9].setVisible(true);
             	
-            	loop = true;
             	var x0 = posx - scax;
             	var y0 = posy - scay;
             	
             	var x1 = posx + scax;
             	var y1 = posy + scay;
             	
-                points  = [ 
-                    [ x0 + _c[0], y0 ],
-                    [ x1 - _c[1], y0 ],
-                    
-                    [ x1, y0 + _c[1] ],
-                    [ x1, y1 - _c[2] ],
-                    
-                    [ x1 - _c[2], y1 ],
-                    [ x0 + _c[3], y1 ],
-                    
-                    [ x0, y1 - _c[3] ],
-                    [ x0, y0 + _c[0] ],
-                ];
+            	var p  = [
+					[ x0, y1 ],
+					[ x0, y0 ],
+            		[ x1, y0 ],
+            		
+					[ x0, y0 ],
+					[ x1, y0 ],
+					[ x1, y1 ],
+					
+					[ x1, y0 ],
+					[ x1, y1 ],
+					[ x0, y1 ],
+					
+					[ x1, y1 ],
+					[ x0, y1 ],
+					[ x0, y0 ],
+        		];
+            	
+            	var ar = array_create(4);
+            	for( var i = 0; i < 4; i++ ) {
+            		ar[i] = _c[i]? get_corner_radius(p[i * 3 + 0][0], p[i * 3 + 0][1], 
+            		                                 p[i * 3 + 1][0], p[i * 3 + 1][1], 
+            		                                 p[i * 3 + 2][0], p[i * 3 + 2][1], _c[i], 64, 0) : [ p[i * 3 + 1] ];
+            	}
+            	
+            	points = array_merge( ar[0], ar[1], ar[2], ar[3] );
                 break;
                 
             case "Trapezoid" : 
             	loop = true;
                 inputs[4].setVisible(true);
+            	inputs[9].setVisible(true);
                 
-                points  = [ 
-                    [ posx - scax * saturate(1 - _pa1), posy - scay ],
-                    [ posx + scax * saturate(1 - _pa1), posy - scay ],
-                    
-                    [ posx + scax * saturate(1 - _pa1), posy - scay ],
-                    [ posx + scax * saturate(1 + _pa1), posy + scay ],
-                    
-                    [ posx + scax * saturate(1 + _pa1), posy + scay ],
-                    [ posx - scax * saturate(1 + _pa1), posy + scay ],
-                    
-                    [ posx - scax * saturate(1 + _pa1), posy + scay ],
-                    [ posx - scax * saturate(1 - _pa1), posy - scay ],
-                ];
+            	var x0 = posx - scax * saturate(1 - _pa1);
+            	var y0 = posy - scay;
+            	
+            	var x1 = posx + scax * saturate(1 - _pa1);
+            	var y1 = posy - scay;
+            	
+            	var x2 = posx + scax * saturate(1 + _pa1);
+            	var y2 = posy + scay;
+            	
+            	var x3 = posx - scax * saturate(1 + _pa1);
+            	var y3 = posy + scay;
+            	
+            	var p  = [
+					[ x3, y3 ],
+					[ x0, y0 ],
+            		[ x1, y1 ],
+            		
+					[ x0, y0 ],
+					[ x1, y1 ],
+					[ x2, y2 ],
+					
+					[ x1, y1 ],
+					[ x2, y2 ],
+					[ x3, y3 ],
+					
+					[ x2, y3 ],
+					[ x3, y3 ],
+					[ x0, y0 ],
+        		];
+            	
+            	var ar = array_create(4);
+            	for( var i = 0; i < 4; i++ ) {
+            		ar[i] = _c[i]? get_corner_radius(p[i * 3 + 0][0], p[i * 3 + 0][1], 
+            		                                 p[i * 3 + 1][0], p[i * 3 + 1][1], 
+            		                                 p[i * 3 + 2][0], p[i * 3 + 2][1], _c[i], 64, 0) : [ p[i * 3 + 1] ];
+            	}
+            	
+            	points = array_merge( ar[0], ar[1], ar[2], ar[3] );
                 break;
                 
             case "Parallelogram" : 
             	loop = true;
                 inputs[4].setVisible(true);
+            	inputs[9].setVisible(true);
                 
-                points  = [ 
-                    [ posx - scax * saturate(1 - _pa1), posy - scay ],
-                    [ posx + scax * saturate(1 + _pa1), posy - scay ],
-                    
-                    [ posx + scax * saturate(1 + _pa1), posy - scay ],
-                    [ posx + scax * saturate(1 - _pa1), posy + scay ],
-                    
-                    [ posx + scax * saturate(1 - _pa1), posy + scay ],
-                    [ posx - scax * saturate(1 + _pa1), posy + scay ],
-                    
-                    [ posx - scax * saturate(1 + _pa1), posy + scay ],
-                    [ posx - scax * saturate(1 - _pa1), posy - scay ],
-                ];
+            	var x0 = posx - scax * saturate(1 - _pa1);
+            	var y0 = posy - scay;
+            	
+            	var x1 = posx + scax * saturate(1 + _pa1);
+            	var y1 = posy - scay;
+            	
+            	var x2 = posx + scax * saturate(1 - _pa1);
+            	var y2 = posy + scay;
+            	
+            	var x3 = posx - scax * saturate(1 + _pa1);
+            	var y3 = posy + scay;
+            	
+            	var p  = [
+					[ x3, y3 ],
+					[ x0, y0 ],
+            		[ x1, y1 ],
+            		
+					[ x0, y0 ],
+					[ x1, y1 ],
+					[ x2, y2 ],
+					
+					[ x1, y1 ],
+					[ x2, y2 ],
+					[ x3, y3 ],
+					
+					[ x2, y3 ],
+					[ x3, y3 ],
+					[ x0, y0 ],
+        		];
+            	
+            	var ar = array_create(4);
+            	for( var i = 0; i < 4; i++ ) {
+            		ar[i] = _c[i]? get_corner_radius(p[i * 3 + 0][0], p[i * 3 + 0][1], 
+            		                                 p[i * 3 + 1][0], p[i * 3 + 1][1], 
+            		                                 p[i * 3 + 2][0], p[i * 3 + 2][1], _c[i], 64, 0) : [ p[i * 3 + 1] ];
+            	}
+            	
+            	points = array_merge( ar[0], ar[1], ar[2], ar[3] );
                 break;
             
             case "Ellipse" : 
@@ -381,6 +439,7 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
         }
 
 		array_map_ext(points, function(p) /*=>*/ {return point_rotate(p[0], p[1], posx, posy, rot, p)});
+		
         var n   = array_length(points);
         lengths = array_create(n + loop);
         

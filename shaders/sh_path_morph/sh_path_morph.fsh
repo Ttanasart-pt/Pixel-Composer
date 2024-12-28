@@ -131,17 +131,12 @@ float pointOnLine(in vec2 p, in vec2 l0, in vec2 l1) {
 	return t;
 }
 
-float tsign (in vec2 p1, in vec2 p2, in vec2 p3) { return (p1.x - p3.x) * (p2.y - p3.y) - (p2.x - p3.x) * (p1.y - p3.y); }
-
 bool pointInTriangle(in vec2 p, in vec2 t0, in vec2 t1, in vec2 t2) {
-    float d1 = tsign(p, t0, t1);
-    float d2 = tsign(p, t1, t2);
-    float d3 = tsign(p, t2, t0);
+    float d1 = (p.x - t1.x) * (t0.y - t1.y) - (t0.x - t1.x) * (p.y - t1.y);
+    float d2 = (p.x - t2.x) * (t1.y - t2.y) - (t1.x - t2.x) * (p.y - t2.y);
+    float d3 = (p.x - t0.x) * (t2.y - t0.y) - (t2.x - t0.x) * (p.y - t0.y);
 	
-    bool has_neg = (d1 < 0.) || (d2 < 0.) || (d3 < 0.);
-    bool has_pos = (d1 > 0.) || (d2 > 0.) || (d3 > 0.);
-
-    return !(has_neg && has_pos);
+    return (d1 >= 0. && d2 >= 0. && d3 >= 0.) || (d1 <= 0. && d2 <= 0. && d3 <= 0.);
 }
 
 bool intersect(in vec2 p, in vec2 l0, in vec2 l1) {
@@ -197,37 +192,63 @@ void main() {
 	    a = dF / (dF + dT);
     	
     } else {
-    	float ma    = 99999.;
-    	float index = 0.;
-    	bool  infr  = false;
     	a = 0.;
+    	
+    	float d1, d2, d3;
     	
     	for(int i = 1; i < subdivision; i++) {
 	        pF1 = point1[i];
-	        pT1 = point2[i];
+	        pT0 = point2[0];
 	        
 	        vec2 f = pointToLine(px, pF0, pF1);
-	        vec2 t = pointToLine(px, pT0, pT1);
-	        
-	        if(intersect(px, pF0, pF1) && f.x >= px.x) inFrom = !inFrom;
-	        if(intersect(px, pT0, pT1) && t.x >= px.x) inTo   = !inTo;
-	        
-	        bool inRegion = pointInTriangle(px, pF0, pF1, pT0) || pointInTriangle(px, pF1, pT0, pT1);
-	        
-	        pF0 = pF1;
-        	pT0 = pT1;
-	        	
-	        if(!inRegion) continue;
-	        
 	        float _f = distance(px, f);
-	        float _t = distance(px, t);
 	        
-	        a = max(a, _f / (_f + _t));
+	        float pxx_f1x = (px.x - pF1.x);
+	        float pxy_f1y = (px.y - pF1.y);
+	        float pxx_f0x = (px.x - pF0.x);
+	        float pxy_f0y = (px.y - pF0.y);
+	        float f0y_f1y = (pF0.y - pF1.y);
+	        float f0x_f1x = (pF0.x - pF1.x);
+	        float dd1     = pxx_f1x * f0y_f1y - f0x_f1x * pxy_f1y;
 	        
-	        infr = true;
+	        for(int j = 1; j < subdivision; j++) {
+		        pT1 = point2[j];
+		        
+		        d1 = dd1;
+			    d2 = (px.x - pT0.x) * (pF1.y - pT0.y) - (pF1.x - pT0.x) * (px.y - pT0.y);
+			    d3 = pxx_f0x * (pT0.y - pF0.y) - (pT0.x - pF0.x) * pxy_f0y;
+			    bool i1 = (d1 >= 0. && d2 >= 0. && d3 >= 0.) || (d1 <= 0. && d2 <= 0. && d3 <= 0.);
+		        
+		        d1 = (px.x - pT0.x) * (pF1.y - pT0.y) - (pF1.x - pT0.x) * (px.y - pT0.y);
+				d2 = (px.x - pT1.x) * (pT0.y - pT1.y) - (pT0.x - pT1.x) * (px.y - pT1.y);
+				d3 = pxx_f1x * (pT1.y - pF1.y) - (pT1.x - pF1.x) * pxy_f1y;
+			    bool i2 = (d1 >= 0. && d2 >= 0. && d3 >= 0.) || (d1 <= 0. && d2 <= 0. && d3 <= 0.);
+			    
+		        bool inRegion = i1 || i2;
+		        	
+		        if(!inRegion) {
+		        	pT0 = pT1;
+		        	continue;
+		        }
+		        
+		        vec2   t = pointToLine(px, pT0, pT1);
+		        float _t = distance(px, t);
+		        a = max(a, _f / (_f + _t));
+		        
+		        pT0 = pT1;
+		        inFrom = true;
+		    }
+		    
+		    pF0 = pF1;
+    	}
+    	
+	    pT0 = point2[0];
+	    for(int i = 1; i < subdivision; i++) {
+	        pT1 = point2[i];
+	        vec2 t = pointToLine(px, pT0, pT1);
+	        if(intersect(px, pT0, pT1) && t.x >= px.x) inTo   = !inTo;
+	        pT0 = pT1;
 	    }
-	    
-	    if(infr) inFrom = true;
     }
     
     if(clip == 1) {

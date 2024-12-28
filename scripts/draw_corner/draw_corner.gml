@@ -52,12 +52,12 @@ function draw_corner(x1, y1, xc, yc, x3, y3, thick = 1, col = c_white, sample = 
 	draw_primitive_end();
 }
 
-function get_corner(x1, y1, xc, yc, x3, y3, sample = 10) {
+function get_corner(x1, y1, xc, yc, x3, y3, sample = 10, thres = 8) {
 	var dir0 = point_direction(x1, y1, xc, yc);
 	var dir1 = point_direction(x3, y3, xc, yc);
 	
 	var dis  = point_distance(x1, y1, x3, y3);
-	if(dis < 8) return [ [x1, y1], [x3, y3] ];
+	if(dis < thres) return [ [x1, y1], [x3, y3] ];
 	
 	var p2 = point_rotate(xc, yc, x1, y1, -90);
 	var x2 = p2[0];
@@ -91,4 +91,17 @@ function get_corner(x1, y1, xc, yc, x3, y3, sample = 10) {
 	}
 	
 	return pnt;
+}
+
+function get_corner_radius(x1, y1, xc, yc, x3, y3, rad, sample = 10, thres = 8) {
+	var dir0 = point_direction(xc, yc, x1, y1);
+	var dir1 = point_direction(xc, yc, x3, y3);
+	
+	x1 = xc + lengthdir_x(rad, dir0);
+	y1 = yc + lengthdir_y(rad, dir0);
+	
+	x3 = xc + lengthdir_x(rad, dir1);
+	y3 = yc + lengthdir_y(rad, dir1);
+	
+	return get_corner(x1, y1, xc, yc, x3, y3, sample, thres);
 }
