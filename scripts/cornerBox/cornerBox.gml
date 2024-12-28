@@ -21,14 +21,18 @@ function cornerBox(_onModify, _unit = noone) : widget() constructor {
 	onModifySingle[2] = function(val) { onModifyIndex(val, 2); }
 	onModifySingle[3] = function(val) { onModifyIndex(val, 3); }
 	
-	labels = [ "r", "t", "l", "b" ];
-	
 	for(var i = 0; i < 4; i++) {
 		tb[i] = new textBox(TEXTBOX_INPUT.number, onModifySingle[i]);
-		tb[i].label    = labels[i];
-		tb[i].slidable = true;
-		tb[i].hide     = true;
+		
+		tb[i].labelSpr       = s_inspector_corner;
+		tb[i].labelSprIndex  = i;
+		tb[i].labelColor     = COLORS._main_icon;
+		tb[i].slidable       = true;
+		tb[i].hide           = true;
 	}
+	
+	tb[1].labelAlign = fa_right;
+	tb[2].labelAlign = fa_right;
 	
 	static setInteract = function(interactable = noone) { 
 		self.interactable = interactable;
@@ -43,8 +47,8 @@ function cornerBox(_onModify, _unit = noone) : widget() constructor {
 		
 		tb[0].register(parent);
 		tb[1].register(parent);
-		tb[2].register(parent);
 		tb[3].register(parent);
+		tb[2].register(parent);
 	}
 	
 	static isHovering = function() { 
@@ -104,11 +108,11 @@ function cornerBox(_onModify, _unit = noone) : widget() constructor {
 		var tb_bx = _x + tb_w;
 		var tb_by = _y + _h + ui(4);
 			
-		tb[2].draw(tb_lx, tb_ly, tb_w, tb_h, array_safe_get_fast(_data, 2), _m);
-		tb[0].draw(tb_rx, tb_ry, tb_w, tb_h, array_safe_get_fast(_data, 0), _m);
+		tb[0].draw(tb_lx, tb_ly, tb_w, tb_h, array_safe_get_fast(_data, 0), _m);
+		tb[1].draw(tb_rx, tb_ry, tb_w, tb_h, array_safe_get_fast(_data, 1), _m);
 			
-		tb[1].draw(tb_tx, tb_ty, tb_w, tb_h, array_safe_get_fast(_data, 1), _m);
-		tb[3].draw(tb_bx, tb_by, tb_w, tb_h, array_safe_get_fast(_data, 3), _m);
+		tb[3].draw(tb_tx, tb_ty, tb_w, tb_h, array_safe_get_fast(_data, 3), _m);
+		tb[2].draw(tb_bx, tb_by, tb_w, tb_h, array_safe_get_fast(_data, 2), _m);
 			
 		resetFocus();
 		

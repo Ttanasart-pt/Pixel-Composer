@@ -6,7 +6,7 @@ if !ready exit;
 	if(DIALOG_SHOW_FOCUS) DIALOG_DRAW_FOCUS
 #endregion
 
-#region search
+#region content
 	WIDGET_CURRENT = tb_search;
 	tb_search.setFocusHover(sFOCUS, sHOVER);
 	

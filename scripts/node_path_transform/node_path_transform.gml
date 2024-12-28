@@ -5,13 +5,15 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput(0, nodeValue_PathNode("Path", self, noone))
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_Vec2("Position", self, [ 0, 0 ]));
+	newInput(1, nodeValue_Vec2("Position", self, [ 0, 0 ]))
+		.setUnitRef(function() /*=>*/ {return DEF_SURF}, VALUE_UNIT.reference);
 	
 	newInput(2, nodeValue_Rotation("Rotation", self, 0));
 	
 	newInput(3, nodeValue_Vec2("Scale", self, [ 1, 1 ]));
 	
-	newInput(4, nodeValue_Vec2("Anchor", self, [ 0, 0 ]));
+	newInput(4, nodeValue_Vec2("Anchor", self, [ 0, 0 ]))
+		.setUnitRef(function() /*=>*/ {return DEF_SURF}, VALUE_UNIT.reference);
 		
 	newOutput(0, nodeValue_Output("Path", self, VALUE_TYPE.pathnode, self));
 	
@@ -21,8 +23,32 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	rot  = 0;
 	sca  = [ 1, 1 ];
 	anc  = [ 0, 0 ];
+	p    = new __vec2();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		var _path = getInputData(0);
+		if(_path && struct_has(_path, "drawOverlay")) _path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		
+		draw_set_color(COLORS._main_icon);
+		var _amo = getLineCount();
+		for( var i = 0; i < _amo; i++ ) {
+			var _len = getLength(i);
+			var _stp = 1 / clamp(_len * _s, 1, 64);
+			
+			var ox, oy, nx, ny;
+			
+			for( var j = 0; j < 1; j += _stp ) {
+				p = getPointRatio(j, i, p);
+				nx = _x + p.x * _s;
+				ny = _y + p.y * _s;
+				
+				if(j > 0) draw_line_width(ox, oy, nx, ny, 1);
+				
+				ox = nx;
+				oy = ny;
+			}
+		}
+		
 		var px  = _x + pos[0] * _s;
 		var py  = _y + pos[1] * _s;
 		
@@ -65,9 +91,9 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	}
 	
 	static getPointRatio = function(_rat, ind = 0, out = undefined) {
-		if(out == undefined) out = new __vec2(); else { out.x = 0; out.y = 0; }
+		if(out == undefined) out = new __vec2();
 		
-		var _cKey = $"{_rat},{ind}";
+		var _cKey = $"{string_format(_rat, 0, 6)},{ind}";
 		if(ds_map_exists(cached_pos, _cKey)) {
 			var _p = cached_pos[? _cKey];
 			out.x = _p.x;
@@ -83,7 +109,7 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		if(!is_struct(path) || !struct_has(path, "getPointRatio"))
 			return out;
 		
-		var _p = path.getPointRatio(_rat, ind).clone();
+		var _p = path.getPointRatio(_rat, ind);
 		
 		_p.x = anc[0] + (_p.x - anc[0]) * sca[0];
 		_p.y = anc[1] + (_p.y - anc[1]) * sca[1];
@@ -94,7 +120,6 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		out.y = _pp[1] + pos[1];
 		
 		cached_pos[? _cKey] = out.clone();
-		
 		return out;
 	}
 	

@@ -40,6 +40,9 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	
 	label           = "";
 	labelColor      = COLORS._main_text_sub;
+	labelSpr        = noone;
+	labelSprIndex   = 0;
+	labelAlign      = fa_left;
 	highlight_color = -1; 
 	highlight_alpha = 1;
 	
@@ -574,6 +577,10 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				draw_set_alpha(0.5);
 				draw_text_add(_x + padding, _y + _h / 2, label);
 				draw_set_alpha(1);
+				
+			} else if(labelSpr != noone) {
+				var _ix = labelAlign == fa_left? _x + _h / 2 : _x + _w - _h / 2;
+				draw_sprite_ext(labelSpr, labelSprIndex, _ix, _y + _h / 2, 1, 1, 0, labelColor, 1);
 			}
 		}
 		

@@ -112,7 +112,7 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	static getPointDistance = function(_dist, ind = 0, out = undefined) {
 		if(out == undefined) out = new __vec2(); else { out.x = 0; out.y = 0; }
 		
-		var _cKey = $"{ind}, {_dist}";
+		var _cKey = $"{ind}, {string_format(_dist, 0, 6)}";
 		if(ds_map_exists(cached_pos, _cKey)) {
 			var _p = cached_pos[? _cKey];
 			out.x = _p.x;

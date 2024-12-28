@@ -25,7 +25,7 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	    new scrollItem("Line",          s_node_shape_type, 16), 
 	    new scrollItem("Curve",         s_shape_curve,      0), 
     ];
-	newInput(3, nodeValue_Enum_Scroll("Shape", self, 0, shapeScroll));
+	newInput(3, nodeValue_Enum_Scroll("Shape", self, 0, { data: shapeScroll, horizontal: true, text_pad: ui(16) }));
 	
 	newInput(4, nodeValue_Float("Skew", self, .5))
 	    .setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01] });
@@ -38,11 +38,13 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	newInput(8, nodeValue_Float("Inner Radius", self, .5));
 	
+	newInput(9, nodeValue_Corner("Corner Radius", self, [ 0, 0, 0, 0 ]));
+	
 	newOutput(0, nodeValue_Output("Path data", self, VALUE_TYPE.pathnode, self));
 		
 	input_display_list = [
 		["Transform", false], 0, 2, 1, 
-		["Shape",     false], 3, 4, 5, 6, 7, 8, 
+		["Shape",     false], 3, 4, 5, 6, 7, 8, 9, 
 	];
 	
 	points      = [];
@@ -62,6 +64,8 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	pa2x  = 0; pa2y  = 0;
 	pa3   = 0;
 	
+	corners = [ 0, 0, 0, 0 ];
+	
 	preview_surf = noone;
 	
 	static getLineCount		= function() /*=>*/ {return 1};
@@ -78,23 +82,11 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
             case "Rectangle" : 
             case "Trapezoid" : 
             case "Parallelogram" : 
-                if(_rat <= .25) {
-                    var r = _rat * 4;
-                    out.x = lerp(points[0][0], points[1][0], r);
-                    out.y = lerp(points[0][1], points[1][1], r);
-                } else if(_rat <= .50) {
-                    var r = (_rat - .25) * 4;
-                    out.x = lerp(points[1][0], points[2][0], r);
-                    out.y = lerp(points[1][1], points[2][1], r);
-                } else if(_rat <= .75) {
-                    var r = (_rat - .50) * 4;
-                    out.x = lerp(points[2][0], points[3][0], r);
-                    out.y = lerp(points[2][1], points[3][1], r);
-                } else {
-                    var r = (_rat - .75) * 4;
-                    out.x = lerp(points[3][0], points[0][0], r);
-                    out.y = lerp(points[3][1], points[0][1], r);
-                }
+            	var i = floor(_rat * 4);
+            	var r = (_rat - i * .25) * 4;
+            	
+            	out.x = lerp(points[i * 2][0], points[i * 2 + 1][0], r);
+                out.y = lerp(points[i * 2][1], points[i * 2 + 1][1], r);
                 break;
                 
             case "Ellipse" : 
@@ -128,7 +120,7 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
         point_vec2_rotate(out, posx, posy, rot);
         return out;
 	}
-	    
+	
 	static getPointDistance = function(_dist, _ind = 0, out = undefined) {
 	    if(out == undefined) out = new __vec2();
 	    _dist = safe_mod(_dist, lengthTotal);
@@ -148,7 +140,6 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
             break;
 	    }
 	    
-        // point_vec2_rotate(out, posx, posy, rot);
         return out;
 	}
 	
@@ -190,6 +181,7 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
         var _pa3  = inputs[6].getValue();
         var _sid  = inputs[7].getValue();
         var _inn  = inputs[8].getValue();
+        var _c    = inputs[9].getValue();
         
 	    shape = inputs[3].getValue();
 	    posx  = _pos[0];
@@ -203,6 +195,8 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
         pa2y  = _aran[1];
         pa3   = _pa3;
         
+        corners = _c;
+        
         var ox, oy, nx, ny, x0, y0;
         
         inputs[4].setVisible(false);
@@ -210,15 +204,31 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
         inputs[6].setVisible(false);
         inputs[7].setVisible(false);
         inputs[8].setVisible(false);
+        inputs[9].setVisible(false);
                 
         switch(shapeScroll[shape].name) {
             case "Rectangle" : 
+            	inputs[9].setVisible(true);
+            	
             	loop = true;
+            	var x0 = posx - scax;
+            	var y0 = posy - scay;
+            	
+            	var x1 = posx + scax;
+            	var y1 = posy + scay;
+            	
                 points  = [ 
-                    [ posx - scax, posy - scay ],
-                    [ posx + scax, posy - scay ],
-                    [ posx + scax, posy + scay ],
-                    [ posx - scax, posy + scay ],
+                    [ x0 + _c[0], y0 ],
+                    [ x1 - _c[1], y0 ],
+                    
+                    [ x1, y0 + _c[1] ],
+                    [ x1, y1 - _c[2] ],
+                    
+                    [ x1 - _c[2], y1 ],
+                    [ x0 + _c[3], y1 ],
+                    
+                    [ x0, y1 - _c[3] ],
+                    [ x0, y0 + _c[0] ],
                 ];
                 break;
                 
@@ -229,8 +239,15 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
                 points  = [ 
                     [ posx - scax * saturate(1 - _pa1), posy - scay ],
                     [ posx + scax * saturate(1 - _pa1), posy - scay ],
+                    
+                    [ posx + scax * saturate(1 - _pa1), posy - scay ],
+                    [ posx + scax * saturate(1 + _pa1), posy + scay ],
+                    
                     [ posx + scax * saturate(1 + _pa1), posy + scay ],
                     [ posx - scax * saturate(1 + _pa1), posy + scay ],
+                    
+                    [ posx - scax * saturate(1 + _pa1), posy + scay ],
+                    [ posx - scax * saturate(1 - _pa1), posy - scay ],
                 ];
                 break;
                 
@@ -241,8 +258,15 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
                 points  = [ 
                     [ posx - scax * saturate(1 - _pa1), posy - scay ],
                     [ posx + scax * saturate(1 + _pa1), posy - scay ],
+                    
+                    [ posx + scax * saturate(1 + _pa1), posy - scay ],
+                    [ posx + scax * saturate(1 - _pa1), posy + scay ],
+                    
                     [ posx + scax * saturate(1 - _pa1), posy + scay ],
                     [ posx - scax * saturate(1 + _pa1), posy + scay ],
+                    
+                    [ posx - scax * saturate(1 + _pa1), posy + scay ],
+                    [ posx - scax * saturate(1 - _pa1), posy - scay ],
                 ];
                 break;
             

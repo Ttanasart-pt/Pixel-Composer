@@ -86,7 +86,7 @@ function Node_Path_Bridge(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	static getPointDistance = function(_dist, ind = 0, out = undefined) { #region
 		if(out == undefined) out = new __vec2(); else { out.x = 0; out.y = 0; }
 		
-		var _cKey = $"{_dist},{ind}";
+		var _cKey = $"{string_format(_dist, 0, 6)},{ind}";
 		if(ds_map_exists(cached_pos, _cKey)) {
 			var _p = cached_pos[? _cKey];
 			out.x = _p.x;

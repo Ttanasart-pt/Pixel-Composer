@@ -60,7 +60,7 @@ function Node_Path_Shift(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	static getPointRatio = function(_rat, ind = 0, out = undefined) {
 		if(out == undefined) out = new __vec2(); else { out.x = 0; out.y = 0; }
 		
-		var _cKey = $"{_rat},{ind}";
+		var _cKey = $"{string_format(_rat, 0, 6)},{ind}";
 		if(ds_map_exists(cached_pos, _cKey)) {
 			var _p = cached_pos[? _cKey];
 			out.x = _p.x;

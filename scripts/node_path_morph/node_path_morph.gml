@@ -1,5 +1,6 @@
-function Node_Path_Morph(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
+function Node_Path_Morph(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Morph Path";
+	dimension_index = 2;
 	
 	newInput(0, nodeValue_PathNode("Path 1", self, noone))
 		.setVisible(true, true)
@@ -11,15 +12,24 @@ function Node_Path_Morph(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 	newInput(2, nodeValue_Dimension(self));
 	
-	newInput(3, nodeValue_Int("Subdivision", self, 512))
+	newInput(3, nodeValue_Int("Subdivision", self, 128))
 		.setValidator(VV_min(2))
 		.rejectArray();
 		
+	newInput(4, nodeValue_Bool("Clip In-Out", self, false))
+		
+	newInput(5, nodeValue_Curve("Curve", self, CURVE_DEF_01));
+	
+	newInput(6, nodeValue_Bool("Match index", self, false))
+	
 	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 0, 1, 
-		["Morphing", false], 2, 3, 
+		["Morphing",  false], 2, 3, 6, 
+		["Rendering", false], 5, 4, 
 	]
+	
+	attribute_surface_depth();
 	
 	temp_surface = [ 0 ];
 	
@@ -31,13 +41,16 @@ function Node_Path_Morph(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		if(_path && struct_has(_path, "drawOverlay")) _path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
-	static update = function() {
-		var _path1 = getInputData(0);
-		var _path2 = getInputData(1);
-		if(_path1 == noone || _path2 == noone) return;
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
+		var _path1 = _data[0];
+		var _path2 = _data[1];
+		if(_path1 == noone || _path2 == noone) return _outSurf;
 		
-		var _dim = getInputData(2);
-		var _sub = getInputData(3);
+		var _dim = _data[2];
+		var _sub = _data[3] + 1;
+		var _clp = _data[4];
+		var _cur = _data[5];
+		var _mid = _data[6];
 		
 		var _p1 = array_create(_sub * 2);
 		var _p2 = array_create(_sub * 2);
@@ -57,18 +70,20 @@ function Node_Path_Morph(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			_p2[i * 2 + 1] = _pp.y;
 		}
 		
-		var _out = outputs[0].getValue();
-		    _out = surface_verify(_out, _dim[0], _dim[1])
-		
-		surface_set_shader(_out, sh_path_morph);
+		surface_set_shader(_outSurf, sh_path_morph);
 			shader_set_2("dimension",   _dim);
 			shader_set_i("subdivision", _sub);
+			shader_set_i("clip",        _clp);
+			shader_set_i("matchIndex",  _mid);
 			shader_set_f("point1",      _p1);
 			shader_set_f("point2",      _p2);
+			
+			shader_set_f("w_curve",   _cur);
+			shader_set_i("w_amount",  array_length(_cur));
 			
 			draw_empty();
 		surface_reset_shader();
 		
-		outputs[0].setValue(_out);
+		return _outSurf;
 	}
 } 

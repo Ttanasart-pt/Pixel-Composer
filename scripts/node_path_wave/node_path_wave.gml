@@ -47,8 +47,8 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 	wig_map   = noone;
 	amp_curve = noone;
-	p0 = new __vec2();
 	p  = new __vec2();
+	p0 = new __vec2();
 	p1 = new __vec2();
 	
 	cached_pos = ds_map_create();
@@ -58,9 +58,7 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		if(_path && struct_has(_path, "drawOverlay")) _path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 		
 		draw_set_color(COLORS._main_icon);
-		
 		var _amo = getLineCount();
-		
 		for( var i = 0; i < _amo; i++ ) {
 			var _len = getLength(i);
 			var _stp = 1 / clamp(_len * _s, 1, 64);
@@ -72,7 +70,7 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				nx = _x + p.x * _s;
 				ny = _y + p.y * _s;
 				
-				if(j > 0) draw_line_width(ox, oy, nx, ny, 3);
+				if(j > 0) draw_line_width(ox, oy, nx, ny, 1);
 				
 				ox = nx;
 				oy = ny;
@@ -116,7 +114,7 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static getPointRatio = function(_rat, ind = 0, out = undefined) {
 		if(out == undefined) out = new __vec2(); else { out.x = 0; out.y = 0; }
 		
-		var _cKey = $"{_rat},{ind}";
+		var _cKey = $"{string_format(_rat, 0, 6)},{ind}";
 		if(ds_map_exists(cached_pos, _cKey)) {
 			var _p = cached_pos[? _cKey];
 			out.x = _p.x;
@@ -125,12 +123,12 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		}
 		
 		var _path = path;
-		var _fre  = fre ; 
-		var _amp  = amp ;
-		var _shf  = shf ;
+		var _fre  = fre; 
+		var _amp  = amp;
+		var _shf  = shf;
 		var _seed = seed + ind;
 					
-		var _wig  = wig ;
+		var _wig  = wig;
 		var _wigs = wigs;
 		var _wigf = wigf;
 		

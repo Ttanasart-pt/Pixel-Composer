@@ -38,14 +38,14 @@ function Node_Greyscale(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	attribute_surface_depth();
 	
-	static step = function() { #region
+	static step = function() {
 		__step_mask_modifier();
 		
 		inputs[1].mappableStep();
 		inputs[2].mappableStep();
-	} #endregion
+	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		
 		surface_set_shader(_outSurf, sh_greyscale);
 			shader_set_f_map("brightness", _data[1], _data[ 9], inputs[1]);
@@ -58,5 +58,5 @@ function Node_Greyscale(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		_outSurf = channel_apply(_data[0], _outSurf, _data[6]);
 		
 		return _outSurf;
-	} #endregion
+	}
 }

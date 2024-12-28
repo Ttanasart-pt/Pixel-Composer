@@ -393,16 +393,18 @@ function Panel_Collection() : PanelContent() constructor {
 						if(sprite_exists(_node.spr)) {
 							var sw = sprite_get_width(_node.spr);
 							var sh = sprite_get_height(_node.spr);
-							var ss = (grid_size - ui(10)) * PREFERENCES.collection_scale / max(sw, sh);
+							var ss = (grid_size - ui(12)) * PREFERENCES.collection_scale / max(sw, sh);
 							
 							var xo = (sprite_get_xoffset(_node.spr) - sw / 2) * ss;
 							var yo = (sprite_get_yoffset(_node.spr) - sh / 2) * ss;
 							var sx = _boxx + grid_size / 2 + xo;
 							var sy = yy + grid_size / 2 + yo;
 							
-							BLEND_ALPHA_MULP
-							draw_sprite_ext(_node.spr, frame, sx, sy, ss, ss, 0, c_white, 1);
-							BLEND_NORMAL
+							gpu_set_texfilter(true);
+								BLEND_ALPHA_MULP
+								draw_sprite_ext(_node.spr, frame, sx, sy, ss, ss, 0, c_white, 1);
+								BLEND_NORMAL
+							gpu_set_texfilter(false);
 						} else
 							draw_sprite_ui_uniform(THEME.group, 0, _boxx + grid_size / 2, yy + grid_size / 2, 1, c_white);
 					
@@ -562,7 +564,7 @@ function Panel_Collection() : PanelContent() constructor {
 		nodeListPane.hover_content = true;
 		
 		var  ww  = nodeListPane.surface_w;
-		var _hg  = ui(28);
+		var _hg  = line_get_height(f_p1, 4);
 		var _hov = pHOVER && nodeListPane.hover;
 		var _foc = pFOCUS;
 		
@@ -583,7 +585,7 @@ function Panel_Collection() : PanelContent() constructor {
 					nodeListPane_page = i;
 			}
 			
-			draw_set_text(f_p0, fa_left, fa_center, nodeListPane_page == i? COLORS._main_text_accent : COLORS._main_text_inner);
+			draw_set_text(f_p1, fa_left, fa_center, nodeListPane_page == i? COLORS._main_text_accent : COLORS._main_text_inner);
 			draw_text_add(ui(24), _y + _hg / 2, _nam);
 			
 			_y += _hg;
@@ -667,13 +669,15 @@ function Panel_Collection() : PanelContent() constructor {
 					}
 				}
 				
-				var ss = grid_size / (max(sprite_get_width(_node.spr), sprite_get_height(_node.spr)) + 16);
+				var ss = (grid_size - ui(16)) / max(sprite_get_width(_node.spr), sprite_get_height(_node.spr));
 				var sx = _boxx + grid_size / 2;
 				var sy = yy + grid_size / 2;
 				
-				BLEND_ALPHA_MULP
-				draw_sprite_ext(_node.spr, 0, sx, sy, ss, ss, 0, c_white, 1);
-				BLEND_NORMAL
+				gpu_set_texfilter(true);
+					BLEND_ALPHA_MULP
+					draw_sprite_ext(_node.spr, 0, sx, sy, ss, ss, 0, c_white, 1);
+					BLEND_NORMAL
+				gpu_set_texfilter(false);
 				
 				var fav = struct_exists(global.FAV_NODES, _node.node);
 				if(fav) draw_sprite_ui_uniform(THEME.star, 0, _boxx + grid_size - ui(8), yy + grid_size - ui(8), 0.7, COLORS._main_accent, 1.);

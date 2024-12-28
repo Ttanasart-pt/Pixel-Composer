@@ -30,7 +30,7 @@ function Node_Path_From_Mask(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	static getPointDistance = function(_dist, _ind = 0, out = undefined) { #region
 		if(out == undefined) out = new __vec2(); else { out.x = 0; out.y = 0; }
 		
-		var _cKey = $"{_dist},{_ind}";
+		var _cKey = $"{string_format(_dist, 0, 6)},{_ind}";
 		if(ds_map_exists(cached_pos, _cKey)) {
 			var _p = cached_pos[? _cKey];
 			out.x = _p.x;

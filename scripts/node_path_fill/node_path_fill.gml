@@ -13,11 +13,13 @@ function Node_Path_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	newInput(4, nodeValue_Bool("Inverted", self, false))
 	
+	newInput(5, nodeValue_Color("Bachground", self, cola(c_black, 0)))
+	
 	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 0, 
 		["Path",  false], 1, 2, 
-		["COlor", false], 3, 4, 
+		["Color", false], 3, 4, 5, 
 	]
 	
 	temp_surface = [ 0 ];
@@ -36,6 +38,7 @@ function Node_Path_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	    var _reso = _data[2];
 	    var _colr = _data[3];
 	    var _invt = _data[4];
+	    var _bg   = _data[5];
 	    
 	    _outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 	    if(!struct_has(_path, "getPointRatio")) return _outSurf; 
@@ -46,7 +49,7 @@ function Node_Path_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 	    surface_set_target(_outSurf);
 	        if(_invt) { draw_clear(_colr); BLEND_SUBTRACT }
-	        else      { DRAW_CLEAR }
+	        else      { draw_clear(_bg); }
 	        draw_set_color(_invt? c_white : _colr);
 			
 			array_map_ext(path_points, function(p, i) /*=>*/ {return __tpath.getPointRatio(i * __step, 0, p)});

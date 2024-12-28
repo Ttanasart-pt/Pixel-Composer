@@ -547,10 +547,11 @@ event_inherited();
 					content_pane.hover_content = true;
 					
 					draw_sprite_stretched_ext(THEME.node_bg, 1, _boxx, yy, grid_size, grid_size, COLORS._main_accent, 1);
-					if(mouse_release(mb_left, sFOCUS))
-						buildNode(_node);
-					else if(mouse_release(mb_right, right_free && sFOCUS))
-						rightClick(_node);
+					
+					if(sFOCUS) {
+						if(mouse_release(mb_left)) buildNode(_node);
+						if(mouse_release(mb_right, right_free)) rightClick(_node);
+					}
 				}
 				
 				if(_node.getTooltip() != "" || _node.tooltip_spr != noone) {
@@ -672,9 +673,9 @@ event_inherited();
 				if(is_string(_node)) {
 					if(!PREFERENCES.dialog_add_node_grouping)
 						continue;
-						
-					hh += ui(8);
-					yy += ui(8);
+					
+					hh += ui(4) * (i > 0);
+					yy += ui(4) * (i > 0);
 					
 					var _key = $"{ADD_NODE_PAGE}:{i}";
 					
