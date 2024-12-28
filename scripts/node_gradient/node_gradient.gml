@@ -60,7 +60,7 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	input_display_list = [
 		["Output",		true],	0, 8, 
 		["Gradient",	false], 1, 15, 5, 12, 9, 13, 7, 
-		["Shape",		false], 2, 3, 10, 4, 11, 6, 14, 17, 
+		["Shape",		false], 2, 3, 10, 4, 11, 6, 17, 14, 
 	];
 	
 	attribute_surface_depth();

@@ -1116,6 +1116,10 @@ function Panel_Preview() : PanelContent() constructor {
             
             draw_set_color(COLORS.panel_preview_surface_outline);
             draw_rectangle(psx, psy, psx + preview_surface_width - 1, psy + preview_surface_height - 1, true);
+        } else {
+        	draw_set_color_alpha(COLORS.panel_preview_surface_outline, .75);
+            draw_rectangle(canvas_x, canvas_y, canvas_x + DEF_SURF_W * canvas_s - 1, canvas_y + DEF_SURF_H * canvas_s - 1, true);
+            draw_set_alpha(1);
         }
         
         if(!struct_try_get(_node, "bypass_grid", false)) drawNodeGrid();
@@ -2339,8 +2343,7 @@ function Panel_Preview() : PanelContent() constructor {
         } else {
         	dragCanvas();
         	
-        	draw_set_color(COLORS.panel_preview_surface_outline);
-        	draw_set_alpha(.75);
+        	draw_set_color(COLORS.panel_preview_surface_outline, .75);
             draw_rectangle(canvas_x, canvas_y, canvas_x + DEF_SURF_W * canvas_s - 1, canvas_y + DEF_SURF_H * canvas_s - 1, true);
             draw_set_alpha(1);
         }

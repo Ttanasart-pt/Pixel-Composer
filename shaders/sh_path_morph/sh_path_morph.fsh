@@ -200,15 +200,15 @@ void main() {
 	        pF1 = point1[i];
 	        pT0 = point2[0];
 	        
-	        vec2 f = pointToLine(px, pF0, pF1);
+	        vec2   f = pointToLine(px, pF0, pF1);
 	        float _f = distance(px, f);
 	        
-	        float pxx_f1x = (px.x - pF1.x);
-	        float pxy_f1y = (px.y - pF1.y);
-	        float pxx_f0x = (px.x - pF0.x);
-	        float pxy_f0y = (px.y - pF0.y);
-	        float f0y_f1y = (pF0.y - pF1.y);
-	        float f0x_f1x = (pF0.x - pF1.x);
+	        float pxx_f1x = px.x - pF1.x;
+	        float pxy_f1y = px.y - pF1.y;
+	        float pxx_f0x = px.x - pF0.x;
+	        float pxy_f0y = px.y - pF0.y;
+	        float f0y_f1y = pF0.y - pF1.y;
+	        float f0x_f1x = pF0.x - pF1.x;
 	        float dd1     = pxx_f1x * f0y_f1y - f0x_f1x * pxy_f1y;
 	        
 	        for(int j = 1; j < subdivision; j++) {
