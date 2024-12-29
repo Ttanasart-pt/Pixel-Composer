@@ -20,10 +20,26 @@ if !ready exit;
 		catagory_pane.setFocusHover(sFOCUS, sHOVER);
 		catagory_pane.draw(dialog_x + ui(12), sy);
 		
-		var _x = dialog_x + category_width + ui(16);
-		draw_sprite_stretched(THEME.ui_panel_bg, 1, _x, sy, dialog_w - category_width - ui(30), dialog_h - ui(66));
+		var _x = dialog_x + category_width + ui(20);
+		draw_sprite_stretched(THEME.ui_panel_bg, 1, _x, sy, dialog_w - category_width - ui(34), dialog_h - ui(66));
+		
+		var _content_w = dialog_w - category_width - ui(40); 
+		var _content_h = dialog_h - ui(66); 
+		var _content_x = _x;
+		
+		if(PREFERENCES.dialog_add_node_grouping == 2 && !array_empty(subgroups)) {
+			var _subw = ui(128);
+			_content_w -= _subw;
+			_content_x += _subw;
+			
+			subcatagory_pane.verify(_subw, _content_h);
+			subcatagory_pane.setFocusHover(sFOCUS, sHOVER);
+			subcatagory_pane.draw(_x, sy);
+		}
+		
+		content_pane.verify(_content_w, _content_h);
 		content_pane.setFocusHover(sFOCUS, sHOVER);
-		content_pane.draw(_x, sy);
+		content_pane.draw(_content_x, sy);
 		
 		node_selecting = 0;
 		
@@ -39,20 +55,17 @@ if !ready exit;
 	
 	tb_search.draw(tx, ty, tw, th, search_string, mouse_ui);
 	
+	view_tooltip.index  = PREFERENCES.dialog_add_node_view;
+	group_tooltip.index = PREFERENCES.dialog_add_node_grouping;
+	
 	var bx = dialog_x + dialog_w - ui(44);
 	var by = dialog_y + ui(16);
-	var b = buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sHOVER, sFOCUS, 
-		PREFERENCES.dialog_add_node_view? __txtx("view_list", "List view") : __txtx("view_grid", "Grid view"), 
-		THEME.view_mode, PREFERENCES.dialog_add_node_view, COLORS._main_icon);
-	if(b == 2) 
-		PREFERENCES.dialog_add_node_view = !PREFERENCES.dialog_add_node_view;
+	var b = buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sHOVER, sFOCUS, view_tooltip, THEME.view_mode, PREFERENCES.dialog_add_node_view, COLORS._main_icon);
+	if(b == 2) PREFERENCES.dialog_add_node_view = (PREFERENCES.dialog_add_node_view + 1) % 2;
 	
 	bx -= ui(32);
-	var b = buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sHOVER, sFOCUS, 
-		PREFERENCES.dialog_add_node_grouping? __txtx("add_node_group_enabled", "Group enabled") : __txtx("add_node_group_disabled", "Group disabled"), 
-		THEME.view_group, PREFERENCES.dialog_add_node_grouping, COLORS._main_icon);
-	if(b == 2)
-		PREFERENCES.dialog_add_node_grouping = !PREFERENCES.dialog_add_node_grouping;
+	var b = buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sHOVER, sFOCUS, group_tooltip, THEME.view_group, PREFERENCES.dialog_add_node_grouping, COLORS._main_icon);
+	if(b == 2) PREFERENCES.dialog_add_node_grouping = (PREFERENCES.dialog_add_node_grouping + 1) % 3;
 	
 	if(node_called != noone || junction_hovering != noone) {
 		var txt = node_show_connectable? __txtx("add_node_show_connect", "Showing connectable") : __txtx("add_node_show_all", "Showing all");

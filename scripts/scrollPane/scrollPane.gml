@@ -44,6 +44,11 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 	scroll_color_bar_active = COLORS.scrollbar_active;
 	scroll_color_bar_alpha  = 1;
 	
+	static verify = function(_w, _h) {
+		if(w == _w && h == _h) return;
+		resize(_w, _h);
+	}
+	
 	static resize = function(_w, _h) {
 		w = _w;
 		h = _h;

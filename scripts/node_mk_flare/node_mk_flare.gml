@@ -23,7 +23,6 @@ function __FlarePart(_type = FLARE_TYPE.circle, _t = 0, _r = 4, _a = 0.5, _seg =
 
 function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "MK Lens Flare";
-	batch_output = false;
 	
 	newInput(0, nodeValue_Surface("Background", self));
 	
@@ -89,7 +88,7 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		triggerRender();
 	}
 	
-	flare_builder = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { #region
+	flare_builder = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		var _flares = inputs[5].getValue();
 		var _amo = array_length(_flares);
 		
@@ -104,6 +103,7 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		
 		if(flare_editing != noone) {
 			var _flare = _flares[flare_editing];
+			CURSOR = cr_size_we;
 			
 			switch(flare_editing_prop) {
 				case "type" :
@@ -116,7 +116,9 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 						if(!struct_has(_flare, "ir"))    _flare.ir    = 1;
 						if(!struct_has(_flare, "ratio")) _flare.ratio = 1;
 					}
+					CURSOR = cr_size_all;
 					break;
+					
 				case "t" :   _flare.t        =       flare_editing_sx + (_m[0] - flare_editing_mx) / 64;        if(abs(_flare.t - round(_flare.t * 10) / 10) < 0.02) _flare.t = round(_flare.t * 10) / 10;								break;
 				case "r" :   _flare.r        =       flare_editing_sx + (_m[0] - flare_editing_mx) / 64;        if(abs(_flare.r - round(_flare.r)) < 0.2) _flare.r = round(_flare.r);													break;
 				case "seg" : _flare.seg      = round(flare_editing_sx + (_m[0] - flare_editing_mx) / 32);																																break;
@@ -127,7 +129,6 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				case "ir" :  _flare.ir       =       flare_editing_sx + (_m[0] - flare_editing_mx) / 64;        if(abs(_flare.ir    - round(_flare.ir   )) < 0.2) _flare.ir    = round(_flare.ir   );									break;
 			}
 			
-			CURSOR = cr_size_we;
 			triggerRender();
 			
 			if(mouse_release(mb_left)) 
@@ -175,7 +176,7 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			
 			var _hov = __frame(_ffx, _ffy, _ffw, _ffh, _m, _hover);
 			draw_sprite_stretched_ext(THEME.ui_panel, 0, _ffx, _ffy, _ffw * clamp(_flare.t, 0., 2.) / 2, _ffh, CDEF.main_dkgrey, 1);
-			draw_text(_ffx + _ffw / 2, _ffy + _ffh / 2, string(_flare.t));
+			draw_text_add(_ffx + _ffw / 2, _ffy + _ffh / 2, string(_flare.t));
 			if(_hov && mouse_press(mb_left, _focus)) {
 				flare_editing = i;
 				flare_editing_prop = "t";
@@ -185,7 +186,7 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			_ffx += _ffw + ui(4);
 			
 			var _hov = __frame(_ffx, _ffy, _ffw, _ffh, _m, _hover);
-			draw_text(_ffx + _ffw / 2, _ffy + _ffh / 2, string(_flare.r));
+			draw_text_add(_ffx + _ffw / 2, _ffy + _ffh / 2, string(_flare.r));
 			if(_hov && mouse_press(mb_left, _focus)) {
 				flare_editing = i;
 				flare_editing_prop = "r";
@@ -200,7 +201,7 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			draw_polygon(_ffx + _ffw / 2, _ffy + _ffh / 2, _ffh / 2 - ui(2), _flare.seg);
 			
 			draw_set_color(COLORS._main_text); 
-			draw_text(_ffx + _ffw / 2, _ffy + _ffh / 2, string(_flare.seg));
+			draw_text_add(_ffx + _ffw / 2, _ffy + _ffh / 2, string(_flare.seg));
 			if(_hov && mouse_press(mb_left, _focus)) {
 				flare_editing = i;
 				flare_editing_prop = "seg";
@@ -212,8 +213,8 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			_ffw  = ui(80);
 			var _hov = __frame(_ffx, _ffy, _ffw, _ffh, _m, _hover);
 			draw_sprite_stretched_ext(THEME.ui_panel, 0, _ffx + _ffw * _flare.shade[0], _ffy, _ffw * (_flare.shade[1] - _flare.shade[0]), _ffh, CDEF.main_dkgrey, 1);
-			draw_text(_ffx + _ffw / 4,     _ffy + _ffh / 2, string(_flare.shade[0]));
-			draw_text(_ffx + _ffw / 4 * 3, _ffy + _ffh / 2, string(_flare.shade[1]));
+			draw_text_add(_ffx + _ffw / 4,     _ffy + _ffh / 2, string(_flare.shade[0]));
+			draw_text_add(_ffx + _ffw / 4 * 3, _ffy + _ffh / 2, string(_flare.shade[1]));
 			if(_hov && mouse_press(mb_left, _focus)) {
 				flare_editing      = i;
 				flare_editing_prop = _m[0] < _ffx + _ffw / 2? "r0" : "r1";
@@ -227,8 +228,8 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				case FLARE_TYPE.line :
 					_ffw  = ui(80);
 					var _hov = __frame(_ffx, _ffy, _ffw, _ffh, _m, _hover);
-					draw_text(_ffx + _ffw / 4,     _ffy + _ffh / 2, string(_flare.th[0]));
-					draw_text(_ffx + _ffw / 4 * 3, _ffy + _ffh / 2, string(_flare.th[1]));
+					draw_text_add(_ffx + _ffw / 4,     _ffy + _ffh / 2, string(_flare.th[0]));
+					draw_text_add(_ffx + _ffw / 4 * 3, _ffy + _ffh / 2, string(_flare.th[1]));
 					if(_hov && mouse_press(mb_left, _focus)) {
 						flare_editing      = i;
 						flare_editing_prop = _m[0] < _ffx + _ffw / 2? "th0" : "th1";
@@ -241,7 +242,7 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				case FLARE_TYPE.star :
 					_ffw  = ui(40);
 					var _hov = __frame(_ffx, _ffy, _ffw, _ffh, _m, _hover);
-					draw_text(_ffx + _ffw / 2, _ffy + _ffh / 2, string(_flare.ir));
+					draw_text_add(_ffx + _ffw / 2, _ffy + _ffh / 2, string(_flare.ir));
 					if(_hov && mouse_press(mb_left, _focus)) {
 						flare_editing = i;
 						flare_editing_prop = "ir";
@@ -296,7 +297,7 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		}
 		
 		return _h;
-	}); #endregion
+	});
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 
 		["Surfaces",  false], 0, 2, 
@@ -360,7 +361,7 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		BLEND_ADD draw_surface_ext(temp_surface[0], _x - _r, _y - _r, 1, 1, 0, _b, _a);
 	}
 	
-	static flare_crescent = function(_t, _r, _a, _side = 16, _angle = 0, _s0 = 0, _s1 = 0, _b = c_white, _ir = 0, _dist = 0) { #region
+	static flare_crescent = function(_t, _r, _a, _side = 16, _angle = 0, _s0 = 0, _s1 = 0, _b = c_white, _ir = 0, _dist = 0) {
 		var _x = lerp(ox, cx, _t);
 		var _y = lerp(oy, cy, _t);
 		
@@ -380,9 +381,9 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		surface_reset_shader();
 		
 		BLEND_ADD draw_surface_ext(temp_surface[0], _x - _r, _y - _r, 1, 1, 0, _b, _a);
-	} #endregion
+	}
 	
-	static flare_ring     = function(_t, _r, _a, _side = 16, _angle = 0, _s0 = 0, _s1 = 0, _b = c_white, _th = 1) { #region
+	static flare_ring     = function(_t, _r, _a, _side = 16, _angle = 0, _s0 = 0, _s1 = 0, _b = c_white, _th = 1) {
 		var _x = lerp(ox, cx, _t);
 		var _y = lerp(oy, cy, _t);
 		
@@ -421,9 +422,9 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		surface_reset_shader();
 		
 		BLEND_ADD draw_surface_ext(temp_surface[0], _x - _r, _y - _r, 1, 1, 0, _b, _a);
-	} #endregion
+	}
 					      
-	static flare_star     = function(_t, _r, _a, _side = 16, _angle = 0, _s0 = 0, _s1 = 1, _b = c_white, _ir = 0, _rt = 1) { #region
+	static flare_star     = function(_t, _r, _a, _side = 16, _angle = 0, _s0 = 0, _s1 = 1, _b = c_white, _ir = 0, _rt = 1) {
 		var _x = lerp(ox, cx, _t);
 		var _y = lerp(oy, cy, _t);
 		
@@ -454,9 +455,9 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		surface_reset_shader();
 		
 		BLEND_ADD draw_surface_ext(temp_surface[0], _x - _r, _y - _r, 1, 1, 0, _b, _a);
-	} #endregion
+	}
 					      
-	static flare_line     = function(_r, _a, _th, _dir, _b = c_white) { #region
+	static flare_line     = function(_r, _a, _th, _dir, _b = c_white) {
 		var _x = cx;
 		var _y = cy;
 		
@@ -496,10 +497,9 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		surface_reset_shader();
 		
 		BLEND_ADD draw_surface_ext(temp_surface[0], _x - _r, _y - _r, 1, 1, 0, _b, _a);
-	} #endregion
+	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
-		if(_output_index == 1) return flares[_array_index];
+	static processData = function(_outData, _data, _output_index, _array_index) {
 		
 		var _surf   = _data[0];
 		var _origin = _data[1];
@@ -514,8 +514,8 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		var _sw = _bg? surface_get_width_safe(_surf)  : _dim[0];
 		var _sh = _bg? surface_get_height_safe(_surf) : _dim[1];
 		
-		_outSurf = surface_verify(_outSurf, _sw, _sh);
-		flares[_array_index] = surface_verify(array_safe_get_fast(flares, _array_index), _sw, _sh);
+		var _outSurf  = surface_verify(_outData[0], _sw, _sh);
+		var flareSurf = surface_verify(_outData[1], _sw, _sh);
 		
 		ox = _origin[0];
 		oy = _origin[1];
@@ -527,7 +527,7 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		
 		var _x, _y;
 		
-		surface_set_target(flares[_array_index]);
+		surface_set_target(flareSurf);
 			draw_clear_alpha(c_black, 0);
 			
 			for( var i = 0, n = array_length(_flares); i < n; i++ ) {
@@ -567,19 +567,20 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		surface_reset_target();
 		
 		surface_set_target(_outSurf);
-			draw_clear_alpha(c_white, 0);
 			
 			if(_bg) {
+				draw_clear_alpha(c_black, 0);
 				BLEND_OVERRIDE
-					draw_surface_safe(_surf);
-			}
+				draw_surface_safe(_surf);
+			} else 
+				draw_clear_alpha(c_black, 1);
 			
 			BLEND_ADD
-				draw_surface_safe(flares[_array_index]);
+			draw_surface_safe(flareSurf);
 				
 			BLEND_NORMAL
 		surface_reset_target();
 		
-		return _outSurf;
-	} #endregion
+		return _outData;
+	}
 }

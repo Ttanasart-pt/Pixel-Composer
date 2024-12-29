@@ -760,9 +760,9 @@ function Panel_Collection() : PanelContent() constructor {
 			case "Collections" : 
 			case "Assets" : 
 			case "Nodes" : 
-				draw_sprite_stretched(THEME.ui_panel_bg, 1, group_w, content_y, content_w, content_h);
-				
 				if(pageStr[page] == "Nodes") {
+					draw_sprite_stretched(THEME.ui_panel_bg, 1, group_w, content_y, content_w, content_h);
+					
 					nodeListPane.setFocusHover(pFOCUS, pHOVER);
 					nodecontentPane.setFocusHover(pFOCUS, pHOVER);
 					
@@ -770,6 +770,8 @@ function Panel_Collection() : PanelContent() constructor {
 					nodecontentPane.draw(group_w + ppd, content_y + ppd, mx - group_w - ppd, my - content_y - ppd);
 					
 				} else {
+					draw_sprite_stretched(THEME.ui_panel_bg, 1, group_w, content_y, content_w, content_h);
+					
 					folderPane.setFocusHover(pFOCUS, pHOVER);
 					contentPane.setFocusHover(pFOCUS, pHOVER);
 					
@@ -807,6 +809,8 @@ function Panel_Collection() : PanelContent() constructor {
 				break;
 				
 		}
+		
+		////- Title bar
 		
 		var _x = ui(10);
 		var _y = ui(10);

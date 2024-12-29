@@ -120,7 +120,7 @@ function NodeObject(_name, _spr, _node, _create, tooltip = "", tags = []) constr
 		
 		var _spw = sprite_get_width(spr);
 		var _sph = sprite_get_height(spr);
-		var _ss  = grid_size / max(_spw, _sph) * 0.6;
+		var _ss  = grid_size / max(_spw, _sph) * 0.75;
 		
 		gpu_set_tex_filter(true);
 		draw_sprite_uniform(spr, 0, spr_x, spr_y, _ss);
@@ -220,6 +220,8 @@ function NodeObject(_name, _spr, _node, _create, tooltip = "", tags = []) constr
 			draw_sprite_ext(s_patreon_supporter, 1, spr_x, spr_y, 1, 1, 0, COLORS._main_accent, 1);
 			
 			if(point_in_circle(_mx, _my, spr_x, spr_y, 10)) TOOLTIP = __txt("Supporter exclusive");
+			
+			tx += ui(16);
 		}
 		
 		return tx;
@@ -516,14 +518,19 @@ function __initNodes() {
 	var input = ds_list_create(); 
 	addNodeCatagory("IO", input);
 		ds_list_add(input, "Images");
+			ds_list_add(input, "/Importers");
 		addNodeObject(input, "Image",				s_node_image,			"Node_Image",					[0, Node_create_Image],, "Load a single image from your computer.");
 		addNodeObject(input, "Image GIF",			s_node_image_gif,		"Node_Image_gif",				[0, Node_create_Image_gif],, "Load animated .gif from your computer.");
-		addNodeObject(input, "Splice Spritesheet",	s_node_image_sheet,		"Node_Image_Sheet",				[1, Node_Image_Sheet],, "Cut up spritesheet into animation or image array.");
 		addNodeObject(input, "Image Array",			s_node_image_sequence,	"Node_Image_Sequence",			[0, Node_create_Image_Sequence],, "Load multiple images from your computer as array.");
 		addNodeObject(input, "Animation",			s_node_image_animation, "Node_Image_Animated",			[0, Node_create_Image_Animated],, "Load multiple images from your computer as animation.");
-		addNodeObject(input, "Array to Anim",		s_node_image_sequence_to_anim, "Node_Sequence_Anim",	[1, Node_Sequence_Anim],, "Convert array of images into animation.");
 		addNodeObject(input, "SVG",					s_node_svg, 			"Node_SVG",						[1, Node_SVG],, "Load a SVG file.");
-		if(!DEMO) addNodeObject(input, "Export",	s_node_export,			"Node_Export",					[0, Node_create_Export],, "Export image, image array to file, image sequence, animation.");
+			ds_list_add(input, "/Converters");
+		addNodeObject(input, "Splice Spritesheet",	s_node_image_sheet,		"Node_Image_Sheet",				[1, Node_Image_Sheet],, "Cut up spritesheet into animation or image array.");
+		addNodeObject(input, "Array to Anim",		s_node_image_sequence_to_anim, "Node_Sequence_Anim",	[1, Node_Sequence_Anim],, "Convert array of images into animation.");
+		if(!DEMO) {
+			ds_list_add(input, "/Exporters");
+			addNodeObject(input, "Export",	s_node_export,			"Node_Export",					[0, Node_create_Export],, "Export image, image array to file, image sequence, animation.");
+		}
 		
 		ds_list_add(input, "Canvas");
 		addNodeObject(input, "Canvas",				s_node_canvas,			"Node_Canvas",					[1, Node_Canvas], ["draw"], "Draw on surface using brush, eraser, etc.");
@@ -531,11 +538,13 @@ function __initNodes() {
 		addNodeObject(input, "Active Canvas",		s_node_active_canvas,	"Node_Active_Canvas",			[1, Node_Active_Canvas], ["draw"], "Draw using parameterized brush.").setVersion(11570);
 		
 		ds_list_add(input, "Tileset");
+			ds_list_add(input, "/Creators");
 		addNodeObject(input, "Tileset",				s_node_tileset, 		"Node_Tile_Tileset",			[1, Node_Tile_Tileset],, "Create tileset object.").setVersion(1_18_03_0);
 		addNodeObject(input, "Tile Drawer",			s_node_tileset_drawer, 	"Node_Tile_Drawer",				[1, Node_Tile_Drawer],, "Draw using tileset.").setVersion(1_18_03_0);
 		addNodeObject(input, "Tile Rule",			s_node_tileset_rule, 	"Node_Tile_Rule",				[1, Node_Tile_Rule],, "Apply tileset rules.").setVersion(1_18_03_0);
+		addNodeObject(input, "Convert to Tilemap",	s_node_tileset_convert, "Node_Tile_Convert",			[1, Node_Tile_Convert],, "Convert color image to tile data.").setVersion(1_18_03_0);
+			ds_list_add(input, "/Exporters");
 		addNodeObject(input, "Render Tilemap",		s_node_tileset_render, 	"Node_Tile_Render",				[1, Node_Tile_Render],, "Render tilemap to image.").setVersion(1_18_03_0);
-		addNodeObject(input, "Convert to Tilemap",	s_node_tileset_convert, "Node_Tile_Convert",			[1, Node_Tile_Convert],, "Render tilemap to image.").setVersion(1_18_03_0);
 		addNodeObject(input, "Export Tilemap",		s_node_tileset_export, 	"Node_Tile_Tilemap_Export",		[1, Node_Tile_Tilemap_Export],, "Export tilemap to file.").setVersion(1_18_03_0);
 		
 		ds_list_add(input, "Files");
@@ -572,16 +581,18 @@ function __initNodes() {
 	#region transform
 	var transform = ds_list_create(); 
 	addNodeCatagory("Transform", transform);
-		ds_list_add(transform, "Transformations");
+		ds_list_add(transform, "Transforms");
 		addNodeObject(transform, "Transform",		s_node_transform,		"Node_Transform",		[1, Node_Transform], ["move", "rotate", "scale"], "Move, rotate, and scale image.");
 		addNodeObject(transform, "Scale",			s_node_scale,			"Node_Scale",			[1, Node_Scale], ["resize"], "Simple node for scaling image.");
 		addNodeObject(transform, "Scale Algorithm",	s_node_scale_algo,		"Node_Scale_Algo",		[0, Node_create_Scale_Algo], ["scale2x", "scale3x", "cleanedge"], "Scale image using pixel-art scaling algorithm.");
 		addNodeObject(transform, "Flip",			s_node_flip,			"Node_Flip",			[1, Node_Flip], ["mirror"], "Flip image horizontally or vertically.");
 		addNodeObject(transform, "Offset",			s_node_offset,			"Node_Offset",			[1, Node_Offset], ["shift"], "Shift image with tiling.");
 		
-		ds_list_add(transform, "Warps");
+		ds_list_add(transform, "Crops");
 		addNodeObject(transform, "Crop",			s_node_crop,			"Node_Crop",			[1, Node_Crop],, "Crop out image to create smaller ones.");
 		addNodeObject(transform, "Crop Content",	s_node_crop_content,	"Node_Crop_Content",	[1, Node_Crop_Content],, "Crop out empty pixel from the image.");
+		
+		ds_list_add(transform, "Warps");
 		addNodeObject(transform, "Bend",			s_node_bend,			"Node_Bend",			[1, Node_Bend], ["wrap"], "Warp an image into a predefined shape.").setVersion(11650);
 		addNodeObject(transform, "Warp",			s_node_warp,			"Node_Warp",			[1, Node_Warp], ["warp corner"], "Warp image by freely moving the corners.");
 		// addNodeObject(transform, "Perspective Warp",s_node_warp,			"Node_Warp_Perspective",[1, Node_Warp_Perspective], ["warp perspective"], "Warp image by modifying perspective.");
@@ -609,91 +620,104 @@ function __initNodes() {
 		addNodeObject(filter, "Override Channel",	s_node_ovreride_channel, "Node_Override_Channel", [1, Node_Override_Channel],, "Replace RGBA value of one surface with another.").setVersion(11640);
 		
 		ds_list_add(filter, "Blurs");
+			ds_list_add(filter, "/Kernel-based");
 		addNodeObject(filter, "Blur",				s_node_blur,			"Node_Blur",			[1, Node_Blur], ["gaussian blur"], "Blur image smoothly.");
 		addNodeObject(filter, "Non-Uniform Blur",	s_node_blur_simple,		"Node_Blur_Simple",		[1, Node_Blur_Simple],, "Blur image using simpler algorithm. Allowing for variable blur strength.").setVersion(1070);
 		addNodeObject(filter, "Directional Blur",	s_node_blur_directional,"Node_Blur_Directional",[1, Node_Blur_Directional], ["motion blur"], "Blur image given a direction.");
 		addNodeObject(filter, "Slope Blur",			s_node_blur_slope,		"Node_Blur_Slope",		[1, Node_Blur_Slope], ["motion blur"], "Blur along a gradient of a slope map.").setVersion(11640);
 		addNodeObject(filter, "Zoom Blur",			s_node_zoom,			"Node_Blur_Zoom",		[1, Node_Blur_Zoom],, "Blur image by zooming in/out from a mid point.");
 		addNodeObject(filter, "Radial Blur",		s_node_radial,			"Node_Blur_Radial",		[1, Node_Blur_Radial],, "Blur image by rotating around a mid point.").setVersion(1110);
-		addNodeObject(filter, "Lens Blur",			s_node_bokeh,			"Node_Blur_Bokeh",		[1, Node_Blur_Bokeh], ["bokeh"], "Create bokeh effect. Blur lighter color in a lens-like manner.").setVersion(1110);
 		addNodeObject(filter, "Contrast Blur",		s_node_blur_contrast,	"Node_Blur_Contrast",	[1, Node_Blur_Contrast],, "Blur only pixel of a similiar color.");
 		addNodeObject(filter, "Shape Blur",			s_node_shape_blur,		"Node_Blur_Shape",		[1, Node_Blur_Shape],, "Blur image using another image as blur map.").setVersion(11650);
+		addNodeObject(filter, "High Pass",			s_node_high_pass,		"Node_High_Pass",		[1, Node_High_Pass], ["sharpen"], "Apply high pass filter").setVersion(1_18_01_0);
+			ds_list_add(filter, "/Analytic");
+		addNodeObject(filter, "Lens Blur",			s_node_bokeh,			"Node_Blur_Bokeh",		[1, Node_Blur_Bokeh], ["bokeh"], "Create bokeh effect. Blur lighter color in a lens-like manner.").setVersion(1110);
 		addNodeObject(filter, "Path Blur",			s_node_blur_path,		"Node_Blur_Path",		[1, Node_Blur_Path],, "Blur pixel along path.").setVersion(11750);
 		addNodeObject(filter, "Average",			s_node_average,			"Node_Average",			[1, Node_Average],, "Average color of every pixels in the image.").setVersion(1110);
 		addNodeObject(filter, "Smear",				s_node_smear,			"Node_Smear",			[1, Node_Smear],, "Stretch out brighter pixel in one direction.").setVersion(11670);
+			ds_list_add(filter, "/Artistics");
 		addNodeObject(filter, "Kuwahara",			s_node_kuwahara,		"Node_Kuwahara",		[1, Node_Kuwahara],, "Apply Kuwahara filter. Creating a watercolor-like effect.").setVersion(11660);
-		addNodeObject(filter, "High Pass",			s_node_high_pass,		"Node_High_Pass",		[1, Node_High_Pass], ["sharpen"], "Apply high pass filter").setVersion(1_18_01_0);
 		addNodeObject(filter, "Brush",				s_node_brush_linear,	"Node_Brush_Linear",	[1, Node_Brush_Linear],, "Apply brush effect.").patreonExtra();
 		
 		ds_list_add(filter, "Warps");
+			ds_list_add(filter, "/Effects");
 		addNodeObject(filter, "Mirror",				s_node_mirror,			"Node_Mirror",			[1, Node_Mirror],, "Reflect the image along a reflection line.").setVersion(1070);
 		addNodeObject(filter, "Twirl",				s_node_twirl,			"Node_Twirl",			[1, Node_Twirl], ["twist"], "Twist the image around a mid point.");
 		addNodeObject(filter, "Dilate",				s_node_dilate,			"Node_Dilate",			[1, Node_Dilate], ["inflate"], "Expand the image around a mid point.");
 		addNodeObject(filter, "Spherize",			s_node_spherize,		"Node_Spherize",		[1, Node_Spherize],, "Wrap a texture on to sphere.").setVersion(11630);
 		addNodeObject(filter, "Displace",			s_node_displace,		"Node_Displace",		[1, Node_Displace], ["distort"], "Distort image using another image as a map.");
+		addNodeObject(filter, "Morph Surface",		s_node_morph_surface,	"Node_Morph_Surface",	[1, Node_Morph_Surface],, "Morph pixel between two surfaces.").setVersion(1141);
+		addNodeObject(filter, "Liquefy",			s_node_liquefy,			"Node_Liquefy",			[1, Node_Liquefy],, "Distort image using variety of tools.").setVersion(1_18_02_0);
+			ds_list_add(filter, "/Mappers");
 		addNodeObject(filter, "Texture Remap",		s_node_texture_map,		"Node_Texture_Remap",	[1, Node_Texture_Remap],, "Remap image using texture map. Where red channel control x position and green channel control y position.");
 		addNodeObject(filter, "Time Remap",			s_node_time_map,		"Node_Time_Remap",		[1, Node_Time_Remap],, "Remap image using texture as time map. Where brighter pixel means using pixel from an older frame.");
 		addNodeObject(filter, "Shape Map",			s_node_shape_map,		"Node_Shape_Map",		[1, Node_Shape_Map],, "Map image into shapes.").setVersion(11660);
-		addNodeObject(filter, "Morph Surface",		s_node_morph_surface,	"Node_Morph_Surface",	[1, Node_Morph_Surface],, "Morph pixel between two surfaces.").setVersion(1141);
-		addNodeObject(filter, "Liquefy",			s_node_liquefy,			"Node_Liquefy",			[1, Node_Liquefy],, "Distort image using variety of tools.").setVersion(1_18_02_0);
 		
 		ds_list_add(filter, "Effects");
+			ds_list_add(filter, "/Basics");
 		addNodeObject(filter, "Outline",			s_node_border,			"Node_Outline",			[1, Node_Outline], ["border"], "Add border to the image.");
 		addNodeObject(filter, "Glow",				s_node_glow,			"Node_Glow",			[1, Node_Glow],, "Apply glow to the border of the image.");
 		addNodeObject(filter, "Shadow",				s_node_shadow,			"Node_Shadow",			[1, Node_Shadow],, "Apply shadow behind the image.");
+		addNodeObject(filter, "Blobify",			s_node_blobify,			"Node_Blobify",			[1, Node_Blobify],, "Round off sharp corner in BW image by bluring and thresholding.").setVersion(11650);
+		addNodeObject(filter, "SDF",				s_node_sdf,				"Node_SDF",				[1, Node_SDF],, "Create signed distance field using jump flooding algorithm.").setVersion(1130);
+		addNodeObject(filter, "Replace Image",		s_node_image_replace,	"Node_Surface_Replace",	[1, Node_Surface_Replace], ["image replace"], "Replace instances of an image with a new one.").setVersion(1140);
+			ds_list_add(filter, "/Post Processing");
 		addNodeObject(filter, "Bloom",				s_node_bloom,			"Node_Bloom",			[1, Node_Bloom],, "Apply bloom effect, blurring and brighten the bright part of the image.");
-		addNodeObject(filter, "Trail",				s_node_trail,			"Node_Trail",			[1, Node_Trail],, "Blend animation by filling in the pixel 'in-between' two or more frames.").setVersion(1130);
+		addNodeObject(filter, "Blend Edge",			s_node_blend_edge,		"Node_Blend_Edge",		[1, Node_Blend_Edge],, "Blend the edges of an image to create tilable patterns.").setVersion(11740);
+		addNodeObject(filter, "Chromatic Aberration",s_node_chromatic_abarration,	"Node_Chromatic_Aberration",	[1, Node_Chromatic_Aberration],, "Apply chromatic aberration effect to the image.");
+		addNodeObject(filter, "FXAA",				s_node_FXAA,			"Node_FXAA",			[1, Node_FXAA], ["anti aliasing"], "Apply fast approximate anti-aliasing to te image.");
+		addNodeObject(filter, "Vignette",			s_node_vignette,		"Node_Vignette",		[1, Node_Vignette],, "Apply vignette effect to the border.").setVersion(11630);
+		addNodeObject(filter, "JPEG",				s_node_JPEG,			"Node_JPEG",			[1, Node_JPEG],, "Apply JPEG compression to the image.").setVersion(11730);
+		addNodeObject(filter, "Grain",				s_node_grain,			"Node_Grain",			[1, Node_Grain],, "Add noise pattern to the image.").setVersion(11770);
+			ds_list_add(filter, "/Convolutions");
+		addNodeObject(filter, "Convolution",		s_node_convolution,		"Node_Convolution",		[1, Node_Convolution], ["kernel"], "Apply convolution operation on each pixel using a custom 3x3 kernel.").setVersion(1090);
+		addNodeObject(filter, "Edge Detect",		s_node_edge_detect,		"Node_Edge_Detect",		[1, Node_Edge_Detect],, "Edge detect by applying Sobel, Prewitt, or Laplacian kernel.");
+		addNodeObject(filter, "Local Analyze",		s_node_local_analyze,	"Node_Local_Analyze",	[1, Node_Local_Analyze],, "Apply non-linear operation (minimum, maximum) on each pixel locally.").setVersion(1110);
 		addNodeObject(filter, "Erode",				s_node_erode,			"Node_Erode",			[1, Node_Erode],, "Remove pixel that are close to the border of the image.");
 		addNodeObject(filter, "Round Corner",		s_node_corner,			"Node_Corner",			[1, Node_Corner],, "Round out sharp corner of the image.").setVersion(1110);
-		addNodeObject(filter, "Blobify",			s_node_blobify,			"Node_Blobify",			[1, Node_Blobify],, "Round off sharp corner in BW image by bluring and thresholding.").setVersion(11650);
-		addNodeObject(filter, "2D Light",			s_node_2d_light,		"Node_2D_light",		[1, Node_2D_light],, "Apply different shaped light on the image.");
-		addNodeObject(filter, "Cast Shadow",		s_node_shadow_cast,		"Node_Shadow_Cast",		[1, Node_Shadow_Cast], ["raycast"], "Apply light that create shadow using shadow mask.").setVersion(1100);
+			ds_list_add(filter, "/Pixel Operations");
+		addNodeObject(filter, "Pixel Math",			s_node_pixel_math,		"Node_Pixel_Math",		[0, Node_create_Pixel_Math], global.node_math_keys, "Apply mathematical operation directly on RGBA value.").setVersion(1_18_02_0);
 		addNodeObject(filter, "Pixel Expand",		s_node_atlas,			"Node_Atlas",			[1, Node_Atlas], ["atlas"], "Replace transparent pixel with the closest non-transparent pixel.");
 		addNodeObject(filter, "Pixel Cloud",		s_node_pixel_cloud,		"Node_Pixel_Cloud",		[1, Node_Pixel_Cloud],, "Displace each pixel of the image randomly.");
 		addNodeObject(filter, "Pixel Sort",			s_node_pixel_sort,		"Node_Pixel_Sort",		[1, Node_Pixel_Sort],, "Sort pixel by brightness in horizontal, or vertial axis.");
-		addNodeObject(filter, "Edge Detect",		s_node_edge_detect,		"Node_Edge_Detect",		[1, Node_Edge_Detect],, "Edge detect by applying Sobel, Prewitt, or Laplacian kernel.");
-		addNodeObject(filter, "Convolution",		s_node_convolution,		"Node_Convolution",		[1, Node_Convolution], ["kernel"], "Apply convolution operation on each pixel using a custom 3x3 kernel.").setVersion(1090);
-		addNodeObject(filter, "Local Analyze",		s_node_local_analyze,	"Node_Local_Analyze",	[1, Node_Local_Analyze],, "Apply non-linear operation (minimum, maximum) on each pixel locally.").setVersion(1110);
-		addNodeObject(filter, "SDF",				s_node_sdf,				"Node_SDF",				[1, Node_SDF],, "Create signed distance field using jump flooding algorithm.").setVersion(1130);
-		addNodeObject(filter, "Replace Image",		s_node_image_replace,	"Node_Surface_Replace",	[1, Node_Surface_Replace], ["image replace"], "Replace instances of an image with a new one.").setVersion(1140);
-		addNodeObject(filter, "Chromatic Aberration",s_node_chromatic_abarration,	"Node_Chromatic_Aberration",	[1, Node_Chromatic_Aberration],, "Apply chromatic aberration effect to the image.");
-		addNodeObject(filter, "Vignette",			s_node_vignette,		"Node_Vignette",		[1, Node_Vignette],, "Apply vignette effect to the border.").setVersion(11630);
-		addNodeObject(filter, "FXAA",				s_node_FXAA,			"Node_FXAA",			[1, Node_FXAA], ["anti aliasing"], "Apply fast approximate anti-aliasing to te image.");
-		addNodeObject(filter, "JPEG",				s_node_JPEG,			"Node_JPEG",			[1, Node_JPEG],, "Apply JPEG compression to the image.").setVersion(11730);
-		addNodeObject(filter, "Interlace",			s_node_interlace,		"Node_Interlaced",		[1, Node_Interlaced],, "Apply interlace effect to an image.").setVersion(11760);
-		addNodeObject(filter, "Blend Edge",			s_node_blend_edge,		"Node_Blend_Edge",		[1, Node_Blend_Edge],, "Blend the edges of an image to create tilable patterns.").setVersion(11740);
-		addNodeObject(filter, "Pixel Math",			s_node_pixel_math,		"Node_Pixel_Math",		[0, Node_create_Pixel_Math], global.node_math_keys, "Apply mathematical operation directly on RGBA value.").setVersion(1_18_02_0);
 		addNodeObject(filter, "Shuffle",			s_node_shuffle,			"Node_Shuffle",			[1, Node_Shuffle],, "Shuffle image while keeping pixel colors.").setVersion(1_18_05_6);
+			ds_list_add(filter, "/Lights");
+		addNodeObject(filter, "2D Light",			s_node_2d_light,		"Node_2D_light",		[1, Node_2D_light],, "Apply different shaped light on the image.");
+		addNodeObject(filter, "Cast Shadow",		s_node_shadow_cast,		"Node_Shadow_Cast",		[1, Node_Shadow_Cast], ["raycast"], "Apply light that create shadow using shadow mask.").setVersion(1100);
+			ds_list_add(filter, "/Animations");
+		addNodeObject(filter, "Interlace",			s_node_interlace,		"Node_Interlaced",		[1, Node_Interlaced],, "Apply interlace effect to an image.").setVersion(11760);
+		addNodeObject(filter, "Trail",				s_node_trail,			"Node_Trail",			[1, Node_Trail],, "Blend animation by filling in the pixel 'in-between' two or more frames.").setVersion(1130);
 		
 		ds_list_add(filter, "Colors");
+			ds_list_add(filter, "/Replacements");
 		addNodeObject(filter, "Replace Palette",	s_node_replace_palette,	"Node_Color_replace",	[1, Node_Color_replace], ["isolate color", "select color", "palette swap", "color replace"], "Match image to a palette then remap it to another palette.");
 		addNodeObject(filter, "Replace Colors",		s_node_color_replace,	"Node_Colors_Replace",	[1, Node_Colors_Replace], ["isolate color", "select color", "palette swap", "color replace"], "Replace selected colors with a new one.");
 		addNodeObject(filter, "Remove Color",		s_node_color_remove,	"Node_Color_Remove",	[1, Node_Color_Remove], ["delete color"], "Remove color that match a palette.");
+			ds_list_add(filter, "/Colorizes");
 		addNodeObject(filter, "Colorize",			s_node_colorize,		"Node_Colorize",		[1, Node_Colorize], ["recolor"], "Map brightness of a pixel to a color from a gradient.");
 		addNodeObject(filter, "Posterize",			s_node_posterize,		"Node_Posterize",		[1, Node_Posterize],, "Reduce and remap color to match a palette.");
 		addNodeObject(filter, "Dither",				s_node_dithering,		"Node_Dither",			[1, Node_Dither],, "Reduce color and use dithering to preserve original color.");
 		addNodeObject(filter, "Error Diffuse Dither",s_node_error_diffuse,	"Node_Dither_Diffuse",	[1, Node_Dither_Diffuse],, "Dither image using error diffusion algorithm.").setVersion(1_18_05_1);
-		addNodeObject(filter, "Color Adjust",		s_node_color_adjust,	"Node_Color_adjust",	[1, Node_Color_adjust], ["brightness", "contrast", "hue", "saturation", "value", "color blend", "alpha"], "Adjust brightness, contrast, hue, saturation, value, alpha, and blend image with color.");
 		addNodeObject(filter, "Palette Shift",		s_node_palette_shift,	"Node_Palette_Shift",	[1, Node_Palette_Shift],, "Shift the order of color in palette.").setVersion(1147);
+			ds_list_add(filter, "/Conversions");
 		addNodeObject(filter, "BW",					s_node_BW,				"Node_BW",				[1, Node_BW], ["black and white"], "Convert color image to black and white.");
 		addNodeObject(filter, "Greyscale",			s_node_greyscale,		"Node_Greyscale",		[1, Node_Greyscale], ["grayscale"], "Convert color image to greyscale.");
-		addNodeObject(filter, "Invert",				s_node_invert,			"Node_Invert",			[1, Node_Invert], ["negate"], "Invert color.");
-		addNodeObject(filter, "Level",				s_node_level,			"Node_Level",			[1, Node_Level],, "Adjust brightness of an image by changing its brightness range.");
-		addNodeObject(filter, "Level Selector",		s_node_level_selector,	"Node_Level_Selector",	[1, Node_Level_Selector],, "Isolate part of the image that falls in the selected brightness range.");
-		addNodeObject(filter, "Curve",				s_node_curve_edit,		"Node_Curve",			[1, Node_Curve],, "Adjust brightness of an image using curves.").setVersion(1120);
-		addNodeObject(filter, "HSV Curve",			s_node_curve_hsv,		"Node_Curve_HSV",		[1, Node_Curve_HSV],, "Adjust hsv values of an image using curves.").setVersion(11720);
-		addNodeObject(filter, "Threshold",			s_node_threshold,		"Node_Threshold",		[1, Node_Threshold],, "Set a threshold where pixel darker will becomes black, and brighter to white. Also works with alpha.").setVersion(1080);
-		addNodeObject(filter, "Alpha Cutoff",		s_node_alpha_cut,		"Node_Alpha_Cutoff",	[1, Node_Alpha_Cutoff], ["remove alpha"], "Remove pixel with low alpha value.");
-		addNodeObject(filter, "Normalize",			s_node_normalize,		"Node_Normalize",		[1, Node_Normalize],, "Normalize image ranges (brightness, RGB channels) in to [0, 1] range.").setVersion(11710);
-		addNodeObject(filter, "Gamma Map",			s_node_gamma_map,		"Node_Gamma_Map",		[1, Node_Gamma_Map], ["srgb"], "Apply gamma approximation (pow(2.2)) to an image.").setVersion(11660);
-		addNodeObject(filter, "Grain",				s_node_grain,			"Node_Grain",			[1, Node_Grain],, "Add noise pattern to the image.").setVersion(11770);
-		addNodeObject(filter, "ACE",				s_node_ace,				"Node_Tonemap_ACE",		[1, Node_Tonemap_ACE],, "Apply ACE tonemapping.").setVersion(11710);
-		
-		ds_list_add(filter, "Conversions");
 		addNodeObject(filter, "RGBA Extract",		s_node_RGB,				"Node_RGB_Channel",		[1, Node_RGB_Channel], ["channel extract"], "Extract RGBA channel on an image, each channel becomes its own image.");
 		addNodeObject(filter, "HSV Extract",		s_node_HSV,				"Node_HSV_Channel",		[1, Node_HSV_Channel],, "Extract HSVA channel on an image, each channel becomes its own image.").setVersion(1070);
 		addNodeObject(filter, "Alpha to Grey",		s_node_alpha_grey,		"Node_Alpha_Grey",		[1, Node_Alpha_Grey], ["alpha to gray"], "Convert alpha value into solid greyscale.");
 		addNodeObject(filter, "Grey to Alpha",		s_node_grey_alpha,		"Node_Grey_Alpha",		[1, Node_Grey_Alpha], ["gray to alpha"], "Convert greyscale to alpha value.");
+			ds_list_add(filter, "/Adjustments");
+		addNodeObject(filter, "Color Adjust",		s_node_color_adjust,	"Node_Color_adjust",	[1, Node_Color_adjust], ["brightness", "contrast", "hue", "saturation", "value", "color blend", "alpha"], "Adjust brightness, contrast, hue, saturation, value, alpha, and blend image with color.");
+		addNodeObject(filter, "Level",				s_node_level,			"Node_Level",			[1, Node_Level],, "Adjust brightness of an image by changing its brightness range.");
+		addNodeObject(filter, "Level Selector",		s_node_level_selector,	"Node_Level_Selector",	[1, Node_Level_Selector],, "Isolate part of the image that falls in the selected brightness range.");
+		addNodeObject(filter, "Curve",				s_node_curve_edit,		"Node_Curve",			[1, Node_Curve],, "Adjust brightness of an image using curves.").setVersion(1120);
+		addNodeObject(filter, "HSV Curve",			s_node_curve_hsv,		"Node_Curve_HSV",		[1, Node_Curve_HSV],, "Adjust hsv values of an image using curves.").setVersion(11720);
+		addNodeObject(filter, "Invert",				s_node_invert,			"Node_Invert",			[1, Node_Invert], ["negate"], "Invert color.");
+		addNodeObject(filter, "Threshold",			s_node_threshold,		"Node_Threshold",		[1, Node_Threshold],, "Set a threshold where pixel darker will becomes black, and brighter to white. Also works with alpha.").setVersion(1080);
+		addNodeObject(filter, "Alpha Cutoff",		s_node_alpha_cut,		"Node_Alpha_Cutoff",	[1, Node_Alpha_Cutoff], ["remove alpha"], "Remove pixel with low alpha value.");
+		addNodeObject(filter, "Normalize",			s_node_normalize,		"Node_Normalize",		[1, Node_Normalize],, "Normalize image ranges (brightness, RGB channels) in to [0, 1] range.").setVersion(11710);
+		addNodeObject(filter, "Gamma Map",			s_node_gamma_map,		"Node_Gamma_Map",		[1, Node_Gamma_Map], ["srgb"], "Apply gamma approximation (pow(2.2)) to an image.").setVersion(11660);
+		addNodeObject(filter, "ACE",				s_node_ace,				"Node_Tonemap_ACE",		[1, Node_Tonemap_ACE],, "Apply ACE tonemapping.").setVersion(11710);
 		
 		ds_list_add(filter, "Fixes");
 		addNodeObject(filter, "De-Corner",			s_node_decorner,		"Node_De_Corner",		[1, Node_De_Corner], ["decorner"], "Attempt to remove single pixel corner from the image.");
@@ -711,15 +735,16 @@ function __initNodes() {
 		addNodeObject(d3d, "Sprite Stack",		s_node_stack,				"Node_Sprite_Stack",		[1, Node_Sprite_Stack],, "Create sprite stack either from repeating a single image or stacking different images using array.");
 		addNodeObject(d3d, "Ambient Occlusion",	s_node_AO,					"Node_Ambient_Occlusion",	[1, Node_Ambient_Occlusion], ["ao"], "Apply simple 2D AO effect using height map.").patreonExtra();
 		
-		ds_list_add(d3d, "3D");
+		ds_list_add(d3d, "Scenes");
 		addNodeObject(d3d, "3D Camera",		s_node_3d_camera,			"Node_3D_Camera",			[1, Node_3D_Camera],, "Create 3D camera that render scene to surface.").setVersion(11510);
 		addNodeObject(d3d, "3D Camera Set",	s_node_3d_camera_set,		"Node_3D_Camera_Set",		[1, Node_3D_Camera_Set],, "3D camera with built-in key and fill directional lights.").setVersion(11571);
-		addNodeObject(d3d, "3D Material",	s_node_3d_meterial,			"Node_3D_Material",			[1, Node_3D_Material],, "Create 3D material with adjustable parameters.").setVersion(11510);
 		addNodeObject(d3d, "3D Scene",		s_node_3d_scene,			"Node_3D_Scene",			[1, Node_3D_Scene],, "Combine multiple 3D objects into a single junction.").setVersion(11510);
-		addNodeObject(d3d, "3D Repeat",		s_node_3d_array,			"Node_3D_Repeat",			[1, Node_3D_Repeat],, "Repeat the same 3D mesh multiple times.").setVersion(11510);
-		addNodeObject(d3d, "Mesh Export",	s_node_3d_obj_export,		"Node_3D_Mesh_Export",		[1, Node_3D_Mesh_Export],, "Export 3D mesh as .obj file").setVersion(11740);
 		
-		ds_list_add(d3d, "Mesh");
+		ds_list_add(d3d, "Materials");
+		addNodeObject(d3d, "3D Material",	s_node_3d_meterial,			"Node_3D_Material",			[1, Node_3D_Material],, "Create 3D material with adjustable parameters.").setVersion(11510);
+		
+		ds_list_add(d3d, "Meshes");
+			ds_list_add(d3d, "/Creators");
 		addNodeObject(d3d, "3D Object",		s_node_3d_obj,			"Node_3D_Mesh_Obj",			[0, Node_create_3D_Obj],, "Load .obj file from your computer as a 3D object.").setVersion(11510);
 		addNodeObject(d3d, "3D Plane",		s_node_3d_plane,		"Node_3D_Mesh_Plane",		[1, Node_3D_Mesh_Plane],, "Put 2D image on a plane in 3D space.").setVersion(11510);
 		addNodeObject(d3d, "3D Cube",		s_node_3d_cube,			"Node_3D_Mesh_Cube",		[1, Node_3D_Mesh_Cube]).setVersion(11510);
@@ -732,22 +757,28 @@ function __initNodes() {
 		addNodeObject(d3d, "3D Wall Builder",	s_node_3d_wall,		"Node_3D_Mesh_Wall_Builder",[1, Node_3D_Mesh_Wall_Builder]).setVersion(1_18_01_0);
 		addNodeObject(d3d, "Surface Extrude",	s_node_3d_extrude,	"Node_3D_Mesh_Extrude",		[1, Node_3D_Mesh_Extrude],, "Extrude 2D image into 3D object.").setVersion(11510);
 		addNodeObject(d3d, "Path Extrude",	s_node_3d_path_extrude,	"Node_3D_Mesh_Path_Extrude",[1, Node_3D_Mesh_Path_Extrude],, "Extrude path into 3D object.").setVersion(11750);
+			ds_list_add(d3d, "/Exporters");
+		addNodeObject(d3d, "Mesh Export",	s_node_3d_obj_export,		"Node_3D_Mesh_Export",		[1, Node_3D_Mesh_Export],, "Export 3D mesh as .obj file").setVersion(11740);
+		addNodeObject(d3d, "Slice Stack",	s_node_3d_stack_slice,		"Node_3D_Mesh_Stack_Slice",	[1, Node_3D_Mesh_Stack_Slice],, "").setVersion(11750);
 		
 		ds_list_add(d3d, "Light");
 		addNodeObject(d3d, "Directional Light",	s_node_3d_light_directi,	"Node_3D_Light_Directional",	[1, Node_3D_Light_Directional],, "Create directional light directed at the origin point.").setVersion(11510);
 		addNodeObject(d3d, "Point Light",		s_node_3d_light_point,		"Node_3D_Light_Point",			[1, Node_3D_Light_Point],, "Create point light to illuminate surrounding area.").setVersion(11510);
 			
 		ds_list_add(d3d, "Modify");
+			ds_list_add(d3d, "/Meshes");
+		addNodeObject(d3d, "Transform",			s_node_3d_transform,		"Node_3D_Transform",		[1, Node_3D_Transform],, "Transform 3D object.").setVersion(11570);
+		addNodeObject(d3d, "Transform Scene",	s_node_3d_transform_scene,	"Node_3D_Transform_Scene",	[1, Node_3D_Transform_Scene],, "Transform 3D scene, accepts array of transformations for each objects.").setVersion(11570);
 		addNodeObject(d3d, "Discretize vertex",	s_node_3d_discretize,		"Node_3D_Round_Vertex",		[1, Node_3D_Round_Vertex],, "Round out vertex position to a specified step.").setVersion(11560);
 		addNodeObject(d3d, "3D Displace",		s_node_3d_displace,			"Node_3D_Displace",			[1, Node_3D_Displace],, "").setVersion(1_18_01_0);
 		addNodeObject(d3d, "3D Subdivide",		s_node_3d_subdivide,		"Node_3D_Subdivide",		[1, Node_3D_Subdivide],, "").setVersion(1_18_03_0);
-		addNodeObject(d3d, "Set Material",		s_node_3d_set_material,		"Node_3D_Set_Material",		[1, Node_3D_Set_Material],, "Replace mesh material with a new one.").setVersion(11560);
-		addNodeObject(d3d, "Transform",			s_node_3d_transform,		"Node_3D_Transform",		[1, Node_3D_Transform],, "Transform 3D object.").setVersion(11570);
-		addNodeObject(d3d, "Transform Scene",	s_node_3d_transform_scene,	"Node_3D_Transform_Scene",	[1, Node_3D_Transform_Scene],, "Transform 3D scene, accepts array of transformations for each objects.").setVersion(11570);
-		addNodeObject(d3d, "UV Remap",			s_node_uv_remap,			"Node_3D_UV_Remap",			[1, Node_3D_UV_Remap],, "Remap UV map using plane.").setVersion(11570);
-		addNodeObject(d3d, "Slice Stack",		s_node_3d_stack_slice,		"Node_3D_Mesh_Stack_Slice",	[1, Node_3D_Mesh_Stack_Slice],, "").setVersion(11750);
+			ds_list_add(d3d, "/Instances");
+		addNodeObject(d3d, "3D Repeat",			s_node_3d_array,			"Node_3D_Repeat",			[1, Node_3D_Repeat],, "Repeat the same 3D mesh multiple times.").setVersion(11510);
 		///**/ addNodeObject(d3d, "3D Instancer",		s_node_3d_set_material,		"Node_3D_Instancer",	[1, Node_3D_Instancer]).setVersion(11560);
 		///**/ addNodeObject(d3d, "3D Particle",		s_node_3d_set_material,		"Node_3D_Particle",		[1, Node_3D_Particle]).setVersion(11560);
+			ds_list_add(d3d, "/Materials");
+		addNodeObject(d3d, "Set Material",		s_node_3d_set_material,		"Node_3D_Set_Material",		[1, Node_3D_Set_Material],, "Replace mesh material with a new one.").setVersion(11560);
+		addNodeObject(d3d, "UV Remap",			s_node_uv_remap,			"Node_3D_UV_Remap",			[1, Node_3D_UV_Remap],, "Remap UV map using plane.").setVersion(11570);
 		
 		ds_list_add(d3d, "Points");
 		addNodeObject(d3d, "Point Affector",	s_node_3d_point_affector,	"Node_3D_Point_Affector",	[1, Node_3D_Point_Affector],, "Generate array of 3D points interpolating between two values based on the distance.").setVersion(11570);
@@ -783,6 +814,7 @@ function __initNodes() {
 		addNodeObject(generator, "Tile Drawer",			s_node_tileset_drawer, 		"Node_Tile_Drawer",			[1, Node_Tile_Drawer]).setVersion(1_18_03_0);
 		
 		ds_list_add(generator, "Noises");
+			ds_list_add(generator, "/Basics");
 		addNodeObject(generator, "Noise",				s_node_noise,				"Node_Noise",				[1, Node_Noise],,							"Generate white noise.");
 		addNodeObject(generator, "Perlin Noise",		s_node_noise_perlin,		"Node_Perlin",				[1, Node_Perlin],,							"Generate perlin noise.");
 		addNodeObject(generator, "Simplex Noise",		s_node_noise_simplex,		"Node_Noise_Simplex",		[1, Node_Noise_Simplex], ["perlin"],		"Generate simplex noise, similiar to perlin noise with better fidelity but non-tilable.").setVersion(1080);
@@ -790,7 +822,7 @@ function __initNodes() {
 		addNodeObject(generator, "Anisotropic Noise",	s_node_noise_aniso,			"Node_Noise_Aniso",			[1, Node_Noise_Aniso],,						"Generate anisotropic noise.");
 		addNodeObject(generator, "Extra Perlins",		s_node_perlin_extra,		"Node_Perlin_Extra",		[1, Node_Perlin_Extra], ["noise"],			"Random perlin noise made with different algorithms.").patreonExtra();
 		addNodeObject(generator, "Extra Voronoi",		s_node_voronoi_extra,		"Node_Voronoi_Extra",		[1, Node_Voronoi_Extra], ["noise"],			"Random voronoi noise made with different algorithms.").patreonExtra();
-		
+			ds_list_add(generator, "/Artistics");
 		addNodeObject(generator, "Fold Noise",			s_node_fold_noise,			"Node_Fold_Noise",			[1, Node_Fold_Noise],,		"Generate cloth fold noise").setVersion(11650);
 		addNodeObject(generator, "Strand Noise",		s_node_strand_noise,		"Node_Noise_Strand",		[1, Node_Noise_Strand],,	"Generate random srtands noise.").setVersion(11650);
 		addNodeObject(generator, "Gabor Noise",			s_node_gabor,				"Node_Gabor_Noise",			[1, Node_Gabor_Noise],, 	"Generate Gabor noise").patreonExtra();
@@ -803,16 +835,20 @@ function __initNodes() {
 		addNodeObject(generator, "Honeycomb Noise",		s_node_honey,				"Node_Honeycomb_Noise",		[1, Node_Honeycomb_Noise],, "Generate honeycomb noise").patreonExtra();
 		
 		ds_list_add(generator, "Patterns");
+			ds_list_add(generator, "/Basics");
 		addNodeObject(generator, "Stripe",				s_node_stripe,				"Node_Stripe",				[1, Node_Stripe],,	                "Generate stripe pattern.");
 		addNodeObject(generator, "Zigzag",				s_node_zigzag,				"Node_Zigzag",				[1, Node_Zigzag],,	                "Generate zigzag pattern.");
 		addNodeObject(generator, "Checker",				s_node_checker,				"Node_Checker",				[1, Node_Checker],,	                "Generate checkerboard pattern.");
+			ds_list_add(generator, "/Grids");
 		addNodeObject(generator, "Grid",				s_node_grid,				"Node_Grid",				[1, Node_Grid], ["tile", "mosaic"],	"Generate grid pattern.");
 		addNodeObject(generator, "Triangular Grid",		s_node_grid_tri,			"Node_Grid_Tri",			[1, Node_Grid_Tri],,                "Generate triangular grid pattern.");
 		addNodeObject(generator, "Hexagonal Grid",		s_node_grid_hex,			"Node_Grid_Hex",			[1, Node_Grid_Hex],,                "Generate hexagonal grid pattern.");
 		addNodeObject(generator, "Pentagonal Grid",		s_node_grid_pentagonal,		"Node_Grid_Pentagonal",		[1, Node_Grid_Pentagonal],,         "Generate Pentagonal grid pattern.").patreonExtra();
+			ds_list_add(generator, "/Tiles");
 		addNodeObject(generator, "Pytagorean Tile",		s_node_pytagorean_tile,		"Node_Pytagorean_Tile",		[1, Node_Pytagorean_Tile],,         "Generate Pytagorean tile pattern.").patreonExtra();
 		addNodeObject(generator, "Herringbone Tile",	s_node_herringbone_tile,	"Node_Herringbone_Tile",	[1, Node_Herringbone_Tile],         "Generate Herringbone tile pattern.").patreonExtra();
 		addNodeObject(generator, "Random Tile",			s_node_random_tile,			"Node_Random_Tile",			[1, Node_Random_Tile],,             "Generate Random tile pattern.").patreonExtra();
+			ds_list_add(generator, "/Others");
 		addNodeObject(generator, "Box Pattern",			s_node_box_pattern,			"Node_Box_Pattern",			[1, Node_Box_Pattern],,             "Generate square-based patterns..").setVersion(11750);
 		addNodeObject(generator, "Quasicrystal",		s_node_quasicircle,			"Node_Quasicrystal",		[1, Node_Quasicrystal],,            "Generate Quasicrystal pattern.").setVersion(11660);
 		addNodeObject(generator, "Pixel Sampler",		s_node_pixel_sampler,		"Node_Pixel_Sampler",		[1, Node_Pixel_Sampler],,           "Map image on to each individual pixels of another image.").setVersion(11730);
@@ -868,11 +904,13 @@ function __initNodes() {
 		addNodeObject(compose, "Pack Sprites",			s_node_pack_sprite,		"Node_Pack_Sprites",		[1, Node_Pack_Sprites],,		"Combine array of images with different dimension using different algorithms.").setVersion(1140);
 			
 		ds_list_add(compose, "Armature");
+			ds_list_add(compose, "/Basics");
 		addNodeObject(compose, "Armature Create",	s_node_armature_create,		"Node_Armature",			[1, Node_Armature], 		 ["rigging", "bone"], "Create new armature system.").setVersion(1146);
 		addNodeObject(compose, "Armature Pose",		s_node_armature_pose,		"Node_Armature_Pose",		[1, Node_Armature_Pose],	 ["rigging", "bone"], "Pose armature system.").setVersion(1146);
 		addNodeObject(compose, "Armature Bind",		s_node_armature_bind,		"Node_Armature_Bind",		[1, Node_Armature_Bind],	 ["rigging", "bone"], "Bind and render image to an armature system.").setVersion(1146);
-		addNodeObject(compose, "Armature Path",		s_node_armature_path,		"Node_Armature_Path",		[1, Node_Armature_Path],	 ["rigging", "bone"], "Generate path from armature system.").setVersion(1146);
 		addNodeObject(compose, "Armature Mesh Rig",	s_node_armature_mesh_rig,	"Node_Armature_Mesh_Rig",	[1, Node_Armature_Mesh_Rig], ["rigging", "bone"], "Rig mesh to armature system.").setVersion(1_18_04_0);
+			ds_list_add(compose, "/Convertors");
+		addNodeObject(compose, "Armature Path",		s_node_armature_path,		"Node_Armature_Path",		[1, Node_Armature_Path],	 ["rigging", "bone"], "Generate path from armature system.").setVersion(1146);
 		addNodeObject(compose, "Armature Sample",	s_node_armature_sample,		"Node_Armature_Sample",		[1, Node_Armature_Sample],	 ["rigging", "bone"], "Sample point from armature system.").setVersion(1147);
 		
 		if(!DEMO) {
@@ -886,60 +924,76 @@ function __initNodes() {
 	addNodeCatagory("Values", values);
 		ds_list_add(values, "Raw data");
 		addNodeObject(values, "Number",			s_node_number,		"Node_Number",			[1, Node_Number],, "Generate number data.");
+		addNodeObject(values, "Boolean",		s_node_boolean,		"Node_Boolean",			[1, Node_Boolean],, "Generate boolean (true, false) data.").setVersion(1090);
 		addNodeObject(values, "Text",			s_node_text,		"Node_String",			[1, Node_String],, "Generate text/string data.");
 		addNodeObject(values, "Path",			s_node_path,		"Node_Path",			[1, Node_Path],, "Generate path.");
 		addNodeObject(values, "Area",			s_node_area,		"Node_Area",			[1, Node_Area],, "Generate area data.");
-		addNodeObject(values, "Boolean",		s_node_boolean,		"Node_Boolean",			[1, Node_Boolean],, "Generate boolean (true, false) data.").setVersion(1090);
 		
 		ds_list_add(values, "Numbers");
+			ds_list_add(values, "/Creators");
 		addNodeObject(values, "Number",				s_node_number,				"Node_Number",				[1, Node_Number],, "Generate number data.");
 		addNodeObject(values, "To Number",			s_node_to_number,			"Node_To_Number",			[1, Node_To_Number],, "Convert string to number, supports scientific format (e.g. 1e-2 = 0.02).").setVersion(1145);
+		addNodeObject(values, "Random",				s_node_random,				"Node_Random",				[1, Node_Random],, "Generate pseudorandom value based on seed.");
+		addNodeObject(values, "Scatter Points",		s_node_scatter_point,		"Node_Scatter_Points",		[1, Node_Scatter_Points],, "Generate array of vector 2 points.").setVersion(1120);
+		addNodeObject(values, "Transform Array",	s_node_transform_array,		"Node_Transform_Array",		[1, Node_Transform_Array],, "Generate transfomation array.").setVersion(1146);
+			ds_list_add(values, "/Operators");
 		addNodeObject(values, "Math",				s_node_math,				"Node_Math",				[0, Node_create_Math], global.node_math_keys, "Apply mathematical function to number(s).");
 		addNodeObject(values, "Equation",			s_node_equation,			"Node_Equation",			[0, Node_create_Equation],, "Evaluate string of equation. With an option for setting variables.");
-		addNodeObject(values, "Random",				s_node_random,				"Node_Random",				[1, Node_Random],, "Generate pseudorandom value based on seed.");
 		addNodeObject(values, "Statistic",			s_node_statistic,			"Node_Statistic",			[0, Node_create_Statistic], global.node_statistic_keys, "Apply statistical operation (sum, average, median, etc.) to array of numbers.");
 		addNodeObject(values, "Convert Base",		s_node_base_conversion,		"Node_Base_Convert",		[1, Node_Base_Convert], ["base convert", "binary", "hexadecimal"]).setVersion(1140);
-		addNodeObject(values, "Scatter Points",		s_node_scatter_point,		"Node_Scatter_Points",		[1, Node_Scatter_Points],, "Generate array of vector 2 points.").setVersion(1120);
-		addNodeObject(values, "Translate Point",	s_node_translate_point,		"Node_Move_Point",			[1, Node_Move_Point],, "Translate array of points.").setVersion(1141);
 		addNodeObject(values, "FFT",				s_node_FFT,					"Node_FFT",					[1, Node_FFT], ["frequency analysis"], "Perform fourier transform on number array.").setVersion(1144);
-		addNodeObject(values, "Transform Array",	s_node_transform_array,		"Node_Transform_Array",		[1, Node_Transform_Array],, "Generate transfomation array.").setVersion(1146);
-		addNodeObject(values, "Point in Area",		s_node_point_in_area,		"Node_Point_In_Area",		[1, Node_Point_In_Area],, "Check whether a point lies in an area.").setVersion(1_17_10_0);
 		
 		ds_list_add(values, "Vector");
+			ds_list_add(values, "/Creators");
 		addNodeObject(values, "Vector2",			s_node_vec2,				"Node_Vector2",				[1, Node_Vector2],, "Genearte vector composite of 2 members.");
 		addNodeObject(values, "Vector3",			s_node_vec3,				"Node_Vector3",				[1, Node_Vector3],, "Genearte vector composite of 3 members.");
 		addNodeObject(values, "Vector4",			s_node_vec4,				"Node_Vector4",				[1, Node_Vector4],, "Genearte vector composite of 4 members.");
+			ds_list_add(values, "/Components");
 		addNodeObject(values, "Vector Split",		s_node_vec_split,			"Node_Vector_Split",		[1, Node_Vector_Split],, "Split vector (up to 4) into individual components.");
+		addNodeObject(values, "Swizzle",            s_node_swizzle,             "Node_Vector_Swizzle",      [1, Node_Vector_Swizzle], ["swap axis"], "Rearrange vector using string containing axis indicies (x, y, z, w).").setVersion(1_17_10_0);
+			ds_list_add(values, "/Operators");
 		addNodeObject(values, "Magnitude",	        s_node_magnitude,	        "Node_Vector_Magnitude",    [1, Node_Vector_Magnitude], ["vector length", "vector magnitude"], "Calculate magnitude (length) of a vector.").setVersion(1_17_10_0);
 		addNodeObject(values, "Dot product",		s_node_dot_product,			"Node_Vector_Dot",			[1, Node_Vector_Dot],, "Calculate dot product between vectors.").setVersion(1141);
-		addNodeObject(values, "Cross product 3D",	s_node_cross_product_2d,	"Node_Vector_Cross_3D",		[1, Node_Vector_Cross_3D],, "Calculate cross product of 2 vec3s.").setVersion(1141);
 		addNodeObject(values, "Cross product 2D",	s_node_cross_product_3d,	"Node_Vector_Cross_2D",		[1, Node_Vector_Cross_2D],, "Calculate cross product of 2 vec2s.").setVersion(1141);
-		addNodeObject(values, "Swizzle",            s_node_swizzle,             "Node_Vector_Swizzle",      [1, Node_Vector_Swizzle], ["swap axis"], "Rearrange vector using string containing axis indicies (x, y, z, w).").setVersion(1_17_10_0);
+		addNodeObject(values, "Cross product 3D",	s_node_cross_product_2d,	"Node_Vector_Cross_3D",		[1, Node_Vector_Cross_3D],, "Calculate cross product of 2 vec3s.").setVersion(1141);
+			ds_list_add(values, "/Points");
+		addNodeObject(values, "Translate Point",	s_node_translate_point,		"Node_Move_Point",			[1, Node_Move_Point],, "Translate array of points.").setVersion(1141);
+		addNodeObject(values, "Point in Area",		s_node_point_in_area,		"Node_Point_In_Area",		[1, Node_Point_In_Area],, "Check whether a point lies in an area.").setVersion(1_17_10_0);
 		
 		ds_list_add(values, "Texts");
+			ds_list_add(values, "/Creators");
 		addNodeObject(values, "Text",				s_node_text,				"Node_String",					[1, Node_String],, "Generate text/string data.");
 		addNodeObject(values, "To Text",			s_node_to_text,				"Node_To_Text",					[1, Node_To_Text]).setVersion(1145);
 		addNodeObject(values, "Unicode",			s_node_unicode,				"Node_Unicode",					[1, Node_Unicode],, "Convert unicode id into string.");
+			ds_list_add(values, "/Info");
 		addNodeObject(values, "Text Length",		s_node_text_length,			"Node_String_Length",			[1, Node_String_Length],, "Return number of character in a string.").setVersion(1138);
+		addNodeObject(values, "Get Character",		s_node_text_char_get,		"Node_String_Get_Char",			[1, Node_String_Get_Char],, "Get a nth character in a string.").setVersion(1100);
+			ds_list_add(values, "/Operators");
 		addNodeObject(values, "Combine Texts",		s_node_text_combine,		"Node_String_Merge",			[1, Node_String_Merge], ["join text", "concatenate text"], "Combine multiple strings into one long string.");
 		addNodeObject(values, "Join Text Array",	s_node_text_join,			"Node_String_Join",				[1, Node_String_Join],, "Combine string array with an option to add extra string in-between.").setVersion(1120);
 		addNodeObject(values, "Split Text",			s_node_text_splice,			"Node_String_Split",			[1, Node_String_Split],, "Split string into arrays of substring based on delimiter.");
 		addNodeObject(values, "Trim Text",			s_node_text_trim,			"Node_String_Trim",				[1, Node_String_Trim],, "Remove first and last n character(s) from a string.").setVersion(1080);
-		addNodeObject(values, "Get Character",		s_node_text_char_get,		"Node_String_Get_Char",			[1, Node_String_Get_Char],, "Get a nth character in a string.").setVersion(1100);
+			ds_list_add(values, "/RegEx");
 		addNodeObject(values, "RegEx Match",		s_node_regex_match,			"Node_String_Regex_Match",		[1, Node_String_Regex_Match],, "Check whether regular expression pattern exist in a string.").setVersion(1140);
 		addNodeObject(values, "RegEx Search",		s_node_regex_search,		"Node_String_Regex_Search",		[1, Node_String_Regex_Search],, "Search for instances in a string using regular expression.").setVersion(1140);
 		addNodeObject(values, "RegEx Replace",		s_node_regex_replace,		"Node_String_Regex_Replace",	[1, Node_String_Regex_Replace],, "Replace instances of a string with another using regular expression.").setVersion(1140);
+			ds_list_add(values, "/Filename");
 		addNodeObject(values, "Separate File Path",	s_node_separate_file_path,	"Node_Path_Separate_Folder",	[1, Node_Path_Separate_Folder],, "Separate path string into a pair of directory and filename.").setVersion(1145);
 		
 		ds_list_add(values, "Arrays");
+			ds_list_add(values, "/Creators");
 		addNodeObject(values, "Array",				s_node_array,			"Node_Array",					[1, Node_Array],, "Create an array.");
-		addNodeObject(values, "Array Split",		s_node_array_split,		"Node_Array_Split",				[1, Node_Array_Split],, "Split array members into individual outputs.");
 		addNodeObject(values, "Array Range",		s_node_array_range,		"Node_Array_Range",				[1, Node_Array_Range],, "Create array of numbers by setting start, end and step length.");
-		addNodeObject(values, "Array Add",			s_node_array_add,		"Node_Array_Add",				[1, Node_Array_Add], ["add array"], "Add elements into an array.");
+		addNodeObject(values, "Parse CSV",			s_node_csv_parse,		"Node_Array_CSV_Parse",			[1, Node_Array_CSV_Parse],, "Parse CSV string into array.").setVersion(1145);
+			ds_list_add(values, "/Info");
 		addNodeObject(values, "Array Length",		s_node_array_length,	"Node_Array_Length",			[1, Node_Array_Length],, "Returns number of members in an array.");
 		addNodeObject(values, "Array Get",			s_node_array_get,		"Node_Array_Get",				[1, Node_Array_Get], ["get array"], "Returns nth member in an array.");
-		addNodeObject(values, "Array Set",			s_node_array_set,		"Node_Array_Set",				[1, Node_Array_Set], ["set array"], "Set array member based on index.").setVersion(1120);
+		addNodeObject(values, "Array Sample",		s_node_array_sample,	"Node_Array_Sample",			[1, Node_Array_Sample],, "Sample member from an array to create smaller one.").setVersion(11540);
 		addNodeObject(values, "Array Find",			s_node_array_find,		"Node_Array_Find",				[1, Node_Array_Find], ["find array"], "Returns index of an array member that match a condition.").setVersion(1120);
+			ds_list_add(values, "/Operators");
+		addNodeObject(values, "Array Set",			s_node_array_set,		"Node_Array_Set",				[1, Node_Array_Set], ["set array"], "Set array member based on index.").setVersion(1120);
+		addNodeObject(values, "Array Add",			s_node_array_add,		"Node_Array_Add",				[1, Node_Array_Add], ["add array"], "Add elements into an array.");
+		addNodeObject(values, "Array Split",		s_node_array_split,		"Node_Array_Split",				[1, Node_Array_Split],, "Split array members into individual outputs.");
 		addNodeObject(values, "Array Insert",		s_node_array_insert,	"Node_Array_Insert",			[1, Node_Array_Insert], ["insert array"], "Insert member into an array at any position.").setVersion(1120);
 		addNodeObject(values, "Array Remove",		s_node_array_remove,	"Node_Array_Remove",			[1, Node_Array_Remove], ["remove array", "delete array", "array delete"], "Remove member in an array.").setVersion(1120);
 		addNodeObject(values, "Array Reverse",		s_node_array_reverse,	"Node_Array_Reverse",			[1, Node_Array_Reverse], ["reverse array"], "Reverse array order").setVersion(1120);
@@ -949,16 +1003,15 @@ function __initNodes() {
 		addNodeObject(values, "Array Copy",			s_node_array_copy,		"Node_Array_Copy",				[1, Node_Array_Copy],, "Copy array or subarray.").setVersion(1144);
 		addNodeObject(values, "Array Convolute",	s_node_array_convolute,	"Node_Array_Convolute",			[1, Node_Array_Convolute],, "Apply convolution between 2 number arrays.").setVersion(11540);
 		addNodeObject(values, "Array Composite",	s_node_array_composite,	"Node_Array_Composite",			[1, Node_Array_Composite],, "Create 2D array by multiplying each member in the first 1D array with the second 1D array.").setVersion(11540);
-		addNodeObject(values, "Array Sample",		s_node_array_sample,	"Node_Array_Sample",			[1, Node_Array_Sample],, "Sample member from an array to create smaller one.").setVersion(11540);
-		addNodeObject(values, "Sort Array",			s_node_array_sort,		"Node_Array_Sort",				[1, Node_Array_Sort], ["array sort"], "Sort array using default comparison.").setVersion(1120);
 		addNodeObject(values, "Shuffle Array",		s_node_array_shuffle,	"Node_Array_Shuffle",			[1, Node_Array_Shuffle], ["array shuffle"], "Randomly rearrange the array members.").setVersion(1120);
+			ds_list_add(values, "/Group Operators");
+		addNodeObject(values, "Sort Array",			s_node_array_sort,		"Node_Array_Sort",				[1, Node_Array_Sort], ["array sort"], "Sort array using default comparison.").setVersion(1120);
 		addNodeObject(values, "Loop Array",			s_node_loop_array,		"Node_Iterate_Each_Inline",		[1, Node_Iterate_Each_Inline], ["iterate each", "for each", "array loop"], "Create group that iterate to each member in an array.");
 		addNodeObject(values, "Filter Array",		s_node_filter_array,	"Node_Iterate_Filter_Inline",	[1, Node_Iterate_Filter_Inline], ["array filter"], "Filter array using condition.").setVersion(1140);
 		addNodeObject(values, "Sort Array Inline",  s_node_sort_array,		"Node_Iterate_Sort_Inline",		[1, Node_Iterate_Sort_Inline], ["array sort"], "Sort array using node graph.").setVersion(1143);
-		addNodeObject(values, "Parse CSV",			s_node_csv_parse,		"Node_Array_CSV_Parse",			[1, Node_Array_CSV_Parse],, "Parse CSV string into array.").setVersion(1145);
 		
 		ds_list_add(values, "Paths");
-		// Creation
+			ds_list_add(values, "/Creators");
 		addNodeObject(values, "Path",			s_node_path,			"Node_Path",			[1, Node_Path],, "Create path using bezier curve.");
 		addNodeObject(values, "Smooth Path",	s_node_path_smooth,		"Node_Path_Smooth",		[1, Node_Path_Smooth], ["path smooth"], "Create path with automatic smoothness.").setVersion(11640);
 		addNodeObject(values, "Shape Path",		s_node_path_shape,		"Node_Path_Shape",		[1, Node_Path_Shape], ["path shape"], "Create path with predefined shape.").setVersion(1_18_05_6);
@@ -968,8 +1021,7 @@ function __initNodes() {
 		addNodeObject(values, "Plot Path",		s_node_path_plot,		"Node_Path_Plot",		[1, Node_Path_Plot],, "Create path from parametric equations.").setVersion(1138);
 		addNodeObject(values, "3D Path",		s_node_path_3d,			"Node_Path_3D",			[1, Node_Path_3D], [ "path 3d" ], "Create path in 3D space.").setVersion(11750);
 		addNodeObject(values, "Path Anchor",	s_node_path_anchor,		"Node_Path_Anchor",		[1, Node_Path_Anchor],, "Create path anchor data.").setVersion(1140);
-		
-		// Modify
+			ds_list_add(values, "/Modifiers");
 		addNodeObject(values, "Transform Path",	s_node_path_transform,	"Node_Path_Transform",	[1, Node_Path_Transform], ["path transform"], "Move rotate and scale a path.").setVersion(1130);
 		addNodeObject(values, "Remap Path",		s_node_path_map,		"Node_Path_Map_Area",	[1, Node_Path_Map_Area],, "Scale path to fit a given area.").setVersion(1130);
 		addNodeObject(values, "Shift Path",		s_node_path_shift,		"Node_Path_Shift",		[1, Node_Path_Shift],, "Move path along its normal.").setVersion(1130);
@@ -977,23 +1029,19 @@ function __initNodes() {
 		addNodeObject(values, "Wave Path",		s_node_path_wave,		"Node_Path_Wave",		[1, Node_Path_Wave], ["zigzag path"], "Apply wave effect along the path.").setVersion(1130);
 		addNodeObject(values, "Path Combine",	s_node_path_array,		"Node_Path_Array",		[1, Node_Path_Array], ["array path"], "Combine multiple path into one.").setVersion(1137);
 		addNodeObject(values, "Reverse Path",	s_node_path_reverse,	"Node_Path_Reverse",	[1, Node_Path_Reverse],, "Reverse path direction.").setVersion(1130);
-		
-		// Combine
+			ds_list_add(values, "/Combine");
 		addNodeObject(values, "Repeat Path",	s_node_path_repeat,		"Node_Path_Repeat",		[1, Node_Path_Repeat],, "Repeat paths.").setVersion(1_18_05_6);
 		addNodeObject(values, "Scatter Path",	s_node_path_scatter,	"Node_Path_Scatter",	[1, Node_Path_Scatter],, "Scatter paths along another path.").setVersion(11740);
 		addNodeObject(values, "Bridge Path",	s_node_path_bridge,		"Node_Path_Bridge",		[1, Node_Path_Bridge],, "Create new paths that connect multiple paths at the same sample positions.").setVersion(11640);
 		addNodeObject(values, "Blend Path",		s_node_path_blend,		"Node_Path_Blend",		[1, Node_Path_Blend],, "Blend between 2 paths.");
-		
-		// To number
+			ds_list_add(values, "/To Number");
 		addNodeObject(values, "Sample Path",	s_node_path_sample,		"Node_Path_Sample",		[1, Node_Path_Sample], ["path sample"], "Sample a 2D position from a path");
 		addNodeObject(values, "Bake Path",		s_node_path_bake,		"Node_Path_Bake",		[1, Node_Path_Bake],, "Bake path data into array of vec2 points.").setVersion(11640);
-		
-		// To Surface
+			ds_list_add(values, "/To Surface");
 		addNodeObject(values, "Fill Path",		s_node_path_fill,		"Node_Path_Fill",		[1, Node_Path_Fill], ["path fill"], "Fill area inside path.").setVersion(1_18_06_2);
 		addNodeObject(values, "Map Path",		s_node_path_mapp,		"Node_Path_Map",		[1, Node_Path_Map],, "Map a texture between multiple paths.").setVersion(11640);
 		addNodeObject(values, "Morph Path",		s_node_path_morph,		"Node_Path_Morph",		[1, Node_Path_Morph],, "").setVersion(1_18_06_2);
-		
-		// Segments
+			ds_list_add(values, "/Segments");
 		addNodeObject(values, "Filter Segments",s_node_segment_filter,	"Node_Segment_Filter",	[1, Node_Segment_Filter],, "Filter segment (vec2 array) based on a conditions.").setVersion(11780);
 		
 		ds_list_add(values, "Boolean");
@@ -1034,14 +1082,18 @@ function __initNodes() {
 	var color = ds_list_create(); 
 	addNodeCatagory("Color", color);
 		ds_list_add(color, "Colors");
+			ds_list_add(color, "/Creators");
 		addNodeObject(color, "Color",			s_node_color_out,		"Node_Color",			[1, Node_Color],,		"Create color value.");
 		addNodeObject(color, "RGB Color",		s_node_color_from_rgb,	"Node_Color_RGB",		[1, Node_Color_RGB],,	"Create (rgb) color from value in RGB color space.");
 		addNodeObject(color, "HSV Color",		s_node_color_from_hsv,	"Node_Color_HSV",		[1, Node_Color_HSV],,	"Create (rgb) color from value in HSV color space.");
 		addNodeObject(color, "OKLCH Color",		s_node_color_from_oklch,"Node_Color_OKLCH",		[1, Node_Color_OKLCH],, ["oklab"],	"Create (rgb) color from value in OKLCH color space.");
-		addNodeObject(color, "Sampler",			s_node_sampler,			"Node_Sampler",			[1, Node_Sampler],,		"Sample color from an image.");
+			ds_list_add(color, "/Data");
 		addNodeObject(color, "Color Data",		s_node_color_data,		"Node_Color_Data",		[1, Node_Color_Data], ["red", "green", "blue", "alpha", "brightness", "luminance"],	"Get data (rgb, hsv, brightness) from color.");
-		addNodeObject(color, "Find pixel",		s_node_pixel_find,		"Node_Find_Pixel",		[1, Node_Find_Pixel],,	"Get the position of the first pixel with a given color.").setVersion(1130);
+			ds_list_add(color, "/Operators");
 		addNodeObject(color, "Mix Color",		s_node_color_mix,		"Node_Color_Mix",		[1, Node_Color_Mix],,   "Combine two colors.").setVersion(1140);
+			ds_list_add(color, "/Surfaces");
+		addNodeObject(color, "Sampler",			s_node_sampler,			"Node_Sampler",			[1, Node_Sampler],,		"Sample color from an image.");
+		addNodeObject(color, "Find pixel",		s_node_pixel_find,		"Node_Find_Pixel",		[1, Node_Find_Pixel],,	"Get the position of the first pixel with a given color.").setVersion(1130);
 			
 		ds_list_add(color, "Palettes");
 		addNodeObject(color, "Palette",			s_node_palette,			"Node_Palette",			[1, Node_Palette],,			"Create palette value. Note that palette is simple an array of colors.");
@@ -1064,13 +1116,13 @@ function __initNodes() {
 	addNodeCatagory("Animation", animation);
 		ds_list_add(animation, "Animations");
 		addNodeObject(animation, "Frame Index",		s_node_counter,		"Node_Counter",		[1, Node_Counter], ["current frame", "counter"], "Output current frame as frame index, or animation progress (0 - 1).");
-		addNodeObject(animation, "Evaluate Curve",	s_node_curve_eval,	"Node_Anim_Curve",	[1, Node_Anim_Curve],, "Evaluate value from an animation curve.");
 		addNodeObject(animation, "Rate Remap",		s_node_rate_remap,	"Node_Rate_Remap",	[1, Node_Rate_Remap],, "Remap animation to a new framerate.").setVersion(1147);
 		addNodeObject(animation, "Delay",			s_node_delay,		"Node_Delay",		[1, Node_Delay],,      "Delay the animation by fix amount of frames.").setVersion(11640);
 		addNodeObject(animation, "Stagger",			s_node_stagger,		"Node_Stagger",		[1, Node_Stagger],,    "Delay the animation based on array index.").setVersion(11640);
-		addNodeObject(animation, "Revert",			s_node_revert,		"Node_Revert",		[1, Node_Revert],,     "Cache the entire animation and replay backward.").setVersion(1_17_11_0);
+		addNodeObject(animation, "Reverse",			s_node_revert,		"Node_Revert",		[1, Node_Revert],,     "Cache the entire animation and replay backward.").setVersion(1_17_11_0);
 		
 		ds_list_add(animation, "Value");	
+		addNodeObject(animation, "Evaluate Curve",	s_node_curve_eval,	"Node_Anim_Curve",	[1, Node_Anim_Curve],, "Evaluate value from an animation curve.");
 		addNodeObject(animation, "WaveTable",		s_node_wave,		  "Node_Fn_WaveTable",	[1, Node_Fn_WaveTable],, "Create value changing overtime in wave pattern.").setVersion(11720);
 		addNodeObject(animation, "Wiggler",			s_node_wiggler,		  "Node_Wiggler",		[1, Node_Wiggler],, "Create random value smoothly changing over time.");
 		addNodeObject(animation, "Ease",			s_node_ease,		  "Node_Fn_Ease",		[1, Node_Fn_Ease],, "Create easing function.").setVersion(11720);
@@ -1078,22 +1130,25 @@ function __initNodes() {
 		addNodeObject(animation, "SmoothStep",		s_node_fx_smoothstep, "Node_Fn_SmoothStep",	[1, Node_Fn_SmoothStep],, "Apply smoothstop function to a value.").setVersion(11720);
 		
 		ds_list_add(animation, "Audio");
+			ds_list_add(animation, "/Files");
 		addNodeObject(animation, "WAV File In",	 s_node_wav_file_read,	"Node_WAV_File_Read",	[0, Node_create_WAV_File_Read],, "Load wav audio file.").setVersion(1144);
 		addNodeObject(animation, "WAV File Out", s_node_wav_file_write,	"Node_WAV_File_Write",	[1, Node_WAV_File_Write],, "Save wav audio file.").setVersion(1145);
-		addNodeObject(animation, "FFT",			 s_node_FFT,			"Node_FFT",				[1, Node_FFT], ["frequency analysis"], "Perform fourier transform on number array.").setVersion(1144);
-		addNodeObject(animation, "Bar / Graph",	 s_node_bar_graph,		"Node_Plot_Linear",		[0, Node_create_Plot_Linear], global.node_plot_linear_keys, "Plot graph or bar chart from array of number.").setVersion(1144);
+			ds_list_add(animation, "/Analyzers");
 		addNodeObject(animation, "Audio Window", s_node_audio_trim,		"Node_Audio_Window",	[1, Node_Audio_Window],, "Take a slice of an audio array based on the current frame.").setVersion(1144);
 		addNodeObject(animation, "Audio Volume", s_node_audio_volume,	"Node_Audio_Loudness",	[1, Node_Audio_Loudness],, "Calculate volume of an audio bit array.").setVersion(11540);
+		addNodeObject(animation, "FFT",			 s_node_FFT,			"Node_FFT",				[1, Node_FFT], ["frequency analysis"], "Perform fourier transform on number array.").setVersion(1144);
+			ds_list_add(animation, "/Renders");
+		addNodeObject(animation, "Bar / Graph",	 s_node_bar_graph,		"Node_Plot_Linear",		[0, Node_create_Plot_Linear], global.node_plot_linear_keys, "Plot graph or bar chart from array of number.").setVersion(1144);
 	#endregion
 	
 	#region misc
 	var node = ds_list_create(); 
 	addNodeCatagory("Misc", node);
 		ds_list_add(node, "Control");
-		addNodeObject(node, "Condition",			s_node_condition,			"Node_Condition",			[1, Node_Condition],,         "Given a condition, output one value if true, another value is false.");
-		addNodeObject(node, "Switch",				s_node_switch,				"Node_Switch",				[1, Node_Switch],,            "Given an index, output a value labeled by the same index.").setVersion(1090);
+		addNodeObject(node, "Condition",			s_node_condition,			"Node_Condition",			[1, Node_Condition],,         "Output value based on conditions.");
+		addNodeObject(node, "Switch",				s_node_switch,				"Node_Switch",				[1, Node_Switch],,            "Output value based on index.").setVersion(1090);
 		addNodeObject(node, "Animation Control",	s_node_animation_control,	"Node_Animation_Control",	[1, Node_Animation_Control],, "Control animation state with triggers.").setVersion(1145);
-			
+		
 		ds_list_add(node, "Groups");
 		addNodeObject(node, "Group",			s_node_group,			"Node_Group",					[1, Node_Group]);
 		addNodeObject(node, "Feedback",			s_node_feedback,		"Node_Feedback",				[1, Node_Feedback],, "Create a group that reuse output from last frame to the current one.").isDeprecated();

@@ -17,6 +17,7 @@ event_inherited();
 	
 	destroy_on_click_out = true;
 	
+	node_list      = ds_list_create();
 	node_selecting = 0;
 	node_focusing  = -1;
 	
@@ -41,6 +42,20 @@ event_inherited();
 	
 	canvas    = false;
 	collapsed = {};
+	
+	subgroups = [];
+	subgroup_index = 0;
+	
+	view_tooltip = new tooltipSelector("View", [
+		__txtx("view_grid", "Grid view"),
+		__txtx("view_list", "List view"),
+	]);
+	
+	group_tooltip = new tooltipSelector("Group", [
+		__txt("Disabled"),
+		__txt("Inline"),
+		__txt("Stacked"),
+	]);
 	
 	#region ---- category ----
 		category = NODE_CATEGORY;
@@ -302,6 +317,91 @@ event_inherited();
 		}
 	}
 	
+	function setPage(pageIndex) {
+		ADD_NODE_PAGE = min(pageIndex, ds_list_size(category) - 1);
+		subgroups      = [];
+		subgroup_index = 0;
+		ds_list_clear(node_list);
+		
+		if(ADD_NODE_PAGE == -2) {
+			for(var i = 0; i < ds_list_size(category); i++) {
+				var cat = category[| i];			
+				if(array_length(cat.filter) && !array_exists(cat.filter, instanceof(context)))
+					continue;
+				
+				for( var j = 0; j < ds_list_size(cat.list); j++ )
+					ds_list_add(node_list, cat.list[| j]);
+			}
+	
+		} else if(ADD_NODE_PAGE == -1) {
+			for( var i = 0, n = ds_list_size(NEW_NODES); i < n; i++ )
+				ds_list_add(node_list, NEW_NODES[| i]);
+	
+		} else if(ADD_NODE_PAGE == NODE_PAGE_DEFAULT && category == NODE_CATEGORY) { // page 0 global context
+			var sug = [];
+			
+			if(node_called != noone) {
+				array_append(sug, nodeReleatedQuery(
+					node_called.connect_type == CONNECT_TYPE.input? "connectTo" : "connectFrom", 
+					node_called.type
+				));
+			}
+			
+			array_append(sug, nodeReleatedQuery("context", instanceof(context)));
+			
+			if(!array_empty(sug)) {
+				ds_list_add(node_list, "Related");
+				for( var i = 0, n = array_length(sug); i < n; i++ ) {
+					var k = array_safe_get_fast(sug, i);
+					if(k == 0) continue;
+					if(ds_map_exists(ALL_NODES, k))
+						ds_list_add(node_list, ALL_NODES[? k]);
+				}
+			}
+			
+			ds_list_add(node_list, "Favourites");
+			var _favs = struct_get_names(global.FAV_NODES);
+			for( var i = 0, n = array_length(_favs); i < n; i++ ) {
+				var _nodeIndex = _favs[i];
+				if(!ds_map_exists(ALL_NODES, _nodeIndex)) continue;
+				
+				var _node = ALL_NODES[? _nodeIndex];
+				if(_node.show_in_recent) 
+					ds_list_add(node_list, _node);
+			}
+			
+			ds_list_add(node_list, "Recents");
+			if(is_array(global.RECENT_NODES))
+			for( var i = 0, n = array_length(global.RECENT_NODES); i < n; i++ ) {
+				var _nodeIndex = global.RECENT_NODES[i];
+				if(!ds_map_exists(ALL_NODES, _nodeIndex)) continue;
+				
+				var _node = ALL_NODES[? _nodeIndex];
+				if(_node.show_in_recent) 
+					ds_list_add(node_list, _node);
+			}
+		} else {
+			var _l = category[| ADD_NODE_PAGE].list;
+			for( var i = 0, n = ds_list_size(_l); i < n; i++ ) 
+				ds_list_add(node_list, _l[| i]);
+		}
+		
+		for( var i = 0, n = ds_list_size(node_list); i < n; i++ ) {
+			var _node = node_list[| i];
+			if(!is_string(_node)) continue;
+			if(string_starts_with(_node, "/")) continue;
+			
+			array_push(subgroups, _node);
+		}
+		setSubgroup(0);
+	}
+	
+	function setSubgroup(_subg) {
+		subgroup_index = _subg;
+	}
+#endregion
+
+#region content
 	catagory_pane = new scrollPane(category_width, dialog_h - ui(66), function(_y, _m) {
 		draw_clear_alpha(COLORS._main_text, 0);
 		
@@ -397,85 +497,74 @@ event_inherited();
 	catagory_pane.scroll_color_bg        = undefined;
 	catagory_pane.scroll_color_bar_alpha = .5;
 	
-	content_pane = new scrollPane(dialog_w - category_width - ui(36), dialog_h - ui(66), function(_y, _m) {
+	subcatagory_pane = new scrollPane(ui(96), dialog_h - ui(66), function(_y, _m) {
+		draw_clear_alpha(COLORS._main_text, 0);
+		var _f = f_p2;
+		
+		var yy = _y + ui(4);
+		var hh = 0 + ui(4);
+		var hg = line_get_height(_f, 6);
+		
+		var ww = subcatagory_pane.surface_w;
+		var _hover  = subcatagory_pane.hover;
+		var _active = subcatagory_pane.active;
+		
+		for( var i = 0, n = array_length(subgroups); i < n; i++ ) {
+			
+			var _hv = _hover && point_in_rectangle(_m[0], _m[1], 0, yy, ww, yy + hg - ui(1)); 
+			
+			if(_hv) {
+				draw_sprite_stretched_add(THEME.ui_panel_bg, 0, ui(4), yy, ww - ui(4), hg, CDEF.main_white, .2);
+				if(mouse_click(mb_left, _active)) setSubgroup(i);
+			}
+			
+			draw_set_text(_f, fa_left, fa_top, i == subgroup_index? COLORS._main_text_accent : CDEF.main_mdwhite);
+			draw_text_add(ui(12), yy + ui(2), subgroups[i]);
+			
+			yy += hg;
+			hh += hg;
+		}
+		
+		return hh;
+	});
+	
+	content_pane = new scrollPane(dialog_w - category_width - ui(40), dialog_h - ui(66), function(_y, _m) {
 		draw_clear_alpha(c_white, 0);
 		
 		var _hover = sHOVER && content_pane.hover;
 		var _focus = sFOCUS && content_pane.active;
-		var _list  = node_list;
+		var _list  = ds_list_create();
 		var ww     = content_pane.surface_w;
 		var hh     = 0;
 		
-		if(ADD_NODE_PAGE == -2) {
-			_list = ds_list_create();
-			for(var i = 0; i < ds_list_size(category); i++) {
-				var cat = category[| i];			
-				if(array_length(cat.filter) && !array_exists(cat.filter, instanceof(context)))
-					continue;
-				
-				for( var j = 0; j < ds_list_size(cat.list); j++ )
-					ds_list_add(_list, cat.list[| j]);
-			}
-	
-		} else if(ADD_NODE_PAGE == -1) {
-			_list = NEW_NODES;
-	
-		} else if(ADD_NODE_PAGE == NODE_PAGE_DEFAULT && category == NODE_CATEGORY) {
-			_list = ds_list_create();
-			
-			var sug = [];
-			
-			if(node_called != noone) {
-				array_append(sug, nodeReleatedQuery(
-					node_called.connect_type == CONNECT_TYPE.input? "connectTo" : "connectFrom", 
-					node_called.type
-				));
-			}
-			
-			array_append(sug, nodeReleatedQuery("context", instanceof(context)));
-			
-			if(!array_empty(sug)) {
-				ds_list_add(_list, "Related");
-				for( var i = 0, n = array_length(sug); i < n; i++ ) {
-					var k = array_safe_get_fast(sug, i);
-					if(k == 0) continue;
-					if(ds_map_exists(ALL_NODES, k))
-						ds_list_add(_list, ALL_NODES[? k]);
-				}
-			}
-			
-			ds_list_add(_list, "Favourites");
-			var _favs = struct_get_names(global.FAV_NODES);
-			for( var i = 0, n = array_length(_favs); i < n; i++ ) {
-				var _nodeIndex = _favs[i];
-				if(!ds_map_exists(ALL_NODES, _nodeIndex)) continue;
-				
-				var _node = ALL_NODES[? _nodeIndex];
-				if(_node.show_in_recent) 
-					ds_list_add(_list, _node);
-			}
-			
-			ds_list_add(_list, "Recents");
-			if(is_array(global.RECENT_NODES))
-			for( var i = 0, n = array_length(global.RECENT_NODES); i < n; i++ ) {
-				var _nodeIndex = global.RECENT_NODES[i];
-				if(!ds_map_exists(ALL_NODES, _nodeIndex)) continue;
-				
-				var _node = ALL_NODES[? _nodeIndex];
-				if(_node.show_in_recent) 
-					ds_list_add(_list, _node);
-			}
+		if(node_list == noone) {
+			ds_list_destroy(_list);
+			setPage(NODE_PAGE_DEFAULT); 
+			return 0;
 		}
 		
-		if(_list == noone) {
-			setPage(NODE_PAGE_DEFAULT);
-			return 0;
+		var _subg_cur = -1;
+		for( var i = 0, n = ds_list_size(node_list); i < n; i++ ) {
+			var _n = node_list[| i];
+			
+			if(PREFERENCES.dialog_add_node_grouping != 2) {
+				ds_list_add(_list, _n); 
+				continue;
+			}
+			
+			if(is_string(_n) && !string_starts_with(_n, "/")) {
+				_subg_cur++
+				if(_subg_cur > subgroup_index) break;
+			} else if(_subg_cur == subgroup_index) {
+				ds_list_add(_list, _n);
+			}
 		}
 		
 		var node_count    = ds_list_size(_list);
 		var group_labels  = [];
 		var _hoverContent = _hover;
-			
+		var _lbh = PREFERENCES.dialog_add_node_grouping == 1? ui(24) : ui(16);
+		
 		if(!content_hoverable) _hoverContent = false;
 		content_hoverable = true;
 			
@@ -501,8 +590,8 @@ event_inherited();
 				}
 				
 				if(is_string(_node)) {
-					if(!PREFERENCES.dialog_add_node_grouping)
-						continue;
+					if(PREFERENCES.dialog_add_node_grouping == 0) continue;
+					if(PREFERENCES.dialog_add_node_grouping == 1 && string_starts_with(_node, "/")) continue;
 					
 					hh += curr_height;
 					yy += curr_height;
@@ -511,17 +600,17 @@ event_inherited();
 					curr_height = 0;
 					var _key = $"{ADD_NODE_PAGE}:{index}";
 					
-					array_push(group_labels, { y: yy, text: __txt(_node), key: _key });
+					array_push(group_labels, { y: yy, text: __txt(string_trim_start(__txt(_node), ["/"])), key: _key });
 					
 					if(struct_try_get(collapsed, _key, 0)) {
-						hh += ui(24 + 4);
-						yy += ui(24 + 4);
+						hh += _lbh + ui(4);
+						yy += _lbh + ui(4);
 						
 						while(index + 1 < node_count && !is_string(_list[| index + 1]))
 							index++;
 					} else {
-						hh += ui(24 + 12);
-						yy += ui(24 + 12);
+						hh += _lbh + ui(12);
+						yy += _lbh + ui(12);
 					}
 					continue;
 				}
@@ -555,6 +644,7 @@ event_inherited();
 				}
 				
 				if(_node.getTooltip() != "" || _node.tooltip_spr != noone) {
+					gpu_set_tex_filter(true);
 					if(_hoverContent && point_in_rectangle(_m[0], _m[1], _boxx, yy, _boxx + ui(16), yy + ui(16))) {
 						content_pane.hover_content = true;
 						
@@ -564,6 +654,7 @@ event_inherited();
 						node_tooltip_y = content_pane.y + yy;
 					} else 
 						draw_sprite_ui_uniform(THEME.info, 0, _boxx + ui(8), yy + ui(8), 0.7, COLORS._main_icon, 0.5);
+					gpu_set_tex_filter(false);
 				}
 				
 				if(is_instanceof(_node, NodeObject)) {
@@ -582,10 +673,10 @@ event_inherited();
 				
 				var _name = _node.getName();
 				
-				draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text);
+				draw_set_text(f_p3, fa_center, fa_top, COLORS._main_text);
 				draw_text_ext_add(_boxx + grid_size / 2, yy + grid_size + 4, _name, -1, grid_width);
 				
-				var name_height = string_height_ext(_name, -1, grid_width - 4) + 8;
+				var name_height = string_height_ext(_name, -1, grid_width) + 8;
 				curr_height = max(curr_height, grid_size + grid_space + name_height);
 				
 				if(++cProg >= col) {
@@ -599,16 +690,15 @@ event_inherited();
 			
 			if(PREFERENCES.dialog_add_node_grouping) {
 				var len = array_length(group_labels);
-				if(len) {
+				if(len && group_labels[0].y < 0) {
 					gpu_set_blendmode(bm_subtract);
 					draw_set_color(c_white);
-					draw_rectangle(0, 0, ww, ui(36), false);
+					draw_rectangle(0, 0, ww, _lbh + ui(12), false);
 					gpu_set_blendmode(bm_normal);
 					
-					content_hoverable &= !point_in_rectangle(_m[0], _m[1], 0, 0, ww, ui(36));
+					content_hoverable &= !point_in_rectangle(_m[0], _m[1], 0, 0, ww, _lbh + ui(12));
 				}
 				
-				var _lbh  = ui(24);
 				var _cAll = 0;
 				
 				for( var i = 0; i < len; i++ ) {
@@ -617,28 +707,36 @@ event_inherited();
 					var _key  = lb.key;
 					var _coll = struct_try_get(collapsed, _key, 0);
 					
-					var _yy  = max(lb.y, i == len - 1? ui(8) : min(ui(8), group_labels[i + 1].y - ui(32)));
+					var _yy = max(lb.y, i == len - 1? ui(8) : min(ui(8), group_labels[i + 1].y - ui(32)));
+					var _hv = _hover && point_in_rectangle(_m[0], _m[1], 0, _yy, ww, _yy + _lbh);
+					var _tc = CDEF.main_ltgrey;
 					
 					BLEND_OVERRIDE;
-					if(_hover && point_in_rectangle(_m[0], _m[1], 0, _yy, ww, _yy + _lbh)) {
-                        draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, ui(16), _yy, ww - ui(32), _lbh, COLORS.panel_inspector_group_hover, 1);
-                        if(_focus) {
-                        	if(DOUBLE_CLICK) {
-                        		_cAll = _coll? -1 : 1;
-                        		
-                        	} else if(mouse_press(mb_left)) {
-	                        	if(_coll) struct_set(collapsed, _key, 0);
-	                        	else      struct_set(collapsed, _key, 1);
-	                        }
+					if(PREFERENCES.dialog_add_node_grouping == 1)
+                    	draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, ui(16), _yy, ww - ui(32), _lbh, _hv? COLORS.panel_inspector_group_hover : COLORS.panel_inspector_group_bg, 1);
+                    else {
+                    	draw_set_color(COLORS.panel_bg_clear_inner);
+                    	draw_rectangle(ui(16), _yy, ww - ui(16), _yy + _lbh, false);
+                    }
+                    
+					if(_hv && _focus) {
+						if(PREFERENCES.dialog_add_node_grouping == 2) _tc = CDEF.main_mdwhite;
+						
+                    	if(DOUBLE_CLICK) {
+                    		_cAll = _coll? -1 : 1;
+                    		MOUSE_BLOCK = 2;
+                    		
+                    	} else if(mouse_press(mb_left)) {
+                        	if(_coll) struct_set(collapsed, _key, 0);
+                        	else      struct_set(collapsed, _key, 1);
                         }
+                    }
                         
-                    } else
-                        draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, ui(16), _yy, ww - ui(32), _lbh, COLORS.panel_inspector_group_bg, 1);
 					BLEND_NORMAL;
 					
-					draw_sprite_ui(THEME.arrow, _coll? 0 : 3, ui(16 + 16), _yy + _lbh / 2, 1, 1, 0, CDEF.main_ltgrey, 1);    
+					draw_sprite_ui(THEME.arrow, _coll? 0 : 3, ui(16 + 16), _yy + _lbh / 2, 1, 1, 0, _tc, 1);    
 					
-					draw_set_text(f_p2, fa_left, fa_center, CDEF.main_ltgrey);
+					draw_set_text(f_p2, fa_left, fa_center, _tc);
 					draw_text_add(ui(16 + 28), _yy + _lbh / 2, _name);
 				}
 				
@@ -658,7 +756,7 @@ event_inherited();
 		} else if(PREFERENCES.dialog_add_node_view == 1) { // list
 			var list_width  = ww;
 			var list_height = display_list_size;
-			var yy          = _y + list_height / 2;
+			var yy          = _y + ui(12);
 			var bg_ind	    = 0;
 			hh += list_height;
 			
@@ -671,25 +769,25 @@ event_inherited();
 				}
 				
 				if(is_string(_node)) {
-					if(!PREFERENCES.dialog_add_node_grouping)
-						continue;
+					if(PREFERENCES.dialog_add_node_grouping == 0) continue;
+					if(PREFERENCES.dialog_add_node_grouping == 1 && string_starts_with(_node, "/")) continue;
 					
-					hh += ui(4) * (i > 0);
-					yy += ui(4) * (i > 0);
+					hh += ui(8) * (i > 0);
+					yy += ui(8) * (i > 0);
 					
 					var _key = $"{ADD_NODE_PAGE}:{i}";
 					
-					array_push(group_labels, { y: yy, text: __txt(_node), key: _key });
+					array_push(group_labels, { y: yy, text: string_trim_start(__txt(_node), ["/"]), key: _key });
 					
 					if(struct_try_get(collapsed, _key, 0)) {
-						hh += ui(24);
-						yy += ui(24);
+						hh += _lbh + ui(0);
+						yy += _lbh + ui(0);
 						
 						while(i + 1 < node_count && !is_string(_list[| i + 1]))
 							i++;
 					} else {
-						hh += ui(32);
-						yy += ui(32);
+						hh += _lbh + ui(8);
+						yy += _lbh + ui(8);
 					}
 					continue;
 				}
@@ -698,24 +796,19 @@ event_inherited();
 				
 				if(++bg_ind % 2) {
 					BLEND_OVERRIDE;
-					draw_sprite_stretched_ext(THEME.node_bg, 0, ui(16), yy, list_width - ui(32), list_height, c_white, 0.1);
+					draw_sprite_stretched_add(THEME.node_bg, 0, ui(16), yy, list_width - ui(32), list_height, c_white, 0.1);
 					BLEND_NORMAL;
 				}
 				
 				if(_hoverContent && point_in_rectangle(_m[0], _m[1], 0, yy, list_width, yy + list_height - 1)) {
 					content_pane.hover_content = true;
 					
-					if(_node.getTooltip() != "" || _node.tooltip_spr != noone) {
-						node_tooltip   = _node;
-						node_tooltip_x = content_pane.x + ui(16);
-						node_tooltip_y = content_pane.y + yy
-					}
-					
 					draw_sprite_stretched_ext(THEME.node_bg, 1, ui(16), yy, list_width - ui(32), list_height, COLORS._main_accent, 1);
-					if(mouse_release(mb_left, sFOCUS))
-						buildNode(_node);
-					else if(mouse_release(mb_right, right_free && sFOCUS))
-						rightClick(_node);
+					
+					if(sFOCUS) {
+							 if(mouse_release(mb_left))              buildNode(_node);
+						else if(mouse_release(mb_right, right_free)) rightClick(_node);
+					}
 				}
 				
 				var tx = list_height + ui(52);
@@ -738,6 +831,21 @@ event_inherited();
 					
 					draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
 					draw_text_add(tx, yy + list_height / 2, _node.getName());
+					
+					tx += string_width(_node.getName());
+				}
+				
+				var _hinfo = _hoverContent && point_in_circle(_m[0], _m[1], tx + ui(12), yy + list_height / 2, list_height / 2);
+				if(_node.getTooltip() != "" || _node.tooltip_spr != noone) {
+					gpu_set_tex_filter(true);
+					draw_sprite_ui_uniform(THEME.info, 0, tx + ui(12), yy + list_height / 2, 0.7, COLORS._main_icon, .5 + _hinfo * .25);
+					gpu_set_tex_filter(false);
+					
+					if(_hinfo) {
+						node_tooltip   = _node;
+						node_tooltip_x = content_pane.x + ui(16);
+						node_tooltip_y = content_pane.y + yy
+					}
 				}
 				
 				yy += list_height;
@@ -746,16 +854,15 @@ event_inherited();
 			
 			if(PREFERENCES.dialog_add_node_grouping) {
 				var len = array_length(group_labels);
-				if(len) {
+				if(len && group_labels[0].y < 0) {
 					gpu_set_blendmode(bm_subtract);
 					draw_set_color(c_white);
-					draw_rectangle(0, 0, ww, ui(36), false);
+					draw_rectangle(0, 0, ww, _lbh + ui(12), false);
 					gpu_set_blendmode(bm_normal);
 					
-					content_hoverable &= !point_in_rectangle(_m[0], _m[1], 0, 0, ww, ui(36));
+					content_hoverable &= !point_in_rectangle(_m[0], _m[1], 0, 0, ww, _lbh + ui(12));
 				}
 				
-				var _lbh  = ui(24);
 				var _cAll = 0;
 				
 				for( var i = 0; i < len; i++ ) {
@@ -763,28 +870,37 @@ event_inherited();
 					var _name = lb.text;
 					var _key  = lb.key;
 					var _coll = struct_try_get(collapsed, _key, 0);
+					
 					var _yy = max(lb.y, i == len - 1? ui(8) : min(ui(8), group_labels[i + 1].y - ui(32)));
-				
+					var _hv = _hover && point_in_rectangle(_m[0], _m[1], 0, _yy, ww, _yy + _lbh);
+					var _tc = CDEF.main_ltgrey;
+					
 					BLEND_OVERRIDE;
-					if(_hover && point_in_rectangle(_m[0], _m[1], 0, _yy, ww, _yy + _lbh)) {
-                        draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, ui(16), _yy, ww - ui(32), _lbh, COLORS.panel_inspector_group_hover, 1);
-                        if(_focus) {
-                        	if(DOUBLE_CLICK) {
-                        		_cAll = _coll? -1 : 1;
-                        		
-                        	} else if(mouse_press(mb_left)) {
-	                        	if(_coll) struct_set(collapsed, _key, 0);
-	                        	else      struct_set(collapsed, _key, 1);
-	                        }
+					if(PREFERENCES.dialog_add_node_grouping == 1)
+                    	draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, ui(16), _yy, ww - ui(32), _lbh, _hv? COLORS.panel_inspector_group_hover : COLORS.panel_inspector_group_bg, 1);
+                	else {
+                    	draw_set_color(COLORS.panel_bg_clear_inner);
+                    	draw_rectangle(ui(16), _yy, ww - ui(16), _yy + _lbh, false);
+                    }
+                    
+					if(_hv && _focus) {
+						if(PREFERENCES.dialog_add_node_grouping == 2) _tc = CDEF.main_mdwhite;
+						
+                    	if(DOUBLE_CLICK) {
+                    		_cAll = _coll? -1 : 1;
+                    		MOUSE_BLOCK = 2;
+                    		
+                    	} else if(mouse_press(mb_left)) {
+                        	if(_coll) struct_set(collapsed, _key, 0);
+                        	else      struct_set(collapsed, _key, 1);
                         }
+                    }
                         
-                    } else
-                        draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, ui(16), _yy, ww - ui(32), _lbh, COLORS.panel_inspector_group_bg, 1);
 					BLEND_NORMAL;
 					
-					draw_sprite_ui(THEME.arrow, _coll? 0 : 3, ui(16 + 16), _yy + _lbh / 2, 1, 1, 0, CDEF.main_ltgrey, 1);    
+					draw_sprite_ui(THEME.arrow, _coll? 0 : 3, ui(16 + 16), _yy + _lbh / 2, 1, 1, 0, _tc, 1);    
 					
-					draw_set_text(f_p2, fa_left, fa_center, CDEF.main_ltgrey);
+					draw_set_text(f_p2, fa_left, fa_center, _tc);
 					draw_text_add(ui(16 + 28), _yy + _lbh / 2, _name);
 				}
 				
@@ -799,23 +915,17 @@ event_inherited();
 			}
 		}
 		
-		if(ADD_NODE_PAGE == -2) 
-			ds_list_destroy(_list);
+		ds_list_destroy(_list);
 		
 		return hh;
 	});
-	
-	function setPage(pageIndex) {
-		ADD_NODE_PAGE	= min(pageIndex, ds_list_size(category) - 1);
-		node_list		= pageIndex < 0? noone : category[| ADD_NODE_PAGE].list;
-	}
 	
 	if(PREFERENCES.add_node_remember) {
 		content_pane.scroll_y_raw = ADD_NODE_SCROLL;
 		content_pane.scroll_y_to  = ADD_NODE_SCROLL;
 	} else 
 		ADD_NODE_PAGE = 0;
-		
+	
 	setPage(ADD_NODE_PAGE);
 #endregion
 
@@ -829,9 +939,8 @@ event_inherited();
 	onResize = function() {
 		var _ch = dialog_h - ui(66);
 		
-		catagory_pane.resize( category_width,                     _ch);
-		content_pane.resize(  dialog_w - category_width - ui(36), _ch);
-		search_pane.resize(   dialog_w - ui(36),                  _ch);
+		catagory_pane.resize(category_width, _ch);
+		search_pane.resize(dialog_w - ui(36), _ch);
 		
 		PREFERENCES.dialog_add_node_w = dialog_w;
 		PREFERENCES.dialog_add_node_h = dialog_h;
