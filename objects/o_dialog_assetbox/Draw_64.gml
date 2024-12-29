@@ -7,7 +7,7 @@
 #region draw
 	if(folderW_dragging) {
 		var w = folderW_drag_sx + (mouse_mx - folderW_drag_mx);
-		w = clamp(w, ui(200), dialog_w - ui(128));
+		w = clamp(w, ui(128), dialog_w - ui(128));
 		
 		folderW = w;
 		onResize();
@@ -17,13 +17,15 @@
 	}
 	
 	draw_set_text(f_p0b, fa_left, fa_top, COLORS._main_text);
-	draw_text(dialog_x + ui(16), dialog_y + ui(16), __txt("Assets"));
+	draw_text(dialog_x + ui(24), dialog_y + ui(16), __txt("Assets"));
 	
-	//draw_sprite_stretched(THEME.ui_panel_bg, 1, dialog_x + ui(16), dialog_y + ui(48), folderW - ui(24), dialog_h - ui(64));
-	draw_sprite_stretched(THEME.ui_panel_bg, 1, dialog_x + ui(12 - 4) + folderW, dialog_y + ui(16), dialog_w - ui(28) - folderW, dialog_h - ui(32));
+	var _fld_x = dialog_x + ui(12);
+	folderPane.setFocusHover(sFOCUS, sHOVER);
+	folderPane.draw(_fld_x, dialog_y + ui(48));
 	
-	var dx0 = dialog_x + ui(16) + folderW - ui(8);
-	var dx1 = dialog_x + ui(16) + folderW;
+	var _cnt_x = _fld_x + folderW - ui(4);
+	var dx0 = _cnt_x - ui(8);
+	var dx1 = _cnt_x;
 	var dy0 = dialog_y + ui(48);
 	var dy1 = dialog_y + dialog_h - ui(16);
 	
@@ -36,9 +38,8 @@
 		}
 	}
 	
-	folderPane.setFocusHover(sFOCUS, sHOVER);
-	folderPane.draw(dialog_x + ui(12), dialog_y + ui(48));
+	draw_sprite_stretched(THEME.ui_panel_bg, 1, _cnt_x, dialog_y + ui(12), content_w + ui(6), dialog_h - ui(24));
 	
 	contentPane.setFocusHover(sFOCUS, sHOVER);
-	contentPane.draw(dialog_x + ui(12 - 4) + folderW, dialog_y + ui(16));
+	contentPane.draw(_cnt_x, dialog_y + ui(12));
 #endregion

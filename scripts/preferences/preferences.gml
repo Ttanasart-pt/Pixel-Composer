@@ -113,6 +113,7 @@
 		PREFERENCES.curve_connection_line			= 1;
 		
 		PREFERENCES.collection_animated				= true;
+		PREFERENCES.collection_label				= true;
 		PREFERENCES.collection_preview_speed		= 60;
 		PREFERENCES.collection_scale				= 1;
 		

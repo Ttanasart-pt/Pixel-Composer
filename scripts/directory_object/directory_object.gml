@@ -7,7 +7,8 @@ function FileObject(_name, _path) constructor {
 	spr        = -1;
 	sprFetchID = noone;
 	
-	content   = -1;
+	size    = file_size(path);
+	content = -1;
 	
 	var _mdir  = filename_dir(path);
 	var _mname = filename_name_only(path);
@@ -15,8 +16,7 @@ function FileObject(_name, _path) constructor {
 	meta	   = noone;
 	type	   = FILE_TYPE.assets;
 	
-	var _ext = filename_ext_raw(path);
-	switch(_ext) {
+	switch(filename_ext_raw(path)) {
 		case "png" :	
 		case "jpg" :	
 		case "gif" :	
@@ -37,7 +37,6 @@ function FileObject(_name, _path) constructor {
 	retrive_data	= false;
 	thumbnail_data	= -1;
 	thumbnail		= noone;
-	size			= file_size(path);
 	
 	static getName = function() { return name; }
 	
@@ -73,20 +72,20 @@ function FileObject(_name, _path) constructor {
 			return spr;
 		}
 		
-		var path = array_safe_get_fast(spr_path, 0);
-		var amo  = array_safe_get_fast(spr_path, 1);
+		var _path = array_safe_get_fast(spr_path, 0);
+		var _amo  = array_safe_get_fast(spr_path, 1);
 		
-		if(!file_exists_empty(path)) return -1;
+		if(!file_exists_empty(_path)) return -1;
 		
 		if(loadThumbnailAsync) {
-			sprFetchID = sprite_add_ext(path, amo, 0, 0, true);
+			sprFetchID = sprite_add_ext(_path, _amo, 0, 0, true);
 			IMAGE_FETCH_MAP[? sprFetchID] = function(load_result) {
 				spr = load_result[? "id"];
 				if(spr && array_safe_get_fast(spr_path, 2))
 					sprite_set_offset(spr, sprite_get_width(spr) / 2, sprite_get_height(spr) / 2);
 			}
 		} else {
-			spr = sprite_add(path, amo, 0, 0, 0, 0);
+			spr = sprite_add(_path, _amo, 0, 0, 0, 0);
 			if(spr && array_safe_get_fast(spr_path, 2))
 				sprite_set_offset(spr, sprite_get_width(spr) / 2, sprite_get_height(spr) / 2);
 		}
@@ -197,12 +196,11 @@ function DirectoryObject(name, path) constructor {
 	}
 	
 	static draw = function(parent, _x, _y, _m, _w, _hover, _focus, _homedir, _params = {}) {
-		var hg = ui(28);
-		var hh = 0;
+		var font = struct_try_get(_params, "font", f_p1);
+		var hg   = line_get_height(font, 5);
+		var hh   = 0;
 		
-		var font = struct_try_get(_params, "font", f_p0);
-		
-		if(!ds_list_empty(subDir) && _hover && point_in_rectangle(_m[0], _m[1], _x, _y, ui(32), _y + hg - 1)) {
+		if(!ds_list_empty(subDir) && _hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + ui(32), _y + hg - 1)) {
 			draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _x, _y, ui(32), hg, CDEF.main_white, 1);
 			if(mouse_press(mb_left, _focus)) {
 				open = !open;
@@ -210,14 +208,14 @@ function DirectoryObject(name, path) constructor {
 			}
 		}
 		
-		var _bx = _x + ui(28);
+		var _bx = _x + ui(32);
 		var _bw = _w - ui(36);
 		
 		if(_hover && point_in_rectangle(_m[0], _m[1], _bx, _y, _bx + _bw, _y + hg - 1)) {
-			draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _bx, _y, _bw, hg, CDEF.main_white, 1);
+			draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _bx - ui(4), _y, _bw + ui(4), hg, CDEF.main_white, 1);
 			if(!triggered && mouse_press(mb_left, _focus)) {
-				if(!ds_list_empty(subDir)) {
-					open = !open;
+				if(!ds_list_empty(subDir) && !open) {
+					open = true;
 					MOUSE_BLOCK = true;
 				}
 				
@@ -230,8 +228,12 @@ function DirectoryObject(name, path) constructor {
 		if(triggered && mouse_release(mb_left))
 			triggered = false;
 		
-		if(ds_list_empty(subDir)) draw_sprite_ui_uniform(THEME.folder_content, parent.context == self, _x + ui(16), _y + hg / 2 - 1, 1, COLORS.collection_folder_empty);
-		else                      draw_sprite_ui_uniform(THEME.folder_content, open, _x + ui(16), _y + hg / 2 - 1, 1, COLORS.collection_folder_nonempty);
+		gpu_set_texfilter(true);
+		var _spr_ind = ds_list_empty(subDir)? parent.context == self : open;
+		var _spr_bld = ds_list_empty(subDir)? COLORS.collection_folder_empty : COLORS.collection_folder_nonempty;
+		var _spr_sca = (hg - ui(5)) / 24;
+		draw_sprite_ui_uniform(THEME.folder_content, _spr_ind, _x + ui(16), _y + hg / 2 - 1, _spr_sca, _spr_bld);
+		gpu_set_texfilter(false);
 		
 		draw_set_text(font, fa_left, fa_center, path == parent.context.path? COLORS._main_text_accent : COLORS._main_text_inner);
 		draw_text_add(_x + ui(32), _y + hg / 2, name);
@@ -242,8 +244,6 @@ function DirectoryObject(name, path) constructor {
 			var l_y = _y;
 			for(var i = 0; i < ds_list_size(subDir); i++) {
 				var _hg = subDir[| i].draw(parent, _x + ui(16), _y, _m, _w - ui(16), _hover, _focus, _homedir, _params);
-				// draw_set_color(COLORS.collection_tree_line);
-				// draw_line(_x + ui(12), _y + hg / 2, _x + ui(16), _y + hg / 2);
 				
 				hh += _hg;
 				_y += _hg;

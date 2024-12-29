@@ -28,7 +28,7 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(8, nodeValue_Surface("Mask", self));
 	
 	newInput(9, nodeValue_Float("Scale", self, 1))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 2, 0.01] })
+		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 5, 0.01] })
 		.setMappable(13);
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
