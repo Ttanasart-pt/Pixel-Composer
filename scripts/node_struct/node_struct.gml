@@ -124,15 +124,16 @@ function Node_Struct(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			var key = getInputData(i + 0);
 			var val = getInputData(i + 1);
 			var frm = inputs[i + 1].value_from;
-			
 			if(key == "") continue;
 			
-			if(frm != noone && frm.type == VALUE_TYPE.surface)
-				str[$ key] = new Surface(val);
-			else if(frm != noone && frm.type == VALUE_TYPE.buffer)
-				str[$ key] = new Buffer(val);
-			else
-				str[$ key] = val;
+			var _typ = frm == noone? VALUE_TYPE.any : frm.type;
+			
+			switch(_typ) {
+				case VALUE_TYPE.surface : str[$ key] = new Surface(val); break;
+				case VALUE_TYPE.buffer  : str[$ key] = new Buffer(val);  break;
+				default : str[$ key] = val;
+			}
+			
 		}
 		
 		outputs[0].setValue(str);

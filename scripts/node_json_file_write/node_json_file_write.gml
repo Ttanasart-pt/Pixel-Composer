@@ -2,18 +2,21 @@ function Node_Json_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	name  = "JSON File Out";
 	color = COLORS.node_blend_input;
 	
-	w = 128;
-	
 	newInput(0, nodeValue_Path("Path", self, ""))
 		.setDisplay(VALUE_DISPLAY.path_save, { filter: "json file|*.json" })
 		.rejectArray();
 		
 	newInput(1, nodeValue_Struct("Struct", self, {}))
+		.shortenDisplay()
 		.setVisible(true, true);
 	
 	newInput(2, nodeValue_Bool("Pretty print", self, false));
 	
-	input_display_list = [ 0, 1, 2 ]
+	newInput(3, nodeValue_Bool("Serialize", self, true));
+	
+	input_display_list = [ 0, 1, 
+		["Formatting", false], 2, 3 
+	];
 	
 	static writeFile = function() {
 		var path = getInputData(0);
@@ -24,6 +27,10 @@ function Node_Json_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		
 		var cont = getInputData(1);
 		var pret = getInputData(2);
+		var seri = getInputData(3);
+		
+		if(seri && struct_has(cont, "serialize"))
+			cont = cont.serialize();
 		
 		json_save_struct(path, cont, pret);
 	}

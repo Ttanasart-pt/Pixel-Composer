@@ -1,56 +1,39 @@
 function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _length = 0, _node = noone) constructor {
-	ID     = UUID_generate();
-	name   = "New bone";
-	node   = _node;
-	parent = _parent;
+	ID      = UUID_generate();
+	name    = "New bone";
+	node    = _node;
+	parent  = _parent;
+	is_main = false;
+	tb_name = new textBox(TEXTBOX_INPUT.text, function(n) /*=>*/ { name = n; if(node) node.triggerRender(); }).setFont(f_p2).setHide(true);
+	
+	childs        = [];
+	parent_anchor = true;
 	
 	distance  = _distance;  pose_distance    = _distance;
 	direction = _direction; pose_direction   = _direction;
 	angle     = _angle;     pose_angle       = _angle;
 	length    = _length;    pose_length      = _length;
 	
-	pose_posit       = [ 0, 0 ];
-	pose_rotate      = 0;
-	pose_scale       = 1;
+	pose_posit  = [ 0, 0 ];  pose_local_posit  = [ 0, 0 ];  pose_apply_posit  = [ 0, 0 ];
+	pose_rotate = 0;         pose_local_rotate = 0;         pose_apply_rotate = 0;
+	pose_scale  = 1;         pose_local_scale  = 1;         pose_apply_scale  = 1;
 	
-	pose_local_posit  = [ 0, 0 ]; pose_apply_posit  = [ 0, 0 ];
-	pose_local_rotate = 0;        pose_apply_rotate = 0;
-	pose_local_scale  = 1;        pose_apply_scale  = 1;
+	bone_head_init = new __vec2(); bone_head_pose = new __vec2();
+	bone_tail_init = new __vec2(); bone_tail_pose = new __vec2();
 	
-	bone_head_init   = new __vec2(); bone_head_pose  = new __vec2();
-	bone_tail_init   = new __vec2(); bone_tail_pose  = new __vec2();
+	apply_scale    = true;
+	apply_rotation = true;
 	
-	apply_scale      = true;
-	apply_rotation   = true;
+	IKlength   = 0;
+	IKTargetID = "";
+	IKTarget   = noone;
 	
-	childs  		 = [];
-	is_main 		 = false;
-	parent_anchor	 = true;
-	
-	tb_name 		 = new textBox(TEXTBOX_INPUT.text, function(_name) /*=>*/ { name = _name; if(node) node.triggerRender(); });
-	tb_name.font	 = f_p2;
-	tb_name.hide	 = true;
-	
-	updated 		 = false;
-	
-	IKlength		 = 0;
-	IKTargetID		 = "";
-	IKTarget		 = noone;
-	
-	constrains       = [];
-	
-	freeze_data      = {};
-	
+	constrains = [];
 	control_x0 = 0; control_y0 = 0; control_i0 = 0;
 	control_x1 = 0; control_y1 = 0; control_i1 = 0;
 	
 	static addChild   = function(bone) { array_push(childs, bone); bone.parent = self; return self; }
 	static childCount = function()     { return array_reduce(childs, function(amo, ch) /*=>*/ { return amo + ch.childCount(); }, array_length(childs)); }
-	
-	static freeze = function() {
-		freeze_data = { angle, length, distance, direction };
-		array_foreach(childs, function(c) /*=>*/ {return c.freeze()});
-	}
 	
 	////- Find
 	
