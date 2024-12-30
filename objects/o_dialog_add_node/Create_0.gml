@@ -607,8 +607,12 @@ event_inherited();
 						hh += _lbh + ui(4);
 						yy += _lbh + ui(4);
 						
-						while(index + 1 < node_count && !is_string(_list[| index + 1]))
+						while(index + 1 < node_count) {
+							var _s = _list[| index + 1];
+							if(is_string(_s) && (!string_starts_with(_s, "/") || PREFERENCES.dialog_add_node_grouping == 2)) break;
+							
 							index++;
+						}
 					} else {
 						hh += _lbh + ui(12);
 						yy += _lbh + ui(12);
@@ -761,7 +765,7 @@ event_inherited();
 			var bg_ind = 0;
 			var yy     = _y + ui(12);
 			var pd     = ui(8);
-			var sec_pd = PREFERENCES.dialog_add_node_grouping == 1? ui(8) : ui(6);
+			var sec_pd = ui(4);
 			hh += list_height;
 			
 			for(var i = 0; i < node_count; i++) {
@@ -787,8 +791,12 @@ event_inherited();
 						hh += _lbh;
 						yy += _lbh;
 						
-						while(i + 1 < node_count && !is_string(_list[| i + 1]))
+						while(i + 1 < node_count) {
+							var _s = _list[| i + 1];
+							if(is_string(_s) && (!string_starts_with(_s, "/") || PREFERENCES.dialog_add_node_grouping == 2)) break;
+							
 							i++;
+						}
 					} else {
 						hh += _lbh + sec_pd;
 						yy += _lbh + sec_pd;
@@ -1036,7 +1044,7 @@ event_inherited();
 		var hh		 = 0;
 		var _hover	 = sHOVER && search_pane.hover;
 		
-		var grid_size  = ui(64);
+		var grid_size  = ui(56);
 		var grid_width = ui(80);
 		var grid_space = ui(16);
 		
@@ -1315,20 +1323,22 @@ event_inherited();
 		}
 		
 		node_focusing = -1;
-		var s_sfz = list_height * 4;
+		var s_sfz = PREFERENCES.dialog_add_node_view == 1? list_height * 4 : 0;
 		
 		if(keyboard_check_pressed(vk_up)) {
 			node_selecting = safe_mod(node_selecting - 1 + amo, amo);
 			node_focusing  = node_selecting;
 			
-			search_pane.scroll_y_to = max(search_pane.scroll_y_to, -list_height * node_selecting + s_sfz);
+			if(PREFERENCES.dialog_add_node_view == 1)
+				search_pane.scroll_y_to = max(search_pane.scroll_y_to, -list_height * node_selecting + s_sfz);
 		}
 		
 		if(keyboard_check_pressed(vk_down)) {
 			node_selecting = safe_mod(node_selecting + 1, amo);
 			node_focusing  = node_selecting;
 			
-			search_pane.scroll_y_to = min(search_pane.scroll_y_to, -list_height * node_selecting - s_sfz + search_pane.h);
+			if(PREFERENCES.dialog_add_node_view == 1)
+				search_pane.scroll_y_to = min(search_pane.scroll_y_to, -list_height * node_selecting - s_sfz + search_pane.h);
 		}
 		
 		return hh;

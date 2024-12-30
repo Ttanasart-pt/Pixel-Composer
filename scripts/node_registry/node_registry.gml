@@ -232,7 +232,7 @@ function NodeObject(_name, _spr, _node, _create, _tooltip = "") constructor {
 			
 			if(point_in_circle(_mx, _my, spr_x, spr_y, ui(10))) TOOLTIP = __txt("Supporter exclusive");
 			
-			tx += ui(16);
+			tx += ui(12);
 		}
 		
 		return tx;
