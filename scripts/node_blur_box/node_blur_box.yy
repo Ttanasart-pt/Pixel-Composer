@@ -1,0 +1,14 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_blur_box",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_blur_box",
+  "parent":{
+    "name":"blur",
+    "path":"folders/nodes/data/filter/blur.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+  "tags":[],
+}

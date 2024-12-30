@@ -1,0 +1,13 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_blur_box",
+  "name":"sh_blur_box",
+  "parent":{
+    "name":"blur",
+    "path":"folders/shader/filter/blur.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "tags":[],
+  "type":1,
+}

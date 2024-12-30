@@ -35,8 +35,9 @@ function NodeObject(_name, _spr, _node, _create, _tooltip = "") constructor {
 		}
 	}
 	
-	static setTags = function(_tags) { tags = _tags; return self; }
-	static setSpr  = function(_spr)  { spr  = _spr;  return self; }
+	static setTags    = function(_tags) { tags    = _tags; return self; }
+	static setSpr     = function(_spr)  { spr     = _spr;  return self; }
+	static setTooltip = function(_tool) { tooltip = _tool; return self; }
 	
 	static setVersion = function(version) {
 		INLINE 
@@ -271,9 +272,11 @@ function nodeBuild(_name, _x, _y, _group = PANEL_GRAPH.getCurrentContext()) {
 	return _bnode;
 }
 	
-function addNodeObject(_list, _name, _node = "", _fun = [], tooltip = "") {
+function addNodeObject(_list, _name = "", _node = "", _fun = [], tooltip = "") {
 	if(ds_map_exists(ALL_NODES, _node)) {
 		var _n = ALL_NODES[? _node];
+		if(tooltip != "") _n.setTooltip(tooltip);
+		
 		ds_list_add(_list, _n);
 		return _n;
 	}
@@ -281,6 +284,8 @@ function addNodeObject(_list, _name, _node = "", _fun = [], tooltip = "") {
 	var _s = asset_get_index($"s_{string_lower(_node)}"); 
 	if(_s == -1) _s = 0;
 	var _n = new NodeObject(_name, _s, _node, _fun, tooltip);
+	if(tooltip != "") _n.setTooltip(tooltip);
+	
 	ALL_NODES[? _node] = _n;
 	
 	ds_list_add(_list, _n);
@@ -406,8 +411,8 @@ function __initNodes() {
 	var vfx = ds_list_create(); 
 	NODE_ADD_CAT("VFX", vfx, ["Node_VFX_Group", "Node_VFX_Group_Inline"], COLORS.node_blend_vfx);
 		ds_list_add(vfx, "Groups");
-		addNodeObject(vfx, "Input",    "Node_Group_Input",         [1, Node_Group_Input]).setSpr(s_node_vfx_input).hideRecent().hideGlobal();
-		addNodeObject(vfx, "Output",   "Node_Group_Output",        [1, Node_Group_Output]).setSpr(s_node_vfx_output).hideRecent().hideGlobal();
+		addNodeObject(vfx, "Input",    "Node_Group_Input",         [1, Node_Group_Input]).hideRecent().hideGlobal();
+		addNodeObject(vfx, "Output",   "Node_Group_Output",        [1, Node_Group_Output]).hideRecent().hideGlobal();
 		addNodeObject(vfx, "Renderer", "Node_VFX_Renderer_Output", [1, Node_VFX_Renderer_Output]).setSpr(s_node_vfx_render_output).hideRecent().hideGlobal();
 			
 		ds_list_add(vfx, "Main");
@@ -600,6 +605,8 @@ function __initNodes() {
 		addNodeObject(transform, "Scale Algorithm", "Node_Scale_Algo",   [0, Node_create_Scale_Algo], "Scale image using pixel-art based scaling algorithms.").setTags(["scale2x", "scale3x", "cleanedge"]);
 		addNodeObject(transform, "Flip",            "Node_Flip",         [1, Node_Flip],              "Flip image horizontally or vertically.").setTags(["mirror"]);
 		addNodeObject(transform, "Offset",          "Node_Offset",       [1, Node_Offset],            "Shift image with tiling.").setTags(["shift"]);
+		addNodeObject(transform, "Mirror",          "Node_Mirror",       [1, Node_Mirror],            "Reflect the image along a reflection line.").setVersion(1070);
+		addNodeObject(transform, "Polar Mirror",    "Node_Mirror_Polar", [1, Node_Mirror_Polar],      "Reflect the image along multiple reflection lines.").setTags(["kaleidoscope"]).setVersion(1_18_06_2);
 		
 		ds_list_add(transform, "Crops");
 		addNodeObject(transform, "Crop",            "Node_Crop",         [1, Node_Crop],         "Crop out image to create smaller ones.");
@@ -637,6 +644,7 @@ function __initNodes() {
 		addNodeObject(filter, "Blur",             "Node_Blur",             [1, Node_Blur],             "Blur image smoothly.").setTags(["gaussian blur"]);
 		addNodeObject(filter, "Non-Uniform Blur", "Node_Blur_Simple",      [1, Node_Blur_Simple],      "Blur image using simpler algorithm. Allowing for variable blur strength.").setVersion(1070);
 		addNodeObject(filter, "Contrast Blur",    "Node_Blur_Contrast",    [1, Node_Blur_Contrast],    "Blur only pixel of a similiar color.");
+		addNodeObject(filter, "Box Blur",         "Node_Blur_Box",         [1, Node_Blur_Box],         "Blur pixel in square area uniformly.").setVersion(1_18_06_2);
 		addNodeObject(filter, "Shape Blur",       "Node_Blur_Shape",       [1, Node_Blur_Shape],       "Blur image using another image as blur map.").setVersion(11650);
 		addNodeObject(filter, "High Pass",        "Node_High_Pass",        [1, Node_High_Pass],        "Apply high pass filter").setTags(["sharpen"]).setVersion(1_18_01_0);
 			ds_list_add(filter, "/Linear");
@@ -654,7 +662,8 @@ function __initNodes() {
 		
 		ds_list_add(filter, "Warps");
 			ds_list_add(filter, "/Effects");
-		addNodeObject(filter, "Mirror",           "Node_Mirror",           [1, Node_Mirror],           "Reflect the image along a reflection line.").setVersion(1070);
+		addNodeObject(filter,, "Node_Mirror");
+		addNodeObject(filter,, "Node_Mirror_Polar");
 		addNodeObject(filter, "Twirl",            "Node_Twirl",            [1, Node_Twirl],            "Twist the image around a mid point.").setTags(["twist"]);
 		addNodeObject(filter, "Dilate",           "Node_Dilate",           [1, Node_Dilate],           "Expand the image around a mid point.").setTags(["inflate"]);
 		addNodeObject(filter, "Spherize",         "Node_Spherize",         [1, Node_Spherize],         "Wrap a texture on to sphere.").setVersion(11630);
@@ -696,7 +705,7 @@ function __initNodes() {
 		addNodeObject(filter, "Shuffle",              "Node_Shuffle",         [1, Node_Shuffle],         "Shuffle image while keeping pixel colors.").setVersion(1_18_05_6);
 			ds_list_add(filter, "/Lights");
 		addNodeObject(filter, "2D Light",             "Node_2D_light",        [1, Node_2D_light],        "Apply different shaped light on the image.");
-		addNodeObject(filter, "Cast Shadow",          "Node_Shadow_Cast",     [1, Node_Shadow_Cast],     "Apply light that create shadow using shadow mask.").setTags(["raycast"]).setVersion(1100);
+		addNodeObject(filter, "Cast Shadow",          "Node_Shadow_Cast",     [1, Node_Shadow_Cast],     "Apply light that casts shadow.").setTags(["raycast"]).setVersion(1100);
 			ds_list_add(filter, "/Animations");
 		addNodeObject(filter, "Interlace",            "Node_Interlaced",      [1, Node_Interlaced],      "Apply interlace effect to an image.").setVersion(11760);
 		addNodeObject(filter, "Trail",                "Node_Trail",           [1, Node_Trail],           "Blend animation by filling in the pixel 'in-between' two or more frames.").setVersion(1130);
@@ -833,6 +842,7 @@ function __initNodes() {
 		addNodeObject(generator, "Simplex Noise",          "Node_Noise_Simplex",    [1, Node_Noise_Simplex],   "Generate simplex noise, similiar to perlin noise with better fidelity but non-tilable.").setTags(["perlin"]).setVersion(1080);
 		addNodeObject(generator, "Cellular Noise",         "Node_Cellular",         [1, Node_Cellular],        "Generate voronoi pattern.").setTags(["voronoi", "worley"]);
 		addNodeObject(generator, "Anisotropic Noise",      "Node_Noise_Aniso",      [1, Node_Noise_Aniso],     "Generate anisotropic noise.");
+	 // addNodeObject(generator, "Blue Noise",             "Node_Noise_Blue",       [1, Node_Noise_Blue],      "Generate blue noise texture").setVersion(1_18_06_2);
 		addNodeObject(generator, "Extra Perlins",          "Node_Perlin_Extra",     [1, Node_Perlin_Extra],    "Random perlin noise made with different algorithms.").setTags(["noise"]).patreonExtra();
 		addNodeObject(generator, "Extra Voronoi",          "Node_Voronoi_Extra",    [1, Node_Voronoi_Extra],   "Random voronoi noise made with different algorithms.").setTags(["noise"]).patreonExtra();
 			ds_list_add(generator, "/Artistics");

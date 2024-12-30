@@ -238,6 +238,7 @@ void main() {
 		uv.y = mod(floor(uv.y * (tileY + 1.)), tileY) / tileY;
 		
 		colr = gradientEval(random(uv));
+		
 	} else if(mode == 2) {
 		vec2 uv = (pos - hc.zw) + vec2(0.5, 0.5);
 		

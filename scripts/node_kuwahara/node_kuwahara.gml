@@ -40,7 +40,7 @@ function Node_Kuwahara(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		["Effects",  false], 9, 2, 10, 11, 12, 13, 
 	];
 	
-	temp_surfaces = array_create(4);
+	temp_surface = array_create(4);
 	
 	attribute_surface_depth();
 	
@@ -69,28 +69,28 @@ function Node_Kuwahara(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				break;
 			
 			case 1 :
-				for( var i = 0; i < 3; i++ ) temp_surfaces[i] = surface_verify(temp_surfaces[i], _dim[0], _dim[1]);
+				for( var i = 0; i < 3; i++ ) temp_surface[i] = surface_verify(temp_surface[i], _dim[0], _dim[1]);
 				
-				surface_set_shader(temp_surfaces[0], sh_kuwahara_ani_pass1);
+				surface_set_shader(temp_surface[0], sh_kuwahara_ani_pass1);
 					shader_set_2("dimension", _dim);
 					
 					draw_surface_safe(_surf);
 				surface_reset_shader();
 				
-				surface_set_shader(temp_surfaces[1], sh_kuwahara_ani_pass2);
+				surface_set_shader(temp_surface[1], sh_kuwahara_ani_pass2);
 					shader_set_2("dimension", _dim);
 					
-					draw_surface_safe(temp_surfaces[0]);
+					draw_surface_safe(temp_surface[0]);
 				surface_reset_shader();
 				
-				surface_set_shader(temp_surfaces[2], sh_kuwahara_ani_pass3);
+				surface_set_shader(temp_surface[2], sh_kuwahara_ani_pass3);
 					shader_set_2("dimension", _dim);
 					
-					draw_surface_safe(temp_surfaces[1]);
+					draw_surface_safe(temp_surface[1]);
 				surface_reset_shader();
 				
 				surface_set_shader(_outSurf, sh_kuwahara_ani_pass4);
-					shader_set_surface("tfm", temp_surfaces[2]);
+					shader_set_surface("tfm", temp_surface[2]);
 					shader_set_2("dimension", _dim);
 					
 					shader_set_f("alpha",        _data[10]);

@@ -168,7 +168,7 @@ float random (in vec2 st) { return fract(sin(dot(st.xy + vec2(85.456034, 64.5406
 	
 #endregion //////////////////////////////////// GRADIENT ////////////////////////////////////
 
-vec3 triGrid(vec2 p){ #region
+vec3 triGrid(vec2 p) {
     float _stx = (p.x + c30 / 2.0 * p.y);
     float stx  = abs(fract(_stx) - 0.5);
    	
@@ -183,7 +183,7 @@ vec3 triGrid(vec2 p){ #region
 	n = (n - .16) / (.35 - .16);
 	
     return vec3((floor(_stx) + floor(_sty) + 1.) / 2., floor(p.y * c30), n);
-} #endregion
+}
 
 void main() { #region
 	#region params
