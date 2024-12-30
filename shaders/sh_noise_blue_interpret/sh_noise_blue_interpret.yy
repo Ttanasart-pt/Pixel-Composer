@@ -1,7 +1,7 @@
 {
   "$GMShader":"",
-  "%Name":"sh_noise_honey",
-  "name":"sh_noise_honey",
+  "%Name":"sh_noise_blue_interpret",
+  "name":"sh_noise_blue_interpret",
   "parent":{
     "name":"noise",
     "path":"folders/shader/generator/noise.yy",

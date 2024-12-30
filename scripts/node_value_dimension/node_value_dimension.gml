@@ -75,11 +75,4 @@ function __NodeValue_Dimension(_node, value) : NodeValue("Dimension", _node, CON
 		return animator.getValue(_time);
 	}
 	
-	static showValue = function() {
-		if(attributes.use_project_dimension) 
-			return PROJECT.attributes.surface_dimension;
-			
-		return __showValue();
-	}
-	
 }

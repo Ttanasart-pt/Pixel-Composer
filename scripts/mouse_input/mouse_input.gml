@@ -15,7 +15,7 @@
 	}
 	
 	#macro SCROLL_SPEED PREFERENCES.mouse_wheel_speed
-	#macro MOUSE_MOVED (window_mouse_get_delta_x() || window_mouse_get_delta_y())
+	#macro MOUSE_MOVED (window_mouse_get_delta_x() != 0 || window_mouse_get_delta_y() != 0)
 	
 	#macro   mouse_wheel_up mouse_wheel_up_override
 	#macro __mouse_wheel_up mouse_wheel_up

@@ -1104,7 +1104,8 @@ event_inherited();
 						BLEND_NORMAL
 					}
 					
-					if(_hover && MOUSE_MOVED && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_size, yy + grid_size)) {
+					var _minput = _hover && (MOUSE_MOVED || mouse_release(mb_any));
+					if(_minput && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_size, yy + grid_size)) {
 						search_pane.hover_content = true;
 						node_selecting = i;
 						
@@ -1236,7 +1237,8 @@ event_inherited();
 				
 				if(i % 2) draw_sprite_stretched_add(THEME.node_bg, 0, pd, yy, list_width - pd * 2, list_height, c_white, 0.1);
 				
-				if(_hover && MOUSE_MOVED && point_in_rectangle(_m[0], _m[1], pd + ui(16 * 2), yy, list_width, yy + list_height - 1)) {
+				var _minput = _hover && (MOUSE_MOVED || mouse_release(mb_any));
+				if(_minput && point_in_rectangle(_m[0], _m[1], pd + ui(16 * 2), yy, list_width, yy + list_height - 1)) {
 					search_pane.hover_content = true;
 					node_selecting = i;
 					

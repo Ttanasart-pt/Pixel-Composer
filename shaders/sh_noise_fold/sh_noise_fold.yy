@@ -4,7 +4,7 @@
   "name":"sh_noise_fold",
   "parent":{
     "name":"noise",
-    "path":"folders/shader/noise.yy",
+    "path":"folders/shader/generator/noise.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

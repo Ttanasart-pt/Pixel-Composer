@@ -136,6 +136,49 @@ function string_partial_match(str, key) {
 function string_partial_match_res(str, key, keys) {
 	if(str == key) return [ 9999, array_create(string_length(str) + 1, 1) ];
 	
+	var lenn = string_length(str);
+	var lenm = string_length(key);
+	var runm = 1;
+	
+	var _minmat = -lenn * lenm;
+	var _matRng = array_create(string_length(str) + 1, 0);
+	var _mated  = array_create(string_length(str) + 1, 0);
+	
+	while(runm <= lenm) {
+		var m = string_char_at(key, runm);
+		
+		var runn = 1;
+		var matc = -1;
+		while(runn <= lenn) {
+			var n = string_char_at(str, runn);
+			if(_mated[runn] == 0 && m == n) {
+				 matc     = runn;
+				_minmat  += lenn - abs(runm - runn);
+				
+				if(runn > 1 && string_char_at(str, runn - 1) == " ")
+					_minmat += 2;
+				
+				_mated[runn]  = 1;
+				_matRng[runn] = 1;
+				break;
+			}
+			runn++;
+		}
+		
+		if(matc == -1) {
+			_minmat = -9999;
+			break;
+		}
+		
+		runm++
+	}
+	
+	return [ _minmat, _matRng ];
+}
+
+function __string_partial_match_res(str, key, keys) {
+	if(str == key) return [ 9999, array_create(string_length(str) + 1, 1) ];
+	
 	var _minmat = 9999;
 	var _matRng = array_create(string_length(str) + 1, 0);
 	
