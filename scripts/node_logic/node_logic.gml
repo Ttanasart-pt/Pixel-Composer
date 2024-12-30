@@ -32,12 +32,12 @@ function Node_Logic(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Enum_Scroll("Type", self,  0, [ new scrollItem("And",   s_node_logic, 0), 
-												          new scrollItem("Or",    s_node_logic, 1), 
-												          new scrollItem("Not",   s_node_logic, 2), 
-												          new scrollItem("Nand",  s_node_logic, 3), 
-												          new scrollItem("Nor",   s_node_logic, 4), 
-												          new scrollItem("Xor",   s_node_logic, 5), ]))
+	newInput(0, nodeValue_Enum_Scroll("Type", self,  0, [ new scrollItem("And",   s_node_logic_type, 0), 
+												          new scrollItem("Or",    s_node_logic_type, 1), 
+												          new scrollItem("Not",   s_node_logic_type, 2), 
+												          new scrollItem("Nand",  s_node_logic_type, 3), 
+												          new scrollItem("Nor",   s_node_logic_type, 4), 
+												          new scrollItem("Xor",   s_node_logic_type, 5), ]))
 		.rejectArray();
 	
 	newOutput(0, nodeValue_Output("Result", self, VALUE_TYPE.boolean, false));

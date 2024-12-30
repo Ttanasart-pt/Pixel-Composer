@@ -42,7 +42,7 @@ function Node_FLIP_Update(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var bbox = drawGetBbox(xx, yy, _s);
 		var _active = getInputData(1);
 		
-		draw_sprite_fit(_active? s_node_fluidSim_update : s_node_fluidSim_update_paused, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
+		draw_sprite_fit(_active? s_node_flip_update : s_node_flip_update_paused, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 	
 	static getPreviewValues = function() { var domain = getInputData(0); return instance_exists(domain)? domain.domain_preview : noone; }

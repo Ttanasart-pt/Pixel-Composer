@@ -29,6 +29,6 @@ function Node_Strand_Break(_x, _y, _group = noone) : _Node_Strand_Affector(_x, _
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
-		draw_sprite_fit(s_node_strandSim_break, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
+		draw_sprite_fit(s_node_strand_break, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 }

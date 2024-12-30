@@ -10,9 +10,9 @@ function Node_Bevel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	newInput(3, nodeValue_Vec2("Scale", self, [ 1, 1 ] ));
 	
-	newInput(4, nodeValue_Enum_Scroll("Slope", self, 0, [ new scrollItem("Linear",   s_node_curve, 2), 
-												          new scrollItem("Smooth",   s_node_curve, 4), 
-												          new scrollItem("Circular", s_node_curve, 5), ]));
+	newInput(4, nodeValue_Enum_Scroll("Slope", self, 0, [ new scrollItem("Linear",   s_node_curve_type, 2), 
+												          new scrollItem("Smooth",   s_node_curve_type, 4), 
+												          new scrollItem("Circular", s_node_curve_type, 5), ]));
 	
 	newInput(5, nodeValue_Surface("Mask", self));
 	

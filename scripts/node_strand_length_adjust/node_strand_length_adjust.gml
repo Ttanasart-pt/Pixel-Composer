@@ -26,6 +26,6 @@ function Node_Strand_Length_Adjust(_x, _y, _group = noone) : _Node_Strand_Affect
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
-		draw_sprite_fit(s_node_strandSim_length, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
+		draw_sprite_fit(s_node_strand_length, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 }

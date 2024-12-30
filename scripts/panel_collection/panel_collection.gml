@@ -900,6 +900,7 @@ function Panel_Collection() : PanelContent() constructor {
 		
     static serialize = function() { 
         _map = { 
+        	name: instanceof(self), 
             page, 
         }; 
         

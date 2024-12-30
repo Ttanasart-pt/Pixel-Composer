@@ -105,15 +105,14 @@ function array_to_string(arr) {
 
 function string_partial_match(str, key) {
 	if(str == key) return 9999;
-	
 	var amo      = string_length(str);
+	var keyAmo   = string_length(key);
 	var run      = 1;
 	var consec   = 0;
 	var conMax   = 0;
 	var misMatch = 0;
-	var kchr     = string_char_at(key, run);
+	var kchr     = string_char_at(key, 1);
 	var ch;
-	var stArr    = [];
 	
 	for( var i = 1; i <= amo; i++ ) {
 		ch = string_char_at(str, i);
@@ -121,8 +120,57 @@ function string_partial_match(str, key) {
 		if(ch == kchr) {
 			consec++;
 			conMax = max(conMax, consec);
-			run++;
-			if(run > string_length(key)) return conMax - misMatch - (amo - i);
+			if(++run > keyAmo) return conMax - misMatch - (amo - i);
+			kchr = string_char_at(key, run);
+			
+		} else {
+			consec    = 0;
+			misMatch += amo - i;
+		}
+		
+	}
+	
+	return -9999;
+}
+
+function string_partial_match_res(str, key, keys) {
+	if(str == key) return [ 9999, array_create(string_length(str) + 1, 1) ];
+	
+	var _minmat = 9999;
+	var _matRng = array_create(string_length(str) + 1, 0);
+	
+	for( var i = 0, n = array_length(keys); i < n; i++ ) {
+		var _mat = string_partial_match_ext(str, keys[i], _matRng);
+		_minmat = min(_minmat, _mat);
+	}
+	
+	return [ _minmat, _matRng ];
+}
+
+function string_partial_match_ext(str, key, _matRng) {
+	var amo      = string_length(str);
+	var keyAmo   = string_length(key);
+	var run      = 1;
+	var consec   = 0;
+	var conMax   = 0;
+	var misMatch = 0;
+	var kchr     = string_char_at(key, 1);
+	var matRng   = array_create(string_length(str) + 1, 0);
+	var ch;
+	
+	for( var i = 1; i <= amo; i++ ) {
+		ch = string_char_at(str, i);
+		
+		if(ch == kchr) {
+			matRng[i] = 1;
+			consec++;
+			conMax = max(conMax, consec);
+			if(++run > keyAmo) {
+				for( var j = 1; j <= amo; j++ )
+					_matRng[j] |= matRng[j];
+				
+				return conMax - misMatch - (amo - i);
+			}
 			kchr = string_char_at(key, run);
 			
 		} else {
@@ -263,6 +311,125 @@ function draw_text_match_ext(_x, _y, _text, _w, _search) {
 				draw_set_color(COLORS._main_accent);
 			} else 
 				draw_set_color(cc);
+			
+			draw_text(ceil(xx), ceil(yy), ch);
+			xx += string_width(ch);
+			j++;
+		}
+		
+		yy += lh;
+	}
+	BLEND_NORMAL;
+	
+	draw_set_halign(ha);
+	draw_set_valign(va);
+	
+	return hh;
+}
+
+function draw_text_match_range(_x, _y, _text, _range, _scale = 1) {
+	INLINE
+	_x = round(_x); 
+	_y = round(_y);
+	
+	var xx = _x;
+	var yy = _y;
+	var ha = draw_get_halign();
+	var cc = draw_get_color();
+	
+	draw_set_halign(fa_left);
+	
+	BLEND_ALPHA_MULP;
+	var aa = string_length(_text);
+	var lw = string_width(_text) * _scale;
+	
+	switch(ha) {
+		case fa_left :   xx = _x;			break;
+		case fa_center : xx = _x - lw / 2;	break;
+		case fa_right :  xx = _x - lw;		break;
+	}
+	
+	var j = 1;
+	repeat(aa) {
+		var ch = string_char_at(_text, j);
+		draw_set_color(_range[j]? COLORS._main_accent : cc);
+		
+		if(_scale == 1) draw_text(ceil(xx), ceil(yy), ch);
+		else            draw_text_transformed(ceil(xx), ceil(yy), ch, _scale, _scale, 0);
+		xx += string_width(ch) * _scale;
+		j++;
+	}
+	
+	BLEND_NORMAL;
+	
+	draw_set_halign(ha);
+}
+
+function draw_text_match_range_ext(_x, _y, _text, _w, _range) {
+	INLINE
+	_x = round(_x);
+	_y = round(_y);
+	
+	var lines  = [];
+	var line   = "";
+	var line_w = 0;
+	var words  = string_split(_text, " ");
+	var amo    = array_length(words);
+	var spw    = string_width(" ");
+	
+	for( var i = 0; i < amo; i++ ) {
+		var wr = words[i] + (i < amo - 1? " " : "");
+		var ww = string_width(wr);
+		
+		if(line_w + ww - spw > _w) {
+			array_push(lines, line);
+			line   = wr;
+			line_w = ww;
+			
+		} else {
+			line   += wr;
+			line_w += ww;
+		}
+	}
+	
+	if(line != "") array_push(lines, line);
+	
+	var ha = draw_get_halign();
+	var va = draw_get_valign();
+	var xx = _x;
+	var yy = _y;
+	var lh = line_get_height();
+	var hh = lh * array_length(lines);
+	var cc = draw_get_color();
+	
+	draw_set_halign(fa_left);
+	draw_set_valign(fa_top);
+	
+	switch(va) {
+		case fa_top :    yy = _y;			break;
+		case fa_middle : yy = _y - hh / 2;	break;
+		case fa_bottom : yy = _y - hh;		break;
+	}
+	
+	var _rind = 1;
+	
+	BLEND_ALPHA_MULP;
+	for( var i = 0, n = array_length(lines); i < n; i++ ) {
+		var ll = lines[i];
+		var aa = string_length(ll);
+		var lw = string_width(ll);
+		var tl = string_lower(ll);
+		
+		switch(ha) {
+			case fa_left :   xx = _x;			break;
+			case fa_center : xx = _x - lw / 2;	break;
+			case fa_right :  xx = _x - lw;		break;
+		}
+		
+		var j = 1;
+		repeat(aa) {
+			var ch = string_char_at(ll, j);
+			draw_set_color(_range[_rind++]? COLORS._main_accent : cc);
 			
 			draw_text(ceil(xx), ceil(yy), ch);
 			xx += string_width(ch);

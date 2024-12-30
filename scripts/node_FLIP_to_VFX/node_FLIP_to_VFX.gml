@@ -51,7 +51,7 @@ function Node_FLIP_to_VFX(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
-		draw_sprite_fit(s_node_fluidSim_to_VFX, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
+		draw_sprite_fit(s_node_flip_to_VFX, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 	
 }

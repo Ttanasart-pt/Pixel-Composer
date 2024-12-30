@@ -205,7 +205,7 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		var bbox = drawGetBbox(xx, yy, _s);
-		draw_sprite_fit(s_node_fluidSim_add_fluid, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
+		draw_sprite_fit(s_node_flip_spawner, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	} #endregion
 	
 	static getPreviewValues = function() { var domain = getInputData(0); return instance_exists(domain)? domain.domain_preview : noone; }

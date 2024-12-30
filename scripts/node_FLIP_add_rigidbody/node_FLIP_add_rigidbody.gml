@@ -69,7 +69,7 @@ function Node_FLIP_Add_Rigidbody(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
-		draw_sprite_bbox_uniform(s_node_fluidSim_add_collider, 0, bbox);
+		draw_sprite_bbox_uniform(s_node_flip_add_collider, 0, bbox);
 	}
 	
 	static getPreviewValues = function() { var domain = getInputData(0); return instance_exists(domain)? domain.domain_preview : noone; }
