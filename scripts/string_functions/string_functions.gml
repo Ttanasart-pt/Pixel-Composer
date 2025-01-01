@@ -243,7 +243,7 @@ function draw_text_match(_x, _y, _text, _search, _scale = 1) {
 	var run      = 1;
 	var kchr     = string_char_at(_search, 1);
 	
-	BLEND_ALPHA_MULP;
+	BLEND_ALPHA_MULP
 	var aa = string_length(_text);
 	var lw = string_width(_text) * _scale;
 	var tl = string_lower(_text);
@@ -273,7 +273,7 @@ function draw_text_match(_x, _y, _text, _search, _scale = 1) {
 		j++;
 	}
 	
-	BLEND_NORMAL;
+	BLEND_NORMAL
 	
 	draw_set_halign(ha);
 }
@@ -329,7 +329,7 @@ function draw_text_match_ext(_x, _y, _text, _w, _search) {
 		case fa_bottom : yy = _y - hh;		break;
 	}
 	
-	BLEND_ALPHA_MULP;
+	BLEND_ALPHA_MULP
 	for( var i = 0, n = array_length(lines); i < n; i++ ) {
 		var ll = lines[i];
 		var aa = string_length(ll);
@@ -362,7 +362,7 @@ function draw_text_match_ext(_x, _y, _text, _w, _search) {
 		
 		yy += lh;
 	}
-	BLEND_NORMAL;
+	BLEND_NORMAL
 	
 	draw_set_halign(ha);
 	draw_set_valign(va);
@@ -382,7 +382,7 @@ function draw_text_match_range(_x, _y, _text, _range, _scale = 1) {
 	
 	draw_set_halign(fa_left);
 	
-	BLEND_ALPHA_MULP;
+	BLEND_ALPHA_MULP
 	var aa = string_length(_text);
 	var lw = string_width(_text) * _scale;
 	
@@ -403,7 +403,7 @@ function draw_text_match_range(_x, _y, _text, _range, _scale = 1) {
 		j++;
 	}
 	
-	BLEND_NORMAL;
+	BLEND_NORMAL
 	
 	draw_set_halign(ha);
 }
@@ -456,7 +456,7 @@ function draw_text_match_range_ext(_x, _y, _text, _w, _range) {
 	
 	var _rind = 1;
 	
-	BLEND_ALPHA_MULP;
+	BLEND_ALPHA_MULP
 	for( var i = 0, n = array_length(lines); i < n; i++ ) {
 		var ll = lines[i];
 		var aa = string_length(ll);
@@ -481,7 +481,7 @@ function draw_text_match_range_ext(_x, _y, _text, _w, _range) {
 		
 		yy += lh;
 	}
-	BLEND_NORMAL;
+	BLEND_NORMAL
 	
 	draw_set_halign(ha);
 	draw_set_valign(va);

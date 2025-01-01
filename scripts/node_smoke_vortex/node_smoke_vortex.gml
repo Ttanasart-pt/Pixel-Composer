@@ -56,12 +56,12 @@ function Node_Smoke_Vortex(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 		surface_set_target(temp_surface[0])
 			draw_clear_alpha(0., 0.);
 			shader_set(sh_fd_vortex);
-			BLEND_OVERRIDE;
+			BLEND_OVERRIDE
 		
 			shader_set_f("vortex",  _str);
 			shader_set_f("angleIO", _aio);
 			draw_sprite_stretched(s_fx_pixel, 0, _pos[0] - _rad, _pos[1] - _rad, _rad * 2, _rad * 2);
-			BLEND_NORMAL;
+			BLEND_NORMAL
 			shader_reset();
 		surface_reset_target();
 		

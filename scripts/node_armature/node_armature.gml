@@ -890,7 +890,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		
 		var _ss = _s * .5;
 		gpu_set_tex_filter(1);
-		draw_sprite_ext(s_node_armature_create, 0, bbox.x0 + 24 * _ss, bbox.y1 - 24 * _ss, _ss, _ss, 0, c_white, 0.5);
+		draw_sprite_ext(s_node_armature, 0, bbox.x0 + 24 * _ss, bbox.y1 - 24 * _ss, _ss, _ss, 0, c_white, 0.5);
 		gpu_set_tex_filter(0);
 		
 		bones.drawThumbnail(_s, bbox, bone_bbox);

@@ -1,6 +1,5 @@
-function canvas_tool_selection(selector = noone) : canvas_tool() constructor {
-	
-	self.selector = selector;
+function canvas_tool_selection(_selector) : canvas_tool() constructor {
+	selector = _selector ?? noone;
 	
 	selection_surface	= surface_create_empty(1, 1);
 	selection_mask		= surface_create_empty(1, 1);

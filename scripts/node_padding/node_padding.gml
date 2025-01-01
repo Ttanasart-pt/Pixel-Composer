@@ -71,12 +71,12 @@ function Node_Padding(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				surface_set_target(_outSurf);
 					if(fill == 0) {
 						DRAW_CLEAR
-						BLEND_OVERRIDE;
+						BLEND_OVERRIDE
 					} else if(fill == 1)
 						draw_clear_alpha(fillClr, 1);
 				
 					draw_surface_safe(surf, padding[2], padding[1]);
-					BLEND_NORMAL;
+					BLEND_NORMAL
 				surface_reset_target();
 			}
 		} else if(mode == 1) { 
@@ -85,7 +85,7 @@ function Node_Padding(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			surface_set_target(_outSurf);
 			if(fill == 0) {
 				DRAW_CLEAR
-				BLEND_OVERRIDE;
+				BLEND_OVERRIDE
 			} else if(fill == 1)
 				draw_clear(fillClr);
 			
@@ -105,7 +105,7 @@ function Node_Padding(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			}
 			
 			draw_surface_safe(surf, sx, sy);
-			BLEND_NORMAL;
+			BLEND_NORMAL
 			surface_reset_target();
 		}
 		

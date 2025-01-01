@@ -66,9 +66,9 @@ function Node_MK_Delay_Machine(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			DRAW_CLEAR
 			
 			switch(_blnd) {
-				case 0 : BLEND_NORMAL; break;
-				case 1 : BLEND_ALPHA;  break;
-				case 2 : BLEND_ADD;    break;
+				case 0 : BLEND_NORMAL break;
+				case 1 : BLEND_ALPHA  break;
+				case 2 : BLEND_ADD    break;
 			}
 			
 			for( var i = _amo - 1; i >= 0; i-- ) {

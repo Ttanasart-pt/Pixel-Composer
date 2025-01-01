@@ -1,6 +1,6 @@
 function Node_String(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Text";
-	setDimension(96, 48);;
+	setDimension(96, 48);
 	
 	newInput(0, nodeValue_Text("Text", self, ""));
 	

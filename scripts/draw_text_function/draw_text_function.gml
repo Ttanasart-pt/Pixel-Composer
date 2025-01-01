@@ -5,33 +5,33 @@ function draw_text_line(_x, _y, _text, _sep, _w, forceCut = false) {
 
 function draw_text_add(_x, _y, _text, scale = 1) {
 	INLINE
-	BLEND_ALPHA_MULP;
+	BLEND_ALPHA_MULP
 	if(scale == 1) draw_text(round(_x), round(_y), _text);
 	else           draw_text_transformed(round(_x), round(_y), _text, scale, scale, 0);
-	BLEND_NORMAL;
+	BLEND_NORMAL
 }
 
 function draw_text_alpha(_x, _y, _text, scale = 1) {
 	INLINE
-	BLEND_ALPHA;
+	BLEND_ALPHA
 	if(scale == 1) draw_text(round(_x), round(_y), _text);
 	else           draw_text_transformed(round(_x), round(_y), _text, scale, scale, 0);
-	BLEND_NORMAL;
+	BLEND_NORMAL
 }
 
 function draw_text_over(_x, _y, _text, scale = 1) {
 	INLINE
-	BLEND_OVERRIDE;
+	BLEND_OVERRIDE
 	draw_text_transformed(round(_x), round(_y), _text, scale, scale, 0);
-	BLEND_NORMAL;
+	BLEND_NORMAL
 }
 
 function draw_text_add_float(_x, _y, _text, scale = 1) {
 	INLINE
 	
-	BLEND_ADD;
+	BLEND_ADD
 	if(scale == 1) draw_text(_x, _y, _text); else draw_text_transformed(_x, _y, _text, scale, scale, 0);
-	BLEND_NORMAL;
+	BLEND_NORMAL
 	if(scale == 1) draw_text(_x, _y, _text); else draw_text_transformed(_x, _y, _text, scale, scale, 0);
 }
 
@@ -61,16 +61,16 @@ function draw_text_bm_add(_x, _y, _text, scale = 1) {
 
 function draw_text_lang_add(_x, _y, _text, scale = 1) {
 	INLINE
-	BLEND_ALPHA_MULP;
+	BLEND_ALPHA_MULP
 	draw_text_lang(_x, _y, _text, scale);
-	BLEND_NORMAL;
+	BLEND_NORMAL
 }
 
 function draw_text_lang_over(_x, _y, _text, scale = 1) {
 	INLINE
-	BLEND_OVERRIDE;
+	BLEND_OVERRIDE
 	draw_text_lang(_x, _y, _text, scale);
-	BLEND_NORMAL;
+	BLEND_NORMAL
 }
 
 function draw_text_lang(_x, _y, _text, scale = 1) {
@@ -114,17 +114,17 @@ function draw_text_lang(_x, _y, _text, scale = 1) {
 
 function draw_text_ext_add(_x, _y, _text, _sep, _w, scale = 1, forceCut = false) {
 	INLINE
-	BLEND_ALPHA_MULP;
+	BLEND_ALPHA_MULP
 	var h = __draw_text_ext_transformed(_x, _y, _text, _sep, _w, scale, scale, 0, forceCut);
-	BLEND_NORMAL;
+	BLEND_NORMAL
 	return h;
 }
 
 function draw_text_ext_alpha(_x, _y, _text, _sep, _w, scale = 1, forceCut = false) {
 	INLINE
-	BLEND_ALPHA;
+	BLEND_ALPHA
 	var h = __draw_text_ext_transformed(_x, _y, _text, _sep, _w, scale, scale, 0, forceCut);
-	BLEND_NORMAL;
+	BLEND_NORMAL
 	return h;
 }
 
@@ -157,7 +157,7 @@ function draw_text_cut(x, y, str, w, scale = 1, _add = false) {
 	if(_add) { BLEND_ADD }
 	else     { BLEND_ALPHA_MULP }
 	draw_text_transformed(round(x), round(y), string_cut(str, w,, scale), scale, scale, 0);
-	BLEND_NORMAL;
+	BLEND_NORMAL
 }
 
 function draw_text_int(x, y, str) {
@@ -171,9 +171,9 @@ function __draw_text_ext_transformed(_x, _y, _text, _sep, _w, sx = 1, sy = 1, ro
 	_y = round(_y);
 	
 	if(!_break) {
-		BLEND_ALPHA_MULP;
+		BLEND_ALPHA_MULP
 		draw_text_ext_transformed(_x, _y, _text, _sep, _w, sx, sy, rotation);
-		BLEND_NORMAL;
+		BLEND_NORMAL
 		
 		return string_height_ext(_text, _sep, _w) * sy;
 	}
@@ -219,7 +219,7 @@ function __draw_text_ext_transformed(_x, _y, _text, _sep, _w, sx = 1, sy = 1, ro
 		case fa_bottom : yy = _y - hh;		break;
 	}
 	
-	BLEND_ALPHA_MULP;
+	BLEND_ALPHA_MULP
 	for( var i = 0, n = array_length(lines); i < n; i++ ) {
 		var lw = string_width(lines[i]) * sx;
 		
@@ -232,7 +232,7 @@ function __draw_text_ext_transformed(_x, _y, _text, _sep, _w, sx = 1, sy = 1, ro
 		draw_text_transformed(xx, yy, lines[i], sx, sy, rotation);
 		yy += lh * sy;
 	}
-	BLEND_NORMAL;
+	BLEND_NORMAL
 	
 	draw_set_halign(ha);
 	draw_set_valign(va);

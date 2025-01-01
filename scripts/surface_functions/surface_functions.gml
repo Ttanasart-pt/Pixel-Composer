@@ -311,7 +311,7 @@ function surface_reset_target_override() { __surface_reset_target(); winwin_draw
 	
 		var s = surface_create_valid(sw, sh, format);
 		surface_set_target(s);
-			BLEND_OVERRIDE;
+			BLEND_OVERRIDE
 			DRAW_CLEAR
 			draw_sprite(spr, ind, sprite_get_xoffset(spr), sprite_get_yoffset(spr));
 			BLEND_NORMAL
@@ -373,7 +373,7 @@ function surface_reset_target_override() { __surface_reset_target(); winwin_draw
 	
 		surface_set_target(dst);
 		DRAW_CLEAR
-		BLEND_OVERRIDE;
+		BLEND_OVERRIDE
 			draw_surface_safe(src);
 		BLEND_NORMAL
 		surface_reset_target();
@@ -390,7 +390,7 @@ function surface_reset_target_override() { __surface_reset_target(); winwin_draw
 	
 		surface_set_target(destination);
 		DRAW_CLEAR
-		BLEND_OVERRIDE;
+		BLEND_OVERRIDE
 			draw_surface_safe(surface);
 		BLEND_NORMAL
 		surface_reset_target();

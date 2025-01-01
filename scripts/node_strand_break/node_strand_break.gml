@@ -2,7 +2,7 @@ function Node_Strand_Break(_x, _y, _group = noone) : _Node_Strand_Affector(_x, _
 	name  = "Strand Break";
 	color = COLORS.node_blend_strand;
 	icon  = THEME.strandSim;
-	setDimension(96, 48);;
+	setDimension(96, 48);
 	
 	manual_ungroupable	 = false;
 	

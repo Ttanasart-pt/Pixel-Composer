@@ -1,6 +1,6 @@
 function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Smooth Path";
-	setDimension(96, 48);;
+	setDimension(96, 48);
 	
 	newInput(0, nodeValue_Bool("Loop", self, false))
 		.rejectArray();

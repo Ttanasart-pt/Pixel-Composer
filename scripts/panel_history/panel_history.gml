@@ -81,7 +81,7 @@ function Panel_History() : PanelContent() constructor {
 			}
 			hh = amoDisp * lh;
 			
-			BLEND_OVERRIDE;
+			BLEND_OVERRIDE
 			if(pHOVER && sc_history.hover && point_in_rectangle(_m[0], _m[1], ui(32), yy - ui(4), ww, yy + hh + ui(4) - 1)) {
 				sc_history.hover_content = true;
 				draw_sprite_stretched_ext(THEME.node_bg, 0, ui(32), yy - ui(2), lw, hh + ui(4), COLORS._main_icon_light, 1);
@@ -108,7 +108,7 @@ function Panel_History() : PanelContent() constructor {
 			else		_yc = yy + hh;
 			
 			draw_sprite_ui(THEME.scroll_box_arrow, 0, ui(16), _yc, 1, 1 - (i > red) * 2, 0, cc, 1);
-			BLEND_NORMAL;
+			BLEND_NORMAL
 			
 			if(i == hovering)
 				connect_line_ed = _yc;

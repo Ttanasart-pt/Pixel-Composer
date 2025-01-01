@@ -116,7 +116,7 @@ function Node_Blur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			draw_clear_alpha(_isovr? _overc : 0, 0);
 			draw_surface_safe(temp_surface[1]);
 		surface_reset_target();
-		BLEND_NORMAL;
+		BLEND_NORMAL
 		
 		__process_mask_modifier(_data);
 		_outSurf = mask_apply(_data[0], _outSurf, _mask, _mix);

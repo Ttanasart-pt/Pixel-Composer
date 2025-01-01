@@ -1,6 +1,6 @@
 function Node_Color_Mix(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Mix Color";
-	setDimension(96, 48);;
+	setDimension(96, 48);
 	
 	newInput(0, nodeValue_Color("Color from", self, cola(c_white)));
 	

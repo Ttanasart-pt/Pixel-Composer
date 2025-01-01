@@ -44,7 +44,7 @@
 	LATEST_VERSION	= 1_18_00_0;
 	VERSION			= 1_18_06_2;
 	SAVE_VERSION	= 1_18_05_0;
-	VERSION_STRING  = MAC? "1.18.003m" : "1.18.6.2.003";
+	VERSION_STRING  = MAC? "1.18.003m" : "1.18.6.2";
 	BUILD_NUMBER	= 1_18_06_2;
 	PREF_VERSION    = 1_17_1;
 	
@@ -169,11 +169,6 @@
 #macro returnNull_mf2 ; if(is_undefined(
 #macro returnNull_mf3 ) || 
 #macro returnNull_mf4  == noone) return;
-	//!#mfunc case2 {"args":["a"," b"],"order":[0,1],"token":"keyword"}
-#macro case2_mf0  case 
-#macro case2_mf1 : case 
-#macro case2_mf2 //
-	
 #endregion
 
 #region presets

@@ -103,7 +103,7 @@
 	PROJECT_VARIABLES.Project.frame			= [ function() { return CURRENT_FRAME },								EXPRESS_TREE_ANIM.animated	];
 	PROJECT_VARIABLES.Project.progress		= [ function() { return CURRENT_FRAME / (TOTAL_FRAMES - 1) },			EXPRESS_TREE_ANIM.animated	];
 	PROJECT_VARIABLES.Project.frameTotal	= [ function() { return TOTAL_FRAMES }, 								EXPRESS_TREE_ANIM.none		];
-	PROJECT_VARIABLES.Project.fps			= [ function() { return PROJECT.animator.framerate }, 					EXPRESS_TREE_ANIM.none		];
+	PROJECT_VARIABLES.Project.FPS           = [ function() { return PROJECT.animator.framerate }, 					EXPRESS_TREE_ANIM.none		];
 	PROJECT_VARIABLES.Project.time			= [ function() { return CURRENT_FRAME / PROJECT.animator.framerate }, 	EXPRESS_TREE_ANIM.animated	];
 	PROJECT_VARIABLES.Project.name			= [ function() { return filename_name_only(PROJECT.path) }, 			EXPRESS_TREE_ANIM.none		];
 	PROJECT_VARIABLES.Project.dimension     = [ function() { return PROJECT.attributes.surface_dimension; }, 		EXPRESS_TREE_ANIM.none		];

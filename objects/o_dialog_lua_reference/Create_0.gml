@@ -51,7 +51,7 @@ event_inherited();
 			}
 			hh += pad * 2;
 			
-			BLEND_OVERRIDE;
+			BLEND_OVERRIDE
 			if(sp_note.hover && point_in_rectangle(_m[0], _m[1], 0, yy, sp_note.surface_w, yy + hh)) {
 				sp_note.hover_content = true;
 				
@@ -61,7 +61,7 @@ event_inherited();
 					is_open[i] = !array_get(is_open, i);
 			} else 
 				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, yy, sp_note.surface_w, hh, COLORS.dialog_lua_ref_bg, 1);
-			BLEND_NORMAL;
+			BLEND_NORMAL
 			
 			draw_sprite_ui(THEME.arrow, is_open[i]? 3 : 0, ui(16), yy + pad + line_get_height() / 2,,,, COLORS._main_icon);
 			draw_set_text(f_code, fa_left, fa_top, COLORS._main_text);

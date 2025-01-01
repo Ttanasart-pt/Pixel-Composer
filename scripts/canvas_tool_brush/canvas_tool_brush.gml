@@ -174,7 +174,7 @@ function canvas_tool_brush(brush, eraser = false) : canvas_tool() constructor {
 			
 		}
 			
-		BLEND_NORMAL;
+		BLEND_NORMAL
 			
 		mouse_pre_x = mouse_cur_x;
 		mouse_pre_y = mouse_cur_y;

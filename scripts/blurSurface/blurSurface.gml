@@ -74,7 +74,7 @@ function surface_apply_gaussian(surface, size, bg = false, bg_c = c_white, sampl
 		shader_reset();
 	surface_reset_target();
 	gpu_set_tex_filter(false);
-	BLEND_NORMAL;
+	BLEND_NORMAL
 	
 	return __blur_vert;
 }

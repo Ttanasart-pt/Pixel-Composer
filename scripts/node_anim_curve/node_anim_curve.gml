@@ -37,6 +37,6 @@ function Node_Anim_Curve(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
-		draw_sprite_fit(s_node_curve_eval, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
+		draw_sprite_fit(s_node_anim_curve, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 }

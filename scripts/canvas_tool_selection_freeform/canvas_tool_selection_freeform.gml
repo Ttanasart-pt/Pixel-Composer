@@ -1,5 +1,4 @@
 function canvas_tool_selection_freeform(selector, brush) : canvas_tool_selection(selector) constructor {
-	
 	self.brush = brush;
 	
 	mouse_pre_x = 0;

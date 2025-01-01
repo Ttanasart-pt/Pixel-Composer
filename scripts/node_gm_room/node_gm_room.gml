@@ -187,7 +187,7 @@ function Node_GMRoom(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			draw_text_add(_wdx + ui(8 + 32), _wdy + _wdh / 2, _tname);
 			
             draw_sprite_stretched_ext(THEME.textbox, 3, _wdx, _wdy, ui(32), _wdh, c_white);
-            draw_sprite_ext(s_node_tileset, 0, _wdx + ui(32) / 2, _wdy + _wdh / 2, .25, .25);
+            draw_sprite_ext(s_node_tile_tileset, 0, _wdx + ui(32) / 2, _wdy + _wdh / 2, .25, .25);
 			
 			_yy += _wdh + ui(8);
 			_h  += _wdh + ui(8);

@@ -1,6 +1,6 @@
 function Node_Mesh_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Mesh Transform";
-	setDimension(96, 48);;
+	setDimension(96, 48);
 	
 	newInput(0, nodeValue("Mesh", self, CONNECT_TYPE.input, VALUE_TYPE.mesh, noone))
 		.setVisible(true, true);
@@ -78,6 +78,6 @@ function Node_Mesh_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
-		draw_sprite_fit(s_node_mesh_path, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
+		draw_sprite_fit(s_node_mesh_create_path, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 }

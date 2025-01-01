@@ -2,7 +2,7 @@ function Node_Strand_Collision(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	name  = "Strand Collision";
 	color = COLORS.node_blend_strand;
 	icon  = THEME.strandSim;
-	setDimension(96, 48);;
+	setDimension(96, 48);
 	
 	manual_ungroupable	 = false;
 	
@@ -51,6 +51,6 @@ function Node_Strand_Collision(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
-		draw_sprite_fit(s_node_strand_collide, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
+		draw_sprite_fit(s_node_strand_collision, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 }

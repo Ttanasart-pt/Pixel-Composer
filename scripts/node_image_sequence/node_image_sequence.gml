@@ -200,9 +200,9 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 					surfs[i] = surface_verify(surfs[i], ww, hh, attrDepth());
 					surface_set_target(surfs[i]);
 						DRAW_CLEAR
-						BLEND_OVERRIDE;
+						BLEND_OVERRIDE
 						draw_sprite(_spr, 0, pad[2], pad[1]);
-						BLEND_NORMAL;
+						BLEND_NORMAL
 					surface_reset_target();
 					break;
 					
@@ -219,9 +219,9 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 						
 						surface_set_target(surfs[i]);
 							DRAW_CLEAR
-							BLEND_OVERRIDE;
+							BLEND_OVERRIDE
 							draw_sprite_ext(_spr, 0, sw, sh, ss, ss, 0, c_white, 1);
-							BLEND_NORMAL;
+							BLEND_NORMAL
 						surface_reset_target();
 						
 					} else {
@@ -230,9 +230,9 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 						
 						surface_set_target(surfs[i]);
 							DRAW_CLEAR
-							BLEND_OVERRIDE;
+							BLEND_OVERRIDE
 							draw_sprite(_spr, 0, xx, yy);
-							BLEND_NORMAL;
+							BLEND_NORMAL
 						surface_reset_target();
 					}
 					break;

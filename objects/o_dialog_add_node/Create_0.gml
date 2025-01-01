@@ -716,7 +716,7 @@ event_inherited();
 					var _hv = _hover && point_in_rectangle(_m[0], _m[1], 0, _yy, ww, _yy + _lbh);
 					var _tc = CDEF.main_ltgrey;
 					
-					BLEND_OVERRIDE;
+					BLEND_OVERRIDE
 					if(PREFERENCES.dialog_add_node_grouping == 1)
                     	draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, ui(16), _yy, ww - ui(32), _lbh, _hv? COLORS.panel_inspector_group_hover : COLORS.panel_inspector_group_bg, 1);
                     else {
@@ -738,7 +738,7 @@ event_inherited();
                         }
                     }
                         
-					BLEND_NORMAL;
+					BLEND_NORMAL
 					
 					draw_sprite_ui(THEME.arrow, _coll? 0 : 3, ui(16 + 16), _yy + _lbh / 2, 1, 1, 0, _tc, 1);    
 					draw_set_text(f_p2, fa_left, fa_center, _tc);
@@ -891,7 +891,7 @@ event_inherited();
 					var _hv = _hover && point_in_rectangle(_m[0], _m[1], 0, _yy, ww, _yy + _lbh);
 					var _tc = CDEF.main_ltgrey;
 					
-					BLEND_OVERRIDE;
+					BLEND_OVERRIDE
 					if(PREFERENCES.dialog_add_node_grouping == 1)
                     	draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, ui(16), _yy, ww - ui(32), _lbh, _hv? COLORS.panel_inspector_group_hover : COLORS.panel_inspector_group_bg, 1);
                 	else {
@@ -914,7 +914,7 @@ event_inherited();
                         }
                     }
                         
-					BLEND_NORMAL;
+					BLEND_NORMAL
 					
 					draw_sprite_ui(THEME.arrow, _coll? 0 : 3, ui(16 + 16), _yy + _lbh / 2, 1, 1, 0, _tc, 1);    
 					

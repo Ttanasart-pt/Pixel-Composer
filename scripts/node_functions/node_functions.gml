@@ -234,8 +234,8 @@
 			var node = PROJECT.nodeNameMap[? key];
 			var map  = noone;
 			switch(string_lower(strs[1])) {
-				case2_mf0/* */"inputs" case2_mf1  "input" case2_mf2   : map = node.inputMap;  break;
-				case2_mf0/* */"outputs" case2_mf1  "output" case2_mf2 : map = node.outputMap; break;
+				case "inputs"  : case "input"  : map = node.inputMap;  break;
+				case "outputs" : case "output" : map = node.outputMap; break;
 				default : return 0;
 			}
 			
@@ -271,8 +271,8 @@
 			var node = PROJECT.nodeNameMap[? key];
 			var map  = noone;
 			switch(string_lower(strs[1])) {
-				case2_mf0/* */"inputs" case2_mf1  "input" case2_mf2   : map = node.inputMap;  break;
-				case2_mf0/* */"outputs" case2_mf1  "output" case2_mf2 : map = node.outputMap; break;
+				case "inputs"  : case "input"  : map = node.inputMap;  break;
+				case "outputs" : case "output" : map = node.outputMap; break;
 				default : return EXPRESS_TREE_ANIM.none;
 			}
 			

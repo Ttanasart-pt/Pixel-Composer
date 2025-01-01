@@ -91,7 +91,7 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	}
 	
 	static getPointRatio = function(_rat, ind = 0, out = undefined) {
-		if(out == undefined) out = new __vec2();
+		out ??= new __vec2();
 		
 		var _cKey = $"{string_format(_rat, 0, 6)},{ind}";
 		if(ds_map_exists(cached_pos, _cKey)) {

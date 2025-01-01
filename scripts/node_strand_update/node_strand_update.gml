@@ -2,7 +2,7 @@ function Node_Strand_Update(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	name  = "Strand Update";
 	color = COLORS.node_blend_strand;
 	icon  = THEME.strandSim;
-	setDimension(96, 48);;
+	setDimension(96, 48);
 	
 	manual_ungroupable	 = false;
 	

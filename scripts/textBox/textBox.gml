@@ -615,7 +615,9 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				
 				sliding = 2;
 				if(hide < 3) {
-					slider_object = instance_create_depth(rx + _x, ry + _y, -16000, slider_Slider, { w: _w, h: _h });
+					slider_object      = instance_create_depth(rx + _x, ry + _y, -16000, slider_Slider);
+					slider_object.w    = _w;
+					slider_object.h    = _h;
 					slider_object.text = self;
 				}
 			}

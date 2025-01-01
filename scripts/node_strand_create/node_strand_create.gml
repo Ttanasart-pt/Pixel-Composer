@@ -2,7 +2,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	name  = "Strand Create";
 	color = COLORS.node_blend_strand;
 	icon  = THEME.strandSim;
-	setDimension(96, 48);;
+	setDimension(96, 48);
 	
 	update_on_frame      = true;
 	manual_ungroupable	 = false;

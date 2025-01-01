@@ -44,13 +44,13 @@ function Node_Smoke_Turbulence(_x, _y, _group = noone) : Node_Smoke(_x, _y, _gro
 		surface_set_target(temp_surface[0])
 			draw_clear_alpha(0., 0.);
 			shader_set(sh_fd_turbulence);
-			BLEND_OVERRIDE;
+			BLEND_OVERRIDE
 			
 			shader_set_f("scale",    _sca);
 			shader_set_f("seed",     _sed);
 			shader_set_f("strength", _str);
 			draw_sprite_stretched(s_fx_pixel, 0, _are[0] - _are[2], _are[1] - _are[3], _are[2] * 2, _are[3] * 2);
-			BLEND_NORMAL;
+			BLEND_NORMAL
 			shader_reset();
 		surface_reset_target();
 		

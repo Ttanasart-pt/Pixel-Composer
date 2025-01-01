@@ -388,7 +388,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					break;
 					
 				case 1 : 
-					BLEND_ADD; 
+					BLEND_ADD 
 					break;
 					
 				case 2 : 

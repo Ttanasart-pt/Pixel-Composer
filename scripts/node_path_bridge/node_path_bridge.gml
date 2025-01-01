@@ -1,6 +1,6 @@
 function Node_Path_Bridge(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Bridge Path";
-	setDimension(96, 48);;
+	setDimension(96, 48);
 	
 	newInput(0, nodeValue_PathNode("Path", self, noone))
 		.setVisible(true, true)

@@ -71,8 +71,8 @@ function pxl_autocomplete_server_node(prompt, pr_list) {
 			var tag  = "";
 			
 			switch(string_lower(sp[1])) {
-				case2_mf0/* */"inputs" case2_mf1   "input" case2_mf2  : tag = "input";  F = node.inputMap;  break;
-				case2_mf0/* */"outputs" case2_mf1  "output" case2_mf2 : tag = "output"; F = node.outputMap; break;
+				case "inputs"  : case "input"  : tag = "input";  F = node.inputMap;  break;
+				case "outputs" : case "output" : tag = "output"; F = node.outputMap; break;
 			}
 			
 			if(!is_struct(F)) return;

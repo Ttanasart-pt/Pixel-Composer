@@ -189,7 +189,7 @@ function __Node_3D_Plane(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		
 		surface_set_target(_outSurf);
 		DRAW_CLEAR
-		BLEND_OVERRIDE;
+		BLEND_OVERRIDE
 		
 			shader = sh_vertex_pt;
 			shader_set(shader);
@@ -232,7 +232,7 @@ function __Node_3D_Plane(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			matrix_stack_clear();
 			matrix_set(matrix_world, MATRIX_IDENTITY);
 		
-		BLEND_NORMAL;
+		BLEND_NORMAL
 		surface_reset_target();
 		
 		return _outSurf;

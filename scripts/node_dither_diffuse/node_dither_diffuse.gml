@@ -135,12 +135,12 @@ function Node_Dither_Diffuse(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			    repeat(_a) {
 			    	__err_diffuse_write_grey
 			    	
-			    	if(_x < _sw - 1) { _pl = _p + 2; __error_diffuse_grey_mf0 _k1 __error_diffuse_grey_mf1; }
+			    	if(_x < _sw - 1) { _pl = _p + 2; __error_diffuse_grey_mf0 _k1 __error_diffuse_grey_mf1 }
 			    	
 			    	if(_y < _sh - 1) {
-			            if(_x > 0) {       _pl = _p + _s - 2; __error_diffuse_grey_mf0 _k2 __error_diffuse_grey_mf1; }
-			                               _pl = _p + _s;     __error_diffuse_grey_mf0 _k3 __error_diffuse_grey_mf1;
-			    		if(_x < _sw - 1) { _pl = _p + _s + 2; __error_diffuse_grey_mf0 _k4 __error_diffuse_grey_mf1; }
+			            if(_x > 0) {       _pl = _p + _s - 2; __error_diffuse_grey_mf0 _k2 __error_diffuse_grey_mf1 }
+			                               _pl = _p + _s;     __error_diffuse_grey_mf0 _k3 __error_diffuse_grey_mf1
+			    		if(_x < _sw - 1) { _pl = _p + _s + 2; __error_diffuse_grey_mf0 _k4 __error_diffuse_grey_mf1 }
 			    	}
 			    	
 			    	_p += 2; _x++; if(_x >= _sw) { _x = 0; _y++; }
@@ -156,24 +156,24 @@ function Node_Dither_Diffuse(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			    	__err_diffuse_write_grey
 			    	
 			    	if(_x < _sw - 1) {
-			    		                   _pl = _p + 2;  __error_diffuse_grey_mf0 _k1 __error_diffuse_grey_mf1;
-			    		if(_x < _sw - 2) { _pl = _p + 4;  __error_diffuse_grey_mf0 _k2 __error_diffuse_grey_mf1; }
+			    		                   _pl = _p + 2;  __error_diffuse_grey_mf0 _k1 __error_diffuse_grey_mf1
+			    		if(_x < _sw - 2) { _pl = _p + 4;  __error_diffuse_grey_mf0 _k2 __error_diffuse_grey_mf1 }
 			    	}
 			    	
 			    	if(_y < _sh - 1) {
-			    		if(_x > 1) {       _pl = _p + _s - 4; __error_diffuse_grey_mf0 _k3 __error_diffuse_grey_mf1; }
-			            if(_x > 0) {       _pl = _p + _s - 2; __error_diffuse_grey_mf0 _k4 __error_diffuse_grey_mf1; }
-			    		                   _pl = _p + _s;     __error_diffuse_grey_mf0 _k5 __error_diffuse_grey_mf1;
-			    		if(_x < _sw - 1) { _pl = _p + _s + 2; __error_diffuse_grey_mf0 _k6 __error_diffuse_grey_mf1; }
-			            if(_x < _sw - 2) { _pl = _p + _s + 4; __error_diffuse_grey_mf0 _k7 __error_diffuse_grey_mf1; }
+			    		if(_x > 1) {       _pl = _p + _s - 4; __error_diffuse_grey_mf0 _k3 __error_diffuse_grey_mf1 }
+			            if(_x > 0) {       _pl = _p + _s - 2; __error_diffuse_grey_mf0 _k4 __error_diffuse_grey_mf1 }
+			    		                   _pl = _p + _s;     __error_diffuse_grey_mf0 _k5 __error_diffuse_grey_mf1
+			    		if(_x < _sw - 1) { _pl = _p + _s + 2; __error_diffuse_grey_mf0 _k6 __error_diffuse_grey_mf1 }
+			            if(_x < _sw - 2) { _pl = _p + _s + 4; __error_diffuse_grey_mf0 _k7 __error_diffuse_grey_mf1 }
 			    	}
 			    	
 			    	if(_y < _sh - 2) {
-			    		if(_x > 1) {       _pl = _p + _s * 2 - 4; __error_diffuse_grey_mf0 _k8 __error_diffuse_grey_mf1; }
-			            if(_x > 0) {       _pl = _p + _s * 2 - 2; __error_diffuse_grey_mf0 _k9 __error_diffuse_grey_mf1; }
-			    		                   _pl = _p + _s * 2;     __error_diffuse_grey_mf0 _k10 __error_diffuse_grey_mf1;
-			    		if(_x < _sw - 1) { _pl = _p + _s * 2 + 2; __error_diffuse_grey_mf0 _k11 __error_diffuse_grey_mf1; }
-			            if(_x < _sw - 2) { _pl = _p + _s * 2 + 4; __error_diffuse_grey_mf0 _k12 __error_diffuse_grey_mf1; }
+			    		if(_x > 1) {       _pl = _p + _s * 2 - 4; __error_diffuse_grey_mf0 _k8 __error_diffuse_grey_mf1 }
+			            if(_x > 0) {       _pl = _p + _s * 2 - 2; __error_diffuse_grey_mf0 _k9 __error_diffuse_grey_mf1 }
+			    		                   _pl = _p + _s * 2;     __error_diffuse_grey_mf0 _k10 __error_diffuse_grey_mf1
+			    		if(_x < _sw - 1) { _pl = _p + _s * 2 + 2; __error_diffuse_grey_mf0 _k11 __error_diffuse_grey_mf1 }
+			            if(_x < _sw - 2) { _pl = _p + _s * 2 + 4; __error_diffuse_grey_mf0 _k12 __error_diffuse_grey_mf1 }
 			    	}
 			    	
 			    	_p += 2; _x++; if(_x >= _sw) { _x = 0; _y++; }
@@ -187,17 +187,17 @@ function Node_Dither_Diffuse(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			    	__err_diffuse_write_grey
 			    	
 			    	if(_x < _sw - 1) {
-			    		                   _pl = _p + 2; __error_diffuse_grey_mf0 _k1 __error_diffuse_grey_mf1;
-			    		if(_x < _sw - 2) { _pl = _p + 4; __error_diffuse_grey_mf0 _k1 __error_diffuse_grey_mf1; }
+			    		                   _pl = _p + 2; __error_diffuse_grey_mf0 _k1 __error_diffuse_grey_mf1
+			    		if(_x < _sw - 2) { _pl = _p + 4; __error_diffuse_grey_mf0 _k1 __error_diffuse_grey_mf1 }
 			    	}
 			    	
 			    	if(_y < _sh - 1) {
-			            if(_x > 0) {       _pl = _p + _s - 2; __error_diffuse_grey_mf0 _k1 __error_diffuse_grey_mf1; }
-			    		                   _pl = _p + _s;     __error_diffuse_grey_mf0 _k1 __error_diffuse_grey_mf1;
-			    		if(_x < _sw - 1) { _pl = _p + _s + 2; __error_diffuse_grey_mf0 _k1 __error_diffuse_grey_mf1; }
+			            if(_x > 0) {       _pl = _p + _s - 2; __error_diffuse_grey_mf0 _k1 __error_diffuse_grey_mf1 }
+			    		                   _pl = _p + _s;     __error_diffuse_grey_mf0 _k1 __error_diffuse_grey_mf1
+			    		if(_x < _sw - 1) { _pl = _p + _s + 2; __error_diffuse_grey_mf0 _k1 __error_diffuse_grey_mf1 }
 			    	}
 			    	
-			    	if(_y < _sh - 2) {     _pl = _p + _s * 2; __error_diffuse_grey_mf0 _k1 __error_diffuse_grey_mf1; }
+			    	if(_y < _sh - 2) {     _pl = _p + _s * 2; __error_diffuse_grey_mf0 _k1 __error_diffuse_grey_mf1 }
 			    	
 			    	_p += 2; _x++; if(_x >= _sw) { _x = 0; _y++; }
 			    }
@@ -207,7 +207,7 @@ function Node_Dither_Diffuse(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			    repeat(_a) {
 			    	__err_diffuse_write_grey
 			    	
-			    	if(_x < _sw - 1) { _pl = _p + 2; __error_diffuse_grey_mf0 1 __error_diffuse_grey_mf1; }
+			    	if(_x < _sw - 1) { _pl = _p + 2; __error_diffuse_grey_mf0 1 __error_diffuse_grey_mf1 }
 			    	
 			    	_p += 2; _x++; if(_x >= _sw) { _x = 0; _y++; }
 			    }
@@ -224,12 +224,12 @@ function Node_Dither_Diffuse(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			    repeat(_a) {
 			    	__err_diffuse_write
 			    	
-			    	if(_x < _sw - 1) { _pl = _p + 8; __error_diffuse_mf0 _k1 __error_diffuse_mf1 _k1 __error_diffuse_mf2 _k1 __error_diffuse_mf3 _k1 __error_diffuse_mf4; }
+			    	if(_x < _sw - 1) { _pl = _p + 8; __error_diffuse_mf0 _k1 __error_diffuse_mf1 _k1 __error_diffuse_mf2 _k1 __error_diffuse_mf3 _k1 __error_diffuse_mf4 }
 			    	
 			    	if(_y < _sh - 1) {
-			            if(_x > 0) {       _pl = _p + _s - 8; __error_diffuse_mf0 _k2 __error_diffuse_mf1 _k2 __error_diffuse_mf2 _k2 __error_diffuse_mf3 _k2 __error_diffuse_mf4; }
-			                               _pl = _p + _s;     __error_diffuse_mf0 _k3 __error_diffuse_mf1 _k3 __error_diffuse_mf2 _k3 __error_diffuse_mf3 _k3 __error_diffuse_mf4;
-			    		if(_x < _sw - 1) { _pl = _p + _s + 8; __error_diffuse_mf0 _k4 __error_diffuse_mf1 _k4 __error_diffuse_mf2 _k4 __error_diffuse_mf3 _k4 __error_diffuse_mf4; }
+			            if(_x > 0) {       _pl = _p + _s - 8; __error_diffuse_mf0 _k2 __error_diffuse_mf1 _k2 __error_diffuse_mf2 _k2 __error_diffuse_mf3 _k2 __error_diffuse_mf4 }
+			                               _pl = _p + _s;     __error_diffuse_mf0 _k3 __error_diffuse_mf1 _k3 __error_diffuse_mf2 _k3 __error_diffuse_mf3 _k3 __error_diffuse_mf4
+			    		if(_x < _sw - 1) { _pl = _p + _s + 8; __error_diffuse_mf0 _k4 __error_diffuse_mf1 _k4 __error_diffuse_mf2 _k4 __error_diffuse_mf3 _k4 __error_diffuse_mf4 }
 			    	}
 			    	
 			    	_p += 8; _x++; if(_x >= _sw) { _x = 0; _y++; }
@@ -245,24 +245,24 @@ function Node_Dither_Diffuse(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			    	__err_diffuse_write
 			    	
 			    	if(_x < _sw - 1) {
-			    		                   _pl = _p +  8;  __error_diffuse_mf0 _k1 __error_diffuse_mf1 _k1 __error_diffuse_mf2 _k1 __error_diffuse_mf3 _k1 __error_diffuse_mf4;
-			    		if(_x < _sw - 2) { _pl = _p + 16;  __error_diffuse_mf0 _k2 __error_diffuse_mf1 _k2 __error_diffuse_mf2 _k2 __error_diffuse_mf3 _k2 __error_diffuse_mf4; }
+			    		                   _pl = _p +  8;  __error_diffuse_mf0 _k1 __error_diffuse_mf1 _k1 __error_diffuse_mf2 _k1 __error_diffuse_mf3 _k1 __error_diffuse_mf4
+			    		if(_x < _sw - 2) { _pl = _p + 16;  __error_diffuse_mf0 _k2 __error_diffuse_mf1 _k2 __error_diffuse_mf2 _k2 __error_diffuse_mf3 _k2 __error_diffuse_mf4 }
 			    	}
 			    	
 			    	if(_y < _sh - 1) {
-			    		if(_x > 1) {       _pl = _p + _s - 16; __error_diffuse_mf0 _k3 __error_diffuse_mf1 _k3 __error_diffuse_mf2 _k3 __error_diffuse_mf3 _k3 __error_diffuse_mf4; }
-			            if(_x > 0) {       _pl = _p + _s -  8; __error_diffuse_mf0 _k4 __error_diffuse_mf1 _k4 __error_diffuse_mf2 _k4 __error_diffuse_mf3 _k4 __error_diffuse_mf4; }
-			    		                   _pl = _p + _s;      __error_diffuse_mf0 _k5 __error_diffuse_mf1 _k5 __error_diffuse_mf2 _k5 __error_diffuse_mf3 _k5 __error_diffuse_mf4;
-			    		if(_x < _sw - 1) { _pl = _p + _s +  8; __error_diffuse_mf0 _k6 __error_diffuse_mf1 _k6 __error_diffuse_mf2 _k6 __error_diffuse_mf3 _k6 __error_diffuse_mf4; }
-			            if(_x < _sw - 2) { _pl = _p + _s + 16; __error_diffuse_mf0 _k7 __error_diffuse_mf1 _k7 __error_diffuse_mf2 _k7 __error_diffuse_mf3 _k7 __error_diffuse_mf4; }
+			    		if(_x > 1) {       _pl = _p + _s - 16; __error_diffuse_mf0 _k3 __error_diffuse_mf1 _k3 __error_diffuse_mf2 _k3 __error_diffuse_mf3 _k3 __error_diffuse_mf4 }
+			            if(_x > 0) {       _pl = _p + _s -  8; __error_diffuse_mf0 _k4 __error_diffuse_mf1 _k4 __error_diffuse_mf2 _k4 __error_diffuse_mf3 _k4 __error_diffuse_mf4 }
+			    		                   _pl = _p + _s;      __error_diffuse_mf0 _k5 __error_diffuse_mf1 _k5 __error_diffuse_mf2 _k5 __error_diffuse_mf3 _k5 __error_diffuse_mf4
+			    		if(_x < _sw - 1) { _pl = _p + _s +  8; __error_diffuse_mf0 _k6 __error_diffuse_mf1 _k6 __error_diffuse_mf2 _k6 __error_diffuse_mf3 _k6 __error_diffuse_mf4 }
+			            if(_x < _sw - 2) { _pl = _p + _s + 16; __error_diffuse_mf0 _k7 __error_diffuse_mf1 _k7 __error_diffuse_mf2 _k7 __error_diffuse_mf3 _k7 __error_diffuse_mf4 }
 			    	}
 			    	
 			    	if(_y < _sh - 2) {
-			    		if(_x > 1) {       _pl = _p + _s * 2 - 16; __error_diffuse_mf0 _k8 __error_diffuse_mf1 _k8 __error_diffuse_mf2 _k8 __error_diffuse_mf3 _k8 __error_diffuse_mf4; }
-			            if(_x > 0) {       _pl = _p + _s * 2 -  8; __error_diffuse_mf0 _k9 __error_diffuse_mf1 _k9 __error_diffuse_mf2 _k9 __error_diffuse_mf3 _k9 __error_diffuse_mf4; }
-			    		                   _pl = _p + _s * 2;      __error_diffuse_mf0 _k10 __error_diffuse_mf1 _k10 __error_diffuse_mf2 _k10 __error_diffuse_mf3 _k10 __error_diffuse_mf4;
-			    		if(_x < _sw - 1) { _pl = _p + _s * 2 +  8; __error_diffuse_mf0 _k11 __error_diffuse_mf1 _k11 __error_diffuse_mf2 _k11 __error_diffuse_mf3 _k11 __error_diffuse_mf4; }
-			            if(_x < _sw - 2) { _pl = _p + _s * 2 + 16; __error_diffuse_mf0 _k12 __error_diffuse_mf1 _k12 __error_diffuse_mf2 _k12 __error_diffuse_mf3 _k12 __error_diffuse_mf4; }
+			    		if(_x > 1) {       _pl = _p + _s * 2 - 16; __error_diffuse_mf0 _k8 __error_diffuse_mf1 _k8 __error_diffuse_mf2 _k8 __error_diffuse_mf3 _k8 __error_diffuse_mf4 }
+			            if(_x > 0) {       _pl = _p + _s * 2 -  8; __error_diffuse_mf0 _k9 __error_diffuse_mf1 _k9 __error_diffuse_mf2 _k9 __error_diffuse_mf3 _k9 __error_diffuse_mf4 }
+			    		                   _pl = _p + _s * 2;      __error_diffuse_mf0 _k10 __error_diffuse_mf1 _k10 __error_diffuse_mf2 _k10 __error_diffuse_mf3 _k10 __error_diffuse_mf4
+			    		if(_x < _sw - 1) { _pl = _p + _s * 2 +  8; __error_diffuse_mf0 _k11 __error_diffuse_mf1 _k11 __error_diffuse_mf2 _k11 __error_diffuse_mf3 _k11 __error_diffuse_mf4 }
+			            if(_x < _sw - 2) { _pl = _p + _s * 2 + 16; __error_diffuse_mf0 _k12 __error_diffuse_mf1 _k12 __error_diffuse_mf2 _k12 __error_diffuse_mf3 _k12 __error_diffuse_mf4 }
 			    	}
 			    	
 			    	_p += 8; _x++; if(_x >= _sw) { _x = 0; _y++; }
@@ -276,17 +276,17 @@ function Node_Dither_Diffuse(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			    	__err_diffuse_write
 			    	
 			    	if(_x < _sw - 1) {
-			    		                   _pl = _p +  8; __error_diffuse_mf0 _k1 __error_diffuse_mf1 _k1 __error_diffuse_mf2 _k1 __error_diffuse_mf3 _k1 __error_diffuse_mf4;
-			    		if(_x < _sw - 2) { _pl = _p + 16; __error_diffuse_mf0 _k1 __error_diffuse_mf1 _k1 __error_diffuse_mf2 _k1 __error_diffuse_mf3 _k1 __error_diffuse_mf4; }
+			    		                   _pl = _p +  8; __error_diffuse_mf0 _k1 __error_diffuse_mf1 _k1 __error_diffuse_mf2 _k1 __error_diffuse_mf3 _k1 __error_diffuse_mf4
+			    		if(_x < _sw - 2) { _pl = _p + 16; __error_diffuse_mf0 _k1 __error_diffuse_mf1 _k1 __error_diffuse_mf2 _k1 __error_diffuse_mf3 _k1 __error_diffuse_mf4 }
 			    	}
 			    	
 			    	if(_y < _sh - 1) {
-			            if(_x > 0) {       _pl = _p + _s - 8; __error_diffuse_mf0 _k1 __error_diffuse_mf1 _k1 __error_diffuse_mf2 _k1 __error_diffuse_mf3 _k1 __error_diffuse_mf4; }
-			    		                   _pl = _p + _s;     __error_diffuse_mf0 _k1 __error_diffuse_mf1 _k1 __error_diffuse_mf2 _k1 __error_diffuse_mf3 _k1 __error_diffuse_mf4;
-			    		if(_x < _sw - 1) { _pl = _p + _s + 8; __error_diffuse_mf0 _k1 __error_diffuse_mf1 _k1 __error_diffuse_mf2 _k1 __error_diffuse_mf3 _k1 __error_diffuse_mf4; }
+			            if(_x > 0) {       _pl = _p + _s - 8; __error_diffuse_mf0 _k1 __error_diffuse_mf1 _k1 __error_diffuse_mf2 _k1 __error_diffuse_mf3 _k1 __error_diffuse_mf4 }
+			    		                   _pl = _p + _s;     __error_diffuse_mf0 _k1 __error_diffuse_mf1 _k1 __error_diffuse_mf2 _k1 __error_diffuse_mf3 _k1 __error_diffuse_mf4
+			    		if(_x < _sw - 1) { _pl = _p + _s + 8; __error_diffuse_mf0 _k1 __error_diffuse_mf1 _k1 __error_diffuse_mf2 _k1 __error_diffuse_mf3 _k1 __error_diffuse_mf4 }
 			    	}
 			    	
-			    	if(_y < _sh - 2) {     _pl = _p + _s * 2; __error_diffuse_mf0 _k1 __error_diffuse_mf1 _k1 __error_diffuse_mf2 _k1 __error_diffuse_mf3 _k1 __error_diffuse_mf4; }
+			    	if(_y < _sh - 2) {     _pl = _p + _s * 2; __error_diffuse_mf0 _k1 __error_diffuse_mf1 _k1 __error_diffuse_mf2 _k1 __error_diffuse_mf3 _k1 __error_diffuse_mf4 }
 			    	
 			    	_p += 8; _x++; if(_x >= _sw) { _x = 0; _y++; }
 			    }
@@ -296,7 +296,7 @@ function Node_Dither_Diffuse(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			    repeat(_a) {
 			    	__err_diffuse_write
 			    	
-			    	if(_x < _sw - 1) { _pl = _p + 8; __error_diffuse_mf0 1 __error_diffuse_mf1 1 __error_diffuse_mf2 1 __error_diffuse_mf3 1 __error_diffuse_mf4; }
+			    	if(_x < _sw - 1) { _pl = _p + 8; __error_diffuse_mf0 1 __error_diffuse_mf1 1 __error_diffuse_mf2 1 __error_diffuse_mf3 1 __error_diffuse_mf4 }
 			    	
 			    	_p += 8; _x++; if(_x >= _sw) { _x = 0; _y++; }
 			    }

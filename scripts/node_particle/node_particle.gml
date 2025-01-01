@@ -116,9 +116,9 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 			if(is_surface(_bg))  draw_surface_safe(_bg);
 			
 			switch(_blend) {
-				case PARTICLE_BLEND_MODE.normal:   BLEND_NORMAL; break;
-				case PARTICLE_BLEND_MODE.alpha:    BLEND_ALPHA;  break;
-				case PARTICLE_BLEND_MODE.additive: BLEND_ADD;    break;
+				case PARTICLE_BLEND_MODE.normal:   BLEND_NORMAL break;
+				case PARTICLE_BLEND_MODE.alpha:    BLEND_ALPHA  break;
+				case PARTICLE_BLEND_MODE.additive: BLEND_ADD    break;
 			}
 			
 			if(_type == PARTICLE_RENDER_TYPE.surface)

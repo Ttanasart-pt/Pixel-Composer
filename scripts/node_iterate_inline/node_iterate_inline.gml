@@ -87,7 +87,7 @@ function Node_Iterate_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 	
 	static update = function() {
 		var _itc = inputs[0].getValue();
-		if(_itc != iteration_count) RENDER_ALL_REORDER;
+		if(_itc != iteration_count) RENDER_ALL_REORDER
 		
 		iteration_count = _itc;
 		iterated        = 0;

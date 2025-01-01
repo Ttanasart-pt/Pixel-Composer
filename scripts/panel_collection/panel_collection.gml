@@ -352,9 +352,9 @@ function Panel_Collection() : PanelContent() constructor {
 					var gr_y1 = yy + grid_size;
 					
 					if(yy + grid_size >= 0 && yy <= contentPane.surface_h) {
-						BLEND_OVERRIDE;
+						BLEND_OVERRIDE
 						draw_sprite_stretched(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size);
-						BLEND_NORMAL;
+						BLEND_NORMAL
 						
 						var meta = noone;
 						if(variable_struct_exists(_node, "getMetadata")) 
@@ -451,9 +451,9 @@ function Panel_Collection() : PanelContent() constructor {
 				
 				if(yy + list_height >= 0 && yy <= contentPane.surface_h) {
 					if(i % 2) {
-						BLEND_OVERRIDE;
+						BLEND_OVERRIDE
 						draw_sprite_stretched_ext(THEME.node_bg, 0, ui(4), yy, list_width - 8, list_height, c_white, 0.2);
-						BLEND_NORMAL;
+						BLEND_NORMAL
 					}
 				
 					if(_hover && point_in_rectangle(_m[0], _m[1], 0, yy, list_width, yy + list_height - 1)) {
@@ -653,9 +653,9 @@ function Panel_Collection() : PanelContent() constructor {
 			var gr_y1 = yy + grid_size;
 			
 			if(yy + grid_size >= 0 && yy <= nodecontentPane.surface_h) {
-				BLEND_OVERRIDE;
+				BLEND_OVERRIDE
 				draw_sprite_stretched(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size);
-				BLEND_NORMAL;
+				BLEND_NORMAL
 				
 				if(_hover && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
 					TOOLTIP = _node.name;

@@ -32,14 +32,14 @@ function Node_Alpha_Cutoff(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region	
 		surface_set_target(_outSurf);
 		DRAW_CLEAR
-		BLEND_OVERRIDE;
+		BLEND_OVERRIDE
 		
 		shader_set(sh_alpha_cutoff);
 			shader_set_uniform_f(shader_get_uniform(sh_alpha_cutoff, "cutoff"), _data[1]);
 			draw_surface_safe(_data[0]);
 		shader_reset();
 		
-		BLEND_NORMAL;
+		BLEND_NORMAL
 		surface_reset_target();
 		
 		__process_mask_modifier(_data);

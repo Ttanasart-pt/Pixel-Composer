@@ -109,9 +109,9 @@ function Node_VFX_Renderer_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 				var parts = inputs[i + 1].getValue(_time);
 				
 				switch(blend) {
-					case PARTICLE_BLEND_MODE.normal:   BLEND_NORMAL; break;
-					case PARTICLE_BLEND_MODE.alpha:    BLEND_ALPHA;  break;
-					case PARTICLE_BLEND_MODE.additive: BLEND_ADD;    break;
+					case PARTICLE_BLEND_MODE.normal:   BLEND_NORMAL break;
+					case PARTICLE_BLEND_MODE.alpha:    BLEND_ALPHA  break;
+					case PARTICLE_BLEND_MODE.additive: BLEND_ADD    break;
 				}
 			
 				if(!is_array(parts) || array_length(parts) == 0) continue;
@@ -127,7 +127,7 @@ function Node_VFX_Renderer_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 				}
 			}
 			
-			BLEND_NORMAL;
+			BLEND_NORMAL
 		surface_reset_shader();
 		
 		cacheCurrentFrame(_outSurf);

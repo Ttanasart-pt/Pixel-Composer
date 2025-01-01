@@ -129,6 +129,6 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
-		draw_sprite_fit(s_node_scatter_point, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
+		draw_sprite_fit(s_node_scatter_points, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 }

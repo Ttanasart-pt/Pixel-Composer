@@ -83,7 +83,7 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _dim    = surface_get_dimension(_surf);
 		
 		var pass1 = surface_create_valid(_dim[0], _dim[1], attrDepth());	
-		var _shax = _shf[0], 
+		var _shax = _shf[0]; 
 		var _shay = _shf[1];
 		
 		if(_posi == 1) {

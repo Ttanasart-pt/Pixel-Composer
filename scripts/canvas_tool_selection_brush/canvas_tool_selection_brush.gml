@@ -1,5 +1,4 @@
 function canvas_tool_selection_brush(selector, brush) : canvas_tool_selection(selector) constructor {
-	
 	self.brush = brush;
 	
 	brush_resizable = true;
@@ -78,7 +77,7 @@ function canvas_tool_selection_brush(selector, brush) : canvas_tool_selection(se
 			}
 		}
 			
-		BLEND_NORMAL;
+		BLEND_NORMAL
 			
 		mouse_pre_x = mouse_cur_x;
 		mouse_pre_y = mouse_cur_y;

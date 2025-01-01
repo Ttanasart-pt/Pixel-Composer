@@ -23,7 +23,7 @@ function Node_Alpha_Hash(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
 		surface_set_target(_outSurf);
 		DRAW_CLEAR
-		BLEND_OVERRIDE;
+		BLEND_OVERRIDE
 		
 		shader_set(shader);
 			shader_set_uniform_f(uniform_dim, surface_get_width_safe(_data[0]), surface_get_height_safe(_data[0]));
@@ -31,7 +31,7 @@ function Node_Alpha_Hash(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			draw_surface_safe(_data[0]);
 		shader_reset();
 		
-		BLEND_NORMAL;
+		BLEND_NORMAL
 		surface_reset_target();
 		
 		return _outSurf;
