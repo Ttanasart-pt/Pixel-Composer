@@ -67,6 +67,8 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    tile_selector_s    = 2;
 	    tile_selector_s_to = 2;
 	    
+	    tile_selector_vm   = 0;
+	    
 	    tile_dragging = false;
 	    tile_drag_sx  = 0;
 	    tile_drag_sy  = 0;
@@ -464,23 +466,28 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				var _sw = _ss * _sel_sw;
 				var _sh = _ss * _sel_sh;
 				
-		    	var _vv  = [ 0, 0b0001, 0b0010, 0b0011, 0b0100, 0b0101, 0b0110, 0b0111 ];
+		    	var _vv  = [ 0, 0b0001, 0b0010, 0b0011 ];
 				var  p   = array_length(_vv)
 				var _col = max(1, floor((_w - ui(8)) / (_sw + ui(8))));
-				var _row = brush.brush_width * brush.brush_height == 1? ceil((p + 1) / _col) : 1;
+				var _row = 1;
 				
 				var _th = ui(8) + (_sh + ui(8)) * _row;
 				_h += ui(8) + _th;
 				
 				draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _ty, _w, _th, COLORS.node_composite_bg_blend, 1);
 				
+				//////////////////
+				
 				var _shov = _hover && point_in_rectangle(_m[0], _m[1], _sx, _sy, _sx + _sw, _sy + _sh);
-				var _aa   = 0.5 + 0.5 * _shov;
+				var _aa   = .75 + .25 * _shov;
 				draw_sprite_stretched_ext(THEME.ui_panel, 1, _sx, _sy, _sw, _sh, COLORS._main_icon, _aa);
-				draw_sprite_uniform(THEME.cross, 0, _sx + _sw / 2, _sy + _sh / 2, 1, COLORS._main_icon, _aa);
+				draw_sprite_uniform(THEME.cross, 0, _sx + _sw / 2, _sy + _sh / 2, 1, _shov? COLORS._main_value_negative : COLORS._main_icon, _aa);
+				_sx += _sw + ui(8);
 				
 				if(_shov) {
 					if(object_selecting == noone) {
+						TOOLTIP = "Set empty";
+						
 						if(mouse_press(mb_left, _focus)) {
 							brush.brush_indices = [[[ -1, 0 ]]];
 			    			brush.brush_width   = 1;
@@ -500,7 +507,25 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					}
 				}
 				
+				//////////////////
+				
+				var _fpx  = bool(tile_selector_vm);
+				var _shov = _hover && point_in_rectangle(_m[0], _m[1], _sx, _sy, _sx + _sw, _sy + _sh);
+				var _aa   = .75 + .25 * _shov;
+				draw_sprite_stretched_ext(THEME.ui_panel, 1, _sx, _sy, _sw, _sh, COLORS._main_icon, _aa);
+				draw_sprite_ext(s_flip_h_24, 0, _sx + _sw / 2, _sy + _sh / 2, _fpx? -1 : 1, 1, 0, _fpx? COLORS._main_accent : COLORS._main_icon, _aa);
 				_sx += _sw + ui(8);
+				
+				if(_shov) {
+					TOOLTIP = "Flip X";
+					
+					if(mouse_press(mb_left, _focus)) {
+						tile_selector_vm = _fpx? 0 : 0b0100;
+						brush_action_flip(0);
+					}
+				}
+				
+				//////////////////
 				
 				if(brush.brush_width * brush.brush_height != 1) return _h;
 				
@@ -508,7 +533,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				var _vi = 1;
 				
 				for( var v = 0; v < p; v++ ) {
-					var _var = _vv[v];
+					var _var = _vv[v] | tile_selector_vm;
 					
 			    	surface_set_shader(selecting_surface, sh_draw_tile_brush, true, BLEND.over);
 			    		shader_set_f("index",   _bb[0]);
@@ -541,11 +566,11 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		    			_bb[1] = _var;
 		    		
 					_sx += _sw + ui(8);
-					if(++_vi >= _col) {
-						_sx  = _x + ui(8);
-						_sy += _sh + ui(8);
-						_vi  = 0;
-					}
+					// if(++_vi >= _col) {
+					// 	_sx  = _x + ui(8);
+					// 	_sy += _sh + ui(8);
+					// 	_vi  = 0;
+					// }
 				}
 			#endregion
 		    	
@@ -1138,7 +1163,6 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		    #endregion
 		    	
 			if(palette_tool == 1) { 
-			#region // pencil tool
 				surface_set_target(palette_selector_mask);
 		    		DRAW_CLEAR
 		    		draw_set_color(c_white);
@@ -1170,7 +1194,10 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    			shader_reset();
 	    		surface_reset_target();
 	    		
-	    		if(mouse_click(mb_left, _hov && _focus)) {
+	    		var lc = mouse_click(mb_left);
+	    		var rc = mouse_click(mb_right);
+	    		
+	    		if(_hov && _focus && (lc || rc)) {
 					palette_tool_using = true;
 					
 	    			surface_set_target(brush_palette);
@@ -1180,8 +1207,8 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    			for( var i = 0, n = array_length(brush.brush_indices);    i < n; i++ ) 
 	    			for( var j = 0, m = array_length(brush.brush_indices[i]); j < m; j++ ) {
 	    				var _b = brush.brush_indices[i][j];
-	    				shader_set_f("index",   _b[0]);
-						shader_set_f("varient", _b[1]);
+	    				shader_set_f("index",   lc? _b[0] : -1);
+						shader_set_f("varient", lc? _b[1] :  0);
 						
 						draw_point(_mtx + j, _mty + i);
 	    			}
@@ -1197,10 +1224,8 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    			buffer_delete_safe(brush_palette_buffer);
 	    			brush_palette_buffer = buffer_from_surface(brush_palette);
 	    		}
-    		#endregion
 		    	
 			} else if(palette_tool == 2) { 
-			#region eraser tool
 				
 	    		surface_set_target(brush_palette_prev);
 	    			DRAW_CLEAR
@@ -1208,8 +1233,8 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    			draw_surface(brush_palette, 0, 0);
 	    			
 	    			shader_set(sh_draw_tile_brush); 
-	    			shader_set_f("index",   0);
-					shader_set_f("varient", 0);
+	    			shader_set_f("index",    0);
+					shader_set_f("varient",  0);
 					
 					draw_point(_mtx, _mty);
 	    			
@@ -1224,8 +1249,8 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    			shader_set(sh_draw_tile_brush); 
 	    			BLEND_OVERRIDE
 		    			
-	    				shader_set_f("index",   0);
-						shader_set_f("varient", 0);
+	    				shader_set_f("index",   -1);
+						shader_set_f("varient",  0);
 						
 						draw_point(_mtx, _mty);
 		    			
@@ -1240,7 +1265,6 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    			buffer_delete_safe(brush_palette_buffer);
 	    			brush_palette_buffer = buffer_from_surface(brush_palette);
 	    		}
-			#endregion
 			
 			} else if(palette_using) { 
 			#region no tool
@@ -1687,5 +1711,49 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		refreshAnimatedData();
 	}
+	
+	////- Tools
+	
+	#region ++++ tools actions ++++
+		function brush_action_rotate(ccw) {
+			var bid   = array_create_2d(brush.brush_width, brush.brush_height);
+			var _rot  = ccw? -1 : 1;
+			
+			for( var i = 0, n = brush.brush_height; i < n; i++ ) 
+			for( var j = 0, m = brush.brush_width;  j < m; j++ ) {
+				var _b  = brush.brush_indices[i][j];
+				var _fl = floor(_b[1] / 4) * 4;
+				var _rt = _b[1] % 4;
+				
+				var _i = !ccw? j : brush.brush_width  - j - 1;
+				var _j =  ccw? i : brush.brush_height - i - 1;
+				
+				bid[_i][_j] = [ _b[0], _fl + (_rt + _rot + 4) % 4 ];
+			}
+			
+			brush.brush_indices = bid;
+			
+			var _t = brush.brush_width;
+			brush.brush_width  = brush.brush_height;
+			brush.brush_height = _t;
+		}
+		
+		function brush_action_flip(axs) {
+			var bid   = array_create_2d(brush.brush_height, brush.brush_width);
+			var flp   = axs? 0b1000 : 0b0100;
+			
+			for( var i = 0, n = brush.brush_height; i < n; i++ ) 
+			for( var j = 0, m = brush.brush_width;  j < m; j++ ) {
+				var _b = brush.brush_indices[i][j];
+				
+				var _i = !axs? i : brush.brush_height - i - 1;
+				var _j =  axs? j : brush.brush_width  - j - 1;
+				
+				bid[_i][_j] = [ _b[0], _b[1] ^ flp ];
+			}
+			
+			brush.brush_indices = bid;
+		}
+	#endregion
 	
 }

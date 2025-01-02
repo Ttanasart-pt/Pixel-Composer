@@ -1,3 +1,10 @@
+function array_create_2d(_x, _y, val = 0) {
+	var _arr = array_create(_x);
+	for( var i = 0; i < _x; i++ )
+		_arr[i] = array_create(_y, val);
+	return _arr;
+}
+
 function array_create_from_list(list) {
 	if(list == undefined) return [];
 	if(!ds_exists(list, ds_type_list)) return [];

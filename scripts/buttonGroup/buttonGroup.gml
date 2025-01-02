@@ -5,9 +5,9 @@ function buttonGroup(_data, _onClick) : widget() constructor {
 	
 	display_button = false;
 	buttonSpr      = [ THEME.button_left, THEME.button_middle, THEME.button_right ];
+	sprBlend       = c_white;
 	fColor         = COLORS._main_text;
-	
-	tooltips  = [];
+	tooltips       = [];
 	
 	current_selecting = 0;
 	collapsable = true;
@@ -21,6 +21,7 @@ function buttonGroup(_data, _onClick) : widget() constructor {
 	static setFont      = function(ff, fc = fColor) { font = ff; fColor = fc; return self; }
 	static setTooltips  = function(tt)              { tooltips    = tt;       return self; } 
 	static setCollape   = function(cc)              { collapsable = cc;       return self; } 
+	static setBlend     = function(bb)              { sprBlend    = bb;       return self; } 
 	
 	static trigger = function() {
 		if(current_selecting + 1 >= array_length(data))
@@ -100,8 +101,7 @@ function buttonGroup(_data, _onClick) : widget() constructor {
 				buttons[i].setFocusHover(active, hover);
 				buttons[i].tooltip = array_safe_get(tooltips, i, "");
 				
-				if(is(_d, scrollItem))
-					_d = _d.spr;
+				if(is(_d, scrollItem)) _d = _d.spr;
 				
 				var bww = !is_string(_d) && sprite_exists(_d) && _mx? _sw : ww;
 				var spr = i == 0 ? buttonSpr[0] : (i == amo - 1? buttonSpr[2] : buttonSpr[1]);
@@ -120,7 +120,7 @@ function buttonGroup(_data, _onClick) : widget() constructor {
 					draw_text_add(bx + bww / 2, _y + _h / 2, _d);
 					
 				} else if(sprite_exists(_d))
-					draw_sprite_ui_uniform(_d, i, bx + bww / 2, _y + _h / 2, 1);
+					draw_sprite_ui_uniform(_d, i, bx + bww / 2, _y + _h / 2, 1, sprBlend);
 				
 				bx += bww;
 			}

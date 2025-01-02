@@ -2,9 +2,6 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
     name        = "Tile Drawer";
     bypass_grid = true;
     
-	tileset     = noone;
-	gmTileLayer = noone;
-	
     newInput( 0, nodeValue_Tileset("Tileset", self, noone))
     	.setVisible(true, true);
     
@@ -31,6 +28,9 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	outputs[3].editWidget.shorted = true;
 	
 	output_display_list = [ 2, 1, 0, 3 ];
+	
+	tileset     = noone;
+	gmTileLayer = noone;
 	
 	#region ++++ data ++++
 		canvas_surface   = surface_create_empty(1, 1, surface_rgba16float);
@@ -81,11 +81,17 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 									.setCollape(false);
 		tool_fil8           	= [ "Fill", tool_fil8_edit, "fillType", tool_attribute ];
 		
-		tool_varient_rotate  = [ "", new buttonGroup( [ s_canvas_rotate, s_canvas_rotate ], function(v) /*=>*/ {return brush_action_rotate(v)} )
-			.setCollape(0).setTooltips([ "Rotate CW", "Rotate CCW" ]) ];
+		tool_varient_rotate  = [ "", new buttonGroup( [ s_canvas_rotate, s_canvas_rotate ], function(v) /*=>*/ { if(tileset != noone) tileset.brush_action_rotate(v) } )
+			.setCollape(0)
+			.setBlend(COLORS._main_icon_light)
+			.setTooltips([ new tooltipHotkey("Rotate CW",  "Node_Tile_Drawer", "Brush Rotate CW"),
+			               new tooltipHotkey("Rotate CCW", "Node_Tile_Drawer", "Brush Rotate CCW")]) ];
 			
-		tool_varient_flip    = [ "", new buttonGroup( [ s_canvas_flip, s_canvas_flip ], function(v) /*=>*/ {return brush_action_flip(v)} )
-			.setCollape(0).setTooltips([ "Flip X", "Flip Y" ]) ];
+		tool_varient_flip    = [ "", new buttonGroup( [ s_canvas_flip, s_canvas_flip ], function(v) /*=>*/ { if(tileset != noone) tileset.brush_action_flip(v) } )
+			.setCollape(0)
+			.setBlend(COLORS._main_icon_light)
+			.setTooltips([ new tooltipHotkey("Flip H", "Node_Tile_Drawer", "Brush Flip H"),
+			               new tooltipHotkey("Flip V", "Node_Tile_Drawer", "Brush Flip V")]) ];
 		
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
@@ -115,41 +121,12 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		tool_tile_picker = false;
 	#endregion
 	
-	#region ++++ tools actions ++++
-		function brush_action_rotate(ccw) {
-			if(tileset == noone) return;
-			var brush = tileset.brush;
-			var _rot  = ccw? -1 : 1;
-			
-			for( var i = 0, n = brush.brush_height; i < n; i++ ) 
-			for( var j = 0, m = brush.brush_width;  j < m; j++ ) {
-				var _b  = brush.brush_indices[i][j];
-				var _fl = floor(_b[1] / 4) * 4;
-				var _rt = _b[1] % 4;
-				
-				_b[1] = _fl + (_rt + _rot + 4) % 4;
-			}
-		}
-		
-		function brush_action_flip(axs) {
-			if(tileset == noone) return;
-			var brush = tileset.brush;
-			var flp   = axs? 0b1000 : 0b0100;
-			
-			for( var i = 0, n = brush.brush_height; i < n; i++ ) 
-			for( var j = 0, m = brush.brush_width;  j < m; j++ ) {
-				var _b = brush.brush_indices[i][j];
-				_b[1] = _b[1] ^ flp;
-			}
-		}
-	#endregion
-	
 	#region ++++ hotkeys ++++
 		hotkeys = [
-			["Brush Rotate CW",  function() /*=>*/ { brush_action_rotate(0); }], 
-			["Brush Rotate CCW", function() /*=>*/ { brush_action_rotate(1); }], 
-			["Brush Flip H",     function() /*=>*/ { brush_action_flip(0);   }], 
-			["Brush Flip V",     function() /*=>*/ { brush_action_flip(1);   }], 
+			["Brush Rotate CW",  function() /*=>*/ { if(tileset != noone) tileset.brush_action_rotate(0); }], 
+			["Brush Rotate CCW", function() /*=>*/ { if(tileset != noone) tileset.brush_action_rotate(1); }], 
+			["Brush Flip H",     function() /*=>*/ { if(tileset != noone) tileset.brush_action_flip(0);   }], 
+			["Brush Flip V",     function() /*=>*/ { if(tileset != noone) tileset.brush_action_flip(1);   }], 
 		];
 	#endregion
 	

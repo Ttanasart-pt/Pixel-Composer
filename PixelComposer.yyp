@@ -2642,6 +2642,7 @@
     {"id":{"name":"s_filter_type","path":"sprites/s_filter_type/s_filter_type.yy",},},
     {"id":{"name":"s_filter","path":"sprites/s_filter/s_filter.yy",},},
     {"id":{"name":"s_flare_type","path":"sprites/s_flare_type/s_flare_type.yy",},},
+    {"id":{"name":"s_flip_h_24","path":"sprites/s_flip_h_24/s_flip_h_24.yy",},},
     {"id":{"name":"s_fluid_sim","path":"sprites/s_fluid_sim/s_fluid_sim.yy",},},
     {"id":{"name":"s_folder_16","path":"sprites/s_folder_16/s_folder_16.yy",},},
     {"id":{"name":"s_folder_24","path":"sprites/s_folder_24/s_folder_24.yy",},},

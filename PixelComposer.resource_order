@@ -1991,6 +1991,7 @@
     {"name":"s_filter_type","order":62,"path":"sprites/s_filter_type/s_filter_type.yy",},
     {"name":"s_filter","order":3,"path":"sprites/s_filter/s_filter.yy",},
     {"name":"s_flare_type","order":1,"path":"sprites/s_flare_type/s_flare_type.yy",},
+    {"name":"s_flip_h_24","order":235,"path":"sprites/s_flip_h_24/s_flip_h_24.yy",},
     {"name":"s_fluid_sim","order":63,"path":"sprites/s_fluid_sim/s_fluid_sim.yy",},
     {"name":"s_folder_16","order":64,"path":"sprites/s_folder_16/s_folder_16.yy",},
     {"name":"s_folder_24","order":65,"path":"sprites/s_folder_24/s_folder_24.yy",},

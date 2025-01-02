@@ -2130,9 +2130,9 @@ function Panel_Preview() : PanelContent() constructor {
             
             tool_x = lerp_float(tool_x, tool_x_to, 5);
             var tolx  = tool_x + ui(8);
-            var toly  = ui(7);
+            var toly  = ui(6);
             var tolw  = ui(48);
-            var tolh  = toolbar_height - ui(20);
+            var tolh  = toolbar_height - ui(18);
             var tol_max_w = ui(16);
             
             for( var i = 0, n = array_length(settings); i < n; i++ ) {
