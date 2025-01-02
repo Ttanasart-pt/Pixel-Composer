@@ -3,8 +3,8 @@
   "%Name":"sh_channel_R2B",
   "name":"sh_channel_R2B",
   "parent":{
-    "name":"channels",
-    "path":"folders/shader/filter/channels.yy",
+    "name":"rgb channel",
+    "path":"folders/nodes/data/filter/conversion/rgb channel.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

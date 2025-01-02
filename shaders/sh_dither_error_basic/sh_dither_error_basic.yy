@@ -4,7 +4,7 @@
   "name":"sh_dither_error_basic",
   "parent":{
     "name":"dither",
-    "path":"folders/shader/filter/dither.yy",
+    "path":"folders/nodes/data/filter/effects/dither.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

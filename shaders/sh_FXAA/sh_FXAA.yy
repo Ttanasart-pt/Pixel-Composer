@@ -3,8 +3,8 @@
   "%Name":"sh_FXAA",
   "name":"sh_FXAA",
   "parent":{
-    "name":"filter",
-    "path":"folders/shader/filter.yy",
+    "name":"blur",
+    "path":"folders/nodes/data/filter/blur.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

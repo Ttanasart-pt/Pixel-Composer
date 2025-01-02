@@ -3,8 +3,8 @@
   "%Name":"sh_zigzag",
   "name":"sh_zigzag",
   "parent":{
-    "name":"generator",
-    "path":"folders/shader/generator.yy",
+    "name":"pattern",
+    "path":"folders/nodes/data/generator/pattern.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

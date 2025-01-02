@@ -3,8 +3,8 @@
   "%Name":"sh_spherize",
   "name":"sh_spherize",
   "parent":{
-    "name":"warp",
-    "path":"folders/shader/filter/warp.yy",
+    "name":"warps",
+    "path":"folders/nodes/data/filter/warps.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

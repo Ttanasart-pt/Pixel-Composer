@@ -3,8 +3,8 @@
   "%Name":"sh_color_picker_hue",
   "name":"sh_color_picker_hue",
   "parent":{
-    "name":"color_picker",
-    "path":"folders/shader/color_picker.yy",
+    "name":"color picker",
+    "path":"folders/shader/UI/color picker.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

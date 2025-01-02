@@ -4,7 +4,7 @@
   "name":"sh_region_fill_coordinate",
   "parent":{
     "name":"region",
-    "path":"folders/shader/generator/region.yy",
+    "path":"folders/nodes/data/generator/regions/region.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

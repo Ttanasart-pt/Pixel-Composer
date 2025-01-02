@@ -3,8 +3,8 @@
   "%Name":"sh_outline_only",
   "name":"sh_outline_only",
   "parent":{
-    "name":"filter",
-    "path":"folders/shader/filter.yy",
+    "name":"outline",
+    "path":"folders/nodes/data/filter/effects/outline.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

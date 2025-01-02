@@ -3,8 +3,8 @@
   "%Name":"sh_level_selector",
   "name":"sh_level_selector",
   "parent":{
-    "name":"color",
-    "path":"folders/shader/filter/color.yy",
+    "name":"colors",
+    "path":"folders/nodes/data/filter/colors.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

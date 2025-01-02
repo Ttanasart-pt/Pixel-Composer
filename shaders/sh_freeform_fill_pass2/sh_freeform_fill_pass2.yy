@@ -3,8 +3,8 @@
   "%Name":"sh_freeform_fill_pass2",
   "name":"sh_freeform_fill_pass2",
   "parent":{
-    "name":"canvas",
-    "path":"folders/shader/canvas.yy",
+    "name":"shader",
+    "path":"folders/nodes/data/canvas/shader.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

@@ -3,8 +3,8 @@
   "%Name":"sh_scale3x",
   "name":"sh_scale3x",
   "parent":{
-    "name":"filter",
-    "path":"folders/shader/filter.yy",
+    "name":"scale algo",
+    "path":"folders/nodes/data/transform/scale algo.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

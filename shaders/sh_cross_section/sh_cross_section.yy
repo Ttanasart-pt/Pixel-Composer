@@ -4,7 +4,7 @@
   "name":"sh_cross_section",
   "parent":{
     "name":"generator",
-    "path":"folders/shader/generator.yy",
+    "path":"folders/nodes/data/generator.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

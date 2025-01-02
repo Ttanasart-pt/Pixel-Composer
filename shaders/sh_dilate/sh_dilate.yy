@@ -3,8 +3,8 @@
   "%Name":"sh_dilate",
   "name":"sh_dilate",
   "parent":{
-    "name":"warp",
-    "path":"folders/shader/filter/warp.yy",
+    "name":"warps",
+    "path":"folders/nodes/data/filter/warps.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

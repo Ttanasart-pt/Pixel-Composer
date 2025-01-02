@@ -4,7 +4,7 @@
   "name":"sh_liquefy_pinch",
   "parent":{
     "name":"liquefy",
-    "path":"folders/shader/filter/liquefy.yy",
+    "path":"folders/nodes/data/filter/warps/liquefy.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

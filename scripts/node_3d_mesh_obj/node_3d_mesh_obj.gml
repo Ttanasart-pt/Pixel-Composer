@@ -22,9 +22,6 @@ function Node_create_3D_Obj_path(_x, _y, path) {
 function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group) constructor {
 	name = "3D Obj";
 	
-	object = noone;
-	object_class = __3dObject;
-	
 	newInput(in_mesh + 0, nodeValue_Path("File Path", self, "" ))
 		.setDisplay(VALUE_DISPLAY.path_load, { filter: "3d object|*.obj" })
 		.rejectArray();
@@ -47,6 +44,9 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 	
 	setDynamicInput(1, false);
 	
+	object_data  = noone;
+	object_class = __3dObject;
+	
 	obj_reading       = false;
 	obj_raw			  = noone;
 	obj_read_progress = 0;
@@ -64,14 +64,14 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 	
 	function setPath(path) { inputs[in_mesh + 0].setValue(path); }
 	
-	static createNewInput = function(index = -1) { #region
+	static createNewInput = function(index = -1) {
 		if(index == -1) index = array_length(inputs);
 		
 		newInput(index, nodeValue_D3Material("Material", self, new __d3dMaterial()))
 							.setVisible(true, true);
-	} #endregion
+	}
 	
-	static createMaterial = function(m_index) { #region
+	static createMaterial = function(m_index) {
 		var index = input_fix_len + m_index;
 		
 		input_display_list[input_display_len + m_index] = index;
@@ -97,9 +97,9 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 			
 			inputs[index].setFrom(sol.outputs[0]);
 		}
-	} #endregion
+	}
 	
-	static updateObj = function(_path) { #region
+	static updateObjStart = function(_path) {
 		if(!file_exists_empty(_path)) return;
 		current_path = _path;
 		
@@ -111,17 +111,17 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 		obj_read_time    = get_timer();
 		obj_read_file    = file_text_open_read(current_path);
 		use_display_list = false;
-	} #endregion
+	}
 	
-	static updateObjProcess = function() { #region
+	static updateObjProcess = function() {
 		switch(obj_read_progress) {
 			case 0 : readObj_file(); break;
 			case 1 : readObj_cent(); break;
 			case 2 : readObj_buff(); break;
 		}
-	} #endregion
+	}
 	
-	static updateObjComplete = function() { #region
+	static updateObjComplete = function() {
 		use_display_list = true;
 		if(obj_raw == noone) return;
 		
@@ -139,13 +139,13 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 			logNode(_txt); noti_warning(_txt);
 		}
 		
-		if(object != noone) object.destroy();
+		if(object_data != noone) object_data.destroy();
 		
-		object = new __3dObject();
-		object.VB     = obj_raw.vertex_groups;
-		object.vertex = obj_raw.vertex;
-		object.size   = obj_raw.model_size;
-		object.object_counts  = obj_raw.object_counts;
+		object_data = new __3dObject();
+		object_data.VB            = obj_raw.vertex_groups;
+		object_data.vertex        = obj_raw.vertex;
+		object_data.size          = obj_raw.model_size;
+		object_data.object_counts = obj_raw.object_counts;
 		use_normal    = obj_raw.use_normal;
 		
 		materialNames = [ "Material" ];
@@ -155,7 +155,7 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 		if(obj_raw.use_material) {
 			var _dir     = filename_dir(current_path);
 			var _pathMtl = string_copy(current_path, 1, string_length(current_path) - 4) + ".mtl";
-			if(obj_raw.mtl_path != "") _pathMtl  = _dir + "/" + obj_raw.mtl_path;
+			if(obj_raw.mtl_path != "") _pathMtl  = $"{_dir}/{obj_raw.mtl_path}";
 			materials = readMtl(_pathMtl);
 			
 			if(array_length(materials) == array_length(obj_raw.materials)) {
@@ -179,53 +179,52 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 			createMaterial(i);
 		
 		triggerRender();
-	} #endregion
+	}
 	
-	static step = function() { #region
+	static step = function() {
 		if(obj_reading) {
 			updateObjProcess();
 			
 			if(obj_read_progress == obj_read_prog_tot) {
 				updateObjComplete();
 				obj_reading = false;
-				
-				triggerRender();
 			}
 			return;
 		}
 		
 		var _path = getInputData(in_mesh + 0);
-		if(_path != current_path) updateObj(_path);
-	} #endregion
+		if(_path != current_path) updateObjStart(_path);
+	}
 	
-	static processData = function(_output, _data, _output_index, _array_index = 0) { #region
+	static processData = function(_output, _data, _output_index, _array_index = 0) {
 		if(obj_reading) return noone;
 		
 		var _flip = _data[in_mesh + 1];
 		
-		if(object == noone) return noone;
+		if(object_data == noone) return noone;
 		var materials = [];
 		for( var i = input_fix_len, n = array_length(_data); i < n; i++ ) 
 			materials[i - input_fix_len] = _data[i];
 		
 		var _object = getObject(_array_index);
-		_object.VF		= global.VF_POS_NORM_TEX_COL;
-		_object.VB		= object.VB;
-		_object.NVB		= object.NVB;
-		_object.vertex  = object.vertex;
-		_object.size    = object.size;
-		_object.object_counts	= object.object_counts;
+		_object.VF		        = global.VF_POS_NORM_TEX_COL;
+		_object.VB		        = object_data.VB;
+		_object.NVB		        = object_data.NVB;
+		_object.vertex          = object_data.vertex;
+		_object.size            = object_data.size;
+		_object.object_counts	= object_data.object_counts;
 		_object.materials		= materials;
 		_object.material_index	= materialIndex;
 		_object.texture_flip    = _flip;
 		
 		setTransform(_object, _data);
+		
 		return _object;
-	} #endregion
+	}
 	
 	static getPreviewValues = function() { return getSingleValue(in_mesh + 3); }
 	
-	static onDrawNodeOver = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
+	static onDrawNodeOver = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		if(!obj_reading) return;
 		
 		var bbox = drawGetBbox(xx, yy, _s);
@@ -235,5 +234,5 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 		
 		draw_set_color(COLORS._main_icon);
 		draw_arc(bbox.xc, bbox.yc, rr, ast, ast + prg * 360, 4 * _s, 90);
-	} #endregion
+	}
 }

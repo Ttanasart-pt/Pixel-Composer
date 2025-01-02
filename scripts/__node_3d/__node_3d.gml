@@ -10,7 +10,7 @@ function Node_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 	static processData = function(_outSurf, _data, _output_index, _array_index) {}
 	static onDrawNode  = function(xx, yy, _mx, _my, _s, _hover, _focus) {}
 	
-	static getPreviewObject = function() { #region
+	static getPreviewObject = function() {
 		if(array_empty(outputs)) return noone;
 		
 		switch(outputs[preview_channel].type) {
@@ -26,13 +26,13 @@ function Node_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 		if(is_array(_obj)) _obj = array_safe_get_fast(_obj, preview_index, noone);
 		
 		return _obj;
-	} #endregion
+	}
 	
 	static getPreviewObjects = function() { return [ getPreviewObject() ]; }
 	
 	static getPreviewObjectOutline = function() { return getPreviewObjects() }
 	
-	static refreshPreview = function() { #region
+	static refreshPreview = function() {
 		var _prev_obj = getPreviewObjects();
 		
 		surface_depth_disable(false);
@@ -67,7 +67,7 @@ function Node_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 		surface_depth_disable(true);
 		
 		D3D_GLOBAL_PREVIEW.camera.resetCamera();
-	} #endregion
+	}
 	
 	static postProcess = function() { refreshPreview(); }
 	

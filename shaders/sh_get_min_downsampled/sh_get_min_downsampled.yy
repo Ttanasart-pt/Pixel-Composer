@@ -3,8 +3,8 @@
   "%Name":"sh_get_min_downsampled",
   "name":"sh_get_min_downsampled",
   "parent":{
-    "name":"misc",
-    "path":"folders/shader/misc.yy",
+    "name":"normalize",
+    "path":"folders/nodes/data/filter/colors/normalize.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

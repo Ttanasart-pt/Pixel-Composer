@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"node_solid",
   "parent":{
-    "name":"generator",
-    "path":"folders/nodes/data/generator.yy",
+    "name":"drawer",
+    "path":"folders/nodes/data/generator/drawer.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

@@ -3,8 +3,8 @@
   "%Name":"sh_checkerboard",
   "name":"sh_checkerboard",
   "parent":{
-    "name":"generator",
-    "path":"folders/shader/generator.yy",
+    "name":"pattern",
+    "path":"folders/nodes/data/generator/pattern.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

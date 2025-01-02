@@ -4,7 +4,7 @@
   "name":"sh_svg_curve_quad",
   "parent":{
     "name":"svg",
-    "path":"folders/shader/svg.yy",
+    "path":"folders/nodes/data/io/image/svg.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

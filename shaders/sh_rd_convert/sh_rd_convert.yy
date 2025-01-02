@@ -3,8 +3,8 @@
   "%Name":"sh_rd_convert",
   "name":"sh_rd_convert",
   "parent":{
-    "name":"reaction_diffusion",
-    "path":"folders/shader/generator/reaction_diffusion.yy",
+    "name":"reaction diffusion",
+    "path":"folders/nodes/data/generator/reaction diffusion.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

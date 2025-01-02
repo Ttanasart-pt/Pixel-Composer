@@ -3,8 +3,8 @@
   "%Name":"sh_replace_color",
   "name":"sh_replace_color",
   "parent":{
-    "name":"misc",
-    "path":"folders/shader/misc.yy",
+    "name":"2d_effects",
+    "path":"folders/nodes/data/3D/2d_effects.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

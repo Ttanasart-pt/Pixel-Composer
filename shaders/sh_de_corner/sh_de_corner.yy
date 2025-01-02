@@ -3,8 +3,8 @@
   "%Name":"sh_de_corner",
   "name":"sh_de_corner",
   "parent":{
-    "name":"filter",
-    "path":"folders/shader/filter.yy",
+    "name":"fixes",
+    "path":"folders/nodes/data/filter/fixes.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

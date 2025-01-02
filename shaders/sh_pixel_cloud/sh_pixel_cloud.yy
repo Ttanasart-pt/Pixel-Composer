@@ -3,8 +3,8 @@
   "%Name":"sh_pixel_cloud",
   "name":"sh_pixel_cloud",
   "parent":{
-    "name":"generator",
-    "path":"folders/shader/generator.yy",
+    "name":"effects",
+    "path":"folders/nodes/data/filter/effects.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

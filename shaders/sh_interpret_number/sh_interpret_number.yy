@@ -3,8 +3,8 @@
   "%Name":"sh_interpret_number",
   "name":"sh_interpret_number",
   "parent":{
-    "name":"interpret",
-    "path":"folders/shader/generator/interpret.yy",
+    "name":"generator",
+    "path":"folders/nodes/data/generator.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

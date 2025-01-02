@@ -4,7 +4,7 @@
   "name":"sh_blend_add_alpha_adj",
   "parent":{
     "name":"blend",
-    "path":"folders/shader/blend.yy",
+    "path":"folders/nodes/data/compose/blend.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

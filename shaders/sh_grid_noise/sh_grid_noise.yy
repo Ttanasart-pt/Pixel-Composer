@@ -3,8 +3,8 @@
   "%Name":"sh_grid_noise",
   "name":"sh_grid_noise",
   "parent":{
-    "name":"grid",
-    "path":"folders/shader/generator/grid.yy",
+    "name":"noise",
+    "path":"folders/nodes/data/generator/noise.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

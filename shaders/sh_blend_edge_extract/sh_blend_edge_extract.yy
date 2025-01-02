@@ -4,7 +4,7 @@
   "name":"sh_blend_edge_extract",
   "parent":{
     "name":"blend_edge",
-    "path":"folders/shader/filter/blend_edge.yy",
+    "path":"folders/nodes/data/filter/effects/blend_edge.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

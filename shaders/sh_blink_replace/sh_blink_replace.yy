@@ -3,8 +3,8 @@
   "%Name":"sh_blink_replace",
   "name":"sh_blink_replace",
   "parent":{
-    "name":"blinker",
-    "path":"folders/shader/generator/blinker.yy",
+    "name":"mk blinker",
+    "path":"folders/nodes/data/MKFX/mk blinker.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

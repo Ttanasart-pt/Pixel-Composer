@@ -3,8 +3,8 @@
   "%Name":"sh_quarsicrystal",
   "name":"sh_quarsicrystal",
   "parent":{
-    "name":"generator",
-    "path":"folders/shader/generator.yy",
+    "name":"pattern",
+    "path":"folders/nodes/data/generator/pattern.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

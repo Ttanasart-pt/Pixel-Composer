@@ -3,8 +3,8 @@
   "%Name":"sh_offset",
   "name":"sh_offset",
   "parent":{
-    "name":"warp",
-    "path":"folders/shader/filter/warp.yy",
+    "name":"transform",
+    "path":"folders/nodes/data/transform.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

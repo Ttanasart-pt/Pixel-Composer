@@ -6,7 +6,7 @@
   "name":"node_pb_draw_fill",
   "parent":{
     "name":"draw",
-    "path":"folders/nodes/data/pixel_builder/draw.yy",
+    "path":"folders/nodes/data/pixel builder/draw.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

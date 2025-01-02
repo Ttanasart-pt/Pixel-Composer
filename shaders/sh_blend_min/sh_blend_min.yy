@@ -4,7 +4,7 @@
   "name":"sh_blend_min",
   "parent":{
     "name":"blend",
-    "path":"folders/shader/blend.yy",
+    "path":"folders/nodes/data/compose/blend.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

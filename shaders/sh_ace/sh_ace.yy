@@ -3,8 +3,8 @@
   "%Name":"sh_ace",
   "name":"sh_ace",
   "parent":{
-    "name":"color",
-    "path":"folders/shader/filter/color.yy",
+    "name":"colors",
+    "path":"folders/nodes/data/filter/colors.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

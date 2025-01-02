@@ -4,7 +4,7 @@
   "name":"sh_vertex_depth_pass",
   "parent":{
     "name":"legacy",
-    "path":"folders/shader/3d/legacy.yy",
+    "path":"folders/nodes/data/3D/shader/legacy.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

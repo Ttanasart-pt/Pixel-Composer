@@ -3,8 +3,8 @@
   "%Name":"sh_gamma_map",
   "name":"sh_gamma_map",
   "parent":{
-    "name":"filter",
-    "path":"folders/shader/filter.yy",
+    "name":"colors",
+    "path":"folders/nodes/data/filter/colors.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

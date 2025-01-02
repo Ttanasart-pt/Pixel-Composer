@@ -4,7 +4,7 @@
   "name":"sh_simplex",
   "parent":{
     "name":"noise",
-    "path":"folders/shader/generator/noise.yy",
+    "path":"folders/nodes/data/generator/noise.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

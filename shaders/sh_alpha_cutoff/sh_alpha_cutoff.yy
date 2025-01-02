@@ -3,8 +3,8 @@
   "%Name":"sh_alpha_cutoff",
   "name":"sh_alpha_cutoff",
   "parent":{
-    "name":"color",
-    "path":"folders/shader/filter/color.yy",
+    "name":"colors",
+    "path":"folders/nodes/data/filter/colors.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

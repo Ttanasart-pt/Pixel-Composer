@@ -3,8 +3,8 @@
   "%Name":"sh_slice_spritesheet_empty_scan",
   "name":"sh_slice_spritesheet_empty_scan",
   "parent":{
-    "name":"misc",
-    "path":"folders/shader/misc.yy",
+    "name":"image",
+    "path":"folders/nodes/data/io/image.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

@@ -3,8 +3,8 @@
   "%Name":"sh_camera",
   "name":"sh_camera",
   "parent":{
-    "name":"misc",
-    "path":"folders/shader/misc.yy",
+    "name":"render",
+    "path":"folders/nodes/data/render.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

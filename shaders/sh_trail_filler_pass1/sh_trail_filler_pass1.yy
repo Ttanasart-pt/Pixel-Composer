@@ -3,8 +3,8 @@
   "%Name":"sh_trail_filler_pass1",
   "name":"sh_trail_filler_pass1",
   "parent":{
-    "name":"filter",
-    "path":"folders/shader/filter.yy",
+    "name":"trail",
+    "path":"folders/nodes/data/filter/effects/trail.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

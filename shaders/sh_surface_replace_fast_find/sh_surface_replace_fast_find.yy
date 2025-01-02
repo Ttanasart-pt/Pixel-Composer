@@ -4,7 +4,7 @@
   "name":"sh_surface_replace_fast_find",
   "parent":{
     "name":"surface_replace",
-    "path":"folders/shader/filter/surface_replace.yy",
+    "path":"folders/nodes/data/generator/surface_replace.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

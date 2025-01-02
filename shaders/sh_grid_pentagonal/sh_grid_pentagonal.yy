@@ -3,8 +3,8 @@
   "%Name":"sh_grid_pentagonal",
   "name":"sh_grid_pentagonal",
   "parent":{
-    "name":"grid",
-    "path":"folders/shader/generator/grid.yy",
+    "name":"pattern",
+    "path":"folders/nodes/data/generator/pattern.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

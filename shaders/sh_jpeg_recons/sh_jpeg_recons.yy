@@ -4,7 +4,7 @@
   "name":"sh_jpeg_recons",
   "parent":{
     "name":"jpeg",
-    "path":"folders/shader/filter/jpeg.yy",
+    "path":"folders/nodes/data/filter/effects/jpeg.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

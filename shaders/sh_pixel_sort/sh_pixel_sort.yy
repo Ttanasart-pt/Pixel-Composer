@@ -3,8 +3,8 @@
   "%Name":"sh_pixel_sort",
   "name":"sh_pixel_sort",
   "parent":{
-    "name":"filter",
-    "path":"folders/shader/filter.yy",
+    "name":"colors",
+    "path":"folders/nodes/data/filter/colors.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

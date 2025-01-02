@@ -3,8 +3,8 @@
   "%Name":"sh_polar",
   "name":"sh_polar",
   "parent":{
-    "name":"warp",
-    "path":"folders/shader/filter/warp.yy",
+    "name":"transform",
+    "path":"folders/nodes/data/transform.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

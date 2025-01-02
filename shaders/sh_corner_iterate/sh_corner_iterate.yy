@@ -4,7 +4,7 @@
   "name":"sh_corner_iterate",
   "parent":{
     "name":"corner",
-    "path":"folders/shader/filter/corner.yy",
+    "path":"folders/nodes/data/filter/effects/corner.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

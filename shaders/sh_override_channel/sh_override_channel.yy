@@ -3,8 +3,8 @@
   "%Name":"sh_override_channel",
   "name":"sh_override_channel",
   "parent":{
-    "name":"color",
-    "path":"folders/shader/filter/color.yy",
+    "name":"combine",
+    "path":"folders/nodes/data/filter/combine.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

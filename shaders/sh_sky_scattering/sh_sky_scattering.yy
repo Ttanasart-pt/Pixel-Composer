@@ -4,7 +4,7 @@
   "name":"sh_sky_scattering",
   "parent":{
     "name":"sky model",
-    "path":"folders/shader/generator/sky model.yy",
+    "path":"folders/nodes/data/generator/sky model.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

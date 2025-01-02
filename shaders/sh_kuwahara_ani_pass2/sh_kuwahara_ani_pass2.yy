@@ -4,7 +4,7 @@
   "name":"sh_kuwahara_ani_pass2",
   "parent":{
     "name":"kuwahara",
-    "path":"folders/shader/filter/kuwahara.yy",
+    "path":"folders/nodes/data/filter/effects/kuwahara.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

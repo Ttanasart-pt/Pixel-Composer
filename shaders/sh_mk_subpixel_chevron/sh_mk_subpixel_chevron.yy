@@ -4,7 +4,7 @@
   "name":"sh_mk_subpixel_chevron",
   "parent":{
     "name":"Subpixel",
-    "path":"folders/shader/MK effects/Subpixel.yy",
+    "path":"folders/nodes/data/MKFX/Subpixel.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

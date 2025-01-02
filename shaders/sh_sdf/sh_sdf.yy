@@ -3,8 +3,8 @@
   "%Name":"sh_sdf",
   "name":"sh_sdf",
   "parent":{
-    "name":"filter",
-    "path":"folders/shader/filter.yy",
+    "name":"sdf",
+    "path":"folders/nodes/data/filter/conversion/sdf.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

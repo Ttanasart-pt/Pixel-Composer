@@ -4,7 +4,7 @@
   "name":"sh_d3d_ssao_blur",
   "parent":{
     "name":"ssao",
-    "path":"folders/shader/3d/ssao.yy",
+    "path":"folders/nodes/data/3D/shader/ssao.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

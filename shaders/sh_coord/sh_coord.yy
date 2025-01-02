@@ -3,8 +3,8 @@
   "%Name":"sh_coord",
   "name":"sh_coord",
   "parent":{
-    "name":"generator",
-    "path":"folders/shader/generator.yy",
+    "name":"draw",
+    "path":"folders/shader/draw.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

@@ -3,8 +3,8 @@
   "%Name":"sh_sample_points",
   "name":"sh_sample_points",
   "parent":{
-    "name":"generator",
-    "path":"folders/shader/generator.yy",
+    "name":"value",
+    "path":"folders/functions/value.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

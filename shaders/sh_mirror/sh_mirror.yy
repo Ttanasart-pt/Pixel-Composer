@@ -3,8 +3,8 @@
   "%Name":"sh_mirror",
   "name":"sh_mirror",
   "parent":{
-    "name":"warp",
-    "path":"folders/shader/filter/warp.yy",
+    "name":"mirror",
+    "path":"folders/nodes/data/transform/mirror.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

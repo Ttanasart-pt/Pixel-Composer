@@ -3,8 +3,8 @@
   "%Name":"sh_channel_H",
   "name":"sh_channel_H",
   "parent":{
-    "name":"channels",
-    "path":"folders/shader/filter/channels.yy",
+    "name":"hsv channel",
+    "path":"folders/nodes/data/filter/conversion/hsv channel.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

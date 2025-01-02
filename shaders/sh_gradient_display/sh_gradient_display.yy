@@ -3,8 +3,8 @@
   "%Name":"sh_gradient_display",
   "name":"sh_gradient_display",
   "parent":{
-    "name":"generator",
-    "path":"folders/shader/generator.yy",
+    "name":"gradient",
+    "path":"folders/shader/UI/gradient.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

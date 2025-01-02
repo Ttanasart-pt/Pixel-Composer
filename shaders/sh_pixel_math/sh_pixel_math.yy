@@ -3,8 +3,8 @@
   "%Name":"sh_pixel_math",
   "name":"sh_pixel_math",
   "parent":{
-    "name":"filter",
-    "path":"folders/shader/filter.yy",
+    "name":"effects",
+    "path":"folders/nodes/data/filter/effects.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

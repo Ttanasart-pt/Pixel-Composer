@@ -3,8 +3,8 @@
   "%Name":"sh_flood_fill_replace",
   "name":"sh_flood_fill_replace",
   "parent":{
-    "name":"flood_fill",
-    "path":"folders/shader/flood_fill.yy",
+    "name":"floodfill",
+    "path":"folders/nodes/data/generator/regions/floodfill.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

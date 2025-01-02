@@ -4,7 +4,7 @@
   "name":"sh_mk_shuffle_pixel",
   "parent":{
     "name":"shuffle",
-    "path":"folders/shader/filter/shuffle.yy",
+    "path":"folders/nodes/data/filter/effects/shuffle.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

@@ -39,7 +39,7 @@ function registerFunctionLite(_context, _name, _action, _param = noone) { return
 function functionObjectLite(_context, _name, _action, _param = noone) constructor {
 	context  = _context;
 	name     = _name;
-	action   = _action;
+	action   = method(undefined, _action);
 	params   = _param;
 	fnName   = string_to_var2(_context, _name);
 	menu     = noone;
@@ -55,7 +55,7 @@ function functionObject(_context, _name, _key, _mod, _action, _param = noone) co
 	name     = _name;
 	dkey     = _key;
 	dmod     = _mod;
-	action   = _action;
+	action   = method(undefined, _action);
 	params   = _param;
 	hide     = false;
 	

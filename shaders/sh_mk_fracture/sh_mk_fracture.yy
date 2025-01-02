@@ -4,7 +4,7 @@
   "name":"sh_mk_fracture",
   "parent":{
     "name":"Fracture",
-    "path":"folders/shader/MK effects/Fracture.yy",
+    "path":"folders/nodes/data/MKFX/Fracture.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

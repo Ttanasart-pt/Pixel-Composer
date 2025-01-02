@@ -3,8 +3,8 @@
   "%Name":"sh_noise_blue_iterate",
   "name":"sh_noise_blue_iterate",
   "parent":{
-    "name":"noise",
-    "path":"folders/shader/generator/noise.yy",
+    "name":"blue",
+    "path":"folders/nodes/data/generator/noise/blue.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

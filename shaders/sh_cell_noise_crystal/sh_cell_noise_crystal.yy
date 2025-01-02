@@ -4,7 +4,7 @@
   "name":"sh_cell_noise_crystal",
   "parent":{
     "name":"cell",
-    "path":"folders/shader/generator/cell.yy",
+    "path":"folders/nodes/data/generator/noise/cell.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

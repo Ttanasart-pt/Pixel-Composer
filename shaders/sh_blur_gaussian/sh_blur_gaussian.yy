@@ -4,7 +4,7 @@
   "name":"sh_blur_gaussian",
   "parent":{
     "name":"blur",
-    "path":"folders/shader/filter/blur.yy",
+    "path":"folders/nodes/data/filter/blur.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

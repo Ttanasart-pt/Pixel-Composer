@@ -44,8 +44,8 @@
   },
   "origin":0,
   "parent":{
-    "name":"sprites",
-    "path":"folders/shader/sprites.yy",
+    "name":"texture",
+    "path":"folders/sprites/texture.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

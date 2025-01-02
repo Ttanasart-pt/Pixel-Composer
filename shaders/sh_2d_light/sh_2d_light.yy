@@ -3,8 +3,8 @@
   "%Name":"sh_2d_light",
   "name":"sh_2d_light",
   "parent":{
-    "name":"generator",
-    "path":"folders/shader/generator.yy",
+    "name":"2d light",
+    "path":"folders/nodes/data/filter/effects/2d light.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

@@ -3,8 +3,8 @@
   "%Name":"sh_mask_invert",
   "name":"sh_mask_invert",
   "parent":{
-    "name":"color",
-    "path":"folders/shader/filter/color.yy",
+    "name":"mask",
+    "path":"folders/shader/mask.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

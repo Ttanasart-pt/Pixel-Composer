@@ -3,8 +3,8 @@
   "%Name":"sh_tile_random",
   "name":"sh_tile_random",
   "parent":{
-    "name":"filter",
-    "path":"folders/shader/filter.yy",
+    "name":"transform",
+    "path":"folders/nodes/data/transform.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

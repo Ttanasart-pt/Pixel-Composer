@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"node_pb",
   "parent":{
-    "name":"pixel_builder",
-    "path":"folders/nodes/data/pixel_builder.yy",
+    "name":"pixel builder",
+    "path":"folders/nodes/data/pixel builder.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

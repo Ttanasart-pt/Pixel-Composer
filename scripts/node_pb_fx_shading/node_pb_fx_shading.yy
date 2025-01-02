@@ -6,7 +6,7 @@
   "name":"node_pb_fx_shading",
   "parent":{
     "name":"effect",
-    "path":"folders/nodes/data/pixel_builder/effect.yy",
+    "path":"folders/nodes/data/pixel builder/effect.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

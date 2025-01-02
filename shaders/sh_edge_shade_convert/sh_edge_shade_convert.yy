@@ -4,7 +4,7 @@
   "name":"sh_edge_shade_convert",
   "parent":{
     "name":"edge_shade",
-    "path":"folders/shader/filter/edge_shade.yy",
+    "path":"folders/nodes/data/filter/effects/edge_shade.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

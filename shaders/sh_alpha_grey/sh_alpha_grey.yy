@@ -3,8 +3,8 @@
   "%Name":"sh_alpha_grey",
   "name":"sh_alpha_grey",
   "parent":{
-    "name":"color",
-    "path":"folders/shader/filter/color.yy",
+    "name":"conversion",
+    "path":"folders/nodes/data/filter/conversion.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

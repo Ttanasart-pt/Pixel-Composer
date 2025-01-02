@@ -3,8 +3,8 @@
   "%Name":"sh_mask_expand",
   "name":"sh_mask_expand",
   "parent":{
-    "name":"filter",
-    "path":"folders/shader/filter.yy",
+    "name":"mask",
+    "path":"folders/shader/mask.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

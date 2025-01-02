@@ -3,8 +3,8 @@
   "%Name":"sh_edge_detect",
   "name":"sh_edge_detect",
   "parent":{
-    "name":"filter",
-    "path":"folders/shader/filter.yy",
+    "name":"effects",
+    "path":"folders/nodes/data/filter/effects.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

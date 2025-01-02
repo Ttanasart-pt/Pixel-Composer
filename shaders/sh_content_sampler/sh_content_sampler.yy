@@ -3,8 +3,8 @@
   "%Name":"sh_content_sampler",
   "name":"sh_content_sampler",
   "parent":{
-    "name":"misc",
-    "path":"folders/shader/misc.yy",
+    "name":"warps",
+    "path":"folders/nodes/data/filter/warps.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

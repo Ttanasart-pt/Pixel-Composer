@@ -4,7 +4,7 @@
   "name":"sh_pixel_sample",
   "parent":{
     "name":"generator",
-    "path":"folders/shader/generator.yy",
+    "path":"folders/nodes/data/generator.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

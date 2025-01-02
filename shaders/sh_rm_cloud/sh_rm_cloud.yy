@@ -3,8 +3,8 @@
   "%Name":"sh_rm_cloud",
   "name":"sh_rm_cloud",
   "parent":{
-    "name":"ray march",
-    "path":"folders/shader/ray march.yy",
+    "name":"raymarching",
+    "path":"folders/nodes/data/3D/raymarching.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

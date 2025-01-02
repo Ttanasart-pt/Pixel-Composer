@@ -3,8 +3,8 @@
   "%Name":"sh_blur_alpha",
   "name":"sh_blur_alpha",
   "parent":{
-    "name":"blur",
-    "path":"folders/shader/filter/blur.yy",
+    "name":"filter",
+    "path":"folders/shader/filter.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

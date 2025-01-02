@@ -3,8 +3,8 @@
   "%Name":"sh_posterize",
   "name":"sh_posterize",
   "parent":{
-    "name":"filter",
-    "path":"folders/shader/filter.yy",
+    "name":"posterize",
+    "path":"folders/nodes/data/filter/effects/posterize.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

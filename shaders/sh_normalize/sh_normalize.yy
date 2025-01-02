@@ -3,8 +3,8 @@
   "%Name":"sh_normalize",
   "name":"sh_normalize",
   "parent":{
-    "name":"color",
-    "path":"folders/shader/filter/color.yy",
+    "name":"normalize",
+    "path":"folders/nodes/data/filter/colors/normalize.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

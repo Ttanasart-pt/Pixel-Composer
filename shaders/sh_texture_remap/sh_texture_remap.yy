@@ -3,8 +3,8 @@
   "%Name":"sh_texture_remap",
   "name":"sh_texture_remap",
   "parent":{
-    "name":"filter",
-    "path":"folders/shader/filter.yy",
+    "name":"warps",
+    "path":"folders/nodes/data/filter/warps.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

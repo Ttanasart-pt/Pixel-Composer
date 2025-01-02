@@ -4,7 +4,7 @@
   "name":"sh_seperate_shape_index",
   "parent":{
     "name":"shape_seperator",
-    "path":"folders/shader/filter/shape_seperator.yy",
+    "path":"folders/nodes/data/generator/regions/shape_seperator.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

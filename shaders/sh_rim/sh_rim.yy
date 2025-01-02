@@ -3,8 +3,8 @@
   "%Name":"sh_rim",
   "name":"sh_rim",
   "parent":{
-    "name":"filter",
-    "path":"folders/shader/filter.yy",
+    "name":"effects",
+    "path":"folders/nodes/data/filter/effects.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

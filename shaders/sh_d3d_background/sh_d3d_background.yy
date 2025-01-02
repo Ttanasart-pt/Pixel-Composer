@@ -3,8 +3,8 @@
   "%Name":"sh_d3d_background",
   "name":"sh_d3d_background",
   "parent":{
-    "name":"3d",
-    "path":"folders/shader/3d.yy",
+    "name":"shader",
+    "path":"folders/nodes/data/3D/shader.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

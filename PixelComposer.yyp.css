@@ -1,20 +1,127 @@
-.treeview .dir[data-rel-path="folders/Steamworks/"] > .header:before { background: url("file:///D:/Project/MakhamDev/LTS-PixelComposer/RESOURCE/data/ide/dir_steam.png") center/contain no-repeat; }
-.treeview .dir[data-rel-path="folders/_extensions/"] > .header:before { background: url("file:///D:/Project/MakhamDev/LTS-PixelComposer/RESOURCE/data/ide/dir_empty.png") center/contain no-repeat; }
-.treeview .dir[data-rel-path="folders/_extensions/Steamworks/"] > .header:before { background: url("file:///D:/Project/MakhamDev/LTS-PixelComposer/RESOURCE/data/ide/dir_steam.png") center/contain no-repeat; }
-.treeview .dir[data-rel-path="folders/shader/"] > .header:before { background: url("file:///D:/Project/MakhamDev/LTS-PixelComposer/RESOURCE/data/ide/dir_shader.png") center/contain no-repeat; }
-.treeview .dir[data-rel-path="folders/misc/"] > .header:before { background: url("file:///D:/Project/MakhamDev/LTS-PixelComposer/RESOURCE/data/ide/dir_empty.png") center/contain no-repeat; }
-.treeview .dir[data-rel-path="folders/addons/"] > .header:before { background: url("file:///D:/Project/MakhamDev/LTS-PixelComposer/RESOURCE/data/ide/dir_empty.png") center/contain no-repeat; }
-.treeview .dir[data-rel-path="folders/dialog/"] > .header:before { background: url("file:///D:/Project/MakhamDev/LTS-PixelComposer/RESOURCE/data/ide/dir_dialog.png") center/contain no-repeat; }
-.treeview .dir[data-rel-path="folders/font/"] > .header:before { background: url("file:///D:/Project/MakhamDev/LTS-PixelComposer/RESOURCE/data/ide/dir_font.png") center/contain no-repeat; }
-.treeview .dir[data-rel-path="folders/functions/"] > .header:before { background: url("file:///D:/Project/MakhamDev/LTS-PixelComposer/RESOURCE/data/ide/dir_function.png") center/contain no-repeat; }
-.treeview .dir[data-rel-path="folders/main/"] > .header:before { background: url("file:///D:/Project/MakhamDev/LTS-PixelComposer/RESOURCE/data/ide/dir_main.png") center/contain no-repeat; }
-.treeview .dir[data-rel-path="folders/nodes/"] > .header:before { background: url("file:///D:/Project/MakhamDev/LTS-PixelComposer/RESOURCE/data/ide/dir_nodes.png") center/contain no-repeat; }
-.treeview .dir[data-rel-path="folders/panels/"] > .header:before { background: url("file:///D:/Project/MakhamDev/LTS-PixelComposer/RESOURCE/data/ide/dir_panels.png") center/contain no-repeat; }
-.treeview .dir[data-rel-path="folders/sprites/"] > .header:before { background: url("file:///D:/Project/MakhamDev/LTS-PixelComposer/RESOURCE/data/ide/dir_sprites.png") center/contain no-repeat; }
-.treeview .dir[data-rel-path="folders/theme/"] > .header:before { background: url("file:///D:/Project/MakhamDev/LTS-PixelComposer/RESOURCE/data/ide/dir_theme.png") center/contain no-repeat; }
-.treeview .dir[data-rel-path="folders/widgets/"] > .header:before { background: url("file:///D:/Project/MakhamDev/LTS-PixelComposer/RESOURCE/data/ide/dir_widgets.png") center/contain no-repeat; }
-.treeview .dir[data-rel-path="folders/nodes/data/"] > .header:before { background: url("file:///D:/Project/MakhamDev/LTS-PixelComposer/RESOURCE/data/ide/dir_nodes.png") center/contain no-repeat; }
-.treeview .dir[data-rel-path="folders/nodes/__base__/"] > .header:before { background: url("file:///D:/Project/MakhamDev/LTS-PixelComposer/RESOURCE/data/ide/dir_empty.png") center/contain no-repeat; }
-.treeview .dir[data-rel-path="folders/__extensions/"] > .header:before { background: url("file:///D:/Project/MakhamDev/LTS-PixelComposer/RESOURCE/data/ide/dir_empty.png") center/contain no-repeat; }
-.treeview .dir[data-rel-path="folders/game engines/gamemaker/"] > .header:before { background: url("file:///D:/Project/MakhamDev/LTS-PixelComposer/RESOURCE/data/default/graphics/_unused/s_gamemaker.png") center/contain no-repeat; }
-.treeview .dir[data-rel-path="datafiles/"] > .header:before { background: url("file:///C:/Users/Makham/AppData/Roaming/AceGM/GMEdit/themes/dracula/tree_empty.png") center/contain no-repeat; }
+.treeview .dir[data-rel-path="folders/Steamworks/"]             > .header:before { background: url("file:///D:/Project/MakhamDev/LTS-PixelComposer/RESOURCE/data/ide/dir_steam.png") center/contain no-repeat;  }
+.treeview .dir[data-rel-path="folders/_extensions/"]            > .header:before { background: url("file:///D:/Project/MakhamDev/LTS-PixelComposer/RESOURCE/data/ide/dir_empty.png") center/contain no-repeat;  }
+.treeview .dir[data-rel-path="folders/_extensions/Steamworks/"] > .header:before { background: url("file:///D:/Project/MakhamDev/LTS-PixelComposer/RESOURCE/data/ide/dir_steam.png") center/contain no-repeat;  }
+.treeview .dir[data-rel-path="folders/shader/"]                 > .header:before { background: url("file:///D:/Project/MakhamDev/LTS-PixelComposer/RESOURCE/data/ide/dir_shader.png") center/contain no-repeat;  }
+.treeview .dir[data-rel-path="folders/misc/"]                   > .header:before { background: url("file:///D:/Project/MakhamDev/LTS-PixelComposer/RESOURCE/data/ide/dir_empty.png") center/contain no-repeat;  }
+.treeview .dir[data-rel-path="folders/addons/"]                 > .header:before { background: url("file:///D:/Project/MakhamDev/LTS-PixelComposer/RESOURCE/data/ide/dir_empty.png") center/contain no-repeat;  }
+.treeview .dir[data-rel-path="folders/dialog/"]                 > .header:before { background: url("file:///D:/Project/MakhamDev/LTS-PixelComposer/RESOURCE/data/ide/dir_dialog.png") center/contain no-repeat;  }
+.treeview .dir[data-rel-path="folders/font/"]                   > .header:before { background: url("file:///D:/Project/MakhamDev/LTS-PixelComposer/RESOURCE/data/ide/dir_font.png") center/contain no-repeat;  }
+.treeview .dir[data-rel-path="folders/functions/"]              > .header:before { background: url("file:///D:/Project/MakhamDev/LTS-PixelComposer/RESOURCE/data/ide/dir_function.png") center/contain no-repeat;  }
+.treeview .dir[data-rel-path="folders/main/"]                   > .header:before { background: url("file:///D:/Project/MakhamDev/LTS-PixelComposer/RESOURCE/data/ide/dir_main.png") center/contain no-repeat;  }
+.treeview .dir[data-rel-path="folders/nodes/"]                  > .header:before { background: url("file:///D:/Project/MakhamDev/LTS-PixelComposer/RESOURCE/data/ide/dir_nodes.png") center/contain no-repeat;  }
+.treeview .dir[data-rel-path="folders/panels/"]                 > .header:before { background: url("file:///D:/Project/MakhamDev/LTS-PixelComposer/RESOURCE/data/ide/dir_panels.png") center/contain no-repeat;  }
+.treeview .dir[data-rel-path="folders/sprites/"]                > .header:before { background: url("file:///D:/Project/MakhamDev/LTS-PixelComposer/RESOURCE/data/ide/dir_sprites.png") center/contain no-repeat;  }
+.treeview .dir[data-rel-path="folders/theme/"]                  > .header:before { background: url("file:///D:/Project/MakhamDev/LTS-PixelComposer/RESOURCE/data/ide/dir_theme.png") center/contain no-repeat;  }
+.treeview .dir[data-rel-path="folders/widgets/"]                > .header:before { background: url("file:///D:/Project/MakhamDev/LTS-PixelComposer/RESOURCE/data/ide/dir_widgets.png") center/contain no-repeat;  }
+.treeview .dir[data-rel-path="folders/nodes/data/"]             > .header:before { background: url("file:///D:/Project/MakhamDev/LTS-PixelComposer/RESOURCE/data/ide/dir_nodes.png") center/contain no-repeat;  }
+.treeview .dir[data-rel-path="folders/nodes/__base__/"]         > .header:before { background: url("file:///D:/Project/MakhamDev/LTS-PixelComposer/RESOURCE/data/ide/dir_empty.png") center/contain no-repeat;  }
+.treeview .dir[data-rel-path="folders/__extensions/"]           > .header:before { background: url("file:///D:/Project/MakhamDev/LTS-PixelComposer/RESOURCE/data/ide/dir_empty.png") center/contain no-repeat;  }
+.treeview .dir[data-rel-path="folders/game engines/gamemaker/"] > .header:before { background: url("file:///D:/Project/MakhamDev/LTS-PixelComposer/RESOURCE/data/default/graphics/_unused/s_gamemaker.png") center/contain no-repeat;  }
+.treeview .dir[data-rel-path="datafiles/"]                      > .header:before { background: url("file:///C:/Users/Makham/AppData/Roaming/AceGM/GMEdit/themes/dracula/tree_empty.png") center/contain no-repeat;  }
+
+.treeview .dir[data-rel-path="folders/main/"]      { --data-color: #408655 !important; }
+.treeview .dir[data-rel-path="folders/functions/"] { --data-color: #347c6f !important; }
+.treeview .dir[data-rel-path="folders/nodes/"]     { 
+    --data-color: #2b5c73 !important; 
+    border-radius: 6px 6px 0px 0px;
+    margin-bottom: 0px;
+}
+.treeview .dir[data-rel-path="folders/shader/"]    { 
+    --data-color: #2b5c73 !important; 
+    border-radius: 0px 0px 6px 6px;
+    margin-top: 0px;
+}
+.treeview .dir[data-rel-path="folders/dialog/"]    { 
+    --data-color: #31425e !important; 
+    border-radius: 6px 6px 0px 0px;
+    margin-bottom: 0px;
+}
+.treeview .dir[data-rel-path="folders/panels/"]    { 
+    --data-color: #31425e !important;
+    border-radius: 0px;
+    margin-top: 0px; 
+    margin-bottom: 0px;
+}
+.treeview .dir[data-rel-path="folders/widgets/"]   { 
+    --data-color: #31425e !important; 
+    border-radius: 0px 0px 6px 6px;
+    margin-top: 0px;
+}
+
+.treeview .dir[data-rel-path="folders/main/"]      div.items { --data-color: #40865560 !important; }
+.treeview .dir[data-rel-path="folders/functions/"] div.items { --data-color: #347c6f60 !important; }
+.treeview .dir[data-rel-path="folders/nodes/"]     div.items { 
+    --data-color: #2b5c7360 !important; 
+    border-radius: 0px;
+    margin-bottom: 0px;
+    padding-bottom: 1px;
+}
+
+.treeview .dir[data-rel-path="folders/shader/"]    div.items { 
+    --data-color: #2b5c7360 !important; 
+    margin-top: 0px;
+}
+
+.treeview .dir[data-rel-path="folders/dialog/"]    div.items { 
+    --data-color: #31425e60 !important; 
+    border-radius: 0px;
+    margin-bottom: 0px;
+    padding-bottom: 1px;
+}
+
+.treeview .dir[data-rel-path="folders/panels/"]    div.items { 
+    --data-color: #31425e60 !important; 
+    border-radius: 0px;
+    margin-top: 0px; 
+    margin-bottom: 0px;
+    padding-bottom: 1px;
+}
+
+.treeview .dir[data-rel-path="folders/widgets/"]   div.items { 
+    --data-color: #31425e60 !important; 
+    margin-top: 0px;
+}
+
+
+.treeview div[data-color] {
+    background-blend-mode: normal !important;
+}
+
+.treeview .dir[data-rel-path="folders/nodes/"] div.item[data-kind="script"] + div.item[data-kind="shader"], 
+.treeview .dir[data-rel-path="folders/nodes/"] div.item[data-ident^="node_3d"] + div.item[data-ident^="d3d"], 
+.treeview .dir[data-rel-path="folders/nodes/"] div.item[data-kind="script"] + div.dir {
+    padding-top: 0px;
+    margin-left: 208px;
+    margin-top: -20px;
+    /* width: 32px; */
+}
+
+.treeview .dir[data-rel-path="folders/nodes/"] div.item[data-kind="script"] + div.item[data-kind="shader"]::before, 
+.treeview .dir[data-rel-path="folders/nodes/"] div.item[data-ident^="node_3d"] + div.item[data-ident^="d3d"]::before, 
+.treeview .dir[data-rel-path="folders/nodes/"] div.item[data-kind="script"] + div.dir::before {
+    margin-right: 4px;
+}
+
+.treeview .dir[data-rel-path="folders/nodes/"] div.item[data-kind="script"] + div.item[data-kind="shader"] > span, 
+.treeview .dir[data-rel-path="folders/nodes/"] div.item[data-ident^="node_3d"] + div.item[data-ident^="d3d"] > span, 
+.treeview .dir[data-rel-path="folders/nodes/"] div.item[data-kind="script"] + div.dir > div.header > span {
+    color: #9F9FB500;
+}
+
+.treeview .dir[data-rel-path="folders/nodes/"] div.item[data-kind="script"] + div.dir > div.items {
+    margin-left: -208px;
+}
+
+.treeview .dir[data-rel-path="folders/nodes/"] div.item[data-kind="script"] + div.item[data-kind="shader"]:hover, 
+.treeview .dir[data-rel-path="folders/nodes/"] div.item[data-ident^="node_3d"] + div.item[data-ident^="d3d"]:hover, 
+.treeview .dir[data-rel-path="folders/nodes/"] div.item[data-kind="script"] + div.dir div.header:hover {
+    background-color: transparent !important;
+}
+
+.treeview .dir[data-rel-path="folders/nodes/"] div.item[data-kind="script"] + div.item[data-kind="shader"]:hover::before {
+    background-image: url(gmedit/tree_shader_hover.png);
+}
+
+.treeview .dir[data-rel-path="folders/nodes/"] div.item[data-kind="script"] + div.dir div.header:hover::before {
+    background-image: url(gmedit/treeview_hover.png?r4);
+}

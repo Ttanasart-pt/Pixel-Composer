@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"d3d_cylinder_nocaps",
   "parent":{
-    "name":"mesh",
-    "path":"folders/nodes/data/3D/d3d_mesh/mesh.yy",
+    "name":"cylinder",
+    "path":"folders/nodes/data/3D/d3d_mesh/cylinder.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

@@ -3,8 +3,8 @@
   "%Name":"sh_pb_mask_inset",
   "name":"sh_pb_mask_inset",
   "parent":{
-    "name":"pixel_builder",
-    "path":"folders/shader/pixel_builder.yy",
+    "name":"shader",
+    "path":"folders/nodes/data/pixel builder/shader.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

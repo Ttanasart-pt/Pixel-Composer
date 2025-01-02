@@ -3,8 +3,8 @@
   "%Name":"sh_bend_arc",
   "name":"sh_bend_arc",
   "parent":{
-    "name":"warp",
-    "path":"folders/shader/filter/warp.yy",
+    "name":"filter",
+    "path":"folders/shader/filter.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",
