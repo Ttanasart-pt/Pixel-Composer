@@ -752,7 +752,7 @@ event_inherited();
 			hh += curr_height;
 			yy += curr_height;
 			
-			if(sHOVER && key_mod_press(CTRL)) {
+			if(_hover && key_mod_press(CTRL)) {
 				if(mouse_wheel_down()) display_grid_size_to = clamp(display_grid_size_to - ui(8), ui(32), ui(128));
 				if(mouse_wheel_up())   display_grid_size_to = clamp(display_grid_size_to + ui(8), ui(32), ui(128));
 			}
@@ -926,7 +926,7 @@ event_inherited();
 				else if(_cAll == -1) { for( var i = 0; i < len; i++ ) struct_set(collapsed, group_labels[i].key, 1); }
 			}
 			
-			if(sHOVER && key_mod_press(CTRL)) {
+			if(_hover && key_mod_press(CTRL)) {
 				if(mouse_wheel_down()) display_list_size_to = clamp(display_list_size_to - ui(4), ui(16), ui(64));
 				if(mouse_wheel_up())   display_list_size_to = clamp(display_list_size_to + ui(4), ui(16), ui(64));
 				display_list_size = lerp_float(display_list_size, display_list_size_to, 3);

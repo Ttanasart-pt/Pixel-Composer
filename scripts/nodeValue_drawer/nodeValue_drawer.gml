@@ -242,9 +242,14 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			tooltip_loop_type.index = jun.on_end;
 			
 			var b = buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, _hover, _focus, tooltip_loop_type, THEME.prop_on_end, jun.on_end)
+			if(b) cHov = true;
 			
-			if(b)      cHov = true;
-			if(b == 2) jun.on_end = safe_mod(jun.on_end + 1, sprite_get_number(THEME.prop_on_end));
+			if(b == 1) {
+				if(key_mod_press(SHIFT) && mouse_wheel_up())   mod_dec_mf0 jun.on_end mod_dec_mf1 jun.on_end mod_dec_mf2  sprite_get_number(THEME.prop_on_end) mod_dec_mf3  sprite_get_number(THEME.prop_on_end) mod_dec_mf4;
+				if(key_mod_press(SHIFT) && mouse_wheel_down()) mod_inc_mf0 jun.on_end mod_inc_mf1 jun.on_end mod_inc_mf2  sprite_get_number(THEME.prop_on_end) mod_inc_mf3;
+			}
+			
+			if(b == 2) mod_inc_mf0 jun.on_end mod_inc_mf1 jun.on_end mod_inc_mf2  sprite_get_number(THEME.prop_on_end) mod_inc_mf3;
 		}
 		
 		if(jun.connect_type == CONNECT_TYPE.input && breakLine && !jun.is_anim && !global_var) { // Right buttons

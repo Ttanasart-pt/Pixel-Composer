@@ -61,18 +61,27 @@ if !ready exit;
 	var bx = dialog_x + dialog_w - ui(44);
 	var by = dialog_y + ui(16);
 	var b = buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sHOVER, sFOCUS, view_tooltip, THEME.view_mode, PREFERENCES.dialog_add_node_view, COLORS._main_icon);
-	if(b == 2) PREFERENCES.dialog_add_node_view = (PREFERENCES.dialog_add_node_view + 1) % 2;
+	if(b == 1) {
+		if(key_mod_press(SHIFT) && mouse_wheel_up())   mod_dec_mf0 PREFERENCES.dialog_add_node_view mod_dec_mf1 PREFERENCES.dialog_add_node_view mod_dec_mf2  2 mod_dec_mf3  2 mod_dec_mf4;
+		if(key_mod_press(SHIFT) && mouse_wheel_down()) mod_inc_mf0 PREFERENCES.dialog_add_node_view mod_inc_mf1 PREFERENCES.dialog_add_node_view mod_inc_mf2  2 mod_inc_mf3;
+	}
+	if(b == 2) mod_inc_mf0 PREFERENCES.dialog_add_node_view mod_inc_mf1 PREFERENCES.dialog_add_node_view mod_inc_mf2  2 mod_inc_mf3;
 	
 	bx -= ui(32);
 	var b = buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sHOVER, sFOCUS, group_tooltip, THEME.view_group, PREFERENCES.dialog_add_node_grouping, COLORS._main_icon);
-	if(b == 2) PREFERENCES.dialog_add_node_grouping = (PREFERENCES.dialog_add_node_grouping + 1) % 3;
+	if(b == 1) {
+		if(key_mod_press(SHIFT) && mouse_wheel_up())   mod_dec_mf0 PREFERENCES.dialog_add_node_grouping mod_dec_mf1 PREFERENCES.dialog_add_node_grouping mod_dec_mf2  3 mod_dec_mf3  3 mod_dec_mf4;
+		if(key_mod_press(SHIFT) && mouse_wheel_down()) mod_inc_mf0 PREFERENCES.dialog_add_node_grouping mod_inc_mf1 PREFERENCES.dialog_add_node_grouping mod_inc_mf2  3 mod_inc_mf3;
+	}
+	if(b == 2) mod_inc_mf0 PREFERENCES.dialog_add_node_grouping mod_inc_mf1 PREFERENCES.dialog_add_node_grouping mod_inc_mf2  3 mod_inc_mf3;
 	
 	if(node_called != noone || junction_hovering != noone) {
 		var txt = node_show_connectable? __txtx("add_node_show_connect", "Showing connectable") : __txtx("add_node_show_all", "Showing all");
 		var cc  = node_show_connectable? COLORS._main_accent : COLORS._main_icon;
 		bx -= ui(32);
-		if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sHOVER, sFOCUS, txt, THEME.filter_type, node_show_connectable, cc) == 2) 
-			node_show_connectable = !node_show_connectable;
+		
+		var b = buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sHOVER, sFOCUS, txt, THEME.filter_type, node_show_connectable, cc);
+		if(b == 2) node_show_connectable = !node_show_connectable;
 	}
 	
 	if(search_string != "") {

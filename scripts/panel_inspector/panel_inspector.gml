@@ -1281,10 +1281,12 @@ function Panel_Inspector() : PanelContent() constructor {
         if(inspecting && !inspecting.active) inspecting = noone;
         
         view_mode_tooltip.index = viewMode;
-        if(buttonInstant(THEME.button_hide,  ui(8), ui(48), ui(32), ui(32), [mx, my], pHOVER, pFOCUS, view_mode_tooltip, THEME.inspector_view, viewMode) == 2) {
-            viewMode = !viewMode;
-            PREFERENCES.inspector_view_default = viewMode;
-        }
+        var b = buttonInstant(THEME.button_hide,  ui(8), ui(48), ui(32), ui(32), [mx, my], pHOVER, pFOCUS, view_mode_tooltip, THEME.inspector_view, viewMode);
+        if(b == 1) {
+			if(key_mod_press(SHIFT) && mouse_wheel_up())   { viewMode = !viewMode; PREFERENCES.inspector_view_default = viewMode; }
+			if(key_mod_press(SHIFT) && mouse_wheel_down()) { viewMode = !viewMode; PREFERENCES.inspector_view_default = viewMode; }
+		}
+        if(b == 2) { viewMode = !viewMode; PREFERENCES.inspector_view_default = viewMode; }
         
         if(inspecting) {
             var _nodes = PANEL_GRAPH.nodes_selecting;

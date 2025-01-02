@@ -99,12 +99,20 @@ function quarternionBox(_onModify) : widget() constructor {
 		if((_w - _bs) / 2 > ui(64)) {
 			var bx = _x + _w - _bs;
 			var by = _y + _h / 2 - _bs / 2;
+			var tg = false;
 			tooltip.index = _disp;
 			
-			if(buttonInstant(THEME.button_hide, bx, by, _bs, _bs, _m, ihover, iactive, tooltip, THEME.unit_angle, _disp, c_white) == 2) {
-				clickable = false;
+			var b = buttonInstant(THEME.button_hide, bx, by, _bs, _bs, _m, ihover, iactive, tooltip, THEME.unit_angle, _disp, c_white);
+			if(b == 1) {
+				if(key_mod_press(SHIFT) && mouse_wheel_up())   tg = true;
+				if(key_mod_press(SHIFT) && mouse_wheel_down()) tg = true;
+			} 
+			if(b == 2) tg = true;
+				
+			if(tg) {
 				attributes.angle_display = (_disp + 1) % 2;
 				onModify([ 0, 0, 0, 1 ]);
+				clickable = false;
 			}
 			_w -= _bs + ui(8);
 		}

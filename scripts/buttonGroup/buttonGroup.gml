@@ -128,7 +128,7 @@ function buttonGroup(_data, _onClick) : widget() constructor {
 			if(draw_sel != noone)
 				draw_sprite_stretched_ext(draw_sel[0], 3, draw_sel[1], _y, ww, _h, COLORS._main_accent, 1);	
 			
-			if(point_in_rectangle(_m[0], _m[1], _x, _y, _x + w, _y + _h)) {
+			if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + w, _y + _h)) {
 				if(is_array(data) && key_mod_press(SHIFT)) {
 					var len = array_length(data);
 					if(len) {

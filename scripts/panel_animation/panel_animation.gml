@@ -1638,16 +1638,16 @@ function Panel_Animation() : PanelContent() constructor {
         if(pHOVER && point_in_rectangle(msx, msy, tx - ui(10), ty - ui(9), tx + ui(10), ty + ui(8))) {
             draw_sprite_ui_uniform(THEME.prop_on_end, prop.on_end, tx, ty, 1, COLORS._main_icon_on_inner, _on_end_disp);
             
-            if(tooltip_loop_prop != prop) 
-                tooltip_loop_type.arrow_pos = noone;
+            if(tooltip_loop_prop != prop) tooltip_loop_type.arrow_pos = noone;
             tooltip_loop_prop = prop;
             tooltip_loop_type.index = prop.on_end;
             TOOLTIP = tooltip_loop_type;
                             
-            if(mouse_release(mb_left, pFOCUS)) 
-                prop.on_end = safe_mod(prop.on_end + 1, sprite_get_number(THEME.prop_on_end));
-            if(mouse_press(mb_left, pFOCUS)) 
-                on_end_dragging_anim = prop;
+            if(mouse_release(mb_left, pFOCUS)) prop.on_end = safe_mod(prop.on_end + 1, sprite_get_number(THEME.prop_on_end));
+            if(mouse_press(mb_left, pFOCUS)) on_end_dragging_anim = prop;
+            
+    		if(key_mod_press(SHIFT) && mouse_wheel_up())   mod_dec_mf0 prop.on_end mod_dec_mf1 prop.on_end mod_dec_mf2  sprite_get_number(THEME.prop_on_end) mod_dec_mf3  sprite_get_number(THEME.prop_on_end) mod_dec_mf4;
+    		if(key_mod_press(SHIFT) && mouse_wheel_down()) mod_inc_mf0 prop.on_end mod_inc_mf1 prop.on_end mod_inc_mf2  sprite_get_number(THEME.prop_on_end) mod_inc_mf3;
         } else
             draw_sprite_ui_uniform(THEME.prop_on_end, prop.on_end, tx, ty, 1, on_end_dragging_anim == prop? COLORS._main_accent : COLORS._main_icon, _on_end_disp);
         
@@ -2588,9 +2588,12 @@ function Panel_Animation() : PanelContent() constructor {
         
         by += ui(32); if(by > max_y) return;
         node_name_tooltip.index = node_name_type;
-        
-        if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(28), [mx, my], pHOVER, pFOCUS, node_name_tooltip, THEME.node_name_type, node_name_type) == 2)
-            node_name_type = (node_name_type + 1) % 3;
+        var b = buttonInstant(THEME.button_hide, bx, by, ui(32), ui(28), [mx, my], pHOVER, pFOCUS, node_name_tooltip, THEME.node_name_type, node_name_type);
+        if(b == 1) {
+            if(key_mod_press(SHIFT) && mouse_wheel_up())   mod_dec_mf0 node_name_type mod_dec_mf1 node_name_type mod_dec_mf2  3 mod_dec_mf3  3 mod_dec_mf4;
+		    if(key_mod_press(SHIFT) && mouse_wheel_down()) mod_inc_mf0 node_name_type mod_inc_mf1 node_name_type mod_inc_mf2  3 mod_inc_mf3;
+        }
+        if(b == 2) mod_inc_mf0 node_name_type mod_inc_mf1 node_name_type mod_inc_mf2  3 mod_inc_mf3;
         
         by += ui(32); if(by > max_y) return;
         if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(28), [mx, my], pHOVER, pFOCUS, tooltip_toggle_nodes, THEME.junc_visible, show_nodes) == 2)

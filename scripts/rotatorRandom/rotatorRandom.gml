@@ -50,6 +50,32 @@ function rotatorRandom(_onModify) : widget() constructor {
 		return draw(params.x, params.y, params.w, params.h, params.data, params.m);
 	}
 	
+	static setMode = function(_data, _mode) {
+		onModify(_mode, 0);
+					
+		if(_mode == 0) {
+			onModify(  0, 1);
+			onModify(180, 2);
+			
+		} else if(_mode == 1) {
+			onModify((_data[1] + _data[2]) / 2,    1);
+			onModify(abs(_data[1] - _data[2]) / 2, 2);
+			
+		} else if(_mode == 2) {
+			onModify(0,   1);
+			onModify(90,  2);
+			onModify(180, 3);
+			onModify(270, 4);
+			
+		} else if(_mode == 3) {
+			onModify(45,  1);
+			onModify(225, 2);
+			onModify(45,  3);
+		}
+		
+		return _mode;
+	}
+	
 	static draw = function(_x, _y, _w, _h, _data, _m) {
 		x = _x;
 		y = _y;
@@ -85,31 +111,15 @@ function rotatorRandom(_onModify) : widget() constructor {
 		if(_drawRot) {
 			if((_w - _r) / 2 > ui(48)) {
 				tooltip.index = mode;
-				if(buttonInstant(noone, _x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m, hover, active, tooltip, THEME.rotator_random_mode, mode, [ COLORS._main_icon, c_white ]) == 2) { #region
-					mode = (mode + 1) % 4;
-					onModify(mode, 0);
-			
-					if(mode == 0) {
-						onModify(  0, 1);
-						onModify(180, 2);
-						
-					} else if(mode == 1) {
-						onModify((_data[1] + _data[2]) / 2,    1);
-						onModify(abs(_data[1] - _data[2]) / 2, 2);
-						
-					} else if(mode == 2) {
-						onModify(0,   1);
-						onModify(90,  2);
-						onModify(180, 3);
-						onModify(270, 4);
-						
-					} else if(mode == 3) {
-						onModify(45,  1);
-						onModify(225, 2);
-						onModify(45,  3);
-					}
-			
-				} #endregion
+				var _bx = _x + _w - _bs;
+				var _by = _y + _h / 2 - _bs / 2;
+				
+				var b = buttonInstant(noone, _bx, _by, _bs, _bs, _m, hover, active, tooltip, THEME.rotator_random_mode, mode, [ COLORS._main_icon, c_white ]);
+				if(b == 1) {
+					if(key_mod_press(SHIFT) && mouse_wheel_up())   mode = setMode(_data, (mode - 1 + 4) % 4);
+					if(key_mod_press(SHIFT) && mouse_wheel_down()) mode = setMode(_data, (mode + 1)     % 4);
+				}
+				if(b == 2) mode = setMode(_data, (mode + 1) % 4);
 		
 				_tw -= _bs + ui(4);
 			}

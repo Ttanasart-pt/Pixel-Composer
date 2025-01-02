@@ -39,14 +39,12 @@ function rangeBox(_type, _onModify) : widget() constructor {
 		self.interactable = interactable;
 		
 		tb[0].interactable = interactable;
-		if(!linked) 
-			tb[1].interactable = interactable;
+		if(!linked) tb[1].interactable = interactable;
 	} 
 	
 	static register = function(parent = noone) { 
 		tb[0].register(parent);
-		if(!linked)
-			tb[1].register(parent);
+		if(!linked) tb[1].register(parent);
 	} 
 	
 	static isHovering = function() { 
@@ -79,10 +77,18 @@ function rangeBox(_type, _onModify) : widget() constructor {
 				_w -= _bs + ui(4);
 			}
 			
-			var bx  = _x;
-			var by  = _y + _h / 2 - _bs / 2;
-		
-			if(buttonInstant(THEME.button_hide, bx, by, _bs, _bs, _m, hover, active, tooltip, THEME.value_link, linked, _icon_blend) == 2) {
+			var bx = _x;
+			var by = _y + _h / 2 - _bs / 2;
+			var b  = buttonInstant(THEME.button_hide, bx, by, _bs, _bs, _m, hover, active, tooltip, THEME.value_link, linked, _icon_blend);
+			var tg = false;
+			
+			if(b == 1) {
+				if(key_mod_press(SHIFT) && mouse_wheel_up())   tg = true;
+				if(key_mod_press(SHIFT) && mouse_wheel_down()) tg = true;
+			} 
+			if(b == 2) tg = true;
+			
+			if(tg) {
 				linked = !linked;
 				_display_data.linked = linked;
 			

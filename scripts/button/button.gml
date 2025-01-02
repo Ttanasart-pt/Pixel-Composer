@@ -22,12 +22,30 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 	
 	base_spr = THEME.button_def;
 	
+	onWUp   = undefined;
+	onWDown = undefined;
+	
 	static setContext = function(struct) { onClick = method(struct, onClick); return self; }
+	static setWheel   = function(wup, wdown = wup) { onWUp = wup; onWDown = wdown; return self; }
+	
+	static setBaseSprite = function(_bspr) { base_spr = _bspr; return self;  }
+	static setText       = function(_text) { text    = _text;  return self; }
+	static setTooltip    = function(_tip)  { tooltip = _tip;   return self; }
+	
+	static setIcon = function(_icon, _index = 0, _blend = c_white, _size = 1) {
+		icon       = _icon; 
+		icon_index = _index;
+		icon_blend = _blend;
+		icon_size  = _size;
+		
+		return self; 
+	}
 	
 	static setLua = function(_lua_thread, _lua_key, _lua_func) {
 		lua_thread     = _lua_thread;
 		lua_thread_key = _lua_key;
 		onClick        = method(self, _lua_func);
+		return self;
 	}
 	
 	static trigger = function() {
@@ -45,23 +63,6 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 		triggered = false;
 		return t;
 	}
-	
-	static setIcon = function(_icon, _index = 0, _blend = c_white, _size = 1) {
-		icon       = _icon; 
-		icon_index = _index;
-		icon_blend = _blend;
-		icon_size  = _size;
-		
-		return self; 
-	}
-	
-	static setBaseSprite = function(_baseSpr) {
-		base_spr = _baseSpr;
-		return self; 
-	}
-	
-	static setText    = function(_text) { text    = _text; return self; }
-	static setTooltip = function(_tip)  { tooltip = _tip;  return self; }
 	
 	static drawParam = function(params) {
 		setParam(params);
@@ -96,6 +97,10 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 				draw_sprite_stretched_ext(spr, 3, _x, _y, _w, _h, COLORS._main_accent, 1);
 			}
 			if(tooltip != "") TOOLTIP = tooltip;
+			
+			if(onWUp   != undefined && key_mod_press(SHIFT) && mouse_wheel_up())   onWUp();
+			if(onWDown != undefined && key_mod_press(SHIFT) && mouse_wheel_down()) onWDown();
+
 		} else {
 			draw_sprite_stretched_ext(spr, toggled? 2 : 0, _x, _y, _w, _h, b, 1);
 			if(mouse_press(mb_left)) deactivate();

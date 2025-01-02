@@ -107,7 +107,15 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 			by += _h + ui(4);
 			
 			tooltip_ranged.index = ranged;
-			if(buttonInstant(THEME.button_hide, bx, by, _bs, _bs, _m, hover, active, tooltip_ranged, THEME.value_range, ranged, COLORS._main_icon) == 2) {
+			var b  = buttonInstant(THEME.button_hide, bx, by, _bs, _bs, _m, hover, active, tooltip_ranged, THEME.value_range, ranged, COLORS._main_icon);
+			var tg = false;
+			if(b == 1) {
+				if(key_mod_press(SHIFT) && mouse_wheel_up())   tg = true;
+				if(key_mod_press(SHIFT) && mouse_wheel_down()) tg = true;
+			} 
+			if(b == 2) tg = true;
+			
+			if(tg) {
 				ranged = !ranged;
 				_display_data.ranged = ranged;
 			

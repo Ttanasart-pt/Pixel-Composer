@@ -112,6 +112,71 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 		return draw(params.x, params.y, params.w, params.h, params.data, params.display_data, params.m);
 	}
 	
+	static setMode = function(_data, _mode) {
+		var x0 = 0, y0 = 0;
+		var x1 = 0, y1 = 0;
+		var ss = unit.mode == VALUE_UNIT.reference? [ 1, 1 ] : onSurfaceSize();
+
+		switch(mode) {
+			case AREA_MODE.area :
+				var cx = array_safe_get_fast(_data, 0);
+				var cy = array_safe_get_fast(_data, 1);
+				var sw = array_safe_get_fast(_data, 2);
+				var sh = array_safe_get_fast(_data, 3);
+				
+				x0 = cx - sw;
+				y0 = cy - sh;
+				x1 = cx + sw;
+				y1 = cy + sh;
+				break;
+				
+			case AREA_MODE.padding :
+				var r = array_safe_get_fast(_data, 0);
+				var t = array_safe_get_fast(_data, 1);
+				var l = array_safe_get_fast(_data, 2);
+				var b = array_safe_get_fast(_data, 3);
+				
+				x0 = l;
+				y0 = t;
+				x1 = ss[0] - r;
+				y1 = ss[1] - b;
+				break;
+				
+			case AREA_MODE.two_point :
+				x0 = array_safe_get_fast(_data, 0);
+				y0 = array_safe_get_fast(_data, 1);
+				x1 = array_safe_get_fast(_data, 2);
+				y1 = array_safe_get_fast(_data, 3);
+				break;
+		}
+		
+		switch(_mode) {
+			case AREA_MODE.area :
+				onModify((x0 + x1) / 2, 0);
+				onModify((y0 + y1) / 2, 1);
+				onModify((x1 - x0) / 2, 2);
+				onModify((y1 - y0) / 2, 3);
+				break;
+				
+			case AREA_MODE.padding :
+				onModify(x0,         0);
+				onModify(y0,         1);
+				onModify(ss[0] - x1, 2);
+				onModify(ss[1] - y1, 3);
+				break;
+				
+			case AREA_MODE.two_point :
+				onModify(x0, 0);
+				onModify(y0, 1);
+				onModify(x1, 2);
+				onModify(y1, 3);
+				break;
+		}
+		
+		onModify(_mode, 5);
+		return _mode;
+	}
+	
 	static draw = function(_x, _y, _w, _h, _data, _display_data, _m) { 
 		x = _x;
 		y = _y;
@@ -142,52 +207,15 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 				_w -= _bs + ui(4);
 			}
 		
-			var _bx   = _x + _w - _bs;
-			var _by   = _y + _h / 2 - _bs / 2;
+			var _bx = _x + _w - _bs;
+			var _by = _y + _h / 2 - _bs / 2;
 			
-			if(buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, _m, hover, active, tooltip, THEME.inspector_area_type, mode) == 2) { 
-				switch(mode) {
-					case AREA_MODE.area : //area to padding
-						var cx = array_safe_get_fast(_data, 0);
-						var cy = array_safe_get_fast(_data, 1);
-						var sw = array_safe_get_fast(_data, 2);
-						var sh = array_safe_get_fast(_data, 3);
-						var ss = unit.mode == VALUE_UNIT.reference? [ 1, 1 ] : onSurfaceSize();
-						
-						onModify(ss[0] - (cx + sw), 0);
-						onModify(cy - sh,           1);
-						onModify(cx - sw,           2);
-						onModify(ss[1] - (cy + sh), 3);
-						break;
-						
-					case AREA_MODE.padding : //padding to two points
-						var r  = array_safe_get_fast(_data, 0);
-						var t  = array_safe_get_fast(_data, 1);
-						var l  = array_safe_get_fast(_data, 2);
-						var b  = array_safe_get_fast(_data, 3);
-						var ss = unit.mode == VALUE_UNIT.reference? [ 1, 1 ] : onSurfaceSize();
-						
-						onModify(l,         0);
-						onModify(t,         1);
-						onModify(ss[0] - r, 2);
-						onModify(ss[1] - b, 3);
-						break;
-						
-					case AREA_MODE.two_point : //twp points to area
-						var x0 = array_safe_get_fast(_data, 0);
-						var y0 = array_safe_get_fast(_data, 1);
-						var x1 = array_safe_get_fast(_data, 2);
-						var y1 = array_safe_get_fast(_data, 3);
-						
-						onModify(   (x0 + x1) / 2, 0);
-						onModify(   (y0 + y1) / 2, 1);
-						onModify(abs(x0 - x1) / 2, 2);
-						onModify(abs(y0 - y1) / 2, 3);
-						break;
-				}
-				
-				onModify((mode + 1) % 3, 5);
-			} 
+			var b = buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, _m, hover, active, tooltip, THEME.inspector_area_type, mode);
+			if(b == 1) {
+				if(key_mod_press(SHIFT) && mouse_wheel_up())   mode = setMode(_data, (mode - 1 + 3) % 3);
+				if(key_mod_press(SHIFT) && mouse_wheel_down()) mode = setMode(_data, (mode + 1)     % 3);
+			}
+			if(b == 2) mode = setMode(_data, (mode + 1) % 3);
 			
 			var _bx   = _x + _w - _bs;
 			var _by   = _y + _h + ui(4) + _h / 2 - _bs / 2;

@@ -131,8 +131,16 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 				var _icon_blend = linked? COLORS._main_accent : (link_inactive_color == noone? COLORS._main_icon : link_inactive_color);
 				var bx = _x;
 				var by = _y + _h / 2 - _bs / 2;
-			
-				if(buttonInstant(THEME.button_hide, bx, by, _bs, _bs, _m, hover, active, tooltip, THEME.value_link, linked, _icon_blend) == 2) {
+				var b  = buttonInstant(THEME.button_hide, bx, by, _bs, _bs, _m, hover, active, tooltip, THEME.value_link, linked, _icon_blend);
+				
+				var tg = false;
+				if(b == 1) {
+					if(key_mod_press(SHIFT) && mouse_wheel_up())   tg = true;
+					if(key_mod_press(SHIFT) && mouse_wheel_down()) tg = true;
+				} 
+				if(b == 2) tg = true;
+					
+				if(tg) {
 					linked = !linked;
 					_display_data.linked =  linked;
 				

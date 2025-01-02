@@ -497,23 +497,23 @@ function isGraphable(prop) {
 	return false;
 }
 
-function nodeValueUnit(_nodeValue) constructor {
+function nodeValueUnit(__nodeValue) constructor {
 	INLINE
 	
-	self._nodeValue = _nodeValue;
+	self._nodeValue = __nodeValue;
 	
-	mode = VALUE_UNIT.constant;
+	mode      = VALUE_UNIT.constant;
 	reference = noone;
-	triggerButton = button(function() { 
+	modeTrigger = function() /*=>*/ { 
 		mode = !mode; 
 		_nodeValue.cache_value[0] = false;
 		_nodeValue.unitConvert(mode);
 		_nodeValue.node.doUpdate();
-	});
+	}
 	
-	triggerButton.icon_blend = COLORS._main_icon_light;
-	triggerButton.icon       = THEME.unit_ref;
-	triggerButton.tooltip    = new tooltipSelector("Unit", ["Pixel", "Fraction"]);
+	triggerButton = button(modeTrigger).setWheel(modeTrigger)
+						.setIcon(THEME.unit_ref, 0, COLORS._main_icon_light)
+						.setTooltip(new tooltipSelector("Unit", ["Pixel", "Fraction"]));
 	
 	static setMode = function(type) {
 		if((type == "constant" || type == VALUE_UNIT.constant)  && mode == VALUE_UNIT.constant) return;

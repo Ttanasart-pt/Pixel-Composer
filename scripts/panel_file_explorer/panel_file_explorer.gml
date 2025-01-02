@@ -673,10 +673,12 @@ function Panel_File_Explorer() : PanelContent() constructor {
 		var tb_w = w - pad - tb_x - bs - ui(4);
 		var tb_h = top_bar - pad - ui(8);
 		
-		if(buttonInstant(THEME.button_hide, w - pad - bs, pad, bs, bs, [mx, my], pHOVER, pFOCUS, view_mode_tooltip, THEME.view_mode, !view_mode) == 2) {
-			view_mode = !view_mode;
-			PREFERENCES.file_explorer_view = view_mode;
+		var b = buttonInstant(THEME.button_hide, w - pad - bs, pad, bs, bs, [mx, my], pHOVER, pFOCUS, view_mode_tooltip, THEME.view_mode, !view_mode);
+		if(b == 1) {
+			if(key_mod_press(SHIFT) && mouse_wheel_up())   { view_mode = !view_mode; PREFERENCES.file_explorer_view = view_mode; }
+			if(key_mod_press(SHIFT) && mouse_wheel_down()) { view_mode = !view_mode; PREFERENCES.file_explorer_view = view_mode; }
 		}
+		if(b == 2) { view_mode = !view_mode; PREFERENCES.file_explorer_view = view_mode; }
 		view_mode_tooltip.index = view_mode;
 			
 		tb_root.setFocusHover(pFOCUS, pHOVER);
