@@ -30,10 +30,10 @@ function tilesetBox(_junction) : widget() constructor {
             b_newTileset.drawParam(param);
             
         } else {
-           var ic = s_node_tileset;
+           var ic = s_node_tile_tileset;
         	
         	switch(instanceof(_tileset)) {
-        		case "Node_Tile_Tileset" : ic = s_node_tileset; break;
+        		case "Node_Tile_Tileset" : ic = s_node_tile_tileset; break;
         	}
         	
         	var iw = ui(24);
