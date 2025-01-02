@@ -41,10 +41,13 @@ function tiler_flood_fill_scanline(_surf, _x, _y, brush, _corner = false) {
 	if(brush.brush_height * brush.brush_width == 0) return;
 	
 	var _index = brush.brush_erase? -1 : brush.brush_indices[0][0];
-	var colorBase = surface_getpixel(_surf, _x, _y)[0];
+	var _c = surface_getpixel(_surf, _x, _y);
+	var baseC = _c[0];
+	var baseV = _c[1];
+	var indxC = _index[0];
+	var indxV = _index[1];
 	
-	if(_index == colorBase) return; //Clicking on the same color as the fill color
-	if(is_array(_index)) return;
+	if(indxC == baseC && indxV == baseV) return;
 	
 	_ff_w    = surface_get_width(_surf);
 	_ff_h    = surface_get_height(_surf);
@@ -61,7 +64,8 @@ function tiler_flood_fill_scanline(_surf, _x, _y, brush, _corner = false) {
 	
 	shader_set(sh_draw_tile_brush);
 	BLEND_OVERRIDE
-	shader_set_f("index", _index);
+	shader_set_f("index",   indxC);
+	shader_set_f("varient", indxV);
 	
 	while(!ds_queue_empty(qx)) {
 		
@@ -70,52 +74,52 @@ function tiler_flood_fill_scanline(_surf, _x, _y, brush, _corner = false) {
 		
 // 		print($"----Checking {x1}, {y1} - {_tiler_ff_getPixel(x1, y1)}")
 		
-		if(_tiler_ff_getPixel(x1, y1) == _index) continue; //Color in queue is already filled
+		if(_tiler_ff_getPixel(x1, y1) == indxC) continue; //Color in queue is already filled
 		
-		while(x1 > 0 && colorBase == _tiler_ff_getPixel(x1 - 1, y1)) //Move to the leftmost connected pixel in the same row.
+		while(x1 > 0 && baseC == _tiler_ff_getPixel(x1 - 1, y1)) //Move to the leftmost connected pixel in the same row.
 			x1--;
 		x_start = x1;
 		
 		spanAbove = false;
 		spanBelow = false;
 		
-		while(x1 < surface_w && colorBase == _tiler_ff_getPixel(x1, y1)) {
+		while(x1 < surface_w && baseC == _tiler_ff_getPixel(x1, y1)) {
 			draw_point(x1, y1);
-			buffer_write_at(_ff_buff, (y1 * _ff_w + x1) * 8, buffer_f16, _index);
+			buffer_write_at(_ff_buff, (y1 * _ff_w + x1) * 8, buffer_f16, indxC);
 			
 // 			print($"----Filling {x1}, {y1}")
 			
 			if(y1 > 0) {
-				if(_corner && x1 > 0 && colorBase == _tiler_ff_getPixel(x1 - 1, y1 - 1)) {	//Check top left pixel
+				if(_corner && x1 > 0 && baseC == _tiler_ff_getPixel(x1 - 1, y1 - 1)) {	//Check top left pixel
 					ds_queue_enqueue(qx, x1 - 1);
 					ds_queue_enqueue(qy, y1 - 1);
 				}
 					
-				if(colorBase == _tiler_ff_getPixel(x1, y1 - 1)) {								//Check top pixel
+				if(baseC == _tiler_ff_getPixel(x1, y1 - 1)) {								//Check top pixel
 					ds_queue_enqueue(qx, x1);
 					ds_queue_enqueue(qy, y1 - 1);
 				}
 			}
 				
 			if(y1 < surface_h - 1) {
-				if(_corner && x1 > 0 && colorBase == _tiler_ff_getPixel(x1 - 1, y1 + 1)) {	//Check bottom left pixel
+				if(_corner && x1 > 0 && baseC == _tiler_ff_getPixel(x1 - 1, y1 + 1)) {	//Check bottom left pixel
 					ds_queue_enqueue(qx, x1 - 1);
 					ds_queue_enqueue(qy, y1 + 1);
 				}
 					
-				if(colorBase == _tiler_ff_getPixel(x1, y1 + 1)) {								//Check bottom pixel
+				if(baseC == _tiler_ff_getPixel(x1, y1 + 1)) {								//Check bottom pixel
 					ds_queue_enqueue(qx, x1);
 					ds_queue_enqueue(qy, y1 + 1);
 				}
 			}
 				
 			if(_corner && x1 < surface_w - 1) {
-				if(y1 > 0 && colorBase == _tiler_ff_getPixel(x1 + 1, y1 - 1)) {				//Check top right pixel
+				if(y1 > 0 && baseC == _tiler_ff_getPixel(x1 + 1, y1 - 1)) {				//Check top right pixel
 					ds_queue_enqueue(qx, x1 + 1);
 					ds_queue_enqueue(qy, y1 - 1);
 				}
 					
-				if(y1 < surface_h - 1 && colorBase == _tiler_ff_getPixel(x1 + 1, y1 + 1)) {	//Check bottom right pixel
+				if(y1 < surface_h - 1 && baseC == _tiler_ff_getPixel(x1 + 1, y1 + 1)) {	//Check bottom right pixel
 					ds_queue_enqueue(qx, x1 + 1);
 					ds_queue_enqueue(qy, y1 + 1);
 				}
