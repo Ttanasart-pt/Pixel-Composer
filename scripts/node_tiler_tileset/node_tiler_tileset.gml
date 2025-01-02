@@ -52,8 +52,8 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	static setPencil = function() {
 		var _n = PANEL_INSPECTOR.getInspecting(); 
 		if(!is(_n, Node_Tile_Drawer)) return;
-		if(PANEL_PREVIEW.tool_current != _n.tool_pencil) 
-			_n.tool_pencil.toggle();
+		if(PANEL_PREVIEW.tool_current != _n.node_tool_pencil) 
+			_n.node_tool_pencil.toggle();
 	}
 	
 	////- Tile selector
@@ -464,7 +464,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				var _sw = _ss * _sel_sw;
 				var _sh = _ss * _sel_sh;
 				
-		    	var _vv  = [ 0, 0b0011, 0b0010, 0b0001, 0b0100, 0b0111, 0b0110, 0b0101 ];
+		    	var _vv  = [ 0, 0b0001, 0b0010, 0b0011, 0b0100, 0b0101, 0b0110, 0b0111 ];
 				var  p   = array_length(_vv)
 				var _col = max(1, floor((_w - ui(8)) / (_sw + ui(8))));
 				var _row = brush.brush_width * brush.brush_height == 1? ceil((p + 1) / _col) : 1;

@@ -69,42 +69,87 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	#region ++++ tools ++++
 		tool_attribute.size = 1;
-		tool_size_edit      = new textBox(TEXTBOX_INPUT.number, function(val) { tool_attribute.size = max(1, round(val)); }).setSlideType(true)
+		tool_size_edit      = new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ { tool_attribute.size = max(1, round(val)); }).setSlideType(true)
 									.setFont(f_p3)
-									.setSideButton(button(function() { dialogPanelCall(new Panel_Node_Canvas_Pressure(self), mouse_mx, mouse_my, { anchor: ANCHOR.top | ANCHOR.left }) })
+									.setSideButton(button(function() /*=>*/ { dialogPanelCall(new Panel_Node_Canvas_Pressure(self), mouse_mx, mouse_my, { anchor: ANCHOR.top | ANCHOR.left }) })
 										.setIcon(THEME.pen_pressure, 0, COLORS._main_icon));
 		tool_size           = [ "Size", tool_size_edit, "size", tool_attribute ];
 		
 		tool_attribute.fillType = 0;
-		tool_fil8_edit      	= new buttonGroup( [ THEME.canvas_fill_type, THEME.canvas_fill_type, THEME.canvas_fill_type ], function(val) { tool_attribute.fillType = val; })
+		tool_fil8_edit      	= new buttonGroup( [ THEME.canvas_fill_type, THEME.canvas_fill_type, THEME.canvas_fill_type ], function(val) /*=>*/ { tool_attribute.fillType = val; })
 									.setTooltips( [ "Edge", "Edge + Corner" ] )
 									.setCollape(false);
 		tool_fil8           	= [ "Fill", tool_fil8_edit, "fillType", tool_attribute ];
 		
-		tool_pencil = new NodeTool( "Pencil",		  THEME.canvas_tools_pencil)
-				.setSetting(tool_size)
-				.setToolObject(tool_brush);
+		tool_varient_rotate  = [ "", new buttonGroup( [ s_canvas_rotate, s_canvas_rotate ], function(v) /*=>*/ {return brush_action_rotate(v)} )
+			.setCollape(0).setTooltips([ "Rotate CW", "Rotate CCW" ]) ];
+			
+		tool_varient_flip    = [ "", new buttonGroup( [ s_canvas_flip, s_canvas_flip ], function(v) /*=>*/ {return brush_action_flip(v)} )
+			.setCollape(0).setTooltips([ "Flip X", "Flip Y" ]) ];
 		
-		tool_tile_picker = false;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		
+		node_tool_pencil	= new NodeTool( "Pencil", THEME.canvas_tools_pencil).setToolObject(tool_brush)
+								.setSetting(tool_size, tool_varient_rotate, tool_varient_flip)
+		
+		node_tool_eraser	= new NodeTool( "Eraser", THEME.canvas_tools_eraser).setToolObject(tool_eraser)
+								.setSetting(tool_size)
+				
+		node_tool_rectangle = new NodeTool( "Rectangle", THEME.canvas_tools_rect_fill).setToolObject(tool_rectangle)
+								.setSetting(tool_size, tool_varient_rotate, tool_varient_flip)
+						
+		node_tool_ellipse	= new NodeTool( "Ellipse", THEME.canvas_tools_ellip_fill).setToolObject(tool_ellipse)
+								.setSetting(tool_size, tool_varient_rotate, tool_varient_flip)
+						
+		node_tool_fill		= new NodeTool( "Fill", THEME.canvas_tools_bucket).setToolObject(tool_fill)
+								.setSetting(tool_fil8, tool_varient_rotate, tool_varient_flip)
 		
 		tools = [
-			tool_pencil,
+			node_tool_pencil,
+			node_tool_eraser,
+			node_tool_rectangle,
+			node_tool_ellipse,
+			node_tool_fill,
+		];
+		
+		tool_tile_picker = false;
+	#endregion
+	
+	#region ++++ tools actions ++++
+		function brush_action_rotate(ccw) {
+			if(tileset == noone) return;
+			var brush = tileset.brush;
+			var _rot  = ccw? -1 : 1;
 			
-			new NodeTool( "Eraser",		  THEME.canvas_tools_eraser)
-				.setSetting(tool_size)
-				.setToolObject(tool_eraser),
+			for( var i = 0, n = brush.brush_height; i < n; i++ ) 
+			for( var j = 0, m = brush.brush_width;  j < m; j++ ) {
+				var _b  = brush.brush_indices[i][j];
+				var _fl = floor(_b[1] / 4) * 4;
+				var _rt = _b[1] % 4;
 				
-			new NodeTool( "Rectangle",	[ THEME.canvas_tools_rect_fill  ])
-				.setSetting(tool_size)
-				.setToolObject(tool_rectangle),
-					
-			new NodeTool( "Ellipse",	[ THEME.canvas_tools_ellip_fill ])
-				.setSetting(tool_size)
-				.setToolObject(tool_ellipse),
+				_b[1] = _fl + (_rt + _rot + 4) % 4;
+			}
+		}
+		
+		function brush_action_flip(axs) {
+			if(tileset == noone) return;
+			var brush = tileset.brush;
+			var flp   = axs? 0b1000 : 0b0100;
 			
-			new NodeTool( "Fill",		  THEME.canvas_tools_bucket)
-				.setSetting(tool_fil8)
-				.setToolObject(tool_fill),
+			for( var i = 0, n = brush.brush_height; i < n; i++ ) 
+			for( var j = 0, m = brush.brush_width;  j < m; j++ ) {
+				var _b = brush.brush_indices[i][j];
+				_b[1] = _b[1] ^ flp;
+			}
+		}
+	#endregion
+	
+	#region ++++ hotkeys ++++
+		hotkeys = [
+			["Brush Rotate CW",  function() /*=>*/ { brush_action_rotate(0); }], 
+			["Brush Rotate CCW", function() /*=>*/ { brush_action_rotate(1); }], 
+			["Brush Flip H",     function() /*=>*/ { brush_action_flip(0);   }], 
+			["Brush Flip V",     function() /*=>*/ { brush_action_flip(1);   }], 
 		];
 	#endregion
 	
@@ -263,12 +308,13 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 				tool_tile_picker = true;
 		}
 	    
-	    // if(!array_empty(tileset.autoterrain)) {
-	    // 	draw_surface_ext_safe(tileset.autoterrain[0].mask_surface, 32, 32, 8, 8, 0, c_white, 1);
-	    // }
-	    // if(surface_exists(canvas_surface))  draw_surface_ext(canvas_surface,   32, 32, 8, 8, 0, c_white, 1);
-	    // if(surface_exists(drawing_surface)) draw_surface_ext(drawing_surface, 232, 32, 8, 8, 0, c_white, 1);
-	    // draw_surface_ext(preview_draw_overlay, 432, 32, 8, 8, 0, c_white, 1);
+	    for( var i = 0, n = array_length(hotkeys); i < n; i++ ) {
+	    	var _hk = hotkeys[i];
+	    	var _h = getToolHotkey("Node_Tile_Drawer", _hk[0]);
+	    	if(_h == noone) continue;
+	    	
+	    	if(_h.isPressing()) _hk[1]();
+	    }
     }
     
     ////- Update

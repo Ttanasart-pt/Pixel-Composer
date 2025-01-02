@@ -2130,7 +2130,7 @@ function Panel_Preview() : PanelContent() constructor {
             
             tool_x = lerp_float(tool_x, tool_x_to, 5);
             var tolx  = tool_x + ui(8);
-            var toly  = ui(8);
+            var toly  = ui(7);
             var tolw  = ui(48);
             var tolh  = toolbar_height - ui(20);
             var tol_max_w = ui(16);
@@ -2141,7 +2141,7 @@ function Panel_Preview() : PanelContent() constructor {
                 var nme  = sett[0];
                 var wdg  = sett[1];
                 var key  = array_safe_get_fast(sett, 2);
-                var atr  = array_safe_get_fast(sett, 3);
+                var atr  = array_safe_get_fast(sett, 3, {});
                 
                 if(nme != "") {
                     tolx      += ui(8) + bool(i == 0) * ui(8);

@@ -24,6 +24,10 @@ function __initHotKey() {
 	hotkeySimple("Node_Tile_Drawer",       	"Rectangle",            "N");
 	hotkeySimple("Node_Tile_Drawer",       	"Ellipse",              "M");
 	hotkeySimple("Node_Tile_Drawer",       	"Fill",                 "G");
+	hotkeySimple("Node_Tile_Drawer",       	"Brush Rotate CW",      "R");
+	hotkeySimple("Node_Tile_Drawer",       	"Brush Rotate CCW",     "R", MOD_KEY.shift);
+	hotkeySimple("Node_Tile_Drawer",       	"Brush Flip H",         "T");
+	hotkeySimple("Node_Tile_Drawer",       	"Brush Flip V",         "T", MOD_KEY.shift);
 	
 	hotkeySimple("Node_Mesh_Warp",          "Edit control point",   "V");
 	hotkeySimple("Node_Mesh_Warp",          "Pin mesh",             "P");

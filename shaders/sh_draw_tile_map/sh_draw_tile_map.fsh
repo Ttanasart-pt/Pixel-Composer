@@ -49,6 +49,7 @@ void main() {
     
     if(mFlipH == 1.) tileTx.x = 1. - tileTx.x;
     if(mFlipV == 1.) tileTx.y = 1. - tileTx.y;
+    
     if(mRot   == 1.) tileTx = vec2(tileTx.y, 1. - tileTx.x);
     if(mRot   == 2.) tileTx = 1. - tileTx;
     if(mRot   == 3.) tileTx = vec2(1. - tileTx.y, tileTx.x);
