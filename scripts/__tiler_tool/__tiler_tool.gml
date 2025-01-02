@@ -1,6 +1,6 @@
-function tiler_tool(node) constructor {
-    self.node = node;
-    subtool   = 0;
+function tiler_tool(_node) constructor {
+    node    = _node;
+    subtool = 0;
     brush_resizable = true;
 	
     apply_draw_surface = noone;

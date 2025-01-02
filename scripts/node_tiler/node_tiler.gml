@@ -118,6 +118,16 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		triggerRender();
 	}
 	
+	static storeAction = function() {
+		var action = recordAction(ACTION_TYPE.custom, function(data) { 
+			var _canvas    = surface_clone(canvas_surface);
+			canvas_surface = data.surface;
+			data.surface   = _canvas;
+			triggerRender();
+			
+		}, { surface: surface_clone(canvas_surface), tooltip: "Modify tilemap" });
+	}
+	
 	function reset_surface(surface) {
 		surface_set_shader(surface, noone, true, BLEND.over);
 			draw_surface(canvas_surface, 0, 0);

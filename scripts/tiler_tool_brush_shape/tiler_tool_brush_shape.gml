@@ -1,4 +1,4 @@
-function tiler_tool_shape(node, _brush, _shape) : tiler_tool(node) constructor {
+function tiler_tool_shape(_node, _brush, _shape) : tiler_tool(_node) constructor {
     self.brush = _brush;
     self.shape = _shape;
     
@@ -54,6 +54,7 @@ function tiler_tool_shape(node, _brush, _shape) : tiler_tool(node) constructor {
 			mouse_pre_x = mouse_cur_x;
 			mouse_pre_y = mouse_cur_y;
 				
+			node.storeAction();
 			mouse_holding = true;
 		}
 			

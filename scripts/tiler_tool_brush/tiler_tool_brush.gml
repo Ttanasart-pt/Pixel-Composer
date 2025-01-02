@@ -1,4 +1,4 @@
-function tiler_tool_brush(node, _brush, eraser = false) : tiler_tool(node) constructor {
+function tiler_tool_brush(_node, _brush, eraser = false) : tiler_tool(_node) constructor {
     self.brush = _brush;
     isEraser   = eraser;
 	brush_resizable = true;
@@ -51,6 +51,7 @@ function tiler_tool_brush(node, _brush, eraser = false) : tiler_tool(node) const
 		}
 			
 		if(mouse_press(mb_left, active)) {
+			node.storeAction();
 			
 			surface_set_target(drawing_surface);
 				tiler_draw_point_brush(brush, mouse_cur_x, mouse_cur_y);

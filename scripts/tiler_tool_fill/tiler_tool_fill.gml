@@ -1,4 +1,4 @@
-function tiler_tool_fill(node, _brush, toolAttr) : tiler_tool(node) constructor {
+function tiler_tool_fill(_node, _brush, toolAttr) : tiler_tool(_node) constructor {
 	self.brush = _brush;
 	self.tool_attribute = toolAttr;
 	
@@ -18,12 +18,14 @@ function tiler_tool_fill(node, _brush, toolAttr) : tiler_tool(node) constructor 
 		var _auto = brush.autoterrain;
 		
 		if(mouse_press(mb_left, active) && point_in_rectangle(mouse_cur_x, mouse_cur_y, 0, 0, surface_w - 1, surface_h - 1)) {
+			node.storeAction();
+			
 			surface_set_target(drawing_surface);
 				tiler_flood_fill_scanline(drawing_surface, mouse_cur_x, mouse_cur_y, brush, tool_attribute.fillType);
 			surface_reset_target();
 			
 			if(_auto != noone) {
-				_auto.drawing_start(drawing_surface, isEraser);
+				_auto.drawing_start(drawing_surface);
 				tiler_flood_fill_scanline(drawing_surface, mouse_cur_x, mouse_cur_y, brush, tool_attribute.fillType);
 				_auto.drawing_end();
 			}
