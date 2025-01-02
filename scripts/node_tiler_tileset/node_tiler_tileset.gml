@@ -456,16 +456,22 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		    	selecting_surface_tile = surface_verify(selecting_surface_tile, _sel_sw, _sel_sh);
 		    	
 				var _ty = _yy + _tsh + ui(8);
-				var _th = ui(48);
-				_h += ui(8) + _th;
 				
 				var _sx =  _x + ui(8);
 				var _sy = _ty + ui(8);
 				
-				var _ss = (_th - ui(16)) / _sel_sh;
+				var _ss = ui(32) / _sel_sh;
 				var _sw = _ss * _sel_sw;
 				var _sh = _ss * _sel_sh;
-		    		
+				
+		    	var _vv  = [ 0, 0b0011, 0b0010, 0b0001, 0b0100, 0b0111, 0b0110, 0b0101 ];
+				var  p   = array_length(_vv)
+				var _col = max(1, floor((_w - ui(8)) / (_sw + ui(8))));
+				var _row = brush.brush_width * brush.brush_height == 1? ceil((p + 1) / _col) : 1;
+				
+				var _th = ui(8) + (_sh + ui(8)) * _row;
+				_h += ui(8) + _th;
+				
 				draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _ty, _w, _th, COLORS.node_composite_bg_blend, 1);
 				
 				var _shov = _hover && point_in_rectangle(_m[0], _m[1], _sx, _sy, _sx + _sw, _sy + _sh);
@@ -496,14 +502,13 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				
 				_sx += _sw + ui(8);
 				
-				if(brush.brush_width * brush.brush_height != 1) 
-					return _h;
-			
-				var _bb = brush.brush_indices[0][0];
-				var _variences = [ 0, 1, 2, 3, 8, 16 ];
+				if(brush.brush_width * brush.brush_height != 1) return _h;
 				
-				for( var v = 0, p = array_length(_variences); v < p; v++ ) {
-					var _var = _variences[v];
+				var _bb = brush.brush_indices[0][0];
+				var _vi = 1;
+				
+				for( var v = 0; v < p; v++ ) {
+					var _var = _vv[v];
 					
 			    	surface_set_shader(selecting_surface, sh_draw_tile_brush, true, BLEND.over);
 			    		shader_set_f("index",   _bb[0]);
@@ -536,6 +541,11 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		    			_bb[1] = _var;
 		    		
 					_sx += _sw + ui(8);
+					if(++_vi >= _col) {
+						_sx  = _x + ui(8);
+						_sy += _sh + ui(8);
+						_vi  = 0;
+					}
 				}
 			#endregion
 		    	

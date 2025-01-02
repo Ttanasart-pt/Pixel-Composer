@@ -42,16 +42,16 @@ void main() {
     texTx  = vec2(mod(index, tileAmo.x), floor(index / tileAmo.x)) * tileSize;
     tileTx = mod(px, tileSize) / tileSize;
     
-    float vari  = samIdx.g + 0.1;
-    float mRotation = mod(floor(vari),       4.);
-    float mFlipH    = mod(floor(vari /  8.), 2.);
-    float mFlipV    = mod(floor(vari / 16.), 2.);
+    float vari   = samIdx.g + 0.1;
+    float mRot   = mod(floor(vari),      4.);
+    float mFlipH = mod(floor(vari / 4.), 2.);
+    float mFlipV = mod(floor(vari / 8.), 2.);
     
-    if(mFlipH    == 1.) tileTx.x = 1. - tileTx.x;
-    if(mFlipV    == 1.) tileTx.y = 1. - tileTx.y;
-    if(mRotation == 1.) tileTx = vec2(tileTx.y, 1. - tileTx.x);
-    if(mRotation == 2.) tileTx = 1. - tileTx;
-    if(mRotation == 3.) tileTx = vec2(1. - tileTx.y, tileTx.x);
+    if(mFlipH == 1.) tileTx.x = 1. - tileTx.x;
+    if(mFlipV == 1.) tileTx.y = 1. - tileTx.y;
+    if(mRot   == 1.) tileTx = vec2(tileTx.y, 1. - tileTx.x);
+    if(mRot   == 2.) tileTx = 1. - tileTx;
+    if(mRot   == 3.) tileTx = vec2(1. - tileTx.y, tileTx.x);
     
     vec2  samTx = texTx + tileTx * tileSize;
     gl_FragColor = texture2D( tileTexture, samTx / tileTextureDim );
