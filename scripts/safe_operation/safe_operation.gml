@@ -14,3 +14,15 @@ function safe_mod(numb, modd, _neg = MOD_NEG._default) {
 	
 	return _md;
 }
+
+//!#mfunc mod_inc {"args":["val"," range"],"order":[0,0,1]}
+#macro mod_inc_mf0  //
+#macro mod_inc_mf1  = (
+#macro mod_inc_mf2  + 1) % 
+#macro mod_inc_mf3 ;
+//!#mfunc mod_dec {"args":["val"," range"],"order":[0,0,1,1]}
+#macro mod_dec_mf0  //
+#macro mod_dec_mf1  = (
+#macro mod_dec_mf2  - 1 + 
+#macro mod_dec_mf3 ) % 
+#macro mod_dec_mf4 ;

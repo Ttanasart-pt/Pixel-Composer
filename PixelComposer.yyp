@@ -1904,6 +1904,7 @@
     {"id":{"name":"panel_resource_monitor","path":"scripts/panel_resource_monitor/panel_resource_monitor.yy",},},
     {"id":{"name":"panel_test","path":"scripts/panel_test/panel_test.yy",},},
     {"id":{"name":"panel_text_editor","path":"scripts/panel_text_editor/panel_text_editor.yy",},},
+    {"id":{"name":"panel_toolbar_icon","path":"scripts/panel_toolbar_icon/panel_toolbar_icon.yy",},},
     {"id":{"name":"panel_tunnels","path":"scripts/panel_tunnels/panel_tunnels.yy",},},
     {"id":{"name":"panel_workspace","path":"scripts/panel_workspace/panel_workspace.yy",},},
     {"id":{"name":"path_function","path":"scripts/path_function/path_function.yy",},},

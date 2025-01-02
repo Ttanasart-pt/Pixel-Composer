@@ -109,6 +109,7 @@ function os_type_sting() {
 
 function exception_print(e) {
 	if(!is_struct(e) || !struct_has(e, "longMessage")) return string(e);
+	if(!code_is_compiled()) return $"ERR:{json_stringify(e)}";
 	
 	var str = $"\n\n==========  Crash log [PXC {VERSION_STRING}] [{os_type_sting()}] ==========";
 	str += $"\n\n{e.longMessage}";
@@ -151,8 +152,7 @@ function setException() {
 		if(IS_CMD) {
 			show_debug_message($"[ERROR BEGIN]\n{tt}\n[ERROR END]");
 			return 0;
-		} else 
-			show_debug_message(tt);
+		} else show_debug_message($"ERR:{json_stringify(ex)}");
 		
 		var rep = $"{APP_LOCATION}report/PXC crash reporter.exe";
 		var pid = shell_execute(rep, DIRECTORY);
