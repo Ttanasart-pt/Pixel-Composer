@@ -53,9 +53,11 @@ function tiler_tool_brush(_node, _brush, eraser = false) : tiler_tool(_node) con
 		if(mouse_press(mb_left, active)) {
 			node.storeAction();
 			
-			surface_set_target(drawing_surface);
-				tiler_draw_point_brush(brush, mouse_cur_x, mouse_cur_y);
-			surface_reset_target();
+			if(!key_mod_press(SHIFT)) {
+				surface_set_target(drawing_surface);
+					tiler_draw_point_brush(brush, mouse_cur_x, mouse_cur_y);
+				surface_reset_target();
+			}
 			
 			if(_auto != noone) {
 				_auto.drawing_start(drawing_surface, isEraser);

@@ -23,35 +23,49 @@
 .treeview .dir[data-rel-path="folders/functions/"] { --data-color: #347c6f !important; }
 .treeview .dir[data-rel-path="folders/nodes/"]     { 
     --data-color: #2b5c73 !important; 
+    background-image: linear-gradient(var(--data-color), var(--data-color)), linear-gradient(var(--treeview-background-color), var(--treeview-background-color));
     border-radius: 6px 6px 0px 0px;
     margin-bottom: 0px;
 }
 .treeview .dir[data-rel-path="folders/shader/"]    { 
     --data-color: #2b5c73 !important; 
+    background-image: linear-gradient(var(--data-color), var(--data-color)), linear-gradient(var(--treeview-background-color), var(--treeview-background-color));
     border-radius: 0px 0px 6px 6px;
     margin-top: 0px;
 }
 .treeview .dir[data-rel-path="folders/dialog/"]    { 
     --data-color: #31425e !important; 
+    background-image: linear-gradient(var(--data-color), var(--data-color)), linear-gradient(var(--treeview-background-color), var(--treeview-background-color));
     border-radius: 6px 6px 0px 0px;
     margin-bottom: 0px;
 }
 .treeview .dir[data-rel-path="folders/panels/"]    { 
     --data-color: #31425e !important;
+    background-image: linear-gradient(var(--data-color), var(--data-color)), linear-gradient(var(--treeview-background-color), var(--treeview-background-color));
     border-radius: 0px;
     margin-top: 0px; 
     margin-bottom: 0px;
 }
 .treeview .dir[data-rel-path="folders/widgets/"]   { 
     --data-color: #31425e !important; 
+    background-image: linear-gradient(var(--data-color), var(--data-color)), linear-gradient(var(--treeview-background-color), var(--treeview-background-color));
     border-radius: 0px 0px 6px 6px;
     margin-top: 0px;
 }
 
-.treeview .dir[data-rel-path="folders/main/"]      div.items { --data-color: #40865560 !important; }
-.treeview .dir[data-rel-path="folders/functions/"] div.items { --data-color: #347c6f60 !important; }
+.treeview .dir[data-rel-path="folders/main/"]      div.items { 
+    --data-color: #40865560 !important; 
+    background-image: linear-gradient(var(--data-color), var(--data-color)), linear-gradient(var(--treeview-background-color), var(--treeview-background-color));
+}
+
+.treeview .dir[data-rel-path="folders/functions/"] div.items { 
+    --data-color: #347c6f60 !important; 
+    background-image: linear-gradient(var(--data-color), var(--data-color)), linear-gradient(var(--treeview-background-color), var(--treeview-background-color));
+}
+
 .treeview .dir[data-rel-path="folders/nodes/"]     div.items { 
     --data-color: #2b5c7360 !important; 
+    background-image: linear-gradient(var(--data-color), var(--data-color)), linear-gradient(var(--treeview-background-color), var(--treeview-background-color));
     border-radius: 0px;
     margin-bottom: 0px;
     padding-bottom: 1px;
@@ -59,11 +73,13 @@
 
 .treeview .dir[data-rel-path="folders/shader/"]    div.items { 
     --data-color: #2b5c7360 !important; 
+    background-image: linear-gradient(var(--data-color), var(--data-color)), linear-gradient(var(--treeview-background-color), var(--treeview-background-color));
     margin-top: 0px;
 }
 
 .treeview .dir[data-rel-path="folders/dialog/"]    div.items { 
     --data-color: #31425e60 !important; 
+    background-image: linear-gradient(var(--data-color), var(--data-color)), linear-gradient(var(--treeview-background-color), var(--treeview-background-color));
     border-radius: 0px;
     margin-bottom: 0px;
     padding-bottom: 1px;
@@ -71,6 +87,7 @@
 
 .treeview .dir[data-rel-path="folders/panels/"]    div.items { 
     --data-color: #31425e60 !important; 
+    background-image: linear-gradient(var(--data-color), var(--data-color)), linear-gradient(var(--treeview-background-color), var(--treeview-background-color));
     border-radius: 0px;
     margin-top: 0px; 
     margin-bottom: 0px;
@@ -79,6 +96,7 @@
 
 .treeview .dir[data-rel-path="folders/widgets/"]   div.items { 
     --data-color: #31425e60 !important; 
+    background-image: linear-gradient(var(--data-color), var(--data-color)), linear-gradient(var(--treeview-background-color), var(--treeview-background-color));
     margin-top: 0px;
 }
 

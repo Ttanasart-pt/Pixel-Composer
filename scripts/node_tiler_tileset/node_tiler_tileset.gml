@@ -132,7 +132,6 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				}
 				
 				var _rx = bx - ui(8);
-				
 				var _zw  = ui(128);
 				var _zh  = ui(12);
 				var _zx1 = _rx;
@@ -922,6 +921,10 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    palette_select_ss = [ 0, 0 ];
 	    palette_bbox      = [ 0, 0, 0, 0 ];
 	    
+	    palette_zoom_drag = false;
+	    palette_zoom_mx   = noone;
+	    palette_zoom_sx   = noone;
+	    
 	    palette_tool       = 0;
 	    palette_tool_using = false;
 	    palette_using      = false;
@@ -935,39 +938,95 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    	var _tileSiz = tileSize;
 	    	
 	    	#region top bar
-			var bx = _x;
-			var by = _yy;
-			var bs = ui(24);
-			
-			var _tsh = palette_viewer.fixHeight > 0? palette_viewer.fixHeight - ui(24 + 4) : brush_palette_h;
-			
-			if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, _hover, _focus, "Pencil", THEME.canvas_tools_pencil, 0, palette_tool == 1? COLORS._main_accent : c_white) == 2)
-				palette_tool = palette_tool == 1? 0 : 1;
-			
-			draw_sprite_ui_uniform(THEME.canvas_tools_pencil, 1, bx + bs / 2, by + bs / 2, 1, palette_tool == 1? COLORS._main_accent : c_white);
-			
-			bx += bs + ui(4);
-			if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, _hover, _focus, "Eraser", THEME.canvas_tools_eraser, 0, palette_tool == 2? COLORS._main_accent : c_white) == 2) 
-				palette_tool = palette_tool == 2? 0 : 2;
-			
-			bx = _x + _w - bs;
-			if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, _hover, _focus, "Zoom to fit", THEME.path_tools_transform, 0, COLORS._main_icon_light) == 2) {
-			    if(is_surface(brush_palette_tile)) {
-			        var _tdim = surface_get_dimension(brush_palette_tile);
-    				var _sw   = _w - _pd * 2;
-    	    	    var _sh   = _tsh - _pd * 2;
-    	    	    
-    	    	    var _ss = min(_sw / (_tdim[0] + 16), _sh / (_tdim[1] + 16));
-    	    	    palette_selector_s    = _ss;
-    	    	    palette_selector_s_to = _ss;
-    	    	    
-    	    	    palette_selector_x = _w / 2              - _tdim[0] * _ss / 2;
-                    palette_selector_y = _tsh / 2 - _tdim[1] * _ss / 2;
-			    }
-			}
-			
-			_h  += bs + ui(4);
-			_yy += bs + ui(4);
+				var bx = _x;
+				var by = _yy;
+				var bs = ui(24);
+				
+				var _tsh = palette_viewer.fixHeight > 0? palette_viewer.fixHeight - ui(24 + 4) : brush_palette_h;
+				
+				if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, _hover, _focus, "Pencil", THEME.canvas_tools_pencil, 0, palette_tool == 1? COLORS._main_accent : c_white) == 2)
+					palette_tool = palette_tool == 1? 0 : 1;
+				
+				draw_sprite_ui_uniform(THEME.canvas_tools_pencil, 1, bx + bs / 2, by + bs / 2, 1, palette_tool == 1? COLORS._main_accent : c_white);
+				
+				bx += bs + ui(1);
+				var b = buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, _hover, _focus, "Eraser", THEME.canvas_tools_eraser, 0, palette_tool == 2? COLORS._main_accent : c_white)
+				gpu_set_tex_filter(true); draw_sprite_ext(THEME.arrow, 0, bx + bs - 4, by + bs - 4, .75, .75, -45, COLORS._main_icon); gpu_set_tex_filter(false);
+				
+				if(b == 2) palette_tool = palette_tool == 2? 0 : 2;
+				if(b == 3) menuCall("", [ menuItem("Clear palette", function() /*=>*/ {
+					surface_clear(brush_palette);
+					buffer_delete_safe(brush_palette_buffer);
+	    			brush_palette_buffer = buffer_from_surface(brush_palette);
+				}) ])
+				
+				var _lx = bx + bs + ui(8);
+				
+				bx = _x + _w - bs;
+				if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, _hover, _focus, "Zoom to fit", THEME.path_tools_transform, 0, COLORS._main_icon_light) == 2) {
+				    if(is_surface(brush_palette_tile)) {
+				        var _tdim = surface_get_dimension(brush_palette_tile);
+	    				var _sw   = _w - _pd * 2;
+	    	    	    var _sh   = _tsh - _pd * 2;
+	    	    	    
+	    	    	    var _ss = min(_sw / (_tdim[0] + 16), _sh / (_tdim[1] + 16));
+	    	    	    palette_selector_s    = _ss;
+	    	    	    palette_selector_s_to = _ss;
+	    	    	    
+	    	    	    palette_selector_x = _w / 2              - _tdim[0] * _ss / 2;
+	                    palette_selector_y = _tsh / 2 - _tdim[1] * _ss / 2;
+				    }
+				}
+				
+				var _rx = bx - ui(8);
+				var _zw  = ui(128);
+				var _zh  = ui(12);
+				var _zx1 = _rx;
+				var _zx0 = max(_lx, _zx1 - _zw);
+				    _zw  = _zx1 - _zx0;
+				var _zy  = by + bs / 2 - _zh / 2;
+				
+				if(_zw) { //zoom
+					var _zcc = (palette_selector_s_to - 0.5) / 3.5;
+					var _zcw = _zw * _zcc;
+					
+					draw_sprite_stretched_ext(THEME.textbox, 3, _zx0, _zy, _zw,  _zh, c_white, 1);
+					draw_sprite_stretched_ext(THEME.textbox, 4, _zx0, _zy, _zcw, _zh, c_white, 1);
+					
+					if(_hover && point_in_rectangle(_m[0], _m[1], _zx0, _zy, _zx0 + _zw, _zy + _zh)) {
+						draw_sprite_stretched_ext(THEME.textbox, 1, _zx0, _zy, _zw,  _zh, c_white, 1);
+						
+						if(mouse_press(mb_left, _focus)) {
+							palette_zoom_drag = true;
+						    palette_zoom_mx   = _m[0];
+						    palette_zoom_sx   = palette_selector_s_to;
+						}
+					}
+					
+					if(palette_zoom_drag) {
+						var _zl = clamp(palette_zoom_sx + (_m[0] - palette_zoom_mx) / _zw * 3.5, .5, 4);
+						
+						var _s = palette_selector_s;
+						palette_selector_s_to = _zl;
+						palette_selector_s    = _zl;
+						
+						if(_s != palette_selector_s) {
+			    			var _ds  = palette_selector_s - _s;
+			    			
+					    	var _msx = (_w   / 2 - _pd) - palette_selector_x;
+					    	var _msy = (_tsh / 2 - _pd) - palette_selector_y;
+					    	
+			    			palette_selector_x -= _msx * _ds / _s;
+			    			palette_selector_y -= _msy * _ds / _s;
+			    		}
+			    		
+						if(mouse_release(mb_left)) 
+							palette_zoom_drag = false;
+					}
+				}
+				
+				_h  += bs + ui(4);
+				_yy += bs + ui(4);
 			#endregion
 			
 	    	var _sx = _x  + _pd;
@@ -1724,11 +1783,12 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				var _b  = brush.brush_indices[i][j];
 				var _fl = floor(_b[1] / 4) * 4;
 				var _rt = _b[1] % 4;
+				var _iv = (_b[1] & 0b1000 ^ _b[1] & 0b0100)? -1 : 1;
 				
 				var _i = !ccw? j : brush.brush_width  - j - 1;
 				var _j =  ccw? i : brush.brush_height - i - 1;
 				
-				bid[_i][_j] = [ _b[0], _fl + (_rt + _rot + 4) % 4 ];
+				bid[_i][_j] = [ _b[0], _fl + (_rt + _rot * _iv + 4) % 4 ];
 			}
 			
 			brush.brush_indices = bid;
