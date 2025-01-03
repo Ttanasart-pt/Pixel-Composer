@@ -57,6 +57,9 @@ function tiler_flood_fill_scanline(_surf, _x, _y, brush, _corner = false) {
 	var x1, y1, x_start;
 	var spanAbove, spanBelow;
     
+	var bw = brush.brush_width;
+	var bh = brush.brush_height;
+	
 	var qx = ds_queue_create();
 	var qy = ds_queue_create();
 	ds_queue_enqueue(qx, _x);
@@ -64,17 +67,13 @@ function tiler_flood_fill_scanline(_surf, _x, _y, brush, _corner = false) {
 	
 	shader_set(sh_draw_tile_brush);
 	BLEND_OVERRIDE
-	shader_set_f("index",   indxC);
-	shader_set_f("varient", indxV);
 	
 	while(!ds_queue_empty(qx)) {
 		
 		x1 = ds_queue_dequeue(qx);
 		y1 = ds_queue_dequeue(qy);
 		
-// 		print($"----Checking {x1}, {y1} - {_tiler_ff_getPixel(x1, y1)}")
-		
-		if(_tiler_ff_getPixel(x1, y1) == indxC) continue; //Color in queue is already filled
+		if(_tiler_ff_getPixel(x1, y1) == 1) continue; //Color in queue is already filled
 		
 		while(x1 > 0 && baseC == _tiler_ff_getPixel(x1 - 1, y1)) //Move to the leftmost connected pixel in the same row.
 			x1--;
@@ -84,10 +83,12 @@ function tiler_flood_fill_scanline(_surf, _x, _y, brush, _corner = false) {
 		spanBelow = false;
 		
 		while(x1 < surface_w && baseC == _tiler_ff_getPixel(x1, y1)) {
+			var _b = brush.brush_indices[y1 % bh][x1 % bw];
+			shader_set_f("index",   _b[0]);
+			shader_set_f("varient", _b[1]);
 			draw_point(x1, y1);
-			buffer_write_at(_ff_buff, (y1 * _ff_w + x1) * 8, buffer_f16, indxC);
 			
-// 			print($"----Filling {x1}, {y1}")
+			buffer_write_at(_ff_buff, (y1 * _ff_w + x1) * 8, buffer_f16, 1);
 			
 			if(y1 > 0) {
 				if(_corner && x1 > 0 && baseC == _tiler_ff_getPixel(x1 - 1, y1 - 1)) {	//Check top left pixel
