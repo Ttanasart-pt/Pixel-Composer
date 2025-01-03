@@ -1,0 +1,14 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_separate_color",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_separate_color",
+  "parent":{
+    "name":"colors",
+    "path":"folders/nodes/data/filter/colors.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+  "tags":[],
+}

@@ -52,14 +52,10 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		
 		var amo = _b.childCount();
 		var _hh = ui(28);
-		var _bh = ui(32 + 16) + amo * _hh;
+		var _bh = ui(16) + amo * _hh;
 		var ty  = _y;
 		
-		draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
-		draw_text_add(_x + ui(16), ty + ui(4), __txt("Bones"));
-		ty += ui(28);
-		
-		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, ty, _w, _bh - ui(32), COLORS.node_composite_bg_blend, 1);
+		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, ty, _w, _bh, COLORS.node_composite_bg_blend, 1);
 		ty += ui(8);
 		
 		var hovering = noone;
@@ -87,13 +83,12 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 				 if(_bone.parent_anchor) draw_sprite_ui(THEME.bone, 1, _dx + 12, ty + 14,,,, COLORS._main_icon);
 			else if(_bone.IKlength)      draw_sprite_ui(THEME.bone, 2, _dx + 12, ty + 14,,,, COLORS._main_icon);
 			else                         draw_sprite_ui(THEME.bone, 0, _dx + 12, ty + 14,,,, COLORS._main_icon);
-					
-			draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
-			draw_text_add(_dx + 24, ty + 12, _bone.name);
 			
+			var  cc  = COLORS._main_text;
 			var _hov = _hover && point_in_rectangle(_m[0], _m[1], _x, ty, _x + _w, ty + _hh - 1);
 				
 			if(_hov) {
+				cc = COLORS._main_accent;
 				anchor_selecting = [ _bone, 2 ];
 				
 				if(mouse_press(mb_left, _focus)) {
@@ -107,7 +102,10 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 					}
 				}
 			}
-				
+			
+			draw_set_text(f_p2, fa_left, fa_center, cc);
+			draw_text_add(_dx + 24, ty + 12, _bone.name);
+			
 			ty += _hh;
 			
 			if(!ds_stack_empty(_bst)) {
@@ -124,8 +122,8 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	});
 	
 	input_display_list = [ 0, 1, 
+		["Armature",   false], layer_renderer, 
 		["Autoweight", false], 2, 3, 
-		["Armature",   false], layer_renderer,
 	];
 	
 	anchor_selecting = noone;
@@ -307,8 +305,9 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
         
         var _boneArr = bone_posed.toArray();
         var _boneDat = [];
+        var _boneAmo = array_length(_boneArr);
         
-        for( var i = 0, n = array_length(_boneArr); i < n; i++ ) {
+        for( var i = 0; i < _boneAmo; i++ ) {
             var _b  = _boneArr[i];
             if(attributes.rigBones != noone && !array_exists(attributes.rigBones, _b.ID)) continue;
             
@@ -322,6 +321,8 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
             rigdata[$ _b.ID] = array_create(_plen, 0);
         }
         
+        var _boneAmo = array_length(_boneDat);
+        
         for( var i = 0, n = array_length(_pnts); i < n; i++ ) {
             var _p  = _pnts[i];
             if(!is(_p, MeshedPoint)) continue;
@@ -331,9 +332,9 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
             
             var _minDist = 9999;
             var _minBone = noone;
-            var _boneWi  = array_create(array_length(_boneDat), 0);
+            var _boneWi  = array_create(_boneAmo, 0);
             
-            for( var j = 0, m = array_length(_boneDat); j < m; j++ ) {
+            for( var j = 0; j < _boneAmo; j++ ) {
                 var _b = _boneDat[j];
                 
                 var _dist  = distance_to_line(_px, _py, _b.p0.x, _b.p0.y, _b.p1.x, _b.p1.y);
@@ -353,12 +354,12 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
             }
             
             var _totalWeight = 0;
-            for( var j = 0, m = array_length(_boneDat); j < m; j++ ) {
+            for( var j = 0; j < _boneAmo; j++ ) {
             	_boneWi[j] = max(_rad - _boneWi[j], 0);
             	_totalWeight += _boneWi[j];
             }
             
-            for( var j = 0, m = array_length(_boneDat); j < m; j++ ) {
+            for( var j = 0; j < _boneAmo; j++ ) {
             	_boneWi[j] /= _totalWeight;
             	var _b = _boneDat[j];
             	

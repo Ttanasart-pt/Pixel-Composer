@@ -1,0 +1,13 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_separate_color",
+  "name":"sh_separate_color",
+  "parent":{
+    "name":"colors",
+    "path":"folders/nodes/data/filter/colors.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "tags":[],
+  "type":1,
+}

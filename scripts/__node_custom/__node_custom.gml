@@ -187,7 +187,7 @@ function __initNodeCustom(list) { #region
 		if(_info == noone) continue;
 		
 		var _spr  = sprite_add_center(_dir + _info.icon);
-		var _n	  = new NodeObject(_info.name, _spr, "Node_Custom", [ 0, Node_create_Custom, { path: _dir_raw } ], _info.tooltip, _info.tags);
+		var _n	  = new NodeObject(_info.name, _spr, Node_Custom, _info.tooltip).setBuild(Node_create_Custom).setParam({ path: _dir });
 		
 		var _tol = _dir + _info.tooltip_spr;
 		if(file_exists_empty(_tol)) _n.tooltip_spr = sprite_add(_tol, 0, false, false, 0, 0);
