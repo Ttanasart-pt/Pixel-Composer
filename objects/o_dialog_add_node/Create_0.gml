@@ -971,10 +971,10 @@ event_inherited();
 	search_list			= ds_list_create();
 	KEYBOARD_RESET
 	
-	tb_search				= new textBox(TEXTBOX_INPUT.text, function(str) /*=>*/ { search_string = string(str); searchNodes(); });
-	tb_search.align			= fa_left;
-	tb_search.auto_update	= true;
-	WIDGET_CURRENT			= tb_search;
+	tb_search = new textBox(TEXTBOX_INPUT.text, function(str) /*=>*/ { search_string = string(str); searchNodes(); })
+                 .setAlign(fa_left)
+                 .setAutoupdate();
+	WIDGET_CURRENT = tb_search;
 	
 	function searchNodes() { 
 		ds_list_clear(search_list);

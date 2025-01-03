@@ -1,10 +1,8 @@
 /// @description init
 if !ready exit;
 
-#region base UI
-	DIALOG_DRAW_BG
-	if(DIALOG_SHOW_FOCUS) DIALOG_DRAW_FOCUS
-#endregion
+DIALOG_DRAW_BG
+if(DIALOG_SHOW_FOCUS) DIALOG_DRAW_FOCUS
 
 #region content
 	WIDGET_CURRENT = tb_search;

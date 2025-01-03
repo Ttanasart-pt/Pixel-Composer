@@ -127,12 +127,14 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		return self;
 	}
 	
+	static setAlign	    = function(align) 	    { self.align		= align;		return self; }
 	static setHide		= function(hide)		{ self.hide 		= hide; 		return self; }
 	static setFont		= function(font)		{ self.font 		= font; 		return self; }
 	static setLabel 	= function(label)		{ self.label		= label;		return self; }
 	static setPrecision = function(precision)	{ self.precision	= precision;	return self; }
 	static setPadding	= function(padding) 	{ self.padding		= padding;		return self; }
 	static setEmpty 	= function()			{ no_empty			= false;		return self; }
+	static setAutoupdate = function()			{ auto_update		= true;			return self; }
 	
 	static activate = function(_def_str = _current_text) {
 		WIDGET_CURRENT = self;
@@ -176,6 +178,13 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				cursor_select = -1;
 			
 			move_cursor(-1);
+			if(key_mod_press(CTRL)) {
+				while(cursor > 0) {
+					var ch = string_char_at(_input_text, cursor);
+					if(breakCharacter(ch)) break;
+					cursor--;
+				}
+			}
 		}
 				
 		if(KEYBOARD_PRESSED == vk_right) {
@@ -186,6 +195,13 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				cursor_select = -1;
 			
 			move_cursor(1);
+			if(key_mod_press(CTRL)) {
+				while(cursor < string_length(_input_text)) {
+					var ch = string_char_at(_input_text, cursor);
+					if(breakCharacter(ch)) break;
+					cursor++;
+				}
+			}
 		}
 	}
 	
