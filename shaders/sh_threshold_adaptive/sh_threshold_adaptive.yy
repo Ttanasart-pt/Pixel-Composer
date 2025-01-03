@@ -1,12 +1,13 @@
 {
   "$GMShader":"",
-  "%Name":"sh_threshold",
-  "name":"sh_threshold",
+  "%Name":"sh_threshold_adaptive",
+  "name":"sh_threshold_adaptive",
   "parent":{
     "name":"threshold",
     "path":"folders/nodes/data/filter/colors/threshold.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",
+  "tags":[],
   "type":1,
 }

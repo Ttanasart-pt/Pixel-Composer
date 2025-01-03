@@ -41,35 +41,61 @@ function Node_Threshold(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
+	newInput(15, nodeValue_Enum_Scroll("Algorithm", self, 0, [ "Simple", "Adaptive mean" ]));
+	
+	newInput(16, nodeValue_Int("Adaptive Radius", self, 4))
+	
 	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 6, 10, 
 		["Surfaces",	 true], 0, 4, 5, 11, 12, 
-		["Brightness",	 true, 1], 2, 13, 3,
+		["Brightness",	 true, 1], 15, 2, 13, 3,16, 
 		["Alpha",	     true, 7], 8, 14, 9, 
 	];
 	
 	attribute_surface_depth();
 	
-	static step = function() { #region
+	static step = function() {
 		__step_mask_modifier();
 		
 		inputs[2].mappableStep();
 		inputs[8].mappableStep();
-	} #endregion
+	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		
-		surface_set_shader(_outSurf, sh_threshold);
-			shader_set_i("bright",			    _data[1]);
-			shader_set_f_map("brightThreshold", _data[2], _data[13], inputs[2]);
-			shader_set_f("brightSmooth",	    _data[3]);
+		var _surf = _data[0];
+		
+		var _bright    = _data[1];
+		var _brightThr = _data[2];
+		var _brightSmt = _data[3];
+		
+		var _alph    = _data[7];
+		var _alphThr = _data[8];
+		var _alphSmt = _data[9];
+		
+		var _algo      = _data[15];
+		var _adap_size = _data[16];
+		
+		inputs[16].setVisible(_algo == 1);
+		
+		var _shader = sh_threshold;
+		if(_algo == 1) _shader = sh_threshold_adaptive;
+		
+		surface_set_shader(_outSurf, _shader);
+			shader_set_dim(, _surf);
 			
-			shader_set_i("alpha",			    _data[7]);
-			shader_set_f_map("alphaThreshold",  _data[8], _data[14], inputs[8]);
-			shader_set_f("alphaSmooth",		    _data[9]);
+			shader_set_i("bright",			    _bright);
+			shader_set_f_map("brightThreshold", _brightThr, _data[13], inputs[2]);
+			shader_set_f("brightSmooth",	    _brightSmt);
+			shader_set_f("adaptiveRadius",	    _adap_size);
+			shader_set_f("gaussianCoeff",	    __gaussian_get_kernel(_adap_size));
 			
-			draw_surface_safe(_data[0]);
+			shader_set_i("alpha",			    _alph);
+			shader_set_f_map("alphaThreshold",  _alphThr, _data[14], inputs[8]);
+			shader_set_f("alphaSmooth",		    _alphSmt);
+			
+			draw_surface_safe(_surf);
 		surface_reset_shader();
 		
 		__process_mask_modifier(_data);
@@ -77,5 +103,5 @@ function Node_Threshold(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		_outSurf = channel_apply(_data[0], _outSurf, _data[10]);
 		
 		return _outSurf;
-	} #endregion
+	}
 }

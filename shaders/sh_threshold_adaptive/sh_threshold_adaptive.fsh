@@ -1,11 +1,15 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
+uniform vec2      dimension;
+uniform float     gaussianCoeff[128];
+
 uniform int       bright;
 uniform vec2      brightThreshold;
 uniform int       brightThresholdUseSurf;
 uniform sampler2D brightThresholdSurf;
 uniform float     brightSmooth;
+uniform float     adaptiveRadius;
 
 uniform int       alpha;
 uniform vec2      alphaThreshold;
@@ -14,6 +18,7 @@ uniform sampler2D alphaThresholdSurf;
 uniform float     alphaSmooth;
 
 float _step( in float threshold, in float val ) { return val < threshold? 0. : 1.; }
+float getBright( in vec4 c ) { return dot(c.rgb, vec3(0.2126, 0.7152, 0.0722)); }
 
 void main() {
 	float bri = brightThreshold.x;
@@ -28,11 +33,24 @@ void main() {
 		alp = mix(alphaThreshold.x, alphaThreshold.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
 	}
 	
-	vec4 col  = v_vColour * texture2D( gm_BaseTexture, v_vTexcoord );
+	vec4 col = texture2D( gm_BaseTexture, v_vTexcoord );
+	vec2 tx  = 1. / dimension;
 	
 	if(bright == 1) {
-		float cbright = dot(col.rgb, vec3(0.2126, 0.7152, 0.0722));
-		col.rgb = vec3(brightSmooth == 0.? _step(bri, cbright) : smoothstep(bri - brightSmooth, bri + brightSmooth, cbright));
+		float cbright = getBright(col);
+		float bNeight = 0.;
+		
+		for(float j = -adaptiveRadius; j <= adaptiveRadius; j++) 
+		for(float i = -adaptiveRadius; i <= adaptiveRadius; i++) {
+			float b  = getBright(texture2D( gm_BaseTexture, clamp(v_vTexcoord + tx * vec2(i, j), 0., 1.) ));
+			      b *= gaussianCoeff[int(abs(i))] * gaussianCoeff[int(abs(j))];
+			bNeight += b;
+		}
+		
+		bNeight -= bri;
+		
+		float _res = brightSmooth == 0.? _step(bNeight, cbright) : smoothstep(bNeight - brightSmooth, bNeight + brightSmooth, cbright);
+		col.rgb = vec3(_res);
 	}
 	
 	if(alpha == 1) {

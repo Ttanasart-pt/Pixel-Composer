@@ -261,6 +261,7 @@
     {"name":"rotator","order":2,"path":"folders/widgets/rotator.yy",},
     {"name":"sliders","order":3,"path":"folders/widgets/sliders.yy",},
     {"name":"text","order":4,"path":"folders/widgets/text.yy",},
+    {"name":"threshold","order":23,"path":"folders/nodes/data/filter/colors/threshold.yy",},
   ],
   "ResourceOrderSettings":[
     {"name":"ac_disappear","order":2,"path":"animcurves/ac_disappear/ac_disappear.yy",},
@@ -1772,7 +1773,6 @@
     {"name":"sh_texture_atlas","order":2,"path":"shaders/sh_texture_atlas/sh_texture_atlas.yy",},
     {"name":"sh_texture_remap","order":5,"path":"shaders/sh_texture_remap/sh_texture_remap.yy",},
     {"name":"sh_texture_repeat","order":21,"path":"shaders/sh_texture_repeat/sh_texture_repeat.yy",},
-    {"name":"sh_threshold","order":23,"path":"shaders/sh_threshold/sh_threshold.yy",},
     {"name":"sh_tile_random","order":26,"path":"shaders/sh_tile_random/sh_tile_random.yy",},
     {"name":"sh_tile_rule_apply","order":9,"path":"shaders/sh_tile_rule_apply/sh_tile_rule_apply.yy",},
     {"name":"sh_tile_rule_select","order":10,"path":"shaders/sh_tile_rule_select/sh_tile_rule_select.yy",},
@@ -2862,5 +2862,6 @@
     {"name":"workshop_badge","order":42,"path":"sprites/workshop_badge/workshop_badge.yy",},
     {"name":"workshop_bg","order":43,"path":"sprites/workshop_bg/workshop_bg.yy",},
     {"name":"workshop_frame","order":44,"path":"sprites/workshop_frame/workshop_frame.yy",},
+    {"name":"sh_threshold_adaptive","order":1,"path":"shaders/sh_threshold_adaptive/sh_threshold_adaptive.yy",},
   ],
 }
