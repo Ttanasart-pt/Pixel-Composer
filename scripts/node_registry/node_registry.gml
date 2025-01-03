@@ -1,3 +1,22 @@
+#region globalvar
+	globalvar ALL_NODES, NODE_CATEGORY, NODE_PB_CATEGORY, NODE_PCX_CATEGORY;
+	globalvar SUPPORTER_NODES, NEW_NODES;
+	
+	globalvar NODE_PAGE_DEFAULT;
+	
+	ALL_NODES		  = ds_map_create();
+	NODE_CATEGORY	  = ds_list_create();
+	NODE_PB_CATEGORY  = ds_list_create();
+	NODE_PCX_CATEGORY = ds_list_create();
+	SUPPORTER_NODES   = ds_list_create();
+	NEW_NODES		  = ds_list_create();
+	
+	global.__currPage    = "";
+	global.__currNewPage = "";
+	
+	#macro NODE_ADD_CAT if(!IS_CMD) addNodeCatagory
+#endregion
+
 function NodeObject(_name, _spr, _node, _tooltip = "") constructor {
 	name = _name;
 	spr  = _spr;
@@ -236,25 +255,6 @@ function NodeObject(_name, _spr, _node, _tooltip = "") constructor {
 		return tx;
 	}
 }
-
-#region globalvar
-	globalvar ALL_NODES, NODE_CATEGORY, NODE_PB_CATEGORY, NODE_PCX_CATEGORY;
-	globalvar SUPPORTER_NODES, NEW_NODES;
-	
-	globalvar NODE_PAGE_DEFAULT;
-	
-	ALL_NODES		  = ds_map_create();
-	NODE_CATEGORY	  = ds_list_create();
-	NODE_PB_CATEGORY  = ds_list_create();
-	NODE_PCX_CATEGORY = ds_list_create();
-	SUPPORTER_NODES   = ds_list_create();
-	NEW_NODES		  = ds_list_create();
-	
-	global.__currPage    = "";
-	global.__currNewPage = "";
-	
-	#macro NODE_ADD_CAT if(!IS_CMD) addNodeCatagory
-#endregion
 
 function nodeBuild(_name, _x, _y, _group = PANEL_GRAPH.getCurrentContext()) {
 	INLINE
@@ -516,9 +516,9 @@ function __initNodes() {
 		addNodeObject(strandSim, "Output", Node_Group_Output).hideRecent().hideGlobal();
 			
 		ds_list_add(strandSim, "System");
-		addNodeObject(strandSim, "Strand Create",         Node_Strand_Create, "Create strands from point, path, or mesh.").hideRecent().setVersion(1140);
-		addNodeObject(strandSim, "Strand Update",         Node_Strand_Update, "Update strands by one step.").hideRecent().setVersion(1140);
-		addNodeObject(strandSim, "Strand Render",         Node_Strand_Render, "Render strands to surface as a single path.").hideRecent().setVersion(1140);
+		addNodeObject(strandSim, "Strand Create",         Node_Strand_Create,         "Create strands from point, path, or mesh.").hideRecent().setVersion(1140);
+		addNodeObject(strandSim, "Strand Update",         Node_Strand_Update,         "Update strands by one step.").hideRecent().setVersion(1140);
+		addNodeObject(strandSim, "Strand Render",         Node_Strand_Render,         "Render strands to surface as a single path.").hideRecent().setVersion(1140);
 		addNodeObject(strandSim, "Strand Render Texture", Node_Strand_Render_Texture, "Render strands to surface as a textured path.").hideRecent().setVersion(1140);
 			
 		ds_list_add(strandSim, "Affectors");
@@ -544,24 +544,24 @@ function __initNodes() {
 		addNodeObject(input, "Animation",          Node_Image_Animated, "Load multiple images from your computer as animation.").setBuild(Node_create_Image_Animated);
 		addNodeObject(input, "SVG",                Node_SVG,            "Load a SVG file.");
 			ds_list_add(input, "/Converters");
-		addNodeObject(input, "Splice Spritesheet", Node_Image_Sheet,   "Cut up spritesheet into animation or image array.");
-		addNodeObject(input, "Array to Anim",      Node_Sequence_Anim, "Convert array of images into animation.");
+		addNodeObject(input, "Splice Spritesheet", Node_Image_Sheet,    "Cut up spritesheet into animation or image array.");
+		addNodeObject(input, "Array to Anim",      Node_Sequence_Anim,  "Convert array of images into animation.");
 		if(!DEMO) {
 			ds_list_add(input, "/Exporters");
-			addNodeObject(input, "Export",         Node_Export, "Export image, image array to file, image sequence, animation.").setBuild(Node_create_Export);
+			addNodeObject(input, "Export",         Node_Export,         "Export image, image array to file, image sequence, animation.").setBuild(Node_create_Export);
 		}
 		
 		ds_list_add(input, "Canvas");
-		addNodeObject(input, "Canvas",             Node_Canvas,        "Draw on surface using brush, eraser, etc.").setTags(["draw"]);
-		addNodeObject(input, "Canvas Group",       Node_Canvas_Group,  "Create a group that combines multiple canvas nodes a layers.").setTags(["draw"]).setVersion(11740);
-		addNodeObject(input, "Active Canvas",      Node_Active_Canvas, "Draw using parameterized brush.").setTags(["draw"]).setVersion(11570);
+		addNodeObject(input, "Canvas",             Node_Canvas,         "Draw on surface using brush, eraser, etc.").setTags(["draw"]);
+		addNodeObject(input, "Canvas Group",       Node_Canvas_Group,   "Create a group that combines multiple canvas nodes a layers.").setTags(["draw"]).setVersion(11740);
+		addNodeObject(input, "Active Canvas",      Node_Active_Canvas,  "Draw using parameterized brush.").setTags(["draw"]).setVersion(11570);
 		
 		ds_list_add(input, "Tileset");
 			ds_list_add(input, "/Creators");
-		addNodeObject(input, "Tileset",            Node_Tile_Tileset, "Create tileset object.").setVersion(1_18_03_0);
-		addNodeObject(input, "Tile Drawer",        Node_Tile_Drawer,  "Draw using tileset.").setVersion(1_18_03_0);
-		addNodeObject(input, "Tile Rule",          Node_Tile_Rule,    "Apply tileset rules.").setVersion(1_18_03_0);
-		addNodeObject(input, "Convert to Tilemap", Node_Tile_Convert, "Convert color image to tile data.").setVersion(1_18_03_0);
+		addNodeObject(input, "Tileset",            Node_Tile_Tileset,        "Create tileset object.").setVersion(1_18_03_0);
+		addNodeObject(input, "Tile Drawer",        Node_Tile_Drawer,         "Draw using tileset.").setVersion(1_18_03_0);
+		addNodeObject(input, "Tile Rule",          Node_Tile_Rule,           "Apply tileset rules.").setVersion(1_18_03_0);
+		addNodeObject(input, "Convert to Tilemap", Node_Tile_Convert,        "Convert color image to tile data.").setVersion(1_18_03_0);
 			ds_list_add(input, "/Exporters");
 		addNodeObject(input, "Render Tilemap",     Node_Tile_Render,         "Render tilemap to image.").setVersion(1_18_03_0);
 		addNodeObject(input, "Export Tilemap",     Node_Tile_Tilemap_Export, "Export tilemap to file.").setVersion(1_18_03_0);
@@ -587,11 +587,11 @@ function __initNodes() {
 		addNodeObject(input, "ASE Tag",            Node_ASE_Tag,              "Read tag from ASE file.").setSpr(s_node_ase_layer).setVersion(1_18_03_0);
 			
 		ds_list_add(input, "External");
-		addNodeObject(input, "Websocket Receiver", Node_Websocket_Receiver, "Create websocket server to receive data from the network.").setVersion(1145);
-		addNodeObject(input, "Websocket Sender",   Node_Websocket_Sender,   "Create websocket server to send data to the network.").setVersion(1145);
-		addNodeObject(input, "Spout Sender",       Node_Spout_Send,         "Send surface through Spout.").setVersion(11600);
-		addNodeObject(input, "MIDI In",            Node_MIDI_In,            "Receive MIDI message.").setVersion(11630).notTest();
-		addNodeObject(input, "HTTP",               Node_HTTP_request,       "Request data from the internet.").setVersion(11780);
+		addNodeObject(input, "Websocket Receiver", Node_Websocket_Receiver,   "Create websocket server to receive data from the network.").setVersion(1145);
+		addNodeObject(input, "Websocket Sender",   Node_Websocket_Sender,     "Create websocket server to send data to the network.").setVersion(1145);
+		addNodeObject(input, "Spout Sender",       Node_Spout_Send,           "Send surface through Spout.").setVersion(11600);
+		addNodeObject(input, "MIDI In",            Node_MIDI_In,              "Receive MIDI message.").setVersion(11630).notTest();
+		addNodeObject(input, "HTTP",               Node_HTTP_request,         "Request data from the internet.").setVersion(11780);
 		
 		ds_list_add(input, "Gamemaker");
 		addNodeObject(input, "GMRoom", Node_GMRoom).setSpr(s_gmroom).setVersion(1_18_04_1);
@@ -610,24 +610,24 @@ function __initNodes() {
 		addNodeObject(transform, "Polar Mirror",    Node_Mirror_Polar,      "Reflect the image along multiple reflection lines.").setTags(["kaleidoscope"]).setVersion(1_18_06_2);
 		
 		ds_list_add(transform, "Crops");
-		addNodeObject(transform, "Crop",            Node_Crop,         "Crop out image to create smaller ones.");
-		addNodeObject(transform, "Crop Content",    Node_Crop_Content, "Crop out empty pixel from the image.");
+		addNodeObject(transform, "Crop",            Node_Crop,              "Crop out image to create smaller ones.");
+		addNodeObject(transform, "Crop Content",    Node_Crop_Content,      "Crop out empty pixel from the image.");
 		
 		ds_list_add(transform, "Warps");
-		addNodeObject(transform, "Warp",            Node_Warp,        "Warp image by freely moving the corners.").setTags(["warp corner"]);
-	 // addNodeObject(transform, "Perspective Warp",Node_Warp_Perspective, "Warp image by modifying perspective.").setTags(["warp perspective"]);
-		addNodeObject(transform, "Skew",            Node_Skew,        "Skew image horizontally, or vertically.").setTags(["shear"]);
-	 // addNodeObject(transform, "Grid Warp",       Node_Grid_Warp,   "Wrap image by modifying mesh lacttice.");
-		addNodeObject(transform, "Bend",            Node_Bend,        "Warp an image into a predefined shape.").setVersion(11650);
-		addNodeObject(transform, "Mesh Warp",       Node_Mesh_Warp,   "Wrap image by converting it to mesh, and using control points.");
-		addNodeObject(transform, "Polar",           Node_Polar,       "Convert image to polar coordinate.");
-		addNodeObject(transform, "Area Warp",       Node_Wrap_Area,   "Wrap image to fit an area value.");
+		addNodeObject(transform, "Warp",            Node_Warp,              "Warp image by freely moving the corners.").setTags(["warp corner"]);
+	 // addNodeObject(transform, "Perspective Warp",Node_Warp_Perspective,  "Warp image by modifying perspective.").setTags(["warp perspective"]);
+		addNodeObject(transform, "Skew",            Node_Skew,              "Skew image horizontally, or vertically.").setTags(["shear"]);
+	 // addNodeObject(transform, "Grid Warp",       Node_Grid_Warp,         "Wrap image by modifying mesh lacttice.");
+		addNodeObject(transform, "Bend",            Node_Bend,              "Warp an image into a predefined shape.").setVersion(11650);
+		addNodeObject(transform, "Mesh Warp",       Node_Mesh_Warp,         "Wrap image by converting it to mesh, and using control points.");
+		addNodeObject(transform, "Polar",           Node_Polar,             "Convert image to polar coordinate.");
+		addNodeObject(transform, "Area Warp",       Node_Wrap_Area,         "Wrap image to fit an area value.");
 		
 		ds_list_add(transform, "Others");
-		addNodeObject(transform, "Composite",       Node_Composite,   "Combine multiple images with controllable position, rotation, scale.").setTags(["merge"]);
-		addNodeObject(transform, "Nine Slice",      Node_9Slice,      "Cut image into 3x3 parts, and scale/repeat only the middle part.").setTags(["9 slice", "splice", "nine patch"]);
-		addNodeObject(transform, "Padding",         Node_Padding,     "Make image bigger by adding space in 4 directions.");
-		addNodeObject(transform, "Tile Random",     Node_Tile_Random, "Repeat images on a larger surface randomly.").setVersion(11780);
+		addNodeObject(transform, "Composite",       Node_Composite,         "Combine multiple images with controllable position, rotation, scale.").setTags(["merge"]);
+		addNodeObject(transform, "Nine Slice",      Node_9Slice,            "Cut image into 3x3 parts, and scale/repeat only the middle part.").setTags(["9 slice", "splice", "nine patch"]);
+		addNodeObject(transform, "Padding",         Node_Padding,           "Make image bigger by adding space in 4 directions.");
+		addNodeObject(transform, "Tile Random",     Node_Tile_Random,       "Repeat images on a larger surface randomly.").setVersion(11780);
 	#endregion
 	
 	#region filter
@@ -699,7 +699,7 @@ function __initNodes() {
 		addNodeObject(filter, "Erode",                Node_Erode,           "Remove pixel that are close to the border of the image.");
 		addNodeObject(filter, "Round Corner",         Node_Corner,          "Round out sharp corner of the image.").setVersion(1110);
 			ds_list_add(filter, "/Pixel Operations");
-		addNodeObject(filter, "Pixel Math",           Node_Pixel_Math, "Apply mathematical operation directly on RGBA value.").setBuild(Node_create_Pixel_Math).setTags(global.node_math_keys).setVersion(1_18_02_0);
+		addNodeObject(filter, "Pixel Math",           Node_Pixel_Math,      "Apply mathematical operation directly on RGBA value.").setBuild(Node_create_Pixel_Math).setTags(global.node_math_keys).setVersion(1_18_02_0);
 		addNodeObject(filter, "Pixel Expand",         Node_Atlas,           "Replace transparent pixel with the closest non-transparent pixel.").setTags(["atlas"]);
 		addNodeObject(filter, "Pixel Cloud",          Node_Pixel_Cloud,     "Displace each pixel of the image randomly.");
 		addNodeObject(filter, "Pixel Sort",           Node_Pixel_Sort,      "Sort pixel by brightness in horizontal, or vertial axis.");
@@ -769,21 +769,21 @@ function __initNodes() {
 		
 		ds_list_add(d3d, "Meshes");
 			ds_list_add(d3d, "/Creators");
-		addNodeObject(d3d, "3D Object",               Node_3D_Mesh_Obj, "Load .obj file from your computer as a 3D object.").setBuild(Node_create_3D_Obj).setVersion(11510);
-		addNodeObject(d3d, "3D Plane",                Node_3D_Mesh_Plane, "Put 2D image on a plane in 3D space.").setVersion(11510);
-		addNodeObject(d3d, "3D Cube",                 Node_3D_Mesh_Cube).setVersion(11510);
-		addNodeObject(d3d, "3D Cylinder",             Node_3D_Mesh_Cylinder).setVersion(11510);
-		addNodeObject(d3d, "3D UV Sphere",            Node_3D_Mesh_Sphere_UV).setVersion(11510);
-		addNodeObject(d3d, "3D Icosphere",            Node_3D_Mesh_Sphere_Ico).setVersion(11510);
-		addNodeObject(d3d, "3D Cone",                 Node_3D_Mesh_Cone).setVersion(11510);
-		addNodeObject(d3d, "3D Torus",                Node_3D_Mesh_Torus).setVersion(1_18_01_0);
+		addNodeObject(d3d, "3D Object",               Node_3D_Mesh_Obj,          "Load .obj file from your computer as a 3D object.").setBuild(Node_create_3D_Obj).setVersion(11510);
+		addNodeObject(d3d, "3D Plane",                Node_3D_Mesh_Plane,        "Put 2D image on a plane in 3D space.").setVersion(11510);
+		addNodeObject(d3d, "3D Cube",                 Node_3D_Mesh_Cube,         "Create 3D cube mesh.").setVersion(11510);
+		addNodeObject(d3d, "3D Cylinder",             Node_3D_Mesh_Cylinder,     "Create 3D cylinder mesh").setVersion(11510);
+		addNodeObject(d3d, "3D UV Sphere",            Node_3D_Mesh_Sphere_UV,    "Create 3D uv sphere mesh").setVersion(11510);
+		addNodeObject(d3d, "3D Icosphere",            Node_3D_Mesh_Sphere_Ico,   "Create 3D icosphere mesh").setVersion(11510);
+		addNodeObject(d3d, "3D Cone",                 Node_3D_Mesh_Cone,         "Create 3D cone mesh").setVersion(11510);
+		addNodeObject(d3d, "3D Torus",                Node_3D_Mesh_Torus,        "Create 3D torus mesh").setVersion(1_18_01_0);
 		addNodeObject(d3d, "3D Terrain",              Node_3D_Mesh_Terrain,      "Create 3D terrain from height map.").setVersion(11560);
-		addNodeObject(d3d, "3D Wall Builder",         Node_3D_Mesh_Wall_Builder).setVersion(1_18_01_0);
+		addNodeObject(d3d, "3D Wall Builder",         Node_3D_Mesh_Wall_Builder, "Create 3D wall be extruding 2D path.").setVersion(1_18_01_0);
 		addNodeObject(d3d, "Surface Extrude",         Node_3D_Mesh_Extrude,      "Extrude 2D image into 3D object.").setVersion(11510);
 		addNodeObject(d3d, "Path Extrude",            Node_3D_Mesh_Path_Extrude, "Extrude path into 3D object.").setVersion(11750);
 			ds_list_add(d3d, "/Exporters");
-		addNodeObject(d3d, "Mesh Export",             Node_3D_Mesh_Export, "Export 3D mesh as .obj file").setVersion(11740);
-		addNodeObject(d3d, "Slice Stack",             Node_3D_Mesh_Stack_Slice).setVersion(11750);
+		addNodeObject(d3d, "Mesh Export",             Node_3D_Mesh_Export,       "Export 3D mesh as .obj file").setVersion(11740);
+		addNodeObject(d3d, "Slice Stack",             Node_3D_Mesh_Stack_Slice,  "Slice 3D object into array of 2d images.").setVersion(11750);
 		
 		ds_list_add(d3d, "Light");
 		addNodeObject(d3d, "Directional Light",       Node_3D_Light_Directional, "Create directional light directed at the origin point.").setVersion(11510);
@@ -791,28 +791,28 @@ function __initNodes() {
 			
 		ds_list_add(d3d, "Modify");
 			ds_list_add(d3d, "/Meshes");
-		addNodeObject(d3d, "Transform",               Node_3D_Transform,       "Transform 3D object.").setVersion(11570);
-		addNodeObject(d3d, "Transform Scene",         Node_3D_Transform_Scene, "Transform 3D scene, accepts array of transformations for each objects.").setVersion(11570);
-		addNodeObject(d3d, "Discretize vertex",       Node_3D_Round_Vertex,    "Round out vertex position to a specified step.").setVersion(11560);
-		addNodeObject(d3d, "3D Displace",             Node_3D_Displace).setVersion(1_18_01_0);
-		addNodeObject(d3d, "3D Subdivide",            Node_3D_Subdivide).setVersion(1_18_03_0);
+		addNodeObject(d3d, "Transform",               Node_3D_Transform,         "Transform 3D object.").setVersion(11570);
+		addNodeObject(d3d, "Transform Scene",         Node_3D_Transform_Scene,   "Transform 3D scene, accepts array of transformations for each objects.").setVersion(11570);
+		addNodeObject(d3d, "Discretize vertex",       Node_3D_Round_Vertex,      "Round out vertex position to a specified step.").setVersion(11560);
+		addNodeObject(d3d, "3D Displace",             Node_3D_Displace,          "Shift vertex of 3D mesh using 2D map.").setVersion(1_18_01_0);
+		addNodeObject(d3d, "3D Subdivide",            Node_3D_Subdivide,         "Subdivide faces in mesh.").setVersion(1_18_03_0);
 			ds_list_add(d3d, "/Instances");
-		addNodeObject(d3d, "3D Repeat",               Node_3D_Repeat, "Repeat the same 3D mesh multiple times.").setVersion(11510);
+		addNodeObject(d3d, "3D Repeat",               Node_3D_Repeat,            "Repeat the same 3D mesh multiple times.").setVersion(11510);
 	 // addNodeObject(d3d, "3D Instancer",            Node_3D_Instancer).setVersion(11560);
 	 // addNodeObject(d3d, "3D Particle",             Node_3D_Particle).setVersion(11560);
 			ds_list_add(d3d, "/Materials");
-		addNodeObject(d3d, "Set Material",            Node_3D_Set_Material, "Replace mesh material with a new one.").setVersion(11560);
-		addNodeObject(d3d, "UV Remap",                Node_3D_UV_Remap,     "Remap UV map using plane.").setVersion(11570);
+		addNodeObject(d3d, "Set Material",            Node_3D_Set_Material,      "Replace mesh material with a new one.").setVersion(11560);
+		addNodeObject(d3d, "UV Remap",                Node_3D_UV_Remap,          "Remap UV map using plane.").setVersion(11570);
 		
 		ds_list_add(d3d, "Points");
-		addNodeObject(d3d, "Point Affector",          Node_3D_Point_Affector, "Generate array of 3D points interpolating between two values based on the distance.").setVersion(11570);
+		addNodeObject(d3d, "Point Affector",          Node_3D_Point_Affector,    "Generate array of 3D points interpolating between two values based on the distance.").setVersion(11570);
 		
 		ds_list_add(d3d, "Ray Marching");
-		addNodeObject(d3d, "RM Primitive",            Node_RM_Primitive).setBuild(Node_create_RM_Primitive).setTags(global.node_rm_primitive_keys).setVersion(11720);
-		addNodeObject(d3d, "RM Terrain",              Node_RM_Terrain).setTags(["ray marching"]).setVersion(11720);
-		addNodeObject(d3d, "RM Combine",              Node_RM_Combine).setTags(["ray marching", "rm boolean"]).setVersion(11740);
-		addNodeObject(d3d, "RM Render",               Node_RM_Render).setTags(["ray marching"]).setVersion(11740);
-		addNodeObject(d3d, "RM Cloud",                Node_RM_Cloud, "Generate distance field cloud.").patreonExtra();
+		addNodeObject(d3d, "RM Primitive",            Node_RM_Primitive, "Create SDF object.").setBuild(Node_create_RM_Primitive).setTags(global.node_rm_primitive_keys).setVersion(11720);
+		addNodeObject(d3d, "RM Combine",              Node_RM_Combine,   "Combine 2 SDF objects using boolean operation.").setTags(["ray marching", "rm boolean"]).setVersion(11740);
+		addNodeObject(d3d, "RM Render",               Node_RM_Render,    "Render SDF object.").setTags(["ray marching"]).setVersion(11740);
+		addNodeObject(d3d, "RM Terrain",              Node_RM_Terrain,   "Generate SDF image from height map.").setTags(["ray marching"]).setVersion(11720);
+		addNodeObject(d3d, "RM Cloud",                Node_RM_Cloud,     "Generate distance field cloud texture.").patreonExtra();
 	#endregion
 	
 	#region generator
@@ -835,7 +835,7 @@ function __initNodes() {
 		addNodeObject(generator, "Draw Cross Section",     Node_Cross_Section,      "Map the brightness of pixels on a linear axis into a surface.").setVersion(11710);
 		addNodeObject(generator, "Interpret Number",       Node_Interpret_Number,   "Convert array of number into surface.").setVersion(11530);
 		addNodeObject(generator, "Pixel Builder",          Node_Pixel_Builder,      "Will break, do not create. please. Why is it here??").setVersion(11540);
-		addNodeObject(generator, "Tile Drawer",            Node_Tile_Drawer).setVersion(1_18_03_0);
+		addNodeObject(generator, "Tile Drawer",            Node_Tile_Drawer,        "Draw using tileset.").setVersion(1_18_03_0);
 		
 		ds_list_add(generator, "Noises");
 			ds_list_add(generator, "/Basics");
@@ -900,43 +900,43 @@ function __initNodes() {
 		addNodeObject(generator, "Flood Fill",       Node_Flood_Fill,     "Filled connected pixel given position and color.").setVersion(1133);
 		
 		ds_list_add(generator, "MK Effects");
-		addNodeObject(generator, "MK Rain",          Node_MK_Rain,      "Generate deterministic rain.").setVersion(11600);
-		addNodeObject(generator, "MK GridBalls",     Node_MK_GridBalls, "Generate controllable grid of spheres.").setVersion(11600);
-		addNodeObject(generator, "MK GridFlip",      Node_MK_GridFlip,  "Generate controllable grid of planes.").setVersion(11600);
-		addNodeObject(generator, "MK Saber",         Node_MK_Saber,     "Generate glowing saber from 2 points.").setVersion(11600);
-		addNodeObject(generator, "MK Tile",          Node_MK_Tile,      "Generate game engines-ready tileset.").setVersion(11600);
-		addNodeObject(generator, "MK Flag",          Node_MK_Flag,      "Generate waving flag.").setVersion(11600);
-		addNodeObject(generator, "MK Brownian",      Node_MK_Brownian,  "Generate random particle.").setVersion(11630);
-		addNodeObject(generator, "MK Fall",          Node_MK_Fall,      "Generate leaves falling effects.").setTags(["Leaf", "Leaves"]).setVersion(11630);
-		addNodeObject(generator, "MK Blinker",       Node_MK_Blinker,   "Flicker regions of the selected colors randomly.").setVersion(11630);
-		addNodeObject(generator, "MK Lens Flare",    Node_MK_Flare,     "Generate lens flare.").setVersion(11630);
-		addNodeObject(generator, "MK Delay Machine", Node_MK_Delay_Machine,"Combines multiple frames of animation into one.").setVersion(11680);
-		addNodeObject(generator, "MK Fracture",      Node_MK_Fracture,  "Deterministically fracture and image and apply basic physics.").patreonExtra();
-		addNodeObject(generator, "MK Sparkle",       Node_MK_Sparkle,   "Generate random star animation.").patreonExtra();
-		addNodeObject(generator, "MK Subpixel",      Node_MK_Subpixel,  "Apply subpixel filter on top of a surface.").setVersion(1_17_11_0);
+		addNodeObject(generator, "MK Rain",          Node_MK_Rain,          "Generate deterministic rain.").setVersion(11600);
+		addNodeObject(generator, "MK GridBalls",     Node_MK_GridBalls,     "Generate controllable grid of spheres.").setVersion(11600);
+		addNodeObject(generator, "MK GridFlip",      Node_MK_GridFlip,      "Generate controllable grid of planes.").setVersion(11600);
+		addNodeObject(generator, "MK Saber",         Node_MK_Saber,         "Generate glowing saber from 2 points.").setVersion(11600);
+		addNodeObject(generator, "MK Tile",          Node_MK_Tile,          "Generate game engines-ready tileset.").setVersion(11600);
+		addNodeObject(generator, "MK Flag",          Node_MK_Flag,          "Generate waving flag.").setVersion(11600);
+		addNodeObject(generator, "MK Brownian",      Node_MK_Brownian,      "Generate random particle.").setVersion(11630);
+		addNodeObject(generator, "MK Fall",          Node_MK_Fall,          "Generate leaves falling effects.").setTags(["Leaf", "Leaves"]).setVersion(11630);
+		addNodeObject(generator, "MK Blinker",       Node_MK_Blinker,       "Flicker regions of the selected colors randomly.").setVersion(11630);
+		addNodeObject(generator, "MK Lens Flare",    Node_MK_Flare,         "Generate lens flare.").setVersion(11630);
+		addNodeObject(generator, "MK Delay Machine", Node_MK_Delay_Machine, "Combines multiple frames of animation into one.").setVersion(11680);
+		addNodeObject(generator, "MK Fracture",      Node_MK_Fracture,      "Deterministically fracture and image and apply basic physics.").patreonExtra();
+		addNodeObject(generator, "MK Sparkle",       Node_MK_Sparkle,       "Generate random star animation.").patreonExtra();
+		addNodeObject(generator, "MK Subpixel",      Node_MK_Subpixel,      "Apply subpixel filter on top of a surface.").setVersion(1_17_11_0);
 	#endregion
 	
 	#region compose
 	var compose = ds_list_create(); 
 	addNodeCatagory("Compose", compose);
 		ds_list_add(compose, "Composes");
-		addNodeObject(compose, "Blend",              Node_Blend,				"Combine 2 images using different blend modes.");
-		addNodeObject(compose, "Composite",          Node_Composite,			"Combine multiple images with custom transformation.");
-		addNodeObject(compose, "Stack",              Node_Stack,				"Place image next to each other linearly, or on top of each other.").setVersion(1070);
-		addNodeObject(compose, "Image Grid",         Node_Image_Grid,			"Place image next to each other in grid pattern.").setVersion(11640);
+		addNodeObject(compose, "Blend",              Node_Blend,			   "Combine 2 images using different blend modes.");
+		addNodeObject(compose, "Composite",          Node_Composite,		   "Combine multiple images with custom transformation.");
+		addNodeObject(compose, "Stack",              Node_Stack,			   "Place image next to each other linearly, or on top of each other.").setVersion(1070);
+		addNodeObject(compose, "Image Grid",         Node_Image_Grid,		   "Place image next to each other in grid pattern.").setVersion(11640);
 		addNodeObject(compose, "Camera",             Node_Camera,              "Create camera that crop image to fix dimension with control of position, zoom. Also can be use to create parallax effect.");
 		addNodeObject(compose, "Render Spritesheet", Node_Render_Sprite_Sheet, "Create spritesheet from image array or animation.");
-		addNodeObject(compose, "Pack Sprites",       Node_Pack_Sprites,		"Combine array of images with different dimension using different algorithms.").setVersion(1140);
+		addNodeObject(compose, "Pack Sprites",       Node_Pack_Sprites,		   "Combine array of images with different dimension using different algorithms.").setVersion(1140);
 			
 		ds_list_add(compose, "Armature");
 			ds_list_add(compose, "/Basics");
-		addNodeObject(compose, "Armature Create",    Node_Armature,          "Create new armature system."                  ).setTags(["rigging", "bone"]).setVersion(1146);
-		addNodeObject(compose, "Armature Pose",      Node_Armature_Pose,     "Pose armature system."                        ).setTags(["rigging", "bone"]).setVersion(1146);
-		addNodeObject(compose, "Armature Bind",      Node_Armature_Bind,     "Bind and render image to an armature system." ).setTags(["rigging", "bone"]).setVersion(1146);
-		addNodeObject(compose, "Armature Mesh Rig",  Node_Armature_Mesh_Rig, "Rig mesh to armature system."                 ).setTags(["rigging", "bone"]).setVersion(1_18_04_0);
+		addNodeObject(compose, "Armature Create",    Node_Armature,            "Create new armature system."                  ).setTags(["rigging", "bone"]).setVersion(1146);
+		addNodeObject(compose, "Armature Pose",      Node_Armature_Pose,       "Pose armature system."                        ).setTags(["rigging", "bone"]).setVersion(1146);
+		addNodeObject(compose, "Armature Bind",      Node_Armature_Bind,       "Bind and render image to an armature system." ).setTags(["rigging", "bone"]).setVersion(1146);
+		addNodeObject(compose, "Armature Mesh Rig",  Node_Armature_Mesh_Rig,   "Rig mesh to armature system."                 ).setTags(["rigging", "bone"]).setVersion(1_18_04_0);
 			ds_list_add(compose, "/Convertors");
-		addNodeObject(compose, "Armature Path",      Node_Armature_Path,     "Generate path from armature system."          ).setTags(["rigging", "bone"]).setVersion(1146);
-		addNodeObject(compose, "Armature Sample",    Node_Armature_Sample,   "Sample point from armature system."           ).setTags(["rigging", "bone"]).setVersion(1147);
+		addNodeObject(compose, "Armature Path",      Node_Armature_Path,       "Generate path from armature system."          ).setTags(["rigging", "bone"]).setVersion(1146);
+		addNodeObject(compose, "Armature Sample",    Node_Armature_Sample,     "Sample point from armature system."           ).setTags(["rigging", "bone"]).setVersion(1147);
 		
 		if(!DEMO) {
 			ds_list_add(compose, "Export");
@@ -948,11 +948,11 @@ function __initNodes() {
 	var values = ds_list_create(); 
 	addNodeCatagory("Values", values);
 		ds_list_add(values, "Raw data");
-		addNodeObject(values, "Number",  Node_Number,  "Generate number data.");
-		addNodeObject(values, "Boolean", Node_Boolean, "Generate boolean (true, false) data.").setVersion(1090);
-		addNodeObject(values, "Text",    Node_String,  "Generate text/string data.");
-		addNodeObject(values, "Path",    Node_Path,    "Generate path.");
-		addNodeObject(values, "Area",    Node_Area,    "Generate area data.");
+		addNodeObject(values, "Number",          Node_Number,           "Generate number data.");
+		addNodeObject(values, "Boolean",         Node_Boolean,          "Generate boolean (true, false) data.").setVersion(1090);
+		addNodeObject(values, "Text",            Node_String,           "Generate text/string data.");
+		addNodeObject(values, "Path",            Node_Path,             "Generate path.");
+		addNodeObject(values, "Area",            Node_Area,             "Generate area data.");
 		
 		ds_list_add(values, "Numbers");
 			ds_list_add(values, "/Creators");
@@ -1065,7 +1065,7 @@ function __initNodes() {
 			ds_list_add(values, "/To Surface");
 		addNodeObject(values, "Fill Path",       Node_Path_Fill,      "Fill area inside path.").setVersion(1_18_06_2);
 		addNodeObject(values, "Map Path",        Node_Path_Map,       "Map a texture between multiple paths.").setVersion(11640);
-		addNodeObject(values, "Morph Path",      Node_Path_Morph).setVersion(1_18_06_2);
+		addNodeObject(values, "Morph Path",      Node_Path_Morph,     "Draw gradient connecting 2 paths.").setVersion(1_18_06_2);
 			ds_list_add(values, "/Segments");
 		addNodeObject(values, "Filter Segments", Node_Segment_Filter, "Filter segment (vec2 array) based on a conditions.").setVersion(11780);
 		

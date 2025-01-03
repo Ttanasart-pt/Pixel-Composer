@@ -509,6 +509,34 @@ function surface_reset_target_override() { __surface_reset_target(); winwin_draw
 		return _arr;
 	}
 
+	function surface_format_get_buffer_type(format) {
+		switch(format) {
+			case surface_rgba4unorm :  return buffer_u8;  break;
+			case surface_rgba8unorm :  return buffer_u8;  break;
+			case surface_rgba16float : return buffer_f16; break;
+			case surface_rgba32float : return buffer_f32; break;
+		
+			case surface_r8unorm  : return buffer_u8;  break;
+			case surface_r16float : return buffer_f16; break;
+			case surface_r32float : return buffer_f32; break;
+		}
+		return buffer_u8;
+	}
+
+	function surface_format_get_channel(format) {
+		switch(format) {
+			case surface_rgba4unorm  :  
+			case surface_rgba8unorm  :  
+			case surface_rgba16float : 
+			case surface_rgba32float : return 4; break;
+		
+			case surface_r8unorm  : 
+			case surface_r16float : 
+			case surface_r32float : return 1; break;
+		}
+		return 1;
+	}
+
 	function surface_format_get_bytes(format) {
 		switch(format) {
 			case surface_rgba4unorm :  return 4 * 0.5; break;

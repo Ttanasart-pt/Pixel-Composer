@@ -81,7 +81,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	newInput(8, nodeValue_Int("Framerate", self, 30))
 		.rejectArray();
 	
-	format_image     = [ ".png", ".jpg", ".webp" ];
+	format_image     = [ ".png", ".jpg", ".webp", ".exr" ];
 	format_animation = [ ".gif", ".apng", ".webp", ".mp4" ];
 	
 	newInput(9, nodeValue_Enum_Scroll("Format", self,  0, { data: format_image, update_hover: false }))
@@ -554,6 +554,10 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				
 				shell_execute_async(magick, shell_cmd, self);
 				break;
+				
+			case ".exr":
+				surface_exr_encode(_surf, _pathOut);
+				break;
 		}
 		
 		return _pathOut;
@@ -591,6 +595,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				
 				if(form == NODE_EXPORT_FORMAT.animation) {
 					p = $"{directory}/{i}/{string_lead_zero(CURRENT_FRAME, 5)}.png";
+					
 				} else {
 					if(is_array(path) && array_length(path) == array_length(surf))
 						p = pathString(array_safe_get_fast(path, i), i);
