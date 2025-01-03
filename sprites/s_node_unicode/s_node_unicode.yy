@@ -25,8 +25,8 @@
   "nineSlice":null,
   "origin":4,
   "parent":{
-    "name":"texts",
-    "path":"folders/nodes/icons/value/texts.yy",
+    "name":"value",
+    "path":"folders/nodes/icons/value.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

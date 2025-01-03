@@ -25,8 +25,8 @@
   "nineSlice":null,
   "origin":4,
   "parent":{
-    "name":"blur",
-    "path":"folders/nodes/icons/filter/blur.yy",
+    "name":"filter",
+    "path":"folders/nodes/icons/filter.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

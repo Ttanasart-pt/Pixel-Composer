@@ -25,8 +25,8 @@
   "nineSlice":null,
   "origin":4,
   "parent":{
-    "name":"surface",
-    "path":"folders/nodes/icons/value/surface.yy",
+    "name":"value",
+    "path":"folders/nodes/icons/value.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",
