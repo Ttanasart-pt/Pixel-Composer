@@ -193,10 +193,10 @@ function Theme() constructor {
     visible_12                      = s_visible_12;
     visible                         = s_visible;
     wiki                            = s_wiki;
-    window_exit                     = s_window_exit;
-    window_fullscreen               = s_window_fullscreen;
-    window_maximize                 = s_window_maximize;
-    window_minimize                 = s_window_minimize;
+    window_exit_icon                = s_window_exit;
+    window_fullscreen_icon          = s_window_fullscreen;
+    window_maximize_icon            = s_window_maximize;
+    window_minimize_icon            = s_window_minimize;
     workshop_collection             = s_group_workshop;
     workshop_project                = s_project_workshop;
     workshop_update                 = s_workshop_update;

@@ -12,7 +12,7 @@ if !ready exit;
 	var _by = dialog_y + ui(8);
 	var _bs = ui(20);
 	
-	if(buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, [ mouse_mx, mouse_my ], sHOVER, sFOCUS, "", THEME.window_exit) == 2) {
+	if(buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, [ mouse_mx, mouse_my ], sHOVER, sFOCUS, "", THEME.window_exit_icon) == 2) {
 		DIALOG_POSTDRAW
 		onDestroy();
 		instance_destroy();

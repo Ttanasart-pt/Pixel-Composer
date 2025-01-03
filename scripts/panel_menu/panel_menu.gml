@@ -546,7 +546,7 @@ function Panel_Menu() : PanelContent() constructor {
                 
                 switch(action) {
                     case "exit":
-                        var b = buttonInstant(THEME.button_hide_fill, x1 - bs, ui(6), bs, bs, [mx, my], pHOVER, true,, THEME.window_exit, 0, COLORS._main_accent);
+                        var b = buttonInstant(THEME.button_hide_fill, x1 - bs, ui(6), bs, bs, [mx, my], pHOVER, true,, THEME.window_exit_icon, 0, COLORS._main_accent);
                         if(b) _draggable = false;
                         if(b == 2) window_close();
                         break;
@@ -556,7 +556,7 @@ function Panel_Menu() : PanelContent() constructor {
                         if(OS == os_macosx)
                             win_max = __win_is_maximized;
                         
-                        var b = buttonInstant(THEME.button_hide_fill, x1 - bs, ui(6), bs, bs, [mx, my], pHOVER, true,, THEME.window_maximize, win_max, [ COLORS._main_icon, CDEF.lime ]);
+                        var b = buttonInstant(THEME.button_hide_fill, x1 - bs, ui(6), bs, bs, [mx, my], pHOVER, true,, THEME.window_maximize_icon, win_max, [ COLORS._main_icon, CDEF.lime ]);
                         if(b) _draggable = false;
                         if(b == 2) {
                             if(OS == os_windows) {
@@ -581,7 +581,7 @@ function Panel_Menu() : PanelContent() constructor {
                         break;
                         
                     case "minimize":
-                        var b = buttonInstant(THEME.button_hide_fill, x1 - bs, ui(6), bs, bs, [mx, my], pHOVER, true,, THEME.window_minimize, 0, [ COLORS._main_icon, CDEF.yellow ]);
+                        var b = buttonInstant(THEME.button_hide_fill, x1 - bs, ui(6), bs, bs, [mx, my], pHOVER, true,, THEME.window_minimize_icon, 0, [ COLORS._main_icon, CDEF.yellow ]);
                         if(b) _draggable = false;
                         if(b == -2) {
                                  if(OS == os_windows) winMan_Minimize();
@@ -591,7 +591,7 @@ function Panel_Menu() : PanelContent() constructor {
                         
                     case "fullscreen":
                         var win_full = window_is_fullscreen;
-                        var b = buttonInstant(THEME.button_hide_fill, x1 - bs, ui(6), bs, bs, [mx, my], pHOVER, true,, THEME.window_fullscreen, win_full, [ COLORS._main_icon, CDEF.cyan ]);
+                        var b = buttonInstant(THEME.button_hide_fill, x1 - bs, ui(6), bs, bs, [mx, my], pHOVER, true,, THEME.window_fullscreen_icon, win_full, [ COLORS._main_icon, CDEF.cyan ]);
                         if(b) _draggable = false;
                         if(b == 2) {
                             if(OS == os_windows)
