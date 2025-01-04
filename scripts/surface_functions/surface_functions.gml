@@ -537,6 +537,20 @@ function surface_reset_target_override() { __surface_reset_target(); winwin_draw
 		return 1;
 	}
 
+	function surface_format_get_depth(format) {
+		switch(format) {
+			case surface_rgba4unorm  : return 4;  break;
+			case surface_rgba8unorm  : return 8;  break;
+			case surface_rgba16float : return 16; break
+			case surface_rgba32float : return 32; break;
+		
+			case surface_r8unorm  : return 8;  break
+			case surface_r16float : return 16; break
+			case surface_r32float : return 32; break;
+		}
+		return 1;
+	}
+
 	function surface_format_get_bytes(format) {
 		switch(format) {
 			case surface_rgba4unorm :  return 4 * 0.5; break;

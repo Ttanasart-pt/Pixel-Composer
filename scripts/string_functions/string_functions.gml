@@ -133,47 +133,48 @@ function string_partial_match(str, key) {
 	return -9999;
 }
 
-function string_partial_match_res(str, key, keys) {
+function string_partial_match_res(str, key, keys = []) {
 	if(str == key) return [ 9999, array_create(string_length(str) + 1, 1) ];
 	
 	var lenn = string_length(str);
 	var lenm = string_length(key);
 	var runm = 1;
 	
-	var _minmat = -lenn * lenm;
+	var _matchw = -lenn * lenm;
 	var _matRng = array_create(string_length(str) + 1, 0);
 	var _mated  = array_create(string_length(str) + 1, 0);
+	var  runn   = 1;
+	var  runC   = 0;
 	
-	while(runm <= lenm) {
+	repeat(lenm) {
 		var m = string_char_at(key, runm);
 		
-		var runn = 1;
 		var matc = -1;
-		while(runn <= lenn) {
+		var matW =  0;
+		
+		repeat(lenn) {
 			var n = string_char_at(str, runn);
 			if(_mated[runn] == 0 && m == n) {
 				 matc     = runn;
-				_minmat  += lenn - abs(runm - runn);
-				
-				if(runn > 1 && string_char_at(str, runn - 1) == " ")
-					_minmat += 2;
+				_matchw  += lenn - matW + (matW == 0) * runC * 5;
 				
 				_mated[runn]  = 1;
 				_matRng[runn] = 1;
+				
+				runC = matW == 0? runC + 1 : 0;
+				if(++runn > lenn) runn = 1;
 				break;
 			}
-			runn++;
+			
+			matW++;
+			if(++runn > lenn) runn = 1;
 		}
 		
-		if(matc == -1) {
-			_minmat = -9999;
-			break;
-		}
-		
+		if(matc == -1) { _matchw = -9999; break; }
 		runm++
 	}
 	
-	return [ _minmat, _matRng ];
+	return [ _matchw, _matRng ];
 }
 
 function __string_partial_match_res(str, key, keys) {

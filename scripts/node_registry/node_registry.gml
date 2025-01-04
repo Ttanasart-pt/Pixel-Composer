@@ -1095,7 +1095,8 @@ function __initNodes() {
 		addNodeObject(values, "Atlas to Struct", Node_Atlas_Struct,      "Convert atlas into generic struct.").setVersion(11710);
 			
 		ds_list_add(values, "Surface");
-		//addNodeObject(values, "Dynamic Surface",   Node_dynaSurf).setVersion(11520);
+		addNodeObject(values, "Surface Data",        Node_Surface_data,        "Extract information about a surface").setTags(["surface info"]).setVersion(1_18_07_0);
+	 // addNodeObject(values, "Dynamic Surface",     Node_dynaSurf).setVersion(11520);
 		addNodeObject(values, "IsoSurf",             Node_IsoSurf,             "Create a dynamic surface that changes its texture based on rotation.").setVersion(11520);
 		addNodeObject(values, "Surface from Buffer", Node_Surface_From_Buffer, "Create surface from a valid buffer.").setTags(["buffer to surface"]).setVersion(1146);
 			

@@ -989,6 +989,7 @@ event_inherited();
 			
 			if(!struct_has(cat, "list"))
 				continue;
+				
 			if(array_length(cat.filter) && !array_exists(cat.filter, instanceof(context)))
 				continue;
 			

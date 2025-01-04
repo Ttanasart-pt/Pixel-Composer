@@ -1,35 +1,43 @@
-function Node_Surface_data(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
+function Node_Surface_data(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name	= "Surface data";
 	color	= COLORS.node_blend_number;
 	
 	newInput(0, nodeValue_Surface("Surface", self));
 	
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
 	newOutput(0, nodeValue_Output("Dimension", self, VALUE_TYPE.integer, [ 1, 1 ]))
 		.setDisplay(VALUE_DISPLAY.vector);
-		
-	newOutput(1, nodeValue_Output("Array length", self, VALUE_TYPE.integer, 0));
 	
+	newOutput(1, nodeValue_Output("Width", self, VALUE_TYPE.integer, 1));
+	
+	newOutput(2, nodeValue_Output("Height", self, VALUE_TYPE.integer, 1));
+	
+	newOutput(3, nodeValue_Output("Format String", self, VALUE_TYPE.text, ""))
+		.setVisible(false);
+	
+	newOutput(4, nodeValue_Output("Bit Depth", self, VALUE_TYPE.integer, 8))
+		.setVisible(false);
+	
+	newOutput(5, nodeValue_Output("Channels", self, VALUE_TYPE.integer, 4))
+		.setVisible(false);
 	
 	setDimension(96, 48);
 	
-	static update = function(frame = CURRENT_FRAME) {
-		var _insurf	= getInputData(0);
-		if(is_array(_insurf)) {
-			var len = array_length(_insurf);
-			var _dim = array_create(len);
-			
-			for( var i = 0; i < len; i++ ) {
-				_dim[i][0] = surface_get_width_safe(_insurf[i]);
-				_dim[i][1] = surface_get_height_safe(_insurf[i]);
-			}
-			
-			outputs[0].setValue(_dim);
-			outputs[1].setValue(len);
-			return;
-		}
+	static processData = function(_outData, _data, _output_index, _array_index = 0) { 
+		var _surf = _data[0];
+		if(!is_surface(_surf)) return _outData; 
 		
-		if(!_insurf || !surface_exists(_insurf)) return;
+		var _dim = surface_get_dimension(_surf);
+		_outData[0] = _dim;
+		_outData[1] = _dim[0];
+		_outData[2] = _dim[1];
 		
-		outputs[0].setValue([ surface_get_width_safe(_insurf), surface_get_height_safe(_insurf) ]);
+		var _frm = surface_get_format(_surf);
+		_outData[3] = surface_format_string(_frm);
+		_outData[4] = surface_format_get_depth(_frm);
+		_outData[5] = surface_format_get_channel(_frm);
+		
+		return _outData;
 	}
 }
