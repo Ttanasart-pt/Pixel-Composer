@@ -258,6 +258,7 @@ function value_bit(i) {
 		case VALUE_TYPE.boolean		: return 1 << 3 | 1 << 1;
 		case VALUE_TYPE.color		: return 1 << 4;
 		case VALUE_TYPE.gradient	: return 1 << 25;
+		case VALUE_TYPE.atlas	    : 
 		case VALUE_TYPE.dynaSurface	: 
 		case VALUE_TYPE.surface		: return 1 << 5 | 1 << 23;
 		case VALUE_TYPE.path		: return 1 << 10;

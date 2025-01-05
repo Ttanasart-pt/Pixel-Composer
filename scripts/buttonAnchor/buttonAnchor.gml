@@ -1,13 +1,25 @@
-function buttonAnchor(_onClick) : widget() constructor {
+function buttonAnchor(_input = noone, _onClick = noone) : widget() constructor {
 	onClick = _onClick;
+	input   = _input;
 	index   = 4;
 	click   = true;
 	
 	center  = true;
 	context = noone;
 	
-	static drawParam = function(params) {
-		return draw(params.x, params.y, params.w, params.h, params.m);
+	static drawParam = function(params) { return draw(params.x, params.y, params.w, params.h, params.m); }
+	
+	static trigger = function(_index) {
+		if(input == noone) {
+			onClick(_index);
+			return;
+		}
+		
+		switch(_index) {
+			case 0 : input.setValue([ 0.0, 0.0 ]); break; case 1 : input.setValue([ 0.5, 0.0 ]); break; case 2 : input.setValue([ 1.0, 0.0 ]); break;
+			case 3 : input.setValue([ 0.0, 0.5 ]); break; case 4 : input.setValue([ 0.5, 0.5 ]); break; case 5 : input.setValue([ 1.0, 0.5 ]); break;
+			case 6 : input.setValue([ 0.0, 1.0 ]); break; case 7 : input.setValue([ 0.5, 1.0 ]); break; case 8 : input.setValue([ 1.0, 1.0 ]); break;
+		}
 	}
 	
 	static draw = function(_x, _y, _w, _h, _m, spr = THEME.button_def, blend = c_white) {
@@ -39,8 +51,7 @@ function buttonAnchor(_onClick) : widget() constructor {
 			
 			if(hov) {
 				hovering = true;
-				if(mouse_click(mb_left, active))
-					onClick(_in);
+				if(mouse_click(mb_left, active)) trigger(_in)
 			}
 		}
 		
@@ -49,9 +60,5 @@ function buttonAnchor(_onClick) : widget() constructor {
 		return _h;
 	}
 	
-	static clone = function() { #region
-		var cln = new buttonAnchor(onClick);
-		
-		return cln;
-	} #endregion
+	static clone = function() /*=>*/ {return new buttonAnchor(input, onClick)}
 }

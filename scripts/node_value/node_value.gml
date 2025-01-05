@@ -19,6 +19,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	#region ---- main ----
 		active = true;
 		from   = noone;
+		name   = _name;
 		node   = _node;
 		tags   = VALUE_TAG.none;
 		
@@ -30,18 +31,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		forward   = true;
 		_initName = _name;
 		
-		static updateName = function(_name) {
-			name          = _name;
-			internalName  = string_to_var(name);
-			name_custom   = true;
-		} updateName(_name);
-		
 		name_custom = false;
-		
-		if(struct_has(node, "inputMap")) {
-				 if(_connect == CONNECT_TYPE.input)  node.inputMap[$ internalName] = self;
-			else if(_connect == CONNECT_TYPE.output) node.outputMap[$ internalName] = self;
-		}
 		
 		tooltip        = _tooltip;
 		editWidget     = noone;
@@ -82,6 +72,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		onSetFrom = noone;
 		onSetTo   = noone;
+		
 	#endregion
 	
 	#region ---- animation ----
@@ -128,11 +119,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		fullUpdate    = false;
 		attributes    = {};
-		
-		if(_connect == CONNECT_TYPE.input) {
-			node.inputs_data[index]              = _value;
-			node.input_value_map[$ internalName] = _value;
-		}
 		
 		__curr_get_val = [ 0, 0 ];
 		validator      = noone;
@@ -241,6 +227,30 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		con_node  = -1;
 		con_index = -1;
 		con_tag   =  0;
+	#endregion
+	
+	#region ---- Init Fn ---
+		static setInternalName = function(_iname) {
+			internalName = string_to_var(_iname);
+			
+			if(is(node, Node)) {
+					 if(connect_type == CONNECT_TYPE.input)  node.inputMap[$ internalName]  = self;
+				else if(connect_type == CONNECT_TYPE.output) node.outputMap[$ internalName] = self;
+			}
+		}
+		static updateName = function(_name) {
+			name          = _name;
+			name_custom   = true;
+			
+			setInternalName(name);
+		} 
+		
+		updateName(_name);
+		
+		if(connect_type == CONNECT_TYPE.input) {
+			node.inputs_data[index]              = _value;
+			node.input_value_map[$ internalName] = _value;
+		}
 	#endregion
 	
 	////- META

@@ -106,24 +106,8 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	newInput(39, nodeValue_Range("Shift radial", self, [ 0, 0 ]));
 	
-	newInput(40, nodeValue_Vec2("Anchor", self, [ 0.5, 0.5 ]))
-		.setDisplay(VALUE_DISPLAY.vector, {
-			side_button : new buttonAnchor(function(ind) { 
-				switch(ind) {
-					case 0 : inputs[40].setValue([ 0.0, 0.0 ]); break;
-					case 1 : inputs[40].setValue([ 0.5, 0.0 ]); break;
-					case 2 : inputs[40].setValue([ 1.0, 0.0 ]); break;
-					
-					case 3 : inputs[40].setValue([ 0.0, 0.5 ]); break;
-					case 4 : inputs[40].setValue([ 0.5, 0.5 ]); break;
-					case 5 : inputs[40].setValue([ 1.0, 0.5 ]); break;
-					
-					case 6 : inputs[40].setValue([ 0.0, 1.0 ]); break;
-					case 7 : inputs[40].setValue([ 0.5, 1.0 ]); break;
-					case 8 : inputs[40].setValue([ 1.0, 1.0 ]); break;
-				}
-			}) 
-		});
+	newInput(40, nodeValue_Vec2("Anchor", self, [ 0.5, 0.5 ]));
+		inputs[40].setDisplay(VALUE_DISPLAY.vector, { side_button : new buttonAnchor(inputs[40]) });
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	

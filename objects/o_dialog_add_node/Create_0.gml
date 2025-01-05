@@ -201,7 +201,6 @@ event_inherited();
 #endregion
 
 #region build
-	
 	function buildNode(_node, _param = {}) {
 		instance_destroy();
 		instance_destroy(o_dialog_menubox);
@@ -1180,14 +1179,18 @@ event_inherited();
 				
 				if(i % 2) draw_sprite_stretched_add(THEME.node_bg, 0, pd, yy, list_width - pd * 2, list_height, c_white, 0.1);
 				
-				var _minput = _hover && (MOUSE_MOVED || mouse_release(mb_any));
-				if(_minput && point_in_rectangle(_m[0], _m[1], pd + ui(16 * 2), yy, list_width, yy + list_height - 1)) {
+				var _minput  = _hover && (MOUSE_MOVED || mouse_release(mb_any));
+				var _mouseOn = point_in_rectangle(_m[0], _m[1], pd + ui(16 * 2), yy, list_width, yy + list_height - 1);
+				
+				if(_mouseOn) {
 					search_pane.hover_content = true;
-					node_selecting = i;
-					
 					node_icon   = _node.spr;
 					node_icon_x = search_pane.x + pd + list_height / 2 + ui(32);
 					node_icon_y = search_pane.y + yy + list_height / 2;
+				}
+				
+				if(_minput && _mouseOn) {
+					node_selecting = i;
 					
 					if(sFOCUS) {
 						if(mouse_release(mb_left))

@@ -224,7 +224,6 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static processBatchOutput = function() { 
 		var _is  = array_length(inputs);
 		var _os  = array_length(outputs);
-		var _dep = attrDepth();
 		
 		var data;
 		var _out = array_create(_os);
@@ -247,7 +246,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				for(var i = 0; i < _os; i++) {
 					if(outputs[i].type != VALUE_TYPE.surface) continue;
 					
-					_out[i] = surface_verify(_out[i], _dim[0], _dim[1], _dep);
+					_out[i] = surface_verify(_out[i], _dim[0], _dim[1], attrDepth());
 				}
 			}
 			
@@ -284,15 +283,16 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				if(l == 0 || l == preview_index) current_data = _inputs;
 				
 				var _outa = array_create(_os);
-				var _dim  = getDimension(l);
 					
-				for(var i = 0; i < _os; i++) {
-					_outa[i] = array_safe_get(_out[i], l);
-					
-					if(dimension_index == -1) continue;
-					if(outputs[i].type != VALUE_TYPE.surface) continue;
-					
-					_outa[i] = surface_verify(_outa[i], _dim[0], _dim[1], _dep);
+				if(dimension_index > -1) {
+					var _dim  = getDimension(l);
+					for(var i = 0; i < _os; i++) {
+						_outa[i] = array_safe_get(_out[i], l);
+						
+						if(outputs[i].type != VALUE_TYPE.surface) continue;
+						
+						_outa[i] = surface_verify(_outa[i], _dim[0], _dim[1], attrDepth());
+					}
 				}
 				
 				if(_os == 1) {

@@ -5,7 +5,7 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	attributes.filter = array_create(9, 1);
 	filtering_vl = false;
 	
-	filter_button = new buttonAnchor(function(ind) {
+	filter_button = new buttonAnchor(noone, function(ind) {
 		if(mouse_press(mb_left))
 			filtering_vl = !attributes.filter[ind];
 		attributes.filter[ind] = filtering_vl;

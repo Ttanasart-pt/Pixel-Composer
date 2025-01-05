@@ -19,7 +19,7 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	newInput(5, nodeValue_Enum_Button("Mode", self,  0 , [ "Greyscale", "Alpha" ] ))
 		
-	newOutput(0, nodeValue_Output("Surface out",	self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
 	
 	newOutput(1, nodeValue_Output("Atlas",	self, VALUE_TYPE.atlas, []));
 	

@@ -61,11 +61,9 @@ function NodeObject(_name, _spr, _node, _tooltip = "") constructor {
 	static setTags    = function(_tags) { tags    = _tags;     return self; }
 	static setSpr     = function(_spr)  { spr     = _spr;      return self; }
 	static setTooltip = function(_tool) { tooltip = _tool;     return self; }
-	static setBuild   = function(_fn)   { createFn = _fn;      return self; }
+	static setBuild   = function(_fn)   { createFn    = _fn;   return self; }
 	static setParam   = function(_par)  { createParam = _par;  return self; }
 	
-	// static setIO  = function(t) { for(var i = 0; i < argument_count; i++)   input_type_mask  |= value_bit(argument[i]); return self; }
-	// static setIO  = function(t) { for(var i = 0; i < argument_count; i++)   output_type_mask |= value_bit(argument[i]); return self; }
 	static setIO = function(t) { for(var i = 0; i < argument_count; i++) { input_type_mask  |= value_bit(argument[i]); output_type_mask |= value_bit(argument[i]); } return self; }
 	
 	static setVersion = function(version) {

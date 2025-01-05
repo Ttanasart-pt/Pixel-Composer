@@ -105,41 +105,41 @@
     background-blend-mode: normal !important;
 }
 
-.treeview .dir[data-rel-path="folders/nodes/"] div.item[data-kind="script"] + div.item[data-kind="shader"], 
-.treeview .dir[data-rel-path="folders/nodes/"] div.item[data-ident^="node_3d"] + div.item[data-ident^="d3d"], 
-.treeview .dir[data-rel-path="folders/nodes/"] div.item[data-kind="script"] + div.dir {
+.treeview .dir[data-rel-path="folders/nodes/data/"] div.item[data-kind="script"] + div.item[data-kind="shader"], 
+.treeview .dir[data-rel-path="folders/nodes/data/"] div.item[data-ident^="node_3d"] + div.item[data-ident^="d3d"], 
+.treeview .dir[data-rel-path="folders/nodes/data/"] div.item[data-kind="script"] + div.dir {
     padding-top: 0px;
     margin-left: 208px;
     margin-top: -20px;
     /* width: 32px; */
 }
 
-.treeview .dir[data-rel-path="folders/nodes/"] div.item[data-kind="script"] + div.item[data-kind="shader"]::before, 
-.treeview .dir[data-rel-path="folders/nodes/"] div.item[data-ident^="node_3d"] + div.item[data-ident^="d3d"]::before, 
-.treeview .dir[data-rel-path="folders/nodes/"] div.item[data-kind="script"] + div.dir::before {
+.treeview .dir[data-rel-path="folders/nodes/data/"] div.item[data-kind="script"] + div.item[data-kind="shader"]::before, 
+.treeview .dir[data-rel-path="folders/nodes/data/"] div.item[data-ident^="node_3d"] + div.item[data-ident^="d3d"]::before, 
+.treeview .dir[data-rel-path="folders/nodes/data/"] div.item[data-kind="script"] + div.dir::before {
     margin-right: 4px;
 }
 
-.treeview .dir[data-rel-path="folders/nodes/"] div.item[data-kind="script"] + div.item[data-kind="shader"] > span, 
-.treeview .dir[data-rel-path="folders/nodes/"] div.item[data-ident^="node_3d"] + div.item[data-ident^="d3d"] > span, 
-.treeview .dir[data-rel-path="folders/nodes/"] div.item[data-kind="script"] + div.dir > div.header > span {
+.treeview .dir[data-rel-path="folders/nodes/data/"] div.item[data-kind="script"] + div.item[data-kind="shader"] > span, 
+.treeview .dir[data-rel-path="folders/nodes/data/"] div.item[data-ident^="node_3d"] + div.item[data-ident^="d3d"] > span, 
+.treeview .dir[data-rel-path="folders/nodes/data/"] div.item[data-kind="script"] + div.dir > div.header > span {
     color: #9F9FB500;
 }
 
-.treeview .dir[data-rel-path="folders/nodes/"] div.item[data-kind="script"] + div.dir > div.items {
+.treeview .dir[data-rel-path="folders/nodes/data/"] div.item[data-kind="script"] + div.dir > div.items {
     margin-left: -208px;
 }
 
-.treeview .dir[data-rel-path="folders/nodes/"] div.item[data-kind="script"] + div.item[data-kind="shader"]:hover, 
-.treeview .dir[data-rel-path="folders/nodes/"] div.item[data-ident^="node_3d"] + div.item[data-ident^="d3d"]:hover, 
-.treeview .dir[data-rel-path="folders/nodes/"] div.item[data-kind="script"] + div.dir div.header:hover {
+.treeview .dir[data-rel-path="folders/nodes/data/"] div.item[data-kind="script"] + div.item[data-kind="shader"]:hover, 
+.treeview .dir[data-rel-path="folders/nodes/data/"] div.item[data-ident^="node_3d"] + div.item[data-ident^="d3d"]:hover, 
+.treeview .dir[data-rel-path="folders/nodes/data/"] div.item[data-kind="script"] + div.dir div.header:hover {
     background-color: transparent !important;
 }
 
-.treeview .dir[data-rel-path="folders/nodes/"] div.item[data-kind="script"] + div.item[data-kind="shader"]:hover::before {
+.treeview .dir[data-rel-path="folders/nodes/data/"] div.item[data-kind="script"] + div.item[data-kind="shader"]:hover::before {
     background-image: url(gmedit/tree_shader_hover.png);
 }
 
-.treeview .dir[data-rel-path="folders/nodes/"] div.item[data-kind="script"] + div.dir div.header:hover::before {
+.treeview .dir[data-rel-path="folders/nodes/data/"] div.item[data-kind="script"] + div.dir div.header:hover::before {
     background-image: url(gmedit/treeview_hover.png?r4);
 }
