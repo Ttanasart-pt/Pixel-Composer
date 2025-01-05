@@ -43,7 +43,7 @@ function NodeObject(_name, _spr, _node, _tooltip = "") constructor {
 	input_type_mask  = 0b0;
 	output_type_mask = 0b0;
 	
-	_fn = registerFunctionLite("New node", _name, function(n) /*=>*/ { PANEL_GRAPH.createNodeHotkey(n); }, [ node ]);
+	_fn = registerFunctionLite("New node", _name, function(n) /*=>*/ { PANEL_GRAPH.createNodeHotkey(n); }, [ nodeName ]);
 	_fn.spr = _spr;
 	
 	if(!IS_CMD) {

@@ -7,7 +7,7 @@ function Node_Delay(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	newInput(1, nodeValue_Int("Frames", self, 1));
 	
-	newInput(2, nodeValue_Bool("Loop", self, false));
+	newInput(2, nodeValue_Enum_Scroll("Overflow", self, 0, [ "Hold", "Loop", "Clear" ]));
 	
 	newOutput(0, nodeValue_Output("Surface", self, VALUE_TYPE.surface, noone));
 	
@@ -16,6 +16,7 @@ function Node_Delay(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	];
 	
 	surf_indexes = [];
+	curr_frame   = 0;
 	
 	static processData_prebatch  = function() {
 		surf_indexes = array_verify(surf_indexes, process_amount);
@@ -26,40 +27,46 @@ function Node_Delay(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	static processData = function(_output, _data, _output_index, _array_index = 0) {  
 		var _surf = _data[0];
 		var _frme = _data[1];
-		var _loop = _data[2];
+		var _ovrf = _data[2];
 		
 		var _time = CURRENT_FRAME;
+		var _totl = TOTAL_FRAMES;
+		
 		var _frtm = _time - _frme;
-		if(_loop) _frtm = (_frtm + TOTAL_FRAMES) % TOTAL_FRAMES;
-		else      _frtm = clamp(_frtm, 0, TOTAL_FRAMES - 1);
+		switch(_ovrf) {
+			case 0 : _frtm = clamp(_frtm, 0, _totl - 1); break;
+			case 1 : _frtm = (_frtm + _totl) % _totl;    break;
+		}
 		
 		var _sw = surface_get_width_safe(_surf);
 		var _sh = surface_get_height_safe(_surf);
 		
-		surf_indexes[_array_index][_time] = surface_verify(surf_indexes[_array_index][_time], _sw, _sh);
+		var _surfA = surf_indexes[_array_index];
+		_surfA[_time] = surface_verify(_surfA[_time], _sw, _sh);
 		
-		surface_set_target(surf_indexes[_array_index][_time]);
-			DRAW_CLEAR
-			BLEND_OVERRIDE
+		surface_set_shader(_surfA[_time], sh_sample, true, BLEND.over);
 			draw_surface_safe(_surf);
-			BLEND_NORMAL
 		surface_reset_target();
 		
 		_output = surface_verify(_output, _sw, _sh);
-		surface_set_target(_output);
-			DRAW_CLEAR
-			BLEND_OVERRIDE
-			
-			if(0 <= _frtm && _frtm < TOTAL_FRAMES) {
-				draw_surface_safe(surf_indexes[_array_index][_frtm]);
-				
-				surface_free(surf_indexes[_array_index][_frtm]);
-				surf_indexes[_array_index][_frtm] = 0;
-			}
-			
-			BLEND_NORMAL
+		surface_set_shader(_output, sh_sample, true, BLEND.over);
+		if(0 <= _frtm && _frtm < _totl)
+			draw_surface_safe(_surfA[_frtm]);
 		surface_reset_target();
+		
+		curr_frame = _frtm;
 		
 		return _output;
 	}
+	
+	
+	static drawAnimationTimeline = function(_shf, _w, _h, _s) {
+		draw_set_color(COLORS._main_value_positive);
+		draw_set_alpha(1);
+		
+		var _x = _shf + (curr_frame + 1) * _s;
+		draw_line_width(_x, 0, _x, _h, 1);
+		draw_set_alpha(1);
+	}
+	
 }

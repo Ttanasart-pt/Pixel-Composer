@@ -690,8 +690,6 @@ function Panel_Animation() : PanelContent() constructor {
         }
         
         #region lines
-            if(inspecting) inspecting.drawAnimationTimeline(timeline_shift, bar_w, bar_h, timeline_scale);
-            
             var _stW = timeline_separate * timeline_scale;
             var _st  = ceil(-timeline_shift / _stW);
             var _fr  = _st + ceil(bar_w / _stW);
@@ -739,6 +737,8 @@ function Panel_Animation() : PanelContent() constructor {
             
             draw_set_text(f_p2, fa_center, fa_bottom, cc);
             draw_text_add(bar_line_x, ui(16), string(CURRENT_FRAME + 1));
+            
+            if(inspecting) inspecting.drawAnimationTimeline(timeline_shift, bar_w, bar_h, timeline_scale);
         #endregion
             
         #region summary \\\ Set X for all keyframes

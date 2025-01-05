@@ -133,7 +133,7 @@ function string_partial_match(str, key) {
 	return -9999;
 }
 
-function string_partial_match_res(str, key, keys = []) {
+function string_partial_match_res(str, key) {
 	if(str == key) return [ 9999, array_create(string_length(str) + 1, 1) ];
 	
 	var lenn = string_length(str);

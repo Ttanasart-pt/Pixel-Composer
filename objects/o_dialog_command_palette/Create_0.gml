@@ -58,10 +58,8 @@ event_inherited();
 			var _name = _menu.name;
 			var _fname = $"{string_lower(_cnxt)} {string_lower(_name)}"
 			
-			var match = string_partial_match(_fname, search_lower);
+			var match = string_partial_match_res(_fname, search_lower)[0];
 			if(match == -9999) continue;
-				
-			if(_cnxt == "New node") match -= 1000;
 			
 			ds_priority_add(pr_list, _menu, match);
 		}

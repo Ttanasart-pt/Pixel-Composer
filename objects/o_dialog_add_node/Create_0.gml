@@ -116,6 +116,92 @@ event_inherited();
 		return bool(_b & value_bit(junction_called.type));
 	}
 	
+	function setPage(pageIndex) {
+		ADD_NODE_PAGE = min(pageIndex, ds_list_size(category) - 1);
+		subgroups      = [];
+		subgroup_index = 0;
+		ds_list_clear(node_list);
+		
+		if(ADD_NODE_PAGE == -2) {
+			for(var i = 0; i < ds_list_size(category); i++) {
+				var cat = category[| i];			
+				if(array_length(cat.filter) && !array_exists(cat.filter, instanceof(context)))
+					continue;
+				
+				for( var j = 0; j < ds_list_size(cat.list); j++ )
+					ds_list_add(node_list, cat.list[| j]);
+			}
+	
+		} else if(ADD_NODE_PAGE == -1) {
+			for( var i = 0, n = ds_list_size(NEW_NODES); i < n; i++ )
+				ds_list_add(node_list, NEW_NODES[| i]);
+	
+		} else if(ADD_NODE_PAGE == NODE_PAGE_DEFAULT && category == NODE_CATEGORY) { // page 0 global context
+			var sug = [];
+			
+			if(junction_called != noone) {
+				array_append(sug, nodeReleatedQuery(
+					junction_called.connect_type == CONNECT_TYPE.input? "connectTo" : "connectFrom", 
+					junction_called.type
+				));
+			}
+			
+			array_append(sug, nodeReleatedQuery("context", instanceof(context)));
+			
+			if(!array_empty(sug)) {
+				ds_list_add(node_list, "Related");
+				for( var i = 0, n = array_length(sug); i < n; i++ ) {
+					var k = array_safe_get_fast(sug, i);
+					if(k == 0) continue;
+					if(ds_map_exists(ALL_NODES, k))
+						ds_list_add(node_list, ALL_NODES[? k]);
+				}
+			}
+			
+			ds_list_add(node_list, "Favourites");
+			var _favs = struct_get_names(global.FAV_NODES);
+			for( var i = 0, n = array_length(_favs); i < n; i++ ) {
+				var _nodeIndex = _favs[i];
+				if(!ds_map_exists(ALL_NODES, _nodeIndex)) continue;
+				
+				var _node = ALL_NODES[? _nodeIndex];
+				if(_node.show_in_recent) 
+					ds_list_add(node_list, _node);
+			}
+			
+			ds_list_add(node_list, "Recents");
+			if(is_array(global.RECENT_NODES))
+			for( var i = 0, n = array_length(global.RECENT_NODES); i < n; i++ ) {
+				var _nodeIndex = global.RECENT_NODES[i];
+				if(!ds_map_exists(ALL_NODES, _nodeIndex)) continue;
+				
+				var _node = ALL_NODES[? _nodeIndex];
+				if(_node.show_in_recent) 
+					ds_list_add(node_list, _node);
+			}
+		} else {
+			var _l = category[| ADD_NODE_PAGE].list;
+			for( var i = 0, n = ds_list_size(_l); i < n; i++ ) 
+				ds_list_add(node_list, _l[| i]);
+		}
+		
+		for( var i = 0, n = ds_list_size(node_list); i < n; i++ ) {
+			var _node = node_list[| i];
+			if(!is_string(_node)) continue;
+			if(string_starts_with(_node, "/")) continue;
+			
+			array_push(subgroups, _node);
+		}
+		setSubgroup(0);
+	}
+	
+	function setSubgroup(_subg) {
+		subgroup_index = _subg;
+	}
+#endregion
+
+#region build
+	
 	function buildNode(_node, _param = {}) {
 		instance_destroy();
 		instance_destroy(o_dialog_menubox);
@@ -212,6 +298,7 @@ event_inherited();
 		
 		//connect to called junction
 		var _call_input = junction_called.connect_type == CONNECT_TYPE.input;
+		var _from       = junction_called.value_from;
 		var _junc_list  = _call_input? _outputs : _inputs;
 		
 		for(var i = 0; i < array_length(_junc_list); i++) {
@@ -229,89 +316,17 @@ event_inherited();
 				break;
 			}
 		}
-	}
-	
-	function setPage(pageIndex) {
-		ADD_NODE_PAGE = min(pageIndex, ds_list_size(category) - 1);
-		subgroups      = [];
-		subgroup_index = 0;
-		ds_list_clear(node_list);
 		
-		if(ADD_NODE_PAGE == -2) {
-			for(var i = 0; i < ds_list_size(category); i++) {
-				var cat = category[| i];			
-				if(array_length(cat.filter) && !array_exists(cat.filter, instanceof(context)))
-					continue;
-				
-				for( var j = 0; j < ds_list_size(cat.list); j++ )
-					ds_list_add(node_list, cat.list[| j]);
-			}
-	
-		} else if(ADD_NODE_PAGE == -1) {
-			for( var i = 0, n = ds_list_size(NEW_NODES); i < n; i++ )
-				ds_list_add(node_list, NEW_NODES[| i]);
-	
-		} else if(ADD_NODE_PAGE == NODE_PAGE_DEFAULT && category == NODE_CATEGORY) { // page 0 global context
-			var sug = [];
-			
-			if(junction_called != noone) {
-				array_append(sug, nodeReleatedQuery(
-					junction_called.connect_type == CONNECT_TYPE.input? "connectTo" : "connectFrom", 
-					junction_called.type
-				));
-			}
-			
-			array_append(sug, nodeReleatedQuery("context", instanceof(context)));
-			
-			if(!array_empty(sug)) {
-				ds_list_add(node_list, "Related");
-				for( var i = 0, n = array_length(sug); i < n; i++ ) {
-					var k = array_safe_get_fast(sug, i);
-					if(k == 0) continue;
-					if(ds_map_exists(ALL_NODES, k))
-						ds_list_add(node_list, ALL_NODES[? k]);
-				}
-			}
-			
-			ds_list_add(node_list, "Favourites");
-			var _favs = struct_get_names(global.FAV_NODES);
-			for( var i = 0, n = array_length(_favs); i < n; i++ ) {
-				var _nodeIndex = _favs[i];
-				if(!ds_map_exists(ALL_NODES, _nodeIndex)) continue;
-				
-				var _node = ALL_NODES[? _nodeIndex];
-				if(_node.show_in_recent) 
-					ds_list_add(node_list, _node);
-			}
-			
-			ds_list_add(node_list, "Recents");
-			if(is_array(global.RECENT_NODES))
-			for( var i = 0, n = array_length(global.RECENT_NODES); i < n; i++ ) {
-				var _nodeIndex = global.RECENT_NODES[i];
-				if(!ds_map_exists(ALL_NODES, _nodeIndex)) continue;
-				
-				var _node = ALL_NODES[? _nodeIndex];
-				if(_node.show_in_recent) 
-					ds_list_add(node_list, _node);
-			}
-		} else {
-			var _l = category[| ADD_NODE_PAGE].list;
-			for( var i = 0, n = ds_list_size(_l); i < n; i++ ) 
-				ds_list_add(node_list, _l[| i]);
-		}
+		if(!_call_input || _from == noone) return;
 		
-		for( var i = 0, n = ds_list_size(node_list); i < n; i++ ) {
-			var _node = node_list[| i];
-			if(!is_string(_node)) continue;
-			if(string_starts_with(_node, "/")) continue;
+		for(var i = 0; i < array_length(_inputs); i++) {
+			var _target = _inputs[i]; 
 			
-			array_push(subgroups, _node);
+			if(_target.isConnectableStrict(_from) == 1) {
+				_target.setFrom(_from);
+				break;
+			}
 		}
-		setSubgroup(0);
-	}
-	
-	function setSubgroup(_subg) {
-		subgroup_index = _subg;
 	}
 #endregion
 
@@ -1170,19 +1185,22 @@ event_inherited();
 					search_pane.hover_content = true;
 					node_selecting = i;
 					
-					if(mouse_release(mb_left, sFOCUS))
-						buildNode(_node, _param);
-					else if(struct_has(_node, "node") && mouse_release(mb_right, right_free && sFOCUS))
-						rightClick(_node);
+					node_icon   = _node.spr;
+					node_icon_x = search_pane.x + pd + list_height / 2 + ui(32);
+					node_icon_y = search_pane.y + yy + list_height / 2;
+					
+					if(sFOCUS) {
+						if(mouse_release(mb_left))
+							buildNode(_node, _param);
+							
+						if(struct_has(_node, "node") && mouse_release(mb_right, right_free))
+							rightClick(_node);
+					}
 				}
 				
 				if(node_selecting == i) {
 					draw_sprite_stretched_ext(THEME.node_bg, 1, pd, yy, list_width - pd * 2, list_height, COLORS._main_accent, 1);
 					if(keyboard_check_pressed(vk_enter)) buildNode(_node, _param);
-						
-					node_icon   = _node.spr;
-					node_icon_x = search_pane.x + pd + list_height / 2 + ui(32);
-					node_icon_y = search_pane.y + yy + list_height / 2;
 				}
 				
 				var tx;

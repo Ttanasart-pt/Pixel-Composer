@@ -21,9 +21,9 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(6, nodeValue_Vec2("Fixed dimension", self, DEF_SURF ))
 		.setVisible(true, false);
 	
-	newInput(7, nodeValue_Enum_Button("Horizontal alignment", self,  0 , [ THEME.inspector_text_halign, THEME.inspector_text_halign, THEME.inspector_text_halign]));
+	newInput(7, nodeValue_Enum_Button("H align", self,  0 , [ THEME.inspector_text_halign, THEME.inspector_text_halign, THEME.inspector_text_halign]));
 	
-	newInput(8, nodeValue_Enum_Button("Vertical alignment", self,  0 , [ THEME.inspector_text_valign, THEME.inspector_text_valign, THEME.inspector_text_valign ]));
+	newInput(8, nodeValue_Enum_Button("V align", self,  0 , [ THEME.inspector_text_valign, THEME.inspector_text_valign, THEME.inspector_text_valign ]));
 	
 	newInput(9, nodeValue_Enum_Scroll("Output dimension", self,  1 , [ "Fixed", "Dynamic" ]));
 	
