@@ -1,6 +1,5 @@
 function Node_Surface_data(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name	= "Surface data";
-	color	= COLORS.node_blend_number;
 	
 	newInput(0, nodeValue_Surface("Surface", self));
 	
@@ -39,5 +38,10 @@ function Node_Surface_data(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		_outData[5] = surface_format_get_channel(_frm);
 		
 		return _outData;
+	}
+	
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+		var bbox = drawGetBbox(xx, yy, _s);
+		draw_sprite_bbox_uniform(s_node_surface_data, 0, bbox);
 	}
 }

@@ -3,28 +3,29 @@ event_inherited();
 
 #region data
 	draggable = false;
+	dialog_w  = PREFERENCES.dialog_add_node_w;
+	dialog_h  = PREFERENCES.dialog_add_node_h;
+	destroy_on_click_out = true;
 	
 	title = "Add node";
 	node_target_x	  = 0;
 	node_target_y	  = 0;
 	node_target_x_raw = 0;
 	node_target_y_raw = 0;
-	node_called		  = noone;
-	junction_hovering = noone;
 	
-	dialog_w = PREFERENCES.dialog_add_node_w;
-	dialog_h = PREFERENCES.dialog_add_node_h;
-	
-	destroy_on_click_out = true;
+	junction_called   = noone;
 	
 	node_list      = ds_list_create();
 	node_selecting = 0;
 	node_focusing  = -1;
 	
-	node_show_connectable = true;
+	node_show_connectable = false;
 	node_tooltip   = noone;
 	node_tooltip_x = 0;
 	node_tooltip_y = 0;
+	node_icon      = noone;
+	node_icon_x    = 0;
+	node_icon_y    = 0;
 	
 	anchor = ANCHOR.left | ANCHOR.top;
 	node_menu_selecting = noone;
@@ -44,7 +45,8 @@ event_inherited();
 	canvas    = false;
 	collapsed = {};
 	
-	subgroups = [];
+	subgroups      = [];
+	subgroups_size = [];
 	subgroup_index = 0;
 	
 	view_tooltip = new tooltipSelector("View", [
@@ -104,57 +106,14 @@ event_inherited();
 		menuCall("add_node_window_menu", menu, 0, 0, fa_left);
 	}
 	
-	function filtered(node) {
-		if(!node_show_connectable) return true;
-		if(node_called == noone && junction_hovering == noone) return true;
-		if(!struct_has(node, "node")) return true;
-		if(!struct_has(global.NODE_GUIDE, node.node)) return true;
+	function checkValid(node, skipConnect = false) {
+		if(!is(node, NodeObject))             return true;
+		if(node.patreon && !IS_PATREON)       return false;
+		if(!node.show_in_global && is_global) return false;
+		if(skipConnect || junction_called == noone || !node_show_connectable) return true;
 		
-		if(is_instanceof(node, NodeObject)) {
-			if(node.is_patreon_extra && !IS_PATREON) return true;
-			if(is_global && !node.show_in_global)    return true;
-		}
-		
-		var io = global.NODE_GUIDE[$ node.node];
-		
-		if(node_called) {
-			var call_in = node_called.connect_type == CONNECT_TYPE.input;
-			var ar = call_in? io.outputs : io.inputs;
-			var typ = node_called.type;
-			
-			for( var i = 0, n = array_length(ar); i < n; i++ ) {
-				if(!ar[i].visible) continue;
-				
-				var _in = call_in? node_called.type : ar[i].type;
-				var _ot = call_in? ar[i].type : node_called.type;
-				
-				if(typeCompatible(_in, _ot, false)) return true;
-			}
-			
-			return false;
-		} else if(junction_hovering) {
-			var to = junction_hovering.type;
-			var fr = junction_hovering.value_from.type;
-			
-			for( var i = 0, n = array_length(io.inputs); i < n; i++ ) {
-				var _in = fr;
-				var _ot = io.inputs[i].type;
-				if(!io.inputs[i].visible) continue;
-				
-				if(typeCompatible(_in, _ot, false)) return true;
-			}
-			
-			for( var i = 0, n = array_length(io.outputs); i < n; i++ ) {
-				var _in = io.outputs[i].type;
-				var _ot = to;
-				
-				if(typeCompatible(_in, _ot, false)) return true;
-			}
-			
-			return false;
-		}
-		
-		return false;
+		var _b = junction_called.connect == CONNECT_TYPE.input? node.output_type_mask : node.input_type_mask;
+		return bool(_b & value_bit(junction_called.type));
 	}
 	
 	function buildNode(_node, _param = {}) {
@@ -167,14 +126,6 @@ event_inherited();
 			UNDO_HOLDING = true;
 			context.nodeTool = new canvas_tool_node(context, _node).init();
 			UNDO_HOLDING = false;
-			return;
-		}
-		
-		if(is_instanceof(_node, AddNodeItem)) {
-			_node.onClick({
-				node_called,
-				junction_hovering
-			});
 			return;
 		}
 		
@@ -257,61 +208,25 @@ event_inherited();
 			}
 		}
 		
-		//try to connect
-		if(node_called != noone) { //dragging from junction
-			var _call_input = node_called.connect_type == CONNECT_TYPE.input;
-			var _junc_list  = _call_input? _outputs : _inputs;
+		if(junction_called == noone) return;
+		
+		//connect to called junction
+		var _call_input = junction_called.connect_type == CONNECT_TYPE.input;
+		var _junc_list  = _call_input? _outputs : _inputs;
+		
+		for(var i = 0; i < array_length(_junc_list); i++) {
+			var _target = _junc_list[i]; 
+			if(!_target.auto_connect) continue;
 			
-			for(var i = 0; i < array_length(_junc_list); i++) {
-				var _target = _junc_list[i]; 
-				if(!_target.auto_connect) continue;
-				
-				if(_call_input && node_called.isConnectableStrict(_junc_list[i]) == 1) {
-					node_called.setFrom(_junc_list[i]);
-					_new_node.x -= _new_node.w;
-					break;
-				} 
-				
-				if(!_call_input && _junc_list[i].isConnectableStrict(node_called) == 1) {
-					_junc_list[i].setFrom(node_called);
-					break;
-				}
-			}
+			if(_call_input && junction_called.isConnectableStrict(_junc_list[i]) == 1) {
+				junction_called.setFrom(_junc_list[i]);
+				_new_node.x -= _new_node.w;
+				break;
+			} 
 			
-		} else if(junction_hovering != noone) { //right click on junction
-			var to   = junction_hovering;
-			var from = junction_hovering.value_from;
-			
-			for( var i = 0; i < array_length(_inputs); i++ ) {
-				var _in = _inputs[i];
-				if(_in.auto_connect && _in.isConnectableStrict(from)) {
-					_in.setFrom(from);
-					break;
-				}
-			}
-				
-			for( var i = 0; i < array_length(_outputs); i++ ) {
-				var _ot = _outputs[i];
-				if(to.isConnectableStrict(_ot)) {
-					to.setFrom(_ot);
-					break;
-				}
-			}
-			
-			if(_new_node) {
-				var _fx = from.node.x, _fy = from.node.y;
-				var _tx =   to.node.x, _ty =   to.node.y;
-				var _ny = node_target_y_raw;
-				
-				if(_tx > _fx) {
-					var _rt = abs((_ny - _fy) / (_ty - _fy));
-					
-						 if(_rt < 0.3) _new_node.y = _fy;
-					else if(_rt > 0.7) {
-						_new_node.y = _ty;
-						// _new_node.x = min(_new_node.x, _tx - _new_node.w - 32);
-					}
-				}
+			if(!_call_input && _junc_list[i].isConnectableStrict(junction_called) == 1) {
+				_junc_list[i].setFrom(junction_called);
+				break;
 			}
 		}
 	}
@@ -339,10 +254,10 @@ event_inherited();
 		} else if(ADD_NODE_PAGE == NODE_PAGE_DEFAULT && category == NODE_CATEGORY) { // page 0 global context
 			var sug = [];
 			
-			if(node_called != noone) {
+			if(junction_called != noone) {
 				array_append(sug, nodeReleatedQuery(
-					node_called.connect_type == CONNECT_TYPE.input? "connectTo" : "connectFrom", 
-					node_called.type
+					junction_called.connect_type == CONNECT_TYPE.input? "connectTo" : "connectFrom", 
+					junction_called.type
 				));
 			}
 			
@@ -502,21 +417,23 @@ event_inherited();
 		var hh = 0 + ui(4);
 		var hg = line_get_height(f_p2, 6);
 		
-		var ww = subcatagory_pane.surface_w;
+		var  ww     = subcatagory_pane.surface_w;
 		var _hover  = subcatagory_pane.hover;
 		var _active = subcatagory_pane.active;
 		
 		for( var i = 0, n = array_length(subgroups); i < n; i++ ) {
-			
 			var _hv = _hover && point_in_rectangle(_m[0], _m[1], 0, yy, ww, yy + hg - ui(1)); 
+			var _sz = array_safe_get(subgroups_size, i, 1);
+			if(_sz == 0) continue;
 			
 			if(_hv) {
 				draw_sprite_stretched_add(THEME.ui_panel_bg, 0, ui(4), yy, ww - ui(4), hg, CDEF.main_white, .2);
 				if(mouse_click(mb_left, _active)) setSubgroup(i);
 			}
 			
-			var _f = i == subgroup_index? f_p2b : f_p2;
-			var _c = i == subgroup_index? COLORS._main_text_accent : CDEF.main_ltgrey;
+			var _f  = i == subgroup_index? f_p2b : f_p2;
+			var _bc = CDEF.main_ltgrey;
+			var _c  = i == subgroup_index? COLORS._main_text_accent : _bc;
 			
 			draw_set_text(_f, fa_left, fa_top, _c);
 			draw_text_add(ui(12), yy + ui(2), subgroups[i]);
@@ -544,21 +461,23 @@ event_inherited();
 		}
 		
 		var _subg_cur = -1;
+		subgroups_size = array_create(array_length(subgroups), 0);
+		
 		for( var i = 0, n = ds_list_size(node_list); i < n; i++ ) {
 			var _n = node_list[| i];
-			
+			if(!checkValid(_n)) continue;
+				
 			if(PREFERENCES.dialog_add_node_grouping != 2 || array_empty(subgroups)) {
 				ds_list_add(_list, _n); 
 				continue;
 			}
 			
-			if(is_string(_n) && !string_starts_with(_n, "/")) {
+			if(is_string(_n) && !string_starts_with(_n, "/"))
 				_subg_cur++
-				if(_subg_cur > subgroup_index) break;
-				
-			} else if(_subg_cur == subgroup_index) {
+			else if(_subg_cur == subgroup_index)
 				ds_list_add(_list, _n);
-			}
+			
+			if(is(_n, NodeObject) && _subg_cur >= 0) subgroups_size[_subg_cur]++;
 		}
 		
 		var node_count    = ds_list_size(_list);
@@ -586,7 +505,7 @@ event_inherited();
 				var _node = _list[| index];
 				if(is_undefined(_node)) continue;
 				if(is_instanceof(_node, NodeObject)) {
-					if(_node.is_patreon_extra && !IS_PATREON) continue;
+					if(_node.patreon && !IS_PATREON) continue;
 					if(is_global && !_node.show_in_global)    continue;
 				}
 				
@@ -619,8 +538,6 @@ event_inherited();
 					}
 					continue;
 				}
-				
-				if(!filtered(_node)) continue;
 				
 				var _nx   = grid_space + (grid_width + grid_space) * cProg;
 				var _boxx = _nx + (grid_width - grid_size) / 2;
@@ -772,7 +689,7 @@ event_inherited();
 				var _node = _list[| i];
 				if(is_undefined(_node)) continue;
 				if(is_instanceof(_node, NodeObject)) {
-					if(_node.is_patreon_extra && !IS_PATREON) continue;
+					if(_node.patreon && !IS_PATREON) continue;
 					if(is_global && !_node.show_in_global)    continue;
 				}
 				
@@ -804,12 +721,13 @@ event_inherited();
 					continue;
 				}
 				
-				if(!filtered(_node)) continue;
-				
 				if(++bg_ind % 2) draw_sprite_stretched_add(THEME.node_bg, 0, pd, yy, list_width - pd * 2, list_height, c_white, 0.1);
 				
 				if(_hoverContent && point_in_rectangle(_m[0], _m[1], pd + ui(16 * 2), yy, list_width, yy + list_height - 1)) {
 					content_pane.hover_content = true;
+					node_icon      = _node.spr;
+					node_icon_x    = content_pane.x + pd + list_height / 2 + ui(32);
+					node_icon_y    = content_pane.y + yy + list_height / 2;
 					
 					draw_sprite_stretched_ext(THEME.node_bg, 1, pd, yy, list_width - pd * 2, list_height, COLORS._main_accent, 1);
 					
@@ -946,6 +864,7 @@ event_inherited();
 		ADD_NODE_PAGE = 0;
 	
 	setPage(ADD_NODE_PAGE);
+	run_in(1, function() /*=>*/ { setPage(ADD_NODE_PAGE) });
 #endregion
 
 #region resize
@@ -996,22 +915,19 @@ event_inherited();
 			var _content = cat.list;
 			for(var j = 0; j < ds_list_size(_content); j++) {
 				var _node = _content[| j];
-
+				
 				if(is_string(_node))					continue;
 				if(ds_map_exists(search_map, _node))	continue;
 				
 				var match = string_partial_match_res(string_lower(_node.getName()), search_lower, search_split);
 				
 				if(is_instanceof(_node, NodeObject)) {
-					if(_node.is_patreon_extra && !IS_PATREON) continue;
-					if(is_global && !_node.show_in_global)    continue;
-					if(_node.deprecated)					  continue;
-					
-					if(match[0] > -9000 && struct_exists(global.FAV_NODES, _node.node)) match[0] += 10000;
+					if(_node.deprecated) continue;
+					if(match[0] > -9000 && struct_exists(global.FAV_NODES, _node.node)) 
+						match[0] += 10000;
 				}
 				
 				var param = "";
-				
 				for( var k = 0; k < array_length(_node.tags); k++ ) {
 					var mat = string_partial_match_res(_node.tags[k], search_lower, search_split);
 					if(mat[0] - 10 > match[0]) {
@@ -1091,6 +1007,8 @@ event_inherited();
 					_mrng        = s_res[2][1];
 				} else
 					_node = s_res;
+					
+				if(!checkValid(_node, false)) continue;
 				
 				_param.search_string = highlight? search_string : 0;
 				_param.query = _query;
@@ -1218,20 +1136,17 @@ event_inherited();
 			
 			var list_width  = search_pane.surface_w;
 			var list_height = ui(28);
-			var sy = _y + list_height / 2;
-			var pd = ui(8);
-			hh += list_height * (amo + 1);
+			var sy  = _y + list_height / 2;
+			var pd  = ui(8);
+			var ind = 0;
 			
 			for(var i = 0; i < amo; i++) {
 				var s_res  = search_list[| i];
-				var yy     = sy + list_height * i;
+				var  yy    = sy + list_height * ind;
 				var _node  = noone;
 				var _param = {};
 				var _query = "";
 				var _mrng  = noone;
-				
-				if(yy < -list_height)  continue;
-				if(yy > search_pane.h) break;
 				
 				if(is_array(s_res)) {
 					_node        = s_res[0];
@@ -1239,7 +1154,11 @@ event_inherited();
 					_mrng        = s_res[2][1];
 				} else
 					_node = s_res;
+					
+				if(!checkValid(_node, false)) continue;
+				ind++;
 				
+				if(yy < -list_height || yy > search_pane.h) continue;
 				_param.search_string = highlight? search_string : 0;
 				_param.query = _query;
 				_param.range = _mrng;
@@ -1259,8 +1178,11 @@ event_inherited();
 				
 				if(node_selecting == i) {
 					draw_sprite_stretched_ext(THEME.node_bg, 1, pd, yy, list_width - pd * 2, list_height, COLORS._main_accent, 1);
-					if(keyboard_check_pressed(vk_enter))
-						buildNode(_node, _param);
+					if(keyboard_check_pressed(vk_enter)) buildNode(_node, _param);
+						
+					node_icon   = _node.spr;
+					node_icon_x = search_pane.x + pd + list_height / 2 + ui(32);
+					node_icon_y = search_pane.y + yy + list_height / 2;
 				}
 				
 				var tx;
@@ -1342,6 +1264,6 @@ event_inherited();
 				search_pane.scroll_y_to = min(search_pane.scroll_y_to, -list_height * node_selecting - s_sfz + search_pane.h);
 		}
 		
-		return hh;
+		return list_height * (ind + 1);
 	});
 #endregion

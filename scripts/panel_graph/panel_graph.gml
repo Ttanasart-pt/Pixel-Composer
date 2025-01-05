@@ -1917,7 +1917,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                     node_target_y     = other.mouse_grid_y;
                     node_target_x_raw = other.mouse_grid_x;
                     node_target_y_raw = other.mouse_grid_y;
-                    node_called       = other.value_dragging;
+                    junction_called   = other.value_dragging;
                     
                     alarm[0] = 1;
                 }
@@ -2137,7 +2137,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
             node_target_y     = other.mouse_grid_y;
             node_target_x_raw = other.mouse_grid_x;
             node_target_y_raw = other.mouse_grid_y;
-            junction_hovering = other.junction_hovering;
+            junction_called   = other.junction_hovering;
             
             resetPosition();
             alarm[0] = 1;

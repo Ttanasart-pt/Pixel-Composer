@@ -245,7 +245,7 @@ function Panel_Collection() : PanelContent() constructor {
 						if(is_string(_node))				      continue;
 						if(ds_map_exists(search_map, _node))      continue;
 						if(!is_instanceof(_node, NodeObject))     continue;
-						if(_node.is_patreon_extra && !IS_PATREON) continue;
+						if(_node.patreon && !IS_PATREON) continue;
 						if(_node.deprecated)					  continue;
 						
 						var match = string_partial_match(string_lower(_node.getName()), search_lower);
@@ -638,7 +638,7 @@ function Panel_Collection() : PanelContent() constructor {
 			var _node = _list[| index];
 			
 			if(!is_instanceof(_node, NodeObject))     continue;
-			if(_node.is_patreon_extra && !IS_PATREON) continue;
+			if(_node.patreon && !IS_PATREON) continue;
 			if(_node.deprecated)					  continue;
 			
 			i = floor(ii / col);

@@ -3299,6 +3299,7 @@
     {"id":{"name":"s_node_struct_json_parse","path":"sprites/s_node_struct_json_parse/s_node_struct_json_parse.yy",},},
     {"id":{"name":"s_node_struct_set","path":"sprites/s_node_struct_set/s_node_struct_set.yy",},},
     {"id":{"name":"s_node_struct","path":"sprites/s_node_struct/s_node_struct.yy",},},
+    {"id":{"name":"s_node_surface_data","path":"sprites/s_node_surface_data/s_node_surface_data.yy",},},
     {"id":{"name":"s_node_surface_from_buffer","path":"sprites/s_node_surface_from_buffer/s_node_surface_from_buffer.yy",},},
     {"id":{"name":"s_node_surface_replace","path":"sprites/s_node_surface_replace/s_node_surface_replace.yy",},},
     {"id":{"name":"s_node_surface_to_buffer","path":"sprites/s_node_surface_to_buffer/s_node_surface_to_buffer.yy",},},

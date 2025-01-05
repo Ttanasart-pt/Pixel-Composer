@@ -2625,6 +2625,7 @@
     {"name":"s_node_struct_json_parse","order":84,"path":"sprites/s_node_struct_json_parse/s_node_struct_json_parse.yy",},
     {"name":"s_node_struct_set","order":87,"path":"sprites/s_node_struct_set/s_node_struct_set.yy",},
     {"name":"s_node_struct","order":85,"path":"sprites/s_node_struct/s_node_struct.yy",},
+    {"name":"s_node_surface_data","order":137,"path":"sprites/s_node_surface_data/s_node_surface_data.yy",},
     {"name":"s_node_surface_from_buffer","order":67,"path":"sprites/s_node_surface_from_buffer/s_node_surface_from_buffer.yy",},
     {"name":"s_node_surface_replace","order":42,"path":"sprites/s_node_surface_replace/s_node_surface_replace.yy",},
     {"name":"s_node_surface_to_buffer","order":68,"path":"sprites/s_node_surface_to_buffer/s_node_surface_to_buffer.yy",},

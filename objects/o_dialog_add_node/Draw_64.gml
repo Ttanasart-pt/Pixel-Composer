@@ -49,7 +49,7 @@ if(DIALOG_SHOW_FOCUS) DIALOG_DRAW_FOCUS
 		tw -= ui(32);
 	}
 	
-	if(node_called != noone || junction_hovering != noone) tw -= ui(32);
+	if(junction_called != noone) tw -= ui(32);
 	
 	tb_search.draw(tx, ty, tw, th, search_string, mouse_ui);
 	
@@ -73,7 +73,7 @@ if(DIALOG_SHOW_FOCUS) DIALOG_DRAW_FOCUS
 	}
 	if(b == 2) mod_inc_mf0 PREFERENCES.dialog_add_node_grouping mod_inc_mf1 PREFERENCES.dialog_add_node_grouping mod_inc_mf2  3 mod_inc_mf3;
 	
-	if(node_called != noone || junction_hovering != noone) {
+	if(junction_called != noone) {
 		var txt = node_show_connectable? __txtx("add_node_show_connect", "Showing connectable") : __txtx("add_node_show_all", "Showing all");
 		var cc  = node_show_connectable? COLORS._main_accent : COLORS._main_icon;
 		bx -= ui(32);
@@ -132,9 +132,24 @@ if(DIALOG_SHOW_FOCUS) DIALOG_DRAW_FOCUS
 		draw_sprite_stretched(THEME.textbox, 3, x0, y0, ww, hh);
 		draw_surface(tooltip_surface, x0, y0);
 		draw_sprite_stretched(THEME.textbox, 0, x0, y0, ww, hh);
+		node_tooltip = noone;
 	}
 	
-	node_tooltip = noone;
+	if(node_icon != noone) {
+		var _sx = node_icon_x - ui(16);
+		var _sy = node_icon_y;
+		
+		var _sw = sprite_get_width(node_icon)  + ui(48);
+		var _sh = sprite_get_height(node_icon) + ui(48);
+		
+		var _bgx = _sx - _sw / 2;
+		var _bgy = _sy - _sh / 2;
+		
+		draw_sprite_stretched(s_node_junction_name_bg, 0, _bgx, _bgy, _sw, _sh);
+		draw_sprite_ext(node_icon, 0, _sx, _sy, 1, 1);
+		node_icon = noone;
+	}
+	
 	ADD_NODE_SCROLL = content_pane.scroll_y_to;
 	
 	if(mouse_release(mb_right))
