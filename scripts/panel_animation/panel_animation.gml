@@ -1334,10 +1334,10 @@ function Panel_Animation() : PanelContent() constructor {
                         break;
                     
                     default :
-                        var dialog = dialogCall(o_dialog_color_selector, WIN_W / 2, WIN_H / 2);
-                        dialog.setDefault(keyframe.value);
-                        dialog.selector.onApply = function(val) { __keyframe_editing.value = val; };
-                        dialog.onApply          = function(val) { __keyframe_editing.value = val; };
+                        var dialog = dialogCall(o_dialog_color_selector)
+                        				.setDefault(keyframe.value)
+                        				.setApply(function(val) /*=>*/ { __keyframe_editing.value = val; });
+                        
                         dialog.drop_target      = _wid;
                 }
                 break;

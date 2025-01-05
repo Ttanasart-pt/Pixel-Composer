@@ -371,10 +371,9 @@ function Panel_Palette_Mixer() : PanelContent() constructor {
 					if(DOUBLE_CLICK) {
 						node_selecting = node_hovering;
 						
-						var dialog = dialogCall(o_dialog_color_selector, WIN_W / 2, WIN_H / 2);
-						dialog.selector.onApply = setColor;
-						dialog.onApply = setColor;
-						dialog.setDefault(node_selecting.color);
+						var dialog = dialogCall(o_dialog_color_selector)
+										.setDefault(node_selecting.color)
+										.setApply(setColor);
 						
 						save_palette_mixer(palette_data);
 					}
@@ -458,10 +457,9 @@ function Panel_Palette_Mixer() : PanelContent() constructor {
 						array_push(palette_data.nodes, _node);
 						node_selecting = _node;
 						
-						var dialog = dialogCall(o_dialog_color_selector, WIN_W / 2, WIN_H / 2);
-						dialog.selector.onApply = setColor;
-						dialog.onApply = setColor;
-						dialog.setDefault(node_selecting.color);
+						var dialog = dialogCall(o_dialog_color_selector)
+										.setDefault(node_selecting.color)
+										.setApply(setColor);
 						
 						save_palette_mixer(palette_data);
 					}

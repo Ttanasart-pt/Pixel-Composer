@@ -40,11 +40,9 @@ function dialogPanelCall(_panel, _x = noone, _y = noone, params = {}) {
 }
 
 function colorSelectorCall(defColor, onApply) {
-	var dialog = dialogCall(o_dialog_color_selector);
-	
-	dialog.setDefault(defColor);
-	dialog.selector.onApply = onApply;
-	dialog.onApply          = onApply;
+	var dialog = dialogCall(o_dialog_color_selector)
+					.setDefault(defColor)
+					.setApply(onApply);
 	
 	return dialog;
 }

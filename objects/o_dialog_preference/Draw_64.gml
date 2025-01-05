@@ -68,7 +68,7 @@ if !ready exit;
 		
 	} else if(page_current == 3) {
 		var _w = ui(200);
-		var _h = TEXTBOX_HEIGHT;
+		var _h = ui(32);
 		
 		var _x   = dialog_x + dialog_w - ui(8);
 		var bx   = _x - ui(48);

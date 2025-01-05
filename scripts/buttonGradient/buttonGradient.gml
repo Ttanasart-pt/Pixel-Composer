@@ -25,17 +25,16 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 		dialog.interactable = interactable;
 		dialog.drop_target  = self;
 		
-		if(parentDialog)
-			parentDialog.addChildren(dialog);
+		if(parentDialog) parentDialog.addChildren(dialog);
 	}
 	
 	static triggerSingle = function(_index) {
 		edit_color_index = _index;
 		
-		var dialog = dialogCall(o_dialog_color_selector, WIN_W / 2, WIN_H / 2);
-		dialog.setDefault(edit_color_index.value);
-		dialog.selector.onApply = editColor;
-		dialog.onApply = editColor;
+		var dialog = dialogCall(o_dialog_color_selector)
+						.setDefault(edit_color_index.value)
+						.setApply(editColor);
+		
 		dialog.interactable = interactable;
 	}
 	

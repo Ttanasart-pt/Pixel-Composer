@@ -110,13 +110,13 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			_x2 -= ui(32 + 4);
 			by   = _y0 + ss / 2 - ui(32) / 2;
 			if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), _m, _hover, _focus,, THEME.color_picker_dropper,, c_white) == 2) {
-				var dialog = dialogCall(o_dialog_color_selector, WIN_W / 2, WIN_H / 2);
+				var dialog = dialogCall(o_dialog_color_selector)
+								.setApply(setColor);
+								
 				dialog.selector.dropper_active = true;
 				dialog.selector.dropper_close  = true;
 			
 				palette_select = [ i, i ];
-				dialog.selector.onApply = setColor;
-				dialog.onApply = setColor;
 			}
 			
 			bx   = _x2 - ui(32);
@@ -170,10 +170,9 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 				palette_selecting = 2;
 				palette_select    = [ _mn, _mx ];
 				
-				var dialog = dialogCall(o_dialog_color_selector, WIN_W / 2, WIN_H / 2);
-				dialog.setDefault(_to[palette_select[0]]);
-				dialog.selector.onApply = setColor;
-				dialog.onApply = setColor;
+				var dialog = dialogCall(o_dialog_color_selector)
+								.setDefault(_to[palette_select[0]])
+								.setApply(setColor);
 			}
 		}
 		

@@ -28,10 +28,10 @@ function buttonPalette(_onApply, dialog = noone) : widget() constructor {
 		edit_color_index = _index;
 		current_palette  = array_clone(current_palette);
 		
-		var dialog = dialogCall(o_dialog_color_selector, WIN_W / 2, WIN_H / 2);
-		dialog.setDefault(current_palette[edit_color_index]);
-		dialog.selector.onApply = editColor;
-		dialog.onApply = editColor;
+		var dialog = dialogCall(o_dialog_color_selector)
+							.setDefault(current_palette[edit_color_index])
+							.setApply(editColor);
+		
 		dialog.interactable = interactable;
 	}
 	

@@ -165,10 +165,9 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			if(_hov && mouse_press(mb_left, _focus)) {
 				flare_color_editing = i;
 				
-				var dialog = dialogCall(o_dialog_color_selector, WIN_W / 2, WIN_H / 2);
-				dialog.selector.onApply = edit_flare_color;
-				dialog.onApply = edit_flare_color;
-				dialog.setDefault(_flare.blend);
+				var dialog = dialogCall(o_dialog_color_selector)
+								.setDefault(_flare.blend)
+								.setApply(edit_flare_color);
 			}
 			_ffx += _ffw + ui(4);
 			

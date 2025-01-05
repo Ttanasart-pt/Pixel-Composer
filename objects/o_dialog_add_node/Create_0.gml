@@ -704,7 +704,7 @@ event_inherited();
 				if(is_undefined(_node)) continue;
 				if(is_instanceof(_node, NodeObject)) {
 					if(_node.patreon && !IS_PATREON) continue;
-					if(is_global && !_node.show_in_global)    continue;
+					if(is_global && !_node.show_in_global) continue;
 				}
 				
 				if(is_string(_node)) {

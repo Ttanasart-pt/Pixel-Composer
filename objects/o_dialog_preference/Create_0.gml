@@ -48,7 +48,8 @@ event_inherited();
 	page[4] = __txt("Hotkeys");
 	
 	section_current = "";
-	sections = array_create(array_length(page));
+	sections  = array_create(array_length(page));
+	collapsed = {};
 	
 	sp_page = new scrollPane(page_width - ui(4), panel_height, function(_y, _m, _r) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 1);
@@ -187,7 +188,7 @@ event_inherited();
 		));
 		
 		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
-			__txtx("pref_save_backups", "Backup saves"),
+			__txtx("pref_save_backups", "Backup save(s) amount"),
 			"save_backup",
 			new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ { PREFERENCES.save_backup = max(0, val);  PREF_SAVE(); })
 		));
@@ -553,7 +554,7 @@ event_inherited();
 		));
 		
 		ds_list_add(pref_node, new __Panel_Linear_Setting_Item_Preference(
-			__txtx("pref_node_3d_preview", "Preview surface size"),
+			__txtx("pref_node_3d_preview", "3D Preview resolution"),
 			"node_3d_preview_size",
 			new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ { PREFERENCES.node_3d_preview_size = clamp(val, 16, 1024); PREF_SAVE(); })
 		));
@@ -570,25 +571,27 @@ event_inherited();
 	themes = [];
 	var f = file_find_first(DIRECTORY + "Themes/*", fa_directory);
 	while(f != "") {
+		var _file = f;
 		var _path = $"{DIRECTORY}Themes/{f}";
-		if(directory_exists(_path)) {
-			var _metaPath = _path + "/meta.json";
-			if(!file_exists_empty(_metaPath)) {
-				var _item = new scrollItem(f, THEME.circle, 0, COLORS._main_accent);
-				    _item.tooltip   = "Theme made for earlier version.";
-				array_push(themes, _item);
-			} else {
-				var _meta = json_load_struct(_metaPath);
-				var _item = new scrollItem(_meta.name, _meta.version >= VERSION? noone : THEME.circle, 0, COLORS._main_accent);
-				    _item.data      = f;
-					
-				if(_meta.version < VERSION)
-				    _item.tooltip = "Theme made for earlier version.";
-				array_push(themes, _item);
-			}
-		}
-		
 		f = file_find_next();
+		
+		if(!directory_exists(_path)) continue;
+		
+		var _metaPath = $"{_path}/meta.json";
+		
+		if(!file_exists_empty(_metaPath)) {
+			var _item = new scrollItem(_file, THEME.circle, 0, COLORS._main_accent)
+							.setTooltip("Theme made for earlier version.");
+			array_push(themes, _item);
+			continue;
+		} 
+		
+		var _meta = json_load_struct(_metaPath);
+		var _item = new scrollItem(_meta.name, _meta.version >= VERSION? noone : THEME.circle, 0, COLORS._main_accent);
+		    _item.data = _file;
+			
+		if(_meta.version < VERSION) _item.tooltip = "Theme made for earlier version.";
+		array_push(themes, _item);
 	}
 	file_find_close();
 	
@@ -607,84 +610,134 @@ event_inherited();
 	
 	sp_colors = new scrollPane(panel_width, panel_height - ui(40), function(_y, _m, _r) {
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
+		var ww   = sp_colors.surface_w;
 		var hh	 = 0;
-		var th   = line_get_height(font);
+		
 		var x1	 = sp_colors.surface_w;
 		var yy	 = _y + ui(8);
-		var padd = ui(6);
+		var padx = ui(8);
+		var pady = ui(6);
+		var th   = line_get_height(font);
 		var ind	 = 0;
 		
 		var cp = ui(0)
 		var cw = ui(100);
 		var ch = th - cp * 2;
-		var cx = x1 - cw - ui(8);
+		var cx = x1 - cw - padx * 2 - ui(8);
 		var category = "";
 		
-		var sect = [];
+		var group_labels = [];
+		var sectH = ui(24);
+		var sect  = [];
 		var psect = "";
+		
+		var _search_text = string_lower(search_text);
 		
 		for( var i = 0, n = array_length(COLOR_KEYS); i < n; i++ ) {
 			var key = COLOR_KEYS[i];
-			var val = variable_struct_get(COLORS, key);
+			var val = COLORS[$ key];
 			
-			if(search_text != "" && string_pos(string_lower(search_text), string_lower(key)) == 0)
-				continue;
-				
+			if(_search_text != "" && string_pos(_search_text, string_lower(key)) == 0) continue;
 			if(is_array(val)) continue;
+			
 			var spl = string_splice(key, "_");
 			var cat = spl[0] == ""? spl[1] : spl[0];
+			
 			if(cat != category) {
 				category = cat;
 				var _sect = string_title(category);
-				
-				draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text_sub);
-				draw_text_add(ui(8), yy - ui(4), _sect);
+				var _coll = struct_try_get(collapsed, cat, 0);
 				
 				array_push(sect, [ _sect, sp_colors, hh + ui(12) ]);
-				if(yy >= 0 && section_current == "") 
-					section_current = psect;
+				array_push(group_labels, { y: yy, text: _sect, key: cat });
+				
+				if(yy >= 0 && section_current == "") section_current = psect;
 				psect = _sect;
 				
-				yy += string_height(category) + ui(8);
-				hh += string_height(category) + ui(8);
+				yy += sectH + ui(!_coll * 4 + 4);
+				hh += sectH + ui(!_coll * 4 + 4);
 				ind = 0;
 			}
+		
+			if(struct_try_get(collapsed, cat, 0)) continue;
 			
-			if(ind % 2 == 0) draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, yy - padd, sp_colors.surface_w, th + padd * 2, COLORS.dialog_preference_prop_bg, 1);
+			if(ind % 2) draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, padx, yy - pady, ww - padx * 2, th + pady * 2, COLORS.dialog_preference_prop_bg, .75);
 					
 			var keyStr = string_replace_all(key, "_", " ");
-			keyStr = string_replace(keyStr, cat + " ", "");
-			keyStr = string_title(keyStr);
+			    keyStr = string_replace(keyStr, cat + " ", "");
+			    keyStr = string_title(keyStr);
 			
 			draw_set_text(font, fa_left, fa_center, COLORS._main_text);
-			draw_text_add(ui(24), yy + th / 2, keyStr);
+			draw_text_add(ui(32), yy + th / 2, keyStr);
 			
 			var b = buttonInstant(THEME.button_def, cx, yy + cp, cw, ch, _m, sHOVER, sFOCUS && sp_colors.hover);
 			draw_sprite_stretched_ext(THEME.palette_mask, 1, cx + ui(2), yy + ui(2), cw - ui(4), ch - ui(4), val, 1);
 			
 			if(b) sp_colors.hover_content = true;
 			if(b == 2) {
-				var dialog = dialogCall(o_dialog_color_selector, WIN_W / 2, WIN_H / 2);
-				dialog.setDefault(val);
-				self.key = key;
-				dialog.onApply = function(color) { 
-					COLORS[$ key] = color; 
-					overrideColor(key);
-				};
+				color_selector_key = key;
 				
-				dialog.selector.onApply = dialog.onApply;
-				
-				addChildren(dialog);
+				var clrSelect = dialogCall(o_dialog_color_selector)
+									.setDefault(val)
+									.setApply(function(color) /*=>*/ { COLORS[$ color_selector_key] = color; overrideColor(color_selector_key); });
+									
+				addChildren(clrSelect);
 			}
 			
-			yy += th + padd + ui(6);
-			hh += th + padd + ui(6);
+			yy += th + pady * 2;
+			hh += th + pady * 2;
 			ind++;
 		}
 		
-		sections[page_current] = sect;
+		#region section label
+			var len = array_length(group_labels);
+			if(len && group_labels[0].y < 0) {
+				gpu_set_blendmode(bm_subtract);
+				draw_set_color(c_white);
+				draw_rectangle(0, 0, ww, sectH + ui(8 + 4), false);
+				gpu_set_blendmode(bm_normal);
+			}
+			
+			var _cAll = 0;
+			
+			for( var i = 0; i < len; i++ ) {
+				var lb = group_labels[i];
+				var _name = lb.text;
+				var _key  = lb.key;
+				var _coll = struct_try_get(collapsed, _key, 0);
+				
+				var _yy = max(lb.y, i == len - 1? ui(8) : min(ui(8), group_labels[i + 1].y - ui(32)));
+				var _hv = sHOVER && point_in_rectangle(_m[0], _m[1], 0, _yy, ww, _yy + sectH);
+				var _tc = CDEF.main_ltgrey;
+				
+				BLEND_OVERRIDE
+            	draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, padx, _yy, ww - padx * 2, sectH, _hv? COLORS.panel_inspector_group_hover : COLORS.panel_inspector_group_bg, 1);
+            	
+				if(_hv && sFOCUS) {
+                	if(DOUBLE_CLICK) {
+                		_cAll = _coll? -1 : 1;
+                		
+                	} else if(mouse_press(mb_left)) {
+                    	if(_coll) struct_set(collapsed, _key, 0);
+                    	else      struct_set(collapsed, _key, 1);
+                    }
+                }
+                    
+				BLEND_NORMAL
+				
+				draw_sprite_ui(THEME.arrow, _coll? 0 : 3, padx + ui(16), _yy + sectH / 2, 1, 1, 0, _tc, 1);    
+				
+				draw_set_text(f_p2, fa_left, fa_center, _tc);
+				draw_text_add(padx + ui(28), _yy + sectH / 2, _name);
+			}
+			
+				 if(_cAll ==  1) { for( var i = 0; i < len; i++ ) struct_set(collapsed, group_labels[i].key, 0); } 
+			else if(_cAll == -1) { for( var i = 0; i < len; i++ ) struct_set(collapsed, group_labels[i].key, 1); }
+			
+			sections[page_current] = sect;
+		#endregion
 		
-		return hh;
+		return hh + ui(16);
 	});
 	
 	function overrideColor(key) {
@@ -872,60 +925,63 @@ event_inherited();
 		var th	 = line_get_height(font, 6);
 		var x1	 = sp_pref.surface_w;
 		var yy	 = _y + ui(8);
-		var padd = ui(6);
+		var padx = ui(8);
+		var pady = ui(6);
 		var ind	 = 0;
 		
+		var _search_text = string_lower(search_text);
 		for(var i = 0; i < ds_list_size(current_list); i++) {
 			var _pref = current_list[| i];
 			if(is_string(_pref)) continue;
-			
-			if(search_text != "" && string_pos(string_lower(search_text), string_lower(_pref.name)) == 0)
-				continue;
+			if(search_text != "" && string_pos(_search_text, string_lower(_pref.name)) == 0) continue;
 			
 			_pref.editWidget.register(sp_pref);
 		}
 		
-		var sect = [];
+		var group_labels = [];
+		var sectH = ui(24);
+		var sect  = [];
 		var psect = "";
 		
 		for(var i = 0; i < ds_list_size(current_list); i++) {
 			var _pref = current_list[| i];
 			
 			if(is_string(_pref)) {
-				draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text_sub);
-				draw_text_add(ui(8), yy, _pref);
+				var _coll = struct_try_get(collapsed, _pref, 0);
 				
 				array_push(sect, [ _pref, sp_pref, hh + ui(12) ]);
-				if(yy >= 0 && section_current == "") 
-					section_current = psect;
+				array_push(group_labels, { y: yy, text: _pref, key: _pref });
+				
+				if(yy >= 0 && section_current == "") section_current = psect;
 				psect = _pref;
 				
-				yy += string_height(_pref) + ui(8);
-				hh += string_height(_pref) + ui(8);
+				yy += sectH + ui(!_coll * 4 + 4);
+				hh += sectH + ui(!_coll * 4 + 4);
 				ind = 0;
 				continue;
 			}
 			
+			if(struct_try_get(collapsed, psect, 0)) continue;
+			
 			var name = _pref.name;
 			var data = _pref.data();
 			
-			if(search_text != "" && string_pos(string_lower(search_text), string_lower(name)) == 0)
-				continue;
+			if(search_text != "" && string_pos(_search_text, string_lower(name)) == 0) continue;
 			
-			if(ind % 2 == 0) draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, yy - padd, ww, max(_pref.editWidget.h, th) + padd * 2, COLORS.dialog_preference_prop_bg, 1);
+			if(ind % 2) draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, padx, yy - pady, ww - padx * 2, max(_pref.editWidget.h, th) + pady * 2, COLORS.dialog_preference_prop_bg, .75);
 			
 			if(goto_item == _pref) {
 				if(goto_item_highlight == 2) sp_pref.setScroll(-hh);
 				if(goto_item_highlight == 0) goto_item = noone;
 				
-				draw_sprite_stretched_add(THEME.ui_panel_bg, 0, 0, yy - padd, ww, max(_pref.editWidget.h, th) + padd * 2, COLORS._main_accent, min(1, goto_item_highlight) * 0.5);
+				draw_sprite_stretched_add(THEME.ui_panel_bg, 0, padx, yy - pady, ww - padx * 2, max(_pref.editWidget.h, th) + pady * 2, COLORS._main_accent, min(1, goto_item_highlight) * 0.5);
 			}
 				
 			draw_set_text(font, fa_left, fa_center, COLORS._main_text);
-			draw_text_add(ui(24), yy + th / 2, name);
+			draw_text_add(padx + ui(24), yy + th / 2, name);
 			
 			if(_pref.is_patreon) {
-				var spr_x = ui(20);
+				var spr_x = padx + ui(20);
 				var spr_y = yy + ui(4);
 				
 				BLEND_SUBTRACT
@@ -945,7 +1001,7 @@ event_inherited();
 				 if(is_instanceof(_pref.editWidget, textBox))         widget_w = _pref.editWidget.input == TEXTBOX_INPUT.text? ui(400) : widget_w;
 			else if(is_instanceof(_pref.editWidget, folderArrayBox))  widget_w = ui(400);
 			
-			var widget_x = x1 - ui(4) - widget_w;
+			var widget_x = x1 - padx - ui(4) - widget_w;
 			var widget_y = yy;
 			
 			if(_pref.getDefault != noone)
@@ -962,7 +1018,7 @@ event_inherited();
 			if(_pref.getDefault != noone) {
 				var _defVal = is_method(_pref.getDefault)? _pref.getDefault() : _pref.getDefault;
 				var _bs = ui(32);
-				var _bx = x1 - ui(4) - _bs;
+				var _bx = x1 - padx - ui(4) - _bs;
 				var _by = yy + wdh / 2 - _bs / 2;
 					
 				if(isEqual(data, _defVal))
@@ -973,12 +1029,59 @@ event_inherited();
 				}
 			}
 				
-			yy += wdh + padd + ui(6);
-			hh += wdh + padd + ui(6);
+			yy += wdh + pady + ui(6);
+			hh += wdh + pady + ui(6);
 			ind++;
 		}
 		
-		sections[page_current] = sect;
+		#region section label
+			var len = array_length(group_labels);
+			if(len && group_labels[0].y < 0) {
+				gpu_set_blendmode(bm_subtract);
+				draw_set_color(c_white);
+				draw_rectangle(0, 0, ww, sectH + ui(8 + 4), false);
+				gpu_set_blendmode(bm_normal);
+			}
+			
+			var _cAll = 0;
+			
+			for( var i = 0; i < len; i++ ) {
+				var lb = group_labels[i];
+				var _name = lb.text;
+				var _key  = lb.key;
+				var _coll = struct_try_get(collapsed, _key, 0);
+				
+				var _yy = max(lb.y, i == len - 1? ui(8) : min(ui(8), group_labels[i + 1].y - ui(32)));
+				var _hv = sHOVER && point_in_rectangle(_m[0], _m[1], 0, _yy, ww, _yy + sectH);
+				var _tc = CDEF.main_ltgrey;
+				
+				BLEND_OVERRIDE
+            	draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, padx, _yy, ww - padx * 2, sectH, _hv? COLORS.panel_inspector_group_hover : COLORS.panel_inspector_group_bg, 1);
+            	
+				if(_hv && sFOCUS) {
+                	if(DOUBLE_CLICK) {
+                		_cAll = _coll? -1 : 1;
+                		
+                	} else if(mouse_press(mb_left)) {
+                    	if(_coll) struct_set(collapsed, _key, 0);
+                    	else      struct_set(collapsed, _key, 1);
+                    }
+                }
+                    
+				BLEND_NORMAL
+				
+				draw_sprite_ui(THEME.arrow, _coll? 0 : 3, padx + ui(16), _yy + sectH / 2, 1, 1, 0, _tc, 1);    
+				
+				draw_set_text(f_p2, fa_left, fa_center, _tc);
+				draw_text_add(padx + ui(28), _yy + sectH / 2, _name);
+			}
+			
+				 if(_cAll ==  1) { for( var i = 0; i < len; i++ ) struct_set(collapsed, group_labels[i].key, 0); } 
+			else if(_cAll == -1) { for( var i = 0; i < len; i++ ) struct_set(collapsed, group_labels[i].key, 1); }
+			
+			sections[page_current] = sect;
+		#endregion
+		
 		goto_item_highlight    = lerp_float(goto_item_highlight, 0, 30);
 		
 		return hh;

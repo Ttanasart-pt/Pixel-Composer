@@ -14,9 +14,16 @@ event_inherited();
 	selector       = new colorSelector();
 	drop_target    = noone;
 	
+	function setApply(_onApply) {
+		onApply = _onApply;
+		selector.onApply = _onApply;
+		return self;
+	}
+	
 	function setDefault(color) {
 		selector.setColor(color);
 		previous_color = color;
+		return self;
 	}
 	
 	b_cancel = button(function() {
