@@ -81,7 +81,7 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 			
 			b_picker.setFocusHover(active && !instance_exists(o_dialog_color_quick_pick), hover);
 			
-			b_picker.draw(bx, _y + _h / 2 - _bs / 2, ui(32), _bs, _m, THEME.button_hide);
+			b_picker.draw(bx, _y + _h / 2 - _bs / 2, ui(32), _bs, _m, THEME.button_hide_fill);
 			b_picker.icon_blend = c_white;
 			b_picker.icon_index = 0;
 			if(instance_exists(o_dialog_color_selector) && o_dialog_color_selector.selector.dropper_active && o_dialog_color_selector.drop_target != noone) {
@@ -97,7 +97,7 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 				_cw -= ui(32 + 4);
 			
 				b_quick_pick.setFocusHover(active, hover);
-				b_quick_pick.draw(bx, _y + _h / 2 - _bs / 2, ui(32), _bs, _m, THEME.button_hide);
+				b_quick_pick.draw(bx, _y + _h / 2 - _bs / 2, ui(32), _bs, _m, THEME.button_hide_fill);
 			}
 			
 			_cw -= ui(8);

@@ -427,11 +427,11 @@ function Panel_File_Explorer() : PanelContent() constructor {
 			var _ppw = _pw;
 			
 			if(point_in_rectangle(_m[0], _m[1], _px, _py, _px + _pw, _py + _ph)) {
-				if(buttonInstant(THEME.button_hide, _px + _ppw - _ph, _py, _ph, _ph, _m, pHOVER, pFOCUS, "Set as root", THEME.path_open_20) == 2)
+				if(buttonInstant(THEME.button_hide_fill, _px + _ppw - _ph, _py, _ph, _ph, _m, pHOVER, pFOCUS, "Set as root", THEME.path_open_20) == 2)
 					setRoot(_dir.path);
 				_ppw -= _ph + ui(2);
 				
-				if(buttonInstant(THEME.button_hide, _px + _ppw - _ph, _py, _ph, _ph, _m, pHOVER, pFOCUS, "Copy path", THEME.copy_20) == 2)
+				if(buttonInstant(THEME.button_hide_fill, _px + _ppw - _ph, _py, _ph, _ph, _m, pHOVER, pFOCUS, "Copy path", THEME.copy_20) == 2)
 					clipboard_set_text(_dir.path);
 				_ppw -= _ph + ui(2);
 				
@@ -665,7 +665,7 @@ function Panel_File_Explorer() : PanelContent() constructor {
 		draw_sprite_stretched(THEME.ui_panel_bg, 1, cnt_x, cnt_y, cnt_w, cnt_h);
 		
 		var bs = top_bar - pad - ui(8);
-		if(buttonInstant(THEME.button_hide, pad, pad, bs, bs, [mx, my], pHOVER, pFOCUS, "Go up", THEME.arrow, 1, root != ""? COLORS._main_icon : COLORS._main_icon_dark) == 2)
+		if(buttonInstant(THEME.button_hide_fill, pad, pad, bs, bs, [mx, my], pHOVER, pFOCUS, "Go up", THEME.arrow, 1, root != ""? COLORS._main_icon : COLORS._main_icon_dark) == 2)
 			if(root != "") setRoot(filename_dir(root));
 		
 		var tb_x = cnt_x + ui(32);
@@ -673,7 +673,7 @@ function Panel_File_Explorer() : PanelContent() constructor {
 		var tb_w = w - pad - tb_x - bs - ui(4);
 		var tb_h = top_bar - pad - ui(8);
 		
-		var b = buttonInstant(THEME.button_hide, w - pad - bs, pad, bs, bs, [mx, my], pHOVER, pFOCUS, view_mode_tooltip, THEME.view_mode, !view_mode);
+		var b = buttonInstant(THEME.button_hide_fill, w - pad - bs, pad, bs, bs, [mx, my], pHOVER, pFOCUS, view_mode_tooltip, THEME.view_mode, !view_mode);
 		if(b == 1) {
 			if(key_mod_press(SHIFT) && mouse_wheel_up())   { view_mode = !view_mode; PREFERENCES.file_explorer_view = view_mode; }
 			if(key_mod_press(SHIFT) && mouse_wheel_down()) { view_mode = !view_mode; PREFERENCES.file_explorer_view = view_mode; }

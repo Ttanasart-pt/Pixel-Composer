@@ -90,7 +90,7 @@ function paddingBox(_onModify, _unit = noone) : widget() constructor {
 		
 			var _bx = _x;
 			var _by = _y + _h / 2 - _bs / 2;
-			b_link.draw(_bx, _by, _bs, _bs, _m, THEME.button_hide);
+			b_link.draw(_bx, _by, _bs, _bs, _m, THEME.button_hide_fill);
 		
 			_w -= _bs + ui(4);
 			_x += _bs + ui(4);

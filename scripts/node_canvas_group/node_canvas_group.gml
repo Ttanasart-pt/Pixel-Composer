@@ -40,7 +40,7 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 		var bx = _x;
 		var by = _yy;
 		var bs = ui(24);
-		if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, _hover, _focus, "", THEME.add_16, 0, COLORS._main_value_positive) == 2) 
+		if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, _m, _hover, _focus, "", THEME.add_16, 0, COLORS._main_value_positive) == 2) 
 			layerAdd();
 			
 		_h  += bs + ui(8);

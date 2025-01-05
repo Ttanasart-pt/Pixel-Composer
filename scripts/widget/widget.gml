@@ -150,6 +150,9 @@ function widgetParam(x, y, w, h, data, display_data = {}, m = mouse_ui, rx = 0, 
 	interact   = undefined;
 	scrollpane = undefined;
 	
+	static setX          = function(_x)   { x    = _x;      return self; }
+	static setY          = function(_y)   { y    = _y;      return self; }
+	static setData       = function(d)    { data  = d;      return self; }
 	static setColor      = function(c)    { color = c;      return self; }
 	static setFont       = function(f)    { font  = f;      return self; }
 	static setScrollpane = function(s)    { scrollpane = s; return self; }

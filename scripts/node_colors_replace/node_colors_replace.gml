@@ -52,22 +52,22 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		var by = _y;
 		
 		var bs = ui(24);
-		if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, _hover, _focus,, THEME.refresh_16) == 2) 
+		if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, _m, _hover, _focus,, THEME.refresh_16) == 2) 
 			refreshPalette();
 			
 		bx += bs + ui(4);
 		var jun   = inputs[2];
 		var index = jun.value_from == noone? jun.is_anim : 2;
-		if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, _hover, _focus,, THEME.animate_clock, index, index == 2? COLORS._main_accent : COLORS._main_icon) == 2) 
+		if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, _m, _hover, _focus,, THEME.animate_clock, index, index == 2? COLORS._main_accent : COLORS._main_icon) == 2) 
 			jun.setAnim(!jun.is_anim);
 		
 		bx += bs + ui(4);
 		var vis = jun.visible;
-		if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, _hover, _focus,, THEME.junc_visible, vis) == 2)
+		if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, _m, _hover, _focus,, THEME.junc_visible, vis) == 2)
 			jun.visible = !vis;
 			
 		bx += bs + ui(4);
-		if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, _hover, _focus,, THEME.sort_16) == 2)
+		if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, _m, _hover, _focus,, THEME.sort_16) == 2)
 			menuCall("", sort_menu);
 			
 		var _from = getInputData(1);
@@ -109,7 +109,7 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			bx   = _x2 - ui(32);
 			_x2 -= ui(32 + 4);
 			by   = _y0 + ss / 2 - ui(32) / 2;
-			if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), _m, _hover, _focus,, THEME.color_picker_dropper,, c_white) == 2) {
+			if(buttonInstant(THEME.button_hide_fill, bx, by, ui(32), ui(32), _m, _hover, _focus,, THEME.color_picker_dropper,, c_white) == 2) {
 				var dialog = dialogCall(o_dialog_color_selector)
 								.setApply(setColor);
 								
@@ -121,7 +121,7 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			
 			bx   = _x2 - ui(32);
 			_x2 -= ui(32 + 4);
-			if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), _m, _hover, _focus,, THEME.color_wheel,, c_white) == 2) {
+			if(buttonInstant(THEME.button_hide_fill, bx, by, ui(32), ui(32), _m, _hover, _focus,, THEME.color_wheel,, c_white) == 2) {
 				var pick = instance_create(mouse_mx, mouse_my, o_dialog_color_quick_pick);
 				array_insert(pick.palette, 0, to);
 				pick.onApply = setColor;

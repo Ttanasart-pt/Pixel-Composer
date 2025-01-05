@@ -84,7 +84,7 @@ function matrixGrid(_type, _size, _onModify, _unit = noone) : widget() construct
 		if((_w - _bs) / size > ui(64)) {
 			if(extras && instanceof(extras) == "buttonClass") {
 				extras.setFocusHover(active, hover);			
-				extras.draw(_x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide);
+				extras.draw(_x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide_fill);
 				_w -= _bs + ui(8);
 			}
 		
@@ -104,7 +104,7 @@ function matrixGrid(_type, _size, _onModify, _unit = noone) : widget() construct
 			var th = _h * size - ui(8);
 			var bx = _x;
 			var by = _y + th / 2 - _bs / 2;
-			b_link.draw(bx, by, _bs, _bs, _m, THEME.button_hide);
+			b_link.draw(bx, by, _bs, _bs, _m, THEME.button_hide_fill);
 			
 			_x += _bs + ui(4);
 			_w -= _bs + ui(4);

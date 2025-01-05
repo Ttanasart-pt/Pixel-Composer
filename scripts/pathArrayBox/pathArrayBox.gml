@@ -33,7 +33,7 @@ function pathArrayBox(_target, _data, _onClick) : widget() constructor {
 		var _bs = min(_h, ui(32));
 		if(_w - _bs > ui(100)) {
 			openPath.setFocusHover(active, hover);
-			openPath.draw(_x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide);
+			openPath.draw(_x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide_fill);
 			_w -= _bs + ui(4);
 		}
 		

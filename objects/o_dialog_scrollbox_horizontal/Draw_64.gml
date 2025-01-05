@@ -21,7 +21,7 @@
 	draw_sprite_stretched(THEME.textbox, 1, dialog_x, dialog_y, dialog_w, dialog_h);
 	
 	if(search_string == "")
-	if(buttonInstant(THEME.button_hide, dialog_x + dialog_w - ui(8) - ui(24), dialog_y + ui(8), ui(24), ui(24), mouse_ui, sHOVER, sFOCUS, "", THEME.scrollbox_direction, horizon) == 2) {
+	if(buttonInstant(THEME.button_hide_fill, dialog_x + dialog_w - ui(8) - ui(24), dialog_y + ui(8), ui(24), ui(24), mouse_ui, sHOVER, sFOCUS, "", THEME.scrollbox_direction, horizon) == 2) {
 		horizon = !horizon;
 		setSize();
 	}

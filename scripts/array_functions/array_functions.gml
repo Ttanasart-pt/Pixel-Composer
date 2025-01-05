@@ -371,6 +371,13 @@ function array_insert_before(arr, before, values) {
 		array_insert(arr, _ind + i, values[i]);
 }
 
+function array_push_to_back(arr, value) {
+	if(!array_exists(arr, value)) return;
+	
+	array_remove(arr, value);
+	array_push(arr, value);
+}
+
 #macro array_equals array_equals_overwrite
 #macro __array_equals array_equals
 

@@ -6,6 +6,7 @@ function draw_text_line(_x, _y, _text, _sep, _w, forceCut = false) {
 function draw_text_add(_x, _y, _text, scale = 1) {
 	INLINE
 	BLEND_ALPHA_MULP
+	// BLEND_OVERRIDE
 	if(scale == 1) draw_text(round(_x), round(_y), _text);
 	else           draw_text_transformed(round(_x), round(_y), _text, scale, scale, 0);
 	BLEND_NORMAL

@@ -259,7 +259,7 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		var by = _fy;
 		var bs = ui(24);
 		
-		if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, _hover, _focus, "", THEME.add_16, 0, COLORS._main_value_positive) == 2) {
+		if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, _m, _hover, _focus, "", THEME.add_16, 0, COLORS._main_value_positive) == 2) {
 			array_push(_flares, new __FlarePart());
 			inputs[5].setValue(_flares);
 			triggerRender();
@@ -267,7 +267,7 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		
 		bx += bs + ui(8);
 		
-		if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, _hover, _focus, "", THEME.minus_16, 0, COLORS._main_value_negative) == 2) {
+		if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, _m, _hover, _focus, "", THEME.minus_16, 0, COLORS._main_value_negative) == 2) {
 			array_delete(_flares, array_length(_flares) - 1, 1);
 			inputs[5].setValue(_flares);
 			triggerRender();

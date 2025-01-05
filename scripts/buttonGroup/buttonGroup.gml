@@ -55,7 +55,7 @@ function buttonGroup(_data, _onClick) : widget() constructor {
 		return draw(params.x, params.y, params.w, params.h, params.data, params.m, params.rx, params.ry);
 	}
 	
-	static draw = function(_x, _y, _w, _h, _selecting, _m, _rx = 0, _ry = 0) {
+	static draw = function(_x, _y, _w, _h, _selecting, _m = mouse_ui, _rx = 0, _ry = 0) {
 		x = _x;
 		y = _y;
 		w = _w;

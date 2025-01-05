@@ -211,7 +211,7 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 					if(isEqual(_data, _defVal))
 						draw_sprite_ext(THEME.refresh_16, 0, _bx + _bs / 2, _by + _bs / 2, 1, 1, 0, COLORS._main_icon_dark);
 					else {
-						if(buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, [ mx, my ], pHOVER, pFOCUS, __txt("Reset"), THEME.refresh_16) == 2)
+						if(buttonInstant(THEME.button_hide_fill, _bx, _by, _bs, _bs, [ mx, my ], pHOVER, pFOCUS, __txt("Reset"), THEME.refresh_16) == 2)
 							_prop.onEdit(_defVal);
 					}
 				}

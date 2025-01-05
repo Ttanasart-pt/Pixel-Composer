@@ -49,7 +49,7 @@ if !ready exit;
 	var by = dialog_y + ui(12);
 	var bs = ui(28);
 	
-	if(buttonInstant(THEME.button_hide, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txtx("add_preset", "Add to preset"), THEME.add_20) == 2) {
+	if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txtx("add_preset", "Add to preset"), THEME.add_20) == 2) {
 		var dia = dialogCall(o_dialog_file_name, mouse_mx + ui(8), mouse_my + ui(8));
 		dia.onModify = function (txt) {
 			var gradStr = "";
@@ -66,11 +66,11 @@ if !ready exit;
 	}
 	bx -= ui(32);
 	
-	if(buttonInstant(THEME.button_hide, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txt("Refresh"), THEME.refresh_20) == 2)
+	if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txt("Refresh"), THEME.refresh_20) == 2)
 		__initGradient();
 	bx -= ui(32);
 	
-	if(buttonInstant(THEME.button_hide, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txtx("graident_editor_open_folder", "Open gradient folder"), THEME.path_open_20) == 2) {
+	if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txtx("graident_editor_open_folder", "Open gradient folder"), THEME.path_open_20) == 2) {
 		var _realpath = DIRECTORY + "Gradients";
 		shellOpenExplorer(_realpath)
 	}
@@ -87,7 +87,7 @@ if !ready exit;
 	var bx = palette_x + palette_w - ui(44);
 	var by = dialog_y + ui(12);
 	
-	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sHOVER, sFOCUS, __txt("Show on Selector"), THEME.display_palette, NODE_COLOR_SHOW_PALETTE, c_white) == 2)
+	if(buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, sHOVER, sFOCUS, __txt("Show on Selector"), THEME.display_palette, NODE_COLOR_SHOW_PALETTE, c_white) == 2)
 		NODE_COLOR_SHOW_PALETTE = !NODE_COLOR_SHOW_PALETTE;
 	bx -= ui(32);
 #endregion
@@ -98,7 +98,7 @@ if !ready exit;
 		var bx = content_x + content_w - ui(50);
 		var by = dialog_y + ui(16);
 		
-		if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sHOVER, interactable && sFOCUS, __txtx("gradient_editor_key_blend", "Key blending"), THEME.grad_blend) == 2) {
+		if(buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, sHOVER, interactable && sFOCUS, __txtx("gradient_editor_key_blend", "Key blending"), THEME.grad_blend) == 2) {
 			menuCall("gradient_window_blend_menu", [ 
 				menuItem(__txtx("gradient_editor_blend_hard",  "Solid"),  function() { gradient.type = 1; onApply(gradient); }), 
 				menuItem(__txtx("gradient_editor_blend_RGB",   "RGB"),    function() { gradient.type = 0; onApply(gradient); }), 
@@ -108,7 +108,7 @@ if !ready exit;
 		}
 		bx -= ui(32);
 		
-		if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sHOVER, interactable && sFOCUS, __txtx("gradient_editor_reverse", "Reverse"), THEME.reverse) == 2) {
+		if(buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, sHOVER, interactable && sFOCUS, __txtx("gradient_editor_reverse", "Reverse"), THEME.reverse) == 2) {
 			for( var i = 0, n = array_length(gradient.keys); i < n; i++ )
 				gradient.keys[i].time = 1 - gradient.keys[i].time;
 			gradient.keys = array_reverse(gradient.keys);
@@ -256,5 +256,5 @@ if !ready exit;
 	bx -= ui(48);
 	b_cancel.register();
 	b_cancel.setFocusHover(sFOCUS, sHOVER);
-	b_cancel.draw(bx - ui(18), by - ui(18), ui(36), ui(36), mouse_ui, THEME.button_hide);
+	b_cancel.draw(bx - ui(18), by - ui(18), ui(36), ui(36), mouse_ui, THEME.button_hide_fill);
 #endregion

@@ -414,7 +414,7 @@ function colorSelector(onApply = noone) constructor {
 		
 		cx += ui(48);
 		if(interactable)
-		if(buttonInstant(THEME.button_hide, cx - ui(18), cy - ui(18), ui(36), ui(36), mouse_ui, focus, hover, "", THEME.color_picker_dropper, 0, c_white) == 2)
+		if(buttonInstant(THEME.button_hide_fill, cx - ui(18), cy - ui(18), ui(36), ui(36), mouse_ui, focus, hover, "", THEME.color_picker_dropper, 0, c_white) == 2)
 			dropper_active = true;
 	}
 }

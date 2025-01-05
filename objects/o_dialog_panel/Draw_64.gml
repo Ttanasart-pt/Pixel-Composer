@@ -62,7 +62,7 @@ if(content.showHeader) {
 	var _bs = ui(20);
 	
 	if(instanceof(content) != "Panel_Menu")
-	if(buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, [ mouse_mx, mouse_my ], sHOVER, sFOCUS, "", THEME.window_exit_icon) == 2) {
+	if(buttonInstant(THEME.button_hide_fill, _bx, _by, _bs, _bs, [ mouse_mx, mouse_my ], sHOVER, sFOCUS, "", THEME.window_exit_icon) == 2) {
 		DIALOG_POSTDRAW
 		onDestroy();
 		instance_destroy();
@@ -77,7 +77,7 @@ if(content.showHeader) {
 		
 		_bx -= _bs;
 		_b.setFocusHover(sFOCUS, sHOVER);
-		_b.draw(_bx, _by, _bs, _bs, [ mouse_mx, mouse_my ], THEME.button_hide);
+		_b.draw(_bx, _by, _bs, _bs, [ mouse_mx, mouse_my ], THEME.button_hide_fill);
 		_bs -= ui(4);
 	}
 } 
@@ -91,7 +91,7 @@ var ss  = content.showHeader? ui(20) : ui(28);
 var sc  = content.showHeader? 0.75 : 1;
 
 if(window == noone && instanceof(content) != "Panel_Menu") {
-	var b = buttonInstant(THEME.button_hide, bx, by, ss, ss, [ mouse_mx, mouse_my ], sHOVER, sFOCUS, txt, THEME.pin, ind, cc, 1, sc);
+	var b = buttonInstant(THEME.button_hide_fill, bx, by, ss, ss, [ mouse_mx, mouse_my ], sHOVER, sFOCUS, txt, THEME.pin, ind, cc, 1, sc);
 	if(b == 2) destroy_on_click_out = !destroy_on_click_out;
 }
 

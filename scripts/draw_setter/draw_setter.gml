@@ -1,4 +1,4 @@
-#macro draw_set_color draw_set_color_ext
+//#macro draw_set_color draw_set_color_ext
 #macro __draw_set_color draw_set_color
 
 #macro draw_clear draw_clear_ext_override

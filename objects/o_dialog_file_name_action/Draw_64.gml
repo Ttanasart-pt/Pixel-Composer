@@ -46,7 +46,7 @@
 	var icon = THEME.accept;
 	var clr  = COLORS._main_value_positive;
 	
-	if(buttonInstant(THEME.button_hide, bx, by, bw, bh, mouse_ui, sHOVER, sFOCUS, txt, icon, 0, clr) == 2) {
+	if(buttonInstant(THEME.button_hide_fill, bx, by, bw, bh, mouse_ui, sHOVER, sFOCUS, txt, icon, 0, clr) == 2) {
 		
 	}
 	
@@ -56,7 +56,7 @@
 	var icon = THEME.cross;
 	var clr  = COLORS._main_value_negative;
 	
-	if(buttonInstant(THEME.button_hide, bx, by, bw, bh, mouse_ui, sHOVER, sFOCUS, txt, icon, 0, clr) == 2) {
+	if(buttonInstant(THEME.button_hide_fill, bx, by, bw, bh, mouse_ui, sHOVER, sFOCUS, txt, icon, 0, clr) == 2) {
 		instance_destroy();
 	}
 	

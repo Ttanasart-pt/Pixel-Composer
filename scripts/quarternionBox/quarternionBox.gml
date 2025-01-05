@@ -102,7 +102,7 @@ function quarternionBox(_onModify) : widget() constructor {
 			var tg = false;
 			tooltip.index = _disp;
 			
-			var b = buttonInstant(THEME.button_hide, bx, by, _bs, _bs, _m, ihover, iactive, tooltip, THEME.unit_angle, _disp, c_white);
+			var b = buttonInstant(THEME.button_hide_fill, bx, by, _bs, _bs, _m, ihover, iactive, tooltip, THEME.unit_angle, _disp, c_white);
 			if(b == 1) {
 				if(key_mod_press(SHIFT) && mouse_wheel_up())   tg = true;
 				if(key_mod_press(SHIFT) && mouse_wheel_down()) tg = true;

@@ -87,7 +87,7 @@ function scrollBox(_data, _onModify, update_hover = true) : widget() constructor
 		
 		if(extra_button != noone) {
 			extra_button.setFocusHover(active, hover);
-			extra_button.draw(_x + _w - ui(32), _y + _h / 2 - ui(32 / 2), ui(32), ui(32), _m, THEME.button_hide);
+			extra_button.draw(_x + _w - ui(32), _y + _h / 2 - ui(32 / 2), ui(32), ui(32), _m, THEME.button_hide_fill);
 			w -= ui(40);
 		}
 		

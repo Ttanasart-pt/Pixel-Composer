@@ -54,7 +54,7 @@ function buttonPalette(_onApply, dialog = noone) : widget() constructor {
 		
 		if(_w - _bs > ui(100) && side_button && instanceof(side_button) == "buttonClass") {
 			side_button.setFocusHover(active, hover);
-			side_button.draw(_x + _w -_bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide);
+			side_button.draw(_x + _w -_bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide_fill);
 			_w -= _bs + ui(8);
 		}
 		

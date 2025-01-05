@@ -15,13 +15,13 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		var bw = _w / 2 - ui(4);
 		var bh = ui(36);
-		if(buttonTextIconInstant(true, THEME.button_hide, _x, _y + ui(8), bw, bh, _m, _focus, _hover, "", THEME.add, __txt("Add"), COLORS._main_value_positive) == 2) {
+		if(buttonTextIconInstant(true, THEME.button_hide_fill, _x, _y + ui(8), bw, bh, _m, _focus, _hover, "", THEME.add, __txt("Add"), COLORS._main_value_positive) == 2) {
 			attributes.size = max(attributes.size, (array_length(inputs) - input_fix_len) / data_length ) + 1;
 			onInputResize();
 		}
 		
 		var act = attributes.size > 0;
-		if(buttonTextIconInstant(act, THEME.button_hide, _x + _w - bw, _y + ui(8), bw, bh, _m, _focus, _hover, "", THEME.minus, __txt("Remove"), COLORS._main_value_negative) == 2) {
+		if(buttonTextIconInstant(act, THEME.button_hide_fill, _x + _w - bw, _y + ui(8), bw, bh, _m, _focus, _hover, "", THEME.minus, __txt("Remove"), COLORS._main_value_negative) == 2) {
 			attributes.size--;
 			onInputResize();
 		}

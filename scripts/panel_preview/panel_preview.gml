@@ -1906,15 +1906,15 @@ function Panel_Preview() : PanelContent() constructor {
                     
                     if(point_in_rectangle(_mx, _my, _sx0, _sy0 + 1, _sx1, _sy1 - 1)) {
                         TOOLTIP = tool.getDisplayName(j);
-                        draw_sprite_stretched(THEME.button_hide, 1, _sx0 + pd, _sy0 + pd, tool_size - pd * 2, tool_size - pd * 2);
+                        draw_sprite_stretched(THEME.button_hide_fill, 1, _sx0 + pd, _sy0 + pd, tool_size - pd * 2, tool_size - pd * 2);
                             
                         if(mouse_press(mb_left, pFOCUS))
                             tool.toggle(j);
                     } 
                             
                     if(tool_current == tool && tool.selecting == j) {
-                        draw_sprite_stretched_ext(THEME.button_hide, 2, _sx0 + pd, _sy0 + pd, tool_size - pd * 2, tool_size - pd * 2, COLORS.panel_preview_grid, 1);
-                        draw_sprite_stretched_ext(THEME.button_hide, 3, _sx0 + pd, _sy0 + pd, tool_size - pd * 2, tool_size - pd * 2, COLORS._main_accent, 1);
+                        draw_sprite_stretched_ext(THEME.button_hide_fill, 2, _sx0 + pd, _sy0 + pd, tool_size - pd * 2, tool_size - pd * 2, COLORS.panel_preview_grid, 1);
+                        draw_sprite_stretched_ext(THEME.button_hide_fill, 3, _sx0 + pd, _sy0 + pd, tool_size - pd * 2, tool_size - pd * 2, COLORS._main_accent, 1);
                     }
                     
                     draw_sprite_colored(stool[j], 0, _sxx, _syy);
@@ -1925,7 +1925,7 @@ function Panel_Preview() : PanelContent() constructor {
             
             } else { // single tools
                 if(tool_hovering == tool) {
-                    draw_sprite_stretched(THEME.button_hide, 1, _x0 + pd, _y0 + pd, tool_size - pd * 2, tool_size - pd * 2);
+                    draw_sprite_stretched(THEME.button_hide_fill, 1, _x0 + pd, _y0 + pd, tool_size - pd * 2, tool_size - pd * 2);
                     TOOLTIP = tool.getDisplayName();
                     
                     if(mouse_press(mb_left, pFOCUS))
@@ -1940,8 +1940,8 @@ function Panel_Preview() : PanelContent() constructor {
                 }
                 
                 if(tool_current == tool) {
-                    draw_sprite_stretched_ext(THEME.button_hide, 2, _x0 + pd, _y0 + pd, tool_size - pd * 2, tool_size - pd * 2, COLORS.panel_preview_grid, 1);
-                    draw_sprite_stretched_ext(THEME.button_hide, 3, _x0 + pd, _y0 + pd, tool_size - pd * 2, tool_size - pd * 2, COLORS._main_accent, 1);
+                    draw_sprite_stretched_ext(THEME.button_hide_fill, 2, _x0 + pd, _y0 + pd, tool_size - pd * 2, tool_size - pd * 2, COLORS.panel_preview_grid, 1);
+                    draw_sprite_stretched_ext(THEME.button_hide_fill, 3, _x0 + pd, _y0 + pd, tool_size - pd * 2, tool_size - pd * 2, COLORS._main_accent, 1);
                 }
                 
                 if(tool.subtools > 0)   draw_sprite_colored(tool.spr[tool.selecting], 0, xx, yy);
@@ -2020,15 +2020,15 @@ function Panel_Preview() : PanelContent() constructor {
                         
                         if(point_in_rectangle(_mx, _my, _sx0, _sy0 + 1, _sx1, _sy1 - 1)) {
                             TOOLTIP = tool.getDisplayName(_sind);
-                            draw_sprite_stretched(THEME.button_hide, 1, _sx0 + pd, _sy0 + pd, tool_size - pd * 2, tool_size - pd * 2);
+                            draw_sprite_stretched(THEME.button_hide_fill, 1, _sx0 + pd, _sy0 + pd, tool_size - pd * 2, tool_size - pd * 2);
                             
                             if(mouse_press(mb_left, pFOCUS))
                                 tool.toggle(_sind);
                         }
                             
                         if(tool_current == tool && tool.selecting == _sind) {
-                            draw_sprite_stretched_ext(THEME.button_hide, 2, _sx0 + pd, _sy0 + pd, tool_size - pd * 2, tool_size - pd * 2, COLORS.panel_preview_grid, 1);
-                            draw_sprite_stretched_ext(THEME.button_hide, 3, _sx0 + pd, _sy0 + pd, tool_size - pd * 2, tool_size - pd * 2, COLORS._main_accent, 1);
+                            draw_sprite_stretched_ext(THEME.button_hide_fill, 2, _sx0 + pd, _sy0 + pd, tool_size - pd * 2, tool_size - pd * 2, COLORS.panel_preview_grid, 1);
+                            draw_sprite_stretched_ext(THEME.button_hide_fill, 3, _sx0 + pd, _sy0 + pd, tool_size - pd * 2, tool_size - pd * 2, COLORS._main_accent, 1);
                         }
                         
                         draw_sprite_colored(stool[_sind], 0, _sxx, _syy);
@@ -2040,7 +2040,7 @@ function Panel_Preview() : PanelContent() constructor {
                 
                 } else { // single tools
                     if(tool_hovering == tool) {
-                        draw_sprite_stretched(THEME.button_hide, 1, _x0 + pd, _y0 + pd, tool_size - pd * 2, tool_size - pd * 2);
+                        draw_sprite_stretched(THEME.button_hide_fill, 1, _x0 + pd, _y0 + pd, tool_size - pd * 2, tool_size - pd * 2);
                         TOOLTIP = tool.getDisplayName();
                     
                         if(mouse_press(mb_left, pFOCUS))
@@ -2054,8 +2054,8 @@ function Panel_Preview() : PanelContent() constructor {
                     }
                     
                     if(tool_current == tool) {
-                        draw_sprite_stretched_ext(THEME.button_hide, 2, _x0 + pd, _y0 + pd, tool_size - pd * 2, tool_size - pd * 2, COLORS.panel_preview_grid, 1);
-                        draw_sprite_stretched_ext(THEME.button_hide, 3, _x0 + pd, _y0 + pd, tool_size - pd * 2, tool_size - pd * 2, COLORS._main_accent, 1);
+                        draw_sprite_stretched_ext(THEME.button_hide_fill, 2, _x0 + pd, _y0 + pd, tool_size - pd * 2, tool_size - pd * 2, COLORS.panel_preview_grid, 1);
+                        draw_sprite_stretched_ext(THEME.button_hide_fill, 3, _x0 + pd, _y0 + pd, tool_size - pd * 2, tool_size - pd * 2, COLORS._main_accent, 1);
                     }
                 
                     if(tool.subtools > 0)   draw_sprite_colored(tool.spr[tool.selecting], 0, xx, yy);
@@ -2229,7 +2229,7 @@ function Panel_Preview() : PanelContent() constructor {
                 tbTooltip.index = tbInd;
             
             var tooltip = instance_exists(o_dialog_menubox)? "" : tbTooltip;
-            var b = buttonInstant(THEME.button_hide, tbx - ui(14), tby - ui(14), ui(28), ui(28), [mx, my], pHOVER, pFOCUS, tooltip, tbSpr, tbInd);
+            var b = buttonInstant(THEME.button_hide_fill, tbx - ui(14), tby - ui(14), ui(28), ui(28), [mx, my], pHOVER, pFOCUS, tooltip, tbSpr, tbInd);
             switch(b) { 
             	case 1 : 
             		if(onWUp   != 0 && key_mod_press(SHIFT) && mouse_wheel_up())   onWUp();
@@ -2250,7 +2250,7 @@ function Panel_Preview() : PanelContent() constructor {
             var tbTooltip = tb[1];
             var tbIndex   = tb[3]();
             
-            var b = buttonInstant(THEME.button_hide, tbx - ui(14), tby - ui(14), ui(28), ui(28), [mx, my], pHOVER, pFOCUS, tbTooltip, tbSpr, tbIndex);
+            var b = buttonInstant(THEME.button_hide_fill, tbx - ui(14), tby - ui(14), ui(28), ui(28), [mx, my], pHOVER, pFOCUS, tbTooltip, tbSpr, tbIndex);
             if(b == 2) tb[2]( { x: x + tbx - ui(14), y: y + tby - ui(14) } );
             
             tbx -= ui(32);
@@ -2358,7 +2358,7 @@ function Panel_Preview() : PanelContent() constructor {
         } else {
         	dragCanvas();
         	
-        	draw_set_color(COLORS.panel_preview_surface_outline, .75);
+        	draw_set_color_alpha(COLORS.panel_preview_surface_outline, .75);
             draw_rectangle(canvas_x, canvas_y, canvas_x + DEF_SURF_W * canvas_s - 1, canvas_y + DEF_SURF_H * canvas_s - 1, true);
             draw_set_alpha(1);
         }

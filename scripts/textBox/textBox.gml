@@ -127,6 +127,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		return self;
 	}
 	
+	static setColor	    = function(color) 	    { self.color		= color;		return self; }
 	static setAlign	    = function(align) 	    { self.align		= align;		return self; }
 	static setHide		= function(hide)		{ self.hide 		= hide; 		return self; }
 	static setFont		= function(font)		{ self.font 		= font; 		return self; }
@@ -517,7 +518,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		
 		if(_w - _bs > ui(100) && front_button) {
 			front_button.setFocusHover(active, hover);
-			front_button.draw(_x, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide);
+			front_button.draw(_x, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide_fill);
 			
 			_x += _bs + ui(4);
 			_w -= _bs + ui(4);
@@ -531,7 +532,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		
 		if(_w - _bs > ui(100) && side_button) {
 			side_button.setFocusHover(active, hover);
-			side_button.draw(_x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide);
+			side_button.draw(_x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide_fill);
 			_w -= _bs + ui(4);
 		}
 		

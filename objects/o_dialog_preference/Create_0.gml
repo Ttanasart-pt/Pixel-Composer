@@ -4,7 +4,7 @@ event_inherited();
 #region data
 	dialog_w   = min(WIN_W - ui(16), ui(1000));
 	dialog_h   = min(WIN_H - ui(16), ui(700));
-	page_width = ui(160);
+	page_width = ui(128);
 	// title_height = 8;
 	
 	destroy_on_click_out = true;
@@ -35,7 +35,6 @@ event_inherited();
 		
 		sp_pref.resize(  panel_width, panel_height);
 		sp_hotkey.resize(panel_width, hotkey_height);
-		sp_colors.resize(panel_width, panel_height - ui(40));
 	}
 #endregion
 
@@ -57,14 +56,14 @@ event_inherited();
 		var hh = 0;
 		
 		var yl = _y;
-		var hg = line_get_height(f_p0, 16);
-		var hs = line_get_height(f_p1, 8);
+		var hg = line_get_height(f_p1, 8);
+		var hs = line_get_height(f_p2, 8);
 		
 		for(var i = 0; i < array_length(page); i++) {
-			if(i == page_current) draw_set_text(f_p0b, fa_left, fa_center, COLORS._main_text_accent);
-			else                  draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_inner);
+			if(i == page_current) draw_set_text(f_p1b, fa_left, fa_center, COLORS._main_text_accent);
+			else                  draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text_inner);
 			
-			if(sHOVER && point_in_rectangle(_m[0], _m[1], 0, yl, ww, yl + hg)) {
+			if(sHOVER && point_in_rectangle(_m[0], _m[1], 0, yl, ww, yl + hg - 1)) {
 				sp_page.hover_content = true;
 				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, yl, ww, hg, CDEF.main_white, 1);
 				
@@ -82,7 +81,7 @@ event_inherited();
 				for( var j = 0, m = array_length(sections[i]); j < m; j++ ) {
 					var sect = sections[i][j];
 				
-					draw_set_text(f_p1, fa_left, fa_center, section_current == sect[0]? COLORS._main_text : COLORS._main_text_sub);
+					draw_set_text(f_p2, fa_left, fa_center, section_current == sect[0]? COLORS._main_text : COLORS._main_text_sub);
 				
 					if(sHOVER && point_in_rectangle(_m[0], _m[1], 0, yl, ww, yl + hs - 1)) {
 						sp_page.hover_content = true;
@@ -568,7 +567,12 @@ event_inherited();
 #endregion
 
 #region theme
+
+	////- Themes
+	
 	themes = [];
+	themeCurrent = noone;
+	
 	var f = file_find_first(DIRECTORY + "Themes/*", fa_directory);
 	while(f != "") {
 		var _file = f;
@@ -587,35 +591,142 @@ event_inherited();
 		} 
 		
 		var _meta = json_load_struct(_metaPath);
+		    _meta.file = _file;
+		    
 		var _item = new scrollItem(_meta.name, _meta.version >= VERSION? noone : THEME.circle, 0, COLORS._main_accent);
-		    _item.data = _file;
-			
+		    _item.data = _meta;
+		
+		if(PREFERENCES.theme == _file) themeCurrent = _meta;
+		
 		if(_meta.version < VERSION) _item.tooltip = "Theme made for earlier version.";
 		array_push(themes, _item);
 	}
 	file_find_close();
 	
 	sb_theme = new scrollBox(themes, function(index) { 
-			var thm = themes[index].data;
-			if(PREFERENCES.theme == thm) return;
-			
-			PREFERENCES.theme = thm;
-			PREF_SAVE();
-			
-			loadGraphic(thm);
-			loadColor(thm);
-			loadFonts();
-		}, false);
+		var dat = themes[index].data;
+		var thm = dat.file;
+		if(PREFERENCES.theme == thm) return;
+		
+		themeCurrent = dat;
+		PREFERENCES.theme = thm;
+		PREF_SAVE();
+		
+		loadGraphic(thm);
+		loadColor(thm);
+		loadFonts();
+	}, false);
+	sb_theme.font  = f_p2;
 	sb_theme.align = fa_left;
 	
-	sp_colors = new scrollPane(panel_width, panel_height - ui(40), function(_y, _m, _r) {
+	tb_override = new textBox(TEXTBOX_INPUT.text, function(val) /*=>*/ { PREFERENCES.theme_override = val; loadColor(PREFERENCES.theme); PREF_SAVE(); })
+	
+	sp_theme = new scrollPane(panel_width, panel_height - ui(40), function(_y, _m, _r) {
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
-		var ww   = sp_colors.surface_w;
+		
+		var _hover = sp_theme.hover;
+		var _focus = sp_theme.active;
+		var _rx    = sp_theme.x;
+		var _ry    = sp_theme.y;
+		
+		var ww     = sp_theme.surface_w;
+		var hh     = sp_theme.surface_h;
+		
+		var hh  = ui(8);
+		    _y += ui(8);
+		
+		var _h = ui(24);
+		if(buttonInstant(THEME.button_hide_fill, ww - _h, _y, _h, _h, _m, _hover, _focus, __txt("Reset colors"), THEME.refresh_16) == 2) {
+			var path = $"{DIRECTORY}Themes/{PREFERENCES.theme}/{PREFERENCES.theme_override}.json";
+			if(file_exists_empty(path)) file_delete(path);
+			loadColor(PREFERENCES.theme);
+		}
+		
+		var _wdw  = ui(128);
+		var _wpar = new widgetParam(ww - _h - ui(4) - _wdw, _y, _wdw, _h, 0, 0, _m, _rx, _ry)
+							.setFont(f_p3)
+							.setFocusHover(_focus, _hover);
+		
+		var thName = themeCurrent == noone? PREFERENCES.theme : themeCurrent.name;
+		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
+		draw_text_add(ui(8), _y + _h / 2, __txt("Theme"));
+		sb_theme.drawParam(_wpar.setData(thName));
+		_y += _h + ui(8);
+		hh += _h + ui(8);
+		
+		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
+		draw_text_add(ui(8), _y + _h / 2, __txt("Variant"));
+		tb_override.drawParam(_wpar.setY(_y).setData(PREFERENCES.theme_override));
+		_y += _h + ui(8 + 4);
+		hh += _h + ui(8 + 4);
+		
+		var _mh = themeCurrent == noone? ui(16) : ui(8 + 4 + 20 * 4);
+		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, 0, _y, ww, _mh, COLORS._main_icon_light);
+		
+		if(themeCurrent) {
+			var _yy = _y + ui(8);
+			draw_set_text(f_p3, fa_left, fa_top, COLORS._main_text_sub);
+			draw_text_add(ui(16), _yy, __txt("Name"));
+			
+			draw_set_text(f_p3, fa_right, fa_top, COLORS._main_text);
+			draw_text_add(ww - ui(16), _yy, themeCurrent.name);
+			
+			_yy += ui(20);
+			draw_set_text(f_p3, fa_left, fa_top, COLORS._main_text_sub);
+			draw_text_add(ui(16), _yy, __txt("Author"));
+			
+			draw_set_text(f_p3, fa_right, fa_top, COLORS._main_text);
+			draw_text_add(ww - ui(16), _yy, themeCurrent.author);
+			
+			_yy += ui(20);
+			draw_set_text(f_p3, fa_left, fa_top, COLORS._main_text_sub);
+			draw_text_add(ui(16), _yy, __txt("Version"));
+			
+			draw_set_text(f_p3, fa_right, fa_top, COLORS._main_text);
+			draw_text_add(ww - ui(16), _yy, themeCurrent.version);
+			
+			_yy += ui(20);
+			draw_set_text(f_p3, fa_left, fa_top, COLORS._main_text_sub);
+			draw_text_add(ui(16), _yy, __txt("Dependency"));
+			
+			var _d = struct_try_get(themeCurrent, "dependency", "none");
+			draw_set_text(f_p3, fa_right, fa_top, COLORS._main_text);
+			draw_text_add(ww - ui(16), _yy, _d);
+		}
+		
+		_y += _mh + ui(8 + 4);
+		hh += _mh + ui(8 + 4);
+		
+		return hh;
+	});
+	
+	////- Colors
+	
+	color_selector_key = noone;
+	
+	color_selector_edit = noone;
+	tb_color_key_edit   = new textBox(TEXTBOX_INPUT.text, function(t) /*=>*/ {
+		if(color_selector_edit == noone) return;
+		
+		var _v = _loadColorStringParse(t);
+		COLORS_KEYS.define[$ color_selector_edit] = _v;
+		COLORS[$ color_selector_edit] = _loadColorString(_v);
+		overrideColor(color_selector_edit, _v);
+		
+		color_selector_edit = noone;
+	}).setFont(f_p3);
+	
+	sp_theme_colors = new scrollPane(panel_width, panel_height - ui(40), function(_y, _m, _r) {
+		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
+		var ww   = sp_theme_colors.surface_w;
 		var hh	 = 0;
 		
-		var x1	 = sp_colors.surface_w;
+		var _hover = sp_theme_colors.hover;
+		var _focus = sp_theme_colors.active;
+		
+		var x1	 = sp_theme_colors.surface_w;
 		var yy	 = _y + ui(8);
-		var padx = ui(8);
+		var padx = ui(0);
 		var pady = ui(6);
 		var th   = line_get_height(font);
 		var ind	 = 0;
@@ -623,8 +734,8 @@ event_inherited();
 		var cp = ui(0)
 		var cw = ui(100);
 		var ch = th - cp * 2;
-		var cx = x1 - cw - padx * 2 - ui(8);
-		var category = "";
+		var cx = x1 - cw - padx - ui(24 + 8);
+		var category = "", cat;
 		
 		var group_labels = [];
 		var sectH = ui(24);
@@ -632,6 +743,72 @@ event_inherited();
 		var psect = "";
 		
 		var _search_text = string_lower(search_text);
+		
+		for( var i = 0, n = array_length(global.palette_keys); i < n; i++ ) {
+			var key = global.palette_keys[i];
+			var val = CDEF[$ key];
+			
+			if(_search_text != "" && string_pos(_search_text, string_lower(key)) == 0) continue;
+			
+			var cat = "global";
+			
+			if(cat != category) {
+				category = cat;
+				
+				var _sect = string_title(category);
+				var _coll = struct_try_get(collapsed, cat, 0);
+				
+				array_push(sect, [ _sect, sp_theme_colors, hh + ui(12) ]);
+				array_push(group_labels, { y: yy, text: _sect, key: cat });
+				
+				if(yy >= 0 && section_current == "") section_current = psect;
+				psect = _sect;
+				
+				yy += sectH + ui(!_coll * 4 + 4);
+				hh += sectH + ui(!_coll * 4 + 4);
+				ind = 0;
+			}
+			
+			if(struct_try_get(collapsed, cat, 0)) continue;
+			
+			if(ind % 2) draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, padx, yy - pady, ww - padx * 2, th + pady * 2, COLORS.dialog_preference_prop_bg, .75);
+					
+			var keyStr = string_title(key);
+			
+			draw_set_text(font, fa_left, fa_center, COLORS._main_text);
+			draw_text_add(ui(32), yy + th / 2, keyStr);
+			
+			var b = buttonInstant(THEME.button_def, cx, yy + cp, cw, ch, _m, _hover, _focus);
+			draw_sprite_stretched_ext(THEME.palette_mask, 1, cx + ui(2), yy + ui(2), cw - ui(4), ch - ui(4), val, 1);
+			
+			if(b) sp_theme_colors.hover_content = true;
+			if(b == 2) {
+				color_selector_key = key;
+				
+				var clrSelect = dialogCall(o_dialog_color_selector)
+									.setDefault(val)
+									.setApply(function(color) /*=>*/ { CDEF[$ color_selector_key] = color; overrideColor(color_selector_key, color); refreshThemePalette(); });
+									
+				addChildren(clrSelect);
+			}
+			
+			var _bs = ui(24);
+			var _bx = x1 - padx - ui(4) - _bs;
+			var _by = yy + th / 2 - _bs / 2;
+				
+			if(struct_has(COLORS_OVERRIDE, key)) {
+				if(buttonInstant(THEME.button_hide_fill, _bx, _by, _bs, _bs, _m, _hover, _focus, __txt("Reset"), THEME.refresh_16) == 2) {
+					CDEF[$ key] = color_from_rgb(COLORS_DEF.colors[$ key]);
+					overrideColorRemove(key);
+					refreshThemePalette();
+				}
+			} else
+				draw_sprite_ext(THEME.refresh_16, 0, _bx + _bs / 2, _by + _bs / 2, 1, 1, 0, COLORS._main_icon_dark);
+			
+			yy += th + pady * 2;
+			hh += th + pady * 2;
+			ind++;
+		}
 		
 		for( var i = 0, n = array_length(COLOR_KEYS); i < n; i++ ) {
 			var key = COLOR_KEYS[i];
@@ -648,7 +825,7 @@ event_inherited();
 				var _sect = string_title(category);
 				var _coll = struct_try_get(collapsed, cat, 0);
 				
-				array_push(sect, [ _sect, sp_colors, hh + ui(12) ]);
+				array_push(sect, [ _sect, sp_theme_colors, hh + ui(12) ]);
 				array_push(group_labels, { y: yy, text: _sect, key: cat });
 				
 				if(yy >= 0 && section_current == "") section_current = psect;
@@ -667,29 +844,80 @@ event_inherited();
 			    keyStr = string_replace(keyStr, cat + " ", "");
 			    keyStr = string_title(keyStr);
 			
-			draw_set_text(font, fa_left, fa_center, COLORS._main_text);
-			draw_text_add(ui(32), yy + th / 2, keyStr);
+			var cy = yy + th / 2;
 			
-			var b = buttonInstant(THEME.button_def, cx, yy + cp, cw, ch, _m, sHOVER, sFOCUS && sp_colors.hover);
+			draw_set_text(font, fa_left, fa_center, COLORS._main_text);
+			draw_text_add(ui(32), cy, keyStr);
+			
+			var _dx1 = cx - ui(4);
+			var _dx0 = _dx1 - ui(16);
+			var _dy0 = cy - ui(12);
+			var _dy1 = cy + ui(12);
+			
+			if(struct_has(COLORS_KEYS.define, key)) {
+				var _def_key = COLORS_KEYS.define[$ key];
+				
+				draw_set_text(f_p3, fa_right, fa_center, COLORS._main_text_sub);
+				draw_text_add(cx - ui(8), cy, _def_key);
+				
+				_dx0 = _dx1 - ui(8) - string_width(_def_key);
+			}
+			
+			if(color_selector_edit == key) {
+				var _tbw = ui(128)
+				var _tbh = ui(24)
+				tb_color_key_edit.setFocusHover(_focus, _hover);
+				tb_color_key_edit.draw(_dx1 - _tbw, cy - _tbh / 2, _tbw, _tbh, COLORS_KEYS.define[$ key], _m)
+				
+			} else {
+				if(sHOVER && point_in_rectangle(_m[0], _m[1], _dx0, _dy0, _dx1, _dy1)) {
+					draw_sprite_stretched_ext(THEME.button_hide, 1, _dx0, _dy0, _dx1 - _dx0, _dy1 - _dy0);
+					if(mouse_press(mb_left, _focus)) {
+						color_selector_edit = key;
+						tb_color_key_edit.activate(COLORS_KEYS.define[$ key]);
+					}
+				}
+			}
+			
+			var b = buttonInstant(THEME.button_def, cx, yy + cp, cw, ch, _m, _hover, _focus);
 			draw_sprite_stretched_ext(THEME.palette_mask, 1, cx + ui(2), yy + ui(2), cw - ui(4), ch - ui(4), val, 1);
 			
-			if(b) sp_colors.hover_content = true;
+			if(b) sp_theme_colors.hover_content = true;
 			if(b == 2) {
 				color_selector_key = key;
 				
 				var clrSelect = dialogCall(o_dialog_color_selector)
 									.setDefault(val)
-									.setApply(function(color) /*=>*/ { COLORS[$ color_selector_key] = color; overrideColor(color_selector_key); });
+									.setApply(function(color) /*=>*/ { 
+										COLORS_KEYS.define[$ color_selector_key] = color;
+										COLORS[$ color_selector_key] = color; 
+										overrideColor(color_selector_key, color); 
+									});
 									
 				addChildren(clrSelect);
 			}
+			
+			var _bs = ui(24);
+			var _bx = x1 - padx - ui(4) - _bs;
+			var _by = cy - _bs / 2;
+				
+			if(struct_has(COLORS_OVERRIDE, key)) {
+				if(buttonInstant(THEME.button_hide_fill, _bx, _by, _bs, _bs, _m, _hover, _focus, __txt("Reset"), THEME.refresh_16) == 2) {
+					var _v = COLORS_DEF.define[$ key];
+					
+					COLORS_KEYS.define[$ key] = _v;
+					COLORS[$ key] = _loadColorString(_v);
+					overrideColorRemove(key);
+				}
+			} else
+				draw_sprite_ext(THEME.refresh_16, 0, _bx + _bs / 2, _by + _bs / 2, 1, 1, 0, COLORS._main_icon_dark);
 			
 			yy += th + pady * 2;
 			hh += th + pady * 2;
 			ind++;
 		}
 		
-		#region section label
+		#region ------------ section label ------------
 			var len = array_length(group_labels);
 			if(len && group_labels[0].y < 0) {
 				gpu_set_blendmode(bm_subtract);
@@ -707,13 +935,13 @@ event_inherited();
 				var _coll = struct_try_get(collapsed, _key, 0);
 				
 				var _yy = max(lb.y, i == len - 1? ui(8) : min(ui(8), group_labels[i + 1].y - ui(32)));
-				var _hv = sHOVER && point_in_rectangle(_m[0], _m[1], 0, _yy, ww, _yy + sectH);
+				var _hv = _hover && point_in_rectangle(_m[0], _m[1], 0, _yy, ww, _yy + sectH);
 				var _tc = CDEF.main_ltgrey;
 				
 				BLEND_OVERRIDE
             	draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, padx, _yy, ww - padx * 2, sectH, _hv? COLORS.panel_inspector_group_hover : COLORS.panel_inspector_group_bg, 1);
             	
-				if(_hv && sFOCUS) {
+				if(_hv && _focus) {
                 	if(DOUBLE_CLICK) {
                 		_cAll = _coll? -1 : 1;
                 		
@@ -740,13 +968,154 @@ event_inherited();
 		return hh + ui(16);
 	});
 	
-	function overrideColor(key) {
-		var path = $"{DIRECTORY}Themes/{PREFERENCES.theme}/override.json";
+	function overrideColor(key, val) {
+		var path = $"{DIRECTORY}Themes/{PREFERENCES.theme}/{PREFERENCES.theme_override}.json";
 		var json = file_exists_empty(path)? json_load_struct(path) : {};
 		
-		json[$ key] = COLORS[$ key];
+		json[$ key] = val;
+		COLORS_OVERRIDE[$ key] = val;
+		
 		json_save_struct(path, json, true);
 	}
+	
+	function overrideColorRemove(key) {
+		var path = $"{DIRECTORY}Themes/{PREFERENCES.theme}/{PREFERENCES.theme_override}.json";
+		var json = file_exists_empty(path)? json_load_struct(path) : {};
+		
+		struct_remove(json, key);
+		struct_remove(COLORS_OVERRIDE, key);
+		
+		json_save_struct(path, json, true);
+	}
+	
+	////- Sprites
+	
+	sprKeys = variable_struct_get_names(THEME);
+	array_sort(sprKeys, true);
+		
+	sp_theme_sprites = new scrollPane(panel_width, panel_height - ui(40), function(_y, _m, _r) {
+		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
+		
+		var _hover = sp_theme_sprites.hover;
+		var _focus = sp_theme_sprites.active;
+		var _rx    = sp_theme_sprites.x;
+		var _ry    = sp_theme_sprites.y;
+		
+		var ww     = sp_theme_sprites.surface_w;
+		var hh     = sp_theme_sprites.surface_h;
+		
+		var _h   = ui(8);
+		    _y  += ui(8);
+		var hg   = ui(24);
+		var ind  = 0;
+		var padx = ui(0);
+		var pady = ui(4);
+		
+		for( var i = 0, n = array_length(sprKeys); i < n; i++ ) {
+			var _key = sprKeys[i];
+			var _spr = THEME[$ _key];
+			
+			var yc = _y + hg / 2;
+			if(ind % 2) draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, padx, _y - pady, ww - padx * 2, hg + pady * 2, COLORS.dialog_preference_prop_bg, .75);
+			
+			if(_y > -hg && _y < hh) {
+				draw_set_text(font, fa_left, fa_center, COLORS._main_text);
+				draw_text_add(ui(32), yc, _key);
+				
+				if(sprite_exists(_spr)) {
+					var _sw = sprite_get_width(_spr);
+					var _sh = sprite_get_height(_spr);
+					
+					var _ss = min(hg / _sh, ui(128) / _sw);
+					
+					var _ox = (sprite_get_xoffset(_spr) - _sw / 2) * _ss;
+					var _oy = (sprite_get_yoffset(_spr) - _sh / 2) * _ss;
+					
+					var _sx = ww / 2 + _ox;
+					var _sy = yc     + _oy;
+					
+					draw_sprite_ext(_spr, 0, _sx, _sy, _ss, _ss);
+					
+					draw_set_text(font, fa_left, fa_center, COLORS._main_text_sub);
+					draw_text_add(ww / 2 + ui(96), yc, $"{_sw}x{_sh} [{sprite_get_number(_spr)}]");
+				}
+			}
+			
+			ind++;
+			_y += hg + pady * 2;
+			_h += hg + pady * 2;
+		}
+		
+		return _h;
+	});
+	
+	////- Fonts
+	
+	fontKeys = variable_struct_get_names(FONT_LIST);
+	array_sort(fontKeys, true);
+	
+	array_push_to_back(fontKeys, "code");
+	array_push_to_back(fontKeys, "f_sdf");
+	array_push_to_back(fontKeys, "f_sdf_medium");
+	
+	sp_theme_fonts = new scrollPane(panel_width, panel_height - ui(40), function(_y, _m, _r) {
+		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
+		
+		var _hover = sp_theme_fonts.hover;
+		var _focus = sp_theme_fonts.active;
+		var _rx    = sp_theme_fonts.x;
+		var _ry    = sp_theme_fonts.y;
+		
+		var ww     = sp_theme_fonts.surface_w;
+		var hh     = sp_theme_fonts.surface_h;
+		
+		var _h   = ui(8);
+		    _y  += ui(8);
+		var hg   = ui(24);
+		var ind  = 0;
+		var padx = ui(0);
+		var pady = ui(4);
+		
+		for( var i = 0, n = array_length(fontKeys); i < n; i++ ) {
+			var _key = fontKeys[i];
+			var _fnt = FONT_LIST[$ _key];
+			var _font = _fnt.font;
+			
+			var hgg = font_exists(_font)? line_get_height(_font) : hg;
+			
+			var yc = _y + hgg / 2;
+			if(ind % 2) draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, padx, _y - pady, ww - padx * 2, hgg + pady * 2, COLORS.dialog_preference_prop_bg, .75);
+			
+			if(_y > -hgg && _y < hh) {
+				draw_set_text(font, fa_left, fa_center, COLORS._main_text);
+				draw_text_add(ui(32), yc, _key);
+				
+				if(font_exists(_font)) {
+					draw_set_text(_font, fa_right, fa_center, COLORS._main_text);
+					draw_text_add(ww - ui(16), yc, $"Pixel Composer");
+				}
+			}
+			
+			ind++;
+			_y += hgg + pady * 2;
+			_h += hgg + pady * 2;
+		}
+		
+		return _h;
+	});
+	
+	////- Resources tab
+	
+	theme_page = 0;
+	theme_page_name = [
+		$"Colors [{array_length(global.palette_keys) + array_length(COLOR_KEYS)}]", 
+		$"Sprites [{array_length(sprKeys)}]", 
+		$"Fonts [{array_length(fontKeys)}]", 
+	];
+	tab_resources = new buttonGroup(theme_page_name, function(i) /*=>*/ { theme_page = i })
+						.setButton([ THEME.button_hide_left, THEME.button_hide_middle, THEME.button_hide_right ])
+   						.setFont(f_p2, COLORS._main_text_sub);
+	
 #endregion
 
 #region hotkey
@@ -864,12 +1233,12 @@ event_inherited();
 			var cc = c_white;
 			
 			if(hk_editing == key) {
-				// draw_sprite_stretched_ext(THEME.ui_panel, 1, bx, by, bw, bh, COLORS._main_accent);
+				draw_sprite_stretched_ext(THEME.ui_panel, 1, bx, by, bw, bh, COLORS._main_accent);
 				cc = COLORS._main_text_accent;
 				
 			} else {
-				if(_hov && point_in_rectangle(_m[0], _m[1], bx, by, bx + bw, by + bh)) {
-					// draw_sprite_stretched_ext(THEME.ui_panel, 1, bx, by, bw, bh, CDEF.main_ltgrey);
+				if(_hov && point_in_rectangle(_m[0], _m[1], _ww / 2, by, bx + bw, by + bh)) {
+					draw_sprite_stretched_ext(THEME.ui_panel, 1, bx, by, bw, bh, CDEF.main_ltgrey);
 					sp_hotkey.hover_content = true;
 					cc = CDEF.main_white;
 					
@@ -891,7 +1260,7 @@ event_inherited();
 				modified = true;
 				var bx   = _ww - ui(32);
 				var by   = _yy + th / 2 - ui(12);
-				var b    = buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), _m, _hov, sFOCUS, __txt("Reset"), THEME.refresh_16);
+				var b    = buttonInstant(THEME.button_hide_fill, bx, by, ui(24), ui(24), _m, _hov, sFOCUS, __txt("Reset"), THEME.refresh_16);
 				
 				if(b) sp_hotkey.hover_content = true;
 				if(b == 2) {
@@ -1024,7 +1393,7 @@ event_inherited();
 				if(isEqual(data, _defVal))
 					draw_sprite_ext(THEME.refresh_16, 0, _bx + _bs / 2, _by + _bs / 2, 1, 1, 0, COLORS._main_icon_dark);
 				else {
-					if(buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, _m, sHOVER, sFOCUS && sp_pref.hover, __txt("Reset"), THEME.refresh_16) == 2)
+					if(buttonInstant(THEME.button_hide_fill, _bx, _by, _bs, _bs, _m, sHOVER, sFOCUS && sp_pref.hover, __txt("Reset"), THEME.refresh_16) == 2)
 						_pref.onEdit(_defVal);
 				}
 			}

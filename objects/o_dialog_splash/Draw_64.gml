@@ -52,20 +52,20 @@ if !ready exit;
 	var bx  = x1 - ui(28);
 	var by  = y0 - ui(28 + 4);
 	var txt = __txtx("splash_clear_recent", "Clear recent files");
-	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sHOVER, sFOCUS, txt, THEME.icon_delete,, COLORS._main_value_negative) == 2) {
+	if(buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, sHOVER, sFOCUS, txt, THEME.icon_delete,, COLORS._main_value_negative) == 2) {
 		ds_list_clear(RECENT_FILES);
 		RECENT_SAVE();
 	}
 	
 	// bx -= ui(28 + 4);
 	// txt = recent_thumbnail? __txtx("splash_hide_thumbnail", "Hide thumbnail") : __txtx("splash_show_thumbnail", "Show thumbnail");
-	// if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sHOVER, sFOCUS, txt, THEME.splash_thumbnail, recent_thumbnail) == 2) {
+	// if(buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, sHOVER, sFOCUS, txt, THEME.splash_thumbnail, recent_thumbnail) == 2) {
 	// 	recent_thumbnail = !recent_thumbnail;
 	// }
 	
 	bx -= ui(28 + 4);
 	txt = __txtx("splash_open_autosave", "Open autosave folder");
-	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sHOVER, sFOCUS, txt, THEME.save_auto, 0) == 2) {
+	if(buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, sHOVER, sFOCUS, txt, THEME.save_auto, 0) == 2) {
 		shellOpenExplorer(DIRECTORY + "autosave");
 	}
 	

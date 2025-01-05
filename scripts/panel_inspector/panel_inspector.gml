@@ -1227,10 +1227,10 @@ function Panel_Inspector() : PanelContent() constructor {
             draw_set_font(f_p1);
             var lx = w / 2 - string_width(inspecting.name) / 2 - ui(10);
             var ly = ui(56 - 8);
-            if(buttonInstant(THEME.button_hide, lx, ly, ui(16), ui(16), [mx, my], pHOVER, pFOCUS, __txt("Lock"), THEME.lock_12, !locked, locked? COLORS._main_icon_light : COLORS._main_icon) == 2)
+            if(buttonInstant(THEME.button_hide_fill, lx, ly, ui(16), ui(16), [mx, my], pHOVER, pFOCUS, __txt("Lock"), THEME.lock_12, !locked, locked? COLORS._main_icon_light : COLORS._main_icon) == 2)
                 locked = !locked;
             
-            if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pHOVER, pFOCUS, __txt("Presets"), THEME.preset, 1) == 2)
+            if(buttonInstant(THEME.button_hide_fill, bx, by, ui(32), ui(32), [mx, my], pHOVER, pFOCUS, __txt("Presets"), THEME.preset, 1) == 2)
                 dialogPanelCall(new Panel_Presets(inspecting), x + bx, y + by + ui(36));
         } else {
             draw_sprite_ui_uniform(THEME.preset, 1, bx + ui(32) / 2, by + ui(32) / 2, 1, COLORS._main_icon_dark);
@@ -1248,7 +1248,7 @@ function Panel_Inspector() : PanelContent() constructor {
             var tt = inspecting.insp1UpdateTooltip;
             if(inspectGroup) tt += " [All]";
             
-            if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pHOVER && ac, pFOCUS && ac, tt, icon[0], icon[1], cc) == 2) {
+            if(buttonInstant(THEME.button_hide_fill, bx, by, ui(32), ui(32), [mx, my], pHOVER && ac, pFOCUS && ac, tt, icon[0], icon[1], cc) == 2) {
                 if(inspectGroup == 1) {
                     for( var i = 0, n = array_length(inspectings); i < n; i++ ) inspectings[i].inspector1Update();
                 } else 
@@ -1265,7 +1265,7 @@ function Panel_Inspector() : PanelContent() constructor {
             var tt = inspecting.insp2UpdateTooltip;
             if(inspectGroup) tt += " [All]";
             
-            if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pHOVER && ac, pFOCUS && ac, tt, icon[0], icon[1], cc) = 2) {
+            if(buttonInstant(THEME.button_hide_fill, bx, by, ui(32), ui(32), [mx, my], pHOVER && ac, pFOCUS && ac, tt, icon[0], icon[1], cc) = 2) {
                 if(inspectGroup) {
                     for( var i = 0, n = array_length(inspectings); i < n; i++ ) inspectings[i].inspector2Update();
                 } else 
@@ -1281,7 +1281,7 @@ function Panel_Inspector() : PanelContent() constructor {
         if(inspecting && !inspecting.active) inspecting = noone;
         
         view_mode_tooltip.index = viewMode;
-        var b = buttonInstant(THEME.button_hide,  ui(8), ui(48), ui(32), ui(32), [mx, my], pHOVER, pFOCUS, view_mode_tooltip, THEME.inspector_view, viewMode);
+        var b = buttonInstant(THEME.button_hide_fill,  ui(8), ui(48), ui(32), ui(32), [mx, my], pHOVER, pFOCUS, view_mode_tooltip, THEME.inspector_view, viewMode);
         if(b == 1) {
 			if(key_mod_press(SHIFT) && mouse_wheel_up())   { viewMode = !viewMode; PREFERENCES.inspector_view_default = viewMode; }
 			if(key_mod_press(SHIFT) && mouse_wheel_down()) { viewMode = !viewMode; PREFERENCES.inspector_view_default = viewMode; }
@@ -1332,7 +1332,7 @@ function Panel_Inspector() : PanelContent() constructor {
             var bx = w - ui(44);
             var by = ui(12);
             
-            if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pHOVER, pFOCUS, __txtx("panel_inspector_set_default", "Set Metadata as default"), THEME.save, 0, COLORS._main_icon) == 2)
+            if(buttonInstant(THEME.button_hide_fill, bx, by, ui(32), ui(32), [mx, my], pHOVER, pFOCUS, __txtx("panel_inspector_set_default", "Set Metadata as default"), THEME.save, 0, COLORS._main_icon) == 2)
                 json_save_struct(DIRECTORY + "meta.json", PROJECT.meta.serialize());
             
             by += ui(36);
@@ -1341,7 +1341,7 @@ function Panel_Inspector() : PanelContent() constructor {
                     buttonInstant(noone, bx, by, ui(32), ui(32), [mx, my], pHOVER, pFOCUS, __txtx("panel_inspector_workshop_save", "Save file before upload"), THEME.workshop_upload, 0, COLORS._main_icon, 0.5);
                 } else {
                     if(PROJECT.meta.steam == FILE_STEAM_TYPE.local) { //project made locally
-                        if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pHOVER, pFOCUS, __txtx("panel_inspector_workshop_upload", "Upload to Steam Workshop"), THEME.workshop_upload, 0, COLORS._main_icon) == 2) {
+                        if(buttonInstant(THEME.button_hide_fill, bx, by, ui(32), ui(32), [mx, my], pHOVER, pFOCUS, __txtx("panel_inspector_workshop_upload", "Upload to Steam Workshop"), THEME.workshop_upload, 0, COLORS._main_icon) == 2) {
                             var s = PANEL_PREVIEW.getNodePreviewSurface();
                             if(is_surface(s)) {
                                 PROJECT.meta.author_steam_id = STEAM_USER_ID;
@@ -1357,8 +1357,8 @@ function Panel_Inspector() : PanelContent() constructor {
                     
                     if(PROJECT.meta.steam && PROJECT.meta.author_steam_id == STEAM_USER_ID) {
                         if(PROJECT.meta.steam == FILE_STEAM_TYPE.steamUpload) {
-                            buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], false, pHOVER, __txtx("panel_inspector_workshop_restart", "Open project from the workshop tab to update."), THEME.workshop_update, 0, COLORS._main_icon);
-                        } else if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pHOVER, pFOCUS, __txtx("panel_inspector_workshop_update", "Update Steam Workshop content"), THEME.workshop_update, 0, COLORS._main_icon) == 2) {
+                            buttonInstant(THEME.button_hide_fill, bx, by, ui(32), ui(32), [mx, my], false, pHOVER, __txtx("panel_inspector_workshop_restart", "Open project from the workshop tab to update."), THEME.workshop_update, 0, COLORS._main_icon);
+                        } else if(buttonInstant(THEME.button_hide_fill, bx, by, ui(32), ui(32), [mx, my], pHOVER, pFOCUS, __txtx("panel_inspector_workshop_update", "Update Steam Workshop content"), THEME.workshop_update, 0, COLORS._main_icon) == 2) {
                             SAVE_AT(PROJECT, PROJECT.path);
                             steam_ugc_update_project();
                             workshop_uploading = true;

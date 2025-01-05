@@ -86,7 +86,7 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 		if((_w - _bs) / 2 > ui(64)) {
 			if(side_button) {
 				side_button.setFocusHover(active, hover);
-				side_button.draw(_x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide);
+				side_button.draw(_x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide_fill);
 				_w -= _bs + ui(4);
 			}
 			
@@ -94,7 +94,7 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 			var by = _y + _h / 2 - _bs / 2;
 			var bc = linked? COLORS._main_accent : COLORS._main_icon;
 			
-			if(buttonInstant(THEME.button_hide, bx, by, _bs, _bs, _m, hover, active, __txt("Link axis"), THEME.value_link, linked, bc) == 2) {
+			if(buttonInstant(THEME.button_hide_fill, bx, by, _bs, _bs, _m, hover, active, __txt("Link axis"), THEME.value_link, linked, bc) == 2) {
 				linked = !linked;
 				_display_data.linked = linked;
 			
@@ -107,7 +107,7 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 			by += _h + ui(4);
 			
 			tooltip_ranged.index = ranged;
-			var b  = buttonInstant(THEME.button_hide, bx, by, _bs, _bs, _m, hover, active, tooltip_ranged, THEME.value_range, ranged, COLORS._main_icon);
+			var b  = buttonInstant(THEME.button_hide_fill, bx, by, _bs, _bs, _m, hover, active, tooltip_ranged, THEME.value_range, ranged, COLORS._main_icon);
 			var tg = false;
 			if(b == 1) {
 				if(key_mod_press(SHIFT) && mouse_wheel_up())   tg = true;

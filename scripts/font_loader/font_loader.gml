@@ -1,4 +1,4 @@
-globalvar FONT_DEF, FONT_ISLOADED, FONT_CACHE, FONT_CUST_CACHE, GLYPH_MAP;
+globalvar FONT_DEF, FONT_ISLOADED, FONT_CACHE, FONT_CUST_CACHE, GLYPH_MAP, FONT_LIST;
 globalvar f_h1, f_h2, f_h3, f_h5, f_p0, f_p0b, f_p1, f_p1b, f_p2, f_p2b, f_p3, f_p4;
 globalvar f_code, f_sdf, f_sdf_medium;
 
@@ -10,6 +10,7 @@ global.LINE_HEIGHTS = {};
 	FONT_CUST_CACHE = {};
 	FONT_ISLOADED   = false;
 	GLYPH_MAP       = {};
+	FONT_LIST       = {};
 	
 	f_h1   = _f_h1;
 	f_h2   = _f_h2;
@@ -111,6 +112,11 @@ function _font_path(rel) {
 	return defPath;
 }
 
+function _font_load_default(name, def) {
+	FONT_LIST[$ name] = { data: noone, font: def }
+	return def;
+}
+
 function _font_load_from_struct(str, name, def, over = true) {
 	if(!struct_has(str, name)) return def;
 	
@@ -131,12 +137,15 @@ function _font_load_from_struct(str, name, def, over = true) {
 	var _sdf  = struct_try_get(font, "sdf", false);
 	var _font = _font_add(path, round(font.size * UI_SCALE), _sdf);
 	
+	FONT_LIST[$ name] = { data: str, font: _font }
+	
 	return _font;
 }
 
 function font_clear(font) { if(font_exists(font)) font_delete(font); }
 
 function loadFonts() {
+	
 	if(FONT_ISLOADED) {
 		font_clear(f_h1);
 		font_clear(f_h2);
@@ -162,24 +171,26 @@ function loadFonts() {
 	
 	var path = _font_path("./fonts.json");
 	
+	FONT_LIST = {};
+	
 	if(FONT_DEF || !file_exists_empty(path)) {
-		f_h1   = _f_h1;
-		f_h2   = _f_h2;
-		f_h3   = _f_h3;
-		f_h5   = _f_h5;
-		f_p0   = _f_p0;
-		f_p0b  = _f_p0b;
-		f_p1   = _f_p1;
-		f_p1b  = _f_p1b;
-		f_p2   = _f_p2;
-		f_p2b  = _f_p2b;
+		f_h1   = _font_load_default("h1",  _f_h1);
+		f_h2   = _font_load_default("h2",  _f_h2);
+		f_h3   = _font_load_default("h3",  _f_h3);
+		f_h5   = _font_load_default("h5",  _f_h5);
+		f_p0   = _font_load_default("p0",  _f_p0);
+		f_p0b  = _font_load_default("p0b", _f_p0b);
+		f_p1   = _font_load_default("p1",  _f_p1);
+		f_p1b  = _font_load_default("p1b", _f_p1b);
+		f_p2   = _font_load_default("p2",  _f_p2);
+		f_p2b  = _font_load_default("p2b", _f_p2b);
 		
-		f_p3   = _f_p3;
-		f_p4   = _f_p4;
+		f_p3   = _font_load_default("p3",  _f_p3);
+		f_p4   = _font_load_default("p4",  _f_p4);
 		
-		f_code = _f_code;
-		f_sdf  = _f_sdf;
-		f_sdf_medium  = _f_sdf_medium;
+		f_code = _font_load_default("code", _f_code);
+		f_sdf  = _font_load_default("sdf",  _f_sdf);
+		f_sdf_medium  = _font_load_default("sdf_medium", _f_sdf_medium);
 		FONT_ISLOADED = false;
 		
 		__font_refresh();
@@ -198,7 +209,7 @@ function loadFonts() {
 	f_p0b = _font_load_from_struct(fontDef, "p0b", _f_p0b);
 	
 	f_p1  = _font_load_from_struct(fontDef, "p1",  _f_p1);
-	// f_p1b = _font_load_from_struct(fontDef, "p1b", _f_p1b);
+	f_p1b = _font_load_from_struct(fontDef, "p1b", _f_p1b);
 	
 	f_p2  = _font_load_from_struct(fontDef, "p2", _f_p2);
 	f_p3  = _font_load_from_struct(fontDef, "p3", _f_p3);

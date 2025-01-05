@@ -369,7 +369,7 @@ function Theme() constructor {
     button_hide_left                = s_button_hide_left;
     button_hide_middle              = s_button_hide_middle;
     button_hide_right               = s_button_hide_right;
-    button_hide                     = s_button_hide_fill;
+    button_hide                     = s_button_hide;
     button_left                     = s_button_left;
     button_lime                     = s_button_lime;
     button_middle                   = s_button_middle;
@@ -388,7 +388,7 @@ function ThemeColorDef() constructor {
 	main_mdblack = #1e1e2c;
 	main_black   = #272736;
 	main_dkgrey  = #3b3b4e;
-	main_dark    = #4da6ff;
+	main_dark    = #505066;
 	main_grey    = #6d6d81;
 	main_ltgrey  = #7e7e8f;
 	main_mdwhite = #9f9fb5;

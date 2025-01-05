@@ -63,7 +63,7 @@ function outputBox() : widget() constructor {
     	var _bx = _x + _w - ui(8) - _bs;
     	var _by = _y + ui(8);
     	
-    	if(buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, _m, ihover, iactive, "", THEME.arrow, expand? 3 : 0) == 2)
+    	if(buttonInstant(THEME.button_hide_fill, _bx, _by, _bs, _bs, _m, ihover, iactive, "", THEME.arrow, expand? 3 : 0) == 2)
     		expand = !expand;
         
 		return _hh;
@@ -118,7 +118,7 @@ function outputStructBox() : widget() constructor {
     	var _bx = _x + _w - ui(8) - _bs;
     	var _by = _y + ui(8);
     	
-    	if(buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, _m, ihover, iactive, "", THEME.arrow, expand? 3 : 0) == 2)
+    	if(buttonInstant(THEME.button_hide_fill, _bx, _by, _bs, _bs, _m, ihover, iactive, "", THEME.arrow, expand? 3 : 0) == 2)
     		expand = !expand;
         
 		return _hh;

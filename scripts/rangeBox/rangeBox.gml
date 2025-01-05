@@ -73,13 +73,13 @@ function rangeBox(_type, _onModify) : widget() constructor {
 		if((_w - _bs) / 2 > ui(64)) {
 			if(side_button) {
 				side_button.setFocusHover(active, hover);
-				side_button.draw(_x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide);
+				side_button.draw(_x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide_fill);
 				_w -= _bs + ui(4);
 			}
 			
 			var bx = _x;
 			var by = _y + _h / 2 - _bs / 2;
-			var b  = buttonInstant(THEME.button_hide, bx, by, _bs, _bs, _m, hover, active, tooltip, THEME.value_link, linked, _icon_blend);
+			var b  = buttonInstant(THEME.button_hide_fill, bx, by, _bs, _bs, _m, hover, active, tooltip, THEME.value_link, linked, _icon_blend);
 			var tg = false;
 			
 			if(b == 1) {

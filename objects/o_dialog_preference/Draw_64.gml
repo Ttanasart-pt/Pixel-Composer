@@ -10,7 +10,7 @@ if !ready exit;
 	
 	var bx = dialog_x + ui(24);
 	var by = dialog_y + ui(18);
-	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sHOVER, sFOCUS, destroy_on_click_out? __txt("Pin") : __txt("Unpin"), 
+	if(buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, sHOVER, sFOCUS, destroy_on_click_out? __txt("Pin") : __txt("Unpin"), 
 		THEME.pin, !destroy_on_click_out, destroy_on_click_out? COLORS._main_icon : COLORS._main_icon_light) == 2)
 			destroy_on_click_out = !destroy_on_click_out;
 			
@@ -67,29 +67,30 @@ if !ready exit;
 		sp_pref.draw(px, py);
 		
 	} else if(page_current == 3) {
-		var _w = ui(200);
-		var _h = ui(32);
+		var _sp_x = ui(296);
+		var _sp_y = ui(28);
 		
-		var _x   = dialog_x + dialog_w - ui(8);
-		var bx   = _x - ui(48);
-		var _txt = __txtx("pref_reset_color", "Reset colors");
-		var b = buttonInstant(THEME.button_hide, bx, py, ui(32), ui(32), mouse_ui, sHOVER, sFOCUS, _txt, THEME.refresh_icon);
-		if(b == 2) {
-			var path = $"{DIRECTORY}Themes/{PREFERENCES.theme}/override.json";
-			if(file_exists_empty(path)) file_delete(path);
-			loadColor(PREFERENCES.theme);
+		var x1 = px + _sp_x - ui(8);
+		sp_theme.verify(_sp_x - ui(8), panel_height);
+		sp_theme.setFocusHover(sFOCUS, sHOVER);
+		sp_theme.draw(px, py);
+		
+		var _res_w = panel_width - _sp_x;
+		
+		tab_resources.setFocusHover(sFOCUS, sHOVER);
+        tab_resources.draw(px + _sp_x + ui(32), py, _res_w - ui(64), ui(24), theme_page);
+		
+		var sp = sp_theme_colors;
+		
+		switch(theme_page) {
+			case 0 : sp = sp_theme_colors;  break;
+			case 1 : sp = sp_theme_sprites; break;
+			case 2 : sp = sp_theme_fonts;   break;
 		}
 		
-		var x1 = dialog_x + ui(padding) + page_width;
-		var x2 = _x - ui(32);
-		
-		draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
-		draw_text(x1 + ui(8), py + _h / 2, __txt("Theme"));
-		sb_theme.setFocusHover(sFOCUS, sHOVER);
-		sb_theme.draw(x2 - ui(24) - _w, py, _w, _h, PREFERENCES.theme);
-		
-		sp_colors.setFocusHover(sFOCUS, sHOVER);
-		sp_colors.draw(px, py + ui(40));
+		sp.verify(_res_w, panel_height - _sp_y);
+		sp.setFocusHover(sFOCUS, sHOVER);
+		sp.draw(px + _sp_x, py + _sp_y);
 		
 	} else if(page_current == 4) {
 		if(mouse_press(mb_left, sFOCUS)) 

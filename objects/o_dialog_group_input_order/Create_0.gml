@@ -95,7 +95,7 @@ event_inherited();
 			
 			if(dragging == disp) {
 				draw_sprite_ui(THEME.hamburger_s, 0, hg / 2, _y + hg / 2,,,, COLORS._main_accent, 1);
-				draw_sprite_stretched_ext(THEME.button_hide, 3, 0, _y0, con_w, hg, COLORS._main_icon, 1);
+				draw_sprite_stretched_ext(THEME.button_hide_fill, 3, 0, _y0, con_w, hg, COLORS._main_icon, 1);
 			}
 			
 			_y += hg + padd;

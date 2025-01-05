@@ -185,7 +185,7 @@ function Panel_Palette_Mixer() : PanelContent() constructor {
 			var _by = pal_y;
 			var _bs = ui(24);
 			
-			var _b = buttonInstant(THEME.button_hide, _bx, _by, _bs, pal_h, [ mx, my ], pHOVER, pFOCUS, "", THEME.hamburger_s);
+			var _b = buttonInstant(THEME.button_hide_fill, _bx, _by, _bs, pal_h, [ mx, my ], pHOVER, pFOCUS, "", THEME.hamburger_s);
 			if(_b == 2) {
 				menuCall("", [
 					menuItem("Save palette as...", function() {

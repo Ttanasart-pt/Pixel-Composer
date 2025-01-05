@@ -84,7 +84,7 @@ function globalvar_viewer_draw(xx, yy, ww, _m, focus, hover, _scrollPane, rx, ry
 			var _wd_ww = wd_w - _wd_h - ui(32 + 4);
 			
 			_edit.tb_name.draw(_wd_xx, yy, _wd_ww, _wd_h, _inpu.name, _m, TEXTBOX_INPUT.text);
-			if(buttonInstant(THEME.button_hide, _wd_x + wd_w - _wd_h, yy, _wd_h, _wd_h, _m, _hov, _foc,, THEME.icon_delete,, COLORS._main_value_negative) == 2) 
+			if(buttonInstant(THEME.button_hide_fill, _wd_x + wd_w - _wd_h, yy, _wd_h, _wd_h, _m, _hov, _foc,, THEME.icon_delete,, COLORS._main_value_negative) == 2) 
 				del = j;
 			yy += _wd_h + _pd_h * 2;
 			hh += _wd_h + _pd_h * 2;

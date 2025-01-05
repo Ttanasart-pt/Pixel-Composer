@@ -828,7 +828,7 @@ function Panel_Collection() : PanelContent() constructor {
 		var by = ui(9);
 		var bs = ui(32);
 		
-		if(buttonInstant(THEME.button_hide, bx, by, bs, bs, [mx, my], pHOVER, pFOCUS, __txt("Search"), THEME.search_24, 0, searching? COLORS._main_accent : COLORS._main_icon) == 2)
+		if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, [mx, my], pHOVER, pFOCUS, __txt("Search"), THEME.search_24, 0, searching? COLORS._main_accent : COLORS._main_icon) == 2)
 			search_toggle();
 			
 		bx -= ui(36);
@@ -847,7 +847,7 @@ function Panel_Collection() : PanelContent() constructor {
 			if(bx < rootx) return;
 			if(context != root) {
 				var txt = __txtx("panel_collection_add_node", "Add selecting node as collection");
-				if(buttonInstant(THEME.button_hide, bx, by, bs, bs, [mx, my], pHOVER, pFOCUS, txt, THEME.add_20, 0, COLORS._main_value_positive) == 2) {
+				if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, [mx, my], pHOVER, pFOCUS, txt, THEME.add_20, 0, COLORS._main_value_positive) == 2) {
 					if(PANEL_INSPECTOR.getInspecting() != noone) {
 						data_path = context.path;
 						var dia = dialogCall(o_dialog_file_name_collection, mouse_mx + ui(8), mouse_my + ui(8));
@@ -864,7 +864,7 @@ function Panel_Collection() : PanelContent() constructor {
 			
 			if(bx < rootx) return;
 			var txt = __txtx("panel_collection_add_folder", "Add folder");
-			if(buttonInstant(THEME.button_hide, bx, by, bs, bs, [mx, my], pHOVER, pFOCUS, txt) == 2) {
+			if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, [mx, my], pHOVER, pFOCUS, txt) == 2) {
 				fileNameCall(context.path, function (txt) {
 					directory_create(txt);
 					refreshContext();
@@ -878,14 +878,14 @@ function Panel_Collection() : PanelContent() constructor {
 		if(pageStr[page] != "Nodes") {
 			if(bx < rootx) return;
 			var txt = __txtx("panel_collection_open_file", "Open in file explorer");
-			if(buttonInstant(THEME.button_hide, bx, by, bs, bs, [mx, my], pHOVER, pFOCUS, txt, THEME.path_open) == 2)
+			if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, [mx, my], pHOVER, pFOCUS, txt, THEME.path_open) == 2)
 				shellOpenExplorer(context.path);
 			draw_sprite_ui_uniform(THEME.path_open, 1, bx + bs / 2, by + bs / 2, 1, c_white);
 			bx -= ui(36);
 			
 			if(bx < rootx) return;
 			var txt = __txt("Refresh");
-			if(buttonInstant(THEME.button_hide, bx, by, bs, bs, [mx, my], pHOVER, pFOCUS, txt, THEME.refresh_icon) == 2)
+			if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, [mx, my], pHOVER, pFOCUS, txt, THEME.refresh_icon) == 2)
 				refreshContext();
 			bx -= ui(36);
 		
@@ -893,7 +893,7 @@ function Panel_Collection() : PanelContent() constructor {
 		
 		if(bx < rootx) return;
 		var txt = __txt("Settings");
-		if(buttonInstant(THEME.button_hide, bx, by, bs, bs, [mx, my], pHOVER, pFOCUS, txt, THEME.gear) == 2)
+		if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, [mx, my], pHOVER, pFOCUS, txt, THEME.gear) == 2)
 			dialogPanelCall(new Panel_Collections_Setting(), x + bx, y + by - 8, { anchor: ANCHOR.bottom | ANCHOR.left }); 
 		bx -= ui(36);
 	}

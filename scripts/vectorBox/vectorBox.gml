@@ -117,7 +117,7 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 				if(is(side_button, buttonAnchor))
 					side_button.index = round(array_safe_get(_data, 0) * 2 + array_safe_get(_data, 1) * 6);
 				side_button.setFocusHover(active, hover);
-				side_button.draw(_x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide);
+				side_button.draw(_x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide_fill);
 				_w -= _bs + ui(4);
 			}
 			
@@ -131,7 +131,7 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 				var _icon_blend = linked? COLORS._main_accent : (link_inactive_color == noone? COLORS._main_icon : link_inactive_color);
 				var bx = _x;
 				var by = _y + _h / 2 - _bs / 2;
-				var b  = buttonInstant(THEME.button_hide, bx, by, _bs, _bs, _m, hover, active, tooltip, THEME.value_link, linked, _icon_blend);
+				var b  = buttonInstant(THEME.button_hide_fill, bx, by, _bs, _bs, _m, hover, active, tooltip, THEME.value_link, linked, _icon_blend);
 				
 				var tg = false;
 				if(b == 1) {

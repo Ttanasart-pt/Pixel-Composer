@@ -2243,7 +2243,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                     var bs = ui(28);
                     if(tbx - (bs + ui(4)) < cont_x) break;
                     
-                    var b = buttonInstant(THEME.button_hide, tbx - bs, tby - bs / 2, bs, bs, _m, pHOVER, pFOCUS, tbTooltip, tbObj, tbInd);
+                    var b = buttonInstant(THEME.button_hide_fill, tbx - bs, tby - bs / 2, bs, bs, _m, pHOVER, pFOCUS, tbTooltip, tbObj, tbInd);
                     if(b == 2) tb[3]( { x: x + tbx - bs, y: y + tby - bs / 2 } );
                     tbx -= bs + ui(4);
                 }
@@ -2253,7 +2253,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
             tbx -= ui(2);
             
             draw_set_color(COLORS.panel_toolbar_separator);
-            draw_line_width(tbx, tby - toolbar_height / 2 + ui(8), tbx, tby + toolbar_height / 2 - ui(8), 2);
+            draw_line_round(tbx, tby - toolbar_height / 2 + ui(8), tbx, tby + toolbar_height / 2 - ui(8), 2);
             
             if(tbx < cont_x) break;
             tbx -= ui(6);

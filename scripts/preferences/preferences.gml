@@ -15,6 +15,7 @@
 		PREFERENCES.window_fix_height				= 800;
 		
 		PREFERENCES.theme							= "default";
+		PREFERENCES.theme_override					= "override";
 		PREFERENCES.local							= "en";
 		PREFERENCES.font_overwrite					= "";
 		

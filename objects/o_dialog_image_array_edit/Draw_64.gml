@@ -27,7 +27,7 @@ if !target exit;
 	var bx = dialog_x + dialog_w - ui(padding - 8) - bw;
 	var by = dialog_y + ui(18);
 	
-	if(buttonInstant(THEME.button_hide, bx, by, bw, bh, mouse_ui, sHOVER, sFOCUS, __txt("Add") + "...", THEME.add,, COLORS._main_value_positive) == 2) {
+	if(buttonInstant(THEME.button_hide_fill, bx, by, bw, bh, mouse_ui, sHOVER, sFOCUS, __txt("Add") + "...", THEME.add,, COLORS._main_value_positive) == 2) {
 		
 		var path = get_open_filenames_compat("image|*.png;*.jpg", "");
 		key_release();
@@ -44,6 +44,6 @@ if !target exit;
 	
 	bx -= ui(36);
 	
-	if(buttonInstant(THEME.button_hide, bx, by, bw, bh, mouse_ui, sHOVER, sFOCUS, __txtx("array_edit_sort_name", "Sort by name"), THEME.text) == 2)
+	if(buttonInstant(THEME.button_hide_fill, bx, by, bw, bh, mouse_ui, sHOVER, sFOCUS, __txtx("array_edit_sort_name", "Sort by name"), THEME.text) == 2)
 		sortByName();
 #endregion

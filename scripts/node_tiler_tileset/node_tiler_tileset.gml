@@ -107,7 +107,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				var by = _yy;
 				var bs = ui(24);
 				
-				if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, _hover, _focus, "Clear selection", THEME.canvas_tools_selection_rectangle, 0, COLORS._main_icon_light) == 2) {
+				if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, _m, _hover, _focus, "Clear selection", THEME.canvas_tools_selection_rectangle, 0, COLORS._main_icon_light) == 2) {
 					brush.brush_indices = [[]];
 					brush.brush_width   = 0;
 					brush.brush_height  = 0;
@@ -116,7 +116,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				var _lx = bx + bs + ui(8);
 				
 				bx = _x + _w - bs;
-				if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, _hover, _focus, "Zoom to fit", THEME.path_tools_transform, 0, COLORS._main_icon_light) == 2) {
+				if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, _m, _hover, _focus, "Zoom to fit", THEME.path_tools_transform, 0, COLORS._main_icon_light) == 2) {
 				    if(is_surface(_tileSet)) {
 				        var _tdim = surface_get_dimension(_tileSet);
 						var _sw   = _w - _pd * 2;
@@ -603,7 +603,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				var _fromSel = _brush_tiles ==  9 || _brush_tiles == 15 || _brush_tiles == 25 ||_brush_tiles == 48 || _brush_tiles == 55;
 				
 				var _txt = _fromSel? "New autoterrain from selection" : "New autoterrain";
-				if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, _hover, _focus, _txt, THEME.add_16, 0, COLORS._main_value_positive) == 2) {
+				if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, _m, _hover, _focus, _txt, THEME.add_16, 0, COLORS._main_value_positive) == 2) {
 					var _new_at = noone;
 					var _indx   = array_create(brush.brush_width * brush.brush_height);
 					
@@ -673,7 +673,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					var by = _yy + _hg / 2 - bs / 2;
 					var bc = _hov? COLORS._main_value_negative : COLORS._main_icon;
 					
-					if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, _hover, _focus, "", THEME.minus_16, 0, bc) == 2) 
+					if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, _m, _hover, _focus, "", THEME.minus_16, 0, bc) == 2) 
 						del = i;
 				}
 				
@@ -944,13 +944,13 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				
 				var _tsh = palette_viewer.fixHeight > 0? palette_viewer.fixHeight - ui(24 + 4) : brush_palette_h;
 				
-				if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, _hover, _focus, "Pencil", THEME.canvas_tools_pencil, 0, palette_tool == 1? COLORS._main_accent : c_white) == 2)
+				if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, _m, _hover, _focus, "Pencil", THEME.canvas_tools_pencil, 0, palette_tool == 1? COLORS._main_accent : c_white) == 2)
 					palette_tool = palette_tool == 1? 0 : 1;
 				
 				draw_sprite_ui_uniform(THEME.canvas_tools_pencil, 1, bx + bs / 2, by + bs / 2, 1, palette_tool == 1? COLORS._main_accent : c_white);
 				
 				bx += bs + ui(1);
-				var b = buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, _hover, _focus, "Eraser", THEME.canvas_tools_eraser, 0, palette_tool == 2? COLORS._main_accent : c_white)
+				var b = buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, _m, _hover, _focus, "Eraser", THEME.canvas_tools_eraser, 0, palette_tool == 2? COLORS._main_accent : c_white)
 				gpu_set_tex_filter(true); draw_sprite_ext(THEME.arrow, 0, bx + bs - 4, by + bs - 4, .75, .75, -45, COLORS._main_icon); gpu_set_tex_filter(false);
 				
 				if(b == 2) palette_tool = palette_tool == 2? 0 : 2;
@@ -963,7 +963,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				var _lx = bx + bs + ui(8);
 				
 				bx = _x + _w - bs;
-				if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, _hover, _focus, "Zoom to fit", THEME.path_tools_transform, 0, COLORS._main_icon_light) == 2) {
+				if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, _m, _hover, _focus, "Zoom to fit", THEME.path_tools_transform, 0, COLORS._main_icon_light) == 2) {
 				    if(is_surface(brush_palette_tile)) {
 				        var _tdim = surface_get_dimension(brush_palette_tile);
 	    				var _sw   = _w - _pd * 2;
@@ -1411,7 +1411,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			if(_brush_tiles < 1) 
 			    draw_sprite_uniform(THEME.add_16, 0, bx + bs / 2, by + bs / 2, 1, COLORS._main_icon);
 			    
-			else if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, _hover, _focus, "New animated tiles", THEME.add_16, 0, COLORS._main_value_positive) == 2) {
+			else if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, _m, _hover, _focus, "New animated tiles", THEME.add_16, 0, COLORS._main_value_positive) == 2) {
 				var _new_at = noone;
 				var _indx   = array_create(brush.brush_width * brush.brush_height);
 				
@@ -1478,7 +1478,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		    		var bs = ui(24);
 					var bx = _w  - bs - ui(4);
 					var by = _yy + _hg / 2 - bs / 2;
-					if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, _hover, _focus, "", THEME.minus_16, 0, _hov? COLORS._main_value_negative : COLORS._main_icon) == 2) 
+					if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, _m, _hover, _focus, "", THEME.minus_16, 0, _hov? COLORS._main_value_negative : COLORS._main_icon) == 2) 
 						del = i;	
 				}
 				

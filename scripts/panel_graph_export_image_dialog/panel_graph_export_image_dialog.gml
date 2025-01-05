@@ -161,7 +161,7 @@ function Panel_Graph_Export_Image(targetPanel) : PanelContent() constructor {
 			var bx = _sx1 - ui(24) - ui(4);
 			var by = _sy  + ui(1)  + ui(4);
 			
-			if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), _m, pHOVER, pFOCUS) == 2)
+			if(buttonInstant(THEME.button_hide_fill, bx, by, ui(24), ui(24), _m, pHOVER, pFOCUS) == 2)
 				refresh();
 			draw_sprite_ui(THEME.refresh_16, 0, bx + ui(12), by + ui(12),,,, COLORS._main_icon, 1);
 			

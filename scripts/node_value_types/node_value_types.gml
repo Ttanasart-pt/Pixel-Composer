@@ -529,7 +529,7 @@ function nodeValueUnit(__nodeValue) constructor {
 	static draw = function(_x, _y, _w, _h, _m) {
 		triggerButton.icon_index = mode;
 		triggerButton.tooltip.index = mode;
-		triggerButton.draw(_x, _y, _w, _h, _m, THEME.button_hide);
+		triggerButton.draw(_x, _y, _w, _h, _m, THEME.button_hide_fill);
 	}
 	
 	static invApply = function(value, index = 0) {
