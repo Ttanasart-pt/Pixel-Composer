@@ -40,7 +40,7 @@ function Panel_Resource_Monitor() : PanelContent() constructor {
 	// 	var _cpu = cpu_use_acc / clamp(cpu_rec, 1, 5);
 	// 	var _mem = memory_use / memory_max;
 		
-	// 	draw_sprite_stretched_ext(THEME.s_box_r2, 0, 0, 0, w * _mem, h, COLORS._main_value_positive, 0.2);
+	// 	draw_sprite_stretched_ext(THEME.box_r2, 0, 0, 0, w * _mem, h, COLORS._main_value_positive, 0.2);
 	// 	draw_set_text(f_code, fa_left, fa_center, COLORS._main_text);
 		
 	// 	var _tx = ui(12);

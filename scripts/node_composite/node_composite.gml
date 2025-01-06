@@ -175,8 +175,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				var _sss = min(ssh / _ssw, ssh / _ssh);
 				draw_surface_ext_safe(_surf, _sx0, _sy0, _sss, _sss, 0, c_white, 1);
 				
-				if(surface_selecting == index) draw_sprite_stretched_add(THEME.s_box_r2, 1, _sx0, _sy0, ssh, ssh, COLORS._main_accent, 1);
-				else						   draw_sprite_stretched_add(THEME.s_box_r2, 1, _sx0, _sy0, ssh, ssh, COLORS._main_icon, 0.3);
+				if(surface_selecting == index) draw_sprite_stretched_add(THEME.box_r2, 1, _sx0, _sy0, ssh, ssh, COLORS._main_accent, 1);
+				else						   draw_sprite_stretched_add(THEME.box_r2, 1, _sx0, _sy0, ssh, ssh, COLORS._main_icon, 0.3);
 			#endregion
 			
 			#region canvas layers

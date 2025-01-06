@@ -23,10 +23,10 @@ for( var i = 0, n = array_length(pal); i < n; i++ ) {
 	var _x = x0 + ui(8) + c * ss;
 	var _y = y0 + ui(8) + r * ss;
 	
-	draw_sprite_stretched_ext(THEME.s_box_r2, 0, _x + 1, _y + 1, ss - 2, ss - 2, pal[i]);
+	draw_sprite_stretched_ext(THEME.box_r2, 0, _x + 1, _y + 1, ss - 2, ss - 2, pal[i]);
 	
 	if(point_in_rectangle(mouse_mx, mouse_my, _x, _y, _x + ss - 1, _y + ss - 1)) {
-		draw_sprite_stretched_add(THEME.s_box_r2, 1, _x + 1, _y + 1, ss - 2, ss - 2, c_white, 0.3);
+		draw_sprite_stretched_add(THEME.box_r2, 1, _x + 1, _y + 1, ss - 2, ss - 2, c_white, 0.3);
 		
 		if(selecting != i && onApply) onApply(pal[i]);
 		selecting = i;

@@ -83,11 +83,11 @@ function Panel_Linear_Setting() : PanelContent() constructor {
                 var lbw = w - ui(8);
                 
                 if(pHOVER && point_in_rectangle(mx, my, lbx, yy, lbx + lbw, yy + lbh)) {
-                    draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, lbx, yy, lbw, lbh, COLORS.panel_inspector_group_hover, 1);
+                    draw_sprite_stretched_ext(THEME.box_r5_clr, 0, lbx, yy, lbw, lbh, COLORS.panel_inspector_group_hover, 1);
                 	if(mouse_press(mb_left, pFOCUS)) _prop[@ 1] = !coll;
                 	
                 } else
-                    draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, lbx, yy, lbw, lbh, CDEF.main_ltgrey, 1);
+                    draw_sprite_stretched_ext(THEME.box_r5_clr, 0, lbx, yy, lbw, lbh, CDEF.main_ltgrey, 1);
             	
                 draw_sprite_ui(THEME.arrow, coll * 3, lbx + ui(16), yy + lbh / 2, 1, 1, 0, COLORS.panel_inspector_group_bg, 1);
                 draw_set_text(f_p2, fa_left, fa_center, COLORS.panel_inspector_group_bg, 1);
@@ -113,7 +113,7 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 				var _ind  = _prop.index;
 				var _colr = _prop.color;
 				
-				draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, ui(4), yy + ui(2), w - ui(8), th - ui(4), _colr, 1);
+				draw_sprite_stretched_ext(THEME.box_r5_clr, 0, ui(4), yy + ui(2), w - ui(8), th - ui(4), _colr, 1);
 				draw_sprite_ui(_spr, _ind, ui(4) + th / 2, yy + th / 2);
 				
 				draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);

@@ -133,7 +133,7 @@ function Panel_Palette() : PanelContent() constructor {
 				
 				if(_palRes.hoverIndex > noone) {
 					var _box = _palRes.hoverBBOX;
-					draw_sprite_stretched_add(THEME.s_box_r2, 1, _box[0] + 1, _box[1] + 1, _box[2] - 2, _box[3] - 2, c_white, 0.3);
+					draw_sprite_stretched_add(THEME.box_r2, 1, _box[0] + 1, _box[1] + 1, _box[2] - 2, _box[3] - 2, c_white, 0.3);
 				}
 				
 				if(mouse_press(mb_left, pFOCUS)) {

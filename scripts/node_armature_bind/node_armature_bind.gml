@@ -151,11 +151,11 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 							}
 								
 							draw_set_color(COLORS._main_accent);
-							draw_sprite_stretched_add(THEME.s_box_r2, 1, _sx, _sy, _sw * _ss, _sh * _ss, COLORS._main_accent, 1);
+							draw_sprite_stretched_add(THEME.box_r2, 1, _sx, _sy, _sw * _ss, _sh * _ss, COLORS._main_accent, 1);
 							
 						} else {
 							draw_set_color(COLORS.node_composite_bg);
-							draw_sprite_stretched_add(THEME.s_box_r2, 1, _sx, _sy, _sw * _ss, _sh * _ss, COLORS._main_icon, .3);
+							draw_sprite_stretched_add(THEME.box_r2, 1, _sx, _sy, _sw * _ss, _sh * _ss, COLORS._main_icon, .3);
 						}
 				
 						_sx += _sw * _ss + 4;
@@ -295,8 +295,8 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				var _ins = _ind == dynamic_input_inspecting;
 				
 				draw_surface_ext_safe(_surf, _sx0, _sy0, _sss, _sss, 0, c_white, 1);
-				if(_ins) draw_sprite_stretched_add(THEME.s_box_r2, 1, _sx0, _sy0, ssh, ssh, COLORS._main_text_accent, 1);
-				else     draw_sprite_stretched_add(THEME.s_box_r2, 1, _sx0, _sy0, ssh, ssh, COLORS._main_icon, .3);
+				if(_ins) draw_sprite_stretched_add(THEME.box_r2, 1, _sx0, _sy0, ssh, ssh, COLORS._main_text_accent, 1);
+				else     draw_sprite_stretched_add(THEME.box_r2, 1, _sx0, _sy0, ssh, ssh, COLORS._main_icon, .3);
 				
 				var tc = _ins? COLORS._main_text_accent : COLORS._main_icon;
 				if(hov) tc = COLORS._main_text;

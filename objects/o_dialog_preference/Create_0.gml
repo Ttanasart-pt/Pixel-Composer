@@ -939,7 +939,7 @@ event_inherited();
 				var _tc = CDEF.main_ltgrey;
 				
 				BLEND_OVERRIDE
-            	draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, padx, _yy, ww - padx * 2, sectH, _hv? COLORS.panel_inspector_group_hover : COLORS.panel_inspector_group_bg, 1);
+            	draw_sprite_stretched_ext(THEME.box_r5_clr, 0, padx, _yy, ww - padx * 2, sectH, _hv? COLORS.panel_inspector_group_hover : COLORS.panel_inspector_group_bg, 1);
             	
 				if(_hv && _focus) {
                 	if(DOUBLE_CLICK) {
@@ -962,7 +962,7 @@ event_inherited();
 				 if(_cAll ==  1) { for( var i = 0; i < len; i++ ) struct_set(collapsed, group_labels[i].key, 0); } 
 			else if(_cAll == -1) { for( var i = 0; i < len; i++ ) struct_set(collapsed, group_labels[i].key, 1); }
 			
-			sections[page_current] = sect;
+			// sections[page_current] = sect;
 		#endregion
 		
 		return hh + ui(16);
@@ -1425,7 +1425,7 @@ event_inherited();
 				var _tc = CDEF.main_ltgrey;
 				
 				BLEND_OVERRIDE
-            	draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, padx, _yy, ww - padx * 2, sectH, _hv? COLORS.panel_inspector_group_hover : COLORS.panel_inspector_group_bg, 1);
+            	draw_sprite_stretched_ext(THEME.box_r5_clr, 0, padx, _yy, ww - padx * 2, sectH, _hv? COLORS.panel_inspector_group_hover : COLORS.panel_inspector_group_bg, 1);
             	
 				if(_hv && sFOCUS) {
                 	if(DOUBLE_CLICK) {

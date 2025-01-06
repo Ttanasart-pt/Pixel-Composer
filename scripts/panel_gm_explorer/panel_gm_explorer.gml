@@ -82,11 +82,11 @@ function GM_Explore_draw(gmBinder, _x, _y, _w, _h, _m, _hover, _focus) {
 	    var _name = _res[i].name;
 	    
 	    if(_hover && point_in_rectangle(_m[0], _m[1], 0, _yy, _ww, _yy + lbh)) {
-            draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, 0, _yy, _ww, lbh, COLORS.panel_inspector_group_hover, 1);
+            draw_sprite_stretched_ext(THEME.box_r5_clr, 0, 0, _yy, _ww, lbh, COLORS.panel_inspector_group_hover, 1);
             if(mouse_press(mb_left, _focus)) _res[i].closed = !_res[i].closed;
             
         } else
-            draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, 0, _yy, _ww, lbh, COLORS.panel_inspector_group_bg, 1);
+            draw_sprite_stretched_ext(THEME.box_r5_clr, 0, 0, _yy, _ww, lbh, COLORS.panel_inspector_group_bg, 1);
         
         
         draw_sprite_ui(THEME.arrow, _res[i].closed? 0 : 3, ui(16), _yy + lbh / 2, 1, 1, 0, COLORS.panel_inspector_group_bg, 1);    

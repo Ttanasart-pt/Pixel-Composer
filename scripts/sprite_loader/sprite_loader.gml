@@ -53,8 +53,7 @@ function _sprite_load_from_struct(str, theme, key) {
 }
 
 function loadGraphic(theme = "default") {
-	THEME    = new Theme();
-	if(theme == "default") return;
+	THEME = {};
 	
 	var path   = _sprite_path("./graphics.json", theme);
 	var sprDef = json_load_struct(_sprite_path("./graphics.json", "default"));

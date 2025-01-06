@@ -107,8 +107,8 @@
 			var dcy  = mys - 96 - 8 - dch;
 			var _dcw = dcw * clamp(o_main.dc_check / PREFERENCES.double_click_delay, 0., 1.);
 		
-			draw_sprite_stretched_ext(THEME.s_box_r2, 0, dcx, dcy,  dcw, dch, COLORS._main_icon_dark,  0.5);
-			draw_sprite_stretched_ext(THEME.s_box_r2, 0, dcx, dcy, _dcw, dch, COLORS._main_icon_light, 1.0);
+			draw_sprite_stretched_ext(THEME.box_r2, 0, dcx, dcy,  dcw, dch, COLORS._main_icon_dark,  0.5);
+			draw_sprite_stretched_ext(THEME.box_r2, 0, dcx, dcy, _dcw, dch, COLORS._main_icon_light, 1.0);
 		}
 		
 		var cc = PEN_USE? COLORS._main_accent : c_white;

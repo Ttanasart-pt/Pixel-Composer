@@ -649,7 +649,7 @@ event_inherited();
 					
 					BLEND_OVERRIDE
 					if(PREFERENCES.dialog_add_node_grouping == 1)
-                    	draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, ui(16), _yy, ww - ui(32), _lbh, _hv? COLORS.panel_inspector_group_hover : COLORS.panel_inspector_group_bg, 1);
+                    	draw_sprite_stretched_ext(THEME.box_r5_clr, 0, ui(16), _yy, ww - ui(32), _lbh, _hv? COLORS.panel_inspector_group_hover : COLORS.panel_inspector_group_bg, 1);
                     else {
                     	draw_set_color(COLORS.panel_bg_clear_inner);
                     	draw_rectangle(ui(16), _yy, ww - ui(16), _yy + _lbh, false);
@@ -825,7 +825,7 @@ event_inherited();
 					
 					BLEND_OVERRIDE
 					if(PREFERENCES.dialog_add_node_grouping == 1)
-                    	draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, ui(16), _yy, ww - ui(32), _lbh, _hv? COLORS.panel_inspector_group_hover : COLORS.panel_inspector_group_bg, 1);
+                    	draw_sprite_stretched_ext(THEME.box_r5_clr, 0, ui(16), _yy, ww - ui(32), _lbh, _hv? COLORS.panel_inspector_group_hover : COLORS.panel_inspector_group_bg, 1);
                 	else {
                     	draw_set_color(COLORS.panel_bg_clear_inner);
                     	draw_rectangle(ui(16), _yy, ww - ui(16), _yy + _lbh, false);

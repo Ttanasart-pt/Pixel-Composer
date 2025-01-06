@@ -60,14 +60,14 @@ function Panel_Test() : PanelContent() constructor {
 			
 			var _hover = sc_content.hover && point_in_rectangle(_m[0], _m[1], 0, yy, ww, yy + wh - 1);
 			if(_hover) {
-				draw_sprite_stretched_ext(THEME.s_box_r2_clr, 0, 0, yy, ww, wh, c_white, 1);
+				draw_sprite_stretched_ext(THEME.box_r2_clr, 0, 0, yy, ww, wh, c_white, 1);
 				if(mouse_press(mb_left, pFOCUS))
 					LOAD_AT(_f[0]);
 			}
 			
 			if(testing && i == test_index) {
 				cc = COLORS._main_accent;
-				draw_sprite_stretched_ext(THEME.s_box_r2, 0, 0, yy, ww * test_step / 4, wh, cc, 0.1);
+				draw_sprite_stretched_ext(THEME.box_r2, 0, 0, yy, ww * test_step / 4, wh, cc, 0.1);
 				
 				sc_content.scroll_y_to = -_h + sc_content.surface_h / 2;
 				
@@ -79,8 +79,8 @@ function Panel_Test() : PanelContent() constructor {
 					var c = _a_pas == _a_amo? COLORS._main_value_positive : COLORS._main_value_negative;
 					cc = merge_color(c, c_white, 0.5); 
 					
-					if(_a_amo == 0) draw_sprite_stretched_ext(THEME.s_box_r2, 0, 0, yy, ww, wh, c, 0.1);
-					else            draw_sprite_stretched_ext(THEME.s_box_r2, 0, 0, yy, ww * _a_pas / _a_amo, wh, c, 0.1);
+					if(_a_amo == 0) draw_sprite_stretched_ext(THEME.box_r2, 0, 0, yy, ww, wh, c, 0.1);
+					else            draw_sprite_stretched_ext(THEME.box_r2, 0, 0, yy, ww * _a_pas / _a_amo, wh, c, 0.1);
 					
 					draw_set_text(f_p3, fa_right, fa_center, cc);
 					draw_text_add(ww - ui(8), yy + wh / 2, $"{_a_pas} / {_a_amo}");
@@ -129,7 +129,7 @@ function Panel_Test() : PanelContent() constructor {
 			var tx = ui(8);
 			var hv = sc_log.hover && point_in_rectangle(_m[0], _m[1], 0, yy, sc_log.surface_w, yy + wh - 1);
 			
-			if(hv) draw_sprite_stretched_ext(THEME.s_box_r2_clr, 0, 0, yy, sc_log.surface_w, wh, c_white, 1);
+			if(hv) draw_sprite_stretched_ext(THEME.box_r2_clr, 0, 0, yy, sc_log.surface_w, wh, c_white, 1);
 						
 			switch(_f.type) {
 				case -1 : 

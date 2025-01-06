@@ -174,7 +174,7 @@ function MetaDataManager() constructor {
 			draw_set_font(f_p2);
 			var _owW = string_width( _ont);
 			var _owH = string_height(_ont);
-			draw_sprite_stretched_ext(THEME.s_box_r2, 0, _owX - ui(4), ty + ui(1) - ui(2), _owW + ui(8), _owH + ui(4), COLORS._main_icon_dark, 1);
+			draw_sprite_stretched_ext(THEME.box_r2, 0, _owX - ui(4), ty + ui(1) - ui(2), _owW + ui(8), _owH + ui(4), COLORS._main_icon_dark, 1);
 			
 			draw_set_color(COLORS._main_text_accent);
 			draw_text_line(_owX, ty + ui(1), _ont, -1, _w);
@@ -219,7 +219,7 @@ function MetaDataManager() constructor {
 					ty += hh + ui(2);
 				}
 				
-				draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, mx + ui(8) + tx, ty, ww, hh, COLORS._main_icon, 1);
+				draw_sprite_stretched_ext(THEME.box_r5_clr, 0, mx + ui(8) + tx, ty, ww, hh, COLORS._main_icon, 1);
 				draw_text(mx + ui(8) + tx + ui(8), ty + hh / 2, tags[i]);
 			
 				tx += ww + ui(2);

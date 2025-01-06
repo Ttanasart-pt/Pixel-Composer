@@ -298,13 +298,13 @@ function Panel_Palette_Mixer() : PanelContent() constructor {
 					var _py = round(_mx_y + _blend.y);
 					var _hv = _pHover && point_in_rectangle(_msx, _msy, _px - _bs / 2, _py - _bs / 2, _px + _bs / 2, _py + _bs / 2);
 					
-					draw_sprite_stretched_ext(THEME.s_box_r2, 0, _px - _bs / 2, _py - _bs / 2, _bs, _bs, _c, 1);
+					draw_sprite_stretched_ext(THEME.box_r2, 0, _px - _bs / 2, _py - _bs / 2, _bs, _bs, _c, 1);
 					
 					if(shade_mode > 0)
 						continue;
 					
 					BLEND_ADD
-					draw_sprite_stretched_ext(THEME.s_box_r2, 1, _px - _bs / 2, _py - _bs / 2, _bs, _bs, c_white, 0.25 + 0.5 * (_bln_hover == i));
+					draw_sprite_stretched_ext(THEME.box_r2, 1, _px - _bs / 2, _py - _bs / 2, _bs, _bs, c_white, 0.25 + 0.5 * (_bln_hover == i));
 					BLEND_NORMAL
 					
 					if(_hv) blnd_hovering = i;
@@ -339,16 +339,16 @@ function Panel_Palette_Mixer() : PanelContent() constructor {
 					
 					if(shade_mode == 0)
 						draw_sprite_stretched(THEME.button_def, _hov == pal, _px - _gs2, _py - _gs2, _gs, _gs);
-					draw_sprite_stretched_ext(THEME.s_box_r2, 0, _px - _gs2 + 2, _py - _gs2 + 2, _gs - 4, _gs - 4, _c, 1);
+					draw_sprite_stretched_ext(THEME.box_r2, 0, _px - _gs2 + 2, _py - _gs2 + 2, _gs - 4, _gs - 4, _c, 1);
 					
 					BLEND_ADD
-					draw_sprite_stretched_ext(THEME.s_box_r2, 1, _px - _gs2 + 2, _py - _gs2 + 2, _gs - 4, _gs - 4, c_white, 0.25);
+					draw_sprite_stretched_ext(THEME.box_r2, 1, _px - _gs2 + 2, _py - _gs2 + 2, _gs - 4, _gs - 4, c_white, 0.25);
 					BLEND_NORMAL
 					
 					if(shade_mode > 0) continue;
 					
 					if(pal == node_selecting)
-						draw_sprite_stretched_ext(THEME.s_box_r2, 1, _px - _gs2, _py - _gs2, _gs, _gs, COLORS._main_accent, 1);
+						draw_sprite_stretched_ext(THEME.box_r2, 1, _px - _gs2, _py - _gs2, _gs, _gs, COLORS._main_accent, 1);
 					
 					if(_hv) {
 						node_hovering = pal;
@@ -409,7 +409,7 @@ function Panel_Palette_Mixer() : PanelContent() constructor {
 					_xx = round(_mx_x + _xx);
 					_yy = round(_mx_y + _yy);
 					
-					draw_sprite_stretched_ext(THEME.s_box_r2, 0, _xx - _gs / 2, _yy - _gs / 2, _gs, _gs, _cc, 1);
+					draw_sprite_stretched_ext(THEME.box_r2, 0, _xx - _gs / 2, _yy - _gs / 2, _gs, _gs, _cc, 1);
 					
 					BLEND_ADD
 					draw_sprite_stretched_ext(THEME.button_def,       3, _xx - _gs / 2, _yy - _gs / 2, _gs, _gs, c_white, 0.25);
@@ -565,7 +565,7 @@ function Panel_Palette_Mixer() : PanelContent() constructor {
 					_yy = _ry;
 					
 					if(DRAGGING.type == "Color") {
-						draw_sprite_stretched_ext(THEME.s_box_r2, 0, _mx_x + _xx - _gs / 2, _mx_y + _yy - _gs / 2, _gs, _gs, DRAGGING.data, 0.75);
+						draw_sprite_stretched_ext(THEME.box_r2, 0, _mx_x + _xx - _gs / 2, _mx_y + _yy - _gs / 2, _gs, _gs, DRAGGING.data, 0.75);
 						
 						if(mouse_release(mb_left)) {
 							var _node = { color : DRAGGING.data, x : _rx, y : _ry };
@@ -606,7 +606,7 @@ function Panel_Palette_Mixer() : PanelContent() constructor {
 							_pxs[i] = _px;
 							_pys[i] = _py;
 							
-							draw_sprite_stretched_ext(THEME.s_box_r2, 0, _mx_x + _px - _gs / 2, _mx_y + _py - _gs / 2, _gs, _gs, _colCurr, 0.75);
+							draw_sprite_stretched_ext(THEME.box_r2, 0, _mx_x + _px - _gs / 2, _mx_y + _py - _gs / 2, _gs, _gs, _colCurr, 0.75);
 							_px += _gs * 2;
 							
 							_colPrev = _colCurr;
@@ -747,7 +747,7 @@ function Panel_Palette_Mixer() : PanelContent() constructor {
 		}
 		
 		if(_cc != noone) {
-			draw_sprite_stretched_ext(THEME.s_box_r2, 0, _nhx, _nhy - _gs, _gs, _gs, _cc, 1);
+			draw_sprite_stretched_ext(THEME.box_r2, 0, _nhx, _nhy - _gs, _gs, _gs, _cc, 1);
 			BLEND_ADD
 			draw_sprite_stretched_ext(THEME.button_def,       3, _nhx, _nhy - _gs, _gs, _gs, c_white, 0.25);
 			BLEND_NORMAL

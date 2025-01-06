@@ -70,9 +70,9 @@ function Panel_Addon() : PanelContent() constructor {
 				
 				if(hover) {
 					sc_addon.hover_content = true;
-					draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, 0, by, ww, hg, COLORS.panel_inspector_group_hover, 1);
+					draw_sprite_stretched_ext(THEME.box_r5_clr, 0, 0, by, ww, hg, COLORS.panel_inspector_group_hover, 1);
 				} else
-					draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, 0, by, ww, hg, COLORS.panel_inspector_group_bg, 1);
+					draw_sprite_stretched_ext(THEME.box_r5_clr, 0, 0, by, ww, hg, COLORS.panel_inspector_group_bg, 1);
 				
 				draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
 				draw_text_add(ui(44), by + hg / 2, _addon.name);

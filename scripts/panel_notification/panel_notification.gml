@@ -81,7 +81,7 @@ function Panel_Notification() : PanelContent() constructor {
 				
 				if(pHOVER && pHOVER && point_in_rectangle(_m[0], _m[1], 0, yy, _w, yy + _h)) {
 					sp_noti.hover_content = true;
-					draw_sprite_stretched_ext(THEME.s_box_r2, 0, 0, yy, _w, _h, CDEF.main_dkblack, 1);
+					draw_sprite_stretched_ext(THEME.box_r2, 0, 0, yy, _w, _h, CDEF.main_dkblack, 1);
 					
 					if(noti.tooltip != "")
 						TOOLTIP = noti.tooltip;
@@ -97,7 +97,7 @@ function Panel_Notification() : PanelContent() constructor {
 					var _nwx = sp_noti.w - ui(12) - ui(40);
 					var _nw  = _nwx * noti.life / noti.life_max;
 				
-					draw_sprite_stretched_ext(THEME.s_box_r2, 0, ui(40), yy, _nw, _h, CDEF.main_mdblack, 1);
+					draw_sprite_stretched_ext(THEME.box_r2, 0, ui(40), yy, _nw, _h, CDEF.main_mdblack, 1);
 				}
 			
 				if(noti.icon_end != noone)

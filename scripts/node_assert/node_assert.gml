@@ -131,11 +131,11 @@ function tooltipSurfaceAssetion(expect, got) constructor {
 			
 			var sc  = min(ss / _ew, ss / _eh);
 			draw_surface_ext_safe(_e, xe + ss / 2 - _ew * sc / 2, yy + ss / 2 - _eh * sc / 2, sc, sc);
-			draw_sprite_stretched_add(THEME.s_box_r2, 1, xe, yy, ss, ss, c_white, .15);
+			draw_sprite_stretched_add(THEME.box_r2, 1, xe, yy, ss, ss, c_white, .15);
 			
 			var sc  = min(ss / _gw, ss / _gh);
 			draw_surface_ext_safe(_g, xg + ss / 2 - _gw * sc / 2, yy + ss / 2 - _gh * sc / 2, sc, sc);
-			draw_sprite_stretched_add(THEME.s_box_r2, 1, xg, yy, ss, ss, c_white, .15);
+			draw_sprite_stretched_add(THEME.box_r2, 1, xg, yy, ss, ss, c_white, .15);
 		}
 	}
 }

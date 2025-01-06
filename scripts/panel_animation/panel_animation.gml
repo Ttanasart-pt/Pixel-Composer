@@ -1914,8 +1914,8 @@ function Panel_Animation() : PanelContent() constructor {
                                 draw_set_color(c0);
                                 draw_rectangle(0, key_y - ui(10), bar_show_w, key_y + ui(10), false);
                                 
-                                     if(_prop == value_focusing) draw_sprite_stretched_ext(THEME.s_box_r2, 0, 0, key_y - ui(8), bar_show_w, ui(16), c1);
-                                else if(_prop == value_hovering) draw_sprite_stretched_ext(THEME.s_box_r2, 0, 0, key_y - ui(8), bar_show_w, ui(16), c1, .9);
+                                     if(_prop == value_focusing) draw_sprite_stretched_ext(THEME.box_r2, 0, 0, key_y - ui(8), bar_show_w, ui(16), c1);
+                                else if(_prop == value_hovering) draw_sprite_stretched_ext(THEME.box_r2, 0, 0, key_y - ui(8), bar_show_w, ui(16), c1, .9);
                             }
                             
                             if(k) prop.y = key_y;
@@ -2370,7 +2370,7 @@ function Panel_Animation() : PanelContent() constructor {
             draw_set_font(f_p2);
             var cf = string(CURRENT_FRAME + 1);
             var tx = string_width(cf) + ui(4);
-            draw_sprite_stretched_ext(THEME.s_box_r2, 0, bar_line_x - tx / 2, 0, tx, hh + PANEL_PAD, cc, 1);
+            draw_sprite_stretched_ext(THEME.box_r2, 0, bar_line_x - tx / 2, 0, tx, hh + PANEL_PAD, cc, 1);
             
             draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text_on_accent);
             draw_text_add(bar_line_x, PANEL_PAD, cf);

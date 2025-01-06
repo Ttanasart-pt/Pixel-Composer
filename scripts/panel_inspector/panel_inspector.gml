@@ -452,7 +452,7 @@ function Panel_Inspector() : PanelContent() constructor {
                     
                     var _amo = array_length(global_buttons);
                     var _tw  = (_bw + ui(4)) * _amo;
-                    draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, con_w - _tw, yy, _tw, lbh, COLORS.panel_inspector_group_bg, 1);
+                    draw_sprite_stretched_ext(THEME.box_r5_clr, 0, con_w - _tw, yy, _tw, lbh, COLORS.panel_inspector_group_bg, 1);
                     
                     global_buttons[0].icon       = var_editing? THEME.accept_16 : THEME.gear_16;
                     global_buttons[0].icon_blend = var_editing? COLORS._main_value_positive : COLORS._main_icon_light;
@@ -479,7 +479,7 @@ function Panel_Inspector() : PanelContent() constructor {
                         }
                     }
                     
-                    draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, 0, yy, _x1, lbh, cc, 1);
+                    draw_sprite_stretched_ext(THEME.box_r5_clr, 0, 0, yy, _x1, lbh, cc, 1);
                     break;
                 
                 default : 
@@ -496,7 +496,7 @@ function Panel_Inspector() : PanelContent() constructor {
                         
                     }
                     
-                    draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, 0, yy, con_w, lbh, cc, 1);
+                    draw_sprite_stretched_ext(THEME.box_r5_clr, 0, 0, yy, con_w, lbh, cc, 1);
             }
             
             draw_sprite_ui(THEME.arrow, _meta[1]? 0 : 3, ui(16), yy + lbh / 2, 1, 1, 0, COLORS.panel_inspector_group_bg, 1);    
@@ -689,7 +689,7 @@ function Panel_Inspector() : PanelContent() constructor {
             }
             
             if(n > 1) {
-                draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, 0, _y, con_w, ui(32), COLORS.panel_inspector_output_label, 0.9);
+                draw_sprite_stretched_ext(THEME.box_r5_clr, 0, 0, _y, con_w, ui(32), COLORS.panel_inspector_output_label, 0.9);
                 draw_set_text(f_p0b, fa_center, fa_center, COLORS._main_text_sub);
                 
                 var _tx = inspectings[i].getFullName();
@@ -849,7 +849,7 @@ function Panel_Inspector() : PanelContent() constructor {
             } else if(i == amoIn) { // output label
                 hh += ui(8 + 32 + 8);
                 
-                draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, 0, yy + ui(8), con_w, ui(32), COLORS.panel_inspector_output_label, 0.8);
+                draw_sprite_stretched_ext(THEME.box_r5_clr, 0, 0, yy + ui(8), con_w, ui(32), COLORS.panel_inspector_output_label, 0.8);
                 draw_set_text(f_p0b, fa_center, fa_center, COLORS._main_text_sub);
                 draw_text_add(xc, yy + ui(8 + 16), __txt("Outputs"));
                 continue;
@@ -960,7 +960,7 @@ function Panel_Inspector() : PanelContent() constructor {
                 
                 if(_hover && point_in_rectangle(_m[0], _m[1], lbx, yy, lbx + lbw, yy + lbh)) {
                     contentPane.hover_content = true;
-                    draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, lbx, yy, con_w - lbx, lbh, COLORS.panel_inspector_group_hover, 1);
+                    draw_sprite_stretched_ext(THEME.box_r5_clr, 0, lbx, yy, con_w - lbx, lbh, COLORS.panel_inspector_group_hover, 1);
                 	
                 	if(pFOCUS) {
 	                		if(DOUBLE_CLICK) _cAll = jun[@ 1]? -1 : 1;
@@ -968,7 +968,7 @@ function Panel_Inspector() : PanelContent() constructor {
 		               else if(mouse_press(mb_right, pFOCUS)) menuCall("inspector_group_menu", group_menu, 0, 0, fa_left);
                 	}
                 } else
-                    draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, lbx, yy, con_w - lbx, lbh, COLORS.panel_inspector_group_bg, 1);
+                    draw_sprite_stretched_ext(THEME.box_r5_clr, 0, lbx, yy, con_w - lbx, lbh, COLORS.panel_inspector_group_bg, 1);
             
                 if(righ != noone) {
                     var _bx = lbx + lbw;
@@ -976,7 +976,7 @@ function Panel_Inspector() : PanelContent() constructor {
                     var _bw = ui(32);
                     var _bh = lbh;
                     
-                    // draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, _bx, _by, _bw, _bh, COLORS.panel_inspector_group_bg, 1);
+                    // draw_sprite_stretched_ext(THEME.box_r5_clr, 0, _bx, _by, _bw, _bh, COLORS.panel_inspector_group_bg, 1);
                     righ.setFocusHover(pFOCUS, pHOVER);
                     righ.draw(_bx + ui(2), _by + ui(2), _bw - ui(4), _bh - ui(4), _m, THEME.button_hide_fill);
                 }
@@ -989,12 +989,12 @@ function Panel_Inspector() : PanelContent() constructor {
                 if(togl != noone) {
                     if(_hover && point_in_rectangle(_m[0], _m[1], 0, yy, ui(32), yy + lbh)) {
                         contentPane.hover_content = true;
-                        draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, 0, yy, ui(32), lbh, COLORS.panel_inspector_group_hover, 1);
+                        draw_sprite_stretched_ext(THEME.box_r5_clr, 0, 0, yy, ui(32), lbh, COLORS.panel_inspector_group_hover, 1);
                         
                         if(mouse_press(mb_left, pFOCUS))
                             _inspecting.inputs[togl].setValue(!toging);
                     } else 
-                        draw_sprite_stretched_ext(THEME.s_box_r5_clr, 0, 0, yy, ui(32), lbh, COLORS.panel_inspector_group_bg, 1);
+                        draw_sprite_stretched_ext(THEME.box_r5_clr, 0, 0, yy, ui(32), lbh, COLORS.panel_inspector_group_bg, 1);
                     
                     cc = toging? COLORS._main_accent : COLORS.panel_inspector_group_bg;
                     aa = 0.5 + toging * 0.5;
@@ -1053,7 +1053,7 @@ function Panel_Inspector() : PanelContent() constructor {
                 var lbHov = point_in_rectangle(_m[0], _m[1], lb_x, _selY + ui(2), lb_x + lb_w, _selY + lb_h - ui(4));
                 if(lbHov) {
                     contentPane.hover_content = true;
-                    draw_sprite_stretched_ext(THEME.s_box_r2_clr, 0, lb_x, _selY + ui(2), lb_w, lb_h - ui(4), c_white, 1);
+                    draw_sprite_stretched_ext(THEME.box_r2_clr, 0, lb_x, _selY + ui(2), lb_w, lb_h - ui(4), c_white, 1);
                 }
                 
                 var widg    = drawWidget(ui(16), yy, contentPane.surface_w - ui(24), _m, jun, false, pHOVER && contentPane.hover, pFOCUS, contentPane, ui(16) + x, top_bar_h + y);

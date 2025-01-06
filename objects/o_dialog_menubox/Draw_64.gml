@@ -16,7 +16,7 @@ DIALOG_WINCLEAR1
 	
 	var to_del = noone;
 	
-	draw_sprite_stretched(THEME.s_box_r2_clr, 0, dialog_x, dialog_y, dialog_w, dialog_h);
+	draw_sprite_stretched(THEME.box_r2_clr, 0, dialog_x, dialog_y, dialog_w, dialog_h);
 	
 	for( var i = 0, n = array_length(menu); i < n; i++ ) {
 		var _menuItem = menu[i];
@@ -279,7 +279,7 @@ DIALOG_WINCLEAR1
 		}
 	}
 	
-	draw_sprite_stretched(THEME.s_box_r2_clr, 1, dialog_x, dialog_y, dialog_w, dialog_h);
+	draw_sprite_stretched(THEME.box_r2_clr, 1, dialog_x, dialog_y, dialog_w, dialog_h);
 	
 	if(mouse_init_inside && (mouse_release(mb_left) || mouse_release(mb_right))) mouse_init_inside = false;
 	if(mouse_release(mb_right)) mouse_init_r_pressed = false;

@@ -128,7 +128,7 @@ function buttonPalette(_onApply, dialog = noone) : widget() constructor {
 				var _pd  = ui(2);
 				var _pd2 = _pd / 2;
 				
-				draw_sprite_stretched_ext(THEME.s_box_r2, 0, _cx, _cy, _cw, _ch, CDEF.main_mdblack, 1);	
+				draw_sprite_stretched_ext(THEME.box_r2, 0, _cx, _cy, _cw, _ch, CDEF.main_mdblack, 1);	
 				
 				for (var i = 0, n = array_length(_color); i < n; i++) {
 					var _c  = _color[i];
@@ -141,14 +141,14 @@ function buttonPalette(_onApply, dialog = noone) : widget() constructor {
 					
 					if(hover && point_in_rectangle(_m[0], _m[1], _ccx, _ccy, _ccx + _ccw, _ccy + _cch - 1)) {
 						if(DRAGGING && DRAGGING.type == "Color") {
-							draw_sprite_stretched_ext(THEME.s_box_r2, 1, _ccx + _pd2, _ccy + _pd2, _ccw - _pd, _cch - _pd, COLORS._main_value_positive, 1);
+							draw_sprite_stretched_ext(THEME.box_r2, 1, _ccx + _pd2, _ccy + _pd2, _ccw - _pd, _cch - _pd, COLORS._main_value_positive, 1);
 							if(mouse_release(mb_left)) {
 								current_palette[i] = DRAGGING.data;
 								apply(current_palette);
 							}
 							
 						} else {
-							draw_sprite_stretched_add(THEME.s_box_r2, 1, _ccx + _pd2, _ccy + _pd2, _ccw - _pd, _cch - _pd, c_white, .3);
+							draw_sprite_stretched_add(THEME.box_r2, 1, _ccx + _pd2, _ccy + _pd2, _ccw - _pd, _cch - _pd, c_white, .3);
 							
 							if(mouse_press(mb_left, active))
 								triggerSingle(i);

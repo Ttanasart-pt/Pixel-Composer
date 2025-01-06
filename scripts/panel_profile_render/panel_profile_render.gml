@@ -45,7 +45,7 @@ function Panel_Profile_Render() : PanelContent() constructor {
 	
 	function draw_surface_debug(surf, xx, yy, w, h, color = c_white, alpha = 1) {
 		if(!is_surface(surf)) {
-			draw_sprite_stretched_add(THEME.s_box_r2, 1, xx, yy, w, h, c_white, .15);
+			draw_sprite_stretched_add(THEME.box_r2, 1, xx, yy, w, h, c_white, .15);
 			draw_set_text(f_p3, fa_center, fa_center, COLORS._main_text_sub);
 			draw_text_add(xx + w / 2, yy + h / 2, string(surf));
 			return;
@@ -59,7 +59,7 @@ function Panel_Profile_Render() : PanelContent() constructor {
 		var sy = yy + h / 2 - sh * ss / 2
 		
 		draw_surface_ext(surf, sx, sy, ss, ss, 0, color, alpha);
-		draw_sprite_stretched_add(THEME.s_box_r2, 1, sx, sy, sw * ss, sh * ss, c_white, .05);
+		draw_sprite_stretched_add(THEME.box_r2, 1, sx, sy, sw * ss, sh * ss, c_white, .05);
 		
 		var _tx = sx + sw * ss + ui(8);
 		var _ty = yy;
@@ -185,7 +185,7 @@ function Panel_Profile_Render() : PanelContent() constructor {
 	        var _cy  = yy + _wh / 2;
 	        var _draw = _cy > -_wh && _cy < _sh + _wh;
 	        
-	        if(_draw && (_hov || _sel)) draw_sprite_stretched_ext(THEME.s_box_r5_clr, 1, 0, yy, _ww, _wh + 1, _sel? CDEF.main_ltgrey : CDEF.main_grey);
+	        if(_draw && (_hov || _sel)) draw_sprite_stretched_ext(THEME.box_r5_clr, 1, 0, yy, _ww, _wh + 1, _sel? CDEF.main_ltgrey : CDEF.main_grey);
 	        
 	        if(_rtype == "render") {
 	        	if(_report.search_res == false) continue;
@@ -472,18 +472,18 @@ function Panel_Profile_Render() : PanelContent() constructor {
 		    if(_hov && mouse_press(mb_left)) show_io = !show_io;
 		    
 		    draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
-	        draw_sprite_stretched_ext(THEME.s_box_r5_clr, 1, _ix - ui(4), io_label_y - ui(2), _iw, ui(24), _hov? CDEF.main_ltgrey : CDEF.main_grey);
+	        draw_sprite_stretched_ext(THEME.box_r5_clr, 1, _ix - ui(4), io_label_y - ui(2), _iw, ui(24), _hov? CDEF.main_ltgrey : CDEF.main_grey);
 	        draw_sprite_ext(THEME.arrow, show_io * 3, _ix + ui(12), io_label_y + ui(10), 1, 1, 0, CDEF.main_grey, 1);
 	        
 	        draw_text_add(_ix + ui(28), io_label_y, $"Inputs [{array_length(_inputs)}] {filter_content_string == ""? "" : " (filtered)"}");
 	        
-	        draw_sprite_stretched_ext(THEME.s_box_r5_clr, 1, _ox - ui(4), io_label_y - ui(2), _iw, ui(24), _hov? CDEF.main_ltgrey : CDEF.main_grey);
+	        draw_sprite_stretched_ext(THEME.box_r5_clr, 1, _ox - ui(4), io_label_y - ui(2), _iw, ui(24), _hov? CDEF.main_ltgrey : CDEF.main_grey);
 	        draw_text_add(_ox + ui(8), io_label_y, $"Outputs [{array_length(_outputs)}] {filter_content_string == ""? "" : " (filtered)"}");
 	        
 	        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	        
 	        var _queue = _report.queue;
-		    draw_sprite_stretched_ext(THEME.s_box_r5_clr, 1, ui(4), _ty - ui(2), _ww - ui(12), ui(24), CDEF.main_grey);
+		    draw_sprite_stretched_ext(THEME.box_r5_clr, 1, ui(4), _ty - ui(2), _ww - ui(12), ui(24), CDEF.main_grey);
 		    draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
 	        draw_text_add(ui(16), _ty, $"Current queue [{array_length(_queue)}]");
 	        
@@ -513,7 +513,7 @@ function Panel_Profile_Render() : PanelContent() constructor {
 	        	if(filter_list_string != "" && string_pos(string_lower(filter_list_string), string_lower(_n)) != 0) 
 	        		cc = COLORS._main_accent;
 	        	
-	        	draw_sprite_stretched_ext(THEME.s_box_r2, 1, _qx, _qy, _qw + ui(12), _qh, cc, .5);
+	        	draw_sprite_stretched_ext(THEME.box_r2, 1, _qx, _qy, _qw + ui(12), _qh, cc, .5);
 	        	draw_set_color(cc);
 	        	draw_text_add(_qx + ui(6), _qy + _qh / 2, _n);
 	        	
@@ -525,7 +525,7 @@ function Panel_Profile_Render() : PanelContent() constructor {
 	        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	        
 	        var _nextx = _report.nextn;
-		    draw_sprite_stretched_ext(THEME.s_box_r5_clr, 1, ui(4), _ty - ui(2), _ww - ui(12), ui(24), CDEF.main_grey);
+		    draw_sprite_stretched_ext(THEME.box_r5_clr, 1, ui(4), _ty - ui(2), _ww - ui(12), ui(24), CDEF.main_grey);
 		    draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
 	        draw_text_add(ui(16), _ty, $"Next queue [{array_length(_nextx)}]");
 	        
@@ -555,7 +555,7 @@ function Panel_Profile_Render() : PanelContent() constructor {
 	        	if(filter_list_string != "" && string_pos(string_lower(filter_list_string), string_lower(_n)) != 0) 
 	        		cc = COLORS._main_accent;
 	        	
-	        	draw_sprite_stretched_ext(THEME.s_box_r2, 1, _qx, _qy, _qw + ui(12), _qh, cc, .5);
+	        	draw_sprite_stretched_ext(THEME.box_r2, 1, _qx, _qy, _qw + ui(12), _qh, cc, .5);
 	        	draw_set_color(cc);
 	        	draw_text_add(_qx + ui(6), _qy + _qh / 2, _n);
 	        	
@@ -677,7 +677,7 @@ function Panel_Profile_Render() : PanelContent() constructor {
 		var _pw  = _px1 - _px0;
 		var _ph  = _py1 - _py0;
 		
-		draw_sprite_stretched_ext(THEME.s_box_r2, 0, _px0, _py0, _pw, _ph, COLORS._main_icon_dark, 1);
+		draw_sprite_stretched_ext(THEME.box_r2, 0, _px0, _py0, _pw, _ph, COLORS._main_icon_dark, 1);
 		
 		var _selected_time = 0;
 		var _running_time  = 0;
@@ -726,7 +726,7 @@ function Panel_Profile_Render() : PanelContent() constructor {
 					}
 					
 					if(report_selecting != noone && report_selecting.node == _report.node)
-						draw_sprite_stretched_ext(THEME.s_box_r2, 0, _rx, _py0, _rx1 - _rx, _ph, COLORS._main_icon, .2);
+						draw_sprite_stretched_ext(THEME.box_r2, 0, _rx, _py0, _rx1 - _rx, _ph, COLORS._main_icon, .2);
 				}
 				
 				if(_rtype == "message") {
@@ -747,12 +747,12 @@ function Panel_Profile_Render() : PanelContent() constructor {
 			    var _rx   = _px0 + (_selected_time / node_render_time) * _pw;
 			    var _rw   = (_time / node_render_time) * _pw;
 			    
-			    draw_sprite_stretched_ext(THEME.s_box_r2, 0, _rx, _py0, _rw, _ph, COLORS._main_icon, 1);
+			    draw_sprite_stretched_ext(THEME.box_r2, 0, _rx, _py0, _rw, _ph, COLORS._main_icon, 1);
 			}
 			
 		}
 		
-		draw_sprite_stretched_add(THEME.s_box_r2, 1, _px0, _py0, _pw, _ph, COLORS._main_icon, .3);
+		draw_sprite_stretched_add(THEME.box_r2, 1, _px0, _py0, _pw, _ph, COLORS._main_icon, .3);
 		
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		

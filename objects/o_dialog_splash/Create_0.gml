@@ -136,7 +136,7 @@ event_inherited();
 					var _hov = sHOVER && point_in_rectangle(_m[0], _m[1], mtx, mty, mtx + mtw, mty + mth);
 					
 					BLEND_OVERRIDE
-					draw_sprite_stretched_ext(THEME.s_box_r5_clr, _hov, mtx, mty, mtw, mth, _sel? c_white : COLORS._main_icon, 1);
+					draw_sprite_stretched_ext(THEME.box_r5_clr, _hov, mtx, mty, mtw, mth, _sel? c_white : COLORS._main_icon, 1);
 					BLEND_NORMAL
 					
 					if(_hov) {
@@ -328,7 +328,7 @@ event_inherited();
 				var _hov = sHOVER && point_in_rectangle(_m[0], _m[1], pd, _yy, pd + ww, _yy + ui(24));
 				
 				BLEND_OVERRIDE
-				draw_sprite_stretched_ext(THEME.s_box_r5_clr, _hov, pd, _yy, ww - pd * 2, ui(24), c_white, 0.3 + _hov * 0.2);
+				draw_sprite_stretched_ext(THEME.box_r5_clr, _hov, pd, _yy, ww - pd * 2, ui(24), c_white, 0.3 + _hov * 0.2);
 				BLEND_NORMAL
 				
 				var _coll = array_exists(PREFERENCES.welcome_file_closed, lb.text);

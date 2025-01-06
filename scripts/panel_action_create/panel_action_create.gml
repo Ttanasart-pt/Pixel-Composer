@@ -101,7 +101,7 @@ function Panel_Action_Create() : PanelContent() constructor {
 				var _hv = pHOVER && point_in_rectangle(_m[0], _m[1], 0, yy, _w, yy + _lh + ui(4));
 				
 				if(_hv) sc_node_content.hover_content = true;
-				draw_sprite_stretched_ext(THEME.s_box_r5_clr, _hv, 0, yy, _w, _lh + ui(4), CDEF.main_grey);
+				draw_sprite_stretched_ext(THEME.box_r5_clr, _hv, 0, yy, _w, _lh + ui(4), CDEF.main_grey);
 				
 				draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text);
 				draw_text_add(ui(8), yy + ui(2), _name);

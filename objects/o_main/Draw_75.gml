@@ -122,20 +122,20 @@ if(winMan_isMinimized()) exit;
 		
 		switch(DRAGGING.type) {
 			case "Color" :
-				draw_sprite_stretched_ext(THEME.s_box_r2, 0, mx, my, ui(32), ui(32), DRAGGING.data, 1);
-				draw_sprite_stretched_add(THEME.s_box_r2, 1, mx, my, ui(32), ui(32), c_white, 0.3);
+				draw_sprite_stretched_ext(THEME.box_r2, 0, mx, my, ui(32), ui(32), DRAGGING.data, 1);
+				draw_sprite_stretched_add(THEME.box_r2, 1, mx, my, ui(32), ui(32), c_white, 0.3);
 				break;
 				
 			case "Palette" :
 				var _l = array_safe_length(DRAGGING.data);
 				var _w = max(ui(128), _l * ui(10));
 				drawPalette(DRAGGING.data, mx, my, _w, ui(24), 1);
-				draw_sprite_stretched_add(THEME.s_box_r2, 1, mx, my, _w, ui(24), c_white, 0.3);
+				draw_sprite_stretched_add(THEME.box_r2, 1, mx, my, _w, ui(24), c_white, 0.3);
 				break;
 				
 			case "Gradient" :
 				DRAGGING.data.draw(mx, my, ui(128), ui(24), 1);
-				draw_sprite_stretched_add(THEME.s_box_r2, 1, mx, my, ui(128), ui(24), c_white, 0.3);
+				draw_sprite_stretched_add(THEME.box_r2, 1, mx, my, ui(128), ui(24), c_white, 0.3);
 				break;
 				
 			case "Bool" :
