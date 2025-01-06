@@ -1355,11 +1355,11 @@ event_inherited();
 				
 				BLEND_SUBTRACT
 				gpu_set_colorwriteenable(0, 0, 0, 1);
-				draw_sprite_ext(s_patreon_supporter, 0, spr_x, spr_y, -1, 1, 0, c_white, 1);
+				draw_sprite_ext(THEME.patreon_supporter, 0, spr_x, spr_y, -1, 1, 0, c_white, 1);
 				gpu_set_colorwriteenable(1, 1, 1, 1);
 				BLEND_NORMAL
 			
-				draw_sprite_ext(s_patreon_supporter, 1, spr_x, spr_y, -1, 1, 0, COLORS._main_accent, 1);
+				draw_sprite_ext(THEME.patreon_supporter, 1, spr_x, spr_y, -1, 1, 0, COLORS._main_accent, 1);
 			}
 			
 			_pref.editWidget.setFocusHover(sFOCUS, sHOVER && sp_pref.hover); 

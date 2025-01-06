@@ -412,8 +412,8 @@
 #region command palette
 	//!#mfunc __regFnPref {"args":["name"," key"],"order":[0,1]}
 #macro __regFnPref_mf0  { registerFunctionLite("Preference", 
-#macro __regFnPref_mf1 , function() { dialogCall(o_dialog_preference).goto(
-#macro __regFnPref_mf2 ); }); }
+#macro __regFnPref_mf1 , function() { dialogPanelCall(new Panel_Preference().goto(
+#macro __regFnPref_mf2 )); }); }
 	
 	function __fnInit_Preference() {
 		__regFnPref_mf0 __txtx("pref_double_click_delay",              "Double click delay") __regFnPref_mf1       		     "double_click_delay"               __regFnPref_mf2

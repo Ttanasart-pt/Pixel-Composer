@@ -58,6 +58,8 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 	
 	static setScroll = function(_scroll_y) { INLINE scroll_y_to  = _scroll_y; }
 	
+	static drawOffset = function(x, y, mx = mouse_mx, my = mouse_my) { return draw(x, y, mx - x, my - y); }
+	
 	static draw = function(x, y, mx = mouse_mx - x, my = mouse_my - y) {
 		self.x = x;
 		self.y = y;

@@ -87,7 +87,7 @@ event_inherited();
 	function trigger_favourite() {
 		if(node_menu_selecting == noone) return;
 		
-		var _node = node_menu_selecting.node;
+		var _node = node_menu_selecting.nodeName;
 		struct_toggle(global.FAV_NODES, _node);
 		PREF_SAVE();
 	}
@@ -98,7 +98,7 @@ event_inherited();
 		if(!is_instanceof(node, NodeObject)) return;
 		
 		node_menu_selecting = node;
-		var fav  = struct_exists(global.FAV_NODES, node.node);
+		var fav  = struct_exists(global.FAV_NODES, node.nodeName);
 		var menu = [
 			menuItem(fav? __txtx("add_node_remove_favourite", "Remove from favourite") : __txtx("add_node_add_favourite", "Add to favourite"), trigger_favourite, THEME.star)
 		];
@@ -223,8 +223,8 @@ event_inherited();
 			if(!_new_node) return;
 			
 			if(category == NODE_CATEGORY && _node.show_in_recent) {
-				array_remove(global.RECENT_NODES, _node.node);
-				array_insert(global.RECENT_NODES, 0, _node.node);
+				array_remove(global.RECENT_NODES, _node.nodeName);
+				array_insert(global.RECENT_NODES, 0, _node.nodeName);
 				if(array_length(global.RECENT_NODES) > PREFERENCES.node_recents_amount)
 					array_pop(global.RECENT_NODES);
 			}
@@ -411,10 +411,10 @@ event_inherited();
 				var _cy = _ty - string_height(name) / 2 + ui(6);
 				
 				gpu_set_colorwriteenable(1, 1, 1, 0);
-				draw_sprite_ext(s_patreon_supporter, 0, _cx, _cy, 1, 1, 0, _hov? COLORS._main_icon_dark : COLORS.panel_bg_clear, 1);
+				draw_sprite_ext(THEME.patreon_supporter, 0, _cx, _cy, 1, 1, 0, _hov? COLORS._main_icon_dark : COLORS.panel_bg_clear, 1);
 				gpu_set_colorwriteenable(1, 1, 1, 1);
 				
-				draw_sprite_ext(s_patreon_supporter, 1, _cx, _cy, 1, 1, 0, i == ADD_NODE_PAGE? COLORS._main_text_accent : cc, 1);
+				draw_sprite_ext(THEME.patreon_supporter, 1, _cx, _cy, 1, 1, 0, i == ADD_NODE_PAGE? COLORS._main_text_accent : cc, 1);
 			}
 			
 			hh += hg;
@@ -780,7 +780,7 @@ event_inherited();
 					draw_sprite_ui_uniform(THEME.star, 0, pd + ui(16), yy + list_height / 2, .8, c_white, .5);
 					gpu_set_tex_filter(false); BLEND_NORMAL
 					
-					if(mouse_press(mb_left, sFOCUS)) struct_toggle(global.FAV_NODES, _node.node);
+					if(mouse_press(mb_left, sFOCUS)) struct_toggle(global.FAV_NODES, _node.nodeName);
 				}
 				
 				var _hinfo = _hoverContent && point_in_circle(_m[0], _m[1], tx + ui(12), yy + list_height / 2, list_height / 2);
@@ -937,7 +937,7 @@ event_inherited();
 				
 				if(is_instanceof(_node, NodeObject)) {
 					if(_node.deprecated) continue;
-					if(match[0] > -9000 && struct_exists(global.FAV_NODES, _node.node)) 
+					if(match[0] > -9000 && struct_exists(global.FAV_NODES, _node.nodeName)) 
 						match[0] += 10000;
 				}
 				
@@ -1248,7 +1248,7 @@ event_inherited();
 					draw_sprite_ui_uniform(THEME.star, 0, pd + ui(16), yy + list_height / 2, .8, c_white, .5);
 					gpu_set_tex_filter(false); BLEND_NORMAL
 					
-					if(mouse_press(mb_left, sFOCUS)) struct_toggle(global.FAV_NODES, _node.node);
+					if(mouse_press(mb_left, sFOCUS)) struct_toggle(global.FAV_NODES, _node.nodeName);
 				}
 				
 				var _hinfo = _hover && point_in_circle(_m[0], _m[1], tx + ui(12), yy + list_height / 2, list_height / 2);

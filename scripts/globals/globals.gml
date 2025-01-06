@@ -35,7 +35,6 @@
 	RUN_IDE  = GM_build_type == "run";
 	
 	DEBUG = false;
-	THEME = new Theme();
 	COLOR_KEYS = [];
 	
 	globalvar VERSION, SAVE_VERSION, VERSION_STRING, BUILD_NUMBER, LATEST_VERSION, NIGHTLY;
@@ -45,7 +44,7 @@
 	VERSION			= 1_18_06_2;
 	SAVE_VERSION	= 1_18_05_0;
 	VERSION_STRING  = MAC? "1.18.003m" : "1.18.7.004";
-	BUILD_NUMBER	= 1_18_06_2;
+	BUILD_NUMBER	= 1_18_06_4;
 	PREF_VERSION    = 1_17_1;
 	
 	var _vsp = string_split(VERSION_STRING, ".");

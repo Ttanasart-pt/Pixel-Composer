@@ -120,7 +120,7 @@
   "name":"_f_p4",
   "parent":{
     "name":"font",
-    "path":"folders/sprites/theme/font.yy",
+    "path":"folders/sprites/font.yy",
   },
   "pointRounding":2,
   "ranges":[

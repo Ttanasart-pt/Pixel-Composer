@@ -175,11 +175,11 @@ function NodeObject(_name, _spr, _node, _tooltip = "") constructor {
 		if(IS_PATREON && patreon) {
 			BLEND_SUBTRACT
 			gpu_set_colorwriteenable(0, 0, 0, 1);
-			draw_sprite_ext(s_patreon_supporter, 0, spr_x, spr_y, 1, 1, 0, c_white, 1);
+			draw_sprite_ext(THEME.patreon_supporter, 0, spr_x, spr_y, 1, 1, 0, c_white, 1);
 			gpu_set_colorwriteenable(1, 1, 1, 1);
 			BLEND_NORMAL
 			
-			draw_sprite_ext(s_patreon_supporter, 1, spr_x, spr_y, 1, 1, 0, COLORS._main_accent, 1);
+			draw_sprite_ext(THEME.patreon_supporter, 1, spr_x, spr_y, 1, 1, 0, COLORS._main_accent, 1);
 			
 			if(point_in_circle(_mx, _my, spr_x, spr_y, 10)) TOOLTIP = __txt("Supporter exclusive");
 		}
@@ -247,10 +247,10 @@ function NodeObject(_name, _spr, _node, _tooltip = "") constructor {
 			var spr_y = _y + _h / 2 - ui(6);
 						
 			gpu_set_colorwriteenable(0, 0, 0, 1); BLEND_SUBTRACT
-			draw_sprite_ext(s_patreon_supporter, 0, spr_x, spr_y, 1, 1, 0, c_white, 1);
+			draw_sprite_ext(THEME.patreon_supporter, 0, spr_x, spr_y, 1, 1, 0, c_white, 1);
 			gpu_set_colorwriteenable(1, 1, 1, 1); BLEND_NORMAL
 			
-			draw_sprite_ext(s_patreon_supporter, 1, spr_x, spr_y, 1, 1, 0, COLORS._main_accent, 1);
+			draw_sprite_ext(THEME.patreon_supporter, 1, spr_x, spr_y, 1, 1, 0, COLORS._main_accent, 1);
 			
 			if(point_in_circle(_mx, _my, spr_x, spr_y, ui(10))) TOOLTIP = __txt("Supporter exclusive");
 			

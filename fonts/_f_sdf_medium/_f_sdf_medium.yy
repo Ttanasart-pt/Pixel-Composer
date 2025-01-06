@@ -120,7 +120,7 @@
   "name":"_f_sdf_medium",
   "parent":{
     "name":"font",
-    "path":"folders/sprites/theme/font.yy",
+    "path":"folders/sprites/font.yy",
   },
   "pointRounding":0,
   "ranges":[

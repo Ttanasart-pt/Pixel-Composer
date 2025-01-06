@@ -476,7 +476,7 @@
 
 #region hotkey
 
-	function call_dialog_preference() 	    { dialogCall(o_dialog_preference);				    }
+	function call_dialog_preference() 	    { dialogPanelCall(new Panel_Preference());		    }
 	function call_dialog_splash()     	    { dialogCall(o_dialog_splash);					   	}
 	function call_dialog_release_note()	    { dialogCall(o_dialog_release_note);			   	}
 	function call_dialog_command_palette()  { dialogCall(o_dialog_command_palette);			   	}

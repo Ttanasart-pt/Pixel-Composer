@@ -138,8 +138,10 @@
 	DIALOGS = ds_list_create();
 	WIDGET_TAB_BLOCK = false;
 	
-	instance_create(0, 0, o_dialog_textbox_autocomplete);
-	instance_create(0, 0, o_dialog_textbox_function_guide);
+	run_in(1, function() /*=>*/ {
+		instance_create(0, 0, o_dialog_textbox_autocomplete);
+		instance_create(0, 0, o_dialog_textbox_function_guide);
+	});
 #endregion
 
 #region async

@@ -820,8 +820,8 @@ function Panel_Menu() : PanelContent() constructor {
                     _ib = COLORS._main_accent;
                 }
                 
-                draw_sprite_ext(s_patreon_supporter, 0, _cx, _cy, 1, 1, 0, _hov? COLORS._main_icon_dark : COLORS.panel_bg_clear, 1);
-                draw_sprite_ext(s_patreon_supporter, 1, _cx, _cy, 1, 1, 0, _ib, 1);
+                draw_sprite_ext(THEME.patreon_supporter, 0, _cx, _cy, 1, 1, 0, _hov? COLORS._main_icon_dark : COLORS.panel_bg_clear, 1);
+                draw_sprite_ext(THEME.patreon_supporter, 1, _cx, _cy, 1, 1, 0, _ib, 1);
             }
         #endregion
         

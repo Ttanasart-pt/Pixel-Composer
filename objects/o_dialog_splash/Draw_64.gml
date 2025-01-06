@@ -25,9 +25,8 @@ if !ready exit;
 	var bs = ui(32);
 	var bx = dialog_x + dialog_w - ui(16) - bs;
 	var by = dialog_y + ui(16);
-	if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txt("Preferences"), THEME.gear) == 2) {
-		dialogCall(o_dialog_preference, WIN_W / 2, WIN_H / 2);
-	}
+	if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txt("Preferences"), THEME.gear) == 2)
+		dialogPanelCall(new Panel_Preference());
 	
 	bx -= bs + ui(4);
 	if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txt("Show on startup"), THEME.icon_splash_show_on_start, PREFERENCES.show_splash) == 2) {

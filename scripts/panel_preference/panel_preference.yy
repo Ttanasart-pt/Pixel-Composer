@@ -1,13 +1,14 @@
 {
   "$GMScript":"v1",
-  "%Name":"font_sprite_loader",
+  "%Name":"panel_preference",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"font_sprite_loader",
+  "name":"panel_preference",
   "parent":{
-    "name":"font",
-    "path":"folders/sprites/font.yy",
+    "name":"_others",
+    "path":"folders/panels/_others.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
+  "tags":[],
 }

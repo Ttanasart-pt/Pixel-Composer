@@ -28,11 +28,12 @@ if !ready exit;
 		draw_sprite_stretched(THEME.node_bg, 0, xx, yy, grid_size, grid_size);
 		if(sHOVER && point_in_rectangle(mouse_mx, mouse_my, xx, yy, xx + grid_width, yy + grid_size)) {
 			draw_sprite_stretched_ext(THEME.node_bg, 1, xx, yy, grid_size, grid_size, COLORS._main_accent, 1);
+			
 			if(mouse_press(mb_left, sFOCUS)) {
 				var path_arr = paths_to_array_ext(paths, dir_filter);
 				
 				switch(_node.node) {
-					case "Node_Image" :
+					case Node_Image :
 						for( var i = 0, n = array_length(path_arr); i < n; i++ )  {
 							var path = path_arr[i];
 							Node_create_Image_path(nx, ny, path).skipDefault();
@@ -40,7 +41,7 @@ if !ready exit;
 						}
 						break;
 						
-					case "Node_Canvas" :
+					case Node_Canvas :
 						for( var i = 0, n = array_length(path_arr); i < n; i++ )  {
 							var path = path_arr[i];
 							var _canvas = nodeBuild("Node_Canvas", nx, ny).skipDefault();
@@ -49,9 +50,9 @@ if !ready exit;
 						}
 						break;
 						
-					case "Node_Image_Sequence"   : Node_create_Image_Sequence_path(nx, ny, path_arr).skipDefault();	break;
-					case "Node_Image_Animated"   : Node_create_Image_Animated_path(nx, ny, path_arr).skipDefault();	break;
-					case "Node_Directory_Search" : Node_create_Directory_path(nx, ny, paths[0]).skipDefault();		break;
+					case Node_Image_Sequence   : Node_create_Image_Sequence_path(nx, ny, path_arr).skipDefault();	break;
+					case Node_Image_Animated   : Node_create_Image_Animated_path(nx, ny, path_arr).skipDefault();	break;
+					case Node_Directory_Search : Node_create_Directory_path(nx, ny, paths[0]).skipDefault();		break;
 				}
 				instance_destroy();
 			}
