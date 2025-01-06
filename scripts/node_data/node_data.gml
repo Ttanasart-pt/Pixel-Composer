@@ -2749,9 +2749,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(!active) return;
 		disable();
 		
+		PANEL_GRAPH.draw_refresh = true;
 		array_remove(group == noone? PROJECT.nodes : group.getNodeList(), self);
 		
-		if(PANEL_GRAPH.node_hover     == self) PANEL_GRAPH.node_hover     = noone;
+		if(PANEL_GRAPH.node_hover == self) PANEL_GRAPH.node_hover     = noone;
 		array_remove(PANEL_GRAPH.nodes_selecting, self);
 		
 		if(PANEL_INSPECTOR.inspecting == self) PANEL_INSPECTOR.inspecting = noone;
@@ -2800,6 +2801,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(active) return;
 		enable();
 		
+		PANEL_GRAPH.draw_refresh = true;
 		array_push(group == noone? PROJECT.nodes : group.getNodeList(), self);
 		
 		onRestore();

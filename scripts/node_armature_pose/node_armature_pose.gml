@@ -144,7 +144,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				orig = posing_bone.getHead();
 				var _rx = _x + _s * orig.x;
 				var _ry = _y + _s * orig.y;
-				draw_sprite_ext(s_bone_move, 0, _rx, _ry, 1, 1, 0, COLORS._main_value_positive, 1);
+				draw_sprite_ext(THEME.bone_move, 0, _rx, _ry, 1, 1, 0, COLORS._main_value_positive, 1);
 				
 			} else if(posing_type == 1) { //free move
 				var _direction = point_direction(posing_sx, posing_sy, smx, smy);
@@ -176,7 +176,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				orig = posing_bone.getTail();
 				var _rx = _x + _s * orig.x;
 				var _ry = _y + _s * orig.y;
-				draw_sprite_ext(s_bone_move, 0, _rx, _ry, 1, 1, 0, COLORS._main_value_positive, 1);
+				draw_sprite_ext(THEME.bone_move, 0, _rx, _ry, 1, 1, 0, COLORS._main_value_positive, 1);
 					
 			} else if(posing_type == 2) { //rotate
 				var ori = posing_bone.getHead();
@@ -201,7 +201,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				orig = posing_bone.getHead();
 				var _rx = _x + _s * orig.x;
 				var _ry = _y + _s * orig.y;
-				draw_sprite_ext(s_bone_rotate, 0, _rx, _ry, 1, 1, posing_bone.pose_angle, COLORS._main_value_positive, 1); 
+				draw_sprite_ext(THEME.bone_rotate, 0, _rx, _ry, 1, 1, posing_bone.pose_angle, COLORS._main_value_positive, 1); 
 				
 			} else if(posing_type == 3) { //scale
 				var ps = val[TRANSFORM.sca_x];
@@ -223,7 +223,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				orig = posing_bone.getPoint(0.8);
 				var _rx = _x + _s * orig.x;
 				var _ry = _y + _s * orig.y;
-				draw_sprite_ext(s_bone_scale,  0, _rx, _ry, 1, 1, posing_bone.pose_angle, COLORS._main_value_positive, 1);
+				draw_sprite_ext(THEME.bone_scale,  0, _rx, _ry, 1, 1, posing_bone.pose_angle, COLORS._main_value_positive, 1);
 			} 
 			
 			gpu_set_texfilter(false);
@@ -255,11 +255,11 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			
 			if(_typ == 0) { // free move
 				var orig = _bne.getHead();
-				draw_sprite_ext(s_bone_move, 0, _x + _s * orig.x, _y + _s * orig.y, 1, 1, 0, COLORS._main_accent, 1);
+				draw_sprite_ext(THEME.bone_move, 0, _x + _s * orig.x, _y + _s * orig.y, 1, 1, 0, COLORS._main_accent, 1);
 				
 			} else if(_typ == 1) { // bone move
 				var orig = _bne.getTail();
-				draw_sprite_ext(s_bone_move, 0, _x + _s * orig.x, _y + _s * orig.y, 1, 1, 0, COLORS._main_accent, 1);
+				draw_sprite_ext(THEME.bone_move, 0, _x + _s * orig.x, _y + _s * orig.y, 1, 1, 0, COLORS._main_accent, 1);
 				
 			} else if(_typ == 2) { // bone rotate
 				var orig = _bne.getHead();
@@ -271,13 +271,13 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				var _sy = _y + _s * orig.y;
 				
 				if(point_in_circle(_mx, _my, _sx, _sy, 12)) {
-					draw_sprite_ext(s_bone_scale,  0, _sx, _sy, 1, 1, _bne.pose_angle, COLORS._main_accent, 1);
-					draw_sprite_ext(s_bone_rotate, 0, _rx, _ry, 1, 1, _bne.pose_angle, c_white, 1);
+					draw_sprite_ext(THEME.bone_scale,  0, _sx, _sy, 1, 1, _bne.pose_angle, COLORS._main_accent, 1);
+					draw_sprite_ext(THEME.bone_rotate, 0, _rx, _ry, 1, 1, _bne.pose_angle, c_white, 1);
 					_typ = 3;
 					
 				} else {
-					draw_sprite_ext(s_bone_scale,  0, _sx, _sy, 1, 1, _bne.pose_angle, c_white, 1);
-					draw_sprite_ext(s_bone_rotate, 0, _rx, _ry, 1, 1, _bne.pose_angle, COLORS._main_accent, 1);
+					draw_sprite_ext(THEME.bone_scale,  0, _sx, _sy, 1, 1, _bne.pose_angle, c_white, 1);
+					draw_sprite_ext(THEME.bone_rotate, 0, _rx, _ry, 1, 1, _bne.pose_angle, COLORS._main_accent, 1);
 					_typ = 2;
 				}
 			}

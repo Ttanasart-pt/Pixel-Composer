@@ -66,6 +66,9 @@ function Node_Feedback_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	}
 	
 	static drawConnections = function(params = {}) {
+		if( junc_out == noone    ||  junc_in == noone)    return noone;
+		if(!junc_out.node.active || !junc_in.node.active) return noone;
+		
 		params.dashed = true; params.loop   = true;
 		drawJuncConnection(junc_out, junc_in, params);
 		params.dashed = false; params.loop   = false;

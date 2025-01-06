@@ -81,13 +81,13 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 									.setCollape(false);
 		tool_fil8           	= [ "Fill", tool_fil8_edit, "fillType", tool_attribute ];
 		
-		tool_varient_rotate  = [ "", new buttonGroup( [ s_canvas_rotate, s_canvas_rotate ], function(v) /*=>*/ { if(tileset != noone) tileset.brush_action_rotate(v) } )
+		tool_varient_rotate  = [ "", new buttonGroup( [ THEME.canvas_rotate, THEME.canvas_rotate ], function(v) /*=>*/ { if(tileset != noone) tileset.brush_action_rotate(v) } )
 			.setCollape(0)
 			.setBlend(COLORS._main_icon_light)
 			.setTooltips([ new tooltipHotkey("Rotate CW",  "Node_Tile_Drawer", "Brush Rotate CW"),
 			               new tooltipHotkey("Rotate CCW", "Node_Tile_Drawer", "Brush Rotate CCW")]) ];
 			
-		tool_varient_flip    = [ "", new buttonGroup( [ s_canvas_flip, s_canvas_flip ], function(v) /*=>*/ { if(tileset != noone) tileset.brush_action_flip(v) } )
+		tool_varient_flip    = [ "", new buttonGroup( [ THEME.canvas_flip, THEME.canvas_flip ], function(v) /*=>*/ { if(tileset != noone) tileset.brush_action_flip(v) } )
 			.setCollape(0)
 			.setBlend(COLORS._main_icon_light)
 			.setTooltips([ new tooltipHotkey("Flip H", "Node_Tile_Drawer", "Brush Flip H"),

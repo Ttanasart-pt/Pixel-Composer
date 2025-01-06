@@ -512,7 +512,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				var _shov = _hover && point_in_rectangle(_m[0], _m[1], _sx, _sy, _sx + _sw, _sy + _sh);
 				var _aa   = .75 + .25 * _shov;
 				draw_sprite_stretched_ext(THEME.ui_panel, 1, _sx, _sy, _sw, _sh, COLORS._main_icon, _aa);
-				draw_sprite_ext(s_flip_h_24, 0, _sx + _sw / 2, _sy + _sh / 2, _fpx? -1 : 1, 1, 0, _fpx? COLORS._main_accent : COLORS._main_icon, _aa);
+				draw_sprite_ext(THEME.flip_h, 0, _sx + _sw / 2, _sy + _sh / 2, _fpx? -1 : 1, 1, 0, _fpx? COLORS._main_accent : COLORS._main_icon, _aa);
 				_sx += _sw + ui(8);
 				
 				if(_shov) {

@@ -139,13 +139,13 @@ if(DIALOG_SHOW_FOCUS) DIALOG_DRAW_FOCUS
 		var _sx = node_icon_x - ui(16);
 		var _sy = node_icon_y;
 		
-		var _sw = sprite_get_width(node_icon)  + ui(48);
-		var _sh = sprite_get_height(node_icon) + ui(48);
+		var _sw = sprite_get_width(node_icon)  + ui(16);
+		var _sh = sprite_get_height(node_icon) + ui(16);
 		
 		var _bgx = _sx - _sw / 2;
 		var _bgy = _sy - _sh / 2;
 		
-		draw_sprite_stretched(s_node_junction_name_bg, 0, _bgx, _bgy, _sw, _sh);
+		draw_sprite_stretched(THEME.node_junction_name_bg, 0, _bgx, _bgy, _sw, _sh);
 		draw_sprite_ext(node_icon, 0, _sx, _sy, 1, 1);
 		node_icon = noone;
 	}

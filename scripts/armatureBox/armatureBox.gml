@@ -30,7 +30,7 @@ function armatureBox(_junction) : widget() constructor {
             b_newTileset.drawParam(param);
             
         } else {
-			var ic = s_bone;
+			var ic = THEME.bone;
 			var iw = ui(24);
         	var _s = (iw - ui(8)) / max(sprite_get_width(ic), sprite_get_height(ic));
         	var bi = 0;
