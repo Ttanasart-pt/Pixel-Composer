@@ -87,8 +87,7 @@ event_inherited();
 	function trigger_favourite() {
 		if(node_menu_selecting == noone) return;
 		
-		var _node = node_menu_selecting.nodeName;
-		struct_toggle(global.FAV_NODES, _node);
+		struct_toggle(global.FAV_NODES, node_menu_selecting.nodeName);
 		PREF_SAVE();
 	}
 	

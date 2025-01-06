@@ -162,7 +162,7 @@ function NodeObject(_name, _spr, _node, _tooltip = "") constructor {
 			draw_sprite_ui_uniform(THEME.node_deprecated_badge, 1, _x + grid_size - ui(12), _y + ui(6));
 		}
 		
-		var fav = struct_exists(global.FAV_NODES, node);
+		var fav = struct_exists(global.FAV_NODES, nodeName);
 		if(fav) {
 			gpu_set_tex_filter(true);
 			draw_sprite_ui_uniform(THEME.star, 0, _x + grid_size - ui(10), _y + grid_size - ui(10), .8, COLORS._main_accent, 1.);
@@ -188,7 +188,7 @@ function NodeObject(_name, _spr, _node, _tooltip = "") constructor {
 	}
 	
 	static drawList = function(_x, _y, _mx, _my, _h, _w, _param = {}) {
-		var fav = struct_exists(global.FAV_NODES, node);
+		var fav = struct_exists(global.FAV_NODES, nodeName);
 		if(fav) {
 			gpu_set_tex_filter(true);
 			draw_sprite_ui_uniform(THEME.star, 0, _x + ui(16), _y + _h / 2, .8, COLORS._main_accent, 1.);

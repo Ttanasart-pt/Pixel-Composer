@@ -5,6 +5,7 @@ function Node_Iterator_Sort_Inline_Input(_x, _y, _group = noone) : Node(_x, _y, 
 	setDimension(96, 48);
 	
 	clonable = false;
+	inline_input         = false;
 	inline_parent_object = "Node_Iterate_Sort_Inline";
 	manual_ungroupable	 = false;
 	

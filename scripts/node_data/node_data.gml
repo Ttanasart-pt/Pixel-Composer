@@ -43,6 +43,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		array_push(PROJECT.allNodes, self);
 		
+		inline_input   = true;
+		inline_output  = true;
 		inline_context = noone;
 		inline_parent_object  = "";
 		

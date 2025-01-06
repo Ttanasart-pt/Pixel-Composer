@@ -4,7 +4,8 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	icon  = THEME.vfx;
 	use_cache = CACHE_USE.auto;
 	
-	manual_ungroupable	 = false;
+	inline_output      = false;
+	manual_ungroupable = false;
 	
 	newInput(0, nodeValue_Vec2("Output dimension", self, DEF_SURF ));
 		

@@ -1711,16 +1711,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			return _res;
 		}
 		
-		if(_valueFrom == noone)
-			return removeFrom();
+		if(_valueFrom == noone) return removeFrom();
+		if(isConnectable(_valueFrom, checkRecur, log) < 0) return conn;
 		
 		run_in(2, function() /*=>*/ { updateColor(getValue()); });
 		
-		var conn = isConnectable(_valueFrom, checkRecur, log);
-		if(conn < 0) return conn;
-		
-		if(setFrom_condition != -1 && !setFrom_condition(_valueFrom)) 
-			return -2;
+		if(setFrom_condition != -1 && !setFrom_condition(_valueFrom))  return -2;
 		
 		if(value_from != noone) array_remove(value_from.value_to, self);
 		
@@ -1729,10 +1725,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		value_from = _valueFrom;
 		array_push(_valueFrom.value_to, self);
 		
-		if(!LOADING && !APPENDING && _valueFrom.node.inline_context != noone) {
-			var _inline = _valueFrom.node.inline_context;
-			if(node.manual_ungroupable) _inline.addNode(node);
-		}
+		if(!LOADING && !APPENDING && _valueFrom.node.inline_context != noone && node.manual_ungroupable && (node.inline_input && _valueFrom.node.inline_output))
+			_valueFrom.node.inline_context.addNode(node);
 		
 		node.valueUpdate(index, _o);
 		if(_update && connect_type == CONNECT_TYPE.input) {
