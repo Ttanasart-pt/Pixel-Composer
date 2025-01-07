@@ -1,179 +1,139 @@
-function Atlas() constructor {}
-
-function SurfaceAtlasFast(surface, _x = 0, _y = 0, rot = 0, sx = 1, sy = 1, blend = c_white, alpha = 1) : Atlas() constructor {
-	self.surface  = surface;
-	self.x        = _x;
-	self.y        = _y;
-	self.rotation = rot;
-	self.sx       = sx;
-	self.sy       = sy;
-	self.blend    = blend;
-	self.alpha    = alpha;
+function Atlas(_surface, _x = 0, _y = 0, _rot = 0, _sx = 1, _sy = 1, _blend = c_white, _alpha = 1) constructor {
+	surface  = _surface;
+	x        = _x;
+	y        = _y;
+	rotation = _rot;
+	sx       = _sx;
+	sy       = _sy;
+	blend    = _blend;
+	alpha    = _alpha;
 	
 	w = 1;
 	h = 1;
 	
-	static set = function(surface, _x = 0, _y = 0, rot = 0, sx = 1, sy = 1, blend = c_white, alpha = 1, setDim = true) {
+	static getSurface = function() /*=>*/ {return surface};
+	
+	static set = function(_surface, _x = 0, _y = 0, _rot = 0, _sx = 1, _sy = 1, _blend = c_white, _alpha = 1, setDim = true) {
 		INLINE
 		
-		self.surface  = surface;
-		self.x        = _x;
-		self.y        = _y;
-		self.rotation = rot;
-		self.sx       = sx;
-		self.sy       = sy;
-		self.blend    = blend;
-		self.alpha    = alpha;
+		surface  = _surface;
+		x        = _x;
+		y        = _y;
+		rotation = _rot;
+		sx       = _sx;
+		sy       = _sy;
+		blend    = _blend;
+		alpha    = _alpha;
 		
 		return self;
 	}
 	
-	static getSurface = function() {
-		INLINE
-		
-		return surface;
-	}
-	
 }
 
-function SurfaceAtlas(surface, _x = 0, _y = 0, rot = 0, sx = 1, sy = 1, blend = c_white, alpha = 1, setDim = true) : Atlas() constructor {
-	self.surface  = new Surface(surface);
-	self.x        = _x;
-	self.y        = _y;
-	self.rotation = rot;
-	self.sx       = sx;
-	self.sy       = sy;
-	self.blend    = blend;
-	self.alpha    = alpha;
-	
-	w = 1;
-	h = 1;
-		
-	if(setDim) {
-		w = surface_get_width_safe(surface);
-		h = surface_get_height_safe(surface);
-	}
+function SurfaceAtlasFast(_surface, _x = 0, _y = 0, _rot = 0, _sx = 1, _sy = 1, _blend = c_white, _alpha = 1)                : Atlas(_surface, _x, _y, _rot, _sx, _sy, _blend, _alpha) constructor {}
+function SurfaceAtlas(    _surface, _x = 0, _y = 0, _rot = 0, _sx = 1, _sy = 1, _blend = c_white, _alpha = 1, setDim = true) : Atlas(_surface, _x, _y, _rot, _sx, _sy, _blend, _alpha) constructor {
+	surface  = new Surface(_surface);
+	w = setDim? surface_get_width_safe(surface.surface)  : 1;
+	h = setDim? surface_get_height_safe(surface.surface) : 1;
 	
 	oriSurf = noone;
 	oriSurf_w = w;
 	oriSurf_h = h;
 	
-	static set = function(surface, _x = 0, _y = 0, rot = 0, sx = 1, sy = 1, blend = c_white, alpha = 1, setDim = true) {
+	static getSurface = function() /*=>*/ {return surface.get()};
+	
+	__base_set = set;
+	static set = function(_surface, _x = 0, _y = 0, _rot = 0, _sx = 1, _sy = 1, _blend = c_white, _alpha = 1, setDim = true) {
 		INLINE
 		
-		self.surface  = new Surface(surface);
-		self.x        = _x;
-		self.y        = _y;
-		self.rotation = rot;
-		self.sx       = sx;
-		self.sy       = sy;
-		self.blend    = blend;
-		self.alpha    = alpha;
+		__base_set(_surface, _x, _y, _rot, _sx, _sy, _blend, _alpha);
+		surface  = new Surface(_surface);
 		
-		w = 1;
-		h = 1;
-		
-		if(setDim) {
-			w = surface_get_width_safe(surface);
-			h = surface_get_height_safe(surface);
-		}
+		w = setDim? surface_get_width_safe(surface.surface)  : 1;
+		h = setDim? surface_get_height_safe(surface.surface) : 1;
 		
 		return self;
 	}
 	
-	static setOrginalSurface = function(surf) {
+	static setOrginalSurface = function(_surface) {
 		INLINE
 		
-		oriSurf   = surf;
-		oriSurf_w = surface_get_width_safe(surf);
-		oriSurf_h = surface_get_height_safe(surf);
+		oriSurf   = _surface;
+		oriSurf_w = surface_get_width_safe(_surface);
+		oriSurf_h = surface_get_height_safe(_surface);
 		return self;
 	}
 	
-	static getSurface = function() {
+	static setSurface = function(_surface) {
 		INLINE
 		
-		return surface.get();
-	}
-	
-	static setSurface = function(surface) {
-		INLINE
+		self.surface.set(_surface);
 		
-		self.surface.set(surface);
-		
-		w = surface_get_width_safe(surface);
-		h = surface_get_height_safe(surface);
+		w = surface_get_width_safe(_surface);
+		h = surface_get_height_safe(_surface);
 	}
 	
 	static draw = function() {
-		INLINE
-		
 		draw_surface_ext_safe(surface.get(), x, y, sx, sy, rotation, blend, alpha);
 		return self;
 	}
 	
-	static clone = function(_surface = false) {
-		INLINE
-		
+	static clone = function(_cloneSurf = false) {
 		var _surf = getSurface();
-		if(_surface) _surf = surface_clone(_surf);
+		if(_cloneSurf) _surf = surface_clone(_surf);
 		
 		return new SurfaceAtlas(_surf, x, y, rotation, sx, sy, blend, alpha);
 	}
 }
 
-function Surface(surface) constructor {
-	static set = function(surface) {
+function Surface(_surf) constructor {
+	static set = function(_surf) {
 		INLINE
 		
-		self.surface = surface;
-		w = surface_get_width_safe(surface);
-		h = surface_get_height_safe(surface);
-		format = surface_get_format(surface);
+		self.surface = _surf;
+		w = surface_get_width_safe(_surf);
+		h = surface_get_height_safe(_surf);
+		format = surface_get_format(_surf);
 	}
-	set(surface);
 	
-	static get = function() { INLINE return surface; }
+	set(_surf);
 	
-	static isValid = function() { INLINE return is_surface(surface); }
+	static get     = function() /*=>*/ {return surface};
+	static isValid = function() /*=>*/ {return is_surface(surface)};
 	
-	static resize = function(w, h) { 
+	static resize = function(_w, _h) { 
 		INLINE
-		
-		surface_resize(surface, w, h);
-		self.w = w;
-		self.h = h;
+		surface_resize(surface, _w, _h);
+		w = _w; h = _h;
 		return self;
 	}
 	
-	static draw = function(x, y, xs = 1, ys = 1, rot = 0, col = c_white, alpha = 1) { 
+	static draw = function(_x, _y, xs = 1, ys = 1, rot = 0, col = c_white, alpha = 1) { 
 		INLINE
-		
-		draw_surface_ext_safe(surface, x, y, xs, ys, rot, col, alpha);
+		draw_surface_ext_safe(surface, _x, _y, xs, ys, rot, col, alpha);
 		return self; 
 	}
 	
-	static drawStretch = function(x, y, w = 1, h = 1, rot = 0, col = c_white, alpha = 1) { 
+	static drawStretch = function(_x, _y, _w = 1, _h = 1, rot = 0, col = c_white, alpha = 1) { 
 		INLINE
-		
-		draw_surface_stretched_ext(surface, x, y, w, h, col, alpha);
+		draw_surface_stretched_ext(surface, _x, _y, _w, _h, col, alpha);
 		return self; 
 	}
 	
 	static destroy = function() {
 		INLINE
-		
 		if(!isValid()) return;
 		surface_free(surface);
 	}
 }
 
-function Surface_get(surface) {
+function Surface_get(_surf) {
 	INLINE
 		
-	if(is_real(surface)) 
-		return surface;
-	if(is_struct(surface) && struct_has(surface, "surface")) 
-		return surface.surface;
+	if(is_real(_surf)) 
+		return _surf;
+	if(is_struct(_surf) && struct_has(_surf, "surface")) 
+		return _surf.surface;
+		
 	return noone;
 }
