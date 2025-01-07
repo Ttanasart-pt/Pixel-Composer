@@ -135,7 +135,7 @@ if(DIALOG_SHOW_FOCUS) DIALOG_DRAW_FOCUS
 		node_tooltip = noone;
 	}
 	
-	if(node_icon != noone) {
+	if(sprite_exists(node_icon)) {
 		var _sx = node_icon_x - ui(16);
 		var _sy = node_icon_y;
 		
@@ -147,8 +147,8 @@ if(DIALOG_SHOW_FOCUS) DIALOG_DRAW_FOCUS
 		
 		draw_sprite_stretched(THEME.node_junction_name_bg, 0, _bgx, _bgy, _sw, _sh);
 		draw_sprite_ext(node_icon, 0, _sx, _sy, 1, 1);
-		node_icon = noone;
 	}
+	node_icon = noone;
 	
 	ADD_NODE_SCROLL = content_pane.scroll_y_to;
 	

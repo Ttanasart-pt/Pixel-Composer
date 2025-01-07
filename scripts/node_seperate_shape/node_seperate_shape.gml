@@ -14,10 +14,12 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput(3, nodeValue_Color("Color", self, cola(c_white)))
 		.rejectArray();
 	
-	newInput(4, nodeValue_Bool("Ignore blank", self, true, "Skip empty and black shape."))
+	newInput(4, nodeValue_Bool("Ignore blank", self, true, "Skip empty shapes."))
 		.rejectArray();
 	
 	newInput(5, nodeValue_Enum_Button("Mode", self,  0 , [ "Greyscale", "Alpha" ] ))
+		
+	newInput(6, nodeValue_Bool("Crop", self, true ))
 		
 	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
 	
@@ -25,7 +27,7 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	input_display_list = [
 		["Shape",	false], 0, 5, 1, 4,
-		["Override Color", true, 2], 3,
+		["Output",  false], 2, 3, 6, 
 	]
 	
 	temp_surface   = [ noone, noone ];
@@ -37,9 +39,7 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	setTrigger(1,,, function() /*=>*/ {return separateShape()});
 	
-	static update = function() {
-		separateShape();
-	}
+	static update = function() { separateShape(); }
 	
 	static separateShape = function() {
 		var _inSurf = getInputData(0);
@@ -48,6 +48,8 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		var _ovrclr = getInputData(3);
 		var _ignore = getInputData(4);
 		var _mode   = getInputData(5);
+		var _crop   = getInputData(6);
+		
 		var t = current_time;
 		
 		if(!is_surface(_inSurf)) return;
@@ -120,15 +122,15 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			
 			for(var i = 0; i < px; i++) {
 				var _k  = key[i];
-				var ccx = reg[? _k];
+				var _cc = reg[? _k];
 				
-				var min_x = round(ccx[0]);
-				var min_y = round(ccx[1]);
-				var max_x = round(ccx[2]);
-				var max_y = round(ccx[3]);
+				var min_x = _crop? round(_cc[0]) : 0;
+				var min_y = _crop? round(_cc[1]) : 0;
+				var max_x = _crop? round(_cc[2]) : ww;
+				var max_y = _crop? round(_cc[3]) : hh;
 				
-				var _sw = max_x - min_x + 1;
-				var _sh = max_y - min_y + 1;
+				var _sw = _crop? max_x - min_x + 1 : ww;
+				var _sh = _crop? max_y - min_y + 1 : hh;
 				
 				if(_sw <= 1 || _sh <= 1) continue;
 				
@@ -137,9 +139,9 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				
 				surface_set_shader(_outSurf, sh_seperate_shape_sep);
 					shader_set_surface("original", _inSurf);
-					shader_set_f("color",     ccx);
-					shader_set_i("override",  _ovr);
-					shader_set_color("overColor", _ovrclr);
+					shader_set_f("color",          _cc);
+					shader_set_i("override",       _ovr);
+					shader_set_color("overColor",  _ovrclr);
 					
 					draw_surface_safe(temp_surface[res_index], -min_x, -min_y);
 				surface_reset_shader();

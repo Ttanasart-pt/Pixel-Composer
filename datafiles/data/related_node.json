@@ -5,7 +5,7 @@
             "integer":   [ "Node_Math", "Node_Equation", "Node_To_Text" ],
             "float":     [ "Node_Math", "Node_Equation", "Node_To_Text" ],
             "color":     [ "Node_Solid", "Node_Color_Data", "Node_Color_Mix" ],
-            "surface":   [ "Node_Transform", "Node_Blend", "Node_Composite", "Node_Export" ],
+            "surface":   [ "Node_Surface_data", "Node_Transform", "Node_Blend", "Node_Composite", "Node_Export" ],
             
             "path":      [ "Node_Line" ],
             "text":      [ "Node_Text", "Node_To_Number" ],

@@ -11,7 +11,7 @@ function Node_Sky(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 	
 	newInput(4, nodeValue_Float("Turbidity", self, 2));
 	
-	newInput(5, nodeValue_Vec2("Sun", self, [ .5, .5 ]))
+	newInput(5, nodeValue_Vec2("Sun", self, [ .2, .2 ]))
 	    .setUnitRef(function(index) /*=>*/ {return getDimension(index)}, VALUE_UNIT.reference);
 	
 	newInput(6, nodeValue_Float("Sun radius", self, 500));

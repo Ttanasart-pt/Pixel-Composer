@@ -135,13 +135,13 @@ function Panel_Console() : PanelContent() constructor {
 			setCommand("");
 			cmd_index = array_length(CMDIN);
 			
-		} else if(keyboard_check_pressed(vk_up)) {
+		} else if(KEYBOARD_PRESSED == vk_up) {
 			cmd_index = max(0, cmd_index - 1); 
 			
 			var his = array_safe_get_fast(CMDIN, cmd_index, "");
 			setCommand(is_instanceof(his, __cmdLine)? his.txt : his);
 		
-		} else if(keyboard_check_pressed(vk_down)) {
+		} else if(KEYBOARD_PRESSED == vk_down) {
 			cmd_index = min(cmd_index + 1, array_length(CMDIN)); 
 		
 			var his = array_safe_get_fast(CMDIN, cmd_index, "");

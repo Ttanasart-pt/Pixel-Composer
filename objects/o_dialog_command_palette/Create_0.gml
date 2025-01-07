@@ -212,13 +212,13 @@ event_inherited();
 				hk_editing = noone;
 				
 		} else if(sc_content.active) {
-			if(keyboard_check_pressed(vk_up)) {
+			if(KEYBOARD_PRESSED == vk_up) {
 				keyboard_trigger = true;
 				selecting--;
 				if(selecting < 0) selecting = array_length(data) - 1;
 			}
 			
-			if(keyboard_check_pressed(vk_down)) {
+			if(KEYBOARD_PRESSED == vk_down) {
 				keyboard_trigger = true;
 				selecting = safe_mod(selecting + 1, array_length(data));
 			}

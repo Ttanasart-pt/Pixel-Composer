@@ -348,16 +348,16 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			keyboard_lastkey = -1;
 		#endregion
 		
-		if(keyboard_check_pressed(vk_left))	 onKey(vk_left);
-		if(keyboard_check_pressed(vk_right)) onKey(vk_right);
+		if(KEYBOARD_PRESSED = vk_left)  onKey(vk_left);
+		if(KEYBOARD_PRESSED = vk_right) onKey(vk_right);
 		
 		if(input == TEXTBOX_INPUT.number) {
 			var _inc = 1;
 			if(key_mod_press(CTRL)) _inc *= 10;
 			if(key_mod_press(ALT))  _inc /= 10;
 			
-			if(KEYBOARD_PRESSED == vk_up   || keyboard_check_pressed(vk_up))   { _input_text = string(toNumber(_input_text) + _inc); apply(); }
-			if(KEYBOARD_PRESSED == vk_down || keyboard_check_pressed(vk_down)) { _input_text = string(toNumber(_input_text) - _inc); apply(); }
+			if(KEYBOARD_PRESSED == vk_up)   { _input_text = string(toNumber(_input_text) + _inc); apply(); }
+			if(KEYBOARD_PRESSED == vk_down) { _input_text = string(toNumber(_input_text) - _inc); apply(); }
 		}
 		
 		if(edited) {
@@ -471,10 +471,6 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		
 			if(mouse_release(mb_left, active))
 				click_block	  = false;
-			
-			if(mouse_press(mb_right, active))
-				menuCall("textbox_context", context_menu_selecting);
-			
 		}
 	}
 	
@@ -839,6 +835,9 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			disp_x_to = clamp(disp_x_to, disp_x_min, disp_x_max);
 			if(!hoverRect && mouse_press(mb_left)) 
 				deactivate();
+			
+			if(mouse_press(mb_right, hoverRect, active))
+				menuCall("textbox_context", context_menu_selecting);
 			
 		} else {
 			

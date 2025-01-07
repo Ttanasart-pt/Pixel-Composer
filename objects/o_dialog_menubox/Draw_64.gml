@@ -264,12 +264,12 @@ DIALOG_WINCLEAR1
 			hk_editing = noone;
 			
 	} else if(sFOCUS) {
-		if(keyboard_check_pressed(vk_up)) {
+		if(KEYBOARD_PRESSED == vk_up) {
 			selecting--;
 			if(selecting < 0) selecting = array_length(menu) - 1;
 		}
 			
-		if(keyboard_check_pressed(vk_down))
+		if(KEYBOARD_PRESSED == vk_down)
 			selecting = safe_mod(selecting + 1, array_length(menu));
 		
 		if(keyboard_check_pressed(vk_escape)) {

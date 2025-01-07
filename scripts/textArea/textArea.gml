@@ -577,10 +577,10 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 			}
 		}
 		
-		if(keyboard_check_pressed(vk_left))	 onKey(vk_left);
-		if(keyboard_check_pressed(vk_right)) onKey(vk_right);
-		if(keyboard_check_pressed(vk_up))	 onKey(vk_up);
-		if(keyboard_check_pressed(vk_down))  onKey(vk_down);
+		if(KEYBOARD_PRESSED == vk_left)  onKey(vk_left);
+		if(KEYBOARD_PRESSED == vk_right) onKey(vk_right);
+		if(KEYBOARD_PRESSED == vk_up)    onKey(vk_up);
+		if(KEYBOARD_PRESSED == vk_down)  onKey(vk_down);
 		
 		if(keyboard_check_pressed(vk_home)) {
 			if(key_mod_press(SHIFT)) {

@@ -745,8 +745,8 @@ event_inherited();
 					draw_sprite_stretched_ext(THEME.node_bg, 1, pd, yy, list_width - pd * 2, list_height, COLORS._main_accent, 1);
 					
 					if(sFOCUS) {
-							 if(mouse_release(mb_left,  left_free))  buildNode(_node);
-						else if(mouse_release(mb_right, right_free)) rightClick(_node);
+						if(mouse_press(mb_left,  left_free))  buildNode(_node);
+						if(mouse_press(mb_right, right_free)) rightClick(_node);
 					}
 				}
 				
@@ -1263,27 +1263,40 @@ event_inherited();
 					}
 				}
 			}
+			
+			hh = list_height * (ind + 1);
 		}
 		
 		node_focusing = -1;
-		var s_sfz = PREFERENCES.dialog_add_node_view == 1? list_height * 4 : 0;
 		
-		if(keyboard_check_pressed(vk_up)) {
-			node_selecting = safe_mod(node_selecting - 1 + amo, amo);
-			node_focusing  = node_selecting;
-			
-			if(PREFERENCES.dialog_add_node_view == 1)
-				search_pane.scroll_y_to = max(search_pane.scroll_y_to, -list_height * node_selecting + s_sfz);
+		if(KEYBOARD_PRESSED == vk_up) {
+			if(PREFERENCES.dialog_add_node_view == 0) {
+				node_selecting = safe_mod(node_selecting - 1 + amo, amo);
+				node_focusing  = node_selecting;
+			} else {
+				node_selecting--;
+				if(node_selecting < 0) {
+					node_selecting = amo - 1;
+					search_pane.scroll_y_to = -list_height * node_selecting + list_height * 4;
+				} else 
+					search_pane.scroll_y_to = max(search_pane.scroll_y_to, -list_height * node_selecting + list_height * 4);
+			}
 		}
 		
-		if(keyboard_check_pressed(vk_down)) {
-			node_selecting = safe_mod(node_selecting + 1, amo);
-			node_focusing  = node_selecting;
-			
-			if(PREFERENCES.dialog_add_node_view == 1)
-				search_pane.scroll_y_to = min(search_pane.scroll_y_to, -list_height * node_selecting - s_sfz + search_pane.h);
+		if(KEYBOARD_PRESSED == vk_down) {
+			if(PREFERENCES.dialog_add_node_view == 0) {
+				node_selecting = safe_mod(node_selecting + 1, amo);
+				node_focusing  = node_selecting;
+			} else {
+				node_selecting++;
+				if(node_selecting >= amo) {
+					node_selecting = 0;
+					search_pane.scroll_y_to = -list_height * node_selecting + list_height * 4;
+				} else 
+					search_pane.scroll_y_to = min(search_pane.scroll_y_to, -list_height * node_selecting - list_height * 4 + search_pane.h);
+			}
 		}
 		
-		return list_height * (ind + 1);
+		return hh;
 	});
 #endregion
