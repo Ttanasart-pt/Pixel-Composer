@@ -321,7 +321,6 @@
     {"name":"o_dialog_output_visibility","order":2,"path":"objects/o_dialog_output_visibility/o_dialog_output_visibility.yy",},
     {"name":"o_dialog_palette","order":2,"path":"objects/o_dialog_palette/o_dialog_palette.yy",},
     {"name":"o_dialog_panel","order":13,"path":"objects/o_dialog_panel/o_dialog_panel.yy",},
-    {"name":"o_dialog_preference","order":3,"path":"objects/o_dialog_preference/o_dialog_preference.yy",},
     {"name":"o_dialog_preset","order":1,"path":"objects/o_dialog_preset/o_dialog_preset.yy",},
     {"name":"o_dialog_release_note","order":4,"path":"objects/o_dialog_release_note/o_dialog_release_note.yy",},
     {"name":"o_dialog_run_shell","order":9,"path":"objects/o_dialog_run_shell/o_dialog_run_shell.yy",},

@@ -3537,6 +3537,7 @@ function load_file_path(path, _x = undefined, _y = undefined) {
     
     if(is_multi) {
         dialogCall(o_dialog_add_multiple_images).setPath(path);
+        
     } else {
         if(!IS_CMD) PANEL_GRAPH.onStepBegin();
         

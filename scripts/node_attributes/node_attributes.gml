@@ -76,7 +76,7 @@
 	function attribute_surface_depth(label = true) {
 		attr_depth_array = variable_clone(global.SURFACE_FORMAT_NAME);
 		attr_depth_array[0].setActive(!array_empty(inputs) && inputs[0].type == VALUE_TYPE.surface);
-		attributes.color_depth = 3;
+		attributes.color_depth = PREFERENCES.node_default_depth;
 		
 		if(label) array_push(attributeEditors, "Surface");
 		array_push(attributeEditors, ["Color depth", function() /*=>*/ {return attributes.color_depth}, 
@@ -85,8 +85,8 @@
 	
 	function attribute_interpolation(label = false) {
 		attr_interpolate_array = variable_clone(global.SURFACE_INTERPOLATION);
-		attributes.interpolate = 1;
-		attributes.oversample  = 1;
+		attributes.interpolate = PREFERENCES.node_default_interpolation;
+		attributes.oversample  = PREFERENCES.node_default_oversample;
 		
 		if(label) array_push(attributeEditors, "Surface");
 		array_push(attributeEditors, ["Texture interpolation", function() /*=>*/ {return attributes.interpolate}, 
@@ -95,8 +95,8 @@
 	
 	function attribute_oversample(label = false) {
 		attr_oversample_array = variable_clone(global.SURFACE_OVERSAMPLE);
-		attributes.interpolate = 1;
-		attributes.oversample  = 1;
+		attributes.interpolate = PREFERENCES.node_default_interpolation;
+		attributes.oversample  = PREFERENCES.node_default_oversample;
 		
 		if(label) array_push(attributeEditors, "Surface");
 		array_push(attributeEditors, ["Oversample", function() /*=>*/ {return attributes.oversample}, 
@@ -110,4 +110,5 @@
 		array_push(attributeEditors, ["Auto execute", function() /*=>*/ {return attributes.auto_exe}, 
 			new checkBox(function() /*=>*/ { attribute_set("auto_exe", !attributes.auto_exe); })]);
 	}
+	
 #endregion

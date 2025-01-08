@@ -1,7 +1,7 @@
 #macro CHECK_PANEL_PRESETS if(!is_instanceof(FOCUS_CONTENT, Panel_Presets)) return;
 
 function panel_preset_replace()	{ CHECK_PANEL_PRESETS CALL("panel_preset_replace");	FOCUS_CONTENT.replacePreset(FOCUS_CONTENT.selecting_preset.path);					}
-function panel_preset_delete()	{ CHECK_PANEL_PRESETS CALL("panel_preset_delete");	file_delete(FOCUS_CONTENT.selecting_preset.path); FOCUS_CONTENT.__initPresets();	}
+function panel_preset_delete()	{ CHECK_PANEL_PRESETS CALL("panel_preset_delete");	file_delete(FOCUS_CONTENT.selecting_preset.path); __initPresets();	}
 function panel_preset_reset()	{ CHECK_PANEL_PRESETS CALL("panel_preset_reset");	FOCUS_CONTENT.newPresetFromNode("_default");										}
 
 function __fnInit_Presets() {

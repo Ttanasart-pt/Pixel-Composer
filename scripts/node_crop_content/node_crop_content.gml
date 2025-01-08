@@ -17,6 +17,8 @@ function Node_Crop_Content(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newOutput(1, nodeValue_Output("Crop distance", self, VALUE_TYPE.integer, [ 0, 0, 0, 0 ]))
 		.setDisplay(VALUE_DISPLAY.padding);
 	
+	newOutput(2, nodeValue_Output("Atlas", self, VALUE_TYPE.atlas, []));
+	
 	input_display_list = [ 1,
 		["Surfaces", false], 0, 2, 4, 
 		["Padding",	 false], 3, 
@@ -48,7 +50,7 @@ function Node_Crop_Content(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		}
 		
 		var _arr = is_array(_inSurf);
-		_array &= _arr;
+		_array  &= _arr;
 		
 		if(!is_array(_inSurf) && !is_surface(_inSurf)) return;
 		if( is_array(_inSurf) && array_empty(_inSurf)) return;
@@ -56,10 +58,10 @@ function Node_Crop_Content(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		if(!_arr) _inSurf = [ _inSurf ];
 		var _amo = array_length(_inSurf);
 		
-		var minx = _array? array_create(_amo) : 999999;
-		var miny = _array? array_create(_amo) : 999999;
-		var maxx = _array? array_create(_amo) : 0;
-		var maxy = _array? array_create(_amo) : 0;
+		var minx = array_create(_amo);
+		var miny = array_create(_amo);
+		var maxx = array_create(_amo);
+		var maxy = array_create(_amo);
 		var cDep = attrDepth();
 		
 		for( var j = 0; j < _amo; j++ ) {
@@ -103,52 +105,44 @@ function Node_Crop_Content(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				maxx[j] = _maxx;
 				maxy[j] = _maxy;
 			} else {
-				minx = min(minx, _minx);
-				miny = min(miny, _miny);
+				minx[0] = min(minx[0], _minx);
+				miny[0] = min(miny[0], _miny);
 				
-				maxx = max(maxx, _maxx);
-				maxy = max(maxy, _maxy);
+				maxx[0] = max(maxx[0], _maxx);
+				maxy[0] = max(maxy[0], _maxy);
 			}
 		}
 		
-		var res  = [];
-		var crop = [];
+		var res   = [];
+		var crop  = [];
+		var atlas = [];
 		
 		for( var i = 0, n = _amo; i < n; i++ ) {
 			var _surf = _inSurf[i];
+			var _ind  = _array == 0? 0 : i;
 			
-			if(_array == 0) {
-				var resDim  = [maxx - minx + 1, maxy - miny + 1];
-				resDim[DIMENSION.width]  += _padd[PADDING.left] + _padd[PADDING.right];
-				resDim[DIMENSION.height] += _padd[PADDING.top] + _padd[PADDING.bottom];
-				
-				res[i]  = surface_create_valid(resDim[DIMENSION.width], resDim[DIMENSION.height], cDep);
-				crop[i] = [ surface_get_width_safe(_surf) - maxx - 1, miny, minx, surface_get_height_safe(_surf) - maxy - 1 ];
-				
-				surface_set_shader(res[i], noone);
-					draw_surface_safe(_surf, -minx + _padd[PADDING.left], -miny + _padd[PADDING.top]);
-				surface_reset_shader();
-				
-			} else if(_array == 1) {
-				var resDim  = [maxx[i] - minx[i] + 1, maxy[i] - miny[i] + 1];
-				resDim[DIMENSION.width]  += _padd[PADDING.left] + _padd[PADDING.right];
-				resDim[DIMENSION.height] += _padd[PADDING.top] + _padd[PADDING.bottom];
-				
-				res[i] = surface_create_valid(resDim[DIMENSION.width], resDim[DIMENSION.height], cDep);
-				crop[i] = [ surface_get_width_safe(_surf) - maxx - 1, miny, minx, surface_get_height_safe(_surf) - maxy - 1 ];
-				
-				surface_set_shader(res[i], noone);
-					draw_surface_safe(_surf, -minx[i] + _padd[PADDING.left], -miny[i] + _padd[PADDING.top]);
-				surface_reset_shader();
-			}
+			var resDim  = [maxx[_ind] - minx[_ind] + 1, maxy[_ind] - miny[_ind] + 1];
+			resDim[DIMENSION.width]  += _padd[PADDING.left] + _padd[PADDING.right];
+			resDim[DIMENSION.height] += _padd[PADDING.top]  + _padd[PADDING.bottom];
+			
+			res[i]  = surface_create_valid(resDim[DIMENSION.width], resDim[DIMENSION.height], cDep);
+			crop[i] = [ surface_get_width_safe(_surf) - maxx[_ind] - 1, miny[_ind], minx[_ind], surface_get_height_safe(_surf) - maxy[_ind] - 1 ];
+			
+			surface_set_shader(res[i], noone);
+				draw_surface_safe(_surf, -minx[_ind] + _padd[PADDING.left], -miny[_ind] + _padd[PADDING.top]);
+			surface_reset_shader();
+			
+			atlas[i] = new SurfaceAtlas(res[i], minx[_ind], miny[_ind]);
 		}
 		
 		if(!_arr) {
-			res  = res[0];
-			crop = crop[0];
+			res   = res[0];
+			crop  = crop[0];
+			atlas = atlas[0];
 		}
 		
 		outputs[0].setValue(res);
 		outputs[1].setValue(crop);
+		outputs[2].setValue(atlas);
 	}
 }

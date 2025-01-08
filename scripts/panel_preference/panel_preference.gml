@@ -518,33 +518,55 @@ function Panel_Preference() : PanelContent() constructor {
     
     #region node
     	pref_node = ds_list_create();
-    	
-    	// ds_list_add(pref_node, __txt("Node"));
-    	
-    		ds_list_add(pref_node, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_node_param_show", "Show paramater on new node"),
-    			"node_param_show",
-    			new checkBox(function() /*=>*/ { PREFERENCES.node_param_show = !PREFERENCES.node_param_show; PREF_SAVE(); })
-    		));
-    		
-    		ds_list_add(pref_node, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_node_param_width", "Default param width"),
-    			"node_param_width",
-    			new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ { PREFERENCES.node_param_width = val; PREF_SAVE(); })
-    		));
-    		
-    		ds_list_add(pref_node, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_node_3d_preview", "3D Preview resolution"),
-    			"node_3d_preview_size",
-    			new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ { PREFERENCES.node_3d_preview_size = clamp(val, 16, 1024); PREF_SAVE(); })
-    		));
-    	
-    		ds_list_add(pref_node, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_file_watcher_delay", "File watcher delay (s)"),
-    			"file_watcher_delay",
-    			new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ { PREFERENCES.file_watcher_delay = val; PREF_SAVE(); })
-    		));
-    	
+	
+		ds_list_add(pref_node, __txt("Defaults"));
+		
+			ds_list_add(pref_node, new __Panel_Linear_Setting_Item_Preference(
+				__txtx("pref_node_default_depth", "Default surface depth"),
+				"node_default_depth",
+				new scrollBox(global.SURFACE_FORMAT_NAME, function(val) /*=>*/ { PREFERENCES.node_default_depth = val; PREF_SAVE(); })
+			));
+			
+			ds_list_add(pref_node, new __Panel_Linear_Setting_Item_Preference(
+				__txtx("pref_node_default_interpolation", "Default interpolation"),
+				"node_default_interpolation",
+				new scrollBox(global.SURFACE_INTERPOLATION, function(val) /*=>*/ { PREFERENCES.node_default_interpolation = val; PREF_SAVE(); })
+			));
+			
+			ds_list_add(pref_node, new __Panel_Linear_Setting_Item_Preference(
+				__txtx("pref_node_default_oversample", "Default oversample"),
+				"node_default_oversample",
+				new scrollBox(global.SURFACE_OVERSAMPLE, function(val) /*=>*/ { PREFERENCES.node_default_oversample = val; PREF_SAVE(); })
+			));
+			
+			ds_list_add(pref_node, new __Panel_Linear_Setting_Item_Preference(
+				__txtx("pref_node_param_width", "Default param width"),
+				"node_param_width",
+				new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ { PREFERENCES.node_param_width = val; PREF_SAVE(); })
+			));
+			
+		ds_list_add(pref_node, __txt("Display"));
+		
+			ds_list_add(pref_node, new __Panel_Linear_Setting_Item_Preference(
+				__txtx("pref_node_param_show", "Show paramater on new node"),
+				"node_param_show",
+				new checkBox(function() /*=>*/ { PREFERENCES.node_param_show = !PREFERENCES.node_param_show; PREF_SAVE(); })
+			));
+			
+			ds_list_add(pref_node, new __Panel_Linear_Setting_Item_Preference(
+				__txtx("pref_node_3d_preview", "3D Preview resolution"),
+				"node_3d_preview_size",
+				new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ { PREFERENCES.node_3d_preview_size = clamp(val, 16, 1024); PREF_SAVE(); })
+			));
+		
+		ds_list_add(pref_node, __txt("Files"));
+		
+			ds_list_add(pref_node, new __Panel_Linear_Setting_Item_Preference(
+				__txtx("pref_file_watcher_delay", "File watcher delay (s)"),
+				"file_watcher_delay",
+				new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ { PREFERENCES.file_watcher_delay = val; PREF_SAVE(); })
+			));
+		
     #endregion
     
     #region theme

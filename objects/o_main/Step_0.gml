@@ -24,7 +24,7 @@ if(!LOADING && PROJECT.active && !PROJECT.safeMode) { //node step
 }
 
 #region hotkey
-	if(!instance_exists(o_dialog_preference) && !HOTKEY_BLOCK) {
+	if(!HOTKEY_BLOCK) {
 		if(ds_map_exists(HOTKEYS, "")) {
 			var l = HOTKEYS[? ""];
 			for(var i = 0, n = ds_list_size(l); i < n; i++) {

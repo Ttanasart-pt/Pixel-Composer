@@ -136,6 +136,10 @@
 		PREFERENCES.node_param_show					= false;
 		PREFERENCES.node_param_width				= 192;
 		PREFERENCES.node_3d_preview_size			= 256;
+		
+		PREFERENCES.node_default_depth				= 3;
+		PREFERENCES.node_default_oversample			= 1;
+		PREFERENCES.node_default_interpolation		= 1;
 	
 	#endregion
 	

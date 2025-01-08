@@ -28,6 +28,8 @@ function Atlas(_surface, _x = 0, _y = 0, _rot = 0, _sx = 1, _sy = 1, _blend = c_
 		return self;
 	}
 	
+	static draw = function() {}
+	
 }
 
 function SurfaceAtlasFast(_surface, _x = 0, _y = 0, _rot = 0, _sx = 1, _sy = 1, _blend = c_white, _alpha = 1)                : Atlas(_surface, _x, _y, _rot, _sx, _sy, _blend, _alpha) constructor {}
@@ -67,21 +69,20 @@ function SurfaceAtlas(    _surface, _x = 0, _y = 0, _rot = 0, _sx = 1, _sy = 1, 
 	static setSurface = function(_surface) {
 		INLINE
 		
-		self.surface.set(_surface);
-		
+		surface.set(_surface);
 		w = surface_get_width_safe(_surface);
 		h = surface_get_height_safe(_surface);
 	}
 	
-	static draw = function() {
-		draw_surface_ext_safe(surface.get(), x, y, sx, sy, rotation, blend, alpha);
+	static draw = function(submitInt = false) {
+		var _surf = getSurface();
+		draw_surface_ext_safe(_surf, x, y, sx, sy, rotation, blend, alpha);
 		return self;
 	}
 	
 	static clone = function(_cloneSurf = false) {
 		var _surf = getSurface();
 		if(_cloneSurf) _surf = surface_clone(_surf);
-		
 		return new SurfaceAtlas(_surf, x, y, rotation, sx, sy, blend, alpha);
 	}
 }
