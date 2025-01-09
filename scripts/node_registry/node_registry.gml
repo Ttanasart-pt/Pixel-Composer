@@ -50,12 +50,13 @@ function NodeObject(_name, _spr, _node, _tooltip = "") constructor {
 	createFn     = noone;
 	createParam  = noone;
 	
+	sourceDir    = "";
 	tags         = [];
 	tooltip      = _tooltip;
+	tooltip_spr  = undefined;
 	
 	pxc_version  = 0;
 	new_node     = false;
-	tooltip_spr  = noone;
 	deprecated   = false;
 	
 	show_in_recent = true;
@@ -70,26 +71,23 @@ function NodeObject(_name, _spr, _node, _tooltip = "") constructor {
 	input_type_mask  = 0b0;
 	output_type_mask = 0b0;
 	
+	_fn = registerFunctionLite("New node", name, function(n) /*=>*/ { PANEL_GRAPH.createNodeHotkey(n); }, [ nodeName ]);
+	_fn.spr = spr;
+	
 	static init = function() {
-		_fn = registerFunctionLite("New node", name, function(n) /*=>*/ { PANEL_GRAPH.createNodeHotkey(n); }, [ nodeName ]);
-		_fn.spr = spr;
+		if(IS_CMD) return;
 		
-		if(!IS_CMD) {
-			var pth = DIRECTORY + $"Nodes/Tooltip/{node}.png";
-			if(file_exists_empty(pth)) tooltip_spr = sprite_add(pth, 0, false, false, 0, 0);
-			
-			if(struct_has(global.NODE_GUIDE, node)) {
-				var _n = global.NODE_GUIDE[$ node];
-				name   = _n.name;
-				if(_n.tooltip != "")
-					tooltip = _n.tooltip;
-			}
+		if(struct_has(global.NODE_GUIDE, node)) {
+			var _n = global.NODE_GUIDE[$ node];
+			name   = _n.name;
+			if(_n.tooltip != "")
+				tooltip = _n.tooltip;
 		}
 	} init();
 		
-	static setTags    = function(_tags) { tags    = _tags;     return self; }
-	static setSpr     = function(_spr)  { spr     = _spr;      return self; }
-	static setTooltip = function(_tool) { tooltip = _tool;     return self; }
+	static setTags    = function(_tags) { tags        = _tags; return self; }
+	static setSpr     = function(_spr)  { spr         = _spr;  return self; }
+	static setTooltip = function(_tool) { tooltip     = _tool; return self; }
 	static setBuild   = function(_fn)   { createFn    = _fn;   return self; }
 	static setParam   = function(_par)  { createParam = _par;  return self; }
 	
@@ -159,6 +157,16 @@ function NodeObject(_name, _spr, _node, _tooltip = "") constructor {
 	
 	static getName    = function() { return __txt_node_name(node, name);	   }
 	static getTooltip = function() { return __txt_node_tooltip(node, tooltip); }
+	static getTooltipSpr = function() { 
+		if(tooltip_spr != undefined) return tooltip_spr;
+		
+		tooltip_spr = noone;
+		var pth = $"{sourceDir}/tooltip_spr.png";
+		if(file_exists_empty(pth)) 
+			tooltip_spr = sprite_add(pth, 0, false, false, 0, 0);
+		
+		return tooltip_spr;
+	}
 	
 	static build = function(_x = 0, _y = 0, _group = PANEL_GRAPH.getCurrentContext(), _param = {}) {
 		INLINE 
@@ -287,7 +295,7 @@ function NodeObject(_name, _spr, _node, _tooltip = "") constructor {
 		
 		return tx;
 	}
-
+	
 	static serialize = function() {
 		var _str = {
 			name,
@@ -307,7 +315,9 @@ function NodeObject(_name, _spr, _node, _tooltip = "") constructor {
 		return _str;
 	}
 	
-	static deserialize = function(_data) {
+	static deserialize = function(_data, _dir) {
+		sourceDir = _dir;
+		
 		if(struct_has(_data, "tooltip")) setTooltip(_data.tooltip);
 		
 		if(struct_has(_data, "io")) {
@@ -406,7 +416,7 @@ function __read_node_folder(dir) {
 	var _node = asset_get_index(_base);
 	var _n = new NodeObject(_name, _spr, _node);
 	
-	_n.deserialize(_data);
+	_n.deserialize(_data, dir);
 	
 	ALL_NODES[$ _inme] = _n;
 	return _n;
@@ -449,40 +459,26 @@ function __initNodes() {
 	global.__startPage =  0;
 	global.FAV_NODES   = {};
 	
-	if(!IS_CMD) {
-		var favPath = DIRECTORY + "Nodes/fav.json";
-		if(file_exists_empty(favPath)) {
-			var favs = json_load_struct(favPath);
-			for (var i = 0, n = array_length(favs); i < n; i++)
-				global.FAV_NODES[$ favs[i]] = 1;
-		}
-		
-		var recPath = DIRECTORY + "Nodes/recent.json";
-		global.RECENT_NODES = file_exists_empty(recPath)? json_load_struct(recPath) : [];
-		if(!is_array(global.RECENT_NODES)) global.RECENT_NODES = [];
-	}
-	
-	NODE_PAGE_DEFAULT = ds_list_size(NODE_CATEGORY);
-	ADD_NODE_PAGE = NODE_PAGE_DEFAULT;
+	NODE_PAGE_DEFAULT = 0;
+	ADD_NODE_PAGE     = 0;
 	
 	////- DATA
 	
-	var dir = $"{DIRECTORY}Nodes/Data/";
-	directory_verify(dir);
-	if(check_version($"{dir}version")) 
-		zip_unzip("data/Nodes/Internal.zip", $"{DIRECTORY}Nodes/Data/");
+	directory_verify($"{DIRECTORY}Nodes");
+	if(check_version($"{DIRECTORY}Nodes/version")) 
+		zip_unzip("data/Nodes/Internal.zip", $"{DIRECTORY}Nodes");
 	
-	var dir = $"{DIRECTORY}Nodes/Data/Internal";
-	__read_node_directory(dir);
+	__read_node_directory($"{DIRECTORY}Nodes/Internal");
+	
+	if(IS_CMD) return;
 	
 	////- DISPLAY
 	
 	var _relFrom = $"data/Nodes/display_data.json";
-	var _relTo   = $"{DIRECTORY}Nodes/Data/display_data.json";
+	var _relTo   = $"{DIRECTORY}Nodes/display_data.json";
 	file_copy_override(_relFrom, _relTo);
 	
 	var _data = json_load_struct(_relTo);
-	
 	__read_node_display(_data.list, addNodeCatagory);
 	
 	NODE_ACTION_LIST = ds_list_create();
@@ -493,6 +489,19 @@ function __initNodes() {
 	
 	__read_node_display(_data.pb,  addNodePBCatagory);
 	__read_node_display(_data.pcx, addNodePCXCatagory);
+	
+	////- FAV
+	
+	var favPath = $"{DIRECTORY}Nodes/fav.json";
+	if(file_exists_empty(favPath)) {
+		var favs = json_load_struct(favPath);
+		for (var i = 0, n = array_length(favs); i < n; i++)
+			global.FAV_NODES[$ favs[i]] = 1;
+	}
+	
+	var recPath = $"{DIRECTORY}Nodes/recent.json";
+	global.RECENT_NODES = file_exists_empty(recPath)? json_load_struct(recPath) : [];
+	if(!is_array(global.RECENT_NODES)) global.RECENT_NODES = [];
 }
 
 function __generateNodeData() {

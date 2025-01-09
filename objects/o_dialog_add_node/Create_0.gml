@@ -578,7 +578,7 @@ event_inherited();
 					}
 				}
 				
-				if(_node.getTooltip() != "" || _node.tooltip_spr != noone) {
+				if(_node.getTooltip() != "" || _node.getTooltipSpr() != noone) {
 					gpu_set_tex_filter(true);
 					if(_hoverContent && point_in_rectangle(_m[0], _m[1], _boxx, yy, _boxx + ui(16), yy + ui(16))) {
 						content_pane.hover_content = true;
@@ -783,7 +783,7 @@ event_inherited();
 				}
 				
 				var _hinfo = _hoverContent && point_in_circle(_m[0], _m[1], tx + ui(12), yy + list_height / 2, list_height / 2);
-				if(_node.getTooltip() != "" || _node.tooltip_spr != noone) {
+				if(_node.getTooltip() != "" || _node.getTooltipSpr() != noone) {
 					gpu_set_tex_filter(true);
 					draw_sprite_ui_uniform(THEME.info, 0, tx + ui(12), yy + list_height / 2, 0.7, COLORS._main_icon, .5 + _hinfo * .25);
 					gpu_set_tex_filter(false);
@@ -1061,7 +1061,7 @@ event_inherited();
 							buildNode(_node, _param);
 					}
 					
-					if(struct_has(_node, "tooltip") && (_node.getTooltip() != "" || _node.tooltip_spr != noone)) {
+					if(struct_has(_node, "tooltip") && (_node.getTooltip() != "" || _node.getTooltipSpr() != noone)) {
 						if(_hover && point_in_rectangle(_m[0], _m[1], _boxx, yy, _boxx + ui(16), yy + ui(16))) {
 							search_pane.hover_content = true;
 							
@@ -1251,7 +1251,7 @@ event_inherited();
 				}
 				
 				var _hinfo = _hover && point_in_circle(_m[0], _m[1], tx + ui(12), yy + list_height / 2, list_height / 2);
-				if((struct_has(_node, "getTooltip") && _node.getTooltip() != "") || struct_try_get(_node, "tooltip_spr", noone) != noone) {
+				if((struct_has(_node, "getTooltip") && _node.getTooltip() != "") || (struct_has(_node, "getTooltipSpr") && _node.getTooltipSpr() != noone)) {
 					gpu_set_tex_filter(true);
 					draw_sprite_ui_uniform(THEME.info, 0, tx + ui(12), yy + list_height / 2, 0.7, COLORS._main_icon, .5 + _hinfo * .25);
 					gpu_set_tex_filter(false);

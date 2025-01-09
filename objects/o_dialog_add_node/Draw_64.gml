@@ -96,7 +96,7 @@ if(DIALOG_SHOW_FOCUS) DIALOG_DRAW_FOCUS
 		var hh = ui(16);
 		
 		var txt = node_tooltip.getTooltip();
-		var spr = node_tooltip.tooltip_spr;
+		var spr = node_tooltip.getTooltipSpr();
 		
 		draw_set_font(f_p1);
 		var _th = string_height_ext(txt, -1, ww - ui(16));

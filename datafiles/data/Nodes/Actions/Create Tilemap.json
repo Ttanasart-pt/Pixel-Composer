@@ -1,0 +1,15 @@
+{
+    "name": "Create Tilemap",
+    "tooltip": "",
+    "sprPath": "./Create Tilemap.png",
+    "tags": [],
+    "nodes": [
+        { "x": 176, "y": 0, "node": "Node_Tile_Drawer"  },
+        { "x": 0,   "y": 0, "node": "Node_Tile_Tileset" }
+    ],
+    "connections": [
+        { "from": 1, "to": 0, "fromIndex": 0, "toIndex": 0 }
+    ],
+    "location": [ "IO", "Tileset" ],
+    "inputNode": 1,
+}

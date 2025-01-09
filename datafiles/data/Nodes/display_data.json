@@ -249,6 +249,8 @@
                 "Node_Image_Sheet",
                 "Node_Sequence_Anim",
                 "Node_Cache_Array",
+                { "label": "Export" },
+                "Node_Export",
                 
                 { "label": "Canvas" },
                 "Node_Canvas",

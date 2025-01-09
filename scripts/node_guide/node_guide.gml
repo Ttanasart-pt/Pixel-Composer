@@ -147,14 +147,11 @@ function __generate_node_data() { #region
 global.NODE_GUIDE = {};
 function __initNodeData() {
 	var nodeDir = DIRECTORY + "Nodes/";
-	
 	directory_verify(nodeDir);
-	if(check_version($"{nodeDir}version"))
-		zip_unzip("data/Nodes/Tooltip.zip", nodeDir);
 	
 	var dir = $"{nodeDir}Related/";
-	
 	directory_verify(dir);
+	
 	if(check_version($"{dir}version")) {
 		var _relFrom = $"data/Nodes/related_node.json";
 		var _relTo   = $"{dir}default.json";
