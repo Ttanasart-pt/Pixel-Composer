@@ -1,0 +1,8 @@
+{
+    "name": "Image",
+    "internalRef": "Node_Image",
+
+    "tooltip": "Load a single image from your computer.",
+    "io": [ "surface" ],
+    "build": "Node_create_Image"
+}

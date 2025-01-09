@@ -1285,7 +1285,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(value_from_loop && value_from_loop.bypassConnection() && value_from_loop.junc_out) {
 			value_from_loop.getValue(arr);
-			arr[@ 0] = surface_array_clone(arr[0]);
+			arr[@ 0] = arr[0];
 		}
 		
 		else if(value_from && value_from != self)
@@ -1712,7 +1712,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		if(_valueFrom == noone) return removeFrom();
-		if(isConnectable(_valueFrom, checkRecur, log) < 0) return conn;
+		var conn = isConnectable(_valueFrom, checkRecur, log);
+		if(conn < 0) return conn;
 		
 		run_in(2, function() /*=>*/ { updateColor(getValue()); });
 		

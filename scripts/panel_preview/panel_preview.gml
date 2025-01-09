@@ -507,7 +507,7 @@ function Panel_Preview() : PanelContent() constructor {
                 function() /*=>*/ {return 0},
             ],
             [ 
-                THEME.node_goto,
+                THEME.node_goto_thin,
                 new tooltipHotkey(__txtx("panel_preview_windows", "Pop up as Preview window"), "Preview", "Popup"), 
                 function() /*=>*/ { create_preview_window(PANEL_PREVIEW.getNodePreview()); },
                 function() /*=>*/ {return 0},
@@ -1642,7 +1642,7 @@ function Panel_Preview() : PanelContent() constructor {
             if(view_pan_tool)
                 _hv = true;
             
-            draw_circle_ui(_d3x, _d3y, d3_view_wr, _hv? 0 : 0.02, COLORS._main_icon, 0.3);
+            draw_circle_ui(_d3x, _d3y, d3_view_wr, _hv? 0 : 0.01, COLORS._main_icon, 0.3);
             
             var _qview = new BBMOD_Quaternion().FromEuler(d3_view_camera.focus_angle_y, -d3_view_camera.focus_angle_x, 0);
             var _as = [
@@ -1678,7 +1678,7 @@ function Panel_Preview() : PanelContent() constructor {
             if(view_zoom_tool)
                 _hv = true;
             
-            draw_circle_ui(_d3x, _d3y, d3_view_wz, _hv? 0 : 0.04, COLORS._main_icon, 0.3);
+            draw_circle_ui(_d3x, _d3y, d3_view_wz, _hv? 0 : 0.02, COLORS._main_icon, 0.3);
             draw_sprite_ui(THEME.view_zoom, 0, _d3x, _d3y, 1, 1, 0, view_zoom_tool? COLORS._main_accent : COLORS._main_icon, 1);
             
         } else {
@@ -1707,7 +1707,7 @@ function Panel_Preview() : PanelContent() constructor {
             if(view_pan_tool)
                 _hv = true;
             
-            draw_circle_ui(_d3x, _d3y, d3_view_wz, _hv? 0 : 0.04, COLORS._main_icon, 0.3);
+            draw_circle_ui(_d3x, _d3y, d3_view_wz, _hv? 0 : 0.02, COLORS._main_icon, 0.3);
             draw_sprite_ui(THEME.view_pan, 0, _d3x, _d3y, 1, 1, 0, view_pan_tool? COLORS._main_accent : COLORS._main_icon, 1);
             
             _d3x += (d3_view_wz + ui(4) + d3_view_wz) * _side;
@@ -1733,7 +1733,7 @@ function Panel_Preview() : PanelContent() constructor {
             if(view_zoom_tool)
                 _hv = true;
             
-            draw_circle_ui(_d3x, _d3y, d3_view_wz, _hv? 0 : 0.04, COLORS._main_icon, 0.3);
+            draw_circle_ui(_d3x, _d3y, d3_view_wz, _hv? 0 : 0.02, COLORS._main_icon, 0.3);
             draw_sprite_ui(THEME.view_zoom, 0, _d3x, _d3y, 1, 1, 0, view_zoom_tool? COLORS._main_accent : COLORS._main_icon, 1);
         }
         

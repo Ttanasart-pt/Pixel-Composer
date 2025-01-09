@@ -304,6 +304,24 @@ function addNodePCXCatagory( name, list, filter = [])                { ds_list_a
 
 	////- Nodes
 	
+function __read_node_folder(dir) {
+	var _name = filename_name_only(dir);
+	var _info = dir + "/info.json";
+	if(!file_exists(_info)) {
+		print($"NODE ERROR: Cannot find info.json for {dir}.");
+		return;
+	}
+	
+	var _data = json_load_struct(_info);
+	var _name = _data[$ "name"];
+	var _iref = _data[$ "internalRef"];
+	var _iref = _data[$ "internalRef"];
+	
+	
+	addNodeObject(input, "Image",              Node_Image,          "Load a single image from your computer.")
+														.setIO(VALUE_TYPE.surface).setBuild(Node_create_Image);
+}
+	
 function __initNodes() { 
 	global.__currPage  = "";
 	global.__startPage =  0;
@@ -324,7 +342,29 @@ function __initNodes() {
 	
 	NODE_PAGE_DEFAULT = ds_list_size(NODE_CATEGORY);
 	ADD_NODE_PAGE = NODE_PAGE_DEFAULT;
-
+	
+	// NODE DATA
+	
+	var dir = $"{DIRECTORY}Nodes/Data/Internal/";
+	if(directory_exists(dir)) {
+		
+		var _dirs = [];
+		var _f = file_find_first(dir + "*", 0);
+		var f, p;
+		
+		while(_f != "") {
+			 f = _f;
+			 p = dir + f;
+			_f = file_find_next();
+			
+			if(!directory_exists(p)) continue;
+			array_push(_dirs, p);
+		}
+		file_find_close();
+		array_foreach(_dirs, function(d) /*=>*/ {return __read_node_folder(d)});
+	}
+	
+	
 	// NODE LIST
 	
 	var fav = ds_list_create();
@@ -651,9 +691,11 @@ function __initNodes() {
 														.setIO(VALUE_TYPE.surface);
 		addNodeObject(input, "Array to Anim",      Node_Sequence_Anim,  "Convert array of images into animation.")
 														.setIO(VALUE_TYPE.surface);
+		addNodeObject(input, "Cache Array",        Node_Cache_Array)
+		
 		if(!DEMO) {
 			ds_list_add(input, "/Exporters");
-			addNodeObject(input, "Export",         Node_Export,         "Export image, image array to file, image sequence, animation.")
+			addNodeObject(input, "Export",         Node_Export,         "Export image to file(s).")
 														.setIO(VALUE_TYPE.surface).setBuild(Node_create_Export);
 		}
 		

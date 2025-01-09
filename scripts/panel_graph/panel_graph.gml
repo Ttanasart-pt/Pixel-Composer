@@ -1168,7 +1168,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         if(view_pan_tool)
             _hv = true;
         
-        draw_circle_ui(_d3x, _d3y, d3_view_wz, _hv? 0 : 0.04, COLORS._main_icon, 0.3);
+        draw_circle_ui(_d3x, _d3y, d3_view_wz, _hv? 0 : 0.02, COLORS._main_icon, 0.3);
         draw_sprite_ui(THEME.view_pan, 0, _d3x, _d3y, 1, 1, 0, view_pan_tool? COLORS._main_accent : COLORS._main_icon, 1);
         
         _d3x += (d3_view_wz + ui(4) + d3_view_wz) * _side;
@@ -1186,14 +1186,14 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                 graph_zoom_m   = my;
                 graph_zoom_s   = graph_s;
                 
-                view_zoom_tool  = true;
+                view_zoom_tool = true;
             }
         }
         
         if(view_zoom_tool)
             _hv = true;
         
-        draw_circle_ui(_d3x, _d3y, d3_view_wz, _hv? 0 : 0.04, COLORS._main_icon, 0.3);
+        draw_circle_ui(_d3x, _d3y, d3_view_wz, _hv? 0 : 0.02, COLORS._main_icon, 0.3);
         draw_sprite_ui(THEME.view_zoom, 0, _d3x, _d3y, 1, 1, 0, view_zoom_tool? COLORS._main_accent : COLORS._main_icon, 1);
         
         if(view_hovering && mouse_press(mb_right, pFOCUS)) {

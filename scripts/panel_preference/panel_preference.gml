@@ -334,6 +334,7 @@ function Panel_Preference() : PanelContent() constructor {
     			__txtx("pref_interface_language", "Interface Language*"),
     			"local",
     			new scrollBox(locals, function(str) /*=>*/ { 
+    				should_restart = true;
     				if(str < 0) return;
     				PREFERENCES.local = locals[str];
     				PREF_SAVE();
@@ -343,7 +344,7 @@ function Panel_Preference() : PanelContent() constructor {
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
     			__txtx("pref_ui_font", "Overwrite UI font") + "*",
     			"font_overwrite",
-    			new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ { PREFERENCES.font_overwrite = txt; PREF_SAVE(); })
+    			new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ { PREFERENCES.font_overwrite = txt; should_restart = true; PREF_SAVE(); })
     				.setSideButton(button(function() /*=>*/ { PREFERENCES.font_overwrite = get_open_filename_pxc("Font files (.ttf, .otf)|*.ttf;*.otf", ""); PREF_SAVE(); }, THEME.button_path_icon))
     				.setFont(f_p2).setEmpty()
     		));
@@ -662,6 +663,19 @@ function Panel_Preference() : PanelContent() constructor {
     		tb_override.drawParam(_wpar.setY(_y).setData(PREFERENCES.theme_override));
     		_y += _h + ui(8 + 4);
     		hh += _h + ui(8 + 4);
+    		
+    		// Font override
+    		
+    		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
+    		draw_text_add(ui(8), _y + _h / 2, __txt("Font Override"));
+    		
+    		var _ovr = PREFERENCES.font_overwrite == ""? "None" : filename_name_only(PREFERENCES.font_overwrite);
+    		draw_set_text(f_p3, fa_right, fa_center, COLORS._main_text_sub);
+    		draw_text_add(ww - _h - ui(4), _y + _h / 2, _ovr);
+    		_y += _h + ui(8 + 4);
+    		hh += _h + ui(8 + 4);
+    		
+    		// Metadata box
     		
     		var _mh = themeCurrent == noone? ui(16) : ui(8 + 4 + 20 * 4);
     		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, 0, _y, ww, _mh, COLORS._main_icon_light);
@@ -1099,8 +1113,11 @@ function Panel_Preference() : PanelContent() constructor {
     				draw_text_add(ui(32), yc, _key);
     				
     				if(font_exists(_font)) {
+    					var _name = font_get_fontname(_font);
+    					    _name = filename_name_only(_name);
+    					
     					draw_set_text(_font, fa_right, fa_center, COLORS._main_text);
-    					draw_text_add(ww - ui(16), yc, $"Pixel Composer");
+    					draw_text_add(ww - ui(16), yc, _name);
     				}
     			}
     			
@@ -1514,33 +1531,32 @@ function Panel_Preference() : PanelContent() constructor {
 		panel_height  = h - padding * 2;
 		hotkey_height = panel_height - hotkey_cont_h - ui(32);
 		
-		sp_pref.resize(  panel_width, panel_height);
+		sp_pref.resize(  panel_width, panel_height - 1);
 		sp_hotkey.resize(panel_width, hotkey_height);
 	}
 	
 	function drawContent(panel) {
 	    draw_clear_alpha(COLORS.panel_bg_clear, 1);
 	    
-    // 	if(should_restart) {
-    // 		var _txt = "Restart recommended";
-    // 		var _rx = ui(168);
-    // 		var _ry = ui(20);
-    		
-    // 		draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text_accent);
-    		
-    // 		var _rw = string_width(_txt);
-    // 		var _rh = string_height(_txt);
-    		
-    // 		draw_sprite_stretched_ext(THEME.box_r5_clr, 0, _rx - ui(8), _ry - ui(4), _rw + ui(16), _rh + ui(8), COLORS._main_accent, 1);
-    // 		draw_text(_rx, _ry, _txt);
-    // 	}
-        
     	tb_search.setFocusHover(pFOCUS, pHOVER);
     	tb_search.draw(padding, padding, page_width - padding * 2 - ui(4), ui(24), search_text, [ mx, my ]);
     	
     	sp_page.verify(page_width - padding, panel_height - padding - ui(32));
     	sp_page.setFocusHover(pFOCUS, pHOVER);
     	sp_page.drawOffset(padding, padding + ui(32), mx, my);
+        
+    	if(should_restart) {
+    		var _txt = "Restart recommended";
+    		draw_set_text(f_p2b, fa_center, fa_center, COLORS._main_text_accent);
+    		
+    		var _rw = page_width - ui(8);
+    		var _rh = string_height_ext(_txt, -1, _rw - ui(16)) + ui(8);
+    		var _rx = ui(2);
+    		var _ry = h - ui(2) - _rh;
+    		
+    		draw_sprite_stretched_ext(THEME.box_r5_clr, 0, _rx, _ry, _rw, _rh, COLORS._main_accent, 1);
+    		draw_text_ext_add(_rx + _rw / 2, _ry + _rh / 2, _txt, -1, _rw - ui(16));
+    	}
         
     	section_current = "";
     	var px = padding + page_width;
@@ -1766,6 +1782,7 @@ function Panel_Preference() : PanelContent() constructor {
         		sp_hotkey.drawOffset(px, _ppy + ui(32), mx, my);
     	    break;
     	}
+    	
 	}
 	
 	static onClose = function() {

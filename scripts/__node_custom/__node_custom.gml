@@ -171,8 +171,8 @@ function __initNodeCustom(list) { #region
 	root += "/Custom";
 	directory_verify(root);
 	
-	if(check_version($"{root}/version"))
-		zip_unzip("data/Nodes.zip", root);
+	// if(check_version($"{root}/version"))
+	// 	zip_unzip("data/Nodes.zip", root);
 		
 	var f = file_find_first(root + "/*", fa_directory);
 		

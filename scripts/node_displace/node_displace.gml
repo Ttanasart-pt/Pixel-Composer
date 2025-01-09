@@ -105,8 +105,6 @@ If set, then strength value control how many times the effect applies on itself.
 		var _sep  = _data[16];
 		var _map2 = _data[17];
 		
-		print(attributes.oversample);
-		
 		var _mode = _data[5];
 		if(!is_surface(_map) || (_sep && !is_surface(_map2))) {
 			surface_set_shader(_outSurf); 

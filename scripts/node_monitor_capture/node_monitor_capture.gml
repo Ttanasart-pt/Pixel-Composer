@@ -18,30 +18,24 @@ function Node_Monitor_Capture(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	
 	surface  = -1;
 	
-	static step = function() { #region
+	static step = function() {
 		LIVE_UPDATE = true;
-		
 		var _mode = getInputData(0);
 		
 		inputs[1].setVisible(_mode == 0);
 		inputs[2].setVisible(_mode == 1);
-	} #endregion
+	}
 	
-	static update = function() { #region
+	static update = function() {
 		var _mode = getInputData(0);
 		var _moni = getInputData(1);
 		var _regi = getInputData(2);
 		
-		switch(_mode) {
-			case 0 :
-				var _mon = monitors[_moni];
-				surface = display_capture_surface_part(_mon[0], _mon[1], _mon[2], _mon[3], surface);
-				break;
-			case 1 :
-				surface = display_capture_surface_part(_regi[0], _regi[1], _regi[2], _regi[3], surface);
-				break;
-		}
+		var _reg = _mode == 0? monitors[_moni] : _regi;
+		
+		surface = surface_verify(surface, _reg[2], _reg[3]);
+		display_capture_surface_part(_reg[0], _reg[1], _reg[2], _reg[3], surface);
 		
 		outputs[0].setValue(surface);
-	} #endregion
+	}
 }
