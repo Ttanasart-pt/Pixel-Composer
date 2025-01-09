@@ -1,0 +1,8 @@
+{
+  "tooltip":"Apply subpixel filter on top of a surface.",
+  "baseNode":"Node_MK_Subpixel",
+  "io":[
+    "surface"
+  ],
+  "name":"MK Subpixel"
+}

@@ -1,0 +1,8 @@
+{
+  "tooltip":"",
+  "baseNode":"Node_Assert",
+  "io":[
+    "any"
+  ],
+  "name":"Assert"
+}

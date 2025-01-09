@@ -1,0 +1,12 @@
+{
+  "tooltip":"Generate path from armature system.",
+  "alias":[
+    "rigging",
+    "bone"
+  ],
+  "baseNode":"Node_Armature_Path",
+  "io":[
+    "surface"
+  ],
+  "name":"Armature Path"
+}

@@ -1,0 +1,8 @@
+{
+  "tooltip":"Genearte vector composite of 4 members.",
+  "baseNode":"Node_Vector4",
+  "io":[
+    "float"
+  ],
+  "name":"Vector4"
+}

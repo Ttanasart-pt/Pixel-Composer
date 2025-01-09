@@ -1,0 +1,8 @@
+{
+  "tooltip":"Create key-value pair struct.",
+  "baseNode":"Node_Struct",
+  "io":[
+    "struct"
+  ],
+  "name":"Struct"
+}

@@ -1,0 +1,9 @@
+{
+  "tooltip":"Create 3D camera that render scene to surface.",
+  "baseNode":"Node_3D_Camera",
+  "io":[
+    "d3Mesh",
+    "surface"
+  ],
+  "name":"3D Camera"
+}

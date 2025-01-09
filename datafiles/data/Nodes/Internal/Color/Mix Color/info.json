@@ -1,0 +1,8 @@
+{
+  "tooltip":"Combine two colors.",
+  "baseNode":"Node_Color_Mix",
+  "io":[
+    "color"
+  ],
+  "name":"Mix Color"
+}

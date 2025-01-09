@@ -1,0 +1,8 @@
+{
+  "tooltip":"",
+  "baseNode":"Node_Iterator_Output",
+  "io":[
+    "any"
+  ],
+  "name":"Loop Output"
+}

@@ -1,0 +1,9 @@
+{
+  "tooltip":"Write struct to xml file.",
+  "baseNode":"Node_XML_File_Write",
+  "io":[
+    "text",
+    "struct"
+  ],
+  "name":"XML File Out"
+}

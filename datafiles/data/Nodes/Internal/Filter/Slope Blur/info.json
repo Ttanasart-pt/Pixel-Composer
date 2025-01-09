@@ -1,0 +1,11 @@
+{
+  "tooltip":"Blur along a gradient of a slope map.",
+  "alias":[
+    "motion blur"
+  ],
+  "baseNode":"Node_Blur_Slope",
+  "io":[
+    "surface"
+  ],
+  "name":"Slope Blur"
+}

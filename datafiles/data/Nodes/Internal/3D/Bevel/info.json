@@ -1,0 +1,8 @@
+{
+  "tooltip":"Apply 2D bevel on the image.",
+  "baseNode":"Node_Bevel",
+  "io":[
+    "surface"
+  ],
+  "name":"Bevel"
+}

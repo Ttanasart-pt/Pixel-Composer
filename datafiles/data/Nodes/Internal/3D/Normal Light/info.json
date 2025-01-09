@@ -1,0 +1,8 @@
+{
+  "tooltip":"Light up the image using normal mapping.",
+  "baseNode":"Node_Normal_Light",
+  "io":[
+    "surface"
+  ],
+  "name":"Normal Light"
+}

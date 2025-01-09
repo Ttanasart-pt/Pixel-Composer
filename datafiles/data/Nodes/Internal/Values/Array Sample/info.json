@@ -1,0 +1,8 @@
+{
+  "tooltip":"Sample member from an array to create smaller one.",
+  "baseNode":"Node_Array_Sample",
+  "io":[
+    "any"
+  ],
+  "name":"Array Sample"
+}

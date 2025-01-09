@@ -1,0 +1,8 @@
+{
+  "tooltip":"Modify atlas data.",
+  "baseNode":"Node_Atlas_Set",
+  "io":[
+    "surface"
+  ],
+  "name":"Atlas Set"
+}

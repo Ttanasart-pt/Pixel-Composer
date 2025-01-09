@@ -1,0 +1,8 @@
+{
+  "tooltip":"Add elements into an array.",
+  "baseNode":"Node_Array_Add",
+  "io":[
+    "any"
+  ],
+  "name":"Array Add"
+}

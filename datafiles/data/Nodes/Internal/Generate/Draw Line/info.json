@@ -1,0 +1,8 @@
+{
+  "tooltip":"Draw line on an image. Connect path data to it to draw line from path.",
+  "baseNode":"Node_Line",
+  "io":[
+    "surface"
+  ],
+  "name":"Draw Line"
+}

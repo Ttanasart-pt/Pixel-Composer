@@ -1,0 +1,9 @@
+{
+  "tooltip":"Create trigger value.",
+  "baseNode":"Node_Trigger",
+  "io":[
+    "boolean",
+    "trigger"
+  ],
+  "name":"Trigger"
+}

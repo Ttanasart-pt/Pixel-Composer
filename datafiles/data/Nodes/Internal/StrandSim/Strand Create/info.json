@@ -1,0 +1,8 @@
+{
+  "tooltip":"Create strands from point, path, or mesh.",
+  "baseNode":"Node_Strand_Create",
+  "io":[
+    "strands"
+  ],
+  "name":"Strand Create"
+}

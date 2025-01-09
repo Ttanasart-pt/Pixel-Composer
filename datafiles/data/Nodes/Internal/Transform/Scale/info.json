@@ -1,0 +1,11 @@
+{
+  "tooltip":"Simple node for scaling image.",
+  "alias":[
+    "resize"
+  ],
+  "baseNode":"Node_Scale",
+  "io":[
+    "surface"
+  ],
+  "name":"Scale"
+}

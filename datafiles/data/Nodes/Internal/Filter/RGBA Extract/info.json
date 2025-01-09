@@ -1,0 +1,11 @@
+{
+  "tooltip":"Extract RGBA channel on an image, each channel becomes its own image.",
+  "alias":[
+    "channel extract"
+  ],
+  "baseNode":"Node_RGB_Channel",
+  "io":[
+    "surface"
+  ],
+  "name":"RGBA Extract"
+}

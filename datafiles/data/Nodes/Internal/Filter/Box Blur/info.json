@@ -1,0 +1,8 @@
+{
+  "tooltip":"Blur pixel in square area uniformly.",
+  "baseNode":"Node_Blur_Box",
+  "io":[
+    "surface"
+  ],
+  "name":"Box Blur"
+}

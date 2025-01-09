@@ -1,0 +1,8 @@
+{
+  "tooltip":"Convert array of images into animation.",
+  "baseNode":"Node_Sequence_Anim",
+  "io":[
+    "surface"
+  ],
+  "name":"Array to Anim"
+}

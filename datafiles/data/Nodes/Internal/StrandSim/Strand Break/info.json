@@ -1,0 +1,8 @@
+{
+  "tooltip":"Detach strands from its origin.",
+  "baseNode":"Node_Strand_Break",
+  "io":[
+    "strands"
+  ],
+  "name":"Strand Break"
+}

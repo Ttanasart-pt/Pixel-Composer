@@ -1,0 +1,8 @@
+{
+  "tooltip":"Create path with automatic smoothness.",
+  "baseNode":"Node_Path_Smooth",
+  "io":[
+    "pathnode"
+  ],
+  "name":"Smooth Path"
+}

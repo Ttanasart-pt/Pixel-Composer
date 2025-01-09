@@ -1,0 +1,9 @@
+{
+  "tooltip":"Display image on the graph.",
+  "baseNode":"Node_Display_Image",
+  "io":[
+    "surface"
+  ],
+  "build":"Node_create_Display_Image",
+  "name":"Display Image"
+}

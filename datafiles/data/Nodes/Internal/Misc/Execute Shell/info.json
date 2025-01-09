@@ -1,0 +1,14 @@
+{
+  "tooltip":"Execute shell script.",
+  "alias":[
+    "terminal",
+    "execute",
+    "run",
+    "console"
+  ],
+  "baseNode":"Node_Shell",
+  "io":[
+    "any"
+  ],
+  "name":"Execute Shell"
+}

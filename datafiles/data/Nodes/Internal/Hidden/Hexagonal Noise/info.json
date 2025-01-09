@@ -1,0 +1,7 @@
+{
+  "tooltip":"",
+  "baseNode":"Node_Noise_Hex",
+  "io":[
+  ],
+  "name":"Hexagonal Noise"
+}

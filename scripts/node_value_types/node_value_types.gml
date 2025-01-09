@@ -386,6 +386,61 @@ function value_type_from_string(str) {
 	return VALUE_TYPE.any;
 }
 
+function value_type_to_string(val) {
+	INLINE
+	
+	switch(val) {
+		case VALUE_TYPE.integer     : return "integer";
+		case VALUE_TYPE.float       : return "float";
+		case VALUE_TYPE.boolean     : return "boolean";
+		case VALUE_TYPE.color       : return "color";
+		case VALUE_TYPE.surface     : return "surface";
+		
+		case VALUE_TYPE.path        : return "path";
+		case VALUE_TYPE.curve       : return "curve";
+		case VALUE_TYPE.text        : return "text";
+		case VALUE_TYPE.object      : return "object";
+		case VALUE_TYPE.node        : return "node";
+		case VALUE_TYPE.d3object    : return "d3object";
+		
+		case VALUE_TYPE.any         : return "any";
+		
+		case VALUE_TYPE.pathnode    : return "pathnode";
+		case VALUE_TYPE.particle    : return "particle";
+		case VALUE_TYPE.rigid       : return "rigid";
+		case VALUE_TYPE.sdomain     : return "sdomain";
+		case VALUE_TYPE.struct      : return "struct";
+		case VALUE_TYPE.strands     : return "strands";
+		case VALUE_TYPE.mesh        : return "mesh";
+		case VALUE_TYPE.trigger     : return "trigger";
+		case VALUE_TYPE.atlas       : return "atlas";
+		
+		case VALUE_TYPE.d3vertex    : return "d3vertex";
+		case VALUE_TYPE.gradient    : return "gradient";
+		case VALUE_TYPE.armature    : return "armature";
+		case VALUE_TYPE.buffer      : return "buffer";
+		
+		case VALUE_TYPE.pbBox       : return "pbBox";
+		
+		case VALUE_TYPE.d3Mesh      :   return "d3Mesh";
+		case VALUE_TYPE.d3Light     :   return "d3Light";
+		case VALUE_TYPE.d3Camera    :   return "d3Camera";
+		case VALUE_TYPE.d3Scene     :   return "d3Scene";
+		case VALUE_TYPE.d3Material  : return "d3Material";
+		
+		case VALUE_TYPE.dynaSurface : return "dynaSurface";
+		case VALUE_TYPE.PCXnode     : return "PCXnode";
+		case VALUE_TYPE.audioBit    : return "audioBit";
+		case VALUE_TYPE.fdomain     : return "fDomain";
+		case VALUE_TYPE.sdf         : return "sdf";
+		case VALUE_TYPE.tileset     : return "tileset";
+		
+		case VALUE_TYPE.action      : return "action";
+	}
+	
+	return "any";
+}
+
 function value_type_direct_settable(type) {
 	INLINE
 	

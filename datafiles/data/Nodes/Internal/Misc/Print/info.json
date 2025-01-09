@@ -1,0 +1,11 @@
+{
+  "tooltip":"Display text to notification.",
+  "alias":[
+    "debug log"
+  ],
+  "baseNode":"Node_Print",
+  "io":[
+    "text"
+  ],
+  "name":"Print"
+}

@@ -1,0 +1,9 @@
+{
+  "tooltip":"Create path anchor data.",
+  "baseNode":"Node_Path_Anchor",
+  "io":[
+    "pathnode",
+    "float"
+  ],
+  "name":"Path Anchor"
+}

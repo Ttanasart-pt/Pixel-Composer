@@ -1,0 +1,8 @@
+{
+  "tooltip":"Draw polygonal shapes.",
+  "baseNode":"Node_Shape_Polygon",
+  "io":[
+    "surface"
+  ],
+  "name":"Draw Shape Polygon"
+}

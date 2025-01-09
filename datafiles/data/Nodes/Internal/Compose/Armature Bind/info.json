@@ -1,0 +1,12 @@
+{
+  "tooltip":"Bind and render image to an armature system.",
+  "alias":[
+    "rigging",
+    "bone"
+  ],
+  "baseNode":"Node_Armature_Bind",
+  "io":[
+    "surface"
+  ],
+  "name":"Armature Bind"
+}

@@ -1,0 +1,8 @@
+{
+  "tooltip":"Add smoke emitter.",
+  "baseNode":"Node_Smoke_Add",
+  "io":[
+    "sdomain"
+  ],
+  "name":"Add Emitter"
+}

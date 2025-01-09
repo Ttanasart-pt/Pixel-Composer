@@ -1,0 +1,8 @@
+{
+  "tooltip":"Execute lua script on a surface.",
+  "baseNode":"Node_Lua_Surface",
+  "io":[
+    "any"
+  ],
+  "name":"Lua Surface"
+}

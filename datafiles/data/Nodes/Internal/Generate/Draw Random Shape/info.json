@@ -1,0 +1,8 @@
+{
+  "tooltip":"Generate random shape, use for testing purposes.",
+  "baseNode":"Node_Random_Shape",
+  "io":[
+    "surface"
+  ],
+  "name":"Draw Random Shape"
+}

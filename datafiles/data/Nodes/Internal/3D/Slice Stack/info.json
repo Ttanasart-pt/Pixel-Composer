@@ -1,0 +1,8 @@
+{
+  "tooltip":"Slice 3D object into array of 2d images.",
+  "baseNode":"Node_3D_Mesh_Stack_Slice",
+  "io":[
+    "d3Mesh"
+  ],
+  "name":"Slice Stack"
+}

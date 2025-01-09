@@ -1,0 +1,11 @@
+{
+  "tooltip":"Apply light that casts shadow.",
+  "alias":[
+    "raycast"
+  ],
+  "baseNode":"Node_Shadow_Cast",
+  "io":[
+    "surface"
+  ],
+  "name":"Cast Shadow"
+}

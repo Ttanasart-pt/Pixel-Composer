@@ -1,0 +1,8 @@
+{
+  "tooltip":"",
+  "baseNode":"Node_Application_Out",
+  "io":[
+    "any"
+  ],
+  "name":"GUI Out"
+}

@@ -1,0 +1,8 @@
+{
+  "tooltip":"Create random value smoothly changing over time.",
+  "baseNode":"Node_Wiggler",
+  "io":[
+    "float"
+  ],
+  "name":"Wiggler"
+}

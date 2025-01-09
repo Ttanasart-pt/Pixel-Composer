@@ -1,0 +1,8 @@
+{
+  "tooltip":"Control animation state with triggers.",
+  "baseNode":"Node_Animation_Control",
+  "io":[
+    "any"
+  ],
+  "name":"Animation Control"
+}

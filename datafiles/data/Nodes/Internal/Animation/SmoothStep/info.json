@@ -1,0 +1,8 @@
+{
+  "tooltip":"Apply smoothstop function to a value.",
+  "baseNode":"Node_Fn_SmoothStep",
+  "io":[
+    "float"
+  ],
+  "name":"SmoothStep"
+}

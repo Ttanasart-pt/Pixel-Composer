@@ -1,0 +1,8 @@
+{
+  "tooltip":"Dither image using error diffusion algorithm.",
+  "baseNode":"Node_Dither_Diffuse",
+  "io":[
+    "surface"
+  ],
+  "name":"Error Diffuse Dither"
+}

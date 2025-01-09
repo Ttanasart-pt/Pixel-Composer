@@ -1,0 +1,8 @@
+{
+  "tooltip":"Create gradient from palette.",
+  "baseNode":"Node_Gradient_Palette",
+  "io":[
+    "gradient"
+  ],
+  "name":"Palette to Gradient"
+}

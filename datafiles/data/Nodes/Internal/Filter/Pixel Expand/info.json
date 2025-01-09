@@ -1,0 +1,11 @@
+{
+  "tooltip":"Replace transparent pixel with the closest non-transparent pixel.",
+  "alias":[
+    "atlas"
+  ],
+  "baseNode":"Node_Atlas",
+  "io":[
+    "surface"
+  ],
+  "name":"Pixel Expand"
+}

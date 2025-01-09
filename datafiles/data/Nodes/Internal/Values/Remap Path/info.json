@@ -1,0 +1,8 @@
+{
+  "tooltip":"Scale path to fit a given area.",
+  "baseNode":"Node_Path_Map_Area",
+  "io":[
+    "pathnode"
+  ],
+  "name":"Remap Path"
+}

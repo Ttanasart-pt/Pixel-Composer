@@ -1,0 +1,12 @@
+{
+  "tooltip":"Load wav audio file.",
+  "baseNode":"Node_WAV_File_Read",
+  "io":[
+    "text",
+    "audioBit",
+    "audioBit",
+    "text"
+  ],
+  "build":"Node_create_WAV_File_Read",
+  "name":"WAV File In"
+}

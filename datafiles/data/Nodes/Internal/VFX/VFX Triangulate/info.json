@@ -1,0 +1,8 @@
+{
+  "tooltip":"Render line between particles.",
+  "baseNode":"Node_VFX_Triangulate",
+  "io":[
+    "particle"
+  ],
+  "name":"VFX Triangulate"
+}

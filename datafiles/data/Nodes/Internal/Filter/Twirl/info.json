@@ -1,0 +1,11 @@
+{
+  "tooltip":"Twist the image around a mid point.",
+  "alias":[
+    "twist"
+  ],
+  "baseNode":"Node_Twirl",
+  "io":[
+    "surface"
+  ],
+  "name":"Twirl"
+}

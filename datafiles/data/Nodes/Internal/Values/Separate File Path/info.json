@@ -1,0 +1,8 @@
+{
+  "tooltip":"Separate path string into a pair of directory and filename.",
+  "baseNode":"Node_Path_Separate_Folder",
+  "io":[
+    "text"
+  ],
+  "name":"Separate File Path"
+}

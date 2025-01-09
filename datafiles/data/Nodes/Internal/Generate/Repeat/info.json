@@ -1,0 +1,13 @@
+{
+  "tooltip":"Repeat image multiple times linearly, or in grid pattern.",
+  "alias":[
+    "repeat polar",
+    "repeat circular"
+  ],
+  "baseNode":"Node_Repeat",
+  "io":[
+    "surface"
+  ],
+  "build":"Node_create_Repeat",
+  "name":"Repeat"
+}

@@ -1,0 +1,11 @@
+{
+  "tooltip":"Create a group that combines multiple canvas nodes a layers.",
+  "alias":[
+    "draw"
+  ],
+  "baseNode":"Node_Canvas_Group",
+  "io":[
+    "surface"
+  ],
+  "name":"Canvas Group"
+}

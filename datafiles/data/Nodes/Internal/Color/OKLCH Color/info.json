@@ -1,0 +1,11 @@
+{
+  "tooltip":"Create (rgb) color from value in OKLCH color space.",
+  "alias":[
+    "oklab"
+  ],
+  "baseNode":"Node_Color_OKLCH",
+  "io":[
+    "color"
+  ],
+  "name":"OKLCH Color"
+}

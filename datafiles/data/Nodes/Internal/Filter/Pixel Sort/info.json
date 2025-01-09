@@ -1,0 +1,8 @@
+{
+  "tooltip":"Sort pixel by brightness in horizontal, or vertial axis.",
+  "baseNode":"Node_Pixel_Sort",
+  "io":[
+    "surface"
+  ],
+  "name":"Pixel Sort"
+}

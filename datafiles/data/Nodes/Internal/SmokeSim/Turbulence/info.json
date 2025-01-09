@@ -1,0 +1,8 @@
+{
+  "tooltip":"Apply random velocity map to the smoke.",
+  "baseNode":"Node_Smoke_Turbulence",
+  "io":[
+    "sdomain"
+  ],
+  "name":"Turbulence"
+}

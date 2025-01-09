@@ -1,0 +1,9 @@
+{
+  "tooltip":"Create a group that reuse output from last frame to the current one.",
+  "baseNode":"Node_Feedback",
+  "io":[
+    "any"
+  ],
+  "deprecated":true,
+  "name":"Feedback"
+}

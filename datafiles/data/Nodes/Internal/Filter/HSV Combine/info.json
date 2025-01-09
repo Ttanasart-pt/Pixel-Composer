@@ -1,0 +1,8 @@
+{
+  "tooltip":"Combine 4 image in to one. Each image use to control HSVA channel.",
+  "baseNode":"Node_Combine_HSV",
+  "io":[
+    "surface"
+  ],
+  "name":"HSV Combine"
+}

@@ -1,0 +1,8 @@
+{
+  "tooltip":"Create 3D cone mesh",
+  "baseNode":"Node_3D_Mesh_Cone",
+  "io":[
+    "d3Mesh"
+  ],
+  "name":"3D Cone"
+}

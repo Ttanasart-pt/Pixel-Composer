@@ -1,0 +1,8 @@
+{
+  "tooltip":"Adjust brightness of an image using curves.",
+  "baseNode":"Node_Curve",
+  "io":[
+    "surface"
+  ],
+  "name":"Curve"
+}

@@ -1,0 +1,9 @@
+{
+  "tooltip":"Generate boolean (true, false) data.",
+  "baseNode":"Node_Boolean",
+  "io":[
+    "boolean",
+    "boolean"
+  ],
+  "name":"Boolean"
+}

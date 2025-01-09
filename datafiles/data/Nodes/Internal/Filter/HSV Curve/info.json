@@ -1,0 +1,8 @@
+{
+  "tooltip":"Adjust hsv values of an image using curves.",
+  "baseNode":"Node_Curve_HSV",
+  "io":[
+    "surface"
+  ],
+  "name":"HSV Curve"
+}

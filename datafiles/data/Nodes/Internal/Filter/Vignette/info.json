@@ -1,0 +1,8 @@
+{
+  "tooltip":"Apply vignette effect to the border.",
+  "baseNode":"Node_Vignette",
+  "io":[
+    "surface"
+  ],
+  "name":"Vignette"
+}

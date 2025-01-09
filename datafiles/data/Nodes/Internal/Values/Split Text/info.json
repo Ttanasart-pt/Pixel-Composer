@@ -1,0 +1,8 @@
+{
+  "tooltip":"Split string into arrays of substring based on delimiter.",
+  "baseNode":"Node_String_Split",
+  "io":[
+    "text"
+  ],
+  "name":"Split Text"
+}

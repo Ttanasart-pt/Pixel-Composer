@@ -1,0 +1,8 @@
+{
+  "tooltip":"Create group for fluid simulation.",
+  "baseNode":"Node_FLIP_Group_Inline",
+  "io":[
+    "surface"
+  ],
+  "name":"FLIP Fluid"
+}

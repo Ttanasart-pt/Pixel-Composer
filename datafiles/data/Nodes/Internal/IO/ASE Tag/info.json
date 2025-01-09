@@ -1,0 +1,8 @@
+{
+  "tooltip":"Read tag from ASE file.",
+  "baseNode":"Node_ASE_Tag",
+  "io":[
+    "surface"
+  ],
+  "name":"ASE Tag"
+}

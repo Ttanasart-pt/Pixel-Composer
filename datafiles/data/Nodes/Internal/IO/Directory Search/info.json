@@ -1,0 +1,9 @@
+{
+  "tooltip":"Search for files in directory.",
+  "baseNode":"Node_Directory_Search",
+  "io":[
+    "text"
+  ],
+  "build":"Node_create_Directory_Search",
+  "name":"Directory Search"
+}

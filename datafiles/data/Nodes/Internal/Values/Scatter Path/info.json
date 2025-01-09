@@ -1,0 +1,8 @@
+{
+  "tooltip":"Scatter paths along another path.",
+  "baseNode":"Node_Path_Scatter",
+  "io":[
+    "pathnode"
+  ],
+  "name":"Scatter Path"
+}

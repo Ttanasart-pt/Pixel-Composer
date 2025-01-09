@@ -1,0 +1,8 @@
+{
+  "tooltip":"Remove pixel that are close to the border of the image.",
+  "baseNode":"Node_Erode",
+  "io":[
+    "surface"
+  ],
+  "name":"Erode"
+}

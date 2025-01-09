@@ -1,0 +1,7 @@
+{
+  "tooltip":"",
+  "baseNode":"Node_DynaSurf_Out_Height",
+  "io":[
+  ],
+  "name":"getHeight"
+}

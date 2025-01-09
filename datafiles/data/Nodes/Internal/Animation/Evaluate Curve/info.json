@@ -1,0 +1,8 @@
+{
+  "tooltip":"Evaluate value from an animation curve.",
+  "baseNode":"Node_Anim_Curve",
+  "io":[
+    "float"
+  ],
+  "name":"Evaluate Curve"
+}

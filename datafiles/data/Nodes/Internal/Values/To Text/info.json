@@ -1,0 +1,8 @@
+{
+  "tooltip":"Convert string to number.",
+  "baseNode":"Node_To_Text",
+  "io":[
+    "text"
+  ],
+  "name":"To Text"
+}

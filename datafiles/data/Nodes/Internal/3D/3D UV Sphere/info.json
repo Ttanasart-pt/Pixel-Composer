@@ -1,0 +1,8 @@
+{
+  "tooltip":"Create 3D uv sphere mesh",
+  "baseNode":"Node_3D_Mesh_Sphere_UV",
+  "io":[
+    "d3Mesh"
+  ],
+  "name":"3D UV Sphere"
+}

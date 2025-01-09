@@ -1,0 +1,8 @@
+{
+  "tooltip":"Blur image using simpler algorithm. Allowing for variable blur strength.",
+  "baseNode":"Node_Blur_Simple",
+  "io":[
+    "surface"
+  ],
+  "name":"Non-Uniform Blur"
+}

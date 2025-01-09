@@ -1,0 +1,8 @@
+{
+  "tooltip":"Repeat texture over larger surface without repeating patterns.",
+  "baseNode":"Node_Repeat_Texture",
+  "io":[
+    "surface"
+  ],
+  "name":"Repeat Texture"
+}

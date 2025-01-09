@@ -1,0 +1,8 @@
+{
+  "tooltip":"Replace particle variable with a new one.",
+  "baseNode":"Node_VFX_Override",
+  "io":[
+    "particle"
+  ],
+  "name":"VFX Override"
+}

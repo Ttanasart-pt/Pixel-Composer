@@ -1,0 +1,11 @@
+{
+  "tooltip":"Attempt to remove orphan pixel.",
+  "alias":[
+    "destray"
+  ],
+  "baseNode":"Node_De_Stray",
+  "io":[
+    "surface"
+  ],
+  "name":"De-Stray"
+}

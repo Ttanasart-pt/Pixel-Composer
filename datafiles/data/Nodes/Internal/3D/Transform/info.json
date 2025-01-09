@@ -1,0 +1,8 @@
+{
+  "tooltip":"Transform 3D object.",
+  "baseNode":"Node_3D_Transform",
+  "io":[
+    "d3Mesh"
+  ],
+  "name":"Transform"
+}

@@ -1,0 +1,7 @@
+{
+  "tooltip":"Create group for fluid simulation.",
+  "baseNode":"Node_Smoke_Group",
+  "io":[
+  ],
+  "name":"SmokeSim"
+}

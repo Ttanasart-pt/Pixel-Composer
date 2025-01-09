@@ -1,0 +1,11 @@
+{
+  "tooltip":"Draw using parameterized brush.",
+  "alias":[
+    "draw"
+  ],
+  "baseNode":"Node_Active_Canvas",
+  "io":[
+    "surface"
+  ],
+  "name":"Active Canvas"
+}

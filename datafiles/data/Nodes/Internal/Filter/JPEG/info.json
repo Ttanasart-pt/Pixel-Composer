@@ -1,0 +1,8 @@
+{
+  "tooltip":"Apply JPEG compression to the image.",
+  "baseNode":"Node_JPEG",
+  "io":[
+    "surface"
+  ],
+  "name":"JPEG"
+}

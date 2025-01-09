@@ -1,0 +1,8 @@
+{
+  "tooltip":"Render tilemap to image.",
+  "baseNode":"Node_Tile_Render",
+  "io":[
+    "surface"
+  ],
+  "name":"Render Tilemap"
+}

@@ -1,0 +1,9 @@
+{
+  "tooltip":"Generate number data.",
+  "baseNode":"Node_Number",
+  "io":[
+    "float",
+    "float"
+  ],
+  "name":"Number"
+}

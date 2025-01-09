@@ -1,0 +1,36 @@
+{
+  "tooltip":"Draw simple shapes using signed distance field.",
+  "alias":[
+    "rectangle",
+    "square",
+    "diamond",
+    "trapezoid",
+    "parallelogram",
+    "half",
+    "circle",
+    "ellipse",
+    "arc",
+    "donut",
+    "crescent",
+    "ring",
+    "squircle",
+    "regular polygon",
+    "triangle",
+    "pentagon",
+    "hexagon",
+    "star",
+    "cross",
+    "line",
+    "arrow",
+    "teardrop",
+    "leaf",
+    "heart",
+    "gear"
+  ],
+  "baseNode":"Node_Shape",
+  "io":[
+    "surface"
+  ],
+  "build":"Node_create_Shape",
+  "name":"Draw Shape"
+}

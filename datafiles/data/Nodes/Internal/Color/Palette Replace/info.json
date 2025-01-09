@@ -1,0 +1,8 @@
+{
+  "tooltip":"Replace colors in a palette with new one.",
+  "baseNode":"Node_Palette_Replace",
+  "io":[
+    "color"
+  ],
+  "name":"Palette Replace"
+}

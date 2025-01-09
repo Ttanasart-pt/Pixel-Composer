@@ -1,0 +1,11 @@
+{
+  "tooltip":"Combine multiple path into one.",
+  "alias":[
+    "array path"
+  ],
+  "baseNode":"Node_Path_Array",
+  "io":[
+    "pathnode"
+  ],
+  "name":"Path Combine"
+}

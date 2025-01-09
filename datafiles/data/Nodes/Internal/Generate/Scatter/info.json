@@ -1,0 +1,8 @@
+{
+  "tooltip":"Scatter image randomly multiple times.",
+  "baseNode":"Node_Scatter",
+  "io":[
+    "surface"
+  ],
+  "name":"Scatter"
+}

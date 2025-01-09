@@ -1,0 +1,8 @@
+{
+  "tooltip":"Store current animation as array.  Cache persisted between save.",
+  "baseNode":"Node_Cache_Array",
+  "io":[
+    "any"
+  ],
+  "name":"Cache Array"
+}

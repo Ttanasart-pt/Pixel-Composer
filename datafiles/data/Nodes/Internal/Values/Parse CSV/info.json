@@ -1,0 +1,8 @@
+{
+  "tooltip":"Parse CSV string into array.",
+  "baseNode":"Node_Array_CSV_Parse",
+  "io":[
+    "text"
+  ],
+  "name":"Parse CSV"
+}

@@ -1,0 +1,12 @@
+{
+  "tooltip":"Rig mesh to armature system.",
+  "alias":[
+    "rigging",
+    "bone"
+  ],
+  "baseNode":"Node_Armature_Mesh_Rig",
+  "io":[
+    "surface"
+  ],
+  "name":"Armature Mesh Rig"
+}

@@ -1,0 +1,11 @@
+{
+  "tooltip":"Save wav audio file.",
+  "baseNode":"Node_WAV_File_Write",
+  "io":[
+    "text",
+    "audioBit",
+    "audioBit",
+    "text"
+  ],
+  "name":"WAV File Out"
+}

@@ -1,0 +1,11 @@
+{
+  "tooltip":"Apply gamma approximation (pow(2.2)) to an image.",
+  "alias":[
+    "srgb"
+  ],
+  "baseNode":"Node_Gamma_Map",
+  "io":[
+    "surface"
+  ],
+  "name":"Gamma Map"
+}

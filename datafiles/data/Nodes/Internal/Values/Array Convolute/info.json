@@ -1,0 +1,8 @@
+{
+  "tooltip":"Apply convolution between 2 number arrays.",
+  "baseNode":"Node_Array_Convolute",
+  "io":[
+    "any"
+  ],
+  "name":"Array Convolute"
+}

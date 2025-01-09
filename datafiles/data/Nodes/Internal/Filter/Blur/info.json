@@ -1,0 +1,11 @@
+{
+  "tooltip":"Blur image smoothly.",
+  "alias":[
+    "gaussian blur"
+  ],
+  "baseNode":"Node_Blur",
+  "io":[
+    "surface"
+  ],
+  "name":"Blur"
+}

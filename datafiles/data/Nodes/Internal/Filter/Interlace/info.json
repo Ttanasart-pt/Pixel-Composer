@@ -1,0 +1,8 @@
+{
+  "tooltip":"Apply interlace effect to an image.",
+  "baseNode":"Node_Interlaced",
+  "io":[
+    "surface"
+  ],
+  "name":"Interlace"
+}

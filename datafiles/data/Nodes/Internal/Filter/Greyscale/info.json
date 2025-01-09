@@ -1,0 +1,11 @@
+{
+  "tooltip":"Convert color image to greyscale.",
+  "alias":[
+    "grayscale"
+  ],
+  "baseNode":"Node_Greyscale",
+  "io":[
+    "surface"
+  ],
+  "name":"Greyscale"
+}

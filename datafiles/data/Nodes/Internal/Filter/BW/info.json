@@ -1,0 +1,11 @@
+{
+  "tooltip":"Convert color image to black and white.",
+  "alias":[
+    "black and white"
+  ],
+  "baseNode":"Node_BW",
+  "io":[
+    "surface"
+  ],
+  "name":"BW"
+}

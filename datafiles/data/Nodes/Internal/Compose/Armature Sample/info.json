@@ -1,0 +1,12 @@
+{
+  "tooltip":"Sample point from armature system.",
+  "alias":[
+    "rigging",
+    "bone"
+  ],
+  "baseNode":"Node_Armature_Sample",
+  "io":[
+    "surface"
+  ],
+  "name":"Armature Sample"
+}

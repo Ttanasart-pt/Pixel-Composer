@@ -1,0 +1,11 @@
+{
+  "tooltip":"Generate SDF image from height map.",
+  "alias":[
+    "ray marching"
+  ],
+  "baseNode":"Node_RM_Terrain",
+  "io":[
+    "surface"
+  ],
+  "name":"RM Terrain"
+}

@@ -1,0 +1,9 @@
+{
+  "tooltip":"Return number of character in a string.",
+  "baseNode":"Node_String_Length",
+  "io":[
+    "text",
+    "float"
+  ],
+  "name":"Text Length"
+}

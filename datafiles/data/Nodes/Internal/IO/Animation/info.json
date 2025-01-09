@@ -1,0 +1,9 @@
+{
+  "tooltip":"Load multiple images from your computer as animation.",
+  "baseNode":"Node_Image_Animated",
+  "io":[
+    "surface"
+  ],
+  "build":"Node_create_Image_Animated",
+  "name":"Animation"
+}

@@ -1,0 +1,8 @@
+{
+  "tooltip":"Apply boids algorithm to create a flock behaviour.",
+  "baseNode":"Node_VFX_Boids",
+  "io":[
+    "particle"
+  ],
+  "name":"Boids"
+}

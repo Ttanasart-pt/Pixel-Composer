@@ -1,0 +1,8 @@
+{
+  "tooltip":"Create directional light directed at the origin point.",
+  "baseNode":"Node_3D_Light_Directional",
+  "io":[
+    "d3Mesh"
+  ],
+  "name":"Directional Light"
+}

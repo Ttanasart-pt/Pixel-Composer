@@ -1,0 +1,8 @@
+{
+  "tooltip":"",
+  "baseNode":"Node_Argument",
+  "io":[
+    "any"
+  ],
+  "name":"Argument"
+}

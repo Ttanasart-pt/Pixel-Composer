@@ -1,0 +1,12 @@
+{
+  "tooltip":"Returns nth member in an array.",
+  "alias":[
+    "get array"
+  ],
+  "baseNode":"Node_Array_Get",
+  "io":[
+    "any",
+    "pbBox"
+  ],
+  "name":"Array Get"
+}

@@ -1,0 +1,8 @@
+{
+  "tooltip":"Add noise pattern to the image.",
+  "baseNode":"Node_Grain",
+  "io":[
+    "surface"
+  ],
+  "name":"Grain"
+}

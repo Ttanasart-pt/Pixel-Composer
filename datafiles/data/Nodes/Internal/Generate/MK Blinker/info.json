@@ -1,0 +1,8 @@
+{
+  "tooltip":"Flicker regions of the selected colors randomly.",
+  "baseNode":"Node_MK_Blinker",
+  "io":[
+    "surface"
+  ],
+  "name":"MK Blinker"
+}

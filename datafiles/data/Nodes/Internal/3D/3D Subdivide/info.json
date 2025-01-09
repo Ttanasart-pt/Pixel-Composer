@@ -1,0 +1,8 @@
+{
+  "tooltip":"Subdivide faces in mesh.",
+  "baseNode":"Node_3D_Subdivide",
+  "io":[
+    "d3Mesh"
+  ],
+  "name":"3D Subdivide"
+}

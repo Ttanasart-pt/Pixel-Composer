@@ -1,0 +1,8 @@
+{
+  "tooltip":"Create (rgb) color from value in RGB color space.",
+  "baseNode":"Node_Color_RGB",
+  "io":[
+    "color"
+  ],
+  "name":"RGB Color"
+}

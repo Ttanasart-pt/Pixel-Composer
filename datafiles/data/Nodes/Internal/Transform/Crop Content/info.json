@@ -1,0 +1,8 @@
+{
+  "tooltip":"Crop out empty pixel from the image.",
+  "baseNode":"Node_Crop_Content",
+  "io":[
+    "surface"
+  ],
+  "name":"Crop Content"
+}

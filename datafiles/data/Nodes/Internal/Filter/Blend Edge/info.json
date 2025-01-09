@@ -1,0 +1,8 @@
+{
+  "tooltip":"Blend the edges of an image to create tilable patterns.",
+  "baseNode":"Node_Blend_Edge",
+  "io":[
+    "surface"
+  ],
+  "name":"Blend Edge"
+}

@@ -1,0 +1,9 @@
+{
+  "tooltip":"Load animated .gif from your computer.",
+  "baseNode":"Node_Image_gif",
+  "io":[
+    "surface"
+  ],
+  "build":"Node_create_Image_gif",
+  "name":"Image GIF"
+}

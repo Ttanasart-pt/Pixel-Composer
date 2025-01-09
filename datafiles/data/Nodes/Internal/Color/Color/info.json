@@ -1,0 +1,8 @@
+{
+  "tooltip":"Create color value.",
+  "baseNode":"Node_Color",
+  "io":[
+    "color"
+  ],
+  "name":"Color"
+}

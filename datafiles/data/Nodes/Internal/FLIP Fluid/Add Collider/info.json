@@ -1,0 +1,8 @@
+{
+  "tooltip":"",
+  "baseNode":"Node_FLIP_Apply_Force",
+  "io":[
+    "fDomain"
+  ],
+  "name":"Add Collider"
+}

@@ -1,0 +1,8 @@
+{
+  "tooltip":"Combine array of images with different dimension using different algorithms.",
+  "baseNode":"Node_Pack_Sprites",
+  "io":[
+    "surface"
+  ],
+  "name":"Pack Sprites"
+}

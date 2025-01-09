@@ -1,0 +1,8 @@
+{
+  "tooltip":"",
+  "baseNode":"Node_Smoke_Domain",
+  "io":[
+    "sdomain"
+  ],
+  "name":"Domain"
+}

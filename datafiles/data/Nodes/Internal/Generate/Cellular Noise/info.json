@@ -1,0 +1,12 @@
+{
+  "tooltip":"Generate voronoi pattern.",
+  "alias":[
+    "voronoi",
+    "worley"
+  ],
+  "baseNode":"Node_Cellular",
+  "io":[
+    "surface"
+  ],
+  "name":"Cellular Noise"
+}

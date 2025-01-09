@@ -1,0 +1,9 @@
+{
+  "tooltip":"Sample gradient into palette.",
+  "baseNode":"Node_Gradient_Sample",
+  "io":[
+    "gradient",
+    "particle"
+  ],
+  "name":"Sample Gradient"
+}

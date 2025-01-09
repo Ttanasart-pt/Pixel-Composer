@@ -1,0 +1,8 @@
+{
+  "tooltip":"Modify struct",
+  "baseNode":"Node_Struct_Set",
+  "io":[
+    "struct"
+  ],
+  "name":"Struct Set"
+}

@@ -1,0 +1,8 @@
+{
+  "tooltip":"",
+  "baseNode":"Node_Rigid_Wall",
+  "io":[
+    "rigid"
+  ],
+  "name":"Wall"
+}

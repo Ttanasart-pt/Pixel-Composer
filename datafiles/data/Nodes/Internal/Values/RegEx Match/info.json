@@ -1,0 +1,8 @@
+{
+  "tooltip":"Check whether regular expression pattern exist in a string.",
+  "baseNode":"Node_String_Regex_Match",
+  "io":[
+    "text"
+  ],
+  "name":"RegEx Match"
+}

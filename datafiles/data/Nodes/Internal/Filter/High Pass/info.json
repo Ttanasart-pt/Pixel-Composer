@@ -1,0 +1,11 @@
+{
+  "tooltip":"Apply high pass filter",
+  "alias":[
+    "sharpen"
+  ],
+  "baseNode":"Node_High_Pass",
+  "io":[
+    "surface"
+  ],
+  "name":"High Pass"
+}

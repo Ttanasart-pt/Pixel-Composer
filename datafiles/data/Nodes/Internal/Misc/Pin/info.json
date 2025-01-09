@@ -1,0 +1,8 @@
+{
+  "tooltip":"Create a pin to organize your connection. Can be create by double clicking on a connection line.",
+  "baseNode":"Node_Pin",
+  "io":[
+    "any"
+  ],
+  "name":"Pin"
+}

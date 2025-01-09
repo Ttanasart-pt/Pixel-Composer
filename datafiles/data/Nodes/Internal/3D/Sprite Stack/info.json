@@ -1,0 +1,8 @@
+{
+  "tooltip":"Create sprite stack either from repeating a single image or stacking different images using array.",
+  "baseNode":"Node_Sprite_Stack",
+  "io":[
+    "surface"
+  ],
+  "name":"Sprite Stack"
+}

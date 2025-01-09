@@ -1,0 +1,8 @@
+{
+  "tooltip":"Apply non-linear operation (minimum, maximum) on each pixel locally.",
+  "baseNode":"Node_Local_Analyze",
+  "io":[
+    "surface"
+  ],
+  "name":"Local Analyze"
+}

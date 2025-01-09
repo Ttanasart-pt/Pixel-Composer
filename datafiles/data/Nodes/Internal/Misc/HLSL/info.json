@@ -1,0 +1,8 @@
+{
+  "tooltip":"Execute HLSL shader on a surface.",
+  "baseNode":"Node_HLSL",
+  "io":[
+    "any"
+  ],
+  "name":"HLSL"
+}

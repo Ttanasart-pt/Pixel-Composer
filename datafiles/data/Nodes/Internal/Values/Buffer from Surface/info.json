@@ -1,0 +1,12 @@
+{
+  "tooltip":"Create buffer from a surface.",
+  "alias":[
+    "surface to buffer"
+  ],
+  "baseNode":"Node_Surface_To_Buffer",
+  "io":[
+    "surface",
+    "buffer"
+  ],
+  "name":"Buffer from Surface"
+}

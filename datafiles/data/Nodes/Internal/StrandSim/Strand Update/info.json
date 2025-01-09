@@ -1,0 +1,8 @@
+{
+  "tooltip":"Update strands by one step.",
+  "baseNode":"Node_Strand_Update",
+  "io":[
+    "strands"
+  ],
+  "name":"Strand Update"
+}

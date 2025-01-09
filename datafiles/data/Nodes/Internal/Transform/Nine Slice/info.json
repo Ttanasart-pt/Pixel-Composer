@@ -1,0 +1,13 @@
+{
+  "tooltip":"Cut image into 3x3 parts, and scale\/repeat only the middle part.",
+  "alias":[
+    "9 slice",
+    "splice",
+    "nine patch"
+  ],
+  "baseNode":"Node_9Slice",
+  "io":[
+    "surface"
+  ],
+  "name":"Nine Slice"
+}

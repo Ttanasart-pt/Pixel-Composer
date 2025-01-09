@@ -1,0 +1,12 @@
+{
+  "tooltip":"Generate leaves falling effects.",
+  "alias":[
+    "Leaf",
+    "Leaves"
+  ],
+  "baseNode":"Node_MK_Fall",
+  "io":[
+    "surface"
+  ],
+  "name":"MK Fall"
+}

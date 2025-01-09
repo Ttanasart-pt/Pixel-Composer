@@ -1,0 +1,8 @@
+{
+  "tooltip":"Convert color image to tile data.",
+  "baseNode":"Node_Tile_Convert",
+  "io":[
+    "surface"
+  ],
+  "name":"Convert to Tilemap"
+}

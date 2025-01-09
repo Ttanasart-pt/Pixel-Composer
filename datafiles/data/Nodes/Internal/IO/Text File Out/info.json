@@ -1,0 +1,11 @@
+{
+  "tooltip":"Save text as a .txt file.",
+  "alias":[
+    "txt"
+  ],
+  "baseNode":"Node_Text_File_Write",
+  "io":[
+    "text"
+  ],
+  "name":"Text File Out"
+}

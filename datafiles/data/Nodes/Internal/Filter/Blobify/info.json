@@ -1,0 +1,8 @@
+{
+  "tooltip":"Round off sharp corner in BW image by bluring and thresholding.",
+  "baseNode":"Node_Blobify",
+  "io":[
+    "surface"
+  ],
+  "name":"Blobify"
+}

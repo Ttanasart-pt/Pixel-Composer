@@ -1,0 +1,8 @@
+{
+  "tooltip":"Create (rgb) color from value in HSV color space.",
+  "baseNode":"Node_Color_HSV",
+  "io":[
+    "color"
+  ],
+  "name":"HSV Color"
+}

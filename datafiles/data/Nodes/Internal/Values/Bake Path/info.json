@@ -1,0 +1,9 @@
+{
+  "tooltip":"Bake path data into array of vec2 points.",
+  "baseNode":"Node_Path_Bake",
+  "io":[
+    "pathnode",
+    "float"
+  ],
+  "name":"Bake Path"
+}

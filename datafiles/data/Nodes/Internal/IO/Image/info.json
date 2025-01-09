@@ -1,0 +1,9 @@
+{
+  "tooltip":"Load a single image from your computer.",
+  "baseNode":"Node_Image",
+  "io":[
+    "surface"
+  ],
+  "build":"Node_create_Image",
+  "name":"Image"
+}

@@ -1,0 +1,12 @@
+{
+  "tooltip":"Load .csv as text, number array.",
+  "alias":[
+    "comma separated value"
+  ],
+  "baseNode":"Node_CSV_File_Read",
+  "io":[
+    "text",
+    "float"
+  ],
+  "name":"CSV File In"
+}

@@ -1,0 +1,17 @@
+{
+  "tooltip":"Plot graph or bar chart from array of number.",
+  "alias":[
+    "plot",
+    "bar chart",
+    "graph",
+    "waveform"
+  ],
+  "baseNode":"Node_Plot_Linear",
+  "io":[
+    "surface",
+    "surface",
+    "float"
+  ],
+  "build":"Node_create_Plot_Linear",
+  "name":"Draw Bar \/ Graph"
+}

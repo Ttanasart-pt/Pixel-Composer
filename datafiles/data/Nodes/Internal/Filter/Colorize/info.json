@@ -1,0 +1,11 @@
+{
+  "tooltip":"Map brightness of a pixel to a color from a gradient.",
+  "alias":[
+    "recolor"
+  ],
+  "baseNode":"Node_Colorize",
+  "io":[
+    "surface"
+  ],
+  "name":"Colorize"
+}

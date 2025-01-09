@@ -1,0 +1,9 @@
+{
+  "tooltip":"",
+  "baseNode":"Node_FLIP_to_VFX",
+  "io":[
+    "fDomain",
+    "particle"
+  ],
+  "name":"FLIP to VFX"
+}

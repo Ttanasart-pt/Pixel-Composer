@@ -1,0 +1,8 @@
+{
+  "tooltip":"Repeat the same 3D mesh multiple times.",
+  "baseNode":"Node_3D_Repeat",
+  "io":[
+    "d3Mesh"
+  ],
+  "name":"3D Repeat"
+}

@@ -1,0 +1,8 @@
+{
+  "tooltip":"Generate Herringbone tile pattern.",
+  "baseNode":"Node_Herringbone_Tile",
+  "io":[
+    "surface"
+  ],
+  "name":"Herringbone Tile"
+}

@@ -1,0 +1,11 @@
+{
+  "tooltip":"Expand the image around a mid point.",
+  "alias":[
+    "inflate"
+  ],
+  "baseNode":"Node_Dilate",
+  "io":[
+    "surface"
+  ],
+  "name":"Dilate"
+}

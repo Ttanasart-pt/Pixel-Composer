@@ -1,0 +1,8 @@
+{
+  "tooltip":"Load Aseprite project file",
+  "baseNode":"Node_ASE_layer",
+  "io":[
+    "surface"
+  ],
+  "name":"ASE Layer"
+}

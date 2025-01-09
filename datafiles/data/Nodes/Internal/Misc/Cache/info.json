@@ -1,0 +1,8 @@
+{
+  "tooltip":"Store current animation. Cache persisted between save.",
+  "baseNode":"Node_Cache",
+  "io":[
+    "any"
+  ],
+  "name":"Cache"
+}

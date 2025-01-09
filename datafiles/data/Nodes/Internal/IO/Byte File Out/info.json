@@ -1,0 +1,9 @@
+{
+  "tooltip":"Save buffer content to a file.",
+  "baseNode":"Node_Byte_File_Write",
+  "io":[
+    "text",
+    "buffer"
+  ],
+  "name":"Byte File Out"
+}

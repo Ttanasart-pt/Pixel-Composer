@@ -1,0 +1,8 @@
+{
+  "tooltip":"Convert atlas into generic struct.",
+  "baseNode":"Node_Atlas_Struct",
+  "io":[
+    "surface"
+  ],
+  "name":"Atlas to Struct"
+}

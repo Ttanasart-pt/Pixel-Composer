@@ -1,0 +1,8 @@
+{
+  "tooltip":"Create 2D array by multiplying each member in the first 1D array with the second 1D array.",
+  "baseNode":"Node_Array_Composite",
+  "io":[
+    "any"
+  ],
+  "name":"Array Composite"
+}

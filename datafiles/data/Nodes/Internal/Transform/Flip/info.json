@@ -1,0 +1,11 @@
+{
+  "tooltip":"Flip image horizontally or vertically.",
+  "alias":[
+    "mirror"
+  ],
+  "baseNode":"Node_Flip",
+  "io":[
+    "surface"
+  ],
+  "name":"Flip"
+}

@@ -1,0 +1,8 @@
+{
+  "tooltip":"Cache the entire animation and replay backward.",
+  "baseNode":"Node_Revert",
+  "io":[
+    "surface"
+  ],
+  "name":"Reverse"
+}

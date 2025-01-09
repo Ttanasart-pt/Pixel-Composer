@@ -1,0 +1,8 @@
+{
+  "tooltip":"Generate deterministic rain.",
+  "baseNode":"Node_MK_Rain",
+  "io":[
+    "surface"
+  ],
+  "name":"MK Rain"
+}

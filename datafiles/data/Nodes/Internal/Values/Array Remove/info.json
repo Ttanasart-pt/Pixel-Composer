@@ -1,0 +1,14 @@
+{
+  "tooltip":"Remove member in an array.",
+  "alias":[
+    "remove array",
+    "delete array",
+    "array delete"
+  ],
+  "baseNode":"Node_Array_Remove",
+  "io":[
+    "any",
+    "pbBox"
+  ],
+  "name":"Array Remove"
+}

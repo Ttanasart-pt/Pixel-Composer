@@ -1,0 +1,9 @@
+{
+  "tooltip":"Load .json file using keys.",
+  "baseNode":"Node_Json_File_Read",
+  "io":[
+    "text",
+    "struct"
+  ],
+  "name":"JSON File In"
+}

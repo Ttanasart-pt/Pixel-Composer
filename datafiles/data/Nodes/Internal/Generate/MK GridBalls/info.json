@@ -1,0 +1,8 @@
+{
+  "tooltip":"Generate controllable grid of spheres.",
+  "baseNode":"Node_MK_GridBalls",
+  "io":[
+    "surface"
+  ],
+  "name":"MK GridBalls"
+}

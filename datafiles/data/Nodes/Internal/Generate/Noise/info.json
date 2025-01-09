@@ -1,0 +1,8 @@
+{
+  "tooltip":"Generate white noise.",
+  "baseNode":"Node_Noise",
+  "io":[
+    "surface"
+  ],
+  "name":"Noise"
+}

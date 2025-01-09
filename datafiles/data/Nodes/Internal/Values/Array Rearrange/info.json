@@ -1,0 +1,8 @@
+{
+  "tooltip":"Rearrange array member manually.",
+  "baseNode":"Node_Array_Rearrange",
+  "io":[
+    "any"
+  ],
+  "name":"Array Rearrange"
+}

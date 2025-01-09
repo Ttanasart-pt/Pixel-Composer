@@ -1,0 +1,12 @@
+{
+  "tooltip":"Create new armature system.",
+  "alias":[
+    "rigging",
+    "bone"
+  ],
+  "baseNode":"Node_Armature",
+  "io":[
+    "surface"
+  ],
+  "name":"Armature Create"
+}

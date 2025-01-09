@@ -1,0 +1,8 @@
+{
+  "tooltip":"Create image from gradient.",
+  "baseNode":"Node_Gradient",
+  "io":[
+    "surface"
+  ],
+  "name":"Draw Gradient"
+}

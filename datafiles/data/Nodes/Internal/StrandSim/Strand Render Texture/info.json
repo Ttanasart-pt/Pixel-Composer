@@ -1,0 +1,8 @@
+{
+  "tooltip":"Render strands to surface as a textured path.",
+  "baseNode":"Node_Strand_Render_Texture",
+  "io":[
+    "strands"
+  ],
+  "name":"Strand Render Texture"
+}

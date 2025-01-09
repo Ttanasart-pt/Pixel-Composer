@@ -1,0 +1,9 @@
+{
+  "tooltip":"Load Aseprite file with support for layers, tags.",
+  "baseNode":"Node_ASE_File_Read",
+  "io":[
+    "surface"
+  ],
+  "build":"Node_create_ASE_File_Read",
+  "name":"ASE File In"
+}

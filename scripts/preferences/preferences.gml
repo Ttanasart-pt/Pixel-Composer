@@ -320,7 +320,7 @@
 		if(!directory_exists(PREFERENCES_DIR)) PREF_UPDATE();
 		
 		var path = PREFERENCES_DIR + "keys.json";
-		if(file_exists(path)) {
+		if(file_exists(path)) {should_restart = true;
 			var map = json_load_struct(path);
 			if(struct_has(map, "preferences")) struct_override(PREFERENCES, map.preferences);
 			else                               struct_override(PREFERENCES, map);

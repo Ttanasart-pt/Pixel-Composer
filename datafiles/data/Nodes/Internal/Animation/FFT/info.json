@@ -1,0 +1,13 @@
+{
+  "tooltip":"Perform fourier transform on number array.",
+  "alias":[
+    "frequency analysis"
+  ],
+  "baseNode":"Node_FFT",
+  "io":[
+    "float",
+    "audioBit",
+    "float"
+  ],
+  "name":"FFT"
+}

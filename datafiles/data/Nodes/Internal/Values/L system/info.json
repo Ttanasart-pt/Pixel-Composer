@@ -1,0 +1,8 @@
+{
+  "tooltip":"Generate path using Lindenmayer system.",
+  "baseNode":"Node_Path_L_System",
+  "io":[
+    "pathnode"
+  ],
+  "name":"L system"
+}

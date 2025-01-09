@@ -1,0 +1,7 @@
+{
+  "tooltip":"Request data from the internet.",
+  "baseNode":"Node_HTTP_request",
+  "io":[
+  ],
+  "name":"HTTP"
+}

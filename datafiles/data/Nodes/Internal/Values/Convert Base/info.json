@@ -1,0 +1,12 @@
+{
+  "tooltip":"Convert number from one base to another.",
+  "alias":[
+    "binary",
+    "hexadecimal"
+  ],
+  "baseNode":"Node_Base_Convert",
+  "io":[
+    "float"
+  ],
+  "name":"Convert Base"
+}

@@ -1,0 +1,8 @@
+{
+  "tooltip":"Filter segment (vec2 array) based on a conditions.",
+  "baseNode":"Node_Segment_Filter",
+  "io":[
+    "float"
+  ],
+  "name":"Filter Segments"
+}

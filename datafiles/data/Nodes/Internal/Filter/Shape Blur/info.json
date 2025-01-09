@@ -1,0 +1,8 @@
+{
+  "tooltip":"Blur image using another image as blur map.",
+  "baseNode":"Node_Blur_Shape",
+  "io":[
+    "surface"
+  ],
+  "name":"Shape Blur"
+}

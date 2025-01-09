@@ -1,0 +1,8 @@
+{
+  "tooltip":"Execute lua function and returns a data.",
+  "baseNode":"Node_Lua_Compute",
+  "io":[
+    "any"
+  ],
+  "name":"Lua Compute"
+}

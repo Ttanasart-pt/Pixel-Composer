@@ -1,0 +1,8 @@
+{
+  "tooltip":"Delay the animation by fix amount of frames.",
+  "baseNode":"Node_Delay",
+  "io":[
+    "surface"
+  ],
+  "name":"Delay"
+}

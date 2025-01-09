@@ -1,0 +1,14 @@
+{
+  "tooltip":"Match image to a palette then remap it to another palette.",
+  "alias":[
+    "isolate colors",
+    "select colors",
+    "palette swap",
+    "colors replace"
+  ],
+  "baseNode":"Node_Color_replace",
+  "io":[
+    "surface"
+  ],
+  "name":"Replace Palette"
+}

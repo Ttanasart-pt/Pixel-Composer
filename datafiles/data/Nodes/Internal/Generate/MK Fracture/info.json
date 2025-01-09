@@ -1,0 +1,8 @@
+{
+  "tooltip":"Deterministically fracture and image and apply basic physics.",
+  "baseNode":"Node_MK_Fracture",
+  "io":[
+    "surface"
+  ],
+  "name":"MK Fracture"
+}

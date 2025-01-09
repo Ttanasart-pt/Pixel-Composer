@@ -1,0 +1,8 @@
+{
+  "tooltip":"Create image from 4 color points.",
+  "baseNode":"Node_Gradient_Points",
+  "io":[
+    "surface"
+  ],
+  "name":"Draw 4 Points Gradient"
+}

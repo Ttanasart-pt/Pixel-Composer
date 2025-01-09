@@ -1,0 +1,8 @@
+{
+  "tooltip":"Extract palette from an image.",
+  "baseNode":"Node_Palette_Extract",
+  "io":[
+    "color"
+  ],
+  "name":"Palette Extract"
+}

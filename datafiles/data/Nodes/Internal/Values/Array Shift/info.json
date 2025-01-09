@@ -1,0 +1,8 @@
+{
+  "tooltip":"Shift all member in an array.",
+  "baseNode":"Node_Array_Shift",
+  "io":[
+    "any"
+  ],
+  "name":"Array Shift"
+}

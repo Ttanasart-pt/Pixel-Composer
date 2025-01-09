@@ -1,0 +1,8 @@
+{
+  "tooltip":"Check whether a point lies in an area.",
+  "baseNode":"Node_Point_In_Area",
+  "io":[
+    "float"
+  ],
+  "name":"Point in Area"
+}

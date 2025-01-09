@@ -1,0 +1,8 @@
+{
+  "tooltip":"Extract atlas data.",
+  "baseNode":"Node_Atlas_Get",
+  "io":[
+    "surface"
+  ],
+  "name":"Atlas Get"
+}

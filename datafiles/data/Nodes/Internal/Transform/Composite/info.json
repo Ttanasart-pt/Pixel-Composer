@@ -1,0 +1,12 @@
+{
+  "tooltip":"Combine multiple images with custom transformation.",
+  "alias":[
+    "merge"
+  ],
+  "baseNode":"Node_Composite",
+  "io":[
+    "surface",
+    "surface"
+  ],
+  "name":"Composite"
+}

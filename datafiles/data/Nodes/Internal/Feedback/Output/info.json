@@ -1,0 +1,8 @@
+{
+  "tooltip":"",
+  "baseNode":"Node_Feedback_Output",
+  "io":[
+    "any"
+  ],
+  "name":"Output"
+}

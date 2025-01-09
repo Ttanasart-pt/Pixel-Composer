@@ -1,0 +1,11 @@
+{
+  "tooltip":"Skew image horizontally, or vertically.",
+  "alias":[
+    "shear"
+  ],
+  "baseNode":"Node_Skew",
+  "io":[
+    "surface"
+  ],
+  "name":"Skew"
+}

@@ -1,0 +1,8 @@
+{
+  "tooltip":"Calculate dot product between vectors.",
+  "baseNode":"Node_Vector_Dot",
+  "io":[
+    "float"
+  ],
+  "name":"Dot product"
+}

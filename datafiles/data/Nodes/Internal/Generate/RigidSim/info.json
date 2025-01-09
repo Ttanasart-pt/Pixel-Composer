@@ -1,0 +1,8 @@
+{
+  "tooltip":"Create group for rigidbody simulation.",
+  "baseNode":"Node_Rigid_Group_Inline",
+  "io":[
+    "surface"
+  ],
+  "name":"RigidSim"
+}

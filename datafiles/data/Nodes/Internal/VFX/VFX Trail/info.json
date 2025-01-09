@@ -1,0 +1,8 @@
+{
+  "tooltip":"Generate path from particle movement.",
+  "baseNode":"Node_VFX_Trail",
+  "io":[
+    "particle"
+  ],
+  "name":"VFX Trail"
+}

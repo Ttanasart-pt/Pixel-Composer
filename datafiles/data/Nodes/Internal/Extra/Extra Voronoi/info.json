@@ -1,0 +1,11 @@
+{
+  "tooltip":"Random voronoi noise made with different algorithms.",
+  "alias":[
+    "noise"
+  ],
+  "baseNode":"Node_Voronoi_Extra",
+  "io":[
+    "surface"
+  ],
+  "name":"Extra Voronoi"
+}

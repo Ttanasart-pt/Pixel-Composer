@@ -1,0 +1,8 @@
+{
+  "tooltip":"Adjust brightness of an image by changing its brightness range.",
+  "baseNode":"Node_Level",
+  "io":[
+    "surface"
+  ],
+  "name":"Level"
+}

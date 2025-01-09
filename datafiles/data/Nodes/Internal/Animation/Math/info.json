@@ -1,0 +1,8 @@
+{
+  "tooltip":"Apply mathematic operation of wave value.",
+  "baseNode":"Node_Fn_Math",
+  "io":[
+    "float"
+  ],
+  "name":"Math"
+}

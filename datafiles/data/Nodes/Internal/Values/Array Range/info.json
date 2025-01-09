@@ -1,0 +1,8 @@
+{
+  "tooltip":"Create array of numbers by setting start, end and step length.",
+  "baseNode":"Node_Array_Range",
+  "io":[
+    "float"
+  ],
+  "name":"Array Range"
+}

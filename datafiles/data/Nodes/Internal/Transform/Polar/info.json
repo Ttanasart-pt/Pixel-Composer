@@ -1,0 +1,8 @@
+{
+  "tooltip":"Convert image to polar coordinate.",
+  "baseNode":"Node_Polar",
+  "io":[
+    "surface"
+  ],
+  "name":"Polar"
+}

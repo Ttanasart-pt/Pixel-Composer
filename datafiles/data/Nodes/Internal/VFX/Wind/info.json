@@ -1,0 +1,8 @@
+{
+  "tooltip":"Move particle in range.",
+  "baseNode":"Node_VFX_Wind",
+  "io":[
+    "particle"
+  ],
+  "name":"Wind"
+}

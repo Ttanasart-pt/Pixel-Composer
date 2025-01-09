@@ -1,0 +1,8 @@
+{
+  "tooltip":"Generate bubble noise",
+  "baseNode":"Node_Noise_Bubble",
+  "io":[
+    "surface"
+  ],
+  "name":"Bubble Noise"
+}

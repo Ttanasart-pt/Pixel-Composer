@@ -1,0 +1,8 @@
+{
+  "tooltip":"Wrap a texture on to sphere.",
+  "baseNode":"Node_Spherize",
+  "io":[
+    "surface"
+  ],
+  "name":"Spherize"
+}

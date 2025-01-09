@@ -1,0 +1,8 @@
+{
+  "tooltip":"Remap image using texture as time map. Where brighter pixel in time map means using pixel from an older frame.",
+  "baseNode":"Node_Time_Remap",
+  "io":[
+    "surface"
+  ],
+  "name":"Time Remap"
+}

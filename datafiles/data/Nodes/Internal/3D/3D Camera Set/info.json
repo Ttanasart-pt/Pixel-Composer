@@ -1,0 +1,9 @@
+{
+  "tooltip":"3D camera with built-in key and fill directional lights.",
+  "baseNode":"Node_3D_Camera_Set",
+  "io":[
+    "d3Mesh",
+    "surface"
+  ],
+  "name":"3D Camera Set"
+}

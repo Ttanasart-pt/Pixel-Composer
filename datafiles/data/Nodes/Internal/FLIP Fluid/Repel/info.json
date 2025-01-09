@@ -1,0 +1,8 @@
+{
+  "tooltip":"",
+  "baseNode":"Node_FLIP_Repel",
+  "io":[
+    "fDomain"
+  ],
+  "name":"Repel"
+}

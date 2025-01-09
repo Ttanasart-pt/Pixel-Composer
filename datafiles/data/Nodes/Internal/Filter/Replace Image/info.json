@@ -1,0 +1,11 @@
+{
+  "tooltip":"Replace instances of an image with a new one.",
+  "alias":[
+    "image replace"
+  ],
+  "baseNode":"Node_Surface_Replace",
+  "io":[
+    "surface"
+  ],
+  "name":"Replace Image"
+}

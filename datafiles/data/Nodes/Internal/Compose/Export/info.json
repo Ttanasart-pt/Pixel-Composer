@@ -1,0 +1,10 @@
+{
+  "tooltip":"Export image\/animation to file(s).",
+  "baseNode":"Node_Export",
+  "io":[
+    "surface",
+    "surface"
+  ],
+  "build":"Node_create_Export",
+  "name":"Export"
+}

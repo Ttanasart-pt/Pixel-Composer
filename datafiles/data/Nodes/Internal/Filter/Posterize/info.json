@@ -1,0 +1,8 @@
+{
+  "tooltip":"Reduce and remap color to match a palette.",
+  "baseNode":"Node_Posterize",
+  "io":[
+    "surface"
+  ],
+  "name":"Posterize"
+}

@@ -1,0 +1,14 @@
+{
+  "tooltip":"Scale image using pixel-art based scaling algorithms.",
+  "alias":[
+    "scale2x",
+    "scale3x",
+    "cleanedge"
+  ],
+  "baseNode":"Node_Scale_Algo",
+  "io":[
+    "surface"
+  ],
+  "build":"Node_create_Scale_Algo",
+  "name":"Scale Algorithm"
+}

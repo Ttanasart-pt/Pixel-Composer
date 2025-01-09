@@ -1,0 +1,8 @@
+{
+  "tooltip":"",
+  "baseNode":"Node_Application_In",
+  "io":[
+    "any"
+  ],
+  "name":"GUI In"
+}

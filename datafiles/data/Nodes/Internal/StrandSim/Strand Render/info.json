@@ -1,0 +1,8 @@
+{
+  "tooltip":"Render strands to surface as a single path.",
+  "baseNode":"Node_Strand_Render",
+  "io":[
+    "strands"
+  ],
+  "name":"Strand Render"
+}

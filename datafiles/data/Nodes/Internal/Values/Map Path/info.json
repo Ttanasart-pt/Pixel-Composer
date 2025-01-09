@@ -1,0 +1,9 @@
+{
+  "tooltip":"Map a texture between multiple paths.",
+  "baseNode":"Node_Path_Map",
+  "io":[
+    "pathnode",
+    "surface"
+  ],
+  "name":"Map Path"
+}

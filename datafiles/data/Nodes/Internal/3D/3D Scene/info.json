@@ -1,0 +1,8 @@
+{
+  "tooltip":"Combine multiple 3D objects into a single junction.",
+  "baseNode":"Node_3D_Scene",
+  "io":[
+    "d3Mesh"
+  ],
+  "name":"3D Scene"
+}

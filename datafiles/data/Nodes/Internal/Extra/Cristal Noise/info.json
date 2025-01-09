@@ -1,0 +1,8 @@
+{
+  "tooltip":"Generate Cristal noise",
+  "baseNode":"Node_Noise_Cristal",
+  "io":[
+    "surface"
+  ],
+  "name":"Cristal Noise"
+}

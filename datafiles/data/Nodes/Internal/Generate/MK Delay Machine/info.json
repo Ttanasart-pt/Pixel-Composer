@@ -1,0 +1,8 @@
+{
+  "tooltip":"Combines multiple frames of animation into one.",
+  "baseNode":"Node_MK_Delay_Machine",
+  "io":[
+    "surface"
+  ],
+  "name":"MK Delay Machine"
+}

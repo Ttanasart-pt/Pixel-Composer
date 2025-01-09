@@ -1,0 +1,12 @@
+{
+  "tooltip":"Pose armature system.",
+  "alias":[
+    "rigging",
+    "bone"
+  ],
+  "baseNode":"Node_Armature_Pose",
+  "io":[
+    "surface"
+  ],
+  "name":"Armature Pose"
+}

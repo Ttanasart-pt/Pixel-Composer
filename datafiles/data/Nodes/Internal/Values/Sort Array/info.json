@@ -1,0 +1,8 @@
+{
+  "tooltip":"Sort array using default comparison.",
+  "baseNode":"Node_Array_Sort",
+  "io":[
+    "any"
+  ],
+  "name":"Sort Array"
+}

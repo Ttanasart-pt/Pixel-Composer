@@ -1,0 +1,8 @@
+{
+  "tooltip":"Get a nth character in a string.",
+  "baseNode":"Node_String_Get_Char",
+  "io":[
+    "text"
+  ],
+  "name":"Get Character"
+}

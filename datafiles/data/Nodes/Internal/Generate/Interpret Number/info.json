@@ -1,0 +1,8 @@
+{
+  "tooltip":"Convert array of number into surface.",
+  "baseNode":"Node_Interpret_Number",
+  "io":[
+    "surface"
+  ],
+  "name":"Interpret Number"
+}

@@ -1,0 +1,11 @@
+{
+  "tooltip":"Transform image in 3D space",
+  "alias":[
+    "3d transform"
+  ],
+  "baseNode":"Node_3D_Transform_Image",
+  "io":[
+    "surface"
+  ],
+  "name":"Transform 3D"
+}

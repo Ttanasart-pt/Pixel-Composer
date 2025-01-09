@@ -1,0 +1,16 @@
+{
+  "tooltip":"",
+  "baseNode":"Node_Group_Output",
+  "io":[
+    "any",
+    "any",
+    "any",
+    "any",
+    "any",
+    "any",
+    "any",
+    "any",
+    "any"
+  ],
+  "name":"Output"
+}

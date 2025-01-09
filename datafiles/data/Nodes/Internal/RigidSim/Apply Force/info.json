@@ -1,0 +1,8 @@
+{
+  "tooltip":"Apply force to objects.",
+  "baseNode":"Node_Rigid_Force_Apply",
+  "io":[
+    "rigid"
+  ],
+  "name":"Apply Force"
+}

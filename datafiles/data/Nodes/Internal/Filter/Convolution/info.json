@@ -1,0 +1,11 @@
+{
+  "tooltip":"Apply convolution operation on each pixel using a custom 3x3 kernel.",
+  "alias":[
+    "kernel"
+  ],
+  "baseNode":"Node_Convolution",
+  "io":[
+    "surface"
+  ],
+  "name":"Convolution"
+}

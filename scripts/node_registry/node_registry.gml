@@ -15,6 +15,28 @@
 	global.__currNewPage = "";
 	
 	#macro NODE_ADD_CAT if(!IS_CMD) addNodeCatagory
+	
+	global.PATREON_NODES = [
+		Node_Brush_Linear, 
+		Node_Ambient_Occlusion, 
+		Node_RM_Cloud, 
+		Node_Perlin_Extra, 
+		Node_Voronoi_Extra, 
+		Node_Gabor_Noise, 
+		Node_Shard_Noise, 
+		Node_Wavelet_Noise, 
+		Node_Caustic, 
+		Node_Noise_Bubble, 
+		Node_Flow_Noise, 
+		Node_Noise_Cristal, 
+		Node_Honeycomb_Noise, 
+		Node_Grid_Pentagonal, 
+		Node_Pytagorean_Tile, 
+		Node_Herringbone_Tile, 
+		Node_Random_Tile, 
+		Node_MK_Fracture, 
+		Node_MK_Sparkle, 
+	];
 #endregion
 
 function NodeObject(_name, _spr, _node, _tooltip = "") constructor {
@@ -37,34 +59,47 @@ function NodeObject(_name, _spr, _node, _tooltip = "") constructor {
 	show_in_recent = true;
 	show_in_global = true;
 	
-	patreon  = false;
+	patreon  = array_exists(global.PATREON_NODES, node);
+	if(patreon) ds_list_add(SUPPORTER_NODES, self);
+	
 	testable = true;
 	
+	ioArray = [];
 	input_type_mask  = 0b0;
 	output_type_mask = 0b0;
 	
-	_fn = registerFunctionLite("New node", _name, function(n) /*=>*/ { PANEL_GRAPH.createNodeHotkey(n); }, [ nodeName ]);
-	_fn.spr = _spr;
-	
-	if(!IS_CMD) {
-		var pth = DIRECTORY + $"Nodes/Tooltip/{node}.png";
-		if(file_exists_empty(pth)) tooltip_spr = sprite_add(pth, 0, false, false, 0, 0);
+	static init = function() {
+		_fn = registerFunctionLite("New node", name, function(n) /*=>*/ { PANEL_GRAPH.createNodeHotkey(n); }, [ nodeName ]);
+		_fn.spr = spr;
 		
-		if(struct_has(global.NODE_GUIDE, node)) {
-			var _n = global.NODE_GUIDEarn[$ node];
-			name   = _n.name;
-			if(_n.tooltip != "")
-				tooltip = _n.tooltip;
+		if(!IS_CMD) {
+			var pth = DIRECTORY + $"Nodes/Tooltip/{node}.png";
+			if(file_exists_empty(pth)) tooltip_spr = sprite_add(pth, 0, false, false, 0, 0);
+			
+			if(struct_has(global.NODE_GUIDE, node)) {
+				var _n = global.NODE_GUIDE[$ node];
+				name   = _n.name;
+				if(_n.tooltip != "")
+					tooltip = _n.tooltip;
+			}
 		}
-	}
-	
+	} init();
+		
 	static setTags    = function(_tags) { tags    = _tags;     return self; }
 	static setSpr     = function(_spr)  { spr     = _spr;      return self; }
 	static setTooltip = function(_tool) { tooltip = _tool;     return self; }
 	static setBuild   = function(_fn)   { createFn    = _fn;   return self; }
 	static setParam   = function(_par)  { createParam = _par;  return self; }
 	
-	static setIO = function(t) { for(var i = 0; i < argument_count; i++) { input_type_mask  |= value_bit(argument[i]); output_type_mask |= value_bit(argument[i]); } return self; }
+	static setIO = function(t) { 
+		for(var i = 0; i < argument_count; i++) { 
+			input_type_mask  |= value_bit(argument[i]); 
+			output_type_mask |= value_bit(argument[i]); 
+			
+			array_push(ioArray, value_type_to_string(argument[i]));
+		} 
+		return self; 
+	}
 	
 	static setVersion = function(version) {
 		INLINE 
@@ -116,16 +151,6 @@ function NodeObject(_name, _spr, _node, _tooltip = "") constructor {
 		if(IS_CMD) return self;
 		
 		show_in_global = false;
-		return self;
-	}
-	
-	static patreonExtra = function() {
-		INLINE 
-		if(IS_CMD) return self;
-		
-		patreon = true;
-		
-		ds_list_add(SUPPORTER_NODES, self);
 		return self;
 	}
 	
@@ -259,6 +284,45 @@ function NodeObject(_name, _spr, _node, _tooltip = "") constructor {
 		
 		return tx;
 	}
+
+	static serialize = function() {
+		var _str = {
+			name,
+			tooltip,
+			
+			baseNode: nodeName,
+			io: ioArray,
+		}
+		
+		if(createFn != noone)  _str.build = script_get_name(createFn);
+		if(deprecated)         _str.deprecated = true;
+		if(!array_empty(tags)) _str.alias      = tags;
+		
+		return _str;
+	}
+	
+	static deserialize = function(_data) {
+		if(struct_has(_data, "tooltip")) _n.setTooltip(_data.tooltip);
+		
+		if(struct_has(_data, "io")) {
+			var _io = _data.io;
+			for( var i = 0, n = array_length(_io); i < n; i++ ) 
+				_n.setIO(value_type_from_string(_io[i]));
+		}
+		
+		if(struct_has(_data, "build")) {
+			var _bfn = asset_get_index(_data.build);
+			if(_bfn != -1) _n.setBuild(_bfn);
+		}
+	
+		if(struct_has(_data, "deprecated"))
+			isDeprecated();
+		
+		if(struct_has(_data, "alias"))
+			setTags(_data.alias);
+		
+		return self;
+	}
 }
 
 function nodeBuild(_name, _x, _y, _group = PANEL_GRAPH.getCurrentContext()) {
@@ -273,6 +337,13 @@ function nodeBuild(_name, _x, _y, _group = PANEL_GRAPH.getCurrentContext()) {
 	var _bnode = _node.build(_x, _y, _group);
 	
 	return _bnode;
+}
+
+function addNodeDirect(_list, _name) {
+	if(!ds_map_exists(ALL_NODES, _name)) return;
+	
+	var _n = ALL_NODES[? _name];
+	ds_list_add(_list, _n);
 }
 	
 function addNodeObject(_list, _name = "", _node = noone, tooltip = "") {
@@ -297,31 +368,66 @@ function addNodeObject(_list, _name = "", _node = noone, tooltip = "") {
 	ds_list_add(_list, _n);
 	return _n;
 }
-	
+
 function addNodeCatagory(    name, list, filter = [], color = noone) { ds_list_add(NODE_CATEGORY,     { name, list, filter, color }); global.__currPage = name; }
 function addNodePBCatagory(  name, list, filter = [])                { ds_list_add(NODE_PB_CATEGORY,  { name, list, filter        }); }
 function addNodePCXCatagory( name, list, filter = [])                { ds_list_add(NODE_PCX_CATEGORY, { name, list, filter        }); }
 
 	////- Nodes
+
+function __read_node_directory(dir) {
+	if(!directory_exists(dir)) return;
+	__read_node_folder(dir);
+	
+	var _dirs = [];
+	var _f = file_find_first(dir + "*", fa_directory);
+	var f, p;
+	
+	while(_f != "") {
+		 f = _f;
+		 p = dir + f;
+		_f = file_find_next();
+		
+		if(!directory_exists(p)) continue;
+		array_push(_dirs, p);
+	}
+	file_find_close();
+	
+	array_foreach(_dirs, function(d) /*=>*/ {return __read_node_directory(d)});
+}
 	
 function __read_node_folder(dir) {
-	var _name = filename_name_only(dir);
 	var _info = dir + "/info.json";
-	if(!file_exists(_info)) {
-		print($"NODE ERROR: Cannot find info.json for {dir}.");
-		return;
-	}
+	if(!file_exists(_info)) return;
 	
 	var _data = json_load_struct(_info);
 	var _name = _data[$ "name"];
-	var _iref = _data[$ "internalRef"];
-	var _iref = _data[$ "internalRef"];
+	var _base = _data[$ "baseNode"];
+	var _inme = _data[$ "iname"] ?? _base;
+	var _spr  = _data[$ "icon"];
 	
+	if(is_undefined(_base)) {
+		print($"NODE ERROR: baseNode not found in {_info}.");
+		return;
+	}
 	
-	addNodeObject(input, "Image",              Node_Image,          "Load a single image from your computer.")
-														.setIO(VALUE_TYPE.surface).setBuild(Node_create_Image);
+	if(ds_map_exists(ALL_NODES, _inme))
+		print($"NODE WARNING: Duplicate node iname {_inme}.");
+	
+	if(is_undefined(_spr))
+		_spr = asset_get_index($"s_{string_lower(_inme)}"); 
+	if(!sprite_exists(_spr)) 
+		_spr = s_node_icon;
+		
+	var _node = asset_get_index(_base);
+	var _n = new NodeObject(_name, _spr, _node);
+	
+	_n.deserialize(_data);
+	
+	ALL_NODES[? _inme] = _n;
+	return _n;
 }
-	
+
 function __initNodes() { 
 	global.__currPage  = "";
 	global.__startPage =  0;
@@ -346,24 +452,7 @@ function __initNodes() {
 	// NODE DATA
 	
 	var dir = $"{DIRECTORY}Nodes/Data/Internal/";
-	if(directory_exists(dir)) {
-		
-		var _dirs = [];
-		var _f = file_find_first(dir + "*", 0);
-		var f, p;
-		
-		while(_f != "") {
-			 f = _f;
-			 p = dir + f;
-			_f = file_find_next();
-			
-			if(!directory_exists(p)) continue;
-			array_push(_dirs, p);
-		}
-		file_find_close();
-		array_foreach(_dirs, function(d) /*=>*/ {return __read_node_folder(d)});
-	}
-	
+	__read_node_directory(dir)
 	
 	// NODE LIST
 	
@@ -676,6 +765,7 @@ function __initNodes() {
 	addNodeCatagory("IO", input);
 		ds_list_add(input, "Images");
 			ds_list_add(input, "/Importers");
+		
 		addNodeObject(input, "Image",              Node_Image,          "Load a single image from your computer.")
 														.setIO(VALUE_TYPE.surface).setBuild(Node_create_Image);
 		addNodeObject(input, "Image GIF",          Node_Image_gif,      "Load animated .gif from your computer.")
@@ -876,7 +966,7 @@ function __initNodes() {
 		addNodeObject(filter, "Kuwahara",         Node_Kuwahara,         "Apply Kuwahara filter. Creating a watercolor-like effect.")
 														.setIO(VALUE_TYPE.surface).setVersion(11660);
 		addNodeObject(filter, "Brush",            Node_Brush_Linear,     "Apply brush effect.")
-														.setIO(VALUE_TYPE.surface).patreonExtra();
+														.setIO(VALUE_TYPE.surface);
 		
 		ds_list_add(filter, "Warps");
 			ds_list_add(filter, "/Effects");
@@ -1044,7 +1134,7 @@ function __initNodes() {
 		addNodeObject(d3d, "Sprite Stack",            Node_Sprite_Stack,       "Create sprite stack either from repeating a single image or stacking different images using array.")
 														.setIO(VALUE_TYPE.surface);
 		addNodeObject(d3d, "Ambient Occlusion",       Node_Ambient_Occlusion,  "Apply simple 2D AO effect using height map.")
-														.setIO(VALUE_TYPE.surface).setTags(["ao"]).patreonExtra();
+														.setIO(VALUE_TYPE.surface).setTags(["ao"]);
 		
 		ds_list_add(d3d, "Scenes");
 		addNodeObject(d3d, "3D Camera",               Node_3D_Camera,     "Create 3D camera that render scene to surface.")
@@ -1133,7 +1223,7 @@ function __initNodes() {
 		addNodeObject(d3d, "RM Terrain",              Node_RM_Terrain,   "Generate SDF image from height map.")
 														.setIO(VALUE_TYPE.surface).setTags(["ray marching"]).setVersion(11720);
 		addNodeObject(d3d, "RM Cloud",                Node_RM_Cloud,     "Generate distance field cloud texture.")
-														.setIO(VALUE_TYPE.surface).patreonExtra();
+														.setIO(VALUE_TYPE.surface);
 #endregion
 	
 #region generator
@@ -1187,30 +1277,30 @@ function __initNodes() {
 														.setIO(VALUE_TYPE.surface);
 	 // addNodeObject(generator, "Blue Noise",             Node_Noise_Blue,      "Generate blue noise texture").setVersion(1_18_06_2);
 		addNodeObject(generator, "Extra Perlins",          Node_Perlin_Extra,    "Random perlin noise made with different algorithms.")
-														.setIO(VALUE_TYPE.surface).setTags(["noise"]).patreonExtra();
+														.setIO(VALUE_TYPE.surface).setTags(["noise"]);
 		addNodeObject(generator, "Extra Voronoi",          Node_Voronoi_Extra,   "Random voronoi noise made with different algorithms.")
-														.setIO(VALUE_TYPE.surface).setTags(["noise"]).patreonExtra();
+														.setIO(VALUE_TYPE.surface).setTags(["noise"]);
 			ds_list_add(generator, "/Artistics");
 		addNodeObject(generator, "Fold Noise",             Node_Fold_Noise,      "Generate cloth fold noise")
 														.setIO(VALUE_TYPE.surface).setVersion(11650);
 		addNodeObject(generator, "Strand Noise",           Node_Noise_Strand,    "Generate random srtands noise.")
 														.setIO(VALUE_TYPE.surface).setVersion(11650);
 		addNodeObject(generator, "Gabor Noise",            Node_Gabor_Noise,     "Generate Gabor noise")
-														.setIO(VALUE_TYPE.surface).patreonExtra();
+														.setIO(VALUE_TYPE.surface);
 		addNodeObject(generator, "Shard Noise",            Node_Shard_Noise,     "Generate glass shard-looking noise")
-														.setIO(VALUE_TYPE.surface).patreonExtra();
+														.setIO(VALUE_TYPE.surface);
 		addNodeObject(generator, "Wavelet Noise",          Node_Wavelet_Noise,   "Generate wavelet noise")
-														.setIO(VALUE_TYPE.surface).patreonExtra();
+														.setIO(VALUE_TYPE.surface);
 		addNodeObject(generator, "Caustic",                Node_Caustic,         "Generate caustic noise")
-														.setIO(VALUE_TYPE.surface).patreonExtra();
+														.setIO(VALUE_TYPE.surface);
 		addNodeObject(generator, "Bubble Noise",           Node_Noise_Bubble,    "Generate bubble noise")
-														.setIO(VALUE_TYPE.surface).patreonExtra();
+														.setIO(VALUE_TYPE.surface);
 		addNodeObject(generator, "Flow Noise",             Node_Flow_Noise,      "Generate fluid flow noise")
-														.setIO(VALUE_TYPE.surface).patreonExtra();
+														.setIO(VALUE_TYPE.surface);
 		addNodeObject(generator, "Cristal Noise",          Node_Noise_Cristal,   "Generate Cristal noise")
-														.setIO(VALUE_TYPE.surface).patreonExtra();
+														.setIO(VALUE_TYPE.surface);
 		addNodeObject(generator, "Honeycomb Noise",        Node_Honeycomb_Noise, "Generate honeycomb noise")
-														.setIO(VALUE_TYPE.surface).patreonExtra();
+														.setIO(VALUE_TYPE.surface);
 		
 		ds_list_add(generator, "Patterns");
 			ds_list_add(generator, "/Basics");
@@ -1228,14 +1318,14 @@ function __initNodes() {
 		addNodeObject(generator, "Hexagonal Grid",         Node_Grid_Hex,        "Generate hexagonal grid pattern.")
 														.setIO(VALUE_TYPE.surface);
 		addNodeObject(generator, "Pentagonal Grid",        Node_Grid_Pentagonal, "Generate Pentagonal grid pattern.")
-														.setIO(VALUE_TYPE.surface).patreonExtra();
+														.setIO(VALUE_TYPE.surface);
 			ds_list_add(generator, "/Tiles");
 		addNodeObject(generator, "Pytagorean Tile",        Node_Pytagorean_Tile, "Generate Pytagorean tile pattern.")
-														.setIO(VALUE_TYPE.surface).patreonExtra();
+														.setIO(VALUE_TYPE.surface);
 		addNodeObject(generator, "Herringbone Tile",       Node_Herringbone_Tile, "Generate Herringbone tile pattern.")
-														.setIO(VALUE_TYPE.surface).patreonExtra();
+														.setIO(VALUE_TYPE.surface);
 		addNodeObject(generator, "Random Tile",            Node_Random_Tile,     "Generate Random tile pattern.")
-														.setIO(VALUE_TYPE.surface).patreonExtra();
+														.setIO(VALUE_TYPE.surface);
 			ds_list_add(generator, "/Others");
 		addNodeObject(generator, "Box Pattern",            Node_Box_Pattern,     "Generate square-based patterns.")
 														.setIO(VALUE_TYPE.surface).setVersion(11750);
@@ -1304,9 +1394,9 @@ function __initNodes() {
 		addNodeObject(generator, "MK Delay Machine", Node_MK_Delay_Machine, "Combines multiple frames of animation into one.")
 														.setIO(VALUE_TYPE.surface).setVersion(11680);
 		addNodeObject(generator, "MK Fracture",      Node_MK_Fracture,      "Deterministically fracture and image and apply basic physics.")
-														.setIO(VALUE_TYPE.surface).patreonExtra();
+														.setIO(VALUE_TYPE.surface);
 		addNodeObject(generator, "MK Sparkle",       Node_MK_Sparkle,       "Generate random star animation.")
-														.setIO(VALUE_TYPE.surface).patreonExtra();
+														.setIO(VALUE_TYPE.surface);
 		addNodeObject(generator, "MK Subpixel",      Node_MK_Subpixel,      "Apply subpixel filter on top of a surface.")
 														.setIO(VALUE_TYPE.surface).setVersion(1_17_11_0);
 #endregion
@@ -1818,9 +1908,9 @@ function __initNodes() {
 	addNodeCatagory("Action", NODE_ACTION_LIST);
 		__initNodeActions();
 	
-	var customs = ds_list_create();
-	addNodeCatagory("Custom", customs);
-		__initNodeCustom(customs);
+	// var customs = ds_list_create();
+	// addNodeCatagory("Custom", customs);
+	// 	__initNodeCustom(customs);
 	
 	if(IS_PATREON) addNodeCatagory("Extra", SUPPORTER_NODES);
 	
@@ -2052,4 +2142,31 @@ function __initNodes() {
 														.setSpr(s_node_pixel_builder).hideRecent();
 #endregion
 
+	//////////////////////////
+	
+}
+
+function __generateNodeData() {
+	var _dir = "D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/datafiles/data/Nodes/Internal"
+	
+	for( var i = 0, n = ds_list_size(NODE_CATEGORY); i < n; i++ ) {
+		var _cat = NODE_CATEGORY[| i];
+		
+		var _lnme = _cat.name;
+		var _list = _cat.list;
+		directory_verify($"{_dir}/{_lnme}");
+		
+		for( var j = 0, m = ds_list_size(_list); j < m; j++ ) {
+			var _node = _list[| j];
+			if(!is(_node, NodeObject)) continue;
+			
+			var _nme  = _node.name;
+			var _vnme = filename_name_validate(_nme);
+			print("check node", _nme)
+			
+			var _str  = _node.serialize();
+			directory_verify($"{_dir}/{_lnme}/{_vnme}");
+			json_save_struct($"{_dir}/{_lnme}/{_vnme}/info.json", _str, true);
+		}
+	}
 }

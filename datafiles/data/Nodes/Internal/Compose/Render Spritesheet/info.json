@@ -1,0 +1,8 @@
+{
+  "tooltip":"Create spritesheet from image array or animation.",
+  "baseNode":"Node_Render_Sprite_Sheet",
+  "io":[
+    "surface"
+  ],
+  "name":"Render Spritesheet"
+}

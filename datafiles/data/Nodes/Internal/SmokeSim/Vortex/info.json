@@ -1,0 +1,8 @@
+{
+  "tooltip":"Apply rotational force around a point.",
+  "baseNode":"Node_Smoke_Vortex",
+  "io":[
+    "sdomain"
+  ],
+  "name":"Vortex"
+}

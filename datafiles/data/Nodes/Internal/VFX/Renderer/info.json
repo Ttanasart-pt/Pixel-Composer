@@ -1,0 +1,8 @@
+{
+  "tooltip":"Render particle objects to surface.",
+  "baseNode":"Node_VFX_Renderer",
+  "io":[
+    "particle"
+  ],
+  "name":"Renderer"
+}

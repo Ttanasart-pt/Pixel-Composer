@@ -1,0 +1,8 @@
+{
+  "tooltip":"Execute lua script in global scope without returning any data.",
+  "baseNode":"Node_Lua_Global",
+  "io":[
+    "any"
+  ],
+  "name":"Lua Global"
+}

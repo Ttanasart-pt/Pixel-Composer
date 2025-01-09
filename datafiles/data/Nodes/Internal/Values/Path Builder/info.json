@@ -1,0 +1,8 @@
+{
+  "tooltip":"Create path from array of vec2 points.",
+  "baseNode":"Node_Path_Builder",
+  "io":[
+    "pathnode"
+  ],
+  "name":"Path Builder"
+}

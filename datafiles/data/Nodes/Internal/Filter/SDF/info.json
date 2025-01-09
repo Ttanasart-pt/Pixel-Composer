@@ -1,0 +1,8 @@
+{
+  "tooltip":"Create signed distance field using jump flooding algorithm.",
+  "baseNode":"Node_SDF",
+  "io":[
+    "surface"
+  ],
+  "name":"SDF"
+}

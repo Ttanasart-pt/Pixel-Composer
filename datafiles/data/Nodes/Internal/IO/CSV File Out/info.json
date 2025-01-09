@@ -1,0 +1,12 @@
+{
+  "tooltip":"Save array as .csv file.",
+  "alias":[
+    "comma separated value"
+  ],
+  "baseNode":"Node_CSV_File_Write",
+  "io":[
+    "text",
+    "float"
+  ],
+  "name":"CSV File Out"
+}

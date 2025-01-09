@@ -1,0 +1,8 @@
+{
+  "tooltip":"Remap animation to a new framerate.",
+  "baseNode":"Node_Rate_Remap",
+  "io":[
+    "surface"
+  ],
+  "name":"Rate Remap"
+}

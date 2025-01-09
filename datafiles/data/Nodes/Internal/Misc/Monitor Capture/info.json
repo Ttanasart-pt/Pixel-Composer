@@ -1,0 +1,8 @@
+{
+  "tooltip":"",
+  "baseNode":"Node_Monitor_Capture",
+  "io":[
+    "any"
+  ],
+  "name":"Monitor Capture"
+}

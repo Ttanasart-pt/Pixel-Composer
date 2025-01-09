@@ -1,0 +1,11 @@
+{
+  "tooltip":"Draw on surface using brush, eraser, etc.",
+  "alias":[
+    "draw"
+  ],
+  "baseNode":"Node_Canvas",
+  "io":[
+    "surface"
+  ],
+  "name":"Canvas"
+}

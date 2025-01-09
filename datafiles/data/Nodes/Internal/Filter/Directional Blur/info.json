@@ -1,0 +1,11 @@
+{
+  "tooltip":"Blur image given a direction.",
+  "alias":[
+    "motion blur"
+  ],
+  "baseNode":"Node_Blur_Directional",
+  "io":[
+    "surface"
+  ],
+  "name":"Directional Blur"
+}

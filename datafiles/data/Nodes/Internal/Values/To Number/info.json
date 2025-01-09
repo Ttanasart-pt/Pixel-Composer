@@ -1,0 +1,8 @@
+{
+  "tooltip":"Convert string to number, supports scientific format (e.g. 1e-2 = 0.02).",
+  "baseNode":"Node_To_Number",
+  "io":[
+    "float"
+  ],
+  "name":"To Number"
+}

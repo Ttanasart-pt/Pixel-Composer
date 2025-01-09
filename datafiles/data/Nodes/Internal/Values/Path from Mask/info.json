@@ -1,0 +1,9 @@
+{
+  "tooltip":"Create path that wrap around a mask.",
+  "baseNode":"Node_Path_From_Mask",
+  "io":[
+    "pathnode",
+    "surface"
+  ],
+  "name":"Path from Mask"
+}

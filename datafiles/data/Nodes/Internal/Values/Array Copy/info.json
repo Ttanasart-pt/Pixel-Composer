@@ -1,0 +1,8 @@
+{
+  "tooltip":"Copy array or subarray.",
+  "baseNode":"Node_Array_Copy",
+  "io":[
+    "any"
+  ],
+  "name":"Array Copy"
+}
