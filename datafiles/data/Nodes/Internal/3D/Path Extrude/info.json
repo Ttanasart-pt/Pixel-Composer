@@ -1,9 +1,0 @@
-{
-  "tooltip":"Extrude path into 3D object.",
-  "baseNode":"Node_3D_Mesh_Path_Extrude",
-  "io":[
-    "d3Mesh",
-    "pathnode"
-  ],
-  "name":"Path Extrude"
-}

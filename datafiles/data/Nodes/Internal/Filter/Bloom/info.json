@@ -1,8 +1,0 @@
-{
-  "tooltip":"Apply bloom effect, blurring and brighten the bright part of the image.",
-  "baseNode":"Node_Bloom",
-  "io":[
-    "surface"
-  ],
-  "name":"Bloom"
-}

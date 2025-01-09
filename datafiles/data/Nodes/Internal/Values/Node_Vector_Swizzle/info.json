@@ -1,0 +1,13 @@
+{
+  "tooltip":"Rearrange vector using string containing axis indicies (x, y, z, w).",
+  "alias":[
+    "swap axis"
+  ],
+  "spr":"s_node_vector_swizzle",
+  "pxc_version":117100.0,
+  "baseNode":"Node_Vector_Swizzle",
+  "io":[
+    "float"
+  ],
+  "name":"Swizzle"
+}

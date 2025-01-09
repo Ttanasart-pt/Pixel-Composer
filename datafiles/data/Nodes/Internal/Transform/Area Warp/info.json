@@ -1,8 +1,0 @@
-{
-  "tooltip":"Wrap image to fit an area value.",
-  "baseNode":"Node_Wrap_Area",
-  "io":[
-    "surface"
-  ],
-  "name":"Area Warp"
-}

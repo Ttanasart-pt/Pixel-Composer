@@ -1,8 +1,0 @@
-{
-  "tooltip":"Create a dynamic surface that changes its texture based on rotation.",
-  "baseNode":"Node_IsoSurf",
-  "io":[
-    "surface"
-  ],
-  "name":"IsoSurf"
-}

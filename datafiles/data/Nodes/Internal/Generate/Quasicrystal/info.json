@@ -1,8 +1,0 @@
-{
-  "tooltip":"Generate Quasicrystal pattern.",
-  "baseNode":"Node_Quasicrystal",
-  "io":[
-    "surface"
-  ],
-  "name":"Quasicrystal"
-}

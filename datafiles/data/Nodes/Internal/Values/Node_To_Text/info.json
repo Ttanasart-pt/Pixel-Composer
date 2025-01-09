@@ -1,0 +1,10 @@
+{
+  "tooltip":"Convert string to number.",
+  "spr":"s_node_to_text",
+  "pxc_version":1145.0,
+  "baseNode":"Node_To_Text",
+  "io":[
+    "text"
+  ],
+  "name":"To Text"
+}

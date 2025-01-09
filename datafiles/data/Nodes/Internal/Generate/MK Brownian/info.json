@@ -1,8 +1,0 @@
-{
-  "tooltip":"Generate random particle.",
-  "baseNode":"Node_MK_Brownian",
-  "io":[
-    "surface"
-  ],
-  "name":"MK Brownian"
-}

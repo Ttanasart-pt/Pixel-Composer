@@ -1,9 +1,0 @@
-{
-  "tooltip":"Sample a 2D position from a path",
-  "baseNode":"Node_Path_Sample",
-  "io":[
-    "pathnode",
-    "float"
-  ],
-  "name":"Sample Path"
-}

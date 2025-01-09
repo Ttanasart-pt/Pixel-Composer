@@ -1,8 +1,0 @@
-{
-  "tooltip":"Reverse path direction.",
-  "baseNode":"Node_Path_Reverse",
-  "io":[
-    "pathnode"
-  ],
-  "name":"Reverse Path"
-}

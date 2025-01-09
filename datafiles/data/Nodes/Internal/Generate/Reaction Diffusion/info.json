@@ -1,8 +1,0 @@
-{
-  "tooltip":"Simulate reaction diffusion effect.",
-  "baseNode":"Node_RD",
-  "io":[
-    "surface"
-  ],
-  "name":"Reaction Diffusion"
-}

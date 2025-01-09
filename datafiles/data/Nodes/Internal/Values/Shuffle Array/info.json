@@ -1,8 +1,0 @@
-{
-  "tooltip":"Randomly rearrange the array members.",
-  "baseNode":"Node_Array_Shuffle",
-  "io":[
-    "any"
-  ],
-  "name":"Shuffle Array"
-}

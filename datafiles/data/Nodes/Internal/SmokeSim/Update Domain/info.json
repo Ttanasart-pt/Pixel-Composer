@@ -1,8 +1,0 @@
-{
-  "tooltip":"Run smoke by one step.",
-  "baseNode":"Node_Smoke_Update",
-  "io":[
-    "sdomain"
-  ],
-  "name":"Update Domain"
-}

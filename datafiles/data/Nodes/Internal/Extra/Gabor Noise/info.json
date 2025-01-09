@@ -1,8 +1,0 @@
-{
-  "tooltip":"Generate Gabor noise",
-  "baseNode":"Node_Gabor_Noise",
-  "io":[
-    "surface"
-  ],
-  "name":"Gabor Noise"
-}

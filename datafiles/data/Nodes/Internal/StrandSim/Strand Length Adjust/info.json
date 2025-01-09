@@ -1,8 +1,0 @@
-{
-  "tooltip":"Adjust length of strands in area.",
-  "baseNode":"Node_Strand_Length_Adjust",
-  "io":[
-    "strands"
-  ],
-  "name":"Strand Length Adjust"
-}

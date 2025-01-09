@@ -1,9 +1,0 @@
-{
-  "tooltip":"Load any file to buffer.",
-  "baseNode":"Node_Byte_File_Read",
-  "io":[
-    "text",
-    "buffer"
-  ],
-  "name":"Byte File In"
-}

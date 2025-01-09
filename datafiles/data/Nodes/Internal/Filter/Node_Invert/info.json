@@ -1,0 +1,12 @@
+{
+  "tooltip":"Invert color.",
+  "alias":[
+    "negate"
+  ],
+  "spr":"s_node_invert",
+  "baseNode":"Node_Invert",
+  "io":[
+    "surface"
+  ],
+  "name":"Invert"
+}

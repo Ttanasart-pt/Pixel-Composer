@@ -1,8 +1,0 @@
-{
-  "tooltip":"Generate array of vector 2 points.",
-  "baseNode":"Node_Scatter_Points",
-  "io":[
-    "float"
-  ],
-  "name":"Scatter Points"
-}

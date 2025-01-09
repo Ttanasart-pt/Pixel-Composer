@@ -1,8 +1,0 @@
-{
-  "tooltip":"Spread smoke away from a point.",
-  "baseNode":"Node_Smoke_Repulse",
-  "io":[
-    "sdomain"
-  ],
-  "name":"Repulse"
-}

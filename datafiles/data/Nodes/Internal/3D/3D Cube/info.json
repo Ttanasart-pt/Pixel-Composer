@@ -1,8 +1,0 @@
-{
-  "tooltip":"Create 3D cube mesh.",
-  "baseNode":"Node_3D_Mesh_Cube",
-  "io":[
-    "d3Mesh"
-  ],
-  "name":"3D Cube"
-}

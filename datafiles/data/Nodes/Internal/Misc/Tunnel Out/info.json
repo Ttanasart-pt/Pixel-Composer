@@ -1,8 +1,0 @@
-{
-  "tooltip":"Receive value from tunnel in of the same key.",
-  "baseNode":"Node_Tunnel_Out",
-  "io":[
-    "any"
-  ],
-  "name":"Tunnel Out"
-}

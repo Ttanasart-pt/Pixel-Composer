@@ -1,0 +1,9 @@
+{
+  "spr":"s_node_pb_fx_brick",
+  "baseNode":"Node_PB_Fx_Brick",
+  "io":[
+    "pbBox"
+  ],
+  "name":"Brick",
+  "show_in_recent":false
+}

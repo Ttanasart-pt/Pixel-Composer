@@ -1,8 +1,0 @@
-{
-  "tooltip":"Warp an image into a predefined shape.",
-  "baseNode":"Node_Bend",
-  "io":[
-    "surface"
-  ],
-  "name":"Bend"
-}

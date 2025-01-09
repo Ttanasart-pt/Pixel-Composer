@@ -1,9 +1,0 @@
-{
-  "tooltip":"Create tileset object.",
-  "baseNode":"Node_Tile_Tileset",
-  "io":[
-    "surface",
-    "tileset"
-  ],
-  "name":"Tileset"
-}

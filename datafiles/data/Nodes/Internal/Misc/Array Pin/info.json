@@ -1,8 +1,0 @@
-{
-  "tooltip":"Create a pin that can receive multiple values and return an array.",
-  "baseNode":"Node_Array_Pin",
-  "io":[
-    "any"
-  ],
-  "name":"Array Pin"
-}

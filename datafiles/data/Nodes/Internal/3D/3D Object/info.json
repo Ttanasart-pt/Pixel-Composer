@@ -1,9 +1,0 @@
-{
-  "tooltip":"Load .obj file from your computer as a 3D object.",
-  "baseNode":"Node_3D_Mesh_Obj",
-  "io":[
-    "d3Mesh"
-  ],
-  "build":"Node_create_3D_Obj",
-  "name":"3D Object"
-}

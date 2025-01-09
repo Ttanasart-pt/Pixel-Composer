@@ -1,9 +1,0 @@
-{
-  "tooltip":"Generate text\/string data.",
-  "baseNode":"Node_String",
-  "io":[
-    "text",
-    "text"
-  ],
-  "name":"Text"
-}

@@ -1,8 +1,0 @@
-{
-  "tooltip":"Move rotate and scale a path.",
-  "baseNode":"Node_Path_Transform",
-  "io":[
-    "pathnode"
-  ],
-  "name":"Transform Path"
-}

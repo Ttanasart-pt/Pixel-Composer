@@ -1,8 +1,0 @@
-{
-  "tooltip":"Output value based on index.",
-  "baseNode":"Node_Switch",
-  "io":[
-    "any"
-  ],
-  "name":"Switch"
-}

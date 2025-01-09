@@ -1,8 +1,0 @@
-{
-  "tooltip":"Distort image using variety of tools.",
-  "baseNode":"Node_Liquefy",
-  "io":[
-    "surface"
-  ],
-  "name":"Liquefy"
-}

@@ -1,8 +1,0 @@
-{
-  "tooltip":"Generate honeycomb noise",
-  "baseNode":"Node_Honeycomb_Noise",
-  "io":[
-    "surface"
-  ],
-  "name":"Honeycomb Noise"
-}

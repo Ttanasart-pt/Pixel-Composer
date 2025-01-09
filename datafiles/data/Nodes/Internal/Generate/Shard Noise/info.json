@@ -1,8 +1,0 @@
-{
-  "tooltip":"Generate glass shard-looking noise",
-  "baseNode":"Node_Shard_Noise",
-  "io":[
-    "surface"
-  ],
-  "name":"Shard Noise"
-}

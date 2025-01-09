@@ -1,9 +1,0 @@
-{
-  "tooltip":"Calculate volume of an audio bit array.",
-  "baseNode":"Node_Audio_Loudness",
-  "io":[
-    "audioBit",
-    "float"
-  ],
-  "name":"Audio Volume"
-}

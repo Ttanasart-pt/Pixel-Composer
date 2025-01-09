@@ -1,0 +1,13 @@
+{
+  "tooltip":"Save wav audio file.",
+  "spr":"s_node_wav_file_write",
+  "pxc_version":1145.0,
+  "baseNode":"Node_WAV_File_Write",
+  "io":[
+    "text",
+    "audioBit",
+    "audioBit",
+    "text"
+  ],
+  "name":"WAV File Out"
+}

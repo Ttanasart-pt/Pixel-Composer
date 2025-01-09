@@ -1,8 +1,0 @@
-{
-  "tooltip":"Generate hexagonal grid pattern.",
-  "baseNode":"Node_Grid_Hex",
-  "io":[
-    "surface"
-  ],
-  "name":"Hexagonal Grid"
-}

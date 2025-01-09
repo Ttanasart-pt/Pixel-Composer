@@ -1,8 +1,0 @@
-{
-  "tooltip":"Sort palette with specified order.",
-  "baseNode":"Node_Palette_Sort",
-  "io":[
-    "color"
-  ],
-  "name":"Sort Palette"
-}

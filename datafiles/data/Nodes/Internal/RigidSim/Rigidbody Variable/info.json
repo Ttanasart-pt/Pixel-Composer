@@ -1,8 +1,0 @@
-{
-  "tooltip":"Extract veriable from rigidbody object.",
-  "baseNode":"Node_Rigid_Variable",
-  "io":[
-    "rigid"
-  ],
-  "name":"Rigidbody Variable"
-}

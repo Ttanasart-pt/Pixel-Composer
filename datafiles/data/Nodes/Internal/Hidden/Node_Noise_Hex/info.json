@@ -1,0 +1,9 @@
+{
+  "spr":"s_node_grid_hex_noise",
+  "pxc_version":1090.0,
+  "show_in_recent":false,
+  "baseNode":"Node_Noise_Hex",
+  "io":[
+  ],
+  "name":"Hexagonal Noise"
+}

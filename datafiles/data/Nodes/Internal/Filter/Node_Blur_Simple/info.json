@@ -1,0 +1,10 @@
+{
+  "tooltip":"Blur image using simpler algorithm. Allowing for variable blur strength.",
+  "spr":"s_node_blur_simple",
+  "pxc_version":1070.0,
+  "baseNode":"Node_Blur_Simple",
+  "io":[
+    "surface"
+  ],
+  "name":"Non-Uniform Blur"
+}

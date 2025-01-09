@@ -115,8 +115,7 @@ function __test_load_current_collections() {
 }
 
 function __test_load_all_nodes() {
-	var amo  = ds_map_size(ALL_NODES);
-	var k    = ds_map_find_first(ALL_NODES);
+	var key  = struct_get_names(ALL_NODES);
 	var xx   = 0;
 	var yy   = 0;
 	var col  = 10;
@@ -129,11 +128,12 @@ function __test_load_all_nodes() {
 	var inded = 1000;
 	
 	LOADING = true;
-	repeat(amo) {
+	for( var i = 0, n = array_length(key); i < n; i++ ) {
+		var k = key[i];
+		
 		if(index > inded) break;
 		if(index > indst) {
-			var node = ALL_NODES[? k];
-			k = ds_map_find_next(ALL_NODES, k);
+			var node = ALL_NODES[$ k];
 			
 			if(!node.testable) continue;
 			
@@ -147,11 +147,11 @@ function __test_load_all_nodes() {
 				yy += 160;
 			} else 
 				xx += 160;
-			if(b) {
-				if(outj) 
-				for( var i = 0; i < array_length(b.inputs); i++ ) {
-					if(b.inputs[i].type != VALUE_TYPE.surface) continue;
-					b.inputs[i].setFrom(outj);	
+				
+			if(b && outj) {
+				for( var j = 0; j < array_length(b.inputs); j++ ) {
+					if(b.inputs[j].type != VALUE_TYPE.surface) continue;
+					b.inputs[j].setFrom(outj);	
 					break;
 				}
 			}

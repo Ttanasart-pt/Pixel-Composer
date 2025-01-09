@@ -1,8 +1,0 @@
-{
-  "tooltip":"Create frame surrounding nodes.",
-  "baseNode":"Node_Frame",
-  "io":[
-    "any"
-  ],
-  "name":"Frame"
-}

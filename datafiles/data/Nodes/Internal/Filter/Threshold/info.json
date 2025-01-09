@@ -1,8 +1,0 @@
-{
-  "tooltip":"Set a threshold where pixel darker will becomes black, and brighter to white. Also works with alpha.",
-  "baseNode":"Node_Threshold",
-  "io":[
-    "surface"
-  ],
-  "name":"Threshold"
-}

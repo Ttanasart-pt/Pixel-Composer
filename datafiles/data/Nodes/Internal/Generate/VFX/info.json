@@ -1,8 +1,0 @@
-{
-  "tooltip":"Create VFX group, which generate particles that can be manipulated using different force nodes.",
-  "baseNode":"Node_VFX_Group_Inline",
-  "io":[
-    "surface"
-  ],
-  "name":"VFX"
-}

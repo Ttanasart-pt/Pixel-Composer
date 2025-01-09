@@ -1,8 +1,0 @@
-{
-  "tooltip":"Generate game engines-ready tileset.",
-  "baseNode":"Node_MK_Tile",
-  "io":[
-    "surface"
-  ],
-  "name":"MK Tile"
-}

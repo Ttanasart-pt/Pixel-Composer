@@ -1,8 +1,0 @@
-{
-  "tooltip":"Generate cloth fold noise",
-  "baseNode":"Node_Fold_Noise",
-  "io":[
-    "surface"
-  ],
-  "name":"Fold Noise"
-}

@@ -1,8 +1,0 @@
-{
-  "tooltip":"Apply velocity to smoke.",
-  "baseNode":"Node_Smoke_Apply_Velocity",
-  "io":[
-    "sdomain"
-  ],
-  "name":"Apply Velocity"
-}

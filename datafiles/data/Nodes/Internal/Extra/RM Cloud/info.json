@@ -1,8 +1,0 @@
-{
-  "tooltip":"Generate distance field cloud texture.",
-  "baseNode":"Node_RM_Cloud",
-  "io":[
-    "surface"
-  ],
-  "name":"RM Cloud"
-}

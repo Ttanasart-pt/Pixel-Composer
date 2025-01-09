@@ -1,8 +1,0 @@
-{
-  "tooltip":"Returns index of an array member that match a condition.",
-  "baseNode":"Node_Array_Find",
-  "io":[
-    "any"
-  ],
-  "name":"Array Find"
-}

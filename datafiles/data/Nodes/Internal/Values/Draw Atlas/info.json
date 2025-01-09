@@ -1,8 +1,0 @@
-{
-  "tooltip":"Render image atlas to a surface.",
-  "baseNode":"Node_Atlas_Draw",
-  "io":[
-    "surface"
-  ],
-  "name":"Draw Atlas"
-}

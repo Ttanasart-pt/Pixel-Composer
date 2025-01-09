@@ -1,0 +1,9 @@
+{
+  "spr":"s_node_pb_fx_outline",
+  "baseNode":"Node_PB_Fx_Outline",
+  "io":[
+    "pbBox"
+  ],
+  "name":"Outline",
+  "show_in_recent":false
+}

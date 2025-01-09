@@ -1,0 +1,12 @@
+{
+  "tooltip":"Convert greyscale to alpha value.",
+  "alias":[
+    "gray to alpha"
+  ],
+  "spr":"s_node_grey_alpha",
+  "baseNode":"Node_Grey_Alpha",
+  "io":[
+    "surface"
+  ],
+  "name":"Grey to Alpha"
+}

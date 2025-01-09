@@ -1,0 +1,10 @@
+{
+  "tooltip":"Adjust brightness of an image using curves.",
+  "spr":"s_node_curve",
+  "pxc_version":1120.0,
+  "baseNode":"Node_Curve",
+  "io":[
+    "surface"
+  ],
+  "name":"Curve"
+}

@@ -1,8 +1,0 @@
-{
-  "tooltip":"Displace each pixel of the image randomly.",
-  "baseNode":"Node_Pixel_Cloud",
-  "io":[
-    "surface"
-  ],
-  "name":"Pixel Cloud"
-}

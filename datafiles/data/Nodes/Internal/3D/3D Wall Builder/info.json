@@ -1,9 +1,0 @@
-{
-  "tooltip":"Create 3D wall be extruding 2D path.",
-  "baseNode":"Node_3D_Mesh_Wall_Builder",
-  "io":[
-    "d3Mesh",
-    "pathnode"
-  ],
-  "name":"3D Wall Builder"
-}

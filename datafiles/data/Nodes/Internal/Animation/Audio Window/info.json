@@ -1,9 +1,0 @@
-{
-  "tooltip":"Take a slice of an audio array based on the current frame.",
-  "baseNode":"Node_Audio_Window",
-  "io":[
-    "audioBit",
-    "float"
-  ],
-  "name":"Audio Window"
-}

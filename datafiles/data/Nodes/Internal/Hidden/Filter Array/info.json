@@ -1,7 +1,0 @@
-{
-  "tooltip":"Filter array using condition.",
-  "baseNode":"Node_Iterate_Filter",
-  "io":[
-  ],
-  "name":"Filter Array"
-}

@@ -1,8 +1,0 @@
-{
-  "tooltip":"Generate checkerboard pattern.",
-  "baseNode":"Node_Checker",
-  "io":[
-    "surface"
-  ],
-  "name":"Checker"
-}

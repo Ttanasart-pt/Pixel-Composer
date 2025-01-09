@@ -1,0 +1,10 @@
+{
+  "tooltip":"Sample a 2D position from a path",
+  "spr":"s_node_path_sample",
+  "baseNode":"Node_Path_Sample",
+  "io":[
+    "pathnode",
+    "float"
+  ],
+  "name":"Sample Path"
+}

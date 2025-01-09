@@ -1,8 +1,0 @@
-{
-  "tooltip":"Extract variable from particle objects.",
-  "baseNode":"Node_VFX_Variable",
-  "io":[
-    "particle"
-  ],
-  "name":"VFX Variable"
-}

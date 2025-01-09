@@ -1,8 +1,0 @@
-{
-  "tooltip":"Export 3D mesh as .obj file",
-  "baseNode":"Node_3D_Mesh_Export",
-  "io":[
-    "d3Mesh"
-  ],
-  "name":"Mesh Export"
-}

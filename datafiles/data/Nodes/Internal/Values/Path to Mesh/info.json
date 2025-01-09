@@ -1,9 +1,0 @@
-{
-  "tooltip":"Create mesh from path.",
-  "baseNode":"Node_Mesh_Create_Path",
-  "io":[
-    "pathnode",
-    "mesh"
-  ],
-  "name":"Path to Mesh"
-}

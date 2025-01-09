@@ -1,8 +1,0 @@
-{
-  "tooltip":"Blur pixel along path.",
-  "baseNode":"Node_Blur_Path",
-  "io":[
-    "surface"
-  ],
-  "name":"Path Blur"
-}

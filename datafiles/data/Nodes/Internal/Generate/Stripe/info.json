@@ -1,8 +1,0 @@
-{
-  "tooltip":"Generate stripe pattern.",
-  "baseNode":"Node_Stripe",
-  "io":[
-    "surface"
-  ],
-  "name":"Stripe"
-}

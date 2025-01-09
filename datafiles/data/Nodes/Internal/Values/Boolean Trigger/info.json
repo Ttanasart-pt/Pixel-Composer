@@ -1,9 +1,0 @@
-{
-  "tooltip":"Create trigger based on boolean condition.",
-  "baseNode":"Node_Trigger_Bool",
-  "io":[
-    "boolean",
-    "trigger"
-  ],
-  "name":"Boolean Trigger"
-}

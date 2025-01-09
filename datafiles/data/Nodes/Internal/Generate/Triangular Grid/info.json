@@ -1,8 +1,0 @@
-{
-  "tooltip":"Generate triangular grid pattern.",
-  "baseNode":"Node_Grid_Tri",
-  "io":[
-    "surface"
-  ],
-  "name":"Triangular Grid"
-}

@@ -1,8 +1,0 @@
-{
-  "tooltip":"Map image on to each individual pixels of another image.",
-  "baseNode":"Node_Pixel_Sampler",
-  "io":[
-    "surface"
-  ],
-  "name":"Pixel Sampler"
-}

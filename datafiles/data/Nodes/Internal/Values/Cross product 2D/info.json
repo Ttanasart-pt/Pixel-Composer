@@ -1,8 +1,0 @@
-{
-  "tooltip":"Calculate cross product of 2 vec2s.",
-  "baseNode":"Node_Vector_Cross_2D",
-  "io":[
-    "float"
-  ],
-  "name":"Cross product 2D"
-}

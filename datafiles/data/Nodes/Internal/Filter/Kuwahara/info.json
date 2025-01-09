@@ -1,8 +1,0 @@
-{
-  "tooltip":"Apply Kuwahara filter. Creating a watercolor-like effect.",
-  "baseNode":"Node_Kuwahara",
-  "io":[
-    "surface"
-  ],
-  "name":"Kuwahara"
-}

@@ -608,9 +608,9 @@ function Panel_Collection() : PanelContent() constructor {
 			var _favs = struct_get_names(global.FAV_NODES);
 			for( var i = 0, n = array_length(_favs); i < n; i++ ) {
 				var _nodeIndex = _favs[i];
-				if(!ds_map_exists(ALL_NODES, _nodeIndex)) continue;
+				if(!struct_has(ALL_NODES, _nodeIndex)) continue;
 				
-				var _node = ALL_NODES[? _nodeIndex];
+				var _node = ALL_NODES[$ _nodeIndex];
 				if(_node.show_in_recent) 
 					ds_list_add(node_temp_list, _node);
 			}

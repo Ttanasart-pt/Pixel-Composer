@@ -1,8 +1,0 @@
-{
-  "tooltip":"Create value changing overtime in wave pattern.",
-  "baseNode":"Node_Fn_WaveTable",
-  "io":[
-    "float"
-  ],
-  "name":"WaveTable"
-}

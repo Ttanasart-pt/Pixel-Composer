@@ -1,8 +1,0 @@
-{
-  "tooltip":"Replace rigidbody object variable with a new one.",
-  "baseNode":"Node_Rigid_Override",
-  "io":[
-    "rigid"
-  ],
-  "name":"Rigidbody Override"
-}

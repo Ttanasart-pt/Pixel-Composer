@@ -1,0 +1,10 @@
+{
+  "spr":"s_node_flip_vortex",
+  "pxc_version":11680.0,
+  "show_in_recent":false,
+  "baseNode":"Node_FLIP_Vortex",
+  "io":[
+    "fDomain"
+  ],
+  "name":"Vortex"
+}

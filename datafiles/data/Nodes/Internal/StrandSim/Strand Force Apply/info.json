@@ -1,8 +1,0 @@
-{
-  "tooltip":"Apply general force to strands.",
-  "baseNode":"Node_Strand_Force_Apply",
-  "io":[
-    "strands"
-  ],
-  "name":"Strand Force Apply"
-}

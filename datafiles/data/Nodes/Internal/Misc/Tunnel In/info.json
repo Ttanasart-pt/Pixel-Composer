@@ -1,8 +1,0 @@
-{
-  "tooltip":"Create tunnel for sending value based on key matching.",
-  "baseNode":"Node_Tunnel_In",
-  "io":[
-    "any"
-  ],
-  "name":"Tunnel In"
-}

@@ -1,8 +1,0 @@
-{
-  "tooltip":"Create path with predefined shape.",
-  "baseNode":"Node_Path_Shape",
-  "io":[
-    "pathnode"
-  ],
-  "name":"Shape Path"
-}

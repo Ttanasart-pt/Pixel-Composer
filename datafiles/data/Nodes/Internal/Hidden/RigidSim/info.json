@@ -1,7 +1,0 @@
-{
-  "tooltip":"Create group for rigidbody simulation.",
-  "baseNode":"Node_Rigid_Group",
-  "io":[
-  ],
-  "name":"RigidSim"
-}

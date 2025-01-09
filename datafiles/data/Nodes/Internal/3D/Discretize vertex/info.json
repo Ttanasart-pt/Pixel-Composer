@@ -1,8 +1,0 @@
-{
-  "tooltip":"Round out vertex position to a specified step.",
-  "baseNode":"Node_3D_Round_Vertex",
-  "io":[
-    "d3Mesh"
-  ],
-  "name":"Discretize vertex"
-}

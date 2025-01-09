@@ -1,8 +1,0 @@
-{
-  "tooltip":"Create normal map using greyscale value as height.",
-  "baseNode":"Node_Normal",
-  "io":[
-    "surface"
-  ],
-  "name":"Normal"
-}

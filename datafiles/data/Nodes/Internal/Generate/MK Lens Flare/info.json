@@ -1,8 +1,0 @@
-{
-  "tooltip":"Generate lens flare.",
-  "baseNode":"Node_MK_Flare",
-  "io":[
-    "surface"
-  ],
-  "name":"MK Lens Flare"
-}

@@ -1,8 +1,0 @@
-{
-  "tooltip":"Create 3D cylinder mesh",
-  "baseNode":"Node_3D_Mesh_Cylinder",
-  "io":[
-    "d3Mesh"
-  ],
-  "name":"3D Cylinder"
-}

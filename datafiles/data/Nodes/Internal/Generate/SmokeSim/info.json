@@ -1,8 +1,0 @@
-{
-  "tooltip":"Create group for smoke simulation.",
-  "baseNode":"Node_Smoke_Group_Inline",
-  "io":[
-    "surface"
-  ],
-  "name":"SmokeSim"
-}

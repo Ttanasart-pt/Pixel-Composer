@@ -1,8 +1,0 @@
-{
-  "tooltip":"Generate square-based patterns.",
-  "baseNode":"Node_Box_Pattern",
-  "io":[
-    "surface"
-  ],
-  "name":"Box Pattern"
-}

@@ -1,8 +1,0 @@
-{
-  "tooltip":"Generate perlin noise.",
-  "baseNode":"Node_Perlin",
-  "io":[
-    "surface"
-  ],
-  "name":"Perlin Noise"
-}

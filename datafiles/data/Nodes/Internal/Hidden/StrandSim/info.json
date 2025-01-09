@@ -1,7 +1,0 @@
-{
-  "tooltip":"Create group for hair simulation.",
-  "baseNode":"Node_Strand_Group",
-  "io":[
-  ],
-  "name":"StrandSim"
-}

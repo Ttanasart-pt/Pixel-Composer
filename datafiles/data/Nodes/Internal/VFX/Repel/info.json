@@ -1,8 +1,0 @@
-{
-  "tooltip":"Move particle away from point.",
-  "baseNode":"Node_VFX_Repel",
-  "io":[
-    "particle"
-  ],
-  "name":"Repel"
-}

@@ -1,8 +1,0 @@
-{
-  "tooltip":"Get palatte and array of key positions from gradient.",
-  "baseNode":"Node_Gradient_Extract",
-  "io":[
-    "gradient"
-  ],
-  "name":"Gradient Data"
-}

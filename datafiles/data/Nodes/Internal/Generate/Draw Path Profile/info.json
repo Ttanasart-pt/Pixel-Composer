@@ -1,8 +1,0 @@
-{
-  "tooltip":"Fill-in an area on one side of a path.",
-  "baseNode":"Node_Path_Profile",
-  "io":[
-    "surface"
-  ],
-  "name":"Draw Path Profile"
-}

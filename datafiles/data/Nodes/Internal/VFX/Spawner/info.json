@@ -1,8 +1,0 @@
-{
-  "tooltip":"Spawn new particles.",
-  "baseNode":"Node_VFX_Spawner",
-  "io":[
-    "particle"
-  ],
-  "name":"Spawner"
-}

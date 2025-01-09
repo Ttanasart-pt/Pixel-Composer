@@ -1,8 +1,0 @@
-{
-  "tooltip":"Morph pixel between two surfaces.",
-  "baseNode":"Node_Morph_Surface",
-  "io":[
-    "surface"
-  ],
-  "name":"Morph Surface"
-}

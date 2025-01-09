@@ -1,0 +1,9 @@
+{
+  "tooltip":"Create color value.",
+  "spr":"s_node_color_out",
+  "baseNode":"Node_Color",
+  "io":[
+    "color"
+  ],
+  "name":"Color"
+}

@@ -1,7 +1,0 @@
-{
-  "tooltip":"Create websocket server to receive data from the network.",
-  "baseNode":"Node_Websocket_Receiver",
-  "io":[
-  ],
-  "name":"Websocket Receiver"
-}

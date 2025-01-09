@@ -1,8 +1,0 @@
-{
-  "tooltip":"Shuffle image while keeping pixel colors.",
-  "baseNode":"Node_Shuffle",
-  "io":[
-    "surface"
-  ],
-  "name":"Shuffle"
-}

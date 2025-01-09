@@ -1,0 +1,12 @@
+{
+  "tooltip":"Convert alpha value into solid greyscale.",
+  "alias":[
+    "alpha to gray"
+  ],
+  "spr":"s_node_alpha_grey",
+  "baseNode":"Node_Alpha_Grey",
+  "io":[
+    "surface"
+  ],
+  "name":"Alpha to Grey"
+}

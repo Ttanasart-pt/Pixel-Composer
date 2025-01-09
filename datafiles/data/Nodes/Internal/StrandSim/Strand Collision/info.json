@@ -1,8 +1,0 @@
-{
-  "tooltip":"Create solid object for strands to collides to.",
-  "baseNode":"Node_Strand_Collision",
-  "io":[
-    "strands"
-  ],
-  "name":"Strand Collision"
-}

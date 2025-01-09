@@ -1,8 +1,0 @@
-{
-  "tooltip":"Output value based on conditions.",
-  "baseNode":"Node_Condition",
-  "io":[
-    "any"
-  ],
-  "name":"Condition"
-}

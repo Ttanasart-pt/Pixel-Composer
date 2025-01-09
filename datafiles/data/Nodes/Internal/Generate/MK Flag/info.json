@@ -1,8 +1,0 @@
-{
-  "tooltip":"Generate waving flag.",
-  "baseNode":"Node_MK_Flag",
-  "io":[
-    "surface"
-  ],
-  "name":"MK Flag"
-}

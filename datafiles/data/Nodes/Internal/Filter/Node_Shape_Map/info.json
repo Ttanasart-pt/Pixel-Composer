@@ -1,0 +1,10 @@
+{
+  "tooltip":"Map image into shapes.",
+  "spr":"s_node_shape_map",
+  "pxc_version":11660.0,
+  "baseNode":"Node_Shape_Map",
+  "io":[
+    "surface"
+  ],
+  "name":"Shape Map"
+}

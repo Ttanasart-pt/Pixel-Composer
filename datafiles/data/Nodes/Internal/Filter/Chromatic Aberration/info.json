@@ -1,7 +1,0 @@
-{
-  "tooltip":"Apply chromatic aberration effect to the image.",
-  "baseNode":"Node_Chromatic_Aberration",
-  "io":[
-  ],
-  "name":"Chromatic Aberration"
-}

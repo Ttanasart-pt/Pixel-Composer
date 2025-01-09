@@ -1,0 +1,14 @@
+{
+  "tooltip":"Rig mesh to armature system.",
+  "alias":[
+    "rigging",
+    "bone"
+  ],
+  "spr":"s_node_armature_mesh_rig",
+  "pxc_version":118040.0,
+  "baseNode":"Node_Armature_Mesh_Rig",
+  "io":[
+    "surface"
+  ],
+  "name":"Armature Mesh Rig"
+}

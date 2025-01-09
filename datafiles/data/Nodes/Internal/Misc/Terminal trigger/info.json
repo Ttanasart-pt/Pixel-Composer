@@ -1,8 +1,0 @@
-{
-  "tooltip":"",
-  "baseNode":"Node_Terminal_Trigger",
-  "io":[
-    "any"
-  ],
-  "name":"Terminal trigger"
-}

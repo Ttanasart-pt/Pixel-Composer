@@ -1,8 +1,0 @@
-{
-  "tooltip":"Repeat paths.",
-  "baseNode":"Node_Path_Repeat",
-  "io":[
-    "pathnode"
-  ],
-  "name":"Repeat Path"
-}

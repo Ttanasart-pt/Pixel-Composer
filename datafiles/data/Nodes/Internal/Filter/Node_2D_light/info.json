@@ -1,0 +1,9 @@
+{
+  "tooltip":"Apply different shaped light on the image.",
+  "spr":"s_node_2d_light",
+  "baseNode":"Node_2D_light",
+  "io":[
+    "surface"
+  ],
+  "name":"2D Light"
+}

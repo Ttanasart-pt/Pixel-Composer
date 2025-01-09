@@ -1,0 +1,9 @@
+{
+  "spr":"s_node_pb_fx_shading",
+  "baseNode":"Node_PB_Fx_Shading",
+  "io":[
+    "pbBox"
+  ],
+  "name":"Shading",
+  "show_in_recent":false
+}

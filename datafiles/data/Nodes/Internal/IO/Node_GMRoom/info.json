@@ -1,0 +1,8 @@
+{
+  "spr":"s_gmroom",
+  "pxc_version":118041.0,
+  "baseNode":"Node_GMRoom",
+  "io":[
+  ],
+  "name":"GMRoom"
+}

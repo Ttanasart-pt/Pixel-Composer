@@ -1,0 +1,8 @@
+{
+  "spr":"s_node_gui_in",
+  "baseNode":"Node_Application_In",
+  "io":[
+    "any"
+  ],
+  "name":"GUI In"
+}

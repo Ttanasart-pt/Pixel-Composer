@@ -1,8 +1,0 @@
-{
-  "tooltip":"Blend animation by filling in the pixel 'in-between' two or more frames.",
-  "baseNode":"Node_Trail",
-  "io":[
-    "surface"
-  ],
-  "name":"Trail"
-}

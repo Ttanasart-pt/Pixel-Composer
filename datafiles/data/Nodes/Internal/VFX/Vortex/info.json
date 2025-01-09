@@ -1,8 +1,0 @@
-{
-  "tooltip":"Rotate particle around a point.",
-  "baseNode":"Node_VFX_Vortex",
-  "io":[
-    "particle"
-  ],
-  "name":"Vortex"
-}

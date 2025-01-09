@@ -1,0 +1,14 @@
+{
+  "tooltip":"Generate leaves falling effects.",
+  "alias":[
+    "Leaf",
+    "Leaves"
+  ],
+  "spr":"s_node_mk_fall",
+  "pxc_version":11630.0,
+  "baseNode":"Node_MK_Fall",
+  "io":[
+    "surface"
+  ],
+  "name":"MK Fall"
+}

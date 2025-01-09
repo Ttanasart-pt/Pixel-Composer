@@ -1,0 +1,12 @@
+{
+  "tooltip":"Add border to the image.",
+  "alias":[
+    "border"
+  ],
+  "spr":"s_node_outline",
+  "baseNode":"Node_Outline",
+  "io":[
+    "surface"
+  ],
+  "name":"Outline"
+}

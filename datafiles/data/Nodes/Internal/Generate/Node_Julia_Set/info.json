@@ -1,0 +1,10 @@
+{
+  "tooltip":"Generate Julia fractal.",
+  "spr":"s_node_julia_set",
+  "pxc_version":118056.0,
+  "baseNode":"Node_Julia_Set",
+  "io":[
+    "surface"
+  ],
+  "name":"Julia"
+}

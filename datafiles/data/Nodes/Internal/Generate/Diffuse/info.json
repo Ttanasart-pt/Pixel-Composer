@@ -1,8 +1,0 @@
-{
-  "tooltip":"Simulate diffusion like simulation.",
-  "baseNode":"Node_Diffuse",
-  "io":[
-    "surface"
-  ],
-  "name":"Diffuse"
-}

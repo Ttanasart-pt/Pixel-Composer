@@ -1,8 +1,0 @@
-{
-  "tooltip":"Split array members into individual outputs.",
-  "baseNode":"Node_Array_Split",
-  "io":[
-    "any"
-  ],
-  "name":"Array Split"
-}

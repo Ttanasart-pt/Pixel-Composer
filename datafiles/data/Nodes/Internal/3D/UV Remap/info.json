@@ -1,8 +1,0 @@
-{
-  "tooltip":"Remap UV map using plane.",
-  "baseNode":"Node_3D_UV_Remap",
-  "io":[
-    "d3Mesh"
-  ],
-  "name":"UV Remap"
-}

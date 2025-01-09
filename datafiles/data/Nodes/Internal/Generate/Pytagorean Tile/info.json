@@ -1,8 +1,0 @@
-{
-  "tooltip":"Generate Pytagorean tile pattern.",
-  "baseNode":"Node_Pytagorean_Tile",
-  "io":[
-    "surface"
-  ],
-  "name":"Pytagorean Tile"
-}

@@ -1,8 +1,0 @@
-{
-  "tooltip":"",
-  "baseNode":"Node_Rigid_Global",
-  "io":[
-    "rigid"
-  ],
-  "name":"RigidSim Global"
-}

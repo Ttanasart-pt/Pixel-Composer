@@ -1,8 +1,0 @@
-{
-  "tooltip":"Trim path.",
-  "baseNode":"Node_Path_Trim",
-  "io":[
-    "pathnode"
-  ],
-  "name":"Trim Path"
-}

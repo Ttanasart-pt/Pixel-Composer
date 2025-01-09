@@ -1,8 +1,0 @@
-{
-  "tooltip":"Move gradients keys.",
-  "baseNode":"Node_Gradient_Shift",
-  "io":[
-    "gradient"
-  ],
-  "name":"Gradient Shift"
-}

@@ -1,0 +1,10 @@
+{
+  "tooltip":"Generate waving flag.",
+  "spr":"s_node_mk_flag",
+  "pxc_version":11600.0,
+  "baseNode":"Node_MK_Flag",
+  "io":[
+    "surface"
+  ],
+  "name":"MK Flag"
+}

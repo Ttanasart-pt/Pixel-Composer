@@ -1,8 +1,0 @@
-{
-  "tooltip":"Replace mesh material with a new one.",
-  "baseNode":"Node_3D_Set_Material",
-  "io":[
-    "d3Mesh"
-  ],
-  "name":"Set Material"
-}

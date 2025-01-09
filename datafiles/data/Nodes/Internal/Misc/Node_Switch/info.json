@@ -1,0 +1,10 @@
+{
+  "tooltip":"Output value based on index.",
+  "spr":"s_node_switch",
+  "pxc_version":1090.0,
+  "baseNode":"Node_Switch",
+  "io":[
+    "any"
+  ],
+  "name":"Switch"
+}

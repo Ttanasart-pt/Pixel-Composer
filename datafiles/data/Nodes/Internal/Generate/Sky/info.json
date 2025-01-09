@@ -1,8 +1,0 @@
-{
-  "tooltip":"Generate sky texture using different model.",
-  "baseNode":"Node_Sky",
-  "io":[
-    "surface"
-  ],
-  "name":"Sky"
-}

@@ -1,8 +1,0 @@
-{
-  "tooltip":"Transform 3D scene, accepts array of transformations for each objects.",
-  "baseNode":"Node_3D_Transform_Scene",
-  "io":[
-    "d3Mesh"
-  ],
-  "name":"Transform Scene"
-}

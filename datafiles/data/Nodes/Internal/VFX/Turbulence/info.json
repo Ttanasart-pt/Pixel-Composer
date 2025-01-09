@@ -1,8 +1,0 @@
-{
-  "tooltip":"Move particle in range randomly.",
-  "baseNode":"Node_VFX_Turbulence",
-  "io":[
-    "particle"
-  ],
-  "name":"Turbulence"
-}

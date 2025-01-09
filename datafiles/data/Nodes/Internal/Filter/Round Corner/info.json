@@ -1,8 +1,0 @@
-{
-  "tooltip":"Round out sharp corner of the image.",
-  "baseNode":"Node_Corner",
-  "io":[
-    "surface"
-  ],
-  "name":"Round Corner"
-}

@@ -1,0 +1,10 @@
+{
+  "tooltip":"Control animation state with triggers.",
+  "spr":"s_node_animation_control",
+  "pxc_version":1145.0,
+  "baseNode":"Node_Animation_Control",
+  "io":[
+    "any"
+  ],
+  "name":"Animation Control"
+}

@@ -1,0 +1,17 @@
+{
+  "spr":"s_node_group_input",
+  "baseNode":"Node_Group_Input",
+  "io":[
+    "any",
+    "any",
+    "any",
+    "any",
+    "any",
+    "any",
+    "any",
+    "any",
+    "any"
+  ],
+  "name":"Input",
+  "show_in_recent":false
+}

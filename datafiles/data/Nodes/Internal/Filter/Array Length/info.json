@@ -1,9 +1,0 @@
-{
-  "tooltip":"",
-  "baseNode":"Node_Iterator_Each_Length",
-  "io":[
-    "float",
-    "float"
-  ],
-  "name":"Array Length"
-}

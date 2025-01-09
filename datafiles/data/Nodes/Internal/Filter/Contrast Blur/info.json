@@ -1,8 +1,0 @@
-{
-  "tooltip":"Blur only pixel of a similiar color.",
-  "baseNode":"Node_Blur_Contrast",
-  "io":[
-    "surface"
-  ],
-  "name":"Contrast Blur"
-}

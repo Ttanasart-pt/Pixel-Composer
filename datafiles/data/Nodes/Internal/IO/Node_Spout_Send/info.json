@@ -1,0 +1,10 @@
+{
+  "tooltip":"Send surface through Spout.",
+  "spr":"s_node_spout_send",
+  "pxc_version":11600.0,
+  "baseNode":"Node_Spout_Send",
+  "io":[
+    "surface"
+  ],
+  "name":"Spout Sender"
+}

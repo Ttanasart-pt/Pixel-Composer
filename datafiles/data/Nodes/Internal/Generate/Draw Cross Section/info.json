@@ -1,8 +1,0 @@
-{
-  "tooltip":"Map the brightness of pixels on a linear axis into a surface.",
-  "baseNode":"Node_Cross_Section",
-  "io":[
-    "surface"
-  ],
-  "name":"Draw Cross Section"
-}

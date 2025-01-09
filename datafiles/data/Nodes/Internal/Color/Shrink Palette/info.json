@@ -1,8 +1,0 @@
-{
-  "tooltip":"Reduce palette size by collapsing similiar colors.",
-  "baseNode":"Node_Palette_Shrink",
-  "io":[
-    "color"
-  ],
-  "name":"Shrink Palette"
-}

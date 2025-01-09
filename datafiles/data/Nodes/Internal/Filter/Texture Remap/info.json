@@ -1,8 +1,0 @@
-{
-  "tooltip":"Remap image using texture map. Where red channel control x position and green channel control y position.",
-  "baseNode":"Node_Texture_Remap",
-  "io":[
-    "surface"
-  ],
-  "name":"Texture Remap"
-}

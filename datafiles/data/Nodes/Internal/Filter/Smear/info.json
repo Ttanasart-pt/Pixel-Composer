@@ -1,8 +1,0 @@
-{
-  "tooltip":"Stretch out brighter pixel in one direction.",
-  "baseNode":"Node_Smear",
-  "io":[
-    "surface"
-  ],
-  "name":"Smear"
-}

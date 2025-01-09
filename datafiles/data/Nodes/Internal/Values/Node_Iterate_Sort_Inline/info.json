@@ -1,0 +1,10 @@
+{
+  "tooltip":"Sort array using node graph.",
+  "spr":"s_node_sort_array",
+  "pxc_version":1143.0,
+  "baseNode":"Node_Iterate_Sort_Inline",
+  "io":[
+    "any"
+  ],
+  "name":"Sort Array Inline"
+}

@@ -1,8 +1,0 @@
-{
-  "tooltip":"Add solid object that smoke can collides to.",
-  "baseNode":"Node_Smoke_Add_Collider",
-  "io":[
-    "sdomain"
-  ],
-  "name":"Add Collider"
-}

@@ -1,8 +1,0 @@
-{
-  "tooltip":"Attract particle in range to one point.",
-  "baseNode":"Node_VFX_Attract",
-  "io":[
-    "particle"
-  ],
-  "name":"Attract"
-}

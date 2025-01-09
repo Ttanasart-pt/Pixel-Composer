@@ -1,8 +1,0 @@
-{
-  "tooltip":"Wrap image by converting it to mesh, and using control points.",
-  "baseNode":"Node_Mesh_Warp",
-  "io":[
-    "surface"
-  ],
-  "name":"Mesh Warp"
-}

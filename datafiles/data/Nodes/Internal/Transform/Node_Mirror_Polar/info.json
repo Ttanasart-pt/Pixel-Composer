@@ -1,0 +1,13 @@
+{
+  "tooltip":"Reflect the image around multiple radial reflection lines.",
+  "alias":[
+    "kaleidoscope"
+  ],
+  "spr":"s_node_mirror_polar",
+  "pxc_version":118062.0,
+  "baseNode":"Node_Mirror_Polar",
+  "io":[
+    "surface"
+  ],
+  "name":"Polar Mirror"
+}

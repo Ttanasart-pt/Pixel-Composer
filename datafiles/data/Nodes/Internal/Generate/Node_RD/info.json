@@ -1,0 +1,10 @@
+{
+  "tooltip":"Simulate reaction diffusion effect.",
+  "spr":"s_node_reaction_diffusion",
+  "pxc_version":11630.0,
+  "baseNode":"Node_RD",
+  "io":[
+    "surface"
+  ],
+  "name":"Reaction Diffusion"
+}

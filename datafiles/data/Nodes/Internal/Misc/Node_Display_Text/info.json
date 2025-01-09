@@ -1,0 +1,9 @@
+{
+  "tooltip":"Display text on the graph.",
+  "spr":"s_node_display_text",
+  "baseNode":"Node_Display_Text",
+  "io":[
+    "text"
+  ],
+  "name":"Display Text"
+}

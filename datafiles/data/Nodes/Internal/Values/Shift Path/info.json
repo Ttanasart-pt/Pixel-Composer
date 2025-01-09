@@ -1,8 +1,0 @@
-{
-  "tooltip":"Move path along its normal.",
-  "baseNode":"Node_Path_Shift",
-  "io":[
-    "pathnode"
-  ],
-  "name":"Shift Path"
-}

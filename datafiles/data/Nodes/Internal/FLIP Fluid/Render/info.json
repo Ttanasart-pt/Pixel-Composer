@@ -1,9 +1,0 @@
-{
-  "tooltip":"",
-  "baseNode":"Node_FLIP_Render",
-  "io":[
-    "fDomain",
-    "surface"
-  ],
-  "name":"Render"
-}

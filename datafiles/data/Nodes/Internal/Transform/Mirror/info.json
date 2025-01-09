@@ -1,9 +1,0 @@
-{
-  "tooltip":"Reflect the image along a reflection line.",
-  "baseNode":"Node_Mirror",
-  "io":[
-    "surface",
-    "surface"
-  ],
-  "name":"Mirror"
-}

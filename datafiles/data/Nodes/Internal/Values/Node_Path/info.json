@@ -1,0 +1,11 @@
+{
+  "tooltip":"Create path using bezier curve.",
+  "spr":"s_node_path",
+  "baseNode":"Node_Path",
+  "io":[
+    "float",
+    "pathnode",
+    "float"
+  ],
+  "name":"Path"
+}

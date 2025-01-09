@@ -1,8 +1,0 @@
-{
-  "tooltip":"Generate area data.",
-  "baseNode":"Node_Area",
-  "io":[
-    "float"
-  ],
-  "name":"Area"
-}

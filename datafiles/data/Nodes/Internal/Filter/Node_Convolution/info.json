@@ -1,0 +1,13 @@
+{
+  "tooltip":"Apply convolution operation on each pixel using a custom 3x3 kernel.",
+  "alias":[
+    "kernel"
+  ],
+  "spr":"s_node_convolution",
+  "pxc_version":1090.0,
+  "baseNode":"Node_Convolution",
+  "io":[
+    "surface"
+  ],
+  "name":"Convolution"
+}

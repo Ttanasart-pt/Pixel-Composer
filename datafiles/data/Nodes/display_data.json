@@ -1,0 +1,1023 @@
+{
+    "list": [
+        {
+            "name": "Home",
+            "nodes": []
+        },
+        {
+            "name": "Group",
+            "nodes": [
+                { "label": "Groups" },
+                "Node_Group_Input",
+                "Node_Group_Output",
+                "Node_Group_Thumbnail"
+            ],
+            "context": ["Node_Group"],
+            "color": "node_blend_collection"
+        },
+        {
+            "name": "Loop",
+            "nodes": [
+                { "label": "Groups" },
+                "Node_Iterate",
+                "Node_Iterator_Input",
+                "Node_Iterator_Output",
+                "Node_Group_Input",
+                "Node_Group_Output",
+                "Node_Group_Thumbnail",
+
+                { "label": "Loops" },
+                "Node_Iterator_Index",
+                "Node_Iterator_Length"
+            ],
+            "context": ["Node_Iterate"],
+            "color": "node_blend_loop"
+        },
+        {
+            "name": "Loop",
+            "nodes": [
+                { "label": "Loops" },
+                "Node_Iterator_Index",
+                "Node_Iterator_Each_Length"
+            ],
+            "context": ["Node_Iterate_Inline"],
+            "color": "node_blend_loop"
+        },
+        {
+            "name": "Loop",
+            "nodes": [
+                { "label": "Groups" },
+                "Node_Group_Input",
+                "Node_Group_Output",
+                "Node_Group_Thumbnail",
+
+                { "label": "Loops" },
+                "Node_Iterator_Index",
+                "Node_Iterator_Each_Length"
+            ],
+            "context": ["Node_Iterate_Each"],
+            "color": "node_blend_loop"
+        },
+        {
+            "name": "Loop",
+            "nodes": [
+                { "label": "Loops" },
+                "Node_Iterator_Index",
+                "Node_Iterator_Length"
+            ],
+            "context": ["Node_Iterate_Each_Inline"],
+            "color": "node_blend_loop"
+        },
+        {
+            "name": "Filter",
+            "nodes": [
+                { "label": "Groups" },
+                "Node_Group_Input",
+                "Node_Group_Output",
+                "Node_Group_Thumbnail",
+                
+                { "label": "Loops" },
+                "Node_Iterator_Index",
+                "Node_Iterator_Each_Length"
+            ],
+            "context": ["Node_Iterate_Filter"],
+            "color": "node_blend_loop"
+        },
+        {
+            "name": "Filter",
+            "nodes": [
+                { "label": "Loops" },
+                "Node_Iterator_Index",
+                "Node_Iterator_Length"
+            ],
+            "context": ["Node_Iterate_Filter_Inline"],
+            "color": "node_blend_loop"
+        },
+        {
+            "name": "Feedback",
+            "nodes": [
+                { "label": "Groups" },
+                "Node_Feedback_Input",
+                "Node_Feedback_Output",
+                "Node_Group_Thumbnail"
+            ],
+            "context": ["Node_Feedback"],
+            "color": "node_blend_feedback"
+        },
+        {
+            "name": "VFX",
+            "nodes": [
+                { "label": "Groups" },
+                "Node_Group_Input",
+                "Node_Group_Output",
+                "Node_Group_Thumbnail",
+                
+                { "label": "Main" },
+                "Node_VFX_Spawner",
+                "Node_VFX_Renderer",
+                
+                { "label": "Affectors" },
+                "Node_VFX_Accelerate",
+                "Node_VFX_Destroy",
+                "Node_VFX_Attract",
+                "Node_VFX_Wind",
+                "Node_VFX_Vortex",
+                "Node_VFX_Turbulence",
+                "Node_VFX_Repel",
+                "Node_VFX_Oscillate",
+                "Node_VFX_Boids",
+                
+                { "label": "Generates" },
+                "Node_VFX_Trail",
+                "Node_VFX_Triangulate",
+                
+                { "label": "Variables" },
+                "Node_VFX_Variable",
+                "Node_VFX_Override"
+            ],
+            "context": ["Node_VFX_Group", "Node_VFX_Group_Inline"],
+            "color": "node_blend_vfx"
+        },
+        {
+            "name": "RigidSim",
+            "nodes": [
+                { "label": "Groups" },
+                "Node_Group_Input",
+                "Node_Group_Output",
+                "Node_Rigid_Render_Output",
+                "Node_Rigid_Global",
+                
+                { "label": "RigidSim" },
+                "Node_Rigid_Object",
+                "Node_Rigid_Object_Spawner",
+                "Node_Rigid_Wall",
+                "Node_Rigid_Render",
+                "Node_Rigid_Force_Apply",
+                "Node_Rigid_Activate",
+                
+                { "label": "Variables" },
+                "Node_Rigid_Variable",
+                "Node_Rigid_Override"
+            ],
+            "context": ["Node_Rigid_Group", "Node_Rigid_Group_Inline"],
+            "color": "node_blend_simulation"
+        },
+        {
+            "name": "SmokeSim",
+            "nodes": [
+                { "label": "Groups" },
+                "Node_Group_Input",
+                "Node_Group_Output",
+                "Node_Smoke_Render_Output",
+                
+                { "label": "Domain" },
+                "Node_Smoke_Domain",
+                "Node_Smoke_Update",
+                "Node_Smoke_Render",
+                "Node_Smoke_Domain_Queue",
+                
+                { "label": "Smoke" },
+                "Node_Smoke_Add",
+                "Node_Smoke_Apply_Velocity",
+                "Node_Smoke_Add_Collider",
+                "Node_Smoke_Vortex",
+                "Node_Smoke_Repulse",
+                "Node_Smoke_Turbulence"
+            ],
+            "context": ["Node_Smoke_Group", "Node_Smoke_Group_Inline"],
+            "color": "node_blend_smoke"
+        },
+        {
+            "name": "FLIP Fluid",
+            "nodes": [
+                { "label": "Domain" },
+                "Node_FLIP_Domain",
+                "Node_FLIP_Render",
+                "Node_FLIP_Update",
+                
+                { "label": "Fluid" },
+                "Node_FLIP_Spawner",
+                "Node_FLIP_Destroy",
+                
+                { "label": "Affectors" },
+                "Node_FLIP_Apply_Velocity",
+                "Node_FLIP_Apply_Force",
+                "Node_FLIP_Repel",
+                "Node_FLIP_Vortex",
+                
+                { "label": "Misc" },
+                "Node_FLIP_to_VFX"
+            ],
+            "context": ["Node_FLIP_Group_Inline"],
+            "color": "node_blend_fluid"
+        },
+        {
+            "name": "StrandSim",
+            "nodes": [
+                { "label": "Group" },
+                "Node_Group_Input",
+                "Node_Group_Output",
+                
+                { "label": "System" },
+                "Node_Strand_Create",
+                "Node_Strand_Update",
+                "Node_Strand_Render",
+                "Node_Strand_Render_Texture",
+                
+                { "label": "Affectors" },
+                "Node_Strand_Gravity",
+                "Node_Strand_Force_Apply",
+                "Node_Strand_Break",
+                "Node_Strand_Length_Adjust",
+                "Node_Strand_Collision"
+            ],
+            "context": ["Node_Strand_Group", "Node_Strand_Group_Inline"],
+            "color": "node_blend_strand"
+        },
+        
+        {
+            "name": "IO",
+            "nodes": [
+                { "label": "Images" },
+                { "label": "/Importers" },
+                "Node_Image",
+                "Node_Image_gif",
+                "Node_Image_Sequence",
+                "Node_Image_Animated",
+                "Node_SVG",
+                { "label": "/Converters" },
+                "Node_Image_Sheet",
+                "Node_Sequence_Anim",
+                "Node_Cache_Array",
+                
+                { "label": "Canvas" },
+                "Node_Canvas",
+                "Node_Canvas_Group",
+                "Node_Active_Canvas",
+                
+                { "label": "Tileset" },
+                { "label": "/Creators" },
+                "Node_Tile_Tileset",
+                "Node_Tile_Drawer",
+                "Node_Tile_Rule",
+                "Node_Tile_Convert",
+                { "label": "/Exporters" },
+                "Node_Tile_Render",
+                "Node_Tile_Tilemap_Export",
+                
+                { "label": "Files" },
+                "Node_Text_File_Read",
+                "Node_Text_File_Write",
+                "Node_CSV_File_Read",
+                "Node_CSV_File_Write",
+                "Node_Json_File_Read",
+                "Node_Json_File_Write",
+                "Node_WAV_File_Read",
+                "Node_WAV_File_Write",
+                "Node_XML_File_Read",
+                "Node_XML_File_Write",
+                "Node_Byte_File_Read",
+                "Node_Byte_File_Write",
+                "Node_Directory_Search",
+                
+                { "label": "Aseprite" },
+                "Node_ASE_File_Read",
+                "Node_ASE_layer",
+                "Node_ASE_Tag",
+                
+                { "label": "External" },
+                "Node_Websocket_Receiver",
+                "Node_Websocket_Sender",
+                "Node_Spout_Send",
+                "Node_MIDI_In",
+                "Node_HTTP_request",
+                
+                { "label": "Gamemaker" },
+                "Node_GMRoom"
+            ]
+        },
+        {
+            "name": "Transform",
+            "nodes": [
+                { "label": "Transforms" },
+                "Node_Transform",
+                "Node_Scale",
+                "Node_Scale_Algo",
+                "Node_Flip",
+                "Node_Offset",
+                "Node_Mirror",
+                "Node_Mirror_Polar",
+                
+                { "label": "Crops" },
+                "Node_Crop",
+                "Node_Crop_Content",
+                
+                { "label": "Warps" },
+                "Node_Warp",
+                "Node_Skew",
+                "Node_Bend",
+                "Node_Mesh_Warp",
+                "Node_Polar",
+                "Node_Wrap_Area",
+                
+                { "label": "Others" },
+                "Node_Composite",
+                "Node_9Slice",
+                "Node_Padding",
+                "Node_Tile_Random"
+            ]
+        },
+        {
+            "name": "Filter",
+            "nodes": [
+                { "label": "Combines" },
+                "Node_Blend",
+                "Node_Combine_RGB",
+                "Node_Combine_HSV",
+                "Node_Override_Channel",
+                
+                { "label": "Blurs" },
+                { "label": "/Kernel-based" },
+                "Node_Blur",
+                "Node_Blur_Simple",
+                "Node_Blur_Contrast",
+                "Node_Blur_Box",
+                "Node_Blur_Shape",
+                "Node_High_Pass",
+                { "label": "/Linear" },
+                "Node_Blur_Directional",
+                "Node_Blur_Slope",
+                "Node_Blur_Zoom",
+                "Node_Blur_Radial",
+                "Node_Blur_Path",
+                "Node_Smear",
+                { "label": "/Non-Linear" },
+                "Node_Blur_Bokeh",
+                "Node_Average",
+                "Node_Kuwahara",
+                "Node_Brush_Linear",
+                
+                { "label": "Warps" },
+                { "label": "/Effects" },
+                "Node_Mirror",
+                "Node_Mirror_Polar",
+                "Node_Dilate",
+                "Node_Spherize",
+                "Node_Displace",
+                "Node_Morph_Surface",
+                "Node_Liquefy",
+                { "label": "/Mappers" },
+                "Node_Texture_Remap",
+                "Node_Time_Remap",
+                "Node_Shape_Map",
+                
+                { "label": "Effects" },
+                { "label": "/Basics" },
+                "Node_Outline",
+                "Node_Glow",
+                "Node_Shadow",
+                "Node_Blobify",
+                "Node_SDF",
+                "Node_Surface_Replace",
+                { "label": "/Post Processing" },
+                "Node_Bloom",
+                "Node_Blend_Edge",
+                "Node_Chromatic_Aberration",
+                "Node_Vignette",
+                "Node_JPEG",
+                "Node_Grain",
+                { "label": "/Convolutions" },
+                "Node_Convolution",
+                "Node_Edge_Detect",
+                "Node_Local_Analyze",
+                "Node_Erode",
+                "Node_Corner",
+                { "label": "/Pixel Operations" },
+                "Node_Pixel_Math",
+                "Node_Atlas",
+                "Node_Pixel_Cloud",
+                "Node_Pixel_Sort",
+                "Node_Shuffle",
+                { "label": "/Lights" },
+                "Node_2D_light",
+                "Node_Shadow_Cast",
+                { "label": "/Animations" },
+                "Node_Interlaced",
+                "Node_Trail",
+                
+                { "label": "Colors" },
+                { "label": "/Replacements" },
+                "Node_Color_replace",
+                "Node_Colors_Replace",
+                "Node_Color_Remove",
+                "Node_Color_Separate",
+                { "label": "/Colorizers" },
+                "Node_Colorize",
+                "Node_Posterize",
+                "Node_Dither",
+                "Node_Dither_Diffuse",
+                "Node_Palette_Shift",
+                { "label": "/Conversions" },
+                "Node_BW",
+                "Node_Greyscale",
+                "Node_RGB_Channel",
+                "Node_HSV_Channel",
+                "Node_Alpha_Grey",
+                "Node_Grey_Alpha",
+                { "label": "/Adjustments" },
+                "Node_Color_adjust",
+                "Node_Level",
+                "Node_Level_Selector",
+                "Node_Curve",
+                "Node_Curve_HSV",
+                "Node_Invert",
+                "Node_Threshold",
+                "Node_Alpha_Cutoff",
+                "Node_Normalize",
+                "Node_Gamma_Map",
+                "Node_Tonemap_ACE",
+                
+                { "label": "Fixes" },
+                "Node_De_Corner",
+                "Node_De_Stray"
+            ]
+        },
+        {
+            "name": "3D",
+            "nodes": [
+                { "label": "2D Operations" },
+                "Node_3D_Transform_Image",
+                "Node_Normal",
+                "Node_Normal_Light",
+                "Node_Bevel",
+                "Node_Sprite_Stack",
+                "Node_Ambient_Occlusion",
+                
+                { "label": "Scenes" },
+                "Node_3D_Camera",
+                "Node_3D_Camera_Set",
+                "Node_3D_Scene",
+                
+                { "label": "Materials" },
+                "Node_3D_Material",
+                
+                { "label": "Meshes" },
+                { "label": "/Creators" },
+                "Node_3D_Mesh_Obj",
+                "Node_3D_Mesh_Plane",
+                "Node_3D_Mesh_Cube",
+                "Node_3D_Mesh_Cylinder",
+                "Node_3D_Mesh_Sphere_UV",
+                "Node_3D_Mesh_Sphere_Ico",
+                "Node_3D_Mesh_Cone",
+                "Node_3D_Mesh_Torus",
+                "Node_3D_Mesh_Terrain",
+                "Node_3D_Mesh_Wall_Builder",
+                "Node_3D_Mesh_Extrude",
+                "Node_3D_Mesh_Path_Extrude",
+                { "label": "/Exporters" },
+                "Node_3D_Mesh_Export",
+                "Node_3D_Mesh_Stack_Slice",
+                
+                { "label": "Light" },
+                "Node_3D_Light_Directional",
+                "Node_3D_Light_Point",
+                
+                { "label": "Modify" },
+                { "label": "/Meshes" },
+                "Node_3D_Transform",
+                "Node_3D_Transform_Scene",
+                "Node_3D_Round_Vertex",
+                "Node_3D_Displace",
+                "Node_3D_Subdivide",
+                { "label": "/Instances" },
+                "Node_3D_Repeat",
+                { "label": "/Materials" },
+                "Node_3D_Set_Material",
+                "Node_3D_UV_Remap",
+                
+                { "label": "Points" },
+                "Node_3D_Point_Affector",
+                
+                { "label": "Ray Marching" },
+                "Node_RM_Primitive",
+                "Node_RM_Combine",
+                "Node_RM_Render",
+                "Node_RM_Terrain",
+                "Node_RM_Cloud"
+            ]
+        },
+        {
+            "name": "Generate",
+            "nodes": [
+                { "label": "Colors" },
+                "Node_Solid",
+                "Node_Gradient",
+                "Node_Gradient_Points",
+                "Node_Sky",
+                
+                { "label": "Drawer" },
+                "Node_Line",
+                "Node_Text",
+                "Node_Shape",
+                "Node_Shape_Polygon",
+                "Node_Random_Shape",
+                "Node_Plot_Linear",
+                "Node_Path_Profile",
+                "Node_Cross_Section",
+                "Node_Interpret_Number",
+                "Node_Pixel_Builder",
+                "Node_Tile_Drawer",
+                
+                { "label": "Noises" },
+                { "label": "/Basics" },
+                "Node_Noise",
+                "Node_Perlin",
+                "Node_Noise_Simplex",
+                "Node_Cellular",
+                "Node_Noise_Aniso",
+                "Node_Perlin_Extra",
+                "Node_Voronoi_Extra",
+                { "label": "/Artistics" },
+                "Node_Fold_Noise",
+                "Node_Noise_Strand",
+                "Node_Gabor_Noise",
+                "Node_Shard_Noise",
+                "Node_Wavelet_Noise",
+                "Node_Caustic",
+                "Node_Noise_Bubble",
+                "Node_Flow_Noise",
+                "Node_Noise_Cristal",
+                "Node_Honeycomb_Noise",
+                
+                { "label": "Patterns" },
+                { "label": "/Basics" },
+                "Node_Stripe",
+                "Node_Zigzag",
+                "Node_Checker",
+                { "label": "/Grids" },
+                "Node_Grid",
+                "Node_Grid_Tri",
+                "Node_Grid_Hex",
+                "Node_Grid_Pentagonal",
+                { "label": "/Tiles" },
+                "Node_Pytagorean_Tile",
+                "Node_Herringbone_Tile",
+                "Node_Random_Tile",
+                { "label": "/Others" },
+                "Node_Box_Pattern",
+                "Node_Quasicrystal",
+                "Node_Pixel_Sampler",
+                "Node_Julia_Set",
+                
+                { "label": "Populate" },
+                "Node_Repeat",
+                "Node_Scatter",
+                "Node_Repeat_Texture",
+                
+                { "label": "Simulation" },
+                "Node_Particle",
+                "Node_VFX_Group_Inline",
+                "Node_Rigid_Group_Inline",
+                "Node_FLIP_Group_Inline",
+                "Node_Smoke_Group_Inline",
+                "Node_Strand_Group_Inline",
+                "Node_Diffuse",
+                "Node_RD",
+                
+                { "label": "Region" },
+                "Node_Seperate_Shape",
+                "Node_Region_Fill",
+                "Node_Flood_Fill",
+                
+                { "label": "MK Effects" },
+                "Node_MK_Rain",
+                "Node_MK_GridBalls",
+                "Node_MK_GridFlip",
+                "Node_MK_Saber",
+                "Node_MK_Tile",
+                "Node_MK_Flag",
+                "Node_MK_Brownian",
+                "Node_MK_Fall",
+                "Node_MK_Blinker",
+                "Node_MK_Flare",
+                "Node_MK_Delay_Machine",
+                "Node_MK_Fracture",
+                "Node_MK_Sparkle",
+                "Node_MK_Subpixel"
+            ]
+        },
+        {
+            "name": "Compose",
+            "nodes": [
+                { "label": "Composes" },
+                "Node_Blend",
+                "Node_Composite",
+                "Node_Stack",
+                "Node_Image_Grid",
+                "Node_Camera",
+                "Node_Render_Sprite_Sheet",
+                "Node_Pack_Sprites",
+                
+                { "label": "Armature" },
+                { "label": "/Basics" },
+                "Node_Armature",
+                "Node_Armature_Pose",
+                "Node_Armature_Bind",
+                "Node_Armature_Mesh_Rig",
+                { "label": "/Convertors" },
+                "Node_Armature_Path",
+                "Node_Armature_Sample",
+                
+                { "label": "Export" },
+                "Node_Export"
+            ]
+        },
+        {
+            "name": "Values",
+            "nodes": [
+                { "label": "Raw data" },
+                "Node_Number",
+                "Node_Boolean",
+                "Node_String",
+                "Node_Path",
+                "Node_Area",
+                
+                { "label": "Numbers" },
+                { "label": "/Creators" },
+                "Node_Number",
+                "Node_To_Number",
+                "Node_Random",
+                "Node_Scatter_Points",
+                "Node_Transform_Array",
+                { "label": "/Operators" },
+                "Node_Math",
+                "Node_Equation",
+                "Node_Statistic",
+                "Node_Base_Convert",
+                "Node_FFT",
+                
+                { "label": "Vector" },
+                { "label": "/Creators" },
+                "Node_Vector2",
+                "Node_Vector3",
+                "Node_Vector4",
+                { "label": "/Components" },
+                "Node_Vector_Split",
+                "Node_Vector_Swizzle",
+                { "label": "/Operators" },
+                "Node_Vector_Magnitude",
+                "Node_Vector_Dot",
+                "Node_Vector_Cross_2D",
+                "Node_Vector_Cross_3D",
+                { "label": "/Points" },
+                "Node_Move_Point",
+                "Node_Point_In_Area",
+                
+                { "label": "Texts" },
+                { "label": "/Creators" },
+                "Node_String",
+                "Node_To_Text",
+                "Node_Unicode",
+                { "label": "/Info" },
+                "Node_String_Length",
+                "Node_String_Get_Char",
+                { "label": "/Operators" },
+                "Node_String_Merge",
+                "Node_String_Join",
+                "Node_String_Split",
+                "Node_String_Trim",
+                { "label": "/RegEx" },
+                "Node_String_Regex_Match",
+                "Node_String_Regex_Search",
+                "Node_String_Regex_Replace",
+                { "label": "/Filename" },
+                "Node_Path_Separate_Folder",
+                
+                { "label": "Arrays" },
+                { "label": "/Creators" },
+                "Node_Array",
+                "Node_Array_Range",
+                "Node_Array_CSV_Parse",
+                { "label": "/Info" },
+                "Node_Array_Length",
+                "Node_Array_Get",
+                "Node_Array_Sample",
+                "Node_Array_Find",
+                { "label": "/Operators" },
+                "Node_Array_Set",
+                "Node_Array_Add",
+                "Node_Array_Split",
+                "Node_Array_Insert",
+                "Node_Array_Remove",
+                "Node_Array_Reverse",
+                "Node_Array_Shift",
+                "Node_Array_Rearrange",
+                "Node_Array_Zip",
+                "Node_Array_Copy",
+                "Node_Array_Convolute",
+                "Node_Array_Composite",
+                "Node_Array_Shuffle",
+                { "label": "/Group Operators" },
+                "Node_Array_Sort",
+                "Node_Iterate_Each_Inline",
+                "Node_Iterate_Filter_Inline",
+                "Node_Iterate_Sort_Inline",
+                
+                { "label": "Paths" },
+                { "label": "/Creators" },
+                "Node_Path",
+                "Node_Path_Smooth",
+                "Node_Path_Shape",
+                "Node_Path_Builder",
+                "Node_Path_L_System",
+                "Node_Path_From_Mask",
+                "Node_Path_Plot",
+                "Node_Path_3D",
+                "Node_Path_Anchor",
+                { "label": "/Modifiers" },
+                "Node_Path_Transform",
+                "Node_Path_Map_Area",
+                "Node_Path_Shift",
+                "Node_Path_Trim",
+                "Node_Path_Wave",
+                "Node_Path_Array",
+                "Node_Path_Reverse",
+                { "label": "/Combine" },
+                "Node_Path_Repeat",
+                "Node_Path_Scatter",
+                "Node_Path_Bridge",
+                "Node_Path_Blend",
+                { "label": "/To Number" },
+                "Node_Path_Sample",
+                "Node_Path_Bake",
+                { "label": "/To Surface" },
+                "Node_Path_Fill",
+                "Node_Path_Map",
+                "Node_Path_Morph",
+                { "label": "/Segments" },
+                "Node_Segment_Filter",
+                
+                { "label": "Boolean" },
+                "Node_Boolean",
+                "Node_Compare",
+                "Node_Logic",
+                
+                { "label": "Trigger" },
+                "Node_Trigger",
+                "Node_Trigger_Bool",
+                
+                { "label": "Struct" },
+                "Node_Struct",
+                "Node_Struct_Get",
+                "Node_Struct_Set",
+                "Node_Struct_JSON_Parse",
+                
+                { "label": "Mesh" },
+                "Node_Mesh_Create_Path",
+                "Node_Mesh_Transform",
+                
+                { "label": "Atlas" },
+                "Node_Atlas_Draw",
+                "Node_Atlas_Get",
+                "Node_Atlas_Set",
+                "Node_Atlas_Struct",
+                
+                { "label": "Surface" },
+                "Node_Surface_data",
+                "Node_IsoSurf",
+                "Node_Surface_From_Buffer",
+                
+                { "label": "Buffer" },
+                "Node_Surface_To_Buffer"
+            ]
+        },
+        {
+            "name": "Color",
+            "nodes": [
+                { "label": "Colors" },
+                { "label": "/Creators" },
+                "Node_Color",
+                "Node_Color_RGB",
+                "Node_Color_HSV",
+                "Node_Color_OKLCH",
+                { "label": "/Data" },
+                "Node_Color_Data",
+                { "label": "/Operators" },
+                "Node_Color_Mix",
+                { "label": "/Surfaces" },
+                "Node_Sampler",
+                "Node_Find_Pixel",
+                
+                { "label": "Palettes" },
+                "Node_Palette",
+                "Node_Palette_Sort",
+                "Node_Palette_Shrink",
+                "Node_Palette_Extract",
+                "Node_Palette_Replace",
+                
+                { "label": "Gradient" },
+                "Node_Gradient_Out",
+                "Node_Gradient_Palette",
+                "Node_Gradient_Shift",
+                "Node_Gradient_Replace_Color",
+                "Node_Gradient_Extract",
+                "Node_Gradient_Sample"
+            ]
+        },
+        {
+            "name": "Animation",
+            "nodes": [
+                { "label": "Animations" },
+                "Node_Counter",
+                "Node_Rate_Remap",
+                "Node_Delay",
+                "Node_Stagger",
+                "Node_Revert",
+                
+                { "label": "Value" },
+                "Node_Anim_Curve",
+                "Node_Fn_WaveTable",
+                "Node_Wiggler",
+                "Node_Fn_Ease",
+                "Node_Fn_Math",
+                "Node_Fn_SmoothStep",
+                
+                { "label": "Audio" },
+                { "label": "/Files" },
+                "Node_WAV_File_Read",
+                "Node_WAV_File_Write",
+                { "label": "/Analyzers" },
+                "Node_Audio_Window",
+                "Node_Audio_Loudness",
+                "Node_FFT",
+                { "label": "/Renders" },
+                "Node_Plot_Linear"
+            ]
+        },
+        {
+            "name": "Misc",
+            "nodes": [
+                { "label": "Control" },
+                "Node_Condition",
+                "Node_Switch",
+                "Node_Animation_Control",
+                
+                { "label": "Groups" },
+                "Node_Group",
+                "Node_Feedback",
+                "Node_Iterate",
+                "Node_Iterate_Each_Inline",
+                "Node_Iterate_Filter_Inline",
+                
+                { "label": "Lua" },
+                "Node_Lua_Global",
+                "Node_Lua_Surface",
+                "Node_Lua_Compute",
+                
+                { "label": "Shader" },
+                "Node_HLSL",
+                
+                { "label": "Organize" },
+                "Node_Pin",
+                "Node_Array_Pin",
+                "Node_Frame",
+                "Node_Tunnel_In",
+                "Node_Tunnel_Out",
+                "Node_Display_Text",
+                "Node_Display_Image",
+                
+                { "label": "Cache" },
+                "Node_Cache",
+                "Node_Cache_Array",
+                
+                { "label": "Debug" },
+                "Node_Print",
+                "Node_Widget_Test",
+                "Node_Graph_Preview",
+                "Node_Slideshow",
+                
+                { "label": "Project" },
+                "Node_Project_Data",
+                
+                { "label": "System" },
+                "Node_Argument",
+                "Node_Terminal_Trigger",
+                "Node_Shell",
+                "Node_Monitor_Capture",
+                "Node_Application_In",
+                "Node_Application_Out",
+                "Node_Assert"
+            ]
+        }
+    ],
+    "pb": [
+        {
+            "name": "Group",
+            "nodes": [
+                "Node_Group_Input",
+                "Node_Group_Output"
+            ]
+        },
+        {
+            "name": "Draw",
+            "nodes": [
+                { "label": "Fill" },
+                "Node_PB_Draw_Fill",
+                
+                { "label": "Shape" },
+                "Node_PB_Draw_Rectangle",
+                "Node_PB_Draw_Round_Rectangle",
+                "Node_PB_Draw_Trapezoid",
+                "Node_PB_Draw_Diamond",
+                "Node_PB_Draw_Ellipse",
+                "Node_PB_Draw_Semi_Ellipse",
+                "Node_PB_Draw_Line",
+                "Node_PB_Draw_Angle",
+                "Node_PB_Draw_Blob"
+            ]
+        },
+        {
+            "name": "Box",
+            "nodes": [
+                { "label": "Layer" },
+                "Node_PB_Layer",
+                
+                { "label": "Box" },
+                "Node_PB_Box_Transform",
+                "Node_PB_Box_Mirror",
+                "Node_PB_Box_Inset",
+                "Node_PB_Box_Split",
+                "Node_PB_Box_Divide",
+                "Node_PB_Box_Divide_Grid",
+                "Node_PB_Box_Contract"
+            ]
+        },
+        {
+            "name": "Effects",
+            "nodes": [
+                { "label": "Effect" },
+                "Node_PB_Fx_Outline",
+                "Node_PB_Fx_Stack",
+                "Node_PB_Fx_Radial",
+                
+                { "label": "Lighting" },
+                "Node_PB_Fx_Highlight",
+                "Node_PB_Fx_Shading",
+                
+                { "label": "Texture" },
+                "Node_PB_Fx_Hash",
+                "Node_PB_Fx_Strip",
+                "Node_PB_Fx_Brick",
+                
+                { "label": "Blend" },
+                "Node_PB_Fx_Add",
+                "Node_PB_Fx_Subtract",
+                "Node_PB_Fx_Intersect"
+            ]
+        },
+        {
+            "name": "Array",
+            "nodes": [
+                "Node_Array",
+                "Node_Array_Get",
+                "Node_Array_Set",
+                "Node_Array_Insert",
+                "Node_Array_Remove"
+            ]
+        }
+    ],
+    "pcx": [
+        {
+            "name": "Variable",
+            "nodes": [
+                "Node_PCX_var",
+                "Node_PCX_fn_var"
+            ]
+        },
+        {
+            "name": "Functions",
+            "nodes": [
+                "Node_PCX_Equation",
+                
+                { "label": "Numbers" },
+                "Node_PCX_fn_Math",
+                "Node_PCX_fn_Random",
+                
+                { "label": "Surface" },
+                "Node_PCX_fn_Surface_Width",
+                "Node_PCX_fn_Surface_Height",
+                
+                { "label": "Array" },
+                "Node_PCX_Array_Get",
+                "Node_PCX_Array_Set"
+            ]
+        },
+        {
+            "name": "Flow Control",
+            "nodes": [
+                "Node_PCX_Condition"
+            ]
+        }
+    ]
+}

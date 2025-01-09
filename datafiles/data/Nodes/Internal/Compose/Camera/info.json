@@ -1,8 +1,0 @@
-{
-  "tooltip":"Create camera that crop image to fix dimension with control of position, zoom. Also can be use to create parallax effect.",
-  "baseNode":"Node_Camera",
-  "io":[
-    "surface"
-  ],
-  "name":"Camera"
-}

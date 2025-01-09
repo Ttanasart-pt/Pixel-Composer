@@ -1,8 +1,0 @@
-{
-  "tooltip":"",
-  "baseNode":"Node_Iterator_Input",
-  "io":[
-    "any"
-  ],
-  "name":"Loop Input"
-}

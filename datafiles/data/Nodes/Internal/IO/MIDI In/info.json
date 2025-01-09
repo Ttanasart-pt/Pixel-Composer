@@ -1,7 +1,0 @@
-{
-  "tooltip":"Receive MIDI message.",
-  "baseNode":"Node_MIDI_In",
-  "io":[
-  ],
-  "name":"MIDI In"
-}

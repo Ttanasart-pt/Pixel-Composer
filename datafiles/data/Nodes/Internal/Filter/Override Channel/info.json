@@ -1,8 +1,0 @@
-{
-  "tooltip":"Replace RGBA value of one surface with another.",
-  "baseNode":"Node_Override_Channel",
-  "io":[
-    "surface"
-  ],
-  "name":"Override Channel"
-}

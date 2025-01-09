@@ -1,9 +1,0 @@
-{
-  "tooltip":"Create 3D terrain from height map.",
-  "baseNode":"Node_3D_Mesh_Terrain",
-  "io":[
-    "d3Mesh",
-    "surface"
-  ],
-  "name":"3D Terrain"
-}

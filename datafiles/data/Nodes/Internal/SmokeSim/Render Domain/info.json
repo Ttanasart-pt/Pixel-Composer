@@ -1,8 +1,0 @@
-{
-  "tooltip":"Render smoke to surface. This node also have update function build in.",
-  "baseNode":"Node_Smoke_Render",
-  "io":[
-    "sdomain"
-  ],
-  "name":"Render Domain"
-}

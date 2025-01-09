@@ -1,8 +1,0 @@
-{
-  "tooltip":"Generate random star animation.",
-  "baseNode":"Node_MK_Sparkle",
-  "io":[
-    "surface"
-  ],
-  "name":"MK Sparkle"
-}

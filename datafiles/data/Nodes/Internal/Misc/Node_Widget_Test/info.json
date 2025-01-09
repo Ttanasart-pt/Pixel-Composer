@@ -1,0 +1,7 @@
+{
+  "spr":"s_node_print",
+  "baseNode":"Node_Widget_Test",
+  "io":[
+  ],
+  "name":"Widget Test"
+}

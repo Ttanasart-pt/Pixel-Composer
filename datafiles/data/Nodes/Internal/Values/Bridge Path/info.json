@@ -1,8 +1,0 @@
-{
-  "tooltip":"Create new paths that connect multiple paths at the same sample positions.",
-  "baseNode":"Node_Path_Bridge",
-  "io":[
-    "pathnode"
-  ],
-  "name":"Bridge Path"
-}

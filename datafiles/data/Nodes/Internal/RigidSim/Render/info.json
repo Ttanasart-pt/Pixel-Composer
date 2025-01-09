@@ -1,8 +1,0 @@
-{
-  "tooltip":"Render rigidbody object to surface.",
-  "baseNode":"Node_Rigid_Render",
-  "io":[
-    "rigid"
-  ],
-  "name":"Render"
-}

@@ -1,8 +1,0 @@
-{
-  "tooltip":"Create easing function.",
-  "baseNode":"Node_Fn_Ease",
-  "io":[
-    "float"
-  ],
-  "name":"Ease"
-}

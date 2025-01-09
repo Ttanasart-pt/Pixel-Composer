@@ -1,9 +1,0 @@
-{
-  "tooltip":"Sample color from an image.",
-  "baseNode":"Node_Sampler",
-  "io":[
-    "color",
-    "surface"
-  ],
-  "name":"Sampler"
-}

@@ -1,0 +1,9 @@
+{
+  "tooltip":"Apply brush effect.",
+  "spr":"s_node_brush_linear",
+  "baseNode":"Node_Brush_Linear",
+  "io":[
+    "surface"
+  ],
+  "name":"Brush"
+}

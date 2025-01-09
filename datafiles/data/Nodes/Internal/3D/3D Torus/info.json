@@ -1,8 +1,0 @@
-{
-  "tooltip":"Create 3D torus mesh",
-  "baseNode":"Node_3D_Mesh_Torus",
-  "io":[
-    "d3Mesh"
-  ],
-  "name":"3D Torus"
-}

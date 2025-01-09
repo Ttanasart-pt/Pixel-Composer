@@ -1,8 +1,0 @@
-{
-  "tooltip":"Create 3D icosphere mesh",
-  "baseNode":"Node_3D_Mesh_Sphere_Ico",
-  "io":[
-    "d3Mesh"
-  ],
-  "name":"3D Icosphere"
-}

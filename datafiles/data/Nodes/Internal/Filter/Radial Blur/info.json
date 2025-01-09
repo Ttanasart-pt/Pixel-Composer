@@ -1,8 +1,0 @@
-{
-  "tooltip":"Blur image by rotating around a mid point.",
-  "baseNode":"Node_Blur_Radial",
-  "io":[
-    "surface"
-  ],
-  "name":"Radial Blur"
-}

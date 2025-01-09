@@ -1,8 +1,0 @@
-{
-  "tooltip":"Apply tileset rules.",
-  "baseNode":"Node_Tile_Rule",
-  "io":[
-    "surface"
-  ],
-  "name":"Tile Rule"
-}

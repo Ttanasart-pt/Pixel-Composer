@@ -1,9 +1,0 @@
-{
-  "tooltip":"Draw gradient connecting 2 paths.",
-  "baseNode":"Node_Path_Morph",
-  "io":[
-    "pathnode",
-    "surface"
-  ],
-  "name":"Morph Path"
-}

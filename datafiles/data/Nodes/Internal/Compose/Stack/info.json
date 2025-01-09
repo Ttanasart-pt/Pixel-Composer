@@ -1,8 +1,0 @@
-{
-  "tooltip":"Place image next to each other linearly, or on top of each other.",
-  "baseNode":"Node_Stack",
-  "io":[
-    "surface"
-  ],
-  "name":"Stack"
-}

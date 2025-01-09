@@ -1,8 +1,0 @@
-{
-  "tooltip":"Fill area inside path.",
-  "baseNode":"Node_Path_Fill",
-  "io":[
-    "float"
-  ],
-  "name":"Fill Path"
-}

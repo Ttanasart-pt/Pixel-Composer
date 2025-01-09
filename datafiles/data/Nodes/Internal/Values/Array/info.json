@@ -1,9 +1,0 @@
-{
-  "tooltip":"Create an array.",
-  "baseNode":"Node_Array",
-  "io":[
-    "any",
-    "pbBox"
-  ],
-  "name":"Array"
-}

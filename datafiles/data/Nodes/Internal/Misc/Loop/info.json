@@ -1,9 +1,0 @@
-{
-  "tooltip":"Create group that reuse output as input repeatedly in one frame.",
-  "baseNode":"Node_Iterate",
-  "io":[
-    "any"
-  ],
-  "deprecated":true,
-  "name":"Loop"
-}

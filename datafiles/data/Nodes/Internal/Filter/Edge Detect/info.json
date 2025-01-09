@@ -1,8 +1,0 @@
-{
-  "tooltip":"Edge detect by applying Sobel, Prewitt, or Laplacian kernel.",
-  "baseNode":"Node_Edge_Detect",
-  "io":[
-    "surface"
-  ],
-  "name":"Edge Detect"
-}

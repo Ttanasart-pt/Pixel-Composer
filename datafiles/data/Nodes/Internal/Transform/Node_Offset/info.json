@@ -1,0 +1,12 @@
+{
+  "tooltip":"Shift image with tiling.",
+  "alias":[
+    "shift"
+  ],
+  "spr":"s_node_offset",
+  "baseNode":"Node_Offset",
+  "io":[
+    "surface"
+  ],
+  "name":"Offset"
+}

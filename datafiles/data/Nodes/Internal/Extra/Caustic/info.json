@@ -1,8 +1,0 @@
-{
-  "tooltip":"Generate caustic noise",
-  "baseNode":"Node_Caustic",
-  "io":[
-    "surface"
-  ],
-  "name":"Caustic"
-}

@@ -1,8 +1,0 @@
-{
-  "tooltip":"Export tilemap to file.",
-  "baseNode":"Node_Tile_Tilemap_Export",
-  "io":[
-    "surface"
-  ],
-  "name":"Export Tilemap"
-}

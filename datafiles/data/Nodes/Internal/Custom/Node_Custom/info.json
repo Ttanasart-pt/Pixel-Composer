@@ -1,0 +1,9 @@
+{
+  "tooltip":"Custom node",
+  "spr":"__newsprite1112",
+  "baseNode":"Node_Custom",
+  "io":[
+  ],
+  "build":"Node_create_Custom",
+  "name":"Custom"
+}

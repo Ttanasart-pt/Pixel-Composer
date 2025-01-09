@@ -1,8 +1,0 @@
-{
-  "tooltip":"Draw text on an image.",
-  "baseNode":"Node_Text",
-  "io":[
-    "surface"
-  ],
-  "name":"Draw Text"
-}

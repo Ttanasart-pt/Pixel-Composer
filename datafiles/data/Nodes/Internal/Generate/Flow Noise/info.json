@@ -1,8 +1,0 @@
-{
-  "tooltip":"Generate fluid flow noise",
-  "baseNode":"Node_Flow_Noise",
-  "io":[
-    "surface"
-  ],
-  "name":"Flow Noise"
-}

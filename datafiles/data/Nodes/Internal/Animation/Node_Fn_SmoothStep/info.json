@@ -1,0 +1,10 @@
+{
+  "tooltip":"Apply smoothstop function to a value.",
+  "spr":"s_node_fn_smoothstep",
+  "pxc_version":11720.0,
+  "baseNode":"Node_Fn_SmoothStep",
+  "io":[
+    "float"
+  ],
+  "name":"SmoothStep"
+}

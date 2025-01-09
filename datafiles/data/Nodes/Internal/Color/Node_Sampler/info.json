@@ -1,0 +1,10 @@
+{
+  "tooltip":"Sample color from an image.",
+  "spr":"s_node_sampler",
+  "baseNode":"Node_Sampler",
+  "io":[
+    "color",
+    "surface"
+  ],
+  "name":"Sampler"
+}

@@ -1,9 +1,0 @@
-{
-  "tooltip":"Create 3D material with adjustable parameters.",
-  "baseNode":"Node_3D_Material",
-  "io":[
-    "d3Mesh",
-    "surface"
-  ],
-  "name":"3D Material"
-}

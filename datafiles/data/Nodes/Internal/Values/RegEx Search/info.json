@@ -1,8 +1,0 @@
-{
-  "tooltip":"Search for instances in a string using regular expression.",
-  "baseNode":"Node_String_Regex_Search",
-  "io":[
-    "text"
-  ],
-  "name":"RegEx Search"
-}

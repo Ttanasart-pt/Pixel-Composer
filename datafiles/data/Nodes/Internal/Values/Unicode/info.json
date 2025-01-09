@@ -1,8 +1,0 @@
-{
-  "tooltip":"Convert unicode id into string.",
-  "baseNode":"Node_Unicode",
-  "io":[
-    "text"
-  ],
-  "name":"Unicode"
-}

@@ -1,8 +1,0 @@
-{
-  "tooltip":"Sort array using node graph.",
-  "baseNode":"Node_Iterate_Sort_Inline",
-  "io":[
-    "any"
-  ],
-  "name":"Sort Array Inline"
-}

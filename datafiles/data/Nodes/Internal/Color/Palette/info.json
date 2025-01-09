@@ -1,8 +1,0 @@
-{
-  "tooltip":"Create palette value. Note that palette is simple an array of colors.",
-  "baseNode":"Node_Palette",
-  "io":[
-    "color"
-  ],
-  "name":"Palette"
-}

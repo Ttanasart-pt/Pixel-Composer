@@ -1,8 +1,0 @@
-{
-  "tooltip":"Apply shadow behind the image.",
-  "baseNode":"Node_Shadow",
-  "io":[
-    "surface"
-  ],
-  "name":"Shadow"
-}

@@ -1,8 +1,0 @@
-{
-  "tooltip":"Remove first and last n character(s) from a string.",
-  "baseNode":"Node_String_Trim",
-  "io":[
-    "text"
-  ],
-  "name":"Trim Text"
-}

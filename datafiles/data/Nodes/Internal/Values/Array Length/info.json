@@ -1,8 +1,0 @@
-{
-  "tooltip":"Returns number of members in an array.",
-  "baseNode":"Node_Array_Length",
-  "io":[
-    "any"
-  ],
-  "name":"Array Length"
-}

@@ -1,8 +1,0 @@
-{
-  "tooltip":"Put 2D image on a plane in 3D space.",
-  "baseNode":"Node_3D_Mesh_Plane",
-  "io":[
-    "d3Mesh"
-  ],
-  "name":"3D Plane"
-}

@@ -1,8 +1,0 @@
-{
-  "tooltip":"Combine string array with an option to add extra string in-between.",
-  "baseNode":"Node_String_Join",
-  "io":[
-    "text"
-  ],
-  "name":"Join Text Array"
-}

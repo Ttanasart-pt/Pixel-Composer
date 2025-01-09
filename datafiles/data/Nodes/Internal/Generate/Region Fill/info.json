@@ -1,8 +1,0 @@
-{
-  "tooltip":"Fill connected pixel with colors.",
-  "baseNode":"Node_Region_Fill",
-  "io":[
-    "surface"
-  ],
-  "name":"Region Fill"
-}

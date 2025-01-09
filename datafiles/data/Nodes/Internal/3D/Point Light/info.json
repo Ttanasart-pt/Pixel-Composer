@@ -1,8 +1,0 @@
-{
-  "tooltip":"Create point light to illuminate surrounding area.",
-  "baseNode":"Node_3D_Light_Point",
-  "io":[
-    "d3Mesh"
-  ],
-  "name":"Point Light"
-}

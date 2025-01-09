@@ -1,8 +1,0 @@
-{
-  "tooltip":"Will break, do not create. please. Why is it here??",
-  "baseNode":"Node_Pixel_Builder",
-  "io":[
-    "surface"
-  ],
-  "name":"Pixel Builder"
-}

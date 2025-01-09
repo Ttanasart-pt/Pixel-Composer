@@ -1,9 +1,0 @@
-{
-  "tooltip":"Parse json string into struct\/array.",
-  "baseNode":"Node_Struct_JSON_Parse",
-  "io":[
-    "struct",
-    "text"
-  ],
-  "name":"Parse JSON"
-}

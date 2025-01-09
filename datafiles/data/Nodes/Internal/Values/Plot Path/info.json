@@ -1,8 +1,0 @@
-{
-  "tooltip":"Create path from parametric equations.",
-  "baseNode":"Node_Path_Plot",
-  "io":[
-    "pathnode"
-  ],
-  "name":"Plot Path"
-}

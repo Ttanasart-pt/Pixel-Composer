@@ -1,0 +1,10 @@
+{
+  "tooltip":"Create group that reuse output as input repeatedly in one frame.",
+  "spr":"s_node_iterate",
+  "deprecated":true,
+  "baseNode":"Node_Iterate",
+  "io":[
+    "any"
+  ],
+  "name":"Loop"
+}

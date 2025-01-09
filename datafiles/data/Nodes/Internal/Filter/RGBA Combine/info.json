@@ -1,8 +1,0 @@
-{
-  "tooltip":"Combine 4 image in to one. Each image use to control RGBA channel.",
-  "baseNode":"Node_Combine_RGB",
-  "io":[
-    "surface"
-  ],
-  "name":"RGBA Combine"
-}

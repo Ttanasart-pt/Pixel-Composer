@@ -1,8 +1,0 @@
-{
-  "tooltip":"Make image bigger by adding space in 4 directions.",
-  "baseNode":"Node_Padding",
-  "io":[
-    "surface"
-  ],
-  "name":"Padding"
-}

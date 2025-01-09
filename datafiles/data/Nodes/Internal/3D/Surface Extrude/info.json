@@ -1,9 +1,0 @@
-{
-  "tooltip":"Extrude 2D image into 3D object.",
-  "baseNode":"Node_3D_Mesh_Extrude",
-  "io":[
-    "d3Mesh",
-    "surface"
-  ],
-  "name":"Surface Extrude"
-}

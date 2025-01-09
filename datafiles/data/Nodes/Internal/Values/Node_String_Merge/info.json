@@ -1,0 +1,13 @@
+{
+  "tooltip":"Combine multiple strings into one long string.",
+  "alias":[
+    "join text",
+    "concatenate text"
+  ],
+  "spr":"s_node_string_merge",
+  "baseNode":"Node_String_Merge",
+  "io":[
+    "text"
+  ],
+  "name":"Combine Texts"
+}

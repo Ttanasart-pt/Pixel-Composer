@@ -1,8 +1,0 @@
-{
-  "tooltip":"Apply downward acceleration to strands.",
-  "baseNode":"Node_Strand_Gravity",
-  "io":[
-    "strands"
-  ],
-  "name":"Strand Gravity"
-}

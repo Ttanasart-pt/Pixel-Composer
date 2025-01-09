@@ -1,0 +1,9 @@
+{
+  "spr":"s_node_pb_box_inset",
+  "baseNode":"Node_PB_Box_Inset",
+  "io":[
+    "pbBox"
+  ],
+  "name":"Inset",
+  "show_in_recent":false
+}

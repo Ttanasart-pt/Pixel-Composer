@@ -1,8 +1,0 @@
-{
-  "tooltip":"Separate disconnected pixel each into an image in an image array.",
-  "baseNode":"Node_Seperate_Shape",
-  "io":[
-    "surface"
-  ],
-  "name":"Separate Shape"
-}

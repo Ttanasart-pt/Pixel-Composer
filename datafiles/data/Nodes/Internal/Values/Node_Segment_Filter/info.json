@@ -1,0 +1,10 @@
+{
+  "tooltip":"Filter segment (vec2 array) based on a conditions.",
+  "spr":"s_node_segment_filter",
+  "pxc_version":11780.0,
+  "baseNode":"Node_Segment_Filter",
+  "io":[
+    "float"
+  ],
+  "name":"Filter Segments"
+}

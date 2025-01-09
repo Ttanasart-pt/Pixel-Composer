@@ -1,0 +1,17 @@
+{
+  "tooltip":"Get data (rgb, hsv, brightness) from color.",
+  "alias":[
+    "red",
+    "green",
+    "blue",
+    "alpha",
+    "brightness",
+    "luminance"
+  ],
+  "spr":"s_node_color_data",
+  "baseNode":"Node_Color_Data",
+  "io":[
+    "color"
+  ],
+  "name":"Color Data"
+}

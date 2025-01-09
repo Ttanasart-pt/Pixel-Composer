@@ -1,8 +1,0 @@
-{
-  "tooltip":"Reverse array order",
-  "baseNode":"Node_Array_Reverse",
-  "io":[
-    "any"
-  ],
-  "name":"Array Reverse"
-}

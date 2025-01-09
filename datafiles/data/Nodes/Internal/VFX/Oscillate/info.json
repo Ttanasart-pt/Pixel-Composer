@@ -1,8 +1,0 @@
-{
-  "tooltip":"Swing particle around its original trajectory.",
-  "baseNode":"Node_VFX_Oscillate",
-  "io":[
-    "particle"
-  ],
-  "name":"Oscillate"
-}

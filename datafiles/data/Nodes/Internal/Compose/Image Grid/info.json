@@ -1,8 +1,0 @@
-{
-  "tooltip":"Place image next to each other in grid pattern.",
-  "baseNode":"Node_Image_Grid",
-  "io":[
-    "surface"
-  ],
-  "name":"Image Grid"
-}

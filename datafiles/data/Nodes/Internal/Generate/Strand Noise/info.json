@@ -1,8 +1,0 @@
-{
-  "tooltip":"Generate random srtands noise.",
-  "baseNode":"Node_Noise_Strand",
-  "io":[
-    "surface"
-  ],
-  "name":"Strand Noise"
-}

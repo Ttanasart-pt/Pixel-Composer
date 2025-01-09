@@ -1,8 +1,0 @@
-{
-  "tooltip":"Spawn multiple rigidbody objects.",
-  "baseNode":"Node_Rigid_Object_Spawner",
-  "io":[
-    "rigid"
-  ],
-  "name":"Object Spawner"
-}

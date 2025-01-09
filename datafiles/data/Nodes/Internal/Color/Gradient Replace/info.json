@@ -1,8 +1,0 @@
-{
-  "tooltip":"Replace color inside a gradient.",
-  "baseNode":"Node_Gradient_Replace_Color",
-  "io":[
-    "gradient"
-  ],
-  "name":"Gradient Replace"
-}

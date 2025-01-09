@@ -1,8 +1,0 @@
-{
-  "tooltip":"Destroy particle in range.",
-  "baseNode":"Node_VFX_Destroy",
-  "io":[
-    "particle"
-  ],
-  "name":"Destroy"
-}

@@ -1,8 +1,0 @@
-{
-  "tooltip":"Generate pseudo-random value based on seed.",
-  "baseNode":"Node_Random",
-  "io":[
-    "float"
-  ],
-  "name":"Random"
-}

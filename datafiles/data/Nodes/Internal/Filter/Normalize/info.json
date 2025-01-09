@@ -1,8 +1,0 @@
-{
-  "tooltip":"Normalize image ranges (brightness, RGB channels) in to [0, 1] range.",
-  "baseNode":"Node_Normalize",
-  "io":[
-    "surface"
-  ],
-  "name":"Normalize"
-}

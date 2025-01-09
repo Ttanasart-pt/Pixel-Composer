@@ -1,8 +1,0 @@
-{
-  "tooltip":"Transform (move, rotate, scale) mesh.",
-  "baseNode":"Node_Mesh_Transform",
-  "io":[
-    "mesh"
-  ],
-  "name":"Mesh Transform"
-}

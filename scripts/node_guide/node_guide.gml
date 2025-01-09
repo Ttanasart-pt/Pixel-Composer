@@ -2,8 +2,8 @@ globalvar NODE_EXTRACT;
 NODE_EXTRACT = false;
 
 function __generate_node_data() { #region
-	var amo = ds_map_size(ALL_NODES);
-	var k = ds_map_find_first(ALL_NODES);
+	
+	var key = struct_get_names(ALL_NODES);
 	
 	CLONING      = true;
 	NODE_EXTRACT = true;
@@ -15,10 +15,10 @@ function __generate_node_data() { #region
 	var junc   = {};
 	var locale = {};
 	
-	repeat(amo) {
-		var _n = ALL_NODES[? k];
+	for( var i = 0, n = array_length(key); i < n; i++ ) {
+		var  k = key[i];
+		var _n = ALL_NODES[$ k];
 		var _b = _n.build(0, 0);
-		k = ds_map_find_next(ALL_NODES, k);
 		
 		if(_b.name == "") continue;
 		
@@ -35,31 +35,31 @@ function __generate_node_data() { #region
 		var _lin = [], _lot = [];
 		var _din = [], _dot = [];
 		
-		for( var i = 0; i < array_length(_b.inputs); i++ ) {
-			_din[i] = variable_clone(_b.inputs[i], 1);
+		for( var j = 0; j < array_length(_b.inputs); j++ ) {
+			_din[j] = variable_clone(_b.inputs[j], 1);
 			
-			_jin[i] = {
-				type:	 _b.inputs[i].type,
-				visible: _b.inputs[i].visible? 1 : 0,
+			_jin[j] = {
+				type:	 _b.inputs[j].type,
+				visible: _b.inputs[j].visible? 1 : 0,
 			};
 			
-			_lin[i] = {
-				name:	 _b.inputs[i]._initName,
-				tooltip: _b.inputs[i].tooltip,
+			_lin[j] = {
+				name:	 _b.inputs[j]._initName,
+				tooltip: _b.inputs[j].tooltip,
 			};
 		}
 		
-		for( var i = 0; i < array_length(_b.outputs); i++ ) {
-			_dot[i] = variable_clone(_b.outputs[i], 1);
+		for( var j = 0; j < array_length(_b.outputs); j++ ) {
+			_dot[j] = variable_clone(_b.outputs[j], 1);
 			
-			_jot[i] = {
-				type:	 _b.outputs[i].type,
-				visible: _b.outputs[i].visible? 1 : 0,
+			_jot[j] = {
+				type:	 _b.outputs[j].type,
+				visible: _b.outputs[j].visible? 1 : 0,
 			};
 			
-			_lot[i] = {
-				name:	 _b.outputs[i]._initName,
-				tooltip: _b.outputs[i].tooltip,
+			_lot[j] = {
+				name:	 _b.outputs[j]._initName,
+				tooltip: _b.outputs[j].tooltip,
 			};
 		}
 			
@@ -149,28 +149,17 @@ function __initNodeData() {
 	var nodeDir = DIRECTORY + "Nodes/";
 	
 	directory_verify(nodeDir);
-	if(check_version($"{nodeDir}version")) {
-		zip_unzip("data/Tooltip.zip", nodeDir);
-	
-		file_delete($"{nodeDir}nodes.json");
-		file_copy_override("data/nodes.json", $"{nodeDir}nodes.json");
-	}
+	if(check_version($"{nodeDir}version"))
+		zip_unzip("data/Nodes/Tooltip.zip", nodeDir);
 	
 	var dir = $"{nodeDir}Related/";
 	
 	directory_verify(dir);
 	if(check_version($"{dir}version")) {
-		var _relFrom = $"data/related_node.json";
+		var _relFrom = $"data/Nodes/related_node.json";
 		var _relTo   = $"{dir}default.json";
 		
 		file_copy_override(_relFrom, _relTo);
-	}
-	
-	var dir = $"{nodeDir}Data/";
-	
-	directory_verify(dir);
-	if(check_version($"{dir}version")) {
-		zip_unzip("data/Nodes/Internal.zip", nodeDir);
 	}
 	
 	__initNodeReleated();

@@ -1,8 +1,0 @@
-{
-  "tooltip":"Create image of a single color.",
-  "baseNode":"Node_Solid",
-  "io":[
-    "surface"
-  ],
-  "name":"Solid"
-}

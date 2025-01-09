@@ -1,8 +1,0 @@
-{
-  "tooltip":"Change the speed of particle in range.",
-  "baseNode":"Node_VFX_Accelerate",
-  "io":[
-    "particle"
-  ],
-  "name":"Accelerate"
-}

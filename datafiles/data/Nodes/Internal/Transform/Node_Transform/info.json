@@ -1,0 +1,14 @@
+{
+  "tooltip":"Move, rotate, and scale image.",
+  "alias":[
+    "move",
+    "rotate",
+    "scale"
+  ],
+  "spr":"s_node_transform",
+  "baseNode":"Node_Transform",
+  "io":[
+    "surface"
+  ],
+  "name":"Transform"
+}

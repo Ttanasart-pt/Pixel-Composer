@@ -1,0 +1,9 @@
+{
+  "spr":"s_node_project_data",
+  "pxc_version":11650.0,
+  "baseNode":"Node_Project_Data",
+  "io":[
+    "text"
+  ],
+  "name":"Project Data"
+}

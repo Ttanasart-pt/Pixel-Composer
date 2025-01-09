@@ -1,8 +1,0 @@
-{
-  "tooltip":"Translate array of points.",
-  "baseNode":"Node_Move_Point",
-  "io":[
-    "float"
-  ],
-  "name":"Translate Point"
-}

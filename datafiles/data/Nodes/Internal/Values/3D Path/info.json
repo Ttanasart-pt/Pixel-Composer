@@ -1,8 +1,0 @@
-{
-  "tooltip":"Create path in 3D space.",
-  "baseNode":"Node_Path_3D",
-  "io":[
-    "pathnode"
-  ],
-  "name":"3D Path"
-}

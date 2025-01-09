@@ -1,8 +1,0 @@
-{
-  "tooltip":"Generate Pentagonal grid pattern.",
-  "baseNode":"Node_Grid_Pentagonal",
-  "io":[
-    "surface"
-  ],
-  "name":"Pentagonal Grid"
-}

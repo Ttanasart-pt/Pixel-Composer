@@ -31,9 +31,10 @@ function Panel_Node_Data_Gen() : PanelContent() constructor {
 	
 	title    = "Dump node data";
 	auto_pin = true;
-	amo = ds_map_size(ALL_NODES);
+	
+	key = struct_get_names(ALL_NODES);
+	amo = array_length(key);
 	cur = 0;
-	key = ds_map_find_first(ALL_NODES);
 	
 	LOADING = true;
 	NODE_EXTRACT = true;
@@ -48,13 +49,12 @@ function Panel_Node_Data_Gen() : PanelContent() constructor {
 	game_set_speed(99999, gamespeed_fps);
 	
 	function drawContent(panel) {
-		var _n = ALL_NODES[? key];
+		var _n = ALL_NODES[$ key[cur]];
 		var _b = _n.build(0, 0);
-		key = ds_map_find_next(ALL_NODES, key);
 		
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		draw_set_text(f_p0, fa_center, fa_top, COLORS._main_text);
-		draw_text_add(w / 2, ui(8), cur + 2 < amo? $"Dumping node data [{key}]" : "Writing JSON");
+		draw_text_add(w / 2, ui(8), cur + 2 < amo? $"Dumping node data [{key[cur]}]" : "Writing JSON");
 		
 		var bx0 = ui(8);
 		var by0 = ui(40);

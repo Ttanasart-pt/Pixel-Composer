@@ -1,8 +1,0 @@
-{
-  "tooltip":"Delay the animation based on array index.",
-  "baseNode":"Node_Stagger",
-  "io":[
-    "surface"
-  ],
-  "name":"Stagger"
-}

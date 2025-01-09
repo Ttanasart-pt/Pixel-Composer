@@ -152,8 +152,8 @@ event_inherited();
 				for( var i = 0, n = array_length(sug); i < n; i++ ) {
 					var k = array_safe_get_fast(sug, i);
 					if(k == 0) continue;
-					if(ds_map_exists(ALL_NODES, k))
-						ds_list_add(node_list, ALL_NODES[? k]);
+					if(struct_has(ALL_NODES, k))
+						ds_list_add(node_list, ALL_NODES[$ k]);
 				}
 			}
 			
@@ -161,9 +161,9 @@ event_inherited();
 			var _favs = struct_get_names(global.FAV_NODES);
 			for( var i = 0, n = array_length(_favs); i < n; i++ ) {
 				var _nodeIndex = _favs[i];
-				if(!ds_map_exists(ALL_NODES, _nodeIndex)) continue;
+				if(!struct_has(ALL_NODES, _nodeIndex)) continue;
 				
-				var _node = ALL_NODES[? _nodeIndex];
+				var _node = ALL_NODES[$ _nodeIndex];
 				if(_node.show_in_recent) 
 					ds_list_add(node_list, _node);
 			}
@@ -172,9 +172,9 @@ event_inherited();
 			if(is_array(global.RECENT_NODES))
 			for( var i = 0, n = array_length(global.RECENT_NODES); i < n; i++ ) {
 				var _nodeIndex = global.RECENT_NODES[i];
-				if(!ds_map_exists(ALL_NODES, _nodeIndex)) continue;
+				if(!struct_has(ALL_NODES, _nodeIndex)) continue;
 				
-				var _node = ALL_NODES[? _nodeIndex];
+				var _node = ALL_NODES[$ _nodeIndex];
 				if(_node.show_in_recent) 
 					ds_list_add(node_list, _node);
 			}
@@ -992,7 +992,7 @@ event_inherited();
 				__txtx("add_node_equation_enter", "Press Enter to create equation node."));
 			
 			if(keyboard_check_pressed(vk_enter))
-				buildNode(ALL_NODES[? "Node_Equation"], { query: eq } );
+				buildNode(ALL_NODES[$ "Node_Equation"], { query: eq } );
 			return hh;
 		}
 		

@@ -1,8 +1,0 @@
-{
-  "tooltip":"Average color of every pixels in the image.",
-  "baseNode":"Node_Average",
-  "io":[
-    "surface"
-  ],
-  "name":"Average"
-}

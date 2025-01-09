@@ -1,8 +1,0 @@
-{
-  "tooltip":"Generate transfomation array.",
-  "baseNode":"Node_Transform_Array",
-  "io":[
-    "float"
-  ],
-  "name":"Transform Array"
-}

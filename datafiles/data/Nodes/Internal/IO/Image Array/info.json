@@ -1,9 +1,0 @@
-{
-  "tooltip":"Load multiple images from your computer as array.",
-  "baseNode":"Node_Image_Sequence",
-  "io":[
-    "surface"
-  ],
-  "build":"Node_create_Image_Sequence",
-  "name":"Image Array"
-}

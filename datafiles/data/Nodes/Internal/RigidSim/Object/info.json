@@ -1,8 +1,0 @@
-{
-  "tooltip":"Spawn a rigidbody object.",
-  "baseNode":"Node_Rigid_Object",
-  "io":[
-    "rigid"
-  ],
-  "name":"Object"
-}

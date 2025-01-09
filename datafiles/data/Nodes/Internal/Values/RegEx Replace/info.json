@@ -1,8 +1,0 @@
-{
-  "tooltip":"Replace instances of a string with another using regular expression.",
-  "baseNode":"Node_String_Regex_Replace",
-  "io":[
-    "text"
-  ],
-  "name":"RegEx Replace"
-}

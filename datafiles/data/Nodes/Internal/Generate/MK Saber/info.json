@@ -1,8 +1,0 @@
-{
-  "tooltip":"Generate glowing saber from 2 points.",
-  "baseNode":"Node_MK_Saber",
-  "io":[
-    "surface"
-  ],
-  "name":"MK Saber"
-}

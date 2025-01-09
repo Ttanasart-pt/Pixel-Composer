@@ -1,8 +1,0 @@
-{
-  "tooltip":"Sync multiple domains to be render at the same time.",
-  "baseNode":"Node_Smoke_Domain_Queue",
-  "io":[
-    "sdomain"
-  ],
-  "name":"Queue Domain"
-}

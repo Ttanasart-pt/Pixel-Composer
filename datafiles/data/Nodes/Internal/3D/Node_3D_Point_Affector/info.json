@@ -1,0 +1,10 @@
+{
+  "tooltip":"Generate array of 3D points interpolating between two values based on the distance.",
+  "spr":"s_node_3d_point_affector",
+  "pxc_version":11570.0,
+  "baseNode":"Node_3D_Point_Affector",
+  "io":[
+    "float"
+  ],
+  "name":"Point Affector"
+}

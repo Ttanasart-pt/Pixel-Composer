@@ -1,8 +1,0 @@
-{
-  "tooltip":"Generate zigzag pattern.",
-  "baseNode":"Node_Zigzag",
-  "io":[
-    "surface"
-  ],
-  "name":"Zigzag"
-}

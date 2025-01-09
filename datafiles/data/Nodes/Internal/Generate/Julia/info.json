@@ -1,8 +1,0 @@
-{
-  "tooltip":"Generate Julia fractal.",
-  "baseNode":"Node_Julia_Set",
-  "io":[
-    "surface"
-  ],
-  "name":"Julia"
-}

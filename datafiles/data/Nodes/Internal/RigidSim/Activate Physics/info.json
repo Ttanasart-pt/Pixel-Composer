@@ -1,8 +1,0 @@
-{
-  "tooltip":"Enable or disable rigidbody object.",
-  "baseNode":"Node_Rigid_Activate",
-  "io":[
-    "rigid"
-  ],
-  "name":"Activate Physics"
-}

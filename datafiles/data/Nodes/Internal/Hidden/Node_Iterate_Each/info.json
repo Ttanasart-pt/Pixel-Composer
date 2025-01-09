@@ -1,0 +1,8 @@
+{
+  "spr":"s_node_loop_array",
+  "baseNode":"Node_Iterate_Each",
+  "io":[
+  ],
+  "name":"Loop Array",
+  "show_in_recent":false
+}

@@ -1,0 +1,11 @@
+{
+  "tooltip":"Create 3D terrain from height map.",
+  "spr":"s_node_3d_mesh_terrain",
+  "pxc_version":11560.0,
+  "baseNode":"Node_3D_Mesh_Terrain",
+  "io":[
+    "d3Mesh",
+    "surface"
+  ],
+  "name":"3D Terrain"
+}

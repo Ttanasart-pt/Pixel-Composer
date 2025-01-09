@@ -1,8 +1,0 @@
-{
-  "tooltip":"Combine multiple arrays into higher dimension array by grouping member of the same indicies.",
-  "baseNode":"Node_Array_Zip",
-  "io":[
-    "any"
-  ],
-  "name":"Array Zip"
-}

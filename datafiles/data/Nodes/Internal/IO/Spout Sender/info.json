@@ -1,8 +1,0 @@
-{
-  "tooltip":"Send surface through Spout.",
-  "baseNode":"Node_Spout_Send",
-  "io":[
-    "surface"
-  ],
-  "name":"Spout Sender"
-}

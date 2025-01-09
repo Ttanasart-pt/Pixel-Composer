@@ -1,8 +1,0 @@
-{
-  "tooltip":"Map image into shapes.",
-  "baseNode":"Node_Shape_Map",
-  "io":[
-    "surface"
-  ],
-  "name":"Shape Map"
-}

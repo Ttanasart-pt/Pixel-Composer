@@ -1,8 +1,0 @@
-{
-  "tooltip":"Apply ACE tonemapping.",
-  "baseNode":"Node_Tonemap_ACE",
-  "io":[
-    "surface"
-  ],
-  "name":"ACE"
-}

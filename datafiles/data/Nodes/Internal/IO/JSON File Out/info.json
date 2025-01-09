@@ -1,9 +1,0 @@
-{
-  "tooltip":"Save data to .json file.",
-  "baseNode":"Node_Json_File_Write",
-  "io":[
-    "text",
-    "struct"
-  ],
-  "name":"JSON File Out"
-}

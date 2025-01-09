@@ -1,0 +1,10 @@
+{
+  "tooltip":"Dither image using error diffusion algorithm.",
+  "spr":"s_node_dither_diffuse",
+  "pxc_version":118051.0,
+  "baseNode":"Node_Dither_Diffuse",
+  "io":[
+    "surface"
+  ],
+  "name":"Error Diffuse Dither"
+}

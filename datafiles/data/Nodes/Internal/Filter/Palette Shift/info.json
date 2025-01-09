@@ -1,8 +1,0 @@
-{
-  "tooltip":"Shift the order of color in palette.",
-  "baseNode":"Node_Palette_Shift",
-  "io":[
-    "surface"
-  ],
-  "name":"Palette Shift"
-}
