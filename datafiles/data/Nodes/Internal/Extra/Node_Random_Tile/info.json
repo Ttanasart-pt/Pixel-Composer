@@ -1,9 +1,0 @@
-{
-  "tooltip":"Generate Random tile pattern.",
-  "spr":"s_node_random_tile",
-  "baseNode":"Node_Random_Tile",
-  "io":[
-    "surface"
-  ],
-  "name":"Random Tile"
-}

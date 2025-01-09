@@ -394,7 +394,7 @@ function __read_node_folder(dir) {
 	}
 	
 	if(struct_has(ALL_NODES, _inme))
-		print($"NODE WARNING: Duplicate node iname {_inme}.");
+		print($"NODE WARNING: Duplicate node iname {_inme} | {dir}.");
 	
 	if(is_undefined(_spr))
 		_spr = $"s_{string_lower(_inme)}"; 
@@ -479,7 +479,6 @@ function __initNodes() {
 	
 	var _relFrom = $"data/Nodes/display_data.json";
 	var _relTo   = $"{DIRECTORY}Nodes/Data/display_data.json";
-	print(file_exists(_relFrom))
 	file_copy_override(_relFrom, _relTo);
 	
 	var _data = json_load_struct(_relTo);

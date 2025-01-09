@@ -1,9 +1,0 @@
-{
-  "tooltip":"Generate wavelet noise",
-  "spr":"s_node_wavelet_noise",
-  "baseNode":"Node_Wavelet_Noise",
-  "io":[
-    "surface"
-  ],
-  "name":"Wavelet Noise"
-}
