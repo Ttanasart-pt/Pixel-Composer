@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_test_blur",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_test_blur",
+  "parent":{
+    "name":"debugging",
+    "path":"folders/misc/debugging.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

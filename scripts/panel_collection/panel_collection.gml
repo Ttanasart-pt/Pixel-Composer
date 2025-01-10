@@ -232,20 +232,20 @@ function Panel_Collection() : PanelContent() constructor {
 				var pr_list    = ds_priority_create();
 				var search_map = ds_map_create();
 				
-				for(var i = 0; i < ds_list_size(NODE_CATEGORY); i++) {
-					var cat = NODE_CATEGORY[| i];
+				for(var i = 0; i < array_length(NODE_CATEGORY); i++) {
+					var cat = NODE_CATEGORY[i];
 					
 					if(!struct_has(cat, "list")) continue;
 					if(!array_empty(cat.filter)) continue;
 					
 					var _content = cat.list;
-					for(var j = 0; j < ds_list_size(_content); j++) {
-						var _node = _content[| j];
+					for(var j = 0; j < array_length(_content); j++) {
+						var _node = _content[j];
 						
 						if(is_string(_node))				      continue;
 						if(ds_map_exists(search_map, _node))      continue;
 						if(!is_instanceof(_node, NodeObject))     continue;
-						if(_node.patreon && !IS_PATREON) continue;
+						if(_node.patreon && !IS_PATREON)          continue;
 						if(_node.deprecated)					  continue;
 						
 						var match = string_partial_match(string_lower(_node.getName()), search_lower);
@@ -566,12 +566,11 @@ function Panel_Collection() : PanelContent() constructor {
 		var _hov = pHOVER && nodeListPane.hover;
 		var _foc = pFOCUS;
 		
-		for (var i = 0, n = ds_list_size(NODE_CATEGORY); i < n; i++) {
-			var _cat = NODE_CATEGORY[| i];
+		for (var i = 0, n = array_length(NODE_CATEGORY); i < n; i++) {
+			var _cat = NODE_CATEGORY[i];
 			var _nam = _cat.name;
 			var _fil = _cat.filter;
-			
-			if(!array_empty(_fil))   continue;
+			if(!array_empty(_fil)) continue;
 			
 			var _y0 = _y;
 			var _y1 = _y + _hg;
@@ -596,8 +595,8 @@ function Panel_Collection() : PanelContent() constructor {
 	nodecontentPane = new scrollPane(content_w - ui(8), content_h - ui(4), function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
 		var hh    = ui(0);
-		var _cat  = NODE_CATEGORY[| nodeListPane_page];
-		var _list = _cat.list;
+		var _cat  = NODE_CATEGORY[nodeListPane_page];
+		var _list;
 		
 		if(searching) {
 			_list = search_list;
@@ -615,7 +614,15 @@ function Panel_Collection() : PanelContent() constructor {
 					ds_list_add(node_temp_list, _node);
 			}
 			_list = node_temp_list;
-		} 
+			
+		} else {
+			ds_list_clear(node_temp_list);
+			
+			for( var i = 0, n = array_length(_cat.list); i < n; i++ )
+				ds_list_add(node_temp_list, _cat.list[i]);
+			
+			_list = nodeTempList;
+		}
 		
 		var grid_width = PREFERENCES.collection_label? max(ui(40), round(grid_size * 1.25)) : grid_size;
 		var node_count = ds_list_size(_list);

@@ -1,16 +1,19 @@
 #region globalvar
 	globalvar ALL_NODES, NODE_CATEGORY, NODE_PB_CATEGORY, NODE_PCX_CATEGORY;
 	globalvar SUPPORTER_NODES, NEW_NODES;
+	globalvar CUSTOM_NODES, CUSTOM_NODES_POSITION;
 	
 	globalvar NODE_PAGE_DEFAULT;
 	globalvar NODE_ACTION_LIST;
 	
+	CUSTOM_NODES_POSITION = {};
 	ALL_NODES		  = {};
-	NODE_CATEGORY	  = ds_list_create();
-	NODE_PB_CATEGORY  = ds_list_create();
-	NODE_PCX_CATEGORY = ds_list_create();
-	SUPPORTER_NODES   = ds_list_create();
-	NEW_NODES		  = ds_list_create();
+	NODE_CATEGORY	  = [];
+	NODE_PB_CATEGORY  = [];
+	NODE_PCX_CATEGORY = [];
+	SUPPORTER_NODES   = [];
+	NEW_NODES		  = [];
+	CUSTOM_NODES	  = [];
 	
 	global.__currPage    = "";
 	global.__currNewPage = "";
@@ -45,6 +48,7 @@ function NodeObject(_name, _spr, _node, _tooltip = "") constructor {
 	spr  = _spr;
 	node = _node;
 	icon = noone;
+	nodekey = "";
 	
 	nodeName     = script_get_name(node);
 	createFn     = noone;
@@ -63,7 +67,7 @@ function NodeObject(_name, _spr, _node, _tooltip = "") constructor {
 	show_in_global = true;
 	
 	patreon  = array_exists(global.PATREON_NODES, node);
-	if(patreon) ds_list_add(SUPPORTER_NODES, self);
+	if(patreon) array_push(SUPPORTER_NODES, self);
 	
 	testable = true;
 	
@@ -110,11 +114,11 @@ function NodeObject(_name, _spr, _node, _tooltip = "") constructor {
 		
 		if(new_node) {
 			if(global.__currPage != global.__currNewPage) {
-				ds_list_add(NEW_NODES, global.__currPage);
+				array_push(NEW_NODES, global.__currPage);
 				global.__currNewPage = global.__currPage;
 			}
 			
-			ds_list_add(NEW_NODES, self);
+			array_push(NEW_NODES, self);
 		}
 		return self;
 	}
@@ -171,8 +175,15 @@ function NodeObject(_name, _spr, _node, _tooltip = "") constructor {
 	static build = function(_x = 0, _y = 0, _group = PANEL_GRAPH.getCurrentContext(), _param = {}) {
 		INLINE 
 		
-		if(createParam != noone) struct_append(_param, createParam);
-		var _node = createFn == noone? new node(_x, _y, _group, _param) : createFn(_x, _y, _group, _param);
+		if(createParam != noone) {
+			struct_append(_param, createParam);
+			_param.sourceDir = sourceDir;
+			_param.iname     = nodekey;
+		}
+		
+		var _node  = createFn == noone? new node(_x, _y, _group, _param) : createFn(_x, _y, _group, _param);
+		_node.name = name;
+		
 		return _node;
 	}
 	
@@ -343,6 +354,19 @@ function NodeObject(_name, _spr, _node, _tooltip = "") constructor {
 		if(struct_has(_data, "pxc_version"))
 			setVersion(_data.pxc_version);
 		
+		if(struct_has(_data, "params"))
+			setParam(_data.params);
+			
+		if(struct_has(_data, "position")) {
+			for( var i = 0, n = array_length(_data.position); i < n; i++ ) {
+				var pos = _data.position[i];
+				if(struct_has(CUSTOM_NODES_POSITION, pos))
+					array_push(CUSTOM_NODES_POSITION[$ pos], self);
+				else 
+					CUSTOM_NODES_POSITION[$ pos] = [ self ];
+			}
+		}
+		
 		return self;
 	}
 }
@@ -361,9 +385,9 @@ function nodeBuild(_name, _x, _y, _group = PANEL_GRAPH.getCurrentContext()) {
 	return _bnode;
 }
 
-function addNodeCatagory(    name, list, filter = [], color = noone) { ds_list_add(NODE_CATEGORY,     { name, list, filter, color }); global.__currPage = name; }
-function addNodePBCatagory(  name, list, filter = [])                { ds_list_add(NODE_PB_CATEGORY,  { name, list, filter        }); }
-function addNodePCXCatagory( name, list, filter = [])                { ds_list_add(NODE_PCX_CATEGORY, { name, list, filter        }); }
+function addNodeCatagory(    name, list, filter = [], color = noone) { array_push(NODE_CATEGORY,     { name, list, filter, color }); global.__currPage = name; }
+function addNodePBCatagory(  name, list, filter = [])                { array_push(NODE_PB_CATEGORY,  { name, list, filter        }); }
+function addNodePCXCatagory( name, list, filter = [])                { array_push(NODE_PCX_CATEGORY, { name, list, filter        }); }
 
 	////- Nodes
 
@@ -397,6 +421,7 @@ function __read_node_folder(dir) {
 	var _base = _data[$ "baseNode"];
 	var _inme = _data[$ "iname"] ?? _base;
 	var _spr  = _data[$ "spr"];
+	var _custom = _data[$ "custom"] ?? false;
 	
 	if(is_undefined(_base)) {
 		print($"NODE ERROR: baseNode not found in {_info}.");
@@ -416,40 +441,51 @@ function __read_node_folder(dir) {
 	var _node = asset_get_index(_base);
 	var _n = new NodeObject(_name, _spr, _node);
 	
+	_n.nodekey = _inme;
 	_n.deserialize(_data, dir);
 	
 	ALL_NODES[$ _inme] = _n;
+	
+	if(_custom) array_push(CUSTOM_NODES, _n);
 	return _n;
 }
 
 function __read_node_display(_list, _addCat) {
-	
 	for( var i = 0, n = array_length(_list); i < n; i++ ) {
 		var _dl     = _list[i];
 		var _name   = _dl.name;
+		var _iname  = _dl[$ "iname"] ?? _name;
 		var _filter = _dl[$ "context"] ?? [];
 		var _color  = noone;
 		
+		var _kname  = _iname;
+		
 		if(struct_has(_dl, "color")) _color = COLORS[$ _dl.color];
 		
-		var _l  = ds_list_create();
+		var _nodes = _dl.nodes;
+		var _l     = [];
+		var _head  = "";
+		var _lab   = "";
+		
 		_addCat(_name, _l, _filter, _color);
 		
-		var _nodes = _dl.nodes;
 		for( var j = 0, m = array_length(_nodes); j < m; j++ ) {
 			var _n = _nodes[j];
 			
-			if(is_string(_n)) {
-				if(struct_has(ALL_NODES, _n))
-					ds_list_add(_l, ALL_NODES[$ _n]);
-				continue;
-			}
-			
-			if(is_struct(_n)) {
-				if(struct_has(_n, "label"))
-					ds_list_add(_l, _n.label);
+			if(is_string(_n) && struct_has(ALL_NODES, _n)) array_push(_l, ALL_NODES[$ _n]);
+			if(is_struct(_n) && struct_has(_n, "label")) {
+				var _k = _kname; if(_head != "") _k += "/" + _head; if(_lab != "") _k += "/" + _lab;
+				array_append(_l, CUSTOM_NODES_POSITION[$ _k]);
+				
+				if(!string_starts_with(_n.label, "/")) _head = _n.label; 
+				else _lab = string_trim_start(_n.label, ["/"]);
+				
+				array_push(_l, _n.label);
 			}
 		}
+		
+		var _k = _kname; if(_head != "") _k += "/" + _head; if(_lab != "") _k += "/" + _lab;
+		array_append(_l, CUSTOM_NODES_POSITION[$ _k]);
 	}
 	
 }
@@ -459,6 +495,7 @@ function __initNodes() {
 	global.__startPage =  0;
 	global.FAV_NODES   = {};
 	
+	CUSTOM_NODES_POSITION = {};
 	NODE_PAGE_DEFAULT = 0;
 	ADD_NODE_PAGE     = 0;
 	
@@ -468,7 +505,7 @@ function __initNodes() {
 	if(check_version($"{DIRECTORY}Nodes/version")) 
 		zip_unzip("data/Nodes/Internal.zip", $"{DIRECTORY}Nodes");
 	
-	__read_node_directory($"{DIRECTORY}Nodes/Internal");
+	__read_node_directory($"{DIRECTORY}Nodes");
 	
 	if(IS_CMD) return;
 	
@@ -481,11 +518,11 @@ function __initNodes() {
 	var _data = json_load_struct(_relTo);
 	__read_node_display(_data.list, addNodeCatagory);
 	
-	NODE_ACTION_LIST = ds_list_create();
-	addNodeCatagory("Action", NODE_ACTION_LIST);
 	__initNodeActions();
+	addNodeCatagory("Action", NODE_ACTION_LIST);
 	
 	if(IS_PATREON) addNodeCatagory("Extra", SUPPORTER_NODES);
+	if(!array_empty(CUSTOM_NODES)) addNodeCatagory("Custom", CUSTOM_NODES);
 	
 	__read_node_display(_data.pb,  addNodePBCatagory);
 	__read_node_display(_data.pcx, addNodePCXCatagory);
@@ -507,15 +544,15 @@ function __initNodes() {
 function __generateNodeData() {
 	var _dir = "D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/datafiles/data/Nodes/Internal"
 	
-	for( var i = 0, n = ds_list_size(NODE_CATEGORY); i < n; i++ ) {
-		var _cat = NODE_CATEGORY[| i];
+	for( var i = 0, n = array_length(NODE_CATEGORY); i < n; i++ ) {
+		var _cat = NODE_CATEGORY[i];
 		
 		var _lnme = _cat.name;
 		var _list = _cat.list;
 		directory_verify($"{_dir}/{_lnme}");
 		
-		for( var j = 0, m = ds_list_size(_list); j < m; j++ ) {
-			var _node = _list[| j];
+		for( var j = 0, m = array_length(_list); j < m; j++ ) {
+			var _node = _list[j];
 			if(!is(_node, NodeObject)) continue;
 			
 			var _nme  = _node.nodeName;
@@ -527,15 +564,15 @@ function __generateNodeData() {
 		}
 	}
 	
-	for( var i = 0, n = ds_list_size(NODE_PB_CATEGORY); i < n; i++ ) {
-		var _cat = NODE_PB_CATEGORY[| i];
+	for( var i = 0, n = array_length(NODE_PB_CATEGORY); i < n; i++ ) {
+		var _cat = NODE_PB_CATEGORY[i];
 		
 		var _lnme = _cat.name;
 		var _list = _cat.list;
 		directory_verify($"{_dir}/{_lnme}");
 		
-		for( var j = 0, m = ds_list_size(_list); j < m; j++ ) {
-			var _node = _list[| j];
+		for( var j = 0, m = array_length(_list); j < m; j++ ) {
+			var _node = _list[j];
 			if(!is(_node, NodeObject)) continue;
 			
 			var _nme  = _node.nodeName;
@@ -547,15 +584,15 @@ function __generateNodeData() {
 		}
 	}
 	
-	for( var i = 0, n = ds_list_size(NODE_PCX_CATEGORY); i < n; i++ ) {
-		var _cat = NODE_PCX_CATEGORY[| i];
+	for( var i = 0, n = array_length(NODE_PCX_CATEGORY); i < n; i++ ) {
+		var _cat = NODE_PCX_CATEGORY[i];
 		
 		var _lnme = _cat.name;
 		var _list = _cat.list;
 		directory_verify($"{_dir}/{_lnme}");
 		
-		for( var j = 0, m = ds_list_size(_list); j < m; j++ ) {
-			var _node = _list[| j];
+		for( var j = 0, m = array_length(_list); j < m; j++ ) {
+			var _node = _list[j];
 			if(!is(_node, NodeObject)) continue;
 			
 			var _nme  = _node.nodeName;

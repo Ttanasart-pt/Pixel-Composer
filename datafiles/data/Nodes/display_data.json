@@ -17,6 +17,7 @@
         },
         {
             "name": "Loop",
+            "iname": "Iterate",
             "nodes": [
                 { "label": "Groups" },
                 "Node_Iterate",
@@ -35,6 +36,7 @@
         },
         {
             "name": "Loop",
+            "iname": "Iterate_Inline",
             "nodes": [
                 { "label": "Loops" },
                 "Node_Iterator_Index",
@@ -45,6 +47,7 @@
         },
         {
             "name": "Loop",
+            "iname": "Iterate_Each",
             "nodes": [
                 { "label": "Groups" },
                 "Node_Group_Input",
@@ -60,6 +63,7 @@
         },
         {
             "name": "Loop",
+            "iname": "Iterate_Each_Inline",
             "nodes": [
                 { "label": "Loops" },
                 "Node_Iterator_Index",
@@ -70,6 +74,7 @@
         },
         {
             "name": "Filter",
+            "iname": "Iterate_Filter",
             "nodes": [
                 { "label": "Groups" },
                 "Node_Group_Input",
@@ -85,6 +90,7 @@
         },
         {
             "name": "Filter",
+            "iname": "Iterate_Filter_Inline",
             "nodes": [
                 { "label": "Loops" },
                 "Node_Iterator_Index",
@@ -916,6 +922,7 @@
     "pb": [
         {
             "name": "Group",
+            "iname": "pb_Group",
             "nodes": [
                 "Node_Group_Input",
                 "Node_Group_Output"
@@ -923,6 +930,7 @@
         },
         {
             "name": "Draw",
+            "iname": "pb_Draw",
             "nodes": [
                 { "label": "Fill" },
                 "Node_PB_Draw_Fill",
@@ -941,6 +949,7 @@
         },
         {
             "name": "Box",
+            "iname": "pb_Box",
             "nodes": [
                 { "label": "Layer" },
                 "Node_PB_Layer",
@@ -957,6 +966,7 @@
         },
         {
             "name": "Effects",
+            "iname": "pb_Effects",
             "nodes": [
                 { "label": "Effect" },
                 "Node_PB_Fx_Outline",
@@ -980,6 +990,7 @@
         },
         {
             "name": "Array",
+            "iname": "pb_Array",
             "nodes": [
                 "Node_Array",
                 "Node_Array_Get",
@@ -992,6 +1003,7 @@
     "pcx": [
         {
             "name": "Variable",
+            "iname": "pcx_Variable",
             "nodes": [
                 "Node_PCX_var",
                 "Node_PCX_fn_var"
@@ -999,6 +1011,7 @@
         },
         {
             "name": "Functions",
+            "iname": "pcx_Functions",
             "nodes": [
                 "Node_PCX_Equation",
                 
@@ -1017,6 +1030,7 @@
         },
         {
             "name": "Flow Control",
+            "iname": "pcx_Flow_Control",
             "nodes": [
                 "Node_PCX_Condition"
             ]

@@ -15,8 +15,8 @@ event_inherited();
 	
 	junction_called   = noone;
 	
-	node_list      = ds_list_create();
-	node_selecting = 0;
+	node_list      = [];
+	node_selecting =  0;
 	node_focusing  = -1;
 	
 	node_show_connectable = false;
@@ -61,17 +61,18 @@ event_inherited();
 	]);
 	
 	#region ---- category ----
-		category = NODE_CATEGORY;
+	
 		switch(instanceof(context)) {
 			case "Node_Pixel_Builder" : category = NODE_PB_CATEGORY;  break;
 			case "Node_DynaSurf" :      category = NODE_PCX_CATEGORY; break;
+			default :                   category = NODE_CATEGORY;
 		}
 		
 		draw_set_font(f_p0);
 		var maxLen = 0;
-		for(var i = 0; i < ds_list_size(category); i++) {
-			var cat  = category[| i];
-		
+		for(var i = 0; i < array_length(category); i++) {
+			var cat  = category[i];
+			
 			if(array_length(cat.filter) && !array_exists(cat.filter, instanceof(context)))
 				continue;
 			
@@ -116,24 +117,24 @@ event_inherited();
 	}
 	
 	function setPage(pageIndex) {
-		ADD_NODE_PAGE = min(pageIndex, ds_list_size(category) - 1);
+		ADD_NODE_PAGE = min(pageIndex, array_length(category) - 1);
 		subgroups      = [];
 		subgroup_index = 0;
-		ds_list_clear(node_list);
+		node_list      = [];
 		
 		if(ADD_NODE_PAGE == -2) {
-			for(var i = 0; i < ds_list_size(category); i++) {
-				var cat = category[| i];			
+			for(var i = 0; i < array_length(category); i++) {
+				var cat = category[i];			
 				if(array_length(cat.filter) && !array_exists(cat.filter, instanceof(context)))
 					continue;
 				
-				for( var j = 0; j < ds_list_size(cat.list); j++ )
-					ds_list_add(node_list, cat.list[| j]);
+				for( var j = 0; j < array_length(cat.list); j++ )
+					array_push(node_list, cat.list[j]);
 			}
 	
 		} else if(ADD_NODE_PAGE == -1) {
-			for( var i = 0, n = ds_list_size(NEW_NODES); i < n; i++ )
-				ds_list_add(node_list, NEW_NODES[| i]);
+			for( var i = 0, n = array_length(NEW_NODES); i < n; i++ )
+				array_push(node_list, NEW_NODES[i]);
 	
 		} else if(ADD_NODE_PAGE == NODE_PAGE_DEFAULT && category == NODE_CATEGORY) { // page 0 global context
 			var sug = [];
@@ -148,16 +149,16 @@ event_inherited();
 			array_append(sug, nodeReleatedQuery("context", instanceof(context)));
 			
 			if(!array_empty(sug)) {
-				ds_list_add(node_list, "Related");
+				array_push(node_list, "Related");
 				for( var i = 0, n = array_length(sug); i < n; i++ ) {
 					var k = array_safe_get_fast(sug, i);
 					if(k == 0) continue;
 					if(struct_has(ALL_NODES, k))
-						ds_list_add(node_list, ALL_NODES[$ k]);
+						array_push(node_list, ALL_NODES[$ k]);
 				}
 			}
 			
-			ds_list_add(node_list, "Favourites");
+			array_push(node_list, "Favourites");
 			var _favs = struct_get_names(global.FAV_NODES);
 			for( var i = 0, n = array_length(_favs); i < n; i++ ) {
 				var _nodeIndex = _favs[i];
@@ -165,10 +166,10 @@ event_inherited();
 				
 				var _node = ALL_NODES[$ _nodeIndex];
 				if(_node.show_in_recent) 
-					ds_list_add(node_list, _node);
+					array_push(node_list, _node);
 			}
 			
-			ds_list_add(node_list, "Recents");
+			array_push(node_list, "Recents");
 			if(is_array(global.RECENT_NODES))
 			for( var i = 0, n = array_length(global.RECENT_NODES); i < n; i++ ) {
 				var _nodeIndex = global.RECENT_NODES[i];
@@ -176,16 +177,16 @@ event_inherited();
 				
 				var _node = ALL_NODES[$ _nodeIndex];
 				if(_node.show_in_recent) 
-					ds_list_add(node_list, _node);
+					array_push(node_list, _node);
 			}
 		} else {
-			var _l = category[| ADD_NODE_PAGE].list;
-			for( var i = 0, n = ds_list_size(_l); i < n; i++ ) 
-				ds_list_add(node_list, _l[| i]);
+			var _l = category[ADD_NODE_PAGE].list;
+			for( var i = 0, n = array_length(_l); i < n; i++ ) 
+				array_push(node_list, _l[i]);
 		}
 		
-		for( var i = 0, n = ds_list_size(node_list); i < n; i++ ) {
-			var _node = node_list[| i];
+		for( var i = 0, n = array_length(node_list); i < n; i++ ) {
+			var _node = node_list[i];
 			if(!is_string(_node)) continue;
 			if(string_starts_with(_node, "/")) continue;
 			
@@ -338,13 +339,13 @@ event_inherited();
 		
 		var start = category == NODE_CATEGORY? -2 : 0;
 		
-		for(var i = start; i < ds_list_size(category); i++) {
+		for(var i = start; i < array_length(category); i++) {
 			var name  = "";
 			
 			     if(i == -2) name = "All";
 			else if(i == -1) name = "New";
 			else {
-				var cat = category[| i];
+				var cat = category[i];
 				name    = cat.name;
 				
 				if(array_length(cat.filter)) {
@@ -463,12 +464,11 @@ event_inherited();
 		
 		var _hover = sHOVER && content_pane.hover;
 		var _focus = sFOCUS && content_pane.active;
-		var _list  = ds_list_create();
+		var _list  = [];
 		var ww     = content_pane.surface_w;
 		var hh     = 0;
 		
 		if(node_list == noone) {
-			ds_list_destroy(_list);
 			setPage(NODE_PAGE_DEFAULT); 
 			return 0;
 		}
@@ -476,24 +476,24 @@ event_inherited();
 		var _subg_cur = -1;
 		subgroups_size = array_create(array_length(subgroups), 0);
 		
-		for( var i = 0, n = ds_list_size(node_list); i < n; i++ ) {
-			var _n = node_list[| i];
+		for( var i = 0, n = array_length(node_list); i < n; i++ ) {
+			var _n = node_list[i];
 			if(!checkValid(_n)) continue;
 				
 			if(PREFERENCES.dialog_add_node_grouping != 2 || array_empty(subgroups)) {
-				ds_list_add(_list, _n); 
+				array_push(_list, _n); 
 				continue;
 			}
 			
 			if(is_string(_n) && !string_starts_with(_n, "/"))
 				_subg_cur++
 			else if(_subg_cur == subgroup_index)
-				ds_list_add(_list, _n);
+				array_push(_list, _n);
 			
 			if(is(_n, NodeObject) && _subg_cur >= 0) subgroups_size[_subg_cur]++;
 		}
 		
-		var node_count    = ds_list_size(_list);
+		var node_count    = array_length(_list);
 		var group_labels  = [];
 		var _hoverContent = _hover;
 		var _lbh = PREFERENCES.dialog_add_node_grouping == 1? ui(24) : ui(16);
@@ -515,7 +515,7 @@ event_inherited();
 			grid_width   = round(ww - grid_space) / col - grid_space;
 			
 			for(var index = 0; index < node_count; index++) {
-				var _node = _list[| index];
+				var _node = _list[index];
 				if(is_undefined(_node)) continue;
 				if(is_instanceof(_node, NodeObject)) {
 					if(_node.patreon && !IS_PATREON) continue;
@@ -540,7 +540,7 @@ event_inherited();
 						yy += _lbh + ui(4);
 						
 						while(index + 1 < node_count) {
-							var _s = _list[| index + 1];
+							var _s = _list[index + 1];
 							if(is_string(_s) && (!string_starts_with(_s, "/") || PREFERENCES.dialog_add_node_grouping == 2)) break;
 							
 							index++;
@@ -699,7 +699,7 @@ event_inherited();
 			hh += list_height;
 			
 			for(var i = 0; i < node_count; i++) {
-				var _node = _list[| i];
+				var _node = _list[i];
 				if(is_undefined(_node)) continue;
 				if(is_instanceof(_node, NodeObject)) {
 					if(_node.patreon && !IS_PATREON) continue;
@@ -722,7 +722,7 @@ event_inherited();
 						yy += _lbh;
 						
 						while(i + 1 < node_count) {
-							var _s = _list[| i + 1];
+							var _s = _list[i + 1];
 							if(is_string(_s) && (!string_starts_with(_s, "/") || PREFERENCES.dialog_add_node_grouping == 2)) break;
 							
 							i++;
@@ -864,7 +864,6 @@ event_inherited();
 			}
 		}
 		
-		ds_list_destroy(_list);
 		if(mouse_release(mb_left)) left_free = true;
 		
 		return hh;
@@ -899,8 +898,8 @@ event_inherited();
 #endregion
 
 #region search
-	search_string		= "";
-	search_list			= ds_list_create();
+	search_string = "";
+	search_list   = [];
 	KEYBOARD_RESET
 	
 	tb_search = new textBox(TEXTBOX_INPUT.text, function(str) /*=>*/ { search_string = string(str); searchNodes(); })
@@ -909,15 +908,15 @@ event_inherited();
 	WIDGET_CURRENT = tb_search;
 	
 	function searchNodes() { 
-		ds_list_clear(search_list);
+		search_list = [];
 		var pr_list = ds_priority_create();
 		
 		var search_lower = string_lower(search_string);
 		var search_split = string_split(search_lower, " ", true);
 		var search_map	 = ds_map_create();
 		
-		for(var i = 0; i < ds_list_size(category); i++) {
-			var cat = category[| i];
+		for(var i = 0; i < array_length(category); i++) {
+			var cat = category[i];
 			
 			if(!struct_has(cat, "list"))
 				continue;
@@ -926,14 +925,14 @@ event_inherited();
 				continue;
 			
 			var _content = cat.list;
-			for(var j = 0; j < ds_list_size(_content); j++) {
-				var _node = _content[| j];
+			for(var j = 0; j < array_length(_content); j++) {
+				var _node = _content[j];
 				
 				if(is_string(_node))					continue;
 				if(ds_map_exists(search_map, _node))	continue;
 				
 				var match = string_partial_match_res(string_lower(_node.getName()), search_lower, search_split);
-				
+								
 				if(is_instanceof(_node, NodeObject)) {
 					if(_node.deprecated) continue;
 					if(match[0] > -9000 && struct_exists(global.FAV_NODES, _node.nodeName)) 
@@ -961,7 +960,7 @@ event_inherited();
 		searchCollection(pr_list, search_string, false);
 		
 		repeat(ds_priority_size(pr_list))
-			ds_list_add(search_list, ds_priority_delete_max(pr_list));
+			array_push(search_list, ds_priority_delete_max(pr_list));
 		
 		ds_priority_destroy(pr_list);
 	}
@@ -970,7 +969,7 @@ event_inherited();
 		draw_clear_alpha(c_white, 0);
 		
 		var equation = string_char_at(search_string, 0) == "=";
-		var amo		 = ds_list_size(search_list);
+		var amo		 = array_length(search_list);
 		var hh		 = 0;
 		var _hover	 = sHOVER && search_pane.hover;
 		
@@ -1008,7 +1007,7 @@ event_inherited();
 			hh += (grid_space + grid_size) * 2;
 			
 			for(var i = 0; i < amo; i++) {
-				var s_res  = search_list[| i];
+				var s_res  = search_list[i];
 				var _node  = noone;
 				var _param = {};
 				var _query = "";
@@ -1154,7 +1153,7 @@ event_inherited();
 			var ind = 0;
 			
 			for(var i = 0; i < amo; i++) {
-				var s_res  = search_list[| i];
+				var s_res  = search_list[i];
 				var  yy    = sy + list_height * ind;
 				var _node  = noone;
 				var _param = {};

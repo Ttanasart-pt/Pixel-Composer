@@ -24,9 +24,11 @@
 
 function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
+	
 	#region ---- main & active ----
 		project      = PROJECT;
 		
+		itype        = noone;
 		active       = true;
 		renderActive = true;
 		
@@ -2409,7 +2411,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			_map.iname	 = internalName;
 			_map.x		 = x;
 			_map.y		 = y;
-			_map.type    = instanceof(self);
+			_map.type    = itype == noone? instanceof(self) : itype;
 			if(isTool)         _map.tool  = isTool;
 			if(group != noone) _map.group = group.node_id;
 			

@@ -134,8 +134,7 @@ function __initNodeActions() {
 	var root = $"{DIRECTORY}Nodes/Actions";
 	directory_verify(root);
 	
-	ds_list_clear(NODE_ACTION_LIST);
-	ds_list_add(NODE_ACTION_LIST, new NodeAction_create());
+	NODE_ACTION_LIST = [ new NodeAction_create() ];
 	
 	var f = file_find_first(root + "/*", 0), _f;
 	
@@ -146,27 +145,14 @@ function __initNodeActions() {
 		if(filename_ext(_f) != ".json") continue;
 		
 		var _c = new NodeAction().deserialize($"{root}/{_f}");
-		ds_list_add(NODE_ACTION_LIST, _c);
+		array_push(NODE_ACTION_LIST, _c);
 		
 		if(_c.location == noone) continue;
 		
 		var _cat = array_safe_get(_c.location, 0, "");
 		var _grp = array_safe_get(_c.location, 1, "");
 		
-		for( var i = 0, n = ds_list_size(NODE_CATEGORY); i < n; i++ ) {
-			var _category = NODE_CATEGORY[| i];
-			
-			if(_category.name != _cat) continue;
-			var _list = _category.list;
-			var j = 0;
-			
-			if(_grp != "")
-			for( var m = ds_list_size(_list); j < m; j++ )
-				if(_list[| j] == _grp) break;
-			
-			ds_list_insert(_list, j + 1, _c);
-			break;
-		}
+		
 	}
 	file_find_close();
 }

@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"__node_custom",
+  "%Name":"node_custom_shader",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"__node_custom",
+  "name":"node_custom_shader",
   "parent":{
-    "name":"misc",
-    "path":"folders/nodes/data/misc.yy",
+    "name":"custom",
+    "path":"folders/nodes/data/misc/custom.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

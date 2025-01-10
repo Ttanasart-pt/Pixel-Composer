@@ -325,9 +325,7 @@ void main(in VertexShaderOutput _input, out PixelShaderOutput output) {
 					var _arg_valu = _data[i + 2];
 			
 					if(_arg_name == "") continue;
-			
-					var _uni = shader_get_uniform(shader.fs, _arg_name);
-			
+					
 					switch(_arg_type) {
 						case 0 :														// u_float
 							d3d11_cbuffer_add_float(1); 

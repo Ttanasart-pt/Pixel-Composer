@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_test_blur",
+  "name":"sh_test_blur",
+  "parent":{
+    "name":"debugging",
+    "path":"folders/misc/debugging.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}
