@@ -23,7 +23,7 @@ function Panel_Action_Create() : PanelContent() constructor {
 		node_categories = [ "None" ];
 		cat_value   = [ noone ];
 		
-		for(var i = global.__startPage; i < ds_list_size(NODE_CATEGORY); i++) {
+		for(var i = 0; i < ds_list_size(NODE_CATEGORY); i++) {
 			var _name = NODE_CATEGORY[| i].name;
 			switch(_name) {
 				case "Action" :

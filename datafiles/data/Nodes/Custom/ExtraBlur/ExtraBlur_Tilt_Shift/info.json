@@ -1,0 +1,17 @@
+{
+  "name":"Tilt Shift",
+  "author":"MakhamDev",
+  "license":"Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License",
+  
+  "iname":"extrablur_tilt_shift",
+  "tooltip":"Apply tilt shift effect.",
+  "custom":true,
+  "alias":[],
+  "baseNode":"Node_Custom_Shader",
+  "io":[
+    "surface"
+  ],
+  "params": {
+    "data": "node.json" 
+  },
+}

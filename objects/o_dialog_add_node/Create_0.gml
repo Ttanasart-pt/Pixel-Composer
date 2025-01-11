@@ -71,16 +71,16 @@ event_inherited();
 		draw_set_font(f_p0);
 		var maxLen = 0;
 		for(var i = 0; i < array_length(category); i++) {
-			var cat  = category[i];
+			var cat = category[i];
 			
-			if(array_length(cat.filter) && !array_exists(cat.filter, instanceof(context)))
+			if(cat[$ "filter"] != undefined && !array_exists(cat.filter, instanceof(context)))
 				continue;
 			
 			var name = __txt(cat.name);
 			maxLen   = max(maxLen, string_width(name));
 		}
 		
-		category_width = maxLen + ui(32);
+		category_width = maxLen + ui(48);
 	#endregion
 	
 	function isTop() { return true; }
@@ -125,7 +125,7 @@ event_inherited();
 		if(ADD_NODE_PAGE == -2) {
 			for(var i = 0; i < array_length(category); i++) {
 				var cat = category[i];			
-				if(array_length(cat.filter) && !array_exists(cat.filter, instanceof(context)))
+				if(struct_has(cat, "filter") && !array_exists(cat.filter, instanceof(context)))
 					continue;
 				
 				for( var j = 0; j < array_length(cat.list); j++ )
@@ -348,7 +348,7 @@ event_inherited();
 				var cat = category[i];
 				name    = cat.name;
 				
-				if(array_length(cat.filter)) {
+				if(cat[$ "filter"] != undefined) {
 					if(!array_exists(cat.filter, instanceof(context))) {
 						if(ADD_NODE_PAGE == i) 
 							setPage(NODE_PAGE_DEFAULT);
@@ -357,7 +357,7 @@ event_inherited();
 					draw_set_color(COLORS._main_text_accent);
 				}
 				
-				if(cat.color != noone) {
+				if(cat[$ "color"] != undefined) {
 					BLEND_OVERRIDE
 					draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, _y + hh, ww, hg, merge_color(c_white, cat.color, 0.5), 1);
 					BLEND_NORMAL
@@ -578,20 +578,6 @@ event_inherited();
 					}
 				}
 				
-				if(_node.getTooltip() != "" || _node.getTooltipSpr() != noone) {
-					gpu_set_tex_filter(true);
-					if(_hoverContent && point_in_rectangle(_m[0], _m[1], _boxx, yy, _boxx + ui(16), yy + ui(16))) {
-						content_pane.hover_content = true;
-						
-						draw_sprite_ui_uniform(THEME.info, 0, _boxx + ui(8), yy + ui(8), 0.7, COLORS._main_icon, 1.0);
-						node_tooltip   = _node;
-						node_tooltip_x = content_pane.x + _nx;
-						node_tooltip_y = content_pane.y + yy;
-					} else 
-						draw_sprite_ui_uniform(THEME.info, 0, _boxx + ui(8), yy + ui(8), 0.7, COLORS._main_icon, 0.5);
-					gpu_set_tex_filter(false);
-				}
-				
 				if(is_instanceof(_node, NodeObject)) {
 					_node.drawGrid(_boxx, yy, _m[0], _m[1], grid_size);
 				} else {
@@ -604,6 +590,20 @@ event_inherited();
 					
 					if(is_instanceof(_node, NodeAction) && !struct_try_get(_node, "hide_bg", false))
 						draw_sprite_ui_uniform(THEME.play_action, 0, _boxx + grid_size - 16, yy + grid_size - 16, 1, COLORS.add_node_blend_action);
+				}
+				
+				if(_node.getTooltip() != "" || _node.getTooltipSpr() != noone) {
+					gpu_set_tex_filter(true);
+					if(_hoverContent && point_in_rectangle(_m[0], _m[1], _boxx, yy, _boxx + ui(16), yy + ui(16))) {
+						content_pane.hover_content = true;
+						
+						draw_sprite_ui_uniform(THEME.info, 0, _boxx + ui(8), yy + ui(8), 0.7, COLORS._main_icon, 1.0);
+						node_tooltip   = _node;
+						node_tooltip_x = content_pane.x + _nx;
+						node_tooltip_y = content_pane.y + yy;
+					} else 
+						draw_sprite_ui_uniform(THEME.info, 0, _boxx + ui(8), yy + ui(8), 0.7, COLORS._main_icon, 0.5);
+					gpu_set_tex_filter(false);
 				}
 				
 				var _name = _node.getName();
@@ -915,17 +915,16 @@ event_inherited();
 		var search_split = string_split(search_lower, " ", true);
 		var search_map	 = ds_map_create();
 		
-		for(var i = 0; i < array_length(category); i++) {
+		for( var i = 0, n = array_length(category); i < n; i++ ) {
 			var cat = category[i];
 			
-			if(!struct_has(cat, "list"))
-				continue;
+			if(!struct_has(cat, "list")) continue;
 				
-			if(array_length(cat.filter) && !array_exists(cat.filter, instanceof(context)))
+			if(cat[$ "filter"] != undefined && !array_exists(cat.filter, instanceof(context)))
 				continue;
 			
 			var _content = cat.list;
-			for(var j = 0; j < array_length(_content); j++) {
+			for( var j = 0, m = array_length(_content); j < m; j++ ) {
 				var _node = _content[j];
 				
 				if(is_string(_node))					continue;
@@ -940,7 +939,7 @@ event_inherited();
 				}
 				
 				var param = "";
-				for( var k = 0; k < array_length(_node.tags); k++ ) {
+				for( var k = 0, p = array_length(_node.tags); k < p; k++ ) {
 					var mat = string_partial_match_res(_node.tags[k], search_lower, search_split);
 					if(mat[0] - 10 > match[0]) {
 						match = mat;
@@ -1060,18 +1059,6 @@ event_inherited();
 							buildNode(_node, _param);
 					}
 					
-					if(struct_has(_node, "tooltip") && (_node.getTooltip() != "" || _node.getTooltipSpr() != noone)) {
-						if(_hover && point_in_rectangle(_m[0], _m[1], _boxx, yy, _boxx + ui(16), yy + ui(16))) {
-							search_pane.hover_content = true;
-							
-							draw_sprite_ui_uniform(THEME.info, 0, _boxx + ui(8), yy + ui(8), 0.7, COLORS._main_icon, 1.0);
-							node_tooltip   = _node;
-							node_tooltip_x = search_pane.x + _nx;
-							node_tooltip_y = search_pane.y + yy
-						} else 
-							draw_sprite_ui_uniform(THEME.info, 0, _boxx + ui(8), yy + ui(8), 0.7, COLORS._main_icon, 0.5);
-					}
-				
 					if(is_instanceof(_node, NodeObject)) {
 						_node.drawGrid(_boxx, yy, _m[0], _m[1], grid_size, _param);
 					} else {
@@ -1096,6 +1083,19 @@ event_inherited();
 						if(is_instanceof(_node, NodeAction) && !struct_try_get(_node, "hide_bg", false))
 							draw_sprite_ui_uniform(THEME.play_action, 0, _boxx + grid_size - 16, yy + grid_size - 16, 1, COLORS.add_node_blend_action);
 					}
+					
+					if(struct_has(_node, "tooltip") && (_node.getTooltip() != "" || _node.getTooltipSpr() != noone)) {
+						if(_hover && point_in_rectangle(_m[0], _m[1], _boxx, yy, _boxx + ui(16), yy + ui(16))) {
+							search_pane.hover_content = true;
+							
+							draw_sprite_ui_uniform(THEME.info, 0, _boxx + ui(8), yy + ui(8), 0.7, COLORS._main_icon, 1.0);
+							node_tooltip   = _node;
+							node_tooltip_x = search_pane.x + _nx;
+							node_tooltip_y = search_pane.y + yy
+						} else 
+							draw_sprite_ui_uniform(THEME.info, 0, _boxx + ui(8), yy + ui(8), 0.7, COLORS._main_icon, 0.5);
+					}
+				
 				}
 				
 				var _name = _node.getName();

@@ -1,0 +1,13 @@
+[
+    {
+        "name": "ShaderToy",
+        "nodes": [
+            { "label" : "Generators" }, 
+            "shadertoy_solid",
+
+            { "label" : "FIlters" }, 
+            "shadertoy_film_grain",
+            "shadertoy_tim_crt",
+        ]
+    }
+]

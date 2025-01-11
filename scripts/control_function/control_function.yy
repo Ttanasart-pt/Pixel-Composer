@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"control_function",
   "parent":{
-    "name":"control",
-    "path":"folders/functions/control.yy",
+    "name":"inputs",
+    "path":"folders/functions/inputs.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

@@ -1,24 +1,11 @@
 #region globalvar
-	globalvar ALL_NODES, NODE_CATEGORY, NODE_PB_CATEGORY, NODE_PCX_CATEGORY;
+	globalvar ALL_NODES, NODE_PB_CATEGORY, NODE_PCX_CATEGORY;
+	globalvar NODE_CATEGORY, NODE_CATEGORY_MAP;
 	globalvar SUPPORTER_NODES, NEW_NODES;
 	globalvar CUSTOM_NODES, CUSTOM_NODES_POSITION;
 	
-	globalvar NODE_PAGE_DEFAULT;
+	globalvar NODE_PAGE_DEFAULT, NODE_PAGE_LAST;
 	globalvar NODE_ACTION_LIST;
-	
-	CUSTOM_NODES_POSITION = {};
-	ALL_NODES		  = {};
-	NODE_CATEGORY	  = [];
-	NODE_PB_CATEGORY  = [];
-	NODE_PCX_CATEGORY = [];
-	SUPPORTER_NODES   = [];
-	NEW_NODES		  = [];
-	CUSTOM_NODES	  = [];
-	
-	global.__currPage    = "";
-	global.__currNewPage = "";
-	
-	#macro NODE_ADD_CAT if(!IS_CMD) addNodeCatagory
 	
 	global.PATREON_NODES = [
 		Node_Brush_Linear, 
@@ -43,10 +30,10 @@
 	];
 #endregion
 
-function NodeObject(_name, _spr, _node, _tooltip = "") constructor {
+function NodeObject(_name, _node, _tooltip = "") constructor {
 	name = _name;
-	spr  = _spr;
 	node = _node;
+	spr  = s_node_icon;
 	icon = noone;
 	nodekey = "";
 	
@@ -74,6 +61,9 @@ function NodeObject(_name, _spr, _node, _tooltip = "") constructor {
 	ioArray = [];
 	input_type_mask  = 0b0;
 	output_type_mask = 0b0;
+	
+	author  = "";
+	license = "";
 	
 	_fn = registerFunctionLite("New node", name, function(n) /*=>*/ { PANEL_GRAPH.createNodeHotkey(n); }, [ nodeName ]);
 	_fn.spr = spr;
@@ -112,14 +102,6 @@ function NodeObject(_name, _spr, _node, _tooltip = "") constructor {
 		pxc_version = version;
 		new_node    = version >= LATEST_VERSION;
 		
-		if(new_node) {
-			if(global.__currPage != global.__currNewPage) {
-				array_push(NEW_NODES, global.__currPage);
-				global.__currNewPage = global.__currPage;
-			}
-			
-			array_push(NEW_NODES, self);
-		}
 		return self;
 	}
 	
@@ -183,6 +165,7 @@ function NodeObject(_name, _spr, _node, _tooltip = "") constructor {
 		
 		var _node  = createFn == noone? new node(_x, _y, _group, _param) : createFn(_x, _y, _group, _param);
 		_node.name = name;
+		_node.postBuild();
 		
 		return _node;
 	}
@@ -193,7 +176,7 @@ function NodeObject(_name, _spr, _node, _tooltip = "") constructor {
 		
 		var _spw = sprite_get_width(spr);
 		var _sph = sprite_get_height(spr);
-		var _ss  = grid_size / max(_spw, _sph) * 0.75;
+		var _ss  = grid_size / max(_spw, _sph) * 0.85;
 		
 		gpu_set_tex_filter(true);
 		draw_sprite_uniform(spr, 0, spr_x, spr_y, _ss);
@@ -331,6 +314,19 @@ function NodeObject(_name, _spr, _node, _tooltip = "") constructor {
 		
 		if(struct_has(_data, "tooltip")) setTooltip(_data.tooltip);
 		
+		if(struct_has(_data, "spr")) {
+			var _spr  = _data[$ "spr"];
+			_spr = asset_get_index(_spr);
+				
+			if(sprite_exists(_spr)) spr = _spr;
+		} else {
+			var pth = $"{sourceDir}/icon.png";
+			if(file_exists_empty(pth)) {
+				spr = sprite_add(pth, 0, false, false, 0, 0);
+				sprite_set_offset(spr, sprite_get_width(spr) / 2, sprite_get_height(spr) / 2);
+			}
+		}
+			
 		if(struct_has(_data, "io")) {
 			var _io = _data.io;
 			for( var i = 0, n = array_length(_io); i < n; i++ ) 
@@ -356,6 +352,12 @@ function NodeObject(_name, _spr, _node, _tooltip = "") constructor {
 		
 		if(struct_has(_data, "params"))
 			setParam(_data.params);
+			
+		if(struct_has(_data, "author"))
+			author = _data.author;
+			
+		if(struct_has(_data, "license"))
+			license = _data.license;
 			
 		if(struct_has(_data, "position")) {
 			for( var i = 0, n = array_length(_data.position); i < n; i++ ) {
@@ -385,10 +387,6 @@ function nodeBuild(_name, _x, _y, _group = PANEL_GRAPH.getCurrentContext()) {
 	return _bnode;
 }
 
-function addNodeCatagory(    name, list, filter = [], color = noone) { array_push(NODE_CATEGORY,     { name, list, filter, color }); global.__currPage = name; }
-function addNodePBCatagory(  name, list, filter = [])                { array_push(NODE_PB_CATEGORY,  { name, list, filter        }); }
-function addNodePCXCatagory( name, list, filter = [])                { array_push(NODE_PCX_CATEGORY, { name, list, filter        }); }
-
 	////- Nodes
 
 function __read_node_directory(dir) {
@@ -411,7 +409,7 @@ function __read_node_directory(dir) {
 	
 	array_foreach(_dirs, function(d) /*=>*/ {return __read_node_directory(d)});
 }
-	
+
 function __read_node_folder(dir) {
 	var _info = dir + "/info.json";
 	if(!file_exists(_info)) return;
@@ -420,7 +418,6 @@ function __read_node_folder(dir) {
 	var _name = _data[$ "name"];
 	var _base = _data[$ "baseNode"];
 	var _inme = _data[$ "iname"] ?? _base;
-	var _spr  = _data[$ "spr"];
 	var _custom = _data[$ "custom"] ?? false;
 	
 	if(is_undefined(_base)) {
@@ -430,16 +427,9 @@ function __read_node_folder(dir) {
 	
 	if(struct_has(ALL_NODES, _inme))
 		print($"NODE WARNING: Duplicate node iname {_inme} | {dir}.");
-	
-	if(is_undefined(_spr))
-		_spr = $"s_{string_lower(_inme)}"; 
-	_spr = asset_get_index(_spr);
-		
-	if(!sprite_exists(_spr)) 
-		_spr = s_node_icon;
 		
 	var _node = asset_get_index(_base);
-	var _n = new NodeObject(_name, _spr, _node);
+	var _n = new NodeObject(_name, _node);
 	
 	_n.nodekey = _inme;
 	_n.deserialize(_data, dir);
@@ -450,29 +440,58 @@ function __read_node_folder(dir) {
 	return _n;
 }
 
-function __read_node_display(_list, _addCat) {
+function __read_node_display(_list) {
+	var _currLab = "";
+	
 	for( var i = 0, n = array_length(_list); i < n; i++ ) {
 		var _dl     = _list[i];
 		var _name   = _dl.name;
 		var _iname  = _dl[$ "iname"] ?? _name;
-		var _filter = _dl[$ "context"] ?? [];
-		var _color  = noone;
+		var _filter = _dl[$ "context"] ?? undefined;
+		var _ctx    = _dl[$ "globalContext"] ?? "";
+		var _color  = struct_has(_dl, "color")? COLORS[$ _dl.color] : undefined;
 		
-		var _kname  = _iname;
-		
-		if(struct_has(_dl, "color")) _color = COLORS[$ _dl.color];
-		
+		var _kname = _iname;
 		var _nodes = _dl.nodes;
-		var _l     = [];
 		var _head  = "";
 		var _lab   = "";
 		
-		_addCat(_name, _l, _filter, _color);
+		if(struct_has(NODE_CATEGORY_MAP, _iname)) {
+			_lobj = NODE_CATEGORY_MAP[$ _iname];
+			_l = _lobj.list;
+			
+		} else {
+			var _l     = [];
+			var _lobj  = { 
+				name   : _name, 
+				list   : _l, 
+				filter : _filter,
+				color  : _color,
+			};
+			NODE_CATEGORY_MAP[$ _iname] = _lobj;
+		}
+		
+		switch(_ctx) {
+			case "pb"  : array_push(NODE_PB_CATEGORY, _lobj);  break;
+			case "pcx" : array_push(NODE_PCX_CATEGORY, _lobj); break;
+			default    : array_insert(NODE_CATEGORY, NODE_PAGE_LAST++, _lobj); break;
+		}
 		
 		for( var j = 0, m = array_length(_nodes); j < m; j++ ) {
 			var _n = _nodes[j];
 			
-			if(is_string(_n) && struct_has(ALL_NODES, _n)) array_push(_l, ALL_NODES[$ _n]);
+			if(is_string(_n) && struct_has(ALL_NODES, _n)) {
+				var _node = ALL_NODES[$ _n];
+				if(_node.new_node) {
+					if(_currLab != _head)
+						array_push(NEW_NODES, _head);
+					_currLab = _head;
+					array_push(NEW_NODES, _node);
+				}
+				
+				array_push(_l, _node);
+			}
+			
 			if(is_struct(_n) && struct_has(_n, "label")) {
 				var _k = _kname; if(_head != "") _k += "/" + _head; if(_lab != "") _k += "/" + _lab;
 				array_append(_l, CUSTOM_NODES_POSITION[$ _k]);
@@ -490,20 +509,58 @@ function __read_node_display(_list, _addCat) {
 	
 }
 
-function __initNodes() { 
-	global.__currPage  = "";
-	global.__startPage =  0;
-	global.FAV_NODES   = {};
+function __read_node_display_folder(dir) {
+	if(!directory_exists(dir)) return;
 	
+	var _dirs = [];
+	var _f = file_find_first(dir + "/*", fa_directory);
+	
+	while(_f != "") {
+		array_push(_dirs, dir + "/" + _f);
+		_f = file_find_next();
+	}
+	file_find_close();
+	
+	var _f = file_find_first(dir + "/*", 0);
+	
+	while(_f != "") {
+		if(_f == "display_data.json") {
+			var _data = json_load_struct(dir + "/" + _f);
+			__read_node_display(_data);
+		}
+		
+		_f = file_find_next();
+	}
+	file_find_close();
+	
+	array_foreach(_dirs, function(d) /*=>*/ {return __read_node_display_folder(d)});
+}
+
+function __initNodes(unzip = true) { 
 	CUSTOM_NODES_POSITION = {};
+	ALL_NODES		      = {};
+	NODE_CATEGORY_MAP     = {};
+	NODE_CATEGORY	      = [];
+	NODE_PB_CATEGORY      = [];
+	NODE_PCX_CATEGORY     = [];
+	SUPPORTER_NODES       = [];
+	NEW_NODES		      = [];
+	CUSTOM_NODES	      = [];
+	CUSTOM_NODES_POSITION = {};
+	
+	global.FAV_NODES      = {};
+	
 	NODE_PAGE_DEFAULT = 0;
 	ADD_NODE_PAGE     = 0;
+	NODE_PAGE_LAST    = 0;
 	
 	////- DATA
 	
-	directory_verify($"{DIRECTORY}Nodes");
-	if(check_version($"{DIRECTORY}Nodes/version")) 
-		zip_unzip("data/Nodes/Internal.zip", $"{DIRECTORY}Nodes");
+	if(unzip) {
+		directory_verify($"{DIRECTORY}Nodes");
+		if(check_version($"{DIRECTORY}Nodes/version")) 
+			zip_unzip("data/Nodes/Internal.zip", $"{DIRECTORY}Nodes");
+	}
 	
 	__read_node_directory($"{DIRECTORY}Nodes");
 	
@@ -511,21 +568,17 @@ function __initNodes() {
 	
 	////- DISPLAY
 	
-	var _relFrom = $"data/Nodes/display_data.json";
-	var _relTo   = $"{DIRECTORY}Nodes/display_data.json";
-	file_copy_override(_relFrom, _relTo);
+	if(unzip) {
+		var _relFrom = $"data/Nodes/display_data.json";
+		var _relTo   = $"{DIRECTORY}Nodes/display_data.json";
+		file_copy_override(_relFrom, _relTo);
+	}
 	
-	var _data = json_load_struct(_relTo);
-	__read_node_display(_data.list, addNodeCatagory);
+	__read_node_display_folder($"{DIRECTORY}Nodes");
 	
-	__initNodeActions();
-	addNodeCatagory("Action", NODE_ACTION_LIST);
-	
-	if(IS_PATREON) addNodeCatagory("Extra", SUPPORTER_NODES);
-	if(!array_empty(CUSTOM_NODES)) addNodeCatagory("Custom", CUSTOM_NODES);
-	
-	__read_node_display(_data.pb,  addNodePBCatagory);
-	__read_node_display(_data.pcx, addNodePCXCatagory);
+	__initNodeActions();           array_push(NODE_CATEGORY, { name : "Action", list : NODE_ACTION_LIST });
+	if(IS_PATREON)                 array_push(NODE_CATEGORY, { name : "Extra",  list : SUPPORTER_NODES  });
+	if(!array_empty(CUSTOM_NODES)) array_push(NODE_CATEGORY, { name : "Custom", list : CUSTOM_NODES     });
 	
 	////- FAV
 	

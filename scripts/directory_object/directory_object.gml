@@ -1,8 +1,9 @@
-function FileObject(_name, _path) constructor {
-	static loadThumbnailAsync = false;
+function FileObject(_path) constructor {
+	static loadThumbnailAsync = true;
 	
-	name = _name;
+	name = filename_name_only(_path);
 	path = _path;
+	
 	spr_path   = [];
 	spr        = -1;
 	sprFetchID = noone;
@@ -126,9 +127,9 @@ function FileObject(_name, _path) constructor {
 	}
 }
 
-function DirectoryObject(name, path) constructor {
-	self.name = name;
-	self.path = path;
+function DirectoryObject(_path) constructor {
+	name = filename_name_only(_path);
+	path = _path;
 	
 	subDir    = ds_list_create();
 	content   = ds_list_create();
@@ -158,14 +159,17 @@ function DirectoryObject(name, path) constructor {
 			var file  = _temp_name[i];
 			var _path = path + "/" + file;
 			
-			if(directory_exists(_path)) {
-				var _fol_path = _path;
-				var fol       = new DirectoryObject(file, _fol_path);
-				fol.scan(file_type);
+			if(array_exists(file_type, "NodeObject") && __Node_IsFileObject(_path)) {
+				var _ndir = new NodeFileObject(_path);
+				ds_list_add(content, _ndir);
+				
+			} else if(directory_exists(_path)) {
+				var fol = new DirectoryObject(_path)
+								.scan(file_type);
 				ds_list_add(subDir, fol);
 				
 			} else if(array_exists(file_type, filename_ext(file))) {
-				var f = new FileObject(string_replace(file, filename_ext(file), ""), _path);
+				var f = new FileObject(_path);
 				ds_list_add(content, f);
 				
 				if(string_lower(filename_ext(file)) == ".png") {
@@ -193,6 +197,8 @@ function DirectoryObject(name, path) constructor {
 				}
 			}
 		}
+		
+		return self;
 	}
 	
 	static draw = function(parent, _x, _y, _m, _w, _hover, _focus, _homedir, _params = {}) {

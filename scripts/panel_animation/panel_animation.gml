@@ -1563,17 +1563,6 @@ function Panel_Animation() : PanelContent() constructor {
         
         var _graph_show = prop.sep_axis? prop.show_graphs[animator.index] : prop.show_graph;
         
-        if(_graph_show) {
-            var _y1 = ty + ui(10) + prop.graph_h + ui(8);
-            var c1  = colorMultiply(_item.item.color_cur, COLORS.panel_animation_dope_key_bg_hover);
-            draw_set_color(c1);
-            draw_rectangle(0, ty + ui(10), tx, _y1, false);
-        }
-        
-        var c0  = colorMultiply(_item.item.color_cur, COLORS.panel_animation_dope_key_bg);
-        draw_set_color(c0);
-        draw_rectangle(0, ty - ui(10), tx, ty + ui(10), false);
-        
         #region keyframe control
             tx = tool_width - ui(20 + 16 * 3);
             if(buttonInstant(noone, tx - ui(10), ty - ui(9), ui(20), ui(17), [msx, msy], pHOVER, pFOCUS, "", THEME.prop_keyframe, 0, [COLORS._main_icon, COLORS._main_icon_on_inner], _tool_a) == 2) {
@@ -1763,7 +1752,7 @@ function Panel_Animation() : PanelContent() constructor {
                 if(show_nodes) __drawDopesheetLabelItem(_cont, 0, _cont.y, msx, msy);
                 
                 if(_cont.type == "node" && _cont.item.show)
-                for( var j = 0; j < array_length(_cont.animators); j++ )
+                for( var j = 0, m = array_length(_cont.animators); j < m; j++ )
                     __drawDopesheetLabelAnimator(_cont, _cont.node, _cont.animators[j], msx, msy);
             }
             

@@ -1,0 +1,14 @@
+{
+  "$GMScript":"v1",
+  "%Name":"panel_node_custom_import",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"panel_node_custom_import",
+  "parent":{
+    "name":"nodes",
+    "path":"folders/panels/nodes.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+  "tags":[],
+}

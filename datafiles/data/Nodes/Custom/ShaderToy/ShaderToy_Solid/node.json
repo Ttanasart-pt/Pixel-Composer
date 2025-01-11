@@ -1,0 +1,30 @@
+{
+    "shader_vs": "shader.vs",
+    "shader_fs": "shader.fs",
+
+    "inputs": [
+        {
+            "name": "Dimension",
+            "type": "dimension",
+            "value": [ 1, 1 ],
+
+            "flag": "DIMENSION"
+        },
+        {
+            "name": "Color",
+            "type": "color",
+            "value": 0,
+
+            "uniform": "uColor"
+        },
+    ],
+    "input_display": [ 0, 1, ],
+
+    "outputs": [
+        {
+            "name": "Surface out",
+            "type": "surface",
+            "value": -4
+        }
+    ],
+}

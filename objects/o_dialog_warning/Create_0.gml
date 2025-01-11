@@ -8,4 +8,6 @@ event_inherited();
 	destroy_on_click_out = true;
 	warning_text = "";
 	life = 300;
+	
+	function setText(txt) { warning_text = txt; return self; }
 #endregion

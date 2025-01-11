@@ -1,13 +1,14 @@
 {
   "$GMScript":"v1",
-  "%Name":"boneObject",
+  "%Name":"node_custom",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"boneObject",
+  "name":"node_custom",
   "parent":{
-    "name":"bones",
-    "path":"folders/functions/bones.yy",
+    "name":"custom",
+    "path":"folders/nodes/data/misc/custom.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
+  "tags":[],
 }

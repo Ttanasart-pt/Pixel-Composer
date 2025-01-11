@@ -10,14 +10,14 @@ function __initCollection() {
 	if(check_version($"{root}/version"))
 		zip_unzip("data/Collections.zip", root);
 	
-	COLLECTIONS = new DirectoryObject("Collections", DIRECTORY + "Collections");
+	COLLECTIONS = new DirectoryObject(DIRECTORY + "Collections");
 	refreshCollections();
 }
 
 function refreshCollections() {
 	log_message("COLLECTION", "refreshing collection base folder.");
 	
-	COLLECTIONS = new DirectoryObject("Collections", DIRECTORY + "Collections");
+	COLLECTIONS = new DirectoryObject(DIRECTORY + "Collections");
 	COLLECTIONS.scan([".json", ".pxcc"]);
 	COLLECTIONS.open = true;
 }

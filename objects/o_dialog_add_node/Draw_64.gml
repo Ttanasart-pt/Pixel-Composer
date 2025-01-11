@@ -124,6 +124,17 @@ if(DIALOG_SHOW_FOCUS) DIALOG_DRAW_FOCUS
 			BLEND_MULTIPLY
 			draw_sprite_stretched(THEME.ui_panel_bg, 4, 0, 0, ww, hh);
 			BLEND_NORMAL
+			
+			var _aut = node_tooltip[$ "author"] ?? "";
+			var _lic = node_tooltip[$ "license"] ?? "";
+			
+			draw_set_text(f_p2b, fa_right, fa_top, COLORS._main_text);
+			draw_text_add(ww - ui(8), ui(8),      _aut);
+			
+			draw_set_text(f_p3, fa_right, fa_top, COLORS._main_text, 0.75);
+			draw_text_ext_add(ww - ui(8), ui(8 + 20), _lic, -1, ww - ui(16));
+			
+			draw_set_alpha(1);
 		surface_reset_shader();
 		
 		var x0 = min(node_tooltip_x, WIN_W - ww - ui(8));
@@ -139,14 +150,14 @@ if(DIALOG_SHOW_FOCUS) DIALOG_DRAW_FOCUS
 		var _sx = node_icon_x - ui(16);
 		var _sy = node_icon_y;
 		
-		var _sw = sprite_get_width(node_icon)  + ui(16);
-		var _sh = sprite_get_height(node_icon) + ui(16);
+		var _sw = ui(64);
+		var _sh = ui(64);
 		
 		var _bgx = _sx - _sw / 2;
 		var _bgy = _sy - _sh / 2;
 		
-		draw_sprite_stretched(THEME.node_junction_name_bg, 0, _bgx, _bgy, _sw, _sh);
-		draw_sprite_ext(node_icon, 0, _sx, _sy, 1, 1);
+		draw_sprite_stretched(THEME.node_junction_name_bg, 0, _bgx - ui(8), _bgy - ui(8), _sw + ui(16), _sh + ui(16));
+		draw_sprite_stretched(node_icon, 0, _bgx, _bgy, _sw, _sh);
 	}
 	node_icon = noone;
 	

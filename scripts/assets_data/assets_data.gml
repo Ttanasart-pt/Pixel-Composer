@@ -15,7 +15,8 @@
 			global.ASSETS = __initAssetsFolder(root);
 			
 		} else {
-			global.ASSETS = new DirectoryObject("Assets", "");
+			global.ASSETS = new DirectoryObject("");
+			global.ASSETS.name = "Assets";
 			
 			ds_list_add(global.ASSETS.subDir, __initAssetsFolder(root));
 			for( var i = 0, n = array_length(PREFERENCES.path_assets); i < n; i++ ) 
@@ -25,7 +26,7 @@
 	
 	function __initAssetsFolder(_dir) {
 	
-		var _folder = new DirectoryObject(filename_name_only(_dir), _dir);
+		var _folder = new DirectoryObject(_dir);
 		    _folder.scan([".png"]);
 		    _folder.open = true;
 		

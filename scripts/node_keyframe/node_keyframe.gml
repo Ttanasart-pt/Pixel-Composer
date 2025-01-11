@@ -591,6 +591,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 	
 	static serialize = function(scale = false) {
 		var _data = [];
+		var _comp = array_length(values) == 1;
 		
 		for(var i = 0; i < array_length(values); i++) {
 			var _value_list = [];
@@ -624,11 +625,12 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			_value_list[5] = _v.ease_out_type;
 			_value_list[6] = _v.ease_y_lock;
 			_value_list[7] = _v.drivers.type == DRIVER_TYPE.none? 0 : _v.drivers;
+			if(_v.drivers.type != DRIVER_TYPE.none) _comp = false;
 			
 			array_push(_data, _value_list);
 		}
 		
-		if(array_length(values) == 1) return { d: _data[0][1] };
+		if(_comp) return { d: _data[0][1] };
 		return _data;
 	}
 	
@@ -677,10 +679,10 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			
 			var _val = value;
 			
-			if(prop.type == VALUE_TYPE.struct)
+			if(prop.type == VALUE_TYPE.struct) {
 				_val = json_try_parse(value);
 			
-			else if(prop.type == VALUE_TYPE.path && prop.display_type == VALUE_DISPLAY.path_array) {
+			} else if(prop.type == VALUE_TYPE.path && prop.display_type == VALUE_DISPLAY.path_array) {
 				for(var j = 0; j < array_length(value); j++)
 					_val[j] = value[j];
 			
@@ -722,6 +724,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			vk.ease_in_type  = ease_in_type;
 			vk.ease_out_type = ease_out_type;
 			vk.ease_y_lock   = ease_y_lock;
+			
 			if(is_struct(driver)) struct_override(vk.drivers, driver);
 			
 			array_push(values, vk);

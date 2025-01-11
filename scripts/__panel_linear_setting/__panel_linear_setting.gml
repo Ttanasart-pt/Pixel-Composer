@@ -42,14 +42,15 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 	selecting_menu = noone;
 	properties     = [];
 	
-	prop_height = ui(32);
-	curr_height = 0;
+	prop_height  = ui(32);
+	curr_height  = 0;
+	shift_height = true;
 	
 	static setHeight   = function() { h = prop_height * array_length(properties) + ui(16); }
 	static resetHeight = function(_h) { 
 		if(h == _h) return;
 		
-		if(in_dialog) {
+		if(shift_height && in_dialog) {
 			panel.dialog_y -= _h - h; 
 			panel.dialog_h  = _h 
 			h = _h; 

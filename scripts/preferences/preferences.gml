@@ -254,7 +254,7 @@
 		
 		for( var i = 0; i < ds_list_size(RECENT_FILES); i++ ) {
 			var p = RECENT_FILES[| i];
-			RECENT_FILE_DATA[| i] = new FileObject(filename_name_only(p), p);
+			RECENT_FILE_DATA[| i] = new FileObject(p);
 		}
 	}
 #endregion

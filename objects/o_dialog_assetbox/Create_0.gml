@@ -115,6 +115,7 @@ event_inherited();
 				BLEND_NORMAL
 				
 				var spr = content.getSpr();
+				
 				if(sprite_exists(spr)) {
 					var sw = sprite_get_width(spr);
 					var sh = sprite_get_height(spr);
@@ -136,6 +137,10 @@ event_inherited();
 					
 					draw_sprite_stretched_ext(THEME.ui_panel, 0, _nx, _ny, _tw, _th - 1, COLORS.panel_bg_clear_inner, 0.85);
 					draw_text_add(xx + grid_size - ui(3), yy + grid_size - ui(2), _txt);
+					
+				} else if(spr == -1) {
+					var _rr = lerp(.075, .2, abs(dsin(current_time / 2)));
+					draw_circle_ui(xx + grid_size / 2, yy + grid_size / 2, grid_size * .25, _rr, COLORS._main_icon, 1);
 				}
 					
 				if(sHOVER && contentPane.hover && point_in_rectangle(_m[0], _m[1], xx, yy, xx + grid_size, yy + grid_size)) {

@@ -236,7 +236,7 @@ function Panel_Collection() : PanelContent() constructor {
 					var cat = NODE_CATEGORY[i];
 					
 					if(!struct_has(cat, "list")) continue;
-					if(!array_empty(cat.filter)) continue;
+					if(!array_empty(cat[$ "filter"])) continue;
 					
 					var _content = cat.list;
 					for(var j = 0; j < array_length(_content); j++) {
@@ -569,8 +569,8 @@ function Panel_Collection() : PanelContent() constructor {
 		for (var i = 0, n = array_length(NODE_CATEGORY); i < n; i++) {
 			var _cat = NODE_CATEGORY[i];
 			var _nam = _cat.name;
-			var _fil = _cat.filter;
-			if(!array_empty(_fil)) continue;
+			var _fil = _cat[$ "filter"];
+			if(_fil != undefined && !array_empty(_fil)) continue;
 			
 			var _y0 = _y;
 			var _y1 = _y + _hg;
@@ -621,7 +621,7 @@ function Panel_Collection() : PanelContent() constructor {
 			for( var i = 0, n = array_length(_cat.list); i < n; i++ )
 				ds_list_add(node_temp_list, _cat.list[i]);
 			
-			_list = nodeTempList;
+			_list = node_temp_list;
 		}
 		
 		var grid_width = PREFERENCES.collection_label? max(ui(40), round(grid_size * 1.25)) : grid_size;
@@ -644,9 +644,9 @@ function Panel_Collection() : PanelContent() constructor {
 		for(var index = 0; index < node_count; index++) {
 			var _node = _list[| index];
 			
-			if(!is_instanceof(_node, NodeObject))     continue;
-			if(_node.patreon && !IS_PATREON) continue;
-			if(_node.deprecated)					  continue;
+			if(!is_instanceof(_node, NodeObject)) continue;
+			if(_node.patreon && !IS_PATREON)      continue;
+			if(_node.deprecated)                  continue;
 			
 			i = floor(ii / col);
 			j = safe_mod(ii, col);

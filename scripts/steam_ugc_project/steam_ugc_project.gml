@@ -1,7 +1,7 @@
 function steam_ugc_create_project() {
 	if(STEAM_UGC_ITEM_UPLOADING) return;
 	
-	var file         = new FileObject(string_replace(filename_name(PROJECT.path), filename_ext(PROJECT.path), ""), PROJECT.path);
+	var file         = new FileObject(PROJECT.path);
 	file.meta        = PROJECT.meta;
 	file.spr_path[0] = DIRECTORY + "steamUGC/thumbnail.png";
 	
@@ -27,7 +27,7 @@ function steam_ugc_create_project() {
 function steam_ugc_update_project(update_preview = false, update_note = "Updated") {
 	if(STEAM_UGC_ITEM_UPLOADING) return;
 	
-	var file	= new FileObject(filename_name_only(PROJECT.path), PROJECT.path);
+	var file	= new FileObject(PROJECT.path);
 	file.meta   = PROJECT.meta;
 	
 	STEAM_UGC_UPDATE		 = true;

@@ -1,0 +1,20 @@
+[
+    {
+        "name": "Extra Blur",
+        "nodes": [
+            { "label": "Normal" },
+            "extrablur_polar",
+            "extrablur_hash",
+            "extrablur_tilt_shift",
+            "extrablur_cross",
+            "extrablur_two_passes",
+            
+            { "label": "Bokeh" },
+            "extrablur_bokeh",
+            "extrablur_bokeh_circle",
+
+            { "label": "Noise" },
+            "extrablur_simple_denoise",
+        ]
+    }
+]

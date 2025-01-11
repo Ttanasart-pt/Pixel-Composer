@@ -1,0 +1,14 @@
+{
+  "$GMScript":"v1",
+  "%Name":"file_drop_global",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"file_drop_global",
+  "parent":{
+    "name":"files",
+    "path":"folders/functions/files.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+  "tags":[],
+}

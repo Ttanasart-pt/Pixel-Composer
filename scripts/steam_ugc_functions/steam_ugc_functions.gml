@@ -63,7 +63,7 @@ function __loadSteamUGCCollection(file_id, f, path) { #region
 	
 	var fullPath  = $"{path}/{f}";
 	var name      = filename_name_only(f);
-	var file      = new FileObject(name, fullPath);
+	var file      = new FileObject(fullPath);
 	var icon_path = string_replace(fullPath, ".pxcc", ".png");
 	
 	if(file_exists_empty(icon_path)) {
@@ -88,7 +88,7 @@ function __loadSteamUGCProject(file_id, f, path) { #region
 	
 	var fullPath  = $"{path}/{f}";
 	var name      = filename_name_only(f);
-	var file      = new FileObject(name, fullPath);
+	var file      = new FileObject(fullPath);
 	var icon_path = path + "/thumbnail.png";
 	
 	if(file_exists_empty(icon_path)) {

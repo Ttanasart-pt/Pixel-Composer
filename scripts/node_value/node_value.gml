@@ -473,6 +473,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static setAnim = function(anim, record = false) {
 		if(is_anim == anim) return;
+		is_modified = true;
+		
 		if(record) {
 			recordAction(ACTION_TYPE.custom, function(data) {
 				setAnim(data.is_anim);
@@ -2369,7 +2371,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		if(type == VALUE_TYPE.path) {
-			DRAGGING.data = new FileObject(node.name, DRAGGING.data);
+			DRAGGING.data = new FileObject(DRAGGING.data);
 			DRAGGING.data.getSpr();
 		}
 		

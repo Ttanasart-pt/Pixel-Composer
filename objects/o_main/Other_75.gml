@@ -13,7 +13,9 @@ switch(ev_type) {
 		break;
 	
 	case "file_drop_end" :
-		_FILE_DROPPED    = true;
+		var _dropped  = files_drop_global(FILE_DROPPING);
+		_FILE_DROPPED = !_dropped;
+		
 		FILE_IS_DROPPING = false;
 		break;
 		

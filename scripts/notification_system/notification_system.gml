@@ -55,6 +55,8 @@
 		if(flash && PANEL_MENU) {
 			PANEL_MENU.noti_flash = 1;
 			PANEL_MENU.noti_flash_color = flash;
+			
+			dialogCall(o_dialog_warning, mouse_mx + ui(16), mouse_my + ui(16)).setText(str);
 		}
 		
 		if(!ds_list_empty(STATUSES) && STATUSES[| ds_list_size(STATUSES) - 1].txt == str) {
@@ -98,10 +100,8 @@
 		ds_list_add(STATUSES, noti);
 		ds_list_add(WARNING, noti);
 		
-		if(!instance_exists(o_dialog_warning)) {
-			var dia = dialogCall(o_dialog_warning, mouse_mx + ui(16), mouse_my + ui(16));
-			if(dia) dia.warning_text = str;
-		}
+		if(!instance_exists(o_dialog_warning))
+			dialogCall(o_dialog_warning, mouse_mx + ui(16), mouse_my + ui(16)).setText(str);
 		
 		if(ref) {
 			var onClick = function() { PANEL_GRAPH.focusNode(self.ref); };

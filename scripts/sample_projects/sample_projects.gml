@@ -16,7 +16,7 @@ function LOAD_FOLDER(list, folder) {
 		
 		if(!path_is_project(full_path)) continue;
 		
-		var f = new FileObject(filename_name_only(f), full_path);
+		var f = new FileObject(full_path);
 		var icon_path = string_replace(full_path, filename_ext(full_path), ".png");
 			
 		if(file_exists_empty(icon_path)) {
