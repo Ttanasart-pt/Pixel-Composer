@@ -51,6 +51,7 @@
 			
 			if(ch == " ") {
 				if(str) _fx += ch;
+				
 			} else {
 				if(ch == "-" && _prevSym)
 					_fx += $"0∸";
@@ -129,13 +130,9 @@
 		
 		for( var i = 0, n = array_length(fxs); i < n; i++ ) {
 			var _fx = functionStringClean(fxs[i]);
-			//print($"Eval line {i}: {_fx} [stack size = {ds_stack_size(call_st)}]");
 			
 			if(_fx == "" || _fx == "{") continue;
-			if(_fx == "}") {
-				ds_stack_pop(call_st);
-				continue;
-			}
+			if(_fx == "}") { ds_stack_pop(call_st); continue; }
 			
 			var _fx_sp = string_split(_fx, "(");
 			var _cmd   = string_trim(_fx_sp[0]);
@@ -167,7 +164,6 @@
 					continue;
 					
 				case "for":
-				
 					var con_for = new __funcFor();
 					var cond    = string_splice(_cond, ":");
 					if(array_length(cond) == 2) {
@@ -195,6 +191,7 @@
 			
 			if(ds_stack_empty(call_st)) {
 				print("Block stack empty, how?");
+				
 			} else {
 				var _top = ds_stack_top(call_st);
 				_top.addFunction(evaluateFunctionTree(_fx));

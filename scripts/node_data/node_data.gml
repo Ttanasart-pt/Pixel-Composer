@@ -24,7 +24,6 @@
 
 function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
-	
 	#region ---- main & active ----
 		project      = PROJECT;
 		

@@ -836,13 +836,13 @@
         "name": "Animation",
         "nodes": [
             { "label": "Animations" },
-            "Node_Counter",
             "Node_Rate_Remap",
             "Node_Delay",
             "Node_Stagger",
             "Node_Revert",
             
             { "label": "Value" },
+            "Node_Counter",
             "Node_Anim_Curve",
             "Node_Fn_WaveTable",
             "Node_Wiggler",

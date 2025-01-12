@@ -130,7 +130,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				var tx = xx + ui(40) + string_width(_name) + ui(16);
 				var ty = lb_y - ui(1);
 				
-				if(point_in_circle(_m[0], _m[1], tx, ty, ui(10))) {
+				if(_hover && point_in_circle(_m[0], _m[1], tx, ty, ui(10))) {
 					cHov  = true;
 					
 					TOOLTIP = jun.active_tooltip;
@@ -150,7 +150,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			var tx = xx + ui(40) + string_width(_name) + ui(16);
 			var ty = lb_y - ui(1);
 					
-			if(point_in_circle(_m[0], _m[1], tx, ty, ui(10))) {
+			if(_hover && point_in_circle(_m[0], _m[1], tx, ty, ui(10))) {
 				cHov  = true;
 				
 				if(is_string(jun.tooltip))
