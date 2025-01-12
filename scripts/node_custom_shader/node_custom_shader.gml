@@ -132,15 +132,17 @@ function __Custom_Shader() constructor {
 function Node_Custom_Shader(_x, _y, _group = noone, _param = {}) : Node_Custom(_x, _y, _group, _param) constructor {
 	multipass = false;
 	
-	shader    = noone;
-	uniform   = [];
+	shader     = noone;
+	uniform    = [];
 	
-	shaders   = [];
-	uniformMap= {};
+	shaders    = [];
+	uniformMap = {};
 	
 	surface_index   = noone;
 	dimension_index = noone;
 	texfilter       = "none";
+	
+	attribute_surface_depth();
 	
 	static onParseInfo = function() {
 		multipass = struct_has(node_info, "passes");
@@ -205,13 +207,13 @@ function Node_Custom_Shader(_x, _y, _group = noone, _param = {}) : Node_Custom(_
 		
 		if(sw == 0 || sh == 0) return _output;
 		
-		_output = surface_verify(_output, sw, sh);
+		_output = surface_verify(_output, sw, sh, attrDepth());
 		
 		if(multipass) {
 			var _draw = _surf;
 			
 			for( var i = 0, n = array_length(shaders); i < n; i++ ) {
-				temp_surface[i] = surface_verify(temp_surface[i], sw, sh);
+				temp_surface[i] = surface_verify(temp_surface[i], sw, sh, attrDepth());
 				
 				var _sh = shaders[i];
 				var _shader  = _sh.shader;

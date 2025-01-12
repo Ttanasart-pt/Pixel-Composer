@@ -44,7 +44,7 @@ function Node_Bevel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	attribute_surface_depth();
 	attribute_oversample();
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		PROCESSOR_OVERLAY_CHECK
 		
 		var _surf = current_data[0];
@@ -57,13 +57,13 @@ function Node_Bevel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var hv = inputs[2].drawOverlay(hover, active, _x + _pw, _y + _ph, _s, _mx, _my, _snx, _sny); _hov |= hv;
 		
 		return _hov;
-	} #endregion
+	}
 	
-	static step = function() { #region
+	static step = function() {
 		__step_mask_modifier();
 		
 		inputs[1].mappableStep();
-	} #endregion
+	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _hei = _data[1];

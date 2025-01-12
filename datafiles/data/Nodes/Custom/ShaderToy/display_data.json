@@ -8,6 +8,7 @@
             { "label" : "FIlters" }, 
             "shadertoy_film_grain",
             "shadertoy_tim_crt",
+            "shadertoy_brannan",
         ]
     }
 ]
