@@ -9,7 +9,8 @@ uniform vec2      range;
 uniform int       rangeUseSurf;
 uniform sampler2D rangeSurf;
 
-uniform int keep;
+uniform float     smoothness;
+uniform int       keep;
 
 void main() {
 	float mid = middle.x;
@@ -24,13 +25,15 @@ void main() {
 		rng = mix(range.x, range.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
 	}
 	
-	vec4 col     = v_vColour * texture2D( gm_BaseTexture, v_vTexcoord );
+	vec4  col    = texture2D( gm_BaseTexture, v_vTexcoord );
 	float bright = dot(col.rgb, vec3(0.2126, 0.7152, 0.0722));
 	
-	if(bright > mid + rng || bright < mid - rng)
-		gl_FragColor = vec4(vec3(0.), col.a);
-	else if(keep == 0)
-		gl_FragColor = vec4(vec3(1.), col.a);
+	if(keep == 0) col.rgb = vec3(1.);
+	
+	if(smoothness == 0.)
+		col.rgb *= 1. - step(rng, abs(bright - mid));
 	else 
-		gl_FragColor = vec4(vec3(bright), col.a);
+		col.rgb *= 1. - smoothstep(rng - smoothness, rng + smoothness, abs(bright - mid));
+	
+	gl_FragColor = vec4(col.rgb, col.a);
 }

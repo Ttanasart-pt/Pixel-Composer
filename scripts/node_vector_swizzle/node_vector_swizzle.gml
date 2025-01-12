@@ -13,21 +13,10 @@ function Node_Vector_Swizzle(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	
 	static char_get_index = function(_chr) {
 		switch(string_lower(_chr)) {
-			case "r" : 
-			case "x" : 
-				return 0;
-				
-			case "g" : 
-			case "y" : 
-				return 1;
-				
-			case "b" : 
-			case "z" : 
-				return 2;
-				
-			case "a" : 
-			case "w" : 
-				return 3;
+			case "r" : case "x" : return 0;
+			case "g" : case "y" : return 1;
+			case "b" : case "z" : return 2;
+			case "a" : case "w" : return 3;
 		}
 		
 		return 0;

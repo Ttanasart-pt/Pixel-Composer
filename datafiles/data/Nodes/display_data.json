@@ -675,6 +675,7 @@
             "Node_Vector_Swizzle",
             { "label": "/Operators" },
             "Node_Vector_Magnitude",
+            "Node_Vector_Normalize",
             "Node_Vector_Dot",
             "Node_Vector_Cross_2D",
             "Node_Vector_Cross_3D",

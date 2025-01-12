@@ -1,0 +1,2 @@
+Compress-Archive -Path 'D:\Project\MakhamDev\LTS-PixelComposer\PixelComposer\datafiles\data\Nodes\Internal' -DestinationPath 'D:\Project\MakhamDev\LTS-PixelComposer\PixelComposer\datafiles\data\Nodes\Internal.zip' -Update
+Compress-Archive -Path 'D:\Project\MakhamDev\LTS-PixelComposer\PixelComposer\datafiles\data\Nodes\Actions' -DestinationPath 'D:\Project\MakhamDev\LTS-PixelComposer\PixelComposer\datafiles\data\Nodes\Actions.zip' -Update
