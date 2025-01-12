@@ -252,7 +252,8 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	function createControl() {
 		var index = array_length(inputs);
-		newInput(index, nodeValue_Float("Control point", self, [ PUPPET_FORCE_MODE.move, 16, 16, 8, 0, 8, 8 ]))
+		newInput(index, nodeValue_Float("Control point", self))
+			.setValue([ PUPPET_FORCE_MODE.move, 16, 16, 8, 0, 8, 8 ])
 			.setDisplay(VALUE_DISPLAY.puppet_control)
 		
 		array_push(input_display_list, index);

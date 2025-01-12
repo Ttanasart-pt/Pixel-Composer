@@ -659,7 +659,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			updateKeyMap();
 			return;
 		}
-					
+		
 		var base = prop.def_val;
 		
 		for(var i = 0; i < array_length(_data); i++) {

@@ -351,6 +351,7 @@
             "Node_Blur_Box",
             "Node_Blur_Shape",
             "Node_High_Pass",
+            "Node_FXAA",
             { "label": "/Linear" },
             "Node_Blur_Directional",
             "Node_Blur_Slope",
@@ -762,6 +763,7 @@
             "Node_Path_Fill",
             "Node_Path_Map",
             "Node_Path_Morph",
+            "Node_Path_SDF",
             { "label": "/Segments" },
             "Node_Segment_Filter",
             

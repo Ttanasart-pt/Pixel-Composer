@@ -1,0 +1,14 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_path_sdf",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_path_sdf",
+  "parent":{
+    "name":"path",
+    "path":"folders/nodes/data/value/path.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+  "tags":[],
+}

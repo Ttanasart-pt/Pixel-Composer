@@ -315,10 +315,14 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 		if(struct_has(_data, "tooltip")) setTooltip(_data.tooltip);
 		
 		if(struct_has(_data, "spr")) {
-			var _spr  = _data[$ "spr"];
-			_spr = asset_get_index(_spr);
+			var _ispr = _data[$ "spr"];
+			_spr = asset_get_index(_ispr);
 				
-			if(sprite_exists(_spr)) spr = _spr;
+			if(sprite_exists(_spr))
+				spr = _spr;
+			else 
+				print($"Node icon not found {_ispr}");
+			
 		} else {
 			var pth = $"{sourceDir}/icon.png";
 			if(file_exists_empty(pth)) {

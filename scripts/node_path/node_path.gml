@@ -107,7 +107,8 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	static createNewInput = function(_x = 0, _y = 0, _dxx = 0, _dxy = 0, _dyx = 0, _dyy = 0, rec = true) {
 		var index = array_length(inputs);
 		
-		newInput(index, nodeValue_Path_Anchor("Anchor", self, newAnchor( _x, _y, _dxx, _dxy, _dyx, _dyy )));
+		newInput(index, nodeValue_Path_Anchor("Anchor", self, []))
+			.setValue(newAnchor( _x, _y, _dxx, _dxy, _dyx, _dyy ));
 		
 		if(rec) {
 			recordAction(ACTION_TYPE.array_insert, inputs, [ inputs[index], index, $"add path anchor point {index}" ]);
