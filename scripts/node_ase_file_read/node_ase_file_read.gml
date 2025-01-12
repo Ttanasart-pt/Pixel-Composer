@@ -43,10 +43,21 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	newOutput(1, nodeValue_Output("Content", self, VALUE_TYPE.object, self))
 		.setIcon(s_junc_aseprite, c_white);
 	
-	newOutput(2, nodeValue_Output("Path", self, VALUE_TYPE.path, ""));
+	newOutput(2, nodeValue_Output("Path", self, VALUE_TYPE.path, ""))
+		.setVisible(false);
 	
 	newOutput(3, nodeValue_Output("Palette", self, VALUE_TYPE.color, []))
-		.setDisplay(VALUE_DISPLAY.palette);
+		.setDisplay(VALUE_DISPLAY.palette)
+		.setVisible(false);
+	
+	newOutput(4, nodeValue_Output("Layers", self, VALUE_TYPE.text, []))
+		.setVisible(false);
+	
+	newOutput(5, nodeValue_Output("Tags", self, VALUE_TYPE.text, []))
+		.setVisible(false);
+	
+	newOutput(6, nodeValue_Output("Raw data", self, VALUE_TYPE.struct, {}))
+		.setVisible(false);
 	
 	hold_visibility = true;
 	layer_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { 
@@ -324,17 +335,21 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var current_tag = getInputData(2);
 		
 		outputs[2].setValue(path);
+		outputs[6].setValue(content);
 		
 		if(path_current != path) updatePaths(path);
 		if(content == noone) return;
 		
 		var tag = noone;
+		var tagNames = array_create(array_length(tags));
 		for( var i = 0, n = array_length(tags); i < n; i++ ) {
+			tagNames[i] = tags[i][$ "Name"];
 			if(tags[i][$ "Name"] == current_tag) {
 				tag = tags[i];
 				break;
 			}
 		}
+		outputs[5].setValue(tagNames);
 		
 		_tag_delay = 0;
 		for( var i = 0; i < array_length(inputs[2].animator.values); i++ ) {
@@ -357,9 +372,12 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		}
 		
 		var _bg = 0;
+		var _layerNames = array_create(array_length(layers));
 		blend_temp_surface = temp_surface[2];
 		
 		for( var i = 0, n = array_length(layers); i < n; i++ ) {
+			_layerNames[i] = layers[i].name;
+			
 			layers[i].tag = tag;
 			var cel = layers[i].getCel(CURRENT_FRAME - _tag_delay);
 			if(!cel) continue;
@@ -378,6 +396,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			_bg = !_bg;
 		}
 		
+		outputs[4].setValue(_layerNames);
 		surface_set_shader(surf);
 			DRAW_CLEAR
 			draw_surface_safe(temp_surface[!_bg]);

@@ -1,6 +1,5 @@
 /*
 * ASE file reader
-* Author: MakhamDev
 * File spec from: https://github.com/aseprite/aseprite/blob/main/docs/ase-file-specs.md
 */
 
