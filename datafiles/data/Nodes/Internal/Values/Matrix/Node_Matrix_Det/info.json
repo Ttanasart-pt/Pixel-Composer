@@ -1,0 +1,9 @@
+{
+  "name":"Matrix Determinant",
+  "baseNode":"Node_Matrix_Det",
+  "tooltip":"Calculate the determinant of a matrix.",
+  "spr":"s_node_matrix_det",
+  "io":[
+    "float",
+  ],
+}

@@ -682,6 +682,10 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			if(prop.type == VALUE_TYPE.struct) {
 				_val = json_try_parse(value);
 			
+			} else if(prop.display_type == VALUE_DISPLAY.matrix) {
+				var mat = new Matrix();
+				_val = mat.deserialize(value);
+			
 			} else if(prop.type == VALUE_TYPE.path && prop.display_type == VALUE_DISPLAY.path_array) {
 				for(var j = 0; j < array_length(value); j++)
 					_val[j] = value[j];

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_vec2_cart_to_polar",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_vec2_cart_to_polar",
+  "parent":{
+    "name":"vector",
+    "path":"folders/nodes/data/value/vector.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

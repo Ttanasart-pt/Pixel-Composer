@@ -26,7 +26,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		x	= node.x; rx  = node.x; 
 		y   = node.y; ry  = node.y;
 		
-		index     = array_length(node.inputs);
+		index     = array_length(_connect == CONNECT_TYPE.input? node.inputs : node.outputs);
 		type      = _type;
 		forward   = true;
 		_initName = _name;
@@ -766,7 +766,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break;
 						
 					case VALUE_DISPLAY.matrix :		
-						editWidget = new matrixGrid(_txt, display_data.size, function(val, index) /*=>*/ {return setValueInspector(val, index)}, unit );
+						editWidget = new matrixGrid(_txt, function(val, index) /*=>*/ {return setValueInspector(val, index)}, unit );
+						if(struct_has(display_data, "size")) editWidget.setSize(display_data.size);
 						
 						for( var i = 0, n = array_length(animators); i < n; i++ )
 							animators[i].suffix = $" {i}";
@@ -775,7 +776,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break;
 						
 					case VALUE_DISPLAY.boolean_grid :
-						editWidget = new matrixGrid(_txt, display_data.size, function(val, index) /*=>*/ {return setValueInspector(val, index)}, unit );
+						editWidget = new matrixGrid(_txt, function(val, index) /*=>*/ {return setValueInspector(val, index)}, unit );
+						if(struct_has(display_data, "size")) editWidget.setSize(display_data.size);
 						
 						for( var i = 0, n = array_length(animators); i < n; i++ )
 							animators[i].suffix = $" {i}";

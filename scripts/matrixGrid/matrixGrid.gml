@@ -1,9 +1,11 @@
-function matrixGrid(_type, _size, _onModify, _unit = noone) : widget() constructor {
+function matrixGrid(_type, _onModify, _unit = noone) : widget() constructor {
 	type     = _type;
-	size	 = 1;
+	size	 = [1, 1];
+	vsize    = 0;
 	onModify = _onModify;
 	unit	 = _unit;
 	
+	tb = [];
 	linked = false;
 	b_link = button(function() /*=>*/ { linked = !linked; });
 	b_link.icon = THEME.value_link;
@@ -12,7 +14,7 @@ function matrixGrid(_type, _size, _onModify, _unit = noone) : widget() construct
 		var modi = false;
 		
 		if(linked) {
-			for( var i = 0; i < size * size; i++ )
+			for( var i = 0; i < vsize; i++ )
 				modi |= onModify(toNumber(val), i); 
 			return modi;
 		}
@@ -23,23 +25,26 @@ function matrixGrid(_type, _size, _onModify, _unit = noone) : widget() construct
 	extras = -1;
 	
 	static setSize = function(_size) {
-		if(size == _size) return self;
-		size = _size;
+		if(!is_array(_size)) _size = [ _size, _size ];
+		if(size[0] == _size[0] && size[1] == _size[1]) return self;
 		
-		for(var i = 0; i < size * size; i++) {
+		size  = _size;
+		vsize = size[0] * size[1];
+		
+		for(var i = 0; i < vsize; i++) {
 			tb[i] = new textBox(type, onModifyIndex);
 			tb[i].onModifyParam = i;
 			tb[i].slidable = true;
 		}
 		
 		return self;
-	} setSize(_size);
+	} setSize(1);
 	
 	static setInteract = function(interactable = false) { 
 		self.interactable   = interactable;
 		b_link.interactable = interactable;
 		
-		for( var i = 0; i < size * size; i++ )
+		for( var i = 0; i < vsize; i++ )
 			tb[i].interactable = interactable;
 		
 		if(extras) 
@@ -49,7 +54,7 @@ function matrixGrid(_type, _size, _onModify, _unit = noone) : widget() construct
 	static register = function(parent = noone) {
 		b_link.register(parent);
 		
-		for( var i = 0; i < size * size; i++ )
+		for( var i = 0; i < vsize; i++ )
 			tb[i].register(parent);
 		
 		if(extras) 
@@ -60,28 +65,30 @@ function matrixGrid(_type, _size, _onModify, _unit = noone) : widget() construct
 	}
 	
 	static isHovering = function() { 
-		for( var i = 0, n = size * size; i < n; i++ ) if(tb[i].isHovering()) return true;
+		for( var i = 0, n = vsize; i < n; i++ ) if(tb[i].isHovering()) return true;
 		return false;
 	}
 	
 	static drawParam = function(params) {
 		setParam(params);
-		for(var i = 0; i < size * size; i++)
+		for(var i = 0; i < vsize; i++)
 			tb[i].setParam(params);
 	
 		return draw(params.x, params.y, params.w, params.h, params.data, params.m);
 	}
 	
 	static draw = function(_x, _y, _w, _h, _data, _m) {
+		if(is(_data, Matrix)) setSize(_data.size);
+		
 		x = _x;
 		y = _y;
 		w = _w;
-		h = _h * size;
+		h = _h * size[1];
 		
-		var ww = _w / size;
+		var ww = _w / size[0];
 		
 		var _bs = min(_h, ui(32));
-		if((_w - _bs) / size > ui(64)) {
+		if((_w - _bs) / size[0] > ui(64)) {
 			if(extras && instanceof(extras) == "buttonClass") {
 				extras.setFocusHover(active, hover);			
 				extras.draw(_x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide_fill);
@@ -101,7 +108,7 @@ function matrixGrid(_type, _size, _onModify, _unit = noone) : widget() construct
 			b_link.icon_blend = linked? COLORS._main_accent : COLORS._main_icon;
 			b_link.tooltip = linked? __txt("Unlink values") : __txt("Link values");
 				
-			var th = _h * size - ui(8);
+			var th = _h * size[1] - ui(8);
 			var bx = _x;
 			var by = _y + th / 2 - _bs / 2;
 			b_link.draw(bx, by, _bs, _bs, _m, THEME.button_hide_fill);
@@ -111,18 +118,20 @@ function matrixGrid(_type, _size, _onModify, _unit = noone) : widget() construct
 		
 		}
 		
-		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, ww * size, _h * size, boxColor, 1);
-		draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, ww * size, _h * size, boxColor, 0.5 + 0.5 * interactable);	
+		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, ww * size[0], _h * size[1], boxColor, 1);
+		draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, ww * size[0], _h * size[1], boxColor, 0.5 + 0.5 * interactable);	
 		
-		for(var i = 0; i < size; i++)
-		for(var j = 0; j < size; j++) {
-			var ind = i * size + j;
+		var _raw = is(_data, Matrix)? _data.raw : _data;
+		
+		for(var i = 0; i < size[1]; i++)
+		for(var j = 0; j < size[0]; j++) {
+			var ind = i * size[0] + j;
 			tb[ind].setFocusHover(active, hover);
 			tb[ind].hide = true;
 			
 			var bx  = _x + ww * j;
 			var by  = _y + _h * i;
-			var _dat = array_safe_get_fast(_data, ind);
+			var _dat = array_safe_get_fast(_raw, ind);
 			
 			tb[ind].draw(bx, by, ww, _h, _dat, _m);
 		}
@@ -133,7 +142,7 @@ function matrixGrid(_type, _size, _onModify, _unit = noone) : widget() construct
 	}
 	
 	static clone = function() {
-		var cln = new matrixGrid(type, size, onModify, unit);
+		var cln = new matrixGrid(type, onModify, unit);
 		return cln;
 	}
 

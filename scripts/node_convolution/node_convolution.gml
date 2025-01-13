@@ -3,8 +3,7 @@ function Node_Convolution(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	newInput(0, nodeValue_Surface("Surface in", self));
 	
-	newInput(1, nodeValue_Float("Kernel", self, array_create(9)))
-		.setDisplay(VALUE_DISPLAY.matrix, { size: 3 });
+	newInput(1, nodeValue_Matrix("Kernel", self, new Matrix(3)));
 	
 	newInput(2, nodeValue_Enum_Scroll("Oversample mode", self, 0, [ "Empty", "Clamp", "Repeat" ]))
 		.setTooltip("How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.");
@@ -28,7 +27,7 @@ function Node_Convolution(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
 	
-	input_display_list = [ 5, 6,
+	input_display_list = [ 5, 6, 
 		["Surfaces", true],	0, 3, 4, 7, 8, 
 		["Kernel",	false],	10, 1, 9, 
 	];
@@ -36,22 +35,20 @@ function Node_Convolution(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	attribute_surface_depth();
 	attribute_oversample();
 	
-	static step = function() {
-		__step_mask_modifier();
-	}
+	static step = function() { __step_mask_modifier(); }
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _ker = _data[1];
 		var _nrm = _data[9];
 		var _siz = max(3, _data[10]);
+		_ker.setSize(_siz);
 		
-		inputs[1].editWidget.setSize(_siz);
-		_ker = array_verify(_ker, _siz * _siz);
+		var _dat = _ker.raw;
 		
 		surface_set_shader(_outSurf, sh_convolution, true, BLEND.over);
 			shader_set_i("sampleMode",  getAttribute("oversample"));
 			shader_set_dim("dimension", _outSurf);
-			shader_set_f("kernel",      _ker);
+			shader_set_f("kernel",      _dat);
 			shader_set_i("size",        _siz);
 			shader_set_i("normalized",  _nrm);
 			

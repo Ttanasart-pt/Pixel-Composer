@@ -20,19 +20,19 @@ function Node_Vector_Normalize(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 			
 			case 2 : 
 			    var _len = sqrt(sqr(_vec[0]) + sqr(_vec[1]));
-			    return [ _vec[0] / _len, _vec[1] / _len ];
+			    return _len == 0? [0, 0] : [ _vec[0] / _len, _vec[1] / _len ];
 			    
 			case 3 : 
 			    var _len = sqrt(sqr(_vec[0]) + sqr(_vec[1]) + sqr(_vec[2]));
-			    return [ _vec[0] / _len, _vec[1] / _len, _vec[2] / _len ];
+			    return _len == 0? [0, 0, 0] : [ _vec[0] / _len, _vec[1] / _len, _vec[2] / _len ];
 			    
 			case 4 : 
 			    var _len = sqrt(sqr(_vec[0]) + sqr(_vec[1]) + sqr(_vec[2]) + sqr(_vec[3]));
-			    return [ _vec[0] / _len, _vec[1] / _len, _vec[2] / _len, _vec[3] / _len ];
+			    return _len == 0? [0, 0, 0, 0] : [ _vec[0] / _len, _vec[1] / _len, _vec[2] / _len, _vec[3] / _len ];
 			
 			default : 
 				__len = sqrt(array_reduce(_vec, function(_p, _c) /*=>*/ { return _p + _c * _c; }, 0));
-				return array_map(_vec, function(v) /*=>*/ {return v / __len});
+				return __len == 0? array_create(array_length(_vec), 0) : array_map(_vec, function(v) /*=>*/ {return v / __len});
 		}
 		
 		return 1;

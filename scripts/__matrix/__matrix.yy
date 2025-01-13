@@ -1,0 +1,14 @@
+{
+  "$GMScript":"v1",
+  "%Name":"__matrix",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"__matrix",
+  "parent":{
+    "name":"matrix",
+    "path":"folders/functions/matrix.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+  "tags":[],
+}
