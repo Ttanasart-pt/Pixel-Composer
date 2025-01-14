@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"node_palette_shrink",
   "parent":{
-    "name":"color",
-    "path":"folders/nodes/data/value/color.yy",
+    "name":"palette",
+    "path":"folders/nodes/data/value/palette.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

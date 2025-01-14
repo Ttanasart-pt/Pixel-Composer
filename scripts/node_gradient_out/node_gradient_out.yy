@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"node_gradient_out",
   "parent":{
-    "name":"color",
-    "path":"folders/nodes/data/value/color.yy",
+    "name":"gradient",
+    "path":"folders/nodes/data/value/gradient.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

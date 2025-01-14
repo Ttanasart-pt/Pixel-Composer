@@ -38,12 +38,6 @@ function Node_Color_OKLCH(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		var alp = _data[3];
 		var clp = _data[4];
 		
-		// var k1 = 0.206;
-		// var k2 = 0.03;
-		// var k3 = (1 + k1) / (1 + k2);
-		// l = (k3 * l - k1 * sqrt(sqr(k3 * l - k1) + 4 * k2 * k3 * l)) / 2;
-		// l = (l * (l + k1)) / (k3 * (l + k2));
-		
 		var rgb = oklch2rgb([ l, c, h ]);
 		
 		var _inrange = rgb[0] >= 0 && rgb[0] <= 1 &&

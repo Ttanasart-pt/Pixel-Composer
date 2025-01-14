@@ -156,7 +156,7 @@ if(DIALOG_SHOW_FOCUS) DIALOG_DRAW_FOCUS
 		var _bgx = _sx - _sw / 2;
 		var _bgy = _sy - _sh / 2;
 		
-		draw_sprite_stretched(THEME.node_junction_name_bg, 0, _bgx - ui(8), _bgy - ui(8), _sw + ui(16), _sh + ui(16));
+		draw_sprite_stretched(THEME.node_junction_name_bg, 0, _bgx - ui(10), _bgy - ui(10), _sw + ui(20), _sh + ui(20));
 		draw_sprite_stretched(node_icon, 0, _bgx, _bgy, _sw, _sh);
 	}
 	node_icon = noone;

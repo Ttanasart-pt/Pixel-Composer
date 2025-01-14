@@ -1,0 +1,9 @@
+{
+  "name":"Color OKLCH",
+  "baseNode":"Node_Color_to_OKLCH",
+  "spr":"s_node_color_to_oklch",
+  "tooltip":"Return normalized LCH components of a color.",
+  "io":[
+    "color"
+  ],
+}

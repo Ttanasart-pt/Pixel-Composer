@@ -1,0 +1,9 @@
+{
+  "name":"Color RGB",
+  "baseNode":"Node_Color_to_RGB",
+  "spr":"s_node_color_to_rgb",
+  "tooltip":"Return normalized RGB components of a color.",
+  "io":[
+    "color"
+  ],
+}
