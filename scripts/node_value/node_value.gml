@@ -1575,7 +1575,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			attributes.use_project_dimension = false;
 		
 		if(connect_type == CONNECT_TYPE.input && self.index >= 0) {
-			var _val = animator.getValue(time);
+			var _val = getValue(time);
 			
 			node.inputs_data[self.index]         = _val; // setInputData(self.index, _val);
 			node.input_value_map[$ internalName] = _val;
