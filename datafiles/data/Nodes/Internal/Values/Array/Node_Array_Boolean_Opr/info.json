@@ -6,5 +6,11 @@
   "io":[
     "float"
   ],
+  "alias":[
+    "union",
+    "intersection",
+    "difference",
+    "xor",
+  ]
   "pxc_version":118069,
 }

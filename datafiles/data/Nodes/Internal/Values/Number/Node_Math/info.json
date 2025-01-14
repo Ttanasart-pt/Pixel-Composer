@@ -23,7 +23,8 @@
     "abs",
     "fract",
     "clamp",
-    "snap"
+    "snap",
+    "map",
   ],
   "spr":"s_node_math",
   "baseNode":"Node_Math",

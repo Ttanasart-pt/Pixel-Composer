@@ -664,6 +664,7 @@
             "Node_Statistic",
             "Node_Base_Convert",
             "Node_FFT",
+            "Node_Differential",
             { "label": "/Surfaces" },
             "Node_Interpret_Number",
             
