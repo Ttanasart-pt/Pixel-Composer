@@ -1,0 +1,9 @@
+{
+  "name":"Array Unique",
+  "baseNode":"Node_Array_Unique",
+  "tooltip":"Return a new array with all duplicate values removed.",
+  "spr":"s_node_array_unique",
+  "io":[
+    "float"
+  ],
+}
