@@ -49,21 +49,21 @@
 	if(OS == os_macosx) APP_LOCATION = string_replace(APP_LOCATION, "/Contents/MacOS/", "/Contents/Resources/");
 	if(RUN_IDE)         APP_LOCATION = "D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/datafiles/";
 		
-	print($"===================== WORKING DIRECTORIES =====================\n\t{working_directory}\n\t{DIRECTORY}");
+	printDebug($"===================== WORKING DIRECTORIES =====================\n\t{working_directory}\n\t{DIRECTORY}");
 	directory_verify($"{DIRECTORY}log");
 #endregion
 
 #region Set up
 	var t = get_timer();
 	
-	              PREF_LOAD();                  log_message("SESSION", $"> init Preferences   | complete in {get_timer() - t}");    t = get_timer();
-	if(!IS_CMD) { __initLocale();               log_message("SESSION", $"> init Locale        | complete in {get_timer() - t}");    t = get_timer(); }
-	if(!IS_CMD) { __initHotKey();               log_message("SESSION", $"> init Hotkeys       | complete in {get_timer() - t}");    t = get_timer(); }
+	              PREF_LOAD();                  printDebug($"> init Preferences   | complete in {get_timer() - t}");    t = get_timer();
+	if(!IS_CMD) { __initLocale();               printDebug($"> init Locale        | complete in {get_timer() - t}");    t = get_timer(); }
+	if(!IS_CMD) { __initHotKey();               printDebug($"> init Hotkeys       | complete in {get_timer() - t}");    t = get_timer(); }
 	
 	log_clear();
 	log_newline();
-	log_message("SESSION", "Begin");
-	log_message("DIRECTORY", DIRECTORY);
+	printDebug("Begin");
+	printDebug($"DIRECTORY {DIRECTORY}");
 	
 	PREF_APPLY();
 	var t0   = get_timer();
@@ -71,34 +71,34 @@
 	var _lua = PROGRAM_ARGUMENTS._lua;
 	
 				  __initKeys()
-				  __initPatreon();              log_message("SESSION", $"> init Patreon       | complete in {get_timer() - t}");    t = get_timer();
-    if(!IS_CMD) { __initTheme();                log_message("SESSION", $"> init Theme         | complete in {get_timer() - t}");    t = get_timer(); }
-    if(!IS_CMD) { loadFonts();                  log_message("SESSION", $"> init Font          | complete in {get_timer() - t}");    t = get_timer(); }
-	if(!IS_CMD) { __initProject();              log_message("SESSION", $"> init Project       | complete in {get_timer() - t}");    t = get_timer(); }
+				  __initPatreon();              printDebug($"> init Patreon       | complete in {get_timer() - t}");    t = get_timer();
+    if(!IS_CMD) { __initTheme();                printDebug($"> init Theme         | complete in {get_timer() - t}");    t = get_timer(); }
+    if(!IS_CMD) { loadFonts();                  printDebug($"> init Font          | complete in {get_timer() - t}");    t = get_timer(); }
+	if(!IS_CMD) { __initProject();              printDebug($"> init Project       | complete in {get_timer() - t}");    t = get_timer(); }
 	              __fnInit();
     
-	if(!IS_CMD) { __initAction();               log_message("SESSION", $"> init Action        | complete in {get_timer() - t}");    t = get_timer(); }
-				  __initSurfaceFormat();        log_message("SESSION", $"> init SurfaceFormat | complete in {get_timer() - t}");    t = get_timer();
-    if(!IS_CMD) { __initCollection();           log_message("SESSION", $"> init Collection    | complete in {get_timer() - t}");    t = get_timer(); }
-    if(!IS_CMD) { __initAssets();               log_message("SESSION", $"> init Assets        | complete in {get_timer() - t}");    t = get_timer(); }
-    if(!IS_CMD) { __initPresets();              log_message("SESSION", $"> init Presets       | complete in {get_timer() - t}");    t = get_timer(); }
-	if(!IS_CMD) { __initFontFolder();           log_message("SESSION", $"> init FontFolder    | complete in {get_timer() - t}");    t = get_timer(); }
-	if(_lua)    { __initLua();                  log_message("SESSION", $"> init Lua           | complete in {get_timer() - t}");    t = get_timer(); }
-	if(!IS_CMD) { __initNodeData();             log_message("SESSION", $"> init NodeData      | complete in {get_timer() - t}");    t = get_timer(); }
-				  __initNodes();                log_message("SESSION", $"> init Nodes         | complete in {get_timer() - t}");    t = get_timer();
-    if(!IS_CMD) { __initSteamUGC();             log_message("SESSION", $"> init SteamUGC      | complete in {get_timer() - t}");    t = get_timer(); }
-    if(!IS_CMD) { __initAddon();                log_message("SESSION", $"> init Addon         | complete in {get_timer() - t}");    t = get_timer(); }
-    if(!IS_CMD) { __initPalette();              log_message("SESSION", $"> init Palette       | complete in {get_timer() - t}");    t = get_timer(); }
-    if(!IS_CMD) { __initGradient();             log_message("SESSION", $"> init Gradient      | complete in {get_timer() - t}");    t = get_timer(); }
-    if(!IS_CMD) { __initPen();					log_message("SESSION", $"> init Pen           | complete in {get_timer() - t}");    t = get_timer(); }
+	if(!IS_CMD) { __initAction();               printDebug($"> init Action        | complete in {get_timer() - t}");    t = get_timer(); }
+				  __initSurfaceFormat();        printDebug($"> init SurfaceFormat | complete in {get_timer() - t}");    t = get_timer();
+    if(!IS_CMD) { __initCollection();           printDebug($"> init Collection    | complete in {get_timer() - t}");    t = get_timer(); }
+    if(!IS_CMD) { __initAssets();               printDebug($"> init Assets        | complete in {get_timer() - t}");    t = get_timer(); }
+    if(!IS_CMD) { __initPresets();              printDebug($"> init Presets       | complete in {get_timer() - t}");    t = get_timer(); }
+	if(!IS_CMD) { __initFontFolder();           printDebug($"> init FontFolder    | complete in {get_timer() - t}");    t = get_timer(); }
+	if(_lua)    { __initLua();                  printDebug($"> init Lua           | complete in {get_timer() - t}");    t = get_timer(); }
+	if(!IS_CMD) { __initNodeData();             printDebug($"> init NodeData      | complete in {get_timer() - t}");    t = get_timer(); }
+				  __initNodes();                printDebug($"> init Nodes         | complete in {get_timer() - t}");    t = get_timer();
+    if(!IS_CMD) { __initSteamUGC();             printDebug($"> init SteamUGC      | complete in {get_timer() - t}");    t = get_timer(); }
+    if(!IS_CMD) { __initAddon();                printDebug($"> init Addon         | complete in {get_timer() - t}");    t = get_timer(); }
+    if(!IS_CMD) { __initPalette();              printDebug($"> init Palette       | complete in {get_timer() - t}");    t = get_timer(); }
+    if(!IS_CMD) { __initGradient();             printDebug($"> init Gradient      | complete in {get_timer() - t}");    t = get_timer(); }
+    if(!IS_CMD) { __initPen();					printDebug($"> init Pen           | complete in {get_timer() - t}");    t = get_timer(); }
     
-    if(!IS_CMD) { loadAddon();                  log_message("SESSION", $"> init Addons        | complete in {get_timer() - t}");    t = get_timer(); }
+    if(!IS_CMD) { loadAddon();                  printDebug($"> init Addons        | complete in {get_timer() - t}");    t = get_timer(); }
     
-    if(!IS_CMD) { LOAD_SAMPLE();                log_message("SESSION", $"> init sample        | complete in {get_timer() - t}");    t = get_timer(); }
-    if(!IS_CMD) { INIT_FOLDERS();               log_message("SESSION", $"> init folders       | complete in {get_timer() - t}");    t = get_timer(); }
-    if(!IS_CMD) { RECENT_LOAD();                log_message("SESSION", $"> init recents       | complete in {get_timer() - t}");    t = get_timer(); }
+    if(!IS_CMD) { LOAD_SAMPLE();                printDebug($"> init sample        | complete in {get_timer() - t}");    t = get_timer(); }
+    if(!IS_CMD) { INIT_FOLDERS();               printDebug($"> init folders       | complete in {get_timer() - t}");    t = get_timer(); }
+    if(!IS_CMD) { RECENT_LOAD();                printDebug($"> init recents       | complete in {get_timer() - t}");    t = get_timer(); }
     
-	log_message("SESSION", $">> Initialization complete in {get_timer() - t0}");
+	printDebug($">> Initialization complete in {get_timer() - t0}");
 	
 	if(!IS_CMD) { 
 		__initPanel();

@@ -349,7 +349,7 @@
 		
 		TESTING = struct_try_get(PREFERENCES, "test_mode", false);
 		if(TESTING && GM_build_type == "run") {
-			log_message("PREFERENCE", "Test mode enabled");
+			log_message("PREFERENCE", "Dev mode enabled");
 			instance_create_depth(0, 0, 0, addon_key_displayer);
 		}
 		

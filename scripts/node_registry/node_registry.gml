@@ -484,16 +484,24 @@ function __read_node_display(_list) {
 		for( var j = 0, m = array_length(_nodes); j < m; j++ ) {
 			var _n = _nodes[j];
 			
-			if(is_string(_n) && struct_has(ALL_NODES, _n)) {
-				var _node = ALL_NODES[$ _n];
-				if(_node.new_node) {
-					if(_currLab != _head)
-						array_push(NEW_NODES, _head);
-					_currLab = _head;
-					array_push(NEW_NODES, _node);
+			if(is_string(_n)) {
+				if(struct_has(ALL_NODES, _n)) {
+					var _node = ALL_NODES[$ _n];
+					
+					if(_node.new_node) {
+						if(_currLab != _head)
+							array_push(NEW_NODES, _head);
+						_currLab = _head;
+						array_push(NEW_NODES, _node);
+					}
+					
+					array_push(_l, _node);
+					
+				} else {
+					var _txt = $"Missing node data [{_n}]: Check if node folder exists in {DIRECTORY}Nodes\Internal";
+					// print(_txt);
+					noti_warning(_txt);
 				}
-				
-				array_push(_l, _node);
 			}
 			
 			if(is_struct(_n) && struct_has(_n, "label")) {

@@ -7,11 +7,11 @@ function __initTheme() {
 	directory_verify(root);
 	
 	if(check_version($"{root}/version")) {
-		zip_unzip("data/Theme.zip", root);	print($"     > Unzip theme  | complete in {get_timer() - t}");    t = get_timer();
+		zip_unzip("data/Theme.zip", root);	printDebug($"     > Unzip theme  | complete in {get_timer() - t}");    t = get_timer();
 	}
 	
-	loadGraphic(PREFERENCES.theme);			print($"     > Load graphic | complete in {get_timer() - t}");    t = get_timer();
-	loadColor(PREFERENCES.theme);			print($"     > Load color   | complete in {get_timer() - t}");    t = get_timer();
+	loadGraphic(PREFERENCES.theme);			printDebug($"     > Load graphic | complete in {get_timer() - t}");    t = get_timer();
+	loadColor(PREFERENCES.theme);			printDebug($"     > Load color   | complete in {get_timer() - t}");    t = get_timer();
 }
 
 function _sprite_path(rel, theme) { INLINE return $"{DIRECTORY}Themes/{theme}/graphics/{string_replace_all(rel, "./", "")}"; }
@@ -67,7 +67,7 @@ function loadGraphic(theme = "default") {
 			noti_warning("Loading theme made for older version.");
 	}
 	
-	print($"Loading theme {theme}");
+	printDebug($"Loading theme {theme}");
 	if(!file_exists_empty(path)) { print($"Theme not defined at {path}, rollback to default theme."); return; }
 	
 	var sprStr   = json_load_struct(path);

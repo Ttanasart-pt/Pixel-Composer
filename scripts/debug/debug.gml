@@ -7,6 +7,7 @@
 #endregion
 
 #macro printlog if(log) show_debug_message
+#macro printDebug show_debug_message
 
 function print(str) { 
 	var _s = "";

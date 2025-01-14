@@ -48,9 +48,18 @@
 	function noti_status(str, icon = noone, flash = false, ref = noone) {
 		str = string(str);
 		show_debug_message($"STATUS: {str}🠂");
-		
 		if(TEST_ERROR) return {};
-		if(PANEL_MAIN == 0) return;
+		
+		var noti;
+		
+		if(!ds_list_empty(STATUSES) && STATUSES[| ds_list_size(STATUSES) - 1].txt == str) {
+			STATUSES[| ds_list_size(STATUSES) - 1].amount++;
+			noti = STATUSES[| ds_list_size(STATUSES) - 1];
+			
+		} else {
+			noti = new notification(NOTI_TYPE.log, str, icon);
+			ds_list_add(STATUSES, noti);
+		}
 		
 		if(flash && PANEL_MENU) {
 			PANEL_MENU.noti_flash = 1;
@@ -59,16 +68,8 @@
 			dialogCall(o_dialog_warning, mouse_mx + ui(16), mouse_my + ui(16)).setText(str);
 		}
 		
-		if(!ds_list_empty(STATUSES) && STATUSES[| ds_list_size(STATUSES) - 1].txt == str) {
-			STATUSES[| ds_list_size(STATUSES) - 1].amount++;
-			return STATUSES[| ds_list_size(STATUSES) - 1];
-		}
-		
-		var noti = new notification(NOTI_TYPE.log, str, icon);
-		ds_list_add(STATUSES, noti);
-		
 		if(ref) {
-			var onClick = function() { PANEL_GRAPH.focusNode(self.ref); };
+			var onClick = function() /*=>*/ { PANEL_GRAPH.focusNode(self.ref); };
 			noti.ref = ref;
 			noti.onClick = method(noti, onClick);
 		}
@@ -78,7 +79,6 @@
 	
 	function noti_warning(str, icon = noone, ref = noone) {
 		if(TEST_ERROR) return {};
-		if(PANEL_MAIN == 0) return;
 		
 		if(PANEL_MENU) {
 			PANEL_MENU.noti_flash = 1;
@@ -104,7 +104,7 @@
 			dialogCall(o_dialog_warning, mouse_mx + ui(16), mouse_my + ui(16)).setText(str);
 		
 		if(ref) {
-			var onClick = function() { PANEL_GRAPH.focusNode(self.ref); };
+			var onClick = function() /*=>*/ { PANEL_GRAPH.focusNode(self.ref); };
 			noti.ref = ref;
 			noti.onClick = method(noti, onClick);
 		}
@@ -114,7 +114,6 @@
 	function noti_error(str, icon = noone, ref = noone) {
 		if(TEST_ERROR) return {};
 		show_debug_message($"ERROR: {str}🠂");
-		if(PANEL_MAIN == 0) print(str);
 		
 		var noti = new notification(NOTI_TYPE.error, str, icon, c_ui_red);
 		noti.txtclr = c_ui_red;
@@ -123,7 +122,7 @@
 		ds_list_add(ERRORS, noti);
 		
 		if(ref) {
-			var onClick = function() { PANEL_GRAPH.focusNode(self.ref); };
+			var onClick = function() /*=>*/ { PANEL_GRAPH.focusNode(self.ref); };
 			noti.ref = ref;
 			noti.onClick = method(noti, onClick);
 		}

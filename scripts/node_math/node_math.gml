@@ -23,6 +23,8 @@ enum MATH_OPERATOR {
 	snap,     // 16
 	fract,    // 17
 	
+	map,
+	
 	length,
 }
 
@@ -30,16 +32,16 @@ global.node_math_keys     = [	"add", "subtract", "multiply", "divide", "power", 
 								"+", "-", "*", "/", "^", 
                         		"sin", "cos", "tan", "modulo", "round", 
                         		"ceiling", "floor", "lerp", "abs", "fract", 
-                        		"clamp", "snap" ];
+                        		"clamp", "snap", "map" ];
               
 global.node_math_keys_map = [	MATH_OPERATOR.add,     MATH_OPERATOR.subtract, MATH_OPERATOR.multiply, MATH_OPERATOR.divide, MATH_OPERATOR.power, MATH_OPERATOR.root, 
 								MATH_OPERATOR.add,     MATH_OPERATOR.subtract, MATH_OPERATOR.multiply, MATH_OPERATOR.divide, MATH_OPERATOR.power, 
                         		MATH_OPERATOR.sin,     MATH_OPERATOR.cos,      MATH_OPERATOR.tan,      MATH_OPERATOR.modulo, MATH_OPERATOR.round, 
                         		MATH_OPERATOR.ceiling, MATH_OPERATOR.floor,    MATH_OPERATOR.lerp,     MATH_OPERATOR.abs,    MATH_OPERATOR.fract, 
-                        		MATH_OPERATOR.clamp,   MATH_OPERATOR.snap ];
+                        		MATH_OPERATOR.clamp,   MATH_OPERATOR.snap,     MATH_OPERATOR.map, ];
 
 global.node_math_names    = [  /* 0 -  9*/ "Add", "Subtract", "Multiply", "Divide", "Power", "Root", "Sin", "Cos", "Tan", "Modulo", 
-							   /*10 - 20*/ "Floor", "Ceil", "Round", "Lerp", "Abs", "Clamp", "Snap", "Fract" ];
+							   /*10 - 20*/ "Floor", "Ceil", "Round", "Lerp", "Abs", "Clamp", "Snap", "Fract", "Map", ];
 
 global.node_math_scroll   = array_create_ext(array_length(global.node_math_names), function(i) /*=>*/ {return new scrollItem(global.node_math_names[i], s_node_math_operators, i)});
 
@@ -73,9 +75,14 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	newInput(5, nodeValue_Float("Amount", self, 0));
 	
-	input_display_list = [
-		0, 1, 2, 5, 3, 4,
-	]
+	newInput(6, nodeValue_Vec2("From", self, [ 0, 1 ]));
+	
+	newInput(7, nodeValue_Vec2("To",   self, [ 0, 1 ]));
+	
+	input_display_list = [ 0, 
+		["Values",   false], 1, 2, 5, 6, 7, 
+		["Settings", false], 3, 4, 
+	];
 		
 	newOutput(0, nodeValue_Output("Result", self, VALUE_TYPE.float, 0));
 	
@@ -118,6 +125,15 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		return 0;
 	}
 	
+	static _evalMap = function(a, fr, to) {
+		var _frMin = fr[0];
+		var _frMax = fr[1];
+		var _toMin = to[0];
+		var _toMax = to[1];
+		
+		return lerp(_toMin, _toMax, (a - _frMin) / (_frMax - _frMin));
+	}
+	
 	function evalArray(a, b, c = 0) {
 		var _as = is_array(a);
 		var _bs = is_array(b);
@@ -154,90 +170,110 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		use_mod = inputs[0].getValue();
 		use_deg = inputs[3].getValue();
 		
-		var a	= inputs[1].getValue();
-		var b	= inputs[2].getValue();
-		var c	= inputs[5].getValue();
+		var a  = inputs[1].getValue();
+		var b  = inputs[2].getValue();
+		var c  = inputs[5].getValue();
+		var val;
 		
-		var val = evalArray(a, b, c);
+		fr = inputs[6].getValue();
+		to = inputs[7].getValue();
+		
+		switch(use_mod) {
+			case MATH_OPERATOR.map : 
+				if(is_array(a)) val = array_map_ext(a, function(v) /*=>*/ {return _evalMap(v, fr, to)});
+				else            val = _evalMap(a, fr, to); 
+				break;
+			
+			default :
+				val = evalArray(a, b, c);
+				break;
+		}
+		
 		outputs[0].setValue(val);
 		
-		if(__mode != use_mod) {
-			inputs[2].setVisible(false, false);
-			inputs[3].setVisible(false, false);
-			inputs[5].setVisible(false, false);
-			
-			switch(use_mod) {
-				case MATH_OPERATOR.sin :
-				case MATH_OPERATOR.cos :
-				case MATH_OPERATOR.tan :
-					inputs[3].setVisible(true);
-					break;
-			}
-			
-			switch(use_mod) {
-				case MATH_OPERATOR.round :
-				case MATH_OPERATOR.floor :
-				case MATH_OPERATOR.ceiling :
-					inputs[4].setVisible(true);
-					
-					var int = getInputData(4);
-					if(int) outputs[0].setType(VALUE_TYPE.integer);
-					else	outputs[0].setType(VALUE_TYPE.float);
-					break;
-				default:
-					inputs[4].setVisible(false);
-					
-					outputs[0].setType(VALUE_TYPE.float);
-					break;
-			}
-			
-			switch(use_mod) {
-				case MATH_OPERATOR.add :
-				case MATH_OPERATOR.subtract :
-				case MATH_OPERATOR.multiply :
-				case MATH_OPERATOR.divide :
-				case MATH_OPERATOR.power :
-				case MATH_OPERATOR.root :	
-				case MATH_OPERATOR.modulo :	
-					inputs[2].name = "b";
-					
-					inputs[2].setVisible(true, true);
-					break;
-					
-				case MATH_OPERATOR.sin :
-				case MATH_OPERATOR.cos :
-				case MATH_OPERATOR.tan :
-					inputs[2].name = "Amplitude";
-					
-					inputs[2].setVisible(true, true);
-					break;
-					
-				case MATH_OPERATOR.lerp :
-					inputs[2].name = "To";
-					inputs[5].name = "Amount";
-					
-					inputs[2].setVisible(true, true);
-					inputs[5].setVisible(true, true);
-					break;
-					
-				case MATH_OPERATOR.clamp :
-					inputs[2].name = "Min";
-					inputs[5].name = "Max";
-					
-					inputs[2].setVisible(true, true);
-					inputs[5].setVisible(true, true);
-					break;
-					
-				case MATH_OPERATOR.snap :
-					inputs[2].name = "Snap";
-					
-					inputs[2].setVisible(true, true);
-					break;
-					
-				default: return;
-			}
-		}
+		if(__mode == use_mod) return;
 		__mode = use_mod;
+	
+		inputs[2].setVisible(false, false);
+		inputs[3].setVisible(false, false);
+		inputs[5].setVisible(false, false);
+		inputs[6].setVisible(false, false);
+		inputs[7].setVisible(false, false);
+		
+		switch(use_mod) {
+			case MATH_OPERATOR.sin :
+			case MATH_OPERATOR.cos :
+			case MATH_OPERATOR.tan :
+				inputs[3].setVisible(true);
+				break;
+				
+			case MATH_OPERATOR.map :
+				inputs[6].setVisible(true, true);
+				inputs[7].setVisible(true, true);
+				break;
+		}
+		
+		switch(use_mod) {
+			case MATH_OPERATOR.round :
+			case MATH_OPERATOR.floor :
+			case MATH_OPERATOR.ceiling :
+				inputs[4].setVisible(true);
+				
+				var int = getInputData(4);
+				if(int) outputs[0].setType(VALUE_TYPE.integer);
+				else	outputs[0].setType(VALUE_TYPE.float);
+				break;
+				
+			default:
+				inputs[4].setVisible(false);
+				
+				outputs[0].setType(VALUE_TYPE.float);
+				break;
+		}
+		
+		switch(use_mod) {
+			case MATH_OPERATOR.add :
+			case MATH_OPERATOR.subtract :
+			case MATH_OPERATOR.multiply :
+			case MATH_OPERATOR.divide :
+			case MATH_OPERATOR.power :
+			case MATH_OPERATOR.root :	
+			case MATH_OPERATOR.modulo :	
+				inputs[2].name = "b";
+				
+				inputs[2].setVisible(true, true);
+				break;
+				
+			case MATH_OPERATOR.sin :
+			case MATH_OPERATOR.cos :
+			case MATH_OPERATOR.tan :
+				inputs[2].name = "Amplitude";
+				
+				inputs[2].setVisible(true, true);
+				break;
+				
+			case MATH_OPERATOR.lerp :
+				inputs[2].name = "To";
+				inputs[5].name = "Amount";
+				
+				inputs[2].setVisible(true, true);
+				inputs[5].setVisible(true, true);
+				break;
+				
+			case MATH_OPERATOR.clamp :
+				inputs[2].name = "Min";
+				inputs[5].name = "Max";
+				
+				inputs[2].setVisible(true, true);
+				inputs[5].setVisible(true, true);
+				break;
+				
+			case MATH_OPERATOR.snap :
+				inputs[2].name = "Snap";
+				
+				inputs[2].setVisible(true, true);
+				break;
+		}
 		
 	}
 	

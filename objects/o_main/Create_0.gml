@@ -270,7 +270,7 @@
 	
 	for( var i = 0; i < paramCount; i++ ) {
 		var param = parameter_string(i);
-		print($"    >>> params {i}: {param}");
+		printDebug($"    >>> params {i}: {param}");
 		
 		if(string_starts_with(param, "-")) {
 			switch(param) {
