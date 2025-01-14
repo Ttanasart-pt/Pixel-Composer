@@ -18,7 +18,9 @@ function __NodeValue_Float(_name, _node, _value, _tooltip = "") : NodeValue(_nam
 		var dis = nod.display_type;
 		
 		if(typ != VALUE_TYPE.surface) {
-			if(typ == VALUE_TYPE.text) val = toNumber(val);
+			if(typ == VALUE_TYPE.text)     val = toNumber(val);
+			if(struct_has(val, "to_real")) val = val.to_real();
+			
 			return valueProcess(val, nod, applyUnit);
 		}
 		

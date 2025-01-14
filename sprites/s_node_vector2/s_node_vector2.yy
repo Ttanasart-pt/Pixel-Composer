@@ -25,8 +25,8 @@
   "nineSlice":null,
   "origin":4,
   "parent":{
-    "name":"value",
-    "path":"folders/nodes/icons/value.yy",
+    "name":"vector",
+    "path":"folders/nodes/icons/value/vector.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

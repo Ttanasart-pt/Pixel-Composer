@@ -695,6 +695,7 @@
             "Node_Matrix_Det",
             "Node_Matrix_Invert",
             "Node_Matrix_Transpose",
+            "Node_Matrix_Color_Apply",
             {"label": "/Convertors"},
             "Node_Matrix_To_Array",
             

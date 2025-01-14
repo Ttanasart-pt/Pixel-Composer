@@ -73,6 +73,10 @@ function Matrix(_size = 1) constructor {
 		return _m;
 	}
 	
+	static to_string = function() { return $"{raw}"; }
+	
+	static to_real = function() { return raw; }
+	
 	////- Unary
 	
 	static isSquare = function() { return size[0] == size[1]; }

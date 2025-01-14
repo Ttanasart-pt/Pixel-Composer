@@ -25,8 +25,8 @@
   "nineSlice":null,
   "origin":4,
   "parent":{
-    "name":"value",
-    "path":"folders/nodes/icons/value.yy",
+    "name":"gradient",
+    "path":"folders/nodes/icons/value/gradient.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

@@ -1,0 +1,13 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_matrix_color_apply",
+  "name":"sh_matrix_color_apply",
+  "parent":{
+    "name":"matrix",
+    "path":"folders/nodes/data/value/matrix.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "tags":[],
+  "type":1,
+}

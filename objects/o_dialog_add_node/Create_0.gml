@@ -941,7 +941,9 @@ event_inherited();
 				var param = "";
 				for( var k = 0, p = array_length(_node.tags); k < p; k++ ) {
 					var mat = string_partial_match_res(_node.tags[k], search_lower, search_split);
-					if(mat[0] - 10 > match[0]) {
+					mat[0] -= 10;
+					
+					if(mat[0] > match[0]) {
 						match = mat;
 						param = _node.tags[k];
 					}
