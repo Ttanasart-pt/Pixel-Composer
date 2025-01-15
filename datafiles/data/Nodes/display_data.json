@@ -775,6 +775,7 @@
             "Node_Path_Wave",
             "Node_Path_Array",
             "Node_Path_Reverse",
+            "Node_Path_Weight_Adjust",
             { "label": "/Combine" },
             "Node_Path_Repeat",
             "Node_Path_Scatter",

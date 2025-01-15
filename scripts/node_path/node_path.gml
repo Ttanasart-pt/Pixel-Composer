@@ -856,7 +856,22 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				break;
 				
 			case "Anchor add / remove" :
-				draw_sprite_ui_uniform(THEME.cursor_path_add, 0, _mx + 4, _my + 4);
+				
+				if(hover_type == 0 && key_mod_press(SHIFT)) { //remove
+					draw_sprite_ui_uniform(THEME.cursor_path_remove, 0, _mx + 4, _my + 4);
+					
+					if(mouse_press(mb_left, active)) {
+						var _indx = input_fix_len + anchor_hover;
+						recordAction(ACTION_TYPE.array_delete, inputs, [ inputs[_indx], _indx, "remove path anchor point" ]);
+						
+						array_delete(inputs, _indx, 1);
+						resetDisplayList();
+						doUpdate();
+					} 
+					
+				} else {
+					draw_sprite_ui_uniform(THEME.cursor_path_add, 0, _mx + 4, _my + 4);
+				}
 				
 				if(mouse_press(mb_left, active)) {
 					var ind = array_length(inputs);
@@ -864,6 +879,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					
 					if(_line_hover == -1) {
 						drag_point = array_length(inputs) - input_fix_len - 1;
+						
 					} else {
 						array_remove(inputs, anc);
 						array_insert(inputs, input_fix_len + _line_hover + 1, anc);
