@@ -69,7 +69,7 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			ind -= lc;
 		}
 		
-		return new __vec2();
+		return new __vec2P();
 	}
 	
 	static getPointDistance = function(_dist, ind = 0) {
@@ -81,7 +81,7 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			ind -= lc;
 		}
 		
-		return new __vec2();
+		return new __vec2P();
 	}
 	
 	static getBoundary = function(ind = 0) {

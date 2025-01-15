@@ -50,7 +50,7 @@ function Node_Path_Map(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		
 		var _pnt = array_create(_amo + 1);
 		var _isb = 1 / (_sub - 1);
-		var _pp  = new __vec2();
+		var _pp  = new __vec2P();
 		
 		for( var i = 0; i < _amo; i++ ) {
 			var _p   = array_create(_sub + 1);
@@ -92,7 +92,7 @@ function Node_Path_Map(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 					draw_vertex_texture(p1[0], p1[1], p1u, p1v);
 					draw_vertex_texture(p2[0], p2[1], p2u, p2v);
 					draw_vertex_texture(p3[0], p3[1], p3u, p3v);
-				
+					
 				}
 			draw_primitive_end();
 		surface_reset_shader();

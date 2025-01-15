@@ -35,3 +35,5 @@ function lerp_color(from, to, ratio) {
 }
 
 function lerp_invert(val, from, to) { return (val - from) / (to - from); }
+
+function lerp_smooth(_x) { return _x * _x * (3.0 - 2.0 * _x) }

@@ -1,6 +1,6 @@
 {
   "tooltip":"Custom node",
-  "spr":"__newsprite1112",
+  "spr":"s_node_icon",
   "baseNode":"Node_Custom",
   "io":[
   ],

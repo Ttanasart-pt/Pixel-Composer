@@ -51,7 +51,7 @@ function Node_3D_Mesh_Wall_Builder(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 		if(_paths == noone) return noone;
 		
 		var points = array_create(_segment + 1);
-		var p = new __vec2();
+		var p = new __vec2P();
 		
 		for( var i = 0; i <= _segment; i++ ) {
 			p = _paths.getPointRatio(i / _segment, 0, p);

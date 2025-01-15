@@ -55,7 +55,7 @@ function Node_Armature_Path(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	static getPointDistance = function(_dist, _ind = 0, out = undefined) { return getPointRatio(_dist / current_length, _ind, out); }
 	
 	static getPointRatio = function(_rat, _ind = 0, out = undefined) {
-		if(out == undefined) out = new __vec2(); else { out.x = 0; out.y = 0; }
+		if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
 		
 		var _p0 = lines[_ind][0];
 		var _p1 = lines[_ind][1];

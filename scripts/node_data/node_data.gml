@@ -2376,9 +2376,15 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return _tool.selecting == subtool;
 	}
 	
+	static getUsingToolName = function() { 
+		var _tool  = PANEL_PREVIEW.tool_current;
+		return _tool == noone? "" : _tool.getName(_tool.selecting);
+	}
+	
 	static isNotUsingTool = function() { return PANEL_PREVIEW.tool_current == noone; }
 	
 	static getTool = function() { return self; }
+	
 	
 	static getToolSettings = function() { return tool_settings; }
 	

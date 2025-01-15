@@ -361,8 +361,8 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				
 				__temp_tx = tx + _pthS;
 				__temp_ty = ty;
-				__temp_p0 = new __vec2();
-				__temp_p1 = new __vec2();
+				__temp_p0 = new __vec2P();
+				__temp_p1 = new __vec2P();
 				
 				string_foreach(_str_line, function(_chr, _ind) {
 					var _p1  = __temp_pt.getPointDistance(__temp_tx,      0, __temp_p0);

@@ -353,7 +353,7 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		if(anchor_hover != -1) { // no tool, dragging existing point
 			var _a = array_clone(getInputData(input_fix_len + anchor_hover));
 			if(isUsingTool(2) && hover_type == 0) {
-				draw_sprite_ui_uniform(THEME.cursor_path_anchor, 0, _mx + 16, _my + 16);
+				draw_sprite_ui_uniform(THEME.cursor_path_anchor, 0, _mx + 4, _my + 4);
 				
 				if(mouse_press(mb_left, active)) {
 					
@@ -387,7 +387,7 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 					}
 				}
 			} else if(hover_type == 0 && key_mod_press(SHIFT)) { //remove
-				draw_sprite_ui_uniform(THEME.cursor_path_remove, 0, _mx + 16, _my + 16);
+				draw_sprite_ui_uniform(THEME.cursor_path_remove, 0, _mx + 4, _my + 4);
 				
 				if(mouse_press(mb_left, active)) {
 					var _indx = input_fix_len + anchor_hover;
@@ -398,7 +398,7 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 					doUpdate();
 				}
 			} else {
-				draw_sprite_ui_uniform(THEME.cursor_path_move, 0, _mx + 16, _my + 16);
+				draw_sprite_ui_uniform(THEME.cursor_path_move, 0, _mx + 4, _my + 4);
 				
 				if(mouse_press(mb_left, active)) {
 					if(isUsingTool(2)) {
@@ -436,7 +436,7 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 			}
 		
 		} else if(key_mod_press(CTRL) || isUsingTool(1)) {	// anchor edit
-			draw_sprite_ui_uniform(THEME.cursor_path_add, 0, _mx + 16, _my + 16);
+			draw_sprite_ui_uniform(THEME.cursor_path_add, 0, _mx + 4, _my + 4);
 			
 			if(mouse_press(mb_left, active)) {
 				

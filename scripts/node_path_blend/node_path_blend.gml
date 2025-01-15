@@ -19,7 +19,7 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	cached_pos = ds_map_create();
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _p0 = getInputData(0);
 		var _p1 = getInputData(1);
 		
@@ -33,7 +33,7 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			var _len = getLength(_amo);
 			var _stp = 1 / clamp(_len * _s, 1, 64);
 			var ox, oy, nx, ny;
-			var _p = new __vec2();
+			var _p = new __vec2P();
 			
 			for( var j = 0; j < 1; j += _stp ) {
 				_p = getPointRatio(j, i, _p);
@@ -46,14 +46,14 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 				oy = ny;
 			}
 		}
-	} #endregion
+	}
 	
-	static getLineCount = function() { #region
+	static getLineCount = function() {
 		var _path = getInputData(0);
 		return struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
-	} #endregion
+	}
 	
-	static getSegmentCount = function(ind = 0) { #region
+	static getSegmentCount = function(ind = 0) {
 		var _path1 = getInputData(0);
 		var _path2 = getInputData(1);
 		var _lerp  = getInputData(2);
@@ -66,9 +66,9 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		if(!p1 &&  p2) return _path2.getSegmentCount(ind);
 		
 		return max(_path1.getSegmentCount(ind), _path2.getSegmentCount(ind));
-	} #endregion
+	}
 	
-	static getLength = function(ind = 0) { #region
+	static getLength = function(ind = 0) {
 		var _path1 = getInputData(0);
 		var _path2 = getInputData(1);
 		var _lerp  = getInputData(2);
@@ -84,9 +84,9 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		var _p2 = _path2.getLength(ind);
 		
 		return lerp(_p1, _p2, _lerp);
-	} #endregion
+	}
 	
-	static getAccuLength = function(ind = 0) { #region
+	static getAccuLength = function(ind = 0) {
 		var _path1 = getInputData(0);
 		var _path2 = getInputData(1);
 		var _lerp  = getInputData(2);
@@ -112,16 +112,17 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		}
 		
 		return res;
-	} #endregion
+	}
 	
-	static getPointRatio = function(_rat, ind = 0, out = undefined) { #region
-		if(out == undefined) out = new __vec2(); else { out.x = 0; out.y = 0; }
+	static getPointRatio = function(_rat, ind = 0, out = undefined) {
+		if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
 		
 		var _cKey = $"{string_format(_rat, 0, 6)},{ind}";
 		if(ds_map_exists(cached_pos, _cKey)) {
 			var _p = cached_pos[? _cKey];
 			out.x = _p.x;
 			out.y = _p.y;
+			out.weight = _p.weight;
 			return out;
 		}
 		
@@ -141,15 +142,16 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		out.x = lerp(_p1.x, _p2.x, _lerp);
 		out.y = lerp(_p1.y, _p2.y, _lerp);
+		out.weight = lerp(_p1.weight, _p2.weight, _lerp);
 		
-		cached_pos[? _cKey] = out.clone();
+		cached_pos[? _cKey] = new __vec2P(out.x, out.y, out.weight);
 		
 		return out;
-	} #endregion
+	}
 	
 	static getPointDistance = function(_dist, ind = 0, out = undefined) { return getPointRatio(_dist / getLength(ind), ind, out); }
 	
-	static getBoundary = function(ind = 0) { #region
+	static getBoundary = function(ind = 0) {
 		var _path1 = getInputData(0);
 		var _path2 = getInputData(1);
 		var _lerp  = getInputData(2);
@@ -165,15 +167,15 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		var _p2 = _path2.getBoundary(ind);
 		
 		return _p1.lerpTo(_p2, _lerp);
-	} #endregion
+	}
 	
-	static update = function() { #region
+	static update = function() {
 		ds_map_clear(cached_pos);
 		outputs[0].setValue(self);
-	} #endregion
+	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
 		draw_sprite_fit(s_node_path_blend, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
-	} #endregion
+	}
 }

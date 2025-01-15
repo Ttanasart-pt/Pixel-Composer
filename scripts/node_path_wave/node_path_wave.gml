@@ -47,9 +47,9 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 	wig_map   = noone;
 	amp_curve = noone;
-	p  = new __vec2();
-	p0 = new __vec2();
-	p1 = new __vec2();
+	p  = new __vec2P();
+	p0 = new __vec2P();
+	p1 = new __vec2P();
 	
 	cached_pos = ds_map_create();
 	
@@ -112,13 +112,14 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	}
 		
 	static getPointRatio = function(_rat, ind = 0, out = undefined) {
-		if(out == undefined) out = new __vec2(); else { out.x = 0; out.y = 0; }
+		if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
 		
 		var _cKey = $"{string_format(_rat, 0, 6)},{ind}";
 		if(ds_map_exists(cached_pos, _cKey)) {
 			var _p = cached_pos[? _cKey];
 			out.x = _p.x;
 			out.y = _p.y;
+			out.weight = _p.weight;
 			return out;
 		}
 		
@@ -175,8 +176,9 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		out.x = p.x + lengthdir_x(_amp * prg, dir);
 		out.y = p.y + lengthdir_y(_amp * prg, dir);
+		out.weight = p.weight;
 		
-		cached_pos[? _cKey] = out.clone();
+		cached_pos[? _cKey] = new __vec2P(out.x, out.y, out.weight);
 		
 		return out;
 	}

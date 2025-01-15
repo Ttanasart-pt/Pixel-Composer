@@ -44,7 +44,7 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static getAccuLength	= function(ind = 0) { return [ length ]; }
 	
 	static getPointRatio = function(_rat, ind = 0, out = undefined) {
-		if(out == undefined) out = new __vec2(); else { out.x = 0; out.y = 0; }
+		if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
 		
 		var _sca  = getInputData(0);
 		var _coor = getInputData(1);
@@ -76,7 +76,7 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				}
 				break;
 			case 1 :
-				var _a = new __vec2();
+				var _a = new __vec2P();
 				switch(_eqa) {
 					case 0 : 
 						_a.x = _rat * _iran[0] + _shf[0];

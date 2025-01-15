@@ -23,7 +23,7 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	rot  = 0;
 	sca  = [ 1, 1 ];
 	anc  = [ 0, 0 ];
-	p    = new __vec2();
+	p    = new __vec2P();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _path = getInputData(0);
@@ -91,13 +91,14 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	}
 	
 	static getPointRatio = function(_rat, ind = 0, out = undefined) {
-		out ??= new __vec2();
+		out ??= new __vec2P();
 		
 		var _cKey = $"{string_format(_rat, 0, 6)},{ind}";
 		if(ds_map_exists(cached_pos, _cKey)) {
 			var _p = cached_pos[? _cKey];
 			out.x = _p.x;
 			out.y = _p.y;
+			out.weight = _p.weight;
 			return out;
 		}
 		
@@ -118,8 +119,9 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		
 		out.x = _pp[0] + pos[0];
 		out.y = _pp[1] + pos[1];
+		out.weight = _p.weight;
 		
-		cached_pos[? _cKey] = out.clone();
+		cached_pos[? _cKey] = new __vec2P(out.x, out.y, out.weight);
 		return out;
 	}
 	

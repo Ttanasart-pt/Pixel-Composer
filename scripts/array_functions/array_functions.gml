@@ -132,9 +132,7 @@
 		var v0 = array_safe_get_fast(arr, floor(index));
 		var v1 = array_safe_get_fast(arr, floor(index) + 1);
 		
-		return color? 
-			merge_color(v0, v1, frac(index)) : 
-			lerp(v0, v1, frac(index));
+		return color? merge_color(v0, v1, frac(index)) : lerp(v0, v1, frac(index));
 	}
 	
 	function array_safe_length(arr) {

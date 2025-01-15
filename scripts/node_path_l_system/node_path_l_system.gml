@@ -248,7 +248,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		}
 		
 		static getPointRatio = function(_rat, _ind = 0, out = undefined) {
-			if(out == undefined) out = path_3d? new __vec3() : new __vec2(); 
+			if(out == undefined) out = path_3d? new __vec3() : new __vec2P(); 
 			else { out.x = 0; out.y = 0; if(path_3d) out.z = 0; }
 			
 			var _p0 = lines[_ind][0];

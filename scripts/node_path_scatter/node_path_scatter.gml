@@ -67,7 +67,7 @@ function Node_Path_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		static getAccuLength    = function(i=0) /*=>*/ {return array_safe_get_fast(accu_lengths, i)};
 		
 		static getPointRatio    = function(_rat,  ind = 0, out = undefined) {
-			if(out == undefined) out = new __vec2(); else { out.x = 0; out.y = 0; }
+			if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
 			
 			var _path = array_safe_get_fast(paths, ind, 0);
 			if(_path == 0) return out;
@@ -140,7 +140,7 @@ function Node_Path_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		
 		random_set_seed(_seed);
 		var _ind = 0;
-		var p = new __vec2();
+		var p = new __vec2P();
 		var ori, pos;
 		var _prog_raw, _prog;
 		var _dir, _sca, _rot, _rotW, _trm;

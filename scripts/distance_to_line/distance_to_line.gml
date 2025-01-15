@@ -1,5 +1,13 @@
-function distance_to_line(_px, _py, _x0, _y0, _x1, _y1, log = false) {
-	INLINE
+function point_to_line(_px, _py, _x0, _y0, _x1, _y1) {
+	var l2 = sqr(_x0 - _x1) + sqr(_y0 - _y1);
+	if (l2 == 0) return [ _x0, _y0 ];
+	
+	var t = ((_px - _x0) * (_x1 - _x0) + (_py - _y0) * (_y1 - _y0)) / l2;
+	    t = clamp(t, 0, 1);
+	return [ lerp(_x0, _x1, t), lerp(_y0, _y1, t) ];
+}
+
+function distance_to_line(_px, _py, _x0, _y0, _x1, _y1) {
 	var l2 = sqr(_x0 - _x1) + sqr(_y0 - _y1);
 	if (l2 == 0) return point_distance(_px, _py, _x0, _y0);
 	  
@@ -11,7 +19,6 @@ function distance_to_line(_px, _py, _x0, _y0, _x1, _y1, log = false) {
 }
 
 function distance_to_line_infinite(px, py, x0, y0, x1, y1) {
-	INLINE
 	return abs((x1 - x0) * (y0 - py) - (x0 - px) * (y1 - y0)) / sqrt(sqr(x1 - x0) + sqr(y1 - y0));	
 }
 

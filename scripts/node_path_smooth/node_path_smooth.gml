@@ -109,7 +109,7 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		line_hover = _line_hover;
 		
 		if(key_mod_press(CTRL) || isUsingTool(0)) {	// anchor edit
-			draw_sprite_ui_uniform(_anchor_hover == -1? THEME.cursor_path_add : THEME.cursor_path_remove, 0, _mx + 16, _my + 16);
+			draw_sprite_ui_uniform(_anchor_hover == -1? THEME.cursor_path_add : THEME.cursor_path_remove, 0, _mx + 4, _my + 4);
 			
 			if(mouse_press(mb_left, active)) {
 				if(_anchor_hover == -1) {
@@ -238,7 +238,7 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	static getAccuLength	= function() { return lengthAccs; }
 	
 	static getPointDistance = function(_dist, _ind = 0, out = undefined) {
-		if(out == undefined) out = new __vec2(); else { out.x = 0; out.y = 0; }
+		if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
 		if(array_empty(lengths)) return out;
 		
 		var _cKey = _dist;
@@ -246,6 +246,7 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			var _p = cached_pos[? _cKey];
 			out.x = _p.x;
 			out.y = _p.y;
+			out.weight = _p.weight;
 			return out;
 		}
 		
@@ -276,7 +277,7 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				out.y = eval_bezier_y(_t, _a0[0], _a0[1], _a1[0], _a1[1], _a0[0] + _c0[2], _a0[1] + _c0[3], _a1[0] + _c1[0], _a1[1] + _c1[1]);
 			}
 			
-			cached_pos[? _cKey] = out.clone();
+			cached_pos[? _cKey] = new __vec2P(out.x, out.y, out.weight);
 			return out;
 		}
 		

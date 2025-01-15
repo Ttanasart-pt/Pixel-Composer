@@ -259,7 +259,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		random_set_seed(_sed);
 		var _sedIndex = 0;
 		
-		var p = new __vec2();
+		var p = new __vec2P();
 		var _pathData = [];
 		var minx = 999999, miny = 999999, maxx = -999999, maxy = -999999;
 		
@@ -402,8 +402,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 							// print($"_pp = {_pp}, total = {_total}");
 							
 							p = _pat.getPointDistance(_pp, i, p);
-							if(struct_has(_pat, "getWeightDistance"))
-								wght = _pat.getWeightDistance(_pp, i);
+							wght = p[$ "weight"] ?? 1;
 								
 						} else {
 							_prog_next = min(_prog_curr + _stepLen, 1); //Move forward _stepLen or _total (if less) stop at 1
@@ -412,8 +411,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 							var _pp = _clamp? clamp(_pathPng, 0, 1) : _pathPng
 							
 							p = _pat.getPointRatio(_pp, i, p);
-							if(struct_has(_pat, "getWeightRatio"))
-								wght = _pat.getWeightRatio(_pp, i);
+							wght = p[$ "weight"] ?? 1;
 						}
 						
 						_nx = p.x;
@@ -605,7 +603,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					if(!ds_map_exists(widthMap, widProg))
 						widthMap[? widProg] = eval_curve_x(_widc, widProg, 0.1);
 					_nw *= widthMap[? widProg];
-					_nw *= p0.weight;
+					_nw *= p0.weight / 2;
 					
 					_nc = colorMultiply(_col_base, _color.eval(_colP? prog : prgc));
 					

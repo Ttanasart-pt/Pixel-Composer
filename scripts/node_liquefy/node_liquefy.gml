@@ -265,7 +265,7 @@ function Node_Liquefy(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			if(_type == LIQUEFY_TYPE.push) {
 				var _usePath = _path != noone;
 				var _pthList = array_create(_pthR * 2);
-				var _p = new __vec2();
+				var _p = new __vec2P();
 				
 				if(_usePath) {
 					for( var i = 0; i < _pthR; i++ ) {

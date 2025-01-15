@@ -43,7 +43,7 @@ function Node_Path_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		
 		var _p   = array_create((_sub + 1) * 2);
 		var _isb = 1 / _sub;
-		var _pp  = new __vec2();
+		var _pp  = new __vec2P();
 		
 		for( var i = 0; i <= _sub; i++ ) {
 			var _prog = frac(i * _isb);

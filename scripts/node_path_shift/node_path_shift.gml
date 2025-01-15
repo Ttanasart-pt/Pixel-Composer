@@ -22,7 +22,7 @@ function Node_Path_Shift(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			var _len = getLength(_amo);
 			var _stp = 1 / clamp(_len * _s, 1, 64);
 			var ox, oy, nx, ny;
-			var _p = new __vec2();
+			var _p = new __vec2P();
 			
 			for( var j = 0; j < 1; j += _stp ) {
 				_p = getPointRatio(j, i, _p);
@@ -58,13 +58,14 @@ function Node_Path_Shift(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}
 	
 	static getPointRatio = function(_rat, ind = 0, out = undefined) {
-		if(out == undefined) out = new __vec2(); else { out.x = 0; out.y = 0; }
+		if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
 		
 		var _cKey = $"{string_format(_rat, 0, 6)},{ind}";
 		if(ds_map_exists(cached_pos, _cKey)) {
 			var _p = cached_pos[? _cKey];
 			out.x = _p.x;
 			out.y = _p.y;
+			out.weight = _p.weight;
 			return out;
 		}
 		
@@ -87,8 +88,9 @@ function Node_Path_Shift(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		out.x += _p.x + lengthdir_x(_shf, dir);
 		out.y += _p.y + lengthdir_y(_shf, dir);
+		out.weight = _p.weight;
 		
-		cached_pos[? _cKey] = out.clone();
+		cached_pos[? _cKey] = new __vec2P(out.x, out.y, out.weight);
 		
 		return out;
 	}

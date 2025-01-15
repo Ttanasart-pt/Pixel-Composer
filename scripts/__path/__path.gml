@@ -13,7 +13,7 @@ function Path() constructor {
 	
 	static getTangentRatio  = function(_rat) { return 0; }
 	
-	static getPointDistance = function(_seg, _ind = 0, out = undefined) { return new __vec2(0, 0); }
+	static getPointDistance = function(_seg, _ind = 0, out = undefined) { return new __vec2P(0, 0); }
 	static getPointRatio    = function(_rat, _ind = 0, out = undefined) { 
 		var pix = frac(_rat) * lengthTotal;
 		return getPointDistance(pix, _ind, out);
@@ -64,7 +64,7 @@ function PathSegment() : Path() constructor {
 	} #endregion
 	
 	static getPointDistance = function(_dist, _ind = 0, out = undefined) { #region
-		if(out == undefined) out = new __vec2(); else { out.x = 0; out.y = 0; }
+		if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
 		
 		for( var i = 0; i < array_length(lengths); i++ ) {
 			if(_dist <= lengths[i]) {

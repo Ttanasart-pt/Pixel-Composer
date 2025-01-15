@@ -55,7 +55,7 @@ function Node_Path_Profile(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		if(_path == noone) return;
 		
 		var _points = array_create(_res * 2);
-		var _p = new __vec2();
+		var _p = new __vec2P();
 		
 		for( var i = 0; i < _res; i++ ) {
 			_p = _path.getPointRatio(i / _res, 0, _p);

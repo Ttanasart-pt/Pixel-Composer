@@ -47,7 +47,7 @@ function Node_VFX_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static getAccuLength	= function(index) { return array_safe_get_fast(lengthAcc, index, []); }
 	
 	static getPointRatio = function(_rat, _ind = 0, out = undefined) {
-		if(out == undefined) out = new __vec2(); else { out.x = 0; out.y = 0; }
+		if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
 		
 		var _p0, _p1;
 		var _x, _y;

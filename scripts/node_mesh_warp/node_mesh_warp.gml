@@ -417,8 +417,8 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		}
 		
 		if(isUsingTool("Edit control point")) {
-			if(key_mod_press(SHIFT)) draw_sprite_ui_uniform(THEME.cursor_path_remove, 0, _mx + 16, _my + 16);
-			else                     draw_sprite_ui_uniform(THEME.cursor_path_add,    0, _mx + 16, _my + 16);
+			if(key_mod_press(SHIFT)) draw_sprite_ui_uniform(THEME.cursor_path_remove, 0, _mx + 4, _my + 4);
+			else                     draw_sprite_ui_uniform(THEME.cursor_path_add,    0, _mx + 4, _my + 4);
 			
 			if(mouse_press(mb_left, active)) {
 				if(_hover == -1) {
@@ -438,7 +438,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				control(input_display_list);
 			}
 		} else if(isUsingTool("Pin mesh")) {
-			draw_sprite_ui_uniform(key_mod_press(SHIFT)? THEME.cursor_path_remove : THEME.cursor_path_add, 0, _mx + 16, _my + 16);
+			draw_sprite_ui_uniform(key_mod_press(SHIFT)? THEME.cursor_path_remove : THEME.cursor_path_add, 0, _mx + 4, _my + 4);
 			
 			draw_set_color(COLORS._main_accent);
 			var rad = 16;

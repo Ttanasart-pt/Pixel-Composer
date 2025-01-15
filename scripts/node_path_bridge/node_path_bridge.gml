@@ -31,14 +31,14 @@ function Node_Path_Bridge(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		cached_pos = ds_map_create();
 	#endregion
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _path = getInputData(0);
 		var _smt  = getInputData(2);
 		if(_path && struct_has(_path, "drawOverlay")) _path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 		
 		var _amo = array_length(anchors);
 		var ox, oy, nx, ny;
-		var _p = new __vec2();
+		var _p = new __vec2P();
 		
 		draw_set_color(COLORS._main_icon);
 		for( var i = 0, n = _amo; i < n; i++ ) {
@@ -69,7 +69,7 @@ function Node_Path_Bridge(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				}
 			}
 		}
-	} #endregion
+	}
 	
 	static getLineCount = function() { return getInputData(1); }
 	
@@ -83,14 +83,15 @@ function Node_Path_Bridge(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	static getPointRatio = function(_rat, ind = 0, out = undefined) { return getPointDistance(clamp(_rat, 0, 1) * getLength(ind), ind, out); }
 	
-	static getPointDistance = function(_dist, ind = 0, out = undefined) { #region
-		if(out == undefined) out = new __vec2(); else { out.x = 0; out.y = 0; }
+	static getPointDistance = function(_dist, ind = 0, out = undefined) {
+		if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
 		
 		var _cKey = $"{string_format(_dist, 0, 6)},{ind}";
 		if(ds_map_exists(cached_pos, _cKey)) {
 			var _p = cached_pos[? _cKey];
 			out.x = _p.x;
 			out.y = _p.y;
+			out.weight = _p.weight;
 			return out;
 		}
 		
@@ -103,7 +104,7 @@ function Node_Path_Bridge(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			out.x = _p[0];
 			out.y = _p[1];
 			
-			cached_pos[? _cKey] = out.clone();
+			cached_pos[? _cKey] = new __vec2P(out.x, out.y, out.weight);
 			return out;
 		}
 		
@@ -117,7 +118,7 @@ function Node_Path_Bridge(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			out.x = _p[0];
 			out.y = _p[1];
 			
-			cached_pos[? _cKey] = out.clone();
+			cached_pos[? _cKey] = new __vec2P(out.x, out.y, out.weight);
 			return out;
 		}
 		
@@ -141,12 +142,12 @@ function Node_Path_Bridge(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			out.y = lerp(p0[1], p1[1], _rat);
 		}
 		
-		cached_pos[? _cKey] = out.clone();
+		cached_pos[? _cKey] = new __vec2P(out.x, out.y, out.weight);
 		
 		return out;
-	} #endregion
+	}
 		
-	static update = function() { #region
+	static update = function() {
 		ds_map_clear(cached_pos);
 		
 		var _path = getInputData(0);
@@ -157,7 +158,7 @@ function Node_Path_Bridge(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		#region bridge
 			var _lines = _path.getLineCount();
-			var _p = new __vec2();
+			var _p = new __vec2P();
 			var _rat;
 		
 			anchors    = array_create(_amo);
@@ -259,5 +260,5 @@ function Node_Path_Bridge(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				}
 			}
 		#endregion
-	} #endregion
+	}
 } 

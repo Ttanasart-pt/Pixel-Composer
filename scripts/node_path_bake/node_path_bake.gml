@@ -55,7 +55,7 @@ function Node_Path_Bake(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		path_amount = _amo;
 		var _segs   = array_create(_amo);
 		
-		var _p = new __vec2();
+		var _p = new __vec2P();
 		
 		for( var i = 0; i < _amo; i++ ) {
 			var _len = _path.getLength(i);
