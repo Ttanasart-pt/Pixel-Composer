@@ -11,18 +11,24 @@ function Node_Path_Shift(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	cached_pos = ds_map_create();
 	
+	curr_path  = noone;
+	is_path    = false;
+	
+	curr_shift = noone;
+	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var _path = getInputData(0);
-		if(_path && struct_has(_path, "drawOverlay")) _path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		if(curr_path && struct_has(curr_path, "drawOverlay")) 
+			curr_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 		
 		draw_set_color(COLORS._main_icon);
 		
 		var _amo = getLineCount();
+		var _p   = new __vec2P();
+		
 		for( var i = 0; i < _amo; i++ ) {
 			var _len = getLength(_amo);
 			var _stp = 1 / clamp(_len * _s, 1, 64);
 			var ox, oy, nx, ny;
-			var _p = new __vec2P();
 			
 			for( var j = 0; j < 1; j += _stp ) {
 				_p = getPointRatio(j, i, _p);
@@ -37,25 +43,11 @@ function Node_Path_Shift(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		}
 	}
 	
-	static getLineCount = function() {
-		var _path = getInputData(0);
-		return struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
-	}
-	
-	static getSegmentCount = function(ind = 0) {
-		var _path = getInputData(0);
-		return struct_has(_path, "getSegmentCount")? _path.getSegmentCount(ind) : 0; 
-	}
-	
-	static getLength = function(ind = 0) {
-		var _path = getInputData(0);
-		return struct_has(_path, "getLength")? _path.getLength(ind) : 0; 
-	}
-	
-	static getAccuLength = function(ind = 0) {
-		var _path = getInputData(0);
-		return struct_has(_path, "getAccuLength")? _path.getAccuLength(ind) : []; 
-	}
+	static getLineCount    = function(       ) /*=>*/ {return is_path? curr_path.getLineCount()       : 1};
+	static getSegmentCount = function(ind = 0) /*=>*/ {return is_path? curr_path.getSegmentCount(ind) : 0};
+	static getLength       = function(ind = 0) /*=>*/ {return is_path? curr_path.getLength(ind)       : 0};
+	static getAccuLength   = function(ind = 0) /*=>*/ {return is_path? curr_path.getAccuLength(ind)   : []};
+	static getBoundary     = function(ind = 0) /*=>*/ {return is_path? curr_path.getBoundary(ind)     : new BoundingBox( 0, 0, 1, 1 )};
 	
 	static getPointRatio = function(_rat, ind = 0, out = undefined) {
 		if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
@@ -69,25 +61,16 @@ function Node_Path_Shift(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			return out;
 		}
 		
-		var _path = getInputData(0);
-		var _shf  = getInputData(1);
+		if(!is_path) return out;
 		
-		if(is_array(_path)) {
-			_path = array_safe_get_fast(_path, ind);
-			ind = 0;
-		}
-		
-		if(!is_struct(_path) || !struct_has(_path, "getPointRatio"))
-			return out;
-		
-		var _p0 = _path.getPointRatio(clamp(_rat - 0.001, 0, 0.999999), ind);
-		var _p  = _path.getPointRatio(_rat, ind);
-		var _p1 = _path.getPointRatio(clamp(_rat + 0.001, 0, 0.999999), ind);
+		var _p0 = curr_path.getPointRatio(clamp(_rat - 0.001, 0, 0.999999), ind);
+		var _p  = curr_path.getPointRatio(_rat, ind);
+		var _p1 = curr_path.getPointRatio(clamp(_rat + 0.001, 0, 0.999999), ind);
 		
 		var dir = point_direction(_p0.x, _p0.y, _p1.x, _p1.y) + 90;
 		
-		out.x += _p.x + lengthdir_x(_shf, dir);
-		out.y += _p.y + lengthdir_y(_shf, dir);
+		out.x += _p.x + lengthdir_x(curr_shift, dir);
+		out.y += _p.y + lengthdir_y(curr_shift, dir);
 		out.weight = _p.weight;
 		
 		cached_pos[? _cKey] = new __vec2P(out.x, out.y, out.weight);
@@ -97,12 +80,12 @@ function Node_Path_Shift(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	static getPointDistance = function(_dist, ind = 0, out = undefined) { return getPointRatio(_dist / getLength(), ind, out); }
 	
-	static getBoundary = function(ind = 0) {
-		var _path = getInputData(0);
-		return struct_has(_path, "getBoundary")? _path.getBoundary(ind) : new BoundingBox( 0, 0, 1, 1 ); 
-	}
-	
 	static update = function() {
+		curr_path  = getInputData(0);
+		is_path    = curr_path != noone && struct_has(curr_path, "getPointRatio");
+		
+		curr_shift = getInputData(1);
+		
 		ds_map_clear(cached_pos);
 		outputs[0].setValue(self);
 	}

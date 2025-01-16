@@ -37,11 +37,11 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		inputs[5].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
-	static getLineCount		= function() { return 1; }
-	static getSegmentCount	= function() { return 1; }
-	
-	static getLength		= function(ind = 0) { return length; }
-	static getAccuLength	= function(ind = 0) { return [ length ]; }
+	static getLineCount		= function() /*=>*/ {return 1};
+	static getSegmentCount	= function() /*=>*/ {return 1};
+	static getLength		= function() /*=>*/ {return length};
+	static getAccuLength	= function() /*=>*/ {return [ length ]};
+	static getBoundary		= function() /*=>*/ {return boundary};
 	
 	static getPointRatio = function(_rat, ind = 0, out = undefined) {
 		if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
@@ -104,8 +104,6 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	}
 	
 	static getPointDistance = function(_dist, ind = 0, out = undefined) { return getPointRatio(_dist / getLength(ind), ind, out); }
-	
-	static getBoundary		= function() { return boundary; }
 	
 	static step = function() { 
 		var _coor = getInputData(1);

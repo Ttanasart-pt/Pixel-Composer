@@ -19,12 +19,17 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	cached_pos = ds_map_create();
 	
+	curr_path1 = noone;
+	curr_path2 = noone;
+	curr_lerp  = noone;
+	
+	is_path1 = false;
+	is_path2 = false;
+	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var _p0 = getInputData(0);
-		var _p1 = getInputData(1);
 		
-		if(_p0) _p0.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-		if(_p1) _p1.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		if(is_path1 && struct_has(curr_path1, "drawOverlay")) curr_path1.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		if(is_path2 && struct_has(curr_path2, "drawOverlay")) curr_path2.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 		
 		draw_set_color(COLORS._main_icon);
 		
@@ -48,58 +53,37 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		}
 	}
 	
-	static getLineCount = function() {
-		var _path = getInputData(0);
-		return struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
-	}
+	static getLineCount = function() { return is_path1? curr_path1.getLineCount() : 1; }
 	
 	static getSegmentCount = function(ind = 0) {
-		var _path1 = getInputData(0);
-		var _path2 = getInputData(1);
-		var _lerp  = getInputData(2);
 		
-		var p1 = _path1 != noone && struct_has(_path1, "getSegmentCount");
-		var p2 = _path2 != noone && struct_has(_path2, "getSegmentCount");
+		if(!is_path1 && !is_path2) return 0;
+		if( is_path1 && !is_path2) return curr_path1.getSegmentCount(ind);
+		if(!is_path1 &&  is_path2) return curr_path2.getSegmentCount(ind);
 		
-		if(!p1 && !p2) return 0;
-		if( p1 && !p2) return _path1.getSegmentCount(ind);
-		if(!p1 &&  p2) return _path2.getSegmentCount(ind);
-		
-		return max(_path1.getSegmentCount(ind), _path2.getSegmentCount(ind));
+		return max(curr_path1.getSegmentCount(ind), curr_path2.getSegmentCount(ind));
 	}
 	
 	static getLength = function(ind = 0) {
-		var _path1 = getInputData(0);
-		var _path2 = getInputData(1);
-		var _lerp  = getInputData(2);
 		
-		var p1 = _path1 != noone && struct_has(_path1, "getLength");
-		var p2 = _path2 != noone && struct_has(_path2, "getLength");
-			
-		if(!p1 && !p2) return 0;
-		if( p1 && !p2) return _path1.getLength(ind);
-		if(!p1 &&  p2) return _path2.getLength(ind);
+		if(!is_path1 && !is_path2) return 0;
+		if( is_path1 && !is_path2) return curr_path1.getLength(ind);
+		if(!is_path1 &&  is_path2) return curr_path2.getLength(ind);
 		
-		var _p1 = _path1.getLength(ind);
-		var _p2 = _path2.getLength(ind);
+		var _p1 = curr_path1.getLength(ind);
+		var _p2 = curr_path2.getLength(ind);
 		
-		return lerp(_p1, _p2, _lerp);
+		return lerp(_p1, _p2, curr_lerp);
 	}
 	
 	static getAccuLength = function(ind = 0) {
-		var _path1 = getInputData(0);
-		var _path2 = getInputData(1);
-		var _lerp  = getInputData(2);
 		
-		var p1 = _path1 != noone && struct_has(_path1, "getAccuLength");
-		var p2 = _path2 != noone && struct_has(_path2, "getAccuLength");
-			
-		if(!p1 && !p2) return 0;
-		if( p1 && !p2) return _path1.getAccuLength(ind);
-		if(!p1 &&  p2) return _path2.getAccuLength(ind);
+		if(!is_path1 && !is_path2) return 0;
+		if( is_path1 && !is_path2) return curr_path1.getAccuLength(ind);
+		if(!is_path1 &&  is_path2) return curr_path2.getAccuLength(ind);
 		
-		var _p1 = _path1.getAccuLength(ind);
-		var _p2 = _path2.getAccuLength(ind);
+		var _p1 = curr_path1.getAccuLength(ind);
+		var _p2 = curr_path2.getAccuLength(ind);
 		
 		var len = max(array_length(_p1), array_length(_p2));
 		var res = [];
@@ -108,7 +92,7 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			var _l1 = array_get_decimal(_p1, i);
 			var _l2 = array_get_decimal(_p2, i);
 			
-			res[i] = lerp(_l1, _l2, _lerp);
+			res[i] = lerp(_l1, _l2, curr_lerp);
 		}
 		
 		return res;
@@ -126,23 +110,16 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			return out;
 		}
 		
-		var _path1 = getInputData(0);
-		var _path2 = getInputData(1);
-		var _lerp  = getInputData(2);
+		if(!is_path1 && !is_path2) return out;
+		if( is_path1 && !is_path2) return curr_path1.getPointRatio(_rat, ind, out);
+		if(!is_path1 &&  is_path2) return curr_path2.getPointRatio(_rat, ind, out);
 		
-		var p1 = _path1 != noone && struct_has(_path1, "getPointRatio");
-		var p2 = _path2 != noone && struct_has(_path2, "getPointRatio");
-			
-		if(!p1 && !p2) return out;
-		if( p1 && !p2) return _path1.getPointRatio(_rat, ind, out);
-		if(!p1 &&  p2) return _path2.getPointRatio(_rat, ind, out);
+		var _p1 = curr_path1.getPointRatio(_rat, ind);
+		var _p2 = curr_path2.getPointRatio(_rat, ind);
 		
-		var _p1 = _path1.getPointRatio(_rat, ind);
-		var _p2 = _path2.getPointRatio(_rat, ind);
-		
-		out.x = lerp(_p1.x, _p2.x, _lerp);
-		out.y = lerp(_p1.y, _p2.y, _lerp);
-		out.weight = lerp(_p1.weight, _p2.weight, _lerp);
+		out.x = lerp(_p1.x, _p2.x, curr_lerp);
+		out.y = lerp(_p1.y, _p2.y, curr_lerp);
+		out.weight = lerp(_p1.weight, _p2.weight, curr_lerp);
 		
 		cached_pos[? _cKey] = new __vec2P(out.x, out.y, out.weight);
 		
@@ -152,24 +129,25 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	static getPointDistance = function(_dist, ind = 0, out = undefined) { return getPointRatio(_dist / getLength(ind), ind, out); }
 	
 	static getBoundary = function(ind = 0) {
-		var _path1 = getInputData(0);
-		var _path2 = getInputData(1);
-		var _lerp  = getInputData(2);
 		
-		var p1 = _path1 != noone && struct_has(_path1, "getPointRatio");
-		var p2 = _path2 != noone && struct_has(_path2, "getPointRatio");
-			
-		if(!p1 && !p2) return new BoundingBox();
-		if( p1 && !p2) return _path1.getBoundary(ind);
-		if(!p1 &&  p2) return _path2.getBoundary(ind);
+		if(!is_path1 && !is_path2) return new BoundingBox();
+		if( is_path1 && !is_path2) return curr_path1.getBoundary(ind);
+		if(!is_path1 &&  is_path2) return curr_path2.getBoundary(ind);
 		
-		var _p1 = _path1.getBoundary(ind);
-		var _p2 = _path2.getBoundary(ind);
+		var _p1 = curr_path1.getBoundary(ind);
+		var _p2 = curr_path2.getBoundary(ind);
 		
-		return _p1.lerpTo(_p2, _lerp);
+		return _p1.lerpTo(_p2, curr_lerp);
 	}
 	
 	static update = function() {
+		curr_path1 = getInputData(0);
+		curr_path2 = getInputData(1);
+		curr_lerp  = getInputData(2);
+		
+		is_path1 = curr_path1 != noone && struct_has(curr_path1, "getPointRatio");
+		is_path2 = curr_path2 != noone && struct_has(curr_path2, "getPointRatio");
+		
 		ds_map_clear(cached_pos);
 		outputs[0].setValue(self);
 	}

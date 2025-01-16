@@ -84,8 +84,9 @@ function Node_Path_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		}
 		
 		static getPointDistance = function(_dist, ind = 0, out = undefined) { return getPointRatio(_dist / getLength(ind), ind, out); }
+		
 		static getBoundary      = function(ind = 0) {
-			var _path = getInputData(0);
+			var _path = array_safe_get_fast(paths, ind, 0);
 			return struct_has(_path, "getBoundary")? _path.getBoundary(ind) : new BoundingBox( 0, 0, 1, 1 ); 
 		}
 	}

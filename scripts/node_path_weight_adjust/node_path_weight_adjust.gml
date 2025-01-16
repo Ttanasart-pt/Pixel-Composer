@@ -9,17 +9,25 @@ function Node_Path_Weight_Adjust(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	
 	newInput(2, nodeValue_Float("Value", self, 0));
 	
-	newInput(3, nodeValue_Curve("Length Modifier", self, CURVE_DEF_11));
+	newInput(3, nodeValue_Curve("Curve", self, CURVE_DEF_11));
+	
+	newInput(4, nodeValue_Enum_Scroll("Type", self, 0, [ "Constant", "Curve" ]));
+	
+	newInput(5, nodeValue_Vec2("Curve Range", self, [ 0, 1 ]));
 	
 	newOutput(0, nodeValue_Output("Path", self, VALUE_TYPE.pathnode, self));
 	
 	input_display_list = [ 0, 
-	    ["Adjustment", false], 1, 2, 
+	    ["Adjustment", false], 1, 4, 2, 3, 5, 
     ];
 	
 	curr_path  = noone;
+	is_path    = false;
 	curr_mode  = 0;
+	curr_type  = 0;
 	curr_value = 0;
+	curr_curve = noone;
+	curr_curve_range = [ 0, 1 ];
 	
 	temp_p = new __vec2P();
 	
@@ -27,22 +35,26 @@ function Node_Path_Weight_Adjust(_x, _y, _group = noone) : Node(_x, _y, _group) 
 		if(curr_path && struct_has(curr_path, "drawOverlay")) curr_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
-	static getLineCount    = function(       ) /*=>*/ {return struct_has(curr_path, "getLineCount")?    curr_path.getLineCount()       : 1};
-	static getSegmentCount = function(ind = 0) /*=>*/ {return struct_has(curr_path, "getSegmentCount")? curr_path.getSegmentCount(ind) : 0};
-	static getLength       = function(ind = 0) /*=>*/ {return struct_has(curr_path, "getLength")?       curr_path.getLength(ind)       : 0};
-	static getAccuLength   = function(ind = 0) /*=>*/ {return struct_has(curr_path, "getAccuLength")?   curr_path.getAccuLength(ind)   : []};
-	static getBoundary     = function(ind = 0) /*=>*/ {return struct_has(curr_path, "getBoundary")?     curr_path.getBoundary(ind)     : new BoundingBox( 0, 0, 1, 1 )};
+	static getLineCount    = function(       ) /*=>*/ {return is_path? curr_path.getLineCount()       : 1};
+	static getSegmentCount = function(ind = 0) /*=>*/ {return is_path? curr_path.getSegmentCount(ind) : 0};
+	static getLength       = function(ind = 0) /*=>*/ {return is_path? curr_path.getLength(ind)       : 0};
+	static getAccuLength   = function(ind = 0) /*=>*/ {return is_path? curr_path.getAccuLength(ind)   : []};
+	static getBoundary     = function(ind = 0) /*=>*/ {return is_path? curr_path.getBoundary(ind)     : new BoundingBox( 0, 0, 1, 1 )};
 	
 	static getPointRatio = function(_rat, ind = 0, out = undefined) {
 		if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
+		if(!is_path) return out;
 		
 		temp_p = curr_path.getPointRatio(_rat, ind, temp_p);
 		out.x  = temp_p.x;
 		out.y  = temp_p.y;
 		
+		var _v = curr_value;
+		if(curr_type) _v = lerp(curr_curve_range[0], curr_curve_range[1], curr_curve.get(_rat));
+		
 		switch(curr_mode) {
-		    case 0 : out.weight = max(0, temp_p.weight + curr_value); break;
-		    case 1 : out.weight = temp_p.weight * curr_value; break;
+		    case 0 : out.weight = max(0, temp_p.weight + _v); break;
+		    case 1 : out.weight = temp_p.weight * _v; break;
 		}
 		
 		return out;
@@ -51,9 +63,26 @@ function Node_Path_Weight_Adjust(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	static getPointDistance = function(_dist, ind = 0, out = undefined) { return getPointRatio(_dist / getLength(), ind, out); }
 	
 	static update = function() {
-		curr_path  = getInputData(0);
-		curr_mode  = getInputData(1);
-	    curr_value = getInputData(2);
+		var _path  = getInputData(0);
+	    var _mode  = getInputData(1);
+	    var _value = getInputData(2);
+	    var _curve = getInputData(3);
+	    var _type  = getInputData(4);
+	    var _curve_range = getInputData(5);
+	    
+		inputs[2].setVisible(curr_type == 0);
+		inputs[3].setVisible(curr_type == 1);
+		inputs[5].setVisible(curr_type == 1);
+		
+		curr_path  = _path;
+		curr_mode  = _mode;
+	    curr_value = _value;
+	    
+	    curr_curve       = new curveMap(_curve, TOTAL_FRAMES);
+	    curr_type        = _type;
+	    curr_curve_range = _curve_range;
+		
+		is_path = curr_path != noone && struct_has(curr_path, "getPointRatio");
 		
 		outputs[0].setValue(self);
 	}

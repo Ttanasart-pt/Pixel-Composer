@@ -1,6 +1,5 @@
 function Node_Path_Sample(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Sample Path";
-	batch_output = false;
 	setDimension(96, 48);
 	
 	newInput(0, nodeValue_PathNode("Path", self, noone))
@@ -14,6 +13,8 @@ function Node_Path_Sample(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	newOutput(1, nodeValue_Output("Direction", self, VALUE_TYPE.float, 0));
+	
+	newOutput(2, nodeValue_Output("Weight", self, VALUE_TYPE.float, 0));
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _path = getInputData(0);
@@ -32,14 +33,18 @@ function Node_Path_Sample(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		}
 	}
 	
+	__temp_p  = new __vec2P();
+	__temp_p0 = new __vec2P();
+	__temp_p1 = new __vec2P();
+	
 	static processData = function(_output, _data, _output_index, _array_index = 0) {
 		var _path = _data[0];
 		var _rat  = _data[1];
 		var _mod  = _data[2];
 		
-		if(_path == noone)						return [ 0, 0 ];
-		if(!struct_has(_path, "getPointRatio")) return [ 0, 0 ];
-		if(!is_real(_rat))						return [ 0, 0 ];
+		if(_path == noone)						return _output;
+		if(!struct_has(_path, "getPointRatio")) return _output;
+		if(!is_real(_rat))						return _output;
 		var inv = false;
 		
 		switch(_mod) {
@@ -56,19 +61,27 @@ function Node_Path_Sample(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 				_rat = fr;
 				break;
 		}
-			
-		if(_output_index == 0)
-			return _path.getPointRatio(_rat).toArray();
-		else if(_output_index == 1) {
-			var r0 = clamp(_rat - 0.0001, 0, 1);
-			var r1 = clamp(_rat + 0.0001, 0, 1);
-			
-			var p0 = _path.getPointRatio(r0);
-			var p1 = _path.getPointRatio(r1);
-			
-			var dir = inv? p1.directionTo(p0) : p0.directionTo(p1);
-			return dir;
-		} 
+		
+		_path.getPointRatio(_rat, 0, __temp_p);
+		
+		var _px = __temp_p.x;
+		var _py = __temp_p.y;
+		var _pw = __temp_p.weight;
+		
+		var r0 = clamp(_rat - 0.0001, 0, 1);
+		var r1 = clamp(_rat + 0.0001, 0, 1);
+		
+		_path.getPointRatio(r0, 0, __temp_p0);
+		_path.getPointRatio(r1, 0, __temp_p1);
+		
+		var dir = inv? __temp_p1.directionTo(__temp_p0) : __temp_p0.directionTo(__temp_p1);
+		
+		return [
+			[ _px, _py ],
+			dir,
+			_pw
+		];
+		
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

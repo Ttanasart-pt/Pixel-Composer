@@ -318,16 +318,18 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 			var _ispr = _data[$ "spr"];
 			_spr = asset_get_index(_ispr);
 				
-			if(sprite_exists(_spr))
-				spr = _spr;
-			else 
-				print($"Node icon not found {_ispr}");
+			if(sprite_exists(_spr)) spr = _spr;
+			else print($"Node icon not found {_ispr}");
 			
 		} else {
 			var pth = $"{sourceDir}/icon.png";
+			
 			if(file_exists_empty(pth)) {
 				spr = sprite_add(pth, 0, false, false, 0, 0);
 				sprite_set_offset(spr, sprite_get_width(spr) / 2, sprite_get_height(spr) / 2);
+			} else {
+				var _spr = asset_get_index($"s_{string_lower(nodeName)}");
+				if(sprite_exists(_spr)) spr = _spr;
 			}
 		}
 			

@@ -33,7 +33,7 @@ function LOAD_FOLDER(list, folder) {
 
 function LOAD_SAMPLE() {
 	ds_list_clear(SAMPLE_PROJECTS);
-	var zzip = "Welcome files/Welcome files.zip";
+	var zzip = "data/Welcome files/Welcome files.zip";
 	var targ = $"{DIRECTORY}Welcome files";
 	
 	directory_verify(targ);

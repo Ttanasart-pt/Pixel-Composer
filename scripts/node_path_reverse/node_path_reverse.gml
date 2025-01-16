@@ -9,48 +9,33 @@ function Node_Path_Reverse(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	cached_pos = ds_map_create();
 	
+	curr_path  = noone;
+	is_path    = false;
+	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var _path = getInputData(0);
-		if(_path && struct_has(_path, "drawOverlay")) _path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		if(curr_path && struct_has(curr_path, "drawOverlay")) 
+			curr_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
-	static getLineCount = function() {
-		var _path = getInputData(0);
-		return struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
-	}
-	
-	static getSegmentCount = function(ind = 0) {
-		var _path = getInputData(0);
-		return struct_has(_path, "getSegmentCount")? _path.getSegmentCount(ind) : 0; 
-	}
-	
-	static getLength = function(ind = 0) {
-		var _path = getInputData(0);
-		return struct_has(_path, "getLength")? _path.getLength(ind) : 0; 
-	}
-		
-	static getAccuLength = function(ind = 0) {
-		var _path = getInputData(0);
-		return struct_has(_path, "getAccuLength")? array_reverse(_path.getAccuLength(ind)) : []; 
-	}
-	
-	static getBoundary = function(ind = 0) {
-		var _path = getInputData(0);
-		return struct_has(_path, "getBoundary")? _path.getBoundary(ind) : new BoundingBox(0, 0, 1, 1); 
-	}
+	static getLineCount    = function(       ) /*=>*/ {return is_path? curr_path.getLineCount()                    : 1};
+	static getSegmentCount = function(ind = 0) /*=>*/ {return is_path? curr_path.getSegmentCount(ind)              : 0};
+	static getLength       = function(ind = 0) /*=>*/ {return is_path? curr_path.getLength(ind)                    : 0};
+	static getAccuLength   = function(ind = 0) /*=>*/ {return is_path? array_reverse(curr_path.getAccuLength(ind)) : []};
+	static getBoundary     = function(ind = 0) /*=>*/ {return is_path? curr_path.getBoundary(ind)                  : new BoundingBox(0, 0, 1, 1)};
 		
 	static getPointRatio = function(_rat, ind = 0, out = undefined) {
 		if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
-		var _path = getInputData(0);
+		if(!is_path) return out;
 		
-		if(!is_struct(_path) || !struct_has(_path, "getPointRatio"))
-			return out;
-		return _path.getPointRatio(1 - _rat, ind, out);
+		return curr_path.getPointRatio(1 - _rat, ind, out);
 	}
 	
 	static getPointDistance = function(_dist, ind = 0, out = undefined) { return getPointRatio(_dist / getLength(), ind, out); }
 	
 	static update = function() {
+		curr_path  = getInputData(0);
+		is_path    = curr_path != noone && struct_has(curr_path, "getPointRatio");
+		
 		ds_map_clear(cached_pos);
 		outputs[0].setValue(self);
 	}

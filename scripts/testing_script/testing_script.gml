@@ -1,6 +1,6 @@
-function __test_update_current_collections() {
+function __test_update_current_collections(dir = COLLECTIONS) {
 	var st = ds_stack_create();
-	ds_stack_push(st, PANEL_COLLECTION.context);
+	ds_stack_push(st, dir);
 	
 	print("---------- COLLECTION UPDATING STARTED ----------");
 	
@@ -50,9 +50,9 @@ function __test_update_sample_projects() {
 	print("---------- PROJECT UPDATING ENDED ----------");
 }
 
-function __test_load_current_collections() {
+function __test_load_current_collections(dir = COLLECTIONS) {
 	var st = ds_stack_create();
-	ds_stack_push(st, PANEL_COLLECTION.context);
+	ds_stack_push(st, dir);
 	
 	var xx = 0;
 	var yy = 0;
@@ -162,9 +162,9 @@ function __test_load_all_nodes() {
 	LOADING = false;
 }
 
-function __test_metadata_current_collections() {
+function __test_metadata_current_collections(dir = COLLECTIONS) {
 	var st = ds_stack_create();
-	ds_stack_push(st, PANEL_COLLECTION.context);
+	ds_stack_push(st, dir);
 	
 	print("---------- COLLECTION UPDATING STARTED ----------");
 	

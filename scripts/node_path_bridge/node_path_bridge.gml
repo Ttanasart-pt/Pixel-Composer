@@ -20,6 +20,12 @@ function Node_Path_Bridge(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	cached_pos = ds_map_create();
 	
+	curr_path  = noone;
+	is_path    = false;
+	
+	curr_amount  = noone;
+	curr_smooth  = noone;
+	
 	#region ---- path ----
 		anchors		= [];
 		controls	= [];
@@ -32,9 +38,9 @@ function Node_Path_Bridge(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	#endregion
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var _path = getInputData(0);
-		var _smt  = getInputData(2);
-		if(_path && struct_has(_path, "drawOverlay")) _path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		
+		if(curr_path && struct_has(curr_path, "drawOverlay")) 
+			curr_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 		
 		var _amo = array_length(anchors);
 		var ox, oy, nx, ny;
@@ -44,7 +50,7 @@ function Node_Path_Bridge(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		for( var i = 0, n = _amo; i < n; i++ ) {
 			var _a = anchors[i];
 			
-			if(_smt) {
+			if(curr_smooth) {
 				var _smp = 1 / 32;
 				for( var j = 0; j <= 1; j += _smp ) {
 					_p = getPointRatio(j, i, _p);
@@ -71,15 +77,11 @@ function Node_Path_Bridge(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		}
 	}
 	
-	static getLineCount = function() { return getInputData(1); }
-	
-	static getSegmentCount = function(ind = 0) { return array_safe_length(array_safe_get_fast(anchors, ind)); } 
-	
-	static getLength       = function(ind = 0) { return array_safe_get_fast(lengths, ind); }
-	
-	static getAccuLength   = function(ind = 0) { return array_safe_get_fast(lengthAccs, ind); }
-	
-	static getBoundary     = function(ind = 0) { return array_safe_get_fast(boundary, ind); }
+	static getLineCount    = function(       ) /*=>*/ {return getInputData(1)};
+	static getSegmentCount = function(ind = 0) /*=>*/ {return array_safe_length(array_safe_get_fast(anchors, ind))}; 
+	static getLength       = function(ind = 0) /*=>*/ {return array_safe_get_fast(lengths, ind)};
+	static getAccuLength   = function(ind = 0) /*=>*/ {return array_safe_get_fast(lengthAccs, ind)};
+	static getBoundary     = function(ind = 0) /*=>*/ {return array_safe_get_fast(boundary, ind)};
 	
 	static getPointRatio = function(_rat, ind = 0, out = undefined) { return getPointDistance(clamp(_rat, 0, 1) * getLength(ind), ind, out); }
 	
@@ -95,14 +97,14 @@ function Node_Path_Bridge(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			return out;
 		}
 		
-		var _smt = getInputData(2);
 		var _a   = anchors[ind];
 		var _la  = lengthAccs[ind];
 		
 		if(_dist == 0) {
 			var _p = _a[0];
-			out.x = _p[0];
-			out.y = _p[1];
+			out.x  = _p[0];
+			out.y  = _p[1];
+			out.weight = _p[2];
 			
 			cached_pos[? _cKey] = new __vec2P(out.x, out.y, out.weight);
 			return out;
@@ -117,6 +119,7 @@ function Node_Path_Bridge(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			var _p = _a[_ind];
 			out.x = _p[0];
 			out.y = _p[1];
+			out.weight = _p[2];
 			
 			cached_pos[? _cKey] = new __vec2P(out.x, out.y, out.weight);
 			return out;
@@ -126,8 +129,8 @@ function Node_Path_Bridge(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _rat = _d / (_la[_ind] - (_ind == 0? 0 : _la[_ind - 1]));
 		var p0   = _a[_ind];
 		var p1   = _a[_ind + 1];
-			
-		if(_smt) {
+		
+		if(curr_smooth) {
 			var _cnt = controls[ind];
 			var _c0x = _cnt[_ind][0];
 			var _c0y = _cnt[_ind][1];
@@ -136,10 +139,12 @@ function Node_Path_Bridge(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			
 			out.x = eval_bezier_x(_rat, p0[0], p0[1], p1[0], p1[1], _c0x, _c0y, _c1x, _c1y);
 			out.y = eval_bezier_y(_rat, p0[0], p0[1], p1[0], p1[1], _c0x, _c0y, _c1x, _c1y);
+			out.weight = lerp(p0[2], p1[2], _rat);
 			
 		} else {
 			out.x = lerp(p0[0], p1[0], _rat);
 			out.y = lerp(p0[1], p1[1], _rat);
+			out.weight = lerp(p0[2], p1[2], _rat);
 		}
 		
 		cached_pos[? _cKey] = new __vec2P(out.x, out.y, out.weight);
@@ -150,33 +155,35 @@ function Node_Path_Bridge(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	static update = function() {
 		ds_map_clear(cached_pos);
 		
-		var _path = getInputData(0);
-		var _amo  = getInputData(1);
-		var _smt  = getInputData(2);
+		curr_path  = getInputData(0);
+		is_path    = curr_path != noone && struct_has(curr_path, "getPointRatio");
 		
-		if(_path == noone) return;
+		curr_amount = getInputData(1);
+		curr_smooth = getInputData(2);
+		
+		if(!is_path) return;
 		
 		#region bridge
-			var _lines = _path.getLineCount();
+			var _lines = curr_path.getLineCount();
 			var _p = new __vec2P();
 			var _rat;
 		
-			anchors    = array_create(_amo);
-			lengths    = array_create(_amo);
-			lengthAccs = array_create(_amo);
+			anchors    = array_create(curr_amount);
+			lengths    = array_create(curr_amount);
+			lengthAccs = array_create(curr_amount);
 					
-			for( var i = 0; i < _amo; i++ ) {
+			for( var i = 0; i < curr_amount; i++ ) {
 				var _a = array_create(_lines);
-				_rat   = _amo == 1? 0.5 : i / (_amo - 1);
+				_rat   = curr_amount == 1? 0.5 : i / (curr_amount - 1);
 			
 				for( var j = 0; j < _lines; j++ ) {
-					_p    = _path.getPointRatio(clamp(_rat, 0, 0.999), j, _p);
-					_a[j] = [ _p.x, _p.y ];
+					_p    = curr_path.getPointRatio(clamp(_rat, 0, 0.999), j, _p);
+					_a[j] = [ _p.x, _p.y, _p.weight ];
 				}
 			
 				anchors[i] = _a;
 			
-				if(_smt) {
+				if(curr_smooth) {
 					var _cnt = array_create(_lines - 1);
 				
 					for( var j = 0; j < _lines - 1; j++ ) _cnt[j] = [ 0, 0, 0, 0 ];

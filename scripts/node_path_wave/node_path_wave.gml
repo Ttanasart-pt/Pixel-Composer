@@ -33,7 +33,6 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		["Wiggle",	 true, 6], 7, 8, 
 	];
 	
-	path = 0;
 	fre  = 0; 
 	amp  = 0;
 	shf  = 0;
@@ -53,9 +52,12 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	cached_pos = ds_map_create();
 	
+	curr_path  = noone;
+	is_path    = false;
+	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var _path = getInputData(0);
-		if(_path && struct_has(_path, "drawOverlay")) _path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		if(curr_path && struct_has(curr_path, "drawOverlay")) 
+			curr_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 		
 		draw_set_color(COLORS._main_icon);
 		var _amo = getLineCount();
@@ -78,31 +80,29 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		}
 	}
 	
-	static getLineCount = function() {
-		return struct_has(path, "getLineCount")? path.getLineCount() : 1; 
-	}
-	
-	static getSegmentCount = function(ind = 0) {
-		return struct_has(path, "getSegmentCount")? path.getSegmentCount(ind) : 0; 
-	}
+	static getLineCount    = function(       ) /*=>*/ {return is_path? curr_path.getLineCount()       : 1};
+	static getSegmentCount = function(ind = 0) /*=>*/ {return is_path? curr_path.getSegmentCount(ind) : 0};
+	static getBoundary     = function(ind = 0) /*=>*/ {return is_path? curr_path.getBoundary(ind)     : new BoundingBox( 0, 0, 1, 1 )};
 	
 	static getLength = function(ind = 0) {
-		var _fre  = fre ; _fre = max(_fre[0], _fre[1]);
-		var _amo  = amp ; _amo = max(_amo[0], _amo[1]);
+		if(!is_path) return 0;
+		
+		var _fre  = fre; _fre = max(_fre[0], _fre[1]);
+		var _amo  = amp; _amo = max(_amo[0], _amo[1]);
 		
 		    _fre  = max(1, abs(_fre));
-		var _len  = struct_has(path, "getLength")? path.getLength(ind) : 0;
+		var _len  = curr_path.getLength(ind);
 		    _len *= _fre * sqrt(abs(_amo) + 1 / _fre);
 		
 		return _len; 
 	}
 	
 	static getAccuLength = function(ind = 0) {
-		var _fre  = fre ; _fre = max(_fre[0], _fre[1]);
-		var _amo  = amp ; _amo = max(_amo[0], _amo[1]);
+		var _fre  = fre; _fre = max(_fre[0], _fre[1]);
+		var _amo  = amp; _amo = max(_amo[0], _amo[1]);
 		
 		    _fre  = max(1, abs(_fre));
-		var _len  = struct_has(path, "getAccuLength")? path.getAccuLength(ind) : [];
+		var _len  = is_path? curr_path.getAccuLength(ind) : [];
 		var _mul  = _fre * sqrt(abs(_amo) + 1 / _fre);
 		
 		for( var i = 0, n = array_length(_len); i < n; i++ ) 
@@ -114,6 +114,7 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static getPointRatio = function(_rat, ind = 0, out = undefined) {
 		if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
 		
+		if(!is_path) return out;
 		var _cKey = $"{string_format(_rat, 0, 6)},{ind}";
 		if(ds_map_exists(cached_pos, _cKey)) {
 			var _p = cached_pos[? _cKey];
@@ -123,7 +124,7 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			return out;
 		}
 		
-		var _path = path;
+		var _path = curr_path;
 		var _fre  = fre; 
 		var _amp  = amp;
 		var _shf  = shf;
@@ -144,14 +145,6 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			var _w = wiggle(_wigs[0], _wigs[1], _wigf, _t, _seed);
 			_amp += _w;
 		}
-		
-		if(is_array(_path)) {
-			_path = array_safe_get_fast(_path, ind);
-			ind = 0;
-		}
-		
-		if(!is_struct(_path) || !struct_has(_path, "getPointRatio"))
-			return out;
 		
 		p0 = _path.getPointRatio(clamp(_rat - 0.001, 0, 0.999999), ind, p0);
 		p  = _path.getPointRatio(_rat, ind, p);
@@ -185,13 +178,11 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	static getPointDistance = function(_dist, ind = 0, out = undefined) { return getPointRatio(_dist / getLength(), ind, out); }
 	
-	static getBoundary = function(ind = 0) {
-		return struct_has(path, "getBoundary")? path.getBoundary(ind) : new BoundingBox( 0, 0, 1, 1 ); 
-	}
-	
 	static update = function() {
 		ds_map_clear(cached_pos);
-		path = getInputData(0);
+		curr_path = getInputData(0);
+		is_path   = curr_path != noone && struct_has(curr_path, "getPointRatio");
+		
 		fre  = getInputData(1); 
 		amp  = getInputData(2);
 		shf  = getInputData(3);

@@ -11,9 +11,14 @@ function Node_Path_Trim(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	cached_pos = ds_map_create();
 	
+	curr_path  = noone;
+	is_path    = false;
+	
+	curr_range = noone;
+	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var _path = getInputData(0);
-		if(_path && struct_has(_path, "drawOverlay")) _path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		if(curr_path && struct_has(curr_path, "drawOverlay")) 
+			curr_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 		
 		draw_set_color(COLORS._main_icon);
 		
@@ -37,53 +42,28 @@ function Node_Path_Trim(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		}
 	}
 	
-	static getLineCount = function() {
-		var _path = getInputData(0);
-		return struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
-	}
-	
-	static getSegmentCount = function(ind = 0) {
-		var _path = getInputData(0);
-		return struct_has(_path, "getSegmentCount")? _path.getSegmentCount(ind) : 0; 
-	}
-	
-	static getLength = function(ind = 0) {
-		var _path = getInputData(0);
-		return struct_has(_path, "getLength")? _path.getLength(ind) : 0; 
-	}
-	
-	static getAccuLength = function(ind = 0) {
-		var _path = getInputData(0);
-		return struct_has(_path, "getAccuLength")? _path.getAccuLength(ind) : []; 
-	}
-	
+	static getLineCount    = function(       ) /*=>*/ {return is_path? curr_path.getLineCount()       : 1};
+	static getSegmentCount = function(ind = 0) /*=>*/ {return is_path? curr_path.getSegmentCount(ind) : 0};
+	static getLength       = function(ind = 0) /*=>*/ {return is_path? curr_path.getLength(ind)       : 0};
+	static getAccuLength   = function(ind = 0) /*=>*/ {return is_path? curr_path.getAccuLength(ind)   : []};
+	static getBoundary     = function(ind = 0) /*=>*/ {return is_path? curr_path.getBoundary(ind)     : new BoundingBox( 0, 0, 1, 1 )};
+		
 	static getPointRatio = function(_rat, ind = 0, out = undefined) {
 		if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
+		if(!is_path) return out;
 		
-		var _path = getInputData(0);
-		var _rng  = getInputData(1);
-		
-		if(is_array(_path)) {
-			_path = array_safe_get_fast(_path, ind);
-			ind = 0;
-		}
-		
-		if(!is_struct(_path) || !struct_has(_path, "getPointRatio"))
-			return out;
-		
-		_rat = _rng[0] + _rat * (_rng[1] - _rng[0]);
-		
-		return _path.getPointRatio(_rat, ind, out);
+		_rat = lerp(curr_range[0], curr_range[1], _rat);
+		return curr_path.getPointRatio(_rat, ind, out);
 	}
 	
 	static getPointDistance = function(_dist, ind = 0, out = undefined) { return getPointRatio(_dist / getLength(), ind, out); }
 	
-	static getBoundary = function(ind = 0) {
-		var _path = getInputData(0);
-		return struct_has(_path, "getBoundary")? _path.getBoundary(ind) : new BoundingBox( 0, 0, 1, 1 ); 
-	}
-		
 	static update = function() {
+		curr_path  = getInputData(0);
+		is_path    = curr_path != noone && struct_has(curr_path, "getPointRatio");
+		
+		curr_range = getInputData(1);
+		
 		ds_map_clear(cached_pos);
 		outputs[0].setValue(self);
 	}

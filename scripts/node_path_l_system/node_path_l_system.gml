@@ -233,20 +233,6 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		static getLength		= function() { return current_length; }
 		static getAccuLength	= function() { return [ 0, current_length ]; }
 		
-		static getWeightDistance = function (_dist, _ind = 0) {
-			return getWeightRatio(_dist / current_length, _ind); 
-		}
-		
-		static getWeightRatio = function (_rat, _ind = 0) {
-			var _p0 = lines[_ind][0];
-			var _p1 = lines[_ind][1];
-			
-			if(!is_array(_p0) || array_length(_p0) < 2) return 1;
-			if(!is_array(_p1) || array_length(_p1) < 2) return 1;
-			
-			return lerp(_p0[3], _p1[3], _rat);
-		}
-		
 		static getPointRatio = function(_rat, _ind = 0, out = undefined) {
 			if(out == undefined) out = path_3d? new __vec3() : new __vec2P(); 
 			else { out.x = 0; out.y = 0; if(path_3d) out.z = 0; }

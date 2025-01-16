@@ -21,13 +21,13 @@ function Node_Path_From_Mask(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	array_push(attributeEditors, ["Max Dimension", function() { return attributes.maximum_dim; }, 
 		new textBox(TEXTBOX_INPUT.number, function(val) { attributes.maximum_dim = clamp(val, 8, 8192); })]);
 	
-	static getBoundary		= function() { return boundary; }
-	static getAccuLength	= function() { return lengthAccs; }
-	static getLength		= function() { return lengthTotal; }
-	static getSegmentCount  = function() { return 1; }
-	static getLineCount     = function() { return 1; }
+	static getBoundary		= function() /*=>*/ {return boundary};
+	static getAccuLength	= function() /*=>*/ {return lengthAccs};
+	static getLength		= function() /*=>*/ {return lengthTotal};
+	static getSegmentCount  = function() /*=>*/ {return 1};
+	static getLineCount     = function() /*=>*/ {return 1};
 	
-	static getPointDistance = function(_dist, _ind = 0, out = undefined) { #region
+	static getPointDistance = function(_dist, _ind = 0, out = undefined) {
 		if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
 		
 		var _cKey = $"{string_format(_dist, 0, 6)},{_ind}";
@@ -71,14 +71,13 @@ function Node_Path_From_Mask(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		cached_pos[? _cKey] = new __vec2P(out.x, out.y, out.weight);
 		
 		return out;
-	} #endregion
+	}
 	
-	static getPointRatio    = function(_rat, _ind = 0, out = undefined) { #region
-		var pix = frac(_rat) * lengthTotal;
-		return getPointDistance(pix, _ind, out);
-	} #endregion
+	static getPointRatio    = function(_rat, _ind = 0, out = undefined) {
+		return getPointDistance(frac(_rat) * lengthTotal, _ind, out);
+	}
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		
 		draw_set_color(COLORS._main_accent);
 		var ox, oy, nx, ny, sx, sy;
@@ -98,9 +97,9 @@ function Node_Path_From_Mask(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			ox = nx;
 			oy = ny;
 		}
-	} #endregion
+	}
 	
-	static update = function(frame = CURRENT_FRAME) { #region
+	static update = function(frame = CURRENT_FRAME) {
 		ds_map_clear(cached_pos);
 		var _surf = getInputData(0);
 		var _smt  = getInputData(1);
@@ -242,7 +241,7 @@ function Node_Path_From_Mask(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		// print($"Anchors  : {anchors}");
 		// print($"Lengths  : {lengths}");
 		// print($"Len Accs : {lengthAccs}");
-	} #endregion
+	}
 	
 	static getGraphPreviewSurface = function() { return /*temp_surface[0]*/ getInputData(0); }
 	static getPreviewValues       = function() { return /*temp_surface[0]*/ getInputData(0); }

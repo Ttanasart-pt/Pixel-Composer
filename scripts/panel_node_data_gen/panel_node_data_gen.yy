@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"panel_node_data_gen",
   "parent":{
-    "name":"_others",
-    "path":"folders/panels/_others.yy",
+    "name":"debug",
+    "path":"folders/panels/_others/debug.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

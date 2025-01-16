@@ -416,7 +416,6 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						
 						_nx = p.x;
 						_ny = p.y;
-						// print($"{_nx}, {_ny}");
 							
 						if(_total < _pathEnd) { //Do not wiggle the last point.
 							var _d = point_direction(_ox, _oy, _nx, _ny);
@@ -587,6 +586,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				var dat    = array_safe_get_fast(_pathData, i, noone);
 				
 				var _col_base = dat == noone? _colb.eval(random(1)) : dat.color;
+				_ow = 1;
 				
 				for( var j = 0, m = array_length(points); j < m; j++ ) {
 					var p0   = points[j];
