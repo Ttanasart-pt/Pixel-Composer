@@ -19,19 +19,43 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 	newInput(6, nodeValue_Slider_Range("Range", self, [ 0, 1 ], { range: [ -1, 1, 0.01 ] }));
 		
-	newInput(7, nodeValue_Vec2("Input scale", self, [ 1, 1 ]));
-		
-	newInput(8, nodeValue_Vec2("Input shift", self, [ 0, 0 ]));
-		
+	newInput(7, nodeValue_Vec2("Input Scale", self, [ 1, 1 ]));
+	
+	newInput(8, nodeValue_Vec2("Input Shift", self, [ 0, 0 ]));
+	
+	newInput(9, nodeValue_Bool("Use Weight", self, false));
+	
+	newInput(10, nodeValue_Text("w(x)", self, ""));
+	
 	newOutput(0, nodeValue_Output("Path", self, VALUE_TYPE.pathnode, self));
 	
 	input_display_list = [
-		[ "Variable",  false ], 5, 7, 8, 0, 
-		[ "Equation",  false ], 1, 2, 3, 4, 6, 
+		[ "Variable",  false],    5, 7, 8, 0, 
+		[ "Equation",  false],    1, 2, 3, 4, 6, 
+		[ "Weight",    false, 9], 10,  
 	]
 	
 	boundary   = new BoundingBox( 0, 0, 1, 1 );
 	cached_pos = ds_map_create();
+	
+	curr_sca  = 0;
+	curr_coor = 0;
+	curr_eqa  = 0;
+	curr_eq0  = 0;
+	curr_eq1  = 0;
+	curr_orig = 0;
+	curr_ran  = 0;
+	curr_iran = 0;
+	curr_shf  = 0;
+	
+	curr_usew = 0;
+	curr_wgfn = 0;
+	
+	fn0 = 0;
+	fn1 = 0;
+	
+	_a = new __vec2P();
+	_param = { x:0, y:0, t:0, r:0, O:0 };
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		inputs[5].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
@@ -46,59 +70,99 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static getPointRatio = function(_rat, ind = 0, out = undefined) {
 		if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
 		
-		var _sca  = getInputData(0);
-		var _coor = getInputData(1);
-		var _eqa  = getInputData(2);
-		var _eq0  = getInputData(3);
-		var _eq1  = getInputData(4);
-		var _orig = getInputData(5);
-		var _ran  = getInputData(6);
-		var _iran = getInputData(7);
-		var _shf  = getInputData(8);
+		_rat = curr_ran[0] + (_rat * (curr_ran[1] - curr_ran[0]));
 		
-		_rat = _ran[0] + (_rat * (_ran[1] - _ran[0]));
-		
-		switch(_coor) {
+		switch(curr_coor) {
 			case 0 :
-				switch(_eqa) {
+				switch(curr_eqa) {
 					case 0 : 
-						out.x = _rat * _iran[0] + _shf[0];
-						out.y = evaluateFunction(_eq0, { x: _rat * _iran[0] + _shf[0] });
+						_param.x = _rat * curr_iran[0] + curr_shf[0];
+						
+						out.x = _rat * curr_iran[0] + curr_shf[0];
+						out.y = fn0.eval(_param);
+						
+						if(curr_usew) {
+							_param.x = _rat;
+							out.weight = fnw.eval(_param);
+						}
 						break;
+						
 					case 1 : 
-						out.x = evaluateFunction(_eq0, { y: _rat * _iran[1] + _shf[1] });
-						out.y = _rat * _iran[1] + _shf[1];
+						_param.y = _rat * curr_iran[1] + curr_shf[1];
+						
+						out.x = fn0.eval(_param);
+						out.y = _rat * curr_iran[1] + curr_shf[1];
+						
+						if(curr_usew) {
+							_param.y = _rat;
+							out.weight = fnw.eval(_param);
+						}
 						break;
+						
 					case 2 : 
-						out.x = evaluateFunction(_eq0, { t: _rat * _iran[0] + _shf[0] });
-						out.y = evaluateFunction(_eq1, { t: _rat * _iran[1] + _shf[1] });
+						_param.t = _rat * curr_iran[0] + curr_shf[0];
+						out.x = fn0.eval(_param);
+						
+						_param.t = _rat * curr_iran[1] + curr_shf[1];
+						out.y = fn1.eval(_param);
+						
+						if(curr_usew) {
+							_param.t = _rat;
+							out.weight = fnw.eval(_param);
+						}
 						break;
 				}
 				break;
+				
 			case 1 :
-				var _a = new __vec2P();
-				switch(_eqa) {
+				var _ax = 0, _ay = 0;
+				
+				switch(curr_eqa) {
 					case 0 : 
-						_a.x = _rat * _iran[0] + _shf[0];
-						_a.y = evaluateFunction(_eq0, { r: _rat * _iran[0] + _shf[0] });
+						_param.r = _rat * curr_iran[0] + curr_shf[0];
+						
+						_ax = _rat * curr_iran[0] + curr_shf[0];
+						_ay = fn0.eval(_param);
+						
+						if(curr_usew) {
+							_param.r = _rat;
+							out.weight = fnw.eval(_param);
+						}
 						break;
+						
 					case 1 : 
-						_a.x = evaluateFunction(_eq0, { O: _rat * _iran[1] + _shf[1] });
-						_a.y = _rat * _iran[1] + _shf[1];
+						_param.O = _rat * curr_iran[1] + curr_shf[1];
+						
+						_ax = fn0.eval(_param);
+						_ay = _rat * curr_iran[1] + curr_shf[1];
+						
+						if(curr_usew) {
+							_param.O = _rat;
+							out.weight = fnw.eval(_param);
+						}
 						break;
+						
 					case 2 : 
-						_a.x = evaluateFunction(_eq0, { t: _rat * _iran[0] + _shf[0] });
-						_a.y = evaluateFunction(_eq1, { t: _rat * _iran[1] + _shf[1] });
+						_param.t = _rat * curr_iran[0] + curr_shf[0];
+						_ax = fn0.eval(_param);
+						
+						_param.t = _rat * curr_iran[1] + curr_shf[1];
+						_ay = fn1.eval(_param);
+						
+						if(curr_usew) {
+							_param.t = _rat;
+							out.weight = fnw.eval(_param);
+						}
 						break;
 				}
 				
-				out.x =  cos(_a.y) * _a.x;
-				out.y = -sin(_a.y) * _a.x;
+				out.x =  cos(_ay) * _ax;
+				out.y = -sin(_ay) * _ax;
 				break;
 		}
 		
-		out.x =  out.x * _sca[0] + _orig[0];
-		out.y = -out.y * _sca[1] + _orig[1];
+		out.x =  out.x * curr_sca[0] + curr_orig[0];
+		out.y = -out.y * curr_sca[1] + curr_orig[1];
 		
 		return out;
 	}
@@ -110,45 +174,51 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var _eqa  = getInputData(2);
 		
 		inputs[2].editWidget.data_list = _coor? eq_type_pol : eq_type_car;
+		inputs[4].setVisible(_eqa == 2);
 		
 		switch(_coor) {
 			case 0 :
 				switch(_eqa) {
 					case 0 : 
-						inputs[3].name = "f(x) = ";
-						inputs[4].setVisible(false);
-						inputs[6].name = "x range";
+						inputs[ 3].name = "f(x) = ";
+						inputs[ 6].name = "x range";
+						inputs[10].name = "w(x) = ";
 						break;
+						
 					case 1 : 
-						inputs[3].name = "f(y) = ";
-						inputs[4].setVisible(false);
-						inputs[6].name = "y range";
+						inputs[ 3].name = "f(y) = ";
+						inputs[ 6].name = "y range";
+						inputs[10].name = "w(y) = ";
 						break;
+						
 					case 2 : 
-						inputs[3].name = "x(t) = ";
-						inputs[4].name = "y(t) = ";
-						inputs[4].setVisible(true);
-						inputs[6].name = "t range";
+						inputs[ 3].name = "x(t) = ";
+						inputs[ 4].name = "y(t) = ";
+						inputs[ 6].name = "t range";
+						inputs[10].name = "w(t) = ";
 						break;
 				}
 				break;
+				
 			case 1 :
 				switch(_eqa) {
 					case 0 : 
-						inputs[3].name = "f(r) = ";
-						inputs[4].setVisible(false);
-						inputs[6].name = "r range";
+						inputs[ 3].name = "f(r) = ";
+						inputs[ 6].name = "r range";
+						inputs[10].name = "w(r) = ";
 						break;
+						
 					case 1 : 
-						inputs[3].name = "f(O) = ";
-						inputs[4].setVisible(false);
-						inputs[6].name = "O range";
+						inputs[ 3].name = "f(O) = ";
+						inputs[ 6].name = "O range";
+						inputs[10].name = "w(O) = ";
 						break;
+						
 					case 2 : 
-						inputs[3].name = "r(t) = ";
-						inputs[4].name = "O(t) = ";
-						inputs[4].setVisible(true);
-						inputs[6].name = "t range";
+						inputs[ 3].name = "r(t) = ";
+						inputs[ 4].name = "O(t) = ";
+						inputs[ 6].name = "t range";
+						inputs[10].name = "w(t) = ";
 						break;
 				}
 				break;
@@ -173,6 +243,23 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	}
 	
 	static update = function() { 
+		curr_sca  = getInputData(0);
+		curr_coor = getInputData(1);
+		curr_eqa  = getInputData(2);
+		curr_eq0  = getInputData(3);
+		curr_eq1  = getInputData(4);
+		curr_orig = getInputData(5);
+		curr_ran  = getInputData(6);
+		curr_iran = getInputData(7);
+		curr_shf  = getInputData(8);
+		
+		curr_usew = getInputData( 9);
+		curr_wgfn = getInputData(10);
+		
+		fn0 = evaluateFunctionList(curr_eq0);
+		fn1 = evaluateFunctionList(curr_eq1);
+		fnw = evaluateFunctionList(curr_wgfn);
+		
 		updateBoundary();
 		outputs[0].setValue(self); 
 	}

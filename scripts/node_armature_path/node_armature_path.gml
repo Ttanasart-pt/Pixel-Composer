@@ -40,18 +40,6 @@ function Node_Armature_Path(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	static getLength		= function() { return current_length; }
 	static getAccuLength	= function() { return [ 0, current_length ]; }
 	
-	static getWeightDistance = function (_dist, _ind = 0) { return getWeightRatio(_dist / current_length, _ind); }
-	
-	static getWeightRatio = function (_rat, _ind = 0) {
-		var _p0 = lines[_ind][0];
-		var _p1 = lines[_ind][1];
-		
-		if(!is_array(_p0) || array_length(_p0) < 3) return 1;
-		if(!is_array(_p1) || array_length(_p1) < 3) return 1;
-		
-		return lerp(_p0[2], _p1[2], _rat);
-	}
-	
 	static getPointDistance = function(_dist, _ind = 0, out = undefined) { return getPointRatio(_dist / current_length, _ind, out); }
 	
 	static getPointRatio = function(_rat, _ind = 0, out = undefined) {

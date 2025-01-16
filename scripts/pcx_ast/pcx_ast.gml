@@ -517,9 +517,7 @@
 			return v1;
 		}
 			
-		static toString = function() {
-			return $"[PCX funcTree] \{ symbol: {symbol}, l: {l}, r: {r}\}";
-		}
+		static toString = function() { return $"[PCX funcTree] \{ symbol: {symbol}, l: {l}, r: {r}\}"; }
 	}
 	
 	function evaluateFunction(fx, params = {}) {

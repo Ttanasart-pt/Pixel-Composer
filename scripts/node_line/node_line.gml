@@ -83,13 +83,21 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	newInput(35, nodeValue_Bool("Force Loop", self, false));
 	
+	newInput(36, nodeValue_Bool("Apply Weight", self, true));
+	
+	newInput(37, nodeValue_Gradient("Color Weight", self, new gradientObject(cola(c_white))));
+	
+	newInput(38, nodeValue_Vec2("Color Range", self, [ 0, 1 ]));
+	
 	input_display_list = [
-		["Output",			true],	0, 1, 30, 31, 
-		["Line data",		false], 27, 6, 7, 28, 32, 33, 35, 19, 2, 20, 
-		["Line settings",	false], 17, 3, 11, 12, 8, 25, 9, 26, 13, 14, 
-		["Wiggle",			false], 4, 5, 
-		["Render",			false], 10, 24, 15, 16, 34, 
-		["Texture",			false], 18, 21, 22, 23, 29, 
+		["Output",         true], 0, 1, 30, 31, 16, 
+		["Line data",     false], 27, 6, 7, 28, 32, 33, 35, 19, 2, 20, 
+		["Width",         false], 17, 3, 11, 12, 36, 
+		["Line settings", false], 8, 25, 9, 26, 13, 14, 
+		["Wiggle",        false], 4, 5, 
+		["Color",         false], 10, 24, 15, 37, 38, 
+		["Texture",       false], 18, 21, 22, 23, 29, 
+		["Render",        false], 34, 
 	];
 	
 	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
@@ -232,6 +240,10 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _aa       = power(2, _data[34]);
 			
 			var _loop     = _data[35];
+			var _wg2wid   = _data[36];
+			
+			var _wg2clr   = _data[37];
+			var _wg2clrR  = _data[38];
 			
 			if(_dtype == 1 && _pat == noone) 
 				_dtype = 0;
@@ -429,7 +441,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 								y:        _ny, 
 								prog:     (_prog_total - _pathStr) / (_pathEnd - _pathStr), 
 								progCrop: _prog_curr / _pathLength, 
-								weight:   wght 
+								weight:   wght,
 							}
 							
 							minx = min(minx, _nx);
@@ -552,6 +564,8 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var _padx = _pbbox * (_ppadd[2] - minx);
 		var _pady = _pbbox * (_ppadd[1] - miny);
 		
+		var _wg2clrRng = _wg2clrR[1] - _wg2clrR[0];
+		
 		temp_surface[0] = surface_verify(temp_surface[0], _surfDim[0] * _aa, _surfDim[1] * _aa, attrDepth());
 		var _cPassAA = temp_surface[0];
 		
@@ -603,9 +617,12 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					if(!ds_map_exists(widthMap, widProg))
 						widthMap[? widProg] = eval_curve_x(_widc, widProg, 0.1);
 					_nw *= widthMap[? widProg];
-					_nw *= p0.weight / 2;
 					
-					_nc = colorMultiply(_col_base, _color.eval(_colP? prog : prgc));
+					if(_wg2wid) _nw *= p0.weight / 2;
+					
+					_nc = _col_base;
+					_nc = colorMultiply(_nc, _color.eval(_colP? prog : prgc));
+					_nc = colorMultiply(_nc, _wg2clr.eval((p0.weight - _wg2clrR[0]) / _wg2clrRng));
 					
 					if(_cap) {
 						if(j == 1) {
