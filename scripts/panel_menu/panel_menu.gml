@@ -262,7 +262,8 @@ function Panel_Menu() : PanelContent() constructor {
             -1, 
             
             menuItem(__txt("Collection Manager"),                                                 function() /*=>*/ { dialogPanelCall(new Panel_Collection_Manager());}),
-            menuItem(__txtx("panel_menu_test_load_nodes", "Load all nodes"),                      function() /*=>*/ { __test_load_all_nodes();                        }),
+            menuItem(__txt("Nodes Manager"),                                                      function() /*=>*/ { dialogPanelCall(new Panel_Nodes_Manager());     }),
+            // menuItem(__txtx("panel_menu_test_load_nodes", "Load all nodes"),                      () => { __test_load_all_nodes();                        }),
             // menuItem(__txtx("panel_menu_test_gen_guide", "Generate node guide"),                  () => { dialogPanelCall(new Panel_Node_Data_Gen());    }),
             // menuItem(__txtx("panel_menu_test_gen_theme", "Generate theme object"),                () => {  __test_generate_theme();                      }),
             -1,

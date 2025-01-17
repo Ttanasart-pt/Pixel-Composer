@@ -2168,6 +2168,7 @@
     {"name":"s_node_mirror_polar","order":25,"path":"sprites/s_node_mirror_polar/s_node_mirror_polar.yy",},
     {"name":"s_node_mirror","order":3,"path":"sprites/s_node_mirror/s_node_mirror.yy",},
     {"name":"s_node_mk_blinker","order":10,"path":"sprites/s_node_mk_blinker/s_node_mk_blinker.yy",},
+    {"name":"panel_node_manager","order":6,"path":"scripts/panel_node_manager/panel_node_manager.yy",},
     {"name":"s_node_mk_brownian","order":8,"path":"sprites/s_node_mk_brownian/s_node_mk_brownian.yy",},
     {"name":"s_node_mk_delay_machine","order":12,"path":"sprites/s_node_mk_delay_machine/s_node_mk_delay_machine.yy",},
     {"name":"s_node_mk_fall","order":9,"path":"sprites/s_node_mk_fall/s_node_mk_fall.yy",},

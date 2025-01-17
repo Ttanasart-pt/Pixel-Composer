@@ -1242,11 +1242,7 @@
     {"$GMIncludedFile":"","%Name":"Update.ps1","CopyToMask":-1,"filePath":"datafiles/data/Nodes","name":"Update.ps1","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"tileset_gamemaker2_room.yy","CopyToMask":-1,"filePath":"datafiles/data/TemplateStrings","name":"tileset_gamemaker2_room.yy","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"Theme.zip","CopyToMask":-1,"filePath":"datafiles/data","name":"Theme.zip","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
-    {"$GMIncludedFile":"","%Name":"dllcredits.txt","ConfigValues":{
-        "Itch":{
-          "CopyToMask":"0",
-        },
-      },"CopyToMask":0,"filePath":"datafiles","name":"dllcredits.txt","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"dllcredits.txt","ConfigValues":{"Itch":{"CopyToMask":"0",},},"CopyToMask":0,"filePath":"datafiles","name":"dllcredits.txt","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"dlltest1.dll","CopyToMask":-1,"filePath":"datafiles","name":"dlltest1.dll","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"ffmpeg.exe","CopyToMask":-1,"filePath":"datafiles/ffmpeg/bin","name":"ffmpeg.exe","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"LICENSE","CopyToMask":-1,"filePath":"datafiles/ffmpeg","name":"LICENSE","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
@@ -1265,11 +1261,7 @@
     {"$GMIncludedFile":"","%Name":"mf.dll","CopyToMask":-1,"filePath":"datafiles","name":"mf.dll","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"mfcore.dll","CopyToMask":-1,"filePath":"datafiles","name":"mfcore.dll","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"mfplat.dll","CopyToMask":-1,"filePath":"datafiles","name":"mfplat.dll","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
-    {"$GMIncludedFile":"","%Name":"PixelComposer_profile-2.provisionprofile","ConfigValues":{
-        "Itch":{
-          "CopyToMask":"2",
-        },
-      },"CopyToMask":-1,"filePath":"datafiles","name":"PixelComposer_profile-2.provisionprofile","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"PixelComposer_profile-2.provisionprofile","ConfigValues":{"Itch":{"CopyToMask":"2",},},"CopyToMask":-1,"filePath":"datafiles","name":"PixelComposer_profile-2.provisionprofile","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"data.win","CopyToMask":-1,"filePath":"datafiles/report","name":"data.win","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"execute_shell_simple_ext_x64.dll","CopyToMask":-1,"filePath":"datafiles/report","name":"execute_shell_simple_ext_x64.dll","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"options.ini","CopyToMask":-1,"filePath":"datafiles/report","name":"options.ini","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
@@ -2697,6 +2689,7 @@
     {"id":{"name":"sh_blend_replace","path":"shaders/sh_blend_replace/sh_blend_replace.yy",},},
     {"id":{"name":"sh_blend_sat","path":"shaders/sh_blend_sat/sh_blend_sat.yy",},},
     {"id":{"name":"sh_blend_screen","path":"shaders/sh_blend_screen/sh_blend_screen.yy",},},
+    {"id":{"name":"panel_node_manager","path":"scripts/panel_node_manager/panel_node_manager.yy",},},
     {"id":{"name":"sh_blend_soft_light","path":"shaders/sh_blend_soft_light/sh_blend_soft_light.yy",},},
     {"id":{"name":"sh_blend_subtract","path":"shaders/sh_blend_subtract/sh_blend_subtract.yy",},},
     {"id":{"name":"sh_blend_vivid_light","path":"shaders/sh_blend_vivid_light/sh_blend_vivid_light.yy",},},
