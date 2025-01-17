@@ -1342,7 +1342,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                             PANEL_INSPECTOR.inspecting = noone;
                             
                     } else {
-                        if(is_instanceof(node_hovering, Node_Frame)) {
+                        if(is(node_hovering, Node_Frame)) {
                         	addKeyOverlay("Frames selection", [[ "Ctrl", "Exclude contents" ]]);
 			
                             var fx0 = (node_hovering.x + graph_x) * graph_s;
@@ -1352,21 +1352,21 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                         
                             nodes_selecting = [ node_hovering ];
                             
-                            if(!key_mod_press(CTRL))
-                            for(var i = 0; i < array_length(nodes_list); i++) { //select content
-                                var _node = nodes_list[i];
-                                if(_node == node_hovering) continue;
-                                if(!display_parameter.show_control && _node.is_controller) continue;
-                                
-                                if(!_node.selectable) continue;
-                                
-                                var _x = (_node.x + graph_x) * graph_s;
-                                var _y = (_node.y + graph_y) * graph_s;
-                                var _w = _node.w * graph_s;
-                                var _h = _node.h * graph_s;
-                                
-                                if(_w && _h && rectangle_inside_rectangle(fx0, fy0, fx1, fy1, _x, _y, _x + _w, _y + _h))
-                                    array_push_unique(nodes_selecting, _node);    
+                            if(!key_mod_press(CTRL)) {
+	                            for( var i = 0, n = array_length(nodes_list); i < n; i++ ) { //select content
+	                                var _node = nodes_list[i];
+	                                if(_node == node_hovering) continue;
+	                                if(!display_parameter.show_control && _node.is_controller) continue;
+	                                if(!_node.selectable) continue;
+	                                
+	                                var _x = (_node.x + graph_x) * graph_s;
+	                                var _y = (_node.y + graph_y) * graph_s;
+	                                var _w = _node.w * graph_s;
+	                                var _h = _node.h * graph_s;
+	                                
+	                                if(_w && _h && rectangle_inside_rectangle(fx0, fy0, fx1, fy1, _x, _y, _x + _w, _y + _h))
+	                                    array_push_unique(nodes_selecting, _node);
+	                            }
                             }
                             
                         } else if(DOUBLE_CLICK) {
@@ -1766,12 +1766,12 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
             if(nodes_select_drag == 2) {
                 draw_sprite_stretched_points_clamp(THEME.ui_selection, 0, nodes_select_mx, nodes_select_my, mx, my, COLORS._main_accent);
                 
-                for(var i = 0; i < array_length(nodes_list); i++) {
+                for( var i = 0, n = array_length(nodes_list); i < n; i++ ) {
                     var _node = nodes_list[i];
                     
-                    if(!display_parameter.show_control && _node.is_controller) continue;
                     if(!_node.selectable) continue;
-                    if(is_instanceof(_node, Node_Frame) && !nodes_select_frame) continue;
+                    if(!display_parameter.show_control && _node.is_controller) continue;
+                    if(is(_node, Node_Frame) && !nodes_select_frame) continue;
                     
                     var _x = (_node.x + graph_x) * graph_s;
                     var _y = (_node.y + graph_y) * graph_s;
@@ -1779,11 +1779,18 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                     var _h = _node.h * graph_s;
                     
                     var _sel = _w && _h && rectangle_in_rectangle(_x, _y, _x + _w, _y + _h, nodes_select_mx, nodes_select_my, mx, my);
+                    var _selecting = array_exists(nodes_selecting, _node);
                     
-                    if(!array_exists(nodes_selecting, _node) && _sel)
-                        array_push(nodes_selecting, _node);    
-                    if(array_exists(nodes_selecting, _node) && !_sel)
-                        array_remove(nodes_selecting, _node);    
+                    if(!_selecting &&  _sel) array_push(  nodes_selecting, _node);
+                    if( _selecting && !_sel) array_remove(nodes_selecting, _node);    
+                }
+                
+                for( var i = 0, n = array_length(nodes_list); i < n; i++ ) { //select inline parent
+                    var _node = nodes_list[i];
+                	if(!is(_node, Node_Collection_Inline)) continue;
+                	
+                	if(array_contains_ext(nodes_selecting, _node.nodes, true))
+                		array_push_unique(nodes_selecting, _node);
                 }
             }
         
@@ -2853,28 +2860,27 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         
         if(array_empty(APPEND_LIST)) return;
         
-        for(var i = 0; i < array_length(nodes_selecting); i++) {
+        for( var i = 0, n = array_length(nodes_selecting); i < n; i++ ) {
             var _orignal = nodes_selecting[i];
-            if(!_orignal.clonable) continue;
             
-            var _cloned     = ds_map_try_get(APPEND_MAP, _orignal.node_id, "");
+            var _cloned = ds_map_try_get(APPEND_MAP, _orignal.node_id, "");
+            if(_cloned == "") continue;
+            
             var _inline_ctx = _orignal.inline_context;
+            if(_inline_ctx == noone) continue;
             
-            if(_inline_ctx != noone && _cloned != "") {
-                _inline_ctx = ds_map_try_get(APPEND_MAP, _inline_ctx.node_id, _inline_ctx);
-                _inline_ctx.addNode(PROJECT.nodeMap[? _cloned]);
-            }
+            _inline_ctx = ds_map_try_get(APPEND_MAP, _inline_ctx.node_id, _inline_ctx);
+            _inline_ctx.addNode(project.nodeMap[? _cloned]);
         }
         
-        var x0 = 99999999;
-        var y0 = 99999999;
+        var x0 = 99999999, y0 = 99999999;
         for(var i = 0; i < array_length(APPEND_LIST); i++) {
             var _node = APPEND_LIST[i];
             
             x0 = min(x0, _node.x);
             y0 = min(y0, _node.y);
         }
-    
+    	
         node_dragging = APPEND_LIST[0];
         node_drag_mx  = x0; node_drag_my  = y0;
         node_drag_sx  = x0; node_drag_sy  = y0;
@@ -2906,15 +2912,12 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         node_drag_ox  = _nodeNew.x; node_drag_oy  = _nodeNew.y;
     }
 
-    function doCopy() { //
+    function doCopy() {
         if(array_empty(nodes_selecting)) return;
         clipboard_set_text("");
     	LOADING_VERSION = SAVE_VERSION;
     	
-        var _map   = {
-        	version: SAVE_VERSION,
-        	nodes: [],
-        };
+        var _map = { version: SAVE_VERSION, nodes: [] };
         
         for(var i = 0; i < array_length(nodes_selecting); i++)
             SAVE_NODE(_map.nodes, nodes_selecting[i],,,, getCurrentContext());
@@ -2922,7 +2925,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         clipboard_set_text(json_stringify_minify(_map));
     } 
 
-    function doPaste() { //
+    function doPaste() {
         var txt  = clipboard_get_text();
         var _map = json_try_parse(txt, noone);
         
@@ -2930,27 +2933,33 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         
         if(is_struct(_map)) {
             ds_map_clear(APPEND_MAP);
-            APPENDING = true;
-            CLONING      = true;
+            CLONING   = true;
             var _app  = __APPEND_MAP(_map);
-            APPENDING = false;
-            CLONING      = false;
+            CLONING   = false;
             
-            if(_app == noone) 
-                return;
-        
-            if(array_empty(_app))
-                return;
-        
-            var x0 = 99999999;
-            var y0 = 99999999;
+            if(_app == noone || array_empty(_app)) return;
+        	
+	        for( var i = 0, n = array_length(_app); i < n; i++ ) {
+	            var _sel = _app[i];
+	            
+	            var _inline_ctx_id = _sel[$ "ictx"] ?? "";
+	            if(_inline_ctx_id == "") continue;
+	            
+	            _inline_ctx_id  = ds_map_try_get(APPEND_MAP, _inline_ctx_id, _inline_ctx_id);
+	            var _inline_ctx = ds_map_try_get(project.nodeMap, _inline_ctx_id, noone);
+	            
+            	if(_inline_ctx == noone) continue;
+	            _inline_ctx.addNode(_sel);
+	        }
+	        
+            var x0 = 99999999, y0 = 99999999;
             for(var i = 0; i < array_length(_app); i++) {
                 var _node = _app[i];
             
                 x0 = min(x0, _node.x);
                 y0 = min(y0, _node.y);
             }
-    
+    		
             node_dragging = _app[0];
             node_drag_mx  = x0; node_drag_my  = y0;
             node_drag_sx  = x0; node_drag_sy  = y0;
@@ -2960,35 +2969,38 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
             return;
         }
         
-        var _ext = filename_ext_raw(txt);
+        var _ext = filename_ext_raw(string_trim(txt, ["\""]));
         
-        if(_ext == "pxc")
-            APPEND(txt);
-            
-        else if(_ext == "pxcc")
-            APPEND(txt);
-            
-        else if(_ext == "png") {
-            if(file_exists_empty(txt)) {
-                Node_create_Image_path(0, 0, txt);
-                return;
-            }
-    
-            var path = TEMPDIR + "url_pasted_" + string(irandom_range(100000, 999999)) + ".png";
-            var img = http_get_file(txt, path);
-            CLONING = true;
-            var node = Node_create_Image(0, 0);
-            CLONING = false;
-            var args = [node, path];
-    
-            global.FILE_LOAD_ASYNC[? img] = [ function(args) {
-                args[0].inputs[0].setValue(args[1]);
-                args[0].doUpdate();
-            }, args];
+        switch(_ext) {
+        	case "pxc" : 
+        	case "pxcc" : 
+        		APPEND(txt); 
+        		break;
+        		
+        	case "png" : 
+        	case "jpg" : 
+        		if(file_exists_empty(txt)) { 
+        			Node_create_Image_path(0, 0, txt); 
+        			break; 
+        		}
+        		
+        		var path = $"{TEMPDIR}url_pasted_{seed_random()}.png";
+	            var img  = http_get_file(txt, path);
+	            var node = new Node_Image(0, 0).skipDefault();
+	            var args = [ node, path ];
+	    		
+	            global.FILE_LOAD_ASYNC[? img] = [ function(a) /*=>*/ { a[0].inputs[0].setValue(a[1]); }, args];
+	            break;
+        	
+        	case "gif" : 
+        		if(file_exists_empty(txt))
+        			Node_create_Image_gif_path(0, 0, txt); 
+    			break; 
         }
+        
     } 
 
-    function doBlend() { //
+    function doBlend() {
         if(array_empty(nodes_selecting)) {
         	nodeBuild("Node_Blend", mouse_grid_x, mouse_grid_y, getCurrentContext()).skipDefault();
         	return;

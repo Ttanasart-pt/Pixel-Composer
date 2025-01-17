@@ -318,6 +318,10 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	static drawJunctions = function(_draw, _x, _y, _mx, _my, _s) {}
 	
 	static postDeserialize = function() {
+		if(APPENDING)
+		for( var i = 0, n = array_length(attributes.members); i < n; i++ )
+			attributes.members[i] = GetAppendID(attributes.members[i]);
+			
 		refreshMember();
 	}
 	

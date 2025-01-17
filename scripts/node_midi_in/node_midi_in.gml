@@ -9,6 +9,7 @@ function Node_MIDI_In(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	rtmidi_ignore_messages(true, true, true);
 	
 	var inps = rtmidi_probe_ins();
+	if(inps == 0) noti_warning($"No MIDI device detected.");
 	var _miniNames = [];
 	for( var i = 0; i < inps; i++ ) 
 		_miniNames[i] = rtmidi_name_in(i);

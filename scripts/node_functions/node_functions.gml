@@ -155,11 +155,14 @@
 		var _type = _data.type;
 		
 		if(ds_map_exists(APPEND_MAP, _data.id)) {
-			var _node = APPEND_MAP[? _data.id];
-			_node.x   = _x;
-			_node.y   = _y;
-			_node.deserialize(_data, scale);
-			return _node;
+			var _node   = node_from_id(APPEND_MAP[? _data.id]);
+			
+			if(_node != noone) {
+				_node.x   = _x;
+				_node.y   = _y;
+				_node.deserialize(_data, scale);
+				return _node;
+			}
 		}
 		
 		var _node = nodeBuild(_type, _x, _y, _group);

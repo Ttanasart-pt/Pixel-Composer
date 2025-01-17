@@ -70,6 +70,17 @@ function scrollBox(_data, _onModify, update_hover = true) : widget() constructor
 		
 		data = is_method(data_list)? data_list() : data_list;
 		
+		if(array_empty(data)) {
+			draw_sprite_stretched(THEME.textbox, 3, _x, _y, _w, _h);
+			
+			if(type == 0) {
+				draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, c_white, 0.5);
+				draw_set_text(f_p2, fa_center, fa_center, COLORS._main_text_sub);
+				draw_text_add(_x + _w / 2, _y + _h / 2, "no data");
+			}
+			return _h;
+		}
+		
 		var _selVal = _val;
 		
 		if(is_array(_val)) return 0;

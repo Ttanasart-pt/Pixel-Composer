@@ -2417,8 +2417,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			_map.x		 = x;
 			_map.y		 = y;
 			_map.type    = itype == noone? instanceof(self) : itype;
-			if(isTool)         _map.tool  = isTool;
-			if(group != noone) _map.group = group.node_id;
+			
+			if(isTool)                  _map.tool  = isTool;
+			if(group != noone)          _map.group = group.node_id;
+			if(inline_context != noone) _map.ictx  = inline_context.node_id;
 			
 			if(!renderActive)  _map.render         = renderActive;
 			if(!previewable)   _map.previewable    = previewable;
@@ -2495,7 +2497,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		load_map   = _map;
 		load_scale = scale;
-		renamed    = struct_try_get(load_map, "renamed", false);
+		renamed    = load_map[$ "renamed"] ?? false;
 		
 		preDeserialize();
 		
@@ -2505,38 +2507,36 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 			PROJECT.nodeMap[? node_id] = self;
 			
-			if(struct_has(load_map, "name"))
-				setDisplayName(load_map.name);
+			if(struct_has(load_map, "name")) setDisplayName(load_map.name);
+			internalName = load_map[$ "iname"] ?? internalName;
+			if(internalName == "") resetInternalName();
 			
-			internalName = struct_try_get(load_map, "iname", internalName);
-			if(internalName == "")
-				resetInternalName();
-			
-			load_group = struct_try_get(load_map, "group", noone);
+			load_group = load_map[$ "group"] ?? noone;
 			if(load_group == -1) load_group = noone;
 			
-			x = struct_try_get(load_map, "x");
-			y = struct_try_get(load_map, "y");
-			renderActive   = struct_try_get(load_map, "render", true);
-			previewable    = struct_try_get(load_map, "previewable", true);
-			isTool         = struct_try_get(load_map, "tool", false);
-			show_parameter = struct_try_get(load_map, "show_parameter", false);
+			x = load_map[$ "x"] ?? 0;
+			y = load_map[$ "y"] ?? 0;
+			renderActive   = load_map[$ "render"]         ?? true;
+			previewable    = load_map[$ "previewable"]    ?? true;
+			isTool         = load_map[$ "tool"]           ?? false;
+			show_parameter = load_map[$ "show_parameter"] ?? false;
+			ictx           = load_map[$ "ictx"]           ?? "";
 		}
 		
 		if(struct_has(load_map, "attri")) {
 			var _lattr = load_map.attri;
-			_lattr.color_depth         = struct_try_get(_lattr, "color_depth",             3);
-			_lattr.interpolate         = struct_try_get(_lattr, "interpolate",             1);
-			_lattr.oversample          = struct_try_get(_lattr, "oversample",              1);
-			_lattr.node_width          = struct_try_get(_lattr, "node_width",              0);
-			_lattr.node_height         = struct_try_get(_lattr, "node_height",             0);
-			_lattr.node_param_width    = struct_try_get(_lattr, "node_param_width",      192);
-			_lattr.outp_meta           = struct_try_get(_lattr, "outp_meta",           false);
+			_lattr.color_depth         = _lattr[$ "color_depth"]      ?? 3;
+			_lattr.interpolate         = _lattr[$ "interpolate"]      ?? 1;
+			_lattr.oversample          = _lattr[$ "oversample"]       ?? 1;
+			_lattr.node_width          = _lattr[$ "node_width"]       ?? 0;
+			_lattr.node_height         = _lattr[$ "node_height"]      ?? 0;
+			_lattr.node_param_width    = _lattr[$ "node_param_width"] ?? 192;
+			_lattr.outp_meta           = _lattr[$ "outp_meta"]        ?? false;
 		
-			_lattr.color               = struct_try_get(_lattr, "color",                  -1);
-			_lattr.update_graph        = struct_try_get(_lattr, "update_graph",         true);
-			_lattr.show_update_trigger = struct_try_get(_lattr, "show_update_trigger", false);
-			_lattr.array_process       = struct_try_get(_lattr, "array_process",           0);
+			_lattr.color               = _lattr[$ "color"]               ?? -1;
+			_lattr.update_graph        = _lattr[$ "update_graph"]        ?? true;
+			_lattr.show_update_trigger = _lattr[$ "show_update_trigger"] ?? false;
+			_lattr.array_process       = _lattr[$ "array_process"]       ?? 0;
 			
 			attributeDeserialize(CLONING? variable_clone(_lattr) : _lattr);
 		}
@@ -2556,7 +2556,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			postLoad();
 		}
 		
-		anim_timeline = struct_try_get(attributes, "show_timeline", false);
+		anim_timeline = attributes[$ "show_timeline"] ?? false;
 		if(anim_timeline) refreshTimeline();
 	}
 	

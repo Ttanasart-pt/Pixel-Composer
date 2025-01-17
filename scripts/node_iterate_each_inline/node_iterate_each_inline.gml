@@ -29,8 +29,8 @@ function Node_Iterate_Each_Inline(_x, _y, _group = noone) : Node_Collection_Inli
 		output_node.loop = self;
 		
 		if(CLONING && is_instanceof(CLONING_GROUP, Node_Iterate_Each_Inline)) {
-			APPEND_MAP[? CLONING_GROUP.input_node.node_id]  = input;
-			APPEND_MAP[? CLONING_GROUP.output_node.node_id] = output;
+			APPEND_MAP[? CLONING_GROUP.input_node.node_id]  = input.node_id;
+			APPEND_MAP[? CLONING_GROUP.output_node.node_id] = output.node_id;
 			
 			array_push(APPEND_LIST, input, output);
 		}
