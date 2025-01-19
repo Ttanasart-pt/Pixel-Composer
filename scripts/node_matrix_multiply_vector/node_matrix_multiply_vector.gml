@@ -6,7 +6,7 @@ function Node_Matrix_Multiply_Vector(_x, _y, _group = noone) : Node_Processor(_x
 	newInput(0, nodeValue_Matrix("Matrix", self, new Matrix(3)))
 		.setVisible(true, true);
 		
-	newInput(1, __NodeValue_Array("Vector", self, []))
+	newInput(1, nodeValue_Vector("Vector", self, []))
 		.setVisible(true, true);
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////

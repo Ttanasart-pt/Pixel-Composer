@@ -1,13 +1,17 @@
-function check_version(path) {
+function check_version(path, key = "version") {
 	if(!file_exists_empty(path)) {
-		json_save_struct(path, { version: BUILD_NUMBER });
+		var str = {};
+		str[$ key] = BUILD_NUMBER;
+		json_save_struct(path, str);
 		return true;
 	}
 	
 	if(TESTING) return true;
 	
 	var res = json_load_struct(path);
-	json_save_struct(path, { version: BUILD_NUMBER });
+	var chk = res[$ key] ?? 0;
+	res[$ key] = BUILD_NUMBER;
+	json_save_struct(path, res);
 	
-	return struct_try_get(res, "version") != BUILD_NUMBER;
+	return chk != BUILD_NUMBER;
 }

@@ -137,7 +137,7 @@ function __test_load_all_nodes() {
 			
 			if(!node.testable) continue;
 			
-			print($"==== Building {node.node} ====");
+			print($"> Building {node.nodeName}");
 			
 			var b = node.build(xx, yy);
 			
@@ -159,7 +159,10 @@ function __test_load_all_nodes() {
 		
 		index++;
 	}
+	
 	LOADING = false;
+	
+	noti_status("Node test completed.");
 }
 
 function __test_metadata_current_collections(dir = COLLECTIONS) {

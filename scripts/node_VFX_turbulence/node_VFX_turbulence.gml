@@ -1,6 +1,6 @@
 function Node_VFX_Turbulence(_x, _y, _group = noone) : Node_VFX_effector(_x, _y, _group) constructor {
 	name = "Turbulence";
-	node_draw_icon = s_node_vfx_turb;
+	node_draw_icon = s_node_vfx_turbulence;
 	
 	inputs[4].setVisible(false, false);
 	

@@ -359,11 +359,9 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 		if(struct_has(_data, "params"))
 			setParam(_data.params);
 			
-		if(struct_has(_data, "author"))
-			author = _data.author;
-			
-		if(struct_has(_data, "license"))
-			license = _data.license;
+		testable = _data[$ "testable"] ?? testable;
+		author   = _data[$ "author"]   ?? author;
+		license  = _data[$ "license"]  ?? license;
 			
 		if(struct_has(_data, "position")) {
 			for( var i = 0, n = array_length(_data.position); i < n; i++ ) {
@@ -572,7 +570,7 @@ function __initNodes(unzip = true) {
 	
 	if(unzip) {
 		directory_verify($"{DIRECTORY}Nodes");
-		if(check_version($"{DIRECTORY}Nodes/version")) 
+		if(check_version($"{DIRECTORY}Nodes/version", "internal")) 
 			zip_unzip("data/Nodes/Internal.zip", $"{DIRECTORY}Nodes");
 	}
 	

@@ -804,8 +804,6 @@ function Panel_Preference() : PanelContent() constructor {
     				var clrSelect = dialogCall(o_dialog_color_selector)
     									.setDefault(val)
     									.setApply(function(color) /*=>*/ { CDEF[$ color_selector_key] = color; overrideColor(color_selector_key, color); refreshThemePalette(); });
-    									
-    				addChildren(clrSelect);
     			}
     			
     			var _bs = ui(24);
@@ -909,8 +907,6 @@ function Panel_Preference() : PanelContent() constructor {
     										COLORS[$ color_selector_key] = color; 
     										overrideColor(color_selector_key, color); 
     									});
-    									
-    				addChildren(clrSelect);
     			}
     			
     			var _bs = ui(24);

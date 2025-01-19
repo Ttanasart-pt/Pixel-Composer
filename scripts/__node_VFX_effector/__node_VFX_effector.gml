@@ -15,7 +15,7 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	reloop = true;
 	
 	manual_ungroupable	 = false;
-	node_draw_icon       = s_node_vfx_accel;
+	node_draw_icon       = s_node_vfx_accelerate;
 
 	setDimension(96, 48);
 	

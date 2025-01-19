@@ -1,5 +1,5 @@
 function Panel_Nodes_Manager() : PanelContent() constructor {
-	w = ui(600);
+	w = ui(540);
 	h = ui(480);
 	
 	title       = "Nodes Manager";
