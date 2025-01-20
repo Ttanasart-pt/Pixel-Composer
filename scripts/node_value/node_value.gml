@@ -526,6 +526,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static setVisible = function(inspector) {
 		var v = visible;
+		var _ref = false;
 		
 		if(connect_type == CONNECT_TYPE.input) {
 			show_in_inspector = inspector;
@@ -534,7 +535,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		} else 
 			visible = inspector;
 		
-		if(NOT_LOAD) node.toRefreshNodeDisplay = true;
+		if(v != visible && NOT_LOAD)
+			node.toRefreshNodeDisplay = true;
 		
 		return self;
 	}

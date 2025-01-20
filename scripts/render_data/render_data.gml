@@ -41,8 +41,6 @@ function NodeTopoSort() {
 	array_foreach(PROJECT.allNodes, function(n) /*=>*/ { if(is(n, Node_Collection)) n.refreshNodes(); });
 	
 	PROJECT.nodeTopo   = [];
-	PROJECT.renderList = [];
-	PROJECT.useRenderList = true;
 	__topoSort(PROJECT.nodeTopo, PROJECT.nodes);
 	
 	// print(PROJECT.nodeTopo);
@@ -171,22 +169,6 @@ function Render(partial = false, runAction = false) {
 	LOG_BLOCK_START();
 	LOG_IF(global.FLAG.render, $"============================== RENDER START [{partial? "PARTIAL" : "FULL"}] [frame {CURRENT_FRAME}] ==============================");
 	
-	// global.getvalue_hit = 0;
-	
-	// if(PROJECT.useRenderList && !array_empty(PROJECT.renderList)) {
-	// 	for( var i = 0, n = array_length(PROJECT.renderList); i < n; i++ ) {
-			
-	// 		var render_pt = get_timer();
-	// 		var rendering = PROJECT.renderList[i];
-			
-	// 		rendering.doUpdate();
-	// 		rendering.getNextNodes(true);
-			
-	// 		if(PROFILER_STAT) rendering.summarizeReport(render_pt);
-	// 	}
-	// 	return;
-	// } 
-	
 	try {
 		var t  = get_timer();
 		var t1 = get_timer();
@@ -237,14 +219,11 @@ function Render(partial = false, runAction = false) {
 			rendering  = RENDER_QUEUE.dequeue();
 			renderable = rendering.isRenderable();
 			
-			if(is(rendering, Node_Iterate_Sort_Inline)) 
-				PROJECT.useRenderList = false;
 			// LOG_IF(global.FLAG.render == 1, $"Rendering {rendering.internalName} ({rendering.display_name}) : {renderable? "Update" : "Pass"} ({rendering.rendered})");
 			
 			if(renderable) {
 				var render_pt = get_timer();
 				rendering.doUpdate(); 
-				array_push(PROJECT.renderList, rendering);
 				_render_time += get_timer() - render_pt;
 				
 				var nextNodes = rendering.getNextNodes();

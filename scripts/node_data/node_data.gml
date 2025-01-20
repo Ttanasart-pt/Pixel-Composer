@@ -1283,7 +1283,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 		
 		__nextNodesToLoop = noone;
-		for(var i = 0; i < array_length(outputs); i++) {
+		for( var i = 0, n = array_length(outputs); i < n; i++ ) {
 			var _ot = outputs[i];
 			if(!_ot.forward) continue;
 			
@@ -1300,30 +1300,36 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(__nextNodes != noone) return __nextNodes;
 		var nodes = [];
 		
-		for(var i = 0; i < array_length(outputs); i++) {
+		for( var i = 0, n = array_length(outputs); i < n; i++ ) {
 			var _ot = outputs[i];
 			if(!_ot.forward) continue;
 			
-			var arr = _ot.getJunctionTo();
-			array_map_ext(arr, function(t) /*=>*/ {return t.node});
-			nodes = array_concat(nodes, arr);
+			for( var j = 0, m = array_length(_ot.value_to); j < m; j++ ) {
+				var _jto = _ot.value_to[j];
+				if(_jto.value_from != _jto || !_jto.node.active) continue;
+				array_push(nodes, _jto.node);
+			}
 		}	
 		
-		for(var i = 0; i < array_length(junc_meta); i++) {
+		for( var i = 0, n = array_length(junc_meta); i < n; i++ ) {
 			var _ot  = junc_meta[i];
 			
-			var arr = _ot.getJunctionTo();
-			array_map_ext(arr, function(t) /*=>*/ {return t.node});
-			nodes = array_concat(nodes, arr);
+			for( var j = 0, m = array_length(_ot.value_to); j < m; j++ ) {
+				var _jto = _ot.value_to[j];
+				if(_jto.value_from != _jto || !_jto.node.active) continue;
+				array_push(nodes, _jto.node);
+			}
 		}
 		
-		for(var i = 0; i < array_length(inputs); i++) {
+		for( var i = 0, n = array_length(inputs); i < n; i++ ) {
 			var _in = inputs[i];
 			if(_in.bypass_junc == noone) continue;
 			
-			var arr = _in.bypass_junc.getJunctionTo();
-			array_map_ext(arr, function(t) /*=>*/ {return t.node});
-			nodes = array_concat(nodes, arr);
+			for( var j = 0, m = array_length(_in.value_to); j < m; j++ ) {
+				var _jto = _in.value_to[j];
+				if(_jto.value_from != _jto || !_jto.node.active) continue;
+				array_push(nodes, _jto.node);
+			}
 		}
 		
 		array_unique_ext(nodes);
@@ -1405,8 +1411,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static refreshNodeDisplay = function() {
-		// print("refreshNodeDisplay"); printCallStack();
-		// if(IS_PLAYING) return;
 		updateIO();
 		setHeight();
 		getJunctionList();

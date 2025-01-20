@@ -1,12 +1,6 @@
 function Node_Pixel_Sort(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Pixel Sort";
 	
-	shader = sh_pixel_sort;
-	uniform_dim = shader_get_uniform(shader, "dimension");
-	uniform_itr = shader_get_uniform(shader, "iteration");
-	uniform_tre = shader_get_uniform(shader, "threshold");
-	uniform_dir = shader_get_uniform(shader, "direction");
-	
 	newInput(0, nodeValue_Surface("Surface in", self));
 	
 	newInput(1, nodeValue_Int("Iteration", self, 2));
@@ -38,12 +32,14 @@ function Node_Pixel_Sort(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	attribute_surface_depth();
 	
-	static step = function() { #region
-		__step_mask_modifier();
-	} #endregion
+	temp_surface = [ 0, 0 ];
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
-		var _in = _data[0];
+	static step = function() {
+		__step_mask_modifier();
+	}
+	
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
+		var _surf = _data[0];
 		
 		var _it = _data[1];
 		var _tr = _data[2];
@@ -52,40 +48,42 @@ function Node_Pixel_Sort(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		if(_it <= 0) {
 			surface_set_target(_outSurf);
 				BLEND_OVERRIDE
-				draw_surface_safe(_in);
+				draw_surface_safe(_surf);
 				BLEND_NORMAL
 			surface_reset_target();
 		
 			return _outSurf;
 		}
 		
-		var sw = surface_get_width_safe(_outSurf);
-		var sh = surface_get_height_safe(_outSurf);
+		var sw = surface_get_width_safe(_surf);
+		var sh = surface_get_height_safe(_surf);
 		
-		var pp = [ surface_create_valid(sw, sh), surface_create_valid(sw, sh) ];
+		temp_surface[0] = surface_verify(temp_surface[0], sw, sh);
+		temp_surface[1] = surface_verify(temp_surface[1], sw, sh);
+		
 		var sBase, sDraw;
 		
-		surface_set_target(pp[1]);
+		surface_set_target(temp_surface[1]);
 			DRAW_CLEAR
 			BLEND_OVERRIDE
-			draw_surface_safe(_in);
+			draw_surface_safe(_surf);
 			BLEND_NORMAL
 		surface_reset_target();
 		
-		shader_set(shader);
-		shader_set_uniform_f(uniform_dim, surface_get_width_safe(_in), surface_get_height_safe(_in));
-		shader_set_uniform_f(uniform_tre, _tr);
-		shader_set_uniform_i(uniform_dir, _dr);
+		shader_set(sh_pixel_sort);
+		shader_set_2("dimension", [sw, sh]);
+		shader_set_f("threshold", _tr);
+		shader_set_i("direction", _dr);
 		
 		for( var i = 0; i < _it; i++ ) {
 			var it = i % 2;
-			sBase = pp[it];
-			sDraw = pp[!it];
+			sBase = temp_surface[it];
+			sDraw = temp_surface[!it];
 			
 			surface_set_target(sBase);
 			DRAW_CLEAR
 			BLEND_OVERRIDE
-				shader_set_uniform_f(uniform_itr, i);
+				shader_set_f("iteration", i);
 				draw_surface_safe(sDraw);
 			BLEND_NORMAL
 			surface_reset_target();
@@ -99,13 +97,10 @@ function Node_Pixel_Sort(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			BLEND_NORMAL
 		surface_reset_target();
 		
-		surface_free(pp[0]);
-		surface_free(pp[1]); 
-		
 		__process_mask_modifier(_data);
 		_outSurf = mask_apply(_data[0], _outSurf, _data[4], _data[5]);
 		_outSurf = channel_apply(_data[0], _outSurf, _data[7]);
 		
 		return _outSurf;
-	} #endregion
+	}
 }
