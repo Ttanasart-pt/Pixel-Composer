@@ -22,8 +22,6 @@ function Node_Segment_Filter(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		["Filter",		false], 1, 2, 3, 
 	];
 	
-	path_preview_surface = noone;
-	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _segs = outputs[0].getValue();
 		var ox, oy, nx, ny;

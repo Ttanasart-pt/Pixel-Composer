@@ -34,7 +34,8 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		boundary    = new BoundingBox();
 		
 		cached_pos  = ds_map_create();
-		path_preview_surface = noone;
+		 path_preview_surface = noone;
+		_path_preview_surface = noone;
 	#endregion
 	
 	#region ---- editor ----
@@ -189,10 +190,9 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var maxx   = boundary.maxx + pad, maxy = boundary.maxy + pad;
 		var rngx   = maxx - minx,   rngy = maxy - miny;
 		var prev_s = 128;
-		var _surf  = surface_create(prev_s, prev_s);
 		
-		_surf = surface_verify(_surf, prev_s, prev_s);
-		surface_set_target(_surf);
+		_path_preview_surface = surface_verify(_path_preview_surface, prev_s, prev_s);
+		surface_set_target(_path_preview_surface);
 			DRAW_CLEAR
 			
 			var ox, oy, nx, ny;
@@ -224,10 +224,9 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			shader_set_f("cornerDis",  0.5);
 			shader_set_f("mixAmo",     1);
 			
-			draw_surface_safe(_surf);
+			draw_surface_safe(_path_preview_surface);
 		surface_reset_shader();
 		
-		surface_free(_surf);
 	}
 	
 	static getLineCount		= function() { return 1; }
@@ -351,6 +350,11 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			draw_surface_bbox(path_preview_surface, bbox);
 			gpu_set_tex_filter(false);
 		}
+	}
+	
+	static onCleanUp = function() {
+		surface_free(_path_preview_surface);
+		surface_free( path_preview_surface);
 	}
 	
 }

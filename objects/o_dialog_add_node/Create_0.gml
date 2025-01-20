@@ -116,7 +116,7 @@ event_inherited();
 		return bool(_b & value_bit(junction_called.type));
 	}
 	
-	function setPage(pageIndex) {
+	function setPage(pageIndex, subPageIndex = 0) {
 		ADD_NODE_PAGE = min(pageIndex, array_length(category) - 1);
 		subgroups      = [];
 		subgroup_index = 0;
@@ -192,11 +192,13 @@ event_inherited();
 			
 			array_push(subgroups, _node);
 		}
-		setSubgroup(0);
+		
+		setSubgroup(subPageIndex);
 	}
 	
 	function setSubgroup(_subg) {
-		subgroup_index = _subg;
+		subgroup_index   = _subg;
+		ADD_NODE_SUBPAGE = _subg;
 	}
 #endregion
 
@@ -326,6 +328,7 @@ event_inherited();
 				break;
 			}
 		}
+		
 	}
 #endregion
 
@@ -872,11 +875,13 @@ event_inherited();
 	if(PREFERENCES.add_node_remember) {
 		content_pane.scroll_y_raw = ADD_NODE_SCROLL;
 		content_pane.scroll_y_to  = ADD_NODE_SCROLL;
-	} else 
-		ADD_NODE_PAGE = 0;
+		
+	} else {
+		ADD_NODE_PAGE    = 0;
+		ADD_NODE_SUBPAGE = 0;
+	}
 	
-	setPage(ADD_NODE_PAGE);
-	run_in(1, function() /*=>*/ { setPage(ADD_NODE_PAGE) });
+	setPage(ADD_NODE_PAGE, ADD_NODE_SUBPAGE);
 #endregion
 
 #region resize

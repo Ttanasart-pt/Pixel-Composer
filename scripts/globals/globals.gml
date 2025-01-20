@@ -83,12 +83,13 @@
 	
 	DIALOG_CLICK = true;
 	
-	globalvar ADD_NODE_PAGE, ADD_NODE_SCROLL;
+	globalvar ADD_NODE_PAGE, ADD_NODE_SCROLL, ADD_NODE_SUBPAGE;
 	
-	ADD_NODE_PAGE   = 0;
-	ADD_NODE_SCROLL = 0;
-	WINDOW_ACTIVE   = noone;
-	TOOLTIP_WINDOW  = noone;
+	ADD_NODE_PAGE    = 0;
+	ADD_NODE_SUBPAGE = 0;
+	ADD_NODE_SCROLL  = 0;
+	WINDOW_ACTIVE    = noone;
+	TOOLTIP_WINDOW   = noone;
 #endregion
 
 #region macro
