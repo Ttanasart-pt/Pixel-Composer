@@ -605,7 +605,6 @@
     {"$GMIncludedFile":"","%Name":"tooltip_spr.png","CopyToMask":-1,"filePath":"datafiles/data/Nodes/Internal/Compose/Node_Render_Sprite_Sheet","name":"tooltip_spr.png","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"info.json","CopyToMask":-1,"filePath":"datafiles/data/Nodes/Internal/Compose/Node_Stack","name":"info.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"tooltip_spr.png","CopyToMask":-1,"filePath":"datafiles/data/Nodes/Internal/Compose/Node_Stack","name":"tooltip_spr.png","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
-    {"$GMIncludedFile":"","%Name":"info.json","CopyToMask":-1,"filePath":"datafiles/data/Nodes/Internal/Custom/Node_Custom","name":"info.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"info.json","CopyToMask":-1,"filePath":"datafiles/data/Nodes/Internal/Feedback/Node_Feedback_Input","name":"info.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"info.json","CopyToMask":-1,"filePath":"datafiles/data/Nodes/Internal/Feedback/Node_Feedback_Output","name":"info.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"info.json","CopyToMask":-1,"filePath":"datafiles/data/Nodes/Internal/Filter/Node_2D_light","name":"info.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},

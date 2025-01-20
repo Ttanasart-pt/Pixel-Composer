@@ -159,6 +159,8 @@ function SAVE_NODE(_arr, _node, dx = 0, dy = 0, scale = false, context = PANEL_G
 	}
 	
 	var m = _node.serialize(scale);
+	if(!is_struct(m)) return;
+	
 	m.x -= dx;
 	m.y -= dy;
 	
