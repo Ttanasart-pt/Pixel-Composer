@@ -163,7 +163,10 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 			_param.iname     = nodekey;
 		}
 		
-		var _node  = createFn == noone? new node(_x, _y, _group, _param) : createFn(_x, _y, _group, _param);
+		var _node;
+		if(createFn == noone) _node = new node(_x, _y, _group, _param);
+		else                  _node = createFn(_x, _y, _group, _param);
+		
 		_node.name = name;
 		_node.postBuild();
 		
