@@ -979,6 +979,7 @@
     {"$GMIncludedFile":"","%Name":"info.json","CopyToMask":-1,"filePath":"datafiles/data/Nodes/Internal/Misc/Node_Cache_Value_Array","name":"info.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"info.json","CopyToMask":-1,"filePath":"datafiles/data/Nodes/Internal/Misc/Node_Cache","name":"info.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"info.json","CopyToMask":-1,"filePath":"datafiles/data/Nodes/Internal/Misc/Node_Condition","name":"info.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"info.json","CopyToMask":-1,"filePath":"datafiles/data/Nodes/Internal/Misc/Node_Custom","name":"info.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"info.json","CopyToMask":-1,"filePath":"datafiles/data/Nodes/Internal/Misc/Node_Display_Image","name":"info.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"info.json","CopyToMask":-1,"filePath":"datafiles/data/Nodes/Internal/Misc/Node_Display_Text","name":"info.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"info.json","CopyToMask":-1,"filePath":"datafiles/data/Nodes/Internal/Misc/Node_Feedback","name":"info.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
