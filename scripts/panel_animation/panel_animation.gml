@@ -240,10 +240,10 @@ function Panel_Animation() : PanelContent() constructor {
         timeline_stretch_sx = 0;
         timeline_stretch_mx = 0;
     
-        timeline_show_time    = -1;
+        timeline_show_time  = -1;
         timeline_preview    = noone;
         
-        timeline_contents = [];
+        timeline_contents   = [];
         
         scroll_s = sprite_get_width(THEME.ui_scrollbar);
         scroll_w = scroll_s;
@@ -658,19 +658,22 @@ function Panel_Animation() : PanelContent() constructor {
     }
     
     function drawTimeline() { // Draw summary
-        var bar_x = tool_width + ui(16);
-        var bar_y = h - timeline_h - ui(10);
-        var bar_w = timeline_w;
-        var bar_h = timeline_h;
+        var bar_x       = tool_width + ui(16);
+        var bar_y       = h - timeline_h - ui(10);
+        var bar_w       = timeline_w;
+        var bar_h       = timeline_h;
         var bar_total_w = TOTAL_FRAMES * timeline_scale;
-        var inspecting = PANEL_INSPECTOR.getInspecting();
+        var inspecting  = PANEL_INSPECTOR.getInspecting();
         
         resetTimelineMask();
         timeline_surface = surface_verify(timeline_surface, timeline_w, timeline_h);
             
         surface_set_target(timeline_surface);    
         draw_clear_alpha(COLORS.panel_bg_clear, 0);
-            
+        
+        var msx = mx - bar_x;
+        var msy = my - bar_y;
+        
         draw_sprite_stretched(THEME.ui_panel_bg, 1, 0, 0, bar_w, bar_h);
         draw_sprite_stretched_ext(THEME.ui_panel_bg, 2, 0, 0, bar_w, bar_h, COLORS.panel_animation_timeline_blend, 1);
         
@@ -723,11 +726,22 @@ function Panel_Animation() : PanelContent() constructor {
             if(FRAME_RANGE != noone) {
                 var _fr_x0 = FRAME_RANGE[0] * timeline_scale + timeline_shift - 6;
                 var _fr_x1 = FRAME_RANGE[1] * timeline_scale + timeline_shift + 2;
+                var _rng_spr = PROJECT.animator.is_simulating? THEME.ui_selection_range_sim_hori : THEME.ui_selection_range_hori;
+                var _rng_clr = PROJECT.animator.is_simulating? COLORS.panel_animation_range_sim  : COLORS.panel_animation_range;
                 
-                if(PROJECT.animator.is_simulating)
-                    draw_sprite_stretched_ext(THEME.ui_selection_range_sim_hori, 0, _fr_x0, 0, _fr_x1 - _fr_x0, bar_h, COLORS.panel_animation_range_sim, 1);
-                else
-                    draw_sprite_stretched_ext(THEME.ui_selection_range_hori, 0, _fr_x0, 0, _fr_x1 - _fr_x0, bar_h, COLORS.panel_animation_range, 1);
+                draw_sprite_stretched_ext(_rng_spr, 0, _fr_x0, 0, _fr_x1 - _fr_x0, bar_h, _rng_clr, 1);
+            }
+            
+            if(pHOVER && point_in_rectangle(msx, msy, 0, 0, bar_w, bar_h)) {
+            	var _frame_hover   = round((msx - timeline_shift) / timeline_scale);
+            	var _frame_hover_x = _frame_hover * timeline_scale + timeline_shift;
+            	
+            	draw_set_alpha(0.5);
+            	draw_set_color(COLORS._main_text_sub);
+            	draw_line(_frame_hover_x, ui(15), _frame_hover_x, bar_h - PANEL_PAD);
+	            draw_set_text(f_p2, fa_center, fa_bottom, COLORS._main_text_sub);
+	            draw_text_add(_frame_hover_x, ui(16), _frame_hover);
+	            draw_set_alpha(1);
             }
             
             var bar_line_x = (CURRENT_FRAME + 1) * timeline_scale + timeline_shift;
@@ -775,10 +789,8 @@ function Panel_Animation() : PanelContent() constructor {
                 PROJECT.animator.setFrame(rfrm, !key_mod_press(ALT));
                 
                 timeline_show_time  = CURRENT_FRAME;
-                    
-                if(timeline_show_time != _scrub_frame) {
+                if(timeline_show_time != _scrub_frame)
                     _scrub_frame = timeline_show_time;
-                }
                     
                 if(mouse_release(mb_left))
                     timeline_scubbing = false;
@@ -843,13 +855,14 @@ function Panel_Animation() : PanelContent() constructor {
             if(pHOVER && point_in_rectangle(mx, my, bar_x, bar_y, bar_x + bar_w, bar_y + bar_h)) { //preview
                 if(mouse_wheel_down()) timeline_shift_to = clamp(timeline_shift_to - 64 * SCROLL_SPEED, -max(bar_total_w - bar_w + 32, 0), 0);
                 if(mouse_wheel_up())   timeline_shift_to = clamp(timeline_shift_to + 64 * SCROLL_SPEED, -max(bar_total_w - bar_w + 32, 0), 0);
-                        
+                
                 if(mx < bar_int_x && mouse_press(mb_left, pFOCUS)) {
                     timeline_scubbing = true;
                     timeline_scub_st  = CURRENT_FRAME;
                     _scrub_frame = timeline_scub_st;
                 }
-                                    if(mouse_press(mb_right, pFOCUS)) {
+                
+                if(mouse_press(mb_right, pFOCUS)) {
                     __selecting_frame = clamp(round((mx - bar_x - timeline_shift) / timeline_scale), 0, TOTAL_FRAMES - 1);
                     
                     menuCall("animation_summary_menu", [
@@ -1818,12 +1831,12 @@ function Panel_Animation() : PanelContent() constructor {
             var scr_scale_s = scr_s * scr_size;
             var scr_prog_s  = scr_prog * (scr_s - scr_scale_s);
                 
-            var scr_w    = scroll_w;
-            var scr_h    = scr_s;
-            var s_bar_w    = scroll_w;
-            var s_bar_h   = scr_scale_s;
-            var s_bar_x    = scr_x;
-            var s_bar_y    = scr_y + scr_prog_s;
+            var scr_w   = scroll_w;
+            var scr_h   = scr_s;
+            var s_bar_w = scroll_w;
+            var s_bar_h = scr_scale_s;
+            var s_bar_x = scr_x;
+            var s_bar_y = scr_y + scr_prog_s;
                 
             if(is_scrolling) {
                 if(scr_s - scr_scale_s != 0)
@@ -1886,8 +1899,8 @@ function Panel_Animation() : PanelContent() constructor {
                     c1 = COLORS.panel_animation_dope_key_bg_hover;
                 }
                 
-                key_y    += ui(20) * show_nodes + _expand * ui(10);
-                _cont.h    += ui(20) * show_nodes;
+                key_y   += ui(20) * show_nodes + _expand * ui(10);
+                _cont.h += ui(20) * show_nodes;
                 _ks      = key_y - ui(10);
                 
                 if(_expand) {
@@ -1908,8 +1921,8 @@ function Panel_Animation() : PanelContent() constructor {
                             }
                             
                             if(k) prop.y = key_y;
-                            key_y    += ui(18);
-                            _cont.h    += ui(18);
+                            key_y       += ui(18);
+                            _cont.h     += ui(18);
                         }
                         
                         var _graph_show = _prop.sep_axis? array_any(_prop.show_graphs, function(v) /*=>*/ {return v == true}) : _prop.show_graph;
@@ -2290,6 +2303,16 @@ function Panel_Animation() : PanelContent() constructor {
             }
             
             draw_set_alpha(1);
+            
+            if(pHOVER && point_in_rectangle(msx, msy, 0, 0, bar_w, hh)) {
+            	var _frame_hover   = round((msx - timeline_shift) / timeline_scale);
+            	var _frame_hover_x = _frame_hover * timeline_scale + timeline_shift;
+            	
+            	draw_set_alpha(0.5);
+	            draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text_sub);
+	            draw_text_add(_frame_hover_x, PANEL_PAD, _frame_hover);
+	            draw_set_alpha(1);
+            }
             
             draw_set_color(COLORS.panel_animation_end_line);
             var end_x = TOTAL_FRAMES * timeline_scale + timeline_shift;

@@ -195,8 +195,8 @@ function Render(partial = false, runAction = false) {
 		LOG_IF(global.FLAG.render == 1, $"----- Finding leaf from {array_length(PROJECT.nodeTopo)} nodes -----");
 		RENDER_QUEUE.clear();
 		array_foreach(PROJECT.nodeTopo, function(n) /*=>*/ { 
-			n.passiveDynamic = false;
 			// n.__nextNodes    = noone;
+			n.passiveDynamic = false;
 			n.render_time    = 0;
 		});
 		
