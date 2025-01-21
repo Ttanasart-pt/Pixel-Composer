@@ -589,15 +589,15 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				if(array_length(points) < 2) continue;
 				random_set_seed(_sed + i);
 				
-				if(_useTex && _scaleTex) shader_set_2("scale", [ _texSca[0] * _len, _texSca[1] ]);
-				if(_useTex) draw_primitive_begin_texture(pr_trianglestrip, tex);
-				else        draw_primitive_begin(pr_trianglestrip);
-				
 				var _ldata = line_data[i];
 				var _len   = _ldata.length;
 				var _caps  = [];
 				var pxs    = [];
 				var dat    = array_safe_get_fast(_pathData, i, noone);
+				
+				if(_useTex && _scaleTex) shader_set_2("scale", [ _texSca[0] * _len, _texSca[1] ]);
+				if(_useTex) draw_primitive_begin_texture(pr_trianglestrip, tex);
+				else        draw_primitive_begin(pr_trianglestrip);
 				
 				var _col_base = dat == noone? _colb.eval(random(1)) : dat.color;
 				_ow = 1;

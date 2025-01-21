@@ -1306,7 +1306,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 			for( var j = 0, m = array_length(_ot.value_to); j < m; j++ ) {
 				var _jto = _ot.value_to[j];
-				if(_jto.value_from != _jto || !_jto.node.active) continue;
+				if(_jto.value_from != _ot || !_jto.node.active) continue;
 				array_push(nodes, _jto.node);
 			}
 		}	
@@ -1316,18 +1316,18 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 			for( var j = 0, m = array_length(_ot.value_to); j < m; j++ ) {
 				var _jto = _ot.value_to[j];
-				if(_jto.value_from != _jto || !_jto.node.active) continue;
+				if(_jto.value_from != _ot || !_jto.node.active) continue;
 				array_push(nodes, _jto.node);
 			}
 		}
 		
 		for( var i = 0, n = array_length(inputs); i < n; i++ ) {
 			var _in = inputs[i];
-			if(_in.bypass_junc == noone) continue;
+			if(_in.bypass_junc == noone || !_in.bypass_junc.visible) continue;
 			
 			for( var j = 0, m = array_length(_in.value_to); j < m; j++ ) {
 				var _jto = _in.value_to[j];
-				if(_jto.value_from != _jto || !_jto.node.active) continue;
+				if(_jto.value_from != _ot || !_jto.node.active) continue;
 				array_push(nodes, _jto.node);
 			}
 		}

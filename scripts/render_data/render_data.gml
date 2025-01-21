@@ -77,7 +77,8 @@ function __sortNode(_arr, _node, _sorted) {
 	if(struct_has(_sorted, _node.node_id)) return;
 	array_push(_arr, _node);
 	_sorted[$ _node.node_id] = 1;
-	_node.__nextNodes = noone;
+	_node.__nextNodes        = noone;
+	_node.__nextNodesToLoop  = noone;
 		
 	// print($"        > Adding > {_node.name} | {_arr}");
 }
@@ -194,8 +195,8 @@ function Render(partial = false, runAction = false) {
 		LOG_IF(global.FLAG.render == 1, $"----- Finding leaf from {array_length(PROJECT.nodeTopo)} nodes -----");
 		RENDER_QUEUE.clear();
 		array_foreach(PROJECT.nodeTopo, function(n) /*=>*/ { 
-			n.passiveDynamic = false; 
-			n.__nextNodes    = noone;
+			n.passiveDynamic = false;
+			// n.__nextNodes    = noone;
 			n.render_time    = 0;
 		});
 		
