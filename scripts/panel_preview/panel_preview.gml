@@ -1931,23 +1931,32 @@ function Panel_Preview() : PanelContent() constructor {
                     if(mouse_press(mb_left, pFOCUS))
                         tool.toggle();
                 }
-                    
-                if(pFOCUS && WIDGET_CURRENT == noone) {
-                    var _key = tool.checkHotkey();
-                    
-                    if(_key != noone && _key.isPressing())
-                        tool.toggleKeyboard();
-                }
                 
                 if(tool_current == tool) {
                     draw_sprite_stretched_ext(THEME.button_hide_fill, 2, _x0 + pd, _y0 + pd, tool_size - pd * 2, tool_size - pd * 2, COLORS.panel_preview_grid, 1);
                     draw_sprite_stretched_ext(THEME.button_hide_fill, 3, _x0 + pd, _y0 + pd, tool_size - pd * 2, tool_size - pd * 2, COLORS._main_accent, 1);
                 }
                 
-                if(tool.subtools > 0)   draw_sprite_colored(tool.spr[tool.selecting], 0, xx, yy);
-                else                    draw_sprite_colored(tool.spr, 0, xx, yy);
+                var _spr = tool.subtools > 0? tool.spr[tool.selecting] : tool.spr;
+                draw_sprite_colored(_spr, 0, xx, yy);
             }
+            
+            var _key = tool.checkHotkey();
+            if(_key != noone && pFOCUS && WIDGET_CURRENT == noone) {
+                if(_key.isPressing()) tool.toggleKeyboard();
                 
+                var _hkstr = key_get_name(_key.key, _key.modi);
+                if(_hkstr != "" && key_mod_press(ALT)) {
+                	draw_set_text(f_p4, fa_right, fa_center, COLORS._main_text);
+                	var _hks  = string_width(_hkstr) + ui(8);
+                	var _hkx0 = _x1 - _hks;
+                	var _hky0 = _y1 - ui(16);
+                	
+                	draw_sprite_stretched_ext(THEME.ui_panel, 0, _hkx0, _hky0, _hks, ui(16), COLORS.panel_bg_clear_inner);
+                	draw_text_add(_hkx0 + _hks - ui(4), _hky0 + ui(16) / 2, _hkstr);
+                }
+            }
+            
             yy         += tool_size;
             tool_y_max += tool_size;
         }
@@ -2047,22 +2056,32 @@ function Panel_Preview() : PanelContent() constructor {
                             tool.toggle();
                     }
                     
-                    if(pFOCUS && WIDGET_CURRENT == noone) {
-                        var _key = tool.checkHotkey();
-                        if(_key != noone && _key.isPressing())
-                            tool.toggleKeyboard();
-                    }
-                    
                     if(tool_current == tool) {
                         draw_sprite_stretched_ext(THEME.button_hide_fill, 2, _x0 + pd, _y0 + pd, tool_size - pd * 2, tool_size - pd * 2, COLORS.panel_preview_grid, 1);
                         draw_sprite_stretched_ext(THEME.button_hide_fill, 3, _x0 + pd, _y0 + pd, tool_size - pd * 2, tool_size - pd * 2, COLORS._main_accent, 1);
                     }
                 
-                    if(tool.subtools > 0)   draw_sprite_colored(tool.spr[tool.selecting], 0, xx, yy);
-                    else                    draw_sprite_colored(tool.spr, 0, xx, yy);
-                
+	                var _spr = tool.subtools > 0? tool.spr[tool.selecting] : tool.spr;
+	                draw_sprite_colored(_spr, 0, xx, yy);
+	                
                 }
                 
+	            var _key = tool.checkHotkey();
+	            if(_key != noone && pFOCUS && WIDGET_CURRENT == noone) {
+	                if(_key.isPressing()) tool.toggleKeyboard();
+	                
+	                var _hkstr = key_get_name(_key.key, _key.modi);
+	                if(_hkstr != "" && key_mod_press(ALT)) {
+	                	draw_set_text(f_p4, fa_left, fa_center, COLORS._main_text);
+	                	var _hks  = string_width(_hkstr) + ui(8);
+	                	var _hkx0 = _x0;
+	                	var _hky0 = _y1 - ui(16);
+	                	
+	                	draw_sprite_stretched_ext(THEME.ui_panel, 0, _hkx0, _hky0, _hks, ui(16), COLORS.panel_bg_clear_inner);
+	                	draw_text_add(_hkx0 + ui(4), _hky0 + ui(16) / 2, _hkstr);
+	                }
+	            }
+	            
                 yy          += tool_size;
                 tool_ry_max += tool_size;
             } 

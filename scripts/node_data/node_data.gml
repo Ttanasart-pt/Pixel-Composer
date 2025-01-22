@@ -2616,9 +2616,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 	}
 	
-	static processDeserialize = function() {}
-	static preDeserialize     = function() {}
-	static postDeserialize    = function() {}
+	static processDeserialize = function() /*=>*/ {}
+	static preDeserialize     = function() /*=>*/ {}
+	static postDeserialize    = function() /*=>*/ {}
 	
 	static applyDeserialize = function(preset = false) {
 		preApplyDeserialize();
@@ -2667,8 +2667,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		postApplyDeserialize();
 	}
 	
-	static preApplyDeserialize = function() {}
-	static postApplyDeserialize  = function() {}
+	static preApplyDeserialize  = function() /*=>*/ {}
+	static postApplyDeserialize = function() /*=>*/ {}
 	
 	static loadGroup = function(ctx = noone) { 
 		if(load_group == noone) {
@@ -2711,10 +2711,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return connected;
 	}
 	
-	static preConnect = function() {}
-	static postConnect = function() {}
-	
-	static postLoad = function() {}
+	static preConnect  = function() /*=>*/ {}
+	static postConnect = function() /*=>*/ {}
+	static postLoad    = function() /*=>*/ {}
 	
 	////- CLEAN UP
 	
