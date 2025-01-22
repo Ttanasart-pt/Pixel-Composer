@@ -258,11 +258,8 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				
 				if(_hov && _mid > noone) {
 		    		
-		    		draw_set_color(c_white);
-		    		draw_rectangle_width(_tileHov_x - 1, _tileHov_y - 1, _tileHov_x + _tileSel_w, _tileHov_y + _tileSel_h, 1);
-		    		
-		    		draw_set_color(c_black);
-		    		draw_rectangle_width(_tileHov_x, _tileHov_y, _tileHov_x + _tileSel_w - 1, _tileHov_y + _tileSel_h - 1, 1);
+		    		draw_set_color(c_white); draw_rectangle_width(_tileHov_x,     _tileHov_y,     _tileHov_x + _tileSel_w,     _tileHov_y + _tileSel_h,     1);
+		    		draw_set_color(c_black); draw_rectangle_width(_tileHov_x + 1, _tileHov_y + 1, _tileHov_x + _tileSel_w - 1, _tileHov_y + _tileSel_h - 1, 1);
 		    		
 		    		     if(is(object_selecting, tiler_brush_autoterrain) && object_select_id != noone) TOOLTIP = "Set Autoterrain";
 					else if(is(object_selecting, tiler_brush_animated)    && object_select_id != noone) TOOLTIP = "Set Animated tile";
@@ -602,8 +599,9 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				var _brush_tiles = brush.brush_width * brush.brush_height;
 				var _fromSel = _brush_tiles ==  9 || _brush_tiles == 15 || _brush_tiles == 25 ||_brush_tiles == 48 || _brush_tiles == 55;
 				
+				var _spr = _fromSel? THEME.add_16_select : THEME.add_16;
 				var _txt = _fromSel? "New autoterrain from selection" : "New autoterrain";
-				if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, _m, _hover, _focus, _txt, THEME.add_16, 0, COLORS._main_value_positive) == 2) {
+				if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, _m, _hover, _focus, _txt, _spr, 0, COLORS._main_value_positive) == 2) {
 					var _new_at = noone;
 					var _indx   = array_create(brush.brush_width * brush.brush_height);
 					
@@ -717,7 +715,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		    				setPencil();
 		    			}
 	    			} else {
-	    				draw_sprite_stretched_ext(THEME.ui_panel, 1, _px, _py, _pw, _ph, COLORS._main_accent);
+	    				draw_set_color(COLORS._main_accent); draw_rectangle(_px, _py, _px + _pw - 1, _py + _ph - 1, 1);
 		    			
 		    			if(mouse_press(mb_left, _focus))
 		    				_at.open = !_at.open;
@@ -799,14 +797,15 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    		draw_surface_ext(_at.preview_surface_tile, _pre_sx, _pre_sy, _ss, _ss, 0, c_white, 1);
     			
     			draw_set_text(f_p3, fa_left, fa_top, COLORS._main_text);
-    			BLEND_ADD
+    			BLEND_ALPHA_MULP
     			for( var iy = 0; iy < _roww; iy++ ) 
     			for( var ix = 0; ix < _coll; ix++ ) {
     				var _indx = iy * _coll + ix;
     				var _inx  = _pre_sx + ix * _ss * _tileSiz[0];
     				var _iny  = _pre_sy + iy * _ss * _tileSiz[1];
     				
-    				draw_text(_inx + 4, _iny + 4, _indx);
+    				draw_set_color(c_black); draw_text(_inx + 3, _iny + 2, _indx);
+    				draw_set_color(c_white); draw_text(_inx + 2, _iny + 1, _indx);
     			}
     			BLEND_NORMAL
     			
@@ -837,7 +836,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    		}
 	    		
     			draw_set_color(COLORS._main_icon);
-    			draw_rectangle(_pre_sx, _pre_sy, _pre_sx + _pre_sw * _ss, _pre_sy + _pre_sh * _ss, true);
+    			draw_rectangle(_pre_sx, _pre_sy, _pre_sx + _pre_sw * _ss - 1, _pre_sy + _pre_sh * _ss - 1, true);
     			
     			var _dtile_w = _tileSiz[0] * _ss;
     			var _dtile_h = _tileSiz[1] * _ss;
@@ -852,7 +851,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
     					var _at_c_sy = _pre_sy + _at_cy * _dtile_h;
     					
     					draw_set_color(COLORS._main_icon_light);
-    					draw_rectangle(_at_c_sx, _at_c_sy, _at_c_sx + _dtile_w, _at_c_sy + _dtile_h, true);
+    					draw_rectangle(_at_c_sx, _at_c_sy, _at_c_sx + _dtile_w - 2, _at_c_sy + _dtile_h - 2, true);
     					
     					if(mouse_press(mb_left, _focus)) {
 							object_selecting = _at;
@@ -872,7 +871,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					var _at_c_sy = _pre_sy + _at_sl_y * _dtile_h;
 					
 					draw_set_color(COLORS._main_accent);
-					draw_rectangle(_at_c_sx, _at_c_sy, _at_c_sx + _dtile_w, _at_c_sy + _dtile_h, true);
+					draw_rectangle(_at_c_sx, _at_c_sy, _at_c_sx + _dtile_w - 2, _at_c_sy + _dtile_h - 2, true);
     			}
     			
     			_yy += _pre_sh * _ss + ui(4);
@@ -1128,11 +1127,8 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    		if(_hov && _mid > noone) {
 		    		
 		    		if(palette_tool != 1) {
-			    		draw_set_color(c_white);
-			    		draw_rectangle_width(_tileHov_x - 1, _tileHov_y - 1, _tileHov_x + _tileSel_w, _tileHov_y + _tileSel_h, 1);
-			    		
-			    		draw_set_color(c_black);
-			    		draw_rectangle_width(_tileHov_x, _tileHov_y, _tileHov_x + _tileSel_w - 1, _tileHov_y + _tileSel_h - 1, 1);
+			    		draw_set_color(c_white); draw_rectangle_width(_tileHov_x,     _tileHov_y,     _tileHov_x + _tileSel_w,     _tileHov_y + _tileSel_h,     1);
+			    		draw_set_color(c_black); draw_rectangle_width(_tileHov_x + 1, _tileHov_y + 1, _tileHov_x + _tileSel_w - 1, _tileHov_y + _tileSel_h - 1, 1);
 		    		}
 		    		
 	    			if(palette_tool == 0 && mouse_press(mb_left, _focus)) {
@@ -1529,7 +1525,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		    				setPencil();
 		    			}
 	    			} else {
-	    				draw_sprite_stretched_ext(THEME.ui_panel, 1, _px, _py, _pw, _ph, COLORS._main_accent);
+	    				draw_set_color(COLORS._main_accent); draw_rectangle(_px, _py, _px + _pw - 1, _py + _ph - 1, 1);
 		    			
 		    			if(mouse_press(mb_left, _focus))
 		    				_at.open = !_at.open;
@@ -1589,7 +1585,9 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			    surface_reset_shader();
     			
 	    		draw_surface_ext(_at.preview_surface_tile, _pre_sx, _pre_sy, _ss, _ss, 0, c_white, 1);
-    			draw_sprite_stretched_ext(THEME.ui_panel, 1, _pre_sx, _pre_sy, _pre_sw * _ss, _pre_sh * _ss, COLORS._main_icon);
+    			
+    			draw_set_color(COLORS._main_icon);
+    			draw_rectangle(_pre_sx, _pre_sy, _pre_sx + _pre_sw * _ss - 1, _pre_sy + _pre_sh * _ss - 1, 1);
     			
     			var _dtile_w = _tileSiz[0] * _ss;
     			var _dtile_h = _tileSiz[1] * _ss;
@@ -1604,7 +1602,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
     					var _at_c_sy = _pre_sy + _at_cy * _dtile_h;
     					
     					draw_set_color(COLORS._main_icon_light);
-    					draw_rectangle(_at_c_sx, _at_c_sy, _at_c_sx + _dtile_w, _at_c_sy + _dtile_h, true);
+    					draw_rectangle(_at_c_sx, _at_c_sy, _at_c_sx + _dtile_w - 1, _at_c_sy + _dtile_h - 1, true);
     					
     					if(mouse_press(mb_left, _focus)) {
 							object_selecting = _at;
@@ -1623,7 +1621,9 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
     				var _at_c_sx = _pre_sx + _at_sl_x * _dtile_w;
 					var _at_c_sy = _pre_sy + _at_sl_y * _dtile_h;
 					
-					draw_sprite_stretched_ext(THEME.ui_panel, 1, _at_c_sx, _at_c_sy, _dtile_w, _dtile_h, COLORS._main_accent);
+					draw_set_color(COLORS._main_accent);
+    				draw_rectangle(_at_c_sx, _at_c_sy, _at_c_sx + _dtile_w - 1, _at_c_sy + _dtile_h - 1, 1);
+					
     			}
     			
     			_yy += _pre_sh * _ss + ui(4);
