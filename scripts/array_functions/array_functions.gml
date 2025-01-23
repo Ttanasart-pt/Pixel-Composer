@@ -356,6 +356,12 @@
 			
 		return _arr;
 	}
+	
+	function array_toggle(arr, value) {
+		if(array_exists(arr, value)) array_remove(arr, value);
+		else                         array_push(arr, value);
+	}
+
 #endregion
 
 #region binary opr

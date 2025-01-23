@@ -602,20 +602,22 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				var _spr = _fromSel? THEME.add_16_select : THEME.add_16;
 				var _txt = _fromSel? "New autoterrain from selection" : "New autoterrain";
 				if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, _m, _hover, _focus, _txt, _spr, 0, COLORS._main_value_positive) == 2) {
-					var _new_at = noone;
 					var _indx   = array_create(brush.brush_width * brush.brush_height);
 					
 					for( var i = 0, n = brush.brush_height; i < n; i++ ) 
 		    		for( var j = 0, m = brush.brush_width;  j < m; j++ ) 
 		    			_indx[i * brush.brush_width + j] = brush.brush_indices[i][j][0];
 		    		
-					     if(_brush_tiles ==  9) _new_at = new tiler_brush_autoterrain(AUTOTERRAIN_TYPE.box9,   _indx);
-					else if(_brush_tiles == 25) _new_at = new tiler_brush_autoterrain(AUTOTERRAIN_TYPE.box25,  _indx);
-					else if(_brush_tiles == 15) _new_at = new tiler_brush_autoterrain(AUTOTERRAIN_TYPE.side15, _indx);
-					else if(_brush_tiles == 48) _new_at = new tiler_brush_autoterrain(AUTOTERRAIN_TYPE.top48,  _indx);
-					else if(_brush_tiles == 55) _new_at = new tiler_brush_autoterrain(AUTOTERRAIN_TYPE.top55,  _indx);
-					else                        _new_at = new tiler_brush_autoterrain(AUTOTERRAIN_TYPE.box9,   _indx);
-					
+		    		var _typ = AUTOTERRAIN_TYPE.box9;
+		    		switch(_brush_tiles) {
+		    			case  9 : _typ = AUTOTERRAIN_TYPE.box9;   break;
+		    			case 25 : _typ = AUTOTERRAIN_TYPE.box25;  break;
+		    			case 15 : _typ = AUTOTERRAIN_TYPE.side15; break;
+		    			case 48 : _typ = AUTOTERRAIN_TYPE.top48;  break;
+		    			case 55 : _typ = AUTOTERRAIN_TYPE.top55;  break;
+		    		}
+		    		
+				    var _new_at = new tiler_brush_autoterrain(_typ,   _indx);
 					object_selecting = _new_at;
 					object_select_id = noone;
 					array_push(autoterrain, _new_at);

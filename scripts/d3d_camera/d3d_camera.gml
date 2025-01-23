@@ -29,7 +29,7 @@ function __3dCamera() constructor {
 	viewMat = new __mat4();
 	projMat = new __mat4();
 	
-	static getUp = function(_x = 1, _y = 1, _z = 1) { #region
+	static getUp = function(_x = 1, _y = 1, _z = 1) {
 		var upVector = new __vec3(0, 0, -1);
     
 	    var hRad = degtorad(focus_angle_x);
@@ -40,23 +40,23 @@ function __3dCamera() constructor {
 	    upVector.z =  cos(vRad) * _z;
 		
 	    return upVector._normalize();
-	} #endregion
+	}
 	
 	static getCombinedMatrix = function() { return matrix_multiply(viewMat.raw, projMat.raw); }
 	
-	static applyCamera = function() { #region
+	static applyCamera = function() {
 		camera_set_view_mat(raw, viewMat.raw);
 		camera_set_proj_mat(raw, projMat.raw);
 		
 		camera_apply(raw);
-	} #endregion
+	}
 	
-	static resetCamera = function() { #region
+	static resetCamera = function() {
 		camera_apply(0);
 		gpu_set_cullmode(cull_noculling); 
-	} #endregion
+	}
 	
-	static setMatrix = function() { #region
+	static setMatrix = function() {
 		if(projection == CAMERA_PROJECTION.perspective)
 			projMat.setRaw(matrix_build_projection_perspective_fov(fov, view_aspect, view_near, view_far));
 		else
@@ -74,9 +74,9 @@ function __3dCamera() constructor {
 		}
 		
 		return self;
-	} #endregion
+	}
 	
-	static setFocusAngle = function(ax, ay, dist) { #region
+	static setFocusAngle = function(ax, ay, dist) {
 		if(ay % 90 == 0) ay += 0.01;
 		
 		focus_angle_x = ax;
@@ -84,30 +84,30 @@ function __3dCamera() constructor {
 		focus_dist    = dist;
 		
 		return self;
-	} #endregion
+	}
 	
-	static setViewFov = function(fov, near, far) { #region
+	static setViewFov = function(fov, near, far) {
 		self.fov = fov;
 		self.view_near = near;
 		self.view_far  = far;
 		
 		return self;
-	} #endregion
+	}
 	
-	static setViewSize = function(w, h) { #region
+	static setViewSize = function(w, h) {
 		view_w = w;
 		view_h = h;
 		view_aspect = w / h;
 		
 		return self;
-	} #endregion
+	}
 	
-	static setCameraLookRotate = function() { #region
+	static setCameraLookRotate = function() {
 		var _fPos = d3d_PolarToCart(focus.x, focus.y, focus.z, focus_angle_x, focus_angle_y, focus_dist);
 		position.set(_fPos);
-	} #endregion
+	}
 	
-	static worldPointToViewPoint = function(vec3) { #region
+	static worldPointToViewPoint = function(vec3) {
 		var _vec4 = new __vec4().set(vec3, 1);
 		var _view = viewMat.transpose().multiplyVector(_vec4);
 		var _proj = projMat.transpose().multiplyVector(_view);
@@ -117,9 +117,9 @@ function __3dCamera() constructor {
 		_proj.y = view_h / 2 + _proj.y * view_h / 2;
 		
 		return _proj;
-	} #endregion
+	}
 	
-	static viewPointToWorldRay = function(_x, _y) { #region
+	static viewPointToWorldRay = function(_x, _y) {
 		var rayOrigin = position;
 		
 	    var normalizedX = (2 * _x / view_w) - 1;
@@ -135,5 +135,5 @@ function __3dCamera() constructor {
 								  ._normalize();
     
 	    return new __ray(rayOrigin, rayDirection);
-	} #endregion
+	}
 }

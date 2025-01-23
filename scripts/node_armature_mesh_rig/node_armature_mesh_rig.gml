@@ -22,29 +22,58 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	newInput(2, nodeValue_Trigger("Autoweight", self, false ))
 		.setDisplay(VALUE_DISPLAY.button, { name: "Auto weight", UI : true, onClick: function() /*=>*/ {return AutoWeightPaint()} });
 		
-	newInput(3, nodeValue_Float("Radius", self, 8))
+	newInput(3, nodeValue_Float("Auto Weight Radius", self, 8))
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	newOutput(0, nodeValue_Output("Rigged Surface", self, VALUE_TYPE.dynaSurface, noone));
 	
 	bone_posed       = noone;
+	bone_array       = [];
 	rigdata          = noone;
 	anchor_selecting = noone;
 	bone_bbox        = undefined;
+	preview_alpha    = .5;
 	
 	attributes.bonePoseData = {};
 	attributes.rigBones     = noone;
+	attributes.baked        = false;
+	attributes.bakeData     = 0;
+	
 	attributes.display_name = true;
 	attributes.display_bone = 0;
+	attributes.display_mesh_size = 2;
+	
+	tool_attribute.size = 48;
+	tool_size_edit      = new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ { tool_attribute.size = max(1, round(val)); }).setFont(f_p3)
+	tool_size           = [ "Size", tool_size_edit, "size", tool_attribute ];
+	
+	tool_attribute.weight = .5;
+	tool_weight_edit      = new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ { tool_attribute.weight = clamp(val, 0, 1); }).setFont(f_p3)
+	tool_weight           = [ "Weight", tool_weight_edit, "weight", tool_attribute ];
 	
 	array_push(attributeEditors, "Display");
-	array_push(attributeEditors, ["Display name", function() /*=>*/ {return attributes.display_name}, new checkBox(function() /*=>*/ { attributes.display_name = !attributes.display_name; })]);
-	array_push(attributeEditors, ["Display bone", function() /*=>*/ {return attributes.display_bone}, new scrollBox(["Octahedral", "Stick"], function(ind) /*=>*/ { attributes.display_bone = ind; })]);
+	array_push(attributeEditors, ["Display name", function() /*=>*/ {return attributes.display_name},      new checkBox(function() /*=>*/ { attributes.display_name = !attributes.display_name; })]);
+	array_push(attributeEditors, ["Display bone", function() /*=>*/ {return attributes.display_bone},      new scrollBox(["Octahedral", "Stick"], function(ind) /*=>*/ { attributes.display_bone = ind; })]);
+	array_push(attributeEditors, ["Vertex size",  function() /*=>*/ {return attributes.display_mesh_size}, new textBox(TEXTBOX_INPUT.number, function(ind) /*=>*/ { attributes.display_mesh_size = ind; })]);
 	
-	tools = [
-		new NodeTool( "Pose", THEME.bone_tool_pose )
+	tools_dynamic = [
+		new NodeTool( "Pose",          THEME.bone_tool_pose      ),
 	];
+	
+	tools_baked = [
+		new NodeTool( "Pose",          THEME.bone_tool_pose      ),
+		
+		new NodeTool( "Weight Brush",  THEME.canvas_tools_pencil )
+			.setSetting(tool_size)
+			.setSetting(tool_weight),
+			
+		new NodeTool( "Weight Eraser", THEME.canvas_tools_eraser )
+			.setSetting(tool_size)
+			.setSetting(tool_weight),
+	];
+	
+	tools = tools_dynamic;
 	
 	layer_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { 
 		var _b = inputs[0].getValue();
@@ -76,35 +105,61 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 				
 			if(_bone.is_main) continue;
 			var _dx = __x + ui(24);
+			var _iy = ty + _hh / 2;
 			
-			         draw_sprite_stretched_ext(THEME.checkbox_def, 0, _x + ui(16), ty + ui(4), ui(20), ui(20), c_white);
-			if(_sel) draw_sprite_stretched_ext(THEME.checkbox_def, 2, _x + ui(16), ty + ui(4), ui(20), ui(20), COLORS._main_accent);
+	        draw_sprite_stretched_ext(THEME.checkbox_def, 0, _x + ui(16), ty + ui(4), ui(20), ui(20), c_white);
 			
-				 if(_bone.parent_anchor) draw_sprite_ui(THEME.bone, 1, _dx + 12, ty + 14,,,, COLORS._main_icon);
-			else if(_bone.IKlength)      draw_sprite_ui(THEME.bone, 2, _dx + 12, ty + 14,,,, COLORS._main_icon);
-			else                         draw_sprite_ui(THEME.bone, 0, _dx + 12, ty + 14,,,, COLORS._main_icon);
+				 if(_bone.parent_anchor) draw_sprite_ui(THEME.bone, 1, _dx + ui(12), _iy, 1, 1, 0, COLORS._main_icon);
+			else if(_bone.IKlength)      draw_sprite_ui(THEME.bone, 2, _dx + ui(12), _iy, 1, 1, 0, COLORS._main_icon);
+			else                         draw_sprite_ui(THEME.bone, 0, _dx + ui(12), _iy, 1, 1, 0, COLORS._main_icon);
 			
-			var  cc  = COLORS._main_text;
+			var  cc  = _sel? COLORS._main_text : COLORS._main_text_sub;
+			if(brush_bone_target == _bone.ID) cc = COLORS._main_value_positive;
+			
 			var _hov = _hover && point_in_rectangle(_m[0], _m[1], _x, ty, _x + _w, ty + _hh - 1);
 				
 			if(_hov) {
 				cc = COLORS._main_accent;
 				anchor_selecting = [ _bone, 2 ];
 				
-				if(mouse_press(mb_left, _focus)) {
-					if(attributes.rigBones == noone)
-						attributes.rigBones = [ _bone.ID ];
-					else {
-						if(array_exists(attributes.rigBones, _bone.ID))
-							array_remove(attributes.rigBones, _bone.ID);
-						else 
-							array_push(attributes.rigBones, _bone.ID);
+				if(_m[0] < _x + ui(36)) {
+					draw_sprite_stretched_ext(THEME.checkbox_def, 1, _x + ui(16), ty + ui(4), ui(20), ui(20), c_white);
+					TOOLTIP = "Include in autoweight";
+					
+					if(mouse_press(mb_left, _focus)) {
+						if(attributes.rigBones == noone)
+							attributes.rigBones = [];
+						array_toggle(attributes.rigBones, _bone.ID);
 					}
+					
+				} else {
+					if(mouse_press(mb_left, _focus))
+						attributes.rigBones = [ _bone.ID ];
 				}
 			}
 			
+			if(_sel) draw_sprite_stretched_ext(THEME.checkbox_def, 2, _x + ui(16), ty + ui(4), ui(20), ui(20), COLORS._main_accent);
+			
 			draw_set_text(f_p2, fa_left, fa_center, cc);
 			draw_text_add(_dx + 24, ty + 12, _bone.name);
+			
+			if(_hov && attributes.baked) {
+				var _ix = _x + _w - ui(20);
+				var _cc = COLORS._main_icon;
+				
+				if(_m[0] > _ix - ui(12)) {
+					_cc = COLORS._main_value_negative;
+					TOOLTIP = "Clear weight";
+					
+					if(mouse_press(mb_left, _focus) && struct_has(attributes.bakeData, _bone.ID)) {
+						var _wdata = attributes.bakeData[$ _bone.ID];
+						for( var i = 0, n = array_length(_wdata); i < n; i++ ) 
+							_wdata[i] = 0;
+					}
+				}
+				
+				draw_sprite_ui(THEME.icon_delete, 0, _ix, _iy, 1, 1, 0, _cc);
+			}
 			
 			ty += _hh;
 			
@@ -121,58 +176,65 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 
 	});
 	
+	auto_button      = button(function() /*=>*/ {return AutoWeightPaint()}).setText("Auto weight");
+	bake_button      = button(function() /*=>*/ {return bake()}).setText("Bake mesh");
+	normalize_button = button(function() /*=>*/ {return normalizeWeight()}).setText("Normalize weight");
+	
 	input_display_list = [ 0, 1, 
-		["Armature",   false], layer_renderer, 
-		["Autoweight", false], 2, 3, 
+		["Armature", false], layer_renderer, 
+		["Weight",   false], 3, auto_button, new Inspector_Spacer(ui(8)), bake_button, normalize_button, 
 	];
 	
 	anchor_selecting = noone;
-	posing_bone      = noone;
-	posing_input     = 0;
-	posing_type      = 0;
-	posing_sx   = 0;
-	posing_sy   = 0;
-	posing_sz   = 0;
-	posing_mx   = 0;
-	posing_my   = 0;
+	posing_bone  = noone;
+	posing_input = 0;
+	posing_type  = 0;
+	posing_sx    = 0;
+	posing_sy    = 0;
+	posing_sz    = 0;
+	posing_mx    = 0;
+	posing_my    = 0;
+	
+	brush_drawing   = false;
+	brush_draw_mask = [];
+	brush_bone_target = noone;
+	
+	current_bone = noone;
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _bones = inputs[0].getValue();
 		var _mesh  = inputs[1].getValue();
+		var _rdata = attributes.baked? attributes.bakeData : rigdata;
+		var _boneTargetID = noone;
+		brush_bone_target = noone;
+		
+		__weights = anchor_selecting == noone? noone : struct_try_get(_rdata, anchor_selecting[0].ID, noone);
+		
+		if(isUsingTool("Weight Brush") || isUsingTool("Weight Eraser")) {
+			if(!is_array(attributes.rigBones)) attributes.rigBones = [ bone_array[0].ID ];
+			
+			var _boneTargetID = array_safe_get(attributes.rigBones, 0, noone);
+			var _boneTarget   = noone;
+			
+			for( var i = 0, n = array_length(bone_array); i < n; i++ ) {
+	        	if(bone_array[i].ID == _boneTargetID) {
+	        		_boneTarget = bone_array[i];
+	        		break;
+	        	}
+	        }
+	        
+	        brush_bone_target = _boneTargetID;
+	        var _weightData = _rdata[$ _boneTargetID];
+	        if(__weights == noone)
+	        	__weights = _weightData;
+		}
 		
 		if(_mesh != noone) {
-			__weights = anchor_selecting == noone? noone : struct_try_get(rigdata, anchor_selecting[0].ID, noone);
 			__x = _x;
 			__y = _y;
 			__s = _s;
 			
 			draw_set_circle_precision(4);
-			
-			if(__weights == noone) {
-				array_foreach(_mesh.points, function(_p) /*=>*/ {
-					if(!is(_p, MeshedPoint)) return;
-					
-					_p.drx = __x + _p.x * __s;
-					_p.dry = __y + _p.y * __s;
-					_p.color = COLORS._main_accent;
-					
-					draw_set_color(_p.color);
-					draw_circle(_p.drx, _p.dry, 2, false);
-				});
-				
-			} else {
-				array_foreach(_mesh.points, function(_p, i) /*=>*/ {
-					if(!is(_p, MeshedPoint)) return;
-					
-					_p.drx = __x + _p.x * __s;
-					_p.dry = __y + _p.y * __s;
-					var _w = array_safe_get_fast(__weights, i);
-					_p.color = merge_color(COLORS._main_accent, c_white, _w);
-					
-					draw_set_color(_p.color);
-					draw_circle(_p.drx, _p.dry, 2, false);
-				});
-			}
 			
 			draw_set_alpha(.5);
 			array_foreach(_mesh.links, function(_l) /*=>*/ {
@@ -185,18 +247,44 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			});
 			draw_set_alpha(1);
 			
+			if(__weights == noone) {
+				array_foreach(_mesh.points, function(_p) /*=>*/ {
+					if(!is(_p, MeshedPoint)) return;
+					
+					_p.drx = __x + _p.x * __s;
+					_p.dry = __y + _p.y * __s;
+					_p.color = COLORS._main_accent;
+					
+					draw_set_color(_p.color);
+					draw_circle(_p.drx, _p.dry, attributes.display_mesh_size, false);
+				});
+				
+			} else {
+				array_foreach(_mesh.points, function(_p, i) /*=>*/ {
+					if(!is(_p, MeshedPoint)) return;
+					
+					_p.drx = __x + _p.x * __s;
+					_p.dry = __y + _p.y * __s;
+					var _w = array_safe_get_fast(__weights, i);
+					_p.color = _w > .5? merge_color(COLORS._main_value_negative, COLORS._main_value_positive, (_w - .5) * 2) : 
+					                    merge_color(CDEF.main_dkblack, COLORS._main_value_negative, _w);
+					
+					draw_set_color(_p.color);
+					draw_circle(_p.drx, _p.dry, attributes.display_mesh_size, false);
+				});
+			}
+			
 		}
 		
 		if(bone_posed == noone) return;
 		
+		var mx  = (_mx - _x) / _s;
+		var my  = (_my - _y) / _s;
+		var smx = value_snap(mx, _snx);
+		var smy = value_snap(my, _sny);
+		
 		if(isUsingTool("Pose")) {
 			anchor_selecting = bone_posed.draw(attributes, active * 0b111, _x, _y, _s, _mx, _my, anchor_selecting, posing_bone);
-			
-			var mx = (_mx - _x) / _s;
-			var my = (_my - _y) / _s;
-			
-			var smx = value_snap(mx, _snx);
-			var smy = value_snap(my, _sny);
 			
 			if(posing_bone) {
 				if(posing_type == 0 && posing_bone.parent) { //move
@@ -280,12 +368,58 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 				}
 			}
 			return;
+		} 
+		
+		if(isUsingTool("Weight Brush") || isUsingTool("Weight Eraser")) {
+			if(_boneTargetID == noone) return;
+			
+			draw_set_color(COLORS._main_icon);
+			draw_set_circle_precision(32);
+			
+			var _rad = tool_attribute.size;
+			draw_circle(_mx, _my, _rad, true);
+			
+			var _r = _rad / _s;
+			var _pnts = _mesh.points;
+        	var _plen = array_length(_pnts);
+        	
+			if(brush_drawing) {
+				var _weight = tool_attribute.weight;
+				if(isUsingTool("Weight Eraser")) _weight = -_weight;
+				
+				for( var i = 0; i < _plen; i++ ) {
+					var _p  = _pnts[i];
+					var _d  = point_distance(_p.x, _p.y, mx, my);
+					var _ww = 1 - _d / _r;
+					if(_ww <= 0) continue;
+					
+					var _w = _weight * min(_ww * 2, 1);
+					if(brush_draw_mask[i] >= abs(_w)) continue;
+					
+					brush_draw_mask[i]   = abs(_w);
+					brush_draw_orig[i] ??= _weightData[i];
+					
+					_weightData[i] = clamp(brush_draw_orig[i] + _w, 0, 1);
+				}
+				
+				if(mouse_release(mb_left)) {
+					brush_drawing = false;
+					triggerRender();
+				}
+			}
+			
+			if(hover && mouse_press(mb_left, active)) {
+				brush_drawing   = true;
+				brush_draw_mask = array_create(_plen, 0);
+				brush_draw_orig = array_create(_plen, undefined);
+			}
+			
+			if(_boneTarget != noone) _boneTarget.drawBone(attributes, false, _x, _y, _s, _mx, _my, noone, noone, c_white, 1);
+			return;
 		}
 		
-		var _boneArr = bone_posed.toArray();
-		
-        for( var i = 0, n = array_length(_boneArr); i < n; i++ ) {
-        	var _b = _boneArr[i];
+        for( var i = 0, n = array_length(bone_array); i < n; i++ ) {
+        	var _b = bone_array[i];
         	var _l = attributes.rigBones == noone || array_exists(attributes.rigBones, _b.ID);
 			_b.drawBone(attributes, false, _x, _y, _s, _mx, _my, anchor_selecting, noone, c_white, 0.25 + _l * 0.75);
         }
@@ -300,8 +434,8 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
         
         rigdata = {};
         
-        var _pnts    = _mesh.points;
-        var _plen    = array_length(_pnts);
+        var _pnts = _mesh.points;
+        var _plen = array_length(_pnts);
         
         var _boneArr = bone_posed.toArray();
         var _boneDat = [];
@@ -323,7 +457,7 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
         
         var _boneAmo = array_length(_boneDat);
         
-        for( var i = 0, n = array_length(_pnts); i < n; i++ ) {
+        for( var i = 0, n = _plen; i < n; i++ ) {
             var _p  = _pnts[i];
             if(!is(_p, MeshedPoint)) continue;
             
@@ -370,7 +504,12 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
         if(_render) triggerRender();
 	}
 	
-	current_bone = noone;
+	static step = function() {
+		auto_button.interactable = !attributes.baked;
+		bake_button.text  = attributes.baked? "Unbake" : "Bake mesh";
+		bake_button.blend = attributes.baked? COLORS._main_value_negative : c_white;
+		tools = attributes.baked? tools_baked : tools_dynamic;
+	}
 	
     static update = function() {
         var _bones = inputs[0].getValue();
@@ -387,9 +526,9 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 							 .resetPose();
 		bone_posed.constrains = _bones.constrains;
 		
-		var _barr = bone_posed.toArray();
-		for( var i = 0, n = array_length(_barr); i < n; i++ ) {
-			var _b = _barr[i];
+		bone_array = bone_posed.toArray();
+		for( var i = 0, n = array_length(bone_array); i < n; i++ ) {
+			var _b = bone_array[i];
 			
 			_map[$ _b.ID] = _b;
 			if(!struct_has(attributes.bonePoseData, _b.ID)) continue;
@@ -403,16 +542,58 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		bone_posed.setPose(false);
 		bone_bbox = bone_posed.bbox();
 		
-        if(rigdata == noone) AutoWeightPaint(false);
+		var _rdata = attributes.baked? attributes.bakeData : rigdata;
+        if(!attributes.baked && rigdata == noone) 
+        	AutoWeightPaint(false);
         
         var _meshRigged     = new RiggedMeshedSurface();
-        _meshRigged.rigMap  = rigdata;
+        _meshRigged.rigMap  = _rdata;
         _meshRigged.mesh    = _mesh.clone();
         _meshRigged.bone    = bone_posed;
         _meshRigged.boneMap = _map;
         
         outputs[0].setValue(_meshRigged);
     }
+    
+    static bake = function() {
+    	if(attributes.baked) { attributes.baked = false; return; }
+    	
+    	attributes.baked = true;
+    	var _dat = {};
+    	var _k = struct_get_names(rigdata);
+    	
+    	for( var i = 0, n = array_length(_k); i < n; i++ )
+    		_dat[$ _k[i]] = array_clone(rigdata[$ _k[i]]);
+    	
+    	attributes.bakeData = _dat;
+    }
+    
+    static normalizeWeight = function() {
+    	if(!attributes.baked) return;
+    	
+    	var _mesh  = inputs[1].getValue();
+        if(!is(_mesh,  MeshedSurface)) return;
+        
+    	var _wdata = attributes.bakeData;
+        var _wkeys = struct_get_names(_wdata);
+        
+        var _plen = array_length(_mesh.points);
+        
+        for( var i = 0; i < _plen; i++ ) {
+        	
+            var _totalWeight = 0;
+            for( var j = 0, m = array_length(_wkeys); j < m; j++ )
+            	_totalWeight += _wdata[$ _wkeys[j]][i];
+            if(_totalWeight == 0) continue;
+            
+            for( var j = 0, m = array_length(_wkeys); j < m; j++ )
+            	_wdata[$ _wkeys[j]][i] /= _totalWeight;
+        }
+        
+        triggerRender();
+    }
+    
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
     static getGraphPreviewSurface = function() { return noone; }
     

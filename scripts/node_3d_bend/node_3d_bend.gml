@@ -25,7 +25,7 @@ function Node_3D_Bend(_x, _y, _group = noone) : Node_3D_Modifier(_x, _y, _group)
 		var _ori = _data[in_mesh + 3];
 		var _nrm = _data[in_mesh + 4];
 		
-		if(!is_instanceof(_obj, __3dObject))    return noone;
+		if(!is_instanceof(_obj, __3dObject)) return noone;
 		
 		var _res  = _obj.clone();
 		var _vlen = array_length(_res.vertex);

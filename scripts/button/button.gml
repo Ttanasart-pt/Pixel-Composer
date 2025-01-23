@@ -25,12 +25,12 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 	onWUp   = undefined;
 	onWDown = undefined;
 	
-	static setContext = function(struct) { onClick = method(struct, onClick); return self; }
-	static setWheel   = function(wup, wdown = wup) { onWUp = wup; onWDown = wdown; return self; }
+	static setContext = function(_s)          /*=>*/ { onClick = method(_s, onClick); return self; }
+	static setWheel   = function(_u, _d = _u) /*=>*/ { onWUp = _u; onWDown = _d;      return self; }
 	
-	static setBaseSprite = function(_bspr) { base_spr = _bspr; return self;  }
-	static setText       = function(_text) { text    = _text;  return self; }
-	static setTooltip    = function(_tip)  { tooltip = _tip;   return self; }
+	static setBaseSprite = function(_b) /*=>*/ { base_spr = _b; return self; }
+	static setText       = function(_t) /*=>*/ { text     = _t; return self; }
+	static setTooltip    = function(_t) /*=>*/ { tooltip  = _t; return self; }
 	
 	static setIcon = function(_icon, _index = 0, _blend = c_white, _size = 1) {
 		icon       = _icon; 
@@ -106,7 +106,7 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 			if(mouse_press(mb_left)) deactivate();
 		}
 		
-		var aa = interactable * 0.25 + 0.75;
+		var aa = interactable * .5 + .5;
 		var bx = _x + _w / 2;
 		
 		if(text != "") {

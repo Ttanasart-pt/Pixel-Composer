@@ -1,0 +1,14 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_pixel_extract",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_pixel_extract",
+  "parent":{
+    "name":"effects",
+    "path":"folders/nodes/data/filter/effects.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+  "tags":[],
+}

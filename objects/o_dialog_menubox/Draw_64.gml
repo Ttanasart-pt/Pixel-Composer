@@ -59,7 +59,8 @@ DIALOG_WINCLEAR1
 			var _hc = cc == c_white? COLORS.dialog_menubox_highlight : cc;
 			var _ha = cc == c_white? 0.75 : 0.8;
 			
-			draw_sprite_stretched_ext(THEME.textbox, 3, dialog_x, yy, dialog_w, _h, _hc);
+			if(_menuItem.active)
+				draw_sprite_stretched_ext(THEME.textbox, 3, dialog_x, yy, dialog_w, _h, _hc);
 			
 			if(_hovering_ch && is_instanceof(_menuItem, MenuItem)) {
 				if(_menuItem.active && _lclick) {

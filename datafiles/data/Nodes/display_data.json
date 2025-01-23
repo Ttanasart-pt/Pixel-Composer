@@ -845,6 +845,7 @@
             { "label": "/Surfaces" },
             "Node_Sampler",
             "Node_Find_Pixel",
+            "Node_Pixel_Extract",
             
             { "label": "Palettes" },
             "Node_Palette",

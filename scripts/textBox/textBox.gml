@@ -427,9 +427,9 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				draw_text_add(_tx, _y, "."); _tx += _dt_w;
 				draw_text_add(_tx, _y, _dc);
 				
-			} else if(sliding == 2 && align == fa_center) {
-				var _wh_w = string_width(_text);
-				draw_text_add(_w / 2 - _wh_w - padding, _y, _text);
+			// } else if(sliding == 2 && align == fa_center) {
+			// 	var _wh_w = string_width(_text);
+			// 	draw_text_add(_w / 2 - _wh_w - padding, _y, _text);
 				
 			} else
 				draw_text_add(_x + disp_x, _y, $"{_text}{suffix}");
