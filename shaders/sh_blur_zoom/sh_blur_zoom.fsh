@@ -50,13 +50,13 @@ uniform sampler2D mask;
 	}
 #endregion
 
-float sampleMask() { #region
+float sampleMask() {
 	if(useMask == 0) return 1.;
 	vec4 m = texture2D( mask, v_vTexcoord );
 	return (m.r + m.g + m.b) / 3. * m.a;
-} #endregion
+}
 
-void main() { #region
+void main() {
 	float str = strength.x;
 	if(strengthUseSurf == 1) {
 		vec4 _vMap = texture2D( strengthSurf, v_vTexcoord );
@@ -88,4 +88,4 @@ void main() { #region
     if(gamma == 1) color.rgb = pow(color.rgb, vec3(1. / 2.2));
     
 	gl_FragColor = color;
-} #endregion
+}

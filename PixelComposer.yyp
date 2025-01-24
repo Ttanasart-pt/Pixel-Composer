@@ -346,6 +346,7 @@
     {"$GMFolder":"","%Name":"rotator","folderPath":"folders/widgets/rotator.yy","name":"rotator","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"sliders","folderPath":"folders/widgets/sliders.yy","name":"sliders","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"text","folderPath":"folders/widgets/text.yy","name":"text","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"blur zoom","folderPath":"folders/nodes/data/filter/blur/blur zoom.yy","name":"blur zoom","resourceType":"GMFolder","resourceVersion":"2.0",},
   ],
   "IncludedFiles":[
     {"$GMIncludedFile":"","%Name":"Addons.zip","CopyToMask":-1,"filePath":"datafiles/data","name":"Addons.zip","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
@@ -3518,6 +3519,7 @@
     {"id":{"name":"s_node_mk_saber","path":"sprites/s_node_mk_saber/s_node_mk_saber.yy",},},
     {"id":{"name":"s_node_mk_sparkle","path":"sprites/s_node_mk_sparkle/s_node_mk_sparkle.yy",},},
     {"id":{"name":"s_node_mk_subpixel","path":"sprites/s_node_mk_subpixel/s_node_mk_subpixel.yy",},},
+    {"id":{"name":"sh_blur_zoom_step","path":"shaders/sh_blur_zoom_step/sh_blur_zoom_step.yy",},},
     {"id":{"name":"s_node_mk_tile","path":"sprites/s_node_mk_tile/s_node_mk_tile.yy",},},
     {"id":{"name":"s_node_monitor_capture","path":"sprites/s_node_monitor_capture/s_node_monitor_capture.yy",},},
     {"id":{"name":"s_node_morph_surface","path":"sprites/s_node_morph_surface/s_node_morph_surface.yy",},},

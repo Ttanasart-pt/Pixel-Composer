@@ -12,7 +12,7 @@ function Node_Blur_Zoom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput(3, nodeValue_Enum_Scroll("Oversample mode", self,  0, [ "Empty", "Clamp", "Repeat" ]))
 		.setTooltip("How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.");
 		
-	newInput(4, nodeValue_Enum_Scroll("Zoom mode", self,  1, [ "Start", "Middle", "End" ]));
+	newInput(4, nodeValue_Enum_Scroll("Zoom origin", self,  1, [ "Start", "Middle", "End" ]));
 		
 	newInput(5, nodeValue_Surface("Blur mask", self));
 	
@@ -38,11 +38,14 @@ function Node_Blur_Zoom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	newInput(14, nodeValue_Int("Samples", self, 64));
 	
+	newInput(15, nodeValue_Enum_Button("Mode", self, 0, [ "Blur", "Step" ]));
+	
 	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 8, 9,
-		["Surfaces", true],	0, 6, 7, 10, 11, 
-		["Blur",	false],	1, 12, 2, 4, 5, 13, 14, 
+		["Surfaces", true],	0, 6, 7, 10, 11, 5, 
+		["Blur",	false],	15, 4, 1, 12, 2, 
+		["Render",	false],	14, 13, 
 	];
 	
 	attribute_surface_depth();
@@ -73,7 +76,7 @@ function Node_Blur_Zoom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		_cen[0] /= surface_get_width_safe(_outSurf);
 		_cen[1] /= surface_get_height_safe(_outSurf);
 		
-		surface_set_shader(_outSurf, sh_blur_zoom);
+		surface_set_shader(_outSurf, _data[15]? sh_blur_zoom_step : sh_blur_zoom);
 			shader_set_2("center",       _cen);
 			shader_set_f_map("strength", _data[1], _data[12], inputs[1]);
 			shader_set_i("blurMode",     _data[4]);
