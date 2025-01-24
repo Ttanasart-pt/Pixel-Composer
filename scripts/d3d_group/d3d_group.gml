@@ -1,9 +1,12 @@
+#macro __3D_GROUP_PRESUB transform.submitMatrix(); for( var i = 0, n = array_length(objects); i < n; i++ )
+#macro __3D_GROUP_POSSUB transform.clearMatrix();
+
 function __3dGroup() constructor {
 	objects = [];
 	
 	transform = new __transform();
 	
-	static getCenter = function() { #region
+	static getCenter = function() {
 		var _v = new __vec3();
 		var _i = 0;
 		
@@ -19,9 +22,9 @@ function __3dGroup() constructor {
 		_v.add(transform.position);
 		
 		return _v;
-	} #endregion
+	}
 	
-	static getBBOX   = function() { #region
+	static getBBOX   = function() {
 		if(array_empty(objects)) return new __bbox3D(new __vec3(-0.5), new __vec3(0.5));
 		var _m0 = noone;
 		var _m1 = noone;
@@ -50,52 +53,18 @@ function __3dGroup() constructor {
 		_m1._subtract(_cc);
 		
 		return new __bbox3D(_m0, _m1); 
-	} #endregion
+	}
 	
-	static addObject = function(_obj) { #region
-		INLINE
-		array_push(objects, _obj);
-	} #endregion
+	static addObject = function(_obj) { array_push(objects, _obj); }
 	
-	static submit       = function(scene = {}, shader = noone) { #region
-		transform.submitMatrix();
-		for( var i = 0, n = array_length(objects); i < n; i++ )
-			objects[i].submit(scene, shader);
-		transform.clearMatrix();
-	} #endregion
+	static submit       = function(_sc = {}, _sh = noone)    /*=>*/ { __3D_GROUP_PRESUB objects[i].submit(_sc, _sh);       __3D_GROUP_POSSUB }
+	static submitUI     = function(_sc = {}, _sh = noone)    /*=>*/ { __3D_GROUP_PRESUB objects[i].submitUI(_sc, _sh);     __3D_GROUP_POSSUB }
+	static submitSel    = function(_sc = {}, _sh = noone)    /*=>*/ { __3D_GROUP_PRESUB objects[i].submitSel(_sc, _sh);    __3D_GROUP_POSSUB }
+	static submitShader = function(_sc = {}, _sh = noone)    /*=>*/ { __3D_GROUP_PRESUB objects[i].submitShader(_sc, _sh); __3D_GROUP_POSSUB }
+	static submitShadow = function(_sc = {}, object = noone) /*=>*/ { for( var i = 0, n = array_length(objects); i < n; i++ ) objects[i].submitShadow(_sc, object); }
+	static map = function(callback, _sc = {}) /*=>*/ { for( var i = 0, n = array_length(objects); i < n; i++ ) callback(objects[i], _sc); }
 	
-	static submitUI     = function(scene = {}, shader = noone) { #region
-		transform.submitMatrix();
-		for( var i = 0, n = array_length(objects); i < n; i++ )
-			objects[i].submitUI(scene, shader);
-		transform.clearMatrix();
-	} #endregion
-	
-	static submitSel    = function(scene = {}, shader = noone) { #region
-		transform.submitMatrix();
-		for( var i = 0, n = array_length(objects); i < n; i++ )
-			objects[i].submitSel(scene, shader);
-		transform.clearMatrix();
-	} #endregion
-	
-	static submitShader = function(scene = {}, shader = noone) { #region
-		transform.submitMatrix();
-		for( var i = 0, n = array_length(objects); i < n; i++ )
-			objects[i].submitShader(scene, shader);
-		transform.clearMatrix();
-	} #endregion
-	
-	static submitShadow = function(scene = {}, object = noone) { #region
-		for( var i = 0, n = array_length(objects); i < n; i++ )
-			objects[i].submitShadow(scene, object);
-	} #endregion
-	
-	static map = function(callback, scene = {}) { #region
-		for( var i = 0, n = array_length(objects); i < n; i++ ) 
-			callback(objects[i], scene);
-	} #endregion
-	
-	static clone = function(vertex = true, cloneBuffer = false) { #region
+	static clone = function(vertex = true, cloneBuffer = false) {
 		var _new = new __3dGroup();
 		
 		_new.transform = transform.clone();
@@ -105,5 +74,5 @@ function __3dGroup() constructor {
 			_new.objects[i] = objects[i].clone(vertex, cloneBuffer);
 		
 		return _new;
-	} #endregion
+	}
 }

@@ -17,7 +17,7 @@ function Node_3D_Light_Point(_x, _y, _group = noone) : Node_3D_Light(_x, _y, _gr
 	input_display_list = [
 		["Transform", false], 0,
 		__d3d_input_list_light, in_light,
-		["Shadow", false], in_light + 1, in_light + 2, in_light + 3, 
+		["Shadow", false, in_light + 1], in_light + 2, in_light + 3, 
 	]
 	
 	tools = [ tool_pos ];
@@ -43,14 +43,4 @@ function Node_3D_Light_Point(_x, _y, _group = noone) : Node_3D_Light(_x, _y, _gr
 		
 		return _object;
 	}
-	
-	// static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-	// 	var bbox    = drawGetBbox(xx, yy, _s);
-	// 	var _object = getObject(0);
-		
-	// 	if(_object == noone) return;
-		
-	// 	var __smap = _object.shadow_map;
-	// 	draw_surface_ext_safe(__smap, bbox.x0, bbox.y0, .5 * _s, .5 * _s);
-	// }
 }

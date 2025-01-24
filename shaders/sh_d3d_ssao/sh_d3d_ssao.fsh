@@ -66,5 +66,4 @@ void main() {
 	}
 	
     gl_FragColor = vec4(vec3(1. - occluded / raysTotal * strength), 1.);
-	//gl_FragColor = vec4(vec3(distance(cPosition, cameraPosition) / 10.), 1.);
 }

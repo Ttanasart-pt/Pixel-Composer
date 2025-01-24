@@ -31,6 +31,7 @@ function __3dObject() constructor {
 	VF     = global.VF_POS_COL;
 	NVB    = noone;
 	WVB    = noone;
+	name   = UUID_generate();
 	
 	transform = new __transform();
 	size      = new __vec3(1);
@@ -154,24 +155,24 @@ function __3dObject() constructor {
 	
 	////- Submit
 	
-	static preSubmitVertex  = function(scene = {}) {}
-	static postSubmitVertex = function(scene = {}) {}
+	static preSubmitVertex  = function(_sc = {}) {}
+	static postSubmitVertex = function(_sc = {}) {}
 	
 	static getCenter = function() { return new __vec3(transform.position.x, transform.position.y, transform.position.z); }
 	static getBBOX   = function() { return new __bbox3D(size.multiplyVec(transform.scale).multiply(-0.5), size.multiplyVec(transform.scale).multiply(0.5)); }
 	
-	static submit		= function(scene = {}, shader = noone) { submitVertex(scene, shader); }
-	static submitUI		= function(scene = {}, shader = noone) { submitVertex(scene, shader); }
-	static submitSel	= function(scene = {}, shader = noone) {
-		var _s = variable_clone(scene);
+	static submit		= function(_sc = {}, _sh = noone) { submitVertex(_sc, _sh); }
+	static submitUI		= function(_sc = {}, _sh = noone) { submitVertex(_sc, _sh); }
+	static submitSel	= function(_sc = {}, _sh = noone) {
+		var _s = variable_clone(_sc);
 		_s.show_normal = false;
 		submitVertex(_s, sh_d3d_silhouette); 
 	}
 	
-	static submitShader = function(scene = {}, shader = noone) {}
-	static submitShadow = function(scene = {}, object = noone) {}
+	static submitShader = function(_sc = {}, _sh = noone) { submitVertex(_sc, _sh); }
+	static submitShadow = function(_sc = {}, _ob = noone) {}
 	
-	static submitVertex = function(scene = {}, shader = noone) {
+	static submitVertex = function(_sc = {}, _sh = noone) {
 		var _shader;
 		
 		switch(VF) {
@@ -181,26 +182,32 @@ function __3dObject() constructor {
 		}
 		
 		if(custom_shader != noone) _shader = custom_shader;
-		if(shader != noone)        _shader = shader;
-		if(!is_undefined(shader)) shader_set(_shader);
+		if(_sh != noone)           _shader = _sh;
+		if(!is_undefined(_sh))     shader_set(_shader);
 		
-		preSubmitVertex(scene);
+		preSubmitVertex(_sc);
 		transform.submitMatrix();
 		matrix_set(matrix_world, matrix_stack_top());
 		
 		gpu_set_tex_repeat(true);
 		for( var i = 0, n = array_length(VB); i < n; i++ ) {
-			var _ind = array_safe_get_fast(material_index, i, i);
-			var _mat = array_safe_get_fast(materials, _ind, noone);
-			var _useMat = is_instanceof(_mat, __d3dMaterial);
+			var _ind  = array_safe_get_fast(material_index, i, i);
+			var _mat  = array_safe_get_fast(materials, _ind, noone);
+			var _uMat = is_instanceof(_mat, __d3dMaterial);
 			
 			shader_set_i("mat_flip", texture_flip);
-			var _tex = _useMat? _mat.getTexture() : -1;
+			var _tex = _uMat? _mat.getTexture() : -1;
 				
-			if(_shader == sh_d3d_default) {
-				if(_useMat) {
-					_mat.submitShader();
-				} else {
+			if(_shader == sh_d3d_geometry) {
+				if(_uMat) _mat.submitGeometry();
+				else {
+					shader_set_i("use_normal",   0);
+					shader_set_f("mat_texScale", [ 1, 1 ] );
+				}
+				
+			} else {
+				if(_uMat) _mat.submitShader();
+				else {
 					shader_set_f("mat_diffuse",    1);
 					shader_set_f("mat_specular",   0);
 					shader_set_f("mat_shine",      1);
@@ -208,23 +215,16 @@ function __3dObject() constructor {
 					shader_set_f("mat_reflective", 0);
 					shader_set_f("mat_texScale",   [ 1, 1 ] );
 				}
-				
-			} else if(_shader == sh_d3d_geometry) {
-				if(_useMat) _mat.submitGeometry();
-				else {
-					shader_set_i("use_normal",   0);
-					shader_set_f("mat_texScale", [ 1, 1 ] );
-				}
-				
 			}
 			
 			vertex_submit(VB[i], render_type, _tex);
 		}
+		// print(shader_get_name(_shader), instanceof(self));
 		gpu_set_tex_repeat(false);
 		
-		if(!is_undefined(shader)) shader_reset();
+		if(!is_undefined(_sh)) shader_reset();
 		
-		if(scene.show_normal) {
+		if(_sc.show_normal) {
 			if(NVB == noone) generateNormal();
 			if(NVB != noone) {
 				shader_set(sh_d3d_wireframe);
@@ -236,7 +236,7 @@ function __3dObject() constructor {
 		
 		transform.clearMatrix();
 		matrix_set(matrix_world, matrix_build_identity());
-		postSubmitVertex(scene);
+		postSubmitVertex(_sc);
 		
 	}
 	

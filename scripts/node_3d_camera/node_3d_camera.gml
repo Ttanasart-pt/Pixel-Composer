@@ -86,24 +86,26 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	in_cam = array_length(inputs);
 	
 	newOutput(0, nodeValue_Output("Rendered", self, VALUE_TYPE.surface, noone ));
-	
-	newOutput(1, nodeValue_Output("Normal", self, VALUE_TYPE.surface, noone ))
-		.setVisible(false);
-	
-	newOutput(2, nodeValue_Output("Depth", self, VALUE_TYPE.surface, noone ))
-		.setVisible(false);
+	newOutput(1, nodeValue_Output("Normal",   self, VALUE_TYPE.surface, noone )).setVisible(false);
+	newOutput(2, nodeValue_Output("Depth",    self, VALUE_TYPE.surface, noone )).setVisible(false);
+	newOutput(3, nodeValue_Output("Shadow",   self, VALUE_TYPE.surface, noone )).setVisible(false);
+	newOutput(4, nodeValue_Output("Ambient Occlusion", self, VALUE_TYPE.surface, noone )).setVisible(false);
+	newOutput(5, nodeValue_Output("Diffuse",  self, VALUE_TYPE.surface, noone )).setVisible(false);
 	
 	input_display_list = [ i+4,
-		["Output",				false], i+ 2,
-		["Transform",			false], i+ 9, 0, 1, i+10, i+11, i+12, i+13, i+14, 
-		["Camera",				 true], i+ 3, i+ 0, i+ 1, i+ 8, 
-		["Render",				 true], i+ 5, i+16, i+ 6, i+ 7, i+15, i+22, 
-		["Wireframe",      true, i+23], i+24, i+25, i+26, i+27, i+28, 
-		["Ambient Occlusion",	 true], i+17, i+20, i+18, i+19, 
-		["Effects",				 true], i+21,
+		["Output",		     false],       i+ 2,
+		["Transform",	     false],       i+ 9, 0, 1, i+10, i+11, i+12, i+13, i+14, 
+		["Camera",		      true],       i+ 3, i+ 0, i+ 1, i+ 8, 
+		["Render",		      true],       i+ 5, i+16, i+ 6, i+ 7, i+15, i+22, 
+		["Wireframe",         true, i+23], i+24, i+25, i+26, i+27, i+28, 
+		["Ambient Occlusion", true, i+17], i+20, i+18, i+19, 
+		["Effects",			  true],       i+21,
 	];
 	
-	tool_lookat = new NodeTool( "Move Target", THEME.tools_3d_transform_object );
+	output_display_list = [ 0, 5, 1, 2, 3, 4 ];
+	
+	temp_surface = [ 0 ];
+	tool_lookat  = new NodeTool( "Move Target", THEME.tools_3d_transform_object );
 	
 	////- Preview
 	
@@ -207,7 +209,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	static submitShadow = function() {}
 	static submitShader = function() {}
 	
-	static processData = function(_output, _data, _output_index, _array_index = 0) {
+	static processData = function(_outData, _data, _output_index, _array_index = 0) {
 		#region data
 			var _pos = _data[0];
 			var _rot = _data[1];
@@ -330,36 +332,32 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		#endregion
 		
 		#region submit
-			var _render = outputs[0].getValue();
-			var _normal = outputs[1].getValue();
-			var _depth  = outputs[2].getValue();
+			for( var i = 0, n = array_length(_outData); i < n; i++ ) {
+				if(is_surface(_outData[i]) && !surface_has_depth(_outData[i]))
+					surface_free(_outData[i]);
+				_outData[i] = surface_verify(_outData[i], _dim[0], _dim[1]);
+			}
+			
+			temp_surface[0] = surface_verify(temp_surface[0], _dim[0], _dim[1]);
+			var _render = temp_surface[0];
 			var _bgSurf = _dbg? scene.renderBackground(_dim[0], _dim[1]) : noone;
-		
-			_render = surface_verify(_render, _dim[0], _dim[1]);
-			_normal = surface_verify(_normal, _dim[0], _dim[1]);
-			_depth  = surface_verify(_depth , _dim[0], _dim[1]);
-		
+			
 			if(_sobj) {
 				_sobj.submitShadow(scene, _sobj);
 				submitShadow();
 				
-				deferData   = scene.deferPass(_sobj, _dim[0], _dim[1], deferData);
+				deferData = scene.deferPass(_sobj, _dim[0], _dim[1], deferData);
 				
 				surface_set_target_ext(0, _render);
-				surface_set_target_ext(1, _normal);
-				surface_set_target_ext(2, _depth );
-			
+				surface_set_target_ext(1, _outData[1]);
+				surface_set_target_ext(2, _outData[2]);
+				surface_set_target_ext(3, _outData[3]);
 				DRAW_CLEAR
 				
 				gpu_set_zwriteenable(true);
 				gpu_set_cullmode(_back); 
-				
-				if(_blend == 0) {
-					gpu_set_ztestenable(true);
-				} else {
-					BLEND_ADD 
-					gpu_set_ztestenable(false);
-				}
+				gpu_set_ztestenable(_blend == 0);
+				if(_blend == 1) BLEND_ADD
 				
 				camera.applyCamera();
 				scene.reset();
@@ -373,12 +371,30 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 				surface_reset_target();
 				
 				camera.resetCamera();
+				
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				
+				surface_set_target_ext(0, _outData[5]);
+				DRAW_CLEAR
+				
+				gpu_set_zwriteenable(true);
+				gpu_set_cullmode(_back); 
+				gpu_set_ztestenable(_blend == 0);
+				if(_blend == 1) BLEND_ADD
+				
+				camera.applyCamera();
+				scene.submitShader(_sobj, sh_d3d_unlit);
+				
+				BLEND_NORMAL
+				surface_reset_target();
+				
+				camera.resetCamera();
+				
 			}
 		#endregion
 		
 		#region render
-			var _finalRender = surface_create(_dim[0], _dim[1]);
-			surface_set_target(_finalRender);
+			surface_set_target(_outData[0]);
 				DRAW_CLEAR
 				BLEND_ALPHA
 				
@@ -395,11 +411,13 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 				}
 			surface_reset_target();
 			surface_free(_render);
+			
+			_outData[4] = deferData.ssao;
 		#endregion
 		
 		surface_depth_disable(true);
 		
-		return [ _finalRender, _normal, _depth ];
+		return _outData;
 	}
 	
 	////- Draw

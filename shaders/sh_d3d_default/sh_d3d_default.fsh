@@ -206,6 +206,7 @@ void main() {
 	mat_baseColor     *= v_vColour;
 	
 	vec4 final_color   = mat_baseColor;
+	vec3 shadow        = vec3(0.);
 	if(show_wireframe == 1 && wireframe_shade == 1) final_color = wireframeCalc(final_color);
 	
 	vec3 viewDirection = normalize(cameraPosition - v_worldPosition.xyz);
@@ -272,20 +273,18 @@ void main() {
 					if(lightMapUV.x >= 0. && lightMapUV.x <= 1. && lightMapUV.y >= 0. && lightMapUV.y <= 1.) {
 						light_map_depth = sampleDirShadowMap(shadow_map_index, lightMapUV);
 						
-						//gl_FragData[0] = texture2D(light_dir_shadowmap_0, lightMapUV);
-						//return;
-						
 						shadow_map_index++;
 						float shadowFactor = dot(normal, lightVector);
 						float bias = mix(light_dir_shadow_bias[i], 0., shadowFactor);
 						
-						if(l_lightDistance > light_map_depth + bias)
+						if(l_lightDistance > light_map_depth + bias) {
+							shadow += 1. / float(light_dir_count + light_pnt_count);
 							continue;
+						}
 					}
-				} 
+				}
 				
 				vec3 light_phong = phongLight(normal, lightVector, viewDirection, light_dir_color[i].rgb);
-				
 				light_effect += light_phong * light_dir_intensity[i];
 			}
 		#endregion
@@ -299,11 +298,8 @@ void main() {
 				vec3 lightVector   = light_pnt_position[i] - v_worldPosition.xyz;
 				
 				light_distance = length(lightVector);
-				if(light_distance > light_pnt_radius[i]) {
-					// gl_FragData[0] = vec4(1., 0., 0., .5);
-					// return;
+				if(light_distance > light_pnt_radius[i])
 					continue;
-				}
 				
 				lightVector = normalize(lightVector);
 				
@@ -328,17 +324,15 @@ void main() {
 						light_map_depth = samplePntShadowMap(shadow_map_index, lightMapUV, side);
 						shadow_map_index++;
 						
-						// gl_FragData[0] = vec4((l_lightDistance - (light_map_depth + bias)) * 10., ((light_map_depth + bias) - l_lightDistance) * 10., 0., 1.);
-						// return;
-						
-						if(l_lightDistance > light_map_depth + bias)
+						if(l_lightDistance > light_map_depth + bias) {
+							shadow += 1. / float(light_dir_count + light_pnt_count);
 							continue;
+						}
 					}
 				} 
 				
 				light_attenuation = 1. - pow(light_distance / light_pnt_radius[i], 2.);
 				vec3 light_phong = phongLight(normal, lightVector, viewDirection, light_pnt_color[i].rgb * light_attenuation);
-				
 				light_effect += light_phong * light_pnt_intensity[i];
 			}
 		#endregion
@@ -360,4 +354,5 @@ void main() {
 	gl_FragData[0] = final_color;
 	gl_FragData[1] = vec4(0.5 + normal * 0.5, final_color.a);
 	gl_FragData[2] = vec4(vec3(1. - abs(v_cameraDistance)), final_color.a);
+	gl_FragData[3] = vec4(shadow, 1.);
 }
