@@ -194,7 +194,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		toRefreshNodeDisplay = false;
 		
-		run_in(1, function() {
+		run_in(1, function() /*=>*/ {
 			input_buttons   = [];
 			
 			for( var i = 0; i < array_length(inputs); i++ ) {
