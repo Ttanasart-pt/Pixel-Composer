@@ -6,7 +6,8 @@ function Node_create_3D_Obj(_x, _y, _group = noone) {
 		if(path == "") return noone;
 	}
 	
-	var node = new Node_3D_Mesh_Obj(_x, _y, _group).skipDefault();
+	var node = new Node_3D_Mesh_Obj(_x, _y, _group);
+	node.skipDefault();
 	node.setPath(path);
 	return node;
 }
@@ -14,7 +15,8 @@ function Node_create_3D_Obj(_x, _y, _group = noone) {
 function Node_create_3D_Obj_path(_x, _y, path) {
 	if(!file_exists_empty(path)) return noone;
 	
-	var node = new Node_3D_Mesh_Obj(_x, _y, PANEL_GRAPH.getCurrentContext()).skipDefault();
+	var node = new Node_3D_Mesh_Obj(_x, _y, PANEL_GRAPH.getCurrentContext());
+	node.skipDefault();
 	node.setPath(path);
 	return node;
 }

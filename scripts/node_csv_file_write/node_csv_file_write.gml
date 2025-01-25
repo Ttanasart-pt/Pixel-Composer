@@ -1,7 +1,8 @@
 function Node_create_CSV_File_Write(_x, _y, _group = noone) {
 	var path = "";
 	
-	var node = new Node_CSV_File_Write(_x, _y, _group).skipDefault();
+	var node = new Node_CSV_File_Write(_x, _y, _group);
+	node.skipDefault();
 	node.inputs[0].setValue(path);
 	node.doUpdate();
 	

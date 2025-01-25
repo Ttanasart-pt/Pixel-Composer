@@ -6,7 +6,8 @@ function Node_create_Directory_Search(_x, _y, _group = noone) {
 		if(path == "") return noone;
 	}
 	
-	var node = new Node_Directory_Search(_x, _y, _group).skipDefault();
+	var node = new Node_Directory_Search(_x, _y, _group);
+	node.skipDefault();
 	node.inputs[0].setValue(path);
 	if(NODE_NEW_MANUAL) node.doUpdate();
 	
@@ -16,7 +17,8 @@ function Node_create_Directory_Search(_x, _y, _group = noone) {
 function Node_create_Directory_path(_x, _y, path) {
 	if(!directory_exists(path)) return noone;
 	
-	var node = new Node_Directory_Search(_x, _y, PANEL_GRAPH.getCurrentContext()).skipDefault();
+	var node = new Node_Directory_Search(_x, _y, PANEL_GRAPH.getCurrentContext());
+	node.skipDefault();
 	node.inputs[0].setValue(path);
 	node.doUpdate();
 	return node;	

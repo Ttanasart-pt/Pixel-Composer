@@ -1,7 +1,8 @@
 function Node_create_SVG_path(_x, _y, path) {
 	if(!file_exists_empty(path)) return noone;
 	
-	var node = new Node_SVG(_x, _y, PANEL_GRAPH.getCurrentContext()).skipDefault();
+	var node = new Node_SVG(_x, _y, PANEL_GRAPH.getCurrentContext());
+	node.skipDefault();
 	node.inputs[0].setValue(path);
 	node.doUpdate();
 	return node;	

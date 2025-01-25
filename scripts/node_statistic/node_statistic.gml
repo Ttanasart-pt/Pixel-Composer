@@ -12,7 +12,9 @@ enum STAT_OPERATOR {
 	
 	function Node_create_Statistic(_x, _y, _group = noone, _param = {}) {
 		var query = struct_try_get(_param, "query", "");
-		var node  = new Node_Statistic(_x, _y, _group).skipDefault();
+		var node  = new Node_Statistic(_x, _y, _group);
+		node.skipDefault();
+		
 		var ind   = -1;
 		
 		switch(query) {

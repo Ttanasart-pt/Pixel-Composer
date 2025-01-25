@@ -38,6 +38,7 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 	nodekey = "";
 	
 	nodeName     = script_get_name(node);
+	usecreateFn  = false;
 	createFn     = noone;
 	createParam  = noone;
 	
@@ -82,8 +83,8 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 	static setTags    = function(_tags) { tags        = _tags; return self; }
 	static setSpr     = function(_spr)  { spr         = _spr;  return self; }
 	static setTooltip = function(_tool) { tooltip     = _tool; return self; }
-	static setBuild   = function(_fn)   { createFn    = _fn;   return self; }
 	static setParam   = function(_par)  { createParam = _par;  return self; }
+	static setBuild   = function(_fn)   { createFn    = method(self, _fn); usecreateFn = true; return self; }
 	
 	static setIO = function(t) { 
 		for(var i = 0; i < argument_count; i++) { 
@@ -163,9 +164,10 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 			_param.iname     = nodekey;
 		}
 		
-		var _node;
-		if(createFn == noone) _node = new node(_x, _y, _group, _param);
-		else                  _node = createFn(_x, _y, _group, _param);
+		var _node = noone;
+		if(usecreateFn) _node = createFn(_x, _y, _group, _param);
+		else            _node = new node(_x, _y, _group, _param);
+		if(_node == noone) return _node;
 		
 		_node.name = name;
 		_node.postBuild();

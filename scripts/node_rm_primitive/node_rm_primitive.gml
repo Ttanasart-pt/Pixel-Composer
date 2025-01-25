@@ -7,12 +7,12 @@ global.node_rm_primitive_keys = [
 
 function Node_create_RM_Primitive(_x, _y, _group = noone, _param = {}) {
 	var query = struct_try_get(_param, "query", "");
-	var node  = new Node_RM_Primitive(_x, _y, _group).skipDefault();
+	var node  = new Node_RM_Primitive(_x, _y, _group);
+	node.skipDefault();
 	
 	switch(query) {
-		case "cube" :   ind = array_find_string(node.shape_types, "box");	break;
-		
-		default : ind = array_find_string(node.shape_types, query);
+		case "cube" : ind = array_find_string(node.shape_types, "box");	break;
+		default     : ind = array_find_string(node.shape_types, query);
 	}
 	
 	if(ind >= 0) node.inputs[1].setValue(ind);

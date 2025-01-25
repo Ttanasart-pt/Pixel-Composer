@@ -2986,7 +2986,9 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         		
         		var path = $"{TEMPDIR}url_pasted_{seed_random()}.png";
 	            var img  = http_get_file(txt, path);
-	            var node = new Node_Image(0, 0).skipDefault();
+	            var node = new Node_Image(0, 0);
+	            node.skipDefault();
+	            
 	            var args = [ node, path ];
 	    		
 	            global.FILE_LOAD_ASYNC[? img] = [ function(a) /*=>*/ { a[0].inputs[0].setValue(a[1]); }, args];
@@ -3586,7 +3588,8 @@ function load_file_path(path, _x = undefined, _y = undefined) {
                 case "hex"      : 
                 case "gpl"      : 
                 case "pal"      : 
-                    node = new Node_Palette(_x, _y, PANEL_GRAPH.getCurrentContext()).skipDefault();
+                    node = new Node_Palette(_x, _y, PANEL_GRAPH.getCurrentContext());
+                    node.skipDefault()
                     node.inputs[0].setValue(loadPalette(p));
                     break;
                     

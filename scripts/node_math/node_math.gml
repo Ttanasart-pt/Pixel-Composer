@@ -47,7 +47,8 @@ global.node_math_scroll   = array_create_ext(array_length(global.node_math_names
 
 function Node_create_Math(_x, _y, _group = noone, _param = {}) {
 	var query = struct_try_get(_param, "query", "");
-	var node  = new Node_Math(_x, _y, _group).skipDefault();
+	var node  = new Node_Math(_x, _y, _group);
+	node.skipDefault();
 
 	var ind = array_find(global.node_math_keys, query);
 	if(ind != -1) node.inputs[0].setValue(global.node_math_keys_map[ind]);

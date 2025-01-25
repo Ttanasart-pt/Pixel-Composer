@@ -6,19 +6,22 @@ function Node_create_Image_Sequence(_x, _y, _group = noone) {
 		if(path == "") return noone;
 	}
 	
-	var node  = new Node_Image_Sequence(_x, _y, _group).skipDefault();
-	var paths = string_splice(path, "\n");
+	var node  = new Node_Image_Sequence(_x, _y, _group);
+	node.skipDefault();
 	
+	var paths = string_splice(path, "\n");
 	node.inputs[0].setValue(paths);
+	
 	if(NODE_NEW_MANUAL) node.doUpdate();
 	
 	return node;
 }
 
 function Node_create_Image_Sequence_path(_x, _y, _path) {
-	var node = new Node_Image_Sequence(_x, _y, PANEL_GRAPH.getCurrentContext()).skipDefault();
-	    node.inputs[0].setValue(_path);
-	    node.doUpdate();
+	var node = new Node_Image_Sequence(_x, _y, PANEL_GRAPH.getCurrentContext());
+	node.skipDefault();
+    node.inputs[0].setValue(_path);
+    node.doUpdate();
 
 	return node;
 }

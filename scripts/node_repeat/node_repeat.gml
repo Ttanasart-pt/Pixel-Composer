@@ -1,19 +1,21 @@
 global.node_repeat_keys = [ "repeat polar", "repeat circular" ];
 
 function Node_create_Repeat(_x, _y, _group = noone, _param = {}) {
-	var _node = new Node_Repeat(_x, _y, _group).skipDefault();
+	var node = new Node_Repeat(_x, _y, _group);
+	node.skipDefault();
+	
 	var query = struct_try_get(_param, "query", "");
 	
 	switch(query) {
 		case "repeat polar" : 
 		case "repeat circular" : 
-			_node.inputs[3].setValue(2);
-			_node.inputs[9].unit.setMode(VALUE_UNIT.reference);
-			_node.inputs[9].setValueDirect([ 0.5, 0.5 ]);
+			node.inputs[3].setValue(2);
+			node.inputs[9].unit.setMode(VALUE_UNIT.reference);
+			node.inputs[9].setValueDirect([ 0.5, 0.5 ]);
 			break;
 	}
 	
-	return _node;
+	return node;
 } 
 
 function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {

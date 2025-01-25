@@ -1,6 +1,8 @@
 function Node_create_Equation(_x, _y, _group = noone, _param = {}) {
 	var query = struct_try_get(_param, "query", "");
-	var node  = new Node_Equation(_x, _y, _group).skipDefault();
+	var node  = new Node_Equation(_x, _y, _group);
+	node.skipDefault();
+	
 	if(query == "") return node;
 	
 	node.inputs[0].setValue(query);

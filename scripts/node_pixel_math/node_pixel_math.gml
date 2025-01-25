@@ -1,6 +1,7 @@
 function Node_create_Pixel_Math(_x, _y, _group = noone, _param = {}) {
 	var query = struct_try_get(_param, "query", "");
-	var node  = new Node_Pixel_Math(_x, _y, _group).skipDefault();
+	var node  = new Node_Pixel_Math(_x, _y, _group);
+	node.skipDefault();
 
 	var ind = array_find(global.node_math_keys, query);
 	if(ind != -1) node.inputs[7].setValue(global.node_math_keys_map[ind]);
