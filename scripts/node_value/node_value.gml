@@ -1604,13 +1604,14 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(tags == VALUE_TAG.updateInTrigger || tags == VALUE_TAG.updateOutTrigger) return true;
 		
 		if(_update) {
-			if(!IS_PLAYING) node.triggerRender();
+			// if(!IS_PLAYING)  // If you have to uncomment this. PLEASE comment the reason why so I don't have to comment it out again.
+			node.triggerRender();
 			node.valueUpdate(self.index);
 			node.clearCacheForward();
 		}
 		
 		if(fullUpdate) RENDER_ALL
-					
+		
 		if(!LOADING) PROJECT.modified = true;
 					
 		cache_value[0] = false;
