@@ -681,53 +681,38 @@ function surface_reset_target_override() { __surface_reset_target(); winwin_draw
 
 #region ================================= SERIALIZE ==================================
 
-	function surface_array_serialize(arr) {
-		INLINE
-	
-		var _arr = __surface_array_serialize(arr);
-		return json_stringify(_arr);
-	}
-
+	function   surface_array_serialize(arr) { return json_stringify(__surface_array_serialize(arr)); }
 	function __surface_array_serialize(arr) {
 		if(!is_array(arr)) {
-			if(is_surface(arr)) {
-				var buff = buffer_create(surface_get_width_safe(arr) * surface_get_height_safe(arr) * 4, buffer_fixed, 1);
-				buffer_get_surface(buff, arr, 0);
-				var comp = buffer_compress(buff, 0, buffer_get_size(buff));
-				var enc  = buffer_base64_encode(comp, 0, buffer_get_size(comp));
-				buffer_delete(buff);
-				return { width: surface_get_width_safe(arr), height: surface_get_height_safe(arr), buffer: enc };
-			} else
-				return arr;
+			if(!is_surface(arr)) return arr;
+			
+			var buff = buffer_create(surface_get_width_safe(arr) * surface_get_height_safe(arr) * 4, buffer_fixed, 1);
+			buffer_get_surface(buff, arr, 0);
+			var comp = buffer_compress(buff, 0, buffer_get_size(buff));
+			var enc  = buffer_base64_encode(comp, 0, buffer_get_size(comp));
+			buffer_delete(buff);
+			
+			return { width: surface_get_width_safe(arr), height: surface_get_height_safe(arr), buffer: enc };
 		}
 	
-		var _arr = [];
-	
+		var _arr = array_create(array_length(arr));
 		for( var i = 0, n = array_length(arr); i < n; i++ ) 
 			_arr[i] = __surface_array_serialize(arr[i]);
 	
 		return _arr;
 	}
 
-	function surface_array_deserialize(arr, index = -1) {
-		INLINE
-	
-		var _arr = json_try_parse(arr);
-		return index == -1? __surface_array_deserialize(_arr) : __surface_array_deserialize(_arr[index]);
-	}
-	
+	function   surface_array_deserialize(dat) { return __surface_array_deserialize(json_try_parse(dat, 0)); }
 	function __surface_array_deserialize(arr) {
 		if(!is_array(arr)) {
-			if(!is_struct(arr) || !struct_has(arr, "buffer")) 
-				return noone;
+			if(!is_struct(arr) || !struct_has(arr, "buffer")) return noone;
 			
 			var buff = buffer_base64_decode(arr.buffer);
 			    buff = buffer_decompress(buff);
 			return surface_create_from_buffer(arr.width, arr.height, buff);
 		}
 	
-		var _arr = [];
-	
+		var _arr = array_create(array_length(arr));
 		for( var i = 0, n = array_length(arr); i < n; i++ ) 
 			_arr[i] = __surface_array_deserialize(arr[i]);
 	

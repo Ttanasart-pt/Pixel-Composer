@@ -608,7 +608,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static doStepBegin = function() {}
 	
-	static setTrigger = function(index, tooltip = __txtx("panel_inspector_execute", "Execute"), icon = [ THEME.sequence_control, 1, COLORS._main_value_positive ], _function = undefined) {
+	static setTrigger = function(index, 
+	                             tooltip   = __txtx("panel_inspector_execute", "Execute"), 
+	                             icon      = [ THEME.sequence_control, 1, COLORS._main_value_positive ], 
+	                             _function = undefined) {
+	                             	
 		use_trigger         = true;
 		
 		if(index == 1) {

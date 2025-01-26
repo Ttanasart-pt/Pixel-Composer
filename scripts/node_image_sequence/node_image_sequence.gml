@@ -68,8 +68,7 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	edit_time    = 0;
 	
 	attributes.file_checker = true;
-	array_push(attributeEditors, [ "File Watcher", function() { return attributes.file_checker; }, 
-		new checkBox(function() { attributes.file_checker = !attributes.file_checker; }) ]);
+	array_push(attributeEditors, [ "File Watcher", function() /*=>*/ {return attributes.file_checker}, new checkBox(function() /*=>*/ { attributes.file_checker = !attributes.file_checker; }) ]);
 	
 	on_drop_file = function(path) {
 		if(directory_exists(path)) {
@@ -110,7 +109,7 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			if(path == -1) continue;
 			
 			var ext = string_lower(filename_ext(path));
-			setDisplayName(filename_name_only(path));
+			if(file_exists_empty(path)) setDisplayName(filename_name_only(path));
 			edit_time = max(edit_time, file_get_modify_s(path));
 			
 			switch(ext) {
@@ -149,6 +148,10 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
+		insp2UpdateTooltip = attributes.cache_use? __txt("Remove Cache") : __txt("Cache");
+		insp2UpdateIcon[0] = attributes.cache_use? THEME.cache : THEME.cache_group;
+		insp2UpdateIcon[2] = attributes.cache_use? c_white : COLORS._main_icon;
+		
 		var path = inputs[0].getValue();
 		
 		if(!array_equals(path_current, path)) 
@@ -164,14 +167,16 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		var _ww = -1, _hh = -1;
 		
 		var surfs = outputs[0].getValue();
-		var amo   = array_length(spr);
+		
+		var _sprs = attributes.cache_use? cache_spr : spr;
+		var amo   = array_length(_sprs);
 		for(var i = amo; i < array_length(surfs); i++)
 			surface_free(surfs[i]);
 			
 		array_resize(surfs, amo);
 		
 		for(var i = 0; i < amo; i++) {
-			var _spr = spr[i];
+			var _spr = _sprs[i];
 			var _w = sprite_get_width(_spr);
 			var _h = sprite_get_height(_spr);
 			
@@ -193,8 +198,8 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		ww += pad[0] + pad[2];
 		hh += pad[1] + pad[3];
 		
-		for(var i = 0; i < array_length(spr); i++) {
-			var _spr = spr[i];
+		for(var i = 0; i < array_length(_sprs); i++) {
+			var _spr = _sprs[i];
 			switch(can) {
 				case CANVAS_SIZE.individual :
 					ww = sprite_get_width(_spr)  + pad[0] + pad[2];
@@ -249,5 +254,32 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	static dropPath = function(path) { 
 		if(!is_array(path)) path = [ path ];
 		inputs[0].setValue(path); 
+	}
+	
+	////- Cache
+	
+	attributes.cache_use  = false;
+	attributes.cache_data = "";
+	cache_spr = [];
+	
+	static cacheData = function() {
+		attributes.cache_use  = true;
+		cache_spr = spr;
+		attributes.cache_data = sprite_array_serialize(spr);
+		triggerRender();
+	}
+	
+	static uncacheData = function() {
+		attributes.cache_use  = false;
+		triggerRender();
+	}
+	
+	setTrigger(2, __txt("Cache"), [ THEME.cache_group, 0, COLORS._main_icon ], function() /*=>*/ { if(attributes.cache_use) uncacheData() else cacheData(); });
+	
+	////- Serialize
+
+	static postDeserialize = function() {
+		if(!attributes[$ "cache_use"] ?? 0) return;
+		cache_spr = sprite_array_deserialize(attributes[$ "cache_data"] ?? "");
 	}
 }

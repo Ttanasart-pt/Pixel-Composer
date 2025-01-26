@@ -35,9 +35,8 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		.setDisplay(VALUE_DISPLAY.path_load, { filter: "Animated gif|*.gif" });
 		
 	newInput(1, nodeValue_Trigger("Set animation length to gif", self, false ))
-		.setDisplay(VALUE_DISPLAY.button, { name: "Match length", UI : true, onClick: function() { 
-				if(!spr) return;
-				if(!sprite_exists(spr)) return;
+		.setDisplay(VALUE_DISPLAY.button, { name: "Match length", UI : true, onClick: function() /*=>*/ { 
+				if(!spr || !sprite_exists(spr)) return;
 				TOTAL_FRAMES = sprite_get_number(spr);
 				PROJECT.animator.framerate = 12;
 			} });
@@ -78,17 +77,12 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	edit_time = 0;
 	attributes.file_checker = true;
-	array_push(attributeEditors, [ "File Watcher", function() { return attributes.file_checker; }, 
-		new checkBox(function() { attributes.file_checker = !attributes.file_checker; }) ]);
+	array_push(attributeEditors, [ "File Watcher", function() /*=>*/ {return attributes.file_checker}, new checkBox(function() /*=>*/ { attributes.file_checker = !attributes.file_checker; }) ]);
 	
 	on_drop_file = function(path) {
 		inputs[0].setValue(path);
 		
-		if(updatePaths(path)) {
-			doUpdate();
-			return true;
-		}
-		
+		if(updatePaths(path)) { doUpdate(); return true; }
 		return false;
 	}
 	

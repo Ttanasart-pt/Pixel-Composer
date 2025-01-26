@@ -57,10 +57,7 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		.rejectArray();
 		
 	newInput(5, nodeValue_Trigger("Set animation length to match", self, false ))
-		.setDisplay(VALUE_DISPLAY.button, { name: "Match length", UI : true, onClick: function() { 
-				if(array_length(spr) == 0) return;
-				TOTAL_FRAMES = array_length(spr);
-			} });
+		.setDisplay(VALUE_DISPLAY.button, { name: "Match length", UI : true, onClick: function() /*=>*/ { if(array_empty(spr)) return; TOTAL_FRAMES = array_length(spr); } });
 	
 	newInput(6, nodeValue_Bool("Custom frame order", self, false));
 	
@@ -83,8 +80,7 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	edit_time    = 0;
 	
 	attributes.file_checker = true;
-	array_push(attributeEditors, [ "File Watcher", function() { return attributes.file_checker; }, 
-		new checkBox(function() { attributes.file_checker = !attributes.file_checker; }) ]);
+	array_push(attributeEditors, [ "File Watcher", function() /*=>*/ {return attributes.file_checker}, new checkBox(function() /*=>*/ { attributes.file_checker = !attributes.file_checker; }) ]);
 	
 	on_drop_file = function(_path) {
 		if(directory_exists(_path)) {
@@ -123,7 +119,7 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			if(_path == -1) continue;
 			
 			array_push(path_current, _path);
-			setDisplayName(filename_name_only(_path));
+			if(file_exists_empty(_path)) setDisplayName(filename_name_only(_path));
 			
 			var ext = string_lower(filename_ext(_path));
 			
@@ -151,7 +147,7 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	setTrigger(1, __txt("Refresh"), [ THEME.refresh_icon, 1, COLORS._main_value_positive ], function() /*=>*/ { updatePaths(path_get(getInputData(0))); triggerRender(); });
 	
-	static step = function() { #region
+	static step = function() {
 		var str  = getInputData(2);
 		var _cus = getInputData(6);
 		
@@ -167,35 +163,40 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				break;
 			}
 		}
-	} #endregion
+	}
 	
-	static update = function(frame = CURRENT_FRAME) { #region
+	static update = function(frame = CURRENT_FRAME) {
+		insp2UpdateTooltip = attributes.cache_use? __txt("Remove Cache") : __txt("Cache");
+		insp2UpdateIcon[0] = attributes.cache_use? THEME.cache : THEME.cache_group;
+		insp2UpdateIcon[2] = attributes.cache_use? c_white : COLORS._main_icon;
+		
 		var path = path_get(getInputData(0));
 		if(!array_equals(path_current, path)) 
 			updatePaths(path);
 			
-		if(array_length(spr) == 0) return;
+		var _sprs = attributes.cache_use? cache_spr : spr;
+		if(array_length(_sprs) == 0) return;
 		
 		var _pad = getInputData(1);
 		
 		var _cus = getInputData(6);
 		var _str = getInputData(2);
 		var _end = getInputData(4);
-		var _spd = _str? (TOTAL_FRAMES + 1) / array_length(spr) : 1 / getInputData(3);
+		var _spd = _str? (TOTAL_FRAMES + 1) / array_length(_sprs) : 1 / getInputData(3);
 		if(_spd == 0) _spd = 1;
 		var _frame = _cus? getInputData(7) : floor(CURRENT_FRAME / _spd);
 		
-		var _len = array_length(spr);
+		var _len = array_length(_sprs);
 		var _drw = true;
 		
 		var _siz = getInputData(8); 
-		var sw = sprite_get_width(spr[0]); 
-		var sh = sprite_get_height(spr[0]);
+		var sw = sprite_get_width(_sprs[0]); 
+		var sh = sprite_get_height(_sprs[0]);
 		
 		if(_siz) {
-			for( var i = 1, n = array_length(spr); i < n; i++ ) {
-				var _sw = sprite_get_width(spr[i]); 
-				var _sh = sprite_get_height(spr[i]);
+			for( var i = 1, n = array_length(_sprs); i < n; i++ ) {
+				var _sw = sprite_get_width(_sprs[i]); 
+				var _sh = sprite_get_height(_sprs[i]);
 				
 				if(_siz == 1) {
 					sw = min(_sw, sw);
@@ -218,35 +219,56 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		outputs[0].setValue(surfs);
 		
 		switch(_end) {
-			case ANIMATION_END.loop : 
-				_frame = safe_mod(_frame, _len);
-				break;
+			case ANIMATION_END.loop : _frame = safe_mod(_frame, _len); break;
+				
 			case ANIMATION_END.ping :
 				_frame = safe_mod(_frame, _len * 2 - 2);
-				if(_frame >= _len)
-					_frame = _len * 2 - 2 - _frame;
+				if(_frame >= _len) _frame = _len * 2 - 2 - _frame;
 				break;
-			case ANIMATION_END.hold :
-				_frame = min(_frame, _len - 1);
-				break;
-			case ANIMATION_END.hide :	
-				if(_frame < 0 || _frame >= _len) 
-					_drw = false;
-				break;
+				
+			case ANIMATION_END.hold : _frame = min(_frame, _len - 1); break;
+			case ANIMATION_END.hide : if(_frame < 0 || _frame >= _len) _drw = false; break;
 		}
 		
-		var _spr   = array_safe_get_fast(spr, _frame, noone);
+		var _spr = array_safe_get_fast(_sprs, _frame, noone);
 		if(_spr == noone) return;
 		
-		var curr_w = sprite_get_width(spr[_frame]);
-		var curr_h = sprite_get_height(spr[_frame]);
+		var curr_w = sprite_get_width(_spr);
+		var curr_h = sprite_get_height(_spr);
 		var curr_x = _pad[2] + (sw - curr_w) / 2;
 		var curr_y = _pad[1] + (sh - curr_h) / 2;
 		
 		surface_set_shader(surfs);
-			if(_drw) draw_sprite(spr[_frame], 0, curr_x, curr_y);
+			if(_drw) draw_sprite(_spr, 0, curr_x, curr_y);
 		surface_reset_shader();
-	} #endregion
+	}
+	
+	////- Cache
+	
+	attributes.cache_use  = false;
+	attributes.cache_data = "";
+	cache_spr = [];
+	
+	static cacheData = function() {
+		attributes.cache_use  = true;
+		cache_spr = spr;
+		attributes.cache_data = sprite_array_serialize(spr);
+		triggerRender();
+	}
+	
+	static uncacheData = function() {
+		attributes.cache_use  = false;
+		triggerRender();
+	}
+	
+	setTrigger(2, __txt("Cache"), [ THEME.cache_group, 0, COLORS._main_icon ], function() /*=>*/ { if(attributes.cache_use) uncacheData() else cacheData(); });
+	
+	////- Serialize
+
+	static postDeserialize = function() {
+		if(!attributes[$ "cache_use"] ?? 0) return;
+		cache_spr = sprite_array_deserialize(attributes[$ "cache_data"] ?? "");
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
