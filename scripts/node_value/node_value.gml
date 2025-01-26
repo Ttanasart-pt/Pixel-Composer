@@ -1607,7 +1607,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			// if(!IS_PLAYING)  // If you have to uncomment this. PLEASE comment the reason why so I don't have to comment it out again.
 			node.triggerRender();
 			node.valueUpdate(self.index);
-			node.clearCacheForward();
+			
+			if(!IS_PLAYING) // can't wait to comment this one
+				node.clearCacheForward();
 		}
 		
 		if(fullUpdate) RENDER_ALL
@@ -2196,27 +2198,27 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(_map == noone)     return;
 		if(!is_struct(_map))  return;
 		
-		visible 	   = struct_try_get(_map, LOADING_VERSION >= 1_18_04_0 || CLONING? "v" : "visible", 0);
-		visible_manual = struct_try_get(_map, "visible_manual", 0);
-		color   	   = struct_try_get(_map, "color", -1);
+		visible 	   = _map[$ LOADING_VERSION >= 1_18_04_0 || CLONING? "v" : "visible"] ?? 0;
+		visible_manual = _map[$ "visible_manual"] ?? 0;
+		color   	   = _map[$ "color"] ?? -1;
 		
 		if(connect_type == CONNECT_TYPE.output) 
 			return;
 		
-		on_end		= struct_try_get(_map, "on_end", KEYFRAME_END.hold);
-		loop_range	= struct_try_get(_map, "loop_range", -1);
-		unit.mode	= struct_try_get(_map, "unit", 0);
-		expUse    	= struct_try_get(_map, "global_use", false);
-		expression	= struct_try_get(_map, "global_key", "");
+		on_end		= _map[$ "on_end"]     ?? KEYFRAME_END.hold;
+		loop_range	= _map[$ "loop_range"] ?? -1;
+		unit.mode	= _map[$ "unit"]       ?? 0;
+		expUse    	= _map[$ "global_use"] ?? false;
+		expression	= _map[$ "global_key"] ?? "";
 		expTree     = evaluateFunctionList(expression); 
 		
-		sep_axis	= struct_try_get(_map, "sep_axis", false);
-		setAnim(struct_try_get(_map, "anim", false));
+		sep_axis	= _map[$ "sep_axis"] ?? false;
+		setAnim(_map[$ "anim"] ?? false);
 		
-		draw_line_shift_x = struct_try_get(_map, "shift_x",     0);
-		draw_line_shift_y = struct_try_get(_map, "shift_y",     0);
-		draw_line_shift_e = struct_try_get(_map, "shift_e",    -1);
-		is_modified       = struct_try_get(_map, "is_modified", false);
+		draw_line_shift_x = _map[$ "shift_x"]     ??  0;
+		draw_line_shift_y = _map[$ "shift_y"]     ??  0;
+		draw_line_shift_e = _map[$ "shift_e"]     ?? -1;
+		is_modified       = _map[$ "is_modified"] ?? true;
 		
 		if(struct_has(_map, "attri")) struct_append(attributes, _map.attri);
 		
@@ -2226,16 +2228,16 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(struct_has(_map, "linked")) 
 			display_data.linked = _map.linked;
 			
-		name_custom = struct_try_get(_map, "name_custom", false);
-		if(name_custom) name = struct_try_get(_map, "name", name);
+		name_custom = _map[$ "name_custom"]   ?? false;
+		if(name_custom) name = _map[$ "name"] ?? name;
 		
-		if(is_modified && struct_has(_map, "raw_value")) 
-			animator.deserialize(struct_try_get(_map, "raw_value"), scale);
+		if(struct_has(_map, "raw_value")) 
+			animator.deserialize(_map[$ "raw_value"] ?? scale);
 			
 		if(bypass_junc) 
-			bypass_junc.visible = struct_try_get(_map, "bypass", false);
+			bypass_junc.visible = _map[$ "bypass"] ?? false;
 		
-		if(is_modified && struct_has(_map, "animators")) {
+		if(struct_has(_map, "animators")) {
 			var anims = _map.animators;
 			var amo = min(array_length(anims), array_length(animators));
 			for( var i = 0; i < amo; i++ )
@@ -2243,9 +2245,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		if(!preset) {
-			con_node  = struct_try_get(_map, "from_node",  -1)
-			con_index = struct_try_get(_map, "from_index", -1);
-			con_tag   = struct_try_get(_map, "from_tag",    0);
+			con_node  = _map[$ "from_node"]  ?? -1;
+			con_index = _map[$ "from_index"] ?? -1;
+			con_tag   = _map[$ "from_tag"]   ?? 0;
 		}
 		
 		if(connect_type == CONNECT_TYPE.input && index >= 0) {

@@ -1141,10 +1141,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(resetSelf) resetRender(false);
 		RENDER_PARTIAL
 		
-		if(is(group, Node_Collection))
-			group.triggerRender();
-		else
-			array_foreach(getNextNodesRaw(), function(n) /*=>*/ {return n.triggerRender()});
+		if(!IS_PLAYING) {
+			if(is(group, Node_Collection)) group.triggerRender();
+			else array_foreach(getNextNodesRaw(), function(n) /*=>*/ {return n.triggerRender()});
+		}
 		
 		LOG_BLOCK_END();
 	}
@@ -2323,9 +2323,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 	}
 	
-	static clearCacheForward = function() {
-		_clearCacheForward(); 
-	}
+	static clearCacheForward = function() /*=>*/ {return _clearCacheForward()};
 	
 	static _clearCacheForward = function() {
 		if(!isRenderActive()) return;

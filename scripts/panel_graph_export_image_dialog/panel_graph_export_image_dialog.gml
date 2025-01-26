@@ -77,28 +77,29 @@ function Panel_Graph_Export_Image(_panel) : PanelContent() constructor {
 		draw_clear_alpha(COLORS.panel_bg_clear, 1);
 		
 		var _ww = max(set_w * 0.5, ui(160));
-		var _hh = ui(30);
+		var _hh = ui(26);
 		var _ss = ui(28);
 		var _ty = _y + _hh / 2;
 		var _tx = sc_settings.surface_w - ui(8);
-		var wh = ui(36);
+		var  wh = _hh + ui(8);
 		
 		for( var i = 0, n = array_length(widgets); i < n; i++ ) {
-			draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
-			draw_text_add(ui(8), _ty + wh * i, __txt(widgets[i][0], "graph_export_"));
+			var _tyy = _ty + wh * i;
+			
+			draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
+			draw_text_add(ui(8), _tyy, __txt(widgets[i][0], "graph_export_"));
 			
 			var _wid = widgets[i][1];
 			var _dat = widgets[i][2]();
+			
+			var _param = new widgetParam(_tx - _ww, _tyy - _hh / 2, _ww, _hh, _dat, {}, _m, sc_settings.x + x, sc_settings.y + y).setFont(f_p2);
+			if(is(_wid, checkBox)) _param.x += _ww / 2 - _param.s / 2;
+			
 			_wid.setFocusHover(pFOCUS, pHOVER);
+			_wid.drawParam(_param);
 			
-			switch(instanceof(widgets[i][1])) {
-				case "textBox" :	 _wid.draw(_tx - _ww, _ty + wh * i - _hh / 2, _ww, _hh,		_dat, _m); break;
-				case "checkBox" :	 _wid.draw(_tx - _ww / 2 - _ss / 2, _ty + wh * i - _ss / 2,	_dat, _m); break;
-				case "buttonColor" : _wid.draw(_tx - _ww, _ty + wh * i - _hh / 2, _ww, _hh,		_dat, _m); break;
-				case "scrollBox" :	 _wid.draw(_tx - _ww, _ty + wh * i - _hh / 2, _ww, _hh,		_dat, _m, sc_settings.x + x, sc_settings.y + y); break;
-			}
-			
-			if(_wid.inBBOX(_m)) sc_settings.hover_content = true;
+			if(_wid.inBBOX(_m)) 
+				sc_settings.hover_content = true;
 		}
 		
 		var _h = wh * array_length(widgets) + _hh;

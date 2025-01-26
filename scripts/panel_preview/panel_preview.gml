@@ -1790,7 +1790,7 @@ function Panel_Preview() : PanelContent() constructor {
         var _mx = mx;
         var _my = my;
         var overHover = pHOVER && mouse_on_preview == 1;
-        var tool_size  = ui(32);
+        var tool_size = ui(32);
         
         var cx = canvas_x + _node.preview_x * canvas_s;
         var cy = canvas_y + _node.preview_y * canvas_s;
