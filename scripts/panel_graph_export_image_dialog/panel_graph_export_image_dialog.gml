@@ -1,38 +1,38 @@
-function Panel_Graph_Export_Image(targetPanel) : PanelContent() constructor {
+function Panel_Graph_Export_Image(_panel) : PanelContent() constructor {
 	title   = __txtx("panel_export_graph", "Export Graph");
 	padding = ui(8);
+	
 	w       = min(WIN_W, ui(800));
 	h       = ui(400);
 	
 	min_w   = ui(640);
 	min_h   = ui(320);
 	
-	set_wm = ui(320);
-	surf_s = min(w - set_wm - padding * 3, h - padding * 2);
+	set_wm  = ui(320);
+	surf_s  = min(w - set_wm - padding * 3, h - padding * 2);
 	
 	c_space = ui(24);
 	set_w   = w - surf_s - padding * 2 - c_space;
 	set_h   = h - padding * 2 - ui(32) - padding;
 	
-	self.targetPanel = targetPanel;
-	
-	nodeList   = targetPanel.nodes_list;
-	surface    = noone;
-	bg_surface = noone;
+	targetPanel = _panel;
+	nodeList    = targetPanel.nodes_list;
+	surface     = noone;
+	bg_surface  = noone;
 	
 	settings = {
 		scale		: 1,
 		padding		: 64,
 		
 		bgEnable	: false,
-		bgColor		: COLORS.panel_bg_clear,
+		bgColor		: cola(COLORS.panel_bg_clear),
 		
 		gridEnable  : false,
-		gridColor   : targetPanel.project.graphGrid.color,
+		gridColor   : cola(targetPanel.project.graphGrid.color),
 		gridAlpha   : targetPanel.project.graphGrid.opacity,
 		
 		borderPad	: 0,
-		borderColor	: c_white,
+		borderColor	: cola(c_white),
 		borderAlpha	: 0.05,
 	};
 	
@@ -40,7 +40,7 @@ function Panel_Graph_Export_Image(targetPanel) : PanelContent() constructor {
 	nodes_select = [ "All nodes", "Selected" ];
 	widgets      = [];
 	
-	widgets[0] = [ "Nodes",				new scrollBox(nodes_select, 
+	widgets[0] = [ "Nodes", new scrollBox(nodes_select, 
 		function(val) /*=>*/ { 
 			sel      = val; 
 			nodeList = val? targetPanel.nodes_selecting : targetPanel.nodes_list; 
@@ -60,7 +60,7 @@ function Panel_Graph_Export_Image(targetPanel) : PanelContent() constructor {
 	widgets[9]  = [ "Border Color",		new buttonColor(                  function(val) /*=>*/ { settings.borderColor = val; refresh(); }),                  function() /*=>*/ {return settings.borderColor} ];
 	widgets[10] = [ "Border Opacity",	new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ { settings.borderAlpha = val; refresh(); }),                  function() /*=>*/ {return settings.borderAlpha} ];
 	
-	b_export = button(function() {
+	b_export = button(function() /*=>*/ {
 		if(!is_surface(surface)) return;
 		
 		var path = get_save_filename_pxc("image|*.png;*.jpg", "Screenshot");
@@ -74,28 +74,28 @@ function Panel_Graph_Export_Image(targetPanel) : PanelContent() constructor {
 	b_export.text = __txt("Export") + "...";
 	
 	sc_settings = new scrollPane(set_w, set_h, function(_y, _m) {
-		draw_clear_alpha(COLORS.panel_bg_clear, 0);
+		draw_clear_alpha(COLORS.panel_bg_clear, 1);
 		
 		var _ww = max(set_w * 0.5, ui(160));
 		var _hh = ui(30);
 		var _ss = ui(28);
-		var ty  = _y + _hh / 2;
-		var _tx = sc_settings.surface_w;
+		var _ty = _y + _hh / 2;
+		var _tx = sc_settings.surface_w - ui(8);
 		var wh = ui(36);
 		
 		for( var i = 0, n = array_length(widgets); i < n; i++ ) {
 			draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
-			draw_text_add(0, ty + wh * i, __txt(widgets[i][0], "graph_export_"));
+			draw_text_add(ui(8), _ty + wh * i, __txt(widgets[i][0], "graph_export_"));
 			
 			var _wid = widgets[i][1];
 			var _dat = widgets[i][2]();
 			_wid.setFocusHover(pFOCUS, pHOVER);
 			
 			switch(instanceof(widgets[i][1])) {
-				case "textBox" :	 _wid.draw(_tx - _ww, ty + wh * i - _hh / 2, _ww, _hh,		_dat, _m); break;
-				case "checkBox" :	 _wid.draw(_tx - _ww / 2 - _ss / 2, ty + wh * i - _ss / 2,	_dat, _m); break;
-				case "buttonColor" : _wid.draw(_tx - _ww, ty + wh * i - _hh / 2, _ww, _hh,		_dat, _m); break;
-				case "scrollBox" :	 _wid.draw(_tx - _ww, ty + wh * i - _hh / 2, _ww, _hh,		_dat, _m, sc_settings.x + x, sc_settings.y + y); break;
+				case "textBox" :	 _wid.draw(_tx - _ww, _ty + wh * i - _hh / 2, _ww, _hh,		_dat, _m); break;
+				case "checkBox" :	 _wid.draw(_tx - _ww / 2 - _ss / 2, _ty + wh * i - _ss / 2,	_dat, _m); break;
+				case "buttonColor" : _wid.draw(_tx - _ww, _ty + wh * i - _hh / 2, _ww, _hh,		_dat, _m); break;
+				case "scrollBox" :	 _wid.draw(_tx - _ww, _ty + wh * i - _hh / 2, _ww, _hh,		_dat, _m, sc_settings.x + x, sc_settings.y + y); break;
 			}
 			
 			if(_wid.inBBOX(_m)) sc_settings.hover_content = true;
@@ -115,17 +115,16 @@ function Panel_Graph_Export_Image(targetPanel) : PanelContent() constructor {
 	}
 	
 	function refresh() {
-		if(is_surface(surface))
-			surface_free(surface);
+		surface_free_safe(surface);
 		surface = noone;
-			
-		if(nodeList == noone)
-			return;
+		if(nodeList == noone) return;
 			
 		surface = graph_export_image(targetPanel.nodes_list, nodeList, settings);
 	} refresh();
 	
 	function drawContent(panel) {
+		draw_clear(COLORS.panel_bg_clear);
+		
 		var tx = padding;
 		var ty = padding;
 		var sh = 160;

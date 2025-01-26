@@ -2,19 +2,19 @@ function graph_export_image(allList, nodeList, settings = {}) {
 	var amo = array_length(nodeList);
 	if(amo < 1) return;
 	
-	var scale    = struct_try_get(settings, "scale", 1);
-	var padding  = struct_try_get(settings, "padding", 0);
+	var scale       = settings[$ "scale"]       ?? 1;
+	var padding     = settings[$ "padding"]     ?? 0;
 	
-	var bgEnable = struct_try_get(settings, "bgEnable", false);
-	var bgColor  = struct_try_get(settings, "bgColor", c_black);
+	var bgEnable    = settings[$ "bgEnable"]    ?? false;
+	var bgColor     = settings[$ "bgColor"]     ?? c_black;
 	
-	var gridEnable  = struct_try_get(settings, "gridEnable", false);
-	var gridColor   = struct_try_get(settings, "gridColor", c_white);
-	var gridAlpha   = struct_try_get(settings, "gridAlpha", 0);
+	var gridEnable  = settings[$ "gridEnable"]  ?? false;
+	var gridColor   = settings[$ "gridColor"]   ?? c_white;
+	var gridAlpha   = settings[$ "gridAlpha"]   ?? 0;
 	
-	var borderPad	= struct_try_get(settings, "borderPad", 0);
-	var borderColor	= struct_try_get(settings, "borderColor", c_white);
-	var borderAlpha	= struct_try_get(settings, "borderAlpha", 0.5);
+	var borderPad   = settings[$ "borderPad"]   ?? 0;
+	var borderColor	= settings[$ "borderColor"] ?? c_white;
+	var borderAlpha	= settings[$ "borderAlpha"] ?? 0.5;
 	
 	var bbox_x0 = nodeList[0].x * scale;
 	var bbox_y0 = nodeList[0].y * scale;
@@ -41,8 +41,7 @@ function graph_export_image(allList, nodeList, settings = {}) {
 	var bbox_w = min(_lim_s, bbox_x1 - bbox_x0);
 	var bbox_h = min(_lim_s, bbox_y1 - bbox_y0);
 	
-	if(bbox_w == _lim_s || bbox_h == _lim_s) 
-		noti_warning("Maximum surface size reached. Reduce scale to prevent cropping.");
+	if(bbox_w == _lim_s || bbox_h == _lim_s) noti_warning("Maximum surface size reached. Reduce scale to prevent cropping.");
 	
 	var s  = surface_create(bbox_w, bbox_h);
 	var cs = surface_create(bbox_w, bbox_h);
@@ -80,15 +79,11 @@ function graph_export_image(allList, nodeList, settings = {}) {
 			draw_set_alpha(1);
 		}
 		
-		for(var i = 0; i < array_length(allList); i++)
+		for( var i = 0, n = array_length(allList); i < n; i++ )
 			allList[i].preDraw(gr_x, gr_y, scale);
 		
-		#region draw frame
-			for(var i = 0; i < array_length(nodeList); i++) {
-				if(instanceof(nodeList[i]) != "Node_Frame") continue;
-				nodeList[i].drawNode(true, gr_x, gr_y, mx, my, scale);
-			}
-		#endregion
+		for( var i = 0, n = array_length(nodeList); i < n; i++ )
+			nodeList[i].drawNodeBG(gr_x, gr_y, mx, my, scale);
 		
 		#region draw conneciton
 			surface_set_target(cs);
@@ -98,28 +93,28 @@ function graph_export_image(allList, nodeList, settings = {}) {
 				param.setPos(gr_x, gr_y, scale, mx, my);
 				param.setProp(1, false);
 				param.setDraw(1, c_black);
-			
+				
 				param.show_dimension  = true;
 				param.show_compute    = true;
 				param.avoid_label     = true;
 				param.preview_scale   = 100;
 				
-				for(var i = 0; i < array_length(nodeList); i++)
+				for( var i = 0, n = array_length(nodeList); i < n; i++ )
 					nodeList[i].drawConnections(param, true);
 			surface_reset_target();
-		
+			
 			draw_surface_safe(cs);
 		#endregion
 			
 		#region draw node
-			for(var i = 0; i < array_length(nodeList); i++)
+			for( var i = 0, n = array_length(nodeList); i < n; i++ )
 				nodeList[i].onDrawNodeBehind(gr_x, gr_y, mx, my, scale);
 			
-			for(var i = 0; i < array_length(nodeList); i++) {
-				var _node = nodeList[i];
-				if(instanceof(_node) == "Node_Frame") continue;
-				var val = _node.drawNode(true, gr_x, gr_y, mx, my, scale, param);
-			}
+			for( var i = 0, n = array_length(nodeList); i < n; i++ )
+				nodeList[i].drawNode(true, gr_x, gr_y, mx, my, scale, param);
+				
+			for( var i = 0, n = array_length(nodeList); i < n; i++ )
+				nodeList[i].drawNodeFG(gr_x, gr_y, mx, my, scale, param);
 		#endregion
 		
 	surface_reset_target();
@@ -128,11 +123,12 @@ function graph_export_image(allList, nodeList, settings = {}) {
 	
 	if(borderPad == 0) {
 		surface_set_target(_sg);
+			DRAW_CLEAR
+			
 			if(bgEnable) {
 				draw_clear(bgColor);
 				gpu_set_colorwriteenable(1, 1, 1, 0);
-			} else
-				draw_clear_alpha(0, 0);
+			}
 			
 			BLEND_OVERRIDE
 			draw_surface_safe(s);
@@ -143,11 +139,12 @@ function graph_export_image(allList, nodeList, settings = {}) {
 		
 	} else {
 		surface_set_target(_sg);
+			DRAW_CLEAR
+			
 			if(bgEnable) {
 				draw_clear(bgColor);
 				gpu_set_colorwriteenable(1, 1, 1, 0);
-			} else
-				draw_clear_alpha(0, 0);
+			}
 			
 			BLEND_OVERRIDE
 			draw_surface(s, borderPad, borderPad);

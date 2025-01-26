@@ -33,7 +33,6 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	draw_x1 = 0;
 	draw_y1 = 0;
 	
-	
 	newInput(0, nodeValue_Vec2("Size", self, [ 240, 160 ] ))
 		.rejectArray();
 	
@@ -82,12 +81,7 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	static drawNode  = function() { return noone; }
 	static drawBadge = function() { return noone; }
 	
-	static drawNodeBase = function(xx, yy, _s, _panel) {
-		var px0 =  3;
-		var py0 =  3;
-		var px1 = -3 + _panel.w;
-		var py1 = -0 + _panel.h - _panel.toolbar_height;
-		
+	static drawNodeBase = function(xx, yy, _s, _panel = noone) {
 		var _yy = yy - name_height;
 		
 		var x0 =  xx;
@@ -95,10 +89,22 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var x1 =  xx + w * _s;
 		var y1 = _yy + name_height + h * _s;
 		
-		draw_x0 = max(x0, px0);
-		draw_x1 = min(x1, px1);
-		draw_y0 = max(y0, py0);
-		draw_y1 = min(y1, py1);
+		draw_x0 = x0;
+		draw_y0 = y0;
+		draw_x1 = x1;
+		draw_y1 = y1;
+		
+		if(_panel != noone) {
+			px0 =  3;
+			py0 =  3;
+			px1 = -3 + _panel.w;
+			py1 = -0 + _panel.h - _panel.toolbar_height;
+			
+			draw_x0 = max(x0, px0);
+			draw_y0 = max(y0, py0);
+			draw_x1 = min(x1, px1);
+			draw_y1 = min(y1, py1);
+		}
 		
 		var _h  = max(draw_y1 - draw_y0, name_height);
 		
@@ -110,8 +116,7 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		draw_sprite_stretched_ext(bg_spr, 0, x0, y0, x1 - x0, y1 - y0, color, alpha);
 	}
 	
-	static drawNodeFG = function(_x, _y, _mx, _my, _s, _dparam, _panel) {
-		
+	static drawNodeFG = function(_x, _y, _mx, _my, _s, _dparam, _panel = noone) {
 		if(draw_x1 - draw_x0 < 4) return;
 		
 		var _w  = draw_x1 - draw_x0;
@@ -132,8 +137,6 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			
 			draw_set_text(f_p2, fa_center, fa_bottom, COLORS._main_text);
 			draw_text_cut((draw_x0 + draw_x1) / 2, draw_y0 + name_height + 1, txt, _w - 4);
-			// draw_text_ext_add((draw_x0 + draw_x1) / 2, draw_y0 + name_height + 1, txt, -1, _w - 4);
-			// name_height = max(18, string_height_ext(txt, -1, _w - 4));
 			
 			if(point_in_rectangle(_mx, _my, draw_x0, draw_y0, draw_x0 + _w, draw_y0 + name_height)) {
 				if(PANEL_GRAPH.pFOCUS && DOUBLE_CLICK)
@@ -151,7 +154,7 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		drawBadge(_x, _y, _s);
 	}
 	
-	static drawNodeBG = function(_x, _y, _mx, _my, _s, _dparam, _panel) {
+	static drawNodeBG = function(_x, _y, _mx, _my, _s, _dparam, _panel = noone) {
 		
 		if(size_dragging) {
 			w = size_dragging_w + (mouse_mx - size_dragging_mx) / _s;
@@ -177,14 +180,14 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var x0  = x1 - 16;
 		var y0  = y1 - 16;
 		var ics = 0.5;
-		var shf = 8 + 8 * ics;
+		var shf = 8 * ics;
 		
 		if(w * _s < 32 || h * _s < 32) return point_in_rectangle(_mx, _my, xx, yy, x1, y1);
 		
-		if(point_in_rectangle(_mx, _my, xx, yy, x1, y1) || size_dragging)
+		if(_panel != noone && point_in_rectangle(_mx, _my, xx, yy, x1, y1) || size_dragging)
 			draw_sprite_ext_add(THEME.node_resize, 0, x1 - shf, y1 - shf, ics, ics, 0, c_white, 0.15);
 		
-		if(!name_hover && point_in_rectangle(_mx, _my, x0, y0, x1, y1)) {
+		if(_panel != noone && !name_hover && point_in_rectangle(_mx, _my, x0, y0, x1, y1)) {
 			draw_sprite_ext_add(THEME.node_resize, 0, x1 - shf, y1 - shf, ics, ics, 0, c_white, 0.30);
 			PANEL_GRAPH.drag_locking = true;
 			
