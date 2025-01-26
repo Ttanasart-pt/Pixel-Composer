@@ -578,6 +578,9 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	static postDeserialize = function() {
 		if(CLONING) return;
 		
+		if(array_length(load_map.inputs) <= 15)
+			load_map.inputs[15] = { raw_value : { d : 0 } };
+		
 		if(LOADING_VERSION < 1_18_01_0) {
 			if(array_length(load_map.inputs) >= 23) {
 				var _dat = load_map.inputs[23].raw_value;

@@ -39,7 +39,7 @@ if !ready exit;
 	var y0 = dialog_y + ui(128);
 	var y1 = dialog_y + dialog_h - ui(16);
 	
-	draw_set_text(f_p0, fa_left, fa_bottom, COLORS._main_text_sub);
+	draw_set_text(f_p2, fa_left, fa_bottom, COLORS._main_text_sub);
 	draw_text(x0, y0 - ui(4), __txt("Recent files"));
 	
 	sp_recent.setFocusHover(sFOCUS, sHOVER);
@@ -51,7 +51,7 @@ if !ready exit;
 	var bx  = x1 - ui(28);
 	var by  = y0 - ui(28 + 4);
 	var txt = __txtx("splash_clear_recent", "Clear recent files");
-	if(buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, sHOVER, sFOCUS, txt, THEME.icon_delete,, COLORS._main_value_negative) == 2) {
+	if(buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, sHOVER, sFOCUS, txt, THEME.icon_delete, 0, COLORS._main_value_negative) == 2) {
 		ds_list_clear(RECENT_FILES);
 		RECENT_SAVE();
 	}
@@ -62,9 +62,9 @@ if !ready exit;
 	// 	recent_thumbnail = !recent_thumbnail;
 	// }
 	
-	bx -= ui(28 + 4);
+	bx -= ui(28 + 1);
 	txt = __txtx("splash_open_autosave", "Open autosave folder");
-	if(buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, sHOVER, sFOCUS, txt, THEME.save_auto, 0) == 2) {
+	if(buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, sHOVER, sFOCUS, txt, THEME.save_auto, 0, COLORS._main_icon, 1, .75) == 2) {
 		shellOpenExplorer(DIRECTORY + "autosave");
 	}
 	
