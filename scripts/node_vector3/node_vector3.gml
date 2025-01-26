@@ -42,14 +42,13 @@ function Node_Vector3(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var _z   = _data[2];
 		var _int = _data[3];
 		
-		var vec = _outData[0];
-		vec[0] = _int? round(_x) : _x;
-		vec[1] = _int? round(_y) : _y;
-		vec[2] = _int? round(_z) : _z;
+		_outData[0][0] = _int? round(_x) : _x;
+		_outData[0][1] = _int? round(_y) : _y;
+		_outData[0][2] = _int? round(_z) : _z;
 		
-		_outData[1] = vec[0];
-		_outData[2] = vec[1];
-		_outData[3] = vec[2];
+		_outData[1] = _outData[0][0];
+		_outData[2] = _outData[0][1];
+		_outData[3] = _outData[0][2];
 		
 		return _outData;
 	}

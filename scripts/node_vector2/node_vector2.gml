@@ -179,12 +179,11 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		inputs[ 9].setVisible(gz_style == 2, gz_style == 2);
 		inputs[10].setVisible(gz_style != 0);
 		
-		var vec = _outData[0];
-		vec[0] = _int? round(_x) : _x;
-		vec[1] = _int? round(_y) : _y;
+		_outData[0][0] = _int? round(_x) : _x;
+		_outData[0][1] = _int? round(_y) : _y;
 		
-		_outData[1] = vec[0];
-		_outData[2] = vec[1];
+		_outData[1] = _outData[0][0];
+		_outData[2] = _outData[0][1];
 		
 		return _outData;
 	} 
