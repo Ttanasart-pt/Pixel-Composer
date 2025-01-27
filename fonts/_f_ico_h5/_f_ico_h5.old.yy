@@ -120,7 +120,7 @@
   "name":"_f_ico_h5",
   "parent":{
     "name":"font",
-    "path":"folders/font.yy",
+    "path":"folders/sprites/font.yy",
   },
   "pointRounding":0,
   "ranges":[

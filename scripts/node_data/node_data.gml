@@ -661,14 +661,14 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 	}
 	
-	static step = function() {}
-	static focusStep = function() {}
-	static inspectorStep = function() {}
+	static step          = function() /*=>*/ {}
+	static focusStep     = function() /*=>*/ {}
+	static inspectorStep = function() /*=>*/ {}
 	
 	////- JUNCTIONS
 	
-	static newInput  = function(index, junction) { inputs[index]  = junction; return junction;  }
-	static newOutput = function(index, junction) { outputs[index] = junction; return junction;  }
+	static newInput  = function(i, j) /*=>*/ { inputs[i]  = j; return j; }
+	static newOutput = function(i, j) /*=>*/ { outputs[i] = j; return j; }
 	
 	static getInputJunctionAmount = function() { return (input_display_list == -1 || !use_display_list)? array_length(inputs) : array_length(input_display_list); }
 	static getInputJunctionIndex  = function(index) {
