@@ -66,9 +66,6 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 	author  = "";
 	license = "";
 	
-	_fn = registerFunctionLite("New node", name, function(n) /*=>*/ { PANEL_GRAPH.createNodeHotkey(n); }, [ nodeName ]);
-	_fn.spr = spr;
-	
 	static init = function() {
 		if(IS_CMD) return;
 		
@@ -79,12 +76,15 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 				tooltip = _n.tooltip;
 		}
 	} init();
-		
+    
 	static setTags    = function(_tags) { tags        = _tags; return self; }
 	static setSpr     = function(_spr)  { spr         = _spr;  return self; }
 	static setTooltip = function(_tool) { tooltip     = _tool; return self; }
 	static setParam   = function(_par)  { createParam = _par;  return self; }
-	static setBuild   = function(_fn)   { createFn    = method(self, _fn); usecreateFn = true; return self; }
+	
+    _fn = registerFunctionLite("New node", name, function(n) /*=>*/ { PANEL_GRAPH.createNodeHotkey(n); }, [ nodeName ]);
+    _fn.spr = spr;
+    static setBuild   = function(_fn)   { createFn    = method(self, _fn); usecreateFn = true; return self; }
 	
 	static setIO = function(t) { 
 		for(var i = 0; i < argument_count; i++) { 

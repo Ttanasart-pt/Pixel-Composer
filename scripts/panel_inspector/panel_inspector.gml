@@ -59,7 +59,7 @@
         ]);
         
         MENU_ITEMS.inspector_group_set_color = menuItemGroup(__txt("Color"), _item, ["Inspector", "Set Color"]).setSpacing(ui(24));
-        registerFunction("Inspector", "Set Color",             "",    MOD_KEY.none,    function() /*=>*/ { menuCall("", [ MENU_ITEMS.inspector_group_set_color ]); });
+        registerFunction("Inspector", "Set Color", "", MOD_KEY.none, function() /*=>*/ { menuCall("", [ MENU_ITEMS.inspector_group_set_color ]); });
         
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         

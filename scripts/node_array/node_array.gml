@@ -15,13 +15,15 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		var bw = _w / 2 - ui(4);
 		var bh = ui(36);
-		if(buttonTextIconInstant(true, THEME.button_hide_fill, _x, _y + ui(8), bw, bh, _m, _focus, _hover, "", THEME.add, __txt("Add"), COLORS._main_value_positive) == 2) {
+		var by = _y + ui(8);
+		if(buttonTextIconInstant(true, THEME.button_hide_fill, _x, by, bw, bh, _m, _focus, _hover, "", THEME.add, __txt("Add"), COLORS._main_value_positive) == 2) {
 			attributes.size = max(attributes.size, (array_length(inputs) - input_fix_len) / data_length ) + 1;
 			onInputResize();
 		}
 		
+		var bx = _x + _w - bw;
 		var act = attributes.size > 0;
-		if(buttonTextIconInstant(act, THEME.button_hide_fill, _x + _w - bw, _y + ui(8), bw, bh, _m, _focus, _hover, "", THEME.minus, __txt("Remove"), COLORS._main_value_negative) == 2) {
+		if(buttonTextIconInstant(act, THEME.button_hide_fill, bx, by, bw, bh, _m, _focus, _hover, "", THEME.minus, __txt("Remove"), COLORS._main_value_negative) == 2) {
 			attributes.size--;
 			onInputResize();
 		}
@@ -111,8 +113,6 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			}
 		}
 		
-		// w = _typ == VALUE_TYPE.surface? 128 : 96;
-		
 		refreshDynamicInput();
 	}
 	
@@ -144,15 +144,26 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var res  = [];
 		var ind  = 0;
 		
+		var _set  = _typ == VALUE_TYPE.any;
+		var _setT = VALUE_TYPE.any;
+		
 		for( var i = input_fix_len; i < array_length(inputs); i++ ) {
 			var val = getInputData(i);
 			
 			if(is_array(val) && spd) array_append(res, val);
 			else                     array_push(res, val);
 			
-			if(_typ == VALUE_TYPE.any && inputs[i].value_from)
-				outputs[0].setType(inputs[i].value_from.type);
+			if(inputs[i].value_from == noone) continue;
+			
+			if(_set) {
+				_setT = inputs[i].value_from.type;
+				_set  = false;
+				
+			} else if(_setT != inputs[i].value_from.type)
+				_setT = VALUE_TYPE.any;
 		}
+		
+		if(_typ == VALUE_TYPE.any) outputs[0].setType(_setT);
 		
 		outputs[0].setValue(res);
 	}

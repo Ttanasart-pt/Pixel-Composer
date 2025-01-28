@@ -1159,7 +1159,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(type == VALUE_TYPE.text) return display_type == VALUE_DISPLAY.text_array? value : string_real(value);
 		
-		if(typeNumeric(typeFrom) && type == VALUE_TYPE.color) return value >= 1? value : make_color_rgb(value * 255, value * 255, value * 255);
+		if(typeNumeric(typeFrom) && type == VALUE_TYPE.color) return value;
 		
 		if(typeFrom == VALUE_TYPE.boolean && type == VALUE_TYPE.text) return value? "true" : "false";
 		
