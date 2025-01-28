@@ -4,9 +4,9 @@ function Node_Path_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _g
 	
 	object   = new __3dCamera_object();
 	camera   = new __3dCamera();
-	lookat   = new __3dGizmoSphere(0.5, c_ltgray, 1);
+	lookat   = new __3dGizmoSphere(.5, c_ltgray, .5);
 	lookLine = noone;
-	lookRad  = new __3dGizmoCircleZ(0.5, c_yellow, 0.5);
+	lookRad  = new __3dGizmoCircleZ(.5, c_yellow, .5);
 	
 	w = 128;
 	var i = in_d3d;
@@ -88,6 +88,12 @@ function Node_Path_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _g
 	static getToolSettings = function() { return curr_posm == 0? tool_settings : []; }
 	
 	static drawOverlay3D = function(active, params, _mx, _my, _snx, _sny, _panel) {
+		if(is_path) {
+			var _nodeFrom = inputs[in_d3d + 2].value_from.node;
+			if(struct_has(_nodeFrom, "drawOverlay3D"))
+				_nodeFrom.drawOverlay3D(false, params, _mx, _my, _snx, _sny, _panel);
+		}
+		
 		var preObj = getPreviewObjects();
 		if(array_empty(preObj)) return;
 		preObj = preObj[0];
@@ -269,7 +275,7 @@ function Node_Path_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _g
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
-		draw_sprite_bbox_uniform(s_node_path_3d, 0, bbox);
+		draw_sprite_bbox_uniform(s_node_path_3d_camera, 0, bbox);
 	}
 	
 	static getPreviewObject = function() { return noone; }

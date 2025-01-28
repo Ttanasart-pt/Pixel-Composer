@@ -49,7 +49,6 @@ function Node_Path_Trim(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static getBoundary     = function(ind = 0) /*=>*/ {return is_path? curr_path.getBoundary(ind)     : new BoundingBox( 0, 0, 1, 1 )};
 		
 	static getPointRatio = function(_rat, ind = 0, out = undefined) {
-		if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
 		if(!is_path) return out;
 		
 		_rat = lerp(curr_range[0], curr_range[1], _rat);

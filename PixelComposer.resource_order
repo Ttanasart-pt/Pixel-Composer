@@ -2217,6 +2217,7 @@
     {"name":"s_node_palette_sort","order":3,"path":"sprites/s_node_palette_sort/s_node_palette_sort.yy",},
     {"name":"s_node_particle_effector","order":13,"path":"sprites/s_node_particle_effector/s_node_particle_effector.yy",},
     {"name":"s_node_particle","order":12,"path":"sprites/s_node_particle/s_node_particle.yy",},
+    {"name":"s_node_path_3d_camera","order":28,"path":"sprites/s_node_path_3d_camera/s_node_path_3d_camera.yy",},
     {"name":"s_node_path_3d","order":20,"path":"sprites/s_node_path_3d/s_node_path_3d.yy",},
     {"name":"s_node_path_anchor","order":1,"path":"sprites/s_node_path_anchor/s_node_path_anchor.yy",},
     {"name":"s_node_path_array","order":2,"path":"sprites/s_node_path_array/s_node_path_array.yy",},
