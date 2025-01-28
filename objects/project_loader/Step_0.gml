@@ -172,7 +172,11 @@ switch(load_process) {
         	LoadPanelStruct(content.layout.panel);
         
         array_remove(STATS_PROGRESS, load_noti);
+    	PROJECT.postDeserialize(content);
+    	
         instance_destroy();
     
-    run_in(1, function() /*=>*/ { PANEL_GRAPH.draw_refresh = true; });
+    run_in(1, function() /*=>*/ { 
+    	PANEL_GRAPH.draw_refresh = true; 
+    });
 }

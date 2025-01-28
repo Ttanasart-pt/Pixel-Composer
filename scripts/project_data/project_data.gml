@@ -315,8 +315,14 @@ function Project() constructor {
 		if(struct_has(_map, "addon")) {
 			var _addon = _map.addon;
 			addons = _addon;
-			struct_foreach(_addon, function(_name, _value) { addonLoad(_name, false); });
+			struct_foreach(_addon, function(_name, _value) /*=>*/ { addonLoad(_name, false); });
 		}
+		
+		bind_gamemaker = Binder_Gamemaker(attributes.bind_gamemaker_path);
+		if(bind_gamemaker == noone) attributes.bind_gamemaker_path = "";
+	}
+	
+	static postDeserialize = function(_map) {
 		
 		previewNode  	= struct_try_get(_map, "previewNode", noone);
 		if(PANEL_PREVIEW && previewNode != "") {
@@ -329,12 +335,6 @@ function Project() constructor {
 			var _node = nodeMap[? inspectingNode];
 			if(_node) PANEL_INSPECTOR.setInspecting(_node);
 		}
-		
-		bind_gamemaker = Binder_Gamemaker(attributes.bind_gamemaker_path);
-		if(bind_gamemaker == noone) attributes.bind_gamemaker_path = "";
-	}
-	
-	static postDeserialize = function() {
 		
 	}
 }
