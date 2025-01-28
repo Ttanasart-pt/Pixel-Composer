@@ -2202,6 +2202,7 @@
     {"id":{"name":"node_palette_sort","path":"scripts/node_palette_sort/node_palette_sort.yy",},},
     {"id":{"name":"node_palette","path":"scripts/node_palette/node_palette.yy",},},
     {"id":{"name":"node_particle","path":"scripts/node_particle/node_particle.yy",},},
+    {"id":{"name":"node_path_3d_camera","path":"scripts/node_path_3d_camera/node_path_3d_camera.yy",},},
     {"id":{"name":"node_path_3d","path":"scripts/node_path_3d/node_path_3d.yy",},},
     {"id":{"name":"node_path_anchor","path":"scripts/node_path_anchor/node_path_anchor.yy",},},
     {"id":{"name":"node_path_array","path":"scripts/node_path_array/node_path_array.yy",},},

@@ -398,6 +398,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					// print($"===== {_prog_curr} / {_segLength} : {_segIndex} - {_pathLength} =====");
 					
 					while(true) {
+						var _pp = 0;
 						wght = 1;
 						_segIndexPrev = _segIndex;
 						
@@ -410,7 +411,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 							//print($"{segmentLength}/{_pathLength} = {_prog_next}");
 							if(_prog_next == segmentLength) _segIndex++;
 							
-							var _pp = _clamp? clamp(_pathPng, 0, _pathLength) : _pathPng;
+							_pp = _clamp? clamp(_pathPng, 0, _pathLength) : _pathPng;
 							// print($"_pp = {_pp}, total = {_total}");
 							
 							p = _pat.getPointDistance(_pp, i, p);
@@ -420,7 +421,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 							_prog_next = min(_prog_curr + _stepLen, 1); //Move forward _stepLen or _total (if less) stop at 1
 							_pathPng   = _ratInv? 1 - _prog_curr : _prog_curr;
 							
-							var _pp = _clamp? clamp(_pathPng, 0, 1) : _pathPng
+							_pp = _clamp? clamp(_pathPng, 0, 1) : _pathPng
 							
 							p = _pat.getPointRatio(_pp, i, p);
 							wght = p[$ "weight"] ?? 1;
@@ -428,7 +429,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						
 						_nx = p.x;
 						_ny = p.y;
-							
+						
 						if(_total < _pathEnd) { //Do not wiggle the last point.
 							var _d = point_direction(_ox, _oy, _nx, _ny);
 							_nx   += lengthdir_x(random1D(_sed + _sedIndex, -_wig, _wig), _d + 90); _sedIndex++;
@@ -591,7 +592,6 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				
 				var _ldata = line_data[i];
 				var _len   = _ldata.length;
-				var _caps  = [];
 				var pxs    = [];
 				var dat    = array_safe_get_fast(_pathData, i, noone);
 				
@@ -627,14 +627,20 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					if(_cap) {
 						if(j == 1) {
 							_d = _dir + 180;
-							_caps[0] = [ _oc, _ox, _oy, _ow / 2, _d - 90, _d ];
-							_caps[1] = [ _oc, _ox, _oy, _ow / 2, _d, _d + 90 ];
+							
+							draw_primitive_end();
+							drawCaps( _cap, _oc, _ox * _aa, _oy * _aa, _ow / 2 * _aa, _d - 90, _d, _capP );
+							drawCaps( _cap, _oc, _ox * _aa, _oy * _aa, _ow / 2 * _aa, _d, _d + 90, _capP );
+							if(_useTex) draw_primitive_begin_texture(pr_trianglestrip, tex); else draw_primitive_begin(pr_trianglestrip);
 						}
 						
 						if(j == m - 1) {
 							_d = _dir;
-							_caps[2] = [ _nc, _nx, _ny, _nw / 2, _d - 90, _d ];
-							_caps[3] = [ _nc, _nx, _ny, _nw / 2, _d, _d + 90 ];
+							
+							draw_primitive_end();
+							drawCaps( _cap, _nc, _nx * _aa, _ny * _aa, _nw / 2 * _aa, _d - 90, _d, _capP );
+							drawCaps( _cap, _nc, _nx * _aa, _ny * _aa, _nw / 2 * _aa, _d, _d + 90, _capP );
+							if(_useTex) draw_primitive_begin_texture(pr_trianglestrip, tex); else draw_primitive_begin(pr_trianglestrip);
 						}
 					}
 					
@@ -695,38 +701,14 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						_ow = _nw;
 						_oc = _nc;
 					}
-				
 					
 					if(j % 120 == 0) {
 						draw_primitive_end();
-						
-						if(_useTex) draw_primitive_begin_texture(pr_trianglestrip, tex);
-						else        draw_primitive_begin(pr_trianglestrip);
+						if(_useTex) draw_primitive_begin_texture(pr_trianglestrip, tex); else draw_primitive_begin(pr_trianglestrip);
 					}
 				}
 				
 				draw_primitive_end();
-				
-				for( var j = 0, m = array_length(_caps); j < m; j++ ) {
-					var _cps = _caps[j];
-					var _cpx = _cps[1] * _aa;
-					var _cpy = _cps[2] * _aa;
-					var _cpr = _cps[3] * _aa;
-					
-					draw_set_color(_cps[0]);
-					
-					switch(_cap) {
-						case 1 : draw_circle_angle(_cpx, _cpy, _cpr, _cps[4], _cps[5], _capP); break;
-						case 2 : 
-							var _x0 = _cpx + lengthdir_x(_cpr, _cps[4]);
-							var _y0 = _cpy + lengthdir_y(_cpr, _cps[4]);
-							var _x2 = _cpx + lengthdir_x(_cpr, _cps[5]);
-							var _y2 = _cpy + lengthdir_y(_cpr, _cps[5]);
-							
-							draw_triangle(_cpx - 1, _cpy - 1, _x0 - 1, _y0 - 1, _x2 - 1, _y2 - 1, false);
-							break;
-					}
-				}
 			}
 			
 			if(_useTex) shader_reset();
@@ -746,8 +728,6 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				for( var i = 0, n = array_length(lines); i < n; i++ ) {
 					var points = lines[i];
 					if(array_length(points) < 2) continue;
-					
-					var _caps = [];
 					
 					draw_primitive_begin(pr_trianglestrip);
 					
@@ -777,14 +757,20 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						if(_cap) {
 							if(j == 1) {
 								_d = _dir + 180;
-								_caps[0] = [ c_grey, _ox, _oy, _ow / 2, _d - 90, _d ];
-								_caps[1] = [ c_grey, _ox, _oy, _ow / 2, _d, _d + 90 ];
+								
+								draw_primitive_end();
+								drawCaps( _cap, c_grey, _ox * _aa, _oy * _aa, _ow / 2 * _aa, _d - 90, _d, _capP );
+								drawCaps( _cap, c_grey, _ox * _aa, _oy * _aa, _ow / 2 * _aa, _d, _d + 90, _capP );
+								draw_primitive_begin(pr_trianglestrip);
 							}
 							
 							if(j == m - 1) {
 								_d = _dir;
-								_caps[2] = [ c_grey, _nx, _ny, _nw / 2, _d - 90, _d ];
-								_caps[3] = [ c_grey, _nx, _ny, _nw / 2, _d, _d + 90 ];
+								
+								draw_primitive_end();
+								drawCaps( _cap, c_grey, _nx * _aa, _ny * _aa, _nw / 2 * _aa, _d - 90, _d, _capP );
+								drawCaps( _cap, c_grey, _nx * _aa, _ny * _aa, _nw / 2 * _aa, _d, _d + 90, _capP );
+								draw_primitive_begin(pr_trianglestrip);
 							}
 						}
 						
@@ -820,27 +806,6 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					}
 					
 					draw_primitive_end();
-					
-					for( var j = 0, m = array_length(_caps); j < m; j++ ) {
-						var _cps = _caps[j];
-						var _cpx = _cps[1];
-						var _cpy = _cps[2];
-						var _cpr = _cps[3];
-						
-						draw_set_color(_cps[0]);
-						
-						switch(_cap) {
-							case 1 : draw_circle_angle(_cpx, _cpy, _cpr, _cps[4], _cps[5], _capP); break;
-							case 2 : 
-								var _x0 = _cpx + lengthdir_x(_cpr, _cps[4]);
-								var _y0 = _cpy + lengthdir_y(_cpr, _cps[4]);
-								var _x2 = _cpx + lengthdir_x(_cpr, _cps[5]);
-								var _y2 = _cpy + lengthdir_y(_cpr, _cps[5]);
-								
-								draw_triangle(_cpx - 1, _cpy - 1, _x0 - 1, _y0 - 1, _x2 - 1, _y2 - 1, false);
-								break;
-						}
-					}
 				}
 				
 			surface_reset_target();
@@ -848,5 +813,21 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		}
 		
 		return [ _colorPass, _widthPass ];
+	}
+	
+	static drawCaps = function(_typ, _cpc, _cpx, _cpy, _cpr, _a0, _a1, _prec = 32) {
+		draw_set_color(_cpc);
+		
+		switch(_typ) {
+			case 1 : draw_circle_angle(_cpx, _cpy, _cpr, _a0, _a1, _prec); break;
+			case 2 : 
+				var _x0 = _cpx + lengthdir_x(_cpr, _a0);
+				var _y0 = _cpy + lengthdir_y(_cpr, _a0);
+				var _x2 = _cpx + lengthdir_x(_cpr, _a1);
+				var _y2 = _cpy + lengthdir_y(_cpr, _a1);
+				
+				draw_triangle(_cpx - 1, _cpy - 1, _x0 - 1, _y0 - 1, _x2 - 1, _y2 - 1, false);
+				break;
+		}
 	}
 }

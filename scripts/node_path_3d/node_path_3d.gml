@@ -13,6 +13,11 @@ enum _ANCHOR3 {
 	amount
 }
 
+function __vec3P(_x = 0, _y = _x, _z = _x, _w = 1) : __vec3(_x, _y, _z) constructor {
+	weight = _w;
+	static clone = function() /*=>*/ {return new __vec3P(x, y, z, weight)};
+}
+
 function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "3D Path";
 	is_3D = NODE_3D.polygon;
@@ -579,15 +584,14 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		// surface_free(_surf);
 	} 
 	
-	static getLineCount		= function() { return 1; }
-	static getSegmentCount	= function() { return array_length(lengths); }
-	static getBoundary		= function() { return boundary; }
-	
-	static getLength		= function() { return lengthTotal; }
-	static getAccuLength	= function() { return lengthAccs; }
+	static getLineCount		= function() /*=>*/ {return 1};
+	static getSegmentCount	= function() /*=>*/ {return array_length(lengths)};
+	static getBoundary		= function() /*=>*/ {return boundary};
+	static getLength		= function() /*=>*/ {return lengthTotal};
+	static getAccuLength	= function() /*=>*/ {return lengthAccs};
 	
 	static getPointDistance = function(_dist, _ind = 0, out = undefined) {
-		if(out == undefined) out = new __vec3(); else { out.x = 0; out.y = 0; out.z = 0; }
+		if(out == undefined) out = new __vec3P(); else { out.x = 0; out.y = 0; out.z = 0; }
 		if(array_empty(lengths)) return out;
 		
 		var _cKey = _dist;
@@ -630,7 +634,7 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 				
 			}
 			
-			cached_pos[? _cKey] = new __vec3(out.x, out.y, out.z);
+			cached_pos[? _cKey] = new __vec3P(out.x, out.y, out.z);
 			return out;
 		}
 		
@@ -643,19 +647,19 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	}
 	
 	static getPointSegment = function(_rat) {
-		if(array_empty(lengths)) return new __vec3();
+		if(array_empty(lengths)) return new __vec3P();
 		
 		var loop   = getInputData(1);
 		var ansize = array_length(inputs) - input_fix_len;
 		
-		if(_rat < 0) return new __vec3(anchors[0][0], anchors[0][1], anchors[0][2]);
+		if(_rat < 0) return new __vec3P(anchors[0][0], anchors[0][1], anchors[0][2]);
 		
 		_rat = safe_mod(_rat, ansize);
 		var _i0 = clamp(floor(_rat), 0, ansize - 1);
 		var _i1 = (_i0 + 1) % ansize;
 		var _t  = frac(_rat);
 		
-		if(_i1 >= ansize && !loop) return new __vec3(anchors[ansize - 1][0], anchors[ansize - 1][1], anchors[ansize - 1][2]);
+		if(_i1 >= ansize && !loop) return new __vec3P(anchors[ansize - 1][0], anchors[ansize - 1][1], anchors[ansize - 1][2]);
 		
 		var _a0 = anchors[_i0];
 		var _a1 = anchors[_i1];
@@ -673,7 +677,7 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 			
 		}
 			
-		return new __vec3(px, py, pz);
+		return new __vec3P(px, py, pz);
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
