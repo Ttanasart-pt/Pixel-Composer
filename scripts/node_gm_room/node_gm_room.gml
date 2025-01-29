@@ -32,6 +32,13 @@ function Node_GMRoom(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
     #endregion
     
     room_renderer  = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
+    	if(gmRoom == noone) {
+			draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _y, _w, ui(28), COLORS.node_composite_bg_blend, 1);	
+			draw_set_text(f_p3, fa_center, fa_center, COLORS._main_text_sub);
+			draw_text_add(_x + _w / 2, _y + ui(14), "No data");
+			return ui(28);
+		}
+		
     	var  hh = ui(40);
     	var _yy = _y + ui(8);
     	draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _y, _w, hh, COLORS.node_composite_bg_blend, 1);	
@@ -100,7 +107,6 @@ function Node_GMRoom(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	layers_renderer  = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		if(gmRoom == noone) {
 			draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _y, _w, ui(28), COLORS.node_composite_bg_blend, 1);	
-			
 			draw_set_text(f_p3, fa_center, fa_center, COLORS._main_text_sub);
 			draw_text_add(_x + _w / 2, _y + ui(14), "No data");
 			return ui(28);
