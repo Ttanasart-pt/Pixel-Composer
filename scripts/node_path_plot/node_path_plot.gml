@@ -27,12 +27,17 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	newInput(10, nodeValue_Text("w(x)", self, ""));
 	
+	newInput(11, nodeValue_Text("z(x)", self, ""));
+	
+	newInput(12, nodeValue_Bool("3D", self, false));
+	
 	newOutput(0, nodeValue_Output("Path", self, VALUE_TYPE.pathnode, self));
 	
 	input_display_list = [
-		[ "Variable",  false],    5, 7, 8, 0, 
-		[ "Equation",  false],    1, 2, 3, 4, 6, 
-		[ "Weight",    false, 9], 10,  
+		[ "Variable",  false],     5, 7, 8, 0, 
+		[ "Equation",  false],     1, 2, 3, 4, 6, 
+		[ "Weight",    false,  9], 10, 
+		[ "3D",        false, 12], 11, 
 	]
 	
 	boundary   = new BoundingBox( 0, 0, 1, 1 );
@@ -41,18 +46,18 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	curr_sca  = 0;
 	curr_coor = 0;
 	curr_eqa  = 0;
-	curr_eq0  = 0;
-	curr_eq1  = 0;
 	curr_orig = 0;
 	curr_ran  = 0;
 	curr_iran = 0;
 	curr_shf  = 0;
+	curr_d3d  = 0;
 	
 	curr_usew = 0;
 	curr_wgfn = 0;
 	
 	fn0 = 0;
 	fn1 = 0;
+	fn2 = 0;
 	
 	_a = new __vec2P();
 	_param = { x:0, y:0, t:0, r:0, O:0 };
@@ -68,7 +73,8 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static getBoundary		= function() /*=>*/ {return boundary};
 	
 	static getPointRatio = function(_rat, ind = 0, out = undefined) {
-		if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
+		if(out == undefined) out = curr_d3d? new __vec3P() : new __vec2P(); 
+		else { out.x = 0; out.y = 0; out.z = 0; }
 		
 		_rat = curr_ran[0] + (_rat * (curr_ran[1] - curr_ran[0]));
 		
@@ -105,6 +111,11 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 						
 						_param.t = _rat * curr_iran[1] + curr_shf[1];
 						out.y = fn1.eval(_param);
+						
+						if(curr_d3d) {
+							_param.t = _rat;
+							out.z = fn2.eval(_param);
+						}
 						
 						if(curr_usew) {
 							_param.t = _rat;
@@ -149,6 +160,11 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 						_param.t = _rat * curr_iran[1] + curr_shf[1];
 						_ay = fn1.eval(_param);
 						
+						if(curr_d3d) {
+							_param.t = _rat;
+							out.z = fn2.eval(_param);
+						}
+						
 						if(curr_usew) {
 							_param.t = _rat;
 							out.weight = fnw.eval(_param);
@@ -168,62 +184,6 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	}
 	
 	static getPointDistance = function(_dist, ind = 0, out = undefined) { return getPointRatio(_dist / getLength(ind), ind, out); }
-	
-	static step = function() { 
-		var _coor = getInputData(1);
-		var _eqa  = getInputData(2);
-		
-		inputs[2].editWidget.data_list = _coor? eq_type_pol : eq_type_car;
-		inputs[4].setVisible(_eqa == 2);
-		
-		switch(_coor) {
-			case 0 :
-				switch(_eqa) {
-					case 0 : 
-						inputs[ 3].name = "f(x) = ";
-						inputs[ 6].name = "x range";
-						inputs[10].name = "w(x) = ";
-						break;
-						
-					case 1 : 
-						inputs[ 3].name = "f(y) = ";
-						inputs[ 6].name = "y range";
-						inputs[10].name = "w(y) = ";
-						break;
-						
-					case 2 : 
-						inputs[ 3].name = "x(t) = ";
-						inputs[ 4].name = "y(t) = ";
-						inputs[ 6].name = "t range";
-						inputs[10].name = "w(t) = ";
-						break;
-				}
-				break;
-				
-			case 1 :
-				switch(_eqa) {
-					case 0 : 
-						inputs[ 3].name = "f(r) = ";
-						inputs[ 6].name = "r range";
-						inputs[10].name = "w(r) = ";
-						break;
-						
-					case 1 : 
-						inputs[ 3].name = "f(O) = ";
-						inputs[ 6].name = "O range";
-						inputs[10].name = "w(O) = ";
-						break;
-						
-					case 2 : 
-						inputs[ 3].name = "r(t) = ";
-						inputs[ 4].name = "O(t) = ";
-						inputs[ 6].name = "t range";
-						inputs[10].name = "w(t) = ";
-						break;
-				}
-				break;
-		}
-	}
 	
 	static updateBoundary = function() {
 		boundary = new BoundingBox( 0, 0, 1, 1 );
@@ -246,22 +206,80 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		curr_sca  = getInputData(0);
 		curr_coor = getInputData(1);
 		curr_eqa  = getInputData(2);
-		curr_eq0  = getInputData(3);
-		curr_eq1  = getInputData(4);
 		curr_orig = getInputData(5);
 		curr_ran  = getInputData(6);
 		curr_iran = getInputData(7);
 		curr_shf  = getInputData(8);
-		
-		curr_usew = getInputData( 9);
+		curr_usew = getInputData(9);
 		curr_wgfn = getInputData(10);
+		curr_d3d  = getInputData(12);
 		
-		fn0 = evaluateFunctionList(curr_eq0);
-		fn1 = evaluateFunctionList(curr_eq1);
+		var _eq0  = getInputData(3);
+		var _eq1  = getInputData(4);
+		var _eq2  = getInputData(11);
+		
+		fn0 = evaluateFunctionList(_eq0);
+		fn1 = evaluateFunctionList(_eq1);
+		fn2 = evaluateFunctionList(_eq2);
 		fnw = evaluateFunctionList(curr_wgfn);
 		
+		_a = curr_d3d? new __vec3P() : new __vec2P();
+		
 		updateBoundary();
-		outputs[0].setValue(self); 
+		outputs[0].setValue(self);
+		
+		#region display
+			inputs[ 2].editWidget.data_list = curr_coor? eq_type_pol : eq_type_car;
+			inputs[ 4].setVisible(curr_eqa == 2);
+			
+			switch(curr_coor) {
+				case 0 :
+					switch(curr_eqa) {
+						case 0 : 
+							inputs[ 3].name = "f(x) = ";
+							inputs[ 6].name = "x range";
+							inputs[10].name = "w(x) = ";
+							break;
+							
+						case 1 : 
+							inputs[ 3].name = "f(y) = ";
+							inputs[ 6].name = "y range";
+							inputs[10].name = "w(y) = ";
+							break;
+							
+						case 2 : 
+							inputs[ 3].name = "x(t) = ";
+							inputs[ 4].name = "y(t) = ";
+							inputs[ 6].name = "t range";
+							inputs[10].name = "w(t) = ";
+							break;
+					}
+					break;
+					
+				case 1 :
+					switch(_eqa) {
+						case 0 : 
+							inputs[ 3].name = "f(r) = ";
+							inputs[ 6].name = "r range";
+							inputs[10].name = "w(r) = ";
+							break;
+							
+						case 1 : 
+							inputs[ 3].name = "f(O) = ";
+							inputs[ 6].name = "O range";
+							inputs[10].name = "w(O) = ";
+							break;
+							
+						case 2 : 
+							inputs[ 3].name = "r(t) = ";
+							inputs[ 4].name = "O(t) = ";
+							inputs[ 6].name = "t range";
+							inputs[10].name = "w(t) = ";
+							break;
+					}
+					break;
+			}
+		#endregion
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

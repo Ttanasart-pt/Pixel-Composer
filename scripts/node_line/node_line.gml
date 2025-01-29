@@ -277,6 +277,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		
 		var _ox, _nx, _nx1, _oy, _ny, _ny1;
 		var _ow, _nw, _oa, _na, _oc, _nc, _owg, _nwg;
+		var _wmin = 0, _wmax = 1;
 		
 		switch(_dtype) {
 			case 0 :
@@ -344,6 +345,8 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				
 				lines = array_verify(lines, lineLen);
 				var _lineAmo = 0;
+				var _wmin =  infinity;
+				var _wmax = -infinity;
 				
 				if(_rtMax > 0) 
 				for( var i = 0; i < lineLen; i++ ) {
@@ -430,6 +433,9 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						_nx = p.x;
 						_ny = p.y;
 						
+						_wmin = min(_wmin, wght);
+						_wmax = max(_wmax, wght);
+						
 						if(_total < _pathEnd) { //Do not wiggle the last point.
 							var _d = point_direction(_ox, _oy, _nx, _ny);
 							_nx   += lengthdir_x(random1D(_sed + _sedIndex, -_wig, _wig), _d + 90); _sedIndex++;
@@ -481,6 +487,8 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				
 				array_resize(lines,     _lineAmo);
 				array_resize(line_data, _lineAmo);
+				
+				if(_wmax == _wmin) { _wmin = 0; _wmax = 1; }
 				
 				if(_pbbox) _surfDim = [ max(1, maxx - minx + _ppadd[0] + _ppadd[2]), max(1, maxy - miny + _ppadd[1] + _ppadd[3]) ];
 				break;
@@ -618,11 +626,12 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						widthMap[? widProg] = eval_curve_x(_widc, widProg, 0.1);
 					_nw *= widthMap[? widProg];
 					
-					if(_wg2wid) _nw *= p0.weight / 2;
+					var _ww = lerp_invert(p0.weight, _wmin, _wmax);
+					if(_wg2wid) _nw *= _ww / 2;
 					
 					_nc = _col_base;
 					_nc = colorMultiply(_nc, _color.eval(_colP? prog : prgc));
-					_nc = colorMultiply(_nc, _wg2clr.eval((p0.weight - _wg2clrR[0]) / _wg2clrRng));
+					_nc = colorMultiply(_nc, _wg2clr.eval((_ww - _wg2clrR[0]) / _wg2clrRng));
 					
 					if(_cap) {
 						if(j == 1) {
@@ -747,12 +756,13 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						var _dir = j? point_direction(_ox, _oy, _nx, _ny) : 0;
 						
 						var widProg = value_snap_real(_widap? prog : prgc, 0.01);
+						var _ww = lerp_invert(p0.weight, _wmin, _wmax);
 						
 						_nw  = random_range(_wid[0], _wid[1]);
 						if(!ds_map_exists(widthMap, widProg))
 							widthMap[? widProg] = eval_curve_x(_widc, widProg, 0.1);
 						_nw *= widthMap[? widProg];
-						_nw *= p0.weight;
+						_nw *= _ww;
 						
 						if(_cap) {
 							if(j == 1) {
