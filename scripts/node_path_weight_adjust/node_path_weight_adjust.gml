@@ -32,7 +32,8 @@ function Node_Path_Weight_Adjust(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	temp_p = new __vec2P();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		if(curr_path && struct_has(curr_path, "drawOverlay")) curr_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		if(curr_path && struct_has(curr_path, "drawOverlay")) 
+			curr_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
 	static getLineCount    = function(       ) /*=>*/ {return is_path? curr_path.getLineCount()       : 1};
@@ -70,9 +71,9 @@ function Node_Path_Weight_Adjust(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	    var _type  = getInputData(4);
 	    var _curve_range = getInputData(5);
 	    
-		inputs[2].setVisible(curr_type == 0);
-		inputs[3].setVisible(curr_type == 1);
-		inputs[5].setVisible(curr_type == 1);
+		inputs[2].setVisible(_type == 0);
+		inputs[3].setVisible(_type == 1);
+		inputs[5].setVisible(_type == 1);
 		
 		curr_path  = _path;
 		curr_mode  = _mode;
