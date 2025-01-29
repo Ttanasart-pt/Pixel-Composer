@@ -404,12 +404,13 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	////- DYNAMIC IO
 	
-	dummy_input              = noone;
-	auto_input               = false;
-	dyna_input_check_shift   =  0;
-	input_display_dynamic    = -1;
-	dynamic_input_inspecting =  0;
-	static createNewInput    = -1;
+	dummy_input                = noone;
+	auto_input                 = false;
+	dyna_input_check_shift     =  0;
+	input_display_dynamic      = -1;
+	input_display_dynamic_full = -1;
+	dynamic_input_inspecting   =  0;
+	static createNewInput      = -1;
 	
     static setDynamicInput = function(_data_length = 1, _auto_input = true, _dummy_type = VALUE_TYPE.any, _dynamic_input_cond = DYNA_INPUT_COND.connection) {
 		is_dynamic_input	= true;						
@@ -440,7 +441,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		for( var i = 0; i < input_fix_len; i++ )
 			array_push(_in, inputs[i]);
 		
-		input_display_list = array_clone(input_display_list_raw, 1);
+		var _input_display_list = array_clone(input_display_list_raw, 1);
 		var sep = false;
 		
 		for( var i = input_fix_len; i < array_length(inputs); i += data_length ) {
@@ -456,14 +457,14 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			}
 			
 			if(_active) {
-				if(sep && data_length > 1) array_push(input_display_list, new Inspector_Spacer(20, true));
+				if(sep && data_length > 1) array_push(_input_display_list, new Inspector_Spacer(20, true));
 				sep = true;
 			
 				for( var j = 0; j < data_length; j++ ) {
 					var _ind = i + j;
 					
-					if(input_display_list != -1)
-						array_push(input_display_list, array_length(_in));
+					if(_input_display_list != -1)
+						array_push(_input_display_list, array_length(_in));
 					array_push(_in, inputs[_ind]);
 				}
 			} else {
@@ -477,10 +478,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			_in[i].index = i;
 		
 		if(dummy_input) dummy_input.index = _ina;
-		
 		inputs = _in;
-		
 		refreshNodeDisplay();
+		
+		if(input_display_dynamic == -1) input_display_list = _input_display_list;
 	}
 
 	static refreshDynamicDisplay = function() {
@@ -488,18 +489,25 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		array_resize(input_display_list, array_length(input_display_list_raw));
 		
 		var _amo = getInputAmount();
-		if(_amo == 0) {
-			dynamic_input_inspecting = 0;
+		if(_amo == 0) { dynamic_input_inspecting = 0; return; }
+		
+		dynamic_input_inspecting = min(dynamic_input_inspecting, _amo - 1);
+		
+		if(dynamic_input_inspecting == noone) {
+			var _list = input_display_dynamic_full == -1? input_display_dynamic : input_display_dynamic_full;
+			for( var j = 0; j < _amo; j++ ) {
+				var _ind = input_fix_len + j * data_length;
+				for( var i = 0, n = array_length(_list); i < n; i++ ) {
+					var v = _list[i]; if(is_real(v)) v += _ind;
+					array_push(input_display_list, v);
+				}
+			}
 			return;
-		}
+		} 
 		
-		dynamic_input_inspecting = clamp(dynamic_input_inspecting, 0, getInputAmount() - 1);
 		var _ind = input_fix_len + dynamic_input_inspecting * data_length;
-		
 		for( var i = 0, n = array_length(input_display_dynamic); i < n; i++ ) {
-			var v = input_display_dynamic[i];
-			if(is_real(v)) v += _ind;
-			
+			var v = input_display_dynamic[i]; if(is_real(v)) v += _ind;
 			array_push(input_display_list, v);
 		}
 	}
@@ -558,7 +566,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var _ind = input_fix_len + index * data_length;
 		
 		array_delete(inputs, _ind, data_length);
-		dynamic_input_inspecting = clamp(dynamic_input_inspecting, 0, getInputAmount() - 1);
+		dynamic_input_inspecting = min(dynamic_input_inspecting, getInputAmount() - 1);
 		refreshDynamicDisplay();
 		triggerRender();
 	}

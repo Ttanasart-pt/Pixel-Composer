@@ -3114,7 +3114,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         }
         
         cx = cx + 160;
-        cy = round(cy / len / 32) * 32;
+        cy = value_snap(cy / len, 16);
         
         var _compose = nodeBuild(_ty, cx, cy, getCurrentContext()).skipDefault();
         

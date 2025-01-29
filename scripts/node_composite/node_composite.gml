@@ -24,6 +24,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	attribute_surface_depth();
 	attribute_interpolation();
 	
+	dynamic_input_inspecting    = noone;
 	attributes.layer_visible    = [];
 	attributes.layer_selectable = [];
 	properties_expand = [];
@@ -44,9 +45,9 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		if(is_real(renaming)) 
 			inputs[renaming].setName(_name);
-		else if(is_struct(renaming) && is_instanceof(renaming, Node))
+		else if(is_struct(renaming) && is(renaming, Node))
 			renaming.setDisplayName(_name) 
-			
+		
 		renaming       = noone;
 		renaming_index = noone;
 	});
@@ -92,37 +93,35 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var _lh  = lh + ui(4) + _exp * eh;
 			_h += _lh;
 			
-			#region extended
-				if(_exp) { 
-					var _px = _x + ui(4);
-					var _py = _cy + lh + ui(4);
-					var _pw = _w - ui(8);
-					var _ph = eh - ui(4);
-					
-					var _pww = (_pw - ui(8)) / 2 - ui(8);
-					var _pwh = _ph - ui(8);
-					
-					draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _px, _py, _pw, _ph, COLORS.node_composite_bg_blend, 1);
-					
-					var jn_bld = inputs[index + 4];
-					var jn_alp = inputs[index + 5];
-					
-					var wd_bld = jn_bld.editWidget;
-					var wd_alp = jn_alp.editWidget;
-					
-					var _param = new widgetParam(_px + ui(4), _py + ui(4), _pww, _pwh, jn_bld.showValue(), jn_bld.display_data, _m, layer_renderer.rx, layer_renderer.ry);
-					    _param.font = f_p2;
-					    
-					wd_bld.setFocusHover(_focus, _hover);
-					wd_bld.drawParam(_param);
-					
-					var _param = new widgetParam(_px + ui(4) + _pww + ui(8), _py + ui(4), _pww, _pwh, jn_alp.showValue(), jn_alp.display_data, _m, layer_renderer.rx, layer_renderer.ry);
-					    _param.font = f_p2;
-					    
-					wd_alp.setFocusHover(_focus, _hover);
-					wd_alp.drawParam(_param);
-				} 
-			#endregion
+			if(_exp) { // expanded
+				var _px = _x + ui(4);
+				var _py = _cy + lh + ui(4);
+				var _pw = _w - ui(8);
+				var _ph = eh - ui(4);
+				
+				var _pww = (_pw - ui(8)) / 2 - ui(8);
+				var _pwh = _ph - ui(8);
+				
+				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _px, _py, _pw, _ph, COLORS.node_composite_bg_blend, 1);
+				
+				var jn_bld = inputs[index + 4];
+				var jn_alp = inputs[index + 5];
+				
+				var wd_bld = jn_bld.editWidget;
+				var wd_alp = jn_alp.editWidget;
+				
+				var _param = new widgetParam(_px + ui(4), _py + ui(4), _pww, _pwh, jn_bld.showValue(), jn_bld.display_data, _m, layer_renderer.rx, layer_renderer.ry);
+				    _param.font = f_p2;
+				    
+				wd_bld.setFocusHover(_focus, _hover);
+				wd_bld.drawParam(_param);
+				
+				var _param = new widgetParam(_px + ui(4) + _pww + ui(8), _py + ui(4), _pww, _pwh, jn_alp.showValue(), jn_alp.display_data, _m, layer_renderer.rx, layer_renderer.ry);
+				    _param.font = f_p2;
+				    
+				wd_alp.setFocusHover(_focus, _hover);
+				wd_alp.drawParam(_param);
+			} 
 			
 			#region draw buttons
 				if(point_in_circle(_m[0], _m[1], _bx, _cy + lh / 2, ui(16))) {
@@ -175,8 +174,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				var _sss = min(ssh / _ssw, ssh / _ssh);
 				draw_surface_ext_safe(_surf, _sx0, _sy0, _sss, _sss, 0, c_white, 1);
 				
-				if(surface_selecting == index) draw_sprite_stretched_add(THEME.box_r2, 1, _sx0, _sy0, ssh, ssh, COLORS._main_accent, 1);
-				else						   draw_sprite_stretched_add(THEME.box_r2, 1, _sx0, _sy0, ssh, ssh, COLORS._main_icon, 0.3);
+				if(dynamic_input_inspecting == ind) draw_sprite_stretched_add(THEME.box_r2, 1, _sx0, _sy0, ssh, ssh, COLORS._main_accent, 1);
+				else                                draw_sprite_stretched_add(THEME.box_r2, 1, _sx0, _sy0, ssh, ssh, COLORS._main_icon, 0.3);
 			#endregion
 			
 			#region canvas layers
@@ -196,9 +195,10 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				if(_junc_canvas) hover &= _m[0] > _txx + ui(8 + 16);
 				
 				var tc = ind == dynamic_input_inspecting? COLORS._main_text_accent : COLORS._main_icon;
+				var tf = ind == dynamic_input_inspecting? f_p1b : f_p1;
 				if(hover) tc = COLORS._main_text;
 					
-				draw_set_text(f_p1, fa_left, fa_center, tc);
+				draw_set_text(tf, fa_left, fa_center, tc);
 				
 				if(canvas_draw != noone && _junc_canvas)
 					_txt = _junc_canvas.display_name;
@@ -238,49 +238,47 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				}
 			#endregion
 			
-			#region modifiers
-				if(_jun_layer) {
-					var _modis = _jun_layer.modifier;
-					var _mdx   = _sx0;
-					var _mdy   = _cy + _lh;
-					var mh     = ui(24);
+			if(_jun_layer) { // modifiers
+				var _modis = _jun_layer.modifier;
+				var _mdx   = _sx0;
+				var _mdy   = _cy + _lh;
+				var mh     = ui(24);
+				
+				for (var j = array_length(_modis) - 1; j >= 0; j--) {
+					var _modi = _modis[j];
+					var _mtx  = _mdx;
 					
-					for (var j = array_length(_modis) - 1; j >= 0; j--) {
-						var _modi = _modis[j];
-						var _mtx  = _mdx;
+					if(_modi.active_index != -1) {
+						var _bx = _mtx + ui(12);
+						var _by = _mdy + mh / 2;
 						
-						if(_modi.active_index != -1) {
-							var _bx = _mtx + ui(12);
-							var _by = _mdy + mh / 2;
+						var _acti = _modi.getInputData(_modi.active_index);
+						
+						if(_hover && point_in_circle(_m[0], _m[1], _bx, _by, ui(12))) {
+							draw_sprite_ui_uniform(THEME.visible_12, _acti, _bx, _by - ui(2), 1, c_white);
 							
-							var _acti = _modi.getInputData(_modi.active_index);
+							if(mouse_press(mb_left, _focus))
+								_modi.inputs[_modi.active_index].setValue(!_acti);
+						} else 
+							draw_sprite_ui_uniform(THEME.visible_12, _acti, _bx, _by - ui(2), 1, COLORS._main_icon);
 							
-							if(_hover && point_in_circle(_m[0], _m[1], _bx, _by, ui(12))) {
-								draw_sprite_ui_uniform(THEME.visible_12, _acti, _bx, _by - ui(2), 1, c_white);
-								
-								if(mouse_press(mb_left, _focus))
-									_modi.inputs[_modi.active_index].setValue(!_acti);
-							} else 
-								draw_sprite_ui_uniform(THEME.visible_12, _acti, _bx, _by - ui(2), 1, COLORS._main_icon);
-								
-						}
-						
-						_mtx += ui(24);
-						var _mhov = _hover && point_in_rectangle(_m[0], _m[1], _mtx, _mdy, _x + _w, _mdy + mh - 1);
-						draw_set_text(f_p2, fa_left, fa_center, _mhov? COLORS._main_text : COLORS._main_text_sub);
-						draw_text_add(_mtx, _mdy + mh / 2 - ui(2), _modi.display_name);
-						
-						if(_mhov && DOUBLE_CLICK) {
-							var pan = panelAdd("Panel_Inspector", true);
-							pan.content.setInspecting(_modi, true);
-						}
-						
-						_h   += mh;
-						_lh  += mh;
-						_mdy += mh;
 					}
+					
+					_mtx += ui(24);
+					var _mhov = _hover && point_in_rectangle(_m[0], _m[1], _mtx, _mdy, _x + _w, _mdy + mh - 1);
+					draw_set_text(f_p2, fa_left, fa_center, _mhov? COLORS._main_text : COLORS._main_text_sub);
+					draw_text_add(_mtx, _mdy + mh / 2 - ui(2), _modi.display_name);
+					
+					if(_mhov && DOUBLE_CLICK) {
+						var pan = panelAdd("Panel_Inspector", true);
+						pan.content.setInspecting(_modi, true);
+					}
+					
+					_h   += mh;
+					_lh  += mh;
+					_mdy += mh;
 				}
-			#endregion
+			}
 			
 			if(_hover && point_in_rectangle(_m[0], _m[1], _x, _cy, _x + _w, _cy + lh)) {
 				hoverIndex = ind;
@@ -319,10 +317,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				}
 				
 				if(mouse_press(mb_left, _focus)) {
-					layer_dragging    = ind;
-					surface_selecting = index;
-					
-					dynamic_input_inspecting = ind;
+					dynamic_input_inspecting = dynamic_input_inspecting == ind? noone : ind;
+					layer_dragging = ind;
 					refreshDynamicDisplay();
 				}
 			}
@@ -419,9 +415,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			.setUnitRef(function(index) { return [ overlay_w, overlay_h ]; });
 		
 		newInput(index + 2, nodeValue_Rotation($"Rotation {_s}", self, 0));
-		inputs[index + 2].options_histories = [ BLEND_TYPES,
-			{ cond: function() /*=>*/ {return LOADING_VERSION < 1_18_00_0}, list: global.BLEND_TYPES_18 }
-		];
+		inputs[index + 2].options_histories = [ BLEND_TYPES, { cond: function() /*=>*/ {return LOADING_VERSION < 1_18_00_0}, list: global.BLEND_TYPES_18 } ];
 		
 		newInput(index + 3, nodeValue_Vec2($"Scale {_s}", self, [ 1, 1 ] ));
 		
@@ -430,11 +424,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		newInput(index + 5, nodeValue_Float($"Opacity {_s}", self, 1))
 			.setDisplay(VALUE_DISPLAY.slider);
 		
-		while(_s >= array_length(attributes.layer_visible))
-			array_push(attributes.layer_visible, true);
-			
-		while(_s >= array_length(attributes.layer_selectable))
-			array_push(attributes.layer_selectable, true);
+		while(_s >= array_length(attributes.layer_visible))    array_push(attributes.layer_visible,    true);
+		while(_s >= array_length(attributes.layer_selectable)) array_push(attributes.layer_selectable, true);
 		
 		refreshDynamicDisplay();
 		return inputs[index + 0];
@@ -443,6 +434,10 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	input_display_dynamic = [ 
 		["Surface",   false], 0, 4, 5, 
 		["Transform", false], 1, 2, 3, 
+	];
+	
+	input_display_dynamic_full = [ 
+		["Surface",   false], 0, 4, 5, 1, 2, 3, 
 	];
 	
 	input_display_list = [
@@ -463,7 +458,6 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	temp_surface = [ surface_create(1, 1), surface_create(1, 1), surface_create(1, 1) ];
 	blend_temp_surface = temp_surface[2];
 	
-	surface_selecting = noone;
 	surf_dragging  = -1;
 	input_dragging = -1;
 	drag_type      = 0;
@@ -479,13 +473,6 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	overlay_h = 0;
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		// var amo     = getInputAmount();
-		// for( var i = 0; i < amo; i++ ) {
-		// 	var index = input_fix_len + i * data_length;
-		// 	var _surf = inputs[index].getValue();
-		// 	draw_surface_ext_safe(_surf, 8 + 128 * i, 64, .5, .5, 0, c_white, 1);
-		// }
-		
 		PROCESSOR_OVERLAY_CHECK
 		
 		var pad = current_data[0];
@@ -670,19 +657,23 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var a = anchors[index];
 			if(!is_struct(a)) continue;
 			
-			if(surface_selecting == index) {
+			var _hov = point_in_rectangle_points(_mx, _my, a.d0[0], a.d0[1], a.d1[0], a.d1[1], a.d2[0], a.d2[1], a.d3[0], a.d3[1]);
+			
+			if(dynamic_input_inspecting == i) {
 				var _ri = 0;
 				var _si = 0;
 			
 				if(point_in_circle(_mx, _my, a.d3[0], a.d3[1], 12)) {
-					hovering = index;
+					hovering = i;
 					hovering_type = NODE_COMPOSE_DRAG.scale;
 					_si = 1;
-				} else if(point_in_rectangle_points(_mx, _my, a.d0[0], a.d0[1], a.d1[0], a.d1[1], a.d2[0], a.d2[1], a.d3[0], a.d3[1])) {
-					hovering = index;
+					
+				} else if(_hov) {
+					hovering = i;
 					hovering_type = NODE_COMPOSE_DRAG.move;
+					
 				} else if(point_in_circle(_mx, _my, a.rr[0], a.rr[1], 12)) {
-					hovering = index;
+					hovering = i;
 					hovering_type = NODE_COMPOSE_DRAG.rotate;
 					_ri = 1;
 				}
@@ -690,27 +681,27 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				draw_sprite_colored(THEME.anchor_rotate, _ri, a.rr[0], a.rr[1],, a.rot);
 				draw_sprite_colored(THEME.anchor_scale,  _si, a.d3[0], a.d3[1],, a.rot);
 				
-			} else if(point_in_rectangle_points(_mx, _my, a.d0[0], a.d0[1], a.d1[0], a.d1[1], a.d2[0], a.d2[1], a.d3[0], a.d3[1]) && 
-				(hovering != surface_selecting || surface_selecting == noone)) {
-					
-				hovering = index;
+			} else if(_hov && (hovering != dynamic_input_inspecting || dynamic_input_inspecting == noone)) {
+				hovering = i;
 				hovering_type = NODE_COMPOSE_DRAG.move;
 			}
 		}
 		
 		if(mouse_press(mb_left, active)) {
-			surface_selecting = hovering;
-			// dynamic_input_inspecting = hovering;
+			dynamic_input_inspecting = hovering;
 			refreshDynamicDisplay();
 		}
 			
-		if(surface_selecting != noone) {
-			var a = array_safe_get_fast(anchors, surface_selecting, noone);
-			if(!is_struct(a)) surface_selecting = noone;
+		if(dynamic_input_inspecting != noone) {
+			var _ss = input_fix_len + dynamic_input_inspecting * data_length;
+			var   a = array_safe_get_fast(anchors, _ss, noone);
+			
+			if(!is_struct(a)) _ss = noone;
 		}
 		
 		if(hovering != noone) {
-			var a = anchors[hovering];
+			var hi = input_fix_len + hovering * data_length;
+			var a  = anchors[hi];
 			
 			draw_set_color(COLORS.node_composite_overlay_border);
 			draw_line(a.d0[0], a.d0[1], a.d1[0], a.d1[1]);
@@ -719,8 +710,9 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			draw_line(a.d3[0], a.d3[1], a.d2[0], a.d2[1]);
 		}
 				
-		if(surface_selecting != noone) {
-			var a = anchors[surface_selecting];
+		if(dynamic_input_inspecting != noone) {
+			var _ss = input_fix_len + dynamic_input_inspecting * data_length;
+			var   a = anchors[_ss];
 			
 			draw_set_color(COLORS._main_accent);
 			draw_line(a.d0[0], a.d0[1], a.d1[0], a.d1[1]);
@@ -730,27 +722,30 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		}
 		
 		if(hovering != noone && mouse_press(mb_left, active)) {
-			var a = anchors[hovering];
+			var hi = input_fix_len + hovering * data_length;
+			var a  = anchors[hi];
 			
 			if(hovering_type == NODE_COMPOSE_DRAG.move) {
-				surf_dragging	= hovering;
-				input_dragging	= hovering + 1;
+				surf_dragging	= hi;
+				input_dragging	= hi + 1;
 				drag_type		= hovering_type;
-				dragging_sx		= current_data[hovering + 1][0];
-				dragging_sy		= current_data[hovering + 1][1];
+				dragging_sx		= current_data[hi + 1][0];
+				dragging_sy		= current_data[hi + 1][1];
 				dragging_mx		= _mx;
 				dragging_my		= _my;
+				
 			} else if(hovering_type == NODE_COMPOSE_DRAG.rotate) { //rot
-				surf_dragging	= hovering;
-				input_dragging	= hovering + 2;
+				surf_dragging	= hi;
+				input_dragging	= hi + 2;
 				drag_type		= hovering_type;
-				dragging_sx		= current_data[hovering + 2];
+				dragging_sx		= current_data[hi + 2];
 				rot_anc_x		= overlay_x(a.cx, _x, _s);
 				rot_anc_y		= overlay_y(a.cy, _y, _s);
 				dragging_mx		= point_direction(rot_anc_x, rot_anc_y, _mx, _my);
+				
 			} else if(hovering_type == NODE_COMPOSE_DRAG.scale) { //sca
-				surf_dragging	= hovering;
-				input_dragging	= hovering + 3;
+				surf_dragging	= hi;
+				input_dragging	= hi + 3;
 				drag_type		= hovering_type;
 				dragging_sx		= _sca[0];
 				dragging_sy		= _sca[1];
@@ -763,18 +758,13 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	static step = function() {
 		var _dim_type = getSingleValue(1);
-		
 		inputs[2].setVisible(_dim_type == COMPOSE_OUTPUT_SCALING.constant);
-		
-		if(canvas_draw != noone && surface_selecting == noone && getInputAmount())
-			surface_selecting = input_fix_len;
 	}
 	
 	static processData = function(_outData, _data, _output_index, _array_index) {
 		var _outSurf  = _outData[0];
 		
 		if(getInputAmount() == 0) return _outData;
-		dynamic_input_inspecting = clamp(dynamic_input_inspecting, 0, getInputAmount() - 1);
 		
 		var _pad	  = _data[0];
 		var _dim_type = _data[1];
@@ -840,8 +830,6 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var _alp = _data[_ind + 5];
 			
 			if(!is_surface(_s)) continue;
-			// print($" < {CURRENT_FRAME}: in {_s}")
-			
 			var _ww = surface_get_width_safe(_s);
 			var _hh = surface_get_height_safe(_s);
 			var _sw = _ww * _sca[0];
@@ -867,11 +855,10 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			draw_surface_safe(temp_surface[!_bg]);
 		surface_reset_shader();
 		
-		// print($" > {CURRENT_FRAME}: out {_outSurf}\n")
-		
 		_outData[0] = _outSurf;
 		_outData[1] = _atlas;
 		_outData[2] = [ww, hh];
+		
 		return _outData;
 	}
 	
@@ -886,10 +873,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	static attributeDeserialize = function(attr) {
 		struct_append(attributes, attr); 
 		
-		if(struct_has(attr, "layer_visible"))
-			attributes.layer_visible = attr.layer_visible;
-			
-		if(struct_has(attr, "layer_selectable"))
-			attributes.layer_selectable = attr.layer_selectable;
+		if(struct_has(attr, "layer_visible"))    attributes.layer_visible    = attr.layer_visible;
+		if(struct_has(attr, "layer_selectable")) attributes.layer_selectable = attr.layer_selectable;
 	}
 }

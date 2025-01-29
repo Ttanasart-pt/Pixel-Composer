@@ -22,6 +22,7 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		new scrollItem("Spot",            s_node_2d_light_shape, 5), 
 		new scrollItem("Flame",           s_node_2d_light_shape, 6), 
 	];
+	
 	typeListStr = array_create_ext(array_length(typeList), function(i) /*=>*/ {return typeList[i].name});
 	
 	static createNewInput = function() {
