@@ -282,7 +282,7 @@ function Panel_Inspector() : PanelContent() constructor {
         function junction_bypass_toggle()      { 
             if(__dialog_junction == noone || __dialog_junction.bypass_junc == noone) return; 
             __dialog_junction.bypass_junc.visible = !__dialog_junction.bypass_junc.visible;
-            __dialog_junction.node.setHeight();
+            __dialog_junction.node.refreshNodeDisplay();
         }
         
         group_menu = [
