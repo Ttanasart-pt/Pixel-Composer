@@ -48,9 +48,6 @@ function globalvar_viewer_draw(xx, yy, ww, _m, focus, hover, _scrollPane, rx, ry
 				var_drag_insert = max(0, j > var_dragging? j : j - 1);
 				
 			if(j) {
-				// draw_set_color(merge_color(c_black, COLORS.panel_toolbar_separator, 0.75));
-				// draw_line_round(wd_x + ui(8), yy, wd_x + wd_w - ui(16), yy, 2);
-				
 				yy += _pd_h;
 				hh += _pd_h;
 			}
@@ -121,9 +118,16 @@ function globalvar_viewer_draw(xx, yy, ww, _m, focus, hover, _scrollPane, rx, ry
 					
 		if(del != noone)
 			array_delete(_node.inputs, del, 1);
+			
 	} else {
+		padd = viewMode == INSP_VIEW_MODE.spacious? ui(8) : ui(4);
+		if(viewMode == INSP_VIEW_MODE.compact) {
+			yy += ui(4);
+			hh += ui(4);
+		}
+		
 		for( var j = 0; j < array_length(_node.inputs); j++ ) {
-			var widg    = drawWidget(xx, yy, ww, _m, _node.inputs[j], true, focus, hover, _scrollPane, rx, ry);
+			var widg    = drawWidget(xx, yy, ww, _m, _node.inputs[j], true, hover, focus, _scrollPane, rx, ry);
 			var widH    = widg[0];
 			var mbRight = widg[1];
 			var widHov  = widg[2];

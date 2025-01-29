@@ -37,7 +37,10 @@ function __particleObject() constructor {
 	
 	__temp_pt = [ 0, 0 ];
 	static draw = function(exact, surf_w, surf_h) {
-		if(!surface_exists(surf)) return;
+		if(!is_surface(surf)) {
+			draw_point_color(x, y, blend);
+			return;
+		}
 		
 		var _sw = surface_get_width(surf)  * scx;
 		var _sh = surface_get_height(surf) * scy;

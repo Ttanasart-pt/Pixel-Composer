@@ -42,6 +42,8 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 	
 	#region left buttons
 		var butx = xx;
+		var lb_x = xx + ui(20);
+		
 		if(jun.connect_type == CONNECT_TYPE.input && jun.isAnimable() && !jun.expUse) { 							// Animation
 			var index = jun.hasJunctionFrom()? 2 : jun.is_anim;
 			
@@ -49,8 +51,10 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			if(jun.is_anim) cc = COLORS._main_value_positive;
 			if(index == 2)  cc = COLORS._main_accent;
 			
-			draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, 1, cc, 0.8);
-			if(_hover && point_in_circle(_m[0], _m[1], butx, lb_y, ui(10))) {
+			var _hov = _hover && point_in_circle(_m[0], _m[1], butx, lb_y, ui(10));
+			draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, 1, cc, .8 + .2 * _hov);
+			
+			if(_hov) {
 				cHov  = true;
 				
 				if(anim_hold != noone)
@@ -69,11 +73,12 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				}
 			}
 		}
-			
+		
 		if(anim_hold != noone && mouse_release(mb_left)) anim_hold = noone;
 			
-		butx += ui(20);
 		if(!global_var) {																							// Visibility
+			butx += ui(20);
+			lb_x += ui(20);
 			var _visi = jun.isVisible();
 			
 			draw_sprite_ui_uniform(THEME.junc_visible, _visi, butx, lb_y, 1,, 0.8);
@@ -87,15 +92,13 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				
 				draw_sprite_ui_uniform(THEME.junc_visible, _visi, butx, lb_y, 1,, 1);
 				TOOLTIP = __txt("Visibility");
-					
+				
 				if(mouse_press(mb_left, _focus)) {
 					jun.setVisibleManual(_visi? -1 : 1);
 					visi_hold = jun.visible_manual;
 				}
 			}
-		
-		} else
-			draw_sprite_ui_uniform(THEME.node_use_expression, 0, butx, lb_y, 1,, 0.8);
+		}
 			
 		if(visi_hold != noone && mouse_release(mb_left)) visi_hold = noone;
 			
@@ -114,7 +117,6 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		
 		draw_set_text(_font, fa_left, fa_center, cc);
 		var lb_w = ui(40 + 16) + string_width(_name);
-		var lb_x = ui(40)      + xx;
 		
 		if(jun.color != -1) {
 			draw_sprite_ext(THEME.timeline_color, 1, lb_x + ui(8), lb_y, 1, 1, 0, jun.color, 1);
@@ -143,7 +145,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		}
 	#endregion
 	
-	#region label
+	#region draw name
 		draw_text_add(lb_x, lb_y, _name);
 				
 		if(jun.tooltip != "") { // Tooltip

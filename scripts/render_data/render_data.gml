@@ -48,12 +48,11 @@ function NodeTopoSort() {
 }
 
 function NodeListSort(_nodeList) {
-	var _arr = [];
-	__topoSort(_arr, _nodeList);
+	var _arr = __topoSort([], _nodeList);
 	return _arr;
 }
 
-function __sortNode(_arr, _node, _sorted) {
+function __sortNode(_arr, _node, _sorted, _nodeMap = undefined) {
 	if(struct_has(_sorted, _node.node_id)) return;
 	
 	var _parents = [];
@@ -62,7 +61,8 @@ function __sortNode(_arr, _node, _sorted) {
 	for( var i = 0, n = array_length(_prev); i < n; i++ ) {
 		var _in = _prev[i];
 		if(_in == noone || struct_has(_sorted, _in.node_id)) continue;
-			
+		if(_nodeMap != undefined && !struct_has(_nodeMap, _in.node_id)) continue;
+		
 		array_push(_parents, _in);
 	}
 		
@@ -72,7 +72,7 @@ function __sortNode(_arr, _node, _sorted) {
 		__topoSort(_arr, _node.nodes, _sorted);
 	
 	for( var i = 0, n = array_length(_parents); i < n; i++ ) 
-		__sortNode(_arr, _parents[i], _sorted);
+		__sortNode(_arr, _parents[i], _sorted, _nodeMap);
 	
 	if(struct_has(_sorted, _node.node_id)) return;
 	array_push(_arr, _node);
@@ -83,39 +83,42 @@ function __sortNode(_arr, _node, _sorted) {
 	// print($"        > Adding > {_node.name} | {_arr}");
 }
 
-function __topoSort(_arr, _nodeArr, _sorted = {}) {
-	var _root     = [];
+function __topoSort(_arr = [], _nodeArr = [], _sorted = {}) {
+	var _leaf     = [];
 	var _leftOver = [];
 	var _global   = _nodeArr == PROJECT.nodes;
+	var _nodeMap  = _global? undefined : {};
 	__temp_nodeList = _nodeArr;
 	
 	for( var i = 0, n = array_length(_nodeArr); i < n; i++ ) {
 		var _node   = _nodeArr[i];
-		var _isRoot = true;
+		var _isLeaf = true;
+		
+		if(!_global) _nodeMap[$ _node.node_id]  = 1;
 		
 		if(is_instanceof(_node, Node_Collection_Inline) && !_node.is_root) { array_push(_leftOver, _node); continue; }
 		
 		if(_node.attributes.show_update_trigger && !array_empty(_node.updatedOutTrigger.getJunctionTo())) {
-			_isRoot = false;
+			_isLeaf = false;
 			
 		} else {
 			for( var j = 0, m = array_length(_node.outputs); j < m; j++ ) {
 				var _to = _node.outputs[j].getJunctionTo();
 				
-				if(_global) _isRoot &=  array_empty(_to);
-				else        _isRoot &= !array_any(_to, function(_val) /*=>*/ {return array_exists(__temp_nodeList, _val.node)});
+				if(_global) _isLeaf &=  array_empty(_to);
+				else        _isLeaf &= !array_any(_to, function(_val) /*=>*/ {return array_exists(__temp_nodeList, _val.node)});
 				
-				if(!_isRoot) break;
+				if(!_isLeaf) break;
 			}
 		}
 		
-		if(_isRoot) array_push(_root, _node);
+		if(_isLeaf) array_push(_leaf, _node);
 	}
 	
-	// print($"Root: {_root}");
+	// print($"Leaf: {_leaf}");
 	
-	for( var i = 0, n = array_length(_root); i < n; i++ ) 
-		__sortNode(_arr, _root[i], _sorted);
+	for( var i = 0, n = array_length(_leaf); i < n; i++ ) 
+		__sortNode(_arr, _leaf[i], _sorted, _nodeMap);
 	
 	for( var i = 0, n = array_length(_leftOver); i < n; i++ ) {
 		if(!struct_has(_sorted, _leftOver[i].node_id))
@@ -123,6 +126,7 @@ function __topoSort(_arr, _nodeArr, _sorted = {}) {
 	}
 	
 	__temp_nodeList = [];
+	return _arr;
 }
 
 function __nodeLeafList(_arr) {

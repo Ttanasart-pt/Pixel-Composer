@@ -226,10 +226,10 @@ function Panel_Inspector() : PanelContent() constructor {
         
         meta_steam_avatar = new checkBox(function() { STEAM_UGC_ITEM_AVATAR = !STEAM_UGC_ITEM_AVATAR; });
         
-        global_buttons = [
-            button(function() /*=>*/ { meta_display[2][1] = false; var_editing = !var_editing; }          ).setIcon(THEME.gear_16,    0, COLORS._main_icon_light),
-            button(function() /*=>*/ { meta_display[2][1] = false; PROJECT.globalNode.createValue(); }    ).setIcon(THEME.add_16,     0, COLORS._main_value_positive),
-        ];
+        global_button_edit = button(function() /*=>*/ { meta_display[2][1] = false; var_editing = !var_editing;       }).setIcon(THEME.gear_16, 0, COLORS._main_icon_light);
+        global_button_new  = button(function() /*=>*/ { meta_display[2][1] = false; PROJECT.globalNode.createValue(); }).setIcon(THEME.add_16,  0, COLORS._main_value_positive);
+        global_buttons         = [ global_button_edit ];
+        global_buttons_editing = [ global_button_edit, global_button_new ];
         
         GM_Explore_draw_init();
     #endregion
@@ -450,17 +450,18 @@ function Panel_Inspector() : PanelContent() constructor {
                     var _x1 = con_w;
                     var _y1 = yy + ui(2);
                     
-                    var _amo = array_length(global_buttons);
+                    var _butts = var_editing? global_buttons_editing : global_buttons;
+                    var _amo = array_length(_butts);
                     var _tw  = (_bw + ui(4)) * _amo;
                     draw_sprite_stretched_ext(THEME.box_r5_clr, 0, con_w - _tw, yy, _tw, lbh, COLORS.panel_inspector_group_bg, 1);
                     
-                    global_buttons[0].icon       = var_editing? THEME.accept_16 : THEME.gear_16;
-                    global_buttons[0].icon_blend = var_editing? COLORS._main_value_positive : COLORS._main_icon_light;
+                    global_button_edit.icon       = var_editing? THEME.accept_16 : THEME.gear_16;
+                    global_button_edit.icon_blend = var_editing? COLORS._main_value_positive : COLORS._main_icon_light;
                     
-                    for (var j = 0, m = array_length(global_buttons); j < m; j++) {
+                    for (var j = 0, m = array_length(_butts); j < m; j++) {
                         _x1 -= _bw + ui(4);
                         
-                        var _b = global_buttons[j];
+                        var _b = _butts[j];
                             _b.setFocusHover(pFOCUS, _hover);
                             _b.draw(_x1 + ui(2), _y1, _bw, _bh, _m, THEME.button_hide_fill);
                         if(_b.inBBOX(_m)) contentPane.hover_content = true;

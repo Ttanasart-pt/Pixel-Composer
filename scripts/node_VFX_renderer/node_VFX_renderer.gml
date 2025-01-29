@@ -42,7 +42,7 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		array_push(input_display_list, ["Particle", false], index + 0, index + 1);
 		
 		return inputs[index + 1];
-	} 
+	}
 	
 	setDynamicInput(2, true, VALUE_TYPE.particle);
 	dyna_input_check_shift = 1;
@@ -80,13 +80,12 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var surf_w = surface_get_width_safe(_outSurf);
 		var surf_h = surface_get_height_safe(_outSurf);
 		
-		surface_set_shader(_outSurf, _type == PARTICLE_RENDER_TYPE.surface? sh_sample : noone);
-		if(_type == PARTICLE_RENDER_TYPE.surface)
-			shader_set_interpolation(_outSurf);
+		surface_set_shader(_outSurf, noone);
+			var blend, parts, part, _part;
 			
-			for( var i = input_fix_len; i < array_length(inputs); i += data_length ) {
-				var blend = inputs[i + 0].getValue(_time);
-				var parts = inputs[i + 1].getValue(_time);
+			for( var i = input_fix_len, n = array_length(inputs); i < n; i += data_length ) {
+				blend = inputs[i + 0].getValue(_time);
+				parts = inputs[i + 1].getValue(_time);
 				
 				switch(blend) {
 					case PARTICLE_BLEND_MODE.normal:   BLEND_NORMAL break;
@@ -97,16 +96,16 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				if(!is_array(parts) || array_length(parts) == 0) continue;
 				if(!is_array(parts[0])) parts = [ parts ];
 				
-				for(var j = 0; j < array_length(parts); j++) {
-					var part = parts[j];
+				for( var j = 0, m = array_length(parts); j < m; j++ ) {
+					part = parts[j];
 					
-					for(var k = 0; k < array_length(part); k++) {
-						var _part = part[k];
-						
+					for( var k = 0, p = array_length(part); k < p; k++ ) {
+						_part = part[k];
 						_part.render_type = _type;
 						_part.line_draw   = _llife;
 						
-						if(_part.active || _type) _part.draw(_exact, surf_w, surf_h);
+						if(_part.active || _type)
+							_part.draw(_exact, surf_w, surf_h);
 					}
 				}
 			}

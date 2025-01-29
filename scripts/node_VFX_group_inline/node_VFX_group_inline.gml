@@ -14,6 +14,7 @@ function Node_VFX_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 	is_simulation      = true;
 	update_on_frame    = true;
 	managedRenderOrder = true;
+	loopable           = true;
 	
 	prev_nodes = [];
 	
@@ -51,7 +52,6 @@ function Node_VFX_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 			
 			if(!string_pos("Node_VFX", _ins)) 
 				continue;
-			
 			if(_ins == "Node_VFX_Renderer" || _ins == "Node_VFX_Renderer_Output") 
 				continue;
 			

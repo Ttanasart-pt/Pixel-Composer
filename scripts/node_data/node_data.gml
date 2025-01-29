@@ -479,7 +479,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		if(dummy_input) dummy_input.index = _ina;
 		inputs = _in;
-		refreshNodeDisplay();
+		setHeight();
 		
 		if(input_display_dynamic == -1) input_display_list = _input_display_list;
 	}
