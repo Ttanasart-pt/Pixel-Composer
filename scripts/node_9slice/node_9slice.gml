@@ -15,6 +15,11 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	attribute_surface_depth();
 	attribute_interpolation();
 	
+	input_display_list = [
+		["Surface", false], 0, 
+		["Slices",  false], 1, 2, 3, 
+	]
+	
 	drag_side = -1;
 	drag_mx   = 0;
 	drag_my   = 0;
@@ -75,6 +80,8 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		if(inputs[1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny)) 
 			return;
 		
+		if(!hover) return;
+		
 		if(distance_to_line_infinite(_mx, _my, sp_r, -hh, sp_r, hh) < 12) {
 			draw_line_width(sp_r, -hh, sp_r, hh, 3);
 			if(mouse_press(mb_left, active)) {
@@ -108,6 +115,7 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				drag_sv   = _splice[3];
 			}
 		}
+		
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
