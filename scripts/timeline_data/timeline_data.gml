@@ -74,13 +74,12 @@ function timelineItemNode(node) : timelineItem() constructor {
 		color_dsp = cc;
 		
 		draw_sprite_stretched_ext(THEME.box_r2, 0, _x, _y, _w, lh, cc, alpha);
+		if(_sel) draw_sprite_stretched_ext(THEME.box_r2, 1, _x, _y, _w, lh, COLORS._main_accent, 1);
 		
 		if(hover && point_in_rectangle(_msx, _msy, _x + ui(20), _y, _x + _w, _y + lh - 1)) {
-			draw_sprite_stretched_add(THEME.box_r2, 0, _x, _y, _w, lh, col, 0.05);
+			draw_sprite_stretched_add(THEME.box_r2, 1, _x, _y, _w, lh, col, 0.3);
 			res = 1;
 		}
-		
-		// draw_sprite_stretched_add(THEME.box_r2, 1, _x, _y, _w, lh, c_white, 0.15);
 		
 		var tx = lx + lw - ui(7);
 		var tt = __txtx("panel_animation_goto", "Go to node");
@@ -89,8 +88,6 @@ function timelineItemNode(node) : timelineItem() constructor {
 		if(buttonInstant(noone, tx - ui(9), _y + ui(1), ui(18), ui(18), _m, hover, focus, tt, THEME.animate_node_go, 0, col == -1? COLORS._main_icon_light : col, 0.4) == 2)
 			graphFocusNode(node);
 			
-		if(_sel) draw_sprite_stretched_ext(THEME.box_r2, 1, _x, _y, _w, lh, COLORS._main_accent, 1);
-		
 		var aa = 0.75;
 		if(hover && point_in_rectangle(_msx, _msy, lx, _y, lx + ui(20), _y + lh)) {
 			aa = 1;

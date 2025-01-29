@@ -40,7 +40,7 @@ function variable_editor(nodeVal) constructor {
 		refreshInput();
 		
 		RENDER_ALL
-	} );
+	});
 	sc_type.update_hover = false;
 	
 	sc_disp = new scrollBox(display_list[0], function(value) {
@@ -61,7 +61,7 @@ function variable_editor(nodeVal) constructor {
 	slider_range = [ 0, 1 ];
 	slider_step  = 0.01;
 	
-	static refreshInput = function() { #region
+	static refreshInput = function() {
 		value.setType(val_type[type_index]);
 		value.name = value_name;
 		
@@ -146,9 +146,9 @@ function variable_editor(nodeVal) constructor {
 			case "Export" :		value.setDisplay(VALUE_DISPLAY.path_save, { filter: "" });	break;
 			case "Font" :		value.setDisplay(VALUE_DISPLAY.path_font);					break;
 		}
-	} #endregion
+	}
 	
-	static draw = function(_x, _y, _w, _m, _focus, _hover) { #region
+	static draw = function(_x, _y, _w, _m, _focus, _hover) {
 		var _h = 0;
 		
 		switch(sc_disp.data_list[disp_index]) {
@@ -177,7 +177,7 @@ function variable_editor(nodeVal) constructor {
 		}
 		
 		return _h;
-	} #endregion
+	}
 }
 
 function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
@@ -193,38 +193,36 @@ function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
 	input_display_list = -1;
 	anim_priority = -999;
 	
+	static isActiveDynamic = function(frame = CURRENT_FRAME) { return true; }
+		
 	static valueUpdate = function(index) { RENDER_ALL }
 	
-	static createValue = function() { #region
+	static createValue = function() {
 		var _in    = nodeValue_Float("NewValue", self, 0);
 		_in.editor = new variable_editor(_in);
 		array_push(inputs, _in);
 		
 		return _in;
-	} #endregion
+	}
 	
-	static inputExist = function(key) { #region
-		return ds_map_exists(value, key);
-	} #endregion
+	static inputExist = function(key) { return ds_map_exists(value, key); }
 	
-	static inputGetable = function(from, key) { #region
+	static inputGetable = function(from, key) {
 		if(!inputExist(key)) return false;
 		var to = value[? key];
 		
-		if(!typeCompatible(from.type, to.type))
-			return false;
-		if(typeIncompatible(from, to))
-			return false;
+		if(!typeCompatible(from.type, to.type)) return false;
+		if(typeIncompatible(from, to))          return false;
 		
 		return true;
-	} #endregion
+	}
 	
-	static getInputKey = function(key, def = noone) { #region
+	static getInputKey = function(key, def = noone) {
 		if(!ds_map_exists(value, key)) return def;
 		return value[? key];
-	} #endregion
+	}
 	
-	static step = function() { #region
+	static step = function() {
 		for( var i = 0; i < array_length(inputs); i++ ) {
 			var _inp = inputs[i];
 			value[? _inp.name] = _inp;
@@ -233,9 +231,9 @@ function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
 			if(string_pos(" ", _inp.name)) val = false;
 			_inp.editor.tb_name.boxColor = val? c_white : COLORS._main_value_negative;
 		}
-	} #endregion
+	}
 	
-	static serialize = function() { #region
+	static serialize = function() {
 		var _map = {};
 		
 		var _inputs = [];
@@ -255,9 +253,9 @@ function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
 		_map.attri  = attributes;
 		
 		return _map;
-	} #endregion
+	}
 	
-	static deserialize = function(_map) { #region
+	static deserialize = function(_map) {
 		var _inputs = _map.inputs;
 		
 		for(var i = 0; i < array_length(_inputs); i++) {
@@ -283,5 +281,5 @@ function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
 		if(struct_has(_map, "attr")) struct_override(attributes, _map.attr); 
 		
 		step();
-	} #endregion
+	}
 }
