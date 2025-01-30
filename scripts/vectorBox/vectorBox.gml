@@ -48,6 +48,12 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 		tb[i].slidable = true;
 	}
 	
+	static setFont = function(_f = noone) { 
+		for( var i = 0; i < size; i++ ) 
+			tb[i].setFont(_f);
+		return self; 
+	}
+	
 	static apply = function() {
 		for( var i = 0; i < size; i++ ) {
 			tb[i].apply();

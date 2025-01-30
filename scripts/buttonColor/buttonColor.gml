@@ -22,13 +22,13 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 	b_picker      = button(onColorPick);
 	b_picker.icon = THEME.color_picker_dropper;
 	
-	b_quick_pick = button(function() {
+	b_quick_pick = button(function() /*=>*/ {
 		var pick = instance_create(mouse_mx, mouse_my, o_dialog_color_quick_pick);
 		array_insert(pick.palette, 0, current_color);
 		pick.onApply = onApply;
 	});
 	b_quick_pick.activate_on_press = true;
-	b_quick_pick.icon = THEME.color_wheel;
+	b_quick_pick.icon              = THEME.color_wheel;
 	
 	function apply(value) {
 		if(!interactable) return;
@@ -60,9 +60,7 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 			parentDialog.addChildren(dialog);
 	}
 	
-	static drawParam = function(params) {
-		return draw(params.x, params.y, params.w, params.h, params.data, params.m);
-	}
+	static drawParam = function(params) { return draw(params.x, params.y, params.w, params.h, params.data, params.m); }
 	
 	static draw = function(_x, _y, _w, _h, _color, _m) {
 		x = _x;
@@ -76,14 +74,16 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 		var _bs = min(_h, ui(32));
 		
 		if(_w - _bs > ui(64) && interactable) {
-			var bx = _x + _cw - ui(32);
-			_cw -= ui(32);
+			var bx = _x + _cw - _bs;
+			_cw -= _bs;
 			
 			b_picker.setFocusHover(active && !instance_exists(o_dialog_color_quick_pick), hover);
 			
-			b_picker.draw(bx, _y + _h / 2 - _bs / 2, ui(32), _bs, _m, THEME.button_hide_fill);
+			b_picker.draw(bx, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide_fill);
 			b_picker.icon_blend = c_white;
 			b_picker.icon_index = 0;
+			b_picker.icon_size  = min(1, _bs / ui(32));
+			
 			if(instance_exists(o_dialog_color_selector) && o_dialog_color_selector.selector.dropper_active && o_dialog_color_selector.drop_target != noone) {
 				if(o_dialog_color_selector.drop_target == self) {
 					b_picker.icon_blend = COLORS._main_accent;
@@ -93,14 +93,15 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 			}
 			
 			if(_cw > ui(64)) {
-				bx  -= ui(32 + 4)
-				_cw -= ui(32 + 4);
-			
+				bx  -= _bs + ui(4)
+				_cw -= _bs + ui(4);
+				
+				b_quick_pick.icon_size = min(1, _bs / ui(32));
 				b_quick_pick.setFocusHover(active, hover);
-				b_quick_pick.draw(bx, _y + _h / 2 - _bs / 2, ui(32), _bs, _m, THEME.button_hide_fill);
+				b_quick_pick.draw(bx, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide_fill);
 			}
 			
-			_cw -= ui(8);
+			_cw -= ui(4);
 		}
 		
 		var _bx  = _x  + ui(2);

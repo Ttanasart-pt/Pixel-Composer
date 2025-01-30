@@ -4,7 +4,7 @@ if(winMan_isMinimized()) exit;
 _MOUSE_BLOCK = MOUSE_BLOCK;
 if(MOUSE_BLOCK) MOUSE_BLOCK--;
 
-if(APP_SURF_OVERRIDE) {
+if(APP_SURF_OVERRIDE || DROPPER_DROPPING) {
 	APP_SURF      = surface_verify(APP_SURF,      WIN_W, WIN_H);
 	PRE_APP_SURF  = surface_verify(PRE_APP_SURF,  WIN_W, WIN_H);
 	POST_APP_SURF = surface_verify(POST_APP_SURF, WIN_W, WIN_H);
@@ -60,6 +60,11 @@ draw_clear(COLORS.bg);
 	winManDraw();
 #endregion
 
+if(DROPPER_DROPPING) {
+	surface_reset_target();
+	draw_surface(APP_SURF, 0, 0);
+}
+
 if(APP_SURF_OVERRIDE) {
 	surface_reset_target();
 	draw_surface(POST_APP_SURF, 0, 0);
@@ -72,3 +77,5 @@ if(APP_SURF_OVERRIDE) {
 		draw_surface(APP_SURF, 0, 0);
 	surface_reset_target();
 }
+
+DROPPER_DROPPING = false;

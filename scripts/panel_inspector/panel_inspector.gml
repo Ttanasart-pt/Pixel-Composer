@@ -181,7 +181,6 @@ function Panel_Inspector() : PanelContent() constructor {
         attribute_hovering = noone;
     #endregion
     
-    globalvar_viewer_init();
     drawWidgetInit();
     
     #region ---- header labels ----
@@ -226,10 +225,12 @@ function Panel_Inspector() : PanelContent() constructor {
         
         meta_steam_avatar = new checkBox(function() { STEAM_UGC_ITEM_AVATAR = !STEAM_UGC_ITEM_AVATAR; });
         
-        global_button_edit = button(function() /*=>*/ { meta_display[2][1] = false; var_editing = !var_editing;       }).setIcon(THEME.gear_16, 0, COLORS._main_icon_light);
+        global_button_edit = button(function() /*=>*/ { meta_display[2][1] = false; global_drawer.editing = !global_drawer.editing; }).setIcon(THEME.gear_16, 0, COLORS._main_icon_light);
         global_button_new  = button(function() /*=>*/ { meta_display[2][1] = false; PROJECT.globalNode.createValue(); }).setIcon(THEME.add_16,  0, COLORS._main_value_positive);
         global_buttons         = [ global_button_edit ];
         global_buttons_editing = [ global_button_edit, global_button_new ];
+        
+        global_drawer = new GlobalVarDrawer();
         
         GM_Explore_draw_init();
     #endregion
@@ -450,13 +451,13 @@ function Panel_Inspector() : PanelContent() constructor {
                     var _x1 = con_w;
                     var _y1 = yy + ui(2);
                     
-                    var _butts = var_editing? global_buttons_editing : global_buttons;
+                    var _butts = global_drawer.editing? global_buttons_editing : global_buttons;
                     var _amo = array_length(_butts);
                     var _tw  = (_bw + ui(4)) * _amo;
                     draw_sprite_stretched_ext(THEME.box_r5_clr, 0, con_w - _tw, yy, _tw, lbh, COLORS.panel_inspector_group_bg, 1);
                     
-                    global_button_edit.icon       = var_editing? THEME.accept_16 : THEME.gear_16;
-                    global_button_edit.icon_blend = var_editing? COLORS._main_value_positive : COLORS._main_icon_light;
+                    global_button_edit.icon       = global_drawer.editing? THEME.accept_16 : THEME.gear_16;
+                    global_button_edit.icon_blend = global_drawer.editing? COLORS._main_value_positive : COLORS._main_icon_light;
                     
                     for (var j = 0, m = array_length(_butts); j < m; j++) {
                         _x1 -= _bw + ui(4);
@@ -631,15 +632,11 @@ function Panel_Inspector() : PanelContent() constructor {
                     break;
                     
                 case "globalvar" :
-                    if(findPanel("Panel_Globalvar")) {
-                        yy += ui(4);
-                        hh += ui(4);
-                        continue;
-                    }
-                    
+                    if(findPanel("Panel_Globalvar")) { yy += ui(4); hh += ui(4); continue; }
                     if(_m[1] > yy) contentPane.hover_content = true;
                     
-                    var glPar = globalvar_viewer_draw(ui(16), yy, contentPane.surface_w - ui(24), _m, pFOCUS, _hover, contentPane, ui(16) + x, top_bar_h + y);
+                    global_drawer.viewMode = viewMode;
+                    var glPar = global_drawer.draw(ui(16), yy, contentPane.surface_w - ui(24), _m, pFOCUS, _hover, contentPane, ui(16) + x, top_bar_h + y);
                     var gvh   = glPar[0];
                     
                     yy += gvh + ui(8);
@@ -1328,7 +1325,7 @@ function Panel_Inspector() : PanelContent() constructor {
             if(PROJECT.meta.steam == FILE_STEAM_TYPE.steamOpen) {
                 var _tw = string_width(txt) / 2;
                 BLEND_ADD
-                draw_sprite_ui(THEME.steam, 0, w / 2 - _tw - ui(16), ui(29), 1, 1, 0, COLORS._main_icon);
+                draw_sprite_ui(THEME.steam, 0, w / 2 - _tw + ui(8), ui(29), 1, 1, 0, COLORS._main_icon);
                 BLEND_NORMAL
             }
             

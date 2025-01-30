@@ -12,6 +12,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	format    = TEXT_AREA_FORMAT._default;
 	precision = 5;
 	padding   = ui(8);
+	base_index = 3;
 	
 	unit   = noone;
 	suffix = "";
@@ -556,8 +557,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		
 		////- Draw
 		
-		if(!hide) {
-			draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, boxColor, 1);
+		if(hide <= 0) {
+			draw_sprite_stretched_ext(THEME.textbox, base_index, _x, _y, _w, _h, boxColor, 1);
 			
 			if(slide_range != noone) {
 				var _minn    = slide_range[0];
@@ -866,7 +867,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				if(mouse_press(mb_right, active))
 					menuCall("textbox_context", context_menu);
 			
-			} else if(!hide)
+			} else if(!hide && base_index == 3)
 				draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, boxColor, 0.5 + 0.5 * interactable);
 			
 			if(drawText) {

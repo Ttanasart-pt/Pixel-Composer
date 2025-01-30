@@ -1,3 +1,7 @@
+globalvar DROPPER_DROPPING, DROPPER_SURFACE;
+DROPPER_DROPPING = false;
+DROPPER_SURFACE  = noone;
+
 function colorSelector(onApply = noone) constructor {
 	self.onApply = onApply;
 	
@@ -14,7 +18,7 @@ function colorSelector(onApply = noone) constructor {
 	dropper_active = false;
 	dropper_close  = true;
 	dropper_color  = c_white;
-	interactable = true;
+	interactable   = true;
 	
 	disp_mode = 0;
 	
@@ -24,25 +28,11 @@ function colorSelector(onApply = noone) constructor {
 	content_surface = surface_create_valid(1, 1);
 	side_surface    = surface_create_valid(1, 1);
 	
-	tb_hue = slider(0, 255, 1, function(_val) {
-		if(!interactable) return;
-		hue = clamp(_val, 0, 255);
-		setHSV();
-	}).setSlideType(1);
+	tb_hue = slider(0, 255, 1, function(_val) /*=>*/ { if(!interactable) return; hue = clamp(_val, 0, 255); setHSV(); }).setSlideType(1);
+	tb_sat = slider(0, 255, 1, function(_val) /*=>*/ { if(!interactable) return; sat = clamp(_val, 0, 255); setHSV(); }).setSlideType(1);
+	tb_val = slider(0, 255, 1, function(_val) /*=>*/ { if(!interactable) return; val = clamp(_val, 0, 255); setHSV(); }).setSlideType(1);
 	
-	tb_sat = slider(0, 255, 1, function(_val) {
-		if(!interactable) return;
-		sat = clamp(_val, 0, 255);
-		setHSV();
-	}).setSlideType(1);
-	
-	tb_val = slider(0, 255, 1, function(_val) {
-		if(!interactable) return;
-		val = clamp(_val, 0, 255);
-		setHSV();
-	}).setSlideType(1);
-	
-	tb_red = slider(0, 255, 1, function(_val) {
+	tb_red = slider(0, 255, 1, function(_val) /*=>*/ {
 		if(!interactable) return;
 		var r = clamp(_val, 0, 255);
 		var g = color_get_green(current_color);
@@ -53,7 +43,7 @@ function colorSelector(onApply = noone) constructor {
 		resetHSV();
 	}).setSlideType(1);
 	
-	tb_green = slider(0, 255, 1, function(_val) {
+	tb_green = slider(0, 255, 1, function(_val) /*=>*/ {
 		if(!interactable) return;
 		var r = color_get_red(current_color);
 		var g = clamp(_val, 0, 255);
@@ -64,7 +54,7 @@ function colorSelector(onApply = noone) constructor {
 		resetHSV();
 	}).setSlideType(1);
 	
-	tb_blue = slider(0, 255, 1, function(_val) {
+	tb_blue = slider(0, 255, 1, function(_val) /*=>*/ {
 		if(!interactable) return;
 		var r = color_get_red(current_color);
 		var g = color_get_green(current_color);
@@ -75,7 +65,7 @@ function colorSelector(onApply = noone) constructor {
 		resetHSV();
 	}).setSlideType(1);
 	
-	tb_alpha = slider(0, 255, 1, function(_val) {
+	tb_alpha = slider(0, 255, 1, function(_val) /*=>*/ {
 		if(!interactable) return;
 		var alp = clamp(_val, 0, 255);
 		
@@ -140,28 +130,64 @@ function colorSelector(onApply = noone) constructor {
 		if(!dropper_active) return;
 		dropper_color = int64(cola(draw_getpixel(mouse_mx, mouse_my)));
 		MOUSE_BLOCK   = true;
+		DROPPER_DROPPING = true;
 	}
 	
 	static drawDropper = function(instance) {
 		if(mouse_check_button_pressed(mb_left)) {
 			setColor(dropper_color);
-			if(dropper_close)
-				instance_destroy(instance);
 			dropper_active = false;
 			MOUSE_BLOCK    = true;
-			
+			if(dropper_close) instance_destroy(instance);
 			return;
 		}
 		
-		if(dropper_active && mouse_check_button_pressed(mb_right))
-			instance_destroy(instance);
-		if(keyboard_check_released(vk_alt))
+		if((dropper_active && mouse_check_button_pressed(mb_right)) || keyboard_check_released(vk_alt)) 
 			instance_destroy(instance);
 		
-		var dx = mouse_mx + ui(36);
-		var dy = mouse_my + ui(36);
-		draw_sprite_stretched(THEME.color_picker_sample, 0, dx - ui(20), dy - ui(20), ui(40), ui(40));
-		draw_sprite_stretched_ext(THEME.color_picker_sample, 0, dx - ui(18), dy - ui(18), ui(36), ui(36), dropper_color, 1);
+		if(is_surface(APP_SURF)) {
+			var _x  = mouse_mx;
+			var _y  = mouse_my;
+			var _ss = 4;
+			var _x0 = _x - _ss, _y0 = _y - _ss;
+			var _x1 = _x + _ss, _y1 = _y + _ss;
+			var _sc = ui(16);
+			
+			var _ww = (_ss * 2 + 1) * _sc;
+			var _vx = _x + ui(32);        if(_vx + _ww > WIN_W - ui(16)) _vx = _x - ui(32) - _ww;
+			var _vy = _y - ui(32) - _ww;  if(_vy < ui(16)) _vy = _y + ui(32);
+			
+			DROPPER_SURFACE = surface_verify(DROPPER_SURFACE, _ww, _ww);
+			surface_set_target(DROPPER_SURFACE);
+				DRAW_CLEAR;
+				
+				gpu_set_colorwriteenable(0, 0, 0, 1);
+				draw_set_color(c_white);
+				draw_circle_prec(_ww / 2, _ww / 2, _ww / 2, false, 32);
+				
+				gpu_set_colorwriteenable(1, 1, 1, 0);
+				draw_surface_part_ext(APP_SURF, _x0, _y0, _x1 - _x0 + 1, _y1 - _y0 + 1, 0, 0, _sc, _sc, c_white, 1);
+				
+				draw_set_color(COLORS._main_icon);
+				draw_set_alpha(.2);
+				
+				var _amo = _ss * 2 + 1;
+				for( var i = 0; i < _amo; i++ ) {
+					draw_line(i * _sc, 0, i * _sc, _ww);
+					draw_line(0, i * _sc, _ww, i * _sc);
+				}
+				
+				draw_set_alpha(1);
+				draw_set_color(COLORS._main_accent);
+				draw_rectangle(_ss * _sc, _ss * _sc, _ss * _sc + _sc - 1, _ss * _sc + _sc - 1, true);
+				
+				gpu_set_colorwriteenable(1, 1, 1, 1);
+			surface_reset_target();
+			
+			draw_surface(DROPPER_SURFACE, _vx, _vy);
+			draw_circle_ui(_vx + _ww / 2 + 1, _vy + _ww / 2 + 1, _ww / 2 + 2, .025, COLORS._main_icon_light, 1);
+			draw_circle_ui(_vx + _ww / 2 + 1, _vy + _ww / 2 + 1, _ww / 2 + 2, .010, COLORS._main_icon, 1);
+		}
 	}
 	
 	static draw = function(_x, _y, focus, hover) {

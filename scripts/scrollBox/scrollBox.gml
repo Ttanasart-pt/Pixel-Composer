@@ -33,8 +33,10 @@ function scrollBox(_data, _onModify, update_hover = true) : widget() constructor
 	extra_button = noone;
 	padding      = ui(8);
 	item_pad     = ui(8);
+	text_color   = COLORS._main_text;
 	
 	type = 0;
+	hide = 0;
 	
 	static trigger = function() {
 		data = is_method(data_list)? data_list() : data_list;
@@ -93,8 +95,7 @@ function scrollBox(_data, _onModify, update_hover = true) : widget() constructor
 		w = _w;
 		draw_set_font(type == 1? f_p0b : font);
 		var _txw = is_string(_text)? string_width(_text) : ui(32);
-		if(type == 1)
-			w = _txw + padding * 2 + ui(24);
+		if(type == 1) w = _txw + padding * 2 + ui(24);
 		
 		if(extra_button != noone) {
 			extra_button.setFocusHover(active, hover);
@@ -107,7 +108,7 @@ function scrollBox(_data, _onModify, update_hover = true) : widget() constructor
 			return h;
 		}
 		
-		if(type == 0) draw_sprite_stretched(THEME.textbox, 3, _x, _y, w, _h);
+		if(type == 0 && hide == 0) draw_sprite_stretched(THEME.textbox, 3, _x, _y, w, _h);
 		
 		if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + w, _y + _h)) {
 			if(type == 0) draw_sprite_stretched(THEME.textbox, 1, _x, _y, w, _h);
@@ -128,7 +129,7 @@ function scrollBox(_data, _onModify, update_hover = true) : widget() constructor
 				}
 			}
 		} else {
-			if(type == 0) draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, w, _h, c_white, 0.5 + 0.5 * interactable);
+			if(type == 0 && hide == 0) draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, w, _h, c_white, 0.5 + 0.5 * interactable);
 			if(mouse_press(mb_left)) deactivate();
 		}
 		
@@ -145,7 +146,7 @@ function scrollBox(_data, _onModify, update_hover = true) : widget() constructor
 		var _xc  = (_x0 + _x1) / 2;
 		var _tx1 = _x;
 		
-		draw_set_text(type == 1? f_p0b : font, align, fa_center, COLORS._main_text);
+		draw_set_text(type == 1? f_p0b : font, align, fa_center, text_color);
 		
 		if(_h >= line_get_height()) {
 			if(is_string(_text))  {

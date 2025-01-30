@@ -3,10 +3,7 @@ if !ready exit;
 
 #region dropper
 	selector.interactable = interactable;
-	if(selector.dropper_active) {
-		selector.drawDropper(self);
-		exit;
-	}
+	if(selector.dropper_active) { selector.drawDropper(self); exit; }
 #endregion
 
 #region base UI

@@ -5,8 +5,8 @@ event_inherited();
 	dialog_w = ui(812);
 	dialog_h = ui(396);
 	title_height = 52;
-	destroy_on_click_out = true;
 	interactable = true;
+	destroy_on_click_out = true;
 	
 	name = __txtx("color_selector_title", "Color selector");
 	
@@ -14,28 +14,12 @@ event_inherited();
 	selector       = new colorSelector();
 	drop_target    = noone;
 	
-	function setApply(_onApply) {
-		onApply = _onApply;
-		selector.onApply = _onApply;
-		return self;
-	}
+	function setApply(_onApply) { onApply = _onApply; selector.onApply = _onApply; return self; }
+	function setDefault(color) { selector.setColor(color); previous_color = color; return self; }
 	
-	function setDefault(color) {
-		selector.setColor(color);
-		previous_color = color;
-		return self;
-	}
-	
-	b_cancel = button(function() {
-		onApply(previous_color);
-		instance_destroy();
-	}).setIcon(THEME.undo, 0, COLORS._main_icon)
-	  .setTooltip(__txtx("dialog_revert_and_exit", "Revert and exit"));
-	
-	b_apply = button(function() {
-		onApply(selector.current_color);
-		instance_destroy();
-	}).setIcon(THEME.accept, 0, COLORS._main_icon_dark);
+	b_cancel = button(function() /*=>*/ { onApply(previous_color); instance_destroy(); }).setIcon(THEME.undo, 0, COLORS._main_icon)
+	                                                                         .setTooltip(__txtx("dialog_revert_and_exit", "Revert and exit"));
+	b_apply  = button(function() /*=>*/ { onApply(selector.current_color); instance_destroy(); }).setIcon(THEME.accept, 0, COLORS._main_icon_dark);
 #endregion
 
 #region presets

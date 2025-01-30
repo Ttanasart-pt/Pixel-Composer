@@ -60,6 +60,14 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		draw_line(-ww, sp_b, ww, sp_b);
 		
 		if(drag_side > -1) {
+			draw_set_color(c_white);
+			switch(drag_side) {
+				case 0 : draw_line_width(sp_r, -hh, sp_r, hh, 3); break;
+				case 1 : draw_line_width(-ww, sp_t, ww, sp_t, 3); break;
+				case 2 : draw_line_width(sp_l, -hh, sp_l, hh, 3); break;
+				case 3 : draw_line_width(-ww, sp_b, ww, sp_b, 3); break;
+			}
+			
 			var vv;
 			
 			if(drag_side == 0)		vv = drag_sv - (_mx - drag_mx) / _s;
@@ -77,10 +85,11 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			}
 		}
 		
-		if(inputs[1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny)) 
-			return;
-		
+		if(inputs[1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny)) return;
 		if(!hover) return;
+		if(drag_side > -1) return;
+		
+		draw_set_color(COLORS._main_accent);
 		
 		if(distance_to_line_infinite(_mx, _my, sp_r, -hh, sp_r, hh) < 12) {
 			draw_line_width(sp_r, -hh, sp_r, hh, 3);
@@ -90,6 +99,7 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				drag_my   = _my;
 				drag_sv   = _splice[0];
 			}
+			
 		} else if(distance_to_line_infinite(_mx, _my, -ww, sp_t, ww, sp_t) < 12) {
 			draw_line_width(-ww, sp_t, ww, sp_t, 3);
 			if(mouse_press(mb_left, active)) {
@@ -98,6 +108,7 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				drag_my   = _my;
 				drag_sv   = _splice[1];
 			}
+			
 		} else if(distance_to_line_infinite(_mx, _my, sp_l, -hh, sp_l, hh) < 12) {
 			draw_line_width(sp_l, -hh, sp_l, hh, 3);
 			if(mouse_press(mb_left, active)) {
@@ -106,6 +117,7 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				drag_my   = _my;
 				drag_sv   = _splice[2];
 			}
+			
 		} else if(distance_to_line_infinite(_mx, _my, -ww, sp_b, ww, sp_b) < 12) {
 			draw_line_width(-ww, sp_b, ww, sp_b, 3);
 			if(mouse_press(mb_left, active)) {
@@ -114,6 +126,7 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				drag_my   = _my;
 				drag_sv   = _splice[3];
 			}
+			
 		}
 		
 	}

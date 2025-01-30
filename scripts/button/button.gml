@@ -122,7 +122,9 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 		
 		if(icon) {
 			var ind = is_array(icon_index)? icon_index[0]() : icon_index;
+			if(icon_size != 1) gpu_set_tex_filter(true);
 			draw_sprite_ui_uniform(icon, ind, bx, _y + _h / 2, icon_size, icon_blend, aa);
+			if(icon_size != 1) gpu_set_tex_filter(false);
 		}
 		
 		if(WIDGET_CURRENT == self) draw_sprite_stretched_ext(THEME.widget_selecting, 0, _x - ui(3), _y - ui(3), _w + ui(6), _h + ui(6), COLORS._main_accent, 1);

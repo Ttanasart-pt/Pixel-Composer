@@ -14,44 +14,37 @@ function variable_editor(nodeVal) constructor {
 		/*Text*/	[ "Default", ],
 	]
 	
-	tb_name = new textBox(TEXTBOX_INPUT.text, function(str) { 
-		value_name = str;
-		value.name = str;
-		
-		if(string_pos(" ", value.name))
-			noti_warning("Global variable name can't have space.");
+	tb_name = new textBox(TEXTBOX_INPUT.text, function(s) /*=>*/ { 
+		if(string_pos(" ", s)) { noti_warning("Global variable name can't have space."); return; }
+		value.name = s;
 		RENDER_ALL
 	});
+	tb_name.hide = 1;
+	tb_name.slidable = false;
 	
-	vb_range = new vectorBox(2, function(value, index) { 
-		slider_range[index] = value;
-		refreshInput();
-	});
+	vb_range = new vectorBox(2, function(v, i) /*=>*/ { slider_range[i] = v; refreshInput(); });
+	vb_range.linkable = false;
 	
-	tb_step = new textBox(TEXTBOX_INPUT.number, function(value) { 
-		slider_step = value;
-		refreshInput();
-	});
+	tb_step  = new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ { slider_step = v; refreshInput(); });
 	
-	sc_type = new scrollBox(val_type_name, function(value) {
-		type_index = value;
-		sc_disp.data_list = display_list[value];
+	sc_type = new scrollBox(val_type_name, function(v) /*=>*/ {
+		type_index = v;
+		sc_disp.data_list = display_list[v];
 		disp_index = 0;
 		refreshInput();
-		
 		RENDER_ALL
 	});
+	sc_type.text_color   = CDEF.main_mdwhite;
 	sc_type.update_hover = false;
 	
-	sc_disp = new scrollBox(display_list[0], function(value) {
-		disp_index = value;
+	sc_disp = new scrollBox(display_list[0], function(v) /*=>*/ {
+		disp_index = v;
 		refreshInput();
-		
 		RENDER_ALL
-	} );
+	});
+	sc_disp.text_color   = CDEF.main_mdwhite;
 	sc_disp.update_hover = false;
 	
-	value_name  = "NewValue";
 	type_index  = 0;
 	_type_index = 0;
 	
@@ -61,9 +54,18 @@ function variable_editor(nodeVal) constructor {
 	slider_range = [ 0, 1 ];
 	slider_step  = 0.01;
 	
+	static setFont = function(_f) { 
+		tb_name.setFont(_f);
+		sc_type.setFont(_f);
+		sc_disp.setFont(_f);
+		vb_range.setFont(_f);
+		tb_step.setFont(_f);
+		
+		return self;
+	}
+	
 	static refreshInput = function() {
 		value.setType(val_type[type_index]);
-		value.name = value_name;
 		
 		if(_type_index != type_index || _disp_index != disp_index) {
 			switch(value.type) {
@@ -74,48 +76,34 @@ function variable_editor(nodeVal) constructor {
 						case "Range" :
 						case "Vector range" :	
 						case "Slider range" :	
-						case "Rotation range" :	
-							value.setValue([0, 0]);		
-							break;
-						case "Vector3" :	
-							value.setValue([0, 0, 0]);
-							break;
+						case "Rotation range" :	value.setValue([0, 0]);          break;
+						
+						case "Vector3" :        value.setValue([0, 0, 0]);       break;
+						
 						case "Vector4" :	
 						case "Vector2 range" :	
-						case "Padding" :	
-							value.setValue([0, 0, 0, 0]);
-							break;
-						case "Area" :	
-							value.setValue([0, 0, 0, 0, 0]);
-							break;
-						default :
-							value.setValue(0);
-							break;
+						case "Padding" :	    value.setValue([0, 0, 0, 0]);    break;
+							
+						case "Area" :	        value.setValue([0, 0, 0, 0, 0]); break;
+							
+						default : value.setValue(0);
 					}
 					break;
+					
 				case VALUE_TYPE.color : 
 					switch(sc_disp.data_list[disp_index]) {
-						case "Palette" :	
-							value.setValue([0]);
-							break;
-						default :
-							value.setValue(0);
-							break;
+						case "Palette" : value.setValue([0]); break;
+						default :        value.setValue(0);   break;
 					}
 					break;
-				case VALUE_TYPE.gradient :	
-					value.setValue(new gradientObject(c_black));		
-					break;
-				case VALUE_TYPE.boolean : 
-					value.setValue(false);
-					break;
+					
+				case VALUE_TYPE.gradient : value.setValue(new gradientObject(c_black)); break;
+				case VALUE_TYPE.boolean :  value.setValue(false);                       break;
+					
 				case VALUE_TYPE.text :
-				case VALUE_TYPE.path : 
-					value.setValue("");
-					break;
-				case VALUE_TYPE.curve :
-					value.setValue(CURVE_DEF_01);
-					break;
+				case VALUE_TYPE.path :     value.setValue("");                          break;
+				
+				case VALUE_TYPE.curve :    value.setValue(CURVE_DEF_01);                break;
 			}
 		}
 		
@@ -127,12 +115,9 @@ function variable_editor(nodeVal) constructor {
 			case "Range" :			value.setDisplay(VALUE_DISPLAY.range);			break;
 			case "Rotation" :		value.setDisplay(VALUE_DISPLAY.rotation);		break;
 			case "Rotation range" : value.setDisplay(VALUE_DISPLAY.rotation_range);	break;
-			case "Slider" :			
-				value.setDisplay(VALUE_DISPLAY.slider, { range: [slider_range[0], slider_range[1], slider_step] });
-				break;
-			case "Slider range" :	
-				value.setDisplay(VALUE_DISPLAY.slider_range, { range: [slider_range[0], slider_range[1], slider_step] });	
-				break;
+			case "Slider" :			value.setDisplay(VALUE_DISPLAY.slider,       { range: [slider_range[0], slider_range[1], slider_step] }); break;
+			case "Slider range" :	value.setDisplay(VALUE_DISPLAY.slider_range, { range: [slider_range[0], slider_range[1], slider_step] }); break;
+				
 			case "Padding" :		value.setDisplay(VALUE_DISPLAY.padding);		break;
 			case "Vector2" :		
 			case "Vector3" :		
@@ -148,31 +133,32 @@ function variable_editor(nodeVal) constructor {
 		}
 	}
 	
-	static draw = function(_x, _y, _w, _m, _focus, _hover) {
+	static draw = function(_x, _y, _w, _m, _focus, _hover, viewMode) {
 		var _h = 0;
+		var _font = viewMode == INSP_VIEW_MODE.spacious? f_p0 : f_p2;
 		
+		var _wd_h = viewMode == INSP_VIEW_MODE.spacious? ui(32) : ui(24);
+		var _pd_h = viewMode == INSP_VIEW_MODE.spacious? ui(4)  : ui(2)
+
 		switch(sc_disp.data_list[disp_index]) {
 			case "Slider" :			
 			case "Slider range" :	
-				var wd_h = ui(32);
-				var lb_w = ui(72);
+				if(viewMode == INSP_VIEW_MODE.compact) { _h += ui(2); _y += ui(2); }
 				
 				vb_range.setFocusHover(_focus, _hover);
 				 tb_step.setFocusHover(_focus, _hover);
 				
-				draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_sub);
-				draw_text(_x + ui(8), _y + wd_h / 2, __txt("Range"));
-						
-				vb_range.draw(_x + lb_w, _y, _w - lb_w, wd_h, slider_range, noone, _m);
-				_h += wd_h + ui(4);
-				_y += wd_h + ui(4);
+				vb_range.axis = [ __txt("min"), __txt("max") ];
+				tb_step.label = __txt("step");
 				
-				draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_sub);
-				draw_text(_x + ui(8), _y + wd_h / 2, __txt("Step"));
+				var stw = _w / 3;
+				var _wx = _x;
+				var _ww = _w - (stw + ui(4));
+				vb_range.draw(_wx, _y, _ww, _wd_h, slider_range, noone, _m);
+				tb_step.draw(_x + _w - stw, _y, stw, _wd_h, slider_step , _m);
 				
-				 tb_step.draw(_x + lb_w, _y, _w - lb_w, wd_h, slider_step , _m);
-				_h += wd_h + ui(8);
-				_y += wd_h + ui(8);
+				_h += _wd_h + ui(2);
+				_y += _wd_h + ui(2);
 				break;
 		}
 		
@@ -198,7 +184,8 @@ function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
 	static valueUpdate = function(index) { RENDER_ALL }
 	
 	static createValue = function() {
-		var _in    = nodeValue_Float("NewValue", self, 0);
+		var _key = $"NewValue{array_length(inputs)}";
+		var _in  = nodeValue_Float(_key, self, 0);
 		_in.editor = new variable_editor(_in);
 		array_push(inputs, _in);
 		
@@ -227,7 +214,7 @@ function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
 			var _inp = inputs[i];
 			value[? _inp.name] = _inp;
 			
-			var val   = true;
+			var val = true;
 			if(string_pos(" ", _inp.name)) val = false;
 			_inp.editor.tb_name.boxColor = val? c_white : COLORS._main_value_negative;
 		}
@@ -242,7 +229,6 @@ function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
 			
 			_ser.global_type    = inputs[i].editor.type_index;
 			_ser.global_disp    = inputs[i].editor.disp_index;
-			_ser.global_name    = inputs[i].editor.value_name;
 			_ser.global_s_range = inputs[i].editor.slider_range;
 			_ser.global_s_step  = inputs[i].editor.slider_step;
 			
@@ -261,12 +247,10 @@ function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
 		for(var i = 0; i < array_length(_inputs); i++) {
 			var _des  = _inputs[i];
 			var _in   = createValue();
-			var _name = struct_try_get(_des, "global_name", "");
 			
 			_in.editor.type_index = struct_try_get(_des, "global_type", 0);
 			_in.editor.disp_index = struct_try_get(_des, "global_disp", 0);
 			_in.editor.disp_index = struct_try_get(_des, "global_disp", 0);
-			_in.editor.value_name = _name;
 			
 			_in.editor.slider_range = _des.global_s_range;
 			_in.editor.slider_step  = struct_try_get(_des, "global_s_step",  0.01);
@@ -274,8 +258,6 @@ function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
 			_in.editor.refreshInput();
 			
 			_in.applyDeserialize(_des);
-			
-			if(struct_has(PROGRAM_ARGUMENTS, _name)) _in.setValue(PROGRAM_ARGUMENTS[$ _name]);
 		}
 		
 		if(struct_has(_map, "attr")) struct_override(attributes, _map.attr); 
