@@ -40,40 +40,12 @@ function Project() constructor {
 	previewNode    = "";
 	inspectingNode = "";
 	
-	previewGrid = {
-		show	: false,
-		snap	: false,
-		size	: [ 16, 16 ],
-		opacity : 0.5,
-		color   : cola(COLORS.panel_preview_grid),
-		
-		pixel   : false,
-	}
+	previewGrid     = variable_clone(PREFERENCES.project_previewGrid);
+	previewSetting  = variable_clone(PREFERENCES.project_previewSetting);
 	
-	graphGrid = {
-		show	    : true,
-		show_origin : false,
-		snap	    : true,
-		size	    : 16,
-		color       : cola(c_white),
-		opacity     : 0.05,
-		highlight   : 12,
-	}
-	
-	graph_display_parameter = {
-		show_grid	    : true,
-		show_dimension  : true,
-		show_compute    : true,
-	
-		avoid_label     : false,
-		preview_scale   : 100,
-		highlight       : false,
-		
-		show_control    : false,
-		show_tooltip    : true,
-	}
-	
-	addons = {};
+	graphGrid       = variable_clone(PREFERENCES.project_graphGrid);
+	graphDisplay    = variable_clone(PREFERENCES.project_graphDisplay);
+	graphConnection = variable_clone(PREFERENCES.project_graphConnection);
 	
 	onion_skin = {
 		enabled : false,
@@ -83,6 +55,8 @@ function Project() constructor {
 		alpha   : 0.5,
 		on_top  : true,
 	};
+	
+	addons = {};
 	
 	tunnels_in     = ds_map_create();
 	tunnels_in_map = ds_map_create();
@@ -176,9 +150,7 @@ function Project() constructor {
 		globalNode.step();
 	}
 	
-	static postStep = function() {
-		slideShowPostStep();
-	}
+	static postStep = function() { slideShowPostStep(); }
 	
 	useSlideShow      = false;
 	slideShow         = {};
@@ -205,11 +177,10 @@ function Project() constructor {
 	}
 	
 	static cleanup = function() {
-		array_foreach(allNodes, function(_node) { 
-			_node.active = false; 
-			_node.cleanUp(); 
-			
-			delete _node;
+		array_foreach(allNodes, function(_n) /*=>*/ { 
+			_n.active = false; 
+			_n.cleanUp(); 
+			delete _n;
 		});
 		
 		ds_map_destroy(nodeMap);
@@ -245,9 +216,10 @@ function Project() constructor {
 		var _insp_node = PANEL_INSPECTOR? PANEL_INSPECTOR.getInspecting() : noone;
 		_map.inspectingNode = _insp_node? _insp_node.node_id : noone;
 		
-		_map.previewGrid = previewGrid;
-		_map.graphGrid   = graphGrid;
-		_map.attributes  = attributes;
+		_map.previewGrid     = variable_clone(previewGrid);
+		_map.graphGrid       = variable_clone(graphGrid);
+		_map.graphConnection = variable_clone(graphConnection);
+		_map.attributes      = variable_clone(attributes);
 		
 		_map.timelines   = timelines.serialize();
 		_map.notes       = array_map(notes, function(note) { return note.serialize(); } );
@@ -256,7 +228,7 @@ function Project() constructor {
 		_map.load_layout = load_layout;
 		if(load_layout) _map.layout = panelSerialize(true);
 		
-		_map.graph_display_parameter = graph_display_parameter;
+		_map.graph_display_parameter = graphDisplay;
 		
 		__node_list = [];
 		array_foreach(allNodes, function(node) { if(node.active) array_push(__node_list, node.serialize()); })
@@ -285,15 +257,16 @@ function Project() constructor {
 			animator.playback   	= struct_try_get(_anim_map, "playback",    ANIMATOR_END.loop);
 		}
 		
-		if(struct_has(_map, "onion_skin"))	struct_override(onion_skin,  _map.onion_skin);
-		if(struct_has(_map, "previewGrid")) struct_override(previewGrid, _map.previewGrid);
-		if(struct_has(_map, "graphGrid"))	struct_override(graphGrid,	 _map.graphGrid);
-		if(struct_has(_map, "attributes"))	struct_override(attributes,  _map.attributes);
+		if(struct_has(_map, "onion_skin"))	    struct_override(onion_skin,      _map.onion_skin);
+		if(struct_has(_map, "previewGrid"))     struct_override(previewGrid,     _map.previewGrid);
+		if(struct_has(_map, "graphGrid"))	    struct_override(graphGrid,	     _map.graphGrid);
+		if(struct_has(_map, "graphConnection"))	struct_override(graphConnection, _map.graphConnection);
+		if(struct_has(_map, "attributes"))	    struct_override(attributes,  _map.attributes);
 		if(struct_has(_map, "metadata"))	meta.deserialize(_map.metadata);
 		if(struct_has(_map, "composer"))	composer = _map.composer;
 		if(struct_has(_map, "freeze"))	    freeze   = _map.freeze;
 		
-		if(struct_has(_map, "graph_display_parameter"))	struct_override(graph_display_parameter,  _map.graph_display_parameter);
+		if(struct_has(_map, "graph_display_parameter"))	struct_override(graphDisplay,  _map.graph_display_parameter);
 		
 		is_nightly	= struct_try_get(_map, "is_nightly",  is_nightly);
 		load_layout	= struct_try_get(_map, "load_layout", load_layout);

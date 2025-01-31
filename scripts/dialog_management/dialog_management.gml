@@ -30,8 +30,7 @@ function dialogPanelCall(_panel, _x = noone, _y = noone, params = {}) {
 	dia.y      = _y;
 	dia.xstart = _x;
 	dia.ystart = _y;
-	dia.anchor = _panel.anchor;
-	
+	dia.anchor = params[$ "anchor"] ?? _panel.anchor;
 	dia.resetPosition();
 	
 	if(struct_try_get(params, "focus", true))

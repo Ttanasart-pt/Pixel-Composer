@@ -5,7 +5,7 @@ function connection_get_curve(x0, y0, x1, y1, xc = noone, yc = noone) { #region
 	if(yc == noone) yc = (y0 + y1) / 2;
 	
 	var pnt    = array_create(sample + 1);
-	var sample = ceil((abs(x0 - x1) + abs(y0 - y1)) / 32 * PREFERENCES.connection_line_sample);
+	var sample = ceil((abs(x0 - x1) + abs(y0 - y1)) / 32 * PROJECT.graphConnection.line_sample);
 	    sample = clamp(sample, 2, 128);
 	
 	var x2 = lerp(x0, x1, 0. - sign(x1 - x0) * 0.2) - abs(y1 - y0) * 0.1;
@@ -41,7 +41,7 @@ function connection_get_curve(x0, y0, x1, y1, xc = noone, yc = noone) { #region
 	return pnt;
 } #endregion
 function connection_get_curve_down(x0, y0, x1, y1) { #region
-	var sample = ceil((abs(x0 - x1) + abs(y0 - y1)) / 32 * PREFERENCES.connection_line_sample);
+	var sample = ceil((abs(x0 - x1) + abs(y0 - y1)) / 32 * PROJECT.graphConnection.line_sample);
 	sample = clamp(sample, 2, 128);
 	
 	var pnt = array_create(sample + 1);

@@ -22,12 +22,12 @@
 
 #region animation class
 	function AnimationManager() constructor {
-		frames_total	= 30;
+		frames_total	= PREFERENCES.project_animation_duration;
 		current_frame	= 0;
 		real_frame		= 0;
 		time_since_last_frame = 0;
 		
-		framerate		= 30;
+		framerate		= PREFERENCES.project_animation_framerate;
 		is_playing		= false;
 		is_rendering	= false;
 		frame_progress	= false;

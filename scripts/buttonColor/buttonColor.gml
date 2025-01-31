@@ -73,7 +73,7 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 		var _cw = _w;
 		var _bs = min(_h, ui(32));
 		
-		if(_w - _bs > ui(64) && interactable) {
+		if(_w - _bs > ui(128) && interactable) {
 			var bx = _x + _cw - _bs;
 			_cw -= _bs;
 			
@@ -92,7 +92,7 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 					b_picker.icon_blend = COLORS._main_icon;
 			}
 			
-			if(_cw > ui(64)) {
+			if(_cw > ui(128)) {
 				bx  -= _bs + ui(4)
 				_cw -= _bs + ui(4);
 				

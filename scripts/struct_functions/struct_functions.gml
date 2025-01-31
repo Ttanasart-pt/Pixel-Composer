@@ -8,7 +8,10 @@ function struct_override(original, override) {
 		var _key = array_safe_get(args, i);
 		
 		if(!struct_has(original, _key)) continue;
-		original[$ _key] = override[$ _key];
+		if(is_struct(original[$ _key]))
+			original[$ _key] = struct_override(original[$ _key], override[$ _key]);
+		else 
+			original[$ _key] = override[$ _key];
 	}
 	
 	return original;

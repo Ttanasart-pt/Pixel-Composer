@@ -353,9 +353,11 @@
 	
 	function resetPosition() {
 		if(!active) return;
+		
 		if(anchor == ANCHOR.none) {
 			dialog_x = xstart - dialog_w / 2;
 			dialog_y = ystart - dialog_h / 2;
+			
 		} else {
 			if(anchor & ANCHOR.left)   dialog_x = min(xstart, WIN_SW - dialog_w);
 			if(anchor & ANCHOR.right)  dialog_x = max(xstart - dialog_w, 0);

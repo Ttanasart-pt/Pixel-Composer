@@ -101,17 +101,6 @@
 	
 		PREFERENCES.graph_zoom_smoooth				= 4;
 		PREFERENCES.graph_open_group_in_tab			= false;
-	
-		PREFERENCES.connection_line_width			= 2;
-		PREFERENCES.connection_line_sample			= 1;
-		PREFERENCES.connection_line_corner			= 8;
-		PREFERENCES.connection_line_aa				= 2;
-		PREFERENCES.connection_line_transition		= true;
-		PREFERENCES.connection_line_highlight		= 0;
-		PREFERENCES.connection_line_highlight_fade	= 0.75;
-		PREFERENCES.connection_line_highlight_all	= false;
-		PREFERENCES.connection_line_extend			= 16;
-		PREFERENCES.curve_connection_line			= 1;
 		
 		PREFERENCES.collection_animated				= true;
 		PREFERENCES.collection_label				= true;
@@ -184,6 +173,67 @@
 	
 	#region ////////////////////////////////////////////////////////////////////// EXPERIMENT ///////////////////////////////////////////////////////////////////////
 		PREFERENCES.multi_window		= false;
+	#endregion
+	
+	#region //////////////////////////////////////////////////////////////////////// PROJECT ////////////////////////////////////////////////////////////////////////
+		PREFERENCES.project_animation_duration  = 30;
+		PREFERENCES.project_animation_framerate = 30;
+		
+		PREFERENCES.project_previewGrid = {
+			show	: false,
+			snap	: false,
+			size	: [ 16, 16 ],
+			opacity : 0.5,
+			color   : cola(#6d6d81),
+			pixel   : false,
+		}
+		
+		PREFERENCES.project_previewSetting = {
+			show_info             : true,
+			show_view_control     : 1,
+			
+			d3_tool_snap          : false,
+            d3_tool_snap_position : 1,
+            d3_tool_snap_rotation : 15,
+		}
+		
+		PREFERENCES.project_graphGrid = {
+			show	    : true,
+			show_origin : false,
+			snap	    : true,
+			size	    : 16,
+			color       : cola(c_white),
+			opacity     : 0.05,
+			highlight   : 12,
+		}
+		
+		PREFERENCES.project_graphDisplay = {
+			show_grid	    : true,
+			show_dimension  : true,
+			show_compute    : true,
+			show_view_control : 1,
+			
+			avoid_label     : false,
+			preview_scale   : 100,
+			highlight       : false,
+			
+			show_control    : false,
+			show_tooltip    : true,
+		}
+		
+		PREFERENCES.project_graphConnection = {
+			type : 1, 
+			
+			line_width			: 2,
+			line_sample			: 1,
+			line_corner			: 8,
+			line_aa				: 2,
+			line_highlight		: 0,
+			line_highlight_fade	: 0.75,
+			line_highlight_all	: false,
+			line_extend			: 16,
+		}
+		
 	#endregion
 	
 	PREFERENCES_DEF = variable_clone(PREFERENCES);
@@ -413,6 +463,36 @@
 	}
 #endregion
 
+#region get set
+	function getPreference(_k, _pref = PREFERENCES) {
+		var _sep = string_splice(_k, ".");
+		var _pnt = PREFERENCES;
+		
+		for( var i = 0, n = array_length(_sep); i < n; i++ ) {
+			var _s = _sep[i];
+			if(!struct_has(_pnt, _s)) return noone;
+			_pnt = _pnt[$ _s];
+		}
+		
+		return _pnt;
+	}
+	
+	function setPreference(_k, _v) {
+		var _sep = string_splice(_k, ".");
+		var _pnt = PREFERENCES;
+		
+		for( var i = 0, n = array_length(_sep); i < n; i++ ) {
+			var _s = _sep[i];
+			if(!struct_has(_pnt, _s)) return noone;
+			
+			if(i == n - 1) _pnt[$ _s] = _v;
+			else _pnt = _pnt[$ _s];
+		}
+		
+		PREF_SAVE();
+	}
+#endregion
+
 #region command palette
 	//!#mfunc __regFnPref {"args":["name"," key"],"order":[0,1]}
 #macro __regFnPref_mf0  { registerFunctionLite("Preference", 
@@ -450,11 +530,6 @@
 		__regFnPref_mf0 __txtx("pref_supporter_icon",                  "Show supporter icon") __regFnPref_mf1                "show_supporter_icon"              __regFnPref_mf2
 		
 		__regFnPref_mf0 __txtx("pref_add_node_remember",               "Remember add node position") __regFnPref_mf1         "add_node_remember"                __regFnPref_mf2
-		__regFnPref_mf0 __txtx("pref_connection_type",                 "Connection type") __regFnPref_mf1                    "curve_connection_line"            __regFnPref_mf2
-		__regFnPref_mf0 __txtx("pref_connection_thickness",            "Connection thickness") __regFnPref_mf1               "connection_line_width"            __regFnPref_mf2
-		__regFnPref_mf0 __txtx("pref_connection_curve_smoothness",     "Connection curve smoothness") __regFnPref_mf1        "connection_line_sample"           __regFnPref_mf2
-		__regFnPref_mf0 __txtx("pref_connection_aa",                   "Connection anti aliasing") __regFnPref_mf1           "connection_line_aa"               __regFnPref_mf2
-		__regFnPref_mf0 __txtx("pref_connection_anim",                 "Connection line animation") __regFnPref_mf1          "connection_line_transition"       __regFnPref_mf2
 		
 		__regFnPref_mf0 __txtx("pref_graph_group_in_tab",              "Open group in new tab") __regFnPref_mf1              "graph_open_group_in_tab"          __regFnPref_mf2
 		__regFnPref_mf0 __txtx("pref_graph_zoom_smoothing",            "Graph zoom smoothing") __regFnPref_mf1               "graph_zoom_smoooth"               __regFnPref_mf2
@@ -474,3 +549,4 @@
 		__regFnPref_mf0 __txtx("pref_file_watcher_delay",              "File watcher delay (s)") __regFnPref_mf1             "file_watcher_delay"               __regFnPref_mf2
 	}
 #endregion
+

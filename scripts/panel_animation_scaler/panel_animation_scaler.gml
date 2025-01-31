@@ -4,35 +4,32 @@ function Panel_Animation_Scaler() : Panel_Linear_Setting() constructor {
 	w = ui(380);
 	scale_to = TOTAL_FRAMES;
 	
-	#region data
-		properties = [
-			new __Panel_Linear_Setting_Item(
-				__txtx("anim_scale_target_frame_length", "Target frame length"),
-				new textBox(TEXTBOX_INPUT.number, function(to) { scale_to = toNumber(to); }), 
-				function() { return scale_to; },
-			)
-		];
-		
-		setHeight();
-		h += ui(36);
-		
-		b_apply = button(function() { scale(); })
-					.setIcon(THEME.accept_16, 0, COLORS._main_icon_dark);
-	#endregion
+	properties = [
+		new __Panel_Linear_Setting_Item(
+			__txtx("anim_scale_target_frame_length", "Target frame length"),
+			new textBox(TEXTBOX_INPUT.number, function(to) /*=>*/ { scale_to = toNumber(to); }), 
+			function() /*=>*/ {return scale_to},
+		)
+	];
+	
+	hpad = ui(36);
+	setHeight();
+	
+	b_apply = button(function() /*=>*/ {return scale()}).setIcon(THEME.accept_16, 0, COLORS._main_icon_dark);
 	
 	static scale = function() {
 		var fac = scale_to / TOTAL_FRAMES;
 		
-		for (var k = 0, n = array_length(PROJECT.allNodes); k < n; k++) {
-			var _node = PROJECT.allNodes[k];
-			
+		for (var i = 0, n = array_length(PROJECT.allNodes); i < n; i++) {
+			var _node = PROJECT.allNodes[i];
 			if(!_node || !_node.active) continue;
 			
-			for(var i = 0; i < array_length(_node.inputs); i++) {
-				var in = _node.inputs[i];
+			for(var j = 0, m = array_length(_node.inputs); j < m; j++) {
+				var in = _node.inputs[j];
 				if(!in.is_anim) continue;
-				for(var j = 0; j < array_length(in.animator.values); j++) {
-					var t = in.animator.values[j];
+				
+				for(var k = 0, p = array_length(in.animator.values); k < p; k++) {
+					var t = in.animator.values[k];
 					t.time = t.ratio * scale_to;
 				}
 			}

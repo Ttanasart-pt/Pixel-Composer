@@ -48,7 +48,6 @@
     function panel_preview_set_reset_view_on()          { CALL("preview_set_reset_view_on");         PANEL_PREVIEW.set_reset_view_on();                                       }
     function panel_preview_toggle_reset_view()          { CALL("preview_toggle_reset_view");         PANEL_PREVIEW.toggle_reset_view();                                       }
     
-    function panel_preview_show_info()                  { CALL("preview_show_info");                 PANEL_PREVIEW.show_info  = !PANEL_PREVIEW.show_info;                     }
     function panel_preview_toggle_lock()                { CALL("preview_toggle_lock");               PANEL_PREVIEW.toggle_lock();                                             }
     
     function __fnInit_Preview() {
@@ -113,8 +112,6 @@
         
         registerFunction("Preview", "Toggle Onion Skin",        "",    MOD_KEY.none,                 panel_preview_onion_enabled             ).setMenu("preview_onion_enabled")
         registerFunction("Preview", "Toggle Onion Skin view",   "",    MOD_KEY.none,                 panel_preview_onion_on_top              ).setMenu("preview_onion_on_top")
-        
-        registerFunction("Preview", "Toggle Show Info",         "",    MOD_KEY.none,                 panel_preview_show_info                 ).setMenu("preview_show_info")
         registerFunction("Preview", "Toggle Lock",              "",    MOD_KEY.none,                 panel_preview_toggle_lock               ).setMenu("preview_toggle_lock")
         
         registerFunction("Preview", "Popup",            		"",    MOD_KEY.none,   function() /*=>*/ { create_preview_window(PANEL_PREVIEW.getNodePreview());           }).setMenu("preview_popup")
@@ -220,9 +217,6 @@ function Panel_Preview() : PanelContent() constructor {
         bg_color            = COLORS.panel_bg_clear;
         
         mouse_pos_string    = "";
-        
-        show_info           = true;
-        show_view_control   = 1;
         
         resetViewOnDoubleClick = true;
         
@@ -340,11 +334,6 @@ function Panel_Preview() : PanelContent() constructor {
             d3_scene_light1.transform.position.set(1, 2, -3);
         #endregion
         
-        #region tool
-            d3_tool_snap          = false;
-            d3_tool_snap_position = 1;
-            d3_tool_snap_rotation = 15;
-        #endregion
     #endregion
     
     #region // ---- minimap ----
@@ -435,13 +424,15 @@ function Panel_Preview() : PanelContent() constructor {
                 THEME.icon_grid_setting,
                 function() /*=>*/ {return 0},
                 function() /*=>*/ {return new tooltipHotkey(__txtx("grid_title", "Grid settings") + "...", "Preview", "Grid Settings")}, 
-                function(param) /*=>*/ { dialogPanelCall(new Panel_Preview_Grid_Setting(), param.x, param.y, { anchor: ANCHOR.bottom | ANCHOR.left }); },
+                function(param) /*=>*/ { dialogPanelCall(new Panel_Preview_Grid_Setting(), 
+                									x + ui(8), y + h - toolbar_height - ui(8), { anchor: ANCHOR.bottom | ANCHOR.left }); }, 
             ),
             new panel_toolbar_icon("Onion Skin",   
                 THEME.onion_skin,
                 function() /*=>*/ {return 0},
                 function() /*=>*/ {return new tooltipHotkey(__txt("Onion Skin") + "...", "Preview", "Onion Skin Settings")}, 
-                function(param) /*=>*/ { dialogPanelCall(new Panel_Preview_Onion_Setting(), param.x, param.y, { anchor: ANCHOR.bottom | ANCHOR.left }); },
+                function(param) /*=>*/ { dialogPanelCall(new Panel_Preview_Onion_Setting(), 
+                									x + ui(8), y + h - toolbar_height - ui(8), { anchor: ANCHOR.bottom | ANCHOR.left }); }, 
             ),
         ];
     
@@ -450,13 +441,15 @@ function Panel_Preview() : PanelContent() constructor {
                 THEME.d3d_preview_settings,
                 function() /*=>*/ {return 0},
                 function() /*=>*/ {return new tooltipHotkey(__txt("3D Preview Settings") + "...", "Preview", "3D View Settings")},
-                function(param) /*=>*/ { dialogPanelCall(new Panel_Preview_3D_Setting(self), param.x, param.y, { anchor: ANCHOR.bottom | ANCHOR.left }); },
+                function(param) /*=>*/ { dialogPanelCall(new Panel_Preview_3D_Setting(), 
+                									x + w - ui(8), y + h - toolbar_height - ui(8), { anchor: ANCHOR.bottom | ANCHOR.right }); }, 
             ),
             new panel_toolbar_icon("3D Snap Settings",
                 THEME.d3d_snap_settings,
                 function() /*=>*/ {return 0},
                 function() /*=>*/ {return new tooltipHotkey(__txt("3D Snap Settings") + "...", "Preview", "3D Snap Settings")},
-                function(param) /*=>*/ { dialogPanelCall(new Panel_Preview_Snap_Setting(self), param.x, param.y, { anchor: ANCHOR.bottom | ANCHOR.left }); },
+                function(param) /*=>*/ { dialogPanelCall(new Panel_Preview_Snap_Setting(), 
+                									x + w - ui(8), y + h - toolbar_height - ui(8), { anchor: ANCHOR.bottom | ANCHOR.right }); }, 
             ),
         ];
         
@@ -465,13 +458,15 @@ function Panel_Preview() : PanelContent() constructor {
                 THEME.d3d_preview_settings,
                 function() /*=>*/ {return 0},
                 function() /*=>*/ {return new tooltipHotkey(__txt("3D SDF Preview Settings") + "...", "Preview", "3D SDF View Settings")},
-                function(param) /*=>*/ { dialogPanelCall(new Panel_Preview_3D_SDF_Setting(self), param.x, param.y, { anchor: ANCHOR.bottom | ANCHOR.left }); },
+                function(param) /*=>*/ { dialogPanelCall(new Panel_Preview_3D_SDF_Setting(), 
+                									x + w - ui(8), y + h - toolbar_height - ui(8), { anchor: ANCHOR.bottom | ANCHOR.right }); }, 
             ),
             new panel_toolbar_icon("3D Snap Settings",
                 THEME.d3d_snap_settings,
                 function() /*=>*/ {return 0},
                 function() /*=>*/ {return new tooltipHotkey(__txt("3D Snap Settings") + "...", "Preview", "3D Snap Settings")},
-                function(param) /*=>*/ { dialogPanelCall(new Panel_Preview_Snap_Setting(self), param.x, param.y, { anchor: ANCHOR.bottom | ANCHOR.left }); },
+                function(param) /*=>*/ { dialogPanelCall(new Panel_Preview_Snap_Setting(), 
+                									x + w - ui(8), y + h - toolbar_height - ui(8), { anchor: ANCHOR.bottom | ANCHOR.right }); }, 
             ),
         ];
         
@@ -503,7 +498,8 @@ function Panel_Preview() : PanelContent() constructor {
             [ 
                 THEME.icon_visibility,
                 new tooltipHotkey(__txtx("graph_visibility_title", "Visibility settings") + "...", "Preview", "View Settings"), 
-                function(param) /*=>*/ { dialogPanelCall(new Panel_Preview_View_Setting(self), param.x, param.y, { anchor: ANCHOR.bottom | ANCHOR.left }); },
+                function(param) /*=>*/ { dialogPanelCall(new Panel_Preview_View_Setting(self), 
+                									x + w - ui(8), y + h - toolbar_height - ui(8), { anchor: ANCHOR.bottom | ANCHOR.right }); }, 
                 function() /*=>*/ {return 0},
             ],
             [ 
@@ -1445,7 +1441,7 @@ function Panel_Preview() : PanelContent() constructor {
     
     function drawPreviewOverlay() {
         right_menu_y = toolbar_height - ui(4);
-        if(show_view_control == 2) {
+        if(PROJECT.previewSetting.show_view_control == 2) {
             if(d3_active) right_menu_y += ui(72);
             else          right_menu_y += ui(40);
         } 
@@ -1460,7 +1456,7 @@ function Panel_Preview() : PanelContent() constructor {
             
             if(right_menu_x == 0) right_menu_x = w - ui(8);
             
-            if(show_info) {
+            if(PROJECT.previewSetting.show_info) {
                 if(PANEL_PREVIEW == self) {
                     draw_set_color(COLORS._main_text_accent);
                     draw_text(right_menu_x, right_menu_y, __txt("Active"));
@@ -1607,10 +1603,10 @@ function Panel_Preview() : PanelContent() constructor {
     }
     
     function drawViewController() {
-        if(!show_view_control) return;
+        if(!PROJECT.previewSetting.show_view_control) return;
         
-        var _side   = show_view_control == 1? 1 : -1;
-        var _view_x = show_view_control == 1? 
+        var _side   = PROJECT.previewSetting.show_view_control == 1? 1 : -1;
+        var _view_x = PROJECT.previewSetting.show_view_control == 1? 
                 tool_side_draw_l * toolbar_width + ui(8) : 
             w - tool_side_draw_r * toolbar_width - ui(8);
             
@@ -1739,7 +1735,7 @@ function Panel_Preview() : PanelContent() constructor {
         
         if(view_hovering && mouse_press(mb_right, pFOCUS)) {
         	mouse_on_preview = false;
-        	menuCall("preview_view_controller", [ menuItem("Hide view controllers", function() /*=>*/ { show_view_control = 0; }) ]);
+        	menuCall("preview_view_controller", [ menuItem("Hide view controllers", function() /*=>*/ { PROJECT.previewSetting.show_view_control = 0; }) ]);
         }
     }
     
@@ -1828,9 +1824,9 @@ function Panel_Preview() : PanelContent() constructor {
             
         } else {
             
-            if(key_mod_press(CTRL) || d3_tool_snap) {
-                _snx = d3_tool_snap_position;
-                _sny = d3_tool_snap_rotation;
+            if(key_mod_press(CTRL) || PROJECT.previewSetting.d3_tool_snap) {
+                _snx = PROJECT.previewSetting.d3_tool_snap_position;
+                _sny = PROJECT.previewSetting.d3_tool_snap_rotation;
             }
             
             _node.drawOverlay3D(overActive, d3_scene, _mx, _my, _snx, _sny, params);
@@ -2475,8 +2471,8 @@ function Panel_Preview() : PanelContent() constructor {
     	draw_sprite_stretched_ext(THEME.ui_panel, 0, 0, 0, minimap_w, minimap_h, COLORS.panel_bg_clear_inner, .75 + .25 * hover);
     	
         	var _surf = getNodePreviewSurface();
+            var _dim  = [ 1, 1 ];
         	var minx, maxx, miny, maxy;
-            var _dim;
             
         	if(is_surface(_surf)) {
         		_dim = surface_get_dimension(_surf);
@@ -2516,14 +2512,9 @@ function Panel_Preview() : PanelContent() constructor {
             var gw  = gx1 - gx0;
             var gh  = gy1 - gy0;
             
-            if(is_surface(_surf)) {
+            if(is_surface(_surf))
             	draw_surface_ext(_surf, nx0, ny0, ss, ss, 0, c_white, 1);
             	
-            	// draw_set_color(COLORS.panel_graph_minimap_focus);
-            	// draw_rectangle(nx0, ny0, nx1, ny1, 1);
-            	
-            }
-            
             draw_sprite_stretched_ext(THEME.ui_panel, 1, gx0, gy0, gw, gh, COLORS._main_icon_light, 1);
 		     
 	        var _mini_mx = minx + (mx - mx0) / minimap_w * spw;
@@ -2562,7 +2553,7 @@ function Panel_Preview() : PanelContent() constructor {
         }
         
         if(pHOVER && point_in_rectangle(mx, my, mx0, my0, mx0 + ui(16), my0 + ui(16))) {
-            draw_sprite_ui(THEME.node_resize, 0, mx0 + ui(10), my0 + ui(10), 0.5, 0.5, 180, c_white, 0.75);
+            draw_sprite_ui(THEME.node_resize, 0, mx0 + ui(4), my0 + ui(4), 0.5, 0.5, 180, c_white, 0.75);
             if(mouse_press(mb_left, pFOCUS)) {
                 minimap_dragging = true;
                 minimap_drag_sx = minimap_w;
@@ -2571,7 +2562,7 @@ function Panel_Preview() : PanelContent() constructor {
                 minimap_drag_my = my;
             }
         } else 
-            draw_sprite_ui(THEME.node_resize, 0, mx0 + ui(10), my0 + ui(10), 0.5, 0.5, 180, c_white, 0.3);
+            draw_sprite_ui(THEME.node_resize, 0, mx0 + ui(4), my0 + ui(4), 0.5, 0.5, 180, c_white, 0.3);
     } 
     
     ////- ACTION

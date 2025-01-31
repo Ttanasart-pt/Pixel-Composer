@@ -32,7 +32,7 @@ function point_project_line(px, py, l0x, l0y, l1x, l1y) {
 
 function point_project_curve(mx, my, x0, y0, x1, y1) {
 	var xc = (x0 + x1) / 2;
-	var sample = ceil((abs(x0 - x1) + abs(y0 - y1)) / 16 * PREFERENCES.connection_line_sample);
+	var sample = ceil((abs(x0 - x1) + abs(y0 - y1)) / 16 * PROJECT.graphConnection.line_sample);
 	sample = clamp(sample, 8, 128);
 	
 	var dist = 999999;

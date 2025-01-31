@@ -1,4 +1,4 @@
-function __Panel_Linear_Setting_Item(name, editWidget, data, onEdit = noone, getDefault = noone, action = noone) constructor {
+function __Panel_Linear_Setting_Item(name, editWidget, data, onEdit = noone, getDefault = noone, action = noone, prefKey = noone) constructor {
 	self.name       = name;
 	self.editWidget = editWidget;
 	self.data       = data;
@@ -6,8 +6,9 @@ function __Panel_Linear_Setting_Item(name, editWidget, data, onEdit = noone, get
 	self.onEdit     = onEdit;
 	self.getDefault = getDefault;
 	self.action     = action == noone? noone : struct_try_get(FUNCTIONS, string_to_var2(action[0], action[1]), noone);
-	key = "";
 	
+	self.prefKey    = prefKey;
+	self.key        = "";
 	self.is_patreon = false;
 	
 	static setKey  = function(_key) { self.key = _key; return self; }
@@ -17,9 +18,9 @@ function __Panel_Linear_Setting_Item(name, editWidget, data, onEdit = noone, get
 function __Panel_Linear_Setting_Item_Preference(name, key, editWidget, _data = noone) : __Panel_Linear_Setting_Item(name, editWidget, _data) constructor {
 	self.key = key;
 	
-	data       = function()    { return PREFERENCES[$ key];             }
-	onEdit     = function(val) { PREFERENCES[$ key] = val; PREF_SAVE(); }
-	getDefault = function()    { return PREFERENCES_DEF[$ key];         }
+	data       = function( ) { return getPreference(key); }
+	onEdit     = function(v) { setPreference(key, v); }
+	getDefault = function( ) { return getPreference(key, PREFERENCES_DEF); }
 }
 
 function __Panel_Linear_Setting_Label(name, sprite, _index = 0, _color = c_white) constructor {
@@ -32,12 +33,14 @@ function __Panel_Linear_Setting_Label(name, sprite, _index = 0, _color = c_white
 function Panel_Linear_Setting() : PanelContent() constructor {
 	title   = __txt("Settings");
 	w       = ui(400);
-	wdgw    = ui(180);
+	wdgw    = ui(200);
+	hpad    = 0;
 	
 	bg_y    = -1;
 	bg_y_to = -1;
 	bg_a    =  0;
 	
+	resizable      = false;
 	hk_editing     = noone;
 	selecting_menu = noone;
 	properties     = [];
@@ -46,7 +49,7 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 	curr_height  = 0;
 	shift_height = true;
 	
-	static setHeight   = function() { h = prop_height * array_length(properties) + ui(16); }
+	static setHeight   = function() { h = prop_height * array_length(properties) + ui(16) + hpad; }
 	static resetHeight = function(_h) { 
 		if(h == _h) return;
 		
@@ -65,6 +68,9 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 		var th = prop_height;
 		var ww = max(wdgw, w * 0.5); 
 		var wh = TEXTBOX_HEIGHT;
+	
+		var _bs = ui(32);
+		var _mm = [ mx, my ];
 		
 		var _hov = false;
 		if(bg_y) draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, ui(4), bg_y, w - ui(8), th, COLORS.panel_prop_bg, 0.5 * bg_a);
@@ -108,7 +114,7 @@ function Panel_Linear_Setting() : PanelContent() constructor {
                 continue;
 			}
 			
-			if(is_instanceof(_prop, __Panel_Linear_Setting_Label)) {
+			if(is(_prop, __Panel_Linear_Setting_Label)) {
 				var _text = _prop.name;
 				var _spr  = _prop.sprite;
 				var _ind  = _prop.index;
@@ -124,7 +130,7 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 				continue;
 			}
 			
-			if(is_instanceof(_prop, __Panel_Linear_Setting_Item)) {
+			if(is(_prop, __Panel_Linear_Setting_Item)) {
 				var _text = _prop.name;
 				var _data = _prop.data;
 				var _widg = _prop.editWidget;
@@ -143,19 +149,15 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 				draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
 				draw_text_add(ui(16), yy + th / 2, _text);
 			
-				var _x1  = w - ui(8);
-				var _wdw = ww;
-			
-				if(_prop.getDefault != noone)
-					_wdw -= ui(32 + 8);
+				var _x1  =  w - ui(4);
+				var _wdw = ww - ui(4);
+				
+				if(_prop.prefKey    != noone) _wdw -= ui(24) + ui(4);
+				if(_prop.getDefault != noone) _wdw -= ui(24) + ui(4);
 				
 				var params = new widgetParam(_x1 - ww, yy + th / 2 - wh / 2, _wdw, wh, _data, {}, [ mx, my ], x, y)
-					.setFont(f_p2);
-					
-				if(is_instanceof(_widg, checkBox)) {
-					params.halign = fa_center;
-					params.valign = fa_center;
-				}
+									.setFont(f_p2);
+				if(is(_widg, checkBox)) { params.halign = fa_center; params.valign = fa_center; }
 				
 				_widg.drawParam(params); 
 				
@@ -203,16 +205,37 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 		
 				}
 				
+				var _bx = _x1;
+				var _by =  yy + th / 2 - _bs / 2;
+				var _cc = [ COLORS._main_icon, COLORS._main_icon_light ];
+				
+				if(_prop.prefKey != noone) {
+					_bx -= ui(24);
+					
+					var _prefVal = getPreference(_prop.prefKey);
+					
+					if(isEqual(_data, _prefVal))
+						draw_sprite_ext(THEME.icon_default, 0, _bx + ui(24) / 2, _by + _bs / 2, 1, 1, 0, COLORS._main_icon_dark);
+					else {
+						if(buttonInstant(noone, _bx, _by, ui(24), _bs, _mm, pHOVER, pFOCUS, __txt("Set default"), THEME.icon_default, 0, _cc, .75) == 2)
+							setPreference(_prop.prefKey, _data);
+					}
+					
+					_bx -= ui(2);
+				}
+				
 				if(_prop.getDefault != noone) {
-					var _defVal = is_method(_prop.getDefault)? _prop.getDefault() : _prop.getDefault;
-					var _bs = ui(32);
-					var _bx = _x1 - _bs;
-					var _by =  yy + th / 2 - _bs / 2;
+					var _defVal = _prop.getDefault;
+					
+					if(_prop.prefKey != noone) _defVal = getPreference(_prop.prefKey);
+					else if(is_method(_prop.getDefault)) _defVal = _prop.getDefault();
+					
+					_bx -= ui(24);
 					
 					if(isEqual(_data, _defVal))
-						draw_sprite_ext(THEME.refresh_16, 0, _bx + _bs / 2, _by + _bs / 2, 1, 1, 0, COLORS._main_icon_dark);
+						draw_sprite_ext(THEME.refresh_16, 0, _bx + ui(24) / 2, _by + _bs / 2, 1, 1, 0, COLORS._main_icon_dark);
 					else {
-						if(buttonInstant(THEME.button_hide_fill, _bx, _by, _bs, _bs, [ mx, my ], pHOVER, pFOCUS, __txt("Reset"), THEME.refresh_16) == 2)
+						if(buttonInstant(noone, _bx, _by, ui(24), _bs, _mm, pHOVER, pFOCUS, __txt("Reset"), THEME.refresh_16, 0, _cc, .75) == 2)
 							_prop.onEdit(_defVal);
 					}
 				}
@@ -232,12 +255,9 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 			if(keyboard_check_pressed(vk_escape)) hk_editing = noone;
 		} 
 		
-		curr_height = yy + ui(4);
+		curr_height = yy + ui(4) + hpad;
 	}
 	
 	function drawContent() { drawSettings(); }
-	
-	function preDraw() {
-		resetHeight(curr_height);
-	}
+	function preDraw()     { resetHeight(curr_height); }
 }

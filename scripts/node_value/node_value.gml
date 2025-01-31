@@ -856,7 +856,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					case VALUE_DISPLAY.path_load :
 						editWidget = new textBox(TEXTBOX_INPUT.text, function(str) /*=>*/ { if(NOT_LOAD) check_directory_redirector(str); setValueInspector(str); });
 						editWidget.align = fa_left;
-						array_append(node.project.pathInputs, self);
+						if(!is(node, Node_Global)) array_append(node.project.pathInputs, self);
 						
 						editWidget.side_button = button(function() /*=>*/ { 
 							var path = display_data.filter == "dir"? get_directory("") : get_open_filename_pxc(display_data.filter, "");
@@ -2039,8 +2039,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(target != noone)
 			drawCorner |= target.type == VALUE_TYPE.action;
 		
-		var corner = PREFERENCES.connection_line_corner * ss;
-		var th     = max(1, PREFERENCES.connection_line_width * ss);
+		var corner = PROJECT.graphConnection.line_corner * ss;
+		var th     = max(1, PROJECT.graphConnection.line_width * ss);
 		
 		var sx = x;
 		var sy = y;
@@ -2053,7 +2053,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		_mx *= aa;
 		_my *= aa;
 		
-		var _fade = PREFERENCES.connection_line_highlight_fade;
+		var _fade = PROJECT.graphConnection.line_highlight_fade;
 		var  col  = custom_color == noone? merge_color(_fade, color_display, .5) : custom_color;
 		draw_set_color(col);
 		
@@ -2061,13 +2061,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var _output = connect_type == CONNECT_TYPE.output;
 		var _drawParam = {
 			corner :    corner,
-			extend :    PREFERENCES.connection_line_extend,
+			extend :    PROJECT.graphConnection.line_extend,
 			fromIndex : 1,
 			toIndex :   1,
 			type :      LINE_STYLE.solid,
 		}
 		
-		switch(PREFERENCES.curve_connection_line) {
+		switch(PROJECT.graphConnection.type) {
 			case 0 : 
 				if(drawCorner) draw_line_width(sx, sy, _mx, _my, th); 
 				else {
@@ -2430,16 +2430,16 @@ function checkJuncConnection(from, to, params) {
 	
 	var cx  = round((frx + jx) / 2 + shx);
 	var cy  = round((fry + jy) / 2 + shy);
-	var th  = max(1, PREFERENCES.connection_line_width * _s);
+	var th  = max(1, PROJECT.graphConnection.line_width * _s);
 	var hover, hovDist = max(th * 2, 6);
 	
 	var _fin = from.draw_line_shift_e > -1? from.draw_line_shift_e : from.drawLineIndex;
 	var _tin = to.draw_line_shift_e   > -1? to.draw_line_shift_e   : to.drawLineIndex;
 	
-	var _x0 = min(jx, cx, frx) - hovDist - max(_fin, _tin) * PREFERENCES.connection_line_extend;
+	var _x0 = min(jx, cx, frx) - hovDist - max(_fin, _tin) * PROJECT.graphConnection.line_extend;
 	var _y0 = min(jy, cy, fry) - hovDist;
 	
-	var _x1 = max(jx, cx, frx) + hovDist + max(_fin, _tin) * PREFERENCES.connection_line_extend;
+	var _x1 = max(jx, cx, frx) + hovDist + max(_fin, _tin) * PROJECT.graphConnection.line_extend;
 	var _y1 = max(jy, cy, fry) + hovDist;
 	if(!point_in_rectangle(mx, my, _x0, _y0, _x1, _y1)) return noone;
 	
@@ -2452,10 +2452,10 @@ function checkJuncConnection(from, to, params) {
 	} else {
 		var _hdist;
 		
-		switch(PREFERENCES.curve_connection_line) { 
+		switch(PROJECT.graphConnection.type) { 
 			case 0 : 
 				if(downDirection) _hdist = distance_to_line(mx, my, jx, jy, frx, fry);
-				else              _hdist = distance_to_linear_connection(mx, my, frx, fry, jx, jy, _s, PREFERENCES.connection_line_extend);
+				else              _hdist = distance_to_linear_connection(mx, my, frx, fry, jx, jy, _s, PROJECT.graphConnection.line_extend);
 				break;
 				
 			case 1 : 
@@ -2470,7 +2470,7 @@ function checkJuncConnection(from, to, params) {
 				
 			case 3 :
 				if(downDirection) _hdist = distance_to_elbow_diag_corner(mx, my, frx, fry, jx, jy);
-				else              _hdist = distance_to_elbow_diag(mx, my, frx, fry, jx, jy, cx, cy, _s, PREFERENCES.connection_line_extend, _fin, _tin);
+				else              _hdist = distance_to_elbow_diag(mx, my, frx, fry, jx, jy, cx, cy, _s, PROJECT.graphConnection.line_extend, _fin, _tin);
 				break;
 				
 			default : return noone;
@@ -2512,10 +2512,10 @@ function drawJuncConnection(from, to, params, _thick = false) {
 	var shy = to.draw_line_shift_y * _s;
 	var cx  = round((frx + jx) / 2 + shx);
 	var cy  = round((fry + jy) / 2 + shy);
-	var th  = max(1, PREFERENCES.connection_line_width * _s) * (1 + _thick);
+	var th  = max(1, PROJECT.graphConnection.line_width * _s) * (1 + _thick);
 	
 	#region draw parameters	
-		var corner = PREFERENCES.connection_line_corner * _s;
+		var corner = PROJECT.graphConnection.line_corner * _s;
 		
 		var ty = LINE_STYLE.solid;
 		if(to.type == VALUE_TYPE.node || struct_try_get(params, "dashed"))
@@ -2525,7 +2525,7 @@ function drawJuncConnection(from, to, params, _thick = false) {
 		var _selc = to.node.branch_drawing && from.node.branch_drawing;
 		
 		if(high) {
-			var _fade = PREFERENCES.connection_line_highlight_fade;
+			var _fade = PROJECT.graphConnection.line_highlight_fade;
 			var _colr = _selc? 1 : _fade;
 			
 			c0 = merge_color(bg, from.custom_color == noone? from.color_display : from.custom_color, _colr);
@@ -2557,13 +2557,13 @@ function drawJuncConnection(from, to, params, _thick = false) {
 	if(_loop) { draw_line_feedback(jx, jy, frx, fry, th, c1, c0, ss); return; }
 	
 	var down = to.type == VALUE_TYPE.action || from.type == VALUE_TYPE.action;
-	drawParam.extend    = PREFERENCES.connection_line_extend;
+	drawParam.extend    = PROJECT.graphConnection.line_extend;
 	drawParam.fromIndex = from.draw_line_shift_e > -1? from.draw_line_shift_e : from.drawLineIndex;
 	drawParam.toIndex   = to.draw_line_shift_e   > -1? to.draw_line_shift_e   : to.drawLineIndex;
 	drawParam.corner    = corner;
 	drawParam.type      = ty;
 	
-	switch(PREFERENCES.curve_connection_line) { 
+	switch(PROJECT.graphConnection.type) { 
 		case 0 : 
 			if(down)	draw_line_width_color(jx, jy, frx, fry, th, c0, c1);
 			else    	draw_line_connect(frx, fry, jx, jy, ss, th, c0, c1, drawParam);

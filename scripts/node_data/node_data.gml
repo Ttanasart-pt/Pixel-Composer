@@ -2196,7 +2196,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(branch_drawing) return;
 		branch_drawing = true;
 		
-		if(!PREFERENCES.connection_line_highlight_all && _depth == 1) return;
+		if(!project.graphConnection.line_highlight_all && _depth == 1) return;
 		
 		for( var i = 0, n = array_length(inputs); i < n; i++ ) {
 			if(inputs[i].value_from == noone) continue;

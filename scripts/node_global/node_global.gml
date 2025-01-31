@@ -9,13 +9,25 @@ function variable_editor(nodeVal) constructor {
 		/*Boolean*/	[ "Default" ],
 		/*Color*/	[ "Default", "Palette" ],
 		/*Gradient*/[ "Default" ],
-		/*Path*/	[ "Import", "Export", "Font" ],
+		/*Path*/	[ "Read", "Write", "Font" ],
 		/*Curve*/	[ "Default", ],
 		/*Text*/	[ "Default", ],
 	]
 	
 	tb_name = new textBox(TEXTBOX_INPUT.text, function(s) /*=>*/ { 
 		if(string_pos(" ", s)) { noti_warning("Global variable name can't have space."); return; }
+		
+		var _node = value.node;
+		for( var i = 0, n = array_length(_node.inputs); i < n; i++ ) {
+			var _in = _node.inputs[i];
+			if(_in == value) continue;
+			
+			if(_in.name == s) {
+				noti_warning("Duplicate variable name."); 
+				return;
+			}
+		}
+		
 		value.name = s;
 		RENDER_ALL
 	});
@@ -127,8 +139,8 @@ function variable_editor(nodeVal) constructor {
 			case "Area" :			value.setDisplay(VALUE_DISPLAY.area);			break;
 			case "Palette" :		value.setDisplay(VALUE_DISPLAY.palette);		break;
 			
-			case "Import" :		value.setDisplay(VALUE_DISPLAY.path_load, { filter: "" });	break;
-			case "Export" :		value.setDisplay(VALUE_DISPLAY.path_save, { filter: "" });	break;
+			case "Read" :		value.setDisplay(VALUE_DISPLAY.path_load, { filter: "" });	break;
+			case "Write" :		value.setDisplay(VALUE_DISPLAY.path_save, { filter: "" });	break;
 			case "Font" :		value.setDisplay(VALUE_DISPLAY.path_font);					break;
 		}
 	}
