@@ -40,6 +40,16 @@ function file_get_modify_s(path) {
 	return ((((_y * 12 + _m) * 31 + _d) * 24 + _h) * 60 + _n) * 60 + _s;
 }
 
+function filename_verify_dir(_path) {
+	var _sp = string_splice(_path, "/");
+	var _pa = "";
+	
+	for( var i = 0, n = array_length(_sp) - 1; i < n; i++ ) {
+		_pa += _sp[i] + "/";
+		directory_verify(_pa);
+	}
+}
+
 function get_save_filename_pxc(filter, name, caption = "Save as") {
 	INLINE
 	

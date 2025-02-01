@@ -553,6 +553,7 @@
     {"name":"d3d_plane_bend_mesh","order":16,"path":"scripts/d3d_plane_bend_mesh/d3d_plane_bend_mesh.yy",},
     {"name":"d3d_plane_mesh","order":14,"path":"scripts/d3d_plane_mesh/d3d_plane_mesh.yy",},
     {"name":"d3d_plane","order":2,"path":"scripts/d3d_plane/d3d_plane.yy",},
+    {"name":"panel_hlsl_libraries","order":3,"path":"scripts/panel_hlsl_libraries/panel_hlsl_libraries.yy",},
     {"name":"d3d_ray","order":9,"path":"scripts/d3d_ray/d3d_ray.yy",},
     {"name":"d3d_rot3","order":3,"path":"scripts/d3d_rot3/d3d_rot3.yy",},
     {"name":"d3d_scene","order":3,"path":"scripts/d3d_scene/d3d_scene.yy",},

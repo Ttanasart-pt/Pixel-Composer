@@ -317,7 +317,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 	#endregion
 	
 	#region draw widget
-		var _hsy       = yy + lb_h;
+		var _hsy       = yy + lb_h + ui(4);
 		var padd       = ui(8);
 		var labelWidth = max(lb_w, min(ww * 0.4, ui(200)));
 		var widExtend  = breakLine || jun.type == VALUE_TYPE.curve;

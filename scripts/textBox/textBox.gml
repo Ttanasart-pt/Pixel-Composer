@@ -146,9 +146,11 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		_input_text	= _def_str;
 		_last_text  = _def_str;
 		
-		cursor        = string_length(_def_str);
-		cursor_select = 0;
-		click_block   = 1;
+		if(select_on_click) {
+			cursor        = string_length(_def_str);
+			cursor_select = 0;
+			click_block   = 1;
+		}
 		
 		KEYBOARD_STRING  = "";
 		keyboard_lastkey = -1;

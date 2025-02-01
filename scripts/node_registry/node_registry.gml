@@ -609,6 +609,10 @@ function __initNodes(unzip = true) {
 	var recPath = $"{DIRECTORY}Nodes/recent.json";
 	global.RECENT_NODES = file_exists_empty(recPath)? json_load_struct(recPath) : [];
 	if(!is_array(global.RECENT_NODES)) global.RECENT_NODES = [];
+	
+	////- HLSL
+	
+	__initHLSL();
 }
 
 function __generateNodeData() {

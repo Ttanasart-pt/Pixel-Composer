@@ -62,6 +62,8 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 	text_scroll_sy = 0;
 	text_scroll_my = 0;
 	
+	border_heightlight_color = COLORS._main_accent;
+	
 	_cl = -1;
 	
 	context_menu = [
@@ -78,10 +80,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		menuItem("Paste", function() /*=>*/ { var _text = clipboard_get_text(); if(onModify) onModify(_text); }, THEME.paste),
 	];
 	
-	static setMaxHieght = function(height) {
-		max_height = height;
-		return self;
-	}
+	static setMaxHeight = function(h) { max_height = h; return self; }
 	
 	static activate = function() {
 		WIDGET_CURRENT = self;
@@ -94,9 +93,11 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		cursor_pos_x = 0;
 		cursor_pos_y = 0;
 		
-		cursor        = string_length(_current_text);
-		cursor_select = 0;
-		click_block   = 1;
+		if(select_on_click) {
+			cursor        = string_length(_current_text);
+			cursor_select = 0;
+			click_block   = 1;
+		}
 		
 		KEYBOARD_STRING = "";
 		keyboard_lastkey = -1;
@@ -955,7 +956,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 			
 			if(typing) typing--;
 			
-			draw_sprite_stretched_ext(THEME.textbox, 2, _x, _y, _w, hh, COLORS._main_accent, 1);
+			draw_sprite_stretched_ext(THEME.textbox, 2, _x, _y, _w, hh, border_heightlight_color, 1);
 			
 			if(o_dialog_textbox_autocomplete.textbox == self) {
 				o_dialog_textbox_autocomplete.dialog_x = rx + _x + cursor_pos_x + 1;
@@ -1058,12 +1059,6 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		return hh;
 	}
 	
-	static clone = function() { 
-		var cln = new textArea(input, onModify); 
-		return cln;
-	}
-	
-	static free = function() {
-		surface_free_safe(text_surface);
-	}
+	static clone = function() { return new textArea(input, onModify); }
+	static free  = function() { surface_free_safe(text_surface); }
 }

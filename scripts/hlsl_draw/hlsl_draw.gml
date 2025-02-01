@@ -6,7 +6,8 @@
 						 "gl_position", "gm_Matrices", "gl_FragColor", "gm_BaseTexture", 
 						 "and", "break", "do", "else", "end", "false", 
 						 "for", "function", "if", "in", "local", "nil", "not", 
-						 "or", "repeat", "return", "then", "true", "until", "while"];
+						 "or", "repeat", "return", "then", "true", "until", "while",
+						 "using"];
 
 	for( var i = 0, n = array_length(hlsl_reserved); i < n; i++ )
 		global.glsl_reserved[? hlsl_reserved[i]] = 1;
@@ -19,7 +20,7 @@
 	global.HLSL_BREAK_TOKEN = [" ", "(", ")", "[", "]", "{", "}", ".", ",", ";", "+", "-", "*", "/", "^", "=", "//"];
 #endregion
 
-function hlsl_token_splice(str) { #region
+function hlsl_token_splice(str) {
 	var st = [];
 	var ss = str;
 	var sp, cc, del;
@@ -52,9 +53,9 @@ function hlsl_token_splice(str) { #region
 	} until(sp == 0);
 	
 	return st;
-} #endregion
+}
 
-function draw_code_hlsl(_x, _y, str) { #region
+function draw_code_hlsl(_x, _y, str) {
 	var tx = _x;
 	var ty = _y;
 	var words   = hlsl_token_splice(str);
@@ -86,4 +87,4 @@ function draw_code_hlsl(_x, _y, str) { #region
 		draw_text_add(tx, ty, word);
 		tx += string_width(word);
 	}
-} #endregion
+}

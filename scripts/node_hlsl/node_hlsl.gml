@@ -16,21 +16,51 @@
 	vertex_end(global.HLSL_VB_PLANE);
 #endregion
 
+#region libraries
+	globalvar HLSL_LIBRARIES, HLSL_LIBRARIES_ARR;
+	
+	function __initHLSL() {
+		HLSL_LIBRARIES     = {};
+		HLSL_LIBRARIES_ARR = [];
+		
+		var _dir = $"{DIRECTORY}Nodes/HLSL";
+		directory_verify(_dir);
+		var _files = readFolder(_dir);
+		
+		for( var i = 0, n = array_length(_files); i < n; i++ ) {
+			var _f = _files[i];
+			var _n = string_replace(_f, _dir + "/", "");
+			    _n = string_replace(_n, filename_ext(_n), "");
+			
+			HLSL_LIBRARIES[$ _n] = _f;
+			array_push(HLSL_LIBRARIES_ARR, _n);
+		}
+	}
+#endregion
+
 function Node_HLSL(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name   = "HLSL";
 	shader = { vs: -1, fs: -1 };
 	
-	newInput(0, nodeValue_Text("Vertex", self, @""))
+	newInput(0, nodeValue_Text("Vertex", self, ""))
 		.setDisplay(VALUE_DISPLAY.codeHLSL)
 		.rejectArray();
 	
-	newInput(1, nodeValue_Text("Fragment", self, 
+	newInput(1, nodeValue_Text("Main", self, 
 @"float4 surfaceColor = gm_BaseTextureObject.Sample(gm_BaseTexture, input.uv);
 output.color = surfaceColor;"))
 		.setDisplay(VALUE_DISPLAY.codeHLSL)
 		.rejectArray();
 	
 	newInput(2, nodeValue_Surface("Base Texture", self));
+	
+	newInput(3, nodeValue_Text("Libraries", self, "" ))
+		.setDisplay(VALUE_DISPLAY.codeHLSL)
+		.rejectArray();
+	
+	newInput(4, nodeValue_Text("Global", self, ""))
+		.setDisplay(VALUE_DISPLAY.codeHLSL)
+		.rejectArray();
 	
 	newOutput(0, nodeValue_Output("Surface", self, VALUE_TYPE.surface, noone ));
 	
@@ -48,9 +78,8 @@ output.color = surfaceColor;"))
 	
 	argumentRenderer();
 	
-	vs_string = @"#define MATRIX_WORLD                 0
-#define MATRIX_WORLD_VIEW            1
-#define MATRIX_WORLD_VIEW_PROJECTION 2
+	vs_string  = "#define MATRIX_WORLD                 0\n#define MATRIX_WORLD_VIEW            1\n#define MATRIX_WORLD_VIEW_PROJECTION 2";
+	vs_string += @"
 
 cbuffer Matrices : register(b0) {
     float4x4 gm_Matrices[3];
@@ -71,8 +100,8 @@ void main(in VertexShaderInput input, out VertexShaderOutput output) {
     output.pos  = mul(gm_Matrices[MATRIX_WORLD_VIEW_PROJECTION], float4(input.pos, 1.0f));
     output.uv   = input.uv;   
 }";
-		
-	_fs_preString  = @"Texture2D gm_BaseTextureObject : register(t0);
+	
+	fs_preMain  = @"Texture2D gm_BaseTextureObject : register(t0);
 SamplerState gm_BaseTexture    : register(s0);
 
 struct VertexShaderOutput {
@@ -84,19 +113,24 @@ struct PixelShaderOutput {
     float4 color : SV_TARGET0;
 };
 
-void main(in VertexShaderOutput _input, out PixelShaderOutput output) {
+";
+	fs_postMain   = @"void main(in VertexShaderOutput _input, out PixelShaderOutput output) {
     VertexShaderOutput input = _input;
 ";
-	fs_preString  = _fs_preString;
+
 	fs_postString = "}";
 	
-	preLabel = new Inspector_Label(fs_preString, _f_code_s);
+	preMainLabel  = new Inspector_Label(fs_preMain,  _f_code_s);
+	postMainLabel = new Inspector_Label(fs_postMain, _f_code_s);
+	
+	inspector_label_values = ["Values", true];
 	
 	input_display_list = [ 2, 
+		["Preprocessor",     true], 3, 
 		["Vertex Shader [read only]", true], new Inspector_Label(vs_string, _f_code_s),
-		["Fragment Shader", false], preLabel, 1, new Inspector_Label(fs_postString, _f_code_s), 
+		["Fragment Shader", false], preMainLabel, 4, postMainLabel, 1, new Inspector_Label(fs_postString, _f_code_s), 
 		["Arguments",	    false], argument_renderer,
-		["Values",		     true], 
+		inspector_label_values, 
 	];
 
 	setDynamicInput(3, false);
@@ -224,11 +258,15 @@ void main(in VertexShaderOutput _input, out PixelShaderOutput output) {
 	
 	setTrigger(1, __txt("Compile"), [ THEME.refresh_icon, 1, COLORS._main_value_positive ], function() /*=>*/ { refreshShader(); triggerRender(); });
 	
-	static step = function() { argument_renderer.showValue = input_display_list[9][1]; }
+	setTrigger(2, __txt("Libraries"), [ THEME.libraries, 1, COLORS._main_icon ], function() /*=>*/ { dialogPanelCall(new Panel_HLSL_Libraries()); });
+	
+	static step = function() { argument_renderer.showValue = inspector_label_values[1]; }
 	
 	static refreshShader = function() {
-		var vs = getInputData(0);
-		var fs = getInputData(1);
+		var  vs  = getInputData(0);
+		var  fs  = getInputData(1);
+		var _lib = getInputData(3);
+		var _glo = getInputData(4);
 		
 		var _dir = TEMPDIR;
 		directory_verify(_dir);
@@ -267,15 +305,37 @@ void main(in VertexShaderOutput _input, out PixelShaderOutput output) {
 		fs_param += "};\n";
 		fs_param += fs_sample;
 		
-		fs_preString = fs_param + _fs_preString;
-		var _fs = fs_preString + fs + fs_postString;
+	        _lib  = string_replace(_lib, "\n", "");
+		var _libs = string_splice(_lib, ";");
+		
+		if(project.data[$ "hlsl"] == undefined)
+			project.data[$ "hlsl"] = {};
+		
+		var fs_lib = "\n";
+		for( var i = 0, n = array_length(_libs); i < n; i++ ) {
+			var _l  = _libs[i];
+			var _ll = _l;
+			    _ll = string_replace(_ll, "using", "");
+			    _ll = string_replace(_ll, ";",     "");
+			    _ll = string_replace(_ll, "\"",    "");
+			    _ll = string_trim(_ll);
+			
+			if(_ll == "") continue;
+			
+			if(!struct_has(project.data.hlsl, _ll)) {
+				if(!struct_has(HLSL_LIBRARIES, _ll)) { noti_warning($"HLSL error: library '{_ll}' not found."); continue; }
+				project.data.hlsl[$ _ll] = file_read_all(HLSL_LIBRARIES[$ _ll])
+			}
+			
+			fs_lib += $"{project.data.hlsl[$ _ll]}\n";
+		}
+		fs_lib += "\n";
+		
+		var _fs_preString = fs_param + fs_preMain;
+		var _fs = fs_lib + _fs_preString + _glo + "\n" + fs_postMain + fs + fs_postString;
 		file_text_write_all(_dir + "fout.shader", _fs);
 		
-		preLabel.text = fs_preString;
-		
-		//print("==================== Compiling ====================");
-		//print(_fs)
-		//print("===================================================\n");
+		preMainLabel.text = _fs_preString;
 		
 		shader.vs = d3d11_shader_compile_vs(_dir + "vout.shader", "main", "vs_4_0");
 		if (!d3d11_shader_exists(shader.vs)) 

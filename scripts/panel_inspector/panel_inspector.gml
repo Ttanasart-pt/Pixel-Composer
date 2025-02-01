@@ -128,6 +128,8 @@ function Inspector_Sprite(spr) constructor { self.spr = spr; }
 function Inspector_Label( text, font = f_p3) constructor { 
     self.text = text; 
     self.font = font; 
+    
+    open = true;
 }
 
 function Inspector_Spacer(height, line = false, coll = true) constructor { 

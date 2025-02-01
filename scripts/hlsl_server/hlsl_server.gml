@@ -71,6 +71,7 @@ function hlsl_document_parser(prompt, node = noone) {
 	var params = [];
 	var lines = string_split(prompt, "\n");
 	
+	if(node != noone)
 	for( var i = node.input_fix_len, n = array_length(node.inputs); i < n; i += node.data_length ) {
 		var _arg_name = node.getInputData(i + 0);
 		var _arg_type = node.getInputData(i + 1);

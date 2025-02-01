@@ -1,0 +1,14 @@
+{
+  "$GMScript":"v1",
+  "%Name":"panel_hlsl_libraries",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"panel_hlsl_libraries",
+  "parent":{
+    "name":"nodes",
+    "path":"folders/panels/nodes.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+  "tags":[],
+}

@@ -57,6 +57,7 @@ function Project() constructor {
 	};
 	
 	addons = {};
+	data   = {};
 	
 	tunnels_in     = ds_map_create();
 	tunnels_in_map = ds_map_create();
@@ -220,6 +221,7 @@ function Project() constructor {
 		_map.graphGrid       = variable_clone(graphGrid);
 		_map.graphConnection = variable_clone(graphConnection);
 		_map.attributes      = variable_clone(attributes);
+		_map.data            = variable_clone(data);
 		
 		_map.timelines   = timelines.serialize();
 		_map.notes       = array_map(notes, function(note) { return note.serialize(); } );
@@ -265,6 +267,7 @@ function Project() constructor {
 		if(struct_has(_map, "metadata"))	meta.deserialize(_map.metadata);
 		if(struct_has(_map, "composer"))	composer = _map.composer;
 		if(struct_has(_map, "freeze"))	    freeze   = _map.freeze;
+		if(struct_has(_map, "data"))	    data     = variable_clone(_map.data);
 		
 		if(struct_has(_map, "graph_display_parameter"))	struct_override(graphDisplay,  _map.graph_display_parameter);
 		

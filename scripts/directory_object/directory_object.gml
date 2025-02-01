@@ -261,3 +261,24 @@ function DirectoryObject(_path) constructor {
 		return hh;
 	}
 }
+
+function readFolder(path, arr = []) {
+	var _fil = file_find_first(path + "/*", 0);
+	while(_fil != "") {
+		array_push(arr, path + "/" + _fil);
+		_fil = file_find_next();
+	}
+	file_find_close();
+	
+	var _dir  = file_find_first(path + "/*", fa_directory);
+	var _dirs = [];
+	while(_dir != "") {
+		array_push(_dirs, path + "/" + _dir);
+		_dir = file_find_next();
+	}
+	file_find_close();
+	
+	for( var i = 0, n = array_length(_dirs); i < n; i++ ) readFolder(_dirs[i], arr);
+	
+	return arr;
+}

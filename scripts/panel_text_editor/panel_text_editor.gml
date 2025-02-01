@@ -4,20 +4,22 @@ function Panel_Text_Editor(_textArea, _inputFunc, _context) : PanelContent() con
 	h     = ui(480);
 	auto_pin = true;
 	
-	self._textArea = new textArea(_textArea.input, _textArea.onModify);
-	self._textArea.color  = _textArea.color;
-	self._textArea.font   = _textArea.font;
-	self._textArea.format = _textArea.format;
+	editor = new textArea(_textArea.input, _textArea.onModify);
+	editor.color  = _textArea.color;
+	editor.font   = _textArea.font;
+	editor.format = _textArea.format;
+	editor.border_heightlight_color = COLORS._main_icon;
 	
-	self._textArea.parser_server		  = _textArea.parser_server;
-	self._textArea.autocomplete_server	  = _textArea.autocomplete_server;
-	self._textArea.autocomplete_object	  = _textArea.autocomplete_object;
-	self._textArea.function_guide_server  = _textArea.function_guide_server;
+	editor.parser_server		  = _textArea.parser_server;
+	editor.autocomplete_server	  = _textArea.autocomplete_server;
+	editor.autocomplete_object	  = _textArea.autocomplete_object;
+	editor.function_guide_server  = _textArea.function_guide_server;
+	editor.select_on_click        = false;
 	
 	self.inputFunc = method(self, _inputFunc);
 	self.context   = _context;
 	
-	shift_new_line = false;
+	shift_new_line  = false;
 	
 	function drawContent(panel) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
@@ -31,24 +33,24 @@ function Panel_Text_Editor(_textArea, _inputFunc, _context) : PanelContent() con
 			shift_new_line = !shift_new_line;
 		bx += bs + ui(4);
 		
-		var txt = _textArea.show_line_number? "Hide line number" : "Show line number";
-		if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, [ mx, my ], pHOVER, pFOCUS, txt, THEME.code_show_line, _textArea.show_line_number) == 2)
-			_textArea.show_line_number = !_textArea.show_line_number;
+		var txt = editor.show_line_number? "Hide line number" : "Show line number";
+		if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, [ mx, my ], pHOVER, pFOCUS, txt, THEME.code_show_line, editor.show_line_number) == 2)
+			editor.show_line_number = !editor.show_line_number;
 		bx += bs + ui(4);
 		
-		var txt = _textArea.use_autocomplete? "Disable Autocomplete" : "Enable Autocomplete";
-		if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, [ mx, my ], pHOVER, pFOCUS, txt, THEME.code_show_auto, _textArea.use_autocomplete) == 2)
-			_textArea.use_autocomplete = !_textArea.use_autocomplete;
+		var txt = editor.use_autocomplete? "Disable Autocomplete" : "Enable Autocomplete";
+		if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, [ mx, my ], pHOVER, pFOCUS, txt, THEME.code_show_auto, editor.use_autocomplete) == 2)
+			editor.use_autocomplete = !editor.use_autocomplete;
 		bx += bs + ui(4);
 		
 		var txt = "Syntax Highlight";
-		if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, [ mx, my ], pHOVER, pFOCUS, txt, THEME.code_syntax_highlight, _textArea.syntax_highlight) == 2)
-			_textArea.syntax_highlight = !_textArea.syntax_highlight;
+		if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, [ mx, my ], pHOVER, pFOCUS, txt, THEME.code_syntax_highlight, editor.syntax_highlight) == 2)
+			editor.syntax_highlight = !editor.syntax_highlight;
 		bx += bs + ui(4);
 		
 		var bx = w - ui(8) - bs;
 		if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, [ mx, my ], pHOVER, pFOCUS, "Apply", THEME.accept,, COLORS._main_value_positive) == 2) 
-			_textArea.apply();
+			editor.apply();
 		bx -= bs + ui(4);
 		
 		var pd = ui(8 - in_dialog * 6);
@@ -58,25 +60,23 @@ function Panel_Text_Editor(_textArea, _inputFunc, _context) : PanelContent() con
 		var th = h - pd - ty;
 		
 		var _text    = inputFunc();
-		var _prevBox = _textArea.boxColor;
+		var _prevBox = editor.boxColor;
 		
-		_textArea.setMaxHieght(th);
-		_textArea.register();
-		_textArea.setFocusHover(pFOCUS, pHOVER);
-		_textArea.shift_new_line = shift_new_line;
-		_textArea.boxColor = merge_color(CDEF.main_white, CDEF.main_ltgrey, .5);
+		editor.setMaxHeight(th);
+		editor.register();
+		editor.setFocusHover(pFOCUS, pHOVER);
+		editor.shift_new_line = shift_new_line;
+		editor.boxColor = merge_color(CDEF.main_white, CDEF.main_ltgrey, .5);
 		
-		_textArea.drawParam(new widgetParam(tx, ty, tw, th, _text, {}, [ mx, my ], x, y));
+		editor.drawParam(new widgetParam(tx, ty, tw, th, _text, {}, [ mx, my ], x, y));
 		
-		_textArea.boxColor = _prevBox;
+		editor.boxColor = _prevBox;
 	}
 	
-	static checkClosable = function() {
-		return o_dialog_textbox_autocomplete.textbox != _textArea;
-	}
+	static checkClosable = function() { return o_dialog_textbox_autocomplete.textbox != editor; }
 	
 	static onClose = function() {
-		_textArea.apply();
+		editor.apply();
 		context.popup_dialog = noone;
 	}
 }
