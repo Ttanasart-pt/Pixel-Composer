@@ -159,7 +159,7 @@ function colorSelector(onApply = noone) constructor {
 			
 			DROPPER_SURFACE = surface_verify(DROPPER_SURFACE, _ww, _ww);
 			surface_set_target(DROPPER_SURFACE);
-				DRAW_CLEAR;
+				DRAW_CLEAR
 				
 				gpu_set_colorwriteenable(0, 0, 0, 1);
 				draw_set_color(c_white);

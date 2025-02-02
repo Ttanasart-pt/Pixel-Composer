@@ -22,10 +22,8 @@ Libraries in the global scope will be add to project automatically.";
 	    if(curr_lib == "") { blank_text = s; return; }
 	    
 	    curr_content = s;
-	    if(curr_type == 0)
-            file_text_write_all(curr_file, s);
-        else if(curr_type == 1)
-            libData[$ curr_lib] = curr_content;
+	         if(curr_type == 0) file_text_write_all(curr_file, s);
+        else if(curr_type == 1) libData[$ curr_lib] = curr_content;
 	});
 	
 	editor.font                  = f_code;

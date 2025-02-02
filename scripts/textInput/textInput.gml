@@ -9,6 +9,8 @@ function textInput(_input, _onModify) : widget() constructor {
 	
 	select_on_click = true;
 	parser_server   = noone;
+	globalParams    = [];
+	localParams     = [];
 	
 	autocomplete_delay   = 0;
 	autocomplete_modi    = false;	

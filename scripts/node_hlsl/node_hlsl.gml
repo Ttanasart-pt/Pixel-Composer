@@ -78,8 +78,9 @@ output.color = surfaceColor;"))
 	
 	argumentRenderer();
 	
-	vs_string  = "#define MATRIX_WORLD                 0\n#define MATRIX_WORLD_VIEW            1\n#define MATRIX_WORLD_VIEW_PROJECTION 2";
-	vs_string += @"
+	#region Template
+		vs_string  = "#define MATRIX_WORLD                 0\n#define MATRIX_WORLD_VIEW            1\n#define MATRIX_WORLD_VIEW_PROJECTION 2";
+		vs_string += @"
 
 cbuffer Matrices : register(b0) {
     float4x4 gm_Matrices[3];
@@ -101,7 +102,7 @@ void main(in VertexShaderInput input, out VertexShaderOutput output) {
     output.uv   = input.uv;   
 }";
 	
-	fs_preMain  = @"Texture2D gm_BaseTextureObject : register(t0);
+		fs_preMain  = @"Texture2D gm_BaseTextureObject : register(t0);
 SamplerState gm_BaseTexture    : register(s0);
 
 struct VertexShaderOutput {
@@ -114,12 +115,15 @@ struct PixelShaderOutput {
 };
 
 ";
-	fs_postMain   = @"void main(in VertexShaderOutput _input, out PixelShaderOutput output) {
+		fs_postMain   = @"void main(in VertexShaderOutput _input, out PixelShaderOutput output) {
     VertexShaderOutput input = _input;
 ";
 
-	fs_postString = "}";
+		fs_postString = "}";
+	#endregion
 	
+	libraries     = [];
+	libraryParams = [];
 	preMainLabel  = new Inspector_Label(fs_preMain,  _f_code_s);
 	postMainLabel = new Inspector_Label(fs_postMain, _f_code_s);
 	
@@ -311,7 +315,10 @@ struct PixelShaderOutput {
 		if(project.data[$ "hlsl"] == undefined)
 			project.data[$ "hlsl"] = {};
 		
-		var fs_lib = "\n";
+		libraries     = [];
+		libraryParams = [];
+		var fs_lib    = "\n";
+		
 		for( var i = 0, n = array_length(_libs); i < n; i++ ) {
 			var _l  = _libs[i];
 			var _ll = _l;
@@ -326,6 +333,9 @@ struct PixelShaderOutput {
 				if(!struct_has(HLSL_LIBRARIES, _ll)) { noti_warning($"HLSL error: library '{_ll}' not found."); continue; }
 				project.data.hlsl[$ _ll] = file_read_all(HLSL_LIBRARIES[$ _ll])
 			}
+			
+			array_push(libraries, _ll);
+			array_append(libraryParams, hlsl_document_parser(project.data.hlsl[$ _ll]));
 			
 			fs_lib += $"{project.data.hlsl[$ _ll]}\n";
 		}
@@ -355,7 +365,19 @@ struct PixelShaderOutput {
 		}
 	}
 	
+	static onCodeEdited = function() {
+		var _global_edit = inputs[4].editWidget;
+		var _fsmain_edit = inputs[1].editWidget;
+		var _globalParams = array_clone(_global_edit.localParams);
+		array_append(_globalParams, libraryParams);
+		
+		_global_edit.globalParams = libraryParams;
+		_fsmain_edit.globalParams = _globalParams;
+	}
+	
 	static processData = function(_output, _data, _output_index, _array_index = 0) {
+		onCodeEdited();
+		
 		var _surf = _data[2];
 		if(!is_surface(_surf)) return noone;
 		if(!d3d11_shader_exists(shader.vs)) return noone;

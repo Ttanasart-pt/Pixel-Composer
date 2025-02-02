@@ -65,7 +65,9 @@
 	global.HLSL_FUNCTIONS[? "trunc"]	= ["x"];
 #endregion
 
-global.HLSL_VAR = [ "float", "int", "float2", "float3", "float4", "float3x3", "float4x4", "sampler" ];
+global.HLSL_VAR_ARR = [ "float", "int", "float2", "float3", "float4", "float3x3", "float4x4", "sampler" ];
+global.HLSL_VAR = {};
+for( var i = 0, n = array_length(global.HLSL_VAR_ARR); i < n; i++ ) global.HLSL_VAR[$ global.HLSL_VAR_ARR[i]] = 1;
 
 function hlsl_document_parser(prompt, node = noone) {
 	var params = [];
@@ -79,28 +81,32 @@ function hlsl_document_parser(prompt, node = noone) {
 		if(_arg_type == 7) {
 			array_push(params, [ _arg_name + "Object", "Texture2D" ]);
 			array_push(params, [ _arg_name, "SamplerState" ]);
-		} else array_push(params, [ _arg_name, array_safe_get_fast(global.HLSL_VAR, _arg_type) ]);
+		} else array_push(params, [ _arg_name, array_safe_get_fast(global.HLSL_VAR_ARR, _arg_type) ]);
 	}
 	
 	for( var i = 0, n = array_length(lines); i < n; i++ ) {
-		var line   = string_trim(lines[i]);
+		var line   = string_trim(lines[i], [ "\n", "\t", "\r", " ", ";", "{", "}" ]);
+		    line   = string_replace_all(line, "(", " (");
+		    line   = string_replace_all(line, ")", ") ");
+		    
 		var _token = string_split(line, " ");
-		var _vari  = false;
-		var _vart  = "";
-		var _vars  = "";
+		if(!struct_has(global.HLSL_VAR, _token[0])) continue;
 		
-		for( var j = 0, m = array_length(_token); j < m; j++ ) {
-			if(_vari)
-				_vars += _token[j];
+		var _vart  = _token[0];
+		var _vars  = "";
+		var _eld   = 0;
+		
+		for( var j = 1, m = array_length(_token); j < m; j++ ) {
+			var _t = string_trim(_token[j]);
 			
-			if(array_exists(global.HLSL_VAR, _token[j])) {
-				_vart = _token[j];
-				_vari = true;
-			}
+			if(struct_has(global.HLSL_VAR, _t)) continue;
+			
+			if(string_char_at(_t, 1) == "(")                 { _eld++; continue; }
+			if(string_char_at(_t, string_length(_t)) == ")") { _eld--; continue; }
+			
+			if(_eld == 0) _vars += _t;
 		}
 		
-		_vars = string_replace_all(_vars, ";", "");
-		_vars = string_replace_all(_vars, " ", "");
 		_vars = string_splice(_vars, ",");
 		
 		var _varType = [];
@@ -140,8 +146,8 @@ function hlsl_autocomplete_server(prompt, params = []) {
 	//////////////////////////////////
 	ds_priority_clear(pr_list);
 	
-	for( var i = 0, n = array_length(global.HLSL_VAR); i < n; i++ ) {
-		var gl = global.HLSL_VAR[i];
+	for( var i = 0, n = array_length(global.HLSL_VAR_ARR); i < n; i++ ) {
+		var gl = global.HLSL_VAR_ARR[i];
 		
 		var match = string_partial_match(string_lower(gl), string_lower(prompt));
 		if(match == -9999) continue;
