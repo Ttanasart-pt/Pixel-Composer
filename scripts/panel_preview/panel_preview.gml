@@ -1075,7 +1075,7 @@ function Panel_Preview() : PanelContent() constructor {
                 sample_y = floor((my - canvas_y) / canvas_s);
                 var surf = getNodePreviewSurface();
                 
-                if(is_surface(surf)) {
+                if(is_surface(surf) && surface_exists(surf)) {
 	                sample_color_raw = surface_getpixel_ext(surf, sample_x, sample_y);
 	                sample_color     = is_array(sample_color_raw)? make_color_rgba(clamp(sample_color_raw[0] * 255, 0, 255), 
 	                															   clamp(sample_color_raw[1] * 255, 0, 255), 

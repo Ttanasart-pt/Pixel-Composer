@@ -116,10 +116,8 @@ function Project() constructor {
 				
 			[ "Palette", "palette", new buttonPalette(function(pal) { setPalette(pal); RENDER_ALL return true; }), 
 				function(junc) {
-					if(!is_struct(junc)) return;
-					if(!is_instanceof(junc, NodeValue)) return;
-					if(junc.type != VALUE_TYPE.color) return;
-					if(junc.display_type != VALUE_DISPLAY.palette) return;
+					if(!is_struct(junc) || !is(junc, NodeValue)) return;
+					if(junc.type != VALUE_TYPE.color || junc.display_type != VALUE_DISPLAY.palette) return;
 					
 					setPalette(junc.getValue());
 				} 

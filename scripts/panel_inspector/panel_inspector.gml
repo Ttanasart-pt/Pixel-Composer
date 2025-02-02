@@ -548,9 +548,9 @@ function Panel_Inspector() : PanelContent() constructor {
                         
                         var _param = new widgetParam(_wdx, _wdy, _wdw, _wdh, _data, {}, _m, rx, ry)
                         					.setFont(_font)
-					    					.setFocusHover(pFOCUS, _hover)
 					    					.setScrollpane(contentPane);
-                        
+					    					
+                        editW.setFocusHover(pFOCUS, _hover);
                         wh = editW.drawParam(_param);
                         
                         var jun  = PANEL_GRAPH.value_dragging;

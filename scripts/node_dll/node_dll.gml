@@ -16,7 +16,7 @@ function Node_DLL(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	ext_function    = -1;
 	attributes.size = 0;
 	
-	array_adjust_tool = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { #region
+	array_adjust_tool = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		var _h = ui(48);
 		
 		var bw = _w / 2 - ui(4);
@@ -35,7 +35,7 @@ function Node_DLL(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		}
 		
 		return _h;
-	}); #endregion
+	});
 	
 	input_display_list = [ 
 		["Function",   	false], 0, 1, 2, 

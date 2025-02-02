@@ -50,7 +50,25 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	frame_renderer_x     = 0;
 	frame_renderer_x_to  = 0;
 	frame_renderer_x_max = 0;
+	frame_dragging       = noone;
+	
 	_selecting_frame     = noone;
+	
+	menu_frame = [
+		menuItem(__txt("Duplicate"), function() /*=>*/ { 
+			var _dup_surf = surface_clone(canvas_surface[_selecting_frame]);
+			var _dup_buff = buffer_from_surface(_dup_surf, false);
+			
+			array_insert(canvas_surface, _selecting_frame, _dup_surf);
+			array_insert(canvas_buffer,  _selecting_frame, _dup_buff);
+			
+			attributes.frames++;
+			refreshFrames();
+			update();
+			
+		}, THEME.duplicate),
+		menuItem(__txt("Delete"),    function() /*=>*/ { removeFrame(_selecting_frame); }, THEME.cross),
+	];
 	
 	frame_renderer_content = surface_create(1, 1);
 	frame_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus, _panel = noone, _full = true, _fx = frame_renderer_x) {
@@ -77,6 +95,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var _y0 = _y + _pd;
 		var _x1 = _x0 + _ww;
 		var _y1 = _y0 + _hh;
+		var _frame_hovering = noone;
 		
 		frame_renderer_x_max   = 0;
 		frame_renderer_content = surface_verify(frame_renderer_content, _ww, _hh);
@@ -94,8 +113,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			var _del  = noone;
 			
 			for( var i = 0, n = attributes.frames; i < n; i++ ) {
-				var _surf = surfs[i];
-				
+				var _surf = array_safe_get(surfs, i);
 				if(!is_surface(_surf)) continue;
 				
 				var _sw = surface_get_width(_surf);
@@ -123,15 +141,17 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 							_del = i;
 							
 					} else if(point_in_rectangle(_msx, _msy, _sx, _sy, _sx + _ssw, _sy + _ssh)) {
+						_frame_hovering = i;
 						draw_sprite_stretched_add(THEME.box_r2, 1, _sx, _sy, _ssw, _ssh, c_white, .2);
-						if(mouse_press(mb_left, _focus)) 
+						
+						if(mouse_press(mb_left, _focus)) {
 							setFrame(i);
+							frame_dragging = i;
+						}
 							
 						if(mouse_press(mb_right, _focus))  {
 							_selecting_frame = i;
-							menuCall("node_canvas_frame", [
-								menuItem(__txt("Delete"), function() /*=>*/ { removeFrame(_selecting_frame); }, THEME.cross)
-							]);
+							menuCall("node_canvas_frame", menu_frame);
 						}
 					}
 					
@@ -166,6 +186,29 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			attributes.frames++;
 			refreshFrames();
 			update();
+		}
+		
+		if(frame_dragging != noone) {
+			
+			if(_frame_hovering != noone && _frame_hovering != frame_dragging) {
+				var _dup_surf = canvas_surface[frame_dragging];
+				var _dup_buff = canvas_buffer[frame_dragging];
+				
+				array_delete(canvas_surface, frame_dragging, 1);
+				array_delete(canvas_buffer,  frame_dragging, 1);
+				
+				array_insert(canvas_surface, _frame_hovering, _dup_surf);
+				array_insert(canvas_buffer,  _frame_hovering, _dup_buff);
+				
+				frame_dragging = _frame_hovering;
+				
+				setFrame(frame_dragging);
+				refreshFrames();
+				update();
+			}
+			
+			if(mouse_release(mb_left))
+				frame_dragging = noone;
 		}
 		
 		return _h + 8 * _full;

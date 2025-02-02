@@ -16,7 +16,7 @@ function Node_Array_Zip(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		return inputs[index];
 	} setDynamicInput(1);
 	
-	static step = function() { #region
+	static step = function() {
 		if(inputs[0].value_from == noone) {
 			inputs[0].setType(VALUE_TYPE.any);
 			outputs[0].setType(VALUE_TYPE.any);
@@ -27,9 +27,9 @@ function Node_Array_Zip(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		for( var i = 0; i < array_length(inputs); i += data_length )
 			inputs[i].setType(inputs[i].value_from == noone? VALUE_TYPE.any : inputs[i].value_from.type);
-	} #endregion
+	}
 	
-	static update = function(frame = CURRENT_FRAME) { #region
+	static update = function(frame = CURRENT_FRAME) {
 		var _arr = getInputData(0);
 		
 		if(!is_array(_arr)) return;
@@ -53,10 +53,10 @@ function Node_Array_Zip(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		}
 		
 		outputs[0].setValue(_out);
-	} #endregion
+	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
 		draw_sprite_fit(s_node_array_zip, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
-	} #endregion
+	}
 }

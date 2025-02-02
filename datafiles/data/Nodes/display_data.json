@@ -626,6 +626,8 @@
             "Node_Render_Sprite_Sheet",
             "Node_Pack_Sprites",
             "Node_Camera",
+            "Node_Surface_Tag",
+            "Node_Composite_Tag",
             
             { "label": "Armature" },
             { "label": "/Basics" },
