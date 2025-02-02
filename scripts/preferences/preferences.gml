@@ -92,7 +92,7 @@
 		PREFERENCES.panel_menu_palette_node_size    = 20;
 	
 		PREFERENCES.inspector_focus_on_double_click	= true;
-		PREFERENCES.inspector_view_default			= 1;
+		PREFERENCES.inspector_view_default			= INSP_VIEW_MODE.compact;
 	
 		PREFERENCES.node_show_render_status			= false;
 		PREFERENCES.node_show_time					= true;

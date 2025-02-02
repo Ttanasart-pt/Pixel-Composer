@@ -1,4 +1,4 @@
-function Node_Path_Map_Area(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
+function Node_Path_Map_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Remap Path";
 	setDimension(96, 48);
 	
@@ -12,70 +12,64 @@ function Node_Path_Map_Area(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	cached_pos = ds_map_create();
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		inputs[1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { 
+		inputs[1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); 
 	}
 	
-	static getLineCount = function() { 
-		var _path = getInputData(0);
-		return struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
-	}
-	
-	static getSegmentCount = function(ind = 0) { 
-		var _path = getInputData(0);
-		return struct_has(_path, "getSegmentCount")? _path.getSegmentCount(ind) : 0; 
-	}
-	
-	static getLength = function(ind = 0) { 
-		var _path = getInputData(0);
-		return struct_has(_path, "getLength")? _path.getLength(ind) : 0; 
-	}
-	
-	static getAccuLength = function(ind = 0) { 
-		var _path = getInputData(0);
-		return struct_has(_path, "getAccuLength")? _path.getAccuLength(ind) : []; 
-	}
+	function _areaMappedPath() constructor {
 		
-	static getPointRatio = function(_rat, ind = 0, out = undefined) {
-		if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
+		path = noone;
+		area = noone;
 		
-		var _path = getInputData(0);
-		var _area = getInputData(1);
-		
-		if(is_array(_path)) {
-			_path = array_safe_get_fast(_path, ind);
-			ind = 0;
+		static getLineCount    = function()    /*=>*/ { return struct_has(path, "getLineCount")?    path.getLineCount()     : 1;  }
+		static getSegmentCount = function(i=0) /*=>*/ { return struct_has(path, "getSegmentCount")? path.getSegmentCount(i) : 0;  }
+		static getLength       = function(i=0) /*=>*/ { return struct_has(path, "getLength")?       path.getLength(i)       : 0;  }
+		static getAccuLength   = function(i=0) /*=>*/ { return struct_has(path, "getAccuLength")?   path.getAccuLength(i)   : []; }
+			
+		static getPointRatio = function(_rat, ind = 0, out = undefined) {
+			if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
+			
+			if(is_array(path)) {
+				path = array_safe_get_fast(path, ind);
+				ind = 0;
+			}
+			
+			if(!is_struct(path) || !struct_has(path, "getPointRatio"))
+				return out;
+			
+			var _b = path.getBoundary();
+			var _p = path.getPointRatio(_rat, ind);
+			
+			out.x = (area[AREA_INDEX.center_x] - area[AREA_INDEX.half_w]) + (_p.x - _b.minx) / _b.width  * area[AREA_INDEX.half_w] * 2;
+			out.y = (area[AREA_INDEX.center_y] - area[AREA_INDEX.half_h]) + (_p.y - _b.miny) / _b.height * area[AREA_INDEX.half_h] * 2;
+			out.weight = _p.weight;
+			
+			return out;
 		}
 		
-		if(!is_struct(_path) || !struct_has(_path, "getPointRatio"))
-			return out;
+		static getPointDistance = function(_dist, ind = 0, out = undefined) { return getPointRatio(_dist / getLength(), ind, out); }
 		
-		var _b = _path.getBoundary();
-		var _p = _path.getPointRatio(_rat, ind);
-		
-		out.x = (_area[AREA_INDEX.center_x] - _area[AREA_INDEX.half_w]) + (_p.x - _b.minx) / _b.width  * _area[AREA_INDEX.half_w] * 2;
-		out.y = (_area[AREA_INDEX.center_y] - _area[AREA_INDEX.half_h]) + (_p.y - _b.miny) / _b.height * _area[AREA_INDEX.half_h] * 2;
-		out.weight = _p.weight;
-		
-		return out;
+		static getBoundary = function() {
+			return new BoundingBox( area[AREA_INDEX.center_x] - area[AREA_INDEX.half_w], 
+									area[AREA_INDEX.center_y] - area[AREA_INDEX.half_h], 
+									area[AREA_INDEX.center_x] + area[AREA_INDEX.half_w], 
+									area[AREA_INDEX.center_y] + area[AREA_INDEX.half_h] );
+		}
 	}
 	
-	static getPointDistance = function(_dist, ind = 0, out = undefined) { return getPointRatio(_dist / getLength(), ind, out); }
-	
-	static getBoundary = function() {
-		var _area = getInputData(1);
-		return new BoundingBox( _area[AREA_INDEX.center_x] - _area[AREA_INDEX.half_w], 
-								_area[AREA_INDEX.center_y] - _area[AREA_INDEX.half_h], 
-								_area[AREA_INDEX.center_x] + _area[AREA_INDEX.half_w], 
-								_area[AREA_INDEX.center_y] + _area[AREA_INDEX.half_h] );
-	}
-	
-	static update = function() { 
-		outputs[0].setValue(self);
+	static processData = function(_outData, _data, _output_index, _array_index = 0) { 
+		
+		if(!is(_outData, _areaMappedPath)) 
+			_outData = new _areaMappedPath();
+		
+		_outData.path = _data[0];
+		_outData.area = _data[1];
+		
+		return _outData;
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
-		draw_sprite_fit(s_node_path_map, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
+		draw_sprite_fit(s_node_path_map_area, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 }

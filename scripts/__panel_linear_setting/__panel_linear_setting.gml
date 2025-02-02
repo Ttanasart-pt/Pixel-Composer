@@ -216,6 +216,7 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 					
 					if(isEqual(_data, _prefVal))
 						draw_sprite_ext(THEME.icon_default, 0, _bx + ui(24) / 2, _by + _bs / 2, 1, 1, 0, COLORS._main_icon_dark);
+						
 					else {
 						if(buttonInstant(noone, _bx, _by, ui(24), _bs, _mm, pHOVER, pFOCUS, __txt("Set default"), THEME.icon_default, 0, _cc, .75) == 2)
 							setPreference(_prop.prefKey, _data);

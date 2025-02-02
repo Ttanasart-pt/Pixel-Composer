@@ -47,6 +47,7 @@ function __initHotKey() {
 	hotkeySimple("Node_Path",               "Draw path",            "B");
 	hotkeySimple("Node_Path",               "Rectangle path",       "N");
 	hotkeySimple("Node_Path",               "Circle path",          "M");
+	hotkeySimple("Node_Path",               "Weight edit",          "W");
 	
 	hotkeySimple("Node_Rigid_Object",       "Mesh edit",            "A");
 	hotkeySimple("Node_Rigid_Object",       "Anchor remove",        "E");
