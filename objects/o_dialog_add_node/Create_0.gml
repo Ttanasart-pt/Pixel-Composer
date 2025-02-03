@@ -243,7 +243,8 @@ event_inherited();
 			for( var i = 0, n = array_length(_new_node.outputs); i < n; i++ ) 
 				array_push(_outputs, _new_node.outputs[i]);
 			
-			PANEL_INSPECTOR.setInspecting(_new_node);
+			if(PANEL_INSPECTOR) PANEL_INSPECTOR.setInspecting(_new_node);
+			if(PANEL_GRAPH)     PANEL_GRAPH.selectDragNode(_new_node, PREFERENCES.node_add_select);
 			
 		} else if(is_instanceof(_node, NodeAction)) {  // NOT IMPLEMENTED
 			var _dat = _node.build(node_target_x, node_target_y,, _param);

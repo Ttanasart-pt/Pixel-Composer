@@ -50,6 +50,8 @@
 		PREFERENCES.keyboard_repeat_start			= 0.50;
 		PREFERENCES.keyboard_repeat_speed			= 0.10;
 		PREFERENCES.keyboard_double_delay			= 0.25;
+		PREFERENCES.keyboard_check_sweep			= true;
+		PREFERENCES.keyboard_capture_raw			= true;
 		
 		PREFERENCES.file_watcher_delay              = 0.1;
 		
@@ -121,7 +123,9 @@
 	#endregion
 	
 	#region //////////////////////////////////////////////////////////////////////// NODES /////////////////////////////////////////////////////////////////////////
-	
+		
+		PREFERENCES.node_add_select			        = true;
+		
 		PREFERENCES.node_param_show					= false;
 		PREFERENCES.node_param_width				= 192;
 		PREFERENCES.node_3d_preview_size			= 256;

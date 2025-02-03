@@ -124,6 +124,12 @@ function Panel_Preference() : PanelContent() constructor {
     		));
     		
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
+    			__txtx("pref_keyboard_check_sweep", "Keyboard check sweep"),
+    			"keyboard_check_sweep",
+    			new checkBox(function() /*=>*/ { PREFERENCES.keyboard_check_sweep = !PREFERENCES.keyboard_check_sweep; PREF_SAVE(); })
+    		));
+    		
+    		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
     			__txtx("pref_expand_hovering_panel", "Expand hovering panel"),
     			"expand_hover",
     			new checkBox(function() /*=>*/ { PREFERENCES.expand_hover = !PREFERENCES.expand_hover; PREF_SAVE(); })

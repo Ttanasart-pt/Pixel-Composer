@@ -1133,29 +1133,41 @@ function Panel_Inspector() : PanelContent() constructor {
                         array_push(_menuItem, -1);
                     }
                     
-                    array_push(_menuItem, jun.expUse? menu_junc_expression_dis : menu_junc_expression_ena);
-                    if(jun.globalExtractable()) array_push(_menuItem, menu_junc_extract_global);
                     if(_inp) array_push(_menuItem, menu_junc_bypass_toggle);
+                    
+                    array_push(_menuItem, jun.expUse? menu_junc_expression_dis : menu_junc_expression_ena);
+                    if(jun.globalExtractable()) {
+                    	
+                		array_push(_menuItem, menuItemShelf(__txtx("panel_inspector_use_global", "Use Globalvar"), function(_dat) /*=>*/ { 
+                			var arr = [];
+                            for( var i = 0, n = array_length(PROJECT.globalNode.inputs); i < n; i++ ) {
+	                    		var _glInp = PROJECT.globalNode.inputs[i];
+	                    		if(!typeCompatible(_glInp.type, __dialog_junction.type)) continue;
+	                    		array_push(arr, menuItem(_glInp.name, function(d) /*=>*/ { __dialog_junction.setExpression(d.name); }, noone, noone, noone, { name : _glInp.name }));
+	                    	}
+                            return submenuCall(_dat, arr);
+                        }));
+                    	
+                    	array_push(_menuItem, menu_junc_extract_global);
+                    }
                     
                     array_push(_menuItem, -1, menu_junc_copy);
                     if(_inp) array_push(_menuItem, menu_junc_paste);
                     
                     if(_inp && jun.extract_node != "") {
                         if(is_array(jun.extract_node)) {
-                            var ext = menuItemShelf(__txtx("panel_inspector_extract_multiple", "Extract to..."), function(_dat) { 
+                            array_push(_menuItem, menuItemShelf(__txtx("panel_inspector_extract_multiple", "Extract to..."), function(_dat) /*=>*/ { 
                                 var arr = [];
                                 for(var i = 0; i < array_length(__dialog_junction.extract_node); i++)  {
                                     var _rec = __dialog_junction.extract_node[i];
-                                    var _nod = ALL_NODES[$ _rec];
-                                    
-                                    array_push(arr, menuItem(_nod.name, function(_dat) /*=>*/ { __dialog_junction.extractNode(_dat.name); }, noone, noone, noone, { name : _rec }));
+                                    array_push(arr, menuItem(ALL_NODES[$ _rec].name, 
+                                    	function(d) /*=>*/ { __dialog_junction.extractNode(d.name); }, noone, noone, noone, { name : _rec }));
                                 }
                                     
                                 return submenuCall(_dat, arr);
-                            });
-                            array_push(_menuItem, ext);
-                        } else
-                            array_push(_menuItem, menu_junc_extract);
+                            }));
+                            
+                        } else array_push(_menuItem, menu_junc_extract);
                     }
                     
                     var dia = menuCall("inspector_value_menu", _menuItem);

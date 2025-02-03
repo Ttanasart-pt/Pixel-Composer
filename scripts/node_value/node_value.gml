@@ -2334,6 +2334,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(!globalExtractable()) return noone;
 		
 		var _key = $"{node.getDisplayName()}_{name}";
+		    _key = string_to_var(_key);
 		var _glb = node.project.globalNode;
 		
 		if(_glb.inputExist(_key))
@@ -2456,7 +2457,7 @@ function checkJuncConnection(from, to, params) {
 	var cx  = round((frx + jx) / 2 + shx);
 	var cy  = round((fry + jy) / 2 + shy);
 	var th  = max(1, PROJECT.graphConnection.line_width * _s);
-	var hover, hovDist = max(th * 2, 6);
+	var hover, hovDist = max(th * 2, 12);
 	
 	var _fin = from.draw_line_shift_e > -1? from.draw_line_shift_e : from.drawLineIndex;
 	var _tin = to.draw_line_shift_e   > -1? to.draw_line_shift_e   : to.drawLineIndex;
@@ -2509,7 +2510,7 @@ function checkJuncConnection(from, to, params) {
 	return hover? self : noone;
 }
 
-function drawJuncConnection(from, to, params, _thick = false) {
+function drawJuncConnection(from, to, params, _hover = 0) {
 	if(from == noone || to == noone) return noone;
 	
 	static drawParam = {
@@ -2537,7 +2538,7 @@ function drawJuncConnection(from, to, params, _thick = false) {
 	var shy = to.draw_line_shift_y * _s;
 	var cx  = round((frx + jx) / 2 + shx);
 	var cy  = round((fry + jy) / 2 + shy);
-	var th  = max(1, PROJECT.graphConnection.line_width * _s) * (1 + _thick);
+	var th  = max(1, PROJECT.graphConnection.line_width * _s) * (1 + _hover);
 	
 	#region draw parameters	
 		var corner = PROJECT.graphConnection.line_corner * _s;

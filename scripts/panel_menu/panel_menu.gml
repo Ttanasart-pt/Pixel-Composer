@@ -72,7 +72,7 @@
             
         registerFunction("", "Reload theme",        vk_f10, MOD_KEY.ctrl | MOD_KEY.shift,                 global_theme_reload      ).setMenu("reload_theme",   )
         
-        registerFunction("", "Addons Menu",         "",     MOD_KEY.none, function(_dat) /*=>*/ {
+        registerFunction("", "Addons",              "",     MOD_KEY.none, function(_dat) /*=>*/ {
             var arr = [
                 MENU_ITEMS.addons,
                 menuItem(__txtx("panel_menu_addons_key", "Key displayer"), function() /*=>*/ { if(instance_exists(addon_key_displayer)) return; instance_create_depth(0, 0, 0, addon_key_displayer); }),

@@ -13,6 +13,13 @@ _HOVERING_ELEMENT = noone;
 FILE_DROPPED      = _FILE_DROPPED;
 _FILE_DROPPED     = false;
 
+#region keybord captures
+	if(PREFERENCES.keyboard_capture_raw && keyboard_string != "") {
+		KEYBOARD_STRING = keyboard_string;
+		keyboard_string = "";
+	}
+#endregion
+
 #region minimize
 	if(winMan_isMinimized()) {
 		if(!minimized) game_set_speed(1, gamespeed_fps);

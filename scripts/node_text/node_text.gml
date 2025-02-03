@@ -8,7 +8,8 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		.setVisible(true, true);
 	
 	newInput(1, nodeValue_Path("Font", self, ""))
-		.setDisplay(VALUE_DISPLAY.path_font);
+		.setDisplay(VALUE_DISPLAY.path_font)
+		.setVisible(true, false);
 	
 	newInput(2, nodeValue_Int("Size", self, 16));
 	
@@ -96,9 +97,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		
 		if(!file_exists_empty(_path)) return;
 		
-		if(font != f_p0 && font_exists(font)) 
-			font_delete(font);
-			
+		if(font != f_p0 && font_exists(font)) font_delete(font);
 		font_add_enable_aa(_aa);
 		font = font_add(_path, _size, false, false, 0, 127);
 	}

@@ -382,6 +382,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         node_drag_sy  = 0;
         node_drag_ox  = 0;
         node_drag_oy  = 0;
+        node_drag_add = false;
     
         selection_block      = 0;
         nodes_selecting      = [];
@@ -1558,9 +1559,10 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         if(connection_draw_update || pHOVER) {
 	        surface_set_target(connection_surface_cc);
 	        	if(connection_draw_update) { DRAW_CLEAR }
-		    
-		        var hoverable = !bool(node_dragging) && pHOVER;
-		        
+		    	
+		        var hoverable  = pHOVER;
+		            hoverable &= !node_dragging || node_drag_add;
+						        
 		        connection_param.active = hoverable;
 		        connection_param.setPos(gr_x, gr_y, graph_s, mx, my);
 		        connection_param.setBoundary(-64, -64, w + 64, h + 64);
@@ -1580,8 +1582,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	        DRAW_CLEAR
 	    	
 	    	draw_surface(connection_surface_cc, 0, 0);
-	    	
-	        if(hov) drawJuncConnection(hov.value_from, hov, connection_param, true);
+	        if(hov) drawJuncConnection(hov.value_from, hov, connection_param, 1 + (node_drag_add && node_dragging));
 	        
 	        if(value_dragging && connection_draw_mouse != noone && !key_mod_press(SHIFT)) {
 	            var _cmx = connection_draw_mouse[0];
@@ -1675,14 +1676,46 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         printIf(log, $"Draw node: {get_timer() - t}"); t = get_timer();
         
         // dragging
-        if(mouse_press(mb_left))
-            node_dragging = noone;
+        if(mouse_press(mb_left)) {
+            
+            if(node_drag_add && node_dragging && junction_hovering != noone) {
+            	var _jfr = junction_hovering.value_from;
+            	var _jto = junction_hovering;
+            	var _shy = undefined;
+            	
+            	for( var i = 0, n = array_length(node_dragging.inputs); i < n; i++ ) {
+            		var _inp = node_dragging.inputs[i];
+            		if((value_bit(_inp.type) & value_bit(_jfr.type) != 0) && _inp.setFrom(_jfr)) { 
+            			_shy = _jfr.node.y; 
+            			break; 
+            		}
+            	}
+            	
+            	for( var i = 0, n = array_length(node_dragging.outputs); i < n; i++ ) {
+            		if(_jto.setFrom(node_dragging.outputs[i])) {
+            			_shy = _shy == undefined? _jto.node.y : (_shy + _jto.node.y) / 2;
+            			break;
+            		}
+            	}
+            	
+            	if(_shy != undefined) {
+            		node_dragging.x -= node_dragging.w / 2;
+            		node_dragging.y  = _shy;
+            	}
+            }
+            
+            if(node_dragging) nodes_selecting = [ node_dragging ];
+            node_dragging   = noone;
+            node_drag_add   = false;
+        }
         
         for(var i = 0; i < array_length(nodes_list); i++)
             nodes_list[i].groupCheck(gr_x, gr_y, graph_s, mx, my);
         
         if(node_dragging && !key_mod_press(ALT)) {
             addKeyOverlay("Dragging node(s)", [[ "Ctrl", "Disable snapping" ]]);
+			connection_draw_update = true;
+			node_surface_update    = true;
             
             var _mgx = mouse_graph_x;
             var _mgy = mouse_graph_y;
@@ -1742,7 +1775,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
             }
         }
         
-        if(mouse_release(mb_left))
+        if(!node_drag_add && mouse_release(mb_left))
             node_dragging = noone;
         
         printIf(log, $"Drag node time : {get_timer() - t}"); t = get_timer();
@@ -1846,7 +1879,6 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
             }
             drag_locking = false;
         }
-        
         
         printIf(log, $"Draw selection frame : {get_timer() - t}"); t = get_timer();
     } 
@@ -3254,6 +3286,23 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
             return node_hovering.on_drop_file(path);
         return false;
     } 
+    
+    function selectDragNode(_node, _add = false) {
+    	nodes_selecting = [ _node ];
+    	node_dragging   = _node;
+    	
+    	_node.x = mouse_graph_x
+		_node.y = mouse_graph_y
+    	
+        node_drag_mx = mouse_graph_x;
+        node_drag_my = mouse_graph_y;
+        node_drag_sx = _node.x;
+        node_drag_sy = _node.y;
+        node_drag_ox = -1;
+        node_drag_oy = -1;
+        
+        node_drag_add = _add;
+    }
     
     static checkDropItem = function() { //
         var node = noone;
