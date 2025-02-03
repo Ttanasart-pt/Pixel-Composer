@@ -1,6 +1,7 @@
 /// @description 
 var ev_id   = async_load[? "id"];
 var ev_type = async_load[? "event_type"];
+print(ev_type)
 
 switch(ev_type) {
 		
@@ -27,5 +28,10 @@ switch(ev_type) {
 	
 	case "file_drag_leave" :
 		FILE_IS_DROPPING = false;
+		break;
+
+	case "virtual keyboard status":
+		print(async_load[? "screen_height"]);
+		print(async_load[? "keyboard_status"]);
 		break;
 }
