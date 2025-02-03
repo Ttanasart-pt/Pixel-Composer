@@ -14,7 +14,7 @@ function drawWidgetInit() {
 	tooltip_loop_type = new tooltipSelector(__txtx("panel_animation_looping_mode", "Looping mode"), global.junctionEndName);
 }
 
-function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _focus = false, _scrollPane = noone, rx = 0, ry = 0) { 
+function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _focus = false, _scrollPane = noone, rx = 0, ry = 0, _ID = undefined) { 
 	#region data
 		var con_w     = ww - ui(4);
 		var xc	      = xx + ww / 2;
@@ -25,6 +25,14 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		
 		var _name     = jun.getName();
 		var wid       = jun.editWidget;
+		
+		if(_ID != undefined) {
+			var _map = jun.editWidgetMap;
+			if(!struct_has(_map, _ID)) 
+				_map[$ _ID] = wid.clone();
+			wid = _map[$ _ID];
+		}
+		
 		var cHov      = false;
 		
 		switch(instanceof(wid)) {

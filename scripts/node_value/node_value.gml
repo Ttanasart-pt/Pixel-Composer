@@ -36,6 +36,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		tooltip        = _tooltip;
 		editWidget     = noone;
 		editWidgetRaw  = noone;
+		editWidgetMap  = {};
 		editable       = true;
 		
 		graphWidget    = noone;
@@ -2326,6 +2327,31 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	////- MISC
+	
+	static globalExtractable = function() { return array_exists(global.GLOBALVAR_TYPES, type) && struct_find_key(global.GLOBALVAR_DISPLAY_MAP, display_type) != undefined; }
+	
+	static extractGlobal = function() {
+		if(!globalExtractable()) return noone;
+		
+		var _key = $"{node.getDisplayName()}_{name}";
+		var _glb = node.project.globalNode;
+		
+		if(_glb.inputExist(_key))
+			_key += string(array_length(_glb.inputs)); 
+			
+		var _newVal = _glb.createValue();
+		
+		_newVal.name = _key;
+		_newVal.setType(type);
+		_newVal.setDisplay(display_type, display_data);
+		_newVal.editor.updateType();
+		_newVal.setValue(getValue());
+		_glb.step();
+		
+		if(!expUse) setExpression(_key);
+		
+		return _newVal;
+	}
 	
 	static extractNode = function(_type = extract_node) {
 		if(_type == "") return noone;

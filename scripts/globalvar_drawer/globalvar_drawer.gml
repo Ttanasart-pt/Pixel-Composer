@@ -1,5 +1,6 @@
 function GlobalVarDrawer() constructor {
 	editing = false;
+	ID = UUID_generate();
 	
 	drawWidgetInit();
 	
@@ -71,7 +72,7 @@ function GlobalVarDrawer() constructor {
 			_hg += _hh;
 			
 			var _wd_ww = (wd_w - ui(32)) / 2 - ui(2);
-			_edit.sc_type.draw(_wd_xx, _yy, _wd_ww, _wd_h, _edit.val_type_name[_edit.type_index], _m, rx, ry);
+			_edit.sc_type.draw(_wd_xx, _yy, _wd_ww, _wd_h, global.GLOBALVAR_TYPES_NAME[_edit.type_index], _m, rx, ry);
 			
 			var _wd_xx2 = _wd_xx + _wd_ww + ui(4);
 			_edit.sc_disp.draw(_wd_xx2, _yy, _wd_ww, _wd_h, _edit.sc_disp.data_list[_edit.disp_index], _m, rx, ry);
@@ -144,13 +145,13 @@ function GlobalVarDrawer() constructor {
 		var _font = viewMode == INSP_VIEW_MODE.spacious? f_p0 : f_p2;
 		var _padd = viewMode == INSP_VIEW_MODE.spacious? ui(8) : ui(4);
 		
-		if(viewMode == INSP_VIEW_MODE.compact) {
-			yy += ui(4);
-			hh += ui(4);
+		if(viewMode == INSP_VIEW_MODE.compact) { 
+			yy += ui(4); 
+			hh += ui(4); 
 		}
 		
 		for( var j = 0; j < array_length(_node.inputs); j++ ) {
-			var widg    = drawWidget(xx, yy, ww, _m, _node.inputs[j], true, hover, focus, _scrollPane, rx, ry);
+			var widg    = drawWidget(xx, yy, ww, _m, _node.inputs[j], true, hover, focus, _scrollPane, rx, ry, ID);
 			var widH    = widg[0];
 			var mbRight = widg[1];
 			var widHov  = widg[2];

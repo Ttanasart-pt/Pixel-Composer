@@ -823,8 +823,17 @@ function Panel_Menu() : PanelContent() constructor {
         #endregion
         
         #region drag
-            if(mouse_press(mb_left, _draggable))
-                winMan_initDrag(0b10000);
+            if(_draggable) {
+                if(DOUBLE_CLICK) {
+                    if(window_is_maximized) 
+                        winMan_Unmaximize();
+                    else 
+                        winMan_Maximize();
+                    DISPLAY_REFRESH
+                }
+                
+                if(mouse_press(mb_left)) winMan_initDrag(0b10000);
+            }
         #endregion
     }
 }

@@ -43,8 +43,8 @@
 	LATEST_VERSION	= 1_18_00_0;
 	VERSION			= 1_18_07_2;
 	SAVE_VERSION	= 1_18_05_0;
-	VERSION_STRING  = MAC? "1.18.003m" : "1.18.8.008";
-	BUILD_NUMBER	= 118072.008;
+	VERSION_STRING  = MAC? "1.18.003m" : "1.18.8.010";
+	BUILD_NUMBER	= 118072.010;
 	PREF_VERSION    = 1_17_1;
 	
 	var _vsp = string_split(VERSION_STRING, ".");
@@ -61,7 +61,6 @@
 	globalvar CURRENT_COLOR;
 	CURRENT_COLOR = cola(c_white);
 	
-	// gml_release_mode(true);
 #endregion
 
 #region input

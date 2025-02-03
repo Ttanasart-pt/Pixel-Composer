@@ -1,9 +1,7 @@
-function variable_editor(nodeVal) constructor {
-	value = nodeVal;
-	
-	val_type      = [ VALUE_TYPE.integer, VALUE_TYPE.float, VALUE_TYPE.boolean, VALUE_TYPE.color, VALUE_TYPE.gradient, VALUE_TYPE.path, VALUE_TYPE.curve, VALUE_TYPE.text ];
-	val_type_name = [ "Integer", "Float", "Boolean", "Color", "Gradient", "Path", "Curve", "Text" ];
-	display_list  = [
+#region data
+	global.GLOBALVAR_TYPES      = [ VALUE_TYPE.integer, VALUE_TYPE.float, VALUE_TYPE.boolean, VALUE_TYPE.color, VALUE_TYPE.gradient, VALUE_TYPE.path, VALUE_TYPE.curve, VALUE_TYPE.text ];
+	global.GLOBALVAR_TYPES_NAME = [ "Integer", "Float", "Boolean", "Color", "Gradient", "Path", "Curve", "Text" ];
+	global.GLOBALVAR_DISPLAY    = [
 		/*Integer*/	[ "Default", "Range", "Rotation", "Rotation range", "Slider", "Slider range", "Padding", "Vector2", "Vector3", "Vector4", "Vector range", "Vector2 range", "Area" ],
 		/*Float*/	[ "Default", "Range", "Rotation", "Rotation range", "Slider", "Slider range", "Padding", "Vector2", "Vector3", "Vector4", "Vector range", "Vector2 range", "Area" ],
 		/*Boolean*/	[ "Default" ],
@@ -12,9 +10,32 @@ function variable_editor(nodeVal) constructor {
 		/*Path*/	[ "Read", "Write", "Font" ],
 		/*Curve*/	[ "Default", ],
 		/*Text*/	[ "Default", ],
-	]
+	];
 	
-	tb_name = new textBox(TEXTBOX_INPUT.text, function(s) /*=>*/ { 
+	global.GLOBALVAR_DISPLAY_MAP = {}
+	global.GLOBALVAR_DISPLAY_MAP[$ "Default"]        = VALUE_DISPLAY._default;
+	global.GLOBALVAR_DISPLAY_MAP[$ "Range"]          = VALUE_DISPLAY.range;
+	global.GLOBALVAR_DISPLAY_MAP[$ "Rotation"]       = VALUE_DISPLAY.rotation;
+	global.GLOBALVAR_DISPLAY_MAP[$ "Rotation range"] = VALUE_DISPLAY.rotation_range;
+	global.GLOBALVAR_DISPLAY_MAP[$ "Slider"]         = VALUE_DISPLAY.slider;
+	global.GLOBALVAR_DISPLAY_MAP[$ "Slider range"]   = VALUE_DISPLAY.slider_range;
+	global.GLOBALVAR_DISPLAY_MAP[$ "Padding"]        = VALUE_DISPLAY.padding;
+	global.GLOBALVAR_DISPLAY_MAP[$ "Vector2"]        = VALUE_DISPLAY.vector;
+	global.GLOBALVAR_DISPLAY_MAP[$ "Vector3"]        = VALUE_DISPLAY.vector;
+	global.GLOBALVAR_DISPLAY_MAP[$ "Vector4"]        = VALUE_DISPLAY.vector;
+	global.GLOBALVAR_DISPLAY_MAP[$ "Vector range"]   = VALUE_DISPLAY.vector_range;
+	global.GLOBALVAR_DISPLAY_MAP[$ "Vector2 range"]  = VALUE_DISPLAY.vector_range;
+	global.GLOBALVAR_DISPLAY_MAP[$ "Area"]           = VALUE_DISPLAY.area;
+	global.GLOBALVAR_DISPLAY_MAP[$ "Palette"]        = VALUE_DISPLAY.palette;
+	global.GLOBALVAR_DISPLAY_MAP[$ "Read"]           = VALUE_DISPLAY.path_load;
+	global.GLOBALVAR_DISPLAY_MAP[$ "Write"]          = VALUE_DISPLAY.path_save;
+	global.GLOBALVAR_DISPLAY_MAP[$ "Font"]           = VALUE_DISPLAY.path_font;
+#endregion
+
+function variable_editor(nodeVal) constructor {
+	value = nodeVal;
+	
+	tb_name  = new textBox(TEXTBOX_INPUT.text, function(s) /*=>*/ { 
 		if(string_pos(" ", s)) { noti_warning("Global variable name can't have space."); return; }
 		
 		var _node = value.node;
@@ -30,37 +51,30 @@ function variable_editor(nodeVal) constructor {
 		
 		value.name = s;
 		RENDER_ALL
-	});
-	tb_name.hide = 1;
-	tb_name.slidable = false;
+	}).setHide(1).setSlide(false);
 	
-	vb_range = new vectorBox(2, function(v, i) /*=>*/ { slider_range[i] = v; refreshInput(); });
-	vb_range.linkable = false;
-	
+	vb_range = new vectorBox(2, function(v, i) /*=>*/ { slider_range[i] = v; refreshInput(); }).setLinkable(false);
 	tb_step  = new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ { slider_step = v; refreshInput(); });
 	
-	sc_type = new scrollBox(val_type_name, function(v) /*=>*/ {
+	sc_type  = new scrollBox(global.GLOBALVAR_TYPES_NAME, function(v) /*=>*/ {
+		sc_disp.data_list = global.GLOBALVAR_DISPLAY[v];
 		type_index = v;
-		sc_disp.data_list = display_list[v];
 		disp_index = 0;
 		refreshInput();
 		RENDER_ALL
-	});
-	sc_type.text_color   = CDEF.main_mdwhite;
-	sc_type.update_hover = false;
-	
-	sc_disp = new scrollBox(display_list[0], function(v) /*=>*/ {
+		
+	}).setTextColor(CDEF.main_mdwhite).setUpdateHover(false);
+	sc_disp  = new scrollBox(global.GLOBALVAR_DISPLAY[0], function(v) /*=>*/ {
 		disp_index = v;
 		refreshInput();
 		RENDER_ALL
-	});
-	sc_disp.text_color   = CDEF.main_mdwhite;
-	sc_disp.update_hover = false;
+		
+	}).setTextColor(CDEF.main_mdwhite).setUpdateHover(false);
 	
-	type_index  = 0;
+	 type_index = 0;
 	_type_index = 0;
 	
-	disp_index  = 0;
+	 disp_index = 0;
 	_disp_index = 0;
 	
 	slider_range = [ 0, 1 ];
@@ -77,7 +91,7 @@ function variable_editor(nodeVal) constructor {
 	}
 	
 	static refreshInput = function() {
-		value.setType(val_type[type_index]);
+		value.setType(global.GLOBALVAR_TYPES[type_index]);
 		
 		if(_type_index != type_index || _disp_index != disp_index) {
 			switch(value.type) {
@@ -121,28 +135,32 @@ function variable_editor(nodeVal) constructor {
 		
 		_type_index = type_index;
 		_disp_index = disp_index;
+		var _dtype  = global.GLOBALVAR_DISPLAY_MAP[$ sc_disp.data_list[disp_index]];
 		
 		switch(sc_disp.data_list[disp_index]) {
-			case "Default" :		value.setDisplay(VALUE_DISPLAY._default);		break;
-			case "Range" :			value.setDisplay(VALUE_DISPLAY.range);			break;
-			case "Rotation" :		value.setDisplay(VALUE_DISPLAY.rotation);		break;
-			case "Rotation range" : value.setDisplay(VALUE_DISPLAY.rotation_range);	break;
-			case "Slider" :			value.setDisplay(VALUE_DISPLAY.slider,       { range: [slider_range[0], slider_range[1], slider_step] }); break;
-			case "Slider range" :	value.setDisplay(VALUE_DISPLAY.slider_range, { range: [slider_range[0], slider_range[1], slider_step] }); break;
-				
-			case "Padding" :		value.setDisplay(VALUE_DISPLAY.padding);		break;
-			case "Vector2" :		
-			case "Vector3" :		
-			case "Vector4" :		value.setDisplay(VALUE_DISPLAY.vector);			break;
-			case "Vector range" :	
-			case "Vector2 range" :	value.setDisplay(VALUE_DISPLAY.vector_range);	break;
-			case "Area" :			value.setDisplay(VALUE_DISPLAY.area);			break;
-			case "Palette" :		value.setDisplay(VALUE_DISPLAY.palette);		break;
+			case "Slider" : 
+			case "Slider range" :
+				value.setDisplay(_dtype, { range: [slider_range[0], slider_range[1], slider_step] }); break;
 			
-			case "Read" :		value.setDisplay(VALUE_DISPLAY.path_load, { filter: "" });	break;
-			case "Write" :		value.setDisplay(VALUE_DISPLAY.path_save, { filter: "" });	break;
-			case "Font" :		value.setDisplay(VALUE_DISPLAY.path_font);					break;
+			case "Read" : 
+			case "Write" : 
+				value.setDisplay(_dtype, { filter: "" }); break;
+			
+			default : value.setDisplay(_dtype); break;
 		}
+	}
+	
+	static updateType = function() {
+		type_index = array_find(global.GLOBALVAR_TYPES, value.type);
+		disp_index = 0;
+		sc_disp.data_list = global.GLOBALVAR_DISPLAY[type_index];
+		
+		var _disp = value.display_type;
+		var _disK = struct_find_key(global.GLOBALVAR_DISPLAY_MAP, _disp);
+		if(_disK == undefined) return self;
+		
+		disp_index = array_find(sc_disp.data_list, _disK);
+		return self;
 	}
 	
 	static draw = function(_x, _y, _w, _m, _focus, _hover, viewMode) {
@@ -179,25 +197,24 @@ function variable_editor(nodeVal) constructor {
 }
 
 function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
-	name = "GLOBAL";
+	name         = "GLOBAL";
 	display_name = "";
 	
-	node_id = 0;
-	group   = noone;
-	
+	node_id   = 0;
+	group     = noone;
 	use_cache = CACHE_USE.none;
 	value     = ds_map_create();
 	
 	input_display_list = -1;
-	anim_priority = -999;
+	anim_priority      = -999;
 	
 	static isActiveDynamic = function(frame = CURRENT_FRAME) { return true; }
 		
 	static valueUpdate = function(index) { RENDER_ALL }
 	
 	static createValue = function() {
-		var _key = $"NewValue{array_length(inputs)}";
-		var _in  = nodeValue_Float(_key, self, 0);
+		var _key   = $"NewValue{array_length(inputs)}";
+		var _in    = nodeValue_Float(_key, self, 0);
 		_in.editor = new variable_editor(_in);
 		array_push(inputs, _in);
 		
@@ -222,6 +239,8 @@ function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static step = function() {
+		ds_map_clear(value);
+		
 		for( var i = 0; i < array_length(inputs); i++ ) {
 			var _inp = inputs[i];
 			value[? _inp.name] = _inp;

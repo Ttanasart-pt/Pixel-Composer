@@ -521,6 +521,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 					
 					cursor_select = -1;
 					modified = true;
+					
 				} else if(KEYBOARD_STRING != "" && KEYBOARD_STRING != "\b" && KEYBOARD_STRING != "\r") {
 					var ch = KEYBOARD_STRING;
 					

@@ -63,3 +63,10 @@ function struct_toggle(struct, key) {
 	if(struct_has(struct, key)) struct_remove(struct, key);
 	else                        struct[$ key] = 1;
 }
+
+function struct_find_key(struct, value) {
+	var _keys = struct_get_names(struct);
+	for( var i = 0, n = array_length(_keys); i < n; i++ )
+		if(value == struct[$ _keys[i]]) return _keys[i];
+	return undefined;
+}

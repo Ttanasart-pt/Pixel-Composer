@@ -38,6 +38,9 @@ function scrollBox(_data, _onModify, update_hover = true) : widget() constructor
 	type = 0;
 	hide = 0;
 	
+	static setTextColor   = function(_l = noone) { text_color   = _l; return self; }
+	static setUpdateHover = function(_l = noone) { update_hover = _l; return self; }
+	
 	static trigger = function() {
 		data = is_method(data_list)? data_list() : data_list;
 		

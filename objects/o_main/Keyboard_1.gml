@@ -6,6 +6,7 @@ kb_time += DELTA_TIME;
 if(kb_hold && kb_time >= PREFERENCES.keyboard_repeat_speed) {
 	trigger = true;
 	kb_time = 0;
+	
 } else if(!kb_hold && kb_time >= PREFERENCES.keyboard_repeat_start) {
 	trigger = true;
 	kb_time = 0;

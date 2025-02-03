@@ -5,6 +5,7 @@ uniform vec2      dimension;
 uniform float     gaussianCoeff[128];
 
 uniform int       bright;
+uniform int       brightInvert;
 uniform vec2      brightThreshold;
 uniform int       brightThresholdUseSurf;
 uniform sampler2D brightThresholdSurf;
@@ -12,6 +13,7 @@ uniform float     brightSmooth;
 uniform float     adaptiveRadius;
 
 uniform int       alpha;
+uniform int       alphaInvert;
 uniform vec2      alphaThreshold;
 uniform int       alphaThresholdUseSurf;
 uniform sampler2D alphaThresholdSurf;
@@ -50,11 +52,14 @@ void main() {
 		bNeight -= bri;
 		
 		float _res = brightSmooth == 0.? _step(bNeight, cbright) : smoothstep(bNeight - brightSmooth, bNeight + brightSmooth, cbright);
+		if(brightInvert == 1) _res = 1. - _res;
+		
 		col.rgb = vec3(_res);
 	}
 	
 	if(alpha == 1) {
 		col.a = alphaSmooth == 0.? _step(alp, col.a) : smoothstep(alp - alphaSmooth, alp + alphaSmooth, col.a);
+		if(alphaInvert == 1) col.a = 1. - col.a;
 	}
 	
     gl_FragColor = col;

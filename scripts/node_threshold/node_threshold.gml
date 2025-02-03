@@ -45,12 +45,16 @@ function Node_Threshold(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	newInput(16, nodeValue_Int("Adaptive Radius", self, 4))
 	
+	newInput(17, nodeValue_Bool("Brightness Invert", self, false));
+	
+	newInput(18, nodeValue_Bool("Alpha Invert", self, false));
+	
 	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 6, 10, 
 		["Surfaces",	 true], 0, 4, 5, 11, 12, 
-		["Brightness",	 true, 1], 15, 2, 13, 3,16, 
-		["Alpha",	     true, 7], 8, 14, 9, 
+		["Brightness",	 true, 1], 15, 2, 13, 3, 16, 17, 
+		["Alpha",	     true, 7], 8, 14, 9, 18, 
 	];
 	
 	attribute_surface_depth();
@@ -77,6 +81,9 @@ function Node_Threshold(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _algo      = _data[15];
 		var _adap_size = _data[16];
 		
+		var _brightInv = _data[17];
+		var _alhpaInv  = _data[18];
+		
 		inputs[16].setVisible(_algo == 1);
 		
 		var _shader = sh_threshold;
@@ -86,12 +93,14 @@ function Node_Threshold(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			shader_set_dim(, _surf);
 			
 			shader_set_i("bright",			    _bright);
+			shader_set_i("brightInvert",        _brightInv);
 			shader_set_f_map("brightThreshold", _brightThr, _data[13], inputs[2]);
 			shader_set_f("brightSmooth",	    _brightSmt);
 			shader_set_f("adaptiveRadius",	    _adap_size);
 			shader_set_f("gaussianCoeff",	    __gaussian_get_kernel(_adap_size));
 			
 			shader_set_i("alpha",			    _alph);
+			shader_set_i("alphaInvert",			_alhpaInv);
 			shader_set_f_map("alphaThreshold",  _alphThr, _data[14], inputs[8]);
 			shader_set_f("alphaSmooth",		    _alphSmt);
 			

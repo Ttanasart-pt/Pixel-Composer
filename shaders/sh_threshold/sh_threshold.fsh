@@ -2,12 +2,14 @@ varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 uniform int       bright;
+uniform int       brightInvert;
 uniform vec2      brightThreshold;
 uniform int       brightThresholdUseSurf;
 uniform sampler2D brightThresholdSurf;
 uniform float     brightSmooth;
 
 uniform int       alpha;
+uniform int       alphaInvert;
 uniform vec2      alphaThreshold;
 uniform int       alphaThresholdUseSurf;
 uniform sampler2D alphaThresholdSurf;
@@ -32,11 +34,15 @@ void main() {
 	
 	if(bright == 1) {
 		float cbright = dot(col.rgb, vec3(0.2126, 0.7152, 0.0722));
-		col.rgb = vec3(brightSmooth == 0.? _step(bri, cbright) : smoothstep(bri - brightSmooth, bri + brightSmooth, cbright));
+		float vBright = brightSmooth == 0.? _step(bri, cbright) : smoothstep(bri - brightSmooth, bri + brightSmooth, cbright);
+		if(brightInvert == 1) vBright = 1. - vBright;
+		
+		col.rgb = vec3(vBright);
 	}
 	
 	if(alpha == 1) {
 		col.a = alphaSmooth == 0.? _step(alp, col.a) : smoothstep(alp - alphaSmooth, alp + alphaSmooth, col.a);
+		if(alphaInvert == 1) col.a = 1. - col.a;
 	}
 	
     gl_FragColor = col;

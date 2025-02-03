@@ -116,6 +116,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		else onModify(value, onModifyParam);
 	}
 	
+	static setSlide      = function(_slidable)          { slidable    = _slidable;    return self; }
 	static setSlideType  = function(_slide_int = false) { slide_int   = _slide_int;   return self; }
 	static setSlideStep  = function(_slide_step = 0)    { slide_snap  = _slide_step;  return self; }
 	static setSlideRange = function(_min = 0, _max = 1) { slide_range = [_min, _max]; return self; }
@@ -607,7 +608,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		////- Slide
 		
 		var hoverRect = point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h);
-		
+	
 		if(sliding > 0) { #region slide
 			slide_delta += PEN_USE? PEN_X_DELTA : window_mouse_get_delta_x();
 			slide_delta += PEN_USE? PEN_Y_DELTA : window_mouse_get_delta_y();
