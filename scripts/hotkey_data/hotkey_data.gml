@@ -111,9 +111,10 @@ function hotkeyObject(_context, _name, _key, _mod = MOD_KEY.none, _action = noon
 	dKey	= _key;
 	dModi	= _mod;
 	
-	static full_name   = function() /*=>*/  {return string_to_var(context == ""? $"global.{name}" : $"{context}.{name}")};
+	static full_name    = function() /*=>*/ {return string_to_var(context == ""? $"global.{name}" : $"{context}.{name}")};
+	static get_key_name = function() /*=>*/ {return key_get_name(key, modi)};
 	
-	static serialize   = function() /*=>*/  { return { context, name, key, modi } }
+	static serialize   = function( ) /*=>*/ { return { context, name, key, modi } }
 	static deserialize = function(l) /*=>*/ { if(!is_struct(l)) return; key = l.key; modi = l.modi; }
 	if(struct_has(HOTKEYS_DATA, $"{context}_{name}")) deserialize(HOTKEYS_DATA[$ $"{context}_{name}"]);
 }
@@ -123,33 +124,33 @@ function addHotkey(_context, _name, _key, _mod, _action) {
 	
 	var key = new hotkeyObject(_context, _name, _key, _mod, _action);
 	
-	if(!ds_map_exists(HOTKEYS, _context)) {
-		HOTKEYS[? _context] = ds_list_create();
+	if(!struct_has(HOTKEYS, _context)) {
+		HOTKEYS[$ _context] = ds_list_create();
 		if(!ds_list_exist(HOTKEY_CONTEXT, _context))
 			ds_list_add(HOTKEY_CONTEXT, _context);
 	}
 	
-	for(var i = 0; i < ds_list_size(HOTKEYS[? _context]); i++) {
-		var hotkey	= HOTKEYS[? _context][| i];
+	for(var i = 0; i < ds_list_size(HOTKEYS[$ _context]); i++) {
+		var hotkey	= HOTKEYS[$ _context][| i];
 		if(hotkey.name == key.name) {
-			delete HOTKEYS[? _context][| i];
-			HOTKEYS[? _context][| i] = key;
+			delete HOTKEYS[$ _context][| i];
+			HOTKEYS[$ _context][| i] = key;
 			return;
 		}
 	}
 	
-	if(_context == "") ds_list_insert(HOTKEYS[? _context], 0, key);
-	else			   ds_list_add(HOTKEYS[? _context], key);
+	if(_context == "") ds_list_insert(HOTKEYS[$ _context], 0, key);
+	else			   ds_list_add(HOTKEYS[$ _context], key);
 	
 	return key;
 }
 
 function find_hotkey(_context, _name) {
-	if(!ds_map_exists(HOTKEYS, _context)) return getToolHotkey(_context, _name);
+	if(!struct_has(HOTKEYS, _context)) return getToolHotkey(_context, _name);
 	
-	for(var j = 0; j < ds_list_size(HOTKEYS[? _context]); j++) {
-		if(HOTKEYS[? _context][| j].name == _name)
-			return HOTKEYS[? _context][| j];
+	for(var j = 0; j < ds_list_size(HOTKEYS[$ _context]); j++) {
+		if(HOTKEYS[$ _context][| j].name == _name)
+			return HOTKEYS[$ _context][| j];
 	}
 }
 
@@ -223,7 +224,7 @@ function hotkey_draw(keyStr, _x, _y, _status = 0) {
 function hotkey_serialize() {
 	var _context = [];
 	for(var i = 0, n = ds_list_size(HOTKEY_CONTEXT); i < n; i++) {
-		var ll = HOTKEYS[? HOTKEY_CONTEXT[| i]];
+		var ll = HOTKEYS[$ HOTKEY_CONTEXT[| i]];
 		
 		for(var j = 0, m = ds_list_size(ll); j < m; j++) {
 			var _hk = ll[| j];

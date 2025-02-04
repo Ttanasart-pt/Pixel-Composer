@@ -244,7 +244,7 @@ function draw_line_elbow_diag_corner(x0, y0, x1, y1, _s = 1, thick = 1, col1 = c
 	
 }
 
-function distance_to_elbow_diag(mx, my, x0, y0, x1, y1, cx, cy, _s, extend, indexIn, indexOut) {
+function point_to_elbow_diag(mx, my, x0, y0, x1, y1, cx, cy, _s, extend, indexIn, indexOut, _p = undefined) {
 	var iy  = sign(y1 - y0);
 	var xx0 = x0 + extend * _s;
 	var xx1 = x1 - extend * _s;
@@ -263,7 +263,8 @@ function distance_to_elbow_diag(mx, my, x0, y0, x1, y1, cx, cy, _s, extend, inde
 	xx0 = x0 + extend * _s * indexIn;
 	xx1 = x1 - extend * _s * indexOut;
 
-	var dist = 9999999;
+	var dist = infinity;
+	
 	if(inv) {
 		var ofl = cy < _y0 || cy > _y1;
 		var iy  = sign(y1 - y0);
@@ -272,8 +273,8 @@ function distance_to_elbow_diag(mx, my, x0, y0, x1, y1, cx, cy, _s, extend, inde
 		var ix  = sign(xx0 - xx1);
 		var rrx = abs(xx0 - xx1);
 		
-		dist = min(dist, distance_to_line(mx, my, x0, y0, xx0, y0));
-		dist = min(dist, distance_to_line(mx, my, xx1, y1, x1, y1));
+		dist = point_closer(_p, dist, mx, my, x0, y0, xx0, y0);
+		dist = point_closer(_p, dist, mx, my, xx1, y1, x1, y1);
 		
 		if(xx1 > xx0 && !ofl) {
 			var top = abs(cy - y0) < rrx / 2;
@@ -282,23 +283,23 @@ function distance_to_elbow_diag(mx, my, x0, y0, x1, y1, cx, cy, _s, extend, inde
 			if(top) { 
 				var cor = (cy - y0) * 2;
 				
-				dist = min(dist, distance_to_line(mx, my, xx0, y0, xx1 - cor * iy, y0));
-				dist = min(dist, distance_to_line(mx, my, xx1, y0 + cor, xx1, y1));
+				dist = point_closer(_p, dist, mx, my, xx0, y0, xx1 - cor * iy, y0);
+				dist = point_closer(_p, dist, mx, my, xx1, y0 + cor, xx1, y1);
 				
-				dist = min(dist, distance_to_line(mx, my, xx1 - cor * iy, y0, xx1, y0 + cor));
+				dist = point_closer(_p, dist, mx, my, xx1 - cor * iy, y0, xx1, y0 + cor);
 			} else if(bot) {
 				var cor = (y1 - cy) * 2;
 				
-				dist = min(dist, distance_to_line(mx, my, xx0, y0, xx0, y1 - cor));
-				dist = min(dist, distance_to_line(mx, my, xx0 + cor * iy, y1, xx1, y1));
+				dist = point_closer(_p, dist, mx, my, xx0, y0, xx0, y1 - cor);
+				dist = point_closer(_p, dist, mx, my, xx0 + cor * iy, y1, xx1, y1);
 				
-				dist = min(dist, distance_to_line(mx, my, xx0, y1 - cor, xx0 + cor * iy, y1));
+				dist = point_closer(_p, dist, mx, my, xx0, y1 - cor, xx0 + cor * iy, y1);
 			} else {
 				var cor = rrx / 2;
-				dist = min(dist, distance_to_line(mx, my, xx0, y0, xx0, cy - cor * iy0));
-				dist = min(dist, distance_to_line(mx, my, xx1, cy + cor * iy1, xx1, y1));
+				dist = point_closer(_p, dist, mx, my, xx0, y0, xx0, cy - cor * iy0);
+				dist = point_closer(_p, dist, mx, my, xx1, cy + cor * iy1, xx1, y1);
 				
-				dist = min(dist, distance_to_line(mx, my, xx0, cy - cor * sign(y1 - y0), xx1, cy + cor * sign(y1 - y0)));
+				dist = point_closer(_p, dist, mx, my, xx0, cy - cor * sign(y1 - y0), xx1, cy + cor * sign(y1 - y0));
 			}
 		} else { 
 			var cut0 = min(abs(cy - yy0) / 2, abs(xx1 - xx0) / 2, ofl? 16 * _s : 9999);
@@ -313,23 +314,24 @@ function distance_to_elbow_diag(mx, my, x0, y0, x1, y1, cx, cy, _s, extend, inde
 			var crX3 = xx1;
 			var crY3 =  cy + cut1 * iy1;
 			
-			dist = min(dist, distance_to_line(mx, my, x0, y0, xx0, y0));
-			dist = min(dist, distance_to_line(mx, my, xx1, y1, x1, y1));
+			dist = point_closer(_p, dist, mx, my, x0, y0, xx0, y0);
+			dist = point_closer(_p, dist, mx, my, xx1, y1, x1, y1);
 		
 			if(abs(crX0 - crX3) == abs(crY0 - crY3)) {
-				dist = min(dist, distance_to_line(mx, my, crX0,   y0, crX0, crY0));
-				dist = min(dist, distance_to_line(mx, my, crX3,   y1, crX3, crY3));
-				dist = min(dist, distance_to_line(mx, my, crX0, crY0, crX3, crY3));
+				dist = point_closer(_p, dist, mx, my, crX0,   y0, crX0, crY0);
+				dist = point_closer(_p, dist, mx, my, crX3,   y1, crX3, crY3);
+				dist = point_closer(_p, dist, mx, my, crX0, crY0, crX3, crY3);
 			} else {
-				dist = min(dist, distance_to_line(mx, my, crX0,   y0, crX0, crY0));
-				dist = min(dist, distance_to_line(mx, my, crX1, crY1, crX2, crY2));
-				dist = min(dist, distance_to_line(mx, my, crX3, crY3, crX3,   y1));
+				dist = point_closer(_p, dist, mx, my, crX0,   y0, crX0, crY0);
+				dist = point_closer(_p, dist, mx, my, crX1, crY1, crX2, crY2);
+				dist = point_closer(_p, dist, mx, my, crX3, crY3, crX3,   y1);
 				
-				dist = min(dist, distance_to_line(mx, my, crX0, crY0, crX1, crY1));
-				dist = min(dist, distance_to_line(mx, my, crX2, crY2, crX3, crY3));
+				dist = point_closer(_p, dist, mx, my, crX0, crY0, crX1, crY1);
+				dist = point_closer(_p, dist, mx, my, crX2, crY2, crX3, crY3);
 			}
 		}
-		return dist;
+		return _p;
+		
 	} else { 
 		cx = clamp(cx, _x0 + abs(ry) / 2, _x1 - abs(ry) / 2);
 		cy = clamp(cy, _y0 + abs(rx) / 2, _y1 - abs(rx) / 2);
@@ -338,23 +340,23 @@ function distance_to_elbow_diag(mx, my, x0, y0, x1, y1, cx, cy, _s, extend, inde
 		var _xc0 = clamp(cx - (ry / 2) * sign(x1 - x0), _x0, _x1);
 		var _xc1 = clamp(cx + (ry / 2) * sign(x1 - x0), _x0, _x1);
 		
-		dist = min(dist, distance_to_line(mx, my,   x0,   y0, _xc0,   y0));
-		dist = min(dist, distance_to_line(mx, my, _xc0,   y0, _xc1,   y1));
-		dist = min(dist, distance_to_line(mx, my, _xc1,   y1,   x1,   y1));
+		dist = point_closer(_p, dist, mx, my,   x0,   y0, _xc0,   y0);
+		dist = point_closer(_p, dist, mx, my, _xc0,   y0, _xc1,   y1);
+		dist = point_closer(_p, dist, mx, my, _xc1,   y1,   x1,   y1);
 		
-		return dist;
+		return _p;
 	}
 }
 
-function distance_to_elbow_diag_corner(mx, my, x0, y0, x1, y1) {
+function point_to_elbow_diag_corner(mx, my, x0, y0, x1, y1, _p = undefined) {
 	var sx   = sign(x1 - x0);
 	var sy   = sign(y1 - y0);
 	var diag = min(abs(x0 - x1) / 2, abs(y0 - y1) / 2);
+	var dist = infinity;
 	
-	var dist = 99999;
-	dist = min(dist, distance_to_line(mx, my,             x0,             y0, x1 - diag * sx,             y0));
-	dist = min(dist, distance_to_line(mx, my, x1 - diag * sx,             y0,             x1, y0 + diag * sy));
-	dist = min(dist, distance_to_line(mx, my,             x1, y0 + diag * sy,             x1,             y1));
+	dist = point_closer(_p, dist, mx, my,             x0,             y0, x1 - diag * sx,             y0);
+	dist = point_closer(_p, dist, mx, my, x1 - diag * sx,             y0,             x1, y0 + diag * sy);
+	dist = point_closer(_p, dist, mx, my,             x1, y0 + diag * sy,             x1,             y1);
 	
-	return dist;
+	return _p;
 }

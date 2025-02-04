@@ -1,8 +1,15 @@
+#region
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Palette_Extract", "Algorithm > Toggle",   "A", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[3].setValue((_n.inputs[3].getValue() + 1) % 3); });
+		addHotkey("Node_Palette_Extract", "Color Space > Toggle", "C", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[4].setValue((_n.inputs[4].getValue() + 1) % 2); });
+	});
+#endregion
+
 function Node_Palette_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Palette Extract";
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Surface("Surface in", self));
+	newInput(0, nodeValue_Surface("Surface In", self));
 	
 	newInput(1, nodeValue_Int("Max colors", self, 5, "Amount of color in a palette."))
 		.rejectArray();

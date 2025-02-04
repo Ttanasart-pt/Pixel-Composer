@@ -1,7 +1,7 @@
 function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "Separate Shape";
 	
-	newInput(0, nodeValue_Surface("Surface in", self))
+	newInput(0, nodeValue_Surface("Surface In", self))
 		.rejectArray();
 	
 	newInput(1, nodeValue_Float("Tolerance", self, 0.2))

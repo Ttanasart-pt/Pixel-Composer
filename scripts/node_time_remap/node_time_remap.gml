@@ -1,15 +1,22 @@
+#region
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Time_Remap", "Max Life > Set", KEY_GROUP.numeric, MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[2].setValue(toNumber(chr(keyboard_key))); });
+		addHotkey("Node_Time_Remap", "Loop > Toggle",                "L", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[3].setValue((_n.inputs[3].getValue() + 1) % 2); });
+	});
+#endregion
+
 function Node_Time_Remap(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name      = "Time Remap";
 	use_cache = CACHE_USE.manual;
 	update_on_frame = true;
 	
-	newInput(0, nodeValue_Surface("Surface in", self))
+	newInput(0, nodeValue_Surface("Surface In", self))
 		.rejectArray();
 	
 	newInput(1, nodeValue_Surface("Map", self))
 		.rejectArray();
 	
-	newInput(2, nodeValue_Int("Max life",   self, 3))
+	newInput(2, nodeValue_Int("Max Life", self, 3))
 		.rejectArray();
 	
 	newInput(3, nodeValue_Bool("Loop", self, false))

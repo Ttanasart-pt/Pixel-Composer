@@ -86,11 +86,11 @@ function draw_line_curve_corner(x0, y0, x1, y1, _s = 1, thick = 1, col1 = c_whit
 	}
 }
 
-function distance_to_curve(mx, my, x0, y0, x1, y1, xc, yc, _s) {
+function point_to_curve(mx, my, x0, y0, x1, y1, xc, yc, _s, _p = undefined) {
 	var sample = ceil((abs(x0 - x1) + abs(y0 - y1)) / 32 * PROJECT.graphConnection.line_sample);
 	sample = clamp(sample, 2, 128);
 	
-	var dist = 999999;
+	var dist = infinity;
 	var ox, oy, nx, ny, t, it;
 	
 	var x2 = lerp(x0, x1, 0. - sign(x1 - x0) * 0.2);
@@ -114,21 +114,20 @@ function distance_to_curve(mx, my, x0, y0, x1, y1, xc, yc, _s) {
 			+ 4 * y3 * power(it, 3) * power(t, 1) 
 			+     y1 * power(it, 4);
 			
-		if(i)
-			dist = min(dist, distance_to_line(mx, my, ox, oy, nx, ny));
+		if(i) dist = point_closer(_p, dist, mx, my, ox, oy, nx, ny);
 		
 		ox = nx;
 		oy = ny;
 	}
 	
-	return dist;
+	return _p;
 }
 
-function distance_to_curve_corner(mx, my, x0, y0, x1, y1, _s) {
+function point_to_curve_corner(mx, my, x0, y0, x1, y1, _s, _p = undefined) {
 	var sample = ceil((abs(x0 - x1) + abs(y0 - y1)) / 32 * PROJECT.graphConnection.line_sample);
 	sample = clamp(sample, 2, 128);
 	
-	var dist = 999999;
+	var dist = infinity;
 	var ox, oy, nx, ny, t, it;
 	
 	var x2 = lerp(x0, x1, 0.9);
@@ -149,13 +148,12 @@ function distance_to_curve_corner(mx, my, x0, y0, x1, y1, _s) {
 			+ 3 * y2 * power(it, 1) * power(t, 2) 
 			+ 3 * y3 * power(it, 2) * power(t, 1) 
 			+     y1 * power(it, 3);
-			
-		if(i)
-			dist = min(dist, distance_to_line(mx, my, ox, oy, nx, ny));
+		
+		if(i) dist = point_closer(_p, dist, mx, my, ox, oy, nx, ny);
 		
 		ox = nx;
 		oy = ny;
 	}
 	
-	return dist;
+	return _p;
 }

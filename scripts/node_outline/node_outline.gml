@@ -1,3 +1,13 @@
+#region
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Outline", "Width > Set", KEY_GROUP.numeric, MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[1].setValue(toNumber(chr(keyboard_key))); });
+		addHotkey("Node_Outline", "Position > Toggle",         "S", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[ 5].setValue((_n.inputs[ 5].getValue() + 1) % 2); });
+		addHotkey("Node_Outline", "Blend > Toggle",            "B", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[ 3].setValue((_n.inputs[ 3].getValue() + 1) % 2); });
+		addHotkey("Node_Outline", "Profile > Toggle",          "P", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[18].setValue((_n.inputs[18].getValue() + 1) % 3); });
+		addHotkey("Node_Outline", "Anti-aliasing > Toggle",    "A", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[ 6].setValue((_n.inputs[ 6].getValue() + 1) % 2); });
+	});
+#endregion
+
 function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Outline";
 	batch_output = false;
@@ -12,7 +22,7 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		triggerRender();
 	});
 	
-	newInput(0, nodeValue_Surface("Surface in", self));
+	newInput(0, nodeValue_Surface("Surface In", self));
 	
 	newInput(1, nodeValue_Int("Width",   self, 0))
 		.setDisplay(VALUE_DISPLAY._default, { front_button : filter_button })
@@ -21,7 +31,7 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	newInput(2, nodeValue_Color("Color",   self, cola(c_white)));
 	
-	newInput(3, nodeValue_Bool("Blend",   self, 0, "Blend outline color with the original color."));
+	newInput(3, nodeValue_Bool("Blend",   self, false, "Blend outline color with the original color."));
 	
 	newInput(4, nodeValue_Float("Blend alpha",   self, 1))
 		.setDisplay(VALUE_DISPLAY.slider)
@@ -29,12 +39,12 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	newInput(5, nodeValue_Enum_Button("Position",   self,  1, ["Inside", "Outside"]));
 	
-	newInput(6, nodeValue_Bool("Anti aliasing",   self, 0));
+	newInput(6, nodeValue_Bool("Anti-aliasing",   self, 0));
 	
 	newInput(7, nodeValue_Enum_Scroll("Oversample mode", self,  0, [ "Empty", "Clamp", "Repeat" ]))
 		.setTooltip("How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.");
 		
-	newInput(8, nodeValue_Int("Start",   self, 0, "Shift outline inside, outside the shape."))
+	newInput(8, nodeValue_Int("Start", self, 0, "Shift outline inside, outside the shape."))
 		.setMappable(17);
 	
 	newInput(9, nodeValue_Surface("Mask", self));

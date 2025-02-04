@@ -24,7 +24,7 @@ function taggedSurf(_surf = noone) : dynaSurf() constructor {
 function Node_Surface_Tag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Tag Surface";
 	
-	newInput(0, nodeValue_Surface("Surface in", self));
+	newInput(0, nodeValue_Surface("Surface In", self));
 	
 	newOutput(0, nodeValue_Output("Tagged Surface", self, VALUE_TYPE.dynaSurface, noone));
 	

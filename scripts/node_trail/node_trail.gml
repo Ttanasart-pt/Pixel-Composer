@@ -1,21 +1,30 @@
+#region
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Trail", "Max Life > Set", KEY_GROUP.numeric, MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[1].setValue(toNumber(chr(keyboard_key))); });
+		addHotkey("Node_Trail", "Loop > Toggle",                "L", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[2].setValue((_n.inputs[2].getValue() + 1) % 2); });
+		addHotkey("Node_Trail", "Match Color > Toggle",         "M", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[4].setValue((_n.inputs[4].getValue() + 1) % 2); });
+		addHotkey("Node_Trail", "Blend Color > Toggle",         "B", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[5].setValue((_n.inputs[5].getValue() + 1) % 2); });
+	});
+#endregion
+
 function Node_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "Trail";
 	use_cache   = CACHE_USE.manual;
 	clearCacheOnChange = false;
 	
-	newInput(0, nodeValue_Surface("Surface in",		self));
+	newInput(0, nodeValue_Surface("Surface In",		self));
 	
-	newInput(1, nodeValue_Int("Max life",			self, 5));
+	newInput(1, nodeValue_Int("Max Life",			self, 5));
 	
 	newInput(2, nodeValue_Bool("Loop",				self, false));
 	
-	newInput(3, nodeValue_Int("Max distance",		self, -1, "Maximum distance to search for movement, set to -1 to search the entire image."));
+	newInput(3, nodeValue_Int("Max Distance",		self, -1, "Maximum distance to search for movement, set to -1 to search the entire image."));
 	
-	newInput(4, nodeValue_Bool("Match color",		self, true, "Make trail track pixels of the same color, instead of the closet pixels."));
+	newInput(4, nodeValue_Bool("Match Color",		self, true, "Make trail track pixels of the same color, instead of the closet pixels."));
 	
-	newInput(5, nodeValue_Bool("Blend color",		self, true, "Blend color between two pixel smoothly."));
+	newInput(5, nodeValue_Bool("Blend Color",		self, true, "Blend color between two pixel smoothly."));
 	
-	newInput(6, nodeValue_Curve("Alpha over life",	self, CURVE_DEF_11));
+	newInput(6, nodeValue_Curve("Alpha Over Life",	self, CURVE_DEF_11));
 	
 	newOutput(0, nodeValue_Output("Surface out",	self, VALUE_TYPE.surface, noone));
 	

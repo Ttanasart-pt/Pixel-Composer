@@ -1,7 +1,7 @@
 function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Normal Light";
 	
-	newInput(0, nodeValue_Surface("Surface in", self));
+	newInput(0, nodeValue_Surface("Surface In", self));
 	
 	newInput(1, nodeValue_Surface("Normal map", self));
 	

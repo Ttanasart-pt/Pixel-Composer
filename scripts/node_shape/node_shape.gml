@@ -1,33 +1,48 @@
-global.node_shape_keys = [ 
-	"rectangle", "square", "diamond", "trapezoid", "parallelogram", "half", 
-	"circle", "ellipse", "arc", "donut", "crescent", "ring", "squircle", 
-	"regular polygon", "triangle", "pentagon", "hexagon", "star", "cross", 
-	"line", "arrow", 
-	"teardrop", "leaf", "heart", "gear", 
-];
+#region create
+	global.node_shape_keys = [ 
+		"rectangle", "square", "diamond", "trapezoid", "parallelogram", "half", 
+		"circle", "ellipse", "arc", "donut", "crescent", "ring", "squircle", 
+		"regular polygon", "triangle", "pentagon", "hexagon", "star", "cross", 
+		"line", "arrow", 
+		"teardrop", "leaf", "heart", "gear", 
+	];
 
-function Node_create_Shape(_x, _y, _group = noone, _param = {}) {
-	var query = struct_try_get(_param, "query", "");
-	var node  = new Node_Shape(_x, _y, _group);
-	node.skipDefault();
-	
-	var ind   = -1;
-	
-	switch(query) {
-		case "square" :   ind = array_find_string(node.shape_types, "rectangle");	break;
-		case "circle" :   ind = array_find_string(node.shape_types, "ellipse"); 	break;
-		case "ring" :     ind = array_find_string(node.shape_types, "donut");		break;
-		case "triangle" : ind = array_find_string(node.shape_types, "regular polygon"); node.inputs[4].setValue(3); break;
-		case "pentagon" : ind = array_find_string(node.shape_types, "regular polygon"); node.inputs[4].setValue(5); break;
-		case "hexagon" :  ind = array_find_string(node.shape_types, "regular polygon"); node.inputs[4].setValue(6); break;
+	function Node_create_Shape(_x, _y, _group = noone, _param = {}) {
+		var query = struct_try_get(_param, "query", "");
+		var node  = new Node_Shape(_x, _y, _group);
+		node.skipDefault();
 		
-		default : ind = array_find_string(node.shape_types, query);
+		var ind   = -1;
+		
+		switch(query) {
+			case "square" :   ind = array_find_string(node.shape_types, "rectangle");	break;
+			case "circle" :   ind = array_find_string(node.shape_types, "ellipse"); 	break;
+			case "ring" :     ind = array_find_string(node.shape_types, "donut");		break;
+			case "triangle" : ind = array_find_string(node.shape_types, "regular polygon"); node.inputs[4].setValue(3); break;
+			case "pentagon" : ind = array_find_string(node.shape_types, "regular polygon"); node.inputs[4].setValue(5); break;
+			case "hexagon" :  ind = array_find_string(node.shape_types, "regular polygon"); node.inputs[4].setValue(6); break;
+			
+			default : ind = array_find_string(node.shape_types, query);
+		}
+		
+		if(ind >= 0) node.inputs[2].setValue(ind);
+		
+		return node;
 	}
 	
-	if(ind >= 0) node.inputs[2].setValue(ind);
+	function __Node_Shape_Hotkeys_set_shape(_n, _key) { _n.inputs[2].setValue(array_find(_n.shape_types, _key)); }
 	
-	return node;
-}
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Shape", "Shape > Rectangle",       "R", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR __Node_Shape_Hotkeys_set_shape(_n, "Rectangle");       });
+		addHotkey("Node_Shape", "Shape > Ellipse",         "E", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR __Node_Shape_Hotkeys_set_shape(_n, "Ellipse");         });
+		addHotkey("Node_Shape", "Shape > Regular polygon", "P", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR __Node_Shape_Hotkeys_set_shape(_n, "Regular polygon"); });
+		addHotkey("Node_Shape", "Shape > Star",            "S", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR __Node_Shape_Hotkeys_set_shape(_n, "Star");            });
+		addHotkey("Node_Shape", "Anti-aliasing > Toggle",  "A", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[6].setValue(!_n.inputs[6].getValue());       });
+		addHotkey("Node_Shape", "Height Render > Toggle",  "H", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[12].setValue(!_n.inputs[12].getValue());     });
+		addHotkey("Node_Shape", "Background > Toggle",     "B", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[1].setValue(!_n.inputs[1].getValue());       });
+	});
+	
+#endregion
 
 function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Draw Shape";

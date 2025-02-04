@@ -1,11 +1,18 @@
+#region
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Posterize", "Use Palette > Toggle", "P", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[2].setValue((_n.inputs[2].getValue() + 1) % 2); });
+		addHotkey("Node_Posterize", "Space > Toggle",       "S", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[8].setValue((_n.inputs[8].getValue() + 1) % 2); });
+	});
+#endregion
+
 function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Posterize";
 	
-	newInput(0, nodeValue_Surface("Surface in", self));
+	newInput(0, nodeValue_Surface("Surface In", self));
 	
 	newInput(1, nodeValue_Palette("Palette", self, array_clone(DEF_PALETTE)));
 	
-	newInput(2, nodeValue_Bool("Use palette", self, true));
+	newInput(2, nodeValue_Bool("Use Palette", self, true));
 	
 	newInput(3, nodeValue_Int("Steps", self, 4))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [2, 16, 0.1] });

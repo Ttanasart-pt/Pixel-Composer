@@ -1,3 +1,23 @@
+#region create
+
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Gradient", "Type > Toggle",     "T", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[2].setValue((_n.inputs[2].getValue() + 1) % 3); });
+		addHotkey("Node_Gradient", "Angle > Rotate CCW","R", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[3].setValue((_n.inputs[3].getValue() + 90) % 360); });
+		addHotkey("Node_Gradient", "Gradient > Invert", "I", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR 
+			var _grad = _n.inputs[1].getValue();
+			var _k = [];
+			for( var i = 0, n = array_length(_grad.keys); i < n; i++ ) {
+				_k[i] = _grad.keys[n - i - 1];
+				_k[i].time = 1 - _k[i].time;
+			}
+			_grad.keys = _k;
+			_grad.refresh();
+			_n.triggerRender();
+		});
+	});
+	
+#endregion
+
 function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Draw Gradient";
 	

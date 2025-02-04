@@ -1,7 +1,7 @@
 function Node_Curve_HSV(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "HSV Curve";
 	
-	newInput(0, nodeValue_Surface("Surface in", self));
+	newInput(0, nodeValue_Surface("Surface In", self));
 	
 	newInput(1, nodeValue_Curve("Hue", self, CURVE_DEF_01));
 	

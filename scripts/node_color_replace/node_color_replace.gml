@@ -1,7 +1,7 @@
 function Node_Color_replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Replace Palette";
 	
-	newInput(0, nodeValue_Surface("Surface in", self));
+	newInput(0, nodeValue_Surface("Surface In", self));
 	newInput(1, nodeValue_Palette("From", self, array_clone(DEF_PALETTE)));
 	
 	newInput(2, nodeValue_Palette("To", self, array_clone(DEF_PALETTE)));

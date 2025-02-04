@@ -4,7 +4,7 @@ function Node_Texture_Remap(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	shader = sh_texture_remap;
 	uniform_map = shader_get_sampler_index(shader, "map");
 	
-	newInput(0, nodeValue_Surface("Surface in", self));
+	newInput(0, nodeValue_Surface("Surface In", self));
 	
 	newInput(1, nodeValue_Surface("RG Map", self, "Displacement map where red retermine the X position, and green determine the Y position."));
 	

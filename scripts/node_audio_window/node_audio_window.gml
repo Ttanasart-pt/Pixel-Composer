@@ -7,14 +7,14 @@ function Node_Audio_Window(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(1, nodeValue_Int("Width", self, 4096, "Amount of bits to extract."));
 	
 	newInput(2, nodeValue_Float("Location", self, 0))
-		.setDisplay(VALUE_DISPLAY._default, { unit: 0, side_button: button(function() { 
+		.setDisplay(VALUE_DISPLAY._default, { side_button: button(function() /*=>*/ { 
 					inputs[2].attributes.unit = (inputs[2].attributes.unit + 1) % 3; 
-					inputs[2].display_data.side_button.tooltip.index = inputs[2].attributes.unit; 
 					update();
 				}).setTooltip( new tooltipSelector("Unit", [ "Bit", "Second", "Progress" ]) ) 
-				  .setIcon( THEME.unit_audio, [ function() { return inputs[2].attributes.unit; } ], COLORS._main_icon )
+				  .setIcon( THEME.unit_audio, [ function() /*=>*/ {return inputs[2].attributes.unit} ], COLORS._main_icon )
 			}
 		);
+	inputs[2].attributes.unit = 0;
 		
 	newInput(3, nodeValue_Enum_Button("Cursor location", self,  1, [ "Start", "Middle", "End" ]));
 	
@@ -41,6 +41,8 @@ function Node_Audio_Window(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
+		inputs[2].display_data.side_button.tooltip.index = inputs[2].attributes.unit; 
+		
 		var _aud = getInputData(0);
 		if(!is_instanceof(_aud, audioObject)) return;
 		
@@ -95,7 +97,7 @@ function Node_Audio_Window(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		outputs[0].setValue(res);
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var _aud = getInputData(0);
 		if(!is_instanceof(_aud, audioObject)) return;
 		
@@ -120,6 +122,6 @@ function Node_Audio_Window(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		draw_set_color(COLORS._main_accent);
 		draw_line(dx + cr * ss, bbox.yc - 16 * _s, dx + cr * ss, bbox.yc + 16 * _s);
-	} #endregion
+	}
 	
 }

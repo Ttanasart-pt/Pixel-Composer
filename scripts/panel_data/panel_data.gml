@@ -402,14 +402,10 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 			
 			if(con && point_in_rectangle(_mx, _my, x + ui(2), y + ui(2), x + w - ui(4), y + h - ui(4))) {
 				HOVER = self;
-				// print($"Hovering {instanceof(con)} : {mouse_press(mb_any)} : {random(1)}")
 				
-				if(mouse_press(mb_any))   
-					setFocus(self);
-					
-				if(FOCUS == self && con) 
-					FOCUS_STR = con.context_str;
-					
+				if(mouse_press(mb_any))
+					setFocus(self, con.context_str);
+				
 			} else {
 				for(var i = 0; i < array_length(childs); i++)
 					childs[i].stepBegin();
@@ -995,8 +991,7 @@ function setFocus(target, fstring = noone) {
 		FOCUS.onFocusEnd();
 	
 	FOCUS = target;
-	if(fstring != noone) 
-		FOCUS_STR = fstring;
+	if(fstring != noone) FOCUS_STR = fstring;
 	
 	if((instance_exists(FOCUS) && variable_instance_exists(FOCUS, "onFocusBegin")) || 
 		(is_struct(FOCUS) && struct_has(FOCUS, "onFocusBegin"))) 

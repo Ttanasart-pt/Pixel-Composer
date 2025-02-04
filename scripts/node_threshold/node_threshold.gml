@@ -1,7 +1,14 @@
+#region
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Threshold", "Brightness > Toggle", "B", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[1].setValue(!_n.inputs[1].getValue()); });
+		addHotkey("Node_Threshold", "Alpha > Toggle",      "A", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[7].setValue(!_n.inputs[7].getValue()); });
+	});
+#endregion
+
 function Node_Threshold(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Threshold";
 	
-	newInput(0, nodeValue_Surface("Surface in", self));
+	newInput(0, nodeValue_Surface("Surface In", self));
 	
 	newInput(1, nodeValue_Bool("Brightness", self, false));
 		

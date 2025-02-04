@@ -1,7 +1,7 @@
 function Node_Color_Separate(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Separate Color";
 	
-	newInput(0, nodeValue_Surface("Surface in", self));
+	newInput(0, nodeValue_Surface("Surface In", self));
 	
 	newInput(1, nodeValue_Bool("All Colors", self, true));
 	

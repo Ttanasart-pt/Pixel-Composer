@@ -9,6 +9,7 @@ event_inherited();
 	align	 = fa_center;
 	text_pad = ui(8);
 	item_pad = ui(8);
+	minWidth = 0;
 	widths   = [];
 	
 	draggable = false;
@@ -85,6 +86,7 @@ event_inherited();
 					if(_emp) {
 						array_push(widths, 0);
 					} else {	
+						lw = max(minWidth, lw);
 						array_push(widths, lw);
 						ww += lw;
 						hh  = max(hh, lh);
@@ -106,6 +108,7 @@ event_inherited();
 			lh += hght;
 		}
 		
+		lw = max(minWidth, lw);
 		array_push(widths, _emp? 0 : lw);
 		ww += lw;
 		hh  = max(hh, lh);

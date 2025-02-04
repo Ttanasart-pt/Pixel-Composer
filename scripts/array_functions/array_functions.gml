@@ -343,6 +343,12 @@
 		array_push(arr, value);
 	}
 
+	function array_push_to_back_index(arr, index) {
+		var _val = arr[index];
+		array_delete(arr, index, 1);
+		array_push(arr, _val);
+	}
+
 	function array_spread(arr, _arr = [], _minDepth = 0) {
 		INLINE
 		

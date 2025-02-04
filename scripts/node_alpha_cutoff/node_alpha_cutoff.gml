@@ -1,7 +1,13 @@
+#region
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Alpha_Cutoff", "Minimum > Set", KEY_GROUP.numeric, MOD_KEY.none, function(val) /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[1].setValue(toNumber(chr(keyboard_key)) / 10); });
+	});
+#endregion
+
 function Node_Alpha_Cutoff(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Alpha Cutoff";
 	
-	newInput(0, nodeValue_Surface("Surface in", self));
+	newInput(0, nodeValue_Surface("Surface In", self));
 	
 	newInput(1, nodeValue_Float("Minimum", self, 0.2, "Any pixel with less alpha (more transparent) than this will be removed."))
 		.setDisplay(VALUE_DISPLAY.slider);

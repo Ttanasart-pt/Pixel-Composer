@@ -1,3 +1,12 @@
+#region
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Interlaced", "Size > Set", KEY_GROUP.numeric, MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[8].setValue(toNumber(chr(keyboard_key))); });
+		addHotkey("Node_Interlaced", "Axis > Toggle",            "A", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[ 7].setValue((_n.inputs[ 7].getValue() + 1) % 2); });
+		addHotkey("Node_Interlaced", "Invert > Toggle",          "I", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[ 9].setValue((_n.inputs[ 9].getValue() + 1) % 2); });
+		addHotkey("Node_Interlaced", "Loop > Toggle",            "L", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[11].setValue((_n.inputs[11].getValue() + 1) % 2); });
+	});
+#endregion
+
 function Node_Interlaced(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Interlace";
 	
@@ -5,7 +14,7 @@ function Node_Interlaced(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	use_cache          = CACHE_USE.manual;
 	clearCacheOnChange = false;
 	
-	newInput(0, nodeValue_Surface("Surface in", self));
+	newInput(0, nodeValue_Surface("Surface In", self));
 	
 	newInput(1, nodeValue_Bool("Active", self, true));
 		active_index = 1;

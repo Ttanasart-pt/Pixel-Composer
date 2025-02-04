@@ -1,15 +1,23 @@
+#region
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Erode", "Width > Set", KEY_GROUP.numeric, MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[1].setValue(toNumber(chr(keyboard_key))); });
+		addHotkey("Node_Erode", "Preserve Border > Toggle",  "B", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[2].setValue(!_n.inputs[2].getValue()); });
+		addHotkey("Node_Erode", "Use Alpha > Toggle",        "A", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[3].setValue(!_n.inputs[3].getValue()); });
+	});
+#endregion
+
 function Node_Erode(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Erode";
 	
-	newInput(0, nodeValue_Surface("Surface in", self));
+	newInput(0, nodeValue_Surface("Surface In", self));
 	
 	newInput(1, nodeValue_Int("Width", self, 1))
 		.setValidator(VV_min(0))
 		.setMappable(10);
 	
-	newInput(2, nodeValue_Bool("Preserve border",self, false));
+	newInput(2, nodeValue_Bool("Preserve Border",self, false));
 	
-	newInput(3, nodeValue_Bool("Use alpha", self, true));
+	newInput(3, nodeValue_Bool("Use Alpha", self, true));
 	
 	newInput(4, nodeValue_Surface("Mask", self));
 	

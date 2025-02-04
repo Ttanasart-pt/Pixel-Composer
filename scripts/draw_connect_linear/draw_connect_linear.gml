@@ -44,10 +44,14 @@ function draw_line_feedback(x0, y0, x1, y1, th, c1, c0, _s) {
 function distance_line_feedback(mx, my, x0, y0, x1, y1, _s) {
 	var _y0 = y0 - 12 * _s;
 	var _y1 = y1 - 12 * _s;
+	var dd  = distance_to_line(mx, my, x0, _y0, x1, _y1);
 	
-	var dd = 99999999;
-	
-	dd = min(dd, distance_to_line(mx, my, x0, _y0, x1, _y1));
-	
+	return dd;
+}
+
+function point_to_line_feedback(mx, my, x0, y0, x1, y1, _s, _p = undefined) {
+	var _y0 = y0 - 12 * _s;
+	var _y1 = y1 - 12 * _s;
+	var dd  = point_to_line(mx, my, x0, _y0, x1, _y1, _p);
 	return dd;
 }

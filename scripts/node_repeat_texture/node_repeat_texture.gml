@@ -2,7 +2,7 @@ function Node_Repeat_Texture(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	name = "Repeat Texture";
 	dimension_index = 1;
 	
-	newInput(0, nodeValue_Surface("Surface in", self));
+	newInput(0, nodeValue_Surface("Surface In", self));
 	
 	newInput(1, nodeValue_Vec2("Target dimension", self, DEF_SURF));
 		

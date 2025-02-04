@@ -496,7 +496,7 @@ function Panel_Preference() : PanelContent() constructor {
     	pref_node = ds_list_create();
 	
 		ds_list_add(pref_node, __txt("Defaults"));
-		
+			
 			ds_list_add(pref_node, new __Panel_Linear_Setting_Item_Preference(
 				__txtx("pref_node_default_depth", "Default surface depth"),
 				"node_default_depth",
@@ -519,6 +519,14 @@ function Panel_Preference() : PanelContent() constructor {
 				__txtx("pref_node_param_width", "Default param width"),
 				"node_param_width",
 				new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ { PREFERENCES.node_param_width = val; PREF_SAVE(); })
+			));
+			
+		ds_list_add(pref_node, __txt("Add node"));
+		
+			ds_list_add(pref_node, new __Panel_Linear_Setting_Item_Preference(
+				__txtx("pref_node_add_select", "Select node on add"),
+				"node_add_select",
+				new checkBox(function() /*=>*/ { PREFERENCES.node_add_select = !PREFERENCES.node_add_select; PREF_SAVE(); })
 			));
 			
 		ds_list_add(pref_node, __txt("Display"));
@@ -1136,17 +1144,31 @@ function Panel_Preference() : PanelContent() constructor {
     		var ctx  = HOTKEY_CONTEXT[| j];
     		var _lst = [];
     		
-    		var ll = HOTKEYS[? ctx];
+    		var ll = HOTKEYS[$ ctx];
     		for(var i = 0; i < ds_list_size(ll); i++)
     			array_push(_lst, ll[| i]);
     		
     		array_sort(_lst, function(s1, s2) /*=>*/ {return string_compare(s1.name, s2.name)});
     		array_push(hotkeyContext, { context: ctx, list: _lst });
     		
-    		var _title = ctx == ""? "Global" : ctx;
+    		var _title = ctx == 0? "Global" : ctx;
     		    _title = string_replace_all(_title, "_", " ");
     		array_push(hotkeyArray, _title);
     	}
+    	
+    	array_push(hotkeyContext, -1);
+		array_push(hotkeyArray,   -1);
+    	
+    	for( var i = array_length(hotkeyArray) - 2; i >= 0; i-- ) {
+    		var _t = hotkeyArray[i];
+    		if(string_starts_with(_t, "Node")) {
+    			array_push_to_back_index(hotkeyContext, i);
+    			array_push_to_back_index(hotkeyArray,   i);
+    		}
+    	}
+    	
+    	array_push(hotkeyContext, -1);
+		array_push(hotkeyArray,   -1);
     	
     	var keys = struct_get_names(HOTKEYS_CUSTOM);
     	for( var i = 0, n = array_length(keys); i < n; i++ ) {
@@ -1168,12 +1190,18 @@ function Panel_Preference() : PanelContent() constructor {
     		
     		array_sort(_lst, function(s1, s2) /*=>*/ {return string_compare(s1.name, s2.name)});
     		array_push(hotkeyContext, { context: ctx, list: _lst });
-    		array_push(hotkeyArray, $"   {ctx}");
+    		
+    		var _title = ctx == 0? "Global" : ctx;
+    		    _title = string_replace_all(_title, "_", " ");
+    		array_push(hotkeyArray, _title);
     	}
     	
     	hk_page   = 0;
-    	hk_scroll = new scrollBox(hotkeyArray, function(val) /*=>*/ { hk_page = val; sp_hotkey.scroll_y_to = 0; });
-    	hk_scroll.align = fa_left;
+    	hk_scroll = new scrollBox(hotkeyArray, function(val) /*=>*/ { hk_page = val; sp_hotkey.scroll_y_to = 0; })
+    					.setFont(f_p2)
+    					.setHorizontal(true)
+    					.setAlign(fa_left)
+    					.setMinWidth(ui(128))
     	
     	sp_hotkey = new scrollPane(panel_width, hotkey_height, function(_y, _m) {
     		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
@@ -1221,8 +1249,21 @@ function Panel_Preference() : PanelContent() constructor {
     			if(ind++ % 2 == 0)				  draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, _yy - padd, _ww, th + padd * 2, COLORS.dialog_preference_prop_bg, 1);
     			if(hotkey_focus_highlight == key) draw_sprite_stretched_add(THEME.ui_panel,    0, 0, _yy - padd, _ww, th + padd * 2, COLORS._main_accent, min(1, hotkey_focus_high_bg) * .5);
     			
-    			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text);
-    			draw_text_add(ui(24), _lb_y, name);
+    			if(string_pos(">", name)) {
+    				var _sp = string_split(name, ">");
+    				var _tx = ui(24);
+    				
+    				draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
+	    			draw_text_add(_tx, _lb_y, _sp[0]);
+	    			_tx += string_width(_sp[0]) + ui(8);
+	    			
+	    			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text);
+    				draw_text_add(_tx, _lb_y, _sp[1]);
+    				
+    			} else {
+	    			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text);
+	    			draw_text_add(ui(24), _lb_y, name);
+    			}
     			
     			var kw = string_width(dk);
     			
@@ -1745,7 +1786,6 @@ function Panel_Preference() : PanelContent() constructor {
         		
         		var _ppy = py + hotkey_cont_h;
         		
-        		hk_scroll.font = f_p2;
         		hk_scroll.setFocusHover(pFOCUS, pHOVER);
         		hk_scroll.draw(px, _ppy, ui(200), ui(24), hk_page, [ mx, my ], x, y);
         		

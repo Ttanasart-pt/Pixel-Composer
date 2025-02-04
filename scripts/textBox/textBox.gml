@@ -847,8 +847,6 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		} else {
 			
 			if(hover && hoverRect) {
-				print("Hover|");
-				
 				hovering = true;
 				if(hide < 3) draw_sprite_stretched_ext(THEME.textbox, 1, _x, _y, _w, _h, boxColor, 0.5 + (0.5 * interactable));	
 				

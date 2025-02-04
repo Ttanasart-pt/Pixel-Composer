@@ -1,7 +1,7 @@
 function Node_Matrix_Color_Apply(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name  = "Matrix Color Apply";
 	
-	newInput(0, nodeValue_Surface("Surface in", self));
+	newInput(0, nodeValue_Surface("Surface In", self));
 	
 	newInput(1, nodeValue_Matrix("Matrix", self, new Matrix(3)))
 		.setVisible(true, true);

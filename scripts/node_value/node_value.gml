@@ -2467,44 +2467,52 @@ function checkJuncConnection(from, to, params) {
 	
 	var _x1 = max(jx, cx, frx) + hovDist + max(_fin, _tin) * PROJECT.graphConnection.line_extend;
 	var _y1 = max(jy, cy, fry) + hovDist;
-	if(!point_in_rectangle(mx, my, _x0, _y0, _x1, _y1)) return noone;
 	
 	var downDirection = to.type == VALUE_TYPE.action || from.type == VALUE_TYPE.action;
-	var _loop = struct_try_get(params, "loop");
+	var _loop   = params[$ "loop"] ?? false;
+	var _chNode = params[$ "checkNode"] ?? noone;
+	var _hPoint = [ 0, 0 ];
+	
+	if(_chNode == noone && !point_in_rectangle(mx, my, _x0, _y0, _x1, _y1)) return noone;
 	
 	if(_loop || from.node == to.node) {
-		hover = distance_line_feedback(mx, my, jx, jy, frx, fry, _s) < hovDist;
+		point_to_line_feedback(mx, my, jx, jy, frx, fry, _s, _hPoint);
 		
 	} else {
-		var _hdist;
 		
 		switch(PROJECT.graphConnection.type) { 
 			case 0 : 
-				if(downDirection) _hdist = distance_to_line(mx, my, jx, jy, frx, fry);
-				else              _hdist = distance_to_linear_connection(mx, my, frx, fry, jx, jy, _s, PROJECT.graphConnection.line_extend);
+				if(downDirection) point_to_line(mx, my, jx, jy, frx, fry, _hPoint);
+				else              point_to_linear_connection(mx, my, frx, fry, jx, jy, _s, PROJECT.graphConnection.line_extend, _hPoint);
 				break;
 				
 			case 1 : 
-				if(downDirection) _hdist = distance_to_curve_corner(mx, my, jx, jy, frx, fry, _s);
-				else              _hdist = distance_to_curve(mx, my, jx, jy, frx, fry, cx, cy, _s);
+				if(downDirection) point_to_curve_corner(mx, my, jx, jy, frx, fry, _s, _hPoint);
+				else              point_to_curve(mx, my, jx, jy, frx, fry, cx, cy, _s, _hPoint);
 				break;
 				
 			case 2 : 
-				if(downDirection) _hdist = distance_to_elbow_corner(mx, my, frx, fry, jx, jy);
-				else              _hdist = distance_to_elbow(mx, my, frx, fry, jx, jy, cx, cy, _s);
+				if(downDirection) point_to_elbow_corner(mx, my, frx, fry, jx, jy, _hPoint);
+				else              point_to_elbow(mx, my, frx, fry, jx, jy, cx, cy, _s, _hPoint);
 				break;
 				
 			case 3 :
-				if(downDirection) _hdist = distance_to_elbow_diag_corner(mx, my, frx, fry, jx, jy);
-				else              _hdist = distance_to_elbow_diag(mx, my, frx, fry, jx, jy, cx, cy, _s, PROJECT.graphConnection.line_extend, _fin, _tin);
+				if(downDirection) point_to_elbow_diag_corner(mx, my, frx, fry, jx, jy, _hPoint);
+				else              point_to_elbow_diag(mx, my, frx, fry, jx, jy, cx, cy, _s, PROJECT.graphConnection.line_extend, _fin, _tin, _hPoint);
 				break;
 				
 			default : return noone;
 				
 		}
-		
-		hover = _hdist < hovDist;
 	} 
+	
+	if(_chNode == noone) {
+		var _dx = _hPoint[0] - mx;
+		var _dy = _hPoint[1] - my;
+		hover = _dx * _dx + _dy * _dy < hovDist * hovDist;
+		
+	} else
+		hover = _chNode.pointIn(params.x, params.y, _hPoint[0], _hPoint[1], params.s);
 	
 	if(PANEL_GRAPH.value_focus == noone) to.draw_line_shift_hover = hover;
 	return hover? self : noone;
@@ -2579,7 +2587,7 @@ function drawJuncConnection(from, to, params, _hover = 0) {
 	corner *= aa;
 	th = max(1, round(th * aa));
 	
-	var _loop = struct_try_get(params, "loop");
+	var _loop = params[$ "loop"] ?? false;
 	if(_loop) { draw_line_feedback(jx, jy, frx, fry, th, c1, c0, ss); return; }
 	
 	var down = to.type == VALUE_TYPE.action || from.type == VALUE_TYPE.action;

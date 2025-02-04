@@ -1,7 +1,14 @@
+#region
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Kuwahara", "Radius > Set", KEY_GROUP.numeric, MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[2].setValue(toNumber(chr(keyboard_key))); });
+		addHotkey("Node_Kuwahara", "Types > Toggle",             "T", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[9].setValue((_n.inputs[9].getValue() + 1) % 3); });
+	});
+#endregion
+
 function Node_Kuwahara(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Kuwahara";
 	
-	newInput(0, nodeValue_Surface("Surface in", self));
+	newInput(0, nodeValue_Surface("Surface In", self));
 	
 	newInput(1, nodeValue_Bool("Active", self, true));
 		active_index = 1;

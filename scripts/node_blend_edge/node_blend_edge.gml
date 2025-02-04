@@ -1,7 +1,14 @@
+#region
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Blend_Edge", "Width > Set", KEY_GROUP.numeric, MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[1].setValue(toNumber(chr(keyboard_key)) / 10);  });
+		addHotkey("Node_Blend_Edge", "Types > Toggle",            "T", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[2].setValue((_n.inputs[2].getValue() + 1) % 3); });
+	});
+#endregion
+
 function Node_Blend_Edge(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Blend Edge";
 	
-	newInput(0, nodeValue_Surface("Surface in", self));
+	newInput(0, nodeValue_Surface("Surface In", self));
 	
 	newInput(1, nodeValue_Float("Width", self, 0.1))
 		.setDisplay(VALUE_DISPLAY.slider)

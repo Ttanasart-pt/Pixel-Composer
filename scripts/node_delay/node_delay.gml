@@ -1,3 +1,9 @@
+#region create
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Delay", "Overflow > Toggle",  "O", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[2].setValue((_n.inputs[2].getValue() + 1) % 3); });
+	});
+#endregion
+
 function Node_Delay(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Delay";
 	

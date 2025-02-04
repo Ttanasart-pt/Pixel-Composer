@@ -244,7 +244,13 @@ event_inherited();
 				array_push(_outputs, _new_node.outputs[i]);
 			
 			if(PANEL_INSPECTOR) PANEL_INSPECTOR.setInspecting(_new_node);
-			if(PANEL_GRAPH)     PANEL_GRAPH.selectDragNode(_new_node, PREFERENCES.node_add_select);
+			
+			if(PANEL_GRAPH) {
+				if(PREFERENCES.node_add_select) 
+					PANEL_GRAPH.selectDragNode(_new_node, junction_called == noone);
+				var _ins = instanceof(_new_node);
+				if(struct_has(HOTKEYS, _ins)) FOCUS_STR = _ins;
+			}
 			
 		} else if(is_instanceof(_node, NodeAction)) {  // NOT IMPLEMENTED
 			var _dat = _node.build(node_target_x, node_target_y,, _param);

@@ -5,10 +5,31 @@
 		shift  = 1 << 1,
 		alt    = 1 << 2
 	}
+	
+	enum KEY_GROUP {
+		base    = 10000, 
+		numeric = 10001,
+	}
 
 	global.KEY_STRING_MAP = ds_map_create();
 	
 	global.KEY_STRING_MAP[?  0] = ""
+	global.KEY_STRING_MAP[? 33] = "!"
+	global.KEY_STRING_MAP[? 34] = "\""
+	global.KEY_STRING_MAP[? 35] = "#"
+	global.KEY_STRING_MAP[? 36] = "$"
+	global.KEY_STRING_MAP[? 37] = "%"
+	global.KEY_STRING_MAP[? 38] = "&"
+	global.KEY_STRING_MAP[? 39] = "'"
+	global.KEY_STRING_MAP[? 40] = "("
+	global.KEY_STRING_MAP[? 41] = ")"
+	global.KEY_STRING_MAP[? 42] = "*"
+	global.KEY_STRING_MAP[? 43] = "+"
+	global.KEY_STRING_MAP[? 44] = ","
+	global.KEY_STRING_MAP[? 45] = "-"
+	global.KEY_STRING_MAP[? 46] = "."
+	global.KEY_STRING_MAP[? 47] = "/"
+	
 	global.KEY_STRING_MAP[? 48] = "0"
 	global.KEY_STRING_MAP[? 49] = "1"
 	global.KEY_STRING_MAP[? 50] = "2"
@@ -19,7 +40,7 @@
 	global.KEY_STRING_MAP[? 55] = "7"
 	global.KEY_STRING_MAP[? 56] = "8"
 	global.KEY_STRING_MAP[? 57] = "9"
-
+	
 	global.KEY_STRING_MAP[? 65] = "A"
 	global.KEY_STRING_MAP[? 66] = "B"
 	global.KEY_STRING_MAP[? 67] = "C"
@@ -79,6 +100,8 @@
 
 	global.KEY_STRING_MAP[? 223] = "`" // actually ` but that needs to be escaped
 	
+	global.KEY_STRING_MAP[? KEY_GROUP.numeric] = "0-9"
+	
 	function key_get_index(key) {
 		if(key == "") return noone;
 		
@@ -94,8 +117,7 @@
 
 #region get name
 	function key_get_name(_key, _mod) {
-		if(!is_real(_key) || (_key <= 0 && _mod == MOD_KEY.none))
-			return "";
+		if(!is_numeric(_key) || (_key <= 0 && _mod == MOD_KEY.none)) return "";
 		
 		var dk = "";
 		if(_mod & MOD_KEY.ctrl)		dk += "Ctrl+";
@@ -139,16 +161,25 @@
 				break;	
 		}
 		
-		if(string_char_at(dk, string_length(dk)) == "+")
-			dk = string_copy(dk, 1, string_length(dk) - 1);
-		
+		dk = string_trim_end(dk, ["+"]);
 		return dk;
 	}
+	
 #endregion
 
 function key_press(_key, _mod = MOD_KEY.none) {
 	if(WIDGET_CURRENT) return false;
 	if(_mod == MOD_KEY.none && _key == noone) return false;
 	
-	return (_key == noone || keyboard_check_pressed(_key)) && HOTKEY_MOD == _mod;
+	var _modPress = HOTKEY_MOD == _mod;
+	var _keyPress = false;
+	
+	switch(_key) {
+		case KEY_GROUP.numeric : _keyPress = keyboard_key >= ord("0") && keyboard_key <= ord("9") break;
+		
+		case noone : _keyPress = true; break;
+		default :    _keyPress = keyboard_check_pressed(_key); break;
+	}
+	
+	return _keyPress && _modPress;
 }

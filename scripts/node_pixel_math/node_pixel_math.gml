@@ -1,19 +1,30 @@
-function Node_create_Pixel_Math(_x, _y, _group = noone, _param = {}) {
-	var query = struct_try_get(_param, "query", "");
-	var node  = new Node_Pixel_Math(_x, _y, _group);
-	node.skipDefault();
+#region
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Pixel_Math", "Operator > Add",      "A", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[7].setValue(array_find(global.node_math_names, "Add")); });
+		addHotkey("Node_Pixel_Math", "Operator > Subtract", "S", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[7].setValue(array_find(global.node_math_names, "Subtract")); });
+		addHotkey("Node_Pixel_Math", "Operator > Multiply", "M", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[7].setValue(array_find(global.node_math_names, "Multiply")); });
+		addHotkey("Node_Pixel_Math", "Operator > Divide",   "D", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[7].setValue(array_find(global.node_math_names, "Divide")); });
+		
+		addHotkey("Node_Pixel_Math", "Operand Type > Toggle", "O", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[10].setValue(!_n.inputs[10].getValue()); });
+	});
 
-	var ind = array_find(global.node_math_keys, query);
-	if(ind != -1) node.inputs[7].setValue(global.node_math_keys_map[ind]);
-
-	return node;
-}
+	function Node_create_Pixel_Math(_x, _y, _group = noone, _param = {}) {
+		var query = struct_try_get(_param, "query", "");
+		var node  = new Node_Pixel_Math(_x, _y, _group);
+		node.skipDefault();
+	
+		var ind = array_find(global.node_math_keys, query);
+		if(ind != -1) node.inputs[7].setValue(global.node_math_keys_map[ind]);
+	
+		return node;
+	}
+#endregion
 
 
 function Node_Pixel_Math(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Pixel Math";
 	
-	newInput(0, nodeValue_Surface("Surface in", self));
+	newInput(0, nodeValue_Surface("Surface In", self));
 	
 	newInput(1, nodeValue_Bool("Active", self, true));
 		active_index = 1;
@@ -35,9 +46,9 @@ function Node_Pixel_Math(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	newInput(9, nodeValue_Vec2("Range", self, [ 0, 0 ]));
 	
-	newInput(10, nodeValue_Enum_Button("Operand type", self, 0, [ "Vec4", "Surface" ]));
+	newInput(10, nodeValue_Enum_Button("Operand Type", self, 0, [ "Vec4", "Surface" ]));
 	
-	newInput(11, nodeValue_Surface("Operand surface", self));
+	newInput(11, nodeValue_Surface("Operand Surface", self));
 	
 	newInput(12, nodeValue_Float("Mix", self, .5))
 		.setDisplay(VALUE_DISPLAY.slider);

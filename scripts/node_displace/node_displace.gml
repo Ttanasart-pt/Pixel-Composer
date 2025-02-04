@@ -1,7 +1,18 @@
+#region
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Displace", "Mode > Toggle",            "M", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[ 5].setValue((_n.inputs[ 5].getValue() + 1) % 4); });
+		addHotkey("Node_Displace", "Oversample Mode > Toggle", "O", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[ 7].setValue((_n.inputs[ 7].getValue() + 1) % 3); });
+		addHotkey("Node_Displace", "Blend Mode > Toggle",      "B", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[11].setValue((_n.inputs[11].getValue() + 1) % 3); });
+		
+		addHotkey("Node_Displace", "Iterate > Toggle",         "I", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[ 6].setValue((_n.inputs[ 6].getValue() + 1) % 2); });
+		addHotkey("Node_Displace", "Fade Distance > Toggle",   "F", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[19].setValue((_n.inputs[19].getValue() + 1) % 2); });
+	});
+#endregion
+
 function Node_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Displace";
 	
-	newInput(0, nodeValue_Surface("Surface in", self))
+	newInput(0, nodeValue_Surface("Surface In", self))
 		.setVisible(true, true);
 	
 	newInput(1, nodeValue_Surface("Displace map", self))
@@ -27,7 +38,7 @@ function Node_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(6, nodeValue_Bool("Iterate",  self, false, @"If not set, then strength value is multiplied directly to the displacement.
 If set, then strength value control how many times the effect applies on itself."));
 	
-	newInput(7, nodeValue_Enum_Scroll("Oversample mode", self,  0, [ "Empty", "Clamp", "Repeat" ]))
+	newInput(7, nodeValue_Enum_Scroll("Oversample Mode", self,  0, [ "Empty", "Clamp", "Repeat" ]))
 		.setTooltip("How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.");
 	
 	newInput(8, nodeValue_Surface("Mask", self));
@@ -38,7 +49,7 @@ If set, then strength value control how many times the effect applies on itself.
 	newInput(10, nodeValue_Bool("Active", self, true));
 		active_index = 10;
 	
-	newInput(11, nodeValue_Enum_Scroll("Blend mode", self,  0, [ "Overwrite", "Min", "Max" ]));
+	newInput(11, nodeValue_Enum_Scroll("Blend Mode", self,  0, [ "Overwrite", "Min", "Max" ]));
 		
 	newInput(12, nodeValue_Toggle("Channel", self, 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	

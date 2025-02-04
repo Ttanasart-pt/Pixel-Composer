@@ -1,7 +1,6 @@
 /// @description 
 var ev_id   = async_load[? "id"];
 var ev_type = async_load[? "event_type"];
-print(ev_type)
 
 switch(ev_type) {
 		

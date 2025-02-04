@@ -1,7 +1,13 @@
+#region
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Blur_Simple", "Size > Set",  KEY_GROUP.numeric, MOD_KEY.none, function(val) /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[1].setValue(toNumber(chr(keyboard_key))); });
+	});
+#endregion
+
 function Node_Blur_Simple(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Non-Uniform Blur";
 	
-	newInput(0, nodeValue_Surface("Surface in", self));
+	newInput(0, nodeValue_Surface("Surface In", self));
 	newInput(1, nodeValue_Float("Size", self, 3))
 		.setValidator(VV_min(0))
 		.setUnitRef(function(index) /*=>*/ {return getDimension(index)});

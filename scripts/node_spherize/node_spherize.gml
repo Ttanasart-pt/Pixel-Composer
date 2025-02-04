@@ -1,7 +1,13 @@
+#region
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Spherize", "Oversample Mode > Toggle", "O", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[4].setValue((_n.inputs[4].getValue() + 1) % 3); });
+	});
+#endregion
+
 function Node_Spherize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Spherize";
 	
-	newInput(0, nodeValue_Surface("Surface in", self));
+	newInput(0, nodeValue_Surface("Surface In", self));
 	
 	newInput(1, nodeValue_Vec2("Center", self, [ DEF_SURF_W / 2, DEF_SURF_H / 2 ]))
 		.setUnitRef(function(index) { return getDimension(index); });
@@ -14,7 +20,7 @@ function Node_Spherize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(12);
 	
-	newInput(4, nodeValue_Enum_Scroll("Oversample mode", self,  0, [ "Empty", "Clamp", "Repeat" ]))
+	newInput(4, nodeValue_Enum_Scroll("Oversample Mode", self,  0, [ "Empty", "Clamp", "Repeat" ]))
 		.setTooltip("How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.");
 	
 	newInput(5, nodeValue_Surface("Mask", self));
@@ -31,18 +37,18 @@ function Node_Spherize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	newInput(11, nodeValue_Surface("Strength map", self))
+	newInput(11, nodeValue_Surface("Strength Map", self))
 		.setVisible(false, false);
 	
-	newInput(12, nodeValue_Surface("Radius map", self))
+	newInput(12, nodeValue_Surface("Radius Map", self))
 		.setVisible(false, false);
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	newInput(13, nodeValue_Float("Trim edge", self, 0))
+	newInput(13, nodeValue_Float("Trim Edge", self, 0))
 		.setDisplay(VALUE_DISPLAY.slider)
 		
-	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 7, 8, 
 		["Surfaces",  true], 0, 5, 6, 9, 10, 

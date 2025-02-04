@@ -1,7 +1,13 @@
+#region
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_High_Pass", "Radius > Set",  KEY_GROUP.numeric, MOD_KEY.none, function(val) /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[7].setValue(toNumber(chr(keyboard_key))); });
+	});
+#endregion
+
 function Node_High_Pass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "High Pass";
 	
-	newInput(0, nodeValue_Surface("Surface in", self));
+	newInput(0, nodeValue_Surface("Surface In", self));
 	
 	newInput(1, nodeValue_Bool("Active", self, true));
 	active_index = 1;
@@ -21,7 +27,7 @@ function Node_High_Pass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	input_display_list = [ 1, 4, 
 		["Surfaces",  true], 0, 2, 3, 5, 6, 
-		["Sharpen",  false], 7, 8, 
+		["Effect",   false], 7, 8, 
 	]
 	
 	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));

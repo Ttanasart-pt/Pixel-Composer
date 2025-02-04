@@ -1,10 +1,14 @@
+#region create
+	
+#endregion
+
 function Node_Anim_Curve(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Evaluate Curve";
 	update_on_frame = true;
 	
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Curve("Curve",   self, CURVE_DEF_01));
+	newInput(0, nodeValue_Curve("Curve",    self, CURVE_DEF_01));
 	newInput(1, nodeValue_Float("Progress", self, 0))
 		.setDisplay(VALUE_DISPLAY.slider);
 	

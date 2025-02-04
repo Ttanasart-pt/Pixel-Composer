@@ -28,18 +28,24 @@ function scrollBox(_data, _onModify, update_hover = true) : widget() constructor
 	open_rx = 0;
 	open_ry = 0;
 	
-	align        = fa_center;
-	horizontal   = false;
-	extra_button = noone;
-	padding      = ui(8);
-	item_pad     = ui(8);
-	text_color   = COLORS._main_text;
+	align          = fa_center;
+	horizontal     = false;
+	extra_button   = noone;
+	padding        = ui(8);
+	padding_scroll = ui(8);
+	item_pad       = ui(8);
+	text_color     = COLORS._main_text;
 	
+	minWidth = 0;
 	type = 0;
 	hide = 0;
 	
-	static setTextColor   = function(_l = noone) { text_color   = _l; return self; }
-	static setUpdateHover = function(_l = noone) { update_hover = _l; return self; }
+	static setHorizontal    = function(_l) /*=>*/ { horizontal   = _l;   return self; }
+	static setAlign         = function(_l) /*=>*/ { align        = _l;   return self; }
+	static setTextColor     = function(_l) /*=>*/ { text_color   = _l;   return self; }
+	static setUpdateHover   = function(_l) /*=>*/ { update_hover = _l;   return self; }
+	static setMinWidth      = function(_l) /*=>*/ { minWidth     = _l;   return self; }
+	static setPaddingScroll = function(_l) /*=>*/ { padding_scroll = _l; return self; }
 	
 	static trigger = function() {
 		data = is_method(data_list)? data_list() : data_list;
@@ -55,6 +61,7 @@ function scrollBox(_data, _onModify, update_hover = true) : widget() constructor
 			text_pad     = other.padding;
 			item_pad     = other.item_pad;
 			update_hover = other.update_hover;
+			minWidth     = other.minWidth;
 			
 			initScroll(other);
 		}

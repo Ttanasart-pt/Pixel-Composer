@@ -25,8 +25,9 @@ if(!LOADING && PROJECT.active && !PROJECT.safeMode) { //node step
 
 #region hotkey
 	if(!HOTKEY_BLOCK) {
-		if(ds_map_exists(HOTKEYS, "")) {
-			var l = HOTKEYS[? ""];
+		
+		if(struct_has(HOTKEYS, 0)) {
+			var l = HOTKEYS[$ 0];
 			for(var i = 0, n = ds_list_size(l); i < n; i++) {
 				var hotkey = l[| i];
 				if(hotkey.key == 0 && hotkey.modi == MOD_KEY.none) continue;
@@ -36,8 +37,8 @@ if(!LOADING && PROJECT.active && !PROJECT.safeMode) { //node step
 			}
 		}
 		
-		if(ds_map_exists(HOTKEYS, FOCUS_STR)) {
-			var list = HOTKEYS[? FOCUS_STR];
+		if(struct_has(HOTKEYS, FOCUS_STR)) {
+			var list = HOTKEYS[$ FOCUS_STR];
 			for(var i = 0, n = ds_list_size(list); i < n; i++) {
 				var hotkey = list[| i];
 				if(hotkey.key == 0 && hotkey.modi == MOD_KEY.none) continue;
@@ -46,6 +47,7 @@ if(!LOADING && PROJECT.active && !PROJECT.safeMode) { //node step
 					hotkey.action();
 			}
 		}
+		
 	}
 	
 	HOTKEY_BLOCK = false;

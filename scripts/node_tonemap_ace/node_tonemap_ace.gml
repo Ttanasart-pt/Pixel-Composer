@@ -1,7 +1,7 @@
 function Node_Tonemap_ACE(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "ACE";
 	
-	newInput(0, nodeValue_Surface("Surface in", self));
+	newInput(0, nodeValue_Surface("Surface In", self));
 	
 	newInput(1, nodeValue_Surface("Mask", self));
 	

@@ -3,7 +3,7 @@ function Node_Sequence_Anim(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	update_on_frame = true;
 	setAlwaysTimeline(new timelineItemNode_Sequence_Anim(self));
 	
-	newInput(0, nodeValue_Surface("Surface in", self, []))
+	newInput(0, nodeValue_Surface("Surface In", self, []))
 		.setArrayDepth(1);
 	
 	newInput(1, nodeValue_Float("Speed", self, 1))

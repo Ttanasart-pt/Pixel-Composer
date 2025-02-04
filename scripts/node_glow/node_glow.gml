@@ -1,7 +1,16 @@
+#region
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Glow", "Size > Set", KEY_GROUP.numeric, MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[2].setValue(toNumber(chr(keyboard_key))); });
+		addHotkey("Node_Glow", "Mode > Toggle",            "M", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[10].setValue((_n.inputs[10].getValue() + 1) % 2); });
+		addHotkey("Node_Glow", "Side > Toggle",            "S", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[12].setValue((_n.inputs[12].getValue() + 1) % 2); });
+		addHotkey("Node_Glow", "Draw Original > Toggle",   "O", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[11].setValue((_n.inputs[11].getValue() + 1) % 2); });
+	});
+#endregion
+
 function Node_Glow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Glow";
 	
-	newInput(0, nodeValue_Surface("Surface in", self));
+	newInput(0, nodeValue_Surface("Surface In", self));
 	
 	newInput(1, nodeValue_Float("Border", self, 0))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 4, 0.1] });
@@ -26,7 +35,7 @@ function Node_Glow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	newInput(10, nodeValue_Enum_Button("Mode", self,  0, [ "Greyscale", "Alpha" ]));
 		
-	newInput(11, nodeValue_Bool("Draw original", self, true));
+	newInput(11, nodeValue_Bool("Draw Original", self, true));
 	
 	newInput(12, nodeValue_Enum_Button("Side", self,  0, [ "Outer", "Inner" ]));
 		

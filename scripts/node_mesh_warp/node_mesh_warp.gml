@@ -208,7 +208,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	anchor_drag_mx  = -1;
 	anchor_drag_my  = -1;
 	
-	newInput(0, nodeValue_Surface("Surface in", self));
+	newInput(0, nodeValue_Surface("Surface In", self));
 	
 	newInput(1, nodeValue_Int("Sample", self, 8, "Amount of grid subdivision. Higher number means more grid, detail."))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 2, 32, 0.1 ] });

@@ -1,10 +1,16 @@
+#region
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Twirl", "Oversample Mode > Toggle", "O", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[4].setValue((_n.inputs[4].getValue() + 1) % 3); });
+	});
+#endregion
+
 function Node_Twirl(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Twirl";
 	
-	newInput(0, nodeValue_Surface("Surface in", self));
+	newInput(0, nodeValue_Surface("Surface In", self));
 	
-	newInput(1, nodeValue_Vec2("Center", self, [ 0, 0 ]))
-		.setUnitRef(function(index) { return getDimension(index); });
+	newInput(1, nodeValue_Vec2("Center", self, [ .5, .5 ]))
+		.setUnitRef(function(index) /*=>*/ {return getDimension(index)}, VALUE_UNIT.reference);
 	
 	newInput(2, nodeValue_Float("Strength", self, 3))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-10, 10, 0.01] })
@@ -13,7 +19,7 @@ function Node_Twirl(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput(3, nodeValue_Float("Radius", self, 16))
 		.setMappable(12);
 	
-	newInput(4, nodeValue_Enum_Scroll("Oversample mode", self,  0, [ "Empty", "Clamp", "Repeat" ]))
+	newInput(4, nodeValue_Enum_Scroll("Oversample Mode", self,  0, [ "Empty", "Clamp", "Repeat" ]))
 		.setTooltip("How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.");
 		
 	newInput(5, nodeValue_Surface("Mask", self));

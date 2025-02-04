@@ -104,6 +104,7 @@ function ThemeColor() constructor {
     node_path_overlay_control_line      = CDEF.main_grey;
     node_wiggler_frame                  = CDEF.main_grey;
     node_border_file_drop               = CDEF.cyan;
+    node_border_context                 = CDEF.yellow;
 
     scrollbar_bg                        = CDEF.main_dkblack;
     scrollbar_idle                      = CDEF.main_grey;

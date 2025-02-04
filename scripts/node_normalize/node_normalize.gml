@@ -1,7 +1,14 @@
+#region
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Normalize", "Channels > Toggle", "C", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[1].setValue(!_n.inputs[1].getValue()); });
+		addHotkey("Node_Normalize", "Modes > Toggle",    "M", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[2].setValue(!_n.inputs[2].getValue()); });
+	});
+#endregion
+
 function Node_Normalize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Normalize";
 	
-	newInput(0, nodeValue_Surface("Surface in", self));
+	newInput(0, nodeValue_Surface("Surface In", self));
 	
 	newInput(1, nodeValue_Enum_Button("Channels", self, 0, [ "BW", "RGB" ]));
 	

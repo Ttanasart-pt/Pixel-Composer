@@ -51,9 +51,9 @@
 	var _lsp = _vsp[array_length(_vsp) - 1];
 	NIGHTLY  = string_length(_lsp) == 3;
 	
-	HOTKEYS			= ds_map_create();
+	HOTKEYS			= {};
 	HOTKEY_CONTEXT	= ds_list_create();
-	HOTKEY_CONTEXT[| 0] = "";
+	HOTKEY_CONTEXT[| 0] = 0;
 	
 	globalvar TOOLTIP, DRAGGING, DIALOG_DEPTH_HOVER;
 	global.KEYS = { download_links: "" };

@@ -2,7 +2,7 @@ function Node_Revert(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	name	  = "Reverse";
 	use_cache = CACHE_USE.manual;
 	
-	newInput(0, nodeValue_Surface("Surface in", self));
+	newInput(0, nodeValue_Surface("Surface In", self));
 	
 	newOutput(0, nodeValue_Output("Output", self, VALUE_TYPE.surface, noone));
 	

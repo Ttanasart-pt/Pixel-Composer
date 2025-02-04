@@ -94,29 +94,29 @@ function draw_line_elbow_corner(x0, y0, x1, y1, _s = 1, thick = 1, col1 = c_whit
 	draw_corner(x1 - corner * sx, y0, x1, y0, x1, y0 + corner * sy, thick, colc, sample);
 }
 
-function distance_to_elbow(mx, my, x0, y0, x1, y1, cx, cy, _s) {
-	var inv = x1 <= x0;
-	var xx0 = x0;
-	var xx1 = x1;
+function point_to_elbow(mx, my, x0, y0, x1, y1, cx, cy, _s, _p = undefined) {
+	var inv  = x1 <= x0;
+	var xx0  = x0;
+	var xx1  = x1;
+	var dist = infinity;
 		
 	if(y0 != y1 && inv) {
-		var dist =	     distance_to_line(mx, my, xx0, y0, xx0, cy);
-		dist = min(dist, distance_to_line(mx, my, xx0, cy, xx1, cy));
-		dist = min(dist, distance_to_line(mx, my, xx1, cy, xx1, y1));
-	
-		return dist;
+		dist = point_closer(_p, dist, mx, my, xx0, y0, xx0, cy);
+		dist = point_closer(_p, dist, mx, my, xx0, cy, xx1, cy);
+		dist = point_closer(_p, dist, mx, my, xx1, cy, xx1, y1);
+		return _p;
+		
 	} else {
-		var dist =		 distance_to_line(mx, my, cx, y0, cx, y1);
-		dist = min(dist, distance_to_line(mx, my, x0, y0, cx, y0));
-		dist = min(dist, distance_to_line(mx, my, cx, y1, x1, y1));
-	
-		return dist;
+		dist = point_closer(_p, dist, mx, my, cx, y0, cx, y1);
+		dist = point_closer(_p, dist, mx, my, x0, y0, cx, y0);
+		dist = point_closer(_p, dist, mx, my, cx, y1, x1, y1);
+		return _p;
 	}
 }
 
-function distance_to_elbow_corner(mx, my, x0, y0, x1, y1) {
-	var dist =           distance_to_line(mx, my, x0, y0, x1, y0);
-	    dist = min(dist, distance_to_line(mx, my, x1, y0, x1, y1));
-	
-	return dist;
+function point_to_elbow_corner(mx, my, x0, y0, x1, y1, _p = undefined) {
+	var dist = infinity;
+	dist = point_closer(_p, dist, mx, my, x0, y0, x1, y0);
+	dist = point_closer(_p, dist, mx, my, x1, y0, x1, y1);
+	return _p;
 }
