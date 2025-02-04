@@ -47,7 +47,7 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		["Blur",	 false], 13, 11, 12, 14, 
 	]
 	
-	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	newOutput(1, nodeValue_Output("Bloom Mask", self, VALUE_TYPE.surface, noone));
 	

@@ -40,7 +40,7 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	newInput(14, nodeValue_Vec2("Relative dimension", self, [ 1, 1 ]));
 	
-	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
 		["Surface",	false],	0, 13, 1, 14, 12, 

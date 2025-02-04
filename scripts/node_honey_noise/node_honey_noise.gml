@@ -1,3 +1,9 @@
+#region
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Honeycomb_Noise", "Mode > Toggle", "M", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[4].setValue((_n.inputs[4].getValue() + 1) % 2); });
+	});
+#endregion
+
 function Node_Honeycomb_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y, _group) constructor {
 	name   = "Honeycomb Noise";
 	shader = sh_noise_honey;

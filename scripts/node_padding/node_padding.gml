@@ -1,3 +1,9 @@
+#region
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Padding", "Fill Method > Toggle", "F", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[2].setValue((_n.inputs[2].getValue() + 1) % 2); });
+	});
+#endregion
+
 function Node_Padding(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Padding";
 	dimension_index = -1;
@@ -5,24 +11,24 @@ function Node_Padding(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(0, nodeValue_Surface("Surface In", self));
 	
 	newInput(1, nodeValue_Padding("Padding", self, [0, 0, 0, 0]))
-		.setUnitRef(function(index) { return getDimension(index); });
+		.setUnitRef(function(i) /*=>*/ {return getDimension(i)});
 	
-	newInput(2, nodeValue_Enum_Scroll("Fill method", self,  0, [ "Empty", "Solid" ]));
+	newInput(2, nodeValue_Enum_Scroll("Fill Method", self,  0, [ "Empty", "Solid" ]));
 	
-	newInput(3, nodeValue_Color("Fill color", self, cola(c_black)));
+	newInput(3, nodeValue_Color("Fill Color", self, cola(c_black)));
 	
 	newInput(4, nodeValue_Bool("Active", self, true));
 		active_index = 4;
 		
-	newInput(5, nodeValue_Enum_Button("Pad mode", self,  0, [ "Pad out", "Pad to size" ]));
+	newInput(5, nodeValue_Enum_Button("Pad Mode", self,  0, [ "Pad out", "Pad to size" ]));
 	
-	newInput(6, nodeValue_Vec2("Target dimension", self, DEF_SURF))
+	newInput(6, nodeValue_Vec2("Target Dimension", self, DEF_SURF))
 	
-	newInput(7, nodeValue_Enum_Button("Horizontal alignment", self,  0 , [ THEME.inspector_surface_halign, THEME.inspector_surface_halign, THEME.inspector_surface_halign]));
+	newInput(7, nodeValue_Enum_Button("Horizontal Alignment", self,  0 , [ THEME.inspector_surface_halign, THEME.inspector_surface_halign, THEME.inspector_surface_halign]));
 	
-	newInput(8, nodeValue_Enum_Button("Vertical alignment", self,  0 , [ THEME.inspector_surface_valign, THEME.inspector_surface_valign, THEME.inspector_surface_valign ]));
+	newInput(8, nodeValue_Enum_Button("Vertical Alignment", self,  0 , [ THEME.inspector_surface_valign, THEME.inspector_surface_valign, THEME.inspector_surface_valign ]));
 		
-	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 4, 
 		["Surfaces", true], 0, 

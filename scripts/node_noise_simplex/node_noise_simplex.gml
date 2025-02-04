@@ -1,3 +1,9 @@
+#region
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Noise_Simplex", "Color Mode > Toggle", "C", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[4].setValue((_n.inputs[4].getValue() + 1) % 3); });
+	});
+#endregion
+
 function Node_Noise_Simplex(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Simplex Noise";
 	
@@ -12,13 +18,13 @@ function Node_Noise_Simplex(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] })
 		.setMappable(9);
 	
-	newInput(4, nodeValue_Enum_Button("Color mode", self,  0, [ "Greyscale", "RGB", "HSV" ]));
+	newInput(4, nodeValue_Enum_Button("Color Mode", self, 0, [ "Greyscale", "RGB", "HSV" ]));
 	
-	newInput(5, nodeValue_Slider_Range("Color R range", self, [ 0, 1 ]));
+	newInput(5, nodeValue_Slider_Range("Color R Range", self, [ 0, 1 ]));
 	
-	newInput(6, nodeValue_Slider_Range("Color G range", self, [ 0, 1 ]));
+	newInput(6, nodeValue_Slider_Range("Color G Range", self, [ 0, 1 ]));
 	
-	newInput(7, nodeValue_Slider_Range("Color B range", self, [ 0, 1 ]));
+	newInput(7, nodeValue_Slider_Range("Color B Range", self, [ 0, 1 ]));
 	
 	//////////////////////////////////////////////////////////////////////////////////
 	
@@ -36,24 +42,24 @@ function Node_Noise_Simplex(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		["Render",	false], 4, 5, 6, 7, 
 	];
 	
-	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	attribute_surface_depth();
 	
-	static step = function() { #region
+	static step = function() {
 		var _col = getInputData(4);
 		
 		inputs[5].setVisible(_col != 0);
 		inputs[6].setVisible(_col != 0);
 		inputs[7].setVisible(_col != 0);
 		
-		inputs[5].name = _col == 1? "Color R range" : "Color H range";
-		inputs[6].name = _col == 1? "Color G range" : "Color S range";
-		inputs[7].name = _col == 1? "Color B range" : "Color V range";
+		inputs[5].name = _col == 1? "Color R Range" : "Color H Range";
+		inputs[6].name = _col == 1? "Color G Range" : "Color S Range";
+		inputs[7].name = _col == 1? "Color B Range" : "Color V Range";
 		
 		inputs[2].mappableStep();
 		inputs[3].mappableStep();
-	} #endregion
+	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _dim = _data[0];

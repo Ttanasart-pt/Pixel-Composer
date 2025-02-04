@@ -50,7 +50,7 @@ function Node_MK_Subpixel(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		["Flicker",  false, 13], 14, 15, 16, 
 	];
 	
-	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _type = _data[1];

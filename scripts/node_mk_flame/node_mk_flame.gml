@@ -10,7 +10,7 @@ function Node_MK_Flame(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		["Shape",	false], 1, 
 	];
 	
-	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	static step = function() { #region
 		

@@ -3,37 +3,30 @@ function Node_Gradient_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	
 	newInput(0, nodeValue_Dimension(self));
 	
-	newInput(1, nodeValue_Vec2("Center 1", self, [          0,          0 ])).setUnitRef(function(index) /*=>*/ {return getDimension(index)});
+	newInput(1, nodeValue_Vec2("Center 1", self, [ 0, 0 ])).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
 	newInput(2, nodeValue_Color("Color 1", self, cola(c_white) ));
 	
-	newInput(3, nodeValue_Vec2("Center 2", self, [ DEF_SURF_W,          0 ])).setUnitRef(function(index) /*=>*/ {return getDimension(index)});
+	newInput(3, nodeValue_Vec2("Center 2", self, [ 1, 0 ])).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
 	newInput(4, nodeValue_Color("Color 2", self, cola(c_white) ));
 	
-	newInput(5, nodeValue_Vec2("Center 3", self, [          0, DEF_SURF_H ])).setUnitRef(function(index) /*=>*/ {return getDimension(index)});
+	newInput(5, nodeValue_Vec2("Center 3", self, [ 0, 1 ])).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
 	newInput(6, nodeValue_Color("Color 3", self, cola(c_white) ));
 	
-	newInput(7, nodeValue_Vec2("Center 4", self, [ DEF_SURF_W, DEF_SURF_H ])).setUnitRef(function(index) /*=>*/ {return getDimension(index)});
+	newInput(7, nodeValue_Vec2("Center 4", self, [ 1, 1 ])).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
 	newInput(8, nodeValue_Color("Color 4", self, cola(c_white) ));
 	
 	newInput(9, nodeValue_Bool("Use palette", self, false ));
 	
 	newInput(10, nodeValue_Palette("Palette", self, array_clone(DEF_PALETTE)));
 	
-	newInput(11, nodeValue_Float("Falloff 1", self, 6 ))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 32, 0.1 ] });
-	
-	newInput(12, nodeValue_Float("Falloff 2", self, 6 ))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 32, 0.1 ] });
-	
-	newInput(13, nodeValue_Float("Falloff 3", self, 6 ))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 32, 0.1 ] });
-	
-	newInput(14, nodeValue_Float("Falloff 4", self, 6 ))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 32, 0.1 ] });
+	newInput(11, nodeValue_Float("Falloff 1", self, 6 )).setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 32, 0.1 ] });
+	newInput(12, nodeValue_Float("Falloff 2", self, 6 )).setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 32, 0.1 ] });
+	newInput(13, nodeValue_Float("Falloff 3", self, 6 )).setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 32, 0.1 ] });
+	newInput(14, nodeValue_Float("Falloff 4", self, 6 )).setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 32, 0.1 ] });
 		
 	newInput(15, nodeValue_Bool("Normalize weight", self, false ))
 	
-	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
 		["Output",		 true],	0,

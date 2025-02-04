@@ -1,11 +1,20 @@
-enum NODE_SCATTER_DIST {
-	area,
-	border,
-	map,
-	data,
-	path,
-	tile
-}
+#region
+	enum NODE_SCATTER_DIST {
+		area,
+		border,
+		map,
+		data,
+		path,
+		tile
+	}
+	
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Scatter", "Distribution > Toggle", "D", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[ 6].setValue((_n.inputs[ 6].getValue() + 1) % 6); });
+		addHotkey("Node_Scatter", "Scatter > Toggle",      "S", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[ 9].setValue((_n.inputs[ 9].getValue() + 1) % 2); });
+		addHotkey("Node_Scatter", "Blend Mode > Toggle",   "B", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[18].setValue((_n.inputs[18].getValue() + 1) % 3); });
+	});
+	
+#endregion
 
 function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Scatter";
@@ -28,22 +37,22 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	newInput(6, nodeValue_Enum_Scroll("Distribution", self,  5, [ "Area", "Border", "Map", "Direct Data", "Path", "Full image + Tile" ]));
 	
-	newInput(7, nodeValue_Bool("Point at center", self, false, "Rotate each copy to face the spawn center."));
+	newInput(7, nodeValue_Bool("Point at Center", self, false, "Rotate each copy to face the spawn center."));
 	
-	newInput(8, nodeValue_Bool("Uniform scaling", self, true));
+	newInput(8, nodeValue_Bool("Uniform Scaling", self, true));
 	
 	newInput(9, nodeValue_Enum_Button("Scatter", self,  1, [ "Uniform", "Random" ]));
 	
 	newInput(10, nodeValueSeed(self));
 	
-	newInput(11, nodeValue_Gradient("Random blend", self, new gradientObject(cola(c_white))))
+	newInput(11, nodeValue_Gradient("Random Blend", self, new gradientObject(cola(c_white))))
 		.setMappable(28);
 	
 	newInput(12, nodeValue_Slider_Range("Alpha", self, [ 1, 1 ]));
 		
-	newInput(13, nodeValue_Surface("Distribution map", self));
+	newInput(13, nodeValue_Surface("Distribution Map", self));
 	
-	newInput(14, nodeValue_Vector("Distribution data", self, []));
+	newInput(14, nodeValue_Vector("Distribution Data", self, []));
 	inputs[14].array_depth = 1;
 	
 	newInput(15, nodeValue_Int("Array", self, 0, @"What to do when input array of surface.
@@ -51,16 +60,16 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 - Mixed: Create single output scattering multiple images."))
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Spread output", "Index", "Random", "Data", "Texture" ]);
 		
-	newInput(16, nodeValue_Bool("Multiply alpha", self, true));
+	newInput(16, nodeValue_Bool("Multiply Alpha", self, true));
 		
-	newInput(17, nodeValue_Text("Use extra value", self, [ "Scale" ], "Apply the third value in each data point (if exist) on given properties."))
+	newInput(17, nodeValue_Text("Use Extra Value", self, [ "Scale" ], "Apply the third value in each data point (if exist) on given properties."))
 		.setDisplay(VALUE_DISPLAY.text_array, { data: [ "Scale", "Rotation", "Color" ] });
 		
-	newInput(18, nodeValue_Enum_Scroll("Blend mode", self,  0, [ "Normal", "Add", "Max" ]));
+	newInput(18, nodeValue_Enum_Scroll("Blend Mode", self,  0, [ "Normal", "Add", "Max" ]));
 		
 	newInput(19, nodeValue_PathNode("Path", self, noone));
 		
-	newInput(20, nodeValue_Bool("Rotate along path", self, true));
+	newInput(20, nodeValue_Bool("Rotate Along Path", self, true));
 		
 	newInput(21, nodeValue_Float("Path Shift", self, 0))
 		.setDisplay(VALUE_DISPLAY.slider);
@@ -69,51 +78,51 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	newInput(23, nodeValue_Bool("Sort Y", self, false));
 	
-	newInput(24, nodeValue_Int("Array indices", self, []))
+	newInput(24, nodeValue_Int("Array Indices", self, []))
 		.setArrayDepth(1);
 	
-	newInput(25, nodeValue_Surface("Array texture", self));
+	newInput(25, nodeValue_Surface("Array Texture", self));
 	
-	newInput(26, nodeValue_Range("Animated array", self, [ 0, 0 ], { linked : true }));
+	newInput(26, nodeValue_Range("Animated Array", self, [ 0, 0 ], { linked : true }));
 	
-	newInput(27, nodeValue_Enum_Scroll("Animated array end", self,  0, [ "Loop", "Ping Pong" ]));
+	newInput(27, nodeValue_Enum_Scroll("Animated Array End", self,  0, [ "Loop", "Ping Pong" ]));
 		
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	newInput(28, nodeValueMap("Gradient map", self));
+	newInput(28, nodeValueMap("Gradient Map", self));
 	
-	newInput(29, nodeValueGradientRange("Gradient map range", self, inputs[11]));
+	newInput(29, nodeValueGradientRange("Gradient Map Range", self, inputs[11]));
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	newInput(30, nodeValue_Vec2("Uniform amount", self, [ 4, 4 ]));
+	newInput(30, nodeValue_Vec2("Uniform Amount", self, [ 4, 4 ]));
 	
-	newInput(31, nodeValue_Bool("Auto amount", self, false));
+	newInput(31, nodeValue_Bool("Auto Amount", self, false));
 	
-	newInput(32, nodeValue_Rotation("Rotate per radius", self, 0));
+	newInput(32, nodeValue_Rotation("Rotate per Radius", self, 0));
 	
-	newInput(33, nodeValue_Vec2_Range("Random position", self, [ 0, 0, 0, 0 ]));
+	newInput(33, nodeValue_Vec2_Range("Random Position", self, [ 0, 0, 0, 0 ]));
 	
-	newInput(34, nodeValue_Vec2("Scale per radius", self, [ 0, 0 ]));
+	newInput(34, nodeValue_Vec2("Scale per Radius", self, [ 0, 0 ]));
 	
-	newInput(35, nodeValue_Rotation_Range("Angle range", self, [ 0, 360 ]));
+	newInput(35, nodeValue_Rotation_Range("Angle Range", self, [ 0, 360 ]));
 	
-	newInput(36, nodeValue_Vec2("Shift position", self, [ 0, 0 ]));
+	newInput(36, nodeValue_Vec2("Shift Position", self, [ 0, 0 ]));
 	
 	newInput(37, nodeValue_Bool("Exact", self,  false))
 	
 	newInput(38, nodeValue_Enum_Button("Spacing", self,   0, [ "After", "Between", "Around" ]));
 	
-	newInput(39, nodeValue_Range("Shift radial", self, [ 0, 0 ]));
+	newInput(39, nodeValue_Range("Shift Radial", self, [ 0, 0 ]));
 	
 	newInput(40, nodeValue_Vec2("Anchor", self, [ 0.5, 0.5 ]));
 		inputs[40].setDisplay(VALUE_DISPLAY.vector, { side_button : new buttonAnchor(inputs[40]) });
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 		
-	newOutput(1, nodeValue_Output("Atlas data", self, VALUE_TYPE.atlas, []))
+	newOutput(1, nodeValue_Output("Atlas Data", self, VALUE_TYPE.atlas, []))
 		.setVisible(false)
 		.rejectArrayProcess();
 	

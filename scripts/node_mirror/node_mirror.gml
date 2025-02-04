@@ -1,18 +1,23 @@
+#region
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Mirror", "Angle > Rotate CCW", "R", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[2].setValue((_n.inputs[2].getValue() + 90) % 360); });
+	});
+#endregion
+
 function Node_Mirror(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Mirror";
 	batch_output = false;
 	
 	newInput(0, nodeValue_Surface("Surface In", self));
 	
-	newInput(1, nodeValue_Vec2("Position", self, [ 0.5, 0.5 ]))
-		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
+	newInput(1, nodeValue_Vec2("Position", self, [ 0.5, 0.5 ])).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
 	
 	newInput(2, nodeValue_Rotation("Angle", self, 0));
 	
 	newInput(3, nodeValue_Bool("Active", self, true));
 		active_index = 3;
 	
-	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	newOutput(1, nodeValue_Output("Mirror mask", self, VALUE_TYPE.surface, noone));
 	

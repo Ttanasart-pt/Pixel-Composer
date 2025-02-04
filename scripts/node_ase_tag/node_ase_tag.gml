@@ -9,7 +9,7 @@ function Node_ASE_Tag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	newInput(1, nodeValue_Text("Tag", self, ""));
 	
-	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	tag_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		if(ase_data == noone) {

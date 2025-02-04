@@ -81,7 +81,7 @@ function Node_Dust(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	newInput(0, nodeValue_Dimension(self));
 	
-	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
 		["Output",	false], 0,

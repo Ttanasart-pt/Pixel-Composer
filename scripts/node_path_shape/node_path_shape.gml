@@ -1,3 +1,10 @@
+#region
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Path_Shape", "Shape > Rectangle", "R", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[3].setValue(0); });
+		addHotkey("Node_Path_Shape", "Shape > Ellipse",   "E", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[3].setValue(4); });
+	});
+#endregion
+
 function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Path Shape";
 	setDimension(96, 48);

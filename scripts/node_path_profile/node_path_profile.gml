@@ -1,3 +1,12 @@
+#region
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Path_Profile", "Side > Toggle",          "S", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[3].setValue((_n.inputs[3].getValue() + 1) % 4); });
+		addHotkey("Node_Path_Profile", "Mirror > Toggle",        "M", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[4].setValue((_n.inputs[4].getValue() + 1) % 2); });
+		addHotkey("Node_Path_Profile", "Anti-aliasing > Toggle", "A", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[6].setValue((_n.inputs[6].getValue() + 1) % 2); });
+		addHotkey("Node_Path_Profile", "Fill > Toggle",          "F", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[9].setValue((_n.inputs[9].getValue() + 1) % 2); });
+	});
+#endregion
+
 function Node_Path_Profile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Draw Path Profile";
 	
@@ -14,7 +23,7 @@ function Node_Path_Profile(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	newInput(5, nodeValue_Color("Color", self, cola(c_white) ));
 	
-	newInput(6, nodeValue_Bool("Anti Aliasing", self, false ));
+	newInput(6, nodeValue_Bool("Anti-aliasing", self, false ));
 	
 	newInput(7, nodeValue_Bool("Background", self, false ));
 	

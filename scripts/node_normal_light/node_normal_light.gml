@@ -119,7 +119,7 @@ function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	setDynamicInput(7, false);
 	if(!LOADING && !APPENDING) createNewInput();
 	
-	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	newOutput(1, nodeValue_Output("Light only", self, VALUE_TYPE.surface, noone));
 	

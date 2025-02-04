@@ -1,3 +1,12 @@
+#region
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Cellular", "Type > Toggle",         "T", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[ 4].setValue((_n.inputs[ 4].getValue() + 1) % 4); });
+		addHotkey("Node_Cellular", "Pattern > Toggle",      "P", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[ 6].setValue((_n.inputs[ 6].getValue() + 1) % 3); });
+		addHotkey("Node_Cellular", "Colored > Toggle",      "C", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[10].setValue((_n.inputs[10].getValue() + 1) % 2); });
+		addHotkey("Node_Cellular", "Rotation > Rotate CCW", "R", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[12].setValue((_n.inputs[12].getValue() + 90) % 360); });
+	});
+#endregion
+
 function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Cellular Noise";
 	
@@ -45,7 +54,7 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		["Rendering",	false], 5, 7, 10, 
 	];
 	
-	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	attribute_surface_depth();
 	

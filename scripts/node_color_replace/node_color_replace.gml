@@ -41,7 +41,7 @@ function Node_Color_replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		["Render",		false],  6
 	];
 	
-	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	attribute_surface_depth();
 	

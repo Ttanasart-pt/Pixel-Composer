@@ -12,7 +12,7 @@ function Node_Crop_Content(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	newInput(4, nodeValue_Color("Background", self, cola(c_black, 0)));
 	
-	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	newOutput(1, nodeValue_Output("Crop distance", self, VALUE_TYPE.integer, [ 0, 0, 0, 0 ]))
 		.setDisplay(VALUE_DISPLAY.padding);

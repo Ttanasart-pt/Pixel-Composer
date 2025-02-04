@@ -1,3 +1,10 @@
+#region
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Sky", "Model > Toggle",      "M", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[3].setValue((_n.inputs[3].getValue() + 1) % 3); });
+		addHotkey("Node_Sky", "Coordinate > Toggle", "C", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[9].setValue((_n.inputs[9].getValue() + 1) % 2); });
+	});
+#endregion
+
 function Node_Sky(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Sky";
 	
@@ -14,15 +21,15 @@ function Node_Sky(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 	newInput(5, nodeValue_Vec2("Sun", self, [ .2, .2 ]))
 	    .setUnitRef(function(index) /*=>*/ {return getDimension(index)}, VALUE_UNIT.reference);
 	
-	newInput(6, nodeValue_Float("Sun radius", self, 500));
+	newInput(6, nodeValue_Float("Sun Radius", self, 500));
 	
-	newInput(7, nodeValue_Float("Sun radiance", self, 20));
+	newInput(7, nodeValue_Float("Sun Radiance", self, 20));
 	
 	newInput(8, nodeValue_Float("Albedo", self, 1));
 	
 	newInput(9, nodeValue_Enum_Scroll("Coordinate", self, 0, [ "Rectangular", "Polar" ]));
 	
-	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 0, 
 	   // ["Transform", false], 1, 2, 

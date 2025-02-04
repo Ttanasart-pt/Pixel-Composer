@@ -104,11 +104,11 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	newInput(15, nodeValue_Enum_Scroll("Positioning Mode", self,  2, [ "Area", "Center + Scale", "Full Image" ]))
 		
-	newInput(16, nodeValue_Vec2("Center", self, [ DEF_SURF_W / 2, DEF_SURF_H / 2 ] ))
-		.setUnitRef(onSurfaceSize);
+	newInput(16, nodeValue_Vec2("Center", self, [ .5, .5 ] ))
+		.setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
 		
-	newInput(17, nodeValue_Vec2("Half Size", self, [ DEF_SURF_W / 2, DEF_SURF_H / 2 ] ))
-		.setUnitRef(onSurfaceSize);
+	newInput(17, nodeValue_Vec2("Half Size", self, [ .5, .5 ] ))
+		.setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
 		
 	newInput(18, nodeValue_Bool("Tile", self, false));
 	
@@ -154,7 +154,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	newInput(36, nodeValue_Enum_Button("Corner Shape", self, 0, [ "Round", "Cut" ]))
 	
-	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
 		["Output",     false], 0, 6, 

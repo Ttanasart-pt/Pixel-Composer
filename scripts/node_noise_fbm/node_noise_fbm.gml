@@ -1,3 +1,10 @@
+#region
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Noise_FBM", "Iteration > Set", KEY_GROUP.numeric, MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[4].setValue(toNumber(chr(keyboard_key))); });
+		addHotkey("Node_Noise_FBM", "Color Mode > Toggle", "C", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[5].setValue((_n.inputs[5].getValue() + 1) % 3); });
+	});
+#endregion
+
 function Node_Noise_FBM(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "FBM Noise";
 	
@@ -11,13 +18,13 @@ function Node_Noise_FBM(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	newInput(4, nodeValue_Int("Iteration", self, 4));
 	
-	newInput(5, nodeValue_Enum_Button("Color mode", self,  0, [ "Greyscale", "RGB", "HSV" ]));
+	newInput(5, nodeValue_Enum_Button("Color Mode", self,  0, [ "Greyscale", "RGB", "HSV" ]));
 	
-	newInput(6, nodeValue_Slider_Range("Color R range", self, [ 0, 1 ]));
+	newInput(6, nodeValue_Slider_Range("Color R Range", self, [ 0, 1 ]));
 	
-	newInput(7, nodeValue_Slider_Range("Color G range", self, [ 0, 1 ]));
+	newInput(7, nodeValue_Slider_Range("Color G Range", self, [ 0, 1 ]));
 	
-	newInput(8, nodeValue_Slider_Range("Color B range", self, [ 0, 1 ]));
+	newInput(8, nodeValue_Slider_Range("Color B Range", self, [ 0, 1 ]));
 	
 	input_display_list = [
 		["Output",	false], 0, 
@@ -25,7 +32,7 @@ function Node_Noise_FBM(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		["Color",	false], 5, 6, 7, 8, 
 	];
 	
-	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	attribute_surface_depth();
 	

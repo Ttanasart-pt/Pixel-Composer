@@ -1,22 +1,29 @@
-global.node_repeat_keys = [ "repeat polar", "repeat circular" ];
-
-function Node_create_Repeat(_x, _y, _group = noone, _param = {}) {
-	var node = new Node_Repeat(_x, _y, _group);
-	node.skipDefault();
+#region
+	global.node_repeat_keys = [ "repeat polar", "repeat circular" ];
 	
-	var query = struct_try_get(_param, "query", "");
+	function Node_create_Repeat(_x, _y, _group = noone, _param = {}) {
+		var node = new Node_Repeat(_x, _y, _group);
+		node.skipDefault();
+		
+		var query = struct_try_get(_param, "query", "");
+		
+		switch(query) {
+			case "repeat polar" : 
+			case "repeat circular" : 
+				node.inputs[3].setValue(2);
+				node.inputs[9].unit.setMode(VALUE_UNIT.reference);
+				node.inputs[9].setValueDirect([ 0.5, 0.5 ]);
+				break;
+		}
+		
+		return node;
+	} 
 	
-	switch(query) {
-		case "repeat polar" : 
-		case "repeat circular" : 
-			node.inputs[3].setValue(2);
-			node.inputs[9].unit.setMode(VALUE_UNIT.reference);
-			node.inputs[9].setValueDirect([ 0.5, 0.5 ]);
-			break;
-	}
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Repeat", "Pattern > Toggle", "P", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[3].setValue((_n.inputs[3].getValue() + 1) % 3); });
+	});
 	
-	return node;
-} 
+#endregion
 
 function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Repeat";
@@ -121,7 +128,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	newInput(37, nodeValue_Padding("Padding", self, [ 0, 0, 0, 0 ]));
 	
-	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	typeList = [ "Linear Transform", "Blending" ];
 	

@@ -1,3 +1,9 @@
+#region
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Text", "Output Dimension > Toggle", "D", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[9].setValue((_n.inputs[9].getValue() + 1) % 2); });
+	});
+#endregion
+
 function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Draw Text";
 	font = f_p0;
@@ -13,60 +19,60 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	newInput(2, nodeValue_Int("Size", self, 16));
 	
-	newInput(3, nodeValue_Bool("Anti-Aliasing ", self, false));
+	newInput(3, nodeValue_Bool("Anti-aliasing ", self, false));
 	
-	newInput(4, nodeValue_Vec2("Character range", self, [ 32, 128 ]));
+	newInput(4, nodeValue_Vec2("Character Range", self, [ 32, 128 ]));
 	
 	newInput(5, nodeValue_Color("Color", self, cola(c_white)));
 	
-	newInput(6, nodeValue_Vec2("Fixed dimension", self, DEF_SURF ))
+	newInput(6, nodeValue_Vec2("Fixed Dimension", self, DEF_SURF ))
 		.setVisible(true, false);
 	
-	newInput(7, nodeValue_Enum_Button("H align", self,  0 , [ THEME.inspector_text_halign, THEME.inspector_text_halign, THEME.inspector_text_halign]));
+	newInput(7, nodeValue_Enum_Button("H Align", self, 0, [ THEME.inspector_text_halign, THEME.inspector_text_halign, THEME.inspector_text_halign]));
 	
-	newInput(8, nodeValue_Enum_Button("V align", self,  0 , [ THEME.inspector_text_valign, THEME.inspector_text_valign, THEME.inspector_text_valign ]));
+	newInput(8, nodeValue_Enum_Button("V Align", self, 0, [ THEME.inspector_text_valign, THEME.inspector_text_valign, THEME.inspector_text_valign ]));
 	
-	newInput(9, nodeValue_Enum_Scroll("Output dimension", self,  1 , [ "Fixed", "Dynamic" ]));
+	newInput(9, nodeValue_Enum_Scroll("Output Dimension", self,  1, [ "Fixed", "Dynamic" ]));
 	
 	newInput(10, nodeValue_Padding("Padding", self, [0, 0, 0, 0]));
 	
-	newInput(11, nodeValue_Float("Letter spacing", self, 0));
+	newInput(11, nodeValue_Float("Letter Spacing", self, 0));
 	
-	newInput(12, nodeValue_Float("Line height", self, 0));
+	newInput(12, nodeValue_Float("Line Height", self, 0));
 	
 	newInput(13, nodeValue_PathNode("Path", self, noone))
 		.setVisible(true, true);
 	
-	newInput(14, nodeValue_Float("Path shift", self, 0));
+	newInput(14, nodeValue_Float("Path Shift", self, 0));
 	
-	newInput(15, nodeValue_Bool("Scale to fit", self, false));
+	newInput(15, nodeValue_Bool("Scale to Fit", self, false));
 	
-	newInput(16, nodeValue_Bool("Render background", self, false));
+	newInput(16, nodeValue_Bool("Render Background", self, false));
 	
 	newInput(17, nodeValue_Color("BG Color", self, cola(c_black)));
 	
 	newInput(18, nodeValue_Bool("Wave", self, false));
 	
-	newInput(19, nodeValue_Float("Wave amplitude", self, 4));
+	newInput(19, nodeValue_Float("Wave Amplitude", self, 4));
 	
-	newInput(20, nodeValue_Float("Wave scale", self, 30));
+	newInput(20, nodeValue_Float("Wave Scale", self, 30));
 	
-	newInput(21, nodeValue_Rotation("Wave phase", self, 0));
+	newInput(21, nodeValue_Rotation("Wave Phase", self, 0));
 	
-	newInput(22, nodeValue_Float("Wave shape", self, 0))
+	newInput(22, nodeValue_Float("Wave Shape", self, 0))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 3, 0.01 ] });
 	
 	newInput(23, nodeValue_Bool("Typewriter", self, false));
 	
 	newInput(24, nodeValue_Slider_Range("Range", self, [ 0, 1 ]));
 	
-	newInput(25, nodeValue_Enum_Button("Trim type", self,  0 , [ "Character", "Word", "Line" ]));
+	newInput(25, nodeValue_Enum_Button("Trim Type", self,  0 , [ "Character", "Word", "Line" ]));
 	
-	newInput(26, nodeValue_Bool("Use full text size", self, true ));
+	newInput(26, nodeValue_Bool("Use Full Text Size", self, true ));
 	
-	newInput(27, nodeValue_Int("Max line width", self, 0 ));
+	newInput(27, nodeValue_Int("Max Line Width", self, 0 ));
 	
-	newInput(28, nodeValue_Bool("Round position", self, true ));
+	newInput(28, nodeValue_Bool("Round Position", self, true ));
 		
 	input_display_list = [ 0, 
 		["Output",		true],	9,  6, 10,
@@ -78,7 +84,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		["Trim",		 true, 23], 25, 24, 26, 
 	];
 	
-	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	 
 	attribute_surface_depth();
 	

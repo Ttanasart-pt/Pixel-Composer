@@ -21,7 +21,7 @@ function Node_Image_Grid(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	newInput(3, nodeValue_Padding("Padding", self, [ 0, 0, 0, 0 ]))
 		.rejectArray();
 	
-	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	newOutput(1, nodeValue_Output("Atlas data", self, VALUE_TYPE.atlas, []));
 	

@@ -1,3 +1,9 @@
+#region
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Noise", "Color Mode > Toggle", "C", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[2].setValue((_n.inputs[2].getValue() + 1) % 3); });
+	});
+#endregion
+
 function Node_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Noise";
 	
@@ -5,13 +11,13 @@ function Node_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	newInput(1, nodeValueSeed(self));
 	
-	newInput(2, nodeValue_Enum_Button("Color mode", self,  0, [ "Greyscale", "RGB", "HSV" ]));
+	newInput(2, nodeValue_Enum_Button("Color Mode", self,  0, [ "Greyscale", "RGB", "HSV" ]));
 	
-	newInput(3, nodeValue_Slider_Range("Color R range", self, [ 0, 1 ]));
+	newInput(3, nodeValue_Slider_Range("Color R Range", self, [ 0, 1 ]));
 	
-	newInput(4, nodeValue_Slider_Range("Color G range", self, [ 0, 1 ]));
+	newInput(4, nodeValue_Slider_Range("Color G Range", self, [ 0, 1 ]));
 	
-	newInput(5, nodeValue_Slider_Range("Color B range", self, [ 0, 1 ]));
+	newInput(5, nodeValue_Slider_Range("Color B Range", self, [ 0, 1 ]));
 	
 	input_display_list = [
 		["Output",	false], 0, 
@@ -19,7 +25,7 @@ function Node_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		["Color",	false], 2, 3, 4, 5, 
 	];
 	
-	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	attribute_surface_depth();
 	

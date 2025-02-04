@@ -1,3 +1,10 @@
+#region
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Zigzag", "Amount > Set", KEY_GROUP.numeric, MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[1].setValue(toNumber(chr(keyboard_key))); });
+		addHotkey("Node_Zigzag", "Type > Toggle",              "T", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[5].setValue((_n.inputs[5].getValue() + 1) % 3); });
+	});
+#endregion
+
 function Node_Zigzag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Zigzag";
 	
@@ -27,7 +34,7 @@ function Node_Zigzag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(8, nodeValue_Rotation("Angle", self, 0))
 		.setMappable(7);
 		
-	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
 		["Output",  false], 0,

@@ -54,7 +54,7 @@ function __Node_3D_Combine(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		["Objects",				 true], 
 	];
 	
-	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	newOutput(1, nodeValue_Output("3D objects", self, VALUE_TYPE.d3object, function() { return submit_vertex(); }));
 	

@@ -64,7 +64,7 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		["Filter Empty", true, 12], 13, 14, 
 	];
 	
-	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	newOutput(1, nodeValue_Output("Atlas Data", self, VALUE_TYPE.atlas, []))
 		.setArrayDepth(1);

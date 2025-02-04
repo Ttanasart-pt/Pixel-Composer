@@ -55,7 +55,7 @@ function __Node_3D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		["Light",			 false], 9, 10, 11, 12, 13,
 	];
 	
-	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	newOutput(1, nodeValue_Output("3D scene", self, VALUE_TYPE.d3object, function(index) { return submit_vertex(index); }));
 	

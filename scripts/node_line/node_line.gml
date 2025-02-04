@@ -1,3 +1,11 @@
+#region
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Line", "Data Type > Toggle",  "D", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[27].setValue((_n.inputs[27].getValue() + 1) % 4); });
+		addHotkey("Node_Line", "Fix Length > Toggle", "F", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[19].setValue((_n.inputs[19].getValue() + 1) % 2); });
+		addHotkey("Node_Line", "1px Mode > Toggle",   "1", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[17].setValue((_n.inputs[17].getValue() + 1) % 2); });
+	});
+#endregion
+
 function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {	
 	name = "Draw Line";
 	
@@ -13,7 +21,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(4, nodeValue_Float("Wiggle", self, 0))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 16, 0.01] });
 	
-	newInput(5, nodeValue_Float("Random seed", self, 0));
+	newInput(5, nodeValue_Float("Random Seed", self, 0));
 	
 	newInput(6, nodeValue_Rotation("Rotation", self, 0));
 	
@@ -25,51 +33,51 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	newInput(9, nodeValue_Float("Shift", self, 0));
 	
-	newInput(10, nodeValue_Gradient("Color over length", self, new gradientObject(cola(c_white))));
+	newInput(10, nodeValue_Gradient("Color over Length", self, new gradientObject(cola(c_white))));
 	
-	newInput(11, nodeValue_Curve("Width over length", self, CURVE_DEF_11));
+	newInput(11, nodeValue_Curve("Width over Length", self, CURVE_DEF_11));
 	
-	newInput(12, nodeValue_Bool("Span width over path", self, false, "Apply the full 'width over length' to the trimmed path."));
+	newInput(12, nodeValue_Bool("Span Width over Path", self, false, "Apply the full 'width over length' to the trimmed path."));
 		
-	newInput(13, nodeValue_Enum_Button("End cap", self, 0, [ new scrollItem("None",  s_node_line_cap, 0), 
+	newInput(13, nodeValue_Enum_Button("End Cap", self, 0, [ new scrollItem("None",  s_node_line_cap, 0), 
 	                                                         new scrollItem("Round", s_node_line_cap, 1),
 	                                                         new scrollItem("Tri",   s_node_line_cap, 2), ]));
 	
-	newInput(14, nodeValue_Int("Round segment", self, 8))
+	newInput(14, nodeValue_Int("Round Segment", self, 8))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [2, 32, 0.1] });
 	
-	newInput(15, nodeValue_Bool("Span color over path", self, false, "Apply the full 'color over length' to the trimmed path."));
+	newInput(15, nodeValue_Bool("Span Color over Path", self, false, "Apply the full 'color over length' to the trimmed path."));
 	
-	newInput(16, nodeValue_Bool("Width pass", self, false));
+	newInput(16, nodeValue_Bool("Width Pass", self, false));
 	
-	newInput(17, nodeValue_Bool("1px mode", self, false, "Render pixel perfect 1px line."));
+	newInput(17, nodeValue_Bool("1px Mode", self, false, "Render pixel perfect 1px line."));
 	
 	newInput(18, nodeValue_Surface("Texture", self));
 	
-	newInput(19, nodeValue_Bool("Fix length", self, false, "Fix length of each segment instead of segment count."));
+	newInput(19, nodeValue_Bool("Fix Length", self, false, "Fix length of each segment instead of segment count."));
 	
-	newInput(20, nodeValue_Float("Segment length", self, 4));
+	newInput(20, nodeValue_Float("Segment Length", self, 4));
 	
-	newInput(21, nodeValue_Vec2("Texture position", self, [ 0, 0 ]));
+	newInput(21, nodeValue_Vec2("Texture Position", self, [ 0, 0 ]));
 	
 	newInput(22, nodeValue_Rotation("Texture Rotation", self, 0));
 	
-	newInput(23, nodeValue_Vec2("Texture scale", self, [ 1, 1 ]));
+	newInput(23, nodeValue_Vec2("Texture Scale", self, [ 1, 1 ]));
 	
 	newInput(24, nodeValue_Gradient("Random Blend", self, new gradientObject(cola(c_white))));
 	
 	newInput(25, nodeValue_Bool("Invert", self, false ));
 	
-	newInput(26, nodeValue_Bool("Clamp range", self, false ));
+	newInput(26, nodeValue_Bool("Clamp Range", self, false ));
 	
 	newInput(27, nodeValue_Enum_Scroll("Data Type", self, 1, [ "None", "Path", "Segments", "Two points" ]));
 	
 	newInput(28, nodeValue_Vector("Segments", self, [[]]))
 		.setArrayDepth(2);
 		
-	newInput(29, nodeValue_Bool("Scale texture to length", self, true ));
+	newInput(29, nodeValue_Bool("Scale Texture to Length", self, true ));
 	
-	newInput(30, nodeValue_Bool("Use Path Bounding box", self, false ));
+	newInput(30, nodeValue_Bool("Use Path Bounding Box", self, false ));
 	
 	newInput(31, nodeValue_Padding("Padding", self, [ 0, 0, 0, 0 ]))
 		
@@ -100,7 +108,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		["Render",        false], 34, 
 	];
 	
-	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	newOutput(1, nodeValue_Output("Width Pass", self, VALUE_TYPE.surface, noone));
 	

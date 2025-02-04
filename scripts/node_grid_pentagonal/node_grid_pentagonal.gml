@@ -1,3 +1,9 @@
+#region
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Pytagorean_Tile", "Render Type > Toggle", "R", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[8].setValue((_n.inputs[8].getValue() + 1) % 3); });
+	});
+#endregion
+
 function Node_Grid_Pentagonal(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Pentagonal Grid";
 	
@@ -16,30 +22,30 @@ function Node_Grid_Pentagonal(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	newInput(4, nodeValue_Rotation("Angle", self, 0))
 		.setMappable(13);
 		
-	newInput(5, nodeValue_Gradient("Tile color", self, new gradientObject(cola(c_white))))
+	newInput(5, nodeValue_Gradient("Tile Color", self, new gradientObject(cola(c_white))))
 		.setMappable(14);
 		
-	newInput(6, nodeValue_Color("Gap color",  self, cola(c_black)));
+	newInput(6, nodeValue_Color("Gap Color",  self, cola(c_black)));
 	
 	newInput(7, nodeValue_Surface("Texture", self));
 	
-	newInput(8, nodeValue_Enum_Scroll("Render type", self,  0, ["Colored tile", "Height map", "Texture grid"]));
+	newInput(8, nodeValue_Enum_Scroll("Render Type", self,  0, ["Colored tile", "Height map", "Texture grid"]));
 		
 	newInput(9, nodeValueSeed(self));
 	
-	newInput(10, nodeValue_Bool("Anti aliasing", self, false));
+	newInput(10, nodeValue_Bool("Anti-aliasing", self, false));
 	
 	/////////////////////////////////////////////////////////////////////
 	
-		newInput(11, nodeValueMap("Scale map", self));
+		newInput(11, nodeValueMap("Scale Map", self));
 	
-		newInput(12, nodeValueMap("Gap map", self));
+		newInput(12, nodeValueMap("Gap Map", self));
 	
-		newInput(13, nodeValueMap("Angle map", self));
+		newInput(13, nodeValueMap("Angle Map", self));
 	
-		newInput(14, nodeValueMap("Gradient map", self));
+		newInput(14, nodeValueMap("Gradient Map", self));
 	
-		newInput(15, nodeValueGradientRange("Gradient map range", self, inputs[5]));
+		newInput(15, nodeValueGradientRange("Gradient Map Range", self, inputs[5]));
 	
 	/////////////////////////////////////////////////////////////////////
 	
@@ -53,7 +59,7 @@ function Node_Grid_Pentagonal(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 		["Render",	false], 8, 9, 5, 14, 6, 7, 17, 10, 16, 
 	];
 	
-	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	attribute_surface_depth();
 	

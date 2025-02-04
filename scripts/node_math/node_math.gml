@@ -1,60 +1,73 @@
-enum MATH_OPERATOR {
-	add,      //  0
-	subtract, //  1
-	multiply, //  2
-	divide,   //  3
-	power,    //  4
-	root,     //  5
+#region
+	enum MATH_OPERATOR {
+		add,      //  0
+		subtract, //  1
+		multiply, //  2
+		divide,   //  3
+		power,    //  4
+		root,     //  5
+			
+		sin,      //  6
+		cos,      //  7
+		tan,      //  8
+			
+		modulo,   //  9
+			
+		floor,    // 10
+		ceiling,  // 11
+		round,    // 12
 		
-	sin,      //  6
-	cos,      //  7
-	tan,      //  8
+		lerp,     // 13
+		abs,      // 14
 		
-	modulo,   //  9
+		clamp,    // 15
+		snap,     // 16
+		fract,    // 17
 		
-	floor,    // 10
-	ceiling,  // 11
-	round,    // 12
+		map,
+		
+		length,
+	}
 	
-	lerp,     // 13
-	abs,      // 14
+	global.node_math_keys     = [	"add", "subtract", "multiply", "divide", "power", "root", 
+									"+", "-", "*", "/", "^", 
+	                        		"sin", "cos", "tan", "modulo", "round", 
+	                        		"ceiling", "floor", "lerp", "abs", "fract", 
+	                        		"clamp", "snap", "map" ];
+	              
+	global.node_math_keys_map = [	MATH_OPERATOR.add,     MATH_OPERATOR.subtract, MATH_OPERATOR.multiply, MATH_OPERATOR.divide, MATH_OPERATOR.power, MATH_OPERATOR.root, 
+									MATH_OPERATOR.add,     MATH_OPERATOR.subtract, MATH_OPERATOR.multiply, MATH_OPERATOR.divide, MATH_OPERATOR.power, 
+	                        		MATH_OPERATOR.sin,     MATH_OPERATOR.cos,      MATH_OPERATOR.tan,      MATH_OPERATOR.modulo, MATH_OPERATOR.round, 
+	                        		MATH_OPERATOR.ceiling, MATH_OPERATOR.floor,    MATH_OPERATOR.lerp,     MATH_OPERATOR.abs,    MATH_OPERATOR.fract, 
+	                        		MATH_OPERATOR.clamp,   MATH_OPERATOR.snap,     MATH_OPERATOR.map, ];
 	
-	clamp,    // 15
-	snap,     // 16
-	fract,    // 17
+	global.node_math_names    = [  /* 0 -  9*/ "Add", "Subtract", "Multiply", "Divide", "Power", "Root", "Sin", "Cos", "Tan", "Modulo", 
+								   /*10 - 20*/ "Floor", "Ceil", "Round", "Lerp", "Abs", "Clamp", "Snap", "Fract", "Map", ];
 	
-	map,
+	global.node_math_scroll   = array_create_ext(array_length(global.node_math_names), function(i) /*=>*/ {return new scrollItem(global.node_math_names[i], s_node_math_operators, i)});
 	
-	length,
-}
+	function Node_create_Math(_x, _y, _group = noone, _param = {}) {
+		var query = struct_try_get(_param, "query", "");
+		var node  = new Node_Math(_x, _y, _group);
+		node.skipDefault();
+	
+		var ind = array_find(global.node_math_keys, query);
+		if(ind != -1) node.inputs[0].setValue(global.node_math_keys_map[ind]);
+	
+		return node;
+	}
 
-global.node_math_keys     = [	"add", "subtract", "multiply", "divide", "power", "root", 
-								"+", "-", "*", "/", "^", 
-                        		"sin", "cos", "tan", "modulo", "round", 
-                        		"ceiling", "floor", "lerp", "abs", "fract", 
-                        		"clamp", "snap", "map" ];
-              
-global.node_math_keys_map = [	MATH_OPERATOR.add,     MATH_OPERATOR.subtract, MATH_OPERATOR.multiply, MATH_OPERATOR.divide, MATH_OPERATOR.power, MATH_OPERATOR.root, 
-								MATH_OPERATOR.add,     MATH_OPERATOR.subtract, MATH_OPERATOR.multiply, MATH_OPERATOR.divide, MATH_OPERATOR.power, 
-                        		MATH_OPERATOR.sin,     MATH_OPERATOR.cos,      MATH_OPERATOR.tan,      MATH_OPERATOR.modulo, MATH_OPERATOR.round, 
-                        		MATH_OPERATOR.ceiling, MATH_OPERATOR.floor,    MATH_OPERATOR.lerp,     MATH_OPERATOR.abs,    MATH_OPERATOR.fract, 
-                        		MATH_OPERATOR.clamp,   MATH_OPERATOR.snap,     MATH_OPERATOR.map, ];
-
-global.node_math_names    = [  /* 0 -  9*/ "Add", "Subtract", "Multiply", "Divide", "Power", "Root", "Sin", "Cos", "Tan", "Modulo", 
-							   /*10 - 20*/ "Floor", "Ceil", "Round", "Lerp", "Abs", "Clamp", "Snap", "Fract", "Map", ];
-
-global.node_math_scroll   = array_create_ext(array_length(global.node_math_names), function(i) /*=>*/ {return new scrollItem(global.node_math_names[i], s_node_math_operators, i)});
-
-function Node_create_Math(_x, _y, _group = noone, _param = {}) {
-	var query = struct_try_get(_param, "query", "");
-	var node  = new Node_Math(_x, _y, _group);
-	node.skipDefault();
-
-	var ind = array_find(global.node_math_keys, query);
-	if(ind != -1) node.inputs[0].setValue(global.node_math_keys_map[ind]);
-
-	return node;
-}
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Math", "Type > Toggle",   "T", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[0].setValue((_n.inputs[0].getValue() + 1) % array_length(global.node_math_scroll)); });
+		addHotkey("Node_Math", "Type > Add",      "A", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[0].setValue(0); });
+		addHotkey("Node_Math", "Type > Subtract", "S", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[0].setValue(1); });
+		addHotkey("Node_Math", "Type > Multiply", "M", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[0].setValue(2); });
+		addHotkey("Node_Math", "Type > Divide",   "D", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[0].setValue(3); });
+		
+		addHotkey("Node_Math", "Angle Unit > Toggle", "N", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[3].setValue(!_n.inputs[3].setValue()); });
+		addHotkey("Node_Math", "To Integer > Toggle", "I", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[4].setValue(!_n.inputs[4].setValue()); });
+	});
+#endregion
 
 function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "Math";
@@ -70,7 +83,7 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	newInput(2, nodeValue_Float("b", self, 0))
 		.setVisible(true, true);
 		
-	newInput(3, nodeValue_Bool("Degree angle", self, true));
+	newInput(3, nodeValue_Bool("Degree Angle", self, true));
 	
 	newInput(4, nodeValue_Bool("To integer", self, false));
 	

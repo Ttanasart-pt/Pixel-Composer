@@ -1,3 +1,9 @@
+#region
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Grid", "Render Type > Toggle", "R", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[10].setValue((_n.inputs[10].getValue() + 1) % 5); });
+	});
+#endregion
+
 function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Grid";
 	
@@ -16,10 +22,10 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(4, nodeValue_Rotation("Angle", self, 0))
 		.setMappable(15);
 		
-	newInput(5, nodeValue_Gradient("Tile color", self, new gradientObject(cola(c_white))))
+	newInput(5, nodeValue_Gradient("Tile Color", self, new gradientObject(cola(c_white))))
 		.setMappable(20);
 		
-	newInput(6, nodeValue_Color("Gap color",  self, cola(c_black)));
+	newInput(6, nodeValue_Color("Gap Color",  self, cola(c_black)));
 	
 	newInput(7, nodeValue_Surface("Texture", self));
 	
@@ -27,37 +33,37 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-0.5, 0.5, 0.01] })
 		.setMappable(16);
 		
-	newInput(9, nodeValue_Enum_Button("Shift axis", self,  0, ["X", "Y"]));
+	newInput(9, nodeValue_Enum_Button("Shift Axis", self,  0, ["X", "Y"]));
 		
-	newInput(10, nodeValue_Enum_Scroll("Render type", self,  0, ["Colored tile", "Colored tile (Accurate)", "Height map", "Texture grid", "Texture sample"]));
+	newInput(10, nodeValue_Enum_Scroll("Render Type", self,  0, ["Colored tile", "Colored tile (Accurate)", "Height map", "Texture grid", "Texture sample"]));
 		
 	newInput(11, nodeValueSeed(self));
 	
-	newInput(12, nodeValue_Bool("Anti aliasing", self, false));
+	newInput(12, nodeValue_Bool("Anti-aliasing", self, false));
 	
-		newInput(13, nodeValueMap("Scale map", self));
+		newInput(13, nodeValueMap("Scale Map", self));
 	
-		newInput(14, nodeValueMap("Gap map", self));
+		newInput(14, nodeValueMap("Gap Map", self));
 	
-		newInput(15, nodeValueMap("Angle map", self));
+		newInput(15, nodeValueMap("Angle Map", self));
 	
-		newInput(16, nodeValueMap("Shift map", self));
+		newInput(16, nodeValueMap("Shift Map", self));
 	
 	newInput(17, nodeValue_Bool("Truchet", self, false));
 	
-	newInput(18, nodeValue_Int("Truchet seed", self, seed_random()));
+	newInput(18, nodeValue_Int("Truchet Seed", self, seed_random()));
 	
-	newInput(19, nodeValue_Float("Flip horizontal", self, 0.5))
+	newInput(19, nodeValue_Float("Flip Horizontal", self, 0.5))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-		newInput(20, nodeValueMap("Gradient map", self));
+		newInput(20, nodeValueMap("Gradient Map", self));
 	
-		newInput(21, nodeValueGradientRange("Gradient map range", self, inputs[5]));
+		newInput(21, nodeValueGradientRange("Gradient Map Range", self, inputs[5]));
 	
-	newInput(22, nodeValue_Float("Flip vertical", self, 0.5))
+	newInput(22, nodeValue_Float("Flip Vertical", self, 0.5))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(23, nodeValue_Rotation_Range("Texture angle", self, [ 0, 0 ]));
+	newInput(23, nodeValue_Rotation_Range("Texture Angle", self, [ 0, 0 ]));
 		
 	newInput(24, nodeValue_Slider_Range("Level", self, [ 0, 1 ]));
 	
@@ -67,7 +73,7 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	newInput(27, nodeValue_Bool("Diagonal", self, false));
 	
-	newInput(28, nodeValue_Bool("Uniform gap", self, true));
+	newInput(28, nodeValue_Bool("Uniform Gap", self, true));
 	
 	newInput(29, nodeValue_Float("Secondary Scale", self, 0));
 	
@@ -93,7 +99,7 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		["Truchet",    true, 17], 18, 19, 22, 23, 
 	];
 	
-	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	attribute_surface_depth();
 	

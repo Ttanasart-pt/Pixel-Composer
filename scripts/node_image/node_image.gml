@@ -34,7 +34,7 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 	newInput(1, nodeValue_Padding("Padding", self, [0, 0, 0, 0]));
 		
-	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	newOutput(1, nodeValue_Output("Path", self, VALUE_TYPE.path, ""))
 		.setVisible(true, true);
 	

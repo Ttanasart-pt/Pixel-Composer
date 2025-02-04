@@ -1,3 +1,9 @@
+#region
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Path_Wave", "Mode > Toggle", "M", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[4].setValue((_n.inputs[4].getValue() + 1) % 3); });
+	});
+#endregion
+
 function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Wave Path";
 	setDimension(96, 48);

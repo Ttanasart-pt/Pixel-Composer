@@ -1,12 +1,12 @@
-enum STAT_OPERATOR {
-	_sum,
-	_average,
-	_median,
-	_max,
-	_min
-}
-
 #region create 
+	enum STAT_OPERATOR {
+		_sum,
+		_average,
+		_median,
+		_max,
+		_min
+	}
+
 	global.node_statistic_keys = [ "sum", "mean", "median", "max", "min" ];
 	array_append(global.node_statistic_keys, [ "average" ]);
 	
@@ -25,6 +25,12 @@ enum STAT_OPERATOR {
 	
 		return node;
 	}
+	
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Statistic", "Type > Toggle", "T", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[0].setValue((_n.inputs[0].getValue() + 1) % 2); });
+		addHotkey("Node_Statistic", "Type > Sum",    "S", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[0].setValue(0); });
+		addHotkey("Node_Statistic", "Type > Mean",   "M", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[0].setValue(1); });
+	});
 #endregion
 
 function Node_Statistic(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {

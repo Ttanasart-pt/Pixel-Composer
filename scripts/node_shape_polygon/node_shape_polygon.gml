@@ -1,3 +1,10 @@
+#region
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Shape_Polygon", "Shape > Rectangle", "R", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[4].setValue(0); });
+		addHotkey("Node_Shape_Polygon", "Shape > Ellipse",   "E", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[4].setValue(1); });
+	});
+#endregion
+
 function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Draw Shape Polygon";
 	
@@ -71,7 +78,7 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 		
 	newOutput(1, nodeValue_Output("Mesh", self, VALUE_TYPE.mesh, noone));
 		

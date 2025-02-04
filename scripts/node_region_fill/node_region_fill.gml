@@ -1,3 +1,11 @@
+#region
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Region_Fill", "Fill > Toggle",       "F", MOD_KEY.ctrl, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[3].setValue((_n.inputs[3].getValue() + 1) % 2); });
+		addHotkey("Node_Region_Fill", "Fill Type > Toggle",  "F", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[8].setValue((_n.inputs[8].getValue() + 1) % 5); });
+		addHotkey("Node_Region_Fill", "Inner Only > Toggle", "N", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[6].setValue((_n.inputs[6].getValue() + 1) % 2); });
+	});
+#endregion
+
 function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Region Fill";
 	
@@ -13,21 +21,21 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	newInput(5, nodeValue_Color("Target Color", self, cola(c_white)));
 	
-	newInput(6, nodeValue_Bool("Inner only", self, false, "Only fill regions with surrounding pixels."));
+	newInput(6, nodeValue_Bool("Inner Only", self, false, "Only fill regions with surrounding pixels."));
 	
-	newInput(7, nodeValue_Enum_Scroll("Draw original", self,  0, [ "None", "Above", "Behind" ]));
+	newInput(7, nodeValue_Enum_Scroll("Draw Original", self,  0, [ "None", "Above", "Behind" ]));
 	
-	newInput(8, nodeValue_Enum_Scroll("Fill type", self,  0, [ "Random", "Color map", "Texture map", "Texture Coord", "Texture Index" ]));
+	newInput(8, nodeValue_Enum_Scroll("Fill Type", self,  0, [ "Random", "Color map", "Texture map", "Texture Coord", "Texture Index" ]));
 	
-	newInput(9, nodeValue_Surface("Color map", self));
+	newInput(9, nodeValue_Surface("Color Map", self));
 	
-	newInput(10, nodeValue_Surface("Texture map", self));
+	newInput(10, nodeValue_Surface("Texture Map", self));
 	
 	newInput(11, nodeValue_Bool("Color Filter", self, false));
 	
-	newInput(12, nodeValue_Rotation_Range("Random rotation", self, [ 0, 0 ]));
+	newInput(12, nodeValue_Rotation_Range("Random Rotation", self, [ 0, 0 ]));
 	
-	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 4, 
 		["Surfaces",        false], 0, 1, 

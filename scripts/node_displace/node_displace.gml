@@ -79,7 +79,7 @@ If set, then strength value control how many times the effect applies on itself.
 		["Algorithm",	  true], 6, 11, 18, 19, 20, 
 	];
 	
-	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	attribute_surface_depth();
 	attribute_oversample();

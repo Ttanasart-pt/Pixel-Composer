@@ -1,3 +1,10 @@
+#region
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Noise_Bubble", "Mode > Toggle",       "M", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[5].setValue((_n.inputs[5].getValue() + 1) % 2); });
+		addHotkey("Node_Noise_Bubble", "Blend Mode > Toggle", "B", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[7].setValue((_n.inputs[7].getValue() + 1) % 2); });
+	});
+#endregion
+
 function Node_Noise_Bubble(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y, _group) constructor {
 	name   = "Bubble Noise";
 	shader = sh_noise_bubble;
@@ -22,7 +29,7 @@ function Node_Noise_Bubble(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 	newInput(6, nodeValue_Slider_Range("Opacity", self, [ 0., 1. ] ));
 		addShaderProp(SHADER_UNIFORM.float, "alpha");
 		
-	newInput(7, nodeValue_Enum_Scroll("Blending", self,  0 , [ "Max", "Add" ] ));
+	newInput(7, nodeValue_Enum_Scroll("Blend Mode", self,  0 , [ "Max", "Add" ] ));
 		addShaderProp(SHADER_UNIFORM.integer, "render");
 		
 	input_display_list = [ 2, 

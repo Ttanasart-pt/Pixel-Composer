@@ -1,15 +1,15 @@
-enum COMPARE_OPERATOR {
-	equal,
-	nonEqual,
-	
-	greater,
-	greaterEqual,
-	
-	lesser,
-	lesserEqual,
-}
-
 #region create
+	enum COMPARE_OPERATOR {
+		equal,
+		nonEqual,
+		
+		greater,
+		greaterEqual,
+		
+		lesser,
+		lesserEqual,
+	}
+	
 	global.node_compare_keys = ["equal", "not equal", "greater", "greater equal", "lesser", "lesser equal"];
 
 	function Node_create_Compare(_x, _y, _group = noone, _param = {}) {
@@ -27,11 +27,15 @@ enum COMPARE_OPERATOR {
 		
 		return node;
 	}
+	
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Compare", "Type > Toggle", "T", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[0].setValue((_n.inputs[0].getValue() + 1) % 6); });
+	});
 #endregion
 
 function Node_Compare(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name		= "Compare";
-	color		= COLORS.node_blend_number;
+	name  = "Compare";
+	color = COLORS.node_blend_number;
 	
 	setDimension(96, 48);
 	

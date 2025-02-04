@@ -19,7 +19,7 @@ function Node_Strand_Render_Texture(_x, _y, _group = noone) : Node(_x, _y, _grou
 	
 	newInput(5, nodeValueSeed(self));
 	
-	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 5, 
 		["Output",  false], 0,

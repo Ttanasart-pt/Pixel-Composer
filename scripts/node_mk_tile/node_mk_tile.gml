@@ -37,7 +37,7 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		["Output",		 false], 3, 14, 
 	];
 	
-	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	temp_surface = array_create(55);
 	for( var i = 0, n = array_length(temp_surface); i < n; i++ ) 

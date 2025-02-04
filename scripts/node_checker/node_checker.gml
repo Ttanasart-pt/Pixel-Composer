@@ -1,3 +1,10 @@
+#region
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Checker", "Amount > Set", KEY_GROUP.numeric, MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[1].setValue(toNumber(chr(keyboard_key))); });
+		addHotkey("Node_Checker", "Type > Toggle", "T", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[8].setValue((_n.inputs[8].getValue() + 1) % 3); });
+	});
+#endregion
+
 function Node_Checker(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Checker";
 	
@@ -27,7 +34,7 @@ function Node_Checker(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	newInput(8, nodeValue_Enum_Button("Type", self,  0, [ "Solid", "Smooth", "AA" ]));
 	
-	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
 		["Output",	true],	0,  

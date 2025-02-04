@@ -1,3 +1,9 @@
+#region
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Herringbone_Tile", "Render Type > Toggle", "R", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[7].setValue((_n.inputs[7].getValue() + 1) % 3); });
+	});
+#endregion
+
 function Node_Herringbone_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Herringbone Tile";
 	
@@ -16,47 +22,47 @@ function Node_Herringbone_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 0.5, 0.001] })
 		.setMappable(13);
 	
-	newInput(5, nodeValue_Gradient("Tile color", self, new gradientObject(cola(c_white))))
+	newInput(5, nodeValue_Gradient("Tile Color", self, new gradientObject(cola(c_white))))
 		.setMappable(18);
 	
-	newInput(6, nodeValue_Color("Gap color", self, cola(c_black)));
+	newInput(6, nodeValue_Color("Gap Color", self, cola(c_black)));
 	
-	newInput(7, nodeValue_Enum_Scroll("Render type", self,  0, ["Colored tile", "Height map", "Texture grid"]));
+	newInput(7, nodeValue_Enum_Scroll("Render Type", self,  0, ["Colored tile", "Height map", "Texture grid"]));
 		
 	newInput(8, nodeValueSeed(self));
 		
 	newInput(9, nodeValue_Surface("Texture", self));
 	
-	newInput(10, nodeValue_Bool("Anti aliasing", self, false));
+	newInput(10, nodeValue_Bool("Anti-aliasing", self, false));
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	newInput(11, nodeValueMap("Scale map", self));
+	newInput(11, nodeValueMap("Scale Map", self));
 	
-	newInput(12, nodeValueMap("Angle map", self));
+	newInput(12, nodeValueMap("Angle Map", self));
 	
-	newInput(13, nodeValueMap("Gap map", self));
+	newInput(13, nodeValueMap("Gap Map", self));
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	newInput(14, nodeValue_Bool("Truchet", self, false));
 	
-	newInput(15, nodeValue_Int("Truchet seed", self, seed_random()));
+	newInput(15, nodeValue_Int("Truchet Seed", self, seed_random()));
 	
-	newInput(16, nodeValue_Float("Truchet threshold", self, 0.5))
+	newInput(16, nodeValue_Float("Truchet Threshold", self, 0.5))
 		.setDisplay(VALUE_DISPLAY.slider)
 		
 	newInput(17, nodeValue_Float("Tile length", self, 2));
 		
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	newInput(18, nodeValueMap("Gradient map", self));
+	newInput(18, nodeValueMap("Gradient Map", self));
 	
-	newInput(19, nodeValueGradientRange("Gradient map range", self, inputs[5]));
+	newInput(19, nodeValueGradientRange("Gradient Map Range", self, inputs[5]));
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	newInput(20, nodeValue_Rotation_Range("Texture angle", self, [ 0, 0 ]));
+	newInput(20, nodeValue_Rotation_Range("Texture Angle", self, [ 0, 0 ]));
 			
 	newInput(21, nodeValue_Slider_Range("Level", self, [ 0, 1 ]));
 	
@@ -67,7 +73,7 @@ function Node_Herringbone_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 		["Truchet",  true, 14], 15, 16, 20, 
 	];
 	
-	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	attribute_surface_depth();
 	

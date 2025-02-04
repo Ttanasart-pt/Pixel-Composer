@@ -21,7 +21,7 @@ function Node_Chromatic_Aberration(_x, _y, _group = noone) : Node_Processor(_x, 
 	
 	newInput(5, nodeValue_Enum_Scroll("Type", self, 0, [ "Spherical", "Scale" ]));
 	
-	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 3, 
 		["Surface",  false], 0, 

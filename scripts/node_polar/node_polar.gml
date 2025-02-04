@@ -1,3 +1,9 @@
+#region
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Polar", "Radius Mode > Toggle", "R", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[9].setValue((_n.inputs[9].getValue() + 1) % 3); });
+	});
+#endregion
+
 function Node_Polar(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Polar";
 	
@@ -21,7 +27,7 @@ function Node_Polar(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	__init_mask_modifier(1); // inputs 7, 8, 
 	
-	newInput(9, nodeValue_Enum_Scroll("Radius mode", self,  0, [ new scrollItem("Linear",         s_node_curve_type, 2), 
+	newInput(9, nodeValue_Enum_Scroll("Radius Mode", self,  0, [ new scrollItem("Linear",         s_node_curve_type, 2), 
 												                 new scrollItem("Inverse Square", s_node_curve_type, 1), 
 												                 new scrollItem("Logarithm",      s_node_curve_type, 3), ]));
 	
@@ -29,7 +35,7 @@ function Node_Polar(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	newInput(11, nodeValueMap("Blend map", self));
+	newInput(11, nodeValueMap("Blend Map", self));
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -37,7 +43,7 @@ function Node_Polar(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	newInput(13, nodeValue_Rotation_Range("Range", self, [ 0, 360 ]));
 	
-	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 3, 4,
 		["Surfaces", false], 0, 1, 2, 7, 8, 12, 

@@ -1,3 +1,10 @@
+#region
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Condition", "Condition > Toggle", "C", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[1].setValue((_n.inputs[1].getValue() + 1) % 6); });
+		addHotkey("Node_Condition", "Eval Mode > Toggle", "E", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[5].setValue((_n.inputs[5].getValue() + 1) % 3); });
+	});
+#endregion
+
 function Node_Condition(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Condition";
 	
@@ -24,7 +31,7 @@ function Node_Condition(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	newInput(4, nodeValue("False", self, CONNECT_TYPE.input, VALUE_TYPE.any, -1 ))
 		.setVisible(true, true);
 	
-	newInput(5, nodeValue_Enum_Scroll("Eval mode", self,  0 , ["Boolean", "Number compare", "Text compare" ]))
+	newInput(5, nodeValue_Enum_Scroll("Eval Mode", self,  0 , ["Boolean", "Number compare", "Text compare" ]))
 		.rejectArray();
 	
 	newInput(6, nodeValue_Bool("Boolean", self, false ))

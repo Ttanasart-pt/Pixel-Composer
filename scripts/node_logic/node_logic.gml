@@ -1,14 +1,14 @@
-enum LOGIC_OPERATOR {
-	land,
-	lor,
-	lnot,
-	
-	lnand,
-	lnor,
-	lxor
-}
-
 #region create
+	enum LOGIC_OPERATOR {
+		land,
+		lor,
+		lnot,
+		
+		lnand,
+		lnor,
+		lxor
+	}
+
 	global.node_logic_keys = [ "and", "or", "not", "nand", "nor" , "xor" ];
 	
 	function Node_create_Logic(_x, _y, _group = noone, _param = {}) {
@@ -26,11 +26,15 @@ enum LOGIC_OPERATOR {
 		
 		return node;
 	}
+	
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Logic", "Type > Toggle", "T", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[0].setValue((_n.inputs[0].getValue() + 1) % 6); });
+	});
 #endregion
 
 function Node_Logic(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name		= "Logic Opr";
-	color		= COLORS.node_blend_number;
+	name  = "Logic Opr";
+	color = COLORS.node_blend_number;
 	
 	setDimension(96, 48);
 	

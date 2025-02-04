@@ -25,7 +25,7 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	newInput(4, nodeValue_Enum_Scroll("Blend Mode", self,  0, BLEND_TYPES))
 		.rejectArray();
 	
-	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	newOutput(1, nodeValue_Output("Atlas data", self, VALUE_TYPE.atlas, []));
 	

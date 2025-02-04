@@ -17,7 +17,7 @@ function Node_SVG(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 	newInput(1, nodeValue_Float("Scale", self, 1));
 		
-	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	newOutput(1, nodeValue_Output("SVG Struct", self, VALUE_TYPE.struct, {}));
 	

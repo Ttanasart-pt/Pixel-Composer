@@ -48,7 +48,7 @@
 //	input_length = array_length(inputs);
 //	input_display_len  = array_length(input_display_list);
 	
-//	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
+//	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 //	newOutput(1, nodeValue_Output("3D scene", self, VALUE_TYPE.d3object, function() { return submit_vertex(); }));
 	

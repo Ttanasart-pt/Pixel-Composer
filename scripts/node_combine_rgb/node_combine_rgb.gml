@@ -24,7 +24,7 @@ function Node_Combine_RGB(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput(8, nodeValue_Surface("RGBA Array", self, []))
 		.setArrayDepth(1);
 	
-	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
 		["Sampling",	false], 4, 5, 6, 

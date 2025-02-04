@@ -19,7 +19,7 @@ function Node_Average(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		["Surfaces", false], 0, 1, 2, 5, 6, 
 	]
 	
-	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	newOutput(1, nodeValue_Output("Color", self, VALUE_TYPE.color, c_black));
 	

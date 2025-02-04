@@ -1,3 +1,11 @@
+#region
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Scatter_Points", "Distribution > Toggle", "D", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[1].setValue((_n.inputs[1].getValue() + 1) % 3); });
+		addHotkey("Node_Scatter_Points", "Scatter > Toggle",      "S", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[2].setValue((_n.inputs[2].getValue() + 1) % 2); });
+		addHotkey("Node_Scatter_Points", "3D > Toggle",           "3", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[9].setValue((_n.inputs[9].getValue() + 1) % 2); });
+	});
+#endregion
+
 function Node_Scatter_Points(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Scatter Points";
 	color = COLORS.node_blend_number;
@@ -8,32 +16,32 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput(0, nodeValue_Area("Point area", self, DEF_AREA_REF, { onSurfaceSize } ))
 		.setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
 	
-	newInput(1, nodeValue_Enum_Button("Point distribution", self,  0, [ "Area", "Border", "Map" ]))
+	newInput(1, nodeValue_Enum_Button("Distribution", self,  0, [ "Area", "Border", "Map" ]))
 		.rejectArray();
 	
 	newInput(2, nodeValue_Enum_Button("Scatter", self,  1, [ "Uniform", "Random" ]))
 		.rejectArray();
 	
-	newInput(3, nodeValue_Int("Point amount", self, 2, "Amount of particle spawn in that frame."))
+	newInput(3, nodeValue_Int("Amount", self, 2, "Amount of particle spawn in that frame."))
 		.rejectArray();
 	
-	newInput(4, nodeValue_Surface("Distribution map", self))
+	newInput(4, nodeValue_Surface("Distribution Map", self))
 		.rejectArray();
 	
 	newInput(5, nodeValueSeed(self))
 		.rejectArray();
 	
-	newInput(6, nodeValue_Bool("Fixed position", self, false, "Fix point position, and only select point in the area."));
+	newInput(6, nodeValue_Bool("Fixed Position", self, false, "Fix point position, and only select point in the area."));
 	
-	newInput(7, nodeValue_Vec2("Reference dimension", self, DEF_SURF));
+	newInput(7, nodeValue_Vec2("Reference Dimension", self, DEF_SURF));
 	
-	newInput(8, nodeValue_Surface("Reference value", self));
+	newInput(8, nodeValue_Surface("Reference Value", self));
 	
 	newInput(9, nodeValue_Bool("Output 3D", self, false));
 	
 	newInput(10, nodeValue_Enum_Button("Normal", self,  0, [ "X", "Y", "Z" ]));
 	
-	newInput(11, nodeValue_Float("Plane position", self, 0));
+	newInput(11, nodeValue_Float("Plane Position", self, 0));
 	
 	input_display_list = [ 
 		["Base",	false], 5, 6, 7, 

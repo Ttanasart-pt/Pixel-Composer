@@ -1,3 +1,10 @@
+#region
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Perlin_Extra", "Color Mode > Toggle", "C", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[ 6].setValue((_n.inputs[ 6].getValue() + 1) % 3); });
+		addHotkey("Node_Perlin_Extra", "Noise Type > Toggle", "T", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[10].setValue((_n.inputs[10].getValue() + 1) % 7); });
+	});
+#endregion
+
 function Node_Perlin_Extra(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y, _group) constructor {
 	name   = "Extra Perlins";
 	shader = sh_perlin_extra;
@@ -19,19 +26,19 @@ function Node_Perlin_Extra(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 	newInput(5, nodeValueSeed(self));
 		addShaderProp(SHADER_UNIFORM.float, "seed");
 		
-	newInput(6, nodeValue_Enum_Button("Color mode", self,  0, [ "Greyscale", "RGB", "HSV" ]));
+	newInput(6, nodeValue_Enum_Button("Color Mode", self,  0, [ "Greyscale", "RGB", "HSV" ]));
 		addShaderProp(SHADER_UNIFORM.integer, "colored");
 	
-	newInput(7, nodeValue_Slider_Range("Color R range", self, [ 0, 1 ]));
+	newInput(7, nodeValue_Slider_Range("Color R Range", self, [ 0, 1 ]));
 		addShaderProp(SHADER_UNIFORM.float, "colorRanR");
 	
-	newInput(8, nodeValue_Slider_Range("Color G range", self, [ 0, 1 ]));
+	newInput(8, nodeValue_Slider_Range("Color G Range", self, [ 0, 1 ]));
 		addShaderProp(SHADER_UNIFORM.float, "colorRanG");
 	
-	newInput(9, nodeValue_Slider_Range("Color B range", self, [ 0, 1 ]));
+	newInput(9, nodeValue_Slider_Range("Color B Range", self, [ 0, 1 ]));
 		addShaderProp(SHADER_UNIFORM.float, "colorRanB");
 	
-	newInput(10, nodeValue_Enum_Scroll("Noise type", self,  0, [ "Absolute worley", "Fluid", "Noisy", "Camo", "Blocky", "Max", "Vine" ]));
+	newInput(10, nodeValue_Enum_Scroll("Noise Type", self, 0, [ "Absolute worley", "Fluid", "Noisy", "Camo", "Blocky", "Max", "Vine" ]));
 		addShaderProp(SHADER_UNIFORM.integer, "type");
 		
 	newInput(11, nodeValue_Float("Parameter A", self, 0))
@@ -77,9 +84,9 @@ function Node_Perlin_Extra(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 		inputs[8].setVisible(_col != 0);
 		inputs[9].setVisible(_col != 0);
 		
-		inputs[7].name = _col == 1? "Color R range" : "Color H range";
-		inputs[8].name = _col == 1? "Color G range" : "Color S range";
-		inputs[9].name = _col == 1? "Color B range" : "Color V range";
+		inputs[7].name = _col == 1? "Color R Range" : "Color H Range";
+		inputs[8].name = _col == 1? "Color G Range" : "Color S Range";
+		inputs[9].name = _col == 1? "Color B Range" : "Color V Range";
 		
 		inputs[11].setVisible(_typ > 0);
 		inputs[12].setVisible(false);

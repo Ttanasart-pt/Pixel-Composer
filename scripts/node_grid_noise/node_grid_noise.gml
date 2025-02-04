@@ -1,3 +1,10 @@
+#region
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Grid_Noise", "Color Mode > Toggle", "C", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[7].setValue((_n.inputs[7].getValue() + 1) % 3); });
+		addHotkey("Node_Grid_Noise", "Shift Axis > Toggle", "A", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[6].setValue((_n.inputs[6].getValue() + 1) % 2); });
+	});
+#endregion
+
 function Node_Grid_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Grid Noise";
 	
@@ -13,17 +20,17 @@ function Node_Grid_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newInput(4, nodeValue_Float("Shift", self, 0))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-0.5, 0.5, 0.01] });
 		
-	newInput(5, nodeValue_Surface("Texture sample", self));
+	newInput(5, nodeValue_Surface("Texture Sample", self));
 	
-	newInput(6, nodeValue_Enum_Button("Shift axis", self,  0, ["x", "y"]));
+	newInput(6, nodeValue_Enum_Button("Shift Axis", self,  0, ["x", "y"]));
 	
-	newInput(7, nodeValue_Enum_Button("Color mode", self,  0, [ "Greyscale", "RGB", "HSV" ]));
+	newInput(7, nodeValue_Enum_Button("Color Mode", self,  0, [ "Greyscale", "RGB", "HSV" ]));
 	
-	newInput(8, nodeValue_Slider_Range("Color R range", self, [ 0, 1 ]));
+	newInput(8, nodeValue_Slider_Range("Color R Range", self, [ 0, 1 ]));
 	
-	newInput(9, nodeValue_Slider_Range("Color G range", self, [ 0, 1 ]));
+	newInput(9, nodeValue_Slider_Range("Color G Range", self, [ 0, 1 ]));
 	
-	newInput(10, nodeValue_Slider_Range("Color B range", self, [ 0, 1 ]));
+	newInput(10, nodeValue_Slider_Range("Color B Range", self, [ 0, 1 ]));
 	
 	input_display_list = [
 		["Output",	false], 0,
@@ -31,7 +38,7 @@ function Node_Grid_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		["Render",	false], 5, 7, 8, 9, 10, 
 	];
 	
-	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	attribute_surface_depth();
 	

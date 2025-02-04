@@ -1,5 +1,13 @@
+#region
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Seperate_Shape", "Ignore blank > Toggle", "I", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[4].setValue((_n.inputs[4].getValue() + 1) % 2); });
+		addHotkey("Node_Seperate_Shape", "Mode > Toggle",         "M", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[5].setValue((_n.inputs[5].getValue() + 1) % 2); });
+		addHotkey("Node_Seperate_Shape", "Crop > Toggle",         "C", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[6].setValue((_n.inputs[6].getValue() + 1) % 2); });
+	});
+#endregion
+
 function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name		= "Separate Shape";
+	name = "Separate Shape";
 	
 	newInput(0, nodeValue_Surface("Surface In", self))
 		.rejectArray();
@@ -21,7 +29,7 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		
 	newInput(6, nodeValue_Bool("Crop", self, true ))
 		
-	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	newOutput(1, nodeValue_Output("Atlas",	self, VALUE_TYPE.atlas, []));
 	

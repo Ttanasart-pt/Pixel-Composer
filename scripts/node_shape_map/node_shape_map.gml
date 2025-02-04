@@ -1,3 +1,10 @@
+#region
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Shape_Map", "Shape > Toggle", "S", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[2].setValue((_n.inputs[2].getValue() + 1) % 2); });
+		addHotkey("Node_Shape_Map", "Sides > Set", KEY_GROUP.numeric, MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[5].setValue(toNumber(chr(keyboard_key))); });
+	});
+#endregion
+
 function Node_Shape_Map(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Shape Map";
 	
@@ -20,7 +27,7 @@ function Node_Shape_Map(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	newInput(7, nodeValue_Rotation("Angle", self, 0));
 	
-	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 1, 
 		["Surfaces",  true], 0,

@@ -1,9 +1,17 @@
-enum OUTPUT_SCALING {
-	same_as_input,
-	constant,
-	relative,
-	scale
-}
+#region
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Transform", "Rotation > Rotate CCW", "R", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[5].setValue((_n.inputs[5].getValue() + 90) % 360); });
+		addHotkey("Node_Transform", "Render Mode > Toggle",  "M", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[7].setValue((_n.inputs[7].getValue() + 1) % 3); });
+		addHotkey("Node_Transform", "Output Dimension Type > Toggle",  "D", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[9].setValue((_n.inputs[9].getValue() + 1) % 4); });
+	});
+
+	enum OUTPUT_SCALING {
+		same_as_input,
+		constant,
+		relative,
+		scale
+	}
+#endregion
 
 function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Transform";
@@ -11,7 +19,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	newInput(0, nodeValue_Surface("Surface In", self));
 	
-	newInput(1, nodeValue_Vec2("Output dimension", self, [ 1, 1 ]))
+	newInput(1, nodeValue_Vec2("Output Dimension", self, [ 1, 1 ]))
 		.setVisible(false);
 	
 	newInput(2, nodeValue_Vec2("Position", self, [ 0.5, 0.5 ]))
@@ -20,7 +28,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput(3, nodeValue_Vec2("Anchor", self, [ 0.5, 0.5 ]));
 		inputs[3].setDisplay(VALUE_DISPLAY.vector, { side_button : new buttonAnchor(inputs[3]) });
 	
-	newInput(4, nodeValue_Bool("Relative anchor", self, true));
+	newInput(4, nodeValue_Bool("Relative Anchor", self, true));
 	
 	newInput(5, nodeValue_Rotation("Rotation", self, 0));
 	
@@ -28,24 +36,24 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	newInput(7, nodeValue_Enum_Button("Render Mode", self, 0, [ "Normal", "Tile", "Wrap" ]));
 	
-	newInput(8, nodeValue_Float("Rotate by velocity", self, 0, "Make the surface rotates to follow its movement."))
+	newInput(8, nodeValue_Float("Rotate by Velocity", self, 0, "Make the surface rotates to follow its movement."))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(9, nodeValue_Enum_Scroll("Output dimension type", self, OUTPUT_SCALING.same_as_input, [
+	newInput(9, nodeValue_Enum_Scroll("Output Dimension Type", self, OUTPUT_SCALING.same_as_input, [
 																			new scrollItem("Same as input"),
 																			new scrollItem("Constant"),
 																			new scrollItem("Relative to input").setTooltip("Set dimension as a multiple of input surface."),
 																			new scrollItem("Fit content").setTooltip("Automatically set dimension to fit content."),
 																		]));
 	
-	newInput(10, nodeValue_Bool("Round position", self, false, "Round position to the nearest integer value to avoid jittering."));
+	newInput(10, nodeValue_Bool("Round Position", self, false, "Round position to the nearest integer value to avoid jittering."));
 	
 	newInput(11, nodeValue_Bool("Active", self, true));
 		active_index = 11;
 	
 	newInput(12, nodeValue_Bool("Echo", self, false));
 	
-	newInput(13, nodeValue_Int("Echo amount", self, 8));
+	newInput(13, nodeValue_Int("Echo Amount", self, 8));
 	
 	newInput(14, nodeValue_Float("Alpha", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider);
@@ -59,7 +67,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		["Echo",		 true, 12], 13, 
 	];
 	
-	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	newOutput(1, nodeValue_Output("Dimension", self, VALUE_TYPE.integer, [ 1, 1 ]))
 		.setDisplay(VALUE_DISPLAY.vector)

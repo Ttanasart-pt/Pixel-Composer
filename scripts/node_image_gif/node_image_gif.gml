@@ -54,7 +54,7 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	newInput(7, nodeValue_Float("Animation speed", self, 1));
 	
-	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	newOutput(1, nodeValue_Output("Path", self, VALUE_TYPE.path, ""))
 		.setVisible(true, true);
 	

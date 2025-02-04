@@ -47,7 +47,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 	
 	newInput(11, nodeValue_Bool("Custom Range", self, false));
 	
-	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 		
 	newOutput(1, nodeValue_Output("Atlas Data", self, VALUE_TYPE.atlas, []));
 	

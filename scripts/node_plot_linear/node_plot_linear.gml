@@ -16,6 +16,11 @@
 		
 		return node;
 	}
+	
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Plot_Linear", "Type > Toggle", "T", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[11].setValue((_n.inputs[11].getValue() + 1) % 2); });
+	});
+
 #endregion
 
 function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
@@ -94,7 +99,7 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 0, 
 		["Data", 	 true], 1, 12, 21, 14, 2, 3, 15, 16, 

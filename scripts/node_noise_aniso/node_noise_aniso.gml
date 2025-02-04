@@ -1,3 +1,10 @@
+#region
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Noise_Aniso", "Render Mode > Toggle",  "M", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[9].setValue((_n.inputs[9].getValue() + 1) % 2); });
+		addHotkey("Node_Noise_Aniso", "Rotation > Rotate CCW", "R", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[3].setValue((_n.inputs[3].getValue() + 90) % 360); });
+	});
+#endregion
+
 function Node_Noise_Aniso(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Anisotropic Noise";
 	
@@ -27,7 +34,7 @@ function Node_Noise_Aniso(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	newInput(9, nodeValue_Enum_Scroll("Render mode", self,  0, [ "Blend", "Waterfall" ] ))
+	newInput(9, nodeValue_Enum_Scroll("Render Mode", self,  0, [ "Blend", "Waterfall" ] ))
 		
 	newInput(10, nodeValueSeed(self));
 	
@@ -37,7 +44,7 @@ function Node_Noise_Aniso(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		["Render",	false], 9, 10, 
 	];
 	
-	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	attribute_surface_depth();
 	

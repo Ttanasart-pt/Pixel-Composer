@@ -1,3 +1,9 @@
+#region
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Perlin", "Color Mode > Toggle", "C", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[6].setValue((_n.inputs[6].getValue() + 1) % 3); });
+	});
+#endregion
+
 function Node_Perlin(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Perlin Noise";
 	
@@ -15,13 +21,13 @@ function Node_Perlin(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 	newInput(5, nodeValueSeed(self));
 		
-	newInput(6, nodeValue_Enum_Button("Color mode", self,  0, [ "Greyscale", "RGB", "HSV" ]));
+	newInput(6, nodeValue_Enum_Button("Color Mode", self,  0, [ "Greyscale", "RGB", "HSV" ]));
 	
-	newInput(7, nodeValue_Slider_Range("Color R range", self, [ 0, 1 ]));
+	newInput(7, nodeValue_Slider_Range("Color R Range", self, [ 0, 1 ]));
 	
-	newInput(8, nodeValue_Slider_Range("Color G range", self, [ 0, 1 ]));
+	newInput(8, nodeValue_Slider_Range("Color G Range", self, [ 0, 1 ]));
 	
-	newInput(9, nodeValue_Slider_Range("Color B range", self, [ 0, 1 ]));
+	newInput(9, nodeValue_Slider_Range("Color B Range", self, [ 0, 1 ]));
 	
 	//////////////////////////////////////////////////////////////////////////////////
 	
@@ -37,7 +43,7 @@ function Node_Perlin(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		["Render",	false], 6, 7, 8, 9, 
 	];
 	
-	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	attribute_surface_depth();
 	
@@ -55,9 +61,9 @@ function Node_Perlin(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		inputs[8].setVisible(_col != 0);
 		inputs[9].setVisible(_col != 0);
 		
-		inputs[7].name = _col == 1? "Color R range" : "Color H range";
-		inputs[8].name = _col == 1? "Color G range" : "Color S range";
-		inputs[9].name = _col == 1? "Color B range" : "Color V range";
+		inputs[7].name = _col == 1? "Color R Range" : "Color H Range";
+		inputs[8].name = _col == 1? "Color G Range" : "Color S Range";
+		inputs[9].name = _col == 1? "Color B Range" : "Color V Range";
 		
 		inputs[2].mappableStep();
 	}

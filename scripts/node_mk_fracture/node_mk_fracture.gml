@@ -43,7 +43,7 @@ function Node_MK_Fracture(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		["Render",		false], 7, 
 	];
 	
-	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		

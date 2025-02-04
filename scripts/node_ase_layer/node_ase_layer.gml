@@ -12,7 +12,7 @@ function Node_ASE_layer(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	newInput(2, nodeValue_Text("Layer name", self, ""))
 		.rejectArray();
 		
-	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	newOutput(1, nodeValue_Output("Layer name", self, VALUE_TYPE.text, ""));
 	

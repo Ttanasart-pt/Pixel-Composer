@@ -21,7 +21,7 @@ function Node_Time_Remap(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	newInput(3, nodeValue_Bool("Loop", self, false))
 	
-	newOutput(0, nodeValue_Output("Surface out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 
 		["Surfaces", false], 0, 1, 
