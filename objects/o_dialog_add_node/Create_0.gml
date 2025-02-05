@@ -1253,7 +1253,7 @@ event_inherited();
 					tx += string_width(_node.getName());
 				}
 				
-				if(_hover && MOUSE_MOVED && point_in_rectangle(_m[0], _m[1], 0, yy, pd + ui(32), yy + list_height - 1)) {
+				if(_hover && point_in_rectangle(_m[0], _m[1], 0, yy, pd + ui(32), yy + list_height - 1)) {
 					node_selecting = noone;
 					
 					gpu_set_tex_filter(true); BLEND_ADD

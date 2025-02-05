@@ -1393,7 +1393,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 		
 		var _prev = getPreviousNodes();
-		
 		for( var i = 0, n = array_length(_prev); i < n; i++ ) {
 			if(_prev[i].__getNodeChildList(_node, _arr)) {
 				array_push(_arr, self);

@@ -873,6 +873,7 @@
             { "label": "Animations" },
             "Node_Rate_Remap",
             "Node_Delay",
+            "Node_Delay_Value",
             "Node_Stagger",
             "Node_Revert",
             
