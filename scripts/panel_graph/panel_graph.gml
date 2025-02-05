@@ -2626,7 +2626,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
     		var _title = _over[j];
         	var _keys  = tooltip_overlay[$ _title];
         	
-        	draw_set_text(f_p2, fa_left, fa_bottom, COLORS._main_text, .75);
+        	draw_set_text(f_p2b, fa_left, fa_bottom, COLORS._main_text, .75);
 			var _tw = 0;
 			for( var i = 0, n = array_length(_keys); i < n; i++ ) 
 				_tw = max(_tw, string_width(_keys[i][0]));
@@ -2634,9 +2634,11 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			var _ttx = _tx + _tw + ui(16);
 			
 			for( var i = array_length(_keys) - 1; i >= 0; i-- ) {
-				draw_set_color(COLORS._main_icon);
+				draw_set_font(f_p2b);
+				draw_set_color(CDEF.main_mdwhite);
 				draw_text_add(_tx, _ty, _keys[i][0]);
 				
+				draw_set_font(f_p2);
 				draw_set_color(COLORS._main_text);
 				draw_text_add(_ttx, _ty, _keys[i][1]);
 				
@@ -2653,7 +2655,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
     	if(getFocusStr() != noone) {
     		var list = HOTKEYS[$ FOCUS_STR];
     		
-    		draw_set_text(f_p2, fa_left, fa_bottom, COLORS._main_text, .75);
+    		draw_set_text(f_p2b, fa_left, fa_bottom, COLORS._main_text, .75);
 			var _tw = 0;
 			for( var i = 0, n = ds_list_size(list); i < n; i++ ) 
 				_tw = max(_tw, string_width(list[| i].get_key_name()));
@@ -2665,19 +2667,21 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				var _title = hotkey.name;
 				var _key   = hotkey.get_key_name();
 				
-				draw_set_color(COLORS._main_icon);
+				draw_set_font(f_p2b);
+				draw_set_color(CDEF.main_mdwhite);
 				draw_text_add(_tx, _ty, _key);
 				
+				draw_set_font(f_p2);
 				var _ttxx = _ttx;
 				if(string_pos(">", _title)) {
     				var _sp = string_split(_title, ">");
     				
-    				draw_set_color(CDEF.main_mdwhite);
-	    			draw_text_add(_ttxx, _ty, _sp[0]);
-	    			_ttxx += string_width(_sp[0]);
-	    			
 	    			draw_set_color(COLORS._main_text);
-    				draw_text_add(_ttxx, _ty, _sp[1]);
+	    			draw_text_add(_ttxx, _ty, _sp[1]);
+	    			_ttxx += string_width(_sp[1]) + ui(4);
+	    			
+	    			draw_set_color(CDEF.main_mdwhite);
+    				draw_text_add(_ttxx, _ty, _sp[0]);
     				
     			} else {
 	    			draw_set_color(COLORS._main_text);

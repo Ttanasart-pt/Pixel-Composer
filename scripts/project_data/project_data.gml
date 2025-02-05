@@ -28,6 +28,7 @@ function Project() constructor {
 	nodeTopo    = [];
 	nodeMap	    = ds_map_create();
 	nodeNameMap = ds_map_create();
+	nodeTopoID  = "";
 	
 	pathInputs  = [];
 	

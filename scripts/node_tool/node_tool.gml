@@ -103,5 +103,6 @@ function NodeTool(name, spr, contextString = instanceof(other)) constructor {
 		if(_obj) _obj.init(context);
 	}
 	
-	static onToggle = function() {}
+	static onToggle    = function() {}
+	static setOnToggle = function(_fn) { onToggle = _fn; return self; }
 }

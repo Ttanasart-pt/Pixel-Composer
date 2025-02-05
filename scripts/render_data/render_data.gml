@@ -43,6 +43,7 @@ function NodeTopoSort() {
 	PROJECT.nodeTopo   = [];
 	__topoSort(PROJECT.nodeTopo, PROJECT.nodes);
 	
+	PROJECT.nodeTopoID = UUID_generate();
 	// print(PROJECT.nodeTopo);
 	LOG_IF(global.FLAG.render == 1, $"+++++++ Topo Sort Completed: {array_length(PROJECT.nodeTopo)}/{amo} nodes sorted in {(get_timer() - _t) / 1000} ms +++++++");
 }

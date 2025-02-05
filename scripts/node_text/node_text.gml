@@ -88,10 +88,28 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	 
 	attribute_surface_depth();
 	
-	_font_current = "";
-	_size_current = 0;
-	_aa_current   = false;
-	seed          = seed_random();
+	_font_current  = "";
+	_size_current  = 0;
+	_aa_current    = false;
+	seed           = seed_random();
+	draw_data      = [];
+	draw_font_data = [];
+	
+	#region tool
+		tools = [
+			new NodeTool( "Edit Text", THEME.text_tools_edit ).setOnToggle(function() /*=>*/ { 
+				KEYBOARD_STRING = ""; 
+				var _currStr    = getSingleValue(0);
+				edit_cursor     = 0;
+				edit_cursor_sel = string_length(_currStr);
+			}),
+		];
+		
+		edit_cursor_hov = noone;
+		edit_cursor     = noone;
+		edit_cursor_sel = noone;
+		edit_typing     = false;
+	#endregion
 	
 	static generateFont = function(_path, _size, _aa) {
 		if(PROJECT.animator.is_playing) return;
@@ -148,7 +166,142 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _hov = false;
-		var  hv  = inputs[13].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= bool(hv);
+		
+		var _pth = getSingleValue(13);
+		if(struct_has(_pth, "drawOverlay")) { var hv = _pth.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= bool(hv); }
+		
+		if(isNotUsingTool()) return _hov;
+		
+		var _dat = array_safe_get(draw_data,      preview_index, 0);
+		var _dft = array_safe_get(draw_font_data, preview_index, 0);
+		if(_dat == 0) return _hov;
+		
+		var _cr_hover = noone;
+		var _currStr  = getSingleValue(0);
+		var _crx0 = 0, _cry0 = 0;
+		var _crx1 = 0, _cry1 = 0;
+		
+		var _crmin = min(edit_cursor, edit_cursor_sel);
+		var _crmax = max(edit_cursor, edit_cursor_sel);
+		
+		draw_set_text(_dft[0], _dft[1], _dft[2], _dft[3]);
+		for( var i = 0, n = array_length(_dat); i < n; i++ ) {
+			var _tdat = _dat[i];
+			var _tx   = _tdat[0];
+			var _ty   = _tdat[1];
+			var _tchr = _tdat[2];
+			var _tsw  = _tdat[3];
+			var _tsh  = _tdat[4];
+			var _trot = _tdat[5];
+			
+			var _tw = _tsw * string_width(_tchr);
+			var _th = _tsh * string_height(_tchr);
+			
+			var _tbx0 = _x + _s * (_tx);
+			var _tby0 = _y + _s * (_ty);
+			var _tbx1 = _x + _s * (_tx + _tw);
+			var _tby1 = _y + _s * (_ty + _th);
+			
+			var _tbxc = (_tbx0 + _tbx1) / 2;
+			
+		    if(hover && point_in_rectangle(_mx, _my, _tbx0, _tby0, _tbxc, _tby1)) {
+		     	_cr_hover = i;
+		     	draw_set_color(COLORS._main_icon); draw_set_alpha(.5); draw_line_width(_tbx0, _tby0, _tbx0, _tby1, 2); draw_set_alpha(1);
+				
+			} else if(hover && point_in_rectangle(_mx, _my, _tbxc, _tby0, _tbx1, _tby1)) {
+				_cr_hover = i + 1;
+				draw_set_color(COLORS._main_icon); draw_set_alpha(.5); draw_line_width(_tbx1, _tby0, _tbx1, _tby1, 2); draw_set_alpha(1);
+				
+			}
+			
+			if(edit_cursor_sel != noone && i >= _crmin && i < _crmax) {
+				draw_set_color(COLORS.widget_text_highlight);
+				draw_set_alpha(0.5);
+				draw_rectangle(_tbx0, _tby0, _tbx1, _tby1, false);
+				draw_set_alpha(1);
+			}
+			
+			// draw cursor
+			
+			if(i == edit_cursor) {
+				_crx0 = _tbx0;  _cry0 = _tby0;
+				_crx1 = _tbx0;  _cry1 = _tby1;
+				
+			} else if(i + 1 == edit_cursor && i + 1 == n) {
+				_crx0 = _tbx1; _cry0 = _tby0;
+				_crx1 = _tbx1; _cry1 = _tby1;
+			}
+			
+		}
+		
+		edit_cursor_hov = _cr_hover;
+		var _out = getSingleValue(0, preview_index, true);
+		draw_surface_ext_safe(_out, _x, _y, _s, _s);
+		
+		if(edit_cursor != noone) {
+			draw_set_color(COLORS._main_text_accent);
+			draw_set_alpha((edit_typing || current_time % (PREFERENCES.caret_blink * 2000) > PREFERENCES.caret_blink * 1000) * 0.75 + 0.25);
+			draw_line_width(_crx0, _cry0, _crx1, _cry1, 2);
+			draw_set_alpha(1);
+		}
+		
+		if(isUsingTool("Edit Text")) {
+			HOTKEY_BLOCK = true;
+			
+			if(mouse_press(mb_left, active)) {
+				edit_cursor     = _cr_hover;
+				edit_cursor_sel = noone;
+				KEYBOARD_STRING = "";
+				
+			} else if(_cr_hover != noone && mouse_click(mb_left, active)) {
+				if(_cr_hover != edit_cursor) edit_cursor_sel = _cr_hover;
+			}
+			
+			if(keyboard_check_pressed(ord("A")) && key_mod_press(CTRL)) {
+				edit_cursor     = 0;
+				edit_cursor_sel = string_length(_currStr);
+				
+			} else if(edit_cursor != noone) {
+				var _edit = false;
+				
+				if(KEYBOARD_PRESSED == vk_left) {
+					edit_cursor = max(0, edit_cursor - 1);
+					edit_cursor_sel = noone;
+					
+				} else if(KEYBOARD_PRESSED == vk_right) {
+					edit_cursor = min(edit_cursor + 1, string_length(_currStr));
+					edit_cursor_sel = noone;
+					
+				} else if(KEYBOARD_PRESSED == vk_escape) {
+					PANEL_PREVIEW.tool_current = noone;
+					edit_cursor_sel = noone;
+					
+				} else if(edit_cursor_sel != noone && (KEYBOARD_STRING != "" || KEYBOARD_PRESSED == vk_backspace || KEYBOARD_PRESSED == vk_delete)) {
+					_currStr        = string_delete(_currStr, _crmin + 1, _crmax - _crmin);
+					_edit           = true;
+					edit_cursor     = _crmin;
+					edit_cursor_sel = noone;
+					
+				} else if(KEYBOARD_PRESSED == vk_backspace) {
+					_currStr    = string_delete(_currStr, edit_cursor, 1);
+					_edit       = true;
+					edit_cursor = max(0, edit_cursor - 1);
+					
+				} else if(KEYBOARD_PRESSED == vk_delete) {
+					_currStr    = string_delete(_currStr, edit_cursor + 1, 1);
+					_edit       = true;
+					
+				} else if(KEYBOARD_STRING != "") {
+					_currStr    = string_insert(KEYBOARD_STRING, _currStr, edit_cursor + 1);
+					_edit       = true;
+					
+					edit_cursor    += string_length(KEYBOARD_STRING);
+					KEYBOARD_STRING = "";
+				}
+				
+				if(_edit) inputs[0].setValue(_currStr);
+			}
+		}
 		
 		return _hov;
 	}
@@ -192,6 +345,9 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		
 		var _lineW = _data[27];
 		__rnd_pos  = _data[28];
+		
+		__dwData   = array_create(string_length(str));
+		__dwDataI  = 0;
 		
 		generateFont(_font, _size, _aa);
 		draw_set_font(font);
@@ -357,6 +513,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				var _str_line   = _str_lines[i];
 				var _line_width = _line_widths[i];
 				draw_set_text(font, fa_left, va, _col);
+				draw_font_data[_array_index] = [font, fa_left, va, _col];
 				
 				switch(_hali) {
 					case 0 : tx = 0;                           break;
@@ -390,6 +547,8 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					if(__rnd_pos) { _tx = round(_tx); _ty = round(_ty); }
 					
 					draw_text_transformed(_tx, _ty, _chr, 1, 1, _nor);
+					__dwData[__dwDataI++] = [_tx, _ty, _chr, 1, 1, _nor];
+					
 					__temp_tx += string_width(_chr) + __temp_trck;
 				});
 				
@@ -401,6 +560,8 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				var _str_line   = _str_lines[i];
 				var _line_width = _line_widths[i];
 				draw_set_text(font, fa_left, fa_top, _col);
+				draw_font_data[_array_index] = [font, fa_left, fa_top, _col];
+				
 				tx = _padd[PADDING.left];
 				
 				if(_dimt == 0) 
@@ -425,6 +586,8 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					if(__rnd_pos) { _tx = round(_tx); _ty = round(_ty); }
 					
 					draw_text_transformed(_tx, _ty, _chr, __temp_ss, __temp_ss, 0);
+					__dwData[__dwDataI++] = [_tx, _ty, _chr, __temp_ss, __temp_ss, 0];
+					
 					__temp_tx += (string_width(_chr) + __temp_trck) * __temp_ss;
 				});
 			
@@ -432,6 +595,9 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			}
 		}
 		surface_reset_shader();
+		
+		array_resize(__dwData, __dwDataI);
+		draw_data[_array_index] = __dwData;
 		
 		return _outSurf;
 	}

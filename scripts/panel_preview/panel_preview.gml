@@ -1820,7 +1820,19 @@ function Panel_Preview() : PanelContent() constructor {
                 _sny = PROJECT.previewGrid.size[1];
             }
             
-            _node.drawOverlay(overHover, overActive, cx, cy, canvas_s, _mx, _my, _snx, _sny, params);
+            var _ovx = cx;
+            var _ovy = cy;
+            var _ovs = canvas_s;
+            
+            var _prevNode = getNodePreview();
+            if(_prevNode != _node && is(_prevNode, Node)) {
+            	var _trans = _prevNode.drawOverlayChainTransform(_node);
+            	_ovx += _trans[0] * _ovs;
+				_ovy += _trans[1] * _ovs;
+				_ovs *= _trans[2];
+            }
+            
+            _node.drawOverlay(overHover, overActive, _ovx, _ovy, _ovs, _mx, _my, _snx, _sny, params);
             
         } else {
             

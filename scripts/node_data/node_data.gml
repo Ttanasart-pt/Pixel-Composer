@@ -1383,6 +1383,45 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return nodes;
 	}
 	
+	__getNodeChildList_cache   = {};
+	__getNodeChildList_cacheId = "";
+	
+	static __getNodeChildList = function(_node, _arr) {
+		if(_node == self) {
+			array_push(_arr, self);
+			return true;
+		}
+		
+		var _prev = getPreviousNodes();
+		
+		for( var i = 0, n = array_length(_prev); i < n; i++ ) {
+			if(_prev[i].__getNodeChildList(_node, _arr)) {
+				array_push(_arr, self);
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	static getNodeChildList = function(_node) {
+		if(__getNodeChildList_cacheId != project.nodeTopoID) 
+			__getNodeChildList_cache = {};
+			
+		if(struct_has(__getNodeChildList_cache, _node)) return __getNodeChildList_cache[$ _node];
+		
+		var _ind_self = array_find(project.nodeTopo, self);
+		var _ind_node = array_find(project.nodeTopo, _node);
+		if(_ind_self == -1 || _ind_node == -1) return noone;
+		
+		var _arr  = [];
+		var _reach = __getNodeChildList(_node, _arr);
+		if(_reach == false) _arr = noone;
+		
+		__getNodeChildList_cache[$ _node] = _arr;
+		return _arr;
+	}
+	
 	////- DRAW
 	
 	static setShowParameter = function(showParam) {
@@ -2216,6 +2255,25 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {}
+	
+	static drawOverlayChainTransform = function(_node) {
+		var _ch = getNodeChildList(_node);
+		var _tr = [ 0, 0, 1, 1, 0 ];
+		if(_ch == noone) return _tr;
+		
+		for( var i = 0, n = array_length(_ch) - 1; i < n; i++ ) {
+			var _trn = _ch[i + 1].drawOverlayTransform(_ch[i]);
+			if(_trn == noone) continue;
+			
+			_tr[0]  = (_trn[0] + _tr[0]) * _tr[2];
+			_tr[1]  = (_trn[1] + _tr[1]) * _tr[2];
+			_tr[2] *= _trn[2];
+		}
+		
+		return _tr;
+	}
+	
+	static drawOverlayTransform = function(_node) { return noone; }
 	
 	static drawPreviewToolOverlay = function(hover, active, _mx, _my, _panel) { return false; }
 	

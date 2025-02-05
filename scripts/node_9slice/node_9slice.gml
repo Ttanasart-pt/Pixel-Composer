@@ -25,6 +25,8 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	drag_my   = 0;
 	drag_sv   = 0;
 	
+	tools = [ new NodeTool( "Preview Original", THEME.bone_tool_scale ) ];
+	
 	static onValueFromUpdate = function(index = 0) {
 		if(index != 0) return;
 		
@@ -38,9 +40,9 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		PROCESSOR_OVERLAY_CHECK
 		
-		var _dim		= current_data[1];
+		var _dim    = isUsingTool("Preview Original")? surface_get_dimension(getSingleValue(0)) : current_data[1];
+		var _splice	= array_create(array_length(current_data[2]));
 		
-		var _splice		= array_create(array_length(current_data[2]));
 		for( var i = 0, n = array_length(current_data[2]); i < n; i++ )
 			_splice[i] = round(current_data[2][i]);
 			
@@ -202,5 +204,10 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		surface_reset_shader();
 		
 		return _outSurf;
+	}
+
+	static getPreviewValues = function() { 
+		if(isUsingTool("Preview Original")) return inputs[0].getValue();
+		return outputs[0].getValue(); 
 	}
 }

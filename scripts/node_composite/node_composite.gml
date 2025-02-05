@@ -472,6 +472,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	overlay_w = 0;
 	overlay_h = 0;
 	
+	draw_transforms = [];
+	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		PROCESSOR_OVERLAY_CHECK
 		
@@ -756,6 +758,19 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 	}
 	
+	static drawOverlayTransform = function(_node) { 
+		var _df  = array_safe_get(draw_transforms, preview_index, noone);
+		if(_df == noone) return noone;
+		
+		var _amo = getInputAmount();
+		for( var i = 0; i < _amo; i++ ) {
+			if(_node == inputs[input_fix_len + i * data_length].getNodeFrom())
+				return _df[i];
+		}
+		
+		return noone;
+	}
+	
 	static step = function() {
 		var _dim_type = getSingleValue(1);
 		inputs[2].setVisible(_dim_type == COMPOSE_OUTPUT_SCALING.constant);
@@ -763,7 +778,6 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	static processData = function(_outData, _data, _output_index, _array_index) {
 		var _outSurf  = _outData[0];
-		
 		if(getInputAmount() == 0) return _outData;
 		
 		var _pad	  = _data[0];
@@ -773,6 +787,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var cDep	  = attrDepth();
 		
 		if(!is_surface(base)) return _outData;
+		draw_transforms[_array_index] = noone;
 		
 		#region dimension 
 			var ww = 0, hh = 0;
@@ -814,6 +829,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var bg        = 0;
 		var _bg       = 0;
 		var _atlas    = [];
+		var _trans    = array_create(imageAmo, noone);
 		
 		blend_temp_surface = temp_surface[2];
 		
@@ -841,6 +857,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var _d0 = point_rotate(cx - _sw / 2, cy - _sh / 2, cx, cy, _rot);
 			
 			array_push(_atlas, new SurfaceAtlas(_s, _d0[0], _d0[1], _rot, _sca[0], _sca[1]));
+			_trans[i] = [ _d0[0], _d0[1], _sca[0], _sca[1], _rot ];
 			
 			surface_set_shader(temp_surface[_bg], sh_sample, true, BLEND.over);
 				draw_surface_blend_ext(temp_surface[!_bg], _s, _d0[0], _d0[1], _sca[0], _sca[1], _rot, c_white, _alp, _bld, true);
@@ -858,6 +875,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		_outData[0] = _outSurf;
 		_outData[1] = _atlas;
 		_outData[2] = [ww, hh];
+		draw_transforms[_array_index] = _trans;
 		
 		return _outData;
 	}

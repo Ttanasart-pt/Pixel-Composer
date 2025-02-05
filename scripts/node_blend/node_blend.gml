@@ -98,6 +98,8 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	drag_mx  = 0;
 	drag_my  = 0;
 	
+	fg_transforms = [];
+	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _surf = outputs[0].getValue();
 		if(is_array(_surf)) _surf = array_safe_get_fast(_surf, preview_index);
@@ -150,6 +152,12 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			}
 		} else 
 			draw_rectangle(_rx, _ry, _rx + _rw, _ry + _rh, true);
+	}
+	
+	static drawOverlayTransform = function(_node) { 
+		if(_node == inputs[1].getNodeFrom())
+			return array_safe_get(fg_transforms, preview_index, noone);
+		return noone;
 	}
 	
 	static processData_prebatch  = function() {
@@ -225,6 +233,7 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		
 		var _backDraw = temp_surface[0];
 		var _foreDraw = temp_surface[1];
+		fg_transforms[_array_index] = [ 0, 0, 1 ];
 		
 		surface_set_shader(_backDraw, noone,, BLEND.over);
 			draw_surface_safe(_back);
@@ -264,6 +273,7 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 					draw_surface_safe(_fore, px - fw / 2, py - fh / 2);
 				surface_reset_shader();
 				
+				fg_transforms[_array_index] = [ px - fw / 2, py - fh / 2, 1, 1, 0 ];
 				_backDraw = _back;
 			}
 			

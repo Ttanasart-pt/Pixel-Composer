@@ -76,9 +76,9 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	attribute_surface_depth();
 	attribute_interpolation();
 	
-	vel       = 0;
-	prev_pos  = [ 0, 0 ];
-	prev_data = noone;
+	vel        = 0;
+	prev_pos   = [ 0, 0 ];
+	prev_data  = noone;
 	
 	static getDimension = function(arr = 0) {
 		var _surf		= getSingleValue(0, arr);
@@ -607,4 +607,12 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			draw_set_alpha(1);
 		}
 	}
+
+	static drawOverlayTransform = function(_node) { 
+		if(_node != inputs[0].getNodeFrom()) return noone;
+		
+		var _tr = array_safe_get(prev_data, preview_index, noone);
+		return _tr == noone? noone : [ _tr[0][0], _tr[0][1], _tr[2][0], _tr[2][1], _tr[1] ];
+	}
+	
 }

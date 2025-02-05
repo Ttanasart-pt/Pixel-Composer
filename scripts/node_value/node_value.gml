@@ -1767,6 +1767,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return true;
 	}
 	
+	static getNodeFrom = function() { return value_from != noone? value_from.node : noone; }
+	
 	static removeFrom = function(_remove_list = true) {
 		run_in(2, function() /*=>*/ { updateColor(getValue()); });
 		
