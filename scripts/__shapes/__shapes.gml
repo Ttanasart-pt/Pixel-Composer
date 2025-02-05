@@ -8,7 +8,7 @@ enum SHAPE_TYPE {
 
 function SHAPE_rectangle(_sca) {
 	var triangles = [
-						[ new __vec2(-_sca[0], -_sca[1]), new __vec2( _sca[0], -_sca[1]), new __vec2(-_sca[0],  _sca[1]), c_white ],
+						[ new __vec2(-_sca[0], -_sca[1]), new __vec2(-_sca[0],  _sca[1]), new __vec2( _sca[0], -_sca[1]), c_white ],
 						[ new __vec2( _sca[0], -_sca[1]), new __vec2(-_sca[0],  _sca[1]), new __vec2( _sca[0],  _sca[1]), c_white ],
 					];
 	var segment = [ new __vec2(-_sca[0], -_sca[1]), new __vec2( _sca[0], -_sca[1]), 
@@ -71,7 +71,7 @@ function SHAPE_star(_sca, data = {}) {
 		
 		var inx = lengthdir_x(inner / 2, (i - 0.5) / prec * 360) * _sca[0] * 2;
 		var iny = lengthdir_y(inner / 2, (i - 0.5) / prec * 360) * _sca[1] * 2;
-		array_push(triangles, [ new __vec2(0, 0), new __vec2(otx, oty), new __vec2(inx, iny), c_white ]);
+		array_push(triangles, [ new __vec2(0, 0), new __vec2(inx, iny), new __vec2(otx, oty), c_white ]);
 		
 		array_push(segment, new __vec2(inx, iny));
 		array_push(segment, new __vec2(otx, oty));
@@ -93,8 +93,8 @@ function SHAPE_capsule(_sca, data = {}) {
 	array_push(segment, new __vec2(-_sca[0] + _sca[1], _sca[1]), new __vec2( _sca[0] - hh, hh));
 	
 	var triangles = [
-		[ new __vec2(-_sca[0] + _sca[1], -_sca[1]), new __vec2( _sca[0] - hh, -hh),           new __vec2(-_sca[0] + _sca[1],  _sca[1]), c_white ],
-		[ new __vec2( _sca[0] - hh,      -hh),      new __vec2(-_sca[0] + _sca[1],  _sca[1]), new __vec2( _sca[0] - hh,       hh),      c_white ],
+		[ new __vec2(-_sca[0] + _sca[1], -_sca[1]), new __vec2(-_sca[0] + _sca[1], _sca[1]), new __vec2(_sca[0] - hh, -hh), c_white ],
+		[ new __vec2(_sca[0] - hh, -hh), new __vec2(-_sca[0] + _sca[1], _sca[1]), new __vec2(_sca[0] - hh, hh),             c_white ],
 	];
 	shapes[0] = { type: SHAPE_TYPE.rectangle, triangles: triangles };
 	
@@ -108,7 +108,7 @@ function SHAPE_capsule(_sca, data = {}) {
 		ny = cy + lengthdir_y(_sca[1], na);
 		
 		if(i) {
-			array_push(triangles, [ new __vec2(cx, cy), new __vec2(ox, oy), new __vec2(nx, ny), c_white ]);
+			array_push(triangles, [ new __vec2(cx, cy), new __vec2(nx, ny), new __vec2(ox, oy), c_white ]);
 			array_push(segment, new __vec2(ox, oy));
 		}
 		array_push(segment, new __vec2(nx, ny));
@@ -223,8 +223,8 @@ function SHAPE_gear(_sca, data = {}) {
 			var tx1 = nx1 + lengthdir_x(teth, (i + 0.5 + teethT) / prec * 360) * _sca[0] * 2;
 			var ty1 = ny1 + lengthdir_y(teth, (i + 0.5 + teethT) / prec * 360) * _sca[1] * 2;
 			
-			array_push(triangles, [ new __vec2(tx0, ty0), new __vec2(nx0, ny0), new __vec2(nx1, ny1), c_white ]);
-			array_push(triangles, [ new __vec2(tx0, ty0), new __vec2(nx1, ny1), new __vec2(tx1, ty1), c_white ]);
+			array_push(triangles, [ new __vec2(tx0, ty0), new __vec2(nx1, ny1), new __vec2(nx0, ny0), c_white ]);
+			array_push(triangles, [ new __vec2(tx0, ty0), new __vec2(tx1, ty1), new __vec2(nx1, ny1), c_white ]);
 			
 			array_push(segment, new __vec2(tx0, ty0));
 			array_push(segment, new __vec2(tx1, ty1));
@@ -246,28 +246,28 @@ function SHAPE_cross(_sca, data = {}) {
 	var side      = min(_sca[0], _sca[1]) * inner;
 	
 	array_push(triangles,
-		[ new __vec2(-side, -side), new __vec2( side, -side), new __vec2(-side, side), c_white ],
+		[ new __vec2(-side, -side), new __vec2(-side, side), new __vec2( side, -side), c_white ],
 		[ new __vec2( side, -side), new __vec2(-side,  side), new __vec2( side, side), c_white ],
 	);
 	
 	array_push(triangles, //top
 		[ new __vec2(-side, -side), new __vec2( side,    -side), new __vec2(-side, -_sca[1]), c_white ],
-		[ new __vec2( side, -side), new __vec2(-side, -_sca[1]), new __vec2( side, -_sca[1]), c_white ],
+		[ new __vec2( side, -side), new __vec2( side, -_sca[1]), new __vec2(-side, -_sca[1]), c_white ],
 	);
 	
 	array_push(triangles, //bottom
 		[ new __vec2(-side, _sca[1]), new __vec2( side, _sca[1]), new __vec2(-side, side), c_white ],
-		[ new __vec2( side, _sca[1]), new __vec2(-side,    side), new __vec2( side, side), c_white ],
+		[ new __vec2( side, _sca[1]), new __vec2( side, side), new __vec2(-side,    side), c_white ],
 	);
 	
 	array_push(triangles, //left
 		[ new __vec2(   -side, -side), new __vec2(-_sca[0], -side), new __vec2(-side,    side), c_white ],
-		[ new __vec2(-_sca[0], -side), new __vec2(-side,     side), new __vec2(-_sca[0], side), c_white ],
+		[ new __vec2(-_sca[0], -side), new __vec2(-_sca[0], side), new __vec2(-side,     side), c_white ],
 	);
 	
 	array_push(triangles, //right
 		[ new __vec2(_sca[0], -side), new __vec2( side,   -side), new __vec2(_sca[0], side), c_white ],
-		[ new __vec2(   side, -side), new __vec2(_sca[0],  side), new __vec2(   side, side), c_white ],
+		[ new __vec2(   side, -side), new __vec2(   side, side), new __vec2(_sca[0],  side), c_white ],
 	);
 	
 	array_push(segment, new __vec2(-side,    -side),   new __vec2(-side,    -_sca[1]), new __vec2( side, -_sca[1]), new __vec2(side, -side) );

@@ -1407,7 +1407,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static getNodeChildList = function(_node) {
 		if(__getNodeChildList_cacheId != project.nodeTopoID) 
 			__getNodeChildList_cache = {};
-			
+		
 		if(struct_has(__getNodeChildList_cache, _node)) return __getNodeChildList_cache[$ _node];
 		
 		var _ind_self = array_find(project.nodeTopo, self);
@@ -1419,6 +1419,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(_reach == false) _arr = noone;
 		
 		__getNodeChildList_cache[$ _node] = _arr;
+		__getNodeChildList_cacheId = project.nodeTopoID;
 		return _arr;
 	}
 	

@@ -1,6 +1,7 @@
 function Mesh() constructor {
 	triangles = [];
 	center    = [ 0, 0 ];
+	bbox      = [ 0, 0, 1, 1 ];
 	
 	static getRandomPoint = function(seed) {
 		random_set_seed(seed);
@@ -41,11 +42,11 @@ function Mesh() constructor {
 		return false;
 	}
 	
-	static mergePath = function() {
+	static mergePath = function(_conn = true) {
 		if(array_length(triangles) == 0) return [];
 		
 		var segments	= [];
-		var pointsPairs = ds_map_create();
+		var pointsPairs = {};
 		
 		for( var i = 0, n = array_length(triangles); i < n; i++ ) {
 			var t = triangles[i];
@@ -73,28 +74,27 @@ function Mesh() constructor {
 			}
 		}
 		
+		if(!_conn) return segments;
+		
 		for( var i = 0, n = array_length(segments); i < n; i++ ) {
-			var s0 = string(segments[i][0]);
-			var s1 = string(segments[i][1]);
-			
-			if(!ds_map_exists(pointsPairs, s0)) pointsPairs[? s0] = [];
-			if(!ds_map_exists(pointsPairs, s1)) pointsPairs[? s1] = [];
-			
-			array_push(pointsPairs[? s0], segments[i][1]);
-			array_push(pointsPairs[? s1], segments[i][0]);
+			var _s = segments[i];
+			pointsPairs[$ _s[0]] = _s[1];
+			pointsPairs[$ _s[1]] = _s[0];
 		}
 		
 		var path = [ segments[0][0], segments[0][1] ];
+		var indx = 1;
 		
 		for( var i = 0, n = array_length(segments); i < n; i++ ) {
-			var end_point  = path[array_length(path) - 1];
-	        var next_point = array_pop(pointsPairs[? string(end_point) ]);
+			var last_point = path[indx];
+	        var next_point = pointsPairs[$ last_point];
+			if(next_point == undefined) break;
 			
-			array_remove(pointsPairs[? string(next_point)], end_point);
+			struct_remove(pointsPairs, last_point);
 			array_push(path, next_point);
+			indx++;
 		}
 		
-		ds_map_destroy(pointsPairs);
 		return path;
 	}
 	
@@ -115,8 +115,13 @@ function Mesh() constructor {
 	}
 	
 	static calcCoM = function() {
-		var _ax = 0, _ay = 0;
-		var _p  = 0;
+		var _ax   = 0;
+		var _ay   = 0;
+		var _p    = 0;
+		var _minx =  infinity;
+		var _miny =  infinity;
+		var _maxx = -infinity;
+		var _maxy = -infinity;
 		
 		for( var i = 0, n = array_length(triangles); i < n; i++ ) {
 			var _tr = triangles[i];
@@ -124,6 +129,11 @@ function Mesh() constructor {
 			for( var j = 0; j < 3; j++ ) {
 				_ax += _tr[j].x; 
 				_ay += _tr[j].y;
+				
+				_minx = min(_minx, _tr[j].x);
+				_miny = min(_miny, _tr[j].y);
+				_maxx = max(_maxx, _tr[j].x);
+				_maxy = max(_maxy, _tr[j].y);
 				_p++;
 			}
 		}
@@ -132,6 +142,7 @@ function Mesh() constructor {
 		if(_p == 0) return;
 		
 		center = [ _ax / _p, _ay / _p ];
+		bbox   = [ _minx, _miny, _maxx, _maxy ];
 	}
 	
 	static serialize   = function()  { return ""; }

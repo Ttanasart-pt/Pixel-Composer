@@ -482,6 +482,7 @@
             "Node_3D_Mesh_Terrain",
             "Node_3D_Mesh_Wall_Builder",
             "Node_3D_Mesh_Extrude",
+            "Node_3D_Mesh_Extrude_Mesh",
             "Node_3D_Mesh_Path_Extrude",
             { "label": "/Exporters" },
             "Node_3D_Mesh_Export",

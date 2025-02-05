@@ -217,7 +217,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			if(edit_cursor_sel != noone && i >= _crmin && i < _crmax) {
 				draw_set_color(COLORS.widget_text_highlight);
 				draw_set_alpha(0.5);
-				draw_rectangle(_tbx0, _tby0, _tbx1, _tby1, false);
+				draw_rectangle(_tbx0, _tby0, _tbx1 - 1, _tby1 - 1, false);
 				draw_set_alpha(1);
 			}
 			
@@ -290,6 +290,13 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				} else if(KEYBOARD_PRESSED == vk_delete) {
 					_currStr    = string_delete(_currStr, edit_cursor + 1, 1);
 					_edit       = true;
+				
+				} else if(KEYBOARD_PRESSED == vk_enter) {
+					_currStr    = string_insert("\n", _currStr, edit_cursor + 1);
+					_edit       = true;
+					
+					edit_cursor    += 1;
+					KEYBOARD_STRING = "";
 					
 				} else if(KEYBOARD_STRING != "") {
 					_currStr    = string_insert(KEYBOARD_STRING, _currStr, edit_cursor + 1);
