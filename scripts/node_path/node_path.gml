@@ -568,6 +568,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			
 			var _dis = point_distance(weight_drag_sx, weight_drag_sy, _mmx, _mmy) / _s;
 			attributes.weight[weight_drag][1] = _dis;
+			if(path_loop && weight_drag == 0) attributes.weight[array_length(attributes.weight) - 1][1] = _dis;
 			
 			updateLength();
 			
@@ -1136,8 +1137,8 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			for( var i = 0; i <= _amo; i++ ) {
 				if(i < _amo && i == _wt[0]) {
 					_wi++;
-					_wf = _w[_wi + 0];
-					_wt = _w[_wi + 1];
+					_wf = _w[(_wi + 0) % _wamo];
+					_wt = _w[(_wi + 1) % _wamo];
 				}
 				
 				weightRatio[i] = lerp(_wf[1], _wt[1], lerp_smooth((i - _wf[0]) / (_wt[0] - _wf[0])));

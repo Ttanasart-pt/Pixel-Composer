@@ -471,7 +471,7 @@ void main() {
 	else if(shape == 18) { d = sdGear(          coord, inner, teeth, teethSize, teethAngle, corner);                        	                          }
 	else if(shape == 19) { d = pow(pow(abs(coord.x), squircle_factor) + pow(abs(coord.y), squircle_factor), 1. / squircle_factor) - 1.;                   }
 	else if(shape == 17) { d = sdArrow(  v_vTexcoord, p1, p2, thickness, arrow, arrow_head);                               	                              }
-	else if(shape == 20) { d = sdSegment(v_vTexcoord, p1, p2) - thickness;                                                                                }
+	else if(shape == 20) { d = sdSegment(center + coordUni, p1, p2) - thickness;                                                                          }
 	else if(shape == 21) { d = sdHalf(v_vTexcoord, p1, -rotation);                                                                                        }
 	
 	float cc, color = 0.;

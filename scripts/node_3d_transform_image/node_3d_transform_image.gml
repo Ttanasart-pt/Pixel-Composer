@@ -129,18 +129,19 @@ function Node_3D_Transform_Image(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, 
 	static getPreviewObjects = function() { return [ camObj, objectPreview ]; }
 	static getPreviewValues  = function() { return outputs[1].getValue(); }
 	
-	static getGraphPreviewSurface = function() { return noone; }
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover = false, _focus = false) {
-		if(!previewable) return;
+	static getGraphPreviewSurface = function() { return getSingleValue(1, preview_index, true); }
+	
+	// static onDrawNode = function(xx, yy, _mx, _my, _s, _hover = false, _focus = false) {
+	// 	if(!previewable) return;
 		
-		var _surf = outputs[1].getValue();
-		if(is_array(_surf)) _surf = array_safe_get_fast(_surf, preview_index);
-		if(!is_surface(_surf)) return;
+	// 	var _surf = outputs[1].getValue();
+	// 	if(is_array(_surf)) _surf = array_safe_get_fast(_surf, preview_index);
+	// 	if(!is_surface(_surf)) return;
 		
-		var bbox = drawGetBbox(xx, yy, _s);
-		var aa   = 0.5 + 0.5 * renderActive;
-		if(!isHighlightingInGraph()) aa *= 0.25;
+	// 	var bbox = drawGetBbox(xx, yy, _s);
+	// 	var aa   = 0.5 + 0.5 * renderActive;
+	// 	if(!isHighlightingInGraph()) aa *= 0.25;
 		
-		draw_surface_bbox(_surf, bbox,, aa);
-	}
+	// 	draw_surface_bbox(_surf, bbox,, aa);
+	// }
 }

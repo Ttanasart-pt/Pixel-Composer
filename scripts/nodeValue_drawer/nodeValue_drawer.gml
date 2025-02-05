@@ -24,6 +24,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		var lb_y      = yy + lb_h / 2;
 		
 		var _name     = jun.getName();
+		var dispName  = _name;
 		var wid       = jun.editWidget;
 		
 		if(_ID != undefined) {
@@ -33,7 +34,9 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			wid = _map[$ _ID];
 		}
 		
-		var cHov      = false;
+		if(global_var) dispName = string_title(string_replace_all(_name, "_", " "));
+		
+		var cHov = false;
 		
 		switch(instanceof(wid)) {
 			case "textArea"        : 
@@ -124,7 +127,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		}
 		
 		draw_set_text(_font, fa_left, fa_center, cc);
-		var lb_w = ui(40 + 16) + string_width(_name);
+		var lb_w = ui(!global_var * 20 + 20 + 16) + string_width(dispName);
 		
 		if(jun.color != -1) {
 			draw_sprite_ext(THEME.timeline_color, 1, lb_x + ui(8), lb_y, 1, 1, 0, jun.color, 1);
@@ -134,10 +137,10 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		
 		if(!jun.active) {
 			draw_set_text(_font, fa_left, fa_center, COLORS._main_text_sub_inner);
-			draw_text_add(lb_x, lb_y - ui(2), _name);
+			draw_text_add(lb_x, lb_y - ui(2), dispName);
 			
 			if(jun.active_tooltip != "") {
-				var tx = xx + ui(40) + string_width(_name) + ui(16);
+				var tx = xx + ui(40) + string_width(dispName) + ui(16);
 				var ty = lb_y - ui(1);
 				
 				if(_hover && point_in_circle(_m[0], _m[1], tx, ty, ui(10))) {
@@ -154,10 +157,10 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 	#endregion
 	
 	#region draw name
-		draw_text_add(lb_x, lb_y, _name);
+		draw_text_add(lb_x, lb_y, dispName);
 				
 		if(jun.tooltip != "") { // Tooltip
-			var tx = xx + ui(40) + string_width(_name) + ui(16);
+			var tx = xx + ui(40) + string_width(dispName) + ui(16);
 			var ty = lb_y - ui(1);
 					
 			if(_hover && point_in_circle(_m[0], _m[1], tx, ty, ui(10))) {

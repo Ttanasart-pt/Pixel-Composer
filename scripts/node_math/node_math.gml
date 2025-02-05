@@ -103,11 +103,11 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	use_mod = 0;
 	use_deg = false;
 	
-	static onValueUpdate = function(index = 0) {
+	static onValueUpdate = function(index = noone) {
 		if(index != 0) return;
 		
 		var _type = inputs[0].getValue();
-		setDisplayName(global.node_math_names[_type]);
+		setDisplayName(array_safe_get(global.node_math_names, _type, ""));
 	}
 	
 	static _eval = function(a, b, c = 0) {

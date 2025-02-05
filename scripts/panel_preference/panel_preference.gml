@@ -48,7 +48,7 @@ function Panel_Preference() : PanelContent() constructor {
     				sp_page.hover_content = true;
     				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, yl, ww, hg, CDEF.main_white, 1);
     				
-    				if(i != page_current && mouse_click(mb_left, pFOCUS)) {
+    				if(i != page_current && mouse_press(mb_left, pFOCUS)) {
     					page_current = i;
     					sp_pref.setScroll(0);
     				}

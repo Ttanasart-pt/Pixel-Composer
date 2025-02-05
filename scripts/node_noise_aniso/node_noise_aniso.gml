@@ -1,7 +1,7 @@
 #region
 	FN_NODE_CONTEXT_INVOKE {
 		addHotkey("Node_Noise_Aniso", "Render Mode > Toggle",  "M", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[9].setValue((_n.inputs[9].getValue() + 1) % 2); });
-		addHotkey("Node_Noise_Aniso", "Rotation > Rotate CCW", "R", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[3].setValue((_n.inputs[3].getValue() + 90) % 360); });
+		addHotkey("Node_Noise_Aniso", "Rotation > Rotate CCW", "R", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[4].setValue((_n.inputs[4].getValue() + 90) % 360); });
 	});
 #endregion
 
