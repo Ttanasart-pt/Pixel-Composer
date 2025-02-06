@@ -15,7 +15,7 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		.setDisplay(VALUE_DISPLAY.slider)
 		.rejectArray();
 	
-	newOutput(0, nodeValue_Output("Path", self, VALUE_TYPE.pathnode, self));
+	newOutput(0, nodeValue_Output("Path", self, VALUE_TYPE.pathnode, noone));
 	
 	function _blendedPath() constructor {
 		cached_pos = {};

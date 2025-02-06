@@ -31,7 +31,7 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	newInput(10, nodeValue_Enum_Button("Post Fn", self, 0, [ "None", "Absolute", "Clamp" ]));
 	
-	newOutput(0, nodeValue_Output("Path", self, VALUE_TYPE.pathnode, self));
+	newOutput(0, nodeValue_Output("Path", self, VALUE_TYPE.pathnode, noone));
 	
 	input_display_list = [ 5, 
 		["Path",	 true], 0,
@@ -67,11 +67,11 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			
 			draw_set_color(COLORS._main_icon);
 			var _amo = getLineCount();
+			var ox, oy, nx, ny;
+			
 			for( var i = 0; i < _amo; i++ ) {
 				var _len = getLength(i);
 				var _stp = 1 / clamp(_len * _s, 1, 64);
-				
-				var ox, oy, nx, ny;
 				
 				for( var j = 0; j < 1; j += _stp ) {
 					p = getPointRatio(j, i, p);
@@ -104,17 +104,18 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		}
 		
 		static getAccuLength = function(ind = 0) {
-			var _fre  = fre; _fre = max(_fre[0], _fre[1]);
-			var _amo  = amp; _amo = max(_amo[0], _amo[1]);
+			var _fre = fre; _fre = max(_fre[0], _fre[1]);
+			var _amo = amp; _amo = max(_amo[0], _amo[1]);
 			
-			    _fre  = max(1, abs(_fre));
-			var _len  = is_path? curr_path.getAccuLength(ind) : [];
-			var _mul  = _fre * sqrt(abs(_amo) + 1 / _fre);
+			    _fre = max(1, abs(_fre));
+			var _len = is_path? curr_path.getAccuLength(ind) : [];
+			var _mul = _fre * sqrt(abs(_amo) + 1 / _fre);
+			var _lln = array_create(array_length(_len));
 			
 			for( var i = 0, n = array_length(_len); i < n; i++ ) 
-				_len[i] *= _mul;
+				_lln[i] = _len[i] * _mul;
 			
-			return _len; 
+			return _lln; 
 		}
 			
 		static getPointRatio = function(_rat, ind = 0, out = undefined) {
@@ -135,20 +136,21 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var _amp  = amp;
 			var _shf  = shf;
 			var _seed = seed + ind;
-						
+			
 			var _wig  = wig;
 			var _wigs = wigs;
 			var _wigf = wigf;
 			
-			_amp   = random_range_seed(_amp[0], _amp[1], _seed + ind);
-			_shf   = random_range_seed(_shf[0], _shf[1], _seed + 1 + ind);
-			_fre   = random_range_seed(_fre[0], _fre[1], _seed + 2 + ind);
+			_amp = random_range_seed(_amp[0], _amp[1], _seed + ind);
+			_shf = random_range_seed(_shf[0], _shf[1], _seed + ind + 1);
+			_fre = random_range_seed(_fre[0], _fre[1], _seed + ind + 2);
 			
 			_fre = max(0.01, abs(_fre));
 			var _t = _shf + _rat * _fre;
 			
 			if(_wig) {
-				var _w = wiggle(_wigs[0], _wigs[1], _wigf, _t, _seed);
+				var _wt = _shf + _rat * _fre;
+				var _w  = wiggle(_wigs[0], _wigs[1], _wigf, frac(_wt), _seed);
 				_amp += _w;
 			}
 			
@@ -203,7 +205,7 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		_outData.amp  = _data[2];
 		_outData.shf  = _data[3];
 		_outData.mode = _data[4];
-		_outData.seed = _data[5];
+		_outData.seed = _data[5] + _array_index;
 		
 		_outData.wig  = _data[6];
 		_outData.wigs = _data[7];

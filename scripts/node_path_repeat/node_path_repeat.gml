@@ -17,7 +17,7 @@ function Node_Path_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput(5, nodeValue_Vec2("Anchor", self, [ 0, 0 ]))
 		.setUnitRef(function() /*=>*/ {return DEF_SURF}, VALUE_UNIT.reference);
 		
-	newOutput(0, nodeValue_Output("Path", self, VALUE_TYPE.pathnode, self));
+	newOutput(0, nodeValue_Output("Path", self, VALUE_TYPE.pathnode, noone));
 	
 	input_display_list = [ 
 		["Paths",     false], 0, 1, 
@@ -28,7 +28,7 @@ function Node_Path_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _path = getSingleValue(0);
-		if(_path && struct_has(_path, "drawOverlay")) _path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		if(struct_has(_path, "drawOverlay")) _path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 		
 		var _pos = getSingleValue(2);
 		var _px = _x + _pos[0] * _s;

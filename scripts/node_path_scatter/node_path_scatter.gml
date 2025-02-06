@@ -31,7 +31,7 @@ function Node_Path_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	newInput(12, nodeValue_Enum_Scroll("Origin", self,  0 , [ "Individual", "First", "Zero" ]));
 	
-	newOutput(0, nodeValue_Output("Path", self, VALUE_TYPE.pathnode, self));
+	newOutput(0, nodeValue_Output("Path", self, VALUE_TYPE.pathnode, noone));
 	
 	input_display_list = [ 5, 
 		["Paths",     false], 0, 1, 10, 9, 

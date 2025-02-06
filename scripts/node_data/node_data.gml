@@ -2687,7 +2687,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			if(struct_has(attributes, "color_depth")) attributes.color_depth += (!array_empty(inputs) && inputs[0].type == VALUE_TYPE.surface)? 1 : 2;
 			if(struct_has(attributes, "interpolate")) attributes.interpolate++;
 			if(struct_has(attributes, "oversample"))  attributes.oversample++;
+			
 		}
+		
+		if(struct_has(attributes, "color_depth") && !global.SURFACE_FORMAT_SUPP[attributes[$ "color_depth"]])
+			attributes.color_depth = PREFERENCES.node_default_depth;
 	}
 	
 	static processDeserialize = function() /*=>*/ {}

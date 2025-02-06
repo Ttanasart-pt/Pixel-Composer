@@ -16,7 +16,7 @@
 	];
 	
 	function __initSurfaceFormat() {
-		var surface_format = [
+		var _surface_format = [
 			-1,
 			-2,
 			surface_rgba4unorm,
@@ -42,13 +42,15 @@
 	
 		global.SURFACE_FORMAT		= [];
 		global.SURFACE_FORMAT_NAME  = []; 
+		global.SURFACE_FORMAT_SUPP  = []; 
 	
-		for( var i = 0, n = array_length(surface_format); i < n; i++ ) {
-			var _form = surface_format[i];
+		for( var i = 0, n = array_length(_surface_format); i < n; i++ ) {
+			var _form = _surface_format[i];
 			var _supp = _form < 0 || surface_format_is_supported(_form);
 			
 			array_push(global.SURFACE_FORMAT, _form);
 			array_push(global.SURFACE_FORMAT_NAME, surface_format_name[i]);
+			array_push(global.SURFACE_FORMAT_SUPP, _supp);
 			
 			if(!_supp) {
 				log_message("WARNING", $"Surface format [{surface_format_name[i].name}] not supported in this device.");
