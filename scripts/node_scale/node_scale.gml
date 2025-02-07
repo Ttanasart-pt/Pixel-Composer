@@ -36,10 +36,12 @@ function Node_Scale(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	static step = function() {
 		var _surf = getSingleValue(0);
-		
 		var _atlas = is_instanceof(_surf, SurfaceAtlas);
 		inputs[5].setVisible(_atlas);
 	}
+	
+	draw_transforms = [];
+	static drawOverlayTransform = function(_node) { return array_safe_get(draw_transforms, preview_index, noone); }
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var surf  = _data[0];
@@ -58,16 +60,19 @@ function Node_Scale(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var _surf = isAtlas? _outSurf.getSurface() : _outSurf;
 		
 		var ww, hh, scx = 1, scy = 1;
+		var _sw = surface_get_width_safe(surf);
+		var _sh = surface_get_height_safe(surf);
+		
 		switch(mode) {
 			case 0 :
 				scx = scale;
 				scy = scale;
-				ww	= scale * surface_get_width_safe(surf);
-				hh	= scale * surface_get_height_safe(surf);
+				ww	= scale * _sw;
+				hh	= scale * _sh;
 				break;
 			case 1 : 
-				scx = targ[0] / surface_get_width_safe(surf);
-				scy = targ[1] / surface_get_height_safe(surf);
+				scx = targ[0] / _sw;
+				scy = targ[1] / _sh;
 				ww	= targ[0];
 				hh	= targ[1];
 				break;
@@ -79,6 +84,8 @@ function Node_Scale(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		shader_set_interpolation(_data[0]);
 		draw_surface_stretched_safe(_data[0], 0, 0, ww, hh);
 		surface_reset_shader();
+		
+		draw_transforms[_array_index] = [ 0, 0, ww * _sw, hh * _sh, 0];
 		
 		if(isAtlas) {
 			if(_atlS) {

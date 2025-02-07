@@ -3205,6 +3205,7 @@
     {"id":{"name":"s_gizmo","path":"sprites/s_gizmo/s_gizmo.yy",},},
     {"id":{"name":"s_gmlayer","path":"sprites/s_gmlayer/s_gmlayer.yy",},},
     {"id":{"name":"s_gmroom","path":"sprites/s_gmroom/s_gmroom.yy",},},
+    {"id":{"name":"s_icon_16_white","path":"sprites/s_icon_16_white/s_icon_16_white.yy",},},
     {"id":{"name":"s_icon_24","path":"sprites/s_icon_24/s_icon_24.yy",},},
     {"id":{"name":"s_icon_256","path":"sprites/s_icon_256/s_icon_256.yy",},},
     {"id":{"name":"s_icon_32","path":"sprites/s_icon_32/s_icon_32.yy",},},

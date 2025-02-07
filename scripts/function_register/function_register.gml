@@ -66,13 +66,11 @@ function functionObject(_context, _name, _key, _mod, _action, _param = noone) co
 	FUNCTIONS[$ fnName]     = self;
 	CMD_FUNCTIONS[$ fnName] = { action: _action, args: [] };
 	
-	static setArg      = function(_args = []) { 
-		CMD_FUNCTIONS[$ fnName] = { action, args: _args };
-		return self;
-	}
+	static setArg = function(_args = []) { CMD_FUNCTIONS[$ fnName] = { action, args: _args }; return self; }
 	
 	static setMenuAlt = function(_name, _id, _spr = noone, shelf = false) { 
 		menu = menuItem(__txt(_name), action, _spr, [ context, name ]);
+		menu.hoykeyObject = hotkey;
 		if(shelf) menu.setIsShelf();
 		MENU_ITEMS[$ _id] = menu;
 		
@@ -81,16 +79,14 @@ function functionObject(_context, _name, _key, _mod, _action, _param = noone) co
 	
 	static setMenu = function(_id, _spr = noone, shelf = false) { 
 		menu = menuItem(__txt(name), action, _spr, [ context, name ]);
+		menu.hoykeyObject = hotkey;
 		if(shelf) menu.setIsShelf();
 		MENU_ITEMS[$ _id] = menu;
 		
 		return self;
 	}
 	
-	static hidePalette = function() { 
-		hide = true; 
-		return self; 
-	}
+	static hidePalette = function() { hide = true; return self; }
 }
 
 function callStatusFunction(name) {

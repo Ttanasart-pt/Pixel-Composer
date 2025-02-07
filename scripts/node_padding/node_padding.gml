@@ -38,6 +38,9 @@ function Node_Padding(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	attribute_surface_depth();
 	
+	draw_transforms = [];
+	static drawOverlayTransform = function(_node) { return array_safe_get(draw_transforms, preview_index, noone); }
+	
 	static step = function() {
 		var mode = getInputData(5);
 		
@@ -85,6 +88,9 @@ function Node_Padding(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					BLEND_NORMAL
 				surface_reset_target();
 			}
+			
+			draw_transforms[_array_index] = [ padding[2], padding[1], 1, 1, 0];
+			
 		} else if(mode == 1) { 
 			_outSurf = surface_verify(_outSurf, dim[0], dim[1], cDep);
 			
@@ -113,6 +119,8 @@ function Node_Padding(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			draw_surface_safe(surf, sx, sy);
 			BLEND_NORMAL
 			surface_reset_target();
+			
+			draw_transforms[_array_index] = [ sx, sy, 1, 1, 0 ];
 		}
 		
 		return _outSurf;

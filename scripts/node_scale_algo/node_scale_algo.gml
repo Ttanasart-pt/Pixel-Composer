@@ -48,6 +48,9 @@ function Node_Scale_Algo(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	attribute_surface_depth();
 	
+	draw_transforms = [];
+	static drawOverlayTransform = function(_node) { return array_safe_get(draw_transforms, preview_index, noone); }
+	
 	static step = function() {
 		var _surf = getSingleValue(0);
 		var _type = getSingleValue(1);
@@ -116,6 +119,8 @@ function Node_Scale_Algo(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			draw_surface_ext_safe(_data[0], 0, 0, sc, sc, 0, c_white, 1);
 		surface_reset_shader();
 		gpu_set_texfilter(false);
+		
+		draw_transforms[_array_index] = [ 0, 0, sc, sc, 0 ];
 		
 		if(isAtlas) {
 			if(_atlS) {

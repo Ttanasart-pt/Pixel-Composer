@@ -111,7 +111,7 @@ function hotkeyObject(_context, _name, _key, _mod = MOD_KEY.none, _action = noon
 	dKey	= _key;
 	dModi	= _mod;
 	
-	static full_name    = function() /*=>*/ {return string_to_var(context == ""? $"global.{name}" : $"{context}.{name}")};
+	static full_name    = function() /*=>*/ {return string_to_var(context == 0? $"global.{name}" : $"{context}.{name}")};
 	static get_key_name = function() /*=>*/ {return key_get_name(key, modi)};
 	
 	static serialize   = function( ) /*=>*/ { return { context, name, key, modi } }

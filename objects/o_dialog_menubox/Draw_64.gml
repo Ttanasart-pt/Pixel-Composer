@@ -14,10 +14,9 @@ DIALOG_WINCLEAR1
 		item_sel_submenu = noone;
 	}
 	
-	var to_del = noone;
-	
 	draw_sprite_stretched(THEME.box_r2_clr, 0, dialog_x, dialog_y, dialog_w, dialog_h);
 	
+	var to_del = noone;
 	for( var i = 0, n = array_length(menu); i < n; i++ ) {
 		var _menuItem = menu[i];
 		
@@ -29,7 +28,7 @@ DIALOG_WINCLEAR1
 			continue;
 		}
 		
-		if(is_instanceof(_menuItem, MenuItem) && _menuItem.shiftMenu != noone && key_mod_press(SHIFT))
+		if(is(_menuItem, MenuItem) && _menuItem.shiftMenu != noone && key_mod_press(SHIFT))
 			_menuItem = _menuItem.shiftMenu;
 			
 		if(_menuItem == -1) {
@@ -43,10 +42,14 @@ DIALOG_WINCLEAR1
 		}
 		
 		var label = _menuItem.name;
-		var _h    = is_instanceof(_menuItem, MenuItemGroup)? hght * 2 : hght;
+		var _h    = is(_menuItem, MenuItemGroup)? hght * 2 : hght;
 		var cc    = struct_try_get(_menuItem, "color", c_white);
-		var _key  = _menuItem.hotkey != noone? find_hotkey(_menuItem.hotkey[0], _menuItem.hotkey[1]) : noone;
-		_menuItem.hoykeyObject = _key;
+		var _key  = _menuItem.hoykeyObject;
+		
+		if(_key == noone && _menuItem.hotkey != noone) {
+			_key = find_hotkey(_menuItem.hotkey[0], _menuItem.hotkey[1]);
+			_menuItem.hoykeyObject = _key;
+		}
 		
 		//print($"{i}: {sHOVER} && {point_in_rectangle(mouse_mx, mouse_my, dialog_x, yy + 1, dialog_x + dialog_w, yy + _h - 1)}")
 		if(sHOVER && point_in_rectangle(mouse_mx, mouse_my, dialog_x, yy + 1, dialog_x + dialog_w, yy + _h - 1)) {
@@ -56,16 +59,11 @@ DIALOG_WINCLEAR1
 		}
 		
 		if(selecting == i) {
-			var _hc = cc == c_white? COLORS.dialog_menubox_highlight : cc;
-			var _ha = cc == c_white? 0.75 : 0.8;
+			if(_menuItem.active && cc == c_white) cc = COLORS.dialog_menubox_highlight;
 			
-			if(_menuItem.active)
-				draw_sprite_stretched_ext(THEME.textbox, 3, dialog_x, yy, dialog_w, _h, _hc);
-			
-			if(_hovering_ch && is_instanceof(_menuItem, MenuItem)) {
-				if(_menuItem.active && _lclick) {
+			if(_hovering_ch) {
+				if(is(_menuItem, MenuItem) && _menuItem.active && _lclick) {
 					var _par = _menuItem.params;
-					var _p   = _par != noone;
 					
 					if(_menuItem.isShelf) {
 						FOCUS_CONTENT = context;
@@ -77,6 +75,7 @@ DIALOG_WINCLEAR1
 						
 						if(submenuIt == _menuItem) {
 							submenuIt = noone;
+							
 						} else {
 							var _dat = {
 								_x:      dialog_x,
@@ -97,16 +96,14 @@ DIALOG_WINCLEAR1
 					} else {
 						FOCUS_CONTENT = context;
 						
-						if(_p) _menuItem.func(_par);
-						else   _menuItem.func();
+						if(_par != noone) _menuItem.func(_par);
+						else              _menuItem.func();
 						
 						to_del = remove_parents? o_dialog_menubox : self;
 					}
 				}
-			}
-			
-			if(_hovering_ch && (is_instanceof(_menuItem, MenuItem) || is_instanceof(_menuItem, MenuItemGroup))) {
-				if(_key && _rclick) {
+				
+				if((is(_menuItem, MenuItem) || is(_menuItem, MenuItemGroup)) && (_key && _rclick)) {
 					var _dat = {
 						_x:      mouse_mx + ui(4),
 						x:       mouse_mx + ui(4),
@@ -128,16 +125,17 @@ DIALOG_WINCLEAR1
 					
 					item_sel_submenu = submenuCall(_dat, context_menu_settings);
 					item_sel_submenu.remove_parents = false;
+					
 				}
 			}
-				
-		} else if(cc != c_white)
-			draw_sprite_stretched_ext(THEME.textbox, 3, dialog_x, yy, dialog_w, _h, cc);
+		} 
+		
+		if(cc != c_white) draw_sprite_stretched_ext(THEME.textbox, 3, dialog_x, yy, dialog_w, _h, cc);
 		
 		var _hx = dialog_x + dialog_w - ui(16);
 		var _hy = yy + hght / 2 + ui(2);
 			
-		if(is_instanceof(_menuItem, MenuItemGroup)) {
+		if(is(_menuItem, MenuItemGroup)) {
 			var _submenus = _menuItem.group;
 			draw_set_text(font, fa_center, fa_center, COLORS._main_text_sub);
 			draw_set_alpha(_menuItem.active * 0.75 + 0.25);
@@ -282,8 +280,11 @@ DIALOG_WINCLEAR1
 	
 	draw_sprite_stretched(THEME.box_r2_clr, 1, dialog_x, dialog_y, dialog_w, dialog_h);
 	
-	if(mouse_init_inside && (mouse_release(mb_left) || mouse_release(mb_right))) mouse_init_inside = false;
-	if(mouse_release(mb_right)) mouse_init_r_pressed = false;
+	if(mouse_init_inside && (mouse_release(mb_left) || mouse_release(mb_right))) 
+		mouse_init_inside = false;
+		
+	if(mouse_release(mb_right)) 
+		mouse_init_r_pressed = false;
 #endregion
 
 #region debug

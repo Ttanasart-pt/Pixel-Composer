@@ -7,33 +7,33 @@ event_inherited();
 	mouse_init_inside	 = false;
 	mouse_init_r_pressed = mouse_click(mb_right);
 	selecting   		 = -1;
+	parentPanel          = noone; 
+	context              = noone;
 	
-	parentPanel = noone; 
-	menu_id     = "";
-	alarm[0]    = -1;
-	menu        = 1;
-	font        = f_p2;
-	hght        = line_get_height(font, 10);
-	tooltips    = [];
-	show_icon   = false;
-	context     = noone;
-	submenu     = noone;
-	submenuIt   = noone;
+	menu_id   = "";
+	menu      = 1;
+	tooltips  = [];
+	show_icon = false;
+	font      = f_p2;
+	hght      = line_get_height(font, 10);
 	
-	_hovering_ch    = true;
+	submenu   = noone;
+	submenuIt = noone;
+	
+	_hovering_ch = true;
 	init_press_l = MOUSE_POOL.lpress;
 	
+	alarm[0] = -1;
 	setFocus(self.id);
-
 #endregion
 
 #region menu
 	item_sel_submenu = noone;
-	remove_parents = true;
-	selecting_menu = noone;
-	hk_editing     = noone;
+	remove_parents   = true;
+	selecting_menu   = noone;
+	hk_editing       = noone;
 	
-	function setMenu(_menu, align = fa_left) {
+	function setMenu(_menu, _align = fa_left) {
 		with(_p_dialog) { if(on_top) continue; other.depth = min(depth - 1, other.depth); }
 		
 		title    = menu_id;
@@ -50,7 +50,7 @@ event_inherited();
 		tooltips = [];
 		
 		draw_set_text(font, fa_center, fa_center, COLORS._main_text);
-		for(var i = 0; i < array_length(menu); i++) {
+		for( var i = 0, n = array_length(menu); i < n; i++ ) {
 			var _menuItem = menu[i];
 			
 			if(_menuItem == -1) {
@@ -67,7 +67,7 @@ event_inherited();
 			
 			draw_set_font(font);
 			var ww   = string_width(_menuItem.name) + ui(64);
-			var _key = _menuItem.hotkey != noone? find_hotkey(_menuItem.hotkey[0], _menuItem.hotkey[1]) : noone;
+			var _key = _menuItem.hoykeyObject;
 			
 			draw_set_font(font);
 			var _kw = _key? string_width(key_get_name(_key.key, _key.modi)) + ui(16) : 0;
@@ -95,7 +95,7 @@ event_inherited();
 		
 		dialog_y = min(dialog_y, _maxh - dialog_h - 2);
 		
-		switch(align) {
+		switch(_align) {
 			case fa_left:	dialog_x = round(min(dialog_x, _maxw - dialog_w - 2)); break;
 			case fa_center: dialog_x = round(min(dialog_x - dialog_w / 2, _maxw - dialog_w - 2)); break;
 			case fa_right:	dialog_x = round(max(dialog_x - dialog_w, 2)); break;
@@ -121,11 +121,6 @@ event_inherited();
 			dialog_y = 0;
 		}
 	}
-#endregion
-
-#region focus
-	function getContextPanel() {
-		if(is(context, PanelContent)) return context.panel;
-		return context;
-	}
+	
+	function getContextPanel() { return is(context, PanelContent)? context.panel : context; }
 #endregion

@@ -91,7 +91,7 @@ function Node_Path_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _g
 		if(is_path) {
 			var _nodeFrom = inputs[in_d3d + 2].value_from.node;
 			if(struct_has(_nodeFrom, "drawOverlay3D"))
-				_nodeFrom.drawOverlay3D(false, params, _mx, _my, _snx, _sny, _panel);
+				_nodeFrom.drawOverlay3D(active, params, _mx, _my, _snx, _sny, _panel);
 		}
 		
 		var preObj = getPreviewObjects();

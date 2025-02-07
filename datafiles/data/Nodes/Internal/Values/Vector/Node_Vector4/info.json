@@ -1,5 +1,5 @@
 {
-  "tooltip":"Genearte vector composite of 4 members.",
+  "tooltip":"Generate vector composite of 4 members.",
   "spr":"s_node_vector4",
   "baseNode":"Node_Vector4",
   "io":[

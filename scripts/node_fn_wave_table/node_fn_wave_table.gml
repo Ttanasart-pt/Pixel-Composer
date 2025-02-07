@@ -26,10 +26,10 @@ function Node_Fn_WaveTable(_x, _y, _group = noone) : Node_Fn(_x, _y, _group) con
 	
 	wavetable_selecting = noone;
 	wavetable_menu = [
-		new MenuItem("Sine",     function() /*=>*/ { wavetable_apply(WAVETABLE_FN.sine);   }, [ s_inspector_wavetable, 0 ]),
-		new MenuItem("Square",   function() /*=>*/ { wavetable_apply(WAVETABLE_FN.square); }, [ s_inspector_wavetable, 1 ]),
-		new MenuItem("Triangle", function() /*=>*/ { wavetable_apply(WAVETABLE_FN.tri);    }, [ s_inspector_wavetable, 2 ]),
-		new MenuItem("Sawtooth", function() /*=>*/ { wavetable_apply(WAVETABLE_FN.saw);    }, [ s_inspector_wavetable, 3 ]),
+		new MenuItem("Sine",     function() /*=>*/ {return wavetable_apply(WAVETABLE_FN.sine)}   , [ s_inspector_wavetable, 0 ]),
+		new MenuItem("Square",   function() /*=>*/ {return wavetable_apply(WAVETABLE_FN.square)} , [ s_inspector_wavetable, 1 ]),
+		new MenuItem("Triangle", function() /*=>*/ {return wavetable_apply(WAVETABLE_FN.tri)}    , [ s_inspector_wavetable, 3 ]),
+		new MenuItem("Sawtooth", function() /*=>*/ {return wavetable_apply(WAVETABLE_FN.saw)}    , [ s_inspector_wavetable, 2 ]),
 	];
 	
 	wavetable_editor = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus, _panel = noone) {
@@ -207,8 +207,8 @@ function Node_Fn_WaveTable(_x, _y, _group = noone) : Node_Fn(_x, _y, _group) con
 		switch(attributes.wavetable[_ind]) {
 			case WAVETABLE_FN.sine   : return sin(_x * pi * 2);
 			case WAVETABLE_FN.square : return (1 - floor(frac(_x) * 2))   * 2 - 1;
-			case WAVETABLE_FN.tri    : return frac(_x + 0.5)              * 2 - 1;
-			case WAVETABLE_FN.saw    : return abs(frac(_x + .5) - .5) * 2 * 2 - 1;
+			case WAVETABLE_FN.tri    : return abs(frac(_x + .5) - .5) * 2 * 2 - 1;
+			case WAVETABLE_FN.saw    : return frac(_x + 0.5)              * 2 - 1;
 		}
 		
 		return 0;

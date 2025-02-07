@@ -777,6 +777,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	}
 	
 	static processData = function(_outData, _data, _output_index, _array_index) {
+		draw_transforms[_array_index] = noone;
+		
 		var _outSurf  = _outData[0];
 		if(getInputAmount() == 0) return _outData;
 		
@@ -787,7 +789,6 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var cDep	  = attrDepth();
 		
 		if(!is_surface(base)) return _outData;
-		draw_transforms[_array_index] = noone;
 		
 		#region dimension 
 			var ww = 0, hh = 0;

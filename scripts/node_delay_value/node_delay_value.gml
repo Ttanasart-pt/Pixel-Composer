@@ -7,7 +7,7 @@
 function Node_Delay_Value(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Delay Value";
 	is_simulation = true;
-	setDimension(96, 32 + 24);
+	setDimension(96, 48);
 	
 	newInput(0, nodeValue("Value", self, CONNECT_TYPE.input, VALUE_TYPE.any, noone))
 	    .setVisible(true, true);

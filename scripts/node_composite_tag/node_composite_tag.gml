@@ -22,7 +22,22 @@ function Node_Composite_Tag(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	setDynamicInput(1, true, VALUE_TYPE.dynaSurface);
 	
+	draw_transforms = [];
+	static drawOverlayTransform = function(_node) { 
+		var _df = array_safe_get(draw_transforms, preview_index, noone);
+		if(_df == noone) return noone;
+		
+		var _amo = getInputAmount();
+		for( var i = 0; i < _amo; i++ ) {
+			if(_node == inputs[input_fix_len + i].getNodeFrom())
+				return _df[i];
+		}
+		
+		return noone;
+	}
+	
 	static processData = function(_outSurf, _data, _output_index, _array_index = 0) { 
+	    draw_transforms[_array_index] = noone;
 	    
 	    var _amo = getInputAmount();
 	    var _dim = _data[0];
@@ -78,7 +93,8 @@ function Node_Composite_Tag(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
         var _cx = _dim[0] / 2 - (minx + maxx) / 2;
         var _cy = _dim[1] / 2 - (miny + maxy) / 2;
         
-        _outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
+        _outSurf   = surface_verify(_outSurf, _dim[0], _dim[1]);
+        var _trans = array_create(_amo, noone);
         
         surface_set_shader(_outSurf);
             for( var i = 0; i < _amo; i++ ) {
@@ -102,8 +118,11 @@ function Node_Composite_Tag(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
                 _oy /= _tagArrAmo;
                 
                 draw_surface(_surface, _cx - _ox, _cy - _oy);
+                _trans[i] = [ _cx - _ox, _cy - _oy, 1, 1, 0 ];
             }
         surface_reset_shader();
+        
+        draw_transforms[_array_index] = _trans;
 
         return _outSurf;
 	}

@@ -329,6 +329,9 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		
 	}
 	
+	// draw_transforms = [];
+	// static drawOverlayTransform = function(_node) { return array_safe_get(draw_transforms, preview_index, noone); }
+	
 	static onValueUpdate = function(index) {
 		if(index != 3) return;
 			
@@ -361,6 +364,7 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			
 			surface_set_shader(_outSurf, noone);
 				draw_surface_safe(_inSurf, -_crop[2], -_crop[1]);
+				draw_transforms[_array_index] = [-_crop[2], -_crop[1], 1, 1, 0];
 			surface_reset_shader();
 			
 		} else if(_fit == 0) {
@@ -374,6 +378,7 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			
 			surface_set_shader(_outSurf, noone);
 				draw_surface_safe(_inSurf, -_x0, -_y0);
+				draw_transforms[_array_index] = [-_x0, -_y0, 1, 1, 0];
 			surface_reset_shader();
 			
 		} else {
@@ -400,6 +405,7 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			
 			surface_set_shader(_outSurf, noone);
 				draw_surface_safe(_inSurf, -_x0, -_y0);
+				draw_transforms[_array_index] = [-_x0, -_y0, 1, 1, 0];
 			surface_reset_shader();
 			
 		}

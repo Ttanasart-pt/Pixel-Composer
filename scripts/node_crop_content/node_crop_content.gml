@@ -33,6 +33,9 @@ function Node_Crop_Content(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	temp_surface = [ 0, 0 ];
 	
+	draw_transforms = [];
+	static drawOverlayTransform = function(_node) { return array_safe_get(draw_transforms, preview_index, noone); }
+	
 	static update = function() {
 		var _inSurf	= getInputData(0);
 		var _active	= getInputData(1);
@@ -58,10 +61,10 @@ function Node_Crop_Content(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		if(!_arr) _inSurf = [ _inSurf ];
 		var _amo = array_length(_inSurf);
 		
-		var minx = array_create(_amo);
-		var miny = array_create(_amo);
-		var maxx = array_create(_amo);
-		var maxy = array_create(_amo);
+		var minx = array_create(_amo,  infinity);
+		var miny = array_create(_amo,  infinity);
+		var maxx = array_create(_amo, -infinity);
+		var maxy = array_create(_amo, -infinity);
 		var cDep = attrDepth();
 		
 		for( var j = 0; j < _amo; j++ ) {
@@ -101,9 +104,10 @@ function Node_Crop_Content(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			if(_array) {
 				minx[j] = _minx;
 				miny[j] = _miny;
-		
+				
 				maxx[j] = _maxx;
 				maxy[j] = _maxy;
+				
 			} else {
 				minx[0] = min(minx[0], _minx);
 				miny[0] = min(miny[0], _miny);
@@ -113,11 +117,13 @@ function Node_Crop_Content(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			}
 		}
 		
+		print(minx, miny);
+		
 		var res   = [];
 		var crop  = [];
 		var atlas = [];
 		
-		for( var i = 0, n = _amo; i < n; i++ ) {
+		for( var i = 0; i < _amo; i++ ) {
 			var _surf = _inSurf[i];
 			var _ind  = _array == 0? 0 : i;
 			
@@ -128,11 +134,15 @@ function Node_Crop_Content(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			res[i]  = surface_create_valid(resDim[DIMENSION.width], resDim[DIMENSION.height], cDep);
 			crop[i] = [ surface_get_width_safe(_surf) - maxx[_ind] - 1, miny[_ind], minx[_ind], surface_get_height_safe(_surf) - maxy[_ind] - 1 ];
 			
+			var _sx = -minx[_ind] + _padd[PADDING.left];
+			var _sy = -miny[_ind] + _padd[PADDING.top];
+			
 			surface_set_shader(res[i], noone);
-				draw_surface_safe(_surf, -minx[_ind] + _padd[PADDING.left], -miny[_ind] + _padd[PADDING.top]);
+				draw_surface_safe(_surf, _sx, _sy);
 			surface_reset_shader();
 			
 			atlas[i] = new SurfaceAtlas(res[i], minx[_ind], miny[_ind]);
+			draw_transforms[i] = [_sx, _sy, 1, 1, 0];
 		}
 		
 		if(!_arr) {

@@ -322,8 +322,8 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 					draw_line(_ax0, _ay0, xx, yy);
 					draw_line(_ax1, _ay1, xx, yy);
 			
-					draw_sprite_colored(THEME.anchor_selector, 2, _ax0, _ay0);
-					draw_sprite_colored(THEME.anchor_selector, 2, _ax1, _ay1);
+					draw_circle_ui(_ax0, _ay0, 4, 0, COLORS._main_accent);
+					draw_circle_ui(_ax1, _ay1, 4, 0, COLORS._main_accent);
 				}
 				
 				draw_sprite_colored(THEME.anchor_selector, 0, xx, yy);
@@ -339,12 +339,12 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 					hover_type   = 0;
 					
 				} else if(cont && point_in_circle(_mx, _my, _ax0, _ay0, 8)) {
-					draw_sprite_colored(THEME.anchor_selector, 0, _ax0, _ay0);
+					draw_circle_ui(_ax0, _ay0, 6, 0, COLORS._main_accent);
 					anchor_hover = i;
 					hover_type   = 1;
 					
 				} else if(cont && point_in_circle(_mx, _my, _ax1, _ay1, 8)) {
-					draw_sprite_colored(THEME.anchor_selector, 0, _ax1, _ay1);
+					draw_circle_ui(_ax1, _ay1, 6, 0, COLORS._main_accent);
 					anchor_hover =  i;
 					hover_type   = -1;
 				}
