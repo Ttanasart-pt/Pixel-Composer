@@ -1,4 +1,9 @@
 #region key map
+	globalvar HOTKEY_MOD, HOTKEY_BLOCK, HOTKEY_ACT;
+	HOTKEY_MOD   = 0;
+	HOTKEY_BLOCK = false;
+	HOTKEY_ACT   = false;
+	
 	enum MOD_KEY {
 		none   = 0,
 		ctrl   = 1 << 0,
@@ -167,7 +172,7 @@
 	
 #endregion
 
-function key_press(_key, _mod = MOD_KEY.none) {
+function key_press(_key, _mod = MOD_KEY.none, _hold = false) {
 	if(WIDGET_CURRENT) return false;
 	if(_mod == MOD_KEY.none && _key == noone) return false;
 	
@@ -178,7 +183,7 @@ function key_press(_key, _mod = MOD_KEY.none) {
 		case KEY_GROUP.numeric : _keyPress = keyboard_key >= ord("0") && keyboard_key <= ord("9") break;
 		
 		case noone : _keyPress = true; break;
-		default :    _keyPress = keyboard_check_pressed(_key); break;
+		default :    _keyPress = _hold? keyboard_check(_key) : keyboard_check_pressed(_key); break;
 	}
 	
 	return _keyPress && _modPress;

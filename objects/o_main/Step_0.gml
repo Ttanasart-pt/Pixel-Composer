@@ -24,30 +24,37 @@ if(!LOADING && PROJECT.active && !PROJECT.safeMode) { //node step
 }
 
 #region hotkey
+	
 	if(!HOTKEY_BLOCK) {
+		var _action = false;
 		
-		if(struct_has(HOTKEYS, 0)) {
+		if(!HOTKEY_ACT && struct_has(HOTKEYS, 0)) {
 			var l = HOTKEYS[$ 0];
 			for(var i = 0, n = ds_list_size(l); i < n; i++) {
 				var hotkey = l[| i];
 				if(hotkey.key == 0 && hotkey.modi == MOD_KEY.none) continue;
 			
-				if(key_press(hotkey.key, hotkey.modi))
+				if(key_press(hotkey.key, hotkey.modi, true)) {
 					hotkey.action();
+					_action |= hotkey.key != noone;
+				}
 			}
 		}
 		
-		if(struct_has(HOTKEYS, FOCUS_STR)) {
+		if(!HOTKEY_ACT && struct_has(HOTKEYS, FOCUS_STR)) {
 			var list = HOTKEYS[$ FOCUS_STR];
 			for(var i = 0, n = ds_list_size(list); i < n; i++) {
 				var hotkey = list[| i];
 				if(hotkey.key == 0 && hotkey.modi == MOD_KEY.none) continue;
 				
-				if(key_press(hotkey.key, hotkey.modi))
+				if(key_press(hotkey.key, hotkey.modi, true)) {
 					hotkey.action();
+					_action |= hotkey.key != noone;
+				}
 			}
 		}
 		
+		HOTKEY_ACT |= _action;
 	}
 	
 	HOTKEY_BLOCK = false;

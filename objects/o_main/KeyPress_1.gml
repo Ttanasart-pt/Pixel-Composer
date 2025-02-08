@@ -7,6 +7,7 @@ if(kb_hkey <= 0 && PREFERENCES.keyboard_check_sweep) for(var i = 2; i < 320; i++
 
 kb_time = 0;
 kb_hold = false;
+
 KEYBOARD_PRESSED = kb_hkey;
 
 if(!PREFERENCES.keyboard_capture_raw) {
