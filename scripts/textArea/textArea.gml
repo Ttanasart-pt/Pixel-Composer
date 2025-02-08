@@ -48,16 +48,14 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 	
 	syntax_highlight = true;
 	
-	undo_current_text = "";
-	undo_delay = 0;
+	undoable   = true;
 	undo_stack = ds_stack_create();
 	redo_stack = ds_stack_create();
 	
-	text_surface = noone;
-	
-	text_y     = 0;
-	text_y_to  = 0;
-	text_y_max = 0;
+	text_surface   = noone;
+	text_y         = 0;
+	text_y_to      = 0;
+	text_y_max     = 0;
 	text_scrolling = false;
 	text_scroll_sy = 0;
 	text_scroll_my = 0;
@@ -87,8 +85,8 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		WIDGET_CURRENT_SCROLL = parent;
 		parentFocus();
 		
-		_input_text		= _current_text;
-		_last_value     = _current_text;
+		_input_text = _current_text;
+		_last_value = _current_text;
 		
 		cursor_pos_x = 0;
 		cursor_pos_y = 0;
@@ -103,8 +101,11 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		keyboard_lastkey = -1;
 					
 		cut_line();
-		undo_delay = 10;
 		
+		ds_stack_clear(undo_stack);
+		ds_stack_clear(redo_stack);
+		ds_stack_push(undo_stack, [_input_text, cursor, cursor_select]);
+				
 		if(PEN_USE) keyboard_virtual_show(kbv_type_default, kbv_returnkey_default, kbv_autocapitalize_none, true);
 	}
 	
@@ -390,35 +391,39 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 	static editText = function() {
 		var _input_text_pre = _input_text;
 		var modified = false;
-		var undoed = true;
+		var undoing  = false;
 		
 		#region text editor
 			if(key_mod_press(CTRL) && keyboard_check_pressed(ord("A"))) {
-				cursor_select	= 0;
-				cursor			= string_length(_input_text);
+				cursor        = string_length(_input_text);
+				cursor_select = 0;
+				
 			} else if(key_mod_press(CTRL) && !key_mod_press(SHIFT) && keyboard_check_pressed(ord("Z"))) {			// UNDO
+				while(!ds_stack_empty(undo_stack) && _input_text == ds_stack_top(undo_stack)[0])
+					ds_stack_pop(undo_stack);
+				
 				if(!ds_stack_empty(undo_stack)) {
-					ds_stack_push(redo_stack, _input_text);
-					_input_text = ds_stack_pop(undo_stack);
-					undo_current_text = _input_text;
+					ds_stack_push(redo_stack, [_input_text, cursor, cursor_select]);
+					var _pop = ds_stack_pop(undo_stack);
+					_input_text   = _pop[0];
+					cursor        = _pop[1];
+					cursor_select = _pop[2];
 					cut_line();
-					move_cursor(0);
 					
-					modified   = true;
-					undoed     = false;
-					undo_delay = 10;
+					undoing  = true;
+					modified = true;
 				}
 			} else if(key_mod_press(CTRL) && key_mod_press(SHIFT) && keyboard_check_pressed(ord("Z"))) {			// REDO
 				if(!ds_stack_empty(redo_stack)) {
-					ds_stack_push(undo_stack, _input_text);
-					_input_text = ds_stack_pop(redo_stack);
-					undo_current_text = _input_text;
+					ds_stack_push(undo_stack, [_input_text, cursor, cursor_select]);
+					var _pop = ds_stack_pop(redo_stack);
+					_input_text   = _pop[0];
+					cursor        = _pop[1];
+					cursor_select = _pop[2];
 					cut_line();
-					move_cursor(0);
 					
-					modified   = true;
-					undoed     = false;
-					undo_delay = 10;
+					undoing  = true;
+					modified = true;
 				}
 			} else if(key_mod_press(CTRL) && (keyboard_check_pressed(ord("C")) || keyboard_check_pressed(ord("X")))) {
 				if(cursor_select != -1) {
@@ -445,6 +450,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 						_input_text		= str_before + ch + str_after;
 						cut_line();
 						move_cursor(string_length(ch));
+						
 					} else {
 						var minc = min(cursor, cursor_select);
 						var maxc = max(cursor, cursor_select);
@@ -457,7 +463,8 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 						cursor = minc + string_length(ch);
 					}
 					modified   = true;
-					undo_delay = 10;
+					ds_stack_push(undo_stack, [_input_text, cursor, cursor_select]);
+					
 				} else if(KEYBOARD_PRESSED == vk_backspace) {
 					if(cursor_select == -1) {
 						var str_before, str_after;
@@ -468,7 +475,6 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 								var ch = string_char_at(_input_text, _c);
 								if(breakCharacter(ch)) break;
 								_c--;
-								undo_delay++;
 							}
 							
 							str_before	= string_copy(_input_text, 1, _c);
@@ -477,7 +483,6 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 						} else {
 							str_before	= string_copy(_input_text, 1, cursor - 1);
 							str_after	= string_copy(_input_text, cursor + 1, string_length(_input_text) - cursor);
-							undo_delay++;
 						}
 						
 						_input_text = str_before + str_after;
@@ -492,12 +497,12 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 						cursor = minc + 1;
 						_input_text	= str_before + str_after;
 						cut_line();
-						undo_delay += maxc - minc;
 					}
 					
 					cursor_select = -1;
 					move_cursor(-1);
 					modified = true;
+					
 				} else if(KEYBOARD_PRESSED == vk_delete || (keyboard_check_pressed(ord("X")) && key_mod_press(CTRL) && cursor_select != -1)) {
 					if(cursor_select == -1) {
 						var str_before	= string_copy(_input_text, 1, cursor);
@@ -505,7 +510,6 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 						
 						_input_text		= str_before + str_after;
 						cut_line();
-						undo_delay++;
 					} else {
 						var minc = min(cursor, cursor_select);
 						var maxc = max(cursor, cursor_select);
@@ -516,7 +520,6 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 						cursor = minc;
 						_input_text	= str_before + str_after;
 						cut_line();
-						undo_delay += maxc - minc;
 					}
 					
 					cursor_select = -1;
@@ -533,7 +536,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 						
 						cut_line();
 						move_cursor(string_length(ch));
-						undo_delay++;
+						
 					} else {
 						var minc = min(cursor, cursor_select);
 						var maxc = max(cursor, cursor_select);
@@ -544,13 +547,11 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 						_input_text		= str_before + ch + str_after;
 						cut_line();
 						cursor = minc + string_length(ch);
-						undo_delay += maxc - minc;
 					}
 					
-					if(ch == " ") undo_delay = 10;
-					
+					if(string_pos(" ", ch)) ds_stack_push(undo_stack, [_input_text, cursor, cursor_select]);
 					cursor_select = -1;
-					modified = true;
+					modified      = true;
 				}
 			}
 			
@@ -559,21 +560,10 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		#endregion
 		
 		if(modified) {
-			if(undoed && undo_delay >= 10) {
-				ds_stack_push(undo_stack, undo_current_text);
-				ds_stack_clear(redo_stack);
-				
-				undo_current_text = _input_text_pre;
-				undo_delay = 0;
-			}
-			onModified();
-		}
-		
-		if(auto_update && (keyboard_check_pressed(vk_anykey) || modified))
-			apply();
+			undoable = !undoing;
+			typing   = 100;
 			
-		if(modified) {
-			typing = 100;
+			onModified();
 			
 			if(IS_PATREON) {
 				shake_amount = PREFERENCES.textbox_shake;
@@ -581,6 +571,9 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 			}
 		}
 		
+		if(auto_update && (keyboard_check_pressed(vk_anykey) || modified))
+			apply();
+			
 		if(KEYBOARD_PRESSED == vk_left)  onKey(vk_left);
 		if(KEYBOARD_PRESSED == vk_right) onKey(vk_right);
 		if(KEYBOARD_PRESSED == vk_up)    onKey(vk_up);
@@ -805,6 +798,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		
 		if(format == TEXT_AREA_FORMAT._default) {
 			line_width = _w - ui(16);
+			
 		} else if(isCodeFormat()) {
 			line_width = _w - ui(16 + code_line_width * show_line_number);
 			tx += ui(code_line_width * show_line_number);
@@ -856,7 +850,12 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 			
 			draw_set_text(font, fa_left, fa_top, COLORS._main_text);
 			editText();
-		
+			
+			if(!typing && undoable && (ds_stack_empty(undo_stack) || ds_stack_top(undo_stack)[0] != _input_text)) {
+				ds_stack_push(undo_stack, [_input_text, cursor, cursor_select]);
+				ds_stack_clear(redo_stack);
+			}
+			
 			var msx = _m[0] - _x;
 			var msy = _m[1] - _y;
 			
@@ -947,10 +946,11 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 				
 				if(cursor_pos_y != 0 && cursor_pos_x != 0) {
 					draw_set_color(COLORS._main_text_accent);
-					draw_set_alpha((typing || current_time % (PREFERENCES.caret_blink * 2000) > PREFERENCES.caret_blink * 1000) * 0.75 + 0.25);
+					draw_set_alpha((typing || current_time % (PREFERENCES.caret_blink * 2000) > PREFERENCES.caret_blink * 1000) * 0.8 + 0.2);
 					draw_line_width(cursor_pos_x, cursor_pos_y, cursor_pos_x, cursor_pos_y + c_h, 2);
 					draw_set_alpha(1);
 				}
+				
 			surface_reset_shader();
 		
 			BLEND_ALPHA

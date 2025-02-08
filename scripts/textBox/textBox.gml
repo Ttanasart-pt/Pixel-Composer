@@ -82,6 +82,10 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	shake_amount = 0;
 	onDeactivate = -1;
 	
+	undoable   = true;
+	undo_stack = ds_stack_create();
+	redo_stack = ds_stack_create();
+	
 	context_menu = [
 		menuItem("Copy",  function() /*=>*/ { clipboard_set_text(_current_text); }, THEME.copy),
 		menuItem("Paste", function() /*=>*/ { 
@@ -105,9 +109,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		}, THEME.paste),
 	];
 	
-	static setOnRelease = function(release) { onRelease = release; return self; }
-	
-	static modifyValue = function(value) {
+	static modifyValue  = function(value) {
 		if(input == TEXTBOX_INPUT.number) {
 			if(use_range) value = clamp(value, range_min, range_max);
 		}
@@ -116,28 +118,22 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		else onModify(value, onModifyParam);
 	}
 	
-	static setSlide      = function(_slidable)          { slidable    = _slidable;    return self; }
-	static setSlideType  = function(_slide_int = false) { slide_int   = _slide_int;   return self; }
-	static setSlideStep  = function(_slide_step = 0)    { slide_snap  = _slide_step;  return self; }
-	static setSlideRange = function(_min = 0, _max = 1) { slide_range = [_min, _max]; return self; }
+	static setOnRelease  = function(_v)   /*=>*/ { onRelease   = _v; return self; }
+	static setSlide      = function(_v)   /*=>*/ { slidable    = _v; return self; }
+	static setSlideType  = function(_v=0) /*=>*/ { slide_int   = _v; return self; }
+	static setSlideStep  = function(_v=0) /*=>*/ { slide_snap  = _v; return self; }
+	static setSlideRange = function(_min = 0, _max = 1) /*=>*/ { slide_range = [_min, _max]; return self; }
+	static setRange      = function(_rng_min, _rng_max) /*=>*/ { use_range   = true; range_min = _rng_min; range_max = _rng_max; return self; }
 	
-	static setRange = function(_rng_min, _rng_max) {
-		use_range = true;
-		range_min = _rng_min;
-		range_max = _rng_max;
-		
-		return self;
-	}
-	
-	static setColor	    = function(color) 	    { self.color		= color;		return self; }
-	static setAlign	    = function(align) 	    { self.align		= align;		return self; }
-	static setHide		= function(hide)		{ self.hide 		= hide; 		return self; }
-	static setFont		= function(font)		{ self.font 		= font; 		return self; }
-	static setLabel 	= function(label)		{ self.label		= label;		return self; }
-	static setPrecision = function(precision)	{ self.precision	= precision;	return self; }
-	static setPadding	= function(padding) 	{ self.padding		= padding;		return self; }
-	static setEmpty 	= function()			{ no_empty			= false;		return self; }
-	static setAutoupdate = function()			{ auto_update		= true;			return self; }
+	static setColor      = function(_v) /*=>*/ { color       = _v;    return self; }
+	static setAlign      = function(_v) /*=>*/ { align       = _v;    return self; }
+	static setHide       = function(_v) /*=>*/ { hide        = _v;    return self; }
+	static setFont       = function(_v) /*=>*/ { font        = _v;    return self; }
+	static setLabel      = function(_v) /*=>*/ { label       = _v;    return self; }
+	static setPrecision  = function(_v) /*=>*/ { precision   = _v;    return self; }
+	static setPadding    = function(_v) /*=>*/ { padding     = _v;    return self; }
+	static setEmpty      = function(  ) /*=>*/ { no_empty    = false; return self; }
+	static setAutoupdate = function(  ) /*=>*/ { auto_update = true;  return self; }
 	
 	static activate = function(_def_str = _current_text) {
 		
@@ -156,6 +152,10 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		
 		KEYBOARD_STRING  = "";
 		keyboard_lastkey = -1;
+		
+		ds_stack_clear(undo_stack);
+		ds_stack_clear(redo_stack);
+		ds_stack_push(undo_stack, [_input_text, cursor, cursor_select]);
 		
 		if(PEN_USE) keyboard_virtual_show(input == TEXTBOX_INPUT.number? kbv_type_numbers : kbv_type_default, kbv_returnkey_default, kbv_autocapitalize_none, true);
 	}
@@ -247,26 +247,53 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	}
 	
 	static editText = function() {
-		var edited = false;
+		var minc     = min(cursor, cursor_select);
+		var maxc     = max(cursor, cursor_select);
+		var modified = false;
+		var undoing  = false;
 		
 		#region text editor
 			if(key_mod_press(CTRL) && keyboard_check_pressed(ord("A"))) {
-				cursor_select	= 0;
-				cursor			= string_length(_input_text);
-			} else if(key_mod_press(CTRL) && (keyboard_check_pressed(ord("C")) || keyboard_check_pressed(ord("X")))) {
-				if(cursor_select != -1) {
-					var minc = min(cursor, cursor_select);
-					var maxc = max(cursor, cursor_select);
-					clipboard_set_text(string_copy(_input_text, minc + 1, maxc - minc));
+				cursor        = string_length(_input_text);
+				cursor_select = 0;
+			
+			} else if(key_mod_press(CTRL) && !key_mod_press(SHIFT) && keyboard_check_pressed(ord("Z"))) {			// UNDO
+				while(!ds_stack_empty(undo_stack) && _input_text == ds_stack_top(undo_stack)[0])
+					ds_stack_pop(undo_stack);
+				
+				if(!ds_stack_empty(undo_stack)) {
+					ds_stack_push(redo_stack, [_input_text, cursor, cursor_select]);
+					var _pop = ds_stack_pop(undo_stack);
+					_input_text   = _pop[0];
+					cursor        = _pop[1];
+					cursor_select = _pop[2];
+					
+					undoing  = true;
+					modified = true;
 				}
+			} else if(key_mod_press(CTRL) && key_mod_press(SHIFT) && keyboard_check_pressed(ord("Z"))) {			// REDO
+				if(!ds_stack_empty(redo_stack)) {
+					ds_stack_push(undo_stack, [_input_text, cursor, cursor_select]);
+					var _pop = ds_stack_pop(redo_stack);
+					_input_text   = _pop[0];
+					cursor        = _pop[1];
+					cursor_select = _pop[2];
+					
+					undoing  = true;
+					modified = true;
+				}
+			} else if(key_mod_press(CTRL) && (keyboard_check_pressed(ord("C")) || keyboard_check_pressed(ord("X")))) {
+				if(cursor_select != -1)
+					clipboard_set_text(string_copy(_input_text, minc + 1, maxc - minc));
+			
 			} else {
 				if(key_mod_press(CTRL) && keyboard_check_pressed(ord("V"))) {
 					var _ctxt = clipboard_get_text();
 					    _ctxt = string_replace_all(_ctxt, "\t", "    ");
 					KEYBOARD_STRING = _ctxt;
-					edited = true;
+					modified        = true;
 				}
-					
+				
 				if(keyboard_check_pressed(vk_escape) || keyboard_check_pressed(vk_enter)) {
 				} else if(KEYBOARD_PRESSED == vk_backspace) {
 					if(cursor_select == -1) {
@@ -282,7 +309,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 							
 							str_before	= string_copy(_input_text, 1, _c);
 							str_after	= string_copy(_input_text, cursor + 1, string_length(_input_text) - cursor);
-							cursor = _c + 1;
+							cursor      = _c + 1;
+							
 						} else {
 							str_before	= string_copy(_input_text, 1, cursor - 1);
 							str_after	= string_copy(_input_text, cursor + 1, string_length(_input_text) - cursor);
@@ -290,9 +318,6 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 						
 						_input_text		= str_before + str_after;
 					} else {
-						var minc = min(cursor, cursor_select);
-						var maxc = max(cursor, cursor_select);
-						
 						var str_before	= string_copy(_input_text, 1, minc);
 						var str_after	= string_copy(_input_text, maxc + 1, string_length(_input_text) - maxc);
 						
@@ -300,8 +325,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 						_input_text		= str_before + str_after;
 					}
 					
-					edited = true;
-					cursor_select	= -1;
+					modified      = true;
+					cursor_select = -1;
 					move_cursor(-1);
 					
 				} else if(KEYBOARD_PRESSED == vk_delete || (keyboard_check_pressed(ord("X")) && key_mod_press(CTRL) && cursor_select != -1)) {
@@ -311,9 +336,6 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 						
 						_input_text		= str_before + str_after;
 					} else {
-						var minc = min(cursor, cursor_select);
-						var maxc = max(cursor, cursor_select);
-						
 						var str_before	= string_copy(_input_text, 1, minc);
 						var str_after	= string_copy(_input_text, maxc + 1, string_length(_input_text) - maxc);
 						
@@ -321,11 +343,11 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 						_input_text		= str_before + str_after;
 					}
 					
-					edited = true;
-					cursor_select	= -1;
+					modified      = true;
+					cursor_select = -1;
 					
 				} else if(KEYBOARD_STRING != "") {
-					var ch			= KEYBOARD_STRING;
+					var ch = KEYBOARD_STRING;
 					
 					if(cursor_select == -1) {
 						var str_before	= string_copy(_input_text, 1, cursor);
@@ -334,9 +356,6 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 						_input_text		= str_before + ch + str_after;
 						move_cursor(string_length(ch));
 					} else {
-						var minc = min(cursor, cursor_select);
-						var maxc = max(cursor, cursor_select);
-						
 						var str_before	= string_copy(_input_text, 1, minc);
 						var str_after	= string_copy(_input_text, maxc + 1, string_length(_input_text) - maxc);
 						
@@ -344,8 +363,9 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 						cursor = minc + string_length(ch);
 					}
 					
-					edited = true;
-					cursor_select	= -1;
+					if(string_pos(" ", ch)) ds_stack_push(undo_stack, [_input_text, cursor, cursor_select]);
+					modified      = true;
+					cursor_select = -1;
 				}
 			}
 			
@@ -353,8 +373,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			keyboard_lastkey = -1;
 		#endregion
 		
-		if(KEYBOARD_PRESSED = vk_left)  onKey(vk_left);
-		if(KEYBOARD_PRESSED = vk_right) onKey(vk_right);
+		if(KEYBOARD_PRESSED == vk_left)  onKey(vk_left);
+		if(KEYBOARD_PRESSED == vk_right) onKey(vk_right);
 		
 		if(input == TEXTBOX_INPUT.number) {
 			var _inc = 1;
@@ -365,8 +385,9 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			if(KEYBOARD_PRESSED == vk_down) { _input_text = string(toNumber(_input_text) - _inc); apply(); }
 		}
 		
-		if(edited) {
-			typing = 100;
+		if(modified) {
+			undoable = !undoing;
+			typing   = 100;
 			
 			if(IS_PATREON) {
 				shake_amount = PREFERENCES.textbox_shake;
@@ -378,16 +399,14 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			if(key_mod_press(SHIFT)) {
 				if(cursor_select == -1)
 					cursor_select = cursor;
-			} else 
-				cursor_select	= -1;
+			} else  cursor_select = -1;
 			move_cursor(-cursor);
 			
 		} else if(keyboard_check_pressed(vk_end)) {
 			if(key_mod_press(SHIFT)) {
 				if(cursor_select == -1)
 					cursor_select = cursor;
-			} else 
-				cursor_select	= -1;
+			} else  cursor_select = -1;
 			move_cursor(string_length(_input_text) - cursor);
 			
 		} else if(keyboard_check_pressed(vk_escape)) {
@@ -397,7 +416,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		} else if(keyboard_check_pressed(vk_enter)) {
 			deactivate();
 			
-		} else if(auto_update && (edited || keyboard_check_pressed(vk_anykey))) {
+		} else if(auto_update && (modified || keyboard_check_pressed(vk_anykey))) {
 			apply();
 		}
 	}
@@ -736,6 +755,11 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			
 			editText();
 			
+			if(!typing && undoable && (ds_stack_empty(undo_stack) || ds_stack_top(undo_stack)[0] != _input_text)) {
+				ds_stack_push(undo_stack, [_input_text, cursor, cursor_select]);
+				ds_stack_clear(redo_stack);
+			}
+			
 			#region multiplier
 				if(_w > ui(80) && input == TEXTBOX_INPUT.number) {
 					draw_set_alpha(0.5);
@@ -830,7 +854,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				BLEND_NORMAL
 				
 				draw_set_color(COLORS._main_text_accent);
-				draw_set_alpha((typing || current_time % (PREFERENCES.caret_blink * 2000) > PREFERENCES.caret_blink * 1000) * 0.75 + 0.25);
+				draw_set_alpha((typing || current_time % (PREFERENCES.caret_blink * 2000) > PREFERENCES.caret_blink * 1000) * 0.8 + 0.2);
 				draw_line_width(cursor_pos, c_y0, cursor_pos, c_y1, 2);
 				draw_set_alpha(1);
 				
