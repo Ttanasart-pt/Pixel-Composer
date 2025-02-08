@@ -388,14 +388,18 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	} run_in(1, function() /*=>*/ {return initTooltip});
 	
 	static setDisplayName = function(_name) {
-		renamed = true;
+		if(NOT_LOAD) recordAction(ACTION_TYPE.custom, function(data) { 
+			var _name = data.name;
+			data.name = display_name;
+			setDisplayName(_name);
+		}, { name : display_name, tooltip : $"Rename node" });
+		
+		renamed      = true;
 		display_name = _name;
 		internalName = string_replace_all(display_name, " ", "_");
 		refreshNodeMap();
 		
-		if(onSetDisplayName != noone)
-			onSetDisplayName();
-		
+		if(onSetDisplayName != noone) onSetDisplayName();
 		return self;
 	}
 	

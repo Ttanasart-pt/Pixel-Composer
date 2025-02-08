@@ -108,7 +108,7 @@ function Inspector_Custom_Renderer(drawFn, registerFn = noone) : widget() constr
         if(instance_exists(popupDialog))
             instance_destroy(popupDialog);
             
-        if(is_instanceof(popupPanel, PanelContent))
+        if(is(popupPanel, PanelContent))
             popupPanel.close();
         
         popupPanel = noone;
@@ -188,15 +188,19 @@ function Panel_Inspector() : PanelContent() constructor {
     drawWidgetInit();
     
     #region ---- header labels ----
-        tb_node_name                 = new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ { if(inspecting) inspecting.setDisplayName(txt); });
+        tb_node_name        = new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ { if(inspecting) inspecting.setDisplayName(txt); });
+        tb_node_name.format = TEXT_AREA_FORMAT.node_title;
+        tb_node_name.font   = f_h5;
+        tb_node_name.align  = fa_center;
+        tb_node_name.hide   = true;
         
-        tb_prop_filter               = new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ { filter_text = txt; });
-        tb_prop_filter.no_empty      = false;
-        tb_prop_filter.auto_update   = true;
-        tb_prop_filter.font          = f_p0;
-        tb_prop_filter.color         = COLORS._main_text_sub;
-        tb_prop_filter.align         = fa_center;
-        tb_prop_filter.hide          = true;
+        tb_prop_filter             = new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ { filter_text = txt; });
+        tb_prop_filter.no_empty    = false;
+        tb_prop_filter.auto_update = true;
+        tb_prop_filter.font        = f_p0;
+        tb_prop_filter.color       = COLORS._main_text_sub;
+        tb_prop_filter.align       = fa_center;
+        tb_prop_filter.hide        = true;
         filter_text = "";
     	
         prop_page   = 0;
@@ -872,7 +876,7 @@ function Panel_Inspector() : PanelContent() constructor {
                 
             }
             
-            if(is_instanceof(jun, Inspector_Spacer)) {                    // SPACER
+            if(is(jun, Inspector_Spacer)) {                    // SPACER
                 var _hh = ui(jun.h);
                 var _yy = yy + _hh / 2 - ui(2);
                 
@@ -884,7 +888,7 @@ function Panel_Inspector() : PanelContent() constructor {
                 hh += _hh;
                 continue;
                 
-            } else if(is_instanceof(jun, Inspector_Sprite)) {            // SPRITE
+            } else if(is(jun, Inspector_Sprite)) {            // SPRITE
                 var _spr = jun.spr;
                 var _sh  = sprite_get_height(_spr);
                 
@@ -893,7 +897,7 @@ function Panel_Inspector() : PanelContent() constructor {
                 hh += _sh + ui(8);
                 continue;
                 
-            } else if(is_instanceof(jun, Inspector_Label)) {            // TEXT
+            } else if(is(jun, Inspector_Label)) {            // TEXT
                 var _txt = jun.text;
                 if(_txt == "") continue;
                 
@@ -905,7 +909,7 @@ function Panel_Inspector() : PanelContent() constructor {
                 hh += _sh + ui(8);
                 continue;
                 
-            } else if(is_instanceof(jun, Inspector_Custom_Renderer)) {
+            } else if(is(jun, Inspector_Custom_Renderer)) {
                 if(jun.popupPanel != noone) {
         			draw_set_text(f_p2, fa_center, fa_center, COLORS._main_icon, .5);
         			draw_text_add(con_w / 2, yy + ui(24) / 2 - ui(2), __txt("Pop-up content"));
@@ -926,7 +930,7 @@ function Panel_Inspector() : PanelContent() constructor {
                 if(!is_undefined(_wdh)) hh += _wdh;
                 continue;
                 
-            } else if(is_instanceof(jun, widget)) {
+            } else if(is(jun, widget)) {
                 jun.setFocusHover(pFOCUS, pHOVER);
                 var param = new widgetParam(ui(6), yy, con_w - ui(12), TEXTBOX_HEIGHT, noone, {}, _m, x, y);
                 var _wdh = jun.drawParam(param);
@@ -1036,7 +1040,7 @@ function Panel_Inspector() : PanelContent() constructor {
                 
             }
         
-            if(!is_instanceof(jun, NodeValue)) continue;
+            if(!is(jun, NodeValue)) continue;
             
             if(!jun.show_in_inspector) continue;
             if(filter_text != "") {
@@ -1210,11 +1214,6 @@ function Panel_Inspector() : PanelContent() constructor {
     }
     
     static drawInspectingNode = function() {
-        tb_node_name.font   = f_h5;
-        tb_node_name.hide   = true;
-        tb_node_name.align  = fa_center;
-        tb_node_name.format = TEXT_AREA_FORMAT.node_title;
-        tb_node_name.setFocusHover(pFOCUS, pHOVER);
         
         var txt = inspecting.renamed? inspecting.display_name : inspecting.name;
              if(inspectGroup ==  1) txt = $"[{array_length(PANEL_GRAPH.nodes_selecting)}] {txt}"; 
@@ -1225,6 +1224,7 @@ function Panel_Inspector() : PanelContent() constructor {
         var tb_w = w - ui(128);
         var tb_h = ui(32);
         
+        tb_node_name.setFocusHover(pFOCUS, pHOVER);
         tb_node_name.draw(tb_x, tb_y, tb_w, tb_h, txt, [ mx, my ]);
         
         if(inspectGroup >= 0) {
@@ -1246,8 +1246,6 @@ function Panel_Inspector() : PanelContent() constructor {
             var ly = ui(56 - 8);
             if(buttonInstant(THEME.button_hide_fill, lx, ly, ui(16), ui(16), [mx, my], pHOVER, pFOCUS, __txt("Lock"), THEME.lock_12, !locked, locked? COLORS._main_icon_light : COLORS._main_icon) == 2)
                 locked = !locked;
-            
-            
             
             if(buttonInstant(THEME.button_hide_fill, bx, by, ui(32), ui(32), [mx, my], pHOVER, pFOCUS, __txt("Presets"), THEME.preset, 1) == 2)
                 dialogPanelCall(new Panel_Presets(inspecting), x + bx, y + by + ui(36));
@@ -1314,13 +1312,13 @@ function Panel_Inspector() : PanelContent() constructor {
             inspectings  = array_empty(_nodes)? [ inspecting ] : _nodes;
             
             for( var i = 1, n = array_length(_nodes); i < n; i++ ) {
-                if(instanceof(_nodes[i]) != instanceof(_nodes[0])) { 
-                    inspectGroup = -1; 
-                    break; 
-                }
+            	if(instanceof(_nodes[i]) == instanceof(_nodes[0])) continue;
+            	
+                inspectGroup = -1; 
+                break; 
             }
             
-            if(is_instanceof(inspecting, Node_Frame)) inspectGroup = 0;
+            if(is(inspecting, Node_Frame)) inspectGroup = 0;
             
             title = inspecting.renamed? inspecting.display_name : inspecting.name;
             inspecting.inspectorStep();
