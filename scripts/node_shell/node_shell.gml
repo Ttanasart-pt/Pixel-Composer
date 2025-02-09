@@ -1,6 +1,6 @@
 function Node_Shell(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Execute Shell";
-	setDimension(96, 32 + 24 * 1);
+	setDimension(96, 48);
 	
 	newInput(0, nodeValue_Path("Path", self, ""));
 	

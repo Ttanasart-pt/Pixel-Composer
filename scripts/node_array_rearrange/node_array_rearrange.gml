@@ -127,7 +127,7 @@ function Node_Array_Rearrange(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		
 		if(type != _typ) {
 			if(_typ == VALUE_TYPE.surface) setDimension(128, 128);
-			else                           setDimension(96, 32 + 24);
+			else                           setDimension(96, 48);
 			
 			type = _typ;
 		}

@@ -1,6 +1,6 @@
 function Node_Array_Boolean_Opr(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Array Boolean Opr";
-	setDimension(96, 32 + 24);
+	setDimension(96, 48);
 	
 	newInput(0, nodeValue("Array 1", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0))
 		.setVisible(true, true);

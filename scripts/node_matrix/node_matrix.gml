@@ -1,7 +1,7 @@
 function Node_Matrix(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name  = "Matrix";
 	color = COLORS.node_blend_number;
-	setDimension(96, 32 + 24);
+	setDimension(96, 48);
 	
 	newInput(0, nodeValue_IVec2("Size", self, [ 3, 3 ]));
 	

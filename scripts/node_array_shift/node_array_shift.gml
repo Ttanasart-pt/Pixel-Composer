@@ -1,6 +1,6 @@
 function Node_Array_Shift(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Array Shift";
-	setDimension(96, 32 + 24);
+	setDimension(96, 48);
 	
 	newInput(0, nodeValue("Array", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0))
 		.setArrayDepth(99)

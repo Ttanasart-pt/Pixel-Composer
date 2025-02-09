@@ -34,8 +34,10 @@ function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	newInput(8, nodeValue_Enum_Button("Space", self,  0, [ "RGB", "LAB" ]));
 	
+	newInput(9, nodeValue_Bool("Use Global Range", self, true));
+	
 	input_display_list = [ 5, 0, 
-		["Palette", false, 2], 1, 3, 4, 7, 8, 
+		["Palette", false, 2], 1, 9, 3, 4, 7, 8, 
 		["Alpha",   false], 6, 
 	];
 	
@@ -48,11 +50,13 @@ function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	static step = function() {
 		var _use_pal = getInputData(2);
 		
-		inputs[1].setVisible(_use_pal);
+		inputs[1].setVisible( _use_pal);
 		inputs[3].setVisible(!_use_pal);
 		inputs[4].setVisible(!_use_pal);
 		inputs[4].mappableStep();
-		inputs[8].setVisible(_use_pal);
+		
+		inputs[8].setVisible( _use_pal);
+		inputs[9].setVisible(!_use_pal);
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
@@ -61,6 +65,7 @@ function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _use_pal = _data[2];
 		var _alp     = _data[6];
 		var _spce    = _data[8];
+		var _glob    = _data[9];
 		
 		if(_use_pal) {
 			surface_set_shader(_outSurf, sh_posterize_palette);
@@ -72,7 +77,11 @@ function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			surface_reset_shader();
 			
 		} else {
-			#region get range
+			
+			var _max  = [ 0, 0, 0 ];
+			var _min  = [ 1, 1, 1 ];
+				
+			if(!_glob) { // get range
 				var _sw  = surface_get_width(_surf);
 				var _sh  = surface_get_height(_surf);
 				var _itr = ceil(logn(4, _sw * _sh / 1024));
@@ -120,8 +129,6 @@ function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				var _sMin = temp_surface[(!_ind) * 2 + 1];
 				var _ssw  = surface_get_width(_sMax);
 				var _ssh  = surface_get_height(_sMax);
-				var _max  = [ 0, 0, 0 ];
-				var _min  = [ 1, 1, 1 ];
 				
 				var _bMax = buffer_from_surface(_sMax, false);
 				var _bMin = buffer_from_surface(_sMin, false);
@@ -144,11 +151,11 @@ function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 					
 				buffer_delete(_bMax);
 				buffer_delete(_bMin);
-			#endregion
+			}
 			
 			surface_set_shader(_outSurf, sh_posterize);
-				shader_set_f("cMax",       _max);
-				shader_set_f("cMin",       _min);
+				shader_set_f("cMax",      _max);
+				shader_set_f("cMin",      _min);
 				shader_set_f("colors",    _data[3]);
 				shader_set_f_map("gamma", _data[4], _data[7], inputs[4]);
 				shader_set_i("alpha",     _alp);

@@ -1,6 +1,6 @@
 function Node_Array_Convolute(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Array Convolute";
-	setDimension(96, 32 + 24);
+	setDimension(96, 48);
 	
 	newInput(0, nodeValue_Float("Array", self, []))
 		.setArrayDepth(1)

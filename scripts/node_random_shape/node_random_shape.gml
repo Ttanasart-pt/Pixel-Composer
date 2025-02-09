@@ -17,25 +17,6 @@ function Node_Random_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	temp_surface = [ noone ];
 	
-	function surfaceContentRatio(_surf) {
-		var s     = 0;
-		var _sw   = surface_get_width_safe(_surf);
-		var _sh   = surface_get_height_safe(_surf);
-		var total = _sw * _sh;
-		var _buff = buffer_create(_sw * _sh * 4, buffer_fixed, 4);
-		buffer_get_surface(_buff, _surf, 0);
-		buffer_seek(_buff, buffer_seek_start, 0);
-		
-		repeat(total) {
-			var b = buffer_read(_buff, buffer_u32);
-			if(b) s++;
-		}
-		
-		buffer_delete(_buff);
-		
-		return s / total;
-	}
-	
 	function generateShape(_dim, _aa = 1) {
 		var _sw = _dim[0] * _aa;
 		var _sh = _dim[1] * _aa;
@@ -49,7 +30,7 @@ function Node_Random_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			
 			repeat(_amou) {
 				var _side  = min(_dim[0], _dim[1]);
-				var _size  = irandom_range(_side * 0.25, _side * 0.75);
+				var _size  = irandom_range(_side * 0.25, _side * 0.5);
 				var _shape = surface_create(_size * _aa, _size * _aa);
 				
 				surface_set_target(_shape);
@@ -58,12 +39,12 @@ function Node_Random_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			
 					var _x1 = _size * _aa;
 					var _y1 = _size * _aa;
-					var _r  = irandom(4) * 2 * _aa;
-				
+					
 					switch(irandom(2)) {
-						case 0 : draw_roundrect_ext(0, 0, _x1, _y1, _r, _r, false); 	break;
-						case 1 : draw_ellipse(0, 0, _x1, _y1, false);					break;
-						case 2 : draw_triangle(_x1 / 2, 0, 0, _y1, _x1, _y1, false);	break;
+						case 0 : var _r  = irandom(4) * 2 * _aa;
+						         draw_roundrect_ext(0, 0, _x1, _y1, _r, _r, false);  break;
+						case 1 : draw_ellipse(0, 0, _x1, _y1, false);                break;
+						case 2 : draw_triangle(_x1 / 2, 0, 0, _y1, _x1, _y1, false); break;
 					}
 				surface_reset_target();
 				
@@ -102,7 +83,7 @@ function Node_Random_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		
 		if(random(1) < 0.5) {
 			_prog     = surface_create(_adim[0], _adim[1]);
-			var _size = [ _dim[0] * .75, _dim[1] * 0.75 ];
+			var _size = [ _dim[0] * .6, _dim[1] * .6 ];
 			var _subs = generateShape(_size, _aa);
 			var _sx   = _adim[0] / 2;
 			var _sy   = _adim[1] / 2;
@@ -122,19 +103,20 @@ function Node_Random_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 				} else
 					draw_surface_safe(_surf);
 					
-				BLEND_SUBTRACT
-					draw_surface_safe(_subs, _sx, _sy);
-				BLEND_NORMAL
+				if(is_surface(_subs)) {
+					BLEND_SUBTRACT
+						draw_surface_ext(_subs, _sx, _sy,  1,  1, 0, c_white, 1);
+						var _mir = irandom(3);
+						if(_mir &  0b01) draw_surface_ext(_subs, _dim[0] - _sx,           _sy, -1,  1, 0, c_white, 1);
+						if(_mir &  0b10) draw_surface_ext(_subs,           _sx, _dim[1] - _sy,  1, -1, 0, c_white, 1);
+						if(_mir == 0b11) draw_surface_ext(_subs, _dim[0] - _sx, _dim[1] - _sy, -1, -1, 0, c_white, 1);
+					BLEND_NORMAL
+				}
 			surface_reset_target();
 			
 			surface_free(_subs);
 			surface_free(_surf);
 		}
-		
-		// if(surfaceContentRatio(_prog) < 0.2) {
-		// 	surface_free(_prog);
-		// 	_prog = generateShape(_adim);
-		// } 
 		
 		var _corn = surface_create(_dim[0], _dim[1]);
 		
@@ -142,12 +124,15 @@ function Node_Random_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var _cPassAA = temp_surface[0];
 		
 		surface_set_shader(_cPassAA, sh_rsh_corner, true, BLEND.add);
-			shader_set_f("dimension", _adim[0], _adim[1]);
+			shader_set_2("dimension", _adim);
 			shader_set_i("type", choose(0, 0, 1, 1, 1));
 			
 			draw_surface_safe(_prog);
-			if(_side == 1) draw_surface_ext_safe(_prog, 0, _adim[1], 1, -1, 0, c_white, 1);
-			if(_side == 2) draw_surface_ext_safe(_prog, _adim[0], 0, -1, 1, 0, c_white, 1);
+			switch(_side) {
+				case 1 : draw_surface_ext_safe(_prog, 0, _adim[1], 1, -1, 0, c_white, 1); break;
+				case 2 : draw_surface_ext_safe(_prog, _adim[0], 0, -1, 1, 0, c_white, 1); break;
+			}
+			
 		surface_reset_shader();
 		surface_free(_prog);
 		

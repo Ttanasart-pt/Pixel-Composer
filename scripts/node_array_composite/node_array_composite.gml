@@ -1,6 +1,6 @@
 function Node_Array_Composite(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Array Composite";
-	setDimension(96, 32 + 24);
+	setDimension(96, 48);
 	
 	newInput(0, nodeValue_Float("Array", self, []))
 		.setArrayDepth(1)

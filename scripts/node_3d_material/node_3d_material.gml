@@ -1,5 +1,6 @@
 function Node_3D_Material(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constructor {
-	name = "3D Material";
+	name  = "3D Material";
+	is_3D = NODE_3D.none;
 	solid_surf = noone;
 	
 	newInput(0, nodeValue_Surface("Texture", self))
@@ -31,7 +32,7 @@ function Node_3D_Material(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 	
 	newOutput(0, nodeValue_Output("Material", self, VALUE_TYPE.d3Material, noone));
 	
-	input_display_list = [  
+	input_display_list = [ 
 		["Texture",		false], 0, 8, 9, 10, 
 		["Properties",	false], 1, 2, 3, 4, 7,
 		["Normal",		false], 5, 6,
@@ -71,24 +72,6 @@ function Node_3D_Material(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 		return _mat;
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		if(!previewable) return;
-		
-		var bbox  = drawGetBbox(xx, yy, _s);
-		var _mat  = outputs[0].getValue();
-		
-		if(_mat == noone) return;
-		
-		if(is_array(_mat)) {
-			if(array_empty(_mat)) return;
-			_mat = _mat[0];
-		}
-		
-		if(is_instanceof(_mat, __d3dMaterial) && is_surface(_mat.surface)) {
-			var aa   = 0.5 + 0.5 * renderActive;
-			if(!isHighlightingInGraph()) aa *= 0.25;
-		
-			draw_surface_bbox(_mat.surface, bbox,, aa);
-		}
-	}
+	static getPreviewValues       = function() /*=>*/ {return inputs[0].getValue()};
+	static getGraphPreviewSurface = function() /*=>*/ {return getSingleValue(0)};
 }

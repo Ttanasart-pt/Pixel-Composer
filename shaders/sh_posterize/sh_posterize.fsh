@@ -10,7 +10,7 @@ uniform int       gammaUseSurf;
 uniform sampler2D gammaSurf;
 
 #region =========================================== COLORS SPACES ===========================================
-	vec3 rgb2hsv(vec3 c) { #region
+	vec3 rgb2hsv(vec3 c) {
 		vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
 	    vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));
 	    vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r));
@@ -18,15 +18,15 @@ uniform sampler2D gammaSurf;
 	    float d = q.x - min(q.w, q.y);
 	    float e = 0.0000000001;
 	    return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);
-	 } #endregion
+	 }
 	
-	vec3 hsv2rgb(vec3 c) { #region
+	vec3 hsv2rgb(vec3 c) {
 	    vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
 	    vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
 	    return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
-	} #endregion
+	}
 	
-	float hue2rgb( in float m1, in float m2, in float hue) { #region
+	float hue2rgb( in float m1, in float m2, in float hue) {
 		if (hue < 0.0)
 			hue += 1.0;
 		else if (hue > 1.0)
@@ -40,9 +40,9 @@ uniform sampler2D gammaSurf;
 			return m1 + (m2 - m1) * ((2.0 / 3.0) - hue) * 6.0;
 		else
 			return m1;
-	} #endregion
+	}
 	
-	vec3 hsl2rgb( in vec3 hsl ) { #region
+	vec3 hsl2rgb( in vec3 hsl ) {
 		float r, g, b;
 		if(hsl.y == 0.) {
 			r = hsl.z;
@@ -62,9 +62,9 @@ uniform sampler2D gammaSurf;
 		}
 		
 		return vec3( r, g, b );
-	} #endregion
+	}
 	
-	vec3 rgb2hsl( in vec3 c ) { #region
+	vec3 rgb2hsl( in vec3 c ) {
 		float h = 0.0;
 		float s = 0.0;
 		float l = 0.0;
@@ -92,7 +92,7 @@ uniform sampler2D gammaSurf;
 			h = h / 6.0;
 		}
 		return vec3( h, s, l );
-	} #endregion
+	}
 #endregion =========================================== COLORS SPACES ===========================================
 
 float round(float a) { return fract(a) >= 0.5? ceil(a) : floor(a); }
@@ -113,10 +113,9 @@ void main() {
     _col.rgb  = clamp((_col.rgb - cMin) / cRan, 0., 1.);
 	
 	vec3 c = _col.rgb;
-	
-	c = pow(c, vec3(gam));
-	c = floor(c * colors) / (colors - 1.);
-	c = pow(c, vec3(1.0 / gam));
+	     c = pow(c, vec3(gam));
+	     c = floor(c * colors) / (colors - 1.);
+	     c = pow(c, vec3(1.0 / gam));
 	_col = vec4(cMin + c * cRan, 1.);
 	
 	_col.a = alpha == 1? 1. : _col.a;

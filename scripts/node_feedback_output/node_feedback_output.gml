@@ -2,7 +2,7 @@ function Node_Feedback_Output(_x, _y, _group = noone) : Node_Group_Output(_x, _y
 	name  = "Feedback Output";
 	color = COLORS.node_blend_feedback;
 	is_group_io = true;
-	setDimension(96, 32 + 24 * 2);
+	setDimension(96, 48);
 	
 	newInput(1, nodeValue("Feedback loop", self, CONNECT_TYPE.input, VALUE_TYPE.node, -1))
 		.setVisible(true, true);

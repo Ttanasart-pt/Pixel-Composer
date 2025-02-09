@@ -76,7 +76,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	destroy_when_upgroup = true;
 	
 	skipDefault();
-	setDimension(96, 32 + 24);
+	setDimension(96, 48);
 	
 	newInput(0, nodeValue_Enum_Scroll("Display type", self,  0, { data: GROUP_IO_DISPLAY[11], update_hover: false }));
 	

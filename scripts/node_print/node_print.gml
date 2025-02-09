@@ -1,6 +1,6 @@
 function Node_Print(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Print";
-	setDimension(96, 32 + 24 * 1); 
+	setDimension(96, 48); 
 	
 	draw_padding = 8;
 	

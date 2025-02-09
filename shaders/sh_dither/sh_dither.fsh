@@ -64,7 +64,7 @@ float random (in vec2 st, float seed) { return fract(sin(dot(st.xy, vec2(1892.98
 	} #endregion
 #endregion
 
-void main() { #region
+void main() {
 	vec4 _col = texture2D( gm_BaseTexture, v_vTexcoord );
 	
 	bool exactColor = false;
@@ -110,6 +110,7 @@ void main() { #region
 	
 	if(exactColor) {
 		gl_FragColor = _col;
+		
 	} else {
 		float d1 = colorDifferent(_col, col1);
 		float d2 = colorDifferent(_col, col2);
@@ -156,4 +157,4 @@ void main() { #region
 	}
 	
 	gl_FragColor.a *= _col.a;
-} #endregion
+}

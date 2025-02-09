@@ -5,7 +5,7 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	destroy_when_upgroup = true;
 	
 	skipDefault();
-	setDimension(96, 32 + 24);
+	setDimension(96, 48);
 	
 	newInput(0, nodeValue("Value", self, CONNECT_TYPE.input, VALUE_TYPE.any, -1))
 		.uncache()

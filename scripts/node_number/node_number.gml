@@ -2,7 +2,7 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	name  = "Number";
 	color = COLORS.node_blend_number;
 	
-	setDimension(96, 32 + 24 * 1);
+	setDimension(96, 48);
 	
 	// wd_slider = slider(0, 1, 0.01, function(val) { inputs[0].setValue(val); } );
 	
@@ -157,7 +157,7 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var disp = getInputData(2);
 		var styl = getInputData(6);
 		
-		var _ww = 96, _hh = 56;
+		var _ww = 96, _hh = 48;
 		
 		inputs[3].setVisible(disp > 0);
 		inputs[4].setVisible(disp > 0);
@@ -166,28 +166,18 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		inputs[7].setVisible(disp == 2);
 		
 		switch(disp) {
-			case 0 : 
-				break;
-				
 			case 1 : 
 				_ww = 160; 
 					 if(styl == 0) _hh = 96;
 				else if(styl == 1) _hh = 64;
 				break;
 				
-			case 2 : 
-				_ww = 128; _hh = 128;
-				break;
-				
-			case 3 : 
-				_ww = 160; _hh = 64;
-				break;
-				
+			case 2 : _ww = 128; _hh = 128; break;
+			case 3 : _ww = 160; _hh =  64; break;
 		}
 		
 		setDimension(_ww, _hh);
-		
-		inputs[0].setType(int? VALUE_TYPE.integer : VALUE_TYPE.float);
+		inputs[0].setType( int? VALUE_TYPE.integer : VALUE_TYPE.float);
 		outputs[0].setType(int? VALUE_TYPE.integer : VALUE_TYPE.float);
 	}
 	

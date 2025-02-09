@@ -2,7 +2,7 @@ function Node_Feedback_Input(_x, _y, _group = noone) : Node_Group_Input(_x, _y, 
 	name        = "Feedback Input";
 	color       = COLORS.node_blend_feedback;
 	is_group_io = true;
-	setDimension(96, 32 + 24 * 2);
+	setDimension(96, 48);
 	
 	feedbackOut = noone;
 	

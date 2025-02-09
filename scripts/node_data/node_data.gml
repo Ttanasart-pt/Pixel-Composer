@@ -2293,7 +2293,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			return noone;
 		
 		var val = outputs[preview_channel].getValue();
-		if(is_struct(val) && is_instanceof(val, dynaSurf))
+		if(is_struct(val) && is(val, dynaSurf))
 			val = array_safe_get_fast(val.surfaces, 0, noone);
 		
 		return val;
