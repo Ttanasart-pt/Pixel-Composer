@@ -26,7 +26,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	#region ---- main & active ----
 		project      = PROJECT;
-		
 		itype        = noone;
 		active       = true;
 		renderActive = true;
@@ -42,7 +41,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		active_index = -1;
 		active_range = [ 0, TOTAL_FRAMES - 1 ];
 		
-		array_push(PROJECT.allNodes, self);
+		array_push(project.allNodes, self);
 		
 		inline_input   = true;
 		inline_output  = true;
@@ -59,15 +58,15 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			str = string_replace_all(str,  "/", "");
 			str = string_replace_all(str,  "-", "");
 		
-		ds_map_delete(PROJECT.nodeNameMap, internalName);
+		ds_map_delete(project.nodeNameMap, internalName);
 		internalName = str + string(irandom_range(10000, 99999)); 
-		PROJECT.nodeNameMap[? internalName] = self;
+		project.nodeNameMap[? internalName] = self;
 	}
 	
 	if(!LOADING && !APPENDING) {
 		recordAction(ACTION_TYPE.node_added, self);
-		PROJECT.nodeMap[? node_id] = self;
-		PROJECT.modified = true;
+		project.nodeMap[? node_id] = self;
+		project.modified = true;
 		
 		run_in(1, function() /*=>*/ { 
 			resetInternalName();
@@ -294,7 +293,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	#region ---- timeline ----
 		timeline_item    = new timelineItemNode(self);
-		anim_priority    = array_length(PROJECT.allNodes);
+		anim_priority    = array_length(project.allNodes);
 		is_anim_timeline = false;
 	#endregion
 	
@@ -605,7 +604,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 		
 		if(is_3D == NODE_3D.polygon) USE_DEPTH = true;
-		if(is_simulation) PROJECT.animator.is_simulating = true;
+		if(is_simulation) project.animator.is_simulating = true;
 		
 		if(attributes.outp_meta) {
 			junc_meta[0].setValue(getDisplayName());
@@ -1056,7 +1055,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static doUpdateFull = function(frame = CURRENT_FRAME) {
 		
-		if(PROJECT.safeMode) return;
+		if(project.safeMode) return;
 		if(NODE_EXTRACT)     return;
 		
 		render_timer  = get_timer();
@@ -1094,7 +1093,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		postUpdate(frame);
 		cached_manual = false;
 		
-		if(!use_cache && PROJECT.onion_skin.enabled) {
+		if(!use_cache && project.onion_skin.enabled) {
 			for( var i = 0; i < array_length(outputs); i++ ) {
 				if(outputs[i].type != VALUE_TYPE.surface) continue;
 				cacheCurrentFrame(outputs[i].getValue());
@@ -2587,7 +2586,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			if(APPENDING) APPEND_MAP[? load_map.id] = node_id;
 			else		  node_id = load_map.id;
 			
-			PROJECT.nodeMap[? node_id] = self;
+			project.nodeMap[? node_id] = self;
 			
 			if(struct_has(load_map, "name")) setDisplayName(load_map.name);
 			internalName = load_map[$ "iname"] ?? internalName;
@@ -2762,8 +2761,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		if(APPENDING) load_group = GetAppendID(load_group);
 		
-		if(ds_map_exists(PROJECT.nodeMap, load_group)) {
-			var _grp = PROJECT.nodeMap[? load_group];
+		if(ds_map_exists(project.nodeMap, load_group)) {
+			var _grp = project.nodeMap[? load_group];
 			
 			if(struct_has(_grp, "add"))
 				_grp.add(self);
@@ -2831,7 +2830,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		x = _x;
 		y = _y; 
-		if(!LOADING) PROJECT.modified = true;
+		if(!LOADING) project.modified = true;
 	}
 	
 	static enable  = function() { INLINE active = true;  timeline_item.active = true;  }
@@ -2844,7 +2843,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		disable();
 		
 		PANEL_GRAPH.draw_refresh = true;
-		array_remove(group == noone? PROJECT.nodes : group.getNodeList(), self);
+		array_remove(group == noone? project.nodes : group.getNodeList(), self);
 		
 		if(PANEL_GRAPH.node_hover == self) PANEL_GRAPH.node_hover     = noone;
 		array_remove(PANEL_GRAPH.nodes_selecting, self);
@@ -2896,7 +2895,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		enable();
 		
 		PANEL_GRAPH.draw_refresh = true;
-		array_push(group == noone? PROJECT.nodes : group.getNodeList(), self);
+		array_push(group == noone? project.nodes : group.getNodeList(), self);
 		
 		onRestore();
 		if(group) group.refreshNodes();
@@ -2946,8 +2945,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		_node.applyDeserialize();
 		_node.node_id = _nid;
 		
-		PROJECT.nodeMap[? node_id] = self;
-		PROJECT.nodeMap[? _nid] = _node;
+		project.nodeMap[? node_id] = self;
+		project.nodeMap[? _nid] = _node;
 		CLONING = false;
 		refreshTimeline();
 		

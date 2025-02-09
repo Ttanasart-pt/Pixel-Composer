@@ -42,7 +42,7 @@
 		    rg.y = __clamp255_mf0 power(rg.y, 1 / 2.2) * 255 __clamp255_mf1;
 		    rg.z = __clamp255_mf0 power(rg.z, 1 / 2.2) * 255 __clamp255_mf1;
 			
-		return make_color_rgba(rg.x, rg.y, rg.z, a);
+		return make_color_rgba(rg.x, rg.y, rg.z, a * 255);
 	}
 	
 	function make_color_srgba(rgb, a) {

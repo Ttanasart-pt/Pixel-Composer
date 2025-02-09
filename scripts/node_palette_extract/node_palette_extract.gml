@@ -17,7 +17,7 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	newInput(2, nodeValueSeed(self))
 		.rejectArray();
 	
-	newInput(3, nodeValue_Enum_Scroll("Algorithm", self,  0, { data: [ "K-mean", "Frequency", "All colors" ], update_hover: false }))
+	newInput(3, nodeValue_Enum_Scroll("Algorithm", self,  0, { data: [ "K-mean", "Frequency", "All Colors", "Mean Shift" ], update_hover: false }))
 		.rejectArray();
 	
 	newInput(4, nodeValue_Enum_Scroll("Color Space", self,  1, { data: [ "RGB", "HSV" ], update_hover: false }))
@@ -25,6 +25,10 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	
 	newInput(5, nodeValue_Surface("Mask", self));
 	
+	newInput(6, nodeValue_Float("Radius", self, .25))
+		.setDisplay(VALUE_DISPLAY.slider)
+		.rejectArray();
+		
 	newOutput(0, nodeValue_Output("Palette", self, VALUE_TYPE.color, [ ]))
 		.setDisplay(VALUE_DISPLAY.palette);
 	
@@ -32,7 +36,7 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	
 	input_display_list = [
 		["Surfaces", true],	0, 5, 
-		["Palette",	false],	3, 4, 1, 2,
+		["Palette",	false],	3, 4, 1, 2, 6, 
 	]
 	
 	temp_surface    = [ 0 ];
@@ -287,12 +291,73 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 		return pal;
 	}
 	
-	static step = function() {
-		var _algo = getInputData(3);
+	function extractMeanShift(_surfFull) {
+		var _r = getInputData(6);
 		
-		inputs[1].setVisible(_algo != 2);
-		inputs[2].setVisible(_algo == 0);
-		inputs[4].setVisible(_algo == 0);
+		var ww = surface_get_width_safe(_surfFull);
+		var hh = surface_get_height_safe(_surfFull);
+		var cb = buffer_create(ww * hh * 4, buffer_fixed, 4);
+		
+		buffer_get_surface(cb, _surfFull, 0);
+		buffer_seek(cb, buffer_seek_start, 0);
+		
+		var amo     = ww * hh;
+		var palette = array_create(amo), ind = 0;
+		var bm      = 0b11111111 << 24;
+		
+		for( var i = 0; i < amo; i++ ) {
+			var c = buffer_read(cb, buffer_u32);
+			if(c & bm == 0) continue;
+			palette[ind++] = color_rgb(c);
+		}
+		
+		buffer_delete(cb);
+		var _com = variable_clone(palette);
+		var _dd  = 0, _itr = 0;
+		
+		do {
+			_dd = 0;
+			
+			for( var i = 0; i < ind; i++ ) {
+				var _c   = _com[i];
+				var _ttx = 0;
+				var _tty = 0;
+				var _ttz = 0;
+				var _ta  = 0;
+				
+				var _cx = _c[0];
+				var _cy = _c[1];
+				var _cz = _c[2];
+				
+				for( var j = 0; j < ind; j++ ) {
+					var _p = palette[j];
+					var _d = point_distance_3d(_cx, _cy, _cz, _p[0], _p[1], _p[2]);
+					if(_d > _r) continue;
+					
+					_ttx += _p[0];
+					_tty += _p[1];
+					_ttz += _p[2];
+					_ta++;
+				}
+				
+				if(_ta == 0) continue;
+				var _tx  = _ttx / _ta;
+				var _ty  = _tty / _ta;
+				var _tz  = _ttz / _ta;
+				    _dd += abs(_cx - _tx) + abs(_cy - _ty) + abs(_cz - _tz);
+				
+				_c[0] = _tx;
+				_c[1] = _ty;
+				_c[2] = _tz;
+			}
+			
+		} until(_dd < 0.1 || ++_itr > 32);
+		
+		for( var i = 0; i < ind; i++ ) _com[i] = make_color_rgba(_com[i][0] * 255, _com[i][1] * 255, _com[i][2] * 255, 255);
+		var palLen = array_unique_ext(_com);
+		array_resize(_com, min(ind, palLen));
+		
+		return _com;
 	}
 	
 	static extractPalette = function(_surf, _algo, _size, _seed) {
@@ -302,6 +367,7 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 			case 0 : return extractKmean(_surf, _size, _seed);
 			case 1 : return extractFrequence(_surf, _size);
 			case 2 : return extractAll(_surf);
+			case 3 : return extractMeanShift(_surf);
 		}
 		
 		return [];
@@ -313,6 +379,11 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 		var _seed = _data[2];
 		var _algo = _data[3];
 		var _mask = _data[5];
+		
+		inputs[1].setVisible(_algo <  2);
+		inputs[2].setVisible(_algo == 0);
+		inputs[4].setVisible(_algo == 0);
+		inputs[6].setVisible(_algo == 3);
 		
 		if(!is_surface(_surf)) return;
 		if(!is_surface(_mask)) return extractPalette(_surf, _algo, _size, _seed);
