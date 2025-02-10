@@ -13,8 +13,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(0, nodeValue_Text("Text", self, ""))
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_Path("Font", self, ""))
-		.setDisplay(VALUE_DISPLAY.path_font)
+	newInput(1, nodeValue_Font("Font", self))
 		.setVisible(true, false);
 	
 	newInput(2, nodeValue_Int("Size", self, 16));
@@ -140,8 +139,6 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		inputs[14].setVisible( _use_path);
 		inputs[15].setVisible(_dimt == 0 && !_use_path && _font != "");
 		
-		inputs[ 2].setVisible(_font != "");
-		inputs[ 3].setVisible(_font != "");
 	}
 	
 	static waveGet = function(_ind) {
@@ -355,9 +352,25 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		
 		__dwData   = array_create(string_length(str));
 		__dwDataI  = 0;
+		__f        = font;
 		
-		generateFont(_font, _size, _aa);
-		draw_set_font(font);
+		#region font
+			inputs[2].setVisible(false);
+			inputs[3].setVisible(false);
+				
+			if(is_string(_font))   { 
+				inputs[2].setVisible(_font != "");
+				inputs[3].setVisible(_font != "");
+			 	
+			 	generateFont(_font, _size, _aa); 
+			 	__f = font; 
+				
+			} else if(font_exists(_font)) { 
+				__f = _font; 
+			}
+				
+			draw_set_font(__f);
+		#endregion
 		
 		#region typewritter
 			if(_type) {
@@ -511,16 +524,16 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _pthl = _path.getLength(0), va;
 			
 			switch(_vali) {
-				case 0 : ty = 0;                							va = fa_top;         break;
-				case 1 : ty = (_max_hh - line_get_height(font)) / 2;    	va = fa_center;      break;
-				case 2 : ty = _max_hh;          							va = fa_top;         break;
+				case 0 : va = fa_top;    ty = 0;                                    break;
+				case 1 : va = fa_center; ty = (_max_hh - line_get_height(__f)) / 2; break;
+				case 2 : va = fa_top;    ty =  _max_hh;                             break;
 			}
 			
 			for( var i = 0, n = array_length(_str_lines); i < n; i++ ) {
 				var _str_line   = _str_lines[i];
 				var _line_width = _line_widths[i];
-				draw_set_text(font, fa_left, va, _col);
-				draw_font_data[_array_index] = [font, fa_left, va, _col];
+				draw_set_text(__f, fa_left, va, _col);
+				draw_font_data[_array_index] = [__f, fa_left, va, _col];
 				
 				switch(_hali) {
 					case 0 : tx = 0;                           break;
@@ -533,7 +546,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				__temp_p0 = new __vec2P();
 				__temp_p1 = new __vec2P();
 				
-				string_foreach(_str_line, function(_chr, _ind) {
+				string_foreach(_str_line, function(_chr, _ind) /*=>*/ {
 					var _p1  = __temp_pt.getPointDistance(__temp_tx,      0, __temp_p0);
 					var _p2  = __temp_pt.getPointDistance(__temp_tx + .1, 0, __temp_p1);
 					var _nor = point_direction(_p1.x, _p1.y, _p2.x, _p2.y);
@@ -566,8 +579,8 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			for( var i = 0, n = array_length(_str_lines); i < n; i++ ) {
 				var _str_line   = _str_lines[i];
 				var _line_width = _line_widths[i];
-				draw_set_text(font, fa_left, fa_top, _col);
-				draw_font_data[_array_index] = [font, fa_left, fa_top, _col];
+				draw_set_text(__f, fa_left, fa_top, _col);
+				draw_font_data[_array_index] = [__f, fa_left, fa_top, _col];
 				
 				tx = _padd[PADDING.left];
 				
@@ -581,15 +594,11 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				__temp_tx = tx;
 				__temp_ty = ty;
 			
-				string_foreach(_str_line, function(_chr, _ind) {
+				string_foreach(_str_line, function(_chr, _ind) /*=>*/ {
 					var _tx = __temp_tx;
 					var _ty = __temp_ty;
 					
-					if(__wave) {
-						var _wd = waveGet(_ind);
-						_ty += _wd;
-					}
-					
+					if(__wave) _ty += waveGet(_ind);
 					if(__rnd_pos) { _tx = round(_tx); _ty = round(_ty); }
 					
 					draw_text_transformed(_tx, _ty, _chr, __temp_ss, __temp_ss, 0);

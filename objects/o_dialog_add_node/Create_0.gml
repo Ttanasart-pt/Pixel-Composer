@@ -247,7 +247,7 @@ event_inherited();
 			
 			if(PANEL_GRAPH) {
 				if(PREFERENCES.node_add_select) 
-					PANEL_GRAPH.selectDragNode(_new_node, junction_called == noone);
+					PANEL_GRAPH.selectDragNode(_new_node, true);
 				var _ins = instanceof(_new_node);
 				if(struct_has(HOTKEYS, _ins)) FOCUS_STR = _ins;
 			}

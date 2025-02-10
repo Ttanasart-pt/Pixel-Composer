@@ -56,12 +56,6 @@ if !ready exit;
 		RECENT_SAVE();
 	}
 	
-	// bx -= ui(28 + 4);
-	// txt = recent_thumbnail? __txtx("splash_hide_thumbnail", "Hide thumbnail") : __txtx("splash_show_thumbnail", "Show thumbnail");
-	// if(buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, sHOVER, sFOCUS, txt, THEME.splash_thumbnail, recent_thumbnail) == 2) {
-	// 	recent_thumbnail = !recent_thumbnail;
-	// }
-	
 	bx -= ui(28 + 1);
 	txt = __txtx("splash_open_autosave", "Open autosave folder");
 	if(buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, sHOVER, sFOCUS, txt, THEME.save_auto, 0, COLORS._main_icon, 1, .75) == 2) {
@@ -181,12 +175,12 @@ if !ready exit;
 	switch(pages[project_page]) {
 		case "Welcome Files" :
 			sp_sample.setFocusHover(sFOCUS, sHOVER);
-			sp_sample.draw(x0 + ui(6), y0);
+			sp_sample.draw(x0 + ui(6), y0 + 1);
 			break;
 			
 		case "Workshop" : 
 			sp_sample.setFocusHover(sFOCUS, sHOVER);
-			sp_sample.draw(x0 + ui(6), y0);
+			sp_sample.draw(x0 + ui(6), y0 + 1);
 			
 			var bs = ui(32);
 			var bx = x1 - ui(32);

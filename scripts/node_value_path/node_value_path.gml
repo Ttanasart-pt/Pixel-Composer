@@ -5,7 +5,7 @@ function __NodeValue_Path(_name, _node, _value, _tooltip = "") : NodeValue(_name
 	/////============== GET =============
 	
 	static valueProcess = function(value, nodeFrom = undefined, applyUnit = true, arrIndex = 0) {
-		return is_string(value)? filepath_resolve(value) : value;
+		return is_string(value)? filepath_resolve(value) : value; 
 	}
 	
 	static getValue = function(_time = CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { //// Get value

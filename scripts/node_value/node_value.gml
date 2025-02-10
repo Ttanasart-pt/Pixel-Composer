@@ -914,10 +914,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						extract_node = "Node_String";
 						break;
 						
-					case VALUE_DISPLAY.path_font :
-						editWidget = new fontScrollBox(function(val) /*=>*/ {return setValueInspector(FONT_INTERNAL[val])});
-						break;
-						
 					default :
 						editWidget = new textBox(TEXTBOX_INPUT.text, function(str) /*=>*/ {return setValueInspector(str)});
 						break;
@@ -975,6 +971,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						editWidget = new textArrayBox(function() /*=>*/ {return animator.values[0].value}, display_data.data, function() /*=>*/ {return node.doUpdate()});
 						break;
 				}
+				break;
+			
+			case VALUE_TYPE.font :
+				editWidget = new fontScrollBox(function(val) /*=>*/ {return setValueInspector(FONT_INTERNAL[val])});
 				break;
 				
 			case VALUE_TYPE.d3Material :
@@ -1951,17 +1951,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				_cfg = merge_color(draw_blend_color, _cfg, draw_blend);
 			}
 			
-			var _bgS, _fgS;
-			
-			if(_s > .5) {
-				_bgS = THEME.node_junctions_bg_x2;
-				_fgS = _hov? THEME.node_junctions_outline_hover_x2 : THEME.node_junctions_outline_x2;
-				
-			} else {
-				_bgS = THEME.node_junctions_bg;
-				_fgS = _hov? THEME.node_junctions_outline_hover : THEME.node_junctions_outline;
-				_s  *= 2;
-			}
+			var _bgS = THEME.node_junctions_bg;
+			var _fgS = _hov? THEME.node_junctions_outline_hover : THEME.node_junctions_outline;
 			
 			if(graph_selecting) __draw_sprite_ext(THEME.node_junction_selecting, 0, x, y, _s, _s, 0, _cfg, .8);
 			graph_selecting   = false;
@@ -2110,8 +2101,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		if(custom_icon == noone) {
-			__draw_sprite_ext(THEME.node_junctions_bg_x2,      draw_junction_index, _mx, _my, ss / 2, ss / 2, 0, draw_bg, 1);
-			__draw_sprite_ext(THEME.node_junctions_outline_x2, draw_junction_index, _mx, _my, ss / 2, ss / 2, 0, col, 1);
+			__draw_sprite_ext(THEME.node_junctions_bg,      draw_junction_index, _mx, _my, ss / 2, ss / 2, 0, draw_bg, 1);
+			__draw_sprite_ext(THEME.node_junctions_outline, draw_junction_index, _mx, _my, ss / 2, ss / 2, 0, col, 1);
 		} else 
 			__draw_sprite_ext(custom_icon, draw_junction_index, _mx, _my, ss / 2, ss / 2, 0, c_white, 1);
 	}

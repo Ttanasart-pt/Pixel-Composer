@@ -99,7 +99,7 @@ event_inherited();
 	
 	meta_filter = [];
 	
-	sp_sample = new scrollPane(x1 - x0 - ui(12), y1 - y0 - 1, function(_y, _m) {
+	sp_sample = new scrollPane(x1 - x0 - ui(12), y1 - y0 - 2, function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 1);
 		
 		var txt = pages[project_page];

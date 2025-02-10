@@ -1,0 +1,11 @@
+{
+  "name":"Bitmap Font",
+  "tooltip":"Create font from surface array.",
+  "spr":"s_node_font_bitmap",
+  "baseNode":"Node_Font_Bitmap",
+  "io":[
+    "text",
+    "surface"
+  ],
+  "version": 118090,
+}

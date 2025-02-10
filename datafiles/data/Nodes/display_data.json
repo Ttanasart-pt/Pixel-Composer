@@ -712,6 +712,7 @@
             "Node_String",
             "Node_To_Text",
             "Node_Unicode",
+            "Node_Font_Bitmap",
             { "label": "/Info" },
             "Node_String_Length",
             "Node_String_Get_Char",

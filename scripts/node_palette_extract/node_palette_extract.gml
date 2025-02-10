@@ -17,7 +17,7 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	newInput(2, nodeValueSeed(self))
 		.rejectArray();
 	
-	newInput(3, nodeValue_Enum_Scroll("Algorithm", self,  0, { data: [ "K-mean", "Frequency", "All Colors", "Mean Shift" ], update_hover: false }))
+	newInput(3, nodeValue_Enum_Scroll("Algorithm", self,  0, { data: [ "K-mean", "Frequency", "All Colors" ], update_hover: false }))
 		.rejectArray();
 	
 	newInput(4, nodeValue_Enum_Scroll("Color Space", self,  1, { data: [ "RGB", "HSV" ], update_hover: false }))
@@ -351,7 +351,7 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 				_c[2] = _tz;
 			}
 			
-		} until(_dd < 0.1 || ++_itr > 32);
+		} until(_dd < 1 || ++_itr > 32);
 		
 		for( var i = 0; i < ind; i++ ) _com[i] = make_color_rgba(_com[i][0] * 255, _com[i][1] * 255, _com[i][2] * 255, 255);
 		var palLen = array_unique_ext(_com);

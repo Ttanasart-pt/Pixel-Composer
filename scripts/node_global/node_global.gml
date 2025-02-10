@@ -7,7 +7,7 @@
 		/*Boolean*/	[ "Default" ],
 		/*Color*/	[ "Default", "Palette" ],
 		/*Gradient*/[ "Default" ],
-		/*Path*/	[ "Read", "Write", "Font" ],
+		/*Path*/	[ "Read", "Write" ],
 		/*Curve*/	[ "Default", ],
 		/*Text*/	[ "Default", ],
 	];
@@ -29,7 +29,6 @@
 	global.GLOBALVAR_DISPLAY_MAP[$ "Palette"]        = VALUE_DISPLAY.palette;
 	global.GLOBALVAR_DISPLAY_MAP[$ "Read"]           = VALUE_DISPLAY.path_load;
 	global.GLOBALVAR_DISPLAY_MAP[$ "Write"]          = VALUE_DISPLAY.path_save;
-	global.GLOBALVAR_DISPLAY_MAP[$ "Font"]           = VALUE_DISPLAY.path_font;
 #endregion
 
 function variable_editor(nodeVal) constructor {
