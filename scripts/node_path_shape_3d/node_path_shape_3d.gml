@@ -1,5 +1,5 @@
 function Node_Path_Shape_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name = "3D Path Shape";
+	name = "Shape Path 3D";
 	is_3D = NODE_3D.polygon;
 	
 	setDimension(96, 48);

@@ -31,6 +31,7 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	    -1,
 	    new scrollItem("Line",          s_node_shape_type, 16), 
 	    new scrollItem("Curve",         s_shape_curve,      0), 
+	    new scrollItem("Spiral",        s_node_path_3d_shape,  6),
     ];
 	newInput(3, nodeValue_Enum_Scroll("Shape", self, 0, { data: shapeScroll, horizontal: true, text_pad: ui(16) }));
 	
@@ -47,11 +48,15 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	newInput(9, nodeValue_Corner("Corner Radius", self, [ 0, 0, 0, 0 ]));
 	
+	newInput(10, nodeValue_Float("Revolution", self, 4));
+	
+	newInput(11, nodeValue_Float("Pitch", self, .2));
+	
 	newOutput(0, nodeValue_Output("Path data", self, VALUE_TYPE.pathnode, self));
 		
 	input_display_list = [
 		["Transform", false], 0, 2, 1, 
-		["Shape",     false], 3, 4, 5, 6, 7, 8, 9, 
+		["Shape",     false], 3, 4, 5, 6, 7, 8, 9, 10, 11, 
 	];
 	
 	points      = [];
@@ -106,15 +111,7 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
                 out.y = posy + lengthdir_y(scay * r, a);
                 break;
                 
-			case "Trapezoid" : 
-            case "Parallelogram" : 
-            case "Rectangle" : 
-            case "Polygon" : 
-            case "Star"    : 
-            case "Line"    : 
-            case "Curve"   : 
-            	return getPointDistance(_rat * lengthTotal, _ind, out);
-                
+			default : return getPointDistance(_rat * lengthTotal, _ind, out);
         }
         
         point_vec2_rotate(out, posx, posy, rot);
@@ -199,12 +196,14 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
         
         var ox, oy, nx, ny, x0, y0;
         
-        inputs[4].setVisible(false);
-        inputs[5].setVisible(false);
-        inputs[6].setVisible(false);
-        inputs[7].setVisible(false);
-        inputs[8].setVisible(false);
-        inputs[9].setVisible(false);
+        inputs[ 4].setVisible(false);
+        inputs[ 5].setVisible(false);
+        inputs[ 6].setVisible(false);
+        inputs[ 7].setVisible(false);
+        inputs[ 8].setVisible(false);
+        inputs[ 9].setVisible(false);
+        inputs[10].setVisible(false);
+        inputs[11].setVisible(false);
                 
         switch(shapeScroll[shape].name) {
             case "Rectangle" : 
@@ -443,6 +442,27 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
         			]
             	}
             	break;
+        
+        	case "Spiral" : 
+                inputs[10].setVisible(true);
+                inputs[11].setVisible(true);
+                var _rev = getInputData(10);
+                var _pit = getInputData(11);
+                
+                loop = false;
+                var _st = 64 * _rev;
+                var _as = 360 / 64;
+                var _pp = 1 / 64 * _pit;
+                points  = array_create(_st);
+                
+                for( var i = 0; i < _st; i++ ) {
+                    nx = posx + lengthdir_x(scax * i * _pp, _as * i);
+                    ny = posy + lengthdir_y(scay * i * _pp, _as * i);
+                    
+                    points[i] = [ nx, ny ];
+                }
+                
+                break;
         }
 
 		array_map_ext(points, function(p) /*=>*/ {return point_rotate(p[0], p[1], posx, posy, rot, p)});
