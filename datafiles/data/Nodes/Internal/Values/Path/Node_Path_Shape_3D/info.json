@@ -1,0 +1,10 @@
+{
+  "name":"3D Path Shape",
+  "baseNode":"Node_Path_Shape_3D",
+  "tooltip":"Create 3D path in predefined shape.",
+  "spr":"s_node_path_shape_3d",
+  "pxc_version":118090,
+  "io":[
+    "pathnode"
+  ],
+}

@@ -1,5 +1,5 @@
 function Node_Font_Bitmap(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name = "Bitmap Font";
+	name = "Surfaces to Font";
 	
 	newInput(0, nodeValue_Surface("Font Surfaces", self, []))
 	    .setArrayDepth(1);

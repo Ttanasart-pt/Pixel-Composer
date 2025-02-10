@@ -734,8 +734,8 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		draw_sprite_bbox_uniform(s_node_path_3d, 0, bbox);
 	}
 	
-	static getPreviewObject 		= function() { return noone; }
-	static getPreviewObjects		= function() { return []; }
-	static getPreviewObjectOutline  = function() { return []; }
+	static getPreviewObject 		= function() /*=>*/ {return noone};
+	static getPreviewObjects		= function() /*=>*/ {return []};
+	static getPreviewObjectOutline  = function() /*=>*/ {return []};
 	
 }

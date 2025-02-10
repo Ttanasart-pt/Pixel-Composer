@@ -1,5 +1,5 @@
 {
-  "name":"Bitmap Font",
+  "name":"Surfaces to Font",
   "tooltip":"Create font from surface array.",
   "spr":"s_node_font_bitmap",
   "baseNode":"Node_Font_Bitmap",

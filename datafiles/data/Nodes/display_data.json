@@ -770,6 +770,7 @@
             "Node_Path_From_Mask",
             "Node_Path_Plot",
             "Node_Path_3D",
+            "Node_Path_Shape_3D",
             "Node_Path_3D_Camera",
             "Node_Path_Anchor",
             { "label": "/Modifiers" },
