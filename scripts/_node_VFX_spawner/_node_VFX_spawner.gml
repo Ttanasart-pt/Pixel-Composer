@@ -135,19 +135,18 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	];
 	
 	attributes.part_amount = 512;
-	array_push(attributeEditors, ["Maximum particles", function() { return attributes.part_amount; },
-		new textBox(TEXTBOX_INPUT.number, function(val) { attributes.part_amount = val; }) ]);
+	array_push(attributeEditors, [ "Maximum particles", function() /*=>*/ {return attributes.part_amount}, new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ { attributes.part_amount = v; }) ]);
 	
-	parts        = array_create(attributes.part_amount);
-	parts_runner = 0;
+	parts = array_create(attributes.part_amount);
+	for( var i = 0; i < attributes.part_amount; i++ ) parts[i] = new __part(self);
 	
+	parts_runner    = 0;
 	seed            = 0;
 	spawn_index_raw = 0;
 	spawn_index     = 0;
 	scatter_index   = 0;
 	def_surface     = -1;
-	
-	surface_cache = {};
+	surface_cache   = {};
 	
 	wiggle_maps = {
 		wig_psx: new wiggleMap(seed, 1, 1000),
@@ -158,12 +157,9 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		wig_dir: new wiggleMap(seed, 1, 1000),
 	};
 	
-	curve_scale = noone;
-	curve_alpha = noone;
+	curve_scale    = noone;
+	curve_alpha    = noone;
 	curve_path_div = noone;
-	
-	for( var i = 0; i < attributes.part_amount; i++ )
-		parts[i] = new __part(self);
 		
 	static spawn = function(_time = CURRENT_FRAME, _pos = -1) {
 		var _inSurf     	= getInputData( 0);

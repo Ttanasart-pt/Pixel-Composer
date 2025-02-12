@@ -64,7 +64,7 @@ function Node_Array_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	}
 	
 	static drawBadge = function(_x, _y, _s) {}
-	static drawJunctionNames = function(_x, _y, _mx, _my, _s) {}
+	static drawJunctionNames = function(_x, _y, _mx, _my, _s, _panel = noone) {}
 	
 	static drawJunctions = function(_draw, _x, _y, _mx, _my, _s) {
 		var _dval = PANEL_GRAPH.value_dragging;

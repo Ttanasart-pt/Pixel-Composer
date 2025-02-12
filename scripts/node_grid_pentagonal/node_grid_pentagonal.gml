@@ -51,7 +51,7 @@ function Node_Grid_Pentagonal(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	
 	newInput(16, nodeValue_Slider_Range("Level", self, [ 0, 1 ]));
 	
-	newInput(17, nodeValue_Bool("Use Texture Dimension", self, true));
+	newInput(17, nodeValue_Bool("Use Texture Dimension", self, false));
 	
 	input_display_list = [
 		["Output",  false], 0,

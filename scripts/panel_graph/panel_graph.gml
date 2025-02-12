@@ -2179,7 +2179,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
             var _node = nodes_list[i];
             
             if(!display_parameter.show_control && _node.is_controller) continue;
-            _node.drawJunctionNames(gr_x, gr_y, mx, my, graph_s);    
+            _node.drawJunctionNames(gr_x, gr_y, mx, my, graph_s, self);    
         }
         
     }

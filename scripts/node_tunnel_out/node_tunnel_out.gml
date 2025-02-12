@@ -89,7 +89,7 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}
 	
 	static drawBadge = function(_x, _y, _s) {}
-	static drawJunctionNames = function(_x, _y, _mx, _my, _s) {}
+	static drawJunctionNames = function(_x, _y, _mx, _my, _s, _panel = noone) {}
 	
 	static onDrawNodeBehind = function(_x, _y, _mx, _my, _s) {
 		var xx =  x      * _s + _x;

@@ -136,7 +136,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	dtype  = -1;
 	range  = 0;
 	
-	onSetDisplayName = function() { attributes.inherit_name = false; }
+	onSetDisplayName = function() /*=>*/ { attributes.inherit_name = false; }
 	
 	outputs[0].onSetTo = function(juncTo) {
 		if(attributes.inherit_name && !LOADING && !APPENDING)
@@ -148,10 +148,46 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var ind = array_find(GROUP_IO_TYPE_MAP, juncTo.type);
 		if(ind == -1) return;
 		
-		if(ind == inputs[2].getValue()) return;
-		
 		outputs[0].setType(juncTo.type);
 		inputs[2].setValue(ind);
+		
+		switch(instanceof(juncTo)) {
+			case "__NodeValue_Vec2" : 
+			case "__NodeValue_Dimension" : 
+				inputs[0].setValue(array_find(GROUP_IO_DISPLAY[0], "Vector"));
+				inputs[4].setValue(0);
+				break;
+			
+			case "__NodeValue_Vec2_Range" :
+				inputs[0].setValue(array_find(GROUP_IO_DISPLAY[0], "Vector range"));
+				inputs[4].setValue(0);
+				break;
+			
+			case "__NodeValue_Vec3" :
+				inputs[0].setValue(array_find(GROUP_IO_DISPLAY[0], "Vector"));
+				inputs[4].setValue(1);
+				break;
+			
+			case "__NodeValue_Vec3_Range" :
+				inputs[0].setValue(array_find(GROUP_IO_DISPLAY[0], "Vector range"));
+				inputs[4].setValue(1);
+				break;
+			
+			case "__NodeValue_Vec4" :
+				inputs[0].setValue(array_find(GROUP_IO_DISPLAY[0], "Vector"));
+				inputs[4].setValue(2);
+				break;
+				
+			case "__NodeValue_Rotation" : 
+				inputs[0].setValue(array_find(GROUP_IO_DISPLAY[0], "Rotation"));
+				inputs[4].setValue(2);
+				break;
+		} 
+		
+		juncTo.value_from = noone;
+			inParent.setValue(juncTo.getValue());
+		juncTo.value_from = outputs[0];
+		
 	}
 	
 	static createInput = function() {

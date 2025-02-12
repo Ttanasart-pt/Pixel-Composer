@@ -138,8 +138,7 @@ function __part(_node) : __particleObject() constructor {
 	static reset = function() {
 		INLINE
 		
-		surf  = noone;
-		
+		surf   = noone;
 		prevx  = undefined;
 		prevy  = undefined;
 	}
@@ -152,8 +151,8 @@ function __part(_node) : __particleObject() constructor {
 		x	   = _x;
 		y	   = _y;
 		
-		drawx = undefined;
-		drawy = undefined;
+		drawx  = undefined;
+		drawy  = undefined;
 		
 		anim_len = is_array(surf)? array_length(surf) : 1;
 		
@@ -247,13 +246,13 @@ function __part(_node) : __particleObject() constructor {
 			node.onPartDestroy(self);
 	}
 	
-	static step = function(frame = 0) {
+	static step = function(_frame = 0) {
 		INLINE
 		trailLife++;
 		
 		if(!active) return;
 		x += speedx;
-		self.frame = frame;
+		frame = _frame;
 		
 		random_set_seed(seed + life);
 		
@@ -361,10 +360,12 @@ function __part(_node) : __particleObject() constructor {
 				case ANIM_END_ACTION.loop: 
 					ss = surf[safe_mod(ind, anim_len)];
 					break;
+					
 				case ANIM_END_ACTION.pingpong:
 					var ping = safe_mod(ind, (anim_len - 1) * 2 + 1); 
 					ss = surf[ping >= anim_len? (anim_len - 1) * 2 - ping : ping];
 					break;
+					
 				case ANIM_END_ACTION.destroy:
 					if(ind >= anim_len) {
 						kill();
@@ -435,9 +436,8 @@ function __part(_node) : __particleObject() constructor {
 					var _s = shader_current();
 					shader_reset();
 						
-						draw_set_color(cc);
-						draw_set_alpha(alp_draw);
-						dynaSurf_circle_fill(_xx, _yy, exact? round(ss) : ss);
+						draw_set_color_alpha(cc, alp_draw);
+						dynaSurf_circle_fill(round(_xx), round(_yy), exact? round(ss) : ss);
 						draw_set_alpha(1);
 					
 					shader_set(_s);

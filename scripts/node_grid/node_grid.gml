@@ -67,7 +67,7 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		
 	newInput(24, nodeValue_Slider_Range("Level", self, [ 0, 1 ]));
 	
-	newInput(25, nodeValue_Bool("Use Texture Dimension", self, true));
+	newInput(25, nodeValue_Bool("Use Texture Dimension", self, false));
 	
 	newInput(26, nodeValue_Float("Gap Width", self, 1));
 	

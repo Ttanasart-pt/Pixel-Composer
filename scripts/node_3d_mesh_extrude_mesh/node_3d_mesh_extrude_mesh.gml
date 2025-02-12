@@ -24,7 +24,7 @@ function Node_3D_Mesh_Extrude_Mesh(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 		__d3d_input_list_mesh,
 		__d3d_input_list_transform,
 		["Mesh",   false], in_mesh + 0, in_mesh + 1, in_mesh + 2, 
-		["Render", false], in_mesh + 3, in_mesh + 4, in_mesh + 5, in_mesh + 6,  
+		["Render", false], in_mesh + 4, in_mesh + 5, in_mesh + 6,  
 	]
 	
 	temp_surface = [ noone, noone ];

@@ -53,21 +53,17 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	newInput(1, nodeValue_Bool("Background", self, false));
 	
-	shape_types     = [ 
+	shape_types = [ 
 		    "Rectangle", "Diamond", "Trapezoid", "Parallelogram", "Half", 
 		-1, "Ellipse", "Arc", "Donut", "Crescent", "Disk Segment", "Pie", "Squircle", 
 		-1, "Regular polygon", "Star", "Cross", "Rounded Cross",  
 		-1, "Line", "Arrow", 
 		-1, "Teardrop", "Leaf", "Heart", "Gear", 
 	];
-	shape_types_str = [];
+	__ind = 0; shape_types_str = array_map(shape_types, function(v, i) /*=>*/ {return v == -1? -1 : new scrollItem(v, s_node_shape_type, __ind++)});
 	
-	var _ind = 0;
-	for( var i = 0, n = array_length(shape_types); i < n; i++ )
-		shape_types_str[i] = shape_types[i] == -1? -1 : new scrollItem(shape_types[i], s_node_shape_type, _ind++);
-	
-	newInput(2, nodeValue_Enum_Scroll("Shape", self,  0, { data: shape_types_str, horizontal: true, text_pad: ui(16) }));
-	inputs[2].options_histories = [ shape_types, { cond: function() /*=>*/ {return LOADING_VERSION < 1_18_00_0}, list: global.node_shape_keys_18 } ];	 
+	newInput(2, nodeValue_Enum_Scroll("Shape", self,  0, { data: shape_types_str, horizontal: true, text_pad: ui(16) }))
+		.setHistory([ shape_types, { cond: function() /*=>*/ {return LOADING_VERSION < 1_18_00_0}, list: global.node_shape_keys_18 } ]);
 	
 	newInput(3, nodeValue_Area("Position", self, DEF_AREA_REF, { onSurfaceSize, useShape : false }))
 		.setUnitRef(onSurfaceSize, VALUE_UNIT.reference);

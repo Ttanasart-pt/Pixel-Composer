@@ -22,7 +22,7 @@ event_inherited();
 
 #region content
 	sc_group = new scrollPane(dialog_w - ui(padding + padding), dialog_h - ui(title_height + padding), function(_y, _m) {
-		draw_clear_alpha(COLORS.panel_bg_clear, 0);
+		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
 		if(node == noone) return 0;
 		
 		var _h    = 0;

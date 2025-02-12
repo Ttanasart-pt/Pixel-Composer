@@ -8,10 +8,6 @@
 function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Draw Shape Polygon";
 	
-	shapesArray = [ "Rectangle", "Ellipse", "Star", "Capsule", "Ring", "Arc", "Gear", "Cross" ];
-	for( var i = 0, n = array_length(shapesArray); i < n; i++ ) 
-		shapesArray[i] = new scrollItem(shapesArray[i], s_node_shape_poly_type, i);
-		
 	newInput(0, nodeValue_Dimension(self));
 	
 	newInput(1, nodeValue_Bool("Background", self, false));
@@ -20,15 +16,25 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	newInput(3, nodeValue_Color("Shape color", self, cola(c_white)));
 	
-	newInput(4, nodeValue_Enum_Scroll("Shape", self,  0, shapesArray));
+	shapesArray = [ 
+		    "Rectangle", "Diamond", "Trapezoid", "Parallelogram", 
+		-1, "Ellipse", "Arc", "Ring", "Crescent", "Pie", "Squircle", 
+		-1, "Regular Polygon", "Star", "Cross", 
+		-1, "Capsule", 
+		-1, "Leaf", "Gear", 
+	];
+	__ind = 0; array_map_ext(shapesArray, function(v, i) /*=>*/ {return v == -1? -1 : new scrollItem(v, s_node_shape_poly_type, __ind++)});
+	
+	newInput(4, nodeValue_Enum_Scroll("Shape", self,  0, { data: shapesArray, horizontal: true, text_pad: ui(16) }))
+		.setHistory([ shapesArray, { cond: function() /*=>*/ {return LOADING_VERSION < 1_18_09_0}, list: global.node_shape_polygon_keys_1809 } ]);
 	
 	newInput(5, nodeValue_Vec2("Position", self, [ 0.5, 0.5 ]))
-		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
+		.setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
 	
 	newInput(6, nodeValue_Rotation("Rotation", self, 0));
 	
 	newInput(7, nodeValue_Vec2("Scale", self, [ 0.5, 0.5 ]))
-		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
+		.setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
 	
 	newInput(8, nodeValue_Int("Sides", self, 16))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [2, 64, 0.1] });
@@ -78,6 +84,14 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
+	newInput(25, nodeValue_Float("Trapezoid sides", self, 0.5))
+		.setDisplay(VALUE_DISPLAY.slider);
+	
+	newInput(26, nodeValue_Float("Skew", self, 0.5))
+		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] });
+	
+	newInput(27, nodeValue_Float("Factor", self, 3));
+	
 	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 		
 	newOutput(1, nodeValue_Output("Mesh", self, VALUE_TYPE.mesh, noone));
@@ -87,7 +101,7 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	input_display_list = [ 16, 
 		["Output", 		false], 0, 
 		["Transform",	false], 5, 6, 7, 
-		["Shape",		false], 4, 8, 9, 10, 11, 12, 13, 14, 15, 17, 
+		["Shape",		false], 4, 8, 9, 10, 11, 12, 13, 14, 15, 17, 25, 26, 27, 
 		["Piecewise",	false], 18, 22, 
 		["Render",		 true],	3, 23, 19, 20, 21, 24, 
 		["Background",	 true, 1], 2, 
@@ -98,6 +112,9 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	node_draw_transform_init();
 	
 	temp_surface = [ noone ];
+	
+	mesh = new Mesh();
+	path = new PathSegment();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(array_length(current_data) != array_length(inputs)) return;
@@ -119,9 +136,6 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		draw_vertex_color(_p.x * _aa, _p.y * _aa, _color, _alpha);
 	}
 	
-	mesh = new Mesh();
-	path = new PathSegment();
-	
 	static processData = function(_outData, _data, _output_index, _array_index) {
 		var _dim	= _data[0];
 		var _bg		= _data[1];
@@ -131,20 +145,26 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		var _pos	= _data[5];
 		var _rot	= _data[6];
 		var _sca	= _data[7];
-		var _side	= _data[8];
-		var _inner	= _data[9];
-		var _rad	= _data[10];
-		var _teeth  = _data[11];
-		var _thHei  = _data[12];
-		var _thTap  = _data[13];
-		var _aRan   = _data[14];
-		var _cap    = _data[15];
 		var _mesh   = _data[16];
-		var _expld  = _data[17];
 		var _prot   = _data[18];
 		var _psca   = _data[22];
 		var _pall   = _data[23];
 		var _aa     = power(2, _data[24]);
+		
+		var data = {
+			side:	  _data[ 8],
+			inner:	  _data[ 9],
+			radius:   _data[10],
+			radRan:   _data[14],
+			teeth:	  _data[11],
+			teethH:   _data[12],
+			teethT:   _data[13],
+			cap:      _data[15],
+			explode:  _data[17],
+			trep:     _data[25], 
+			palAng:   _data[26], 
+			factor:   _data[27], 
+		};
 		
 		inputs[ 8].setVisible(false);
 		inputs[ 9].setVisible(false);
@@ -155,69 +175,99 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		inputs[14].setVisible(false);
 		inputs[15].setVisible(false);
 		inputs[17].setVisible(false);
+		inputs[25].setVisible(false);
+		inputs[26].setVisible(false);
+		inputs[27].setVisible(false);
 		
 		var _shapeName = array_safe_get_fast(shapesArray, _shp).name; 
+		var _shapeFn   = noone;
 		
 		switch(_shapeName) {
-			case "Rectangle" : // 0
+			case "Rectangle" : _shapeFn = SHAPE_rectangle; break;
+			case "Diamond"   : _shapeFn = SHAPE_diamond;   break;
+			
+			case "Trapezoid" : _shapeFn = SHAPE_trapezoid; 
+				inputs[25].setVisible(true);
 				break;
 				
-			case "Ellipse"	 : // 1
+			case "Parallelogram" : _shapeFn = SHAPE_parallelogram; 
+				inputs[26].setVisible(true);
+				break;
+			
+			////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				
+			case "Ellipse"	 : _shapeFn = SHAPE_circle; 
 				inputs[ 8].setVisible(true);
 				inputs[17].setVisible(true);
 				break;
 				
-			case "Star"		 : // 2
-				inputs[ 8].setVisible(true);
-				inputs[ 9].setVisible(true);
-				break;
-				
-			case "Capsule"	 : // 3
-				inputs[ 8].setVisible(true);
-				inputs[10].setVisible(true);
-				break;
-				
-			case "Ring"		 : // 4
-				inputs[ 8].setVisible(true);
-				inputs[ 9].setVisible(true);
-				break;
-				
-			case "Arc"		 : // 5
+			case "Arc"		 : _shapeFn = SHAPE_arc; 
 				inputs[ 8].setVisible(true);
 				inputs[ 9].setVisible(true);
 				inputs[14].setVisible(true);
 				inputs[15].setVisible(true);
 				break;
 				
-			case "Gear"		 : // 6
+			case "Ring"		 : _shapeFn = SHAPE_ring; 
+				inputs[ 8].setVisible(true);
+				inputs[ 9].setVisible(true);
+				break;
+				
+			case "Crescent"  : _shapeFn = SHAPE_crescent; 
+				inputs[ 8].setVisible(true);
+				inputs[ 9].setVisible(true);
+				break;
+				
+			case "Pie"  :      _shapeFn = SHAPE_pie;
+				inputs[ 8].setVisible(true);
+				inputs[14].setVisible(true);
+				break;
+				
+			case "Squircle"  : _shapeFn = SHAPE_squircle;
+				inputs[ 8].setVisible(true);
+				inputs[27].setVisible(true);
+				break;
+				
+			////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				
+			case "Regular Polygon" : _shapeFn = SHAPE_reg_poly;
+				inputs[ 8].setVisible(true);
+				break;
+				
+			case "Star"		 : _shapeFn = SHAPE_star; 
+				inputs[ 8].setVisible(true);
+				inputs[ 9].setVisible(true);
+				break;
+				
+			case "Cross"	 : _shapeFn = SHAPE_cross; 
+				inputs[ 9].setVisible(true);
+				break;
+				
+			////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				
+			case "Capsule"	 : _shapeFn = SHAPE_capsule; 
+				inputs[ 8].setVisible(true);
+				inputs[10].setVisible(true);
+				break;
+				
+			////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				
+			case "Leaf"		 : _shapeFn = SHAPE_leaf;
+				inputs[ 8].setVisible(true);
+				break;
+			
+			case "Gear"		 : _shapeFn = SHAPE_gear; 
 				inputs[ 9].setVisible(true);	
 				inputs[11].setVisible(true);
 				inputs[12].setVisible(true);
 				inputs[13].setVisible(true);
 				break;
 				
-			case "Cross"	 : // 7
-				inputs[ 9].setVisible(true);
-				break;
-				
 		}
-				
-		var _outSurf = surface_verify(_outData[0], _dim[0], _dim[1], attrDepth());
 		
 		temp_surface[0] = surface_verify(temp_surface[0], _dim[0] * _aa, _dim[1] * _aa, attrDepth());
-		var _cPassAA = temp_surface[0];
-		
-		var data = {
-			side:	   _side,
-			inner:	   _inner,
-			radius:    _rad,
-			radRan:    _aRan,
-			teeth:	   _teeth,
-			teethH:    _thHei,
-			teethT:    _thTap,
-			cap:       _cap,
-			explode:   _expld,
-		};
+		var _outSurf    = surface_verify(_outData[0], _dim[0], _dim[1], attrDepth());
+		var _cPassAA    = temp_surface[0];
 		
 		var tri0 = colorMultiply(_shc, _data[19]); 
 		var tri1 = colorMultiply(_shc, _data[20]); 
@@ -245,28 +295,17 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				
 			} else {
 				
-				var shapeData = [];
-			
-				switch(_shapeName) {
-					case "Rectangle" : shapeData = SHAPE_rectangle( _sca      );	break;
-					case "Ellipse"	 : shapeData = SHAPE_circle(	_sca, data);	break;
-					case "Star"		 : shapeData = SHAPE_star(  	_sca, data);	break;
-					case "Capsule"	 : shapeData = SHAPE_capsule(	_sca, data);	break;
-					case "Ring"		 : shapeData = SHAPE_ring(  	_sca, data);	break;
-					case "Arc"		 : shapeData = SHAPE_arc(       _sca, data);	break;
-					case "Gear"		 : shapeData = SHAPE_gear(  	_sca, data);	break;
-					case "Cross"	 : shapeData = SHAPE_cross( 	_sca, data);	break;
+				if(_shapeFn == noone) {
+					draw_primitive_end();
+					draw_set_alpha(1);
 					
-					default: 
-						draw_primitive_end();
-						draw_set_alpha(1);
-			
-						surface_reset_target();
-						return [ _outSurf, mesh, path ];
+					surface_reset_target();
+					return [ _outSurf, mesh, path ];
 				}
 				
-				var points  = shapeData[0];
-				var segment = shapeData[1];
+				var shapeData = _shapeFn(_sca, data);
+				var points    = shapeData[0];
+				var segment   = shapeData[1];
 				
 				if(_prot != 0 || _psca != 1)
 				for( var i = 0, n = array_length(points); i < n; i++ ) {
@@ -306,12 +345,8 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				path.setSegment(segment);
 				
 				var shapes = [];
-				for( var i = 0, n = array_length(points); i < n; i++ ) {
-					if(points[i].type == SHAPE_TYPE.points)
-						shapes[i] = polygon_triangulate(points[i].points)[0];
-					else 
-						shapes[i] = points[i].triangles;
-				}
+				for( var i = 0, n = array_length(points); i < n; i++ )
+					shapes[i] = points[i].type == SHAPE_TYPE.points? polygon_triangulate(points[i].points)[0] : points[i].triangles;
 				
 				var _plen = array_length(_pall);
 				mesh.triangles = [];
@@ -349,3 +384,5 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		return [ _outSurf, mesh, path ];
 	}
 }
+
+global.node_shape_polygon_keys_1809 = [ "Rectangle", "Ellipse", "Star", "Capsule", "Ring", "Arc", "Gear", "Cross" ];

@@ -116,7 +116,7 @@ function Node_Mirror_Polar(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			shader_set_2("scale",     _sca);
 			shader_set_i("rscale",   _rsca);
 			
-			draw_surface_stretched(_suf, 0, 0, _dim[0], _dim[1]);
+			draw_surface_stretched_safe(_suf, 0, 0, _dim[0], _dim[1]);
 		surface_reset_shader();
 		
 		return _outSurf;

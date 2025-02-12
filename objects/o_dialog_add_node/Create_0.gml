@@ -160,14 +160,16 @@ event_inherited();
 			
 			array_push(node_list, "Favourites");
 			var _favs = struct_get_names(global.FAV_NODES);
+			var _fvnd = [];
 			for( var i = 0, n = array_length(_favs); i < n; i++ ) {
 				var _nodeIndex = _favs[i];
 				if(!struct_has(ALL_NODES, _nodeIndex)) continue;
 				
 				var _node = ALL_NODES[$ _nodeIndex];
-				if(_node.show_in_recent) 
-					array_push(node_list, _node);
+				if(_node.show_in_recent) array_push(_fvnd, _node);
 			}
+			array_sort(_fvnd, function(v1, v2) /*=>*/ {return string_compare(v1.name, v2.name)});
+			for( var i = 0, n = array_length(_fvnd); i < n; i++ ) array_push(node_list, _fvnd[i]);
 			
 			array_push(node_list, "Recents");
 			if(is_array(global.RECENT_NODES))
@@ -304,7 +306,7 @@ event_inherited();
 		
 		if(junction_called == noone) return;
 		
-		//connect to called junction
+		// connect to called junction
 		var _call_input = junction_called.connect_type == CONNECT_TYPE.input;
 		var _from       = junction_called.value_from;
 		var _junc_list  = _call_input? _outputs : _inputs;

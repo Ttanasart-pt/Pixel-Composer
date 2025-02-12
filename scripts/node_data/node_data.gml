@@ -709,7 +709,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			var _input = getInputJunctionIndex(i);
 			if(_input == noone) continue;
 			
-			var _inp = inputs[_input];
+			var _inp = array_safe_get(inputs, _input);
 			if(!is_struct(_inp) || !is_instanceof(_inp, NodeValue)) continue;
 			
 			_inp.visible_in_list = true;
@@ -1670,7 +1670,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		draw_set_alpha(1);
 	}
 	
-	static drawJunctionWidget = function(_x, _y, _mx, _my, _s, _hover, _focus) {
+	static drawJunctionWidget = function(_x, _y, _mx, _my, _s, _hover, _focus, display_parameter = noone, _panel = noone) {
 		
 		var hover = noone;
 		
@@ -1685,8 +1685,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		var jy = _y + con_h * _s + wh / 2;
 		
-		var rx = PANEL_GRAPH.x;
-		var ry = PANEL_GRAPH.y;
+		var rx = _panel.x;
+		var ry = _panel.y;
 		
 		var extY = 0;
 		var drwT = _s > 0.5;
@@ -1843,14 +1843,14 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static onDrawJunctions = function(_x, _y, _mx, _my, _s) {}
 	
-	static drawJunctionNames = function(_x, _y, _mx, _my, _s) {
+	static drawJunctionNames = function(_x, _y, _mx, _my, _s, _panel = noone) {
 		var amo = input_display_list == -1? array_length(inputs) : array_length(input_display_list);
 		var jun;
 		
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
 		
-		var _hov = PANEL_GRAPH.pHOVER && (PANEL_GRAPH.node_hovering == noone || PANEL_GRAPH.node_hovering == self);
+		var _hov = _panel.pHOVER && (_panel.node_hovering == noone || _panel.node_hovering == self);
 		
 		show_input_name  = _hov;
 		show_output_name = _hov;
@@ -1861,9 +1861,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		show_input_name  &= point_in_rectangle(_mx, _my, xx - (    12) * _s, _y0, xx + (    12) * _s, _y1);
 		show_output_name &= point_in_rectangle(_mx, _my, xx + (w - 12) * _s, _y0, xx + (w + 12) * _s, _y1);
 		
-		if(PANEL_GRAPH.value_dragging && PANEL_GRAPH.node_hovering == self) {
-			if(PANEL_GRAPH.value_dragging.connect_type == CONNECT_TYPE.input)  show_output_name = true;
-			if(PANEL_GRAPH.value_dragging.connect_type == CONNECT_TYPE.output) show_input_name = true;
+		if(_panel.value_dragging && _panel.node_hovering == self) {
+			if(_panel.value_dragging.connect_type == CONNECT_TYPE.input)  show_output_name = true;
+			if(_panel.value_dragging.connect_type == CONNECT_TYPE.output) show_input_name = true;
 		}
 		
 		if(show_input_name) {
@@ -1909,12 +1909,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 		}
 		
-		if(hasInspector1Update() && PANEL_GRAPH.pHOVER && point_in_circle(_mx, _my, inspectInput1.x, inspectInput1.y, 10)) {
+		if(hasInspector1Update() && _panel.pHOVER && point_in_circle(_mx, _my, inspectInput1.x, inspectInput1.y, 10)) {
 			inspectInput1.drawNameBG(_s);
 			inspectInput1.drawName(_s, _mx, _my);
 		}
 		
-		if(hasInspector2Update() && PANEL_GRAPH.pHOVER && point_in_circle(_mx, _my, inspectInput2.x, inspectInput2.y, 10)) {
+		if(hasInspector2Update() && _panel.pHOVER && point_in_circle(_mx, _my, inspectInput2.x, inspectInput2.y, 10)) {
 			inspectInput2.drawNameBG(_s);
 			inspectInput2.drawName(_s, _mx, _my);
 		}
@@ -2149,15 +2149,15 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			if(preview_draw) drawPreview(xx, yy, _s);
 			
 			try { 
-				var _hover = PANEL_GRAPH.node_hovering == self;
-				var _focus = PANEL_GRAPH.getFocusingNode() == self;
+				var _hover = _panel.node_hovering == self;
+				var _focus = _panel.getFocusingNode() == self;
 				
 				onDrawNode(xx, yy, _mx, _my, _s, _hover, _focus); 
 			}
 			catch(e) { log_warning("NODE onDrawNode", exception_print(e)); }
 		} 
 		
-		if(SHOW_PARAM) drawJunctionWidget(xx, yy, _mx, _my, _s, _hover, _focus);
+		if(SHOW_PARAM) drawJunctionWidget(xx, yy, _mx, _my, _s, _hover, _focus, display_parameter, _panel);
 		
 		draw_name = false;
 		if((previewable && _s >= 0.5) || (!previewable && h * _s >= name_height * .5)) drawNodeName(xx, yy, _s, _panel);
