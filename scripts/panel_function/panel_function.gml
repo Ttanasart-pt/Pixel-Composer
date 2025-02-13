@@ -510,6 +510,8 @@
 	function call_panel_Globalvar()         { panelAdd("Panel_Globalvar",		    true);      }
 	function call_panel_File_Explorer()     { panelAdd("Panel_File_Explorer",	    true);      }
 	
+	function call_panel_Collection_Runner() { dialogPanelCall(new Panel_Collection_Runner());   }
+	
 	function __fnInit_Panels() {
 		
         registerFunction("", "Preferences",               "", MOD_KEY.none, call_dialog_preference            ).setMenu("preference",      THEME.gear)
@@ -542,5 +544,7 @@
         registerFunction("", "Console Panel",             "", MOD_KEY.none, call_panel_Console                ).setMenuAlt("Console",      "console_panel")
         registerFunction("", "Globalvar Panel",           "", MOD_KEY.none, call_panel_Globalvar              ).setMenuAlt("Globalvar",    "globalvar_panel")
         registerFunction("", "File Explorer Panel",       "", MOD_KEY.none, call_panel_File_Explorer          ).setMenuAlt("File",         "file_explorer_panel")
+        
+        registerFunction("", "Collection Runner Panel",   "", MOD_KEY.none, call_panel_Collection_Runner      ).setMenuAlt("Runner",       "collection_runner_panel")
 	}
 #endregion

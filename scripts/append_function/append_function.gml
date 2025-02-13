@@ -55,8 +55,7 @@ function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext(), appended_
 			var _node = appended_list[i];
 			_node.loadGroup(context);
 		
-			if(_node.group == context)
-				array_push(node_create, _node);
+			if(_node.group == context) array_push(node_create, _node);
 		}
 	} catch(e) {
 		log_warning("APPEND, node", exception_print(e));
@@ -80,14 +79,17 @@ function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext(), appended_
 	printIf(log, $"Apply deserialize time: {current_time - t}"); t = current_time;
 	
 	try {
-		for(var i = 0; i < array_length(appended_list); i++)
-			appended_list[i].preConnect();
+		var _conn_list = array_substract(appended_list, node_create);
+		
+		for(var i = 0; i < array_length(_conn_list); i++)
+			_conn_list[i].preConnect();
 			
-		for(var i = 0; i < array_length(appended_list); i++) 
-			appended_list[i].connect();
+		for(var i = 0; i < array_length(_conn_list); i++) 
+			_conn_list[i].connect();
 			
-		for(var i = 0; i < array_length(appended_list); i++)
-			appended_list[i].postConnect();
+		for(var i = 0; i < array_length(_conn_list); i++)
+			_conn_list[i].postConnect();
+			
 	} catch(e) {
 		log_warning("APPEND, connect", exception_print(e));
 	}

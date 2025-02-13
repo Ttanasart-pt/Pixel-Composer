@@ -64,10 +64,6 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	static step = function() { 
 		__step_mask_modifier();
 		
-		var _typ = getSingleValue(11);
-		
-		inputs[ 3].setVisible(_typ == 0);
-		inputs[12].setVisible(_typ == 1);
 	} 
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
@@ -91,6 +87,9 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			_shay = _dim[1] / 2 - _lgh[1];
 		}
 		
+		inputs[ 3].setVisible(_posi == 0);
+		inputs[12].setVisible(_posi == 1);
+		
 		surface_set_shader(pass1, sh_outline_only);
 			shader_set_f("dimension",   _dim);
 			shader_set_f("borderSize",  _border);
@@ -102,7 +101,8 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		surface_set_target(_outSurf);
 			DRAW_CLEAR
 			BLEND_OVERRIDE
-				draw_surface_ext_safe(surface_apply_gaussian(pass1, _size, false, cl), 0, 0, 1, 1, 0, cl, _stre * _color_get_alpha(cl));
+				var _s = surface_apply_gaussian(pass1, _size, false, cl, 2);
+				draw_surface_ext_safe(_s, 0, 0, 1, 1, 0, cl, _stre * _color_get_alpha(cl));
 			BLEND_ALPHA_MULP
 				draw_surface_safe(_surf);
 			BLEND_NORMAL

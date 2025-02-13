@@ -1,0 +1,14 @@
+{
+  "$GMScript":"v1",
+  "%Name":"panel_collection_runner",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"panel_collection_runner",
+  "parent":{
+    "name":"runner",
+    "path":"folders/panels/runner.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+  "tags":[],
+}

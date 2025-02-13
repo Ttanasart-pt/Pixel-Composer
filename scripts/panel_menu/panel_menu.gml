@@ -225,6 +225,7 @@ function Panel_Menu() : PanelContent() constructor {
             MENU_ITEMS.notification_panel,
             MENU_ITEMS.globalvar_panel,
             MENU_ITEMS.file_explorer_panel,
+            MENU_ITEMS.collection_runner_panel,
             
             menuItemShelf(__txt("Nodes"), function(_dat) { 
                 return submenuCall(_dat, [

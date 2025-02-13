@@ -2225,7 +2225,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(name_custom) name = _map[$ "name"] ?? name;
 		
 		if(struct_has(_map, "raw_value")) 
-			animator.deserialize(_map[$ "raw_value"] ?? scale);
+			animator.deserialize(_map[$ "raw_value"], scale);
 			
 		if(bypass_junc) 
 			bypass_junc.visible = _map[$ "bypass"] ?? false;

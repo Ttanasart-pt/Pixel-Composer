@@ -666,8 +666,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			var _keyframe = _data[i];
 			var _time = array_safe_get_fast(_keyframe, 0);
 			
-			if(scale && _time <= 1)
-				_time = round(_time * (TOTAL_FRAMES - 1));
+			if(scale) _time = round(_time * (TOTAL_FRAMES - 1));
 			
 			var value		  = array_safe_get_fast(_keyframe, 1);
 			var ease_in		  = array_safe_get_fast(_keyframe, 2, [0, 1]);
