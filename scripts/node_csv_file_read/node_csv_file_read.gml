@@ -28,14 +28,13 @@ function Node_create_CSV_File_Read_path(_x, _y, path) {
 function Node_CSV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "CSV File In";
 	color = COLORS.node_blend_input;
-	
-	w = 128;
+	w     = 128;
 	
 	newInput(0, nodeValue_Path("Path", self, ""))
 		.setDisplay(VALUE_DISPLAY.path_load, { filter: "CSV file|*.csv" })
 		.rejectArray();
 		
-	newInput(1, nodeValue_Bool("Convert to number", self, false))
+	newInput(1, nodeValue_Bool("Convert to Number", self, false))
 		.rejectArray();
 	
 	newOutput(0, nodeValue_Output("Content", self, VALUE_TYPE.text, ""));
@@ -43,22 +42,21 @@ function Node_CSV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	newOutput(1, nodeValue_Output("Path", self, VALUE_TYPE.path, ""))
 		.setVisible(true, true);
 	
+	input_display_list = [ 0,
+		["Data", false], 1,
+	];
+	
 	content      = "";
 	path_current = "";
 	
 	edit_time = 0;
 	attributes.file_checker = true;
-	array_push(attributeEditors, [ "File Watcher", function() { return attributes.file_checker; }, 
-		new checkBox(function() { attributes.file_checker = !attributes.file_checker; }) ]);
+	array_push(attributeEditors, [ "File Watcher", function() /*=>*/ {return attributes.file_checker}, new checkBox(function() /*=>*/ { attributes.file_checker = !attributes.file_checker; }) ]);
 	
 	first_update = false;
 	
 	on_drop_file = function(path) {
-		if(updatePaths(path)) {
-			doUpdate();
-			return true;
-		}
-		
+		if(updatePaths(path)) { doUpdate(); return true; }
 		return false;
 	}
 	
@@ -66,13 +64,12 @@ function Node_CSV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		path = path_get(path);
 		if(path == -1) return false;
 		
-		var ext = string_lower(filename_ext(path));
-		var _name = string_replace(filename_name(path), filename_ext(path), "");
+		var  ext  = string_lower(filename_ext(path));
+		var _name = filename_name_only(path);
 		
 		if(ext != ".csv") return false;
 			
 		outputs[1].setValue(path);
-		
 		content = file_text_read_all_lines(path);
 		
 		var convert = getInputData(1);

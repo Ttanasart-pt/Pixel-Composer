@@ -1012,7 +1012,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 			text_y_max  = max(0, total_h - hh + 16);
 			text_y      = lerp_float(text_y, text_y_to, 5);
 		
-			if(hover) {
+			if(ihover) {
 				if(mouse_wheel_down()) text_y_to = clamp(text_y_to - ui(64) * SCROLL_SPEED, -text_y_max, 0);
 				if(mouse_wheel_up())   text_y_to = clamp(text_y_to + ui(64) * SCROLL_SPEED, -text_y_max, 0);
 			}
@@ -1034,12 +1034,12 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 			}
 			
 			if(text_y_max) {
-				var hov = hover && point_in_rectangle(_m[0], _m[1], scr_x - 3, _y, _x + _w, _y + _h);
+				var hov = ihover && point_in_rectangle(_m[0], _m[1], scr_x - 3, _y, _x + _w, _y + _h);
 				
 				draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, scr_x, scr_y, scr_w, scr_h, COLORS.scrollbar_bg,   1);
 				draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, scr_x, bar_y, scr_w, bar_h, hov || text_scrolling? COLORS.scrollbar_hover : COLORS.scrollbar_idle, 1);
 				
-				if(mouse_press(mb_left, hov && active)) {
+				if(hov && mouse_press(mb_left, iactive)) {
 					text_scrolling = true;
 					text_scroll_sy = text_y;
 					text_scroll_my = _m[1];

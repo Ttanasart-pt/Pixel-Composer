@@ -754,6 +754,7 @@
             "Node_Array_Shuffle",
             "Node_Array_Unique",
             "Node_Array_Boolean_Opr",
+            "Node_Array_Flattern",
             { "label": "/Group Operators" },
             "Node_Array_Sort",
             "Node_Iterate_Each_Inline",

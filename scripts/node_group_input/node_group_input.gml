@@ -8,7 +8,7 @@ globalvar GROUP_IO_TYPE_NAME, GROUP_IO_TYPE_MAP, GROUP_IO_DISPLAY;
 							
 							-1,						"3D Mesh",				"3D Light",				"3D Camera",			"3D Scene",	
 							"3D Material",  		-1,						"PCX",					"Audio",				"Fluid Domain", 
-							"SDF",
+							"SDF",                  "Gradient", 
 						 ];
 	
 	GROUP_IO_TYPE_MAP  = [	VALUE_TYPE.integer,		VALUE_TYPE.float,		VALUE_TYPE.boolean,		VALUE_TYPE.color,		VALUE_TYPE.surface, 
@@ -18,50 +18,51 @@ globalvar GROUP_IO_TYPE_NAME, GROUP_IO_TYPE_MAP, GROUP_IO_DISPLAY;
 							
 							noone,					VALUE_TYPE.d3Mesh,		VALUE_TYPE.d3Light,		VALUE_TYPE.d3Camera,	VALUE_TYPE.d3Scene,		
 							VALUE_TYPE.d3Material,  noone,					VALUE_TYPE.PCXnode,		VALUE_TYPE.audioBit,	VALUE_TYPE.fdomain,
-							VALUE_TYPE.sdf,
+							VALUE_TYPE.sdf,         VALUE_TYPE.gradient,
 						 ];
 	
 	GROUP_IO_DISPLAY = [
 		
-	/*Integer*/	    [ "Default", "Range", "Rotation", "Rotation range", "Slider", "Slider range", "Padding", "Vector", "Vector range", "Area", "Enum button", "Menu scroll" ],
-	/*Float*/	    [ "Default", "Range", "Rotation", "Rotation range", "Slider", "Slider range", "Padding", "Vector", "Vector range", "Area" ],
-	/*Boolean*/	    [ "Default" ],
-	/*Color*/	    [ "Default", "Gradient", "Palette" ],
-	/*Surface*/	    [ "Default" ],
+	/*Integer*/	    [ "Integer", "Range", "Rotation", "Rotation range", "Slider", "Slider range", "Padding", "Vector", "Vector range", "Area", "Enum button", "Menu scroll" ],
+	/*Float*/	    [ "Float",   "Range", "Rotation", "Rotation range", "Slider", "Slider range", "Padding", "Vector", "Vector range", "Area" ],
+	/*Boolean*/	    [ "Boolean" ],
+	/*Color*/	    [ "Color", "Palette" ],
+	/*Surface*/	    [ "Surface" ],
 	    
-	/*Path*/	    [ "Default" ],
+	/*Path*/	    [ "Path"    ],
 	/*Curve*/	    [ "Curve",  ],
-	/*Text*/	    [ "Default" ],
-	/*Object*/	    [ "Default" ],
-	/*Node*/	    [ "Default" ],
+	/*Text*/	    [ "Text"    ],
+	/*Object*/	    [ "Object"  ],
+	/*Node*/	    [ "Node"    ],
 	    
-	/*3D*/		    [ "Default" ],
-	/*Any*/		    [ "Default" ],
-	/*Pathnode*/    [ "Default" ],
-	/*Particle*/    [ "Default" ],
-	/*Rigid*/	    [ "Default" ],
+	/*3D*/		    [ "-" ],
+	/*Any*/		    [ "Any"      ],
+	/*Pathnode*/    [ "Pathnode" ],
+	/*Particle*/    [ "Particle" ],
+	/*Rigid*/	    [ "Rigidbody Object" ],
 	    
-	/*Sdomain*/	    [ "Default" ],
-	/*Struct*/	    [ "Default" ],
-	/*Strand*/	    [ "Default" ],
-	/*Mesh*/	    [ "Default" ],
-	/*Trigger*/	    [ "Default" ],
+	/*Sdomain*/	    [ "Domain"  ],
+	/*Struct*/	    [ "Struct"  ],
+	/*Strand*/	    [ "Strand"  ],
+	/*Mesh*/	    [ "Mesh"    ],
+	/*Trigger*/	    [ "Trigger" ],
 	
 	//=========================//
 	
-	/*Noone*/	    [ "Default" ],
-	/*3D Mesh*/     [ "Default" ],
-	/*3D Light*/    [ "Default" ],
-	/*3D Camera*/   [ "Default" ],
-	/*3D Scene*/    [ "Default" ],
+	/*Noone*/	    [ "-" ],
+	/*3D Mesh*/     [ "3D Mesh"   ],
+	/*3D Light*/    [ "3D Light"  ],
+	/*3D Camera*/   [ "3D Camera" ],
+	/*3D Scene*/    [ "3D Scene"  ],
 	
-	/*3D Material*/ [ "Default" ],
-	/*noone*/	    [ "Default" ],
-	/*PCX*/         [ "Default" ],
-	/*Audio*/       [ "Default" ],
-	/*Fdomain*/     [ "Default" ],
+	/*3D Material*/ [ "3D Material" ],
+	/*noone*/	    [ "-" ],
+	/*PCX*/         [ "PCX"      ],
+	/*Audio*/       [ "Audio"    ],
+	/*Fdomain*/     [ "Fdomain"  ],
 	
-	/*SDF*/         [ "Default" ],
+	/*SDF*/         [ "SDF"      ],
+	/*Gradient*/    [ "Gradient" ],
 	
 	];
 #endregion
@@ -146,42 +147,31 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		attributes.inherit_type = false;
 		
 		var ind = array_find(GROUP_IO_TYPE_MAP, juncTo.type);
-		if(ind == -1) return;
-		
 		outputs[0].setType(juncTo.type);
-		inputs[2].setValue(ind);
+		
+		if(ind != -1) inputs[2].setValue(ind);
 		
 		switch(instanceof(juncTo)) {
 			case "__NodeValue_Vec2" : 
 			case "__NodeValue_Dimension" : 
-				inputs[0].setValue(array_find(GROUP_IO_DISPLAY[0], "Vector"));
-				inputs[4].setValue(0);
-				break;
+				inputs[0].setValue(array_find(GROUP_IO_DISPLAY[0], "Vector"));       inputs[4].setValue(0); break;
 			
 			case "__NodeValue_Vec2_Range" :
-				inputs[0].setValue(array_find(GROUP_IO_DISPLAY[0], "Vector range"));
-				inputs[4].setValue(0);
-				break;
+				inputs[0].setValue(array_find(GROUP_IO_DISPLAY[0], "Vector range")); inputs[4].setValue(0); break;
 			
 			case "__NodeValue_Vec3" :
-				inputs[0].setValue(array_find(GROUP_IO_DISPLAY[0], "Vector"));
-				inputs[4].setValue(1);
-				break;
+				inputs[0].setValue(array_find(GROUP_IO_DISPLAY[0], "Vector"));       inputs[4].setValue(1); break;
 			
 			case "__NodeValue_Vec3_Range" :
-				inputs[0].setValue(array_find(GROUP_IO_DISPLAY[0], "Vector range"));
-				inputs[4].setValue(1);
-				break;
+				inputs[0].setValue(array_find(GROUP_IO_DISPLAY[0], "Vector range")); inputs[4].setValue(1); break;
 			
 			case "__NodeValue_Vec4" :
-				inputs[0].setValue(array_find(GROUP_IO_DISPLAY[0], "Vector"));
-				inputs[4].setValue(2);
-				break;
+				inputs[0].setValue(array_find(GROUP_IO_DISPLAY[0], "Vector"));       inputs[4].setValue(2); break;
 				
 			case "__NodeValue_Rotation" : 
-				inputs[0].setValue(array_find(GROUP_IO_DISPLAY[0], "Rotation"));
-				inputs[4].setValue(2);
-				break;
+				inputs[0].setValue(array_find(GROUP_IO_DISPLAY[0], "Rotation"));     inputs[4].setValue(2); break;
+				
+			case "__NodeValue_Palette" : inputs[0].setValue(1); break;
 		} 
 		
 		juncTo.value_from = noone;
@@ -274,12 +264,9 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		if(index == 2) {
 			if(outputs[0].type != _val_type) {
-				var _o = outputs[0];
-				for(var j = 0; j < array_length(_o.value_to); j++) {
-					var _to = _o.value_to[j];
-					if(_to.value_from == _o)
-						_to.removeFrom();
-				}
+				var _to = outputs[0].getJunctionTo();
+				for( var i = 0, n = array_length(_to); i < n; i++ )
+					_to[i].removeFrom();
 			}
 			
 			inputs[0].setValue(0);
@@ -307,6 +294,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				inParent.def_val = 0;
 				inParent.setDisplay(VALUE_DISPLAY.slider, { range: [_range[0], _range[1], _step] });	
 				break;
+				
 			case "Slider range" :	
 				if(!is_array(_val) || array_length(_val) != 2) 
 					inParent.animator = new valueAnimator([0, 0], inParent);
@@ -355,12 +343,14 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 							
 							inParent.def_val = [0, 0];
 						break;
+						
 					case 1 : 
 						if(!is_array(_val) || array_length(_val) != 3)
 							inParent.animator = new valueAnimator([0, 0, 0], inParent);
 							
 							inParent.def_val = [0, 0, 0];
 						break;
+						
 					case 2 : 
 						if(!is_array(_val) || array_length(_val) != 4)
 							inParent.animator = new valueAnimator([0, 0, 0, 0], inParent);
@@ -399,8 +389,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				outputs[0].setType(inParent.type);
 				
 				inParent.animator = new valueAnimator(new gradientObject(cola(c_white)), inParent);
-				
-				inParent.def_val = new gradientObject(cola(c_white));
+				inParent.def_val  = new gradientObject(cola(c_white));
 				inParent.setDisplay(VALUE_DISPLAY._default);
 				break;
 				
