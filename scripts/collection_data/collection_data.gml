@@ -7,7 +7,7 @@ function __initCollection() {
 	var root  = DIRECTORY + "Collections";       directory_verify(root);
 	var rootz = DIRECTORY + "Collections_cache"; directory_verify(rootz);
 	
-	// if(check_version($"{root}/version")) zip_unzip("data/Collections.zip", root);
+	if(check_version($"{root}/version")) zip_unzip("data/Collections.zip", root);
 	
 	COLLECTIONS = new DirectoryObject(DIRECTORY + "Collections");
 	refreshCollections();
