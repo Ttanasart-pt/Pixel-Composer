@@ -601,7 +601,7 @@ function surface_reset_target_override() { __surface_reset_target(); winwin_draw
 	function surface_free_safe(surface) {
 		INLINE
 	
-		if(!is_surface(surface)) return;
+		if(!surface_exists(surface)) return;
 		__surface_free(surface);
 	}
 

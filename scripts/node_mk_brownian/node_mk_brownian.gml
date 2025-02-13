@@ -122,12 +122,8 @@ function Node_MK_Brownian(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 					var _ss  = random_range(_size[0], _size[1]);
 					
 					if(_sprt == noone) {
-						draw_set_color(_cc);
-						draw_set_alpha(_aa);
+						global.DynaDraw_circle_fill.draw(_pos[0], _pos[1], round(_ss), round(_ss), 0, _cc, _aa);
 						
-						dynaSurf_circle_fill(_pos[0], _pos[1], round(_ss));
-						
-						draw_set_alpha(1);
 					} else {
 						var _p = _sprt;
 						if(is_array(_p)) _p = array_safe_get_fast(_p, irandom(array_length(_p) - 1));

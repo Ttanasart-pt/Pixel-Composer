@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"dynaSurf_circle_outline",
   "parent":{
-    "name":"dynaSurf",
-    "path":"folders/functions/draw/dynaSurf.yy",
+    "name":"dynaDraw",
+    "path":"folders/functions/surface/dynaDraw.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

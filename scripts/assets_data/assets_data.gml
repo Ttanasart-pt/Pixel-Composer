@@ -22,6 +22,8 @@
 			for( var i = 0, n = array_length(PREFERENCES.path_assets); i < n; i++ ) 
 				ds_list_add(global.ASSETS.subDir, __initAssetsFolder(PREFERENCES.path_assets[i]));
 		}
+		
+		__init_dynaDraw();
 	}
 	
 	function __initAssetsFolder(_dir) {
@@ -52,6 +54,7 @@
 	}
 	
 	function get_asset(key) {
+		if(struct_has(DYNADRAW_SHAPE_MAP, key))   return DYNADRAW_SHAPE_MAP[$ key];
 		if(!ds_map_exists(global.ASSET_MAP, key)) return noone;
 		
 		if(ds_map_exists(global.ASSET_CACHE, key)) {

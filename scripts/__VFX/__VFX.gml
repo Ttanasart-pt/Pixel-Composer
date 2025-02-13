@@ -380,8 +380,8 @@ function __part(_node) : __particleObject() constructor {
 			ss = array_safe_get_fast(surf, clamp(_sca, 0, array_length(surf) - 1));
 		}
 		
-		var surface = node.surface_cache[$ ss];
-		var _useS   = is_surface(surface);
+		var _surf = node.surface_cache[$ ss];
+		var _useS = is_surface(_surf);
 		
 		if(arr_type == 3) {
 			scx = 1;
@@ -401,8 +401,8 @@ function __part(_node) : __particleObject() constructor {
 			_yy = round(_yy);
 		}
 		
-		var s_w = (_useS? surface_get_width_safe(surface)  : 1) * scx;
-		var s_h = (_useS? surface_get_height_safe(surface) : 1) * scy;
+		var s_w = (_useS? surface_get_width_safe(_surf)  : 1) * scx;
+		var s_h = (_useS? surface_get_height_safe(_surf) : 1) * scy;
 		var _pp = point_rotate(-s_w / 2, -s_h / 2, 0, 0, rot);
 		_xx += _pp[0];
 		_yy += _pp[1];
@@ -428,18 +428,25 @@ function __part(_node) : __particleObject() constructor {
 		
 		switch(render_type) {
 			case PARTICLE_RENDER_TYPE.surface : 
-				if(_useS) draw_surface_ext_safe(surface, _xx, _yy, scx, scy, drawrot, cc, alp_draw);
+				if(surface_exists(_surf)) 
+					draw_surface_ext_safe(_surf, _xx, _yy, scx, scy, drawrot, cc, alp_draw);
 				else {
 					var ss = round(min(scx, scy));
 					if(round(ss) == 0) return;
 					
+					_xx = drawx
+					_yy = drawy;
+					
+					if(exact) { 
+						_xx = round(_xx); 
+						_yy = round(_yy); 
+						 ss = round( ss); 
+					}
+					
 					var _s = shader_current();
 					shader_reset();
-						
-						draw_set_color_alpha(cc, alp_draw);
-						dynaSurf_circle_fill(round(_xx), round(_yy), exact? round(ss) : ss);
-						draw_set_alpha(1);
-					
+						if(is(_surf, dynaSurf)) _surf.draw(_xx, _yy, ss, ss, 0, cc, alp_draw);
+						else DYNADRAW_SHAPES[0].draw(_xx, _yy, ss, ss, 0, cc, alp_draw);
 					shader_set(_s);
 				}
 				break;

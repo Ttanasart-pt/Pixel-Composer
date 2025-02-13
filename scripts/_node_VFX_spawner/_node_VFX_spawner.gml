@@ -329,13 +329,18 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		for( var i = 0, n = array_length(surfs); i < n; i++ ) {
 			var _s = surfs[i];
 			
+			if(is(_s, dynaSurf)) {
+				surface_cache[$ surfs[i]] = _s;
+				continue;
+			}
+			
 			if(surface_exists(surface_cache[$ _s])) 
 				continue;
 				
-			if(is_instanceof(_s, SurfaceAtlas))
+			if(is(_s, SurfaceAtlas))
 				_s = _s.surface.get();
 				
-			if(!is_surface(_s))
+			if(!is_surface(_s)) 
 				continue;
 			
 			surface_cache[$ surfs[i]] = surface_clone(_s);

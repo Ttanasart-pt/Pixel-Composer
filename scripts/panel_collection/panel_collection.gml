@@ -422,8 +422,9 @@ function Panel_Collection() : PanelContent() constructor {
 					
 					if(PREFERENCES.collection_label) {
 						draw_set_text(f_p3, fa_center, fa_top, COLORS._main_text_inner);
-						var _txtH = draw_text_ext_add(_boxx + grid_size / 2, yy + grid_size + ui(4), _node.name, -1, grid_width, 1, true);
+						var _txtH = draw_text_ext_add(_boxx + grid_size / 2, yy + grid_size + ui(4), _node.name, -1, grid_width + ui(16), 1, true);
 						name_height = max(name_height, _txtH + 8);
+						
 					} else 
 						name_height = 0;
 				}

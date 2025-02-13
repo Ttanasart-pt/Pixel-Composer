@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"dynaSurf",
   "parent":{
-    "name":"dynamic_surface",
-    "path":"folders/functions/surface/dynamic_surface.yy",
+    "name":"dynaSurf",
+    "path":"folders/functions/surface/dynaSurf.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
