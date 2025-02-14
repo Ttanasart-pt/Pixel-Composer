@@ -2,103 +2,103 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	name = "Spawner";
 	update_on_frame = true;
 	
-	newInput(0, nodeValue_Surface("Particle sprite", self));
+	newInput(0, nodeValue_Surface("Particle Sprite", self));
 	
-	newInput(1, nodeValue_Int("Spawn delay", self, 4, "Frames delay between each particle spawn." ));
+	newInput(1, nodeValue_Int("Spawn Delay", self, 4, "Frames delay between each particle spawn." ));
 	
-	newInput(2, nodeValue_Range("Spawn amount", self, [ 2, 2 ] , { linked : true }))
+	newInput(2, nodeValue_Range("Spawn Amount", self, [ 2, 2 ] , { linked : true }))
 		.setTooltip("Amount of particle spawn in that frame.");
 	
-	newInput(3, nodeValue_Area("Spawn area", self, DEF_AREA ));
+	newInput(3, nodeValue_Area("Spawn Area", self, DEF_AREA ));
 	
-	newInput(4, nodeValue_Enum_Scroll("Spawn distribution", self, 0, [ "Area", "Border", "Map" ] ));
+	newInput(4, nodeValue_Enum_Scroll("Spawn Distribution", self, 0, [ "Area", "Border", "Map" ] ));
 	
 	newInput(5, nodeValue_Range("Lifespan", self, [ 20, 30 ] ));
 	
-	newInput(6, nodeValue_Rotation_Random("Spawn direction", self, [ 0, 45, 135, 0, 0 ] )); 
+	newInput(6, nodeValue_Rotation_Random("Spawn Direction", self, [ 0, 45, 135, 0, 0 ] )); 
 	
 	newInput(7, nodeValue_Range("Acceleration", self, [ 0, 0 ] , { linked : true }));
 	
 	newInput(8, nodeValue_Rotation_Random("Orientation", self, [ 0, 0, 0, 0, 0 ] ));
 	
-	newInput(9, nodeValue_Range("Rotational speed", self, [ 0, 0 ] , { linked : true }));
+	newInput(9, nodeValue_Range("Rotational Speed", self, [ 0, 0 ] , { linked : true }));
 	
-	newInput(10, nodeValue_Vec2_Range("Spawn scale", self, [ 1, 1, 1, 1 ] , { linked : true }));
+	newInput(10, nodeValue_Vec2_Range("Spawn Scale", self, [ 1, 1, 1, 1 ] , { linked : true }));
 	
-	newInput(11, nodeValue_Curve("Scale over time", self, CURVE_DEF_11));
+	newInput(11, nodeValue_Curve("Scale Over Time", self, CURVE_DEF_11));
 	
-	newInput(12, nodeValue_Gradient("Color over lifetime", self, new gradientObject(cola(c_white))));
+	newInput(12, nodeValue_Gradient("Color Over Lifetime", self, new gradientObject(cola(c_white))));
 	
 	newInput(13, nodeValue_Range("Alpha", self, [ 1, 1 ], { linked : true }));
 	
-	newInput(14, nodeValue_Curve("Alpha over time", self, CURVE_DEF_11));
+	newInput(14, nodeValue_Curve("Alpha Over Time", self, CURVE_DEF_11));
 	
-	newInput(15, nodeValue_Bool("Rotate by direction", self, false, "Make the particle rotates to follow its movement."));
+	newInput(15, nodeValue_Bool("Rotate by Direction", self, false, "Make the particle rotates to follow its movement."));
 	
-	newInput(16, nodeValue_Enum_Button("Spawn type", self,  0, [ "Stream", "Burst", "Trigger" ]));
+	newInput(16, nodeValue_Enum_Button("Spawn Type", self,  0, [ "Stream", "Burst", "Trigger" ]));
 	
-	newInput(17, nodeValue_Range("Spawn size", self, [ 1, 1 ] , { linked : true }));
+	newInput(17, nodeValue_Range("Spawn Size", self, [ 1, 1 ] , { linked : true }));
 	
-	newInput(18, nodeValue_Range("Spawn velocity", self, [ 1, 2 ] ));
+	newInput(18, nodeValue_Range("Spawn Velocity", self, [ 1, 2 ] ));
 	
 	newInput(19, nodeValue_Range("Gravity", self, [ 0, 0 ] , { linked : true }));
 	
-	newInput(20, nodeValue_Vec2("Direction wiggle", self, [ 0, 0 ] , { label: [ "Amplitude", "Period" ], linkable: false, per_line: true }));
+	newInput(20, nodeValue_Vec2("Direction Wiggle", self, [ 0, 0 ] , { label: [ "Amplitude", "Period" ], linkable: false, per_line: true }));
 	
 	newInput(21, nodeValue_Bool("Loop", self, true ));
 	
-	newInput(22, nodeValue_Enum_Scroll("Surface array", self, 0, [ "Random", "Order", "Animation", "Scale" ]))
+	newInput(22, nodeValue_Enum_Scroll("Surface Array", self, 0, [ "Random", "Order", "Animation", "Scale" ]))
 		.setTooltip("Whether to select image from an array in order, at random, or treat array as animation.")
 		.setVisible(false);
 	
-	newInput(23, nodeValue_Range("Animation speed", self, [ 1, 1 ] , { linked : true }))
+	newInput(23, nodeValue_Range("Animation Speed", self, [ 1, 1 ] , { linked : true }))
 		.setVisible(false);
 	
 	newInput(24, nodeValue_Enum_Button("Scatter", self,  1, [ "Uniform", "Random" ]));
 	
-	newInput(25, nodeValue_Int("Boundary data", self, []))
+	newInput(25, nodeValue_Int("Boundary Data", self, []))
 		.setArrayDepth(1)
 		.setVisible(false, true);
 	
-	newInput(26, nodeValue_Enum_Button("On animation end", self,  ANIM_END_ACTION.loop, [ "Loop", "Ping pong", "Destroy" ]))
+	newInput(26, nodeValue_Enum_Button("On Animation End", self,  ANIM_END_ACTION.loop, [ "Loop", "Ping pong", "Destroy" ]))
 		.setVisible(false);
 		
 	newInput(27, nodeValue_Bool("Spawn", self, true));
 	
-	newInput(28, nodeValue_Gradient("Random blend", self, new gradientObject(cola(c_white))));
+	newInput(28, nodeValue_Gradient("Random Blend", self, new gradientObject(cola(c_white))));
 		
-	newInput(29, nodeValue_Bool("Directed from center", self, false, "Make particle move away from the spawn center."));
+	newInput(29, nodeValue_Bool("Directed From Center", self, false, "Make particle move away from the spawn center."));
 	
-	newInput(30, nodeValue_Surface("Distribution map", self))
+	newInput(30, nodeValue_Surface("Distribution Map", self))
 	
 	newInput(31, nodeValue_Surface("Atlas", self,  []))
 		.setArrayDepth(1);
 	
 	newInput(32, nodeValueSeed(self));
 	
-	newInput(33, nodeValue_Rotation("Gravity direction", self, -90));
+	newInput(33, nodeValue_Rotation("Gravity Direction", self, -90));
 	
 	newInput(34, nodeValue_Range("Turning", self, [ 0, 0 ] , { linked : true }));
 	
-	newInput(35, nodeValue_Bool("Turn both directions", self, false, "Apply randomized 1, -1 multiplier to the turning speed." ));
+	newInput(35, nodeValue_Bool("Turn Both Directions", self, false, "Apply randomized 1, -1 multiplier to the turning speed." ));
 	
-	newInput(36, nodeValue_Float("Turn scale with speed", self, false ));
+	newInput(36, nodeValue_Float("Turn Scale with Speed", self, false ));
 	
-	newInput(37, nodeValue_Bool("Collide ground", self, false ));
+	newInput(37, nodeValue_Bool("Collide Ground", self, false ));
 	
-	newInput(38, nodeValue_Float("Ground offset", self, 0 ));
+	newInput(38, nodeValue_Float("Ground Offset", self, 0 ));
 	
-	newInput(39, nodeValue_Float("Bounce amount", self, 0.5 ))
+	newInput(39, nodeValue_Float("Bounce Amount", self, 0.5 ))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(40, nodeValue_Float("Bounce friction", self, 0.1, "Apply horizontal friction once particle stop bouncing." ))
+	newInput(40, nodeValue_Float("Bounce Friction", self, 0.1, "Apply horizontal friction once particle stop bouncing." ))
 		.setDisplay(VALUE_DISPLAY.slider);
 		
-	newInput(41, nodeValue_Vec2("Position wiggle", self, [ 0, 0 ] , { label: [ "Amplitude", "Period" ], linkable: false, per_line: true }));
+	newInput(41, nodeValue_Vec2("Position Wiggle", self, [ 0, 0 ] , { label: [ "Amplitude", "Period" ], linkable: false, per_line: true }));
 		
-	newInput(42, nodeValue_Vec2("Rotation wiggle", self, [ 0, 0 ] , { label: [ "Amplitude", "Period" ], linkable: false, per_line: true }));
+	newInput(42, nodeValue_Vec2("Rotation Wiggle", self, [ 0, 0 ] , { label: [ "Amplitude", "Period" ], linkable: false, per_line: true }));
 		
-	newInput(43, nodeValue_Vec2("Scale wiggle", self, [ 0, 0 ] , { label: [ "Amplitude", "Period" ], linkable: false, per_line: true }));
+	newInput(43, nodeValue_Vec2("Scale Wiggle", self, [ 0, 0 ] , { label: [ "Amplitude", "Period" ], linkable: false, per_line: true }));
 		
 	newInput(44, nodeValue_Trigger("Spawn", self,  false ))
 		.setDisplay(VALUE_DISPLAY.button, { name: "Trigger" });
@@ -116,14 +116,20 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	newInput(50, nodeValue_Palette("Color by Index", self, [ cola(c_white) ] ));
 	
+	newInput(51, nodeValue_Int("Burst Duration", self, 1 ));
+	
+	newInput(52, nodeValue_Float("Uniform Period", self, 4 ));
+	
+	newInput(53, nodeValue_Rotation_Range("Angle Range", self, [ 0, 360 ]));
+	
 	for (var i = 2, n = array_length(inputs); i < n; i++)
 		inputs[i].rejectArray();
 	input_len = array_length(inputs);
 	
 	input_display_list = [ 32, 48, 
 		["Sprite",	   false],	0, 22, 23, 49, 26,
-		["Spawn",		true],	27, 16, 44, 1, 2, 3, 4, 30, 24, 5,
-		["Movement",	true],	29, 6, 18,
+		["Spawn",		true],	27, 16, 44, 1, 51, 2, 3, 4, 30, 24, 52, 5,
+		["Movement",	true],	29, 53, 6, 18,
 		["Follow path", true, 45], 46, 47, 
 		["Physics",		true],	7, 19, 33, 34, 35, 36, 
 		["Ground",		true, 37], 38, 39, 40, 
@@ -170,10 +176,12 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		var _distrib    	= getInputData( 4);
 		var _dist_map   	= getInputData(30);
 		var _scatter    	= getInputData(24);
+		var _spawn_period   = getInputData(52);
 		
 		var _life       	= getInputData( 5);
 		var _direction  	= getInputData( 6);
 		var _directCenter	= getInputData(29);
+		var _directRange	= getInputData(53);
 		var _velocity   	= getInputData(18);
 		
 		var _accel      	= getInputData( 7);
@@ -248,7 +256,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 					part.atlas = _spr;
 					
 				} else if(_distrib < 2) {
-					var sp = area_get_random_point(_spawn_area, _distrib, _scatter, spawn_index, _amo);
+					var sp = area_get_random_point(_spawn_area, _distrib, _scatter, spawn_index, _spawn_period + 1);
 					xx = sp[0];
 					yy = sp[1];
 					
@@ -271,7 +279,12 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			var _rot_spd = random_range(_rotation_speed[0], _rotation_speed[1]);
 			
 			var _dirRand = angle_random_eval(_direction);
-			var _dirr	 = _directCenter? point_direction(_spawn_area[0], _spawn_area[1], xx, yy) + _dirRand : _dirRand;
+			var _dirr	 = _dirRand;
+			if(_directCenter) {
+				var _pointDir = point_direction(_spawn_area[0], _spawn_area[1], xx, yy);
+				    _pointDir = lerp(_directRange[0], _directRange[1], _pointDir / 360);
+				_dirr += _pointDir;
+			}
 			
 			var _velo	= random_range(_velocity[0], _velocity[1]);
 			var _vx		= lengthdir_x(_velo, _dirr);
@@ -409,19 +422,20 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	}
 	
 	static runVFX = function(_time = CURRENT_FRAME, _render = true) {
-		var _spawn_delay  = inputs[1].getValue(_time);
-		var _spawn_type   = inputs[16].getValue(_time);
-		var _spawn_active = inputs[27].getValue(_time);
-		var _spawn_trig   = inputs[44].getValue(_time);
-
+		var _spawn_delay    = inputs[ 1].getValue(_time);
+		var _spawn_type     = inputs[16].getValue(_time);
+		var _spawn_active   = inputs[27].getValue(_time);
+		var _spawn_trig     = inputs[44].getValue(_time);
+		var _spawn_duration = inputs[51].getValue(_time);
+		
 		getInputs(_time);
 		getSurfaceCache();
 		
 		if(_spawn_active) {
 			switch(_spawn_type) {
 				case 0 : if(safe_mod(_time, _spawn_delay) == 0) spawn(_time); break;
-				case 1 : if(_time == _spawn_delay)				spawn(_time); break;
-				case 2 : if(_spawn_trig)						spawn(_time); break;
+				case 1 : if(_time >= _spawn_delay && _time < _spawn_delay + _spawn_duration) spawn(_time); break;
+				case 2 : if(_spawn_trig) spawn(_time); break;
 			}
 		}
 		
@@ -445,10 +459,11 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	static step = function() {
 		var _inSurf = getInputData(0);
 		var _dist   = getInputData(4);
+		var _spwTyp = getInputData(16);
 		var _scatt  = getInputData(24);
 		var _turn   = getInputData(34);
-		var _spwTyp = getInputData(16);
 		var _usePth = getInputData(45);
+		var _direct = getInputData(29);
 		
 		inputs[24].setVisible(_dist < 2);
 		
@@ -463,6 +478,9 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		inputs[49].setVisible(false);
 		
 		inputs[46].setVisible(true, _usePth);
+		inputs[51].setVisible(_spwTyp == 1);
+		inputs[52].setVisible(_scatt  == 0);
+		inputs[53].setVisible(_direct);
 		
 		inputs[1].setVisible(_spwTyp < 2);
 		if(_spwTyp == 0)		inputs[1].name = "Spawn delay";

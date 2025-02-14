@@ -85,7 +85,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	newInput(26, nodeValue_Range("Animated Array", self, [ 0, 0 ], { linked : true }));
 	
-	newInput(27, nodeValue_Enum_Scroll("Animated Array End", self,  0, [ "Loop", "Ping Pong" ]));
+	newInput(27, nodeValue_Enum_Scroll("Animated Array End", self,  0, [ "Loop", "Ping Pong", "Hide" ]));
 		
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -558,8 +558,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					
 					if(arrAnim[0] != 0 || arrAnim[1] != 0) {
 						var _arrAnim_spd = random_range(arrAnim[0], arrAnim[1]);
-						var _arrAnim_shf = random(_arrLen);
-						var _animInd     = ind + _arrAnim_shf + CURRENT_FRAME * _arrAnim_spd;
+						var _animInd     = ind + CURRENT_FRAME * _arrAnim_spd;
 						
 						switch(arrAnimEnd) {
 							case 0 : 
@@ -570,6 +569,8 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 								var pp = safe_mod(_animInd, _arrLen * 2 - 1);
 								ind = pp < _arrLen? pp : _arrLen * 2 - pp;
 								break;
+								
+							case 2 : ind = _animInd; break;
 						}
 					}
 					

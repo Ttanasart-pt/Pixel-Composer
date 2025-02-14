@@ -95,10 +95,13 @@ if !ready exit;
 #region gradient
 	
 	#region tools
+		var _hov = sHOVER;
+		var _foc = interactable && sFOCUS;
+		
 		var bx = content_x + content_w - ui(50);
 		var by = dialog_y + ui(16);
 		
-		if(buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, sHOVER, interactable && sFOCUS, __txtx("gradient_editor_key_blend", "Key blending"), THEME.grad_blend) == 2) {
+		if(buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, _hov, _foc, __txtx("gradient_editor_key_blend", "Key blending"), THEME.grad_blend) == 2) {
 			menuCall("gradient_window_blend_menu", [ 
 				menuItem(__txtx("gradient_editor_blend_hard",  "Solid"),  function() { gradient.type = 1; onApply(gradient); }), 
 				menuItem(__txtx("gradient_editor_blend_RGB",   "RGB"),    function() { gradient.type = 0; onApply(gradient); }), 
@@ -108,10 +111,19 @@ if !ready exit;
 		}
 		bx -= ui(32);
 		
-		if(buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, sHOVER, interactable && sFOCUS, __txtx("gradient_editor_reverse", "Reverse"), THEME.reverse) == 2) {
+		if(buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, _hov, _foc, __txtx("gradient_editor_reverse", "Reverse"), THEME.reverse) == 2) {
 			for( var i = 0, n = array_length(gradient.keys); i < n; i++ )
 				gradient.keys[i].time = 1 - gradient.keys[i].time;
 			gradient.keys = array_reverse(gradient.keys);
+			onApply(gradient);
+		}
+		bx -= ui(32);
+		
+		if(buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, _hov, _foc, __txt("Distribute"), THEME.obj_distribute_h) == 2) {
+			var _stp = 1 / (array_length(gradient.keys) - (gradient.type != 1));
+			
+			for( var i = 0, n = array_length(gradient.keys); i < n; i++ )
+				gradient.keys[i].time = _stp * i;
 			onApply(gradient);
 		}
 		bx -= ui(32);
