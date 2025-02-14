@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"dynaDraw_circle_fill",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"dynaDraw_circle_fill",
+  "parent":{
+    "name":"dynaDraw",
+    "path":"folders/functions/surface/dynaDraw.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

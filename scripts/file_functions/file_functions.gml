@@ -69,3 +69,20 @@ function get_open_filename_pxc(filter, name, caption = "Open") {
 	
 	return path;
 }
+
+function file_is_image(path) {
+	var ext  = string_lower(filename_ext(path));
+		
+	switch(ext) {
+		case ".png"  :
+		case ".jpg"  :
+		case ".jpeg" :
+		case ".gif"  :
+			return true;
+			
+		default : 
+			return false;
+	}
+	
+	return false;
+}

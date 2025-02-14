@@ -125,6 +125,7 @@ event_inherited();
 					var sx = xx + grid_size / 2;
 					var sy = yy + grid_size / 2;
 					content.draw(sx, sy, _sw, _sh);
+					draw_sprite_ext(THEME.dynadraw, 0, xx + grid_size - ui(14), yy + grid_size - ui(14));
 					
 				} else {
 					spr = content.getSpr();
@@ -164,7 +165,10 @@ event_inherited();
 					draw_sprite_stretched_ext(THEME.node_bg, 1, xx, yy, grid_size, grid_size, COLORS._main_accent, 1);
 					
 					if(mouse_press(mb_left, sFOCUS)) {
-						target.onModify(content.path);
+						if(is(content, dynaSurf))
+							target.onModify(content.clone());
+						else 
+							target.onModify(content.path);
 						instance_destroy();
 					}
 				}

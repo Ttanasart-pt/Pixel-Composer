@@ -4,16 +4,45 @@ function draw_circle_prec(x, y, r, border, precision = 32) {
 }
 
 function draw_polygon(x, y, r, sides, a = 0) {
+	var aa = 360 / sides;
+	
 	draw_primitive_begin(pr_trianglelist);
 		for( var i = 0; i < sides; i++ ) {
-			var a0 = (i + 0) / sides * 360 + a;
-			var a1 = (i + 1) / sides * 360 + a;
+			var a0 = a + i * aa;
+			var a1 = a0 + aa;
 			
 			draw_vertex(x, y);
 			draw_vertex(x + lengthdir_x(r, a0), y + lengthdir_y(r, a0));
 			draw_vertex(x + lengthdir_x(r, a1), y + lengthdir_y(r, a1));
 		}
 	draw_primitive_end();
+}
+
+function draw_polygon_rect(x, y, w, h, sides, a = 0) {
+	var aa = 360 / sides;
+	
+	draw_primitive_begin(pr_trianglelist);
+		for( var i = 0; i < sides; i++ ) {
+			var a0 = a + i * aa;
+			var a1 = a0 + aa;
+			
+			draw_vertex(x, y);
+			draw_vertex(x + lengthdir_x(w, a0), y + lengthdir_y(h, a0));
+			draw_vertex(x + lengthdir_x(w, a1), y + lengthdir_y(h, a1));
+		}
+	draw_primitive_end();
+}
+
+function draw_polygon_rect_border(x, y, w, h, sides, thick = 1, a = 0) {
+	var aa = 360 / sides;
+	
+	for( var i = 0; i < sides; i++ ) {
+		var a0 = a + i * aa;
+		var a1 = a0 + aa;
+		
+		draw_line_width(x + lengthdir_x(w, a0), y + lengthdir_y(h, a0), 
+		                x + lengthdir_x(w, a1), y + lengthdir_y(h, a1), thick);
+	}
 }
 
 function draw_circle_color_alpha(_x, _y, _r, colI, colO, alpI, alpO) {

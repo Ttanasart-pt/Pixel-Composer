@@ -661,6 +661,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		}
 		
 		var base = prop.def_val;
+		var _typ = prop.type;
 		
 		for(var i = 0; i < array_length(_data); i++) {
 			var _keyframe = _data[i];
@@ -678,32 +679,36 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			
 			var _val = value;
 			
-			if(prop.type == VALUE_TYPE.struct) {
+			if(_typ == VALUE_TYPE.struct) {
 				_val = json_try_parse(value);
 			
 			} else if(prop.display_type == VALUE_DISPLAY.matrix) {
 				var mat = new Matrix();
 				_val = mat.deserialize(value);
 			
-			} else if(prop.type == VALUE_TYPE.path && prop.display_type == VALUE_DISPLAY.path_array) {
+			} else if(_typ == VALUE_TYPE.path && prop.display_type == VALUE_DISPLAY.path_array) {
 				for(var j = 0; j < array_length(value); j++)
 					_val[j] = value[j];
 			
-			} else if(prop.type == VALUE_TYPE.gradient) {
+			} else if(_typ == VALUE_TYPE.gradient) {
 				var grad = new gradientObject();
 				_val = grad.deserialize(value);
 			
-			} else if(prop.type == VALUE_TYPE.d3Material) {
+			} else if(_typ == VALUE_TYPE.d3Material) {
 				var mat = new __d3dMaterial();
 				_val = mat.deserialize(value);
 			
-			} else if(prop.type == VALUE_TYPE.color) {
+			} else if(_typ == VALUE_TYPE.color) {
 				if(is_array(_val)) {
 					for( var i = 0, n = array_length(_val); i < n; i++ )
 						_val[i] = LOADING_VERSION < 11640 && !is_int64(_val[i])? cola(_val[i]) : int64(_val[i]);
 				} else 
 					_val = LOADING_VERSION < 11640 && !is_int64(_val)? cola(_val) : int64(_val);
 			
+			} else if(_typ == VALUE_TYPE.surface) {
+				if(is_struct(_val))
+					_val = new dynaDraw().deserialize(_val);
+				
 			} else if(!sep_axis && typeArray(prop)) {
 				_val = [];
 				

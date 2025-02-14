@@ -1,0 +1,14 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_http_request_file",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_http_request_file",
+  "parent":{
+    "name":"misc",
+    "path":"folders/nodes/data/misc.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+  "tags":[],
+}

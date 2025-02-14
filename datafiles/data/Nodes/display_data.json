@@ -298,6 +298,7 @@
             "Node_Spout_Send",
             "Node_MIDI_In",
             "Node_HTTP_request",
+            "Node_HTTP_Request_File",
             
             { "label": "Gamemaker" },
             "Node_GMRoom"

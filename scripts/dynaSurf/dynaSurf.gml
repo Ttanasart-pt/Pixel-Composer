@@ -74,7 +74,3 @@ function compute_dynaSurf() : dynaSurf() constructor {
 		return _surf;
 	}
 }
-
-function dynaDraw() : dynaSurf() constructor {
-	path = "";
-}

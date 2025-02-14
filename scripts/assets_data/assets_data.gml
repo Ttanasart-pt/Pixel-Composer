@@ -54,7 +54,6 @@
 	}
 	
 	function get_asset(key) {
-		if(struct_has(DYNADRAW_SHAPE_MAP, key))   return DYNADRAW_SHAPE_MAP[$ key];
 		if(!ds_map_exists(global.ASSET_MAP, key)) return noone;
 		
 		if(ds_map_exists(global.ASSET_CACHE, key)) {

@@ -439,14 +439,14 @@ function __part(_node) : __particleObject() constructor {
 					
 					if(exact) { 
 						_xx = round(_xx); 
-						_yy = round(_yy); 
+						_yy = round(_yy);
 						 ss = round( ss); 
 					}
 					
 					var _s = shader_current();
 					shader_reset();
-						if(is(_surf, dynaSurf)) _surf.draw(_xx, _yy, ss, ss, 0, cc, alp_draw);
-						else DYNADRAW_SHAPES[0].draw(_xx, _yy, ss, ss, 0, cc, alp_draw);
+						if(is(_surf, dynaSurf)) _surf.draw(_xx, _yy, ss, ss, drawrot, cc, alp_draw);
+						else DYNADRAW_DEFAULT.draw(_xx, _yy, ss, ss, 0, cc, alp_draw);
 					shader_set(_s);
 				}
 				break;

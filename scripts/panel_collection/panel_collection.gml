@@ -400,9 +400,12 @@ function Panel_Collection() : PanelContent() constructor {
 							var sx = _boxx + grid_size / 2 + xo;
 							var sy = yy + grid_size / 2 + yo;
 							
+							if(ss < 1) gpu_set_tex_filter(true);
 							BLEND_ALPHA_MULP
 							draw_sprite_ext(_node.spr, frame, sx, sy, ss, ss, 0, c_white, 1);
 							BLEND_NORMAL
+							if(ss < 1) gpu_set_tex_filter(false);
+							
 						} else
 							draw_sprite_ui_uniform(THEME.group, 0, _boxx + grid_size / 2, yy + grid_size / 2, 1, c_white);
 					
@@ -485,7 +488,10 @@ function Panel_Collection() : PanelContent() constructor {
 						var sx = spr_x + xo;
 						var sy = spr_y + yo;
 					
+						if(ss < 1) gpu_set_tex_filter(true);
 						draw_sprite_ext(_node.spr, frame, sx, sy, ss, ss, 0, c_white, 1);
+						if(ss < 1) gpu_set_tex_filter(false);
+						
 					} else
 						draw_sprite_ui_uniform(THEME.group, 0, spr_x, spr_y, 0.75, c_white);
 				

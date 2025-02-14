@@ -36,7 +36,7 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 	
 	setTrigger(2, "Clear cache", [ THEME.cache, 0, COLORS._main_icon ]);
 	
-	static onInspector2Update = function() { clearCache(); }
+	static onInspector2Update = function() /*=>*/ { clearCache(); }
 	
 	static onValueUpdate = function(index = 0) {
 		if(index == input_len + 0) {

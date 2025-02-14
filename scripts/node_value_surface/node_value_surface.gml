@@ -12,9 +12,10 @@ function __NodeValue_Surface(_name, _node, _value, _tooltip = "") : NodeValue(_n
 		var nod = __curr_get_val[1]; if(!is(nod, NodeValue)) return val;
 		
 		draw_junction_index = VALUE_TYPE.surface;
-		if(is_instanceof(val, SurfaceAtlas) || (array_valid(val) && is_instanceof(val[0], SurfaceAtlas))) 
+		if(is(val, SurfaceAtlas) || (array_valid(val) && is_instanceof(val[0], SurfaceAtlas))) 
 			draw_junction_index = VALUE_TYPE.atlas;
 		
+		if(is(val, dynaDraw)) val.node = node;
 		return val;
 	}
 	

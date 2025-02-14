@@ -96,6 +96,10 @@ function surfaceBox(_onModify, _def_path = "") : widget() constructor {
 		if(is(_surface, dynaDraw)) {
 			_surface.draw(sx0 + sw / 2, sy0 + sh / 2, sw - 2, sh - 2);
 			
+			gpu_set_texfilter(true);
+			draw_sprite_ext(THEME.dynadraw, 0, sx0 + sw - ui(10), sy0 + sh - ui(10), .75, .75);
+			gpu_set_texfilter(false);
+			
 		} else if(surface_exists(_surface)) {
 			var sfw = surface_get_width(_surface);	
 			var sfh = surface_get_height(_surface);	
@@ -134,8 +138,38 @@ function surfaceBox(_onModify, _def_path = "") : widget() constructor {
 				onModify(DRAGGING.data.path);
 		}
 		
-		resetFocus();
+		if(is(_surface, dynaDraw)) {
+			var _eds = _surface.editors;
+			var _hg  = line_get_height(f_p3, 6);
+			
+			_y += _h + ui(4);
+			 h += ui(4);
+			
+			for( var i = 0, n = array_length(_eds); i < n; i++ ) {
+				var _ed  = _eds[i];
+				var _txt = _ed[0];
+				var _wid = _ed[1];
+				var _val = _ed[2]();
+				
+				draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text);
+				draw_text_add(_x, _y + _hg / 2, _txt);
+				
+				var _tw  = max(string_width(_txt) + ui(16), _w * .3);
+				var _par = new widgetParam(_x + _tw, _y, _w - _tw, _hg, _val, {}, _m, _rx, _ry)
+				               .setFont(f_p3);
+				_par.s = _hg;
+				if(is(_wid, checkBox)) _par.halign = fa_center;
+				
+            	_wid.setFocusHover(active, hover);
+				_hg = _wid.drawParam(_par);
+				_y += _hg + ui(4);
+				 h += _hg + ui(4);
+			}
+			
+			h -= ui(4);
+		}
 		
+		resetFocus();
 		return h;
 	}
 	

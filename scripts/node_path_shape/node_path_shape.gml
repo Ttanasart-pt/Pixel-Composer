@@ -32,6 +32,7 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	    new scrollItem("Line",          s_node_shape_type, 16), 
 	    new scrollItem("Curve",         s_shape_curve,      0), 
 	    new scrollItem("Spiral",        s_node_path_3d_shape,  6),
+	    new scrollItem("Spiral Circle", s_node_path_3d_shape,  6),
     ];
 	newInput(3, nodeValue_Enum_Scroll("Shape", self, 0, { data: shapeScroll, horizontal: true, text_pad: ui(16) }));
 	
@@ -458,6 +459,28 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
                 for( var i = 0; i < _st; i++ ) {
                     nx = posx + lengthdir_x(scax * i * _pp, _as * i);
                     ny = posy + lengthdir_y(scay * i * _pp, _as * i);
+                    
+                    points[i] = [ nx, ny ];
+                }
+                
+                break;
+                
+            case "Spiral Circle" : 
+                inputs[10].setVisible(true);
+                var _rev = getInputData(10);
+                
+                loop = false;
+                var _st = 64 * _rev;
+                var _as = 360 / 64;
+                var _pp = 1 / _st;
+                points  = array_create(_st);
+                
+                for( var i = 0; i < _st; i++ ) {
+                	var prg = i * _pp;
+                	    prg = sqrt(1 - prg * prg);
+                	
+                    nx = posx + lengthdir_x(scax * prg, _as * i);
+                    ny = posy + lengthdir_y(scay * prg, _as * i);
                     
                     points[i] = [ nx, ny ];
                 }

@@ -130,6 +130,8 @@ function FileObject(_path) constructor {
 function DirectoryObject(_path) constructor {
 	name = filename_name_only(_path);
 	path = _path;
+	icon = THEME.folder_content;
+	icon_blend = undefined
 	
 	subDir    = ds_list_create();
 	content   = ds_list_create();
@@ -237,8 +239,10 @@ function DirectoryObject(_path) constructor {
 		gpu_set_texfilter(true);
 		var _spr_ind = ds_list_empty(subDir)? parent.context == self : open;
 		var _spr_bld = ds_list_empty(subDir)? COLORS.collection_folder_empty : COLORS.collection_folder_nonempty;
+		if(icon_blend != undefined) _spr_bld = icon_blend;
+		
 		var _spr_sca = (hg - ui(5)) / 24;
-		draw_sprite_ui_uniform(THEME.folder_content, _spr_ind, _x + ui(16), _y + hg / 2 - 1, _spr_sca, _spr_bld);
+		draw_sprite_ui_uniform(icon, _spr_ind, _x + ui(16), _y + hg / 2 - 1, _spr_sca, _spr_bld);
 		gpu_set_texfilter(false);
 		
 		draw_set_text(font, fa_left, fa_center, path == parent.context.path? COLORS._main_text_accent : COLORS._main_text_inner);
