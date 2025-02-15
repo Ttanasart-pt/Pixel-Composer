@@ -332,7 +332,8 @@
             "Node_Composite",
             "Node_9Slice",
             "Node_Padding",
-            "Node_Tile_Random"
+            "Node_Tile",
+            "Node_Tile_Random",
         ]
     },
     {

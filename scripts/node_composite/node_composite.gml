@@ -598,6 +598,9 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var amo     = getInputAmount();
 		var anchors = array_create(array_length(inputs));
 		
+		if(amo == 0) dynamic_input_inspecting = noone;
+		dynamic_input_inspecting = min(dynamic_input_inspecting, amo - 1);
+		
 		for(var i = 0; i < amo; i++) {
 			var vis = _vis[i];
 			var sel = _sel[i];

@@ -1,0 +1,10 @@
+{
+  "name":"Tile",
+  "tooltip":"Repeat images on a larger surface.",
+  "spr":"s_node_tile",
+  "pxc_version":118090,
+  "baseNode":"Node_Tile",
+  "io":[
+    "surface"
+  ],
+}

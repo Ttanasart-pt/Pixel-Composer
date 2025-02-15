@@ -11,9 +11,13 @@ function __Node_Cache(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	group_alpha    = 0;
 	vertex_hash    = "";
 	
+	attributes.serialize = true;
+	array_push(attributeEditors, "Cache");
+	array_push(attributeEditors, [ "Serizalize Data", function() /*=>*/ {return attributes.serialize}, new checkBox(function() /*=>*/ { attributes.serialize = !attributes.serialize; }) ]);
+	
 	setTrigger(1, "Generate cache group", [ THEME.cache_group, 0, COLORS._main_icon ]);
 	
-	if(NOT_LOAD) run_in(1, function() { onInspector1Update(); });
+	if(NOT_LOAD) run_in(1, function() /*=>*/ {return onInspector1Update()});
 	
 	static removeNode = function(node) {
 		if(node.cache_group != self) return;
@@ -36,7 +40,8 @@ function __Node_Cache(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	}
 	
 	static enableNodeGroup = function() {
-		if(LOADING || APPENDING) return; 
+		if(LOADING || APPENDING)  return; 
+		if(!attributes.serialize) return; 
 		
 		for( var i = 0, n = array_length(cache_group_members); i < n; i++ )
 			cache_group_members[i].renderActive = true;
@@ -44,7 +49,8 @@ function __Node_Cache(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	}
 	
 	static disableNodeGroup = function() {
-		if(LOADING || APPENDING) return;
+		if(LOADING || APPENDING)  return;
+		if(!attributes.serialize) return; 
 		
 		if(IS_PLAYING && IS_LAST_FRAME)
 		for( var i = 0, n = array_length(cache_group_members); i < n; i++ )

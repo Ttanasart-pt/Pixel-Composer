@@ -54,6 +54,7 @@ function Node_Cache(_x, _y, _group = noone) : __Node_Cache(_x, _y, _group) const
 	static postDeserialize = function() {
 		refreshCacheGroup();
 		
+		if(!attributes.serialize) return; 
 		if(!struct_has(load_map, "cache")) return;
 		cache_content			= json_try_parse(load_map.cache);
 		cache_loading_progress	= 0;

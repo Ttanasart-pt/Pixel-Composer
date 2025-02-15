@@ -2,6 +2,7 @@
 event_inherited();
 
 #region data
+	dialog_resizable = true;
 	dialog_w = ui(320);
 	dialog_h = ui(400);
 	
