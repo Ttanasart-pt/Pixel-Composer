@@ -74,6 +74,7 @@ function __part(_node) : __particleObject() constructor {
 	turning = 0;
 	turnSpd = 0;
 	
+	frict   = 0;
 	accel   = 0;
 	spVec   = [ 0, 0 ];
 	
@@ -170,12 +171,13 @@ function __part(_node) : __particleObject() constructor {
 		alp_history   = array_create(life);
 	}
 	
-	static setPhysic = function(_sx, _sy, _ac, _g, _gDir, _turn, _turnSpd) {
+	static setPhysic = function(_sx, _sy, _ac, _fr, _g, _gDir, _turn, _turnSpd) {
 		INLINE
 		
 		speedx  = _sx;
 		speedy  = _sy;
 		accel   = _ac;
+		frict   = _fr;
 		grav    = _g;
 		gravDir = _gDir;
 		gravX   = lengthdir_x(grav, gravDir);
@@ -267,7 +269,7 @@ function __part(_node) : __particleObject() constructor {
 		
 		var dirr = point_direction(0, 0, speedx, speedy);
 		var diss = point_distance(0, 0, speedx, speedy);
-		diss = max(0, diss + accel);
+		    diss = max(0, diss + accel) * (1 - frict);
 		
 		if(speedx != 0 || speedy != 0) {
 			dirr += wig_dir.get(seed + life);

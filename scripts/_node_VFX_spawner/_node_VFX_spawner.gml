@@ -122,22 +122,24 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	newInput(53, nodeValue_Rotation_Range("Angle Range", self, [ 0, 360 ]));
 	
+	newInput(54, nodeValue_Range("Friction", self, [ 0, 0 ], { linked : true }));
+	
 	for (var i = 2, n = array_length(inputs); i < n; i++)
 		inputs[i].rejectArray();
 	input_len = array_length(inputs);
 	
 	input_display_list = [ 32, 48, 
-		["Sprite",	   false],	0, 22, 23, 49, 26,
-		["Spawn",		true],	27, 16, 44, 1, 51, 2, 3, 4, 30, 24, 52, 5,
-		["Movement",	true],	29, 53, 6, 18,
+		["Sprite",	   false],	    0, 22, 23, 49, 26,
+		["Spawn",		true],	   27, 16, 44,  1, 51,  2,  3,  4, 30, 24, 52,  5,
+		["Movement",	true],	   29, 53,  6, 18,
 		["Follow path", true, 45], 46, 47, 
-		["Physics",		true],	7, 19, 33, 34, 35, 36, 
+		["Physics",		true],	   54,  7, 19, 33, 34, 35, 36, 
 		["Ground",		true, 37], 38, 39, 40, 
-		["Rotation",	true],	15, 8, 9, 
-		["Scale",		true],	10, 17, 11, 
-		["Wiggles",		true],	20, 41, 42, 43, 
-		["Color",		true],	12, 28, 50, 13, 14, 
-		["Render",		true],	21, 
+		["Rotation",	true],	   15,  8,  9, 
+		["Scale",		true],	   10, 17, 11, 
+		["Wiggles",		true],	   20, 41, 42, 43, 
+		["Color",		true],	   12, 28, 50, 13, 14, 
+		["Render",		true],	   21, 
 	];
 	
 	attributes.part_amount = 512;
@@ -190,6 +192,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		var _turn       	= getInputData(34);
 		var _turnBi     	= getInputData(35);
 		var _turnSc     	= getInputData(36);
+		var _friction     	= getInputData(54);
 		
 		var _follow     	= getInputData(15);
 		var _rotation   	= getInputData( 8);
@@ -290,6 +293,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			var _vx		= lengthdir_x(_velo, _dirr);
 			var _vy		= lengthdir_y(_velo, _dirr);
 			var _acc	= random_range(_accel[0], _accel[1]);
+			var _frc	= random_range(_friction[0], _friction[1]);
 			
 			var _ss  = random_range(_size[0], _size[1]);
 			var _scx = random_range(_scale[0], _scale[1]) * _ss;
@@ -313,7 +317,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			
 			var _gravity = random_range(_grav[0], _grav[1]);
 			
-			part.setPhysic(_vx, _vy, _acc, _gravity, _gvDir, _trn, _turnSc);
+			part.setPhysic(_vx, _vy, _acc, _frc, _gravity, _gvDir, _trn, _turnSc);
 			part.setWiggle(wiggle_maps);
 			part.setGround(_ground, _ground_offset, _ground_bounce, _ground_frict);
 			part.setTransform(_scx, _scy, curve_scale, _rot, _rot_spd, _follow);

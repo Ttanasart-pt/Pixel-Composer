@@ -30,6 +30,10 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 	array_push(          input_display_list,     input_len + 1, input_len + 2);
 	array_insert_before( input_display_list, 21, [ input_len + 4, input_len + 5 ]);
 	
+	attributes.cache = true;
+	array_push(attributeEditors, "Cache");
+	array_push(attributeEditors, [ "Cache Data", function() /*=>*/ {return attributes.cache}, new checkBox(function() /*=>*/ { attributes.cache = !attributes.cache; }) ]);
+	
 	def_surface    = -1;
 	curr_dimension = [ 0, 0 ];
 	render_amount  = 0;
@@ -65,6 +69,8 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 	}
 	
 	static onStep = function() {
+		use_cache = attributes.cache? CACHE_USE.auto : CACHE_USE.none;
+		
 		var _dim = getInputData(input_len + 0);
 		var _typ = getInputData(input_len + 4);
 		
