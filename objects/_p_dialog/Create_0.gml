@@ -55,8 +55,7 @@
 	dialog_drag_mx  = 0;
 	dialog_drag_my  = 0;
 	mouse_draggable = true;
-	
-	passthrough = false;
+	passthrough     = false;
 	
 	function doDrag() {
 		if(!active) return;

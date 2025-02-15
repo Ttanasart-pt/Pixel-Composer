@@ -1,13 +1,11 @@
 /// @description init
 if !ready exit;
 if palette == 0 exit;
+draggable = true;
 
 #region dropper
 	selector.interactable = interactable;
-	if(selector.dropper_active) {
-		selector.drawDropper(self);
-		exit;
-	}
+	if(selector.dropper_active) { selector.drawDropper(self); exit; }
 #endregion
 
 #region base UI
@@ -43,7 +41,8 @@ if palette == 0 exit;
 	var by = dialog_y + ui(12);
 	var bs = ui(28);
 	
-	if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txtx("add_preset", "Add to preset"), THEME.add_20) == 2) {
+	var b = buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txtx("add_preset", "Add to preset"), THEME.add_20);
+	if(b == 2) {
 		var dia = dialogCall(o_dialog_file_name, mouse_mx + ui(8), mouse_my + ui(8));
 		dia.onModify = function (txt) {
 			var file = file_text_open_write(txt + ".hex");
@@ -63,14 +62,12 @@ if palette == 0 exit;
 	}
 	bx -= ui(32);
 	
-	if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txt("Refresh"), THEME.refresh_20) == 2)
-		__initPalette();
+	var b = buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txt("Refresh"), THEME.refresh_20);
+	if(b == 2) __initPalette();
 	bx -= ui(32);
 	
-	if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txtx("color_selector_open_palette", "Open palette folder"), THEME.path_open_20) == 2) {
-		var _realpath = DIRECTORY + "Palettes";
-		shellOpenExplorer(_realpath)
-	}
+	var b = buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txtx("color_selector_open_palette", "Open palette folder"), THEME.path_open_20);
+	if(b == 2) shellOpenExplorer(DIRECTORY + "Palettes")
 	draw_sprite_ui_uniform(THEME.path_open_20, 1, bx + bs / 2, by + bs / 2, 1, c_white);
 	bx -= ui(32);
 #endregion
@@ -84,37 +81,45 @@ if palette == 0 exit;
 		
 		var _txt = index_selecting[1] < 2? __txtx("palette_editor_sort", "Sort palette") : __txtx("palette_editor_sort_selected", "Sort selected");
 		var b = buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, sHOVER, interactable && sFOCUS, _txt, THEME.sort, 0, bc);
-		if(b) mouse_draggable = false;
+		if(b) {
+			mouse_draggable = false;
+			draggable       = false;
+		}
+		
 		if(b == 2) {
 			menuCall("palette_window_sort_menu", [ 
-				menuItem(__txtx("palette_editor_sort_brighter", "Brighter"), function() { sortPalette(__sortBright); }), 
-				menuItem(__txtx("palette_editor_sort_darker", "Darker"),     function() { sortPalette(__sortDark); }),
+				menuItem(__txtx("palette_editor_sort_brighter", "Brighter"), function() /*=>*/ {return sortPalette(function(a,b) /*=>*/ {return __sortBright(a.color, b.color)})}),
+				menuItem(__txtx("palette_editor_sort_darker", "Darker"),     function() /*=>*/ {return sortPalette(function(a,b) /*=>*/ {return __sortDark(a.color, b.color)})}),
 				-1,
-				menuItem(__txtx("palette_editor_sort_hue", "Hue"),           function() { sortPalette(__sortHue); }), 
-				menuItem(__txtx("palette_editor_sort_sat", "Saturation"),    function() { sortPalette(__sortSat); }), 
-				menuItem(__txtx("palette_editor_sort_val", "Value"),         function() { sortPalette(__sortVal); }), 
+				menuItem(__txtx("palette_editor_sort_hue", "Hue"),           function() /*=>*/ {return sortPalette(function(a,b) /*=>*/ {return __sortHue(a.color, b.color)})}),
+				menuItem(__txtx("palette_editor_sort_sat", "Saturation"),    function() /*=>*/ {return sortPalette(function(a,b) /*=>*/ {return __sortSat(a.color, b.color)})}),
+				menuItem(__txtx("palette_editor_sort_val", "Value"),         function() /*=>*/ {return sortPalette(function(a,b) /*=>*/ {return __sortVal(a.color, b.color)})}),
 			], bx + ui(32), by, fa_left, palette);
 		}
 		bx -= ui(32);
 		
 		var _txt = index_selecting[1] < 2? __txtx("palette_editor_reverse", "Reverse palette") : __txtx("palette_editor_reverse_selected", "Reverse selected");
 		var b = buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, sHOVER, interactable && sFOCUS, _txt, THEME.reverse, 0, bc);
-		if(b) mouse_draggable = false;
+		if(b) {
+			mouse_draggable = false;
+			draggable       = false;
+		}
+		
 		if(b == 2) {
-			
 			if(index_selecting[1] < 2)
-				palette = array_reverse(palette);
+				paletteObject = array_reverse(paletteObject);
+				
 			else {
 				var _arr = array_create(index_selecting[1]);
 				for(var i = 0; i < index_selecting[1]; i++)
-					_arr[i] = palette[index_selecting[0] + i];
+					_arr[i] = paletteObject[index_selecting[0] + i];
 				_arr = array_reverse(_arr);
 				
 				for(var i = 0; i < index_selecting[1]; i++)
-					palette[index_selecting[0] + i] = _arr[i];
+					paletteObject[index_selecting[0] + i] = _arr[i];
 			}
 			
-			onApply(palette);
+			refreshPalette();
 		}
 		bx -= ui(32);
 	#endregion
@@ -158,10 +163,8 @@ if palette == 0 exit;
 	
 	var _spx = pl_x - pdd;
 	var _spy = pl_y - pdd;
-	var ppos = palette_positions;
 	
 	var _hedge  = false;
-	var _clrRep = {};
 	var _palInd = [];
 	
 	for(var i = 0; i < row; i++)
@@ -169,53 +172,42 @@ if palette == 0 exit;
 		var index = i * col + j;
 		if(index >= _len) break;
 		
-		var _p  = palette[index];
-		var _pa = _color_get_alpha(_p);
+		var _p = paletteObject[index];
+		
 		var _kx = pl_x + j * ww;
 		var _ky = pl_y + i * hh;
 		
-		var _px = floor(_kx + pd);
-		var _py = floor(_ky + pd);
+		var _px = floor(_kx + pd) - dialog_x;
+		var _py = floor(_ky + pd) - dialog_y;
 		
-		var _k  = string(_p);
-		var _ii = 0;
+		_p.x = _p.x == 0? _px : lerp_float(_p.x, _px, 4);
+		_p.y = _p.y == 0? _py : lerp_float(_p.y, _py, 4);
+		
 		var _selecting = index >= index_selecting[0] && index < index_selecting[0] + index_selecting[1];
-		
-		while(struct_has(_clrRep, _k)) {
-			_k = $"{_p}{_ii}";
-			_ii++;
-		}
-		
-		_clrRep[$ _k] = 1;
-		
-		if(struct_has(ppos, _k)) {
-			ppos[$ _k][0] = (ppos[$ _k][0] == 0 || !_selecting)? _px - dialog_x : lerp_float(ppos[$ _k][0], _px - dialog_x, 4);
-			ppos[$ _k][1] = (ppos[$ _k][1] == 0 || !_selecting)? _py - dialog_y : lerp_float(ppos[$ _k][1], _py - dialog_y, 4);
-		} else {
-			ppos[$ _k] = [ _px - dialog_x, _py - dialog_y ];
-		}
-		
-		var _pdx = dialog_x + ppos[$ _k][0];
-		var _pdy = dialog_y + ppos[$ _k][1];
+		var _pdx = dialog_x + _p.x;
+		var _pdy = dialog_y + _p.y;
 		
 		var _ind = 0;
+		
 		if(row == 1) {
-				 if(j == 0)       _ind = 2;
-			else if(j == col - 1) _ind = 3;
+				 if(j == 0)                                   _ind = 2;
+			else if(j == col - 1)                             _ind = 3;
+			
 		} else {
-				 if(index == 0)     	    _ind = 6;
-			else if(i == 0 && j == col - 1) _ind = 7;
+				 if(index == 0)     	                      _ind = 6;
+			else if(i == 0 && j == col - 1)                   _ind = 7;
 			else if(i == row - 2) {
 			     if(j == col - 1 && _len - 1 < index + col)   _ind = 9;
+			     
 			} else if(i == row - 1) {
-				 if(j == 0)            _ind = 8;
-				 if(j == col - 1)      _ind = 7;
-				 if(index == _len - 1) _ind = 9;
+				 if(j == 0)                                   _ind = 8;
+				 if(j == col - 1)                             _ind = 7;
+				 if(index == _len - 1)                        _ind = 9;
 			}
 		}
 		
 		_palInd[index] = _ind;
-		drawColor(_p, _pdx, _pdy, _pw, _ph, true, _ind);
+		drawColor(_p.color, _pdx, _pdy, _pw, _ph, true, _ind);
 		
 		if(sHOVER && point_in_rectangle(mouse_mx, mouse_my, _kx, _ky, _kx + ww, _ky + hh)) {
 			hover = index;
@@ -235,11 +227,11 @@ if palette == 0 exit;
 			if(index >= _len) break;
 			
 			if(index >= index_selecting[0] && index < index_selecting[0] + index_selecting[1]) {
-				var _p  = palette[index];
-				var _px = dialog_x + ppos[$ _p][0] - pl_sx;
-				var _py = dialog_y + ppos[$ _p][1] - pl_sy;
+				var _p  = paletteObject[index];
+				var _px = dialog_x + _p.x - pl_sx;
+				var _py = dialog_y + _p.y - pl_sy;
 				
-				drawColor(_p, _px, _py, _pw, _ph, true, _palInd[index]);
+				drawColor(_p.color, _px, _py, _pw, _ph, true, _palInd[index]);
 			}
 		}
 	surface_reset_target();
@@ -261,12 +253,12 @@ if palette == 0 exit;
 			
 			var _0 = index_selecting[0];
 			var _1 = index_selecting[0] + index_selecting[1];
-			var _2 = array_length(palette);
+			var _2 = array_length(paletteObject);
 			
 			for(var i = 0; i < _2; i++) {
-					 if(i < _0) array_push(prea, palette[i]);
-				else if(i < _1) array_push(cont, palette[i]);
-				else            array_push(posa, palette[i]);
+					 if(i < _0) array_push(prea, paletteObject[i]);
+				else if(i < _1) array_push(cont, paletteObject[i]);
+				else            array_push(posa, paletteObject[i]);
 			}
 			
 			var _shf = clamp(hover - index_dragging, -index_selecting[0], _2 - (index_selecting[0] + index_selecting[1]));
@@ -278,7 +270,7 @@ if palette == 0 exit;
 				for (var i = array_length(prea) + _shf, n = array_length(prea); i < n; i++)		array_push(_pal, prea[i]);
 				for (var i = 0, n = array_length(posa); i < n; i++)                     		array_push(_pal, posa[i]);
 				
-				palette = _pal;
+				paletteObject = _pal;
 				
 			} else if(_shf > 0) {
 				for (var i = 0, n = array_length(prea); i < n; i++)                     		array_push(_pal, prea[i]);
@@ -286,13 +278,13 @@ if palette == 0 exit;
 				for (var i = 0, n = array_length(cont); i < n; i++)                     		array_push(_pal, cont[i]);
 				for (var i = _shf, n = array_length(posa); i < n; i++)                  		array_push(_pal, posa[i]);
 				
-				palette = _pal;
+				paletteObject = _pal;
 				
 			}
 			
 			index_selecting[0] += _shf;
 			index_dragging      = hover;
-			onApply(palette);
+			refreshPalette();
 		}
 		
 		if(mouse_release(mb_left)) {
@@ -354,37 +346,40 @@ if palette == 0 exit;
 		selector.current_colors = colors_selecting;
 	}
 	
-	var bx = content_x + content_w - ui(50);
-	var by = pl_y - ui(2);
+	var bx   = content_x + content_w - ui(50);
+	var by   = pl_y - ui(2);
+	var _foc = interactable && sFOCUS;
 	
 	if(array_length(palette) > 1) {
-		if(buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, sHOVER, interactable && sFOCUS, "", THEME.minus) == 2) {
+		if(buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, sHOVER, _foc, "", THEME.minus) == 2) {
 			array_delete(palette, index_selecting[0], index_selecting[1]);
-			if(array_empty(palette))
-				palette = [ c_black ];
+			if(array_empty(palette)) palette = [ c_black ];
 			index_selecting = [ 0, 0 ];
 			
+			refreshPaletteObject();
 			onApply(palette);
 		}
-	} else {
+	} else
 		draw_sprite_ui_uniform(THEME.minus, 0, bx + ui(14), by + ui(14), 1, COLORS._main_icon, 0.5);
-	}
 	
 	bx -= ui(32);
-	if(buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, sHOVER, interactable && sFOCUS, "", THEME.add) == 2) {
+	if(buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, sHOVER, _foc, "", THEME.add) == 2) {
 		palette[array_length(palette)] = c_black;
 		index_selecting = [ array_length(palette), 1 ];
 		
+		refreshPaletteObject();
 		onApply(palette);
 	}
 	
 	bx = content_x + ui(18);
-	if(buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, sHOVER, interactable && sFOCUS, __txtx("palette_editor_load", "Load palette file") + " (.hex)", THEME.file) == 2) {
+	if(buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, sHOVER, _foc, __txtx("palette_editor_load", "Load palette file") + " (.hex)", THEME.file) == 2) {
 		var path = get_open_filename_pxc("HEX palette|*.hex", "");
 		key_release();
 		
 		if(isPaletteFile(path)) {
 			palette = loadPalette(path);
+			refreshPaletteObject();
+			
 			onApply(palette);
 		}
 	}

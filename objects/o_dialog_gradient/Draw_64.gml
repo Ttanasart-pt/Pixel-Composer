@@ -1,5 +1,6 @@
 /// @description init
 if !ready exit;
+draggable = true;
 
 #region dropper
 	selector.interactable = interactable;
@@ -101,7 +102,11 @@ if !ready exit;
 		var bx = content_x + content_w - ui(50);
 		var by = dialog_y + ui(16);
 		
-		if(buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, _hov, _foc, __txtx("gradient_editor_key_blend", "Key blending"), THEME.grad_blend) == 2) {
+		var t = __txtx("gradient_editor_key_blend", "Key blending");
+		var b = buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, _hov, _foc, t, THEME.gradient_keys_blend, 0, COLORS._main_icon_light);
+		draggable &= !b;
+		
+		if(b == 2) {
 			menuCall("gradient_window_blend_menu", [ 
 				menuItem(__txtx("gradient_editor_blend_hard",  "Solid"),  function() { gradient.type = 1; onApply(gradient); }), 
 				menuItem(__txtx("gradient_editor_blend_RGB",   "RGB"),    function() { gradient.type = 0; onApply(gradient); }), 
@@ -111,7 +116,11 @@ if !ready exit;
 		}
 		bx -= ui(32);
 		
-		if(buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, _hov, _foc, __txtx("gradient_editor_reverse", "Reverse"), THEME.reverse) == 2) {
+		var t = __txtx("gradient_editor_reverse", "Reverse");
+		var b = buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, _hov, _foc, t, THEME.gradient_keys_reverse, 0, COLORS._main_icon_light);
+		draggable &= !b;
+		
+		if(b == 2) {
 			for( var i = 0, n = array_length(gradient.keys); i < n; i++ )
 				gradient.keys[i].time = 1 - gradient.keys[i].time;
 			gradient.keys = array_reverse(gradient.keys);
@@ -119,7 +128,11 @@ if !ready exit;
 		}
 		bx -= ui(32);
 		
-		if(buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, _hov, _foc, __txt("Distribute"), THEME.obj_distribute_h) == 2) {
+		var t = __txt("Distribute");
+		var b = buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, _hov, _foc, t, THEME.gradient_keys_distribute, 0, COLORS._main_icon_light);
+		draggable &= !b;
+		
+		if(b == 2) {
 			var _stp = 1 / (array_length(gradient.keys) - (gradient.type != 1));
 			
 			for( var i = 0, n = array_length(gradient.keys); i < n; i++ )
@@ -152,7 +165,7 @@ if !ready exit;
 		_k._hover = lerp_float(_k._hover, _hov, 5);
 		
 		var _kw = ui(12);
-		var _kh = lerp(ui(24), ui(32), _k._hover);
+		var _kh = lerp(ui(12), ui(32), _k._hover);
 		
 		var _kdx = _kx - _kw / 2;
 		var _kdy = _ky - _kh / 2;
@@ -161,13 +174,13 @@ if !ready exit;
 		draw_sprite_stretched_ext(THEME.prop_gradient, 0, _kdx, _kdy, _kw, _kh, _c, _aa);
 		
 		if(key_selecting == _k || key_dragging == _k) {
-			draw_sprite_stretched_ext(THEME.prop_gradient, 1, _kdx, _kdy, _kw, _kh, COLORS._main_accent, _aa);
+			draw_sprite_stretched_ext(THEME.prop_gradient, 1, _kdx, _kdy, _kw, _kh, _color_get_light(_c) < 0.75? c_white : c_black, _aa);
+			draw_sprite_stretched_ext(THEME.prop_gradient, 2, _kdx, _kdy, _kw, _kh, COLORS._main_accent, _aa);
 			
 		} else {
-			if(_color_get_light(_c) < 0.75) draw_sprite_stretched_ext(THEME.prop_gradient, 1, _kdx, _kdy, _kw, _kh, c_white, _aa);
-			else                            draw_sprite_stretched_ext(THEME.prop_gradient, 1, _kdx, _kdy, _kw, _kh, c_black, _aa);
+			draw_sprite_stretched_ext(THEME.prop_gradient, 2, _kdx, _kdy, _kw, _kh, _color_get_light(_c) < 0.75? c_white : c_black, _aa);
 		}
-		
+			
 		if(_hov) hover = _k;
 	}
 	
