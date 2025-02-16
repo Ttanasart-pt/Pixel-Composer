@@ -1,7 +1,8 @@
 function dynaDraw_polygon_fill_gradient() : dynaDraw() constructor {
 	
-	sides   = 6;
-	editors = [
+	parameters = [ "sides" ];
+	sides      = 6;
+	editors    = [
 		[ "Sides", new textBox(TEXTBOX_INPUT.number, function(n) /*=>*/ { sides = max(3, round(n)); updateNode(); }), function() /*=>*/ {return sides} ],
 	];
 	
@@ -15,10 +16,12 @@ function dynaDraw_polygon_fill_gradient() : dynaDraw() constructor {
 			return;
 		}
 		
-		var _aa = 360 / sides;
+		var _sd = params[$ "sides"]     ?? sides;     params[$ "sides"]     = sides;
+		    _sd = max(3, round(_sd));
+		var _aa = 360 / _sd;
 		
 		draw_primitive_begin(pr_trianglelist);
-			for( var i = 0; i < sides; i++ ) {
+			for( var i = 0; i < _sd; i++ ) {
 				var a0 = _ang + i * _aa;
 				var a1 = a0 + _aa;
 				

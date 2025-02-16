@@ -1252,8 +1252,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		        
 		_upd |= connection_cache[$ "line_aa"]     != project.graphConnection.line_aa;
 		        connection_cache[$ "line_aa"]     =  project.graphConnection.line_aa;
-		        
-
+		
 		connection_draw_update |= _upd;
 		
 		_upd |= connection_cache[$ "frame"]     != CURRENT_FRAME;     connection_cache[$ "frame"]     = CURRENT_FRAME;

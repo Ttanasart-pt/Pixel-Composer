@@ -919,8 +919,9 @@ function Panel_Inspector() : PanelContent() constructor {
                 jun.ry        = top_bar_h + y;
                 jun.register(contentPane);
                 
-                var _wdh = jun.draw(ui(6), yy, con_w - ui(12), _m, _hover, pFOCUS, self) + ui(8);
-                if(!is_undefined(_wdh)) hh += _wdh;
+                var _wdh = jun.draw(ui(6), yy, con_w - ui(12), _m, _hover, pFOCUS, self);
+                if(_wdh > 0) _wdh += ui(8);
+                hh += _wdh;
                 continue;
                 
             } else if(is(jun, widget)) {

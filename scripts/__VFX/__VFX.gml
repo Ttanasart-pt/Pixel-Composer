@@ -7,7 +7,8 @@ enum ANIM_END_ACTION {
 enum PARTICLE_BLEND_MODE {
 	normal,
 	alpha,
-	additive
+	additive,
+	maximum,
 }
 
 enum PARTICLE_RENDER_TYPE {	
@@ -134,7 +135,8 @@ function __part(_node) : __particleObject() constructor {
 	trailLife   = 0;
 	trailActive = false;
 	
-	frame = 0;
+	frame  = 0;
+	params = {};
 	
 	static reset = function() {
 		INLINE
@@ -447,8 +449,17 @@ function __part(_node) : __particleObject() constructor {
 					
 					var _s = shader_current();
 					shader_reset();
-						if(is(_surf, dynaSurf)) _surf.draw(_xx, _yy, ss, ss, drawrot, cc, alp_draw);
-						else DYNADRAW_DEFAULT.draw(_xx, _yy, ss, ss, 0, cc, alp_draw);
+						if(is(_surf, dynaSurf)) {
+							for( var i = 0, n = array_length(_surf.parameters); i < n; i++ ) {
+								var _param = _surf.parameters[i]
+								var _parcv = params[$ _param];
+								if(_parcv == undefined) continue;
+								
+								_surf.params[$ _param] = _parcv.get(lifeRat) * _surf[$ _param];
+							}
+							
+							_surf.draw(_xx, _yy, ss, ss, drawrot, cc, alp_draw);
+						} else DYNADRAW_DEFAULT.draw(_xx, _yy, ss, ss, 0, cc, alp_draw);
 					shader_set(_s);
 				}
 				break;

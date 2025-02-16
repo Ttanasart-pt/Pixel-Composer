@@ -1,15 +1,21 @@
 function Panel_Animation_Scaler() : Panel_Linear_Setting() constructor {
 	title = __txtx("anim_scale_title", "Animation Scaler");
+	w     = ui(380);
 	
-	w = ui(380);
 	scale_to = TOTAL_FRAMES;
+	quantize = false;
 	
 	properties = [
 		new __Panel_Linear_Setting_Item(
 			__txtx("anim_scale_target_frame_length", "Target frame length"),
 			new textBox(TEXTBOX_INPUT.number, function(to) /*=>*/ { scale_to = toNumber(to); }), 
 			function() /*=>*/ {return scale_to},
-		)
+		),
+		new __Panel_Linear_Setting_Item(
+			__txtx("anim_scale_quantize", "Quantize Keyframes"),
+			new checkBox(function() /*=>*/ { quantize = !quantize; }), 
+			function() /*=>*/ {return quantize},
+		),
 	];
 	
 	hpad = ui(36);
@@ -31,6 +37,7 @@ function Panel_Animation_Scaler() : Panel_Linear_Setting() constructor {
 				for(var k = 0, p = array_length(in.animator.values); k < p; k++) {
 					var t = in.animator.values[k];
 					t.time = t.ratio * scale_to;
+					if(quantize) t.time = round(t.time);
 				}
 			}
 		}

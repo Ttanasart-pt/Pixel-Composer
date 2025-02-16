@@ -8,7 +8,7 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 		
 	newInput(input_len + 1, nodeValue_Bool("Round position", self, true, "Round position to the closest integer value to avoid jittering."));
 	
-	newInput(input_len + 2, nodeValue_Enum_Scroll("Blend mode", self,  0 , [ "Normal", "Alpha", "Additive" ]));
+	newInput(input_len + 2, nodeValue_Enum_Scroll("Blend mode", self,  0 , [ "Normal", "Alpha", "Additive", "Maximum" ]));
 	
 	newInput(input_len + 3, nodeValue_Surface("Background", self));
 	
@@ -99,11 +99,9 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 		
 		if(IS_FIRST_FRAME) {
 			reset();
-			// if(IS_PLAYING)
 			reLoop();
 		}
 		
-		// if(IS_PLAYING) 
 		runVFX(frame);
 	}
 	
@@ -127,6 +125,7 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 				case PARTICLE_BLEND_MODE.normal:   BLEND_NORMAL break;
 				case PARTICLE_BLEND_MODE.alpha:    BLEND_ALPHA  break;
 				case PARTICLE_BLEND_MODE.additive: BLEND_ADD    break;
+				case PARTICLE_BLEND_MODE.maximum:  BLEND_MAX    break;
 			}
 			
 			if(_type == PARTICLE_RENDER_TYPE.surface)
@@ -142,5 +141,5 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 		
 		if(PROJECT.animator.is_playing)
 			cacheCurrentFrame(_outSurf);
-	}	
+	}
 }

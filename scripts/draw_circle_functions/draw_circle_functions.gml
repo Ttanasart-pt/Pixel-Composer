@@ -40,7 +40,7 @@ function draw_polygon_rect_border(x, y, w, h, sides, thick = 1, a = 0) {
 		var a0 = a + i * aa;
 		var a1 = a0 + aa;
 		
-		draw_line_width(x + lengthdir_x(w, a0), y + lengthdir_y(h, a0), 
+		draw_line_round(x + lengthdir_x(w, a0), y + lengthdir_y(h, a0), 
 		                x + lengthdir_x(w, a1), y + lengthdir_y(h, a1), thick);
 	}
 }

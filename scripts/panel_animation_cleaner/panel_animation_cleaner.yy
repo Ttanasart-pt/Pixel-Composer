@@ -1,0 +1,14 @@
+{
+  "$GMScript":"v1",
+  "%Name":"panel_animation_cleaner",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"panel_animation_cleaner",
+  "parent":{
+    "name":"animation",
+    "path":"folders/panels/animation.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+  "tags":[],
+}

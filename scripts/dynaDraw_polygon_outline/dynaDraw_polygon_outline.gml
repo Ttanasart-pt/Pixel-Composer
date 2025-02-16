@@ -1,8 +1,9 @@
 function dynaDraw_polygon_outline() : dynaDraw() constructor {
 	
-	sides     = 6;
-	thickness = 1;
-	editors   = [
+	parameters = [ "sides", "thickness" ];
+	sides      = 6;
+	thickness  = 1;
+	editors    = [
 		[ "Sides",     new textBox(TEXTBOX_INPUT.number, function(n) /*=>*/ { sides = max(3, round(n)); updateNode(); }), function() /*=>*/ {return sides} ],
 		[ "Thickness", new textBox(TEXTBOX_INPUT.number, function(n) /*=>*/ { thickness = n; updateNode(); }), function() /*=>*/ {return thickness} ],
 	];
@@ -11,13 +12,18 @@ function dynaDraw_polygon_outline() : dynaDraw() constructor {
 		draw_set_color(_col);
 		draw_set_alpha(_alp);
 		
+		var _sd = params[$ "sides"]     ?? sides;     params[$ "sides"]     = sides;
+		    _sd = max(3, round(_sd));
+		    
+		var _th = params[$ "thickness"] ?? thickness; params[$ "thickness"] = thickness;
+		
 		if(round(_sx) <= 1 && round(_sy) <= 0) {
 			draw_point(_x, _y);
 			draw_set_alpha(1);
 			return;
 		}
 		
-		draw_polygon_rect_border(_x, _y, _sx / 2, _sy / 2, sides, thickness, _ang);
+		draw_polygon_rect_border(_x, _y, _sx / 2, _sy / 2, _sd, _th, _ang);
 		draw_set_alpha(1);
 	}
 	

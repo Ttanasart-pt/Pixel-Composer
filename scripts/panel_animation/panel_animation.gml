@@ -2581,12 +2581,25 @@ function Panel_Animation() : PanelContent() constructor {
         
         by += ui(36);
         bx = w - ui(44);
-        if(buttonInstant(THEME.button_hide_fill, bx, by, ui(32), ui(32), [mx, my], pHOVER, pFOCUS, __txtx("panel_animation_animation_settings", "Animation settings"), THEME.gear, 2) == 2)
-            dialogPanelCall(new Panel_Animation_Setting(), x + bx + ui(32), y + by - ui(8), { anchor: ANCHOR.right | ANCHOR.bottom }); 
+        var b = buttonInstant(THEME.button_hide_fill, bx, by, ui(32), ui(32), [mx, my], pHOVER, pFOCUS, __txtx("panel_animation_animation_settings", "Animation settings"), THEME.gear, 2);
+        if(b == 2) dialogPanelCall(new Panel_Animation_Setting(), x + bx + ui(32), y + by - ui(8), { anchor: ANCHOR.right | ANCHOR.bottom }); 
         
         by -= ui(40); if(by < 8) return;
-        if(buttonInstant(THEME.button_hide_fill, bx, by, ui(32), ui(32), [mx, my], pHOVER, pFOCUS, __txtx("panel_animation_scale_animation", "Scale animation"), THEME.animation_timing, 2) == 2)
-            dialogPanelCall(new Panel_Animation_Scaler(), x + bx + ui(32), y + by - ui(8), { anchor: ANCHOR.right | ANCHOR.bottom }); 
+        var b = buttonInstant(THEME.button_hide_fill, bx, by, ui(32), ui(32), [mx, my], pHOVER, pFOCUS, __txt("Animation Tools"), THEME.animation_timing, 2);
+        if(b == 2) {
+        	var _dx = x + bx + ui(32);
+        	var _dy = y + by - ui(8);
+        	
+        	menuCall("animation_tools", [
+        		menuItem(__txtx("panel_animation_scale_animation", "Scaler"),  function(d) /*=>*/ { dialogPanelCall(new Panel_Animation_Scaler(),  d.x, d.y, 
+        			{ anchor: ANCHOR.right | ANCHOR.bottom }); }, noone, noone, noone, { x : _dx, y : _dy }),
+        			
+        		menuItem(__txtx("panel_animation_clean_animation", "Cleaner"), function(d) /*=>*/ { dialogPanelCall(new Panel_Animation_Cleaner(), d.x, d.y, 
+        			{ anchor: ANCHOR.right | ANCHOR.bottom }); }, noone, noone, noone, { x : _dx, y : _dy }),
+        			
+    		], _dx, _dy);
+        
+        }
         
         var max_y = by - ui(28);
         if(by < ui(28)) return;

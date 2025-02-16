@@ -11,7 +11,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	newInput(3, nodeValue_Area("Spawn Area", self, DEF_AREA ));
 	
-	newInput(4, nodeValue_Enum_Scroll("Spawn Distribution", self, 0, [ "Area", "Border", "Map" ] ));
+	newInput(4, nodeValue_Enum_Scroll("Spawn Source", self, 0, [ "Area Inside", "Area Border", "Map", "Path" ] ));
 	
 	newInput(5, nodeValue_Range("Lifespan", self, [ 20, 30 ] ));
 	
@@ -124,13 +124,46 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	newInput(54, nodeValue_Range("Friction", self, [ 0, 0 ], { linked : true }));
 	
+	newInput(55, nodeValue_PathNode("Spawn Path", self, noone ));
+	
 	for (var i = 2, n = array_length(inputs); i < n; i++)
 		inputs[i].rejectArray();
 	input_len = array_length(inputs);
 	
+	dynaDraw_parameter = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
+		if(array_empty(custom_parameter_names)) return 0;
+		
+		var _hh =  0;
+		
+		for( var i = 0, n = array_length(custom_parameter_names); i < n; i++ ) {
+			var _n = custom_parameter_names[i];
+			
+			var _wig = custom_parameter_curves_view[$ _n];
+			var _dat = attributes.parameter_curves[$ _n];
+			if(_wig == undefined || _dat == undefined) continue;
+			
+			var _txt = string_title(_n) + " Over Time";
+			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
+			draw_text_add(_x, _y, _txt);
+			
+			var _th = string_height(_txt) + ui(8);
+			_y  += _th;
+			_hh += _th;
+			
+			_wig.setFocusHover(_focus, _hover);
+			var _hg = _wig.drawParam(new widgetParam(_x, _y, _w, 0, _dat, {}, _m, dynaDraw_parameter.rx, dynaDraw_parameter.ry).setFont(f_p2));
+			
+			_y  += _hg + ui(8);
+			_hh += _hg + ui(8);
+		}
+		
+		_hh -= ui(8);
+		return _hh;
+	});
+	
 	input_display_list = [ 32, 48, 
-		["Sprite",	   false],	    0, 22, 23, 49, 26,
-		["Spawn",		true],	   27, 16, 44,  1, 51,  2,  3,  4, 30, 24, 52,  5,
+		["Sprite",	   false],	    0, dynaDraw_parameter, 22, 23, 49, 26,
+		["Spawn",		true],	   27, 16, 44,  1, 51,  2,  4,  3, 30, 55, 24, new Inspector_Spacer(ui(6), true), 52,  5,
 		["Movement",	true],	   29, 53,  6, 18,
 		["Follow path", true, 45], 46, 47, 
 		["Physics",		true],	   54,  7, 19, 33, 34, 35, 36, 
@@ -145,8 +178,8 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	attributes.part_amount = 512;
 	array_push(attributeEditors, [ "Maximum particles", function() /*=>*/ {return attributes.part_amount}, new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ { attributes.part_amount = v; }) ]);
 	
-	parts = array_create(attributes.part_amount);
-	for( var i = 0; i < attributes.part_amount; i++ ) parts[i] = new __part(self);
+	_self = self;
+	parts = array_create_ext(attributes.part_amount, function() /*=>*/ {return new __part(_self)});
 	
 	parts_runner    = 0;
 	seed            = 0;
@@ -168,7 +201,12 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	curve_scale    = noone;
 	curve_alpha    = noone;
 	curve_path_div = noone;
-		
+	
+	custom_parameter_names       = [];
+	custom_parameter_curves_view = {};
+	custom_parameter_map         = {};
+	attributes.parameter_curves  = {};
+	
 	static spawn = function(_time = CURRENT_FRAME, _pos = -1) {
 		var _inSurf     	= getInputData( 0);
 		
@@ -177,6 +215,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		var _spawn_area 	= getInputData( 3);
 		var _distrib    	= getInputData( 4);
 		var _dist_map   	= getInputData(30);
+		var _dist_path   	= getInputData(55);
 		var _scatter    	= getInputData(24);
 		var _spawn_period   = getInputData(52);
 		
@@ -259,7 +298,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 					part.atlas = _spr;
 					
 				} else if(_distrib < 2) {
-					var sp = area_get_random_point(_spawn_area, _distrib, _scatter, spawn_index, _spawn_period + 1);
+					var sp = area_get_random_point(_spawn_area, _distrib, _scatter, spawn_index, _spawn_period);
 					xx = sp[0];
 					yy = sp[1];
 					
@@ -269,6 +308,15 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 						
 					xx = _spawn_area[0] + _spawn_area[2] * (sp[0] * 2 - 1.);
 					yy = _spawn_area[1] + _spawn_area[3] * (sp[1] * 2 - 1.);
+					
+				} else if(_distrib == 3) {
+					if(_dist_path == noone) continue;
+					
+					var _pathProg = _scatter == 0? (spawn_index % _spawn_period) / (_spawn_period - 1) : random(1);
+					var _p = _dist_path.getPointRatio(_pathProg, 0);
+					
+					xx = _p.x;
+					yy = _p.y;
 				}
 				
 			} else {
@@ -323,6 +371,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			part.setTransform(_scx, _scy, curve_scale, _rot, _rot_spd, _follow);
 			part.setDraw(_color, _bld, _alp, curve_alpha);
 			part.setPath(_path, curve_path_div);
+			part.params = custom_parameter_map;
 			
 			spawn_index = safe_mod(spawn_index + 1, attributes.part_amount);
 			onSpawn(_time, part);
@@ -404,6 +453,13 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			curve_scale    = new curveMap(_curve_sca, TOTAL_FRAMES);
 			curve_alpha    = new curveMap(_curve_alp, TOTAL_FRAMES);
 			curve_path_div = new curveMap(_curve_pth, TOTAL_FRAMES);
+			
+			for( var i = 0, n = array_length(custom_parameter_names); i < n; i++ ) {
+				var _n = custom_parameter_names[i];
+				if(struct_exists(attributes.parameter_curves, _n))
+					custom_parameter_map[$ _n] = new curveMap(attributes.parameter_curves[$ _n], TOTAL_FRAMES);
+			}
+			
 		#endregion
 		
 		render();
@@ -469,9 +525,11 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		var _usePth = getInputData(45);
 		var _direct = getInputData(29);
 		
-		inputs[24].setVisible(_dist < 2);
+		inputs[24].setVisible(_dist != 2);
 		
+		inputs[ 3].setVisible(_dist != 3);
 		inputs[30].setVisible(_dist == 2, _dist == 2);
+		inputs[55].setVisible(_dist == 3, _dist == 3);
 		
 		inputs[35].setVisible(_turn[0] != 0 && _turn[1] != 0);
 		inputs[36].setVisible(_turn[0] != 0 && _turn[1] != 0);
@@ -483,7 +541,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		
 		inputs[46].setVisible(true, _usePth);
 		inputs[51].setVisible(_spwTyp == 1);
-		inputs[52].setVisible(_scatt  == 0);
+		inputs[52].setVisible(_dist != 2 && _scatt == 0);
 		inputs[53].setVisible(_direct);
 		
 		inputs[1].setVisible(_spwTyp < 2);
@@ -506,21 +564,49 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	}
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var _spr  = getInputData(0);
-		if(array_empty(_spr)) return;
-		if(is_array(_spr))
-			_spr = _spr[0];
+		var _spr = getInputData(0);
+		var _src = getInputData(4);
 		
-		var _flag = is_instanceof(_spr, SurfaceAtlas)? 0b0001 : 0b0011;
+		if(_src == 3) {
+			var _path = getInputData(55);
+			if(_path) _path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+			
+		} else {
+			if(array_empty(_spr)) return;
+			if(is_array(_spr)) _spr = _spr[0];
+			
+			var _flag = is_instanceof(_spr, SurfaceAtlas)? 0b0001 : 0b0011;
+			inputs[3].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag);
+		}
 		
-		inputs[3].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag);
-		if(onDrawOverlay != -1)
-			onDrawOverlay(active, _x, _y, _s, _mx, _my);
+		if(onDrawOverlay != -1) onDrawOverlay(active, _x, _y, _s, _mx, _my);
+		
 	}
-	
+	 
 	static onDrawOverlay = -1;
 	
 	static update = function(frame = CURRENT_FRAME) {
+		var _surf = getInputData(0);
+		if(is(_surf, dynaDraw)) {
+			custom_parameter_names = _surf.parameters;
+			
+			for( var i = 0, n = array_length(custom_parameter_names); i < n; i++ ) {
+				var _n = custom_parameter_names[i];
+				if(!struct_exists(attributes.parameter_curves, _n)) 
+					attributes.parameter_curves[$ _n] = CURVE_DEF_11;
+					
+				if(!struct_exists(custom_parameter_curves_view, _n)) {
+					var cbox = new curveBox(noone);
+					    cbox.param_name  = _n;
+					    cbox.param_curve = attributes.parameter_curves;
+					    cbox.node        = self;
+					    cbox.onModify    = method(cbox, function(c) /*=>*/ { param_curve[$ param_name] = c; node.clearCacheForward(); });
+					
+					custom_parameter_curves_view[$ _n] = cbox;
+				}
+			}
+		}
+		
 		var _resetSeed = getInputData(48);
 		if(_resetSeed) resetSeed();
 	

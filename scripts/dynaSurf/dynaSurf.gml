@@ -1,5 +1,7 @@
 function dynaSurf() constructor {
-	surfaces = [];
+	surfaces   = [];
+	parameters = [];
+	params     = {};
 	
 	static getAbsolutePos = function(_x, _y, _xs = 1, _ys = 1, _rot = 0) {
 		var _w = getWidth() * _xs;

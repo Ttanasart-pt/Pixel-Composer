@@ -1,7 +1,8 @@
 function dynaDraw_circle_outline() : dynaDraw() constructor {
 	
-	thickness = 1;
-	editors   = [
+	parameters = [ "thickness" ];
+	thickness  = 1;
+	editors    = [
 		[ "Thickness", new textBox(TEXTBOX_INPUT.number, function(n) /*=>*/ { thickness = n; updateNode(); }), function() /*=>*/ {return thickness} ],
 	];
 	
@@ -10,9 +11,11 @@ function dynaDraw_circle_outline() : dynaDraw() constructor {
 		draw_set_alpha(_alp);
 		draw_set_circle_precision(32);
 		
+		var _th = params[$ "thickness"] ?? thickness; params[$ "thickness"] = thickness;
+		
 		if(_sx != _sy) {
-			if(thickness <= 1) draw_ellipse(_x - _sx / 2, _y - _sy / 2, _x + _sx / 2, _y + _sy / 2, true);
-			else        draw_ellipse_border(_x - _sx / 2, _y - _sy / 2, _x + _sx / 2, _y + _sy / 2, thickness);
+			if(_th <= 1) draw_ellipse(_x - _sx / 2, _y - _sy / 2, _x + _sx / 2, _y + _sy / 2, true);
+			else         draw_ellipse_border(_x - _sx / 2, _y - _sy / 2, _x + _sx / 2, _y + _sy / 2, _th);
 			draw_set_alpha(1);
 			return;
 		}
@@ -35,12 +38,12 @@ function dynaDraw_circle_outline() : dynaDraw() constructor {
 				draw_point( _x + 1, _y     );
 				draw_point( _x,     _y + 1 );
 				draw_point( _x,     _y - 1 );
-				if(thickness > 1) draw_point( _x, _y );
+				if(_th > 1) draw_point( _x, _y );
 				break;
 				
 			default : 
-				if(thickness <= 1) draw_circle(_x, _y, _sx / 2 - 1, true);
-				else        draw_circle_border(_x, _y, _sx / 2 - 1, thickness);
+				if(_th <= 1) draw_circle(_x - 1, _y - 1, _sx / 2 - 1, true);
+				else         draw_circle_border(_x, _y, _sx / 2 - 1, _th);
 				break;
 		}
 		

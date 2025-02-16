@@ -1,5 +1,5 @@
-function __d3dMaterial(surface = noone) constructor {
-	self.surface   = surface;
+function __d3dMaterial(s = noone) constructor {
+	surface   = s;
 	
 	diffuse   = 1;
 	specular  = 0;
@@ -18,6 +18,8 @@ function __d3dMaterial(surface = noone) constructor {
 		if(!is_surface(surface)) return -1;
 		return surface_get_texture(surface);
 	}
+	
+	static setSurface = function(s) { surface = s; return self; }
 	
 	static submitGeometry = function() {
 		shader_set_i("use_normal", is_surface(normal));

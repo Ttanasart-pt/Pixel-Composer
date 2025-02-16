@@ -2,7 +2,7 @@
 
 function struct_has(s, k) { return is_struct(s) && variable_struct_exists(s, k); }
 
-function struct_override(original, override) {
+function struct_override(original, override, _clone = false) {
 	var args = variable_struct_get_names(override);
 	
 	for( var i = 0, n = array_length(args); i < n; i++ ) {
@@ -10,7 +10,7 @@ function struct_override(original, override) {
 		
 		if(!struct_has(original, _key)) continue;
 		if(is_struct(original[$ _key]))
-			original[$ _key] = struct_override(original[$ _key], override[$ _key]);
+			original[$ _key] = _clone? variable_clone(override[$ _key]) : struct_override(original[$ _key], override[$ _key]);
 		else 
 			original[$ _key] = override[$ _key];
 	}

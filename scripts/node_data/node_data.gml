@@ -1470,7 +1470,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		getJunctionList();
 		setJunctionIndex();
 		
-		__preDraw_data.force = true;
+		PANEL_GRAPH.draw_refresh = true;
+		__preDraw_data.force     = true;
 		
 	} run_in(1, function() /*=>*/ { refreshNodeDisplay(); });
 	
@@ -1481,7 +1482,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var yy = y * _s + _y;
 		
 		var _d   = __preDraw_data;
-		var _upd = _d._x != xx || _d._y != yy || _d._s != _s || _d.force || _d._w != w || _d._h != h || _d._p != previewable || _d.sp != show_parameter 
+		var _upd = _d.force || _d._x != xx || _d._y != yy || _d._s != _s || _d._w != w || _d._h != h || _d._p != previewable || _d.sp != show_parameter 
 		
 		_d._x = xx;
 		_d._y = yy;
@@ -2682,9 +2683,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		repeat(_dynamic_inputs)
 			createNewInput();
 	}
-	
+	 
 	static attributeDeserialize = function(attr) {
-		struct_override(attributes, attr); 
+		struct_override(attributes, attr, true); 
 		
 		if(!CLONING && LOADING_VERSION < 1_18_02_0) {
 			if(struct_has(attributes, "color_depth")) attributes.color_depth += (!array_empty(inputs) && inputs[0].type == VALUE_TYPE.surface)? 1 : 2;

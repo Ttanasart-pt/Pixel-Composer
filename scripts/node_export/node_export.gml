@@ -166,7 +166,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					ly += string_height("M");
 				}
 			
-				draw_text(lx, ly, ch);
+				draw_text_add(lx, ly, ch);
 			
 				lw += ww;
 				lx += ww;

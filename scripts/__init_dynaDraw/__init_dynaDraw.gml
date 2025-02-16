@@ -20,8 +20,8 @@ function __init_dynaDraw() {
 
 function dynaDraw() : dynaSurf() constructor {
 	
-	node    = noone;
-	editors = [];
+	node       = noone;
+	editors    = [];
 	
 	static getWidth  = function() /*=>*/ {return 1};
 	static getHeight = function() /*=>*/ {return 1};

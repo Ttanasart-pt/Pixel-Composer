@@ -1,7 +1,8 @@
 function dynaDraw_polygon_fill() : dynaDraw() constructor {
 	
-	sides   = 6;
-	editors = [
+	parameters = [ "sides" ];
+	sides      = 6;
+	editors    = [
 		[ "Sides", new textBox(TEXTBOX_INPUT.number, function(n) /*=>*/ { sides = max(3, round(n)); updateNode(); }), function() /*=>*/ {return sides} ],
 	];
 	
@@ -15,7 +16,10 @@ function dynaDraw_polygon_fill() : dynaDraw() constructor {
 			return;
 		}
 		
-		draw_polygon_rect(_x, _y, _sx / 2, _sy / 2, sides, _ang);
+		var _sd = params[$ "sides"]     ?? sides;     params[$ "sides"]     = sides; 
+		    _sd = max(3, round(_sd));
+		
+		draw_polygon_rect(_x, _y, _sx / 2, _sy / 2, _sd, _ang);
 		draw_set_alpha(1);
 	}
 	

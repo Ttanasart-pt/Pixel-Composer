@@ -23,11 +23,18 @@ function Node_3D_Mesh_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 	
 	newInput(in_mesh + 8, nodeValue_Slider_Range("Back Height Level", self, [ 0, 1 ]));
 	
+	newInput(in_mesh + 9, nodeValue_D3Material("Front Texture", self, new __d3dMaterial()));
+	
+	newInput(in_mesh + 10, nodeValue_D3Material("Back Texture", self, new __d3dMaterial()));
+	
+	newInput(in_mesh + 11, nodeValue_D3Material("Side Texture", self, new __d3dMaterial()));
+	
 	input_display_list = [ in_mesh + 3,
 		__d3d_input_list_mesh,
 		__d3d_input_list_transform,
-		["Extrude",		false], in_mesh + 0, in_mesh + 1,              in_mesh + 7,  
-		["Backside",	false], in_mesh + 4, in_mesh + 5, in_mesh + 6, in_mesh + 8, 
+		["Extrude",  false], in_mesh + 0,  in_mesh +  1,               in_mesh + 7,  
+		["Backside", false,  in_mesh + 4], in_mesh +  5, in_mesh +  6, in_mesh + 8, 
+		["Texture",	 false], in_mesh + 9,  in_mesh + 10, in_mesh + 11, 
 	]
 	
 	temp_surface = [ noone, noone ];
@@ -41,8 +48,8 @@ function Node_3D_Mesh_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 		inputs[in_mesh + 6].setVisible(true, _double);
 	}
 	
-	static processData = function(_output, _data, _output_index, _array_index = 0) { #region
-		var _mat  = _data[in_mesh + 0];
+	static processData = function(_output, _data, _output_index, _array_index = 0) {
+		var _fmat = _data[in_mesh + 0];
 		var _hght = _data[in_mesh + 1];
 		var _smt  = _data[in_mesh + 2];
 		var _updt = _data[in_mesh + 3];
@@ -54,12 +61,14 @@ function Node_3D_Mesh_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 		var _flv  = _data[in_mesh + 7];
 		var _blv  = _data[in_mesh + 8];
 		
-		var _surf  = is_instanceof(_mat, __d3dMaterial)?  _mat.surface  : noone;
-		var _bsurf = is_instanceof(_bmat, __d3dMaterial)? _bmat.surface : noone;
+		var _matF = _data[in_mesh +  9];
+		var _matB = _data[in_mesh + 10];
+		var _matS = _data[in_mesh + 11];
 		
+		var _surf  = is(_fmat, __d3dMaterial)? _fmat.surface : noone;
+		var _bsurf = is(_bmat, __d3dMaterial)? _bmat.surface : noone;
 		if(!is_surface(_surf)) return noone;
 		
-		var _matN   = _mat.clone();
 		var _object = getObject(_array_index);
 		_object.checkParameter( { 
 			smooth  : _smt,
@@ -77,24 +86,16 @@ function Node_3D_Mesh_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 			blevel_max : _blv[1],
 		}, _updt);
 		
-		var _dim   = surface_get_dimension(_surf);
-		var _nSurf = surface_create(_dim[0] * 2, _dim[1]);
+		var _texF = is_surface(_matF.surface)? _matF : _fmat;
+		var _texB = is_surface(_matB.surface)? _matB : (_back? _bmat : _fmat);
+		var _texS = is_surface(_matS.surface)? _matS : _fmat;
 		
-		surface_set_shader(_nSurf, sh_d3d_extrude_extends);
-			shader_set_dim("dimension", _surf);
-			
-			draw_surface_safe(_surf, 0);
-			if(_back) draw_surface_stretched_safe(_bsurf, _dim[0], 0, _dim[0], _dim[1]);
-			else      draw_surface_stretched_safe(_surf,  _dim[0], 0, _dim[0], _dim[1]);
-		surface_reset_shader();
-		
-		_matN.surface    = _nSurf;
-		_object.materials = [ _matN ];
+		_object.materials = [ _texF, _texB, _texS ];
 		
 		setTransform(_object, _data);
 		
 		return _object;
-	} #endregion
+	}
 	
-	static getPreviewValues = function() { return getSingleValue(in_mesh + 0); }
+	static getPreviewValues = function() /*=>*/ {return getSingleValue(in_mesh + 0)};
 }

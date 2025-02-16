@@ -521,7 +521,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static setVisibleManual = function(v) {
 		visible_manual = v;
-		node.refreshNodeDisplay();
+		node.toRefreshNodeDisplay = true;
 		return self;
 	}
 	

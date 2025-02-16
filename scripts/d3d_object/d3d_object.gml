@@ -191,6 +191,8 @@ function __3dObject() constructor {
 		
 		gpu_set_tex_repeat(true);
 		for( var i = 0, n = array_length(VB); i < n; i++ ) {
+			if(VB[i] == noone) continue;
+			
 			var _ind  = array_safe_get_fast(material_index, i, i);
 			var _mat  = array_safe_get_fast(materials, _ind, noone);
 			var _uMat = is_instanceof(_mat, __d3dMaterial);
