@@ -1,0 +1,8 @@
+{
+  "name":"Datetime",
+  "tooltip":"Get current date/time data.",
+  "spr":"s_node_datetime",
+  "pxc_version":118090,
+  "baseNode":"Node_Datetime_Get",
+  "io":[ "text" ],
+}

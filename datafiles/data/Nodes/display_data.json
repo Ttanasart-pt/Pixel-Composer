@@ -718,6 +718,7 @@
             { "label": "/Info" },
             "Node_String_Length",
             "Node_String_Get_Char",
+            "Node_Datetime_Get",
             { "label": "/Operators" },
             "Node_String_Merge",
             "Node_String_Join",

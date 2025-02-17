@@ -137,9 +137,7 @@ function draw_text_bbox(bbox, text, scale = 1) {
 	draw_set_halign(fa_center);
 	draw_set_valign(fa_center);
 	
-	// BLEND_ALPHA_MULP
-	draw_text_transformed(bbox.xc, bbox.yc, text, ss * scale, ss * scale, 0);
-	// BLEND_NORMAL
+	draw_text_add(bbox.xc, bbox.yc, text, ss * scale);
 }
 
 function draw_text_bbox_cut(bbox, text, scale = 1) {
