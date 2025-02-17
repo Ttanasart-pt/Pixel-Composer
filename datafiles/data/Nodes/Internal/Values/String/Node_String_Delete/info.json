@@ -1,0 +1,8 @@
+{
+  "name":"Delete Text",
+  "tooltip":"Delete parts of a text.",
+  "spr":"s_node_string_delete",
+  "pxc_version":118090,
+  "baseNode":"Node_String_Delete",
+  "io":[ "text" ],
+}

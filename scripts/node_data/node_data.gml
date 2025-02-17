@@ -577,12 +577,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	////- INSPECTOR
 	
 	static onInspector1Update  = noone;
-	static inspector1Update    = function() { INLINE onInspector1Update(); }
-	static hasInspector1Update = function() { INLINE return onInspector1Update != noone; }
+	static inspector1Update    = function() /*=>*/ { onInspector1Update(); }
+	static hasInspector1Update = function() /*=>*/ { return onInspector1Update != noone; }
 	
 	static onInspector2Update  = noone;
-	static inspector2Update    = function() { INLINE onInspector2Update(); }
-	static hasInspector2Update = function() { INLINE return onInspector2Update != noone; }
+	static inspector2Update    = function() /*=>*/ { onInspector2Update(); }
+	static hasInspector2Update = function() /*=>*/ { return onInspector2Update != noone; }
 	
 	////- STEP
 	

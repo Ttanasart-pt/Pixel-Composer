@@ -432,7 +432,14 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		}
 		
 		var _shp = getInputData(5);
-		if(_shp != 2) return active;
+		var _tex = getInputData(6);
+		var _dim = surface_get_dimension(_tex);
+		
+		draw_set_color(COLORS._main_accent);
+		switch(_shp) {
+			case 0 : draw_rectangle(_x, _y, _x + _dim[0] * _s, _y + _dim[1] * _s, true); return active;
+			case 1 : draw_ellipse(  _x, _y, _x + _dim[0] * _s, _y + _dim[1] * _s, true); return active;
+		}
 		
 		var meshes = attributes.mesh;
 		var _hover = -1, _side = 0;
@@ -714,7 +721,6 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	static update = function(frame = CURRENT_FRAME) {
 		if(IS_FIRST_FRAME) reset();
-		
 		outputs[0].setValue(object);
 	}
 	

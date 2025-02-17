@@ -58,11 +58,6 @@ function Node_Rigid_Object_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group
 		return inputs[1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
-	static reset = function() {
-		spawn_index = 0;
-		object = [];
-	}
-	
 	static step = function() {
 		var _typ = getInputData(2);
 		
@@ -97,6 +92,8 @@ function Node_Rigid_Object_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
+		if(IS_FIRST_FRAME) reset();
+		
 		RETURN_ON_REST
 			
 		var _obj = getInputData(0);
@@ -118,6 +115,14 @@ function Node_Rigid_Object_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group
 			spawn(_sed);
 			
 		outputs[0].setValue(object);
+	}
+	
+	static reset = function() {
+		for( var i = 0, n = array_length(object); i < n; i++ )
+			if(instance_exists(object[i])) instance_destroy(object[i]);
+		
+		spawn_index = 0;
+		object = [];
 	}
 	
 	static getGraphPreviewSurface = function() /*=>*/ {
