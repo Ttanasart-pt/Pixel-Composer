@@ -106,6 +106,12 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	newInput(16, nodeValue_Bool("Export on Save", self, false))
 	
+	newInput(17, nodeValue_Bool("Use Built-in gif encoder", self, false))
+	
+	newInput(18, nodeValue_Int("Quality", self, 2))
+		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 3, 1 ] })
+		.rejectArray();
+	
 	newOutput(0, nodeValue_Output("Preview", self, VALUE_TYPE.surface, noone));
 	
 	template_guide = [
@@ -192,7 +198,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	input_display_list = [
 		["Export",		false], 0, 1, 2, export_template, 16, 
-		["Format",		false], 3, 9, 6, 7, 10, 13, 
+		["Format",		false], 3, 9, 17, 18, 6, 7, 10, 13, 
 		["Custom Range", true, 15], 12, 
 		["Animation",	false], 8, 5, 11, 14, 
 	];
@@ -201,6 +207,9 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	render_type   = "";
 	render_target = "";
 	exportLog     = true;
+	
+	use_gif_encoder = false;
+	gif_encoder = [];
 	
 	directory = TEMPDIR + string(irandom_range(100000, 999999));
 	converter = filepath_resolve(PREFERENCES.ImageMagick_path) + "convert.exe";
@@ -588,6 +597,19 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			if(rng_st != 0) return;
 		}
 		
+		if(use_gif_encoder) {
+			var rate = getInputData( 8);
+			var quan = getInputData(18);
+			
+			if(!is_array(surf)) surf = [ surf ];
+			for( var i = 0, n = array_length(surf); i < n; i++ ) {
+				var _s = surf[i];
+				gif_add_surface(gif_encoder[i], _s, 100 / rate, 0, 0, quan);
+			}
+			
+			return;
+		}
+		
 		if(is_array(surf)) {
 			var p = "";
 			for(var i = 0; i < array_length(surf); i++) {
@@ -647,6 +669,29 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		// print($">>>>>>>>>>>>>>>>>>>> export {CURRENT_FRAME} complete <<<<<<<<<<<<<<<<<<<<");
 	}
 	
+	static renderStarted = function() {
+		use_gif_encoder = false;
+		
+		var extd = getInputData( 9);
+		
+		if(format_animation[extd] == ".gif") {
+			var _build_in_gif = getInputData(17);
+			if(!_build_in_gif) return;
+			
+			use_gif_encoder = true;
+			var surf = getInputData(0);
+			if(!is_array(surf)) surf = [ surf ];
+			
+			for( var i = 0, n = array_length(surf); i < n; i++ ) {
+				var _s = surf[i];
+				var _d = surface_get_dimension(_s);
+				
+				gif_encoder[i] = gif_open(_d[0], _d[1], 0);
+			}
+		}
+		
+	}
+	
 	static renderCompleted = function() {
 		var surf = getInputData( 0);
 		var path = getInputData( 1);
@@ -662,45 +707,32 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				if(is_array(path)) target_path = pathString(array_safe_get_fast(path, i), i);
 				else               target_path = pathString(path, i);
 				
+				target_path = string_replace(target_path, ".png", format_animation[extd]);
+				
 				switch(format_animation[extd]) {
 					case ".gif" :
-						target_path = string_replace(target_path, ".png", ".gif");
-						renderGif(temp_path, target_path);
+						if(use_gif_encoder) gif_save(gif_encoder[i], target_path);
+						else                renderGif(temp_path, target_path);
 						break;
-					case ".webp" :
-						target_path = string_replace(target_path, ".png", ".webp");
-						renderWebp(temp_path, target_path);
-						break;
-					case ".mp4" :
-						target_path = string_replace(target_path, ".png", ".mp4");
-						renderMp4(temp_path, target_path);
-						break;
-					case ".apng" :
-						target_path = string_replace(target_path, ".png", ".apng");
-						renderApng(temp_path, target_path);
-						break;
+						
+					case ".webp" : renderWebp(temp_path, target_path); break;
+					case ".mp4"  : renderMp4( temp_path, target_path); break;
+					case ".apng" : renderApng(temp_path, target_path); break;
 				}
 			}
 		} else {
 			target_path = pathString(path);
+			target_path = string_replace(target_path, ".png", format_animation[extd]);
 			
 			switch(format_animation[extd]) {
-				case ".gif" :	
-					target_path = string_replace(target_path, ".png", ".gif");
-					renderGif(directory + "/*.png", target_path);
-					break;
-				case ".webp" : 
-					target_path = string_replace(target_path, ".png", ".webp");
-					renderWebp(directory + "/", target_path);
-					break;
-				case ".mp4" : 
-					target_path = string_replace(target_path, ".png", ".mp4");
-					renderMp4(directory + "/", target_path);
-					break;
-				case ".apng" : 
-					target_path = string_replace(target_path, ".png", ".apng");
-					renderApng(directory + "/", target_path);
-					break;
+				case ".gif"  : 
+					if(use_gif_encoder) gif_save(gif_encoder[0], target_path);
+					else                renderGif(directory + "/*.png", target_path); 
+				break;
+				
+				case ".webp" : renderWebp(directory + "/",      target_path); break;
+				case ".mp4"  : renderMp4( directory + "/",      target_path); break;
+				case ".apng" : renderApng(directory + "/",      target_path); break;
 			}
 		}
 		
@@ -711,10 +743,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	setTrigger(1, "Export", [ THEME.sequence_control, 1, COLORS._main_value_positive ], function(_fromValue = false) /*=>*/ {
 		if(IS_RENDERING) return;
 		
-		if(_fromValue) {
-			export();
-			return;
-		}
+		if(_fromValue) { export(); return; }
 		
 		if(isInLoop())	RENDER_ALL
 		else			doInspectorAction();
@@ -745,6 +774,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		played			= 0;
 		
 		PROJECT.animator.render();
+		renderStarted();
 		
 		if(IS_CMD) array_push(PROGRAM_ARGUMENTS._exporting, node_id);
 		
@@ -762,7 +792,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var expo = getInputData(16);
 		
 		if(is_array(surf)) {
-			inputs[3].display_data.data	 = format_array;
+			inputs[3].display_data.data	   = format_array;
 			inputs[3].editWidget.data_list = format_array;
 		} else {
 			inputs[3].display_data.data    = format_single;
@@ -788,11 +818,15 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		inputs[14].setVisible(anim >  0);
 		
 		if(anim == NODE_EXPORT_FORMAT.animation) {
+			var _enc = getInputData(17);
 			var _fmt = array_safe_get_fast(format_animation, extn);
 			
 			inputs[ 5].setVisible(_fmt == ".gif");
-			inputs[ 6].setVisible(_fmt == ".gif");
-			inputs[ 7].setVisible(_fmt == ".gif");
+			
+			inputs[17].setVisible(_fmt == ".gif");
+			inputs[ 6].setVisible(_fmt == ".gif" && !_enc);
+			inputs[ 7].setVisible(_fmt == ".gif" && !_enc);
+			inputs[18].setVisible(_fmt == ".gif" &&  _enc);
 			inputs[ 8].setVisible(true);
 		
 			inputs[ 9].display_data.data	  = format_animation;
@@ -815,6 +849,8 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			inputs[ 5].setVisible(false);
 			inputs[ 6].setVisible(false);
 			inputs[ 7].setVisible(false);
+			inputs[17].setVisible(false);
+			inputs[18].setVisible(false);
 			inputs[ 8].setVisible(false);
 		
 			inputs[ 9].display_data.data	  = format_image;
