@@ -10,7 +10,8 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	icon  = THEME.rigidSim;
 	setDimension(96, 96);
 	
-	manual_ungroupable	 = false;
+	manual_ungroupable = false;
+	getInputData       = getInputDataForce;
 	
 	object = [];
 	attributes.mesh = [];
@@ -35,7 +36,9 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		.rejectArray()
 		.setAnimable(false);
 	
-	newInput(5, nodeValue_Enum_Scroll("Shape", self,  0, [ new scrollItem("Box", s_node_shape_rectangle, 0), new scrollItem("Circle", s_node_shape_circle, 0), new scrollItem("Custom", s_node_shape_misc, 1) ]))
+	newInput(5, nodeValue_Enum_Scroll("Shape", self,  0, [ new scrollItem("Box",    s_node_shape_rectangle, 0), 
+	                                                       new scrollItem("Circle", s_node_shape_circle,    0), 
+	                                                       new scrollItem("Custom", s_node_shape_misc,      1) ]))
 		.rejectArray()
 		.setAnimable(false);
 	
@@ -50,7 +53,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		.setAnimable(false);
 	
 	newInput(9, nodeValue_Trigger("Generate mesh", self, false ))
-		.setDisplay(VALUE_DISPLAY.button, { name: "Generate", UI : true, onClick: function() { generateAllMesh(); } });
+		.setDisplay(VALUE_DISPLAY.button, { name: "Generate", UI : true, onClick: function() /*=>*/ {return generateAllMesh()} });
 	
 	newInput(10, nodeValue_Float("Mesh expansion", self, 0))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -2, 2, 0.1 ] })
@@ -66,10 +69,10 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 	newOutput(0, nodeValue_Output("Object", self, VALUE_TYPE.rigid, object));
 	
-	input_display_list = [ 8, 12, 
-		["Texture",	false],	6, 
-		["Physics",	false],	0, 1, 2, 3, 4, 
-		["Shape",	false],	7, 5, 9, 10, 11, 
+	input_display_list = [ 8, 
+		["Physics",	   true], 12, 0, 1, 2, 3, 4, 
+		["Shape",	  false], 6, 5, 9, 10, 11, 
+		["Transform", false], 7,
 	];
 	
 	static newMesh = function(index) {
@@ -97,12 +100,12 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	anchor_drag_mx  = -1;
 	anchor_drag_my  = -1;
 	
-	static getPreviewValues = function() {
-		return getInputData(6); 
-	}
+	////- Mesh
+	
+	static getPreviewValues = function() { return getInputData(6); }
 	
 	static generateAllMesh = function() {
-		var _tex  = getInputData(6);
+		var _tex = getInputData(6);
 			
 		if(is_array(_tex)) {
 			for( var i = 0, n = array_length(_tex); i < n; i++ ) 
@@ -110,185 +113,6 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		} else 
 			generateMesh();
 		doUpdate();
-	}
-	
-	static drawOverlayPreviewSingle = function(_i, _x, _y, _s, _pr_x, _pr_y, _tex_s) {
-		var meshes = attributes.mesh;
-		var _shp = getInputData(5);
-		
-		var ww = surface_get_width_safe(_tex_s);
-		var hh = surface_get_height_safe(_tex_s);
-		var _tex = _tex_s;
-		
-		if(is_instanceof(_tex_s, SurfaceAtlas)) {
-			_tex = _tex_s.getSurface();
-			_pr_x += _tex_s.x * _s;
-			_pr_y += _tex_s.y * _s;
-		} else {
-			_pr_x -= ww * _s / 2;
-			_pr_y -= hh * _s / 2;
-		}
-		
-		if(_shp == 2 && array_length(meshes) > _i) {
-			draw_set_color(is_convex? COLORS._main_accent : COLORS._main_value_negative);
-				
-			var _m = meshes[_i];
-			var _l = array_length(_m);
-					
-			for( var i = 0; i < _l; i++ ) {
-				var _px0 = _m[i][0];
-				var _py0 = _m[i][1];
-				var _px1 = _m[safe_mod(i + 1, _l)][0];
-				var _py1 = _m[safe_mod(i + 1, _l)][1];
-						
-				_px0 = _pr_x + _px0 * _s;
-				_py0 = _pr_y + _py0 * _s;
-				_px1 = _pr_x + _px1 * _s;
-				_py1 = _pr_y + _py1 * _s;
-						
-				draw_line_width(_px0, _py0, _px1, _py1, 1);
-			}
-		}
-			
-		draw_surface_ext_safe(_tex, _pr_x, _pr_y, _s, _s, 0, c_white, 0.5);
-	}
-	
-	static drawOverlayPreview = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var _pos = getInputData(7);	
-		var _tex = getInputData(6);
-		
-		var _pr_x = _x + _pos[0] * _s;
-		var _pr_y = _y + _pos[1] * _s;
-			
-		if(is_array(_tex)) {
-			for( var i = 0, n = array_length(_tex); i < n; i++ ) 
-				drawOverlayPreviewSingle(i, _x, _y, _s, _pr_x, _pr_y, _tex[i]);
-		} else 
-			drawOverlayPreviewSingle(0, _x, _y, _s, _pr_x, _pr_y, _tex);
-			
-		return inputs[7].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-	}
-	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var gr = is_instanceof(group, Node_Rigid_Group)? group : noone;
-		if(inline_context != noone) gr = inline_context;
-		
-		if(gr == noone) return;
-		
-		if(previewing == 0) {
-			for( var i = 0, n = array_length(gr.nodes); i < n; i++ ) {
-				var _node = gr.nodes[i];
-				if(!is_instanceof(_node, Node_Rigid_Object)) continue;
-				var _hov = _node.drawOverlayPreview(active, _x, _y, _s, _mx, _my, _snx, _sny);
-				active &= _hov;
-			}
-			return active;
-		}
-		
-		var _shp = getInputData(5);
-		if(_shp != 2) return active;
-		
-		var meshes = attributes.mesh;
-		var _hover = -1, _side = 0;
-		draw_set_color(is_convex? COLORS._main_accent : COLORS._main_value_negative);
-		
-		var mesh = meshes[preview_index];
-		var len  = array_length(mesh);
-		
-		is_convex = true;
-		for( var i = 0; i < len; i++ ) {
-			var _px0 = mesh[safe_mod(i + 0, len)][0];
-			var _py0 = mesh[safe_mod(i + 0, len)][1];
-			var _px1 = mesh[safe_mod(i + 1, len)][0];
-			var _py1 = mesh[safe_mod(i + 1, len)][1];
-			var _px2 = mesh[safe_mod(i + 2, len)][0];
-			var _py2 = mesh[safe_mod(i + 2, len)][1];
-			
-			var side = cross_product(_px0, _py0, _px1, _py1, _px2, _py2);
-			if(_side != 0 && sign(_side) != sign(side)) 
-				is_convex = false;
-			_side = side;
-			
-			var _dx0 = _x + _px0 * _s;
-			var _dy0 = _y + _py0 * _s;
-			var _dx1 = _x + _px1 * _s;
-			var _dy1 = _y + _py1 * _s;
-			
-			draw_line_width(_dx0, _dy0, _dx1, _dy1, hover == i + 0.5? 4 : 2);
-			
-			if(isUsingTool(0) && distance_to_line(_mx, _my, _dx0, _dy0, _dx1, _dy1) < 6)
-				_hover = i + 0.5;
-		}
-		
-		draw_set_color(COLORS._main_accent);
-		draw_set_text(f_p1, fa_center, fa_bottom);
-		
-		for( var i = 0; i < len; i++ ) {
-			var _px = mesh[i][0];
-			var _py = mesh[i][1];
-			
-			var _dx = _x + _px * _s;
-			var _dy = _y + _py * _s;
-			
-			//draw_text(_dx, _dy - 8, i);
-			if(isNotUsingTool())
-				draw_circle_prec(_dx, _dy, 4, false)
-			else {
-				draw_sprite_colored(THEME.anchor_selector, hover == i, _dx, _dy);
-				if(point_distance(_mx, _my, _dx, _dy) < 8)
-					_hover = i;
-			}
-		}
-		
-		hover = _hover;
-		
-		if(anchor_dragging > -1) {
-			var dx = anchor_drag_sx + (_mx - anchor_drag_mx) / _s;
-			var dy = anchor_drag_sy + (_my - anchor_drag_my) / _s;
-			
-			dx = value_snap(dx, _snx);
-			dy = value_snap(dy, _sny);
-			
-			mesh[anchor_dragging][0] = dx;
-			mesh[anchor_dragging][1] = dy;
-			
-			if(mouse_release(mb_left))
-				anchor_dragging = -1;
-			return active;
-		}
-		
-		if(hover == -1) return active;
-			
-		if(frac(hover) == 0) {
-			if(mouse_click(mb_left, active)) {
-				if(isUsingTool(0)) {
-					anchor_dragging = hover;
-					anchor_drag_sx  = mesh[hover][0];
-					anchor_drag_sy  = mesh[hover][1];
-					anchor_drag_mx  = _mx;
-					anchor_drag_my  = _my;
-				} else if(isUsingTool(1)) {
-					if(array_length(mesh) > 3)
-						array_delete(mesh, hover, 1);
-				}
-			}
-		} else {
-			if(mouse_click(mb_left, active)) {
-				var ind = ceil(hover);
-				ds_list_insert(lx, ind, (_mx - _x) / _s);
-				ds_list_insert(ly, ind, (_my - _y) / _s);
-				
-				anchor_dragging = ind;
-				anchor_drag_sx  = mesh[ind][0];
-				anchor_drag_sy  = mesh[ind][1];
-				anchor_drag_mx  = _mx;
-				anchor_drag_my  = _my;
-			}
-		}
-		
-		var a = inputs[7].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); active &= !a;
-		
-		return active;
 	}
 	
 	static generateMesh = function(index = 0) {
@@ -530,6 +354,189 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		return mesh;
 	}
 	
+	////- Draw
+	
+	static drawOverlayPreviewSingle = function(_i, _x, _y, _s, _pr_x, _pr_y, _tex_s) {
+		var meshes = attributes.mesh;
+		var _shp   = getInputData(5);
+		
+		var ww = surface_get_width_safe(_tex_s);
+		var hh = surface_get_height_safe(_tex_s);
+		var _tex = _tex_s;
+		
+		if(is_instanceof(_tex_s, SurfaceAtlas)) {
+			_tex = _tex_s.getSurface();
+			_pr_x += _tex_s.x * _s;
+			_pr_y += _tex_s.y * _s;
+			
+		} else {
+			_pr_x -= ww * _s / 2;
+			_pr_y -= hh * _s / 2;
+		}
+		
+		if(_shp == 2 && array_length(meshes) > _i) {
+			draw_set_color(is_convex? COLORS._main_accent : COLORS._main_value_negative);
+				
+			var _m = meshes[_i];
+			var _l = array_length(_m);
+					
+			for( var i = 0; i < _l; i++ ) {
+				var _px0 = _m[i][0];
+				var _py0 = _m[i][1];
+				var _px1 = _m[safe_mod(i + 1, _l)][0];
+				var _py1 = _m[safe_mod(i + 1, _l)][1];
+						
+				_px0 = _pr_x + _px0 * _s;
+				_py0 = _pr_y + _py0 * _s;
+				_px1 = _pr_x + _px1 * _s;
+				_py1 = _pr_y + _py1 * _s;
+						
+				draw_line_width(_px0, _py0, _px1, _py1, 1);
+			}
+		}
+			
+		draw_surface_ext_safe(_tex, _pr_x, _pr_y, _s, _s, 0, c_white, 0.5);
+	}
+	
+	static drawOverlayPreview = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		var _pos = getInputData(7);	
+		var _tex = getInputData(6);
+		
+		var _pr_x = _x + _pos[0] * _s;
+		var _pr_y = _y + _pos[1] * _s;
+			
+		if(is_array(_tex)) {
+			for( var i = 0, n = array_length(_tex); i < n; i++ ) 
+				drawOverlayPreviewSingle(i, _x, _y, _s, _pr_x, _pr_y, _tex[i]);
+		} else 
+			drawOverlayPreviewSingle(0, _x, _y, _s, _pr_x, _pr_y, _tex);
+			
+		return inputs[7].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+	}
+	
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		var gr = is_instanceof(group, Node_Rigid_Group)? group : noone;
+		if(inline_context != noone) gr = inline_context;
+		if(gr == noone) return;
+		
+		var a = inputs[7].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); active &= !a;
+		
+		if(previewing == 0) {
+			for( var i = 0, n = array_length(gr.nodes); i < n; i++ ) {
+				var _node = gr.nodes[i];
+				if(!is_instanceof(_node, Node_Rigid_Object)) continue;
+				var _hov = _node.drawOverlayPreview(active, _x, _y, _s, _mx, _my, _snx, _sny);
+				active &= _hov;
+			}
+			return active;
+		}
+		
+		var _shp = getInputData(5);
+		if(_shp != 2) return active;
+		
+		var meshes = attributes.mesh;
+		var _hover = -1, _side = 0;
+		draw_set_color(is_convex? COLORS._main_accent : COLORS._main_value_negative);
+		
+		var mesh = meshes[preview_index];
+		var len  = array_length(mesh);
+		
+		is_convex = true;
+		for( var i = 0; i < len; i++ ) {
+			var _px0 = mesh[safe_mod(i + 0, len)][0];
+			var _py0 = mesh[safe_mod(i + 0, len)][1];
+			var _px1 = mesh[safe_mod(i + 1, len)][0];
+			var _py1 = mesh[safe_mod(i + 1, len)][1];
+			var _px2 = mesh[safe_mod(i + 2, len)][0];
+			var _py2 = mesh[safe_mod(i + 2, len)][1];
+			
+			var side = cross_product(_px0, _py0, _px1, _py1, _px2, _py2);
+			if(_side != 0 && sign(_side) != sign(side)) 
+				is_convex = false;
+			_side = side;
+			
+			var _dx0 = _x + _px0 * _s;
+			var _dy0 = _y + _py0 * _s;
+			var _dx1 = _x + _px1 * _s;
+			var _dy1 = _y + _py1 * _s;
+			
+			draw_line_width(_dx0, _dy0, _dx1, _dy1, hover == i + 0.5? 4 : 2);
+			
+			if(isUsingTool(0) && distance_to_line(_mx, _my, _dx0, _dy0, _dx1, _dy1) < 6)
+				_hover = i + 0.5;
+		}
+		
+		draw_set_color(COLORS._main_accent);
+		draw_set_text(f_p1, fa_center, fa_bottom);
+		
+		for( var i = 0; i < len; i++ ) {
+			var _px = mesh[i][0];
+			var _py = mesh[i][1];
+			
+			var _dx = _x + _px * _s;
+			var _dy = _y + _py * _s;
+			
+			//draw_text(_dx, _dy - 8, i);
+			if(isNotUsingTool())
+				draw_circle_prec(_dx, _dy, 4, false)
+			else {
+				draw_sprite_colored(THEME.anchor_selector, hover == i, _dx, _dy);
+				if(point_distance(_mx, _my, _dx, _dy) < 8)
+					_hover = i;
+			}
+		}
+		
+		hover = _hover;
+		
+		if(anchor_dragging > -1) {
+			var dx = anchor_drag_sx + (_mx - anchor_drag_mx) / _s;
+			var dy = anchor_drag_sy + (_my - anchor_drag_my) / _s;
+			
+			dx = value_snap(dx, _snx);
+			dy = value_snap(dy, _sny);
+			
+			mesh[anchor_dragging][0] = dx;
+			mesh[anchor_dragging][1] = dy;
+			
+			if(mouse_release(mb_left))
+				anchor_dragging = -1;
+			return active;
+		}
+		
+		if(hover == -1) return active;
+			
+		if(frac(hover) == 0) {
+			if(mouse_click(mb_left, active)) {
+				if(isUsingTool(0)) {
+					anchor_dragging = hover;
+					anchor_drag_sx  = mesh[hover][0];
+					anchor_drag_sy  = mesh[hover][1];
+					anchor_drag_mx  = _mx;
+					anchor_drag_my  = _my;
+				} else if(isUsingTool(1)) {
+					if(array_length(mesh) > 3)
+						array_delete(mesh, hover, 1);
+				}
+			}
+		} else {
+			if(mouse_click(mb_left, active)) {
+				var ind = ceil(hover);
+				ds_list_insert(lx, ind, (_mx - _x) / _s);
+				ds_list_insert(ly, ind, (_my - _y) / _s);
+				
+				anchor_dragging = ind;
+				anchor_drag_sx  = mesh[ind][0];
+				anchor_drag_sy  = mesh[ind][1];
+				anchor_drag_mx  = _mx;
+				anchor_drag_my  = _my;
+			}
+		}
+		
+		return active;
+	}
+	
+	////- Rigidbody
+	
 	static fixtureCreate = function(fixture, object, dx = 0, dy = 0) {
 		var _mov	  = getInputData(0);
 		var _den	  = getInputData(1);
@@ -660,6 +667,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				}
 				
 				fixtureCreate(fixture, object, -1, -1);
+				
 			} else {
 				for( var i = 0; i < len; i++ ) {
 					var fixture = physics_fixture_create();
@@ -681,13 +689,8 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			object.type   = RIGID_SHAPE.mesh;
 		}
 		
+		object.node = self;
 		return object;
-	}
-	
-	static update = function(frame = CURRENT_FRAME) {
-		if(IS_FIRST_FRAME) reset();
-		
-		outputs[0].setValue(object);
 	}
 	
 	static step = function() {
@@ -709,7 +712,13 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		}
 	}
 	
-	static reset = function() {
+	static update = function(frame = CURRENT_FRAME) {
+		if(IS_FIRST_FRAME) reset();
+		
+		outputs[0].setValue(object);
+	}
+	
+	static reset = function() { 
 		var _tex = getInputData(6);
 		
 		for( var i = 0, n = array_length(object); i < n; i++ ) {
@@ -728,21 +737,9 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			object = [ spawn() ];
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		if(!previewable) return;
-		
-		var bbox = drawGetBbox(xx, yy, _s);
-		var _tex = getInputData(6);
-		
-		if(is_array(_tex)) {
-			if(array_empty(_tex)) return;
-			_tex = _tex[0];
-		}
-		
-		var aa   = 0.5 + 0.5 * renderActive;
-		if(!isHighlightingInGraph()) aa *= 0.25;
-		draw_surface_bbox(_tex, bbox,, aa);
-	}
+	static getGraphPreviewSurface = function() /*=>*/ {return getInputData(6)};
+	
+	////- Serialize
 	
 	static attributeSerialize = function() {
 		var att = {};

@@ -1,5 +1,6 @@
 /// @description 
 #region data
+	node    = noone;
 	surface = noone;
 	fixture = [];
 	

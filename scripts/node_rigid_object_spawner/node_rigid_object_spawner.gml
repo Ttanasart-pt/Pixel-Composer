@@ -4,9 +4,9 @@ function Node_Rigid_Object_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group
 	icon  = THEME.rigidSim;
 	setDimension(96, 96);
 	
-	manual_ungroupable	 = false;
-	
 	object = [];
+	manual_ungroupable = false;
+	update_on_frame    = true;
 	
 	newInput(0, nodeValue("Object", self, CONNECT_TYPE.input, VALUE_TYPE.rigid, noone))
 		.setVisible(true, true);
@@ -41,10 +41,7 @@ function Node_Rigid_Object_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group
 	
 	attributes.show_objects = true;
 	array_push(attributeEditors, "Display");
-	array_push(attributeEditors, ["Show objects", function() { return attributes.show_objects; }, 
-		new checkBox(function() { 
-			attributes.show_objects = !attributes.show_objects;
-		})]);
+	array_push(attributeEditors, ["Show objects", function() /*=>*/ {return attributes.show_objects}, new checkBox(function() /*=>*/ { attributes.show_objects = !attributes.show_objects; })]);
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var gr = is_instanceof(group, Node_Rigid_Group)? group : noone;
@@ -74,20 +71,29 @@ function Node_Rigid_Object_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group
 	}
 	
 	static spawn = function(seed = 0) {
-		var _obj = getInputData(0);
+		var _frm = inputs[0].value_from;
+		if(_frm == noone) return;
+		
+		var _nod = _frm.node;
 		var _are = getInputData(1);
 		var _amo = getInputData(4);
 		
 		random_set_seed(seed);
 		
 		repeat(_amo) {
-			var pos = area_get_random_point(_are);
-			var _o = _obj;
-			if(is_array(_o))
-				_o = _o[irandom_range(0, array_length(_o) - 1)];
-				
-			array_push(object, _o.spawn(pos, spawn_index++));
+			if(!struct_has(_nod, "spawn")) continue;
+			
+			var  pos = area_get_random_point(_are);
+			var _rig = _nod.spawn(spawn_index++);
+			
+			_rig.x = pos[0];
+			_rig.y = pos[1];
+			_rig.phy_position_x = pos[0];
+			_rig.phy_position_y = pos[1];
+			
+			array_push(object, _rig);
 		}
+		
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
@@ -107,22 +113,18 @@ function Node_Rigid_Object_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group
 		
 		if(_typ == 0 && (safe_mod(CURRENT_FRAME, _del) == 0)) 
 			spawn(_sed);
+			
 		else if(_typ == 1 && CURRENT_FRAME == _frm) 
 			spawn(_sed);
 			
 		outputs[0].setValue(object);
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = drawGetBbox(xx, yy, _s);
+	static getGraphPreviewSurface = function() /*=>*/ {
+		var _in = array_safe_get(inputs, 0, noone);
+		if(_in == noone) return noone;
 		
-		var _obj = getInputData(0);
-		if(_obj == noone) return;
-		if(is_array(_obj)) return;
-		
-		var _tex  = _obj.getInputData(6);
-		var _spos = _obj.getInputData(7);
-		
-		draw_surface_stretch_fit(_tex, bbox.xc, bbox.yc, bbox.w, bbox.h, _spos[2], _spos[3]);
+		if(_in.value_from == noone) return;
+		return _in.value_from.node.getGraphPreviewSurface();
 	}
 }

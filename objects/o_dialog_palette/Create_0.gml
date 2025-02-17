@@ -66,6 +66,7 @@ function __PaletteColor(_color = c_black) constructor {
 	sp_presets  = new scrollPane(sp_preset_w, dialog_h - ui(48 + 8) - pal_padding, function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
+		var _hov = sp_presets.hover && sHOVER;
 		var _foc = interactable && sFOCUS;
 		var ww   = sp_presets.surface_w;
 		var _gs  = ui(20);
@@ -74,17 +75,12 @@ function __PaletteColor(_color = c_black) constructor {
 		var pd   = ui(6);
 		var _ww  = ww - pd * 2;
 		var hg   = nh + _gs + pd;
+		var yy   = _y;
 		
-		var yy = _y;
-		
-		for(var i = -1; i < array_length(PALETTES); i++) {
-			var pal = i == -1? {
-				name    : "project",
-				palette : PROJECT.attributes.palette,
-				path    : ""
-			} : PALETTES[i];
+		for(var i = 0; i < array_length(PALETTES); i++) {
+			var pal = PALETTES[i];
 			
-			var isHover = sHOVER && sp_presets.hover && point_in_rectangle(_m[0], _m[1], 0, yy, ww, yy + hg);
+			var isHover = _hov && point_in_rectangle(_m[0], _m[1], 0, yy, ww, yy + hg);
 			draw_sprite_stretched(THEME.ui_panel_bg, 3, 0, yy, ww, hg);
 			
 			if(isHover) {
@@ -102,7 +98,7 @@ function __PaletteColor(_color = c_black) constructor {
 					onApply(palette);
 				}
 				
-				if(i >= 0 && mouse_press(mb_right, _foc)) {
+				if(mouse_press(mb_right, _foc)) {
 					hovering = pal;
 					
 					menuCall("palette_window_preset_menu", [

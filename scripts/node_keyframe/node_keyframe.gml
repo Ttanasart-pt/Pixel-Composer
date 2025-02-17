@@ -447,7 +447,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		return _val;
 	}
 	
-	static insertKey = function(_key, _index) { array_push(values, _index, _key); }
+	static insertKey = function(_key, _index) { array_insert(values, _index, _key); }
 	
 	function onUndo() { updateKeyMap(); prop.triggerSetFrom(); }
 	

@@ -40,7 +40,6 @@ function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext(), appended_
 	
 	ds_queue_clear(CONNECTION_CONFLICT);
 	if(!CLONING) ds_map_clear(APPEND_MAP);
-	load_scale = !CLONING;
 	
 	var t = current_time;
 	
@@ -48,7 +47,10 @@ function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext(), appended_
 		var ex = ds_map_exists(APPEND_MAP, _node_list[i].id);
 		
 		var _node = nodeLoad(_node_list[i], true, context);
-		if(_node && !ex) array_push(appended_list, _node);
+		if(_node == noone) continue;
+		
+		_node.load_scale = !CLONING;
+		if(!ex) array_push(appended_list, _node);
 	}
 	printIf(log, $"Load time: {current_time - t}"); t = current_time;
 	

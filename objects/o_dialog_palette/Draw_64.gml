@@ -77,10 +77,9 @@ draggable = true;
 	#region tools
 		var bx = content_x + content_w - ui(50);
 		var by = dialog_y + ui(16);
-		var bc = index_selecting[1] < 2? COLORS._main_icon : merge_color(COLORS._main_icon, COLORS._main_accent, 0.5);
 		
 		var _txt = index_selecting[1] < 2? __txtx("palette_editor_sort", "Sort palette") : __txtx("palette_editor_sort_selected", "Sort selected");
-		var b = buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, sHOVER, interactable && sFOCUS, _txt, THEME.sort, 0, bc);
+		var b = buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, sHOVER, interactable && sFOCUS, _txt, THEME.sort);
 		if(b) {
 			mouse_draggable = false;
 			draggable       = false;
@@ -99,7 +98,7 @@ draggable = true;
 		bx -= ui(32);
 		
 		var _txt = index_selecting[1] < 2? __txtx("palette_editor_reverse", "Reverse palette") : __txtx("palette_editor_reverse_selected", "Reverse selected");
-		var b = buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, sHOVER, interactable && sFOCUS, _txt, THEME.reverse, 0, bc);
+		var b = buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, sHOVER, interactable && sFOCUS, _txt, THEME.reverse);
 		if(b) {
 			mouse_draggable = false;
 			draggable       = false;
@@ -353,7 +352,7 @@ draggable = true;
 	if(array_length(palette) > 1) {
 		if(buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, sHOVER, _foc, "", THEME.minus) == 2) {
 			array_delete(palette, index_selecting[0], index_selecting[1]);
-			if(array_empty(palette)) palette = [ c_black ];
+			if(array_empty(palette)) palette = [ cola(c_black) ];
 			index_selecting = [ 0, 0 ];
 			
 			refreshPaletteObject();
@@ -364,7 +363,7 @@ draggable = true;
 	
 	bx -= ui(32);
 	if(buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, sHOVER, _foc, "", THEME.add) == 2) {
-		palette[array_length(palette)] = c_black;
+		palette[array_length(palette)] = cola(c_black);
 		index_selecting = [ array_length(palette), 1 ];
 		
 		refreshPaletteObject();

@@ -53,7 +53,9 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		for( var i = 0; i < data_length; i++ ) array_push(input_display_list, index + i);
 		
 		return inputs[index + 0];
-	} setDynamicInput(6, true, VALUE_TYPE.surface);
+	} 
+	
+	setDynamicInput(6, true, VALUE_TYPE.surface);
 	
 	static getPreviewValues = function() { return getInputData(input_fix_len); }
 	

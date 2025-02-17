@@ -64,7 +64,8 @@ function toggleGroup(_data, _onClick) : widget() constructor {
 				
 			if(is_string(data[i])) {
 				draw_set_text(font, fa_center, fa_center, fColor);
-				draw_text(bx + ww / 2, _y + _h / 2, data[i]);
+				draw_text_add(bx + ww / 2, _y + _h / 2, data[i]);
+				
 			} else if(sprite_exists(data[i])) {
 				draw_sprite_ui_uniform(data[i], i, bx + ww / 2, _y + _h / 2);
 			}
@@ -78,9 +79,5 @@ function toggleGroup(_data, _onClick) : widget() constructor {
 		return h;
 	}
 	
-	static clone = function() { #region
-		var cln = new toggleGroup(data, onClick);
-		
-		return cln;
-	} #endregion
+	static clone = function() /*=>*/ {return new toggleGroup(data, onClick)};
 }

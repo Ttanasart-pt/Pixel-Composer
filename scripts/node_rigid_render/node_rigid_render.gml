@@ -3,10 +3,8 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	color = COLORS.node_blend_simulation;
 	icon  = THEME.rigidSim;
 	
-	manual_ungroupable	 = false;
-	
-	//use_cache = CACHE_USE.auto;
-	update_on_frame = true;
+	manual_ungroupable = false;
+	update_on_frame    = true;
 	
 	newInput(0, nodeValue_Vec2("Render dimension", self, DEF_SURF));
 		
@@ -16,12 +14,11 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	attribute_surface_depth();
 	
+	input_display_list = [ 1 ];
+	
 	attributes.show_objects = true;	
 	array_push(attributeEditors, "Display");
-	array_push(attributeEditors, ["Show objects", function() { return attributes.show_objects; }, 
-		new checkBox(function() { 
-			attributes.show_objects = !attributes.show_objects;
-		})]);
+	array_push(attributeEditors, ["Show objects", function() /*=>*/ {return attributes.show_objects}, new checkBox(function() /*=>*/ { attributes.show_objects = !attributes.show_objects; })]);
 	
 	setTrigger(2, "Clear cache", [ THEME.cache, 0, COLORS._main_icon ]);
 		
@@ -32,10 +29,13 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		newInput(index, nodeValue("Object", self, CONNECT_TYPE.input, VALUE_TYPE.rigid, noone ))
 			.setVisible(true, true);
 		
-		return inputs[index];	
-	} setDynamicInput(1, true, VALUE_TYPE.rigid);
+		array_push(input_display_list, index);
+		return inputs[index];
+	} 
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	setDynamicInput(1, true, VALUE_TYPE.rigid);
+	
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var gr = is_instanceof(group, Node_Rigid_Group)? group : noone;
 		if(inline_context != noone) gr = inline_context;
 					
@@ -48,10 +48,12 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var _hov = _node.drawOverlayPreview(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 			active &= !_hov;
 		}
-	} #endregion
+	} 
 	
-	static update = function(frame = CURRENT_FRAME) { #region
-		var _dim = getInputData(0);
+	static update = function(frame = CURRENT_FRAME) { 
+		if(!is(inline_context, Node_Rigid_Group_Inline)) return;
+		var _dim = inline_context.dimension;
+		
 		preview_surface = surface_verify(preview_surface, _dim[0], _dim[1], attrDepth());
 		
 		//if(!(TESTING && keyboard_check(ord("D"))) )
@@ -97,11 +99,10 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		surface_reset_target();
 		cacheCurrentFrame(_outSurf);
-	} #endregion
+	} 
 	
-	static getPreviewValues = function() { #region
+	static getPreviewValues = function() { 
 		var _surf = outputs[0].getValue();
-		if(is_surface(_surf)) return _surf;
-		return preview_surface;
-	} #endregion
+		return is_surface(_surf)? _surf : preview_surface;
+	} 
 }

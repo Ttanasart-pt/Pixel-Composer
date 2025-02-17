@@ -1318,7 +1318,11 @@
     {"$GMIncludedFile":"","%Name":"Canvas.png","CopyToMask":-1,"filePath":"datafiles/data/Welcome files/Templates","name":"Canvas.png","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"Canvas.pxc","CopyToMask":-1,"filePath":"datafiles/data/Welcome files/Templates","name":"Canvas.pxc","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"Welcome files.zip","CopyToMask":-1,"filePath":"datafiles/data/Welcome files","name":"Welcome files.zip","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
-    {"$GMIncludedFile":"","%Name":"dllcredits.txt","ConfigValues":{"Itch":{"CopyToMask":"0",},},"CopyToMask":0,"filePath":"datafiles","name":"dllcredits.txt","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"dllcredits.txt","ConfigValues":{
+        "Itch":{
+          "CopyToMask":"0",
+        },
+      },"CopyToMask":0,"filePath":"datafiles","name":"dllcredits.txt","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"dlltest1.dll","CopyToMask":-1,"filePath":"datafiles","name":"dlltest1.dll","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"ffmpeg.exe","CopyToMask":-1,"filePath":"datafiles/ffmpeg/bin","name":"ffmpeg.exe","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"LICENSE","CopyToMask":-1,"filePath":"datafiles/ffmpeg","name":"LICENSE","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
@@ -1337,7 +1341,11 @@
     {"$GMIncludedFile":"","%Name":"mf.dll","CopyToMask":-1,"filePath":"datafiles","name":"mf.dll","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"mfcore.dll","CopyToMask":-1,"filePath":"datafiles","name":"mfcore.dll","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"mfplat.dll","CopyToMask":-1,"filePath":"datafiles","name":"mfplat.dll","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
-    {"$GMIncludedFile":"","%Name":"PixelComposer_profile-2.provisionprofile","ConfigValues":{"Itch":{"CopyToMask":"2",},},"CopyToMask":-1,"filePath":"datafiles","name":"PixelComposer_profile-2.provisionprofile","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"PixelComposer_profile-2.provisionprofile","ConfigValues":{
+        "Itch":{
+          "CopyToMask":"2",
+        },
+      },"CopyToMask":-1,"filePath":"datafiles","name":"PixelComposer_profile-2.provisionprofile","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"data.win","CopyToMask":-1,"filePath":"datafiles/report","name":"data.win","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"execute_shell_simple_ext_x64.dll","CopyToMask":-1,"filePath":"datafiles/report","name":"execute_shell_simple_ext_x64.dll","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"options.ini","CopyToMask":-1,"filePath":"datafiles/report","name":"options.ini","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
@@ -2565,6 +2573,7 @@
     {"id":{"name":"palette_functions","path":"scripts/palette_functions/palette_functions.yy",},},
     {"id":{"name":"panel_action_create","path":"scripts/panel_action_create/panel_action_create.yy",},},
     {"id":{"name":"panel_addon","path":"scripts/panel_addon/panel_addon.yy",},},
+    {"id":{"name":"panel_animation_cleaner","path":"scripts/panel_animation_cleaner/panel_animation_cleaner.yy",},},
     {"id":{"name":"panel_animation_scaler","path":"scripts/panel_animation_scaler/panel_animation_scaler.yy",},},
     {"id":{"name":"panel_animation_settings","path":"scripts/panel_animation_settings/panel_animation_settings.yy",},},
     {"id":{"name":"panel_animation","path":"scripts/panel_animation/panel_animation.yy",},},
@@ -3036,7 +3045,6 @@
     {"id":{"name":"sh_noise_honey","path":"shaders/sh_noise_honey/sh_noise_honey.yy",},},
     {"id":{"name":"sh_noise_shard","path":"shaders/sh_noise_shard/sh_noise_shard.yy",},},
     {"id":{"name":"sh_noise_strand","path":"shaders/sh_noise_strand/sh_noise_strand.yy",},},
-    {"id":{"name":"panel_animation_cleaner","path":"scripts/panel_animation_cleaner/panel_animation_cleaner.yy",},},
     {"id":{"name":"sh_noise_wavelet","path":"shaders/sh_noise_wavelet/sh_noise_wavelet.yy",},},
     {"id":{"name":"sh_noise","path":"shaders/sh_noise/sh_noise.yy",},},
     {"id":{"name":"sh_normal_light_apply","path":"shaders/sh_normal_light_apply/sh_normal_light_apply.yy",},},
