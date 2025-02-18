@@ -41,7 +41,7 @@ draggable = true;
 	var by = dialog_y + ui(12);
 	var bs = ui(28);
 	
-	var b = buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txtx("add_preset", "Add to preset"), THEME.add_20);
+	var b = buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txtx("add_preset", "Add to preset"), THEME.add_16);
 	if(b == 2) {
 		var dia = dialogCall(o_dialog_file_name, mouse_mx + ui(8), mouse_my + ui(8));
 		dia.onModify = function (txt) {

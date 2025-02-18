@@ -426,6 +426,7 @@
             "Node_Posterize",
             "Node_Dither",
             "Node_Dither_Diffuse",
+            "Node_Bit_Reduce",
             "Node_Palette_Shift",
             { "label": "/Conversions" },
             "Node_BW",

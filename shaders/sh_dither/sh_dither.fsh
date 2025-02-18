@@ -92,12 +92,14 @@ void main() {
 			if(dif <= 0.001) {
 				exactColor = true;
 				_col = p_col;
+				
 			} else if(dif < closet1_value) {
 				closet2_value = closet1_value;
 				closet2_index = closet1_index;
 				
 				closet1_value = dif;
 				closet1_index = i;
+				
 			} else if(dif < closet2_value) {
 				closet2_value = dif;
 				closet2_index = i;	
@@ -124,14 +126,11 @@ void main() {
 			rat = (rat - 0.5) * _cont + 0.5;
 		}
 		
-		vec2 pixelPos = v_vTexcoord * dimension;
-		pixelPos.x = floor(pixelPos.x);
-		pixelPos.y = floor(pixelPos.y);
-	
+		vec2 px = floor(v_vTexcoord * dimension);
+		
 		if(useMap == 0) {
-			float col = pixelPos.x - floor(pixelPos.x / ditherSize) * ditherSize;
-			float row = pixelPos.y - floor(pixelPos.y / ditherSize) * ditherSize;
-	
+			float col = px.x - floor(px.x / ditherSize) * ditherSize;
+			float row = px.y - floor(px.y / ditherSize) * ditherSize;
 			float ditherVal = dither[int(row * ditherSize + col)] / (ditherSize * ditherSize - 1.);
 	
 			if(rat < ditherVal) 
@@ -140,8 +139,8 @@ void main() {
 				gl_FragColor = col2;	
 				
 		} else if(useMap == 1) {
-			float col = pixelPos.x - floor(pixelPos.x / mapDimension.x) * mapDimension.x;
-			float row = pixelPos.y - floor(pixelPos.y / mapDimension.y) * mapDimension.y;
+			float col = px.x - floor(px.x / mapDimension.x) * mapDimension.x;
+			float row = px.y - floor(px.y / mapDimension.y) * mapDimension.y;
 			vec4 map_data = texture2D( map, vec2(col, row) / mapDimension );
 		
 			float ditherVal = dot(map_data.rgb, vec3(0.2126, 0.7152, 0.0722));

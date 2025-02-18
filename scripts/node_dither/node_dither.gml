@@ -61,10 +61,10 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
-	input_display_list = [ 9, 10, 13, 
-		["Surfaces", true], 0, 7, 8, 11, 12, 
-		["Pattern",	false], 2, 3, 
-		["Dither",	false], 6, 4, 5, 
+	input_display_list = [  9, 10, 13, 
+		["Surfaces", true], 0,  7,  8, 11, 12, 
+		["Pattern",	false], 2,  3, 
+		["Dither",	false], 6,  4,  5, 
 		["Palette", false, 14], 1, 15, 
 	]
 	
