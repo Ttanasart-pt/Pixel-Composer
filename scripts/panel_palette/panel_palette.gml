@@ -14,22 +14,23 @@ function Panel_Palette() : PanelContent() constructor {
 	__save_palette_data = [];
 	view_label = true;
 	
-	menu_refresh = menuItem(__txt("Refresh"), function() { __initPalette(); });
-	menu_add     = menuItemShelf(__txt("Add"), function(_dat) {
+	menu_refresh = menuItem(__txt("Refresh"), function() /*=>*/ {return __initPalette()});
+	menu_add     = menuItemShelf(__txt("Add"), function(_dat) /*=>*/ {
 		return submenuCall(_dat, [
-			menuItem(__txt("File..."), function() {
+			menuItem(__txt("File..."), function() /*=>*/ {
 				var _p = get_open_filename("hex|*.hex|gpl|*.gpl|Image|.png", "palette");
 				if(!file_exists_empty(_p)) return;
 				
 				file_copy(_p, $"{DIRECTORY}Palettes/{filename_name(_p)}");
 				__initPalette();
 			}),
-			menuItem(__txt("Lospec..."), function() {
-				fileNameCall("", function(txt) {
+			
+			menuItem(__txt("Lospec..."), function() /*=>*/ {
+				fileNameCall("", function(txt) /*=>*/ {
 					if(txt == "") return;
+					
 					txt = string_lower(txt);
 					txt = string_replace_all(txt, " ", "-");
-					
 					var _url = $"https://Lospec.com/palette-list{txt}.json";
 					PALETTE_LOSPEC = http_get(_url);
 				}).setName("Palette")
@@ -37,8 +38,8 @@ function Panel_Palette() : PanelContent() constructor {
 		]);
 	});
 	
-	menu_stretch = menuItem(__txt("Stretch"), function() { PREFERENCES.palette_stretch = !PREFERENCES.palette_stretch; }, noone, noone, function() /*=>*/ {return PREFERENCES.palette_stretch});
-	menu_mini    = menuItem(__txt("Label"), function() { view_label = !view_label; }, noone, noone, function() /*=>*/ {return view_label});
+	menu_stretch = menuItem(__txt("Stretch"), function() /*=>*/ { PREFERENCES.palette_stretch = !PREFERENCES.palette_stretch; }, noone, noone, function() /*=>*/ {return PREFERENCES.palette_stretch});
+	menu_mini    = menuItem(__txt("Label"),   function() /*=>*/ { view_label = !view_label; }, noone, noone, function() /*=>*/ {return view_label});
 	  
 	function onResize() {
 		sp_palettes.resize(w - ui(padding + padding), h - ui(padding + padding));

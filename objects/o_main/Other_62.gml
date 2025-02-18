@@ -36,6 +36,8 @@ if(PALETTE_LOSPEC && _id == PALETTE_LOSPEC) {
     __initPalette();
     
     noti_status($"Loaded palette: {_name} by {_auth} completed.", noone, true);
+    
+    with(o_dialog_palette) { initPalette(); }
 }
 
 asyncLoad(async_load);

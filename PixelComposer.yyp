@@ -159,7 +159,6 @@
     {"$GMFolder":"","%Name":"corner","folderPath":"folders/nodes/data/filter/effects/corner.yy","name":"corner","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"dither","folderPath":"folders/nodes/data/filter/effects/dither.yy","name":"dither","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"edge_shade","folderPath":"folders/nodes/data/filter/effects/edge_shade.yy","name":"edge_shade","resourceType":"GMFolder","resourceVersion":"2.0",},
-    {"$GMFolder":"","%Name":"bit reduce","folderPath":"folders/nodes/data/filter/effects/bit reduce.yy","name":"bit reduce","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"jpeg","folderPath":"folders/nodes/data/filter/effects/jpeg.yy","name":"jpeg","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"kuwahara","folderPath":"folders/nodes/data/filter/effects/kuwahara.yy","name":"kuwahara","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"outline","folderPath":"folders/nodes/data/filter/effects/outline.yy","name":"outline","resourceType":"GMFolder","resourceVersion":"2.0",},

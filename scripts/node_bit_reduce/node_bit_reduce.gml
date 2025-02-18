@@ -20,7 +20,7 @@ function Node_Bit_Reduce(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	newInput(1, nodeValue_Enum_Scroll("Color Space", self, 0, [ "RGB", "HSV", "OKLAB", "YIQ" ]));
 	
-	newInput(2, nodeValue_Vec3("Amount", self, [ 4, 4, 4 ]));
+	newInput(2, nodeValue_Vec3("Steps", self, [ 4, 4, 4 ]));
 	
 	newInput(3, nodeValue_Bool("Dithering", self, false));
 	
@@ -29,11 +29,13 @@ function Node_Bit_Reduce(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newInput(5, nodeValue_Float("Contrast", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 5, 0.1] });
 	
+	newInput(6, nodeValue_Float("Alpha Steps", self, 256));
+	
 	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [  
 		["Surfaces",   true], 0,  
-		["Quantize",  false], 1, 2,
+		["Quantize",  false], 1, 2, 6, 
 		["Dithering", false, 3], 4, 5, 
 	]
 	
@@ -46,6 +48,7 @@ function Node_Bit_Reduce(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		var _dith = _data[3];
 		var _dpat = _data[4];
 		var _dcon = _data[5];
+		var _alph = _data[6];
 		
 		surface_set_shader(_outSurf, sh_bit_reduce);
 		    shader_set_dim("dimension", _surf);
@@ -53,6 +56,7 @@ function Node_Bit_Reduce(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		    shader_set_3("quantize",    _quan);
 		    shader_set_i("dithering",   _dith);
 		    shader_set_f("ditherContrast", _dcon);
+		    shader_set_f("alphaStep",   _alph);
 		    
 			switch(_dpat) {
 				case 0 :

@@ -3,8 +3,8 @@
   "%Name":"sh_bit_reduce",
   "name":"sh_bit_reduce",
   "parent":{
-    "name":"bit reduce",
-    "path":"folders/nodes/data/filter/effects/bit reduce.yy",
+    "name":"effects",
+    "path":"folders/nodes/data/filter/effects.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

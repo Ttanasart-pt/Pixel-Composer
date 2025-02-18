@@ -4,6 +4,7 @@ varying vec4 v_vColour;
 uniform vec2 dimension;
 uniform int  space;
 uniform vec3 quantize;
+uniform float alphaStep;
 
 uniform int   dithering;
 uniform float ditherContrast;
@@ -116,5 +117,7 @@ void main() {
 	else if(space == 2) fin = oklab2rgb(cvt);
 	else if(space == 3) fin = YIQ2RGB * cvt;
 	
-	gl_FragColor = vec4(fin, cc.a);
+	float _a = floor(cc.a * alphaStep) / (alphaStep - 1.);
+	
+	gl_FragColor = vec4(fin, _a);
 }

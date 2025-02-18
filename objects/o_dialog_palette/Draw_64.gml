@@ -41,25 +41,12 @@ draggable = true;
 	var by = dialog_y + ui(12);
 	var bs = ui(28);
 	
-	var b = buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txtx("add_preset", "Add to preset"), THEME.add_16);
-	if(b == 2) {
-		var dia = dialogCall(o_dialog_file_name, mouse_mx + ui(8), mouse_my + ui(8));
-		dia.onModify = function (txt) {
-			var file = file_text_open_write(txt + ".hex");
-			for(var i = 0; i < array_length(palette); i++) {
-				var cc = palette[i];
-				var r  = number_to_hex(color_get_red(cc));
-				var g  = number_to_hex(color_get_green(cc));
-				var b  = number_to_hex(color_get_blue(cc));
-				var a  = number_to_hex(color_get_alpha(cc));
-				
-				file_text_write_string(file, $"{r}{g}{b}{a}\n");
-			}
-			file_text_close(file);
-			__initPalette();
-		};
-		dia.path = DIRECTORY + "Palettes/"
-	}
+	var b = buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txt("Add to preset..."), THEME.add_16);
+	if(b == 2) menuCall("", menu_add, bx + bs, by + bs);
+	bx -= ui(32);
+	
+	var b = buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txt("Sort preset"), THEME.sort);
+	if(b == 2) menuCall("", menu_preset_sort, bx + bs, by + bs);
 	bx -= ui(32);
 	
 	var b = buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txt("Refresh"), THEME.refresh_20);
