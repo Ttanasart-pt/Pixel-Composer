@@ -1157,9 +1157,9 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			if(_anim) {
 				var _fr_index = CURRENT_FRAME * _anims;
 				switch(_atype) {
-					case 0 : _fr_index = safe_mod(_fr_index, _frames);				break;
-					case 1 : _fr_index = min(_fr_index, _frames - 1);				break;
-					case 2 : _fr_index = _fr_index < _frames? _fr_index : noone;	break;
+					case 0 : _fr_index = safe_mod(max(0, _fr_index), _frames);                     break;
+					case 1 : _fr_index = clamp(_fr_index, 0, _frames - 1);                         break;
+					case 2 : _fr_index = _fr_index >= 0 && _fr_index < _frames? _fr_index : noone; break;
 				}
 				
 				outputs[0].setValue(_fr_index == noone? temp_surface[1] : output_surface[_fr_index]);

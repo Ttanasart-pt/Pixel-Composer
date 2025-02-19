@@ -63,7 +63,6 @@ DIALOG_WINCLEAR1
 			
 			if(_hovering_ch) {
 				if(is(_menuItem, MenuItem) && _menuItem.active && _lclick) {
-					var _par = _menuItem.params;
 					
 					if(_menuItem.isShelf) {
 						FOCUS_CONTENT = context;
@@ -85,10 +84,10 @@ DIALOG_WINCLEAR1
 								index:   i,
 								depth:   depth,
 								context: context,
-								params:  _par,
+								params:  _menuItem.params,
 							};
 							
-							var _res  = _menuItem.func(_dat);
+							var _res  = _menuItem.toggleFunction(_dat);
 							submenu   = _res;
 							submenuIt = _menuItem;
 						}
@@ -96,10 +95,8 @@ DIALOG_WINCLEAR1
 					} else {
 						FOCUS_CONTENT = context;
 						
-						if(_par != noone) _menuItem.func(_par);
-						else              _menuItem.func();
-						
-						to_del = remove_parents? o_dialog_menubox : self;
+						_menuItem.toggleFunction();
+						if(close_on_trigger) to_del = remove_parents? o_dialog_menubox : self;
 					}
 				}
 				
@@ -197,11 +194,13 @@ DIALOG_WINCLEAR1
 			}
 			
 		} else {
-			if(_menuItem.spr != noone) {
-				var spr = array_safe_get_fast(_menuItem.spr, 0, _menuItem.spr);
-				var ind = array_safe_get_fast(_menuItem.spr, 1, 0);
-				var sca = array_safe_get_fast(_menuItem.spr, 2, 0.8);
-				var clr = array_safe_get_fast(_menuItem.spr, 3, COLORS._main_icon);
+			var _spr = _menuItem.getSpr();
+			
+			if(_spr != noone) {
+				var spr = array_safe_get_fast(_spr, 0, _spr);
+				var ind = array_safe_get_fast(_spr, 1, 0);
+				var sca = array_safe_get_fast(_spr, 2, 0.8);
+				var clr = array_safe_get_fast(_spr, 3, COLORS._main_icon);
 				
 				gpu_set_tex_filter(true);
 				draw_sprite_ui(spr, ind, dialog_x + ui(24), yy + hght / 2, sca, sca, 0, clr, _menuItem.active * 0.5 + 0.25);

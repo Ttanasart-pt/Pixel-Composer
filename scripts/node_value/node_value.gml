@@ -1864,8 +1864,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 								
 					case VALUE_DISPLAY.vector :
 						var _typ = argument_count > arc + 0? argument[arc + 0] : 0;
-						var _sca = argument_count > arc + 1? argument[arc + 1] : 1;
-						return preview_overlay_vector(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _typ);
+						var _sca = argument_count > arc + 1? argument[arc + 1] : [ 1, 1 ];
+						return preview_overlay_vector(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _typ, _sca);
 						
 					case VALUE_DISPLAY.gradient_range :
 						var _dim = argument[arc];

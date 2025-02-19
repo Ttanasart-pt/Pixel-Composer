@@ -208,7 +208,7 @@ void main() {
 		
 	}
 	
-	prog = (prog + shf - 0.5) * sca + 0.5;
+	prog = (prog + shf - 0.5) / sca + 0.5;
 	
 	if(gradient_loop == 1) {
 		prog = fract(prog < 0.? 1. - abs(prog) : prog);

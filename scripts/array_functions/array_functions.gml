@@ -209,7 +209,13 @@
 		for( var i = max(0, startIndex); i < endIndex; i++ ) 
 			arr[i] = value;
 	}
-
+	
+	function array_get_sub(arr, startIndex, amount) {
+		var _sub = array_create(amount);
+		for( var i = 0; i < amount; i++ ) _sub[i] = arr[startIndex + i];
+		return _sub;
+	}
+	
 #endregion
 
 #region find

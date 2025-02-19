@@ -30,6 +30,7 @@ event_inherited();
 #region menu
 	item_sel_submenu = noone;
 	remove_parents   = true;
+	close_on_trigger = true;
 	selecting_menu   = noone;
 	hk_editing       = noone;
 	
@@ -72,15 +73,15 @@ event_inherited();
 			draw_set_font(font);
 			var _kw = _key? string_width(key_get_name(_key.key, _key.modi)) + ui(16) : 0;
 			
-			if(instanceof(_menuItem) == "MenuItemGroup") {
+			if(is(_menuItem, MenuItemGroup)) {
 				var amo = array_length(_menuItem.group);
 				ww = max(ww + _kw * 2, ui(16) + amo * (_menuItem.spacing + ui(4)));
 				dialog_h += hght;
 			} 
 			
-			if(instanceof(_menuItem) == "MenuItem") {
+			if(is(_menuItem, MenuItem)) {
 				ww += _kw;
-				if(_menuItem.spr != noone || _menuItem.toggle != noone) show_icon = true;
+				if(_menuItem.getSpr() != noone || _menuItem.toggle != noone) show_icon = true;
 			}
 			
 			dialog_w = max(dialog_w, ww);

@@ -83,12 +83,22 @@ function MenuItem(_name, _func, _spr = noone, _hotkey = noone, _toggle = noone, 
 	shiftMenu	 = noone;
 	hoykeyObject = noone;
 	
-	static deactivate   = function()			/*=>*/ { INLINE active		= false;		return self; }
-	static setIsShelf   = function()			/*=>*/ { INLINE isShelf 	= true;			return self; }
-	static setActive    = function(_active)		/*=>*/ { INLINE active 		= _active;		return self; }
-	static setColor     = function(_color)		/*=>*/ { INLINE color		= _color;		return self; }
-	static setShiftMenu = function(_shiftMenu)	/*=>*/ { INLINE shiftMenu	= _shiftMenu;	return self; }
-	static setParam     = function(_param)	    /*=>*/ { INLINE params	    = _param;	    return self; }
+	static toggleFunction = function(_dat = undefined) /*=>*/ {
+		if(!is_undefined(_dat)) return func(_dat);
+		
+		if(params == noone) func();
+		else                func(params);
+	}
+	
+    static deactivate   = function() /*=>*/ { active = false; return self; }
+	
+    static setIsShelf   = function()           /*=>*/ { isShelf   = true;       return self; }
+    static setActive    = function(_active)    /*=>*/ { active    = _active;    return self; }
+    static setColor     = function(_color)     /*=>*/ { color     = _color;     return self; }
+    static setShiftMenu = function(_shiftMenu) /*=>*/ { shiftMenu = _shiftMenu; return self; }
+    static setParam     = function(_param)     /*=>*/ { params    = _param;     return self; }
+	
+	static getSpr       = function() /*=>*/ {return spr};
 }
 
 function menuItemGroup(_name, _group, _hotkey = noone) { return new MenuItemGroup(_name, _group, _hotkey); }
@@ -113,4 +123,18 @@ function menuButton(_spr, _onClick, _tooltip = "", _step = noone) constructor {
 	onClick = _onClick;
 	tooltip = _tooltip;
 	step    = _step;
+}
+
+
+function MenuItem_Sort(_name, _func, _spr = noone, _hotkey = noone, _toggle = noone, _params = noone) : MenuItem(_name, _func, _spr, _hotkey, _toggle, _params) constructor {
+	
+	sortAsc = false;
+	spr     = [ THEME.arrow_24, 1 ];
+	
+	static toggleFunction = function() /*=>*/ {
+		func[sortAsc? 0 : 1]();
+		sortAsc = !sortAsc;
+	}
+	
+	static getSpr = function() /*=>*/ {return [ THEME.arrow_24, sortAsc? 3 : 1 ]};
 }

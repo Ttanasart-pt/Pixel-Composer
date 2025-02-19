@@ -1,4 +1,4 @@
-function preview_overlay_vector(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, _type = 0) {
+function preview_overlay_vector(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, _type = 0, _scale = [ 1, 1 ]) {
 	var _val  = array_clone(getValue());
 	var hover = -1;
 	if(!is_array(_val) || array_empty(_val)) return hover;
@@ -8,15 +8,15 @@ function preview_overlay_vector(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 	var __ay = _val[1];
 	var _r   = 10;
 						
-	var _ax    = __ax * _s + _x;
-	var _ay    = __ay * _s + _y;
+	var _ax    = __ax * _s * _scale[0] + _x;
+	var _ay    = __ay * _s * _scale[1] + _y;
 	var _index = 0;
 						
 	if(drag_type) {
 		_index = 1;
 		
-		var _nx = (drag_sx + (_mx - drag_mx) - _x) / _s;
-		var _ny = (drag_sy + (_my - drag_my) - _y) / _s;
+		var _nx = (drag_sx + (_mx - drag_mx) - _x) / _s / _scale[0];
+		var _ny = (drag_sy + (_my - drag_my) - _y) / _s / _scale[1];
 		
 		_nx = value_snap(_nx, _snx);
 		_ny = value_snap(_ny, _sny);
@@ -28,7 +28,7 @@ function preview_overlay_vector(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 				_nx = drag_rx;
 			
 			draw_set_color(COLORS._main_accent);
-			draw_line(drag_sx, drag_sy, _x + _nx * _s, _y + _ny * _s);
+			draw_line(drag_sx, drag_sy, _x + _nx * _s * _scale[0], _y + _ny * _s * _scale[1]);
 		}
 		
 		if(key_mod_press(CTRL)) {

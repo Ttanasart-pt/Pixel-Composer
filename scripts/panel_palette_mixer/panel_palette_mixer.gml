@@ -1,7 +1,9 @@
-function Panel_Palette_Mixer() : PanelContent() constructor {
+function Panel_Palette_Mixer(_selector = noone) : PanelContent() constructor {
 	title    = __txt("Palettes Mixer");
 	padding  = ui(8);
 	auto_pin = true;
+	
+	selector = _selector;
 	
 	w = ui(320);
 	h = ui(400);
@@ -69,6 +71,43 @@ function Panel_Palette_Mixer() : PanelContent() constructor {
 	
 	pr_palette = ds_priority_create();
 	
+	function setPalette(pal) {
+		palette_data = {
+			nodes: [],
+			connections: [],
+			blends: [],
+		};
+		
+		var _x = -1, _y = 0;
+		var _col = 4;
+		var _ol, _nl, _os = 0, _ns = 0, nl = false;
+		
+		for( var i = 0, n = array_length(pal); i < n; i++ ) {
+			_nl = _color_get_light(pal[i]);
+			
+			if(i) _ns = sign(_nl - _ol);
+			
+			_x++;
+			if(i > 1 && _ns != _os && !nl) {
+				_x = 0;
+				_y++;
+				nl = true;
+			} else 
+				nl = false;
+			
+			if(i && _y * 80 == palette_data.nodes[i - 1].y)
+				array_push(palette_data.connections, [ i - 1, i ]);
+			
+			palette_data.nodes[i] = { color : pal[i], x : _x * 80, y : _y * 80 };
+			
+			_ol = _nl;
+			if(i) _os = _ns;
+		}
+		
+		centerView();
+		return self;
+	}
+	
 	function setColor(clr) {
 		if(node_selecting == noone) return;
 		node_selecting.color = clr;
@@ -102,28 +141,7 @@ function Panel_Palette_Mixer() : PanelContent() constructor {
 		#endregion
 		
 		#region palette
-			var pal_s = ui(16);
-			var pal_w = in_dialog? w - padding * 2 : w - ui(16 * 2);
-			
-			var col = floor(pal_w / pal_s);
-			var row = ceil(array_length(_palettes) / col);
-			
-			var pal_h = pal_s * max(1, row);
-			var pal_x = in_dialog? padding : ui(16);
-			var pal_y = in_dialog? h - pal_h - padding : h - pal_h - ui(16);
-			
-			var pbg_x = pal_x - ui(8);
-			var pbg_y = pal_y - ui(8);
-			var pbg_w = pal_w + ui(16);
-			var pbg_h = pal_h + ui(16);
-			
-			draw_sprite_stretched(THEME.button_def, 0, pbg_x, pbg_y, pbg_w, pbg_h);
-			
-			if(pHOVER && point_in_rectangle(mx, my, pbg_x, pbg_y, pbg_x + pbg_w, pbg_y + pbg_h)) {
-				
-				draw_sprite_stretched_ext(THEME.button_def, 3, pbg_x, pbg_y, pbg_w, pbg_h, c_white, 0.5);
-			}
-			
+		
 			ds_priority_clear(pr_palette);
 			for (var i = 0, n = array_length(_palettes); i < n; i++) 
 				ds_priority_add(pr_palette, _palettes[i].color, _palettes[i].y * 10000 + _palettes[i].x);
@@ -136,97 +154,129 @@ function Panel_Palette_Mixer() : PanelContent() constructor {
 			while(!ds_priority_empty(pr_palette))
 				palette[_ind++] = ds_priority_delete_min(pr_palette);
 			
-			var _ppw = pal_w - ui(24 + 8);
-			var _ppx = pal_x + ui(24 + 8);
+			var pal_w = 0;
+			var pal_h = 0;
 			
-			var _pw = pal_s;
-			var _ph = pal_s;
-			var amo = array_length(palette);
-			var col = floor(_ppw / _pw);
-			var row = ceil(amo / col);
-			var cx  = -1, cy = -1;
-			var _pd = ui(5);
-			var _h  = row * _ph;
-			_pw = _ppw / col;
+			if(selector != noone) selector.setPaletteSelecting(palette);
 			
-			for(var i = 0; i < array_length(palette); i++) {
-				draw_set_color(palette[i]);
-				var _x0 = _ppx  + safe_mod(i, col) * _pw;
-				var _y0 = pal_y + floor(i / col) * _ph;
+			if(selector == noone) { // draw palette
+				var pal_s = ui(16);
+				var pal_w = in_dialog? w - padding * 2 : w - ui(16 * 2);
 				
-				draw_rectangle(_x0, _y0 + 1, _x0 + _pw, _y0 + _ph, false);
+				var col = floor(pal_w / pal_s);
+				var row = ceil(array_length(_palettes) / col);
 				
-				if(node_selecting) {
-					if(color_diff(node_selecting.color, palette[i]) < 0.01) {
+				var pal_h = pal_s * max(1, row);
+				var pal_x = in_dialog? padding : ui(16);
+				var pal_y = in_dialog? h - pal_h - padding : h - pal_h - ui(16);
+				
+				var pbg_x = pal_x - ui(8);
+				var pbg_y = pal_y - ui(8);
+				var pbg_w = pal_w + ui(16);
+				var pbg_h = pal_h + ui(16);
+				
+				draw_sprite_stretched(THEME.button_def, 0, pbg_x, pbg_y, pbg_w, pbg_h);
+				
+				if(pHOVER && point_in_rectangle(mx, my, pbg_x, pbg_y, pbg_x + pbg_w, pbg_y + pbg_h))
+					draw_sprite_stretched_ext(THEME.button_def, 3, pbg_x, pbg_y, pbg_w, pbg_h, c_white, 0.5);
+				
+				var _ppw = pal_w - ui(24 + 8);
+				var _ppx = pal_x + ui(24 + 8);
+				
+				var _pw = pal_s;
+				var _ph = pal_s;
+				var amo = array_length(palette);
+				var col = floor(_ppw / _pw);
+				var row = ceil(amo / col);
+				var cx  = -1, cy = -1;
+				var _pd = ui(5);
+				var _h  = row * _ph;
+				_pw = _ppw / col;
+				
+				for(var i = 0; i < array_length(palette); i++) {
+					draw_set_color(palette[i]);
+					var _x0 = _ppx  + safe_mod(i, col) * _pw;
+					var _y0 = pal_y + floor(i / col) * _ph;
+					
+					draw_rectangle(_x0, _y0 + 1, _x0 + _pw, _y0 + _ph, false);
+					
+					if(node_selecting) {
+						if(color_diff(node_selecting.color, palette[i]) < 0.01) {
+							cx = _x0; cy = _y0;
+						}
+						
+					} else if(color_diff(CURRENT_COLOR, palette[i]) < 0.01) {
 						cx = _x0; cy = _y0;
 					}
 					
-				} else if(color_diff(CURRENT_COLOR, palette[i]) < 0.01) {
-					cx = _x0; cy = _y0;
-				}
-				
-				if(pHOVER && point_in_rectangle(mx, my, _x0, _y0 + 1, _x0 + _pw, _y0 + _ph)) {
-					if(mouse_press(mb_left)) {
-						node_selecting = noone;
-						CURRENT_COLOR  = palette[i];
-						
-						DRAGGING = {
-							type: "Color",
-							data: palette[i]
+					if(pHOVER && point_in_rectangle(mx, my, _x0, _y0 + 1, _x0 + _pw, _y0 + _ph)) {
+						if(mouse_press(mb_left)) {
+							node_selecting = noone;
+							CURRENT_COLOR  = palette[i];
+							
+							DRAGGING = {
+								type: "Color",
+								data: palette[i]
+							}
+							MESSAGE = DRAGGING;
 						}
-						MESSAGE = DRAGGING;
 					}
 				}
-			}
-			
-			if(cx) draw_sprite_stretched_ext(THEME.palette_selecting, 0, cx - _pd, cy + 1 - _pd, _pw + _pd * 2, _ph + _pd * 2);
-			
-			var _bx = pal_x;
-			var _by = pal_y;
-			var _bs = ui(24);
-			
-			var _b = buttonInstant(THEME.button_hide_fill, _bx, _by, _bs, pal_h, [ mx, my ], pHOVER, pFOCUS, "", THEME.hamburger_s);
-			if(_b == 2) {
-				menuCall("", [
-					menuItem("Save palette as...", function() {
-						var _path = get_save_filename_pxc("Hex paleete|*.hex", "Palette");
-						if(_path != "") {
-							var _str = palette_string_hex(palette, false);
-							file_text_write_all(_path, _str);
-							
-							var noti  = log_message("PALETTE", $"Export palette complete.", THEME.noti_icon_tick, COLORS._main_value_positive, false);
-							noti.path = _path;
-							noti.setOnClick(function() { shellOpenExplorer(self.path); }, "Open in explorer", THEME.explorer);
-						}
-					}), 
-				]);
 				
-				pal_draging = true;
-				pal_drag_mx = mx;
-				pal_drag_my = my;
-			}
-			
-			if(pal_draging) {
-				if(point_distance(pal_drag_mx, pal_drag_my, mx, my) > 8) {
-					DRAGGING = { type: "Palette", data: palette };
-					MESSAGE = DRAGGING;
-					pal_draging = false;
+				if(cx) draw_sprite_stretched_ext(THEME.palette_selecting, 0, cx - _pd, cy + 1 - _pd, _pw + _pd * 2, _ph + _pd * 2);
+				
+				var _bx = pal_x;
+				var _by = pal_y;
+				var _bs = ui(24);
+				
+				var _b = buttonInstant(THEME.button_hide_fill, _bx, _by, _bs, pal_h, [ mx, my ], pHOVER, pFOCUS, "", THEME.hamburger_s);
+				if(_b == 2) {
+					menuCall("", [
+						menuItem("Save palette as...", function() {
+							var _path = get_save_filename_pxc("Hex paleete|*.hex", "Palette");
+							if(_path != "") {
+								var _str = palette_string_hex(palette, false);
+								file_text_write_all(_path, _str);
+								
+								var noti  = log_message("PALETTE", $"Export palette complete.", THEME.noti_icon_tick, COLORS._main_value_positive, false);
+								noti.path = _path;
+								noti.setOnClick(function() { shellOpenExplorer(self.path); }, "Open in explorer", THEME.explorer);
+							}
+						}), 
+					]);
 					
-					instance_destroy(o_dialog_menubox);
+					pal_draging = true;
+					pal_drag_mx = mx;
+					pal_drag_my = my;
 				}
 				
-				if(mouse_release(mb_left))
-					pal_draging = false;
+				if(pal_draging) {
+					if(point_distance(pal_drag_mx, pal_drag_my, mx, my) > 8) {
+						DRAGGING = { type: "Palette", data: palette };
+						MESSAGE = DRAGGING;
+						pal_draging = false;
+						
+						instance_destroy(o_dialog_menubox);
+					}
+					
+					if(mouse_release(mb_left))
+						pal_draging = false;
+				}
+				
+				pal_h += ui(16);
+				
+			} else {
+				
 			}
 		#endregion
 		
 		var px = padding;
 		var py = padding;
 		var pw = w - padding - padding;
-		var ph = h - padding - padding - pal_h - ui(16);
+		var ph = h - padding - padding - pal_h;
 		
-		if(in_dialog)
-			draw_sprite_stretched(THEME.ui_panel_bg, 1, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16 - 4));
+		if(in_dialog || selector != noone)
+			draw_sprite_stretched(THEME.ui_panel_bg, 1, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16 - 4 * (selector == noone)));
 		else 
 			ph -= ui(8);
 		

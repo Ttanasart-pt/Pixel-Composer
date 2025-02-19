@@ -154,7 +154,10 @@ event_inherited();
 #endregion
 
 #region palette
+	function initPalette() { paletePresets = array_clone(PALETTES); return self; } initPalette();
+	
 	palette_selecting = -1;
+	preset_show_name  = true;
 	
 	sp_palette_w    = ui(240) - pal_padding * 2 - ui(8);
 	sp_palette_size = ui(20);
@@ -166,8 +169,8 @@ event_inherited();
 		var ww  = sp_palettes.surface_w;
 		var _gs = sp_palette_size;
 		var hh  = ui(24);
-		var nh  = ui(20);
-		var pd  = ui(6);
+		var pd  = preset_show_name? ui(6) : ui(4);
+		var nh  = preset_show_name? ui(20) : pd;
 		var _ww = ww - pd * 2;
 		var _bh = nh + _gs + pd;
 		var yy  = _y;
@@ -176,12 +179,12 @@ event_inherited();
 		var _hover = sHOVER && sp_palettes.hover;
 		var col = max(1, floor(_ww / _gs)), row;
 		
-		for(var i = -1; i < array_length(PALETTES); i++) {
+		for(var i = -1; i < array_length(paletePresets); i++) {
 			var pal = i == -1? {
 				name    : "project",
 				palette : PROJECT.attributes.palette,
 				path    : ""
-			} : PALETTES[i];
+			} : paletePresets[i];
 			
 			pre_amo = array_length(pal.palette);
 			row     = ceil(pre_amo / col);
@@ -195,11 +198,13 @@ event_inherited();
 				draw_sprite_stretched_ext(THEME.node_bg, 1, 0, yy, ww, _height, COLORS._main_accent, 1);
 			}
 			
-			var cc = i == palette_selecting? COLORS._main_accent : COLORS._main_text_sub;
-			draw_set_text(f_p2, fa_left, fa_top, cc);
-			draw_text_add(pd, yy + ui(2), pal.name);
-			
-			if(i == -1) { draw_set_color(cc); draw_circle_prec(ww - ui(10), yy + ui(10), ui(4), false); }
+			if(preset_show_name) {
+				var cc = i == palette_selecting? COLORS._main_accent : COLORS._main_text_sub;
+				draw_set_text(f_p2, fa_left, fa_top, cc);
+				draw_text_add(pd, yy + ui(2), pal.name);
+				
+				if(i == -1) { draw_set_color(cc); draw_circle_prec(ww - ui(10), yy + ui(10), ui(4), false); }
+			}
 			
 			if(palette_selecting == i) 
 				_palRes = drawPaletteGrid(pal.palette, pd, yy + nh, _ww, _gs, { mx : _m[0], my : _m[1] });
@@ -245,7 +250,33 @@ event_inherited();
 		return hh;
 	});
 	
+	//////////////////////// SORT
 	
+	sortPreset_name_a = function() /*=>*/ { array_sort(paletePresets, function(p0, p1) /*=>*/ {return string_compare(p0.name, p1.name)}); }
+	sortPreset_name_d = function() /*=>*/ { array_sort(paletePresets, function(p0, p1) /*=>*/ {return string_compare(p1.name, p0.name)}); }
+	
+	sortPreset_size_a = function() /*=>*/ { array_sort(paletePresets, function(p0, p1) /*=>*/ { return array_length(p0.palette) - array_length(p1.palette); }); }
+	sortPreset_size_d = function() /*=>*/ { array_sort(paletePresets, function(p0, p1) /*=>*/ { return array_length(p1.palette) - array_length(p0.palette); }); }
+	
+	sortPreset_hue_a  = function() /*=>*/ { array_sort(paletePresets, function(p0, p1) /*=>*/ {return palette_compare_hue_var(p0.palette, p1.palette)}); }
+	sortPreset_hue_d  = function() /*=>*/ { array_sort(paletePresets, function(p0, p1) /*=>*/ {return palette_compare_hue_var(p1.palette, p0.palette)}); }
+	
+	sortPreset_sat_a  = function() /*=>*/ { array_sort(paletePresets, function(p0, p1) /*=>*/ {return palette_compare_sat(p0.palette, p1.palette)}); }
+	sortPreset_sat_d  = function() /*=>*/ { array_sort(paletePresets, function(p0, p1) /*=>*/ {return palette_compare_sat(p1.palette, p0.palette)}); }
+	
+	sortPreset_val_a  = function() /*=>*/ { array_sort(paletePresets, function(p0, p1) /*=>*/ {return palette_compare_val(p0.palette, p1.palette)}); }
+	sortPreset_val_d  = function() /*=>*/ { array_sort(paletePresets, function(p0, p1) /*=>*/ {return palette_compare_val(p1.palette, p0.palette)}); }
+	
+	menu_preset_sort = [
+		menuItem(__txt("Display Name"), function() /*=>*/ { preset_show_name = !preset_show_name; }, noone, noone, function() /*=>*/ {return preset_show_name}),
+		-1,
+		new MenuItem_Sort(__txt("Name"), [ sortPreset_name_a, sortPreset_name_d]),
+		new MenuItem_Sort(__txt("Size"), [ sortPreset_size_a, sortPreset_size_d]),
+		-1,
+		new MenuItem_Sort(__txt("Hue Flex"),    [ sortPreset_hue_a,  sortPreset_hue_d ]),
+		new MenuItem_Sort(__txt("Sat Average"), [ sortPreset_sat_a,  sortPreset_sat_d ]),
+		new MenuItem_Sort(__txt("Val Average"), [ sortPreset_val_a,  sortPreset_val_d ]),
+	];
 #endregion
 
 #region action

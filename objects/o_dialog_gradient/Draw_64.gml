@@ -50,7 +50,8 @@ draggable = true;
 	var by = dialog_y + ui(12);
 	var bs = ui(28);
 	
-	if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txtx("add_preset", "Add to preset"), THEME.add_20) == 2) {
+	var b = buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txtx("add_preset", "Add to preset"), THEME.add_16);
+	if(b == 2) {
 		var dia = dialogCall(o_dialog_file_name, mouse_mx + ui(8), mouse_my + ui(8));
 		dia.onModify = function (txt) {
 			var gradStr = "";
@@ -65,17 +66,21 @@ draggable = true;
 		};
 		dia.path = DIRECTORY + "Gradients/"
 	}
+	draggable &= !b;
 	bx -= ui(32);
 	
-	if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txt("Refresh"), THEME.refresh_20) == 2)
-		__initGradient();
+	var b = buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txt("Refresh"), THEME.refresh_20);
+	if(b == 2) __initGradient();
+	draggable &= !b;
 	bx -= ui(32);
 	
-	if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txtx("graident_editor_open_folder", "Open gradient folder"), THEME.path_open_20) == 2) {
+	var b = buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txtx("graident_editor_open_folder", "Open gradient folder"), THEME.path_open_20);
+	if(b == 2) {
 		var _realpath = DIRECTORY + "Gradients";
 		shellOpenExplorer(_realpath)
 	}
 	draw_sprite_ui_uniform(THEME.path_open_20, 1, bx + bs / 2, by + bs / 2, 1, c_white);
+	draggable &= !b;
 	bx -= ui(32);
 #endregion
 
@@ -87,10 +92,21 @@ draggable = true;
 	
 	var bx = palette_x + palette_w - ui(44);
 	var by = dialog_y + ui(12);
+	var bs = ui(28);
 	
-	if(buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, sHOVER, sFOCUS, __txt("Show on Selector"), THEME.display_palette, NODE_COLOR_SHOW_PALETTE, c_white) == 2)
-		NODE_COLOR_SHOW_PALETTE = !NODE_COLOR_SHOW_PALETTE;
+	var b = buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txt("Show on Selector"), THEME.display_palette, NODE_COLOR_SHOW_PALETTE, c_white);
+	if(b == 2) NODE_COLOR_SHOW_PALETTE = !NODE_COLOR_SHOW_PALETTE;
+	draggable &= !b;
 	bx -= ui(32);
+	
+	var b = buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txt("View settings..."), THEME.sort_v);
+	if(b == 2) {
+		var _menu = menuCall("", menu_preset_sort, bx + bs, by + bs);
+		_menu.close_on_trigger = false;
+	}
+	draggable &= !b;
+	bx -= ui(32);
+	
 #endregion
 
 #region gradient
@@ -158,11 +174,10 @@ draggable = true;
 		var _c  = _k.value;
 		var _kx = gr_x + _k.time * gr_w; 
 		var _ky = gr_y + gr_h / 2;
-		var _in = _k == key_selecting? 1 : 0;
 		
 		var _hov  = sHOVER && point_in_rectangle(mouse_mx, mouse_my, _kx - ui(6), gr_y, _kx + ui(6), gr_y + gr_h);
 		    _hov |= key_dragging == _k;
-		_k._hover = lerp_float(_k._hover, _hov, 5);
+		_k._hover = lerp_float(_k._hover, _hov || key_selecting == _k, 5);
 		
 		var _kw = ui(12);
 		var _kh = lerp(ui(12), ui(32), _k._hover);
@@ -266,7 +281,7 @@ draggable = true;
 	var col_y = dialog_y + ui(128);
 	
 	if(palette_selecting > -1)
-		selector.palette = PALETTES[palette_selecting].palette;
+		selector.palette = paletePresets[palette_selecting].palette;
 	selector.draw(col_x, col_y, sFOCUS, sHOVER);
 #endregion
 

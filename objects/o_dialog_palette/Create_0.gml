@@ -25,14 +25,15 @@ function __PaletteColor(_color = c_black) constructor {
 	
 	mouse_interact  = false;
 	
+	mixer           = noone;
+	mixer_surface   = noone;
+	
 	colors_selecting = [];
 	
 	index_drag_x = 0; index_drag_x_to = 0;
 	index_drag_y = 0; index_drag_y_to = 0;
 	index_drag_w = 0; index_drag_w_to = 0;
 	index_drag_h = 0; index_drag_h_to = 0;
-	
-	palette_positions = {}
 	
 	setColor = function(c) /*=>*/ {
 		if(index_selecting[1] != 1 || palette == 0) return;
@@ -82,6 +83,14 @@ function __PaletteColor(_color = c_black) constructor {
 				
 				txt = string_lower(txt);
 				txt = string_replace_all(txt, " ", "-");
+				
+				for( var i = 0, n = array_length(PALETTES); i < n; i++ ) {
+					if(PALETTES[i].name == txt) {
+						noti_warning($"Palette {txt} alerady existed.");
+						return;
+					}
+				}
+				
 				var _url = $"https://Lospec.com/palette-list{txt}.json";
 				PALETTE_LOSPEC = http_get(_url);
 			}).setName("Palette")
@@ -90,14 +99,10 @@ function __PaletteColor(_color = c_black) constructor {
 #endregion
 
 #region presets
-	paletePresets = PALETTES;
+	function initPalette() { paletePresets = array_clone(PALETTES); return self; } initPalette();
 	
-	function initPalette() {
-		paletePresets = array_clone(PALETTES);
-		return self;
-	}
-	
-	hovering_name = "";
+	hovering_name    = "";
+	preset_show_name = true;
 	
 	pal_padding = ui(9);
 	sp_preset_w = ui(240) - pal_padding * 2 - ui(8);
@@ -109,8 +114,8 @@ function __PaletteColor(_color = c_black) constructor {
 		var ww   = sp_presets.surface_w;
 		var _gs  = ui(20);
 		var hh   = ui(24);
-		var nh   = ui(20);
-		var pd   = ui(6);
+		var pd   = preset_show_name? ui(6) : ui(4);
+		var nh   = preset_show_name? ui(20) : pd;
 		var _ww  = ww - pd * 2;
 		var hg   = nh + _gs + pd;
 		var yy   = _y;
@@ -126,8 +131,11 @@ function __PaletteColor(_color = c_black) constructor {
 				draw_sprite_stretched_ext(THEME.node_bg, 1, 0, yy, ww, hg, COLORS._main_accent, 1);
 			}
 			
-			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
-			draw_text_add(pd, yy + ui(2), pal.name);
+			if(preset_show_name) {
+				draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
+				draw_text_add(pd, yy + ui(2), pal.name);
+			}
+				
 			drawPalette(pal.palette, pd, yy + nh, _ww, _gs);
 			
 			if(isHover) {
@@ -153,17 +161,32 @@ function __PaletteColor(_color = c_black) constructor {
 		return hh;
 	});
 	
-	function sortPreset_name_a() { array_sort(paletePresets, function(p0, p1) /*=>*/ { return string_compare(p0.name, p1.name); }) }
-	function sortPreset_name_d() { array_sort(paletePresets, function(p0, p1) /*=>*/ { return string_compare(p1.name, p0.name); }) }
-	function sortPreset_size_a() { array_sort(paletePresets, function(p0, p1) /*=>*/ { return array_length(p0.palette) - array_length(p1.palette); }) }
-	function sortPreset_size_d() { array_sort(paletePresets, function(p0, p1) /*=>*/ { return array_length(p1.palette) - array_length(p0.palette); }) }
+	//////////////////////// SORT
 	
-	sort_name_type = true;
-	sort_size_type = true;
+	sortPreset_name_a = function() /*=>*/ { array_sort(paletePresets, function(p0, p1) /*=>*/ {return string_compare(p0.name, p1.name)}); }
+	sortPreset_name_d = function() /*=>*/ { array_sort(paletePresets, function(p0, p1) /*=>*/ {return string_compare(p1.name, p0.name)}); }
+	
+	sortPreset_size_a = function() /*=>*/ { array_sort(paletePresets, function(p0, p1) /*=>*/ { return array_length(p0.palette) - array_length(p1.palette); }); }
+	sortPreset_size_d = function() /*=>*/ { array_sort(paletePresets, function(p0, p1) /*=>*/ { return array_length(p1.palette) - array_length(p0.palette); }); }
+	
+	sortPreset_hue_a  = function() /*=>*/ { array_sort(paletePresets, function(p0, p1) /*=>*/ {return palette_compare_hue_var(p0.palette, p1.palette)}); }
+	sortPreset_hue_d  = function() /*=>*/ { array_sort(paletePresets, function(p0, p1) /*=>*/ {return palette_compare_hue_var(p1.palette, p0.palette)}); }
+	
+	sortPreset_sat_a  = function() /*=>*/ { array_sort(paletePresets, function(p0, p1) /*=>*/ {return palette_compare_sat(p0.palette, p1.palette)}); }
+	sortPreset_sat_d  = function() /*=>*/ { array_sort(paletePresets, function(p0, p1) /*=>*/ {return palette_compare_sat(p1.palette, p0.palette)}); }
+	
+	sortPreset_val_a  = function() /*=>*/ { array_sort(paletePresets, function(p0, p1) /*=>*/ {return palette_compare_val(p0.palette, p1.palette)}); }
+	sortPreset_val_d  = function() /*=>*/ { array_sort(paletePresets, function(p0, p1) /*=>*/ {return palette_compare_val(p1.palette, p0.palette)}); }
 	
 	menu_preset_sort = [
-		menuItem(__txt("Name"),  function() /*=>*/ { if(sort_name_type) sortPreset_name_a(); else sortPreset_name_d(); sort_name_type = !sort_name_type; }),
-		menuItem(__txt("Size"),  function() /*=>*/ { if(sort_size_type) sortPreset_size_a(); else sortPreset_size_d(); sort_size_type = !sort_size_type; }),
+		menuItem(__txt("Display Name"), function() /*=>*/ { preset_show_name = !preset_show_name; }, noone, noone, function() /*=>*/ {return preset_show_name}),
+		-1,
+		new MenuItem_Sort(__txt("Name"), [ sortPreset_name_a, sortPreset_name_d]),
+		new MenuItem_Sort(__txt("Size"), [ sortPreset_size_a, sortPreset_size_d]),
+		-1,
+		new MenuItem_Sort(__txt("Hue Flex"),    [ sortPreset_hue_a,  sortPreset_hue_d ]),
+		new MenuItem_Sort(__txt("Sat Average"), [ sortPreset_sat_a,  sortPreset_sat_d ]),
+		new MenuItem_Sort(__txt("Val Average"), [ sortPreset_val_a,  sortPreset_val_d ]),
 	];
 #endregion
 
@@ -199,15 +222,44 @@ function __PaletteColor(_color = c_black) constructor {
 	
 	function setDefault(pal) { setPalette(pal); previous_palette = array_clone(pal); }
 	
-	function setPalette(pal) {
-		palette           = pal;	
-		index_selecting   = [ 0, 0 ];
-		palette_positions = {};
-		
-		if(!array_empty(palette)) selector.setColor(palette[0]);
+	function setPalette(pal, _reset_select = true) {
+		palette = pal;	
 		refreshPaletteObject();
+		
+		if(!_reset_select) return;
+		index_selecting = [ 0, 0 ];
+		if(!array_empty(palette)) selector.setColor(palette[0]);
+		mixer = noone;
 	}
+	
+	function setPaletteSelecting(pal) {
+		if(index_selecting[1] == 0) {
+			setPalette(pal, false);
+			return;
+		}
+		
+		array_delete(palette, index_selecting[0], index_selecting[1]);
+		for( var i = 0, n = array_length(pal); i < n; i++ )
+			array_insert(palette, index_selecting[0] + i, pal[i]);
+		
+		index_selecting[1] = array_length(pal);
+		refreshPaletteObject();
+		
+		if(onApply != noone) onApply(palette);
+	} 
 	
 	function onResize()   { sp_presets.resize(sp_preset_w, dialog_h - ui(62)); }
 	function checkMouse() {}
+	
+	menu_palette_sort = [
+		new MenuItem_Sort(__txtx("palette_editor_sort_brightness", "Brightness"), 
+			[ function() /*=>*/ {return sortPalette(function(a,b) /*=>*/ {return __sortBright(a.color, b.color)})}, function() /*=>*/ {return sortPalette(function(a,b) /*=>*/ {return __sortDark(a.color, b.color)})} ]),
+		-1,
+		new MenuItem_Sort(__txtx("palette_editor_sort_hue", "Hue"),           
+			[ function() /*=>*/ {return sortPalette(function(a,b) /*=>*/ {return __sortHue(a.color, b.color)})}, function() /*=>*/ {return sortPalette(function(a,b) /*=>*/ {return __sortHue(b.color, a.color)})} ] ),
+		new MenuItem_Sort(__txtx("palette_editor_sort_sat", "Saturation"),    
+			[ function() /*=>*/ {return sortPalette(function(a,b) /*=>*/ {return __sortSat(a.color, b.color)})}, function() /*=>*/ {return sortPalette(function(a,b) /*=>*/ {return __sortSat(b.color, a.color)})} ] ),
+		new MenuItem_Sort(__txtx("palette_editor_sort_val", "Value"),         
+			[ function() /*=>*/ {return sortPalette(function(a,b) /*=>*/ {return __sortVal(a.color, b.color)})}, function() /*=>*/ {return sortPalette(function(a,b) /*=>*/ {return __sortVal(b.color, a.color)})} ] ),
+	];
 #endregion
