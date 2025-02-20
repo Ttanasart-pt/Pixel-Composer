@@ -123,7 +123,6 @@ function LOAD_AT(path, params = new __loadParams()) {
 	
 	printIf(log, $" > Create temp : {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
 	
-	var content;
 	var _ext = filename_ext_raw(path);
 	var s;
 	
@@ -140,7 +139,7 @@ function LOAD_AT(path, params = new __loadParams()) {
 	
 	buffer_delete(bf);
 	
-	content = json_try_parse(s);
+	var content = json_try_parse(s);
 	printIf(log, $" > Load struct : {(get_timer() - t1) / 1000} ms");
 	
 	return instance_create(0, 0, project_loader, { path, content, log, params, t0, t1 });

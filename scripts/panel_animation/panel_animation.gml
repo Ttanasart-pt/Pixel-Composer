@@ -2048,15 +2048,13 @@ function Panel_Animation() : PanelContent() constructor {
                 
                     switch(graph_key_drag_index) {
                         case KEYFRAME_DRAG_TYPE.ease_in :
-                            k.ease_in_type  = keyframe_dragout? CURVE_TYPE.bezier : CURVE_TYPE.linear;
-                            k.ease_in[0] = _dx;
-                            // k.ease_in[1] = _dy + 1;
+                            k.ease_in_type = keyframe_dragout? CURVE_TYPE.bezier : CURVE_TYPE.linear;
+                            k.ease_in[0]   = _dx;
                             
                             break;
                         case KEYFRAME_DRAG_TYPE.ease_out :
                             k.ease_out_type = keyframe_dragout? CURVE_TYPE.bezier : CURVE_TYPE.linear;
-                            k.ease_out[0] =  _dx;
-                            // k.ease_out[1] = -_dy;
+                            k.ease_out[0]   = _dx;
                             
                             break;
                         case KEYFRAME_DRAG_TYPE.ease_both :
@@ -2065,10 +2063,7 @@ function Panel_Animation() : PanelContent() constructor {
                             k.ease_out_type = keyframe_dragout? CURVE_TYPE.bezier : CURVE_TYPE.linear;
                         
                             k.ease_in[0]  = _dx;
-                            // k.ease_in[1]  = _dy + 1;
-                            
-                            k.ease_out[0] =  _dx;
-                            // k.ease_out[1] = -_dy;
+                            k.ease_out[0] = _dx;
                             break;
                     }
                                 
@@ -2105,92 +2100,6 @@ function Panel_Animation() : PanelContent() constructor {
                 
             }
         #endregion
-        
-        if(keyframe_dragging) { // drag key
-            if(keyframe_drag_type == KEYFRAME_DRAG_TYPE.move) {
-                var tt = round((mx - bar_x - timeline_shift) / timeline_scale) - 1;
-                tt = max(tt, 0);
-                var sh = tt - keyframe_dragging.time;
-                var edited = false;
-                
-                for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
-                    var k  = keyframe_selecting[i];
-                    var kt = k.time + sh;
-                    
-                    if(k.anim.setKeyTime(k, kt, false, true))
-                        edited = true;
-                }
-                
-                if(edited) UNDO_HOLDING = true;
-                timeline_show_time = floor(tt);
-                            
-                if(mouse_release(mb_left) || mouse_press(mb_left)) {
-                    keyframe_dragging = noone;
-                    UNDO_HOLDING = false;
-                    
-                    for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
-                        var k  = keyframe_selecting[i];
-                        k.anim.setKeyTime(k, k.time, true, true);
-                    }
-                }
-            } else {
-                var dx = abs((keyframe_dragging.time + 1) - (mx - bar_x - timeline_shift) / timeline_scale) / 2;
-                dx = clamp(dx, 0, 1);
-                if(dx > 0.2) keyframe_dragout = true;
-            
-                var dy = -(my - keyframe_drag_my) / 32;
-            
-                var _in = keyframe_dragging.ease_in;
-                var _ot = keyframe_dragging.ease_out;
-            
-                switch(keyframe_drag_type) {
-                    case KEYFRAME_DRAG_TYPE.ease_in :
-                        for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
-                            var k = keyframe_selecting[i];
-                            k.ease_in_type  = keyframe_dragout? CURVE_TYPE.bezier : CURVE_TYPE.linear;
-                            
-                            k.ease_in[0] = dx;
-                            if(!k.ease_y_lock) 
-                                k.ease_in[1] = dy;
-                        }
-                    
-                        break;
-                    case KEYFRAME_DRAG_TYPE.ease_out :
-                        for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
-                            var k = keyframe_selecting[i];
-                            k.ease_out_type = keyframe_dragout? CURVE_TYPE.bezier : CURVE_TYPE.linear;
-                            
-                            k.ease_out[0] =  dx;
-                            if(!k.ease_y_lock) 
-                                k.ease_out[1] =  dy;
-                        }
-                        break;
-                    case KEYFRAME_DRAG_TYPE.ease_both :
-                        for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
-                            var k  = keyframe_selecting[i];
-                            k.ease_in_type  = keyframe_dragout? CURVE_TYPE.bezier : CURVE_TYPE.linear;
-                            k.ease_out_type = keyframe_dragout? CURVE_TYPE.bezier : CURVE_TYPE.linear;
-                        
-                            k.ease_in[0] = dx;
-                            if(!k.ease_y_lock) 
-                                k.ease_in[1] = dy;
-                            
-                            k.ease_out[0] = dx;
-                            if(!k.ease_y_lock) 
-                                k.ease_out[1] = dy;
-                        }
-                        break;
-                }
-                            
-                if(mouse_release(mb_left)) {
-                    recordAction(ACTION_TYPE.var_modify, keyframe_dragging, [_in, "ease_in"]);
-                    recordAction(ACTION_TYPE.var_modify, keyframe_dragging, [_ot, "ease_out"]);
-                            
-                    keyframe_dragging = noone;
-                    UNDO_HOLDING      = false;
-                }
-            }
-        }
         
         if(on_end_dragging_anim != noone) { // on end dragging
             if(mouse_release(mb_left)) on_end_dragging_anim = false;
@@ -2282,7 +2191,92 @@ function Panel_Animation() : PanelContent() constructor {
                 staggerKeys(stagger_index, st);
             }
         }
+        
+        if(keyframe_dragging) { // drag key
+            if(keyframe_drag_type == KEYFRAME_DRAG_TYPE.move) {
+                var tt = round((mx - bar_x - timeline_shift) / timeline_scale) - 1;
+                tt = max(tt, 0);
+                 
+                var sh = tt - keyframe_dragging.time;
+                var edited = false;
                 
+                for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
+                    var k  = keyframe_selecting[i];
+                    var kt = k.time + sh;
+                    
+                    if(k.anim.setKeyTime(k, kt, false, true))
+                        edited = true;
+                }
+                
+                if(edited) UNDO_HOLDING = true;
+                timeline_show_time = floor(tt);
+                            
+                if(mouse_release(mb_left)) {
+                    keyframe_dragging = noone;
+                    UNDO_HOLDING = false;
+                    
+                    for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
+                        var k  = keyframe_selecting[i];
+                        k.anim.setKeyTime(k, k.time, true, true);
+                    }
+                }
+                
+            } else {
+                var dx = abs((keyframe_dragging.time + 1) - (mx - bar_x - timeline_shift) / timeline_scale) / 2;
+                dx = clamp(dx, 0, 1);
+                if(dx > 0.2) keyframe_dragout = true;
+            
+                var dy = -(my - keyframe_drag_my) / 32;
+            
+                var _in = keyframe_dragging.ease_in;
+                var _ot = keyframe_dragging.ease_out;
+            
+                switch(keyframe_drag_type) {
+                    case KEYFRAME_DRAG_TYPE.ease_in :
+                        for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
+                            var k = keyframe_selecting[i];
+                            k.ease_in_type  = keyframe_dragout? CURVE_TYPE.bezier : CURVE_TYPE.linear;
+                            
+                            k.ease_in[0] = dx;
+                            if(!k.ease_y_lock) k.ease_in[1] = dy;
+                        }
+                    
+                        break;
+                    case KEYFRAME_DRAG_TYPE.ease_out :
+                        for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
+                            var k = keyframe_selecting[i];
+                            k.ease_out_type = keyframe_dragout? CURVE_TYPE.bezier : CURVE_TYPE.linear;
+                            
+                            k.ease_out[0] =  dx;
+                            if(!k.ease_y_lock) k.ease_out[1] =  dy;
+                        }
+                        break;
+                        
+                    case KEYFRAME_DRAG_TYPE.ease_both :
+                        for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
+                            var k  = keyframe_selecting[i];
+                            k.ease_in_type  = keyframe_dragout? CURVE_TYPE.bezier : CURVE_TYPE.linear;
+                            k.ease_out_type = keyframe_dragout? CURVE_TYPE.bezier : CURVE_TYPE.linear;
+                        
+                            k.ease_in[0] = dx;
+                            if(!k.ease_y_lock) k.ease_in[1] = dy;
+                            
+                            k.ease_out[0] = dx;
+                            if(!k.ease_y_lock) k.ease_out[1] = dy;
+                        }
+                        break;
+                }
+                            
+                if(mouse_release(mb_left)) {
+                    recordAction(ACTION_TYPE.var_modify, keyframe_dragging, [_in, "ease_in"]);
+                    recordAction(ACTION_TYPE.var_modify, keyframe_dragging, [_ot, "ease_out"]);
+                            
+                    keyframe_dragging = noone;
+                    UNDO_HOLDING      = false;
+                }
+            }
+        }
+        
         #region overlay 
             var hh = ui(20);
             

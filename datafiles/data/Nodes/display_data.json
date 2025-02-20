@@ -1,11 +1,9 @@
 [
     {
-        "name": "Home",
-        "nodes": []
+        "name": "Home", "nodes": []
     },
     {
-        "name": "Group",
-        "nodes": [
+        "name": "Group", "nodes": [
             { "label": "Groups" },
             "Node_Group_Input",
             "Node_Group_Output",
@@ -16,8 +14,7 @@
     },
     {
         "name": "Loop",
-        "iname": "Iterate",
-        "nodes": [
+        "iname": "Iterate", "nodes": [
             { "label": "Groups" },
             "Node_Iterate",
             "Node_Iterator_Input",
@@ -35,8 +32,7 @@
     },
     {
         "name": "Loop",
-        "iname": "Iterate_Inline",
-        "nodes": [
+        "iname": "Iterate_Inline", "nodes": [
             { "label": "Loops" },
             "Node_Iterator_Index",
             "Node_Iterator_Each_Length"
@@ -46,8 +42,7 @@
     },
     {
         "name": "Loop",
-        "iname": "Iterate_Each",
-        "nodes": [
+        "iname": "Iterate_Each", "nodes": [
             { "label": "Groups" },
             "Node_Group_Input",
             "Node_Group_Output",
@@ -62,8 +57,7 @@
     },
     {
         "name": "Loop",
-        "iname": "Iterate_Each_Inline",
-        "nodes": [
+        "iname": "Iterate_Each_Inline", "nodes": [
             { "label": "Loops" },
             "Node_Iterator_Index",
             "Node_Iterator_Length"
@@ -73,8 +67,7 @@
     },
     {
         "name": "Filter",
-        "iname": "Iterate_Filter",
-        "nodes": [
+        "iname": "Iterate_Filter", "nodes": [
             { "label": "Groups" },
             "Node_Group_Input",
             "Node_Group_Output",
@@ -89,8 +82,7 @@
     },
     {
         "name": "Filter",
-        "iname": "Iterate_Filter_Inline",
-        "nodes": [
+        "iname": "Iterate_Filter_Inline", "nodes": [
             { "label": "Loops" },
             "Node_Iterator_Index",
             "Node_Iterator_Length"
@@ -99,8 +91,7 @@
         "color": "node_blend_loop"
     },
     {
-        "name": "Feedback",
-        "nodes": [
+        "name": "Feedback", "nodes": [
             { "label": "Groups" },
             "Node_Feedback_Input",
             "Node_Feedback_Output",
@@ -110,8 +101,7 @@
         "color": "node_blend_feedback"
     },
     {
-        "name": "VFX",
-        "nodes": [
+        "name": "VFX", "nodes": [
             { "label": "Groups" },
             "Node_Group_Input",
             "Node_Group_Output",
@@ -144,8 +134,7 @@
         "color": "node_blend_vfx"
     },
     {
-        "name": "RigidSim",
-        "nodes": [
+        "name": "RigidSim", "nodes": [
             { "label": "Groups" },
             "Node_Group_Input",
             "Node_Group_Output",
@@ -168,8 +157,7 @@
         "color": "node_blend_simulation"
     },
     {
-        "name": "SmokeSim",
-        "nodes": [
+        "name": "SmokeSim", "nodes": [
             { "label": "Groups" },
             "Node_Group_Input",
             "Node_Group_Output",
@@ -193,8 +181,7 @@
         "color": "node_blend_smoke"
     },
     {
-        "name": "FLIP Fluid",
-        "nodes": [
+        "name": "FLIP Fluid", "nodes": [
             { "label": "Domain" },
             "Node_FLIP_Domain",
             "Node_FLIP_Render",
@@ -217,8 +204,7 @@
         "color": "node_blend_fluid"
     },
     {
-        "name": "StrandSim",
-        "nodes": [
+        "name": "StrandSim", "nodes": [
             { "label": "Group" },
             "Node_Group_Input",
             "Node_Group_Output",
@@ -241,8 +227,7 @@
     },
     
     {
-        "name": "IO",
-        "nodes": [
+        "name": "IO", "nodes": [
             { "label": "Images" },
             { "label": "/Importers" },
             "Node_Image",
@@ -305,8 +290,7 @@
         ]
     },
     {
-        "name": "Transform",
-        "nodes": [
+        "name": "Transform", "nodes": [
             { "label": "Transforms" },
             "Node_Transform",
             "Node_Scale",
@@ -337,8 +321,7 @@
         ]
     },
     {
-        "name": "Filter",
-        "nodes": [
+        "name": "Filter", "nodes": [
             { "label": "Combines" },
             "Node_Blend",
             "Node_Combine_RGB",
@@ -454,8 +437,7 @@
         ]
     },
     {
-        "name": "3D",
-        "nodes": [
+        "name": "3D", "nodes": [
             { "label": "2D Operations" },
             "Node_3D_Transform_Image",
             "Node_Normal",
@@ -520,8 +502,7 @@
         ]
     },
     {
-        "name": "Generate",
-        "nodes": [
+        "name": "Generate", "nodes": [
             { "label": "Colors" },
             "Node_Solid",
             "Node_Gradient",
@@ -620,8 +601,7 @@
         ]
     },
     {
-        "name": "Compose",
-        "nodes": [
+        "name": "Compose", "nodes": [
             { "label": "Composes" },
             "Node_Blend",
             "Node_Composite",
@@ -648,8 +628,7 @@
         ]
     },
     {
-        "name": "Values",
-        "nodes": [
+        "name": "Values", "nodes": [
             { "label": "Raw data" },
             "Node_Number",
             "Node_Boolean",
@@ -842,8 +821,7 @@
         ]
     },
     {
-        "name": "Color",
-        "nodes": [
+        "name": "Color", "nodes": [
             { "label": "Colors" },
             { "label": "/Creators" },
             "Node_Color",
@@ -879,14 +857,14 @@
         ]
     },
     {
-        "name": "Animation",
-        "nodes": [
+        "name": "Animation", "nodes": [
             { "label": "Animations" },
             "Node_Rate_Remap",
             "Node_Delay",
             "Node_Delay_Value",
             "Node_Stagger",
             "Node_Revert",
+            "Node_Anim_Loop",
             
             { "label": "Value" },
             "Node_Counter",
@@ -910,8 +888,7 @@
         ]
     },
     {
-        "name": "Misc",
-        "nodes": [
+        "name": "Misc", "nodes": [
             { "label": "Control" },
             "Node_Condition",
             "Node_Switch",
@@ -968,8 +945,7 @@
     {
         "name": "Group",
         "iname": "pb_Group",
-        "globalContext": "pb",
-        "nodes": [
+        "globalContext": "pb", "nodes": [
             "Node_Group_Input",
             "Node_Group_Output"
         ]
@@ -977,8 +953,7 @@
     {
         "name": "Draw",
         "iname": "pb_Draw",
-        "globalContext": "pb",
-        "nodes": [
+        "globalContext": "pb", "nodes": [
             { "label": "Fill" },
             "Node_PB_Draw_Fill",
             
@@ -997,8 +972,7 @@
     {
         "name": "Box",
         "iname": "pb_Box",
-        "globalContext": "pb",
-        "nodes": [
+        "globalContext": "pb", "nodes": [
             { "label": "Layer" },
             "Node_PB_Layer",
             
@@ -1015,8 +989,7 @@
     {
         "name": "Effects",
         "iname": "pb_Effects",
-        "globalContext": "pb",
-        "nodes": [
+        "globalContext": "pb", "nodes": [
             { "label": "Effect" },
             "Node_PB_Fx_Outline",
             "Node_PB_Fx_Stack",
@@ -1040,8 +1013,7 @@
     {
         "name": "Array",
         "iname": "pb_Array",
-        "globalContext": "pb",
-        "nodes": [
+        "globalContext": "pb", "nodes": [
             "Node_Array",
             "Node_Array_Get",
             "Node_Array_Set",
@@ -1052,8 +1024,7 @@
     {
         "name": "Variable",
         "iname": "pcx_Variable",
-        "globalContext": "pcx",
-        "nodes": [
+        "globalContext": "pcx", "nodes": [
             "Node_PCX_var",
             "Node_PCX_fn_var"
         ]
@@ -1061,8 +1032,7 @@
     {
         "name": "Functions",
         "iname": "pcx_Functions",
-        "globalContext": "pcx",
-        "nodes": [
+        "globalContext": "pcx", "nodes": [
             "Node_PCX_Equation",
             
             { "label": "Numbers" },
@@ -1081,8 +1051,7 @@
     {
         "name": "Flow Control",
         "iname": "pcx_Flow_Control",
-        "globalContext": "pcx",
-        "nodes": [
+        "globalContext": "pcx", "nodes": [
             "Node_PCX_Condition"
         ]
     }
