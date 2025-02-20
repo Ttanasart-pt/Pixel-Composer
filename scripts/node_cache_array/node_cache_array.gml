@@ -59,8 +59,8 @@ function Node_Cache_Array(_x, _y, _group = noone) : __Node_Cache(_x, _y, _group)
 		str -= 1;
 		lst -= 1;
 		
-		if(CURRENT_FRAME < str) return;
-		if(CURRENT_FRAME > lst) return;
+		if(CURRENT_FRAME <  str) return;
+		if(CURRENT_FRAME >= lst) return;
 		
 		cacheCurrentFrame(getInputData(0));
 		

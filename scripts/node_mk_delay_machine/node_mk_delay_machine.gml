@@ -61,9 +61,7 @@ function Node_MK_Delay_Machine(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		var cc, aa;
 		var _psiz = array_length(_pal) - 1;
 		
-		surface_set_target(_outSurf);
-			DRAW_CLEAR
-			
+		surface_set_shader(_outSurf, sh_sample);
 			switch(_blnd) {
 				case 0 : BLEND_NORMAL break;
 				case 1 : BLEND_ALPHA  break;
@@ -89,8 +87,7 @@ function Node_MK_Delay_Machine(_x, _y, _group = noone) : Node(_x, _y, _group) co
 				draw_surface_ext(_s, 0, 0, 1, 1, 0, cc, aa);
 			}
 			
-			BLEND_NORMAL
-		surface_reset_target();
+		surface_reset_shader();
 		
 		outputs[0].setValue(_outSurf);
 	}

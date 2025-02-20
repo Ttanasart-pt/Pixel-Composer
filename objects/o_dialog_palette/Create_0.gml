@@ -21,7 +21,7 @@ function __PaletteColor(_color = c_black) constructor {
 	index_selecting = [ 0, 0 ];
 	index_dragging  = noone;
 	interactable    = true;
-	drop_target     = noone;
+	drop_target     = noone; setDrop = function(d) /*=>*/ { drop_target = d; return self; }
 	
 	mouse_interact  = false;
 	

@@ -78,6 +78,8 @@ function timelineItemNode(node) : timelineItem() constructor {
 		
 		if(hover && point_in_rectangle(_msx, _msy, _x + ui(20), _y, _x + _w, _y + lh - 1)) {
 			draw_sprite_stretched_add(THEME.box_r2, 1, _x, _y, _w, lh, col, 0.3);
+			if(mouse_press(mb_left, focus)) graphFocusNode(node, false);
+			if(focus && DOUBLE_CLICK) show = !show;
 			res = 1;
 		}
 		
@@ -91,7 +93,11 @@ function timelineItemNode(node) : timelineItem() constructor {
 		var aa = 0.75;
 		if(hover && point_in_rectangle(_msx, _msy, lx, _y, lx + ui(20), _y + lh)) {
 			aa = 1;
-			if(mouse_press(mb_left, focus)) show = !show;
+			if(DOUBLE_CLICK) {
+				if(show) panel_animation_dopesheet_expand();
+				else     panel_animation_dopesheet_collapse();
+				
+			} else if(mouse_press(mb_left, focus)) show = !show;
 		}
 		
 		if(node.isActiveDynamic())

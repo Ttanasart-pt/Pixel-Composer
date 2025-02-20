@@ -184,10 +184,10 @@
 		ds_map_clear(APPEND_MAP);
 	}
 	
-	function graphFocusNode(node) {
+	function graphFocusNode(node, _moveView = true) {
 		PANEL_INSPECTOR.setInspecting(node);
 		PANEL_GRAPH.nodes_selecting = [ node ];
-		PANEL_GRAPH.fullView();
+		if(_moveView) PANEL_GRAPH.fullView();
 	}
 	
 	function refreshNodeMap() {
