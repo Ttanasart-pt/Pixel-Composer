@@ -93,10 +93,15 @@ varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 uniform sampler2D map;
+uniform int   useIndex;
+uniform float index;
 
 void main() {
 	vec4 map = texture2Dintp( map, v_vTexcoord );
 	vec2 pos = map.rg;
+	
+	gl_FragColor = vec4(0.);
+	if(useIndex == 1 && map.z != index) return;
 	
 	vec4 samp = texture2Dintp( gm_BaseTexture, 1. - vec2(1. - pos.x, pos.y) );
 	samp.a *= map.a;
