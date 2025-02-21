@@ -19,7 +19,6 @@ function timelineItem() constructor {
 	static removeSelf = function() {
 		if(parent == noone) return;
 		array_remove(parent.contents, self);
-		
 		return self;
 	}
 	
@@ -48,7 +47,7 @@ function timelineItemNode(node) : timelineItem() constructor {
 	self.node = node;
 	
 	static drawLabel = function(_item, _x, _y, _w, _msx, _msy, hover, focus, itHover, fdHover, nameType, alpha = 1) {
-		var _sel = node == PANEL_INSPECTOR.getInspecting();
+		var _sel = node.active_drawing;
 		
 		var lx = _x + _item.depth * ui(12) + ui(2);
 		var lw = _w - _item.depth * ui(12) - ui(4);
@@ -78,7 +77,11 @@ function timelineItemNode(node) : timelineItem() constructor {
 		
 		if(hover && point_in_rectangle(_msx, _msy, _x + ui(20), _y, _x + _w, _y + lh - 1)) {
 			draw_sprite_stretched_add(THEME.box_r2, 1, _x, _y, _w, lh, col, 0.3);
-			if(mouse_press(mb_left, focus)) graphFocusNode(node, false);
+			if(mouse_press(mb_left, focus)) {
+				if(key_mod_press(SHIFT)) array_toggle(PANEL_GRAPH.nodes_selecting, node);
+				else graphFocusNode(node, false);
+			}
+			
 			if(focus && DOUBLE_CLICK) show = !show;
 			res = 1;
 		}
@@ -179,20 +182,17 @@ function timelineItemGroup() : timelineItem() constructor {
 	name     = "";
 	renaming = false;
 	
-	tb_name  = new textBox(TEXTBOX_INPUT.text, function(val) { name = val; renaming = false; });
+	tb_name         = new textBox(TEXTBOX_INPUT.text, function(val) /*=>*/ { name = val; renaming = false; });
 	tb_name.padding = ui(4);
 	tb_name.hide    = 2;
 	
 	contents = [];
 	
-	static rename = function() { #region
+	static rename = function() {
 		renaming = true;
 		tb_name.setFocusHover(true, true);
-		run_in(1, function() { 
-			tb_name._current_text = name;
-			tb_name.activate(); 
-		});
-	} #endregion
+		run_in(1, function() /*=>*/ { tb_name._current_text = name; tb_name.activate(); });
+	}
 	
 	static drawLabel = function(_item, _x, _y, _w, _msx, _msy, hover, focus, itHover, fdHover, nameType, alpha = 1) {
 		var lx = _x + _item.depth * ui(12) + ui(2);

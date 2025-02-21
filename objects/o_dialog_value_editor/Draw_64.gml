@@ -12,8 +12,9 @@ if(editWidget == noone) exit;
 	var eW = dialog_w - ui(8);
 	
 	var param = new widgetParam(eX, eY, eW, TEXTBOX_HEIGHT, keyframe.value, junction.display_data);
-	var _h    = editWidget.drawParam(param);
+	if(is(editWidget, checkBox)) param.halign = fa_center;
 	
+	var _h = editWidget.drawParam(param);
 	dialog_h = _h + ui(8);
 	
 	if(wid_h != dialog_h) {

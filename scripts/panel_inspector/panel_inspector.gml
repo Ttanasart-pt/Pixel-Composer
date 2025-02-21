@@ -334,10 +334,10 @@ function Panel_Inspector() : PanelContent() constructor {
         menu_junc_color = MENU_ITEMS.inspector_group_set_color;
     #endregion
     
-    function setInspecting(inspecting, _lock = false, _focus = true) {
+    function setInspecting(_inspecting, _lock = false, _focus = true) {
         if(locked) return;
         
-        self.inspecting = inspecting;
+        inspecting = _inspecting;
         if(_lock) locked = true;
         focusable = _focus;
         
@@ -349,10 +349,7 @@ function Panel_Inspector() : PanelContent() constructor {
         picker_index = 0;
     }
     
-    function getInspecting() {
-        if(inspecting == noone) return noone;
-        return inspecting.active? inspecting : noone;
-    }
+    function getInspecting() { return inspecting != noone && inspecting.active? inspecting : noone; }
     
     function onFocusBegin() { if(!focusable) return; PANEL_INSPECTOR = self; }
     

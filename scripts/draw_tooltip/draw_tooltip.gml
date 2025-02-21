@@ -316,6 +316,69 @@ function draw_tooltip_curve(curve) {
 	
 }
 
+function draw_tooltip_path(_path) {
+	
+	var ww = ui(160);
+	var hh = ui(160);
+		
+	var pd = ui(8);
+	var mx = min(__mouse_tx + ui(16), __win_tw - (ww + pd * 2));
+	var my = min(__mouse_ty + ui(16), __win_th - (hh + pd * 2));
+		
+	draw_sprite_stretched(THEME.textbox, 3, mx, my, ww + pd * 2, hh + pd * 2);
+	draw_sprite_stretched(THEME.textbox, 0, mx, my, ww + pd * 2, hh + pd * 2);
+	
+	var x0 = mx + pd, x1 = x0 + ww;
+	var y0 = my + pd, y1 = y0 + hh;
+	var st = 0.1;
+		
+	draw_set_color(COLORS.widget_curve_line);
+	draw_set_alpha(0.15);
+	
+	for( var i = st; i < 1; i += st ) {
+		var _y0 = y0 + hh * (1 - i);
+		var _x0 = x0 + ww * i;
+		
+		draw_line(x0, _y0, x1, _y0);
+		draw_line(_x0, y0, _x0, y1);
+	}
+	
+	draw_set_alpha(1);
+	
+	draw_set_color(COLORS._main_accent);
+	var _bbox = _path.getBoundary();
+	var _x0 = _bbox.minx, _x1 = _bbox.maxx, _cx = (_x0 + _x1) / 2;
+	var _y0 = _bbox.miny, _y1 = _bbox.maxy, _cy = (_y0 + _y1) / 2;
+	var _ss = max(_bbox.width, _bbox.height);
+	_x0 = _cx - _ss / 2; _x1 = _cx + _ss / 2;
+	_y0 = _cy - _ss / 2; _y1 = _cy + _ss / 2;
+	
+	var _step = 32;
+	var ox, oy, nx, ny;
+	var p = new __vec2();
+	
+	for( var i = 0; i < _step; i++ ) {
+		p = _path.getPointRatio(i / _step);
+		nx = lerp(x0, x1, (p.x - _x0) / _ss);
+		ny = lerp(y0, y1, (p.y - _y0) / _ss);
+		
+		if(i) draw_line(ox, oy, nx, ny);
+		
+		ox = nx;
+		oy = ny;
+	}
+	
+	draw_set_color(COLORS.widget_curve_outline);
+	draw_rectangle(x0, y0, x1, y1, true);
+	
+	draw_set_text(f_p4, fa_left, fa_top);
+	draw_text_add(x0 + ui(2), y0, $"({_x0}, {_y0})");
+	
+	draw_set_text(f_p4, fa_right, fa_bottom);
+	draw_text_add(x1 - ui(2), y1, $"({_x1}, {_y1})");
+	
+}
+
 function tooltip_modifiers(title, keys) constructor {
 	self.title = title;
 	self.keys  = keys;

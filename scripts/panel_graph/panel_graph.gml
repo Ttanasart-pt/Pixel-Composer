@@ -1348,12 +1348,9 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                 } else if(mouse_press(mb_left, _focus)) {
                 	
                     if(key_mod_press(SHIFT)) {
-                        if(node_hovering) {
-                            if(array_exists(nodes_selecting, node_hovering))
-                                array_remove(nodes_selecting, node_hovering);
-                            else 
-                                array_push(nodes_selecting, node_hovering);
-                        } else
+                        if(node_hovering)
+                            array_toggle(nodes_selecting, node_hovering);
+                        else
                             nodes_selecting = [];
                             
                     } else if(value_focus || node_hovering == noone) {

@@ -125,6 +125,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		badgePreview = 0;
 		badgeInspect = 0;
 		
+		active_drawing     = false;
 		active_draw_index  = -1;
 		active_draw_anchor = false;
 		
@@ -2172,6 +2173,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			BLEND_NORMAL
 		}
 		
+		active_drawing = active_draw_index > -1;
 		if(active_draw_index > -1) {
 			var cc = COLORS._main_accent;
 			switch(active_draw_index) {
@@ -2180,7 +2182,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			}
 			
 			draw_sprite_stretched_ext(bg_spr, 1, xx, yy, round(w * _s), round(h * _s), cc, 1);
-			
 			if(active_draw_anchor) draw_sprite_stretched_add(bg_spr, 1, xx, yy, round(w * _s), round(h * _s), COLORS._main_accent, 0.5);
 			
 			active_draw_anchor = false;
@@ -2189,7 +2190,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		if(draw_droppable) {
 			draw_sprite_stretched_ext(THEME.color_picker_box, 0, xx - 2 * _s, yy - 2 * _s, w * _s + 4 * _s, h * _s + 4 * _s, COLORS._main_value_positive, 1);
-			
 			draw_droppable = false;
 		}
 		
