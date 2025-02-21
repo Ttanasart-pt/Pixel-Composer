@@ -126,6 +126,8 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	newInput(55, nodeValue_PathNode("Spawn Path", self, noone ));
 	
+	newInput(56, nodeValue_Surface("Sample Surface", self, noone));
+	
 	for (var i = 2, n = array_length(inputs); i < n; i++)
 		inputs[i].rejectArray();
 	input_len = array_length(inputs);
@@ -171,7 +173,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		["Rotation",	true],	   15,  8,  9, 
 		["Scale",		true],	   10, 17, 11, 
 		["Wiggles",		true],	   20, 41, 42, 43, 
-		["Color",		true],	   12, 28, 50, 13, 14, 
+		["Color",		true],	   12, 28, 50, 13, 14, 56, 
 		["Render",		true],	   21, 
 	];
 	
@@ -206,6 +208,8 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	custom_parameter_curves_view = {};
 	custom_parameter_map         = {};
 	attributes.parameter_curves  = {};
+	
+	surfSamp = new Surface_sampler();
 	
 	static spawn = function(_time = CURRENT_FRAME, _pos = -1) {
 		var _inSurf     	= getInputData( 0);
@@ -278,10 +282,12 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 						_index = irandom(array_length(_inSurf) - 1);
 						_spr = _inSurf[_index];						
 						break;
+						
 					case 1 : 
 						_index = safe_mod(spawn_index, array_length(_inSurf));
 						_spr = _inSurf[_index];
 						break;
+						
 					case 2 : 
 					case 3 : 
 						_spr = _inSurf;
@@ -352,6 +358,11 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			
 			var _clr_ind = array_safe_get(_color_idx, safe_mod(spawn_index, _color_idx_len), cola(c_white));
 			    _bld = colorMultiply(_bld, _clr_ind);
+			
+			if(surfSamp.active) {
+				var _samC = surfSamp.getPixel(xx, yy);
+					_bld  = colorMultiply(_bld, _samC);
+			}
 			
 			part.seed = irandom_range(100000, 999999);
 			part.create(_spr, xx, yy, _lif);
@@ -586,6 +597,10 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	static onDrawOverlay = -1;
 	
 	static update = function(frame = CURRENT_FRAME) {
+		
+		var sampSrf = getInputData(56);
+		surfSamp.setSurface(sampSrf);
+		
 		var _surf = getInputData(0);
 		if(is(_surf, dynaDraw)) {
 			custom_parameter_names = _surf.parameters;

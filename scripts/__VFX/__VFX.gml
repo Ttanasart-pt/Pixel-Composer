@@ -9,6 +9,7 @@ enum PARTICLE_BLEND_MODE {
 	alpha,
 	additive,
 	maximum,
+	minimum,
 }
 
 enum PARTICLE_RENDER_TYPE {	

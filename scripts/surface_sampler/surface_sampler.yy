@@ -1,0 +1,14 @@
+{
+  "$GMScript":"v1",
+  "%Name":"surface_sampler",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"surface_sampler",
+  "parent":{
+    "name":"surface",
+    "path":"folders/functions/surface.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+  "tags":[],
+}

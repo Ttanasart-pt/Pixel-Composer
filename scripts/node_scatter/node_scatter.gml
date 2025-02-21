@@ -118,6 +118,10 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(40, nodeValue_Vec2("Anchor", self, [ 0.5, 0.5 ]));
 		inputs[40].setDisplay(VALUE_DISPLAY.vector, { side_button : new buttonAnchor(inputs[40]) });
 	
+	newInput(41, nodeValue_Surface("Sample Surface", self, noone));
+	
+	newInput(42, nodeValue_Vec2_Range("Sample Wiggle", self, [ 0, 0, 0, 0 ]));
+	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
@@ -127,13 +131,14 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		.rejectArrayProcess();
 	
 	input_display_list = [ 10, 
-		["Surfaces", 	 true], 0, 1, 15, 24, 25, 26, 27, 
-		["Scatter",		false], 6, 5, 13, 14, 17, 9, 31, 2, 30, 35, 
-		["Path",		false], 19, 38, 20, 21, 22, 
-		["Position",	false], 40, 33, 36, 37, 39, 
-		["Rotation",	false], 7, 4, 32, 
-		["Scale",	    false], 3, 8, 34, 
-		["Render",		false], 18, 11, 28, 12, 16, 23, 
+		["Surfaces",  true], 0, 1, 15, 24, 25, 26, 27, 
+		["Scatter",  false], 6, 5, 13, 14, 17, 9, 31, 2, 30, 35, 
+		["Path",     false], 19, 38, 20, 21, 22, 
+		["Position", false], 40, 33, 36, 37, 39, 
+		["Rotation", false], 7, 4, 32, 
+		["Scale",    false], 3, 8, 34, 
+		["Color",    false], 11, 28, 12, 16, 41, 42, 
+		["Render",   false], 18, 23, 
 	];
 	
 	attribute_surface_depth();
@@ -147,6 +152,8 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	scatter_mapa = 0;
 	scatter_maps = 0;
 	scatter_mapp = [];
+	
+	surfSamp = new Surface_sampler();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		PROCESSOR_OVERLAY_CHECK
@@ -284,6 +291,9 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var pthSpac = _data[38];
 		var shfRad  = _data[39];
 		var anchor  = _data[40];
+		
+		var sampSrf = _data[41]; surfSamp.setSurface(sampSrf);
+		var sampWig = _data[42];
 		
 		var _in_w, _in_h;
 		
@@ -561,9 +571,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 						var _animInd     = ind + CURRENT_FRAME * _arrAnim_spd;
 						
 						switch(arrAnimEnd) {
-							case 0 : 
-								ind = safe_mod(_animInd, _arrLen); 
-								break;
+							case 0 : ind = safe_mod(_animInd, _arrLen); break;
 								
 							case 1 :
 								var pp = safe_mod(_animInd, _arrLen * 2 - 1);
@@ -600,14 +608,17 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				if(vCol && _v != noone)
 					grSamp *= _v;
 				
-				var clr  = _clrUni? _clrSin  : evaluate_gradient_map(grSamp, color, clr_map, clr_rng, inputs[11], true);
+				var clr = _clrUni? _clrSin  : evaluate_gradient_map(grSamp, color, clr_map, clr_rng, inputs[11], true);
 				var alp  = _alpUni? alpha[0] : random_range_seed(alpha[0], alpha[1], _sed++);
 				var _atl = _sct_len >= _datLen? noone : scatter_data[_sct_len];
 				
-				if(posExt) { 
-					_x = round(_x); 
-					_y = round(_y); 
+				if(surfSamp.active) {
+					var _samC = surfSamp.getPixel(_x + random_range_seed(sampWig[0], sampWig[1], _sed++), _y + random_range_seed(sampWig[2], sampWig[3], _sed++));
+					clr =  colorMultiply(clr, _samC);
+					alp *= color_get_alpha(_samC);
 				}
+				
+				if(posExt) { _x = round(_x); _y = round(_y); }
 				
 				if(!is(_atl, SurfaceAtlasFast))  _atl = new SurfaceAtlasFast(surf, _x, _y, _r, _scx, _scy, clr, alp);
 				else						     _atl.set(surf, _x, _y, _r, _scx, _scy, clr, alp);

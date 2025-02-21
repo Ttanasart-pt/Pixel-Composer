@@ -16,6 +16,7 @@
     function panel_animation_copy()                    { CALL("animation_copy");                    PANEL_ANIMATION.doCopy();                                                                            }
     function panel_animation_paste()                   { CALL("animation_paste");     if(PANEL_ANIMATION.value_focusing != noone) PANEL_ANIMATION.doPaste(PANEL_ANIMATION.value_focusing.prop);          }
     function panel_animation_show_nodes()              { CALL("animation_toggle_nodes");            PANEL_ANIMATION.show_nodes = !PANEL_ANIMATION.show_nodes;                                            }
+    function panel_animation_quantize()                { CALL("animation_quantize");                PANEL_ANIMATION.doQuantize();                                                                        }
     
     function panel_animation_edit_keyframe_value()     { CALL("animation_edit_keyframe_value");     PANEL_ANIMATION.edit_keyframe_value();   }
     function panel_animation_edit_keyframe_lock_y()    { CALL("animation_edit_lock_keyframe_y");    PANEL_ANIMATION.edit_keyframe_lock_y();  }
@@ -53,6 +54,7 @@
         registerFunction("Animation", "Paste",              "V",        MOD_KEY.ctrl,                 panel_animation_paste                 ).setMenu("animation_paste",               THEME.paste)
         registerFunction("Animation", "Collapse Toggle",    "C",        MOD_KEY.none,                 panel_animation_collapseToggle        ).setMenu("animation_collapse_toggle",     )
         registerFunction("Animation", "Toggle Nodes",       "H",        MOD_KEY.none,                 panel_animation_show_nodes            ).setMenu("animation_toggle_nodes",        )
+        registerFunction("Animation", "Quantize",           "Q",        MOD_KEY.none,                 panel_animation_quantize              ).setMenu("animation_quantize",            )
         
         registerFunction("Animation", "Settings",           "S",        MOD_KEY.ctrl | MOD_KEY.shift, panel_animation_settings              ).setMenu("animation_settings", THEME.animation_setting )
         registerFunction("Animation", "Scaler",             "",         MOD_KEY.none,                 panel_animation_scale                 ).setMenu("animation_scaler",   THEME.animation_timing  )
@@ -210,8 +212,13 @@ function Panel_Animation() : PanelContent() constructor {
         keyframe_drag_my       = 0;
         keyframe_drag_sv       = 0;
         keyframe_drag_st       = 0;
-        keyframe_selecting     = [];
-    	
+        
+         keyframe_selecting     = [];
+         keyframe_selecting_f  = noone;
+         keyframe_selecting_l  = noone;
+    	_keyframe_selecting_f  = noone;
+        _keyframe_selecting_l  = noone;
+        
         keyframe_boxable       = true;
         keyframe_boxing        = false;
         keyframe_box_sx        = -1;
@@ -1427,12 +1434,18 @@ function Panel_Animation() : PanelContent() constructor {
             }
             
             var hc = COLORS._main_accent;
+            var sca_back = noone;
             
             if(pHOVER && point_in_circle(msx, msy, t, prop_y, ui(8))) {
                 cc = COLORS.panel_animation_keyframe_selected;
                 key_hover = keyframe;
                 if(!instance_exists(o_dialog_menubox))
                     TOOLTIP = [ keyframe.value, animator.prop.type ];
+                
+                if(_scaling) {
+                	hc = CDEF.cyan;
+                	sca_back = keyframe.time == keyframe_selecting_f.time;
+                }
                 
                 if(pFOCUS && !key_mod_press(SHIFT)) {
                 	
@@ -1453,11 +1466,12 @@ function Panel_Animation() : PanelContent() constructor {
                             keyframe_drag_mx   = mx;
                             keyframe_drag_my   = my;
                             keyframe_drag_st   = keyframe.time;
+                            
+                            keyframe_drag_sv   = sca_back? keyframe_selecting_l : keyframe_selecting_f;
                         }
                     }
                 }
                 
-                if(_scaling) hc = CDEF.cyan;
             }
             
             if(stagger_mode == 1 && _select)
@@ -1467,8 +1481,19 @@ function Panel_Animation() : PanelContent() constructor {
             draw_sprite_ui_uniform(THEME.timeline_keyframe, ind, t, prop_y, 1, cc);
             
             if(_select) {
-            	if(keyframe_drag_sv == noone) keyframe_drag_sv = keyframe;
+            	if(_keyframe_selecting_f == noone) _keyframe_selecting_f = keyframe;
+            	else _keyframe_selecting_f = keyframe.time < _keyframe_selecting_f.time? keyframe : _keyframe_selecting_f;
+            	
+            	if(_keyframe_selecting_l == noone) _keyframe_selecting_l = keyframe;
+            	else _keyframe_selecting_l = keyframe.time > _keyframe_selecting_l.time? keyframe : _keyframe_selecting_l;
+            	
+                if(_scaling && sca_back != noone) {
+                	if(sca_back) draw_sprite_ui_uniform(THEME.arrow, 2, t - ui(12), prop_y, 1, CDEF.cyan, .5);
+                	else         draw_sprite_ui_uniform(THEME.arrow, 0, t + ui(12), prop_y, 1, CDEF.cyan, .5);
+                }
+                
                 draw_sprite_ui_uniform(THEME.timeline_keyframe_selecting, ind, t, prop_y, 1, hc);
+                
             }
             
             if(keyframe_boxing) {
@@ -2096,7 +2121,9 @@ function Panel_Animation() : PanelContent() constructor {
         }
         
         #region ======= draw keys =======
-        	keyframe_drag_sv = noone;
+        	_keyframe_selecting_f = noone;
+        	_keyframe_selecting_l = noone;
+        
             for( var i = 0, n = array_length(timeline_contents); i < n; i++ ) {
                 var _cont = timeline_contents[i];
                 if(_cont.type != "node") continue;
@@ -2108,6 +2135,9 @@ function Panel_Animation() : PanelContent() constructor {
                 }
             }
             
+            keyframe_selecting_f = _keyframe_selecting_f;
+        	keyframe_selecting_l = _keyframe_selecting_l;
+        	
         #endregion
         
         if(pHOVER && point_in_rectangle(msx, msy, 0, ui(18), dope_sheet_w, dope_sheet_h)) { // selection & stagger

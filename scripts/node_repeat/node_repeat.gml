@@ -40,8 +40,8 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 												             new scrollItem("Grid",     s_node_repeat_axis, 1), 
 												             new scrollItem("Circular", s_node_repeat_axis, 2), ]));
 	
-	newInput(4, nodeValue_Vec2("Shift position", self, [ DEF_SURF_W / 2, 0 ]))
-		.setUnitRef(function() /*=>*/ {return getDimension()});
+	newInput(4, nodeValue_Vec2("Shift position", self, [ .5, 0 ]))
+		.setUnitRef(function() /*=>*/ {return getDimension()}, VALUE_UNIT.reference);
 	
 	newInput(5, nodeValue_Rotation_Range("Repeat rotation", self, [ 0, 0 ]));
 	
@@ -52,7 +52,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(8, nodeValue_Float("Radius", self, 1));
 		
 	newInput(9, nodeValue_Vec2("Start position", self, [ 0, 0 ]))
-		.setUnitRef(function(index) { return getInputData(1); });
+		.setUnitRef(function() /*=>*/ {return getInputData(1)}, VALUE_UNIT.reference);
 		
 	newInput(10, nodeValue_Curve("Scale over copy", self, CURVE_DEF_11 ));
 	
@@ -76,8 +76,8 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	newInput(18, nodeValue_Int("Column", self, 4));
 	
-	newInput(19, nodeValue_Vec2("Column shift", self, [0, DEF_SURF_H / 2]))
-		.setUnitRef(function() /*=>*/ {return getDimension()});
+	newInput(19, nodeValue_Vec2("Column shift", self, [0, .5]))
+		.setUnitRef(function() /*=>*/ {return getDimension()}, VALUE_UNIT.reference);
 	
 	/* deprecated */ newInput(20, nodeValue_Float("Animator midpoint", self, 0.5))                                          
 		               .setDisplay(VALUE_DISPLAY.slider, { range: [-1, 2, 0.01] });
@@ -127,6 +127,8 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(36, nodeValue_Vec2("Relative dimension", self, [ 1, 1 ]));
 	
 	newInput(37, nodeValue_Padding("Padding", self, [ 0, 0, 0, 0 ]));
+	
+	newInput(38, nodeValue_Curve("Shift per copy", self, CURVE_DEF_11 ));
 	
 	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
@@ -247,7 +249,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		["Surfaces",	 true],	0, 35, 36, 37, 1, 16, 17,
 		["Pattern",		false],	3, 9, 32, 2, 18, 7, 8, 
 		["Path",		 true],	11, 12, 13, 
-		["Position",	false],	4, 26, 19, 
+		["Position",	false],	4, 26, 19, 38, 
 		["Rotation",	false],	33, 5, 
 		["Scale",		false],	6, 10, 
 		["Render",		false],	34, 14, 30, 
@@ -313,6 +315,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		inputs[19].setVisible( _pat == 1);
 		inputs[26].setVisible( _pat == 0);
 		inputs[32].setVisible( _pat == 2);
+		inputs[38].setVisible( _pat == 0);
 		
 		inputs[14].mappableStep();
 	}
@@ -333,6 +336,8 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _srot = _data[32];
 		
 		var _rpos = _data[ 4];
+		var _cpos = _data[38];
+		
 		var _rsta = _data[26];
 		var _rrot = _data[ 5];
 		var _rots = _data[33];
@@ -383,7 +388,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			inputs[_ind + 14].setVisible(_selc == 2, _selc == 2);
 		}
 		
-		var _surf, runx, runy, posx, posy, scax, scay, rot;
+		var _surf, posx, posy, scax, scay, rot;
 		var _dim, _sdim = [ 1, 1 ];
 		var _surf = _iSrf;
 		
@@ -404,18 +409,20 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 		var atlases = array_create(_amo, 0);
 		var atlas_i = 0;
-		runx = 0;
-		runy = 0;
+		var runx = 0;
+		var runy = 0;
+		
+		var _rposx = 0;
+		var _rposy = 0;
 		
 		for( var i = 0; i < _amo; i++ ) {
 			posx = runx;
 			posy = runy;
 			
+			var _prg = i / (_amo - 1);
+			
 			if(_pat == 0) {
-				if(_path == noone || !variable_struct_exists(_path, "getPointRatio")) {
-					posx += _spos[0] + _rpos[0] * i;
-					posy += _spos[1] + _rpos[1] * i;
-				} else {
+				if(struct_has(_path, "getPointRatio")) {
 					var rat = _prsh + _prng[0] + (_prng[1] - _prng[0]) * i / _amo;
 					if(_prng[1] - _prng[0] == 0) break;
 					rat = abs(frac(rat));
@@ -423,7 +430,16 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 					var _p = _path.getPointRatio(rat);
 					posx = _p.x;
 					posy = _p.y;
+					
+				} else {
+					posx += _spos[0] + _rposx;
+					posy += _spos[1] + _rposy;
+					
+					var _rpos_sca = eval_curve_x(_cpos, _prg);
+					_rposx += _rpos[0] * _rpos_sca;
+					_rposy += _rpos[1] * _rpos_sca;
 				}
+				
 			} else if(_pat == 1) {
 				var row = floor(i / _col);
 				var col = safe_mod(i, _col);
@@ -437,9 +453,9 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				posy = _spos[1] + lengthdir_y(_arad, aa);
 			}
 			
-			scax = eval_curve_x(_msca, i / (_amo - 1)) * _rsca;
+			scax = eval_curve_x(_msca, _prg) * _rsca;
 			scay = scax;
-			rot = _rots + lerp(_rrot[0], _rrot[1], i / _amo);
+			rot  = _rots + lerp(_rrot[0], _rrot[1], i / _amo);
 			
 			var _surf = _iSrf;
 			if(is_array(_iSrf)) {

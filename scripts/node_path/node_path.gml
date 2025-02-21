@@ -1147,10 +1147,18 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		// Surface generate
 		
-		var pad    = min(8, abs(boundary.maxx - boundary.minx) * 0.1, abs(boundary.maxy - boundary.miny) * 0.1);
-		var minx   = boundary.minx - pad, miny = boundary.miny - pad;
-		var maxx   = boundary.maxx + pad, maxy = boundary.maxy + pad;
-		var rngx   = maxx - minx,   rngy = maxy - miny;
+		var pad  = min(8, abs(boundary.maxx - boundary.minx) * 0.1, abs(boundary.maxy - boundary.miny) * 0.1);
+		var minx = boundary.minx - pad, maxx = boundary.maxx + pad;
+		var cx   = (minx + maxx) / 2;
+		
+		var miny = boundary.miny - pad, maxy = boundary.maxy + pad;
+		var cy   = (miny + maxy) / 2;
+		
+		var rng  = max(maxx - minx, maxy - miny);
+		
+		var x0 = cx - rng / 2, x1 = cx + rng / 2;
+		var y0 = cy - rng / 2, y1 = cy + rng / 2;
+		
 		var prev_s = 128;
 		
 		_path_preview_surface = surface_verify(_path_preview_surface, prev_s, prev_s);
@@ -1163,8 +1171,8 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				var segment = segments[i];
 				
 				for (var j = 0, m = array_length(segment); j < m; j += 2) {
-					nx = (segment[j + 0] - minx) / rngx * prev_s;
-					ny = (segment[j + 1] - miny) / rngy * prev_s;
+					nx = (segment[j + 0] - x0) / rng * prev_s;
+					ny = (segment[j + 1] - y0) / rng * prev_s;
 					
 					if(j) draw_line_round(ox, oy, nx, ny, 4);
 					
@@ -1176,7 +1184,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			draw_set_color(COLORS._main_accent);
 			for (var i = 0, n = array_length(anchors); i < n; i++) {
 				var _a0 = anchors[i];
-				draw_circle((_a0[0] - minx) / rngx * prev_s, (_a0[1] - miny) / rngy * prev_s, 8, false);
+				draw_circle((_a0[0] - x0) / rng * prev_s, (_a0[1] - y0) / rng * prev_s, 8, false);
 			}
 		surface_reset_target();
 		

@@ -1746,6 +1746,7 @@
     {"name":"sh_noise_cristal","order":43,"path":"shaders/sh_noise_cristal/sh_noise_cristal.yy",},
     {"name":"sh_noise_fbm","order":7,"path":"shaders/sh_noise_fbm/sh_noise_fbm.yy",},
     {"name":"sh_noise_flow","order":41,"path":"shaders/sh_noise_flow/sh_noise_flow.yy",},
+    {"name":"surface_sampler","order":10,"path":"scripts/surface_sampler/surface_sampler.yy",},
     {"name":"sh_noise_fold","order":33,"path":"shaders/sh_noise_fold/sh_noise_fold.yy",},
     {"name":"sh_noise_gabor","order":27,"path":"shaders/sh_noise_gabor/sh_noise_gabor.yy",},
     {"name":"sh_noise_grid_hex","order":11,"path":"shaders/sh_noise_grid_hex/sh_noise_grid_hex.yy",},
