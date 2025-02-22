@@ -683,20 +683,17 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 				_val = json_try_parse(value);
 			
 			} else if(prop.display_type == VALUE_DISPLAY.matrix) {
-				var mat = new Matrix();
-				_val = mat.deserialize(value);
+				_val = new Matrix().deserialize(value);
 			
 			} else if(_typ == VALUE_TYPE.path && prop.display_type == VALUE_DISPLAY.path_array) {
 				for(var j = 0; j < array_length(value); j++)
 					_val[j] = value[j];
 			
 			} else if(_typ == VALUE_TYPE.gradient) {
-				var grad = new gradientObject();
-				_val = grad.deserialize(value);
+				_val = new gradientObject().deserialize(value);
 			
 			} else if(_typ == VALUE_TYPE.d3Material) {
-				var mat = new __d3dMaterial();
-				_val = mat.deserialize(value);
+				_val = new __d3dMaterial().deserialize(value);
 			
 			} else if(_typ == VALUE_TYPE.color) {
 				if(is_array(_val)) {
@@ -721,9 +718,13 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 						_val[j] = processValue(value);
 				}
 				
-				if(prop.type == VALUE_TYPE.curve && array_length(value) % 6 == 0) {
-					array_insert(_val, 0, 0);
-					array_insert(_val, 1, 1);
+				if(prop.type == VALUE_TYPE.curve && LOADING_VERSION < 1_18_09_1) {
+					if(array_length(value) % 6 == 0)
+						array_insert(_val, 0, /**/ 0, 1, 0, 0, 0, 0);
+					else {
+						var _insert = CURVE_PADD - array_length(value) % 6;
+						repeat(_insert) array_insert(_val, 2, /**/ 0);
+					}
 				}
 			} 
 			

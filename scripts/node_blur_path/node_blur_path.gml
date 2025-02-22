@@ -102,8 +102,7 @@ function Node_Blur_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			shader_set_f("points_y",    _points_y);
 			
 			shader_set_f("intensity", _intn);
-			shader_set_f("i_curve",   _curv);
-			shader_set_i("i_amount",  array_length(_curv));
+			shader_set_curve("i",     _curv);
 			
 			draw_surface_safe(_surf);
 		surface_reset_shader();

@@ -6,7 +6,7 @@ function curveBox(_onModify) : widget() constructor {
 	anc_mirror = [];
 	linear_mode = false;
 	
-	curve_surface   = surface_create(1, 1);
+	curve_surface   = noone;
 	node_dragging   = -1;
 	node_drag_typ   = -1;
 	node_drag_break = false;
@@ -90,12 +90,8 @@ function curveBox(_onModify) : widget() constructor {
 		
 		var _h = h - ui(4);
 		
-		var _amo = array_length(_data);
-		    _shf = _amo % 6;
-		var points = (_amo - _shf) / 6;
-		
-		var _shift = 0;
-		var _scale = 1;
+		var _amo   = array_length(_data);
+		var points = (_amo - CURVE_PADD) / 6;
 		
 		var zoom_size = ui(12);
 		var zoom_padd = zoom_size + ui(8);
@@ -103,14 +99,16 @@ function curveBox(_onModify) : widget() constructor {
 		var tbh = line_get_height(font) + ui(4);
 		
 		cw = _w - zoom_padd;
-		ch = _h - zoom_padd - (tbh + ui(4)) * bool(_shf);
+		ch = _h - zoom_padd - (tbh + ui(4));
 		
 		hovering  = false;
 		curr_data = _data;
-			 if(_shf == 1) { _shift = _data[0]; } 
-		else if(_shf == 2) { _shift = _data[0]; _scale = _data[1]; }
 		
-		linear_mode = curr_data[2 + 0] == 0 && curr_data[2 + 4] == 0;
+		var _shift = _data[0]; 
+		var _scale = _data[1];
+		var _type  = _data[2];
+		
+		linear_mode = curr_data[CURVE_PADD + 0] == 0 && curr_data[CURVE_PADD + 4] == 0;
 		
 		display_pos_x = lerp(minx, maxx,     (_m[0] - _x) / cw);
 		display_pos_y = lerp(miny, maxy, 1 - (_m[1] - _y) / ch);
@@ -130,7 +128,7 @@ function curveBox(_onModify) : widget() constructor {
 				var _my = 1 - (_m[1] - _y) / ch;
 					_my = clamp(_my * (maxy - miny) + miny, 0, 1);
 					
-				var node_point = (node_dragging - _shf - 2) / 6;
+				var node_point = (node_dragging - CURVE_PADD - 2) / 6;
 				if(node_point > 0 && node_point < points - 1) {
 					
 					if(key_mod_press(CTRL) || grid_snap)
@@ -207,7 +205,7 @@ function curveBox(_onModify) : widget() constructor {
 		
 		var node_hovering  = -1;
 		var node_hover_typ = -1;
-		var point_insert   = 1;
+		var point_insert   =  1;
 		var _x1 = 0;
 		
 		var msx = _m[0] - _x;
@@ -250,13 +248,11 @@ function curveBox(_onModify) : widget() constructor {
 					draw_line(_px, 0, _px, ch);
 				}
 				
-				if(_shf) {
-					draw_set_color(merge_color(COLORS._main_icon, COLORS._main_icon_dark, 0.5));
-					draw_curve(0, 0, cw, ch, _data, minx, maxx, miny, maxy, _shift, _scale);
-				}
+				draw_set_color(merge_color(COLORS._main_icon, COLORS._main_icon_dark, 0.5));
+				draw_curve(0, 0, cw, ch, _data, minx, maxx, miny, maxy, _shift, _scale);
 				
 				for( var i = 0; i < points; i++ ) {
-					var ind = _shf + i * 6;
+					var ind = CURVE_PADD + i * 6;
 					var _x0 = _data[ind + 2];
 					var _y0 = _data[ind + 3];
 					
@@ -281,36 +277,38 @@ function curveBox(_onModify) : widget() constructor {
 					ay0 = get_y(ay0);
 				
 					draw_set_color(COLORS.widget_curve_line);
-					if(i > 0) { //draw pre line
-						draw_line(bx0, by0, _x0, _y0);
-					
-						draw_circle_prec(bx0, by0, 3, false);
-						if(hover && point_in_circle(msx, msy, bx0, by0, 10)) {
-							draw_circle_prec(bx0, by0, 5, false);
-							node_hovering = ind + 2;
-							node_hover_typ = -1;
-							
-							display_pos_x = _data[ind + 0];
-							display_pos_y = _data[ind + 1];
-							display_sel   = 2;
+					if(_type == 0) {
+						if(i > 0) { //draw pre line
+							draw_line(bx0, by0, _x0, _y0);
+						
+							draw_circle_prec(bx0, by0, 3, false);
+							if(hover && point_in_circle(msx, msy, bx0, by0, 10)) {
+								draw_circle_prec(bx0, by0, 5, false);
+								node_hovering = ind + 2;
+								node_hover_typ = -1;
+								
+								display_pos_x = _data[ind + 0];
+								display_pos_y = _data[ind + 1];
+								display_sel   = 2;
+							}
 						}
-					}
-			
-					if(i < points - 1) { //draw post line
-						draw_line(ax0, ay0, _x0, _y0);
 				
-						draw_circle_prec(ax0, ay0, 3, false);
-						if(hover && point_in_circle(msx, msy, ax0, ay0, 10)) {
-							draw_circle_prec(ax0, ay0, 5, false);
-							node_hovering = ind + 2;
-							node_hover_typ = 1;
-							
-							display_pos_x = _data[ind + 4];
-							display_pos_y = _data[ind + 5];
-							display_sel   = 2;
+						if(i < points - 1) { //draw post line
+							draw_line(ax0, ay0, _x0, _y0);
+					
+							draw_circle_prec(ax0, ay0, 3, false);
+							if(hover && point_in_circle(msx, msy, ax0, ay0, 10)) {
+								draw_circle_prec(ax0, ay0, 5, false);
+								node_hovering = ind + 2;
+								node_hover_typ = 1;
+								
+								display_pos_x = _data[ind + 4];
+								display_pos_y = _data[ind + 5];
+								display_sel   = 2;
+							}
 						}
 					}
-			
+					
 					draw_set_color(COLORS._main_accent);
 					draw_circle_prec(_x0, _y0, 3, false);
 					if(hover && point_in_circle(msx, msy, _x0, _y0, 10)) {
@@ -386,7 +384,7 @@ function curveBox(_onModify) : widget() constructor {
 			
 			var bxW = _w - zoom_padd;
 			var bx  = _x;
-			var by  = _y + _h - bs - (tbh + ui(4)) * bool(_shf);
+			var by  = _y + _h - bs - (tbh + ui(4));
 			
 			var zx0 = bx + bs / 2 + (bxW - bs) * (minx - zminx) / (zmaxx - zminx);
 			var zx1 = bx + bs / 2 + (bxW - bs) * (maxx - zminx) / (zmaxx - zminx);
@@ -465,7 +463,7 @@ function curveBox(_onModify) : widget() constructor {
 			////- Height drag
 			
 			var _bhx = _x + _w - bs;
-			var _bhy = _y + _h - bs - (tbh + ui(4)) * bool(_shf);
+			var _bhy = _y + _h - bs - (tbh + ui(4));
 			var _hov = false;
 			
 			if(point_in_rectangle(_m[0], _m[1], _bhx, _bhy, _bhx + bs, _bhy + bs)) {
@@ -496,7 +494,7 @@ function curveBox(_onModify) : widget() constructor {
 			
 			if(mouse_press(mb_left, active)) {
 				if(node_hovering == -1) {
-					var _ind = _shf + point_insert * 6;
+					var _ind = CURVE_PADD + point_insert * 6;
 					var _px =     (_m[0] - _x) / cw;
 					var _py = 1 - (_m[1] - _y) / ch;
 					
@@ -546,18 +544,39 @@ function curveBox(_onModify) : widget() constructor {
 						]),
 						-1,
 						
-						menuItem(__txt("Linear Curve"), function() /*=>*/ { 
-							var _lin = linear_mode;
-							
-							for( var i = 2, n = array_length(curr_data); i < n; i += 6 ) {
-								curr_data[@ i + 0] = _lin? -1/3 : 0;
-								curr_data[@ i + 1] = _lin?    0 : 0;
-								curr_data[@ i + 4] = _lin?  1/3 : 0;
-								curr_data[@ i + 5] = _lin?    0 : 0;
-							}
-							
-							onModify(curr_data);
-						}, noone, noone, function() /*=>*/ {return linear_mode}),
+						menuItemGroup(__txt("Modes"), [ 
+							[ [THEME.curve_type, 0], function() /*=>*/ {
+								var _dat = variable_clone(curr_data);
+								
+								_dat[2] = 0;
+								for( var i = CURVE_PADD, n = array_length(_dat); i < n; i += 6 ) {
+									_dat[i + 0] = -1/3;
+									_dat[i + 1] =    0;
+									_dat[i + 4] =  1/3;
+									_dat[i + 5] =    0;
+								}
+								onModify(_dat);
+							} ],
+							[ [THEME.curve_type, 1], function() /*=>*/ {
+								var _dat = variable_clone(curr_data);
+								
+							    _dat[2] = 0;
+								for( var i = CURVE_PADD, n = array_length(_dat); i < n; i += 6 ) {
+									_dat[i + 0] = 0;
+									_dat[i + 1] = 0;
+									_dat[i + 4] = 0;
+									_dat[i + 5] = 0;
+								}
+								onModify(_dat);
+							} ],
+							[ [THEME.curve_type, 2], function() /*=>*/ {
+								var _dat = variable_clone(curr_data);
+								
+								_dat[2] = 1;
+								onModify(_dat);
+							} ],
+						]),
+						-1,
 						
 						menuItem(__txt("Reset View"),   function() /*=>*/ { minx = 0; maxx = 1; miny = 0; maxy = 1; } ),
 						menuItem(__txt("Grid"),         function() /*=>*/ { grid_show = !grid_show; }, noone, noone, function() /*=>*/ {return grid_show} ),
@@ -576,15 +595,16 @@ function curveBox(_onModify) : widget() constructor {
 					select_type = node_hover_typ;
 					select_data = _data;
 					
-					var _pnt  = (selecting - _shf - 2) / 6;
+					var _pnt  = (selecting - CURVE_PADD - 2) / 6;
 					var _menu = [];
 					
-					array_push(_menu, menuItem(__txt("Reset Controls"), function() /*=>*/ { 
+					array_push(_menu, menuItem(__txt("Toggle Controls"), function() /*=>*/ { 
 						var _ind = selecting - 2;
+						var _lin = select_data[_ind + 0] == 0 && select_data[_ind + 4] == 0;
 						
-						select_data[@ _ind + 0] = -1/3;
+						select_data[@ _ind + 0] = _lin? -1/3 : 0;
 						select_data[@ _ind + 1] = 0;
-						select_data[@ _ind + 4] = 1/3;
+						select_data[@ _ind + 4] = _lin?  1/3 : 0;
 						select_data[@ _ind + 5] = 0;
 						onModify(select_data);
 					}));
@@ -615,22 +635,20 @@ function curveBox(_onModify) : widget() constructor {
 			show_coord = false;
 		}
 		
-		if(_shf) {
-			var tby = _y + h - tbh;
-			var tbw = _w / 2;
+		var tby = _y + h - tbh;
+		var tbw = _w / 2;
+		
+		tb_shift.setFocusHover(active, hover);
+		tb_scale.setFocusHover(active, hover);
+		
+		tb_shift.hide = true;
+		tb_scale.hide = true;
 			
-			tb_shift.setFocusHover(active, hover);
-			tb_scale.setFocusHover(active, hover);
-			
-			tb_shift.hide = true;
-			tb_scale.hide = true;
-				
-			draw_sprite_stretched_ext(THEME.textbox, 3, _x, tby, _w, tbh, c_white, 1);
-			draw_sprite_stretched_ext(THEME.textbox, 0, _x, tby, _w, tbh, c_white, 0.5 + 0.5 * interactable);	
-			
-			tb_shift.draw(_x,       tby, tbw, tbh, _data[0], _m);
-			tb_scale.draw(_x + tbw, tby, tbw, tbh, _data[1], _m);
-		}
+		draw_sprite_stretched_ext(THEME.textbox, 3, _x, tby, _w, tbh, c_white, 1);
+		draw_sprite_stretched_ext(THEME.textbox, 0, _x, tby, _w, tbh, c_white, 0.5 + 0.5 * interactable);	
+		
+		tb_shift.draw(_x,       tby, tbw, tbh, _data[0], _m);
+		tb_scale.draw(_x + tbw, tby, tbw, tbh, _data[1], _m);
 		
 		resetFocus();
 		

@@ -40,15 +40,9 @@ function Node_Curve_HSV(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _vcur = _data[3];
 		
 		surface_set_shader(_outSurf, sh_curve_hsv);
-									
-			shader_set_f("h_curve",  _hcur);
-			shader_set_i("h_amount", array_length(_hcur));
-									
-			shader_set_f("s_curve",  _scur);
-			shader_set_i("s_amount", array_length(_scur));
-									
-			shader_set_f("v_curve",  _vcur);
-			shader_set_i("v_amount", array_length(_vcur));
+			shader_set_curve("h_curve", _hcur);
+			shader_set_curve("s_curve", _scur);
+			shader_set_curve("v_curve", _vcur);
 			
 			draw_surface_safe(_data[0]);
 		surface_reset_shader();

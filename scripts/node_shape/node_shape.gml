@@ -571,8 +571,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			shader_set_2("dfLevel",    _level);
 			shader_set_i("tile",      _tile);
 			shader_set_f("corner",    _corner);
-			shader_set_f("w_curve",   _curve);
-			shader_set_i("w_amount",  array_length(_curve));
+			shader_set_curve("w",     _curve);
 			shader_set_i("cornerShape", _data[36]);
 			
 			shader_set_2("center",    _center);

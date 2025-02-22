@@ -1,5 +1,4 @@
 function shader_set_i(uniform, value) {
-	INLINE
 	
 	var shader = shader_current();
 	if(shader == -1) return;
@@ -21,15 +20,11 @@ function shader_set_i(uniform, value) {
 	}
 }
 
-function shader_set_i_array(shader, uniform, array) {
-	INLINE
-	
-	shader_set_uniform_i_array(shader_get_uniform(shader, uniform), array);
-}
+function shader_set_i_array(shader, uniform, array) { shader_set_uniform_i_array(shader_get_uniform(shader, uniform), array); }
 
-function shader_set_2(uniform, v) { INLINE var shader = shader_current(); shader_set_uniform_f(shader_get_uniform(shader, uniform), aGetF(v, 0), aGetF(v, 1)); } 
-function shader_set_3(uniform, v) { INLINE var shader = shader_current(); shader_set_uniform_f(shader_get_uniform(shader, uniform), aGetF(v, 0), aGetF(v, 1), aGetF(v, 2)); } 
-function shader_set_4(uniform, v) { INLINE var shader = shader_current(); shader_set_uniform_f(shader_get_uniform(shader, uniform), aGetF(v, 0), aGetF(v, 1), aGetF(v, 2), aGetF(v, 3)); } 
+function shader_set_2(uniform, v) { var shader = shader_current(); shader_set_uniform_f(shader_get_uniform(shader, uniform), aGetF(v, 0), aGetF(v, 1)); } 
+function shader_set_3(uniform, v) { var shader = shader_current(); shader_set_uniform_f(shader_get_uniform(shader, uniform), aGetF(v, 0), aGetF(v, 1), aGetF(v, 2)); } 
+function shader_set_4(uniform, v) { var shader = shader_current(); shader_set_uniform_f(shader_get_uniform(shader, uniform), aGetF(v, 0), aGetF(v, 1), aGetF(v, 2), aGetF(v, 3)); } 
 
 function shader_set_f_array(uniform, value, max_length = 128) {
 	var shader = shader_current();
@@ -40,7 +35,6 @@ function shader_set_f_array(uniform, value, max_length = 128) {
 }
 
 function shader_set_f(uniform, value) {
-	INLINE
 	
 	var shader = shader_current();
 	if(shader == -1) return;
@@ -63,12 +57,9 @@ function shader_set_f(uniform, value) {
 			shader_set_uniform_f_array(shader_get_uniform(shader, uniform), array)
 	}
 	
-	if(argument_count == 2)
-		shader_set_uniform_f(shader_get_uniform(shader, uniform), value);
-	else if(argument_count == 3)
-		shader_set_uniform_f(shader_get_uniform(shader, uniform), value, argument[2]);
-	else if(argument_count == 4)
-		shader_set_uniform_f(shader_get_uniform(shader, uniform), value, argument[2], argument[3]);
+	     if(argument_count == 2) shader_set_uniform_f(shader_get_uniform(shader, uniform), value);
+	else if(argument_count == 3) shader_set_uniform_f(shader_get_uniform(shader, uniform), value, argument[2]);
+	else if(argument_count == 4) shader_set_uniform_f(shader_get_uniform(shader, uniform), value, argument[2], argument[3]);
 	else {
 		var array = array_create(argument_count - 1);
 		for( var i = 1; i < argument_count; i++ )
@@ -78,7 +69,6 @@ function shader_set_f(uniform, value) {
 }
 
 function shader_set_f_map(uniform, value, surface = noone, junc = noone) {
-	INLINE
 	
 	shader_set_f(uniform, is_array(value)? value : [ value, value ]); 
 	
@@ -91,14 +81,12 @@ function shader_set_f_map(uniform, value, surface = noone, junc = noone) {
 }
 
 function shader_set_f_map_s(uniform, value, surface, junc) {
-	INLINE
 	
 	shader_set_f(uniform, is_array(value)? value : [ value, value ]); 
 	shader_set_i(uniform + "UseSurf", junc.attributes.mapped && is_surface(surface));
 }
 
 function shader_set_uniform_f_array_safe(uniform, array, max_length = 4096) {
-	INLINE
 	
 	if(!is_array(array)) return;
 	
@@ -110,7 +98,6 @@ function shader_set_uniform_f_array_safe(uniform, array, max_length = 4096) {
 }
 
 function shader_set_surface(sampler, surface, linear = false, _repeat = false) {
-	INLINE
 	
 	var shader = shader_current();
 	if(shader == -1) return noone;
@@ -129,7 +116,6 @@ function shader_set_surface(sampler, surface, linear = false, _repeat = false) {
 }
 
 function shader_set_surface_dimension(uniform, surface) {
-	INLINE
 	
 	var shader = shader_current();
 	if(!is_surface(surface)) return;
@@ -146,20 +132,21 @@ function shader_set_surface_dimension(uniform, surface) {
 }
 
 function shader_set_dim(uniform = "dimension", surf = noone) {
-	INLINE
 	
 	if(!is_surface(surf)) return;
 	shader_set_f(uniform, surface_get_width_safe(surf), surface_get_height_safe(surf));
 }
 
-function shader_set_color(uniform, col, alpha = 1) {
-	INLINE
+function shader_set_color(uniform, col, alpha = 1) { shader_set_f(uniform, colToVec4(col, alpha)); }
+
+function shader_set_curve(uniform, curve) { 
+	shader_set_i($"curve_offset",      CURVE_PADD);
+	shader_set_f($"{uniform}_curve",   curve);
+	shader_set_i($"{uniform}_amount",  array_length(curve));
 	
-	shader_set_f(uniform, colToVec4(col, alpha));
 }
 
 function shader_set_palette(pal, pal_uni = "palette", amo_uni = "paletteAmount", max_length = 1024) {
-	INLINE
 	
 	if(MAC) max_length = min(max_length, 256);
 	var _amo = min(max_length, array_length(pal));
@@ -184,26 +171,22 @@ function shader_set_palette(pal, pal_uni = "palette", amo_uni = "paletteAmount",
 	}
 
 	function shader_preset_interpolation(shader = sh_sample) {
-		INLINE
 		
 		shader_set_uniform_i(shader_get_uniform(shader, "interpolation"),	getAttribute("interpolate"));
 		shader_set_uniform_i(shader_get_uniform(shader, "sampleMode"),		getAttribute("oversample"));
 	}
 
 	function shader_postset_interpolation() {
-		INLINE
 		
 		gpu_set_tex_filter(false);
 	}
 	
 	function shader_set_interpolation_surface(surface) {
-		INLINE
 		
 		shader_set_f("sampleDimension", surface_get_width_safe(surface), surface_get_height_safe(surface));
 	}
 	
 	function shader_set_interpolation(surface, _dim = noone) {
-		INLINE
 		
 		var intp   = getAttribute("interpolate");
 		

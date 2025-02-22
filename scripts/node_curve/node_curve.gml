@@ -46,20 +46,11 @@ function Node_Curve(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var _acur = _data[11];
 		
 		surface_set_shader(_outSurf, sh_curve);
-			shader_set_f("w_curve",  _wcur);
-			shader_set_i("w_amount", array_length(_wcur));
-									
-			shader_set_f("r_curve",  _rcur);
-			shader_set_i("r_amount", array_length(_rcur));
-									
-			shader_set_f("g_curve",  _gcur);
-			shader_set_i("g_amount", array_length(_gcur));
-									
-			shader_set_f("b_curve",  _bcur);
-			shader_set_i("b_amount", array_length(_bcur));
-			
-			shader_set_f("a_curve",  _acur);
-			shader_set_i("a_amount", array_length(_acur));
+			shader_set_curve("w", _wcur);
+			shader_set_curve("r", _rcur);
+			shader_set_curve("g", _gcur);
+			shader_set_curve("b", _bcur);
+			shader_set_curve("a", _acur);
 			
 			draw_surface_safe(_data[0]);
 		surface_reset_shader();

@@ -57,8 +57,7 @@ function Node_Pixel_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			
 			shader_set_gradient(_data[4], _data[9], _data[10], inputs[4]);
 			
-			shader_set_f("alpha_curve" , _data[6]);
-			shader_set_i("curve_amount", array_length(_data[6]));
+			shader_set_curve("alpha" , _data[6]);
 			shader_set_f("randomAmount", _data[7]);
 			
 			draw_surface_safe(_data[0]);

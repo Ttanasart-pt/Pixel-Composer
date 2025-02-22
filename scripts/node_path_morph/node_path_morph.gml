@@ -121,8 +121,7 @@ function Node_Path_Morph(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			shader_set_f("point1",      _p1);
 			shader_set_f("point2",      _p2);
 			
-			shader_set_f("w_curve",   _cur);
-			shader_set_i("w_amount",  array_length(_cur));
+			shader_set_curve("w",       _cur);
 			
 			draw_empty();
 		surface_reset_shader();
