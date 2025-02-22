@@ -23,10 +23,13 @@ uniform vec2 point2[1024];
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 float eval_curve_segment_t(in float _y0, in float ax0, in float ay0, in float bx1, in float by1, in float _y1, in float prog) {
-	return _y0 * pow(1. - prog, 3.) + 
-		   ay0 * 3. * pow(1. - prog, 2.) * prog + 
-		   by1 * 3. * (1. - prog) * pow(prog, 2.) + 
-		   _y1 * pow(prog, 3.);
+	float p = prog;
+	float i = 1. - p;
+	
+	return _y0 *      i*i*i + 
+		   ay0 * 3. * i*i*p + 
+		   by1 * 3. * i*p*p + 
+		   _y1 *      p*p*p;
 }
 
 float eval_curve_segment_x(in float _y0, in float ax0, in float ay0, in float bx1, in float by1, in float _y1, in float _x) {
@@ -90,8 +93,6 @@ float curveEval(in float[CURVE_MAX] curve, in int amo, in float _x) {
 		int ind = _shf + i * 6;
 		float _x0 = curve[ind + 2];
 		float _y0 = curve[ind + 3];
-	  //float bx0 = _x0 + curve[ind + 0];
-	  //float by0 = _y0 + curve[ind + 1];
 		float ax0 = _x0 + curve[ind + 4];
 		float ay0 = _y0 + curve[ind + 5];
 		
@@ -99,13 +100,15 @@ float curveEval(in float[CURVE_MAX] curve, in int amo, in float _x) {
 		float _y1 = curve[ind + 6 + 3];
 		float bx1 = _x1 + curve[ind + 6 + 0];
 		float by1 = _y1 + curve[ind + 6 + 1];
-	  //float ax1 = _x1 + curve[ind + 6 + 4];
-	  //float ay1 = _y1 + curve[ind + 6 + 5];
 		
 		if(_x < _x0) continue;
 		if(_x > _x1) continue;
 		
-		return eval_curve_segment_x(_y0, ax0, ay0, bx1, by1, _y1, (_x - _x0) / (_x1 - _x0));
+		float t = (_x - _x0) / (_x1 - _x0);
+		if(curve[ind + 4] == 0. && curve[ind + 5] == 0. && curve[ind + 6 + 0] == 0. && curve[ind + 6 + 1] == 0.)
+			return mix(_y0, _y1, t);
+		
+		return eval_curve_segment_x(_y0, ax0, ay0, bx1, by1, _y1, t);
 	}
 	
 	return curve[0];

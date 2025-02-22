@@ -52,15 +52,16 @@ function Node_Anim_Loop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _loop_a = _loop_infin? infinity : _loop_amoun;
 		loop_amount = _loop_a;
 		
-		loop_start = _loop_start;
-        loop_range = _loop_range;
+		loop_start = _loop_start - 1;
+        loop_range = _loop_range - 1;
         
-		var _sw = surface_get_width_safe(_surf);
+        var _sw = surface_get_width_safe(_surf);
     	var _sh = surface_get_height_safe(_surf);
-		_output = surface_verify(_output, _sw, _sh);
-		
+	    	
         curr_frame = _time;
-		if(_time < _loop_start) {
+		if(_time < loop_start) {
+			_output = surface_verify(_output, _sw, _sh);
+			
 		    if(_loop_pre == 0) {
 		    	surface_set_shader(_output, sh_sample, true, BLEND.over);
 				    draw_surface_safe(_surf);
@@ -70,18 +71,23 @@ function Node_Anim_Loop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		    return _output;
 		}
 		
-		var _loop_time = (_time - _loop_start) % _loop_range;
-		var _loop_perd = floor((_time - _loop_start) / _loop_range);
+		var _loop_time = (_time - loop_start) % _loop_range;
+		var _loop_perd = floor((_time - loop_start) / _loop_range);
 		
 		if(_loop_perd > _loop_a) {
-		    if(_loop_pos == 0) return _surf;
-		    if(_loop_pos == 1) surface_clear(_output);
+			_output = surface_verify(_output, _sw, _sh);
+			
+		    if(_loop_pos == 0) {
+		    	surface_set_shader(_output, sh_sample, true, BLEND.over);
+				    draw_surface_safe(_surf);
+				surface_reset_target();
+		    } if(_loop_pos == 1) surface_clear(_output);
 		    return _output;
 		}
 		
 		var _surfA = surf_indexes[_array_index];
 		
-		if(_time < _loop_start + _loop_range) {
+		if(_time < loop_start + _loop_range) {
     		_surfA[_loop_time] = surface_verify(_surfA[_loop_time], _sw, _sh);
     		
     		surface_set_shader(_surfA[_loop_time], sh_sample, true, BLEND.over);
@@ -89,18 +95,23 @@ function Node_Anim_Loop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
     		surface_reset_target();
 		}
 		
+        var _sw = surface_get_width_safe(_surfA[_loop_time]);
+    	var _sh = surface_get_height_safe(_surfA[_loop_time]);
+	    
+		_output = surface_verify(_output, _sw, _sh);
+		
 		surface_set_shader(_output, sh_sample, true, BLEND.over);
 		    draw_surface_safe(_surfA[_loop_time]);
 		surface_reset_target();
 		
-		curr_frame = _loop_start + _loop_time;
+		curr_frame = loop_start + _loop_time;
 		
 		return _output;
 	}
 	
 	static drawAnimationTimeline = function(_shf, _w, _h, _s) {
 		var _x0 = _shf + (loop_start + 1) * _s;
-		var _ww = (loop_range - 1) * _s;
+		var _ww = (loop_range) * _s;
 		BLEND_ADD
 		    draw_sprite_stretched_ext(THEME.ui_selection, 0, _x0, ui(13), _ww, ui(15), COLORS._main_value_positive, .5);
 		BLEND_NORMAL

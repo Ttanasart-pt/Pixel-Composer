@@ -9,6 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////// DRAW ////////////////////////////////////////////////////////////////////////////////////////////
 
 function eval_curve_segment_t_position(_t, bbz) { 
+	
 	var _t2 = _t * _t;
 	var _t3 = _t * _t * _t;
 	var _T  =  1 - _t;
@@ -77,17 +78,23 @@ function draw_curve(x0, y0, _w, _h, _bz, minx = 0, maxx = 1, miny = 0, maxy = 1,
 			draw_line(x0 + _w, _ny, _nx, _ny);
 		}
 		
-		var ax0 = _bz[ind + 4] + _x0;
-		var ay0 = _bz[ind + 5] + _y0;
+		if(_bz[ind + 4] == 0 && _bz[ind + 5] == 0 && _bz[ind + 6 + 0] == 0 && _bz[ind + 6 + 1] == 0) {
+			draw_line(x0 + _x0 * _w, y0 + (1 - _y0) * _h, 
+			          x0 + _x1 * _w, y0 + (1 - _y1) * _h);
+			continue;
+		}
 		
-		var bx1 = _bz[ind + 6 + 0] + _x1;
-		var by1 = _bz[ind + 6 + 1] + _y1;
+		var ax0 = _x0 + _bz[ind + 4];
+		var ay0 = _y0 + _bz[ind + 5];
+		
+		var bx1 = _x1 + _bz[ind + 6 + 0];
+		var by1 = _y1 + _bz[ind + 6 + 1];
 		
 		var bbz = [ _y0, ax0, ay0, bx1, by1, _y1 ];
-		// print($"{i}, {bbz}")
+		
 		for(var j = 0; j <= smp; j++) {
-			var t   = j / smp;
-			var _r  = eval_curve_segment_t_position(t, bbz);
+			var _t  = j / smp;
+			var _r  = eval_curve_segment_t_position(_t, bbz);
 			
 			var _rx = _r[0] * _xr + _x0;
 			var _ry = _r[1];
@@ -113,8 +120,8 @@ function draw_curve(x0, y0, _w, _h, _bz, minx = 0, maxx = 1, miny = 0, maxy = 1,
 //////////////////////////////////////////////////////////////////////////////////////////// EVAL ////////////////////////////////////////////////////////////////////////////////////////////
 
 function eval_curve_segment_t(_bz, t) {
-	// if(_bz[1] == 0 && _bz[2] == 0 && _bz[3] == 0 && _bz[4] == 0)
-	// 	return lerp(_bz[0], _bz[5], t);
+	if(_bz[1] == 0 && _bz[2] == 0 && _bz[3] == 0 && _bz[4] == 0)
+		return lerp(_bz[0], _bz[5], t);
 		
 	return         power(1 - t, 3)               * _bz[0]
 			 + 3 * power(1 - t, 2) * t           * _bz[2] 

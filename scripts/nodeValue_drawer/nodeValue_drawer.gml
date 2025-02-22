@@ -411,10 +411,6 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 					param.h = widExtend? ui(96) : ui(48);
 					break;
 				
-				case VALUE_TYPE.curve :   
-					if(point_in_rectangle(_m[0], _m[1], ui(32), _hsy, ui(32) + ww - ui(16), _hsy + wid.h))
-						mbRight = false;
-					break;
 			}
 			
 			var _widH = wid.drawParam(param) ?? 0;
