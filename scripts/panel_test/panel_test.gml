@@ -231,6 +231,8 @@ function Panel_Test() : PanelContent() constructor {
 		try {
 			switch(test_step) {
 				case 0 :
+					print($"Testing [{test_index}] {filename_name_only(_cur)}")
+					
 					array_append(ASSERT_LOG, {
 						type: 0,
 						text: $"Testing {filename_name_only(_cur)}",
@@ -298,10 +300,7 @@ function Panel_Test() : PanelContent() constructor {
 		    _summ += $"\n{ts.project_pass}/{ts.projects} projects passed [{ts.project_pass / ts.projects * 100}%].";
 		    _summ += $"\n{ts.assertion_pass}/{ts.assertion} assertions passed [{ts.assertion == 0? "-" : ts.assertion_pass / ts.assertion * 100}%].";
 		
-		array_append(ASSERT_LOG, {
-			type: 1,
-			text: _summ,
-		});
+		array_append(ASSERT_LOG, { type: 1, text: _summ, });
 	}
 	
 	function drawContent(panel) {

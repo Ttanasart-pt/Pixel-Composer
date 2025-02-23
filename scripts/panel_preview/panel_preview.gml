@@ -378,7 +378,7 @@ function Panel_Preview() : PanelContent() constructor {
         	new panel_toolbar_icon("On preview", 
                 THEME.icon_reset_when_preview,
                 function() /*=>*/ {return !resetViewOnDoubleClick},
-                new tooltipSelector(__txtx("panel_preview_on_preview", "On preview"), [ __txt("Keep view"), __txt("Center view") ]), 
+                new tooltipSelector(__txtx("panel_preview_on_preview", "On preview"), [ __txt("Center view"), __txt("Keep view") ]), 
                 toggle_reset_view,
                 function(data) /*=>*/ {
                     menuCall("preview_reset_view_menu", [

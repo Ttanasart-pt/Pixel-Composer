@@ -321,7 +321,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				if(b) cHov = true;
 				if(b == 2) {
 					jun.bypass_junc.visible = !jun.bypass_junc.visible; 
-					jun.node.setHeight();
+					jun.node.refreshNodeDisplay();
 				}
 			}
 		}

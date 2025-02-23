@@ -41,6 +41,8 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		if(_index < 0 || _index >= array_length(_l)) return 0;
 		
 		var _n  = _l[_index];
+		if(!is(_n, NodeValue)) return 0;
+		
 		var _in = output? _n.getValue() : getInputData(_index);
 		
 		if(!_n.isArray(_in)) return _in;

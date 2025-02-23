@@ -179,13 +179,11 @@ function eval_curve_x(_bz, _x, _tolr = 0.00001) {
 	if(array_equals(_bz, _CURVE_DEF_01)) return _x;
 	if(array_equals(_bz, _CURVE_DEF_10)) return 1 - _x;
 	
-	var _amo   = array_length(_bz);
-		
 	var _shift = _bz[0];
 	var _scale = _bz[1];
 	var _type  = _bz[2];
 	
-	var segments = (_amo - CURVE_PADD) / 6 - 1;
+	var segments = (array_length(_bz) - CURVE_PADD) / 6 - 1;
 	
 	_x = _x / _scale - _shift;
 	_x = clamp(_x, 0, 1);

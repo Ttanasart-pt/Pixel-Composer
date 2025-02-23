@@ -199,7 +199,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 			for( var i = 0; i < array_length(inputs); i++ ) {
 				var _in = inputs[i];
-				if(!is_instanceof(_in, NodeValue)) continue;
+				if(!is(_in, NodeValue)) continue;
 				if(_in.type != VALUE_TYPE.trigger) continue;
 				
 				if(_in.runInUI) array_push(input_buttons, _in);
@@ -363,7 +363,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	////- NAME
 	
-	static initTooltip = function() { 
+	static initTooltip    = function() { 
 		if(IS_CMD) return;
 		
 		var type_self = instanceof(self);
@@ -702,7 +702,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static updateIO = function() {
 		
 		for( var i = 0, n = array_length(inputs); i < n; i++ )
-			inputs[i].visible_in_list = false;
+			if(is(inputs[i], NodeValue)) inputs[i].visible_in_list = false;
 		
 		inputs_amount = getInputJunctionAmount();
 		
@@ -711,7 +711,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			if(_input == noone) continue;
 			
 			var _inp = array_safe_get(inputs, _input);
-			if(!is_struct(_inp) || !is_instanceof(_inp, NodeValue)) continue;
+			if(!is_struct(_inp) || !is(_inp, NodeValue)) continue;
 			
 			_inp.visible_in_list = true;
 		}
@@ -753,7 +753,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var _p = previewable;
 		for( var i = 0, n = array_length(inputs); i < n; i++ ) {
 			var _inp = inputs[i];
-			if(is_instanceof(_inp, NodeValue) && _inp.isVisible()) {
+			if(is(_inp, NodeValue) && _inp.isVisible()) {
 				if(_p) _hi += junction_draw_hei_y;
 				_p = true;
 			}
@@ -770,9 +770,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		for( var i = 0, n = array_length(inputs); i < n; i++ ) {
 			var _inp = inputs[i];
-			var _byp = _inp.bypass_junc;
-			if(_byp == noone) continue;
+			if(!is(_inp, NodeValue)) continue;
 			
+			var _byp = _inp.bypass_junc;
 			_ho += junction_draw_hei_y * _byp.visible;
 		}
 		
@@ -1020,7 +1020,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		__frame     = frame;
 		
 		array_foreach(inputs, function(_inp, i) /*=>*/ {
-			if(!is_instanceof(_inp, NodeValue)) return;
+			if(!is(_inp, NodeValue)) return;
 			if(!_inp.isDynamic())               return;
 			
 			var val = _inp.getValue(__frame);
@@ -1059,7 +1059,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(project.safeMode) return;
 		
 		render_timer  = get_timer();
-		var _updateRender = !is_instanceof(self, Node_Collection) || !managedRenderOrder;
+		var _updateRender = !is(self, Node_Collection) || !managedRenderOrder;
 		if(_updateRender) setRenderStatus(true);
 		
 		if(cached_manual || (use_cache == CACHE_USE.auto && recoverCache())) {
@@ -1301,7 +1301,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		__nextNodesToLoop = noone;
 		for( var i = 0, n = array_length(outputs); i < n; i++ ) {
 			var _ot = outputs[i];
-			if(!_ot.forward) continue;
+			if(is(_ot, NodeValue) && !_ot.forward) continue;
 			
 			for( var j = 0, n = array_length(_ot.value_to_loop); j < n; j++ ) {
 				var _to = _ot.value_to_loop[j];
@@ -1318,7 +1318,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		for( var i = 0, n = array_length(outputs); i < n; i++ ) {
 			var _ot = outputs[i];
-			if(!_ot.forward) continue;
+			if(is(_ot, NodeValue) && !_ot.forward) continue;
 			
 			for( var j = 0, m = array_length(_ot.value_to); j < m; j++ ) {
 				var _jto = _ot.value_to[j];
@@ -1359,7 +1359,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		for(var i = 0; i < array_length(outputs); i++) {
 			var _ot = outputs[i];
-			if(!_ot.forward) continue;
+			if(is(_ot, NodeValue) && !_ot.forward) continue;
 			if(_ot.type == VALUE_TYPE.node) continue;
 			
 			for( var j = 0, n = array_length(_ot.value_to_loop); j < n; j++ ) {
@@ -1729,7 +1729,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			_param.font = f_p2;
 			_param.color = getColor();
 			
-			if(is_instanceof(jun, checkBox))
+			if(is(jun, checkBox))
 				_param.halign = fa_center;
 			
 			wd.setInteract(wh > line_get_height(f_p2));
@@ -1989,7 +1989,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static getGraphPreviewSurface = function() { 
 		var _node = array_safe_get(outputs, preview_channel);
-		if(!is_instanceof(_node, NodeValue)) return noone;
+		if(!is(_node, NodeValue)) return noone;
 		
 		switch(_node.type) {
 			case VALUE_TYPE.surface :
@@ -2043,7 +2043,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var _ss = min(bbox.w / _sw, bbox.h / _sh);
 		
 		var _ps = preview_surface;
-		if(is_struct(_ps) && is_instanceof(_ps, dynaSurf))
+		if(is_struct(_ps) && is(_ps, dynaSurf))
 			_ps = array_safe_get_fast(_ps.surfaces, 0, noone);
 			
 		draw_surface_ext_safe(_ps, bbox.xc - _sw * _ss / 2, bbox.yc - _sh * _ss / 2, _ss, _ss);
@@ -2428,7 +2428,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static clearInputCache = function() {
 		for( var i = 0; i < array_length(inputs); i++ ) {
-			if(!is_instanceof(inputs[i], NodeValue)) continue;
+			if(!is(inputs[i], NodeValue)) continue;
 			inputs[i].resetCache();
 		}
 	}
@@ -2803,9 +2803,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		for( var i = 0; i < array_length(inputs);  i++ ) { inputs[i].cleanUp();  delete inputs[i];  }
 		for( var i = 0; i < array_length(outputs); i++ ) { outputs[i].cleanUp(); delete outputs[i]; }
 		
-		for( var i = 0, n = array_length(temp_surface); i < n; i++ )
-			surface_free(temp_surface[i]);
-		
+		surface_array_free(temp_surface);
 		onCleanUp();
 	}
 	

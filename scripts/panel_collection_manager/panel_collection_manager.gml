@@ -11,23 +11,49 @@ function Panel_Collection_Manager() : PanelContent() constructor {
 	
 	sc_content = new scrollPane(content_w, h, function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
+		var ww = sc_content.surface_w;
 		var _h = 0;
 		var hg = ui(20);
+		var bs = ui(16);
 		var yy = _y;
 		
+		var _a = sc_content.active;
+		
 		ds_stack_clear(stack);
-		ds_stack_push(stack, COLLECTIONS);
+		ds_stack_push(stack, [COLLECTIONS, 0]);
 		
 		while(!ds_stack_empty(stack)) {
-		    var st = ds_stack_pop(stack);
+		    var tp = ds_stack_pop(stack);
+		    var st = tp[0];
+		    var dp = tp[1];
 		    
 		    var _list = st.subDir;
 		    for( var i = 0, n = ds_list_size(_list); i < n; i++ ) 
-		        ds_stack_push(stack, _list[| i]);
+		        ds_stack_push(stack, [_list[| n - 1 - i], dp + 1]);
 		        
 		    draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text_sub);
-    		draw_text_add(ui(16), yy + hg / 2, st.name);
-		        
+    		draw_text_add(ui(dp * 8 + 8), yy + hg / 2, st.name);
+    		
+    		var bx = ww - ui(4) - bs + bs / 2;
+    		var by = yy + bs / 2;
+    		
+    		if(_a && point_in_circle(_m[0], _m[1], bx, by, bs / 2)) {
+    			TOOLTIP = "Load Folder";
+    			draw_sprite_ext(THEME.folder, 0, bx, by, .5, .5, 0, c_white);
+    			if(mouse_click(mb_left)) __test_load_current_collections(st);
+    			
+    		} else draw_sprite_ext(THEME.folder, 0, bx, by, .5, .5, 0, COLORS._main_icon);
+		    bx -= bs;
+		    
+    		if(_a && point_in_circle(_m[0], _m[1], bx, by, bs / 2)) {
+    			TOOLTIP = "Update Folder";
+    			draw_sprite_ext(THEME.refresh_icon, 0, bx, by, .5, .5, 0, c_white);
+    			if(mouse_click(mb_left)) __test_update_current_collections(st);
+    			
+    		} else draw_sprite_ext(THEME.refresh_icon, 0, bx, by, .5, .5, 0, COLORS._main_icon);
+		    bx -= bs;
+		    
+		    //// content
 	        _h += hg;
 		    yy += hg;
 		    
@@ -36,7 +62,7 @@ function Panel_Collection_Manager() : PanelContent() constructor {
     		    var _con = _list[| i];
     		    
     		    draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text);
-    		    draw_text_add(ui(8), yy + hg / 2, _con.name);
+    		    draw_text_add(ui(dp * 8 + 16), yy + hg / 2, _con.name);
     		    
     		    _h += hg;
     		    yy += hg;
@@ -49,6 +75,7 @@ function Panel_Collection_Manager() : PanelContent() constructor {
 	function drawContent(panel) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 1);
 		
+		padding   = in_dialog? ui(4) : ui(8);
 		content_w = w - ui(200);
 		
 		// Lists

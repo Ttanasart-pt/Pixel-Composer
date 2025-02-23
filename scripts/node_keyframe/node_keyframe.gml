@@ -718,13 +718,17 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 						_val[j] = processValue(value);
 				}
 				
-				if(prop.type == VALUE_TYPE.curve && LOADING_VERSION < 1_18_09_1) {
-					if(array_length(value) % 6 == 0)
+				if(prop.type == VALUE_TYPE.curve) {
+					var _pd = array_length(value) % 6;
+					
+					if(LOADING_VERSION < 1_18_09_1 && _pd == 0)
 						array_insert(_val, 0, /**/ 0, 1, 0, 0, 0, 0);
-					else {
-						var _insert = CURVE_PADD - array_length(value) % 6;
-						repeat(_insert) array_insert(_val, 2, /**/ 0);
+						
+					else if(_pd != 0) {
+						var _insert = CURVE_PADD - _pd;
+						repeat(_insert) array_insert(_val, 2, 0);
 					}
+					
 				}
 			} 
 			
