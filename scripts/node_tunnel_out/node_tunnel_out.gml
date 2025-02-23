@@ -1,8 +1,8 @@
 function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Tunnel Out";
 	color = COLORS.node_blend_tunnel;
-	is_group_io  = true;
 	preview_draw = false;
+	set_default  = false;
 	
 	setDimension(32, 32);
 	
@@ -12,18 +12,20 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	hover_alpha    = 0;
 	
 	preview_connecting = false;
-	preview_scale  = 1;
-	junction_hover = false;
+	preview_scale      = 1;
+	junction_hover     = false;
 	
-	var tname = "";
-	if(!LOADING && !APPENDING && !ds_map_empty(project.tunnels_in))
-		tname = ds_map_find_first(project.tunnels_in);
+	__key = noone;
 	
-	newInput(0, nodeValue_Text("Name", self, tname ))
+	newInput(0, nodeValue_Text("Name", self, LOADING || APPENDING? "" : ds_map_find_first(project.tunnels_in) ))
 		.setDisplay(VALUE_DISPLAY.text_tunnel)
 		.rejectArray();
 	
 	newOutput(0, nodeValue_Output("Value out", self, VALUE_TYPE.any, noone ));
+	
+	inputs[0].is_modified = true;
+	
+	////- Update
 	
 	setTrigger(2, "Goto tunnel in", [ THEME.tunnel, 1, c_white ]);
 	
@@ -35,31 +37,22 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		graphFocusNode(_node);
 	}
 	
-	static isRenderable = function() {
-		var _key = inputs[0].getValue();
-		if(!ds_map_exists(project.tunnels_in, _key)) return false;
-		
-		return project.tunnels_in[? _key].node.rendered;
-	}
-	
 	static onValueUpdate = function(index = -1) {
-		var _key = inputs[0].getValue();
+		resetMap();
 		
 		if(index == 0) { RENDER_ALL_REORDER }
 	}
 	
-	static step = function() {
-		var _key = inputs[0].getValue();
-		project.tunnels_out[? node_id] = _key;
-	}
-	
 	static update = function(frame = CURRENT_FRAME) {
-		var _key = inputs[0].getValue();
+		__key = inputs[0].getValue();
 		
-		if(ds_map_exists(project.tunnels_in, _key)) {
-			outputs[0].setType(project.tunnels_in[? _key].type);
-			outputs[0].setDisplay(project.tunnels_in[? _key].display_type);
-			outputs[0].setValue(project.tunnels_in[? _key].getValue());
+		if(ds_map_exists(project.tunnels_in, __key)) {
+			var _inputNode = project.tunnels_in[? __key];
+			
+			outputs[0].setType(_inputNode.type);
+			outputs[0].setDisplay(_inputNode.display_type);
+			outputs[0].setValue(_inputNode.getValue());
+			
 		} else {
 			outputs[0].setType(VALUE_TYPE.any);
 			outputs[0].setDisplay(VALUE_DISPLAY._default);
@@ -68,7 +61,19 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		outputs[0].updateColor();
 	}
 	
-	/////////////////////////////////////////////////////////////////////////////
+	static resetMap = function() {
+		var _key = inputs[0].getValue();
+		project.tunnels_out[? node_id] = _key;
+	}
+	
+	static isRenderable = function() {
+		var _key = inputs[0].getValue();
+		if(!ds_map_exists(project.tunnels_in, _key)) return false;
+		
+		return project.tunnels_in[? _key].node.rendered;
+	}
+	
+	////- Draw
 	
 	static pointIn = function(_x, _y, _mx, _my, _s) {
 		var xx =  x      * _s + _x;
@@ -100,11 +105,11 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		hover |= tun && tun.tunnel_hover == self;
 		if(!hover) return;
 		
-		var _key = inputs[0].getValue();
-		if(!ds_map_exists(project.tunnels_in, _key)) return;
+		if(!ds_map_exists(project.tunnels_in, __key)) return;
 		
-		var node = project.tunnels_in[? _key].node;
+		var node = project.tunnels_in[? __key].node;
 		if(node.group != group) return;
+		if(node.__key != __key) return;
 		
 		preview_connecting      = true;
 		node.preview_connecting = true;
@@ -189,7 +194,18 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		return drawJunctions(_draw, _x, _y, _mx, _my, _s);
 	}
 	
+	////- Actions
+	
 	static onClone = function() { onValueUpdate(0); }
 	
 	static postConnect = function() { step(); onValueUpdate(0); }
+	
+	static onRestore = function() {
+		resetMap();
+	}
+	
+	////- Init
+	
+	resetMap();
+	
 }

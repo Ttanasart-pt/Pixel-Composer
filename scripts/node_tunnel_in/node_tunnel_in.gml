@@ -1,9 +1,8 @@
 function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Tunnel In";
 	color = COLORS.node_blend_tunnel;
-	is_group_io  = true;
 	preview_draw = false;
-	// custom_grid  = 8;
+	set_default  = false;
 	
 	setDimension(32, 32);
 	
@@ -13,21 +12,24 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	hover_alpha    = 0;
 	
 	preview_connecting = false;
-	preview_scale  = 1;
-	junction_hover = false;
+	preview_scale      = 1;
+	junction_hover     = false;
+	error_notification = noone;
 	
-	var tname = "";
-	if(!LOADING && !APPENDING) tname = $"tunnel{ds_map_size(project.tunnels_in_map)}";
+	__jfrom = noone;
+	__key   = noone;
 	
-	newInput(0, nodeValue_Text("Name", self, tname ))
+	newInput(0, nodeValue_Text("Name", self, LOADING || APPENDING? "" : $"tunnel{ds_map_size(project.tunnels_in_map)}" ))
 		.rejectArray();
 		
 	newInput(1, nodeValue("Value in", self, CONNECT_TYPE.input, VALUE_TYPE.any, noone ))
 		.setVisible(true, true);
 	
-	error_notification = noone;
-	
 	setTrigger(2, "Create tunnel out", [ THEME.tunnel, 0, c_white ]);
+	
+	inputs[0].is_modified = true;
+	
+	////- Update
 	
 	static onInspector2Update = function() {
 		var _node = nodeBuild("Node_Tunnel_Out", x + 128, y).skipDefault();
@@ -36,14 +38,11 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		_node.inputs[0].setValue(_key);
 	}
 	
-	__jfrom = noone;
-	__key   = noone;
-	
 	static update = function(frame = CURRENT_FRAME) {
 		var _key = inputs[0].getValue();
 		var _frm = inputs[1].value_from;
 		
-		if(_key != __key) onValueUpdate(); 
+		if(_key != __key) checkKey(); 
 		
 		if(_frm != __jfrom) {
 			inputs[1].setType(   _frm? _frm.type         : VALUE_TYPE.any);
@@ -53,18 +52,22 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		__key   = _key;
 		__jfrom = _frm;
+		
+		value_validation[VALIDATION.error] = error_notification != noone;
 	}
 	
 	static resetMap = function() {
+		if(__key != noone) ds_map_delete(project.tunnels_in, __key);
+		
 		var _key = inputs[0].getValue();
 		project.tunnels_in_map[? node_id] = _key;
 		project.tunnels_in[? _key] = inputs[1];
-	} 
-	
-	resetMap();
+	}
 	
 	static checkDuplicate = function() {
 		var _key = inputs[0].getValue();
+		if(_key == "") return;
+		
 		var amo  = ds_map_size(project.tunnels_in_map);
 		var k    = ds_map_find_first(project.tunnels_in_map);
 		var dup  = false;
@@ -78,24 +81,25 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		if(dup && error_notification == noone) {
 			error_notification = noti_error($"Duplicated key: {_key}");
-			error_notification.onClick = function() { PANEL_GRAPH.focusNode(self); };
+			error_notification.onClick = function() /*=>*/ {return PANEL_GRAPH.focusNode(self)};
+			
 		} else if(!dup && error_notification) {
 			noti_remove(error_notification);
 			error_notification = noone;
 		}
 	}
 	
-	static onValueUpdate = function(index = -1) {
+	static checkKey = function() {
 		var _key = inputs[0].getValue();
 		resetMap();
 		
 		var amo = ds_map_size(project.tunnels_in_map);
-		var k   = ds_map_find_first(project.tunnels_in_map);
+		var k   = ds_map_find_first(project.tunnels_in_map), _n;
 		repeat(amo) {
-			var _n = project.nodeMap[? k];
+			_n = project.nodeMap[? k];
 			k = ds_map_find_next(project.tunnels_in_map, k);
 			
-			if(!is_instanceof(_n, Node_Tunnel_In)) continue;
+			if(!is(_n, Node_Tunnel_In)) continue;
 			if(!_n.active) continue;
 			
 			_n.resetMap();
@@ -103,48 +107,42 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		var k   = ds_map_find_first(project.tunnels_in_map);
 		repeat(amo) {
-			var _n = project.nodeMap[? k];
+			_n = project.nodeMap[? k];
 			k = ds_map_find_next(project.tunnels_in_map, k);
 			
-			if(!is_instanceof(_n, Node_Tunnel_In)) continue;
+			if(!is(_n, Node_Tunnel_In)) continue;
 			if(!_n.active) continue;
 			
 			_n.checkDuplicate();
 		}
-		
+	}
+	
+	static onValueUpdate = function(index = -1) {
+		checkKey();
 		if(index == 0) { RENDER_ALL_REORDER }
 	}
 	
-	static step = function() {
-		value_validation[VALIDATION.error] = error_notification != noone;
-	}
-	
 	static getNextNodes = function(checkLoop = false) {
-		var nodes     = [];
-		var nodeNames = [];
-		var _key      = inputs[0].getValue();
-		var amo       = ds_map_size(project.tunnels_out);
-		var k         = ds_map_find_first(project.tunnels_out);
+		var nodes = [];
+		var _key  = inputs[0].getValue();
+		var amo   = ds_map_size(project.tunnels_out);
+		var k     = ds_map_find_first(project.tunnels_out);
 		
 		LOG_BLOCK_START();
 		LOG_IF(global.FLAG.render == 1, $"→→→→→ Call get next node from: {INAME}");
 		
 		repeat(amo) {
-			if(project.tunnels_out[? k] == _key) {
-				array_push(nodes, PROJECT.nodeMap[? k]);
-				array_push(nodeNames, PROJECT.nodeMap[? k].internalName);
-			}
+			if(project.tunnels_out[? k] == _key)
+				array_push(nodes, project.nodeMap[? k]);
 			
 			k = ds_map_find_next(project.tunnels_out, k);
 		}
-		
-		LOG_IF(global.FLAG.render == 1, $"→→ Push {nodeNames} to queue.");
 		
 		LOG_BLOCK_END();
 		return nodes;
 	}
 	
-	/////////////////////////////////////////////////////////////////////////////
+	////- Draw
 	
 	static pointIn = function(_x, _y, _mx, _my, _s) {
 		var xx =  x      * _s + _x;
@@ -273,6 +271,8 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		return drawJunctions(_draw, _x, _y, _mx, _my, _s);
 	}
 	
+	////- Actions
+	
 	static onClone = function() { onValueUpdate(0); }
 	
 	static postConnect = function() { 
@@ -293,5 +293,9 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static onRestore = function() {
 		resetMap();
 	}
+	
+	////- Init
+	
+	resetMap();
 	
 }

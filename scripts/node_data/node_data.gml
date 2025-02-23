@@ -119,22 +119,22 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		draw_name = true;
 		draggable = true;
 		
-		draw_boundary     = [ 0, 0, 0, 0 ];
-		draw_graph_culled = false;
+		draw_boundary       = [ 0, 0, 0, 0 ];
+		draw_graph_culled   = false;
 		
-		badgePreview = 0;
-		badgeInspect = 0;
+		badgePreview        = 0;
+		badgeInspect        = 0;
 		
-		active_drawing     = false;
-		active_draw_index  = -1;
-		active_draw_anchor = false;
+		active_drawing      = false;
+		active_draw_index   = -1;
+		active_draw_anchor  = false;
 		
-		draw_droppable = false;
+		draw_droppable      = false;
 		
 		junction_draw_pad_y = 32;
 		junction_draw_hei_y = 24;
 		
-		branch_drawing = false;
+		branch_drawing      = false;
 	#endregion
 	
 	#region ---- junctions ----
@@ -1057,7 +1057,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static doUpdateFull = function(frame = CURRENT_FRAME) {
 		
 		if(project.safeMode) return;
-		if(NODE_EXTRACT)     return;
 		
 		render_timer  = get_timer();
 		var _updateRender = !is_instanceof(self, Node_Collection) || !managedRenderOrder;
@@ -1077,6 +1076,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 			try {
 				if(attributes.update_graph) update(frame);
+				
 			} catch(exception) {
 				var sCurr = surface_get_target();
 				while(surface_get_target() != sBase)

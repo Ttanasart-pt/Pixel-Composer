@@ -37,7 +37,6 @@ function Panel_Node_Data_Gen() : PanelContent() constructor {
 	cur = 0;
 	
 	LOADING = true;
-	NODE_EXTRACT = true;
 	
 	dir  = DIRECTORY + "Nodes/";
 	directory_verify(dir);

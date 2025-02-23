@@ -18,7 +18,7 @@ function Panel_Tunnels() : PanelContent() constructor {
 		for (var i = 0, n = array_length(PROJECT.allNodes); i < n; i++) {
 			var node = PROJECT.allNodes[i];
 			
-			if(instanceof(node) == "Node_Tunnel_In") 
+			if(is(node, Node_Tunnel_In)) 
 				array_push(tunnel_ins, node);
 		}
 	}

@@ -1,14 +1,8 @@
-globalvar NODE_EXTRACT;
-NODE_EXTRACT = false;
-
 function __generate_node_data() { #region
+	CLONING = true;
 	
 	var key = struct_get_names(ALL_NODES);
-	
-	CLONING      = true;
-	NODE_EXTRACT = true;
-	
-	var dir  = DIRECTORY + "Nodes/";
+	var dir = DIRECTORY + "Nodes/";
 	directory_verify(dir);
 	
 	var data   = {};
