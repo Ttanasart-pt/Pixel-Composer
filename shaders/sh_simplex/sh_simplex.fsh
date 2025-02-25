@@ -15,7 +15,6 @@ varying vec4 v_vColour;
 
 uniform vec2  dimension;
 uniform vec3  position;
-uniform int   layerMode;
 uniform float rotation;
 
 uniform vec2      scale;
@@ -26,18 +25,23 @@ uniform vec2      iteration;
 uniform int       iterationUseSurf;
 uniform sampler2D iterationSurf;
 
-vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
-vec4 mod289(vec4 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
-vec4 permute(vec4 x) { return mod289(((x * 34.0) + 10.0) * x); }
-vec4 taylorInvSqrt(vec4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
-
 uniform int  colored;
 uniform vec2 colorRanR;
 uniform vec2 colorRanG;
 uniform vec2 colorRanB;
 
+uniform float itrScaling;
+uniform float itrAmplitude;
+
+uniform float phase;
+
 vec2 sca;
 float itrMax, itr;
+
+vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+vec4 mod289(vec4 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+vec4 permute(vec4 x) { return mod289(((x * 34.0) + 10.0) * x); }
+vec4 taylorInvSqrt(vec4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
 
 vec3 hsv2rgb(vec3 c) {
     vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
@@ -46,7 +50,7 @@ vec3 hsv2rgb(vec3 c) {
 }
 
 float snoise(vec3 vec) {
-	vec3 v = vec * 4.;
+	vec3 v  = vec * 4.;
 	
 	const vec2 C = vec2(1.0 / 6.0, 1.0 / 3.0);
 	const vec4 D = vec4(0.0, 0.5, 1.0, 2.0);
@@ -54,7 +58,7 @@ float snoise(vec3 vec) {
 	// First corner
 	vec3 i  = floor(v + dot(v, C.yyy));
 	vec3 x0 =   v - i + dot(i, C.xxx);
-
+	
 	// Other corners
 	vec3 g = step(x0.yzx, x0.xyz);
 	vec3 l = 1.0 - g;
@@ -70,12 +74,13 @@ float snoise(vec3 vec) {
 	vec3 x3 = x0 - D.yyy;      // -1.0+3.0*C.x = -0.5 = -D.y
 
 	// Permutations
-	i = mod289(i); 
+	i = mod289(i);
+	
 	vec4 p = permute( permute( permute( 
              i.z + vec4(0.0, i1.z, i2.z, 1.0 ))
            + i.y + vec4(0.0, i1.y, i2.y, 1.0 )) 
            + i.x + vec4(0.0, i1.x, i2.x, 1.0 ));
-
+	
 	// Gradients: 7x7 points over a square, mapped onto an octahedron.
 	// The ring size 17*17 = 289 is close to a multiple of 49 (49*6 = 294)
 	float n_ = 0.142857142857; // 1.0/7.0
@@ -130,17 +135,13 @@ float simplex(in vec2 st) {
     
 	float amp = pow(2., float(itr) - 1.)  / (pow(2., float(itr)) - 1.);
     float n = 0.;
-	if(layerMode == 0)		n = 0.;
-	else if(layerMode == 1) n = 1.;
-	
+    
 	for(float i = 0.; i < itrMax; i++) {
 		if(i >= itr) break;
 		
-		if(layerMode == 0)		n +=  snoise(xyz) * amp;
-		else if(layerMode == 1) n *= (snoise(xyz) * amp) + (1. - amp);
-		
-		amp *= .5;
-		xyz *= 2.;
+		n   += snoise(xyz) * amp;
+		amp *= itrAmplitude;
+		xyz *= itrScaling;
 	}
 	
 	return n;
@@ -168,12 +169,14 @@ void main() {
 	
 	if(colored == 0) {
 		gl_FragColor = vec4(vec3(simplex(st)), 1.0);
+		
 	} else if(colored == 1) {
 		float randR = colorRanR[0] + simplex(st) * (colorRanR[1] - colorRanR[0]);
 		float randG = colorRanG[0] + simplex(st + vec2(1.7227, 4.55529)) * (colorRanG[1] - colorRanG[0]);
 		float randB = colorRanB[0] + simplex(st + vec2(6.9950, 6.82063)) * (colorRanB[1] - colorRanB[0]);
 		
 		gl_FragColor = vec4(randR, randG, randB, 1.0);
+		
 	} else if(colored == 2) {
 		float randH = colorRanR[0] + simplex(st) * (colorRanR[1] - colorRanR[0]);
 		float randS = colorRanG[0] + simplex(st + vec2(1.7227, 4.55529)) * (colorRanG[1] - colorRanG[0]);

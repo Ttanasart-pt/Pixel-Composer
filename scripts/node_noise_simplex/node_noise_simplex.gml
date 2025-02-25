@@ -36,10 +36,16 @@ function Node_Noise_Simplex(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		
 	newInput(10, nodeValue_Rotation("Rotation", self, 0));
 		
+	newInput(11, nodeValue_Float("Scaling", self, 2.));
+	
+	newInput(12, nodeValue_Float("Amplitude", self, .5))
+		.setDisplay(VALUE_DISPLAY.slider);
+	
 	input_display_list = [
-		["Output",	false], 0, 
-		["Noise",	false], 1, 10, 2, 8, 3, 9, 
-		["Render",	false], 4, 5, 6, 7, 
+		["Output",   false], 0, 
+		["Noise",    false], 1, 10, 2, 8, 3, 9, 
+		["Advances",  true], 11, 12, 
+		["Render",   false], 4, 5, 6, 7, 
 	];
 	
 	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
@@ -71,6 +77,9 @@ function Node_Noise_Simplex(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		var _clb = _data[7];
 		var _ang = _data[10];
 		
+		var _adv_scale  = _data[11];
+		var _adv_amplit = _data[12];
+		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
 		surface_set_shader(_outSurf, sh_simplex);
@@ -84,8 +93,11 @@ function Node_Noise_Simplex(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			shader_set_2("colorRanR", _clr);
 			shader_set_2("colorRanG", _clg);
 			shader_set_2("colorRanB", _clb);
+			
+			shader_set_f("itrAmplitude", _adv_amplit);
+			shader_set_f("itrScaling",   _adv_scale);
 		
-			draw_sprite_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], 0, c_white, 1);
+			draw_empty();
 		surface_reset_shader();
 		
 		return _outSurf;

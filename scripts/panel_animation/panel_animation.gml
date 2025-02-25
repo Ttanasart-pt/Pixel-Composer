@@ -819,7 +819,7 @@ function Panel_Animation() : PanelContent() constructor {
                 
                 if(sca != timeline_scale) {
                     var mfb = (mx - bar_x - timeline_shift) / timeline_scale;
-                    var mfa = (mx - bar_x - timeline_shift) / ui(sca);
+                    var mfa = (mx - bar_x - timeline_shift) / sca;
                     
                     timeline_shift_to = timeline_shift_to - (mfa - mfb) * timeline_scale;
                     timeline_shift    = timeline_shift_to;
