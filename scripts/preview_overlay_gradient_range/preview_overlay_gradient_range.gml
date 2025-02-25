@@ -21,7 +21,7 @@ function preview_overlay_gradient_range(interact, active, _x, _y, _s, _mx, _my, 
 	var _ay1 = __y1 * _s + _y;
 	
 	var cc = COLORS.labels[2];
-	var _r = 10;
+	var _r = ui(10);
 	
 	__overlay_hover = array_verify(__overlay_hover, 2);
 	if(surface_exists(_surf) && (__overlay_hover[0] > 0 || __overlay_hover[1] > 0))
@@ -44,11 +44,11 @@ function preview_overlay_gradient_range(interact, active, _x, _y, _s, _mx, _my, 
 	var dir = point_direction(tx0, ty0, tx1, ty1);
 	var dis = point_distance( tx0, ty0, tx1, ty1);
 	
-	draw_set_text(_f_p2b, fa_center, fa_center, cc);
-	var txt = string_cut(mappedJunc.name, dis - 16);
+	draw_set_text(f_p2b, fa_center, fa_center, cc);
+	var txt = string_cut(mappedJunc.name, dis - ui(16));
 	draw_text_transformed((tx0 + tx1) / 2, (ty0 + ty1) / 2, txt, 1, 1, dir);
 	
-	var _tw = string_width(txt) + 16;
+	var _tw = string_width(txt) + ui(16);
 	
 	draw_set_color(cc);
 	draw_line_round(tx0, ty0, tx0 + lengthdir_x(dis / 2 - _tw / 2, dir), ty0 + lengthdir_y(dis / 2 - _tw / 2, dir), 2);
@@ -81,7 +81,7 @@ function preview_overlay_gradient_range(interact, active, _x, _y, _s, _mx, _my, 
 		}
 		
 	} else if(interact && active) {
-		if(point_in_circle(_mx, _my, _ax0, _ay0, 8)) {
+		if(point_in_circle(_mx, _my, _ax0, _ay0, ui(8))) {
 			d0 = true;
 			hover = 1;
 			
@@ -92,7 +92,7 @@ function preview_overlay_gradient_range(interact, active, _x, _y, _s, _mx, _my, 
 				drag_sx   = _ax0;
 				drag_sy   = _ay0;
 			}
-		} else if(point_in_circle(_mx, _my, _ax1, _ay1, 8)) {
+		} else if(point_in_circle(_mx, _my, _ax1, _ay1, ui(8))) {
 			d1 = true;
 			hover = 2;
 			

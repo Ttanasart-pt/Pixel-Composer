@@ -25,7 +25,7 @@ function preview_overlay_puppet(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 			draw_sprite_colored(THEME.anchor_selector, 0, _ax, _ay);
 			draw_sprite_colored(THEME.anchor_selector, 2, _ax1, _ay1);
 			
-			if(point_in_circle(_mx, _my, _ax + __wd * _s, _ay, 8)) {
+			if(point_in_circle(_mx, _my, _ax + __wd * _s, _ay, ui(8))) {
 				hover = 3;
 				draw_sprite_colored(THEME.anchor_scale_hori, 1, _ax + __wd * _s, _ay);
 				if(mouse_press(mb_left, active)) {
@@ -64,7 +64,7 @@ function preview_overlay_puppet(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 			draw_line(_l1x0, _l1y0, _l1x1, _l1y1);
 			draw_sprite_colored(THEME.anchor_selector, 0, _ax, _ay);
 			
-			if(point_in_circle(_mx, _my, _l0x, _l0y, 8)) {
+			if(point_in_circle(_mx, _my, _l0x, _l0y, ui(8))) {
 				hover = 4;
 				draw_sprite_colored(THEME.anchor_scale_hori, 1, _l0x, _l0y,, dir + 90);
 				if(mouse_press(mb_left, active)) {
@@ -75,7 +75,7 @@ function preview_overlay_puppet(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 			} else 
 				draw_sprite_colored(THEME.anchor_scale_hori, drag_type == 4, _l0x, _l0y,, dir + 90);
 			
-			if(point_in_circle(_mx, _my, _lx, _ly, 8)) {
+			if(point_in_circle(_mx, _my, _lx, _ly, ui(8))) {
 				hover = 5;
 				draw_sprite_colored(THEME.anchor_scale_hori, 1, _lx, _ly,, dir);
 				if(mouse_press(mb_left, active)) {
@@ -89,7 +89,7 @@ function preview_overlay_puppet(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 			var rx = _ax + lengthdir_x(64, dir + 45);
 			var ry = _ay + lengthdir_y(64, dir + 45);
 			
-			if(point_in_circle(_mx, _my, rx, ry, 8)) {
+			if(point_in_circle(_mx, _my, rx, ry, ui(8))) {
 				draw_set_color(COLORS._main_accent);
 				draw_circle_prec(_ax, _ay, 64, true);
 				
@@ -175,7 +175,7 @@ function preview_overlay_puppet(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 		}
 	}
 						
-	if(interact && active && point_in_circle(_mx, _my, _ax, _ay, 8)) {
+	if(interact && active && point_in_circle(_mx, _my, _ax, _ay, ui(8))) {
 		hover = 1;
 		draw_sprite_colored(THEME.anchor_selector, 1, _ax, _ay);
 		if(mouse_press(mb_left, active)) {
@@ -189,7 +189,7 @@ function preview_overlay_puppet(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 						
 	var _mode = _val[PUPPET_CONTROL.mode];
 	
-	if(interact && active && (_mode == PUPPET_FORCE_MODE.move || _mode == PUPPET_FORCE_MODE.puppet) && point_in_circle(_mx, _my, _ax1, _ay1, 8)) {
+	if(interact && active && (_mode == PUPPET_FORCE_MODE.move || _mode == PUPPET_FORCE_MODE.puppet) && point_in_circle(_mx, _my, _ax1, _ay1, ui(8))) {
 		
 		hover = 2;
 		draw_sprite_colored(THEME.anchor_selector, 0, _ax1, _ay1);

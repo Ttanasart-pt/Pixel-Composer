@@ -216,7 +216,7 @@ event_inherited();
 			} else if(align == fa_left) 
 				draw_text_add(_tpad + _lx + (_spr != noone) * (_tpad * 2 + hght), _ly + hght / 2, _txt);
 			
-			if(_spr) draw_sprite_ext(_val.spr, _val.spr_ind, _lx + ui(8) + hght / 2, _ly + hght / 2, 1, 1, 0, _val.spr_blend, 1);
+			if(_spr) draw_sprite_ui(_val.spr, _val.spr_ind, _lx + ui(8) + hght / 2, _ly + hght / 2, 1, 1, 0, _val.spr_blend);
 			
 			_ly += hght;
 			_lh += hght;

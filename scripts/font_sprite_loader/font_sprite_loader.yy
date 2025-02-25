@@ -6,7 +6,7 @@
   "name":"font_sprite_loader",
   "parent":{
     "name":"font",
-    "path":"folders/sprites/font.yy",
+    "path":"folders/font.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

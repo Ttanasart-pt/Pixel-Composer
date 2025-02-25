@@ -211,7 +211,9 @@ function loadFonts() {
 	f_p1  = _font_load_from_struct(fontDef, "p1",  _f_p1);
 	f_p1b = _font_load_from_struct(fontDef, "p1b", _f_p1b);
 	
-	f_p2  = _font_load_from_struct(fontDef, "p2", _f_p2);
+	f_p2  = _font_load_from_struct(fontDef, "p2",  _f_p2);
+	f_p2b = _font_load_from_struct(fontDef, "p2b", _f_p2b);
+	
 	f_p3  = _font_load_from_struct(fontDef, "p3", _f_p3);
 	f_p4  = _font_load_from_struct(fontDef, "p4", _f_p4);
 	

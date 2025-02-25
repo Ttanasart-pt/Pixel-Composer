@@ -22,11 +22,8 @@ event_inherited();
 	
 	destroy_on_click_out = true;
 	
-	sl_position = slider(0, 100, 0.1, function(val) { 
-		if(!interactable) return;
-		if(key_selecting == noone) return;
-		setKeyPosition(key_selecting, val / 100);
-	}, function() { removeKeyOverlap(key_selecting); }).setLabel(__txt("Position"));
+	sl_position = slider(0, 100, 0.1, function(val) /*=>*/ { if(!interactable || key_selecting == noone) return; setKeyPosition(key_selecting, val / 100); }, 
+		function() /*=>*/ {return removeKeyOverlap(key_selecting)}).setLabel(__txt("Position"));
 	
 	setColor = function(color) {
 		if(key_selecting == noone) return;
@@ -53,16 +50,12 @@ event_inherited();
 		previous_gradient = grad.clone();
 	}
 	
-	b_cancel = button(function() {
-		onApply(previous_gradient);
-		instance_destroy();
-	}).setIcon(THEME.undo, 0, COLORS._main_icon)
-	  .setTooltip(__txtx("dialog_revert_and_exit", "Revert and exit"));
+	b_cancel = button(function() /*=>*/ { onApply(previous_gradient); instance_destroy(); })
+		.setIcon(THEME.undo, 0, COLORS._main_icon)
+		.setTooltip(__txtx("dialog_revert_and_exit", "Revert and exit"));
 	
-	b_apply = button(function() {
-		onApply(gradient);
-		instance_destroy();
-	}).setIcon(THEME.accept, 0, COLORS._main_icon_dark);
+	b_apply = button(function() /*=>*/ { onApply(gradient); instance_destroy(); })
+		.setIcon(THEME.accept, 0, COLORS._main_icon_dark);
 	
 	function setKeyPosition(key, position) {
 		key.time = position;
@@ -149,7 +142,6 @@ event_inherited();
 		
 		return hh;
 	});
-	
 	
 #endregion
 

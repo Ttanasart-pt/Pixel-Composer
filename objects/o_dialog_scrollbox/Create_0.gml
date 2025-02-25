@@ -147,7 +147,7 @@ event_inherited();
 				draw_sprite_ext(_txt, i, _dw / 2, _yy);
 			}
 			
-			if(_spr) draw_sprite_ext(_val.spr, _val.spr_ind, ui(8) + hght / 2, _yy, 1, 1, 0, _val.spr_blend, 1);
+			if(_spr) draw_sprite_ui(_val.spr, _val.spr_ind, ui(8) + hght / 2, _yy, 1, 1, 0, _val.spr_blend);
 			
 			_ly += hght;
 			_h  += hght;

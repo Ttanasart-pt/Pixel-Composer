@@ -4,9 +4,9 @@ function preview_overlay_scalar(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 	if(!is_real(_val)) return hover;
 	
 	var index = 0;
-	var __ax = lengthdir_x(_val * _scale, _angle);
-	var __ay = lengthdir_y(_val * _scale, _angle);
-	var _r   = 10;
+	var __ax  = lengthdir_x(_val * _scale, _angle);
+	var __ay  = lengthdir_y(_val * _scale, _angle);
+	var _r    = ui(10);
 	
 	var _ax = _x + __ax * _s;
 	var _ay = _y + __ay * _s;
@@ -48,12 +48,12 @@ function preview_overlay_scalar(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 	
 	if(overlay_draw_text) {
 		if(overlay_text_valign == fa_top) {
-			draw_set_text(_f_p2b, fa_center, fa_bottom, COLORS._main_accent);
-			draw_text_add(round(_ax), round(_ay - 4), name);
+			draw_set_text(f_p2b, fa_center, fa_bottom, COLORS._main_accent);
+			draw_text_add(round(_ax), round(_ay - ui(4)), name);
 			
 		} else if(overlay_text_valign == fa_bottom) {
-			draw_set_text(_f_p2b, fa_center, fa_top, COLORS._main_accent);
-			draw_text_add(round(_ax), round(_ay + 4), name);
+			draw_set_text(f_p2b, fa_center, fa_top, COLORS._main_accent);
+			draw_text_add(round(_ax), round(_ay + ui(4)), name);
 			
 		}
 	}

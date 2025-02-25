@@ -216,7 +216,7 @@
   "name":"_f_code_s",
   "parent":{
     "name":"font",
-    "path":"folders/sprites/font.yy",
+    "path":"folders/font.yy",
   },
   "pointRounding":2,
   "ranges":[

@@ -1629,10 +1629,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(_name == "") return;
 		
 		draw_name = true;
+		var _si = _s// / UI_SCALE;
 		
 		var aa = (.25 + .5 * renderActive) * (.25 + .75 * isHighlightingInGraph());
 		var cc = getColor();
-		var nh = previewable? name_height * _s : h * _s;
+		var nh = previewable? name_height * _si : h * _si;
 		var ba = aa;
 		
 		if(_panel && _panel.node_hovering == self) ba = .1;
@@ -1644,21 +1645,21 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		aa += 0.25;
 		
-		var tx = xx     + 6 * _s;
-		var tw = w * _s - 8 * _s;
+		var tx = xx     + 6 * _si;
+		var tw = w * _s - 8 * _si;
 		
 		if(_panel && _panel.is_searching && _panel.search_string != "" && search_match == -9999)
 			aa *= .15;
 				
 		if(icon) {
-			tx += _s * 6;
-			draw_sprite_ui_uniform(icon, 0, round(tx) + 1, round(yy + nh / 2) + 1, _s, c_black,    1);
-			draw_sprite_ui_uniform(icon, 0, round(tx),     round(yy + nh / 2),     _s, icon_blend, 1);
-			tx += _s *  12;
-			tw -= _s * (12 + 6);
+			tx += _si * 6;
+			draw_sprite_ui_uniform(icon, 0, round(tx) + 1, round(yy + nh / 2) + 1, _si, c_black,    1);
+			draw_sprite_ui_uniform(icon, 0, round(tx),     round(yy + nh / 2),     _si, icon_blend, 1);
+			tx += _si *  12;
+			tw -= _si * (12 + 6);
 		}
 		
-		var _ts  = _s * 0.275;
+		var _ts  = _si * 0.275;
 		var _tx  = round(tx);
 		var _ty  = round(yy + nh / 2 + 1);
 		

@@ -6,7 +6,7 @@ function preview_overlay_vector(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 	
 	var __ax = _val[0];
 	var __ay = _val[1];
-	var _r   = 10;
+	var _r   = ui(10);
 						
 	var _ax    = __ax * _s * _scale[0] + _x;
 	var _ay    = __ay * _s * _scale[1] + _y;
@@ -68,8 +68,8 @@ function preview_overlay_vector(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 	draw_anchor(__overlay_hover[0], _ax, _ay, _r, _type);
 	
 	if(overlay_draw_text) {
-		draw_set_text(_f_p2b, fa_center, fa_bottom, COLORS._main_accent);
-		draw_text_add(round(_ax), round(_ay - 4), name);
+		draw_set_text(f_p2b, fa_center, fa_bottom, COLORS._main_accent);
+		draw_text_add(round(_ax), round(_ay - ui(4)), name);
 	}
 	
 	return hover;

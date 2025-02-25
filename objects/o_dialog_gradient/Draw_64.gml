@@ -273,7 +273,7 @@ draggable = true;
 	sl_position.setFocusHover(sFOCUS, sHOVER);
 	sl_position.register();
 	sl_position.setFont(f_p2);
-	sl_position.draw(op_x, op_y, ui(content_w - 40), ui(24), txt, mouse_ui);
+	sl_position.draw(op_x, op_y, content_w - ui(40), ui(24), txt, mouse_ui);
 #endregion
 
 #region selector

@@ -34,6 +34,8 @@ function preview_overlay_area_padding(interact, active, _x, _y, _s, _mx, _my, _s
 	var drawPos  = _flag & 0b0001;
 	var drawSize = _flag & 0b0010;
 	
+	var _rr = ui(16);
+	
 	if(drawSize) {
 		draw_set_color(COLORS._main_accent);
 		draw_set_circle_precision(32);
@@ -75,7 +77,7 @@ function preview_overlay_area_padding(interact, active, _x, _y, _s, _mx, _my, _s
 			}
 		}
 		
-		if(drawSize && point_in_circle(_mx, _my, xc, y0, 16)) {
+		if(drawSize && point_in_circle(_mx, _my, xc, y0, _rr)) {
 			_hov[0] = 1;
 			hover   = 1;
 			
@@ -84,7 +86,7 @@ function preview_overlay_area_padding(interact, active, _x, _y, _s, _mx, _my, _s
 				drag_sy   = _t;
 				drag_my   = _my;
 			}
-		} else if(drawSize && point_in_circle(_mx, _my, xc, y1, 16)) {
+		} else if(drawSize && point_in_circle(_mx, _my, xc, y1, _rr)) {
 			_hov[1] = 1;
 			hover = 3;
 			
@@ -93,7 +95,7 @@ function preview_overlay_area_padding(interact, active, _x, _y, _s, _mx, _my, _s
 				drag_sy   = _b;
 				drag_my   = _my;
 			}
-		} else if(drawSize && point_in_circle(_mx, _my, x0, yc, 16)) {
+		} else if(drawSize && point_in_circle(_mx, _my, x0, yc, _rr)) {
 			_hov[2] = 1;
 			hover = 0;
 			
@@ -102,7 +104,7 @@ function preview_overlay_area_padding(interact, active, _x, _y, _s, _mx, _my, _s
 				drag_sx   = _l;
 				drag_mx   = _mx;
 			}
-		} else if(drawSize && point_in_circle(_mx, _my, x1, yc, 16)) {
+		} else if(drawSize && point_in_circle(_mx, _my, x1, yc, _rr)) {
 			_hov[3] = 1;
 			hover = 2;
 			
@@ -118,14 +120,11 @@ function preview_overlay_area_padding(interact, active, _x, _y, _s, _mx, _my, _s
 		__overlay_hover[i] = lerp_float(__overlay_hover[i], _hov[i], 4);
 	
 	if(drawSize) {
-		if(drag_type == 0 || drag_type == 2) draw_anchor_line(__overlay_hover[0], xc, y0, 16,  0);
-		if(drag_type == 0 || drag_type == 4) draw_anchor_line(__overlay_hover[1], xc, y1, 16,  0);
-		if(drag_type == 0 || drag_type == 3) draw_anchor_line(__overlay_hover[2], x0, yc, 16, 90);
-		if(drag_type == 0 || drag_type == 1) draw_anchor_line(__overlay_hover[3], x1, yc, 16, 90);
+		if(drag_type == 0 || drag_type == 2) draw_anchor_line(__overlay_hover[0], xc, y0, _rr,  0);
+		if(drag_type == 0 || drag_type == 4) draw_anchor_line(__overlay_hover[1], xc, y1, _rr,  0);
+		if(drag_type == 0 || drag_type == 3) draw_anchor_line(__overlay_hover[2], x0, yc, _rr, 90);
+		if(drag_type == 0 || drag_type == 1) draw_anchor_line(__overlay_hover[3], x1, yc, _rr, 90);
 	}
-	
-	//draw_set_text(_f_p2b, fa_center, fa_center, COLORS._main_accent);
-	//draw_text_add((x0 + x1) / 2, (y0 + y1) / 2, name);
 	
 	return hover;
 }
@@ -165,7 +164,7 @@ function preview_overlay_area_two_point(interact, active, _x, _y, _s, _mx, _my, 
 	}
 	
 	var _hov = [ 0, 0, 0 ];
-	var _r   = 10;
+	var _r   = ui(10);
 	
 	if(interact) {
 		if(drag_type) {
@@ -227,7 +226,7 @@ function preview_overlay_area_two_point(interact, active, _x, _y, _s, _mx, _my, 
 			}
 		}
 		
-		if(drawSize && point_in_circle(_mx, _my, x0, y0, 8)) {
+		if(drawSize && point_in_circle(_mx, _my, x0, y0, ui(8))) {
 			_hov[1] = 1;
 			hover   = 1;
 			
@@ -238,7 +237,7 @@ function preview_overlay_area_two_point(interact, active, _x, _y, _s, _mx, _my, 
 				drag_mx   = _mx;
 				drag_my   = _my;
 			}
-		} else if(drawSize && point_in_circle(_mx, _my, x1, y1, 8)) {
+		} else if(drawSize && point_in_circle(_mx, _my, x1, y1, ui(8))) {
 			_hov[2] = 1;
 			hover   = 2;
 			
@@ -266,13 +265,13 @@ function preview_overlay_area_two_point(interact, active, _x, _y, _s, _mx, _my, 
 	for( var i = 0; i < 3; i++ ) 
 		__overlay_hover[i] = lerp_float(__overlay_hover[i], _hov[i], 4);
 		
-	if(drawPos && (drag_type == 0 || drag_type == 3)) draw_anchor_cross(__overlay_hover[0], xc, yc, _r + 4);
+	if(drawPos && (drag_type == 0 || drag_type == 3)) draw_anchor_cross(__overlay_hover[0], xc, yc, _r + ui(4));
 	if(drawSize) {
 		if(drag_type == 0 || drag_type == 1) draw_anchor(__overlay_hover[1], x0, y0, _r);
 		if(drag_type == 0 || drag_type == 2) draw_anchor(__overlay_hover[2], x1, y1, _r);
 	}
 		
-	//draw_set_text(_f_p2b, fa_center, fa_center, COLORS._main_accent);
+	//draw_set_text(f_p2b, fa_center, fa_center, COLORS._main_accent);
 	//draw_text_add((x0 + x1) / 2, (y0 + y1) / 2 - 4, name);
 	
 	return hover;
@@ -307,7 +306,7 @@ function preview_overlay_area_span(interact, active, _x, _y, _s, _mx, _my, _snx,
 	}
 	
 	var _hov = [ 0, 0 ];
-	var _r   = 10;
+	var _r   = ui(10);
 	
 	if(point_in_circle(_mx, _my, _ax + _aw, _ay + _ah, _r))
 		_hov[1] = 1;
@@ -317,7 +316,7 @@ function preview_overlay_area_span(interact, active, _x, _y, _s, _mx, _my, _snx,
 	__overlay_hover[0] = lerp_float(__overlay_hover[0], _hov[0], 4);
 	__overlay_hover[1] = lerp_float(__overlay_hover[1], _hov[1], 4);
 	
-	if((drag_type == 0 || drag_type == 1) && drawPos)  draw_anchor_cross(__overlay_hover[0], _ax, _ay, _r + 4);
+	if((drag_type == 0 || drag_type == 1) && drawPos)  draw_anchor_cross(__overlay_hover[0], _ax, _ay, _r + ui(4));
 	if((drag_type == 0 || drag_type == 2) && drawSize) draw_anchor(__overlay_hover[1], _ax + _aw, _ay + _ah, _r);
 	
 	if(!interact) return -1;
@@ -377,7 +376,7 @@ function preview_overlay_area_span(interact, active, _x, _y, _s, _mx, _my, _snx,
 		}
 	}
 						
-	if(drawSize && point_in_circle(_mx, _my, _ax + _aw, _ay + _ah, 8)) {
+	if(drawSize && point_in_circle(_mx, _my, _ax + _aw, _ay + _ah, ui(8))) {
 		hover = 2;
 		
 		if(mouse_press(mb_left, active)) {

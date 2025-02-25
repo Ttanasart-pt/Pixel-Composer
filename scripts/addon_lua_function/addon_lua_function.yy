@@ -6,7 +6,7 @@
   "name":"addon_lua_function",
   "parent":{
     "name":"custom",
-    "path":"folders/addons/custom.yy",
+    "path":"folders/misc/addons/custom.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

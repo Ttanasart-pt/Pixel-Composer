@@ -13,7 +13,7 @@
   "overriddenProperties":[],
   "parent":{
     "name":"custom",
-    "path":"folders/addons/custom.yy",
+    "path":"folders/misc/addons/custom.yy",
   },
   "parentObjectId":{
     "name":"addon",

@@ -11,11 +11,10 @@ if !ready exit;
 	var ly = dialog_y + ui(96);
 	
 	draw_sprite_ui_uniform(THEME.icon_64, 0, cx, dialog_y + ui(56));
-	draw_set_text(_f_ico_h5, fa_center, fa_top, COLORS._main_text_accent);
-	draw_text(cx, ly, "Pixel Composer");
-	ly += string_height("l");
+	draw_sprite_ui_uniform(s_title, 0, cx - ui(256 * .4), ly, .4);
+	ly += ui(32);
 	
-	draw_set_font(f_p3);
+	draw_set_text(f_p3, fa_center, fa_top);
 	draw_set_color(COLORS._main_text_sub);
 	draw_text(cx, ly - ui(4), code_is_compiled()? "Native build" : "VM build");
 	ly += string_height("l");

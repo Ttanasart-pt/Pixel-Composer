@@ -11,7 +11,7 @@
   "overriddenProperties":[],
   "parent":{
     "name":"key_displayer",
-    "path":"folders/addons/key_displayer.yy",
+    "path":"folders/misc/addons/key_displayer.yy",
   },
   "parentObjectId":{
     "name":"addon",

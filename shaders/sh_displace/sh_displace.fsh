@@ -124,8 +124,10 @@ vec2 shiftMap(in vec2 pos, in float str) {
 	vec2  _disp;
 	
 	if(mode == 0) {
-		_str = (bright(disP) - middle) * str;
-		sam_pos = pos + _str * raw_displace;
+		_str  = (bright(disP) - middle) * str;
+		_disp = _str * raw_displace;
+		
+		sam_pos = pos + _disp;
 		
 	} else if(mode == 1) {
 		if(sepAxis == 0)

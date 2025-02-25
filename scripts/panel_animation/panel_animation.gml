@@ -2701,7 +2701,7 @@ function Panel_Animation() : PanelContent() constructor {
     }
     
     function drawContent(panel) { //                    >>>>>>>>>>>>>>>>>>>> MAIN DRAW <<<<<<<<<<<<<<<<<<<<
-        draw_clear_alpha(COLORS.panel_bg_clear, 0);
+        draw_clear_alpha(COLORS.panel_bg_clear, 1);
         if(!PROJECT.active) return;
         
         if(tool_width_drag) {

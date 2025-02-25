@@ -9,7 +9,7 @@
   "overriddenProperties":[],
   "parent":{
     "name":"addons",
-    "path":"folders/addons.yy",
+    "path":"folders/misc/addons.yy",
   },
   "parentObjectId":null,
   "persistent":false,

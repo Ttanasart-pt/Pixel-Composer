@@ -45,8 +45,7 @@ function Node_ASE_Tag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					inputs[1].setValue(tName);
 			}
 			
-			if(tName == _tag)
-				cc = COLORS._main_text_accent;
+			if(tName == _tag) cc = COLORS._main_text_accent;
 			
 			draw_set_text(f_p2, fa_left, fa_center, cc);
 			draw_text_add(_bx + ui(16), _yy + hh / 2, tName);
@@ -113,7 +112,6 @@ function Node_ASE_Tag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		}
 		
 		surface_set_shader(_outSurf);
-			DRAW_CLEAR
 			draw_surface_safe(temp_surface[!bg]);
 		surface_reset_shader();
 		

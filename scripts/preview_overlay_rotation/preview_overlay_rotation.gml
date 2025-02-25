@@ -6,7 +6,7 @@ function preview_overlay_rotation(interact, active, _x, _y, _s, _mx, _my, _snx, 
 	var _ax   = _x + lengthdir_x(_rad, _val);
 	var _ay   = _y + lengthdir_y(_rad, _val);
 	var index = 0;
-	var _r    = 10;
+	var _r    = ui(10);
 						
 	if(drag_type) {
 		index = 1;
@@ -52,15 +52,15 @@ function preview_overlay_rotation(interact, active, _x, _y, _s, _mx, _my, _snx, 
 		shader_set_f("index",     __overlay_hover[0]);
 		shader_set_f("angle",     degtorad(_val + 90));
 		
-		var _arx = _x + lengthdir_x(_rad - 4, _val);
-		var _ary = _y + lengthdir_y(_rad - 4, _val);
+		var _arx = _x + lengthdir_x(_rad - ui(4), _val);
+		var _ary = _y + lengthdir_y(_rad - ui(4), _val);
 		draw_sprite_stretched(s_fx_pixel, 0, _arx - _r * 2, _ary - _r * 2, _r * 4, _r * 4);
 	shader_reset();
 	
 	//draw_sprite_colored(THEME.anchor_rotate, index, _ax, _ay, 1, _val - 90);
 	
-	draw_set_text(_f_p2b, fa_center, fa_bottom, COLORS._main_accent);
-	draw_text_add(round(_ax), round(_ay - 4), name);
+	draw_set_text(f_p2b, fa_center, fa_bottom, COLORS._main_accent);
+	draw_text_add(round(_ax), round(_ay - ui(4)), name);
 	
 	return hover;
 }
