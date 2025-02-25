@@ -719,7 +719,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 				}
 				
 				if(prop.type == VALUE_TYPE.curve) {
-					var _pd = array_length(value) % 6;
+					var _pd = array_length(_val) % 6;
 					
 					if(LOADING_VERSION < 1_18_09_1 && _pd == 0)
 						array_insert(_val, 0, /**/ 0, 1, 0, 0, 0, 0);

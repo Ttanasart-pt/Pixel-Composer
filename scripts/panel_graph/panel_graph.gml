@@ -1289,6 +1289,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         frame_hovering  = noone;
         
         var _node_active = nodes_list;
+        
+        array_foreach(_node_active, function(_n) /*=>*/ { _n.is_selecting = false; });
         if(display_parameter.show_control) _node_active = array_filter(nodes_list, function(_n) /*=>*/ {return _n.active});
         else                               _node_active = array_filter(nodes_list, function(_n) /*=>*/ {return _n.active && !_n.is_controller});
         
@@ -1543,7 +1545,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         printIf(log, $"Node selection time: {get_timer() - t}"); t = get_timer();
         
         // draw active
-        array_foreach(nodes_selecting, function(_n) /*=>*/ { _n.drawActive(__gr_x, __gr_y, __gr_s, instanceof(_n) == FOCUS_STR); });
+        array_foreach(nodes_selecting, function(_n) /*=>*/ { _n.drawActive(__gr_x, __gr_y, __gr_s, instanceof(_n) == FOCUS_STR); _n.is_selecting = true; });
         if(nodes_select_anchor) nodes_select_anchor.active_draw_anchor = true;
         
         printIf(log, $"Draw active: {get_timer() - t}"); t = get_timer();

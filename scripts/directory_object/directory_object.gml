@@ -39,7 +39,7 @@ function FileObject(_path) constructor {
 	thumbnail_data	= -1;
 	thumbnail		= noone;
 	
-	static getName = function() { return name; }
+	static getName  = function() /*=>*/ {return name};
 	
 	static getThumbnail = function() {
 		if(thumbnail != noone && is_surface(thumbnail)) return thumbnail;	// Thumbnail loaded
@@ -242,7 +242,7 @@ function DirectoryObject(_path) constructor {
 		if(icon_blend != undefined) _spr_bld = icon_blend;
 		
 		var _spr_sca = (hg - ui(5)) / 24;
-		draw_sprite_ui_uniform(icon, _spr_ind, _x + ui(16), _y + hg / 2 - 1, _spr_sca, _spr_bld);
+		draw_sprite_uniform(icon, _spr_ind, _x + ui(16), _y + hg / 2 - 1, _spr_sca, _spr_bld);
 		gpu_set_texfilter(false);
 		
 		draw_set_text(font, fa_left, fa_center, path == parent.context.path? COLORS._main_text_accent : COLORS._main_text_inner);

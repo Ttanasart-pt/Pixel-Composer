@@ -13,22 +13,22 @@ function Node_ASE_Tag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	tag_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		if(ase_data == noone) {
-			draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _y, _w, 28, COLORS.node_composite_bg_blend, 1);	
+			draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _y, _w, ui(28), COLORS.node_composite_bg_blend, 1);	
 			
 			draw_set_text(f_p3, fa_center, fa_center, COLORS._main_text_sub);
-			draw_text_add(_x + _w / 2, _y + 14, "No data");
-			return 32;
+			draw_text_add(_x + _w / 2, _y + ui(14), "No data");
+			return ui(32);
 		}
 		
 		var _tag = getSingleValue(1);
 		var _amo = array_length(ase_data.tags);
-		var hh   = 24;
-		var _h   = hh * _amo + 16;
+		var hh   = ui(24);
+		var _h   = hh * _amo + ui(16);
 		
 		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _y, _w, _h, COLORS.node_composite_bg_blend, 1);
 		for( var i = 0, n = array_length(ase_data.tags); i < n; i++ ) {
-			var _bx    = _x + 24;
-			var _yy    = _y + 8 + i * hh;
+			var _bx    = _x + ui(24);
+			var _yy    = _y + ui(8) + i * hh;
 			
 			var tag   = ase_data.tags[i];
 			var tName = tag[$ "Name"];
@@ -49,7 +49,7 @@ function Node_ASE_Tag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				cc = COLORS._main_text_accent;
 			
 			draw_set_text(f_p2, fa_left, fa_center, cc);
-			draw_text_add(_bx + 16, _yy + hh / 2, tName);
+			draw_text_add(_bx + ui(16), _yy + hh / 2, tName);
 		}
 		
 		return _h;
@@ -92,7 +92,7 @@ function Node_ASE_Tag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 		var st = tag[$ "Frame start"];
 		var ed = tag[$ "Frame end"];
-		var fr = st + CURRENT_FRAME % (ed - st);
+		var fr = st + CURRENT_FRAME % (ed - st + 1);
 		var bg = 0;
 		
 		for( var i = 0, n = array_length(_ase.layers); i < n; i++ ) {

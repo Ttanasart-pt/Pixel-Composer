@@ -125,6 +125,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		badgePreview        = 0;
 		badgeInspect        = 0;
 		
+		is_selecting        = false;
 		active_drawing      = false;
 		active_draw_index   = -1;
 		active_draw_anchor  = false;
@@ -2224,9 +2225,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			var xx = x * _s + _x + w * _s;
 			var yy = y * _s + _y;
 			
-			if(badgePreview > 0) { draw_sprite_ext(THEME.node_state, is_3D? 3 : 0, xx, yy, badgePreview, badgePreview, 0, c_white, 1); 	xx -= 28 * badgePreview;	}
-			if(badgeInspect > 0) { draw_sprite_ext(THEME.node_state, 1, xx, yy, badgeInspect, badgeInspect, 0, c_white, 1);				xx -= 28 * badgeInspect;	}
-			if(isTool)           { draw_sprite_ext(THEME.node_state, 2, xx, yy, 1, 1, 0, c_white, 1);									xx -= 28 * 2;				}
+			if(badgePreview > 0) { draw_sprite_ext(THEME.node_state, is_3D? 3 : 0, xx, yy, badgePreview, badgePreview, 0, c_white, 1); 	xx -= 28 * badgePreview; }
+			if(badgeInspect > 0) { draw_sprite_ext(THEME.node_state, 1, xx, yy, badgeInspect, badgeInspect, 0, c_white, 1);				xx -= 28 * badgeInspect; }
+			if(isTool)           { draw_sprite_ext(THEME.node_state, 2, xx, yy, 1, 1, 0, c_white, 1);									xx -= 28 * 2;			 }
 			
 		} else {
 			var xx = _x + _s * (x + w - 10);

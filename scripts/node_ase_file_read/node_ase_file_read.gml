@@ -65,18 +65,18 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	layer_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { 
 		var _vis = attributes.layer_visible;
 		var _amo = array_length(layers);
-		var hh   = 24;
-		var _h   = hh * _amo + 16;
+		var hh   = ui(24);
+		var _h   = hh * _amo + ui(16);
 		
 		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _y, _w, _h, COLORS.node_composite_bg_blend, 1);
 		for( var i = 0, n = array_length(layers); i < n; i++ ) {
-			var _yy = _y + 8 + i * hh;
-			var _bx = _x + 24;
+			var _yy = _y + ui(8) + i * hh;
+			var _bx = _x + ui(24);
 			var _layer = layers[i];
 			
 			if(_layer.type == 0) {
 				var vis = array_safe_get_fast(_vis, i, true);
-				if(point_in_circle(_m[0], _m[1], _bx, _yy + hh / 2, 12)) {
+				if(point_in_circle(_m[0], _m[1], _bx, _yy + hh / 2, ui(12))) {
 					draw_sprite_ui_uniform(THEME.junc_visible, vis, _bx, _yy + hh / 2, 1, c_white);
 					
 					if(mouse_press(mb_left, _focus))
@@ -93,7 +93,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				draw_sprite_ui_uniform(THEME.folder_16, 0, _bx, _yy + hh / 2, 1, COLORS._main_icon);
 			
 			draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
-			draw_text_add(_bx + 16, _yy + hh / 2, _layer.name);
+			draw_text_add(_bx + ui(16), _yy + hh / 2, _layer.name);
 		}
 		
 		return _h;
@@ -105,7 +105,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var abx = ui(24);
 		
 		var by = _y;
-		var hh = 32;
+		var hh = ui(32);
 		var _h = hh * amo + ui(8);
 		
 		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, by, _w, _h, COLORS.node_composite_bg_blend, 1);
@@ -127,23 +127,26 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			var _tgy = _yy + ui(2);
 			var _tgh = hh  - ui(4);
 			
+			var _x1 = _x + ui(8);
+			var _tw = _w - ui(16);
+			
 			if(tag[$ "Name"] == current_tag) {
-				draw_sprite_stretched_ext(THEME.ui_panel, 0, _x + 8, _tgy, _w - 16, _tgh, cc, 0.5);
+				draw_sprite_stretched_ext(THEME.ui_panel, 0, _x1, _tgy, _tw, _tgh, cc, 0.5);
 				
-				draw_sprite_stretched_ext(THEME.ui_panel, 0, _x + 8, _tgy, (_w - 16) * prog, _tgh, cc, 0.85);
-				draw_sprite_stretched_add(THEME.ui_panel, 1, _x + 8, _tgy, (_w - 16) * prog, _tgh, c_white, 0.1);
+				draw_sprite_stretched_ext(THEME.ui_panel, 0, _x1, _tgy, _tw * prog, _tgh, cc, 0.85);
+				draw_sprite_stretched_add(THEME.ui_panel, 1, _x1, _tgy, _tw * prog, _tgh, c_white, 0.1);
 				
 				txt = $"{progFr}/{rn}";
 				
 			} else {
-				draw_sprite_stretched_ext(THEME.ui_panel, 0, _x + 8, _tgy, 10, _tgh, cc, 0.85);
-				draw_sprite_stretched_add(THEME.ui_panel, 1, _x + 8, _tgy, 10, _tgh, c_white, 0.1);
+				draw_sprite_stretched_ext(THEME.ui_panel, 0, _x1, _tgy, ui(10), _tgh, cc, 0.85);
+				draw_sprite_stretched_add(THEME.ui_panel, 1, _x1, _tgy, ui(10), _tgh, c_white, 0.1);
 				
 				txt = $"{rn}";
 			}
 			
-			if(_hover && point_in_rectangle(_m[0], _m[1], _x + 8, _yy, _x + _w - 8, _yy + hh)) {
-				draw_sprite_stretched_add(THEME.ui_panel, 0, _x + 8, _tgy, _w - 16, _tgh, c_white, 0.1);
+			if(_hover && point_in_rectangle(_m[0], _m[1], _x1, _yy, _x + _w - ui(8), _yy + hh)) {
+				draw_sprite_stretched_add(THEME.ui_panel, 0, _x1, _tgy, _tw, _tgh, c_white, 0.1);
 				
 				if(mouse_press(mb_left, _focus))
 					inputs[2].setValue(current_tag == _tagName? "" : _tagName);
@@ -151,11 +154,11 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			
 			draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
 			draw_set_alpha(1);
-			draw_text_add(_x + 28, _yy + hh / 2, tag[$ "Name"]);
+			draw_text_add(_x + ui(28), _yy + hh / 2, tag[$ "Name"]);
 			
 			draw_set_halign(fa_right);
 			draw_set_alpha(0.4);
-			draw_text_add(_x + _w - 20, _yy + hh / 2, txt);
+			draw_text_add(_x + _w - ui(20), _yy + hh / 2, txt);
 			
 			draw_set_alpha(1);
 		}

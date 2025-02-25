@@ -646,5 +646,17 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		
 		for( var i = _tlen; i < input_len; i++ )
 			array_insert(load_map.inputs, i, noone);
+			
+		var _attr_curv = attributes.parameter_curves;
+		var _keys = variable_struct_get_names(_attr_curv);
+		for( var i = 0, n = array_length(_keys); i < n; i++ ) {
+			var _val = _attr_curv[$ _keys[i]];
+			
+			var _insert = CURVE_PADD - (array_length(_val) % 6);
+			repeat(_insert) array_insert(_val, 2, 0);
+			
+			_attr_curv[$ _keys[i]] = _val;
+		}
+		
 	}
 }

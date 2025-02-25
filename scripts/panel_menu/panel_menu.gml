@@ -279,7 +279,7 @@ function Panel_Menu() : PanelContent() constructor {
     
     menu_help_steam = array_clone(menu_help);
     array_push(menu_help_steam, -1, 
-        menuItem(__txtx("panel_menu_steam_workshop", "Steam Workshop"), function() /*=>*/ { steam_activate_overlay_browser("https://steamcommunity.com/app/2299510/workshop/"); }, THEME.steam) );
+        menuItem(__txtx("panel_menu_steam_workshop", "Steam Workshop"), function() /*=>*/ {return steam_activate_overlay_browser("https://steamcommunity.com/app/2299510/workshop/")}, THEME.steam) );
     
     function onFocusBegin() { PANEL_MENU = self; }
     
@@ -341,7 +341,7 @@ function Panel_Menu() : PanelContent() constructor {
             } else {
                 var bx = ui(20);
                 var by = h - ui(20);
-            
+                
                 draw_sprite_ui_uniform(THEME.icon_24, 0, bx, by, 1, c_white);
                 if(pHOVER && point_in_rectangle(mx, my, bx - ui(16), by - ui(16), bx + ui(16), by + ui(16))) {
                     _draggable = false;

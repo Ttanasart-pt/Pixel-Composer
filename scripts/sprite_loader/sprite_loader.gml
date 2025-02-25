@@ -24,7 +24,7 @@ function _sprite_load_from_struct(str, theme, key) {
 	
 	var s    = sprite_add(path, numb, false, true, sx, sy);
 	if(s < 0) { log_message("THEME", $"Load sprite {path} failed."); return 0; }
-		
+	
 	if(!struct_has(str, "slice")) return s;
 	
 	var slice = sprite_nineslice_create();	

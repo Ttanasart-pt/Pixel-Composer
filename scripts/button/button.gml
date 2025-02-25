@@ -191,7 +191,9 @@ function buttonTextIconInstant(active, spr, _x, _y, _w, _h, _m, _act, _hvr, _tip
 	draw_set_text(f_p1, fa_left, fa_center, active? COLORS._main_icon_light : COLORS._main_icon);
 	var bxc = _x + _w / 2 - (string_width(_icon_label) + ui(64)) / 2;
 	var byc = _y + _h / 2;
+	
 	if(_icon) draw_sprite_ui(_icon, 0, bxc + ui(24), byc, 1, 1, 0, _icon_blend, _icon_alpha * (0.5 + 0.5 * active));
+	
 	draw_text_add(bxc + ui(48), byc, _icon_label);
 	
 	return _b;

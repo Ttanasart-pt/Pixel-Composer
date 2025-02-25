@@ -33,7 +33,7 @@ function Node_Stagger(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var _ovfl = _data[4];
 		
 		var _time = CURRENT_FRAME;
-		if(_time == -1) return _output;
+		if(_time < 0) return _output;
 		
 		var _aind = _array_index;
 		var _stps = floor(process_amount / _step);
