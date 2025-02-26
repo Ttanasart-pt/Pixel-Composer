@@ -558,6 +558,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		if(value_from)           return true;
+		if(!show_in_inspector)   return false;
 		if(visible_manual != 0)  return visible_manual == 1;
 		if(!visible)        	 return false;
 		if(index == -1)          return true;

@@ -345,6 +345,11 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		if(will_refresh) refreshNodes();
 		doStepBegin(); 
+		
+		if(toRefreshNodeDisplay) {
+			refreshNodeDisplay();
+			toRefreshNodeDisplay = false;
+		}
 	}
 	
 	static step = function() {

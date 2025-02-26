@@ -856,7 +856,7 @@ function Panel_Animation() : PanelContent() constructor {
                 }
             }
                     
-            if(pHOVER && point_in_rectangle(mx, my, bar_x, 8, bar_x + bar_w, 8 + 16)) { //top bar
+            if(pHOVER && point_in_rectangle(mx, my, bar_x, ui(8), bar_x + bar_w, ui(8 + 16))) { //top bar
                 if(mx < bar_int_x && mouse_press(mb_left, pFOCUS) && timeline_draggable) {
                     timeline_scubbing = true;
                     timeline_scub_st  = CURRENT_FRAME;

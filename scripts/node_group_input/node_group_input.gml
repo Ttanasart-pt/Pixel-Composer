@@ -115,7 +115,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	newInput(12, nodeValue_Vec2("Gizmo Position", self, [ 0, 0 ]));
 	
-	newInput(13, nodeValue_Vec2("Gizmo Scale", self, 1));
+	newInput(13, nodeValue_Float("Gizmo Scale", self, 1));
 	
 	inputs[10].setFrom_condition = function(_valueFrom) {
 		if(is_instanceof(_valueFrom.node, Node_Group_Input)) return true;
@@ -246,14 +246,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			case 7 : _vis = _val <= _vto; break;
 		}
 		
-		var _v = inParent.visible;
-		if(_v && !_vis) inParent.visible = false;
-		inParent.show_in_inspector = _vis;
-		
-		if(_v != _vis) {
-			group.setHeight();
-			group.getJunctionList();
-		}
+		inParent.setVisible(_vis, _vis);
 	}
 	
 	static onValueUpdate = function(index = 0) {
@@ -495,6 +488,8 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	__data   = noone;
 	
 	static update = function(frame = CURRENT_FRAME) {
+		visibleCheck();
+		
 		if(!is(inParent, NodeValue)) return;
 		outputs[0].setValue(inParent.getValue());
 		

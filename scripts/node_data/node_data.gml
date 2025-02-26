@@ -792,7 +792,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		inputDisplayList = [];
 		
 		var iamo = getInputAmount();
-		if(iamo && input_display_dynamic != -1) {
+		if(input_display_dynamic != -1 && iamo) {
 			
 			for(var i = 0; i < array_length(input_display_list_raw); i++) {
 				var ind = input_display_list_raw[i];
@@ -823,7 +823,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 		} else {
 			var amo = input_display_list == -1? array_length(inputs) : array_length(input_display_list);
-			// print($"Amo = {amo}");
 			
 			for(var i = 0; i < amo; i++) {
 				var ind = getInputJunctionIndex(i);
@@ -831,21 +830,13 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				
 				var jun = array_safe_get(inputs, ind, noone);
 				if(jun == noone || is_undefined(jun)) continue;
-				
-				// print($"{i}: {jun.isVisible()}");
-				// print($"    {jun.visible_manual}, {jun.visible}, {jun.index}, {jun.visible_in_list}");
-				
 				if(!jun.isVisible()) continue;
 				
 				array_push(inputDisplayList, jun);
 			}
-			
-			// print($"{inputDisplayList}\n");
 		}
 		
 		if(auto_input && dummy_input) array_push(inputDisplayList, dummy_input);
-		
-		// print(inputDisplayList);
 	}
 	
 	static onValidate = function() {
@@ -1467,6 +1458,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static refreshNodeDisplay = function() {
+		
 		updateIO();
 		setHeight();
 		getJunctionList();

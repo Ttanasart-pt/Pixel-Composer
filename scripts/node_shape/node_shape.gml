@@ -205,6 +205,18 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			
 		}
 		
+		if(_posMode == 0) {
+			hv = inputs[3].drawOverlay(_int, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= hv; _int &= !_hov;
+			
+		} else if(_posMode == 1) {
+			_px  = _x + _pos[0] * _s;
+			_py  = _y + _pos[1] * _s;
+			
+			hv = inputs[16].drawOverlay(_int, active,  _x,  _y, _s, _mx, _my, _snx, _sny); _hov |= hv; _int &= !_hov;
+			hv = inputs[17].drawOverlay(_int, active, _px, _py, _s, _mx, _my, _snx, _sny); _hov |= hv; _int &= !_hov;
+		
+		}
+		
 		if(inputs[9].show_in_inspector && _posMode != 2) { // corner
 			var _px = _x  + _pos[0] * _s;
 			var _py = _y  + _pos[1] * _s;
@@ -232,18 +244,6 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			draw_arc(cx, cy, _cor - _corr, ar, ar + 90, 2);
 			
 			hv = inputs[9].drawOverlay(_int, active, _x0, _y0, _s, _mx, _my, _snx, _sny, aa, _max_s, 1); _hov |= hv; _int &= !_hov;
-		}
-		
-		if(_posMode == 0) {
-			hv = inputs[3].drawOverlay(_int, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= hv; _int &= !_hov;
-			
-		} else if(_posMode == 1) {
-			_px  = _x + _pos[0] * _s;
-			_py  = _y + _pos[1] * _s;
-			
-			hv = inputs[16].drawOverlay(_int, active,  _x,  _y, _s, _mx, _my, _snx, _sny); _hov |= hv; _int &= !_hov;
-			hv = inputs[17].drawOverlay(_int, active, _px, _py, _s, _mx, _my, _snx, _sny); _hov |= hv; _int &= !_hov;
-		
 		}
 		
 		return _hov;

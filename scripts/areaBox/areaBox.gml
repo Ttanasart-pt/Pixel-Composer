@@ -159,9 +159,9 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 				break;
 				
 			case AREA_MODE.padding :
-				onModify(x0,         0);
+				onModify(ss[0] - x1, 0);
 				onModify(y0,         1);
-				onModify(ss[0] - x1, 2);
+				onModify(x0,         2);
 				onModify(ss[1] - y1, 3);
 				break;
 				
@@ -232,6 +232,7 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 						onModify(cnvt? 0.5 : ss[0] / 2, 2);
 						onModify(cnvt? 0.5 : ss[1] / 2, 3);
 						break;
+						
 					case AREA_MODE.padding :   
 						var ss = onSurfaceSize();
 						onModify(0, 0);
@@ -239,6 +240,7 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 						onModify(0, 2);
 						onModify(0, 3);
 						break;
+						
 					case AREA_MODE.two_point : 
 						var ss = onSurfaceSize();
 						onModify(0,               0);
