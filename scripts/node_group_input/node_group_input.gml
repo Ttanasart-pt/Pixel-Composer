@@ -79,14 +79,14 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	skipDefault();
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Enum_Scroll("Display type", self,  0, { data: GROUP_IO_DISPLAY[11], update_hover: false }));
+	newInput(0, nodeValue_Enum_Scroll("Subtype", self,  0, { data: GROUP_IO_DISPLAY[11], update_hover: false }));
 	
 	newInput(1, nodeValue_Range("Range", self, [ 0, 1 ]))
 		.setVisible(false);
 	
-	newInput(2, nodeValue_Enum_Scroll("Input type", self,  11, { data: GROUP_IO_TYPE_NAME, update_hover: false }));
+	newInput(2, nodeValue_Enum_Scroll("Input Type", self,  11, { data: GROUP_IO_TYPE_NAME, update_hover: false }));
 	
-	newInput(3, nodeValue_Text("Enum label", self, ""))
+	newInput(3, nodeValue_Text("Enum Labels", self, "", "Define enum choices, use comma to separate each choice."))
 		.setVisible(false);
 	
 	newInput(4, nodeValue_Enum_Button("Vector size", self,  0, [ "2", "3", "4" ]))
@@ -102,16 +102,20 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	newInput(8, nodeValue_Text("Button Label", self, "Trigger"))
 		.setVisible(false);
 	
-	newInput(9, nodeValue_Enum_Scroll("Visible Condition", self,  0, [ "Show", "Hide", /* 2 */ new scrollItem("Equal",              s_node_condition_type, 0), 
-												        		                       /* 3 */ new scrollItem("Not equal",          s_node_condition_type, 1), 
-												        		                       /* 4 */ new scrollItem("Greater ",           s_node_condition_type, 4), 
-												        		                       /* 5 */ new scrollItem("Greater or equal",   s_node_condition_type, 5), 
-												        		                       /* 6 */ new scrollItem("Lesser",             s_node_condition_type, 2), 
-												        		                       /* 7 */ new scrollItem("Lesser or equal",    s_node_condition_type, 3), ]));
+	newInput(9, nodeValue_Enum_Scroll("Visible Condition", self,  0, [ "Always Show", "Always Hide", /* 2 */ new scrollItem("Equal",              s_node_condition_type, 0), 
+												        		                                     /* 3 */ new scrollItem("Not equal",          s_node_condition_type, 1), 
+												        		                                     /* 4 */ new scrollItem("Greater ",           s_node_condition_type, 4), 
+												        		                                     /* 5 */ new scrollItem("Greater or equal",   s_node_condition_type, 5), 
+												        		                                     /* 6 */ new scrollItem("Lesser",             s_node_condition_type, 2), 
+												        		                                     /* 7 */ new scrollItem("Lesser or equal",    s_node_condition_type, 3), ]));
 	
 	newInput(10, nodeValue_Float("Visible Check", self, 0));
 	
 	newInput(11, nodeValue_Float("Visible Check To", self, 0));
+	
+	newInput(12, nodeValue_Vec2("Gizmo Position", self, [ 0, 0 ]));
+	
+	newInput(13, nodeValue_Vec2("Gizmo Scale", self, 1));
 	
 	inputs[10].setFrom_condition = function(_valueFrom) {
 		if(is_instanceof(_valueFrom.node, Node_Group_Input)) return true;
@@ -123,8 +127,9 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		inputs[i].uncache().rejectArray();
 		
 	input_display_list = [ 
-		["Display", false], 6, 9, 10, 11, 
-		["Data",	false], 2, 0, 4, 1, 7, 3, 8, 
+		["Junction", false], 9, 10, 11, 
+		["Data",     false], 2, 0, 4, 1, 7, 3, 8, 
+		["Gizmo",    false, 6], 12, 13, 
 	];
 	
 	newOutput(0, nodeValue_Output("Value", self, VALUE_TYPE.any, 0))
@@ -511,7 +516,15 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(inParent.isArray()) return;
-		return inParent.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		
+		var _pos = inputs[12].getValue();
+		var _px  = _x + _pos[0] * _s;
+		var _py  = _y + _pos[1] * _s;
+		
+		var _sca = inputs[13].getValue();
+		_s *= _sca;
+		
+		return inParent.drawOverlay(hover, active, _px, _py, _s, _mx, _my, _snx, _sny);
 	}
 	
 	static drawNode = function(_draw, _x, _y, _mx, _my, _s, display_parameter = noone, _panel = noone) { 

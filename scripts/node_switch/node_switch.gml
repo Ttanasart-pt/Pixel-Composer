@@ -10,7 +10,7 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	newInput(1, nodeValue("Default value", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0 ))
 		.setVisible(false, true);
 	
-	size_adjust_tool = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { #region
+	size_adjust_tool = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		var _h = ui(48);
 		
 		var bw = _w / 2 - ui(4);
@@ -23,7 +23,7 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			deleteInput(array_length(inputs) - data_length);
 		
 		return _h;
-	}); #endregion
+	});
 	
 	newOutput(0, nodeValue_Output("Result", self, VALUE_TYPE.any, 0));
 	
@@ -112,7 +112,7 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	#endregion //////////////////////////////// Dynamic IO ////////////////////////////////
 		
-	static onValueFromUpdate = function(index) { #region
+	static onValueFromUpdate = function(index) {
 		if(LOADING || APPENDING) return;
 		if(index < 0) return;
 		
@@ -123,9 +123,9 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			if(inputs[i + 1].value_from != noone)
 				inputs[i + 1].setType(inputs[i + 1].value_from.type);
 		}
-	} #endregion
+	}
 	
-	static onValueUpdate = function(index = 0) { #region
+	static onValueUpdate = function(index = 0) {
 		if(index < input_fix_len) return;
 		if(LOADING || APPENDING) return;
 		
@@ -135,18 +135,18 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		}
 		
 		refreshDynamicInput();
-	} #endregion
+	}
 	
-	static step = function() { #region
+	static step = function() {
 		for( var i = input_fix_len; i < array_length(inputs); i += data_length ) {
 			var _inp = inputs[i + 1];
 			if(_inp.value_from == noone) continue;
 			
 			_inp.setType(_inp.value_from.type);
 		}
-	} #endregion
+	}
 	
-	static update = function(frame = CURRENT_FRAME) { #region
+	static update = function(frame = CURRENT_FRAME) {
 		var sele = getInputData(0);
 		var _res = getInputData(1);
 		
@@ -164,9 +164,9 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		}
 		
 		outputs[0].setValue(_res);
-	} #endregion
+	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var frm = inputs[1];
 		var sele = getInputData(0);
 		var _res = getInputData(1);
@@ -189,7 +189,8 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		if(inputs[1].visible) {
 			var str = string("default");
-			var ss	= min(_s * 0.4, string_scale(str, bbox.w - 16 * _s, 999));
+			var ss	= min(_s * 0.4 / UI_SCALE, string_scale(str, bbox.w - 16 * _s, 999));
+			
 			draw_set_color(value_color(inputs[1].type));
 			draw_text_transformed(bbox.x0 + 8 * _s, inputs[1].y, str, ss, ss, 0);
 		}
@@ -200,11 +201,12 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			var str = string(getInputData(i, ""));
 			if(str == "") continue;
 			
-			var ss	= min(_s * 0.4, string_scale(str, bbox.w - 16 * _s, 999));
+			var ss	= min(_s * 0.4 / UI_SCALE, string_scale(str, bbox.w - 16 * _s, 999));
+			
 			draw_set_color(value_color(inputs[i + 1].type));
 			draw_text_transformed(bbox.x0 + 8 * _s, inputs[i + 1].y, str, ss, ss, 0);
 		}
-	} #endregion
+	}
 	
 	static postApplyDeserialize = function() { refreshDynamicInput(); }
 }
