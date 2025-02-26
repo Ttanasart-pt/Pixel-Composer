@@ -7,11 +7,6 @@
 function Node_Edge_Detect(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Edge Detect";
 	
-	shader = sh_edge_detect;
-	uniform_dim    = shader_get_uniform(shader, "dimension");
-	uniform_filter = shader_get_uniform(shader, "filter");
-	uniform_sam    = shader_get_uniform(shader, "sampleMode");
-	
 	newInput(0, nodeValue_Surface("Surface in self", self));
 	
 	newInput(1, nodeValue_Enum_Scroll("Algorithm", self, 0, ["Sobel", "Prewitt", "Laplacian", "Neighbor max diff"] ));
@@ -41,31 +36,26 @@ function Node_Edge_Detect(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	attribute_surface_depth();
 	attribute_oversample();
 	
-	static step = function() { #region
+	static step = function() {
 		__step_mask_modifier();
-	} #endregion
+	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
-		var ft = _data[1];
-		var ov = getAttribute("oversample");
+		var surf = _data[0];
+		var filt = _data[1];
+		var over = getAttribute("oversample");
 		
-		surface_set_target(_outSurf);
-		DRAW_CLEAR
-		BLEND_OVERRIDE
-		
-		shader_set(shader);
-			shader_set_uniform_f_array_safe(uniform_dim, [surface_get_width_safe(_data[0]), surface_get_height_safe(_data[0])]);
-			shader_set_uniform_i(uniform_filter, ft);
-			shader_set_uniform_i(uniform_sam, ov);
-			draw_surface_safe(_data[0]);
-		shader_reset();
-		
-		BLEND_NORMAL
-		surface_reset_target();
+		surface_set_shader(_outSurf, sh_edge_detect);
+			shader_set_dim("dimension", surf);
+			shader_set_i("filter",      filt);
+			shader_set_i("sampleMode",  over);
+			
+			draw_surface_safe(surf);
+		surface_reset_shader();
 		
 		__process_mask_modifier(_data);
-		_outSurf = mask_apply(_data[0], _outSurf, _data[3], _data[4]);
-		_outSurf = channel_apply(_data[0], _outSurf, _data[6]);
+		_outSurf = mask_apply(surf, _outSurf, _data[3], _data[4]);
+		_outSurf = channel_apply(surf, _outSurf, _data[6]);
 		
 		return _outSurf;
 	}

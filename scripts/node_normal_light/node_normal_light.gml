@@ -45,6 +45,7 @@ function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	}
 	
 	lights_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
+		PROCESSOR_OVERLAY_CHECK
 		
 		var bs = ui(24);
 		var bx = _x + ui(20);
@@ -202,8 +203,9 @@ function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	static processData = function(_outData, _data, _output_index, _array_index) {
 		var _surf = _data[0];
+		var _norm = _data[1];
 		var _amb  = _data[3];
-		var _dim  = surface_get_dimension(_surf);
+		var _dim  = is_surface(_surf)? surface_get_dimension(_surf) : surface_get_dimension(_norm);
 		
 		if(getInputAmount()) {
 			dynamic_input_inspecting = clamp(dynamic_input_inspecting, 0, getInputAmount() - 1);

@@ -12,11 +12,13 @@ function Node_Threshold(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	newInput(1, nodeValue_Bool("Brightness", self, false));
 		
-	newInput(2, nodeValue_Float("Brightness Threshold", self, 0.5))
+	newInput(2, nodeValue_Float("Threshold", self, 0.5))
+		.setInternalName("Brightness Threshold")
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(13);
 		
-	newInput(3, nodeValue_Float("Brightness Smoothness", self, 0))
+	newInput(3, nodeValue_Float("Smoothness", self, 0))
+		.setInternalName("Brightness Smoothness")
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(4, nodeValue_Surface("Mask", self));
@@ -29,11 +31,13 @@ function Node_Threshold(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	newInput(7, nodeValue_Bool("Alpha", self, false));
 	
-	newInput(8, nodeValue_Float("Alpha Threshold", self, 0.5))
+	newInput(8, nodeValue_Float("Threshold", self, 0.5))
+		.setInternalName("Alpha Threshold")
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(14);
 		
-	newInput(9, nodeValue_Float("Alpha Smoothness", self, 0))
+	newInput(9, nodeValue_Float("Smoothness", self, 0))
+		.setInternalName("Alpha Smoothness")
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(10, nodeValue_Toggle("Channel", self, 0b1111, { data: array_create(4, THEME.inspector_channel) }));
@@ -52,15 +56,19 @@ function Node_Threshold(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	newInput(16, nodeValue_Int("Adaptive Radius", self, 4))
 	
-	newInput(17, nodeValue_Bool("Brightness Invert", self, false));
+	newInput(17, nodeValue_Bool("Invert", self, false))
+		.setInternalName("Brightness Invert");
 	
-	newInput(18, nodeValue_Bool("Alpha Invert", self, false));
+	newInput(18, nodeValue_Bool("Invert", self, false))
+		.setInternalName("Alpha Invert");
+	
+	newInput(19, nodeValue_Bool("Apply to Alpha", self, false))
 	
 	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 6, 10, 
 		["Surfaces",	 true], 0, 4, 5, 11, 12, 
-		["Brightness",	 true, 1], 15, 2, 13, 3, 16, 17, 
+		["Brightness",	 true, 1], 15, 2, 13, 3, 16, 17, 19, 
 		["Alpha",	     true, 7], 8, 14, 9, 18, 
 	];
 	
@@ -90,6 +98,7 @@ function Node_Threshold(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		var _brightInv = _data[17];
 		var _alhpaInv  = _data[18];
+		var _brightAlp = _data[19];
 		
 		inputs[16].setVisible(_algo == 1);
 		
@@ -105,6 +114,7 @@ function Node_Threshold(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			shader_set_f("brightSmooth",	    _brightSmt);
 			shader_set_f("adaptiveRadius",	    _adap_size);
 			shader_set_f("gaussianCoeff",	    __gaussian_get_kernel(_adap_size));
+			shader_set_i("brightAlpha",		    _brightAlp);
 			
 			shader_set_i("alpha",			    _alph);
 			shader_set_i("alphaInvert",			_alhpaInv);

@@ -11,6 +11,7 @@ uniform int       brightThresholdUseSurf;
 uniform sampler2D brightThresholdSurf;
 uniform float     brightSmooth;
 uniform float     adaptiveRadius;
+uniform int       brightAlpha;
 
 uniform int       alpha;
 uniform int       alphaInvert;
@@ -54,7 +55,8 @@ void main() {
 		float _res = brightSmooth == 0.? _step(bNeight, cbright) : smoothstep(bNeight - brightSmooth, bNeight + brightSmooth, cbright);
 		if(brightInvert == 1) _res = 1. - _res;
 		
-		col.rgb = vec3(_res);
+		if(brightAlpha == 0) col.rgb = vec3(_res);
+		else                 col     = vec4(col.rgb, _res);
 	}
 	
 	if(alpha == 1) {

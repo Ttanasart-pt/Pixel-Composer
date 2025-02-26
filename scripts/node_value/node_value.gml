@@ -238,12 +238,17 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					 if(connect_type == CONNECT_TYPE.input)  node.inputMap[$ internalName]  = self;
 				else if(connect_type == CONNECT_TYPE.output) node.outputMap[$ internalName] = self;
 			}
+			
+			return self;
 		}
+		
 		static updateName = function(_name) {
 			name          = _name;
 			name_custom   = true;
 			
 			setInternalName(name);
+			
+			return self;
 		} 
 		
 		updateName(_name);
@@ -297,16 +302,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	////- NAME
 	
-	static getName = function() {
-		if(name_custom) return name;
-		return __txt_junction_name(instanceof(node), connect_type, index, name);
-	}
+	static getName = function() /*=>*/ {return name_custom? name : __txt_junction_name(instanceof(node), connect_type, index, name)};
 	
-	static setName = function(_name) {
-		INLINE
-		name = _name;
-		return self;
-	}
+	static setName = function(_name) /*=>*/ { name = _name; return self; }
 	
 	////- VALUE
 	

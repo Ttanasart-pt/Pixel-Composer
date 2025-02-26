@@ -804,7 +804,7 @@ function Panel_Animation() : PanelContent() constructor {
             var bar_line_w = TOTAL_FRAMES * timeline_scale + timeline_shift;
             var bar_int_x  = min(bar_x + bar_w, bar_x + bar_line_w);
             
-            if(pHOVER && point_in_rectangle(mx, my, bar_x, 16, bar_x + bar_w, bar_y - 8)) {
+            if(pHOVER && point_in_rectangle(mx, my, bar_x, ui(16), bar_x + bar_w, bar_y - ui(8))) {
                 var sca = timeline_scale;
                 
                 if(mouse_wheel_down()) timeline_scale = max(timeline_scale - 1 * SCROLL_SPEED, 1);
@@ -2150,7 +2150,7 @@ function Panel_Animation() : PanelContent() constructor {
             	if(key_hover == noone && value_hovering != noone) {
 	                var _kx = (_fr + 1) * timeline_scale + timeline_shift;
 	                var _ky = value_hovering.y;
-	                draw_sprite_ui_uniform(THEME.add, 0, _kx, _ky, .5, COLORS._main_value_positive, .5);
+	                draw_sprite_ui_uniform(THEME.add, 0, _kx, _ky, .5, COLORS._main_value_positive, 1);
 	                
 	                if(mouse_press(mb_left, pFOCUS)) {
 	                	var _nk  = new valueKey(_fr, variable_clone(value_hovering.getValue(_fr)), value_hovering);
