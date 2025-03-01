@@ -102,7 +102,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		min_w   = w;
 		con_h   = 128;
 		h_param = h;
-		name_height = ui(16);
+		name_height = 16;
 		custom_grid = 0;
 		
 		preserve_height_for_preview = false;
@@ -1621,11 +1621,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(_name == "") return;
 		
 		draw_name = true;
-		var _si = _s// / UI_SCALE;
+		var _si = _s / UI_SCALE;
 		
 		var aa = (.25 + .5 * renderActive) * (.25 + .75 * isHighlightingInGraph());
 		var cc = getColor();
-		var nh = previewable? name_height * _si : h * _si;
+		var nh = previewable? name_height * _s : h * _s;
 		var ba = aa;
 		
 		if(_panel && _panel.node_hovering == self) ba = .1;
