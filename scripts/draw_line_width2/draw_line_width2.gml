@@ -82,3 +82,14 @@ function draw_line_width2_angle_width(x0, y0, x1, y1, w0, w1, a0 = 0, a1 = 0, _o
 	draw_vertex_color(_x0, _y0, c_black, 1);
 	draw_vertex_color(_x1, _y1, c_black, 1);
 }
+
+function draw_line_cap_T(x0, y0, x1, y1, cap = 4) {
+	draw_line(x0, y0, x1, y1);
+	
+	var _dir = point_direction(x0, y0, x1, y1);
+	var _dx  = lengthdir_x(cap, _dir + 90);
+	var _dy  = lengthdir_y(cap, _dir + 90);
+	
+	draw_line(x0 - _dx, y0 - _dy, x0 + _dx, y0 + _dy);
+	draw_line(x1 - _dx, y1 - _dy, x1 + _dx, y1 + _dy);
+}

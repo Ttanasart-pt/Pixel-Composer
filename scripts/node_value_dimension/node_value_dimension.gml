@@ -18,6 +18,15 @@ function __NodeValue_Dimension(_node, value) : NodeValue("Dimension", _node, CON
 		var nod = __curr_get_val[1]; if(!is(nod, NodeValue)) return val;
 		var typ = nod.type;
 		
+		if(typ == VALUE_TYPE.pbBox) {
+			if (is(val, __pbBox))  {
+				var _bbox = val.getBBOX();
+				return [ _bbox[2] - _bbox[0], _bbox[3] - _bbox[1] ];
+			}
+			
+			return [ 1, 1 ];
+		}
+		
 		if(typ != VALUE_TYPE.surface) {
 			var _d = array_get_depth(val);
 			
@@ -52,6 +61,7 @@ function __NodeValue_Dimension(_node, value) : NodeValue("Dimension", _node, CON
 			
 			if(eqSize) return _osZ;
 			return sArr;
+			
 		} else if (is_surface(val)) 
 			return [ surface_get_width_safe(val), surface_get_height_safe(val) ];
 			

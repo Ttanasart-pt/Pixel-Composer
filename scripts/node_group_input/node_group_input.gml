@@ -117,8 +117,12 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	newInput(13, nodeValue_Float("Gizmo Scale", self, 1));
 	
-	inputs[10].setFrom_condition = function(_valueFrom) {
-		if(is_instanceof(_valueFrom.node, Node_Group_Input)) return true;
+	newInput(14, nodeValue_Rotation("Gizmo Rotation", self, 0));
+	
+	newInput(15, nodeValue_Bool("Gizmo Label", self, true));
+	
+	inputs[10].setFrom_condition = function(v) {
+		if(is(v.node, Node_Group_Input)) return true;
 		noti_warning("Group IO visibility must be connected directly to another group input.",, self);
 		return false;
 	}
@@ -129,7 +133,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	input_display_list = [ 
 		["Junction", false], 9, 10, 11, 
 		["Data",     false], 2, 0, 4, 1, 7, 3, 8, 
-		["Gizmo",    false, 6], 12, 13, 
+		["Gizmo",    false, 6], 12, 13, 14, 15, 
 	];
 	
 	newOutput(0, nodeValue_Output("Value", self, VALUE_TYPE.any, 0))
@@ -510,16 +514,21 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	static drawNodeDef = drawNode;
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		if(inParent.isArray()) return;
+		if(inParent.isArray()) return false;
+		
+		var _vis = inputs[ 6].getValue();
+		if(!_vis) return false;
 		
 		var _pos = inputs[12].getValue();
+		var _sca = inputs[13].getValue();
+		var _rot = inputs[14].getValue();
+		
 		var _px  = _x + _pos[0] * _s;
 		var _py  = _y + _pos[1] * _s;
-		
-		var _sca = inputs[13].getValue();
 		_s *= _sca;
 		
-		return inParent.drawOverlay(hover, active, _px, _py, _s, _mx, _my, _snx, _sny);
+		inParent.overlay_draw_text = inputs[15].getValue();
+		return inParent.drawOverlay(hover, active, _px, _py, _s, _mx, _my, _snx, _sny, _rot);
 	}
 	
 	static drawNode = function(_draw, _x, _y, _mx, _my, _s, display_parameter = noone, _panel = noone) { 

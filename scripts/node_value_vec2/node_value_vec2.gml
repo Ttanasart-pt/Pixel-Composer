@@ -1,3 +1,4 @@
+#macro nodeValue_2 nodeValue_Vec2
 function nodeValue_Vec2( _name, _node, _value, _data = {}) { return new __NodeValue_Vec2( _name, _node, _value, _data); }
 function nodeValue_IVec2(_name, _node, _value, _data = {}) { return new __NodeValue_IVec2(_name, _node, _value, _data); }
 

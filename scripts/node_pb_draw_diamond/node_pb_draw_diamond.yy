@@ -6,7 +6,7 @@
   "name":"node_pb_draw_diamond",
   "parent":{
     "name":"draw",
-    "path":"folders/nodes/data/pixel builder/draw.yy",
+    "path":"folders/nodes/data/PB/draw.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

@@ -1,32 +1,16 @@
 function Node_PB_Draw_Ellipse(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _group) constructor {
 	name = "Ellipse";
 	
-	input_display_list = [
-		["Draw",	false], 0, 1, 2, 
-	];
+	array_insert_array(input_display_list, input_display_shape_index, [
+		
+	]);
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {
-		var _pbox = _data[0];
-		var _fcol = _data[1];
-		var _mask = _data[2];
+	static pbDrawSurface = function(_data, _bbox) {
+		var _x0 = _bbox[0] - 1;
+		var _y0 = _bbox[1] - 1;
+		var _x1 = _bbox[2] - 1;
+		var _y1 = _bbox[3] - 1;
 		
-		if(_pbox == noone) return _pbox;
-		
-		var _nbox = _pbox.clone();
-		_nbox.content = surface_verify(_nbox.content, _pbox.w, _pbox.h);
-		
-		surface_set_target(_nbox.content);
-			DRAW_CLEAR
-			
-			draw_set_circle_precision(64);
-			draw_set_color(_fcol);
-			draw_ellipse(-1, -1, _pbox.w - 1, _pbox.h - 1, false);
-			
-			PB_DRAW_APPLY_MASK
-		surface_reset_target();
-		
-		PB_DRAW_CREATE_MASK
-		
-		return _nbox;
+		draw_ellipse(_x0, _y0, _x1, _y1, false);
 	}
 }

@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"__pbBox",
   "parent":{
-    "name":"pixel builder",
-    "path":"folders/nodes/data/pixel builder.yy",
+    "name":"main",
+    "path":"folders/nodes/data/PB/main.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

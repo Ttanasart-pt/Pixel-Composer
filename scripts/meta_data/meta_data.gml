@@ -22,6 +22,7 @@ function MetaDataManager() constructor {
 	contact		= "";
 	alias		= "";
 	type		= FILE_TYPE.collection;
+	isDefault   = false;
 	
 	author_steam_id = 0;
 	file_id		= 0;
@@ -30,36 +31,40 @@ function MetaDataManager() constructor {
 	steam		= FILE_STEAM_TYPE.local;
 	
 	static displays = [
-		[ "Description",  function(meta) { return meta.description; }	, 5],
-		[ "Author",		  function(meta) { return meta.author; }		, 1],
-		[ "Contact info", function(meta) { return meta.contact; }		, 1],
-		[ "Alias",		  function(meta) { return meta.alias; }			, 1],
-		[ "Tags",		  function(meta) { return meta.tags; }			, 1],
+		[ "Description",  function(m) /*=>*/ {return m.description}, 5],
+		[ "Author",       function(m) /*=>*/ {return m.author},      1],
+		[ "Contact info", function(m) /*=>*/ {return m.contact},     1],
+		[ "Alias",        function(m) /*=>*/ {return m.alias},       1],
+		[ "Tags",         function(m) /*=>*/ {return m.tags},        1],
 	];
 	
 	static serialize = function() {
-		var m = {};
-		m.description	= description;
-		m.author		= author;
-		m.contact		= contact;
-		m.alias			= alias;
-		m.aut_id		= author_steam_id;
-		m.file_id		= file_id;
-		m.tags			= tags;
-		m.version		= version;
+		var m = {
+			description, 
+			author, 
+			contact, 
+			alias, 
+			file_id, 
+			tags, 
+			version, 
+			isDefault, 
+		};
+		
+		m.aut_id = author_steam_id;
 		
 		return m;
 	}
 	
 	static deserialize = function(m, readonly = false) {
-		description		= struct_try_get(m, "description",	description);
-		author			= struct_try_get(m, "author",		author);
-		contact			= struct_try_get(m, "contact",		contact);
-		alias			= struct_try_get(m, "alias",		alias);
-		author_steam_id = struct_try_get(m, "aut_id",		author_steam_id);
-		file_id			= struct_try_get(m, "file_id",		file_id);
-		tags			= struct_try_get(m, "tags",			tags);
-		version			= struct_try_get(m, "version",		version);
+		description     = m[$ "description"] ?? description;
+		author          = m[$ "author"]      ?? author;
+		contact         = m[$ "contact"]     ?? contact;
+		alias           = m[$ "alias"]       ?? alias;
+		author_steam_id = m[$ "aut_id"]      ?? author_steam_id;
+		file_id         = m[$ "file_id"]     ?? file_id;
+		tags            = m[$ "tags"]        ?? tags;
+		version         = m[$ "version"]     ?? version;
+		isDefault       = m[$ "isDefault"]   ?? isDefault;
 		
 		return self;
 	}
@@ -104,7 +109,7 @@ function MetaDataManager() constructor {
 		
 		draw_set_font(f_h5);
 		_h += string_height_ext(name, -1, ww) - ui(4);
-		_w = max(_w, string_width_ext(name, -1, ww));
+		_w = max(_w, string_width_ext(name, -1, ww) + isDefault * ui(6 + 56));
 		
 		draw_set_font(f_p1);
 		_h += string_height_ext(_aut, -1, ww);
@@ -116,10 +121,12 @@ function MetaDataManager() constructor {
 			_w = max(_w, string_width_ext(contact, -1, ww));
 		}
 		
-		draw_set_font(f_p1);
-		_h += ui(8);
-		_h += string_height_ext(description, -1, ww);
-		_w = max(_w, string_width_ext(description, -1, ww));
+		if(description != "") {
+			draw_set_font(f_p1);
+			_h += ui(8);
+			_h += string_height_ext(description, -1, ww);
+			_w = max(_w, string_width_ext(description, -1, ww));
+		}
 		
 		if(alias != "") { 
 			_h += ui(16);
@@ -160,16 +167,29 @@ function MetaDataManager() constructor {
 		draw_sprite_stretched(THEME.textbox, 3, mx, my, _w + _pd * 2, _h + _pd * 2);
 		draw_sprite_stretched(THEME.textbox, 0, mx, my, _w + _pd * 2, _h + _pd * 2);
 		
+		var tx = mx + _pd;
 		var ty = my + ui(8);
 		
 		draw_set_text(f_h5, fa_left, fa_top, COLORS._main_text);
-		draw_text_line(mx + _pd, ty, name, -1, _w);
+		draw_text_line(tx, ty, name, -1, _w);
+		
+		if(isDefault) {
+			var _dx = tx + string_width(name) + ui(6);
+			var _dy = ty + ui(6);
+			
+			draw_sprite_stretched_ext(THEME.box_r2, 0, _dx, _dy, ui(56), ui(20), COLORS._main_icon_dark, 1);
+			draw_set_text(f_p3, fa_left, fa_top, COLORS._main_text_accent);
+			draw_text(_dx + ui(4), _dy + ui(2), "Default");
+			
+			draw_set_font(f_h5);
+		}
+		
 		ty += string_height_ext(name, -1, _w) - ui(4);
 		
 		draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text_sub);
-		draw_text_line(mx + _pd, ty, _aut, -1, _w);
+		draw_text_line(tx, ty, _aut, -1, _w);
 		if(_own) {
-			var _owX = mx + _pd + string_width_ext(_aut, -1, _w) + ui(12);
+			var _owX = tx + string_width_ext(_aut, -1, _w) + ui(12);
 			
 			draw_set_font(f_p2);
 			var _owW = string_width( _ont);
@@ -183,26 +203,28 @@ function MetaDataManager() constructor {
 		
 		if(contact != "") {
 			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
-			draw_text_line(mx + _pd, ty, contact, -1, _w);
+			draw_text_line(tx, ty, contact, -1, _w);
 			ty += string_height_ext(contact, -1, _w);
 		}
 		
-		ty += ui(8);
-		draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text);
-		draw_text_line(mx + _pd, ty, description, -1, _w);
-		ty += string_height_ext(description, -1, _w);
+		if(description != "") {
+			ty += ui(8);
+			draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text);
+			draw_text_line(tx, ty, description, -1, _w);
+			ty += string_height_ext(description, -1, _w);
+		}
 		
 		if(alias != "") { 
 			ty += ui(16);
 			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
-			draw_text_line(mx + _pd, ty, alias, -1, _w);
+			draw_text_line(tx, ty, alias, -1, _w);
 			ty += string_height_ext(alias, -1, _w);
 		}
 		
 		if(floor(version) != floor(SAVE_VERSION)) {
 			ty += ui(8);
 			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_accent);
-			draw_text_line(mx + _pd, ty, _ver, -1, _w);
+			draw_text_line(tx, ty, _ver, -1, _w);
 			ty += string_height_ext(_ver, -1, _w);
 		}
 		

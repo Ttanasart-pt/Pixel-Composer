@@ -134,10 +134,12 @@ function Inspector_Label( text, font = f_p3) constructor {
     open = true;
 }
 
-function Inspector_Spacer(height, line = false, coll = true) constructor { 
-    self.h = height;  
-    self.line = line; 
-    self.coll = coll; 
+function Inspector_Spacer(_h, _line = false, _coll = true, _shf = ui(2)) constructor { 
+    h    = _h;  
+    line = _line;
+    coll = _coll;
+    
+    lshf = _shf;
 }
 
 function Panel_Inspector() : PanelContent() constructor {
@@ -868,7 +870,7 @@ function Panel_Inspector() : PanelContent() constructor {
             
             if(is(jun, Inspector_Spacer)) {                    // SPACER
                 var _hh = ui(jun.h);
-                var _yy = yy + _hh / 2 - ui(2);
+                var _yy = yy + _hh / 2 - jun.lshf;
                 
                 if(jun.line) {
                     draw_set_color(COLORS.panel_inspector_key_separator);

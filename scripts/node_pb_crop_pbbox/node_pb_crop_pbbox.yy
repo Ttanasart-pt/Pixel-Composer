@@ -1,0 +1,14 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_pb_crop_pbbox",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_pb_crop_pbbox",
+  "parent":{
+    "name":"modify",
+    "path":"folders/nodes/data/PB/modify.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+  "tags":[],
+}

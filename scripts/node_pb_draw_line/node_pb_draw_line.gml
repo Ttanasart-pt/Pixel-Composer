@@ -1,78 +1,56 @@
 function Node_PB_Draw_Line(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _group) constructor {
 	name = "Line";
 	
-	newInput(3, nodeValue_Enum_Button("Direction", self,  0 , [ THEME.obj_draw_line, THEME.obj_draw_line, THEME.obj_draw_line, THEME.obj_draw_line ] ));
+	newInput(pbi+0, nodeValue_Enum_Button("Type", self, 0, array_create(6, THEME.inspector_pb_line)));
 	
-	newInput(4, nodeValue_Int("Thickness", self, 2 ))
+	newInput(pbi+1, nodeValue_Int("Thickness", self, 1));
 	
-	input_display_list = [
-		["Draw",	false], 0, 1, 2, 
-		["Shape",	false], 3, 4, 
-	];
+	array_insert_array(input_display_list, input_display_shape_index, [
+		["Shape", false], pbi+0, pbi+1
+	]);
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {
-		var _pbox = _data[0];
-		var _fcol = _data[1];
-		var _mask = _data[2];
+	static pbDrawSurface = function(_data, _bbox) {
+		var _x0 = _bbox[0] - 1;
+		var _y0 = _bbox[1] - 1;
+		var _x1 = _bbox[2] - 1;
+		var _y1 = _bbox[3] - 1;
 		
-		var _dirr = _data[3];
-		var _thck = _data[4];
+		var _type = _data[pbi+0];
+		var _thck = _data[pbi+1];
 		
-		if(_pbox == noone) return _pbox;
+		var _px0 = _x0, _py0 = _y0;
+		var _px1 = _x1, _py1 = _y1;
 		
-		var _nbox = _pbox.clone();
-		_nbox.content = surface_verify(_nbox.content, _pbox.w, _pbox.h);
+		var _thk2 = floor(_thck / 2);
 		
-		surface_set_target(_nbox.content);
-			DRAW_CLEAR
+		switch(_type) {
+			case 0 : _px0 = _x0; _py0 = _y1 - _thk2;
+				     _px1 = _x1; _py1 = _y1 - _thk2; 
+				     break;
 			
-			var x0 = 0, y0 = 0;
-			var x1 = 0, y1 = 0;
+			case 1 : _px0 = _x0; _py0 = _y0 + _thck % 2 + _thk2;
+				     _px1 = _x1; _py1 = _y0 + _thck % 2 + _thk2; 
+				     break;
 			
-			     if(_dirr == 2 && (_pbox.mirror_h ^^ _pbox.mirror_v)) _dirr = 3;
-			else if(_dirr == 3 && (_pbox.mirror_h ^^ _pbox.mirror_v)) _dirr = 2;
+			case 2 : _px0 = _x0 + _thck % 2 + _thk2; _py0 = _y0;
+				     _px1 = _x0 + _thck % 2 + _thk2; _py1 = _y1; 
+				     break;
 			
-			switch(_dirr) {
-				case 0 : 
-					x0 = _pbox.w / 2;
-					y0 = 0;
-					
-					x1 = _pbox.w / 2;
-					y1 = _pbox.h;
-					break;
-				case 1 :
-					x0 = 0;
-					y0 = _pbox.h / 2;
-					
-					x1 = _pbox.w;
-					y1 = _pbox.h / 2;
-					break;
-				case 2 :
-					x0 = _pbox.w;
-					y0 = 0;
-					
-					x1 = 0;
-					y1 = _pbox.h;
-					break;
-				case 3 :
-					x0 = 0;
-					y0 = 0;
-					
-					x1 = _pbox.w;
-					y1 = _pbox.h;
-					break;
-				
-			}
+			case 3 : _px0 = _x1 - _thk2; _py0 = _y0;
+				     _px1 = _x1 - _thk2; _py1 = _y1; 
+				     break;
 			
-			draw_set_color(_fcol);
-			if(_thck == 1)		  draw_line(x0 - 1, y0 - 1, x1 - 1, y1 - 1);
-			else			draw_line_width(x0 - 1, y0 - 1, x1 - 1, y1 - 1, _thck);
+			case 4 : _px0 = _x1; _py0 = _y0;
+				     _px1 = _x0; _py1 = _y1; 
+				     break;
 			
-			PB_DRAW_APPLY_MASK
-		surface_reset_target();
+			case 5 : _px0 = _x0; _py0 = _y0;
+				     _px1 = _x1; _py1 = _y1; 
+				     break;
+			
+		}
 		
-		PB_DRAW_CREATE_MASK
-		
-		return _nbox;
+		if(_thck == 1) draw_line(_px0, _py0, _px1, _py1);
+		else draw_line_width(_px0, _py0, _px1, _py1, _thck);
 	}
 }

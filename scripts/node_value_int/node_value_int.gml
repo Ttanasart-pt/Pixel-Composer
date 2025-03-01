@@ -1,3 +1,4 @@
+#macro nodeValue_i nodeValue_Int
 function nodeValue_Int(_name, _node, _value, _tooltip = "") { return new __NodeValue_Int(_name, _node, _value, _tooltip); }
 
 function __NodeValue_Int(_name, _node, _value, _tooltip = "") : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.integer, _value, _tooltip) constructor {

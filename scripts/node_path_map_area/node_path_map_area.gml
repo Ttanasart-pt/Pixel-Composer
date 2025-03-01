@@ -8,18 +8,64 @@ function Node_Path_Map_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput(1, nodeValue_Area("Area", self, DEF_AREA, { useShape : false }));
 	inputs[1].editWidget.adjust_shape = false;
 	
+	newInput(2, nodeValue_Enum_Scroll("Map From", self, 0, [ "Path Boundary", "Fix Dimension", "BBOX" ]));
+	
+	newInput(3, nodeValue_Vec2("Dimension From", self, [ 1, 1 ]))
+	
+	newInput(4, nodeValue_Enum_Scroll("Map To", self, 0, [ "Area", "Fix Dimension", "BBOX" ]));
+	
+	newInput(5, nodeValue_Vec2("Dimension To", self, [ 1, 1 ]))
+	
+	newInput(6, nodeValue_Vec4("BBOX From", self, [ 0, 0, 1, 1 ]))
+	
+	newInput(7, nodeValue_Vec4("BBOX To", self, [ 0, 0, 1, 1 ]))
+	
 	newOutput(0, nodeValue_Output("Path", self, VALUE_TYPE.pathnode, self));
+	
+	input_display_list = [ 0, 
+		["From", false], 2, 3, 6, 
+		["To",   false], 4, 1, 5, 7, 
+	]
 	
 	cached_pos = ds_map_create();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { 
-		inputs[1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); 
+		var _toType = getSingleValue(4);
+		
+		switch(_toType) {
+			case 0 : inputs[1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); break;
+			case 1 : 
+				var _tdim = getSingleValue(5);
+				draw_set_color(COLORS._main_accent);
+				draw_rectangle(
+					_x + 0 * _s,
+					_y + 0 * _s,
+					_x + _tdim[0] * _s,
+					_y + _tdim[1] * _s,
+					true
+				);
+				break;
+			
+			case 2 : 
+				var _tbox = getSingleValue(7);
+				draw_set_color(COLORS._main_accent);
+				draw_rectangle(
+					_x + _tbox[0] * _s,
+					_y + _tbox[1] * _s,
+					_x + _tbox[2] * _s,
+					_y + _tbox[3] * _s,
+					true
+				);
+				break;
+				
+		}
 	}
 	
 	function _areaMappedPath() constructor {
-		
 		path = noone;
-		area = noone;
+		
+		areaFrom = [ 0, 0, 1, 1 ];
+		areaTo   = [ 0, 0, 1, 1 ];
 		
 		static getLineCount    = function()    /*=>*/ { return struct_has(path, "getLineCount")?    path.getLineCount()     : 1;  }
 		static getSegmentCount = function(i=0) /*=>*/ { return struct_has(path, "getSegmentCount")? path.getSegmentCount(i) : 0;  }
@@ -40,8 +86,8 @@ function Node_Path_Map_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			var _b = path.getBoundary();
 			var _p = path.getPointRatio(_rat, ind);
 			
-			out.x = (area[AREA_INDEX.center_x] - area[AREA_INDEX.half_w]) + (_p.x - _b.minx) / _b.width  * area[AREA_INDEX.half_w] * 2;
-			out.y = (area[AREA_INDEX.center_y] - area[AREA_INDEX.half_h]) + (_p.y - _b.miny) / _b.height * area[AREA_INDEX.half_h] * 2;
+			out.x = (areaTo[AREA_INDEX.center_x] - areaTo[AREA_INDEX.half_w]) + (_p.x - areaFrom[0]) / areaFrom[2] * areaTo[AREA_INDEX.half_w] * 2;
+			out.y = (areaTo[AREA_INDEX.center_y] - areaTo[AREA_INDEX.half_h]) + (_p.y - areaFrom[1]) / areaFrom[3] * areaTo[AREA_INDEX.half_h] * 2;
 			out.weight = _p.weight;
 			
 			return out;
@@ -50,20 +96,55 @@ function Node_Path_Map_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		static getPointDistance = function(_dist, ind = 0, out = undefined) { return getPointRatio(_dist / getLength(), ind, out); }
 		
 		static getBoundary = function() {
-			return new BoundingBox( area[AREA_INDEX.center_x] - area[AREA_INDEX.half_w], 
-									area[AREA_INDEX.center_y] - area[AREA_INDEX.half_h], 
-									area[AREA_INDEX.center_x] + area[AREA_INDEX.half_w], 
-									area[AREA_INDEX.center_y] + area[AREA_INDEX.half_h] );
+			return new BoundingBox( areaTo[AREA_INDEX.center_x] - areaTo[AREA_INDEX.half_w], 
+									areaTo[AREA_INDEX.center_y] - areaTo[AREA_INDEX.half_h], 
+									areaTo[AREA_INDEX.center_x] + areaTo[AREA_INDEX.half_w], 
+									areaTo[AREA_INDEX.center_y] + areaTo[AREA_INDEX.half_h] );
 		}
 	}
 	
 	static processData = function(_outData, _data, _output_index, _array_index = 0) { 
+		var _path = _data[0];
+		var _from = _data[2];
+		var _fdim = _data[3];
+		var _fbox = _data[6];
+		
+		var _to   = _data[4];
+		var _area = _data[1];
+		var _tdim = _data[5];
+		var _tbox = _data[7];
+		
+		inputs[3].setVisible(_from == 1);
+		inputs[6].setVisible(_from == 2);
+		
+		inputs[1].setVisible(_to == 0);
+		inputs[5].setVisible(_to == 1);
+		inputs[7].setVisible(_to == 2);
 		
 		if(!is(_outData, _areaMappedPath)) 
 			_outData = new _areaMappedPath();
 		
-		_outData.path = _data[0];
-		_outData.area = _data[1];
+		if(!struct_has(_path, "getPointRatio")) 
+			return _outData;
+		
+		_outData.path = _path;
+		
+		switch(_from) {
+			case 0 : 
+				var _bb = _path.getBoundary();
+				_outData.areaFrom = [ _bb.minx, _bb.miny, _bb.width, _bb.height ];
+				break;
+				
+			case 1 : _outData.areaFrom = [ 0, 0, _fdim[0], _fdim[1] ]; break;
+			case 2 : _outData.areaFrom = [ _fbox[0], _fbox[1], _fbox[2] - _fbox[0], _fbox[3] - _fbox[1] ]; break;
+		}
+		
+		switch(_to) {
+			case 0 : _outData.areaTo = _area; break;
+			case 1 : _outData.areaTo = [ _tdim[0] / 2, _tdim[1] / 2, _tdim[0] / 2, _tdim[1] / 2, 0 ]; break;
+			case 2 : _outData.areaTo = [ (_tbox[0] + _tbox[2]) / 2, (_tbox[1] + _tbox[3]) / 2, 
+			                             (_tbox[2] - _tbox[0]) / 2, (_tbox[3] - _tbox[1]) / 2, 0 ]; break;
+		}
 		
 		return _outData;
 	}

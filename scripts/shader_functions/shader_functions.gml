@@ -137,6 +137,7 @@ function shader_set_dim(uniform = "dimension", surf = noone) {
 	shader_set_f(uniform, surface_get_width_safe(surf), surface_get_height_safe(surf));
 }
 
+function shader_set_c(uniform, col, alpha = 1) { shader_set_f(uniform, colToVec4(col, alpha)); }
 function shader_set_color(uniform, col, alpha = 1) { shader_set_f(uniform, colToVec4(col, alpha)); }
 
 function shader_set_curve(uniform, curve) { 

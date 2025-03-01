@@ -5,9 +5,10 @@
   "isDnD":false,
   "name":"node_pb_box_mirror",
   "parent":{
-    "name":"box",
-    "path":"folders/nodes/data/pixel builder/box.yy",
+    "name":"pbbox",
+    "path":"folders/nodes/data/PB/pbbox.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
+  "tags":[],
 }

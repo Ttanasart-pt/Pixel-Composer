@@ -1,3 +1,4 @@
+#macro nodeValue_es nodeValue_Enum_Scroll
 function nodeValue_Enum_Scroll(_name, _node, _value, _data) { return new __NodeValue_Enum_Scroll(_name, _node, _value, _data); }
 
 function __NodeValue_Enum_Scroll(_name, _node, _value, _data) : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.integer, _value, "") constructor {

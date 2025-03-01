@@ -105,6 +105,7 @@ function FileObject(_path) constructor {
 		
 		if(file_exists_empty(meta_path)) {
 			meta.deserialize(json_load_struct(meta_path));
+			
 		} else {
 			var m  = json_load_struct(path);
 			
@@ -166,8 +167,7 @@ function DirectoryObject(_path) constructor {
 				ds_list_add(content, _ndir);
 				
 			} else if(directory_exists(_path)) {
-				var fol = new DirectoryObject(_path)
-								.scan(file_type);
+				var fol = new DirectoryObject(_path).scan(file_type);
 				ds_list_add(subDir, fol);
 				
 			} else if(array_exists(file_type, filename_ext(file))) {

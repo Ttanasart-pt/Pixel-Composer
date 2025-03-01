@@ -1,48 +1,28 @@
 function Node_PB_Draw_Diamond(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _group) constructor {
 	name = "Diamond";
 	
-	input_display_list = [
-		["Draw",	false], 0, 1, 2, 
-	];
+	newInput(pbi+0, nodeValue_Enum_Scroll("Corner", self, 0, [ "Scale", "Minimum" ]));
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {
-		var _pbox = _data[0];
-		var _fcol = _data[1];
-		var _mask = _data[2];
+	array_insert_array(input_display_list, input_display_shape_index, [
+		["Shape", false], pbi+0, 
+	]);
+	
+	static pbDrawSurface = function(_data, _bbox) {
+		var _x0 = _bbox[0];
+		var _y0 = _bbox[1];
+		var _x1 = _bbox[2];
+		var _y1 = _bbox[3];
 		
-		if(_pbox == noone) return _pbox;
+		var _ww = _x1 - _x0;
+		var _hh = _y1 - _y0;
 		
-		var _nbox = _pbox.clone();
-		_nbox.content = surface_verify(_nbox.content, _pbox.w, _pbox.h);
+		var _cor = _data[pbi+0];
 		
-		var x0 = 0;
-		var y0 = 0;
-		
-		var x1 = _pbox.w + !(_pbox.w % 2);
-		var y1 = _pbox.h + !(_pbox.h % 2);
-		
-		var xc = _pbox.w / 2;
-		var yc = _pbox.h / 2;
-		
-		surface_set_target(_nbox.content);
-			DRAW_CLEAR
+		shader_set(sh_pb_diamond);
+			shader_set_2("dimension",  [ _ww, _hh ]);
+			shader_set_i("cornerType", _cor);
 			
-			draw_set_color(_fcol);
-			draw_primitive_begin(pr_trianglelist);
-				draw_vertex(xc, y0);
-				draw_vertex(x0, yc);
-				draw_vertex(x1, yc);
-				
-				draw_vertex(x0, yc);
-				draw_vertex(x1, yc);
-				draw_vertex(xc, y1);
-			draw_primitive_end();
-			
-			PB_DRAW_APPLY_MASK
-		surface_reset_target();
-		
-		PB_DRAW_CREATE_MASK
-		
-		return _nbox;
+			draw_sprite_stretched(s_fx_pixel, 0, _x0, _y0, _ww, _hh);
+		shader_reset();
 	}
 }

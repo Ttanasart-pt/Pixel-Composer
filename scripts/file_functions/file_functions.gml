@@ -86,3 +86,5 @@ function file_is_image(path) {
 	
 	return false;
 }
+
+function file_delete_safe(path) { if(!file_exists_empty(path)) return; file_delete(path); }

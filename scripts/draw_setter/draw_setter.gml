@@ -6,15 +6,7 @@
 
 function draw_set_color_alpha(col, alpha = 1) { draw_set_color(col); draw_set_alpha(alpha); }
 
-function draw_set_color_ext(col) {
-	INLINE
-	
-	__draw_set_color(col);
-	if(is_real(col)) return;
-	
-	var a = _color_get_alpha(col);
-	draw_set_alpha(a);
-}
+function draw_set_color_ext(col) { draw_set_color(col); draw_set_alpha(_color_get_alpha(col)); }
 
 function draw_clear_ext_override(col) {
 	if(is_real(col)) {

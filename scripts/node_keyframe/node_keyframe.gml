@@ -682,6 +682,9 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			if(_typ == VALUE_TYPE.struct) {
 				_val = json_try_parse(value);
 			
+			} else if(_typ == VALUE_TYPE.pbBox) {
+				_val = new __pbBox().deserialize(value);
+				
 			} else if(prop.display_type == VALUE_DISPLAY.matrix) {
 				_val = new Matrix().deserialize(value);
 			

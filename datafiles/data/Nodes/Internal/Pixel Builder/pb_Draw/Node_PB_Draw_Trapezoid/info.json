@@ -1,9 +1,8 @@
 {
-  "spr":"s_node_pb_draw_trapezoid",
-  "baseNode":"Node_PB_Draw_Trapezoid",
-  "io":[
-    "pbBox"
-  ],
-  "name":"Trapezoid",
-  "show_in_recent":false
+    "name":          "Trapezoid",
+    "spr":           "s_node_pb_draw_trapezoid",
+    "baseNode":      "Node_PB_Draw_Trapezoid",
+    "pxc_version":    118090,
+    "io":             ["pbBox"],
+    "show_in_recent": false,
 }

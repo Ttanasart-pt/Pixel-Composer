@@ -284,6 +284,41 @@ function Panel_Preference() : PanelContent() constructor {
     				.setFont(f_p2).setEmpty(),
     		));
     	
+    	ds_list_add(pref_global, __txt("Cleanups"));
+    		
+    		ds_list_add(pref_global, new __Panel_Linear_Setting_Item(
+    			__txtx("pref_clear_temp", "Temp File"),
+    			button(function() /*=>*/ { directory_clear(TEMPDIR); }).setText($"Clear Temp Folder ({directory_size_mb(TEMPDIR)} Mb)"),
+    		));
+    	
+    		ds_list_add(pref_global, new __Panel_Linear_Setting_Item(
+    			__txtx("pref_clear_theme", "Autosaves"),
+    			button(function() /*=>*/ { directory_destroy(DIRECTORY + "Autosave"); }).setText($"Clear Autosaves ({directory_size_mb(DIRECTORY + "Autosave")} Mb)"),
+    		));
+    	
+    		ds_list_add(pref_global, new __Panel_Linear_Setting_Item(
+    			__txtx("pref_clear_theme", "Caches"),
+    			button(function() /*=>*/ { directory_destroy(DIRECTORY + "Cache"); 
+    			               directory_destroy(DIRECTORY + "font_cache"); }).setText($"Clear Caches ({directory_size_mb(DIRECTORY + "Cache")} Mb)"),
+    		));
+    	
+    		ds_list_add(pref_global, new __Panel_Linear_Setting_Item(
+    			__txtx("pref_clear_collection", "Default Collections"),
+    			button(function() /*=>*/ { clearDefaultCollection(); }).setText($"Clear Default Collections ({directory_size_mb(DIRECTORY + "Collections")} Mb)"),
+    		));
+    	
+    		ds_list_add(pref_global, new __Panel_Linear_Setting_Item(
+    			__txtx("pref_clear_theme", "Default Theme"),
+    			button(function() /*=>*/ { directory_destroy(DIRECTORY + "Themes/default"); file_delete_safe(DIRECTORY + "Themes/version"); })
+    				.setText($"Clear Default Theme ({directory_size_mb(DIRECTORY + "Themes/default")} Mb)"),
+    		));
+    		
+    		ds_list_add(pref_global, new __Panel_Linear_Setting_Item(
+    			__txtx("pref_clear_nodes", "Default Nodes"),
+    			button(function() /*=>*/ { directory_destroy(DIRECTORY + "Nodes/Internal"); file_delete_safe(DIRECTORY + "Nodes/version"); })
+    				.setText($"Clear Nodes ({directory_size_mb(DIRECTORY + "Nodes/Internal")} Mb)"),
+    		));
+    		
     #endregion
     
     #region interface
@@ -1377,7 +1412,6 @@ function Panel_Preference() : PanelContent() constructor {
     			if(struct_try_get(collapsed, psect, 0)) continue;
     			
     			var name = _pref.name;
-    			var data = _pref.data();
     			
     			if(search_text != "" && string_pos(_search_text, string_lower(name)) == 0) continue;
     			
@@ -1411,15 +1445,17 @@ function Panel_Preference() : PanelContent() constructor {
     			var widget_w = ui(260);
     			var widget_h = th;
     			
-    				 if(is_instanceof(_pref.editWidget, textBox))         widget_w = _pref.editWidget.input == TEXTBOX_INPUT.text? ui(400) : widget_w;
-    			else if(is_instanceof(_pref.editWidget, folderArrayBox))  widget_w = ui(400);
+    				 if(is(_pref.editWidget, textBox))         widget_w = _pref.editWidget.input == TEXTBOX_INPUT.text? ui(400) : widget_w;
+    			else if(is(_pref.editWidget, folderArrayBox))  widget_w = ui(400);
+    			else if(is(_pref.editWidget, buttonClass))     widget_w = ui(400);
     			
     			var widget_x = x1 - padx - ui(4) - widget_w;
     			var widget_y = yy;
     			
     			if(_pref.getDefault != noone)
     				widget_w -= ui(32 + 8);
-    				
+    			
+    			var data    = is(_pref, __Panel_Linear_Setting_Item_Preference)? _pref.data() : 0;
     			var params  = new widgetParam(widget_x, widget_y, widget_w, widget_h, data, {}, _m, rx, ry);
     			params.s    = th;
     			params.font = font;
@@ -1518,7 +1554,7 @@ function Panel_Preference() : PanelContent() constructor {
     	for (var j = 0, m = array_length(_pref_lists); j < m; j++) 
     	for (var i = 0, n = ds_list_size(_pref_lists[j]); i < n; i++) {
     		var _pr = _pref_lists[j][| i];
-    		if(!is_struct(_pr)) continue;
+    		if(!is(_pr, __Panel_Linear_Setting_Item_Preference)) continue;
     		
     		contents[$ _pr.key] = { page: j, item: _pr };
     	}

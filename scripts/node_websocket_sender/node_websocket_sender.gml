@@ -17,23 +17,28 @@ function Node_Websocket_Sender(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	newInput(6, nodeValue_Buffer("Buffer", self, noone));
 	
-	input_display_list = [ 5, 0, 1, 2, 3, 4, 6 ];
+	input_display_list = [ 
+		["Connection", false], 5, 0, 
+		["Data",       false], 1, 2, 3, 4, 6 
+	];
 	
-	port      = 0;
-	url       = "";
-	connected = false;
-	
+	port        = 0;
+	url         = "";
+	connected   = false;
+	socket      = noone;
 	callbackMap = {};
 	
 	attributes.network_timeout = 1000;
 	array_push(attributeEditors, "Network");
-	array_push(attributeEditors, [ "Connection timeout", function() { return attributes.network_timeout; }, 
-		new textBox(TEXTBOX_INPUT.number, function(val) { 
-			attributes.network_timeout = val; 
-			network_set_config(network_config_connect_timeout, val);
-		}) ]);
+	array_push(attributeEditors, [ "Connection timeout", function() /*=>*/ {return attributes.network_timeout}, 
+		new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ { attributes.network_timeout = val; network_set_config(network_config_connect_timeout, val); }) ]);
 		
-	static connectTo = function(newPort, newUrl, params) {
+	setTrigger(1, __txt("Resend"), [ THEME.refresh_icon, 1, COLORS._main_value_positive ], function() /*=>*/ {return triggerRender()});
+	
+	static connectTo = function(newPort, newUrl) {
+		if(port == newPort && url == newUrl) return;
+		if(socket != noone) network_destroy(socket);
+		
 		logNode($"Connecting to {newUrl}:{newPort}");
 		
 		if(ds_map_exists(PORT_MAP, port))
@@ -45,22 +50,16 @@ function Node_Websocket_Sender(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		if(ds_map_exists(NETWORK_CLIENTS, port)) 
 			network_destroy(NETWORK_CLIENTS[? port]);
 		
-		var socket = network_create_socket(network_socket_ws);
-		if(socket < 0) {
+		var _sock = network_create_socket(network_socket_ws);
+		if(_sock < 0) {
 			var _txt = "Websocket sender: Fail to create new socket.";
 			logNode(_txt); noti_warning(_txt);
 			return;
 		}
 		
-		var _conId = network_connect_raw_async(socket, url, port);
-		PORT_MAP[? _conId]        = self;
-		callbackMap[$ _conId]     = params;
-		NETWORK_CLIENTS[? _conId] = socket;
-		
+		socket = _sock;
 		logNode($"Connected to {newUrl}:{newPort}");
 	}
-	
-	setTrigger(1, __txt("Resend"), [ THEME.refresh_icon, 1, COLORS._main_value_positive ], function() { triggerRender(); });
 	
 	static sendCall = function(ID, params) {
 		var network = ds_map_try_get(NETWORK_CLIENTS, ID, noone);
@@ -89,8 +88,7 @@ function Node_Websocket_Sender(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			logNode(_txt); noti_status(_txt);
 			
 			connected = true;
-			var callBack = callbackMap[$ aid];
-			sendCall(aid, callBack);
+			sendCall(aid, callbackMap[$ aid]);
 		}
 	}
 	
@@ -117,16 +115,19 @@ function Node_Websocket_Sender(_x, _y, _group = noone) : Node(_x, _y, _group) co
 				var _str  = json_stringify(_stru);
 				_buff = buffer_from_string(_str);
 				break;
+				
 			case 1 :
 				var _surf = getInputData(3);
 				if(!is_surface(_surf)) return;
 				_buff = buffer_from_surface(_surf);
 				break;
+				
 			case 2 :
 				var _path = getInputData(4);
 				if(!file_exists_empty(_path)) return;
 				_buff = buffer_from_file(_path);
 				break;
+				
 			case 3 :
 				_buff = getInputData(6);
 				if(!buffer_exists(_buff)) return;
@@ -134,7 +135,13 @@ function Node_Websocket_Sender(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		}
 		
 		params.content = _buff;
-		connectTo(_port, _target, params);
+		connectTo(_port, _target);
+		
+		var _conId = network_connect_raw_async(socket, url, port);
+		PORT_MAP[? _conId]        = self;
+		callbackMap[$ _conId]     = params;
+		NETWORK_CLIENTS[? _conId] = socket;
+		
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
@@ -153,6 +160,10 @@ function Node_Websocket_Sender(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		draw_set_alpha(1);
 		
 		draw_sprite_fit(THEME.node_websocket_send, 0, bbox.xc, (_y0 + _y1) / 2, bbox.w, _y1 - _y0, cc, aa);
+	}
+	
+	static onCleanUp = function() {
+		if(socket != noone) network_destroy(socket);
 	}
 		
 	static postApplyDeserialize = function() {

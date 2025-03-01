@@ -61,11 +61,10 @@ event_inherited();
 	]);
 	
 	#region ---- category ----
-	
+		category = NODE_CATEGORY;
+		
 		switch(instanceof(context)) {
-			case "Node_Pixel_Builder" : category = NODE_PB_CATEGORY;  break;
 			case "Node_DynaSurf" :      category = NODE_PCX_CATEGORY; break;
-			default :                   category = NODE_CATEGORY;
 		}
 		
 		draw_set_font(f_p0);

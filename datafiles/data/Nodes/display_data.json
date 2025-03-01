@@ -225,6 +225,36 @@
         "context": ["Node_Strand_Group", "Node_Strand_Group_Inline"],
         "color": "node_blend_strand"
     },
+    {
+        "name": "Pixel Builder", "nodes": [
+            { "label": "Group" },
+            "Node_Group_Input",
+            "Node_Group_Output",
+            "Node_PB_Output",
+
+            { "label": "Main" },
+            "Node_PB_Dimension",
+            { "label": "/PBBOX" },
+            "Node_PB_Box",
+            "Node_PB_Box_BBOX",
+            "Node_PB_Box_Mirror",
+
+            { "label": "Draw" },
+            "Node_PB_Draw_Rectangle",
+            "Node_PB_Draw_Round_Rectangle",
+            "Node_PB_Draw_Trapezoid",
+            "Node_PB_Draw_Diamond",
+            "Node_PB_Draw_Ellipse",
+            "Node_PB_Draw_Line",
+            "Node_PB_Draw_Surface",
+
+            { "label": "Surface" },
+            "Node_PB_Draw_Surface",
+            "Node_PB_Crop_PBBOX",
+        ],
+        "context": ["Node_Pixel_Builder"],
+        "color": "node_blend_feedback"
+    },
     
     {
         "name": "IO", "nodes": [
@@ -943,96 +973,15 @@
         ]
     },
     {
-        "name": "Group",
-        "iname": "pb_Group",
-        "globalContext": "pb", "nodes": [
-            "Node_Group_Input",
-            "Node_Group_Output"
-        ]
-    },
-    {
-        "name": "Draw",
-        "iname": "pb_Draw",
-        "globalContext": "pb", "nodes": [
-            { "label": "Fill" },
-            "Node_PB_Draw_Fill",
-            
-            { "label": "Shape" },
-            "Node_PB_Draw_Rectangle",
-            "Node_PB_Draw_Round_Rectangle",
-            "Node_PB_Draw_Trapezoid",
-            "Node_PB_Draw_Diamond",
-            "Node_PB_Draw_Ellipse",
-            "Node_PB_Draw_Semi_Ellipse",
-            "Node_PB_Draw_Line",
-            "Node_PB_Draw_Angle",
-            "Node_PB_Draw_Blob"
-        ]
-    },
-    {
-        "name": "Box",
-        "iname": "pb_Box",
-        "globalContext": "pb", "nodes": [
-            { "label": "Layer" },
-            "Node_PB_Layer",
-            
-            { "label": "Box" },
-            "Node_PB_Box_Transform",
-            "Node_PB_Box_Mirror",
-            "Node_PB_Box_Inset",
-            "Node_PB_Box_Split",
-            "Node_PB_Box_Divide",
-            "Node_PB_Box_Divide_Grid",
-            "Node_PB_Box_Contract"
-        ]
-    },
-    {
-        "name": "Effects",
-        "iname": "pb_Effects",
-        "globalContext": "pb", "nodes": [
-            { "label": "Effect" },
-            "Node_PB_Fx_Outline",
-            "Node_PB_Fx_Stack",
-            "Node_PB_Fx_Radial",
-            
-            { "label": "Lighting" },
-            "Node_PB_Fx_Highlight",
-            "Node_PB_Fx_Shading",
-            
-            { "label": "Texture" },
-            "Node_PB_Fx_Hash",
-            "Node_PB_Fx_Strip",
-            "Node_PB_Fx_Brick",
-            
-            { "label": "Blend" },
-            "Node_PB_Fx_Add",
-            "Node_PB_Fx_Subtract",
-            "Node_PB_Fx_Intersect"
-        ]
-    },
-    {
-        "name": "Array",
-        "iname": "pb_Array",
-        "globalContext": "pb", "nodes": [
-            "Node_Array",
-            "Node_Array_Get",
-            "Node_Array_Set",
-            "Node_Array_Insert",
-            "Node_Array_Remove"
-        ]
-    },
-    {
-        "name": "Variable",
         "iname": "pcx_Variable",
-        "globalContext": "pcx", "nodes": [
+        "globalContext": "pcx", "name": "Variable", "nodes": [
             "Node_PCX_var",
             "Node_PCX_fn_var"
         ]
     },
     {
-        "name": "Functions",
         "iname": "pcx_Functions",
-        "globalContext": "pcx", "nodes": [
+        "globalContext": "pcx", "name": "Functions", "nodes": [
             "Node_PCX_Equation",
             
             { "label": "Numbers" },
@@ -1049,9 +998,8 @@
         ]
     },
     {
-        "name": "Flow Control",
         "iname": "pcx_Flow_Control",
-        "globalContext": "pcx", "nodes": [
+        "globalContext": "pcx", "name": "Flow Control", "nodes": [
             "Node_PCX_Condition"
         ]
     }

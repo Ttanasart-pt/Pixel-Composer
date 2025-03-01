@@ -1,5 +1,5 @@
 #region globalvar
-	globalvar ALL_NODES, NODE_PB_CATEGORY, NODE_PCX_CATEGORY;
+	globalvar ALL_NODES, NODE_PCX_CATEGORY;
 	globalvar NODE_CATEGORY, NODE_CATEGORY_MAP;
 	globalvar SUPPORTER_NODES, NEW_NODES;
 	globalvar CUSTOM_NODES, CUSTOM_NODES_POSITION;
@@ -481,7 +481,6 @@ function __read_node_display(_list) {
 		}
 		
 		switch(_ctx) {
-			case "pb"  : array_push(NODE_PB_CATEGORY, _lobj);  break;
 			case "pcx" : array_push(NODE_PCX_CATEGORY, _lobj); break;
 			default    : array_insert(NODE_CATEGORY, NODE_PAGE_LAST++, _lobj); break;
 		}
@@ -558,7 +557,6 @@ function __initNodes(unzip = true) {
 	ALL_NODES		      = {};
 	NODE_CATEGORY_MAP     = {};
 	NODE_CATEGORY	      = [];
-	NODE_PB_CATEGORY      = [];
 	NODE_PCX_CATEGORY     = [];
 	SUPPORTER_NODES       = [];
 	NEW_NODES		      = [];
@@ -635,26 +633,6 @@ function __generateNodeData() {
 			var _str  = _node.serialize();
 			directory_verify($"{_dir}/{_lnme}/{_vnme}");
 			json_save_struct($"{_dir}/{_lnme}/{_vnme}/info.json", _str, true);
-		}
-	}
-	
-	for( var i = 0, n = array_length(NODE_PB_CATEGORY); i < n; i++ ) {
-		var _cat = NODE_PB_CATEGORY[i];
-		
-		var _lnme = _cat.name;
-		var _list = _cat.list;
-		directory_verify($"{_dir}/{_lnme}");
-		
-		for( var j = 0, m = array_length(_list); j < m; j++ ) {
-			var _node = _list[j];
-			if(!is(_node, NodeObject)) continue;
-			
-			var _nme  = _node.nodeName;
-			var _vnme = filename_name_validate(_nme);
-			
-			var _str  = _node.serialize();
-			directory_verify($"{_dir}/pb_{_lnme}/{_vnme}");
-			json_save_struct($"{_dir}/pb_{_lnme}/{_vnme}/info.json", _str, true);
 		}
 	}
 	

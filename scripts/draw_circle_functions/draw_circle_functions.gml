@@ -280,7 +280,7 @@ function draw_arc_forward(_x, _y, _r, _th, _angSt, _angEd) {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function draw_circle_ui(_x, _y, _r, _th, _c = c_white, _a = 1) {
+function draw_circle_ui(_x, _y, _r, _th = 0, _c = c_white, _a = 1) {
 	shader_set(sh_node_circle);
 		shader_set_color("color", _c, _a);
 		shader_set_f("thickness", _th);

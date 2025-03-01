@@ -1358,8 +1358,12 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                     } else if(value_focus || node_hovering == noone) {
                         nodes_selecting = [];
                         
-                        if(DOUBLE_CLICK && !PANEL_INSPECTOR.locked)
-                            PANEL_INSPECTOR.inspecting = noone;
+                        if(DOUBLE_CLICK) {
+                        	var _ctx = getCurrentContext();
+                        	
+                        	if(!PANEL_INSPECTOR.locked) PANEL_INSPECTOR.inspecting = _ctx; 
+                        	if(_ctx) PANEL_PREVIEW.setNodePreview(_ctx);
+                        }
                             
                     } else {
                         if(is(node_hovering, Node_Frame)) {

@@ -10,6 +10,31 @@ function NodeFileObject(_path) : FileObject(_path) constructor {
     
     infoPath = _path + "/info.json";
     info     = json_load_struct(infoPath);
+    
+    static updateInfo = function() {
+    	var _str = "{\n";
+    	
+    	_str += $"    \"name\":          \"{info.name}\",\n";
+    	
+    	if(struct_has(info, "tooltip"))
+		_str += $"    \"tooltip\":       \"{info.tooltip}\",\n";
+    		
+    	_str += $"    \"spr\":           \"{info.spr}\",\n";
+    	_str += $"    \"baseNode\":      \"{info.baseNode}\",\n";
+    	
+    	if(struct_has(info, "pxc_version"))
+		_str += $"    \"pxc_version\":    {info.pxc_version},\n";
+    	
+    	if(struct_has(info, "io") && !array_empty(info.io))
+		_str += $"    \"io\":             {json_stringify(info.io)},\n";
+    		
+    	if(struct_has(info, "show_in_recent"))
+		_str += $"    \"show_in_recent\": {info.show_in_recent? "true" : "false"},\n";
+    	
+    	_str += "}\n";
+    	
+    	file_text_write_all(infoPath, _str);
+    }
 }
 
 function Panel_Node_Custom_Import(_dirs) : PanelContent() constructor {

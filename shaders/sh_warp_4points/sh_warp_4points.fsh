@@ -92,6 +92,7 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
+uniform sampler2D backSurface;
 uniform vec2 p0;
 uniform vec2 p1;
 uniform vec2 p2;
@@ -108,8 +109,16 @@ void main() {
 	float px = v_vTexcoord.x;
 	float py = v_vTexcoord.y;
 	float u, v;
-	vec2 uv;
+	vec2 uv, _p;
 	
+	vec2 _p0 = p0;
+	vec2 _p1 = p1;
+	vec2 _p2 = p2;
+	vec2 _p3 = p3;
+	
+	bool invX = p2.x > p1.x && p3.x > p0.x;
+	bool invY = p3.y < p2.y && p0.y < p1.y;
+    	
 	#region linear interpolation
 		if (abs(p3.y - p0.y) < 1. / dimension.y && abs(p2.y - p1.y) < 1. / dimension.y) { // trapezoid edge case
 	        float t = (py - p2.y) / (p3.y - p2.y);
@@ -117,17 +126,30 @@ void main() {
 			u = unmix(mix(p3.x, p2.x, 1. - t), mix(p0.x, p1.x, 1. - t), px);
 			v = t;
 	        uv = vec2(u, v);
+	        
 		} else if(abs(p2.x - p3.x) < 1. / dimension.x && abs(p1.x - p0.x) < 1. / dimension.x) { // trapezoid edge case
 			float t = (px - p2.x) / (p1.x - p2.x);
 		
 			u = t;
 			v = unmix(mix(p1.y, p2.y, 1. - t), mix(p0.y, p3.y, 1. - t), py);
 	        uv = vec2(u, v);
+	        
 	    } else {
-			vec2 A = (p3 - p0) - (p2 - p1);
-		    vec2 B = (p0 - p1);
-		    vec2 C = (p2 - p1);
-		    vec2 D =  p1;
+	    	
+	    	if(invX) {
+	    		_p = _p2; _p2 = _p1; _p1 = _p;
+	    		_p = _p3; _p3 = _p0; _p0 = _p;
+	    	}
+	    	
+	    	if(invY) {
+	    		_p = _p2; _p2 = _p3; _p3 = _p;
+	    		_p = _p1; _p1 = _p0; _p0 = _p;
+	    	}
+	    	
+			vec2 A = (_p3 - _p0) - (_p2 - _p1);
+		    vec2 B = (_p0 - _p1);
+		    vec2 C = (_p2 - _p1);
+		    vec2 D =  _p1;
 		
 			float c1 = (B.y * C.x) + (A.y * D.x) - (B.x * C.y) - (A.x * D.y);
 		    float c2 = (B.y * D.x) - (B.x * D.y);
@@ -139,13 +161,18 @@ void main() {
 			u =  A == vec2(0.)?        0. : (-_B - sqrt(_B * _B - 4.0 * _A * _C)) / (_A * 2.0);
 			v = (u * A.x + B.x) == 0.? 0. : (px - (u * C.x) - D.x) / (u * A.x + B.x);
 			uv = vec2(1. - u, v);
+			
+			if(invX) uv.x = 1. - uv.x;
+			if(invY) uv.y = 1. - uv.y;
 		}
 	#endregion
 	
 	if(tile == 1) uv = fract(1. + fract(uv));
 	
+	bool flip = (invX && !invY) || (!invX && invY);
+	gl_FragColor = vec4(0.);
+	
 	if(uv.x >= 0. && uv.y >= 0. && uv.x <= 1. && uv.y <= 1.)
-		gl_FragColor = texture2Dintp( gm_BaseTexture, uv );
-	else 
-		gl_FragColor = vec4(0.);
+		gl_FragColor = flip? texture2Dintp( backSurface, uv ) : texture2Dintp( gm_BaseTexture, uv );
+	
 }

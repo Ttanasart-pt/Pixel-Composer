@@ -1,0 +1,14 @@
+{
+  "$GMScript":"v1",
+  "%Name":"pbBoxBox",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"pbBoxBox",
+  "parent":{
+    "name":"object",
+    "path":"folders/widgets/object.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+  "tags":[],
+}

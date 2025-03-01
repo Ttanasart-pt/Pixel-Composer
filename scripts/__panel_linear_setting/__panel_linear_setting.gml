@@ -18,9 +18,9 @@ function __Panel_Linear_Setting_Item(name, editWidget, data, onEdit = noone, get
 function __Panel_Linear_Setting_Item_Preference(name, key, editWidget, _data = noone) : __Panel_Linear_Setting_Item(name, editWidget, _data) constructor {
 	self.key = key;
 	
-	data       = function( ) { return getPreference(key); }
-	onEdit     = function(v) { setPreference(key, v); }
-	getDefault = function( ) { return getPreference(key, PREFERENCES_DEF); }
+	data       = function( ) /*=>*/ {return getPreference(key)};
+	onEdit     = function(v) /*=>*/ {return setPreference(key, v)};
+	getDefault = function( ) /*=>*/ {return getPreference(key, PREFERENCES_DEF)};
 }
 
 function __Panel_Linear_Setting_Label(name, sprite, _index = 0, _color = c_white) constructor {

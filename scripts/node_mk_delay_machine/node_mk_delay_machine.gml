@@ -18,7 +18,7 @@ function Node_MK_Delay_Machine(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	newInput(6, nodeValueSeed(self));
 	
-	newInput(7, nodeValue_Bool("Loop", self, false));
+	newInput(7, nodeValue_Enum_Scroll("Overflow", self, 0, [ "Empty", "Loop", "Hold" ]));
 	
 	newInput(8, nodeValue_Enum_Scroll("Blend Mode", self, 0, [ "Normal", "Alpha", "Additive", "Maximum" ]));
 	
@@ -32,8 +32,10 @@ function Node_MK_Delay_Machine(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	];
 	
 	setTrigger(2, "Clear cache", [ THEME.cache, 0, COLORS._main_icon ]);
-	
+	 
 	static onInspector2Update = function() { clearCache(); }
+	
+	surf_indexes = [];
 	
 	static update = function() {  
 		var _surf = getInputData(0);
@@ -43,13 +45,16 @@ function Node_MK_Delay_Machine(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		var _alpC = getInputData(4);
 		var _psel = getInputData(5);
 		var _seed = getInputData(6);
-		var _loop = getInputData(7);
+		var _over = getInputData(7);
 		var _blnd = getInputData(8);
 		var _invt = getInputData(9);
 		
 		inputs[6].setVisible(_psel == 2);
 		
-		cacheCurrentFrame(_surf);
+		surf_indexes = array_verify(surf_indexes, TOTAL_FRAMES);
+		surface_free_safe(array_safe_get_fast(surf_indexes, CURRENT_FRAME));
+		surf_indexes[CURRENT_FRAME] = surface_clone(_surf);
+		
 		random_set_seed(_seed);
 		
 		var _sw = surface_get_width_safe(_surf);
@@ -72,9 +77,13 @@ function Node_MK_Delay_Machine(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			for( var i = _amo - 1; i >= 0; i-- ) {
 				var _i  = _invt? _amo - 1 - i : i;
 				var _ff = CURRENT_FRAME - _i * _frm;
-				if(_loop) _ff = (_ff + TOTAL_FRAMES) % TOTAL_FRAMES;
 				
-				var _s  = array_safe_get_fast(cached_output, _ff);
+				switch(_over) {
+					case 1 : _ff = (_ff + TOTAL_FRAMES) % TOTAL_FRAMES; break;
+					case 2 : _ff = clamp(_ff, 0, TOTAL_FRAMES); break;
+				}
+				
+				var _s  = array_safe_get_fast(surf_indexes, _ff);
 				if(!is_surface(_s)) continue;
 				
 				switch(_psel) {

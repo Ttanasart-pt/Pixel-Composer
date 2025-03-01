@@ -2141,7 +2141,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		drawNodeBase(xx, yy, _s);
 		draggable = true;
 		
-		if(previewable) {
+		if(previewable && _panel != noone) {
 			if(preview_draw) drawPreview(xx, yy, _s);
 			
 			try { 

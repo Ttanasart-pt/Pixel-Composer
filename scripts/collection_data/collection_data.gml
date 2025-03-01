@@ -4,8 +4,7 @@ function __initCollection() {
 	globalvar COLLECTIONS;
 	COLLECTIONS = -1;
 	
-	var root  = DIRECTORY + "Collections";       directory_verify(root);
-	var rootz = DIRECTORY + "Collections_cache"; directory_verify(rootz);
+	var root = DIRECTORY + "Collections"; directory_verify(root);
 	
 	if(check_version($"{root}/version")) zip_unzip("data/Collections.zip", root);
 	
@@ -73,4 +72,34 @@ function saveCollection(_node, _path, _name, save_surface = true, metadata = noo
 	PANEL_COLLECTION.updated_path = _path;
 	PANEL_COLLECTION.updated_prog = 1;
 	PANEL_COLLECTION.refreshContext();
+}
+
+function clearDefaultCollection() {
+	var st = ds_stack_create();
+	ds_stack_push(st, COLLECTIONS);
+		
+	while(!ds_stack_empty(st)) {
+		var _st = ds_stack_pop(st);
+		for( var i = 0; i < ds_list_size(_st.content); i++ ) {
+			var _file = _st.content[| i];
+			if(_file.type != FILE_TYPE.collection) continue;
+			
+			var _meta = _file.getMetadata();
+			if(!_meta.isDefault) continue;
+			
+			var _path = _file.path;
+			var _spth = array_safe_get(_file.spr_path, 0);
+			var _mpth = _file.meta_path;
+			
+			file_delete_safe(_path);
+			file_delete_safe(_spth);
+			file_delete_safe(_mpth);
+		}
+		
+		for( var i = 0; i < ds_list_size(_st.subDir); i++ )
+			ds_stack_push(st, _st.subDir[| i]);
+	}
+	
+	ds_stack_destroy(st);
+	file_delete_safe(DIRECTORY + "Collections/version");
 }

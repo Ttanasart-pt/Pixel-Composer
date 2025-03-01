@@ -538,12 +538,9 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		if(!draw_input_overlay) return;
 		
 		for(var i = custom_input_index; i < array_length(inputs); i++) {
-			var _in   = inputs[i];
-			var _show = _in.from.getInputData(6);
-			
-			if(!_show) continue;
-			var _hov = _in.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-			if(_hov != undefined) active &= !_hov;
+			var _in = inputs[i];
+			var _hv = _in.from.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+			if(_hv != undefined) active &= !_hv;
 		}
 	}
 	

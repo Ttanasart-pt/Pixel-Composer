@@ -1,79 +1,273 @@
+enum PB_AXIS_ANCHOR {
+	center  = 0b00,
+	minimum = 0b10,
+	maximum = 0b01,
+	bounded = 0b11,
+}
+
+enum PB_DIM_BOUND {
+	unbounded, 
+}
+
 function __pbBox() constructor {
-	layer = 0;
 	
-	x = 0;
-	y = 0;
-	w = 32;
-	h = 32;
+	base_bbox = [ 0, 0, 32, 32 ];
 	
-	layer_w = 32;
-	layer_h = 32;
+	anchor_x_type = PB_AXIS_ANCHOR.minimum;
+	anchor_y_type = PB_AXIS_ANCHOR.minimum;
 	
-	mask	= noone;
-	content = noone;
+	anchor_l = 0; anchor_l_fract = false;
+	anchor_t = 0; anchor_t_fract = false;
 	
-	mirror_h = false;
-	mirror_v = false;
+	anchor_r = 0; anchor_r_fract = false;
+	anchor_b = 0; anchor_b_fract = false;
 	
-	rotation = 0;
+	anchor_w = 1; anchor_w_fract =  true;
+	anchor_h = 1; anchor_h_fract =  true;
 	
-	static drawOverlay = function(_x, _y, _s, color = COLORS._main_accent) {
-		var _x0 = _x + x * _s;
-		var _y0 = _y + y * _s;
+	anchor_w_type = PB_DIM_BOUND.unbounded;
+	anchor_h_type = PB_DIM_BOUND.unbounded;
+	
+	anchor_w_min = 0; anchor_w_max = 0;
+	anchor_h_min = 0; anchor_h_max = 0;
+	
+	function set_w(v) { anchor_w = anchor_w_fract? v / (base_bbox[2] - base_bbox[0]) : v; }
+	function set_h(v) { anchor_h = anchor_h_fract? v / (base_bbox[3] - base_bbox[1]) : v; }
+	
+	function set_l(v) { v -= base_bbox[0]; anchor_l = anchor_l_fract? v / (base_bbox[2] - base_bbox[0]) : v; }
+	function set_t(v) { v -= base_bbox[1]; anchor_t = anchor_t_fract? v / (base_bbox[3] - base_bbox[1]) : v; }
+	
+	function set_r(v) { anchor_r = anchor_r_fract? v / (base_bbox[2] - base_bbox[0]) : v; }
+	function set_b(v) { anchor_b = anchor_b_fract? v / (base_bbox[3] - base_bbox[1]) : v; }
+	
+	////- Draw
+	
+	drag_anchor    = noone;
+	drag_anchor_sv = [ 0, 0, 0, 0 ];
+	drag_anchor_mx = 0;
+	drag_anchor_my = 0;
+	
+	static drawOverlayBBOX = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _node) {
+		var _bbox = getBBOX();
 		
-		var _x1 = _x0 + w * _s;
-		var _y1 = _y0 + h * _s;
+		var _x0 = _x + _bbox[0] * _s;
+		var _y0 = _y + _bbox[1] * _s;
+		var _x1 = _x + _bbox[2] * _s;
+		var _y1 = _y + _bbox[3] * _s;
 		
-		var _msk = is_surface(mask);
-		
-		draw_set_alpha(0.5 + 0.5 * !_msk);
-		draw_set_color(color);
 		draw_rectangle(_x0, _y0, _x1, _y1, true);
-		draw_set_alpha(1);
+	}
+	
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _node) {
+		var _bbox = getBBOX();
 		
-		if(_msk) {
-			var _sr = surface_get_target();
-			var _ms = surface_create_size(_sr);
+		var _x0 = _x + _bbox[0] * _s;
+		var _y0 = _y + _bbox[1] * _s;
+		var _x1 = _x + _bbox[2] * _s;
+		var _y1 = _y + _bbox[3] * _s;
+		
+		var _h0 = 0, _h1 = 0, _h2 = 0, _h3 = 0, _h9 = 0;
+	
+		draw_set_color(COLORS._main_accent);
+		draw_rectangle(_x0, _y0, _x1, _y1, true);
+		
+		if(drag_anchor == noone) {
+			     if(hover && point_in_circle(_mx, _my, _x0, _y0, 12)) { _h0 = 1; if(mouse_press(mb_left, active)) drag_anchor = 0; } 
+			else if(hover && point_in_circle(_mx, _my, _x1, _y0, 12)) { _h1 = 1; if(mouse_press(mb_left, active)) drag_anchor = 1; } 
+			else if(hover && point_in_circle(_mx, _my, _x0, _y1, 12)) { _h2 = 1; if(mouse_press(mb_left, active)) drag_anchor = 2; } 
+			else if(hover && point_in_circle(_mx, _my, _x1, _y1, 12)) { _h3 = 1; if(mouse_press(mb_left, active)) drag_anchor = 3; } 
+			else if(hover && point_in_rectangle(_mx, _my, _x0, _y0, _x1, _y1)) { _h9 = 1; if(mouse_press(mb_left, active)) drag_anchor = 9; } 
 			
-			surface_set_target(_ms);
-				DRAW_CLEAR
-				draw_surface_ext_safe(mask, _x0, _y0, _s, _s, 0, color, 1);
-			surface_reset_target();
+			draw_anchor(_h0, _x0, _y0, ui(10));
+			draw_anchor(_h1, _x1, _y0, ui(10));
+			draw_anchor(_h2, _x0, _y1, ui(10));
+			draw_anchor(_h3, _x1, _y1, ui(10));
+			draw_anchor(_h9, (_x0 + _x1) / 2, (_y0 + _y1) / 2, ui(8));
 			
-			shader_set(sh_pb_draw_mask);
-				shader_set_dim(, _ms);
-				draw_surface_ext_safe(_ms, 0, 0, 1, 1, 0, color, 1);
-			shader_reset();
-			
-			surface_free(_ms);
+			if(drag_anchor != noone) {
+				drag_anchor_sv = variable_clone(_bbox);
+				drag_anchor_mx = _mx;
+				drag_anchor_my = _my;
+			}
+			return;
 		}
+		
+		var _xx = base_bbox[0]; 
+		var _yy = base_bbox[1];
+		var _ww = base_bbox[2] - base_bbox[0];
+		var _hh = base_bbox[3] - base_bbox[1];
+		
+		var _mdx = (_mx - drag_anchor_mx) / _s;
+		var _mdy = (_my - drag_anchor_my) / _s;
+		
+		switch(drag_anchor) {
+			case 0 : draw_anchor(1, _x0, _y0, ui(10)); break;
+			case 1 : draw_anchor(1, _x1, _y0, ui(10)); break;
+			case 2 : draw_anchor(1, _x0, _y1, ui(10)); break;
+			case 3 : draw_anchor(1, _x1, _y1, ui(10)); break;
+			case 9 : draw_anchor(_h9, (_x0 + _x1) / 2, (_y0 + _y1) / 2, ui(8));
+		}
+		
+		if(drag_anchor == 9) {
+			var _bl = round(drag_anchor_sv[0] + _mdx);
+			var _br = round(drag_anchor_sv[2] + _mdx);
+			var _bt = round(drag_anchor_sv[1] + _mdy);
+			var _bb = round(drag_anchor_sv[3] + _mdy);
+			
+			setBBOX([ _bl, _bt, _br, _bb ]);
+			
+		} else {
+			if(drag_anchor == 0 || drag_anchor == 2) {
+				var _bx = round(drag_anchor_sv[0] + _mdx);
+				var _bw = _bbox[2] - _bx;
+				
+				switch(anchor_x_type) {
+					case PB_AXIS_ANCHOR.minimum : set_l(_bx); set_w(_bw); break;
+					case PB_AXIS_ANCHOR.maximum : set_w(_bw);             break;
+					case PB_AXIS_ANCHOR.bounded : set_l(_bx);             break;
+				}
+			}
+			
+			if(drag_anchor == 0 || drag_anchor == 1) {	
+				var _by = round(drag_anchor_sv[1] + _mdy);
+				var _bh = _bbox[3] - _by;
+				
+				switch(anchor_y_type) {
+					case PB_AXIS_ANCHOR.minimum : set_t(_by); set_h(_bh); break;
+					case PB_AXIS_ANCHOR.maximum : set_h(_bh);             break;
+					case PB_AXIS_ANCHOR.bounded : set_t(_by);             break;
+				}
+			}
+			
+			if(drag_anchor == 3 || drag_anchor == 1) {
+				var _bx = round(drag_anchor_sv[2] + _mdx);
+				var _bw = _bx - _bbox[0];
+				
+				switch(anchor_x_type) {
+					case PB_AXIS_ANCHOR.minimum : set_w(_bw);                   break;
+					case PB_AXIS_ANCHOR.maximum : set_r(_ww - _bx); set_w(_bw); break;
+					case PB_AXIS_ANCHOR.bounded : set_r(_ww - _bx);             break;
+				}
+			}
+			
+			if(drag_anchor == 3 || drag_anchor == 2) {
+				var _by = round(drag_anchor_sv[3] + _mdy);
+				var _bh = _by - _bbox[1];
+				
+				switch(anchor_y_type) {
+					case PB_AXIS_ANCHOR.minimum : set_h(_bh);                   break;
+					case PB_AXIS_ANCHOR.maximum : set_b(_hh - _by); set_h(_bh); break;
+					case PB_AXIS_ANCHOR.bounded : set_b(_hh - _by);             break;
+				}
+			}
+		}
+		
+		_node.triggerRender();
+		if(mouse_release(mb_left)) drag_anchor = noone;
 	}
 	
-	static clone = function() {
-		var _pbbox = new __pbBox();
+	////- BBOX
+	
+	static setBBOX = function(_bbox) {
 		
-		_pbbox.layer = layer;
-		_pbbox.x = x;
-		_pbbox.y = y;
-		_pbbox.w = w;
-		_pbbox.h = h;
+		var _x0 = base_bbox[0]; 
+		var _y0 = base_bbox[1];
+		var _x1 = base_bbox[2];
+		var _y1 = base_bbox[3];
 		
-		_pbbox.layer_w = layer_w;
-		_pbbox.layer_h = layer_h;
+		var _bl =       _bbox[0];
+		var _br = _x1 - _bbox[2];
+		var _bt =       _bbox[1];
+		var _bb = _y1 - _bbox[3];
+		var _bw = _bbox[2] - _bbox[0];
+		var _bh = _bbox[3] - _bbox[1];
 		
-		_pbbox.mirror_h = mirror_h;
-		_pbbox.mirror_v = mirror_v;
+		switch(anchor_x_type) {
+			case PB_AXIS_ANCHOR.minimum : set_l(_bl); set_w(_bw); break;
+			case PB_AXIS_ANCHOR.maximum : set_r(_br); set_w(_bw); break;
+			case PB_AXIS_ANCHOR.bounded : set_l(_bl); set_r(_br); break;
+		}
 		
-		_pbbox.rotation = rotation;
+		switch(anchor_y_type) {
+			case PB_AXIS_ANCHOR.minimum : set_t(_bt); set_h(_bh); break;
+			case PB_AXIS_ANCHOR.maximum : set_b(_bb); set_h(_bh); break;
+			case PB_AXIS_ANCHOR.bounded : set_t(_bt); set_b(_bb); break;
+		}
 		
-		_pbbox.mask		= surface_clone(mask);
-		_pbbox.content	= surface_clone(content);
-		
-		return _pbbox;
 	}
 	
-	static free = function() {
-		surface_free_safe(mask);
-		surface_free_safe(content);
+	static getBBOX = function() {
+		
+		var _xx = base_bbox[0]; 
+		var _yy = base_bbox[1];
+		var _ww = base_bbox[2] - base_bbox[0];
+		var _hh = base_bbox[3] - base_bbox[1];
+		
+		var _w = anchor_w_fract? _ww * anchor_w : anchor_w;
+		var _h = anchor_h_fract? _hh * anchor_h : anchor_h;
+		
+		var _l = anchor_l_fract? _ww * anchor_l : anchor_l;
+		var _t = anchor_t_fract? _hh * anchor_t : anchor_t;
+		
+		var _r = anchor_r_fract? _ww * anchor_r : anchor_r;
+		var _b = anchor_b_fract? _hh * anchor_b : anchor_b;
+		
+		var _x0 = _xx,       _y0 = _yy;
+		var _x1 = _xx + _ww, _y1 = _yy + _hh;
+		
+		_x0 = _xx + _l; 
+		_x1 = _xx + _ww - _r;
+		_y0 = _yy + _t;
+		_y1 = _yy + _hh - _b;
+		
+		var _cx = (_x0 + _x1) / 2;
+		var _cy = (_y0 + _y1) / 2;
+		
+		////////////////////////////////////////////
+		
+		switch(anchor_x_type) {
+			case PB_AXIS_ANCHOR.minimum : _x1 = _x0 + _w; break;
+			case PB_AXIS_ANCHOR.maximum : _x0 = _x1 - _w; break;
+			case PB_AXIS_ANCHOR.center :  
+				_w  = min(_w, _x1 - _x0);
+				_x0 = _cx - _w / 2;
+				_x1 = _cx + _w / 2; 
+				break;
+		}
+		
+		switch(anchor_y_type) {
+			case PB_AXIS_ANCHOR.minimum : _y1 = _y0 + _h; break;
+			case PB_AXIS_ANCHOR.maximum : _y0 = _y1 - _h; break;
+			case PB_AXIS_ANCHOR.center :  
+				_h  = min(_h, _y1 - _y0);
+				_y0 = _cy - _h / 2;
+				_y1 = _cy + _h / 2; 
+				break;
+		}
+		
+		return [ floor(_x0), floor(_y0), ceil(_x1), ceil(_y1) ];
 	}
+	
+	////- Lerp
+	
+	static lerpTo = function(target, amount) {
+		var nb = clone();
+		
+		nb.anchor_l = lerp(nb.anchor_l, target.anchor_l, amount);
+		nb.anchor_t = lerp(nb.anchor_t, target.anchor_t, amount);
+		nb.anchor_r = lerp(nb.anchor_r, target.anchor_r, amount);
+		nb.anchor_b = lerp(nb.anchor_b, target.anchor_b, amount);
+		nb.anchor_w = lerp(nb.anchor_w, target.anchor_w, amount);
+		nb.anchor_h = lerp(nb.anchor_h, target.anchor_h, amount);
+		
+		return nb;
+	}
+	
+	////- Actions
+	
+	static serialize   = function(   ) { return variable_clone(self); }
+	static deserialize = function(map) { struct_override(self, map); return self; }
+	
+	static clone = function() /*=>*/ {return variable_clone(self)};
+	
 }

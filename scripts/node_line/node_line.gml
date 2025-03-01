@@ -273,7 +273,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var _rtStr = min(_rangeMin, _rangeMax);
 		var _rtMax = max(_rangeMin, _rangeMax);
 		
-		var _useTex = is_surface(_text);
+		var _useTex = !_1px && is_surface(_text);
 		if(_useTex) { _cap = false; _1px = false; }
 		
 		random_set_seed(_sed);

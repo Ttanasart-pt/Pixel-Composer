@@ -25,12 +25,13 @@ function Node_Websocket_Receiver(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	socket = noone;
 	client = noone;
 	
+	setTrigger(1, __txt("Refresh Server"), [ THEME.refresh_icon, 1, COLORS._main_value_positive ], function() /*=>*/ {return setPort()});
+	
 	function setPort() {
 		
 		var _port = getInputData(0);
 		var _mode = getInputData(2);
 		var _url  = getInputData(3);
-		
 		if(_port == port && _mode == mode && _url == url) return;
 		
 		port = _port;
@@ -56,8 +57,6 @@ function Node_Websocket_Receiver(_x, _y, _group = noone) : Node(_x, _y, _group) 
 			if(socket) NETWORK_SERVERS[? port] = socket;
 		}
 	}
-	
-	setTrigger(1, __txt("Refresh Server"), [ THEME.refresh_icon, 1, COLORS._main_value_positive ], function() { setPort(); });
 	
 	static asyncPackets = function(_async_load) {
 		if(!active) return;
@@ -105,6 +104,7 @@ function Node_Websocket_Receiver(_x, _y, _group = noone) : Node(_x, _y, _group) 
 		if(network_trigger == 1) {
 			outputs[1].setValue(1);
 			network_trigger = -1;
+			
 		} else if(network_trigger == -1) {
 			outputs[1].setValue(0);
 			network_trigger = 0;

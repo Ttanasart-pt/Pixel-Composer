@@ -42,6 +42,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			case "textArea"        : 
 			case "controlPointBox" : 
 			case "transformBox"    : 
+			case "pbBoxBox"        : 
 				breakLine = true;
 				break;
 				

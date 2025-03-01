@@ -324,6 +324,13 @@
 		array_insert(arr, ind, val);
 	}
 
+	function array_insert_array(arr, _ind, values) {
+		INLINE
+		
+		for( var i = 0, n = array_length(values); i < n; i++ )
+			array_insert(arr, _ind + i, values[i]);
+	}
+		
 	function array_insert_after(arr, before, values) {
 		INLINE
 		

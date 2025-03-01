@@ -1,9 +1,0 @@
-{
-  "spr":"s_node_pb_box_divide_grid",
-  "baseNode":"Node_PB_Box_Divide_Grid",
-  "io":[
-    "pbBox"
-  ],
-  "name":"Divide Grid",
-  "show_in_recent":false
-}

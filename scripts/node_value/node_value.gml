@@ -454,7 +454,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			inp.visible = vis;
 			node.refreshNodeDisplay();
 		}
-		
 	}
 	
 	////- ANIMATION
@@ -558,7 +557,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		if(value_from)           return true;
-		if(!show_in_inspector)   return false;
 		if(visible_manual != 0)  return visible_manual == 1;
 		if(!visible)        	 return false;
 		if(index == -1)          return true;
@@ -1001,6 +999,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			case VALUE_TYPE.tileset :     editWidget = new tilesetBox(self);  extract_node = "Node_Tile_Tileset"; 	break;
 			case VALUE_TYPE.armature :    editWidget = new armatureBox(self); 										break;
 			case VALUE_TYPE.mesh :        editWidget = new meshBox(self); 											break;
+			case VALUE_TYPE.pbBox :       editWidget = new pbBoxBox(self); 											break;
 			case VALUE_TYPE.struct :      editWidget = new outputStructBox(); 										break;
 			case VALUE_TYPE.particle :    editWidget = noone; 														break;
 				
@@ -1655,6 +1654,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			return -1;
 		}
 		
+		if(_valueFrom.type == VALUE_TYPE.pbBox && is(self, __NodeValue_Dimension)) 
+			return 1;
+		
 		if(_valueFrom == value_from) {
 			if(_log) noti_warning("whaT");
 			return -2;
@@ -1696,7 +1698,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			if(_log) noti_warning("setFrom: Array mismatch",, node);
 			return -9;
 		}
-		
+			
 		return 1;
 	} 
 	

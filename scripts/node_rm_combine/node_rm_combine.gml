@@ -103,11 +103,12 @@ function Node_RM_Combine(_x, _y, _group = noone) : Node_RM(_x, _y, _group) const
 		var _eint = _data[18];
 		
 		var _outSurf = _outData[0];
+		    _outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 		
-		if(!is_instanceof(_sh0, RM_Object)) return [ _outSurf, noone ];
-		if(!is_instanceof(_sh1, RM_Object)) return [ _outSurf, noone ];
-		
-		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
+		if(!is(_sh0, RM_Object) || !is(_sh1, RM_Object)) {
+			surface_clear(_outSurf);
+			return [ _outSurf, noone ];
+		}
 		
 		for (var i = 0, n = array_length(temp_surface); i < n; i++)
 			temp_surface[i] = surface_verify(temp_surface[i], 8192, 8192);

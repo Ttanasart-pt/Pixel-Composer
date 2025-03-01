@@ -2,8 +2,8 @@
   "$GMSprite":"",
   "%Name":"s_node_pb_draw_trapezoid",
   "bboxMode":0,
-  "bbox_bottom":53,
-  "bbox_left":10,
+  "bbox_bottom":61,
+  "bbox_left":1,
   "bbox_right":53,
   "bbox_top":10,
   "collisionKind":1,
@@ -12,14 +12,14 @@
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"","%Name":"c85cadbf-820e-40e5-9766-2bcc2701ed4e","name":"c85cadbf-820e-40e5-9766-2bcc2701ed4e","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"","%Name":"0692879a-8b01-4c63-8891-fa1601b63784","name":"0692879a-8b01-4c63-8891-fa1601b63784","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,
   "height":64,
   "HTile":false,
   "layers":[
-    {"$GMImageLayer":"","%Name":"9f1008fd-6f7b-4d65-a0eb-837647e8218c","blendMode":0,"displayName":"default","isLocked":false,"name":"9f1008fd-6f7b-4d65-a0eb-837647e8218c","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
+    {"$GMImageLayer":"","%Name":"b4b80c7e-dfad-487a-b585-e47fd530d6cb","blendMode":0,"displayName":"default","isLocked":false,"name":"b4b80c7e-dfad-487a-b585-e47fd530d6cb","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
   ],
   "name":"s_node_pb_draw_trapezoid",
   "nineSlice":null,
@@ -69,8 +69,8 @@
     "tracks":[
       {"$GMSpriteFramesTrack":"","builtinName":0,"events":[],"inheritsTrackColour":true,"interpolation":1,"isCreationTrack":false,"keyframes":{"$KeyframeStore<SpriteFrameKeyframe>":"","Keyframes":[
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"c85cadbf-820e-40e5-9766-2bcc2701ed4e","path":"sprites/s_node_pb_draw_trapezoid/s_node_pb_draw_trapezoid.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"d624f3f0-5466-4972-ba98-956f96de3684","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"0692879a-8b01-4c63-8891-fa1601b63784","path":"sprites/s_node_pb_draw_trapezoid/s_node_pb_draw_trapezoid.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+              },"Disabled":false,"id":"8de58c64-b4ad-43e8-a4e9-71fea13201da","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
           ],"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"2.0",},"modifiers":[],"name":"frames","resourceType":"GMSpriteFramesTrack","resourceVersion":"2.0","spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
     ],
     "visibleRange":null,

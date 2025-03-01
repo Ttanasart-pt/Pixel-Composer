@@ -1,9 +1,0 @@
-{
-  "spr":"s_node_pb_draw_blob",
-  "baseNode":"Node_PB_Draw_Blob",
-  "io":[
-    "pbBox"
-  ],
-  "name":"Blob",
-  "show_in_recent":false
-}

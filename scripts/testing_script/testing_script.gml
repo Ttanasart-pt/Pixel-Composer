@@ -173,6 +173,9 @@ function __test_metadata_current_collections(dir = COLLECTIONS) {
 	
 	var sel   = PANEL_GRAPH.getFocusingNode(), outj = noone;
 	var _meta = PROJECT.meta.serialize();
+	_meta.isDefault = true;
+	_meta.version   = SAVE_VERSION;
+	
 	if(sel != noone) outj = sel.outputs[0];
 	
 	while(!ds_stack_empty(st)) {
