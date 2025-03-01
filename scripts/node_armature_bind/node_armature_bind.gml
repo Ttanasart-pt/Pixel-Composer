@@ -73,8 +73,8 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	layer_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { 
 		surfMap = {};
 		
-		var amo   = min(array_length(inputs) - data_length, array_length(current_data));
-		var _bind = getSingleValue(2);
+		var amo      = min(array_length(inputs) - data_length, array_length(current_data));
+		var _bind    = getSingleValue(2);
 		var use_data = _bind != noone;
 		var _surfAmo = getInputAmount();
 		
@@ -88,8 +88,9 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		}
 		
 		#region draw bones
+			if(bone == noone) return 0;
+			
 			var _b  = bone;
-			if(_b == noone) return 0;
 			var amo = _b.childCount();
 			var _hh = ui(28);
 			var bh  = ui(32 + 16) + amo * _hh;
@@ -117,29 +118,29 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				var __w   = _st[2];
 				
 				for( var i = 0, n = array_length(_bone.childs); i < n; i++ )
-					ds_stack_push(_bst, [ _bone.childs[i], __x + 16, __w - 16 ]);
+					ds_stack_push(_bst, [ _bone.childs[i], __x + ui(16), __w - ui(16) ]);
 					
 				if(_bone.is_main) continue;
 				
-					 if(_bone.parent_anchor) draw_sprite_ui(THEME.bone, 1, __x + 12, ty + 14,,,, COLORS._main_icon);
-				else if(_bone.IKlength)      draw_sprite_ui(THEME.bone, 2, __x + 12, ty + 14,,,, COLORS._main_icon);
-				else                         draw_sprite_ui(THEME.bone, 0, __x + 12, ty + 14,,,, COLORS._main_icon);
+					 if(_bone.parent_anchor) draw_sprite_ui(THEME.bone, 1, __x + ui(12), ty + ui(14),,,, COLORS._main_icon);
+				else if(_bone.IKlength)      draw_sprite_ui(THEME.bone, 2, __x + ui(12), ty + ui(14),,,, COLORS._main_icon);
+				else                         draw_sprite_ui(THEME.bone, 0, __x + ui(12), ty + ui(14),,,, COLORS._main_icon);
 						
 				draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
-				draw_text_add(__x + 24, ty + 12, _bone.name);
+				draw_text_add(__x + ui(24), ty + ui(12), _bone.name);
 				
 				if(struct_exists(surfMap, _bone.ID)) {
 					var _sdata = surfMap[$ _bone.ID];
 						
-					var _sx = __x + 24 + string_width(_bone.name) + 8;
-					var _sy = ty + 4;
+					var _sx = __x + ui(24) + string_width(_bone.name) + ui(8);
+					var _sy = ty + ui(4);
 						
 					for( var i = 0, n = array_length(_sdata); i < n; i++ ) {
 						var _sid  = _sdata[i][0];
 						var _surf = _sdata[i][1];
 						var _sw = surface_get_width_safe(_surf);
 						var _sh = surface_get_height_safe(_surf);
-						var _ss = (_hh - 8) / _sh;
+						var _ss = (_hh - ui(8)) / _sh;
 							
 						draw_surface_ext_safe(_surf, _sx, _sy, _ss, _ss, 0, c_white, 1);
 							
@@ -158,7 +159,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 							draw_sprite_stretched_add(THEME.box_r2, 1, _sx, _sy, _sw * _ss, _sh * _ss, COLORS._main_icon, .3);
 						}
 				
-						_sx += _sw * _ss + 4;
+						_sx += _sw * _ss + ui(4);
 					}
 				}
 				
@@ -175,7 +176,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				
 				if(!ds_stack_empty(_bst)) {
 					draw_set_color(COLORS.node_composite_separator);
-					draw_line(_x + 16, ty, _x + _w - 16, ty);
+					draw_line(_x + ui(16), ty, _x + _w - ui(16), ty);
 				}
 			}
 			
@@ -205,14 +206,14 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		ty += ui(16);
 		
 		#region draw surface
-			var lh = 28;
-			var sh = 4 + max(1, amo) * (lh + 4) + 4;
+			var lh = ui(28);
+			var sh = ui(4) + max(1, amo) * (lh + ui(4)) + ui(4);
 			draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, ty, _w, sh, COLORS.node_composite_bg_blend, 1);
 			
 			var _vis = attributes.layer_visible;
 			var _sel = attributes.layer_selectable;
-			var ly   = ty + 6;
-			var ssh  = lh - 6;
+			var ly   = ty + ui(6);
+			var ssh  = lh - ui(6);
 			hoverIndex = noone;
 			
 			layer_remove = -1;
@@ -227,10 +228,10 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				
 				var binded = array_safe_get(boneIDMap, _ind, "") != "";
 				
-				var _bx = _x + _w - 24;
-				var _cy = ly + _ind * (lh + 4);
+				var _bx = _x + _w - ui(24);
+				var _cy = ly + _ind * (lh + ui(4));
 				
-				if(point_in_circle(_m[0], _m[1], _bx, _cy + lh / 2, 16)) {
+				if(point_in_circle(_m[0], _m[1], _bx, _cy + lh / 2, ui(16))) {
 					draw_sprite_ui_uniform(THEME.icon_delete, 3, _bx, _cy + lh / 2, 1, COLORS._main_value_negative);
 				
 					if(mouse_press(mb_left, _focus))
@@ -238,10 +239,10 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				} else 
 					draw_sprite_ui_uniform(THEME.icon_delete, 3, _bx, _cy + lh / 2, 1, COLORS._main_icon);
 				
-				_bx -= 32;
+				_bx -= ui(32);
 				
 				if(binded) {
-					if(point_in_circle(_m[0], _m[1], _bx, _cy + lh / 2, 16)) {
+					if(point_in_circle(_m[0], _m[1], _bx, _cy + lh / 2, ui(16))) {
 						draw_sprite_ui_uniform(THEME.reset_16, 3, _bx, _cy + lh / 2, 1, COLORS._main_value_negative);
 					
 						if(mouse_press(mb_left, _focus))
@@ -257,8 +258,8 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				var sel = _sel[_ind];
 				var hov = _hover && point_in_rectangle(_m[0], _m[1], _x, _cy, _x + _w, _cy + lh);
 				
-				var _bx = _x + 24;
-				if(point_in_circle(_m[0], _m[1], _bx, _cy + lh / 2, 12)) {
+				var _bx = _x + ui(24);
+				if(point_in_circle(_m[0], _m[1], _bx, _cy + lh / 2, ui(12))) {
 					draw_sprite_ui_uniform(THEME.junc_visible, vis, _bx, _cy + lh / 2, 1, c_white);
 				
 					if(mouse_press(mb_left, _focus))
@@ -271,8 +272,8 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				} else 
 					draw_sprite_ui_uniform(THEME.junc_visible, vis, _bx, _cy + lh / 2, 1, COLORS._main_icon, 0.5 + 0.5 * vis);
 				
-				_bx += 24 + 1;
-				if(point_in_circle(_m[0], _m[1], _bx, _cy + lh / 2, 12)) {
+				_bx += ui(24 + 1);
+				if(point_in_circle(_m[0], _m[1], _bx, _cy + lh / 2, ui(12))) {
 					draw_sprite_ui_uniform(THEME.cursor_select, sel, _bx, _cy + lh / 2, 1, c_white);
 				
 					if(mouse_press(mb_left, _focus))
@@ -284,9 +285,9 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 					draw_sprite_ui_uniform(THEME.cursor_select, sel, _bx, _cy + lh / 2, 1, COLORS._main_icon, 0.5 + 0.5 * sel);
 				
 				draw_set_color(COLORS.node_composite_bg);
-				var _sx0 = _bx + 18;
+				var _sx0 = _bx + ui(18);
 				var _sx1 = _sx0 + ssh;
-				var _sy0 = _cy + 3;
+				var _sy0 = _cy + ui(3);
 				var _sy1 = _sy0 + ssh;
 				
 				var _ssw = surface_get_width_safe(_surf);
@@ -301,7 +302,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				var tc = _ins? COLORS._main_text_accent : COLORS._main_icon;
 				if(hov) tc = COLORS._main_text;
 				
-				var _tx = _sx1 + 12;
+				var _tx = _sx1 + ui(12);
 				var _ty = _cy + lh / 2;
 				
 				if(_mesh) {
@@ -310,7 +311,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 					
 					draw_sprite_ext(s_node_armature_mesh, 0, _mshx, _mshy, 1, 1, 0, COLORS._main_icon, 1);
 					
-					_tx += 22;
+					_tx += ui(22);
 				}
 				
 				var _nam = inputs[_inp].name;
@@ -334,8 +335,8 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 					
 					if(layer_dragging != noone) {
 						draw_set_color(COLORS._main_accent);
-							 if(layer_dragging < _ind) draw_line_width(_x + 16, _cy + lh + 2, _x + _w - 16, _cy + lh + 2, 2);
-						else if(layer_dragging > _ind) draw_line_width(_x + 16, _cy - 2,      _x + _w - 16, _cy - 2,      2);
+							 if(layer_dragging < _ind) draw_line_width(_x + ui(16), _cy + lh + 2, _x + _w - ui(16), _cy + lh + 2, 2);
+						else if(layer_dragging > _ind) draw_line_width(_x + ui(16), _cy - 2,      _x + _w - ui(16), _cy - 2,      2);
 					}
 				}
 			}

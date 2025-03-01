@@ -508,8 +508,8 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 						case 1 : _sy = py + (hh - _h) / 2;	break;
 						case 2 : _sy = py + (hh - _h);		break;
 					}
-					
 					break;
+					
 				case SPRITE_STACK.vertical :
 					py = padd[1] + _frame * _h + max(0, _frame) * spac;
 					_sx = px;
@@ -519,8 +519,8 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 						case 1 : _sx = px + (ww - _w) / 2;	break;
 						case 2 : _sx = px + (ww - _w);		break;
 					}
-					
 					break;
+					
 				case SPRITE_STACK.grid :
 					var col  = getInputData(4);
 					var _row = floor(_frame / col);

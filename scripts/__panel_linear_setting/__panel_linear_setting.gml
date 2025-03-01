@@ -1,4 +1,4 @@
-function __Panel_Linear_Setting_Item(name, editWidget, data, onEdit = noone, getDefault = noone, action = noone, prefKey = noone) constructor {
+function __Panel_Linear_Setting_Item(name, editWidget, data = noone, onEdit = noone, getDefault = noone, action = noone, prefKey = noone) constructor {
 	self.name       = name;
 	self.editWidget = editWidget;
 	self.data       = data;

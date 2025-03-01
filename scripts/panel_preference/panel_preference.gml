@@ -1455,7 +1455,7 @@ function Panel_Preference() : PanelContent() constructor {
     			if(_pref.getDefault != noone)
     				widget_w -= ui(32 + 8);
     			
-    			var data    = is(_pref, __Panel_Linear_Setting_Item_Preference)? _pref.data() : 0;
+    			var data    = _pref.data == noone? _pref.data : _pref.data();
     			var params  = new widgetParam(widget_x, widget_y, widget_w, widget_h, data, {}, _m, rx, ry);
     			params.s    = th;
     			params.font = font;

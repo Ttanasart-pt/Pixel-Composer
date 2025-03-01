@@ -61,8 +61,11 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	newOutput(6, nodeValue_Output("Raw data", self, VALUE_TYPE.struct, {}))
 		.setVisible(false);
 	
+	newOutput(7, nodeValue_Output("Frame Amount", self, VALUE_TYPE.integer, 1))
+		.setVisible(false);
+	
 	hold_visibility = true;
-	layer_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { 
+	layer_renderer  = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { 
 		var _vis = attributes.layer_visible;
 		var _amo = array_length(layers);
 		var hh   = ui(24);
@@ -99,7 +102,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		return _h;
 	}); 
 	
-	tag_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { 
+	tag_renderer    = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { 
 		var current_tag = getInputData(2);
 		var amo = array_length(tags);
 		var abx = ui(24);
@@ -190,11 +193,9 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	path_current = "";
 	first_update = false;
 	
-	on_drop_file = function(path) { 
-		inputs[0].setValue(path);
-		doUpdate();
-		return true;
-	} 
+	on_drop_file = function(path) { inputs[0].setValue(path); doUpdate(); return true; } 
+	
+	setTrigger(1, __txt("Refresh"), [THEME.refresh_icon, 1, COLORS._main_value_positive ], function() /*=>*/ { updatePaths(path_get(getInputData(0))); triggerRender(); });
 	
 	function refreshLayers() { 
 		var _nh = 64;
@@ -323,8 +324,6 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		return true;
 	} 
 	
-	setTrigger(1, __txt("Refresh"), [THEME.refresh_icon, 1, COLORS._main_value_positive ], function() /*=>*/ { updatePaths(path_get(getInputData(0))); triggerRender(); });
-	
 	static step = function() { 
 		if(!attributes.file_checker) return;
 		if(!file_exists_empty(path_current)) return;
@@ -354,7 +353,9 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				break;
 			}
 		}
+		
 		outputs[5].setValue(tagNames);
+		outputs[7].setValue(content[$ "Frame amount"]);
 		
 		_tag_delay = 0;
 		for( var i = 0; i < array_length(inputs[2].animator.values); i++ ) {

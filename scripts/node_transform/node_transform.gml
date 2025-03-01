@@ -40,11 +40,11 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(9, nodeValue_Enum_Scroll("Output Dimension Type", self, OUTPUT_SCALING.same_as_input, [
-																			new scrollItem("Same as input"),
-																			new scrollItem("Constant"),
-																			new scrollItem("Relative to input").setTooltip("Set dimension as a multiple of input surface."),
-																			new scrollItem("Fit content").setTooltip("Automatically set dimension to fit content."),
-																		]));
+																		new scrollItem("Same as input"),
+																		new scrollItem("Constant"),
+																		new scrollItem("Relative to input").setTooltip("Set dimension as a multiple of input surface."),
+																		new scrollItem("Fit content").setTooltip("Automatically set dimension to fit content."),
+																	]));
 	
 	newInput(10, nodeValue_Bool("Round Position", self, false, "Round position to the nearest integer value to avoid jittering."));
 	
@@ -96,14 +96,17 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				ww = sw;
 				hh = sh;
 				break;
+				
 			case OUTPUT_SCALING.relative : 
 				ww = sw * _out[0];
 				hh = sh * _out[1];
 				break;
+				
 			case OUTPUT_SCALING.constant :	
 				ww = _out[0];
 				hh = _out[1];
 				break;
+				
 			case OUTPUT_SCALING.scale :	
 				ww = sw * _scale[0];
 				hh = sh * _scale[1];

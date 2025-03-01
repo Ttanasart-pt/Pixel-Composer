@@ -208,10 +208,10 @@ function shader_set_palette(pal, pal_uni = "palette", amo_uni = "paletteAmount",
 		if(clear) DRAW_CLEAR;
 		
 		switch(blend) {
-			case BLEND.add :		BLEND_ADD			break;
-			case BLEND.over:		BLEND_OVERRIDE		break;
-			case BLEND.alpha:		BLEND_ALPHA		break;
-			case BLEND.alphamulp:	BLEND_ALPHA_MULP	break;
+			case BLEND.add :      BLEND_ADD        break;
+			case BLEND.over:      BLEND_OVERRIDE   break;
+			case BLEND.alpha:     BLEND_ALPHA      break;
+			case BLEND.alphamulp: BLEND_ALPHA_MULP break;
 		}
 		
 		if(shader == noone)

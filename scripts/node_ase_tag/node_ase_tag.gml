@@ -11,6 +11,9 @@ function Node_ASE_Tag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
+	newOutput(1, nodeValue_Output("Frame Range", self, VALUE_TYPE.integer, [ 0, 0 ]))
+		.setDisplay(VALUE_DISPLAY.vector);
+	
 	tag_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		if(ase_data == noone) {
 			draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _y, _w, ui(28), COLORS.node_composite_bg_blend, 1);	
@@ -60,16 +63,18 @@ function Node_ASE_Tag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	temp_surface = [ 0, 0, 0 ];
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outData, _data, _output_index, _array_index) {
 		var _ase = _data[0];
 		var _tag = _data[1];
 		
 		ase_data = _ase;
-		if(_ase == noone || _ase.content == noone) return;
+		if(_ase == noone || _ase.content == noone) return _outData;
 		
 		var _cnt = _ase.content;
 		var ww   = _cnt[$ "Width"];
 		var hh   = _cnt[$ "Height"];
+		
+		var _outSurf = _outData[0];
 		_outSurf = surface_verify(_outSurf, ww, hh);
 		
 		var tag = noone;
@@ -80,7 +85,7 @@ function Node_ASE_Tag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			}
 		}
 		
-		if(tag == noone) return;
+		if(tag == noone) return _outData;
 		
 		for (var i = 0, n = array_length(temp_surface); i < n; i++) {
 			temp_surface[i] = surface_verify(temp_surface[i], ww, hh);
@@ -91,6 +96,8 @@ function Node_ASE_Tag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 		var st = tag[$ "Frame start"];
 		var ed = tag[$ "Frame end"];
+		var _range = [ st, ed ];
+		
 		var fr = st + CURRENT_FRAME % (ed - st + 1);
 		var bg = 0;
 		
@@ -115,6 +122,6 @@ function Node_ASE_Tag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			draw_surface_safe(temp_surface[!bg]);
 		surface_reset_shader();
 		
-		return _outSurf;
+		return [ _outSurf, _range ];
 	}
 }
