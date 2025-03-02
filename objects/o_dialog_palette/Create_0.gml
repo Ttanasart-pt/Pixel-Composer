@@ -62,15 +62,8 @@ function __PaletteColor(_color = c_black) constructor {
 			var dia = dialogCall(o_dialog_file_name, mouse_mx + ui(8), mouse_my + ui(8));
 			dia.onModify = function(txt) /*=>*/ {
 				var file = file_text_open_write(txt + ".hex");
-				for(var i = 0; i < array_length(palette); i++) {
-					var cc = palette[i];
-					var r  = number_to_hex(color_get_red(cc));
-					var g  = number_to_hex(color_get_green(cc));
-					var b  = number_to_hex(color_get_blue(cc));
-					var a  = number_to_hex(color_get_alpha(cc));
-					
-					file_text_write_string(file, $"{r}{g}{b}{a}\n");
-				}
+				for(var i = 0; i < array_length(palette); i++)
+					file_text_write_string(file,  $"{color_get_hex(palette[i])}\n");
 				file_text_close(file);
 				__initPalette();
 			};

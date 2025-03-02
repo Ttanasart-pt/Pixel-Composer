@@ -368,8 +368,8 @@ draggable = true;
 	
 	bx -= ui(32);
 	if(buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, sHOVER, _foc, "", THEME.add_16) == 2) {
-		palette[array_length(palette)] = cola(c_black);
 		index_selecting = [ array_length(palette), 1 ];
+		palette[array_length(palette)] = cola(c_black);
 		
 		refreshPaletteObject();
 		onApply(palette);
