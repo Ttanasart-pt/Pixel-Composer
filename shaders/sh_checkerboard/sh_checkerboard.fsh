@@ -5,6 +5,7 @@ varying vec4 v_vColour;
 
 uniform vec2 dimension;
 uniform vec2 position;
+uniform int  diagonal;
 uniform int  blend;
 
 uniform vec2      amount;
@@ -28,7 +29,6 @@ float check(vec2 c, float amo, float ang) {
 	float mm = mod(floor(_x / _a) + floor(_y / _a), 2.);
 	
 	return mm < .5? 0.5 + dd : 0.5 - dd;
-	//return mod(floor(_x / _a) + floor(_y / _a), 2.);
 }
 
 void main() {
@@ -49,8 +49,28 @@ void main() {
 	
 	vec2 a = dimension / dimension.y;
 	vec2 c = (v_vTexcoord - position) * a;
+	float ch;
 	
-	float ch = check(c, amo, ang);
+	if(diagonal == 0 || blend != 0) {
+		if(diagonal == 1) {
+			ang += PI / 4.;
+			amo *= sqrt(2.);
+		}
+		
+		ch = check(c, amo, ang);
+		
+	} else {
+		vec2 pa = floor(dimension / amo);
+		vec2 px = floor(dimension * c);
+		     px = mod(px, pa);
+		
+		bool d1 = px.x > px.y;
+		bool d2 = (pa.x - px.x) > px.y;
+		bool chk = (d1 && d2) || (!d1 && !d2);
+		
+		ch = chk? 1. : 0.;
+	}
+	
 	
 	if(blend == 0) gl_FragColor = ch < 0.5? col1 : col2;
 	else if(blend == 1) { 

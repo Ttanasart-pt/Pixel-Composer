@@ -34,11 +34,13 @@ function Node_Checker(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	newInput(8, nodeValue_Enum_Button("Type", self,  0, [ "Solid", "Smooth", "AA" ]));
 	
+	newInput(9, nodeValue_Bool("Diagonal", self, false));
+	
 	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
 		["Output",	true],	0,  
-		["Pattern",	false], 1, 6, 2, 7, 3,
+		["Pattern",	false], 9, 1, 6, 2, 7, 3,
 		["Render",	false], 8, 4, 5,
 	];
 	
@@ -63,20 +65,23 @@ function Node_Checker(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _dim = _data[0];
-		var _pos = _data[3];
+		var _pos = _data[3]
+		
+		inputs[2].setVisible(!_data[9]);
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
-			
+		
 		surface_set_shader(_outSurf, sh_checkerboard);
-			shader_set_f("dimension",   surface_get_width_safe(_outSurf), surface_get_height_safe(_outSurf));
+			shader_set_2("dimension",  _dim);
+			shader_set_i("diagonal",   _data[9]);
 			shader_set_f("position",   _pos[0] / _dim[0], _pos[1] / _dim[1]);
 			shader_set_f_map("amount", _data[1], _data[6], inputs[1]);
 			shader_set_f_map("angle",  _data[2], _data[7], inputs[2]);
 			shader_set_color("col1",   _data[4]);
 			shader_set_color("col2",   _data[5]);
-			shader_set_i("blend",	   _data[8]);
+			shader_set_i("blend",      _data[8]);
 			
-			draw_sprite_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], 0, c_white, 1);
+			draw_empty();
 		surface_reset_shader();
 		
 		return _outSurf;
