@@ -89,7 +89,6 @@ void main() {
 	float ksize = 0.;
 	float borDist = 99999.;
 	float borCond = isShape? 0. : 1.;
-		
 	float scanRad = max(corner_radius, stroke_thickness);
 	
 	for(float i = -scanRad; i <= scanRad; i++)

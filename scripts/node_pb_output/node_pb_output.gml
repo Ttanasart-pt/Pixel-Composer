@@ -1,3 +1,9 @@
+#region
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_PB_Output", "Layer > Set",  KEY_GROUP.numeric, MOD_KEY.none, function(val) /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[1].setValue(toNumber(chr(keyboard_key))); });
+	});
+#endregion
+
 function Node_PB_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "PB Output";
 	data  = noone;

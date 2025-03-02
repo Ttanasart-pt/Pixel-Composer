@@ -1,0 +1,13 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_pb_main_draw",
+  "name":"sh_pb_main_draw",
+  "parent":{
+    "name":"shaders",
+    "path":"folders/nodes/data/PB/main/shaders.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "tags":[],
+  "type":1,
+}

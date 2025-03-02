@@ -348,6 +348,7 @@
     {"$GMFolder":"","%Name":"rotator","folderPath":"folders/widgets/rotator.yy","name":"rotator","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"sliders","folderPath":"folders/widgets/sliders.yy","name":"sliders","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"text","folderPath":"folders/widgets/text.yy","name":"text","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"shaders","folderPath":"folders/nodes/data/PB/main/shaders.yy","name":"shaders","resourceType":"GMFolder","resourceVersion":"2.0",},
   ],
   "IncludedFiles":[
     {"$GMIncludedFile":"","%Name":"Addons.zip","CopyToMask":-1,"filePath":"datafiles/data","name":"Addons.zip","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
@@ -1756,6 +1757,7 @@
     {"id":{"name":"dynaSurf_3d","path":"scripts/dynaSurf_3d/dynaSurf_3d.yy",},},
     {"id":{"name":"dynaSurf_iso","path":"scripts/dynaSurf_iso/dynaSurf_iso.yy",},},
     {"id":{"name":"dynaSurf","path":"scripts/dynaSurf/dynaSurf.yy",},},
+    {"id":{"name":"sh_pb_main_draw","path":"shaders/sh_pb_main_draw/sh_pb_main_draw.yy",},},
     {"id":{"name":"event_recorder","path":"scripts/event_recorder/event_recorder.yy",},},
     {"id":{"name":"export_portable","path":"scripts/export_portable/export_portable.yy",},},
     {"id":{"name":"fft_functions","path":"scripts/fft_functions/fft_functions.yy",},},

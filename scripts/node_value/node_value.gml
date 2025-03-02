@@ -335,8 +335,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		unit.mode = def_unit;
 		setValue(unit.apply(variable_clone(def_val))); 
 		attributes.mapped = false;
-		
-		is_modified = false; 
 	}
 	
 	static setUnitRef = function(ref, mode = VALUE_UNIT.constant) {

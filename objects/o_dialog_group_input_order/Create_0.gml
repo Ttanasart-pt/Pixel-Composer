@@ -13,13 +13,14 @@ event_inherited();
 	drag_shift  = 0;
 	
 	sep_editing = -1;
-	tb_edit = new textBox(TEXTBOX_INPUT.text, function(str) {
+	tb_edit = new textBox(TEXTBOX_INPUT.text, function(str) /*=>*/ {
 		if(sep_editing == -1) return;
 		
 		display_list[sep_editing][0] = str;
 		sep_editing = -1;
 		node.sortIO();
 	} );
+	
 	tb_edit.align = fa_left;
 	tb_edit.font  = f_p2;
 	
@@ -28,16 +29,16 @@ event_inherited();
 	type          = 1;
 	junction_list = noone;
 	
-	function setNode(node, type) {
-		self.node = node;
-		self.type = type;
-		self.display_list  = type == CONNECT_TYPE.input? node.attributes.input_display_list : node.attributes.output_display_list;
-		self.junction_list = type == CONNECT_TYPE.input? node.inputs : node.outputs;
+	function setNode(_node, _type) {
+		node = _node;
+		type = _type;
+		display_list  = type == CONNECT_TYPE.input? node.attributes.input_display_list : node.attributes.output_display_list;
+		junction_list = type == CONNECT_TYPE.input? node.inputs : node.outputs;
 	}
 #endregion
 
 #region content
-	sc_group = new scrollPane(dialog_w - ui(padding + padding), dialog_h - ui(title_height + padding), function(_y, _m) {
+	sc_group = new scrollPane(dialog_w - ui(padding * 2), dialog_h - ui(title_height + padding), function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
 		if(node == noone) return 0;
 		

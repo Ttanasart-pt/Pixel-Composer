@@ -31,14 +31,14 @@ function __pbBox() constructor {
 	anchor_w_min = 0; anchor_w_max = 0;
 	anchor_h_min = 0; anchor_h_max = 0;
 	
-	function set_w(v) { anchor_w = anchor_w_fract? v / (base_bbox[2] - base_bbox[0]) : v; }
-	function set_h(v) { anchor_h = anchor_h_fract? v / (base_bbox[3] - base_bbox[1]) : v; }
+	static set_w = function(v) /*=>*/ { anchor_w = anchor_w_fract? v / (base_bbox[2] - base_bbox[0]) : v; }
+	static set_h = function(v) /*=>*/ { anchor_h = anchor_h_fract? v / (base_bbox[3] - base_bbox[1]) : v; }
 	
-	function set_l(v) { v -= base_bbox[0]; anchor_l = anchor_l_fract? v / (base_bbox[2] - base_bbox[0]) : v; }
-	function set_t(v) { v -= base_bbox[1]; anchor_t = anchor_t_fract? v / (base_bbox[3] - base_bbox[1]) : v; }
+	static set_l = function(v) /*=>*/ { v -= base_bbox[0]; anchor_l = anchor_l_fract? v / (base_bbox[2] - base_bbox[0]) : v; }
+	static set_t = function(v) /*=>*/ { v -= base_bbox[1]; anchor_t = anchor_t_fract? v / (base_bbox[3] - base_bbox[1]) : v; }
 	
-	function set_r(v) { anchor_r = anchor_r_fract? v / (base_bbox[2] - base_bbox[0]) : v; }
-	function set_b(v) { anchor_b = anchor_b_fract? v / (base_bbox[3] - base_bbox[1]) : v; }
+	static set_r = function(v) /*=>*/ { anchor_r = anchor_r_fract? v / (base_bbox[2] - base_bbox[0]) : v; }
+	static set_b = function(v) /*=>*/ { anchor_b = anchor_b_fract? v / (base_bbox[3] - base_bbox[1]) : v; }
 	
 	////- Draw
 	

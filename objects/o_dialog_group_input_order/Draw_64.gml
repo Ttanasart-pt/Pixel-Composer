@@ -17,6 +17,7 @@ if !ready exit;
 	
 	draw_sprite_stretched(THEME.ui_panel_bg, 1, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
 	sc_group.setFocusHover(sFOCUS, sHOVER);
+	sc_group.verify(dialog_w - ui(padding * 2), dialog_h - ui(title_height + padding));
 	sc_group.draw(px, py);
 	
 	var bx = dialog_x + dialog_w - ui(32 + 16);
