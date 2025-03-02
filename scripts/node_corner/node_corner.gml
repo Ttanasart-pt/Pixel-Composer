@@ -9,8 +9,8 @@ function Node_Corner(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	newInput(0, nodeValue_Surface("Surface In", self));
 	
-	newInput(1, nodeValue_Float("Radius", self, 2))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [2, 16, 0.1] });
+	newInput(1, nodeValue_Int("Radius", self, 2))
+		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] });
 	
 	newInput(2, nodeValue_Surface("Mask", self));
 	
@@ -24,44 +24,68 @@ function Node_Corner(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	__init_mask_modifier(2); // inputs 6, 7
 	
+	newInput(8, nodeValue_Slider("Thershold", self, .5));
+	
 	input_display_list = [ 4, 5, 
 		["Surfaces", true], 0, 2, 3, 6, 7, 
-		["Corner",	false], 1,
+		["Corner",	false], 1, 8, 
 	]
 	
 	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	attribute_surface_depth();
+	attribute_oversample();
 	
-	static step = function() { #region
+	temp_surface = array_create(2);
+		
+	static step = function() {
 		__step_mask_modifier();
-	} #endregion
+	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
-		var wd = _data[1];
+		var _surf = _data[0];
+		var _rad  = _data[1];
+		var _thr  = _data[8];
 		
-		var temp = surface_create_valid(surface_get_width_safe(_data[0]), surface_get_height_safe(_data[0]), attrDepth());
+		var _sw = surface_get_width_safe(_surf);
+		var _sh = surface_get_height_safe(_surf);
+		var _dim = [ _sw, _sh ];
 		
-		surface_set_shader(temp, sh_corner_erode);
-			shader_set_f("dimension", [surface_get_width_safe(_data[0]), surface_get_height_safe(_data[0])]);
-			shader_set_f("size",      wd);
-			
-			draw_surface_safe(_data[0]);
+		for( var i = 0, n = array_length(temp_surface); i < n; i++ ) {
+			temp_surface[i] = surface_verify(temp_surface[i], _sw, _sh); 
+			surface_clear(temp_surface[i]);
+		}
+		
+		surface_set_shader(temp_surface[0], sh_corner_coord);
+			draw_surface_safe(_surf);
 		surface_reset_shader();
 		
-		surface_set_shader(_outSurf, sh_corner);
-			shader_set_f("dimension", [surface_get_width_safe(_data[0]), surface_get_height_safe(_data[0])]);
-			shader_set_f("rad",       wd);
-			shader_set_surface("original", _data[0]);
-			
-			draw_surface_safe(temp);
-		surface_reset_shader();
+		var _itr = max(_sw, _sh) / 4;
+		var _bg  = 1;
 		
-		surface_free(temp);
+		repeat(_itr) {
+			surface_set_shader(temp_surface[_bg], sh_corner_iterate);
+				shader_set_2("dimension", _dim);
+				draw_surface_safe(temp_surface[!_bg]);
+			surface_reset_shader();
+			_bg = !_bg;
+		}
+		
+		var _sam = getAttribute("oversample");
+		
+		surface_set_shader(_outSurf, sh_corner_apply);
+			shader_set_2("dimension", _dim);
+			shader_set_f("radius",    _rad);
+			shader_set_f("thershold", _thr);
+			shader_set_surface("original", _surf);
+			shader_set_i("sampleMode", _sam);
+			
+			draw_surface_safe(temp_surface[!_bg]);
+		surface_reset_shader();
 		
 		__process_mask_modifier(_data);
-		_outSurf = mask_apply(_data[0], _outSurf, _data[2], _data[3]);
-		_outSurf = channel_apply(_data[0], _outSurf, _data[5]);
+		_outSurf = mask_apply(_surf, _outSurf, _data[2], _data[3]);
+		_outSurf = channel_apply(_surf, _outSurf, _data[5]);
 		
 		return _outSurf;
 	}

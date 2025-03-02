@@ -1,7 +1,8 @@
 #region
 	FN_NODE_CONTEXT_INVOKE {
 		addHotkey("Node_Checker", "Amount > Set", KEY_GROUP.numeric, MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[1].setValue(toNumber(chr(keyboard_key))); });
-		addHotkey("Node_Checker", "Type > Toggle", "T", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[8].setValue((_n.inputs[8].getValue() + 1) % 3); });
+		addHotkey("Node_Checker", "Diagonal > Toggle", "D", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[9].setValue(!_n.inputs[9].getValue());          });
+		addHotkey("Node_Checker", "Type > Toggle",     "T", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[8].setValue((_n.inputs[8].getValue() + 1) % 3); });
 	});
 #endregion
 

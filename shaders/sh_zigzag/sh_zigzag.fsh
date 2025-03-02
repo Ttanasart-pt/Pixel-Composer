@@ -32,7 +32,8 @@ void main() {
 		ang = radians(ang);
 	#endregion
 	
-	vec2 ntx     = v_vTexcoord * vec2(1., dimension.y / dimension.x);
+	vec2 vtx     = floor(v_vTexcoord * dimension) / dimension;
+	vec2 ntx     = vtx * vec2(1., dimension.y / dimension.x);
 	vec2 pos     = ntx - position;
 	float _cell  = 1. / (amo * 2.); 
 	pos.y -= _cell / 2.;
