@@ -231,13 +231,12 @@
             "Node_Group_Input",
             "Node_Group_Output",
             "Node_PB_Output",
-
-            { "label": "Main" },
             "Node_PB_Dimension",
-            { "label": "/PBBOX" },
+
+            { "label": "PBBOX" },
             "Node_PB_Box",
-            "Node_PB_Box_BBOX",
             "Node_PB_Box_Mirror",
+            "Node_PB_Box_BBOX",
 
             { "label": "Draw" },
             "Node_PB_Draw_Rectangle",

@@ -82,6 +82,12 @@ event_inherited();
 #endregion
 
 #region preset
+	function initGradient() { 
+		gradientPresets = array_clone(GRADIENTS); 
+		currentGradient = gradientPresets;
+		return self; 
+	} initGradient();
+	
 	hovering_name = "";
 	
 	pal_padding = ui(9);
@@ -101,8 +107,8 @@ event_inherited();
 		
 		var _hover = sHOVER && sp_presets.hover;
 		
-		for(var i = 0; i < array_length(GRADIENTS); i++) {
-			var _gradient = GRADIENTS[i];
+		for(var i = 0; i < array_length(gradientPresets); i++) {
+			var _gradient = gradientPresets[i];
 			var isHover   = point_in_rectangle(_m[0], _m[1], 0, yy, ww, yy + hg);
 			
 			draw_sprite_stretched(THEME.ui_panel_bg, 3, 0, yy, ww, hg);
@@ -143,10 +149,49 @@ event_inherited();
 		return hh;
 	});
 	
+	//////////////////////// SEARCH ////////////////////////
+	
+	gradient_search_string = "";
+	tb_preset_search     = new textBox(TEXTBOX_INPUT.text, function(t) /*=>*/ {return searchGradient(t)} )
+	                          .setFont(f_p2)
+	                          .setHide(1)
+	                          .setEmpty(false)
+	                          .setPadding(ui(24))
+	                          .setAutoUpdate();
+	
+	function searchGradient(t) {
+		gradient_search_string = t;
+		
+		if(gradient_search_string == "") {
+			gradientPresets = currentGradient;
+			return;
+		}
+		
+		gradientPresets = [];
+		var _pr = ds_priority_create();
+		
+		for( var i = 0, n = array_length(currentGradient); i < n; i++ ) {
+			var _prest = currentGradient[i];
+			var _match = string_partial_match(_prest.name, gradient_search_string);
+			if(_match <= -9999) continue;
+			
+			ds_priority_add(_pr, _prest, _match);
+		}
+		
+		repeat(ds_priority_size(_pr))
+			array_push(gradientPresets, ds_priority_delete_max(_pr));
+		
+		ds_priority_destroy(_pr);
+	}
+	
 #endregion
 
 #region palette
-	function initPalette() { paletePresets = array_clone(PALETTES); return self; } initPalette();
+	function initPalette() { 
+		paletePresets  = array_clone(PALETTES); 
+		currentPresets = paletePresets;
+		return self; 
+	} initPalette();
 	
 	palette_selecting = -1;
 	preset_show_name  = true;
@@ -242,7 +287,42 @@ event_inherited();
 		return hh;
 	});
 	
-	//////////////////////// SORT
+	//////////////////////// SEARCH ////////////////////////
+	
+	palette_search_string = "";
+	tb_palette_search = new textBox(TEXTBOX_INPUT.text, function(t) /*=>*/ {return searchPalette(t)} )
+	               .setFont(f_p2)
+	               .setHide(1)
+	               .setEmpty(false)
+	               .setPadding(ui(24))
+	               .setAutoUpdate();
+	
+	function searchPalette(t) {
+		palette_search_string = t;
+		
+		if(palette_search_string == "") {
+			paletePresets = currentPresets;
+			return;
+		}
+		
+		paletePresets = [];
+		var _pr = ds_priority_create();
+		
+		for( var i = 0, n = array_length(currentPresets); i < n; i++ ) {
+			var _prest = currentPresets[i];
+			var _match = string_partial_match(_prest.name, palette_search_string);
+			if(_match <= -9999) continue;
+			
+			ds_priority_add(_pr, _prest, _match);
+		}
+		
+		repeat(ds_priority_size(_pr))
+			array_push(paletePresets, ds_priority_delete_max(_pr));
+		
+		ds_priority_destroy(_pr);
+	}
+	
+	////////////////////////  SORT  ////////////////////////
 	
 	sortPreset_name_a = function() /*=>*/ { array_sort(paletePresets, function(p0, p1) /*=>*/ {return string_compare(p0.name, p1.name)}); }
 	sortPreset_name_d = function() /*=>*/ { array_sort(paletePresets, function(p0, p1) /*=>*/ {return string_compare(p1.name, p0.name)}); }

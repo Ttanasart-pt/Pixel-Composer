@@ -43,8 +43,18 @@ draggable = true;
 #region presets
 	draw_sprite_stretched(THEME.ui_panel_bg, 1, presets_x + pal_padding, dialog_y + ui(48), ui(240) - pal_padding * 2, dialog_h - ui(48) - pal_padding);
 	
+	var _px = presets_x + pal_padding + ui(4);
+	var _py = dialog_y + ui(48 + 4);
+	var _pw = sp_palette_w;
+	
+	draw_sprite_stretched_ext(THEME.textbox, 1, _px, _py, _pw, ui(24), COLORS._main_icon);
+	tb_preset_search.setFocusHover(sFOCUS, sHOVER);
+	tb_preset_search.draw(_px, _py, _pw, ui(24), gradient_search_string);
+	draw_sprite_ui(THEME.search, 0, _px + ui(12), _py + ui(12), .75, .75, 0, COLORS._main_icon, .5);
+	
 	sp_presets.setFocusHover(sFOCUS, sHOVER);
-	sp_presets.draw(presets_x + pal_padding + ui(4), dialog_y + ui(48) + ui(4));
+	sp_presets.verify(_pw, dialog_h - ui(72 + 24));
+	sp_presets.draw(_px, _py + ui(24 + 8));
 	
 	var bx = presets_x + presets_w - ui(44);
 	var by = dialog_y + ui(12);
@@ -63,6 +73,7 @@ draggable = true;
 			
 			file_text_write_all(txt + ".txt", gradStr);
 			__initGradient();
+			initGradient();
 		};
 		dia.path = DIRECTORY + "Gradients/"
 	}
@@ -70,7 +81,7 @@ draggable = true;
 	bx -= ui(32);
 	
 	var b = buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txt("Refresh"), THEME.refresh_20);
-	if(b == 2) __initGradient();
+	if(b == 2) { __initGradient(); initGradient(); }
 	draggable &= !b;
 	bx -= ui(32);
 	
@@ -87,8 +98,18 @@ draggable = true;
 #region palette
 	draw_sprite_stretched(THEME.ui_panel_bg, 1, palette_x + pal_padding, dialog_y + ui(48), ui(240) - pal_padding * 2, dialog_h - ui(48) - pal_padding);
 	
+	var _px = palette_x + pal_padding + ui(4);
+	var _py = dialog_y + ui(48 + 4);
+	var _pw = sp_palette_w;
+	
+	draw_sprite_stretched_ext(THEME.textbox, 1, _px, _py, _pw, ui(24), COLORS._main_icon);
+	tb_palette_search.setFocusHover(sFOCUS, sHOVER);
+	tb_palette_search.draw(_px, _py, _pw, ui(24), palette_search_string);
+	draw_sprite_ui(THEME.search, 0, _px + ui(12), _py + ui(12), .75, .75, 0, COLORS._main_icon, .5);
+	
 	sp_palettes.setFocusHover(sFOCUS, sHOVER);
-	sp_palettes.draw(palette_x + pal_padding + ui(4), dialog_y + ui(48) + ui(4));
+	sp_palettes.verify(_pw, dialog_h - ui(72 + 24));
+	sp_palettes.draw(_px, _py + ui(24 + 8));
 	
 	var bx = palette_x + palette_w - ui(44);
 	var by = dialog_y + ui(12);

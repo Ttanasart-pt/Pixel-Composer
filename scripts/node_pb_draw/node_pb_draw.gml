@@ -164,7 +164,7 @@ function Node_PB_Draw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			shader_set_i("stroke",               _stk         );
 			shader_set_f("stroke_thickness",     _stk_thk     );
 			shader_set_c("stroke_color",         _stk_col     );
-			shader_set_i("stroke_position",      _stk_pos     );
+			shader_set_i("stroke_position",      _stk_thk <= 1? 1 : _stk_pos );
 			shader_set_i("stroke_corner",        _stk_cor     );
 			shader_set_i("stroke_pattern",       _stk_pat     );
 			shader_set_2("stroke_pattern_scale", _stk_pat_sca );

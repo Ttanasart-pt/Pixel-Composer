@@ -13,16 +13,15 @@ function __PaletteColor(_color = c_black) constructor {
 	title_height = 52;
 	destroy_on_click_out = true;
 	
-	name          = __txtx("palette_editor_title", "Palette editor");
-	palette       = 0;
-	paletteObject = [];
+	name            = __txtx("palette_editor_title", "Palette editor");
+	palette         = 0;
+	paletteObject   = [];
 	
 	index_sel_start = 0;
 	index_selecting = [ 0, 0 ];
 	index_dragging  = noone;
 	interactable    = true;
 	drop_target     = noone; setDrop = function(d) /*=>*/ { drop_target = d; return self; }
-	
 	mouse_interact  = false;
 	
 	mixer           = noone;
@@ -92,14 +91,18 @@ function __PaletteColor(_color = c_black) constructor {
 #endregion
 
 #region presets
-	function initPalette() { paletePresets = array_clone(PALETTES); return self; } initPalette();
+	function initPalette() { 
+		paletePresets  = array_clone(PALETTES); 
+		currentPresets = paletePresets;
+		return self; 
+	} initPalette();
 	
 	hovering_name    = "";
 	preset_show_name = true;
 	
 	pal_padding = ui(9);
 	sp_preset_w = ui(240) - pal_padding * 2 - ui(8);
-	sp_presets  = new scrollPane(sp_preset_w, dialog_h - ui(48 + 8) - pal_padding, function(_y, _m) {
+	sp_presets  = new scrollPane(sp_preset_w, dialog_h - ui(48 + 8 + 40) - pal_padding, function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
 		var _hov = sp_presets.hover && sHOVER;
@@ -154,7 +157,42 @@ function __PaletteColor(_color = c_black) constructor {
 		return hh;
 	});
 	
-	//////////////////////// SORT
+	//////////////////////// SEARCH ////////////////////////
+	
+	search_string = "";
+	tb_search = new textBox(TEXTBOX_INPUT.text, function(t) /*=>*/ {return searchPalette(t)} )
+	               .setFont(f_p2)
+	               .setHide(1)
+	               .setEmpty(false)
+	               .setPadding(ui(24))
+	               .setAutoUpdate();
+	
+	function searchPalette(t) {
+		search_string = t;
+		
+		if(search_string == "") {
+			paletePresets = currentPresets;
+			return;
+		}
+		
+		paletePresets = [];
+		var _pr = ds_priority_create();
+		
+		for( var i = 0, n = array_length(currentPresets); i < n; i++ ) {
+			var _prest = currentPresets[i];
+			var _match = string_partial_match(_prest.name, search_string);
+			if(_match <= -9999) continue;
+			
+			ds_priority_add(_pr, _prest, _match);
+		}
+		
+		repeat(ds_priority_size(_pr))
+			array_push(paletePresets, ds_priority_delete_max(_pr));
+		
+		ds_priority_destroy(_pr);
+	}
+	
+	////////////////////////  SORT  ////////////////////////
 	
 	sortPreset_name_a = function() /*=>*/ { array_sort(paletePresets, function(p0, p1) /*=>*/ {return string_compare(p0.name, p1.name)}); }
 	sortPreset_name_d = function() /*=>*/ { array_sort(paletePresets, function(p0, p1) /*=>*/ {return string_compare(p1.name, p0.name)}); }
@@ -241,7 +279,6 @@ function __PaletteColor(_color = c_black) constructor {
 		if(onApply != noone) onApply(palette);
 	} 
 	
-	function onResize()   { sp_presets.resize(sp_preset_w, dialog_h - ui(62)); }
 	function checkMouse() {}
 	
 	menu_palette_sort = [

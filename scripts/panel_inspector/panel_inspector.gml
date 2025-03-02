@@ -190,19 +190,20 @@ function Panel_Inspector() : PanelContent() constructor {
     drawWidgetInit();
     
     #region ---- header labels ----
-        tb_node_name        = new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ { if(inspecting) inspecting.setDisplayName(txt); });
+        tb_node_name = new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ { if(inspecting) inspecting.setDisplayName(txt); })
+                             .setFont(f_h5)
+                             .setHide(1)
+                             .setAlign(fa_center);
+                             
         tb_node_name.format = TEXT_AREA_FORMAT.node_title;
-        tb_node_name.font   = f_h5;
-        tb_node_name.align  = fa_center;
-        tb_node_name.hide   = true;
         
-        tb_prop_filter             = new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ { filter_text = txt; });
-        tb_prop_filter.no_empty    = false;
-        tb_prop_filter.auto_update = true;
-        tb_prop_filter.font        = f_p0;
-        tb_prop_filter.color       = COLORS._main_text_sub;
-        tb_prop_filter.align       = fa_center;
-        tb_prop_filter.hide        = true;
+        tb_prop_filter = new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ { filter_text = txt; })
+                             .setFont(f_p0)
+                             .setHide(1)
+                             .setAlign(fa_center)
+                             .setColor(COLORS._main_text_sub)
+                             .setEmpty(false)
+                             .setAutoUpdate()
         filter_text = "";
     	
         prop_page   = 0;

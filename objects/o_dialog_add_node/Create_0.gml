@@ -94,7 +94,7 @@ event_inherited();
 	registerFunction("Add Node", "Trigger Favourite",	"",	   MOD_KEY.none,	trigger_favourite);
 	
 	function rightClick(node) {
-		if(!is_instanceof(node, NodeObject)) return;
+		if(!is(node, NodeObject)) return;
 		
 		node_menu_selecting = node;
 		var fav  = struct_exists(global.FAV_NODES, node.nodeName);
@@ -221,7 +221,7 @@ event_inherited();
 		var _inputs   = [];
 		var _outputs  = [];
 		
-		if(is_instanceof(_node, NodeObject)) {
+		if(is(_node, NodeObject)) {
 			_new_node = _node.build(node_target_x, node_target_y,, _param);
 			if(!_new_node) return;
 			
@@ -232,7 +232,7 @@ event_inherited();
 					array_pop(global.RECENT_NODES);
 			}
 			
-			if(is_instanceof(context, Node_Collection_Inline))
+			if(is(context, Node_Collection_Inline))
 				context.addNode(_new_node);
 			
 			for( var i = 0, n = array_length(_new_node.inputs); i < n; i++ ) 
@@ -247,12 +247,12 @@ event_inherited();
 			if(PANEL_INSPECTOR) PANEL_INSPECTOR.setInspecting(_new_node);
 			
 			if(PANEL_GRAPH) {
-				if(PREFERENCES.node_add_select)  PANEL_GRAPH.selectDragNode(_new_node, junction_called == noone);
+				if(PREFERENCES.node_add_select) PANEL_GRAPH.selectDragNode(_new_node, junction_called == noone);
 				var _ins = instanceof(_new_node);
 				if(struct_has(HOTKEYS, _ins)) FOCUS_STR = _ins;
 			}
 			
-		} else if(is_instanceof(_node, NodeAction)) {  // NOT IMPLEMENTED
+		} else if(is(_node, NodeAction)) {  // NOT IMPLEMENTED
 			var _dat = _node.build(node_target_x, node_target_y,, _param);
 			var _node_in  = _dat.inputNode;
 			var _node_out = _dat.outputNode;
@@ -275,7 +275,7 @@ event_inherited();
 				tx = min(tx, _new_list[i].x);
 				ty = min(tx, _new_list[i].y);
 				
-				if(is_instanceof(context, Node_Collection_Inline) && !is_instanceof(_new_list[i], Node_Collection_Inline))
+				if(is(context, Node_Collection_Inline) && !is(_new_list[i], Node_Collection_Inline))
 					context.addNode(_new_list[i]);
 			}
 			
@@ -527,7 +527,7 @@ event_inherited();
 			for(var index = 0; index < node_count; index++) {
 				var _node = _list[index];
 				if(is_undefined(_node)) continue;
-				if(is_instanceof(_node, NodeObject)) {
+				if(is(_node, NodeObject)) {
 					if(_node.patreon && !IS_PATREON) continue;
 					if(is_global && !_node.show_in_global)    continue;
 				}
@@ -566,9 +566,9 @@ event_inherited();
 				var _boxx = _nx + (grid_width - grid_size) / 2;
 				var cc    = c_white;
 				
-					 if(is_instanceof(_node, NodeObject))	cc = c_white;
-				else if(is_instanceof(_node, NodeAction))	cc = COLORS.add_node_blend_action;
-				else if(is_instanceof(_node, AddNodeItem))	cc = COLORS.add_node_blend_generic;
+					 if(is(_node, NodeObject))	cc = c_white;
+				else if(is(_node, NodeAction))	cc = COLORS.add_node_blend_action;
+				else if(is(_node, AddNodeItem))	cc = COLORS.add_node_blend_generic;
 				else										cc = COLORS.dialog_add_node_collection;
 				
 				if(!struct_try_get(_node, "hide_bg", false)) {
@@ -588,7 +588,7 @@ event_inherited();
 					}
 				}
 				
-				if(is_instanceof(_node, NodeObject)) {
+				if(is(_node, NodeObject)) {
 					_node.drawGrid(_boxx, yy, _m[0], _m[1], grid_size);
 				} else {
 					var spr_x = _boxx + grid_size / 2;
@@ -598,7 +598,7 @@ event_inherited();
 					if(sprite_exists(_node.spr)) 
 						draw_sprite_ui_uniform(_node.spr, 0, spr_x, spr_y, 0.5);
 					
-					if(is_instanceof(_node, NodeAction) && !struct_try_get(_node, "hide_bg", false))
+					if(is(_node, NodeAction) && !struct_try_get(_node, "hide_bg", false))
 						draw_sprite_ui_uniform(THEME.play_action, 0, _boxx + grid_size - 16, yy + grid_size - 16, 1, COLORS.add_node_blend_action);
 				}
 				
@@ -711,7 +711,7 @@ event_inherited();
 			for(var i = 0; i < node_count; i++) {
 				var _node = _list[i];
 				if(is_undefined(_node)) continue;
-				if(is_instanceof(_node, NodeObject)) {
+				if(is(_node, NodeObject)) {
 					if(_node.patreon && !IS_PATREON) continue;
 					if(is_global && !_node.show_in_global) continue;
 				}
@@ -755,14 +755,14 @@ event_inherited();
 					draw_sprite_stretched_ext(THEME.node_bg, 1, pd, yy, list_width - pd * 2, list_height, COLORS._main_accent, 1);
 					
 					if(sFOCUS) {
-						if(mouse_press(mb_left,  left_free))  buildNode(_node);
-						if(mouse_press(mb_right, right_free)) rightClick(_node);
+						if(mouse_release(mb_left,  left_free))  buildNode(_node);
+						if(mouse_release(mb_right, right_free)) rightClick(_node);
 					}
 				}
 				
 				var tx;
 				
-				if(is_instanceof(_node, NodeObject)) {
+				if(is(_node, NodeObject)) {
 					tx = _node.drawList(pd, yy, _m[0], _m[1], list_height, list_width - pd);
 					
 				} else {
@@ -775,7 +775,7 @@ event_inherited();
 						draw_sprite_ext(_node.spr, 0, spr_x, spr_y, ss, ss, 0, c_white, 1);
 					}
 					
-					if(is_instanceof(_node, NodeAction) && !struct_try_get(_node, "hide_bg", false))
+					if(is(_node, NodeAction) && !struct_try_get(_node, "hide_bg", false))
 						draw_sprite_ui_uniform(THEME.play_action, 0, spr_x + list_height / 2 - 8, spr_y + list_height / 2 - 8, 0.5, COLORS.add_node_blend_action);
 					
 					tx = pd + list_height + ui(32 + 4);
@@ -944,7 +944,7 @@ event_inherited();
 				
 				var match = string_partial_match_res(string_lower(_node.getName()), search_lower, search_split);
 								
-				if(is_instanceof(_node, NodeObject)) {
+				if(is(_node, NodeObject)) {
 					if(_node.deprecated) continue;
 					if(match[0] > -9000 && struct_exists(global.FAV_NODES, _node.nodeName)) 
 						match[0] += 10000;
@@ -1045,9 +1045,9 @@ event_inherited();
 				
 				if(_drw) {
 					
-						 if(is_instanceof(_node, NodeObject))	cc = c_white;
-					else if(is_instanceof(_node, NodeAction))	cc = COLORS.add_node_blend_action;
-					else if(is_instanceof(_node, AddNodeItem))	cc = COLORS.add_node_blend_generic;
+						 if(is(_node, NodeObject))	cc = c_white;
+					else if(is(_node, NodeAction))	cc = COLORS.add_node_blend_action;
+					else if(is(_node, AddNodeItem))	cc = COLORS.add_node_blend_generic;
 					else										cc = COLORS.dialog_add_node_collection;
 					
 					if(!struct_try_get(_node, "hide_bg", false)) {
@@ -1073,7 +1073,7 @@ event_inherited();
 							buildNode(_node, _param);
 					}
 					
-					if(is_instanceof(_node, NodeObject)) {
+					if(is(_node, NodeObject)) {
 						_node.drawGrid(_boxx, yy, _m[0], _m[1], grid_size, _param);
 					} else {
 						if(variable_struct_exists(_node, "getSpr")) _node.getSpr();
@@ -1094,7 +1094,7 @@ event_inherited();
 							draw_sprite_ext(_node.spr, _si, _sx, _sy, _ss, _ss, 0, c_white, 1);
 						}
 					
-						if(is_instanceof(_node, NodeAction) && !struct_try_get(_node, "hide_bg", false))
+						if(is(_node, NodeAction) && !struct_try_get(_node, "hide_bg", false))
 							draw_sprite_ui_uniform(THEME.play_action, 0, _boxx + grid_size - 16, yy + grid_size - 16, 1, COLORS.add_node_blend_action);
 					}
 					
@@ -1220,7 +1220,7 @@ event_inherited();
 				
 				var tx;
 				
-				if(is_instanceof(_node, NodeObject)) {
+				if(is(_node, NodeObject)) {
 					var tx = _node.drawList(pd, yy, _m[0], _m[1], list_height, list_width - pd, _param);
 					
 				} else {
@@ -1241,7 +1241,7 @@ event_inherited();
 				
 						draw_sprite_ext(_node.spr, _si, _sx, _sy, _ss, _ss, 0, c_white, 1);
 					
-						if(is_instanceof(_node, NodeAction) && !struct_try_get(_node, "hide_bg", false))
+						if(is(_node, NodeAction) && !struct_try_get(_node, "hide_bg", false))
 							draw_sprite_ui_uniform(THEME.play_action, 0, _sx + list_height / 2 - 8, _sy + list_height / 2 - 8, 0.5, COLORS.add_node_blend_action);
 					}
 					
