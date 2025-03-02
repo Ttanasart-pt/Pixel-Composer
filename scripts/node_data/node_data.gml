@@ -700,6 +700,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static getOutputJunctionAmount = function()      { return output_display_list == -1? array_length(outputs) : array_length(output_display_list); }
 	static getOutputJunctionIndex  = function(index) { return output_display_list == -1? index : output_display_list[index]; }
 	
+	static getOutputChannelAmount = function( ) /*=>*/ {return array_length(outputs)};
+	static getOutputChannelName   = function(i) /*=>*/ {return outputs[i].name};
+	
 	static updateIO = function() {
 		
 		for( var i = 0, n = array_length(inputs); i < n; i++ )
@@ -1981,19 +1984,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return hovering;
 	}
 	
-	static getGraphPreviewSurface = function() { 
-		var _node = array_safe_get(outputs, preview_channel);
-		if(!is(_node, NodeValue)) return noone;
-		
-		switch(_node.type) {
-			case VALUE_TYPE.surface :
-			case VALUE_TYPE.dynaSurface :
-				return _node.showValue();
-		}
-		
-		return noone;
-	}
-	
 	__preview_surf = false;
 	__preview_sw   = noone;
 	__preview_sh   = noone;
@@ -2300,6 +2290,19 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(!is_surface(_surf)) return noone;
 		
 		return BBOX().fromWH(preview_x, preview_y, surface_get_width_safe(_surf), surface_get_height_safe(_surf));
+	}
+	
+	static getGraphPreviewSurface = function() { 
+		var _node = array_safe_get(outputs, preview_channel);
+		if(!is(_node, NodeValue)) return noone;
+		
+		switch(_node.type) {
+			case VALUE_TYPE.surface :
+			case VALUE_TYPE.dynaSurface :
+				return _node.showValue();
+		}
+		
+		return noone;
 	}
 	
 	////- CACHE

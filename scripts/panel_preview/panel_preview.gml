@@ -822,16 +822,13 @@ function Panel_Preview() : PanelContent() constructor {
     }
     
     function drawNodeChannel(_node, _x, _y) {
-       if(array_length(_node.outputs) < 2) {
-			_node.preview_channel = 0;
-			return 0;
-		}
+    	var _chAmo = _node.getOutputChannelAmount();
+    	_node.preview_channel = min(_node.preview_channel, _chAmo - 1);
+    	if(_chAmo <= 1) return 0;
         
         sbChannelIndex = [];
-        var chName = [];
-        
-		_node.preview_channel = min(_node.preview_channel, array_length(_node.outputs) - 1);
-        var currName = _node.outputs[_node.preview_channel].name;
+        var chName     = [];
+        var currName   = _node.getOutputChannelName(_node.preview_channel);
         
         draw_set_text(sbChannel.font, fa_center, fa_center);
         var ww  = 0;
@@ -840,12 +837,12 @@ function Panel_Preview() : PanelContent() constructor {
         
         for( var i = 0; i < amo; i++ ) {
             var _outi = _node.getOutputJunctionIndex(i);
-            var _outj = _node.outputs[_outi];
+            var _name = _node.getOutputChannelName(_outi);
             
-            array_push(chName, _outj.name);
             array_push(sbChannelIndex, _outi);
+            array_push(chName, _name);
             
-            ww = max(ww, string_width(_outj.name) + ui(40));
+            ww = max(ww, string_width(_name) + ui(40));
         }
         
         if(!array_empty(chName)) {

@@ -546,4 +546,5 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		if(drawn) array_safe_set(anim_drawn, CURRENT_FRAME, true);
 		outputs[1].setValue(array_spread(atlases));
 	}
+
 }

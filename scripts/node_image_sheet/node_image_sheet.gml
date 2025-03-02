@@ -95,7 +95,17 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	temp_surface = [ noone ];
 	
-	static getPreviewValues  = function() { return getInputData(0); }
+	static getPreviewValues  = function() { 
+		switch(preview_channel) {
+			case 0 : return getInputData(0); 
+			case 1 : return outputs[0].getValue(); 
+		}
+		
+		return noone;
+	}
+	
+	getGraphPreviewSurface = getPreviewValues;
+	
 	static onValueFromUpdate = function() { _inSurf = noone; }
 	static onValueUpdate     = function() { _inSurf = noone; }
 	
@@ -126,6 +136,8 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	} 
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		if(preview_channel != 0) return;
+		
 		var _inSurf  = getInputData(0);
 		if(!is_surface(_inSurf)) return;
 		
@@ -410,4 +422,14 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			outputs[0].setValue(array_safe_get_fast(surf_array, ind));
 		}
 	}
+
+	static getOutputChannelAmount = function() /*=>*/ {return 2};
+	static getOutputChannelName   = function(i) /*=>*/ {
+		switch(i) {
+			case 0 : return "Original";
+			case 1 : return "Spliced";
+		}
+		return "";
+	}
+	
 }
