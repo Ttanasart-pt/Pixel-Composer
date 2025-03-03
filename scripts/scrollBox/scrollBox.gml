@@ -13,8 +13,8 @@ function scrollItem(name, spr = noone, spr_ind = 0, spr_blend = COLORS._main_ico
 	static setTooltip = function(_tt) { tooltip = _tt; return self; }
 }
 
-function scrollBox(_data, _onModify, update_hover = true) : widget() constructor {
-	self.update_hover = update_hover;
+function scrollBox(_data, _onModify, _update_hover = true) : widget() constructor {
+	update_hover = _update_hover;
 	
 	onModify  = _onModify;	
 	data_list = _data;
@@ -40,11 +40,13 @@ function scrollBox(_data, _onModify, update_hover = true) : widget() constructor
 	type = 0;
 	hide = 0;
 	
-	static setHorizontal    = function(_l) /*=>*/ { horizontal   = _l;   return self; }
-	static setAlign         = function(_l) /*=>*/ { align        = _l;   return self; }
-	static setTextColor     = function(_l) /*=>*/ { text_color   = _l;   return self; }
-	static setUpdateHover   = function(_l) /*=>*/ { update_hover = _l;   return self; }
-	static setMinWidth      = function(_l) /*=>*/ { minWidth     = _l;   return self; }
+	static setHorizontal    = function(_l) /*=>*/ { horizontal     = _l; return self; }
+	static setAlign         = function(_l) /*=>*/ { align          = _l; return self; }
+	static setTextColor     = function(_l) /*=>*/ { text_color     = _l; return self; }
+	static setUpdateHover   = function(_l) /*=>*/ { update_hover   = _l; return self; }
+	static setMinWidth      = function(_l) /*=>*/ { minWidth       = _l; return self; }
+	static setPadding       = function(_l) /*=>*/ { padding        = _l; return self; }
+	static setPaddingItem   = function(_l) /*=>*/ { item_pad       = _l; return self; }
 	static setPaddingScroll = function(_l) /*=>*/ { padding_scroll = _l; return self; }
 	
 	static trigger = function() {

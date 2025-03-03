@@ -2,7 +2,7 @@ function Panel_Action_Create() : PanelContent() constructor {
 	#region data
 		title = __txt("Create Action");
 		showHeader = true;
-		padding    = ui(12);
+		padding    = ui(8);
 		
 		w     = min(WIN_W, ui(720));
 		h     = ui(400);
@@ -19,12 +19,12 @@ function Panel_Action_Create() : PanelContent() constructor {
 		nodes       = [];
 		connections = [];
 		
-		cat_index   = 0;
 		node_categories = [ "None" ];
+		cat_index   = 0;
 		cat_value   = [ noone ];
 		
-		for(var i = 0; i < ds_list_size(NODE_CATEGORY); i++) {
-			var _name = NODE_CATEGORY[| i].name;
+		for(var i = 0; i < array_length(NODE_CATEGORY); i++) {
+			var _name = NODE_CATEGORY[i].name;
 			switch(_name) {
 				case "Action" :
 				case "Custom" :
@@ -35,11 +35,12 @@ function Panel_Action_Create() : PanelContent() constructor {
 			array_push(node_categories, _name);
 			array_push(cat_value, [ _name, "" ]);
 			
-			var _list  = NODE_CATEGORY[| i].list;
-			for(var j = 0, m = ds_list_size(_list); j < m; j++ ) {
-				if(is_string(_list[| j])) {
-					array_push(node_categories, $"> {_list[| j]}");
-					array_push(cat_value, [ _name, _list[| j] ]);
+			var _list  = NODE_CATEGORY[i].list;
+			
+			for(var j = 0, m = array_length(_list); j < m; j++ ) {
+				if(is_string(_list[j])) {
+					array_push(node_categories, $"> {_list[j]}");
+					array_push(cat_value, [ _name, _list[j] ]);
 				}
 			}
 			
@@ -47,18 +48,18 @@ function Panel_Action_Create() : PanelContent() constructor {
 			array_push(cat_value, noone);
 		}
 		
-		tb_name 	= new textBox( TEXTBOX_INPUT.text, function(str) /*=>*/ { name    = str; }).setAutoUpdate();
-		tb_tooltip  = new textArea(TEXTBOX_INPUT.text, function(str) /*=>*/ { tooltip = str; }).setAutoUpdate();
-		tb_alias    = new textArea(TEXTBOX_INPUT.text, function(str) /*=>*/ { tags	  = str; }).setAutoUpdate();
-		tb_location = new scrollBox(node_categories, function(val) /*=>*/ { cat_index = val; });
-		tb_location.align      = fa_left;
-		tb_location.horizontal = true;
-		tb_location.padding    = ui(16);
-		tb_location.item_pad   = ui(4);
-		tb_location.font       = f_p2;
+		tb_name 	= new textBox( TEXTBOX_INPUT.text, function(s) /*=>*/ { name    = s; }).setAutoUpdate().setFont(f_p2);
+		tb_tooltip  = new textArea(TEXTBOX_INPUT.text, function(s) /*=>*/ { tooltip = s; }).setAutoUpdate().setFont(f_p2);
+		tb_alias    = new textArea(TEXTBOX_INPUT.text, function(s) /*=>*/ { tags    = s; }).setAutoUpdate().setFont(f_p2);
+		tb_location = new scrollBox(node_categories,   function(v) /*=>*/ { cat_index = v; })
+		                     .setAlign(fa_left)
+		                     .setHorizontal(true)
+		                     .setFont(f_p2)
+		                     .setPadding(ui(16))
+		                     .setPaddingItem(ui(4));
 		
 		b_create = button(function() /*=>*/ {
-			var _path = $"{DIRECTORY}Actions/Nodes/{name}.json";
+			var _path = $"{DIRECTORY}Nodes/Actions/{name}.json";
 			var _map  = {
 				name,
 				sprPath : $"./{name}.png",
@@ -71,10 +72,10 @@ function Panel_Action_Create() : PanelContent() constructor {
 			
 			json_save_struct(_path, _map);
 			
-			if(spr) surface_save(spr, $"{DIRECTORY}Actions/Nodes/{name}.png");
+			if(spr) surface_save(spr, $"{DIRECTORY}Nodes/Actions/{name}.png");
 			close();
 			
-			__initNodeActions();
+			__initNodeActions(true);
 		});
 		
 		b_create.text = __txtx("new_action_create", "Create");
@@ -93,8 +94,8 @@ function Panel_Action_Create() : PanelContent() constructor {
 			var _lh = line_get_height(f_p2);
 			
 			for (var i = 0, n = array_length(rawNodes); i < n; i++) {
-				var _r = rawNodes[i];
-				var _n = _r.node;
+				var _r    = rawNodes[i];
+				var _n    = _r.node;
 				var _name = _n.getFullName();
 				var _nd   = nodes[i];
 				
@@ -125,7 +126,7 @@ function Panel_Action_Create() : PanelContent() constructor {
 						var _bx = ui(8 + 12);
 						var _by = yy + _lh / 2;
 						var _tg = struct_has(_vali, "value"); _ttg |= _tg;
-						var _hv = pHOVER && point_in_circle(_m[0], _m[1], _bx, _by, 6);
+						var _hv = pHOVER && point_in_circle(_m[0], _m[1], _bx, _by, ui(8));
 						if(_hv) {
 							TOOLTIP = "Save value";
 							sc_node_content.hover_content = true;
@@ -140,7 +141,7 @@ function Panel_Action_Create() : PanelContent() constructor {
 						
 						if(_in.expUse) {
 							var _tg = struct_has(_vali, "expression"); _ttg |= _tg;
-							var _hv = pHOVER && point_in_circle(_m[0], _m[1], _bx, _by, 6);
+							var _hv = pHOVER && point_in_circle(_m[0], _m[1], _bx, _by, ui(8));
 							if(_hv) {
 								TOOLTIP = "Save expression";
 								sc_node_content.hover_content = true;
@@ -156,7 +157,7 @@ function Panel_Action_Create() : PanelContent() constructor {
 						
 						if(_in.unit.reference != noone) {
 							var _tg = struct_has(_vali, "unit"); _ttg |= _tg;
-							var _hv = pHOVER && point_in_circle(_m[0], _m[1], _bx, _by, 6);
+							var _hv = pHOVER && point_in_circle(_m[0], _m[1], _bx, _by, ui(8));
 							if(_hv) {
 								TOOLTIP = "Save unit";
 								sc_node_content.hover_content = true;
@@ -249,13 +250,14 @@ function Panel_Action_Create() : PanelContent() constructor {
 	function drawContent(panel) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
-		var _pd = padding;
+		var _pd   = padding;
+		var _conw = ui(320);
 		
 		// Nodes
 		
 		var ndx = _pd;
 		var ndy = _pd;
-		var ndw = w - _pd * 2 - ui(320);
+		var ndw = w - _pd * 2 - _conw;
 		var ndh = h - _pd * 2;
 		
 		draw_sprite_stretched(THEME.ui_panel_bg, 1, ndx, ndy, ndw, ndh);
@@ -265,11 +267,11 @@ function Panel_Action_Create() : PanelContent() constructor {
 		
 		// Metadata
 		
-		var _tx = w - ui(320);
+		var _tx = w - _conw;
 		var _nm = ui(128);
 		var _wx = _tx + _nm;
 		var _wy = ui(8);
-		var _ww = ui(320) - _pd - _nm;
+		var _ww = _conw - _pd - _nm;
 		var _wh = TEXTBOX_HEIGHT;
 		var _th = _wy;
 		
@@ -278,24 +280,28 @@ function Panel_Action_Create() : PanelContent() constructor {
 		tb_alias.setFocusHover(pFOCUS, pHOVER); 	tb_alias.register();
 		tb_location.setFocusHover(pFOCUS, pHOVER);	tb_location.register();
 		
-		draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
-		draw_text_add(_tx, _wy + _wh / 2, __txt("Name"));
-		var _hh = tb_name.draw(_wx, _wy, _ww, _wh, name, [ mx, my ]);			_wy += _hh + ui(8); _th += _hh + ui(8);
+		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
+		draw_text_add(_tx + ui(8), _wy + _wh / 2, __txt("Name"));
+		var _hh = tb_name.draw(_wx, _wy, _ww, _wh, name, [ mx, my ]);
+		_wy += _hh + ui(8); _th += _hh + ui(8);
 		
-		draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
-		draw_text_add(_tx, _wy + _wh / 2, __txt("Alias"));
-		var _hh = tb_alias.draw(_wx, _wy, _ww, _wh, tags, [ mx, my ]);			_wy += _hh + ui(8); _th += _hh + ui(8);
+		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
+		draw_text_add(_tx + ui(8), _wy + _wh / 2, __txt("Alias"));
+		var _hh = tb_alias.draw(_wx, _wy, _ww, _wh, tags, [ mx, my ]);
+		_wy += _hh + ui(8); _th += _hh + ui(8);
 		
-		draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
-		draw_text_add(_tx, _wy + _wh / 2, __txt("Tooltip"));
-		var _hh = tb_tooltip.draw(_wx, _wy, _ww, _wh * 2, tooltip, [ mx, my ]);	_wy += _hh + ui(8); _th += _hh + ui(8);
+		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
+		draw_text_add(_tx + ui(8), _wy + _wh / 2, __txt("Tooltip"));
+		var _hh = tb_tooltip.draw(_wx, _wy, _ww, _wh * 2, tooltip, [ mx, my ]);
+		_wy += _hh + ui(8); _th += _hh + ui(8);
 		
-		draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
-		draw_text_add(_tx, _wy + _wh / 2, __txt("Category"));
-		var _hh = tb_location.draw(_wx, _wy, _ww, _wh, cat_index, [ mx, my ], x, y); _wy += _hh + ui(8); _th += _hh + ui(8);
+		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
+		draw_text_add(_tx + ui(8), _wy + _wh / 2, __txt("Category"));
+		var _hh = tb_location.draw(_wx, _wy, _ww, _wh, cat_index, [ mx, my ], x, y);
+		_wy += _hh + ui(8); _th += _hh + ui(8);
 		
-		draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
-		draw_text_add(_tx, _wy + _wh / 2, __txt("Icon"));
+		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
+		draw_text_add(_tx + ui(8), _wy + _wh / 2, __txt("Icon"));
 		
 		var spx = _wx;
 		var spy = _wy;

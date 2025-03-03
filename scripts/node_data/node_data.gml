@@ -125,7 +125,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		badgePreview        = 0;
 		badgeInspect        = 0;
 		
-		is_selecting        = false;
 		active_drawing      = false;
 		active_draw_index   = -1;
 		active_draw_anchor  = false;

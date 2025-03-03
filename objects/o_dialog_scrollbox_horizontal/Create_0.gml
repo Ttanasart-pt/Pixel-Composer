@@ -2,7 +2,8 @@
 event_inherited();
 
 #region 
-	max_h	 = 640;
+	max_w	 = WIN_W * .8;
+	max_h	 = ui(640);
 	
 	horizon  = true;
 	font     = f_p0
@@ -11,6 +12,9 @@ event_inherited();
 	item_pad = ui(8);
 	minWidth = 0;
 	widths   = [];
+	heights  = [];
+	
+	minHeight = 0;
 	
 	draggable = false;
 	destroy_on_click_out = true;
@@ -72,22 +76,27 @@ event_inherited();
 		var lh = item_pad;
 		var _emp = true;
 		
-		widths = [];
+		widths  = [];
+		heights = [];
 		
 		draw_set_text(font, fa_left, fa_top);
 		
 		for( var i = 0, n = array_length(data); i < n; i++ ) {
 			var _val = data[i];
-			var  txt = is_instanceof(_val, scrollItem)? _val.name : _val;
-			var _spr = is_instanceof(_val, scrollItem) && _val.spr;
+			var  txt = is(_val, scrollItem)? _val.name : _val;
+			var _spr = is(_val, scrollItem) && _val.spr;
 			
 			if(_hori) {
 				if(_val == -1) {
 					if(_emp) {
-						array_push(widths, 0);
+						array_push(widths,  0);
+						array_push(heights, 0);
+						
 					} else {	
-						lw = max(minWidth, lw);
-						array_push(widths, lw);
+						lw = max(minWidth,  lw);
+						array_push(widths,  lw);
+						array_push(heights, lh);
+						
 						ww += lw;
 						hh  = max(hh, lh);
 					}
@@ -103,13 +112,15 @@ event_inherited();
 			
 			_emp = false;
 			
-			tw  = string_width(txt) + _spr * (hght + _tpad * 2);
-			lw  = max(lw, tw + _tpad * 2);
-			lh += hght;
+			tw     = string_width(txt) + _spr * (hght + _tpad * 2) + _tpad * 2;
+			lw     = max(lw, tw);
+			lh    += hght;
 		}
 		
 		lw = max(minWidth, lw);
-		array_push(widths, _emp? 0 : lw);
+		
+		array_push(widths,  _emp? 0 : lw);
+		array_push(heights, _emp? 0 : lh);
 		ww += lw;
 		hh  = max(hh, lh);
 		
@@ -120,6 +131,31 @@ event_inherited();
 		} else {
 			dialog_w = max(scrollbox.w, lw);
 			dialog_h = min(max_h, sh + lh);
+		}
+		
+		if(_hori && dialog_w >= max_w) {
+			var wwMin = 0;
+			minHeight = sh + hh;
+			
+			var lwMin = 0;
+			var lhMin = item_pad;
+		
+			for( var i = 0, n = array_length(heights); i < n; i++ ) {
+				var _w = widths[i];
+				var _h = heights[i];
+				
+				if(lhMin + _h > minHeight) {
+					wwMin += lwMin;
+					lwMin = 0;
+					lhMin = item_pad;
+				}
+				
+				lwMin = max(lwMin, _w);
+				lhMin += _h;
+			}
+			
+			wwMin += lwMin;
+			dialog_w = wwMin + _tpad * 2;
 		}
 		
 		sc_content.resize(dialog_w - _tpad * 2, dialog_h - ui(40));
@@ -141,20 +177,31 @@ event_inherited();
 		var _hori     = horizon && search_string == "";
 		var _tpad     = _hori? text_pad : ui(8);
 		
+		var _ww = sc_content.surface_w;
+		var _hh = sc_content.surface_h;
+		var _dw = 0;
+		
+		if(MOUSE_MOVED) selecting = noone;
+		
 		for( var i = 0, n = array_length(data); i < n; i++ ) {
-			var _dw  = _hori? widths[_col] : sc_content.surface_w;
 			var _val = data[i];
+			_dw  = max(_dw, _hori? widths[_col] : _ww);
 			
 			if(_hori) {
 				if(_val == -1) {
-					_lx += _dw;
-					_ly  = _y;
 					_col++;
+					var _ch = heights[_col];
 					
-					_h   = max(_h, _lh);
-					_lh  = 0;
-					_lw  = 0;
-					
+					if(_lh + _ch > minHeight) {
+						_lx += _dw;
+						_ly  = _y;
+						
+						_h   = max(_h, _lh);
+						_dw  = 0;
+						_lh  = 0;
+						_lw  = 0;
+						
+					}
 					continue;
 				}
 				
@@ -213,8 +260,12 @@ event_inherited();
 				var _xc = _spr != noone? hght + (_dw - hght) / 2 : _dw / 2;
 				draw_text_add(_lx + _xc, _ly + hght / 2, _txt);
 				
-			} else if(align == fa_left) 
-				draw_text_add(_tpad + _lx + (_spr != noone) * (_tpad * 2 + hght), _ly + hght / 2, _txt);
+			} else if(align == fa_left) {
+				var _tx = _tpad + _lx;
+				if(_spr != noone) _tx += _tpad * 2 + hght;
+				
+				draw_text_add(_tx, _ly + hght / 2, _txt);
+			}
 			
 			if(_spr) draw_sprite_ui(_val.spr, _val.spr_ind, _lx + ui(8) + hght / 2, _ly + hght / 2, 1, 1, 0, _val.spr_blend);
 			
@@ -244,7 +295,7 @@ event_inherited();
 				instance_destroy();
 		}
 		
-		return _h;
+		return _h + ui(8);
 	});
 	
 	sc_content.scroll_resize = false;

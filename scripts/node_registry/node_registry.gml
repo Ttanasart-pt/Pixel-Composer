@@ -503,7 +503,6 @@ function __read_node_display(_list) {
 					
 				} else {
 					var _txt = $"Missing node data [{_n}]: Check if node folder exists in {DIRECTORY}Nodes\Internal";
-					// print(_txt);
 					noti_warning(_txt);
 				}
 			}

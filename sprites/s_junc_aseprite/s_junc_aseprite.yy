@@ -26,7 +26,7 @@
   "origin":4,
   "parent":{
     "name":"junctions",
-    "path":"folders/sprites/nodes/junctions.yy",
+    "path":"folders/sprites/junctions.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

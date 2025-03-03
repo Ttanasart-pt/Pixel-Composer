@@ -2,7 +2,7 @@ global.ACTIONS = [];
 
 function NodeAction() constructor {
 	name = "";
-	spr  = noone;
+	spr  = s_node_action_default;
 	node = noone;
 	tags = [];
 	
@@ -124,37 +124,31 @@ function NodeAction_create() : NodeAction() constructor {
 	spr     = s_action_add;
 	hide_bg = true;
 	
-	static build = function() { PANEL_GRAPH.createAction(); }
+	static build = function() { PANEL_GRAPH.createAction(); return noone; }
 }
 
-function __initNodeActions() {
-	var root = $"{DIRECTORY}Nodes";
-	directory_verify(root);
+function __initNodeActions(_update = false) {
+	if(_update) {
+		array_resize(NODE_ACTION_LIST, 0);
+		array_push(NODE_ACTION_LIST, new NodeAction_create());
+		
+	} else NODE_ACTION_LIST = [ new NodeAction_create() ];
 	
 	var root = $"{DIRECTORY}Nodes/Actions";
 	directory_verify(root);
 	
-	NODE_ACTION_LIST = [ new NodeAction_create() ];
+	var _acts = directory_get_files_ext(root, ".json");
 	
-	var f = file_find_first(root + "/*", 0), _f;
-	
-	while (f != "") {
-		_f = f;
-		 f = file_find_next();
-		
-		if(filename_ext(_f) != ".json") continue;
-		
+	for( var i = 0, n = array_length(_acts); i < n; i++ ) {
+		var _f = _acts[i];
 		var _c = new NodeAction().deserialize($"{root}/{_f}");
 		array_push(NODE_ACTION_LIST, _c);
 		
 		if(_c.location == noone) continue;
-		
 		var _cat = array_safe_get(_c.location, 0, "");
 		var _grp = array_safe_get(_c.location, 1, "");
-		
-		
 	}
-	file_find_close();
+	
 }
 
 function __initAction() {

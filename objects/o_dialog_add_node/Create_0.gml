@@ -254,8 +254,10 @@ event_inherited();
 			
 		} else if(is(_node, NodeAction)) {  // NOT IMPLEMENTED
 			var _dat = _node.build(node_target_x, node_target_y,, _param);
-			var _node_in  = _dat.inputNode;
-			var _node_out = _dat.outputNode;
+			if(_dat == noone) return;
+			
+			var _node_in  = _dat[$ "inputNode"]  ?? noone;
+			var _node_out = _dat[$ "outputNode"] ?? noone;
 			
 			if(_node_in != noone)
 			for( var i = 0, n = array_length(_node_in.inputs); i < n; i++ ) 
@@ -532,6 +534,8 @@ event_inherited();
 					if(is_global && !_node.show_in_global)    continue;
 				}
 				
+				if(is(_node, NodeAction_create) && array_empty(PANEL_GRAPH.nodes_selecting)) continue;
+				
 				if(is_string(_node)) {
 					if(PREFERENCES.dialog_add_node_grouping == 0) continue;
 					if(PREFERENCES.dialog_add_node_grouping == 1 && string_starts_with(_node, "/")) continue;
@@ -715,6 +719,8 @@ event_inherited();
 					if(_node.patreon && !IS_PATREON) continue;
 					if(is_global && !_node.show_in_global) continue;
 				}
+				
+				if(is(_node, NodeAction_create) && array_empty(PANEL_GRAPH.nodes_selecting)) continue;
 				
 				if(is_string(_node)) {
 					if(PREFERENCES.dialog_add_node_grouping == 0) continue;

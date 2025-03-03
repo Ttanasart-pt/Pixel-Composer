@@ -9,6 +9,7 @@ function __Node_Base(x, y) constructor {
 	outputs         = [];
 	input_value_map = {};
 	
+	is_selecting    = false;
 	active_index	= -1;
 	preview_index	= 0;
 	anim_priority	= -999;

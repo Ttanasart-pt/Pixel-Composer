@@ -51,8 +51,8 @@
   },
   "origin":5,
   "parent":{
-    "name":"nodes",
-    "path":"folders/sprites/nodes.yy",
+    "name":"enum icons",
+    "path":"folders/sprites/enum icons.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",
