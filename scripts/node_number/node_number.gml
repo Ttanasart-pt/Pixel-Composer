@@ -240,7 +240,7 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				
 		switch(disp) {
 			case 1 :
-				var _hov  = _hover;
+				var _hov = _hover;
 				
 				if(sty == 0) {
 					slider_value = slider_value == -1? raw : lerp_float(slider_value, raw, 2.5);

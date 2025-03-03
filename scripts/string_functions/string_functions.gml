@@ -22,12 +22,14 @@ function string_real(val, digMax = 999, decMin = 5) {
 	var pres, p = 1;
 	var presMax = min(decMin, digMax - ceil(log10(ceil(abs(val)))));
 	for( pres = 0; pres < presMax; pres++ ) {
-		if(frac(val * p) == 0)
-			break;
+		if(frac(val * p) == 0) break;
 		p *= 10;
 	}
 	
-	return string_format(val, -1, pres);
+	var _str = string_format(val, -1, pres);
+	if(string_pos(".", _str)) _str = string_trim_end(_str, ["0"]);
+	
+	return _str;
 }
 
 function string_char_last(str, shift = 0) {
