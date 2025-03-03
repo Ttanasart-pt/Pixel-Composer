@@ -499,6 +499,7 @@ function typeArray(_value) {
 		case VALUE_DISPLAY.matrix :
 		case VALUE_DISPLAY.transform :
 		case VALUE_DISPLAY.boolean_grid :
+		case VALUE_DISPLAY.corner :
 			
 		case VALUE_DISPLAY.curve :
 			

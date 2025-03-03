@@ -3113,9 +3113,10 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
     	var _ty = "";
     	
 			 if(value_bit(_jj.type) & (1 << 15) || is(nodes_selecting[0], Node_Path)) doCompose();
-		else if(value_bit(_jj.type) & (1 << 5))  _ty = "Node_Blend";
-		else if(value_bit(_jj.type) & (1 << 3))  doCompose();
-		else if(value_bit(_jj.type) & (1 << 1))  _ty = "Node_Math";
+		else if(value_bit(_jj.type) & (1 <<  5)) _ty = "Node_Blend";
+		else if(value_bit(_jj.type) & (1 <<  3)) doCompose();
+		else if(value_bit(_jj.type) & (1 <<  1)) _ty = "Node_Math";
+		else if(value_bit(_jj.type) & (1 << 28)) _ty = "Node_Blend";
 		else if(value_bit(_jj.type) & (1 << 29)) doCompose();
         
         if(_ty = "") return;
@@ -3149,8 +3150,14 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         
         switch(_ty) {
         	case "Node_Blend" :    
-        		_blend.inputs[0].setFrom(_j0);
-            	_blend.inputs[1].setFrom(_j1);
+        		var i0 = 0;
+        		var i1 = 0;
+        		
+        		while(i0 < array_length(_n0.outputs) && value_bit(_n0.outputs[i0].type) & (1 << 5) == 0) i0++;
+        		while(i1 < array_length(_n1.outputs) && value_bit(_n1.outputs[i1].type) & (1 << 5) == 0) i1++;
+        			
+        		_blend.inputs[0].setFrom(_n0.outputs[i0]);
+            	_blend.inputs[1].setFrom(_n1.outputs[i1]);
         		break;
         		
         	case "Node_Math" :    

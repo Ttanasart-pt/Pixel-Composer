@@ -2,8 +2,8 @@ function cornerBox(_onModify, _unit = noone) : widget() constructor {
 	onModify = _onModify;
 	unit     = _unit;
 	
-	linked = false;
-	b_link = button(function() { linked = !linked; });
+	linked      = false;
+	b_link      = button(function() /*=>*/ { linked = !linked; });
 	b_link.icon = THEME.value_link;
 	
 	onModifyIndex = function(val, index) { 
@@ -16,10 +16,10 @@ function cornerBox(_onModify, _unit = noone) : widget() constructor {
 		onModify(toNumber(val), index); 
 	}
 	
-	onModifySingle[0] = function(val) { onModifyIndex(val, 0); }
-	onModifySingle[1] = function(val) { onModifyIndex(val, 1); }
-	onModifySingle[2] = function(val) { onModifyIndex(val, 2); }
-	onModifySingle[3] = function(val) { onModifyIndex(val, 3); }
+	onModifySingle[0] = function(v) /*=>*/ {return onModifyIndex(v, 0)};
+	onModifySingle[1] = function(v) /*=>*/ {return onModifyIndex(v, 1)};
+	onModifySingle[2] = function(v) /*=>*/ {return onModifyIndex(v, 2)};
+	onModifySingle[3] = function(v) /*=>*/ {return onModifyIndex(v, 3)};
 	
 	for(var i = 0; i < 4; i++) {
 		tb[i] = new textBox(TEXTBOX_INPUT.number, onModifySingle[i]);
@@ -32,7 +32,7 @@ function cornerBox(_onModify, _unit = noone) : widget() constructor {
 	}
 	
 	tb[1].labelAlign = fa_right;
-	tb[2].labelAlign = fa_right;
+	tb[3].labelAlign = fa_right;
 	
 	static setInteract = function(interactable = noone) { 
 		self.interactable = interactable;
@@ -111,8 +111,8 @@ function cornerBox(_onModify, _unit = noone) : widget() constructor {
 		tb[0].draw(tb_lx, tb_ly, tb_w, tb_h, array_safe_get_fast(_data, 0), _m);
 		tb[1].draw(tb_rx, tb_ry, tb_w, tb_h, array_safe_get_fast(_data, 1), _m);
 			
-		tb[3].draw(tb_tx, tb_ty, tb_w, tb_h, array_safe_get_fast(_data, 3), _m);
-		tb[2].draw(tb_bx, tb_by, tb_w, tb_h, array_safe_get_fast(_data, 2), _m);
+		tb[2].draw(tb_tx, tb_ty, tb_w, tb_h, array_safe_get_fast(_data, 2), _m);
+		tb[3].draw(tb_bx, tb_by, tb_w, tb_h, array_safe_get_fast(_data, 3), _m);
 			
 		resetFocus();
 		

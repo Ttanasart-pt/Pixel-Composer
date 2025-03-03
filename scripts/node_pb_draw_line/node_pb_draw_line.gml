@@ -5,8 +5,10 @@ function Node_PB_Draw_Line(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _group
 	
 	newInput(pbi+1, nodeValue_Int("Thickness", self, 1));
 	
+	newInput(pbi+2, nodeValue_Bool("Overflow", self, false));
+	
 	array_insert_array(input_display_list, input_display_shape_index, [
-		["Shape", false], pbi+0, pbi+1
+		["Shape", false], pbi+0, pbi+1, pbi+2, 
 	]);
 	
 	static pbDrawSurface = function(_data, _bbox) {
@@ -17,6 +19,7 @@ function Node_PB_Draw_Line(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _group
 		
 		var _type = _data[pbi+0];
 		var _thck = _data[pbi+1];
+		var _over = _data[pbi+2];
 		
 		var _px0 = _x0, _py0 = _y0;
 		var _px1 = _x1, _py1 = _y1;
@@ -40,17 +43,28 @@ function Node_PB_Draw_Line(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _group
 				     _px1 = _x1 - _thk2; _py1 = _y1; 
 				     break;
 			
-			case 4 : _px0 = _x1; _py0 = _y0;
-				     _px1 = _x0; _py1 = _y1; 
-				     break;
+			case 4 : 
+				_px0 = _x1; 
+				_py0 = _y0;
+				_px1 = _x0; 
+				_py1 = _y1;
+			     break;
 			
-			case 5 : _px0 = _x0; _py0 = _y0;
-				     _px1 = _x1; _py1 = _y1; 
-				     break;
+			case 5 : 
+				_px0 = _x0; 
+				_py0 = _y0;
+		    	_px1 = _x1; 
+		    	_py1 = _y1; 
+			     break;
 			
 		}
 		
+		var scr = gpu_get_scissor();
+		if(!_over) gpu_set_scissor(_x0 + 1, _y0 + 1, _x1 - _x0, _y1 - _y0)
+		
 		if(_thck == 1) draw_line(_px0, _py0, _px1, _py1);
 		else draw_line_width(_px0, _py0, _px1, _py1, _thck);
+		
+		gpu_set_scissor(scr);
 	}
 }

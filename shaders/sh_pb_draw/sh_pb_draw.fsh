@@ -101,7 +101,10 @@ void main() {
 		}
 		
 		if(abs(i) <= stroke_thickness && abs(j) <= stroke_thickness) {
-			if(samp.a == borCond) borDist = min(borDist, stroke_corner == 0? length(vec2(i, j)) : min(i, j));
+			if(samp.a == borCond) {
+				
+				borDist = min(borDist, stroke_corner == 0? length(vec2(i, j)) : min(i, j));
+			}
 		}
 	}
 	

@@ -239,17 +239,21 @@
             "Node_PB_Box_BBOX",
 
             { "label": "Draw" },
+            { "label": "/Shapes" },
             "Node_PB_Draw_Rectangle",
             "Node_PB_Draw_Round_Rectangle",
             "Node_PB_Draw_Trapezoid",
             "Node_PB_Draw_Diamond",
             "Node_PB_Draw_Ellipse",
             "Node_PB_Draw_Line",
+            { "label": "/Surface" },
             "Node_PB_Draw_Surface",
 
             { "label": "Surface" },
             "Node_PB_Draw_Surface",
             "Node_PB_Crop_PBBOX",
+            { "label": "/Filter" },
+            "Node_PB_FX_Highlight",
         ],
         "context": ["Node_Pixel_Builder"],
         "color": "node_blend_feedback"

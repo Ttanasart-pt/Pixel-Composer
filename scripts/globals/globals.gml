@@ -43,8 +43,8 @@
 	LATEST_VERSION	= 1_18_00_0;
 	VERSION			= 1_18_09_0;
 	SAVE_VERSION	= 1_18_09_1;
-	VERSION_STRING  = MAC? "1.18.003m" : "1.18.10.005";
-	BUILD_NUMBER	= 118101.005;
+	VERSION_STRING  = MAC? "1.18.003m" : "1.18.10.006";
+	BUILD_NUMBER	= 118101.006;
 	PREF_VERSION    = 1_17_1;
 	
 	var _vsp = string_split(VERSION_STRING, ".");
@@ -123,7 +123,8 @@
 	#macro DELTA_TIME delta_time / 1_000_000
 	
 	#macro INLINE gml_pragma("forceinline");
-	#macro is is_instanceof
+	#macro is __is_instanceof
+	function  __is_instanceof(a,b) { return is_struct(a) && is_instanceof(a,b) };
 	
 	#macro CONF_TESTING false
 	globalvar TESTING, TEST_ERROR;

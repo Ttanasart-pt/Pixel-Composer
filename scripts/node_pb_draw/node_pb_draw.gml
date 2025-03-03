@@ -104,9 +104,10 @@ function Node_PB_Draw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	static pbDrawSurface = function(_data, _bbox) {}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outData, _data, _output_index, _array_index) {
 		var _dim = group.dimension;
-		_outSurf         = surface_verify(_outSurf, _dim[0], _dim[1]);
+		
+		var _outSurf     = surface_verify(_outData[0], _dim[0], _dim[1]);
 		temp_surfaces[0] = surface_verify(temp_surfaces[0], _dim[0], _dim[1]);
 		
 		var _pbbox = _data[1];
@@ -145,10 +146,13 @@ function Node_PB_Draw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var _hig_b   = _data[32];
 		
 		var _draws = temp_surfaces[0];
+		var _bboxw = _bbox[2] - _bbox[0];
+		var _bboxh = _bbox[3] - _bbox[1];
 		
 		surface_set_shader(_draws, noone);
 			draw_set_color(c_white);
-			pbDrawSurface(_data, _bbox);
+			if(_bboxw && _bboxh) 
+				pbDrawSurface(_data, _bbox);
 		surface_reset_shader();
 		
 		surface_set_shader(_outSurf, sh_pb_draw);

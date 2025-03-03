@@ -20,12 +20,16 @@ void main() {
 	
 	for(float i = -16.; i <= 16.; i++)
 	for(float j = -16.; j <= 16.; j++) {
-		if(abs(i) > stroke_thickness || abs(j) > stroke_thickness) continue;
+		if(abs(i) > stroke_thickness + 1. || abs(j) > stroke_thickness + 1.) continue;
 		vec4 samp = texture2D(gm_BaseTexture, v_vTexcoord + vec2(i, j) * tx);
+		if(samp.a < 1.) continue;
 		
-		if(abs(i) <= stroke_thickness && abs(j) <= stroke_thickness) {
-			if(samp.a == 1.) borDist = min(borDist, length(vec2(i, j)));
-		}
+		float len = length(vec2(i, j));
+		     if(    i  == 0. && abs(j) == 1.) len = 0.;
+		else if(abs(i) == 1. &&     j  == 0.) len = 0.;
+		else if(abs(i) == 1. && abs(j) == 1.) len = 1.;
+		
+		borDist = min(borDist, len);
 	}
 	
 	if(stroke == 1) {

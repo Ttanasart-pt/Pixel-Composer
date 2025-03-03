@@ -16,8 +16,19 @@ function Node_PB_Box_BBOX(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newOutput(3, nodeValue_Output("Height", self, VALUE_TYPE.float, 0))
 		.setVisible(false)
 	
+	newOutput(4, nodeValue_Output("Dimension", self, VALUE_TYPE.float, [ 0, 0 ]))
+		.setDisplay(VALUE_DISPLAY.vector)
+		.setVisible(false)
+	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		var _pbase = getSingleValue(0);
 		var _pbbox = getSingleValue(1);
+		
+		if(is(_pbase, __pbBox)) {
+			draw_set_color(COLORS._main_icon);
+			_pbase.drawOverlayBBOX(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, self);
+		}
+		
 		if(is(_pbbox, __pbBox)) _pbbox.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, self);
 	}
 	
@@ -35,7 +46,7 @@ function Node_PB_Box_BBOX(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		
 		var _area = [ (_x0 + _x1) / 2, (_y0 + _y1) / 2, _w / 2, _h / 2, 0 ];
 		
-		return [ _bbox, _area, _w, _h ];
+		return [ _bbox, _area, _w, _h, [_w, _h] ];
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

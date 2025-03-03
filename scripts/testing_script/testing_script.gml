@@ -171,11 +171,7 @@ function __test_metadata_current_collections(dir = COLLECTIONS) {
 	
 	print("---------- COLLECTION UPDATING STARTED ----------");
 	
-	var sel   = PANEL_GRAPH.getFocusingNode(), outj = noone;
-	var _meta = PROJECT.meta.serialize();
-	_meta.isDefault = true;
-	_meta.version   = SAVE_VERSION;
-	
+	var sel = PANEL_GRAPH.getFocusingNode(), outj = noone;
 	if(sel != noone) outj = sel.outputs[0];
 	
 	while(!ds_stack_empty(st)) {
@@ -185,8 +181,9 @@ function __test_metadata_current_collections(dir = COLLECTIONS) {
 			
 			print("  > Updating " + _node.path);
 			var _currMeta = json_load_struct(_node.meta_path);
-			_currMeta.author  = "MakhamDev";
-			_currMeta.version = SAVE_VERSION;
+			_currMeta.author    = "MakhamDev";
+			_currMeta.version   = SAVE_VERSION;
+			_currMeta.isDefault = true;
 			json_save_struct(_node.meta_path, _currMeta, true);
 		}
 		
