@@ -51,11 +51,13 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	newInput(14, nodeValue_Vec2("Gizmo size", self, [ 32, 32 ]));
 	
+	newInput(15, nodeValue_Rotation_Range("Knob Range", self, [ 0, 360 ]));
+	
 	newOutput(0, nodeValue_Output("Number", self, VALUE_TYPE.float, 0));
 	
 	input_display_list = [ 0, 1, 
-		["Editor",  false], 2, 6, 3, 5, 4, 7,
-		["Gizmo",   false], 8, 11, 12, 13, 14, 9, 10,
+		["Editor",  false], 2, 6, 15, 3, 5, 4, 7,
+		["Gizmo",    true], 8, 11, 12, 13, 14, 9, 10,
 	];
 	
 	gz_style  = 0;
@@ -68,6 +70,16 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	gz_dragging = false;
 	gz_drag_sx  = 0;
 	gz_drag_mx  = 0;
+	
+	draw_raw      = 0;
+	draw_int      = 0;
+	draw_disp     = 0;
+	draw_rang     = [ 0, 1 ];
+	draw_stp      = 0;
+	draw_cmp      = 0;
+	draw_sty      = 0;
+	draw_spd      = 0;
+	draw_knob_rng = [ 0, 360 ];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _val = getInputData(0);
@@ -159,11 +171,12 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		var _ww = 96, _hh = 48;
 		
-		inputs[3].setVisible(disp > 0);
-		inputs[4].setVisible(disp > 0);
-		inputs[5].setVisible(disp > 0);
-		inputs[6].setVisible(disp > 0);
-		inputs[7].setVisible(disp == 2);
+		inputs[ 3].setVisible(disp > 0);
+		inputs[ 4].setVisible(disp > 0);
+		inputs[ 5].setVisible(disp > 0);
+		inputs[ 6].setVisible(disp > 0);
+		inputs[ 7].setVisible(disp == 2);
+		inputs[15].setVisible(disp == 2);
 		
 		switch(disp) {
 			case 1 : 
@@ -195,6 +208,17 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	doUpdate = doUpdateLite;
 	static update = function() {
 		setType();
+		
+		draw_raw       = getInputData(0);
+		draw_int       = getInputData(1);
+		draw_disp      = getInputData(2);
+		draw_rang      = getInputData(3);
+		draw_stp       = getInputData(4);
+		draw_cmp       = getInputData(5);
+		draw_sty       = getInputData(6);
+		draw_spd       = getInputData(7);
+		draw_knob_rng  = getInputData(15);
+		
 		isGizmoGlobal = getInputData( 8);
 		gz_pos        = getInputData( 9);
 		gz_scale      = getInputData(10);
@@ -216,14 +240,14 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var raw  = getInputData(0);
-		var _int = getInputData(1);
-		var disp = getInputData(2);
-		var rang = getInputData(3);
-		var stp  = getInputData(4);
-		var cmp  = getInputData(5);
-		var sty  = getInputData(6);
-		var spd  = getInputData(7);
+		var raw  = draw_raw;
+		var _int = draw_int;
+		var disp = draw_disp;
+		var rang = draw_rang;
+		var stp  = draw_stp;
+		var cmp  = draw_cmp;
+		var sty  = draw_sty;
+		var spd  = draw_spd;
 		var _col = getColor();
 		
 		var val  = outputs[0].getValue();
@@ -329,10 +353,17 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				break;
 				
 			case 2 :
+				var _knb_rng_st = draw_knob_rng[0];
+				var _knb_rng_ed = draw_knob_rng[1];
+				var _knb_rng    = _knb_rng_ed - _knb_rng_st;
+				
 				var _ss  = min(bbox.w, bbox.h);
 				var _dst = point_distance(_mx, _my, bbox.xc, bbox.yc);
 				var _x0  = bbox.xc - _ss / 2;
 				var _y0  = bbox.yc - _ss / 2;
+				
+				var _knb_ang = raw;
+				_knb_ang = lerp(_knb_rng_st, _knb_rng_ed, (_knb_ang - _minn) / (_maxx - _minn));
 				
 				if(sty == 0) {
 					var c0   = (draggable && !rotator_dragging)? colorMultiply(CDEF.main_grey, _col) : colorMultiply(CDEF.main_white, _col);
@@ -343,9 +374,10 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					surface_set_shader(rotator_surface, sh_ui_rotator);
 						shader_set_color("c0", c0);
 						shader_set_color("c1", c1);
-						shader_set_f("angle", degtorad(raw));
+						shader_set_f("angle", degtorad(_knb_ang));
 						shader_set_f("mouse", (_mx - _x0) / _ss, (_my - _y0) / _ss);
 						shader_set_f("mouseProg", animation_curve_eval(ac_ripple, rotator_m));
+						shader_set_2("radius", [ degtorad(_knb_rng_st), degtorad(_knb_rng_ed) ]);
 						
 						draw_sprite_stretched(s_fx_pixel, 0, 0, 0, _ss, _ss);
 					surface_reset_shader();
@@ -357,10 +389,10 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					var c1   = colorMultiply(merge_color(CDEF.main_grey, CDEF.main_dkgrey, .5), _col);
 				
 					var _r = _ss / 2 - 10 * _s;
-					draw_circle_ui(bbox.xc, bbox.yc, _r, .04, cola(c1));
+					draw_circle_arc_ui(bbox.xc, bbox.yc, draw_knob_rng, _r, .04, cola(c1));
 					
-					var _knx =  bbox.xc + lengthdir_x(_r - 12 * _s, raw);
-					var _kny =  bbox.yc + lengthdir_y(_r - 12 * _s, raw);
+					var _knx =  bbox.xc + lengthdir_x(_r - 12 * _s, _knb_ang);
+					var _kny =  bbox.yc + lengthdir_y(_r - 12 * _s, _knb_ang);
 					
 					draw_circle_ui(_knx, _kny, 6 * _s, 0, cola(c0));
 				}
@@ -374,6 +406,8 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					
 					var _val = rotator_s + rotate_dx * spd;
 					    _val = value_snap(_val, stp);
+					    
+					_val = lerp(_minn, _maxx, (_val - _knb_rng_st) / _knb_rng)
 					if(cmp) _val = clamp(_val, _minn, _maxx);
 					
 					if(inputs[0].setValue(_val))
@@ -389,7 +423,7 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				if(_hover && point_in_circle(_mx, _my, bbox.xc, bbox.yc, _ss / 2)) {
 					if(mouse_press(mb_left, _focus) && is_real(raw)) {
 						rotator_dragging = true;
-						rotator_s = raw;
+						rotator_s = _knb_ang;
 						rotator_p = point_direction(bbox.xc, bbox.yc, _mx, _my);
 						rotate_dx = 0;
 					}

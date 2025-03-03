@@ -1,0 +1,13 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_node_circle_arc",
+  "name":"sh_node_circle_arc",
+  "parent":{
+    "name":"node",
+    "path":"folders/shader/UI/node.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "tags":[],
+  "type":1,
+}

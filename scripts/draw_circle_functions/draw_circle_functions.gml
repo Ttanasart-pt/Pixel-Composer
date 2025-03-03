@@ -290,3 +290,15 @@ function draw_circle_ui(_x, _y, _r, _th = 0, _c = c_white, _a = 1) {
 		draw_sprite_stretched(s_fx_pixel, 0, _x - _r, _y - _r, _r * 2, _r * 2);
 	shader_reset();
 }
+
+function draw_circle_arc_ui(_x, _y, _rad, _r, _th = 0, _c = c_white, _a = 1) {
+	shader_set(sh_node_circle_arc);
+		shader_set_color("color", _c, _a);
+		shader_set_f("thickness", _th);
+		shader_set_f("antialias", 1 / _r);
+		shader_set_2("arcRad", [ degtorad(_rad[0]), degtorad(_rad[1])]);
+		shader_set_i("fill", _th == 0);
+		
+		draw_sprite_stretched(s_fx_pixel, 0, _x - _r, _y - _r, _r * 2, _r * 2);
+	shader_reset();
+}
