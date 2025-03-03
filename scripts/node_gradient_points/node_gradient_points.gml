@@ -82,9 +82,9 @@ function Node_Gradient_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 		
 		if(_usePal) {
 			for( var i = 0; i < 4; i++ )
-				colArr = array_append(colArr, colorToArray(array_safe_get_fast(_pal, i, c_black)));
+				colArr = array_append(colArr, colorToArray(array_safe_get_fast(_pal, i, c_black), 1));
 		} else
-			colArr = array_merge(colorToArray(_1col), colorToArray(_2col), colorToArray(_3col), colorToArray(_4col))
+			colArr = array_merge(colorToArray(_1col, 1), colorToArray(_2col, 1), colorToArray(_3col, 1), colorToArray(_4col, 1))
 		
 		surface_set_shader(_outSurf, sh_gradient_points);
 			

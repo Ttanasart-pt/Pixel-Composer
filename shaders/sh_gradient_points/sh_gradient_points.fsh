@@ -5,7 +5,7 @@ varying vec4 v_vColour;
 
 uniform vec2 dimension;
 uniform vec2 center[4];
-uniform vec3 color[4];
+uniform vec4 color[4];
 uniform vec4 strength;
 
 uniform int blend;
@@ -31,10 +31,10 @@ void main() {
 	     if(blend == 0) weights = distances / (distances[0] + distances[1] + distances[2] + distances[3]);
 	else if(blend == 1) weights = normalize(distances);
 	
-	vec3 clr = color[0] * weights[0] + 
+	vec4 clr = color[0] * weights[0] + 
 	           color[1] * weights[1] + 
 			   color[2] * weights[2] + 
 			   color[3] * weights[3];
 	
-	gl_FragColor = vec4(clr, 1.);
+	gl_FragColor = clr;
 }
