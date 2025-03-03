@@ -2314,6 +2314,7 @@
     {"name":"s_node_rgb_channel","order":58,"path":"sprites/s_node_rgb_channel/s_node_rgb_channel.yy",},
     {"name":"s_node_rigid_activate","order":6,"path":"sprites/s_node_rigid_activate/s_node_rigid_activate.yy",},
     {"name":"s_node_rigid_deactivate","order":7,"path":"sprites/s_node_rigid_deactivate/s_node_rigid_deactivate.yy",},
+    {"name":"sh_selection_mask","order":5,"path":"shaders/sh_selection_mask/sh_selection_mask.yy",},
     {"name":"s_node_rigid_force_apply","order":2,"path":"sprites/s_node_rigid_force_apply/s_node_rigid_force_apply.yy",},
     {"name":"s_node_rigid_global","order":4,"path":"sprites/s_node_rigid_global/s_node_rigid_global.yy",},
     {"name":"s_node_rigid_object_spawner","order":5,"path":"sprites/s_node_rigid_object_spawner/s_node_rigid_object_spawner.yy",},

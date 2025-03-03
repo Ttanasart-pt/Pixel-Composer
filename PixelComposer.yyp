@@ -1423,6 +1423,7 @@
     {"id":{"name":"o_dialog_color_selector","path":"objects/o_dialog_color_selector/o_dialog_color_selector.yy",},},
     {"id":{"name":"o_dialog_command_palette","path":"objects/o_dialog_command_palette/o_dialog_command_palette.yy",},},
     {"id":{"name":"o_dialog_crashed","path":"objects/o_dialog_crashed/o_dialog_crashed.yy",},},
+    {"id":{"name":"sh_selection_mask","path":"shaders/sh_selection_mask/sh_selection_mask.yy",},},
     {"id":{"name":"o_dialog_drag_folder","path":"objects/o_dialog_drag_folder/o_dialog_drag_folder.yy",},},
     {"id":{"name":"o_dialog_exit","path":"objects/o_dialog_exit/o_dialog_exit.yy",},},
     {"id":{"name":"o_dialog_file_name_action","path":"objects/o_dialog_file_name_action/o_dialog_file_name_action.yy",},},

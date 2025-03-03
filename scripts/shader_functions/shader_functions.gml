@@ -169,6 +169,7 @@ function shader_set_palette(pal, pal_uni = "palette", amo_uni = "paletteAmount",
 		alpha,
 		alphamulp,
 		subtract,
+		maximum
 	}
 
 	function shader_preset_interpolation(shader = sh_sample) {
@@ -212,6 +213,8 @@ function shader_set_palette(pal, pal_uni = "palette", amo_uni = "paletteAmount",
 			case BLEND.over:      BLEND_OVERRIDE   break;
 			case BLEND.alpha:     BLEND_ALPHA      break;
 			case BLEND.alphamulp: BLEND_ALPHA_MULP break;
+			case BLEND.subtract:  BLEND_SUBTRACT   break;
+			case BLEND.maximum:   BLEND_MAX        break;
 		}
 		
 		if(shader == noone)

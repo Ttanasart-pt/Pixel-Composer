@@ -184,7 +184,10 @@ function __test_metadata_current_collections(dir = COLLECTIONS) {
 			var _node = _st.content[| i];
 			
 			print("  > Updating " + _node.path);
-			json_save_struct(_node.meta_path, _meta, true);
+			var _currMeta = json_load_struct(_node.meta_path);
+			_currMeta.author  = "MakhamDev";
+			_currMeta.version = SAVE_VERSION;
+			json_save_struct(_node.meta_path, _currMeta, true);
 		}
 		
 		for( var i = 0; i < ds_list_size(_st.subDir); i++ )

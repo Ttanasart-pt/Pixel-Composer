@@ -451,6 +451,12 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	bone = noone;
 	surface_selecting = noone;
+	selection_surf    = noone;
+	selection_sampler = new Surface_sampler();
+	
+	attributes.select_object = false;
+	array_push(attributeEditors, "Selection");
+	array_push(attributeEditors, ["Content-Based", function() /*=>*/ {return attributes.select_object}, new checkBox(function() /*=>*/ { attributes.select_object = !attributes.select_object; triggerRender(); })]);
 	
 	static getInputIndex = function(index) {
 		if(index < input_fix_len) return index;
@@ -706,10 +712,22 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				draw_sprite_colored(THEME.anchor_rotate, _ri, a.rr[0], a.rr[1],, a.rot);
 				draw_sprite_colored(THEME.anchor_scale,  _si, a.d3[0], a.d3[1],, a.rot);
 				
-			} else if(point_in_rectangle_points(_mx, _my, a.d0[0], a.d0[1], a.d1[0], a.d1[1], a.d2[0], a.d2[1], a.d3[0], a.d3[1]) && 
+			} else if(!attributes.select_object && point_in_rectangle_points(_mx, _my, a.d0[0], a.d0[1], a.d1[0], a.d1[1], a.d2[0], a.d2[1], a.d3[0], a.d3[1]) && 
 				(surface_selecting != hovering || surface_selecting == noone)) {
 				
 				hovering = index;
+				hovering_type = NODE_COMPOSE_DRAG.move;
+			}
+		}
+		
+		if(attributes.select_object && selection_sampler.active) {
+			var _msx = floor((_mx - _x) / _s);
+			var _msy = floor((_my - _y) / _s);
+			var _ind = selection_sampler.getPixel(_msx, _msy);
+			
+			if(_ind) {
+				var index = input_fix_len + (_ind - 1) * data_length;
+				hovering  = index;
 				hovering_type = NODE_COMPOSE_DRAG.move;
 			}
 		}
@@ -872,6 +890,12 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		var _vis	  = attributes.layer_visible;
 		var _bg = 0, _s, _i;
 		
+		var _selDarw  = _array_index == preview_index && attributes.select_object;
+		if(_selDarw) {
+			selection_surf = surface_verify(selection_surf, _dim[0], _dim[1], surface_r16float);
+			surface_clear(selection_surf);
+		}
+		
 		for(var i = 0; i < imageAmo; i++) {
 			if(!array_safe_get_fast(_vis, i, true)) continue;
 			
@@ -936,8 +960,15 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				draw_surface_blend_ext(temp_surface[!_bg], _s, _pos[0], _pos[1], _sca[0], _sca[1], _rot);
 			surface_reset_shader();
 			
+			surface_set_shader(selection_surf, sh_selection_mask, false, BLEND.maximum);
+				shader_set_f("index", i + 1);
+				draw_surface_ext(_s, _pos[0], _pos[1], _sca[0], _sca[1], _rot, c_white, 1);
+			surface_reset_shader();
+			
 			_bg = !_bg;
 		}
+		
+		if(_selDarw) selection_sampler.setSurface(selection_surf);
 		
 		var _outSurf = surface_verify(_outData[0], _dim[0], _dim[1], cDep);
 		

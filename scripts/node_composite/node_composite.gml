@@ -470,7 +470,13 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	overlay_w = 0;
 	overlay_h = 0;
 	
-	draw_transforms = [];
+	draw_transforms   = [];
+	selection_surf    = noone;
+	selection_sampler = new Surface_sampler();
+	
+	attributes.select_object = false;
+	array_push(attributeEditors, "Selection");
+	array_push(attributeEditors, ["Content-Based", function() /*=>*/ {return attributes.select_object}, new checkBox(function() /*=>*/ { attributes.select_object = !attributes.select_object; triggerRender(); })]);
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		PROCESSOR_OVERLAY_CHECK
@@ -684,8 +690,19 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				draw_sprite_colored(THEME.anchor_rotate, _ri, a.rr[0], a.rr[1],, a.rot);
 				draw_sprite_colored(THEME.anchor_scale,  _si, a.d3[0], a.d3[1],, a.rot);
 				
-			} else if(_hov && (hovering != dynamic_input_inspecting || dynamic_input_inspecting == noone)) {
+			} else if(!attributes.select_object && _hov && (hovering != dynamic_input_inspecting || dynamic_input_inspecting == noone)) {
 				hovering = i;
+				hovering_type = NODE_COMPOSE_DRAG.move;
+			}
+		}
+		
+		if(attributes.select_object && selection_sampler.active) {
+			var _msx = floor((_mx - _x) / _s);
+			var _msy = floor((_my - _y) / _s);
+			var _ind = selection_sampler.getPixel(_msx, _msy);
+			
+			if(_ind) {
+				hovering = _ind - 1;
 				hovering_type = NODE_COMPOSE_DRAG.move;
 			}
 		}
@@ -833,8 +850,13 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _atlas    = [];
 		var _trans    = array_create(imageAmo, noone);
 		
-		blend_temp_surface = temp_surface[2];
+		var _selDarw  = _array_index == preview_index && attributes.select_object;
+		if(_selDarw) {
+			selection_surf = surface_verify(selection_surf, ww, hh, surface_r16float);
+			surface_clear(selection_surf);
+		}
 		
+		blend_temp_surface = temp_surface[2];
 		for(var i = 0; i < imageAmo; i++) {
 			var vis  = _vis[i];
 			if(!vis) continue;
@@ -865,8 +887,15 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				draw_surface_blend_ext(temp_surface[!_bg], _s, _d0[0], _d0[1], _sca[0], _sca[1], _rot, c_white, _alp, _bld, true);
 			surface_reset_shader();
 			
+			surface_set_shader(selection_surf, sh_selection_mask, false, BLEND.maximum);
+				shader_set_f("index", i + 1);
+				draw_surface_ext(_s, _d0[0], _d0[1], _sca[0], _sca[1], _rot, c_white, 1);
+			surface_reset_shader();
+			
 			_bg = !_bg;
 		}
+		
+		if(_selDarw) selection_sampler.setSurface(selection_surf);
 		
 		_outSurf = surface_verify(_outSurf, ww, hh, cDep);
 		
