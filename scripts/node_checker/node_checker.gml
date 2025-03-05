@@ -37,10 +37,12 @@ function Node_Checker(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	newInput(9, nodeValue_Bool("Diagonal", self, false));
 	
+	newInput(10, nodeValue_Surface("Mask", self));
+	
 	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
-		["Output",	true],	0,  
+		["Output",	true],	0, 10, 
 		["Pattern",	false], 9, 1, 6, 2, 7, 3,
 		["Render",	false], 8, 4, 5,
 	];
@@ -85,6 +87,7 @@ function Node_Checker(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			draw_empty();
 		surface_reset_shader();
 		
+		_outSurf = mask_apply_empty(_outSurf, _data[input_mask_index]);
 		return _outSurf;
 	}
 }

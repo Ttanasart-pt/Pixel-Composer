@@ -208,6 +208,9 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		if(__mode == use_mod) return;
 		__mode = use_mod;
 	
+		inputs[1].name = "a";
+		inputs[2].name = "b";
+		
 		inputs[2].setVisible(false, false);
 		inputs[3].setVisible(false, false);
 		inputs[5].setVisible(false, false);
@@ -253,8 +256,6 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			case MATH_OPERATOR.power :
 			case MATH_OPERATOR.root :	
 			case MATH_OPERATOR.modulo :	
-				inputs[2].name = "b";
-				
 				inputs[2].setVisible(true, true);
 				break;
 				
@@ -267,11 +268,13 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				break;
 				
 			case MATH_OPERATOR.lerp :
+				inputs[1].name = "From";
 				inputs[2].name = "To";
 				inputs[5].name = "Amount";
 				
 				inputs[2].setVisible(true, true);
 				inputs[5].setVisible(true, true);
+				inputs[5].editWidget.setSlideRange(0, 1);
 				break;
 				
 			case MATH_OPERATOR.clamp :
@@ -280,6 +283,7 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				
 				inputs[2].setVisible(true, true);
 				inputs[5].setVisible(true, true);
+				inputs[5].editWidget.slide_range = noone;
 				break;
 				
 			case MATH_OPERATOR.snap :

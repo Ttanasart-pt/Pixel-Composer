@@ -26,8 +26,10 @@ function Node_Noise_FBM(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	newInput(8, nodeValue_Slider_Range("Color B Range", self, [ 0, 1 ]));
 	
+	newInput(9, nodeValue_Surface("Mask", self));
+	
 	input_display_list = [
-		["Output",	false], 0, 
+		["Output",	false], 0, 9, 
 		["Noise",	false], 1, 2, 3, 4, 
 		["Color",	false], 5, 6, 7, 8, 
 	];
@@ -76,6 +78,7 @@ function Node_Noise_FBM(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			draw_sprite_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], 0, c_white, 1);
 		surface_reset_shader();
 		
+		_outSurf = mask_apply_empty(_outSurf, _data[input_mask_index]);
 		return _outSurf;
 	}
 }

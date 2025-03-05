@@ -19,17 +19,19 @@ function Node_Cross_Section(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	newInput(4, nodeValue_Enum_Button("Mode", self,  0 , [ "BW", "Colored" ]));
 	
+	newInput(5, nodeValue_Surface("Mask", self));
+	
 	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone ));
 	
 	input_display_list = [
-		["Surfaces", false], 0, 
+		["Surfaces", false], 0, 5, 
 		["Axis",	 false], 1, 2, 
 		["Output",	 false], 4, 3, 
 	];
 	
 	attribute_surface_depth();
 		
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, params) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, params) {
 		PROCESSOR_OVERLAY_CHECK
 		
 		var _surf = getSingleValue(0);
@@ -75,6 +77,7 @@ function Node_Cross_Section(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			draw_surface_safe(_surf);
 		surface_reset_shader();
 		
+		_outSurf = mask_apply_empty(_outSurf, _data[input_mask_index]);
 		return _outSurf;
 	}
 }

@@ -5,8 +5,10 @@ function Node_Noise_Blue(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	newInput(1, nodeValueSeed(self));
 	
+	newInput(2, nodeValue_Surface("Mask", self));
+	
 	input_display_list = [
-		["Output",	false], 0, 
+		["Output",	false], 0, 2, 
 		["Noise",	false], 1, 
 	];
 	
@@ -27,6 +29,7 @@ function Node_Noise_Blue(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			draw_empty();
 		surface_reset_shader();
 		
+		_outSurf = mask_apply_empty(_outSurf, _data[input_mask_index]);
 		return _outSurf;
 	}
 }

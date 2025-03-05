@@ -64,10 +64,12 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 	newInput(19, nodeValueSeed(self));
 		
+	newInput(20, nodeValue_Surface("Mask", self));
+	
 	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 19, 
-		["Output",	true],	0,  
+		["Output",	true],	0, 20, 
 		["Pattern",	false], 1, 11, 10, 14, 2, 12, 4, 5, 13, 17, 
 		["Render",	false], 3, 6, 7, 15, 8, 9, 18, 
 	];
@@ -104,7 +106,7 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		inputs[ 7].setVisible(_clr == 2);
 	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _dim  = _data[0];
 		var _bnd  = _data[3];
 		var _pos  = _data[4];
@@ -141,6 +143,7 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			draw_sprite_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], 0, c_white, 1);
 		surface_reset_shader();
 		
+		_outSurf = mask_apply_empty(_outSurf, _data[input_mask_index]);
 		return _outSurf;
-	} #endregion
+	}
 }

@@ -95,3 +95,22 @@ function channel_apply(original, edited, channel) {
 	surface_free(edited);
 	return _s;
 }
+
+function mask_apply_empty(_surf, _mask) {
+	if(!is_surface(_mask)) return _surf;
+	
+	var _dim = surface_get_dimension(_surf);
+	__maskedSurf = self[$ "__maskedSurf"] ?? noone;
+	__maskedSurf = surface_verify(__maskedSurf, _dim[0], _dim[1])
+	
+	surface_set_shader(__maskedSurf, sh_mask_empty);
+		shader_set_surface("mask", _mask);
+		draw_surface_safe(_surf);
+	surface_reset_shader();
+	
+	surface_set_shader(_surf)
+		draw_surface_safe(__maskedSurf);
+	surface_reset_shader();
+	
+	return _surf;
+}

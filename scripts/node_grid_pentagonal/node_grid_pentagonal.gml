@@ -53,8 +53,10 @@ function Node_Grid_Pentagonal(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	
 	newInput(17, nodeValue_Bool("Use Texture Dimension", self, false));
 	
+	newInput(18, nodeValue_Surface("Mask", self));
+	
 	input_display_list = [
-		["Output",  false], 0,
+		["Output",  false], 0, 18, 
 		["Pattern",	false], 1, 4, 13, 2, 11, 3, 12, 
 		["Render",	false], 8, 9, 5, 14, 6, 7, 17, 10, 16, 
 	];
@@ -127,6 +129,7 @@ function Node_Grid_Pentagonal(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 			else					draw_sprite_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], 0, c_white, 1);
 		surface_reset_shader();
 		
+		_outSurf = mask_apply_empty(_outSurf, _data[input_mask_index]);
 		return _outSurf;
 	}
 }

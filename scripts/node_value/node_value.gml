@@ -49,13 +49,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		dummy_get      = noone;
 		dummy_undo     = -1;
 		dummy_redo     = -1;
-		
-		bypass_junc    = noone;
-		
-		if(_connect == CONNECT_TYPE.input) {
-			bypass_junc = new __NodeValue_Input_Bypass(self, _name, _node, _type, index);
-			node.input_bypass[index] = bypass_junc;
-		}
 	#endregion
 	
 	#region ---- connection ----
@@ -73,7 +66,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		onSetFrom = noone;
 		onSetTo   = noone;
-		
 	#endregion
 	
 	#region ---- animation ----
@@ -123,6 +115,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		__curr_get_val = [ 0, 0 ];
 		validator      = noone;
+		
+		bypass_junc    = connect_type == CONNECT_TYPE.input? new __NodeValue_Input_Bypass(self, name, node, type) : noone;
 	#endregion
 	
 	#region ---- draw ----
@@ -231,6 +225,16 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	#endregion
 	
 	#region ---- Init Fn ---
+		static setIndex = function(i) {
+			index = i;
+			
+			if(connect_type == CONNECT_TYPE.input) {
+				bypass_junc.setIndex(index);
+				node.input_bypass[index] = bypass_junc;
+				node.inputs_data[index]  = def_val;
+			}
+		}
+		
 		static setInternalName = function(_iname) {
 			internalName = string_to_var(_iname);
 			
@@ -247,16 +251,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			name_custom   = true;
 			
 			setInternalName(name);
-			
 			return self;
 		} 
 		
 		updateName(_name);
 		
-		if(connect_type == CONNECT_TYPE.input) {
-			node.inputs_data[index]              = _value;
+		if(connect_type == CONNECT_TYPE.input)
 			node.input_value_map[$ internalName] = _value;
-		}
 	#endregion
 	
 	////- META
@@ -395,10 +396,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	mappedJunc  = noone;
 	mapped_vec4 = false;
 	
-	static setMappable = function(index, vec4 = false) {
+	static setMappable = function(_index, _vec4 = false) {
 		attributes.mapped     = false;
-		attributes.map_index  = index;
-		mapped_vec4           = vec4;
+		attributes.map_index  = _index;
+		mapped_vec4           = _vec4;
 		
 		if(arrayLength == arrayLengthSimple)
 			arrayLength = __arrayLength;
@@ -414,7 +415,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						
 						node.triggerRender(); 
 					})
-				.setIcon( THEME.value_use_surface, [ function() { return attributes.mapped; } ], COLORS._main_icon )
+				.setIcon( THEME.value_use_surface, [ function() /*=>*/ {return attributes.mapped} ], COLORS._main_icon )
 				.setTooltip("Toggle map");
 		
 		switch(type) {
@@ -423,9 +424,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				break;
 				
 			default : 
-				mapWidget = vec4? 
-					new vectorRangeBox(4, TEXTBOX_INPUT.number, function(val, index) { return setValueDirect(val, index); }) : 
-					new rangeBox(         TEXTBOX_INPUT.number, function(val, index) { return setValueDirect(val, index); });
+				mapWidget = _vec4? 
+					new vectorRangeBox(4, TEXTBOX_INPUT.number, function(v,i) /*=>*/ {return setValueDirect(v,i)}) : 
+					new rangeBox(         TEXTBOX_INPUT.number, function(v,i) /*=>*/ {return setValueDirect(v,i)});
 				mapWidget.side_button = mapButton;
 				break;
 		}
@@ -806,8 +807,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						
 					case VALUE_DISPLAY.path_anchor :
 						editWidget = new pathAnchorBox(function(val, index) /*=>*/ {return setValueInspector(val, index)});
-						
 						extract_node = "Node_Path_Anchor";
+						break;
+						
+					case VALUE_DISPLAY.number_array :
+						editWidget = new numberArrayBox(function(val) /*=>*/ {return setValueInspector(val)});
+						extract_node = "Node_Number";
 						break;
 						
 				}

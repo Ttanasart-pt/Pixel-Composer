@@ -2,6 +2,8 @@ function Node_PB_Draw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	name = "PB Draw";
 	preview_channel = 1;
 	
+	inputs = array_create(30);
+	
 	newInput(0, nodeValue_Pbbox("Base PBBOX", self, new __pbBox()));
 	inputs[0].editWidget = noone;
 	
@@ -20,18 +22,36 @@ function Node_PB_Draw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(10, nodeValue_b(  "Stroke",            self, false));
 	newInput(11, nodeValue_i(  "Thickness",         self, 1));
 	newInput(12, nodeValue_c(  "Color",             self, cola(c_white))).setInternalName("Stroke Color");
-	newInput(13, nodeValue_eb( "Position",          self, 0, array_create(3, THEME.stroke_position) ));
+	newInput(13, nodeValue_eb( "Position",          self, 1, array_create(3, THEME.stroke_position) ));
 	newInput(14, nodeValue_eb( "Corner",            self, 0, array_create(2, THEME.stroke_profile)  ));
 	
-	newInput(15, nodeValue_es( "Pattern",           self, 0, [ "Solid", "Stripe X", "Stripe Y", "Checker", "Dotted" ] )).setInternalName("Fill Pattern");
+	fill_pattern_data = [ "Solid", 
+           -1, "Stripe X", "Stripe Y", "Stripe D0", "Stripe D1",  
+           -1, "Checker", "Checker Diag", 
+           -1, "Grid", "Grid Diag",    
+           -1, "Half X", "Half Y", "Half D0", "Half D1", 
+           -1, "Grad X", "Grad Y", "Grad D0", "Grad D1",
+           -1, "Grad Both X", "Grad Both Y", "Grad Both D0", "Grad Both D1",
+           -1, "Grad Circular", "Grad Radial", 
+           -1, "Brick X", "Brick Y",
+           -1, "Zigzag X", "Zigzag Y",
+	];
+    fill_pattern_scroll_data = array_create_ext(array_length(fill_pattern_data), 
+    	function(i) /*=>*/ {return fill_pattern_data[i] == -1? -1 : new scrollItem(fill_pattern_data[i], s_node_pb_pattern, i)});
+    
+	newInput(15, nodeValue_es( "Pattern",           self, 0, { data: fill_pattern_scroll_data, horizontal: true, text_pad: ui(16) } )).setInternalName("Fill Pattern");
 	newInput(16, nodeValue_c(  "Pattern Color",     self, cola(c_white))).setInternalName("Fill Pattern Color");
 	newInput(17, nodeValue_s(  "Pattern Intensity", self, 1)).setInternalName("Fill Pattern Intensity");
 	newInput(18, nodeValue_2(  "Pattern Scale",     self, [1,1])).setInternalName("Fill Pattern Scale");
+	newInput(34, nodeValue_2(  "Pattern Position",  self, [0,0])).setInternalName("Fill Pattern Position");
+	newInput(36, nodeValue_b(  "Pattern Map BBOX",  self, false)).setInternalName("Fill Pattern Map");
 	
-	newInput(19, nodeValue_es( "Pattern",           self, 0, [ "Solid", "Stripe X", "Stripe Y", "Checker", "Layered" ] )).setInternalName("Stroke Pattern");
+	newInput(19, nodeValue_es( "Pattern",           self, 0, { data: fill_pattern_scroll_data, horizontal: true, text_pad: ui(16) } )).setInternalName("Stroke Pattern");
 	newInput(20, nodeValue_c(  "Pattern Color",     self, cola(c_white))).setInternalName("Stroke Pattern Color");
 	newInput(21, nodeValue_s(  "Pattern Intensity", self, 1)).setInternalName("Stroke Pattern Intensity");
 	newInput(22, nodeValue_2(  "Pattern Scale",     self, [1,1])).setInternalName("Stroke Pattern Scale");
+	newInput(35, nodeValue_2(  "Pattern Position",  self, [0,0])).setInternalName("Stroke Pattern Position");
+	newInput(37, nodeValue_b(  "Pattern Map BBOX",  self, false)).setInternalName("Stroke Pattern Map");
 	
 	newInput(23, nodeValue_b(  "Corner",            self, false));
 	newInput(24, nodeValue_i(  "Radius",            self, 1));
@@ -40,10 +60,10 @@ function Node_PB_Draw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	newInput(27, nodeValue_b(  "Highlight",         self, false));
 	newInput(28, nodeValue_i(  "Width",             self, [ 0, 0, 0, 0 ])).setDisplay(VALUE_DISPLAY.padding).setInternalName("Highlight Width");
-	newInput(29, nodeValue_c(  "Color Left",        self, cola(c_white))).setInternalName("Corner Color");
-	newInput(30, nodeValue_c(  "Color Right",       self, cola(c_white))).setInternalName("Corner Color");
-	newInput(31, nodeValue_c(  "Color Top",         self, cola(c_white))).setInternalName("Corner Color");
-	newInput(32, nodeValue_c(  "Color Bottom",      self, cola(c_white))).setInternalName("Corner Color");
+	newInput(29, nodeValue_c(  "Color Left",        self, cola(c_white))).setInternalName("Highlight Color Left");
+	newInput(30, nodeValue_c(  "Color Right",       self, cola(c_white))).setInternalName("Highlight Color Right");
+	newInput(31, nodeValue_c(  "Color Top",         self, cola(c_white))).setInternalName("Highlight Color Top");
+	newInput(32, nodeValue_c(  "Color Bottom",      self, cola(c_white))).setInternalName("Highlight Color Bottom");
 	
 	newInput(33, nodeValue_b(  "Subtract",          self, false));
 	
@@ -65,8 +85,8 @@ function Node_PB_Draw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	input_display_shape_index = array_length(input_display_list);
 	
 	array_append(input_display_list, [
-		["Fill",     false,  8], 9, _sep, 15, 18, 16, 17, 
-		["Stroke",   false, 10], 11, 13, 14, 12, _sep, 19, 22, 20, 21, 
+		["Fill",     false,  8], 9, _sep, 15, 34, 18, 36, 16, 17, 
+		["Stroke",   false, 10], 11, 13, 14, 12, _sep, 19, 35, 22, 37, 20, 21, 
 		["Corner",    true, 23], 24, 25, 26, 33, 
 		["Highlight", true, 27], 28, 29, 30, 31, 32, 
 	]);
@@ -120,6 +140,8 @@ function Node_PB_Draw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var _fil_pat_col = _data[16]; inputs[16].setVisible(_fil_pat);
 		var _fil_pat_int = _data[17]; inputs[17].setVisible(_fil_pat);
 		var _fil_pat_sca = _data[18]; inputs[18].setVisible(_fil_pat);
+		var _fil_pat_pos = _data[34]; inputs[34].setVisible(_fil_pat);
+		var _fil_pat_map = _data[36]; inputs[36].setVisible(_fil_pat);
 		
 		var _stk     = _data[10];
 		var _stk_thk = _data[11];
@@ -131,6 +153,8 @@ function Node_PB_Draw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var _stk_pat_col = _data[20]; inputs[20].setVisible(_stk_pat);
 		var _stk_pat_int = _data[21]; inputs[21].setVisible(_stk_pat);
 		var _stk_pat_sca = _data[22]; inputs[22].setVisible(_stk_pat);
+		var _stk_pat_pos = _data[35]; inputs[35].setVisible(_stk_pat);
+		var _stk_pat_map = _data[37]; inputs[37].setVisible(_stk_pat);
 		
 		var _crn     = _data[23];
 		var _crn_rad = _data[24];
@@ -157,21 +181,26 @@ function Node_PB_Draw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 		surface_set_shader(_outSurf, sh_pb_draw);
 			shader_set_2("dimension",            _dim         );
+			shader_set_4("bbox",                 _bbox        );
 			
 			shader_set_i("fill",                 _fil         );
 			shader_set_c("fill_color",           _fil_col     );
 			shader_set_i("fill_pattern",         _fil_pat     );
+			shader_set_2("fill_pattern_pos",     _fil_pat_pos );
 			shader_set_2("fill_pattern_scale",   _fil_pat_sca );
+			shader_set_i("fill_pattern_map",     _fil_pat_map );
 			shader_set_c("fill_pattern_color",   _fil_pat_col );
 			shader_set_f("fill_pattern_inten",   _fil_pat_int );
 			
 			shader_set_i("stroke",               _stk         );
 			shader_set_f("stroke_thickness",     _stk_thk     );
 			shader_set_c("stroke_color",         _stk_col     );
-			shader_set_i("stroke_position",      _stk_thk <= 1? 1 : _stk_pos );
+			shader_set_i("stroke_position",      _stk_pos     );
 			shader_set_i("stroke_corner",        _stk_cor     );
 			shader_set_i("stroke_pattern",       _stk_pat     );
+			shader_set_2("stroke_pattern_pos",   _stk_pat_pos );
 			shader_set_2("stroke_pattern_scale", _stk_pat_sca );
+			shader_set_i("stroke_pattern_map",   _stk_pat_map );
 			shader_set_c("stroke_pattern_color", _stk_pat_col );
 			shader_set_f("stroke_pattern_inten", _stk_pat_int );
 			

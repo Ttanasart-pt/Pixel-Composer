@@ -45,8 +45,10 @@ function Node_Gabor_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y
 	newInput(12, nodeValue_Rotation("Rotation", self, 0));
 		addShaderProp(SHADER_UNIFORM.float, "trRotation");
 			
+	newInput(13, nodeValue_Surface("Mask", self));
+	
 	input_display_list = [
-		["Output", 	 true],	0, 3, 
+		["Output", 	 true],	0, 13, 3, 
 		["Noise",	false],	1, 12, 2, 8, 4, 9, 7, 11, 5, 10, 
 	];
 	

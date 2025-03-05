@@ -32,8 +32,10 @@ function Node_Noise_Bubble(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 	newInput(7, nodeValue_Enum_Scroll("Blend Mode", self,  0 , [ "Max", "Add" ] ));
 		addShaderProp(SHADER_UNIFORM.integer, "render");
 		
+	newInput(8, nodeValue_Surface("Mask", self));
+	
 	input_display_list = [ 2, 
-		["Output", 	 true],	0, 
+		["Output", 	 true],	0, 8, 
 		["Noise",	false],	1, 3, 
 		["Render",	false], 5, 4, 6, 7, 
 	];

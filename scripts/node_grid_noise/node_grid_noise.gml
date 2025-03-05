@@ -32,8 +32,10 @@ function Node_Grid_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	newInput(10, nodeValue_Slider_Range("Color B Range", self, [ 0, 1 ]));
 	
+	newInput(11, nodeValue_Surface("Mask", self));
+	
 	input_display_list = [
-		["Output",	false], 0,
+		["Output",	false], 0, 11, 
 		["Noise",	false], 3, 1, 2, 6, 4, 
 		["Render",	false], 5, 7, 8, 9, 10, 
 	];
@@ -85,6 +87,7 @@ function Node_Grid_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			draw_sprite_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], 0, c_white, 1);
 		surface_reset_shader();
 		
+		_outSurf = mask_apply_empty(_outSurf, _data[input_mask_index]);
 		return _outSurf;
 	}
 }

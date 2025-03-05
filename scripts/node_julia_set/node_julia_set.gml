@@ -16,9 +16,11 @@ function Node_Julia_Set(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	newInput(6, nodeValue_Float("Diverge Threshold", self, 4));
 	
+	newInput(7, nodeValue_Surface("Mask", self));
+	
 	newOutput(0, nodeValue_Output("Surface", self, VALUE_TYPE.surface, noone));
 	
-	input_display_list = [ 0, 
+	input_display_list = [ 0, 7, 
 	    ["Julia",     false], 1, 5, 6, 
 	    ["Transform", false], 2, 3, 4, 
     ];
@@ -62,6 +64,7 @@ function Node_Julia_Set(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	        draw_empty();
 	    surface_reset_shader();
 	    
+		_outSurf = mask_apply_empty(_outSurf, _data[input_mask_index]);
 	    return _outSurf; 
 	    
 	}

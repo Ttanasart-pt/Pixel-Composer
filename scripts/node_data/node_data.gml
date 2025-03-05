@@ -193,6 +193,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		input_button_length = 0;
 		
 		toRefreshNodeDisplay = false;
+		input_mask_index     = -1;
 		
 		run_in(1, function() /*=>*/ {
 			input_buttons   = [];
@@ -679,8 +680,15 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	////- JUNCTIONS
 	
-	static newInput  = function(i, j) /*=>*/ { inputs[i]  = j; return j; }
-	static newOutput = function(i, j) /*=>*/ { outputs[i] = j; return j; }
+	static newInput = function(i, j) /*=>*/ { 
+		inputs[i] = j; 
+		j.setIndex(i); 
+		if(j.name == "Mask") input_mask_index = i;
+		
+		return j;
+	}
+	
+	static newOutput = function(i, j) /*=>*/ { outputs[i] = j; j.setIndex(i); return j; }
 	
 	static getInputJunctionAmount = function() { return (input_display_list == -1 || !use_display_list)? array_length(inputs) : array_length(input_display_list); }
 	static getInputJunctionIndex  = function(index) {
@@ -1002,12 +1010,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static getInputDataFull  = function(index, def = 0) { return array_safe_get_fast(inputs_data, index, def); }
 	static getInputDataForce = function(index, def = 0) { return inputs[index].getValue(); }
 	
-	// static setInputData = function(index, value) {
-	// 	var _inp = inputs[index];
-	// 	inputs_data[index] = value;
-	// 	if(is_struct(_inp)) input_value_map[$ _inp.internalName] = value;
-	// }
-	
 	static getInputs = function(frame = CURRENT_FRAME) {
 		
 		inputs_data	= array_verify(inputs_data, array_length(inputs));
@@ -1015,7 +1017,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		array_foreach(inputs, function(_inp, i) /*=>*/ {
 			if(!is(_inp, NodeValue)) return;
-			if(!_inp.isDynamic())               return;
+			if(!_inp.isDynamic()) return;
 			
 			var val = _inp.getValue(__frame);
 			

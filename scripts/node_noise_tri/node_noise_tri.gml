@@ -21,8 +21,10 @@ function Node_Noise_Tri(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	newInput(4, nodeValue_Surface("Texture sample", self));
 	
+	newInput(5, nodeValue_Surface("Mask", self));
+	
 	input_display_list = [
-		["Output",	false], 0, 
+		["Output",	false], 0, 5, 
 		["Noise",	false], 1, 2, 3,
 		["Texture",	false], 4, 
 	];
@@ -66,6 +68,7 @@ function Node_Noise_Tri(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		shader_reset();
 		surface_reset_target();
 		
+		_outSurf = mask_apply_empty(_outSurf, _data[input_mask_index]);
 		return _outSurf;
 	}
 }

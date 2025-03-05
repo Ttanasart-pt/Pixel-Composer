@@ -27,15 +27,16 @@ function Node_Honeycomb_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x
 	newInput(6, nodeValue_Int("Iteration", self, 1));
 		addShaderProp(SHADER_UNIFORM.integer, "iteration");
 	
+	newInput(7, nodeValue_Surface("Mask", self));
+	
 	input_display_list = [ 5, 
-		["Output", 	 true],	0, 
+		["Output", 	 true],	0, 7, 
 		["Noise",	false],	1, 2, 3, 4, 6. 
 	];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _hov = false;
 		var  hv  = inputs[1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= hv;
-		
 		return _hov;
 	}
 }

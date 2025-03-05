@@ -1,0 +1,13 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_pb_fx_bevel_angle",
+  "name":"sh_pb_fx_bevel_angle",
+  "parent":{
+    "name":"pb_fx_bevel",
+    "path":"folders/nodes/data/PB/modify/pb_fx_bevel.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "tags":[],
+  "type":1,
+}

@@ -26,8 +26,10 @@ function Node_Fold_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y,
 	newInput(7, nodeValue_Rotation("Rotation", self, 0));
 		addShaderProp(SHADER_UNIFORM.float, "rotation");
 		
+	newInput(8, nodeValue_Surface("Mask", self));
+	
 	input_display_list = [
-		["Output", 	 true],	0, 
+		["Output", 	 true],	0, 8, 
 		["Noise",	false],	1, 7, 2, 3, 4, 5, 
 		["Render",	false],	6, 
 	];

@@ -1440,7 +1440,7 @@ function Panel_Animation() : PanelContent() constructor {
                 cc = COLORS.panel_animation_keyframe_selected;
                 key_hover = keyframe;
                 if(!instance_exists(o_dialog_menubox))
-                    TOOLTIP = [ keyframe.value, animator.prop.type ];
+                    TOOLTIP = [ keyframe, animator.prop.type ];
                 
                 if(_scaling) {
                 	hc = CDEF.cyan;
@@ -2505,7 +2505,7 @@ function Panel_Animation() : PanelContent() constructor {
                 
             } else {
                 if(!IS_PLAYING && pHOVER && point_in_circle(msx, msy, stx, sty, sty)) {
-                    if(key_mod_press(CTRL)) {
+                    if(key_mod_press(ALT)) {
                         draw_sprite_ui(THEME.animation_stretch, 1, stx, sty, 1, 1, 0, COLORS._main_icon, 1);
                         TOOLTIP = __txtx("panel_animation_stretch", "Stretch animation");
                         if(mouse_press(mb_left, pFOCUS)) {

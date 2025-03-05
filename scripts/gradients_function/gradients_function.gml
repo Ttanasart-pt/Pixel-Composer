@@ -235,15 +235,15 @@ function gradientObject(color = c_black) constructor {
 		return grad;
 	}
 	
-	static shader_submit = function() {
+	static shader_submit = function(_key = "gradient") {
 		var _grad = toArray();
 		var _grad_color = _grad[0];
 		var _grad_time	= _grad[1];
 		
-		shader_set_i("gradient_blend", type);
-		shader_set_f_array("gradient_color", _grad_color, GRADIENT_LIMIT * 4);
-		shader_set_f("gradient_time",  _grad_time);
-		shader_set_i("gradient_keys",  array_length(keys));
+		shader_set_i($"{_key}_blend", type);
+		shader_set_f_array($"{_key}_color", _grad_color, GRADIENT_LIMIT * 4);
+		shader_set_f($"{_key}_time",  _grad_time);
+		shader_set_i($"{_key}_keys",  array_length(keys));
 	}
 	
 	static clone = function() {

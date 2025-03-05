@@ -1,0 +1,14 @@
+{
+  "$GMScript":"v1",
+  "%Name":"numberArrayBox",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"numberArrayBox",
+  "parent":{
+    "name":"text",
+    "path":"folders/widgets/text.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+  "tags":[],
+}

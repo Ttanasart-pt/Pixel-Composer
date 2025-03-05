@@ -37,8 +37,10 @@ function Node_Perlin(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	newInput(11, nodeValue_Rotation("Rotation", self, 0));
 		
+	newInput(12, nodeValue_Surface("Mask", self));
+	
 	input_display_list = [
-		["Output", 	 true],	0, 5, 
+		["Output", 	 true],	0, 12, 5, 
 		["Noise",	false],	1, 11, 2, 10, 3, 4, 
 		["Render",	false], 6, 7, 8, 9, 
 	];
@@ -100,6 +102,7 @@ function Node_Perlin(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			draw_sprite_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], 0, c_white, 1);
 		surface_reset_shader();
 		
+		_outSurf = mask_apply_empty(_outSurf, _data[input_mask_index]);
 		return _outSurf;
 	}
 }

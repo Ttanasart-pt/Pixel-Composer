@@ -64,8 +64,10 @@ function Node_Random_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			
 	newInput(20, nodeValue_Slider_Range("Level", self, [ 0, 1 ]));
 	
+	newInput(21, nodeValue_Surface("Mask", self));
+	
 	input_display_list = [
-		["Output",  false], 0,
+		["Output",  false], 0, 21, 
 		["Pattern",	false], 1, 3, 12, 2, 11, 4, 13,
 		["Render",	false], 7, 8, 5, 17, 6, 9, 10, 20, 
 		["Truchet",  true, 14], 15, 16, 19, 
@@ -83,12 +85,12 @@ function Node_Random_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		return _hov;
 	}
 	
-	static step = function() { #region
+	static step = function() {
 		inputs[2].mappableStep();
 		inputs[3].mappableStep();
 		inputs[4].mappableStep();
 		inputs[5].mappableStep();
-	} #endregion
+	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _dim  = _data[0];
@@ -130,6 +132,7 @@ function Node_Random_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			else                 draw_sprite_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], 0, c_white, 1);
 		surface_reset_shader();
 		
+		_outSurf = mask_apply_empty(_outSurf, _data[input_mask_index]);
 		return _outSurf;
 	}
 }

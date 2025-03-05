@@ -1,0 +1,14 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_pd_filter_shine",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_pd_filter_shine",
+  "parent":{
+    "name":"modify",
+    "path":"folders/nodes/data/PB/modify.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+  "tags":[],
+}

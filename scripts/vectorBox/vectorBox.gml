@@ -25,23 +25,20 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 			var modi = false;
 			for( var i = 0; i < size; i++ ) {
 				tb[i]._input_text = v;
-				
-				if(is_callable(onModify))
-					modi |= onModify(v, i); 
+				if(is_callable(onModify)) modi |= onModify(v, i); 
 			}
+			
 			return modi;
 		}
 		
-		if(is_callable(onModify))
-			return onModify(v, index); 
-		return noone;
+		return is_callable(onModify)? onModify(v, index) : noone;
 	}
 	
 	axis = [ "x", "y", "z", "w" ];
-	onModifySingle[0] = function(val) { return onModifyIndex(val, 0); }
-	onModifySingle[1] = function(val) { return onModifyIndex(val, 1); }
-	onModifySingle[2] = function(val) { return onModifyIndex(val, 2); }
-	onModifySingle[3] = function(val) { return onModifyIndex(val, 3); }
+	onModifySingle[0] = function(v) /*=>*/ {return onModifyIndex(v, 0)};
+	onModifySingle[1] = function(v) /*=>*/ {return onModifyIndex(v, 1)};
+	onModifySingle[2] = function(v) /*=>*/ {return onModifyIndex(v, 2)};
+	onModifySingle[3] = function(v) /*=>*/ {return onModifyIndex(v, 3)};
 	
 	for(var i = 0; i < 4; i++) {
 		tb[i] = new textBox(TEXTBOX_INPUT.number, onModifySingle[i]);

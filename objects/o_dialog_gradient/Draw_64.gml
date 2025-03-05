@@ -280,11 +280,14 @@ draggable = true;
 				key_drag_my	  = mouse_my;
 				
 				selector.setColor(key_dragging.value);
+				onApply(gradient);
 			}
 		}
 			
-		if(mouse_press(mb_right, interactable && sFOCUS) && hover && array_length(gradient.keys) > 1)
+		if(mouse_press(mb_right, interactable && sFOCUS) && hover && array_length(gradient.keys) > 1) {
 			array_remove(gradient.keys, hover);
+			onApply(gradient);
+		}
 	}
 	
 	var op_x = content_x + ui(20);

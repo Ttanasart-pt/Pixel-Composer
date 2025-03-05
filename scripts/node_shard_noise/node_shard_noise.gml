@@ -35,8 +35,10 @@ function Node_Shard_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y
 	newInput(9, nodeValue_Rotation("Rotation", self, 0));
 		addShaderProp(SHADER_UNIFORM.float, "rotation");
 			
+	newInput(10, nodeValue_Surface("Mask", self));
+	
 	input_display_list = [
-		["Output", 	 true],	0, 3, 
+		["Output", 	 true],	0, 3, 10, 
 		["Noise",	false],	1, 9, 2, 6, 5, 8, 4, 7, 
 	];
 	

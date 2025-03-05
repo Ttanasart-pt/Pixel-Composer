@@ -6,7 +6,7 @@ function Node_Shader_Generator(_x, _y, _group = noone) : Node_Shader(_x, _y, _gr
 	
 	attribute_surface_depth();
 	
-	static generateShader = function(_outSurf, _data) { #region
+	static generateShader = function(_outSurf, _data) {
 		var _dim = _data[0];
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
@@ -15,10 +15,11 @@ function Node_Shader_Generator(_x, _y, _group = noone) : Node_Shader(_x, _y, _gr
 			draw_sprite_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], 0, c_white, 1);
 		surface_reset_shader();
 		
+		if(input_mask_index) _outSurf = mask_apply_empty(_outSurf, _data[input_mask_index]);
 		return _outSurf;
-	} #endregion
+	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		return generateShader(_outSurf, _data);
-	} #endregion
+	}
 }

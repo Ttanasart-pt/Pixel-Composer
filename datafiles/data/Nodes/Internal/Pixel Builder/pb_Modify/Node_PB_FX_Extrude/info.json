@@ -1,0 +1,6 @@
+{
+    "name":          "Extrude",
+    "spr":           "s_node_pb_fx_extrude",
+    "baseNode":      "Node_PB_FX_Extrude",
+    "pxc_version":    118090,
+}

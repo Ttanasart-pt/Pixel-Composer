@@ -63,8 +63,10 @@ function Node_Perlin_Extra(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 	newInput(16, nodeValue_Rotation("Rotation", self, 0));
 		addShaderProp(SHADER_UNIFORM.float, "rotation");
 			
+	newInput(17, nodeValue_Surface("Mask", self));
+	
 	input_display_list = [
-		["Output", 	 true],	0, 5, 
+		["Output", 	 true],	0, 17, 5, 
 		["Noise",	false],	10, 1, 16, 2, 13, 3, 4, 11, 14, 12, 15,
 		["Render",	false], 6, 7, 8, 9, 
 	];

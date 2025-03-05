@@ -66,8 +66,10 @@ function Node_Grid_Hex(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	newInput(21, nodeValue_Bool("Use Texture Dimension", self, false));
 	
+	newInput(22, nodeValue_Surface("Mask", self));
+	
 	input_display_list = [
-		["Output",  false], 0,
+		["Output",  false], 0, 22, 
 		["Pattern",	false], 1, 3, 12, 2, 11, 4, 13,
 		["Render",	false], 7, 8, 5, 17, 6, 9, 21, 10, 20, 
 		["Truchet",  true, 14], 15, 16, 19, 
@@ -145,6 +147,7 @@ function Node_Grid_Hex(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			else                 draw_sprite_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], 0, c_white, 1);
 		surface_reset_shader();
 		
+		_outSurf = mask_apply_empty(_outSurf, _data[input_mask_index]);
 		return _outSurf;
 	}
 }

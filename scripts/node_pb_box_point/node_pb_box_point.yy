@@ -1,0 +1,14 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_pb_box_point",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_pb_box_point",
+  "parent":{
+    "name":"pbbox",
+    "path":"folders/nodes/data/PB/pbbox.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+  "tags":[],
+}

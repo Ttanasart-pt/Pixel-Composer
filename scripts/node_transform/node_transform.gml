@@ -23,10 +23,9 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		.setVisible(false);
 	
 	newInput(2, nodeValue_Vec2("Position", self, [ 0.5, 0.5 ]))
-		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
+		.setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
 	
-	newInput(3, nodeValue_Vec2("Anchor", self, [ 0.5, 0.5 ]));
-		inputs[3].setDisplay(VALUE_DISPLAY.vector, { side_button : new buttonAnchor(inputs[3]) });
+	newInput(3, nodeValue_Anchor("Anchor", self));
 	
 	newInput(4, nodeValue_Bool("Relative Anchor", self, true));
 	

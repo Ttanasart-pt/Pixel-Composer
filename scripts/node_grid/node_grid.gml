@@ -90,8 +90,10 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	newInput(34, nodeValueSeed(self, VALUE_TYPE.float, "Scale Seed"));
 	
+	newInput(35, nodeValue_Surface("Mask", self));
+	
 	input_display_list = [
-		["Output",    false],  0,
+		["Output",    false],  0, 35, 
 		["Pattern",	  false],  1,  4, 15,  2, 13, 28,  3, 26, 27, 14, 
 		["Shift",	  false],  9,  8, 16, 31, 32, 30, 
 		["Scale",     false], 33, 34, 29, 
@@ -195,6 +197,7 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			else					draw_sprite_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], 0, c_white, 1);
 		surface_reset_shader();
 		
+		_outSurf = mask_apply_empty(_outSurf, _data[input_mask_index]);
 		return _outSurf;
 	}
 }

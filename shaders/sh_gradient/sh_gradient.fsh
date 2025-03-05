@@ -1,5 +1,3 @@
-#define TAU 6.283185307179586
-
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
@@ -27,6 +25,8 @@ uniform int gradient_loop;
 uniform int uniAsp;
 
 uniform vec2 cirScale;
+
+#define TAU 6.283185307179586
 
 #region //////////////////////////////////// GRADIENT ////////////////////////////////////
 	#define GRADIENT_LIMIT 128

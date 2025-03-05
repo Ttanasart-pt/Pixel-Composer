@@ -14,10 +14,14 @@ if(winMan_isMinimized()) exit;
 				TOOLTIP.drawTooltip();
 				
 		} else if(is_array(TOOLTIP)) {
-			var content = TOOLTIP[0];
-			var type    = TOOLTIP[1];
+			var raw  = TOOLTIP[0];
+			var type = TOOLTIP[1];
+			var content = raw;
+			
+			if(is(raw, valueKey)) {
+				content = raw.value;
 				
-			if(is_method(content)) content = content();
+			} else if(is_method(raw)) content = raw();
 			
 			switch(type) {
 				

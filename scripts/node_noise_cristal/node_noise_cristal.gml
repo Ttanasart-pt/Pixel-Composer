@@ -24,8 +24,10 @@ function Node_Noise_Cristal(_x, _y, _group = noone) : Node_Shader_Generator(_x, 
 	newInput(7, nodeValue_Rotation("Phase", self, 0));
 		addShaderProp(SHADER_UNIFORM.float, "phase");
 		
+	newInput(8, nodeValue_Surface("Mask", self));
+	
 	input_display_list = [ 3, 
-		["Output", 	 true],	0, 
+		["Output", 	 true],	0, 8, 
 		["Noise",	false],	1, 2, 4, 7, 
 		["Render",	false], 5, 6, 
 	];

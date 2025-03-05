@@ -41,8 +41,10 @@ function Node_Noise_Simplex(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput(12, nodeValue_Float("Amplitude", self, .5))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
+	newInput(13, nodeValue_Surface("Mask", self));
+	
 	input_display_list = [
-		["Output",   false], 0, 
+		["Output",   false], 0, 13, 
 		["Noise",    false], 1, 10, 2, 8, 3, 9, 
 		["Advances",  true], 11, 12, 
 		["Render",   false], 4, 5, 6, 7, 
@@ -100,6 +102,7 @@ function Node_Noise_Simplex(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			draw_empty();
 		surface_reset_shader();
 		
+		_outSurf = mask_apply_empty(_outSurf, _data[input_mask_index]);
 		return _outSurf;
 	}
 	

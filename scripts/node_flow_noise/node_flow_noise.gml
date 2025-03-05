@@ -18,8 +18,10 @@ function Node_Flow_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y,
 	newInput(5, nodeValue_Rotation("Rotation", self, 0));
 		addShaderProp(SHADER_UNIFORM.float, "rotation");
 			
+	newInput(6, nodeValue_Surface("Mask", self));
+	
 	input_display_list = [
-		["Output", 	 true],	0, 
+		["Output", 	 true],	0, 6, 
 		["Noise",	false],	1, 5, 2, 3, 4, 
 	];
 	

@@ -29,22 +29,21 @@ function Node_Sky(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 	
 	newInput(9, nodeValue_Enum_Scroll("Coordinate", self, 0, [ "Rectangular", "Polar" ]));
 	
+	newInput(10, nodeValue_Surface("Mask", self));
+	
 	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 0, 
-	   // ["Transform", false], 1, 2, 
-		["Sky",	   false], 3, 4, 8, 
-		["Sun",    false], 5, 6, 7, 
-		//["Render", false], 9, 
+		["Surface", false], 10, 
+		["Sky",	    false], 3, 4, 8, 
+		["Sun",     false], 5, 6, 7, 
 	];
 	
 	attribute_surface_depth();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _hov = false;
-		
 		var hv = inputs[5].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= hv;
-		
 		return _hov;
 	}
 	
@@ -115,6 +114,7 @@ function Node_Sky(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
     		surface_reset_shader();
 		}
 		
+		_outSurf = mask_apply_empty(_outSurf, _data[input_mask_index]);
 		return _outSurf;
 	}
 }

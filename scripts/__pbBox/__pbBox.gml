@@ -186,12 +186,14 @@ function __pbBox() constructor {
 			case PB_AXIS_ANCHOR.minimum : set_l(_bl); set_w(_bw); break;
 			case PB_AXIS_ANCHOR.maximum : set_r(_br); set_w(_bw); break;
 			case PB_AXIS_ANCHOR.bounded : set_l(_bl); set_r(_br); break;
+			case PB_AXIS_ANCHOR.center  : set_w(_bw);             break;
 		}
 		
 		switch(anchor_y_type) {
 			case PB_AXIS_ANCHOR.minimum : set_t(_bt); set_h(_bh); break;
 			case PB_AXIS_ANCHOR.maximum : set_b(_bb); set_h(_bh); break;
 			case PB_AXIS_ANCHOR.bounded : set_t(_bt); set_b(_bb); break;
+			case PB_AXIS_ANCHOR.center  : set_h(_bh);             break;
 		}
 		
 	}

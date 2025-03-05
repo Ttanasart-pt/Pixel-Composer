@@ -216,6 +216,7 @@
 		return _sub;
 	}
 	
+	function array_sum(arr) { return array_reduce(arr, function(s, v) /*=>*/ {return s + v}, 0); }
 #endregion
 
 #region find

@@ -39,10 +39,11 @@ function __NodeValue_Output(_name, _node, _type, _value, _tooltip = "") : NodeVa
 	static shortenDisplay = function() { editWidget.shorted = true; return self; }
 }
 
-function __NodeValue_Input_Bypass(_from, _name, _node, _type, _index) : __NodeValue_Output(_name, _node, _type, 0, "") constructor {
+function __NodeValue_Input_Bypass(_from, _name, _node, _type) : __NodeValue_Output(_name, _node, _type, 0, "") constructor {
 	from_junc = _from;
 	visible   = false;
-	index     = 1000 + _index;
+	
+	static setIndex = function(i) { index = 1000 + i; }
 	
 	static drawBypass = function(params = {}) {
 		if(!from_junc.isVisible()) return;

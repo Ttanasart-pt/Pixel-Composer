@@ -46,8 +46,10 @@ function Node_Noise_Strand(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 	newInput(11, nodeValue_Slider_Range("Opacity", self, [ 0., 1. ] ));
 		addShaderProp(SHADER_UNIFORM.float, "alpha");
 		
+	newInput(12, nodeValue_Surface("Mask", self));
+	
 	input_display_list = [ 3, 
-		["Output", 	 true],	0, 
+		["Output", 	 true],	0, 12, 
 		["Noise",	false],	9, 1, 2, 4, 
 		["Curve",	false],	5, 6, 8, 
 		["Render",	false], 10, 7, 11, 

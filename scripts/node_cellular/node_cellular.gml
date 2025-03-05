@@ -47,8 +47,10 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	newInput(12, nodeValue_Rotation("Rotation", self, 0));
 		
+	newInput(13, nodeValue_Surface("Mask", self));
+	
 	input_display_list = [
-		["Output",		false], 0, 
+		["Output",		false], 0, 13, 
 		["Noise",		false], 4, 6, 3, 1, 12, 2, 11, 
 		["Radial",		false], 8, 9,
 		["Rendering",	false], 5, 7, 10, 
@@ -65,9 +67,9 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		return _hov;
 	}
 	
-	static step = function() { #region
+	static step = function() {
 		inputs[2].mappableStep();
-	} #endregion
+	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _dim  = _data[0];
@@ -112,6 +114,7 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			draw_sprite_stretched(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1]);
 		surface_reset_shader();
 		
+		_outSurf = mask_apply_empty(_outSurf, _data[input_mask_index]);
 		return _outSurf;
 	}
 }

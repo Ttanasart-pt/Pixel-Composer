@@ -38,8 +38,10 @@ function Node_Noise_Aniso(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		
 	newInput(10, nodeValueSeed(self));
 	
+	newInput(11, nodeValue_Surface("Mask", self));
+	
 	input_display_list = [
-		["Output",	false], 0, 
+		["Output",	false], 0, 11, 
 		["Noise",	false], 2, 1, 6, 5, 7, 3, 4, 8, 
 		["Render",	false], 9, 10, 
 	];
@@ -85,6 +87,7 @@ function Node_Noise_Aniso(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			draw_sprite_stretched(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1]);
 		surface_reset_shader();
 		
+		_outSurf = mask_apply_empty(_outSurf, _data[input_mask_index]);
 		return _outSurf;
 	}
 }

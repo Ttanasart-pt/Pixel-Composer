@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_pb_fx_bevel",
+  "name":"sh_pb_fx_bevel",
+  "parent":{
+    "name":"pb_fx_bevel",
+    "path":"folders/nodes/data/PB/modify/pb_fx_bevel.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

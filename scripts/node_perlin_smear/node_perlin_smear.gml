@@ -15,10 +15,12 @@ function Node_Perlin_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	newInput(5, nodeValue_Rotation("Rotation", self, 0));
 		
+	newInput(6, nodeValue_Surface("Mask", self));
+	
 	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
-		["Output",		false], 0, 
+		["Output",		false], 0, 6, 
 		["Noise",		false], 1, 5, 2, 3, 4,
 	];
 	
@@ -52,6 +54,7 @@ function Node_Perlin_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			draw_sprite_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], 0, c_white, 1);
 		surface_reset_shader();
 		
+		_outSurf = mask_apply_empty(_outSurf, _data[input_mask_index]);
 		return _outSurf;
 	}
 }

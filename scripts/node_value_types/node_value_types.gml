@@ -78,6 +78,7 @@ enum VALUE_DISPLAY {
 	rotation_random,
 	slider,
 	slider_range,
+	number_array,
 	
 	//Color
 	palette,
@@ -500,6 +501,7 @@ function typeArray(_value) {
 		case VALUE_DISPLAY.transform :
 		case VALUE_DISPLAY.boolean_grid :
 		case VALUE_DISPLAY.corner :
+		case VALUE_DISPLAY.number_array :
 			
 		case VALUE_DISPLAY.curve :
 			

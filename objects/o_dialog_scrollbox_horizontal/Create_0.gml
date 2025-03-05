@@ -2,7 +2,7 @@
 event_inherited();
 
 #region 
-	max_w	 = WIN_W * .8;
+	max_w	 = ui(640);
 	max_h	 = ui(640);
 	
 	horizon  = true;
@@ -73,7 +73,7 @@ event_inherited();
 		var hh = 0;
 		
 		var lw = 0;
-		var lh = item_pad;
+		var lh = 0;
 		var _emp = true;
 		
 		widths  = [];
@@ -102,7 +102,7 @@ event_inherited();
 					}
 					
 					lw = 0;
-					lh = item_pad;
+					lh = 0;
 					continue;
 				}
 			} else if(_val == -1) {
@@ -112,7 +112,7 @@ event_inherited();
 			
 			_emp = false;
 			
-			tw     = string_width(txt) + _spr * (hght + _tpad * 2) + _tpad * 2;
+			tw     = string_width(txt) + _spr * (hght + _tpad) + _tpad * 2;
 			lw     = max(lw, tw);
 			lh    += hght;
 		}
@@ -126,36 +126,42 @@ event_inherited();
 		
 		if(_hori) {
 			dialog_w = max(scrollbox.w, ww) + _tpad * 2;
-			dialog_h = min(max_h, sh + hh);
+			dialog_h = min(max_h, sh + hh + ui(8));
 			
 		} else {
 			dialog_w = max(scrollbox.w, lw);
-			dialog_h = min(max_h, sh + lh);
+			dialog_h = min(max_h, sh + lh + ui(8));
 		}
 		
 		if(_hori && dialog_w >= max_w) {
-			var wwMin = 0;
-			minHeight = sh + hh;
+			var wwCur = 0;
+			minHeight = hh;
 			
 			var lwMin = 0;
-			var lhMin = item_pad;
-		
+			var lhMin = 0;
+			var lhMax = 0;
+			
 			for( var i = 0, n = array_length(heights); i < n; i++ ) {
 				var _w = widths[i];
 				var _h = heights[i];
 				
 				if(lhMin + _h > minHeight) {
-					wwMin += lwMin;
+					wwCur += lwMin;
 					lwMin = 0;
-					lhMin = item_pad;
+					lhMin = 0;
+					
+				} else {
+					_h += ui(8);
 				}
 				
 				lwMin = max(lwMin, _w);
 				lhMin += _h;
+				lhMax = max(lhMax, lhMin);
 			}
 			
-			wwMin += lwMin;
-			dialog_w = wwMin + _tpad * 2;
+			wwCur += lwMin;
+			dialog_w = wwCur + _tpad * 2 + ui(12);
+			dialog_h = max(sh + lhMax + ui(8), minHeight);
 		}
 		
 		sc_content.resize(dialog_w - _tpad * 2, dialog_h - ui(40));
@@ -201,6 +207,12 @@ event_inherited();
 						_lh  = 0;
 						_lw  = 0;
 						
+					} else {
+						draw_set_color(CDEF.main_mdblack);
+						draw_line_width(_lx + ui(8), _ly + ui(4), _lx + _dw - ui(8), _ly + ui(4), 2);
+						
+						_ly += ui(8);
+						_lh += ui(8);
 					}
 					continue;
 				}
@@ -213,7 +225,6 @@ event_inherited();
 				
 				_ly += ui(8);
 				_lh += ui(8);
-				
 				continue;
 			}
 			
@@ -262,7 +273,7 @@ event_inherited();
 				
 			} else if(align == fa_left) {
 				var _tx = _tpad + _lx;
-				if(_spr != noone) _tx += _tpad * 2 + hght;
+				if(_spr != noone) _tx += _tpad + hght;
 				
 				draw_text_add(_tx, _ly + hght / 2, _txt);
 			}

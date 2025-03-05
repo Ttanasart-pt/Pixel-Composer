@@ -33,17 +33,19 @@ function Node_Quasicrystal(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	newInput(10, nodeValue_Rotation_Range("Angle Range", self, [ 0, 180 ]));
 		
+	newInput(11, nodeValue_Surface("Mask", self));
+	
 	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 
-		["Output",	 true],	0,  
+		["Output",	 true],	0, 11, 
 		["Pattern",	false], 1, 6, 2, 7, 8, 9, 10, 
 		["Colors",  false], 4, 5, 
 	];
 	
 	attribute_surface_depth();
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var pos  = getInputData(3);
 		var px   = _x + pos[0] * _s;
 		var py   = _y + pos[1] * _s;
@@ -53,15 +55,15 @@ function Node_Quasicrystal(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var  hv  = inputs[2].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny); active &= !hv; _hov |= hv;
 		
 		return _hov;
-	} #endregion
+	}
 	
-	static step = function() { #region
+	static step = function() {
 		inputs[1].mappableStep();
 		inputs[2].mappableStep();
 		inputs[8].mappableStep();
-	} #endregion
+	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _dim  = _data[ 0];
 		var _fre  = _data[ 1];
 		var _ang  = _data[ 2];
@@ -87,6 +89,7 @@ function Node_Quasicrystal(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			draw_sprite_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], 0, c_white, 1);
 		surface_reset_shader();
 		
+		_outSurf = mask_apply_empty(_outSurf, _data[input_mask_index]);
 		return _outSurf;
-	} #endregion
+	}
 }
