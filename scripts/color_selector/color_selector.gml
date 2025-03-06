@@ -142,6 +142,13 @@ function colorSelector(onApply = noone) constructor {
 			return;
 		}
 		
+		if(keyboard_check_pressed(vk_escape)) {
+			dropper_active = false;
+			MOUSE_BLOCK    = true;
+			if(dropper_close) instance_destroy(instance);
+			return;
+		}
+		
 		if((dropper_active && mouse_check_button_pressed(mb_right)) || keyboard_check_released(vk_alt)) 
 			instance_destroy(instance);
 		
