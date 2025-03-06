@@ -92,9 +92,11 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	newInput(35, nodeValue_Surface("Mask", self));
 	
+	newInput(36, nodeValue_Bool("Invert Size", self, false));
+	
 	input_display_list = [
 		["Output",    false],  0, 35, 
-		["Pattern",	  false],  1,  4, 15,  2, 13, 28,  3, 26, 27, 14, 
+		["Pattern",	  false],  1,  4, 15, 36,  2, 13, 28,  3, 26, 27, 14, 
 		["Shift",	  false],  9,  8, 16, 31, 32, 30, 
 		["Scale",     false], 33, 34, 29, 
 		["Render",	  false], 10, 11,  5, 20,  6,  7, 25, 12, 24, 
@@ -168,10 +170,11 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			shader_set_f_map("angle",	_data[ 4], _data[15], inputs[4]);
 			shader_set_f_map("shift",	_data[ 8], _data[16], inputs[8]);
 			
-			shader_set_i("mode",		   _mode);
-			shader_set_f("seed", 		   _data[11]);
-			shader_set_i("shiftAxis",	   _data[ 9]);
-			shader_set_i("aa",			   _data[12]);
+			shader_set_i("mode",           _mode);
+			shader_set_i("scaleMode",      _data[36]);
+			shader_set_f("seed",           _data[11]);
+			shader_set_i("shiftAxis",      _data[ 9]);
+			shader_set_i("aa",             _data[12]);
 			shader_set_i("textureTruchet", _data[17]);
 			shader_set_f("truchetSeed",    _data[18]);
 			shader_set_f("truchetThresX",  _data[19]);
@@ -181,13 +184,13 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			shader_set_f("gapAcc",         _data[26]);
 			shader_set_i("diagonal",       _data[27]);
 			shader_set_i("uniformSize",    _data[28]);
-			shader_set_f("secScale", 	   _data[29]);
-			shader_set_f("secShift", 	   _data[30]);
+			shader_set_f("secScale",       _data[29]);
+			shader_set_f("secShift",       _data[30]);
 			
-			shader_set_f("randShift", 	   _data[31]);
-			shader_set_f("randShiftSeed",  _data[32]);
-			shader_set_f("randScale", 	   _data[33]);
-			shader_set_f("randScaleSeed",  _data[34]);
+			shader_set_f("randShift",     _data[31]);
+			shader_set_f("randShiftSeed", _data[32]);
+			shader_set_f("randScale",     _data[33]);
+			shader_set_f("randScaleSeed", _data[34]);
 			
 			shader_set_color("gapCol", _col_gap);
 			

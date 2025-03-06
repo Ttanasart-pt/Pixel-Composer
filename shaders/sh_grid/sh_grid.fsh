@@ -8,6 +8,7 @@ uniform int   shiftAxis;
 uniform int   mode;
 uniform int   aa;
 
+uniform int       scaleMode;
 uniform vec2      scale;
 uniform int       scaleUseSurf;
 uniform sampler2D scaleSurf;
@@ -189,6 +190,7 @@ void main() {
 			vec4 _vMap = texture2D( scaleSurf, v_vTexcoord );
 			sca = vec2(mix(scale.x, scale.y, (_vMap.r + _vMap.g + _vMap.b) / 3.));
 		}
+		if(scaleMode == 1) sca = dimension / sca;
 		
 		float ang = angle.x;
 		if(angleUseSurf == 1) {

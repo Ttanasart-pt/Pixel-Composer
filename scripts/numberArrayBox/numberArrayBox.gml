@@ -68,14 +68,14 @@ function numberArrayBox(_onModify) : widget() constructor {
 		    } else {
     		    draw_set_text(font, fa_center, fa_center, COLORS._main_text);
     		    draw_text_add(_tx + _tw / 2, _ty + _th / 2, _v);
-		    }
-		    
-		    if(_hov) {
-		        draw_sprite_stretched_ext(THEME.textbox, 0, _tx, _ty, _tw, _th, boxColor, 1);
-		        if(mouse_press(mb_left, active)) {
-		            editing = i;
-		            tb.activate(_v);
-		        }
+    		    
+    		    if(_hov) {
+			        draw_sprite_stretched_ext(THEME.textbox, 0, _tx, _ty, _tw, _th, boxColor, 1);
+			        if(mouse_press(mb_left, active)) {
+			            editing = i;
+			            tb.activate(_v);
+			        }
+			    }
 		    }
 		    
 		    _tx += _tw;

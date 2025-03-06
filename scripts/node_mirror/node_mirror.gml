@@ -6,7 +6,6 @@
 
 function Node_Mirror(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Mirror";
-	batch_output = false;
 	
 	newInput(0, nodeValue_Surface("Surface In", self));
 	
@@ -17,13 +16,15 @@ function Node_Mirror(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(3, nodeValue_Bool("Active", self, true));
 		active_index = 3;
 	
+	newInput(4, nodeValue_Bool("Both Side", self, false));
+	
 	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	newOutput(1, nodeValue_Output("Mirror mask", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 3,
 		["Surfaces", false], 0, 
-		["Mirror",	 false], 1, 2, 
+		["Mirror",	 false], 1, 2, 4, 
 	]
 	
 	attribute_surface_depth();
@@ -51,21 +52,33 @@ function Node_Mirror(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		return _hov;
 	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outData, _data, _output_index, _array_index) {
 		var _suf = _data[0];
 		var _pos = _data[1];
 		var _ang = _data[2];
+		var _bth = _data[4];
 		
 		var _dim = surface_get_dimension(_suf);
+		var _outSurf = surface_verify(_outData[0], _dim[0], _dim[1]);
+		var _outMask = surface_verify(_outData[1], _dim[0], _dim[1]);
 		
-		surface_set_shader(_outSurf, _output_index? sh_mirror_mask : sh_mirror);
+		shader_set(sh_mirror);
+		surface_set_target_ext(0, _outSurf);
+		surface_set_target_ext(1, _outMask);
+		DRAW_CLEAR
+		BLEND_OVERRIDE
+			
 			shader_set_f("dimension", _dim);
 			shader_set_2("position",  _pos);
 			shader_set_f("angle",     degtorad(_ang));
+			shader_set_i("bothSide",  _bth);
 			
 			draw_surface_safe(_suf);
-		surface_reset_shader();
 		
-		return _outSurf;
+		BLEND_NORMAL
+		shader_reset();
+		surface_reset_target();
+		
+		return [ _outSurf, _outMask ];
 	}
 }
