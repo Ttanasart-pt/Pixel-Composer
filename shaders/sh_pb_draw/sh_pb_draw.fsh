@@ -4,34 +4,24 @@ varying vec4 v_vColour;
 uniform vec2  dimension;
 uniform vec4  bbox;
 
-uniform int   fill;
-uniform vec4  fill_color;
-uniform int   fill_pattern;
-uniform vec2  fill_pattern_pos;
-uniform vec2  fill_pattern_scale;
-uniform int   fill_pattern_map;
-uniform vec4  fill_pattern_color;
-uniform float fill_pattern_inten;
+uniform int   type;
+uniform vec4  color;
+uniform float intensity;
+uniform int   empty;
 
-uniform int   stroke;
+uniform int   pattern;
+uniform vec4  pattern_color;
+uniform float pattern_inten;
+uniform vec2  pattern_scale;
+uniform vec2  pattern_pos;
+uniform int   pattern_map;
+
 uniform float stroke_thickness;
-uniform vec4  stroke_color;
 uniform int   stroke_position;
 uniform int   stroke_corner;
-uniform int   stroke_pattern;
-uniform vec2  stroke_pattern_pos;
-uniform vec2  stroke_pattern_scale;
-uniform int   stroke_pattern_map;
-uniform vec4  stroke_pattern_color;
-uniform float stroke_pattern_inten;
 
-uniform int   corner;
 uniform float corner_radius;
-uniform vec4  corner_color;
-uniform int   corner_effect;
-uniform int   corner_subtract;
 
-uniform int   highlight;
 uniform vec4  highlight_width;
 uniform vec4  highlight_l;
 uniform vec4  highlight_r;
@@ -71,9 +61,10 @@ bool patZigzag(vec2 px, vec2 sc) {
 	return ps.x == ps.y;
 }
 
-vec4 pbPattern(int pattern, vec2 tx, vec2 pos, vec2 sc, vec4 c0, vec4 c1) {
+vec4 pbPattern(int pattern, vec2 tx, vec2 pos, vec2 sc, vec4 c0) {
 	float dxy = dimension.x + dimension.y;
 	vec4  cc  = c0;
+	vec4  c1  = mix(c0, pattern_color, pattern_inten);
 	
 	vec2  rx = floor(tx * dimension - pos);
 	vec2  px = floor(rx / sc);
@@ -132,97 +123,91 @@ void main() {
 	vec4 bboxtx = bbox * vec4(tx, tx);
 	vec2 txMap  = (v_vTexcoord - bboxtx.xy) / (bboxtx.zw - bboxtx.xy);
 	
-	vec2 px, rx;
-	vec4 c0, c1;
-		
-	vec4 shapeMask = sampleTex(v_vTexcoord);
-	bool isShape   = shapeMask.a > 0.;
+	vec4 cc      = sampleTex(v_vTexcoord);
+	gl_FragColor = empty == 1? vec4(0.) : cc;
 	
-	vec4 cc = vec4(0.);
+	bool isShape = cc.a > 0.;
+	vec2 patx    = pattern_map == 1? txMap : v_vTexcoord;
+	vec4 cs      = pbPattern(pattern, patx, pattern_pos, pattern_scale, color);
 	
-	if(fill == 1 && isShape) {
-		c0 = fill_color;
-		c1 = mix(fill_color, fill_pattern_color, fill_pattern_inten);
-		cc = pbPattern(fill_pattern, fill_pattern_map == 1? txMap : v_vTexcoord, fill_pattern_pos, fill_pattern_scale, c0, c1);
+	if(type == 0) { // fill
+		if(isShape) gl_FragColor = mix(cc, cs, intensity);
+		return;
 	}
 	
-	if(highlight == 1 && isShape) {
-		int   high = -1;
-		float dist = 9999.;
+	if(type == 1) { // stroke
+		float borDist = 99999.;
+		float borCond = isShape? 0. : 1.;
 		
-		for(float i = 1.; i <= highlight_width[2]; i++) {
-			vec4 samp = sampleTex(v_vTexcoord + vec2(-1., 0.) * i * tx);
-			if(samp.a == 0.) { if(i < dist) { dist = i; high = 0; } break; }
-		}
-		
-		for(float i = 1.; i <= highlight_width[0]; i++) {
-			vec4 samp = sampleTex(v_vTexcoord + vec2( 1., 0.) * i * tx);
-			if(samp.a == 0.) { if(i < dist) { dist = i; high = 1; } break; }
-		}
-		
-		for(float i = 1.; i <= highlight_width[1]; i++) {
-			vec4 samp = sampleTex(v_vTexcoord + vec2(0., -1.) * i * tx);
-			if(samp.a == 0.) { if(i < dist) { dist = i; high = 2; } break; }
-		}
-		
-		for(float i = 1.; i <= highlight_width[3]; i++) {
-			vec4 samp = sampleTex(v_vTexcoord + vec2(0.,  1.) * i * tx);
-			if(samp.a == 0.) { if(i < dist) { dist = i; high = 3; } break; }
-		}
-		
-		     if(high == 0) cc = highlight_l;
-		else if(high == 1) cc = highlight_r;
-		else if(high == 2) cc = highlight_t;
-		else if(high == 3) cc = highlight_b;
-	}
-	
-	float kfill = 0.;
-	float ksize = 0.;
-	float borDist = 99999.;
-	float borCond = isShape? 0. : 1.;
-	float scanRad = max(corner_radius, stroke_thickness);
-	
-	for(float i = -scanRad; i <= scanRad; i++)
-	for(float j = -scanRad; j <= scanRad; j++) {
-		vec4 samp = sampleTex(v_vTexcoord + vec2(i, j) * tx);
-		
-		if(abs(i) <= corner_radius && abs(j) <= corner_radius) {
-			ksize++;
-			kfill += samp.a;
-		}
-		
-		if(abs(i) <= stroke_thickness && abs(j) <= stroke_thickness) {
-			if(samp.a == borCond) {
-				
+		for(float i = -stroke_thickness; i <= stroke_thickness; i++)
+		for(float j = -stroke_thickness; j <= stroke_thickness; j++) {
+			vec4 samp = sampleTex(v_vTexcoord + vec2(i, j) * tx);
+			
+			if(samp.a == borCond)
 				borDist = min(borDist, stroke_corner == 0? length(vec2(i, j)) : min(i, j));
-			}
 		}
-	}
-	
-	bool isStroke = false;
-	
-	if(stroke == 1) {
+		
+		bool isStroke = false;
+		
 		     if(stroke_position == 0) isStroke =             borDist <= float(stroke_thickness) / 2.;
 		else if(stroke_position == 1) isStroke =  isShape && borDist <= float(stroke_thickness);
 		else if(stroke_position == 2) isStroke = !isShape && borDist <= float(stroke_thickness);
 		
-		if(isStroke) {
-			c0 = stroke_color;
-			c1 = mix(stroke_color, stroke_pattern_color, stroke_pattern_inten);
-			cc = pbPattern(stroke_pattern, stroke_pattern_map == 1? txMap : v_vTexcoord, stroke_pattern_pos, stroke_pattern_scale, c0, c1);
-		}
+		if(isStroke) gl_FragColor = mix(cc, cs, intensity);
+		return;
 	}
 	
-	if(corner == 1) {
+	if(type == 2) { // corner
+			
+		float kfill = 0.;
+		float ksize = 0.;
+		
+		for(float i = -corner_radius; i <= corner_radius; i++)
+		for(float j = -corner_radius; j <= corner_radius; j++) {
+			vec4 samp = sampleTex(v_vTexcoord + vec2(i, j) * tx);
+			
+			ksize++;
+			kfill += samp.a;
+		}
+		
 		bool isCorner = isShape && (kfill / ksize) < .5;
-		vec4 crn_col = corner_subtract == 1? vec4(0.) : corner_color;
-		
-		if(isCorner) {
-			     if(corner_effect == 0)             cc = crn_col;
-			else if(corner_effect == 1 && isStroke) cc = crn_col;
-		}
-		
+		if(isCorner) gl_FragColor = mix(cc, cs, intensity);
+		return;
 	}
 	
-	gl_FragColor = cc;
+	if(type == 3) { // highlight
+		if(isShape) {
+			int   high = -1;
+			float dist = 9999.;
+			
+			for(float i = 1.; i <= highlight_width[2]; i++) {
+				vec4 samp = sampleTex(v_vTexcoord + vec2(-1., 0.) * i * tx);
+				if(samp.a == 0.) { if(i < dist) { dist = i; high = 0; } break; }
+			}
+			
+			for(float i = 1.; i <= highlight_width[0]; i++) {
+				vec4 samp = sampleTex(v_vTexcoord + vec2( 1., 0.) * i * tx);
+				if(samp.a == 0.) { if(i < dist) { dist = i; high = 1; } break; }
+			}
+			
+			for(float i = 1.; i <= highlight_width[1]; i++) {
+				vec4 samp = sampleTex(v_vTexcoord + vec2(0., -1.) * i * tx);
+				if(samp.a == 0.) { if(i < dist) { dist = i; high = 2; } break; }
+			}
+			
+			for(float i = 1.; i <= highlight_width[3]; i++) {
+				vec4 samp = sampleTex(v_vTexcoord + vec2(0.,  1.) * i * tx);
+				if(samp.a == 0.) { if(i < dist) { dist = i; high = 3; } break; }
+			}
+			
+			     if(high == 0) gl_FragColor = mix(cc, pbPattern(pattern, patx, pattern_pos, pattern_scale, highlight_l), intensity);
+			else if(high == 1) gl_FragColor = mix(cc, pbPattern(pattern, patx, pattern_pos, pattern_scale, highlight_r), intensity);
+			else if(high == 2) gl_FragColor = mix(cc, pbPattern(pattern, patx, pattern_pos, pattern_scale, highlight_t), intensity);
+			else if(high == 3) gl_FragColor = mix(cc, pbPattern(pattern, patx, pattern_pos, pattern_scale, highlight_b), intensity);
+			
+		}
+		
+		return;
+	}
+	
 }

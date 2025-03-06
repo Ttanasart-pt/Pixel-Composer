@@ -3692,6 +3692,7 @@
     {"id":{"name":"s_node_pb_draw_tri_apexc","path":"sprites/s_node_pb_draw_tri_apexc/s_node_pb_draw_tri_apexc.yy",},},
     {"id":{"name":"s_node_pb_draw_tri_base","path":"sprites/s_node_pb_draw_tri_base/s_node_pb_draw_tri_base.yy",},},
     {"id":{"name":"s_node_pb_draw_triangle","path":"sprites/s_node_pb_draw_triangle/s_node_pb_draw_triangle.yy",},},
+    {"id":{"name":"s_node_pb_effect_types","path":"sprites/s_node_pb_effect_types/s_node_pb_effect_types.yy",},},
     {"id":{"name":"s_node_pb_filter_mirror","path":"sprites/s_node_pb_filter_mirror/s_node_pb_filter_mirror.yy",},},
     {"id":{"name":"s_node_pb_filter_polar","path":"sprites/s_node_pb_filter_polar/s_node_pb_filter_polar.yy",},},
     {"id":{"name":"s_node_pb_fx_bevel","path":"sprites/s_node_pb_fx_bevel/s_node_pb_fx_bevel.yy",},},

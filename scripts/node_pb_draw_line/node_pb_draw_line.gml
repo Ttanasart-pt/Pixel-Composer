@@ -11,6 +11,8 @@ function Node_PB_Draw_Line(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _group
 		["Shape", false], pbi+0, pbi+1, pbi+2, 
 	]);
 	
+	resetDynamicInput();
+	
 	static pbDrawSurface = function(_data, _bbox) {
 		var _x0 = _bbox[0] - 1;
 		var _y0 = _bbox[1] - 1;

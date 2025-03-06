@@ -99,6 +99,7 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newOutput(1, nodeValue_Output("Light only", self, VALUE_TYPE.surface, noone));
 	
 	lights_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
+		if(array_length(current_data) != array_length(inputs)) return 0;
 		
 		var bs = ui(24);
 		var bx = _x + ui(20);

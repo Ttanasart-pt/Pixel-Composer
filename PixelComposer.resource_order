@@ -2321,6 +2321,7 @@
     {"name":"s_node_pb_draw_tri_apexc","order":40,"path":"sprites/s_node_pb_draw_tri_apexc/s_node_pb_draw_tri_apexc.yy",},
     {"name":"s_node_pb_draw_tri_base","order":38,"path":"sprites/s_node_pb_draw_tri_base/s_node_pb_draw_tri_base.yy",},
     {"name":"s_node_pb_draw_triangle","order":21,"path":"sprites/s_node_pb_draw_triangle/s_node_pb_draw_triangle.yy",},
+    {"name":"s_node_pb_effect_types","order":42,"path":"sprites/s_node_pb_effect_types/s_node_pb_effect_types.yy",},
     {"name":"s_node_pb_filter_mirror","order":29,"path":"sprites/s_node_pb_filter_mirror/s_node_pb_filter_mirror.yy",},
     {"name":"s_node_pb_filter_polar","order":28,"path":"sprites/s_node_pb_filter_polar/s_node_pb_filter_polar.yy",},
     {"name":"s_node_pb_fx_bevel","order":20,"path":"sprites/s_node_pb_fx_bevel/s_node_pb_fx_bevel.yy",},

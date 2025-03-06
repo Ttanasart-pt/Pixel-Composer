@@ -32,15 +32,20 @@ function __initHotKey() {
 	hotkeySimple("Node_Mesh_Warp",          "Edit control point",   "V");
 	hotkeySimple("Node_Mesh_Warp",          "Pin mesh",             "P");
 	hotkeySimple("Node_Mesh_Warp",          "Mesh edit",            "M");
-	hotkeySimple("Node_Mesh_Warp",          "Anchor remove",        "E");
+	hotkeySimple("Node_Mesh_Warp",          "Mesh anchor remove",   "E");
 	 
 	hotkeySimple("Node_Armature",           "Move",                 "V");
 	hotkeySimple("Node_Armature",           "Scale",                "S");
+	hotkeySimple("Node_Armature",           "Transform",            "T");
 	hotkeySimple("Node_Armature",           "Add bones",            "A");
 	hotkeySimple("Node_Armature",           "Remove bones",         "E");
 	hotkeySimple("Node_Armature",           "Detach bones",         "D");
 	hotkeySimple("Node_Armature",           "IK",                   "K");
-	           
+	hotkeySimple("Node_Armature_Bind",      "Pose",                 "P");
+	hotkeySimple("Node_Armature_Mesh_Rig",  "Pose",                 "P");
+	hotkeySimple("Node_Armature_Mesh_Rig",  "Weight Brush",         "B");
+	hotkeySimple("Node_Armature_Mesh_Rig",  "Weight Eraser",        "E");
+	
 	hotkeySimple("Node_Path",               "Transform",            "T");
 	hotkeySimple("Node_Path",               "Anchor add / remove",  "A");
 	hotkeySimple("Node_Path",               "Edit Control point",   "C");
@@ -48,6 +53,8 @@ function __initHotKey() {
 	hotkeySimple("Node_Path",               "Rectangle path",       "N");
 	hotkeySimple("Node_Path",               "Circle path",          "M");
 	hotkeySimple("Node_Path",               "Weight edit",          "W");
+	hotkeySimple("Node_Path_Smooth",        "Anchor add / remove",  "A");
+	hotkeySimple("Node_Path_Anchor",        "Adjust control point", "A");
 	
 	hotkeySimple("Node_Rigid_Object",       "Mesh edit",            "A");
 	hotkeySimple("Node_Rigid_Object",       "Anchor remove",        "E");
@@ -58,15 +65,24 @@ function __initHotKey() {
 	hotkeySimple("Node_Strand_Create",      "Shorten",              "D");
 	hotkeySimple("Node_Strand_Create",      "Grab",                 "G");
 	
-	hotkeySimple("Node_Path_Anchor",        "Adjust control point", "A");
-	       
+	hotkeySimple("Node_9Slice",             "Preview Original",     "P");
+	hotkeySimple("Node_Crop",               "Draw crop area",       "D");
+	hotkeySimple("Node_Crop",               "Fit Width",            "W");
+	hotkeySimple("Node_Crop",               "Fit Height",           "H");
+	
+	hotkeySimple("Node_Text",               "Edit Text",            "T");
+	
 	hotkeySimple("Node_3D_Object",          "Transform",            "G");
 	hotkeySimple("Node_3D_Object",          "Rotate",               "R");
 	hotkeySimple("Node_3D_Object",          "Scale",                "S");
-	                  
 	hotkeySimple("Node_3D_Camera",          "Move Target",          "T");
+	hotkeySimple("Node_Path_3D_Camera",     "Move Target",          "T");
+	hotkeySimple("Node_Path_3D",            "Transform",            "T");
+	hotkeySimple("Node_Path_3D",            "Anchor add / remove",  "A");
+	hotkeySimple("Node_Path_3D",            "Edit Control point",   "C");
 	
-	hotkeySimple("Node_Armature_Bind",      "Pose",                 "P");
+	hotkeySimple("Node_RM_Primitive",       "Transform",            "T");
+	
 }
 
 function getToolHotkey(_group, _key) {

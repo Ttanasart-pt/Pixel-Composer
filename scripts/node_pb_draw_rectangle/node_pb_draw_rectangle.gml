@@ -5,6 +5,8 @@ function Node_PB_Draw_Rectangle(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _
 		
 	]);
 	
+	resetDynamicInput();
+	
 	static pbDrawSurface = function(_data, _bbox) {
 		var _x0 = _bbox[0];
 		var _y0 = _bbox[1];

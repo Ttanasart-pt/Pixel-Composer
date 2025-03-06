@@ -5,9 +5,13 @@ function Node_PB_Draw_Round_Rectangle(_x, _y, _group = noone) : Node_PB_Draw(_x,
 	
 	newInput(pbi+1, nodeValue_Enum_Button("Profile", self, 0, [ "Round", "Sharp" ] ));
 	
+	newInput(pbi+2, nodeValue_Bool("Clamp", self, false ));
+	
 	array_insert_array(input_display_list, input_display_shape_index, [
-		["Shape", false], pbi+0, pbi+1, 
+		["Shape", false], pbi+0, pbi+1, pbi+2, 
 	]);
+	
+	resetDynamicInput();
 	
 	static pbDrawSurface = function(_data, _bbox) {
 		var _x0 = _bbox[0] - 1;
@@ -17,6 +21,7 @@ function Node_PB_Draw_Round_Rectangle(_x, _y, _group = noone) : Node_PB_Draw(_x,
 		
 		var _rad = _data[pbi+0];
 		var _pro = _data[pbi+1];
+		var _clm = _data[pbi+2];
 		
 		var _ww = _x1 - _x0;
 		var _hh = _y1 - _y0;
@@ -25,6 +30,13 @@ function Node_PB_Draw_Round_Rectangle(_x, _y, _group = noone) : Node_PB_Draw(_x,
 		var _tr = floor(_rad[1]);
 		var _bl = floor(_rad[2]);
 		var _br = floor(_rad[3]);
+		
+		if(_clm) {
+			_tl = min(_tl, _ww / 2, _hh / 2);
+			_tr = min(_tr, _ww / 2, _hh / 2);
+			_bl = min(_bl, _ww / 2, _hh / 2);
+			_br = min(_br, _ww / 2, _hh / 2);
+		}
 		
 		var _rcx0 = _x0 + _tl, _rcy0 = _y0 + _tl;
 		var _rcx1 = _x1 - _tr, _rcy1 = _y0 + _tr;

@@ -421,21 +421,23 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		is_dynamic_input	= true;						
 		auto_input			= _auto_input;
 		dummy_type	 		= _dummy_type;
-		
-		input_display_list_raw = array_clone(input_display_list, 1);
-		input_display_len	= input_display_list == -1? 0 : array_length(input_display_list);
-		input_fix_len		= array_length(inputs);
 		data_length			= _data_length;
-		
 		dynamic_input_cond  = _dynamic_input_cond;
 		
 		if(auto_input) {
 			dummy_input = nodeValue("Add value", self, CONNECT_TYPE.input, dummy_type, 0)
-						.setDummy(function() /*=>*/ {return createNewInput()})
-						.setVisible(false, true);
+				.setDummy(function() /*=>*/ {return createNewInput()})
+				.setVisible(false, true);
 		}
 		
 		attributes.size = 0;
+		resetDynamicInput();
+	}
+	
+	static resetDynamicInput = function() {
+		input_display_list_raw = array_clone(input_display_list, 1);
+		input_display_len	   = input_display_list == -1? 0 : array_length(input_display_list);
+		input_fix_len		   = array_length(inputs);
 	}
 	
 	static refreshDynamicInput = function() {
@@ -489,6 +491,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(input_display_dynamic == -1) input_display_list = _input_display_list;
 	}
 
+	static dynamic_visibility = -1;
 	static refreshDynamicDisplay = function() {
 		if(input_display_dynamic == -1) return;
 		array_resize(input_display_list, array_length(input_display_list_raw));
@@ -515,6 +518,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			var v = input_display_dynamic[i]; if(is_real(v)) v += _ind;
 			array_push(input_display_list, v);
 		}
+		
+		if(dynamic_visibility != -1) dynamic_visibility();
 	}
 	
 	static getInputAmount = function() { return (array_length(inputs) - input_fix_len) / data_length; }
@@ -2672,12 +2677,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static inputGenerate = function() { // Generate inputs for dynamic input nodes
-		if(createNewInput == noone) 
-			return;
+		if(createNewInput == noone) return;
 		
 		var _dynamic_inputs = ceil((array_length(load_map.inputs) - input_fix_len) / data_length);
-		repeat(_dynamic_inputs)
-			createNewInput();
+		repeat(_dynamic_inputs) createNewInput();
 	}
 	 
 	static attributeDeserialize = function(attr) {
@@ -2709,7 +2712,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		for(var i = 0; i < amo; i++) {
 			if(inputs[i] == noone || _inputs[i] == noone) continue;
 			
-			//print($"      Apply {i} : {inputs[i].name}");
+			// print($"      Apply {i} : {name}, {inputs[i].name}");
 			inputs[i].applyDeserialize(_inputs[i], load_scale, preset);
 		}
 		

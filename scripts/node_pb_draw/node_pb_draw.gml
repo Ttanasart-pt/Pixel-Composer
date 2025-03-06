@@ -1,8 +1,13 @@
+enum PB_EFFECT_TYPES {
+	fill,
+	stroke,
+	corner,
+	highlight
+}
+
 function Node_PB_Draw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "PB Draw";
 	preview_channel = 1;
-	
-	inputs = array_create(30);
 	
 	newInput(0, nodeValue_Pbbox("Base PBBOX", self, new __pbBox()));
 	inputs[0].editWidget = noone;
@@ -16,14 +21,7 @@ function Node_PB_Draw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(6, nodeValue_f("PBBOX Width",  self, 0));
 	newInput(7, nodeValue_f("PBBOX Height", self, 0));
 	
-	newInput( 8, nodeValue_b(  "Fill",              self, true));
-	newInput( 9, nodeValue_c(  "Color",             self, cola(c_white))).setInternalName("Fill Color");
-	
-	newInput(10, nodeValue_b(  "Stroke",            self, false));
-	newInput(11, nodeValue_i(  "Thickness",         self, 1));
-	newInput(12, nodeValue_c(  "Color",             self, cola(c_white))).setInternalName("Stroke Color");
-	newInput(13, nodeValue_eb( "Position",          self, 1, array_create(3, THEME.stroke_position) ));
-	newInput(14, nodeValue_eb( "Corner",            self, 0, array_create(2, THEME.stroke_profile)  ));
+	typeList = [ "Fill", "Stroke", "Corner", "Highlight" ];
 	
 	fill_pattern_data = [ "Solid", 
            -1, "Stripe X", "Stripe Y", "Stripe D0", "Stripe D1",  
@@ -39,33 +37,40 @@ function Node_PB_Draw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
     fill_pattern_scroll_data = array_create_ext(array_length(fill_pattern_data), 
     	function(i) /*=>*/ {return fill_pattern_data[i] == -1? -1 : new scrollItem(fill_pattern_data[i], s_node_pb_pattern, i)});
     
-	newInput(15, nodeValue_es( "Pattern",           self, 0, { data: fill_pattern_scroll_data, horizontal: true, text_pad: ui(16) } )).setInternalName("Fill Pattern");
-	newInput(16, nodeValue_c(  "Pattern Color",     self, cola(c_white))).setInternalName("Fill Pattern Color");
-	newInput(17, nodeValue_s(  "Pattern Intensity", self, 1)).setInternalName("Fill Pattern Intensity");
-	newInput(18, nodeValue_2(  "Pattern Scale",     self, [1,1])).setInternalName("Fill Pattern Scale");
-	newInput(34, nodeValue_2(  "Pattern Position",  self, [0,0])).setInternalName("Fill Pattern Position");
-	newInput(36, nodeValue_b(  "Pattern Map BBOX",  self, false)).setInternalName("Fill Pattern Map");
-	
-	newInput(19, nodeValue_es( "Pattern",           self, 0, { data: fill_pattern_scroll_data, horizontal: true, text_pad: ui(16) } )).setInternalName("Stroke Pattern");
-	newInput(20, nodeValue_c(  "Pattern Color",     self, cola(c_white))).setInternalName("Stroke Pattern Color");
-	newInput(21, nodeValue_s(  "Pattern Intensity", self, 1)).setInternalName("Stroke Pattern Intensity");
-	newInput(22, nodeValue_2(  "Pattern Scale",     self, [1,1])).setInternalName("Stroke Pattern Scale");
-	newInput(35, nodeValue_2(  "Pattern Position",  self, [0,0])).setInternalName("Stroke Pattern Position");
-	newInput(37, nodeValue_b(  "Pattern Map BBOX",  self, false)).setInternalName("Stroke Pattern Map");
-	
-	newInput(23, nodeValue_b(  "Corner",            self, false));
-	newInput(24, nodeValue_i(  "Radius",            self, 1));
-	newInput(25, nodeValue_c(  "Color",             self, cola(c_white))).setInternalName("Corner Color");
-	newInput(26, nodeValue_es( "Apply",             self, 0, [ "Fill", "Stroke" ] )).setInternalName("Corner Effect");
-	
-	newInput(27, nodeValue_b(  "Highlight",         self, false));
-	newInput(28, nodeValue_i(  "Width",             self, [ 0, 0, 0, 0 ])).setDisplay(VALUE_DISPLAY.padding).setInternalName("Highlight Width");
-	newInput(29, nodeValue_c(  "Color Left",        self, cola(c_white))).setInternalName("Highlight Color Left");
-	newInput(30, nodeValue_c(  "Color Right",       self, cola(c_white))).setInternalName("Highlight Color Right");
-	newInput(31, nodeValue_c(  "Color Top",         self, cola(c_white))).setInternalName("Highlight Color Top");
-	newInput(32, nodeValue_c(  "Color Bottom",      self, cola(c_white))).setInternalName("Highlight Color Bottom");
-	
-	newInput(33, nodeValue_b(  "Subtract",          self, false));
+	static createNewInput = function() {
+		var _index = array_length(inputs);
+		dynamic_input_inspecting = getInputAmount();
+		
+		newInput(_index + 0, nodeValue_Enum_Scroll("Effect Type", self, 0, typeList));
+		
+		newInput(_index + 1, nodeValue_c(  "Color",     self, cola(c_white)));
+		newInput(_index + 2, nodeValue_s(  "Intensity", self, 1));
+		
+		newInput(_index + 3, nodeValue_es( "Pattern",           self, 0, { data: fill_pattern_scroll_data, horizontal: true, text_pad: ui(16) } ));
+		newInput(_index + 4, nodeValue_c(  "Pattern Color",     self, cola(c_white)));
+		newInput(_index + 5, nodeValue_s(  "Pattern Intensity", self, 1));
+		newInput(_index + 6, nodeValue_2(  "Pattern Scale",     self, [1,1]));
+		newInput(_index + 7, nodeValue_2(  "Pattern Position",  self, [0,0]));
+		newInput(_index + 8, nodeValue_b(  "Pattern Map BBOX",  self, false));
+		
+		// Stroke
+		newInput(_index +  9, nodeValue_i(  "Thickness", self, 1));
+		newInput(_index + 10, nodeValue_eb( "Position",  self, 1, array_create(3, THEME.stroke_position) ));
+		newInput(_index + 11, nodeValue_eb( "Corner",    self, 0, array_create(2, THEME.stroke_profile)  ));
+		
+		// Corner
+		newInput(_index + 12, nodeValue_i(  "Radius",   self, 1));
+		
+		// Highlight
+		newInput(_index + 13, nodeValue_i(  "Width",        self, [ 0, 0, 0, 0 ])).setDisplay(VALUE_DISPLAY.padding);
+		newInput(_index + 14, nodeValue_c(  "Color Left",   self, cola(c_white)));
+		newInput(_index + 15, nodeValue_c(  "Color Right",  self, cola(c_white)));
+		newInput(_index + 16, nodeValue_c(  "Color Top",    self, cola(c_white)));
+		newInput(_index + 17, nodeValue_c(  "Color Bottom", self, cola(c_white)));
+		
+		refreshDynamicDisplay();
+		return inputs[_index];
+	} 
 	
 	////////////////////////////////////////////////////////////////////////////////
 	
@@ -73,25 +78,125 @@ function Node_PB_Draw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	newOutput(1, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
-	var _sep = new Inspector_Spacer(ui(4), true, true, ui(4));
-	
 	pbi = array_length(inputs);
+	
+	effect_dragging = noone;
+	effect_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
+		if(array_length(current_data) != array_length(inputs)) return 0;
+		
+		var bs = ui(24);
+		var bx = _x;
+		var by = _y;
+		
+		for( var i = 0, n = array_length(typeList); i < n; i++ ) {
+			var _txt = $"New {typeList[i]}";
+			
+			if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, _m, _hover, _focus, _txt, s_node_pb_effect_types, i, COLORS._main_icon, 1, .75) == 2) {
+				var _inTyp = createNewInput(); 
+			    _inTyp.setValue(i);
+				triggerRender();
+			}
+			
+			bx += bs + ui(4);
+		}
+			
+		var amo = getInputAmount();
+		var lh  = ui(28);
+		var _h  = ui(12) + lh * amo;
+		var yy  = _y + bs + ui(4);
+		var hoverIndex = noone;
+		
+		var del_fx = -1;
+		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, yy, _w, _h, COLORS.node_composite_bg_blend, 1);
+		
+		for(var i = 0; i < amo; i++) {
+			var _x0 = _x + ui(12);
+			var _x1 = _x + _w - ui(16);
+			var _yy = ui(6) + yy + i * lh + lh / 2;
+			
+			var _ind = input_fix_len + i * data_length;
+			var _typ = current_data[_ind + 0];
+			var _col = current_data[_ind + 1];
+			
+			var tc   = i == dynamic_input_inspecting? COLORS._main_text_accent : COLORS._main_icon;
+			var hov  = _hover && point_in_rectangle(_m[0], _m[1], _x0, _yy - lh / 2, _x1, _yy + lh / 2 - 1);
+			
+			if(hov && _m[0] < _x1 - ui(32)) {
+				tc = COLORS._main_text;
+				
+				if(mouse_press(mb_left, _focus)) {
+					dynamic_input_inspecting = i;
+					refreshDynamicDisplay();
+					effect_dragging = i;
+				}
+				
+				if(effect_dragging != noone) {
+					hoverIndex = i;
+					
+					draw_set_color(COLORS._main_accent);
+					     if(effect_dragging > i) draw_line_width(_x + ui(16), _yy - lh / 2 + 2, _x + _w - ui(16), _yy - lh / 2 + ui(2), 2);
+					else if(effect_dragging < i) draw_line_width(_x + ui(16), _yy + lh / 2 - 2, _x + _w - ui(16), _yy + lh / 2 - ui(2), 2);
+				}
+			}
+			
+			draw_sprite_ext(s_node_pb_effect_types, _typ, _x0 + ui(8), _yy, 1, 1, 0, _col, 1);
+			
+			draw_set_text(f_p2, fa_left, fa_center, tc);
+			draw_text_add(_x0 + ui(28), _yy, typeList[_typ]);
+			
+			var bs = ui(24);
+			var bx = _x1 - bs;
+			var by = _yy - bs / 2;
+			if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, _m, _hover, _focus, "", THEME.minus_16, 0, hov? COLORS._main_value_negative : COLORS._main_icon) == 2) 
+				del_fx = i;	
+		}
+		
+		if(effect_dragging != noone && mouse_release(mb_left)) {
+			if(effect_dragging != hoverIndex && hoverIndex != noone) {
+				var index = input_fix_len + effect_dragging * data_length;
+				var targt = input_fix_len + hoverIndex * data_length;
+				
+				var ext = [];
+				for( var i = 0; i < data_length; i++ ) {
+					ext[i] = inputs[index];
+					array_delete(inputs, index, 1);
+				}
+				
+				for( var i = 0; i < data_length; i++ )
+					array_insert(inputs, targt + i, ext[i]);
+				
+				dynamic_input_inspecting = hoverIndex;
+				refreshDynamicDisplay(); 
+				triggerRender();
+			}
+			
+			effect_dragging = noone;
+			refreshDynamicDisplay();
+		}
+		
+		if(del_fx > -1) deleteDynamicInput(del_fx);
+		
+		
+		return ui(32) + _h;
+	});
+	
+	input_display_dynamic = [ 0, 
+		["Properties", false],  2,  9, 10, 11, 12, 13,
+		["Base Color", false],  1, 14, 15, 16, 17, 
+		["Pattern",    false],  3,  4,  5,  6,  7,  8, 
+	];
 	
 	input_display_list = [
 		["Layout",         false], 0, 1, 
 		["Layout Override", true], 2, 3, 4, 5, 6, 7, 
+		["Effects",        false], effect_renderer, 
 	]
 	
-	input_display_shape_index = array_length(input_display_list);
+	input_display_shape_index = array_length(input_display_list) - 2;
+	setDynamicInput(18, false);
+	if(!LOADING && !APPENDING) run_in(1, function() /*=>*/ {return createNewInput()});
 	
-	array_append(input_display_list, [
-		["Fill",     false,  8], 9, _sep, 15, 34, 18, 36, 16, 17, 
-		["Stroke",   false, 10], 11, 13, 14, 12, _sep, 19, 35, 22, 37, 20, 21, 
-		["Corner",    true, 23], 24, 25, 26, 33, 
-		["Highlight", true, 27], 28, 29, 30, 31, 32, 
-	]);
-	
-	temp_surfaces = [ 0 ];
+	temp_surfaces = [ 0, 0 ];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _pbase = getSingleValue(0);
@@ -124,50 +229,44 @@ function Node_PB_Draw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	static pbDrawSurface = function(_data, _bbox) {}
 	
-	static processData = function(_outData, _data, _output_index, _array_index) {
-		var _dim = group.dimension;
+	static dynamic_visibility = function() {
+		dynamic_input_inspecting = clamp(dynamic_input_inspecting, 0, getInputAmount() - 1);
+		var _ind = input_fix_len + dynamic_input_inspecting * data_length;
 		
-		var _outSurf     = surface_verify(_outData[0], _dim[0], _dim[1]);
-		temp_surfaces[0] = surface_verify(temp_surfaces[0], _dim[0], _dim[1]);
+		var _type = getSingleValue(_ind + 0);
+		var _patt = getSingleValue(_ind + 3);
+		
+		inputs[_ind +  4].setVisible(_patt > 0);
+		inputs[_ind +  5].setVisible(_patt > 0);
+		inputs[_ind +  6].setVisible(_patt > 0);
+		inputs[_ind +  7].setVisible(_patt > 0);
+		inputs[_ind +  8].setVisible(_patt > 0);
+		
+		inputs[_ind +  9].setVisible(_type == PB_EFFECT_TYPES.stroke);
+		inputs[_ind + 10].setVisible(_type == PB_EFFECT_TYPES.stroke);
+		inputs[_ind + 11].setVisible(_type == PB_EFFECT_TYPES.stroke);
+		
+		inputs[_ind + 12].setVisible(_type == PB_EFFECT_TYPES.corner);
+		
+		inputs[_ind +  1].setVisible(_type != PB_EFFECT_TYPES.highlight);
+		inputs[_ind + 13].setVisible(_type == PB_EFFECT_TYPES.highlight);
+		inputs[_ind + 14].setVisible(_type == PB_EFFECT_TYPES.highlight);
+		inputs[_ind + 15].setVisible(_type == PB_EFFECT_TYPES.highlight);
+		inputs[_ind + 16].setVisible(_type == PB_EFFECT_TYPES.highlight);
+		inputs[_ind + 17].setVisible(_type == PB_EFFECT_TYPES.highlight);
+	}
+	
+	static processData = function(_outData, _data, _output_index, _array_index) { 
+		if(getInputAmount() == 0) return _outData;
+		dynamic_visibility();
+		
+		var _dim     = group.dimension;
+		var _outSurf = surface_verify(_outData[0], _dim[0], _dim[1]);
+		for( var i = 0, n = array_length(temp_surfaces); i < n; i++ )
+			temp_surfaces[i] = surface_verify(temp_surfaces[i], _dim[0], _dim[1]);
 		
 		var _pbbox = _data[1];
 		var _bbox  = getBBOX(_data);
-		
-		var _fil     = _data[8];
-		var _fil_col = _data[9];
-		
-		var _fil_pat     = _data[15];
-		var _fil_pat_col = _data[16]; inputs[16].setVisible(_fil_pat);
-		var _fil_pat_int = _data[17]; inputs[17].setVisible(_fil_pat);
-		var _fil_pat_sca = _data[18]; inputs[18].setVisible(_fil_pat);
-		var _fil_pat_pos = _data[34]; inputs[34].setVisible(_fil_pat);
-		var _fil_pat_map = _data[36]; inputs[36].setVisible(_fil_pat);
-		
-		var _stk     = _data[10];
-		var _stk_thk = _data[11];
-		var _stk_col = _data[12];
-		var _stk_pos = _data[13];
-		var _stk_cor = _data[14];
-		
-		var _stk_pat     = _data[19];
-		var _stk_pat_col = _data[20]; inputs[20].setVisible(_stk_pat);
-		var _stk_pat_int = _data[21]; inputs[21].setVisible(_stk_pat);
-		var _stk_pat_sca = _data[22]; inputs[22].setVisible(_stk_pat);
-		var _stk_pat_pos = _data[35]; inputs[35].setVisible(_stk_pat);
-		var _stk_pat_map = _data[37]; inputs[37].setVisible(_stk_pat);
-		
-		var _crn     = _data[23];
-		var _crn_rad = _data[24];
-		var _crn_col = _data[25];
-		var _crn_eff = _data[26];
-		var _crn_sub = _data[33];
-		
-		var _hig     = _data[27];
-		var _hig_wid = _data[28];
-		var _hig_l   = _data[29];
-		var _hig_r   = _data[30];
-		var _hig_t   = _data[31];
-		var _hig_b   = _data[32];
 		
 		var _draws = temp_surfaces[0];
 		var _bboxw = _bbox[2] - _bbox[0];
@@ -179,60 +278,51 @@ function Node_PB_Draw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				pbDrawSurface(_data, _bbox);
 		surface_reset_shader();
 		
-		surface_set_shader(_outSurf, sh_pb_draw);
-			shader_set_2("dimension",            _dim         );
-			shader_set_4("bbox",                 _bbox        );
+		////
+		
+		var bg = 0;
+		for( var i = 0; i < getInputAmount(); i++ ) {
+			var _ind = input_fix_len + i * data_length;
 			
-			shader_set_i("fill",                 _fil         );
-			shader_set_c("fill_color",           _fil_col     );
-			shader_set_i("fill_pattern",         _fil_pat     );
-			shader_set_2("fill_pattern_pos",     _fil_pat_pos );
-			shader_set_2("fill_pattern_scale",   _fil_pat_sca );
-			shader_set_i("fill_pattern_map",     _fil_pat_map );
-			shader_set_c("fill_pattern_color",   _fil_pat_col );
-			shader_set_f("fill_pattern_inten",   _fil_pat_int );
+			bg = !bg;
+			surface_set_shader(temp_surfaces[bg], sh_pb_draw);
+				shader_set_i("empty",     i == 0 );
+				shader_set_2("dimension", _dim );
+				shader_set_4("bbox",      _bbox);
+				
+				shader_set_i("type",            _data[_ind +  0]);
+				shader_set_c("color",           _data[_ind +  1]);
+				shader_set_f("intensity",       _data[_ind +  2]);
+				
+				shader_set_i("pattern",         _data[_ind +  3]);
+				shader_set_c("pattern_color",   _data[_ind +  4]);
+				shader_set_f("pattern_inten",   _data[_ind +  5]);
+				shader_set_2("pattern_scale",   _data[_ind +  6]);
+				shader_set_2("pattern_pos",     _data[_ind +  7]);
+				shader_set_i("pattern_map",     _data[_ind +  8]);
+				
+				shader_set_f("stroke_thickness",_data[_ind +  9]);
+				shader_set_i("stroke_position", _data[_ind + 10]);
+				shader_set_i("stroke_corner",   _data[_ind + 11]);
+				
+				shader_set_f("corner_radius",   _data[_ind + 12]);
+				
+				shader_set_4("highlight_width", _data[_ind + 13] );
+				shader_set_c("highlight_l",     _data[_ind + 14] );
+				shader_set_c("highlight_r",     _data[_ind + 15] );
+				shader_set_c("highlight_t",     _data[_ind + 16] );
+				shader_set_c("highlight_b",     _data[_ind + 17] );
 			
-			shader_set_i("stroke",               _stk         );
-			shader_set_f("stroke_thickness",     _stk_thk     );
-			shader_set_c("stroke_color",         _stk_col     );
-			shader_set_i("stroke_position",      _stk_pos     );
-			shader_set_i("stroke_corner",        _stk_cor     );
-			shader_set_i("stroke_pattern",       _stk_pat     );
-			shader_set_2("stroke_pattern_pos",   _stk_pat_pos );
-			shader_set_2("stroke_pattern_scale", _stk_pat_sca );
-			shader_set_i("stroke_pattern_map",   _stk_pat_map );
-			shader_set_c("stroke_pattern_color", _stk_pat_col );
-			shader_set_f("stroke_pattern_inten", _stk_pat_int );
-			
-			shader_set_i("corner",               _crn         );
-			shader_set_f("corner_radius",        _crn_rad     );
-			shader_set_c("corner_color",         _crn_col     );
-			shader_set_i("corner_effect",        _crn_eff     );
-			shader_set_i("corner_subtract",      _crn_sub     );
-			
-			shader_set_i("highlight",            _hig         );
-			shader_set_4("highlight_width",      _hig_wid     );
-			shader_set_c("highlight_l",          _hig_l       );
-			shader_set_c("highlight_r",          _hig_r       );
-			shader_set_c("highlight_t",          _hig_t       );
-			shader_set_c("highlight_b",          _hig_b       );
-			
-			draw_surface_safe(_draws);
+				draw_surface_safe(temp_surfaces[!bg]);
+			surface_reset_shader();
+		}
+		
+		surface_set_shader(_outSurf);
+			draw_surface_safe(temp_surfaces[bg]);
 		surface_reset_shader();
 		
 		return [ _pbbox, _outSurf ];
 	}
 	
-	////- Serialize
 	
-	static doSerialize = function(_map) {
-		_map.pbi_base_length = pbi;
-	}
-	
-	static postDeserialize = function() {
-		var _tlen = struct_try_get(load_map, "pbi_base_length", pbi);
-		
-		for( var i = _tlen; i < pbi; i++ )
-			array_insert(load_map.inputs, i, noone);
-	}
 }
