@@ -20,7 +20,6 @@ uniform int       angleUseSurf;
 uniform sampler2D angleSurf;
 
 float random1D (in vec2 st, float _seed) { return fract(sin(dot(st.xy, vec2(12.9898, 78.233)) * mod(_seed + 453.456, 100.) * 12.588) * 43758.5453123); }
-
 float random (in vec2 st, float _seed) { return mix(random1D(st, floor(_seed)), random1D(st, floor(_seed) + 1.), fract(_seed)); }
 
 void main() {

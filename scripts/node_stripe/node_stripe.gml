@@ -92,18 +92,11 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	}
 	
 	static step = function() {
-		var _clr = getSingleValue(6);
-		
 		inputs[ 1].mappableStep();
 		inputs[ 2].mappableStep();
 		inputs[ 5].mappableStep();
 		inputs[ 7].mappableStep();
 		inputs[10].mappableStep();
-		
-		inputs[ 8].setVisible(_clr == 0);
-		inputs[ 9].setVisible(_clr == 0);
-		inputs[18].setVisible(_clr == 1);
-		inputs[ 7].setVisible(_clr == 2);
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
@@ -117,6 +110,11 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _seed = _data[19];
 		
 		var _color = _data[6];
+		
+		inputs[ 8].setVisible(_color == 0);
+		inputs[ 9].setVisible(_color == 0);
+		inputs[18].setVisible(_color == 1);
+		inputs[ 7].setVisible(_color == 2);
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 			

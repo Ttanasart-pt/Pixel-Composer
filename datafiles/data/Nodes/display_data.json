@@ -591,6 +591,7 @@
             "Node_Stripe",
             "Node_Zigzag",
             "Node_Checker",
+            "Node_Dotted", 
             { "label": "/Grids" },
             "Node_Grid",
             "Node_Grid_Tri",

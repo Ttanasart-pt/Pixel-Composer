@@ -402,12 +402,12 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					var dir = point_direction(bbox.xc, bbox.yc, _mx, _my);
 					var dx  = angle_difference(dir, rotator_p);
 					rotate_dx += dx;
-					rotator_p = dir;
+					rotator_p  = dir;
 					
 					var _val = rotator_s + rotate_dx * spd;
-					    _val = value_snap(_val, stp);
-					    
-					_val = lerp(_minn, _maxx, (_val - _knb_rng_st) / _knb_rng)
+					    _val = lerp(_minn, _maxx, (_val - _knb_rng_st) / _knb_rng)
+					
+					_val = value_snap(_val, stp);
 					if(cmp) _val = clamp(_val, _minn, _maxx);
 					
 					if(inputs[0].setValue(_val))

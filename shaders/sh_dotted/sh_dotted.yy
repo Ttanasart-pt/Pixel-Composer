@@ -1,0 +1,13 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_dotted",
+  "name":"sh_dotted",
+  "parent":{
+    "name":"pattern",
+    "path":"folders/nodes/data/generator/pattern.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "tags":[],
+  "type":1,
+}

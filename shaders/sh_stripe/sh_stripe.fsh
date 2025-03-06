@@ -2,11 +2,6 @@ varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 #define PI 3.14159265359
-#ifdef _YY_HLSL11_ 
-	#define PALETTE_LIMIT 1024 
-#else 
-	#define PALETTE_LIMIT 256 
-#endif
 
 uniform float seed;
 uniform vec2  dimension;
@@ -33,6 +28,12 @@ uniform sampler2D ratioSurf;
 uniform int   coloring;
 uniform vec4  color0;
 uniform vec4  color1;
+
+#ifdef _YY_HLSL11_ 
+	#define PALETTE_LIMIT 1024 
+#else 
+	#define PALETTE_LIMIT 256 
+#endif
 
 uniform vec4  palette[PALETTE_LIMIT];
 uniform int   paletteAmount;
@@ -174,7 +175,7 @@ uniform int   paletteAmount;
 
 float random (in vec2 st) { return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * (seed + 43758.5453123)); }
 
-void main() { #region
+void main() { 
 	#region params
 		float amo = amount.x;
 		if(amountUseSurf == 1) {
@@ -243,4 +244,4 @@ void main() { #region
 	} else if(coloring == 2) {
 		gl_FragColor = gradientEval(random(vec2(_s > rat? slot : slot + 1.)));
 	}
-} #endregion
+} 
