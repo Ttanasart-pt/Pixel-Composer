@@ -1,0 +1,13 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_gap_contract",
+  "name":"sh_gap_contract",
+  "parent":{
+    "name":"fixes",
+    "path":"folders/nodes/data/filter/fixes.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "tags":[],
+  "type":1,
+}

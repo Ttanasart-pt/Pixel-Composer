@@ -1,0 +1,14 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_gap_contract",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_gap_contract",
+  "parent":{
+    "name":"fixes",
+    "path":"folders/nodes/data/filter/fixes.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+  "tags":[],
+}

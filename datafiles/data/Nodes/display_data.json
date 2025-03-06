@@ -481,7 +481,8 @@
             
             { "label": "Fixes" },
             "Node_De_Corner",
-            "Node_De_Stray"
+            "Node_De_Stray",
+            "Node_Gap_Contract",
         ]
     },
     {
