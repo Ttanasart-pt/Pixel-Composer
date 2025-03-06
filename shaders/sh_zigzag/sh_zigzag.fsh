@@ -5,6 +5,7 @@ uniform vec2  dimension;
 uniform vec2  position;
 uniform int   blend;
 uniform float rotation;
+uniform float threshold;
 
 uniform vec2      amount;
 uniform int       amountUseSurf;
@@ -57,14 +58,14 @@ void main() {
 	if(mod(_ychi, 2.) == 1.) _h = 1. - _h;
 	
 	if(blend == 0) {
-		gl_FragColor = _h < 0.5? col1 : col2;
+		gl_FragColor = _h < threshold? col1 : col2;
 		
 	} else if(blend == 1) {
 		gl_FragColor = mix(col1, col2, _h);
 		
 	} else if(blend == 2) { 
 		float px = 1. / max(dimension.x, dimension.y);
-		_h = smoothstep(0.5 - px, 0.5 + px, _h);
+		_h = smoothstep(threshold - px, threshold + px, _h);
 			
 		gl_FragColor = mix(col1, col2, _h);
 	}

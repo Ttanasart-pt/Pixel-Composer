@@ -49,25 +49,20 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	setTrigger(2, "Clear cache", [ THEME.cache, 0, COLORS._main_icon ]);
 	
-	static onInspector2Update = function() { clearCache(); }
+	static onInspector2Update = function() /*=>*/ {return clearCache()};
 	
 	static step = function() {
 		var _typ = getInputData(2);
 		
 		inputs[3].setVisible(_typ == PARTICLE_RENDER_TYPE.line);
 		
-		if(previewing && is_instanceof(group, Node_VFX_Group)) 
+		if(previewing && is(group, Node_VFX_Group)) 
 			group.preview_node = self;
 	}
 	
 	static update = function(_time = CURRENT_FRAME) {
 		var _dim   = inputs[0].getValue(_time);
 		temp_surface[0] = surface_verify(temp_surface[0], _dim[0], _dim[1]);
-		
-		if(!IS_PLAYING) {
-			recoverCache();
-			return;
-		}
 		
 		var _exact = inputs[1].getValue(_time);
 		var _type  = inputs[2].getValue(_time);

@@ -133,9 +133,9 @@ event_inherited();
 			dialog_h = min(max_h, sh + lh + ui(8));
 		}
 		
-		if(_hori && dialog_w >= max_w) {
+		if(_hori && (dialog_w >= max_w || dialog_w / dialog_h > 2)) {
 			var wwCur = 0;
-			minHeight = hh;
+			minHeight = max(hh, sqrt(ww * hh));
 			
 			var lwMin = 0;
 			var lhMin = 0;
@@ -161,7 +161,7 @@ event_inherited();
 			
 			wwCur += lwMin;
 			dialog_w = wwCur + _tpad * 2 + ui(12);
-			dialog_h = max(sh + lhMax + ui(8), minHeight);
+			dialog_h = max(sh + lhMax + ui(8), hh);
 		}
 		
 		sc_content.resize(dialog_w - _tpad * 2, dialog_h - ui(40));
@@ -209,7 +209,7 @@ event_inherited();
 						
 					} else {
 						draw_set_color(CDEF.main_mdblack);
-						draw_line_width(_lx + ui(8), _ly + ui(4), _lx + _dw - ui(8), _ly + ui(4), 2);
+						draw_line_width(_lx + ui(8), _ly + ui(4), _lx + _dw - ui(8), _ly + ui(4), ui(2));
 						
 						_ly += ui(8);
 						_lh += ui(8);
@@ -221,7 +221,7 @@ event_inherited();
 				
 			} else if(_val == -1) {
 				draw_set_color(CDEF.main_mdblack);
-				draw_line_width(ui(8), _ly + ui(3), _dw - ui(8), _ly + ui(3), 2);
+				draw_line_width(ui(8), _ly + ui(3), _dw - ui(8), _ly + ui(3), ui(2));
 				
 				_ly += ui(8);
 				_lh += ui(8);

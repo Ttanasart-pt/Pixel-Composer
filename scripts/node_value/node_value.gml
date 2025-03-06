@@ -1605,13 +1605,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(tags == VALUE_TAG.updateInTrigger || tags == VALUE_TAG.updateOutTrigger) return true;
 		
-		if(_update) {
-			// if(!IS_PLAYING)  // If you have to uncomment this. PLEASE comment the reason why so I don't have to comment it out again.
+		if(_update) { // This part used to have !IS_PLAYING
 			node.triggerRender();
 			node.valueUpdate(self.index);
-			
-			if(!IS_PLAYING) // can't wait to comment this one
-				node.clearCacheForward();
+			node.clearCacheForward();
 		}
 		
 		if(fullUpdate) RENDER_ALL

@@ -21,7 +21,7 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 	
 	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
-	for(var i = input_len, n = array_length(inputs); i < n; i++) inputs[i].rejectArray();
+	array_foreach(inputs, function(i) /*=>*/ {return i.rejectArray()});
 	
 	attribute_surface_depth();
 	attribute_interpolation();
@@ -50,8 +50,6 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 			_outSurf = surface_verify(_outSurf, array_safe_get_fast(_dim, 0, 1), array_safe_get_fast(_dim, 1, 1), attrDepth());
 			outputs[0].setValue(_outSurf);
 		}
-		
-		if(IS_PLAYING) clearCache();
 	}
 	
 	static reLoop = function() {

@@ -10,7 +10,7 @@ function Node_Zigzag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	newInput(0, nodeValue_Dimension(self));
 	
-	newInput(1, nodeValue_Int("Amount", self, 1))
+	newInput(1, nodeValue_Float("Amount", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] })
 		.setMappable(6);
 		
@@ -35,12 +35,14 @@ function Node_Zigzag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		.setMappable(7);
 		
 	newInput(9, nodeValue_Surface("Mask", self));
+		
+	newInput(10, nodeValue_Slider("Threshold", self, .5));
 	
 	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
 		["Output",  false], 0, 9, 
-		["Pattern",	false], 1, 6, 2, 8, 
+		["Pattern",	false], 1, 6, 2, 8, 10,  
 		["Render",	false], 5, 3, 4, 
 	];
 	
@@ -72,6 +74,9 @@ function Node_Zigzag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _col1 = _data[3];
 		var _col2 = _data[4];
 		var _bnd  = _data[5];
+		var _thr  = _data[10];
+		
+		inputs[10].setVisible(_bnd != 1);
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
@@ -83,6 +88,7 @@ function Node_Zigzag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			shader_set_i("blend",      _bnd);
 			shader_set_color("col1",   _col1);
 			shader_set_color("col2",   _col2);
+			shader_set_f("threshold",  _thr);
 			
 			draw_sprite_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], 0, c_white, 1);
 		surface_reset_shader();
