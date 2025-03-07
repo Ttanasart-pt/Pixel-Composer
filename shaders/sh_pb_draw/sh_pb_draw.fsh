@@ -8,6 +8,7 @@ uniform int   type;
 uniform vec4  color;
 uniform float intensity;
 uniform int   empty;
+uniform int   subtract;
 
 uniform int   pattern;
 uniform vec4  pattern_color;
@@ -15,6 +16,7 @@ uniform float pattern_inten;
 uniform vec2  pattern_scale;
 uniform vec2  pattern_pos;
 uniform int   pattern_map;
+uniform float pattern_mod;
 
 uniform float stroke_thickness;
 uniform int   stroke_position;
@@ -61,6 +63,8 @@ bool patZigzag(vec2 px, vec2 sc) {
 	return ps.x == ps.y;
 }
 
+float quant(float v, float stp) { return floor(v * stp + .5) / stp; }
+
 vec4 pbPattern(int pattern, vec2 tx, vec2 pos, vec2 sc, vec4 c0) {
 	float dxy = dimension.x + dimension.y;
 	vec4  cc  = c0;
@@ -68,6 +72,7 @@ vec4 pbPattern(int pattern, vec2 tx, vec2 pos, vec2 sc, vec4 c0) {
 	
 	vec2  rx = floor(tx * dimension - pos);
 	vec2  px = floor(rx / sc);
+	float q = pattern_mod;
 	
 	     if(pattern == 2) cc = (mod(rx.x, sc.x + sc.y) < sc.y)? c0 : c1;                                          // Stripe X
 	else if(pattern == 3) cc = (mod(rx.y, sc.x + sc.y) < sc.y)? c0 : c1;                                          // Stripe Y
@@ -85,23 +90,23 @@ vec4 pbPattern(int pattern, vec2 tx, vec2 pos, vec2 sc, vec4 c0) {
 	else if(pattern == 15) cc = (rx.x + px.y >= dxy / 2.)?                 c1 : c0;                               // Half D0
 	else if(pattern == 16) cc = (rx.x + (dimension.x - px.y) >= dxy / 2.)? c1 : c0;                               // Half D1
 	
-	else if(pattern == 18) cc = mix(c0, c1, clamp(px.x / dimension.x, 0., 1.));                                   // Gradient X
-	else if(pattern == 19) cc = mix(c0, c1, clamp(px.y / dimension.y, 0., 1.));                                   // Gradient Y
-	else if(pattern == 20) cc = mix(c0, c1, clamp((px.x + px.y) / dxy, 0., 1.));                                  // Gradient D0
-	else if(pattern == 21) cc = mix(c0, c1, clamp((px.x + (dimension.x - px.y)) / dxy, 0., 1.));                  // Gradient D1
+	else if(pattern == 18) cc = mix(c0, c1, quant(clamp(px.x / dimension.x, 0., 1.), q));                         // Gradient X
+	else if(pattern == 19) cc = mix(c0, c1, quant(clamp(px.y / dimension.y, 0., 1.), q));                         // Gradient Y
+	else if(pattern == 20) cc = mix(c0, c1, quant(clamp((px.x + px.y) / dxy, 0., 1.), q));                        // Gradient D0
+	else if(pattern == 21) cc = mix(c0, c1, quant(clamp((px.x + (dimension.x - px.y)) / dxy, 0., 1.), q));        // Gradient D1
 	
-	else if(pattern == 23) cc = mix(c0, c1, (abs(clamp(px.x / dimension.x, 0., 1.) - .5) * 2.));                  // Gradient2 X
-	else if(pattern == 24) cc = mix(c0, c1, (abs(clamp(px.y / dimension.y, 0., 1.) - .5) * 2.));                  // Gradient2 Y
-	else if(pattern == 25) cc = mix(c0, c1, (abs(clamp((px.x + px.y) / dxy, 0., 1.) - .5) * 2.));                 // Gradient2 D0
-	else if(pattern == 26) cc = mix(c0, c1, (abs(clamp((px.x + (dimension.x - px.y)) / dxy, 0., 1.) - .5) * 2.)); // Gradient2 D1
+	else if(pattern == 23) cc = mix(c0, c1, quant(abs(clamp(px.x / dimension.x, 0., 1.) - .5) * 2., q));                   // Gradient2 X
+	else if(pattern == 24) cc = mix(c0, c1, quant(abs(clamp(px.y / dimension.y, 0., 1.) - .5) * 2., q));                   // Gradient2 Y
+	else if(pattern == 25) cc = mix(c0, c1, quant(abs(clamp((px.x + px.y) / dxy, 0., 1.) - .5) * 2., q));                  // Gradient2 D0
+	else if(pattern == 26) cc = mix(c0, c1, quant(abs(clamp((px.x + (dimension.x - px.y)) / dxy, 0., 1.) - .5) * 2., q));  // Gradient2 D1
 	
-	else if(pattern == 28) cc = mix(c1, c0, sqrt(pow(tx.x - pos.x - .5, 2.) / sc.x + 
-	                                             pow(tx.y - pos.y - .5, 2.) / sc.y) * 2.);                        // Gradient Circular
+	else if(pattern == 28) cc = mix(c1, c0, quant(sqrt(pow(tx.x - pos.x - .5, 2.) / sc.x + 
+	                                                   pow(tx.y - pos.y - .5, 2.) / sc.y) * 2., q));              // Gradient Circular
 	else if(pattern == 29) {                                                                                      // Gradient Radial
 		vec2  _v = (tx - pos - .5) / sc;
 		float _a = atan(_v.y, _v.x);
 		_a = (_a - floor(_a / TAU) * TAU) / TAU;
-		cc = mix(c0, c1, _a); 
+		cc = mix(c0, c1, quant(_a, 4.)); 
 	}
 	
 	else if(pattern == 31) cc = patBrick(rx.xy, sc)? c1 : c0;                                                     // Brick X
@@ -118,6 +123,8 @@ vec4 sampleTex(vec2 px) {
 	return texture2D(gm_BaseTexture, px);
 }
 
+vec4 mmix(vec4 c0, vec4 c1, float inten) { return subtract == 0? mix(c0, c1, c1.a * inten) : vec4(c0.rgb, c0.a - inten); }
+
 void main() {
 	vec2 tx     = 1. / dimension;
 	vec4 bboxtx = bbox * vec4(tx, tx);
@@ -131,7 +138,7 @@ void main() {
 	vec4 cs      = pbPattern(pattern, patx, pattern_pos, pattern_scale, color);
 	
 	if(type == 0) { // fill
-		if(isShape) gl_FragColor = mix(cc, cs, intensity);
+		if(isShape) gl_FragColor = mmix(cc, cs, intensity);
 		return;
 	}
 	
@@ -153,7 +160,7 @@ void main() {
 		else if(stroke_position == 1) isStroke =  isShape && borDist <= float(stroke_thickness);
 		else if(stroke_position == 2) isStroke = !isShape && borDist <= float(stroke_thickness);
 		
-		if(isStroke) gl_FragColor = mix(cc, cs, intensity);
+		if(isStroke) gl_FragColor = mmix(cc, cs, intensity);
 		return;
 	}
 	
@@ -171,7 +178,7 @@ void main() {
 		}
 		
 		bool isCorner = isShape && (kfill / ksize) < .5;
-		if(isCorner) gl_FragColor = mix(cc, cs, intensity);
+		if(isCorner) gl_FragColor = mmix(cc, cs, intensity);
 		return;
 	}
 	
@@ -200,10 +207,10 @@ void main() {
 				if(samp.a == 0.) { if(i < dist) { dist = i; high = 3; } break; }
 			}
 			
-			     if(high == 0) gl_FragColor = mix(cc, pbPattern(pattern, patx, pattern_pos, pattern_scale, highlight_l), intensity);
-			else if(high == 1) gl_FragColor = mix(cc, pbPattern(pattern, patx, pattern_pos, pattern_scale, highlight_r), intensity);
-			else if(high == 2) gl_FragColor = mix(cc, pbPattern(pattern, patx, pattern_pos, pattern_scale, highlight_t), intensity);
-			else if(high == 3) gl_FragColor = mix(cc, pbPattern(pattern, patx, pattern_pos, pattern_scale, highlight_b), intensity);
+			     if(high == 0) gl_FragColor = mmix(cc, pbPattern(pattern, patx, pattern_pos, pattern_scale, highlight_l), intensity);
+			else if(high == 1) gl_FragColor = mmix(cc, pbPattern(pattern, patx, pattern_pos, pattern_scale, highlight_r), intensity);
+			else if(high == 2) gl_FragColor = mmix(cc, pbPattern(pattern, patx, pattern_pos, pattern_scale, highlight_t), intensity);
+			else if(high == 3) gl_FragColor = mmix(cc, pbPattern(pattern, patx, pattern_pos, pattern_scale, highlight_b), intensity);
 			
 		}
 		

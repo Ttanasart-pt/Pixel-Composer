@@ -1184,8 +1184,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static getValue = function(_time = CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { //// Get value
 		draw_junction_index = type;
-		if(type == VALUE_TYPE.trigger)
-			return _getValue(_time, false, 0, false);
+		if(type == VALUE_TYPE.trigger) return _getValue(_time, false, 0, false);
 		
 		if(useCache && use_cache) {
 			var cache_hit = cache_value[0];

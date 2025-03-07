@@ -46,12 +46,12 @@ function Node_PB_Draw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		newInput(_index + 1, nodeValue_c(  "Color",     self, cola(c_white)));
 		newInput(_index + 2, nodeValue_s(  "Intensity", self, 1));
 		
-		newInput(_index + 3, nodeValue_es( "Pattern",           self, 0, { data: fill_pattern_scroll_data, horizontal: true, text_pad: ui(16) } ));
-		newInput(_index + 4, nodeValue_c(  "Pattern Color",     self, cola(c_white)));
-		newInput(_index + 5, nodeValue_s(  "Pattern Intensity", self, 1));
-		newInput(_index + 6, nodeValue_2(  "Pattern Scale",     self, [1,1]));
-		newInput(_index + 7, nodeValue_2(  "Pattern Position",  self, [0,0]));
-		newInput(_index + 8, nodeValue_b(  "Pattern Map BBOX",  self, false));
+		newInput(_index + 3, nodeValue_es( "Pattern",    self, 0, { data: fill_pattern_scroll_data, horizontal: true, text_pad: ui(16) } ));
+		newInput(_index + 4, nodeValue_c(  "Color",      self, cola(c_white)));
+		newInput(_index + 5, nodeValue_s(  "Intensity",  self, 1));
+		newInput(_index + 6, nodeValue_2(  "Scale",      self, [1,1]));
+		newInput(_index + 7, nodeValue_2(  "Position",   self, [0,0]));
+		newInput(_index + 8, nodeValue_b(  "Map BBOX",   self, false));
 		
 		// Stroke
 		newInput(_index +  9, nodeValue_i(  "Thickness", self, 1));
@@ -59,7 +59,7 @@ function Node_PB_Draw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		newInput(_index + 11, nodeValue_eb( "Corner",    self, 0, array_create(2, THEME.stroke_profile)  ));
 		
 		// Corner
-		newInput(_index + 12, nodeValue_i(  "Radius",   self, 1));
+		newInput(_index + 12, nodeValue_i(  "Radius",    self, 1));
 		
 		// Highlight
 		newInput(_index + 13, nodeValue_i(  "Width",        self, [ 0, 0, 0, 0 ])).setDisplay(VALUE_DISPLAY.padding);
@@ -67,6 +67,9 @@ function Node_PB_Draw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		newInput(_index + 15, nodeValue_c(  "Color Right",  self, cola(c_white)));
 		newInput(_index + 16, nodeValue_c(  "Color Top",    self, cola(c_white)));
 		newInput(_index + 17, nodeValue_c(  "Color Bottom", self, cola(c_white)));
+		
+		newInput(_index + 18, nodeValue_f(  "Modify",       self, 4));
+		newInput(_index + 19, nodeValue_b(  "Subtract",     self, false));
 		
 		refreshDynamicDisplay();
 		return inputs[_index];
@@ -181,9 +184,9 @@ function Node_PB_Draw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	});
 	
 	input_display_dynamic = [ 0, 
-		["Properties", false],  2,  9, 10, 11, 12, 13,
+		["Properties", false],  2,  9, 10, 11, 12, 13, 19, 
 		["Base Color", false],  1, 14, 15, 16, 17, 
-		["Pattern",    false],  3,  4,  5,  6,  7,  8, 
+		["Pattern",    false],  3,  4,  5,  6,  7,  8, 18, 
 	];
 	
 	input_display_list = [
@@ -193,7 +196,7 @@ function Node_PB_Draw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	]
 	
 	input_display_shape_index = array_length(input_display_list) - 2;
-	setDynamicInput(18, false);
+	setDynamicInput(20, false);
 	if(!LOADING && !APPENDING) run_in(1, function() /*=>*/ {return createNewInput()});
 	
 	temp_surfaces = [ 0, 0 ];
@@ -241,6 +244,7 @@ function Node_PB_Draw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		inputs[_ind +  6].setVisible(_patt > 0);
 		inputs[_ind +  7].setVisible(_patt > 0);
 		inputs[_ind +  8].setVisible(_patt > 0);
+		inputs[_ind + 18].setVisible(_patt > 0);
 		
 		inputs[_ind +  9].setVisible(_type == PB_EFFECT_TYPES.stroke);
 		inputs[_ind + 10].setVisible(_type == PB_EFFECT_TYPES.stroke);
@@ -289,6 +293,7 @@ function Node_PB_Draw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				shader_set_i("empty",     i == 0 );
 				shader_set_2("dimension", _dim );
 				shader_set_4("bbox",      _bbox);
+				shader_set_i("subtract",  _data[_ind + 19]);
 				
 				shader_set_i("type",            _data[_ind +  0]);
 				shader_set_c("color",           _data[_ind +  1]);
@@ -300,6 +305,7 @@ function Node_PB_Draw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				shader_set_2("pattern_scale",   _data[_ind +  6]);
 				shader_set_2("pattern_pos",     _data[_ind +  7]);
 				shader_set_i("pattern_map",     _data[_ind +  8]);
+				shader_set_f("pattern_mod",     _data[_ind + 18]);
 				
 				shader_set_f("stroke_thickness",_data[_ind +  9]);
 				shader_set_i("stroke_position", _data[_ind + 10]);
@@ -307,11 +313,11 @@ function Node_PB_Draw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				
 				shader_set_f("corner_radius",   _data[_ind + 12]);
 				
-				shader_set_4("highlight_width", _data[_ind + 13] );
-				shader_set_c("highlight_l",     _data[_ind + 14] );
-				shader_set_c("highlight_r",     _data[_ind + 15] );
-				shader_set_c("highlight_t",     _data[_ind + 16] );
-				shader_set_c("highlight_b",     _data[_ind + 17] );
+				shader_set_4("highlight_width", _data[_ind + 13]);
+				shader_set_c("highlight_l",     _data[_ind + 14]);
+				shader_set_c("highlight_r",     _data[_ind + 15]);
+				shader_set_c("highlight_t",     _data[_ind + 16]);
+				shader_set_c("highlight_b",     _data[_ind + 17]);
 			
 				draw_surface_safe(temp_surfaces[!bg]);
 			surface_reset_shader();

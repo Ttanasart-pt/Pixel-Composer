@@ -11,9 +11,7 @@ function __NodeValue_Trigger(_name, _node, _value, _tooltip = "") : NodeValue(_n
 		return val;
 	}
 	
-	static __getAnimValue = function(_time = CURRENT_FRAME) {
-		return array_empty(animator.values)? 0 : animator.values[0].value;
-	}
+	static __getAnimValue = function(_time = CURRENT_FRAME) { return animator.getValue(_time); }
 	
 	static arrayLength = arrayLengthSimple;
 }

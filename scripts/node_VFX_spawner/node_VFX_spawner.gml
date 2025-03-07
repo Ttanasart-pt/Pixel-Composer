@@ -3,12 +3,10 @@ function Node_VFX_Spawner(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y
 	color  = COLORS.node_blend_vfx;
 	icon   = THEME.vfx;
 	reloop = true;
-	
-	manual_ungroupable	 = false;
+	manual_ungroupable = false;
 	
 	attributes.Output_pool = false;
-	array_push(attributeEditors, ["Output all particles", function() /*=>*/ {return attributes.Output_pool},
-		new checkBox(function() /*=>*/ { attributes.Output_pool = !attributes.Output_pool; }) ]);
+	array_push(attributeEditors, ["Output all particles", function() /*=>*/ {return attributes.Output_pool}, new checkBox(function() /*=>*/ { attributes.Output_pool = !attributes.Output_pool; }) ]);
 	
 	inputs[21].setVisible(false, false);
 	

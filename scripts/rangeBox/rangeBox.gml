@@ -23,16 +23,15 @@ function rangeBox(_type, _onModify) : widget() constructor {
 	}
 	
 	labels = [ "min", "max" ];
-	onModifySingle[0] = function(val) { return onModifyIndex(toNumber(val), 0); }
-	onModifySingle[1] = function(val) { return onModifyIndex(toNumber(val), 1); }
+	onModifySingle[0] = function(v) /*=>*/ {return onModifyIndex(toNumber(v), 0)};
+	onModifySingle[1] = function(v) /*=>*/ {return onModifyIndex(toNumber(v), 1)};
 	
 	extras = -1;
 	
 	for(var i = 0; i < 2; i++) {
-		tb[i] = new textBox(_type, onModifySingle[i]);
-		tb[i].slidable = true;
-		tb[i].hide     = true;
-		tb[i].label    = labels[i];
+		tb[i] = new textBox(_type, onModifySingle[i])
+		           .setHide(true)
+		           .setLabel(labels[i]);
 	}
 	
 	static setInteract = function(interactable = noone) { 
@@ -111,10 +110,12 @@ function rangeBox(_type, _onModify) : widget() constructor {
 		if(linked) {
 			tb[0].setFocusHover(active, hover);
 			tb[0].draw(_x, _y, disp_w, _h, _data[0], _m);
+			tb[0].setLabel("value");
 			
 		} else if(is_array(_data) && array_length(_data) >= 2) {
 			for(var i = 0; i < 2; i++) {
 				tb[i].setFocusHover(active, hover);
+				tb[i].setLabel(labels[i]);
 				
 				var bx  = _x + disp_w * i;
 				tb[i].draw(bx, _y, disp_w, _h, _data[i], _m);

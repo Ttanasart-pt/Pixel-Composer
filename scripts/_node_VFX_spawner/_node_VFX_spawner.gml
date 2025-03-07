@@ -15,7 +15,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	newInput(5, nodeValue_Range("Lifespan", self, [ 20, 30 ] ));
 	
-	newInput(6, nodeValue_Rotation_Random("Spawn Direction", self, [ 0, 45, 135, 0, 0 ] )); 
+	newInput(6, nodeValue_Rotation_Random("Initial Direction", self, [ 0, 45, 135, 0, 0 ] )); 
 	
 	newInput(7, nodeValue_Range("Acceleration", self, [ 0, 0 ] , { linked : true }));
 	
@@ -39,7 +39,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	newInput(17, nodeValue_Range("Spawn Size", self, [ 1, 1 ] , { linked : true }));
 	
-	newInput(18, nodeValue_Range("Spawn Velocity", self, [ 1, 2 ] ));
+	newInput(18, nodeValue_Range("Initial Velocity", self, [ 1, 2 ] ));
 	
 	newInput(19, nodeValue_Range("Gravity", self, [ 0, 0 ] , { linked : true }));
 	
@@ -54,7 +54,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	newInput(23, nodeValue_Range("Animation Speed", self, [ 1, 1 ] , { linked : true }))
 		.setVisible(false);
 	
-	newInput(24, nodeValue_Enum_Button("Scatter", self,  1, [ "Uniform", "Random" ]));
+	newInput(24, nodeValue_Enum_Button("Distribution", self,  1, [ "Uniform", "Random" ]));
 	
 	newInput(25, nodeValue_Int("Boundary Data", self, []))
 		.setArrayDepth(1)
@@ -163,10 +163,10 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		return _hh;
 	});
 	
-	input_display_list = [ 32, 48, 
+	input_display_list = [ 32, 
 		["Sprite",	   false],	    0, dynaDraw_parameter, 22, 23, 49, 26,
-		["Spawn",		true],	   27, 16, 44,  1, 51,  2,  4,  3, 30, 55, 24, new Inspector_Spacer(ui(6), true), 52,  5,
-		["Movement",	true],	   29, 53,  6, 18,
+		["Spawn",		true],	   27, 16, 44,  1, 51,  2,  4,  3, 30, 55, 24, __inspc(ui(6), true), 52,  5, 
+		["Movement",	true],     29, 53,  6, 18,
 		["Follow path", true, 45], 46, 47, 
 		["Physics",		true],	   54,  7, 19, 33, 34, 35, 36, 
 		["Ground",		true, 37], 38, 39, 40, 
@@ -210,6 +210,8 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	attributes.parameter_curves  = {};
 	
 	surfSamp = new Surface_sampler();
+	
+	////- VFX
 	
 	static spawn = function(_time = CURRENT_FRAME, _pos = -1) {
 		var _inSurf     	= getInputData( 0);
@@ -503,76 +505,29 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		getSurfaceCache();
 		
 		if(_spawn_active) {
+			var _doSpawn = false;
 			switch(_spawn_type) {
-				case 0 : if(safe_mod(_time, _spawn_delay) == 0) spawn(_time); break;
-				case 1 : if(_time >= _spawn_delay && _time < _spawn_delay + _spawn_duration) spawn(_time); break;
-				case 2 : if(_spawn_trig) spawn(_time); break;
+				case 0 : _doSpawn = safe_mod(_time, _spawn_delay) == 0;                                 break;
+				case 1 : _doSpawn = _time >= _spawn_delay && _time < _spawn_delay + _spawn_duration;    break;
+				case 2 : _doSpawn = _spawn_trig;                                                        break;
 			}
-		}
-		
-		//print($"\n===== Running VFX {_time} =====")
-		//var activeParts = 0;
-		for(var i = 0; i < array_length(parts); i++) {
-			//activeParts++;
-			parts[i].step(_time);
-		}
-		
-		//print($"Run VFX frame {_time} seed {seed}");
-		//print($"[{display_name}] Running VFX frame {_time}: {activeParts} active particles.");
 			
+			print($"Run VFX [{_time}]: {_spawn_trig}");
+			if(_doSpawn) spawn(_time);
+		}
+		
+		__time = _time;
+		array_foreach(parts, function(p) /*=>*/ {return p.step(__time)});
 		if(!_render) return;
 		
 		render(_time);
 	}
 	
-	static onStep = function() {}
+	static onPartCreate  = noone;
+	static onPartStep    = noone;
+	static onPartDestroy = noone;
 	
-	static step = function() {
-		var _inSurf = getInputData(0);
-		var _dist   = getInputData(4);
-		var _spwTyp = getInputData(16);
-		var _scatt  = getInputData(24);
-		var _turn   = getInputData(34);
-		var _usePth = getInputData(45);
-		var _direct = getInputData(29);
-		
-		inputs[24].setVisible(_dist != 2);
-		
-		inputs[ 3].setVisible(_dist != 3);
-		inputs[30].setVisible(_dist == 2, _dist == 2);
-		inputs[55].setVisible(_dist == 3, _dist == 3);
-		
-		inputs[35].setVisible(_turn[0] != 0 && _turn[1] != 0);
-		inputs[36].setVisible(_turn[0] != 0 && _turn[1] != 0);
-		
-		inputs[22].setVisible(false);
-		inputs[23].setVisible(false);
-		inputs[26].setVisible(false);
-		inputs[49].setVisible(false);
-		
-		inputs[46].setVisible(true, _usePth);
-		inputs[51].setVisible(_spwTyp == 1);
-		inputs[52].setVisible(_dist != 2 && _scatt == 0);
-		inputs[53].setVisible(_direct);
-		
-		inputs[1].setVisible(_spwTyp < 2);
-		if(_spwTyp == 0)		inputs[1].name = "Spawn delay";
-		else if(_spwTyp == 1)	inputs[1].name = "Spawn frame";
-		
-		inputs[44].setVisible(_spwTyp == 2);
-		
-		if(is_array(_inSurf)) {
-			inputs[22].setVisible(true);
-			var _type = getInputData(22);
-			if(_type == 2) {
-				inputs[23].setVisible(true);
-				inputs[26].setVisible(true);
-				inputs[49].setVisible(true);
-			}
-		}
-		
-		onStep();
-	}
+	////- Draw
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _spr = getInputData(0);
@@ -596,7 +551,61 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	 
 	static onDrawOverlay = -1;
 	
+	////- Step
+	
+	static onStep = function() {}
+	
+	static step = function() {
+		onStep();
+	}
+	
+	////- Update
+	
 	static update = function(frame = CURRENT_FRAME) {
+		#region visiblity
+			var _inSurf = getInputData(0);
+			var _dist   = getInputData(4);
+			var _spwTyp = getInputData(16);
+			var _scatt  = getInputData(24);
+			var _turn   = getInputData(34);
+			var _usePth = getInputData(45);
+			var _direct = getInputData(29);
+			
+			inputs[24].setVisible(_dist != 2);
+			
+			inputs[ 3].setVisible(_dist != 3);
+			inputs[30].setVisible(_dist == 2, _dist == 2);
+			inputs[55].setVisible(_dist == 3, _dist == 3);
+			
+			inputs[35].setVisible(_turn[0] != 0 && _turn[1] != 0);
+			inputs[36].setVisible(_turn[0] != 0 && _turn[1] != 0);
+			
+			inputs[22].setVisible(false);
+			inputs[23].setVisible(false);
+			inputs[26].setVisible(false);
+			inputs[49].setVisible(false);
+			
+			inputs[46].setVisible(true, _usePth);
+			inputs[51].setVisible(_spwTyp == 1);
+			inputs[52].setVisible(_dist != 2 && _scatt == 0);
+			inputs[53].setVisible(_direct);
+			
+			inputs[1].setVisible(_spwTyp < 2);
+			     if(_spwTyp == 0) inputs[1].name = "Spawn delay";
+			else if(_spwTyp == 1) inputs[1].name = "Spawn frame";
+			
+			inputs[44].setVisible(_spwTyp == 2);
+			
+			if(is_array(_inSurf)) {
+				inputs[22].setVisible(true);
+				var _type = getInputData(22);
+				if(_type == 2) {
+					inputs[23].setVisible(true);
+					inputs[26].setVisible(true);
+					inputs[49].setVisible(true);
+				}
+			}
+		#endregion
 		
 		var sampSrf = getInputData(56);
 		surfSamp.setSurface(sampSrf);
@@ -633,9 +642,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	static render = function() {}
 	
-	static onPartCreate  = noone;
-	static onPartStep    = noone;
-	static onPartDestroy = noone;
+	////- Serialize
 	
 	static doSerialize = function(_map) {
 		_map.part_base_length = input_len;

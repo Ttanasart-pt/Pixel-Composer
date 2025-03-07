@@ -134,11 +134,11 @@ function Inspector_Label( text, font = f_p3) constructor {
     open = true;
 }
 
+function __inspc(_h, _line = false, _coll = true, _shf = ui(2)) { return new Inspector_Spacer(_h, _line, _coll, _shf); }
 function Inspector_Spacer(_h, _line = false, _coll = true, _shf = ui(2)) constructor { 
     h    = _h;  
     line = _line;
     coll = _coll;
-    
     lshf = _shf;
 }
 

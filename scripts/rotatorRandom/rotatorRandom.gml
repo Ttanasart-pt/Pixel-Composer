@@ -9,25 +9,25 @@ function rotatorRandom(_onModify) : widget() constructor {
 	knob_hovering = noone;
 	
 	mode = 0;
-	tb_min_0 = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(val, 1); } ).setSlideStep(15); tb_min_0.hide = true;
-	tb_max_0 = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(val, 2); } ).setSlideStep(15); tb_max_0.hide = true;
-	tb_min_1 = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(val, 3); } ).setSlideStep(15); tb_min_1.hide = true;
-	tb_max_1 = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(val, 4); } ).setSlideStep(15); tb_max_1.hide = true;
+	tb_min_0 = new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ {return onModify(v, 1)}).setSlideStep(15); tb_min_0.hide = true;
+	tb_max_0 = new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ {return onModify(v, 2)}).setSlideStep(15); tb_max_0.hide = true;
+	tb_min_1 = new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ {return onModify(v, 3)}).setSlideStep(15); tb_min_1.hide = true;
+	tb_max_1 = new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ {return onModify(v, 4)}).setSlideStep(15); tb_max_1.hide = true;
 	
-	tooltip    = new tooltipSelector("Mode", [
+	tooltip  = new tooltipSelector("Mode", [
 		__txtx("widget_rotator_random_range",        "Range"), 
 		__txtx("widget_rotator_random_span",         "Span"), 
 		__txtx("widget_rotator_random_double_range", "Double Range"), 
 		__txtx("widget_rotator_random_double_span",  "Double Span")
 	]);
 	
-	static setInteract = function(interactable = noone) {
-		self.interactable = interactable;
-		tb_min_0.interactable = interactable;
-		tb_max_0.interactable = interactable;
+	static setInteract = function(i = noone) {
+		interactable = i;
+		tb_min_0.interactable = i;
+		tb_max_0.interactable = i;
 		
-		if(mode == 2 || mode == 3)	tb_min_1.interactable = interactable;
-		if(mode == 2)				tb_max_1.interactable = interactable;
+		if(mode == 2 || mode == 3)	tb_min_1.interactable = i;
+		if(mode == 2)				tb_max_1.interactable = i;
 	}
 	
 	static register = function(parent = noone) {
@@ -85,9 +85,10 @@ function rotatorRandom(_onModify) : widget() constructor {
 		var _hh = mode > 1? _h * 2 + ui(4) : _h;
 		h = h == 0? _hh : lerp_float(h, _hh, 5);
 		
-		var _kHover = dragging_index;
-		var _r  = _h;
+		var _khv = dragging_index;
+		var _r   = _h;
 		var _drawRot = _w - _r > ui(64);
+		
 		var _bs = min(_h, ui(32));
 		var _tx = _drawRot? _x + _r + ui(4) : _x;
 		var _tw = _drawRot? _w - _r - ui(4) : _w;
@@ -97,6 +98,7 @@ function rotatorRandom(_onModify) : widget() constructor {
 			case 2 :
 				draw_sprite_stretched_ext(THEME.textbox, 3, _tx, _y + _h + ui(4), _tw, _h, boxColor, 1);
 				draw_sprite_stretched_ext(THEME.textbox, 0, _tx, _y + _h + ui(4), _tw, _h, boxColor, 0.5 + 0.5 * interactable);	
+				
 			case 0 :
 			case 1 :
 				draw_sprite_stretched_ext(THEME.textbox, 3, _tx, _y, _tw, _h, boxColor, 1);
@@ -133,7 +135,7 @@ function rotatorRandom(_onModify) : widget() constructor {
 		_tw /= 2;
 		
 		switch(mode) {
-			case 0 : #region
+			case 0 : 
 				tb_min_0.setFocusHover(active, hover);
 				tb_max_0.setFocusHover(active, hover);
 		
@@ -202,9 +204,8 @@ function rotatorRandom(_onModify) : widget() constructor {
 				}
 				
 				break;
-			#endregion
 			
-			case 1 : #region
+			case 1 : 
 				tb_min_0.setFocusHover(active, hover);
 				tb_max_0.setFocusHover(active, hover);
 				
@@ -270,9 +271,8 @@ function rotatorRandom(_onModify) : widget() constructor {
 				}
 				
 				break;
-			#endregion
 			
-			case 2 : #region
+			case 2 : 
 				var _ky0 = _y + _r / 2;
 				var _ky1 = _y + _h + ui(4) + _r / 2;
 				
@@ -369,9 +369,8 @@ function rotatorRandom(_onModify) : widget() constructor {
 				}
 				
 				break;
-			#endregion
 				
-			case 3 : #region
+			case 3 : 
 				var _ky0 = _y + _r / 2;
 				var _ky1 = _y + _h + ui(4) + _r / 2;
 				
@@ -461,10 +460,9 @@ function rotatorRandom(_onModify) : widget() constructor {
 				}
 				
 				break;
-			#endregion
 		}
 		
-		knob_hovering = _kHover;
+		knob_hovering = _khv;
 		resetFocus();
 		
 		return h;
