@@ -26,9 +26,11 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 	attribute_surface_depth();
 	attribute_interpolation();
 	
-	array_insert(        input_display_list, 0,  ["Output", true], input_len + 3, input_len + 0);
-	array_push(          input_display_list,     input_len + 1, input_len + 2);
-	array_insert_before( input_display_list, 21, [ input_len + 4, input_len + 5 ]);
+	array_insert( input_display_list, 0, ["Output", true], input_len + 3, input_len + 0);
+	array_append( input_display_list,   [
+		__inspc(ui(6), true, false, ui(3)), 
+		["Render", true], input_len + 4, input_len + 5, 21, input_len + 1, input_len + 2
+	]);
 	
 	attributes.cache = true;
 	array_push(attributeEditors, "Cache");

@@ -13,11 +13,12 @@ event_inherited();
 	node_target_x_raw = 0;
 	node_target_y_raw = 0;
 	
-	junction_called   = noone;
+	junction_called = noone;
+	node_replace    = noone;
 	
-	node_list      = [];
-	node_selecting =  0;
-	node_focusing  = -1;
+	node_list       = [];
+	node_selecting  =  0;
+	node_focusing   = -1;
 	
 	node_show_connectable = false;
 	node_tooltip   = noone;
@@ -247,7 +248,8 @@ event_inherited();
 			if(PANEL_INSPECTOR) PANEL_INSPECTOR.setInspecting(_new_node);
 			
 			if(PANEL_GRAPH) {
-				if(PREFERENCES.node_add_select) PANEL_GRAPH.selectDragNode(_new_node, junction_called == noone);
+				if(PREFERENCES.node_add_select && node_replace == noone) 
+					PANEL_GRAPH.selectDragNode(_new_node, junction_called == noone);
 				var _ins = instanceof(_new_node);
 				if(struct_has(HOTKEYS, _ins)) FOCUS_STR = _ins;
 			}
@@ -267,7 +269,7 @@ event_inherited();
 			for( var i = 0, n = array_length(_node_out.outputs); i < n; i++ ) 
 				array_push(_outputs, _node_out.outputs[i]);
 			
-		} else {
+		} else { // Collection
 			var _new_list = APPEND(_node.path);
 			if(_new_list == noone) return;
 			
@@ -304,37 +306,88 @@ event_inherited();
 			}
 		}
 		
-		if(junction_called == noone) return;
-		
-		// connect to called junction
-		var _call_input = junction_called.connect_type == CONNECT_TYPE.input;
-		var _from       = junction_called.value_from;
-		var _junc_list  = _call_input? _outputs : _inputs;
-		
-		for(var i = 0; i < array_length(_junc_list); i++) {
-			var _target = _junc_list[i]; 
-			if(!_target.auto_connect) continue;
+		if(node_replace != noone) { // Replace Nodes
 			
-			if(_call_input && junction_called.isConnectableStrict(_junc_list[i]) == 1) {
-				junction_called.setFrom(_junc_list[i]);
-				_new_node.x -= _new_node.w;
-				break;
-			} 
-			
-			if(!_call_input && _junc_list[i].isConnectableStrict(junction_called) == 1) {
-				_junc_list[i].setFrom(junction_called);
-				break;
+			var _ii = 0;
+			for( var i = 0, n = array_length(node_replace.inputs); i < n; i++ ) {
+				var _inp = node_replace.inputs[i];
+				if(_inp.value_from == noone) continue;
+				
+				for(; _ii < array_length(_inputs); _ii++) {
+					var _newIn = _inputs[_ii];
+					
+					if(_newIn.type == _inp.type) {
+						_newIn.setFrom(_inp.value_from);
+						break;
+					}
+				}
 			}
+			
+			var _ii = 0;
+			for( var i = 0, n = array_length(node_replace.inputs); i < n; i++ ) {
+				var _inp = node_replace.inputs[i];
+				
+				for(; _ii < array_length(_inputs); _ii++) {
+					var _newIn = _inputs[_ii];
+					if(_newIn.value_from != noone) continue;
+					
+					if(_newIn.type == _inp.type && _newIn.name == _inp.name) {
+						_newIn.setValue(_inp.getValue());
+						break;
+					}
+				}
+			}
+			
+			var _oo = 0;
+			for( var i = 0, n = array_length(node_replace.outputs); i < n; i++ ) {
+				var _out = node_replace.outputs[i];
+				var _to  = _out.getJunctionTo();
+				if(array_empty(_to)) continue;
+				
+				for(; _oo < array_length(_outputs); _oo++) {
+					var _newOut = _outputs[_oo];
+					
+					if(_newOut.type == _out.type) {
+						for( var j = 0, m = array_length(_to); j < m; j++ )
+							if(_to[j].setFrom(_newOut)) break;
+					}
+				}
+			}
+			
+			node_replace.destroy(false);
+			return;
 		}
 		
-		if(!_call_input || _from == noone) return;
-		
-		for(var i = 0; i < array_length(_inputs); i++) {
-			var _target = _inputs[i]; 
+		if(junction_called != noone) { // Connect to called junction
+			var _call_input = junction_called.connect_type == CONNECT_TYPE.input;
+			var _from       = junction_called.value_from;
+			var _junc_list  = _call_input? _outputs : _inputs;
 			
-			if(_target.isConnectableStrict(_from) == 1) {
-				_target.setFrom(_from);
-				break;
+			for(var i = 0; i < array_length(_junc_list); i++) {
+				var _target = _junc_list[i]; 
+				if(!_target.auto_connect) continue;
+				
+				if(_call_input && junction_called.isConnectableStrict(_junc_list[i]) == 1) {
+					junction_called.setFrom(_junc_list[i]);
+					_new_node.x -= _new_node.w;
+					break;
+				} 
+				
+				if(!_call_input && _junc_list[i].isConnectableStrict(junction_called) == 1) {
+					_junc_list[i].setFrom(junction_called);
+					break;
+				}
+			}
+			
+			if(!_call_input || _from == noone) return;
+			
+			for(var i = 0; i < array_length(_inputs); i++) {
+				var _target = _inputs[i]; 
+				
+				if(_target.isConnectableStrict(_from) == 1) {
+					_target.setFrom(_from);
+					break;
+				}
 			}
 		}
 		

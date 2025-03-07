@@ -65,6 +65,7 @@ function ThemeColor() constructor {
     dialog_about_bg                     = CDEF.main_grey;
     dialog_preference_prop_bg           = CDEF.main_white;
     dialog_add_node_collection          = merge_color(CDEF.white, CDEF.orange, 0.5);
+    dialog_add_node_replace_mode        = CDEF.cyan;
     dialog_palette_divider              = CDEF.main_grey;
     dialog_notification_bg_hover        = CDEF.main_ltgrey;
     dialog_notification_bg              = CDEF.main_grey;

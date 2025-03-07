@@ -7,7 +7,7 @@ function Node_PB_FX_Shine(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	newInput(2, nodeValue_c("Colors", self, cola(c_white)));
 	
-	newInput(3, nodeValue_b("Invert", self, false));
+	newInput(3, nodeValue_b("Invert Direction", self, false));
 	
 	newInput(4, nodeValue_f("Shines", self, [ 2, 1, 1 ]))
 	    .setDisplay(VALUE_DISPLAY.number_array);
@@ -18,10 +18,14 @@ function Node_PB_FX_Shine(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	newInput(7, nodeValue_s("Intensity", self, 1));
 	
+	newInput(8, nodeValue_b("Invert Axis", self, false));
+	
+	newInput(9, nodeValue_b("Straight", self, false));
+	
 	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 0, 1, 
-	    ["Shine",  false], 5, 3, 4, 6, 
+	    ["Shine",  false], 5, 4, 9, 6, 3, 8, 
 	    ["Render", false], 2, 7, 
     ];
 	
@@ -39,6 +43,10 @@ function Node_PB_FX_Shine(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	    var _progr = _data[5];
 	    var _slope = _data[6];
 	    var _ints  = _data[7];
+	    var _invx  = _data[8];
+	    var _strg  = _data[9];
+	    
+	    inputs[6].setVisible(!_strg);
 	    
 	    surface_set_shader(_outSurf, sh_pb_fx_shine);
 	        shader_set_dim("dimension", _surf);
@@ -48,11 +56,13 @@ function Node_PB_FX_Shine(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	        
             shader_set_f("progress",    _progr);
             shader_set_i("side",        _inver);
+            shader_set_i("invAxis",     _invx);
             shader_set_f("shines",      _shine);
             shader_set_i("shineAmount", array_length(_shine));
             shader_set_f("shinesWidth", array_sum(_shine));
             shader_set_c("shineColor",  _color);
             shader_set_f("slope",       _slope);
+            shader_set_i("straight",    _strg);
             shader_set_f("intensity",   _ints);
 
 	        draw_surface_safe(_surf);

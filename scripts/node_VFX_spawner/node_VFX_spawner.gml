@@ -8,8 +8,6 @@ function Node_VFX_Spawner(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y
 	attributes.Output_pool = false;
 	array_push(attributeEditors, ["Output all particles", function() /*=>*/ {return attributes.Output_pool}, new checkBox(function() /*=>*/ { attributes.Output_pool = !attributes.Output_pool; }) ]);
 	
-	inputs[21].setVisible(false, false);
-	
 	newInput(input_len + 0, nodeValue("Spawn trigger", self, CONNECT_TYPE.input, VALUE_TYPE.node, false))
 		.setVisible(true, true);
 	

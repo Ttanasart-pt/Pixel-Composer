@@ -128,8 +128,11 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	newInput(56, nodeValue_Surface("Sample Surface", self, noone));
 	
-	for (var i = 2, n = array_length(inputs); i < n; i++)
-		inputs[i].rejectArray();
+	newInput(57, nodeValue_Bool("Use Physics", self, false ));
+	
+	newInput(58, nodeValue_Bool("Use Wiggles", self, false ));
+	
+	for (var i = 2, n = array_length(inputs); i < n; i++) inputs[i].rejectArray();
 	input_len = array_length(inputs);
 	
 	dynaDraw_parameter = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
@@ -167,14 +170,16 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		["Sprite",	   false],	    0, dynaDraw_parameter, 22, 23, 49, 26,
 		["Spawn",		true],	   27, 16, 44,  1, 51,  2,  4,  3, 30, 55, 24, __inspc(ui(6), true), 52,  5, 
 		["Movement",	true],     29, 53,  6, 18,
-		["Follow path", true, 45], 46, 47, 
-		["Physics",		true],	   54,  7, 19, 33, 34, 35, 36, 
-		["Ground",		true, 37], 38, 39, 40, 
 		["Rotation",	true],	   15,  8,  9, 
 		["Scale",		true],	   10, 17, 11, 
-		["Wiggles",		true],	   20, 41, 42, 43, 
 		["Color",		true],	   12, 28, 50, 13, 14, 56, 
-		["Render",		true],	   21, 
+		__inspc(ui(6), true, false, ui(3)), 
+		
+		["Follow path", true, 45], 46, 47, 
+		["Physics",		true, 57], 54,  7, 19, 33, 34, 35, 36, 
+		["Ground",		true, 37], 38, 39, 40, 
+		["Wiggles",		true, 58], 20, 41, 42, 43, 
+		
 	];
 	
 	attributes.part_amount = 512;
@@ -215,9 +220,12 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	static spawn = function(_time = CURRENT_FRAME, _pos = -1) {
 		var _inSurf     	= getInputData( 0);
+		var _arr_type   	= getInputData(22);
+		var _anim_speed 	= getInputData(23);
+		var _anim_stre  	= getInputData(49);
+		var _anim_end   	= getInputData(26);
 		
 		var _spawn_amount	= getInputData( 2);
-		
 		var _spawn_area 	= getInputData( 3);
 		var _distrib    	= getInputData( 4);
 		var _dist_map   	= getInputData(30);
@@ -231,6 +239,23 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		var _directRange	= getInputData(53);
 		var _velocity   	= getInputData(18);
 		
+		var _rotation   	= getInputData( 8);
+		var _rotation_speed	= getInputData( 9);
+		var _scale      	= getInputData(10);
+		var _size       	= getInputData(17);
+		var _follow     	= getInputData(15);
+		
+		var _color      	= getInputData(12);
+		var _blend      	= getInputData(28);
+		var _color_idx   	= getInputData(50);
+		var _color_idx_len  = array_length(_color_idx);
+		var _alpha      	= getInputData(13);
+		
+		//////////////////////////////////////////////////////////////////////////////
+		
+		var _path       	= getInputData(46);
+		
+		var _use_phy     	= getInputData(58);
 		var _accel      	= getInputData( 7);
 		var _grav       	= getInputData(19);
 		var _gvDir      	= getInputData(33);
@@ -239,29 +264,14 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		var _turnSc     	= getInputData(36);
 		var _friction     	= getInputData(54);
 		
-		var _follow     	= getInputData(15);
-		var _rotation   	= getInputData( 8);
-		var _rotation_speed	= getInputData( 9);
-		var _scale      	= getInputData(10);
-		var _size       	= getInputData(17);
-		
-		var _color      	= getInputData(12);
-		var _blend      	= getInputData(28);
-		var _color_idx   	= getInputData(50);
-		var _color_idx_len  = array_length(_color_idx);
-		var _alpha      	= getInputData(13);
-		
-		var _arr_type   	= getInputData(22);
-		var _anim_speed 	= getInputData(23);
-		var _anim_stre  	= getInputData(49);
-		var _anim_end   	= getInputData(26);
-		
 		var _ground     	= getInputData(37);
 		var _ground_offset	= getInputData(38);
 		var _ground_bounce	= getInputData(39);
 		var _ground_frict	= getInputData(40);
 		
-		var _path       	= getInputData(46);
+		var _use_wig     	= getInputData(57);
+		
+		//////////////////////////////////////////////////////////////////////////////
 		
 		var _posDist = [];
 		
@@ -378,8 +388,9 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			
 			var _gravity = random_range(_grav[0], _grav[1]);
 			
-			part.setPhysic(_vx, _vy, _acc, _frc, _gravity, _gvDir, _trn, _turnSc);
-			part.setWiggle(wiggle_maps);
+			part.setPhysic(_use_phy, _vx, _vy, _acc, _frc, _gravity, _gvDir, _trn, _turnSc);
+			part.setWiggle(_use_wig, wiggle_maps);
+			
 			part.setGround(_ground, _ground_offset, _ground_bounce, _ground_frict);
 			part.setTransform(_scx, _scy, curve_scale, _rot, _rot_spd, _follow);
 			part.setDraw(_color, _bld, _alp, curve_alpha);
@@ -512,7 +523,6 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 				case 2 : _doSpawn = _spawn_trig;                                                        break;
 			}
 			
-			print($"Run VFX [{_time}]: {_spawn_trig}");
 			if(_doSpawn) spawn(_time);
 		}
 		

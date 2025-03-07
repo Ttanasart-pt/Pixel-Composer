@@ -5,6 +5,7 @@
 	array_push(global.__FN_NODE_CONTEXT, function()
 	
     function panel_graph_add_node()                { CALL("graph_add_node");            PANEL_GRAPH.callAddDialog();                                                                    }
+    function panel_graph_replace_node()            { CALL("graph_replace_node");        PANEL_GRAPH.callReplaceDialog();                                                                }
     function panel_graph_focus_content()           { CALL("graph_focus_content");       PANEL_GRAPH.fullView();                                                                         }
     function panel_graph_preview_focus()           { CALL("graph_preview_focus");       PANEL_GRAPH.setCurrentPreview();                                                                }
     
@@ -73,6 +74,7 @@
 				                                                                           
     function __fnInit_Graph() {
         registerFunction("Graph", "Add Node",              "A", MOD_KEY.none,                    panel_graph_add_node            ).setMenu("graph_add_node")
+        registerFunction("Graph", "Replace Node",          "R", MOD_KEY.ctrl,                    panel_graph_replace_node        ).setMenu("graph_replace_node")
         registerFunction("Graph", "Focus Content",         "F", MOD_KEY.none,                    panel_graph_focus_content       ).setMenu("graph_focus_content")
         registerFunction("Graph", "Preview Focusing Node", "P", MOD_KEY.none,                    panel_graph_preview_focus       ).setMenu("graph_preview_focusing_node")
                                                                                         
@@ -83,7 +85,7 @@
         registerFunction("Graph", "Add Vector3",           "3", MOD_KEY.none,                    panel_graph_add_vec3            ).setMenu("graph_add_vector3")
         registerFunction("Graph", "Add Vector4",           "4", MOD_KEY.none,                    panel_graph_add_vec4            ).setMenu("graph_add_vector4")
         registerFunction("Graph", "Add Display",           "D", MOD_KEY.none,                    panel_graph_add_display         ).setMenu("graph_add_display")
-        registerFunction("Graph", "Transform Node",        "T", MOD_KEY.ctrl,                    panel_graph_add_transform       ).setMenu("graph_transform_node")
+        registerFunction("Graph", "Transform Output",      "T", MOD_KEY.ctrl,                    panel_graph_add_transform       ).setMenu("graph_transform_node")
                                                                                         
         registerFunction("Graph", "Select All",            "A", MOD_KEY.ctrl,                    panel_graph_select_all          ).setMenu("graph_select_all")
         registerFunction("Graph", "Toggle Grid",           "G", MOD_KEY.none,                    panel_graph_toggle_grid         ).setMenu("graph_toggle_grid")
@@ -779,6 +781,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
     
     menu_nodes_align        = MENU_ITEMS.graph_group_align;
     
+    menu_node_replace       = MENU_ITEMS.graph_replace_node;
     menu_node_transform     = MENU_ITEMS.graph_transform_node;
     menu_nodes_blend        = MENU_ITEMS.graph_blend;
     menu_nodes_compose      = MENU_ITEMS.graph_compose;
@@ -1497,7 +1500,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                     array_push(menu, -1, menu_node_delete_merge, menu_node_delete_cut, menu_node_duplicate, menu_node_copy);
                     if(array_empty(nodes_selecting)) array_push(menu, menu_node_copy_prop, menu_node_paste_prop);
                     
-                    array_push(menu, -1, menu_node_transform, menu_node_canvas);
+                    array_push(menu, -1, menu_node_replace, menu_node_transform, menu_node_canvas);
                     
                     if(array_length(nodes_selecting) >= 2) 
                         array_push(menu, -1, menu_nodes_align, menu_nodes_blend, menu_nodes_compose, menu_nodes_array);
@@ -2202,6 +2205,26 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         
         return _dia;
     } 
+    
+    function callReplaceDialog(ctx = getCurrentContext()) { 
+    	var _target = array_safe_get(nodes_selecting, 0, noone);
+    	if(!is(_target, Node)) return;
+    	
+    	var _dia = dialogCall(o_dialog_add_node, mouse_mx + 8, mouse_my + 8, { context: ctx });
+        
+        with(_dia) {    
+            node_target_x     = _target.x;
+            node_target_y     = _target.y;
+            node_target_x_raw = _target.x;
+            node_target_y_raw = _target.y;
+            node_replace      = _target;
+            
+            resetPosition();
+            alarm[0] = 1;
+        }
+        
+        return _dia;
+    }
     
     function drawContext() { //
         draw_set_text(f_p0, fa_left, fa_center);

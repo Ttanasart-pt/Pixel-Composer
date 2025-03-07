@@ -7,11 +7,13 @@ uniform sampler2D mask;
 
 uniform float progress;
 uniform int   side;
+uniform int   invAxis;
 uniform float shines[64];
 uniform float shinesWidth; 
 uniform int   shineAmount; 
 uniform vec4  shineColor;
 
+uniform int   straight; 
 uniform float slope; 
 uniform float intensity; 
 
@@ -26,13 +28,25 @@ void main() {
 	}
 	
 	vec2  px = floor(v_vTexcoord * dimension);
-	float tw = dimension.x + shinesWidth;
+	float ww = dimension.x;
 	
-	float ns = mix(-dimension.x - tw, dimension.x + tw, progress);
+	if(invAxis == 1) {
+		px = px.yx;
+		ww = dimension.y;
+	}
+	
+	float tw = ww + shinesWidth;
+	float ns = mix(-ww - tw, ww + tw, progress);
 	float dy = px.y / slope;
 	
-	if(side == 1) ns = ns + dy;
-	else          ns = ns + dimension.x - dy;
+	if(straight == 1) {
+		if(side == 1) ns = mix(ww + shinesWidth, -shinesWidth, progress);
+		else          ns = mix(-shinesWidth, ww + shinesWidth, progress);
+		
+	} else {
+		if(side == 1) ns = ns + dy;
+		else          ns = ns + ww - dy;
+	}
 	
 	float os = ns;
 	bool  fill = true;

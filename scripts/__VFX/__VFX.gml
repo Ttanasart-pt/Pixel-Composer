@@ -139,6 +139,9 @@ function __part(_node) : __particleObject() constructor {
 	frame  = 0;
 	params = {};
 	
+	use_phy = false;
+	use_wig = false;
+	
 	static reset = function() {
 		INLINE
 		
@@ -160,9 +163,10 @@ function __part(_node) : __particleObject() constructor {
 		
 		anim_len = is_array(surf)? array_length(surf) : 1;
 		
-		life_incr = 0;
-		life = _life;
-		life_total = life;
+		life_incr  = 0;
+		life_total = _life;
+		life       = _life;
+		
 		if(node.onPartCreate != noone) node.onPartCreate(self);
 		
 		trailLife     = 0;
@@ -174,9 +178,10 @@ function __part(_node) : __particleObject() constructor {
 		alp_history   = array_create(life);
 	}
 	
-	static setPhysic = function(_sx, _sy, _ac, _fr, _g, _gDir, _turn, _turnSpd) {
+	static setPhysic = function(_use_phy, _sx, _sy, _ac, _fr, _g, _gDir, _turn, _turnSpd) {
 		INLINE
 		
+		use_phy = _use_phy;
 		speedx  = _sx;
 		speedy  = _sy;
 		accel   = _ac;
@@ -193,9 +198,10 @@ function __part(_node) : __particleObject() constructor {
 		spVec[1] = point_direction(0, 0, speedx, speedy);
 	}
 	
-	static setWiggle = function(wiggle_maps) {
+	static setWiggle = function(_use_wig, wiggle_maps) {
 		INLINE
 		
+		use_wig = _use_wig;
 		wig_psx = wiggle_maps.wig_psx;
 		wig_psy = wiggle_maps.wig_psy;
 		wig_rot = wiggle_maps.wig_rot;
@@ -272,12 +278,13 @@ function __part(_node) : __particleObject() constructor {
 		
 		var dirr = point_direction(0, 0, speedx, speedy);
 		var diss = point_distance(0, 0, speedx, speedy);
-		    diss = max(0, diss + accel) * (1 - frict);
+		
+		if(use_phy) diss = max(0, diss + accel) * (1 - frict);
 		
 		if(speedx != 0 || speedy != 0) {
-			dirr += wig_dir.get(seed + life);
+			if(use_wig) dirr += wig_dir.get(seed + life);
 			
-			if(turning != 0) {
+			if(use_phy && turning != 0) {
 				var trn = turning;
 				
 				     if(turnSpd > 0) trn = turning * diss * turnSpd;
@@ -287,8 +294,10 @@ function __part(_node) : __particleObject() constructor {
 			}
 		}
 		
-		speedx = lengthdir_x(diss, dirr) + gravX;
-		speedy = lengthdir_y(diss, dirr) + gravY;
+		if(use_phy) {
+			speedx = lengthdir_x(diss, dirr) + gravX;
+			speedy = lengthdir_y(diss, dirr) + gravY;
+		}
 		
 		rot_base += rot_s;
 		
@@ -321,11 +330,13 @@ function __part(_node) : __particleObject() constructor {
 		drawsx  = sc_sx;
 		drawsy  = sc_sy;
 		
-		drawx   += wig_psx.get(seed + life);
-		drawy   += wig_psy.get(seed + life);
-		drawrot += wig_rot.get(seed + life);
-		drawsx  += wig_scy.get(seed + life);
-		drawsy  += wig_scy.get(seed + life);
+		if(use_wig) {
+			drawx   += wig_psx.get(seed + life);
+			drawy   += wig_psy.get(seed + life);
+			drawrot += wig_rot.get(seed + life);
+			drawsx  += wig_scy.get(seed + life);
+			drawsy  += wig_scy.get(seed + life);
+		}
 		
 		if(path != noone) {
 			var _lifeRat = clamp(1 - life / life_total, 0., 1.);
