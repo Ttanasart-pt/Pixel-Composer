@@ -96,13 +96,13 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			
 			if(_fix) {
 				for( var i = 0; i < _amo; i++ ) {
-					var p = area_get_random_point(_fixArea, _dist, _scat, i, _amo, _seed++);
+					var p = area_get_random_point(_fixArea, _dist, _scat, i, _amo, _seed + i * 16);
 					if(point_in_rectangle(p[0], p[1], aBox[0], aBox[1], aBox[2], aBox[3]))
 						array_push(pos, p);
 				} 
 			} else {
 				for( var i = 0; i < _amo; i++ )
-					pos[i] = area_get_random_point(_area, _dist, _scat, i, _amo, _seed++);
+					pos[i] = area_get_random_point(_area, _dist, _scat, i, _amo, _seed + i * 16);
 			}
 			
 		} else {
