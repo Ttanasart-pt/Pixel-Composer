@@ -190,6 +190,7 @@ function Panel_Preview() : PanelContent() constructor {
         preview_node        = [ noone, noone ];
         preview_surfaces    = [ 0, 0 ];
         preview_surface     = [ 0, 0 ];
+        preview_junction    = noone;
         tile_surface        = surface_create(1, 1);
         
         preview_x           = 0;
@@ -561,9 +562,15 @@ function Panel_Preview() : PanelContent() constructor {
     function getNodePreviewSequence() { return preview_sequence[splitView? splitSelection : 0]; }
     
     function getPreviewData() {
+    	preview_junction = noone;
+    	
+        var _prevNode = preview_node[0];
+        if(is(_prevNode, Node) && _prevNode.active)
+	        preview_junction = array_safe_get(_prevNode.outputs, _prevNode.preview_channel, noone);
+        
         preview_surfaces = [ noone, noone ];
         preview_sequence = [ noone, noone ];
-        
+            
         for( var i = 0; i < 2; i++ ) {
             var node = preview_node[i];
             
@@ -943,7 +950,7 @@ function Panel_Preview() : PanelContent() constructor {
         var _node = getNodePreview();
         if(_node) title = _node.renamed? _node.display_name : _node.name;
         
-        #region >>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Draw Surfaces <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+        #region >>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Draw Content <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
             var _ps0 = is_surface(preview_surfaces[0]);
             var _ps1 = is_surface(preview_surfaces[1]);
             
@@ -976,7 +983,9 @@ function Panel_Preview() : PanelContent() constructor {
                     draw_surface_safe(preview_surfaces[1]);
                 surface_reset_shader();
             }
+        #endregion
             
+		#region >>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Draw Surfaces <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
             if(splitView == 0 && _ps0) {
                 preview_node[0].previewing = 1;
                 
@@ -1056,6 +1065,11 @@ function Panel_Preview() : PanelContent() constructor {
                     }
                     break;
             } 
+            
+            if(preview_junction != noone && !_ps0 && !_ps1) {
+            	preview_junction.drawPreviewOverlay(canvas_x, canvas_y, canvas_s, self);
+            	preview_junction.node.previewing = 1;
+            }
         #endregion
         
         if(!instance_exists(o_dialog_menubox)) { // color sample

@@ -1,17 +1,29 @@
 function pbBoxBox(_junction) : widget() constructor {
-	junction = _junction;
-	node     = junction.node;
-	
+	junction   = _junction;
+	node       = junction.node;
 	curr_pbbox = noone;
-	locked     = false;
+	
+	locked = false;
+	linked = false;
 	var t = TEXTBOX_INPUT.number;
 	
-	tb_anchor_w = new textBox(t, function(v) /*=>*/ { curr_pbbox.anchor_w = v; node.triggerRender(); }).setLabel("w").setFont(f_p3).setAlign(fa_center).setAutoUpdate();
-	tb_anchor_h = new textBox(t, function(v) /*=>*/ { curr_pbbox.anchor_h = v; node.triggerRender(); }).setLabel("h").setFont(f_p3).setAlign(fa_center).setAutoUpdate();
-	tb_anchor_l = new textBox(t, function(v) /*=>*/ { curr_pbbox.anchor_l = v; node.triggerRender(); }).setFont(f_p3).setAlign(fa_center).setAutoUpdate();
-	tb_anchor_t = new textBox(t, function(v) /*=>*/ { curr_pbbox.anchor_t = v; node.triggerRender(); }).setFont(f_p3).setAlign(fa_center).setAutoUpdate();
-	tb_anchor_r = new textBox(t, function(v) /*=>*/ { curr_pbbox.anchor_r = v; node.triggerRender(); }).setFont(f_p3).setAlign(fa_center).setAutoUpdate();
-	tb_anchor_b = new textBox(t, function(v) /*=>*/ { curr_pbbox.anchor_b = v; node.triggerRender(); }).setFont(f_p3).setAlign(fa_center).setAutoUpdate();
+	tb_anchor_w = new textBox(t, function(v) /*=>*/ { if(linked) setLinked(v); else { curr_pbbox.anchor_w = v; node.triggerRender(); } }).setLabel("w");
+	tb_anchor_h = new textBox(t, function(v) /*=>*/ { if(linked) setLinked(v); else { curr_pbbox.anchor_h = v; node.triggerRender(); } }).setLabel("h");
+	tb_anchor_l = new textBox(t, function(v) /*=>*/ { if(linked) setLinked(v); else { curr_pbbox.anchor_l = v; node.triggerRender(); } });
+	tb_anchor_t = new textBox(t, function(v) /*=>*/ { if(linked) setLinked(v); else { curr_pbbox.anchor_t = v; node.triggerRender(); } });
+	tb_anchor_r = new textBox(t, function(v) /*=>*/ { if(linked) setLinked(v); else { curr_pbbox.anchor_r = v; node.triggerRender(); } });
+	tb_anchor_b = new textBox(t, function(v) /*=>*/ { if(linked) setLinked(v); else { curr_pbbox.anchor_b = v; node.triggerRender(); } });
+		
+	tbs = [ tb_anchor_w, tb_anchor_h, tb_anchor_l, tb_anchor_t, tb_anchor_r, tb_anchor_b ];
+	array_foreach(tbs, function(t) /*=>*/ { t.setFont(f_p3).setAlign(fa_center).setAutoUpdate(); });
+	
+	setLinked = function(v) /*=>*/ {
+		curr_pbbox.anchor_l = v;
+		curr_pbbox.anchor_t = v;
+		curr_pbbox.anchor_r = v;
+		curr_pbbox.anchor_b = v; 
+		node.triggerRender();
+	}
 	
 	tb_draw = [];
 	
@@ -73,6 +85,16 @@ function pbBoxBox(_junction) : widget() constructor {
             
             draw_set_color(COLORS._main_icon_light);
             draw_rectangle_border(_ix0, _iy0, _ix1, _iy1, 2);
+        #endregion
+        
+        #region link
+        	var bs = ui(28);
+			var bx = _x0 + ui(8);
+			var by = _y0 + ui(8);
+			var bb = linked? COLORS._main_accent : COLORS._main_icon;
+			
+			var b  = buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, _m, hover, active, "", THEME.value_link, linked, bb);
+			if(b == 2) linked = !linked;
         #endregion
         
         #region width

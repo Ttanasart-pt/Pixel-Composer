@@ -63,7 +63,8 @@ function rangeBox(_type, _onModify) : widget() constructor {
 		y = _y;
 		w = _w;
 		h = _h;
-		if(struct_has(_display_data, "linked"))	   linked	  = _display_data.linked;
+		
+		linked = _display_data[$ "linked"] ?? linked;
 		tooltip.index = linked;
 		
 		var _icon_blend = linked? COLORS._main_accent : COLORS._main_icon;

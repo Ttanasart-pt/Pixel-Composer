@@ -2,6 +2,12 @@ varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 uniform vec2  dimension;
+
+uniform int   useBox;
+uniform int   boxMode;
+uniform vec4  boxFrom;
+uniform vec4  boxTo;
+
 uniform float angle;
 uniform float extDistance;
 
@@ -27,14 +33,53 @@ void main() {
 		return;
 	}
 	
-	vec2 shf = vec2(cos(angle), -sin(angle));
-	
-	for(float i = 1.; i <= extDistance; i++) {
-		vec4 sp = texture2D(gm_BaseTexture, v_vTexcoord - shf * i * tx);
-		if(sp.a != 0.) { 
-			cc = extColor; 
-			if(cloneColor == 1) cc *= sp;
-			break; 
+	if(useBox == 0) {
+		vec2 shf = vec2(cos(angle), -sin(angle));
+		
+		for(float i = 1.; i <= extDistance; i++) {
+			vec4 sp = texture2D(gm_BaseTexture, v_vTexcoord - shf * i * tx);
+			if(sp.a != 0.) { cc = cloneColor == 1? extColor * sp : extColor; break; }
+		}
+		
+	} else if(useBox == 1) {
+		if(boxMode == 0) {
+			float bl = boxFrom.x - boxTo.x;
+			float br = boxTo.z - boxFrom.z;
+			float bt = boxFrom.y - boxTo.y;
+			float bb = boxTo.w - boxFrom.w;
+			
+			for(float i = 1.; i <= bl; i++) {
+				vec4 sp = texture2D(gm_BaseTexture, v_vTexcoord + vec2(i, 0.) * tx);
+				if(sp.a != 0.) { cc = cloneColor == 1? extColor * sp : extColor; break; }
+			}
+			
+			for(float i = 1.; i <= br; i++) {
+				vec4 sp = texture2D(gm_BaseTexture, v_vTexcoord - vec2(i, 0.) * tx);
+				if(sp.a != 0.) { cc = cloneColor == 1? extColor * sp : extColor; break; }
+			}
+			
+			for(float i = 1.; i <= bt; i++) {
+				vec4 sp = texture2D(gm_BaseTexture, v_vTexcoord + vec2(0., i) * tx);
+				if(sp.a != 0.) { cc = cloneColor == 1? extColor * sp : extColor; break; }
+			}
+			
+			for(float i = 1.; i <= bb; i++) {
+				vec4 sp = texture2D(gm_BaseTexture, v_vTexcoord - vec2(0., i) * tx);
+				if(sp.a != 0.) { cc = cloneColor == 1? extColor * sp : extColor; break; }
+			}
+			
+		} else if(boxMode == 1) {
+			float dx = ((boxTo.x + boxTo.z) - (boxFrom.x + boxFrom.z)) / 2.;
+			float dy = ((boxTo.y + boxTo.w) - (boxFrom.y + boxFrom.w)) / 2.;
+			
+			vec2  dd  = vec2(dx, dy);
+			vec2  shf = normalize(dd);
+			float dst = length(dd);
+			
+			for(float i = 1.; i <= ceil(dst); i++) {
+				vec4 sp = texture2D(gm_BaseTexture, v_vTexcoord - shf * min(i, dst) * tx);
+				if(sp.a != 0.) { cc = cloneColor == 1? extColor * sp : extColor; break; }
+			}
 		}
 	}
 	

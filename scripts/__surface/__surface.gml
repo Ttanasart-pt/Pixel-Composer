@@ -14,8 +14,6 @@ function Atlas(_surface, _x = 0, _y = 0, _rot = 0, _sx = 1, _sy = 1, _blend = c_
 	static getSurface = function() /*=>*/ {return surface};
 	
 	static set = function(_surface, _x = 0, _y = 0, _rot = 0, _sx = 1, _sy = 1, _blend = c_white, _alpha = 1, setDim = true) {
-		INLINE
-		
 		surface  = _surface;
 		x        = _x;
 		y        = _y;
@@ -28,7 +26,11 @@ function Atlas(_surface, _x = 0, _y = 0, _rot = 0, _sx = 1, _sy = 1, _blend = c_
 		return self;
 	}
 	
-	static draw = function() {}
+	static draw = function(_x = 0, _y = 0, _s = 1) {
+		var _surf = getSurface();
+		draw_surface_ext_safe(_surf, _x + x * _s, _y + y * _s, sx * _s, sy * _s, rotation, blend, alpha);
+		return self;
+	}
 	
 }
 
@@ -46,8 +48,6 @@ function SurfaceAtlas(    _surface, _x = 0, _y = 0, _rot = 0, _sx = 1, _sy = 1, 
 	
 	__base_set = set;
 	static set = function(_surface, _x = 0, _y = 0, _rot = 0, _sx = 1, _sy = 1, _blend = c_white, _alpha = 1, setDim = true) {
-		INLINE
-		
 		__base_set(_surface, _x, _y, _rot, _sx, _sy, _blend, _alpha);
 		surface  = new Surface(_surface);
 		
@@ -58,8 +58,6 @@ function SurfaceAtlas(    _surface, _x = 0, _y = 0, _rot = 0, _sx = 1, _sy = 1, 
 	}
 	
 	static setOrginalSurface = function(_surface) {
-		INLINE
-		
 		oriSurf   = _surface;
 		oriSurf_w = surface_get_width_safe(_surface);
 		oriSurf_h = surface_get_height_safe(_surface);
@@ -67,17 +65,9 @@ function SurfaceAtlas(    _surface, _x = 0, _y = 0, _rot = 0, _sx = 1, _sy = 1, 
 	}
 	
 	static setSurface = function(_surface) {
-		INLINE
-		
 		surface.set(_surface);
 		w = surface_get_width_safe(_surface);
 		h = surface_get_height_safe(_surface);
-	}
-	
-	static draw = function(submitInt = false) {
-		var _surf = getSurface();
-		draw_surface_ext_safe(_surf, x, y, sx, sy, rotation, blend, alpha);
-		return self;
 	}
 	
 	static clone = function(_cloneSurf = false) {
@@ -89,8 +79,6 @@ function SurfaceAtlas(    _surface, _x = 0, _y = 0, _rot = 0, _sx = 1, _sy = 1, 
 
 function Surface(_surf) constructor {
 	static set = function(_surf) {
-		INLINE
-		
 		self.surface = _surf;
 		w = surface_get_width_safe(_surf);
 		h = surface_get_height_safe(_surf);
@@ -103,34 +91,28 @@ function Surface(_surf) constructor {
 	static isValid = function() /*=>*/ {return is_surface(surface)};
 	
 	static resize = function(_w, _h) { 
-		INLINE
 		surface_resize(surface, _w, _h);
 		w = _w; h = _h;
 		return self;
 	}
 	
 	static draw = function(_x, _y, xs = 1, ys = 1, rot = 0, col = c_white, alpha = 1) { 
-		INLINE
 		draw_surface_ext_safe(surface, _x, _y, xs, ys, rot, col, alpha);
 		return self; 
 	}
 	
 	static drawStretch = function(_x, _y, _w = 1, _h = 1, rot = 0, col = c_white, alpha = 1) { 
-		INLINE
 		draw_surface_stretched_ext(surface, _x, _y, _w, _h, col, alpha);
 		return self; 
 	}
 	
 	static destroy = function() {
-		INLINE
 		if(!isValid()) return;
 		surface_free(surface);
 	}
 }
 
 function Surface_get(_surf) {
-	INLINE
-		
 	if(is_real(_surf)) 
 		return _surf;
 	if(is_struct(_surf) && struct_has(_surf, "surface")) 

@@ -132,7 +132,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	newInput(58, nodeValue_Bool("Use Wiggles", self, false ));
 	
-	for (var i = 2, n = array_length(inputs); i < n; i++) inputs[i].rejectArray();
+	array_foreach(inputs, function(i) /*=>*/ {return i.rejectArray()}, 1);
 	input_len = array_length(inputs);
 	
 	dynaDraw_parameter = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {

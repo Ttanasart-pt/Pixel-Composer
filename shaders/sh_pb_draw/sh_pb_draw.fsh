@@ -6,9 +6,12 @@ uniform vec4  bbox;
 
 uniform int   type;
 uniform vec4  color;
+uniform float seed;
 uniform float intensity;
 uniform int   empty;
 uniform int   subtract;
+uniform float progress;
+uniform float direction;
 
 uniform int   pattern;
 uniform vec4  pattern_color;
@@ -30,7 +33,15 @@ uniform vec4  highlight_r;
 uniform vec4  highlight_t;
 uniform vec4  highlight_b;
 
+uniform int   shines_axis; 
+uniform float shines[64];
+uniform int   shines_amount; 
+uniform float shines_width; 
+uniform float shines_slope; 
+
 #define TAU 6.283185307179586
+
+float random (in vec2 st) { return fract(sin(dot(st.xy + seed / 1000., vec2(1892.9898, 78.23453))) * 437.54123); }
 
 bool patDiag(vec2 px, vec2 sc) {
 	vec2 _px = mod(px, sc + 1.);
@@ -57,10 +68,20 @@ bool patGridDiag(vec2 px, vec2 sc) {
 bool patBrick(vec2 px, vec2 sc) { return (mod(px.x + mod(floor(px.y / (sc.y + 1.)), 2.) * sc.x, sc.x * 2. + 1.) < 1.) || mod(px.y, sc.y + 1.) < 1.; }
 
 bool patZigzag(vec2 px, vec2 sc) { 
-	vec2 bl = floor(px / sc);
-	vec2 ps = mod(px, sc);
+	vec2 bl = floor(px / vec2(sc.x));
+	vec2 ps = mod(px, vec2(sc.x));
 	if(mod(bl.x, 2.) < 1.) ps.x = sc.x - ps.x - 1.;
-	return ps.x == ps.y;
+	return abs(ps.x - ps.y) < sc.y / sc.x;
+}
+
+bool patHalfZigzag(vec2 rx, vec2 sc) { 
+	float thr = dimension.y / 2. - sc.y / 2. + abs(mod(rx.x, sc.x * 2.) - sc.x) * sc.y / sc.x;
+	return rx.y > thr; 
+}
+
+bool patHalfWave(vec2 rx, vec2 sc) { 
+	float thr = dimension.y / 2. + sin(rx.x / dimension.x * sc.x * TAU) * sc.y / 2.;
+	return rx.y > thr; 
 }
 
 float quant(float v, float stp) { return floor(v * stp + .5) / stp; }
@@ -80,7 +101,7 @@ vec4 pbPattern(int pattern, vec2 tx, vec2 pos, vec2 sc, vec4 c0) {
 	else if(pattern == 5) cc = (mod(rx.x - rx.y, sc.x + sc.y) < sc.y)? c0 : c1;                                   // Stripe D1
 	
 	else if(pattern == 7) cc = (mod(px.x + px.y, 2.) < 1.)? c0 : c1;                                              // Checker
-	else if(pattern == 8) cc = patDiag(rx, sc)? c0 : c1;                                                          // Checker Diag
+	else if(pattern == 8) cc = patDiag(rx, sc * 2.)? c0 : c1;                                                     // Checker Diag
 	
 	else if(pattern == 10) cc = patGrid(rx, sc)? c1 : c0;                                                         // Grid
 	else if(pattern == 11) cc = patGridDiag(rx, sc)? c1 : c0;                                                     // Grid Diag
@@ -109,11 +130,20 @@ vec4 pbPattern(int pattern, vec2 tx, vec2 pos, vec2 sc, vec4 c0) {
 		cc = mix(c0, c1, quant(_a, 4.)); 
 	}
 	
-	else if(pattern == 31) cc = patBrick(rx.xy, sc)? c1 : c0;                                                     // Brick X
+	if(pattern < 30) return cc;
+	
+	     if(pattern == 31) cc = patBrick(rx.xy, sc)? c1 : c0;                                                     // Brick X
 	else if(pattern == 32) cc = patBrick(rx.yx, sc)? c1 : c0;                                                     // Brick Y
 	
 	else if(pattern == 34) cc = patZigzag(rx.xy, sc)? c1 : c0;                                                    // Zigzag X
 	else if(pattern == 35) cc = patZigzag(rx.yx, sc)? c1 : c0;                                                    // Zigzag Y
+	else if(pattern == 36) cc = patHalfZigzag(rx.xy, sc)? c1 : c0;                                                // Half Zigzag X
+	else if(pattern == 37) cc = patHalfZigzag(rx.yx, sc)? c1 : c0;                                                // Half Zigzag Y
+	
+	else if(pattern == 39) cc = patHalfWave(rx.xy, sc)? c1 : c0;                                                  // Half Wave X
+	else if(pattern == 40) cc = patHalfWave(rx.yx, sc)? c1 : c0;                                                  // Half Wave Y
+	
+	else if(pattern == 42) cc = random(px.xy) < pattern_inten? pattern_color : c0;                                // Noise
 	
 	return cc;
 }
@@ -148,6 +178,7 @@ void main() {
 		
 		for(float i = -stroke_thickness; i <= stroke_thickness; i++)
 		for(float j = -stroke_thickness; j <= stroke_thickness; j++) {
+			if(abs(i) > stroke_thickness) break;
 			vec4 samp = sampleTex(v_vTexcoord + vec2(i, j) * tx);
 			
 			if(samp.a == borCond)
@@ -165,56 +196,102 @@ void main() {
 	}
 	
 	if(type == 2) { // corner
-			
+		if(!isShape) return;
+		
 		float kfill = 0.;
 		float ksize = 0.;
 		
 		for(float i = -corner_radius; i <= corner_radius; i++)
 		for(float j = -corner_radius; j <= corner_radius; j++) {
+			if(abs(i) > corner_radius) break;
 			vec4 samp = sampleTex(v_vTexcoord + vec2(i, j) * tx);
 			
 			ksize++;
 			kfill += samp.a;
 		}
 		
-		bool isCorner = isShape && (kfill / ksize) < .5;
+		bool isCorner = (kfill / ksize) < .5;
 		if(isCorner) gl_FragColor = mmix(cc, cs, intensity);
 		return;
 	}
 	
 	if(type == 3) { // highlight
-		if(isShape) {
-			int   high = -1;
-			float dist = 9999.;
+		if(!isShape) return;
+		
+		int   high = -1;
+		float dist = 9999.;
+		
+		for(float i = 1.; i <= highlight_width[2]; i++) {
+			vec4 samp = sampleTex(v_vTexcoord + vec2(-1., 0.) * i * tx);
+			if(samp.a == 0.) { if(i < dist) { dist = i; high = 0; } break; }
+		}
+		
+		for(float i = 1.; i <= highlight_width[0]; i++) {
+			vec4 samp = sampleTex(v_vTexcoord + vec2( 1., 0.) * i * tx);
+			if(samp.a == 0.) { if(i < dist) { dist = i; high = 1; } break; }
+		}
+		
+		for(float i = 1.; i <= highlight_width[1]; i++) {
+			vec4 samp = sampleTex(v_vTexcoord + vec2(0., -1.) * i * tx);
+			if(samp.a == 0.) { if(i < dist) { dist = i; high = 2; } break; }
+		}
+		
+		for(float i = 1.; i <= highlight_width[3]; i++) {
+			vec4 samp = sampleTex(v_vTexcoord + vec2(0.,  1.) * i * tx);
+			if(samp.a == 0.) { if(i < dist) { dist = i; high = 3; } break; }
+		}
+		
+		     if(high == 0) gl_FragColor = mmix(cc, pbPattern(pattern, patx, pattern_pos, pattern_scale, highlight_l), intensity);
+		else if(high == 1) gl_FragColor = mmix(cc, pbPattern(pattern, patx, pattern_pos, pattern_scale, highlight_r), intensity);
+		else if(high == 2) gl_FragColor = mmix(cc, pbPattern(pattern, patx, pattern_pos, pattern_scale, highlight_t), intensity);
+		else if(high == 3) gl_FragColor = mmix(cc, pbPattern(pattern, patx, pattern_pos, pattern_scale, highlight_b), intensity);
+		return;
+	}
+	
+	if(type == 4) { // Extrude
+		if(isShape) return;
+		
+		vec2 shf = vec2(cos(direction), -sin(direction));
+		for(float i = 1.; i <= 16.; i++) {
+			if(i > stroke_thickness) break;
 			
-			for(float i = 1.; i <= highlight_width[2]; i++) {
-				vec4 samp = sampleTex(v_vTexcoord + vec2(-1., 0.) * i * tx);
-				if(samp.a == 0.) { if(i < dist) { dist = i; high = 0; } break; }
+			vec4 sp = sampleTex(v_vTexcoord - shf * i * tx);
+			if(sp.a != 0.) { 
+				gl_FragColor = mmix(cc, cs, intensity);
+				break; 
+			}
+		}
+		return;
+	}
+	
+	if(type == 5) { // Shine
+		if(!isShape) return;
+		
+		vec2  px = floor(v_vTexcoord * dimension);
+		if(shines_axis == 1) px = px.yx;
+	
+		float ww = shines_axis == 0? dimension.x : dimension.y;
+		float ns = 0.;
+		
+		if(shines_slope == 0.) ns = mix(-shines_width, ww + shines_width, progress);
+		else ns = mix(-shines_width, ww + ww + shines_width, progress) - px.y / shines_slope;
+		
+		float os = ns;
+		bool  fill = true;
+		
+		for(int i = 0; i < shines_amount; i++) {
+			float _shine = shines[i];
+			ns += _shine;
+			
+			if(fill && px.x > os && px.x <= ns) {
+				gl_FragColor = mmix(cc, cs, intensity);
+				break;
 			}
 			
-			for(float i = 1.; i <= highlight_width[0]; i++) {
-				vec4 samp = sampleTex(v_vTexcoord + vec2( 1., 0.) * i * tx);
-				if(samp.a == 0.) { if(i < dist) { dist = i; high = 1; } break; }
-			}
-			
-			for(float i = 1.; i <= highlight_width[1]; i++) {
-				vec4 samp = sampleTex(v_vTexcoord + vec2(0., -1.) * i * tx);
-				if(samp.a == 0.) { if(i < dist) { dist = i; high = 2; } break; }
-			}
-			
-			for(float i = 1.; i <= highlight_width[3]; i++) {
-				vec4 samp = sampleTex(v_vTexcoord + vec2(0.,  1.) * i * tx);
-				if(samp.a == 0.) { if(i < dist) { dist = i; high = 3; } break; }
-			}
-			
-			     if(high == 0) gl_FragColor = mmix(cc, pbPattern(pattern, patx, pattern_pos, pattern_scale, highlight_l), intensity);
-			else if(high == 1) gl_FragColor = mmix(cc, pbPattern(pattern, patx, pattern_pos, pattern_scale, highlight_r), intensity);
-			else if(high == 2) gl_FragColor = mmix(cc, pbPattern(pattern, patx, pattern_pos, pattern_scale, highlight_t), intensity);
-			else if(high == 3) gl_FragColor = mmix(cc, pbPattern(pattern, patx, pattern_pos, pattern_scale, highlight_b), intensity);
-			
+			fill = !fill;
+			os   = ns;
 		}
 		
 		return;
 	}
-	
 }

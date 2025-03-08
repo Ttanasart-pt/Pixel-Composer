@@ -13,16 +13,27 @@ function Node_PB_FX_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput(6, nodeValue_c(  "Highlight Color",     self, cola(c_white)));
 	newInput(7, nodeValue_r(  "Highlight Direction", self, 0));
 	
+	newInput( 8, nodeValue_Pbbox("Shape PBBOX",   self, new __pbBox()));
+	newInput( 9, nodeValue_Pbbox("Target PBBOX",  self, new __pbBox()));
+	newInput(10, nodeValue_Bool("Use PBBOX",      self, true));
+	newInput(11, nodeValue_es("PBBOX Mode",       self, 0, [ "4 Directions", "Extends" ]));
+	
 	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
-	input_display_list = [ 0,
-	    ["Extrude",    false], 1, 2, 
-	    ["Render",     false], 3, 4, 
-	    ["Highlight",  false, 5], 7, 6, 
+	input_display_list = [
+	    ["PBBOX",       true, 10], 8, 9, 11, 
+	    ["Surface",    false    ], 0, 
+	    ["Extrude",    false    ], 1, 2, 
+	    ["Render",     false    ], 3, 4, 
+	    ["Highlight",  false,  5], 7, 6, 
     ];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		// inputs[1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		var _pbbox = getSingleValue(8);
+		if(is(_pbbox, __pbBox)) _pbbox.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, self);
+		
+		var _pbbox = getSingleValue(9);
+		if(is(_pbbox, __pbBox)) _pbbox.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, self);
 	}
 	
 	static step = function() {}
@@ -39,8 +50,20 @@ function Node_PB_FX_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	    var _hgcl = _data[6];
 	    var _hdir = _data[7];
 	    
+	    var _usePB  = _data[10];
+	    var _pbMode = _data[11];
+	    var _pbFr   = _data[8];
+	    var _pbTo   = _data[9];
+	    
+	    var _boxFr = _pbFr.getBBOX();
+	    var _boxTo = _pbTo.getBBOX();
+	    
 	    surface_set_shader(_outSurf, sh_pb_fx_extrude);
 	        shader_set_dim("dimension",  _surf);
+			shader_set_i("useBox",       _usePB);
+			shader_set_i("boxMode",      _pbMode);
+			shader_set_4("boxFrom",      _boxFr);
+			shader_set_4("boxTo",        _boxTo);
 			shader_set_f("angle",        degtorad(_ang));
 			shader_set_f("extDistance",  _dist);
 			

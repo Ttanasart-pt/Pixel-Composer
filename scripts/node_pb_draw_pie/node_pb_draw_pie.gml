@@ -18,8 +18,8 @@ function Node_PB_Draw_Pie(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _group)
 		var _corn = _data[pbi+0];
 		var _cx = _x0;
 		var _cy = _y0;
-		var _cw = (_x1 - _x0) / 2;
-		var _ch = (_y1 - _y0) / 2;
+		var _cw = _x1 - _x0;
+		var _ch = _y1 - _y0;
 		
 		switch(_corn) {
 		    case 0 : _cx = _x0; _cy = _y0; break;
@@ -31,7 +31,7 @@ function Node_PB_Draw_Pie(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _group)
 		var scr = gpu_get_scissor();
 		gpu_set_scissor(_x0 + 1, _y0 + 1, _x1 - _x0, _y1 - _y0)
 		
-		draw_ellipse(_cx - _cw, _cy - _ch, _cx + _cw, _cy + +ch, false);
+		draw_ellipse(_cx - _cw, _cy - _ch, _cx + _cw, _cy + _ch, false);
 		
 		gpu_set_scissor(scr);
 	}

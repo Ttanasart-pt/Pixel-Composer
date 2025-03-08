@@ -196,6 +196,7 @@ function __pbBox() constructor {
 			case PB_AXIS_ANCHOR.center  : set_h(_bh);             break;
 		}
 		
+		return self;
 	}
 	
 	static getBBOX = function() {

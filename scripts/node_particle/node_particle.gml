@@ -21,7 +21,7 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 	
 	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
-	array_foreach(inputs, function(i) /*=>*/ {return i.rejectArray()});
+	array_foreach(inputs, function(i) /*=>*/ {return i.rejectArray()}, input_len);
 	
 	attribute_surface_depth();
 	attribute_interpolation();

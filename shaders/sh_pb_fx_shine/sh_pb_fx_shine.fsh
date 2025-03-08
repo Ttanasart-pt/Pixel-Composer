@@ -9,8 +9,8 @@ uniform float progress;
 uniform int   side;
 uniform int   invAxis;
 uniform float shines[64];
-uniform float shinesWidth; 
 uniform int   shineAmount; 
+uniform float shinesWidth; 
 uniform vec4  shineColor;
 
 uniform int   straight; 
@@ -28,13 +28,9 @@ void main() {
 	}
 	
 	vec2  px = floor(v_vTexcoord * dimension);
-	float ww = dimension.x;
+	if(invAxis == 1) px = px.yx;
 	
-	if(invAxis == 1) {
-		px = px.yx;
-		ww = dimension.y;
-	}
-	
+	float ww = invAxis == 0? dimension.x : dimension.y;
 	float tw = ww + shinesWidth;
 	float ns = mix(-ww - tw, ww + tw, progress);
 	float dy = px.y / slope;

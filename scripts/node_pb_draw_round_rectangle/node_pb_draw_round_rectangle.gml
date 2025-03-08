@@ -32,10 +32,10 @@ function Node_PB_Draw_Round_Rectangle(_x, _y, _group = noone) : Node_PB_Draw(_x,
 		var _br = floor(_rad[3]);
 		
 		if(_clm) {
-			_tl = min(_tl, _ww / 2, _hh / 2);
-			_tr = min(_tr, _ww / 2, _hh / 2);
-			_bl = min(_bl, _ww / 2, _hh / 2);
-			_br = min(_br, _ww / 2, _hh / 2);
+			_tl = min(_tl, _ww / 2 + 1, _hh / 2 + 1);
+			_tr = min(_tr, _ww / 2 + 1, _hh / 2 + 1);
+			_bl = min(_bl, _ww / 2 + 1, _hh / 2 + 1);
+			_br = min(_br, _ww / 2 + 1, _hh / 2 + 1);
 		}
 		
 		var _rcx0 = _x0 + _tl, _rcy0 = _y0 + _tl;

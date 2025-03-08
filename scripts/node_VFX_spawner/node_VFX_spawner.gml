@@ -18,6 +18,8 @@ function Node_VFX_Spawner(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y
 	newOutput(2, nodeValue_Output("On step",	self, VALUE_TYPE.node, noone ));
 	newOutput(3, nodeValue_Output("On destroy",	self, VALUE_TYPE.node, noone ));
 	
+	array_foreach(inputs, function(i) /*=>*/ {return i.rejectArray()}, input_len);
+	
 	array_insert(input_display_list, 0, ["Trigger", true], input_len + 0, input_len + 1);
 	
 	UPDATE_PART_FORWARD

@@ -7,8 +7,10 @@ function Node_PB_Draw_Line(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _group
 	
 	newInput(pbi+2, nodeValue_Bool("Overflow", self, false));
 	
+	newInput(pbi+3, nodeValue_Toggle("Corner", self, 0, [ "Start", "End" ]));
+	
 	array_insert_array(input_display_list, input_display_shape_index, [
-		["Shape", false], pbi+0, pbi+1, pbi+2, 
+		["Shape", false], pbi+0, pbi+1, pbi+3, pbi+2, 
 	]);
 	
 	resetDynamicInput();
@@ -22,6 +24,7 @@ function Node_PB_Draw_Line(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _group
 		var _type = _data[pbi+0];
 		var _thck = _data[pbi+1];
 		var _over = _data[pbi+2];
+		var _corn = _data[pbi+3];
 		
 		var _px0 = _x0, _py0 = _y0;
 		var _px1 = _x1, _py1 = _y1;
@@ -46,17 +49,17 @@ function Node_PB_Draw_Line(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _group
 				     break;
 			
 			case 4 : 
-				_px0 = _x1; 
-				_py0 = _y0;
-				_px1 = _x0; 
-				_py1 = _y1;
+				_px0 = _x1 + _thk2 * bool(_corn & 01); 
+				_py0 = _y0 + _thk2 * bool(_corn & 01); 
+				_px1 = _x0 - _thk2 * bool(_corn & 10); 
+				_py1 = _y1 - _thk2 * bool(_corn & 10); 
 			     break;
 			
 			case 5 : 
-				_px0 = _x0; 
-				_py0 = _y0;
-		    	_px1 = _x1; 
-		    	_py1 = _y1; 
+				_px0 = _x0 + _thk2 * bool(_corn & 01); 
+				_py0 = _y0 + _thk2 * bool(_corn & 01); 
+		    	_px1 = _x1 - _thk2 * bool(_corn & 10); 
+		    	_py1 = _y1 - _thk2 * bool(_corn & 10); 
 			     break;
 			
 		}

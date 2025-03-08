@@ -1,0 +1,6 @@
+{
+    "name":          "PBBox Split",
+    "spr":           "s_node_pb_box_split",
+    "baseNode":      "Node_PB_Box_Split",
+    "pxc_version":    118090,
+}

@@ -56,7 +56,7 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	coordinate_menu = [
 		menuItem(__txt("Reset view"),  function() /*=>*/ { wd_minx = -1; wd_miny = -1; wd_maxx = 1; wd_maxy = 1; }),
-		menuItem(__txt("Focus value"),  function() /*=>*/ {
+		menuItem(__txt("Focus value"), function() /*=>*/ {
 			var _x = getInputData(0);
 			var _y = getInputData(1);
 			
@@ -109,8 +109,8 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		}
 		
 		if(gz_style == 0) {
-			_hov = hover && point_in_circle(_mx, _my, _ax, _ay, 8);
-			draw_anchor(_hov, _ax, _ay, 8);
+			_hov = hover && point_in_circle(_mx, _my, _ax, _ay, ui(8));
+			draw_anchor(_hov, _ax, _ay, ui(8));
 			
 		} else {
 			

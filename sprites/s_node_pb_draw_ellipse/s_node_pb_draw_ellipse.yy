@@ -25,8 +25,8 @@
   "nineSlice":null,
   "origin":4,
   "parent":{
-    "name":"pixel builder",
-    "path":"folders/nodes/icons/pixel builder.yy",
+    "name":"PB",
+    "path":"folders/nodes/icons/PB.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

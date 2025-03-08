@@ -18,6 +18,7 @@ function __vec2P(_x = 0, _y = _x, _w = 1) : __vec2(_x, _y) constructor {
 
 function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Path";
+	preview_channel = 1;
 	
 	setDimension(96, 48);
 	

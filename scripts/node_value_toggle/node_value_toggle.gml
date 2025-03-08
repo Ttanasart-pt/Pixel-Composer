@@ -1,4 +1,4 @@
-function nodeValue_Toggle(_name, _node, _value, _data = {}) { return new __NodeValue_Toggle(_name, _node, _value, _data); }
+function nodeValue_Toggle(_name, _node, _value, _data = {}) { return new __NodeValue_Toggle(_name, _node, _value, is_array(_data)? { data : _data } : _data); }
 
 function __NodeValue_Toggle(_name, _node, _value, _data = {}) : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.integer, _value, "") constructor {
 	
