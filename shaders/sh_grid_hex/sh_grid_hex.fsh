@@ -1,3 +1,21 @@
+#pragma use(sampler_simple)
+
+#region -- sampler_simple -- [1729740692.1417658]
+    uniform int  sampleMode;
+    
+    vec4 sampleTexture( sampler2D texture, vec2 pos) {
+        if(pos.x >= 0. && pos.y >= 0. && pos.x <= 1. && pos.y <= 1.)
+            return texture2D(texture, pos);
+        
+             if(sampleMode <= 1) return vec4(0.);
+        else if(sampleMode == 2) return texture2D(texture, clamp(pos, 0., 1.));
+        else if(sampleMode == 3) return texture2D(texture, fract(pos));
+        else if(sampleMode == 4) return vec4(vec3(0.), 1.);
+        
+        return vec4(0.);
+    }
+#endregion -- sampler_simple --
+
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
@@ -262,11 +280,11 @@ void main() {
 			uv = 0.5 + mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * (uv - 0.5);
 		}
 		
-		colr = texture2D( gm_BaseTexture, uv );
+		colr = sampleTexture( gm_BaseTexture, uv );
 		
 	} else if(mode == 3) {
 		vec2 uv = clamp(abs(hc.zw) / sca / vec2(dimension.x / dimension.y, 1.), 0., 1.);
-		colr    = texture2D( gm_BaseTexture, uv );
+		colr = sampleTexture( gm_BaseTexture, uv );
 	}
 	
 	float _aa = 3. / max(dimension.x, dimension.y);

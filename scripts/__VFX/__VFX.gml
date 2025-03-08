@@ -59,6 +59,7 @@ function __particleObject() constructor {
 }
 
 function __part(_node) : __particleObject() constructor {
+	
 	seed    = irandom(99999);
 	node    = _node;
 	
@@ -69,10 +70,10 @@ function __part(_node) : __particleObject() constructor {
 	step_int   = 0;
 	
 	/////////////////////// Transforms /////////////////////// 
-	prevx   = 0;
-	prevy   = 0;
-	speedx  = 0;
-	speedy  = 0;
+	startx  = 0; starty  = 0;
+	prevx   = 0; prevy   = 0;
+	speedx  = 0; speedy  = 0;
+	
 	turning = 0;
 	turnSpd = 0;
 	
@@ -82,11 +83,9 @@ function __part(_node) : __particleObject() constructor {
 	
 	grav    = 0;
 	gravDir = -90;
-	gravX   = 0;
-	gravY   = 0;
+	gravX   = 0; gravY   = 0;
 	
-	sc_sx = 1;
-	sc_sy = 1;
+	sc_sx = 1; sc_sy = 1;
 	sct   = noone;
 	
 	scx_history = [];
@@ -106,11 +105,9 @@ function __part(_node) : __particleObject() constructor {
 	
 	arr_type = 0;
 	
-	drawx   = 0;
-	drawy   = 0;
+	drawx   = 0; drawy   = 0;
+	drawsx  = 0; drawsy  = 0;
 	drawrot = 0;
-	drawsx  = 0;
-	drawsy  = 0;
 	
 	col       = -1;
 	alp_draw  = alp;
@@ -157,6 +154,8 @@ function __part(_node) : __particleObject() constructor {
 		surf   = _surf;
 		x	   = _x;
 		y	   = _y;
+		startx = _x; 
+		starty = _y;
 		
 		drawx  = undefined;
 		drawy  = undefined;
@@ -348,6 +347,14 @@ function __part(_node) : __particleObject() constructor {
 		}
 	}
 	
+	static setDrawParameter = function() {
+		drawx   = x;
+		drawy   = y;
+		drawrot = rot;
+		drawsx  = sc_sx;
+		drawsy  = sc_sy;
+	}
+	
 	static draw = function(exact, surf_w, surf_h) {
 		INLINE
 		
@@ -522,6 +529,22 @@ function __part(_node) : __particleObject() constructor {
 		struct_override(_p, self);
 		return _p;
 	}
+
+	static set = function(_part) {
+		var _keys = struct_get_names(self);
+		for( var i = 0, n = array_length(_keys); i < n; i++ ) {
+			if(is_struct(self[$ _keys[i]])) {
+				self[$ _keys[i]] = _part[$ _keys[i]];
+				continue;
+			}
+			
+			self[$ _keys[i]] = variable_clone(_part[$ _keys[i]]);
+		}
+		
+		return self;
+	}
+
+	static toString = function() { return $"[particle]: pos = ({x}, {y})" }
 }
 
 #region helper

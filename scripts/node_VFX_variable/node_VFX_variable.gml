@@ -2,83 +2,59 @@ function Node_VFX_Variable(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	name  = "VFX Variable";
 	color = COLORS.node_blend_vfx;
 	icon  = THEME.vfx;
-	node_draw_icon = s_node_vfx_variable;
+	node_draw_icon     = s_node_vfx_variable;
+	manual_ungroupable = false;
+	
 	setDimension(96, 48);
-	
-	manual_ungroupable	 = false;
-	
 	
 	newInput(0, nodeValue_Particle("Particles", self, -1 ))
 		.setVisible(true, true);
 	
-	input_display_list = [ 0 ];
+	newOutput( 0, nodeValue_Output("Positions", self, VALUE_TYPE.float,   []    ));
+	newOutput( 1, nodeValue_Output("Scales",    self, VALUE_TYPE.float,   []    ));
+	newOutput( 2, nodeValue_Output("Rotations", self, VALUE_TYPE.float,   0     ));
+	newOutput( 3, nodeValue_Output("Blending",  self, VALUE_TYPE.color,   0     ));
+	newOutput( 4, nodeValue_Output("Alpha",     self, VALUE_TYPE.float,   0     ));
+	newOutput( 5, nodeValue_Output("Life",      self, VALUE_TYPE.float,   0     ));
+	newOutput( 6, nodeValue_Output("Max life",  self, VALUE_TYPE.float,   0     ));
+	newOutput( 7, nodeValue_Output("Surface",   self, VALUE_TYPE.surface, noone ));
+	newOutput( 8, nodeValue_Output("Velocity",  self, VALUE_TYPE.float,   []    ));
+	newOutput( 9, nodeValue_Output("Seed",      self, VALUE_TYPE.float,   0     ));
 	
-	newOutput(0, nodeValue_Output("Positions", self, VALUE_TYPE.float, [] ))
-		.setDisplay(VALUE_DISPLAY.none)
-		.setVisible(false);
+	newOutput(10, nodeValue_Output("Spawn Positions", self, VALUE_TYPE.float,   []    ));
 	
-	newOutput(1, nodeValue_Output("Scales", self, VALUE_TYPE.float, [] ))
-		.setDisplay(VALUE_DISPLAY.none)
-		.setVisible(false);
+	input_display_list  = [ 0 ];
+	output_display_list = [ 
+		0, 10, 
+		1, 2, 3, 4, 5, 6, 7, 8, 9
+	];
 	
-	newOutput(2, nodeValue_Output("Rotations", self, VALUE_TYPE.float, 0 ))
-		.setDisplay(VALUE_DISPLAY.none)
-		.setVisible(false);
-	
-	newOutput(3, nodeValue_Output("Blending", self, VALUE_TYPE.color, 0 ))
-		.setDisplay(VALUE_DISPLAY.none)
-		.setVisible(false);
-	
-	newOutput(4, nodeValue_Output("Alpha", self, VALUE_TYPE.float, 0 ))
-		.setDisplay(VALUE_DISPLAY.none)
-		.setVisible(false);
-	
-	newOutput(5, nodeValue_Output("Life", self, VALUE_TYPE.float, 0 ))
-		.setDisplay(VALUE_DISPLAY.none)
-		.setVisible(false);
-	
-	newOutput(6, nodeValue_Output("Max life", self, VALUE_TYPE.float, 0 ))
-		.setDisplay(VALUE_DISPLAY.none)
-		.setVisible(false);
-	
-	newOutput(7, nodeValue_Output("Surface", self, VALUE_TYPE.surface, noone ))
-		.setDisplay(VALUE_DISPLAY.none)
-		.setVisible(false);
-	
-	newOutput(8, nodeValue_Output("Velocity", self, VALUE_TYPE.float, [] ))
-		.setDisplay(VALUE_DISPLAY.none)
-		.setVisible(false);
-	
-	newOutput(9, nodeValue_Output("Seed", self, VALUE_TYPE.float, 0 ))
-		.setDisplay(VALUE_DISPLAY.none)
-		.setVisible(false);
+	array_foreach(outputs, function(o) /*=>*/ {return o.setDisplay(VALUE_DISPLAY.none).setArrayDepth(1).setVisible(false)});
 		
 	static update = function(frame = CURRENT_FRAME) {
-		var parts = getInputData(0);
+		parts = getInputData(0);
 		if(!is_array(parts)) return;
 		
-		var _val = [];
+		var _len   = array_length(parts);
+		var _vouts = [];
 		
-		for( var i = 0; i < array_length(outputs); i++ )
-			_val[i] = array_create(array_length(parts));
-		
-		for( var i = 0, n = array_length(parts); i < n; i++ ) {
-			var part = parts[i];
-			
-			if(outputs[0].visible) _val[0][i] = [part.x,   part.y];
-			if(outputs[1].visible) _val[1][i] = [part.scx, part.scy];
-			if(outputs[2].visible) _val[2][i] = part.rot;
-			if(outputs[3].visible) _val[3][i] = part.blend;
-			if(outputs[4].visible) _val[4][i] = part.alp;
-			if(outputs[5].visible) _val[5][i] = part.life;
-			if(outputs[6].visible) _val[6][i] = part.life_total;
-			if(outputs[7].visible) _val[7][i] = part.surf;
-			if(outputs[8].visible) _val[8][i] = [part.speedx, part.speedy];
-			if(outputs[9].visible) _val[9][i] = part.seed;
+		for( var i = 0, n = array_length(outputs); i < n; i++ ) {
+			_vouts[i] = array_verify(outputs[i].getValue(), _len); 
+			outputs[i].setValue(_vouts[i]);
 		}
 		
-		for( var i = 0; i < array_length(outputs); i++ )
-			if(outputs[i].visible) outputs[i].setValue(_val[i]);
+		if(outputs[ 0].visible_manual) array_map_ext(_vouts[ 0], function(_,i) /*=>*/ {return [parts[i].x, parts[i].y]}           ); 
+		if(outputs[ 1].visible_manual) array_map_ext(_vouts[ 1], function(_,i) /*=>*/ {return [parts[i].scx, parts[i].scy]}       ); 
+		if(outputs[ 2].visible_manual) array_map_ext(_vouts[ 2], function(_,i) /*=>*/  {return parts[i].rot}                      ); 
+		if(outputs[ 3].visible_manual) array_map_ext(_vouts[ 3], function(_,i) /*=>*/  {return parts[i].blend}                    ); 
+		if(outputs[ 4].visible_manual) array_map_ext(_vouts[ 4], function(_,i) /*=>*/  {return parts[i].alp}                      ); 
+		if(outputs[ 5].visible_manual) array_map_ext(_vouts[ 5], function(_,i) /*=>*/  {return parts[i].life}                     ); 
+		if(outputs[ 6].visible_manual) array_map_ext(_vouts[ 6], function(_,i) /*=>*/  {return parts[i].life_total}               ); 
+		if(outputs[ 7].visible_manual) array_map_ext(_vouts[ 7], function(_,i) /*=>*/  {return parts[i].surf}                     ); 
+		if(outputs[ 8].visible_manual) array_map_ext(_vouts[ 8], function(_,i) /*=>*/ {return [parts[i].speedx, parts[i].speedy]} ); 
+		if(outputs[ 9].visible_manual) array_map_ext(_vouts[ 9], function(_,i) /*=>*/  {return parts[i].seed}                     ); 
+		if(outputs[10].visible_manual) array_map_ext(_vouts[10], function(_,i) /*=>*/ {return [parts[i].startx, parts[i].starty]} ); 
+		
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

@@ -78,6 +78,8 @@ function Node_Grid_Tri(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	attribute_surface_depth();
+	attribute_interpolation();
+	attribute_oversample();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _hov = false;
@@ -125,6 +127,8 @@ function Node_Grid_Tri(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		inputs[21].setVisible(_tex_mode, _tex_mode);
 		
 		surface_set_shader(_outSurf, sh_grid_tri);
+		    shader_set_interpolation(_sam);
+		    
 			shader_set_f("position",  _pos[0] / _dim[0], _pos[1] / _dim[1]);
 			shader_set_f("dimension", _dim[0], _dim[1]);
 			

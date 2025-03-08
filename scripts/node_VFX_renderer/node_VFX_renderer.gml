@@ -99,8 +99,7 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 						_part.render_type = _type;
 						_part.line_draw   = _llife;
 						
-						if(_part.active || _type)
-							_part.draw(_exact, surf_w, surf_h);
+						if(_part.active || _type) _part.draw(_exact, surf_w, surf_h);
 					}
 				}
 			}

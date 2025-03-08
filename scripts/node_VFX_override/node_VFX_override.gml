@@ -10,76 +10,140 @@ function Node_VFX_Override(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(0, nodeValue_Particle("Particles", self, -1 ))
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_Float("Positions", self, noone ));
+	newInput(1, nodeValue_b(  "Set Positions", self, false ));
+	newInput(2, nodeValue_eb( "Mode",          self, 0, [ "Absolute", "Relative" ])).setInternalName("Position mode");
+	newInput(3, nodeValue_2(  "Positions",     self, [0, 0] ));
 	
-	newInput(2, nodeValue_Float("Rotations", self, noone ));
+	newInput(4, nodeValue_b(  "Set Rotations", self, false ));
+	newInput(5, nodeValue_eb( "Mode",          self, 0, [ "Absolute", "Relative" ])).setInternalName("Rotation mode");
+	newInput(6, nodeValue_f(  "Rotations",     self, 0 ));
 	
-	newInput(3, nodeValue_Float("Scales", self, noone ));
+	newInput(7, nodeValue_b(  "Set Scales",    self, false ));
+	newInput(8, nodeValue_eb( "Mode",          self, 0, [ "Absolute", "Relative Add", "Relative Muliply" ])).setInternalName("Scale mode");
+	newInput(9, nodeValue_2(  "Scales",        self, [1, 1] ));
 	
-	newInput(4, nodeValue_Color("Blend", self, noone ));
+	newInput(10, nodeValue_b( "Set Blend",     self, false ));
+	newInput(11, nodeValue_c( "Blend",         self, cola(c_black) ));
 	
-	newInput(5, nodeValue_Float("Alpha", self, noone ));
+	newInput(12, nodeValue_b(  "Set Alpha",    self, false ));
+	newInput(13, nodeValue_eb( "Mode",         self, 0, [ "Absolute", "Relative" ])).setInternalName("Alpha mode");
+	newInput(14, nodeValue_f(  "Alpha",        self, noone ));
 	
-	newInput(6, nodeValue_Surface("Surface", self))
-		.setVisible(true, false);
+	newInput(15, nodeValue_b( "Set Surface",   self, false ));
+	newInput(16, nodeValue_Surface( "Surface", self)).setVisible(true, false);
 	
 	newOutput(0, nodeValue_Output("Particles", self, VALUE_TYPE.particle, -1 ));
 	
-	static update = function(frame = CURRENT_FRAME) {
-		var parts = getInputData(0);
-		if(!is_array(parts)) return;
-		
-		var _pos = getInputData(1);
-		var _sca = getInputData(2);
-		var _rot = getInputData(3);
-		var _col = getInputData(4);
-		var _alp = getInputData(5);
-		var _srf = getInputData(6);
-		
-		var nParts = array_create(array_length(parts));
-		
-		var _a_pos = inputs[1].value_from != noone;
-		var _a_rot = inputs[2].value_from != noone;
-		var _a_sca = inputs[3].value_from != noone;
-		var _a_col = inputs[4].value_from != noone;
-		var _a_alp = inputs[5].value_from != noone;
-		var _a_srf = inputs[6].value_from != noone;
-		
-		if(array_get_depth(_pos) < 2) _pos = [ _pos ];
-		if(array_get_depth(_sca) < 2) _sca = [ _sca ];
-		if(!is_array(_rot))			  _rot = [ _rot ];
-		if(!is_array(_col))			  _col = [ _col ];
-		if(!is_array(_alp))			  _alp = [ _alp ];
-		if(!is_array(_srf))			  _srf = [ _srf ];
-		
-		var _l_pos = array_length(_pos);
-		var _l_sca = array_length(_sca);
-		var _l_rot = array_length(_rot);
-		var _l_col = array_length(_col);
-		var _l_alp = array_length(_alp);
-		var _l_srf = array_length(_srf);
-		
-		for( var i = 0, n = array_length(parts); i < n; i++ ) {
-			var nPart = parts[i].clone();
-			
-			if(_a_pos) {
-				nPart.x = _pos[i % _l_pos][0];
-				nPart.y = _pos[i % _l_pos][1];
-			}
-			
-			if(_a_sca) {
-				nPart.scx = _sca[i % _l_sca][0];
-				nPart.scy = _sca[i % _l_sca][1];
-			}
-			
-			if(_a_rot) nPart.rot   = array_safe_get_fast(_rot, i % _l_rot);
-			if(_a_col) nPart.blend = array_safe_get_fast(_col, i % _l_col);
-			if(_a_alp) nPart.alp   = array_safe_get_fast(_alp, i % _l_alp);
-			if(_a_srf) nPart.surf  = array_safe_get_fast(_srf, i % _l_srf);
-			
-			nParts[i] = nPart;
-		}
+	input_display_list = [ 0, 
+		["Surface",  false, 15], 16, 
+		["Position", false,  1], 2, 3, 
+		["Rotation", false,  4], 5, 6, 
+		["Scale",    false,  7], 8, 9, 
+		["Blend",    false, 10], 11, 
+		["Alpha",    false, 12], 13, 14, 
+	]
 	
+	_self = self;
+	parts = [];
+	
+	static update = function(frame = CURRENT_FRAME) {
+		var _parts = getInputData(0);
+		if(!is_array(_parts)) return;
+		
+		var _len   = array_length(_parts);
+		    parts  = array_verify_ext(parts, max(array_length(parts), _len), function() /*=>*/ {return new __part(_self)});
+		var nParts = array_verify(outputs[0].getValue(), _len);
+		for( var i = 0; i < _len; i++ ) nParts[i] = parts[i].set(_parts[i]);
+		
+		if(getInputData(15)) { // surface
+			var _surfs = getInputData(16);
+			if(is_array(_surfs)) {
+				var _llen = min(_len, array_length(_surfs));
+				for( var i = 0; i < _llen; i++ ) nParts[i].surf = _surfs[i];
+					
+			} else if(is_surface(_surfs)) {
+				for( var i = 0; i < _len; i++ ) nParts[i].surf = _surfs;
+			}
+		}
+		
+		if(getInputData(1)) { // positions
+			var _mode = getInputData(2);
+			var _posi = getInputData(3);
+			var _d    = array_get_depth(_posi);
+			
+			if(_d == 2) {
+				var _llen = min(_len, array_length(_posi));
+				     if(_mode == 0) for( var i = 0; i < _llen; i++ ) { nParts[i].x  = _posi[i][0]; nParts[i].y  = _posi[i][1]; }
+				else if(_mode == 1) for( var i = 0; i < _llen; i++ ) { nParts[i].x += _posi[i][0]; nParts[i].y += _posi[i][1]; }
+					
+			} else if(_d == 1) {
+				     if(_mode == 0) for( var i = 0; i < _len; i++ ) { nParts[i].x  = _posi[0]; nParts[i].y  = _posi[1]; }
+				else if(_mode == 1) for( var i = 0; i < _len; i++ ) { nParts[i].x += _posi[0]; nParts[i].y += _posi[1]; }
+			}
+			
+		}
+		
+		if(getInputData(4)) { // rotation
+			var _mode = getInputData(5);
+			var _rots = getInputData(6);
+			
+			if(is_array(_rots)) {
+				var _llen = min(_len, array_length(_rots));
+				     if(_mode == 0) for( var i = 0; i < _llen; i++ ) { nParts[i].rot  = _rots[i]; }
+				else if(_mode == 1) for( var i = 0; i < _llen; i++ ) { nParts[i].rot += _rots[i]; }
+					
+			} else {
+				     if(_mode == 0) for( var i = 0; i < _len; i++ ) { nParts[i].rot  = _rots; }
+				else if(_mode == 1) for( var i = 0; i < _len; i++ ) { nParts[i].rot += _rots; }
+			}
+		}
+		
+		if(getInputData(7)) { // scale
+			var _mode = getInputData(8);
+			var _scas = getInputData(9);
+			var _d    = array_get_depth(_scas);
+			
+			if(_d == 2) {
+				var _llen = min(_len, array_length(_scas));
+				     if(_mode == 0) for( var i = 0; i < _llen; i++ ) { nParts[i].scx  = _scas[i][0]; nParts[i].scy  = _scas[i][1]; }
+				else if(_mode == 1) for( var i = 0; i < _llen; i++ ) { nParts[i].scx += _scas[i][0]; nParts[i].scy += _scas[i][1]; }
+				else if(_mode == 2) for( var i = 0; i < _llen; i++ ) { nParts[i].scx *= _scas[i][0]; nParts[i].scy *= _scas[i][1]; }
+					
+			} else if(_d == 1) {
+				     if(_mode == 0) for( var i = 0; i < _len; i++ ) { nParts[i].scx  = _scas[0]; nParts[i].scy  = _scas[1]; }
+				else if(_mode == 1) for( var i = 0; i < _len; i++ ) { nParts[i].scx += _scas[0]; nParts[i].scy += _scas[1]; }
+				else if(_mode == 2) for( var i = 0; i < _len; i++ ) { nParts[i].scx *= _scas[0]; nParts[i].scy *= _scas[1]; }
+			}
+		}
+		
+		if(getInputData(10)) { // blend
+			var _blns = getInputData(11);
+			
+			if(is_array(_blns)) {
+				var _llen = min(_len, array_length(_blns));
+				for( var i = 0; i < _llen; i++ ) { nParts[i].blend = _blns[i]; }
+					
+			} else {
+				for( var i = 0; i < _len; i++ ) { nParts[i].blend = _blns; }
+			}
+		}
+		
+		if(getInputData(12)) { // alpha
+			var _mode = getInputData(13);
+			var _alps = getInputData(14);
+			
+			if(is_array(_alps)) {
+				var _llen = min(_len, array_length(_alps));
+				     if(_mode == 0) for( var i = 0; i < _llen; i++ ) { nParts[i].alp  = _alps[i]; }
+				else if(_mode == 1) for( var i = 0; i < _llen; i++ ) { nParts[i].alp += _alps[i]; }
+					
+			} else {
+				     if(_mode == 0) for( var i = 0; i < _len; i++ ) { nParts[i].alp  = _alps; }
+				else if(_mode == 1) for( var i = 0; i < _len; i++ ) { nParts[i].alp += _alps; }
+			}
+		}
+		
+		for( var i = 0; i < _len; i++ ) parts[i].setDrawParameter();
 		outputs[0].setValue(nParts);
 	}
 	

@@ -49,7 +49,7 @@ function Node_Blur_Radial(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	attribute_oversample();
 	attribute_interpolation();
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var pos  = getInputData(2);
 		var px   = _x + pos[0] * _s;
 		var py   = _y + pos[1] * _s;
@@ -59,13 +59,13 @@ function Node_Blur_Radial(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		var hv = inputs[2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= hv;
 		
 		return _hov;
-	} #endregion
+	}
 	
-	static step = function() { #region
+	static step = function() {
 		__step_mask_modifier();
 		
 		inputs[1].mappableStep();
-	} #endregion
+	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {		
 		var _cen  = _data[2];
