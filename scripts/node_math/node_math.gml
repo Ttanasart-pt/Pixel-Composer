@@ -93,9 +93,11 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	newInput(7, nodeValue_Vec2("To",   self, [ 0, 1 ]));
 	
+	newInput(8, nodeValue_Bool("Output Vector", self, false));
+	
 	input_display_list = [ 0, 
 		["Values",   false], 1, 2, 5, 6, 7, 
-		["Settings", false], 3, 4, 
+		["Settings", false], 3, 4, 8, 
 	];
 		
 	newOutput(0, nodeValue_Output("Result", self, VALUE_TYPE.float, 0));
@@ -110,7 +112,7 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		setDisplayName(array_safe_get(global.node_math_names, _type, ""));
 	}
 	
-	static _eval = function(a, b, c = 0) {
+	static _eval = function(a, b, c, f, t) {
 		switch(use_mod) {
 			case MATH_OPERATOR.add :		return a + b;    
 			case MATH_OPERATOR.subtract :	return a - b;
@@ -135,26 +137,19 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			case MATH_OPERATOR.clamp :		return clamp(a, b, c);
 			case MATH_OPERATOR.snap :		return value_snap(a, b);
 			case MATH_OPERATOR.fract :		return frac(a);
+			
+			case MATH_OPERATOR.map :		return lerp(t[0], t[1], (a - f[0]) / (f[1] - f[0]));
 		}
 		return 0;
 	}
 	
-	static _evalMap = function(a, fr, to) {
-		var _frMin = fr[0];
-		var _frMax = fr[1];
-		var _toMin = to[0];
-		var _toMax = to[1];
-		
-		return lerp(_toMin, _toMax, (a - _frMin) / (_frMax - _frMin));
-	}
-	
-	function evalArray(a, b, c = 0) {
+	function evalArray(a, b, c, f, t) {
 		var _as = is_array(a);
 		var _bs = is_array(b);
 		var _cs = is_array(c);
 		
 		if(!_as && !_bs && !_cs)
-			return _eval(a, b, c);
+			return _eval(a, b, c, f, t);
 		
 		if(!_as) a = [ a ];
 		if(!_bs) b = [ b ];
@@ -172,6 +167,7 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				array_safe_get(a, i,, ARRAY_OVERFLOW.loop), 
 				array_safe_get(b, i,, ARRAY_OVERFLOW.loop),
 				array_safe_get(c, i,, ARRAY_OVERFLOW.loop),
+				f, t, 
 			);
 		
 		return val;
@@ -184,26 +180,16 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		use_mod = inputs[0].getValue();
 		use_deg = inputs[3].getValue();
 		
-		var a  = inputs[1].getValue();
-		var b  = inputs[2].getValue();
-		var c  = inputs[5].getValue();
-		var val;
-		
-		fr = inputs[6].getValue();
-		to = inputs[7].getValue();
-		
-		switch(use_mod) {
-			case MATH_OPERATOR.map : 
-				if(is_array(a)) val = array_map_ext(a, function(v) /*=>*/ {return _evalMap(v, fr, to)});
-				else            val = _evalMap(a, fr, to); 
-				break;
-			
-			default :
-				val = evalArray(a, b, c);
-				break;
-		}
+		var a   = inputs[1].getValue();
+		var b   = inputs[2].getValue();
+		var c   = inputs[5].getValue();
+		var f   = inputs[6].getValue();
+		var t   = inputs[7].getValue();
+		var vc  = inputs[8].getValue();
+		var val = evalArray(a, b, c, f, t);
 		
 		outputs[0].setValue(val);
+		outputs[0].setDisplay(vc? VALUE_DISPLAY.vector : VALUE_DISPLAY._default);
 		
 		if(__mode == use_mod) return;
 		__mode = use_mod;

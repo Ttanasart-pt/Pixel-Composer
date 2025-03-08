@@ -1892,6 +1892,111 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return -1;
 	}
 	
+	static drawPreviewOverlay = function(_x, _y, _s, _panel) {
+		var _raw = getValue();
+		
+		var _txt = _raw;
+		var _x0 = _x;
+		var _y0 = _y;
+		var _x1 = _x + DEF_SURF_W * _s;
+		var _y1 = _y + DEF_SURF_H * _s;
+		
+		var _bbox = BBOX().fromPoints(_x0 + ui(16), _y0 + ui(16), _x1 - ui(16), _y1 - ui(16));
+		var _tc   = COLORS._main_text;
+		
+		switch(type) {
+			case VALUE_TYPE.integer : 
+			case VALUE_TYPE.float  : 
+				if(display_type == VALUE_DISPLAY.vector) {
+					var _d = array_get_depth(_raw);
+					draw_set_color(COLORS._main_accent);
+					draw_set_circle_precision(8);
+					
+					if(_d == 1) {
+						var _px = _x + _raw[0] * _s;
+						var _py = _y + _raw[1] * _s;
+						draw_circle(_px, _py, ui(3), false);
+						
+					} else if(_d == 2) {
+						for( var i = 0, n = array_length(_raw); i < n; i++ ) {
+							var _p  = _raw[i];
+							var _px = _x + _p[0] * _s;
+							var _py = _y + _p[1] * _s;
+							
+							draw_circle(_px, _py, ui(3), false);
+						}
+					}
+					return;
+				}
+				break;
+			
+			case VALUE_TYPE.boolean:
+				if(is_array(_raw)) {
+					_txt = [];
+					for( var i = 0, n = array_length(_raw); i < n; i++ ) 
+						_txt[i] = bool(_raw[i])? "True" : "False";
+				} else 
+					_txt = bool(_raw)? "True" : "False";
+				break;
+				
+			case VALUE_TYPE.color:
+				if(is_array(_raw)) {
+					var _d = array_get_depth(_raw);
+					if(_d == 1) {
+						var _amo = array_length(_raw);
+						var _w   = (_x1 - _x0) / _amo;
+						
+						for( var i = 0, n = array_length(_raw); i < n; i++ ) {
+							draw_set_color(_raw[i]);
+							draw_rectangle(_x0 + _w * i, _y0, _x0 + _w * (i + 1), _y1, false);
+						}
+					}
+					return;
+				} 
+				
+				draw_set_color(_raw);
+				draw_rectangle(_x0, _y0, _x1, _y1, false);
+				
+				if(colorBrightness(_raw) > .8) _tc = c_black;
+				_txt = $"#{color_get_hex(_raw)}";
+				break;
+			
+			case VALUE_TYPE.gradient:	
+				if(is_array(_raw))
+					return;
+				
+				if(is(_raw, gradientObject))
+					_raw.draw(_x0, _y0, _x1 - _x0, _y1 - _y0);
+				return;
+				
+			case VALUE_TYPE.path: 
+			case VALUE_TYPE.curve: 
+			case VALUE_TYPE.struct:
+				return;
+				
+			case VALUE_TYPE.atlas:
+				if(is(_raw, Atlas)) _raw.draw(_x, _y, _s);
+				
+				for( var i = 0, n = array_length(_raw); i < n; i++ )
+					if(is(_raw[i], Atlas)) _raw[i].draw(_x, _y, _s);
+				return;
+			
+			case VALUE_TYPE.audioBit:
+				return;
+			
+			case VALUE_TYPE.font:
+				return;
+			
+			case VALUE_TYPE.text: 
+				break;
+				
+			default: return;
+		}
+		
+		draw_set_text(f_sdf, fa_center, fa_center, _tc);
+		draw_text_bbox(_bbox, _txt);
+	}
+	
 	static drawJunction_fast = function(_draw, _s, _mx, _my) {
 		var hov  = PANEL_GRAPH.pHOVER && (PANEL_GRAPH.node_hovering == noone || PANEL_GRAPH.node_hovering == node);
 		var _d   = node.junction_draw_hei_y * _s;
@@ -2105,113 +2210,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			__draw_sprite_ext(THEME.node_junctions_outline, draw_junction_index, _mx, _my, ss / 2, ss / 2, 0, col, 1);
 		} else 
 			__draw_sprite_ext(custom_icon, draw_junction_index, _mx, _my, ss / 2, ss / 2, 0, c_white, 1);
-	}
-	
-	static drawPreviewOverlay = function(_x, _y, _s, _panel) {
-		var _raw = getValue();
-		
-		var _txt = _raw;
-		var _x0 = _x;
-		var _y0 = _y;
-		var _x1 = _x + DEF_SURF_W * _s;
-		var _y1 = _y + DEF_SURF_H * _s;
-		
-		var _bbox = BBOX().fromPoints(_x0 + ui(16), _y0 + ui(16), _x1 - ui(16), _y1 - ui(16));
-		var _tc   = COLORS._main_text;
-		
-		switch(type) {
-			case VALUE_TYPE.integer : 
-			case VALUE_TYPE.float  : 
-				if(display_type == VALUE_DISPLAY.vector) {
-					if(def_length == 2) {
-						var _d = array_get_depth(_raw);
-						draw_set_color(COLORS._main_accent);
-						draw_set_circle_precision(8);
-						
-						if(_d == 1) {
-							var _px = _x + _raw[0] * _s;
-							var _py = _y + _raw[1] * _s;
-							draw_circle(_px, _py, ui(3), false);
-							
-						} else if(_d == 2) {
-							for( var i = 0, n = array_length(_raw); i < n; i++ ) {
-								var _p  = _raw[i];
-								var _px = _x + _p[0] * _s;
-								var _py = _y + _p[1] * _s;
-								
-								draw_circle(_px, _py, ui(3), false);
-							}
-						}
-					}
-					return;
-				}
-				break;
-			
-			case VALUE_TYPE.boolean:
-				if(is_array(_raw)) {
-					_txt = [];
-					for( var i = 0, n = array_length(_raw); i < n; i++ ) 
-						_txt[i] = bool(_raw[i])? "True" : "False";
-				} else 
-					_txt = bool(_raw)? "True" : "False";
-				break;
-				
-			case VALUE_TYPE.color:
-				if(is_array(_raw)) {
-					var _d = array_get_depth(_raw);
-					if(_d == 1) {
-						var _amo = array_length(_raw);
-						var _w   = (_x1 - _x0) / _amo;
-						
-						for( var i = 0, n = array_length(_raw); i < n; i++ ) {
-							draw_set_color(_raw[i]);
-							draw_rectangle(_x0 + _w * i, _y0, _x0 + _w * (i + 1), _y1, false);
-						}
-					}
-					return;
-				} 
-				
-				draw_set_color(_raw);
-				draw_rectangle(_x0, _y0, _x1, _y1, false);
-				
-				if(colorBrightness(_raw) > .8) _tc = c_black;
-				_txt = $"#{color_get_hex(_raw)}";
-				break;
-			
-			case VALUE_TYPE.gradient:	
-				if(is_array(_raw))
-					return;
-				
-				if(is(_raw, gradientObject))
-					_raw.draw(_x0, _y0, _x1 - _x0, _y1 - _y0);
-				return;
-				
-			case VALUE_TYPE.path: 
-			case VALUE_TYPE.curve: 
-			case VALUE_TYPE.struct:
-				return;
-				
-			case VALUE_TYPE.atlas:
-				if(is(_raw, Atlas)) _raw.draw(_x, _y, _s);
-				
-				for( var i = 0, n = array_length(_raw); i < n; i++ )
-					if(is(_raw[i], Atlas)) _raw[i].draw(_x, _y, _s);
-				return;
-			
-			case VALUE_TYPE.audioBit:
-				return;
-			
-			case VALUE_TYPE.font:
-				return;
-			
-			case VALUE_TYPE.text: 
-				break;
-				
-			default: return;
-		}
-		
-		draw_set_text(f_sdf, fa_center, fa_center, _tc);
-		draw_text_bbox(_bbox, _txt);
 	}
 	
 	////- EXPRESSION
