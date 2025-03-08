@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"node_move_point",
   "parent":{
-    "name":"number",
-    "path":"folders/nodes/data/value/number.yy",
+    "name":"point",
+    "path":"folders/nodes/data/value/point.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

@@ -1,5 +1,6 @@
 function Node_PB_Draw_Surface(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
-	name = "PB Draw Surface";
+	name  = "PB Draw Surface";
+	color = COLORS.node_blend_feedback;
 	
 	newInput(0, nodeValue_Pbbox("Base PBBOX", self, new __pbBox()));
 	inputs[0].editWidget = noone;

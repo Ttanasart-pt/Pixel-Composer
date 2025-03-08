@@ -1,0 +1,6 @@
+{
+    "name":          "Triangulate Points",
+    "spr":           "s_node_points_triangulate",
+    "baseNode":      "Node_Points_Triangulate",
+    "pxc_version":    118090,
+}

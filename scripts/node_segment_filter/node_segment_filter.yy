@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"node_segment_filter",
   "parent":{
-    "name":"path",
-    "path":"folders/nodes/data/value/path.yy",
+    "name":"segment",
+    "path":"folders/nodes/data/value/segment.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

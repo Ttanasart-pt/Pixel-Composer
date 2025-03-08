@@ -1066,7 +1066,7 @@ function Panel_Preview() : PanelContent() constructor {
                     break;
             } 
             
-            if(preview_junction != noone && !_ps0 && !_ps1) {
+            if(preview_junction != noone) {
             	preview_junction.drawPreviewOverlay(canvas_x, canvas_y, canvas_s, self);
             	preview_junction.node.previewing = 1;
             }

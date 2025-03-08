@@ -6,6 +6,7 @@
 
 function Node_PB_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "PB Output";
+	color = COLORS.node_blend_feedback;
 	data  = noone;
 	layr  = 0;
 	blend = 0;

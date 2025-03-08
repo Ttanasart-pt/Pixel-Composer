@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"node_vec2_cart_to_polar",
   "parent":{
-    "name":"vector",
-    "path":"folders/nodes/data/value/vector.yy",
+    "name":"point",
+    "path":"folders/nodes/data/value/point.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

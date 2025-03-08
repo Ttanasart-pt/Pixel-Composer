@@ -47,6 +47,8 @@ event_inherited();
 		var con_w = sc_group.surface_w;
 		var hovr  = 0;
 		var padd  = ui(4);
+		var bs    = ui(24);
+		var _del  = noone;
 		
 		for( var i = 0, n = array_length(display_list); i < n; i++ ) {
 			var disp = display_list[i];
@@ -70,7 +72,7 @@ event_inherited();
 			
 			if(is_array(disp)) {
 				var ed_x = hg + ui(4);
-				if(sHOVER && point_in_rectangle(_m[0], _m[1], ed_x, _y, con_w, _y + hg)) {
+				if(sHOVER && point_in_rectangle(_m[0], _m[1], ed_x, _y, con_w - bs - ui(8), _y + hg)) {
 					draw_sprite_stretched_ext(THEME.button_def, 1, ed_x, _y, con_w - ed_x, hg, COLORS._main_icon_light, 1);
 					
 					if(sep_editing == -1 && mouse_press(mb_left, sFOCUS)) {
@@ -85,10 +87,16 @@ event_inherited();
 					WIDGET_CURRENT = tb_edit;
 					tb_edit.setFocusHover(sFOCUS, sHOVER);
 					tb_edit.draw(ed_x, _y, con_w - ed_x, hg, disp[0], _m);
+					
 				} else {
 					draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
 					draw_text_add(ed_x + ui(8), _y + hg / 2 - 1, disp[0]);
+					
+					if(buttonInstant(noone, con_w - ui(4) - bs, _y + hg / 2 - bs / 2 , bs, bs, _m, sHOVER, sFOCUS, "", 
+						THEME.icon_delete, 0, [ COLORS._main_icon, COLORS._main_value_negative ]) == 2)
+						_del = i;
 				}
+				
 			} else {
 				var ind = junction_list[disp];
 				draw_set_text(f_p2, fa_left, fa_center, ind.color_display);
@@ -102,6 +110,12 @@ event_inherited();
 			
 			_y += hg + padd;
 			_h += hg + padd;
+		}
+		
+		if(_del != noone) {
+			sc_group.hover_content = true;
+			array_delete(display_list, _del, 1);
+			node.sortIO();
 		}
 		
 		if(dragging != noone) {

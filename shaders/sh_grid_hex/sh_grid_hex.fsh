@@ -242,7 +242,7 @@ void main() {
 	} else if(mode == 2) {
 		vec2 uv = (pos - hc.zw) + vec2(0.5, 0.5);
 		
-		if(textureTruchet == 1) { //lmao wtf is this code?
+		if(textureTruchet == 1) { // lmao wtf is this code?
 			float rx = random(hc.zw + truchetSeed / 100.);
 			float ry = random(hc.zw + truchetSeed / 100. + vec2(0.4864, 0.6879));
 			float rz = random(hc.zw + truchetSeed / 100. + vec2(0.1638, 0.8974));

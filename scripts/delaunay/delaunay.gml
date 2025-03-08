@@ -27,11 +27,21 @@ function delaunay_triangulation(points, polygons = noone) {
         }
     }
 
-    for (var i = array_length(triangles) - 1; i >= 0; i--) {
-        var _triangle = triangles[i];
-        if (_shares_vertex(super_triangle, _triangle) || (polygons != noone && !delaunay_triangle_in_polygon(polygons, _triangle)))
-            array_delete(triangles, i, 1);
-    }
+	if(polygons == noone) {
+	    for (var i = array_length(triangles) - 1; i >= 0; i--) {
+	        var _triangle = triangles[i];
+	        if (_shares_vertex(super_triangle, _triangle))
+	            array_delete(triangles, i, 1);
+	    }
+	    
+	} else {
+		for (var i = array_length(triangles) - 1; i >= 0; i--) {
+	        var _triangle = triangles[i];
+	        if (_shares_vertex(super_triangle, _triangle) || !delaunay_triangle_in_polygon(polygons, _triangle))
+	            array_delete(triangles, i, 1);
+	    }
+	    
+	}
 	
     return triangles;
 }

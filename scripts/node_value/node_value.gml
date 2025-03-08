@@ -2109,6 +2109,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static drawPreviewOverlay = function(_x, _y, _s, _panel) {
 		var _raw = getValue();
+		
 		var _txt = _raw;
 		var _x0 = _x;
 		var _y0 = _y;

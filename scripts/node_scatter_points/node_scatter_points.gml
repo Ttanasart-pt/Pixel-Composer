@@ -12,7 +12,7 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	setDimension(96, 48);
 	
-	onSurfaceSize = function() { return getInputData(7, DEF_SURF); };
+	onSurfaceSize = function() /*=>*/ {return DEF_SURF}; 
 	newInput(0, nodeValue_Area("Point area", self, DEF_AREA_REF, { onSurfaceSize } ))
 		.setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
 	
@@ -63,8 +63,6 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		inputs[0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
-	static getPreviewValues = function() { return getInputData(8); }
-	
 	static update = function(frame = CURRENT_FRAME) {
 		var _area	 = getInputData(0);
 		var _dist	 = getInputData(1);
@@ -91,25 +89,30 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		}
 			
 		var aBox = area_get_bbox(_area);
+		pos = [];
 			
 		if(_dist != 2) {
-			pos = [];
-			for( var i = 0; i < _amo; i++ ) {
-				if(_fix) {
-					var p = area_get_random_point([_fixRef[0], _fixRef[1], _fixRef[0], _fixRef[1]], _dist, _scat, i, _amo);
+			var _fixArea = [_fixRef[0] / 2, _fixRef[1] / 2, _fixRef[0] / 2, _fixRef[1] / 2, 0];
+			
+			if(_fix) {
+				for( var i = 0; i < _amo; i++ ) {
+					var p = area_get_random_point(_fixArea, _dist, _scat, i, _amo, _seed++);
 					if(point_in_rectangle(p[0], p[1], aBox[0], aBox[1], aBox[2], aBox[3]))
 						array_push(pos, p);
-				} else
-					pos[i] = area_get_random_point(_area, _dist, _scat, i, _amo);
+				} 
+			} else {
+				for( var i = 0; i < _amo; i++ )
+					pos[i] = area_get_random_point(_area, _dist, _scat, i, _amo, _seed++);
 			}
+			
 		} else {
-			pos = [];
 			var p = get_points_from_dist(_distMap, _amo, _seed, 8);
 			for( var i = 0, n = array_length(p); i < n; i++ ) {
 				if(p[i] == 0) continue;
 				if(_fix) {
 					p[i][0] *= _fixRef[0];
 					p[i][1] *= _fixRef[1];
+					
 				} else {
 					p[i][0] = _area[0] + _area[2] * (p[i][0] * 2 - 1);
 					p[i][1] = _area[1] + _area[3] * (p[i][1] * 2 - 1);

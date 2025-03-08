@@ -846,6 +846,7 @@
             "Node_Path_SDF",
             { "label": "/Segments" },
             "Node_Segment_Filter",
+            "Node_Points_Triangulate",
             
             { "label": "Boolean" },
             "Node_Boolean",

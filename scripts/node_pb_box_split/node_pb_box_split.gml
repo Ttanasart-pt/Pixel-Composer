@@ -1,5 +1,6 @@
 function Node_PB_Box_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
-	name = "PBBox Split";
+	name  = "PBBox Split";
+	color = COLORS.node_blend_feedback;
 	setDimension(96, 48);
 	
 	newInput(0, nodeValue_Pbbox("PBBOX", self, new __pbBox()));
