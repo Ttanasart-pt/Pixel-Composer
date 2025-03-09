@@ -63,7 +63,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(16, nodeValue_Bool("Multiply Alpha", self, true));
 		
 	newInput(17, nodeValue_Text("Extra Value", self, [], "Apply the third and later values in each data point (if exist) on given properties."))
-		.setDisplay(VALUE_DISPLAY.text_array, { data: [ "Scale", "Rotation", "Color" ] });
+		.setDisplay(VALUE_DISPLAY.text_array, { data: [ "Scale", "Rotation", "Color", "Alpha", "Array Index" ] });
 		
 	newInput(18, nodeValue_Enum_Scroll("Blend Mode", self,  0, [ "Normal", "Add", "Max" ]));
 		
@@ -302,6 +302,8 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var iSca = 2 + array_get_index(useV, "Scale");
 		var iRot = 2 + array_get_index(useV, "Rotation");
 		var iCol = 2 + array_get_index(useV, "Color");
+		var iAlp = 2 + array_get_index(useV, "Alpha");
+		var iArr = 2 + array_get_index(useV, "Array Index");
 		
 		var surfArray = is_array(_inSurf);
 		if(surfArray && array_empty(_inSurf)) return _outData;
@@ -589,6 +591,9 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 						}
 					}
 					
+					if(iArr > 1 && _v != noone) 
+						ind = array_safe_get_fast(_v, iArr, ind);
+						
 					surf = array_safe_get_fast(_inSurf, ind, 0); 
 				}
 				
@@ -619,13 +624,16 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				
 				if(iCol > 1 && _v != noone) 
 					clr = colorMultiply(clr, array_safe_get_fast(_v, iCol, cola(c_white, 1)));
-					
+				
 				if(surfSamp.active) {
 					var _samC = surfSamp.getPixel(_x + random_range_seed(sampWig[0], sampWig[1], _sed++), _y + random_range_seed(sampWig[2], sampWig[3], _sed++));
 					clr =  colorMultiply(clr, _samC);
 					alp *= color_get_alpha(_samC);
 				}
 				
+				if(iAlp > 1 && _v != noone) 
+					alp += array_safe_get_fast(_v, iAlp, 0);
+					
 				if(posExt) { 
 					_x = round(_x); 
 					_y = round(_y); 
