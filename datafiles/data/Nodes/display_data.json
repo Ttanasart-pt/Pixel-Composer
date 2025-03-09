@@ -903,17 +903,22 @@
             "Node_Pixel_Extract",
             
             { "label": "Palettes" },
+            { "label": "/Creators" },
             "Node_Palette",
+            "Node_Palette_Extract",
+            { "label": "/Modifiers" },
             "Node_Palette_Sort",
             "Node_Palette_Shrink",
-            "Node_Palette_Extract",
             "Node_Palette_Replace",
             
             { "label": "Gradient" },
+            { "label": "/Creators" },
             "Node_Gradient_Out",
             "Node_Gradient_Palette",
+            { "label": "/Modifiers" },
             "Node_Gradient_Shift",
             "Node_Gradient_Replace_Color",
+            { "label": "/Data" },
             "Node_Gradient_Extract",
             "Node_Gradient_Sample"
         ]

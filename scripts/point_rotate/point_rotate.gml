@@ -16,6 +16,25 @@ function point_rotate(px, py, ox, oy, a, p = undefined) {
 	return p;
 }
 
+function point_rotate_array(p, o, a) {
+	var px = p[0], py = p[1];
+	var ox = o[0], oy = o[1];
+	
+		 if(a ==   0) { return p; }
+	else if(a == 180) { p[0] = ox + (ox - px); p[1] = oy + (oy - py); return p; }
+	
+	var cx = px - ox;
+	var cy = py - oy;
+	
+	var dc = dcos(-a);
+	var ds = dsin(-a);
+	
+	p[0] = ox + cx * dc - cy * ds;
+	p[1] = oy + cx * ds + cy * dc;
+	
+	return p;
+}
+
 function point_rotate_origin(px, py, a, p) {
 	INLINE
 	

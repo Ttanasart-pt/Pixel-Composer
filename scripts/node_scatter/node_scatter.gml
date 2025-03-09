@@ -31,7 +31,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	newInput(4, nodeValue_Rotation_Random("Angle", self, [ 0, 0, 0, 0, 0 ] ));
 	
-	onSurfaceSize = function() { return getInputData(1, DEF_SURF); };
+	onSurfaceSize = function() /*=>*/ {return getInputData(1, DEF_SURF)}; 
 	newInput(5, nodeValue_Area("Area", self, DEF_AREA_REF, { onSurfaceSize }))
 		.setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
 	
@@ -62,7 +62,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 	newInput(16, nodeValue_Bool("Multiply Alpha", self, true));
 		
-	newInput(17, nodeValue_Text("Use Extra Value", self, [ "Scale" ], "Apply the third value in each data point (if exist) on given properties."))
+	newInput(17, nodeValue_Text("Extra Value", self, [], "Apply the third and later values in each data point (if exist) on given properties."))
 		.setDisplay(VALUE_DISPLAY.text_array, { data: [ "Scale", "Rotation", "Color" ] });
 		
 	newInput(18, nodeValue_Enum_Scroll("Blend Mode", self,  0, [ "Normal", "Add", "Max" ]));
@@ -184,59 +184,6 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	}
 	
 	static step = function() {
-		var _are = getInputData(5);
-		var _dis = getInputData(6);
-		var _sct = getInputData(9);
-		var _arr = getInputData(15);
-		var _amn = getInputData(26);
-		var _spa = getInputData(38);
-		
-		update_on_frame = _arr && (_amn[0] != 0 || _amn[1] != 0);
-		
-		inputs[0].array_depth = bool(_arr);
-		
-		inputs[13].setVisible(_dis == 2, _dis == 2);
-		inputs[14].setVisible(_dis == 3, _dis == 3);
-		inputs[17].setVisible(_dis == 3);
-		inputs[ 9].setVisible(_dis != 2 && _dis != 3);
-		inputs[19].setVisible(_dis == 4, _dis == 4);
-		inputs[20].setVisible(_dis == 4);
-		inputs[21].setVisible(_dis == 4 && _spa == 0);
-		inputs[22].setVisible(_dis == 4);
-		inputs[38].setVisible(_dis == 4 && _sct == 0);
-		inputs[24].setVisible(_arr == 3, _arr == 3);
-		inputs[25].setVisible(_arr == 4, _arr == 4);
-		inputs[26].setVisible(_arr);
-		inputs[27].setVisible(_arr);
-		
-		inputs[ 5].setVisible(_dis < 3);
-		inputs[ 2].setVisible( true);
-		inputs[30].setVisible(false);
-		inputs[31].setVisible(false);
-		inputs[32].setVisible(false);
-		inputs[34].setVisible(false);
-		inputs[35].setVisible(false);
-		
-		if(_dis == 0 && _sct == 0) {
-			if(_are[AREA_INDEX.shape] == AREA_SHAPE.elipse) {
-				var _aut = getInputData(31);
-			
-				inputs[ 2].setVisible( _aut);
-				inputs[30].setVisible(!_aut);
-				inputs[31].setVisible( true);
-				inputs[32].setVisible(!_aut);
-				inputs[34].setVisible(!_aut);
-				inputs[35].setVisible(!_aut);
-				
-			} else {
-				inputs[ 2].setVisible(false);
-				inputs[30].setVisible( true);
-			}
-		} else if(_dis == 5) {
-			inputs[ 2].setVisible(_sct == 1);
-			inputs[30].setVisible(_sct == 0);
-		}
-		
 		inputs[11].mappableStep();
 	}
 	
@@ -297,9 +244,64 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 		var _in_w, _in_h;
 		
-		var vSca = array_exists(useV, "Scale");
-		var vRot = array_exists(useV, "Rotation");
-		var vCol = array_exists(useV, "Color");
+		#region visible
+			var _are = _data[5];
+			var _dis = _data[6];
+			var _sct = _data[9];
+			var _arr = _data[15];
+			var _amn = _data[26];
+			var _spa = _data[38];
+			
+			update_on_frame = _arr && (_amn[0] != 0 || _amn[1] != 0);
+			
+			inputs[0].array_depth = bool(_arr);
+			
+			inputs[13].setVisible(_dis == 2, _dis == 2);
+			inputs[14].setVisible(_dis == 3, _dis == 3);
+			inputs[17].setVisible(_dis == 3);
+			inputs[ 9].setVisible(_dis != 2 && _dis != 3);
+			inputs[19].setVisible(_dis == 4, _dis == 4);
+			inputs[20].setVisible(_dis == 4);
+			inputs[21].setVisible(_dis == 4 && _spa == 0);
+			inputs[22].setVisible(_dis == 4);
+			inputs[38].setVisible(_dis == 4 && _sct == 0);
+			inputs[24].setVisible(_arr == 3, _arr == 3);
+			inputs[25].setVisible(_arr == 4, _arr == 4);
+			inputs[26].setVisible(_arr);
+			inputs[27].setVisible(_arr);
+			
+			inputs[ 5].setVisible(_dis < 3);
+			inputs[ 2].setVisible(_dis != 3);
+			inputs[30].setVisible(false);
+			inputs[31].setVisible(false);
+			inputs[32].setVisible(false);
+			inputs[34].setVisible(false);
+			inputs[35].setVisible(false);
+			
+			if(_dis == 0 && _sct == 0) {
+				if(_are[AREA_INDEX.shape] == AREA_SHAPE.elipse) {
+					var _aut = _data[31];
+				
+					inputs[ 2].setVisible( _aut);
+					inputs[30].setVisible(!_aut);
+					inputs[31].setVisible( true);
+					inputs[32].setVisible(!_aut);
+					inputs[34].setVisible(!_aut);
+					inputs[35].setVisible(!_aut);
+					
+				} else {
+					inputs[ 2].setVisible(false);
+					inputs[30].setVisible( true);
+				}
+			} else if(_dis == 5) {
+				inputs[ 2].setVisible(_sct == 1);
+				inputs[30].setVisible(_sct == 0);
+			}
+		#endregion
+		
+		var iSca = 2 + array_get_index(useV, "Scale");
+		var iRot = 2 + array_get_index(useV, "Rotation");
+		var iCol = 2 + array_get_index(useV, "Color");
 		
 		var surfArray = is_array(_inSurf);
 		if(surfArray && array_empty(_inSurf)) return _outData;
@@ -339,6 +341,9 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				if(_scat == 0 && (!uniAut || _area[AREA_INDEX.shape] == AREA_SHAPE.rectangle)) 
 					_amount = uniAmo[0] * uniAmo[1];
 			
+			} else if(_dist == NODE_SCATTER_DIST.data) { // Data
+				_amount = array_length(_distData);
+			
 			} else if(_dist == NODE_SCATTER_DIST.path) { // Path
 				var path_valid    = path != noone && struct_has(path, "getPointRatio");
 			
@@ -350,6 +355,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				_amount *= path_amount;
 			
 				var path_line_index = 0;
+				
 			} else if(_dist == NODE_SCATTER_DIST.tile) {
 				if(_scat == 0) _amount = uniAmo[0] * uniAmo[1];
 			}
@@ -471,7 +477,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 						
 						_x = array_safe_get_fast(sp, 0);
 						_y = array_safe_get_fast(sp, 1);
-						_v = array_safe_get_fast(sp, 2, noone);
+						_v = sp;
 						break;
 						
 					case NODE_SCATTER_DIST.path : 
@@ -534,15 +540,16 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					_scx = _scy;
 				}
 				
-				if(vSca && _v != noone) {
-					_scx *= _v;
-					_scy *= _v;
+				if(iSca > 1 && _v != noone) {
+					var vSca = array_safe_get_fast(_v, iSca, 1);
+					_scx *= vSca;
+					_scy *= vSca;
 				}
 				
 				var _r = (_pint? point_direction(_area[0], _area[1], _x, _y) : 0) + angle_random_eval_fast(_rota, _sed++);
 				
-				if(vRot && _v != noone)
-					_r *= _v;
+				if(iRot > 1 && _v != noone)
+					_r += array_safe_get_fast(_v, iRot, 0);
 					
 				if(_dist == NODE_SCATTER_DIST.path && pathRot) {
 					var pr1 = clamp(_pathProgress + 0.01, 0, 1);
@@ -605,20 +612,24 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				}
 				
 				var grSamp = random_seed(1, _sed++);
-				if(vCol && _v != noone)
-					grSamp *= _v;
 				
 				var clr = _clrUni? _clrSin  : evaluate_gradient_map(grSamp, color, clr_map, clr_rng, inputs[11], true);
 				var alp  = _alpUni? alpha[0] : random_range_seed(alpha[0], alpha[1], _sed++);
 				var _atl = _sct_len >= _datLen? noone : scatter_data[_sct_len];
 				
+				if(iCol > 1 && _v != noone) 
+					clr = colorMultiply(clr, array_safe_get_fast(_v, iCol, cola(c_white, 1)));
+					
 				if(surfSamp.active) {
 					var _samC = surfSamp.getPixel(_x + random_range_seed(sampWig[0], sampWig[1], _sed++), _y + random_range_seed(sampWig[2], sampWig[3], _sed++));
 					clr =  colorMultiply(clr, _samC);
 					alp *= color_get_alpha(_samC);
 				}
 				
-				if(posExt) { _x = round(_x); _y = round(_y); }
+				if(posExt) { 
+					_x = round(_x); 
+					_y = round(_y); 
+				}
 				
 				if(!is(_atl, SurfaceAtlasFast))  _atl = new SurfaceAtlasFast(surf, _x, _y, _r, _scx, _scy, clr, alp);
 				else						     _atl.set(surf, _x, _y, _r, _scx, _scy, clr, alp);

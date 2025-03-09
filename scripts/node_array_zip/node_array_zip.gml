@@ -2,8 +2,7 @@ function Node_Array_Zip(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	name = "Array Zip";
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue("Array", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0))
-		.setVisible(true, true);
+	newInput(0, nodeValue_b("Spread Content", self, false));
 	
 	newOutput(0, nodeValue_Output("Output", self, VALUE_TYPE.integer, 0));
 	
@@ -17,39 +16,50 @@ function Node_Array_Zip(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	} setDynamicInput(1);
 	
 	static step = function() {
-		if(inputs[0].value_from == noone) {
-			inputs[0].setType(VALUE_TYPE.any);
-			outputs[0].setType(VALUE_TYPE.any);
-		} else {
-			inputs[0].setType(inputs[0].value_from.type);
-			outputs[0].setType(inputs[0].value_from.type);
-		}
+		var _typ = VALUE_TYPE.any;
 		
-		for( var i = 0; i < array_length(inputs); i += data_length )
+		for( var i = 0; i < array_length(inputs); i += data_length ) {
 			inputs[i].setType(inputs[i].value_from == noone? VALUE_TYPE.any : inputs[i].value_from.type);
+			_typ = inputs[i].type;
+		}
+			
+		outputs[0].setType(_typ);
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
-		var _arr = getInputData(0);
+		var _spr = getInputData(0);
+		var  amo = getInputAmount();
+		if(amo == 0) return;
 		
-		if(!is_array(_arr)) return;
 		var len = 1;
 		var val = [];
-		for( var i = 0; i < array_length(inputs); i += data_length ) {
-			val[i] = getInputData(i);
+		
+		for( var i = 0; i < amo; i++ ) {
+			val[i] = getInputData(input_fix_len + i);
 			
 			if(!is_array(val[i])) {
 				val[i] = [ val[i] ];
 				continue;
 			}
+			
 			len = max(len, array_length(val[i]));
 		}
 		
 		var _out = array_create(len);
 		
-		for( var i = 0; i < len; i++ ) {
-			for( var j = 0; j < array_length(inputs); j += data_length )
-				_out[i][j] = array_safe_get_fast(val[j], i, 0);
+		if(_spr) {
+			for( var i = 0; i < len; i++ ) {
+				_out[i] = [];
+				
+				for( var j = 0; j < amo; j++ )
+					array_append(_out[i], array_safe_get_fast(val[j], i, 0));
+			}
+			
+		} else {
+			for( var i = 0; i < len; i++ ) {
+				for( var j = 0; j < amo; j++ )
+					_out[i][j] = array_safe_get_fast(val[j], i, 0);
+			}
 		}
 		
 		outputs[0].setValue(_out);
