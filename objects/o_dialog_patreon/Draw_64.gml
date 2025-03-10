@@ -63,7 +63,7 @@ if !ready exit;
 			tb_code.draw(_tx, _ty, _tw, _th, "");
 			
 		} else if(status == 0) {
-			draw_sprite_ext(THEME.loading_s, 0, cx, _ty + _th / 2, 1, 1, current_time, COLORS._main_icon, 1);
+			draw_sprite_ui(THEME.loading_s, 0, cx, _ty + _th / 2, 1, 1, current_time, COLORS._main_icon, 1);
 		}
 	}
 #endregion

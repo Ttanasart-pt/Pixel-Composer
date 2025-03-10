@@ -415,7 +415,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						
 						node.triggerRender(); 
 					})
-				.setIcon( THEME.value_use_surface, [ function() /*=>*/ {return attributes.mapped} ], COLORS._main_icon )
+				.setIcon( THEME.mappable_parameter, [ function() /*=>*/ {return attributes.mapped} ], COLORS._main_icon )
 				.setTooltip("Toggle map");
 		
 		switch(type) {
@@ -2025,7 +2025,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	static drawJunction = function(_draw, _s, _mx, _my) {
-		_s /= 2;
+		_s /= 2 * THEME_SCALE;
 		
 		var hov  = PANEL_GRAPH.pHOVER && (PANEL_GRAPH.node_hovering == noone || PANEL_GRAPH.node_hovering == node);
 		var _d   = node.junction_draw_hei_y * _s;

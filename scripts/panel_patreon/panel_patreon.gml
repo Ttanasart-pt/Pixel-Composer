@@ -128,7 +128,7 @@ function Panel_Patreon() : PanelContent() constructor {
 					draw_set_text(f_p0, fa_center, fa_center, COLORS._main_text);
 					draw_text(_bx + _bw / 2, _yy + _bh / 2, "Submit");
 				} else 
-					draw_sprite_ext(THEME.loading_s, 0, w / 2, _yy + _bh / 2, 1, 1, current_time, COLORS._main_icon, 1);
+					draw_sprite_ui(THEME.loading_s, 0, w / 2, _yy + _bh / 2, 1, 1, current_time, COLORS._main_icon, 1);
 				break;
 				
 			case 1 :

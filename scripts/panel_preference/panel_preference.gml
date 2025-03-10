@@ -423,6 +423,14 @@ function Panel_Preference() : PanelContent() constructor {
     			})
     		));
     		
+    		if(TESTING) {
+	    		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
+	    			__txtx("pref_ui_window_shadoe", "Shadow"),
+	    			"window_shadow",
+	    			new checkBox(function() /*=>*/ { PREFERENCES.window_shadow = !PREFERENCES.window_shadow; PREF_SAVE(); PREF_APPLY(); })
+	    		));
+    		}
+    		
     	ds_list_add(pref_appr, __txt("Splash"));
     		
     		if(IS_PATREON)
@@ -607,7 +615,8 @@ function Panel_Preference() : PanelContent() constructor {
     		
     		if(!file_exists_empty(_metaPath)) {
     			var _item = new scrollItem(_file, THEME.circle, 0, COLORS._main_accent)
-    							.setTooltip("Theme made for earlier version.");
+    							.setTooltip("Theme made for earlier version.")
+    							.setSpriteScale();
     			array_push(themes, _item);
     			continue;
     		} 
@@ -620,7 +629,7 @@ function Panel_Preference() : PanelContent() constructor {
     		
     		if(PREFERENCES.theme == _file) themeCurrent = _meta;
     		
-    		if(_meta.version < VERSION) _item.tooltip = "Theme made for earlier version.";
+    		if(_meta.version < VERSION) _item.setTooltip("Theme made for earlier version.").setSpriteScale();
     		array_push(themes, _item);
     	}
     	file_find_close();
@@ -835,15 +844,15 @@ function Panel_Preference() : PanelContent() constructor {
     					refreshThemePalette();
     				}
     			} else
-    				draw_sprite_ext(THEME.refresh_16, 0, _bx + _bs / 2, _by + _bs / 2, 1, 1, 0, COLORS._main_icon_dark);
+    				draw_sprite_ui(THEME.refresh_16, 0, _bx + _bs / 2, _by + _bs / 2, 1, 1, 0, COLORS._main_icon_dark);
     			
     			yy += th + pady * 2;
     			hh += th + pady * 2;
     			ind++;
     		}
     		
-    		for( var i = 0, n = array_length(COLOR_KEYS); i < n; i++ ) {
-    			var key = COLOR_KEYS[i];
+    		for( var i = 0, n = array_length(COLOR_KEY_ARRAY); i < n; i++ ) {
+    			var key = COLOR_KEY_ARRAY[i];
     			var val = COLORS[$ key];
     			
     			if(_search_text != "" && string_pos(_search_text, string_lower(key)) == 0) continue;
@@ -940,7 +949,7 @@ function Panel_Preference() : PanelContent() constructor {
     					overrideColorRemove(key);
     				}
     			} else
-    				draw_sprite_ext(THEME.refresh_16, 0, _bx + _bs / 2, _by + _bs / 2, 1, 1, 0, COLORS._main_icon_dark);
+    				draw_sprite_ui(THEME.refresh_16, 0, _bx + _bs / 2, _by + _bs / 2, 1, 1, 0, COLORS._main_icon_dark);
     			
     			yy += th + pady * 2;
     			hh += th + pady * 2;
@@ -1152,7 +1161,7 @@ function Panel_Preference() : PanelContent() constructor {
             sp_theme_fonts,
 	    ];
     	theme_page_name = [
-    		$"Colors [{array_length(global.palette_keys) + array_length(COLOR_KEYS)}]", 
+    		$"Colors [{array_length(global.palette_keys) + array_length(COLOR_KEY_ARRAY)}]", 
     		$"Sprites [{array_length(sprKeys)}]", 
     		$"Fonts [{array_length(fontKeys)}]", 
     	];
@@ -1433,11 +1442,11 @@ function Panel_Preference() : PanelContent() constructor {
     				
     				BLEND_SUBTRACT
     				gpu_set_colorwriteenable(0, 0, 0, 1);
-    				draw_sprite_ext(THEME.patreon_supporter, 0, spr_x, spr_y, -1, 1, 0, c_white, 1);
+    				draw_sprite_ui(THEME.patreon_supporter, 0, spr_x, spr_y, -1, 1, 0, c_white, 1);
     				gpu_set_colorwriteenable(1, 1, 1, 1);
     				BLEND_NORMAL
     			
-    				draw_sprite_ext(THEME.patreon_supporter, 1, spr_x, spr_y, -1, 1, 0, COLORS._main_accent, 1);
+    				draw_sprite_ui(THEME.patreon_supporter, 1, spr_x, spr_y, -1, 1, 0, COLORS._main_accent, 1);
     			}
     			
     			_pref.editWidget.setFocusHover(pFOCUS, pHOVER && sp_pref.hover); 
@@ -1471,7 +1480,7 @@ function Panel_Preference() : PanelContent() constructor {
     				var _by = yy + wdh / 2 - _bs / 2;
     					
     				if(isEqual(data, _defVal))
-    					draw_sprite_ext(THEME.refresh_16, 0, _bx + _bs / 2, _by + _bs / 2, 1, 1, 0, COLORS._main_icon_dark);
+    					draw_sprite_ui(THEME.refresh_16, 0, _bx + _bs / 2, _by + _bs / 2, 1, 1, 0, COLORS._main_icon_dark);
     				else {
     					if(buttonInstant(THEME.button_hide_fill, _bx, _by, _bs, _bs, _m, pHOVER, pFOCUS && sp_pref.hover, __txt("Reset"), THEME.refresh_16) == 2)
     						_pref.onEdit(_defVal);
@@ -1805,7 +1814,7 @@ function Panel_Preference() : PanelContent() constructor {
         			        
         			        var _mspr = _mod_clr[j];
         			        for( var k = 0, p = array_length(_mspr); k < p; k++ )
-        			            draw_sprite_ext(THEME.circle_hotkey, _mspr[k][0], _mkx, _mky, 1, 1, 0, _mspr[k][1]);
+        			            draw_sprite_ui(THEME.circle_hotkey, _mspr[k][0], _mkx, _mky, 1, 1, 0, _mspr[k][1]);
         			        _mkx += ui(5);
         			    }
         			}

@@ -194,16 +194,17 @@ function ThemeColor() constructor {
 }
 
 function ThemeValue() constructor {
-	highlight_corner_radius    =  8;
-    selection_corner_radius    =  6;
+	icon_scale                 = 1;
+	highlight_corner_radius    = 8;
+    selection_corner_radius    = 6;
     
-    panel_padding              =  2;
-    panel_margin               =  2;
-    panel_corner_radius        =  8;
-    panel_notification_padding =  0;
-    panel_tab_extend           =  2;
+    panel_padding              = 2;
+    panel_margin               = 2;
+    panel_corner_radius        = 8;
+    panel_notification_padding = 0;
+    panel_tab_extend           = 2;
 
-    minimap_corner_radius      =  2;
-    slider_type                =  "stem";
-    font_aa                    =  true;
+    minimap_corner_radius      = 2;
+    slider_type                = "stem";
+    font_aa                    = true;
 }

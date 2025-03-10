@@ -13,6 +13,7 @@
 		PREFERENCES.window_fix					    = false;
 		PREFERENCES.window_fix_width				= 1600;
 		PREFERENCES.window_fix_height				= 800;
+		PREFERENCES.window_shadow                   = true;
 		
 		PREFERENCES.theme							= "default";
 		PREFERENCES.theme_override					= "override";
@@ -442,7 +443,7 @@
 			if(PREFERENCES.window_maximize)
 				winMan_Maximize();
 					
-			gameframe_set_shadow(true);
+			gameframe_set_shadow(PREFERENCES.window_shadow);
 		}
 		
 		window_refresh();

@@ -8,7 +8,7 @@ if !ready exit;
 
 #region content
 	draw_sprite_ui_uniform(THEME.icon_64, 0, dialog_x + ui(56), dialog_y + ui(56));
-	draw_sprite_ui_uniform(s_title, 0, dialog_x + ui(56 + 48 - 4), dialog_y + ui(56 + 4 - 32), .4);
+	draw_sprite_ui_uniform(s_title, 0, dialog_x + ui(56 + 48 - 4), dialog_y + ui(56 + 4 - 32), .4 * THEME_SCALE);
 	
 	draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text_sub);
 	var bx  = dialog_x + ui(56 + 48);

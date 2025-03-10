@@ -47,7 +47,7 @@ function buttonAnchor(_input = noone, _onClick = noone) : widget() constructor {
 			var cc  = hov? COLORS._main_accent : COLORS._main_icon;
 			var aa  = 0.75 + (_fil || hov) * 0.25;
 			
-			draw_sprite_ext(THEME.prop_anchor, _fil, _bx, _by, 1, 1, 0, cc, aa);
+			draw_sprite_ui(THEME.prop_anchor, _fil, _bx, _by, 1, 1, 0, cc, aa);
 			
 			if(hov) {
 				hovering = true;

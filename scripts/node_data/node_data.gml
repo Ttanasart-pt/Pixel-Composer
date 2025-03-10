@@ -2209,22 +2209,23 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static drawBadge = function(_x, _y, _s) {
 		badgePreview = lerp_float(badgePreview, !!previewing, 2);
 		badgeInspect = lerp_float(badgeInspect,   inspecting, 2);
+		var _si = THEME_SCALE / UI_SCALE;
 		
 		if(previewable) {
 			var xx = x * _s + _x + w * _s;
 			var yy = y * _s + _y;
 			
-			if(badgePreview > 0) { draw_sprite_ext(THEME.node_state, is_3D? 3 : 0, xx, yy, badgePreview, badgePreview, 0, c_white, 1); 	xx -= 28 * badgePreview; }
-			if(badgeInspect > 0) { draw_sprite_ext(THEME.node_state, 1, xx, yy, badgeInspect, badgeInspect, 0, c_white, 1);				xx -= 28 * badgeInspect; }
-			if(isTool)           { draw_sprite_ext(THEME.node_state, 2, xx, yy, 1, 1, 0, c_white, 1);									xx -= 28 * 2;			 }
+			if(badgePreview > 0) { draw_sprite_ui_uniform(THEME.node_state, is_3D? 3 : 0, xx, yy, badgePreview, c_white, 1); xx -= 28 * badgePreview * _si; }
+			if(badgeInspect > 0) { draw_sprite_ui_uniform(THEME.node_state, 1,            xx, yy, badgeInspect, c_white, 1); xx -= 28 * badgeInspect * _si; }
+			if(isTool)           { draw_sprite_ui_uniform(THEME.node_state, 2,            xx, yy, 1, c_white, 1);            xx -= 28 * _si;                }
 			
 		} else {
 			var xx = _x + _s * (x + w - 10);
 			var yy = _y + _s *  y;
 			
-			if(badgePreview > 0) { draw_sprite_ext(THEME.circle_16, 0, xx, yy, .5 * _s, .5 * _s, 0, CDEF.orange); xx -= 12 * _s; }
-			if(badgeInspect > 0) { draw_sprite_ext(THEME.circle_16, 0, xx, yy, .5 * _s, .5 * _s, 0, CDEF.lime);   xx -= 12 * _s; }
-			if(isTool)           { draw_sprite_ext(THEME.circle_16, 0, xx, yy, .5 * _s, .5 * _s, 0, CDEF.blue);   xx -= 12 * _s; }
+			if(badgePreview > 0) { draw_sprite_ui_uniform(THEME.circle_16, 0, xx, yy, .5 * _s, CDEF.orange); xx -= 12 * _s * _si; }
+			if(badgeInspect > 0) { draw_sprite_ui_uniform(THEME.circle_16, 0, xx, yy, .5 * _s, CDEF.lime);   xx -= 12 * _s * _si; }
+			if(isTool)           { draw_sprite_ui_uniform(THEME.circle_16, 0, xx, yy, .5 * _s, CDEF.blue);   xx -= 12 * _s * _si; }
 		}
 		
 		inspecting = false;

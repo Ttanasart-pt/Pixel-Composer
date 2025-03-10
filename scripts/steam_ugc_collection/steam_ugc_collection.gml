@@ -105,7 +105,7 @@ function steam_ugc_collection_generate(file, dest_path = TEMPDIR + "steamUGCthum
 		draw_sprite_ext(spr, 0, prev_size / 2 + ox, prev_size / 2 + oy, ss, ss, 0, c_white, 1);
 		
 		draw_sprite_stretched(s_workshop_badge, 0, 8, 8, 88, 88);
-		draw_sprite_ext(THEME.workshop_collection, 0, 40, 40, 1, 1, 0, COLORS._main_icon_dark, 1);
+		draw_sprite_ui(THEME.workshop_collection, 0, 40, 40, 1, 1, 0, COLORS._main_icon_dark, 1);
 		
 		draw_set_text(f_h2, fa_right, fa_bottom, COLORS._main_icon_dark);
 		var _bw = 48 + string_width(VERSION_STRING);

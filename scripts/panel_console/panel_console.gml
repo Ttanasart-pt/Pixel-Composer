@@ -38,7 +38,7 @@ function Panel_Console() : PanelContent() constructor {
 				draw_set_color(his.color);
 				
 				if(is_instanceof(his, __cmdLineIn)) {
-					draw_sprite_ext(THEME.icon_cmd_enter, 0, _x + ui(8), _y - line_get_height() / 2, 1, 1, 0, his.color, 1);
+					draw_sprite_ui(THEME.icon_cmd_enter, 0, _x + ui(8), _y - line_get_height() / 2, 1, 1, 0, his.color, 1);
 					draw_text_line(_x + ui(20), _y, txt, -1, _w);
 				} else 
 					draw_text_line(_x, _y, txt, -1, _w);

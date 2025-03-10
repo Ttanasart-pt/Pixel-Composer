@@ -39,18 +39,18 @@ function Panel_Collection_Manager() : PanelContent() constructor {
     		
     		if(_a && point_in_circle(_m[0], _m[1], bx, by, bs / 2)) {
     			TOOLTIP = "Load Folder";
-    			draw_sprite_ext(THEME.folder, 0, bx, by, .5, .5, 0, c_white);
+    			draw_sprite_ui(THEME.folder, 0, bx, by, .5, .5, 0, c_white);
     			if(mouse_click(mb_left)) __test_load_current_collections(st);
     			
-    		} else draw_sprite_ext(THEME.folder, 0, bx, by, .5, .5, 0, COLORS._main_icon);
+    		} else draw_sprite_ui(THEME.folder, 0, bx, by, .5, .5, 0, COLORS._main_icon);
 		    bx -= bs;
 		    
     		if(_a && point_in_circle(_m[0], _m[1], bx, by, bs / 2)) {
     			TOOLTIP = "Update Folder";
-    			draw_sprite_ext(THEME.refresh_icon, 0, bx, by, .5, .5, 0, c_white);
+    			draw_sprite_ui(THEME.refresh_icon, 0, bx, by, .5, .5, 0, c_white);
     			if(mouse_click(mb_left)) __test_update_current_collections(st);
     			
-    		} else draw_sprite_ext(THEME.refresh_icon, 0, bx, by, .5, .5, 0, COLORS._main_icon);
+    		} else draw_sprite_ui(THEME.refresh_icon, 0, bx, by, .5, .5, 0, COLORS._main_icon);
 		    bx -= bs;
 		    
 		    //// content

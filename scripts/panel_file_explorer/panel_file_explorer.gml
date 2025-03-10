@@ -301,7 +301,7 @@ function Panel_File_Explorer() : PanelContent() constructor {
 			var _tx = _px + ui(2);
 			var _ty = _py + ui(2);
 			
-			draw_sprite_ext(THEME.arrow, _dir.open? 3 : 0, _tx + _ph / 2, _py + _ph / 2, 1, 1, 0, COLORS._main_icon, 1);
+			draw_sprite_ui(THEME.arrow, _dir.open? 3 : 0, _tx + _ph / 2, _py + _ph / 2, 1, 1, 0, COLORS._main_icon, 1);
 			_tx += _ph + ui(2);
 			draw_set_color(merge_color(COLORS._main_text, COLORS._main_text_sub, 0.5));
 			draw_text_add(_tx, _ty, _dir.name);
@@ -685,7 +685,7 @@ function Panel_File_Explorer() : PanelContent() constructor {
 			var f  = file_selectings[i];
 			
 			if(is(f, ExpDir)) {
-				draw_sprite_ext(THEME.folder_content, 0, mouse_mx + 20 + 8 * i, mouse_my + 20 + 8 * i, 1, 1, 0, c_white, 1);
+				draw_sprite_ui(THEME.folder_content, 0, mouse_mx + 20 + 8 * i, mouse_my + 20 + 8 * i, 1, 1, 0, c_white, 1);
 				
 			} else if(is(f, ExpFile)) {
 				var _s = 64 / max(f.th_w, f.th_h);

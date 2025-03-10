@@ -63,7 +63,7 @@ function Node_Tile_Convert(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			var _x2 = _x + _w - ui(8);
 			var _xw = _x2 - _x1;
 			
-			draw_sprite_ext(THEME.arrow, 0, (_x0 + ss + _x1) / 2, _y0 + ss / 2, 1, 1, 0, c_white, 0.5);
+			draw_sprite_ui(THEME.arrow, 0, (_x0 + ss + _x1) / 2, _y0 + ss / 2, 1, 1, 0, c_white, 0.5);
 			draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x1, _y0, _xw, ss, COLORS.node_composite_bg_blend, 1);
 			
 			if(tileset == noone) continue;

@@ -278,7 +278,10 @@ event_inherited();
 				draw_text_add(_tx, _ly + hght / 2, _txt);
 			}
 			
-			if(_spr) draw_sprite_ui(_val.spr, _val.spr_ind, _lx + ui(8) + hght / 2, _ly + hght / 2, 1, 1, 0, _val.spr_blend);
+			if(_spr) {
+				var _ss = 28 / sprite_get_height(_val.spr);
+				draw_sprite_uniform(_val.spr, _val.spr_ind, _lx + ui(8) + hght / 2, _ly + hght / 2, _ss, _val.spr_blend);
+			}
 			
 			_ly += hght;
 			_lh += hght;

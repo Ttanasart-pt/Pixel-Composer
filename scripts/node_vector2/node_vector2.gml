@@ -239,7 +239,7 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		if(point_in_rectangle(v0, v1, wd_minx, wd_miny, wd_maxx, wd_maxy)) { // draw pin
 			var pin_dx = bbox.x0 + bbox.w * pin_x;
 			var pin_dy = bbox.y1 - bbox.h * pin_y;
-			draw_sprite_ext(THEME.node_coor_pin, 0, pin_dx, pin_dy, 1, 1, 0, c_white, 1);
+			draw_sprite_ui(THEME.node_coor_pin, 0, pin_dx, pin_dy, 1, 1, 0, c_white, 1);
 		} 
 		
 		if(wd_dragging) { 

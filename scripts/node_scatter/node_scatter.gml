@@ -592,7 +592,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					}
 					
 					if(iArr > 1 && _v != noone) 
-						ind = array_safe_get_fast(_v, iArr, ind);
+						ind = safe_mod(array_safe_get_fast(_v, iArr, ind), _arrLen);
 						
 					surf = array_safe_get_fast(_inSurf, ind, 0); 
 				}

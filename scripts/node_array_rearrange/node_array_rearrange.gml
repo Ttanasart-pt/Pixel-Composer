@@ -48,7 +48,7 @@ function Node_Array_Rearrange(_x, _y, _group = noone) : Node(_x, _y, _group) con
 			draw_sprite_stretched_ext(THEME.ui_panel, 0, _fx, _fy, _w, _fh, CDEF.main_dkblack, 1);
 			var hv = ordering == noone && _hover && point_in_rectangle(_m[0], _m[1], _fx, _fy, _fx + ui(32), _fy + _fh);
 			var cc = hv? COLORS._main_icon : COLORS.node_composite_bg;
-			draw_sprite_ext(THEME.hamburger_s, 0, _fx + ui(16), _fy + _fh / 2, 1, 1, 0, cc, 1);
+			draw_sprite_ui(THEME.hamburger_s, 0, _fx + ui(16), _fy + _fh / 2, 1, 1, 0, cc, 1);
 			
 			if(_m[1] > _ffy) _hov = i;
 			

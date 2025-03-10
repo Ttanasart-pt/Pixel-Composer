@@ -77,8 +77,8 @@ event_inherited();
 				if(exists) draw_sprite_stretched_ext(THEME.checkbox_def, 2, ui(20) - bs / 2, yc - bs / 2, bs, bs, COLORS._main_accent, 1);
 				
 			} else if(mode == 1) {
-				     if(exists ==  1) draw_sprite_ext(THEME.arrow, 1, ui(20), yc,         1, 1, 0, COLORS._main_value_positive, 1);
-				else if(exists == -1) draw_sprite_ext(THEME.arrow, 3, ui(20), yc + ui(2), 1, 1, 0, COLORS._main_value_negative, 1);
+				     if(exists ==  1) draw_sprite_ui(THEME.arrow, 1, ui(20), yc,         1, 1, 0, COLORS._main_value_positive, 1);
+				else if(exists == -1) draw_sprite_ui(THEME.arrow, 3, ui(20), yc + ui(2), 1, 1, 0, COLORS._main_value_negative, 1);
 			}
 			
 			draw_set_text(font, fa_left, fa_center, COLORS._main_text);

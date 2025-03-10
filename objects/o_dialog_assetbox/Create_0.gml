@@ -125,7 +125,7 @@ event_inherited();
 					var sx = xx + grid_size / 2;
 					var sy = yy + grid_size / 2;
 					content.draw(sx, sy, _sw, _sh);
-					draw_sprite_ext(THEME.dynadraw, 0, xx + grid_size - ui(14), yy + grid_size - ui(14));
+					draw_sprite_ui(THEME.dynadraw, 0, xx + grid_size - ui(14), yy + grid_size - ui(14));
 					
 				} else {
 					spr = content.getSpr();

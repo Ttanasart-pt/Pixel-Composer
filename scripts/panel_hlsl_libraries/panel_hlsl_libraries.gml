@@ -267,7 +267,7 @@ Libraries in the global scope will be add to project automatically.";
         	        __initHLSL();
         	    }
         	} 
-    	} else draw_sprite_ext(THEME.arrow, 1, _bx + _bs / 2, _by + _bs / 2, 1, 1, 0, COLORS._main_icon_dark);
+    	} else draw_sprite_ui(THEME.arrow, 1, _bx + _bs / 2, _by + _bs / 2, 1, 1, 0, COLORS._main_icon_dark);
     	_bx -= _bs + ui(4);
     	
     	if(new_file_type == 0) {
@@ -312,7 +312,7 @@ Libraries in the global scope will be add to project automatically.";
     		draw_sprite_stretched_ext(THEME.box_r5_clr, 0, px, py, _tw, _th, c_white, _aa);
     		if(curr_type == 0) {
     		    gpu_set_tex_filter(true);
-    		    draw_sprite_ext(THEME.globe, 0, px + ui(4 + 10), py + _th / 2, .75, .75);
+    		    draw_sprite_ui(THEME.globe, 0, px + ui(4 + 10), py + _th / 2, .75, .75);
     		    gpu_set_tex_filter(false);
     		}
     		
@@ -320,7 +320,7 @@ Libraries in the global scope will be add to project automatically.";
     		
     		var _hov = pHOVER && point_in_rectangle(mx, my, px + _tw - ui(22), py, px + _tw, py + _th);
     		gpu_set_tex_filter(true);
-    		draw_sprite_ext(THEME.cross, 0, px + _tw - 8 - 4, py + _th / 2, .5, .5, 0, _hov? COLORS._main_value_negative : COLORS._main_icon, .5 + .5 * _hov);
+    		draw_sprite_ui(THEME.cross, 0, px + _tw - 8 - 4, py + _th / 2, .5, .5, 0, _hov? COLORS._main_value_negative : COLORS._main_icon, .5 + .5 * _hov);
     		gpu_set_tex_filter(false);
     		
     		if(_hov && mouse_press(mb_left, pFOCUS))

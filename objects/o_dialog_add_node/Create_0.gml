@@ -476,10 +476,10 @@ event_inherited();
 				var _cy = _ty - string_height(name) / 2 + ui(6);
 				
 				gpu_set_colorwriteenable(1, 1, 1, 0);
-				draw_sprite_ext(THEME.patreon_supporter, 0, _cx, _cy, 1, 1, 0, _hov? COLORS._main_icon_dark : COLORS.panel_bg_clear, 1);
+				draw_sprite_ui(THEME.patreon_supporter, 0, _cx, _cy, 1, 1, 0, _hov? COLORS._main_icon_dark : COLORS.panel_bg_clear, 1);
 				gpu_set_colorwriteenable(1, 1, 1, 1);
 				
-				draw_sprite_ext(THEME.patreon_supporter, 1, _cx, _cy, 1, 1, 0, i == ADD_NODE_PAGE? COLORS._main_text_accent : cc, 1);
+				draw_sprite_ui(THEME.patreon_supporter, 1, _cx, _cy, 1, 1, 0, i == ADD_NODE_PAGE? COLORS._main_text_accent : cc, 1);
 			}
 			
 			hh += hg;

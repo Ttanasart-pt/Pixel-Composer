@@ -88,8 +88,8 @@ function textArrayBox(arraySet, data, onModify = noone) : widget() constructor {
 					break;
 					
 				case 1 : 
-					     if(_type == "+") draw_sprite_ext(THEME.arrow, 1, tx + ui(16), ty + hh / 2,         1, 1, 0, COLORS._main_value_positive, 1);
-					else if(_type == "-") draw_sprite_ext(THEME.arrow, 3, tx + ui(16), ty + hh / 2 + ui(2), 1, 1, 0, COLORS._main_value_negative, 1);
+					     if(_type == "+") draw_sprite_ui(THEME.arrow, 1, tx + ui(16), ty + hh / 2,         1, 1, 0, COLORS._main_value_positive, 1);
+					else if(_type == "-") draw_sprite_ui(THEME.arrow, 3, tx + ui(16), ty + hh / 2 + ui(2), 1, 1, 0, COLORS._main_value_negative, 1);
 					
 					draw_text_add(tx + ui(32), ty + hh / 2, _txt); 
 					break;

@@ -70,7 +70,7 @@ function draw_sprite_uniform(spr, ind, _x, _y, scale, color = c_white, alpha = 1
 
 function draw_sprite_ui(spr, ind, _x, _y, xscale = 1, yscale = 1, rot = 0, color = c_white, alpha = 1) {
 	gpu_set_tex_filter(true);
-		draw_sprite_ext(spr, ind, _x, _y, xscale * UI_SCALE, yscale * UI_SCALE, rot, color, alpha);
+		draw_sprite_ext(spr, ind, _x, _y, xscale * UI_SCALE / THEME_SCALE, yscale * UI_SCALE / THEME_SCALE, rot, color, alpha);
 	gpu_set_tex_filter(false);
 }
 

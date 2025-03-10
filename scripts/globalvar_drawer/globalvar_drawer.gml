@@ -60,7 +60,7 @@ function GlobalVarDrawer() constructor {
 			
 			_edit.tb_name.draw(_wd_xx + ui(22), _yy, _wd_ww - ui(22), _wd_h, _inpu.name, _m, TEXTBOX_INPUT.text);
 			gpu_set_texfilter(true);
-			draw_sprite_ext(THEME.rename, 0, _wd_xx + ui(10), _yy + _wd_h / 2, -.6, .6, 0, COLORS._main_icon, .75);
+			draw_sprite_ui(THEME.rename, 0, _wd_xx + ui(10), _yy + _wd_h / 2, -.6, .6, 0, COLORS._main_icon, .75);
 			gpu_set_texfilter(false);
 			
 			if(buttonInstant(noone, _wd_x + wd_w - _wd_h, _yy, _wd_h, _wd_h, _m, _hov, _foc, "", 

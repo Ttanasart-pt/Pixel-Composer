@@ -209,7 +209,7 @@ function Panel_Profile_Render() : PanelContent() constructor {
 		        if(_draw) {
 		        	var _text = _report.text;
 			        
-		        	draw_sprite_ext(THEME.noti_icon_log, 0, ui(16), _cy, .75, .75, 0, c_white, 1);
+		        	draw_sprite_ui(THEME.noti_icon_log, 0, ui(16), _cy, .75, .75, 0, c_white, 1);
 			        draw_set_text(f_p2, fa_left, fa_center, _sel? COLORS._main_text_accent : COLORS._main_text);
 			        draw_text_add(ui(32), _cy, _text);
 		        }
@@ -473,7 +473,7 @@ function Panel_Profile_Render() : PanelContent() constructor {
 		    
 		    draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
 	        draw_sprite_stretched_ext(THEME.box_r5_clr, 1, _ix - ui(4), io_label_y - ui(2), _iw, ui(24), _hov? CDEF.main_ltgrey : CDEF.main_grey);
-	        draw_sprite_ext(THEME.arrow, show_io * 3, _ix + ui(12), io_label_y + ui(10), 1, 1, 0, CDEF.main_grey, 1);
+	        draw_sprite_ui(THEME.arrow, show_io * 3, _ix + ui(12), io_label_y + ui(10), 1, 1, 0, CDEF.main_grey, 1);
 	        
 	        draw_text_add(_ix + ui(28), io_label_y, $"Inputs [{array_length(_inputs)}] {filter_content_string == ""? "" : " (filtered)"}");
 	        

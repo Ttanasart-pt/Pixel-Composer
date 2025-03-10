@@ -11,7 +11,7 @@ if !ready exit;
 	var ly = dialog_y + ui(96);
 	
 	draw_sprite_ui_uniform(THEME.icon_64, 0, cx, dialog_y + ui(56));
-	draw_sprite_ui_uniform(s_title, 0, cx - ui(256 * .4), ly, .4);
+	draw_sprite_ui_uniform(s_title, 0, cx - ui(256 * .4), ly, .4 * THEME_SCALE);
 	ly += ui(32);
 	
 	draw_set_text(f_p3, fa_center, fa_top);

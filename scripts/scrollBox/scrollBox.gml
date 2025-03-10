@@ -1,16 +1,18 @@
-function scrollItem(name, spr = noone, spr_ind = 0, spr_blend = COLORS._main_icon) constructor {
-	self.name = name;
-	self.data = name;
+function scrollItem(_name, _spr = noone, _spr_ind = 0, _spr_blend = COLORS._main_icon) constructor {
+	name = _name;
+	data = _name;
 	
-	self.spr       = spr;
-	self.spr_ind   = spr_ind;
-	self.spr_blend = spr_blend;
+	spr       = _spr;
+	spr_ind   = _spr_ind;
+	spr_blend = _spr_blend;
+	spr_scale = true;
 	
 	active  = true;
 	tooltip = "";
 	
-	static setActive  = function(_ac) { active  = _ac; return self; }
-	static setTooltip = function(_tt) { tooltip = _tt; return self; }
+	static setSpriteScale = function() /*=>*/ { spr_scale  = false; return self; }
+	static setActive      = function(_ac) /*=>*/ { active  = _ac;   return self; }
+	static setTooltip     = function(_tt) /*=>*/ { tooltip = _tt;   return self; }
 }
 
 function scrollBox(_data, _onModify, _update_hover = true) : widget() constructor {
@@ -173,7 +175,10 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 			}
 		}
 		
-		if(_spr) draw_sprite_ui(_selVal.spr, _selVal.spr_ind, _x + ui(16) * _sps, _yc, _sps, _sps, 0, _selVal.spr_blend);
+		if(_spr) {
+			var _ss = 28 / sprite_get_height(_selVal.spr);
+			draw_sprite_uniform(_selVal.spr, _selVal.spr_ind, _x + ui(16) * _sps, _yc, _sps, _selVal.spr_blend);
+		}
 		
 		if(type == 0) draw_sprite_ui_uniform(arrow_spr, arrow_ind, _x1 + _arw / 2, _yc, _ars, COLORS._main_icon, 0.5 + 0.5 * interactable);
 		if(type == 1) draw_sprite_ui_uniform(arrow_spr, arrow_ind, _tx1 + ui(16),  _yc, _ars, COLORS._main_icon, 0.5 + 0.5 * interactable);

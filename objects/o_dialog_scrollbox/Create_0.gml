@@ -80,13 +80,18 @@ event_inherited();
 		
 		for(var i = 0; i < array_length(data); i++) {
 			var _val = data[i];
-			var _txt = _val, _spr = noone, _tol = false, _act = true, _sub = false;
+			var _txt = _val, _spr = noone;
+			var _tol = false;
+			var _act = true;
+			var _sub = false;
+			var _sca = true;
 			
 			if(is(_val, scrollItem)) {
 				_act = _val.active;
 				_txt = _val.name;
 				_spr = _val.spr;
 				_tol = _val.tooltip != "";
+				_sca = _val.spr_scale;
 				
 			} else {
 				_act = !string_starts_with(_txt, "-");
@@ -147,7 +152,10 @@ event_inherited();
 				draw_sprite_ext(_txt, i, _dw / 2, _yy);
 			}
 			
-			if(_spr) draw_sprite_ui(_val.spr, _val.spr_ind, ui(8) + hght / 2, _yy, 1, 1, 0, _val.spr_blend);
+			if(_spr) {
+				var _ss = _sca? 28 / sprite_get_height(_val.spr) : 1;
+				draw_sprite_uniform(_val.spr, _val.spr_ind, ui(8) + hght / 2, _yy, _ss, _val.spr_blend);
+			}
 			
 			_ly += hght;
 			_h  += hght;

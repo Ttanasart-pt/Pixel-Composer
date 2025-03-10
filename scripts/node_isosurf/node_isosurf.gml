@@ -34,7 +34,7 @@ function Node_IsoSurf(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var _ky = _y + hh / 2;
 		
 		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _y, _w, hh, COLORS.node_composite_bg_blend, 1);
-		draw_sprite(THEME.rotator_bg, 0, _kx, _ky);
+		// draw_sprite(THEME.rotator_bg, 0, _kx, _ky);
 		
 		var _khover = noone;
 		
@@ -45,7 +45,7 @@ function Node_IsoSurf(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var _kny = _ky + lengthdir_y(ui(28), _ang);
 			var _ind = (knob_dragging == noone && i == knob_hover) || knob_dragging == i;
 			var _cc  = knob_dragging == i? COLORS._main_accent : c_white;
-			draw_sprite_ext(THEME.rotator_knob, _ind, _knx, _kny, 1, 1, 0, _cc, 1);
+			// draw_sprite_ext(THEME.rotator_knob, _ind, _knx, _kny, 1, 1, 0, _cc, 1);
 			if(point_in_circle(_m[0], _m[1], _knx, _kny, ui(10)))
 				_khover = i;
 			

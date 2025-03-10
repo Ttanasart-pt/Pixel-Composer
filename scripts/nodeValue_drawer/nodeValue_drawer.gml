@@ -131,7 +131,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		var lb_w = ui(!global_var * 20 + 20 + 16) + string_width(dispName);
 		
 		if(jun.color != -1) {
-			draw_sprite_ext(THEME.timeline_color, 1, lb_x + ui(8), lb_y, 1, 1, 0, jun.color, 1);
+			draw_sprite_ui(THEME.timeline_color, 1, lb_x + ui(8), lb_y, 1, 1, 0, jun.color, 1);
 			lb_x += ui(24);
 			lb_w += ui(24);
 		}

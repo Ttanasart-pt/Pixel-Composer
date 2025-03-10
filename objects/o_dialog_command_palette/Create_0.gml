@@ -147,7 +147,7 @@ event_inherited();
 				draw_text_add(_tx, _ty, _cnxt);
 				_tx += string_width(_cnxt);
 				
-				draw_sprite_ext(THEME.arrow, 0, _tx + ui(8), _ty, .75, .75, 0, COLORS._main_text_sub);
+				draw_sprite_ui(THEME.arrow, 0, _tx + ui(8), _ty, .75, .75, 0, COLORS._main_text_sub);
 				_tx += ui(16);
 			}
 			

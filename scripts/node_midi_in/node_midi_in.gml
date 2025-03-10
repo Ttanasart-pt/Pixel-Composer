@@ -66,7 +66,7 @@ function Node_MIDI_In(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 			if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, _m, _hover, _focus) == 2)
 				index_watching = index_watching == i? noone : i;
 			var cc = index_watching == i? COLORS._main_value_negative : COLORS._main_icon;
-			draw_sprite_ext(THEME.circle_16, 0, bx + bs / 2, by + bs / 2, 1, 1, 0, cc, 1);
+			draw_sprite_ui(THEME.circle_16, 0, bx + bs / 2, by + bs / 2, 1, 1, 0, cc, 1);
 			
 			wid .setFocusHover(_focus, _hover);
 			nwid.setFocusHover(_focus, _hover);

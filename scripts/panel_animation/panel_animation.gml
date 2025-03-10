@@ -2405,22 +2405,22 @@ function Panel_Animation() : PanelContent() constructor {
                 var _ex = (fr + rang[1]) * timeline_scale + timeline_shift + ui(8);
             
                 if(point_in_circle(msx, msy, _sx, yc, ui(8))) {
-                    draw_sprite_ext(THEME.arrow, 2, _sx, yc, 1, 1, 0, colr[0], 1);
+                    draw_sprite_ui(THEME.arrow, 2, _sx, yc, 1, 1, 0, colr[0], 1);
                 
                     if(mouse_press(mb_left, pFOCUS))
                         onion_dragging = 0;
                     timeline_draggable = false;
                 } else
-                    draw_sprite_ext(THEME.arrow, 2, _sx, yc, 1, 1, 0, colr[0], 0.5);
+                    draw_sprite_ui(THEME.arrow, 2, _sx, yc, 1, 1, 0, colr[0], 0.5);
             
                 if(point_in_circle(msx, msy, _ex, yc, ui(8))) {
-                    draw_sprite_ext(THEME.arrow, 0, _ex, yc, 1, 1, 0, colr[1], 1);
+                    draw_sprite_ui(THEME.arrow, 0, _ex, yc, 1, 1, 0, colr[1], 1);
                 
                     if(mouse_press(mb_left, pFOCUS))
                         onion_dragging = 1;
                     timeline_draggable = false;
                 } else 
-                    draw_sprite_ext(THEME.arrow, 0, _ex, yc, 1, 1, 0, colr[1], 0.5);
+                    draw_sprite_ui(THEME.arrow, 0, _ex, yc, 1, 1, 0, colr[1], 0.5);
                 
                 if(onion_dragging != noone) {
                     if(onion_dragging == 0) {

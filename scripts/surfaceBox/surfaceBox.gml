@@ -97,7 +97,7 @@ function surfaceBox(_onModify, _def_path = "") : widget() constructor {
 			_surface.draw(sx0 + sw / 2, sy0 + sh / 2, sw - 2, sh - 2);
 			
 			gpu_set_texfilter(true);
-			draw_sprite_ext(THEME.dynadraw, 0, sx0 + sw - ui(10), sy0 + sh - ui(10), .75, .75);
+			draw_sprite_ui(THEME.dynadraw, 0, sx0 + sw - ui(10), sy0 + sh - ui(10), .75, .75);
 			gpu_set_texfilter(false);
 			
 		} else if(surface_exists(_surface)) {

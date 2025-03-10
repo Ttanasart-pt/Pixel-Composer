@@ -297,7 +297,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 				
 				var _rx = _x + _s * builder_sx;
 				var _ry = _y + _s * builder_sy;
-				draw_sprite_ext(THEME.bone_rotate, 0, _rx, _ry, 1, 1, builder_bone.angle, COLORS._main_value_positive, 1);
+				draw_sprite_ui(THEME.bone_rotate, 0, _rx, _ry, 1, 1, builder_bone.angle, COLORS._main_value_positive, 1);
 			
 			} else if(builder_type == 3) {
 				
@@ -306,7 +306,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 				orig = builder_bone.getPoint(0.8);
 				var _rx = _x + _s * orig.x;
 				var _ry = _y + _s * orig.y;
-				draw_sprite_ext(THEME.bone_scale,  0, _rx, _ry, 1, 1, builder_bone.angle, COLORS._main_value_positive, 1);
+				draw_sprite_ui(THEME.bone_scale,  0, _rx, _ry, 1, 1, builder_bone.angle, COLORS._main_value_positive, 1);
 			
 			} else if(key_mod_press(ALT)) {
 				if(builder_type == 0) {
@@ -360,7 +360,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 						}
 					}
 					
-					draw_sprite_ext(THEME.bone_move, 0, _rx, _ry, 1, 1, 0, cc, 1);
+					draw_sprite_ui(THEME.bone_move, 0, _rx, _ry, 1, 1, 0, cc, 1);
 					
 				} else if(builder_type == 1) {
 					builder_bone.angle  = dir;
@@ -369,7 +369,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 					orig = builder_bone.getTail();
 					var _rx = _x + _s * orig.x;
 					var _ry = _y + _s * orig.y;
-					draw_sprite_ext(THEME.bone_move, 0, _rx, _ry, 1, 1, 0, COLORS._main_value_positive, 1);
+					draw_sprite_ui(THEME.bone_move, 0, _rx, _ry, 1, 1, 0, COLORS._main_value_positive, 1);
 				}
 			}
 			
@@ -640,14 +640,14 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			}
 			
 			if(anchor_selecting == noone)
-				draw_sprite_ext(THEME.bone_tool_add, 1, _mx + 16, _my + 16, 1, 1, 0, c_white, 1);
+				draw_sprite_ui(THEME.bone_tool_add, 1, _mx + 16, _my + 16, 1, 1, 0, c_white, 1);
 				
 			else if(anchor_selecting[1] == 1) {
-				draw_sprite_ext(THEME.bone_tool_add, 0, _mx + 24, _my + 24, 1, 1, 0, c_white, 1);
-				draw_sprite_ext(THEME.bone_tool_add, 1, _mx + 24, _my + 24, 1, 1, 0, c_white, 1);
+				draw_sprite_ui(THEME.bone_tool_add, 0, _mx + 24, _my + 24, 1, 1, 0, c_white, 1);
+				draw_sprite_ui(THEME.bone_tool_add, 1, _mx + 24, _my + 24, 1, 1, 0, c_white, 1);
 				
 			} else if(anchor_selecting[1] == 2)
-				draw_sprite_ext(THEME.bone_tool_add, 0, _mx + 24, _my + 24, 1, 1, 0, c_white, 1);
+				draw_sprite_ui(THEME.bone_tool_add, 0, _mx + 24, _my + 24, 1, 1, 0, c_white, 1);
 		
 		} else if(isUsingTool("Remove bones")) { //remover
 			anchor_selecting = _b.draw(attributes, active * 0b100, _x, _y, _s, _mx, _my, anchor_selecting);
@@ -669,7 +669,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			}
 			
 			if(anchor_selecting != noone)
-				draw_sprite_ext(THEME.bone_tool_remove, 1, _mx + 24, _my + 24, 1, 1, 0, c_white, 1);
+				draw_sprite_ui(THEME.bone_tool_remove, 1, _mx + 24, _my + 24, 1, 1, 0, c_white, 1);
 		
 		} else if(isUsingTool("Detach bones")) { //detach
 			if(builder_bone == noone)
@@ -768,11 +768,11 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 				
 				if(_typ == 0) { // free move
 					var orig = _bne.getHead();
-					draw_sprite_ext(THEME.bone_move, 0, _x + _s * orig.x, _y + _s * orig.y, 1, 1, 0, COLORS._main_accent, 1);
+					draw_sprite_ui(THEME.bone_move, 0, _x + _s * orig.x, _y + _s * orig.y, 1, 1, 0, COLORS._main_accent, 1);
 					
 				} else if(_typ == 1) { // bone move
 					var orig = _bne.getTail();
-					draw_sprite_ext(THEME.bone_move, 0, _x + _s * orig.x, _y + _s * orig.y, 1, 1, 0, COLORS._main_accent, 1);
+					draw_sprite_ui(THEME.bone_move, 0, _x + _s * orig.x, _y + _s * orig.y, 1, 1, 0, COLORS._main_accent, 1);
 					
 				} else if(_typ == 2) { // bone rotate
 					var orig = _bne.getHead();
@@ -784,13 +784,13 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 					var _sy = _y + _s * orig.y;
 					
 					if(point_in_circle(_mx, _my, _sx, _sy, 12)) {
-						draw_sprite_ext(THEME.bone_scale,  0, _sx, _sy, 1, 1, _bne.angle, COLORS._main_accent, 1);
-						draw_sprite_ext(THEME.bone_rotate, 0, _rx, _ry, 1, 1, _bne.angle, c_white, 1);
+						draw_sprite_ui(THEME.bone_scale,  0, _sx, _sy, 1, 1, _bne.angle, COLORS._main_accent, 1);
+						draw_sprite_ui(THEME.bone_rotate, 0, _rx, _ry, 1, 1, _bne.angle, c_white, 1);
 						_typ = 3;
 						
 					} else {
-						draw_sprite_ext(THEME.bone_scale,  0, _sx, _sy, 1, 1, _bne.angle, c_white, 1);
-						draw_sprite_ext(THEME.bone_rotate, 0, _rx, _ry, 1, 1, _bne.angle, COLORS._main_accent, 1);
+						draw_sprite_ui(THEME.bone_scale,  0, _sx, _sy, 1, 1, _bne.angle, c_white, 1);
+						draw_sprite_ui(THEME.bone_rotate, 0, _rx, _ry, 1, 1, _bne.angle, COLORS._main_accent, 1);
 						_typ = 2;
 					}
 				}

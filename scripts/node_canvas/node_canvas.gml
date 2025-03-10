@@ -156,7 +156,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					}
 					
 					if(_del_a != noone) {
-						draw_sprite_ext(THEME.cross_12, 0, _del_x, _del_y, 1, 1, 0, c_white, .5 + _del_a * .5);
+						draw_sprite_ui(THEME.cross_12, 0, _del_x, _del_y, 1, 1, 0, c_white, .5 + _del_a * .5);
 						draw_sprite_stretched_add(THEME.box_r2, 1, _sx, _sy, _ssw, _ssh, c_white, .2);
 					}
 				}
@@ -487,11 +487,11 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			var _3x = _cx + _cw / 2;
 			var _3y =  yy + _cw / 2;
 			
-			draw_sprite_ext(THEME.color_3d, 0, _3x, _3y, 1, 1, 0, CURRENT_COLOR  );
-			draw_sprite_ext(THEME.color_3d, 1, _3x, _3y, 1, 1, 0, brush.colors[0]);
-			draw_sprite_ext(THEME.color_3d, 2, _3x, _3y, 1, 1, 0, brush.colors[1]);
+			draw_sprite_ui(THEME.color_3d, 0, _3x, _3y, 1, 1, 0, CURRENT_COLOR  );
+			draw_sprite_ui(THEME.color_3d, 1, _3x, _3y, 1, 1, 0, brush.colors[0]);
+			draw_sprite_ui(THEME.color_3d, 2, _3x, _3y, 1, 1, 0, brush.colors[1]);
 			
-			draw_sprite_ext(THEME.color_3d_selected, color_3d_selected, _3x, _3y);
+			draw_sprite_ui(THEME.color_3d_selected, color_3d_selected, _3x, _3y);
 			
 			if(color_3d_selected) _currc = brush.colors[color_3d_selected - 1];
 			

@@ -1,4 +1,5 @@
-globalvar THEME_DEF; THEME_DEF = true;
+globalvar THEME, THEME_DEF; 
+THEME_DEF = true;
 
 function __initTheme() {
 	var root = DIRECTORY + "Themes";
@@ -10,8 +11,8 @@ function __initTheme() {
 		zip_unzip("data/Theme.zip", root);	printDebug($"     > Unzip theme  | complete in {get_timer() - t}");    t = get_timer();
 	}
 	
-	loadGraphic(PREFERENCES.theme);			printDebug($"     > Load graphic | complete in {get_timer() - t}");    t = get_timer();
 	loadColor(PREFERENCES.theme);			printDebug($"     > Load color   | complete in {get_timer() - t}");    t = get_timer();
+	loadGraphic(PREFERENCES.theme);			printDebug($"     > Load graphic | complete in {get_timer() - t}");    t = get_timer();
 }
 
 function _sprite_path(rel, theme) { INLINE return $"{DIRECTORY}Themes/{theme}/graphics/{string_replace_all(rel, "./", "")}"; }
@@ -19,8 +20,8 @@ function _sprite_path(rel, theme) { INLINE return $"{DIRECTORY}Themes/{theme}/gr
 function _sprite_load_from_struct(str, theme, key) {
 	var path = _sprite_path(str.path, theme);
 	var numb = struct_try_get(str, "s", 1);
-	var sx   = struct_try_get(str, "x", 0);
-	var sy   = struct_try_get(str, "y", 0);
+	var sx   = struct_try_get(str, "x", 0) * THEME_SCALE;
+	var sy   = struct_try_get(str, "y", 0) * THEME_SCALE;
 	
 	var s    = sprite_add(path, numb, false, true, sx, sy);
 	if(s < 0) { log_message("THEME", $"Load sprite {path} failed."); return 0; }

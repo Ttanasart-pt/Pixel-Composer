@@ -60,8 +60,7 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	edit_time    = 0;
 	
 	attributes.file_checker = true;
-	array_push(attributeEditors, [ "File Watcher", function() { return attributes.file_checker; }, 
-		new checkBox(function() { attributes.file_checker = !attributes.file_checker; }) ]);
+	array_push(attributeEditors, [ "File Watcher", function() /*=>*/ {return attributes.file_checker}, new checkBox(function() /*=>*/ { attributes.file_checker = !attributes.file_checker; }) ]);
 	
 	first_update = false;
 	
@@ -79,16 +78,8 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		attributes.preview_gain = 0.5;
 	
 		array_push(attributeEditors, "Audio Preview");
-	
-		array_push(attributeEditors, ["Gain", function() { return attributes.preview_gain; }, 
-			new textBox(TEXTBOX_INPUT.number, function(val) { 
-				attributes.preview_gain = val; 
-			})]);
-		
-		array_push(attributeEditors, ["Shift", function() { return attributes.preview_shift; }, 
-			new textBox(TEXTBOX_INPUT.number, function(val) { 
-				attributes.preview_shift = val; 
-			})]);
+		array_push(attributeEditors, ["Gain",  function() /*=>*/ {return attributes.preview_gain},  new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ { attributes.preview_gain  = v; })]);
+		array_push(attributeEditors, ["Shift", function() /*=>*/ {return attributes.preview_shift}, new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ { attributes.preview_shift = v; })]);
 	#endregion
 		
 	on_drop_file = function(path) {

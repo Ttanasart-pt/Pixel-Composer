@@ -509,7 +509,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				var _shov = _hover && point_in_rectangle(_m[0], _m[1], _sx, _sy, _sx + _sw, _sy + _sh);
 				var _aa   = .75 + .25 * _shov;
 				draw_sprite_stretched_ext(THEME.ui_panel, 1, _sx, _sy, _sw, _sh, COLORS._main_icon, _aa);
-				draw_sprite_ext(THEME.flip_h, 0, _sx + _sw / 2, _sy + _sh / 2, _fpx? -1 : 1, 1, 0, _fpx? COLORS._main_accent : COLORS._main_icon, _aa);
+				draw_sprite_ui(THEME.flip_h, 0, _sx + _sw / 2, _sy + _sh / 2, _fpx? -1 : 1, 1, 0, _fpx? COLORS._main_accent : COLORS._main_icon, _aa);
 				_sx += _sw + ui(8);
 				
 				if(_shov) {
@@ -952,7 +952,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				
 				bx += bs + ui(1);
 				var b = buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, _m, _hover, _focus, "Eraser", THEME.canvas_tools_eraser, 0, palette_tool == 2? COLORS._main_accent : c_white)
-				gpu_set_tex_filter(true); draw_sprite_ext(THEME.arrow, 0, bx + bs - 4, by + bs - 4, .75, .75, -45, COLORS._main_icon); gpu_set_tex_filter(false);
+				gpu_set_tex_filter(true); draw_sprite_ui(THEME.arrow, 0, bx + bs - 4, by + bs - 4, .75, .75, -45, COLORS._main_icon); gpu_set_tex_filter(false);
 				
 				if(b == 2) palette_tool = palette_tool == 2? 0 : 2;
 				if(b == 3) menuCall("", [ menuItem("Clear palette", function() /*=>*/ {

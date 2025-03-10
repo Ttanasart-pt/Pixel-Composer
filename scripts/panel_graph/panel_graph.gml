@@ -2595,7 +2595,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                     setSlideShow(i);
             }
             
-            draw_sprite_ext(THEME.circle, 0, _sx, _sy, ss, ss, 0, cc, aa);
+            draw_sprite_ui(THEME.circle, 0, _sx, _sy, ss, ss, 0, cc, aa);
         }
         
         if(point_in_rectangle(mx, my, _sl_x, _sl_y, _sl_x + slider_width, _sl_y + _sl_h)) { 
@@ -2871,7 +2871,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         	draw_set_alpha(1);
         	
         	gpu_set_tex_filter(true);
-        	draw_sprite_ext(THEME.loading, 0, w / 2, h / 2, 1, 1, current_time / 2, COLORS._main_icon);
+        	draw_sprite_ui(THEME.loading, 0, w / 2, h / 2, 1, 1, current_time / 2, COLORS._main_icon);
         	gpu_set_tex_filter(false);
         }
     } 

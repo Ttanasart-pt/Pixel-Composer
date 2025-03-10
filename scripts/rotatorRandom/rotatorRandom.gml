@@ -1,3 +1,10 @@
+enum ROTATOR_RANDOM_TYPE {
+	range,
+	span,
+	double_range,
+	double_span, 
+}
+
 function rotatorRandom(_onModify) : widget() constructor {
 	onModify = _onModify;
 	
@@ -95,17 +102,17 @@ function rotatorRandom(_onModify) : widget() constructor {
 		var _ty = _y;
 		
 		switch(mode) {
-			case 2 :
+			case ROTATOR_RANDOM_TYPE.double_range :
 				draw_sprite_stretched_ext(THEME.textbox, 3, _tx, _y + _h + ui(4), _tw, _h, boxColor, 1);
 				draw_sprite_stretched_ext(THEME.textbox, 0, _tx, _y + _h + ui(4), _tw, _h, boxColor, 0.5 + 0.5 * interactable);	
 				
-			case 0 :
-			case 1 :
+			case ROTATOR_RANDOM_TYPE.range :
+			case ROTATOR_RANDOM_TYPE.span :
 				draw_sprite_stretched_ext(THEME.textbox, 3, _tx, _y, _tw, _h, boxColor, 1);
 				draw_sprite_stretched_ext(THEME.textbox, 0, _tx, _y, _tw, _h, boxColor, 0.5 + 0.5 * interactable);	
 				break;
 				
-			case 3 :
+			case ROTATOR_RANDOM_TYPE.double_span :
 				draw_sprite_stretched_ext(THEME.textbox, 3, _tx, _y, _tw, h, boxColor, 1);
 				draw_sprite_stretched_ext(THEME.textbox, 0, _tx, _y, _tw, h, boxColor, 0.5 + 0.5 * interactable);	
 		}
@@ -135,7 +142,7 @@ function rotatorRandom(_onModify) : widget() constructor {
 		_tw /= 2;
 		
 		switch(mode) {
-			case 0 : 
+			case ROTATOR_RANDOM_TYPE.range : 
 				tb_min_0.setFocusHover(active, hover);
 				tb_max_0.setFocusHover(active, hover);
 		
@@ -165,7 +172,7 @@ function rotatorRandom(_onModify) : widget() constructor {
 					
 						if(mouse_check_button_pressed(mb_right)) {
 							for( var i = 0; i < 5; i++ ) onModify(drag_dat[i], i);
-						
+							
 							instance_destroy(rotator_Rotator);
 							dragging       = noone;
 							dragging_index = -1;
@@ -180,17 +187,21 @@ function rotatorRandom(_onModify) : widget() constructor {
 					
 					} else if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _r, _y + _r)) {
 						_kc = COLORS._main_icon_light;
-			
-						if(mouse_press(mb_left, active)) {
+						
+						if(DOUBLE_CLICK) {
+							var _cr = (_data[1] + _data[2]) / 2;
+							onModify(_cr, 1);
+							onModify(_cr, 2);
+							
+						} else if(mouse_press(mb_left, active)) {
 							dragging_index = 2;
 						
 							drag_sv  = [ _data[0], _data[1], _data[2], _data[3], _data[4] ];
 							drag_dat = [ _data[0], _data[1], _data[2], _data[3], _data[4] ];
 							dragging = instance_create(0, 0, rotator_Rotator).init(_m, _kx, _ky);
 						}
-					
 					}
-				
+					
 					draw_set_color(CDEF.main_dkgrey);
 					draw_circle_angle(_kx, _ky, _kr, _data[1], _data[2], 32);
 				
@@ -205,7 +216,7 @@ function rotatorRandom(_onModify) : widget() constructor {
 				
 				break;
 			
-			case 1 : 
+			case ROTATOR_RANDOM_TYPE.span : 
 				tb_min_0.setFocusHover(active, hover);
 				tb_max_0.setFocusHover(active, hover);
 				
@@ -250,7 +261,10 @@ function rotatorRandom(_onModify) : widget() constructor {
 					} else if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _r, _y + _r)) {
 						_kc = COLORS._main_icon_light;
 							
-						if(mouse_press(mb_left, active)) {
+						if(DOUBLE_CLICK) {
+							onModify(0, 2);
+							
+						} else if(mouse_press(mb_left, active)) {
 							dragging_index = 2;
 							drag_sv  = [ _data[0], _data[1], _data[2], _data[3], _data[4] ];
 							drag_dat = [ _data[0], _data[1], _data[2], _data[3], _data[4] ];
@@ -272,7 +286,7 @@ function rotatorRandom(_onModify) : widget() constructor {
 				
 				break;
 			
-			case 2 : 
+			case ROTATOR_RANDOM_TYPE.double_range : 
 				var _ky0 = _y + _r / 2;
 				var _ky1 = _y + _h + ui(4) + _r / 2;
 				
@@ -333,16 +347,27 @@ function rotatorRandom(_onModify) : widget() constructor {
 					} else if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _r, _y + _r)) {
 						_kc0 = COLORS._main_icon_light;
 							
-						if(mouse_press(mb_left, active)) {
+						if(DOUBLE_CLICK) {
+							var _cr = (_data[1] + _data[2]) / 2;
+							onModify(_cr, 1);
+							onModify(_cr, 2);
+							
+						} else if(mouse_press(mb_left, active)) {
 							dragging_index = 1;
 							drag_sv  = [ _data[0], _data[1], _data[2], _data[3], _data[4] ];
 							drag_dat = [ _data[0], _data[1], _data[2], _data[3], _data[4] ];
 							dragging = instance_create(0, 0, rotator_Rotator).init(_m, _kx, _ky0);
 						}
+						
 					} else if(hover && point_in_rectangle(_m[0], _m[1], _x, _y + _h + ui(4), _x + _r, _y + _h + ui(4) + _r)) {
 						_kc1 = COLORS._main_icon_light;
 							
-						if(mouse_press(mb_left, active)) {
+						if(DOUBLE_CLICK) {
+							var _cr = (_data[3] + _data[4]) / 2;
+							onModify(_cr, 3);
+							onModify(_cr, 4);
+							
+						} else if(mouse_press(mb_left, active)) {
 							dragging_index = 2;
 							drag_sv  = [ _data[0], _data[1], _data[2], _data[3], _data[4] ];
 							drag_dat = [ _data[0], _data[1], _data[2], _data[3], _data[4] ];
@@ -370,7 +395,7 @@ function rotatorRandom(_onModify) : widget() constructor {
 				
 				break;
 				
-			case 3 : 
+			case ROTATOR_RANDOM_TYPE.double_span : 
 				var _ky0 = _y + _r / 2;
 				var _ky1 = _y + _h + ui(4) + _r / 2;
 				
@@ -424,7 +449,10 @@ function rotatorRandom(_onModify) : widget() constructor {
 					} else if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _r, _y + _r)) {
 						_kc0 = COLORS._main_icon_light;
 							
-						if(mouse_press(mb_left, active)) {
+						if(DOUBLE_CLICK) {
+							onModify(0, 3);
+							
+						} else if(mouse_press(mb_left, active)) {
 							dragging_index = 1;
 							drag_sv  = [ _data[0], _data[1], _data[2], _data[3], _data[4] ];
 							drag_dat = [ _data[0], _data[1], _data[2], _data[3], _data[4] ];
@@ -433,7 +461,10 @@ function rotatorRandom(_onModify) : widget() constructor {
 					} else if(hover && point_in_rectangle(_m[0], _m[1], _x, _y + _h + ui(4), _x + _r, _y + _h + ui(4) + _r)) {
 						_kc1 = COLORS._main_icon_light;
 							
-						if(mouse_press(mb_left, active)) {
+						if(DOUBLE_CLICK) {
+							onModify(0, 3);
+							
+						} else if(mouse_press(mb_left, active)) {
 							dragging_index = 2;
 							drag_sv  = [ _data[0], _data[1], _data[2], _data[3], _data[4] ];
 							drag_dat = [ _data[0], _data[1], _data[2], _data[3], _data[4] ];
@@ -469,8 +500,7 @@ function rotatorRandom(_onModify) : widget() constructor {
 	}
 		
 	static clone = function() {
-		var cln = new rotatorRandom(onModify);
-		return cln;
+		return new rotatorRandom(onModify);
 	}
 
 	static free = function() {

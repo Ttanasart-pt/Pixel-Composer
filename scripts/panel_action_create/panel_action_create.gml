@@ -132,7 +132,7 @@ function Panel_Action_Create() : PanelContent() constructor {
 							sc_node_content.hover_content = true;
 						}
 						
-						draw_sprite_ext(THEME.circle_toggle_8, _tg, _bx, _by, 1, 1, 0, _tg? c_white : COLORS._main_icon, .5 + .5 * (_hv || _tg));
+						draw_sprite_ui(THEME.circle_toggle_8, _tg, _bx, _by, 1, 1, 0, _tg? c_white : COLORS._main_icon, .5 + .5 * (_hv || _tg));
 						if(mouse_press(mb_left, _hv)) {
 							if(_tg) struct_remove(_vali, "value");
 							else    _vali[$ "value"] = _in.getValue();
@@ -147,7 +147,7 @@ function Panel_Action_Create() : PanelContent() constructor {
 								sc_node_content.hover_content = true;
 							}
 							
-							draw_sprite_ext(THEME.circle_toggle_8, _tg, _bx, _by, 1, 1, 0, _tg? c_white : COLORS._main_icon, .5 + .5 * (_hv || _tg));
+							draw_sprite_ui(THEME.circle_toggle_8, _tg, _bx, _by, 1, 1, 0, _tg? c_white : COLORS._main_icon, .5 + .5 * (_hv || _tg));
 							if(mouse_press(mb_left, _hv)) {
 								if(_tg) struct_remove(_vali, "expression");
 								else    _vali[$ "expression"] = _in.expression;
@@ -163,7 +163,7 @@ function Panel_Action_Create() : PanelContent() constructor {
 								sc_node_content.hover_content = true;
 							}
 							
-							draw_sprite_ext(THEME.circle_toggle_8, _tg, _bx, _by, 1, 1, 0, _tg? c_white : COLORS._main_icon, .5 + .5 * (_hv || _tg));
+							draw_sprite_ui(THEME.circle_toggle_8, _tg, _bx, _by, 1, 1, 0, _tg? c_white : COLORS._main_icon, .5 + .5 * (_hv || _tg));
 							if(mouse_press(mb_left, _hv)) {
 								if(_tg) struct_remove(_vali, "unit");
 								else    _vali[$ "unit"] = _in.unit.mode;

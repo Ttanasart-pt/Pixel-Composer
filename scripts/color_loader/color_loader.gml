@@ -1,11 +1,12 @@
 #region colors
-	globalvar THEME_VALUE;
-	globalvar CDEF, COLORS, COLORS_KEYS;
+	globalvar CDEF, COLORS, COLOR_KEY_ARRAY, COLORS_KEYS;
 	globalvar COLORS_DEF, COLORS_OVERRIDE;
+	globalvar THEME_VALUE, THEME_SCALE;
 	
 	CDEF		    = new ThemeColorDef();
 	COLORS		    = new ThemeColor();
 	THEME_VALUE     = new ThemeValue();
+	THEME_SCALE     = 1;
 	COLORS_KEYS     = {};
 	COLORS_OVERRIDE = {};
 	COLORS_DEF      = {};
@@ -82,15 +83,15 @@ function _loadColorString(str) {
 	return merge_color(c0, c1, m);
 }
 
-function _loadColor(theme = "default", replace = false) {
+function _loadColor(theme = "default") {
 	var t = get_timer();
 		
 	var dirr  = DIRECTORY + "Themes/" + theme;
 	var path  = $"{dirr}/values.json";
 	var pathO = $"{dirr}/{PREFERENCES.theme_override}.json";
 	
-	COLOR_KEYS = variable_struct_get_names(COLORS);
-	array_sort(COLOR_KEYS, true);
+	COLOR_KEY_ARRAY = variable_struct_get_names(COLORS);
+	array_sort(COLOR_KEY_ARRAY, true);
 		
 	if(theme == "default" && !file_exists_empty(pathO)) {
 		COLORS_KEYS = json_load_struct(path);
@@ -107,8 +108,8 @@ function _loadColor(theme = "default", replace = false) {
 	////- Value (parameters)
 	
 	var valkeys = variable_struct_get_names(clrs.values);
-	if(replace)	THEME_VALUE = clrs.values;
-	else		struct_override(THEME_VALUE, clrs.values);
+	struct_override(THEME_VALUE, clrs.values);
+	THEME_SCALE = THEME_VALUE.icon_scale;
 	
 	////- Colors
 	

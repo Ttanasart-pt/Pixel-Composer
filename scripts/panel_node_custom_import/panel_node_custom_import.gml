@@ -109,7 +109,7 @@ function Panel_Node_Custom_Import(_dirs) : PanelContent() constructor {
                     var _icx = ww - ui(8 + 10);
                     var _icy = yc;
                     
-                    draw_sprite_ext(THEME.noti_icon_warning, 1, _icx, _icy, .75, .75);
+                    draw_sprite_ui(THEME.noti_icon_warning, 1, _icx, _icy, .75, .75);
                     if(_hover && point_in_circle(_m[0], _m[1], _icx, _icy, ui(10)))
                         TOOLTIP = "Node already exists."
                 }

@@ -202,7 +202,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		
 		var ty = _y + bh;
 		
-		draw_sprite_ext(THEME.arrow, 1, _x + _w / 2, ty + ui(6), 1, 1, 0, COLORS._main_icon);
+		draw_sprite_ui(THEME.arrow, 1, _x + _w / 2, ty + ui(6), 1, 1, 0, COLORS._main_icon);
 		ty += ui(16);
 		
 		#region draw surface

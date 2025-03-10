@@ -122,7 +122,7 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 					_bbc = COLORS._main_icon_light;
 			}
 			
-			draw_sprite_ext(THEME.arrow, expanded? 3 : 0, _bbx, _bby + ui(expanded), 1, 1, 0, _bbc, _bba);
+			draw_sprite_ui(THEME.arrow, expanded? 3 : 0, _bbx, _bby + ui(expanded), 1, 1, 0, _bbc, _bba);
 			
 			_gradient.draw(_ggx, _ggy, _ggw, _ggh);
 			

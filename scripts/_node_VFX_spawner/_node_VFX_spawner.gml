@@ -255,7 +255,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		
 		var _path       	= getInputData(46);
 		
-		var _use_phy     	= getInputData(58);
+		var _use_phy     	= getInputData(57);
 		var _accel      	= getInputData( 7);
 		var _grav       	= getInputData(19);
 		var _gvDir      	= getInputData(33);
@@ -269,7 +269,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		var _ground_bounce	= getInputData(39);
 		var _ground_frict	= getInputData(40);
 		
-		var _use_wig     	= getInputData(57);
+		var _use_wig     	= getInputData(58);
 		
 		//////////////////////////////////////////////////////////////////////////////
 		

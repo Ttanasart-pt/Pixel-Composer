@@ -20,7 +20,7 @@
 #endregion
 
 #region ======================================================================= MAIN =======================================================================
-	globalvar OS, DEBUG, THEME, COLOR_KEYS, RUN_IDE;
+	globalvar OS, DEBUG, RUN_IDE;
 	globalvar CMD, CMDIN, CMDPRG;
 	globalvar FPS_REAL;
 	
@@ -35,7 +35,7 @@
 	RUN_IDE  = GM_build_type == "run";
 	
 	DEBUG = false;
-	COLOR_KEYS = [];
+	COLOR_KEY_ARRAY = [];
 	
 	globalvar VERSION, SAVE_VERSION, VERSION_STRING, BUILD_NUMBER, LATEST_VERSION, NIGHTLY;
 	globalvar HOTKEYS, HOTKEY_CONTEXT;
@@ -43,8 +43,8 @@
 	LATEST_VERSION	= 1_18_00_0;
 	VERSION			= 1_18_09_0;
 	SAVE_VERSION	= 1_18_09_1;
-	VERSION_STRING  = MAC? "1.18.003m" : "1.18.10.011";
-	BUILD_NUMBER	= 118101.011;
+	VERSION_STRING  = MAC? "1.18.003m" : "1.18.10.012";
+	BUILD_NUMBER	= 118101.012;
 	PREF_VERSION    = 1_17_1;
 	
 	var _vsp = string_split(VERSION_STRING, ".");
