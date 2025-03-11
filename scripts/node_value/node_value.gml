@@ -1975,10 +1975,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				return;
 				
 			case VALUE_TYPE.atlas:
-				if(is(_raw, Atlas)) _raw.draw(_x, _y, _s);
-				
-				for( var i = 0, n = array_length(_raw); i < n; i++ )
-					if(is(_raw[i], Atlas)) _raw[i].draw(_x, _y, _s);
 				return;
 			
 			case VALUE_TYPE.audioBit:
@@ -2205,11 +2201,15 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				break;
 		}
 		
-		if(custom_icon == noone) {
-			__draw_sprite_ext(THEME.node_junctions_bg,      draw_junction_index, _mx, _my, ss / 2, ss / 2, 0, draw_bg, 1);
-			__draw_sprite_ext(THEME.node_junctions_outline, draw_junction_index, _mx, _my, ss / 2, ss / 2, 0, col, 1);
-		} else 
-			__draw_sprite_ext(custom_icon, draw_junction_index, _mx, _my, ss / 2, ss / 2, 0, c_white, 1);
+		var _sprs = ss / 2 / THEME_SCALE;
+		
+		if(custom_icon != noone) {
+			__draw_sprite_ext(custom_icon, draw_junction_index, _mx, _my, _sprs, _sprs, 0, c_white, 1);
+			return;
+		}
+		
+		__draw_sprite_ext(THEME.node_junctions_bg,      draw_junction_index, _mx, _my, _sprs, _sprs, 0, draw_bg, 1);
+		__draw_sprite_ext(THEME.node_junctions_outline, draw_junction_index, _mx, _my, _sprs, _sprs, 0, draw_fg, 1);
 	}
 	
 	////- EXPRESSION

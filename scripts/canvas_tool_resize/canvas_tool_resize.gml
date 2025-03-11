@@ -32,7 +32,7 @@ function canvas_tool_resize() : canvas_tool() constructor {
 			y1 = _y + _sh * _s;
 		}
 		
-		var _r = 10;
+		var _r = ui(10);
 		
 		var _sr  = surface_get_target();
 		var _srw = surface_get_width(_sr);

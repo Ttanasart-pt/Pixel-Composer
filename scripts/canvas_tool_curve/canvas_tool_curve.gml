@@ -167,9 +167,9 @@ function canvas_tool_curve_bezier(brush) : canvas_tool() constructor {
 			ax1 = nx + anchors[i][4] * _s;
 			ay1 = ny + anchors[i][5] * _s;
 			
-			draw_anchor(0,  nx,  ny, lerp(10, 13, draw_hovering[i * 3 + 1]));
-			draw_anchor(0, ax0, ay0, lerp( 7, 10, draw_hovering[i * 3 + 0]));
-			draw_anchor(0, ax1, ay1, lerp( 7, 10, draw_hovering[i * 3 + 2]));
+			draw_anchor(0,  nx,  ny, lerp(ui(10), ui(13), draw_hovering[i * 3 + 1]));
+			draw_anchor(0, ax0, ay0, lerp(ui( 7), ui(10), draw_hovering[i * 3 + 0]));
+			draw_anchor(0, ax1, ay1, lerp(ui( 7), ui(10), draw_hovering[i * 3 + 2]));
 			
 			     if(point_in_circle(_mx, _my, nx, ny,   10)) mouse_hovering = [ i,  0 ];
 			else if(point_in_circle(_mx, _my, ax0, ay0, 10)) mouse_hovering = [ i, -1 ];

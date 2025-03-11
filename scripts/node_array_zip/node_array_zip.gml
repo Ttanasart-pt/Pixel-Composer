@@ -16,14 +16,16 @@ function Node_Array_Zip(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	} setDynamicInput(1);
 	
 	static step = function() {
-		var _typ = VALUE_TYPE.any;
-		
-		for( var i = 0; i < array_length(inputs); i += data_length ) {
-			inputs[i].setType(inputs[i].value_from == noone? VALUE_TYPE.any : inputs[i].value_from.type);
-			_typ = inputs[i].type;
+		var _amo = getInputAmount();
+		if(_amo == 0) {
+			outputs[0].setType(VALUE_TYPE.any);
+			return;
 		}
-			
-		outputs[0].setType(_typ);
+		
+		for( var i = input_fix_len; i < array_length(inputs); i += data_length )
+			inputs[i].setType(inputs[i].value_from == noone? VALUE_TYPE.any : inputs[i].value_from.type);
+		
+		outputs[0].setType(inputs[1].type);
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
@@ -31,7 +33,7 @@ function Node_Array_Zip(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var  amo = getInputAmount();
 		if(amo == 0) return;
 		
-		var len = 1;
+		var len = infinity;
 		var val = [];
 		
 		for( var i = 0; i < amo; i++ ) {
@@ -42,9 +44,10 @@ function Node_Array_Zip(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				continue;
 			}
 			
-			len = max(len, array_length(val[i]));
+			len = min(len, array_length(val[i]));
 		}
 		
+		if(len == 0) return;
 		var _out = array_create(len);
 		
 		if(_spr) {

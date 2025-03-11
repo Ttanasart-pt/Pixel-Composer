@@ -27,7 +27,7 @@ function Node_VFX_Override(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	newInput(12, nodeValue_b(  "Set Alpha",    self, false ));
 	newInput(13, nodeValue_eb( "Mode",         self, 0, [ "Absolute", "Relative" ])).setInternalName("Alpha mode");
-	newInput(14, nodeValue_f(  "Alpha",        self, noone ));
+	newInput(14, nodeValue_f(  "Alpha",        self, 0 ));
 	
 	newInput(15, nodeValue_b( "Set Surface",   self, false ));
 	newInput(16, nodeValue_Surface( "Surface", self)).setVisible(true, false);

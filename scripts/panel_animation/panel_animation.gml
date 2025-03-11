@@ -64,8 +64,8 @@
         registerFunction("Animation", "Stagger",            "", MOD_KEY.none, panel_animation_edit_keyframe_stagger ).setMenu("animation_stagger",             )
         registerFunction("Animation", "Driver",             "", MOD_KEY.none, panel_animation_keyframe_driver       ).setMenu("animation_driver",              )
         
-        registerFunction("Animation", "New Folder",                "", MOD_KEY.none, panel_animation_dopesheet_folder        ).setMenu("animation_new_folder",          THEME.folder_content)
-        registerFunction("Animation", "New Folder From Selection", "", MOD_KEY.none, panel_animation_dopesheet_folder_select ).setMenu("animation_new_folder_select",   THEME.folder_content)
+        registerFunction("Animation", "New Folder",                "", MOD_KEY.none, panel_animation_dopesheet_folder        ).setMenu("animation_new_folder",          THEME.folder)
+        registerFunction("Animation", "New Folder From Selection", "", MOD_KEY.none, panel_animation_dopesheet_folder_select ).setMenu("animation_new_folder_select",   THEME.folder)
         registerFunction("Animation", "Dopesheet Expand",          "", MOD_KEY.none, panel_animation_dopesheet_expand        ).setMenu("animation_dopesheet_expand",    )
         registerFunction("Animation", "Dopesheet Collapse",        "", MOD_KEY.none, panel_animation_dopesheet_collapse      ).setMenu("animation_dopesheet_collapse",  )
         
@@ -2671,7 +2671,7 @@ function Panel_Animation() : PanelContent() constructor {
         by = ui(8);
         
         var txt = __txt("New folder");
-        if(buttonInstant(THEME.button_hide_fill, bx, by, ui(32), ui(28), [mx, my], pHOVER, pFOCUS, txt, THEME.folder_content) == 2) {
+        if(buttonInstant(THEME.button_hide_fill, bx, by, ui(32), ui(28), [mx, my], pHOVER, pFOCUS, txt, THEME.folder) == 2) {
             var _dir = new timelineItemGroup();
             PROJECT.timelines.addItem(_dir);
         }
@@ -2686,7 +2686,7 @@ function Panel_Animation() : PanelContent() constructor {
         if(b == 2) mod_inc_mf0 node_name_type mod_inc_mf1 node_name_type mod_inc_mf2  3 mod_inc_mf3;
         
         by += ui(32); if(by > max_y) return;
-        if(buttonInstant(THEME.button_hide_fill, bx, by, ui(32), ui(28), [mx, my], pHOVER, pFOCUS, tooltip_toggle_nodes, THEME.junc_visible, show_nodes) == 2)
+        if(buttonInstant(THEME.button_hide_fill, bx, by, ui(32), ui(28), [mx, my], pHOVER, pFOCUS, tooltip_toggle_nodes, THEME.icon_visibility, show_nodes) == 2)
             show_nodes = !show_nodes;
         
         by += ui(32); if(by > max_y) return;

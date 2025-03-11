@@ -293,8 +293,8 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 	static drawControl = function(attributes) {
 		if(parent != noone && IKlength == 0) {
 			if(!parent_anchor) 
-				draw_anchor(control_i0 * .5, control_x0, control_y0, 8, attributes.display_bone); 
-			draw_anchor(control_i1 * .5, control_x1, control_y1, 8, attributes.display_bone); 
+				draw_anchor(control_i0 * .5, control_x0, control_y0, ui(8), attributes.display_bone); 
+			draw_anchor(control_i1 * .5, control_x1, control_y1, ui(8), attributes.display_bone); 
 		}
 		
 		for( var i = 0, n = array_length(childs); i < n; i++ )

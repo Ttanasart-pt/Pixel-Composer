@@ -3,7 +3,7 @@ function Node_ASE_Tag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	ase_data = noone;
 	
 	newInput(0, nodeValue("ASE data", self, CONNECT_TYPE.input, VALUE_TYPE.object, noone))
-		.setIcon(s_junc_aseprite, c_white)
+		.setIcon(THEME.junc_aseprite, c_white)
 		.setVisible(false, true)
 		.rejectArray();
 	

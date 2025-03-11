@@ -39,7 +39,7 @@ if !ready exit;
 			}
 		}
 					
-		draw_sprite_ui_uniform(_node.spr, 0, xx + grid_size / 2, yy + grid_size / 2, 0.5);
+		draw_sprite_uniform(_node.spr, 0, xx + grid_size / 2, yy + grid_size / 2, 0.5 * UI_SCALE);
 				
 		draw_set_text(f_p3, fa_center, fa_top, COLORS._main_text);
 		draw_text_ext(xx + grid_size / 2, yy + grid_size + 4, _node.name, -1, grid_size + grid_space / 2);	

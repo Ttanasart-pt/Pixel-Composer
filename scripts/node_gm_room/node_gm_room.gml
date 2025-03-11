@@ -456,10 +456,10 @@ function Node_GMRoom(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
     		draw_text(_cx, (_y1 + _cy1) / 2, _padB);
     	}
     	
-    	draw_anchor(room_resizing_hov[0], _cx0, _cy0, 10);
-    	draw_anchor(room_resizing_hov[1], _cx1, _cy0, 10);
-    	draw_anchor(room_resizing_hov[2], _cx0, _cy1, 10);
-    	draw_anchor(room_resizing_hov[3], _cx1, _cy1, 10);
+    	draw_anchor(room_resizing_hov[0], _cx0, _cy0, ui(10));
+    	draw_anchor(room_resizing_hov[1], _cx1, _cy0, ui(10));
+    	draw_anchor(room_resizing_hov[2], _cx0, _cy1, ui(10));
+    	draw_anchor(room_resizing_hov[3], _cx1, _cy1, ui(10));
     	
     	if(room_resizing_t == noone) {
 	    	if(_hov > noone && mouse_press(mb_left, active)) {

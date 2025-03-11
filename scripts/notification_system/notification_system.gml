@@ -104,10 +104,13 @@
 			dialogCall(o_dialog_warning, mouse_mx + ui(16), mouse_my + ui(16)).setText(str);
 		
 		if(ref) {
+			ref.logNode(str);
+			
 			var onClick = function() /*=>*/ { PANEL_GRAPH.focusNode(self.ref); };
 			noti.ref = ref;
 			noti.onClick = method(noti, onClick);
 		}
+		
 		return noti;
 	}
 	

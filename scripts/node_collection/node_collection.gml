@@ -571,7 +571,9 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		var _hv = PANEL_GRAPH.pHOVER && PANEL_GRAPH.node_hovering == self && PANEL_GRAPH._value_focus == noone;
 		    _hv &= point_in_circle(_mx, _my, _bx, _by, 8);
 		
-		draw_sprite_ext_add(THEME.animate_node_go, 0, _bx, _by, 1, 1, 0, _hv? COLORS._main_accent : c_white, 0.3 + _hv * 0.7);
+		var _ss = 1 / THEME_SCALE;
+		
+		draw_sprite_ext_add(THEME.animate_node_go, 0, _bx, _by, _ss, _ss, 0, _hv? COLORS._main_accent : c_white, 0.3 + _hv * 0.7);
 		
 		if(_hv && PANEL_GRAPH.pFOCUS && mouse_press(mb_left))
 			panelSetContext(PANEL_GRAPH);

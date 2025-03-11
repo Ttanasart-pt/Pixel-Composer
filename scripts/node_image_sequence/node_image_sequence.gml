@@ -97,11 +97,7 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		var paths    = path_get(_paths);
 		path_current = array_clone(paths);
 		
-		for(var i = 0; i < array_length(spr); i++) {
-			if(spr[i] && sprite_exists(spr[i]))
-				sprite_delete(spr[i]);
-		}
-		
+		array_foreach(spr, function(s) /*=>*/ { if(sprite_exists(s)) sprite_delete(s); });
 		spr = [];
 		
 		for( var i = 0, n = array_length(paths); i < n; i++ )  {
@@ -117,15 +113,15 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				case ".jpg"	 :
 				case ".jpeg" :
 					var _spr = sprite_add_map(path);
-					
-					if(_spr == -1) {
-						var _txt = $"Image node: File not a valid image.";
-						logNode(_txt); noti_warning(_txt);
-						return false;
-					}
+					if(_spr == -1) { noti_warning($"Image node: {path} is not a valid image.", noone, self); continue; }
 					
 					array_push(spr, _spr);
 					break;
+				
+				default : 
+					noti_warning($"Image node: {path} is not a valid image.", noone, self);
+					break;
+					
 			}
 		}
 		
