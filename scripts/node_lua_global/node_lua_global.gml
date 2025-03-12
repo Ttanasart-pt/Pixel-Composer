@@ -32,7 +32,7 @@ function Node_Lua_Global(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		lua_projectData(getState());
 		
 		try		 { lua_add_code(getState(), _code);         }
-		catch(e) { noti_warning(exception_print(e),, self); }
+		catch(e) { noti_warning(exception_print(e), noone, self); }
 	}
 	
 	static onDestroy = function() { lua_state_destroy(lua_state); }

@@ -46,7 +46,7 @@ function Node_Tile_Tilemap_Export(_x, _y, _group = noone) : Node(_x, _y, _group)
 	    
 	    var _form = surface_get_format(tilemap);
 	    if(_form != surface_rgba16float) {
-	        noti_warning("Invalid tilemap type (RGBA16float only)")
+	        noti_warning("Invalid tilemap type (RGBA16float only)", noone, self)
 	        return; 
 	    }
 	    

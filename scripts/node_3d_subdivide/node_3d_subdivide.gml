@@ -22,7 +22,7 @@ function Node_3D_Subdivide(_x, _y, _group = noone) : Node_3D_Modifier(_x, _y, _g
 		var _vlen = array_length(_res.vertex);
 		var _tarr = _trg == -1? array_create_ext(_vlen, function(i) /*=>*/ {return i}) : [ clamp(_trg, 0, _vlen - 1) ];
 		
-		if(_sub > 8) noti_warning("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+		if(_sub > 8) noti_warning("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", noone, self);
 		
 		repeat(_sub)
 		for( var i = 0, n = array_length(_tarr); i < n; i++ ) {

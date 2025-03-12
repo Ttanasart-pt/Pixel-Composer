@@ -74,6 +74,7 @@ function Node_Text_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			first_update = true;
 		path_current = path;
 		edit_time    = max(edit_time, file_get_modify_s(path_current));
+		logNode($"Loaded file: {path}", false);
 		
 		return true;
 	}

@@ -71,12 +71,12 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				var _spr = sprite_add(_real_path, 1, false, false, 0, 0);
 				
 				if(_spr == -1) {
-					var _txt = $"Image node: File not a valid image.";
-					logNode(_txt); noti_warning(_txt);
+					noti_warning($"Image node: File not a valid image.", noone, self);
 					break;
 				}
 				
 				edit_time = file_get_modify_s(path);
+				logNode($"Loaded file: {path}", false);
 				return _spr;
 		}
 		

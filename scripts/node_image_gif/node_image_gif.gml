@@ -101,17 +101,14 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		outputs[1].setValue(path);
 		
 		if(spr) sprite_delete(spr);
-		sprite_add_gif(path, function(_spr) { 
-			spr_builder = _spr; 
-			loading = 2;
-		});
+		sprite_add_gif(path, function(_spr) /*=>*/ { spr_builder = _spr; loading = 2; });
 		loading = 1;
 				
-		if(path_current == "") 
-			first_update = true;
+		if(path_current == "") first_update = true;
 		path_current = path;
 		edit_time    = max(edit_time, file_get_modify_s(path_current));	
 		
+		logNode($"Loaded file: {path}", false);
 		return true;
 	}
 	

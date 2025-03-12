@@ -91,8 +91,7 @@ function Node_Iterate_Sort(_x, _y, _group = noone) : Node_Collection(_x, _y, _gr
 		
 			nodeValid = inputReady == 0b111;
 			if(!nodeValid) {
-				var _txt = $"Array sort: Missing inputs or output, need 2 inputs and 1 output for comparison [{inputReady}].";
-				logNode(_txt); noti_warning(_txt);
+				noti_warning($"Array sort: Missing inputs or output, need 2 inputs and 1 output for comparison [{inputReady}].", noone, self);
 				return;
 			}
 		}

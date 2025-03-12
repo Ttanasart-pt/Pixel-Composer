@@ -100,10 +100,8 @@ function Node_Pack_Sprites(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var rect  = pack[1];
 		var atlas = [];
 		
-		if(array_length(rect) < array_length(_rects)) {
-			var _txt = $"Not enought space, packed {array_length(rect)} out of {array_length(_rects)} images.";
-			logNode(_txt); noti_warning(_txt);
-		}
+		if(array_length(rect) < array_length(_rects))
+			noti_warning($"Not enought space, packed {array_length(rect)} out of {array_length(_rects)} images.", noone, self);
 		
 		var _surf = outputs[0].getValue();
 		_surf = surface_verify(_surf, area.w, area.h, surface_get_format(_inpt[0]));

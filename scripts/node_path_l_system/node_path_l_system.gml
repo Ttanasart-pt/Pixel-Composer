@@ -294,8 +294,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			
 			cache_data.result = _temp_s;
 			if(string_length(cache_data.result) > attributes.rule_length_limit) {
-				var _txt = $"L System: Rules length limit ({attributes.rule_length_limit}) reached.";
-				logNode(_txt); noti_warning(_txt);
+				noti_warning($"L System: Rules length limit ({attributes.rule_length_limit}) reached.", noone, self);
 				break;
 			}
 		}
@@ -447,7 +446,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				
 				case "[": ds_stack_push(st, t.clone()); break;
 				case "]": 
-					if(ds_stack_empty(st)) noti_warning("L-system: Trying to pop an empty stack. Make sure that all close brackets ']' has a corresponding open bracket '['.");
+					if(ds_stack_empty(st)) noti_warning("L-system: Trying to pop an empty stack. Make sure that all close brackets ']' has a corresponding open bracket '['.", noone, self);
 				    else t = ds_stack_pop(st);
 				    break;
 				

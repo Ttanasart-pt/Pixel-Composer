@@ -224,10 +224,8 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 						var _sy = py;
 						
 						curr_w = curr_w == -1? _w : curr_w; curr_h = curr_h == -1? _h : curr_h;
-						if(curr_w != _w || curr_h != _h) {
-							var _txt = "Spritesheet node does not support different surfaces size. Use Stack, Image grid, or pack sprite.";
-							logNode(_txt); noti_warning(_txt);
-						}
+						if(curr_w != _w || curr_h != _h)
+							noti_warning("Spritesheet node does not support different surfaces size. Use Stack, Image grid, or pack sprite.", noone, self);
 						
 						switch(alig) {
 							case 1 : _sy = py + (hh - _h) / 2;	break;
@@ -250,10 +248,8 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 						var _sy = py;
 							
 						curr_w = curr_w == -1? _w : curr_w; curr_h = curr_h == -1? _h : curr_h;
-						if(curr_w != _w || curr_h != _h) {
-							var _txt = "Spritesheet node does not support different surfaces size. Use Stack, Image grid, or pack sprite.";
-							logNode(_txt); noti_warning(_txt);
-						}
+						if(curr_w != _w || curr_h != _h)
+							noti_warning("Spritesheet node does not support different surfaces size. Use Stack, Image grid, or pack sprite.", noone, self);
 						
 						switch(alig) {
 							case 1 : _sx = px + (ww - _w) / 2;	break;
@@ -289,11 +285,9 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 							var _h = surface_get_height_safe(inpt[index]);
 							
 							curr_w = curr_w == -1? _w : curr_w; curr_h = curr_h == -1? _h : curr_h;
-							if(curr_w != _w || curr_h != _h) {
-								var _txt = "Spritesheet node does not support different surfaces size. Use Stack, Image grid, or pack sprite.";
-								logNode(_txt); noti_warning(_txt);
-							}
-						
+							if(curr_w != _w || curr_h != _h)
+								noti_warning("Spritesheet node does not support different surfaces size. Use Stack, Image grid, or pack sprite.", noone, self);
+							
 							array_push(atlases, new SurfaceAtlas(inpt[index], px, py));
 							draw_surface_safe(inpt[index], px, py);
 								
@@ -489,10 +483,8 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 			var _w = surface_get_width_safe(_surfi);
 			var _h = surface_get_height_safe(_surfi);
 			
-			if(anim_curr_w != _w || anim_curr_h != _h) {
-				var _txt = "Spritesheet node does not support different surfaces size. Use Stack, Image grid, or pack sprite.";
-				logNode(_txt); noti_warning(_txt);
-			}
+			if(anim_curr_w != _w || anim_curr_h != _h)
+				noti_warning("Spritesheet node does not support different surfaces size. Use Stack, Image grid, or pack sprite.", noone, self);
 			
 			var px;
 			var _sx = 0;

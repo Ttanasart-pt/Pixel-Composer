@@ -69,6 +69,8 @@
 		}
 		
 		if(ref) {
+			ref.logNode(str);
+			
 			var onClick = function() /*=>*/ { PANEL_GRAPH.focusNode(self.ref); };
 			noti.ref = ref;
 			noti.onClick = method(noti, onClick);
@@ -125,6 +127,8 @@
 		ds_list_add(ERRORS, noti);
 		
 		if(ref) {
+			ref.logNode(str);
+			
 			var onClick = function() /*=>*/ { PANEL_GRAPH.focusNode(self.ref); };
 			noti.ref = ref;
 			noti.onClick = method(noti, onClick);

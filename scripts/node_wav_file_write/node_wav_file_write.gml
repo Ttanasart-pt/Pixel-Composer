@@ -49,15 +49,13 @@ function Node_WAV_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		
 		for( var i = 0; i < _chn; i++ ) {
 			if(!is_array(data[i])) {
-				var _txt = "Audio Export: Malformed data. Expects 2D array [channel x number array].";
-				logNode(_txt); noti_warning(_txt);
+				noti_warning("Audio Export: Malformed data. Expects 2D array [channel x number array].", noone, self);
 				return;
 			}
 			var len = array_length(data[i]);
 			
 			if(_siz && _siz != len) {
-				var _txt = "Audio Export: Uneven sample per channel.";
-				logNode(_txt); noti_warning(_txt);
+				noti_warning("Audio Export: Uneven sample per channel.", noone, self);
 				return;
 			}
 			

@@ -36,14 +36,12 @@ function Node_Iterate_Filter(_x, _y, _group = noone) : Node_Iterator(_x, _y, _gr
 		}
 		
 		if(_int == noone) {
-			var _txt = "Filter Array: Input node not found.";
-			logNode(_txt); noti_warning(_txt);
+			noti_warning("Filter Array: Input node not found.", noone, self);
 			return;
 		}
 		
 		if(_oup == noone) {
-			var _txt = "Filter Array: Output node not found.";
-			logNode(_txt); noti_warning(_txt);
+			noti_warning("Filter Array: Output node not found.", noone, self);
 			return;
 		}
 		

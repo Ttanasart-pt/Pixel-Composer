@@ -221,18 +221,18 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	if(OS == os_windows) {
 		var _w = function(str, pth) /*=>*/ {return $"No {str} detected at {pth}, please make sure the installation is complete and {str} path is set correctly in the preference."};
 		
-		if(!file_exists_empty(converter)) noti_warning(_w("ImageMagick", magick));
-		if(!file_exists_empty(magick))    noti_warning(_w("ImageMagick", magick));
-		if(!file_exists_empty(webp))      noti_warning(_w("webp",        webp));
-		if(!file_exists_empty(gifski))    noti_warning(_w("gifski",      gifski));
-		if(!file_exists_empty(ffmpeg))    noti_warning(_w("FFmpeg",      ffmpeg));
+		if(!file_exists_empty(converter)) noti_warning(_w("ImageMagick", magick), noone, self);
+		if(!file_exists_empty(magick))    noti_warning(_w("ImageMagick", magick), noone, self);
+		if(!file_exists_empty(webp))      noti_warning(_w("webp",        webp), noone, self);
+		if(!file_exists_empty(gifski))    noti_warning(_w("gifski",      gifski), noone, self);
+		if(!file_exists_empty(ffmpeg))    noti_warning(_w("FFmpeg",      ffmpeg), noone, self);
 		
 	} else if(OS == os_macosx) {
 		var _w = function(str) /*=>*/ {return $"No {str} installed, please install {str} with homebrew or use the provided 'mac-libraries-installer.command'."};
 		
-		if(string_pos(shell_execute_output("convert", ""), "not found")) noti_warning(_w("ImageMagick"));
-		if(string_pos(shell_execute_output("webp", ""),    "not found")) noti_warning(_w("webp"));
-		if(string_pos(shell_execute_output("ffmpeg", ""),  "not found")) noti_warning(_w("FFmpeg"));
+		if(string_pos(shell_execute_output("convert", ""), "not found")) noti_warning(_w("ImageMagick"), noone, self);
+		if(string_pos(shell_execute_output("webp", ""),    "not found")) noti_warning(_w("webp"), noone, self);
+		if(string_pos(shell_execute_output("ffmpeg", ""),  "not found")) noti_warning(_w("FFmpeg"), noone, self);
 		
 		converter = "/opt/homebrew/bin/convert";
 		magick    = "/opt/homebrew/bin/magick";

@@ -238,7 +238,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	function updatePaths(path = path_current) { 
 		if(path == -1) return false;
 		if(!file_exists_empty(path)) {
-			noti_warning("File not exist.");
+			noti_warning("File not exist.", noone, self);
 			return false;
 		}
 		
@@ -321,6 +321,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			if(array_length(cel)) update_on_frame = true;
 		}
 		
+		logNode($"Loaded file: {path}", false);
 		return true;
 	} 
 	

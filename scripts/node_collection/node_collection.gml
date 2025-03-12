@@ -17,7 +17,7 @@ function groupNodes(nodeArray, _group = noone, record = true, check_connect = tr
 			for( var k = 0, n = array_length(ctx.nodes); k < n; k++ ) {
 				if(array_exists(nodeArray, ctx.nodes[k])) continue;
 				
-				noti_warning("Grouping incomplete inline group is not allowed.");
+				noti_warning("Grouping incomplete inline group is not allowed.", noone, self);
 				return;
 			}
 		} 

@@ -52,8 +52,7 @@ function Node_Websocket_Sender(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		
 		var _sock = network_create_socket(network_socket_ws);
 		if(_sock < 0) {
-			var _txt = "Websocket sender: Fail to create new socket.";
-			logNode(_txt); noti_warning(_txt);
+			noti_warning("Websocket sender: Fail to create new socket.", noone, self);
 			return;
 		}
 		
@@ -64,17 +63,13 @@ function Node_Websocket_Sender(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	static sendCall = function(ID, params) {
 		var network = ds_map_try_get(NETWORK_CLIENTS, ID, noone);
 		if(network < 0) {
-			var _txt = "Websocket sender: No client.";
-			logNode(_txt); noti_warning(_txt);
+			noti_warning("Websocket sender: No client.", noone, self);
 			return;
 		}
 		
 		var content = params.content;
 		var res = network_send_raw(network, content, buffer_get_size(content));
-		if(res < 0) {
-			var _txt = "Websocket sender: Send error.";
-			logNode(_txt); noti_warning(_txt);
-		}
+		if(res < 0) noti_warning("Websocket sender: Send error.", noone, self);
 	}
 	
 	static asyncPackets = function(_async_load) {
@@ -84,8 +79,7 @@ function Node_Websocket_Sender(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		var type = async_load[? "type"];
 		
 		if(type == network_type_non_blocking_connect) {
-			var _txt = $"Websocket sender: Connected at port {port} on node {display_name}";
-			logNode(_txt); noti_status(_txt);
+			noti_status($"Websocket sender: Connected at port {port} on node {display_name}", noone, self);
 			
 			connected = true;
 			sendCall(aid, callbackMap[$ aid]);

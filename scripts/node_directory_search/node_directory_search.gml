@@ -72,8 +72,7 @@ function Node_Directory_Search(_x, _y, _group = noone) : Node(_x, _y, _group) co
 				pathObj.spr = sprite_add(path, 1, false, false, 0, 0);
 				
 				if(pathObj.spr == -1) {
-					var _txt = $"Image node: File not a valid image.";
-					logNode(_txt); noti_warning(_txt);
+					noti_warning($"Image node: File not a valid image.", noone, self);
 					break;
 				}
 				
@@ -107,8 +106,7 @@ function Node_Directory_Search(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		var _paths = path_dir_get_files(path, filter, recurs);
 		
 		if(array_empty(_paths)) {
-			var _txt = "Directory Search: Empty search results.";
-			logNode(_txt); noti_warning(_txt);
+			noti_warning("Directory Search: Empty search results.", noone, self);
 			return;
 		} 
 		

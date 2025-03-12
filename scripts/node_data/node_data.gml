@@ -332,15 +332,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		messages_bub = false;
 		messages_dbg = [];
 		
-		static logNode = function(text, noti = 0) { 
+		static logNode = function(text, _bubble = true) { 
 			var _time = $"{string_lead_zero(current_hour, 2)}:{string_lead_zero(current_minute, 2)}.{string_lead_zero(current_second, 2)}";
-			messages_bub = true;
 			array_push(messages, [ _time, text ]); 
-			
-			switch(noti) {
-				case 1 : noti_status(text,,  self); break;
-				case 2 : noti_warning(text,, self); break;
-			}
+			if(_bubble) messages_bub = true;
 		}
 		
 		static logNodeDebug = function(text, level = 1) { 
@@ -876,7 +871,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			if(_n.inline_context == noone) continue;
 			
 			if(_inline_input != noone && _inline_input != _n.inline_context)
-				logNode($"Node {getDisplayName()} connected to multiple inline loop inputs, this can cause render error.", 2);
+				noti_warning($"Node {getDisplayName()} connected to multiple inline loop inputs, this can cause render error.", noone, self);
 				
 			_inline_input = _n.inline_context;
 		}
@@ -891,14 +886,14 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				if(_n.inline_context == noone) continue;
 			
 				if(_inline_output != noone && _inline_output != _n.inline_context)
-					logNode($"Node {getDisplayName()} connected to multiple inline loop outputs, this can cause render error.", 2);
+					noti_warning($"Node {getDisplayName()} connected to multiple inline loop outputs, this can cause render error.", noone, self);
 					
 				_inline_output = _n.inline_context;
 			}
 		}
 		
 		if(_inline_input != noone && _inline_output != noone && _inline_input != inline_context) {
-			logNode($"Node {getDisplayName()} connected between two inline nodes, but the node itself is not part of the group. The program has automatically add the node back to inline group.", 1);
+			noti_warning($"Node {getDisplayName()} connected between two inline nodes, but the node itself is not part of the group. The program has automatically add the node back to inline group.", noone, self);
 			_inline_input.addNode(self);
 		}
 	}
@@ -2654,8 +2649,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var _data_length    = load_map.data_length;
 		var _dynamic_inputs = (array_length(load_map.inputs) - _input_fix_len) / _data_length;
 		if(frac(_dynamic_inputs) != 0) {
-			var _txt = "LOAD: Uneven dynamic input.";
-			logNode(_txt); noti_warning(_txt);
+			noti_warning("LOAD: Uneven dynamic input.", noone, self);
 			
 			_dynamic_inputs = ceil(_dynamic_inputs);
 		}

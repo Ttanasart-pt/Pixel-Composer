@@ -10,7 +10,7 @@ function Node_Iterator_Output(_x, _y, _group = noone) : Node_Group_Output(_x, _y
 		if(instanceof(_valueFrom.node) != "Node_Iterator_Input") return true;
 		if(inputs[1].value_from == noone) return true;
 		if(inputs[1].value_from.node == _valueFrom.node) {
-			noti_warning("setFrom: Immediate cycle disallowed",, self);
+			noti_warning("setFrom: Immediate cycle disallowed", noone, self);
 			return false;
 		}
 		return true;
@@ -24,7 +24,7 @@ function Node_Iterator_Output(_x, _y, _group = noone) : Node_Group_Output(_x, _y
 		if(instanceof(_valueFrom.node) != "Node_Iterator_Input") return true;
 		if(inputs[0].value_from == noone) return true;
 		if(inputs[0].value_from.node == _valueFrom.node) {
-			noti_warning("setFrom: Immediate cycle disallowed",, self);
+			noti_warning("setFrom: Immediate cycle disallowed", noone, self);
 			return false;
 		}
 		return true;

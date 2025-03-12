@@ -26,10 +26,10 @@ function __Custom_Shader() constructor {
 	
 	static compile = function(vs, fs) {
 		shader_vs = shader_compile_vs(vs);
-		if(!d3d11_shader_exists(shader_vs)) noti_warning(d3d11_get_error_string());
+		if(!d3d11_shader_exists(shader_vs)) noti_warning(d3d11_get_error_string(), noone, self);
 		
 		shader_fs = shader_compile_ps(fs);
-		if(!d3d11_shader_exists(shader_fs)) noti_warning(d3d11_get_error_string());
+		if(!d3d11_shader_exists(shader_fs)) noti_warning(d3d11_get_error_string(), noone, self);
 		
 		return self;
 	}

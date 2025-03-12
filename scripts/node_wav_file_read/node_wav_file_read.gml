@@ -109,6 +109,8 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		printIf(global.FLAG.wav_import, "-- Reading file...");
 		
 		content = file_read_wav(path);
+		logNode($"Loaded file: {path}", false);
+		
 		return true;
 	}
 	

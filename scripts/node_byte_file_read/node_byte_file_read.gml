@@ -43,6 +43,7 @@ function Node_Byte_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		
 		outputs[1].setValue(path_current);
 		content = buffer_load(path_current);
+		logNode($"Loaded file: {path}", false);
 		
 		return true;
 	}

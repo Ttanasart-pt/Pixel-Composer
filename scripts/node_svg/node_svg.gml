@@ -62,6 +62,7 @@ function Node_SVG(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		rawContent = SnapFromXML(_rawContent);
 		content    = svg_parse(rawContent);
+		logNode($"Loaded file: {path}", false);
 		
 		return;
 	}

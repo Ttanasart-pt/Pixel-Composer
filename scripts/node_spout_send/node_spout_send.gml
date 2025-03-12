@@ -9,14 +9,12 @@ function Node_Spout_Send(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		.setVisible(false);
 	
 	spoutIndex = spoutSenderInit();
-	if(spoutIndex == noone) {
-		var _txt = "Spout initialize error";
-		logNode(_txt); noti_warning(_txt);
-	}
+	if(spoutIndex == noone) 
+		noti_warning("Spout initialize error", noone, self);
 	
 	surf_buff = buffer_create(1, buffer_grow, 1);
 	
-	static update = function() { #region
+	static update = function() {
 		if(spoutIndex == noone) return;
 		
 		var _name = inputs[0].getValue();
@@ -34,5 +32,5 @@ function Node_Spout_Send(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		spoutSendPixels(spoutIndex, buffer_get_address(surf_buff), _sw, _sh);
 		
 		outputs[0].setValue(_surf);
-	} #endregion
+	}
 }

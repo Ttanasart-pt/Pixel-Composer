@@ -34,7 +34,7 @@ function Node_HTTP_request(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					
 					if(sta == 0) {
 						if(downloaded_size > attributes.max_file_size) {
-							noti_warning($"HTTP request: Requesed file to large ({downloaded_size} B).");
+							noti_warning($"HTTP request: Requesed file to large ({downloaded_size} B).", noone, self);
 							outputs[0].setValue("");
 						} else
 							outputs[0].setValue(res);

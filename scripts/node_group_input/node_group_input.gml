@@ -123,7 +123,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	inputs[10].setFrom_condition = function(v) {
 		if(is(v.node, Node_Group_Input)) return true;
-		noti_warning("Group IO visibility must be connected directly to another group input.",, self);
+		noti_warning("Group IO visibility must be connected directly to another group input.", noone, self);
 		return false;
 	}
 	

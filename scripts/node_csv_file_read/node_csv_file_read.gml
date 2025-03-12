@@ -91,6 +91,7 @@ function Node_CSV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			
 		path_current = path;
 		edit_time    = max(edit_time, file_get_modify_s(path_current));	
+		logNode($"Loaded file: {path}", false);
 		
 		return true;
 	}

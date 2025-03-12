@@ -330,7 +330,7 @@ struct PixelShaderOutput {
 			if(_ll == "") continue;
 			
 			if(!struct_has(project.data.hlsl, _ll)) {
-				if(!struct_has(HLSL_LIBRARIES, _ll)) { noti_warning($"HLSL error: library '{_ll}' not found."); continue; }
+				if(!struct_has(HLSL_LIBRARIES, _ll)) { noti_warning($"HLSL error: library '{_ll}' not found.", noone, self); continue; }
 				project.data.hlsl[$ _ll] = file_read_all(HLSL_LIBRARIES[$ _ll])
 			}
 			
@@ -349,11 +349,11 @@ struct PixelShaderOutput {
 		
 		shader.vs = d3d11_shader_compile_vs(_dir + "vout.shader", "main", "vs_4_0");
 		if (!d3d11_shader_exists(shader.vs)) 
-			noti_warning(d3d11_get_error_string());
+			noti_warning(d3d11_get_error_string(), noone, self);
 			
 		shader.fs = d3d11_shader_compile_ps(_dir + "fout.shader", "main", "ps_4_0");
 		if (!d3d11_shader_exists(shader.fs))
-			noti_warning(d3d11_get_error_string());
+			noti_warning(d3d11_get_error_string(), noone, self);
 	} if(!LOADING && !APPENDING) refreshShader();
 	
 	static onValueUpdate = function(index) {
