@@ -13,12 +13,13 @@ void main() {
     vec2 px  = v_vTexcoord * dimension - .5;
          px /= size;
     vec2 md = mod(px, 2.);
-    if(invert == 1)
-        md = 1. - md;
+    
+    float chk = axis == 0? md.y : md.x;
+    bool intl = chk < 1.;
+    if(invert == 1) intl = !intl;
         
     gl_FragColor = vec4(0.);
-    if((axis == 0 && md.y < 1.) || (axis == 1 && md.x < 1.))
-        gl_FragColor = texture2D( gm_BaseTexture, v_vTexcoord );
-    else if(useSurf == 1)
-        gl_FragColor = texture2D( prevFrame, v_vTexcoord );
+    
+         if(intl)         gl_FragColor = texture2D( gm_BaseTexture, v_vTexcoord );
+    else if(useSurf == 1) gl_FragColor = texture2D( prevFrame,      v_vTexcoord );
 }

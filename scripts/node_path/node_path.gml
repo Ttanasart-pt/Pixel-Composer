@@ -657,6 +657,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		if(!array_empty(anchors)) {
 			draw_set_color(_tooln == "Transform"? COLORS._main_icon : COLORS._main_accent);
 			
+			var draw_w = _tooln == "Weight edit";
 			var _ox = 0, _oy = 0, _ow = 0;
 			var _nx = 0, _ny = 0, _nw = 0;
 			
@@ -680,9 +681,10 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					miny = min(miny, _ny); maxy = max(maxy, _ny);
 					
 					var _rat = round(lerp(_rat_s, _rat_e, j / _amo) * 100);
-					_nw = weightRatio[clamp(_rat, 0, array_length(weightRatio) - 1)];
 					
-					if(_tooln == "Weight edit") {
+					if(draw_w) {
+						_nw = array_safe_get_fast(weightRatio, _rat);
+						
 						if(j) _wdir = point_direction(_ox, _oy, _nx, _ny);
 						_nw1x = _nx + lengthdir_x(_nw, _wdir + 90);
 						_nw1y = _ny + lengthdir_y(_nw, _wdir + 90);
@@ -696,7 +698,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 						}
 					}
 					
-					if(j) {
+					if(i || j) {
 						if(hover) {
 							var _p = point_to_line(_mx, _my, _ox, _oy, _nx, _ny);
 							var _d = point_distance(_mx, _my, _p[0], _p[1]);
@@ -710,7 +712,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 							if(_d < 4) _line_hover = i;
 						}
 						
-						if(_tooln == "Weight edit") {
+						if(draw_w) {
 							draw_set_color(COLORS._main_accent);
 							draw_line(_ox, _oy, _nx, _ny);
 							

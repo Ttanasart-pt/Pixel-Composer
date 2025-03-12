@@ -42,21 +42,23 @@ function path_dir_get_files(paths, _extension = ".png", _recur = true) {
 }
 
 function paths_to_array_ext(paths, _extension = ".png") {
-	var _ext   = string_splice(_extension, ";", false, false);
-	var _p = [];
+	var _ext = string_splice(_extension, ";", false, false);
+	var _pth = [];
 	
 	for(var i = array_length(paths) - 1; i >= 0; i--) {
-		if(file_exists(paths[i]) && array_exists(_ext, filename_ext(paths[i])))
-			array_push(_p, paths[i]);
+		var _e = string_lower(filename_ext(paths[i]));
+		
+		if(file_exists(paths[i]) && array_exists(_ext, _e))
+			array_push(_pth, paths[i]);
 	}
 	
-	return _p;
+	return _pth;
 }
 
 function path_is_image(path) {
 	if(!file_exists_empty(path)) return false;	
 	
-	var ext = filename_ext(path);
+	var ext = string_lower(filename_ext(path));
 	switch(ext) {
 		case ".png":
 		case ".jpg":
