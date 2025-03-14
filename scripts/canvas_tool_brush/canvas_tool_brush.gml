@@ -28,6 +28,14 @@ function canvas_tool_brush(brush, eraser = false) : canvas_tool() constructor {
 	draw_w = 1;
 	draw_h = 1;
 	
+	temp_surf = noone;
+	mixx_surf = noone;
+	
+	function onDisable() { 
+		surface_free_safe(temp_surf); 
+		surface_free_safe(mixx_surf); 
+	}
+	
 	function draw_point_wrap(_draw = true) {
 		var _oxn = mouse_cur_tx - brush.brush_range < 0;
 		var _oxp = mouse_cur_tx + brush.brush_range > draw_w;
@@ -81,29 +89,30 @@ function canvas_tool_brush(brush, eraser = false) : canvas_tool() constructor {
 		
 		mouse_cur_x = round((_mx - _x) / _s - 0.5);
 		mouse_cur_y = round((_my - _y) / _s - 0.5);
+		mouse_line_drawing = false;
 		
-		if(mouse_pre_draw_x != undefined && mouse_pre_draw_y != undefined && key_mod_presses(SHIFT, CTRL)) {
-			
-			var _dx = mouse_cur_x - mouse_pre_draw_x;
-			var _dy = mouse_cur_y - mouse_pre_draw_y;
-			
-			if(_dx != _dy) {
-				var _ddx = _dx;
-				var _ddy = _dy;
+		if(mouse_pre_draw_x != undefined && mouse_pre_draw_y != undefined && key_mod_press(SHIFT)) {
+			if(key_mod_presses(CTRL)) {
+				var _dx = mouse_cur_x - mouse_pre_draw_x;
+				var _dy = mouse_cur_y - mouse_pre_draw_y;
 				
-				if(abs(_dx) > abs(_dy)) {
-					var _rat = round(_ddx / _ddy);
-					_ddx = _ddy * _rat;
+				if(_dx != _dy) {
+					var _ddx = _dx;
+					var _ddy = _dy;
 					
-				} else if(abs(_dx) < abs(_dy)) {
-					var _rat = round(_ddy / _ddx);
-					_ddy = _ddx * _rat;
+					     if(abs(_dx) > abs(_dy)) _ddx = _ddy * round(_ddx / _ddy);
+					else if(abs(_dx) < abs(_dy)) _ddy = _ddx * round(_ddy / _ddx);
 					
+					mouse_cur_x = mouse_pre_draw_x + _ddx - sign(_ddx);
+					mouse_cur_y = mouse_pre_draw_y + _ddy - sign(_ddy);
 				}
-				
-				mouse_cur_x = mouse_pre_draw_x + _ddx - sign(_ddx);
-				mouse_cur_y = mouse_pre_draw_y + _ddy - sign(_ddy);
 			}
+			
+			mouse_line_drawing = true;
+			mouse_line_x0 = min(mouse_cur_x, mouse_pre_draw_x);
+			mouse_line_y0 = min(mouse_cur_y, mouse_pre_draw_y);
+			mouse_line_x1 = max(mouse_cur_x, mouse_pre_draw_x) + 1;
+			mouse_line_y1 = max(mouse_cur_y, mouse_pre_draw_y) + 1;
 		}
 			
 		mouse_cur_tx = mouse_cur_x;
@@ -125,17 +134,17 @@ function canvas_tool_brush(brush, eraser = false) : canvas_tool() constructor {
 		
 		if(mouse_press(mb_left, active)) {
 			
-			surface_set_shader(drawing_surface, noone);
+			surface_set_shader(drawing_surface, noone, true, BLEND.over);
 				draw_point_wrap(true);
 			surface_reset_shader();
 				
 			mouse_holding = true;
 			if(mouse_pre_draw_x != undefined && mouse_pre_draw_y != undefined && key_mod_press(SHIFT)) { ///////////////// shift line
-				surface_set_shader(drawing_surface, noone, true, BLEND.alpha);
+				surface_set_shader(drawing_surface, noone, false, BLEND.maximum);
 					draw_line_wrap(true);
 				surface_reset_shader();
+				
 				mouse_holding = false;
-					
 				apply_draw_surface();
 			}
 			
@@ -154,15 +163,14 @@ function canvas_tool_brush(brush, eraser = false) : canvas_tool() constructor {
 			var _1stp = brush.brush_dist_min == brush.brush_dist_max && brush.brush_dist_min == 1;
 				
 			if(_move || !_1stp) {
-				surface_set_shader(drawing_surface, noone, false, BLEND.alpha);
+				surface_set_shader(drawing_surface, noone, false, BLEND.maximum);
 					if(_1stp) draw_point_wrap(true);
-					
 					draw_line_wrap(true);
 				surface_reset_shader();
 			}
 				
 			mouse_pre_draw_x = mouse_cur_tx;
-			mouse_pre_draw_y = mouse_cur_ty;	
+			mouse_pre_draw_y = mouse_cur_ty;
 				
 			warp_block_px = warp_block_x;
 			warp_block_py = warp_block_y;
@@ -171,11 +179,8 @@ function canvas_tool_brush(brush, eraser = false) : canvas_tool() constructor {
 				mouse_holding = false;
 				apply_draw_surface();
 			}
-			
 		}
-			
-		BLEND_NORMAL
-			
+		
 		mouse_pre_x = mouse_cur_x;
 		mouse_pre_y = mouse_cur_y;
 		
@@ -184,26 +189,17 @@ function canvas_tool_brush(brush, eraser = false) : canvas_tool() constructor {
 	function drawPreview(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(isEraser) draw_set_color(c_white);
 		
-		mouse_line_drawing = false;
-		
-		if(mouse_pre_draw_x != undefined && mouse_pre_draw_y != undefined && key_mod_press(SHIFT)) {
-			
-			draw_line_wrap(false);
-			mouse_line_drawing = true;
-			mouse_line_x0 = min(mouse_cur_x, mouse_pre_draw_x);
-			mouse_line_y0 = min(mouse_cur_y, mouse_pre_draw_y);
-			mouse_line_x1 = max(mouse_cur_x, mouse_pre_draw_x) + 1;
-			mouse_line_y1 = max(mouse_cur_y, mouse_pre_draw_y) + 1;
-			
-			return;
-		}
-		
-		draw_point_wrap(false);
+		BLEND_MAX
+			if(mouse_pre_draw_x != undefined && mouse_pre_draw_y != undefined && key_mod_press(SHIFT))
+				draw_line_wrap(false);	
+			else if(!mouse_holding) 
+				draw_point_wrap(false);
+		BLEND_NORMAL
 	}
 	
 	function drawPostOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		if(!mouse_line_drawing) return;
 		if(brush.brush_sizing)  return;
+		if(!mouse_line_drawing) return;
 		if(!node.attributes.show_slope_check)  return;
 		
 		var _x0 = _x + mouse_line_x0 * _s;

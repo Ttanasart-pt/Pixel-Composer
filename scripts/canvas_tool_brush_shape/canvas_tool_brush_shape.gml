@@ -18,6 +18,9 @@ function canvas_tool_shape(brush, shape) : canvas_tool() constructor {
 	draw_w = 1;
 	draw_h = 1;
 	
+	temp_surf = noone;
+	mixx_surf = noone;
+	
 	function draw_point_wrap(_draw = true) {
 		var _oxn = mouse_cur_tx - brush.brush_range < 0;
 		var _oxp = mouse_cur_tx + brush.brush_range > draw_w;
@@ -128,10 +131,10 @@ function canvas_tool_shape(brush, shape) : canvas_tool() constructor {
 		
 		if(mouse_holding) {
 			
-			surface_set_shader(drawing_surface, noone);
+			surface_set_shader(drawing_surface, noone, true, BLEND.maximum);
 				draw_shape();
 			surface_reset_shader();
-				
+		
 			if(mouse_release(mb_left)) {
 				apply_draw_surface();
 				mouse_holding = false;
@@ -150,13 +153,10 @@ function canvas_tool_shape(brush, shape) : canvas_tool() constructor {
 	}
 	
 	function drawPreview(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		
-		if(!mouse_holding) {
-			draw_point_wrap(false);
-			return;
-		}
-		
-		draw_shape();
+		BLEND_MAX
+		if(mouse_holding) draw_shape();
+		else              draw_point_wrap(false);
+		BLEND_NORMAL
 	}
 	
 	function drawPostOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {

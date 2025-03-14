@@ -5,7 +5,7 @@ uniform int replace;
 uniform vec4 color;
 
 float bright(in vec4 col) {
-	return dot(col.rgb, vec3(0.2126, 0.7152, 0.0722))  * col.a;
+	return dot(col.rgb, vec3(0.2126, 0.7152, 0.0722)) * col.a;
 }
 
 void main() {

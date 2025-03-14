@@ -15,24 +15,17 @@ function canvas_tool_curve_bezier(brush) : canvas_tool() constructor {
 	
 	mouse_hovering = [ noone, 0 ];
 	draw_hovering  = [];
-	
-	function init() {
-		clear();
-	}
-	
-	function apply() {
-		apply_draw_surface();
-		disable();
-	}
-	
-	function cancel()    { disable(); }
-	function onDisable() { clear();   }
 		
 	function clear() {
 		anchors = [];
 		editing = [ noone, 0 ];
 		surface_clear(drawing_surface);
 	}
+	
+	function init()      { clear();   }
+	function apply()     { apply_draw_surface(); disable(); }
+	function cancel()    { disable(); }
+	function onDisable() { clear();   }
 	
 	function step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		
@@ -116,8 +109,6 @@ function canvas_tool_curve_bezier(brush) : canvas_tool() constructor {
 			
 		surface_reset_shader();
 		
-		node.tool_curve_apply.setInteract(!array_empty(anchors));
-		node.tool_curve_cancel.setInteract(!array_empty(anchors));
 		if(key_press(vk_enter))  apply();
 		if(key_press(vk_escape)) disable();
 	}

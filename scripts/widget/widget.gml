@@ -44,8 +44,8 @@ function widget() constructor {
 		onModify = method(self, _lua_func);
 	}
 	
-	static setInteract = function(interactable = noone) { self.interactable = interactable; return self; }
-	static setFont     = function(_f = noone) { self.font = _f; return self; }
+	static setInteract = function(_i = noone) /*=>*/ { interactable = _i; return self; }
+	static setFont     = function(_f = noone) /*=>*/ { font = _f;         return self; }
 	
 	static register = function(parent = noone) {
 		if(!interactable) return;

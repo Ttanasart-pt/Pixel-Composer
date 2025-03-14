@@ -2191,6 +2191,7 @@ function Panel_Preview() : PanelContent() constructor {
                 }
                 
                 wdg.setFocusHover(pFOCUS, pHOVER);
+                
                 var _tool_font = f_p3;
                 
                 switch(instanceof(wdg)) {
@@ -2361,7 +2362,7 @@ function Panel_Preview() : PanelContent() constructor {
     }
     
     function drawContent(panel) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> MAIN DRAW <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-        mouse_on_preview = pHOVER && point_in_rectangle(mx, my, 0, topbar_height, w, h - toolbar_height);
+    	mouse_on_preview = pHOVER && point_in_rectangle(mx, my, 0, topbar_height, w, h - toolbar_height);
         
         if(do_fullView) run_in(1, fullView);
         do_fullView = false;

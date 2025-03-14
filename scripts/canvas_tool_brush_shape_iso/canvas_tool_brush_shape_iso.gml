@@ -27,7 +27,7 @@ function canvas_tool_shape_iso(brush, shape, toolAttr) : canvas_tool() construct
 		var _ang = tool_attribute.iso_angle;
 		
 		if(mouse_holding) {
-			surface_set_shader(drawing_surface, noone);
+			surface_set_shader(drawing_surface, noone, true, BLEND.maximum);
 			
 					 if(_ang == 0) canvas_draw_iso_cube( brush, mouse_points, subtool);
 				else if(_ang == 1) canvas_draw_diag_cube(brush, mouse_points, subtool);

@@ -244,6 +244,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		preview_draw_surface  = surface_create_empty(1, 1);
 		preview_draw_tile     = surface_create_empty(1, 1);
 		preview_draw_mask     = surface_create_empty(1, 1);
+		preview_draw_final    = surface_create_empty(1, 1);
 		
 		draw_stack = ds_list_create();
 		
@@ -321,8 +322,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 									.setTooltips( [ "Edge", "Edge + Corner", "Entire image" ] )
 									.setCollape(false);
 		
-		tool_curve_apply    = button(function() /*=>*/ {return tool_curve_bez.apply()} ).setIcon(THEME.toolbar_check, 0);
-		tool_curve_cancel   = button(function() /*=>*/ {return tool_curve_bez.cancel()}).setIcon(THEME.toolbar_check, 1);
+		tool_curve_buttons  = new buttonGroup( array_create(2, THEME.toolbar_check), function(v) /*=>*/ { if(v == 0) tool_curve_bez.apply(); else tool_curve_bez.cancel(); })
+									.setCollape(false);
 		
 		tool_isoangle       = new buttonGroup( array_create(2, THEME.canvas_iso_angle), function(v) /*=>*/ { tool_attribute.iso_angle = v; })
 									.setTooltips( [ "2:1", "1:1" ] )
@@ -372,8 +373,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			
 			new NodeTool( "Curve",		  THEME.canvas_tool_curve_icon)
 				.setSetting(tool_size)
-				.setSetting([ "", tool_curve_apply,  0, tool_attribute ])
-				.setSetting([ "", tool_curve_cancel, 0, tool_attribute ])
+				.setSetting([ "", tool_curve_buttons, 0, tool_attribute ])
 				.setToolObject(tool_curve_bez),
 			
 			new NodeTool( "Freeform",	  THEME.canvas_tools_freeform)
@@ -786,6 +786,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		brush.tileMode = _panel.tileMode
 		brush.step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 		
+		tool_size_edit.setInteract(!is_surface(brush.brush_surface));
+		
 		if(!tool_selection.is_selected && active && key_mod_press(ALT)) { // color selector
 			var dialog     = instance_create(0, 0, o_dialog_color_picker);
 			dialog.onApply = setToolColor;
@@ -810,6 +812,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			
 			prev_surface 		  = surface_verify(prev_surface,		  _dim[0], _dim[1]);
 			preview_draw_surface  = surface_verify(preview_draw_surface,  _dim[0], _dim[1]);
+			preview_draw_final    = surface_verify(preview_draw_mask,     _dim[0], _dim[1]);
 			preview_draw_mask     = surface_verify(preview_draw_mask,     _sw,     _sh);
 		#endregion
 		
@@ -959,7 +962,6 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			var _paa = isUsingTool("Eraser")? .2 : _alp;
 			
 			switch(_panel.tileMode) {
-				case 0 : draw_surface_ext_safe(preview_draw_surface, _x, _y, _s, _s, 0, _pcc, _paa); break;
 				
 				case 1 : 
                     preview_draw_tile = surface_verify(preview_draw_tile, _panel.w, _dim[1] * _s);
@@ -979,7 +981,9 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
                     draw_surface_safe(preview_draw_tile, _x, 0);
                     break;
                     
-                case 3 : draw_surface_tiled_ext_safe(preview_draw_surface, _x, _y, _s, _s, 0, _pcc, _paa); break;
+                case 3 : 
+                	draw_surface_tiled_ext_safe(preview_draw_surface, _x, _y, _s, _s, 0, _pcc, _paa); 
+                	break;
 			}
 			
 			surface_set_target(preview_draw_mask);
@@ -1094,21 +1098,21 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	}
 	
 	static step = function() {
-		var fram  = attributes.frames;
-		var brush = getInputData(6);
-		var anim  = getInputData(12);
+		var _fram  = attributes.frames;
+		var _brush = getInputData(6);
+		var _anim  = getInputData(12);
 		
-		inputs[15].setVisible(is_surface(brush));
-		inputs[16].setVisible(is_surface(brush));
+		inputs[15].setVisible(is_surface(_brush));
+		inputs[16].setVisible(is_surface(_brush));
 		
-		update_on_frame = fram > 1 && anim;
+		update_on_frame = _fram > 1 && _anim;
 		
 		if(update_on_frame) {
-			var anims = getInputData(13);
-			var atype = getInputData(18);
+			var _anims = getInputData(13);
+			var _atype = getInputData(18);
 			
-			if(atype == 0)  preview_index = safe_mod(CURRENT_FRAME * anims, fram);
-			else			preview_index = min(CURRENT_FRAME * anims, fram - 1);
+			if(_atype == 0)  preview_index = safe_mod(CURRENT_FRAME * _anims, _fram);
+			else			 preview_index = min(CURRENT_FRAME * _anims, _fram - 1);
 		}
 	}
 	
@@ -1195,6 +1199,21 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			_fileO.refreshThumbnail();
 		}
 		
+	}
+	
+	static getPreviewValues = function() {
+		var val = outputs[0].getValue();
+		
+		surface_set_shader(preview_draw_final, isUsingTool("Eraser")? sh_blend_subtract_alpha : sh_blend_normal, true, BLEND.over);
+			shader_set_surface("fore",    preview_draw_surface);
+			shader_set_i("useMask",       false);
+			shader_set_i("preserveAlpha", false);
+			shader_set_f("opacity",       1);
+			
+			draw_surface_safe(val);
+		surface_reset_shader();
+		
+		return preview_draw_final;
 	}
 	
 	////- Serialize
