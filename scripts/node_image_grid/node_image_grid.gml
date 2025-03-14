@@ -21,11 +21,21 @@ function Node_Image_Grid(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	newInput(3, nodeValue_Padding("Padding", self, [ 0, 0, 0, 0 ]))
 		.rejectArray();
 	
+	newInput(4, nodeValue_Text("Group", self, noone))
+		.setVisible(true, true)
+		.setArrayDepth(1);
+	
 	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	newOutput(1, nodeValue_Output("Atlas data", self, VALUE_TYPE.atlas, []));
 	
 	temp_surface = [ noone, noone ];
+	
+	input_display_list = [
+		["Grid",     false], 0, 1, 2, 3, 
+		["Grouping", false], 4, 
+		["Surfaces", false], 
+	];
 	
 	static createNewInput = function() {
 		var index = array_length(inputs);
@@ -37,11 +47,12 @@ function Node_Image_Grid(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	attribute_surface_depth();
 	
-	static update = function(frame = CURRENT_FRAME) { #region
+	static update = function(frame = CURRENT_FRAME) {
 		var _axis = getInputData(0);
 		var _col  = getInputData(1);
 		var _spac = getInputData(2);
 		var _padd = getInputData(3);
+		var _grup = getInputData(4);
 		
 		var ww = 0;
 		var hh = 0;
@@ -54,13 +65,12 @@ function Node_Image_Grid(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			array_append(surfs, _surf);
 		}
 		
+		var _useG = is_array(_grup);
+		var _curG = array_safe_get(_grup, 0);
+		
 		var _coli  = 0;
-		
-		var _mainw = 0;
-		var _subw  = 0;
-		
-		var _mains = 0;
-		var _subs  = 0;
+		var _mainw = 0, _subw  = 0;
+		var _mains = 0, _subs  = 0;
 		
 		for( var j = 0; j < array_length(surfs); j++ ) {
 			var _s = surfs[j];
@@ -73,7 +83,15 @@ function Node_Image_Grid(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			else           { _mains += sh + _spac[1]; _subs = max(_subs, sw + _spac[0]); }
 			
 			_coli++;
-			if(_coli >= _col) {
+			var _newL = _coli >= _col;
+			
+			if(_useG) {
+				var _g = array_safe_get(_grup, j + 1);
+				if(_curG != _g) _newL = true;
+				_curG = _g;
+			}
+			
+			if(_newL) {
 				_coli  = 0;
 				
 				_mainw = max(_mainw, _mains);
@@ -110,6 +128,7 @@ function Node_Image_Grid(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		var _mains = 0;
 		var _subs  = 0;
 		var _coli  = 0;
+		var _curG  = array_safe_get(_grup, 0);
 		
 		for( var j = 0; j < array_length(surfs); j++ ) {
 			var _s = surfs[j];
@@ -134,7 +153,15 @@ function Node_Image_Grid(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			else           { sy += sh + _spac[1]; _subs = max(_subs, sw); }
 			
 			_coli++;
-			if(_coli >= _col) {
+			var _newL = _coli >= _col;
+			
+			if(_useG) {
+				var _g = array_safe_get(_grup, j + 1);
+				if(_curG != _g) _newL = true;
+				_curG = _g;
+			}
+			
+			if(_newL) {
 				_coli = 0;
 				
 				if(_axis == 0) { sy += _subs + _spac[1]; sx = 0; } 
@@ -148,6 +175,6 @@ function Node_Image_Grid(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		outputs[0].setValue(_outSurf);
 		outputs[1].setValue(atlas);
-	} #endregion
+	}
 }
 

@@ -1878,7 +1878,7 @@ function Panel_Preview() : PanelContent() constructor {
         }
         
         var aa = d3_active? 0.8 : 1;
-        draw_sprite_stretched_ext(THEME.tool_side, 1, 0, ui(32), toolbar_width, h - toolbar_height - ui(32), c_white, aa);
+        draw_sprite_stretched_ext(THEME.tool_side, 0, 0, ui(32), toolbar_width, h - toolbar_height - ui(32), c_white, aa);
         
         tool_y_max = 0; 
         tool_y   = lerp_float(tool_y, tool_y_to, 5);
@@ -1999,10 +1999,7 @@ function Panel_Preview() : PanelContent() constructor {
             var xx   = _tbx + toolbar_width / 2;
             var yy   = ui(34) + tool_size  / 2 + tool_ry;
             
-            var _sw = -toolbar_width / sprite_get_width(THEME.tool_side);
-            var _sh = h - toolbar_height - ui(32) / sprite_get_height(THEME.tool_side);
-            
-            draw_sprite_ui(THEME.tool_side, 1, w + 1, ui(32), _sw, _sh, 0, c_white, aa);
+            draw_sprite_stretched_ext(THEME.tool_side, 1, w + 1 - toolbar_width, ui(32), toolbar_width, h - toolbar_height - ui(32), c_white, aa);
             
             var thov = pHOVER && point_in_rectangle(mx, my, _tbx, toolbar_height, w, h - toolbar_height);
             if(thov) canvas_hover = false;

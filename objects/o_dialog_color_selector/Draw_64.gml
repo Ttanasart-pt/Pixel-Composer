@@ -34,8 +34,18 @@ if !ready exit;
 #region palette
 	draw_sprite_stretched(THEME.ui_panel_bg, 1, presets_x + pal_padding, dialog_y + ui(48), ui(240) - pal_padding * 2, dialog_h - ui(48) - pal_padding);
 	
+	var _px = presets_x + pal_padding + ui(4);
+	var _py = dialog_y + ui(48 + 4);
+	var _pw = sp_preset_w;
+	
+	draw_sprite_stretched_ext(THEME.textbox, 1, _px, _py, _pw, ui(24), COLORS._main_icon);
+	tb_search.setFocusHover(sFOCUS, sHOVER);
+	tb_search.draw(_px, _py, _pw, ui(24), search_string);
+	draw_sprite_ui(THEME.search, 0, _px + ui(12), _py + ui(12), .75, .75, 0, COLORS._main_icon, .5);
+	
 	sp_presets.setFocusHover(sFOCUS, sHOVER);
-	sp_presets.draw(presets_x + pal_padding + ui(4), dialog_y + ui(48) + ui(4));
+	sp_presets.verify(_pw, dialog_h - ui(72 + 24));
+	sp_presets.draw(_px, _py + ui(24 + 8));
 	
 	var bx = presets_x + presets_w - ui(44);
 	var by = dialog_y + ui(12);
@@ -60,7 +70,7 @@ if !ready exit;
 	var col_y = dialog_y + ui(52);
 	
 	if(preset_selecting > -1)
-		selector.palette = PALETTES[preset_selecting].palette;
+		selector.palette = paletePresets[preset_selecting].palette;
 	selector.draw(col_x, col_y, sFOCUS, sHOVER);
 #endregion
 

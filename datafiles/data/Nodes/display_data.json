@@ -803,6 +803,7 @@
             "Node_Array_Unique",
             "Node_Array_Boolean_Opr",
             "Node_Array_Flattern",
+            "Node_Array_Transpose",
             { "label": "/Group Operators" },
             "Node_Array_Sort",
             "Node_Iterate_Each_Inline",
@@ -1006,7 +1007,8 @@
             "Node_Monitor_Capture",
             "Node_Application_In",
             "Node_Application_Out",
-            "Node_Assert"
+            "Node_Assert",
+            "Node_Image_Grid_Patreon",
         ]
     },
     {

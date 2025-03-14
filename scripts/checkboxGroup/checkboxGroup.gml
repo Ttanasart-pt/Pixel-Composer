@@ -6,12 +6,11 @@ function checkBoxGroup(sprs, _onClick) : widget() constructor {
 	holding   = noone;
 	tooltips  = [];
 	
-	static trigger     = function(value, index) { onClick(value, index); }
-	static setTooltips = function(tt) { tooltips = tt; return self; } 
+	static trigger     = function(v,i) /*=>*/ { onClick(v, i); return self; }
+	static setTooltips = function(tt)  /*=>*/ { tooltips = tt; return self; } 
 	
 	static drawParam = function(params) {
 		setParam(params);
-		
 		return draw(params.x, params.y, params.data, params.m, params.s);
 	}
 	
@@ -57,9 +56,8 @@ function checkBoxGroup(sprs, _onClick) : widget() constructor {
 				if(mouse_press(mb_left)) deactivate();
 			
 			draw_sprite_stretched_ext(spr, ind, _dx, _dy, ss, ss, c_white, aa);
-			if(_value[i])
-				draw_sprite_stretched_ext(spr, 3, _dx, _dy, ss, ss, COLORS._main_accent, 1);
-			draw_sprite_ext(sprs, i, _dx + ss / 2, _dy + ss / 2, 1, 1, 0, c_white, 0.5 + _value[i] * 0.5);
+			if(_value[i]) draw_sprite_stretched_ext(spr, 3, _dx, _dy, ss, ss, COLORS._main_accent, 1);
+			draw_sprite_ui(sprs, i, _dx + ss / 2, _dy + ss / 2, 1, 1, 0, c_white, 0.5 + _value[i] * 0.5);
 			
 			_dx += ss;
 		}
@@ -72,9 +70,5 @@ function checkBoxGroup(sprs, _onClick) : widget() constructor {
 		return h;
 	}
 	
-	static clone = function() { #region
-		var cln = new checkBoxGroup(sprs, onClick);
-		
-		return cln;
-	} #endregion
+	static clone = function() /*=>*/ {return new checkBoxGroup(sprs, onClick)};
 }

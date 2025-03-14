@@ -72,6 +72,8 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(27, nodeValue_Int("Max Line Width", self, 0 ));
 	
 	newInput(28, nodeValue_Bool("Round Position", self, true ));
+	
+	newInput(29, nodeValue_Enum_Button("Blend Mode", self,  1, [ "Normal", "Alpha" ]));
 		
 	input_display_list = [ 0, 
 		["Output",		true],	9,  6, 10,
@@ -310,11 +312,6 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		return _hov;
 	}
 	
-	static getTool = function() { 
-		var _path = getInputData(13);
-		return is_instanceof(_path, Node)? _path : self; 
-	}
-	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var str    = _data[ 0];
 		var strRaw = str;
@@ -349,6 +346,8 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		
 		var _lineW = _data[27];
 		__rnd_pos  = _data[28];
+		
+		var _bm    = _data[29];
 		
 		__dwData   = array_create(string_length(str));
 		__dwDataI  = 0;
@@ -510,7 +509,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			__wave_shape =  _waveH;
 		#endregion
 		
-		surface_set_shader(_outSurf, noone,, BLEND.alpha);
+		surface_set_shader(_outSurf, noone, true, BLEND.alpha);
 		if(_ubg) {
 			draw_clear(_bgc);
 			BLEND_ALPHA_MULP

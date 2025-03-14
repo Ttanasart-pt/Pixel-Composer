@@ -866,7 +866,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 							
 							if(NOT_LOAD) check_directory_redirector(path);
 							return setValueInspector(path);
-						}, THEME.button_path_icon).setTooltip(__txt("Open Explorer..."));
+						}).setIcon(THEME.button_path_icon, 0, COLORS._main_icon).setTooltip(__txt("Open Explorer..."));
 						
 						editWidget.front_button = button(function() /*=>*/ { 
 							if(node.project.path == "") { noti_warning("Save the current project first."); return; }
@@ -893,9 +893,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						editWidget.side_button = button(function() { 
 							var path = get_save_filename_pxc(display_data.filter, "");
 							key_release();
+							
 							if(path == "") return noone;
 							return setValueInspector(path);
-						}, THEME.button_path_icon).setTooltip(__txt("Open Explorer..."));
+						}).setIcon(THEME.button_path_icon, 0, COLORS._main_icon).setTooltip(__txt("Open Explorer..."));
 						
 						editWidget.front_button = button(function() { 
 							var project = PROJECT;

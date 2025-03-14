@@ -51,7 +51,6 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	frame_renderer_x_to  = 0;
 	frame_renderer_x_max = 0;
 	frame_dragging       = noone;
-	
 	_selecting_frame     = noone;
 	
 	menu_frame = [
@@ -250,83 +249,94 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		attributes.show_slope_check = true;
 		array_push(attributeEditors, "Display");
-		array_push(attributeEditors, [ "Draw Guide", function() { return attributes.show_slope_check; }, new checkBox(function() { attributes.show_slope_check = !attributes.show_slope_check; }) ]);
+		array_push(attributeEditors, [ "Draw Guide", function() /*=>*/ {return attributes.show_slope_check}, 
+			new checkBox(function() /*=>*/ { attributes.show_slope_check = !attributes.show_slope_check; }) ]);
 	#endregion
 	
 	#region ++++ tool object ++++
 		brush = new canvas_brush();
 		
-		tool_selection = new canvas_tool_selection();
-		tool_selection.node = self;
+		tool_selection      = new canvas_tool_selection().setNode(self);
 		
-		tool_brush     = new canvas_tool_brush(brush, false);
-		tool_eraser    = new canvas_tool_brush(brush, true);
-		tool_rectangle = new canvas_tool_shape(brush, CANVAS_TOOL_SHAPE.rectangle);
-		tool_ellipse   = new canvas_tool_shape(brush, CANVAS_TOOL_SHAPE.ellipse);
-		tool_iso_cube  = new canvas_tool_shape_iso(brush, CANVAS_TOOL_SHAPE_ISO.cube, tool_attribute);
+		tool_brush          = new canvas_tool_brush(brush, false);
+		tool_eraser         = new canvas_tool_brush(brush, true);
+		tool_rectangle      = new canvas_tool_shape(brush, CANVAS_TOOL_SHAPE.rectangle);
+		tool_ellipse        = new canvas_tool_shape(brush, CANVAS_TOOL_SHAPE.ellipse);
+		tool_iso_cube       = new canvas_tool_shape_iso(brush, CANVAS_TOOL_SHAPE_ISO.cube, tool_attribute);
 		
-		tool_fill      = new canvas_tool_fill(tool_attribute);
-		tool_freeform  = new canvas_tool_draw_freeform(brush);
-		tool_curve_bez = new canvas_tool_curve_bezier(brush);
+		tool_fill           = new canvas_tool_fill(tool_attribute);
+		tool_freeform       = new canvas_tool_draw_freeform(brush);
+		tool_curve_bez      = new canvas_tool_curve_bezier(brush);
 		
-		tool_sel_rectangle = new canvas_tool_selection_shape(tool_selection, CANVAS_TOOL_SHAPE.rectangle);
-		tool_sel_ellipse   = new canvas_tool_selection_shape(tool_selection, CANVAS_TOOL_SHAPE.ellipse);
-		tool_sel_freeform  = new canvas_tool_selection_freeform(tool_selection, brush);
-		tool_sel_magic     = new canvas_tool_selection_magic(tool_selection, tool_attribute);
-		tool_sel_brush     = new canvas_tool_selection_brush(tool_selection, brush);
+		tool_sel_rectangle  = new canvas_tool_selection_shape(tool_selection, CANVAS_TOOL_SHAPE.rectangle);
+		tool_sel_ellipse    = new canvas_tool_selection_shape(tool_selection, CANVAS_TOOL_SHAPE.ellipse);
+		tool_sel_freeform   = new canvas_tool_selection_freeform(tool_selection, brush);
+		tool_sel_magic      = new canvas_tool_selection_magic(tool_selection, tool_attribute);
+		tool_sel_brush      = new canvas_tool_selection_brush(tool_selection, brush);
 		
-		use_color_3d = false;
-		color_3d_selected = 0;
+		use_color_3d        = false;
+		color_3d_selected   = 0;
 	#endregion
 	
 	#region ++++ tools ++++
-		tool_attribute.channel = [ true, true, true, true ];
-		tool_channel_edit      = new checkBoxGroup(THEME.tools_canvas_channel, function(val, ind) { tool_attribute.channel[ind] = val; });
+		tool_attribute.channel       = [ true, true, true, true ];
+		tool_attribute.mirror        = [ false, false, false ];
+		tool_attribute.drawLayer     = 0;
+		tool_attribute.pickColor     = c_white;
 		
-		tool_attribute.drawLayer = 0;
-		tool_attribute.pickColor = c_white;
-		tool_drawLayer_edit      = new buttonGroup( [ THEME.canvas_draw_layer, THEME.canvas_draw_layer, THEME.canvas_draw_layer ], function(val) { tool_attribute.drawLayer = val; })
-										.setTooltips( [ "Draw on top", "Draw behind", "Draw inside" ] )
-										.setCollape(false);
-		
-		tool_attribute.mirror = [ false, false, false ];
-		tool_mirror_edit      = new checkBoxGroup( THEME.canvas_mirror, function(val, ind) { tool_attribute.mirror[ind] = val; })
-										.setTooltips( [ "Toggle diagonal", "", "" ] );
-		
-		tool_settings          = [ [ "", tool_channel_edit,   "channel",   tool_attribute ], 
-								   [ "", tool_drawLayer_edit, "drawLayer", tool_attribute ],
-								   [ "", tool_mirror_edit,    "mirror",    tool_attribute ],
-							   ];
-		
-		tool_attribute.size = 1;
-		tool_size_edit      = new textBox(TEXTBOX_INPUT.number, function(val) { tool_attribute.size = max(1, round(val)); }).setSlideType(true)
-									.setFont(f_p3)
-									.setSideButton(button(function() { dialogPanelCall(new Panel_Node_Canvas_Pressure(self), mouse_mx, mouse_my, { anchor: ANCHOR.top | ANCHOR.left }) })
-										.setIcon(THEME.pen_pressure, 0, COLORS._main_icon));
-		tool_size           = [ "Size", tool_size_edit, "size", tool_attribute ];
-		
+		tool_attribute.size          = 1;
 		tool_attribute.pressure      = false;
 		tool_attribute.pressure_size = [ 1, 1 ];
 		
-		tool_attribute.thres	= 0;
-		tool_thrs_edit      	= new textBox(TEXTBOX_INPUT.number, function(val) { tool_attribute.thres = clamp(val, 0, 1); }).setSlideRange(0, 1).setFont(f_p3);
-		tool_thrs           	= [ "Threshold", tool_thrs_edit, "thres", tool_attribute ];
+		tool_attribute.thres	     = 0;
+		tool_attribute.fillType      = 0;
+		tool_attribute.iso_angle     = 0;
+		tool_attribute.button_apply  = [ false, false ];
 		
-		tool_attribute.fillType = 0;
-		tool_fil8_edit      	= new buttonGroup( [ THEME.canvas_fill_type, THEME.canvas_fill_type, THEME.canvas_fill_type ], function(val) { tool_attribute.fillType = val; })
+		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		
+		tool_channel_edit   = new checkBoxGroup(THEME.tools_canvas_channel, function(v,i) /*=>*/ { tool_attribute.channel[i] = v; });
+		
+		tool_drawLayer_edit = new buttonGroup( array_create(3, THEME.canvas_draw_layer), function(v) /*=>*/ { tool_attribute.drawLayer = v; })
+									.setTooltips( [ "Draw on top", "Draw behind", "Draw inside" ] )
+									.setCollape(false);
+		
+		tool_mirror_edit    = new checkBoxGroup( THEME.canvas_mirror, function(v,i) /*=>*/ { tool_attribute.mirror[i] = v; })
+									.setTooltips( [ "Toggle diagonal", "", "" ] );
+		
+		tool_size_edit      = new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ { tool_attribute.size = max(1, round(v)); })
+									.setSlideType(true)
+									.setFont(f_p3)
+									.setSideButton(button(function() /*=>*/ { 
+											dialogPanelCall(new Panel_Node_Canvas_Pressure(self), mouse_mx, mouse_my, { anchor: ANCHOR.top | ANCHOR.left }) 
+										}).setIcon(THEME.pen_pressure, 0, COLORS._main_icon));
+		
+		tool_thrs_edit      = new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ { tool_attribute.thres = clamp(v, 0, 1); })
+									.setSlideRange(0, 1)
+									.setFont(f_p3);
+		
+		tool_fil8_edit      = new buttonGroup( array_create(3, THEME.canvas_fill_type), function(v) /*=>*/ { tool_attribute.fillType = v; })
 									.setTooltips( [ "Edge", "Edge + Corner", "Entire image" ] )
 									.setCollape(false);
-		tool_fil8           	= [ "Fill", tool_fil8_edit, "fillType", tool_attribute ];
 		
-		tool_attribute.button_apply = [ false, false ];
-		tool_curve_apply  = button( function() { tool_curve_bez.apply();  } ).setIcon(THEME.toolbar_check, 0);
-		tool_curve_cancel = button( function() { tool_curve_bez.cancel(); } ).setIcon(THEME.toolbar_check, 1);
+		tool_curve_apply    = button(function() /*=>*/ {return tool_curve_bez.apply()} ).setIcon(THEME.toolbar_check, 0);
+		tool_curve_cancel   = button(function() /*=>*/ {return tool_curve_bez.cancel()}).setIcon(THEME.toolbar_check, 1);
 		
-		tool_attribute.iso_angle = 0;
-		tool_isoangle            = new buttonGroup( [ THEME.canvas_iso_angle, THEME.canvas_iso_angle ], function(val) { tool_attribute.iso_angle = val; })
-										.setTooltips( [ "2:1", "1:1" ] )
-										.setCollape(false);
-		tool_iso_settings        = [ "", tool_isoangle,   "iso_angle",   tool_attribute ];
+		tool_isoangle       = new buttonGroup( array_create(2, THEME.canvas_iso_angle), function(v) /*=>*/ { tool_attribute.iso_angle = v; })
+									.setTooltips( [ "2:1", "1:1" ] )
+									.setCollape(false);
+		
+		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		
+		tool_settings     = [ [ "",          tool_channel_edit,   "channel",   tool_attribute ], 
+						      [ "",          tool_drawLayer_edit, "drawLayer", tool_attribute ],
+						      [ "",          tool_mirror_edit,    "mirror",    tool_attribute ] ];
+		tool_size         =   [ "Size",      tool_size_edit,      "size",      tool_attribute ];
+		tool_thrs         =   [ "Threshold", tool_thrs_edit,      "thres",     tool_attribute ];
+		tool_fil8         =   [ "Fill",      tool_fil8_edit,      "fillType",  tool_attribute ];
+		tool_iso_settings =   [ "",          tool_isoangle,       "iso_angle", tool_attribute ];
+		
+		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
 		tools = [
 			new NodeTool( "Selection",	[ THEME.canvas_tools_selection_rectangle, THEME.canvas_tools_selection_circle, THEME.canvas_tools_freeform_selection, THEME.canvas_tools_selection_brush ])
@@ -376,38 +386,42 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	#endregion
 	
 	#region ++++ right tools ++++
-		__action_rotate_90_cw  = method(self, function() { if(tool_selection.is_selected) tool_selection.rotate90cw()  else canvas_action_rotate(-90); });
-		__action_rotate_90_ccw = method(self, function() { if(tool_selection.is_selected) tool_selection.rotate90ccw() else canvas_action_rotate( 90); });
-		__action_flip_h        = method(self, function() { if(tool_selection.is_selected) tool_selection.flipH()       else canvas_action_flip(1); });
-		__action_flip_v        = method(self, function() { if(tool_selection.is_selected) tool_selection.flipV()       else canvas_action_flip(0); });
-		__action_add_node      = method(self, function(ctx) { var dia = dialogCall(o_dialog_add_node, mouse_mx + 8, mouse_my + 8, { context: ctx }); dia.canvas = true; });
-		__action_make_brush    = method(self, function() { 
+		__action_rotate_90_cw  = method(self, function( ) /*=>*/ { if(tool_selection.is_selected) tool_selection.rotate90cw()  else canvas_action_rotate(-90); });
+		__action_rotate_90_ccw = method(self, function( ) /*=>*/ { if(tool_selection.is_selected) tool_selection.rotate90ccw() else canvas_action_rotate( 90); });
+		__action_flip_h        = method(self, function( ) /*=>*/ { if(tool_selection.is_selected) tool_selection.flipH()       else canvas_action_flip(1);     });
+		__action_flip_v        = method(self, function( ) /*=>*/ { if(tool_selection.is_selected) tool_selection.flipV()       else canvas_action_flip(0);     });
+		__action_add_node      = method(self, function(c) /*=>*/ { var dia = dialogCall(o_dialog_add_node, mouse_mx + 8, mouse_my + 8, { context: c }); dia.canvas = true; });
+		__action_make_brush    = method(self, function( ) /*=>*/ { 
 			if(brush.brush_use_surface) {
-				brush.brush_surface = noone;
+				brush.brush_surface     = noone;
 				brush.brush_use_surface = false;
 				return;
 			}
+			
 			var _surf  = tool_selection.selection_surface;
 			var _bsurf = surface_create(surface_get_width(_surf) + 2, surface_get_height(_surf) + 2);
-			surface_set_target(_bsurf);
-				DRAW_CLEAR
+			
+			surface_set_shader(_bsurf, noone);
 				draw_surface(_surf, 1, 1);
-			surface_reset_target();
+			surface_reset_shader();
+			
 			brush.brush_use_surface = true;
-			brush.brush_surface = _bsurf; 
+			brush.brush_surface     = _bsurf; 
 			tool_selection.apply();
 			
 			PANEL_PREVIEW.tool_current = tools[2];
 		});
 		
 		nodeTool        = noone;
-		nodeToolPreview = new NodeTool( "Apply Node",	  THEME.canvas_tools_node, self ).setToolFn( __action_add_node )
+		nodeToolPreview = new NodeTool( "Apply Node", THEME.canvas_tools_node, self )
+								.setToolFn(__action_add_node)
 								.setContext(self);
 		
 		rightTools_general = [ 
 			nodeToolPreview,
 			-1,
-			new NodeTool( "Resize Canvas",	  THEME.canvas_resize ).setToolObject( new canvas_tool_resize() ),
+			new NodeTool( "Resize Canvas",	  THEME.canvas_resize )
+				.setToolObject( new canvas_tool_resize() ),
 			
 			new NodeTool( [ "Rotate 90 CW", "Rotate 90 CCW" ],
 				[ THEME.canvas_rotate_cw, THEME.canvas_rotate_ccw ] )
@@ -426,7 +440,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			/*  4 */ new NodeTool( "Extrude", THEME.canvas_tools_extrude ).setSetting(tool_thrs).setSetting(tool_fil8).setToolObject( new canvas_tool_extrude() ),
 			/*  5 */ new NodeTool( "Inset",   THEME.canvas_tools_inset   ).setSetting(tool_thrs).setSetting(tool_fil8).setToolObject( new canvas_tool_inset()   ),
 			/*  6 */ new NodeTool( "Skew",    THEME.canvas_tools_skew    ).setSetting(tool_thrs).setSetting(tool_fil8).setToolObject( new canvas_tool_skew()    ),
-			/*  7 */ new NodeTool( "Corner",  THEME.canvas_tools_corner  ).setSetting(tool_thrs).setSetting(tool_fil8).setToolObject( new canvas_tool_corner()   ),
+			/*  7 */ new NodeTool( "Corner",  THEME.canvas_tools_corner  ).setSetting(tool_thrs).setSetting(tool_fil8).setToolObject( new canvas_tool_corner()  ),
 		];
 		
 		rightTools_not_selection = [ 
@@ -547,7 +561,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		}
 		
 		if(_sel != noone) 
-			draw_sprite_stretched_ext(THEME.palette_selecting, 0, _sel[0] - _pd, _sel[1] - _pd, _cw + _pd * 2, _ch + _pd * 2, c_white, 1);
+			draw_sprite_stretched_ext(THEME.palette_selecting, 0, _sel[0] - _pd, _sel[1] - _pd, _cw + _pd * 2, _ch + _pd * 2 - 1, c_white, 1);
 		
 		return hh + ui(4);
 	}
@@ -829,9 +843,10 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			tool_selection._canvas_surface    = _canvas_surface;
 			tool_selection.apply_draw_surface = apply_draw_surface;
 			
+			tool_mirror_edit.sprs = tool_attribute.mirror[0]? THEME.canvas_mirror_diag : THEME.canvas_mirror;
+			
 			if(tool_selection.is_selected && !is_instanceof(_tool, canvas_tool_node)) {
 				tool_selection.step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-				tool_mirror_edit.sprs = (!tool_selection.is_selected && tool_attribute.mirror[0])? THEME.canvas_mirror_diag : THEME.canvas_mirror;
 				
 				array_append(rightTools, rightTools_selection);
 				

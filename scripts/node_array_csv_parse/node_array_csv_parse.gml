@@ -16,13 +16,16 @@ function Node_Array_CSV_Parse(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	
 	newInput(5, nodeValue_Text("Columns", self, []))
 		.setDisplay(VALUE_DISPLAY.text_array, { data: [] });
-		
+	
+	newInput(6, nodeValue_Text("Number Columns", self, []))
+		.setDisplay(VALUE_DISPLAY.text_array, { data: [] });
+	
 	newOutput(0, nodeValue_Output("Array", self, VALUE_TYPE.any, 0))
 		.setArrayDepth(1);
 	
 	input_display_list = [
 		["Input",  false], 0, 1, 
-		["Table",  false], 2, 3, 
+		["Table",  false], 2, 6, 3, 
 		["Output", false], 5, 4,
 	];
 	
@@ -56,6 +59,7 @@ function Node_Array_CSV_Parse(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		var _sort   = getInputData(3);
 		var _struct = getInputData(4);
 		var _ocol   = getInputData(5);
+		var _ncol   = getInputData(6);
 		
 		var _lines = _str;
 		var _lAmo  = array_length(_lines);
@@ -82,7 +86,12 @@ function Node_Array_CSV_Parse(_x, _y, _group = noone) : Node(_x, _y, _group) con
 			if(_head != noone) {
 				var _rowStr = {};
 				for( var j = 0, m = min(array_length(_row), _col); j < m; j++ )
-					_rowStr[$ _head[j]] = _row[j]; 
+					_rowStr[$ _head[j]] = _row[j];
+				
+				for( var j = 0, m = array_length(_ncol); j < m; j++ )
+					if(struct_has(_rowStr, _ncol[j])) 
+						_rowStr[$ _ncol[j]] = toNumber(_rowStr[$ _ncol[j]]);
+				
 				array_push(_sarr, _rowStr);
 			}
 		}
@@ -92,6 +101,7 @@ function Node_Array_CSV_Parse(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		if(_hed && _head != noone) {
 			inputs[3].editWidget.data = _head;
 			inputs[5].editWidget.data = _head;
+			inputs[6].editWidget.data = _head;
 		}
 		
 		__sort = [];

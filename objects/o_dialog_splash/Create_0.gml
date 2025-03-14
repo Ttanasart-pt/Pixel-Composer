@@ -613,7 +613,6 @@ event_inherited();
 			//banner
 			
 			banner_alpha = lerp_float(banner_alpha, _y < 0, 3);
-			draw_sprite_stretched_ext(THEME.shadow_drop_down_24, 0, 0, ui(56), sww, ui(20), c_white, banner_alpha);
 			draw_set_color(COLORS.panel_bg_clear);
 			draw_rectangle(0, 0, sww, ui(64), false);
 			

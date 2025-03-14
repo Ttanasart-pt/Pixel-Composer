@@ -18,11 +18,11 @@ function canvas_tool() constructor {
 	
 	subtool = 0;
 	
-	function disable() {
-		PANEL_PREVIEW.tool_current = noone;
-	}
+	function setNode(_n) { node = _n; return self; }
 	
 	function getTool() { return self; }
+	
+	function disable() { PANEL_PREVIEW.tool_current = noone; return self; }
 	
 	function init() {}
 	

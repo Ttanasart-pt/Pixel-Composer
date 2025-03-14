@@ -1,4 +1,9 @@
 function draw_line_connect(x0, y0, x1, y1, _s = 1, thick = 1, c1 = c_white, c2 = c_white, params = {}) {
+	if(y0 == y1) {
+		draw_line_width_color(x0, y0, x1, y1, thick, c1, c2); 
+		return;
+	}
+	
 	var extend    = params.extend;
     var corner    = min(extend, params.corner, min(abs(x0 - x1), abs(y0 - y1)) / 2);
 	var type      = params.type;

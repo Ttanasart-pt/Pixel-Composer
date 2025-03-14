@@ -23,6 +23,12 @@ event_inherited();
 #endregion
 
 #region presets
+	function initPalette() { 
+		paletePresets  = array_clone(PALETTES); 
+		currentPresets = paletePresets;
+		return self; 
+	} initPalette();
+	
 	preset_selecting = -1;
 	
 	pal_padding    = ui(9);
@@ -47,12 +53,12 @@ event_inherited();
 		var yy  = _y;
 		var col = max(1, floor(_ww / _gs)), row;
 		
-		for(var i = -1; i < array_length(PALETTES); i++) {
+		for(var i = -1; i < array_length(paletePresets); i++) {
 			var pal = i == -1? {
 				name    : "project",
 				palette : PROJECT.attributes.palette,
 				path    : ""
-			} : PALETTES[i];
+			} : paletePresets[i];
 			
 			pre_amo = array_length(pal.palette);
 			row     = ceil(pre_amo / col);
@@ -105,7 +111,43 @@ event_inherited();
 			click_block = false;
 		
 		return hh;
-	})
+	});
+	
+	//////////////////////// SEARCH ////////////////////////
+	
+	search_string = "";
+	tb_search = new textBox(TEXTBOX_INPUT.text, function(t) /*=>*/ {return searchPalette(t)} )
+	               .setFont(f_p2)
+	               .setHide(1)
+	               .setEmpty(false)
+	               .setPadding(ui(24))
+	               .setAutoUpdate();
+	
+	function searchPalette(t) {
+		search_string = t;
+		
+		if(search_string == "") {
+			paletePresets = currentPresets;
+			return;
+		}
+		
+		paletePresets = [];
+		var _pr = ds_priority_create();
+		
+		for( var i = 0, n = array_length(currentPresets); i < n; i++ ) {
+			var _prest = currentPresets[i];
+			var _match = string_partial_match(_prest.name, search_string);
+			if(_match <= -9999) continue;
+			
+			ds_priority_add(_pr, _prest, _match);
+		}
+		
+		repeat(ds_priority_size(_pr))
+			array_push(paletePresets, ds_priority_delete_max(_pr));
+		
+		ds_priority_destroy(_pr);
+	}
+	
 #endregion
 
 #region action
