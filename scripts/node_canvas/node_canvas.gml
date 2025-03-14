@@ -253,6 +253,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			new checkBox(function() /*=>*/ { attributes.show_slope_check = !attributes.show_slope_check; }) ]);
 	#endregion
 	
+	////- Tools
+	
 	#region ++++ tool object ++++
 		brush = new canvas_brush();
 		
@@ -467,12 +469,6 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		selection_tool_after = noone;
 	#endregion
 	
-	static setFrame = function(frame) {
-		var _anim  = getInputData(12);
-		if(_anim) PROJECT.animator.setFrame(frame);
-		else      preview_index = frame;
-	}
-	
 	function setToolColor(color) { 
 		if(!use_color_3d || color_3d_selected == 0) CURRENT_COLOR = color;
 		else                                        brush.colors[color_3d_selected - 1] = color;
@@ -566,6 +562,21 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		return hh + ui(4);
 	}
 	
+	static tool_pick_color = function(_x, _y) {
+		tool_attribute.pickColor = tool_selection.is_selected?
+				surface_get_pixel_ext(tool_selection.selection_surface, _x - tool_selection.selection_position[0], _y - tool_selection.selection_position[1]) : 
+				surface_get_pixel_ext(getCanvasSurface(), _x, _y);
+	}
+	
+	////- Frames
+	
+	static setFrame = function(frame) {
+		var _anim  = getInputData(12);
+		
+		if(_anim) PROJECT.animator.setFrame(frame);
+		else      preview_index = frame;
+	}
+	
 	static removeFrame = function(index = 0) {
 		if(attributes.frames <= 1) return;
 		
@@ -604,25 +615,11 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		}
 	}
 	
+	////- Surfaces
+	
 	function getCanvasSurface(index = preview_index) { INLINE return array_safe_get_fast(canvas_surface, index); }
 	
 	function setCanvasSurface(surface, index = preview_index) { INLINE canvas_surface[index] = surface; }
-	
-	static storeAction = function() {
-		
-		var action = recordAction(ACTION_TYPE.custom, function(data) { 
-			if(tool_selection.is_selected) tool_selection.apply();
-			
-			var _canvas = surface_clone(getCanvasSurface(data.index));
-			
-			if(is_surface(data.surface))
-				setCanvasSurface(data.surface, data.index); 
-			surface_store_buffer(data.index); 
-			
-			data.surface = _canvas;
-		}, { surface: surface_clone(getCanvasSurface(preview_index)), tooltip: $"Modify canvas {preview_index}", index: preview_index });
-		
-	}
 	
 	static apply_surfaces = function() {
 		for( var i = 0; i < attributes.frames; i++ )
@@ -680,12 +677,6 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		apply_surface(index);
 	}
 	
-	static tool_pick_color = function(_x, _y) {
-		tool_attribute.pickColor = tool_selection.is_selected?
-				surface_get_pixel_ext(tool_selection.selection_surface, _x - tool_selection.selection_position[0], _y - tool_selection.selection_position[1]) : 
-				surface_get_pixel_ext(getCanvasSurface(), _x, _y);
-	}
-	
 	function apply_draw_surface(_applyAlpha = true) {
 		var _can = getCanvasSurface();
 		var _drw = drawing_surface;
@@ -693,17 +684,13 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var _tmp;
 		
 		if(tool_selection.is_selected) {
-			
 			var _tmp = surface_create(surface_get_width_safe(tool_selection.selection_mask), surface_get_width_safe(tool_selection.selection_mask));
-			
 			var _spx = tool_selection.selection_position[0];
 			var _spy = tool_selection.selection_position[1];
 			var _spw = tool_selection.selection_size[0];
 			var _sph = tool_selection.selection_size[1];
 			
-			surface_set_target(_tmp);
-				DRAW_CLEAR
-				
+			surface_set_shader(_tmp, noone, true, BLEND.over);
 				draw_surface(drawing_surface, -_spx, -_spy);
 				
 				BLEND_ALPHA
@@ -713,19 +700,16 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				
 				BLEND_MULTIPLY
 					draw_surface_safe(tool_selection.selection_mask);
-				BLEND_NORMAL
-			surface_reset_target();
+			surface_reset_shader();
 			
 			_can = tool_selection.selection_surface;
+			
 		} else {
 			storeAction();
 			
 			var _tmp = surface_create(_dim[0], _dim[1]);
 			
-			surface_set_target(_tmp);
-				DRAW_CLEAR
-				BLEND_OVERRIDE
-				
+			surface_set_shader(_tmp, noone, true, BLEND.over);
 				draw_surface_safe(drawing_surface);
 				
 				BLEND_ALPHA
@@ -733,13 +717,13 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 						if(tool_attribute.mirror[1]) draw_surface_ext_safe(drawing_surface, _dim[0], 0, -1, 1);
 						if(tool_attribute.mirror[2]) draw_surface_ext_safe(drawing_surface, 0, _dim[1], 1, -1);
 						if(tool_attribute.mirror[1] && tool_attribute.mirror[2]) draw_surface_ext_safe(drawing_surface, _dim[0], _dim[1], -1, -1);
+						
 					} else {
 						if(tool_attribute.mirror[1]) draw_surface_ext_safe(drawing_surface, _dim[0], _dim[1], -1, 1, -90);
 						if(tool_attribute.mirror[2]) draw_surface_ext_safe(drawing_surface,       0,       0, -1, 1,  90);
 						if(tool_attribute.mirror[1] && tool_attribute.mirror[2]) draw_surface_ext_safe(drawing_surface, _dim[0], _dim[1], 1, 1, 180);
 					}
-				BLEND_NORMAL
-			surface_reset_target();
+			surface_reset_shader();
 			
 		}
 		
@@ -754,27 +738,44 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			shader_set_f("channels",  tool_attribute.channel);
 			shader_set_f("alpha",     _applyAlpha? _color_get_alpha(CURRENT_COLOR) : 1);
 			shader_set_f("mirror",    tool_attribute.mirror);
-			shader_set_color("pickColor", tool_attribute.pickColor, _color_get_alpha(tool_attribute.pickColor));
+			shader_set_c("pickColor", tool_attribute.pickColor, _color_get_alpha(tool_attribute.pickColor));
 			
 			shader_set_surface("back", _can);
 			shader_set_surface("fore", _tmp);
 			
-			draw_sprite_stretched(s_fx_pixel, 0, 0, 0, _sw, _sh);
+			draw_empty();
 		surface_reset_shader();
 		
 		surface_free(_can);
-		surface_clear(drawing_surface);
-		
 		surface_free(_tmp);
+		surface_clear(drawing_surface);
 		
 		if(tool_selection.is_selected) {
 			tool_selection.selection_surface = _drawnSurface;
+			
 		} else {
 			setCanvasSurface(_drawnSurface);
 			surface_store_buffer();
 		}
+	}
+	
+	static storeAction = function() {
+		
+		var action = recordAction(ACTION_TYPE.custom, function(data) { 
+			if(tool_selection.is_selected) tool_selection.apply();
+			
+			var _canvas = surface_clone(getCanvasSurface(data.index));
+			
+			if(is_surface(data.surface))
+				setCanvasSurface(data.surface, data.index); 
+			surface_store_buffer(data.index); 
+			
+			data.surface = _canvas;
+		}, { surface: surface_clone(getCanvasSurface(preview_index)), tooltip: $"Modify canvas {preview_index}", index: preview_index });
 		
 	}
+	
+	////- Nodes
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, params) { 
 		if(instance_exists(o_dialog_color_picker)) return;
@@ -1198,6 +1199,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 	}
 	
+	////- Serialize
+	
 	static doSerialize = function(_map) {
 		surface_store_buffers();
 		var _buff = array_create(attributes.frames);
@@ -1240,7 +1243,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		surface_array_free(canvas_surface);
 	}
 	
-	///////////////////////////////////
+	////- Actions
 	
 	on_drop_file = function(path) {
 		loadImagePath(path);

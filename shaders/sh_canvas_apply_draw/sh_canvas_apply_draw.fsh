@@ -18,7 +18,7 @@ void main() {
 	fc.a *= alpha;
 	
 	if(eraser == 1) {
-		bc -= fc;
+		bc.a -= fc.a;
 		gl_FragColor = bc;
 		return;
 	}

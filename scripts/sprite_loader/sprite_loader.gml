@@ -23,8 +23,17 @@ function _sprite_load_from_struct(str, theme, key) {
 	var sx   = struct_try_get(str, "x", 0) * THEME_SCALE;
 	var sy   = struct_try_get(str, "y", 0) * THEME_SCALE;
 	
-	var s    = sprite_add(path, numb, false, true, sx, sy);
-	if(s < 0) { log_message("THEME", $"Load sprite {path} failed."); return 0; }
+	if(!file_exists_empty(path)) { 
+		log_message("THEME", $"Load sprite {path} failed: Path not exists."); 
+		return 0; 
+	}
+	
+	var s = sprite_add(path, numb, false, true, sx, sy);
+	
+	if(s < 0) { 
+		log_message("THEME", $"Load sprite {path} failed: Cannot read file."); 
+		return 0; 
+	}
 	
 	if(!struct_has(str, "slice")) return s;
 	
