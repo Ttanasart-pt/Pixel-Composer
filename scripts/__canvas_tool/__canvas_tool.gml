@@ -22,17 +22,15 @@ function canvas_tool() constructor {
 	
 	function getTool() { return self; }
 	
-	function disable() { PANEL_PREVIEW.tool_current = noone; return self; }
+	function disable() { PANEL_PREVIEW.tool_current = noone; onDisable(); return self; }
+	function onDisable() {}
 	
 	function init() {}
 	
 	function step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {}
 	
-	function drawPreview(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {}
-	
-	function drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {}
-	
-	function drawPostOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {}
-	
-	function drawMask(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {}
+	function drawPreview(     hover, active, _x, _y, _s, _mx, _my, _snx, _sny ) {}
+	function drawOverlay(     hover, active, _x, _y, _s, _mx, _my, _snx, _sny ) {}
+	function drawPostOverlay( hover, active, _x, _y, _s, _mx, _my, _snx, _sny ) {}
+	function drawMask(        hover, active, _x, _y, _s, _mx, _my, _snx, _sny ) {}
 }

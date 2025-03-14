@@ -266,7 +266,7 @@ function canvas_draw_iso_cube(brush, _p, _fill = false) {
 				canvas_draw_line_brush(brush, p0px - 1, p0py, p0px - 1, p0py + d);
 				
 				if(_fill == 1)
-					canvas_draw_line_brush(brush, p1px, p1py, p1px, p1py + d);
+					canvas_draw_line_brush(brush, p1px, p1py - 1, p1px, p1py + d);
 				
 			} else if(_fill == 0) {
 				canvas_draw_line_brush(brush, p1x,  p1y,  p1px + 1, p1py);

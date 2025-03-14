@@ -800,10 +800,9 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			_drawing_surface = surface_verify(_drawing_surface, _dim[0], _dim[1]);
 			drawing_surface  = surface_verify( drawing_surface, _dim[0], _dim[1], attrDepth());
 				
-			surface_set_target(_drawing_surface); 
-				DRAW_CLEAR
+			surface_set_shader(_drawing_surface, noone); 
 				draw_surface_safe(drawing_surface); 
-			surface_reset_target();
+			surface_reset_shader();
 			
 			var __s  = surface_get_target();
 			var _sw  = surface_get_width(__s);
@@ -890,22 +889,21 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			
 			_tool.drawing_surface    = drawing_surface;
 			_tool._canvas_surface    = _canvas_surface;
-			
 			_tool.apply_draw_surface = apply_draw_surface;
 			_tool.brush              = brush;
 			
 			_tool.node = self;
 			
+			var _tx = _x;
+			var _ty = _y;
+			
 			if(_tool.relative && tool_selection.is_selected) {
 				_tool._canvas_surface = tool_selection.selection_surface;
-				var _px = tool_selection.selection_position[0];
-				var _py = tool_selection.selection_position[1];
-				var _rx = _x + _px * _s;
-				var _ry = _y + _py * _s;
-				
-				_tool.step(hover, active, _rx, _ry, _s, _mx, _my, _snx, _sny);
-			} else 
-				_tool.step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+				_tx = _x + tool_selection.selection_position[0] * _s;
+				_ty = _y + tool_selection.selection_position[1] * _s;
+			}
+			
+			_tool.step(hover, active, _tx, _ty, _s, _mx, _my, _snx, _sny);
 			
 			if(_tool.brush_resizable) { 
 				if(hover && key_mod_press(CTRL)) {
@@ -922,7 +920,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			if(tool_selection.is_selected) tool_selection.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 			if(_tool) _tool.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 			
-			surface_set_shader(preview_draw_surface, noone,, BLEND.alpha);
+			surface_set_shader(preview_draw_surface, noone, true, BLEND.alpha);
 				draw_surface_safe(_drawing_surface);
 				
 				if(tool_selection.is_selected) {

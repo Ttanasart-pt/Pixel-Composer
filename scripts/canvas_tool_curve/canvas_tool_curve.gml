@@ -17,25 +17,27 @@ function canvas_tool_curve_bezier(brush) : canvas_tool() constructor {
 	draw_hovering  = [];
 	
 	function init() {
-		anchors = [];
-		editing = [ noone, 0 ];
+		clear();
 	}
 	
 	function apply() {
 		apply_draw_surface();
-		
 		disable();
 	}
 	
-	function cancel() {
+	function cancel()    { disable(); }
+	function onDisable() { clear();   }
+		
+	function clear() {
+		anchors = [];
+		editing = [ noone, 0 ];
 		surface_clear(drawing_surface);
-		disable();
 	}
 	
 	function step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		
-		mouse_cur_x = (_mx - _x) / _s;
-		mouse_cur_y = (_my - _y) / _s;
+		mouse_cur_x = round((_mx - _x) / _s - 0.5);
+		mouse_cur_y = round((_my - _y) / _s - 0.5);
 		
 		if(editing[0] != noone) {
 			var _a  = anchors[editing[0]];
@@ -120,15 +122,6 @@ function canvas_tool_curve_bezier(brush) : canvas_tool() constructor {
 		if(key_press(vk_escape)) disable();
 	}
 	
-	function drawPreview(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		draw_surface_ext_safe(drawing_surface, _x, _y, _s, _s);
-		canvas_draw_point_brush(brush, mouse_cur_x, mouse_cur_y);
-	}
-	
-	function drawMask(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		
-	}
-	
 	function drawPostOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var ox, oy, nx, ny, ax0, ay0, ax1, ay1;
 		var oax1, oay1, nax0, nay0;
@@ -154,8 +147,7 @@ function canvas_tool_curve_bezier(brush) : canvas_tool() constructor {
 		}
 		
 		mouse_hovering = [ noone, 0 ];
-		
-		draw_hovering = array_verify(draw_hovering, array_length(anchors) * 3);
+		draw_hovering  = array_verify(draw_hovering, array_length(anchors) * 3);
 		
 		for (var i = 0, n = array_length(anchors); i < n; i++) {
 			nx = _x + anchors[i][2] * _s;
@@ -171,17 +163,16 @@ function canvas_tool_curve_bezier(brush) : canvas_tool() constructor {
 			draw_anchor(0, ax0, ay0, lerp(ui( 7), ui(10), draw_hovering[i * 3 + 0]));
 			draw_anchor(0, ax1, ay1, lerp(ui( 7), ui(10), draw_hovering[i * 3 + 2]));
 			
-			     if(point_in_circle(_mx, _my, nx, ny,   10)) mouse_hovering = [ i,  0 ];
-			else if(point_in_circle(_mx, _my, ax0, ay0, 10)) mouse_hovering = [ i, -1 ];
-			else if(point_in_circle(_mx, _my, ax1, ay1, 10)) mouse_hovering = [ i,  1 ];
+			     if(point_in_circle(_mx, _my, nx, ny,   ui(10))) mouse_hovering = [ i,  0 ];
+			else if(point_in_circle(_mx, _my, ax0, ay0, ui(10))) mouse_hovering = [ i, -1 ];
+			else if(point_in_circle(_mx, _my, ax1, ay1, ui(10))) mouse_hovering = [ i,  1 ];
 		}
 		
-		if(mouse_hovering[0] != noone) {
-			var index = mouse_hovering[0] * 3 + mouse_hovering[1] + 1;
-			
-			for (var i = 0, n = array_length(draw_hovering); i < n; i++)
-				draw_hovering[i] = lerp_float(draw_hovering[i], i == index, 4);
-		}
+		var index = mouse_hovering[0] != noone? mouse_hovering[0] * 3 + mouse_hovering[1] + 1 : noone;
+		for (var i = 0, n = array_length(draw_hovering); i < n; i++)
+			draw_hovering[i] = lerp_float(draw_hovering[i], i == index, 4);
+				
+		if(mouse_hovering[0] == noone && editing[0] == noone) draw_anchor(0, _mx, _my, ui(10));
 	}
 	
 }

@@ -2417,7 +2417,12 @@ function Panel_Preview() : PanelContent() constructor {
                 if(tool) drawNodeTools(pFOCUS, tool);
                 
             } else {
-                tool_current = noone;
+            	if(tool_current != noone) {
+	                var _tobj = tool_current.getToolObject();
+	        		if(_tobj) _tobj.disable();
+	                tool_current = noone;
+            	}
+	        	
                 drawAllNodeGizmo(pFOCUS);
             }
         }

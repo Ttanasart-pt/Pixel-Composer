@@ -360,8 +360,6 @@ function surface_reset_target_override() { __surface_reset_target(); winwin_draw
 	}
 
 	function surface_clear(surface, color = 0, alpha = 0) {
-		INLINE
-	
 		if(!is_surface(surface)) return;
 		surface_set_target(surface);
 			draw_clear_alpha(color, alpha);
