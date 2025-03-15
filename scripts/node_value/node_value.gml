@@ -1065,10 +1065,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	__init_dynamic = true;
+	__value_from   = noone;
+	
 	static isDynamic = function() {
-		INLINE
 		
-		if(__init_dynamic)    { __init_dynamic = false; return true; }
+		if(__init_dynamic)             { __init_dynamic = false;      return true; }
+		if(value_from != __value_from) { __value_from   = value_from; return true; }
+		
 		if(!IS_PLAYING)         return true;
 		if(value_from_loop)     return true;
 		if(value_from != noone) return true;

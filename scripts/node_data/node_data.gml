@@ -1011,13 +1011,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static getInputDataForce = function(index, def = 0) { return inputs[index].getValue(); }
 	
 	static getInputs = function(frame = CURRENT_FRAME) {
-		
 		inputs_data	= array_verify(inputs_data, array_length(inputs));
 		__frame     = frame;
 		
 		array_foreach(inputs, function(_inp, i) /*=>*/ {
-			if(!is(_inp, NodeValue)) return;
-			if(!_inp.isDynamic()) return;
+			if(!is(_inp, NodeValue) || !_inp.isDynamic()) return;
 			
 			var val = _inp.getValue(__frame);
 			
@@ -1025,6 +1023,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			inputs_data[i] = val;								// setInputData(i, val);
 			input_value_map[$ _inp.internalName] = val;
 		});
+		
 	}
 	
 	////- UPDATE
@@ -1058,12 +1057,13 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var _updateRender = !is(self, Node_Collection) || !managedRenderOrder;
 		if(_updateRender) setRenderStatus(true);
 		
+		getInputs(frame);
+		
 		if(cached_manual || (use_cache == CACHE_USE.auto && recoverCache())) {
 			render_cached = true;
 			
 		} else {
 			render_cached = false;
-			getInputs(frame);
 			
 			LOG_BLOCK_START();
 			LOG_IF(global.FLAG.render == 1, $">>>>>>>>>> DoUpdate called from {INAME} <<<<<<<<<<");
