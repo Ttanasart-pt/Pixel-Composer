@@ -13,10 +13,10 @@ event_inherited();
 	dialog_w = ui(50 + 80 * array_length(nodes));
 	dialog_h = ui(176);
 	
-	paths	= "";
-	is_dir	= false;
+	paths	      = "";
+	is_dir	      = false;
 	dir_recursive = false;
-	dir_filter    = ".png";
+	dir_filter    = ".png;.jpg;.jpeg";
 	
 	function setPath(path) {
 		paths	= path;
