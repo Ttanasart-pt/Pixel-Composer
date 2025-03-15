@@ -1,6 +1,5 @@
 function Panel_Tunnels() : PanelContent() constructor {
 	title   = __txt("Tunnels");
-	padding = 8;
 	
 	w = ui(320);
 	h = ui(480);
@@ -51,9 +50,9 @@ function Panel_Tunnels() : PanelContent() constructor {
 		}
 	}
 	
-	function onResize() { sc_tunnel.resize(w - ui(padding + padding), h - ui(padding + padding) - ui(28 + 40)); }
+	function onResize() { sc_tunnel.resize(w - padding * 2, h - padding * 2 - ui(28 + 40)); }
 
-	sc_tunnel = new scrollPane(w - ui(padding + padding), h - ui(padding + padding) - ui(28 + 40), function(_y, _m) {
+	sc_tunnel = new scrollPane(w - padding * 2, h - padding * 2 - ui(28 + 40), function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
 		var _h  = 0;
 		var ww  = sc_tunnel.surface_w;
@@ -140,10 +139,10 @@ function Panel_Tunnels() : PanelContent() constructor {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		scanNodes();
 		
-		var px = ui(padding);
-		var py = ui(padding);
-		var pw = w - ui(padding + padding);
-		var ph = h - ui(padding + padding) - ui(28);
+		var px = padding;
+		var py = padding;
+		var pw = w - padding * 2;
+		var ph = h - padding * 2 - ui(28);
 	
 		draw_sprite_stretched(THEME.ui_panel_bg, 1, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
 		

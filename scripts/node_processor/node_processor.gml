@@ -389,7 +389,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		// print($"{name}: {process_amount}");
 	}
 	
-	static update = function(frame = CURRENT_FRAME) {
+	static update = function(frame = CURRENT_FRAME) { 
 		processData_prebatch();
 		
 		if(batch_output) processBatchOutput();

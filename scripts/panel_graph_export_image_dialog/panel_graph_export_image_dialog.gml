@@ -1,6 +1,5 @@
 function Panel_Graph_Export_Image(_panel) : PanelContent() constructor {
 	title   = __txtx("panel_export_graph", "Export Graph");
-	padding = ui(8);
 	
 	w       = min(WIN_W, ui(800));
 	h       = ui(400);

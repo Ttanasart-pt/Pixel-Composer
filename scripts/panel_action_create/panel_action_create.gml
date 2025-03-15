@@ -2,7 +2,6 @@ function Panel_Action_Create() : PanelContent() constructor {
 	#region data
 		title = __txt("Create Action");
 		showHeader = true;
-		padding    = ui(8);
 		
 		w     = min(WIN_W, ui(720));
 		h     = ui(400);

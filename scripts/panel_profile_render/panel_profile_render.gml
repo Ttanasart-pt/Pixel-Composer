@@ -6,7 +6,6 @@ PROFILER_DATA = [];
 function Panel_Profile_Render() : PanelContent() constructor {
     title = __txt("Render Profiler");
 	showHeader = true;
-	padding    = ui(4);
 	auto_pin   = true;
 	
 	w = ui(800);
@@ -90,8 +89,6 @@ function Panel_Profile_Render() : PanelContent() constructor {
 	}
 	
 	function onResize() {
-		padding = in_dialog? ui(4) : ui(8);
-		
     	list_w    = ui(300);
     	detail_w  = w - list_w - padding * 2 - ui(8);
     	content_h = h - ui(40) - padding;

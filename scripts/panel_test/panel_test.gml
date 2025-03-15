@@ -10,7 +10,6 @@ function Panel_Test() : PanelContent() constructor {
 	
 	title       = "Tester";
 	auto_pin    = true;
-	padding     = ui(4);
 	content_w   = ui(320);
 	
 	test_dir    = "";

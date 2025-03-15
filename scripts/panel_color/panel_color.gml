@@ -5,7 +5,6 @@ enum COLOR_SELECTOR_MODE {
 
 function Panel_Color() : PanelContent() constructor {
 	title   = __txt("Color");
-	padding = 8;
 	
 	w = ui(320);
 	h = ui(320);
@@ -63,21 +62,21 @@ function Panel_Color() : PanelContent() constructor {
 	function drawContent(panel) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
-		var px = ui(padding);
-		var py = ui(padding);
-		var pw = w - ui(padding + padding);
-		var ph = h - ui(padding + padding);
+		var px = padding;
+		var py = padding;
+		var pw = w - padding * 2;
+		var ph = h - padding * 2;
 		
 		draw_sprite_stretched(THEME.ui_panel_bg, 1, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
 		
-		var _y1 = h - ui(padding);
+		var _y1 = h - padding;
 		
 		if(show_palette) {
-			var amo = min(array_length(colors) + 1, floor((w - ui(padding * 2)) / ui(24 + 4)));
+			var amo = min(array_length(colors) + 1, floor((w - padding * 2) / ui(24 + 4)));
 			var cy  = _y1 - ui(24);
 			
 			for( var i = 0; i < amo; i++ ) {
-				var cx = ui(padding) + ui(24 + 4) * i;
+				var cx = padding + ui(24 + 4) * i;
 				
 				if(i == 0) {
 					draw_sprite_stretched_ext(THEME.box_r2, 0, cx + ui(4), cy + ui(4), ui(16), ui(16), CURRENT_COLOR, _color_get_alpha(CURRENT_COLOR));
@@ -123,15 +122,15 @@ function Panel_Color() : PanelContent() constructor {
 		
 		if(show_hex) {
 			var alp_h = ui(20);
-			var alp_w = w - ui(padding * 2) - alp_h - ui(padding);
+			var alp_w = w - padding * 2 - alp_h - padding;
 			
-			var alp_x = alp_h + ui(padding * 2);
+			var alp_x = alp_h + padding * 2;
 			var alp_y = _y1 - alp_h;
 			
-			draw_sprite_stretched_ext(THEME.box_r2, 0, ui(padding), alp_y, alp_h, alp_h, CURRENT_COLOR, alp);
+			draw_sprite_stretched_ext(THEME.box_r2, 0, padding, alp_y, alp_h, alp_h, CURRENT_COLOR, alp);
 			
 			aa = 0.3;
-			if(point_in_rectangle(mx, my, ui(padding), alp_y, ui(padding) + alp_h, alp_y + alp_h)) {
+			if(point_in_rectangle(mx, my, padding, alp_y, padding + alp_h, alp_y + alp_h)) {
 				aa = 0.5;
 				if(mouse_press(mb_left, pFOCUS)) {
 					DRAGGING = {
@@ -142,7 +141,7 @@ function Panel_Color() : PanelContent() constructor {
 				}
 			}
 			
-			draw_sprite_stretched_add(THEME.box_r2, 1, ui(padding), alp_y, alp_h, alp_h, c_white, aa);
+			draw_sprite_stretched_add(THEME.box_r2, 1, padding, alp_y, alp_h, alp_h, c_white, aa);
 			
 			hex_tb.setFocusHover(pFOCUS, pHOVER);
 			hex_tb.setFont(f_p2);
@@ -154,10 +153,10 @@ function Panel_Color() : PanelContent() constructor {
 		}
 		
 		if(show_alpha) {
-			var alp_w = w - ui(padding * 2);
+			var alp_w = w - padding * 2;
 			var alp_h = ui(20);
 			
-			var alp_x = ui(padding);
+			var alp_x = padding;
 			var alp_y = _y1 - alp_h;
 			
 			alpha_slider.setFocusHover(pFOCUS, pHOVER);

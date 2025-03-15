@@ -4,8 +4,6 @@ function Panel_Array_Sequence(node) : PanelContent() constructor {
 	
 	w = ui(640);
 	h = ui(168);
-		
-	padding = ui(16);
 	
 	content_h = ui(64);
 	content_surface = noone;
@@ -28,7 +26,7 @@ function Panel_Array_Sequence(node) : PanelContent() constructor {
 		var _ord = node.getInputData(2);
 		
 		var draw_drag = true;
-		var content_w = w - (padding + padding);
+		var content_w = w - padding * 2;
 		var _ns = content_h;
 		var msx = mx - padding;
 		var msy = my - padding;
@@ -71,8 +69,8 @@ function Panel_Array_Sequence(node) : PanelContent() constructor {
 		
 		var px = padding;
 		var py = padding + content_h + ui(16);
-		var pw = w - (padding + padding);
-		var ph = h - (padding + padding) - content_h - ui(16);
+		var pw = w - padding * 2;
+		var ph = h - padding * 2 - content_h - ui(16);
 		var _ns = ui(32);
 		var len = array_length(_ord);
 		var msx = mx - px;

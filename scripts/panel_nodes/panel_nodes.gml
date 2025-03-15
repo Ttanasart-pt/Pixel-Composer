@@ -1,6 +1,5 @@
 function Panel_Nodes() : PanelContent() constructor {
 	title   = __txt("Nodes");
-	padding = ui(8);
 	w       = ui(320);
 	h       = ui(480);
 	
@@ -13,7 +12,7 @@ function Panel_Nodes() : PanelContent() constructor {
 	
 	node_collapse = ds_map_create();
 
-	function onResize() { sc_nodes.resize(w - ui(padding + padding), h - ui(padding + padding + 40)); }
+	function onResize() { sc_nodes.resize(w - padding * 2, h - padding * 2 + ui(40)); }
 	
 	function drawNodeList(_arr, _x0, _x1, _y, _m) {
 		var _hh = sc_nodes.surface_h;
@@ -96,7 +95,7 @@ function Panel_Nodes() : PanelContent() constructor {
 		return _h;
 	}
 	
-	sc_nodes = new scrollPane(w - ui(padding + padding), h - ui(padding + padding + 40), function(_y, _m) {
+	sc_nodes = new scrollPane(w - padding * 2, h - padding * 2 + ui(40), function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
 		var _h = drawNodeList(PROJECT.nodes, 0, sc_nodes.surface_w, _y, _m);
 		return _h;
@@ -105,10 +104,10 @@ function Panel_Nodes() : PanelContent() constructor {
 	function drawContent(panel) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
-		var px = ui(padding);
-		var py = ui(padding);
-		var pw = w - ui(padding + padding);
-		var ph = h - ui(padding + padding);
+		var px = padding;
+		var py = padding;
+		var pw = w - padding * 2;
+		var ph = h - padding * 2;
 		
 		draw_sprite_stretched(THEME.ui_panel_bg, 1, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
 		tb_search.setFocusHover(pFOCUS, pHOVER);

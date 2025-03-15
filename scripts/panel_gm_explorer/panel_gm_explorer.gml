@@ -3,7 +3,6 @@ function Panel_GM_Explore(gmBinder) : PanelContent() constructor {
     title = $"{gmBinder.projectName}.yyc";
     
     auto_pin = true;
-    padding  = 8;
 	w = ui(400);
 	h = ui(480);
 	
@@ -25,9 +24,9 @@ function Panel_GM_Explore(gmBinder) : PanelContent() constructor {
 		search_res = [];
 	}
 	
-	function onResize() { sc_content.resize(w - ui(padding + padding), h - ui(padding + padding + 40)); }
+	function onResize() { sc_content.resize(w - padding * 2, h - padding * 2 + ui(40)); }
 	
-	sc_content = new scrollPane(w - ui(padding + padding), h - ui(padding + padding + 40), function(_y, _m) {
+	sc_content = new scrollPane(w - padding * 2, h - padding * 2 + ui(40), function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
 		return GM_Explore_draw(gmBinder, 0, _y, sc_content.surface_w, sc_content.surface_h, _m, sc_content.hover, sc_content.active);
 	});
@@ -35,10 +34,10 @@ function Panel_GM_Explore(gmBinder) : PanelContent() constructor {
 	function drawContent(panel) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
-		var px = ui(padding);
-		var py = ui(padding);
-		var pw = w - ui(padding + padding);
-		var ph = h - ui(padding + padding);
+		var px = padding;
+		var py = padding;
+		var pw = w - padding * 2;
+		var ph = h - padding * 2;
 		
 		draw_sprite_stretched(THEME.ui_panel_bg, 1, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
 		

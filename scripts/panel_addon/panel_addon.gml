@@ -1,7 +1,6 @@
 function Panel_Addon() : PanelContent() constructor {
 	title = __txt("Addons");
 	icon  = THEME.addon_icon;
-	padding = 8;
 	
 	#region data
 		w = ui(400);
@@ -34,11 +33,11 @@ function Panel_Addon() : PanelContent() constructor {
 	#endregion
 	
 	function onResize() {
-		sc_addon.resize(w - ui(padding + padding), h - ui(title_height + padding + 40));
+		sc_addon.resize(w - padding * 2, h - title_height + padding + ui(40));
 	}
 	
 	#region content
-		sc_addon = new scrollPane(w - ui(padding + padding), h - ui(title_height + padding + 40), function(_y, _m) {
+		sc_addon = new scrollPane(w - padding * 2, h - title_height + padding + ui(40), function(_y, _m) {
 			draw_clear_alpha(COLORS.panel_bg_clear, 0);
 			var _h  = 0;
 			var ww  = sc_addon.surface_w;
@@ -162,10 +161,10 @@ function Panel_Addon() : PanelContent() constructor {
 	function drawContent(panel) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
-		var px = ui(padding);
-		var py = ui(padding);
-		var pw = w - ui(padding + padding);
-		var ph = h - ui(padding + padding);
+		var px = padding;
+		var py = padding;
+		var pw = w - padding * 2;
+		var ph = h - padding * 2;
 		
 		draw_sprite_stretched(THEME.ui_panel_bg, 1, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
 		if(pFOCUS) WIDGET_CURRENT = tb_search;

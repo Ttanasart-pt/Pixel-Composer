@@ -1,7 +1,6 @@
 function Panel_Globalvar() : PanelContent() constructor {
 	title       = __txtx("panel_globalvar", "Global Variables");
 	context_str = "Globalvar";
-	padding     = 8;
 	auto_pin    = true;
 	
 	w = ui(320);
@@ -9,16 +8,16 @@ function Panel_Globalvar() : PanelContent() constructor {
 	
 	global_drawer = new GlobalVarDrawer();
 	
-	function onResize() { contentPane.resize(w - ui(padding + padding), h - ui(padding + padding) - ui(28)); }
+	function onResize() { contentPane.resize(w - padding * 2, h - padding * 2 - ui(28)); }
 	
-	contentPane = new scrollPane(w - ui(padding + padding), h - ui(padding + padding) - ui(28), function(_y, _m) {
+	contentPane = new scrollPane(w - padding * 2, h - padding * 2 - ui(28), function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
 		
 		var _hover = pHOVER && contentPane.hover;
 		var hh = 0;
 		var yy = _y;
 		
-        var glPar = global_drawer.draw(ui(8), yy, contentPane.surface_w - ui(16), _m, pFOCUS, _hover, contentPane, x + ui(padding), y + ui(padding));
+        var glPar = global_drawer.draw(ui(8), yy, contentPane.surface_w - ui(16), _m, pFOCUS, _hover, contentPane, x + padding, y + padding);
         var gvh   = glPar[0];
 		if(glPar[1]) contentPane.hover_content = true;
 					
@@ -31,10 +30,10 @@ function Panel_Globalvar() : PanelContent() constructor {
 	function drawContent(panel) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 1);
 		
-		var px = ui(padding);
-		var py = ui(padding);
-		var pw = w - ui(padding + padding);
-		var ph = h - ui(padding + padding) - ui(28);
+		var px = padding;
+		var py = padding;
+		var pw = w - padding * 2;
+		var ph = h - padding * 2 - ui(28);
 		
 		draw_sprite_stretched(THEME.ui_panel_bg, 1, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
 		

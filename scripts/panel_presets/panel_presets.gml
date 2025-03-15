@@ -12,7 +12,6 @@ function __fnInit_Presets() {
 
 function Panel_Presets(_node) : PanelContent() constructor {
 	title   = __txt("Presets");
-	padding = 8;
 	
 	w = ui(240);
 	h = ui(400);
@@ -73,9 +72,9 @@ function Panel_Presets(_node) : PanelContent() constructor {
 		adding = false;
 	}
 	
-	function onResize() { sc_presets.resize(w - ui(padding + padding), h - ui(padding + padding) - ui(28)); }
+	function onResize() { sc_presets.resize(w - padding * 2, h - padding * 2 - ui(28)); }
 	
-	sc_presets = new scrollPane(w - ui(padding + padding), h - ui(padding + padding) - ui(28), function(_y, _m) {
+	sc_presets = new scrollPane(w - padding * 2, h - padding * 2 - ui(28), function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
 		
 		var _ww = sc_presets.surface_w;
@@ -210,10 +209,12 @@ function Panel_Presets(_node) : PanelContent() constructor {
 	function drawContent(panel) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
-		var px = ui(padding);
-		var py = ui(padding);
-		var pw = w - ui(padding + padding);
-		var ph = h - ui(padding + padding) - ui(28);
+		var px = padding;
+		var py = padding;
+		var pw = w - padding * 2;
+		var ph = h - padding * 2 - ui(28);
+		
+		var sp = padding - ui(8);;
 		
 		draw_sprite_stretched(THEME.ui_panel_bg, 1, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
 		
@@ -221,8 +222,8 @@ function Panel_Presets(_node) : PanelContent() constructor {
 		sc_presets.draw(px, py, mx - px, my - py);
 		
 		var _add_h = ui(24);
-		var _bx    = 0;
-		var _by    = h - _add_h;
+		var _bx    = sp;
+		var _by    = h - _add_h - sp;
 		var _ww    = w;
 		
 		if(adding) {

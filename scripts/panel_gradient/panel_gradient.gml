@@ -1,13 +1,12 @@
 function Panel_Gradient() : PanelContent() constructor {
 	title = __txt("Gradients");
-	padding		 = 8;
 	
 	w = ui(320);
 	h = ui(480);
 	
-	function onResize() { sp_gradient.resize(w - ui(padding + padding), h - ui(padding + padding)); }
+	function onResize() { sp_gradient.resize(w - padding * 2, h - padding * 2); }
 	
-	sp_gradient = new scrollPane(w - ui(padding + padding), h - ui(padding + padding), function(_y, _m) {
+	sp_gradient = new scrollPane(w - padding * 2, h - padding * 2, function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		var ww  = sp_gradient.surface_w;
 		var hh  = 0;
@@ -61,10 +60,10 @@ function Panel_Gradient() : PanelContent() constructor {
 	function drawContent(panel) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
-		var px = ui(padding);
-		var py = ui(padding);
-		var pw = w - ui(padding + padding);
-		var ph = h - ui(padding + padding);
+		var px = padding;
+		var py = padding;
+		var pw = w - padding * 2;
+		var ph = h - padding * 2;
 	
 		draw_sprite_stretched(THEME.ui_panel_bg, 1, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
 		

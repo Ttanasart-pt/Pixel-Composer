@@ -1,6 +1,5 @@
 function Panel_Palette_Mixer(_selector = noone) : PanelContent() constructor {
 	title    = __txt("Palettes Mixer");
-	padding  = ui(8);
 	auto_pin = true;
 	
 	selector = _selector;

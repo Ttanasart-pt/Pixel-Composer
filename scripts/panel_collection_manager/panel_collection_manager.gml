@@ -4,7 +4,6 @@ function Panel_Collection_Manager() : PanelContent() constructor {
 	
 	title       = "Collection Manager";
 	auto_pin    = true;
-	padding     = ui(4);
 	content_w   = w - ui(200);
 	
 	stack = ds_stack_create();
@@ -75,31 +74,29 @@ function Panel_Collection_Manager() : PanelContent() constructor {
 	function drawContent(panel) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 1);
 		
-		padding   = in_dialog? ui(4) : ui(8);
 		content_w = w - ui(200);
 		
 		// Lists
 		
-		var _pd = padding;
-		var ndx = _pd;
-		var ndy = _pd;
-		var ndw = content_w + ui(16);
-		var ndh = h - _pd * 2;
+		var ndx = padding;
+		var ndy = padding;
+		var ndw = content_w + ui(16) - padding * 2;
+		var ndh = h - padding * 2;
 		
-		draw_sprite_stretched(THEME.ui_panel_bg, 1, ndx, ndy, ndw, ndh);
+		draw_sprite_stretched(THEME.ui_panel_bg, 1, ndx - ui(8), ndy - ui(8), ndw + ui(16), ndh + ui(16));
 		
 		sc_content.verify(content_w, ndh - ui(16));
 		sc_content.setFocusHover(pFOCUS, pHOVER);
-		sc_content.drawOffset(ndx + ui(8), ndy + ui(8), mx, my);
+		sc_content.drawOffset(ndx, ndy, mx, my);
 		
 		// Button
 		
 		var lx = ndx + ndw + ui(8);
 		
-		var bw = w - _pd - lx;
+		var bw = w - padding - lx;
 		var bh = TEXTBOX_HEIGHT;
 		var bx = lx;
-		var by = _pd;
+		var by = padding;
 		
 		if(buttonInstant(THEME.button_def, bx, by, bw, bh, [ mx, my ], pHOVER, pFOCUS) == 2)
 			__test_load_current_collections(COLLECTIONS);

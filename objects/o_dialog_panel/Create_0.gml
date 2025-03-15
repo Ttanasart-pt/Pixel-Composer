@@ -4,7 +4,7 @@ event_inherited();
 #region panel
 	dialog_w             = 640;
 	dialog_h             = 480;
-	padding              = ui(8);
+	padding              = ui(2);
 	title_height         = ui(24);
 	dialog_resizable     = true;
 	destroy_on_click_out = true;

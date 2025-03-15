@@ -1,6 +1,5 @@
 function Panel_HLSL_Libraries() : PanelContent() constructor {
     title    = __txt("HLSL Libraries");
-    padding  = ui(8);
 	w        = ui(640);
 	h        = ui(480);
 	auto_pin = true;
@@ -196,7 +195,6 @@ Libraries in the global scope will be add to project automatically.";
     
     function drawContent(panel) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 1);
-		padding = in_dialog? ui(4) : ui(8);
 		
 		var px = padding;
 		var py = padding + ui(24 + 4);

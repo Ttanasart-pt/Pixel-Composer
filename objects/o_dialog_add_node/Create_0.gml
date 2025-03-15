@@ -210,13 +210,7 @@ event_inherited();
 		instance_destroy(o_dialog_menubox);
 		
 		if(!_node) return;
-		
-		if(canvas) {
-			UNDO_HOLDING = true;
-			context.nodeTool = new canvas_tool_node(context, _node).init();
-			UNDO_HOLDING = false;
-			return;
-		}
+		if(canvas) return context.addNodeTool(_node); 
 		
 		var _new_node = noone;
 		var _inputs   = [];

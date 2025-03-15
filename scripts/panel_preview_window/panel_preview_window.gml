@@ -13,8 +13,6 @@ function __fnInit_Preview_Window() {
 function Panel_Preview_Window() : PanelContent() constructor {
 	min_w   = ui(64);
 	min_h   = ui(64);
-	padding = 8;
-	title_height = 24;
 	
 	w = ui(200);
 	h = ui(200);

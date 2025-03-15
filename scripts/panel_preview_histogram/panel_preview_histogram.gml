@@ -1,6 +1,5 @@
 function Panel_Preview_Histogram() : PanelContent() constructor {
 	title   = __txt("Histogram");
-	padding = 8;
 	
 	w = ui(320);
 	h = ui(240);

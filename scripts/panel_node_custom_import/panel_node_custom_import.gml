@@ -39,7 +39,6 @@ function NodeFileObject(_path) : FileObject(_path) constructor {
 
 function Panel_Node_Custom_Import(_dirs) : PanelContent() constructor {
     title    = __txt("Import Resources");
-    padding  = ui(8);
 	w        = ui(320);
 	h        = ui(480);
 	auto_pin = true;

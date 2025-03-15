@@ -387,12 +387,29 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		];
 	#endregion
 	
+	#region ++++ nodeTool ++++
+		__action_add_node = method(self, function(c) /*=>*/ { with(dialogCall(o_dialog_add_node, mouse_mx + 8, mouse_my + 8, { context: c })) canvas = true; });
+		
+		tool_node_buttons = new buttonGroup( array_create(2, THEME.toolbar_check), function(v) /*=>*/ { if(v == 0) nodeTool.apply(); else nodeTool.destroy(); })
+								.setCollape(false);
+		
+		nodeTool        = noone;
+		nodeToolPreview = new NodeTool( "Apply Node", THEME.canvas_tools_node, self )
+								.setToolFn(__action_add_node)
+								.setContext(self);
+		
+		static addNodeTool = function(_node) {
+			UNDO_HOLDING = true;
+			nodeTool = new canvas_tool_node(self, _node).init();
+			UNDO_HOLDING = false;
+		}
+	#endregion
+	
 	#region ++++ right tools ++++
 		__action_rotate_90_cw  = method(self, function( ) /*=>*/ { if(tool_selection.is_selected) tool_selection.rotate90cw()  else canvas_action_rotate(-90); });
 		__action_rotate_90_ccw = method(self, function( ) /*=>*/ { if(tool_selection.is_selected) tool_selection.rotate90ccw() else canvas_action_rotate( 90); });
 		__action_flip_h        = method(self, function( ) /*=>*/ { if(tool_selection.is_selected) tool_selection.flipH()       else canvas_action_flip(1);     });
 		__action_flip_v        = method(self, function( ) /*=>*/ { if(tool_selection.is_selected) tool_selection.flipV()       else canvas_action_flip(0);     });
-		__action_add_node      = method(self, function(c) /*=>*/ { var dia = dialogCall(o_dialog_add_node, mouse_mx + 8, mouse_my + 8, { context: c }); dia.canvas = true; });
 		__action_make_brush    = method(self, function( ) /*=>*/ { 
 			if(brush.brush_use_surface) {
 				brush.brush_surface     = noone;
@@ -413,11 +430,6 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			
 			PANEL_PREVIEW.tool_current = tools[2];
 		});
-		
-		nodeTool        = noone;
-		nodeToolPreview = new NodeTool( "Apply Node", THEME.canvas_tools_node, self )
-								.setToolFn(__action_add_node)
-								.setContext(self);
 		
 		rightTools_general = [ 
 			nodeToolPreview,
@@ -567,6 +579,12 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				surface_get_pixel_ext(tool_selection.selection_surface, _x - tool_selection.selection_position[0], _y - tool_selection.selection_position[1]) : 
 				surface_get_pixel_ext(getCanvasSurface(), _x, _y);
 	}
+	
+	////- Apply node
+	
+	nodes = [];
+	static refreshNodes = function() {}
+	static getNodeList  = function() /*=>*/ {return nodes};
 	
 	////- Frames
 	
@@ -1202,8 +1220,12 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	}
 	
 	static getPreviewValues = function() {
-		var val = outputs[0].getValue();
+		if(nodeTool != noone && !nodeTool.applySelection) {
+			surface_clear(preview_draw_final);
+			return preview_draw_final;
+		}
 		
+		var val = outputs[0].getValue();
 		surface_set_shader(preview_draw_final, isUsingTool("Eraser")? sh_blend_subtract_alpha : sh_blend_normal, true, BLEND.over);
 			shader_set_surface("fore",    preview_draw_surface);
 			shader_set_i("useMask",       false);

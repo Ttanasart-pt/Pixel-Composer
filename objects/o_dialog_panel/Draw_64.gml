@@ -57,42 +57,58 @@ if(content.showHeader) {
 	draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
 	draw_text_cut(_tx, dialog_y + ui(8), content.title, dialog_w - ui(32 + 32));
 	
-	var _bx = dialog_x + dialog_w - ui(28);
-	var _by = dialog_y + ui(8);
+	var _bx = dialog_x + dialog_w - ui(8);
+	var _by = dialog_y + ui(6);
 	var _bs = ui(20);
 	
-	if(instanceof(content) != "Panel_Menu")
-	if(buttonInstant(THEME.button_hide_fill, _bx, _by, _bs, _bs, [ mouse_mx, mouse_my ], sHOVER, sFOCUS, "", THEME.window_exit_icon) == 2) {
-		DIALOG_POSTDRAW
-		onDestroy();
-		instance_destroy();
+	if(instanceof(content) != "Panel_Menu" && array_empty(content.title_actions)) {
+		if(buttonInstant(THEME.button_hide_fill, _bx - _bs, _by, _bs, _bs, [ mouse_mx, mouse_my ], sHOVER, sFOCUS, "", THEME.window_exit_icon) == 2) {
+			DIALOG_POSTDRAW
+			onDestroy();
+			instance_destroy();
+		}
+		
+		_bx -= _bs + ui(4);
 	}
-	
-	_bx -= ui(8);
-	// draw_set_color(COLORS.panel_toolbar_separator);
-	// draw_line_width(_bx + ui(4), _by, _bx + ui(4), _by + _bs, 2);
 	
 	for (var i = 0, n = array_length(content.title_actions); i < n; i++) {
-		var _b = content.title_actions[i];
+		var _b   = content.title_actions[i];
+		var _txt = _b[0];
+		var _spr = _b[1];
+		var _act = _b[2];
 		
-		_bx -= _bs;
-		_b.setFocusHover(sFOCUS, sHOVER);
-		_b.draw(_bx, _by, _bs, _bs, [ mouse_mx, mouse_my ], THEME.button_hide_fill);
-		_bs -= ui(4);
+		if(buttonInstant(THEME.button_hide_fill, _bx - _bs, _by, _bs, _bs, [ mouse_mx, mouse_my ], sHOVER, sFOCUS, _txt, _spr[0], _spr[1], _spr[2]) == 2)
+			_act();
+		
+		_bx -= _bs + ui(4);
 	}
-} 
+	
+	var bx  = dialog_x + ui(8);
+	var by  = dialog_y + ui(6);
+	var txt = destroy_on_click_out? __txt("Pin") : __txt("Unpin");
+	var cc  = destroy_on_click_out? COLORS._main_icon : COLORS._main_icon_light;
+	var ind = !destroy_on_click_out;
+	var ss  = ui(20);
+	var sc  = 0.75;
+	
+	if(window == noone && instanceof(content) != "Panel_Menu") {
+		var b = buttonInstant(THEME.button_hide_fill, bx, by, ss, ss, [ mouse_mx, mouse_my ], sHOVER, sFOCUS, txt, THEME.pin, ind, cc, 1, sc);
+		if(b == 2) destroy_on_click_out = !destroy_on_click_out;
+	}
 
-var bx  = content.showHeader? dialog_x + ui(8) : dialog_x + ui(24);
-var by  = content.showHeader? dialog_y + ui(8) : dialog_y + ui(18);
-var txt = destroy_on_click_out? __txt("Pin") : __txt("Unpin");
-var cc  = destroy_on_click_out? COLORS._main_icon : COLORS._main_icon_light;
-var ind = !destroy_on_click_out;
-var ss  = content.showHeader? ui(20) : ui(28);
-var sc  = content.showHeader? 0.75 : 1;
-
-if(window == noone && instanceof(content) != "Panel_Menu") {
-	var b = buttonInstant(THEME.button_hide_fill, bx, by, ss, ss, [ mouse_mx, mouse_my ], sHOVER, sFOCUS, txt, THEME.pin, ind, cc, 1, sc);
-	if(b == 2) destroy_on_click_out = !destroy_on_click_out;
+} else {
+	var bx  = dialog_x + ui(24);
+	var by  = dialog_y + ui(18);
+	var txt = destroy_on_click_out? __txt("Pin") : __txt("Unpin");
+	var cc  = destroy_on_click_out? COLORS._main_icon : COLORS._main_icon_light;
+	var ind = !destroy_on_click_out;
+	var ss  = ui(28);
+	var sc  = 1;
+	
+	if(window == noone && instanceof(content) != "Panel_Menu") {
+		var b = buttonInstant(THEME.button_hide_fill, bx, by, ss, ss, [ mouse_mx, mouse_my ], sHOVER, sFOCUS, txt, THEME.pin, ind, cc, 1, sc);
+		if(b == 2) destroy_on_click_out = !destroy_on_click_out;
+	}
 }
 
 if(DIALOG_SHOW_FOCUS) DIALOG_DRAW_FOCUS

@@ -897,7 +897,7 @@ function PanelContent() constructor {
 	y  = 0;
 	w  = 640;
 	h  = 480;
-	padding		 = ui(16);
+	padding		 = ui(12);
 	title_height = ui(28);
 	
 	tab_x  = 0;

@@ -171,7 +171,6 @@ function Panel_File_Explorer() : PanelContent() constructor {
 	grid_size    = ui(64);
 	
 	cntPad  = ui(4);
-	padding = ui(8);
 	top_bar = ui(44);
 	tb_root = new textBox(TEXTBOX_INPUT.text, function(v) /*=>*/ {return setRoot(v)});
 	
@@ -492,7 +491,7 @@ function Panel_File_Explorer() : PanelContent() constructor {
 		return _h;
 	}
 	
-	contentPane = new scrollPane(w - padding - padding - cntPad * 2, h - padding - top_bar - cntPad * 2, function(_y, _m, _r) {
+	contentPane = new scrollPane(w - padding * 2 - cntPad * 2, h - padding - top_bar - cntPad * 2, function(_y, _m, _r) {
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
 		
 		if(frame_dragging) file_selectings = [];
@@ -629,7 +628,7 @@ function Panel_File_Explorer() : PanelContent() constructor {
 	
 	function onResize() {
 		initSize();
-		contentPane.resize(w - padding - padding - cntPad * 2, h - padding - top_bar - cntPad * 2);
+		contentPane.resize(w - padding * 2 - cntPad * 2, h - padding - top_bar - cntPad * 2);
 	}
 	
 	function drawContent(panel) {

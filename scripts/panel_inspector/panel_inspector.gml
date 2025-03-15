@@ -677,9 +677,6 @@ function Panel_Inspector() : PanelContent() constructor {
         var _hh = ui(40);
         _y += _hh;
         
-        if(is(inspecting, Node_Canvas) && inspecting.nodeTool != noone && is(inspecting.nodeTool.nodeObject, Node))
-            return _hh + drawNodeProperties(_y, _m, inspecting.nodeTool.nodeObject);
-        
         if(inspectGroup >= 0)           return _hh + drawNodeProperties(_y, _m, inspecting);
         if(is(inspecting, Node_Frame))  return _hh + drawNodeProperties(_y, _m, inspecting);
         
@@ -1286,9 +1283,9 @@ function Panel_Inspector() : PanelContent() constructor {
     }
     
     function drawContent(panel) { 
-        draw_clear_alpha(COLORS.panel_bg_clear, 1);
+    	draw_clear_alpha(COLORS.panel_bg_clear, 1);
         draw_sprite_stretched(THEME.ui_panel_bg, 1, ui(8), top_bar_h - ui(8), w - ui(16), h - top_bar_h);
-        
+    	
         if(inspecting && !inspecting.active) inspecting = noone;
         
         view_mode_tooltip.index = viewMode;

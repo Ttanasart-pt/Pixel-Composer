@@ -1,6 +1,5 @@
 function Panel_Image_Array_Editor(_junction) : PanelContent() constructor {
 	title   = __txt("Array Editor");
-	padding = 8;
 	target  = _junction;
 	data    = target.getValue();
 	
@@ -45,9 +44,9 @@ function Panel_Image_Array_Editor(_junction) : PanelContent() constructor {
 		apply();
 	}
 	
-	function onResize() { sp_content.resize(w - ui(padding + padding), h - ui(padding + padding)); }
+	function onResize() { sp_content.resize(w - padding * 2, h - padding * 2); }
 	
-	sp_content = new scrollPane(w - ui(padding + padding), h - ui(padding + padding), function(_y, _m) {
+	sp_content = new scrollPane(w - padding * 2, h - padding * 2, function(_y, _m) {
 		if(!target) return 0;
 		
 		draw_clear_alpha(CDEF.main_mdblack, 1);
@@ -202,10 +201,10 @@ function Panel_Image_Array_Editor(_junction) : PanelContent() constructor {
 	function drawContent(panel) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
-		var px = ui(padding);
-		var py = ui(padding);
-		var pw = w - ui(padding + padding);
-		var ph = h - ui(padding + padding);
+		var px = padding;
+		var py = padding;
+		var pw = w - padding * 2;
+		var ph = h - padding * 2;
 		
 		var msx = mx - px;
 		var msy = my - py;

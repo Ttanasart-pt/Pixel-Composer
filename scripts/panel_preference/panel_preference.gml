@@ -9,7 +9,6 @@ function Panel_Preference() : PanelContent() constructor {
 	
 	page_width     = ui(128);
 	should_restart = false;
-	padding        = ui(8);
 	
 	font = f_p2;
     

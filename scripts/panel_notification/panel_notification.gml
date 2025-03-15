@@ -20,7 +20,6 @@ function Panel_Notification() : PanelContent() constructor {
 	title   = __txt("Notifications");
 	w       = ui(720);
 	h       = ui(480);
-	padding = 8;
 	
 	current_page   = 0;
 	filter         = NOTI_TYPE.log | NOTI_TYPE.warning | NOTI_TYPE.error;
@@ -41,10 +40,10 @@ function Panel_Notification() : PanelContent() constructor {
 	];
 	
 	function onResize() {
-		sp_noti.resize(w - ui(padding + padding), h - ui(padding + padding));
+		sp_noti.resize(w - padding * 2, h - padding * 2);
 	}
 	
-	sp_noti = new scrollPane(w - ui(padding + padding), h - ui(padding + padding), function(_y, _m) {
+	sp_noti = new scrollPane(w - padding * 2, h - padding * 2, function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
 		
 		var hh  = ui(8);
@@ -149,10 +148,10 @@ function Panel_Notification() : PanelContent() constructor {
 	function drawContent(panel) { 
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
-		var px = ui(padding);
-		var py = ui(padding);
-		var pw = w - ui(padding + padding);
-		var ph = h - ui(padding + padding);
+		var px = padding;
+		var py = padding;
+		var pw = w - padding * 2;
+		var ph = h - padding * 2;
 	
 		draw_sprite_stretched(THEME.ui_panel_bg, 1, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
 		sp_noti.setFocusHover(pFOCUS, pHOVER);

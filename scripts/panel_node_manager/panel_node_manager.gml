@@ -4,7 +4,6 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 	
 	title      = "Nodes Manager";
 	auto_pin   = true;
-	padding    = ui(4);
 	stack      = ds_stack_create();
 	selectDir  = noone;
 	selectNode = noone;
