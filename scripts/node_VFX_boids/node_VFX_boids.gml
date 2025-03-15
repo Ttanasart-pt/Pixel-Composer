@@ -12,35 +12,30 @@ function Node_VFX_Boids(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	newInput(0, nodeValue_Particle("Particles", self, -1 ))
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_Float("Sep. radius", self, 4 ));
+	newInput(1, nodeValue_f("Sep. radius",         self, 4   ));
+	newInput(2, nodeValue_s("Sep. influence",      self, 0.2 ));
 		
-	newInput(2, nodeValue_Float("Sep. influence", self, 0.2 ))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(3, nodeValue_f("Ali. radius",         self, 32  ));
+	newInput(4, nodeValue_s("Ali. influence",      self, 0.2 ));
 		
-	newInput(3, nodeValue_Float("Ali. radius", self, 32 ));
-		
-	newInput(4, nodeValue_Float("Ali. influence", self, 0.2 ))
-		.setDisplay(VALUE_DISPLAY.slider);
-		
-	newInput(5, nodeValue_Float("Grp. radius", self, 32 ));
-		
-	newInput(6, nodeValue_Float("Grp. influence", self, 0.2 ))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(5, nodeValue_f("Grp. radius",         self, 32  ));
+	newInput(6, nodeValue_s("Grp. influence",      self, 0.2 ));
 	
-	newInput(7, nodeValue_Float("Speed amplification", self, 1 ));
+	newInput(7, nodeValue_f("Speed amplification", self, 1   ));
 	
-	newInput(8, nodeValue_Bool("Follow point", self, false ));
+	newInput( 8, nodeValue_b("Follow point",       self, false    ));
+	newInput( 9, nodeValue_2("Point",              self, [ 0, 0 ] ));
+	newInput(10, nodeValue_s("Fol. influence",     self, 0.1      ));
 	
-	newInput(9, nodeValue_Vec2("Point", self, [ 0, 0 ] ));
-		
-	newInput(10, nodeValue_Float("Fol. influence", self, 0.1 ))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(11, nodeValue_b("Separate",           self, true    ));
+	newInput(12, nodeValue_b("Align",              self, true    ));
+	newInput(13, nodeValue_b("Group",              self, true    ));
 	
 	input_display_list = [ 0, 7, 
-		["Separation",	false], 1, 2, 
-		["Alignment",	false], 3, 4, 
-		["Grouping",	false], 5, 6, 
-		["Follow point", true, 8], 9, 10, 
+		["Separation",	 false, 11],  1,  2, 
+		["Alignment",	 false, 12],  3,  4, 
+		["Grouping",	 false, 13],  5,  6, 
+		["Follow point", false,  8],  9, 10, 
 	];
 	
 	newOutput(0, nodeValue_Output("Particles", self, VALUE_TYPE.particle, -1 ));
@@ -52,7 +47,7 @@ function Node_VFX_Boids(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var _hov = false;
 		
 		if(_fol_pnt) {
-			var hv = inputs[9].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, 0, 64);	_hov |= hv;
+			var hv = inputs[9].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= hv;
 		}
 		
 		return _hov;
@@ -77,10 +72,15 @@ function Node_VFX_Boids(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			}
 		}
 		
+		var _use_sep = getInputData(11);
 		var _sep_rad = getInputData(1), _sep_rad2 = _sep_rad * _sep_rad;
 		var _sep_amo = getInputData(2);
+		
+		var _use_ali = getInputData(12);
 		var _ali_rad = getInputData(3), _ali_rad2 = _ali_rad * _ali_rad;
 		var _ali_amo = getInputData(4);
+		
+		var _use_grp = getInputData(13);
 		var _grp_rad = getInputData(5), _grp_rad2 = _grp_rad * _grp_rad;
 		var _grp_amo = getInputData(6);
 		var _spd_amp = getInputData(7);
@@ -134,25 +134,25 @@ function Node_VFX_Boids(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				var _dist = _dx * _dx + _dy * _dy;
 				if(_dist >= max_rad2) continue;
 				
-				if(_dist < _sep_rad2) {
+				if(_use_sep && _dist < _sep_rad2) {
 					p0x += (p0x - p1x) * _sep_amo;
 					p0y += (p0y - p1y) * _sep_amo;
 				}
 				
-				if(_dist < _ali_rad2) {
+				if(_use_ali && _dist < _ali_rad2) {
 					avx += p1vx;
 					avy += p1vy;
 					avc++;
 				}
 				
-				if(_dist < _grp_rad2) {
+				if(_use_grp && _dist < _grp_rad2) {
 					ax += p1x;
 					ay += p1y;
 					ac++;
 				}
 			}
 			
-			if(avc) {
+			if(_use_ali && avc) {
 				avx /= avc;
 				avy /= avc;
 				
@@ -160,7 +160,7 @@ function Node_VFX_Boids(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				p0vy += (avy - p0vy) * _ali_amo;
 			}
 			
-			if(ac) {
+			if(_use_grp && ac) {
 				ax /= ac;
 				ay /= ac;
 				
@@ -176,10 +176,17 @@ function Node_VFX_Boids(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			var dir   = point_direction(p0.x, p0.y, p0x, p0y);
 			var _disn = point_distance( p0.x, p0.y, p0x, p0y);
 			
-			p0.x   += lengthdir_x(min(dis, _disn), dir);
-			p0.y   += lengthdir_y(min(dis, _disn), dir);
-			p0.speedx  = p0vx;
-			p0.speedy  = p0vy;
+			p0.speedx = lengthdir_x(min(dis, _disn), dir);
+			p0.speedy = lengthdir_y(min(dis, _disn), dir);
+			
+			p0.x += p0.speedx;
+			p0.y += p0.speedy;
+			
+			// p0.x   += lengthdir_x(min(dis, _disn), dir);
+			// p0.y   += lengthdir_y(min(dis, _disn), dir);
+			
+			// p0.speedx  = p0vx;
+			// p0.speedy  = p0vy;
 			
 		}
 	}
