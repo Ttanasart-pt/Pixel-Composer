@@ -20,21 +20,21 @@ function Node_Anim_Curve(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newOutput(0, nodeValue_Output("Curve", self, VALUE_TYPE.float, []));
 	
 	input_display_list = [ 0, 4, 1, 2, 3 ];
-	
-	static step = function() {
-		var _anim = getSingleValue(4);
-		
-		inputs[1].setVisible(!_anim);
-	}
+	curveBox_obj = inputs[0].editWidget;
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) {  		
 		var curve = _data[0];
-		var time  = _data[4]? CURRENT_FRAME / (TOTAL_FRAMES - 1) : _data[1];
+		var _anim = _data[4];
+		var time  = _anim? CURRENT_FRAME / (TOTAL_FRAMES - 1) : _data[1];
 		var _min  = _data[2];
 		var _max  = _data[3];
 		var val   = eval_curve_x(curve, time) * (_max - _min) + _min;
 		
-		inputs[0].editWidget.progress_draw = time;
+		inputs[1].setVisible(!_anim);
+		
+		curveBox_obj.progress_draw = time;
+		curveBox_obj.display_min   = _min;
+		curveBox_obj.display_max   = _max;
 		
 		return val;
 	}

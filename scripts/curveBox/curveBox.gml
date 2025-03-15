@@ -1,5 +1,5 @@
 function curveBox(_onModify) : widget() constructor {
-	h = 200;
+	h = ui(200);
 	
 	onModify   = _onModify;
 	curr_data  = [];
@@ -39,29 +39,29 @@ function curveBox(_onModify) : widget() constructor {
 	selecting      = noone;
 	select_type    = 0;
 	
+	display_val    = 0;
+	display_min    = 0;
+	display_max    = 1;
+	
 	cw = 0;
 	ch = 0;
 	
-	tb_shift = new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ { var _data = array_clone(curr_data); _data[0] = v; onModify(_data); });
-	tb_scale = new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ { var _data = array_clone(curr_data); _data[1] = v; onModify(_data); });
+	tb_shift = new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ { var _data = array_clone(curr_data); _data[0] = v; onModify(_data); }).setLabel("Shift");
+	tb_scale = new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ { var _data = array_clone(curr_data); _data[1] = v; onModify(_data); }).setLabel("Scale");
 	
-	tb_shift.label = "Shift";
-	tb_scale.label = "Scale";
+	static get_x = function(v) /*=>*/ { return cw *      (v - minx) / (maxx - minx) ; }
+	static get_y = function(v) /*=>*/ { return ch * (1 - (v - miny) / (maxy - miny)); }
 	
-	static get_x = function(val) { return cw *      (val - minx) / (maxx - minx) ; }
-	static get_y = function(val) { return ch * (1 - (val - miny) / (maxy - miny)); }
-	
-	static setInteract = function(interactable = noone) {
-		self.interactable = interactable;
-		
-		tb_shift.setInteract(interactable);
-		tb_scale.setInteract(interactable);
+	static setInteract = function(i = noone) {
+		interactable = i;
+		tb_shift.setInteract(i);
+		tb_scale.setInteract(i);
 	}
 	
-	static register = function(parent = noone) {
-		self.parent = parent;
-		tb_shift.register(parent);
-		tb_scale.register(parent);
+	static register = function(p = noone) {
+		parent = p;
+		tb_shift.register(p);
+		tb_scale.register(p);
 	}
 	
 	static isHovering = function() { 
@@ -242,10 +242,11 @@ function curveBox(_onModify) : widget() constructor {
 				
 				if(progress_draw > -1) {
 					var _prg = clamp(progress_draw, 0, 1);
-					var _px  = get_x(cw * _prg);
+					var _px  = get_x(_prg);
 					
-					draw_set_color(COLORS.widget_curve_line);
+					draw_set_color_alpha(COLORS.widget_curve_line, .75);
 					draw_line(_px, 0, _px, ch);
+					draw_set_alpha(1);
 				}
 				
 				draw_set_color(merge_color(COLORS._main_icon, COLORS._main_icon_dark, 0.5));
@@ -588,6 +589,7 @@ function curveBox(_onModify) : widget() constructor {
 							[ "25%", function() /*=>*/ { grid_step = 0.25; } ],
 						]),
 						menuItem(__txt("Scale Controls"), function() /*=>*/ { scale_control = !scale_control; }, noone, noone, function() /*=>*/ {return scale_control} ),
+						menuItem(__txt("Show Value"),     function() /*=>*/ { display_val   = !display_val; },   noone, noone, function() /*=>*/ {return display_val}   ),
 					], rmx, rmy);
 					
 				} else {
@@ -608,13 +610,12 @@ function curveBox(_onModify) : widget() constructor {
 						onModify(select_data);
 					}));
 					
-					array_push(_menu, menuItem(__txt("Toggle Controls"), function() /*=>*/ { 
+					array_push(_menu, menuItem(__txt("Remove Controls"), function() /*=>*/ { 
 						var _ind = selecting - 2;
-						var _lin = select_data[_ind + 0] == 0 && select_data[_ind + 4] == 0;
 						
-						select_data[@ _ind + 0] = _lin? -1/3 : 0;
+						select_data[@ _ind + 0] = 0;
 						select_data[@ _ind + 1] = 0;
-						select_data[@ _ind + 4] = _lin?  1/3 : 0;
+						select_data[@ _ind + 4] = 0;
 						select_data[@ _ind + 5] = 0;
 						onModify(select_data);
 					}));
@@ -636,11 +637,25 @@ function curveBox(_onModify) : widget() constructor {
 			var tx = _x + cw - ui(6);
 			var ty = _y + ch - ui(6);
 			
-			draw_set_text(f_p2, fa_right, fa_bottom, display_sel? COLORS._main_text: COLORS._main_text_sub);
-			draw_text_add(tx, ty, $"{display_sel == 2? "dy" : "y"}: {string_format(display_pos_y * 100, -1, 2)}%");
-			
-			ty -= line_get_height();
-			draw_text_add(tx, ty, $"{display_sel == 2? "dx" : "x"}: {string_format(display_pos_x * 100, -1, 2)}%");
+			if(display_val == 0 || display_sel == 2) {
+				draw_set_text(f_p2, fa_right, fa_bottom, display_sel? COLORS._main_text: COLORS._main_text_sub);
+				draw_text_add(tx, ty, $"{display_sel == 2? "dy" : "y"}: {string_format(display_pos_y * 100, -1, 2)}%");
+				
+				ty -= line_get_height();
+				draw_text_add(tx, ty, $"{display_sel == 2? "dx" : "x"}: {string_format(display_pos_x * 100, -1, 2)}%");
+				
+			} else if(display_val == 1) {
+				
+				var _spx = display_pos_x;
+				var _spy = lerp(display_min, display_max, display_pos_y);
+				
+				draw_set_text(f_p2, fa_right, fa_bottom, display_sel? COLORS._main_text: COLORS._main_text_sub);
+				draw_text_add(tx, ty, $"y: {string_format(_spy, -1, 2)}");
+				
+				ty -= line_get_height();
+				draw_text_add(tx, ty, $"x: {string_format(_spx * 100, -1, 2)}%");
+				
+			}
 			
 			show_coord = false;
 		}
