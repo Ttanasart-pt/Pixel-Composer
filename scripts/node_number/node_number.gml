@@ -25,7 +25,7 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	newInput(1, nodeValue_Bool("Integer", self, false));
 	
-	newInput(2, nodeValue_Enum_Scroll("Display", self, 0, { data: [ "Number", "Slider", "Rotator", "Increment" ], update_hover: false }));
+	newInput(2, nodeValue_Enum_Scroll("Display Type", self, 0, { data: [ "Number", "Slider", "Rotator", "Increment" ], update_hover: false }));
 	
 	newInput(3, nodeValue_Range("Range", self, [ 0, 1 ]));
 	
@@ -56,7 +56,7 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	newOutput(0, nodeValue_Output("Number", self, VALUE_TYPE.float, 0));
 	
 	input_display_list = [ 0, 1, 
-		["Editor",  false], 2, 6, 15, 3, 5, 4, 7,
+		["Display",  false], 2, 6, 15, 3, 5, 4, 7,
 		["Gizmo",    true], 8, 11, 12, 13, 14, 9, 10,
 	];
 	

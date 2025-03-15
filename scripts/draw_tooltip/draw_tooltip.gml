@@ -292,7 +292,6 @@ function draw_tooltip_curve(curve) {
 	var x1 = x0 + ww;
 	var y0 = my + pd;
 	var y1 = y0 + hh;
-	
 	var st = 0.1;
 		
 	draw_set_color(COLORS.widget_curve_line);

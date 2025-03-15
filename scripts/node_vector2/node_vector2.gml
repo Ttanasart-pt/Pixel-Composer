@@ -12,7 +12,7 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	newInput(2, nodeValue_Bool("Integer", self, false));
 	
-	newInput(3, nodeValue_Enum_Scroll("Display", self,  0, [ "Number", "Coordinate" ]));
+	newInput(3, nodeValue_Enum_Scroll("Display Type", self,  0, [ "Number", "Coordinate" ]));
 	
 	newInput(4, nodeValue_Bool("Show on global", self, false, "Whether to show overlay gizmo when not selecting any nodes."));
 	
@@ -38,8 +38,8 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newOutput(2, nodeValue_Output("y", self, VALUE_TYPE.float, 0))
 		
 	input_display_list = [ 0, 1, 2, 
-		["Editor", false], 3, 
-		["Gizmo",  false], 4, 5, 6, 7, 8, 9, 10, 
+		["Display", false], 3, 
+		["Gizmo",   false], 4, 5, 6, 7, 8, 9, 10, 
 	];
 	
 	wd_dragging = false;
