@@ -90,12 +90,23 @@ function draw_curve(x0, y0, _w, _h, _bz, minx = 0, maxx = 1, miny = 0, maxy = 1,
 				var _yr = _y1 - _y0;
 				
 				var smp = max(abs(_yr) * _h / 2, ceil(_xr / rngx * 32));
-		
-				var ax0 = _x0 + _bz[ind + 4];
-				var ay0 = _y0 + _bz[ind + 5];
 				
-				var bx1 = _x1 + _bz[ind + 6 + 0];
-				var by1 = _y1 + _bz[ind + 6 + 1];
+				var dx0 = _bz[ind + 4];
+				var dy0 = _bz[ind + 5];
+				var dx1 = _bz[ind + 6 + 0];
+				var dy1 = _bz[ind + 6 + 1];
+				
+				if(abs(dx0) + abs(dx1) > 1) {
+					var _td = abs(dx0) + abs(dx1);
+					dx0 /= _td;
+					dx1 /= _td;
+				}
+				
+				var ax0 = _x0 + dx0;
+				var ay0 = _y0 + dy0;
+				
+				var bx1 = _x1 + dx1;
+				var by1 = _y1 + dy1;
 				
 				var bbz = [ _y0, ax0, ay0, bx1, by1, _y1 ];
 				
@@ -114,7 +125,7 @@ function draw_curve(x0, y0, _w, _h, _bz, minx = 0, maxx = 1, miny = 0, maxy = 1,
 					_nx = x0 + _w * _rx;
 					_ny = y0 + _h * (1 - _ry);
 					
-					if(j) draw_line(_ox, _oy, _nx, _ny);
+					if(i || j) draw_line(_ox, _oy, _nx, _ny);
 					
 					_ox = _nx;
 					_oy = _ny;
@@ -194,13 +205,25 @@ function eval_curve_x(_bz, _x, _tolr = 0.00001) {
 				var ind = CURVE_PADD + i * 6;
 				var _x0 = _bz[ind + 2];
 				var _y0 = _bz[ind + 3];
-				var ax0 = _x0 + _bz[ind + 4];
-				var ay0 = _y0 + _bz[ind + 5];
-				
 				var _x1 = _bz[ind + 6 + 2];
 				var _y1 = _bz[ind + 6 + 3];
-				var bx1 = _x1 + _bz[ind + 6 + 0];
-				var by1 = _y1 + _bz[ind + 6 + 1];
+				
+				var dx0 = _bz[ind + 4];
+				var dy0 = _bz[ind + 5];
+				var dx1 = _bz[ind + 6 + 0];
+				var dy1 = _bz[ind + 6 + 1];
+				
+				if(abs(dx0) + abs(dx1) > 1) {
+					var _td = abs(dx0) + abs(dx1);
+					dx0 /= _td;
+					dx1 /= _td;
+				}
+				
+				var ax0 = _x0 + dx0;
+				var ay0 = _y0 + dy0;
+				
+				var bx1 = _x1 + dx1;
+				var by1 = _y1 + dy1;
 				
 				if(_x < _x0) continue;
 				if(_x > _x1) continue;
@@ -221,7 +244,6 @@ function eval_curve_x(_bz, _x, _tolr = 0.00001) {
 			}
 			
 			return _y0;
-			break;
 	}
 	
 	return array_safe_get_fast(_bz, array_length(_bz) - 3);

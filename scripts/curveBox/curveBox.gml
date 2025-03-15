@@ -598,6 +598,16 @@ function curveBox(_onModify) : widget() constructor {
 					var _pnt  = (selecting - CURVE_PADD - 2) / 6;
 					var _menu = [];
 					
+					array_push(_menu, menuItem(__txt("Reset Controls"), function() /*=>*/ { 
+						var _ind = selecting - 2;
+						
+						select_data[@ _ind + 0] = -1/3;
+						select_data[@ _ind + 1] = 0;
+						select_data[@ _ind + 4] =  1/3;
+						select_data[@ _ind + 5] = 0;
+						onModify(select_data);
+					}));
+					
 					array_push(_menu, menuItem(__txt("Toggle Controls"), function() /*=>*/ { 
 						var _ind = selecting - 2;
 						var _lin = select_data[_ind + 0] == 0 && select_data[_ind + 4] == 0;

@@ -1,6 +1,6 @@
 #pragma use(curve)
 
-#region -- curve -- [1740201118.8128765]
+#region -- curve -- [1742009781.2228172]
 
     #ifdef _YY_HLSL11_ 
         #define CURVE_MAX  512
@@ -79,16 +79,27 @@
         
         if(_type == 0.) {
             for( int i = 0; i < _segs; i++ ) {
-                int ind   = curve_offset + i * 6;
-                float _x0 = curve[ind + 2];
-                float _y0 = curve[ind + 3];
-                float ax0 = _x0 + curve[ind + 4];
-                float ay0 = _y0 + curve[ind + 5];
-                
-                float _x1 = curve[ind + 6 + 2];
-                float _y1 = curve[ind + 6 + 3];
-                float bx1 = _x1 + curve[ind + 6 + 0];
-                float by1 = _y1 + curve[ind + 6 + 1];
+                int ind    = curve_offset + i * 6;
+                float _x0  = curve[ind + 2];
+                float _y0  = curve[ind + 3];
+                float _x1  = curve[ind + 6 + 2];
+                float _y1  = curve[ind + 6 + 3];
+
+                float _dx0 = curve[ind + 4];
+                float _dy0 = curve[ind + 5];
+                float _dx1 = curve[ind + 6 + 0];
+                float _dy1 = curve[ind + 6 + 1];
+
+                if(abs(_dx0) + abs(_dx1) > 1.) {
+                    float _total = abs(_dx0) + abs(_dx1);
+                    _dx0 /= _total;
+                    _dx1 /= _total;
+                }
+
+                float ax0  = _x0 + _dx0;
+                float ay0  = _y0 + _dy0;
+                float bx1  = _x1 + _dx1;
+                float by1  = _y1 + _dy1;
                 
                 if(_x < _x0) continue;
                 if(_x > _x1) continue;
