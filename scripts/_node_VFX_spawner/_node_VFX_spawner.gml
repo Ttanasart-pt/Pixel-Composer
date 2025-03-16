@@ -2,50 +2,12 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	name = "Spawner";
 	update_on_frame = true;
 	
-	newInput(0, nodeValue_Surface("Particle Sprite", self));
+	inputs = array_create(59);
 	
-	newInput(1, nodeValue_Int("Spawn Delay", self, 4, "Frames delay between each particle spawn." ));
+	newInput(32, nodeValueSeed(self));
 	
-	newInput(2, nodeValue_Range("Spawn Amount", self, [ 2, 2 ] , { linked : true }))
-		.setTooltip("Amount of particle spawn in that frame.");
-	
-	newInput(3, nodeValue_Area("Spawn Area", self, DEF_AREA ));
-	
-	newInput(4, nodeValue_Enum_Scroll("Spawn Source", self, 0, [ "Area Inside", "Area Border", "Map", "Path" ] ));
-	
-	newInput(5, nodeValue_Range("Lifespan", self, [ 20, 30 ] ));
-	
-	newInput(6, nodeValue_Rotation_Random("Initial Direction", self, [ 0, 45, 135, 0, 0 ] )); 
-	
-	newInput(7, nodeValue_Range("Acceleration", self, [ 0, 0 ] , { linked : true }));
-	
-	newInput(8, nodeValue_Rotation_Random("Orientation", self, [ 0, 0, 0, 0, 0 ] ));
-	
-	newInput(9, nodeValue_Range("Rotational Speed", self, [ 0, 0 ] , { linked : true }));
-	
-	newInput(10, nodeValue_Vec2_Range("Spawn Scale", self, [ 1, 1, 1, 1 ] , { linked : true }));
-	
-	newInput(11, nodeValue_Curve("Scale Over Time", self, CURVE_DEF_11));
-	
-	newInput(12, nodeValue_Gradient("Color Over Lifetime", self, new gradientObject(cola(c_white))));
-	
-	newInput(13, nodeValue_Range("Alpha", self, [ 1, 1 ], { linked : true }));
-	
-	newInput(14, nodeValue_Curve("Alpha Over Time", self, CURVE_DEF_11));
-	
-	newInput(15, nodeValue_Bool("Rotate by Direction", self, false, "Make the particle rotates to follow its movement."));
-	
-	newInput(16, nodeValue_Enum_Button("Spawn Type", self,  0, [ "Stream", "Burst", "Trigger" ]));
-	
-	newInput(17, nodeValue_Range("Spawn Size", self, [ 1, 1 ] , { linked : true }));
-	
-	newInput(18, nodeValue_Range("Initial Velocity", self, [ 1, 2 ] ));
-	
-	newInput(19, nodeValue_Range("Gravity", self, [ 0, 0 ] , { linked : true }));
-	
-	newInput(20, nodeValue_Vec2("Direction Wiggle", self, [ 0, 0 ] , { label: [ "Amplitude", "Period" ], linkable: false, per_line: true }));
-	
-	newInput(21, nodeValue_Bool("Loop", self, true ));
+	////- Sprite
+	newInput( 0, nodeValue_Surface("Particle Sprite", self));
 	
 	newInput(22, nodeValue_Enum_Scroll("Surface Array", self, 0, [ "Random", "Order", "Animation", "Scale" ]))
 		.setTooltip("Whether to select image from an array in order, at random, or treat array as animation.")
@@ -53,84 +15,120 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	newInput(23, nodeValue_Range("Animation Speed", self, [ 1, 1 ] , { linked : true }))
 		.setVisible(false);
-	
-	newInput(24, nodeValue_Enum_Button("Distribution", self,  1, [ "Uniform", "Random" ]));
-	
-	newInput(25, nodeValue_Int("Boundary Data", self, []))
-		.setArrayDepth(1)
-		.setVisible(false, true);
+		
+	newInput(49, nodeValue_Bool("Stretch Animation", self, false ));
 	
 	newInput(26, nodeValue_Enum_Button("On Animation End", self,  ANIM_END_ACTION.loop, [ "Loop", "Ping pong", "Destroy" ]))
 		.setVisible(false);
-		
+	
+	////- Spawn
 	newInput(27, nodeValue_Bool("Spawn", self, true));
 	
-	newInput(28, nodeValue_Gradient("Random Blend", self, new gradientObject(cola(c_white))));
-		
-	newInput(29, nodeValue_Bool("Directed From Center", self, false, "Make particle move away from the spawn center."));
+	newInput(16, nodeValue_Enum_Button("Spawn Type", self,  0, [ "Stream", "Burst", "Trigger" ]));
 	
-	newInput(30, nodeValue_Surface("Distribution Map", self))
-	
-	newInput(31, nodeValue_Surface("Atlas", self,  []))
-		.setArrayDepth(1);
-	
-	newInput(32, nodeValueSeed(self));
-	
-	newInput(33, nodeValue_Rotation("Gravity Direction", self, -90));
-	
-	newInput(34, nodeValue_Range("Turning", self, [ 0, 0 ] , { linked : true }));
-	
-	newInput(35, nodeValue_Bool("Turn Both Directions", self, false, "Apply randomized 1, -1 multiplier to the turning speed." ));
-	
-	newInput(36, nodeValue_Float("Turn Scale with Speed", self, false ));
-	
-	newInput(37, nodeValue_Bool("Collide Ground", self, false ));
-	
-	newInput(38, nodeValue_Float("Ground Offset", self, 0 ));
-	
-	newInput(39, nodeValue_Float("Bounce Amount", self, 0.5 ))
-		.setDisplay(VALUE_DISPLAY.slider);
-	
-	newInput(40, nodeValue_Float("Bounce Friction", self, 0.1, "Apply horizontal friction once particle stop bouncing." ))
-		.setDisplay(VALUE_DISPLAY.slider);
-		
-	newInput(41, nodeValue_Vec2("Position Wiggle", self, [ 0, 0 ] , { label: [ "Amplitude", "Period" ], linkable: false, per_line: true }));
-		
-	newInput(42, nodeValue_Vec2("Rotation Wiggle", self, [ 0, 0 ] , { label: [ "Amplitude", "Period" ], linkable: false, per_line: true }));
-		
-	newInput(43, nodeValue_Vec2("Scale Wiggle", self, [ 0, 0 ] , { label: [ "Amplitude", "Period" ], linkable: false, per_line: true }));
-		
 	newInput(44, nodeValue_Trigger("Spawn", self,  false ))
 		.setDisplay(VALUE_DISPLAY.button, { name: "Trigger" });
 	
-	newInput(45, nodeValue_Bool("Follow Path", self, false ));
-	
-	newInput(46, nodeValue_PathNode("Path", self, noone ));
-	
-	newInput(47, nodeValue_Curve("Path Deviation", self, CURVE_DEF_11 ));
-	
-	newInput(48, nodeValue_Trigger("Reset Seed", self, false ))
-		.setDisplay(VALUE_DISPLAY.button, { name: "Trigger" })
-	
-	newInput(49, nodeValue_Bool("Stretch Animation", self, false ));
-	
-	newInput(50, nodeValue_Palette("Color by Index", self, [ cola(c_white) ] ));
+	newInput( 1, nodeValue_Int("Spawn Delay", self, 4, "Frames delay between each particle spawn." ));
 	
 	newInput(51, nodeValue_Int("Burst Duration", self, 1 ));
 	
-	newInput(52, nodeValue_Float("Uniform Period", self, 4 ));
+	newInput( 2, nodeValue_Range("Spawn Amount", self, [ 2, 2 ] , { linked : true }))
+		.setTooltip("Amount of particle spawn in that frame.");
 	
-	newInput(53, nodeValue_Rotation_Range("Angle Range", self, [ 0, 360 ]));
+	newInput( 4, nodeValue_Enum_Scroll("Spawn Source", self, 0, [ "Area Inside", "Area Border", "Map", "Path" ] ));
 	
-	newInput(54, nodeValue_Range("Friction", self, [ 0, 0 ], { linked : true }));
+	newInput( 3, nodeValue_Area("Spawn Area", self, DEF_AREA ));
+	
+	newInput(30, nodeValue_Surface("Distribution Map", self))
 	
 	newInput(55, nodeValue_PathNode("Spawn Path", self, noone ));
 	
+	newInput(24, nodeValue_Enum_Button("Distribution", self,  1, [ "Uniform", "Random" ]));
+	
+	newInput(52, nodeValue_Float("Uniform Period", self, 4 ));
+	
+	newInput( 5, nodeValue_Range("Lifespan", self, [ 20, 30 ] ));
+	
+	////- Movement
+	newInput(29, nodeValue_Bool("Directed From Center", self, false, "Make particle move away from the spawn center."));
+	
+	newInput(53, nodeValue_Rotation_Range("Angle Range", self, [ 0, 360 ]));
+	
+	newInput( 6, nodeValue_Rotation_Random("Initial Direction", self, [ 0, 45, 135, 0, 0 ] )); 
+	
+	newInput(18, nodeValue_Range("Initial Velocity", self, [ 1, 2 ] ));
+	
+	////- Rotation
+	newInput(15, nodeValue_Bool("Rotate by Direction", self, false, "Make the particle rotates to follow its movement."));
+	
+	newInput( 8, nodeValue_Rotation_Random("Orientation", self, [ 0, 0, 0, 0, 0 ] ));
+	
+	newInput( 9, nodeValue_Range("Rotational Speed", self, [ 0, 0 ] , { linked : true }));
+	
+	////- Scale
+	newInput(10, nodeValue_Vec2_Range("Spawn Scale", self, [ 1, 1, 1, 1 ] , { linked : true }));
+	
+	newInput(17, nodeValue_Range("Spawn Size", self, [ 1, 1 ] , { linked : true }));
+	
+	newInput(11, nodeValue_Curve("Scale Over Time", self, CURVE_DEF_11));
+	
+	////- Color
+	newInput(12, nodeValue_Gradient("Color Over Lifetime", self, new gradientObject(cola(c_white))));
+	
+	newInput(28, nodeValue_Gradient("Random Blend", self, new gradientObject(cola(c_white))));
+		
+	newInput(50, nodeValue_Palette("Color by Index", self, [ cola(c_white) ] ));
+	
+	newInput(13, nodeValue_Range("Alpha", self, [ 1, 1 ], { linked : true }));
+	
+	newInput(14, nodeValue_Curve("Alpha Over Time", self, CURVE_DEF_11));
+	
 	newInput(56, nodeValue_Surface("Sample Surface", self, noone));
 	
-	newInput(57, nodeValue_Bool("Use Physics", self, false ));
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	newInput(58, nodeValue_Bool("Use Wiggles", self, false ));
+	////- Path
+	
+	newInput(45, nodeValue_Bool(     "Follow Path",    self, false ));
+	newInput(46, nodeValue_PathNode( "Path",           self, noone ));
+	newInput(47, nodeValue_Curve(    "Path Deviation", self, CURVE_DEF_11 ));
+	
+	////- Physics
+	
+	newInput(57, nodeValue_b(  "Use Physics",           self, false ));
+	newInput(54, nodeValue_rn( "Friction",              self, [ 0, 0 ], { linked : true }));
+	newInput( 7, nodeValue_rn( "Acceleration",          self, [ 0, 0 ], { linked : true }));
+	newInput(19, nodeValue_rn( "Gravity",               self, [ 0, 0 ], { linked : true }));
+	newInput(33, nodeValue_r(  "Gravity Direction",     self, -90));
+	
+	newInput(34, nodeValue_rn( "Turning",               self, [ 0, 0 ], { linked : true }));
+	newInput(35, nodeValue_b(  "Turn Both Directions",  self, false, "Apply randomized 1, -1 multiplier to the turning speed." ));
+	newInput(36, nodeValue_f(  "Turn Scale with Speed", self, false ));
+	
+	////- Ground
+	
+	newInput(37, nodeValue_b( "Collide Ground",  self, false ));
+	newInput(38, nodeValue_f( "Ground Offset",   self, 0     ));
+	newInput(39, nodeValue_s( "Bounce Amount",   self, 0.5   ));
+	newInput(40, nodeValue_s( "Bounce Friction", self, 0.1   )).setTooltip("Apply horizontal friction once particle stop bouncing.");
+		
+	////- Wiggles
+	
+	newInput(58, nodeValue_b( "Use Wiggles",      self, false ));
+	newInput(20, nodeValue_2( "Direction Wiggle", self, [ 0, 0 ] , { label: [ "Amplitude", "Period" ], linkable: false, per_line: true }));
+	newInput(41, nodeValue_2( "Position Wiggle",  self, [ 0, 0 ] , { label: [ "Amplitude", "Period" ], linkable: false, per_line: true }));
+	newInput(42, nodeValue_2( "Rotation Wiggle",  self, [ 0, 0 ] , { label: [ "Amplitude", "Period" ], linkable: false, per_line: true }));
+	newInput(43, nodeValue_2( "Scale Wiggle",     self, [ 0, 0 ] , { label: [ "Amplitude", "Period" ], linkable: false, per_line: true }));
+	
+	////- Unused
+	
+	newInput(21, nodeValue_Bool("Loop",          self, true ));
+	newInput(25, nodeValue_Int("Boundary Data",  self, [])).setArrayDepth(1).setVisible(false, true);
+	newInput(31, nodeValue_Surface("Atlas",      self, [])).setArrayDepth(1);
+	newInput(48, nodeValue_Trigger("Reset Seed", self, false )).setDisplay(VALUE_DISPLAY.button, { name: "Trigger" })
+	
+	// 59
 	
 	array_foreach(inputs, function(i) /*=>*/ {return i.rejectArray()}, 1);
 	input_len = array_length(inputs);

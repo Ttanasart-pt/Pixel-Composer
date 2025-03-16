@@ -29,22 +29,13 @@ function Node_VFX_Triangulate(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	
 	newOutput(0, nodeValue_Output("Triangles", self, VALUE_TYPE.surface, noone));
 	
-	input_display_list = [ 0, 
-		[ "Particles", false], 1, 
+	input_display_list = [ 0, 1, 
 		[ "Rendering", false], 4, 2, 5, 3,
 	]
 	
 	setTrigger(2, "Clear cache", [ THEME.cache, 0, COLORS._main_icon ]);
 	
-	static onInspector2Update = function() { clearCache(); }
-	
-	static step = function() {
-		var _ith = getInputData(4);
-		var _icl = getInputData(5);
-		
-		inputs[2].setVisible(!_ith);
-		inputs[3].setVisible(!_icl);
-	}
+	static onInspector2Update = function() /*=>*/ {return clearCache()};
 	
 	static update = function() {
 		var _dim = getInputData(0);
@@ -54,6 +45,9 @@ function Node_VFX_Triangulate(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		var _cl  = getInputData(3);
 		var _ith = getInputData(4);
 		var _icl = getInputData(5);
+		
+		inputs[2].setVisible(!_ith);
+		inputs[3].setVisible(!_icl);
 		
 		var _surf = outputs[0].getValue();
 		    _surf = surface_verify(_surf, _dim[0], _dim[1]);
@@ -126,6 +120,4 @@ function Node_VFX_Triangulate(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		cacheCurrentFrame(_surf);
 	}
 	
-	static getPreviewingNode = function() { return is(inline_context, Node_VFX_Group_Inline)? inline_context.getPreviewingNode() : self; }
-	static getPreviewValues  = function() { return is(inline_context, Node_VFX_Group_Inline)? inline_context.getPreviewValues()  : self; }
 }

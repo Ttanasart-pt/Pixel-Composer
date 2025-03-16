@@ -2028,7 +2028,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		_s /= 2 * THEME_SCALE;
 		
 		var hov  = PANEL_GRAPH.pHOVER && (PANEL_GRAPH.node_hovering == noone || PANEL_GRAPH.node_hovering == node);
-		var _d   = node.junction_draw_hei_y * _s;
+		var _d   = node.junction_draw_hei_y * _s * 2;
 		var _hov = hov && point_in_rectangle(_mx, _my, x - _d, y - _d, x + _d - 1, y + _d - 1);
 		hover_in_graph = _hov;
 		if(!_draw) return _hov;

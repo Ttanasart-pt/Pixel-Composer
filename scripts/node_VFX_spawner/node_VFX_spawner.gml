@@ -23,23 +23,35 @@ function Node_VFX_Spawner(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y
 	array_insert(input_display_list, 0, ["Trigger", true], input_len + 0, input_len + 1);
 	
 	UPDATE_PART_FORWARD
+	junction_tos = array_create(array_length(outputs));
 	
 	static onUpdate = function(frame = CURRENT_FRAME) {
-		if(IS_PLAYING) runVFX(frame);
 		
-		if(attributes.Output_pool) {
-			outputs[0].setValue(parts);
-			return;
+		#region visibility
+			var _ntTrig = inputs[input_len + 0].value_from == noone;
 			
-		} else {
-			var _parts = [];
-			for( var i = 0, n = array_length(parts); i < n; i++ ) {
-				if(!parts[i].active) continue;
-				array_push(_parts, parts[i]);
+			inputs[16].setVisible(_ntTrig);
+			inputs[ 1].setVisible(_ntTrig);
+			inputs[51].setVisible(_ntTrig);
+			
+			if(_ntTrig) {
+				inputs[30].setVisible(false);
+				inputs[55].setVisible(false);
 			}
-			
-			outputs[0].setValue(_parts);
+		#endregion
+		
+		if(IS_PLAYING) runVFX(frame);
+		if(attributes.Output_pool) { outputs[0].setValue(parts); return; } 
+		
+		var _parts = [];
+		for( var i = 0, n = array_length(parts); i < n; i++ ) {
+			if(!parts[i].active) continue;
+			array_push(_parts, parts[i]);
 		}
+		
+		outputs[0].setValue(_parts);
+		
+		for( var i = 1; i <= 3; i++ ) junction_tos[i] = outputs[i].getJunctionTo();
 	}
 	
 	static onSpawn = function(_time, part) {
@@ -47,46 +59,30 @@ function Node_VFX_Spawner(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y
 	}
 	
 	static onPartCreate = function(part) {
-		var vt = outputs[1];
-		if(array_empty(vt.value_to)) return;
-		
+		var jn = junction_tos[1];
 		var pv = part.getPivot();
 		
-		for( var i = 0; i < array_length(vt.value_to); i++ ) {
-			var _n = vt.value_to[i];
-			if(_n.value_from != vt) continue;
-			_n.node.spawn(part.frame, pv);
-		}
+		for( var i = 0, n = array_length(jn); i < n; i++ )
+			jn[i].node.spawn(part.frame, pv);
 	}
 	
 	static onPartStep = function(part) {
-		var vt = outputs[2];
-		if(array_empty(vt.value_to)) return;
-		
+		var jn = junction_tos[2];
 		var pv = part.getPivot();
 		
-		for( var i = 0; i < array_length(vt.value_to); i++ ) {
-			var _n = vt.value_to[i];
-			if(_n.value_from != vt) continue;
-			_n.node.spawn(part.frame, pv);
-		}
+		for( var i = 0, n = array_length(jn); i < n; i++ )
+			jn[i].node.spawn(part.frame, pv);
 	}
 	
 	static onPartDestroy = function(part) {
-		var vt = outputs[3];
-		if(array_empty(vt.value_to)) return;
-		
+		var jn = junction_tos[3];
 		var pv = part.getPivot();
-			
-		for( var i = 0; i < array_length(vt.value_to); i++ ) {
-			var _n = vt.value_to[i];
-			if(_n.value_from != vt) continue;
-			_n.node.spawn(part.frame, pv);
-		}
+		
+		for( var i = 0, n = array_length(jn); i < n; i++ )
+			jn[i].node.spawn(part.frame, pv);
 	}
 	
-	static getGraphPreviewSurface = function() { return getInputData(0); }
-	
-	static getPreviewingNode = function() { return is(inline_context, Node_VFX_Group_Inline)? inline_context.getPreviewingNode() : self; }
-	static getPreviewValues  = function() { return is(inline_context, Node_VFX_Group_Inline)? inline_context.getPreviewValues()  : self; }
+	static getGraphPreviewSurface = function() /*=>*/ {return getInputData(0)};
+	static getPreviewingNode      = function() /*=>*/ {return is(inline_context, Node_VFX_Group_Inline)? inline_context.getPreviewingNode() : self};
+	static getPreviewValues       = function() /*=>*/ {return is(inline_context, Node_VFX_Group_Inline)? inline_context.getPreviewValues()  : self};
 }

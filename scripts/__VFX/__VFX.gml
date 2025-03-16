@@ -38,7 +38,7 @@ function __particleObject() constructor {
 	static step = function() {}
 	
 	__temp_pt = [ 0, 0 ];
-	static draw = function(exact, surf_w, surf_h) {
+	static draw = function(exact, surf_w = 1, surf_h = 1) {
 		if(!is_surface(surf)) {
 			draw_point_color(x, y, blend);
 			return;
@@ -278,47 +278,55 @@ function __part(_node) : __particleObject() constructor {
 		x += speedx;
 		frame = _frame;
 		
+		var lifeRat = 1 - life / life_total;
+		
 		random_set_seed(seed + life);
 		
-		if(ground && y + speedy > ground_y) {
-			y = ground_y;
-			speedy = -speedy * ground_bounce;
-			
-			if(abs(speedy) < 0.1)
-				speedx *= ground_friction;
-		} else
-			y += speedy;
-		
-		var dirr = point_direction(0, 0, speedx, speedy);
-		var diss = point_distance(0, 0, speedx, speedy);
-		
-		if(use_phy) diss = max(0, diss + accel) * (1 - frict);
-		
-		if(speedx != 0 || speedy != 0) {
-			if(use_wig) dirr += wig_dir.get(seed + life);
-			
-			if(use_phy && turning != 0) {
-				var trn = turning;
+		#region ground
+			if(ground && y + speedy > ground_y) {
+				y = ground_y;
+				speedy = -speedy * ground_bounce;
 				
-				     if(turnSpd > 0) trn = turning * diss * turnSpd;
-				else if(turnSpd < 0) trn = turning / diss * turnSpd;
+				if(abs(speedy) < 0.1)
+					speedx *= ground_friction;
+			} else
+				y += speedy;
+		#endregion
+		
+		#region physics
+			var dirr = point_direction(0, 0, speedx, speedy);
+			var diss = point_distance(0, 0, speedx, speedy);
+			
+			if(use_phy) diss = max(0, diss + accel) * (1 - frict);
+			
+			if(speedx != 0 || speedy != 0) {
+				if(use_wig) dirr += wig_dir.get(seed + life);
 				
-				dirr += trn
+				if(use_phy && turning != 0) {
+					var trn = turning;
+					
+					     if(turnSpd > 0) trn = turning * diss * turnSpd;
+					else if(turnSpd < 0) trn = turning / diss * turnSpd;
+					
+					dirr += trn
+				}
 			}
-		}
+			
+			speedx = lengthdir_x(diss, dirr);
+			speedy = lengthdir_y(diss, dirr);
+			
+			if(use_phy) {
+				speedx += gravX;
+				speedy += gravY;
+			}
+		#endregion
 		
-		speedx = lengthdir_x(diss, dirr);
-		speedy = lengthdir_y(diss, dirr);
-		
-		if(use_phy) {
-			speedx += gravX;
-			speedy += gravY;
-		}
-		
-		rot_base += rot_s;
-		
-		if(follow)  rot = spVec[1] + rot_base;
-		else        rot = rot_base;
+		#region rotation
+			rot_base += rot_s;
+			
+			if(follow)  rot = spVec[1] + rot_base;
+			else        rot = rot_base;
+		#endregion
 		
 		if(node.onPartStep != noone && step_int > 0 && safe_mod(life, step_int) == 0) 
 			node.onPartStep(self);
@@ -355,13 +363,26 @@ function __part(_node) : __particleObject() constructor {
 		}
 		
 		if(path != noone) {
-			var _lifeRat = clamp(1 - life / life_total, 0., 1.);
+			var _lifeRat = clamp(lifeRat, 0., 1.);
 			var _pathDiv = pathDiv.get(_lifeRat);
 			
 			pathPos = path.getPointRatio(clamp(_lifeRat, 0, 0.99), pathIndex, pathPos);
 			drawx   = pathPos.x + drawx * _pathDiv;
 			drawy   = pathPos.y + drawy * _pathDiv;
 		}
+	
+		#region color
+			var cc = (col == -1)? c_white : col.eval(lifeRat);
+			if(blend != c_white) cc = colorMultiply(blend, cc);
+			alp_draw = alp * (alp_fade == noone? 1 : alp_fade.get(lifeRat)) * _color_get_alpha(cc);
+			
+			if(life_incr) {
+				blend_history[life_incr - 1] = cc;
+				alp_history[life_incr - 1]   = alp_draw;
+			}
+			
+			currColor = cola(cc, alp_draw);
+		#endregion
 	}
 	
 	static setDrawParameter = function() {
@@ -372,7 +393,7 @@ function __part(_node) : __particleObject() constructor {
 		drawsy  = sc_sy;
 	}
 	
-	static draw = function(exact, surf_w, surf_h) {
+	static draw = function(exact, surf_w = 1, surf_h = 1) {
 		INLINE
 		
 		if(render_type == PARTICLE_RENDER_TYPE.line) {
@@ -451,17 +472,6 @@ function __part(_node) : __particleObject() constructor {
 		var y0 = _yy - s_h * 1.5;
 		var x1 = _xx + s_w * 1.5;
 		var y1 = _yy + s_h * 1.5;
-		
-		var cc = (col == -1)? c_white : col.eval(lifeRat);
-		if(blend != c_white) cc = colorMultiply(blend, cc);
-		alp_draw = alp * (alp_fade == noone? 1 : alp_fade.get(lifeRat)) * _color_get_alpha(cc);
-		
-		if(life_incr) {
-			blend_history[life_incr - 1] = cc;
-			alp_history[life_incr - 1]   = alp_draw;
-		}
-		
-		currColor = cola(cc, alp_draw);
 		
 		if(_useS && (x0 > surf_w || y0 > surf_h || x1 < 0 || y1 < 0))
 			return;
