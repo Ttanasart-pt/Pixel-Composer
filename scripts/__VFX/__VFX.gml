@@ -479,7 +479,7 @@ function __part(_node) : __particleObject() constructor {
 		switch(render_type) {
 			case PARTICLE_RENDER_TYPE.surface : 
 				if(surface_exists(_surf)) 
-					draw_surface_ext_safe(_surf, _xx, _yy, scx, scy, drawrot, cc, alp_draw);
+					draw_surface_ext_safe(_surf, _xx, _yy, scx, scy, drawrot, currColor, alp_draw);
 				else {
 					var ss = round(min(scx, scy));
 					if(round(ss) == 0) return;
@@ -504,8 +504,8 @@ function __part(_node) : __particleObject() constructor {
 								_surf.params[$ _param] = _parcv.get(lifeRat) * _surf[$ _param];
 							}
 							
-							_surf.draw(_xx, _yy, ss, ss, drawrot, cc, alp_draw);
-						} else DYNADRAW_DEFAULT.draw(_xx, _yy, ss, ss, 0, cc, alp_draw);
+							_surf.draw(_xx, _yy, ss, ss, drawrot, currColor, alp_draw);
+						} else DYNADRAW_DEFAULT.draw(_xx, _yy, ss, ss, 0, currColor, alp_draw);
 					shader_set(_s);
 				}
 				break;

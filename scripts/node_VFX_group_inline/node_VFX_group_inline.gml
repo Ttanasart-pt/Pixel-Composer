@@ -9,7 +9,12 @@ function Node_VFX_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 	newInput(0, nodeValue_Bool("Loop", self, true ))
 		.rejectArray();
 	
+	newInput(1, nodeValue_Dimension(self))
+		.rejectArray();
+	
 	output_node_type = Node_VFX_Renderer;
+	
+	input_display_list = [ 1, 0 ]
 	
 	is_simulation      = true;
 	update_on_frame    = true;
@@ -17,6 +22,7 @@ function Node_VFX_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 	loopable           = true;
 	
 	prev_nodes = [];
+	dimension  = DEF_SURF;
 	
 	if(NODE_NEW_MANUAL) {
 		var input  = nodeBuild("Node_VFX_Spawner",  x,       y);
@@ -66,6 +72,8 @@ function Node_VFX_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 	}
 	
 	static update = function() {
+		dimension = inputs[1].getValue();
+		
 		if(!IS_FIRST_FRAME) return;
 		
 		topoList = NodeListSort(nodes);

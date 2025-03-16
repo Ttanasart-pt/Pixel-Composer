@@ -21,7 +21,6 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 
-		["Output",    false], 0, 
 		["Rendering", false], 1, 2, 3, 
 	];
 	
@@ -61,7 +60,7 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	}
 	
 	static update = function(_time = CURRENT_FRAME) {
-		var _dim   = inputs[0].getValue(_time);
+		var _dim   = inline_context.dimension;
 		temp_surface[0] = surface_verify(temp_surface[0], _dim[0], _dim[1]);
 		
 		var _exact = inputs[1].getValue(_time);
