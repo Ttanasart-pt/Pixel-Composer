@@ -63,13 +63,15 @@ function __part(_node) : __particleObject() constructor {
 	seed    = irandom(99999);
 	node    = _node;
 	
-	/////////////////////// Lifespans /////////////////////// 
+	////- Lifes
+	
 	life       = 0;
 	life_total = 0;
 	life_incr  = 0;
 	step_int   = 0;
 	
-	/////////////////////// Transforms /////////////////////// 
+	////-  Transforms
+	
 	startx  = 0; starty  = 0;
 	prevx   = 0; prevy   = 0;
 	speedx  = 0; speedy  = 0;
@@ -100,7 +102,8 @@ function __part(_node) : __particleObject() constructor {
 	pathPos   = new __vec2();
 	pathDiv   = noone;
 	
-	/////////////////////// Render /////////////////////// 
+	////- Render
+	
 	render_type = PARTICLE_RENDER_TYPE.surface;
 	
 	arr_type = 0;
@@ -124,7 +127,8 @@ function __part(_node) : __particleObject() constructor {
 	
 	line_draw = 1;
 	
-	/////////////////////// Physics /////////////////////// 
+	////- Physics
+	
 	ground			= false;
 	ground_y		= 0;
 	ground_bounce	= 0;
@@ -138,6 +142,16 @@ function __part(_node) : __particleObject() constructor {
 	
 	use_phy = false;
 	use_wig = false;
+	
+	////- Wiggles
+	
+	use_wig = false;
+	wig_psx = noone;
+	wig_psy = noone;
+	wig_rot = noone;
+	wig_scx = noone;
+	wig_scy = noone;
+	wig_dir = noone;
 	
 	static reset = function() {
 		INLINE
@@ -293,9 +307,12 @@ function __part(_node) : __particleObject() constructor {
 			}
 		}
 		
+		speedx = lengthdir_x(diss, dirr);
+		speedy = lengthdir_y(diss, dirr);
+		
 		if(use_phy) {
-			speedx = lengthdir_x(diss, dirr) + gravX;
-			speedy = lengthdir_y(diss, dirr) + gravY;
+			speedx += gravX;
+			speedy += gravY;
 		}
 		
 		rot_base += rot_s;

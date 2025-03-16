@@ -1274,6 +1274,7 @@
     {"$GMIncludedFile":"","%Name":"Update.ps1","CopyToMask":-1,"filePath":"datafiles/data/Nodes","name":"Update.ps1","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"update.py","CopyToMask":-1,"filePath":"datafiles/data/Nodes","name":"update.py","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"tileset_gamemaker2_room.yy","CopyToMask":-1,"filePath":"datafiles/data/TemplateStrings","name":"tileset_gamemaker2_room.yy","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"Theme.zip","CopyToMask":-1,"filePath":"datafiles/data","name":"Theme.zip","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"0 Introduction.png","CopyToMask":-1,"filePath":"datafiles/data/Welcome files/Getting started","name":"0 Introduction.png","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"0 Introduction.pxc","CopyToMask":-1,"filePath":"datafiles/data/Welcome files/Getting started","name":"0 Introduction.pxc","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"1 Image import.png","CopyToMask":-1,"filePath":"datafiles/data/Welcome files/Getting started","name":"1 Image import.png","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
