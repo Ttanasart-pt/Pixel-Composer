@@ -8,7 +8,8 @@ function canvas_tool() constructor {
 	
 	relative_position  = [ 0, 0 ];
 	drawing_surface    = noone;
-	_canvas_surface    = noone;
+	canvas_surface     = noone;
+	output_surface     = noone;
 	apply_draw_surface = noone;
 	
 	brush_resizable = false;

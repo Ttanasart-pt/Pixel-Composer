@@ -136,7 +136,7 @@ function canvas_tool_selection(_selector) : canvas_tool() constructor {
 		
 		surface_set_target(selection_surface);
 			DRAW_CLEAR
-			draw_surface_safe(_canvas_surface, -sel_x0, -sel_y0);
+			draw_surface_safe(canvas_surface, -sel_x0, -sel_y0);
 							
 			BLEND_MULTIPLY
 				draw_surface_safe(_mask);
@@ -149,7 +149,7 @@ function canvas_tool_selection(_selector) : canvas_tool() constructor {
 		surface_reset_target();
 		
 		node.storeAction();
-		surface_set_target(_canvas_surface);
+		surface_set_target(canvas_surface);
 			gpu_set_blendmode(bm_subtract);
 			draw_surface_safe(selection_surface, sel_x0, sel_y0);
 			gpu_set_blendmode(bm_normal);
@@ -163,15 +163,15 @@ function canvas_tool_selection(_selector) : canvas_tool() constructor {
 	}
 	
 	function selectAll() {
-		var sel_w = surface_get_width(_canvas_surface);
-		var sel_h = surface_get_height(_canvas_surface);
+		var sel_w = surface_get_width(canvas_surface);
+		var sel_h = surface_get_height(canvas_surface);
 		
 		selection_surface = surface_verify(selection_surface, sel_w, sel_h);
 		selection_mask    = surface_verify(selection_mask,    sel_w, sel_h);
 		
 		surface_set_target(selection_surface);
 			DRAW_CLEAR
-			draw_surface_safe(_canvas_surface);
+			draw_surface_safe(canvas_surface);
 		surface_reset_target();
 		
 		surface_set_target(selection_mask);
@@ -179,7 +179,7 @@ function canvas_tool_selection(_selector) : canvas_tool() constructor {
 		surface_reset_target();
 		
 		node.storeAction();
-		surface_set_target(_canvas_surface);
+		surface_set_target(canvas_surface);
 			DRAW_CLEAR
 		surface_reset_target();
 						
@@ -198,8 +198,8 @@ function canvas_tool_selection(_selector) : canvas_tool() constructor {
 	
 	function apply() {
 		var _drawLay = node.tool_attribute.drawLayer;
-		var _sw = surface_get_width(_canvas_surface);
-		var _sh = surface_get_height(_canvas_surface);
+		var _sw = surface_get_width(canvas_surface);
+		var _sh = surface_get_height(canvas_surface);
 		
 		var _selectionSurf = surface_create(_sw, _sh);
 		var _drawnSurface  = surface_create(_sw, _sh);
@@ -214,15 +214,15 @@ function canvas_tool_selection(_selector) : canvas_tool() constructor {
 			shader_set_f("channels",  1, 1, 1, 1);
 			shader_set_f("alpha",     1);
 			
-			shader_set_surface("back", _canvas_surface);
+			shader_set_surface("back", canvas_surface);
 			shader_set_surface("fore", _selectionSurf);
 			
 			draw_sprite_stretched(s_fx_pixel, 0, 0, 0, _sw, _sh);
 		surface_reset_shader();
 		
 		node.setCanvasSurface(_drawnSurface);
-		surface_free(_canvas_surface);
-		_canvas_surface = _drawnSurface;
+		surface_free(canvas_surface);
+		canvas_surface = _drawnSurface;
 		
 		node.surface_store_buffer();
 		

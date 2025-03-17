@@ -293,6 +293,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		tool_attribute.thres	     = 0;
 		tool_attribute.fillType      = 0;
+		tool_attribute.useBG         = true;
 		tool_attribute.iso_angle     = 0;
 		tool_attribute.button_apply  = [ false, false ];
 		
@@ -322,6 +323,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 									.setTooltips( [ "Edge", "Edge + Corner", "Entire image" ] )
 									.setCollape(false);
 		
+		tool_fill_use_bg    = new checkBox( function() /*=>*/ { tool_attribute.useBG = !tool_attribute.useBG; });
+		
 		tool_curve_buttons  = new buttonGroup( array_create(2, THEME.toolbar_check), function(v) /*=>*/ { if(v == 0) tool_curve_bez.apply(); else tool_curve_bez.cancel(); })
 									.setCollape(false);
 		
@@ -337,6 +340,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		tool_size         =   [ "Size",      tool_size_edit,      "size",      tool_attribute ];
 		tool_thrs         =   [ "Threshold", tool_thrs_edit,      "thres",     tool_attribute ];
 		tool_fil8         =   [ "Fill",      tool_fil8_edit,      "fillType",  tool_attribute ];
+		tool_fill_bg      =   [ "BG",        tool_fill_use_bg,    "useBG",     tool_attribute ];
 		tool_iso_settings =   [ "",          tool_isoangle,       "iso_angle", tool_attribute ];
 		
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -348,6 +352,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			new NodeTool( "Magic Selection", THEME.canvas_tools_magic_selection )
 				.setSetting(tool_thrs)
 				.setSetting(tool_fil8)
+				.setSetting(tool_fill_bg)
 				.setToolObject(tool_sel_magic),
 			
 			new NodeTool( "Pencil",		  THEME.canvas_tools_pencil)
@@ -383,6 +388,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			new NodeTool( "Fill",		  THEME.canvas_tools_bucket)
 				.setSetting(tool_thrs)
 				.setSetting(tool_fil8)
+				.setSetting(tool_fill_bg)
 				.setToolObject(tool_fill),
 		];
 	#endregion
@@ -636,6 +642,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	////- Surfaces
 	
 	function getCanvasSurface(index = preview_index) { INLINE return array_safe_get_fast(canvas_surface, index); }
+	function getOutputSurface(index = preview_index) { INLINE return array_safe_get_fast(output_surface, index); }
 	
 	function setCanvasSurface(surface, index = preview_index) { INLINE canvas_surface[index] = surface; }
 	
@@ -861,7 +868,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			}
 			
 			tool_selection.drawing_surface    = drawing_surface;
-			tool_selection._canvas_surface    = _canvas_surface;
+			tool_selection.canvas_surface     = _canvas_surface;
 			tool_selection.apply_draw_surface = apply_draw_surface;
 			
 			tool_mirror_edit.sprs = tool_attribute.mirror[0]? THEME.canvas_mirror_diag : THEME.canvas_mirror;
@@ -909,7 +916,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		if(_tool) { // tool step
 			
 			_tool.drawing_surface    = drawing_surface;
-			_tool._canvas_surface    = _canvas_surface;
+			_tool.canvas_surface     = _canvas_surface;
+			_tool.output_surface     = getOutputSurface();
 			_tool.apply_draw_surface = apply_draw_surface;
 			_tool.brush              = brush;
 			
@@ -919,7 +927,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			var _ty = _y;
 			
 			if(_tool.relative && tool_selection.is_selected) {
-				_tool._canvas_surface = tool_selection.selection_surface;
+				_tool.canvas_surface = tool_selection.selection_surface;
 				_tx = _x + tool_selection.selection_position[0] * _s;
 				_ty = _y + tool_selection.selection_position[1] * _s;
 			}
@@ -1174,6 +1182,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			surface_reset_shader();
 			
 			outputs[0].setValue(output_surface[0]);
+			
 		} else {
 			for( var i = 0; i < _frames; i++ ) {
 				var _canvas_surface = getCanvasSurface(i);

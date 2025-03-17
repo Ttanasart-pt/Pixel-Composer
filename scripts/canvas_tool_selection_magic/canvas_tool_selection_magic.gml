@@ -13,14 +13,15 @@ function canvas_tool_selection_magic(selector, toolAttr) : canvas_tool_selection
 		
 		var _thr		= tool_attribute.thres;
 		var _fill_type	= tool_attribute.fillType;
+		var _use_output	= tool_attribute.useBG;
 		
 		if(!selector.is_select_drag && mouse_press(mb_left, active)) {
 			selecting = true;
 			canvas_buffer = node.canvas_buffer;
 			preview_index = node.preview_index;
 		
-			surface_w	= surface_get_width(_canvas_surface);
-			surface_h	= surface_get_height(_canvas_surface);
+			surface_w	= surface_get_width(canvas_surface);
+			surface_h	= surface_get_height(canvas_surface);
 			
 			if(point_in_rectangle(mouse_cur_x, mouse_cur_y, 0, 0, surface_w - 1, surface_h - 1)) {
 				var bb = [ 0, 0, surface_w, surface_h ];
@@ -29,11 +30,12 @@ function canvas_tool_selection_magic(selector, toolAttr) : canvas_tool_selection
 				draw_set_color(c_white);
 				surface_set_target(_temp_surface);
 					DRAW_CLEAR
-				
+					var _surf = _use_output? output_surface : canvas_surface;
+					
 					switch(_fill_type) {
-						case 0 : bb = canvas_magic_selection_scanline(_canvas_surface, mouse_cur_x, mouse_cur_y, _thr, false); break;
-						case 1 : bb = canvas_magic_selection_scanline(_canvas_surface, mouse_cur_x, mouse_cur_y, _thr, true);  break;
-						case 2 : bb = canvas_magic_selection_all(_canvas_surface, mouse_cur_x, mouse_cur_y, _thr);  break;
+						case 0 : bb = canvas_magic_selection_scanline(_surf, mouse_cur_x, mouse_cur_y, _thr, false); break;
+						case 1 : bb = canvas_magic_selection_scanline(_surf, mouse_cur_x, mouse_cur_y, _thr, true);  break;
+						case 2 : bb = canvas_magic_selection_all(_surf, mouse_cur_x, mouse_cur_y, _thr);             break;
 					}
 					
 				surface_reset_target();
