@@ -2,7 +2,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	name = "Spawner";
 	update_on_frame = true;
 	
-	inputs = array_create(59);
+	inputs = array_create(61);
 	
 	newInput(32, nodeValueSeed(self));
 	
@@ -10,81 +10,56 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	newInput( 0, nodeValue_Surface("Particle Sprite", self));
 	
 	newInput(22, nodeValue_Enum_Scroll("Surface Array", self, 0, [ "Random", "Order", "Animation", "Scale" ]))
-		.setTooltip("Whether to select image from an array in order, at random, or treat array as animation.")
-		.setVisible(false);
+		.setTooltip("Whether to select image from an array in order, at random, or treat array as animation.");
 	
-	newInput(23, nodeValue_Range("Animation Speed", self, [ 1, 1 ] , { linked : true }))
-		.setVisible(false);
-		
-	newInput(49, nodeValue_Bool("Stretch Animation", self, false ));
-	
-	newInput(26, nodeValue_Enum_Button("On Animation End", self,  ANIM_END_ACTION.loop, [ "Loop", "Ping pong", "Destroy" ]))
-		.setVisible(false);
+	newInput(23, nodeValue_Range(       "Animation Speed",   self, [ 1, 1 ], { linked : true }));
+	newInput(49, nodeValue_Bool(        "Stretch Animation", self, false ));
+	newInput(26, nodeValue_Enum_Button( "On Animation End",  self,  ANIM_END_ACTION.loop, [ "Loop", "Ping pong", "Destroy" ]));
 	
 	////- Spawn
-	newInput(27, nodeValue_Bool("Spawn", self, true));
-	
-	newInput(16, nodeValue_Enum_Button("Spawn Type", self,  0, [ "Stream", "Burst", "Trigger" ]));
-	
-	newInput(44, nodeValue_Trigger("Spawn", self,  false ))
-		.setDisplay(VALUE_DISPLAY.button, { name: "Trigger" });
-	
-	newInput( 1, nodeValue_Int("Spawn Delay", self, 4, "Frames delay between each particle spawn." ));
-	
-	newInput(51, nodeValue_Int("Burst Duration", self, 1 ));
-	
-	newInput( 2, nodeValue_Range("Spawn Amount", self, [ 2, 2 ] , { linked : true }))
-		.setTooltip("Amount of particle spawn in that frame.");
-	
-	newInput( 4, nodeValue_Enum_Scroll("Spawn Source", self, 0, [ "Area Inside", "Area Border", "Map", "Path" ] ));
-	
-	newInput( 3, nodeValue_Area("Spawn Area", self, DEF_AREA ));
-	
-	newInput(30, nodeValue_Surface("Distribution Map", self))
-	
-	newInput(55, nodeValue_PathNode("Spawn Path", self, noone ));
-	
-	newInput(24, nodeValue_Enum_Button("Distribution", self,  1, [ "Uniform", "Random" ]));
-	
-	newInput(52, nodeValue_Float("Uniform Period", self, 4 ));
-	
-	newInput( 5, nodeValue_Range("Lifespan", self, [ 20, 30 ] ));
+	newInput(27, nodeValue_Bool(        "Spawn",            self, true));
+	newInput(16, nodeValue_Enum_Button( "Spawn Type",       self, 0, [ "Stream", "Burst", "Trigger" ]));
+	newInput(44, nodeValue_Trigger(     "Spawn",            self, false )).setDisplay(VALUE_DISPLAY.button, { name: "Trigger" });
+	newInput( 1, nodeValue_Int(         "Spawn Delay",      self, 4, "Frames delay between each particle spawn." ));
+	newInput(51, nodeValue_Int(         "Burst Duration",   self, 1 ));
+	newInput( 2, nodeValue_Range(       "Spawn Amount",     self, [ 2, 2 ], { linked : true })).setTooltip("Amount of particle spawn in that frame.");
+	newInput( 4, nodeValue_Enum_Scroll( "Spawn Source",     self, 0, [ "Area Inside", "Area Border", "Map", "Path" ] ));
+	newInput( 3, nodeValue_Area(        "Spawn Area",       self, DEF_AREA_REF )).setUnitRef(function() /*=>*/ {return getDimension()}, VALUE_UNIT.reference);
+	newInput(30, nodeValue_Surface(     "Distribution Map", self));
+	newInput(55, nodeValue_PathNode(    "Spawn Path",       self));
+	newInput(24, nodeValue_Enum_Button( "Distribution",     self, 1, [ "Uniform", "Random" ]));
+	newInput(52, nodeValue_Float(       "Uniform Period",   self, 4 ));
+	newInput( 5, nodeValue_Range(       "Lifespan",         self, [ 20, 30 ] ));
 	
 	////- Movement
-	newInput(29, nodeValue_Bool("Directed From Center", self, false, "Make particle move away from the spawn center."));
 	
-	newInput(53, nodeValue_Rotation_Range("Angle Range", self, [ 0, 360 ]));
-	
-	newInput( 6, nodeValue_Rotation_Random("Initial Direction", self, [ 0, 45, 135, 0, 0 ] )); 
-	
-	newInput(18, nodeValue_Range("Initial Velocity", self, [ 1, 2 ] ));
+	newInput(29, nodeValue_Bool(            "Directed From Center", self, false, "Make particle move away from the spawn center."));
+	newInput(53, nodeValue_Rotation_Range(  "Angle Range",          self, [ 0, 360 ]));
+	newInput( 6, nodeValue_Rotation_Random( "Initial Direction",    self, [ 0, 45, 135, 0, 0 ] )); 
+	newInput(18, nodeValue_Range(           "Initial Speed",        self, [ 1, 2 ] ));
+	newInput(60, nodeValue_Curve(           "Base Speed Over Time", self, CURVE_DEF_11)).setTooltip("Speed may conflict with physics-based properties.");
 	
 	////- Rotation
-	newInput(15, nodeValue_Bool("Rotate by Direction", self, false, "Make the particle rotates to follow its movement."));
 	
-	newInput( 8, nodeValue_Rotation_Random("Orientation", self, [ 0, 0, 0, 0, 0 ] ));
-	
-	newInput( 9, nodeValue_Range("Rotational Speed", self, [ 0, 0 ] , { linked : true }));
+	newInput(15, nodeValue_Bool(            "Rotate by Direction",        self, false, "Make the particle rotates to follow its movement."));
+	newInput( 8, nodeValue_Rotation_Random( "Initial Rotation",           self, [ 0, 0, 0, 0, 0 ] ));
+	newInput( 9, nodeValue_Rotation_Random( "Rotational Speed",           self, [ 0, 0, 0, 0, 0 ] ));
+	newInput(59, nodeValue_Curve(           "Rotational Speed Over Time", self, CURVE_DEFN_11));
 	
 	////- Scale
-	newInput(10, nodeValue_Vec2_Range("Spawn Scale", self, [ 1, 1, 1, 1 ] , { linked : true }));
 	
-	newInput(17, nodeValue_Range("Spawn Size", self, [ 1, 1 ] , { linked : true }));
-	
-	newInput(11, nodeValue_Curve("Scale Over Time", self, CURVE_DEF_11));
+	newInput(10, nodeValue_Vec2_Range( "Initial Scale",   self, [ 1, 1, 1, 1 ], { linked : true }));
+	newInput(17, nodeValue_Range(      "Initial Size",    self, [ 1, 1 ],       { linked : true }));
+	newInput(11, nodeValue_Curve(      "Scale Over Time", self, CURVE_DEF_11));
 	
 	////- Color
-	newInput(12, nodeValue_Gradient("Color Over Lifetime", self, new gradientObject(cola(c_white))));
 	
-	newInput(28, nodeValue_Gradient("Random Blend", self, new gradientObject(cola(c_white))));
-		
-	newInput(50, nodeValue_Palette("Color by Index", self, [ cola(c_white) ] ));
-	
-	newInput(13, nodeValue_Range("Alpha", self, [ 1, 1 ], { linked : true }));
-	
-	newInput(14, nodeValue_Curve("Alpha Over Time", self, CURVE_DEF_11));
-	
-	newInput(56, nodeValue_Surface("Sample Surface", self, noone));
+	newInput(12, nodeValue_Gradient( "Color Over Lifetime", self, new gradientObject(cola(c_white))));
+	newInput(28, nodeValue_Gradient( "Random Blend",        self, new gradientObject(cola(c_white))));
+	newInput(50, nodeValue_Palette(  "Color by Index",      self, [ cola(c_white) ] ));
+	newInput(13, nodeValue_Range(    "Alpha",               self, [ 1, 1 ], { linked : true }));
+	newInput(14, nodeValue_Curve(    "Alpha Over Time",     self, CURVE_DEF_11));
+	newInput(56, nodeValue_Surface(  "Sample Surface",      self, noone));
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -128,8 +103,6 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	newInput(31, nodeValue_Surface("Atlas",      self, [])).setArrayDepth(1);
 	newInput(48, nodeValue_Trigger("Reset Seed", self, false )).setDisplay(VALUE_DISPLAY.button, { name: "Trigger" })
 	
-	// 59
-	
 	array_foreach(inputs, function(i) /*=>*/ {return i.rejectArray()}, 1);
 	input_len = array_length(inputs);
 	
@@ -167,8 +140,8 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	input_display_list = [ 32, 
 		["Sprite",	   false],	    0, dynaDraw_parameter, 22, 23, 49, 26,
 		["Spawn",		true],	   27, 16, 44,  1, 51,  2,  4,  3, 30, 55, 24, __inspc(ui(6), true), 52,  5, 
-		["Movement",	true],     29, 53,  6, 18,
-		["Rotation",	true],	   15,  8,  9, 
+		["Movement",	true],     29, 53,  6, 18, 60, 
+		["Rotation",	true],	   15,  8,  9, 59, 
 		["Scale",		true],	   10, 17, 11, 
 		["Color",		true],	   12, 28, 50, 13, 14, 56, 
 		__inspc(ui(6), true, false, ui(3)), 
@@ -203,6 +176,8 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		wig_dir: new wiggleMap(seed, 1, 1000),
 	};
 	
+	curve_speed    = noone;
+	curve_rotate   = noone;
 	curve_scale    = noone;
 	curve_alpha    = noone;
 	curve_path_div = noone;
@@ -343,7 +318,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			var _lif = irandom_range(_life[0], _life[1]);
 				
 			var _rot	 = angle_random_eval(_rotation);
-			var _rot_spd = random_range(_rotation_speed[0], _rotation_speed[1]);
+			var _rot_spd = angle_random_eval(_rotation_speed);
 			
 			var _dirRand = angle_random_eval(_direction);
 			var _dirr	 = _dirRand;
@@ -386,11 +361,11 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			
 			var _gravity = random_range(_grav[0], _grav[1]);
 			
-			part.setPhysic(_use_phy, _vx, _vy, _acc, _frc, _gravity, _gvDir, _trn, _turnSc);
+			part.setPhysic(_use_phy, _vx, _vy, curve_speed, _acc, _frc, _gravity, _gvDir, _trn, _turnSc);
 			part.setWiggle(_use_wig, wiggle_maps);
 			
 			part.setGround(_ground, _ground_offset, _ground_bounce, _ground_frict);
-			part.setTransform(_scx, _scy, curve_scale, _rot, _rot_spd, _follow);
+			part.setTransform(_scx, _scy, curve_scale, _rot, _rot_spd, curve_rotate, _follow);
 			part.setDraw(_color, _bld, _alp, curve_alpha);
 			part.setPath(_path, curve_path_div);
 			part.params = custom_parameter_map;
@@ -471,10 +446,14 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			var _curve_sca = getInputData(11);
 			var _curve_alp = getInputData(14);
 			var _curve_pth = getInputData(47);
+			var _curve_rot = getInputData(59);
+			var _curve_spd = getInputData(60);
 		
 			curve_scale    = new curveMap(_curve_sca, TOTAL_FRAMES);
 			curve_alpha    = new curveMap(_curve_alp, TOTAL_FRAMES);
 			curve_path_div = new curveMap(_curve_pth, TOTAL_FRAMES);
+			curve_rotate   = new curveMap(_curve_rot, TOTAL_FRAMES);
+			curve_speed    = new curveMap(_curve_spd, TOTAL_FRAMES);
 			
 			for( var i = 0, n = array_length(custom_parameter_names); i < n; i++ ) {
 				var _n = custom_parameter_names[i];
@@ -569,6 +548,8 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	////- Update
 	
+	static getDimension = function() /*=>*/ {return DEF_SURF};
+	
 	static update = function(frame = CURRENT_FRAME) {
 		#region visiblity
 			var _inSurf = getInputData(0);
@@ -624,7 +605,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			
 			for( var i = 0, n = array_length(custom_parameter_names); i < n; i++ ) {
 				var _n = custom_parameter_names[i];
-				if(!struct_exists(attributes.parameter_curves, _n)) 
+				if(!struct_exists(attributes.parameter_curves, _n))
 					attributes.parameter_curves[$ _n] = CURVE_DEF_11;
 					
 				if(!struct_exists(custom_parameter_curves_view, _n)) {
@@ -658,10 +639,11 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	static postDeserialize = function() {
 		var _tlen = struct_try_get(load_map, "part_base_length", 40);
-		
 		for( var i = _tlen; i < input_len; i++ )
 			array_insert(load_map.inputs, i, noone);
-			
+		
+		if(LOADING_VERSION >= 1_18_09_0) return;
+		
 		var _attr_curv = attributes.parameter_curves;
 		var _keys = variable_struct_get_names(_attr_curv);
 		for( var i = 0, n = array_length(_keys); i < n; i++ ) {

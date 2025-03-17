@@ -426,7 +426,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			default : 
 				mapWidget = _vec4? 
 					new vectorRangeBox(4, TEXTBOX_INPUT.number, function(v,i) /*=>*/ {return setValueDirect(v,i)}) : 
-					new rangeBox(         TEXTBOX_INPUT.number, function(v,i) /*=>*/ {return setValueDirect(v,i)});
+					new rangeBox(function(v,i) /*=>*/ {return setValueDirect(v,i)});
 				mapWidget.side_button = mapButton;
 				break;
 		}
@@ -604,7 +604,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break;
 						
 					case VALUE_DISPLAY.range :		
-						editWidget = new rangeBox(_txt, function(val, index) /*=>*/ {return setValueInspector(val, index)});
+						editWidget = new rangeBox(function(val, index) /*=>*/ {return setValueInspector(val, index)});
 						
 						if(!struct_has(display_data, "linked")) display_data.linked = false;
 						

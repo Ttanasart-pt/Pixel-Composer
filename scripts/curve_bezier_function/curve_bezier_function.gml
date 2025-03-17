@@ -1,11 +1,17 @@
-//curve format [-cx0, -cy0, x0, y0, +cx0, +cy0, -cx1, -cy1, x1, y1, +cx1, +cy1]
-//segment format [y0, +cx0, +cy0, -cx1, -cy1, y1]
+// curve format [-cx0, -cy0, x0, y0, +cx0, +cy0, -cx1, -cy1, x1, y1, +cx1, +cy1]
+// segment format [y0, +cx0, +cy0, -cx1, -cy1, y1]
+// curve data [x shift, x scale, type, min y, max y, -]
 
-#macro CURVE_DEF_00 [0, 1, 0, 0, 0, 0, /**/ 0, 0, 0, 0, 1/3,    0, /**/ -1/3,    0, 1, 0, 0, 0]
-#macro CURVE_DEF_01 [0, 1, 0, 0, 0, 0, /**/ 0, 0, 0, 0, 1/3,  1/3, /**/ -1/3, -1/3, 1, 1, 0, 0]
-#macro CURVE_DEF_10 [0, 1, 0, 0, 0, 0, /**/ 0, 0, 0, 1, 1/3, -1/3, /**/ -1/3,  1/3, 1, 0, 0, 0]
-#macro CURVE_DEF_11 [0, 1, 0, 0, 0, 0, /**/ 0, 0, 0, 1, 1/3,    0, /**/ -1/3,    0, 1, 1, 0, 0]
 #macro CURVE_PADD 6
+#macro CURVE_DEF_00  [0, 1, 0,  0, 1, 0, /**/ 0, 0, 0, 0, 1/3,    0, /**/ -1/3,    0, 1, 0, 0, 0]
+#macro CURVE_DEF_01  [0, 1, 0,  0, 1, 0, /**/ 0, 0, 0, 0, 1/3,  1/3, /**/ -1/3, -1/3, 1, 1, 0, 0]
+#macro CURVE_DEF_10  [0, 1, 0,  0, 1, 0, /**/ 0, 0, 0, 1, 1/3, -1/3, /**/ -1/3,  1/3, 1, 0, 0, 0]
+#macro CURVE_DEF_11  [0, 1, 0,  0, 1, 0, /**/ 0, 0, 0, 1, 1/3,    0, /**/ -1/3,    0, 1, 1, 0, 0]
+
+#macro CURVE_DEFN_00 [0, 1, 0, -1, 1, 0, /**/ 0, 0, 0, 0, 1/3,    0, /**/ -1/3,    0, 1, 0, 0, 0]
+#macro CURVE_DEFN_01 [0, 1, 0, -1, 1, 0, /**/ 0, 0, 0, 0, 1/3,  1/3, /**/ -1/3, -1/3, 1, 1, 0, 0]
+#macro CURVE_DEFN_10 [0, 1, 0, -1, 1, 0, /**/ 0, 0, 0, 1, 1/3, -1/3, /**/ -1/3,  1/3, 1, 0, 0, 0]
+#macro CURVE_DEFN_11 [0, 1, 0, -1, 1, 0, /**/ 0, 0, 0, 1, 1/3,    0, /**/ -1/3,    0, 1, 1, 0, 0]
 
 //////////////////////////////////////////////////////////////////////////////////////////// DRAW ////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -125,7 +131,7 @@ function draw_curve(x0, y0, _w, _h, _bz, minx = 0, maxx = 1, miny = 0, maxy = 1,
 					_nx = x0 + _w * _rx;
 					_ny = y0 + _h * (1 - _ry);
 					
-					if(i || j) draw_line(_ox, _oy, _nx, _ny);
+					if(j) draw_line(_ox, _oy, _nx, _ny);
 					
 					_ox = _nx;
 					_oy = _ny;
@@ -186,18 +192,23 @@ function eval_curve_x(_bz, _x, _tolr = 0.00001) {
 	static _CURVE_DEF_10 = [0, 1, 0, 0, 0, 0, /**/ 0, 0, 0, 1, 1/3, -1/3, /**/ -1/3,  1/3, 1, 0, 0, 0];
 	static _CURVE_DEF_11 = [0, 1, 0, 0, 0, 0, /**/ 0, 0, 0, 1, 1/3,    0, /**/ -1/3,    0, 1, 1, 0, 0];
 	
-	if(array_equals(_bz, _CURVE_DEF_11)) return 1;
-	if(array_equals(_bz, _CURVE_DEF_01)) return _x;
-	if(array_equals(_bz, _CURVE_DEF_10)) return 1 - _x;
-	
 	var _shift = _bz[0];
 	var _scale = _bz[1];
 	var _type  = _bz[2];
+	var _miny  = _bz[3];
+	var _maxy  = _bz[4];
 	
-	var segments = (array_length(_bz) - CURVE_PADD) / 6 - 1;
+	if(_miny == 0 && _maxy == 0)
+		_maxy = 1;
 	
 	_x = _x / _scale - _shift;
 	_x = clamp(_x, 0, 1);
+	
+	if(array_equals_ext(_bz, _CURVE_DEF_11, CURVE_PADD)) return lerp(_miny, _maxy, 1     );
+	if(array_equals_ext(_bz, _CURVE_DEF_01, CURVE_PADD)) return lerp(_miny, _maxy,     _x);
+	if(array_equals_ext(_bz, _CURVE_DEF_10, CURVE_PADD)) return lerp(_miny, _maxy, 1 - _x);
+	
+	var segments = (array_length(_bz) - CURVE_PADD) / 6 - 1;
 	
 	switch(_type) {
 		case 0 :
@@ -228,7 +239,8 @@ function eval_curve_x(_bz, _x, _tolr = 0.00001) {
 				if(_x < _x0) continue;
 				if(_x > _x1) continue;
 				
-				return eval_curve_segment_x([_y0, ax0, ay0, bx1, by1, _y1], (_x - _x0) / (_x1 - _x0), _tolr);
+				var _ev = eval_curve_segment_x([_y0, ax0, ay0, bx1, by1, _y1], (_x - _x0) / (_x1 - _x0), _tolr);
+				return lerp(_miny, _maxy, _ev);
 			}
 			break;
 			
@@ -239,14 +251,15 @@ function eval_curve_x(_bz, _x, _tolr = 0.00001) {
 				var ind = CURVE_PADD + i * 6;
 				var _x0 = _bz[ind + 2];
 				
-				if(_x <= _x0) return _y0;
+				if(_x <= _x0) return lerp(_miny, _maxy, _y0);
 				_y0 = _bz[ind + 3];
 			}
 			
-			return _y0;
+			return lerp(_miny, _maxy, _y0);
 	}
 	
-	return array_safe_get_fast(_bz, array_length(_bz) - 3);
+	var _ev = array_safe_get_fast(_bz, array_length(_bz) - 3);
+	return lerp(_miny, _maxy, _ev);
 }
 
 function eval_curve_segment_x(_bz, _x, _tolr = 0.00001) {

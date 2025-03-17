@@ -1,3 +1,4 @@
+#macro nodeValue_pl nodeValue_Palette
 function nodeValue_Palette(_name, _node, _value, _tooltip = "") { return new __NodeValue_Palette(_name, _node, _value, _tooltip); }
 
 function __NodeValue_Palette(_name, _node, _value, _tooltip = "") : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.color, _value, _tooltip) constructor {

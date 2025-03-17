@@ -75,6 +75,8 @@ function __part(_node) : __particleObject() constructor {
 	startx  = 0; starty  = 0;
 	prevx   = 0; prevy   = 0;
 	speedx  = 0; speedy  = 0;
+	speedsx = 0; speedsy = 0;
+	speedT  = noone;
 	
 	turning = 0;
 	turnSpd = 0;
@@ -88,12 +90,14 @@ function __part(_node) : __particleObject() constructor {
 	gravX   = 0; gravY   = 0;
 	
 	sc_sx = 1; sc_sy = 1;
-	sct   = noone;
+	scT   = noone;
 	
 	scx_history = [];
 	scy_history = [];
 	
 	follow 	 = false;
+	rot      = 0;
+	rotT     = noone;
 	rot_base = 0;
 	rot_s	 = 0;
 	
@@ -191,12 +195,16 @@ function __part(_node) : __particleObject() constructor {
 		alp_history   = array_create(life);
 	}
 	
-	static setPhysic = function(_use_phy, _sx, _sy, _ac, _fr, _g, _gDir, _turn, _turnSpd) {
+	static setPhysic = function(_use_phy, _sx, _sy, _st, _ac, _fr, _g, _gDir, _turn, _turnSpd) {
 		INLINE
 		
 		use_phy = _use_phy;
 		speedx  = _sx;
 		speedy  = _sy;
+		speedsx = _sx;
+		speedsy = _sy;
+		speedT  = _st;
+		
 		accel   = _ac;
 		frict   = _fr;
 		grav    = _g;
@@ -232,15 +240,16 @@ function __part(_node) : __particleObject() constructor {
 		ground_friction	= clamp(1 - _ground_frict, 0, 1);
 	}
 	
-	static setTransform = function(_scx, _scy, _sct, _rot, _rots, _follow) {
+	static setTransform = function(_scx, _scy, _sct, _rot, _rots, _rott, _follow) {
 		INLINE
 		
 		sc_sx = _scx;
 		sc_sy = _scy;
-		sct   = _sct;
+		scT   = _sct;
 		
 		rot_base = _rot;
 		rot      = _rot;
+		rotT     = _rott;
 		rot_s    = _rots;
 		follow   = _follow;
 	}
@@ -275,22 +284,25 @@ function __part(_node) : __particleObject() constructor {
 		trailLife++;
 		
 		if(!active) return;
-		x += speedx;
-		frame = _frame;
 		
-		var lifeRat = 1 - life / life_total;
+		var lifeRat  = 1 - life / life_total;
+		var spdCurve = speedT == noone? 1 : speedT.get(lifeRat);
+		
+		frame = _frame;
 		
 		random_set_seed(seed + life);
 		
-		#region ground
+		#region apply position
+			x += speedx * spdCurve;
+			
 			if(ground && y + speedy > ground_y) {
 				y = ground_y;
 				speedy = -speedy * ground_bounce;
 				
-				if(abs(speedy) < 0.1)
+				if(abs(speedy) < 0.1) 
 					speedx *= ground_friction;
 			} else
-				y += speedy;
+				y += speedy * spdCurve;
 		#endregion
 		
 		#region physics
@@ -322,7 +334,8 @@ function __part(_node) : __particleObject() constructor {
 		#endregion
 		
 		#region rotation
-			rot_base += rot_s;
+			var rotCurve = rotT == noone? 1 : rotT.get(lifeRat);
+			rot_base += rot_s * rotCurve;
 			
 			if(follow)  rot = spVec[1] + rot_base;
 			else        rot = rot_base;
@@ -407,7 +420,7 @@ function __part(_node) : __particleObject() constructor {
 		var ss = surf;
 		
 		var lifeRat = 1 - life / life_total;
-		var scCurve = sct == noone? 1 : sct.get(lifeRat);
+		var scCurve = scT == noone? 1 : scT.get(lifeRat);
 		scx = drawsx * scCurve;
 		scy = drawsy * scCurve;
 		

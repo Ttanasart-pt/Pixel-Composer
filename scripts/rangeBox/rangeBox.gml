@@ -1,5 +1,4 @@
-function rangeBox(_type, _onModify) : widget() constructor {
-	type     = _type;
+function rangeBox(_onModify) : widget() constructor {
 	onModify = _onModify;
 	linked   = false;
 	
@@ -29,9 +28,16 @@ function rangeBox(_type, _onModify) : widget() constructor {
 	extras = -1;
 	
 	for(var i = 0; i < 2; i++) {
-		tb[i] = new textBox(_type, onModifySingle[i])
+		tb[i] = new textBox(TEXTBOX_INPUT.number, onModifySingle[i])
 		           .setHide(true)
 		           .setLabel(labels[i]);
+	}
+	
+	static setFont = function(_f = noone) /*=>*/ { 
+		font = _f;
+		tb[0].setFont(_f);
+		tb[1].setFont(_f);
+		return self; 
 	}
 	
 	static setInteract = function(interactable = noone) { 
@@ -129,9 +135,7 @@ function rangeBox(_type, _onModify) : widget() constructor {
 	} 
 	
 	static clone = function() { 
-		var cln = new rangeBox(type, onModify);
-		
-		return cln;
+		return new rangeBox(onModify);
 	} 
 
 	static free = function() {

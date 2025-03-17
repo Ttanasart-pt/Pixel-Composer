@@ -24,7 +24,7 @@ function Node_VFX_Boids(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	newInput(7, nodeValue_f("Speed amplification", self, 1   ));
 	
 	newInput( 8, nodeValue_b("Follow point",       self, false    ));
-	newInput( 9, nodeValue_2("Point",              self, [ 0, 0 ] ));
+	newInput( 9, nodeValue_2("Point",              self, [ 0, 0 ] )).setUnitRef(function() /*=>*/ {return inline_context.dimension}, VALUE_UNIT.reference);
 	newInput(10, nodeValue_s("Fol. influence",     self, 0.1      ));
 	
 	newInput(11, nodeValue_b("Separate",           self, true    ));

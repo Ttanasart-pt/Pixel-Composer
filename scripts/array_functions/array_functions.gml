@@ -431,6 +431,21 @@
 		return __array_equals(arr1, arr2)
 	}
 	
+	function array_equals_ext(arr1, arr2, offset = 0) { 
+		if(!is_array(arr1) &&  is_array(arr2)) return false;
+		if( is_array(arr1) && !is_array(arr2)) return false;
+		if(!is_array(arr1) && !is_array(arr2)) return arr1 == arr2;
+		
+		var _l1 = array_length(arr1);
+		var _l2 = array_length(arr2);
+		if(_l1 != _l2) return false;
+		
+		for( var i = offset; i < _l1; i++ )
+			if(arr1[i] != arr2[i]) return false;
+		
+		return true;
+	}
+	
 	function array_substract(arr1, arr2) {
 		if(!is_array(arr1) || !is_array(arr2)) return;
 		

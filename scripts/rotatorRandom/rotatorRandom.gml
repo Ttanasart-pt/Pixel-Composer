@@ -3,6 +3,7 @@ enum ROTATOR_RANDOM_TYPE {
 	span,
 	double_range,
 	double_span, 
+	length
 }
 
 function rotatorRandom(_onModify) : widget() constructor {
@@ -88,7 +89,11 @@ function rotatorRandom(_onModify) : widget() constructor {
 		y = _y;
 		w = _w;
 		
-		mode = _data[0];
+		_data = array_verify(_data, 5);
+		_data[0] = clamp(_data[0], 0, ROTATOR_RANDOM_TYPE.length - 1);
+		
+		mode  = _data[0];
+		
 		var _hh = mode > 1? _h * 2 + ui(4) : _h;
 		h = h == 0? _hh : lerp_float(h, _hh, 5);
 		

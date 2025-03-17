@@ -43,37 +43,56 @@ function curveBox(_onModify) : widget() constructor {
 	display_min    = 0;
 	display_max    = 1;
 	
+	curve_y_min    = 0;
+	curve_y_max    = 0;
+	
+	range_display_data = {};
+	show_x_control     = false;
+	
 	cw = 0;
 	ch = 0;
 	
 	tb_shift = new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ { var _data = array_clone(curr_data); _data[0] = v; onModify(_data); }).setLabel("Shift");
 	tb_scale = new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ { var _data = array_clone(curr_data); _data[1] = v; onModify(_data); }).setLabel("Scale");
+	tb_range = new rangeBox(function(v,i) /*=>*/ { var _data = array_clone(curr_data); _data[3+i] = v; onModify(_data); });
 	
 	static get_x = function(v) /*=>*/ { return cw *      (v - minx) / (maxx - minx) ; }
 	static get_y = function(v) /*=>*/ { return ch * (1 - (v - miny) / (maxy - miny)); }
 	
+	static replaceCurve = function(_c) {
+		var _crv = array_create(array_length(_c));
+		
+		for( var i = 0, n = array_length(_c); i < n; i++ ) 
+			_crv[i] = i < CURVE_PADD? curr_data[i] : _c[i];
+		
+		onModify(_crv);
+	}
+	
 	static setInteract = function(i = noone) {
 		interactable = i;
+		tb_range.setInteract(i);
 		tb_shift.setInteract(i);
 		tb_scale.setInteract(i);
 	}
 	
 	static register = function(p = noone) {
 		parent = p;
+		tb_range.register(p);
 		tb_shift.register(p);
 		tb_scale.register(p);
 	}
 	
 	static isHovering = function() { 
-		if(tb_shift.isHovering()) return true;
-		if(tb_scale.isHovering()) return true;
-		
-		return hovering;
+		return hovering              || 
+		       tb_range.isHovering() || 
+		       tb_shift.isHovering() || 
+		       tb_scale.isHovering();
 	}
 	
 	static drawParam = function(params) {
 		rx = params.rx;
 		ry = params.ry;
+		tb_range.setParam(params);
 		tb_shift.setParam(params);
 		tb_scale.setParam(params);
 		
@@ -81,25 +100,23 @@ function curveBox(_onModify) : widget() constructor {
 	}
 	
 	static draw = function(_x, _y, _w, _data, _m) {
-		x = _x; 
-		y = _y;
-		w = _w; 
+		     x = _x; 
+		     y = _y;
+		     w = _w; 
+		var _h =  h - ui(4);
 		
 		if(!is_array(_data) || array_length(_data) == 0) return 0;
 		if(is_array(_data[0])) return 0;
 		
-		var _h = h - ui(4);
-		
-		var _amo   = array_length(_data);
-		var points = (_amo - CURVE_PADD) / 6;
+		var tbh       = line_get_height(f_p3) + ui(4);
+		var _amo      = array_length(_data);
+		var points    = (_amo - CURVE_PADD) / 6;
 		
 		var zoom_size = ui(12);
 		var zoom_padd = zoom_size + ui(8);
 		
-		var tbh = line_get_height(font) + ui(4);
-		
 		cw = _w - zoom_padd;
-		ch = _h - zoom_padd - (tbh + ui(4));
+		ch = _h - zoom_padd - (tbh + ui(4)) * (1 + show_x_control);
 		
 		hovering  = false;
 		curr_data = _data;
@@ -107,6 +124,14 @@ function curveBox(_onModify) : widget() constructor {
 		var _shift = _data[0]; 
 		var _scale = _data[1];
 		var _type  = _data[2];
+		
+		var _miny  = _data[3];
+		var _maxy  = _data[4];
+		
+		if(_miny == 0 && _maxy == 0) _maxy = 1;
+		
+		curve_y_min = _miny;
+		curve_y_max = _maxy;
 		
 		linear_mode = curr_data[CURVE_PADD + 0] == 0 && curr_data[CURVE_PADD + 4] == 0;
 		
@@ -232,13 +257,20 @@ function curveBox(_onModify) : widget() constructor {
 					}
 				}
 				
-				var y0 = ch - ch * (0 - miny) / (maxy - miny);
-				var y1 = ch - ch * (1 - miny) / (maxy - miny);
+				var y0 = get_y(0);
+				var y1 = get_y(1);
+				var yc = get_y(-_miny / (_maxy - _miny));
 				
 				draw_set_alpha(0.9);
 					draw_line(0, y0, cw, y0);
 					draw_line(0, y1, cw, y1);
+					
+					if(_miny < 0 && _maxy > 0) {
+						draw_set_alpha(0.75);
+						draw_line(0, yc, cw, yc);
+					}
 				draw_set_alpha(1);
+				
 				
 				if(progress_draw > -1) {
 					var _prg = clamp(progress_draw, 0, 1);
@@ -385,7 +417,7 @@ function curveBox(_onModify) : widget() constructor {
 			
 			var bxW = _w - zoom_padd;
 			var bx  = _x;
-			var by  = _y + _h - bs - (tbh + ui(4));
+			var by  = _y + _h - bs - (tbh + ui(4)) * (1 + show_x_control);
 			
 			var zx0 = bx + bs / 2 + (bxW - bs) * (minx - zminx) / (zmaxx - zminx);
 			var zx1 = bx + bs / 2 + (bxW - bs) * (maxx - zminx) / (zmaxx - zminx);
@@ -538,10 +570,10 @@ function curveBox(_onModify) : widget() constructor {
 				if(node_hovering == -1 || node_hover_typ != 0) {
 					menuCall("widget_curve", [
 						menuItemGroup(__txt("Presets"), [ 
-							[ [THEME.curve_presets, 0], function() /*=>*/ {return onModify(CURVE_DEF_00)} ],
-							[ [THEME.curve_presets, 1], function() /*=>*/ {return onModify(CURVE_DEF_11)} ],
-							[ [THEME.curve_presets, 2], function() /*=>*/ {return onModify(CURVE_DEF_01)} ],
-							[ [THEME.curve_presets, 3], function() /*=>*/ {return onModify(CURVE_DEF_10)} ],
+							[ [THEME.curve_presets, 0], function() /*=>*/ {return replaceCurve(CURVE_DEF_00)} ],
+							[ [THEME.curve_presets, 1], function() /*=>*/ {return replaceCurve(CURVE_DEF_11)} ],
+							[ [THEME.curve_presets, 2], function() /*=>*/ {return replaceCurve(CURVE_DEF_01)} ],
+							[ [THEME.curve_presets, 3], function() /*=>*/ {return replaceCurve(CURVE_DEF_10)} ],
 						]),
 						-1,
 						
@@ -572,14 +604,18 @@ function curveBox(_onModify) : widget() constructor {
 							} ],
 							[ [THEME.curve_type, 2], function() /*=>*/ {
 								var _dat = variable_clone(curr_data);
-								
-								_dat[2] = 1;
+								    _dat[2] = 1;
 								onModify(_dat);
 							} ],
 						]),
-						-1,
 						
-						menuItem(__txt("Reset View"),   function() /*=>*/ { minx = 0; maxx = 1; miny = 0; maxy = 1; } ),
+						-1,
+						menuItem(__txt("Reset View"),      function() /*=>*/ { minx = 0; maxx = 1; miny = 0; maxy = 1; } ),
+						menuItem(__txt("Show Value"),      function() /*=>*/ { display_val    = !display_val;    }, noone, noone, function() /*=>*/ {return display_val}    ),
+						menuItem(__txt("Show X Controls"), function() /*=>*/ { show_x_control = !show_x_control; }, noone, noone, function() /*=>*/ {return show_x_control} ),
+						menuItem(__txt("Scale Controls"),  function() /*=>*/ { scale_control  = !scale_control;  }, noone, noone, function() /*=>*/ {return scale_control}  ),
+						
+						-1,
 						menuItem(__txt("Grid"),         function() /*=>*/ { grid_show = !grid_show; }, noone, noone, function() /*=>*/ {return grid_show} ),
 						menuItem(__txt("Snap to grid"), function() /*=>*/ { grid_snap = !grid_snap; }, noone, noone, function() /*=>*/ {return grid_snap} ),
 						menuItemGroup(__txt("Grid size"), [
@@ -588,8 +624,6 @@ function curveBox(_onModify) : widget() constructor {
 							[ "10%", function() /*=>*/ { grid_step = 0.10; } ],
 							[ "25%", function() /*=>*/ { grid_step = 0.25; } ],
 						]),
-						menuItem(__txt("Scale Controls"), function() /*=>*/ { scale_control = !scale_control; }, noone, noone, function() /*=>*/ {return scale_control} ),
-						menuItem(__txt("Show Value"),     function() /*=>*/ { display_val   = !display_val; },   noone, noone, function() /*=>*/ {return display_val}   ),
 					], rmx, rmy);
 					
 				} else {
@@ -647,7 +681,7 @@ function curveBox(_onModify) : widget() constructor {
 			} else if(display_val == 1) {
 				
 				var _spx = display_pos_x;
-				var _spy = lerp(display_min, display_max, display_pos_y);
+				var _spy = lerp(display_min, display_max, lerp(curve_y_min, curve_y_max, display_pos_y));
 				
 				draw_set_text(f_p2, fa_right, fa_bottom, display_sel? COLORS._main_text: COLORS._main_text_sub);
 				draw_text_add(tx, ty, $"y: {string_format(_spy, -1, 2)}");
@@ -660,20 +694,35 @@ function curveBox(_onModify) : widget() constructor {
 			show_coord = false;
 		}
 		
-		var tby = _y + h - tbh;
+		var tby = _y + h;
 		var tbw = _w / 2;
 		
-		tb_shift.setFocusHover(active, hover);
-		tb_scale.setFocusHover(active, hover);
-		
-		tb_shift.hide = true;
-		tb_scale.hide = true;
+		if(show_x_control) {
+			tby -= tbh;
 			
-		draw_sprite_stretched_ext(THEME.textbox, 3, _x, tby, _w, tbh, c_white, 1);
-		draw_sprite_stretched_ext(THEME.textbox, 0, _x, tby, _w, tbh, c_white, 0.5 + 0.5 * interactable);	
+			tb_shift.setFocusHover(active, hover);
+			tb_scale.setFocusHover(active, hover);
+			
+			tb_shift.setFont(f_p3);
+			tb_scale.setFont(f_p3);
+			
+			tb_shift.hide = true;
+			tb_scale.hide = true;
+				
+			draw_sprite_stretched_ext(THEME.textbox, 3, _x, tby, _w, tbh, c_white, 1);
+			draw_sprite_stretched_ext(THEME.textbox, 0, _x, tby, _w, tbh, c_white, 0.5 + 0.5 * interactable);	
+			
+			tb_shift.draw(_x,       tby, tbw, tbh, _data[0], _m);
+			tb_scale.draw(_x + tbw, tby, tbw, tbh, _data[1], _m);
+			
+			tby -= ui(4);
+		}
 		
-		tb_shift.draw(_x,       tby, tbw, tbh, _data[0], _m);
-		tb_scale.draw(_x + tbw, tby, tbw, tbh, _data[1], _m);
+		tby -= tbh;
+		tb_range.setFont(f_p3);
+		tb_range.setFocusHover(active, hover);
+		tb_range.draw(_x,       tby, _w, tbh, [_miny, _maxy], range_display_data, _m);
+		tby -= ui(4);
 		
 		resetFocus();
 		
