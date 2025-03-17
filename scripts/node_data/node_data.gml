@@ -2274,7 +2274,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	////- PREVIEW
 	
 	static getPreviewValues = function() {
-		if(preview_channel >= array_length(outputs)) return noone;
+		if(preview_channel < 0 || preview_channel >= array_length(outputs)) return noone;
 		
 		var _type = outputs[preview_channel].type;
 		if(_type != VALUE_TYPE.surface && _type != VALUE_TYPE.dynaSurface)
