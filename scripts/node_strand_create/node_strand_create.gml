@@ -41,7 +41,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	newInput(14, nodeValue_Enum_Scroll("Distribution", self,  0, [ "Uniform", "Random" ]));
 	
-	newInput(15, nodeValue_Trigger("Bake hair", self, false, "Prevent strand reseting to apply manual modification. Unbaking will remove all changes."))
+	newInput(15, nodeValue_Trigger("Bake hair", self, "Prevent strand reseting to apply manual modification. Unbaking will remove all changes."))
 		.setDisplay(VALUE_DISPLAY.button, { name: "Bake", UI : true, onClick: function() { 
 			attributes.use_groom = !attributes.use_groom; 
 			if(attributes.use_groom)

@@ -33,7 +33,7 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		.setDisplay(VALUE_DISPLAY.path_load, { filter: "audio|*.wav" })
 		.rejectArray();
 	
-	newInput(1, nodeValue_Trigger("Sync length", self, false ))
+	newInput(1, nodeValue_Trigger("Sync length", self ))
 		.setDisplay(VALUE_DISPLAY.button, { name: "Sync", UI : true, onClick: function() { 
 			if(content == noone) return;
 			TOTAL_FRAMES = max(1, ceil(content.duration * PROJECT.animator.framerate));

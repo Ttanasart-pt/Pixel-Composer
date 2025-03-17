@@ -33,7 +33,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	newInput(0, nodeValue_Path("Path", self, ""))
 		.setDisplay(VALUE_DISPLAY.path_load, { filter: "Aseprite file|*.ase;*.aseprite" });
 		
-	newInput(1, nodeValue_Trigger("Generate layers", self, false ))
+	newInput(1, nodeValue_Trigger("Generate layers", self ))
 		.setDisplay(VALUE_DISPLAY.button, { name: "Generate", UI : true, onClick: function() /*=>*/ {return refreshLayers()} });
 	
 	newInput(2, nodeValue_Text("Current tag", self, ""));

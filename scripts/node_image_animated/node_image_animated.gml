@@ -56,7 +56,7 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput(4, nodeValue_Enum_Scroll("Loop modes", self,  0, ["Loop", "Ping pong", "Hold last frame", "Hide"]))
 		.rejectArray();
 		
-	newInput(5, nodeValue_Trigger("Set animation length to match", self, false ))
+	newInput(5, nodeValue_Trigger("Set animation length to match", self ))
 		.setDisplay(VALUE_DISPLAY.button, { name: "Match length", UI : true, onClick: function() /*=>*/ { if(array_empty(spr)) return; TOTAL_FRAMES = array_length(spr); } });
 	
 	newInput(6, nodeValue_Bool("Custom frame order", self, false));

@@ -318,6 +318,28 @@ function eval_curve_segment_x(_bz, _x, _tolr = 0.00001) {
 	return eval_curve_segment_t(_bz, _xt);
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////// CMF ////////////////////////////////////////////////////////////////////////////////////////////
+
+function eval_curve_cmf(_c, _res = 128) {
+	var _st  = 1 / (_res - 1);
+	var _cv  = 0;
+	var _cmf = array_create(_res);
+	
+	for( var i = 0; i < _res; i++ ) {
+		var _i = i * _st;
+		var _v = eval_curve_x(_c, _i);
+		
+		_cmf[i] = _cv;
+		_cv    += _v;
+	}
+	
+	for( var i = 0; i < _res; i++ ) // normalize
+		_cmf[i] /= _cv;
+		
+	return _cmf;
+}
+
+
 //////////////////////////////////////////////////////////////////////////////////////////// MISC ////////////////////////////////////////////////////////////////////////////////////////////
 
 function bezier_range(bz) { return [ min(bz[0], bz[2], bz[4], bz[5]), max(bz[0], bz[2], bz[4], bz[5]) ]; }

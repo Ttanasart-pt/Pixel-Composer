@@ -16,19 +16,10 @@ function UUID_generate(length = 32) {
 	return _id;
 }
 
-function irandom_seed(val, seed) {
-	random_set_seed(floor(seed));
-	return irandom(val);
-}
+function irandom_seed(val, seed)            { random_set_seed(floor(seed)); return irandom(val);            }
+function irandom_range_seed(from, to, seed) { random_set_seed(floor(seed)); return irandom_range(from, to); }
 
-function irandom_range_seed(from, to, seed) {
-	random_set_seed(floor(seed));
-	return irandom_range(from, to);
-}
-
-function seed_random(digits = 6) {
-	return irandom_range(power(10, digits - 1), power(10, digits) - 1);
-}
+function seed_random(digits = 6) { return irandom_range(power(10, digits - 1), power(10, digits) - 1); }
 
 function random_seed(val, seed) {
 	random_set_seed(floor(seed));
@@ -94,8 +85,8 @@ function perlin1D(pos, seed, scale = 1, octave = 1, startRange = 0, endRange = 1
 	return lerp(startRange, endRange, n);
 }
 
-function wiggle(_min = 0, _max = 1, _freq = 1, _time = 0, _seed = 0, _octave = 1) {
-	return perlin1D(_time, _seed, _freq, _octave, _min, _max);
+function wiggle(_min = 0, _max = 1, _freq = 1, _time = 0, _seed = 0, _octave = 1) { 
+	return perlin1D(_time, _seed, _freq, _octave, _min, _max); 
 }
 
 function getWiggle(_min = 0, _max = 1, _freq = 1, _time = 0, _seed = 0, startTime = noone, endTime = noone) {
@@ -149,4 +140,11 @@ function wiggleMap(_seed, _freq, _length) constructor {
 		if(amp == 0) return 0;
 		return map[abs(i) % len] * amp; 
 	}
+}
+
+function random_gaussian(_mean = 0, _var = 1) {
+	var u1 = random(1);
+	var u2 = random(1);
+	var z  = sqrt(-2 * ln(u1)) * cos(2 * pi * u2);
+	return _mean + z * _var;
 }

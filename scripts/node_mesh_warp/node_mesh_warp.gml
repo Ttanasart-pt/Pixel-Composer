@@ -216,7 +216,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput(2, nodeValue_Float("Spring Force", self, 0.5))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(3, nodeValue_Trigger("Mesh", self, false ))
+	newInput(3, nodeValue_Trigger("Mesh", self ))
 		.setDisplay(VALUE_DISPLAY.button, { name: "Generate", UI : true, onClick: function() /*=>*/ {return Mesh_build()} });
 	
 	newInput(4, nodeValue_Bool("Diagonal Link", self, false, "Include diagonal link to prevent drastic grid deformation."));

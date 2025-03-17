@@ -2,7 +2,7 @@ function Node_Trigger(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	name = "Trigger";
 	setDimension(96, 56);
 	
-	newInput(0, nodeValue_Trigger("Trigger", self, false ))
+	newInput(0, nodeValue_Trigger("Trigger", self ))
 		.setDisplay(VALUE_DISPLAY.button, { name: "Trigger" });
 	
 	newOutput(0, nodeValue_Output("Trigger", self, VALUE_TYPE.trigger, false ));

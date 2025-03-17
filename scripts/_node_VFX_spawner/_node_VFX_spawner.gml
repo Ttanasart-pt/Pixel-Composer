@@ -19,7 +19,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	////- Spawn
 	newInput(27, nodeValue_Bool(        "Spawn",            self, true));
 	newInput(16, nodeValue_Enum_Button( "Spawn Type",       self, 0, [ "Stream", "Burst", "Trigger" ]));
-	newInput(44, nodeValue_Trigger(     "Spawn",            self, false )).setDisplay(VALUE_DISPLAY.button, { name: "Trigger" });
+	newInput(44, nodeValue_Trigger(     "Spawn",            self )).setDisplay(VALUE_DISPLAY.button, { name: "Trigger" });
 	newInput( 1, nodeValue_Int(         "Spawn Delay",      self, 4, "Frames delay between each particle spawn." ));
 	newInput(51, nodeValue_Int(         "Burst Duration",   self, 1 ));
 	newInput( 2, nodeValue_Range(       "Spawn Amount",     self, [ 2, 2 ], { linked : true })).setTooltip("Amount of particle spawn in that frame.");
@@ -101,7 +101,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	newInput(21, nodeValue_Bool("Loop",          self, true ));
 	newInput(25, nodeValue_Int("Boundary Data",  self, [])).setArrayDepth(1).setVisible(false, true);
 	newInput(31, nodeValue_Surface("Atlas",      self, [])).setArrayDepth(1);
-	newInput(48, nodeValue_Trigger("Reset Seed", self, false )).setDisplay(VALUE_DISPLAY.button, { name: "Trigger" })
+	newInput(48, nodeValue_Trigger("Reset Seed", self )).setDisplay(VALUE_DISPLAY.button, { name: "Trigger" })
 	
 	array_foreach(inputs, function(i) /*=>*/ {return i.rejectArray()}, 1);
 	input_len = array_length(inputs);

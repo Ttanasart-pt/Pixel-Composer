@@ -5,7 +5,7 @@ function __Node_3D_Obj(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		.setDisplay(VALUE_DISPLAY.path_load, { filter: "3d object|*.obj" })
 		.rejectArray();
 	
-	newInput(1, nodeValue_Trigger("Generate", self, false ))
+	newInput(1, nodeValue_Trigger("Generate", self ))
 		.setDisplay(VALUE_DISPLAY.button, { name: "Generate", UI : true, onClick: function() { 
 			updateObj();
 			doUpdate(); 

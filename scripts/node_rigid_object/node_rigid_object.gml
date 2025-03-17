@@ -52,7 +52,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		.rejectArray()
 		.setAnimable(false);
 	
-	newInput(9, nodeValue_Trigger("Generate mesh", self, false ))
+	newInput(9, nodeValue_Trigger("Generate mesh", self ))
 		.setDisplay(VALUE_DISPLAY.button, { name: "Generate", UI : true, onClick: function() /*=>*/ {return generateAllMesh()} });
 	
 	newInput(10, nodeValue_Float("Mesh expansion", self, 0))

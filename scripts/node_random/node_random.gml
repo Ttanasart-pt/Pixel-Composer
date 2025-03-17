@@ -1,27 +1,209 @@
 function Node_Random(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
-	name		= "Random";
-	color		= COLORS.node_blend_number;
-	
+	name  = "Random";
+	color = COLORS.node_blend_number;
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Int("Seed", self, irandom(99999)));
+	inputs   = array_create(22);
+	distList = [ "Uniform", "Gaussian", "Bernoulli (True/False)", "Binomial", "Custom" ];
 	
-	newInput(1, nodeValue_Float("From", self, 0));
+	newInput( 0, nodeValueSeed(self, VALUE_TYPE.integer));
+	newInput( 9, nodeValue_Enum_Scroll( "Distribution", self, 0, distList));
+	newInput(10, nodeValue_Curve( "Dist. Curve",        self, CURVE_DEF_11)).setAnimable(false);
+	newInput( 1, nodeValue_f( "From",     self, 0));
+	newInput( 2, nodeValue_f( "To",       self, 1));
+	newInput(11, nodeValue_f( "Mean",     self, 0));
+	newInput(12, nodeValue_f( "Variance", self, 1));
+	newInput(13, nodeValue_s( "p",        self, .5));
+	newInput(14, nodeValue_f( "t",        self, 1));
 	
-	newInput(2, nodeValue_Float("To", self, 1));
+	newInput( 3, nodeValue_Bool(        "Shuffle",         self, false));
+	newInput( 4, nodeValue_Enum_Scroll( "Mode",            self, 0, [ "Per Frame", "Periordic", "Trigger", "Probabilistic", "Accumulative" ]));
+	newInput( 5, nodeValue_Int(         "Period",          self, 1));
+	newInput( 6, nodeValue_Int(         "Period Shift",    self, 0));
+	newInput( 7, nodeValue_Trigger(     "Trigger",         self)).setDisplay(VALUE_DISPLAY.button, { name: "Trigger" });
+	newInput( 8, nodeValue_Slider(      "Probability",     self, 1));
+	newInput(20, nodeValue_Float(       "Average Period",  self, 4));
+	newInput(21, nodeValue_Float(       "Period Variance", self, 2));
 	
-	newInput(3, nodeValue_Bool("Shuffle", self, false));
+	newInput(15, nodeValue_Enum_Scroll( "Smoothing",    self, 0, [ "None", "Moving Average", "Convolution", "Lerp" ]));
+	newInput(16, nodeValue_Int(         "Window Size",  self, 5));
+	newInput(17, nodeValue_Int(         "Kernel Span",  self, 3));
+	newInput(18, nodeValue_Curve(       "Kernel",       self, CURVE_DEF_11));
+	newInput(19, nodeValue_Slider(      "Lerp Ratio",   self, .5));
 	
 	newOutput(0, nodeValue_Output("Result", self, VALUE_TYPE.float, 0));
 	
-	static processData_prebatch  = function() {
-		var _shuffle = getSingleValue(3);
-		update_on_frame = _shuffle;
-	}
+	input_display_list = [ 
+		["Random",  false   ], 0, 9, 10, 1, 2, 11, 12, 13, 14, 
+		["Shuffle", false, 3], 4, 5, 6, 7, 8, 20, 21, 
+		["Smooth",  false   ], 15, 16, 17, 18, 19, 
+	];
+	
+	accPool    = [];
+	seed       = [];
+	moving_Avg = [];
+	kernels    = [[]];
+	
+	distCurveCMF = {
+		curve : [],
+		cmf   : {},
+	};
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) {
-		random_set_seed(_data[0] + _data[3] * CURRENT_FRAME * pi);
-		return random_range(_data[1], _data[2]);
+		var _seed    = _data[ 0];
+		var _distTyp = _data[ 9];
+		var _distCrv = _data[10];
+		var _from    = _data[ 1];
+		var _to      = _data[ 2];
+		var _mean    = _data[11];
+		var _var     = _data[12];
+		var _p       = _data[13];
+		var _t       = _data[14];
+		
+		var _shuffle = _data[ 3];
+		var _shfMode = _data[ 4];
+		var _shfPer  = _data[ 5];
+		var _shfSft  = _data[ 6];
+		var _shfTrig = _data[ 7];
+		var _shfProb = _data[ 8];
+		var _shfAcAg = _data[20];
+		var _shfAcVa = _data[21];
+		
+		var _smtTyp  = _data[15];
+		var _smtWin  = _data[16];
+		var _smtKrs  = _data[17];
+		var _smtKer  = _data[18];
+		var _smtLrp  = _data[19];
+		
+		update_on_frame = _shuffle;
+		
+		inputs[ 1].setVisible(_distTyp == 0 || _distTyp == 4);
+		inputs[ 2].setVisible(_distTyp == 0 || _distTyp == 4);
+		inputs[11].setVisible(_distTyp == 1);
+		inputs[12].setVisible(_distTyp == 1);
+		inputs[13].setVisible(_distTyp == 2 || _distTyp == 3);
+		inputs[14].setVisible(_distTyp == 3);
+		inputs[10].setVisible(_distTyp == 4);
+		
+		inputs[ 5].setVisible(_shfMode == 1);
+		inputs[ 6].setVisible(_shfMode == 1);
+		inputs[ 7].setVisible(_shfMode == 2);
+		inputs[ 8].setVisible(_shfMode == 3);
+		inputs[20].setVisible(_shfMode == 4);
+		inputs[21].setVisible(_shfMode == 4);
+		
+		inputs[16].setVisible(_smtTyp == 1);
+		inputs[17].setVisible(_smtTyp == 2);
+		inputs[18].setVisible(_smtTyp == 2);
+		inputs[19].setVisible(_smtTyp == 3);
+		
+		if(CURRENT_FRAME == 0 || !_shuffle) {
+			seed[_array_index]       = _seed
+			accPool[_array_index]    = 0;
+			moving_Avg[_array_index] = 0;
+		}
+		random_set_seed(seed[_array_index]);
+		
+		if(_shuffle) {
+			switch(_shfMode) {
+				case 0 :                                              seed[_array_index] = seed_random(); break;
+				case 1 : if((CURRENT_FRAME - _shfSft) % _shfPer == 0) seed[_array_index] = seed_random(); break;
+				case 2 : if(_shfTrig)                                 seed[_array_index] = seed_random(); break;
+				
+				case 3 : 
+					random_set_seed(seed[_array_index] + CURRENT_FRAME);
+					if(random(1) <= _shfProb) seed[_array_index] = seed_random(); 
+					break;
+					
+				case 4 : 
+					random_set_seed(seed[_array_index] + CURRENT_FRAME);
+					var _acfr = random_gaussian(_shfAcAg, _shfAcVa);
+					if(_acfr > 0) accPool[_array_index] += 1 / _acfr;
+					
+					if(accPool[_array_index] > 1) seed[_array_index] = seed_random();
+					accPool[_array_index] = frac(accPool[_array_index]);
+					break;
+			}
+		}
+		
+		random_set_seed(seed[_array_index]);
+		var _r;
+		
+		switch(_distTyp) {
+			case 0 : _r = random_range(_from, _to);     break;
+			case 1 : _r = random_gaussian(_mean, _var); break;
+			case 2 : _r = random(1) <= _p;              break;
+			
+			case 3 : 
+				_r = 0;
+				repeat(_t) _r += random(1) <= _p;
+				break;
+				
+			case 4 : 
+				if(!array_equals(distCurveCMF.curve, _distCrv)) {
+					distCurveCMF.curve = _distCrv;
+					distCurveCMF.cmf   = eval_curve_cmf(_distCrv);
+				}
+				
+				var _len = array_length(distCurveCMF.cmf) - 1;
+				var _st = 0;
+				var _ed = _len;
+				var _cr = random(1);
+				
+				while(_ed - _st > 1) {
+					if(distCurveCMF.cmf[_st] == _cr) break;
+					if(distCurveCMF.cmf[_ed] == _cr) break;
+					
+					var _m = round(_st + _ed) / 2;
+					if(distCurveCMF.cmf[_m] > _cr) _ed = _m;
+					else _st = _m;
+				}
+				
+				var _ast = lerp(_st, _ed, (_cr - distCurveCMF.cmf[_st]) / (distCurveCMF.cmf[_ed] - distCurveCMF.cmf[_st]));
+				_r = lerp(_from, _to, _ast / _len);
+				break;
+		}
+		
+		var _res = _r;
+		
+		switch(_smtTyp) {
+			case 0 : break;
+			
+			case 1 : 
+				var _moving_Avg  = moving_Avg[_array_index] * clamp(CURRENT_FRAME, 0, _smtWin - 1) + _r;
+				    
+			    moving_Avg[_array_index] = _moving_Avg / clamp(CURRENT_FRAME + 1, 1, _smtWin);
+			    _res = moving_Avg[_array_index];
+			    break;
+			    
+		    case 2 : 
+		    	kernels[_array_index] = array_verify(kernels[_array_index], TOTAL_FRAMES);
+		    	
+		    	var _k = kernels[_array_index];
+	    	        _k[CURRENT_FRAME] = _r;
+		    	
+		    	if(_smtKrs <= 0) break;
+		    	var _tot = 0;
+		    	var _wei = 0;
+		    	
+		    	for( var i = -_smtKrs; i <= _smtKrs; i++ ) {
+		    		var _fr  = CURRENT_FRAME + i;
+		    		if(_fr < 0 || _fr >= TOTAL_FRAMES) continue;
+		    		
+		    		var _x   = abs(i) / _smtKrs;
+		    		var _inf = eval_curve_x(_smtKer, _x);
+		    		
+		    		_tot += _inf * _k[_fr];
+					_wei += _inf;
+		    	}
+		    	
+		    	_res = _tot / _wei;
+		    	break;
+		    	
+		    case 3 : _res = lerp(_output, _res, _smtLrp); break;
+		}
+		
+		return _res;
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
