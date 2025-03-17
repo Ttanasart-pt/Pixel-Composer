@@ -17,11 +17,12 @@ function Node_Feedback_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	junc_in  = noone;
 	junc_out = noone;
 	
-	value_buffer = noone;
+	value_buffer   = noone;
+	buffered_frame = noone;
 	
-	static bypassConnection = function() { return CURRENT_FRAME > 0; }
-	static bypassNextNode   = function() { return false; }
-	static getNextNode      = function() { return [] };
+	static bypassConnection = function() /*=>*/ {return CURRENT_FRAME > 0};
+	static bypassNextNode   = function() /*=>*/ {return false};
+	static getNextNode      = function() /*=>*/ {return []};
 	
 	static connectJunctions = function(jFrom, jTo) {
 		junc_in  = jFrom.is_dummy? jFrom.dummy_get() : jFrom;
@@ -43,6 +44,8 @@ function Node_Feedback_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	}
 	
 	static updateValue = function() {
+		if(!IS_PLAYING && CURRENT_FRAME != 0 && CURRENT_FRAME != buffered_frame + 1) return;
+		
 		var type = junc_out.type;
 		var val  = junc_out.getValue();
 		
@@ -52,10 +55,10 @@ function Node_Feedback_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) con
 				value_buffer = surface_array_clone(val);
 				break;
 				
-			default :
-				value_buffer = variable_clone(val);
-				break;
+			default : value_buffer = variable_clone(val);
 		}
+		
+		buffered_frame = CURRENT_FRAME;
 	}
 	
 	static getValue = function(arr) {

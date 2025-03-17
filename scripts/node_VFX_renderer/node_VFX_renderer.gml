@@ -46,11 +46,17 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	setDynamicInput(2, true, VALUE_TYPE.particle);
 	dyna_input_check_shift = 1;
 	
+	attributes.cache = true;
+	array_push(attributeEditors, "Cache");
+	array_push(attributeEditors, [ "Cache Data", function() /*=>*/ {return attributes.cache}, new checkBox(function() /*=>*/ { attributes.cache = !attributes.cache; }) ]);
+	
 	setTrigger(2, "Clear cache", [ THEME.cache, 0, COLORS._main_icon ]);
 	
 	static onInspector2Update = function() /*=>*/ {return clearCache()};
 	
 	static step = function() {
+		use_cache = attributes.cache? CACHE_USE.auto : CACHE_USE.none;
+		
 		var _typ = getInputData(2);
 		
 		inputs[3].setVisible(_typ == PARTICLE_RENDER_TYPE.line);
