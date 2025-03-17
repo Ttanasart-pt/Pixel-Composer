@@ -1,8 +1,7 @@
 function canvas_tool_selection_magic(selector, toolAttr) : canvas_tool_selection(selector) constructor {
 	 
-	self.tool_attribute = toolAttr;
-	
-	selecting = false;
+	tool_attribute = toolAttr;
+	selecting      = false;
 	
 	function step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		

@@ -1,10 +1,8 @@
-//
-// Simple passthrough fragment shader
-//
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 uniform vec2 dimension;
+uniform vec2 position;
 uniform int tile_type;
 
 uniform int useMask;

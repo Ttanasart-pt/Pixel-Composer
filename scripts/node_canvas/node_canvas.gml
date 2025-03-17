@@ -1244,8 +1244,19 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			draw_surface_safe(val);
 		surface_reset_shader();
 		
+		if(nodeTool == noone && tool_selection.is_selected) {
+			surface_set_target(preview_draw_final);
+				var _fore = tool_selection.selection_surface;
+				var _pos  = tool_selection.selection_position;
+				
+				draw_surface_safe(_fore, _pos[0], _pos[1]);
+			surface_reset_target();
+		}
+		
 		return preview_draw_final;
 	}
+	
+	static getGraphPreviewSurface = function() /*=>*/ {return getPreviewValues()};
 	
 	////- Serialize
 	
