@@ -13,42 +13,73 @@ BLEND_TYPES = [
 	"Hue", "Saturation", "Luminosity", 
 ];
 
+enum BLEND_MODE {
+	normal       = 0,
+	replace      = 1,
+	//             2
+	multiply     = 3,
+	color_burn   = 4,
+	linear_burn  = 5,
+	minimum      = 6,
+	//             7
+	add          = 8,
+	screen       = 9,
+	color_dodge  = 10,
+	maximum      = 11,
+	//             12
+	overlay      = 13,
+	soft_light   = 14,
+	hard_light   = 15,
+	vivid_light  = 16,
+	linear_light = 17,
+	pin_light    = 18,
+	//             19
+	difference   = 20,
+	exclusion    = 21,
+	subtract     = 22,
+	divide       = 23,
+	//             24
+	hue          = 25,
+	saturation   = 26,
+	luminosity   = 27,
+}
+
 global.node_blend_keys = array_create_ext(array_length(BLEND_TYPES), function(i) /*=>*/ {return string_lower(BLEND_TYPES[i])});
 
-function draw_surface_blend(background, foreground, blend = 0, alpha = 1, _pre_alp = true, _mask = 0, tile = 0) {
+function draw_surface_blend(background, foreground, blend = BLEND_MODE.normal, alpha = 1, _pre_alp = true, _mask = 0, tile = 0) {
 	if(!is_surface(background)) return;
 	
 	var sh = sh_blend_normal
-	switch(array_safe_get_fast(BLEND_TYPES, blend)) {
-		case "Normal" :			sh = sh_blend_normal			break;
-		case "Replace" :		sh = sh_blend_replace;			break;
+	switch(blend) {
+		case BLEND_MODE.normal :       sh = sh_blend_normal        break;
+		case BLEND_MODE.replace :      sh = sh_blend_replace;      break;
 		
-		case "Multiply" :		sh = sh_blend_multiply;			break;
-		case "Color Burn" :		sh = sh_blend_color_burn;		break;
-		case "Linear Burn" :	sh = sh_blend_linear_burn;		break;
-		case "Minimum" :		sh = sh_blend_min;				break;
+		case BLEND_MODE.multiply :     sh = sh_blend_multiply;     break;
+		case BLEND_MODE.color_burn :   sh = sh_blend_color_burn;   break;
+		case BLEND_MODE.linear_burn :  sh = sh_blend_linear_burn;  break;
+		case BLEND_MODE.minimum :      sh = sh_blend_min;          break;
 		
-		case "Add" :			sh = sh_blend_add;				break;
-		case "Screen" :			sh = sh_blend_screen;			break;
-		case "Color Dodge" :	sh = sh_blend_color_dodge;		break;
-		case "Linear Dodge" :	sh = sh_blend_linear_dodge;		break;
-		case "Maximum" :		sh = sh_blend_max;				break;
+		case BLEND_MODE.add :          sh = sh_blend_add;          break;
+		case BLEND_MODE.screen :       sh = sh_blend_screen;       break;
+		case BLEND_MODE.color_dodge :  sh = sh_blend_color_dodge;  break;
+		// case BLEND_MODE. :             sh = sh_blend_linear_dodge; break;
+		case BLEND_MODE.maximum :      sh = sh_blend_max;          break;
 		
-		case "Overlay" :		sh = sh_blend_overlay;			break;
-		case "Soft Light" :		sh = sh_blend_soft_light;		break;
-		case "Hard Light" :		sh = sh_blend_hard_light;		break;
-		case "Vivid Light" :	sh = sh_blend_vivid_light;		break;
-		case "Linear Light" :	sh = sh_blend_linear_light;		break;
-		case "Pin Light" :		sh = sh_blend_pin_light;		break;
+		case BLEND_MODE.overlay :      sh = sh_blend_overlay;      break;
+		case BLEND_MODE.soft_light :   sh = sh_blend_soft_light;   break;
+		case BLEND_MODE.hard_light :   sh = sh_blend_hard_light;   break;
+		case BLEND_MODE.vivid_light :  sh = sh_blend_vivid_light;  break;
+		case BLEND_MODE.linear_light : sh = sh_blend_linear_light; break;
+		case BLEND_MODE.pin_light :    sh = sh_blend_pin_light;    break;
 		
-		case "Difference" :		sh = sh_blend_difference;		break;
-		case "Exclusion" :		sh = sh_blend_exclusion;		break;
-		case "Subtract" :		sh = sh_blend_subtract;			break;
-		case "Divide" :			sh = sh_blend_divide;			break;
+		case BLEND_MODE.difference :   sh = sh_blend_difference;   break;
+		case BLEND_MODE.exclusion :    sh = sh_blend_exclusion;    break;
+		case BLEND_MODE.subtract :     sh = sh_blend_subtract;     break;
+		case BLEND_MODE.divide :       sh = sh_blend_divide;       break;
 		
-		case "Hue" :			sh = sh_blend_hue;				break;
-		case "Saturation" :		sh = sh_blend_sat;				break;
-		case "Luminosity" :		sh = sh_blend_luma;				break;
+		case BLEND_MODE.hue :          sh = sh_blend_hue;          break;
+		case BLEND_MODE.saturation :   sh = sh_blend_sat;          break;
+		case BLEND_MODE.luminosity :   sh = sh_blend_luma;         break;
 		
 		// case "XOR" :			sh = sh_blend_xor;				break;
 		default: return;

@@ -6,7 +6,7 @@ function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _
 	setDisplay(VALUE_DISPLAY.vector, _data);
 	def_length = 2;
 	
-	/////============== GET =============
+	////- GET
 	
 	static valueProcess = function(value, nodeFrom = undefined, applyUnit = true, arrIndex = 0) {
 		var typeFrom = nodeFrom == undefined? VALUE_TYPE.any : nodeFrom.type;
@@ -77,6 +77,43 @@ function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _
 		
 		return animator.getValue(_time);
 	}
+
+	////- DRAW
+	
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _typ = 0, _sca = [ 1, 1 ]) {
+		if(expUse || value_from != noone) return -1;
+		
+		if(is_anim) {
+			var ox, oy, nx, ny;
+			draw_set_color(COLORS._main_accent);
+			
+			if(sep_axis) {
+				
+				
+			} else {
+				for( var i = 0, n = array_length(animator.values); i < n; i++ ) {
+					var _v = animator.values[i].value;
+					    _v = unit.apply(_v, node.preview_index);
+					
+					nx = _x + _v[0] * _s;
+					ny = _y + _v[1] * _s;
+					
+					draw_circle_prec(nx, ny, 4, false);
+					if(i) {
+						draw_set_alpha(.5);
+						draw_line_dashed(ox, oy, nx, ny);
+						draw_set_alpha(1);
+					}
+					
+					ox = nx;
+					oy = ny;
+				}
+			}
+		}
+		
+		return preview_overlay_vector(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _typ, _sca);
+	}
+	
 }
 
 function __NodeValue_IVec2(_name, _node, _value, _data = {}) : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.integer, _value, "") constructor {
