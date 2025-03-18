@@ -62,7 +62,15 @@ function filename_ext_verify(_path, _ext) {
 	return filename_dir(_path) + "/" + filename_name_only(_path) + _ext;
 }
 	
-function string_to_var(str)            { INLINE return string_replace_all(string_replace_all(string_lower(str), " ", "_"), "/", "_"); }
+function string_to_var(str) {
+	str = string_lower(str);
+	str = string_replace_all(str, " ", "_");
+	str = string_replace_all(str, "/", "_");
+	str = string_replace_all(str, "-", "_");
+	
+	return str;
+}
+
 function string_to_var2(context, name) { INLINE return string_to_var(context == ""? name : $"{context} {name}"); }
 function string_quote(str)             { INLINE return $"\"{str}\""; }
 
