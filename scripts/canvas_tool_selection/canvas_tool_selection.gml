@@ -28,14 +28,9 @@ function canvas_tool_selection(_selector) : canvas_tool() constructor {
 			return;
 		}
 		
-		if(key_mod_press(SHIFT))
-			modifySelection(_mask, sel_x0, sel_y0, sel_w, sel_h, true);
-			
-		else if(key_mod_press(ALT))
-			modifySelection(_mask, sel_x0, sel_y0, sel_w, sel_h, false);
-			
-		else 
-			createNewSelection(_mask, sel_x0, sel_y0, sel_w, sel_h);
+		     if(key_mod_press(SHIFT)) modifySelection(_mask, sel_x0, sel_y0, sel_w, sel_h, true);
+		else if(key_mod_press(ALT))   modifySelection(_mask, sel_x0, sel_y0, sel_w, sel_h, false);
+		else                          createNewSelection(_mask, sel_x0, sel_y0, sel_w, sel_h);
 	}
 	
 	function createSelectionFromSurface(surface, sel_x0 = 0, sel_y0 = 0) {
@@ -47,23 +42,17 @@ function canvas_tool_selection(_selector) : canvas_tool() constructor {
 		selection_surface = surface_verify(selection_surface, sel_w, sel_h);
 		selection_mask    = surface_verify(selection_mask,    sel_w, sel_h);
 		
-		surface_set_target(selection_surface);
-			DRAW_CLEAR
-			BLEND_OVERRIDE
+		surface_set_shader(selection_surface, noone, true, BLEND.over);
 			draw_surface_safe(surface);
-			BLEND_NORMAL
-		surface_reset_target();
+		surface_reset_shader();
 		
-		surface_set_target(selection_mask);
-			DRAW_CLEAR
-			BLEND_OVERRIDE
+		surface_set_shader(selection_mask, noone, true, BLEND.over);
 			draw_surface_safe(surface);
-			BLEND_NORMAL
-		surface_reset_target();
+		surface_reset_shader();
 		
 		selection_position = [ sel_x0, sel_y0 ];
 		selection_size     = [ sel_w,  sel_h  ];
-		is_selected = true;
+		is_selected        = true;
 	}
 	
 	function modifySelection(_mask, sel_x0, sel_y0, sel_w, sel_h, _add) {
@@ -76,6 +65,7 @@ function canvas_tool_selection(_selector) : canvas_tool() constructor {
 			_y0 = min(sel_y0,         selection_position[1]);
 			_x1 = max(sel_x0 + sel_w, selection_position[0] + selection_size[0]);
 			_y1 = max(sel_y0 + sel_h, selection_position[1] + selection_size[1]);
+			
 		} else {
 			var __nx0 = sel_x0;
 			var __ny0 = sel_y0;
@@ -136,8 +126,9 @@ function canvas_tool_selection(_selector) : canvas_tool() constructor {
 		
 		surface_set_target(selection_surface);
 			DRAW_CLEAR
+			BLEND_OVERRIDE
 			draw_surface_safe(canvas_surface, -sel_x0, -sel_y0);
-							
+			
 			BLEND_MULTIPLY
 				draw_surface_safe(_mask);
 			BLEND_NORMAL
@@ -204,7 +195,7 @@ function canvas_tool_selection(_selector) : canvas_tool() constructor {
 		var _selectionSurf = surface_create(_sw, _sh);
 		var _drawnSurface  = surface_create(_sw, _sh);
 		
-		surface_set_shader(_selectionSurf, noone);
+		surface_set_shader(_selectionSurf, noone, true, BLEND.over);
 			draw_surface(selection_surface, selection_position[0], selection_position[1]);
 		surface_reset_shader();
 		
@@ -217,7 +208,7 @@ function canvas_tool_selection(_selector) : canvas_tool() constructor {
 			shader_set_surface("back", canvas_surface);
 			shader_set_surface("fore", _selectionSurf);
 			
-			draw_sprite_stretched(s_fx_pixel, 0, 0, 0, _sw, _sh);
+			draw_empty();
 		surface_reset_shader();
 		
 		node.setCanvasSurface(_drawnSurface);

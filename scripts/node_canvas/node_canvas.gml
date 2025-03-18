@@ -1235,6 +1235,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		}
 		
 		var val = outputs[0].getValue();
+		
 		surface_set_shader(preview_draw_final, isUsingTool("Eraser")? sh_blend_subtract_alpha : sh_blend_normal, true, BLEND.over);
 			shader_set_surface("fore",    preview_draw_surface);
 			shader_set_i("useMask",       false);
