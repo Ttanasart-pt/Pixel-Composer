@@ -101,18 +101,14 @@ function canvas_tool_selection(_selector) : canvas_tool() constructor {
 		
 		var _selection_mask = surface_create(_nw, _nh);
 		
-		surface_set_target(_selection_mask);
-			DRAW_CLEAR
-			BLEND_OVERRIDE
+		surface_set_shader(_selection_mask, noone, true, BLEND.over);
 			draw_surface_safe(selection_mask, _ox, _oy);
 			
 			if(_add) BLEND_ADD
 			else     BLEND_SUBTRACT
 			
 			draw_surface_safe(_mask, _nx, _ny);
-			
-			BLEND_NORMAL
-		surface_reset_target();
+		surface_reset_shader();
 		
 		createNewSelection(_selection_mask, _x0, _y0, _nw, _nh);
 		surface_free(_selection_mask);
@@ -124,26 +120,21 @@ function canvas_tool_selection(_selector) : canvas_tool() constructor {
 		selection_surface = surface_verify(selection_surface, sel_w, sel_h);
 		selection_mask    = surface_verify(selection_mask,    sel_w, sel_h);
 		
-		surface_set_target(selection_surface);
-			DRAW_CLEAR
-			BLEND_OVERRIDE
+		surface_set_shader(selection_surface, noone, true, BLEND.over);
 			draw_surface_safe(canvas_surface, -sel_x0, -sel_y0);
-			
 			BLEND_MULTIPLY
-				draw_surface_safe(_mask);
-			BLEND_NORMAL
-		surface_reset_target();
-		
-		surface_set_target(selection_mask);
-			DRAW_CLEAR
 			draw_surface_safe(_mask);
-		surface_reset_target();
+		surface_reset_shader();
+		
+		surface_set_shader(selection_mask, noone, true, BLEND.normal);
+			draw_surface_safe(_mask);
+		surface_reset_shader();
 		
 		node.storeAction();
 		surface_set_target(canvas_surface);
-			gpu_set_blendmode(bm_subtract);
-			draw_surface_safe(selection_surface, sel_x0, sel_y0);
-			gpu_set_blendmode(bm_normal);
+			BLEND_SUBTRACT
+			draw_surface_safe(_mask, sel_x0, sel_y0);
+			BLEND_NORMAL
 		surface_reset_target();
 						
 		node.surface_store_buffer();
@@ -160,19 +151,14 @@ function canvas_tool_selection(_selector) : canvas_tool() constructor {
 		selection_surface = surface_verify(selection_surface, sel_w, sel_h);
 		selection_mask    = surface_verify(selection_mask,    sel_w, sel_h);
 		
-		surface_set_target(selection_surface);
-			DRAW_CLEAR
+		surface_set_shader(selection_surface, noone, true, BLEND.over);
 			draw_surface_safe(canvas_surface);
-		surface_reset_target();
+		surface_reset_shader();
 		
-		surface_set_target(selection_mask);
-			draw_clear(c_white);
-		surface_reset_target();
+		surface_clear(selection_mask, c_white, 1);
 		
 		node.storeAction();
-		surface_set_target(canvas_surface);
-			DRAW_CLEAR
-		surface_reset_target();
+		surface_clear(canvas_surface);
 						
 		node.surface_store_buffer();
 						
@@ -183,7 +169,7 @@ function canvas_tool_selection(_selector) : canvas_tool() constructor {
 	
 	function copySelection() {
 		var s = surface_encode(selection_surface, false);
-		s.position = selection_position;
+	    s.position = selection_position;
 		clipboard_set_text(json_stringify(s));
 	}
 	
@@ -199,7 +185,7 @@ function canvas_tool_selection(_selector) : canvas_tool() constructor {
 			draw_surface(selection_surface, selection_position[0], selection_position[1]);
 		surface_reset_shader();
 		
-		surface_set_shader(_drawnSurface, sh_canvas_apply_draw);
+		surface_set_shader(_drawnSurface, sh_canvas_apply_draw, false, BLEND.over);
 			shader_set_i("drawLayer", _drawLay);
 			shader_set_i("eraser",    0);
 			shader_set_f("channels",  1, 1, 1, 1);
@@ -316,7 +302,7 @@ function canvas_tool_selection(_selector) : canvas_tool() constructor {
 		var sel_w = surface_get_width_safe(selection_surface)  * _s;
 		var sel_h = surface_get_height_safe(selection_surface) * _s;
 		
-		draw_surface_ext_safe(selection_surface, pos_x, pos_y, _s, _s, 0, c_white, 1);
+		// draw_surface_ext_safe(selection_surface, pos_x, pos_y, _s, _s, 0, c_white, 1);
 					
 		draw_set_color(c_black);
 		draw_rectangle(pos_x, pos_y, pos_x + sel_w, pos_y + sel_h, true);

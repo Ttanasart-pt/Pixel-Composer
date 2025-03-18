@@ -244,7 +244,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		preview_draw_surface  = surface_create_empty(1, 1);
 		preview_draw_tile     = surface_create_empty(1, 1);
 		preview_draw_mask     = surface_create_empty(1, 1);
-		preview_draw_final    = surface_create_empty(1, 1);
+		preview_draw_final    = [ 0, 0 ];
 		
 		draw_stack = ds_list_create();
 		
@@ -837,7 +837,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			
 			prev_surface 		  = surface_verify(prev_surface,		  _dim[0], _dim[1]);
 			preview_draw_surface  = surface_verify(preview_draw_surface,  _dim[0], _dim[1]);
-			preview_draw_final    = surface_verify(preview_draw_mask,     _dim[0], _dim[1]);
+			
 			preview_draw_mask     = surface_verify(preview_draw_mask,     _sw,     _sh);
 		#endregion
 		
@@ -1229,14 +1229,20 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	}
 	
 	static getPreviewValues = function() {
+		var _dim = attributes.dimension;
+		preview_draw_final[0] = surface_verify(preview_draw_final[0], _dim[0], _dim[1]);
+		preview_draw_final[1] = surface_verify(preview_draw_final[1], _dim[0], _dim[1]);
+		
 		if(nodeTool != noone && !nodeTool.applySelection) {
-			surface_clear(preview_draw_final);
-			return preview_draw_final;
+			for( var i = 0, n = array_length(preview_draw_final); i < n; i++ )
+				surface_clear(preview_draw_final[i]);
+			return preview_draw_final[0];
 		}
 		
 		var val = outputs[0].getValue();
+		var bg = 0;
 		
-		surface_set_shader(preview_draw_final, isUsingTool("Eraser")? sh_blend_subtract_alpha : sh_blend_normal, true, BLEND.over);
+		surface_set_shader(preview_draw_final[bg], isUsingTool("Eraser")? sh_blend_subtract_alpha : sh_blend_normal, true, BLEND.over);
 			shader_set_surface("fore",    preview_draw_surface);
 			shader_set_i("useMask",       false);
 			shader_set_i("preserveAlpha", false);
@@ -1244,17 +1250,24 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			
 			draw_surface_safe(val);
 		surface_reset_shader();
+		bg = !bg;
 		
 		if(nodeTool == noone && tool_selection.is_selected) {
-			surface_set_target(preview_draw_final);
-				var _fore = tool_selection.selection_surface;
-				var _pos  = tool_selection.selection_position;
+			var _fore = tool_selection.selection_surface;
+			var _pos  = tool_selection.selection_position;
+			
+			surface_set_shader(preview_draw_final[bg], sh_blend_normal_ext);
+				shader_set_surface("fore",    _fore);
+				shader_set_2("dimension",     surface_get_dimension(preview_draw_final[bg]));
+				shader_set_2("foreDimension", surface_get_dimension(_fore));
+				shader_set_2("position",      _pos);
 				
-				draw_surface_safe(_fore, _pos[0], _pos[1]);
-			surface_reset_target();
+				draw_surface_safe(preview_draw_final[!bg]);
+			surface_reset_shader();
+			bg = !bg;
 		}
 		
-		return preview_draw_final;
+		return preview_draw_final[!bg];
 	}
 	
 	static getGraphPreviewSurface = function() /*=>*/ {return getPreviewValues()};

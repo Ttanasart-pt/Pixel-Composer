@@ -1,0 +1,13 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_blend_normal_ext",
+  "name":"sh_blend_normal_ext",
+  "parent":{
+    "name":"blend",
+    "path":"folders/nodes/data/compose/blend.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "tags":[],
+  "type":1,
+}
