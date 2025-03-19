@@ -16,6 +16,9 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	junction_hover     = false;
 	error_notification = noone;
 	
+	receivers = [];
+	open      = true;
+	
 	__jfrom = noone;
 	__key   = noone;
 	
@@ -29,7 +32,10 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	////- Update
 	
-	setTrigger(2, "Create tunnel out", [ THEME.tunnel, 0, COLORS.node_blend_tunnel ]);
+	setTrigger(1, "Tunnel Panel", [ THEME.tunnel_panel, 0, c_white ]);
+	static onInspector1Update = function() { dialogPanelCall(new Panel_Tunnels()); }
+	
+	setTrigger(2, "Create Receiver", [ THEME.tunnel, 0, COLORS.node_blend_tunnel ]);
 	static onInspector2Update = function() {
 		var _nx = x + 160;
 		var _ny = PANEL_GRAPH.getFreeY(_nx, y);
@@ -56,6 +62,22 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		__jfrom = _frm;
 		
 		value_validation[VALIDATION.error] = error_notification != noone;
+		
+		receivers = [];
+		var _keys = ds_map_keys_to_array(project.tunnels_out);
+		
+		for (var i = 0, n = array_length(_keys); i < n; i++) {
+			var _k = _keys[i];
+			
+			if(project.tunnels_out[? _k] != _key)   continue;
+			if(!ds_map_exists(PROJECT.nodeMap, _k)) continue;
+			
+			var node = PROJECT.nodeMap[? _k];
+			if(!node.active || node.group != group) continue;
+			
+			array_push(receivers, _k);
+		}
+		
 	}
 	
 	static resetMap = function() {

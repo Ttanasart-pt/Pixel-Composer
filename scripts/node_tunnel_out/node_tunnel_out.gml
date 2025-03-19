@@ -27,7 +27,10 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	////- Update
 	
-	setTrigger(2, "Goto tunnel in", [ THEME.tunnel, 1, COLORS.node_blend_tunnel ]);
+	setTrigger(1, "Tunnel Panel", [ THEME.tunnel_panel, 0, c_white ]);
+	static onInspector1Update = function() { dialogPanelCall(new Panel_Tunnels()); }
+	
+	setTrigger(2, "Goto Sender", [ THEME.tunnel, 1, COLORS.node_blend_tunnel ]);
 	static onInspector2Update = function() {
 		var _key = inputs[0].getValue();
 		if(!ds_map_exists(project.tunnels_in, _key)) return;
