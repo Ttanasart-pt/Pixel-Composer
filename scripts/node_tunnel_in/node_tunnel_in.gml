@@ -31,7 +31,10 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	setTrigger(2, "Create tunnel out", [ THEME.tunnel, 0, COLORS.node_blend_tunnel ]);
 	static onInspector2Update = function() {
-		var _node = nodeBuild("Node_Tunnel_Out", x + 128, y).skipDefault();
+		var _nx = x + 160;
+		var _ny = PANEL_GRAPH.getFreeY(_nx, y);
+		    
+		var _node = nodeBuild("Node_Tunnel_Out", _nx, _ny).skipDefault();
 		var _key  = inputs[0].getValue();
 		
 		_node.inputs[0].setValue(_key);

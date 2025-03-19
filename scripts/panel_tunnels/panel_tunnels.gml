@@ -91,8 +91,7 @@ function Panel_Tunnels() : PanelContent() constructor {
 			_txt = __txtx("panel_tunnel_create_tunnel", "Create Receiver");
 			if(buttonInstant(THEME.button_hide_fill, bx, by, bw, bh, _m, sc_tunnel.hover, sc_tunnel.active, _txt, THEME.tunnel, 1, col) == 2) {
 				var _nx = node.x + 160;
-				var _ny = node.y;
-				    _ny = PANEL_GRAPH.getFreeY(_nx, _ny);
+				var _ny = PANEL_GRAPH.getFreeY(_nx, node.y);
 				    
 				var _node = nodeBuild("Node_Tunnel_Out", _nx, _ny);
 				_node.inputs[0].setValue(key);

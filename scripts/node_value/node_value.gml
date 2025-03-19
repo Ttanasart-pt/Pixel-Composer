@@ -1658,7 +1658,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			return 1;
 		
 		if(_valueFrom == value_from) {
-			if(_log) noti_warning("whaT");
+			if(_log) noti_warning("setFrom: Can't connect to itself");
 			return -2;
 		}
 		
@@ -1728,13 +1728,14 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		run_in(2, function() /*=>*/ { updateColor(getValue()); });
 		
-		if(setFrom_condition != -1 && !setFrom_condition(_valueFrom))  return -2;
+		if(setFrom_condition != -1 && !setFrom_condition(_valueFrom)) return -2;
 		
 		if(value_from != noone) array_remove(value_from.value_to, self);
 		
 		var _o = animator.getValue();
 		recordAction(ACTION_TYPE.junction_connect, self, value_from);
 		value_from = _valueFrom;
+		
 		array_push(_valueFrom.value_to, self);
 		
 		if(!LOADING && !APPENDING && _valueFrom.node.inline_context != noone && node.manual_ungroupable && (node.inline_input && _valueFrom.node.inline_output))
@@ -1806,7 +1807,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	static searchNodeBackward = function(_node) {
-		if(node == _node) return true;
+		if(node == _node) 
+			return true;
+			
+		if(struct_has(node, "__key") && struct_has(_node, "__key") && node.__key == _node.__key)
+			return true;
+		
 		for(var i = 0; i < array_length(node.inputs); i++) {
 			var _in = node.inputs[i].value_from;
 			if(_in && _in.searchNodeBackward(_node))
