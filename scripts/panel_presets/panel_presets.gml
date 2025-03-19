@@ -209,12 +209,11 @@ function Panel_Presets(_node) : PanelContent() constructor {
 	function drawContent(panel) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
+		var sp = padding - ui(8);
 		var px = padding;
 		var py = padding;
 		var pw = w - padding * 2;
 		var ph = h - padding * 2 - ui(28);
-		
-		var sp = padding - ui(8);;
 		
 		draw_sprite_stretched(THEME.ui_panel_bg, 1, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
 		
@@ -224,7 +223,7 @@ function Panel_Presets(_node) : PanelContent() constructor {
 		var _add_h = ui(24);
 		var _bx    = sp;
 		var _by    = h - _add_h - sp;
-		var _ww    = w;
+		var _ww    = w - sp * 2;
 		
 		if(adding) {
 			tb_add.setFocusHover(sc_presets.active, sc_presets.hover);

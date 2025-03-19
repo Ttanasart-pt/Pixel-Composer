@@ -29,10 +29,7 @@ function Panel_Tunnels() : PanelContent() constructor {
 	KEYBOARD_STRING   = "";
 	
 	search_res = [];
-	tb_search = new textBox(TEXTBOX_INPUT.text, function(str) { 
-		search_string = string(str); 
-		searchNodes();
-	});
+	tb_search = new textBox(TEXTBOX_INPUT.text, function(s) /*=>*/ { search_string = string(s); searchNodes(); });
 	
 	tb_search.align			= fa_left;
 	tb_search.auto_update	= true;
@@ -51,14 +48,14 @@ function Panel_Tunnels() : PanelContent() constructor {
 	}
 	
 	function onResize() { sc_tunnel.resize(w - padding * 2, h - padding * 2 - ui(28 + 40)); }
-
+	
 	sc_tunnel = new scrollPane(w - padding * 2, h - padding * 2 - ui(28 + 40), function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
-		var _h  = 0;
-		var ww  = sc_tunnel.surface_w;
-		var hg  = ui(36);
-		var i   = 0;
-	
+		var _h = 0;
+		var ww = sc_tunnel.surface_w;
+		var hg = ui(36);
+		var i  = 0;
+		
 		var arr = search_string == ""? tunnel_ins : search_res;
 		tunnel_hover  = noone;
 	
@@ -82,20 +79,20 @@ function Panel_Tunnels() : PanelContent() constructor {
 			var bh = ui(28);
 			var bx = ww - ui(4) - bw;
 			var by = _y + (hg - bh) / 2;
-		
-			if(buttonInstant(THEME.button_hide_fill, bx, by, bw, bh, _m, sc_tunnel.hover, sc_tunnel.active, __txtx("panel_node_goto", "Go to node"), THEME.node_goto) == 2)
+			var _txt = __txtx("panel_node_goto", "Go to node");
+			
+			if(buttonInstant(THEME.button_hide_fill, bx, by, bw, bh, _m, sc_tunnel.hover, sc_tunnel.active, _txt, THEME.node_goto) == 2)
 				graphFocusNode(node);
 			bx -= ui(32);
-		
-			if(buttonInstant(THEME.button_hide_fill, bx, by, bw, bh, _m, sc_tunnel.hover, sc_tunnel.active, __txtx("panel_tunnel_create_tunnel", "Create tunnel out"), THEME.tunnel) == 2) {
+			
+			_txt = __txtx("panel_tunnel_create_tunnel", "Create Receiver");
+			if(buttonInstant(THEME.button_hide_fill, bx, by, bw, bh, _m, sc_tunnel.hover, sc_tunnel.active, _txt, THEME.tunnel, 1) == 2) {
 				var _node = nodeBuild("Node_Tunnel_Out", build_x, build_y - 8);
 				_node.inputs[0].setValue(key);
-				
-				if(in_dialog) instance_destroy();
 			}
 			bx -= ui(32);
 		
-			draw_sprite_ui(THEME.tunnel, 1, ui(4 + 16), _y + hg / 2);
+			draw_sprite_ui(THEME.tunnel, 0, ui(4 + 16), _y + hg / 2);
 			draw_set_text(f_p2, fa_left, fa_center, key == ""? COLORS._main_text_sub : COLORS._main_text);
 			draw_text_add(ui(4 + 32 + 4), _y + hg / 2, key == ""? $"[{__txtx("panel_tunnel_no_key", "No key")}]" : key);
 		
@@ -105,7 +102,7 @@ function Panel_Tunnels() : PanelContent() constructor {
 			if(tunnel_select == node) {
 				var amo = ds_map_size(PROJECT.tunnels_out);
 				var k   = ds_map_find_first(PROJECT.tunnels_out);
-	
+				
 				repeat(amo) { 
 					var _k  = k;
 					k = ds_map_find_next(PROJECT.tunnels_out, k);
@@ -139,6 +136,7 @@ function Panel_Tunnels() : PanelContent() constructor {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		scanNodes();
 		
+		var sp = padding - ui(8);
 		var px = padding;
 		var py = padding;
 		var pw = w - padding * 2;
@@ -154,9 +152,9 @@ function Panel_Tunnels() : PanelContent() constructor {
 		sc_tunnel.draw(px, py + ui(40), mx - px, my - (py + ui(40)));
 		
 		var _add_h = ui(24);
-		var _bx    = 0;
-		var _by    = h - _add_h;
-		var _ww    = w;
+		var _bx    = sp;
+		var _by    = h - _add_h - sp;
+		var _ww    = w - sp * 2;
 		var _hov   = pHOVER && point_in_rectangle(mx, my, _bx, _by, _bx + _ww, _by + _add_h);
 		
 		draw_sprite_stretched_ext(THEME.ui_panel, 0, _bx, _by, _ww, _add_h, _hov? COLORS._main_value_positive : COLORS._main_icon, .3 + _hov * .1);
