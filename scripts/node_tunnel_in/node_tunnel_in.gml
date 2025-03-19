@@ -25,12 +25,11 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	newInput(1, nodeValue("Value in", self, CONNECT_TYPE.input, VALUE_TYPE.any, noone ))
 		.setVisible(true, true);
 	
-	setTrigger(2, "Create tunnel out", [ THEME.tunnel, 0, c_white ]);
-	
 	inputs[0].is_modified = true;
 	
 	////- Update
 	
+	setTrigger(2, "Create tunnel out", [ THEME.tunnel, 0, COLORS.node_blend_tunnel ]);
 	static onInspector2Update = function() {
 		var _node = nodeBuild("Node_Tunnel_Out", x + 128, y).skipDefault();
 		var _key  = inputs[0].getValue();
@@ -176,6 +175,7 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		var _key  = inputs[0].getValue();
 		var _keys = ds_map_keys_to_array(project.tunnels_out);
+		insp2UpdateIcon[2] = inputs[1].color_display;
 		
 		draw_set_color(inputs[1].color_display);
 		draw_set_alpha(0.5);

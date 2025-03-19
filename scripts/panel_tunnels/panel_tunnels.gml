@@ -30,6 +30,7 @@ function Panel_Tunnels() : PanelContent() constructor {
 	
 	search_res = [];
 	tb_search  = new textBox(TEXTBOX_INPUT.text, function(s) /*=>*/ { search_string = string(s); searchNodes(); })
+					.setEmpty()
 					.setAlign(fa_left)
 					.setBoxColor(COLORS._main_icon_light)
 					.setAutoUpdate();
@@ -76,6 +77,7 @@ function Panel_Tunnels() : PanelContent() constructor {
 			draw_sprite_stretched_add(THEME.ui_panel, 1, 0, _y, ww, hg, c_white, .1);
 			
 			var key = node.inputs[0].getValue(0);
+			var col = node.inputs[1].color_display;
 			var bw = ui(28);
 			var bh = ui(28);
 			var bx = ww - ui(4) - bw;
@@ -87,7 +89,7 @@ function Panel_Tunnels() : PanelContent() constructor {
 			bx -= ui(32);
 			
 			_txt = __txtx("panel_tunnel_create_tunnel", "Create Receiver");
-			if(buttonInstant(THEME.button_hide_fill, bx, by, bw, bh, _m, sc_tunnel.hover, sc_tunnel.active, _txt, THEME.tunnel, 1) == 2) {
+			if(buttonInstant(THEME.button_hide_fill, bx, by, bw, bh, _m, sc_tunnel.hover, sc_tunnel.active, _txt, THEME.tunnel, 1, col) == 2) {
 				var _nx = node.x + 160;
 				var _ny = node.y;
 				    _ny = PANEL_GRAPH.getFreeY(_nx, _ny);
@@ -97,14 +99,14 @@ function Panel_Tunnels() : PanelContent() constructor {
 			}
 			bx -= ui(32);
 		
-			draw_sprite_ui(THEME.tunnel, 0, ui(4 + 16), _y + hg / 2);
+			draw_sprite_ui(THEME.tunnel, 0, ui(4 + 16), _y + hg / 2, 1, 1, 0, col);
 			draw_set_text(f_p2, fa_left, fa_center, key == ""? COLORS._main_text_sub : COLORS._main_text);
 			draw_text_add(ui(4 + 32 + 4), _y + hg / 2, key == ""? $"[{__txtx("panel_tunnel_no_key", "No key")}]" : key);
 		
 			_y += hg + ui(4);
 			_h += hg + ui(4);
 		
-			if(tunnel_select == node) {
+			// if(tunnel_select == node) {
 				var amo   = ds_map_size(PROJECT.tunnels_out);
 				var _k, k = ds_map_find_first(PROJECT.tunnels_out);
 				
@@ -116,7 +118,7 @@ function Panel_Tunnels() : PanelContent() constructor {
 					if(out != key || !ds_map_exists(PROJECT.nodeMap, _k)) continue;
 					
 					var _node = PROJECT.nodeMap[? _k];
-					draw_sprite_ui(THEME.tunnel, 0, ui(32), _y + ui(10), 0.75, 0.75, 0, COLORS._main_icon);
+					draw_sprite_ui(THEME.tunnel, 0, ui(32), _y + ui(10), 0.75, 0.75, 0, col, .5);
 					draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text_sub);
 					draw_text_add(ui(32 + 16), _y + ui(10), _node.renamed? _node.display_name : _node.name);
 					
@@ -129,7 +131,7 @@ function Panel_Tunnels() : PanelContent() constructor {
 			
 				_y += ui(8);
 				_h += ui(8);
-			}
+			// }
 		}
 	
 		return _h;

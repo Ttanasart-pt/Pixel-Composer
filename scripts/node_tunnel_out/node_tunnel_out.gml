@@ -27,8 +27,7 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	////- Update
 	
-	setTrigger(2, "Goto tunnel in", [ THEME.tunnel, 1, c_white ]);
-	
+	setTrigger(2, "Goto tunnel in", [ THEME.tunnel, 1, COLORS.node_blend_tunnel ]);
 	static onInspector2Update = function() {
 		var _key = inputs[0].getValue();
 		if(!ds_map_exists(project.tunnels_in, _key)) return;
@@ -113,6 +112,7 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		preview_connecting      = true;
 		node.preview_connecting = true;
+		insp2UpdateIcon[2]      = outputs[0].color_display;
 		
 		draw_set_color(outputs[0].color_display);
 		draw_set_alpha(0.5);
