@@ -11,7 +11,7 @@ function Node_Datetime_Get(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	template_guide = [
 		["%s", "Second",   function() /*=>*/ {return string_lead_zero(current_second,  2)} ],
-		["%m", "Minute",   function() /*=>*/ {return string_lead_zero(current_minute,  2)} ],
+		["%n", "Minute",   function() /*=>*/ {return string_lead_zero(current_minute,  2)} ],
 		["%h", "Hour",     function() /*=>*/ {return string_lead_zero(current_hour,    2)} ],
 		-1,
 		
