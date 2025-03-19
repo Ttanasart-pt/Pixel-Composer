@@ -126,6 +126,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	static setRange      = function(_rng_min, _rng_max) /*=>*/ { use_range   = true; range_min = _rng_min; range_max = _rng_max; return self; }
 	
 	static setColor      = function(_v) /*=>*/ { color       = _v;    return self; }
+	static setBoxColor   = function(_v) /*=>*/ { boxColor    = _v;    return self; }
 	static setAlign      = function(_v) /*=>*/ { align       = _v;    return self; }
 	static setHide       = function(_v) /*=>*/ { hide        = _v;    return self; }
 	static setFont       = function(_v) /*=>*/ { font        = _v;    return self; }

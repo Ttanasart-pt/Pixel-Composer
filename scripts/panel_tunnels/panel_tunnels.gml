@@ -29,12 +29,12 @@ function Panel_Tunnels() : PanelContent() constructor {
 	KEYBOARD_STRING   = "";
 	
 	search_res = [];
-	tb_search = new textBox(TEXTBOX_INPUT.text, function(s) /*=>*/ { search_string = string(s); searchNodes(); });
+	tb_search  = new textBox(TEXTBOX_INPUT.text, function(s) /*=>*/ { search_string = string(s); searchNodes(); })
+					.setAlign(fa_left)
+					.setBoxColor(COLORS._main_icon_light)
+					.setAutoUpdate();
 	
-	tb_search.align			= fa_left;
-	tb_search.auto_update	= true;
-	tb_search.boxColor		= COLORS._main_icon_light;
-	WIDGET_CURRENT			= tb_search;
+	WIDGET_CURRENT = tb_search;
 	
 	function searchNodes() {
 		search_res = [];
@@ -87,7 +87,11 @@ function Panel_Tunnels() : PanelContent() constructor {
 			
 			_txt = __txtx("panel_tunnel_create_tunnel", "Create Receiver");
 			if(buttonInstant(THEME.button_hide_fill, bx, by, bw, bh, _m, sc_tunnel.hover, sc_tunnel.active, _txt, THEME.tunnel, 1) == 2) {
-				var _node = nodeBuild("Node_Tunnel_Out", build_x, build_y - 8);
+				var _nx = node.x + 160;
+				var _ny = node.y;
+				    _ny = PANEL_GRAPH.getFreeY(_nx, _ny);
+				    
+				var _node = nodeBuild("Node_Tunnel_Out", _nx, _ny);
 				_node.inputs[0].setValue(key);
 			}
 			bx -= ui(32);
