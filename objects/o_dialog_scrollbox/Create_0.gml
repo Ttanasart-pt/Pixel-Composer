@@ -22,9 +22,10 @@ event_inherited();
 	KEYBOARD_STRING	= "";
 	tb_search = new textBox(TEXTBOX_INPUT.text, function(s) /*=>*/ { search_string = string(s); filterSearch(); })
 					.setFont(f_p2)
-					.setAutoUpdate();
+					.setAutoUpdate()
+					.setEmpty()
+					.setAlign(fa_left);
 	
-	tb_search.align	= fa_left;
 	WIDGET_CURRENT  = tb_search;
 	
 	anchor = ANCHOR.top | ANCHOR.left;
@@ -111,7 +112,7 @@ event_inherited();
 			var _yy  = _ly + hght / 2;
 			
 			if(_act) {
-				if(sc_content.hover && point_in_rectangle(_m[0], _m[1], 0, _ly, _dw, _ly + hght - 1)) {
+				if(sc_content.hover && MOUSE_MOVED && point_in_rectangle(_m[0], _m[1], 0, _ly, _dw, _ly + hght - 1)) {
 					sc_content.hover_content = true;
 					selecting = i;
 					hov       = _val;

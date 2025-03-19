@@ -3,6 +3,7 @@ function Node_Iterator_Input(_x, _y, _group = noone) : Node_Group_Input(_x, _y, 
 	color = COLORS.node_blend_loop;
 	is_group_io  = true;
 	local_output = noone;
+	loopable     = false;
 	
 	manual_ungroupable	 = false;
 	setDimension(96, 48);

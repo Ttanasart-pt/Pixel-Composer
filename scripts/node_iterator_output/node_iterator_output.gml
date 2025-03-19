@@ -2,6 +2,7 @@ function Node_Iterator_Output(_x, _y, _group = noone) : Node_Group_Output(_x, _y
 	name  = "Loop Output";
 	color = COLORS.node_blend_loop;
 	is_group_io = true;
+	loopable    = false;
 	
 	manual_ungroupable = false;
 	setDimension(96, 48);

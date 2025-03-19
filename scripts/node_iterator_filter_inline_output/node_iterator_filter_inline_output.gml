@@ -4,7 +4,9 @@ function Node_Iterator_Filter_Inline_Output(_x, _y, _group = noone) : Node(_x, _
 	loop  = noone;
 	setDimension(96, 48);
 	
+	loopable = false;
 	clonable = false;
+	
 	inline_output        = false;
 	inline_parent_object = "Node_Iterate_Filter_Inline";
 	manual_ungroupable	 = false;

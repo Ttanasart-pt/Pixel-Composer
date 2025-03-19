@@ -221,7 +221,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 	#endregion
 	
-	#region --- attributes ----
+	#region ---- attributes ----
 		attributes.node_param_width = PREFERENCES.node_param_width;
 		attributes.node_width  = 0;
 		attributes.node_height = 0;
@@ -291,6 +291,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		in_VFX           = false;
 		
 		use_trigger      = false;
+		loopable         = true;
 	#endregion
 	
 	#region ---- timeline ----

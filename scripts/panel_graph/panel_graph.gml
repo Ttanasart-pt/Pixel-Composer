@@ -1924,7 +1924,6 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         if(array_length(value_draggings) == 1) {
         	value_dragging  = value_draggings[0];
         	value_draggings = [];
-        	
         }
         
         if(is_instanceof(PANEL_INSPECTOR, Panel_Inspector) && PANEL_INSPECTOR.attribute_hovering != noone) {
@@ -2017,10 +2016,13 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
             }
         }
         
-        if(_connect[0] == -7 && !is(value_dragging.node, Node_Pin)) {
+        var _node = value_dragging.node;
+        var _loopable = !is(_node, Node_Pin) && _connect[1].node.loopable && _connect[2].node.loopable;
+        
+        if(_connect[0] == -7 && _loopable) {
             if(_connect[1].value_from_loop != noone)
                 _connect[1].value_from_loop.destroy();
-               
+			
             var menu = [
                 menuItem("Feedback", function(data) {
                     var junc_in  = data.junc_in;

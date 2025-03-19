@@ -90,8 +90,8 @@ function Node_Composite_Tag(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	        maxy = max(maxy, -_oy + _sh);
 	    }
         
-        var _cx = _dim[0] / 2 - (minx + maxx) / 2;
-        var _cy = _dim[1] / 2 - (miny + maxy) / 2;
+        var _cx = round(_dim[0] / 2 - (minx + maxx) / 2);
+        var _cy = round(_dim[1] / 2 - (miny + maxy) / 2);
         
         _outSurf   = surface_verify(_outSurf, _dim[0], _dim[1]);
         var _trans = array_create(_amo, noone);
@@ -117,8 +117,11 @@ function Node_Composite_Tag(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
                 _ox /= _tagArrAmo;
                 _oy /= _tagArrAmo;
                 
-                draw_surface(_surface, _cx - _ox, _cy - _oy);
-                _trans[i] = [ _cx - _ox, _cy - _oy, 1, 1, 0 ];
+                var _xx = round(_cx - _ox);
+                var _yy = round(_cy - _oy);
+                
+                draw_surface(_surface, _xx, _yy);
+                _trans[i] = [ _xx, _yy, 1, 1, 0 ];
             }
         surface_reset_shader();
         

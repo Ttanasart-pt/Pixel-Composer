@@ -4,6 +4,7 @@ function Node_Feedback_Input(_x, _y, _group = noone) : Node_Group_Input(_x, _y, 
 	is_group_io = true;
 	setDimension(96, 48);
 	
+	loopable    = false;
 	feedbackOut = noone;
 	
 	outputs[0].getValueDefault = method(outputs[0], outputs[0].getValueRecursive); //Get value from outside loop
