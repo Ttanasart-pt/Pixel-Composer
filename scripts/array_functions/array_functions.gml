@@ -46,6 +46,16 @@
 		return arr;
 	}
 	
+	function array_verify_min(arr, length) {
+		INLINE
+		
+		if(!is_array(arr)) return array_create(length);
+		if(array_length(arr) >= length) return arr;
+		
+		array_resize(arr, length);
+		return arr;
+	}
+	
 	function array_verify(arr, length) {
 		INLINE
 		

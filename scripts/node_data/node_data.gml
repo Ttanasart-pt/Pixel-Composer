@@ -680,7 +680,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	////- JUNCTIONS
 	
+	static newActiveInput = function(i) /*=>*/ { newInput(i, nodeValue_Bool("Active", self, true)); active_index = i; }
 	static newInput = function(i, j) /*=>*/ { 
+		inputs = array_verify_min(inputs, i);
+		
 		inputs[i] = j; 
 		j.setIndex(i); 
 		if(j.name == "Mask") input_mask_index = i;

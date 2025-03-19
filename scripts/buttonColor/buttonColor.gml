@@ -16,8 +16,7 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 		dialog.drop_target = self;
 	}
 	
-	is_picking = false;
-	
+	is_picking    = false;
 	current_color = c_black;
 	b_picker      = button(onColorPick);
 	b_picker.icon = THEME.color_picker_dropper;
@@ -27,6 +26,7 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 		array_insert(pick.palette, 0, current_color);
 		pick.onApply = onApply;
 	});
+	
 	b_quick_pick.activate_on_press = true;
 	b_quick_pick.icon              = THEME.color_wheel;
 	
@@ -53,9 +53,9 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 		
 		if(parentDialog == noone) return;
 		
-		if(is_instanceof(parentDialog, PanelContent)) {
-			if(parentDialog.panel)
-				parentDialog.panel.addChildren(dialog);
+		if(is(parentDialog, PanelContent)) {
+			if(parentDialog.panel) parentDialog.panel.addChildren(dialog);
+			
 		} else
 			parentDialog.addChildren(dialog);
 	}
@@ -68,7 +68,7 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 		w = _w;
 		h = _h;
 		current_color = _color;
-		hovering = hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h);
+		hovering      = hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h);
 		
 		var _cw = _w;
 		var _bs = min(_h, ui(32));
@@ -162,7 +162,8 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 				draw_set_text(f_p1, fa_right, fa_center, COLORS._main_text_sub);
 				draw_text_add(_bx + _bw - ui(28), _y + _h / 2 + ui(1), color_get_hex(current_color));
 				
-				draw_sprite_ext(interactable && key_mod_press(SHIFT)? THEME.paste_20 : THEME.copy_20, 0, _bcx, _bcy, 1, 1, 0, _bcc, _baa);
+				var _ss = (_bh - ui(8)) / 20;
+				draw_sprite_ui(interactable && key_mod_press(SHIFT)? THEME.paste_20 : THEME.copy_20, 0, _bcx, _bcy, _ss, _ss, 0, _bcc, _baa);
 			}
 			
 			hover_wid = lerp_float(hover_wid, _htg, 5);

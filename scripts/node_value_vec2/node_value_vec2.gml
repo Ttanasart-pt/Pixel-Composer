@@ -88,7 +88,7 @@ function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _
 			draw_set_color(COLORS._main_accent);
 			
 			if(sep_axis) {
-				
+				// TODO	
 				
 			} else {
 				for( var i = 0, n = array_length(animator.values); i < n; i++ ) {
