@@ -1,9 +1,9 @@
 {
+  "name":"Tunnel Receiver",
   "tooltip":"Receive value from tunnel in of the same key.",
   "spr":"s_node_tunnel_out",
   "baseNode":"Node_Tunnel_Out",
   "io":[
     "any"
   ],
-  "name":"Tunnel Out"
 }

@@ -1,5 +1,5 @@
 function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name  = "Tunnel Out";
+	name  = "Tunnel Receiver";
 	color = COLORS.node_blend_tunnel;
 	preview_draw = false;
 	set_default  = false;

@@ -1,9 +1,9 @@
 {
+  "name":"Tunnel Sender",
   "tooltip":"Create tunnel for sending value based on key matching.",
   "spr":"s_node_tunnel_in",
   "baseNode":"Node_Tunnel_In",
   "io":[
     "any"
   ],
-  "name":"Tunnel In"
 }
