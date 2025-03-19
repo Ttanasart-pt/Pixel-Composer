@@ -61,6 +61,7 @@ function Panel_Tunnels() : PanelContent() constructor {
 	
 		for( var i = 0, n = array_length(arr); i < n; i++ ) {
 			var node = arr[i];
+			if(!node.active) continue;
 
 			if(point_in_rectangle(_m[0], _m[1], 0, _y, ww, _y + hg)) {
 				sc_tunnel.hover_content = true;
@@ -104,19 +105,17 @@ function Panel_Tunnels() : PanelContent() constructor {
 			_h += hg + ui(4);
 		
 			if(tunnel_select == node) {
-				var amo = ds_map_size(PROJECT.tunnels_out);
-				var k   = ds_map_find_first(PROJECT.tunnels_out);
+				var amo   = ds_map_size(PROJECT.tunnels_out);
+				var _k, k = ds_map_find_first(PROJECT.tunnels_out);
 				
 				repeat(amo) { 
-					var _k  = k;
-					k = ds_map_find_next(PROJECT.tunnels_out, k);
-				
+					_k = k;
+					 k = ds_map_find_next(PROJECT.tunnels_out, k);
+					
 					var out = PROJECT.tunnels_out[? _k];
-					if(out != key || !ds_map_exists(PROJECT.nodeMap, _k)) 
-						continue;
+					if(out != key || !ds_map_exists(PROJECT.nodeMap, _k)) continue;
 					
 					var _node = PROJECT.nodeMap[? _k];
-					
 					draw_sprite_ui(THEME.tunnel, 0, ui(32), _y + ui(10), 0.75, 0.75, 0, COLORS._main_icon);
 					draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text_sub);
 					draw_text_add(ui(32 + 16), _y + ui(10), _node.renamed? _node.display_name : _node.name);

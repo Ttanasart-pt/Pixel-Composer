@@ -30,6 +30,7 @@ function Panel_Globalvar() : PanelContent() constructor {
 	function drawContent(panel) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 1);
 		
+		var sp = padding - ui(8);
 		var px = padding;
 		var py = padding;
 		var pw = w - padding * 2;
@@ -41,9 +42,9 @@ function Panel_Globalvar() : PanelContent() constructor {
 		contentPane.draw(px, py, mx - px, my - py);
 		
 		var _add_h = ui(24);
-		var _bx    = 0;
-		var _by    = h - _add_h;
-		var _ww    = w;
+		var _bx    = sp;
+		var _by    = h - _add_h - sp;
+		var _ww    = w - sp * 2;
 		
 		if(global_drawer.editing) {
 			var _bw  = _ww / 2 - ui(4);
