@@ -1,3 +1,9 @@
+#region
+	FN_NODE_TOOL_INVOKE {
+		hotkeySimple("Node_Armature_Bind", "Pose", "P");		
+	});
+#endregion
+
 function __armature_bind_data(_surface, _bone = noone, _tran = 0, _aang = 0, _pang = 0, _asca = 0, _psca = 0) constructor {
 	surface   =	is_struct(_surface)? _surface : new Surface(_surface);
 	bone      = _bone == noone? noone : _bone.ID;

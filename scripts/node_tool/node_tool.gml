@@ -14,7 +14,10 @@ function NodeTool(name, spr, contextString = instanceof(other)) constructor {
 	toolFn      = noone;
 	toolFnParam = {};
 	
-	static checkHotkey   = function() { INLINE return getToolHotkey(ctx, name); }
+	hk_editing  = false;
+	hk_object   = noone;
+	
+	static checkHotkey   = function() { return getToolHotkey(ctx, name); }
 	
 	static setContext    = function(context) {    self.context    = context;    return self; }
 	static setToolObject = function(toolObject) { self.toolObject = toolObject; return self; }
@@ -101,6 +104,18 @@ function NodeTool(name, spr, contextString = instanceof(other)) constructor {
 			
 		var _obj = getToolObject();
 		if(_obj) _obj.init(context);
+	}
+	
+	static rightClick = function() {
+		hk_object = checkHotkey();
+		if(hk_object == noone) return;
+		
+		var _menu = [
+			getName(),
+			menuItem(__txt("Edit hotkey"), function() /*=>*/ { hk_editing = true; keyboard_lastchar = hk_object.key; }),
+		];
+		
+		menuCall("", _menu);
 	}
 	
 	static onToggle    = function() {}

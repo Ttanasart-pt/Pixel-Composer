@@ -1,3 +1,9 @@
+#region
+	FN_NODE_TOOL_INVOKE {
+		hotkeySimple("Node_RM_Primitive", "Transform", "T");
+	});
+#endregion
+
 global.node_rm_primitive_keys = [ 
 	"plane", "box", "box frame", "box round", "cube", 
 	"sphere", "ellipse", "cut sphere", "cut hollow sphere", "torus", "capped torus",

@@ -253,13 +253,10 @@ DIALOG_WINCLEAR1
 	}
 	
 	if(hk_editing != noone) {
-		if(keyboard_check_pressed(vk_enter))
-			hk_editing = noone;
-		else 
-			hotkey_editing(hk_editing.hoykeyObject);
+		if(keyboard_check_pressed(vk_enter))  hk_editing = noone;
+		else hotkey_editing(hk_editing.hoykeyObject);
 			
-		if(keyboard_check_pressed(vk_escape))
-			hk_editing = noone;
+		if(keyboard_check_pressed(vk_escape)) hk_editing = noone;
 			
 	} else if(sFOCUS) {
 		if(KEYBOARD_PRESSED == vk_up) {

@@ -1,3 +1,17 @@
+#region
+	FN_NODE_TOOL_INVOKE {
+		hotkeySimple("Node_Tile_Drawer", "Pencil",           "B");
+		hotkeySimple("Node_Tile_Drawer", "Eraser",           "E");
+		hotkeySimple("Node_Tile_Drawer", "Rectangle",        "N");
+		hotkeySimple("Node_Tile_Drawer", "Ellipse",          "M");
+		hotkeySimple("Node_Tile_Drawer", "Fill",             "G");
+		hotkeySimple("Node_Tile_Drawer", "Brush Rotate CW",  "R");
+		hotkeySimple("Node_Tile_Drawer", "Brush Rotate CCW", "R", MOD_KEY.shift);
+		hotkeySimple("Node_Tile_Drawer", "Brush Flip H",     "T");
+		hotkeySimple("Node_Tile_Drawer", "Brush Flip V",     "T", MOD_KEY.shift);	
+	});
+#endregion
+
 function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
     name        = "Tile Drawer";
     bypass_grid = true;

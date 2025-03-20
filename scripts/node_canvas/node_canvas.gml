@@ -1,3 +1,23 @@
+#region 
+	FN_NODE_TOOL_INVOKE {
+		hotkeySimple("Node_Canvas", "Selection",       "S");
+		hotkeySimple("Node_Canvas", "Magic Selection", "W");
+		hotkeySimple("Node_Canvas", "Pencil",          "B");
+		hotkeySimple("Node_Canvas", "Eraser",          "E");
+		hotkeySimple("Node_Canvas", "Rectangle",       "N");
+		hotkeySimple("Node_Canvas", "Ellipse",         "M");
+		hotkeySimple("Node_Canvas", "Iso Cube",        "");
+		hotkeySimple("Node_Canvas", "Curve",           "");
+		hotkeySimple("Node_Canvas", "Freeform",        "Q");
+		hotkeySimple("Node_Canvas", "Fill",            "G");
+		hotkeySimple("Node_Canvas", "Outline",         "O", MOD_KEY.alt);
+		hotkeySimple("Node_Canvas", "Extrude",         "E", MOD_KEY.alt);
+		hotkeySimple("Node_Canvas", "Inset",           "I", MOD_KEY.alt);
+		hotkeySimple("Node_Canvas", "Skew",            "S", MOD_KEY.alt);
+		hotkeySimple("Node_Canvas", "Corner",          "C", MOD_KEY.alt);
+	});
+#endregion 
+
 function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name	= "Canvas";
 	color	= COLORS.node_blend_canvas;

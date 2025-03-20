@@ -1,3 +1,13 @@
+#region
+	FN_NODE_TOOL_INVOKE {
+		hotkeySimple("Node_Strand_Create", "Push",    "P");
+		hotkeySimple("Node_Strand_Create", "Comb",    "C");
+		hotkeySimple("Node_Strand_Create", "Stretch", "S");
+		hotkeySimple("Node_Strand_Create", "Shorten", "D");
+		hotkeySimple("Node_Strand_Create", "Grab",    "G");
+	});
+#endregion
+
 function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Strand Create";
 	color = COLORS.node_blend_strand;

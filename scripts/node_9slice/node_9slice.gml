@@ -1,3 +1,9 @@
+#region
+	FN_NODE_TOOL_INVOKE {
+		hotkeySimple("Node_9Slice", "Preview Original", "P");
+	});
+#endregion
+
 function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Nine Slice";
 	

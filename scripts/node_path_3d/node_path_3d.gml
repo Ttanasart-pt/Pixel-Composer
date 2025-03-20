@@ -1,3 +1,11 @@
+#region
+	FN_NODE_TOOL_INVOKE {
+		hotkeySimple("Node_Path_3D", "Transform",           "T");
+		hotkeySimple("Node_Path_3D", "Anchor add / remove", "A");
+		hotkeySimple("Node_Path_3D", "Edit Control point",  "C");
+	});
+#endregion
+
 enum _ANCHOR3 {
 	x,
 	y,

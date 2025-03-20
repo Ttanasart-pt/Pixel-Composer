@@ -23,7 +23,12 @@ function canvas_tool() constructor {
 	
 	function getTool() { return self; }
 	
-	function disable() { PANEL_PREVIEW.tool_current = noone; onDisable(); return self; }
+	function disable() { 
+		PANEL_PREVIEW.tool_current = noone; 
+		onDisable(); 
+		return self; 
+	}
+		
 	function onDisable() {}
 	
 	function init() {}

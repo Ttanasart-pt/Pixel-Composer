@@ -1,3 +1,15 @@
+#region
+	FN_NODE_TOOL_INVOKE {
+		hotkeySimple("Node_Armature", "Move",         "V");
+		hotkeySimple("Node_Armature", "Scale",        "S");
+		hotkeySimple("Node_Armature", "Transform",    "T");
+		hotkeySimple("Node_Armature", "Add bones",    "A");
+		hotkeySimple("Node_Armature", "Remove bones", "E");
+		hotkeySimple("Node_Armature", "Detach bones", "D");
+		hotkeySimple("Node_Armature", "IK",           "K");
+	});
+#endregion
+
 function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Armature Create";
 	setDimension(96, 96);

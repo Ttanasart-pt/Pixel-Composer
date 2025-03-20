@@ -1,3 +1,9 @@
+#region
+	FN_NODE_TOOL_INVOKE {
+		hotkeySimple("Node_Path_Smooth", "Anchor add / remove", "A");
+	});
+#endregion
+
 function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Smooth Path";
 	setDimension(96, 48);

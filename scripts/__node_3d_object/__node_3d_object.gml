@@ -1,3 +1,11 @@
+#region
+	FN_NODE_TOOL_INVOKE {
+		hotkeySimple("Node_3D_Object", "Transform", "G");
+		hotkeySimple("Node_3D_Object", "Rotate",    "R");
+		hotkeySimple("Node_3D_Object", "Scale",     "S");
+	});
+#endregion
+
 function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constructor {
 	name  = "3D Object";
 	gizmo = new __3dGizmoAxis(.2, COLORS._main_accent);

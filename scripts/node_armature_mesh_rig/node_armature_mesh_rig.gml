@@ -1,3 +1,11 @@
+#region
+	FN_NODE_TOOL_INVOKE {
+		hotkeySimple("Node_Armature_Mesh_Rig",  "Pose",          "P");
+		hotkeySimple("Node_Armature_Mesh_Rig",  "Weight Brush",  "B");
+		hotkeySimple("Node_Armature_Mesh_Rig",  "Weight Eraser", "E");
+	});
+#endregion
+
 function RiggedMeshedSurface() : dynaSurf() constructor {
 	mesh    = noone;
 	bone    = noone;

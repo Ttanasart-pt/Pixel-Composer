@@ -1,3 +1,9 @@
+#region
+	FN_NODE_TOOL_INVOKE {
+		hotkeySimple("Node_Path_3D_Camera", "Move Target", "T");
+	});
+#endregion
+
 function Node_Path_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group) constructor {
 	name = "3D Path Camera";
 	batch_output = true;

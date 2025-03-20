@@ -1,88 +1,10 @@
 globalvar HOTKEYS_CUSTOM;
-
+#macro FN_NODE_TOOL_INVOKE if(!variable_global_exists("__FN_NODE_TOOL") || variable_global_get("__FN_NODE_TOOL") == undefined) variable_global_set("__FN_NODE_TOOL", []); \
+array_push(global.__FN_NODE_TOOL, function()
+	
 function __initHotKey() {
-	HOTKEYS_CUSTOM  = {};
-	
-	hotkeySimple("Node_Canvas",         	"Selection",            "S");
-	hotkeySimple("Node_Canvas",         	"Magic Selection",      "W");
-	hotkeySimple("Node_Canvas",         	"Pencil",               "B");
-	hotkeySimple("Node_Canvas",         	"Eraser",               "E");
-	hotkeySimple("Node_Canvas",         	"Rectangle",            "N");
-	hotkeySimple("Node_Canvas",         	"Ellipse",              "M");
-	hotkeySimple("Node_Canvas",         	"Iso Cube",             "");
-	hotkeySimple("Node_Canvas",         	"Curve",                "");
-	hotkeySimple("Node_Canvas",         	"Freeform",             "Q");
-	hotkeySimple("Node_Canvas",         	"Fill",                 "G");
-	hotkeySimple("Node_Canvas",         	"Outline",              "O", MOD_KEY.alt);
-	hotkeySimple("Node_Canvas",         	"Extrude",              "E", MOD_KEY.alt);
-	hotkeySimple("Node_Canvas",         	"Inset",                "I", MOD_KEY.alt);
-	hotkeySimple("Node_Canvas",         	"Skew",                 "S", MOD_KEY.alt);
-	hotkeySimple("Node_Canvas",         	"Corner",               "C", MOD_KEY.alt);
-	  
-	hotkeySimple("Node_Tile_Drawer",       	"Pencil",               "B");
-	hotkeySimple("Node_Tile_Drawer",       	"Eraser",               "E");
-	hotkeySimple("Node_Tile_Drawer",       	"Rectangle",            "N");
-	hotkeySimple("Node_Tile_Drawer",       	"Ellipse",              "M");
-	hotkeySimple("Node_Tile_Drawer",       	"Fill",                 "G");
-	hotkeySimple("Node_Tile_Drawer",       	"Brush Rotate CW",      "R");
-	hotkeySimple("Node_Tile_Drawer",       	"Brush Rotate CCW",     "R", MOD_KEY.shift);
-	hotkeySimple("Node_Tile_Drawer",       	"Brush Flip H",         "T");
-	hotkeySimple("Node_Tile_Drawer",       	"Brush Flip V",         "T", MOD_KEY.shift);
-	
-	hotkeySimple("Node_Mesh_Warp",          "Edit control point",   "V");
-	hotkeySimple("Node_Mesh_Warp",          "Pin mesh",             "P");
-	hotkeySimple("Node_Mesh_Warp",          "Mesh edit",            "M");
-	hotkeySimple("Node_Mesh_Warp",          "Mesh anchor remove",   "E");
-	 
-	hotkeySimple("Node_Armature",           "Move",                 "V");
-	hotkeySimple("Node_Armature",           "Scale",                "S");
-	hotkeySimple("Node_Armature",           "Transform",            "T");
-	hotkeySimple("Node_Armature",           "Add bones",            "A");
-	hotkeySimple("Node_Armature",           "Remove bones",         "E");
-	hotkeySimple("Node_Armature",           "Detach bones",         "D");
-	hotkeySimple("Node_Armature",           "IK",                   "K");
-	hotkeySimple("Node_Armature_Bind",      "Pose",                 "P");
-	hotkeySimple("Node_Armature_Mesh_Rig",  "Pose",                 "P");
-	hotkeySimple("Node_Armature_Mesh_Rig",  "Weight Brush",         "B");
-	hotkeySimple("Node_Armature_Mesh_Rig",  "Weight Eraser",        "E");
-	
-	hotkeySimple("Node_Path",               "Transform",            "T");
-	hotkeySimple("Node_Path",               "Anchor add / remove",  "A");
-	hotkeySimple("Node_Path",               "Edit Control point",   "C");
-	hotkeySimple("Node_Path",               "Draw path",            "B");
-	hotkeySimple("Node_Path",               "Rectangle path",       "N");
-	hotkeySimple("Node_Path",               "Circle path",          "M");
-	hotkeySimple("Node_Path",               "Weight edit",          "W");
-	hotkeySimple("Node_Path_Smooth",        "Anchor add / remove",  "A");
-	hotkeySimple("Node_Path_Anchor",        "Adjust control point", "A");
-	
-	hotkeySimple("Node_Rigid_Object",       "Mesh edit",            "A");
-	hotkeySimple("Node_Rigid_Object",       "Anchor remove",        "E");
-	            
-	hotkeySimple("Node_Strand_Create",      "Push",                 "P");
-	hotkeySimple("Node_Strand_Create",      "Comb",                 "C");
-	hotkeySimple("Node_Strand_Create",      "Stretch",              "S");
-	hotkeySimple("Node_Strand_Create",      "Shorten",              "D");
-	hotkeySimple("Node_Strand_Create",      "Grab",                 "G");
-	
-	hotkeySimple("Node_9Slice",             "Preview Original",     "P");
-	hotkeySimple("Node_Crop",               "Draw crop area",       "D");
-	hotkeySimple("Node_Crop",               "Fit Width",            "W");
-	hotkeySimple("Node_Crop",               "Fit Height",           "H");
-	
-	hotkeySimple("Node_Text",               "Edit Text",            "T");
-	
-	hotkeySimple("Node_3D_Object",          "Transform",            "G");
-	hotkeySimple("Node_3D_Object",          "Rotate",               "R");
-	hotkeySimple("Node_3D_Object",          "Scale",                "S");
-	hotkeySimple("Node_3D_Camera",          "Move Target",          "T");
-	hotkeySimple("Node_Path_3D_Camera",     "Move Target",          "T");
-	hotkeySimple("Node_Path_3D",            "Transform",            "T");
-	hotkeySimple("Node_Path_3D",            "Anchor add / remove",  "A");
-	hotkeySimple("Node_Path_3D",            "Edit Control point",   "C");
-	
-	hotkeySimple("Node_RM_Primitive",       "Transform",            "T");
-	
+    for( var i = 0, n = array_length(global.__FN_NODE_TOOL); i < n; i++ ) 
+    	global.__FN_NODE_TOOL[i]();
 }
 
 function getToolHotkey(_group, _key) {
@@ -96,8 +18,8 @@ function getToolHotkey(_group, _key) {
 	return _grp[$ _key];
 }
 
-function hotkeySimple(_context, _name, _key, _mod = MOD_KEY.none) {	return new HotkeySimple(_context, _name, _key, _mod); }
-function HotkeySimple(_context, _name, _key, _mod = MOD_KEY.none) constructor {
+function hotkeySimple(_context, _name, _key = "", _mod = MOD_KEY.none) { return new HotkeySimple(_context, _name, _key, _mod); }
+function HotkeySimple(_context, _name, _key = "", _mod = MOD_KEY.none) constructor {
 	context	= _context;
 	name	= _name;
 	
@@ -106,6 +28,7 @@ function HotkeySimple(_context, _name, _key, _mod = MOD_KEY.none) constructor {
 	dKey    =  key;
 	dModi   = _mod;
 	
+	if(!variable_global_exists("HOTKEYS_CUSTOM") || variable_global_get("HOTKEYS_CUSTOM") == undefined) variable_global_set("HOTKEYS_CUSTOM", {});
 	if(!struct_has(HOTKEYS_CUSTOM, context)) HOTKEYS_CUSTOM[$ context] = {};
 	HOTKEYS_CUSTOM[$ context][$ name] = self;
 	

@@ -25,7 +25,7 @@ function canvas_tool_curve_bezier(brush) : canvas_tool() constructor {
 	function init()      { clear();   }
 	function apply()     { apply_draw_surface(); disable(); }
 	function cancel()    { disable(); }
-	function onDisable() { clear();   }
+	function onDisable() { clear(); }
 	
 	function step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		

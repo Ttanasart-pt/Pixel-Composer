@@ -1,3 +1,11 @@
+#region
+	FN_NODE_TOOL_INVOKE {
+		hotkeySimple("Node_Crop", "Draw crop area", "D");
+		hotkeySimple("Node_Crop", "Fit Width",      "W");
+		hotkeySimple("Node_Crop", "Fit Height",     "H");
+	});
+#endregion
+
 function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Crop";
 	preview_alpha = 0.5;
