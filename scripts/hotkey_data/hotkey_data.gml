@@ -109,10 +109,12 @@ function HotkeySimple(_context, _name, _key, _mod = MOD_KEY.none) constructor {
 	if(!struct_has(HOTKEYS_CUSTOM, context)) HOTKEYS_CUSTOM[$ context] = {};
 	HOTKEYS_CUSTOM[$ context][$ name] = self;
 	
-	static isPressing  = function()  /*=>*/ {return key == noone? false : key_press(key, modi)};
-	static getName     = function()  /*=>*/ {return key_get_name(key, modi)};
+	static isPressing  = function( ) /*=>*/ {return key == noone? false : key_press(key, modi)};
+	static getName     = function( ) /*=>*/ {return key_get_name(key, modi)};
 	
-	static serialize   = function()  /*=>*/ { return { context, name, key, modi } }
+	static equal       = function(h) /*=>*/ {return key == h.key && modi == h.modi};
+	
+	static serialize   = function( ) /*=>*/ { return { context, name, key, modi } }
 	static deserialize = function(l) /*=>*/ { if(!is_struct(l)) return; key = l.key; modi = l.modi; if(is_string(key)) key = key_get_index(key); }
 	if(struct_has(HOTKEYS_DATA, $"{context}_{name}")) deserialize(HOTKEYS_DATA[$ $"{context}_{name}"]);
 }
@@ -127,11 +129,13 @@ function hotkeyObject(_context, _name, _key, _mod = MOD_KEY.none, _action = noon
 	dKey	= _key;
 	dModi	= _mod;
 	
-	static full_name    = function() /*=>*/ {return string_to_var(context == 0? $"global.{name}" : $"{context}.{name}")};
-	static get_key_name = function() /*=>*/ {return key_get_name(key, modi)};
+	static full_name    = function( ) /*=>*/ {return string_to_var(context == 0? $"global.{name}" : $"{context}.{name}")};
+	static get_key_name = function( ) /*=>*/ {return key_get_name(key, modi)};
 	
-	static serialize   = function( ) /*=>*/ { return { context, name, key, modi } }
-	static deserialize = function(l) /*=>*/ { if(!is_struct(l)) return; key = l.key; modi = l.modi; }
+	static equal        = function(h) /*=>*/ {return key == h.key && modi == h.modi};
+	
+	static serialize    = function( ) /*=>*/ { return { context, name, key, modi } }
+	static deserialize  = function(l) /*=>*/ { if(!is_struct(l)) return; key = l.key; modi = l.modi; }
 	if(struct_has(HOTKEYS_DATA, $"{context}_{name}")) deserialize(HOTKEYS_DATA[$ $"{context}_{name}"]);
 }
 

@@ -1,5 +1,7 @@
 #region function calls
     
+    function panel_preview_clear_tool()                 { CALL("preview_clear_tool");                PANEL_PREVIEW.clearTool();                                                }
+    
     function panel_preview_focus_content()              { CALL("preview_focus_content");             PANEL_PREVIEW.fullView();                                                }
     function panel_preview_save_current_frame()         { CALL("preview_save_current_frame");        PANEL_PREVIEW.saveCurrentFrame();                                        }
     function panel_preview_saveCurrentFrameToFocus()    { CALL("preview_save_to_focused_file");      PANEL_PREVIEW.saveCurrentFrameToFocus();                                 }
@@ -51,76 +53,84 @@
     function panel_preview_toggle_lock()                { CALL("preview_toggle_lock");               PANEL_PREVIEW.toggle_lock();                                             }
     
     function __fnInit_Preview() {
-        registerFunction("Preview", "Focus content",            "F", MOD_KEY.none,                   panel_preview_focus_content             ).setMenu("preview_focus_content", THEME.icon_center_canvas)
-        registerFunction("Preview", "Save current frame",       "S", MOD_KEY.shift,                  panel_preview_save_current_frame        ).setMenu("preview_save_current_frame")
-        registerFunction("Preview", "Save to focused file",     "",  MOD_KEY.none,                   panel_preview_saveCurrentFrameToFocus   ).setMenu("preview_save_to_focused_file")
-        registerFunction("Preview", "Save all current frame",   "",  MOD_KEY.none,                   panel_preview_save_all_current_frame    ).setMenu("preview_save_all_current_frame")
-        registerFunction("Preview", "Preview window",           "P", MOD_KEY.ctrl,                   panel_preview_preview_window            ).setMenu("preview_preview_window")
-        registerFunction("Preview", "Toggle grid",              "G", MOD_KEY.ctrl,                   panel_preview_toggle_grid               ).setMenu("preview_toggle_grid")
+    	var p = "Preview";
+    	var n = MOD_KEY.none;
+    	var s = MOD_KEY.shift;
+    	var c = MOD_KEY.ctrl;
+    	var a = MOD_KEY.alt;
+    	
+        registerFunction(p, "Clear tool",               "A", n, panel_preview_clear_tool               )
+        
+        registerFunction(p, "Focus content",            "F", n, panel_preview_focus_content            ).setMenu("preview_focus_content", THEME.icon_center_canvas)
+        registerFunction(p, "Save current frame",       "S", s, panel_preview_save_current_frame       ).setMenu("preview_save_current_frame")
+        registerFunction(p, "Save to focused file",     "",  n, panel_preview_saveCurrentFrameToFocus  ).setMenu("preview_save_to_focused_file")
+        registerFunction(p, "Save all current frame",   "",  n, panel_preview_save_all_current_frame   ).setMenu("preview_save_all_current_frame")
+        registerFunction(p, "Preview window",           "P", c, panel_preview_preview_window           ).setMenu("preview_preview_window")
+        registerFunction(p, "Toggle grid",              "G", c, panel_preview_toggle_grid              ).setMenu("preview_toggle_grid")
     
-        registerFunction("Preview", "Pan",                      "", MOD_KEY.ctrl,                    panel_preview_pan                       ).setMenu("preview_pan")
-        registerFunction("Preview", "Zoom",                     "", MOD_KEY.alt | MOD_KEY.ctrl,      panel_preview_zoom                      ).setMenu("preview_zoom")
+        registerFunction(p, "Pan",                      "", c,     panel_preview_pan                   ).setMenu("preview_pan")
+        registerFunction(p, "Zoom",                     "", a | c, panel_preview_zoom                  ).setMenu("preview_zoom")
         
-        registerFunction("Preview", "3D Front view",            vk_numpad1,    MOD_KEY.none,         panel_preview_3d_view_front             ).setMenu("preview_3d_front_view")
-        registerFunction("Preview", "3D Back view",             vk_numpad1,    MOD_KEY.alt,          panel_preview_3d_view_back              ).setMenu("preview_3d_back_view")
-        registerFunction("Preview", "3D Right view ",           vk_numpad3,    MOD_KEY.none,         panel_preview_3d_view_right             ).setMenu("preview_3d_right_view")
-        registerFunction("Preview", "3D Left view ",            vk_numpad3,    MOD_KEY.alt,          panel_preview_3d_view_left              ).setMenu("preview_3d_left_view")
-        registerFunction("Preview", "3D Top view",              vk_numpad7,    MOD_KEY.none,         panel_preview_3d_view_top               ).setMenu("preview_3d_top_view")
-        registerFunction("Preview", "3D Bottom view",           vk_numpad7,    MOD_KEY.alt,          panel_preview_3d_view_bottom            ).setMenu("preview_3d_bottom_view")
+        registerFunction(p, "3D Front view",            vk_numpad1, n, panel_preview_3d_view_front     ).setMenu("preview_3d_front_view")
+        registerFunction(p, "3D Back view",             vk_numpad1, a, panel_preview_3d_view_back      ).setMenu("preview_3d_back_view")
+        registerFunction(p, "3D Right view ",           vk_numpad3, n, panel_preview_3d_view_right     ).setMenu("preview_3d_right_view")
+        registerFunction(p, "3D Left view ",            vk_numpad3, a, panel_preview_3d_view_left      ).setMenu("preview_3d_left_view")
+        registerFunction(p, "3D Top view",              vk_numpad7, n, panel_preview_3d_view_top       ).setMenu("preview_3d_top_view")
+        registerFunction(p, "3D Bottom view",           vk_numpad7, a, panel_preview_3d_view_bottom    ).setMenu("preview_3d_bottom_view")
         
-        registerFunction("Preview", "Scale x1",                 "1", MOD_KEY.none,                   function() /*=>*/ { panel_preview_set_zoom(1) }     ).setMenu("preview_scale_x1")
-        registerFunction("Preview", "Scale x2",                 "2", MOD_KEY.none,                   function() /*=>*/ { panel_preview_set_zoom(2) }     ).setMenu("preview_scale_x2")
-        registerFunction("Preview", "Scale x4",                 "3", MOD_KEY.none,                   function() /*=>*/ { panel_preview_set_zoom(4) }     ).setMenu("preview_scale_x4")
-        registerFunction("Preview", "Scale x8",                 "4", MOD_KEY.none,                   function() /*=>*/ { panel_preview_set_zoom(8) }     ).setMenu("preview_scale_x8")
+        registerFunction(p, "Scale x1",                 "1", n, function() /*=>*/ { panel_preview_set_zoom(1) }    ).setMenu("preview_scale_x1")
+        registerFunction(p, "Scale x2",                 "2", n, function() /*=>*/ { panel_preview_set_zoom(2) }    ).setMenu("preview_scale_x2")
+        registerFunction(p, "Scale x4",                 "3", n, function() /*=>*/ { panel_preview_set_zoom(4) }    ).setMenu("preview_scale_x4")
+        registerFunction(p, "Scale x8",                 "4", n, function() /*=>*/ { panel_preview_set_zoom(8) }    ).setMenu("preview_scale_x8")
         
-        registerFunction("Preview", "Tile Off",                 "",    MOD_KEY.none,                 panel_preview_set_tile_off              ).setMenu("preview_set_tile_off")
-        registerFunction("Preview", "Tile Horizontal",          "",    MOD_KEY.none,                 panel_preview_set_tile_horizontal       ).setMenu("preview_set_tile_horizontal")
-        registerFunction("Preview", "Tile Vertical",            "",    MOD_KEY.none,                 panel_preview_set_tile_vertical         ).setMenu("preview_set_tile_vertical")
-        registerFunction("Preview", "Tile Both",                "",    MOD_KEY.none,                 panel_preview_set_tile_both             ).setMenu("preview_set_tile_both")
-        registerFunction("Preview", "Toggle Tile",              "",    MOD_KEY.none,                 panel_preview_set_tile_toggle           ).setMenu("preview_toggle_tile")
-        registerFunction("Preview", "Tiling Settings",          "",    MOD_KEY.none,                 function(_dat) /*=>*/ { submenuCall(_dat, [
-                                                                                                            MENU_ITEMS.preview_set_tile_off,
-                                                                                                            MENU_ITEMS.preview_set_tile_horizontal,
-                                                                                                            MENU_ITEMS.preview_set_tile_vertical,
-                                                                                                            MENU_ITEMS.preview_set_tile_both,
-                                                                                                        ]) }).setMenu("preview_tiling_settings")
+        registerFunction(p, "Tile Off",                 "", n, panel_preview_set_tile_off              ).setMenu("preview_set_tile_off")
+        registerFunction(p, "Tile Horizontal",          "", n, panel_preview_set_tile_horizontal       ).setMenu("preview_set_tile_horizontal")
+        registerFunction(p, "Tile Vertical",            "", n, panel_preview_set_tile_vertical         ).setMenu("preview_set_tile_vertical")
+        registerFunction(p, "Tile Both",                "", n, panel_preview_set_tile_both             ).setMenu("preview_set_tile_both")
+        registerFunction(p, "Toggle Tile",              "", n, panel_preview_set_tile_toggle           ).setMenu("preview_toggle_tile")
+        registerFunction(p, "Tiling Settings",          "", n, function(_dat) /*=>*/ { submenuCall(_dat, [
+                                                                                                 MENU_ITEMS.preview_set_tile_off,
+                                                                                                 MENU_ITEMS.preview_set_tile_horizontal,
+                                                                                                 MENU_ITEMS.preview_set_tile_vertical,
+                                                                                                 MENU_ITEMS.preview_set_tile_both,
+                                                                                             ]) }).setMenu("preview_tiling_settings")
         
-        registerFunction("Preview", "Split View Off",           "",    MOD_KEY.none,                 panel_preview_set_split_off             ).setMenu("preview_set_split_off")
-        registerFunction("Preview", "Split View Horizontal",    "",    MOD_KEY.none,                 panel_preview_set_split_horizontal      ).setMenu("preview_set_split_horizontal")
-        registerFunction("Preview", "Split View Vertical",      "",    MOD_KEY.none,                 panel_preview_set_split_vertical        ).setMenu("preview_set_split_vertical")
-        registerFunction("Preview", "Toggle Split View",        "",    MOD_KEY.none,                 panel_preview_toggle_split_view         ).setMenu("preview_toggle_split_view")
-        registerFunction("Preview", "Split View Settings",      "",    MOD_KEY.none,                 function(_dat) /*=>*/ { submenuCall(_dat, [
-                                                                                                            MENU_ITEMS.preview_set_split_off,
-                                                                                                            MENU_ITEMS.preview_set_split_horizontal,
-                                                                                                            MENU_ITEMS.preview_set_split_vertical,
-                                                                                                        ]) }).setMenu("preview_split_view_settings")
+        registerFunction(p, "Split View Off",           "", n, panel_preview_set_split_off             ).setMenu("preview_set_split_off")
+        registerFunction(p, "Split View Horizontal",    "", n, panel_preview_set_split_horizontal      ).setMenu("preview_set_split_horizontal")
+        registerFunction(p, "Split View Vertical",      "", n, panel_preview_set_split_vertical        ).setMenu("preview_set_split_vertical")
+        registerFunction(p, "Toggle Split View",        "", n, panel_preview_toggle_split_view         ).setMenu("preview_toggle_split_view")
+        registerFunction(p, "Split View Settings",      "", n, function(_dat) /*=>*/ { submenuCall(_dat, [
+                                                                                                 MENU_ITEMS.preview_set_split_off,
+                                                                                                 MENU_ITEMS.preview_set_split_horizontal,
+                                                                                                 MENU_ITEMS.preview_set_split_vertical,
+                                                                                             ]) }).setMenu("preview_split_view_settings")
                                                                                                         
-        registerFunction("Preview", "Set Reset View Off",       "",    MOD_KEY.none,                 panel_preview_set_reset_view_off        ).setMenu("preview_set_reset_view_off")
-        registerFunction("Preview", "Set Reset View On",        "",    MOD_KEY.none,                 panel_preview_set_reset_view_on         ).setMenu("preview_set_reset_view_on")
-        registerFunction("Preview", "Toggle Reset View",        "",    MOD_KEY.none,                 panel_preview_toggle_reset_view         ).setMenu("preview_toggle_reset_view")
+        registerFunction(p, "Set Reset View Off",       "", n, panel_preview_set_reset_view_off        ).setMenu("preview_set_reset_view_off")
+        registerFunction(p, "Set Reset View On",        "", n, panel_preview_set_reset_view_on         ).setMenu("preview_set_reset_view_on")
+        registerFunction(p, "Toggle Reset View",        "", n, panel_preview_toggle_reset_view         ).setMenu("preview_toggle_reset_view")
         
-        registerFunction("Preview", "New Preview Window",       "",    MOD_KEY.none,                 panel_preview_new_preview_window        ).setMenu("preview_new_preview_window")
-        registerFunction("Preview", "Save Current Frame",       "",    MOD_KEY.none,                 panel_preview_saveCurrentFrame          ).setMenu("preview_save_current_frame")
-        registerFunction("Preview", "Save All Current Frames",  "",    MOD_KEY.none,                 panel_preview_saveAllCurrentFrames      ).setMenu("preview_save_all_current_frames")
-        registerFunction("Preview", "Copy Current Frame",       "",    MOD_KEY.none,                 panel_preview_copyCurrentFrame          ).setMenu("preview_copy_current_frame", THEME.copy)
-        registerFunction("Preview", "Copy Color",               "",    MOD_KEY.none,                 panel_preview_copy_color                ).setMenu("preview_copy_color")
-        registerFunction("Preview", "Copy Color Hex",           "",    MOD_KEY.none,                 panel_preview_copy_color_hex            ).setMenu("preview_copy_color_hex")
+        registerFunction(p, "New Preview Window",       "", n, panel_preview_new_preview_window        ).setMenu("preview_new_preview_window")
+        registerFunction(p, "Save Current Frame",       "", n, panel_preview_saveCurrentFrame          ).setMenu("preview_save_current_frame")
+        registerFunction(p, "Save All Current Frames",  "", n, panel_preview_saveAllCurrentFrames      ).setMenu("preview_save_all_current_frames")
+        registerFunction(p, "Copy Current Frame",       "", n, panel_preview_copyCurrentFrame          ).setMenu("preview_copy_current_frame", THEME.copy)
+        registerFunction(p, "Copy Color",               "", n, panel_preview_copy_color                ).setMenu("preview_copy_color")
+        registerFunction(p, "Copy Color Hex",           "", n, panel_preview_copy_color_hex            ).setMenu("preview_copy_color_hex")
         
-        registerFunction("Preview", "Toggle Pixel Grid",        "",    MOD_KEY.none,                 panel_preview_toggle_grid_pixel         ).setMenu("preview_toggle_grid_pixel")
-        registerFunction("Preview", "Toggle Grid",              "",    MOD_KEY.none,                 panel_preview_toggle_grid_visible       ).setMenu("preview_toggle_grid_visible")
-        registerFunction("Preview", "Toggle Snap to Grid",      "",    MOD_KEY.none,                 panel_preview_toggle_grid_snap          ).setMenu("preview_toggle_grid_snap")
+        registerFunction(p, "Toggle Pixel Grid",        "", n, panel_preview_toggle_grid_pixel         ).setMenu("preview_toggle_grid_pixel")
+        registerFunction(p, "Toggle Grid",              "", n, panel_preview_toggle_grid_visible       ).setMenu("preview_toggle_grid_visible")
+        registerFunction(p, "Toggle Snap to Grid",      "", n, panel_preview_toggle_grid_snap          ).setMenu("preview_toggle_grid_snap")
         
-        registerFunction("Preview", "Toggle Onion Skin",        "",    MOD_KEY.none,                 panel_preview_onion_enabled             ).setMenu("preview_onion_enabled")
-        registerFunction("Preview", "Toggle Onion Skin view",   "",    MOD_KEY.none,                 panel_preview_onion_on_top              ).setMenu("preview_onion_on_top")
-        registerFunction("Preview", "Toggle Lock",              "",    MOD_KEY.none,                 panel_preview_toggle_lock               ).setMenu("preview_toggle_lock")
+        registerFunction(p, "Toggle Onion Skin",        "", n, panel_preview_onion_enabled             ).setMenu("preview_onion_enabled")
+        registerFunction(p, "Toggle Onion Skin view",   "", n, panel_preview_onion_on_top              ).setMenu("preview_onion_on_top")
+        registerFunction(p, "Toggle Lock",              "", n, panel_preview_toggle_lock               ).setMenu("preview_toggle_lock")
         
-        registerFunction("Preview", "Popup",            		"",    MOD_KEY.none,   function() /*=>*/ { create_preview_window(PANEL_PREVIEW.getNodePreview());           }).setMenu("preview_popup")
-        registerFunction("Preview", "Grid Settings",            "",    MOD_KEY.none,   function() /*=>*/ { dialogPanelCall(new Panel_Preview_Grid_Setting())                }).setMenu("preview_grid_settings")
-        registerFunction("Preview", "Onion Skin Settings",      "",    MOD_KEY.none,   function() /*=>*/ { dialogPanelCall(new Panel_Preview_Onion_Setting())               }).setMenu("preview_onion_settings")
-        registerFunction("Preview", "3D View Settings",         "",    MOD_KEY.none,   function() /*=>*/ { dialogPanelCall(new Panel_Preview_3D_Setting(PANEL_PREVIEW))     }).setMenu("preview_3D_settings")
-        registerFunction("Preview", "3D SDF View Settings",     "",    MOD_KEY.none,   function() /*=>*/ { dialogPanelCall(new Panel_Preview_3D_SDF_Setting(PANEL_PREVIEW)) }).setMenu("preview_3D_SDF_settings")
-        registerFunction("Preview", "3D Snap Settings",         "",    MOD_KEY.none,   function() /*=>*/ { dialogPanelCall(new Panel_Preview_Snap_Setting(PANEL_PREVIEW))   }).setMenu("preview_snap_settings")
-        registerFunction("Preview", "View Settings",            "",    MOD_KEY.none,   function() /*=>*/ { dialogPanelCall(new Panel_Preview_View_Setting(PANEL_PREVIEW))   }).setMenu("preview_view_settings")
+        registerFunction(p, "Popup",            		"", n, function() /*=>*/ { create_preview_window(PANEL_PREVIEW.getNodePreview());           }).setMenu("preview_popup")
+        registerFunction(p, "Grid Settings",            "", n, function() /*=>*/ { dialogPanelCall(new Panel_Preview_Grid_Setting())                }).setMenu("preview_grid_settings")
+        registerFunction(p, "Onion Skin Settings",      "", n, function() /*=>*/ { dialogPanelCall(new Panel_Preview_Onion_Setting())               }).setMenu("preview_onion_settings")
+        registerFunction(p, "3D View Settings",         "", n, function() /*=>*/ { dialogPanelCall(new Panel_Preview_3D_Setting(PANEL_PREVIEW))     }).setMenu("preview_3D_settings")
+        registerFunction(p, "3D SDF View Settings",     "", n, function() /*=>*/ { dialogPanelCall(new Panel_Preview_3D_SDF_Setting(PANEL_PREVIEW)) }).setMenu("preview_3D_SDF_settings")
+        registerFunction(p, "3D Snap Settings",         "", n, function() /*=>*/ { dialogPanelCall(new Panel_Preview_Snap_Setting(PANEL_PREVIEW))   }).setMenu("preview_snap_settings")
+        registerFunction(p, "View Settings",            "", n, function() /*=>*/ { dialogPanelCall(new Panel_Preview_View_Setting(PANEL_PREVIEW))   }).setMenu("preview_view_settings")
         
         __fnGroupInit_Preview();
     }
@@ -263,6 +273,9 @@ function Panel_Preview() : PanelContent() constructor {
         tool_side_draw_r    = false;
         overlay_hovering    = false;
         view_hovering       = false;
+        
+        tool_clearable      = false;
+        tool_clearKey       = FUNCTIONS[$ string_to_var2("Preview", "Clear tool")];
         
         sbChannel = new scrollBox([], function(index) {
             var node = __getNodePreview();
@@ -863,6 +876,265 @@ function Panel_Preview() : PanelContent() constructor {
     }
     
     static onFullScreen = function() { run_in(1, fullView); }
+    
+    ////- TOOL
+    
+    function clearTool() {
+    	if(!tool_clearable)       return;
+    	if(tool_current == noone) return;
+    	
+    	var _tobj = tool_current.getToolObject();
+		if(_tobj) _tobj.disable();
+        tool_current = noone;
+    }
+    
+    function drawTools(_node) {
+    	var _mx   = mx;
+        var _my   = my;
+        var _tool = tool_hovering;
+        var  tool_size = ui(32);
+        
+        tool_clearable = true;
+        tool_hovering  = noone;
+        
+        if(_node.tools == -1) { tool_current = noone; return; }
+        
+        var aa = d3_active? 0.8 : 1;
+        draw_sprite_stretched_ext(THEME.tool_side, 0, 0, ui(32), toolbar_width, h - toolbar_height - ui(32), c_white, aa);
+        
+        tool_y_max = 0; 
+        tool_y   = lerp_float(tool_y, tool_y_to, 5);
+        var xx   = ui(1)  + toolbar_width / 2;
+        var yy   = ui(34) + tool_size  / 2 + tool_y;
+        var pd   = 2;
+        var thov = pHOVER && point_in_rectangle(mx, my, 0, toolbar_height, toolbar_width, h - toolbar_height);
+        if(thov) canvas_hover = false;
+        
+        // Left tools
+        for(var i = 0; i < array_length(_node.tools); i++) { 
+            var tool = _node.tools[i];
+            var _x0  = xx - tool_size / 2;
+            var _y0  = yy - tool_size / 2;
+            var _x1  = xx + tool_size / 2;
+            var _y1  = yy + tool_size / 2;
+                
+            if(tool == -1) {
+                draw_set_color(COLORS._main_icon_dark);
+                draw_line_round(xx + ui(8), _y0 + ui(3), xx - ui(9), _y0 + ui(3), 2);
+                
+                yy          += ui(8);
+                tool_y_max  += ui(8);
+                continue;
+            }
+                
+            if(thov && point_in_rectangle(_mx, _my, _x0, _y0 + 1, _x1, _y1 - 1))
+                tool_hovering = tool;
+            
+            if(tool.subtools > 0 && _tool == tool) { // hovering subtools
+                var s_ww = tool_size * tool.subtools;
+                var s_hh = tool_size;
+                draw_sprite_stretched(THEME.box_r2_clr, 0, _x0 - pd, _y0 - pd, s_ww + pd * 2, s_hh + pd * 2);
+                    
+                var stool = tool.spr;
+                        
+                for( var j = 0; j < array_length(stool); j++ ) {
+                    var _sxx = xx + j * tool_size;
+                    var _syy = yy;
+                            
+                    var _sx0  = _sxx - tool_size / 2;
+                    var _sy0  = _syy - tool_size / 2;
+                    var _sx1  = _sxx + tool_size / 2;
+                    var _sy1  = _syy + tool_size / 2;
+                    
+                    if(point_in_rectangle(_mx, _my, _sx0, _sy0 + 1, _sx1, _sy1 - 1)) {
+                        TOOLTIP = tool.getDisplayName(j);
+                        draw_sprite_stretched(THEME.button_hide_fill, 1, _sx0 + pd, _sy0 + pd, tool_size - pd * 2, tool_size - pd * 2);
+                            
+                        if(mouse_press(mb_left, pFOCUS))
+                            tool.toggle(j);
+                    } 
+                            
+                    if(tool_current == tool && tool.selecting == j) {
+                        draw_sprite_stretched_ext(THEME.button_hide_fill, 2, _sx0 + pd, _sy0 + pd, tool_size - pd * 2, tool_size - pd * 2, COLORS.panel_preview_grid, 1);
+                        draw_sprite_stretched_ext(THEME.button_hide_fill, 3, _sx0 + pd, _sy0 + pd, tool_size - pd * 2, tool_size - pd * 2, COLORS._main_accent, 1);
+                    }
+                    
+                    draw_sprite_colored(stool[j], 0, _sxx, _syy);
+                }
+                    
+                if(point_in_rectangle(_mx, _my, _x0, _y0 + 1, _x0 + s_ww, _y1 - 1))
+                    tool_hovering = tool;
+            
+            } else { // single tools
+                if(tool_hovering == tool) {
+                    draw_sprite_stretched(THEME.button_hide_fill, 1, _x0 + pd, _y0 + pd, tool_size - pd * 2, tool_size - pd * 2);
+                    TOOLTIP = tool.getDisplayName();
+                    
+                    if(mouse_press(mb_left, pFOCUS))
+                        tool.toggle();
+                }
+                
+                if(tool_current == tool) {
+                    draw_sprite_stretched_ext(THEME.button_hide_fill, 2, _x0 + pd, _y0 + pd, tool_size - pd * 2, tool_size - pd * 2, COLORS.panel_preview_grid, 1);
+                    draw_sprite_stretched_ext(THEME.button_hide_fill, 3, _x0 + pd, _y0 + pd, tool_size - pd * 2, tool_size - pd * 2, COLORS._main_accent, 1);
+                }
+                
+                var _spr = tool.subtools > 0? tool.spr[tool.selecting] : tool.spr;
+                draw_sprite_colored(_spr, 0, xx, yy);
+            }
+            
+            var _key = tool.checkHotkey();
+            if(_key != noone && pFOCUS && WIDGET_CURRENT == noone) {
+            	if(tool_clearKey.hotkey.equal(_key)) tool_clearable = false;
+                if(_key.isPressing()) tool.toggleKeyboard();
+                
+                var _hkstr = key_get_name(_key.key, _key.modi);
+                if(_hkstr != "" && key_mod_press(ALT)) {
+                	draw_set_text(f_p4, fa_right, fa_center, COLORS._main_text);
+                	var _hks  = string_width(_hkstr) + ui(8);
+                	var _hkx0 = _x1 - _hks;
+                	var _hky0 = _y1 - ui(16);
+                	
+                	draw_sprite_stretched_ext(THEME.ui_panel, 0, _hkx0, _hky0, _hks, ui(16), COLORS.panel_bg_clear_inner);
+                	draw_text_add(_hkx0 + _hks - ui(4), _hky0 + ui(16) / 2, _hkstr);
+                }
+            }
+            
+            yy         += tool_size;
+            tool_y_max += tool_size;
+        }
+        
+        var _h = _node.drawTools == noone? 0 : _node.drawTools(_mx, _my, xx, yy - tool_size / 2, tool_size, thov, pFOCUS);
+        yy         += _h;
+        tool_y_max += _h;
+        
+        tool_y_max = max(0, tool_y_max - h + toolbar_height * 2);            
+        if(thov && !key_mod_press_any()) {
+            if(mouse_wheel_up())   tool_y_to = clamp(tool_y_to + ui(64) * SCROLL_SPEED, -tool_y_max, 0);
+            if(mouse_wheel_down()) tool_y_to = clamp(tool_y_to - ui(64) * SCROLL_SPEED, -tool_y_max, 0);
+        }
+        
+        // Right tools
+        if(_node.rightTools == -1) return;
+        
+        right_menu_x = w - toolbar_width - ui(8);
+        tool_ry_max  = 0; 
+        tool_ry      = lerp_float(tool_ry, tool_ry_to, 5);
+        
+        var _tbx = w - toolbar_width;
+        var xx   = _tbx + toolbar_width / 2;
+        var yy   = ui(34) + tool_size  / 2 + tool_ry;
+        
+        draw_sprite_stretched_ext(THEME.tool_side, 1, w + 1 - toolbar_width, ui(32), toolbar_width, h - toolbar_height - ui(32), c_white, aa);
+        
+        var thov = pHOVER && point_in_rectangle(mx, my, _tbx, toolbar_height, w, h - toolbar_height);
+        if(thov) canvas_hover = false;
+        
+        for(var i = 0; i < array_length(_node.rightTools); i++) {
+            var tool = _node.rightTools[i];
+            var _x0  = xx - tool_size / 2;
+            var _y0  = yy - tool_size / 2;
+            var _x1  = xx + tool_size / 2;
+            var _y1  = yy + tool_size / 2;
+            
+            if(tool == -1) {
+                draw_set_color(COLORS._main_icon_dark);
+                draw_line_round(xx + ui(8), _y0 + ui(3), xx - ui(9), _y0 + ui(3), 2);
+                
+                yy          += ui(8);
+                tool_ry_max += ui(8);
+                continue;
+            }
+            
+            if(thov && point_in_rectangle(_mx, _my, _x0, _y0 + 1, _x1, _y1 - 1))
+                tool_hovering = tool;
+        
+            if(tool.subtools > 0 && _tool == tool) { // hovering subtools
+                
+                var stool = tool.spr;
+                var s_ww  = tool_size * tool.subtools;
+                var s_hh  = tool_size;
+                var tx    = _x0 - s_ww + tool_size;
+                draw_sprite_stretched(THEME.box_r2_clr, 0, tx - pd, _y0 - pd, s_ww + pd * 2, s_hh + pd * 2);
+                
+                var _am = array_length(stool);
+                
+                for( var j = 0; j < _am; j++ ) {
+                    var _sind = _am - 1 - j;
+                    var _sxx = tx + j * tool_size + tool_size / 2;
+                    var _syy = yy;
+                        
+                    var _sx0  = _sxx - tool_size / 2;
+                    var _sy0  = _syy - tool_size / 2;
+                    var _sx1  = _sxx + tool_size / 2;
+                    var _sy1  = _syy + tool_size / 2;
+                    
+                    if(point_in_rectangle(_mx, _my, _sx0, _sy0 + 1, _sx1, _sy1 - 1)) {
+                        TOOLTIP = tool.getDisplayName(_sind);
+                        draw_sprite_stretched(THEME.button_hide_fill, 1, _sx0 + pd, _sy0 + pd, tool_size - pd * 2, tool_size - pd * 2);
+                        
+                        if(mouse_press(mb_left, pFOCUS))
+                            tool.toggle(_sind);
+                    }
+                        
+                    if(tool_current == tool && tool.selecting == _sind) {
+                        draw_sprite_stretched_ext(THEME.button_hide_fill, 2, _sx0 + pd, _sy0 + pd, tool_size - pd * 2, tool_size - pd * 2, COLORS.panel_preview_grid, 1);
+                        draw_sprite_stretched_ext(THEME.button_hide_fill, 3, _sx0 + pd, _sy0 + pd, tool_size - pd * 2, tool_size - pd * 2, COLORS._main_accent, 1);
+                    }
+                    
+                    draw_sprite_colored(stool[_sind], 0, _sxx, _syy);
+                    
+                }
+                
+                if(point_in_rectangle(_mx, _my, tx, _y0 + 1, tx + s_ww, _y1 - 1))
+                    tool_hovering = tool;
+            
+            } else { // single tools
+                if(tool_hovering == tool) {
+                    draw_sprite_stretched(THEME.button_hide_fill, 1, _x0 + pd, _y0 + pd, tool_size - pd * 2, tool_size - pd * 2);
+                    TOOLTIP = tool.getDisplayName();
+                
+                    if(mouse_press(mb_left, pFOCUS))
+                        tool.toggle();
+                }
+                
+                if(tool_current == tool) {
+                    draw_sprite_stretched_ext(THEME.button_hide_fill, 2, _x0 + pd, _y0 + pd, tool_size - pd * 2, tool_size - pd * 2, COLORS.panel_preview_grid, 1);
+                    draw_sprite_stretched_ext(THEME.button_hide_fill, 3, _x0 + pd, _y0 + pd, tool_size - pd * 2, tool_size - pd * 2, COLORS._main_accent, 1);
+                }
+            
+                var _spr = tool.subtools > 0? tool.spr[tool.selecting] : tool.spr;
+                draw_sprite_colored(_spr, 0, xx, yy);
+                
+            }
+            
+            var _key = tool.checkHotkey();
+            if(_key != noone && pFOCUS && WIDGET_CURRENT == noone) {
+            	if(tool_clearKey.hotkey.equal(_key)) tool_clearable = false;
+                if(_key.isPressing()) tool.toggleKeyboard();
+                
+                var _hkstr = key_get_name(_key.key, _key.modi);
+                if(_hkstr != "" && key_mod_press(ALT)) {
+                	draw_set_text(f_p4, fa_left, fa_center, COLORS._main_text);
+                	var _hks  = string_width(_hkstr) + ui(8);
+                	var _hkx0 = _x0;
+                	var _hky0 = _y1 - ui(16);
+                	
+                	draw_sprite_stretched_ext(THEME.ui_panel, 0, _hkx0, _hky0, _hks, ui(16), COLORS.panel_bg_clear_inner);
+                	draw_text_add(_hkx0 + ui(4), _hky0 + ui(16) / 2, _hkstr);
+                }
+            }
+            
+            yy          += tool_size;
+            tool_ry_max += tool_size;
+        } 
+        
+        tool_ry_max = max(0, tool_ry_max - h + toolbar_height * 2);            
+        if(thov && !key_mod_press_any()) {
+            if(mouse_wheel_up())   tool_ry_to = clamp(tool_ry_to + ui(64) * SCROLL_SPEED, -tool_ry_max, 0);
+            if(mouse_wheel_down()) tool_ry_to = clamp(tool_ry_to - ui(64) * SCROLL_SPEED, -tool_ry_max, 0);
+        }
+    }
     
     ////- DRAW
     
@@ -1793,11 +2065,10 @@ function Panel_Preview() : PanelContent() constructor {
         }
     }
     
-    function drawNodeTools(active, _node) {
+    function drawNodeActions(active, _node) {
         var _mx = mx;
         var _my = my;
         var overHover = pHOVER && mouse_on_preview == 1;
-        var tool_size = ui(32);
         
         var cx = canvas_x + _node.preview_x * canvas_s;
         var cy = canvas_y + _node.preview_y * canvas_s;
@@ -1846,7 +2117,6 @@ function Panel_Preview() : PanelContent() constructor {
             _node.drawOverlay(overHover, overActive, _ovx, _ovy, _ovs, _mx, _my, _snx, _sny, params);
             
         } else {
-            
             if(key_mod_press(CTRL) || PROJECT.previewSetting.d3_tool_snap) {
                 _snx = PROJECT.previewSetting.d3_tool_snap_position;
                 _sny = PROJECT.previewSetting.d3_tool_snap_rotation;
@@ -1855,259 +2125,19 @@ function Panel_Preview() : PanelContent() constructor {
             _node.drawOverlay3D(overActive, d3_scene, _mx, _my, _snx, _sny, params);
         }
         
-        #region node overlay
-            overlay_hovering = false;
-            
-            if(_node.drawPreviewToolOverlay(pHOVER, pFOCUS, _mx, _my, { x, y, w, h, toolbar_height, 
-                x0: _node.tools == -1? 0 : ui(40),
-                x1: w,
-                y0: toolbar_height - ui(8), 
-                y1: h - toolbar_height 
-            })) {
-                canvas_hover     = false;
-                overlay_hovering = true;
-            }
-        #endregion
+        overlay_hovering = false;
         
-        var _tool = tool_hovering;
-        tool_hovering = noone;
-        
-        if(_node.tools == -1) {
-            tool_current = noone;
-            return;
+        if(_node.drawPreviewToolOverlay(pHOVER, pFOCUS, _mx, _my, { x, y, w, h, toolbar_height, 
+            x0: _node.tools == -1? 0 : ui(40),
+            x1: w,
+            y0: toolbar_height - ui(8), 
+            y1: h - toolbar_height 
+        })) {
+            canvas_hover     = false;
+            overlay_hovering = true;
         }
         
-        var aa = d3_active? 0.8 : 1;
-        draw_sprite_stretched_ext(THEME.tool_side, 0, 0, ui(32), toolbar_width, h - toolbar_height - ui(32), c_white, aa);
-        
-        tool_y_max = 0; 
-        tool_y   = lerp_float(tool_y, tool_y_to, 5);
-        var xx   = ui(1)  + toolbar_width / 2;
-        var yy   = ui(34) + tool_size  / 2 + tool_y;
-        var pd   = 2;
-        var thov = pHOVER && point_in_rectangle(mx, my, 0, toolbar_height, toolbar_width, h - toolbar_height);
-        if(thov) canvas_hover = false;
-        
-        for(var i = 0; i < array_length(_node.tools); i++) { //// left tools
-            var tool = _node.tools[i];
-            var _x0  = xx - tool_size / 2;
-            var _y0  = yy - tool_size / 2;
-            var _x1  = xx + tool_size / 2;
-            var _y1  = yy + tool_size / 2;
-                
-            if(tool == -1) {
-                draw_set_color(COLORS._main_icon_dark);
-                draw_line_round(xx + ui(8), _y0 + ui(3), xx - ui(9), _y0 + ui(3), 2);
-                
-                yy          += ui(8);
-                tool_y_max  += ui(8);
-                continue;
-            }
-                
-            if(thov && point_in_rectangle(_mx, _my, _x0, _y0 + 1, _x1, _y1 - 1))
-                tool_hovering = tool;
-            
-            if(tool.subtools > 0 && _tool == tool) { // hovering subtools
-                var s_ww = tool_size * tool.subtools;
-                var s_hh = tool_size;
-                draw_sprite_stretched(THEME.box_r2_clr, 0, _x0 - pd, _y0 - pd, s_ww + pd * 2, s_hh + pd * 2);
-                    
-                var stool = tool.spr;
-                        
-                for( var j = 0; j < array_length(stool); j++ ) {
-                    var _sxx = xx + j * tool_size;
-                    var _syy = yy;
-                            
-                    var _sx0  = _sxx - tool_size / 2;
-                    var _sy0  = _syy - tool_size / 2;
-                    var _sx1  = _sxx + tool_size / 2;
-                    var _sy1  = _syy + tool_size / 2;
-                    
-                    if(point_in_rectangle(_mx, _my, _sx0, _sy0 + 1, _sx1, _sy1 - 1)) {
-                        TOOLTIP = tool.getDisplayName(j);
-                        draw_sprite_stretched(THEME.button_hide_fill, 1, _sx0 + pd, _sy0 + pd, tool_size - pd * 2, tool_size - pd * 2);
-                            
-                        if(mouse_press(mb_left, pFOCUS))
-                            tool.toggle(j);
-                    } 
-                            
-                    if(tool_current == tool && tool.selecting == j) {
-                        draw_sprite_stretched_ext(THEME.button_hide_fill, 2, _sx0 + pd, _sy0 + pd, tool_size - pd * 2, tool_size - pd * 2, COLORS.panel_preview_grid, 1);
-                        draw_sprite_stretched_ext(THEME.button_hide_fill, 3, _sx0 + pd, _sy0 + pd, tool_size - pd * 2, tool_size - pd * 2, COLORS._main_accent, 1);
-                    }
-                    
-                    draw_sprite_colored(stool[j], 0, _sxx, _syy);
-                }
-                    
-                if(point_in_rectangle(_mx, _my, _x0, _y0 + 1, _x0 + s_ww, _y1 - 1))
-                    tool_hovering = tool;
-            
-            } else { // single tools
-                if(tool_hovering == tool) {
-                    draw_sprite_stretched(THEME.button_hide_fill, 1, _x0 + pd, _y0 + pd, tool_size - pd * 2, tool_size - pd * 2);
-                    TOOLTIP = tool.getDisplayName();
-                    
-                    if(mouse_press(mb_left, pFOCUS))
-                        tool.toggle();
-                }
-                
-                if(tool_current == tool) {
-                    draw_sprite_stretched_ext(THEME.button_hide_fill, 2, _x0 + pd, _y0 + pd, tool_size - pd * 2, tool_size - pd * 2, COLORS.panel_preview_grid, 1);
-                    draw_sprite_stretched_ext(THEME.button_hide_fill, 3, _x0 + pd, _y0 + pd, tool_size - pd * 2, tool_size - pd * 2, COLORS._main_accent, 1);
-                }
-                
-                var _spr = tool.subtools > 0? tool.spr[tool.selecting] : tool.spr;
-                draw_sprite_colored(_spr, 0, xx, yy);
-            }
-            
-            var _key = tool.checkHotkey();
-            if(_key != noone && pFOCUS && WIDGET_CURRENT == noone) {
-                if(_key.isPressing()) tool.toggleKeyboard();
-                
-                var _hkstr = key_get_name(_key.key, _key.modi);
-                if(_hkstr != "" && key_mod_press(ALT)) {
-                	draw_set_text(f_p4, fa_right, fa_center, COLORS._main_text);
-                	var _hks  = string_width(_hkstr) + ui(8);
-                	var _hkx0 = _x1 - _hks;
-                	var _hky0 = _y1 - ui(16);
-                	
-                	draw_sprite_stretched_ext(THEME.ui_panel, 0, _hkx0, _hky0, _hks, ui(16), COLORS.panel_bg_clear_inner);
-                	draw_text_add(_hkx0 + _hks - ui(4), _hky0 + ui(16) / 2, _hkstr);
-                }
-            }
-            
-            yy         += tool_size;
-            tool_y_max += tool_size;
-        }
-        
-        var _h = _node.drawTools == noone? 0 : _node.drawTools(_mx, _my, xx, yy - tool_size / 2, tool_size, thov, pFOCUS);
-        yy         += _h;
-        tool_y_max += _h;
-        
-        tool_y_max = max(0, tool_y_max - h + toolbar_height * 2);            
-        if(thov && !key_mod_press_any()) {
-            if(mouse_wheel_up())   tool_y_to = clamp(tool_y_to + ui(64) * SCROLL_SPEED, -tool_y_max, 0);
-            if(mouse_wheel_down()) tool_y_to = clamp(tool_y_to - ui(64) * SCROLL_SPEED, -tool_y_max, 0);
-        }
-        
-        if(_node.rightTools != -1) {
-            right_menu_x = w - toolbar_width - ui(8);
-            tool_ry_max  = 0; 
-            tool_ry      = lerp_float(tool_ry, tool_ry_to, 5);
-            
-            var _tbx = w - toolbar_width;
-            var xx   = _tbx + toolbar_width / 2;
-            var yy   = ui(34) + tool_size  / 2 + tool_ry;
-            
-            draw_sprite_stretched_ext(THEME.tool_side, 1, w + 1 - toolbar_width, ui(32), toolbar_width, h - toolbar_height - ui(32), c_white, aa);
-            
-            var thov = pHOVER && point_in_rectangle(mx, my, _tbx, toolbar_height, w, h - toolbar_height);
-            if(thov) canvas_hover = false;
-            
-            for(var i = 0; i < array_length(_node.rightTools); i++) { //// right tools
-                var tool = _node.rightTools[i];
-                var _x0  = xx - tool_size / 2;
-                var _y0  = yy - tool_size / 2;
-                var _x1  = xx + tool_size / 2;
-                var _y1  = yy + tool_size / 2;
-                
-                if(tool == -1) {
-                    draw_set_color(COLORS._main_icon_dark);
-                    draw_line_round(xx + ui(8), _y0 + ui(3), xx - ui(9), _y0 + ui(3), 2);
-                    
-                    yy          += ui(8);
-                    tool_ry_max += ui(8);
-                    continue;
-                }
-                
-                if(thov && point_in_rectangle(_mx, _my, _x0, _y0 + 1, _x1, _y1 - 1))
-                    tool_hovering = tool;
-            
-                if(tool.subtools > 0 && _tool == tool) { // hovering subtools
-                    
-                    var stool = tool.spr;
-                    var s_ww  = tool_size * tool.subtools;
-                    var s_hh  = tool_size;
-                    var tx    = _x0 - s_ww + tool_size;
-                    draw_sprite_stretched(THEME.box_r2_clr, 0, tx - pd, _y0 - pd, s_ww + pd * 2, s_hh + pd * 2);
-                    
-                    var _am = array_length(stool);
-                    
-                    for( var j = 0; j < _am; j++ ) {
-                        var _sind = _am - 1 - j;
-                        var _sxx = tx + j * tool_size + tool_size / 2;
-                        var _syy = yy;
-                            
-                        var _sx0  = _sxx - tool_size / 2;
-                        var _sy0  = _syy - tool_size / 2;
-                        var _sx1  = _sxx + tool_size / 2;
-                        var _sy1  = _syy + tool_size / 2;
-                        
-                        if(point_in_rectangle(_mx, _my, _sx0, _sy0 + 1, _sx1, _sy1 - 1)) {
-                            TOOLTIP = tool.getDisplayName(_sind);
-                            draw_sprite_stretched(THEME.button_hide_fill, 1, _sx0 + pd, _sy0 + pd, tool_size - pd * 2, tool_size - pd * 2);
-                            
-                            if(mouse_press(mb_left, pFOCUS))
-                                tool.toggle(_sind);
-                        }
-                            
-                        if(tool_current == tool && tool.selecting == _sind) {
-                            draw_sprite_stretched_ext(THEME.button_hide_fill, 2, _sx0 + pd, _sy0 + pd, tool_size - pd * 2, tool_size - pd * 2, COLORS.panel_preview_grid, 1);
-                            draw_sprite_stretched_ext(THEME.button_hide_fill, 3, _sx0 + pd, _sy0 + pd, tool_size - pd * 2, tool_size - pd * 2, COLORS._main_accent, 1);
-                        }
-                        
-                        draw_sprite_colored(stool[_sind], 0, _sxx, _syy);
-                        
-                    }
-                    
-                    if(point_in_rectangle(_mx, _my, tx, _y0 + 1, tx + s_ww, _y1 - 1))
-                        tool_hovering = tool;
-                
-                } else { // single tools
-                    if(tool_hovering == tool) {
-                        draw_sprite_stretched(THEME.button_hide_fill, 1, _x0 + pd, _y0 + pd, tool_size - pd * 2, tool_size - pd * 2);
-                        TOOLTIP = tool.getDisplayName();
-                    
-                        if(mouse_press(mb_left, pFOCUS))
-                            tool.toggle();
-                    }
-                    
-                    if(tool_current == tool) {
-                        draw_sprite_stretched_ext(THEME.button_hide_fill, 2, _x0 + pd, _y0 + pd, tool_size - pd * 2, tool_size - pd * 2, COLORS.panel_preview_grid, 1);
-                        draw_sprite_stretched_ext(THEME.button_hide_fill, 3, _x0 + pd, _y0 + pd, tool_size - pd * 2, tool_size - pd * 2, COLORS._main_accent, 1);
-                    }
-                
-	                var _spr = tool.subtools > 0? tool.spr[tool.selecting] : tool.spr;
-	                draw_sprite_colored(_spr, 0, xx, yy);
-	                
-                }
-                
-	            var _key = tool.checkHotkey();
-	            if(_key != noone && pFOCUS && WIDGET_CURRENT == noone) {
-	                if(_key.isPressing()) tool.toggleKeyboard();
-	                
-	                var _hkstr = key_get_name(_key.key, _key.modi);
-	                if(_hkstr != "" && key_mod_press(ALT)) {
-	                	draw_set_text(f_p4, fa_left, fa_center, COLORS._main_text);
-	                	var _hks  = string_width(_hkstr) + ui(8);
-	                	var _hkx0 = _x0;
-	                	var _hky0 = _y1 - ui(16);
-	                	
-	                	draw_sprite_stretched_ext(THEME.ui_panel, 0, _hkx0, _hky0, _hks, ui(16), COLORS.panel_bg_clear_inner);
-	                	draw_text_add(_hkx0 + ui(4), _hky0 + ui(16) / 2, _hkstr);
-	                }
-	            }
-	            
-                yy          += tool_size;
-                tool_ry_max += tool_size;
-            } 
-            
-            tool_ry_max = max(0, tool_ry_max - h + toolbar_height * 2);            
-            if(thov && !key_mod_press_any()) {
-                if(mouse_wheel_up())   tool_ry_to = clamp(tool_ry_to + ui(64) * SCROLL_SPEED, -tool_ry_max, 0);
-                if(mouse_wheel_down()) tool_ry_to = clamp(tool_ry_to - ui(64) * SCROLL_SPEED, -tool_ry_max, 0);
-            }
-        }
+        drawTools(_node);
     }
     
     function drawToolBar(_tool, _node) {
@@ -2415,7 +2445,7 @@ function Panel_Preview() : PanelContent() constructor {
         if(PANEL_PREVIEW == self) { //only draw overlay once
             if(inspect_node) {
                 tool = inspect_node.getTool();
-                if(tool) drawNodeTools(pFOCUS, tool);
+                if(tool) drawNodeActions(pFOCUS, tool);
                 
             } else {
             	if(tool_current != noone) {

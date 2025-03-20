@@ -138,7 +138,6 @@
             { "label": "Groups" },
             "Node_Group_Input",
             "Node_Group_Output",
-            "Node_Rigid_Render_Output",
             "Node_Rigid_Global",
             
             { "label": "RigidSim" },
