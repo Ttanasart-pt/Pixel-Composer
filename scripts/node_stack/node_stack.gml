@@ -69,6 +69,7 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var hh = 0;
 		
 		for( var i = input_fix_len; i < array_length(inputs); i++ ) {
+			
 			var _surf = getInputData(i);
 			if(!is_array(_surf)) _surf = [ _surf ];
 			

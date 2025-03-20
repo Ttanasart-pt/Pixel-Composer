@@ -46,6 +46,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		active_tooltip = "";
 		
 		is_dummy       = false;
+		ghost_hover    = noone;
 		dummy_get      = noone;
 		dummy_undo     = -1;
 		dummy_redo     = -1;
@@ -2040,7 +2041,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			__draw_sprite_ext(custom_icon, 0, x, y, _s, _s, 0, c_white, 1);
 			
 		} else if(is_dummy) {
-			__draw_sprite_ext(THEME.node_junction_add, _hov, x, y, _s, _s, 0, c_white, 0.5 + 0.5 * _hov);
+			if(ghost_hover == noone) __draw_sprite_ext(THEME.node_junction_add, _hov, x, y, _s, _s, 0, c_white, 0.5 + 0.5 * _hov);
+			else {
+				__draw_sprite_ext(THEME.node_junctions_bg,      ghost_hover.draw_junction_index, x, y, _s, _s, 0, ghost_hover.draw_bg, 1);
+				__draw_sprite_ext(THEME.node_junctions_outline, ghost_hover.draw_junction_index, x, y, _s, _s, 0, ghost_hover.draw_fg, 1);
+			}
+			
+			ghost_hover = noone;
 			
 		} else if(type == VALUE_TYPE.action) {
 			var _cbg = c_white;

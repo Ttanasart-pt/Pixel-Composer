@@ -55,7 +55,6 @@ function Node_Logic(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		newInput(index, nodeValue_Bool(jname,  self, false ))
 			.setVisible(true, true);
 		
-		array_push(input_display_list, inAmo);
 		return inputs[index];
 	} 
 	

@@ -408,6 +408,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	dummy_input                = noone;
 	dummy_add_index            = noone;
 	_dummy_add_index           = noone;
+	_dummy_start               = 0;
 	auto_input                 = false;
 	dyna_input_check_shift     =  0;
 	input_display_dynamic      = -1;
@@ -427,8 +428,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				.setDummy(function() /*=>*/ {
 					var inAmo = array_length(inputs);
 					var index = dummy_add_index == noone? inAmo : input_fix_len + dummy_add_index * data_length;
-					repeat(data_length) array_insert(inputs, index, 0);
 					
+					repeat(data_length) array_insert(inputs, index, 0);
 					return createNewInput(index);
 				})
 				.setVisible(false, true);
@@ -859,7 +860,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		if(auto_input && dummy_input) {
 			if(dummy_add_index == noone) array_push(inputDisplayList, dummy_input);
-			else array_insert(inputDisplayList, dummy_add_index, dummy_input);
+			else array_insert(inputDisplayList, _dummy_start + dummy_add_index, dummy_input);
 		}
 	}
 	
@@ -1568,14 +1569,21 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		array_foreach(inputs, function(jun) /*=>*/ { jun.x = _ix; jun.y = _iy; });
 		
+		_dummy_start = 0;
 		_dummy &= key_mod_press(CTRL);
-		if(_dummy) dummy_add_index = 0;
 		
 		array_foreach(inputDisplayList, function(jun, i) /*=>*/ { 
 			jun.x = _ix; jun.rx = _rix; 
 			jun.y = _iy; jun.ry = _riy; 
 			
-			if(_dummy && __my > _iy - junction_draw_hei_y * __s * .5) dummy_add_index = i;
+			if(_dummy) {
+				if(jun.index < input_fix_len)
+					_dummy_start = max(_dummy_start, i + 1);
+				
+				var _jy = _iy - junction_draw_hei_y * __s * .5;
+				if(jun.index >= input_fix_len && __my > _jy)
+					dummy_add_index = i - _dummy_start;
+			}
 			
 			_riy += junction_draw_hei_y;
 			_iy  += junction_draw_hei_y * __s;

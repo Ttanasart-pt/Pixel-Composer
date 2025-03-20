@@ -1627,18 +1627,21 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	            var _cmy = connection_draw_mouse[1];
 	            var _cmt = connection_draw_target;
 	            
-	            if(array_empty(value_draggings))
+	            if(array_empty(value_draggings)) {
 	                value_dragging.drawConnectionMouse(connection_param, _cmx, _cmy, _cmt);
-	            else {
+	                
+	            } else {
 	                var _stIndex = array_find(value_draggings, value_dragging);
-	            
+	            	var _hh = 16 * graph_s;
+	            	
 	                for( var i = 0, n = array_length(value_draggings); i < n; i++ ) {
 	                    var _dmx = _cmx;
-	                    var _dmy = value_draggings[i].connect_type == CONNECT_TYPE.output? _cmy + (i - _stIndex) * 24 * graph_s : _cmy;
+	                    var _dmy = value_draggings[i].connect_type == CONNECT_TYPE.output? _cmy + (i - _stIndex) * _hh : _cmy;
 	                
 	                    value_draggings[i].drawConnectionMouse(connection_param, _dmx, _dmy, _cmt);
 	                }
 	            }
+	            
 	        } else if(add_node_draw_junc != noone) {
 	        	
 	        	if(!instance_exists(o_dialog_add_node))
@@ -2115,9 +2118,12 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
             
             connection_draw_mouse  = [ _mmx, _mmy ];
             connection_draw_target = target;
-            
+			
             value_dragging.drawJunction(true, graph_s, value_dragging.x, value_dragging.y);
-            if(target) target.drawJunction(true, graph_s, target.x, target.y);
+            if(target) {
+            	target.ghost_hover = value_dragging;
+            	target.drawJunction(true, graph_s, target.x, target.y);
+            }
             
             var _inline_ctx = value_dragging.node.inline_context;
             
