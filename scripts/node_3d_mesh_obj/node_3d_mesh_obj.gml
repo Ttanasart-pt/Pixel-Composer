@@ -71,6 +71,9 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 		
 		newInput(index, nodeValue_D3Material("Material", self, new __d3dMaterial()))
 							.setVisible(true, true);
+							
+		array_push(input_display_list, index);
+		return inputs[index];
 	}
 	
 	static createMaterial = function(m_index) {

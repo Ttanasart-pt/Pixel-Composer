@@ -9,32 +9,27 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	newInput(0, nodeValue("Object", self, CONNECT_TYPE.input, VALUE_TYPE.rigid, noone))
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_Enum_Scroll("Force type", self,  0, [ "Constant", "Impulse", "Torque", "Explode" ]))
-		.rejectArray();
+	newInput(1, nodeValue_Enum_Scroll("Force type", self,  0, [ "Constant", "Impulse", "Torque", "Explode" ]));
 	
-	newInput(2, nodeValue_Vec2("Position", self, [ 0, 0 ]))
-		.rejectArray();
+	newInput(2, nodeValue_Vec2("Position", self, [ 0, 0 ]));
 	
-	newInput(3, nodeValue_Float("Torque", self, 0))
-		.rejectArray();
+	newInput(3, nodeValue_Float("Torque", self, 0));
 	
-	newInput(4, nodeValue_Int("Apply frame", self, 0, "Frame index to apply force."))
-		.rejectArray();
+	newInput(4, nodeValue_Int("Apply frame", self, 0, "Frame index to apply force."));
 	
-	newInput(5, nodeValue_Vec2("Force", self, [ 0.1, 0 ]))
-		.rejectArray();
+	newInput(5, nodeValue_Vec2("Force", self, [ 0.1, 0 ]));
 	
-	newInput(6, nodeValue_Enum_Button("Scope", self,  0, [ "Global", "Local" ]))
-		.rejectArray();
+	newInput(6, nodeValue_Enum_Button("Scope", self,  0, [ "Global", "Local" ]));
 	
 	newInput(7, nodeValue_Float("Strength", self, 1))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 16, 0.01] })
-		.rejectArray();
+		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 16, 0.01] });
 	
-	newInput(8, nodeValue_Float("Range", self, 8))
-		.rejectArray();
-		
+	newInput(8, nodeValue_Float("Range", self, 8));
+	
 	newOutput(0, nodeValue_Output("Object", self, VALUE_TYPE.rigid, noone));
+	
+	for( var i = 1, n = array_length(inputs); i < n; i++ )
+		inputs[i].rejectArray();
 	
 	input_display_list = [
 		["Object",	 true],	0,
@@ -43,17 +38,11 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	
 	array_push(attributeEditors, "Display");
 	
-	attributes.show_objects = true;
-	array_push(attributeEditors, ["Show objects", function() { return attributes.show_objects; }, 
-		new checkBox(function() { 
-			attributes.show_objects = !attributes.show_objects;
-		})]);
-	
+	attributes.show_objects  = true;
 	attributes.display_scale = 512;
-	array_push(attributeEditors, ["Display scale", function() { return attributes.display_scale; }, 
-		new textBox(TEXTBOX_INPUT.number, function(val) { 
-			attributes.display_scale = val;
-		})]);
+	
+	array_push(attributeEditors, ["Show objects",  function() /*=>*/ {return attributes.show_objects},  new checkBox(function() /*=>*/ { attributes.show_objects = !attributes.show_objects; })]);
+	array_push(attributeEditors, ["Display scale", function() /*=>*/ {return attributes.display_scale}, new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ { attributes.display_scale = v; })]);
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _typ = getInputData(1);
@@ -74,6 +63,7 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			
 			inputs[2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 			inputs[5].drawOverlay(hover, active, px, py, _s * attributes.display_scale, _mx, _my, _snx, _sny, 0, 10);
+			
 		} else if(_typ == 3) {
 			var _rad = getInputData(8);
 			
@@ -84,19 +74,9 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			
 			inputs[2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 			inputs[8].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny);
+			
 		} else 
 			inputs[2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-	}
-	
-	static step = function() {
-		var _typ = getInputData(1);
-		
-		inputs[3].setVisible(_typ == 2);
-		inputs[4].setVisible(_typ > 0);
-		inputs[5].setVisible(_typ == 0 || _typ == 1);
-		inputs[6].setVisible(_typ != 3);
-		inputs[7].setVisible(_typ == 3);
-		inputs[8].setVisible(_typ == 3);
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
@@ -114,6 +94,13 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		var _sco = getInputData(6);
 		var _str = getInputData(7);
 		var _rad = getInputData(8);
+		
+		inputs[3].setVisible(_typ == 2);
+		inputs[4].setVisible(_typ > 0);
+		inputs[5].setVisible(_typ == 0 || _typ == 1);
+		inputs[6].setVisible(_typ != 3);
+		inputs[7].setVisible(_typ == 3);
+		inputs[8].setVisible(_typ == 3);
 		
 		if((_typ > 0) && CURRENT_FRAME != _frm)
 			return;

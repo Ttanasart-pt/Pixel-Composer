@@ -26,6 +26,7 @@ function Node_Rigid_Render_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 		newInput(index, nodeValue("Object", self, CONNECT_TYPE.input, VALUE_TYPE.rigid, noone ))
 			.setVisible(true, true);
 			
+		array_push(input_display_list, index);
 		return inputs[index];
 	} setDynamicInput(1, true, VALUE_TYPE.rigid);
 	

@@ -2016,8 +2016,9 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
             }
         }
         
-        var _node = value_dragging.node;
-        var _loopable = !is(_node, Node_Pin) && _connect[1].node.loopable && _connect[2].node.loopable;
+        var _node     = value_dragging.node;
+        var _loopable = !is(_node, Node_Pin) && _connect[1] != noone && _connect[2] != noone && 
+                             _connect[1].node.loopable && _connect[2].node.loopable;
         
         if(_connect[0] == -7 && _loopable) {
             if(_connect[1].value_from_loop != noone)

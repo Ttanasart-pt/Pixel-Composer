@@ -19,7 +19,8 @@ function Node_Array_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		newInput(index, nodeValue("Input", self, CONNECT_TYPE.input, VALUE_TYPE.any, -1 ))
 			.setVisible(true, true);
-		
+							
+		array_push(input_display_list, index);
 		return inputs[index];
 	} setDynamicInput(1);
 	

@@ -31,8 +31,8 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		inputs[index].attributes.bone_id = bone != noone? bone.ID : noone;
 		
 		if(bone != noone) boneMap[$ bone.ID] = inputs[index];
-		array_push(input_display_list, index);
 		
+		array_push(input_display_list, index);
 		return inputs[index];
 	} 
 	

@@ -70,7 +70,7 @@ function __Node_3D_Combine(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			.setVisible(true, true);
 			
 		array_push(input_display_list, index);
-		
+		return inputs[index];
 	} setDynamicInput(1, true, VALUE_TYPE.d3object);
 	
 	static onValueFromUpdate = function(index) {

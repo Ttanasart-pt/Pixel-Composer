@@ -74,6 +74,8 @@ output.color = surfaceColor;"))
 		newInput(index + 2, nodeValue("Argument value", self, CONNECT_TYPE.input, VALUE_TYPE.float, 0 ))
 			.setVisible(true, true);
 		inputs[index + 2].editWidget.interactable = false;
+							
+		array_push(input_display_list, index, index + 1, index + 2);
 	}
 	
 	argumentRenderer();

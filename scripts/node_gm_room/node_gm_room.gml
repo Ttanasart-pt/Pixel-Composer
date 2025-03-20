@@ -258,7 +258,6 @@ function Node_GMRoom(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var _jun  = newInput(index, nodeValue("Data", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0 ));
 		
 		array_push(input_display_list, index);
-		
 		return _jun;
 	} 
 	setDynamicInput(1, false);

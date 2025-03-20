@@ -10,6 +10,7 @@ function Node_String_Merge(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		newInput(index, nodeValue_Text("Text", self, "" ))
 			.setVisible(true, true);
 		
+		array_push(input_display_list, index);
 		return inputs[index];
 	} 
 	

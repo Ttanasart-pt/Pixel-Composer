@@ -42,6 +42,7 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		newInput(index, nodeValue_Surface("Input", self))
 			.setVisible(true, true);
 			
+		array_push(input_display_list, index);
 		return inputs[index];
 	} setDynamicInput(1, true, VALUE_TYPE.surface);
 	

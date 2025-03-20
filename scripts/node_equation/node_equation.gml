@@ -111,7 +111,8 @@ function Node_Equation(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		
 		newInput(index + 1, nodeValue_Float("Argument value", self, 0 ))
 			.setVisible(true, true);
-		
+							
+		array_push(input_display_list, index, index + 1);
 		return inputs[index + 0];
 	} setDynamicInput(2, false);
 	

@@ -48,6 +48,7 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			.setVisible(true, true);
 		inputs[index + 2].editWidget.interactable = false;
 		
+		array_push(input_display_list, index, index + 1, index + 2);
 		return inputs[index + 0];
 	} 
 	

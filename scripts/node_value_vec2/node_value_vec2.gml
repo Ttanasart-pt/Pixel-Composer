@@ -111,6 +111,8 @@ function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _
 			}
 		}
 		
+		if(!is_array(_sca)) _sca = [ _sca, _sca ];
+		
 		return preview_overlay_vector(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _typ, _sca);
 	}
 	

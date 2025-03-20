@@ -561,8 +561,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		if(dummy_input) {
 			var _ddy = abs(dummy_input.y - _y);
-			if(_ddy < _dy)
-				_targ = dummy_input;
+			if(_ddy < _dy) _targ = dummy_input;
 		}
 		
 		return _targ;
