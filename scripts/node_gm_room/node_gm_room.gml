@@ -253,12 +253,13 @@ function Node_GMRoom(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
     	["Data",    true], 
 	];
 	
-	static createNewInput = function() {
-		var index = array_length(inputs);
-		var _jun  = newInput(index, nodeValue("Data", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0 ));
+	static createNewInput = function(index = array_length(inputs)) {
+		var inAmo = array_length(inputs);
 		
-		array_push(input_display_list, index);
-		return _jun;
+		newInput(index, nodeValue("Data", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0 ));
+		
+		array_push(input_display_list, inAmo);
+		return inputs[index];
 	} 
 	setDynamicInput(1, false);
 	

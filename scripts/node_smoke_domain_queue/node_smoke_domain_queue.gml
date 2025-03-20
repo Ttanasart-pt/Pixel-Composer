@@ -6,13 +6,13 @@ function Node_Smoke_Domain_Queue(_x, _y, _group = noone) : Node_Smoke(_x, _y, _g
 	
 	newOutput(0, nodeValue_Output("Domain", self, VALUE_TYPE.sdomain, noone));
 	
-	static createNewInput = function() {
-		var index = array_length(inputs);
+	static createNewInput = function(index = array_length(inputs)) {
+		var inAmo = array_length(inputs);
 		
 		newInput(index, nodeValue("Input", self, CONNECT_TYPE.input, VALUE_TYPE.sdomain, noone ))
 			.setVisible(true, true);
 		
-		array_push(input_display_list, index);
+		array_push(input_display_list, inAmo);
 		return inputs[index];
 	} 
 	

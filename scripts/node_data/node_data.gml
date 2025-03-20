@@ -406,6 +406,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	////- DYNAMIC IO
 	
 	dummy_input                = noone;
+	dummy_add_index            = noone;
+	_dummy_add_index           = noone;
 	auto_input                 = false;
 	dyna_input_check_shift     =  0;
 	input_display_dynamic      = -1;
@@ -422,7 +424,13 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		if(auto_input) {
 			dummy_input = nodeValue("Add value", self, CONNECT_TYPE.input, dummy_type, 0)
-				.setDummy(function() /*=>*/ {return createNewInput()})
+				.setDummy(function() /*=>*/ {
+					var inAmo = array_length(inputs);
+					var index = dummy_add_index == noone? inAmo : input_fix_len + dummy_add_index * data_length;
+					repeat(data_length) array_insert(inputs, index, 0);
+					
+					return createNewInput(index);
+				})
 				.setVisible(false, true);
 		}
 		
@@ -849,7 +857,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			}
 		}
 		
-		if(auto_input && dummy_input) array_push(inputDisplayList, dummy_input);
+		if(auto_input && dummy_input) {
+			if(dummy_add_index == noone) array_push(inputDisplayList, dummy_input);
+			else array_insert(inputDisplayList, dummy_add_index, dummy_input);
+		}
 	}
 	
 	static onValidate = function() {
@@ -1478,7 +1489,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	__preDraw_data = { _x: undefined, _y: undefined, _w: undefined, _h: undefined, _s: undefined, _p: undefined, sp: undefined, force: false };
 	
-	static preDraw = function(_x, _y, _s) {
+	static preDraw = function(_x, _y, _mx, _my, _s) {
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
 		
@@ -1494,8 +1505,16 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		_d.sp = show_parameter;
 		
 		_d.force = false;
+		_dummy   = auto_input && dummy_input && PANEL_GRAPH.value_dragging;
 		
-		if(!_upd) {
+		if(_dummy || _dummy_add_index != dummy_add_index) {
+			getJunctionList();
+			PANEL_GRAPH.draw_refresh = true;
+		}
+		_dummy_add_index = dummy_add_index;
+		dummy_add_index  = noone;
+		
+		if(!_upd && !_dummy) {
 			if(SHOW_PARAM) h = h_param;
 			onPreDraw(_x, _y, _s, _iy, _oy);
 			return;
@@ -1545,11 +1564,18 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		_ox = xx + w * _s;  _rox = x + w;
 		_oy = _junSy;       _roy = y + _junRy;
 		
-		array_foreach(inputs,           function(jun) /*=>*/ { jun.x = _ix; jun.y = _iy; });
+		__mx = _mx;         __my = _my;
 		
-		array_foreach(inputDisplayList, function(jun) /*=>*/ { 
+		array_foreach(inputs, function(jun) /*=>*/ { jun.x = _ix; jun.y = _iy; });
+		
+		_dummy &= key_mod_press(CTRL);
+		if(_dummy) dummy_add_index = 0;
+		
+		array_foreach(inputDisplayList, function(jun, i) /*=>*/ { 
 			jun.x = _ix; jun.rx = _rix; 
 			jun.y = _iy; jun.ry = _riy; 
+			
+			if(_dummy && __my > _iy - junction_draw_hei_y * __s * .5) dummy_add_index = i;
 			
 			_riy += junction_draw_hei_y;
 			_iy  += junction_draw_hei_y * __s;
@@ -1748,70 +1774,23 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		h_param = h;
 	}
 	
-	static drawJunctions = function(_draw, _x, _y, _mx, _my, _s) {
-		var hover = noone;
-		gpu_set_texfilter(true);
-		
-		for(var i = 0, n = array_length(inputDisplayList); i < n; i++) { //inputs
-			var jun = inputDisplayList[i];
-			
-			if(jun.drawJunction(_draw, _s, _mx, _my)) hover = jun;
-		}
-		
-		for(var i = 0; i < array_length(outputs); i++) { // outputs
-			var jun = outputs[i];
-			
-			if(!jun.isVisible()) continue;
-			if(jun.drawJunction(_draw, _s, _mx, _my)) hover = jun;
-		}
-		
-		for( var i = 0; i < array_length(inputs); i++ ) { // bypass
-			var _inp = inputs[i];
-			var  jun = _inp.bypass_junc;
-			
-			if(jun == noone || !jun.visible) continue;
-			if(jun.drawJunction(_draw, _s, _mx, _my)) hover = jun;
-		}
-		
-		if(hasInspector1Update() && inspectInput1.drawJunction(_draw, _s, _mx, _my)) hover = inspectInput1;
-		if(hasInspector2Update() && inspectInput2.drawJunction(_draw, _s, _mx, _my)) hover = inspectInput2;
-		
-		if(attributes.show_update_trigger) {
-			if(updatedInTrigger.drawJunction(_draw, _s, _mx, _my))  hover = updatedInTrigger;
-			if(updatedOutTrigger.drawJunction(_draw, _s, _mx, _my)) hover = updatedOutTrigger;
-		}
-		
-		if(attributes.outp_meta) {
-			for(var i = 0; i < array_length(junc_meta); i++) { // outputs
-				var jun = junc_meta[i];
-				
-				if(!jun.isVisible()) continue;
-				if(jun.drawJunction(_draw, _s, _mx, _my)) hover = jun;
-			}
-		}
-		
-		onDrawJunctions(_x, _y, _mx, _my, _s);
-		
-		gpu_set_texfilter(false);
-		return hover;
-	}
-	
-	static drawJunctions_fast = function(_draw, _x, _y, _mx, _my, _s) {
+	static drawJunctions = function(_draw, _x, _y, _mx, _my, _s, _fast = false) {
 		var hover = noone;
 		
-		draw_set_circle_precision(4);
+		if(_fast) draw_set_circle_precision(4);
+		else      gpu_set_texfilter(true);
 		
 		for(var i = 0, n = array_length(inputDisplayList); i < n; i++) {
 			var jun = inputDisplayList[i];
 			
-			if(jun.drawJunction_fast(_draw, _s, _mx, _my)) hover = jun;
+			if(jun.drawJunction(_draw, _s, _mx, _my, _fast)) hover = jun;
 		}
 		
 		for(var i = 0; i < array_length(outputs); i++) {
 			var jun = outputs[i];
 			
 			if(!jun.isVisible()) continue;
-			if(jun.drawJunction_fast(_draw, _s, _mx, _my)) hover = jun;
+			if(jun.drawJunction(_draw, _s, _mx, _my, _fast)) hover = jun;
 		}
 		
 		for( var i = 0; i < array_length(inputs); i++ ) {
@@ -1819,32 +1798,30 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			var jun = _inp.bypass_junc;
 			
 			if(jun == noone || !jun.visible) continue;
-			if(jun.drawJunction_fast(_draw, _s, _mx, _my)) hover = jun;
+			if(jun.drawJunction(_draw, _s, _mx, _my, _fast)) hover = jun;
 		}
 		
-		if(hasInspector1Update() && inspectInput1.drawJunction_fast(_draw, _s, _mx, _my)) hover = inspectInput1;
-		if(hasInspector2Update() && inspectInput2.drawJunction_fast(_draw, _s, _mx, _my)) hover = inspectInput2;
+		if(hasInspector1Update() && inspectInput1.drawJunction(_draw, _s, _mx, _my, _fast)) hover = inspectInput1;
+		if(hasInspector2Update() && inspectInput2.drawJunction(_draw, _s, _mx, _my, _fast)) hover = inspectInput2;
 		
 		if(attributes.show_update_trigger) {
-			if(updatedInTrigger.drawJunction_fast(_draw, _s, _mx, _my))  hover = updatedInTrigger;
-			if(updatedOutTrigger.drawJunction_fast(_draw, _s, _mx, _my)) hover = updatedOutTrigger;
+			if(updatedInTrigger.drawJunction(_draw, _s, _mx, _my, _fast))  hover = updatedInTrigger;
+			if(updatedOutTrigger.drawJunction(_draw, _s, _mx, _my, _fast)) hover = updatedOutTrigger;
 		}
 		
 		if(attributes.outp_meta) {
-			for(var i = 0; i < array_length(junc_meta); i++) { // outputs
+			for( var i = 0, n = array_length(junc_meta); i < n; i++ ) {
 				var jun = junc_meta[i];
 				
 				if(!jun.isVisible()) continue;
-				if(jun.drawJunction_fast(_draw, _s, _mx, _my)) hover = jun;
+				if(jun.drawJunction(_draw, _s, _mx, _my, _fast)) hover = jun;
 			}
 		}
 		
-		onDrawJunctions(_x, _y, _mx, _my, _s);
-		
+		if(!_fast) gpu_set_texfilter(false);
+			
 		return hover;
 	}
-	
-	static onDrawJunctions = function(_x, _y, _mx, _my, _s) {}
 	
 	static drawJunctionNames = function(_x, _y, _mx, _my, _s, _panel = noone) {
 		var amo = input_display_list == -1? array_length(inputs) : array_length(input_display_list);
@@ -2124,7 +2101,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
-		if(!_draw) return _s > 0.5? drawJunctions(_draw, xx, yy, _mx, _my, _s) : drawJunctions_fast(_draw, xx, yy, _mx, _my, _s);
+		if(!_draw) return drawJunctions(_draw, xx, yy, _mx, _my, _s, _s <= 0.5);
 		
 		preview_mx = _mx;
 		preview_my = _my;
@@ -2185,8 +2162,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		drawNodeOverlay(xx, yy, _mx, _my, _s);
 		
-		if(!previewable) return drawJunctions_fast(_draw, xx, yy, _mx, _my, _s);
-		return _s > 0.5? drawJunctions(_draw, xx, yy, _mx, _my, _s) : drawJunctions_fast(_draw, xx, yy, _mx, _my, _s);
+		if(!previewable) return drawJunctions(_draw, xx, yy, _mx, _my, _s, true);
+		return drawJunctions(_draw, xx, yy, _mx, _my, _s, _s <= 0.5);
 	}
 	
 	static drawNodeBehind = function(_x, _y, _mx, _my, _s) {

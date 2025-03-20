@@ -22,20 +22,20 @@ function Node_Struct(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	newOutput(0, nodeValue_Output("Struct", self, VALUE_TYPE.struct, {}));
 	
-	static createNewInput = function(list = inputs) {
-		var index = array_length(list);
-		var bDel  = button(function() { node.deleteInput(index); })
+	static createNewInput = function(index = array_length(inputs)) {
+		var inAmo = array_length(inputs);
+		var bDel  = button(function() /*=>*/ {return node.deleteInput(index)} )
 				.setIcon(THEME.minus_16, 0, COLORS._main_icon);
 		
-		list[index + 0] = nodeValue_Text("Key", self, "" )
+		inputs[index + 0] = nodeValue_Text("Key", self, "" )
 			.setDisplay(VALUE_DISPLAY.text_box, { side_button : bDel })
 			.setAnimable(false);
-		bDel.setContext(list[index + 0]);
+		bDel.setContext(inputs[index + 0]);
 		
-		list[index + 1] = nodeValue("value", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0 )
+		inputs[index + 1] = nodeValue("value", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0 )
 			.setVisible(false, false);
 			
-		return list[index + 0];
+		return inputs[index + 0];
 	} 
 	
 	setDynamicInput(2, false);

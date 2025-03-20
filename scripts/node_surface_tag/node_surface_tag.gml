@@ -83,15 +83,15 @@ function Node_Surface_Tag(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		["Values",   true], 
 	];
 	
-	static createNewInput = function() {
-		var index = array_length(inputs);
+	static createNewInput = function(index = array_length(inputs)) {
+		var inAmo = array_length(inputs);
 		
 		newInput(index + 0, nodeValue_Text("Tag", self, "new tag"));
 		
 		newInput(index + 1, nodeValue_Vec2("Position", self, [[ 0, 0 ]] ))
 			.setArrayDepth(1);
 		
-		array_push(input_display_list, index + 1);
+		array_push(input_display_list, inAmo + 1);
 		return [ inputs[index + 0], inputs[index + 1] ];
 	} 
 	

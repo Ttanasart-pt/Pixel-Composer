@@ -136,8 +136,8 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	static newAnchor = function(_x = 0, _y = 0, _dxx = 0, _dxy = 0, _dyx = 0, _dyy = 0) { return [ _x, _y, _dxx, _dxy, _dyx, _dyy, 0 ]; }
 	
-	static createNewInput = function(_x = 0, _y = 0, _dxx = 0, _dxy = 0, _dyx = 0, _dyy = 0, rec = true) {
-		var index = array_length(inputs);
+	static createNewInput = function(index = array_length(inputs), _x = 0, _y = 0, _dxx = 0, _dxy = 0, _dyx = 0, _dyy = 0, rec = true) {
+		var inAmo = array_length(inputs);
 		
 		newInput(index, nodeValue_Path_Anchor("Anchor", self, []))
 			.setValue(newAnchor( _x, _y, _dxx, _dxy, _dyx, _dyy ));
@@ -493,7 +493,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 							
 							anc = [ _p[_ANCHOR.x], _p[_ANCHOR.y], dxx, dxy, dyx, dyy ];
 							if(input_fix_len + i >= array_length(inputs))
-								createNewInput(_p[_ANCHOR.x], _p[_ANCHOR.y], dxx, dxy, dyx, dyy);
+								createNewInput(, _p[_ANCHOR.x], _p[_ANCHOR.y], dxx, dxy, dyx, dyy);
 							else 
 								inputs[input_fix_len + i].setValue(anc);
 						}
@@ -891,7 +891,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				
 					if(mouse_press(mb_left, active)) {
 						var ind = array_length(inputs);
-						var anc = createNewInput(value_snap((_mx - _x) / _s, _snx), value_snap((_my - _y) / _s, _sny), 0, 0, 0, 0, false);
+						var anc = createNewInput(, value_snap((_mx - _x) / _s, _snx), value_snap((_my - _y) / _s, _sny), 0, 0, 0, 0, false);
 						
 						if(_line_hover == -1) {
 							drag_point = array_length(inputs) - input_fix_len - 1;
@@ -954,7 +954,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					inputs[1].setValue(true);
 					
 					repeat(4)
-						createNewInput(value_snap((_mx - _x) / _s, _snx), value_snap((_my - _y) / _s, _sny));
+						createNewInput(, value_snap((_mx - _x) / _s, _snx), value_snap((_my - _y) / _s, _sny));
 				}
 				break;
 				

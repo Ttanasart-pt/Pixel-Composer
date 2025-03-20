@@ -80,7 +80,7 @@ function graph_export_image(allList, nodeList, settings = {}) {
 		}
 		
 		for( var i = 0, n = array_length(allList); i < n; i++ )
-			allList[i].preDraw(gr_x, gr_y, scale);
+			allList[i].preDraw(gr_x, gr_y, mx, my, scale);
 		
 		for( var i = 0, n = array_length(nodeList); i < n; i++ )
 			nodeList[i].drawNodeBG(gr_x, gr_y, mx, my, scale);

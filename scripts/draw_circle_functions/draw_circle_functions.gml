@@ -157,16 +157,19 @@ function draw_ellipse_dash(cx, cy, ww, hh, th = 1, dash = 8, ang = 0) {
 	var rd = max(ww, hh);
 	
 	var dash_dist = 0, is_dash = true;
-	var samp = dash * max(cx, cy);
+	var samp = min(64, dash * max(cx, cy));
 	var ox, oy, nx, ny;
+	var p0 = [ 0, 0 ];
 	
 	for( var i = 0; i < samp; i++ ) {
 		nx = cx + lengthdir_x(ww, i * 360 / samp);
 		ny = cy + lengthdir_y(hh, i * 360 / samp);
 		
-        var p0 = point_rotate(nx, ny, cx, cy, ang);
-        nx = p0[0];
-        ny = p0[1];
+		if(ang != 0) {
+	        point_rotate(nx, ny, cx, cy, ang, p0);
+	        nx = p0[0];
+	        ny = p0[1];
+		}
         
 		if(i) {
 			dash_dist += point_distance(ox, oy, nx, ny);

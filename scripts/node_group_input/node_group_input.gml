@@ -550,7 +550,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		BLEND_NORMAL
 		
-		return _s > 0.5? drawJunctions(_draw, xx, yy, _mx, _my, _s) : drawJunctions_fast(_draw, xx, yy, _mx, _my, _s);
+		return drawJunctions(_draw, xx, yy, _mx, _my, _s, _s <= 0.5);
 	}
 	
 	////- Serialize

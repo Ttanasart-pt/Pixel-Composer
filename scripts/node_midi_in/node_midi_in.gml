@@ -94,19 +94,17 @@ function Node_MIDI_In(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		["Watchers", false], watcher_controllers, 
 	];
 	
-	static createNewInput = function() {
-		var _index = array_length(inputs);
-		index_watching = _index;
+	static createNewInput = function(index = array_length(inputs)) {
+		index_watching = index;
 		
-		var _inp = nodeValue_Int("Index", self, -1 );
-		_inp.editWidget.slidable = false;
-		array_push(inputs,  _inp);
-		array_push(inputs,  nodeValue("Normalize", self, CONNECT_TYPE.input,  VALUE_TYPE.boolean, false ));
+		newInput(index + 0, nodeValue_Int(  "Index",     self, -1    ));
+		newInput(index + 1, nodeValue_Bool( "Normalize", self, false ));
+		inputs[index].editWidget.slidable = false;
 		
 		var _out = nodeValue_Output("Value", self, VALUE_TYPE.float, -1 );
 		array_push(outputs, _out);
 		
-		return _inp;
+		return inputs[index];
 	} setDynamicInput(2, false);
 	
 	index_watching = noone;

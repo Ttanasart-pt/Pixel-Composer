@@ -1326,7 +1326,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         else                               _node_active = array_filter(nodes_list, function(_n) /*=>*/ {return _n.active && !_n.is_controller});
         
         var _node_draw = array_filter( _node_active, function(_n) /*=>*/ {
-        	_n.preDraw(__gr_x, __gr_y, __gr_s, __gr_x, __gr_y);
+        	_n.preDraw(__gr_x, __gr_y, __mx, __my, __gr_s);
         	var _cull = _n.cullCheck(__gr_x, __gr_y, __gr_s, -32, -32, __gr_w + 32, __gr_h + 64);
         	
         	return _n.active && _cull;

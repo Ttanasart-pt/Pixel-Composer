@@ -32,7 +32,7 @@ function HotkeySimple(_context, _name, _key = "", _mod = MOD_KEY.none) construct
 	if(!struct_has(HOTKEYS_CUSTOM, context)) HOTKEYS_CUSTOM[$ context] = {};
 	HOTKEYS_CUSTOM[$ context][$ name] = self;
 	
-	static isPressing  = function( ) /*=>*/ {return key == noone? false : key_press(key, modi)};
+	static isPressing  = function( ) /*=>*/ {return key <= 0? false : key_press(key, modi)};
 	static getName     = function( ) /*=>*/ {return key_get_name(key, modi)};
 	
 	static equal       = function(h) /*=>*/ {return key == h.key && modi == h.modi};

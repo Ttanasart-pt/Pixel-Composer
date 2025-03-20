@@ -33,20 +33,19 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	#region //////////////////////////////// Dynamic IO ////////////////////////////////
 		
-		static createNewInput = function(list = inputs) {
-			var index = array_length(list);
-			var bDel  = button(function() { node.deleteInput(index); })
-					.setIcon(THEME.minus_16, 0, COLORS._main_icon);
+		static createNewInput = function(index = array_length(inputs)) {
+			var bDel  = button(function() /*=>*/ {return node.deleteInput(index)})
+				.setIcon(THEME.minus_16, 0, COLORS._main_icon);
 			
-			list[index + 0] = nodeValue_Text("Case", self, "" )
+			inputs[index + 0] = nodeValue_Text("Case", self, "" )
 				.setDisplay(VALUE_DISPLAY.text_box, { side_button : bDel })
 				.setAnimable(false);
-			bDel.setContext(list[index + 0]);
+			bDel.setContext(inputs[index + 0]);
 			
-			list[index + 1] = nodeValue("value", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0 )
+			inputs[index + 1] = nodeValue("value", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0 )
 				.setVisible(false, false);
 			
-			return list[index + 0];
+			return inputs[index + 0];
 		} 
 		
 		setDynamicInput(2, false);

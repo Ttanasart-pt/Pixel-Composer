@@ -69,8 +69,9 @@ function Node_String_Format(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		["Inputs",		 true], 
 	]
 	
-	static createNewInput = function() {
-		var index = array_length(inputs);
+	static createNewInput = function(index = array_length(inputs)) {
+		var inAmo = array_length(inputs);
+		
 		newInput(index + 0, nodeValue_Text("Argument name", self, "" ));
 		
 		newInput(index + 1, nodeValue_Text("Argument value", self, "" ))

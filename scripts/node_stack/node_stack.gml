@@ -37,14 +37,17 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	temp_surface = [ noone, noone, noone ];
 	
-	static createNewInput = function() {
-		var index = array_length(inputs);
+	static createNewInput = function(index = array_length(inputs)) {
+		var inAmo = array_length(inputs);
+		
 		newInput(index, nodeValue_Surface("Input", self))
 			.setVisible(true, true);
-			
-		array_push(input_display_list, index);
+		
+		array_push(input_display_list, inAmo);
 		return inputs[index];
-	} setDynamicInput(1, true, VALUE_TYPE.surface);
+	} 
+	
+	setDynamicInput(1, true, VALUE_TYPE.surface);
 	
 	attribute_surface_depth();
 	

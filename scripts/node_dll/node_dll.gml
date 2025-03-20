@@ -42,15 +42,15 @@ function Node_DLL(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		["Parameters",	false], array_adjust_tool, 
 	]
 	
-	static createNewInput = function() {
-		var index = array_length(inputs);
+	static createNewInput = function(index = array_length(inputs)) {
+		var inAmo = array_length(inputs);
 		
 		newInput(index + 0, nodeValue_Enum_Button("Parameter type", self,  0, [ "Number", "Buffer" ]));
 		
 		newInput(index + 1, nodeValue_Float("Parameter value", self, 0 ))
 			.setVisible(true, true);
 		
-		array_push(input_display_list, index + 0, index + 1);
+		array_push(input_display_list, inAmo + 0, inAmo + 1);
 		
 		return [ inputs[index + 0], inputs[index + 1] ];
 	} 

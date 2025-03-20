@@ -15,13 +15,13 @@ function Node_Module_Test(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	setDynamicInput(1);
 	
-	static createNewInput = function() { #region
-		var index = array_length(inputs);
+	static createNewInput = function(index = array_length(inputs)) {
+		var inAmo = array_length(inputs);
 		
 		inputs[index] = new Node_Module_SubModule(self);
 		
 		return inputs[index];
-	} if(!LOADING && !APPENDING) createNewInput(); #endregion
+	} if(!LOADING && !APPENDING) createNewInput();
 	
 	static step = function() {}
 	

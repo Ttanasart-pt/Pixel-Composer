@@ -37,8 +37,9 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	lua_state = lua_create();
 	
-	static createNewInput = function() {
-		var index = array_length(inputs);
+	static createNewInput = function(index = array_length(inputs)) {
+		var inAmo = array_length(inputs);
+		
 		newInput(index + 0, nodeValue_Text("Argument name", self, "" ));
 		
 		newInput(index + 1, nodeValue_Enum_Scroll("Argument type", self,  0 , { data: [ "Number", "String", "Surface", "Struct" ], update_hover: false }));
@@ -48,7 +49,7 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			.setVisible(true, true);
 		inputs[index + 2].editWidget.interactable = false;
 		
-		array_push(input_display_list, index, index + 1, index + 2);
+		array_push(input_display_list, inAmo, inAmo + 1, inAmo + 2);
 		return inputs[index + 0];
 	} 
 	

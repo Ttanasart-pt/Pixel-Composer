@@ -64,12 +64,13 @@ function __Node_3D_Combine(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	_3d_node_init(1, /*Transform*/ 4, 5, 1, 2, 3);
 	
-	static createNewInput = function() {
-		var index = array_length(inputs);
+	static createNewInput = function(index = array_length(inputs)) {
+		var inAmo = array_length(inputs);
+		
 		newInput(index, nodeValue("3D object", self, CONNECT_TYPE.input, VALUE_TYPE.d3object, noone ))
 			.setVisible(true, true);
 			
-		array_push(input_display_list, index);
+		array_push(input_display_list, inAmo);
 		return inputs[index];
 	} setDynamicInput(1, true, VALUE_TYPE.d3object);
 	

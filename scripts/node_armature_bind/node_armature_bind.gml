@@ -406,8 +406,8 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		doUpdate();
 	}
 	
-	static createNewInput = function() {
-		var index = array_length(inputs);
+	static createNewInput = function(index = array_length(inputs)) {
+		var inAmo = array_length(inputs);
 		var _s    = floor((index - input_fix_len) / data_length);
 		if(!LOADING && !APPENDING) boneIDMap = array_verify(boneIDMap, max(array_length(boneIDMap), _s + 1));
 		

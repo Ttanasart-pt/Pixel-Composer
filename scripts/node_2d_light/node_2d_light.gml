@@ -25,8 +25,9 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	typeListStr = array_create_ext(array_length(typeList), function(i) /*=>*/ {return typeList[i].name});
 	
-	static createNewInput = function() {
-		var _index = array_length(inputs);
+	static createNewInput = function(index = array_length(inputs)) {
+		var inAmo = array_length(inputs);
+		
 		dynamic_input_inspecting = getInputAmount();
 		
 		var _val = nodeValue_Enum_Scroll("Light shape", self, 0, typeList);
@@ -36,62 +37,62 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 					list: [ "Point", "Line", "Line asymmetric", "Spot" ]
 				}
 			];	 
-		newInput(_index + 0, _val);
+		newInput(index + 0, _val);
 		
-		newInput(_index + 1, nodeValue_Vec2("Center", self, [ 16, 16 ]))
-			.setUnitRef(function(index) { return getDimension(index); });
+		newInput(index + 1, nodeValue_Vec2("Center", self, [ 16, 16 ]))
+			.setUnitRef(function(i) /*=>*/ {return getDimension(i)});
 		
-		newInput(_index + 2, nodeValue_Float("Range", self, 16));
+		newInput(index + 2, nodeValue_Float("Range", self, 16));
 		
-		newInput(_index + 3, nodeValue_Float("Intensity", self, 1))
+		newInput(index + 3, nodeValue_Float("Intensity", self, 1))
 			.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01 ]});
 		
-		newInput(_index + 4, nodeValue_Color("Color", self, cola(c_white)));
+		newInput(index + 4, nodeValue_Color("Color", self, cola(c_white)));
 		
-		newInput(_index + 5, nodeValue_Vec2("Start", self, [ 16, 16 ]));
+		newInput(index + 5, nodeValue_Vec2("Start", self, [ 16, 16 ]));
 		
-		newInput(_index + 6, nodeValue_Vec2("Finish", self, [ 32, 16 ]));
+		newInput(index + 6, nodeValue_Vec2("Finish", self, [ 32, 16 ]));
 		
-		newInput(_index + 7, nodeValue_Int("Sweep", self, 15))
+		newInput(index + 7, nodeValue_Int("Sweep", self, 15))
 			.setDisplay(VALUE_DISPLAY.slider, { range: [-80, 80, 0.1] });
 		
-		newInput(_index + 8, nodeValue_Int("Sweep end", self, 0))
+		newInput(index + 8, nodeValue_Int("Sweep end", self, 0))
 			.setDisplay(VALUE_DISPLAY.slider, { range: [-80, 80, 0.1] });
 		
-		newInput(_index + 9, nodeValue_Int("Banding", self, 0))
+		newInput(index + 9, nodeValue_Int("Banding", self, 0))
 			.setDisplay(VALUE_DISPLAY.slider, { range: [0, 16, 0.1] });
 		
-		newInput(_index + 10, nodeValue_Enum_Scroll("Attenuation", self, 0, [	new scrollItem("Quadratic",			s_node_curve_type, 0),
+		newInput(index + 10, nodeValue_Enum_Scroll("Attenuation", self, 0, [	new scrollItem("Quadratic",			s_node_curve_type, 0),
 																				new scrollItem("Invert quadratic",	s_node_curve_type, 1),
 																				new scrollItem("Linear",			s_node_curve_type, 2), ]))
 			 .setTooltip("Control how light fade out over distance.");
 		
-		newInput(_index + 11, nodeValue_Int("Radial banding", self, 0))
+		newInput(index + 11, nodeValue_Int("Radial banding", self, 0))
 			.setDisplay(VALUE_DISPLAY.slider, { range: [0, 16, 0.1] });
 		
-		newInput(_index + 12, nodeValue_Rotation("Radial start", self, 0));
+		newInput(index + 12, nodeValue_Rotation("Radial start", self, 0));
 		
-		newInput(_index + 13, nodeValue_Float("Radial band ratio", self, 0.5))
+		newInput(index + 13, nodeValue_Float("Radial band ratio", self, 0.5))
 			.setDisplay(VALUE_DISPLAY.slider);
 		
-		newInput(_index + 14, nodeValue_Bool("Active", self, true));
+		newInput(index + 14, nodeValue_Bool("Active", self, true));
 			
-		newInput(_index + 15, nodeValue_Float("Radius x", self, 16));
+		newInput(index + 15, nodeValue_Float("Radius x", self, 16));
 		
-		newInput(_index + 16, nodeValue_Float("Radius y", self, 16));
+		newInput(index + 16, nodeValue_Float("Radius y", self, 16));
 		
-		newInput(_index + 17, nodeValue_Rotation("Rotation", self, 0));
+		newInput(index + 17, nodeValue_Rotation("Rotation", self, 0));
 		
-		newInput(_index + 18, nodeValue_Float("Exponent", self, 2));
+		newInput(index + 18, nodeValue_Float("Exponent", self, 2));
 			
-		newInput(_index + 19, nodeValue_Bool("Anti aliasing", self, false));
+		newInput(index + 19, nodeValue_Bool("Anti aliasing", self, false));
 			
-		newInput(_index + 20, nodeValue_Bool("Two sides", self, false));
+		newInput(index + 20, nodeValue_Bool("Two sides", self, false));
 		
-		newInput(_index + 21, nodeValue_Float("Thickness", self, 2));
+		newInput(index + 21, nodeValue_Float("Thickness", self, 2));
 		
 		refreshDynamicDisplay();
-		return inputs[_index];
+		return inputs[index];
 	} 
 	
 	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));

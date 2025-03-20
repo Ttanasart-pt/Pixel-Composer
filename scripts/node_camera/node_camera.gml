@@ -28,8 +28,8 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 
 	temp_surface = [ noone, noone ];
 	
-	static createNewInput = function() { 
-		var index = array_length(inputs);
+	static createNewInput = function(index = array_length(inputs)) {
+		var inAmo = array_length(inputs);
 		var _s    = floor((index - input_fix_len) / data_length);
 		
 		if(_s) array_push(input_display_list, new Inspector_Spacer(20, true));
@@ -50,7 +50,7 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 		newInput(index + 5, nodeValue($"Depth {_s}", self, CONNECT_TYPE.input, VALUE_TYPE.float, 0));
 		
-		for( var i = 0; i < data_length; i++ ) array_push(input_display_list, index + i);
+		for( var i = 0; i < data_length; i++ ) array_push(input_display_list, inAmo + i);
 		
 		return inputs[index + 0];
 	} 

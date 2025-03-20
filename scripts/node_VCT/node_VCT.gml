@@ -15,20 +15,6 @@ function Node_VCT(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 		["Automations", false], 
 	];
 
-	static createNewInput = function(key = "") {
-		var index = array_length(inputs);
-		var _s    = floor((index - input_fix_len) / data_length);
-		var name  = string_title(string_replace_all(key, "_", " "));
-		
-		var _var  = vct[$ key];
-		
-		newInput(index, nodeValue(name, self, CONNECT_TYPE.input, _var.type, 0))
-			.setDisplay(_var.disp, _var.disp_data);
-		inputs[index].attributes.key = key;
-		
-		array_append(input_display_list, [ index ]);
-	}
-	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		for( var i = 1; i < array_length(_data); i++ )
 			vct[$ inputs[i].attributes.key].setDirect(_data[i]);

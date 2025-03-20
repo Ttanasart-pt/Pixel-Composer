@@ -42,6 +42,7 @@
 		return CTRL == KEY_STAT.pressing || ALT == KEY_STAT.pressing || SHIFT == KEY_STAT.pressing;
 	}
 	
+	function key_mod_up(key)       { INLINE return key == KEY_STAT.up;       }
 	function key_mod_down(key)     { INLINE return key == KEY_STAT.down;     }
 	function key_mod_double(key)   { INLINE return key == KEY_STAT.double;   }
 	function key_mod_press(key)    { INLINE return key == KEY_STAT.pressing; }

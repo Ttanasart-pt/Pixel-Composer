@@ -21,12 +21,13 @@ function Node_Rigid_Render_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 			attributes.show_objects = !attributes.show_objects;
 		})]);
 	
-	static createNewInput = function() {
-		var index = array_length(inputs);
+	static createNewInput = function(index = array_length(inputs)) {
+		var inAmo = array_length(inputs);
+		
 		newInput(index, nodeValue("Object", self, CONNECT_TYPE.input, VALUE_TYPE.rigid, noone ))
 			.setVisible(true, true);
 			
-		array_push(input_display_list, index);
+		array_push(input_display_list, inAmo);
 		return inputs[index];
 	} setDynamicInput(1, true, VALUE_TYPE.rigid);
 	

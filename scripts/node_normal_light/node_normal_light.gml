@@ -19,29 +19,29 @@ function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	];
 	typeListStr = array_create_ext(array_length(typeList), function(i) /*=>*/ {return typeList[i].name});
 	
-	static createNewInput = function() {
-		var _index = array_length(inputs);
+	static createNewInput = function(index = array_length(inputs)) {
+		var inAmo = array_length(inputs);
 		dynamic_input_inspecting = getInputAmount();
 		
-		newInput(_index + 0, nodeValue_Enum_Scroll("Type", self, 0, typeList));
+		newInput(index + 0, nodeValue_Enum_Scroll("Type", self, 0, typeList));
 		
-		newInput(_index + 1, nodeValue_Vec3("Position", self, [ 0, 0, 1 ]))
+		newInput(index + 1, nodeValue_Vec3("Position", self, [ 0, 0, 1 ]))
 			.setUnitRef(function(index) /*=>*/ {return getDimension(index)});
 		
-		newInput(_index + 2, nodeValue_Float("Range", self, 16));
-		inputs[_index + 2].overlay_text_valign = fa_bottom;
+		newInput(index + 2, nodeValue_Float("Range", self, 16));
+		inputs[index + 2].overlay_text_valign = fa_bottom;
 		
-		newInput(_index + 3, nodeValue_Float("Intensity", self, 4));
+		newInput(index + 3, nodeValue_Float("Intensity", self, 4));
 		
-		newInput(_index + 4, nodeValue_Color("Color", self, cola(c_white)));
+		newInput(index + 4, nodeValue_Color("Color", self, cola(c_white)));
 		
-		newInput(_index + 5, nodeValue_Vec3("End Position", self, [ 0, 0, 1 ]))
+		newInput(index + 5, nodeValue_Vec3("End Position", self, [ 0, 0, 1 ]))
 			.setUnitRef(function(index) /*=>*/ {return getDimension(index)});
 		
-		newInput(_index + 6, nodeValue_Color("End Color", self, cola(c_white)));
+		newInput(index + 6, nodeValue_Color("End Color", self, cola(c_white)));
 		
 		refreshDynamicDisplay();
-		return inputs[_index];
+		return inputs[index];
 	}
 	
 	lights_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {

@@ -10,13 +10,13 @@ function Node_Composite_Tag(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		["Surfaces", false], 
 	];
 	
-	static createNewInput = function()  {
-		var index = array_length(inputs);
+	static createNewInput = function(index = array_length(inputs)) {
+		var inAmo = array_length(inputs);
 		
 		newInput(index, nodeValue_Surface("Surface", self, noone ))
 			.setVisible(true, true);
 		
-		array_push(input_display_list, index);
+		array_push(input_display_list, inAmo);
 		return inputs[index];
 	} 
 	

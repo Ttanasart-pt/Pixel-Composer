@@ -14,15 +14,17 @@ function Node_Array_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	newOutput(0, nodeValue_Output("Array", self, VALUE_TYPE.any, []));
 	
-	static createNewInput = function() {
-		var index = array_length(inputs);
+	static createNewInput = function(index = array_length(inputs)) {
+		var inAmo = array_length(inputs);
 		
 		newInput(index, nodeValue("Input", self, CONNECT_TYPE.input, VALUE_TYPE.any, -1 ))
 			.setVisible(true, true);
 							
-		array_push(input_display_list, index);
+		array_push(input_display_list, inAmo);
 		return inputs[index];
-	} setDynamicInput(1);
+	} 
+	
+	setDynamicInput(1);
 	
 	static update = function(frame = CURRENT_FRAME) {
 		var res  = [];
@@ -48,7 +50,7 @@ function Node_Array_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		return point_in_circle(_mx, _my, xx, yy, _s * 24);
 	}
 	
-	static preDraw = function(_x, _y, _s) {
+	static preDraw = function(_x, _y, _mx, _my, _s) {
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
 		

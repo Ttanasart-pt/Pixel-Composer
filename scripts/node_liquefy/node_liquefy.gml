@@ -34,40 +34,40 @@ function Node_Liquefy(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	];
 	typeListStr = array_create_ext(array_length(typeList), function(i) /*=>*/ {return typeList[i].name});
 	
-	static createNewInput = function() {
-		var _index = array_length(inputs);
+	static createNewInput = function(index = array_length(inputs)) {
+		var inAmo = array_length(inputs);
 		dynamic_input_inspecting = getInputAmount();
 		
-		newInput(_index + 0, nodeValue_Enum_Scroll("Type", self, 0, typeList));
+		newInput(index + 0, nodeValue_Enum_Scroll("Type", self, 0, typeList));
 		
-		newInput(_index + 1, nodeValue_Vec2("Position", self, [ 0, 0 ]))
+		newInput(index + 1, nodeValue_Vec2("Position", self, [ 0, 0 ]))
 			.setUnitRef(function(index) /*=>*/ {return getDimension(index)}, VALUE_UNIT.reference);
 		
-		newInput(_index + 2, nodeValue_Vec2("Position 2", self, [ 1, 0 ])) // push
+		newInput(index + 2, nodeValue_Vec2("Position 2", self, [ 1, 0 ])) // push
 			.setUnitRef(function(index) /*=>*/ {return getDimension(index)}, VALUE_UNIT.reference);
 		
-		newInput(_index + 3, nodeValue_Float("Radius", self, 8));
-		inputs[_index + 3].overlay_text_valign = fa_bottom;
+		newInput(index + 3, nodeValue_Float("Radius", self, 8));
+		inputs[index + 3].overlay_text_valign = fa_bottom;
 		
-		newInput(_index + 4, nodeValue_Float("Intensity", self, 0.1))
+		newInput(index + 4, nodeValue_Float("Intensity", self, 0.1))
 			.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01] });
 		
-		newInput(_index + 5, nodeValue_Float("Falloff", self, 0));
+		newInput(index + 5, nodeValue_Float("Falloff", self, 0));
 		
-		newInput(_index + 6, nodeValue_Curve("Falloff Curve", self, CURVE_DEF_10));
+		newInput(index + 6, nodeValue_Curve("Falloff Curve", self, CURVE_DEF_10));
 		
-		newInput(_index + 7, nodeValue_Float("Push", self, 0.1))
+		newInput(index + 7, nodeValue_Float("Push", self, 0.1))
 			.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01] });
 		
-		newInput(_index + 8, nodeValue_PathNode("Push path", self, noone))
+		newInput(index + 8, nodeValue_PathNode("Push path", self, noone))
 		
-		newInput(_index + 9, nodeValue_Int("Push resolution", self, 16));
+		newInput(index + 9, nodeValue_Int("Push resolution", self, 16));
 		
-		newInput(_index + 10, nodeValue_Float("Radius 2", self, 8));
-		inputs[_index + 10].overlay_text_valign = fa_bottom;
+		newInput(index + 10, nodeValue_Float("Radius 2", self, 8));
+		inputs[index + 10].overlay_text_valign = fa_bottom;
 		
 		refreshDynamicDisplay();
-		return inputs[_index];
+		return inputs[index];
 	} 
 	
 	effect_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {

@@ -64,8 +64,9 @@ output.color = surfaceColor;"))
 	
 	newOutput(0, nodeValue_Output("Surface", self, VALUE_TYPE.surface, noone ));
 	
-	static createNewInput = function() {
-		var index = array_length(inputs);
+	static createNewInput = function(index = array_length(inputs)) {
+		var inAmo = array_length(inputs);
+		
 		newInput(index + 0, nodeValue_Text("Argument name", self, "" ));
 		
 		newInput(index + 1, nodeValue_Enum_Scroll("Argument type", self,  0 , { data: [ "Float", "Int", "Vec2", "Vec3", "Vec4", "Mat3", "Mat4", "Sampler2D", "Color" ], update_hover: false }));
@@ -75,7 +76,7 @@ output.color = surfaceColor;"))
 			.setVisible(true, true);
 		inputs[index + 2].editWidget.interactable = false;
 							
-		array_push(input_display_list, index, index + 1, index + 2);
+		array_push(input_display_list, inAmo, inAmo + 1, inAmo + 2);
 	}
 	
 	argumentRenderer();

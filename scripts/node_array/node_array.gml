@@ -35,14 +35,14 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	newOutput(0, nodeValue_Output("Array", self, VALUE_TYPE.any, []));
 	
-	static createNewInput = function() {
-		var index = array_length(inputs);
+	static createNewInput = function(index = array_length(inputs)) {
+		var inAmo = array_length(inputs);
 		var _typ  = getType();
 		
 		newInput(index, nodeValue("Input", self, CONNECT_TYPE.input, _typ, -1 ))
 			.setVisible(true, true);
 		
-		array_push(input_display_list, index);
+		array_push(input_display_list, inAmo);
 		return inputs[index];
 	}
 	

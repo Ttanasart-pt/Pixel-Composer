@@ -23,8 +23,8 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	array_push(attributeEditors, ["Display name", function() /*=>*/ {return attributes.display_name}, new checkBox(function() /*=>*/ { attributes.display_name = !attributes.display_name; })]);
 	array_push(attributeEditors, ["Display bone", function() /*=>*/ {return attributes.display_bone}, new scrollBox(["Octahedral", "Stick"], function(ind) /*=>*/ { attributes.display_bone = ind; })]);
 	
-	static createNewInput = function(bone = noone) {
-		var index = array_length(inputs);
+	static createNewInput = function(index = array_length(inputs), bone = noone) {
+		var inAmo = array_length(inputs);
 		
 		newInput(index, nodeValue(bone != noone? bone.name : "bone", self, CONNECT_TYPE.input, VALUE_TYPE.float, [ 0, 0, 0, 1 ] ))
 			.setDisplay(VALUE_DISPLAY.transform);
@@ -32,7 +32,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		if(bone != noone) boneMap[$ bone.ID] = inputs[index];
 		
-		array_push(input_display_list, index);
+		array_push(input_display_list, inAmo);
 		return inputs[index];
 	} 
 	
@@ -60,7 +60,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				_inp = boneMap[$ bone.ID];
 				_inp.index = _idx;
 			} else
-				_inp = createNewInput(bone);
+				_inp = createNewInput(, bone);
 			
 			array_push(_inputs, _inp);
 		}

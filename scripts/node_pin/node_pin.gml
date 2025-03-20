@@ -54,7 +54,7 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		return point_in_circle(_mx, _my, xx, yy, _s * 24);
 	}
 	
-	static preDraw = function(_x, _y, _s) {
+	static preDraw = function(_x, _y, _mx, _my, _s) {
 		var xx =  x      * _s + _x;
 		var yy = (y + 8) * _s + _y;
 		

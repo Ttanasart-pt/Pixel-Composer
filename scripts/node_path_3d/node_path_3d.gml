@@ -121,11 +121,12 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		}
 	}
 	
-	static createNewInput = function(  _x = 0,   _y = 0,   _z = 0, 
+	static createNewInput = function(index = array_length(inputs),
+	                                   _x = 0,   _y = 0,   _z = 0, 
 									 _dxx = 0, _dxy = 0, _dxz = 0, 
 									 _dyx = 0, _dyy = 0, _dyz = 0, rec = true) {
 		
-		var index = array_length(inputs);
+		var inAmo = array_length(inputs);
 		
 		newInput(index, nodeValue_Path_Anchor_3D("Anchor", self, []))
 			.setValue([ _x, _y, _z, _dxx, _dxy, _dxz, _dyx, _dyy, _dyz, false ]);
@@ -459,7 +460,7 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 				var mAdj = d3d_intersect_ray_plane(ray, drag_plane);
 				
 				var ind = array_length(inputs);
-				var anc = createNewInput(mAdj.x, mAdj.y, mAdj.z, 0, 0, 0, 0, 0, 0, false);
+				var anc = createNewInput(, mAdj.x, mAdj.y, mAdj.z, 0, 0, 0, 0, 0, 0, false);
 				
 				if(_line_hover == -1) {
 					drag_point = array_length(inputs) - input_fix_len - 1;

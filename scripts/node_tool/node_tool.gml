@@ -14,7 +14,6 @@ function NodeTool(name, spr, contextString = instanceof(other)) constructor {
 	toolFn      = noone;
 	toolFnParam = {};
 	
-	hk_editing  = false;
 	hk_object   = noone;
 	
 	static checkHotkey   = function() { return getToolHotkey(ctx, name); }
@@ -112,7 +111,7 @@ function NodeTool(name, spr, contextString = instanceof(other)) constructor {
 		
 		var _menu = [
 			getName(),
-			menuItem(__txt("Edit hotkey"), function() /*=>*/ { hk_editing = true; keyboard_lastchar = hk_object.key; }),
+			menuItem(__txt("Edit hotkey"), function() /*=>*/ { PANEL_PREVIEW.hk_editing = self; keyboard_lastchar = hk_object.key; }),
 		];
 		
 		menuCall("", _menu);

@@ -5,12 +5,13 @@ function Node_3D_Scene(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constru
 	
 	object_lists = [];
 	
-	static createNewInput = function() {
-		var index = array_length(inputs);
+	static createNewInput = function(index = array_length(inputs)) {
+		var inAmo = array_length(inputs);
+		
 		newInput(index, nodeValue_D3Mesh("Object", self, noone))
 			.setVisible(true, true);
 							
-		array_push(input_display_list, index);
+		array_push(input_display_list, inAmo);
 		return inputs[index];
 	} setDynamicInput(1, true, VALUE_TYPE.d3Mesh);
 	

@@ -2000,34 +2000,34 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		draw_text_bbox(_bbox, _txt);
 	}
 	
-	static drawJunction_fast = function(_draw, _s, _mx, _my) {
-		var hov  = PANEL_GRAPH.pHOVER && (PANEL_GRAPH.node_hovering == noone || PANEL_GRAPH.node_hovering == node);
-		var _d   = node.junction_draw_hei_y * _s;
-		var _hov = hov && point_in_rectangle(_mx, _my, x - 6 * _s, y - _d / 2, x + 6 * _s, y + _d / 2 - 1);
-		if(!_draw) return _hov;
-		
-		var _aa  = 0.75 + (!is_dummy * 0.25);
-		hover_in_graph = _hov;
-		
-		draw_set_color(custom_color == noone? draw_fg : custom_color);
-		draw_set_alpha(_aa);
-		
-		if(node.previewable)
-			draw_circle(x, y, _s * 6, false);
+	static drawJunction = function(_draw, _s, _mx, _my, _fast = false) {
+		if(_fast) {
+			var hov  = PANEL_GRAPH.pHOVER && (PANEL_GRAPH.node_hovering == noone || PANEL_GRAPH.node_hovering == node);
+			var _d   = node.junction_draw_hei_y * _s;
+			var _hov = hov && point_in_rectangle(_mx, _my, x - 6 * _s, y - _d / 2, x + 6 * _s, y + _d / 2 - 1);
+			if(!_draw) return _hov;
 			
-		else if(index == -1)
-			draw_rectangle(	x - _s * 4, y - _s * 1.5, 
-							x + _s * 4, y + _s * 1.5, false);
-		else
-			draw_rectangle(	x - _s * 1.5, y - _s * 4, 
-							x + _s * 1.5, y + _s * 4, false);
+			var _aa  = 0.75 + (!is_dummy * 0.25);
+			hover_in_graph = _hov;
+			
+			draw_set_color(custom_color == noone? draw_fg : custom_color);
+			draw_set_alpha(_aa);
+			
+			if(node.previewable)
+				draw_circle(x, y, _s * 6, false);
+				
+			else if(index == -1)
+				draw_rectangle(	x - _s * 4, y - _s * 1.5, 
+								x + _s * 4, y + _s * 1.5, false);
+			else
+				draw_rectangle(	x - _s * 1.5, y - _s * 4, 
+								x + _s * 1.5, y + _s * 4, false);
+			
+			draw_set_alpha(1);
+			
+			return _hov;
+		}
 		
-		draw_set_alpha(1);
-		
-		return _hov;
-	}
-	
-	static drawJunction = function(_draw, _s, _mx, _my) {
 		_s /= 2 * THEME_SCALE;
 		
 		var hov  = PANEL_GRAPH.pHOVER && (PANEL_GRAPH.node_hovering == noone || PANEL_GRAPH.node_hovering == node);

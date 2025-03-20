@@ -42,52 +42,53 @@ function Node_PB_Draw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
     fill_pattern_scroll_data = array_create_ext(array_length(fill_pattern_data), 
     	function(i) /*=>*/ {return fill_pattern_data[i] == -1? -1 : new scrollItem(fill_pattern_data[i], s_node_pb_pattern, i)});
     
-	static createNewInput = function() {
-		var _index = array_length(inputs);
+	static createNewInput = function(index = array_length(inputs)) {
+		var inAmo = array_length(inputs);
+		
 		dynamic_input_inspecting = getInputAmount();
 		
-		newInput(_index + 0, nodeValue_Enum_Scroll("Effect Type", self, 0, typeList));
+		newInput(index + 0, nodeValue_Enum_Scroll("Effect Type", self, 0, typeList));
 		
-		newInput(_index + 1, nodeValue_c(  "Color",         self, cola(c_white)));
-		newInput(_index + 2, nodeValue_s(  "Intensity",     self, 1));
+		newInput(index + 1, nodeValue_c(  "Color",         self, cola(c_white)));
+		newInput(index + 2, nodeValue_s(  "Intensity",     self, 1));
 		
-		newInput(_index + 3, nodeValue_es( "Pattern",       self, 0, { data: fill_pattern_scroll_data, horizontal: true, text_pad: ui(16) } ));
-		newInput(_index + 4, nodeValue_c(  "Color",         self, cola(c_white)));
-		newInput(_index + 5, nodeValue_s(  "Intensity",     self, 1));
-		newInput(_index + 6, nodeValue_2(  "Scale",         self, [1,1])).setUnitRef(function(i) /*=>*/ {return group.dimension});
-		newInput(_index + 7, nodeValue_2(  "Position",      self, [0,0])).setUnitRef(function(i) /*=>*/ {return group.dimension});
-		newInput(_index + 8, nodeValue_b(  "Map BBOX",      self, false));
+		newInput(index + 3, nodeValue_es( "Pattern",       self, 0, { data: fill_pattern_scroll_data, horizontal: true, text_pad: ui(16) } ));
+		newInput(index + 4, nodeValue_c(  "Color",         self, cola(c_white)));
+		newInput(index + 5, nodeValue_s(  "Intensity",     self, 1));
+		newInput(index + 6, nodeValue_2(  "Scale",         self, [1,1])).setUnitRef(function(i) /*=>*/ {return group.dimension});
+		newInput(index + 7, nodeValue_2(  "Position",      self, [0,0])).setUnitRef(function(i) /*=>*/ {return group.dimension});
+		newInput(index + 8, nodeValue_b(  "Map BBOX",      self, false));
 		
 		// Stroke
-		newInput(_index +  9, nodeValue_i(  "Thickness",    self, 1));
-		newInput(_index + 10, nodeValue_eb( "Position",     self, 1, array_create(3, THEME.stroke_position) ));
-		newInput(_index + 11, nodeValue_eb( "Corner",       self, 0, array_create(2, THEME.stroke_profile)  ));
+		newInput(index +  9, nodeValue_i(  "Thickness",    self, 1));
+		newInput(index + 10, nodeValue_eb( "Position",     self, 1, array_create(3, THEME.stroke_position) ));
+		newInput(index + 11, nodeValue_eb( "Corner",       self, 0, array_create(2, THEME.stroke_profile)  ));
 		
 		// Corner
-		newInput(_index + 12, nodeValue_i(  "Radius",       self, 1));
+		newInput(index + 12, nodeValue_i(  "Radius",       self, 1));
 		
 		// Highlight
-		newInput(_index + 13, nodeValue_i(  "Widths",       self, [ 0, 0, 0, 0 ])).setDisplay(VALUE_DISPLAY.padding);
-		newInput(_index + 14, nodeValue_c(  "Color Left",   self, cola(c_white)));
-		newInput(_index + 15, nodeValue_c(  "Color Right",  self, cola(c_white)));
-		newInput(_index + 16, nodeValue_c(  "Color Top",    self, cola(c_white)));
-		newInput(_index + 17, nodeValue_c(  "Color Bottom", self, cola(c_white)));
+		newInput(index + 13, nodeValue_i(  "Widths",       self, [ 0, 0, 0, 0 ])).setDisplay(VALUE_DISPLAY.padding);
+		newInput(index + 14, nodeValue_c(  "Color Left",   self, cola(c_white)));
+		newInput(index + 15, nodeValue_c(  "Color Right",  self, cola(c_white)));
+		newInput(index + 16, nodeValue_c(  "Color Top",    self, cola(c_white)));
+		newInput(index + 17, nodeValue_c(  "Color Bottom", self, cola(c_white)));
 		
 		// Generic Props
-		newInput(_index + 18, nodeValue_f(  "Modify",       self, 4));
-		newInput(_index + 19, nodeValue_b(  "Subtract",     self, false));
-		newInput(_index + 20, nodeValue_r(  "Direction",    self, -90));
+		newInput(index + 18, nodeValue_f(  "Modify",       self, 4));
+		newInput(index + 19, nodeValue_b(  "Subtract",     self, false));
+		newInput(index + 20, nodeValue_r(  "Direction",    self, -90));
 		
 		// Shines
-		newInput(_index + 21, nodeValue_f(  "Shines",       self, [ 2, 1, 1 ]))
+		newInput(index + 21, nodeValue_f(  "Shines",       self, [ 2, 1, 1 ]))
 	    	.setDisplay(VALUE_DISPLAY.number_array);
-		newInput(_index + 22, nodeValue_s(  "Progress",     self, .5));
-		newInput(_index + 23, nodeValue_f(  "Slope",        self,  1));
-		newInput(_index + 24, nodeValue_eb( "Axis",         self,  0, [ "X", "Y" ]));
-		newInput(_index + 25, nodeValue_f(  "Seed",         self,  seed_random()));
+		newInput(index + 22, nodeValue_s(  "Progress",     self, .5));
+		newInput(index + 23, nodeValue_f(  "Slope",        self,  1));
+		newInput(index + 24, nodeValue_eb( "Axis",         self,  0, [ "X", "Y" ]));
+		newInput(index + 25, nodeValue_f(  "Seed",         self,  seed_random()));
 		
 		refreshDynamicDisplay();
-		return inputs[_index];
+		return inputs[index];
 	} 
 	
 	////////////////////////////////////////////////////////////////////////////////

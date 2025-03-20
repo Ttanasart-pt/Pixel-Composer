@@ -66,13 +66,13 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 	
 	function setPath(path) { inputs[in_mesh + 0].setValue(path); }
 	
-	static createNewInput = function(index = -1) {
-		if(index == -1) index = array_length(inputs);
+	static createNewInput = function(index = array_length(inputs)) {
+		var inAmo = array_length(inputs);
 		
 		newInput(index, nodeValue_D3Material("Material", self, new __d3dMaterial()))
 							.setVisible(true, true);
 							
-		array_push(input_display_list, index);
+		array_push(input_display_list, inAmo);
 		return inputs[index];
 	}
 	

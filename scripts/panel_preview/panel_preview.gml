@@ -279,6 +279,8 @@ function Panel_Preview() : PanelContent() constructor {
         tool_clearable      = false;
         tool_clearKey       = FUNCTIONS[$ string_to_var2("Preview", "Clear tool")];
         
+        hk_editing          = noone;
+        
         sbChannel = new scrollBox([], function(index) {
             var node = __getNodePreview();
             if(node == noone) return;
@@ -558,7 +560,7 @@ function Panel_Preview() : PanelContent() constructor {
     }
     
     function __getNodePreview() { return preview_node[splitView? splitSelection : 0]; }
-    function getNodePreview() { 
+    function   getNodePreview() { 
         var _node = __getNodePreview();
         if(_node == noone) return noone;
         
@@ -1010,14 +1012,14 @@ function Panel_Preview() : PanelContent() constructor {
                 }
             }
             
-            if(tool.hk_editing) {
+            if(tool == hk_editing) {
             	_tool_show_key = true;
             	draw_sprite_stretched_ext(THEME.button_hide, 3, _bx, _by, _bs, _bs, COLORS._main_accent, 1);
             	
-            	if(keyboard_check_pressed(vk_enter))  tool.hk_editing = false;
+            	if(keyboard_check_pressed(vk_enter))  hk_editing = noone;
 				else hotkey_editing(tool.hk_object);
 					
-				if(keyboard_check_pressed(vk_escape)) tool.hk_editing = false;
+				if(keyboard_check_pressed(vk_escape)) hk_editing = noone;
             }
             
             yy         += ts;
@@ -1149,14 +1151,14 @@ function Panel_Preview() : PanelContent() constructor {
                 }
             }
             
-            if(tool.hk_editing) {
+            if(tool == hk_editing) {
             	_tool_show_key = true;
             	draw_sprite_stretched_ext(THEME.button_hide, 3, _bx, _by, _bs, _bs, COLORS._main_accent, 1);
             	
-            	if(keyboard_check_pressed(vk_enter))  tool.hk_editing = false;
+            	if(keyboard_check_pressed(vk_enter))  hk_editing = noone;
 				else hotkey_editing(tool.hk_object);
 					
-				if(keyboard_check_pressed(vk_escape)) tool.hk_editing = false;
+				if(keyboard_check_pressed(vk_escape)) hk_editing = noone;
             }
             
             yy          += ts;

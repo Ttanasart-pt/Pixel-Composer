@@ -409,7 +409,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	static doUpdate = function() {}
 	static update   = function() {}
 	
-	static preDraw = function(_x, _y, _s) {
+	static preDraw = function(_x, _y, _mx, _my, _s) {
 		var xx = (x - 3) * _s + _x;
 		var yy = y * _s + _y;
 		var jun;
@@ -519,7 +519,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		for(var i = 0, n = array_length(inputDisplayList); i < n; i++) {
 			var jun = inputDisplayList[i];
 			
-			if(jun.drawJunction_fast(_draw, _s, _mx, _my))
+			if(jun.drawJunction(_draw, _s, _mx, _my, true))
 				hover = jun;
 		}
 		

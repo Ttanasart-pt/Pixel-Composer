@@ -104,17 +104,20 @@ function Node_Equation(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		["Inputs",		 true], 
 	]
 	
-	static createNewInput = function() {
-		var index = array_length(inputs);
+	static createNewInput = function(index = array_length(inputs)) {
+		var inAmo = array_length(inputs);
+		
 		newInput(index + 0, nodeValue_Text("Argument name", self, "" ))
 			.setDisplay(VALUE_DISPLAY.text_box);
 		
 		newInput(index + 1, nodeValue_Float("Argument value", self, 0 ))
 			.setVisible(true, true);
 							
-		array_push(input_display_list, index, index + 1);
+		array_push(input_display_list, inAmo, inAmo + 1);
 		return inputs[index + 0];
-	} setDynamicInput(2, false);
+	} 
+	
+	setDynamicInput(2, false);
 	
 	static refreshDynamicInput = function() {
 		var _l  = [];

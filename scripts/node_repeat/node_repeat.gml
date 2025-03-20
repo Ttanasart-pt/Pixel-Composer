@@ -134,50 +134,51 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	typeList = [ "Linear Transform", "Blending" ];
 	
-	static createNewInput = function() {
-		var _index = array_length(inputs);
+	static createNewInput = function(index = array_length(inputs)) {
+		var inAmo = array_length(inputs);
+		
 		dynamic_input_inspecting = getInputAmount();
 		
-		newInput(_index + 0, nodeValue_Enum_Scroll("Animator type", self, 0, typeList));
+		newInput(index + 0, nodeValue_Enum_Scroll("Animator type", self, 0, typeList));
 		
-		newInput(_index + 1, nodeValue_Enum_Scroll("Select mode", self, 0, [ new scrollItem("Index",   s_node_repeat_selection_types, 0), 
+		newInput(index + 1, nodeValue_Enum_Scroll("Select mode", self, 0, [ new scrollItem("Index",   s_node_repeat_selection_types, 0), 
 																			 new scrollItem("Area",    s_node_repeat_selection_types, 1),
 																			 new scrollItem("Surface", s_node_repeat_selection_types, 2),]));
 		
-		newInput(_index + 2, nodeValue_Vec2("Position", self, [ 0, 0 ]));
+		newInput(index + 2, nodeValue_Vec2("Position", self, [ 0, 0 ]));
 		
-		newInput(_index + 3, nodeValue_Rotation("Rotation", self, 0));
+		newInput(index + 3, nodeValue_Rotation("Rotation", self, 0));
 		
-		newInput(_index + 4, nodeValue_Vec2("Scale", self, [ 0, 0 ]));
+		newInput(index + 4, nodeValue_Vec2("Scale", self, [ 0, 0 ]));
 		
-		newInput(_index + 5, nodeValue_Enum_Button("Anchor type", self, 1, [ "Global", "Local" ]));
+		newInput(index + 5, nodeValue_Enum_Button("Anchor type", self, 1, [ "Global", "Local" ]));
 		
-		newInput(_index + 6, nodeValue_Vec2("Anchor Position", self, [ 0.5, 0.5 ]))
+		newInput(index + 6, nodeValue_Vec2("Anchor Position", self, [ 0.5, 0.5 ]))
 			.setTooltip("Anchor point for transformation, absolute value for global type, relative for local.");
 		
-		newInput(_index + 7, nodeValue_Color("Color", self, cola(c_white)));
+		newInput(index + 7, nodeValue_Color("Color", self, cola(c_white)));
 		
-		newInput(_index + 8, nodeValue_Float("Alpha", self, 0))
+		newInput(index + 8, nodeValue_Float("Alpha", self, 0))
 			.setDisplay(VALUE_DISPLAY.slider, { range : [ -1, 1, 0.01 ] });
 		
-		newInput(_index + 9, nodeValue_Area("Selection area", self, DEF_AREA_REF))
+		newInput(index + 9, nodeValue_Area("Selection area", self, DEF_AREA_REF))
 			.setUnitRef(function() /*=>*/ {return getDimension()}, VALUE_UNIT.reference);
 		
-		newInput(_index + 10, nodeValue_Float("Selection index", self, 0));
+		newInput(index + 10, nodeValue_Float("Selection index", self, 0));
 		
-		newInput(_index + 11, nodeValue_Float("Selection range", self, 2));
+		newInput(index + 11, nodeValue_Float("Selection range", self, 2));
 		
-		newInput(_index + 12, nodeValue_Float("Selection falloff", self, 0));
+		newInput(index + 12, nodeValue_Float("Selection falloff", self, 0));
 		
-		newInput(_index + 13, nodeValue_Curve("Selection falloff curve", self, CURVE_DEF_10));
+		newInput(index + 13, nodeValue_Curve("Selection falloff curve", self, CURVE_DEF_10));
 		
-		newInput(_index + 14, nodeValue_Surface("Selection surface", self, noone));
+		newInput(index + 14, nodeValue_Surface("Selection surface", self, noone));
 		
-		newInput(_index + 15, nodeValue_Float("Strength", self, 0))
+		newInput(index + 15, nodeValue_Float("Strength", self, 0))
 			.setDisplay(VALUE_DISPLAY.slider, { range : [ -1, 1, 0.01 ] });
 		
 		refreshDynamicDisplay();
-		return inputs[_index];
+		return inputs[index];
 	} 
 	
 	animator_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {

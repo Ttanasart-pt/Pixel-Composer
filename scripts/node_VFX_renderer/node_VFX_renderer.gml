@@ -29,8 +29,8 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	attribute_surface_depth();
 	attribute_interpolation();
 	
-	static createNewInput = function() {
-		var index = array_length(inputs);
+	static createNewInput = function(index = array_length(inputs)) {
+		var inAmo = array_length(inputs);
 		
 		newInput(index + 0, nodeValue_Enum_Scroll("Blend mode", self,  0 , [ "Normal", "Alpha", "Additive" ]))
 			.rejectArray();
@@ -38,8 +38,7 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		newInput(index + 1, nodeValue_Particle("Particles", self, noone ))
 			.setVisible(true, true);
 		
-		array_push(input_display_list, ["Particle", false], index + 0, index + 1);
-		
+		array_push(input_display_list, ["Particle", false], inAmo + 0, inAmo + 1);
 		return inputs[index + 1];
 	}
 	
