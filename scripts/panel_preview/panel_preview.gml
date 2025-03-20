@@ -274,6 +274,7 @@ function Panel_Preview() : PanelContent() constructor {
         overlay_hovering    = false;
         view_hovering       = false;
         
+        tool_show_key       = false;
         tool_clearable      = false;
         tool_clearKey       = FUNCTIONS[$ string_to_var2("Preview", "Clear tool")];
         
@@ -897,7 +898,7 @@ function Panel_Preview() : PanelContent() constructor {
         tool_clearable = true;
         tool_hovering  = noone;
         
-        if(_node.tools == -1) { tool_current = noone; return; }
+        if(_node.tools == -1) { tool_current = noone; return; } 
         
         var aa = d3_active? 0.8 : 1;
         draw_sprite_stretched_ext(THEME.tool_side, 0, 0, ui(32), toolbar_width, h - toolbar_height - ui(32), c_white, aa);
@@ -909,6 +910,8 @@ function Panel_Preview() : PanelContent() constructor {
         var pd   = 2;
         var thov = pHOVER && point_in_rectangle(mx, my, 0, toolbar_height, toolbar_width, h - toolbar_height);
         if(thov) canvas_hover = false;
+        
+        if(pFOCUS && key_mod_double(ALT)) tool_show_key = !tool_show_key;
         
         // Left tools
         for(var i = 0; i < array_length(_node.tools); i++) { 
@@ -989,7 +992,7 @@ function Panel_Preview() : PanelContent() constructor {
                 if(_key.isPressing()) tool.toggleKeyboard();
                 
                 var _hkstr = key_get_name(_key.key, _key.modi);
-                if(_hkstr != "" && key_mod_press(ALT)) {
+                if(_hkstr != "" && (key_mod_press(ALT) || tool_show_key)) {
                 	draw_set_text(f_p4, fa_right, fa_center, COLORS._main_text);
                 	var _hks  = string_width(_hkstr) + ui(8);
                 	var _hkx0 = _x1 - _hks;
@@ -1114,7 +1117,7 @@ function Panel_Preview() : PanelContent() constructor {
                 if(_key.isPressing()) tool.toggleKeyboard();
                 
                 var _hkstr = key_get_name(_key.key, _key.modi);
-                if(_hkstr != "" && key_mod_press(ALT)) {
+                if(_hkstr != "" && (key_mod_press(ALT) || tool_show_key)) {
                 	draw_set_text(f_p4, fa_left, fa_center, COLORS._main_text);
                 	var _hks  = string_width(_hkstr) + ui(8);
                 	var _hkx0 = _x0;
