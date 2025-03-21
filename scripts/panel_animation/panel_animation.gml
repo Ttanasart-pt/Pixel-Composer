@@ -1878,7 +1878,7 @@ function Panel_Animation() : PanelContent() constructor {
                 var _cont = timeline_contents[i];
                 _cont.y   = key_y;
                 _cont.h   = 0;
-                _cont.item.drawDopesheet(timeline_shift, _cont.y, timeline_scale, msx, msy);
+                // _cont.item.drawDopesheet(timeline_shift, _cont.y, timeline_scale, msx, msy);
                 
                 if(!_cont.show && show_nodes) continue;
                 if(item_dragging != noone && item_dragging.item == _cont.item) continue;

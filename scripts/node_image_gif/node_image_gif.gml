@@ -235,8 +235,8 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 
 function timelineItemNode_Image_gif(node) : timelineItemNode(node) constructor {
 	
-	static drawDopesheet = function(_x, _y, _s, _msx, _msy) {
-		if(!is_instanceof(node, Node_Image_gif)) return;
+	static drawDopesheetOver = function(_x, _y, _s, _msx, _msy, _hover, _focus) {
+		if(!is(node, Node_Image_gif))      return;
 		if(!node.attributes.show_timeline) return;
 		
 		var _spr = node.spr;
@@ -247,19 +247,17 @@ function timelineItemNode_Image_gif(node) : timelineItemNode(node) constructor {
 		var _sh = sprite_get_height(_spr);
 		var _ss = h / max(_sw, _sh);
 		
+		var _hw = _sw * _ss / 2;
+		var _hh = _sh * _ss / 2;
+		var _aa;
+		
 		for (var i = 0, n = sprite_get_number(_spr); i < n; i++) {
 			_rx = _x + (i + 1) * _s;
 			_ry = h / 2 + _y;
 			
-			draw_sprite_ext(_spr, i, _rx - _sw * _ss / 2, _ry - _sh * _ss / 2, _ss, _ss, 0, c_white, .5);
+			_aa = .5 + .5 * (i == CURRENT_FRAME);
+			draw_sprite_ext(_spr, i, _rx - _hw, _ry - _hh, _ss, _ss, 0, c_white, _aa);
 		}
-	}
-	
-	static drawDopesheetOver = function(_x, _y, _s, _msx, _msy, _hover, _focus) {
-		if(!is_instanceof(node, Node_Image_gif)) return;
-		if(!node.attributes.show_timeline) return;
-		
-		drawDopesheetOutput(_x, _y, _s, _msx, _msy);
 	}
 	
 	static onSerialize = function(_map) {

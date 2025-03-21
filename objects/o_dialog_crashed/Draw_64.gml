@@ -44,7 +44,7 @@ draw_set_alpha(1);
 	var b = buttonInstant(THEME.button_def, bx0, by0, bw, bh, mouse_ui, sHOVER, sFOCUS);
 	draw_text(bx0 + bw / 2, by0 + bh / 2, __txtx("crashed_log", "Log file") + "...");
 	if(b == 2) {
-		var path = string(DIRECTORY) + "crash_log.txt";
+		var path = string(DIRECTORY) + "log/crash_log.txt";
 		if(file_exists_empty(path)) shellOpenExplorer(path);
 	}
 #endregion

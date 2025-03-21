@@ -1401,13 +1401,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 
 function timelineItemNode_Canvas(node) : timelineItemNode(node) constructor {
 	
-	static drawDopesheet = function(_x, _y, _s, _msx, _msy) {
-		if(!is_instanceof(node, Node_Canvas)) return;
-		if(!node.attributes.show_timeline) return;
-	}
-	
 	static drawDopesheetOver = function(_x, _y, _s, _msx, _msy, _hover, _focus) {
-		if(!is_instanceof(node, Node_Canvas)) return;
+		if(!is(node, Node_Canvas))         return;
 		if(!node.attributes.show_timeline) return;
 		
 		var _surfs = node.output_surface;

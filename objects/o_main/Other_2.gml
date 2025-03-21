@@ -18,6 +18,8 @@
 		DIRECTORY = struct_has(PRESIST_PREF, "path")? PRESIST_PREF.path : "";
 	}
 	
+	show_debug_message($"Persisted directory: {perstPath}");
+	
 	if(DIRECTORY != "") {
 		var _ch = string_char_last(DIRECTORY);
 		if(_ch != "\\" && _ch != "/") DIRECTORY += "/";

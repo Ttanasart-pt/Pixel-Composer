@@ -1632,8 +1632,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			_iy  += junction_draw_hei_y * __s;
 		});
 		
-		if(name == "Stack") print($"{name}|", dummy_insert);
-		
 		array_foreach(outputs_index,    function(jun) /*=>*/ { 
 			jun = outputs[jun]; 
 			jun.x = _ox; jun.rx = _rox; 

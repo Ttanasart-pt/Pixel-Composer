@@ -130,8 +130,8 @@ function Node_Sequence_Anim(_x, _y, _group = noone) : Node(_x, _y, _group) const
 
 function timelineItemNode_Sequence_Anim(node) : timelineItemNode(node) constructor {
 	
-	static drawDopesheet = function(_x, _y, _s, _msx, _msy) {
-		if(!is_instanceof(node, Node_Sequence_Anim)) return;
+	static drawDopesheetOver = function(_x, _y, _s, _msx, _msy, _hover, _focus) {
+		if(!is(node, Node_Sequence_Anim))  return;
 		if(!node.attributes.show_timeline) return;
 		
 		var _surfs = node.getInputData(0);
@@ -139,6 +139,7 @@ function timelineItemNode_Sequence_Anim(node) : timelineItemNode(node) construct
 		var _useq  = !array_empty(_seq);
 		var _arr   = _useq? _seq : _surfs;
 		var _surf, _rx;
+		var _aa;
 		
 		var _h  = h - 2;
 		var _ry = h / 2 + _y;
@@ -157,16 +158,10 @@ function timelineItemNode_Sequence_Anim(node) : timelineItemNode(node) construct
 			var _sw = surface_get_width_safe(_surf);
 			var _sh = surface_get_height_safe(_surf);
 			var _ss = _h / max(_sw, _sh);
+			_aa = .5 + .5 * (i == CURRENT_FRAME);
 			
-			draw_surface_ext(_surf, _rx - _sw * _ss / 2, _ry - _sh * _ss / 2, _ss, _ss, 0, c_white, .5);
+			draw_surface_ext(_surf, _rx - _sw * _ss / 2, _ry - _sh * _ss / 2, _ss, _ss, 0, c_white, _aa);
 		}
-	}
-	
-	static drawDopesheetOver = function(_x, _y, _s, _msx, _msy, _hover, _focus) {
-		if(!is_instanceof(node, Node_Sequence_Anim)) return;
-		if(!node.attributes.show_timeline) return;
-		
-		drawDopesheetOutput(_x, _y, _s, _msx, _msy);
 	}
 	
 	static onSerialize = function(_map) {

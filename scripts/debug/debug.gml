@@ -145,7 +145,7 @@ function setException() {
 		tt += $"\nOperating system: {os_type_sting()} ({os_version})"
 		tt += "\n\n---------------------------- :( ----------------------------\n";
 		
-		var path = $"{env_user()}crash_log.txt";
+		var path = $"{env_user()}log/crash_log.txt";
 		
 		file_text_write_all(path, tt);
 		clipboard_set_text(tt);
