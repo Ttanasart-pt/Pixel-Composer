@@ -182,9 +182,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		input_hash		  = "";
 		input_hash_raw	  = "";
 		
-		inputs_amount    = 0;
-		in_cache_len     = 0;
-		inputDisplayList = [];
+		inputs_amount     = 0;
+		in_cache_len      = 0;
+		inputDisplayList  = [];
+		inputDisplayGroup = [];
 		
 		outputs_index  = [];
 		out_cache_len  = 0;
@@ -405,14 +406,16 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	////- DYNAMIC IO
 	
-	dummy_input                = noone;
-	dummy_add_index            = noone;
-	_dummy_add_index           = noone;
-	_dummy_start               = 0;
+	dummy_input      = noone;
+	dummy_insert     = noone;
+	dummy_add_index  = noone;
+	_dummy_add_index = noone;
+	_dummy_start     = 0;
+	
 	auto_input                 = false;
 	dyna_input_check_shift     =  0;
 	input_display_dynamic      = -1;
-	input_display_dynamic_full = -1;
+	input_display_dynamic_full = undefined;
 	dynamic_input_inspecting   =  0;
 	static createNewInput      = -1;
 	
@@ -426,8 +429,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(auto_input) {
 			dummy_input = nodeValue("Add value", self, CONNECT_TYPE.input, dummy_type, 0)
 				.setDummy(function() /*=>*/ {
-					var inAmo = array_length(inputs);
-					var index = dummy_add_index == noone? inAmo : input_fix_len + dummy_add_index * data_length;
+					var index = array_length(inputs);
+					
+					if(dummy_insert != noone) {
+						var i = dummy_insert;
+						index = input_fix_len + i * data_length;
+					}
 					
 					repeat(data_length) array_insert(inputs, index, 0);
 					return createNewInput(index);
@@ -507,11 +514,17 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		dynamic_input_inspecting = min(dynamic_input_inspecting, _amo - 1);
 		
 		if(dynamic_input_inspecting == noone) {
-			var _list = input_display_dynamic_full == -1? input_display_dynamic : input_display_dynamic_full;
-			for( var j = 0; j < _amo; j++ ) {
-				var _ind = input_fix_len + j * data_length;
-				for( var i = 0, n = array_length(_list); i < n; i++ ) {
-					var v = _list[i]; if(is_real(v)) v += _ind;
+			for( var i = 0; i < _amo; i++ ) {
+				var _ind = input_fix_len + i * data_length;
+				var _list = input_display_dynamic;
+				
+				if(!is_undefined(input_display_dynamic_full))
+					_list = input_display_dynamic_full(i);
+					
+				for( var j = 0, n = array_length(_list); j < n; j++ ) {
+					var v = _list[j]; 
+					if(is_real(v)) v += _ind;
+					
 					array_push(input_display_list, v);
 				}
 			}
@@ -1506,23 +1519,26 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		_d.sp = show_parameter;
 		
 		_d.force = false;
-		_dummy   = auto_input && dummy_input && PANEL_GRAPH.value_dragging;
 		
-		if(_dummy || _dummy_add_index != dummy_add_index) {
-			getJunctionList();
-			PANEL_GRAPH.draw_refresh = true;
-		}
-		_dummy_add_index = dummy_add_index;
-		dummy_add_index  = noone;
-		
-		if(!_upd && !_dummy) {
-			if(SHOW_PARAM) h = h_param;
-			onPreDraw(_x, _y, _s, _iy, _oy);
-			return;
-		}
+		#region dummy
+			_dummy = auto_input && dummy_input && PANEL_GRAPH.value_dragging;
+			
+			if(_dummy || _dummy_add_index != dummy_add_index) {
+				getJunctionList();
+				PANEL_GRAPH.draw_refresh = true;
+			}
+			_dummy_add_index = dummy_add_index;
+			dummy_add_index  = noone;
+			dummy_insert     = noone;
+			
+			if(!_upd && !_dummy) {
+				if(SHOW_PARAM) h = h_param;
+				onPreDraw(_x, _y, _s, _iy, _oy);
+				return;
+			}
+		#endregion
 		
 		var jun;
-		
 		var inspCount = hasInspector1Update() + hasInspector2Update();
 		var ind = 1;
 		if(hasInspector1Update()) {
@@ -1569,8 +1585,14 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		array_foreach(inputs, function(jun) /*=>*/ { jun.x = _ix; jun.y = _iy; });
 		
+		inputDisplayGroup = [];
+		_curr_group  = noone;
+		_curr_index  = noone;
+		
+		_dummy_curr  = 0; 
 		_dummy_start = 0;
 		_dummy &= key_mod_press(CTRL);
+		if(_dummy) dummy_insert = 0;
 		
 		array_foreach(inputDisplayList, function(jun, i) /*=>*/ { 
 			jun.x = _ix; jun.rx = _rix; 
@@ -1581,13 +1603,36 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 					_dummy_start = max(_dummy_start, i + 1);
 				
 				var _jy = _iy - junction_draw_hei_y * __s * .5;
-				if(jun.index >= input_fix_len && __my > _jy)
+				
+				if(!jun.is_dummy) 
+					_dummy_curr = max(_dummy_curr, floor((jun.index - input_fix_len) / data_length) + 1);
+				
+				if(jun.index >= input_fix_len && __my > _jy) {
 					dummy_add_index = i - _dummy_start;
+					dummy_insert    = _dummy_curr;
+				}
+			}
+			
+			if(is_dynamic_input && !jun.is_dummy && jun.index >= input_fix_len) {
+				var _ind = floor((jun.index - input_fix_len) / data_length);
+				
+				if(_ind != _curr_index || _curr_group == noone) {
+					_curr_index = _ind;
+					_curr_group = [ jun.x, jun.y, undefined, 0 ];
+					
+				} else if(_curr_group[2] == undefined) {
+					_curr_group[2] = jun.y;
+					array_push(inputDisplayGroup, _curr_group);
+					
+				} else 
+					_curr_group[2] = max(_curr_group[2], jun.y);
 			}
 			
 			_riy += junction_draw_hei_y;
 			_iy  += junction_draw_hei_y * __s;
 		});
+		
+		if(name == "Stack") print($"{name}|", dummy_insert);
 		
 		array_foreach(outputs_index,    function(jun) /*=>*/ { 
 			jun = outputs[jun]; 
@@ -1784,6 +1829,24 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static drawJunctions = function(_draw, _x, _y, _mx, _my, _s, _fast = false) {
 		var hover = noone;
+		
+		var _scs = gpu_get_scissor();
+		gpu_set_scissor(_x, _y, w * _s, h * _s);
+		
+		var _js = 16 * _s;
+		for( var i = 0, n = array_length(inputDisplayGroup); i < n; i++ ) {
+			var _gr  = inputDisplayGroup[i];
+			var _gx  = _gr[0] - 1;
+			var _gy0 = _gr[1] - 1;
+			var _gy1 = _gr[2] - 1;
+			
+			_gr[3] = key_mod_press(CTRL) && point_in_rectangle(_mx, _my, _gx - _js/2, _gy0 - _js/2, _gx + _js/2, _gy1 + _js/2);
+				
+			draw_set_color_alpha(_gr[3]? CDEF.main_dkgrey : CDEF.main_mdblack, .75);
+				draw_roundrect_ext(_gx - _js/2, _gy0 - _js/2, _gx + _js/2, _gy1 + _js/2, _js, _js, false);
+			draw_set_alpha(1);
+		}
+		gpu_set_scissor(_scs);
 		
 		if(_fast) draw_set_circle_precision(4);
 		else      gpu_set_texfilter(true);
@@ -2098,6 +2161,18 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
 		
+		var _js = 16 * _s;
+		for( var i = 0, n = array_length(inputDisplayGroup); i < n; i++ ) {
+			var _gr  = inputDisplayGroup[i];
+			var _gx  = _gr[0] - 1;
+			var _gy0 = _gr[1] - 1;
+			var _gy1 = _gr[2] - 1;
+			
+			draw_set_color_alpha(_gr[3]? CDEF.main_dkgrey : CDEF.main_mdblack, .9);
+				draw_roundrect_ext(_gx - _js/2, _gy0 - _js/2, _gx + _js/2, _gy1 + _js/2, _js, _js, false);
+			draw_set_alpha(1);
+		}
+		
 		drawDimension(xx, yy, _s);
 		return false; 
 	}
@@ -2171,6 +2246,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		drawNodeOverlay(xx, yy, _mx, _my, _s);
 		
 		if(!previewable) return drawJunctions(_draw, xx, yy, _mx, _my, _s, true);
+		
 		return drawJunctions(_draw, xx, yy, _mx, _my, _s, _s <= 0.5);
 	}
 	

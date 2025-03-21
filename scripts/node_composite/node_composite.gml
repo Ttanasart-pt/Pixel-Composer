@@ -434,9 +434,10 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		["Transform", false], 1, 2, 3, 
 	];
 	
-	input_display_dynamic_full = [ 
-		["Surface",   false], 0, 4, 5, 1, 2, 3, 
-	];
+	input_display_dynamic_full = function(j) { 
+		var _sname = $"Surface {j}";
+		return [ [_sname, false], 0, 4, 5, __inspc(ui(4), true, true, ui(4)), 1, 2, 3 ]; 
+	}
 	
 	input_display_list = [
 		["Output",	 true],	0, 1, 2,
