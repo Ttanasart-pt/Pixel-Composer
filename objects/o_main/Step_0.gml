@@ -63,8 +63,8 @@ if(!LOADING && PROJECT.active && !PROJECT.safeMode) { //node step
 	for( var i = 0; i < ds_list_size(GIF_READER); i++ ) {
 		var _reader = GIF_READER[| i];
 		
-		var _reading = _reader[0].reading();
-		if(_reading) {
+		var _readComplete = _reader[0].reading();
+		if(_readComplete) {
 			var ret = _reader[2];
 			ret(new __gif_sprite_builder(_reader[0]));
 			ds_stack_push(gif_complete_st, i);

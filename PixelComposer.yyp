@@ -1831,6 +1831,7 @@
     {"id":{"name":"gameframe","path":"scripts/gameframe/gameframe.yy",},},
     {"id":{"name":"gamemakerPathBox","path":"scripts/gamemakerPathBox/gamemakerPathBox.yy",},},
     {"id":{"name":"getGradientData","path":"scripts/getGradientData/getGradientData.yy",},},
+    {"id":{"name":"gif_reader_legacy","path":"scripts/gif_reader_legacy/gif_reader_legacy.yy",},},
     {"id":{"name":"gif_reader","path":"scripts/gif_reader/gif_reader.yy",},},
     {"id":{"name":"globals","path":"scripts/globals/globals.yy",},},
     {"id":{"name":"globalvar_drawer","path":"scripts/globalvar_drawer/globalvar_drawer.yy",},},

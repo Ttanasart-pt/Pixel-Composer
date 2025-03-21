@@ -72,6 +72,7 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	spr			 = noone;
 	path_current = "";
 	loading		 = 0;
+	load_start_t = 0;
 	spr_builder	 = noone; 
 	surfaces	 = [];
 	
@@ -103,6 +104,7 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		if(spr) sprite_delete(spr);
 		sprite_add_gif(path, function(_spr) /*=>*/ { spr_builder = _spr; loading = 2; });
 		loading = 1;
+		load_start_t = get_timer();
 				
 		if(path_current == "") first_update = true;
 		path_current = path;
@@ -125,8 +127,8 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		if(loading == 2 && spr_builder != noone && spr_builder.building()) {
 			surfaces = [];
 			spr = spr_builder._spr;
-			//print($"{spr}: {sprite_get_width(spr)}, {sprite_get_height(spr)}");
 			detail.text = $"{filename_name(path_current)}\n{sprite_get_number(spr)} frames";
+			print($"Load gif finish in {(get_timer() - load_start_t) / 1_000}ms");
 			
 			triggerRender();
 			loading = 0;
