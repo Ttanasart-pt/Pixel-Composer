@@ -310,18 +310,16 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         tb_zoom_level = new textBox(TEXTBOX_INPUT.number, function(z) /*=>*/ { 
         	var _s = graph_s;
                 
-            graph_s_to = clamp(z, 0.01, 2); 
+            graph_s_to = clamp(z, 0.01, 4); 
         	graph_s    = graph_s_to; 
             
             if(_s != graph_s) {
 				graph_x += w / 2 * ((1 / graph_s) - (1 / _s));
 				graph_y += h / 2 * ((1 / graph_s) - (1 / _s));
             }
-        });
-        tb_zoom_level.color  = c_white;
-        tb_zoom_level.align  = fa_right;
-        tb_zoom_level.hide   = 3;
-        tb_zoom_level.font   = f_p2;
+            
+        }).setColor(c_white).setAlign(fa_right).setHide(3).setFont(f_p2);
+        
     #endregion
     
     #region // ---- position ----

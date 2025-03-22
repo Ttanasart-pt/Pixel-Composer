@@ -39,10 +39,13 @@ function Node_Perlin(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 	newInput(12, nodeValue_Surface("Mask", self));
 	
+	newInput(13, nodeValue_Rotation("Phase", self, 0));
+	
 	input_display_list = [
-		["Output", 	 true],	0, 12, 5, 
-		["Noise",	false],	1, 11, 2, 10, 3, 4, 
-		["Render",	false], 6, 7, 8, 9, 
+		["Output", 	   true], 0, 12, 
+		["Noise",	  false], 5, 13, 3, 4, 
+		["Transform", false], 1, 11, 2, 10, 
+		["Render",	  false], 6, 7, 8, 9, 
 	];
 	
 	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
@@ -57,16 +60,6 @@ function Node_Perlin(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	}
 	
 	static step = function() {
-		var _col = getInputData(6);
-		
-		inputs[7].setVisible(_col != 0);
-		inputs[8].setVisible(_col != 0);
-		inputs[9].setVisible(_col != 0);
-		
-		inputs[7].name = _col == 1? "Color R Range" : "Color H Range";
-		inputs[8].name = _col == 1? "Color G Range" : "Color S Range";
-		inputs[9].name = _col == 1? "Color B Range" : "Color V Range";
-		
 		inputs[2].mappableStep();
 	}
 	
@@ -77,11 +70,20 @@ function Node_Perlin(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _til = _data[4];
 		var _sed = _data[5];
 		
-		var _col = _data[6];
-		var _clr = _data[7];
-		var _clg = _data[8];
-		var _clb = _data[9];
+		var _col = _data[ 6];
+		var _clr = _data[ 7];
+		var _clg = _data[ 8];
+		var _clb = _data[ 9];
 		var _rot = _data[11];
+		var _phs = _data[13];
+		
+		inputs[7].setVisible(_col != 0);
+		inputs[8].setVisible(_col != 0);
+		inputs[9].setVisible(_col != 0);
+		
+		inputs[7].name = _col == 1? "Color R Range" : "Color H Range";
+		inputs[8].name = _col == 1? "Color G Range" : "Color S Range";
+		inputs[9].name = _col == 1? "Color B Range" : "Color V Range";
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
@@ -91,6 +93,7 @@ function Node_Perlin(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			shader_set_f("rotation",   degtorad(_rot));
 			shader_set_f_map("scale",  _data[2], _data[10], inputs[2]);
 			shader_set_f("seed",       _sed);
+			shader_set_f("phase",      _phs / 360);
 			shader_set_i("tile",       _til);
 			shader_set_i("iteration",  _ite);
 		

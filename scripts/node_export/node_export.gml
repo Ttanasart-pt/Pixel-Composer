@@ -303,17 +303,15 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		}
 	}
 	
-	static pathString = function(path, fnam, index = 0, _array = false) {
+	static pathString = function(path, fnam = "", index = 0, _array = false) {
 		var suff = getInputData( 2);
 		var form = getInputData( 3);
 		var strt = getInputData(11);
 		
 		path = string_replace_all(path, "\\", "/");
 		
-		if(!string_ends_with(path, "/")) {
+		if(fnam == "" && !string_ends_with(path, "/"))
 			fnam = filename_name_only(path);
-			path = filename_dir(path);
-		}
 		
 		var s = _array? [] : "";
 		var i = 1;

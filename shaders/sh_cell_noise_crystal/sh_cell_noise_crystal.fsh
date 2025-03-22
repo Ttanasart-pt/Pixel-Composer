@@ -1,4 +1,4 @@
-// 3D Voronio noise by Pixel
+// 3D Voronoi noise by Pixel 
 
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
@@ -6,6 +6,8 @@ varying vec4 v_vColour;
 uniform vec2  dimension;
 uniform vec2  position;
 uniform float seed;
+uniform float phase;
+
 uniform float contrast;
 uniform float middle;
 uniform float rotation;
@@ -13,6 +15,8 @@ uniform float rotation;
 uniform vec2      scale;
 uniform int       scaleUseSurf;
 uniform sampler2D scaleSurf;
+
+#define TAU 6.283185307179586
 
 vec3 hash(vec3 p) { return fract(sin(vec3(dot(p, vec3(1.0, 57.0, 113.0)), dot(p, vec3(57.0, 113.0, 1.0)), dot(p, vec3(113.0, 1.0, 57.0)))) * 438.54); }
 

@@ -273,7 +273,7 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function timelineItemNode_Image_Animated(node) : timelineItemNode(node) constructor {
+function timelineItemNode_Image_Animated(_node) : timelineItemNode(_node) constructor {
 	
 	static drawDopesheetOver = function(_x, _y, _s, _msx, _msy, _hover, _focus) {
 		if(!is(node, Node_Image_Animated)) return;
@@ -284,6 +284,8 @@ function timelineItemNode_Image_Animated(node) : timelineItemNode(node) construc
 		var _aa;
 		
 		for (var i = 0, n = array_length(_sprs); i < n; i++) {
+			if(i >= TOTAL_FRAMES) break;
+			
 			_spr = _sprs[i];
 			if(!sprite_exists(_spr)) continue;
 			

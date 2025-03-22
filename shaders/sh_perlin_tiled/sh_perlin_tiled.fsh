@@ -11,6 +11,7 @@ uniform sampler2D scaleSurf;
 
 uniform int   iteration;
 uniform float seed;
+uniform float phase;
 uniform int   tile;
 
 uniform int  colored;
@@ -20,14 +21,14 @@ uniform vec2 colorRanB;
 
 vec2 sca;
 
-vec3 hsv2rgb(vec3 c) { #region
+vec3 hsv2rgb(vec3 c) {
     vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
     vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
     return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
-} #endregion
+}
 
 float random  (in vec2 st) { return smoothstep(0., 1., abs(fract(sin(dot(st.xy + vec2(21.456, 46.856), vec2(12.989, 78.233))) * (43758.545 + seed)) * 2. - 1.)); }
-vec2  random2 (in vec2 st) { float a = random(st) * 6.28319; return vec2(cos(a), sin(a)); }
+vec2  random2 (in vec2 st) { float a = fract(random(st) + phase) * 6.28319; return vec2(cos(a), sin(a)); }
 
 float noise (in vec2 st, in vec2 scale) { #region
     vec2 cellMin = floor(st);

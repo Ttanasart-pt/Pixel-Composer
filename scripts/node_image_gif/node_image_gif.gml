@@ -235,7 +235,7 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function timelineItemNode_Image_gif(node) : timelineItemNode(node) constructor {
+function timelineItemNode_Image_gif(_node) : timelineItemNode(_node) constructor {
 	
 	static drawDopesheetOver = function(_x, _y, _s, _msx, _msy, _hover, _focus) {
 		if(!is(node, Node_Image_gif))      return;
@@ -254,6 +254,8 @@ function timelineItemNode_Image_gif(node) : timelineItemNode(node) constructor {
 		var _aa;
 		
 		for (var i = 0, n = sprite_get_number(_spr); i < n; i++) {
+			if(i >= TOTAL_FRAMES) break;
+			
 			_rx = _x + (i + 1) * _s;
 			_ry = h / 2 + _y;
 			

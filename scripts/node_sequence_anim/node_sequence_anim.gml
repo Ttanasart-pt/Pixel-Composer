@@ -128,7 +128,7 @@ function Node_Sequence_Anim(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	}
 }
 
-function timelineItemNode_Sequence_Anim(node) : timelineItemNode(node) constructor {
+function timelineItemNode_Sequence_Anim(_node) : timelineItemNode(_node) constructor {
 	
 	static drawDopesheetOver = function(_x, _y, _s, _msx, _msy, _hover, _focus) {
 		if(!is(node, Node_Sequence_Anim))  return;
@@ -145,6 +145,8 @@ function timelineItemNode_Sequence_Anim(node) : timelineItemNode(node) construct
 		var _ry = h / 2 + _y;
 		
 		for (var i = 0, n = array_length(_arr); i < n; i++) {
+			if(i >= TOTAL_FRAMES) break;
+			
 			_surf = _arr[i];
 			if(_useq) {
 				if(_surf < 0) continue;

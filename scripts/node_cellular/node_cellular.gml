@@ -49,11 +49,14 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		
 	newInput(13, nodeValue_Surface("Mask", self));
 	
+	newInput(14, nodeValue_Rotation("Phase", self, 0));
+	
 	input_display_list = [
-		["Output",		false], 0, 13, 
-		["Noise",		false], 4, 6, 3, 1, 12, 2, 11, 
-		["Radial",		false], 8, 9,
-		["Rendering",	false], 5, 7, 10, 
+		["Output",    false], 0, 13, 
+		["Noise",     false], 4, 6, 3, 14, 
+		["Transform", false], 1, 12, 2, 11, 
+		["Radial",    false], 8, 9,
+		["Rendering", false], 5, 7, 10, 
 	];
 	
 	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
@@ -80,14 +83,16 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		var _pat  = _data[6];
 		var _mid  = _data[7];
 		
-		inputs[ 8].setVisible(_pat ==  2);
-		inputs[ 9].setVisible(_pat ==  2);
+		inputs[ 8].setVisible(_pat  == 2);
+		inputs[ 9].setVisible(_pat  == 2);
 		inputs[10].setVisible(_type == 2);
+		inputs[14].setVisible(_type != 3);
 		
 		var _rad = _data[ 8];
 		var _sht = _data[ 9];
 		var _col = _data[10];
 		var _rot = _data[12];
+		var _phs = _data[14];
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
@@ -99,17 +104,19 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		}
 		
 		surface_set_shader(_outSurf, shader);
-			shader_set_f("dimension",		_dim);
-			shader_set_f("seed",			_tim);
-			shader_set_2("position",		_pos);
-			shader_set_f_map("scale",		_data[2], _data[11], inputs[2]);
-			shader_set_f("contrast",		_con);
-			shader_set_f("middle",			_mid);
-			shader_set_f("radiusScale",		_rad);
-			shader_set_f("radiusShatter",	_sht);
-			shader_set_i("pattern",			_pat);
-			shader_set_i("colored",			_col);
-			shader_set_f("rotation",		degtorad(_rot));
+			shader_set_f("dimension",     _dim);
+			shader_set_f("seed",          _tim);
+			shader_set_f("phase",         _phs / 360);
+			
+			shader_set_2("position",      _pos);
+			shader_set_f_map("scale",     _data[2], _data[11], inputs[2]);
+			shader_set_f("contrast",      _con);
+			shader_set_f("middle",        _mid);
+			shader_set_f("radiusScale",   _rad);
+			shader_set_f("radiusShatter", _sht);
+			shader_set_i("pattern",       _pat);
+			shader_set_i("colored",       _col);
+			shader_set_f("rotation",      degtorad(_rot));
 			
 			draw_sprite_stretched(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1]);
 		surface_reset_shader();

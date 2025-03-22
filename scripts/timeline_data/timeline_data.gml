@@ -43,8 +43,8 @@ function timelineItem() constructor {
 	}
 }
 
-function timelineItemNode(node) : timelineItem() constructor {
-	self.node = node;
+function timelineItemNode(_node) : timelineItem() constructor {
+	node = _node;
 	
 	static drawLabel = function(_item, _x, _y, _w, _msx, _msy, hover, focus, itHover, fdHover, nameType, alpha = 1) {
 		var _sel = node.is_selecting;

@@ -6,6 +6,8 @@ varying vec4 v_vColour;
 uniform vec2  dimension;
 uniform vec2  position;
 uniform float seed;
+uniform float phase;
+
 uniform float contrast;
 uniform float middle;
 uniform float radiusScale;
@@ -52,7 +54,7 @@ void main() {
 	    for (int x = -1; x <= 1; x++) {
 	        vec2 neighbor = vec2(float(x), float(y));
 	        vec2 point = random2(pattern == 0? mod(i_st + neighbor, scaMax) : i_st + neighbor);
-			point = 0.5 + 0.5 * sin(seed + TAU * point);
+			point = 0.5 + 0.5 * sin(seed + TAU * fract(point + phase));
 			
 	        vec2 _diff = neighbor + point - f_st;
 	        float dist = length(_diff);
@@ -69,7 +71,7 @@ void main() {
 		for(int x = -2; x <= 2; x++) {
 			vec2 g = mg + vec2(float(x), float(y));
 			vec2 point = random2(mod(i_st + g, scaMax));
-			point = 0.5 + 0.5 * sin(seed + TAU * point);
+			point = 0.5 + 0.5 * sin(seed + TAU * fract(point + phase));
 		
 			vec2 r = g + point - f_st;
 			if(dot(mr - r, mr - r) > .000001)
@@ -81,7 +83,7 @@ void main() {
 			for (int i = 0; i <= _amo; i++) {
 				float ang = TAU / float(_amo) * float(i) + float(j) + seed;
 				float rad = pow(float(j) / sca, radiusScale) * sca * .5 + random(vec2(ang)) * 0.1;
-				vec2 neighbor = vec2(cos(ang) * rad, sin(ang) * rad);
+				vec2 neighbor = vec2(cos(ang + TAU * phase) * rad, sin(ang + TAU * phase) * rad);
 				vec2 point = neighbor + pos;
 				
 			    vec2 _diff = point - ntx;
@@ -101,7 +103,7 @@ void main() {
 			for (int i = 0; i <= _amo; i++) {
 				float ang = TAU / float(_amo) * float(i) + float(j) + random(vec2(0.684, 1.387)) + seed;
 				float rad = pow(float(j) / sca, radiusScale) * sca * .5 + random(vec2(ang)) * 0.1;
-				vec2 neighbor = vec2(cos(ang) * rad, sin(ang) * rad);
+				vec2 neighbor = vec2(cos(ang + TAU * phase) * rad, sin(ang + TAU * phase) * rad);
 				vec2 point = neighbor + pos;
 			
 			    vec2 r = point - ntx;

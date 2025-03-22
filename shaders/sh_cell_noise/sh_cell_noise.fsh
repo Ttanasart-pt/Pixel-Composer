@@ -6,6 +6,7 @@ uniform vec2  position;
 uniform float rotation;
 uniform int   pattern;
 uniform float seed;
+uniform float phase;
 
 uniform vec2      scale;
 uniform int       scaleUseSurf;
@@ -22,7 +23,7 @@ uniform float radiusShatter;
 
 vec2 random2( vec2 p ) { return fract(sin(vec2(dot(p, vec2(127.1, 311.7)), dot(p, vec2(269.5, 183.3)))) * 43758.5453); }
 
-float random (in vec2 st) { return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123); }
+float random(in vec2 st) { return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123); }
 
 void main() {
 	#region params
@@ -53,7 +54,7 @@ void main() {
 	        vec2 neighbor = vec2(float(x),float(y));
 	        vec2 point    = random2(pattern == 0? mod(i_st + neighbor, scaMax) : i_st + neighbor);
 			
-			point = 0.5 + 0.5 * sin(seed + 6.2831 * point);
+			point = 0.5 + 0.5 * sin(seed + TAU * fract(point + phase));
 			
 	        vec2 _diff = neighbor + point - f_st;
 	        float dist = length(_diff);
@@ -69,7 +70,7 @@ void main() {
 				
 				float angl = ang + TAU / float(_amo) * float(i) + float(j) + random(vec2(0.684, 1.387)) + seed;
 				float rad  = pow(float(j) / sca, radiusScale) * sca * .5 + random(vec2(angl)) * 0.1;
-				vec2 point = vec2(cos(angl) * rad, sin(angl) * rad) + pos;
+				vec2 point = vec2(cos(angl + TAU * phase) * rad, sin(angl + TAU * phase) * rad) + pos;
 				
 			    vec2 _diff = point - ntx;
 			    float dist = length(_diff);
