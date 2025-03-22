@@ -184,11 +184,10 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		if(w * _s < 32 || h * _s < 32) return point_in_rectangle(_mx, _my, xx, yy, x1, y1);
 		
-		if(_panel != noone && point_in_rectangle(_mx, _my, xx, yy, x1, y1) || size_dragging)
-			draw_sprite_ext_add(THEME.node_resize, 0, x1 - shf, y1 - shf, ics, ics, 0, c_white, 0.15);
+		var _aa = size_dragging? .3 : .15;
 		
 		if(_panel != noone && !name_hover && point_in_rectangle(_mx, _my, x0, y0, x1, y1)) {
-			draw_sprite_ext_add(THEME.node_resize, 0, x1 - shf, y1 - shf, ics, ics, 0, c_white, 0.30);
+			_aa = .3;
 			PANEL_GRAPH.drag_locking = true;
 			
 			if(mouse_press(mb_left)) {
@@ -199,6 +198,8 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				size_dragging_my = mouse_my;
 			}
 		}
+		
+		draw_sprite_ext_add(THEME.node_resize, 0, x1 - shf, y1 - shf, ics, ics, 0, c_white, _aa);
 		
 		return point_in_rectangle(_mx, _my, xx, yy, x1, y1);
 	}

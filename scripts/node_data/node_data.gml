@@ -769,14 +769,13 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		var _hi, _ho;
 		
-		if(previewable) {
+		if(SHOW_PARAM) {
+			_hi = con_h;
+			_ho = 24;
+			
+		} else if(previewable) {
 			_hi = junction_draw_pad_y;
 			_ho = junction_draw_pad_y;
-			
-			if(SHOW_PARAM) {
-				_hi = con_h;
-				_ho = con_h;
-			}
 			
 		} else {
 			junction_draw_hei_y = 16;
@@ -1566,22 +1565,34 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			out_cache_len = array_length(outputs);
 		}
 		
-		var _junRy = junction_draw_pad_y;
-		var _junSy = yy + _junRy * _s;
-		
 		if(SHOW_PARAM) {
-			_junRy = con_h + junction_draw_hei_y / 2;
-			_junSy = yy + _junRy * _s;
+			var _junRy = con_h + junction_draw_hei_y / 2;
+			var _junSy = yy + _junRy * _s;
+			
+			_ix = xx;           _rix = x;
+			_iy = _junSy;       _riy = y + _junRy;
+			
+			var _junRy = 24;
+			var _junSy = yy + _junRy * _s;
+			
+			_ox = xx + w * _s;  _rox = x + w;
+			_oy = _junSy;       _roy = y + _junRy;
+			
+		} else {
+			var _junRy = junction_draw_pad_y;
+			var _junSy = yy + _junRy * _s;
+		
+			_ix = xx;           _rix = x;
+			_iy = _junSy;       _riy = y + _junRy;
+			
+			_ox = xx + w * _s;  _rox = x + w;
+			_oy = _junSy;       _roy = y + _junRy;
+			
 		}
 		
 		__s = _s;
-		_ix = xx;           _rix = x;
-		_iy = _junSy;       _riy = y + _junRy;
-		
-		_ox = xx + w * _s;  _rox = x + w;
-		_oy = _junSy;       _roy = y + _junRy;
-		
-		__mx = _mx;         __my = _my;
+		__mx = _mx;
+		__my = _my;
 		
 		array_foreach(inputs, function(jun) /*=>*/ { jun.x = _ix; jun.y = _iy; });
 		
@@ -1770,6 +1781,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		var extY = 0;
 		var drwT = _s > 0.5;
+		var outY = 24;
 		
 		for(var i = 0, n = array_length(inputDisplayList); i < n; i++) {
 			var jun = inputDisplayList[i];
@@ -1779,7 +1791,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 			if(drwT) {
 				draw_set_text(f_sdf, fa_left, fa_center, jun.color_display);
-				draw_text_add(lx, jun.y, jun.getName(), _s * 0.25);
+				draw_text_add(lx, jun.y, jun.getName(), _s * 0.25 / UI_SCALE);
 				
 			} else {
 				draw_set_color(jun.color_display);
@@ -1814,14 +1826,18 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			wd.setFocusHover(_focus, _hover);
 			var _h = wd.drawParam(_param);
 			jun.graphWidgetH = _h / _s;
-					
+			
 			extY += max(0, jun.graphWidgetH + 4);
 			jy   += (jun.graphWidgetH + 4) * _s;
 			
 			if(wd.isHovering()) draggable = false;
 		}
 		
-		h = con_h + extY + 4;
+		for( var i = 0, n = array_length(outputs); i < n; i++ )
+			outY += junction_draw_hei_y * outputs[i].isVisible();
+		
+		extY += bool(extY) * 4;
+		h = max(outY, con_h + extY);
 		h_param = h;
 	}
 	
@@ -2242,10 +2258,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(bg_spr_add > 0) draw_sprite_stretched_add(bg_spr, 1, xx, yy, w * _s, h * _s, bg_spr_add_clr, bg_spr_add);
 		
 		drawNodeOverlay(xx, yy, _mx, _my, _s);
-		
-		if(!previewable) return drawJunctions(_draw, xx, yy, _mx, _my, _s, true);
-		
-		return drawJunctions(_draw, xx, yy, _mx, _my, _s, _s <= 0.5);
+		return drawJunctions(_draw, xx, yy, _mx, _my, _s, _s <= 0.5 || !previewable);
 	}
 	
 	static drawNodeBehind = function(_x, _y, _mx, _my, _s) {
