@@ -63,7 +63,6 @@ function log_message(title, str, icon = noone, flash = false, write = true) {
 	if(IS_CMD)     { show_debug_message($"{title}: {str}"); return; }
 	
 	if(write) __log("[MESSAGE] ", $"{title}: {str}");
-	
 	return noti_status($"{title}: {str}", icon, flash);
 }
 
@@ -71,18 +70,16 @@ function log_warning(title, str, ref = noone) {
 	if(TEST_ERROR) return;
 	if(IS_CMD)     { show_debug_message($"{title}: {str}"); return; }
 	
-	__log("[WARNING] ", string(title) + ": " + string(str));
-	
-	return noti_warning(string(title) + ": " + string(str),, ref);
+	__log("[WARNING] ", $"{title}: {str}");
+	return noti_warning($"{title}: {str}",, ref);
 }
 
 function log_crash(str) {
 	if(TEST_ERROR) return;
 	if(IS_CMD)     { show_debug_message($"{title}: {str}"); return; }
 	
-	__log("[ERROR] ", string(str));
-	
-	return noti_error(string(str));
+	__log("[ERROR] ", str);
+	return noti_error(str);
 }
 
 function log_newline() {

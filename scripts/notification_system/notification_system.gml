@@ -15,29 +15,33 @@
 		internal = 1 << 3,
 	}
 	
-	function notification(type, str, icon = noone, color = c_ui_blue_dkgrey, life = -1) constructor {
-		self.type   = type;
-		self.txt    = str;
-		self.txtclr = COLORS._main_text_sub;
-		self.icon   = icon;
-		self.color  = color;
+	function notification(_type, _str, _icon = noone, _color = c_ui_blue_dkgrey, _life = -1) constructor {
+		type   = _type;
+		txt    = _str;
+		txtclr = COLORS._main_text_sub;
+		icon   = _icon;
+		color  = _color;
 		
-		self.life_max = life;
-		self.life     = life;
+		life_max = _life;
+		life     = _life;
 		
-		self.onClick  = noone;
-		self.tooltip  = "";
-		self.icon_end = noone;
+		onClick  = noone;
+		tooltip  = "";
+		icon_end = noone;
 		
-		self.progress = noone;
+		progress  = noone;
+		reference = noone;
 		
-		self.amount = 1;
-		self.time   = $"{string_lead_zero(current_hour, 2)}:{string_lead_zero(current_minute, 2)}.{string_lead_zero(current_second, 2)}";
+		amount = 1;
+		time   = $"{string_lead_zero(current_hour, 2)}:{string_lead_zero(current_minute, 2)}.{string_lead_zero(current_second, 2)}";
 		
-		static setOnClick = function(onClick, tooltip = "", icon_end = noone) {
-			self.onClick  = method(self, onClick);
-			self.tooltip  = tooltip;
-			self.icon_end = icon_end;
+		static setColor = function(_c) /*=>*/ { color     = _c; return self; }
+		static setRef   = function(_r) /*=>*/ { reference = _r; return self; }
+		
+		static setOnClick = function(_onClick, _tooltip = "", _icon_end = noone) {
+			onClick  = method(self, _onClick);
+			tooltip  = _tooltip;
+			icon_end = _icon_end;
 			
 			return self;
 		}
@@ -65,7 +69,10 @@
 			PANEL_MENU.noti_flash = 1;
 			PANEL_MENU.noti_flash_color = flash;
 			
-			dialogCall(o_dialog_warning, mouse_mx + ui(16), mouse_my + ui(16)).setText(str);
+			dialogCall(o_dialog_warning, mouse_mx + ui(16), mouse_my + ui(16))
+				.setText(str)
+				.setColor(flash)
+				.setIcon(icon);
 		}
 		
 		if(ref) {

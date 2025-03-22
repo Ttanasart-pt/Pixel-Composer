@@ -132,7 +132,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		draw_droppable      = false;
 		
 		junction_draw_pad_y = 32;
-		junction_draw_hei_y = 24;
+		junction_draw_hei_y = 16;
+		junction_outp_hei_y = 16;
 		
 		branch_drawing      = false;
 	#endregion
@@ -808,7 +809,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			if(!is(_inp, NodeValue)) continue;
 			
 			var _byp = _inp.bypass_junc;
-			_ho += junction_draw_hei_y * _byp.visible;
+			_ho += junction_outp_hei_y * _byp.visible;
 		}
 		
 		if(attributes.outp_meta) {
@@ -1649,8 +1650,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			jun.y = _oy; jun.ry = _roy; 
 			
 			var __vis = jun.isVisible();
-			_roy += junction_draw_hei_y * __vis 
-			_oy  += junction_draw_hei_y * __vis * __s; 
+			_roy += junction_outp_hei_y * __vis 
+			_oy  += junction_outp_hei_y * __vis * __s; 
 		});
 		
 		array_foreach(inputs,           function(jun) /*=>*/ { jun   = jun.bypass_junc; if(!jun.visible) return; 
@@ -1834,7 +1835,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 		
 		for( var i = 0, n = array_length(outputs); i < n; i++ )
-			outY += junction_draw_hei_y * outputs[i].isVisible();
+			outY += junction_outp_hei_y * outputs[i].isVisible();
 		
 		extY += bool(extY) * 4;
 		h = max(outY, con_h + extY);

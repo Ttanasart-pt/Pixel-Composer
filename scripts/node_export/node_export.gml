@@ -663,9 +663,10 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				var _txt = $"Export {array_length(surf)} images complete.";
 				logNode(_txt);
 				
-				var noti  = log_message("EXPORT", _txt, THEME.noti_icon_tick, COLORS._main_value_positive, false);
-				noti.path = filename_dir(p);
-				noti.setOnClick(function() { shellOpenExplorer(self.path); }, "Open in explorer", THEME.explorer);
+				var noti  = log_message("EXPORT", _txt, THEME.noti_icon_tick, COLORS._main_value_positive, false)
+								.setRef(filename_dir(p))
+								// .setColor(COLORS._main_value_positive)
+								.setOnClick(function() /*=>*/ {return shellOpenExplorer(self.reference)}, "Open in explorer", THEME.explorer);
 				
 				PANEL_MENU.setNotiIcon(THEME.noti_icon_tick);
 			}
@@ -688,9 +689,10 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				var _txt = $"Export image as {p}";
 				logNode(_txt);
 				
-				var noti  = log_message("EXPORT", _txt, THEME.noti_icon_tick, COLORS._main_value_positive, false);
-				noti.path = filename_dir(p);
-				noti.setOnClick(function() { shellOpenExplorer(self.path); }, "Open in explorer", THEME.explorer);
+				var noti  = log_message("EXPORT", _txt, THEME.noti_icon_tick, COLORS._main_value_positive, false)
+								.setRef(filename_dir(p))
+								// .setColor(COLORS._main_value_positive)
+								.setOnClick(function() /*=>*/ {return shellOpenExplorer(self.reference)}, "Open in explorer", THEME.explorer);
 					
 				PANEL_MENU.setNotiIcon(THEME.noti_icon_tick);
 			}

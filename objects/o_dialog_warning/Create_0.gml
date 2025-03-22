@@ -2,12 +2,18 @@
 event_inherited();
 
 #region data
-	anchor = ANCHOR.left | ANCHOR.top;
-	
+	anchor  = ANCHOR.left | ANCHOR.top;
 	padding = ui(8);
 	destroy_on_click_out = true;
-	warning_text = "";
-	life = 300;
 	
-	function setText(txt) { warning_text = txt; return self; }
+	text  = "";
+	icon  = THEME.noti_icon_warning;
+	color = COLORS._main_accent;
+	anim  = -1;
+	life  = 15;
+	y    += life * UI_SCALE;
+	
+	function setText(txt) { text  = txt; return self; }
+	function setColor(_c) { color = _c;  return self; }
+	function setIcon(_i)  { icon  = _i;  return self; }
 #endregion

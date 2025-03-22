@@ -53,6 +53,8 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	input_display_list = [ 0, 1, 3, 4 ];
 	
+	////- Update
+	
 	static onValueUpdate = function(index = 3) { 
 		previewable = true;
 		global.__FRAME_LABEL_SCALE = inputs[3].getValue();
@@ -74,9 +76,9 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	static doUpdate = function() {}
 	static update   = function() {}
 	
-	static postApplyDeserialize  = function() {
-		onValueUpdate();
-	}
+	////- Draw
+	
+	static preDraw = function(_x, _y, _mx, _my, _s) {}
 	
 	static drawNode  = function() { return noone; }
 	static drawBadge = function() { return noone; }
@@ -113,7 +115,10 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		if(draw_x1 - draw_x0 < 4) return;
 		
-		draw_sprite_stretched_ext(bg_spr, 0, x0, y0, x1 - x0, y1 - y0, color, alpha);
+		var _dw = x1 - x0;
+		var _dh = y1 - y0;
+		
+		draw_sprite_stretched_ext(bg_spr, 0, x0, y0, _dw, _dh, color, alpha);
 	}
 	
 	static drawNodeFG = function(_x, _y, _mx, _my, _s, _dparam, _panel = noone) {
@@ -177,8 +182,8 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		var x1  = xx + w * _s;
 		var y1  = yy + h * _s;
-		var x0  = x1 - 16;
-		var y0  = y1 - 16;
+		var x0  = x1 - 16 * THEME_SCALE;
+		var y0  = y1 - 16 * THEME_SCALE;
 		var ics = 0.5;
 		var shf = 8 * ics;
 		
@@ -214,4 +219,11 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		return hover;
 	}
+
+	////- Serialize
+	
+	static postApplyDeserialize  = function() {
+		onValueUpdate();
+	}
+	
 }
