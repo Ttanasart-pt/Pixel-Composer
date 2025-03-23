@@ -41,9 +41,6 @@ function canvas_tool_shape_iso(brush, shape, toolAttr) : canvas_tool() construct
 				mouse_points[0][1] = mouse_cur_y;
 				
 				if(mouse_press(mb_left, active)) {
-					mouse_points[0][0] = mouse_cur_x;
-					mouse_points[0][1] = mouse_cur_y;
-				
 					mouse_points[1][0] = mouse_cur_x;
 					mouse_points[1][1] = mouse_cur_y;
 				
