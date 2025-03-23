@@ -16,7 +16,7 @@ function NodeTool(name = "", spr = noone, contextString = instanceof(other)) con
 	
 	hk_object   = noone;
 	
-	static checkHotkey   = function() { return getToolHotkey(ctx, name); }
+	static checkHotkey   = function() { return getToolHotkey(ctx, getName()); }
 	
 	static setContext    = function(_c) { context    = _c; return self; }
 	static setToolObject = function(_o) { toolObject = _o; return self; }

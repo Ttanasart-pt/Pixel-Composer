@@ -298,6 +298,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		tool_fill           = new canvas_tool_fill(tool_attribute);
 		tool_fill_grad      = new canvas_tool_fill_gradient(tool_attribute);
+		
 		tool_freeform       = new canvas_tool_draw_freeform(brush);
 		tool_curve_bez      = new canvas_tool_curve_bezier(brush);
 		
@@ -330,6 +331,52 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		tool_attribute.button_apply  = [ false, false ];
 		
 		tool_attribute.dither        = 0;
+		
+		tool_attribute.pattern       = 2;
+		tool_attribute.pattern_inten = 1;
+		tool_attribute.pattern_scale = [ 1, 1 ];
+		tool_attribute.pattern_pos   = [ 0, 0 ];
+		tool_attribute.pattern_mod   = 4;
+
+		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		
+		tool_pattern      = new canvas_tool_pattern(tool_attribute);
+		tool_pattern.node = self;
+		
+		fill_pattern_data = [ "Solid", 
+	           -1, "Stripe X", "Stripe Y", "Stripe D0", "Stripe D1",  
+	           -1, "Checker", "Checker Diag", 
+	           -1, "Grid", "Grid Diag",    
+	           -1, "Half X", "Half Y", "Half D0", "Half D1", 
+	           -1, "Grad X", "Grad Y", "Grad D0", "Grad D1",
+	           -1, "Grad Both X", "Grad Both Y", "Grad Both D0", "Grad Both D1",
+	           -1, "Grad Circular", "Grad Radial", 
+	           -1, "Brick X", "Brick Y",
+	           -1, "Zigzag X", "Zigzag Y", "Half Zigzag X", "Half Zigzag Y", 
+	           -1, "Half Wave X", "Half Wave Y", 
+	           -1, "Noise", 
+		];
+	    fill_pattern_scroll_data = array_create_ext(array_length(fill_pattern_data), 
+	    	function(i) /*=>*/ {return fill_pattern_data[i] == -1? -1 : new scrollItem(fill_pattern_data[i], s_node_pb_pattern, i)});
+	    
+		tool_pattern_type = new scrollBox(fill_pattern_scroll_data, function(v) /*=>*/ { tool_attribute.pattern = v; })
+								.setHorizontal(true)
+								.setMinWidth(ui(128));
+								
+		tool_pattern_intn = new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ { tool_attribute.pattern_inten = clamp(v, 0, 1); })
+									.setSlideRange(0, 1)
+									
+		tool_pattern_scal = new vectorBox(2, function(v,i) /*=>*/ { tool_attribute.pattern_scale[i] = round(v); });
+		
+		tool_pattern_modi = new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ { tool_attribute.pattern_mod = round(v); });
+		
+		tool_pattern_settings = [
+			// () => tool_pattern.prev_surface,
+			[ "", tool_pattern_type, "pattern",       tool_attribute  ],
+			[ THEME.tool_intensity, tool_pattern_intn, "pattern_inten", tool_attribute, "Intensity" ],
+			[ THEME.tool_scale,     tool_pattern_scal, "pattern_scale", tool_attribute, "Scale"     ],
+			[ THEME.tool_poster,    tool_pattern_modi, "pattern_mod",   tool_attribute, "Modifier"  ],
+		];
 		
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
@@ -384,7 +431,22 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		tool_iso_settings =   [ "",                   tool_isoangle,       "iso_angle", tool_attribute ];
 		tool_dithering    =   [ "",                   tool_dither,         "dither",    tool_attribute ];
 		
+		tool_fill_settings = [
+			tool_thrs,
+			tool_fil8,
+			tool_fill_bg,
+		];
+		
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		
+		tool_fill_grad_obj  = new NodeTool()
+			.setSettings(tool_fill_settings)
+			.setSetting(tool_dithering)
+			.setToolObject(tool_fill_grad);
+		
+		tool_pattern_obj  = new NodeTool()
+			.setSettings(tool_pattern_settings)
+			.setToolObject(tool_pattern);
 		
 		tools = [
 			new NodeTool( "Selection",	[ THEME.canvas_tools_selection_rectangle, THEME.canvas_tools_selection_circle, THEME.canvas_tools_freeform_selection, THEME.canvas_tools_selection_brush ])
@@ -393,9 +455,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			
 			new NodeTool( "Magic Selection", THEME.canvas_tools_magic_selection )
 				.setSettings(tool_settings)
-				.setSetting(tool_thrs)
-				.setSetting(tool_fil8)
-				.setSetting(tool_fill_bg)
+				.setSettings(tool_fill_settings)
 				.setToolObject(tool_sel_magic),
 			
 			new NodeTool( "Pencil",		  THEME.canvas_tools_pencil)
@@ -436,18 +496,12 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				.setToolObject(tool_freeform),
 					
 			new NodeTool( "Fill",		  THEME.canvas_tools_bucket)
-				.setSetting(tool_thrs)
-				.setSetting(tool_fil8)
-				.setSetting(tool_fill_bg)
+				.setSettings(tool_fill_settings)
 				.setToolObject(tool_fill),
 			
-			new NodeTool( "Gradient",  THEME.canvas_tools_gradient )
+			new NodeTool( [ "Gradient", "Pattern" ],     [ THEME.canvas_tools_gradient, THEME.canvas_tools_pattern ] )
 				.setContext(self)
-				.setSetting(tool_thrs)
-				.setSetting(tool_fil8)
-				.setSetting(tool_fill_bg)
-				.setSetting(tool_dithering)
-				.setToolObject( new canvas_tool_with_selector( new NodeTool().setToolObject(tool_fill_grad)) ),
+				.setToolObject( [ new canvas_tool_with_selector(tool_fill_grad_obj), new canvas_tool_with_selector(tool_pattern_obj) ]),
 			
 		];
 	#endregion
@@ -497,36 +551,40 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			PANEL_PREVIEW.tool_current = tools[2];
 		});
 		
+		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		
 		tool_resizer     = new canvas_tool_resize(self);
+		
 		tool_resizer_dim = new vectorBox(2, function(v,i) /*=>*/ { tool_resizer.setSize(v,i); })
 								.setFont(f_p3);
 		
 		tool_resizer_buttons  = new buttonGroup( array_create(2, THEME.toolbar_check), function(v) /*=>*/ { if(v == 0) tool_resizer.apply(); else tool_resizer.cancel(); })
 									.setCollape(false);
 		
+		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		
 		rightTools_general = [ 
 			nodeToolPreview,
 			-1,
+			
 			new NodeTool( "Resize Canvas",	  THEME.canvas_resize )
-				.setSetting([ "Dim", tool_resizer_dim, "dimension", tool_resizer ])
-				.setSetting([ "", tool_resizer_buttons, 0, tool_attribute ])
+				.setSetting([ "Dim", tool_resizer_dim,     "dimension", tool_resizer  ])
+				.setSetting([ "",    tool_resizer_buttons, 0,           tool_attribute ])
 				.setToolObject(tool_resizer),
 			
-			new NodeTool( [ "Rotate 90 CW", "Rotate 90 CCW" ],
-				[ THEME.canvas_rotate_cw, THEME.canvas_rotate_ccw ] )
+			new NodeTool( [ "Rotate 90 CW", "Rotate 90 CCW" ], [ THEME.canvas_rotate_cw, THEME.canvas_rotate_ccw ] )
 				.setToolFn( [ __action_rotate_90_cw, __action_rotate_90_ccw ] ),
 			
-			new NodeTool( [ "Flip H", "Flip V" ],
-				[ THEME.canvas_flip_h, THEME.canvas_flip_v ] )
+			new NodeTool( [ "Flip H", "Flip V" ], [ THEME.canvas_flip_h, THEME.canvas_flip_v ] )
 				.setToolFn( [ __action_flip_h, __action_flip_v ] ),
 		];
 		
 		rtool_brush   = new NodeTool( "Make/Reset Brush", THEME.canvas_tools_pencil ).setToolFn( __action_make_brush );
-		rtool_outline = new NodeTool( "Outline", THEME.canvas_tools_outline ).setSetting(tool_thrs).setSetting(tool_fil8).setToolObject( new canvas_tool_outline() );
-		rtool_extrude = new NodeTool( "Extrude", THEME.canvas_tools_extrude ).setSetting(tool_thrs).setSetting(tool_fil8).setToolObject( new canvas_tool_extrude() );
-		rtool_inset   = new NodeTool( "Inset",   THEME.canvas_tools_inset   ).setSetting(tool_thrs).setSetting(tool_fil8).setToolObject( new canvas_tool_inset()   );
-		rtool_skew    = new NodeTool( "Skew",    THEME.canvas_tools_skew    ).setSetting(tool_thrs).setSetting(tool_fil8).setToolObject( new canvas_tool_skew()    );
-		rtool_corner  = new NodeTool( "Corner",  THEME.canvas_tools_corner  ).setSetting(tool_thrs).setSetting(tool_fil8).setToolObject( new canvas_tool_corner()  );
+		rtool_outline = new NodeTool( "Outline", THEME.canvas_tools_outline ).setToolObject( new canvas_tool_outline() );
+		rtool_extrude = new NodeTool( "Extrude", THEME.canvas_tools_extrude ).setToolObject( new canvas_tool_extrude() );
+		rtool_inset   = new NodeTool( "Inset",   THEME.canvas_tools_inset   ).setToolObject( new canvas_tool_inset()   );
+		rtool_skew    = new NodeTool( "Skew",    THEME.canvas_tools_skew    ).setToolObject( new canvas_tool_skew()    );
+		rtool_corner  = new NodeTool( "Corner",  THEME.canvas_tools_corner  ).setToolObject( new canvas_tool_corner()  );
 		
 		rightTools_selection = [ 
 			-1,
@@ -633,6 +691,11 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		var _sel = noone;
 		
+		var _scroll = 0;
+		var _scrollTarget = noone;
+		if(focus && key_mod_press(SHIFT) && mouse_wheel_up())   _scroll = -1;
+		if(focus && key_mod_press(SHIFT) && mouse_wheel_down()) _scroll =  1;
+		
 		for( var i = 0, n = array_length(DEF_PALETTE); i < n; i++ ) {
 			var _c = DEF_PALETTE[i];
 			
@@ -642,8 +705,11 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			
 			draw_sprite_stretched_ext(THEME.palette_mask, ii, _cx, yy, _cw, _ch, _c, 1);
 			
-			if(color_diff(_c, _currc) <= 0) 
+			if(color_diff(_c, _currc) <= 0) {
 				_sel = [ _cx, yy ];
+				if(_scroll != 0)
+					_scrollTarget = (i + _scroll + n) % n;
+			}
 					
 			if(hover && point_in_rectangle(_mx, _my, _cx, yy, _cx + _cw, yy + _ch)) {
 				if(mouse_click(mb_left, focus))
@@ -653,6 +719,9 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			yy += _ch;
 			hh += _ch;
 		}
+		
+		if(_scrollTarget != noone)
+			setToolColor(DEF_PALETTE[_scrollTarget]);
 		
 		if(_sel != noone) 
 			draw_sprite_stretched_ext(THEME.palette_selecting, 0, _sel[0] - _pd, _sel[1] - _pd, _cw + _pd * 2, _ch + _pd * 2 - 1, c_white, 1);
@@ -791,7 +860,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var _tmp;
 		
 		if(tool_selection.is_selected) {
-			var _tmp = surface_create(surface_get_width_safe(tool_selection.selection_mask), surface_get_width_safe(tool_selection.selection_mask));
+			var _tmp = surface_create(surface_get_width_safe(tool_selection.selection_mask), surface_get_height_safe(tool_selection.selection_mask));
 			var _spx = tool_selection.selection_position[0];
 			var _spy = tool_selection.selection_position[1];
 			var _spw = tool_selection.selection_size[0];
@@ -833,6 +902,9 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			surface_reset_shader();
 			
 		}
+		
+		var _tw = surface_get_width_safe(_tmp);
+		var _th = surface_get_height_safe(_tmp);
 		
 		var _sw = surface_get_width_safe(_can);
 		var _sh = surface_get_height_safe(_can);
@@ -930,6 +1002,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		#region tool
 			var _currTool = PANEL_PREVIEW.tool_current;
 			var _tool     = noone;
+			var _tool_sel = noone;
 			use_color_3d  = false;
 			
 			rightTools = [];
@@ -940,6 +1013,9 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				
 			else if(_currTool != noone) {
 				_tool = _currTool.getToolObject();
+				
+				if(is(_tool, canvas_tool_with_selector))
+					_tool_sel = _tool;
 				
 				if(is(_tool, canvas_tool)) {
 					_tool.node = self;
@@ -959,9 +1035,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			
 			tool_mirror_edit.sprs = tool_attribute.mirror[0]? THEME.canvas_mirror_diag : THEME.canvas_mirror;
 			
-			if(tool_selection.is_selected && !is_instanceof(_tool, canvas_tool_node)) {
+			if(tool_selection.is_selected && is(_tool, canvas_tool_selection)) {
 				tool_selection.step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-				
 				array_append(rightTools, rightTools_selection);
 				
 			} else
@@ -1033,7 +1108,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		#region preview
 			if(tool_selection.is_selected) tool_selection.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-			if(_tool) _tool.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+			if(_tool_sel) _tool_sel.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+			if(_tool)     _tool.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 			
 			surface_set_shader(preview_draw_surface, noone, true, BLEND.alpha);
 				draw_surface_safe(_drawing_surface);
@@ -1073,6 +1149,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			var _pcc = isUsingTool("Eraser")? c_red : c_white;
 			var _paa = isUsingTool("Eraser")? .2 : _alp;
 			
+			if(!key_mod_press(ALT))
 			switch(_panel.tileMode) {
 				
 				case 1 : 

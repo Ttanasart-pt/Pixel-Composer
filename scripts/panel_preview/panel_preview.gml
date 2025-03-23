@@ -1188,6 +1188,10 @@ function Panel_Preview() : PanelContent() constructor {
     	if(tool_current == noone) return;
     	var settings = array_merge(_node.getToolSettings(), tool_current.settings);
     	
+    	var _toolObj = tool_current.getToolObject();
+    	if(is(_toolObj, canvas_tool_with_selector))
+    		array_append(settings, _toolObj.tool.settings);
+    	
         tool_x = lerp_float(tool_x, tool_x_to, 5);
         
         var tolx  = tool_x + ui(8);
@@ -1198,6 +1202,22 @@ function Panel_Preview() : PanelContent() constructor {
         
         for( var i = 0, n = array_length(settings); i < n; i++ ) {
             var sett = settings[i];
+            
+            if(is_callable(sett)) {
+            	var _data = sett();
+            	if(!surface_exists(_data)) continue;
+            	
+            	var _sw = surface_get_width(_data);
+            	var _sh = surface_get_height(_data);
+            	var _ss = (topbar_height - ui(16)) / _sh;
+            	
+            	draw_surface_ext(_data, tolx, ui(8), _ss, _ss, 0, c_white, 1);
+            	
+            	tolx      += _sw * _ss + ui(8);
+            	tol_max_w += _sw * _ss + ui(8);
+            	continue;
+            }
+            
             var nme  = sett[0];
             var wdg  = sett[1];
             var key  = array_safe_get_fast(sett, 2);
@@ -1236,7 +1256,7 @@ function Panel_Preview() : PanelContent() constructor {
                 case "buttonGroup"   :
                 case "checkBoxGroup" : tolw = tolh * wdg.size;             break;
                 case "checkBox"      : tolw = tolh;                        break;
-                case "scrollBox"     : tolw = ui(96); _tool_font = f_p2;   break;
+                case "scrollBox"     : tolw = max(wdg.minWidth, ui(96)); _tool_font = f_p3;   break;
                 case "buttonClass"   : tolw = wdg.text == ""? tolh : tolw; break;
             }
             

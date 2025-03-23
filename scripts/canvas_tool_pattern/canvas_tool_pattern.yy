@@ -1,0 +1,14 @@
+{
+  "$GMScript":"v1",
+  "%Name":"canvas_tool_pattern",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"canvas_tool_pattern",
+  "parent":{
+    "name":"actions",
+    "path":"folders/nodes/data/canvas/actions.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+  "tags":[],
+}
