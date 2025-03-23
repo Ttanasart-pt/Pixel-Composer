@@ -52,8 +52,23 @@ function canvas_tool_shape_iso(brush, shape, toolAttr) : canvas_tool() construct
 				break;
 				
 			case 1 :
-				mouse_points[1][0] = mouse_cur_x;
-				mouse_points[1][1] = mouse_cur_y;
+				if(key_mod_press(SHIFT)) {
+					var x0 = mouse_points[0][0];
+					var y0 = mouse_points[0][1];
+						
+					var _dx = mouse_cur_x - x0;
+					var _dy = mouse_cur_y - y0;
+					
+					if(abs(_dx) > abs(_dy)) x0 = x0 + _dx;
+					else y0 = y0 + _dy;
+					
+					mouse_points[1][0] = x0;
+					mouse_points[1][1] = y0;
+					
+				} else {
+					mouse_points[1][0] = mouse_cur_x;
+					mouse_points[1][1] = mouse_cur_y;
+				}
 				
 				if(mouse_release(mb_left))
 					mouse_holding = 2;
