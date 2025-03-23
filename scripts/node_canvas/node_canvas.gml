@@ -10,6 +10,7 @@
 		hotkeySimple("Node_Canvas", "Curve",           "");
 		hotkeySimple("Node_Canvas", "Freeform",        "Q");
 		hotkeySimple("Node_Canvas", "Fill",            "G");
+		hotkeySimple("Node_Canvas", "Gradient",        "G", MOD_KEY.shift);
 		
 		hotkeySimple("Node_Canvas", "Outline",         "O", MOD_KEY.alt);
 		hotkeySimple("Node_Canvas", "Extrude",         "E", MOD_KEY.alt);
@@ -296,6 +297,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		tool_iso_cube       = new canvas_tool_shape_iso(brush, CANVAS_TOOL_SHAPE_ISO.cube, tool_attribute);
 		
 		tool_fill           = new canvas_tool_fill(tool_attribute);
+		tool_fill_grad      = new canvas_tool_fill_gradient(tool_attribute);
 		tool_freeform       = new canvas_tool_draw_freeform(brush);
 		tool_curve_bez      = new canvas_tool_curve_bezier(brush);
 		
@@ -326,6 +328,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		tool_attribute.useBG         = true;
 		tool_attribute.iso_angle     = 0;
 		tool_attribute.button_apply  = [ false, false ];
+		
+		tool_attribute.dither        = 0;
 		
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
@@ -364,6 +368,10 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 									.setTooltips( [ "2:1", "1:1" ] )
 									.setCollape(false);
 		
+		tool_dither         = new buttonGroup( array_create(4, THEME.canvas_dither), function(v) /*=>*/ { tool_attribute.dither = v; })
+									.setTooltips( [ "No Dithering", "Bayer 2", "Bayer 4", "Bayer 8" ] )
+									.setCollape(false);
+									
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
 		tool_settings     = [ [ "",                   tool_channel_edit,   "channel",   tool_attribute ], 
@@ -374,6 +382,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		tool_fil8         =   [ THEME.tool_fill_type, tool_fil8_edit,      "fillType",  tool_attribute, "Fill Type"  ];
 		tool_fill_bg      =   [ THEME.tool_bg,        tool_fill_use_bg,    "useBG",     tool_attribute, "Use BG"     ];
 		tool_iso_settings =   [ "",                   tool_isoangle,       "iso_angle", tool_attribute ];
+		tool_dithering    =   [ "",                   tool_dither,         "dither",    tool_attribute ];
 		
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
@@ -427,11 +436,19 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				.setToolObject(tool_freeform),
 					
 			new NodeTool( "Fill",		  THEME.canvas_tools_bucket)
-				.setSettings(tool_settings)
 				.setSetting(tool_thrs)
 				.setSetting(tool_fil8)
 				.setSetting(tool_fill_bg)
 				.setToolObject(tool_fill),
+			
+			new NodeTool( "Gradient",  THEME.canvas_tools_gradient )
+				.setContext(self)
+				.setSetting(tool_thrs)
+				.setSetting(tool_fil8)
+				.setSetting(tool_fill_bg)
+				.setSetting(tool_dithering)
+				.setToolObject( new canvas_tool_with_selector( new NodeTool().setToolObject(tool_fill_grad)) ),
+			
 		];
 	#endregion
 	

@@ -94,7 +94,6 @@ function canvas_tool_shader() : canvas_tool() constructor {
 	
 	function drawMask(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(!mask) return;
-		
 		draw_surface_ext_safe(preview_surface[1], _x, _y, _s, _s);
 	}
 }

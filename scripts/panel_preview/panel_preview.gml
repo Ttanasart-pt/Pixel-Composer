@@ -1001,7 +1001,10 @@ function Panel_Preview() : PanelContent() constructor {
             var _key = tool.checkHotkey();
             if(_key != noone && pFOCUS && WIDGET_CURRENT == noone) {
             	if(tool_clearKey.hotkey.equal(_key)) tool_clearable = false;
-                if(_key.isPressing()) tool.toggleKeyboard();
+                if(_key.isPressing()) {
+                	tool.toggleKeyboard();
+                	HOTKEY_BLOCK = true;
+                }
                 
                 var _hkstr = key_get_name(_key.key, _key.modi);
                 if(_hkstr != "" && (key_mod_press(ALT) || __tool_show_key)) {
@@ -1143,7 +1146,10 @@ function Panel_Preview() : PanelContent() constructor {
             var _key = tool.checkHotkey();
             if(_key != noone && pFOCUS && WIDGET_CURRENT == noone) {
             	if(tool_clearKey.hotkey.equal(_key)) tool_clearable = false;
-                if(_key.isPressing()) tool.toggleKeyboard();
+                if(_key.isPressing()) {
+                	tool.toggleKeyboard();
+                	HOTKEY_BLOCK = true;
+                }
                 
                 var _hkstr = key_get_name(_key.key, _key.modi);
                 if(_hkstr != "" && (key_mod_press(ALT) || __tool_show_key)) {

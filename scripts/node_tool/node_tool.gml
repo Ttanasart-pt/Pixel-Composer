@@ -1,4 +1,4 @@
-function NodeTool(name, spr, contextString = instanceof(other)) constructor {
+function NodeTool(name = "", spr = noone, contextString = instanceof(other)) constructor {
 	ctx         = contextString;
 	context     = noone;
 	
