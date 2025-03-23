@@ -10,11 +10,18 @@
 		hotkeySimple("Node_Canvas", "Curve",           "");
 		hotkeySimple("Node_Canvas", "Freeform",        "Q");
 		hotkeySimple("Node_Canvas", "Fill",            "G");
+		
 		hotkeySimple("Node_Canvas", "Outline",         "O", MOD_KEY.alt);
 		hotkeySimple("Node_Canvas", "Extrude",         "E", MOD_KEY.alt);
 		hotkeySimple("Node_Canvas", "Inset",           "I", MOD_KEY.alt);
 		hotkeySimple("Node_Canvas", "Skew",            "S", MOD_KEY.alt);
 		hotkeySimple("Node_Canvas", "Corner",          "C", MOD_KEY.alt);
+		
+		hotkeySimple("Node_Canvas", "Resize Canvas",   "");
+		// hotkeySimple("Node_Canvas", "Rotate 90 CW",    "");
+		// hotkeySimple("Node_Canvas", "Rotate 90 CCW",   "");
+		// hotkeySimple("Node_Canvas", "Flip H",          "");
+		// hotkeySimple("Node_Canvas", "Flip V",          "");
 	});
 #endregion 
 
@@ -303,6 +310,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	#endregion
 	
 	#region ++++ tools ++++
+		palette_picking = false;
+		
 		tool_attribute.channel       = [ true, true, true, true ];
 		tool_attribute.mirror        = [ false, false, false ];
 		tool_attribute.drawLayer     = 0;
@@ -327,17 +336,19 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 									.setCollape(false);
 		
 		tool_mirror_edit    = new checkBoxGroup( THEME.canvas_mirror, function(v,i) /*=>*/ { tool_attribute.mirror[i] = v; })
-									.setTooltips( [ "Toggle diagonal", "", "" ] );
+									.setTooltips( [ "Mirror diagonal", "Mirror", "Mirror" ] );
 		
 		tool_size_edit      = new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ { tool_attribute.size = max(1, round(v)); })
 									.setSlideType(true)
+									.setVAlign(fa_center)
 									.setFont(f_p3)
-									.setSideButton(button(function() /*=>*/ { 
-											dialogPanelCall(new Panel_Node_Canvas_Pressure(self), mouse_mx, mouse_my, { anchor: ANCHOR.top | ANCHOR.left }) 
-										}).setIcon(THEME.pen_pressure, 0, COLORS._main_icon));
+									.setSideButton(button(function() /*=>*/ { dialogPanelCall(new Panel_Node_Canvas_Pressure(self), mouse_mx, mouse_my, { anchor: ANCHOR.top | ANCHOR.left }) })
+										.setTooltip("Pen Pressure Settings...")
+										.setIcon(THEME.pen_pressure, 0, COLORS._main_icon), true);
 		
 		tool_thrs_edit      = new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ { tool_attribute.thres = clamp(v, 0, 1); })
 									.setSlideRange(0, 1)
+									.setVAlign(fa_center)
 									.setFont(f_p3);
 		
 		tool_fil8_edit      = new buttonGroup( array_create(3, THEME.canvas_fill_type), function(v) /*=>*/ { tool_attribute.fillType = v; })
@@ -355,14 +366,14 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
-		tool_settings     = [ [ "",              tool_channel_edit,   "channel",   tool_attribute ], 
-						      [ "",              tool_drawLayer_edit, "drawLayer", tool_attribute ],
-						      [ "",              tool_mirror_edit,    "mirror",    tool_attribute ] ];
-		tool_size         =   [ "Size",          tool_size_edit,      "size",      tool_attribute ];
-		tool_thrs         =   [ "Threshold",     tool_thrs_edit,      "thres",     tool_attribute ];
-		tool_fil8         =   [ "Fill",          tool_fil8_edit,      "fillType",  tool_attribute ];
-		tool_fill_bg      =   [ "BG",            tool_fill_use_bg,    "useBG",     tool_attribute ];
-		tool_iso_settings =   [ "",              tool_isoangle,       "iso_angle", tool_attribute ];
+		tool_settings     = [ [ "",                   tool_channel_edit,   "channel",   tool_attribute ], 
+						      [ "",                   tool_drawLayer_edit, "drawLayer", tool_attribute ],
+						      [ "",                   tool_mirror_edit,    "mirror",    tool_attribute ] ];
+		tool_size         =   [ "",                   tool_size_edit,      "size",      tool_attribute, "Brush Size" ];
+		tool_thrs         =   [ THEME.tool_threshold, tool_thrs_edit,      "thres",     tool_attribute, "Threshold"  ];
+		tool_fil8         =   [ THEME.tool_fill_type, tool_fil8_edit,      "fillType",  tool_attribute, "Fill Type"  ];
+		tool_fill_bg      =   [ THEME.tool_bg,        tool_fill_use_bg,    "useBG",     tool_attribute, "Use BG"     ];
+		tool_iso_settings =   [ "",                   tool_isoangle,       "iso_angle", tool_attribute ];
 		
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
@@ -535,14 +546,15 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		selection_tool_after = noone;
 	#endregion
 	
+	function getToolColor() { return !use_color_3d || color_3d_selected == 0? CURRENT_COLOR : brush.colors[color_3d_selected - 1]; }
 	function setToolColor(color) { 
 		if(!use_color_3d || color_3d_selected == 0) CURRENT_COLOR = color;
 		else                                        brush.colors[color_3d_selected - 1] = color;
 	}
 	
-	static drawTools = function(_mx, _my, xx, yy, tool_size, hover, focus) {
-		var _sx0 = xx - tool_size / 2;
-		var _sx1 = xx + tool_size / 2;
+	static drawTools = function(_mx, _my, xx, yy, _tool_size, hover, focus) {
+		var _sx0 = xx - _tool_size / 2;
+		var _sx1 = xx + _tool_size / 2;
 		var hh   = ui(8);
 		
 		yy += ui(4);
@@ -551,7 +563,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		yy += ui(4);
 		
 		var _cx = _sx0 + ui(8);
-		var _cw = tool_size - ui(16);
+		var _cw = _tool_size - ui(16);
 		var _ch = ui(12);
 		var _pd = ui(5);
 		var _currc = CURRENT_COLOR;
@@ -583,6 +595,9 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					else color_3d_selected = sel;
 				}
 			}
+			
+			if(focus && keyboard_check_pressed(ord("X")))
+				color_3d_selected = (color_3d_selected + 1) % 3;
 			
 			yy += _cw + ui(12);
 			hh += _cw + ui(12);
@@ -856,6 +871,10 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		if(instance_exists(o_dialog_color_picker)) return;
 		
 		var _panel = params.panel;
+		if(palette_picking) {
+			hover  = false; 
+			active = false; 
+		}
 		
 		brush.node     = self;
 		brush.tileMode = _panel.tileMode
@@ -1150,6 +1169,19 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				if(tool_selection.is_selected) tool_selection.apply();
 				tool_selection.selectAll();
 			}
+		#endregion
+		
+		#region color picker 
+			if(active && key_press(ord("C"), MOD_KEY.shift)) {
+				var pick = instance_create(mouse_mx, mouse_my, o_dialog_color_quick_pick);
+				array_insert(pick.palette, 0, getToolColor());
+				
+				pick.use_key = MOD_KEY.shift;
+				pick.onApply = setToolColor;
+				
+			}
+			
+			palette_picking = instance_exists(o_dialog_color_quick_pick);
 		#endregion
 		
 		if(DRAGGING && hover&& mouse_release(mb_left)) { //drag n drop

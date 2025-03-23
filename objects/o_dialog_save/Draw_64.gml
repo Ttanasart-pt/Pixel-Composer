@@ -26,26 +26,23 @@ draw_set_alpha(1);
 	var bx0 = bx1 - bw;
 	var by0 = by1 - bh;
 	
-	draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text);
-	var b = buttonInstant(THEME.button_def, bx0, by0, bw, bh, mouse_ui, sHOVER, sFOCUS);
-	draw_text(bx0 + bw / 2, by0 + bh / 2, __txt("Cancel"));
-	if(b == 2) 
-		instance_destroy();
+	var _des = false;
+	if(keyboard_check_pressed(vk_tab)) buttonIndex = (buttonIndex + 1) % array_length(buttons);
 	
-	bx0 -= bw + ui(12);
-	var b = buttonInstant(THEME.button_def, bx0, by0, bw, bh, mouse_ui, sHOVER, sFOCUS);
-	draw_text(bx0 + bw / 2, by0 + bh / 2,  __txtx("dont_save", "Don't save"));
-	if(b == 2) {
-		closeProject(project);
-		instance_destroy();
+	for( var i = array_length(buttons) - 1; i >= 0; i-- ) {
+		var _b = buttons[i];
+		
+		draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text);
+		var b = buttonInstant(THEME.button_def, bx0, by0, bw, bh, mouse_ui, sHOVER, sFOCUS);
+		if(buttonIndex == i) draw_sprite_stretched_ext(THEME.button_def, 3, bx0, by0, bw, bh, COLORS._main_accent);
+		draw_text(bx0 + bw / 2, by0 + bh / 2, _b[0]);
+		
+		var _trg = b == 2 || (buttonIndex == i && keyboard_check_pressed(vk_enter));
+		if(_trg) { _b[1](); _des = true; }
+		
+		bx0 -= bw + ui(12);
 	}
 	
-	bx0 -= bw + ui(12);
-	var b = buttonInstant(THEME.button_def, bx0, by0, bw, bh, mouse_ui, sHOVER, sFOCUS);
-	draw_text(bx0 + bw / 2, by0 + bh / 2, __txt("Save"));
-	if(b == 2) {
-		SAVE(project);
-		closeProject(project);
-		instance_destroy();
-	}
 #endregion
+
+if(_des) instance_destroy();

@@ -91,6 +91,10 @@ function canvas_tool_shape_iso(brush, shape, toolAttr) : canvas_tool() construct
 		if(!node.attributes.show_slope_check)  return;
 		
 	}
+
+	function drawMask(hover, active, _x, _y, _s, _mx, _my, _snx, _sny ) {
+		draw_surface_ext_safe(drawing_surface, _x, _y, _s, _s);
+	}
 }
 
 function canvas_draw_iso_cube(brush, _p, _fill = false) {

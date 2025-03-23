@@ -26,7 +26,6 @@ function textInput(_input, _onModify) : widget() constructor {
 	static onKey = function(key) {}
 	
 	static setAutoUpdate = function( ) /*=>*/ { auto_update = true; 	return self; } 
-	static setSideButton = function(b) /*=>*/ { self.side_button = b;	return self; } 
 	
 	static breakCharacter = function(ch) /*=>*/ { return ch == " " || ch == "\n"; }
 }

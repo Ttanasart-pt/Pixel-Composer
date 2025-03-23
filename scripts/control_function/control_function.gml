@@ -42,6 +42,14 @@
 		return CTRL == KEY_STAT.pressing || ALT == KEY_STAT.pressing || SHIFT == KEY_STAT.pressing;
 	}
 	
+	function key_mod_enum(key)     { INLINE 
+		switch(key) {
+			case MOD_KEY.alt   : return ALT;
+			case MOD_KEY.shift : return SHIFT;
+			case MOD_KEY.ctrl  : return CTRL;
+		}
+	}
+	
 	function key_mod_up(key)       { INLINE return key == KEY_STAT.up;       }
 	function key_mod_down(key)     { INLINE return key == KEY_STAT.down;     }
 	function key_mod_double(key)   { INLINE return key == KEY_STAT.double;   }

@@ -912,7 +912,10 @@ function Panel_Preview() : PanelContent() constructor {
         var yy   = ui(34) + ts2 + tool_y;
         var pd   = 2;
         var thov = pHOVER && point_in_rectangle(mx, my, 0, toolbar_height, toolbar_width, h - toolbar_height);
-        if(thov) canvas_hover = false;
+        if(thov) {
+        	canvas_hover = false;
+        	mouse_on_preview = 0;
+        }
         
         if(pFOCUS && key_mod_double(ALT)) tool_show_key = !tool_show_key;
         var __tool_show_key = _tool_show_key;
@@ -1050,7 +1053,10 @@ function Panel_Preview() : PanelContent() constructor {
         draw_sprite_stretched_ext(THEME.tool_side, 1, w + 1 - toolbar_width, ui(32), toolbar_width, h - toolbar_height - ui(32), c_white, aa);
         
         var thov = pHOVER && point_in_rectangle(mx, my, _tbx, toolbar_height, w, h - toolbar_height);
-        if(thov) canvas_hover = false;
+        if(thov) {
+        	canvas_hover = false;
+        	mouse_on_preview = 0;
+        }
         
         for(var i = 0; i < array_length(_node.rightTools); i++) {
             var tool = _node.rightTools[i];
@@ -1190,19 +1196,23 @@ function Panel_Preview() : PanelContent() constructor {
             var wdg  = sett[1];
             var key  = array_safe_get_fast(sett, 2);
             var atr  = array_safe_get_fast(sett, 3, {});
+            var ttip = array_safe_get_fast(sett, 4, "");
             
-            draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text_sub);
+            draw_set_text(f_p3, fa_left, fa_center, COLORS._main_icon_light);
             if(nme != "") {
             	if(is_string(nme)) {
             		tolx      += ui(4);
                 	tol_max_w += ui(4);
-                
+                	
 	                draw_text(tolx, topbar_height / 2, nme);
 	                tolx      += string_width(nme) + ui(8);
 	                tol_max_w += string_width(nme) + ui(8);
 	                
             	} else if(sprite_exists(nme)) {
-            		draw_sprite_ui(nme, 0, tolx + ui(8), topbar_height / 2, 1, 1, 0, COLORS._main_text_sub);
+            		draw_sprite_ui(nme, 0, tolx + ui(8), topbar_height / 2, 1, 1, 0, COLORS._main_icon_light);
+            		if(ttip != "" && pHOVER && point_in_rectangle(mx, my, tolx, 0, tolx + ui(20), topbar_height))
+            			TOOLTIP = ttip;
+            		
 	                tolx      += ui(20);
 	                tol_max_w += ui(20);
 	                
@@ -1215,8 +1225,8 @@ function Panel_Preview() : PanelContent() constructor {
             var _tool_font = f_p3;
             
             switch(instanceof(wdg)) {
-                case "textBox"       : tolw = ui(40) + (wdg.side_button != noone) * (tolh + ui(8)); break;
-                case "vectorBox"     : tolw = ui(40) * wdg.size; break;
+                case "textBox"       : tolw = ui(32) + (wdg.side_button != noone) * (tolh + ui(8)); break;
+                case "vectorBox"     : tolw = ui(32) * wdg.size; break;
                 case "buttonGroup"   :
                 case "checkBoxGroup" : tolw = tolh * wdg.size;             break;
                 case "checkBox"      : tolw = tolh;                        break;
@@ -2182,10 +2192,8 @@ function Panel_Preview() : PanelContent() constructor {
         tool_side_draw_l = _node.tools != -1;
         tool_side_draw_r = _node.rightTools != -1;
         
-        if(_node.tools != -1 && point_in_rectangle(_mx, _my, 0, 0, toolbar_width, h)) {
+        if(_node.tools != -1 && point_in_rectangle(_mx, _my, 0, 0, toolbar_width, h))
             overHover = false;
-            mouse_on_preview = 0;
-        }
         
         overHover &= !view_hovering;
         overHover &= tool_hovering == noone && !overlay_hovering;

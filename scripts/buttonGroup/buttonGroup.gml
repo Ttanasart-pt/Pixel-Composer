@@ -100,8 +100,10 @@ function buttonGroup(_data, _onClick) : widget() constructor {
 			
 			for(var i = 0; i < amo; i++) {
 				var _d = data[i];
+				var _t = array_safe_get(tooltips, i, "");
+				
 				buttons[i].setFocusHover(active, hover);
-				buttons[i].tooltip = array_safe_get(tooltips, i, "");
+				buttons[i].tooltip = _t;
 				
 				if(is(_d, scrollItem)) _d = _d.spr;
 				
@@ -109,6 +111,9 @@ function buttonGroup(_data, _onClick) : widget() constructor {
 				var spr = i == 0 ? buttonSpr[0] : (i == amo - 1? buttonSpr[2] : buttonSpr[1]);
 				
 				if(_selecting == i) {
+					if(hover && point_in_rectangle(_m[0], _m[1], floor(bx), _y, floor(bx) + bww, _y + _h)) 
+						TOOLTIP = _t;
+						
 					draw_sprite_stretched_ext(spr, 2, floor(bx), _y, ceil(bww), _h, boxColor);
 					draw_sel = [spr, bx];
 					

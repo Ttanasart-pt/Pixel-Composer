@@ -4,6 +4,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	onRelease = noone;
 	
 	align     = _input == TEXTBOX_INPUT.number? fa_center : fa_left;
+	yalign    = fa_top;
+	
 	hide      = false;
 	color     = COLORS._main_text;
 	boxColor  = c_white;
@@ -128,6 +130,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	static setColor      = function(_v) /*=>*/ { color       = _v;    return self; }
 	static setBoxColor   = function(_v) /*=>*/ { boxColor    = _v;    return self; }
 	static setAlign      = function(_v) /*=>*/ { align       = _v;    return self; }
+	static setVAlign     = function(_v) /*=>*/ { yalign      = _v;    return self; }
 	static setHide       = function(_v) /*=>*/ { hide        = _v;    return self; }
 	static setFont       = function(_v) /*=>*/ { font        = _v;    return self; }
 	static setLabel      = function(_v) /*=>*/ { label       = _v;    return self; }
@@ -424,7 +427,9 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	
 	static display_text = function(_x, _y, _text, _w, _m = -1) {
 		draw_set_alpha(0.5 + 0.5 * interactable);
-		_y += ui(1); //Huh?
+		switch(yalign) {
+			case fa_top : _y += ui(1); break;
+		}
 		
 		var cc = sliding == 2? COLORS._main_accent : color;
 		draw_set_text(font, fa_left, fa_top, cc);
@@ -451,10 +456,6 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				draw_set_alpha(0.5 + (_inv) * 0.5);
 				draw_text_add(_tx, _y, "."); _tx += _dt_w;
 				draw_text_add(_tx, _y, _dc);
-				
-			// } else if(sliding == 2 && align == fa_center) {
-			// 	var _wh_w = string_width(_text);
-			// 	draw_text_add(_w / 2 - _wh_w - padding, _y, _text);
 				
 			} else
 				draw_text_add(_x + disp_x, _y, $"{_text}{suffix}");
@@ -551,7 +552,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			_w -= _bs + ui(4);
 		}
 		
-		if(_w - _bs > ui(100) && side_button) {
+		if((_w - _bs > ui(100) || always_side_button) && side_button) {
 			side_button.setFocusHover(active, hover);
 			side_button.draw(_x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide_fill);
 			_w -= _bs + ui(4);
