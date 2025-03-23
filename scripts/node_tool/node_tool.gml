@@ -18,9 +18,9 @@ function NodeTool(name, spr, contextString = instanceof(other)) constructor {
 	
 	static checkHotkey   = function() { return getToolHotkey(ctx, name); }
 	
-	static setContext    = function(context) {    self.context    = context;    return self; }
-	static setToolObject = function(toolObject) { self.toolObject = toolObject; return self; }
-	static setToolFn     = function(toolFn) {     self.toolFn     = toolFn;     return self; }
+	static setContext    = function(_c) { context    = _c; return self; }
+	static setToolObject = function(_o) { toolObject = _o; return self; }
+	static setToolFn     = function(_f) { toolFn     = _f; return self; }
 	
 	static getName = function(index = 0) { return is_array(name)? array_safe_get_fast(name, index, "") : name; }
 	
@@ -34,7 +34,8 @@ function NodeTool(name, spr, contextString = instanceof(other)) constructor {
 		return new tooltipHotkey(_nme).setKey(_key.getName());
 	}
 	
-	static setSetting = function(setting) { for(var i = 0; i < argument_count; i++) array_push(settings, argument[i]); return self; }
+	static setSettings = function(_s) { for(var i = 0; i < array_length(_s); i++) array_push(settings, _s[i]);    return self; }
+	static setSetting  = function(_s) { for(var i = 0; i < argument_count; i++) array_push(settings, argument[i]); return self; }
 	
 	static addSetting = function(name, type, onEdit, keyAttr, val) {
 		var w;

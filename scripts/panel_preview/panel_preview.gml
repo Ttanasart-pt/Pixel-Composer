@@ -1172,16 +1172,16 @@ function Panel_Preview() : PanelContent() constructor {
         }
     }
     
-    function drawToolSettings(_tool) {
+    function drawToolSettings(_node) {
     	if(tool_current == noone) return;
-    	var settings = array_merge(_tool.getToolSettings(), tool_current.settings);
-        
+    	var settings = array_merge(_node.getToolSettings(), tool_current.settings);
+    	
         tool_x = lerp_float(tool_x, tool_x_to, 5);
         
         var tolx  = tool_x + ui(8);
-        var toly  = ui(6);
+        var toly  = ui(5);
         var tolw  = ui(48);
-        var tolh  = toolbar_height - ui(18);
+        var tolh  = topbar_height - ui(10);
         var tol_max_w = ui(16);
         
         for( var i = 0, n = array_length(settings); i < n; i++ ) {
@@ -1191,24 +1191,32 @@ function Panel_Preview() : PanelContent() constructor {
             var key  = array_safe_get_fast(sett, 2);
             var atr  = array_safe_get_fast(sett, 3, {});
             
+            draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text_sub);
             if(nme != "") {
-                tolx      += ui(8) + bool(i == 0) * ui(8);
-                tol_max_w += ui(8) + bool(i == 0) * ui(8);
-            } 
-            
-            draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text_sub);
-            if(nme != "") {
-                draw_text(tolx, toolbar_height / 2 - ui(2), nme);
-                tolx      += string_width(nme) + ui(8);
-                tol_max_w += string_width(nme) + ui(8);
+            	if(is_string(nme)) {
+            		tolx      += ui(4);
+                	tol_max_w += ui(4);
+                
+	                draw_text(tolx, topbar_height / 2, nme);
+	                tolx      += string_width(nme) + ui(8);
+	                tol_max_w += string_width(nme) + ui(8);
+	                
+            	} else if(sprite_exists(nme)) {
+            		draw_sprite_ui(nme, 0, tolx + ui(8), topbar_height / 2, 1, 1, 0, COLORS._main_text_sub);
+	                tolx      += ui(20);
+	                tol_max_w += ui(20);
+	                
+            	}
             }
             
+            wdg.register();
             wdg.setFocusHover(pFOCUS, pHOVER);
             
             var _tool_font = f_p3;
             
             switch(instanceof(wdg)) {
                 case "textBox"       : tolw = ui(40) + (wdg.side_button != noone) * (tolh + ui(8)); break;
+                case "vectorBox"     : tolw = ui(40) * wdg.size; break;
                 case "buttonGroup"   :
                 case "checkBoxGroup" : tolw = tolh * wdg.size;             break;
                 case "checkBox"      : tolw = tolh;                        break;
@@ -1227,7 +1235,7 @@ function Panel_Preview() : PanelContent() constructor {
         }
         
         tol_max_w = max(0, tol_max_w - w);            
-        if(point_in_rectangle(mx, my, 0, 0, w, toolbar_height) && !key_mod_press_any()) {
+        if(point_in_rectangle(mx, my, 0, 0, w, topbar_height) && !key_mod_press_any()) {
             if(mouse_wheel_up())   tool_x_to = clamp(tool_x_to + ui(64) * SCROLL_SPEED, -tol_max_w, 0);
             if(mouse_wheel_down()) tool_x_to = clamp(tool_x_to - ui(64) * SCROLL_SPEED, -tol_max_w, 0);
         }
@@ -2237,7 +2245,7 @@ function Panel_Preview() : PanelContent() constructor {
         drawTools(_node);
     }
     
-    function drawToolBar(_tool, _node) {
+    function drawToolBar(_node) {
         var ty = h - toolbar_height;
         var aa = d3_active? 0.8 : 1;
         draw_sprite_stretched_ext(THEME.toolbar, 1, 0,  0, w, topbar_height, c_white, aa);
@@ -2287,8 +2295,8 @@ function Panel_Preview() : PanelContent() constructor {
 				draw_text(tx, cy + ch / 2, $"Tile {_in}");
             }
             
-        } else if(_tool) // tool settings
-            drawToolSettings(_tool);
+        } else if(_node) // tool settings
+            drawToolSettings(_node);
         
         sample_data = noone;
         
@@ -2456,7 +2464,7 @@ function Panel_Preview() : PanelContent() constructor {
         drawPreviewOverlay();
         
         var inspect_node = PANEL_INSPECTOR.getInspecting();
-        var tool = noone;
+        var toolNode = noone;
         
         drawViewController();
         
@@ -2468,8 +2476,8 @@ function Panel_Preview() : PanelContent() constructor {
         
         if(PANEL_PREVIEW == self) { //only draw overlay once
             if(inspect_node) {
-                tool = inspect_node.getTool();
-                if(tool) drawNodeActions(pFOCUS, tool);
+                toolNode = inspect_node.getTool();
+                if(toolNode) drawNodeActions(pFOCUS, toolNode);
                 
             } else {
             	if(tool_current != noone) {
@@ -2484,7 +2492,7 @@ function Panel_Preview() : PanelContent() constructor {
         
         if(d3_active == NODE_3D.none) drawSplitView();
         
-        drawToolBar(tool, _prev_node);
+        drawToolBar(toolNode);
         drawMinimap();
         
         if(mouse_on_preview && mouse_press(mb_right, pFOCUS) && !key_mod_press(SHIFT)) {

@@ -180,23 +180,24 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 						draw_set_font(f_p1);
 						
 						var _ktxt = key_get_name(_key.key, _key.modi);
+						draw_set_font(f_p2);
 						var _tw = string_width(_ktxt);
 						var _th = line_get_height();
 						
 						var _hx = _x1 - ww - ui(16);
-						var _hy = yy + th / 2 + ui(2);
+						var _hy = yy + th / 2;
 							
 						var _bx = _hx - _tw - ui(4);
 						var _by = _hy - _th / 2 - ui(3);
 						var _bw = _tw + ui(8);
-						var _bh = _th + ui(3);
+						var _bh = _th + ui(6);
 						
 						if(hk_editing == _key) {
-							draw_set_text(f_p1, fa_right, fa_center, COLORS._main_accent);
+							draw_set_text(f_p2, fa_right, fa_center, COLORS._main_accent);
 							draw_sprite_stretched_ext(THEME.ui_panel, 1, _bx, _by, _bw, _bh, COLORS._main_text_accent);
 							
 						} else if(_ktxt != "") {
-							draw_set_text(f_p1, fa_right, fa_center, COLORS._main_text_sub);
+							draw_set_text(f_p2, fa_right, fa_center, COLORS._main_text_sub);
 							draw_sprite_stretched_ext(THEME.ui_panel, 1, _bx, _by, _bw, _bh, CDEF.main_dkgrey);
 						}
 						

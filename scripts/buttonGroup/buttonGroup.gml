@@ -24,6 +24,8 @@ function buttonGroup(_data, _onClick) : widget() constructor {
 	static setBlend     = function(bb)              { sprBlend    = bb;       return self; } 
 	
 	static trigger = function() {
+		if(!is_real(current_selecting)) return;
+		
 		if(current_selecting + 1 >= array_length(data))
 			onClick(0);
 		else

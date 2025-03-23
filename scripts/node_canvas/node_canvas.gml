@@ -240,9 +240,10 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	live_target = "";
 	
 	input_display_list = [ 
-		["Output",	  false], 0, frame_renderer, 12, 18, 13, 
-		["Brush",	   true], 6, 15, 17, 16, 
-		["Background", true, 10], 8, 14, 9, 
+		["Frames",    false    ],  0, frame_renderer, 
+		["Animation", false, 12], 18, 13, 
+		["Brush",      true    ],  6, 15, 17, 16, 
+		["Background", true, 10],  8, 14,  9, 
 	];
 	
 	#region ++++ data ++++
@@ -354,58 +355,68 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
-		tool_settings     = [ [ "",          tool_channel_edit,   "channel",   tool_attribute ], 
-						      [ "",          tool_drawLayer_edit, "drawLayer", tool_attribute ],
-						      [ "",          tool_mirror_edit,    "mirror",    tool_attribute ] ];
-		tool_size         =   [ "Size",      tool_size_edit,      "size",      tool_attribute ];
-		tool_thrs         =   [ "Threshold", tool_thrs_edit,      "thres",     tool_attribute ];
-		tool_fil8         =   [ "Fill",      tool_fil8_edit,      "fillType",  tool_attribute ];
-		tool_fill_bg      =   [ "BG",        tool_fill_use_bg,    "useBG",     tool_attribute ];
-		tool_iso_settings =   [ "",          tool_isoangle,       "iso_angle", tool_attribute ];
+		tool_settings     = [ [ "",              tool_channel_edit,   "channel",   tool_attribute ], 
+						      [ "",              tool_drawLayer_edit, "drawLayer", tool_attribute ],
+						      [ "",              tool_mirror_edit,    "mirror",    tool_attribute ] ];
+		tool_size         =   [ "Size",          tool_size_edit,      "size",      tool_attribute ];
+		tool_thrs         =   [ "Threshold",     tool_thrs_edit,      "thres",     tool_attribute ];
+		tool_fil8         =   [ "Fill",          tool_fil8_edit,      "fillType",  tool_attribute ];
+		tool_fill_bg      =   [ "BG",            tool_fill_use_bg,    "useBG",     tool_attribute ];
+		tool_iso_settings =   [ "",              tool_isoangle,       "iso_angle", tool_attribute ];
 		
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
 		tools = [
 			new NodeTool( "Selection",	[ THEME.canvas_tools_selection_rectangle, THEME.canvas_tools_selection_circle, THEME.canvas_tools_freeform_selection, THEME.canvas_tools_selection_brush ])
+				.setSettings(tool_settings)
 				.setToolObject([ tool_sel_rectangle, tool_sel_ellipse, tool_sel_freeform, tool_sel_brush ]),
 			
 			new NodeTool( "Magic Selection", THEME.canvas_tools_magic_selection )
+				.setSettings(tool_settings)
 				.setSetting(tool_thrs)
 				.setSetting(tool_fil8)
 				.setSetting(tool_fill_bg)
 				.setToolObject(tool_sel_magic),
 			
 			new NodeTool( "Pencil",		  THEME.canvas_tools_pencil)
+				.setSettings(tool_settings)
 				.setSetting(tool_size)
 				.setToolObject(tool_brush),
 			
 			new NodeTool( "Eraser",		  THEME.canvas_tools_eraser)
+				.setSettings(tool_settings)
 				.setSetting(tool_size)
 				.setToolObject(tool_eraser),
 					
 			new NodeTool( "Rectangle",	[ THEME.canvas_tools_rect,  THEME.canvas_tools_rect_fill  ])
+				.setSettings(tool_settings)
 				.setSetting(tool_size)
 				.setToolObject(tool_rectangle),
 					
 			new NodeTool( "Ellipse",	[ THEME.canvas_tools_ellip, THEME.canvas_tools_ellip_fill ])
+				.setSettings(tool_settings)
 				.setSetting(tool_size)
 				.setToolObject(tool_ellipse),
 			
 			new NodeTool( "Iso Cube",	[ THEME.canvas_tools_iso_cube, THEME.canvas_tools_iso_cube_wire, THEME.canvas_tools_iso_cube_fill ])
+				.setSettings(tool_settings)
 				.setSetting(tool_size)
 				.setSetting(tool_iso_settings)
 				.setToolObject(tool_iso_cube),
 			
 			new NodeTool( "Curve",		  THEME.canvas_tool_curve_icon)
+				.setSettings(tool_settings)
 				.setSetting(tool_size)
 				.setSetting([ "", tool_curve_buttons, 0, tool_attribute ])
 				.setToolObject(tool_curve_bez),
 			
 			new NodeTool( "Freeform",	  THEME.canvas_tools_freeform)
+				.setSettings(tool_settings)
 				.setSetting(tool_size)
 				.setToolObject(tool_freeform),
 					
 			new NodeTool( "Fill",		  THEME.canvas_tools_bucket)
+				.setSettings(tool_settings)
 				.setSetting(tool_thrs)
 				.setSetting(tool_fil8)
 				.setSetting(tool_fill_bg)
@@ -421,6 +432,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		nodeTool        = noone;
 		nodeToolPreview = new NodeTool( "Apply Node", THEME.canvas_tools_node, self )
+								.setSettings(tool_settings)
 								.setToolFn(__action_add_node)
 								.setContext(self);
 		
@@ -457,11 +469,20 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			PANEL_PREVIEW.tool_current = tools[2];
 		});
 		
+		tool_resizer     = new canvas_tool_resize(self);
+		tool_resizer_dim = new vectorBox(2, function(v,i) /*=>*/ { tool_resizer.setSize(v,i); })
+								.setFont(f_p3);
+		
+		tool_resizer_buttons  = new buttonGroup( array_create(2, THEME.toolbar_check), function(v) /*=>*/ { if(v == 0) tool_resizer.apply(); else tool_resizer.cancel(); })
+									.setCollape(false);
+		
 		rightTools_general = [ 
 			nodeToolPreview,
 			-1,
 			new NodeTool( "Resize Canvas",	  THEME.canvas_resize )
-				.setToolObject( new canvas_tool_resize() ),
+				.setSetting([ "Dim", tool_resizer_dim, "dimension", tool_resizer ])
+				.setSetting([ "", tool_resizer_buttons, 0, tool_attribute ])
+				.setToolObject(tool_resizer),
 			
 			new NodeTool( [ "Rotate 90 CW", "Rotate 90 CCW" ],
 				[ THEME.canvas_rotate_cw, THEME.canvas_rotate_ccw ] )
@@ -472,24 +493,31 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				.setToolFn( [ __action_flip_h, __action_flip_v ] ),
 		];
 		
+		rtool_brush   = new NodeTool( "Make/Reset Brush", THEME.canvas_tools_pencil ).setToolFn( __action_make_brush );
+		rtool_outline = new NodeTool( "Outline", THEME.canvas_tools_outline ).setSetting(tool_thrs).setSetting(tool_fil8).setToolObject( new canvas_tool_outline() );
+		rtool_extrude = new NodeTool( "Extrude", THEME.canvas_tools_extrude ).setSetting(tool_thrs).setSetting(tool_fil8).setToolObject( new canvas_tool_extrude() );
+		rtool_inset   = new NodeTool( "Inset",   THEME.canvas_tools_inset   ).setSetting(tool_thrs).setSetting(tool_fil8).setToolObject( new canvas_tool_inset()   );
+		rtool_skew    = new NodeTool( "Skew",    THEME.canvas_tools_skew    ).setSetting(tool_thrs).setSetting(tool_fil8).setToolObject( new canvas_tool_skew()    );
+		rtool_corner  = new NodeTool( "Corner",  THEME.canvas_tools_corner  ).setSetting(tool_thrs).setSetting(tool_fil8).setToolObject( new canvas_tool_corner()  );
+		
 		rightTools_selection = [ 
-			/*  0 */ -1,
-			/*  1 */ new NodeTool( "Make/Reset Brush", THEME.canvas_tools_pencil ).setToolFn( __action_make_brush ),
-			/*  2 */ -1,
-			/*  3 */ new NodeTool( "Outline", THEME.canvas_tools_outline ).setSetting(tool_thrs).setSetting(tool_fil8).setToolObject( new canvas_tool_outline() ),
-			/*  4 */ new NodeTool( "Extrude", THEME.canvas_tools_extrude ).setSetting(tool_thrs).setSetting(tool_fil8).setToolObject( new canvas_tool_extrude() ),
-			/*  5 */ new NodeTool( "Inset",   THEME.canvas_tools_inset   ).setSetting(tool_thrs).setSetting(tool_fil8).setToolObject( new canvas_tool_inset()   ),
-			/*  6 */ new NodeTool( "Skew",    THEME.canvas_tools_skew    ).setSetting(tool_thrs).setSetting(tool_fil8).setToolObject( new canvas_tool_skew()    ),
-			/*  7 */ new NodeTool( "Corner",  THEME.canvas_tools_corner  ).setSetting(tool_thrs).setSetting(tool_fil8).setToolObject( new canvas_tool_corner()  ),
+			-1,
+			rtool_brush,
+			-1,
+			rtool_outline,
+			rtool_extrude,
+			rtool_inset,
+			rtool_skew,
+			rtool_corner,
 		];
 		
 		rightTools_not_selection = [ 
 			-1,
-			new NodeTool( "Outline", THEME.canvas_tools_outline).setContext(self).setToolObject( new canvas_tool_with_selector(rightTools_selection[3]) ),
-			new NodeTool( "Extrude", THEME.canvas_tools_extrude).setContext(self).setToolObject( new canvas_tool_with_selector(rightTools_selection[4]) ),
-			new NodeTool( "Inset",   THEME.canvas_tools_inset  ).setContext(self).setToolObject( new canvas_tool_with_selector(rightTools_selection[5]) ),
-			new NodeTool( "Skew",    THEME.canvas_tools_skew   ).setContext(self).setToolObject( new canvas_tool_with_selector(rightTools_selection[6]) ),
-			new NodeTool( "Corner",  THEME.canvas_tools_corner ).setContext(self).setToolObject( new canvas_tool_with_selector(rightTools_selection[7]) ),
+			new NodeTool( "Outline", THEME.canvas_tools_outline).setContext(self).setToolObject( new canvas_tool_with_selector(rtool_outline) ).setSettings(tool_settings),
+			new NodeTool( "Extrude", THEME.canvas_tools_extrude).setContext(self).setToolObject( new canvas_tool_with_selector(rtool_extrude) ).setSettings(tool_settings),
+			new NodeTool( "Inset",   THEME.canvas_tools_inset  ).setContext(self).setToolObject( new canvas_tool_with_selector(rtool_inset)   ).setSettings(tool_settings),
+			new NodeTool( "Skew",    THEME.canvas_tools_skew   ).setContext(self).setToolObject( new canvas_tool_with_selector(rtool_skew)    ).setSettings(tool_settings),
+			new NodeTool( "Corner",  THEME.canvas_tools_corner ).setContext(self).setToolObject( new canvas_tool_with_selector(rtool_corner)  ).setSettings(tool_settings),
 		];
 		
 		rightTools_brush = [ 
@@ -605,6 +633,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				surface_get_pixel_ext(tool_selection.selection_surface, _x - tool_selection.selection_position[0], _y - tool_selection.selection_position[1]) : 
 				surface_get_pixel_ext(getCanvasSurface(), _x, _y);
 	}
+	
+	static getToolSettings = function() { return []; }
 	
 	////- Apply node
 	
