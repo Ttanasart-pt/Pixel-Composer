@@ -67,10 +67,8 @@ function Panel_Console() : PanelContent() constructor {
 			if(_y <= 0) break;
 		}
 		
-		if(pHOVER) {
-			if(mouse_wheel_up())    scroll_y = clamp(scroll_y + 1, 0, array_length(CMD) - 1);
-			if(mouse_wheel_down())  scroll_y = clamp(scroll_y - 1, 0, array_length(CMD) - 1);
-		}
+		if(pHOVER && MOUSE_WHEEL != 0)
+			scroll_y = clamp(scroll_y + sign(MOUSE_WHEEL), 0, array_length(CMD) - 1);
 	}
 	
 	function drawContent(panel) {

@@ -37,10 +37,7 @@
 		keyboard_key_release(vk_alt);
 	}
 	
-	function key_mod_press_any() {
-		INLINE
-		return CTRL == KEY_STAT.pressing || ALT == KEY_STAT.pressing || SHIFT == KEY_STAT.pressing;
-	}
+	function key_mod_press_any() { INLINE return CTRL == KEY_STAT.pressing || ALT == KEY_STAT.pressing || SHIFT == KEY_STAT.pressing; }
 	
 	function key_mod_enum(key)     { INLINE 
 		switch(key) {

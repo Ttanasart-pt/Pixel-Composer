@@ -200,10 +200,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		frame_renderer_x_max = max(0, frame_renderer_x_max - 200);
 		frame_renderer_x     = lerp_float(frame_renderer_x, frame_renderer_x_to, 3);
 		
-		if(_cnt_hover) {
-			if(mouse_wheel_down()) frame_renderer_x_to = clamp(frame_renderer_x_to + 80, 0, frame_renderer_x_max);
-			if(mouse_wheel_up())   frame_renderer_x_to = clamp(frame_renderer_x_to - 80, 0, frame_renderer_x_max);
-		}
+		if(_cnt_hover && MOUSE_WHEEL != 0)
+			frame_renderer_x_to = clamp(frame_renderer_x_to - 80 * MOUSE_WHEEL, 0, frame_renderer_x_max);
 		
 		var _bs = _aw - ui(8);
 		var _bx = _x1 + _aw / 2 - _bs / 2;
@@ -693,8 +691,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		var _scroll = 0;
 		var _scrollTarget = noone;
-		if(focus && key_mod_press(SHIFT) && mouse_wheel_up())   _scroll = -1;
-		if(focus && key_mod_press(SHIFT) && mouse_wheel_down()) _scroll =  1;
+		if(focus && key_mod_press(SHIFT) && MOUSE_WHEEL != 0) _scroll = sign(MOUSE_WHEEL);
 		
 		for( var i = 0, n = array_length(DEF_PALETTE); i < n; i++ ) {
 			var _c = DEF_PALETTE[i];
@@ -1096,10 +1093,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			_tool.step(hover, active, _tx, _ty, _s, _mx, _my, _snx, _sny);
 			
 			if(_tool.brush_resizable) { 
-				if(hover && key_mod_press(CTRL)) {
-					if(mouse_wheel_down()) tool_attribute.size = max( 1, tool_attribute.size - 1);
-					if(mouse_wheel_up())   tool_attribute.size = min(64, tool_attribute.size + 1);
-				}
+				if(hover && key_mod_press(CTRL) && MOUSE_WHEEL != 0)
+					tool_attribute.size = clamp(tool_attribute.size + sign(MOUSE_WHEEL), 1, 64);
 				
 				brush.sizing(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 			} 

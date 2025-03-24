@@ -139,10 +139,7 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 				var b  = buttonInstant(THEME.button_hide_fill, bx, by, _bs, _bs, _m, hover, active, tooltip, THEME.value_link, linked, _icon_blend);
 				
 				var tg = false;
-				if(b == 1) {
-					if(key_mod_press(SHIFT) && mouse_wheel_up())   tg = true;
-					if(key_mod_press(SHIFT) && mouse_wheel_down()) tg = true;
-				} 
+				if(b == 1 && key_mod_press(SHIFT) && MOUSE_WHEEL != 0) tg = true;
 				if(b == 2) tg = true;
 					
 				if(tg) {

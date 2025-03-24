@@ -53,10 +53,8 @@ function Panel_Palette() : PanelContent() constructor {
 		var cur = CURRENT_COLOR;
 		var _height;
 		
-		if(pHOVER && key_mod_press(CTRL)) {
-			if(mouse_wheel_down()) grid_size_to = clamp(grid_size_to - ui(4), ui(8), ui(32));
-			if(mouse_wheel_up())   grid_size_to = clamp(grid_size_to + ui(4), ui(8), ui(32));
-		}
+		if(pHOVER && key_mod_press(CTRL) && MOUSE_WHEEL != 0)
+			grid_size_to = clamp(grid_size_to + ui(4) * MOUSE_WHEEL, ui(8), ui(32));
 		grid_size = lerp_float(grid_size, grid_size_to, 10);
 		
 		if(DRAGGING && DRAGGING.type == "Palette" && !drag_from_self) {

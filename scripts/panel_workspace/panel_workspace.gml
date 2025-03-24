@@ -131,16 +131,13 @@ function Panel_Workspace() : PanelContent() constructor {
 		
 		if(hori) {
 			scroll_max = max(ww - w + ui(16), 0);
-			if(pHOVER) {
-				if(mouse_wheel_down()) scroll_to = clamp(scroll_to - ui(128) * SCROLL_SPEED, -scroll_max, 0);
-				if(mouse_wheel_up())   scroll_to = clamp(scroll_to + ui(128) * SCROLL_SPEED, -scroll_max, 0);
-			}
+			if(pHOVER && MOUSE_WHEEL != 0)
+				scroll_to = clamp(scroll_to + ui(128) * MOUSE_WHEEL, -scroll_max, 0);
+			
 		} else {
 			scroll_max = max(hh - h + ui(16), 0);
-			if(pHOVER) {
-				if(mouse_wheel_down()) scroll_to = clamp(scroll_to - ui(32) * SCROLL_SPEED, -scroll_max, 0);
-				if(mouse_wheel_up())   scroll_to = clamp(scroll_to + ui(32) * SCROLL_SPEED, -scroll_max, 0);
-			}
+			if(pHOVER && MOUSE_WHEEL != 0)
+				scroll_to = clamp(scroll_to + ui(32) * MOUSE_WHEEL, -scroll_max, 0);
 		}
 	}
 }

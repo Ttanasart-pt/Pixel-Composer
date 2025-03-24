@@ -617,10 +617,8 @@ function Panel_File_Explorer() : PanelContent() constructor {
 			}
 		}
 		
-		if(view_mode == FILE_EXPLORER_VIEW.grid && pHOVER && key_mod_press(CTRL)) {
-			if(mouse_wheel_down()) grid_size = clamp(grid_size - ui(8), ui(32), ui(128));
-			if(mouse_wheel_up())   grid_size = clamp(grid_size + ui(8), ui(32), ui(128));
-		}
+		if(view_mode == FILE_EXPLORER_VIEW.grid && pHOVER && key_mod_press(CTRL) && MOUSE_WHEEL != 0)
+			grid_size = clamp(grid_size + MOUSE_WHEEL, ui(32), ui(128));
 		
 		return _h;
 		
@@ -662,11 +660,10 @@ function Panel_File_Explorer() : PanelContent() constructor {
 		var tb_h = top_bar - pad - ui(8);
 		
 		var b = buttonInstant(THEME.button_hide_fill, w - pad - bs, pad, bs, bs, [mx, my], pHOVER, pFOCUS, view_mode_tooltip, THEME.view_mode, !view_mode);
-		if(b == 1) {
-			if(key_mod_press(SHIFT) && mouse_wheel_up())   { view_mode = !view_mode; PREFERENCES.file_explorer_view = view_mode; }
-			if(key_mod_press(SHIFT) && mouse_wheel_down()) { view_mode = !view_mode; PREFERENCES.file_explorer_view = view_mode; }
+		if(b == 2 || (b == 1 && key_mod_press(SHIFT) && MOUSE_WHEEL != 0)) { 
+			view_mode = !view_mode; 
+			PREFERENCES.file_explorer_view = view_mode; 
 		}
-		if(b == 2) { view_mode = !view_mode; PREFERENCES.file_explorer_view = view_mode; }
 		view_mode_tooltip.index = view_mode;
 			
 		tb_root.setFocusHover(pFOCUS, pHOVER);

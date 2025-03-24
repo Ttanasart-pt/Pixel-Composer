@@ -880,9 +880,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 					var amo = slide_speed;
 					if(key_mod_press(CTRL)) amo *= 10;
 					if(key_mod_press(ALT))  amo /= 10;
-					
-					if(mouse_wheel_down())	modifyValue(toNumber(_text) + amo * SCROLL_SPEED);
-					if(mouse_wheel_up())	modifyValue(toNumber(_text) - amo * SCROLL_SPEED);
+					if(MOUSE_WHEEL != 0)    modifyValue(toNumber(_text) + MOUSE_WHEEL);
 				}
 				
 				if(mouse_press(mb_left, active)) {

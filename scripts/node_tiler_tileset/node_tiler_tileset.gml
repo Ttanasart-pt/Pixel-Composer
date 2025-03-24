@@ -381,10 +381,9 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		    		}
 		    		
 		    		var _s = tile_selector_s;
-		    		if(key_mod_press(CTRL) || tile_selector.popupPanel != noone) {
-			    		if(mouse_wheel_up())   { tile_selector_s_to = clamp(tile_selector_s_to * 1.2, 0.5, 4); }
-			    		if(mouse_wheel_down()) { tile_selector_s_to = clamp(tile_selector_s_to / 1.2, 0.5, 4); }
-		    		}
+		    		if(key_mod_press(CTRL) || tile_selector.popupPanel != noone && MOUSE_WHEEL != 0)
+			    		tile_selector_s_to = clamp(tile_selector_s_to * (1 + .2 * MOUSE_WHEEL), 0.5, 4);
+		    		
 		    		tile_selector_s = lerp_float(tile_selector_s, tile_selector_s_to, 2);
 		    		
 		    		if(_s != tile_selector_s) {
@@ -1192,10 +1191,9 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    		}
 	    		
 	    		var _s = palette_selector_s;
-	    		if(key_mod_press(CTRL) || palette_viewer.popupPanel != noone) {
-		    		if(mouse_wheel_up())   { palette_selector_s_to = clamp(palette_selector_s_to * 1.2, 0.5, 4); }
-		    		if(mouse_wheel_down()) { palette_selector_s_to = clamp(palette_selector_s_to / 1.2, 0.5, 4); }
-	    		}
+	    		if(key_mod_press(CTRL) || palette_viewer.popupPanel != noone && MOUSE_WHEEL != 0)
+		    		palette_selector_s_to = clamp(palette_selector_s_to * (1 + .2 * MOUSE_WHEEL), 0.5, 4);
+	    		
 	    		palette_selector_s = lerp_float(palette_selector_s, palette_selector_s_to, 2);
 	    		
 	    		if(_s != palette_selector_s) {

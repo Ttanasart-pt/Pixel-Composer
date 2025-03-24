@@ -102,8 +102,7 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 					if(key_mod_press(CTRL)) amo *= 10;
 					if(key_mod_press(ALT))  amo /= 10;
 			
-					if(mouse_wheel_down())	onModify(_data + amo * SCROLL_SPEED);
-					if(mouse_wheel_up())	onModify(_data - amo * SCROLL_SPEED);
+					if(MOUSE_WHEEL != 0) onModify(_data + amo * MOUSE_WHEEL);
 				}
 			}
 		

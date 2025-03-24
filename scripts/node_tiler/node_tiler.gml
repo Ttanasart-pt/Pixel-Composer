@@ -234,10 +234,8 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 				surface_reset_target();
 				
 				if(_tool.brush_resizable) { 
-					if(hover && key_mod_press(CTRL)) {
-						if(mouse_wheel_down()) tool_attribute.size = max( 1, tool_attribute.size - 1);
-						if(mouse_wheel_up())   tool_attribute.size = min(64, tool_attribute.size + 1);
-					}
+					if(hover && key_mod_press(CTRL) && MOUSE_WHEEL != 0)
+						tool_attribute.size = clamp(tool_attribute.size + sign(MOUSE_WHEEL), 1, 64);
 					
 					brush.sizing(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 				} 

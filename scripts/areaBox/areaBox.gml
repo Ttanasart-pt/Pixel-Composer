@@ -212,8 +212,8 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 			
 			var b = buttonInstant(THEME.button_hide_fill, _bx, _by, _bs, _bs, _m, hover, active, tooltip, THEME.inspector_area_type, mode);
 			if(b == 1) {
-				if(key_mod_press(SHIFT) && mouse_wheel_up())   mode = setMode(_data, (mode - 1 + 3) % 3);
-				if(key_mod_press(SHIFT) && mouse_wheel_down()) mode = setMode(_data, (mode + 1)     % 3);
+				if(key_mod_press(SHIFT) && MOUSE_WHEEL > 0) mode = setMode(_data, (mode - 1 + 3) % 3);
+				if(key_mod_press(SHIFT) && MOUSE_WHEEL < 0) mode = setMode(_data, (mode + 1)     % 3);
 			}
 			if(b == 2) mode = setMode(_data, (mode + 1) % 3);
 			

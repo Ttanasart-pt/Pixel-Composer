@@ -119,8 +119,8 @@
 		if(mouse_click(mb_right))		draw_sprite_ext(s_key_display_mouse, 2, mxs, mys, 1, 1, 0, COLORS._main_icon_light, 1);
 		if(mouse_click(mb_middle))		draw_sprite_ext(s_key_display_mouse, 3, mxs, mys, 1, 1, 0, COLORS._main_icon_light, 1);
 			
-		if(mouse_wheel_up())			draw_sprite_ext(s_key_display_mouse, 3, mxs, mys, 1, 1, 0, COLORS._main_accent, 1);
-		if(mouse_wheel_down())			draw_sprite_ext(s_key_display_mouse, 3, mxs, mys, 1, 1, 0, COLORS._main_accent, 1);
+		if(MOUSE_WHEEL > 0)             draw_sprite_ext(s_key_display_mouse, 3, mxs, mys, 1, 1, 0, COLORS._main_accent, 1);
+		if(MOUSE_WHEEL < 0)             draw_sprite_ext(s_key_display_mouse, 3, mxs, mys, 1, 1, 0, COLORS._main_accent, 1);
 		
 		draw_sprite_ext_add(s_key_display_mouse, 0, mxs, mys, 1, 1, 0, cc, 0.5);
 	#endregion

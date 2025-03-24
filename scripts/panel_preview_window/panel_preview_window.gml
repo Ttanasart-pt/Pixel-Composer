@@ -134,22 +134,23 @@ function Panel_Preview_Window() : PanelContent() constructor {
 			//if(WINDOW_ACTIVE != noone) print($"{winwin_mouse_wheel_down(WINDOW_ACTIVE)} : {winwin_mouse_wheel_up(WINDOW_ACTIVE)} : {random(1)}");
 			
 			var s = scale;
-			if(mouse_wheel_down()) {
-				for( var i = 0, n = array_length(scale_levels) - 1; i < n; i++ ) {
-					if(s > scale_levels[i] && s <= scale_levels[i + 1]) {
-						scale = scale_levels[i];
-						break;
+			if(MOUSE_WHEEL != 0) {
+				if(MOUSE_WHEEL == -1) {
+					for( var i = 0, n = array_length(scale_levels) - 1; i < n; i++ ) {
+						if(s > scale_levels[i] && s <= scale_levels[i + 1]) {
+							scale = scale_levels[i];
+							break;
+						}
 					}
-				}
-			}
-			
-			if(mouse_wheel_up()) {
-				for( var i = 0, n = array_length(scale_levels) - 1; i < n; i++ ) {
-					if(s >= scale_levels[i] && s < scale_levels[i + 1]) {
-						scale = scale_levels[i + 1];
-						break;
+				} else if(MOUSE_WHEEL == 1) {
+					for( var i = 0, n = array_length(scale_levels) - 1; i < n; i++ ) {
+						if(s >= scale_levels[i] && s < scale_levels[i + 1]) {
+							scale = scale_levels[i + 1];
+							break;
+						}
 					}
-				}
+				} else 
+					scale += MOUSE_WHEEL;
 			}
 			
 			var ds = scale - s;

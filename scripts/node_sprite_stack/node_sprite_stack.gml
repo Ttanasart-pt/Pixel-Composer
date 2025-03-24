@@ -122,10 +122,8 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		
 		var hov = hover && point_in_rectangle(_mx, _my, 0, sy, _panel.x1, _panel.y1);
 		
-		if(hov) {
-			if(mouse_wheel_down()) preview_custom_x_to -= ui(128);
-			if(mouse_wheel_up())   preview_custom_x_to += ui(128);
-		}
+		if(hov && MOUSE_WHEEL != 0)
+			preview_custom_x_to += ui(128) * MOUSE_WHEEL;
 		
 		preview_custom_x_to = clamp(preview_custom_x_to, -preview_custom_x_max, 0);
 		preview_custom_x    = lerp_float(preview_custom_x, preview_custom_x_to, 5);

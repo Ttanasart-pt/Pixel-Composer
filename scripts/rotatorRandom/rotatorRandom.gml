@@ -130,8 +130,8 @@ function rotatorRandom(_onModify) : widget() constructor {
 				
 				var b = buttonInstant(noone, _bx, _by, _bs, _bs, _m, hover, active, tooltip, THEME.rotator_random_mode, mode, [ COLORS._main_icon, c_white ]);
 				if(b == 1) {
-					if(key_mod_press(SHIFT) && mouse_wheel_up())   mode = setMode(_data, (mode - 1 + 4) % 4);
-					if(key_mod_press(SHIFT) && mouse_wheel_down()) mode = setMode(_data, (mode + 1)     % 4);
+					if(key_mod_press(SHIFT) && MOUSE_WHEEL > 0) mode = setMode(_data, (mode - 1 + 4) % 4);
+					if(key_mod_press(SHIFT) && MOUSE_WHEEL < 0) mode = setMode(_data, (mode + 1)     % 4);
 				}
 				if(b == 2) mode = setMode(_data, (mode + 1) % 4);
 		

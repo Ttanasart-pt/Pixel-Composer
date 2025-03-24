@@ -137,10 +137,8 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 			if(is_array(data_list) && key_mod_press(SHIFT)) {
 				var ind = array_find(data_list, _text);
 				var len = array_length(data_list);
-				if(len) {
-					if(mouse_wheel_down())	onModify(safe_mod(ind + 1 + len, len));
-					if(mouse_wheel_up())	onModify(safe_mod(ind - 1 + len, len));
-				}
+				if(len && MOUSE_WHEEL != 0)
+					onModify(safe_mod(ind + sign(MOUSE_WHEEL) + len, len));
 			}
 		} else {
 			if(type == 0 && hide == 0) draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, w, _h, c_white, 0.5 + 0.5 * interactable);

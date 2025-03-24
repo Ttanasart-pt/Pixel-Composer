@@ -712,9 +712,11 @@ function Panel_Preview() : PanelContent() constructor {
             else if(canvas_s > 3)    inc = 0.5;
             else if(canvas_s > 1)    inc = 0.25;
             
-            if(mouse_wheel_down() && !key_mod_press_any()) canvas_s = max(round(canvas_s / inc) * inc - inc, 0.10);
-            if(mouse_wheel_up()   && !key_mod_press_any()) canvas_s = min(round(canvas_s / inc) * inc + inc, 1024);
-            
+            if((!key_mod_press_any() || key_mod_press(CTRL)) && MOUSE_WHEEL != 0) {
+            	if(frac(MOUSE_WHEEL) == 0) canvas_s = clamp(value_snap(canvas_s + MOUSE_WHEEL * inc, inc), 0.10, 1024);
+            	else                       canvas_s = clamp(canvas_s + MOUSE_WHEEL * inc, 0.10, 1024);
+            }
+            	
             if(_canvas_s != canvas_s) {
                 var dx = (canvas_s - _canvas_s) * ((mx - canvas_x) / _canvas_s);
                 var dy = (canvas_s - _canvas_s) * ((my - canvas_y) / _canvas_s);
@@ -810,8 +812,8 @@ function Panel_Preview() : PanelContent() constructor {
                 canvas_zoom_m   = my;
             }
             
-            if(mouse_wheel_up())   d3_view_camera.focus_dist = max(   1, d3_view_camera.focus_dist * (1 - d3_zoom_speed));
-            if(mouse_wheel_down()) d3_view_camera.focus_dist = min(1000, d3_view_camera.focus_dist * (1 + d3_zoom_speed));
+            if(MOUSE_WHEEL != 0)
+            	d3_view_camera.focus_dist = clamp(d3_view_camera.focus_dist * (1 + d3_zoom_speed * MOUSE_WHEEL), 1, 1000);
         }
         
         canvas_dragging_key = false;
@@ -1037,10 +1039,8 @@ function Panel_Preview() : PanelContent() constructor {
         tool_y_max += _h;
         
         tool_y_max = max(0, tool_y_max - h + toolbar_height * 2);            
-        if(thov && !key_mod_press_any()) {
-            if(mouse_wheel_up())   tool_y_to = clamp(tool_y_to + ui(64) * SCROLL_SPEED, -tool_y_max, 0);
-            if(mouse_wheel_down()) tool_y_to = clamp(tool_y_to - ui(64) * SCROLL_SPEED, -tool_y_max, 0);
-        }
+        if(thov && !key_mod_press_any() && MOUSE_WHEEL != 0)
+            tool_y_to = clamp(tool_y_to + ui(64) * MOUSE_WHEEL, -tool_y_max, 0);
         
         // Right tools
         if(_node.rightTools == -1) return;
@@ -1178,10 +1178,8 @@ function Panel_Preview() : PanelContent() constructor {
         } 
         
         tool_ry_max = max(0, tool_ry_max - h + toolbar_height * 2);            
-        if(thov && !key_mod_press_any()) {
-            if(mouse_wheel_up())   tool_ry_to = clamp(tool_ry_to + ui(64) * SCROLL_SPEED, -tool_ry_max, 0);
-            if(mouse_wheel_down()) tool_ry_to = clamp(tool_ry_to - ui(64) * SCROLL_SPEED, -tool_ry_max, 0);
-        }
+        if(thov && !key_mod_press_any() && MOUSE_WHEEL != 0)
+            tool_ry_to = clamp(tool_ry_to + ui(64) * MOUSE_WHEEL, -tool_ry_max, 0);
     }
     
     function drawToolSettings(_node) {
@@ -1271,10 +1269,8 @@ function Panel_Preview() : PanelContent() constructor {
         }
         
         tol_max_w = max(0, tol_max_w - w);            
-        if(point_in_rectangle(mx, my, 0, 0, w, topbar_height) && !key_mod_press_any()) {
-            if(mouse_wheel_up())   tool_x_to = clamp(tool_x_to + ui(64) * SCROLL_SPEED, -tol_max_w, 0);
-            if(mouse_wheel_down()) tool_x_to = clamp(tool_x_to - ui(64) * SCROLL_SPEED, -tol_max_w, 0);
-        }
+        if(point_in_rectangle(mx, my, 0, 0, w, topbar_height) && !key_mod_press_any() && MOUSE_WHEEL != 0)
+            tool_x_to = clamp(tool_x_to + ui(64) * MOUSE_WHEEL, -tol_max_w, 0);
     }
     
     ////- DRAW
@@ -1971,8 +1967,8 @@ function Panel_Preview() : PanelContent() constructor {
         if(pHOVER && my > h - toolbar_height - prev_size - ui(16) && my > toolbar_height) {
             canvas_hover = false;
             
-            if(mouse_wheel_down() && !key_mod_press_any())    preview_x_to = clamp(preview_x_to - prev_size * SCROLL_SPEED, - preview_x_max, 0);
-            if(mouse_wheel_up() && !key_mod_press_any())    preview_x_to = clamp(preview_x_to + prev_size * SCROLL_SPEED, - preview_x_max, 0);
+            if(MOUSE_WHEEL != 0 && !key_mod_press_any()) 
+            	preview_x_to = clamp(preview_x_to + prev_size * MOUSE_WHEEL, - preview_x_max, 0);
         }
         
         #region surface array
@@ -2364,8 +2360,8 @@ function Panel_Preview() : PanelContent() constructor {
             var b = buttonInstant(THEME.button_hide_fill, tbx - ui(14), tby - ui(14), ui(28), ui(28), [mx, my], pHOVER, pFOCUS, tooltip, tbSpr, tbInd);
             switch(b) { 
             	case 1 : 
-            		if(onWUp   != 0 && key_mod_press(SHIFT) && mouse_wheel_up())   onWUp();
-            		if(onWDown != 0 && key_mod_press(SHIFT) && mouse_wheel_down()) onWDown();
+            		if(onWUp   != 0 && key_mod_press(SHIFT) && MOUSE_WHEEL > 0) onWUp();
+            		if(onWDown != 0 && key_mod_press(SHIFT) && MOUSE_WHEEL < 0) onWDown();
             		break;
             		
             	case 2 : tbClick(tbData); break;

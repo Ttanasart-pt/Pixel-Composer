@@ -437,10 +437,9 @@ function Panel_Collection() : PanelContent() constructor {
 				yy += hght;
 			}
 			
-			if(pHOVER && key_mod_press(CTRL) && point_in_rectangle(_m[0], _m[1], 0, 0, contentPane.surface_w, contentPane.surface_h)) {
-				if(mouse_wheel_down()) grid_size_to = clamp(grid_size_to - ui(4), ui(32), ui(160));
-				if(mouse_wheel_up())   grid_size_to = clamp(grid_size_to + ui(4), ui(32), ui(160));
-			}
+			if(pHOVER && key_mod_press(CTRL) && MOUSE_WHEEL != 0 && point_in_rectangle(_m[0], _m[1], 0, 0, contentPane.surface_w, contentPane.surface_h))
+				grid_size_to = clamp(grid_size_to + ui(4) * MOUSE_WHEEL, ui(32), ui(160));
+			
 			grid_size = lerp_float(grid_size, grid_size_to, 5);
 			
 		} else {
@@ -717,10 +716,9 @@ function Panel_Collection() : PanelContent() constructor {
 		hh += hght;
 		yy += hght;
 		
-		if(pHOVER && key_mod_press(CTRL) && point_in_rectangle(_m[0], _m[1], 0, 0, nodecontentPane.surface_w, nodecontentPane.surface_h)) {
-			if(mouse_wheel_down()) grid_size_to = clamp(grid_size_to - ui(4), ui(32), ui(160));
-			if(mouse_wheel_up())   grid_size_to = clamp(grid_size_to + ui(4), ui(32), ui(160));
-		}
+		if(pHOVER && key_mod_press(CTRL) && MOUSE_WHEEL != 0 && point_in_rectangle(_m[0], _m[1], 0, 0, nodecontentPane.surface_w, nodecontentPane.surface_h))
+			grid_size_to = clamp(grid_size_to + ui(4) && MOUSE_WHEEL, ui(32), ui(160));
+		
 		grid_size = lerp_float(grid_size, grid_size_to, 5);
 		
 		return hh + ui(16);

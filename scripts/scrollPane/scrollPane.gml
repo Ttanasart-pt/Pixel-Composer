@@ -92,10 +92,8 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 		scroll_y	 = round(scroll_y_raw);
 		draw_surface_safe(surface, x, y);
 		
-		if(hover && !scroll_lock && !key_mod_press(SHIFT) && !key_mod_press(CTRL)) {
-			if(mouse_wheel_down())	scroll_y_to -= scroll_step * SCROLL_SPEED;
-			if(mouse_wheel_up())	scroll_y_to += scroll_step * SCROLL_SPEED;
-		}
+		if(hover && !scroll_lock && !key_mod_press(SHIFT) && !key_mod_press(CTRL) && MOUSE_WHEEL != 0) 
+			scroll_y_to += scroll_step * MOUSE_WHEEL;
 		
 		/// Pen scroll
 		

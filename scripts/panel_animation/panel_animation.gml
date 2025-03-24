@@ -807,8 +807,7 @@ function Panel_Animation() : PanelContent() constructor {
             if(pHOVER && point_in_rectangle(mx, my, bar_x, ui(16), bar_x + bar_w, bar_y - ui(8))) {
                 var sca = timeline_scale;
                 
-                if(mouse_wheel_down()) timeline_scale = max(timeline_scale - 1 * SCROLL_SPEED, 1);
-                if(mouse_wheel_up())   timeline_scale = min(timeline_scale + 1 * SCROLL_SPEED, 24);
+                if(MOUSE_WHEEL != 0) timeline_scale = clamp(timeline_scale + MOUSE_WHEEL, 1, 24);
                 
                 timeline_separate = 5;
                 timeline_sep_line = 1;
@@ -836,8 +835,7 @@ function Panel_Animation() : PanelContent() constructor {
             }
             
             if(pHOVER && point_in_rectangle(mx, my, bar_x, bar_y, bar_x + bar_w, bar_y + bar_h)) { //preview
-                if(mouse_wheel_down()) timeline_shift_to = clamp(timeline_shift_to - 64 * SCROLL_SPEED, -max(bar_total_w - bar_w + 32, 0), 0);
-                if(mouse_wheel_up())   timeline_shift_to = clamp(timeline_shift_to + 64 * SCROLL_SPEED, -max(bar_total_w - bar_w + 32, 0), 0);
+                if(MOUSE_WHEEL != 0) timeline_shift_to = clamp(timeline_shift_to + 64 * MOUSE_WHEEL, -max(bar_total_w - bar_w + 32, 0), 0);
                 
                 if(mx < bar_int_x && mouse_press(mb_left, pFOCUS)) {
                     timeline_scubbing = true;
@@ -1654,8 +1652,8 @@ function Panel_Animation() : PanelContent() constructor {
             if(mouse_release(mb_left, pFOCUS)) prop.on_end = safe_mod(prop.on_end + 1, sprite_get_number(THEME.prop_on_end));
             if(mouse_press(  mb_left, pFOCUS)) on_end_dragging_anim = prop;
             
-    		if(key_mod_press(SHIFT) && mouse_wheel_up())   mod_dec_mf0 prop.on_end mod_dec_mf1 prop.on_end mod_dec_mf2  sprite_get_number(THEME.prop_on_end) mod_dec_mf3  sprite_get_number(THEME.prop_on_end) mod_dec_mf4;
-    		if(key_mod_press(SHIFT) && mouse_wheel_down()) mod_inc_mf0 prop.on_end mod_inc_mf1 prop.on_end mod_inc_mf2  sprite_get_number(THEME.prop_on_end) mod_inc_mf3;
+    		if(key_mod_press(SHIFT) && MOUSE_WHEEL != 0)
+    			prop.on_end = (prop.on_end + sign(MOUSE_WHEEL) + sprite_get_number(THEME.prop_on_end)) % sprite_get_number(THEME.prop_on_end);
         } else
             draw_sprite_ui_uniform(THEME.prop_on_end, prop.on_end, tx, ty, 1, on_end_dragging_anim == prop? COLORS._main_accent : COLORS._main_icon, _on_end_disp);
         
@@ -1819,11 +1817,9 @@ function Panel_Animation() : PanelContent() constructor {
         #region scroll
             dope_sheet_y = lerp_float(dope_sheet_y, dope_sheet_y_to, 4);
                 
-            if(pHOVER && point_in_rectangle(mx, my, ui(8), ui(8), bar_x, ui(8) + dope_sheet_h)) {
-                if(mouse_wheel_down())  dope_sheet_y_to = clamp(dope_sheet_y_to - ui(32) * SCROLL_SPEED, -dope_sheet_y_max, 0);
-                if(mouse_wheel_up())    dope_sheet_y_to = clamp(dope_sheet_y_to + ui(32) * SCROLL_SPEED, -dope_sheet_y_max, 0);
-            }
-                    
+            if(pHOVER && point_in_rectangle(mx, my, ui(8), ui(8), bar_x, ui(8) + dope_sheet_h) && MOUSE_WHEEL != 0)
+                dope_sheet_y_to = clamp(dope_sheet_y_to + ui(32) * MOUSE_WHEEL, -dope_sheet_y_max, 0);
+                
             var scr_x    = bar_x + dope_sheet_w + ui(4);
             var scr_y    = ui(8);
             var scr_s    = dope_sheet_h;
@@ -2679,10 +2675,8 @@ function Panel_Animation() : PanelContent() constructor {
         by += ui(32); if(by > max_y) return;
         node_name_tooltip.index = node_name_type;
         var b = buttonInstant(THEME.button_hide_fill, bx, by, ui(32), ui(28), [mx, my], pHOVER, pFOCUS, node_name_tooltip, THEME.node_name_type, node_name_type);
-        if(b == 1) {
-            if(key_mod_press(SHIFT) && mouse_wheel_up())   mod_dec_mf0 node_name_type mod_dec_mf1 node_name_type mod_dec_mf2  3 mod_dec_mf3  3 mod_dec_mf4;
-		    if(key_mod_press(SHIFT) && mouse_wheel_down()) mod_inc_mf0 node_name_type mod_inc_mf1 node_name_type mod_inc_mf2  3 mod_inc_mf3;
-        }
+        if(b == 1 && MOUSE_WHEEL != 0 && key_mod_press(SHIFT))
+        	node_name_type = (node_name_type + sign(MOUSE_WHEEL) + 3) % 3;
         if(b == 2) mod_inc_mf0 node_name_type mod_inc_mf1 node_name_type mod_inc_mf2  3 mod_inc_mf3;
         
         by += ui(32); if(by > max_y) return;

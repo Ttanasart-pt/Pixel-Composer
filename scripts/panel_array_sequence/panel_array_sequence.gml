@@ -60,10 +60,8 @@ function Panel_Array_Sequence(node) : PanelContent() constructor {
 		content_x = lerp_float(content_x, content_x_to, 5);
 		content_x_max = max(0, array_length(_seq) * (_ns + ui(8)) - content_w + ui(96));
 		
-		if(pHOVER && point_in_rectangle(mx, my, padding, padding, w - padding, h + content_h)) {
-			if(mouse_wheel_down())	content_x_to = clamp(content_x_to - (_ns + ui(8)), -content_x_max, 0);
-			if(mouse_wheel_up())	content_x_to = clamp(content_x_to + (_ns + ui(8)), -content_x_max, 0);
-		}
+		if(pHOVER && point_in_rectangle(mx, my, padding, padding, w - padding, h + content_h) && MOUSE_WHEEL != 0)
+			content_x_to = clamp(content_x_to + (_ns + ui(8)) * MOUSE_WHEEL, -content_x_max, 0);
 		
 		draw_surface_safe(content_surface, padding, padding);
 		
@@ -164,10 +162,8 @@ function Panel_Array_Sequence(node) : PanelContent() constructor {
 		sequence_x = lerp_float(sequence_x, sequence_x_to, 5);
 		sequence_x_max = max(0, array_length(_ord) * _ns - pw + ui(320));
 		
-		if(pHOVER && point_in_rectangle(mx, my, px, py, px + pw, py + ph)) {
-			if(mouse_wheel_down())	sequence_x_to = clamp(sequence_x_to - (_ns + ui(8)), -sequence_x_max, 0);
-			if(mouse_wheel_up())	sequence_x_to = clamp(sequence_x_to + (_ns + ui(8)), -sequence_x_max, 0);
-		}
+		if(pHOVER && point_in_rectangle(mx, my, px, py, px + pw, py + ph) && MOUSE_WHEEL != 0)
+			sequence_x_to = clamp(sequence_x_to + (_ns + ui(8)) * MOUSE_WHEEL, -sequence_x_max, 0);
 		
 		draw_surface_safe(sequence_surface, px, py);
 		

@@ -1012,10 +1012,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 			text_y_max  = max(0, total_h - hh + 16);
 			text_y      = lerp_float(text_y, text_y_to, 5);
 		
-			if(ihover) {
-				if(mouse_wheel_down()) text_y_to = clamp(text_y_to - ui(64) * SCROLL_SPEED, -text_y_max, 0);
-				if(mouse_wheel_up())   text_y_to = clamp(text_y_to + ui(64) * SCROLL_SPEED, -text_y_max, 0);
-			}
+			if(ihover && MOUSE_WHEEL != 0) text_y_to = clamp(text_y_to + ui(64) * MOUSE_WHEEL, -text_y_max, 0);
 			
 			var scr_w = ui(sprite_get_width(THEME.ui_scrollbar));
 			var scr_h = hh - (ui(12) - scr_w) * 2;

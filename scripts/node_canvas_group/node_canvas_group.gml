@@ -80,10 +80,8 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 		
 		frame_renderer_x = lerp_float(frame_renderer_x, frame_renderer_x_to, 3);
 		
-		if(_cnt_hover) {
-			if(mouse_wheel_down()) frame_renderer_x_to = clamp(frame_renderer_x_to + 80, 0, frame_renderer_x_max);
-			if(mouse_wheel_up())   frame_renderer_x_to = clamp(frame_renderer_x_to - 80, 0, frame_renderer_x_max);
-		}
+		if(_cnt_hover && MOUSE_WHEEL != 0)
+			frame_renderer_x_to = clamp(frame_renderer_x_to - 80 * MOUSE_WHEEL, 0, frame_renderer_x_max);
 		
 		frame_renderer.h = _h;
 		return _h;

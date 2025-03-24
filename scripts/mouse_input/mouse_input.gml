@@ -2,6 +2,7 @@
 	globalvar CURSOR, CURSOR_LOCK, CURSOR_IS_LOCK, CURSOR_LOCK_X, CURSOR_LOCK_Y;
 	globalvar MOUSE_WRAP, MOUSE_WRAPPING, MOUSE_BLOCK, _MOUSE_BLOCK;
 	globalvar MOUSE_POOL;
+	globalvar MOUSE_WHEEL, MOUSE_WHEEL_H;
 	
 	MOUSE_WRAP     = false;
 	MOUSE_WRAPPING = false;
@@ -14,7 +15,9 @@
 		mclick: false, mpress: false, mrelease: false,
 	}
 	
-	#macro SCROLL_SPEED PREFERENCES.mouse_wheel_speed
+	MOUSE_WHEEL   = 0;
+	MOUSE_WHEEL_H = 0;
+	
 	#macro MOUSE_MOVED (window_mouse_get_delta_x() != 0 || window_mouse_get_delta_y() != 0)
 	
 	#macro   mouse_wheel_up mouse_wheel_up_override
@@ -58,6 +61,11 @@ function global_mouse_pool_init() {
 		MOUSE_POOL.rrelease |= winwin_mouse_check_button_released(ww, mb_right);
 		MOUSE_POOL.mrelease |= winwin_mouse_check_button_released(ww, mb_middle);
 	}
+}
+
+function mouse_step() {
+	MOUSE_WHEEL   = mouse_wheel_get();
+	MOUSE_WHEEL_H = mouse_wheel_get_h();
 }
 
 function mouse_click(mouse, focus = true) {

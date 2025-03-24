@@ -287,39 +287,29 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			
 			if(mouse_click(mb_left, _focus))
 				wd_dragging = true;
+				
 			else if(mouse_press(mb_middle, active)) {
 				wd_panning	= true;
 				wd_pan_sx	= wd_minx;
 				wd_pan_sy	= wd_miny;
 				wd_pan_mx	= _mx;
 				wd_pan_my	= _my;
-			} else if(mouse_wheel_down()) {
+				
+			} else if(MOUSE_WHEEL != 0) {
 				var wd_cx = (wd_maxx + wd_minx) / 2;
 				var wd_cy = (wd_maxy + wd_miny) / 2;
 				var rx    = (wd_maxx - wd_minx) / 2;
 				var ry    = (wd_maxy - wd_miny) / 2;
 				
-				rx = clamp(rx * 1.5, 1, 100);
-				ry = clamp(ry * 1.5, 1, 100);
+				rx = clamp(rx + MOUSE_WHEEL, 1, 100);
+				ry = clamp(ry + MOUSE_WHEEL, 1, 100);
 				
 				wd_minx = wd_cx - rx;
 				wd_miny = wd_cy - ry;
 				wd_maxx = wd_cx + rx;
 				wd_maxy = wd_cy + ry;
-			} else if(mouse_wheel_up()) {
-				var wd_cx = (wd_maxx + wd_minx) / 2;
-				var wd_cy = (wd_maxy + wd_miny) / 2;
-				var rx    = (wd_maxx - wd_minx) / 2;
-				var ry    = (wd_maxy - wd_miny) / 2;
 				
-				rx = clamp(rx / 1.5, 1, 100);
-				ry = clamp(ry / 1.5, 1, 100);
-				
-				wd_minx = wd_cx - rx;
-				wd_miny = wd_cy - ry;
-				wd_maxx = wd_cx + rx;
-				wd_maxy = wd_cy + ry;
-			}
+			} 
 			
 			if(mouse_press(mb_right, _focus))
 				menuCall("node_vec2_coordinate", coordinate_menu);

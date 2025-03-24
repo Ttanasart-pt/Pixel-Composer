@@ -599,11 +599,9 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 			if(rem > -1) content[rem].close();
 			
 			tab_width = max(0, tab_width - w + ui(32));
-			if(point_in_rectangle(msx, msy, 0, 0, w, tab_height)) {
-				if(mouse_wheel_up())	tab_x_to = clamp(tab_x_to + ui(64) * SCROLL_SPEED, -tab_width, 0);
-				if(mouse_wheel_down())	tab_x_to = clamp(tab_x_to - ui(64) * SCROLL_SPEED, -tab_width, 0);
-			}
-			
+			if(point_in_rectangle(msx, msy, 0, 0, w, tab_height) && MOUSE_WHEEL != 0) 
+				tab_x_to = clamp(tab_x_to + ui(64) * MOUSE_WHEEL, -tab_width, 0);
+				
 			if(tab_holding) {
 				draw_set_font(f_p3);
 				

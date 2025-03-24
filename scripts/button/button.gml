@@ -98,8 +98,8 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 			}
 			if(tooltip != "") TOOLTIP = tooltip;
 			
-			if(onWUp   != undefined && key_mod_press(SHIFT) && mouse_wheel_up())   onWUp();
-			if(onWDown != undefined && key_mod_press(SHIFT) && mouse_wheel_down()) onWDown();
+			if(onWUp   != undefined && key_mod_press(SHIFT) && MOUSE_WHEEL > 0) onWUp();
+			if(onWDown != undefined && key_mod_press(SHIFT) && MOUSE_WHEEL < 0) onWDown();
 
 		} else {
 			draw_sprite_stretched_ext(spr, toggled? 2 : 0, _x, _y, _w, _h, b, 1);

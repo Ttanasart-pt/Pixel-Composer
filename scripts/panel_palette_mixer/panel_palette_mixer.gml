@@ -804,10 +804,8 @@ function Panel_Palette_Mixer(_selector = noone) : PanelContent() constructor {
 			draw_text(_nhx - ui(4), _nhy, _txt);
 		}
 		
-		if(pHOVER && key_mod_press(CTRL)) {
-			if(mouse_wheel_down()) node_size_to = clamp(node_size_to - ui(4), ui(12), ui(64));
-			if(mouse_wheel_up())   node_size_to = clamp(node_size_to + ui(4), ui(12), ui(64));
-		}
+		if(pHOVER && key_mod_press(CTRL) && MOUSE_WHEEL != 0)
+			node_size_to = clamp(node_size_to + MOUSE_WHEEL, ui(12), ui(64));
 		node_size = lerp_float(node_size, node_size_to, 3);
 		
 	}

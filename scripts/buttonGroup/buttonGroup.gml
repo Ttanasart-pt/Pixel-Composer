@@ -138,10 +138,8 @@ function buttonGroup(_data, _onClick) : widget() constructor {
 			if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + w, _y + _h)) {
 				if(is_array(data) && key_mod_press(SHIFT)) {
 					var len = array_length(data);
-					if(len) {
-						if(mouse_wheel_down())	onClick(safe_mod(_selecting + 1 + len, len));
-						if(mouse_wheel_up())	onClick(safe_mod(_selecting - 1 + len, len));
-					}
+					if(len && MOUSE_WHEEL != 0)
+						onClick(safe_mod(_selecting - sign(MOUSE_WHEEL) + len, len));
 				}
 			}
 		} else {

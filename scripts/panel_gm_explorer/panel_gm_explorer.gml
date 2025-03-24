@@ -146,10 +146,8 @@ function GM_Explore_draw(gmBinder, _x, _y, _w, _h, _m, _hover, _focus) {
         
 	}
 	
-	if(_hover && key_mod_press(CTRL) && point_in_rectangle(_m[0], _m[1], 0, 0, _w, _h)) {
-		if(mouse_wheel_down()) grid_size_to = clamp(grid_size_to - ui(4), ui(32), ui(160));
-		if(mouse_wheel_up())   grid_size_to = clamp(grid_size_to + ui(4), ui(32), ui(160));
-	}
+	if(_hover && key_mod_press(CTRL) && point_in_rectangle(_m[0], _m[1], 0, 0, _w, _h) && MOUSE_WHEEL != 0)
+		grid_size_to = clamp(grid_size_to + ui(4) * MOUSE_WHEEL, ui(32), ui(160));
 	grid_size = lerp_float(grid_size, grid_size_to, 5);
 	
 	return _hh;
