@@ -1318,6 +1318,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var _bg    = getInputData(8);
 		var _bga   = getInputData(9);
 		var _bgr   = getInputData(10);
+		
 		var _anim  = getInputData(12);
 		var _anims = getInputData(13);
 		var _bgDim = getInputData(14);
@@ -1344,7 +1345,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			var _canvas_surface = getCanvasSurface(0);
 			if(is_array(_bg) && !array_empty(_bg)) _bg = _bg[0];
 			
-			output_surface[0]   = surface_verify(output_surface[0], _dim[0], _dim[1], cDep);
+			output_surface[0] = surface_verify(output_surface[0], _dim[0], _dim[1], cDep);
 			
 			surface_set_shader(output_surface[0], noone,, BLEND.alpha);
 				if(_bgr && is_surface(_bg))
@@ -1410,8 +1411,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			return preview_draw_final[0];
 		}
 		
-		var val = outputs[0].getValue();
-		var bg = 0;
+		var val = getOutputSurface();
+		var bg  = 0;
 		
 		surface_set_shader(preview_draw_final[bg], isUsingTool("Eraser")? sh_blend_subtract_alpha : sh_blend_normal, true, BLEND.over);
 			shader_set_surface("fore",    preview_draw_surface);
