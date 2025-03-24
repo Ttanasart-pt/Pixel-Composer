@@ -626,6 +626,7 @@ function Panel_Preview() : PanelContent() constructor {
     ////- VIEW
     
     function dragCanvas() {
+    	
         if(canvas_dragging) {
             if(!MOUSE_WRAPPING) {
                 var dx = mx - canvas_drag_mx;

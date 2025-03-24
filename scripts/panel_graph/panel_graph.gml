@@ -989,9 +989,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	                        break;
 	                    }
 	                }
-	            } else {
-	            	graph_s_to = clamp(graph_s_to + MOUSE_WHEEL, scale[0], scale[array_length(scale) - 1]);
-	            }
+	            } else
+	            	graph_s_to = clamp(graph_s_to + MOUSE_WHEEL * .1, scale[0], scale[array_length(scale) - 1]);
             }
             
             graph_s = lerp_float(graph_s, graph_s_to, PREFERENCES.graph_zoom_smoooth);

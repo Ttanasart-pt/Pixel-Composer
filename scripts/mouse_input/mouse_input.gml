@@ -2,7 +2,11 @@
 	globalvar CURSOR, CURSOR_LOCK, CURSOR_IS_LOCK, CURSOR_LOCK_X, CURSOR_LOCK_Y;
 	globalvar MOUSE_WRAP, MOUSE_WRAPPING, MOUSE_BLOCK, _MOUSE_BLOCK;
 	globalvar MOUSE_POOL;
-	globalvar MOUSE_WHEEL, MOUSE_WHEEL_H;
+	
+	globalvar MOUSE_WHEEL,  MOUSE_WHEEL_H;
+	globalvar MOUSE_PAN_X,  MOUSE_PAN_Y;
+	globalvar MOUSE_ZOOM_X, MOUSE_ZOOM_Y;
+	globalvar MOUSE_PAN;
 	
 	MOUSE_WRAP     = false;
 	MOUSE_WRAPPING = false;
@@ -17,6 +21,11 @@
 	
 	MOUSE_WHEEL   = 0;
 	MOUSE_WHEEL_H = 0;
+	MOUSE_PAN_X   = 0;
+	MOUSE_PAN_Y   = 0;
+	MOUSE_ZOOM_X  = 0;
+	MOUSE_ZOOM_Y  = 0;
+	MOUSE_PAN     = true;
 	
 	#macro MOUSE_MOVED (window_mouse_get_delta_x() != 0 || window_mouse_get_delta_y() != 0)
 	
@@ -66,6 +75,11 @@ function global_mouse_pool_init() {
 function mouse_step() {
 	MOUSE_WHEEL   = mouse_wheel_get();
 	MOUSE_WHEEL_H = mouse_wheel_get_h();
+	
+	// MOUSE_PAN_X   = mouse_pan_x();
+	// MOUSE_PAN_Y   = mouse_pan_y();
+	// MOUSE_ZOOM_X  = mouse_zoom_x();
+	// MOUSE_ZOOM_Y  = mouse_zoom_y();
 }
 
 function mouse_click(mouse, focus = true) {

@@ -470,16 +470,16 @@ function __part(_node) : __particleObject() constructor {
 		var _xx = drawx;
 		var _yy = drawy;
 		
-		if(exact) {
-			_xx = round(_xx);
-			_yy = round(_yy);
-		}
-		
 		var s_w = (_useS? surface_get_width_safe(_surf)  : 1) * scx;
 		var s_h = (_useS? surface_get_height_safe(_surf) : 1) * scy;
 		var _pp = point_rotate(-s_w / 2, -s_h / 2, 0, 0, rot);
 		_xx += _pp[0];
 		_yy += _pp[1];
+		
+		if(exact) {
+			_xx = round(_xx);
+			_yy = round(_yy);
+		}
 		
 		var x0 = _xx - s_w * 1.5;
 		var y0 = _yy - s_h * 1.5;
@@ -491,9 +491,10 @@ function __part(_node) : __particleObject() constructor {
 		
 		switch(render_type) {
 			case PARTICLE_RENDER_TYPE.surface : 
-				if(surface_exists(_surf)) 
+				if(surface_exists(_surf)) {
 					draw_surface_ext_safe(_surf, _xx, _yy, scx, scy, drawrot, currColor, alp_draw);
-				else {
+					
+				} else {
 					var ss = round(min(scx, scy));
 					if(round(ss) == 0) return;
 					
@@ -503,7 +504,6 @@ function __part(_node) : __particleObject() constructor {
 					if(exact) { 
 						_xx = round(_xx); 
 						_yy = round(_yy);
-						 ss = round( ss); 
 					}
 					
 					var _s = shader_current();

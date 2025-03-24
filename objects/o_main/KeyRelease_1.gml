@@ -6,3 +6,4 @@ keyboard_lastchar = "";
 
 KEYBOARD_PRESSED = vk_nokey;
 HOTKEY_ACT       = false;
+
