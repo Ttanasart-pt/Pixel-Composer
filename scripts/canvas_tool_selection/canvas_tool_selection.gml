@@ -246,13 +246,6 @@ function canvas_tool_selection(_selector) : canvas_tool() constructor {
 			if(_app && PANEL_PREVIEW.tool_current == noone)
 				apply();
 		}
-		
-		if(key_press(vk_delete)) {
-			is_selected = false;
-			surface_free(selection_surface);
-			
-		} else if(key_press(vk_escape))
-			apply();
 	}
 	
 	function step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
@@ -262,6 +255,13 @@ function canvas_tool_selection(_selector) : canvas_tool() constructor {
 		
 		if(is_selected) { onSelected(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); return; }
 		else if(is_surface(selection_surface)) { apply(); }
+		
+		if(key_press(vk_delete)) {
+			is_selected = false;
+			surface_free(selection_surface);
+			
+		} else if(key_press(vk_escape))
+			apply();
 	}
 	
 	function onDrawMask(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {}

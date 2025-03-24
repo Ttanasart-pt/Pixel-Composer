@@ -196,10 +196,14 @@ function canvas_tool_node(_canvas, _node) : canvas_tool() constructor {
 		} else
 			maskedSurface = _surf;
 		
-		// if(key_mod_press(SHIFT)) draw_surface_ext_safe(sourceSurface, _dx, _dy, _s, _s);
 		draw_surface_ext_safe(maskedSurface, _dx, _dy, _s, _s);
 		
 		nodeObject.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		
+		if(WIDGET_CURRENT == noone) {
+			if(key_press(vk_enter))  apply();
+			if(key_press(vk_escape)) cancel();
+		}
 	}
 	
 }

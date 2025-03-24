@@ -79,22 +79,23 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	frame_renderer_x_to  = 0;
 	frame_renderer_x_max = 0;
 	frame_dragging       = noone;
-	_selecting_frame     = noone;
+	
+	frame_selecting      = noone;
 	
 	menu_frame = [
 		menuItem(__txt("Duplicate"), function() /*=>*/ { 
-			var _dup_surf = surface_clone(canvas_surface[_selecting_frame]);
+			var _dup_surf = surface_clone(canvas_surface[frame_selecting]);
 			var _dup_buff = buffer_from_surface(_dup_surf, false);
 			
-			array_insert(canvas_surface, _selecting_frame, _dup_surf);
-			array_insert(canvas_buffer,  _selecting_frame, _dup_buff);
+			array_insert(canvas_surface, frame_selecting, _dup_surf);
+			array_insert(canvas_buffer,  frame_selecting, _dup_buff);
 			
 			attributes.frames++;
 			refreshFrames();
 			update();
 			
 		}, THEME.duplicate),
-		menuItem(__txt("Delete"),    function() /*=>*/ { removeFrame(_selecting_frame); }, THEME.cross),
+		menuItem(__txt("Delete"),    function() /*=>*/ { removeFrame(frame_selecting); }, THEME.cross),
 	];
 	
 	frame_renderer_content = surface_create(1, 1);
@@ -173,19 +174,23 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 						
 						if(mouse_press(mb_left, _focus)) {
 							setFrame(i);
-							frame_dragging = i;
+							frame_dragging  = i;
+							frame_selecting = i;
 						}
 							
 						if(mouse_press(mb_right, _focus))  {
-							_selecting_frame = i;
+							frame_selecting = i;
 							menuCall("node_canvas_frame", menu_frame);
 						}
 					}
 					
 					if(_del_a != noone) {
 						draw_sprite_ui(THEME.cross_12, 0, _del_x, _del_y, 1, 1, 0, c_white, .5 + _del_a * .5);
-						draw_sprite_stretched_add(THEME.box_r2, 1, _sx, _sy, _ssw, _ssh, c_white, .2);
 					}
+				}
+				
+				if(_focus && i == preview_index) {
+					if(key_press(vk_delete)) _del = i;
 				}
 				
 				var _xw = _ssw + 4;
@@ -208,6 +213,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var _by = _y + _h / 2  - _bs / 2;
 		
 		if(buttonInstant(noone, _bx, _by, _bs, _bs, _m, _hover, _focus, "", THEME.add_16, 0, [ COLORS._main_icon, COLORS._main_value_positive ]) == 2) {
+			setFrame(attributes.frames);
 			attributes.frames++;
 			refreshFrames();
 			update();
@@ -691,7 +697,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		var _scroll = 0;
 		var _scrollTarget = noone;
-		if(focus && key_mod_press(SHIFT) && MOUSE_WHEEL != 0) _scroll = sign(MOUSE_WHEEL);
+		if(focus && key_mod_press(SHIFT) && MOUSE_WHEEL != 0) _scroll = -sign(MOUSE_WHEEL);
 		
 		for( var i = 0, n = array_length(DEF_PALETTE); i < n; i++ ) {
 			var _c = DEF_PALETTE[i];
@@ -744,18 +750,26 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	static setFrame = function(frame) {
 		var _anim  = getInputData(12);
-		
 		if(_anim) PROJECT.animator.setFrame(frame);
-		else      preview_index = frame;
+		
+		preview_index = frame;
 	}
 	
 	static removeFrame = function(index = 0) {
-		if(attributes.frames <= 1) return;
+		if(attributes.frames <= 1) {
+			surface_clear(canvas_surface[0]);
+			buffer_delete(canvas_buffer[0]);
+			update();
+			return;
+		}
 		
-		if(preview_index == attributes.frames) 
-			preview_index--;
+		if(preview_index >= attributes.frames) 
+			setFrame(max(preview_index - 1, 0));
 		attributes.frames--;
 		
+		surface_free_safe(canvas_surface[index]);
+		buffer_delete(canvas_buffer[index]);
+			
 		array_delete(canvas_surface, index, 1);
 		array_delete(canvas_buffer,  index, 1);
 		update();

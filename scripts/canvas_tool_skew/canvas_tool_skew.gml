@@ -115,4 +115,8 @@ function canvas_tool_skew() : canvas_tool_shader() constructor {
 		surface_reset_shader();
 		
 	}
+	
+	function drawMask(hover, active, _x, _y, _s, _mx, _my, _snx, _sny ) {
+		draw_surface_ext_safe(preview_surface[1], _x, _y, _s, _s);
+	}
 }
