@@ -8,5 +8,8 @@ function panel_toolbar_icon(_name, _sprite, _index, _tooltip, _onCilck, _onRClic
     onWUp    = _onWUp;
     onWDown  = _onWDown;
     
-    static setWheelFn = function(u,d) /*=>*/ { onWUp = u; onWDown = d; return self; }
+    hotkey   = noone;
+    
+    static setHotkey  = function(c,n) /*=>*/ { hotkey = find_hotkey(c,n); return self; }
+    static setWheelFn = function(u,d) /*=>*/ { onWUp = u; onWDown = d;    return self; }
 }

@@ -88,6 +88,8 @@ function find_hotkey(_context, _name) {
 		if(HOTKEYS[$ _context][| j].name == _name)
 			return HOTKEYS[$ _context][| j];
 	}
+	
+	return noone;
 }
 
 function getToolHotkey(_group, _key) {

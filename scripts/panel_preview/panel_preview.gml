@@ -50,6 +50,7 @@
     function panel_preview_toggle_reset_view()          { CALL("preview_toggle_reset_view");         PANEL_PREVIEW.toggle_reset_view();                                       }
     
     function panel_preview_toggle_lock()                { CALL("preview_toggle_lock");               PANEL_PREVIEW.toggle_lock();                                             }
+    function panel_preview_toggle_mini()                { CALL("preview_toggle_mini");               PANEL_PREVIEW.toggle_mini();                                             }
     
     function __fnInit_Preview() {
     	var p = "Preview";
@@ -122,6 +123,7 @@
         registerFunction(p, "Toggle Onion Skin",        "", n, panel_preview_onion_enabled             ).setMenu("preview_onion_enabled")
         registerFunction(p, "Toggle Onion Skin view",   "", n, panel_preview_onion_on_top              ).setMenu("preview_onion_on_top")
         registerFunction(p, "Toggle Lock",              "", n, panel_preview_toggle_lock               ).setMenu("preview_toggle_lock")
+        registerFunction(p, "Toggle Minimap",           "", n, panel_preview_toggle_mini               ).setMenu("preview_toggle_mini")
         
         registerFunction(p, "Popup",            		"", n, function() /*=>*/ { create_preview_window(PANEL_PREVIEW.getNodePreview());           }).setMenu("preview_popup")
         registerFunction(p, "Grid Settings",            "", n, function() /*=>*/ { dialogPanelCall(new Panel_Preview_Grid_Setting())                }).setMenu("preview_grid_settings")
@@ -136,9 +138,9 @@
     
     function __fnGroupInit_Preview() {
         MENU_ITEMS.preview_group_preview_bg = menuItemGroup(__txtx("panel_menu_preview_background", "Preview background"), [
-            [ s_preview_transparent,    function() { PANEL_PREVIEW.canvas_bg = -1;      } ],
-            [ s_preview_white,          function() { PANEL_PREVIEW.canvas_bg = c_white; } ],
-            [ s_preview_black,          function() { PANEL_PREVIEW.canvas_bg = c_black; } ],
+            [ s_preview_transparent, function() /*=>*/ { PANEL_PREVIEW.canvas_bg = -1;      } ],
+            [ s_preview_white,       function() /*=>*/ { PANEL_PREVIEW.canvas_bg = c_white; } ],
+            [ s_preview_black,       function() /*=>*/ { PANEL_PREVIEW.canvas_bg = c_black; } ],
         ], ["Preview", "Background"]);
         registerFunction("Preview", "Background",               "",  MOD_KEY.none,                   function() /*=>*/ { menuCall("", [ MENU_ITEMS.menu_group_preview_bg ]); });
         
@@ -388,6 +390,10 @@ function Panel_Preview() : PanelContent() constructor {
         static toggle_split_view   = function() /*=>*/ { splitView = (splitView + 1) % 3; }
         
         static toggle_lock         = function() /*=>*/ { locked = !locked }
+        static toggle_mini         = function() /*=>*/ { minimap_show = !minimap_show; }
+        
+        hk_editing   = noone;
+        hk_selecting = noone;
         
         topbar_height  = ui(32);
         toolbar_height = ui(40);
@@ -440,14 +446,15 @@ function Panel_Preview() : PanelContent() constructor {
                 function() /*=>*/ {return new tooltipHotkey(__txtx("grid_title", "Grid settings") + "...", "Preview", "Grid Settings")}, 
                 function(param) /*=>*/ { dialogPanelCall(new Panel_Preview_Grid_Setting(), 
                 									x + ui(8), y + h - toolbar_height - ui(8), { anchor: ANCHOR.bottom | ANCHOR.left }); }, 
-            ),
+            ).setHotkey("Preview", "Grid Settings"),
+            
             new panel_toolbar_icon("Onion Skin",   
                 THEME.onion_skin,
                 function() /*=>*/ {return 0},
                 function() /*=>*/ {return new tooltipHotkey(__txt("Onion Skin") + "...", "Preview", "Onion Skin Settings")}, 
                 function(param) /*=>*/ { dialogPanelCall(new Panel_Preview_Onion_Setting(), 
                 									x + ui(8), y + h - toolbar_height - ui(8), { anchor: ANCHOR.bottom | ANCHOR.left }); }, 
-            ),
+            ).setHotkey("Preview", "Onion Skin Settings"),
         ];
     
         toolbars_3d = [
@@ -457,14 +464,15 @@ function Panel_Preview() : PanelContent() constructor {
                 function() /*=>*/ {return new tooltipHotkey(__txt("3D Preview Settings") + "...", "Preview", "3D View Settings")},
                 function(param) /*=>*/ { dialogPanelCall(new Panel_Preview_3D_Setting(), 
                 									x + w - ui(8), y + h - toolbar_height - ui(8), { anchor: ANCHOR.bottom | ANCHOR.right }); }, 
-            ),
+            ).setHotkey("Preview", "3D View Settings"),
+            
             new panel_toolbar_icon("3D Snap Settings",
                 THEME.d3d_snap_settings,
                 function() /*=>*/ {return 0},
                 function() /*=>*/ {return new tooltipHotkey(__txt("3D Snap Settings") + "...", "Preview", "3D Snap Settings")},
                 function(param) /*=>*/ { dialogPanelCall(new Panel_Preview_Snap_Setting(), 
                 									x + w - ui(8), y + h - toolbar_height - ui(8), { anchor: ANCHOR.bottom | ANCHOR.right }); }, 
-            ),
+            ).setHotkey("Preview", "3D Snap Settings"),
         ];
         
         toolbars_3d_sdf = [
@@ -474,54 +482,60 @@ function Panel_Preview() : PanelContent() constructor {
                 function() /*=>*/ {return new tooltipHotkey(__txt("3D SDF Preview Settings") + "...", "Preview", "3D SDF View Settings")},
                 function(param) /*=>*/ { dialogPanelCall(new Panel_Preview_3D_SDF_Setting(), 
                 									x + w - ui(8), y + h - toolbar_height - ui(8), { anchor: ANCHOR.bottom | ANCHOR.right }); }, 
-            ),
+            ).setHotkey("Preview", "3D SDF View Settings"),
+            
             new panel_toolbar_icon("3D Snap Settings",
                 THEME.d3d_snap_settings,
                 function() /*=>*/ {return 0},
                 function() /*=>*/ {return new tooltipHotkey(__txt("3D Snap Settings") + "...", "Preview", "3D Snap Settings")},
                 function(param) /*=>*/ { dialogPanelCall(new Panel_Preview_Snap_Setting(), 
                 									x + w - ui(8), y + h - toolbar_height - ui(8), { anchor: ANCHOR.bottom | ANCHOR.right }); }, 
-            ),
+            ).setHotkey("Preview", "3D Snap Settings"),
         ];
         
         actions = [
-            [ 
+            new panel_toolbar_icon("Export Canvas",
                 THEME.icon_preview_export,
-                new tooltipHotkey(__txtx("panel_preview_export_canvas", "Export canvas"), "Preview", "Save current frame"), 
-                function() /*=>*/ { saveCurrentFrame(); },
                 function() /*=>*/ {return 0},
-            ],
-            [ 
+                new tooltipHotkey(__txtx("panel_preview_export_canvas", "Export canvas"), "Preview", "Save current frame"), 
+                function() /*=>*/ {return saveCurrentFrame()},
+            ).setHotkey("Preview", "Save current frame"),
+            
+            new panel_toolbar_icon("Lock Preview",
                 THEME.lock,
+                function() /*=>*/ {return !locked},
                 new tooltipHotkey(__txtx("panel_preview_lock_preview", "Lock previewing node"), "Preview", "Toggle Lock"), 
                 toggle_lock,
-                function() /*=>*/ {return !locked},
-            ],
-            [ 
+            ).setHotkey("Preview", "Toggle Lock"),
+            
+            new panel_toolbar_icon("Center Canvas",
                 THEME.icon_center_canvas,
-                new tooltipHotkey(__txtx("panel_preview_center_canvas", "Center canvas"), "Preview", "Focus content"), 
-                function() /*=>*/ { fullView(); },
                 function() /*=>*/ {return 0},
-            ],
-            [ 
+                new tooltipHotkey(__txtx("panel_preview_center_canvas", "Center canvas"), "Preview", "Focus content"), 
+                function() /*=>*/ {return fullView()},
+            ).setHotkey("Preview", "Focus content"),
+            
+            new panel_toolbar_icon("Minimap",
                 THEME.icon_minimap,
-                new tooltipHotkey(__txtx("panel_graph_toggle_minimap", "Toggle minimap"), "Graph", "Toggle Minimap"), 
-                function(param) /*=>*/ { minimap_show = !minimap_show; }, 
                 function() /*=>*/ {return minimap_show}, 
-            ],
-            [ 
+                new tooltipHotkey(__txtx("panel_graph_toggle_minimap", "Toggle minimap"), "Preview", "Toggle Minimap"), 
+                toggle_mini, 
+            ).setHotkey("Preview", "Toggle Minimap"),
+            
+            new panel_toolbar_icon("Visibility Settings",
                 THEME.icon_visibility,
+                function() /*=>*/ {return 0},
                 new tooltipHotkey(__txtx("graph_visibility_title", "Visibility settings") + "...", "Preview", "View Settings"), 
                 function(param) /*=>*/ { dialogPanelCall(new Panel_Preview_View_Setting(self), 
                 									x + w - ui(8), y + h - toolbar_height - ui(8), { anchor: ANCHOR.bottom | ANCHOR.right }); }, 
-                function() /*=>*/ {return 0},
-            ],
-            [ 
+            ).setHotkey("Preview", "View Settings"),
+            
+            new panel_toolbar_icon("Popup",
                 THEME.node_goto_thin,
+                function() /*=>*/ {return 0},
                 new tooltipHotkey(__txtx("panel_preview_windows", "Pop up as Preview window"), "Preview", "Popup"), 
                 function() /*=>*/ { create_preview_window(PANEL_PREVIEW.getNodePreview()); },
-                function() /*=>*/ {return 0},
-            ],
+            ).setHotkey("Preview", "Popup"),
         ];
         
         static d3_view_action_front  = function() /*=>*/ { d3_camLerp = 1; d3_camLerp_x =   0; d3_camLerp_y =   0; }
@@ -2331,6 +2345,7 @@ function Panel_Preview() : PanelContent() constructor {
         
         var tbx = toolbar_height / 2;
         var tby = ty + toolbar_height / 2;
+        var _m  = [ mx, my ];
         
         var _toolbars = toolbars;
         
@@ -2349,6 +2364,7 @@ function Panel_Preview() : PanelContent() constructor {
             var tbRight   = tb.onRClick;
             var onWUp     = tb.onWUp;
             var onWDown   = tb.onWDown;
+        	var hKey      = tb.hotkey;
             
             var tbData  = { x: x + tbx - ui(14), y: y + tby - ui(14) };
             
@@ -2356,7 +2372,12 @@ function Panel_Preview() : PanelContent() constructor {
                 tbTooltip.index = tbInd;
             
             var tooltip = instance_exists(o_dialog_menubox)? "" : tbTooltip;
-            var b = buttonInstant(THEME.button_hide_fill, tbx - ui(14), tby - ui(14), ui(28), ui(28), [mx, my], pHOVER, pFOCUS, tooltip, tbSpr, tbInd);
+            var _bx = tbx - ui(14);
+            var _by = tby - ui(14);
+            var _bw = ui(28);
+            var _bh = ui(28);
+            
+            var b = buttonInstant(THEME.button_hide_fill, _bx, _by, _bw, _bh, _m, pHOVER, pFOCUS, tooltip, tbSpr, tbInd);
             switch(b) { 
             	case 1 : 
             		if(onWUp   != 0 && key_mod_press(SHIFT) && MOUSE_WHEEL > 0) onWUp();
@@ -2364,8 +2385,22 @@ function Panel_Preview() : PanelContent() constructor {
             		break;
             		
             	case 2 : tbClick(tbData); break;
-            	case 3 : if(tbRight != 0) tbRight(tbData); break;
+            	case 3 : 
+            		if(tbRight != 0) tbRight(tbData); 
+            		else if(hKey != noone) {
+            			hk_selecting = hKey;
+            			
+            			menuCall("", [
+							hKey.getNameFull(),
+							menuItem(__txt("Edit Hotkey"), function() /*=>*/ { hk_editing = hk_selecting.modify(); }),
+							menuItem(__txt("Reset Hotkey"), function() /*=>*/ {return hk_selecting.reset(true)}, THEME.refresh_20).setActive(hKey.isModified()),
+						]);
+            		}
+            		break;
             }
+            
+            if(hKey != noone && hKey == hk_editing)
+            	draw_sprite_stretched_ext(THEME.ui_panel, 1, _bx, _by, _bw, _bh, COLORS._main_text_accent);
             
             tbx += ui(32);
         }
@@ -2373,12 +2408,45 @@ function Panel_Preview() : PanelContent() constructor {
         tbx = w - toolbar_height / 2;
         for( var i = 0, n = array_length(actions); i < n; i++ ) {
             var tb        = actions[i];
-            var tbSpr     = tb[0];
-            var tbTooltip = tb[1];
-            var tbIndex   = tb[3]();
+            var tbSpr     = tb.sprite;
+            var tbInd     = tb.index();
+            var tbTooltip = is_method(tb.tooltip)? tb.tooltip() : tb.tooltip;
+            var tbClick   = tb.onCilck;
+            var tbRight   = tb.onRClick;
+            var onWUp     = tb.onWUp;
+            var onWDown   = tb.onWDown;
+        	var hKey      = tb.hotkey;
             
-            var b = buttonInstant(THEME.button_hide_fill, tbx - ui(14), tby - ui(14), ui(28), ui(28), [mx, my], pHOVER, pFOCUS, tbTooltip, tbSpr, tbIndex);
-            if(b == 2) tb[2]( { x: x + tbx - ui(14), y: y + tby - ui(14) } );
+            var tbData    = { x: x + tbx - ui(14), y: y + tby - ui(14) };
+            var _bx = tbx - ui(14);
+            var _by = tby - ui(14);
+            var _bw = ui(28);
+            var _bh = ui(28);
+            
+            var b = buttonInstant(THEME.button_hide_fill, _bx, _by, _bw, _bh, _m, pHOVER, pFOCUS, tbTooltip, tbSpr, tbInd);
+            switch(b) { 
+            	case 1 : 
+            		if(onWUp   != 0 && key_mod_press(SHIFT) && MOUSE_WHEEL > 0) onWUp();
+            		if(onWDown != 0 && key_mod_press(SHIFT) && MOUSE_WHEEL < 0) onWDown();
+            		break;
+            		
+            	case 2 : tbClick(tbData); break;
+            	case 3 : 
+            		if(tbRight != 0) tbRight(tbData); 
+            		else if(hKey != noone) {
+            			hk_selecting = hKey;
+            			
+            			menuCall("", [
+							hKey.getNameFull(),
+							menuItem(__txt("Edit Hotkey"), function() /*=>*/ { hk_editing = hk_selecting.modify(); }),
+							menuItem(__txt("Reset Hotkey"), function() /*=>*/ {return hk_selecting.reset(true)}, THEME.refresh_20).setActive(hKey.isModified()),
+						]);
+            		}
+            		break;
+            }
+            
+            if(hKey != noone && hKey == hk_editing)
+            	draw_sprite_stretched_ext(THEME.ui_panel, 1, _bx, _by, _bw, _bh, COLORS._main_text_accent);
             
             tbx -= ui(32);
         }
@@ -2388,6 +2456,13 @@ function Panel_Preview() : PanelContent() constructor {
         
         var _nodeRaw = __getNodePreview();
         if(_nodeRaw) tbx -= drawNodeChannel(_nodeRaw, tbx, tby);
+        
+        if(hk_editing != noone) { 
+			if(key_press(vk_enter)) hk_editing = noone;
+			else hotkey_editing(hk_editing);
+			
+			if(key_press(vk_escape)) hk_editing = noone;
+		}
     }
     
     function drawSplitView() {

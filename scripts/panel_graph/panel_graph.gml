@@ -522,81 +522,89 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
     function initSize() { toCenterNode(); }
     
     #region // ++++ toolbars ++++
+        hk_editing = noone;
         
         toolbars_general = [
-            [ 
+            new panel_toolbar_icon("Export Graph",
                 THEME.icon_preview_export,
                 function()  /*=>*/ {return 0}, 
                 function()  /*=>*/ {return new tooltipHotkey(__txtx("panel_graph_export_image", "Export graph as image"), "Graph", "Export As Image")},
                 function(p) /*=>*/ { dialogPanelCall(new Panel_Graph_Export_Image(self)); }
-            ],
-            [ 
+            ).setHotkey("Graph", "Export As Image"),
+            
+            new panel_toolbar_icon("Search",
                 THEME.search_24,
                 function()  /*=>*/ {return 0}, 
                 function()  /*=>*/ {return new tooltipHotkey(__txt("Search"), "Graph", "Search")}, 
                 function(p) /*=>*/ { toggleSearch(); }
-            ],
-            [ 
+            ).setHotkey("Graph", "Search"),
+            
+            new panel_toolbar_icon("Focus Content",
                 THEME.icon_center_canvas,
                 function()  /*=>*/ {return 0}, 
-                function()  /*=>*/ {return new tooltipHotkey(__txtx("panel_graph_center_to_nodes", "Center to nodes"), "Graph", "Focus content")}, 
+                function()  /*=>*/ {return new tooltipHotkey(__txtx("panel_graph_center_to_nodes", "Center to nodes"), "Graph", "Focus Content")}, 
                 function(p) /*=>*/ { toCenterNode(); } 
-            ],
-            [ 
+            ).setHotkey("Graph", "Focus Content"),
+            
+            new panel_toolbar_icon("Minimap",
                 THEME.icon_minimap,
                 function()  /*=>*/ {return minimap_show}, 
                 function()  /*=>*/ {return new tooltipHotkey(__txtx("panel_graph_toggle_minimap", "Toggle minimap"), "Graph", "Toggle Minimap")}, 
                 function(p) /*=>*/ { minimap_show = !minimap_show; } 
-            ],
-            [ 
+            ).setHotkey("Graph", "Toggle Minimap"),
+            
+            new panel_toolbar_icon("Connection Settings",
                 THEME.icon_curve_connection,
                 function()  /*=>*/ {return project.graphConnection.type}, 
                 function()  /*=>*/ {return new tooltipHotkey(__txtx("panel_graph_connection_line", "Connection render settings") + "...", "Graph", "Connection Settings")}, 
                 function(p) /*=>*/ { dialogPanelCall(new Panel_Graph_Connection_Setting(), 
                 								x + w - ui(8), y + h - toolbar_height - ui(8), { anchor: ANCHOR.bottom | ANCHOR.right }); } 
-            ],
-            [ 
+            ).setHotkey("Graph", "Connection Settings"),
+            
+            new panel_toolbar_icon("Grid Settings",
                 THEME.icon_grid_setting,
                 function()  /*=>*/ {return 0}, 
                 function()  /*=>*/ {return new tooltipHotkey(__txtx("grid_title", "Grid settings") + "...", "Graph", "Grid Settings")}, 
                 function(p) /*=>*/ { dialogPanelCall(new Panel_Graph_Grid_Setting(), 
                 								x + w - ui(8), y + h - toolbar_height - ui(8), { anchor: ANCHOR.bottom | ANCHOR.right }); } 
-            ],
-            [ 
+            ).setHotkey("Graph", "Grid Settings"),
+            
+            new panel_toolbar_icon("View Settiings",
                 THEME.icon_visibility,
                 function()  /*=>*/ {return 0}, 
-                function()  /*=>*/ {return new tooltipHotkey(__txtx("graph_visibility_title", "Visibility settings") + "...", "Graph", "View Settiings")}, 
+                function()  /*=>*/ {return new tooltipHotkey(__txtx("graph_visibility_title", "Visibility settings") + "...", "Graph", "View Settings")}, 
                 function(p) /*=>*/ { dialogPanelCall(new Panel_Graph_View_Setting(self, display_parameter), 
                 								x + w - ui(8), y + h - toolbar_height - ui(8), { anchor: ANCHOR.bottom | ANCHOR.right }); } 
-            ],
+            ).setHotkey("Graph", "View Settings"),
         ]; 
         
         toolbars_halign = [
-            [ THEME.object_halign, function() /*=>*/ {return 2}, function() /*=>*/ {return ""}, function(p) /*=>*/ { node_halign(nodes_selecting, fa_right);  } ],
-            [ THEME.object_halign, function() /*=>*/ {return 1}, function() /*=>*/ {return ""}, function(p) /*=>*/ { node_halign(nodes_selecting, fa_center); } ],
-            [ THEME.object_halign, function() /*=>*/ {return 0}, function() /*=>*/ {return ""}, function(p) /*=>*/ { node_halign(nodes_selecting, fa_left);   } ],
+            new panel_toolbar_icon("HAlign Right",  THEME.object_halign, function() /*=>*/ {return 2}, function() /*=>*/ {return ""}, function(p) /*=>*/ { node_halign(nodes_selecting, fa_right);  } ),
+            new panel_toolbar_icon("HAlign Center", THEME.object_halign, function() /*=>*/ {return 1}, function() /*=>*/ {return ""}, function(p) /*=>*/ { node_halign(nodes_selecting, fa_center); } ),
+            new panel_toolbar_icon("HAlign Left",   THEME.object_halign, function() /*=>*/ {return 0}, function() /*=>*/ {return ""}, function(p) /*=>*/ { node_halign(nodes_selecting, fa_left);   } ),
         ];
         
         toolbars_valign = [
-            [ THEME.object_valign, function() /*=>*/ {return 2}, function() /*=>*/ {return ""}, function(p) /*=>*/ { node_valign(nodes_selecting, fa_bottom); } ],
-            [ THEME.object_valign, function() /*=>*/ {return 1}, function() /*=>*/ {return ""}, function(p) /*=>*/ { node_valign(nodes_selecting, fa_middle); } ],
-            [ THEME.object_valign, function() /*=>*/ {return 0}, function() /*=>*/ {return ""}, function(p) /*=>*/ { node_valign(nodes_selecting, fa_top);    } ],
+            new panel_toolbar_icon("VAlign Bottom", THEME.object_valign, function() /*=>*/ {return 2}, function() /*=>*/ {return ""}, function(p) /*=>*/ { node_valign(nodes_selecting, fa_bottom); } ),
+            new panel_toolbar_icon("VAlign Middle", THEME.object_valign, function() /*=>*/ {return 1}, function() /*=>*/ {return ""}, function(p) /*=>*/ { node_valign(nodes_selecting, fa_middle); } ),
+            new panel_toolbar_icon("VAlign Top",    THEME.object_valign, function() /*=>*/ {return 0}, function() /*=>*/ {return ""}, function(p) /*=>*/ { node_valign(nodes_selecting, fa_top);    } ),
         ];
         
         toolbars_distrib = [
-            [ THEME.obj_distribute_h, function() /*=>*/ {return 0}, function() /*=>*/ {return ""}, function(p) /*=>*/ { node_hdistribute(nodes_selecting); } ],
-            [ THEME.obj_distribute_v, function() /*=>*/ {return 0}, function() /*=>*/ {return ""}, function(p) /*=>*/ { node_vdistribute(nodes_selecting); } ],
+            new panel_toolbar_icon("Distribute X", THEME.obj_distribute_h, function() /*=>*/ {return 0}, function() /*=>*/ {return ""}, function(p) /*=>*/ { node_hdistribute(nodes_selecting); } ),
+            new panel_toolbar_icon("Distribute Y", THEME.obj_distribute_v, function() /*=>*/ {return 0}, function() /*=>*/ {return ""}, function(p) /*=>*/ { node_vdistribute(nodes_selecting); } ),
         ];
         
         toolbars_auto_arrange = [
-            [ THEME.obj_auto_align,    function() /*=>*/ {return 0}, function() /*=>*/ {return "Auto align"},    function(p) /*=>*/ { node_auto_align(nodes_selecting); } ],
-            [ THEME.obj_auto_organize, function() /*=>*/ {return 0}, function() /*=>*/ {return "Auto organize"}, function(p) /*=>*/ { dialogPanelCall(new Panel_Graph_Auto_Organize(PANEL_GRAPH.nodes_selecting), p.x, p.y, { anchor: ANCHOR.bottom | ANCHOR.left }) } ],
+            new panel_toolbar_icon("Auto Align",    THEME.obj_auto_align,    function() /*=>*/ {return 0}, function() /*=>*/ {return "Auto Align"},    function(p) /*=>*/ { node_auto_align(nodes_selecting); } ),
+            new panel_toolbar_icon("Auto Organize", THEME.obj_auto_organize, function() /*=>*/ {return 0}, function() /*=>*/ {return "Auto Organize"}, 
+            	function(p) /*=>*/ { dialogPanelCall(new Panel_Graph_Auto_Organize(PANEL_GRAPH.nodes_selecting), p.x, p.y, { anchor: ANCHOR.bottom | ANCHOR.left }) } ),
         ];
         
         distribution_spacing = 0;
         toolbars_distrib_space = [
-            [ THEME.obj_distribute_h, function() /*=>*/ {return 0}, function() /*=>*/ {return ""}, function(p) /*=>*/ { node_hdistribute_dist(nodes_selecting, nodes_select_anchor, distribution_spacing); } ],
-            [ THEME.obj_distribute_v, function() /*=>*/ {return 0}, function() /*=>*/ {return ""}, function(p) /*=>*/ { node_vdistribute_dist(nodes_selecting, nodes_select_anchor, distribution_spacing); } ],
+            new panel_toolbar_icon("", THEME.obj_distribute_h, function() /*=>*/ {return 0}, function() /*=>*/ {return ""}, function(p) /*=>*/ { node_hdistribute_dist(nodes_selecting, nodes_select_anchor, distribution_spacing); } ),
+            new panel_toolbar_icon("", THEME.obj_distribute_v, function() /*=>*/ {return 0}, function() /*=>*/ {return ""}, function(p) /*=>*/ { node_vdistribute_dist(nodes_selecting, nodes_select_anchor, distribution_spacing); } ),
             [ new textBox(TEXTBOX_INPUT.number, function(val) { distribution_spacing = value_snap(val, 4); } ).setPadding(4), function() /*=>*/ {return distribution_spacing} ],
         ];
         
@@ -2334,10 +2342,58 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
             var tbs   = toolbars[i];
             
             for (var j = 0, m = array_length(tbs); j < m; j++) {
-                var tb    = tbs[j];
-                var tbObj = tb[0];
+                var tb = tbs[j];
                 
-                if(is_instanceof(tbObj, widget)) {
+                if(is(tb, panel_toolbar_icon)) {
+		            var tbSpr     = tb.sprite;
+		            var tbInd     = tb.index();
+		            var tbTooltip = is_method(tb.tooltip)? tb.tooltip() : tb.tooltip;
+		            var tbClick   = tb.onCilck;
+		            var tbRight   = tb.onRClick;
+		            var onWUp     = tb.onWUp;
+		            var onWDown   = tb.onWDown;
+		        	var hKey      = tb.hotkey;
+		            
+		            var tbData  = { x: x + tbx - ui(14), y: y + tby - ui(14) };
+		            
+		            if(is_instanceof(tbTooltip, tooltipSelector))
+		                tbTooltip.index = tbInd;
+		            
+		            var tooltip = instance_exists(o_dialog_menubox)? "" : tbTooltip;
+		            var _bw = ui(28);
+		            var _bh = ui(28);
+		            var _bx = tbx - _bw;
+		            var _by = tby - _bh / 2;
+		            
+		            var b = buttonInstant(THEME.button_hide_fill, _bx, _by, _bw, _bh, _m, pHOVER, pFOCUS, tooltip, tbSpr, tbInd);
+		            switch(b) { 
+		            	case 1 : 
+		            		if(onWUp   != 0 && key_mod_press(SHIFT) && MOUSE_WHEEL > 0) onWUp();
+		            		if(onWDown != 0 && key_mod_press(SHIFT) && MOUSE_WHEEL < 0) onWDown();
+		            		break;
+		            		
+		            	case 2 : tbClick(tbData); break;
+		            	case 3 : 
+		            		if(tbRight != 0) tbRight(tbData); 
+		            		else if(hKey != noone) {
+		            			hk_selecting = hKey;
+		            			
+		            			menuCall("", [
+									hKey.getNameFull(),
+									menuItem(__txt("Edit Hotkey"), function() /*=>*/ { hk_editing = hk_selecting.modify(); }),
+									menuItem(__txt("Reset Hotkey"), function() /*=>*/ {return hk_selecting.reset(true)}, THEME.refresh_20).setActive(hKey.isModified()),
+								]);
+		            		}
+		            		break;
+		            }
+		            
+		            if(hKey != noone && hKey == hk_editing)
+		            	draw_sprite_stretched_ext(THEME.ui_panel, 1, _bx, _by, _bw, _bh, COLORS._main_text_accent);
+		            
+		            tbx -= _bw + ui(4);
+                	
+                } else if(is_array(tb) && is(tb[0], widget)) {
+                	var tbObj = tb[0];
                     tbObj.setFocusHover(pFOCUS, pHOVER);
                     
                     var _wdw = ui(32);
@@ -2375,6 +2431,12 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
             tbx -= ui(6);
         }
         
+        if(hk_editing != noone) { 
+			if(key_press(vk_enter)) hk_editing = noone;
+			else hotkey_editing(hk_editing);
+			
+			if(key_press(vk_escape)) hk_editing = noone;
+		}
     } 
     
     function drawMinimap() { //
@@ -2764,7 +2826,9 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         tooltip_overlay = {};
     }
     
-    function drawContent(panel) { ////- Main Draw
+    ////- Main Draw
+    
+    function drawContent(panel) { 
         if(!project.active) return;
         
         dragGraph();

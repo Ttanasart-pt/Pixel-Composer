@@ -250,11 +250,11 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 		bg_y = bg_y == -1? bg_y_to : lerp_float(bg_y, bg_y_to, 2);
 		
 		if(hk_editing != noone) { 
-			if(keyboard_check_pressed(vk_enter))  hk_editing = noone;
-			else                                  hotkey_editing(hk_editing);
+			if(key_press(vk_enter))  hk_editing = noone;
+			else hotkey_editing(hk_editing);
 			
-			if(keyboard_check_pressed(vk_escape)) hk_editing = noone;
-		} 
+			if(key_press(vk_escape)) hk_editing = noone;
+		}
 		
 		curr_height = yy + ui(4) + hpad;
 	}
