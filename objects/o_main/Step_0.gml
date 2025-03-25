@@ -33,7 +33,7 @@ if(!LOADING && PROJECT.active && !PROJECT.safeMode) { //node step
 				var hotkey = l[| i];
 				if(hotkey.key == 0 && hotkey.modi == MOD_KEY.none) continue;
 				
-				if(key_press(hotkey.key, hotkey.modi, true)) {
+				if(hotkey.isPressing(true)) {
 					hotkey.action();
 					_action |= hotkey.key != noone;
 				}
@@ -46,7 +46,7 @@ if(!LOADING && PROJECT.active && !PROJECT.safeMode) { //node step
 				var hotkey = list[| i];
 				if(hotkey.key == 0 && hotkey.modi == MOD_KEY.none) continue;
 				
-				if(key_press(hotkey.key, hotkey.modi, true)) {
+				if(hotkey.isPressing(true)) {
 					hotkey.action();
 					_action |= hotkey.key != noone;
 				}

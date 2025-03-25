@@ -7,4 +7,6 @@ function panel_toolbar_icon(_name, _sprite, _index, _tooltip, _onCilck, _onRClic
     onRClick = _onRClick;
     onWUp    = _onWUp;
     onWDown  = _onWDown;
+    
+    static setWheelFn = function(u,d) /*=>*/ { onWUp = u; onWDown = d; return self; }
 }

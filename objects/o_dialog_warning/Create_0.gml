@@ -7,7 +7,7 @@ event_inherited();
 	destroy_on_click_out = true;
 	
 	text  = "";
-	icon  = THEME.noti_icon_warning;
+	icon  = noone;
 	color = COLORS._main_accent;
 	anim  = -1;
 	life  = 15;

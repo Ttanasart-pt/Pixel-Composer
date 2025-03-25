@@ -1,12 +1,12 @@
 #region
 	FN_NODE_TOOL_INVOKE {
-		hotkeySimple("Node_Path", "Transform",           "T");
-		hotkeySimple("Node_Path", "Anchor add / remove", "A");
-		hotkeySimple("Node_Path", "Edit Control point",  "C");
-		hotkeySimple("Node_Path", "Draw path",           "B");
-		hotkeySimple("Node_Path", "Rectangle path",      "N");
-		hotkeySimple("Node_Path", "Circle path",         "M");
-		hotkeySimple("Node_Path", "Weight edit",         "W");
+		hotkeyTool("Node_Path", "Transform",           "T");
+		hotkeyTool("Node_Path", "Anchor add / remove", "A");
+		hotkeyTool("Node_Path", "Edit Control point",  "C");
+		hotkeyTool("Node_Path", "Draw path",           "B");
+		hotkeyTool("Node_Path", "Rectangle path",      "N");
+		hotkeyTool("Node_Path", "Circle path",         "M");
+		hotkeyTool("Node_Path", "Weight edit",         "W");
 	});
 #endregion
 

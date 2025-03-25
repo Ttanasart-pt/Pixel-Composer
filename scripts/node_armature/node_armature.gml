@@ -1,12 +1,12 @@
 #region
 	FN_NODE_TOOL_INVOKE {
-		hotkeySimple("Node_Armature", "Move",         "V");
-		hotkeySimple("Node_Armature", "Scale",        "S");
-		hotkeySimple("Node_Armature", "Transform",    "T");
-		hotkeySimple("Node_Armature", "Add bones",    "A");
-		hotkeySimple("Node_Armature", "Remove bones", "E");
-		hotkeySimple("Node_Armature", "Detach bones", "D");
-		hotkeySimple("Node_Armature", "IK",           "K");
+		hotkeyTool("Node_Armature", "Move",         "V");
+		hotkeyTool("Node_Armature", "Scale",        "S");
+		hotkeyTool("Node_Armature", "Transform",    "T");
+		hotkeyTool("Node_Armature", "Add bones",    "A");
+		hotkeyTool("Node_Armature", "Remove bones", "E");
+		hotkeyTool("Node_Armature", "Detach bones", "D");
+		hotkeyTool("Node_Armature", "IK",           "K");
 	});
 #endregion
 

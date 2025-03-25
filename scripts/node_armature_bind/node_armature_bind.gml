@@ -1,6 +1,6 @@
 #region
 	FN_NODE_TOOL_INVOKE {
-		hotkeySimple("Node_Armature_Bind", "Pose", "P");		
+		hotkeyTool("Node_Armature_Bind", "Pose", "P");		
 	});
 #endregion
 

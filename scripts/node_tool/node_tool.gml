@@ -112,7 +112,8 @@ function NodeTool(name = "", spr = noone, contextString = instanceof(other)) con
 		
 		var _menu = [
 			getName(),
-			menuItem(__txt("Edit hotkey"), function() /*=>*/ { PANEL_PREVIEW.hk_editing = self; keyboard_lastchar = hk_object.key; }),
+			menuItem(__txt("Edit Hotkey"),  function() /*=>*/ { PANEL_PREVIEW.hk_editing = self; keyboard_lastchar = hk_object.key; }),
+			menuItem(__txt("Reset Hotkey"), function() /*=>*/ {return hk_object.reset(true)}, THEME.refresh_20).setActive(hk_object.isModified()),
 		];
 		
 		menuCall("", _menu);

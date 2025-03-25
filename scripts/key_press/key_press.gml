@@ -16,112 +16,144 @@
 		numeric = 10001,
 	}
 
-	global.KEY_STRING_MAP = ds_map_create();
+	globalvar KEY_STRING_MAP;
+	KEY_STRING_MAP = {};
 	
-	global.KEY_STRING_MAP[?  0] = ""
-	global.KEY_STRING_MAP[? 33] = "!"
-	global.KEY_STRING_MAP[? 34] = "\""
-	global.KEY_STRING_MAP[? 35] = "#"
-	global.KEY_STRING_MAP[? 36] = "$"
-	global.KEY_STRING_MAP[? 37] = "%"
-	global.KEY_STRING_MAP[? 38] = "&"
-	global.KEY_STRING_MAP[? 39] = "'"
-	global.KEY_STRING_MAP[? 40] = "("
-	global.KEY_STRING_MAP[? 41] = ")"
-	global.KEY_STRING_MAP[? 42] = "*"
-	global.KEY_STRING_MAP[? 43] = "+"
-	global.KEY_STRING_MAP[? 44] = ","
-	global.KEY_STRING_MAP[? 45] = "-"
-	global.KEY_STRING_MAP[? 46] = "."
-	global.KEY_STRING_MAP[? 47] = "/"
+	KEY_STRING_MAP[$ 33] = "!"
+	KEY_STRING_MAP[$ 34] = "\""
+	KEY_STRING_MAP[$ 35] = "#"
+	KEY_STRING_MAP[$ 36] = "$"
+	KEY_STRING_MAP[$ 37] = "%"
+	KEY_STRING_MAP[$ 38] = "&"
+	KEY_STRING_MAP[$ 39] = "'"
+	KEY_STRING_MAP[$ 40] = "("
+	KEY_STRING_MAP[$ 41] = ")"
+	KEY_STRING_MAP[$ 42] = "*"
+	KEY_STRING_MAP[$ 43] = "+"
+	KEY_STRING_MAP[$ 44] = ","
+	KEY_STRING_MAP[$ 45] = "-"
+	KEY_STRING_MAP[$ 46] = "."
+	KEY_STRING_MAP[$ 47] = "/"
 	
-	global.KEY_STRING_MAP[? 48] = "0"
-	global.KEY_STRING_MAP[? 49] = "1"
-	global.KEY_STRING_MAP[? 50] = "2"
-	global.KEY_STRING_MAP[? 51] = "3"
-	global.KEY_STRING_MAP[? 52] = "4"
-	global.KEY_STRING_MAP[? 53] = "5"
-	global.KEY_STRING_MAP[? 54] = "6"
-	global.KEY_STRING_MAP[? 55] = "7"
-	global.KEY_STRING_MAP[? 56] = "8"
-	global.KEY_STRING_MAP[? 57] = "9"
+	KEY_STRING_MAP[$ 48] = "0"
+	KEY_STRING_MAP[$ 49] = "1"
+	KEY_STRING_MAP[$ 50] = "2"
+	KEY_STRING_MAP[$ 51] = "3"
+	KEY_STRING_MAP[$ 52] = "4"
+	KEY_STRING_MAP[$ 53] = "5"
+	KEY_STRING_MAP[$ 54] = "6"
+	KEY_STRING_MAP[$ 55] = "7"
+	KEY_STRING_MAP[$ 56] = "8"
+	KEY_STRING_MAP[$ 57] = "9"
 	
-	global.KEY_STRING_MAP[? 65] = "A"
-	global.KEY_STRING_MAP[? 66] = "B"
-	global.KEY_STRING_MAP[? 67] = "C"
-	global.KEY_STRING_MAP[? 68] = "D"
-	global.KEY_STRING_MAP[? 69] = "E"
-	global.KEY_STRING_MAP[? 70] = "F"
-	global.KEY_STRING_MAP[? 71] = "G"
-	global.KEY_STRING_MAP[? 72] = "H"
-	global.KEY_STRING_MAP[? 73] = "I"
-	global.KEY_STRING_MAP[? 74] = "J"
-	global.KEY_STRING_MAP[? 75] = "K"
-	global.KEY_STRING_MAP[? 76] = "L"
-	global.KEY_STRING_MAP[? 77] = "M"
-	global.KEY_STRING_MAP[? 78] = "N"
-	global.KEY_STRING_MAP[? 79] = "O"
-	global.KEY_STRING_MAP[? 80] = "P"
-	global.KEY_STRING_MAP[? 81] = "Q"
-	global.KEY_STRING_MAP[? 82] = "R"
-	global.KEY_STRING_MAP[? 83] = "S"
-	global.KEY_STRING_MAP[? 84] = "T"
-	global.KEY_STRING_MAP[? 85] = "U"
-	global.KEY_STRING_MAP[? 86] = "V"
-	global.KEY_STRING_MAP[? 87] = "W"
-	global.KEY_STRING_MAP[? 88] = "X"
-	global.KEY_STRING_MAP[? 89] = "Y"
-	global.KEY_STRING_MAP[? 90] = "Z"
+	KEY_STRING_MAP[$ 65] = "A"
+	KEY_STRING_MAP[$ 66] = "B"
+	KEY_STRING_MAP[$ 67] = "C"
+	KEY_STRING_MAP[$ 68] = "D"
+	KEY_STRING_MAP[$ 69] = "E"
+	KEY_STRING_MAP[$ 70] = "F"
+	KEY_STRING_MAP[$ 71] = "G"
+	KEY_STRING_MAP[$ 72] = "H"
+	KEY_STRING_MAP[$ 73] = "I"
+	KEY_STRING_MAP[$ 74] = "J"
+	KEY_STRING_MAP[$ 75] = "K"
+	KEY_STRING_MAP[$ 76] = "L"
+	KEY_STRING_MAP[$ 77] = "M"
+	KEY_STRING_MAP[$ 78] = "N"
+	KEY_STRING_MAP[$ 79] = "O"
+	KEY_STRING_MAP[$ 80] = "P"
+	KEY_STRING_MAP[$ 81] = "Q"
+	KEY_STRING_MAP[$ 82] = "R"
+	KEY_STRING_MAP[$ 83] = "S"
+	KEY_STRING_MAP[$ 84] = "T"
+	KEY_STRING_MAP[$ 85] = "U"
+	KEY_STRING_MAP[$ 86] = "V"
+	KEY_STRING_MAP[$ 87] = "W"
+	KEY_STRING_MAP[$ 88] = "X"
+	KEY_STRING_MAP[$ 89] = "Y"
+	KEY_STRING_MAP[$ 90] = "Z"
 
-	global.KEY_STRING_MAP[? 96]  = "Num 0"
-	global.KEY_STRING_MAP[? 97]  = "Num 1"
-	global.KEY_STRING_MAP[? 98]  = "Num 2"
-	global.KEY_STRING_MAP[? 99]  = "Num 3"
-	global.KEY_STRING_MAP[? 100] = "Num 4"
-	global.KEY_STRING_MAP[? 101] = "Num 5"
-	global.KEY_STRING_MAP[? 102] = "Num 6"
-	global.KEY_STRING_MAP[? 103] = "Num 7"
-	global.KEY_STRING_MAP[? 104] = "Num 8"
-	global.KEY_STRING_MAP[? 105] = "Num 9"
+	KEY_STRING_MAP[$ 96]  = "Num 0"
+	KEY_STRING_MAP[$ 97]  = "Num 1"
+	KEY_STRING_MAP[$ 98]  = "Num 2"
+	KEY_STRING_MAP[$ 99]  = "Num 3"
+	KEY_STRING_MAP[$ 100] = "Num 4"
+	KEY_STRING_MAP[$ 101] = "Num 5"
+	KEY_STRING_MAP[$ 102] = "Num 6"
+	KEY_STRING_MAP[$ 103] = "Num 7"
+	KEY_STRING_MAP[$ 104] = "Num 8"
+	KEY_STRING_MAP[$ 105] = "Num 9"
 
-	global.KEY_STRING_MAP[? 106] = "Num *"
-	global.KEY_STRING_MAP[? 107] = "Num +"
-	global.KEY_STRING_MAP[? 109] = "Num -"
-	global.KEY_STRING_MAP[? 110] = "Num ."
-	global.KEY_STRING_MAP[? 111] = "Num /"
+	KEY_STRING_MAP[$ 106] = "Num *"
+	KEY_STRING_MAP[$ 107] = "Num +"
+	KEY_STRING_MAP[$ 109] = "Num -"
+	KEY_STRING_MAP[$ 110] = "Num ."
+	KEY_STRING_MAP[$ 111] = "Num /"
 
-	global.KEY_STRING_MAP[? 186] = ";"
-	global.KEY_STRING_MAP[? 187] = "="
-	global.KEY_STRING_MAP[? 188] = ","
-	global.KEY_STRING_MAP[? 189] = "-"
-	global.KEY_STRING_MAP[? 190] = "."
-	global.KEY_STRING_MAP[? 191] = "/"
-	global.KEY_STRING_MAP[? 192] = "`" // actually `
+	KEY_STRING_MAP[$ 186] = ";"
+	KEY_STRING_MAP[$ 187] = "="
+	KEY_STRING_MAP[$ 188] = ","
+	KEY_STRING_MAP[$ 189] = "-"
+	KEY_STRING_MAP[$ 190] = "."
+	KEY_STRING_MAP[$ 191] = "/"
+	KEY_STRING_MAP[$ 192] = "`" // actually `
 
-	global.KEY_STRING_MAP[? 219] = "["
-	global.KEY_STRING_MAP[? 220] = "\\"
-	global.KEY_STRING_MAP[? 221] = "]"
-	global.KEY_STRING_MAP[? 222] = "'" // actually # but that needs to be escaped
+	KEY_STRING_MAP[$ 219] = "["
+	KEY_STRING_MAP[$ 220] = "\\"
+	KEY_STRING_MAP[$ 221] = "]"
+	KEY_STRING_MAP[$ 222] = "'" // actually # but that needs to be escaped
 
-	global.KEY_STRING_MAP[? 223] = "`" // actually ` but that needs to be escaped
+	KEY_STRING_MAP[$ 223] = "`" // actually ` but that needs to be escaped
 	
-	global.KEY_STRING_MAP[? KEY_GROUP.numeric] = "0-9"
+	KEY_STRING_MAP[$ vk_space]       = "Space";
+	KEY_STRING_MAP[$ vk_left]        = "Left";
+	KEY_STRING_MAP[$ vk_right]       = "Right";
+	KEY_STRING_MAP[$ vk_up]          = "Up";
+	KEY_STRING_MAP[$ vk_down]        = "Down";
+	KEY_STRING_MAP[$ vk_backspace]   = "Backspace";
+	KEY_STRING_MAP[$ vk_tab]         = "Tab";
+	KEY_STRING_MAP[$ vk_home]        = "Home";
+	KEY_STRING_MAP[$ vk_end]         = "End";
+	KEY_STRING_MAP[$ vk_delete]      = "Delete";
+	KEY_STRING_MAP[$ vk_insert]      = "Insert";
+	KEY_STRING_MAP[$ vk_pageup]      = "Page Up";
+	KEY_STRING_MAP[$ vk_pagedown]    = "Page Down";
+	KEY_STRING_MAP[$ vk_pause]       = "Pause";
+	KEY_STRING_MAP[$ vk_printscreen] = "Printscreen";
+	KEY_STRING_MAP[$ vk_f1]          = "F1";
+	KEY_STRING_MAP[$ vk_f2]          = "F2";
+	KEY_STRING_MAP[$ vk_f3]          = "F3";
+	KEY_STRING_MAP[$ vk_f4]          = "F4";
+	KEY_STRING_MAP[$ vk_f5]          = "F5";
+	KEY_STRING_MAP[$ vk_f6]          = "F6";
+	KEY_STRING_MAP[$ vk_f7]          = "F7";
+	KEY_STRING_MAP[$ vk_f8]          = "F8";
+	KEY_STRING_MAP[$ vk_f9]          = "F9";
+	KEY_STRING_MAP[$ vk_f10]         = "F10";
+	KEY_STRING_MAP[$ vk_f11]         = "F11";
+	KEY_STRING_MAP[$ vk_f12]         = "F12";
 	
-	function key_get_index(key) {
-		if(key == "") return noone;
-		
-		var k = ds_map_find_first(global.KEY_STRING_MAP);
-		repeat(ds_map_size(global.KEY_STRING_MAP)) {
-			if(global.KEY_STRING_MAP[? k] == key) return k;
-			k = ds_map_find_next(global.KEY_STRING_MAP, k);
-		}
-		
-		return ord(key);
+	KEY_STRING_MAP[$ KEY_GROUP.numeric] = "0-9"
+	
+	globalvar KEY_STRING_KEY, KEY_ID_MAP;
+	KEY_ID_MAP = {};
+	KEY_STRING_KEY = struct_get_names(KEY_STRING_MAP);
+	
+	for( var i = 0, n = array_length(KEY_STRING_KEY); i < n; i++ ) {
+		var _v = KEY_STRING_MAP[$ KEY_STRING_KEY[i]];
+		KEY_ID_MAP[$ _v] = real(KEY_STRING_KEY[i]);
 	}
+	
 #endregion
 
-#region get name
-	function key_get_name(_key, _mod) {
+#region get 
+	function key_get_index(_k) { 
+		if(_k == "")      return noone;
+		if(is_string(_k)) return struct_try_get(KEY_ID_MAP, _k, ord(_k)); 
+		return _k;
+	}
+	
+	function key_get_name(_key, _mod = MOD_KEY.none) {
 		if(!is_numeric(_key) || (_key <= 0 && _mod == MOD_KEY.none)) return "";
 		
 		var dk = "";
@@ -129,47 +161,14 @@
 		if(_mod & MOD_KEY.shift)	dk += "Shift+";
 		if(_mod & MOD_KEY.alt)		dk += "Alt+";
 		
-		switch(_key) { 
-			case vk_space :         dk += "Space";       break;	
-			case vk_left  :         dk += "Left";        break;	
-			case vk_right :         dk += "Right";	     break;	
-			case vk_up    :         dk += "Up";		     break;	
-			case vk_down  :         dk += "Down";	     break;	
-			case vk_backspace :     dk += "Backspace";   break;
-			case vk_tab :           dk += "Tab";		 break;
-			case vk_home :          dk += "Home";		 break;
-			case vk_end :           dk += "End";		 break;
-			case vk_delete :        dk += "Delete";	     break;
-			case vk_insert :        dk += "Insert";	     break; 
-			case vk_pageup :        dk += "Page Up";	 break;
-			case vk_pagedown :      dk += "Page Down";   break;
-			case vk_pause :         dk += "Pause";	     break;
-			case vk_printscreen :   dk += "Printscreen"; break;         
-			case vk_f1 :            dk += "F1";          break;
-			case vk_f2 :            dk += "F2";          break;
-			case vk_f3 :            dk += "F3";          break;
-			case vk_f4 :            dk += "F4";          break;
-			case vk_f5 :            dk += "F5";          break;
-			case vk_f6 :            dk += "F6";          break;
-			case vk_f7 :            dk += "F7";          break;
-			case vk_f8 :            dk += "F8";          break;
-			case vk_f9 :            dk += "F9";          break;
-			case vk_f10 :           dk += "F10";         break;
-			case vk_f11 :           dk += "F11";         break;
-			case vk_f12 :           dk += "F12";         break;          
-			
-			default : 
-				if(ds_map_exists(global.KEY_STRING_MAP, _key)) 
-					dk += global.KEY_STRING_MAP[? _key];
-				else if(_key > 0) 
-					dk += ansi_char(_key);	
-				break;	
-		}
+		if(struct_has(KEY_STRING_MAP, _key)) 
+			dk += KEY_STRING_MAP[$ _key];
+		else if(_key > 0) 
+			dk += ansi_char(_key);	
 		
 		dk = string_trim_end(dk, ["+"]);
 		return dk;
 	}
-	
 #endregion
 
 function key_press(_key, _mod = MOD_KEY.none, _hold = false) {

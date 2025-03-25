@@ -1182,38 +1182,56 @@ function Panel_Preference() : PanelContent() constructor {
     	hotkey_focus_index     = 0;
     	
     	keyboards_display = new KeyboardDisplay();
+    	key_node_index = [];
     	
-    	for(var j = 0; j < ds_list_size(HOTKEY_CONTEXT); j++) {
-    		var ctx  = HOTKEY_CONTEXT[| j];
-    		var _lst = [];
+    	for(var i = 0; i < ds_list_size(HOTKEY_CONTEXT); i++) {
+    		var ctx  = HOTKEY_CONTEXT[| i];
     		
-    		var ll = HOTKEYS[$ ctx];
-    		for(var i = 0; i < ds_list_size(ll); i++)
-    			array_push(_lst, ll[| i]);
+    		var _title = ctx == 0? "Global" : ctx;
+    		    _title = string_replace_all(_title, "_", " ");
+		    if(string_starts_with(_title, "Node")) {
+		    	array_push(key_node_index, ctx);
+		    	continue;
+		    }
+		    
+    		array_push(hotkeyArray, _title);
+    		
+    		var _lst = [];
+    		var ll   = HOTKEYS[$ ctx];
+    		for(var j = 0; j < ds_list_size(ll); j++)
+    			array_push(_lst, ll[| j]);
     		
     		array_sort(_lst, function(s1, s2) /*=>*/ {return string_compare(s1.name, s2.name)});
     		array_push(hotkeyContext, { context: ctx, list: _lst });
     		
-    		var _title = ctx == 0? "Global" : ctx;
-    		    _title = string_replace_all(_title, "_", " ");
-    		array_push(hotkeyArray, _title);
     	}
     	
     	array_push(hotkeyContext, -1);
 		array_push(hotkeyArray,   -1);
     	
-    	for( var i = array_length(hotkeyArray) - 2; i >= 0; i-- ) {
-    		var _t = hotkeyArray[i];
-    		if(string_starts_with(_t, "Node")) {
-    			array_push_to_back_index(hotkeyContext, i);
-    			array_push_to_back_index(hotkeyArray,   i);
-    		}
+    	for( var i = 0, n = array_length(key_node_index); i < n; i++ ) {
+    		var ctx  = key_node_index[i];
+    		var _lst = [];
+    		
+    		var _title = ctx == 0? "Global" : ctx;
+    		    _title = string_replace_all(_title, "_", " ");
+		    
+    		array_push(hotkeyArray, _title);
+    		
+    		var ll = HOTKEYS[$ ctx];
+    		for(var j = 0; j < ds_list_size(ll); j++)
+    			array_push(_lst, ll[| j]);
+    		
+    		array_sort(_lst, function(s1, s2) /*=>*/ {return string_compare(s1.name, s2.name)});
+    		array_push(hotkeyContext, { context: ctx, list: _lst });
     	}
     	
     	array_push(hotkeyContext, -1);
 		array_push(hotkeyArray,   -1);
     	
     	var keys = struct_get_names(HOTKEYS_CUSTOM);
+    	array_sort(keys, true);
+    	
     	for( var i = 0, n = array_length(keys); i < n; i++ ) {
     		var ctx = keys[i];
     		
@@ -1265,10 +1283,10 @@ function Panel_Preference() : PanelContent() constructor {
     		var _hov      = pHOVER && sp_hotkey.hover;
     		var modified  = false;
     		
-    		var _ctxObj = hotkeyContext[hk_page];
-    		var _cntx   = _ctxObj.context;
-    		var _list   = _ctxObj.list;
-    		var _yy     = yy + hh;
+    		var _ctxObj   = hotkeyContext[hk_page];
+    		var _cntx     = _ctxObj.context;
+    		var _list     = _ctxObj.list;
+    		var _yy       = yy + hh;
     		
     		var _search = string_lower(search_text);
     		
@@ -1276,7 +1294,7 @@ function Panel_Preference() : PanelContent() constructor {
     			
     			var key  = _list[j];
     			var name = __txt(key.name);
-    			var dk   = key_get_name(key.key, key.modi);
+    			var dk   = key.getName();
     			
     			if(_search != "" && string_pos(_search, string_lower(name)) == 0
     			                 && string_pos(_search, string_lower(dk))   == 0)
@@ -1327,10 +1345,8 @@ function Panel_Preference() : PanelContent() constructor {
     					sp_hotkey.hover_content = true;
     					cc = CDEF.main_white;
     					
-    					if(mouse_press(mb_left, pFOCUS)) {
-    						hk_editing        = key;
-    						keyboard_lastchar = pkey;
-    					}
+    					if(mouse_press(mb_left, pFOCUS))
+    						hk_editing = key.modify();
     					
     				} else {
     					// draw_sprite_stretched_ext(THEME.ui_panel, 1, bx, by, bw, bh, CDEF.main_dkgrey, 1);
@@ -1341,19 +1357,14 @@ function Panel_Preference() : PanelContent() constructor {
     			draw_set_text(f_p2, fa_right, fa_top, cc);
     			draw_text_add(tx, _lb_y, dk);
     			
-    			if(key.key != key.dKey || key.modi != key.dModi) {
+    			if(key.isModified()) {
     				modified = true;
     				var bx   = _ww - ui(32);
     				var by   = _yy + th / 2 - ui(12);
     				var b    = buttonInstant(THEME.button_hide_fill, bx, by, ui(24), ui(24), _m, _hov, pFOCUS, __txt("Reset"), THEME.refresh_16);
     				
     				if(b) sp_hotkey.hover_content = true;
-    				if(b == 2) {
-    					key.key  = key.dKey;
-    					key.modi = key.dModi;
-    					
-    					PREF_SAVE();
-    				}
+    				if(b == 2) key.reset(true);
     			}
     			
     			hh += th + padd * 2;
@@ -1690,6 +1701,21 @@ function Panel_Preference() : PanelContent() constructor {
         			var _kmod = _ky.modi;
         			
         			if(_kkey == noone && _kmod == MOD_KEY.none) continue;
+        			
+        			if(_kkey == KEY_GROUP.numeric) {
+        				for( var k = 0; k <= 9; k++ ) {
+        					var _numk = ord(k);
+        					if(!struct_has(_keyUsing, _numk)) 
+        						_keyUsing[$ _numk] = {};
+		        			
+		        			var _kuse = _keyUsing[$ _numk];
+		        			if(!struct_has(_kuse, _kmod))
+		        				_kuse[$ _kmod] = [];
+		        				
+		        			array_append(_kuse[$ _kmod], _ky);
+        				}
+        				continue;
+        			}
         			
         			if(!struct_has(_keyUsing, _kkey))
         				_keyUsing[$ _kkey] = {};

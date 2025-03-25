@@ -1,9 +1,9 @@
 #region
 	FN_NODE_TOOL_INVOKE {
-		hotkeySimple("Node_Mesh_Warp", "Edit control point", "V");
-		hotkeySimple("Node_Mesh_Warp", "Pin mesh",           "P");
-		hotkeySimple("Node_Mesh_Warp", "Mesh edit",          "M");
-		hotkeySimple("Node_Mesh_Warp", "Mesh anchor remove", "E");	
+		hotkeyTool("Node_Mesh_Warp", "Edit control point", "V");
+		hotkeyTool("Node_Mesh_Warp", "Pin mesh",           "P");
+		hotkeyTool("Node_Mesh_Warp", "Mesh edit",          "M");
+		hotkeyTool("Node_Mesh_Warp", "Mesh anchor remove", "E");	
 	});
 #endregion
 

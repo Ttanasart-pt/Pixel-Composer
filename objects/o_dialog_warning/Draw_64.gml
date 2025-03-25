@@ -34,6 +34,7 @@ if !ready exit;
 #endregion
 
 #region text
+	if(icon == noone) icon = THEME.noti_icon_warning;
 	draw_sprite_ui(icon, 1, dialog_x + ui(16), dialog_y + dialog_h / 2, 1, 1, 0, c_white, aa);
 	
 	draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text, aa);

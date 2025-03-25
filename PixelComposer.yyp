@@ -3376,6 +3376,7 @@
     {"id":{"name":"s_node_array_shuffle","path":"sprites/s_node_array_shuffle/s_node_array_shuffle.yy",},},
     {"id":{"name":"s_node_array_sort","path":"sprites/s_node_array_sort/s_node_array_sort.yy",},},
     {"id":{"name":"s_node_array_split","path":"sprites/s_node_array_split/s_node_array_split.yy",},},
+    {"id":{"name":"s_node_array_transpose","path":"sprites/s_node_array_transpose/s_node_array_transpose.yy",},},
     {"id":{"name":"s_node_array_unique","path":"sprites/s_node_array_unique/s_node_array_unique.yy",},},
     {"id":{"name":"s_node_array_zip","path":"sprites/s_node_array_zip/s_node_array_zip.yy",},},
     {"id":{"name":"s_node_array","path":"sprites/s_node_array/s_node_array.yy",},},

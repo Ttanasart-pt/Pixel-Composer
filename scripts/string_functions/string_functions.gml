@@ -67,6 +67,7 @@ function string_to_var(str) {
 	str = string_replace_all(str, " ", "_");
 	str = string_replace_all(str, "/", "_");
 	str = string_replace_all(str, "-", "_");
+	str = string_replace_all(str, " > ", "_");
 	
 	return str;
 }

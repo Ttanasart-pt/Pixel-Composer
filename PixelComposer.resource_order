@@ -2014,6 +2014,7 @@
     {"name":"s_node_array_shuffle","order":16,"path":"sprites/s_node_array_shuffle/s_node_array_shuffle.yy",},
     {"name":"s_node_array_sort","order":17,"path":"sprites/s_node_array_sort/s_node_array_sort.yy",},
     {"name":"s_node_array_split","order":20,"path":"sprites/s_node_array_split/s_node_array_split.yy",},
+    {"name":"s_node_array_transpose","order":25,"path":"sprites/s_node_array_transpose/s_node_array_transpose.yy",},
     {"name":"s_node_array_unique","order":22,"path":"sprites/s_node_array_unique/s_node_array_unique.yy",},
     {"name":"s_node_array_zip","order":18,"path":"sprites/s_node_array_zip/s_node_array_zip.yy",},
     {"name":"s_node_ase_file_read","order":15,"path":"sprites/s_node_ase_file_read/s_node_ase_file_read.yy",},

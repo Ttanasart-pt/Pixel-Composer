@@ -116,8 +116,9 @@ DIALOG_WINCLEAR1
 					
 					with(o_dialog_menubox) { if(!remove_parents) instance_destroy(); }
 					var context_menu_settings = [
-						_key.full_name(),
-						menuItem(__txt("Edit hotkey"), function() /*=>*/ { hk_editing = selecting_menu; keyboard_lastchar = hk_editing.hoykeyObject.key; }),
+						_key.getNameFull(),
+						menuItem(__txt("Edit Hotkey"), function() /*=>*/ { hk_editing = selecting_menu; keyboard_lastchar = hk_editing.hoykeyObject.key; }),
+						menuItem(__txt("Reset Hotkey"), function() /*=>*/ {return selecting_menu.hoykeyObject.reset(true)}, THEME.refresh_20).setActive(_key.isModified()),
 					];
 					
 					item_sel_submenu = submenuCall(_dat, context_menu_settings);
@@ -234,11 +235,13 @@ DIALOG_WINCLEAR1
 			var _bx = _hx - _tw - ui(4);
 			var _by = _hy - _th / 2 - ui(3);
 			var _bw = _tw + ui(8);
-			var _bh = _th + ui(3);
+			var _bh = _th + ui(6);
 			
 			draw_set_text(font, fa_right, fa_center, COLORS._main_accent);
 			
 			if(hk_editing == _menuItem) {
+				draw_sprite_stretched_ext(THEME.ui_panel, 1, _bx, _by, _bw, _bh, COLORS._main_text_accent);
+				
 				draw_set_color(COLORS._main_accent);
 				if(_ktxt == "") _ktxt = "-";
 				

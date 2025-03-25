@@ -4,7 +4,7 @@
 	});
 	
 	FN_NODE_TOOL_INVOKE {
-		hotkeySimple("Node_Text", "Edit Text", "T");
+		hotkeyTool("Node_Text", "Edit Text", "T");
 	});
 #endregion
 

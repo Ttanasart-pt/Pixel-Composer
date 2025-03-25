@@ -1,7 +1,7 @@
 #region
 	FN_NODE_TOOL_INVOKE {
-		hotkeySimple("Node_Rigid_Object", "Mesh edit",     "A");
-		hotkeySimple("Node_Rigid_Object", "Anchor remove", "E");
+		hotkeyTool("Node_Rigid_Object", "Mesh edit",     "A");
+		hotkeyTool("Node_Rigid_Object", "Anchor remove", "E");
 	});
 #endregion
 

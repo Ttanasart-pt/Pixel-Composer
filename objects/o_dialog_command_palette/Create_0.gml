@@ -116,13 +116,11 @@ event_inherited();
 						var _key = _menu.hotkey;
 						selecting_hotkey = _key;
 						
-						var _loadKey = _key.full_name();
+						var _loadKey = _key.getNameFull();
 						var context_menu_settings = [
 							_loadKey,
-							menuItem("Edit hotkey", function() /*=>*/ {
-								hk_editing        = selecting_hotkey;
-								keyboard_lastchar = selecting_hotkey.key;
-								
+							menuItem("Edit Hotkey", function() /*=>*/ {
+								hk_editing = selecting_hotkey.modify();
 								tb_search.deactivate();
 							}),
 						];

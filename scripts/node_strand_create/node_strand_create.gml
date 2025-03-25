@@ -1,10 +1,10 @@
 #region
 	FN_NODE_TOOL_INVOKE {
-		hotkeySimple("Node_Strand_Create", "Push",    "P");
-		hotkeySimple("Node_Strand_Create", "Comb",    "C");
-		hotkeySimple("Node_Strand_Create", "Stretch", "S");
-		hotkeySimple("Node_Strand_Create", "Shorten", "D");
-		hotkeySimple("Node_Strand_Create", "Grab",    "G");
+		hotkeyTool("Node_Strand_Create", "Push",    "P");
+		hotkeyTool("Node_Strand_Create", "Comb",    "C");
+		hotkeyTool("Node_Strand_Create", "Stretch", "S");
+		hotkeyTool("Node_Strand_Create", "Shorten", "D");
+		hotkeyTool("Node_Strand_Create", "Grab",    "G");
 	});
 #endregion
 

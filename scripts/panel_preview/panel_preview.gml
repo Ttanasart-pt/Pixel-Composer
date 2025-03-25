@@ -7,7 +7,6 @@
     function panel_preview_saveCurrentFrameToFocus()    { CALL("preview_save_to_focused_file");      PANEL_PREVIEW.saveCurrentFrameToFocus();                                 }
     function panel_preview_save_all_current_frame()     { CALL("preview_save_all_current_frame");    PANEL_PREVIEW.saveAllCurrentFrames();                                    }
     function panel_preview_preview_window()             { CALL("preview_preview_window");            PANEL_PREVIEW.create_preview_window(PANEL_PREVIEW.getNodePreview());     }
-    function panel_preview_toggle_grid()                { CALL("preview_toggle_grid");               PROJECT.previewGrid.show = !PROJECT.previewGrid.show;                    }
     
     function panel_preview_pan()                        { CALL("preview_pan");                       PANEL_PREVIEW.canvas_dragging_key = true;                                }
     function panel_preview_zoom()                       { CALL("preview_zoom");                      PANEL_PREVIEW.canvas_zooming_key  = true;                                }
@@ -58,6 +57,7 @@
     	var s = MOD_KEY.shift;
     	var c = MOD_KEY.ctrl;
     	var a = MOD_KEY.alt;
+    	var cs = MOD_KEY.ctrl | MOD_KEY.shift;
     	
         registerFunction(p, "Clear tool",               "A", n, panel_preview_clear_tool               )
         
@@ -66,7 +66,6 @@
         registerFunction(p, "Save to focused file",     "",  n, panel_preview_saveCurrentFrameToFocus  ).setMenu("preview_save_to_focused_file")
         registerFunction(p, "Save all current frame",   "",  n, panel_preview_save_all_current_frame   ).setMenu("preview_save_all_current_frame")
         registerFunction(p, "Preview window",           "P", c, panel_preview_preview_window           ).setMenu("preview_preview_window")
-        registerFunction(p, "Toggle grid",              "G", c, panel_preview_toggle_grid              ).setMenu("preview_toggle_grid")
     
         registerFunction(p, "Pan",                      "", c,     panel_preview_pan                   ).setMenu("preview_pan")
         registerFunction(p, "Zoom",                     "", a | c, panel_preview_zoom                  ).setMenu("preview_zoom")
@@ -116,9 +115,9 @@
         registerFunction(p, "Copy Color",               "", n, panel_preview_copy_color                ).setMenu("preview_copy_color")
         registerFunction(p, "Copy Color Hex",           "", n, panel_preview_copy_color_hex            ).setMenu("preview_copy_color_hex")
         
-        registerFunction(p, "Toggle Pixel Grid",        "", n, panel_preview_toggle_grid_pixel         ).setMenu("preview_toggle_grid_pixel")
-        registerFunction(p, "Toggle Grid",              "", n, panel_preview_toggle_grid_visible       ).setMenu("preview_toggle_grid_visible")
-        registerFunction(p, "Toggle Snap to Grid",      "", n, panel_preview_toggle_grid_snap          ).setMenu("preview_toggle_grid_snap")
+        registerFunction(p, "Toggle Grid",              "G", c,  panel_preview_toggle_grid_visible     ).setMenu("preview_toggle_grid_visible")
+        registerFunction(p, "Toggle Pixel Grid",        "G", cs, panel_preview_toggle_grid_pixel       ).setMenu("preview_toggle_grid_pixel")
+        registerFunction(p, "Toggle Snap to Grid",      "",  n,  panel_preview_toggle_grid_snap        ).setMenu("preview_toggle_grid_snap")
         
         registerFunction(p, "Toggle Onion Skin",        "", n, panel_preview_onion_enabled             ).setMenu("preview_onion_enabled")
         registerFunction(p, "Toggle Onion Skin view",   "", n, panel_preview_onion_on_top              ).setMenu("preview_onion_on_top")
@@ -404,9 +403,8 @@ function Panel_Preview() : PanelContent() constructor {
                         MENU_ITEMS.preview_set_reset_view_on,
                     ], data.x + ui(28), data.y + ui(28));
                 },
-                toggle_reset_view,
-                toggle_reset_view,
-            ),
+            ).setWheelFn(toggle_reset_view, toggle_reset_view),
+            
             new panel_toolbar_icon("Split view", 
                 THEME.icon_split_view,
                 function() /*=>*/ {return splitView},
@@ -419,9 +417,8 @@ function Panel_Preview() : PanelContent() constructor {
                         MENU_ITEMS.preview_set_split_vertical,
                     ], data.x + ui(28), data.y + ui(28));
                 },
-                function() /*=>*/ { mod_dec_mf0 splitView mod_dec_mf1 splitView mod_dec_mf2  3 mod_dec_mf3  3 mod_dec_mf4 },
-                function() /*=>*/ { mod_inc_mf0 splitView mod_inc_mf1 splitView mod_inc_mf2  3 mod_inc_mf3 },
-            ),
+            ).setWheelFn(function() /*=>*/ { mod_dec_mf0 splitView mod_dec_mf1 splitView mod_dec_mf2  3 mod_dec_mf3  3 mod_dec_mf4 }, function() /*=>*/ { mod_inc_mf0 splitView mod_inc_mf1 splitView mod_inc_mf2  3 mod_inc_mf3 }),
+            
             new panel_toolbar_icon("Tiling", 
                 THEME.icon_tile_view,
                 function() /*=>*/ {return tileMode},
@@ -435,9 +432,8 @@ function Panel_Preview() : PanelContent() constructor {
                         MENU_ITEMS.preview_set_tile_both,
                     ], data.x + ui(28), data.y + ui(28));
                 },
-                function() /*=>*/ { mod_dec_mf0 tileMode mod_dec_mf1 tileMode mod_dec_mf2  4 mod_dec_mf3  4 mod_dec_mf4 },
-                function() /*=>*/ { mod_inc_mf0 tileMode mod_inc_mf1 tileMode mod_inc_mf2  4 mod_inc_mf3 },
-            ),
+            ).setWheelFn(function() /*=>*/ { mod_dec_mf0 tileMode mod_dec_mf1 tileMode mod_dec_mf2  4 mod_dec_mf3  4 mod_dec_mf4 }, function() /*=>*/ { mod_inc_mf0 tileMode mod_inc_mf1 tileMode mod_inc_mf2  4 mod_inc_mf3 }),
+            
             new panel_toolbar_icon("Grid",  
                 THEME.icon_grid_setting,
                 function() /*=>*/ {return 0},
@@ -924,7 +920,8 @@ function Panel_Preview() : PanelContent() constructor {
         var __tool_show_key = _tool_show_key;
         _tool_show_key = tool_show_key;
         
-        // Left tools
+        ////- Left tools
+        
         for(var i = 0; i < array_length(_node.tools); i++) { 
             var tool = _node.tools[i];
             var _x0  = xx - ts2;
@@ -1009,7 +1006,7 @@ function Panel_Preview() : PanelContent() constructor {
                 	HOTKEY_BLOCK = true;
                 }
                 
-                var _hkstr = key_get_name(_key.key, _key.modi);
+                var _hkstr = _key.getName();
                 if(_hkstr != "" && (key_mod_press(ALT) || __tool_show_key)) {
                 	draw_set_text(f_p4, fa_right, fa_center, COLORS._main_text);
                 	var _hks  = string_width(_hkstr) + ui(8);
@@ -1043,7 +1040,8 @@ function Panel_Preview() : PanelContent() constructor {
         if(thov && !key_mod_press_any() && MOUSE_WHEEL != 0)
             tool_y_to = clamp(tool_y_to + ui(64) * MOUSE_WHEEL, -tool_y_max, 0);
         
-        // Right tools
+        ////- Right tools
+        
         if(_node.rightTools == -1) return;
         
         right_menu_x = w - toolbar_width - ui(8);
@@ -1152,7 +1150,7 @@ function Panel_Preview() : PanelContent() constructor {
                 	HOTKEY_BLOCK = true;
                 }
                 
-                var _hkstr = key_get_name(_key.key, _key.modi);
+                var _hkstr = _key.getName();
                 if(_hkstr != "" && (key_mod_press(ALT) || __tool_show_key)) {
                 	draw_set_text(f_p4, fa_left, fa_center, COLORS._main_text);
                 	var _hks  = string_width(_hkstr) + ui(8);

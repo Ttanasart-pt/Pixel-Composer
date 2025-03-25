@@ -1,28 +1,28 @@
 #region 
 	FN_NODE_TOOL_INVOKE {
-		hotkeySimple("Node_Canvas", "Selection",       "S");
-		hotkeySimple("Node_Canvas", "Magic Selection", "W");
-		hotkeySimple("Node_Canvas", "Pencil",          "B");
-		hotkeySimple("Node_Canvas", "Eraser",          "E");
-		hotkeySimple("Node_Canvas", "Rectangle",       "N");
-		hotkeySimple("Node_Canvas", "Ellipse",         "M");
-		hotkeySimple("Node_Canvas", "Iso Cube",        "");
-		hotkeySimple("Node_Canvas", "Curve",           "");
-		hotkeySimple("Node_Canvas", "Freeform",        "Q");
-		hotkeySimple("Node_Canvas", "Fill",            "G");
-		hotkeySimple("Node_Canvas", "Gradient",        "G", MOD_KEY.shift);
+		hotkeyTool("Node_Canvas", "Selection",       "S");
+		hotkeyTool("Node_Canvas", "Magic Selection", "W");
+		hotkeyTool("Node_Canvas", "Pencil",          "B");
+		hotkeyTool("Node_Canvas", "Eraser",          "E");
+		hotkeyTool("Node_Canvas", "Rectangle",       "N");
+		hotkeyTool("Node_Canvas", "Ellipse",         "M");
+		hotkeyTool("Node_Canvas", "Iso Cube",        "");
+		hotkeyTool("Node_Canvas", "Curve",           "");
+		hotkeyTool("Node_Canvas", "Freeform",        "Q");
+		hotkeyTool("Node_Canvas", "Fill",            "G");
+		hotkeyTool("Node_Canvas", "Gradient",        "G", MOD_KEY.shift);
 		
-		hotkeySimple("Node_Canvas", "Outline",         "O", MOD_KEY.alt);
-		hotkeySimple("Node_Canvas", "Extrude",         "E", MOD_KEY.alt);
-		hotkeySimple("Node_Canvas", "Inset",           "I", MOD_KEY.alt);
-		hotkeySimple("Node_Canvas", "Skew",            "S", MOD_KEY.alt);
-		hotkeySimple("Node_Canvas", "Corner",          "C", MOD_KEY.alt);
+		hotkeyTool("Node_Canvas", "Outline",         "O", MOD_KEY.alt);
+		hotkeyTool("Node_Canvas", "Extrude",         "E", MOD_KEY.alt);
+		hotkeyTool("Node_Canvas", "Inset",           "I", MOD_KEY.alt);
+		hotkeyTool("Node_Canvas", "Skew",            "S", MOD_KEY.alt);
+		hotkeyTool("Node_Canvas", "Corner",          "C", MOD_KEY.alt);
 		
-		hotkeySimple("Node_Canvas", "Resize Canvas",   "");
-		// hotkeySimple("Node_Canvas", "Rotate 90 CW",    "");
-		// hotkeySimple("Node_Canvas", "Rotate 90 CCW",   "");
-		// hotkeySimple("Node_Canvas", "Flip H",          "");
-		// hotkeySimple("Node_Canvas", "Flip V",          "");
+		hotkeyTool("Node_Canvas", "Resize Canvas",   "");
+		// hotkeyTool("Node_Canvas", "Rotate 90 CW",    "");
+		// hotkeyTool("Node_Canvas", "Rotate 90 CCW",   "");
+		// hotkeyTool("Node_Canvas", "Flip H",          "");
+		// hotkeyTool("Node_Canvas", "Flip V",          "");
 	});
 #endregion 
 

@@ -1,14 +1,14 @@
 #region
 	FN_NODE_TOOL_INVOKE {
-		hotkeySimple("Node_Tile_Drawer", "Pencil",           "B");
-		hotkeySimple("Node_Tile_Drawer", "Eraser",           "E");
-		hotkeySimple("Node_Tile_Drawer", "Rectangle",        "N");
-		hotkeySimple("Node_Tile_Drawer", "Ellipse",          "M");
-		hotkeySimple("Node_Tile_Drawer", "Fill",             "G");
-		hotkeySimple("Node_Tile_Drawer", "Brush Rotate CW",  "R");
-		hotkeySimple("Node_Tile_Drawer", "Brush Rotate CCW", "R", MOD_KEY.shift);
-		hotkeySimple("Node_Tile_Drawer", "Brush Flip H",     "T");
-		hotkeySimple("Node_Tile_Drawer", "Brush Flip V",     "T", MOD_KEY.shift);	
+		hotkeyTool("Node_Tile_Drawer", "Pencil",           "B");
+		hotkeyTool("Node_Tile_Drawer", "Eraser",           "E");
+		hotkeyTool("Node_Tile_Drawer", "Rectangle",        "N");
+		hotkeyTool("Node_Tile_Drawer", "Ellipse",          "M");
+		hotkeyTool("Node_Tile_Drawer", "Fill",             "G");
+		hotkeyTool("Node_Tile_Drawer", "Brush Rotate CW",  "R");
+		hotkeyTool("Node_Tile_Drawer", "Brush Rotate CCW", "R", MOD_KEY.shift);
+		hotkeyTool("Node_Tile_Drawer", "Brush Flip H",     "T");
+		hotkeyTool("Node_Tile_Drawer", "Brush Flip V",     "T", MOD_KEY.shift);	
 	});
 #endregion
 

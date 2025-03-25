@@ -79,6 +79,8 @@ event_inherited();
 		var _ly  = _y;
 		var hov  = noone;
 		
+		if(MOUSE_MOVED) selecting = noone;
+		
 		for(var i = 0; i < array_length(data); i++) {
 			var _val = data[i];
 			var _txt = _val, _spr = noone;
@@ -112,7 +114,7 @@ event_inherited();
 			var _yy  = _ly + hght / 2;
 			
 			if(_act) {
-				if(sc_content.hover && MOUSE_MOVED && point_in_rectangle(_m[0], _m[1], 0, _ly, _dw, _ly + hght - 1)) {
+				if(sc_content.hover && point_in_rectangle(_m[0], _m[1], 0, _ly, _dw, _ly + hght - 1)) {
 					sc_content.hover_content = true;
 					selecting = i;
 					hov       = _val;
