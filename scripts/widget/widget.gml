@@ -36,6 +36,8 @@ function widget() constructor {
 	w = 0; 
 	h = 0;
 	
+	minWidth = ui(32);
+	
 	rx = 0;
 	ry = 0;
 	
@@ -45,9 +47,10 @@ function widget() constructor {
 		onModify = method(self, _lua_func);
 	}
 	static setSideButton = function(b,s=false) /*=>*/ { side_button = b; always_side_button = s; return self; } 
+	static setFont       = function(f) /*=>*/ { font     = f; return self; }
+	static setMinWidth   = function(w) /*=>*/ { minWidth = w; return self; }
 	
 	static setInteract = function(_i = noone) /*=>*/ { interactable = _i; return self; }
-	static setFont     = function(_f = noone) /*=>*/ { font = _f;         return self; }
 	
 	static register = function(parent = noone) {
 		if(!interactable) return;

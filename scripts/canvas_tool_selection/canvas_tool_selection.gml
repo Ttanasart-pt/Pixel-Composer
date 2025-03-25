@@ -253,12 +253,12 @@ function canvas_tool_selection(_selector) : canvas_tool() constructor {
 		mouse_cur_x = round((_mx - _x) / _s - 0.5);
 		mouse_cur_y = round((_my - _y) / _s - 0.5);
 		
-		if(is_selected) { onSelected(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); return; }
-		else if(is_surface(selection_surface)) { apply(); }
+		if(!is_selected && is_surface(selection_surface))
+			apply();
 		
 		if(key_press(vk_delete)) {
 			is_selected = false;
-			surface_free(selection_surface);
+			surface_free_safe(selection_surface);
 			
 		} else if(key_press(vk_escape))
 			apply();

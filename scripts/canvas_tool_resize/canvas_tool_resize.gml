@@ -16,6 +16,12 @@ function canvas_tool_resize(_node) : canvas_tool() constructor {
 	overlay_surface = noone;
 	
 	function init()   { 
+		if(node.attributes.useBGDim) {
+			noti_warning($"Canvas: Cannot resize canvas with 'Use Background Dimension' on.")
+			cancel();
+			return;
+		}
+		
 		var _sw = node.attributes.dimension[0];
 		var _sh = node.attributes.dimension[1];
 		

@@ -1262,8 +1262,8 @@ function Panel_Preview() : PanelContent() constructor {
             var _tool_font = f_p3;
             
             switch(instanceof(wdg)) {
-                case "textBox"       : tolw = ui(32) + (wdg.side_button != noone) * (tolh + ui(8)); break;
-                case "vectorBox"     : tolw = ui(32) * wdg.size; break;
+                case "textBox"       : tolw = max(wdg.minWidth, ui(32)) + (wdg.side_button != noone) * (tolh + ui(8)); break;
+                case "vectorBox"     : tolw = max(wdg.minWidth, ui(32)) * wdg.size; break;
                 case "buttonGroup"   :
                 case "checkBoxGroup" : tolw = tolh * wdg.size;             break;
                 case "checkBox"      : tolw = tolh;                        break;

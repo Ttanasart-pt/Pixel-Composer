@@ -8,7 +8,9 @@ function canvas_tool_fill_gradient(toolAttr) : canvas_tool_shader() constructor 
 	fy = 0;
 	
 	tx = 0;
-	ty = 0; 
+	ty = 0;
+	
+	dragging = false;
 	
 	static dither2 = [  0,  2,
 					    3,  1 ];
@@ -25,7 +27,9 @@ function canvas_tool_fill_gradient(toolAttr) : canvas_tool_shader() constructor 
 					   15, 47,  7, 39, 13, 45,  5, 37,
 					   63, 31, 55, 23, 61, 29, 53, 21];
 					   
-	function init() { mouse_init = true; }
+	function init() { 
+		mouse_init = true; 
+	}
 	
 	function onInit(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		mouse_sx = _mx;
@@ -81,9 +85,11 @@ function canvas_tool_fill_gradient(toolAttr) : canvas_tool_shader() constructor 
 			draw_surface_safe(preview_surface[0]);
 		surface_reset_shader();
 		
+		dragging = true;
 	}
 	
 	function drawOverlay( hover, active, _x, _y, _s, _mx, _my, _snx, _sny ) {
+	    if(!dragging) return;
 	    
 	    var _fx = _x + fx * _s;
 	    var _fy = _y + fy * _s;
@@ -98,6 +104,6 @@ function canvas_tool_fill_gradient(toolAttr) : canvas_tool_shader() constructor 
 	    draw_set_color(c_white); draw_circle_prec(_fx, _fy, ui(3), true);
 	    draw_set_color(c_white); draw_circle_prec(_tx, _ty, ui(6), true);
 	    
-	    
+	    dragging = false;
 	}
 }

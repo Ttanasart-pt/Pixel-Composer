@@ -34,42 +34,42 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	newInput( 0, nodeValue_Dimension(self));
 	
 	newInput( 1, nodeValue_Color("Color", self, cola(c_white) ));
-	newInput( 2, nodeValue_Int("Brush size", self, 1 ))
+	newInput( 2, nodeValue_Int("Brush Size", self, 1 ))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 32, 0.1] });
 	
-	newInput( 3, nodeValue_Float("Fill threshold", self, 0.))
+	newInput( 3, nodeValue_Float("Fill Threshold", self, 0.))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput( 4, nodeValue_Enum_Scroll("Fill type", self,  0, ["4 connect", "8 connect", "Entire canvas"]));
+	newInput( 4, nodeValue_Enum_Scroll("Fill Type", self,  0, ["4 connect", "8 connect", "Entire canvas"]));
 	
-	newInput( 5, nodeValue_Bool("Draw preview overlay", self, true));
+	newInput( 5, nodeValue_Bool("Draw Preview Overlay", self, true));
 	
 	newInput( 6, nodeValue_Surface("Brush", self))
 		.setVisible(true, false);
 	
-	newInput( 7, nodeValue_Int("Surface amount", self, 1));
+	newInput( 7, nodeValue_Int("Surface Amount", self, 1));
 	
 	newInput( 8, nodeValue_Surface("Background", self));
 	
-	newInput( 9, nodeValue_Float("Background alpha", self, 1.))
+	newInput( 9, nodeValue_Float("Background Alpha", self, 1.))
 		.setDisplay(VALUE_DISPLAY.slider);
 		
-	newInput(10, nodeValue_Bool("Render background", self, true));
+	newInput(10, nodeValue_Bool("Render Background", self, true));
 	
 	newInput(11, nodeValue_Float("Alpha", self, 1 ))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(12, nodeValue_Bool("Frames animation", self, true ));
+	newInput(12, nodeValue_Bool("Frames Animation", self, true ));
 	
-	newInput(13, nodeValue_Float("Animation speed", self, 1 ));
+	newInput(13, nodeValue_Float("Animation Speed", self, 1 ));
 	
-	newInput(14, nodeValue_Bool("Use background dimension", self, true ));
+	newInput(14, nodeValue_Bool("Use Background Dimension", self, true ));
 	
-	newInput(15, nodeValue_Range("Brush distance", self, [ 1, 1 ] , { linked : true }));
+	newInput(15, nodeValue_Range("Brush Distance", self, [ 1, 1 ] , { linked : true }));
 	
-	newInput(16, nodeValue_Bool("Rotate brush by direction", self, false ));
+	newInput(16, nodeValue_Bool("Rotate Brush by Direction", self, false ));
 	
-	newInput(17, nodeValue_Rotation_Random("Random direction", self, [ 0, 0, 0, 0, 0 ] ));
+	newInput(17, nodeValue_Rotation_Random("Random Direction", self, [ 0, 0, 0, 0, 0 ] ));
 	
 	newInput(18, nodeValue_Enum_Scroll("Animation Type", self,  0, [ "Loop", "Hold", "Clear" ]));
 	
@@ -262,6 +262,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		attributes.frames = 1;
 		attribute_surface_depth();
 	
+		attributes.useBGDim  = false;
 		attributes.dimension = [ 1, 1 ];
 	
 		output_surface   = [ surface_create_empty(1, 1) ];
@@ -560,7 +561,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		tool_resizer     = new canvas_tool_resize(self);
 		
 		tool_resizer_dim = new vectorBox(2, function(v,i) /*=>*/ { tool_resizer.setSize(v,i); })
-								.setFont(f_p3);
+								.setFont(f_p3)
+								.setMinWidth(ui(64));
 		
 		tool_resizer_buttons  = new buttonGroup( array_create(2, THEME.toolbar_check), function(v) /*=>*/ { if(v == 0) tool_resizer.apply(); else tool_resizer.cancel(); })
 									.setCollape(false);
@@ -572,8 +574,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			-1,
 			
 			new NodeTool( "Resize Canvas",	  THEME.canvas_resize )
-				.setSetting([ "Dim", tool_resizer_dim,     "dimension", tool_resizer  ])
-				.setSetting([ "",    tool_resizer_buttons, 0,           tool_attribute ])
+				.setSetting([ THEME.tool_scale, tool_resizer_dim,     "dimension", tool_resizer, "Dimension"])
+				.setSetting([ "",               tool_resizer_buttons, 0,           tool_attribute ])
 				.setToolObject(tool_resizer),
 			
 			new NodeTool( [ "Rotate 90 CW", "Rotate 90 CCW" ], [ THEME.canvas_rotate_cw, THEME.canvas_rotate_ccw ] )
@@ -1046,8 +1048,11 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			
 			tool_mirror_edit.sprs = tool_attribute.mirror[0]? THEME.canvas_mirror_diag : THEME.canvas_mirror;
 			
-			if(tool_selection.is_selected && is(_tool, canvas_tool_selection)) {
+			if(tool_selection.is_selected) {
 				tool_selection.step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+				if(is(_tool, canvas_tool_selection))
+					tool_selection.onSelected(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+					
 				array_append(rightTools, rightTools_selection);
 				
 			} else
@@ -1340,10 +1345,15 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		var cDep   = attrDepth();
 		
+		attributes.useBGDim  = false;
+		
 		if(_bgDim) {
 			var _bgDim = _bg;
 			if(is_array(_bgDim) && !array_empty(_bgDim)) _bgDim = _bg[0];
-			if(is_surface(_bgDim)) _dim = surface_get_dimension(_bgDim);
+			if(is_surface(_bgDim)) {
+				attributes.useBGDim = true;
+				_dim = surface_get_dimension(_bgDim);
+			}
 		}
 		attributes.dimension = _dim;
 		
@@ -1428,15 +1438,9 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var val = getOutputSurface();
 		var bg  = 0;
 		
-		surface_set_shader(preview_draw_final[bg], isUsingTool("Eraser")? sh_blend_subtract_alpha : sh_blend_normal, true, BLEND.over);
-			shader_set_surface("fore",    preview_draw_surface);
-			shader_set_i("useMask",       false);
-			shader_set_i("preserveAlpha", false);
-			shader_set_f("opacity",       1);
-			
+		surface_set_shader(preview_draw_final[!bg], noone, true, BLEND.over);
 			draw_surface_safe(val);
 		surface_reset_shader();
-		bg = !bg;
 		
 		if(nodeTool == noone && tool_selection.is_selected) {
 			var _fore = tool_selection.selection_surface;
@@ -1452,6 +1456,16 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			surface_reset_shader();
 			bg = !bg;
 		}
+		
+		surface_set_shader(preview_draw_final[bg], isUsingTool("Eraser")? sh_blend_subtract_alpha : sh_blend_normal, true, BLEND.over);
+			shader_set_surface("fore",    preview_draw_surface);
+			shader_set_i("useMask",       false);
+			shader_set_i("preserveAlpha", false);
+			shader_set_f("opacity",       1);
+			
+			draw_surface_safe(preview_draw_final[!bg]);
+		surface_reset_shader();
+		bg = !bg;
 		
 		return preview_draw_final[!bg];
 	}

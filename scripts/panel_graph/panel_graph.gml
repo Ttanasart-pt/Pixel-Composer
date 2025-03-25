@@ -333,9 +333,9 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         graph_pan_y_to  = 0;
         graph_pan_speed = 32;
         
-        scale           = [ 0.01, 0.02, 0.05, 0.10, 0.15, 0.20, 0.25, 0.33, 0.50, 0.65, 0.80, 1, 1.2, 1.35, 1.5, 2.0, 2.5, 3.0 ];
-        graph_s         = 1;
-        graph_s_to      = graph_s;
+        scale      = [ 0.01, 0.02, 0.05, 0.10, 0.15, 0.20, 0.25, 0.33, 0.50, 0.65, 0.80, 1, 1.2, 1.35, 1.5, 2.0, 2.5, 3.0, 4.0 ];
+        graph_s    = 1;
+        graph_s_to = graph_s;
         
         graph_dragging_key = false;
         graph_zooming_key  = false;
