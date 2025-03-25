@@ -44,7 +44,7 @@ function canvas_flood_fill_scanline(_surf, _x, _y, _thres, _corner = false) {
 		spanAbove = false;
 		spanBelow = false;
 		
-		while(x1 < surface_w && canvas_ff_fillable(colorBase, colorFill, x1, y1, thr)) {
+		while(x1 < _ff_w && canvas_ff_fillable(colorBase, colorFill, x1, y1, thr)) {
 			draw_point(x1, y1);
 			buffer_seek(_ff_buff, buffer_seek_start, (y1 * _ff_w + x1) * 4)
 			buffer_write(_ff_buff, buffer_u32, _c);
@@ -61,7 +61,7 @@ function canvas_flood_fill_scanline(_surf, _x, _y, _thres, _corner = false) {
 				}
 			}
 				
-			if(y1 < surface_h - 1) {
+			if(y1 < _ff_h - 1) {
 				if(_corner && x1 > 0 && canvas_ff_fillable(colorBase, colorFill, x1 - 1, y1 + 1, thr)) {	//Check bottom left pixel
 					ds_queue_enqueue(qx, x1 - 1);
 					ds_queue_enqueue(qy, y1 + 1);
@@ -73,13 +73,13 @@ function canvas_flood_fill_scanline(_surf, _x, _y, _thres, _corner = false) {
 				}
 			}
 				
-			if(_corner && x1 < surface_w - 1) {
+			if(_corner && x1 < _ff_w - 1) {
 				if(y1 > 0 && canvas_ff_fillable(colorBase, colorFill, x1 + 1, y1 - 1, thr)) {				//Check top right pixel
 					ds_queue_enqueue(qx, x1 + 1);
 					ds_queue_enqueue(qy, y1 - 1);
 				}
 					
-				if(y1 < surface_h - 1 && canvas_ff_fillable(colorBase, colorFill, x1 + 1, y1 + 1, thr)) {	//Check bottom right pixel
+				if(y1 < _ff_h - 1 && canvas_ff_fillable(colorBase, colorFill, x1 + 1, y1 + 1, thr)) {	//Check bottom right pixel
 					ds_queue_enqueue(qx, x1 + 1);
 					ds_queue_enqueue(qy, y1 + 1);
 				}
@@ -109,8 +109,8 @@ function canvas_flood_fill_all(_surf, _x, _y, _thres) {
 	buffer_get_surface(_ff_buff, _surf, 0);
 	buffer_seek(_ff_buff, buffer_seek_start, 0);
 	
-	var sel_x0 = surface_w;
-	var sel_y0 = surface_h;
+	var sel_x0 = _ff_w;
+	var sel_y0 = _ff_h;
 	var sel_x1 = 0;
 	var sel_y1 = 0;
 	

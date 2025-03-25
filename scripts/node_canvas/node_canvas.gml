@@ -1050,7 +1050,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			
 			if(tool_selection.is_selected) {
 				tool_selection.step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-				if(is(_tool, canvas_tool_selection))
+				if(_tool_sel == noone && is(_tool, canvas_tool_selection))
 					tool_selection.onSelected(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 					
 				array_append(rightTools, rightTools_selection);

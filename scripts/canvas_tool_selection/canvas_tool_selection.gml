@@ -260,7 +260,7 @@ function canvas_tool_selection(_selector) : canvas_tool() constructor {
 			is_selected = false;
 			surface_free_safe(selection_surface);
 			
-		} else if(key_press(vk_escape))
+		} else if(key_press(vk_escape) || key_press(vk_enter))
 			apply();
 	}
 	

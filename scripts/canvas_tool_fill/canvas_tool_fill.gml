@@ -20,7 +20,34 @@ function canvas_tool_fill(toolAttr) : canvas_tool() constructor {
 			node.storeAction();
 			var _surf = _use_output? output_surface : canvas_surface;
 			
-			surface_set_target(canvas_surface);
+			if(node.tool_selection.is_selected) {
+				var _srf = _surf;
+				var _dim = surface_get_dimension(_surf);
+				_surf = surface_create(_dim[0], _dim[1]);
+				
+				var _fore = node.tool_selection.selection_surface;
+				var _mask = node.tool_selection.selection_mask;
+				var _pos  = node.tool_selection.selection_position;
+				
+				mouse_cur_x += _pos[0];
+				mouse_cur_y += _pos[1];
+				
+				surface_set_shader(_surf, sh_canvas_fill_selection_filter);
+					shader_set_surface("fore",    _fore);
+					shader_set_surface("mask",    _mask);
+					
+					shader_set_2("dimension",     _dim);
+					shader_set_2("foreDimension", surface_get_dimension(_fore));
+					shader_set_2("position",      _pos);
+					shader_set_c("color",         CURRENT_COLOR);
+					
+					draw_surface_safe(_srf);
+				surface_reset_shader();
+				
+			}
+			
+			surface_set_target(drawing_surface);
+				DRAW_CLEAR
 				switch(_fill_type) {
 					case 0 : 
 					case 1 : canvas_flood_fill_scanline(_surf, mouse_cur_x, mouse_cur_y, _thr, _fill_type); break;
@@ -28,7 +55,11 @@ function canvas_tool_fill(toolAttr) : canvas_tool() constructor {
 				}
 			surface_reset_target();
 			
+			node.apply_draw_surface();
 			node.surface_store_buffer();
+			
+			if(node.tool_selection.is_selected)
+				surface_free(_surf);
 		}
 			
 	}
