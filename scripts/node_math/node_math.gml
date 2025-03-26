@@ -119,7 +119,7 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			case MATH_OPERATOR.multiply :	return a * b;
 			case MATH_OPERATOR.divide :		return b == 0? 0 : a / b;
 				
-			case MATH_OPERATOR.power :		return power(a, b);
+			case MATH_OPERATOR.power :		return b >= 0? power(a, b) : 1 / power(a, -b);
 			case MATH_OPERATOR.root :		return b == 0? 0 : power(a, 1 / b);
 			
 			case MATH_OPERATOR.sin :		return (use_deg? dsin(a) : sin(a)) * b;
