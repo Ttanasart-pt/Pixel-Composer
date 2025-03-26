@@ -21,6 +21,7 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 	onModify  = _onModify;	
 	data_list = _data;
 	data      = _data;
+	data_len  = 1;
 	curr_text = 0;
 	
 	arrow_spr = THEME.scroll_box_arrow;
@@ -84,7 +85,8 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 		open_ry = _ry;
 		h = _h;
 		
-		data = is_method(data_list)? data_list() : data_list;
+		data     = is_method(data_list)? data_list() : data_list;
+		data_len = array_length(data);
 		
 		if(array_empty(data)) {
 			draw_sprite_stretched(THEME.textbox, 3, _x, _y, _w, _h);

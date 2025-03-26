@@ -1,7 +1,8 @@
 function buttonGroup(_data, _onClick) : widget() constructor {
-	data    = _data;
-	onClick = _onClick;
-	size    = array_length(data);
+	data     = _data;
+	onClick  = _onClick;
+	size     = array_length(data);
+	data_len = array_length(data);
 	
 	display_button = false;
 	buttonSpr      = [ THEME.button_left, THEME.button_middle, THEME.button_right ];
@@ -67,6 +68,7 @@ function buttonGroup(_data, _onClick) : widget() constructor {
 			current_selecting = array_safe_get_fast(current_selecting, 0);
 		hovering = hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h);
 		
+		data_len = array_length(data);
 		var amo  = array_length(data);
 		var _tw  = _w;
 		var _mx  = false, _t = 0;
