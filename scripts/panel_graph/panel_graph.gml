@@ -1403,34 +1403,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                         }
                             
                     } else {
-                        if(is(node_hovering, Node_Frame)) {
-                        	addKeyOverlay("Frames selection", [[ "Ctrl", "Exclude contents" ]]);
-			
-                            var fx0 = (node_hovering.x + graph_x) * graph_s;
-                            var fy0 = (node_hovering.y + graph_y) * graph_s;
-                            var fx1 = fx0 + node_hovering.w * graph_s;
-                            var fy1 = fy0 + node_hovering.h * graph_s;
-                        
-                            nodes_selecting = [ node_hovering ];
-                            
-                            if(!key_mod_press(CTRL)) {
-	                            for( var i = 0, n = array_length(nodes_list); i < n; i++ ) { //select content
-	                                var _node = nodes_list[i];
-	                                if(_node == node_hovering) continue;
-	                                if(!display_parameter.show_control && _node.is_controller) continue;
-	                                if(!_node.selectable) continue;
-	                                
-	                                var _x = (_node.x + graph_x) * graph_s;
-	                                var _y = (_node.y + graph_y) * graph_s;
-	                                var _w = _node.w * graph_s;
-	                                var _h = _node.h * graph_s;
-	                                
-	                                if(_w && _h && rectangle_inside_rectangle(fx0, fy0, fx1, fy1, _x, _y, _x + _w, _y + _h))
-	                                    array_push_unique(nodes_selecting, _node);
-	                            }
-                            }
-                            
-                        } else if(DOUBLE_CLICK) {
+                        if(DOUBLE_CLICK) {
                             PANEL_PREVIEW.setNodePreview(node_hovering);
                             
                             if(PREFERENCES.inspector_focus_on_double_click) {
@@ -1452,6 +1425,35 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                                 
                             if(array_length(nodes_selecting) > 1)
                                 _anc = nodes_select_anchor == node_hovering? noone : node_hovering;
+                                
+                            if(is(node_hovering, Node_Frame)) {
+	                            var fx0 = (node_hovering.x + graph_x) * graph_s;
+	                            var fy0 = (node_hovering.y + graph_y) * graph_s;
+	                            var fx1 = fx0 + node_hovering.w * graph_s;
+	                            var fy1 = fy0 + node_hovering.h * graph_s;
+	                            var sel = key_mod_press(CTRL);
+	                            
+	                        	node_hovering.__nodes = [];
+	                            if(sel) nodes_selecting = [ node_hovering ];
+	                        	
+	                            for( var i = 0, n = array_length(nodes_list); i < n; i++ ) { // Select content
+	                                var _node = nodes_list[i];
+	                                
+	                                if(_node == node_hovering) continue;
+	                                if(!_node.selectable)      continue;
+	                                if(!display_parameter.show_control && _node.is_controller) continue;
+	                                
+	                                var _x = (_node.x + graph_x) * graph_s;
+	                                var _y = (_node.y + graph_y) * graph_s;
+	                                var _w = _node.w * graph_s;
+	                                var _h = _node.h * graph_s;
+	                                
+	                                if(_w && _h && rectangle_inside_rectangle(fx0, fy0, fx1, fy1, _x, _y, _x + _w, _y + _h)) {
+	                                    array_push(node_hovering.__nodes, _node);
+	                                    if(sel) array_push(nodes_selecting, _node);
+	                                }
+	                            }
+	                        }
                         }
                         
                         if(WIDGET_CURRENT) WIDGET_CURRENT.deactivate();
@@ -1799,7 +1801,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		                _ny = value_snap(_ny, _grd);
 		            }
                     
-                    _node.move(_nx, _ny, graph_s);
+                    _node.move(_nx, _ny);
                 }
                    
                 node_drag_ox = nx;
@@ -1863,7 +1865,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                     
                     if(!_node.selectable) continue;
                     if(!display_parameter.show_control && _node.is_controller) continue;
-                    if(is(_node, Node_Frame) && !nodes_select_frame) continue;
+                    if(is(_node, Node_Frame) && !nodes_select_frame)           continue;
                     
                     var _x = (_node.x + graph_x) * graph_s;
                     var _y = (_node.y + graph_y) * graph_s;

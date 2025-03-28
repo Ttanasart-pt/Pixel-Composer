@@ -99,6 +99,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		y = _y;
 		w = 128;
 		h = 128;
+		moved   = false;
 		min_w   = w;
 		con_h   = 128;
 		h_param = h;
@@ -612,6 +613,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	////- STEP
 	
 	static stepBegin = function() {
+		moved = false;
 		
 		if(use_cache) cacheArrayCheck();
 		
@@ -2896,11 +2898,13 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(_oh != _h) refreshNodeDisplay();
 	}
 	
-	static move = function(_x, _y, _s) {
+	static move = function(_x, _y) {
+		if(moved) return;
 		if(x == _x && y == _y) return;
 		
 		x = _x;
 		y = _y; 
+		moved = true;
 		if(!LOADING) project.modified = true;
 	}
 	

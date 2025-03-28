@@ -27,6 +27,7 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	tb_name.align  = fa_center;
 	
 	name_height  = 18;
+	__nodes      = [];
 	
 	draw_x0 = 0;
 	draw_y0 = 0;
@@ -52,6 +53,28 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		.rejectArray();
 	
 	input_display_list = [ 0, 1, 3, 4 ];
+	
+	static move = function(_x, _y) {
+		if(moved) return;
+		if(x == _x && y == _y) return;
+		
+		var _dx = _x - x;
+		var _dy = _y - y;
+		
+		x = _x; 
+		y = _y; 
+		moved = true;
+		
+		for( var i = 0, n = array_length(__nodes); i < n; i++ ) {
+			var _n  = __nodes[i];
+			var _nx = _n.x + _dx;
+			var _ny = _n.y + _dy;
+			
+			_n.move(_nx, _ny);
+		}
+		
+		if(!LOADING) project.modified = true;
+	}
 	
 	////- Update
 	
