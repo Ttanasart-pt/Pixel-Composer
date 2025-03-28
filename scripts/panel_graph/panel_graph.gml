@@ -1813,7 +1813,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                 var shfy = node_drag_sy - ny;
                 
                 UNDO_HOLDING = false;    
-                for(var i = 0; i < array_length(nodes_selecting); i++) {
+                for( var i = 0, n = array_length(nodes_selecting); i < n; i++ ) {
                     var _n = nodes_selecting[i];
                     if(_n == noone) continue;
                     recordAction(ACTION_TYPE.var_modify, _n, [ _n.x + shfx, "x", "node x position" ]);

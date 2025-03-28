@@ -33,32 +33,32 @@ function Panel_Addon() : PanelContent() constructor {
 	#endregion
 	
 	function onResize() {
-		sc_addon.resize(w - padding * 2, h - title_height + padding + ui(40));
+		sc_addon.resize(w - padding * 2, h - (padding * 2 + ui(40)));
 	}
 	
 	#region content
-		sc_addon = new scrollPane(w - padding * 2, h - title_height + padding + ui(40), function(_y, _m) {
+		sc_addon = new scrollPane(w - padding * 2, h - (padding * 2 + ui(40)), function(_y, _m) {
 			draw_clear_alpha(COLORS.panel_bg_clear, 0);
 			var _h  = 0;
 			var ww  = sc_addon.surface_w;
-			var hg  = ui(40);
+			var hg  = ui(32);
 			var i   = 0;
+			
+			var bsp = THEME.button_hide_fill;
+			var bs  = hg - ui(8);
 		
 			var arr = search_string == ""? ADDONS : search_res;
 			
 			for( var i = 0, n = array_length(arr); i < n; i++ ) {
 				var _addon = arr[i];
 				
-				var bw = ui(28);
-				var bh = ui(28);
-				var bx = ww - ui(4) - bw;
+				var bx = ww - ui(4);
 				var by = _y;
 				var hh = hg;
 				var _act = addonActivated(_addon.name);
 				
 				if(_addon.open) {
 					draw_set_font(f_p1);
-					hh += ui(8);
 					hh += string_height(_addon.meta.author) + ui(8);
 					hh += string_height_ext(_addon.meta.description, -1, ww - ui(16)) + ui(8);
 				}
@@ -73,13 +73,13 @@ function Panel_Addon() : PanelContent() constructor {
 				} else
 					draw_sprite_stretched_ext(THEME.box_r5_clr, 0, 0, by, ww, hg, COLORS.panel_inspector_group_bg, 1);
 				
-				draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
+				draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
 				draw_text_add(ui(44), by + hg / 2, _addon.name);
 				
-				var chx0 = ui(6);
-				var chy0 = by + ui(6);
-				var chx1 = chx0 + ui(28);
-				var chy1 = chy0 + ui(28);
+				var chx0 = ui(4);
+				var chy0 = by + ui(4);
+				var chx1 = chx0 + bs;
+				var chy1 = chy0 + bs;
 				var _onStart = array_exists(ADDONS_ON_START, _addon.name);
 				
 				if(pHOVER && point_in_rectangle(_m[0], _m[1], chx0, chy0, chx1, chy1)) {
@@ -89,38 +89,38 @@ function Panel_Addon() : PanelContent() constructor {
 					else if(!_onStart)	TOOLTIP = __txtx("panel_addon_activated", "Activated");
 					else				TOOLTIP = __txtx("panel_addon_run_on_start", "Run on start");
 					
-					draw_sprite_stretched_ext(THEME.checkbox_def, 1, chx0, chy0, ui(28), ui(28), c_white, 1);
+					draw_sprite_stretched_ext(THEME.checkbox_def, 1, chx0, chy0, bs, bs, c_white, 1);
 					hover = false;
 					
 					if(mouse_press(mb_left, pFOCUS)) {
 						if(!_act)
-							addonTrigger(_addon.name);
+							addonLoad(_addon.name, true);
+							
 						else if(!_onStart) {
 							array_push(ADDONS_ON_START, _addon.name);
+							
 						} else {
-							addonTrigger(_addon.name);
+							addonUnload(_addon.name);
 							array_remove(ADDONS_ON_START, _addon.name);
 						}
 						
 						json_save_struct(DIRECTORY + "Addons/__init.json", ADDONS_ON_START);
 					}
 				} else
-					draw_sprite_stretched_ext(THEME.checkbox_def, 0, chx0, chy0, ui(28), ui(28), c_white, 1);
+					draw_sprite_stretched_ext(THEME.checkbox_def, 0, chx0, chy0, bs, bs, c_white, 1);
 				
-				if(_onStart) 
-					draw_sprite_stretched_ext(THEME.checkbox_on_start, 0, chx0, chy0, ui(28), ui(28), COLORS._main_value_positive, 1);
-				else if(_act) 
-					draw_sprite_stretched_ext(THEME.checkbox_def, 2, chx0, chy0, ui(28), ui(28), COLORS._main_accent, 1);
+				if(_onStart)  draw_sprite_stretched_ext(THEME.checkbox_def, 2, chx0, chy0, bs, bs, COLORS._main_value_positive, 1);
+				else if(_act) draw_sprite_stretched_ext(THEME.checkbox_def, 2, chx0, chy0, bs, bs, COLORS._main_accent, 1);
 				
-				var _bx = bx - ui(4);
+				var _bx = bx - bs;
 				var _by = by + ui(4);
 				
-				var b = buttonInstant(THEME.button_hide_fill, _bx, _by, ui(32), ui(32), _m, pHOVER, pFOCUS, __txt("Open in explorer"), THEME.folder_content);
+				var b = buttonInstant(bsp, _bx, _by, bs, bs, _m, pHOVER, pFOCUS, __txt("Open in explorer"), THEME.folder, 0, COLORS._main_icon, 1, .75);
 				if(b) hover = false;
 				if(b == 2) shellOpenExplorer(DIRECTORY + "Addons/" + _addon.name);
 				
-				_bx -= ui(36)
-				if(_act && buttonInstant(THEME.button_hide_fill, _bx, _by, ui(32), ui(32), _m, pHOVER, pFOCUS, __txt("Addon settings"), THEME.addon_setting) == 2) {
+				_bx -= bs + ui(4);
+				if(_act && buttonInstant(bsp, _bx, _by, bs, bs, _m, pHOVER, pFOCUS, __txt("Addon settings"), THEME.addon_setting, 0, COLORS._main_icon, 1, .75) == 2) {
 					var _addObj = noone;
 					with(_addon_custom) if(name == _addon.name) _addObj = self;
 						
@@ -140,13 +140,13 @@ function Panel_Addon() : PanelContent() constructor {
 				if(_addon.open) {
 					var _yy = by + hg + ui(8);
 					
-					draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text_sub);
+					draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
 					draw_text_add(ui(8), _yy, __txt("Author"));
-					draw_set_text(f_p1, fa_right, fa_top, COLORS._main_text);
+					draw_set_text(f_p2, fa_right, fa_top, COLORS._main_text);
 					draw_text_add(ww - ui(8), _yy, _addon.meta.author);
 					
-					_yy += string_height(_addon.meta.author) + ui(8);
-					draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text_sub);
+					_yy += string_height(_addon.meta.author) + ui(4);
+					draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
 					draw_text_ext_add(ui(8), _yy, _addon.meta.description, -1, ww - ui(16));
 				}
 				

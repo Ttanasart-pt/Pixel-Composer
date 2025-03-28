@@ -4,23 +4,26 @@ event_inherited();
 #region init
 	alarm[0] = 1;
 	
-	function init(directory, _openDialog = true) {
+	function init(_directory, _openDialog = true) {
 		ID = UUID_generate();
 		global.ADDON_ID[? ID] = self;
-		ready = false;
-		name = filename_name_only(directory);
 		
-		thread = lua_create();
+		directory = _directory;
+		name      = filename_name_only(directory);
+		ready     = false;
+		thread    = lua_create();
 		__addon_lua_setup(thread, self);
 		
-		self.directory = directory;
-	
-		var propPath = directory + "/meta.json";
+		var propPath  = $"{directory}/meta.json";
 		context_menus = {};
-		panels = {};
+		panels        = {};
+		scripts       = [ "./script.lua" ];
 		
 		if(file_exists_empty(propPath)) {
 			var meta = json_load_struct(propPath);
+			if(struct_has(meta, "scripts")) 
+				scripts = meta.scripts;
+				
 			if(struct_has(meta, "panels")) {
 				panels = meta.panels;
 				
@@ -43,21 +46,26 @@ event_inherited();
 				for( var i = 0, n = array_length(arr); i < n; i++ ) {
 					var _call = ds_map_try_get(CONTEXT_MENU_CALLBACK, arr[i], []);
 					var _fnk  = context_menus[$ arr[i]];
-					var _generator = new addonContextGenerator(self, _fnk);
-					array_push(_call, _generator);
+					var _gen  = new addonContextGenerator(self, _fnk);
+					array_push(_call, _gen);
 					
 					CONTEXT_MENU_CALLBACK[? arr[i]] = _call;
 				}
 			}
 		}
 		
-		scriptPath = directory + "/script.lua";
-		if(!file_exists_empty(scriptPath)) {
-			noti_warning(title + " Addon error: script.lua not found.");
-			return self;
+		for( var i = 0, n = array_length(scripts); i < n; i++ ) {
+			var _scr = scripts[i];
+			    _scr = string_replace(_scr, "./", directory + "/");
+			
+			if(!file_exists_empty(_scr)) {
+				noti_warning($"[{name}] Addon error: {_scr} not found.");
+				continue;
+			}
+			
+			lua_add_file(thread, _scr);
 		}
-	
-		lua_add_file(thread, scriptPath);
+		
 		var runResult = lua_call(thread, "init");
 		
 		array_push(ANIMATION_PRE,  animationPreStep);
