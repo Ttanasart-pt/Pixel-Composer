@@ -287,35 +287,35 @@ function Panel_Preference() : PanelContent() constructor {
     		
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item(
     			__txtx("pref_clear_temp", "Temp File"),
-    			button(function() /*=>*/ { directory_clear(TEMPDIR); }).setText($"Clear Temp Folder ({directory_size_mb(TEMPDIR)} Mb)"),
+    			button(function() /*=>*/ { directory_clear(TEMPDIR); }).setText($"Clear Temp Folder"),
     		));
     	
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item(
     			__txtx("pref_clear_theme", "Autosaves"),
-    			button(function() /*=>*/ { directory_destroy(DIRECTORY + "Autosave"); }).setText($"Clear Autosaves ({directory_size_mb(DIRECTORY + "Autosave")} Mb)"),
+    			button(function() /*=>*/ { directory_destroy(DIRECTORY + "Autosave"); }).setText($"Clear Autosaves"),
     		));
     	
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item(
     			__txtx("pref_clear_theme", "Caches"),
     			button(function() /*=>*/ { directory_destroy(DIRECTORY + "Cache"); 
-    			               directory_destroy(DIRECTORY + "font_cache"); }).setText($"Clear Caches ({directory_size_mb(DIRECTORY + "Cache")} Mb)"),
+    			               directory_destroy(DIRECTORY + "font_cache"); }).setText($"Clear Caches"),
     		));
     	
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item(
     			__txtx("pref_clear_collection", "Default Collections"),
-    			button(function() /*=>*/ { clearDefaultCollection(); }).setText($"Clear Default Collections ({directory_size_mb(DIRECTORY + "Collections")} Mb)"),
+    			button(function() /*=>*/ { clearDefaultCollection(); }).setText($"Clear Default Collections"),
     		));
     	
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item(
     			__txtx("pref_clear_theme", "Default Theme"),
     			button(function() /*=>*/ { directory_destroy(DIRECTORY + "Themes/default"); file_delete_safe(DIRECTORY + "Themes/version"); })
-    				.setText($"Clear Default Theme ({directory_size_mb(DIRECTORY + "Themes/default")} Mb)"),
+    				.setText($"Clear Default Theme"),
     		));
     		
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item(
     			__txtx("pref_clear_nodes", "Default Nodes"),
     			button(function() /*=>*/ { directory_destroy(DIRECTORY + "Nodes/Internal"); file_delete_safe(DIRECTORY + "Nodes/version"); })
-    				.setText($"Clear Nodes ({directory_size_mb(DIRECTORY + "Nodes/Internal")} Mb)"),
+    				.setText($"Clear Nodes"),
     		));
     		
     #endregion
@@ -1163,6 +1163,7 @@ function Panel_Preference() : PanelContent() constructor {
     #endregion
     
     #region hotkey
+    	hk_init       = false;
     	hk_editing    = noone;
     	hk_modifiers  = MOD_KEY.none;
     	hotkeyContext = [];
@@ -1176,85 +1177,90 @@ function Panel_Preference() : PanelContent() constructor {
     	keyboards_display = new KeyboardDisplay();
     	key_node_index = [];
     	
-    	for(var i = 0; i < ds_list_size(HOTKEY_CONTEXT); i++) {
-    		var ctx  = HOTKEY_CONTEXT[| i];
-    		
-    		var _title = ctx == 0? "Global" : ctx;
-    		    _title = string_replace_all(_title, "_", " ");
-		    if(string_starts_with(_title, "Node")) {
-		    	array_push(key_node_index, ctx);
-		    	continue;
-		    }
-		    
-    		array_push(hotkeyArray, _title);
-    		
-    		var _lst = [];
-    		var ll   = HOTKEYS[$ ctx];
-    		for(var j = 0; j < ds_list_size(ll); j++)
-    			array_push(_lst, ll[| j]);
-    		
-    		array_sort(_lst, function(s1, s2) /*=>*/ {return string_compare(s1.name, s2.name)});
-    		array_push(hotkeyContext, { context: ctx, list: _lst });
-    		
+    	function initHK() {
+    		hk_init = true;
+	    	
+	    	for(var i = 0; i < ds_list_size(HOTKEY_CONTEXT); i++) {
+	    		var ctx  = HOTKEY_CONTEXT[| i];
+	    		
+	    		var _title = ctx == 0? "Global" : ctx;
+	    		    _title = string_replace_all(_title, "_", " ");
+			    if(string_starts_with(_title, "Node")) {
+			    	array_push(key_node_index, ctx);
+			    	continue;
+			    }
+			    
+	    		array_push(hotkeyArray, _title);
+	    		
+	    		var _lst = [];
+	    		var ll   = HOTKEYS[$ ctx];
+	    		for(var j = 0; j < ds_list_size(ll); j++)
+	    			array_push(_lst, ll[| j]);
+	    		
+	    		array_sort(_lst, function(s1, s2) /*=>*/ {return string_compare(s1.name, s2.name)});
+	    		array_push(hotkeyContext, { context: ctx, list: _lst });
+	    		
+	    	}
+	    	
+	    	array_push(hotkeyContext, -1);
+			array_push(hotkeyArray,   -1);
+	    	
+	    	for( var i = 0, n = array_length(key_node_index); i < n; i++ ) {
+	    		var ctx  = key_node_index[i];
+	    		var _lst = [];
+	    		
+	    		var _title = ctx == 0? "Global" : ctx;
+	    		    _title = string_replace_all(_title, "_", " ");
+			    
+	    		array_push(hotkeyArray, _title);
+	    		
+	    		var ll = HOTKEYS[$ ctx];
+	    		for(var j = 0; j < ds_list_size(ll); j++)
+	    			array_push(_lst, ll[| j]);
+	    		
+	    		array_sort(_lst, function(s1, s2) /*=>*/ {return string_compare(s1.name, s2.name)});
+	    		array_push(hotkeyContext, { context: ctx, list: _lst });
+	    	}
+	    	
+	    	array_push(hotkeyContext, -1);
+			array_push(hotkeyArray,   -1);
+	    	
+	    	var keys = struct_get_names(HOTKEYS_CUSTOM);
+	    	array_sort(keys, true);
+	    	
+	    	for( var i = 0, n = array_length(keys); i < n; i++ ) {
+	    		var ctx = keys[i];
+	    		
+	    		var hotkey = HOTKEYS_CUSTOM[$ ctx];
+	    		var hks    = struct_get_names(hotkey);
+	    		var _lst   = [];
+	    		
+	    		for (var j = 0, m = array_length(hks); j < m; j++) {
+	    			var _n = hks[j];
+	    			var _k = hotkey[$ _n];
+	    			
+	    			_k.context = ctx;
+	    			_k.name    = _n;
+	    			
+	    			array_push(_lst, _k);
+	    		}
+	    		
+	    		array_sort(_lst, function(s1, s2) /*=>*/ {return string_compare(s1.name, s2.name)});
+	    		array_push(hotkeyContext, { context: ctx, list: _lst });
+	    		
+	    		var _title = ctx == 0? "Global" : ctx;
+	    		    _title = string_replace_all(_title, "_", " ");
+	    		array_push(hotkeyArray, _title);
+	    	}
+	    	
+	    	hk_page   = 0;
+	    	hk_scroll = new scrollBox(hotkeyArray, function(val) /*=>*/ { hk_page = val; sp_hotkey.scroll_y_to = 0; })
+	    					.setFont(f_p2)
+	    					.setHorizontal(true)
+	    					.setAlign(fa_left)
+	    					.setMinWidth(ui(128))
+	    	
     	}
-    	
-    	array_push(hotkeyContext, -1);
-		array_push(hotkeyArray,   -1);
-    	
-    	for( var i = 0, n = array_length(key_node_index); i < n; i++ ) {
-    		var ctx  = key_node_index[i];
-    		var _lst = [];
-    		
-    		var _title = ctx == 0? "Global" : ctx;
-    		    _title = string_replace_all(_title, "_", " ");
-		    
-    		array_push(hotkeyArray, _title);
-    		
-    		var ll = HOTKEYS[$ ctx];
-    		for(var j = 0; j < ds_list_size(ll); j++)
-    			array_push(_lst, ll[| j]);
-    		
-    		array_sort(_lst, function(s1, s2) /*=>*/ {return string_compare(s1.name, s2.name)});
-    		array_push(hotkeyContext, { context: ctx, list: _lst });
-    	}
-    	
-    	array_push(hotkeyContext, -1);
-		array_push(hotkeyArray,   -1);
-    	
-    	var keys = struct_get_names(HOTKEYS_CUSTOM);
-    	array_sort(keys, true);
-    	
-    	for( var i = 0, n = array_length(keys); i < n; i++ ) {
-    		var ctx = keys[i];
-    		
-    		var hotkey = HOTKEYS_CUSTOM[$ ctx];
-    		var hks    = struct_get_names(hotkey);
-    		var _lst   = [];
-    		
-    		for (var j = 0, m = array_length(hks); j < m; j++) {
-    			var _n = hks[j];
-    			var _k = hotkey[$ _n];
-    			
-    			_k.context = ctx;
-    			_k.name    = _n;
-    			
-    			array_push(_lst, _k);
-    		}
-    		
-    		array_sort(_lst, function(s1, s2) /*=>*/ {return string_compare(s1.name, s2.name)});
-    		array_push(hotkeyContext, { context: ctx, list: _lst });
-    		
-    		var _title = ctx == 0? "Global" : ctx;
-    		    _title = string_replace_all(_title, "_", " ");
-    		array_push(hotkeyArray, _title);
-    	}
-    	
-    	hk_page   = 0;
-    	hk_scroll = new scrollBox(hotkeyArray, function(val) /*=>*/ { hk_page = val; sp_hotkey.scroll_y_to = 0; })
-    					.setFont(f_p2)
-    					.setHorizontal(true)
-    					.setAlign(fa_left)
-    					.setMinWidth(ui(128))
     	
     	sp_hotkey = new scrollPane(panel_width, hotkey_height, function(_y, _m) {
     		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
@@ -1665,6 +1671,8 @@ function Panel_Preference() : PanelContent() constructor {
     		    break;
     		
     	    case 4 : //Hotkeys
+    	    	if(!hk_init) initHK();
+    	    	
         		if(mouse_press(mb_left, pFOCUS)) 
         			hk_editing = noone;
         		

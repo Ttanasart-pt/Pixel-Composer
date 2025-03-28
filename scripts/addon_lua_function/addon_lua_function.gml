@@ -563,7 +563,7 @@
 		[ "random_get_seed", random_get_seed ], 
 		[ "randomise",       randomise       ], 
 
-		[ "ui",       ui       ], 
+		[ "ui",       ui_raw   ], 
 		[ "round",    round    ], 
 		[ "floor",    floor    ], 
 		[ "frac",     frac     ], 
