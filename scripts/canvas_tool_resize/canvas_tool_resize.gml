@@ -30,7 +30,8 @@ function canvas_tool_resize(_node) : canvas_tool() constructor {
 	}
 	
 	function apply()  { 
-		applySize(points[0], points[1], points[2], points[3]); disable(); 
+		applySize(); 
+		disable(); 
 		
 		var p = PANEL_PREVIEW;
 		p.canvas_x += points[0] * p.canvas_s;
@@ -39,7 +40,12 @@ function canvas_tool_resize(_node) : canvas_tool() constructor {
 	
 	function cancel() { disable(); }
 	
-	function applySize(x0, y0, x1, y1) {
+	function applySize() {
+		var x0 = points[0];
+		var y0 = points[1];
+		var x1 = points[2];
+		var y1 = points[3];
+		
 		var _sw = x1 - x0;
 		var _sh = y1 - y0;
 		if(_sw <= 0 || _sh <= 0) return;
@@ -66,6 +72,65 @@ function canvas_tool_resize(_node) : canvas_tool() constructor {
 		}
 		
 		node.inputs[0].setValue([_sw, _sh]);
+		node.triggerRender();
+	}
+	
+	function setAnchor(a) {
+		var _r = floor(a / 3);
+		var _c =      (a % 3);
+		
+		var x0 = points[0];
+		var y0 = points[1];
+		var x1 = points[2];
+		var y1 = points[3];
+		
+		var _sw = x1 - x0;
+		var _sh = y1 - y0;
+		
+		var _ow = node.attributes.dimension[0];
+		var _oh = node.attributes.dimension[1];
+		
+		switch(_r) {
+			case 0 : 
+				var _dy = -y0;
+				points[1] += _dy;
+				points[3] += _dy;
+				break;
+			
+			case 1 : 
+				var _dy = round((_oh / 2) - (y0 + y1) / 2);
+				points[1] += _dy;
+				points[3] += _dy;
+				break;
+			
+			case 2 : 
+				var _dy = _oh - y1;
+				points[1] += _dy;
+				points[3] += _dy;
+				break;
+			
+		}
+		
+		switch(_c) {
+			case 0 : 
+				var _dx = -x0;
+				points[0] += _dx;
+				points[2] += _dx;
+				break;
+			
+			case 1 : 
+				var _dx = round((_ow / 2) - (x0 + x1) / 2);
+				points[0] += _dx;
+				points[2] += _dx;
+				break;
+			
+			case 2 : 
+				var _dx = _ow - x1;
+				points[0] += _dx;
+				points[2] += _dx;
+				break;
+			
+		}
 	}
 	
 	function setSize(_s, i) {

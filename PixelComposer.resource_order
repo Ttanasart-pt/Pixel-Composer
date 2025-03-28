@@ -294,7 +294,6 @@
     {"name":"libfilesystem","order":14,"path":"extensions/libfilesystem/libfilesystem.yy",},
     {"name":"libxprocess","order":9,"path":"extensions/libxprocess/libxprocess.yy",},
     {"name":"macMinimize","order":2,"path":"extensions/macMinimize/macMinimize.yy",},
-    {"name":"mouse_wheel","order":22,"path":"extensions/mouse_wheel/mouse_wheel.yy",},
     {"name":"patreon_key","order":1,"path":"extensions/patreon_key/patreon_key.yy",},
     {"name":"Regex","order":11,"path":"extensions/Regex/Regex.yy",},
     {"name":"Spout","order":16,"path":"extensions/Spout/Spout.yy",},

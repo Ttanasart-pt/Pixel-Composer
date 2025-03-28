@@ -11,8 +11,10 @@ function __NodeValue_Enum_Button(_name, _node, _value, _data) : NodeValue(_name,
 		var val = __curr_get_val[0];
 		var nod = __curr_get_val[1]; if(!is(nod, NodeValue)) return val;
 		
-		var choicesAmount = editWidget.data_len - 1;
-		if(is_real(val)) val = clamp(val, 0, choicesAmount);
+		var choicesAmount = array_length(editWidget.data);
+		if(choicesAmount == undefined) return val;
+		
+		if(is_real(val)) val = clamp(val, 0, choicesAmount - 1);
 		
 		return val;
 	}

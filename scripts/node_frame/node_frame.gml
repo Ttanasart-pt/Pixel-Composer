@@ -84,12 +84,13 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	static drawBadge = function() { return noone; }
 	
 	static drawNodeBase = function(xx, yy, _s, _panel = noone) {
-		var _yy = yy - name_height;
+		var _nh = ui(name_height);
+		var _yy = yy - _nh;
 		
 		var x0 =  xx;
 		var y0 = _yy;
 		var x1 =  xx + w * _s;
-		var y1 = _yy + name_height + h * _s;
+		var y1 = _yy + _nh + h * _s;
 		
 		draw_x0 = x0;
 		draw_y0 = y0;
@@ -108,7 +109,7 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			draw_y1 = min(y1, py1);
 		}
 		
-		var _h  = max(draw_y1 - draw_y0, name_height);
+		var _h  = max(draw_y1 - draw_y0, _nh);
 		
 		if(y0 > 0)	draw_y1 = draw_y0 + _h;
 		else		draw_y0 = draw_y1 - _h;
@@ -124,6 +125,7 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	static drawNodeFG = function(_x, _y, _mx, _my, _s, _dparam, _panel = noone) {
 		if(draw_x1 - draw_x0 < 4) return;
 		
+		var _nh = ui(name_height);
 		var _w  = draw_x1 - draw_x0;
 		var _h  = draw_y1 - draw_y0;
 		var txt = renamed? display_name : name;
@@ -138,12 +140,12 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			tb_name.draw(draw_x0, draw_y0, _w, nh, txt, [ _mx, _my ]);
 			
 		} else {
-			draw_sprite_stretched_ext(bg_spr, 2, draw_x0, draw_y0, _w, name_height, color, alpha * .75);
+			draw_sprite_stretched_ext(bg_spr, 2, draw_x0, draw_y0, _w, _nh, color, alpha * .75);
 			
 			draw_set_text(f_p2, fa_center, fa_bottom, COLORS._main_text);
-			draw_text_cut((draw_x0 + draw_x1) / 2, draw_y0 + name_height + 1, txt, _w - 4);
+			draw_text_cut((draw_x0 + draw_x1) / 2, draw_y0 + _nh + 1, txt, _w - 4);
 			
-			if(point_in_rectangle(_mx, _my, draw_x0, draw_y0, draw_x0 + _w, draw_y0 + name_height)) {
+			if(point_in_rectangle(_mx, _my, draw_x0, draw_y0, draw_x0 + _w, draw_y0 + _nh)) {
 				if(PANEL_GRAPH.pFOCUS && DOUBLE_CLICK)
 					tb_name.activate(txt);
 			}
@@ -212,7 +214,7 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	static pointIn = function(_x, _y, _mx, _my, _s) {
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
-		var y0 = yy - name_height;
+		var y0 = yy - ui(name_height);
 		
 		var hover  = point_in_rectangle(_mx, _my, xx, y0, xx + w * _s, yy);
 		name_hover = hover;

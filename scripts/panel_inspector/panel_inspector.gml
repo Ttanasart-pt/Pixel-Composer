@@ -341,8 +341,8 @@ function Panel_Inspector() : PanelContent() constructor {
         if(locked) return;
         
         inspecting = _inspecting;
-        if(_lock) locked = true;
-        focusable = _focus;
+        locked    |= _lock;
+        focusable  = _focus;
         
         if(inspecting != noone)
             inspecting.onInspect();
@@ -1382,9 +1382,8 @@ function Panel_Inspector() : PanelContent() constructor {
         contentPane.setFocusHover(pFOCUS, pHOVER);
         contentPane.draw(ui(16), top_bar_h, mx - ui(16), my - top_bar_h);
         
-        if(!locked && PANEL_GRAPH.getFocusingNode() && inspecting != PANEL_GRAPH.getFocusingNode())
-            setInspecting(PANEL_GRAPH.getFocusingNode());
-            
+        var _foc = PANEL_GRAPH.getFocusingNode();
+        if(!locked && _foc && inspecting != _foc) setInspecting(_foc);
     }
     
     ////- Serialize

@@ -22,8 +22,8 @@ _FILE_DROPPED     = false;
 
 #region minimize
 	if(winMan_isMinimized()) {
-		if(!minimized) game_set_speed(1, gamespeed_fps);
-		minimized = true;
+		// if(!minimized) game_set_speed(1, gamespeed_fps);
+		// minimized = true;
 		exit;
 		
 	} else if(!minimized)
@@ -39,7 +39,10 @@ _FILE_DROPPED     = false;
 	if(PREFERENCES.multi_window)
 		foc = true;
 	
-	game_set_speed(foc || IS_PLAYING? PREFERENCES.ui_framerate : PREFERENCES.ui_framerate_non_focus, gamespeed_fps);
+	var _fps_cur = game_get_speed(gamespeed_fps);
+	var _fps_tar = foc || IS_PLAYING? PREFERENCES.ui_framerate : PREFERENCES.ui_framerate_non_focus;
+	if(_fps_tar != _fps_cur) game_set_speed(_fps_tar, gamespeed_fps);
+	
 	WINDOW_ACTIVE = noone;
 #endregion
 

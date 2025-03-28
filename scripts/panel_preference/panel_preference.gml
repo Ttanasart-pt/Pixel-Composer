@@ -345,21 +345,13 @@ function Panel_Preference() : PanelContent() constructor {
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
     			__txtx("pref_ui_frame_rate", "UI frame rate"),
     			"ui_framerate",
-    			new textBox(TEXTBOX_INPUT.number, function(str) /*=>*/ { 
-    				PREFERENCES.ui_framerate = max(15, round(real(str)));
-    				game_set_speed(PREFERENCES.ui_framerate, gamespeed_fps);
-    				PREF_SAVE();
-    			})
+    			new textBox(TEXTBOX_INPUT.number, function(str) /*=>*/ { PREFERENCES.ui_framerate = max(15, round(real(str))); PREF_SAVE(); })
     		));
     		
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
     			__txtx("pref_ui_frame_rate", "UI inactive frame rate"),
     			"ui_framerate_non_focus",
-    			new textBox(TEXTBOX_INPUT.number, function(str) /*=>*/ { 
-    				PREFERENCES.ui_framerate_non_focus = max(1, round(real(str)));
-    				game_set_speed(PREFERENCES.ui_framerate_non_focus, gamespeed_fps);
-    				PREF_SAVE();
-    			})
+    			new textBox(TEXTBOX_INPUT.number, function(str) /*=>*/ { PREFERENCES.ui_framerate_non_focus = max(1, round(real(str))); PREF_SAVE(); })
     		));
     		
     		locals = [];

@@ -3,7 +3,7 @@
 	globalvar MOUSE_WRAP, MOUSE_WRAPPING, MOUSE_BLOCK, _MOUSE_BLOCK;
 	globalvar MOUSE_POOL;
 	
-	globalvar MOUSE_WHEEL,  MOUSE_WHEEL_H;
+	globalvar MOUSE_WHEEL,  MOUSE_WHEEL_H, __MOUSE_WHEEL_HOOK;
 	globalvar MOUSE_PAN_X,  MOUSE_PAN_Y;
 	globalvar MOUSE_ZOOM_X, MOUSE_ZOOM_Y;
 	globalvar MOUSE_PAN;
@@ -19,8 +19,10 @@
 		mclick: false, mpress: false, mrelease: false,
 	}
 	
-	MOUSE_WHEEL   = 0;
-	MOUSE_WHEEL_H = 0;
+	MOUSE_WHEEL      = 0;
+	MOUSE_WHEEL_H    = 0;
+	__MOUSE_WHEEL_HOOK = false;
+	
 	MOUSE_PAN_X   = 0;
 	MOUSE_PAN_Y   = 0;
 	MOUSE_ZOOM_X  = 0;
@@ -73,8 +75,11 @@ function global_mouse_pool_init() {
 }
 
 function mouse_step() {
-	MOUSE_WHEEL   = mouse_wheel_get();
-	MOUSE_WHEEL_H = mouse_wheel_get_h();
+	MOUSE_WHEEL      = 0;
+	if(mouse_wheel_up())   MOUSE_WHEEL =  1;
+	if(mouse_wheel_down()) MOUSE_WHEEL = -1;
+	
+	MOUSE_WHEEL_H    = 0;//mouse_wheel_get_h();
 	
 	// MOUSE_PAN_X   = mouse_pan_x();
 	// MOUSE_PAN_Y   = mouse_pan_y();

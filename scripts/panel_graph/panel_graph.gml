@@ -1370,10 +1370,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         // ++++++++++++ interaction ++++++++++++
         if(mouse_on_graph && pHOVER) {
         	if(node_dragging == noone && value_dragging == noone) {
-    			if(value_focus)
-        			addKeyOverlay("Select junction(s)", [[ "Shift", "Peek content" ]]);
-        		else if(node_hovering)
-            		addKeyOverlay("Select node(s)", [[ "Shift", "Toggle selection" ]]);
+    			     if(value_focus)   addKeyOverlay("Select junction(s)", [[ "Shift", "Peek content"     ]]);
+        		else if(node_hovering) addKeyOverlay("Select node(s)",     [[ "Shift", "Toggle selection" ]]);
         	}
             	
             // select

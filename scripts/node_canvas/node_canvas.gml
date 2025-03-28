@@ -564,7 +564,9 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 								.setFont(f_p3)
 								.setMinWidth(ui(64));
 		
-		tool_resizer_buttons  = new buttonGroup( array_create(2, THEME.toolbar_check), function(v) /*=>*/ { if(v == 0) tool_resizer.apply(); else tool_resizer.cancel(); })
+		tool_resizer_anchor  = new buttonAnchor(noone, function(v) /*=>*/ { tool_resizer.setAnchor(v); });
+		
+		tool_resizer_buttons = new buttonGroup( array_create(2, THEME.toolbar_check), function(v) /*=>*/ { if(v == 0) tool_resizer.apply(); else tool_resizer.cancel(); })
 									.setCollape(false);
 		
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -575,7 +577,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			
 			new NodeTool( "Resize Canvas",	  THEME.canvas_resize )
 				.setSetting([ THEME.tool_scale, tool_resizer_dim,     "dimension", tool_resizer, "Dimension"])
-				.setSetting([ "",               tool_resizer_buttons, 0,           tool_attribute ])
+				.setSetting([ "", tool_resizer_anchor,  0, tool_resizer   ])
+				.setSetting([ "", tool_resizer_buttons, 0, tool_attribute ])
 				.setToolObject(tool_resizer),
 			
 			new NodeTool( [ "Rotate 90 CW", "Rotate 90 CCW" ], [ THEME.canvas_rotate_cw, THEME.canvas_rotate_ccw ] )

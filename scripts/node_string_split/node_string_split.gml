@@ -45,7 +45,6 @@ function Node_String_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 				
 				_arr[i] = string_copy(_text, _st, _ed - _st);
 			}
-			// print($"{_amo}: {_arr}");
 			
 			return _arr;
 			
@@ -62,6 +61,8 @@ function Node_String_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var _deli = getInputData(1);
 		var _mode = getInputData(2);
 		var _peri = getInputData(3);
+		
+		_s /= UI_SCALE;
 		
 		if(_mode == 0) {
 			if(string_length(_deli) == 0) {

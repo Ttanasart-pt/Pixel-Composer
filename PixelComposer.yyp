@@ -1412,7 +1412,6 @@
     {"id":{"name":"libfilesystem","path":"extensions/libfilesystem/libfilesystem.yy",},},
     {"id":{"name":"libxprocess","path":"extensions/libxprocess/libxprocess.yy",},},
     {"id":{"name":"macMinimize","path":"extensions/macMinimize/macMinimize.yy",},},
-    {"id":{"name":"mouse_wheel","path":"extensions/mouse_wheel/mouse_wheel.yy",},},
     {"id":{"name":"patreon_key","path":"extensions/patreon_key/patreon_key.yy",},},
     {"id":{"name":"Regex","path":"extensions/Regex/Regex.yy",},},
     {"id":{"name":"Spout","path":"extensions/Spout/Spout.yy",},},

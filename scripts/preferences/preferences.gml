@@ -447,7 +447,6 @@
 		}
 		
 		window_refresh();
-		game_set_speed(PREFERENCES.ui_framerate, gamespeed_fps);
 		
 		var grav = struct_try_get(PREFERENCES, "physics_gravity", [ 0, 10 ]);
 		physics_world_gravity(array_safe_get_fast(grav, 0, 0), array_safe_get_fast(grav, 1, 10));

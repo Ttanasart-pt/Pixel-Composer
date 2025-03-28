@@ -82,7 +82,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	newInput(8, nodeValue_Int("Framerate", self, 30))
 		.rejectArray();
 	
-	format_image     = [ ".png", ".jpg", ".webp", ".exr" ];
+	format_image     = [ ".png", ".jpg",  ".webp", ".exr" ];
 	format_animation = [ ".gif", ".apng", ".webp", ".mp4" ];
 	
 	newInput(9, nodeValue_Enum_Scroll("Format", self,  0, { data: format_image, update_hover: false }))
@@ -235,7 +235,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		if(!file_exists_empty(converter)) noti_warning(_w("ImageMagick", magick), noone, self);
 		if(!file_exists_empty(magick))    noti_warning(_w("ImageMagick", magick), noone, self);
-		if(!file_exists_empty(webp))      noti_warning(_w("webp",        webp), noone, self);
+		if(!file_exists_empty(webp))      noti_warning(_w("webp",        webp),   noone, self);
 		if(!file_exists_empty(gifski))    noti_warning(_w("gifski",      gifski), noone, self);
 		if(!file_exists_empty(ffmpeg))    noti_warning(_w("FFmpeg",      ffmpeg), noone, self);
 		
@@ -243,8 +243,8 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var _w = function(str) /*=>*/ {return $"No {str} installed, please install {str} with homebrew or use the provided 'mac-libraries-installer.command'."};
 		
 		if(string_pos(shell_execute_output("convert", ""), "not found")) noti_warning(_w("ImageMagick"), noone, self);
-		if(string_pos(shell_execute_output("webp", ""),    "not found")) noti_warning(_w("webp"), noone, self);
-		if(string_pos(shell_execute_output("ffmpeg", ""),  "not found")) noti_warning(_w("FFmpeg"), noone, self);
+		if(string_pos(shell_execute_output("webp", ""),    "not found")) noti_warning(_w("webp"),        noone, self);
+		if(string_pos(shell_execute_output("ffmpeg", ""),  "not found")) noti_warning(_w("FFmpeg"),      noone, self);
 		
 		converter = "/opt/homebrew/bin/convert";
 		magick    = "/opt/homebrew/bin/magick";
@@ -253,16 +253,17 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	}
 	
 	static onValueUpdate = function(_index) {
+		if(!(NOT_LOAD)) return;
+		
 		var form = getInputData(3);
 		
-		if(_index == 3) {
-			if(NOT_LOAD) inputs[9].setValue(0);
-		}
+		if(_index == 3)
+			inputs[9].setValue(0);
 		
-		if(NOT_LOAD && _index == 3 && form == 1)
+		if(_index == 3 && form == 1)
 			inputs[2].setValue("%d%n%3f%i");
 		
-		if(NOT_LOAD && _index == 1) {
+		if(_index == 1) {
 			var _path = getInputData(1);
 			var _ext  = filename_ext(_path);
 			
@@ -727,6 +728,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	static renderCompleted = function() {
 		var surf = getInputData( 0);
 		var path = getInputData( 1);
+		var fnam = getInputData(20);
 		var extd = getInputData( 9);
 		var temp_path, target_path;
 		
