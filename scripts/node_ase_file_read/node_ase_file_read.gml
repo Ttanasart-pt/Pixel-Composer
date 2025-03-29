@@ -326,11 +326,21 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		}
 		
 		update_on_frame = false;
+		var _names = {};
 		
 		for( var i = 0, n = array_length(layers); i < n; i++ ) {
-			if(!struct_has(layers[i], "cels")) continue;
+			var _l = layers[i];
+			var _n = _l[$ "name"];
 			
-			var cel = layers[i].cels;
+			if(struct_has(_names, _n)) {
+				_names[$ _n]++;
+				_l[$ "name"] += $"_{_names[$ _n]}"
+				
+			} else
+				_names[$ _n] = 0;
+			
+			if(!struct_has(_l, "cels")) continue;
+			var cel = _l.cels;
 			if(array_length(cel)) update_on_frame = true;
 		}
 		

@@ -2,7 +2,7 @@ function Node_ASE_layer(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	name = "ASE Layer";
 	
 	newInput(0, nodeValue("ASE data", self, CONNECT_TYPE.input, VALUE_TYPE.object, noone))
-		.setIcon(s_junc_aseprite, c_white)
+		.setIcon(THEME.junc_aseprite, c_white)
 		.setVisible(false, true)
 		.rejectArray();
 	
@@ -21,18 +21,18 @@ function Node_ASE_layer(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _y, _w, 28, COLORS.node_composite_bg_blend, 1);	
 			
 			draw_set_text(f_p3, fa_center, fa_center, COLORS._main_text_sub);
-			draw_text_add(_x + _w / 2, _y + 14, "No data");
-			return 32;
+			draw_text_add(_x + _w / 2, _y + ui(14), "No data");
+			return ui(32);
 		}
 		
 		var _amo = array_length(ase_data.layers);
-		var hh   = 24;
-		var _h   = hh * _amo + 16;
+		var hh   = ui(24);
+		var _h   = hh * _amo + ui(16);
 		
 		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _y, _w, _h, COLORS.node_composite_bg_blend, 1);
 		for( var i = 0, n = array_length(ase_data.layers); i < n; i++ ) {
-			var _bx    = _x + 24;
-			var _yy    = _y + 8 + i * hh;
+			var _bx    = _x + ui(24);
+			var _yy    = _y + ui(8) + i * hh;
 			var _layer = ase_data.layers[i];
 			
 			if(_layer.type == 0) {
@@ -54,7 +54,7 @@ function Node_ASE_layer(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				cc = COLORS._main_text_accent;
 			
 			draw_set_text(f_p2, fa_left, fa_center, cc);
-			draw_text_add(_bx + 16, _yy + hh / 2, _layer.name);
+			draw_text_add(_bx + ui(16), _yy + hh / 2, _layer.name);
 		}
 		
 		return _h;
