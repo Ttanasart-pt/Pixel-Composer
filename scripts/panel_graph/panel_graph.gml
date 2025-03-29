@@ -2798,13 +2798,13 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
     		
     		draw_set_text(f_p2b, fa_left, fa_bottom, COLORS._main_text, .75);
 			var _tw = 0;
-			for( var i = 0, n = ds_list_size(list); i < n; i++ ) 
-				_tw = max(_tw, string_width(list[| i].getName()));
+			for( var i = 0, n = array_length(list); i < n; i++ ) 
+				_tw = max(_tw, string_width(list[i].getName()));
     		
 			var _ttx = _tx + _tw + ui(16);
 			
-    		for(var i = ds_list_size(list) - 1; i >= 0; i--) {
-				var hotkey = list[| i];
+    		for(var i = array_length(list) - 1; i >= 0; i--) {
+				var hotkey = list[i];
 				var _title = hotkey.name;
 				var _key   = hotkey.getName();
 				

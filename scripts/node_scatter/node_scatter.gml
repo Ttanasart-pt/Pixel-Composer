@@ -20,107 +20,82 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	name = "Scatter";
 	dimension_index = 1;
 	
-	newInput(0, nodeValue_Surface("Surface In", self));
-	
-	newInput(1, nodeValue_Dimension(self));
-	
-	newInput(2, nodeValue_Int("Amount", self, 8))
-		.setValidator(VV_min(0));
-	
-	newInput(3, nodeValue_Vec2_Range("Scale", self, [ 1, 1, 1, 1 ] , { linked : true }));
-	
-	newInput(4, nodeValue_Rotation_Random("Angle", self, [ 0, 0, 0, 0, 0 ] ));
-	
-	onSurfaceSize = function() /*=>*/ {return getInputData(1, DEF_SURF)}; 
-	newInput(5, nodeValue_Area("Area", self, DEF_AREA_REF, { onSurfaceSize }))
-		.setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
-	
-	newInput(6, nodeValue_Enum_Scroll("Distribution", self,  5, [ "Area", "Border", "Map", "Direct Data", "Path", "Full image + Tile" ]));
-	
-	newInput(7, nodeValue_Bool("Point at Center", self, false, "Rotate each copy to face the spawn center."));
-	
-	newInput(8, nodeValue_Bool("Uniform Scaling", self, true));
-	
-	newInput(9, nodeValue_Enum_Button("Scatter", self,  1, [ "Uniform", "Random" ]));
+	inputs = array_create(44);
 	
 	newInput(10, nodeValueSeed(self));
 	
-	newInput(11, nodeValue_Gradient("Random Blend", self, new gradientObject(cola(c_white))))
-		.setMappable(28);
+	////- Surfaces
 	
-	newInput(12, nodeValue_Slider_Range("Alpha", self, [ 1, 1 ]));
-		
-	newInput(13, nodeValue_Surface("Distribution Map", self));
-	
-	newInput(14, nodeValue_Vector("Distribution Data", self, []));
-	inputs[14].array_depth = 1;
-	
-	newInput(15, nodeValue_Int("Array", self, 0, @"What to do when input array of surface.
+	newInput( 0, nodeValue_Surface(     "Surface In",         self));
+	newInput( 1, nodeValue_Dimension(                         self));
+	newInput(15, nodeValue_Int(         "Array",              self, 0, @"What to do when input array of surface.
 - Spread: Create Array of output each scattering single surface.
 - Mixed: Create single output scattering multiple images."))
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Spread output", "Index", "Random", "Data", "Texture" ]);
-		
-	newInput(16, nodeValue_Bool("Multiply Alpha", self, true));
-		
-	newInput(17, nodeValue_Text("Extra Value", self, [], "Apply the third and later values in each data point (if exist) on given properties."))
+	newInput(24, nodeValue_Int(         "Array Indices",      self, [])).setArrayDepth(1);
+	newInput(25, nodeValue_Surface(     "Array Texture",      self));
+	newInput(26, nodeValue_Range(       "Animated Array",     self, [ 0, 0 ], { linked : true }));
+	newInput(27, nodeValue_Enum_Scroll( "Animated Array End", self,  0, [ "Loop", "Ping Pong", "Hide" ]));
+	
+	////- Scatter
+	
+	onSurfaceSize = function() /*=>*/ {return getInputData(1, DEF_SURF)}; 
+	
+	newInput( 6, nodeValue_Enum_Scroll(    "Distribution",      self,  5, [ "Area", "Border", "Map", "Direct Data", "Path", "Full image + Tile" ]));
+	newInput( 5, nodeValue_Area(           "Area",              self, DEF_AREA_REF, { onSurfaceSize })).setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
+	newInput(13, nodeValue_Surface(        "Distribution Map",  self));
+	newInput(14, nodeValue_Vector(         "Distribution Data", self, [])).setArrayDepth(1);
+	newInput(17, nodeValue_Text(           "Extra Value",       self, [], "Apply the third and later values in each data point (if exist) on given properties."))
 		.setDisplay(VALUE_DISPLAY.text_array, { data: [ "Scale", "Rotation", "Color", "Alpha", "Array Index" ] });
-		
-	newInput(18, nodeValue_Enum_Scroll("Blend Mode", self,  0, [ "Normal", "Add", "Max" ]));
-		
-	newInput(19, nodeValue_PathNode("Path", self, noone));
-		
-	newInput(20, nodeValue_Bool("Rotate Along Path", self, true));
-		
-	newInput(21, nodeValue_Float("Path Shift", self, 0))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput( 9, nodeValue_Enum_Button(    "Scatter",           self,  1, [ "Uniform", "Random" ]));
+	newInput(31, nodeValue_Bool(           "Auto Amount",       self, false));
+	newInput( 2, nodeValue_Int(            "Amount",            self, 8)).setValidator(VV_min(0));
+	newInput(30, nodeValue_Vec2(           "Uniform Amount",    self, [ 4, 4 ]));
+	newInput(35, nodeValue_Rotation_Range( "Angle Range",       self, [ 0, 360 ]));
 	
-	newInput(22, nodeValue_Float("Scatter Distance", self, 0));
+	////- Path
 	
-	newInput(23, nodeValue_Bool("Sort Y", self, false));
+	newInput(19, nodeValue_PathNode(    "Path",              self, noone));
+	newInput(38, nodeValue_Enum_Button( "Spacing",           self, 0, [ "After", "Between", "Around" ]));
+	newInput(20, nodeValue_Bool(        "Rotate Along Path", self, true));
+	newInput(21, nodeValue_Slider(      "Path Shift",        self, 0));
+	newInput(22, nodeValue_Float(       "Scatter Distance",  self, 0));
 	
-	newInput(24, nodeValue_Int("Array Indices", self, []))
-		.setArrayDepth(1);
+	////- Position
 	
-	newInput(25, nodeValue_Surface("Array Texture", self));
+	newInput(40, nodeValue_Anchor(     "Anchor",          self));
+	newInput(33, nodeValue_Vec2_Range( "Random Position", self, [ 0, 0, 0, 0 ]));
+	newInput(36, nodeValue_Vec2(       "Shift Position",  self, [ 0, 0 ]));
+	newInput(37, nodeValue_Bool(       "Exact",           self,  false))
+	newInput(39, nodeValue_Range(      "Shift Radial",    self, [ 0, 0 ]));
 	
-	newInput(26, nodeValue_Range("Animated Array", self, [ 0, 0 ], { linked : true }));
+	////- Rotation
 	
-	newInput(27, nodeValue_Enum_Scroll("Animated Array End", self,  0, [ "Loop", "Ping Pong", "Hide" ]));
-		
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	newInput( 7, nodeValue_Bool(            "Point at Center",   self, false, "Rotate each copy to face the spawn center."));
+	newInput( 4, nodeValue_Rotation_Random( "Angle",             self, [ 0, 0, 0, 0, 0 ] ));
+	newInput(32, nodeValue_Rotation(        "Rotate per Radius", self, 0));
 	
-	newInput(28, nodeValueMap("Gradient Map", self));
+	////- Scale
 	
-	newInput(29, nodeValueGradientRange("Gradient Map Range", self, inputs[11]));
+	newInput( 3, nodeValue_Vec2_Range( "Scale",            self, [ 1, 1, 1, 1 ] , { linked : true }));
+	newInput( 8, nodeValue_Bool(       "Uniform Scaling",  self, true));
+	newInput(34, nodeValue_Vec2(       "Scale per Radius", self, [ 0, 0 ]));
+	newInput(43, nodeValue_Surface(    "Scale Surface",    self, noone));
 	
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	////- Color
 	
-	newInput(30, nodeValue_Vec2("Uniform Amount", self, [ 4, 4 ]));
+	newInput(11, nodeValue_Gradient(     "Random Blend",       self, new gradientObject(cola(c_white)))).setMappable(28);
+	newInput(28, nodeValueMap(           "Gradient Map",       self));
+	newInput(29, nodeValueGradientRange( "Gradient Map Range", self, inputs[11]));
+	newInput(12, nodeValue_Slider_Range( "Alpha",              self, [ 1, 1 ]));
+	newInput(16, nodeValue_Bool(         "Multiply Alpha",     self, true));
+	newInput(41, nodeValue_Surface(      "Sample Surface",     self, noone));
+	newInput(42, nodeValue_Vec2_Range(   "Sample Wiggle",      self, [ 0, 0, 0, 0 ]));
 	
-	newInput(31, nodeValue_Bool("Auto Amount", self, false));
+	////- Render
 	
-	newInput(32, nodeValue_Rotation("Rotate per Radius", self, 0));
-	
-	newInput(33, nodeValue_Vec2_Range("Random Position", self, [ 0, 0, 0, 0 ]));
-	
-	newInput(34, nodeValue_Vec2("Scale per Radius", self, [ 0, 0 ]));
-	
-	newInput(35, nodeValue_Rotation_Range("Angle Range", self, [ 0, 360 ]));
-	
-	newInput(36, nodeValue_Vec2("Shift Position", self, [ 0, 0 ]));
-	
-	newInput(37, nodeValue_Bool("Exact", self,  false))
-	
-	newInput(38, nodeValue_Enum_Button("Spacing", self,   0, [ "After", "Between", "Around" ]));
-	
-	newInput(39, nodeValue_Range("Shift Radial", self, [ 0, 0 ]));
-	
-	newInput(40, nodeValue_Vec2("Anchor", self, [ 0.5, 0.5 ]));
-		inputs[40].setDisplay(VALUE_DISPLAY.vector, { side_button : new buttonAnchor(inputs[40]) });
-	
-	newInput(41, nodeValue_Surface("Sample Surface", self, noone));
-	
-	newInput(42, nodeValue_Vec2_Range("Sample Wiggle", self, [ 0, 0, 0, 0 ]));
+	newInput(18, nodeValue_Enum_Scroll( "Blend Mode", self,  0, [ "Normal", "Add", "Max" ]));
+	newInput(23, nodeValue_Bool(        "Sort Y",     self, false));
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -136,7 +111,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		["Path",     false], 19, 38, 20, 21, 22, 
 		["Position", false], 40, 33, 36, 37, 39, 
 		["Rotation", false], 7, 4, 32, 
-		["Scale",    false], 3, 8, 34, 
+		["Scale",    false], 3, 8, 34, 43, 
 		["Color",    false], 11, 28, 12, 16, 41, 42, 
 		["Render",   false], 18, 23, 
 	];
@@ -154,6 +129,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	scatter_mapp = [];
 	
 	surfSamp = new Surface_sampler();
+	scalSamp = new Surface_sampler();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		PROCESSOR_OVERLAY_CHECK
@@ -241,6 +217,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 		var sampSrf = _data[41]; surfSamp.setSurface(sampSrf);
 		var sampWig = _data[42];
+		var scalSam = _data[43]; scalSamp.setSurface(scalSam);
 		
 		var _in_w, _in_h;
 		
@@ -602,6 +579,13 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				var dim = surface_size_map[$ surf];
 				var sw  = dim[0];
 				var sh  = dim[1];
+				
+				if(scalSamp.active) {
+					var _samC = scalSamp.getPixel(_x, _y);
+					var _samB = colorBrightness(_samC);
+					_scx *= _samB;
+					_scy *= _samB;
+				}
 				
 				var _shf_x = sw * _scx * anchor[0];
 				var _shf_y = sh * _scy * anchor[1];

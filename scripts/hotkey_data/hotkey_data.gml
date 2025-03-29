@@ -33,6 +33,8 @@ function Hotkey(_context, _name, _key = "", _mod = MOD_KEY.none, _action = noone
 	static reset  = function(r=0) /*=>*/ { key = dKey; modi = dModi; if(r) PREF_SAVE(); }
 	static modify = function()    /*=>*/ { keyboard_lastchar = key; return self; }
 	
+	static toString = function() /*=>*/ {return $"{getNameFull()}: {getName()} [{key}+{modi}]"};
+	
 	////- Serialize
 	
 	static serialize = function( ) /*=>*/ { return { context, name, key, modi } }
@@ -62,22 +64,21 @@ function addHotkey(_context, _name, _key, _mod, _action) {
 	var key = new Hotkey(_context, _name, _key, _mod, _action);
 	
 	if(!struct_has(HOTKEYS, _context)) {
-		HOTKEYS[$ _context] = ds_list_create();
-		if(!ds_list_exist(HOTKEY_CONTEXT, _context))
-			ds_list_add(HOTKEY_CONTEXT, _context);
+		HOTKEYS[$ _context] = [];
+		array_push_unique(HOTKEY_CONTEXT, _context);
 	}
 	
-	for(var i = 0; i < ds_list_size(HOTKEYS[$ _context]); i++) {
-		var hotkey	= HOTKEYS[$ _context][| i];
+	for(var i = 0; i < array_length(HOTKEYS[$ _context]); i++) {
+		var hotkey	= HOTKEYS[$ _context][i];
 		if(hotkey.name == key.name) {
-			delete HOTKEYS[$ _context][| i];
-			HOTKEYS[$ _context][| i] = key;
+			delete HOTKEYS[$ _context][i];
+			HOTKEYS[$ _context][i] = key;
 			return;
 		}
 	}
 	
-	if(_context == "") ds_list_insert(HOTKEYS[$ _context], 0, key);
-	else			   ds_list_add(HOTKEYS[$ _context], key);
+	if(_context == "") array_insert(HOTKEYS[$ _context], 0, key);
+	else			   array_push(HOTKEYS[$ _context], key);
 	
 	return key;
 }
@@ -85,9 +86,9 @@ function addHotkey(_context, _name, _key, _mod, _action) {
 function find_hotkey(_context, _name) {
 	if(!struct_has(HOTKEYS, _context)) return getToolHotkey(_context, _name);
 	
-	for(var j = 0; j < ds_list_size(HOTKEYS[$ _context]); j++) {
-		if(HOTKEYS[$ _context][| j].name == _name)
-			return HOTKEYS[$ _context][| j];
+	for(var j = 0; j < array_length(HOTKEYS[$ _context]); j++) {
+		if(HOTKEYS[$ _context][j].name == _name)
+			return HOTKEYS[$ _context][j];
 	}
 	
 	return noone;
@@ -150,11 +151,11 @@ function hotkey_draw(keyStr, _x, _y, _status = 0) {
 
 function hotkey_serialize() {
 	var _context = [];
-	for(var i = 0, n = ds_list_size(HOTKEY_CONTEXT); i < n; i++) {
-		var ll = HOTKEYS[$ HOTKEY_CONTEXT[| i]];
+	for(var i = 0, n = array_length(HOTKEY_CONTEXT); i < n; i++) {
+		var ll = HOTKEYS[$ HOTKEY_CONTEXT[i]];
 		
-		for(var j = 0, m = ds_list_size(ll); j < m; j++) {
-			var _hk = ll[| j];
+		for(var j = 0, m = array_length(ll); j < m; j++) {
+			var _hk = ll[j];
 			if(_hk.dKey == _hk.key && _hk.dModi == _hk.modi) continue;
 			array_push(_context, _hk.serialize());
 		}

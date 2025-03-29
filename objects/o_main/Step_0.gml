@@ -29,8 +29,8 @@ if(!LOADING && PROJECT.active && !PROJECT.safeMode) { //node step
 		
 		if(!HOTKEY_ACT && struct_has(HOTKEYS, 0)) {
 			var l = HOTKEYS[$ 0];
-			for(var i = 0, n = ds_list_size(l); i < n; i++) {
-				var hotkey = l[| i];
+			for(var i = 0, n = array_length(l); i < n; i++) {
+				var hotkey = l[i];
 				
 				if(hotkey.isPressing(true)) {
 					hotkey.action();
@@ -41,8 +41,9 @@ if(!LOADING && PROJECT.active && !PROJECT.safeMode) { //node step
 		
 		if(!HOTKEY_ACT && struct_has(HOTKEYS, FOCUS_STR)) {
 			var list = HOTKEYS[$ FOCUS_STR];
-			for(var i = 0, n = ds_list_size(list); i < n; i++) {
-				var hotkey = list[| i];
+			
+			for(var i = 0, n = array_length(list); i < n; i++) {
+				var hotkey = list[i];
 				
 				if(hotkey.isPressing(true)) {
 					hotkey.action();

@@ -8,6 +8,7 @@ if(DIALOG_SHOW_FOCUS) {
 }
 
 #region content
+	WIDGET_CURRENT = tb_search;
 	
 	var tw = dialog_w - ui(96);
 	var th = ui(32);
@@ -53,7 +54,6 @@ if(DIALOG_SHOW_FOCUS) {
 	if(junction_called != noone) tw -= ui(32);
 	
 	if(hk_editing == noone) {
-		WIDGET_CURRENT = tb_search;
 		tb_search.setFocusHover(sFOCUS, sHOVER);
 		tb_search.draw(tx, ty, tw, th, search_string, mouse_ui);
 		
