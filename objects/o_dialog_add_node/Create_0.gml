@@ -43,8 +43,12 @@ event_inherited();
 	tooltip_surface   = -1;
 	content_hoverable = true;
 	
-	canvas    = false;
-	collapsed = {};
+	canvas       = false;
+	collapsed    = {};
+	
+	hk_edit_node = noone;
+	hk_editing   = noone;
+	hk_selecting = noone;
 	
 	subgroups      = [];
 	subgroups_size = [];
@@ -98,9 +102,27 @@ event_inherited();
 		if(!is(node, NodeObject)) return;
 		
 		node_menu_selecting = node;
-		var fav  = struct_exists(global.FAV_NODES, node.nodeName);
+		var fav = struct_exists(global.FAV_NODES, node.nodeName);
+		var fvt = fav? __txtx("add_node_remove_favourite", "Remove from favourite") : __txtx("add_node_add_favourite", "Add to favourite");
+		hk_selecting = struct_try_get(GRAPH_ADD_NODE_MAPS, node.nodeName, noone);
+		
 		var menu = [
-			menuItem(fav? __txtx("add_node_remove_favourite", "Remove from favourite") : __txtx("add_node_add_favourite", "Add to favourite"), trigger_favourite, THEME.star)
+			menuItem(fvt, trigger_favourite, THEME.star),
+			-1,
+			menuItem(__txt("Edit Hotkey"),  function() /*=>*/ { 
+				var _n  = node_menu_selecting.nodeName;
+				var _hk = struct_try_get(GRAPH_ADD_NODE_MAPS, _n, noone);
+				
+				if(_hk == noone) {
+					_hk = new Hotkey("_graph_add_node", _n);
+	        		array_push(GRAPH_ADD_NODE_KEYS, _hk);
+	        		GRAPH_ADD_NODE_MAPS[$ _n] = _hk;
+				}
+				
+				hk_edit_node = node_menu_selecting;
+				hk_editing   = _hk.modify();
+			}),
+			menuItem(__txt("Reset Hotkey"), function() /*=>*/ {return hk_selecting.reset(true)}, THEME.refresh_20).setActive(hk_selecting != noone && hk_selecting.isModified()),
 		];
 		
 		menuCall("add_node_window_menu", menu, 0, 0, fa_left);
@@ -815,6 +837,11 @@ event_inherited();
 				
 				if(is(_node, NodeObject)) {
 					tx = _node.drawList(pd, yy, _m[0], _m[1], list_height, list_width - pd);
+					var _hotkey = GRAPH_ADD_NODE_MAPS[$ _node.nodeName];
+					if(_hotkey != undefined) {
+						draw_set_text(f_p2, fa_right, fa_center, COLORS._main_text_sub);
+						draw_text_add(ww - ui(16), yy + list_height / 2, _hotkey.getName());
+					}
 					
 				} else {
 					var spr_x = pd + list_height / 2 + ui(32);

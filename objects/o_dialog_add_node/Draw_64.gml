@@ -8,8 +8,6 @@ if(DIALOG_SHOW_FOCUS) {
 }
 
 #region content
-	WIDGET_CURRENT = tb_search;
-	tb_search.setFocusHover(sFOCUS, sHOVER);
 	
 	var tw = dialog_w - ui(96);
 	var th = ui(32);
@@ -54,7 +52,26 @@ if(DIALOG_SHOW_FOCUS) {
 	
 	if(junction_called != noone) tw -= ui(32);
 	
-	tb_search.draw(tx, ty, tw, th, search_string, mouse_ui);
+	if(hk_editing == noone) {
+		WIDGET_CURRENT = tb_search;
+		tb_search.setFocusHover(sFOCUS, sHOVER);
+		tb_search.draw(tx, ty, tw, th, search_string, mouse_ui);
+		
+	} else {
+		draw_sprite_stretched_ext(THEME.textbox, 5, tx, ty, tw, th);
+		draw_sprite_stretched_ext(THEME.textbox, 2, tx, ty, tw, th, COLORS._main_accent);
+		
+		var _name = hk_edit_node.name;
+		var _txt  = $"Edit key for {_name} :  ";
+		var _txx  = tx + ui(8);
+		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text_sub);
+		draw_text(_txx, ty + th / 2, _txt);
+		_txx += string_width(_txt);
+		
+		var _key  = hk_editing.getName();
+		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
+		draw_text(_txx, ty + th / 2, _key);
+	}
 	
 	view_tooltip.index  = PREFERENCES.dialog_add_node_view;
 	group_tooltip.index = PREFERENCES.dialog_add_node_grouping;
@@ -94,61 +111,6 @@ if(DIALOG_SHOW_FOCUS) {
 #endregion
 
 #region tooltip
-	if(node_tooltip != noone) {
-		var ww = ui(300 + 8);
-		var hh = ui(16);
-		
-		var txt = node_tooltip.getTooltip();
-		var spr = node_tooltip.getTooltipSpr();
-		
-		draw_set_font(f_p1);
-		var _th = string_height_ext(txt, -1, ww - ui(16));
-		
-		if(spr) {
-			ww = sprite_get_width(spr);
-			hh = sprite_get_height(spr) + (_th - ui(8)) * (txt != "");
-		} else 
-			hh = ui(16) + string_height_ext(txt, -1, ww - ui(16));
-		
-		tooltip_surface = surface_verify(tooltip_surface, ww, hh);
-		surface_set_shader(tooltip_surface, noone);
-			draw_set_text(f_p1, fa_left, fa_bottom, COLORS._main_text)
-			
-			if(spr) {
-				draw_sprite(spr, 0, 0, 0);
-				
-				BLEND_NORMAL
-				if(txt != "") draw_sprite_stretched_ext(THEME.add_node_bg, 0, 0, hh - _th - 32, ww, _th + 32, CDEF.main_dkblack);
-			} else
-				draw_clear_alpha(c_white, 0);
-			
-			draw_text_ext_add(ui(8), hh - ui(8), txt, -1, ww - ui(16));
-			
-			BLEND_MULTIPLY
-			draw_sprite_stretched(THEME.ui_panel_bg, 4, 0, 0, ww, hh);
-			BLEND_NORMAL
-			
-			var _aut = node_tooltip[$ "author"] ?? "";
-			var _lic = node_tooltip[$ "license"] ?? "";
-			
-			draw_set_text(f_p2b, fa_right, fa_top, COLORS._main_text);
-			draw_text_add(ww - ui(8), ui(8),      _aut);
-			
-			draw_set_text(f_p3, fa_right, fa_top, COLORS._main_text, 0.75);
-			draw_text_ext_add(ww - ui(8), ui(8 + 20), _lic, -1, ww - ui(16));
-			
-			draw_set_alpha(1);
-		surface_reset_shader();
-		
-		var x0 = min(node_tooltip_x, WIN_W - ww - ui(8));
-		var y0 = node_tooltip_y - hh - ui(8);
-		
-		draw_sprite_stretched(THEME.textbox, 3, x0, y0, ww, hh);
-		draw_surface(tooltip_surface, x0, y0);
-		draw_sprite_stretched(THEME.textbox, 0, x0, y0, ww, hh);
-		node_tooltip = noone;
-	}
-	
 	if(sprite_exists(node_icon)) {
 		var _sx = node_icon_x - ui(16);
 		var _sy = node_icon_y;
@@ -164,8 +126,89 @@ if(DIALOG_SHOW_FOCUS) {
 	}
 	node_icon = noone;
 	
-	ADD_NODE_SCROLL = content_pane.scroll_y_to;
+	if(node_tooltip != noone) {
+		var ww = ui(300 + 8);
+		var hh = ui(16);
+		var tw = ww - ui(16);
+		
+		var txt = node_tooltip.getTooltip();
+		var spr = node_tooltip.getTooltipSpr();
+		var hk  = is(node_tooltip, NodeObject)? struct_try_get(GRAPH_ADD_NODE_MAPS, node_tooltip.nodeName, noone) : noone;
+		
+		draw_set_font(f_p1);
+		var _th = string_height_ext(txt, -1, tw);
+		
+		if(spr) {
+			ww = ui(sprite_get_width(spr));
+			hh = ui(sprite_get_height(spr)) + (_th - ui(8)) * (txt != "");
+			
+		} else {
+			hh = ui(16) + _th;
+			
+			if(hk != noone) {
+				draw_set_font(f_p2);
+				ww += string_width(hk.getName()) + ui(8);
+			}
+		}
+		
+		tooltip_surface = surface_verify(tooltip_surface, ww, hh);
+		surface_set_shader(tooltip_surface, noone);
+			draw_clear_alpha(c_white, 0);
+			
+			if(spr) {
+				DRAW_CLEAR
+				
+				gpu_set_texfilter(true);
+				draw_sprite_uniform(spr, 0, 0, 0, UI_SCALE);
+				gpu_set_texfilter(false);
+				
+				BLEND_NORMAL
+				if(txt != "") draw_sprite_stretched_ext(THEME.add_node_bg, 0, 0, hh - _th - ui(32), ww, _th + ui(32), CDEF.main_dkblack);
+			} 
+			
+			if(hk != noone) {
+				draw_set_text(f_p2, fa_right, fa_top, COLORS._main_text_sub);
+				draw_text_add(ww - ui(8), ui(8), hk.getName());
+			}
+			
+			draw_set_text(f_p1, fa_left, fa_bottom, COLORS._main_text)
+			draw_text_ext_add(ui(8), hh - ui(8), txt, -1, tw);
+			
+			BLEND_MULTIPLY
+			draw_sprite_stretched(THEME.ui_panel_bg, 4, 0, 0, ww, hh);
+			BLEND_NORMAL
+			
+			var _aut = node_tooltip[$ "author"] ?? "";
+			var _lic = node_tooltip[$ "license"] ?? "";
+			
+			draw_set_text(f_p2b, fa_right, fa_top, COLORS._main_text);
+			draw_text_add(ww - ui(8), ui(8), _aut);
+			
+			draw_set_text(f_p3, fa_right, fa_top, COLORS._main_text, 0.75);
+			draw_text_ext_add(ww - ui(8), ui(8 + 20), _lic, -1, tw);
+			
+			draw_set_alpha(1);
+		surface_reset_shader();
+		
+		var x0 = min(node_tooltip_x, WIN_W - ww - ui(8));
+		var y0 = node_tooltip_y - hh - ui(8);
+		
+		draw_sprite_stretched(THEME.textbox, 3, x0, y0, ww, hh);
+		draw_surface(tooltip_surface, x0, y0);
+		draw_sprite_stretched(THEME.textbox, 0, x0, y0, ww, hh);
+		node_tooltip = noone;
+	}
 	
-	if(mouse_release(mb_right))
-		right_free = true;
+	ADD_NODE_SCROLL = content_pane.scroll_y_to;
+	if(mouse_release(mb_right)) right_free = true;
+#endregion
+
+#region hotkey
+	destroy_on_escape = hk_editing == noone;
+	if(hk_editing != noone) {
+		if(keyboard_check_pressed(vk_enter))  { hk_editing = noone; keyboard_string = ""; search_string = ""; KEYBOARD_STRING = ""; }
+		else hotkey_editing(hk_editing);
+			
+		if(keyboard_check_pressed(vk_escape)) { hk_editing = noone; keyboard_string = ""; search_string = ""; KEYBOARD_STRING = ""; }
+	}
 #endregion

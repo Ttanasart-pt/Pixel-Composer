@@ -1,4 +1,4 @@
-globalvar HOTKEYS_CUSTOM;
+globalvar HOTKEYS_DATA, HOTKEYS_CUSTOM;
 #macro FN_NODE_TOOL_INVOKE if(!variable_global_exists("__FN_NODE_TOOL") || variable_global_get("__FN_NODE_TOOL") == undefined) variable_global_set("__FN_NODE_TOOL", []); \
 array_push(global.__FN_NODE_TOOL, function()
 	
@@ -26,7 +26,7 @@ function Hotkey(_context, _name, _key = "", _mod = MOD_KEY.none, _action = noone
 	static getName     = function() /*=>*/ {return key_get_name(key, modi)};
 	static getNameFull = function() /*=>*/ {return string_to_var(context == 0? $"global.{name}" : $"{context}.{name}")};
 	
-	static isPressing  = function(h=0) /*=>*/ {return key == ""? false : key_press(key, modi, h)};
+	static isPressing  = function(h=0) /*=>*/ {return key <= 0 && modi == 0? false : key_press(key, modi, h)};
 	static isModified  = function()    /*=>*/ {return key != dKey || modi != dModi};
 	
 	static equal  = function(h)   /*=>*/ {return key == h.key && modi == h.modi};
@@ -38,9 +38,10 @@ function Hotkey(_context, _name, _key = "", _mod = MOD_KEY.none, _action = noone
 	static serialize = function( ) /*=>*/ { return { context, name, key, modi } }
 	
 	static deserialize = function(l) /*=>*/ { 
-		if(!is_struct(l)) return; 
+		if(!is_struct(l)) return self; 
 		key  = l.key; 
 		modi = l.modi; 
+		return self; 
 	}
 	
 	if(VERSION >= 1_18_10_1) deserialize(HOTKEYS_DATA[$ getNameFull()]);
@@ -162,7 +163,6 @@ function hotkey_serialize() {
 	var _node = [];
 	var _cust = variable_struct_get_names(HOTKEYS_CUSTOM);
 	for(var i = 0, n = array_length(_cust); i < n; i++) {
-		
 		var nd = _cust[i];
 		var nl = HOTKEYS_CUSTOM[$ nd];
 		var kk = variable_struct_get_names(nl);
@@ -176,11 +176,18 @@ function hotkey_serialize() {
 		}
 	}
 	
-	json_save_struct(PREFERENCES_DIR + "hotkeys.json", { context: _context, node: _node });
+	var _graph = {};
+	for( var i = 0, n = array_length(GRAPH_ADD_NODE_KEYS); i < n; i++ ) {
+		var _ky = GRAPH_ADD_NODE_KEYS[i];
+		_graph[$ _ky.name] = _ky.serialize();
+	}
+	
+	json_save_struct(PREFERENCES_DIR + "hotkeys.json", { context: _context, node: _node, graph: _graph });
 }
 
 function hotkey_deserialize() {
 	HOTKEYS_DATA = {};
+	
 	var path = PREFERENCES_DIR + "hotkeys.json";
 	if(!file_exists(path)) return;
 	
@@ -188,6 +195,8 @@ function hotkey_deserialize() {
 	if(!is_struct(map)) return;
 	
 	var fn = function(n) /*=>*/ { HOTKEYS_DATA[$ $"{n.context}_{n.name}"] = n; };
+	
 	if(struct_has(map, "context")) array_foreach(map.context, fn);
 	if(struct_has(map, "node"))    array_foreach(map.node,    fn);
+	if(struct_has(map, "graph"))   HOTKEYS_DATA.graph = map.graph;
 }

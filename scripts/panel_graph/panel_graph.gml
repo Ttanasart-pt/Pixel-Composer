@@ -1,4 +1,6 @@
 #region function calls
+	globalvar GRAPH_ADD_NODE_KEYS, GRAPH_ADD_NODE_MAPS;
+	
     #macro PANEL_GRAPH_PROJECT_CHECK if(PANEL_GRAPH.project == noone || !PANEL_GRAPH.project.active) return;
 	#macro PANEL_GRAPH_FOCUS_STR var _n = PANEL_GRAPH.getFocusStr(); if(_n == noone) return;
 	#macro FN_NODE_CONTEXT_INVOKE if(!variable_global_exists("__FN_NODE_CONTEXT") || variable_global_get("__FN_NODE_CONTEXT") == undefined) variable_global_set("__FN_NODE_CONTEXT", []); \
@@ -9,14 +11,14 @@
     function panel_graph_focus_content()           { CALL("graph_focus_content");       PANEL_GRAPH.fullView();                                                                         }
     function panel_graph_preview_focus()           { CALL("graph_preview_focus");       PANEL_GRAPH.setCurrentPreview();                                                                }
     
-    function panel_graph_import_image()            { CALL("graph_import_image");        PANEL_GRAPH.createNodeHotkey("Node_Image");                                                     }
-    function panel_graph_import_image_array()      { CALL("graph_import_image_array");  PANEL_GRAPH.createNodeHotkey("Node_Image_Sequence");                                            }
-    function panel_graph_add_number()              { CALL("graph_add_number");          PANEL_GRAPH.createNodeHotkey("Node_Number");                                                    }
-    function panel_graph_add_vec2()                { CALL("graph_add_vec2");            PANEL_GRAPH.createNodeHotkey("Node_Vector2");                                                   }
-    function panel_graph_add_vec3()                { CALL("graph_add_vec3");            PANEL_GRAPH.createNodeHotkey("Node_Vector3");                                                   }
-    function panel_graph_add_vec4()                { CALL("graph_add_vec4");            PANEL_GRAPH.createNodeHotkey("Node_Vector4");                                                   }
-    function panel_graph_add_display()             { CALL("graph_add_disp");            PANEL_GRAPH.createNodeHotkey("Node_Display_Text");                                              }
-    function panel_graph_add_math_add()            { CALL("graph_add_math_add");        PANEL_GRAPH.createNodeHotkey(Node_create_Math, { query: "add" });                               }
+    // function panel_graph_import_image()            { CALL("graph_import_image");        PANEL_GRAPH.createNodeHotkey("Node_Image");                                                     }
+    // function panel_graph_import_image_array()      { CALL("graph_import_image_array");  PANEL_GRAPH.createNodeHotkey("Node_Image_Sequence");                                            }
+    // function panel_graph_add_number()              { CALL("graph_add_number");          PANEL_GRAPH.createNodeHotkey("Node_Number");                                                    }
+    // function panel_graph_add_vec2()                { CALL("graph_add_vec2");            PANEL_GRAPH.createNodeHotkey("Node_Vector2");                                                   }
+    // function panel_graph_add_vec3()                { CALL("graph_add_vec3");            PANEL_GRAPH.createNodeHotkey("Node_Vector3");                                                   }
+    // function panel_graph_add_vec4()                { CALL("graph_add_vec4");            PANEL_GRAPH.createNodeHotkey("Node_Vector4");                                                   }
+    // function panel_graph_add_display()             { CALL("graph_add_disp");            PANEL_GRAPH.createNodeHotkey("Node_Display_Text");                                              }
+    // function panel_graph_add_math_add()            { CALL("graph_add_math_add");        PANEL_GRAPH.createNodeHotkey(Node_create_Math, { query: "add" });                               }
     
     function panel_graph_select_all()              { CALL("graph_select_all");          PANEL_GRAPH.nodes_selecting = PANEL_GRAPH.nodes_list;                                           }
     function panel_graph_toggle_grid()             { CALL("graph_toggle_grid");         PANEL_GRAPH.display_parameter.show_grid      = !PANEL_GRAPH.display_parameter.show_grid;        }
@@ -73,19 +75,18 @@
     function panel_graph_show_origin()             { CALL("graph_grid_show_origin");  PANEL_GRAPH_PROJECT_CHECK PANEL_GRAPH.project.graphGrid.show_origin = !PANEL_GRAPH.project.graphGrid.show_origin; }
 				                                                                           
     function __fnInit_Graph() {
-        registerFunction("Graph", "Add Node",              "A", MOD_KEY.none,                    panel_graph_add_node            ).setMenu("graph_add_node")
+    	registerFunction("Graph", "Add Node",              "A", MOD_KEY.none,                    panel_graph_add_node            ).setMenu("graph_add_node")
         registerFunction("Graph", "Replace Node",          "R", MOD_KEY.ctrl,                    panel_graph_replace_node        ).setMenu("graph_replace_node")
         registerFunction("Graph", "Focus Content",         "F", MOD_KEY.none,                    panel_graph_focus_content       ).setMenu("graph_focus_content")
         registerFunction("Graph", "Preview Focusing Node", "P", MOD_KEY.none,                    panel_graph_preview_focus       ).setMenu("graph_preview_focusing_node")
                                                                                         
-        registerFunction("Graph", "Import Image",          "I", MOD_KEY.none,                    panel_graph_import_image        ).setMenu("graph_import_image")
-        registerFunction("Graph", "Import Image Array",    "I", MOD_KEY.shift,                   panel_graph_import_image_array  ).setMenu("graph_import_image_array")
-        registerFunction("Graph", "Add Number",            "1", MOD_KEY.none,                    panel_graph_add_number          ).setMenu("graph_add_number")
-        registerFunction("Graph", "Add Vector2",           "2", MOD_KEY.none,                    panel_graph_add_vec2            ).setMenu("graph_add_vector2")
-        registerFunction("Graph", "Add Vector3",           "3", MOD_KEY.none,                    panel_graph_add_vec3            ).setMenu("graph_add_vector3")
-        registerFunction("Graph", "Add Vector4",           "4", MOD_KEY.none,                    panel_graph_add_vec4            ).setMenu("graph_add_vector4")
-        registerFunction("Graph", "Add Display",           "D", MOD_KEY.none,                    panel_graph_add_display         ).setMenu("graph_add_display")
-        registerFunction("Graph", "Transform Output",      "T", MOD_KEY.ctrl,                    panel_graph_add_transform       ).setMenu("graph_transform_node")
+        // registerFunction("Graph", "Import Image",          "I", MOD_KEY.none,                    panel_graph_import_image        ).setMenu("graph_import_image")
+        // registerFunction("Graph", "Import Image Array",    "I", MOD_KEY.shift,                   panel_graph_import_image_array  ).setMenu("graph_import_image_array")
+        // registerFunction("Graph", "Add Number",            "1", MOD_KEY.none,                    panel_graph_add_number          ).setMenu("graph_add_number")
+        // registerFunction("Graph", "Add Vector2",           "2", MOD_KEY.none,                    panel_graph_add_vec2            ).setMenu("graph_add_vector2")
+        // registerFunction("Graph", "Add Vector3",           "3", MOD_KEY.none,                    panel_graph_add_vec3            ).setMenu("graph_add_vector3")
+        // registerFunction("Graph", "Add Vector4",           "4", MOD_KEY.none,                    panel_graph_add_vec4            ).setMenu("graph_add_vector4")
+        // registerFunction("Graph", "Add Display",           "D", MOD_KEY.none,                    panel_graph_add_display         ).setMenu("graph_add_display")
                                                                                         
         registerFunction("Graph", "Select All",            "A", MOD_KEY.ctrl,                    panel_graph_select_all          ).setMenu("graph_select_all")
         registerFunction("Graph", "Toggle Grid",           "G", MOD_KEY.none,                    panel_graph_toggle_grid         ).setMenu("graph_toggle_grid")
@@ -94,6 +95,7 @@
         registerFunction("Graph", "Toggle Control",        "",  MOD_KEY.none,                    panel_graph_toggle_control      ).setMenu("graph_toggle_control")
         registerFunction("Graph", "Toggle Avoid Label",    "",  MOD_KEY.none,                    panel_graph_toggle_avoid_label  ).setMenu("graph_toggle_avoid_label")
         
+        registerFunction("Graph", "Transform Output",      "T", MOD_KEY.ctrl,                    panel_graph_add_transform       ).setMenu("graph_transform_node")
         registerFunction("Graph", "Blend",                 "B", MOD_KEY.ctrl,                    panel_graph_blend               ).setMenu("graph_blend")
         registerFunction("Graph", "Compose",               "B", MOD_KEY.ctrl | MOD_KEY.shift,    panel_graph_compose             ).setMenu("graph_compose")
         registerFunction("Graph", "Array",                 "A", MOD_KEY.ctrl | MOD_KEY.shift,    panel_graph_array               ).setMenu("graph_array")
@@ -102,7 +104,7 @@
         registerFunction("Graph", "Copy to Canvas",        "C", MOD_KEY.ctrl | MOD_KEY.shift,    panel_graph_canvas_copy         ).setMenu("graph_canvas_copy")
         registerFunction("Graph", "Blend Canvas",          "C", MOD_KEY.ctrl | MOD_KEY.alt,      panel_graph_canvas_blend        ).setMenu("graph_canvas_blend")
         registerFunction("Graph", "Canvas",                "",  MOD_KEY.none,                    
-        	function(_dat) /*=>*/ {return submenuCall(_dat, [ MENU_ITEMS.graph_canvas_copy, MENU_ITEMS.graph_canvas_blend ])}).setMenu("graph_canvas",, true)
+        	function(d) /*=>*/ {return submenuCall(d, [ MENU_ITEMS.graph_canvas_copy, MENU_ITEMS.graph_canvas_blend ])}).setMenu("graph_canvas", noone, true)
 		
         registerFunction("Graph", "Delete (break)",        vk_delete, MOD_KEY.shift,             panel_graph_delete_break        ).setMenu("graph_delete_break",    THEME.cross)
         registerFunction("Graph", "Delete (merge)",        vk_delete, MOD_KEY.none,              panel_graph_delete_merge        ).setMenu("graph_delete_merge",    THEME.cross)
@@ -155,6 +157,21 @@
         
         for( var i = 0, n = array_length(global.__FN_NODE_CONTEXT); i < n; i++ ) 
         	global.__FN_NODE_CONTEXT[i]();
+        	
+    	GRAPH_ADD_NODE_KEYS = [];
+    	GRAPH_ADD_NODE_MAPS = {};
+    	
+        if(struct_has(HOTKEYS_DATA, "graph")) {
+        	var _grps = HOTKEYS_DATA.graph;
+        	var _keys = struct_get_names(_grps);
+        	
+        	for( var i = 0, n = array_length(_keys); i < n; i++ ) {
+        		var _k = _keys[i];
+        		var _h = new Hotkey("_graph_add_node", _k).deserialize(_grps[$ _k]);
+        		array_push(GRAPH_ADD_NODE_KEYS, _h);
+        		GRAPH_ADD_NODE_MAPS[$ _k] = _h;
+        	}
+        }
     }
     
     function __fnGroupInit_Graph() {
@@ -1139,6 +1156,15 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         mouse_grid_y = round(m_y / project.graphGrid.size) * project.graphGrid.size;
         
         setTitle();
+        
+        if(pFOCUS) {
+        	for( var i = 0, n = array_length(GRAPH_ADD_NODE_KEYS); i < n; i++ ) {
+        		var _addKey = GRAPH_ADD_NODE_KEYS[i];
+        		if(!struct_has(ALL_NODES, _addKey.name)) continue;
+        		
+        		if(_addKey.isPressing()) createNodeHotkey(_addKey.name);
+        	}
+        }
     } 
     
     ////- Draw
@@ -2144,14 +2170,6 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
             if(mouse_release(mb_left)) 
                 connectDraggingValueTo(target);
         } 
-        
-        // if(keyboard_check_pressed(vk_anykey)) {
-        // 	var k = keyboard_lastkey;
-        	
-        // 	if(k >= ord("A") && k <= ord("z") && !node_drag_search) {
-        // 		node_drag_search = true;
-        // 	}
-        // }
         
         if(mouse_release(mb_left)) value_draggings = [];
     }

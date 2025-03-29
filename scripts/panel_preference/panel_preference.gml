@@ -1200,6 +1200,10 @@ function Panel_Preference() : PanelContent() constructor {
 	    		array_sort(_lst, function(s1, s2) /*=>*/ {return string_compare(s1.name, s2.name)});
 	    		array_push(hotkeyContext, { context: ctx, list: _lst });
 	    		
+	    		if(_title == "Graph") {
+	    			array_push(hotkeyArray, "> Add Nodes");
+	    			array_push(hotkeyContext, { list: GRAPH_ADD_NODE_KEYS });
+	    		}
 	    	}
 	    	
 	    	array_push(hotkeyContext, -1);
@@ -1219,7 +1223,7 @@ function Panel_Preference() : PanelContent() constructor {
 	    			array_push(_lst, ll[| j]);
 	    		
 	    		array_sort(_lst, function(s1, s2) /*=>*/ {return string_compare(s1.name, s2.name)});
-	    		array_push(hotkeyContext, { context: ctx, list: _lst });
+	    		array_push(hotkeyContext, { list: _lst });
 	    	}
 	    	
 	    	array_push(hotkeyContext, -1);
@@ -1246,7 +1250,7 @@ function Panel_Preference() : PanelContent() constructor {
 	    		}
 	    		
 	    		array_sort(_lst, function(s1, s2) /*=>*/ {return string_compare(s1.name, s2.name)});
-	    		array_push(hotkeyContext, { context: ctx, list: _lst });
+	    		array_push(hotkeyContext, { list: _lst });
 	    		
 	    		var _title = ctx == 0? "Global" : ctx;
 	    		    _title = string_replace_all(_title, "_", " ");
@@ -1282,16 +1286,23 @@ function Panel_Preference() : PanelContent() constructor {
     		var modified  = false;
     		
     		var _ctxObj   = hotkeyContext[hk_page];
-    		var _cntx     = _ctxObj.context;
     		var _list     = _ctxObj.list;
     		var _yy       = yy + hh;
     		
-    		var _search = string_lower(search_text);
+    		var _addnode  = _list == GRAPH_ADD_NODE_KEYS;
+    		var _search   = string_lower(search_text);
+    		
+    		var key, name;
     		
     		for (var j = 0, m = array_length(_list); j < m; j++) {
+    			key  = _list[j];
+    			name = __txt(key.name);
     			
-    			var key  = _list[j];
-    			var name = __txt(key.name);
+    			if(_addnode) {
+    				var _nd = ALL_NODES[$ key.name];
+    				name = _nd.name;
+    			}
+    			
     			var dk   = key.getName();
     			
     			if(_search != "" && string_pos(_search, string_lower(name)) == 0
@@ -1347,7 +1358,6 @@ function Panel_Preference() : PanelContent() constructor {
     						hk_editing = key.modify();
     					
     				} else {
-    					// draw_sprite_stretched_ext(THEME.ui_panel, 1, bx, by, bw, bh, CDEF.main_dkgrey, 1);
     					cc = CDEF.main_ltgrey;
     				}
     			}
@@ -1691,7 +1701,6 @@ function Panel_Preference() : PanelContent() constructor {
         		
         		var _keyUsing = {};
         		var _ctxObj   = hotkeyContext[hk_page];
-        		var _cntx     = _ctxObj.context;
         		var _list     = _ctxObj.list;
         		
         		for (var j = 0, m = array_length(_list); j < m; j++) {
