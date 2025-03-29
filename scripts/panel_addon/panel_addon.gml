@@ -1,6 +1,7 @@
 function Panel_Addon() : PanelContent() constructor {
-	title = __txt("Addons");
-	icon  = THEME.addon_icon;
+	title    = __txt("Addons");
+	icon     = THEME.addon_icon;
+	auto_pin = true;
 	
 	#region data
 		w = ui(400);
@@ -12,10 +13,7 @@ function Panel_Addon() : PanelContent() constructor {
 		keyboard_lastkey  = -1;
 		
 		search_res = [];
-		tb_search = new textBox(TEXTBOX_INPUT.text, function(str) { 
-			search_string = string(str); 
-			searchAddons();
-		});
+		tb_search = new textBox(TEXTBOX_INPUT.text, function(str) /*=>*/ { search_string = string(str); searchAddons(); });
 		
 		tb_search.align			= fa_left;
 		tb_search.auto_update	= true;
@@ -46,15 +44,18 @@ function Panel_Addon() : PanelContent() constructor {
 			
 			var bsp = THEME.button_hide_fill;
 			var bs  = hg - ui(8);
-		
+			var bc  = COLORS._main_icon;
+			
 			var arr = search_string == ""? ADDONS : search_res;
+			
+			
 			
 			for( var i = 0, n = array_length(arr); i < n; i++ ) {
 				var _addon = arr[i];
 				
-				var bx = ww - ui(4);
-				var by = _y;
-				var hh = hg;
+				var bx   = ww - ui(4);
+				var by   = _y;
+				var hh   = hg;
 				var _act = addonActivated(_addon.name);
 				
 				if(_addon.open) {
@@ -67,11 +68,10 @@ function Panel_Addon() : PanelContent() constructor {
 				
 				if(_addon.open) draw_sprite_stretched_ext(THEME.ui_panel_bg, 3, 0, by, ww, hh, COLORS._main_icon_light, 1);
 				
-				if(hover) {
-					sc_addon.hover_content = true;
-					draw_sprite_stretched_ext(THEME.box_r5_clr, 0, 0, by, ww, hg, COLORS.panel_inspector_group_hover, 1);
-				} else
-					draw_sprite_stretched_ext(THEME.box_r5_clr, 0, 0, by, ww, hg, COLORS.panel_inspector_group_bg, 1);
+				var cc = hover? COLORS.panel_inspector_group_hover : COLORS.panel_inspector_group_bg;
+				if(hover) sc_addon.hover_content = true;
+				
+				draw_sprite_stretched_ext(THEME.box_r5_clr, 0, 0, by, ww, hg, cc, 1);
 				
 				draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
 				draw_text_add(ui(44), by + hg / 2, _addon.name);
@@ -86,8 +86,8 @@ function Panel_Addon() : PanelContent() constructor {
 					sc_addon.hover_content = true;
 					
 					if(!_act)			TOOLTIP = __txtx("panel_addon_not_activated", "Not activated");
-					else if(!_onStart)	TOOLTIP = __txtx("panel_addon_activated", "Activated");
-					else				TOOLTIP = __txtx("panel_addon_run_on_start", "Run on start");
+					else if(!_onStart)	TOOLTIP = __txtx("panel_addon_activated",     "Activated");
+					else				TOOLTIP = __txtx("panel_addon_run_on_start",  "Run on start");
 					
 					draw_sprite_stretched_ext(THEME.checkbox_def, 1, chx0, chy0, bs, bs, c_white, 1);
 					hover = false;
@@ -115,15 +115,15 @@ function Panel_Addon() : PanelContent() constructor {
 				var _bx = bx - bs;
 				var _by = by + ui(4);
 				
-				var b = buttonInstant(bsp, _bx, _by, bs, bs, _m, pHOVER, pFOCUS, __txt("Open in explorer"), THEME.folder, 0, COLORS._main_icon, 1, .75);
+				var b = buttonInstant(bsp, _bx, _by, bs, bs, _m, pHOVER, pFOCUS, __txt("Open in explorer"), THEME.folder, 0, bc, 1, .75);
 				if(b) hover = false;
 				if(b == 2) shellOpenExplorer(DIRECTORY + "Addons/" + _addon.name);
 				
 				_bx -= bs + ui(4);
-				if(_act && buttonInstant(bsp, _bx, _by, bs, bs, _m, pHOVER, pFOCUS, __txt("Addon settings"), THEME.addon_setting, 0, COLORS._main_icon, 1, .75) == 2) {
+				if(_act && buttonInstant(bsp, _bx, _by, bs, bs, _m, pHOVER, pFOCUS, __txt("Addon settings"), THEME.addon_setting, 0, bc, 1, .75) == 2) {
 					var _addObj = noone;
 					with(_addon_custom) if(name == _addon.name) _addObj = self;
-						
+					
 					if(_addObj) {
 						var arr = variable_struct_get_names(_addObj.panels);
 						for( var i = 0, n = array_length(arr); i < n; i++ ) {
@@ -134,8 +134,8 @@ function Panel_Addon() : PanelContent() constructor {
 					}
 				}
 				
-				if(pHOVER && hover && _m[0] < _bx)
-					if(mouse_press(mb_left, pFOCUS)) _addon.open = !_addon.open;
+				if(hover && _m[0] < _bx && mouse_press(mb_left, pFOCUS))
+					_addon.open = !_addon.open;
 				
 				if(_addon.open) {
 					var _yy = by + hg + ui(8);

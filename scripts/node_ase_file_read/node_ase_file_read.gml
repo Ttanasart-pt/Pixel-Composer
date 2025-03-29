@@ -312,6 +312,19 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			tags = chunk[$ "Tags"];
 		}
 		
+		var _names = {};
+		for( var i = 0, n = array_length(tags); i < n; i++ ) {
+			var _t = tags[i];
+			var _n = _t[$ "Name"];
+			
+			if(struct_has(_names, _n)) {
+				_names[$ _n]++;
+				_t[$ "Name"] += $"_{_names[$ _n]}"
+				
+			} else
+				_names[$ _n] = 0;
+		}
+		
 		update_on_frame = false;
 		
 		for( var i = 0, n = array_length(layers); i < n; i++ ) {
