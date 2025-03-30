@@ -1194,8 +1194,8 @@ function Panel_Preference() : PanelContent() constructor {
 	    		
 	    		var _lst = [];
 	    		var ll   = HOTKEYS[$ ctx];
-	    		for(var j = 0; j < ds_list_size(ll); j++)
-	    			array_push(_lst, ll[| j]);
+	    		for( var i = 0, n = array_length(ll); i < n; i++ ) 
+	    			_lst[i] = ll[i];
 	    		
 	    		array_sort(_lst, function(s1, s2) /*=>*/ {return string_compare(s1.name, s2.name)});
 	    		array_push(hotkeyContext, { context: ctx, list: _lst });
