@@ -14,8 +14,8 @@ float bright(in vec4 col) {
 
 void main() {
 	float b = bright(texture2D( map, v_vTexcoord ));
-	if(b > vMin && b <= vMax)
+	gl_FragColor = vec4(0.);
+	
+	if(b >= vMin && b <= vMax)
 		gl_FragColor = texture2D( gm_BaseTexture, v_vTexcoord );
-	else 
-		gl_FragColor = vec4(0.);
 }

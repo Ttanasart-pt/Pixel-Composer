@@ -8,12 +8,15 @@ function __init_dynaDraw() {
     
     var _d = function(a) /*=>*/ {return ds_list_add(DYNADRAW_FOLDER.content, a)};
     _d(new dynaDraw_line());
+    
     _d(new dynaDraw_circle_fill());
     _d(new dynaDraw_circle_fill_gradient());
     _d(new dynaDraw_circle_outline());
+    
     _d(new dynaDraw_square_fill());
     _d(new dynaDraw_square_fill_gradient());
     _d(new dynaDraw_square_outline());
+    
     _d(new dynaDraw_polygon_fill());
     _d(new dynaDraw_polygon_fill_gradient());
     _d(new dynaDraw_polygon_outline());
