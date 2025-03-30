@@ -35,6 +35,7 @@ if(winMan_isMinimized()) exit;
 				case VALUE_TYPE.curve    : draw_tooltip_curve(content);           break;
 				case VALUE_TYPE.color    : draw_tooltip_color(content);           break;
 				case VALUE_TYPE.gradient : draw_tooltip_gradient(content);        break;
+				case VALUE_TYPE.atlas    : 
 				case VALUE_TYPE.surface  : draw_tooltip_surface(content);         break;
 				case VALUE_TYPE.buffer   : draw_tooltip_buffer(content);          break;
 				case VALUE_TYPE.pathnode : draw_tooltip_path(content);            break;

@@ -86,6 +86,6 @@ function Node_Path_Sample(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
-		draw_sprite_bbox_uniform(THEME.node_draw_path, 0, bbox);
+		draw_sprite_bbox_uniform(s_node_path_sample, 0, bbox);
 	}
 }

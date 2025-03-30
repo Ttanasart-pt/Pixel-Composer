@@ -23,22 +23,12 @@ function seed_random(digits = 6) { return irandom_range(power(10, digits - 1), p
 
 function random_seed(val, seed) {
 	random_set_seed(floor(seed));
-	var _s0 = random(val);
-	
-	random_set_seed(floor(seed) + 1);
-	var _s1 = random(val);
-	
-	return lerp(_s0, _s1, frac(seed));
+	return lerp(random(val), random(val), frac(seed));
 }
 
 function random_range_seed(from, to, seed) {
 	random_set_seed(floor(seed));
-	var _s0 = random_range(from, to);
-	
-	random_set_seed(floor(seed) + 1);
-	var _s1 = random_range(from, to);
-	
-	return lerp(_s0, _s1, frac(seed));
+	return lerp(from, to, lerp(random(1), random(1), frac(seed)));
 }
 
 function random1D(seed, startRange = 0, endRange = 1) {

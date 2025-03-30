@@ -14,12 +14,11 @@ function Panel_Profile_Render() : PanelContent() constructor {
 	list_w    = ui(300);
 	detail_w  = w - list_w - padding * 2 - ui(8);
 	content_h = h - ui(40) - padding;
-	
 	io_label_y = 0;
 	
 	run = 0;
-	render_time = 0;
-	render_drag = false;
+	render_time      = 0;
+	render_drag      = false;
 	report_selecting = noone;
 	report_clicked   = noone;
 	
@@ -87,15 +86,6 @@ function Panel_Profile_Render() : PanelContent() constructor {
 		    	_report.search_res = false;
 		}
 	}
-	
-	function onResize() {
-    	list_w    = ui(300);
-    	detail_w  = w - list_w - padding * 2 - ui(8);
-    	content_h = h - ui(40) - padding;
-    	
-	    sc_profile_list.resize(list_w - ui(8), content_h - ui(8)); 
-	    sc_profile_detail.resize(detail_w - ui(8), content_h - ui(8)); 
-	} 
 	
 	function setReport(_report) {
 		report_selecting = _report;
@@ -593,7 +583,9 @@ function Panel_Profile_Render() : PanelContent() constructor {
 		var _bx = _pd;
 		var _by = _pd;
 		
-		if(buttonInstant(THEME.button_hide_fill, _bx, _by, _bs, _bs, [ mx, my ], pHOVER, pFOCUS, "Render all", s_run, 1, COLORS._main_value_positive, 1, 1) == 2) {
+		if(buttonInstant(THEME.button_hide_fill, _bx, _by, _bs, _bs, [ mx, my ], pHOVER, pFOCUS, "Render all", 
+			s_run, 1, COLORS._main_value_positive, 1, UI_SCALE) == 2) {
+				
 		    PROFILER_STAT = 1;
 		    PROFILER_DATA = [];
 		    setReport(noone);
@@ -608,7 +600,9 @@ function Panel_Profile_Render() : PanelContent() constructor {
 		}
 		_bx += _bs + ui(2);
 		
-		if(buttonInstant(THEME.button_hide_fill, _bx, _by, _bs, _bs, [ mx, my ], pHOVER, pFOCUS, "Render partial", s_run_partial, 1, COLORS._main_value_positive, 1, 1) == 2) {
+		if(buttonInstant(THEME.button_hide_fill, _bx, _by, _bs, _bs, [ mx, my ], pHOVER, pFOCUS, "Render partial", 
+			s_run_partial, 1, COLORS._main_value_positive, 1, UI_SCALE) == 2) {
+				
 		    PROFILER_STAT = 1;
 		    PROFILER_DATA = [];
 		    setReport(noone);
@@ -634,19 +628,22 @@ function Panel_Profile_Render() : PanelContent() constructor {
 		var _bx = _pd + list_w - _bs;
 		var _by = _pd;
 		
-		if(buttonInstant(THEME.button_hide_fill, _bx, _by, _bs, _bs, [ mx, my ], pHOVER, pFOCUS, $"Log level {show_log_level}", s_filter_log_level, show_log_level, COLORS._main_icon, 1, 1) == 2)
+		if(buttonInstant(THEME.button_hide_fill, _bx, _by, _bs, _bs, [ mx, my ], pHOVER, pFOCUS, $"Log level {show_log_level}", 
+			s_filter_log_level, show_log_level, COLORS._main_icon, 1, UI_SCALE) == 2)
 		    show_log_level = (show_log_level + 1) % 5;
 		_bx -= _bs + ui(4);
 		
 		if(report_selecting == noone) 
 			draw_sprite_ext(s_filter_node, 0, _bx + _bs / 2, _by + _bs / 2, 1, 1, 0, COLORS._main_icon, 0.25);
-		else if(buttonInstant(THEME.button_hide_fill, _bx, _by, _bs, _bs, [ mx, my ], pHOVER, pFOCUS, "Filter node", s_filter_node, 0, filter_node == noone? COLORS._main_icon : COLORS._main_accent, 1, 1) == 2) {
+		else if(buttonInstant(THEME.button_hide_fill, _bx, _by, _bs, _bs, [ mx, my ], pHOVER, pFOCUS, "Filter node", 
+			s_filter_node, 0, filter_node == noone? COLORS._main_icon : COLORS._main_accent, 1, UI_SCALE) == 2) {
 		    filter_node = filter_node == report_selecting.node? noone : report_selecting.node;
 		    searchData();
 		}
 		_bx -= _bs + ui(4);
 		
-		if(buttonInstant(THEME.button_hide_fill, _bx, _by, _bs, _bs, [ mx, my ], pHOVER, pFOCUS, "Match selecting", s_filter_node_inspector, 0, set_selecting_node? COLORS._main_accent : COLORS._main_icon, 1, 1) == 2)
+		if(buttonInstant(THEME.button_hide_fill, _bx, _by, _bs, _bs, [ mx, my ], pHOVER, pFOCUS, "Match selecting", 
+			s_filter_node_inspector, 0, set_selecting_node? COLORS._main_accent : COLORS._main_icon, 1, UI_SCALE) == 2)
 		    set_selecting_node = !set_selecting_node;
 		
 		_bx -= ui(4);
@@ -659,7 +656,7 @@ function Panel_Profile_Render() : PanelContent() constructor {
 		var _bx = _pd + list_w + ui(8);
 		var _by = _pd;
 		
-		draw_sprite_ext(s_filter, 0, _bx + _bs / 2, _by + _bs / 2, 1, 1, 0, COLORS._main_icon, 0.25);
+		draw_sprite_ext(s_filter, 0, _bx + _bs / 2, _by + _bs / 2, UI_SCALE, UI_SCALE, 0, COLORS._main_icon, 0.25);
 		
 		_bx += _bs + ui(4);
 		tb_content.draw(_bx, _by + ui(2), ui(128), _bs - ui(4), filter_content_string, [ mx, my ]);
@@ -732,10 +729,10 @@ function Panel_Profile_Render() : PanelContent() constructor {
 			    	
 			    	if(pHOVER && point_in_rectangle(mx, my, _rx - 4, _py0, _rx + 4, _py1)) {
 			    		TOOLTIP = _report.text;
-			    		draw_line_width(_rx, _py0, _rx, _py0 + _ph - 2, 2);
+			    		draw_line_width(_rx, _py0, _rx, _py0 + _ph - ui(2), 2);
 			    		
 			    	} else
-			    		draw_line(_rx, _py0, _rx, _py0 + _ph - 2);
+			    		draw_line(_rx, _py0, _rx, _py0 + _ph - ui(2));
 				}
 			}
 			
@@ -753,23 +750,31 @@ function Panel_Profile_Render() : PanelContent() constructor {
 		
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
+		
 		var ndx = _pd;
-		var ndy = ui(40);
+		var ndy = ui(44);
+		
+		list_w    = ui(300);
+    	detail_w  = w - list_w - padding * 2 - ui(8);
+    	content_h = h - ndy - padding;
+    	
 		var ndw = list_w;
 		var ndh = content_h;
 		
 		draw_sprite_stretched(THEME.ui_panel_bg, 1, ndx, ndy, ndw, ndh);
 		
+		sc_profile_list.verify(list_w - ui(8), content_h - ui(8)); 
 		sc_profile_list.setFocusHover(pFOCUS, pHOVER);
-		sc_profile_list.draw(ndx + ui(4), ndy + ui(4), mx - ndx - ui(4), my - ndy - ui(4));
+		sc_profile_list.drawOffset(ndx + ui(4), ndy + ui(4), mx, my);
 		
 		var ndx = _pd + list_w + ui(8);
 		var ndw = detail_w;
 		
 		draw_sprite_stretched(THEME.ui_panel_bg, 1, ndx, ndy, ndw, ndh);
 		
+		sc_profile_detail.verify(detail_w - ui(8), content_h - ui(8)); 
 		sc_profile_detail.setFocusHover(pFOCUS, pHOVER);
-		sc_profile_detail.draw(ndx + ui(4), ndy + ui(4), mx - ndx - ui(4), my - ndy - ui(4));
+		sc_profile_detail.drawOffset(ndx + ui(4), ndy + ui(4), mx, my);
 		
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		

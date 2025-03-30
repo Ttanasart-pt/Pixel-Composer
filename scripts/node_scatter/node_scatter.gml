@@ -106,15 +106,17 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		.rejectArrayProcess();
 	
 	input_display_list = [ 10, 
-		["Surfaces",  true], 0, 1, 15, 24, 25, 26, 27, 
-		["Scatter",  false], 6, 5, 13, 14, 17, 9, 31, 2, 30, 35, 
+		["Surfaces",  true],  0,  1, 15, 24, 25, 26, 27, 
+		["Scatter",  false],  6,  5, 13, 14, 17,  9, 31,  2, 30, 35, 
 		["Path",     false], 19, 38, 20, 21, 22, 
 		["Position", false], 40, 33, 36, 37, 39, 
-		["Rotation", false], 7, 4, 32, 
-		["Scale",    false], 3, 8, 34, 43, 
+		["Rotation", false],  7,  4, 32, 
+		["Scale",    false],  3,  8, 34, 43, 
 		["Color",    false], 11, 28, 12, 16, 41, 42, 
-		["Render",   false], 18, 23, 
+		["Render",   false], 18, 23, 44, 
 	];
+	
+	transform_prop = [ 40, 33, 36, 37, 39 ];
 	
 	attribute_surface_depth();
 	attribute_interpolation();
@@ -363,6 +365,13 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var _p = [ 0, 0 ];
 		#endregion
 		
+		#region update
+			var _calPos = CURRENT_FRAME == 0 || !IS_PLAYING;
+			
+			for( var i = 0, n = array_length(transform_prop); i < n; i++ )
+				_calPos |= inputs[transform_prop[i]].isDynamic();
+		#endregion
+		
 		var _outSurf = _outData[0];
 		
 		surface_set_target(_outSurf);
@@ -388,15 +397,45 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var positions = array_create(_amount);
 			var posIndex  = 0;
 			
-			for(var i = 0; i < _amount; i++) {
-				var sp = noone, _x = 0, _y = 0;
-				var _v = noone;
+			var seedFrac  = frac(_sed);
+			var _sedSt    = floor(_sed);
+			var i = -1;
+			
+			var _ww = _dim[0];
+			var _hh = _dim[1];
+			var uniAmoX = uniAmo[0];
+			var uniAmoY = uniAmo[1];
+			
+			var _w2 = _ww / 2;
+			var _h2 = _hh / 2;
+			var _wa = _ww / uniAmoX;
+			var _ha = _hh / uniAmoY;
+			
+			var sp, _x, _y, _v;
+			
+			repeat(_amount) {
+				i++;
 				
-				var _scx = _scaUniX? _scale[0] : random_range_seed(_scale[0], _scale[1], _sed++);
-				var _scy = _scaUniY? _scale[2] : random_range_seed(_scale[2], _scale[3], _sed++); 
+				var _atl = _sct_len >= _datLen? 0 : scatter_data[_sct_len];
+				sp = noone;
+				_v = noone;
+				_x = 0;
+				_y = 0;
+				
+				if(_atl != 0) {
+					_x = _atl.x;
+					_y = _atl.y;
+				}
+				
+				random_set_seed(_sedSt + i * 100);
+				
+				var _scx = _scaUniX? _scale[0] : lerp(_scale[0], _scale[1], lerp(random(1), random(1), seedFrac));
+				var _scy = _scaUniY? _scale[2] : lerp(_scale[2], _scale[3], lerp(random(1), random(1), seedFrac));
 				
 				switch(_dist) { // position
 					case NODE_SCATTER_DIST.area : 
+						if(!_calPos) break;
+						
 						if(_scat == 0) {
 							var _axc = _area[AREA_INDEX.center_x];
 							var _ayc = _area[AREA_INDEX.center_y];
@@ -405,12 +444,12 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 							var _ax0 = _axc - _aw, _ax1 = _axc + _aw;
 							var _ay0 = _ayc - _ah, _ay1 = _ayc + _ah;
 							
-							var _acol = i % uniAmo[0];
-							var _arow = floor(i / uniAmo[0]);
+							var _acol = i % uniAmoX;
+							var _arow = floor(i / uniAmoX);
 								
 							if(_area[AREA_INDEX.shape] == AREA_SHAPE.rectangle) {
-								_x = uniAmo[0] == 1? _axc : _ax0 + (_acol + 0.5) * _aw2 / ( uniAmo[0] );
-								_y = uniAmo[1] == 1? _ayc : _ay0 + (_arow + 0.5) * _ah2 / ( uniAmo[1] );
+								_x = uniAmoX == 1? _axc : _ax0 + (_acol + 0.5) * _aw2 / uniAmoX;
+								_y = uniAmoY == 1? _ayc : _ay0 + (_arow + 0.5) * _ah2 / uniAmoY;
 								
 							} else if(_area[AREA_INDEX.shape] == AREA_SHAPE.elipse) {
 								if(uniAut) {
@@ -418,8 +457,8 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 									_x = sp[0];
 									_y = sp[1];
 								} else {
-									var _ang = cirRng[0] + _acol * (cirRng[1] - cirRng[0]) / uniAmo[0];
-									var _rad = uniAmo[1] == 1? 0.5 : _arow / (uniAmo[1] - 1);
+									var _ang = cirRng[0] + _acol * (cirRng[1] - cirRng[0]) / uniAmoX;
+									var _rad = uniAmoY == 1? 0.5 : _arow / (uniAmoY - 1);
 									_ang += _arow * uniRot;
 									
 									_x += _axc + lengthdir_x(_rad * _aw, _ang);
@@ -437,12 +476,16 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 						break;
 						
 					case NODE_SCATTER_DIST.border : 
+						if(!_calPos) break;
+						
 						sp = area_get_random_point(_area, _dist, _scat, i, _amount);
 						_x = sp[0];
 						_y = sp[1];
 						break;
 						
 					case NODE_SCATTER_DIST.map : 
+						if(!_calPos) break;
+						
 						sp = array_safe_get_fast(_posDist, i);
 						if(!is_array(sp)) continue;
 						
@@ -453,13 +496,15 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					case NODE_SCATTER_DIST.data : 
 						sp = array_safe_get_fast(_distData, i);
 						if(!is_array(sp)) continue;
+						_v = sp;
 						
 						_x = array_safe_get_fast(sp, 0);
 						_y = array_safe_get_fast(sp, 1);
-						_v = sp;
 						break;
 						
 					case NODE_SCATTER_DIST.path : 
+						if(!_calPos) break;
+						
 						if(_scat == 0) {
 							switch(pthSpac) {
 								case 0 :
@@ -483,36 +528,40 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 						}
 						
 						var pp = path.getPointRatio(_pathProgress, path_line_index);
-						_x = pp.x + random_range_seed(-pathDis, pathDis, _sed++);
-						_y = pp.y + random_range_seed(-pathDis, pathDis, _sed++);
+						_x = pp.x + lerp(-pathDis, pathDis, lerp(random(1), random(1), seedFrac));
+						_y = pp.y + lerp(-pathDis, pathDis, lerp(random(1), random(1), seedFrac));
 						break;
 						
 					case NODE_SCATTER_DIST.tile : 
+						if(!_calPos) break;
+						
 						if(_scat == 0) {
-							var _acol =       i % uniAmo[0];
-							var _arow = floor(i / uniAmo[0]);
+							var _acol =       i % uniAmoX;
+							var _arow = floor(i / uniAmoX);
 								
-							_x = uniAmo[0] == 1? _dim[0] / 2 : (_acol + 0.5) * _dim[0] / ( uniAmo[0] );
-							_y = uniAmo[1] == 1? _dim[1] / 2 : (_arow + 0.5) * _dim[1] / ( uniAmo[1] );
+							_x = uniAmoX == 1? _w2 : (_acol + 0.5) * _wa;
+							_y = uniAmoY == 1? _h2 : (_arow + 0.5) * _ha;
 								
 						} else if(_scat == 1) {
-							_x = random_range_seed(0, _dim[0], _sed++);
-							_y = random_range_seed(0, _dim[1], _sed++);
+							_x = lerp(0, _ww, lerp(random(1), random(1), seedFrac));
+							_y = lerp(0, _hh, lerp(random(1), random(1), seedFrac));
 						}
 						break;
 				}
 				
-				if(_wigX) _x += random_range_seed(posWig[0], posWig[1], _sed++);
-				if(_wigY) _y += random_range_seed(posWig[2], posWig[3], _sed++);
+				if(_calPos) {
+					if(_wigX) _x += lerp(posWig[0], posWig[1], lerp(random(1), random(1), seedFrac));
+					if(_wigY) _y += lerp(posWig[2], posWig[3], lerp(random(1), random(1), seedFrac));
 				
-				_x += posShf[0] * i;
-				_y += posShf[1] * i;
+					_x += posShf[0] * i;
+					_y += posShf[1] * i;
 				
-				var shrRad = random_range_seed(shfRad[0], shfRad[1], _sed++);
-				var shrAng = point_direction(_x, _y, _area[0], _area[1]);
-				
-				_x -= lengthdir_x(shrRad, shrAng);
-				_y -= lengthdir_y(shrRad, shrAng);
+					var shrRad = lerp(shfRad[0], shfRad[1], lerp(random(1), random(1), seedFrac));
+					var shrAng = point_direction(_x, _y, _area[0], _area[1]);
+					
+					_x -= lengthdir_x(shrRad, shrAng);
+					_y -= lengthdir_y(shrRad, shrAng);
+				}
 				
 				if(_unis) {
 					_scy = max(_scx, _scy);
@@ -525,7 +574,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					_scy *= vSca;
 				}
 				
-				var _r = (_pint? point_direction(_area[0], _area[1], _x, _y) : 0) + angle_random_eval_fast(_rota, _sed++);
+				var _r = (_pint? point_direction(_area[0], _area[1], _x, _y) : 0) + angle_random_eval_fast_fract(_rota, seedFrac);
 				
 				if(iRot > 1 && _v != noone)
 					_r += array_safe_get_fast(_v, iRot, 0);
@@ -590,27 +639,29 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				var _shf_x = sw * _scx * anchor[0];
 				var _shf_y = sh * _scy * anchor[1];
 				
-				if(_r == 0) {
-					_x -= _shf_x;
-					_y -= _shf_y;
-					
-				} else {
-					_p = point_rotate(_x - _shf_x, _y - _shf_y, _x, _y, _r, _p);
-					_x = _p[0];
-					_y = _p[1];
+				if(_calPos) {
+					if(_r == 0) {
+						_x -= _shf_x;
+						_y -= _shf_y;
+						
+					} else {
+						_p = point_rotate(_x - _shf_x, _y - _shf_y, _x, _y, _r, _p);
+						_x = _p[0];
+						_y = _p[1];
+					}
 				}
 				
 				var grSamp = random_seed(1, _sed++);
 				
 				var clr = _clrUni? _clrSin  : evaluate_gradient_map(grSamp, color, clr_map, clr_rng, inputs[11], true);
-				var alp  = _alpUni? alpha[0] : random_range_seed(alpha[0], alpha[1], _sed++);
-				var _atl = _sct_len >= _datLen? noone : scatter_data[_sct_len];
+				var alp  = _alpUni? alpha[0] : lerp(alpha[0], alpha[1], lerp(random(1), random(1), seedFrac));
 				
 				if(iCol > 1 && _v != noone) 
 					clr = colorMultiply(clr, array_safe_get_fast(_v, iCol, cola(c_white, 1)));
 				
 				if(surfSamp.active) {
-					var _samC = surfSamp.getPixel(_x + random_range_seed(sampWig[0], sampWig[1], _sed++), _y + random_range_seed(sampWig[2], sampWig[3], _sed++));
+					var _samC = surfSamp.getPixel(_x + lerp(sampWig[0], sampWig[1], lerp(random(1), random(1), seedFrac)), 
+					                              _y + lerp(sampWig[2], sampWig[3], lerp(random(1), random(1), seedFrac)));
 					clr =  colorMultiply(clr, _samC);
 					alp *= color_get_alpha(_samC);
 				}
@@ -618,7 +669,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				if(iAlp > 1 && _v != noone) 
 					alp += array_safe_get_fast(_v, iAlp, 0);
 					
-				if(posExt) { 
+				if(_calPos && posExt) { 
 					_x = round(_x); 
 					_y = round(_y); 
 				}
@@ -639,8 +690,10 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			array_resize(_sct, _sct_len);
 			if(sortY) array_sort(_sct, function(a1, a2) /*=>*/ {return a1.y - a2.y});
 			
-			for( var i = 0; i < _sct_len; i++ ) {
-				var _atl = _sct[i];
+			var i = 0;
+			
+			repeat(_sct_len) {
+				var _atl = _sct[i++];
 				
 				surf = _atl.surface;
 				_x   = _atl.x;
@@ -648,7 +701,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				_scx = _atl.sx;
 				_scy = _atl.sy;
 				_r	 = _atl.rotation;
-				clr	 = _atl.blend;
+				clr	 = _atl.blend; 
 				alp	 = _atl.alpha;
 				
 				draw_surface_ext(surf, _x, _y, _scx, _scy, _r, clr, alp);
@@ -657,13 +710,13 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					var _sw = _atl.w * _scx;
 					var _sh = _atl.h * _scy;
 					
-					if(_x < _sw)				draw_surface_ext(surf, _dim[0] + _x, _y, _scx, _scy, _r, clr, alp);
-					if(_y < _sh)				draw_surface_ext(surf, _x, _dim[1] + _y, _scx, _scy, _r, clr, alp);
-					if(_x < _sw && _y < _sh)	draw_surface_ext(surf, _dim[0] + _x, _dim[1] + _y, _scx, _scy, _r, clr, alp);
+					if(_x < _sw)				draw_surface_ext(surf, _x + _ww, _y,       _scx, _scy, _r, clr, alp);
+					if(_y < _sh)				draw_surface_ext(surf,       _x, _y + _hh, _scx, _scy, _r, clr, alp);
+					if(_x < _sw && _y < _sh)	draw_surface_ext(surf, _x + _ww, _y + _hh, _scx, _scy, _r, clr, alp);
 					
-					if(_x > _dim[0] - _sw)							draw_surface_ext(surf, _x - _dim[0], _y, _scx, _scy, _r, clr, alp);
-					if(_y > _dim[1] - _sh)							draw_surface_ext(surf, _x, _y - _dim[1], _scx, _scy, _r, clr, alp);
-					if(_x > _dim[0] - _sw || _y > _dim[1] - _sh)	draw_surface_ext(surf, _x - _dim[0], _y - _dim[1], _scx, _scy, _r, clr, alp);
+					if(_x > _ww - _sw)					 draw_surface_ext(surf, _x - _ww, _y,       _scx, _scy, _r, clr, alp);
+					if(_y > _hh - _sh)					 draw_surface_ext(surf, _x,       _y - _hh, _scx, _scy, _r, clr, alp);
+					if(_x > _ww - _sw || _y > _hh - _sh) draw_surface_ext(surf, _x - _ww, _y - _hh, _scx, _scy, _r, clr, alp);
 				}
 			}
 			

@@ -266,7 +266,7 @@
 	
 	for( var i = 0; i < paramCount; i++ ) {
 		var param = parameter_string(i);
-		printDebug($"    >>> params {i}: {param}");
+		show_debug_message($"    >>> params {i}: {param}");
 		
 		if(string_starts_with(param, "-")) {
 			switch(param) {

@@ -4,10 +4,11 @@
 	
 	var _p = $"D:/Project/MakhamDev/LTS-PixelComposer/MISC/temp/";
 	if(directory_exists(_p)) directory_destroy(_p);
+	
+	#macro printlog if(log) show_debug_message
 #endregion
 
-#macro printlog if(log) show_debug_message
-#macro printDebug show_debug_message
+function printDebug(t) { show_debug_message(t); __log("", t); }
 
 function print(str) { 
 	var _s = "";
