@@ -158,6 +158,9 @@
 		#macro c_ui_lime_light		$b2ffd0
 		
 		#macro c_ui_white			$ffffff
+		
+		#macro ca_white cola(c_white)
+		#macro ca_black cola(c_black)
 	#endregion
 	
 	#macro RETURN_ON_REST if(!PROJECT.animator.is_playing || !PROJECT.animator.frame_progress) return;

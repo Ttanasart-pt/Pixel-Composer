@@ -142,6 +142,7 @@ uniform int sides;
 uniform int tile;
 
 uniform int   drawBG;
+uniform int   drawOpacity;
 uniform int   drawDF;
 uniform vec2  dfLevel;
 
@@ -527,6 +528,7 @@ void main() {
 		color *= cc;
 	}
 	
-	if(drawBG == 0) gl_FragColor = vec4(v_vColour.rgb * color, v_vColour.a * cc);
-	else            gl_FragColor = mix(bgColor, v_vColour, color);
+	     if(drawBG == 1)      gl_FragColor = mix(bgColor, v_vColour, color);
+	else if(drawOpacity == 0) gl_FragColor = vec4(v_vColour.rgb * color, v_vColour.a * cc);
+	else                      gl_FragColor = vec4(v_vColour.rgb, v_vColour.a * color);
 }
