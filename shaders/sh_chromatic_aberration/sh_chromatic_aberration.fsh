@@ -1,3 +1,6 @@
+// continuous chromatic aberration
+// by 01000001
+
 #pragma use(sampler)
 
 #region -- sampler -- [1730686036.7372286]
@@ -92,13 +95,75 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-uniform int  type;
-uniform vec2 dimension;
-uniform vec2 center;
+uniform int       type;
+uniform vec2      dimension;
+uniform vec2      center;
 
 uniform vec2      strength;
 uniform int       strengthUseSurf;
 uniform sampler2D strengthSurf;
+
+float saturate (float x) { return min(1.0, max(0.0,x)); }
+vec3  saturate (vec3  x) { return min(vec3(1.,1.,1.), max(vec3(0.,0.,0.),x)); }
+
+vec3 bump3y (vec3 x, vec3 yoffset) {
+	vec3 y = vec3(1.,1.,1.) - x * x;
+	y = saturate(y-yoffset);
+	return y;
+}
+
+vec3 spectral_zucconi6 (float w) {
+	// w: [400, 700]
+	// x: [0,   1]
+	float x = saturate((w - 400.0)/ 300.0);
+
+	const vec3 c1 = vec3(3.54585104, 2.93225262, 2.41593945);
+	const vec3 x1 = vec3(0.69549072, 0.49228336, 0.27699880);
+	const vec3 y1 = vec3(0.02312639, 0.15225084, 0.52607955);
+
+	const vec3 c2 = vec3(3.90307140, 3.21182957, 3.96587128);
+	const vec3 x2 = vec3(0.11748627, 0.86755042, 0.66077860);
+	const vec3 y2 = vec3(0.84897130, 0.88445281, 0.73949448);
+
+	return
+		bump3y(c1 * (x - x1), y1) +
+		bump3y(c2 * (x - x2), y2) ;
+}
+
+
+vec4 chroma_scaling(vec2 uv, float str) {
+	vec2 tx = 1.0 / dimension;
+    vec2 co = (uv - center * tx) * 2.0;
+    vec2 pp = vec2(0.), uvR, uvB;
+	
+	pp = dot(co, co) * co;
+	pp *= str * tx;
+	
+    uvR = uv - pp;
+    uvB = uv + pp;
+    
+    vec4 cr = texture2Dintp(gm_BaseTexture, uvR);
+    vec4 cb = texture2Dintp(gm_BaseTexture, uvB);
+    vec4 cv = texture2Dintp(gm_BaseTexture, uv);
+    
+    return vec4(cr.r, cv.g, cb.b, cv.a + cr.a + cb.a);
+}
+
+vec4 chroma_continuous(vec2 uv, float str) {
+	float stp  = 64.;
+	vec2  tx   = 1.0 / dimension;
+	float strr = str / 16. * .2;
+	vec2  cuv  = (uv - center * tx) * 2.0;
+    vec3  o    = vec3(0.);
+    
+    for (float i = 0.; i <= 1.; i += 1. / stp)
+        o += pow(texture2Dintp(gm_BaseTexture, uv - cuv * strr * i).xyz, vec3(2.2)) * spectral_zucconi6(400. + i * 300.);
+    
+    o /= stp * vec3(.386, .372, .23);
+    o  = pow(o, vec3(1. / 2.2));
+    
+    return vec4(o, 1.);
+}
 
 void main() {
 	float str = strength.x;
@@ -108,22 +173,7 @@ void main() {
 	}
 	
 	gl_FragColor = vec4(0.);
-	vec2 tx = 1.0 / dimension;
-    vec2 coords = (v_vTexcoord - center * tx) * 2.0;
-    
-    vec2 pcp = vec2(0.), uvR, uvB;
-
-	pcp = dot(coords, coords) * coords;
-	// else if(type == 1) pcp = vec2(pow(coords.x, 3.), pow(coords.y, 3.));
 	
-	pcp *= str * tx;
-	
-    uvR = v_vTexcoord - pcp;
-    uvB = v_vTexcoord + pcp;
-    
-    vec4 cr = texture2Dintp(gm_BaseTexture, uvR);
-    vec4 cb = texture2Dintp(gm_BaseTexture, uvB);
-    vec4 cv = texture2Dintp(gm_BaseTexture, v_vTexcoord);
-    
-    gl_FragColor = vec4(cr.r, cv.g, cb.b, cv.a + cr.a + cb.a);
+	if(type == 0) gl_FragColor = chroma_scaling(v_vTexcoord, str);
+	if(type == 1) gl_FragColor = chroma_continuous(v_vTexcoord, str);
 }
