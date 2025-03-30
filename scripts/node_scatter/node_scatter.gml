@@ -116,7 +116,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		["Render",   false], 18, 23, 44, 
 	];
 	
-	transform_prop = [ 40, 33, 36, 37, 39 ];
+	transform_prop = [ 10, 40, 33, 36, 37, 39 ];
 	
 	attribute_surface_depth();
 	attribute_interpolation();
@@ -296,13 +296,13 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				for( var i = 0, n = array_length(_inSurf); i < n; i++ ) {
 					_dyna |= is(_inSurf[i], dynaSurf);
 					surface_valid_map[$ _inSurf[i]] = is_surface(_inSurf[i]);
-					surface_size_map[$ _inSurf[i]]  = _dyna? [ 0, 0 ] : surface_get_dimension(_inSurf[i]);
+					surface_size_map[$ _inSurf[i]]  = surface_get_dimension(_inSurf[i]);
 				}
 				
 			} else {
 				_dyna = is(_inSurf, dynaSurf);
 				surface_valid_map[$ _inSurf] = is_surface(_inSurf);
-				surface_size_map[$ _inSurf]  = _dyna? [ 0, 0 ] : surface_get_dimension(_inSurf);
+				surface_size_map[$ _inSurf]  = surface_get_dimension(_inSurf);
 			}
 			
 			color.cache();

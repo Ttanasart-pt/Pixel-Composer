@@ -6,25 +6,25 @@ function __init_dynaDraw() {
     DYNADRAW_FOLDER.icon       = THEME.dynadraw;
     DYNADRAW_FOLDER.icon_blend = c_white;
     
-    ds_list_add(DYNADRAW_FOLDER.content, new dynaDraw_line());
-    ds_list_add(DYNADRAW_FOLDER.content, new dynaDraw_circle_fill());
-    ds_list_add(DYNADRAW_FOLDER.content, new dynaDraw_circle_fill_gradient());
-    ds_list_add(DYNADRAW_FOLDER.content, new dynaDraw_circle_outline());
-    ds_list_add(DYNADRAW_FOLDER.content, new dynaDraw_square_fill());
-    ds_list_add(DYNADRAW_FOLDER.content, new dynaDraw_square_fill_gradient());
-    ds_list_add(DYNADRAW_FOLDER.content, new dynaDraw_square_outline());
-    ds_list_add(DYNADRAW_FOLDER.content, new dynaDraw_polygon_fill());
-    ds_list_add(DYNADRAW_FOLDER.content, new dynaDraw_polygon_fill_gradient());
-    ds_list_add(DYNADRAW_FOLDER.content, new dynaDraw_polygon_outline());
+    var _d = function(a) /*=>*/ {return ds_list_add(DYNADRAW_FOLDER.content, a)};
+    _d(new dynaDraw_line());
+    _d(new dynaDraw_circle_fill());
+    _d(new dynaDraw_circle_fill_gradient());
+    _d(new dynaDraw_circle_outline());
+    _d(new dynaDraw_square_fill());
+    _d(new dynaDraw_square_fill_gradient());
+    _d(new dynaDraw_square_outline());
+    _d(new dynaDraw_polygon_fill());
+    _d(new dynaDraw_polygon_fill_gradient());
+    _d(new dynaDraw_polygon_outline());
 }
 
 function dynaDraw() : dynaSurf() constructor {
+	node    = noone;
+	editors = [];
 	
-	node       = noone;
-	editors    = [];
-	
-	static getWidth  = function() /*=>*/ {return 1};
-	static getHeight = function() /*=>*/ {return 1};
+	static getWidth  = function() /*=>*/ {return 0};
+	static getHeight = function() /*=>*/ {return 0};
 	static getFormat = function() /*=>*/ {return surface_rgba8unorm};
 
 	static updateNode = function() {
@@ -34,7 +34,7 @@ function dynaDraw() : dynaSurf() constructor {
 	}
 	
 	static doSerialize = function(m) {}
-	static serialize = function()  { 
+	static serialize   = function()  { 
 	    var _m  = {};
 	    _m.type = instanceof(self);
 	    doSerialize(_m);

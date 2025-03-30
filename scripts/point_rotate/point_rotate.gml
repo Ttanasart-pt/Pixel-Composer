@@ -1,5 +1,6 @@
 function point_rotate(px, py, ox, oy, a, p = undefined) {
-	p ??= [ px, py ];
+	static __p = [ 0, 0 ];
+	p ??= __p;
 	
 		 if(a ==   0) { p[0] = px;             p[1] = py;             return p; }
 	else if(a == 180) { p[0] = ox + (ox - px); p[1] = oy + (oy - py); return p; }
