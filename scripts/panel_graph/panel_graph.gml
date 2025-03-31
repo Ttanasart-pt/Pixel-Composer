@@ -1392,7 +1392,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                 var dx = nx - node_drag_ox;
                 var dy = ny - node_drag_oy;
                 
-                for(var i = 0; i < array_length(nodes_selecting); i++) {
+                for( var i = 0, n = array_length(nodes_selecting); i < n; i++ ) {
                     var _node = nodes_selecting[i];
                     var _nx   = _node.x + dx;
                     var _ny   = _node.y + dy;

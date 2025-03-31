@@ -1,7 +1,7 @@
-function Panel_Preview_3D_Setting(_panel) : Panel_Linear_Setting() constructor {
+function Panel_Preview_3D_Setting() : Panel_Linear_Setting() constructor {
 	title   = __txtx("preview_3d_settings", "3D Preview Settings");
-	preview = _panel;
-	scene   = _panel.d3_scene;
+	preview = PANEL_PREVIEW;
+	scene   = PANEL_PREVIEW.d3_scene;
 	
 	properties_default = [
 		["Wireframe", false],
