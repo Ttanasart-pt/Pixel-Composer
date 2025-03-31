@@ -61,14 +61,14 @@ function __sortNode(_arr, _node, _sorted, _nodeMap = undefined) {
 		
 	for( var i = 0, n = array_length(_prev); i < n; i++ ) {
 		var _in = _prev[i];
-		if(_in == noone || struct_has(_sorted, _in.node_id)) continue;
+		if(_in == noone || struct_has(_sorted, _in.node_id))            continue;
 		if(_nodeMap != undefined && !struct_has(_nodeMap, _in.node_id)) continue;
 		
 		array_push(_parents, _in);
 	}
 		
-	// print($"        > Checking {_node.name}: {array_length(_parents)}");
-		
+	// print($"> Checking {_node.name}: {array_length(_parents)} {_parents}");
+	
 	if(is_instanceof(_node, Node_Collection) && !_node.managedRenderOrder)
 		__topoSort(_arr, _node.nodes, _sorted);
 	

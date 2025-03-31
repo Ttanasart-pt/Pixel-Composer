@@ -291,7 +291,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		is_simulation    = false;
 		is_group_io      = false;
-		in_VFX           = false;
 		
 		use_trigger      = false;
 		loopable         = true;
@@ -1281,17 +1280,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			var _in = inputs[i];
 			
 			if(_in.value_from != noone) {
-				if(in_VFX && !_in.value_from.node.in_VFX) {
-					array_push(in_VFX.prev_nodes, _in.value_from.node);
-					
-					if(!struct_has(prMp, in_VFX.node_id)) {
-						array_push(prev, in_VFX);
-						prMp[$ in_VFX.node_id] = 1;
-					}
-					
-					continue;
-				}
-				
 				_n = _in.value_from.node;
 				if(!struct_has(prMp, _n.node_id)) {
 					array_push(prev, _n);

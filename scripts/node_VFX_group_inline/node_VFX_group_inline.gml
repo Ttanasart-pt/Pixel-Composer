@@ -21,7 +21,6 @@ function Node_VFX_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 	managedRenderOrder = true;
 	loopable           = true;
 	
-	prev_nodes = [];
 	dimension  = DEF_SURF;
 	
 	if(NODE_NEW_MANUAL) {
@@ -33,11 +32,6 @@ function Node_VFX_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 		addNode(input);
 		addNode(output);
 	}
-	
-	static getPreviousNodes = function() { onGetPreviousNodes(prev_nodes); return prev_nodes; }
-	
-	static onRemoveNode = function(node) { node.in_VFX = noone; }
-	static onAddNode    = function(node) { node.in_VFX = self;  }
 	
 	static getNextNodes = function(checkLoop = false) { return __nodeLeafList(nodes); }
 	
@@ -51,17 +45,16 @@ function Node_VFX_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 		var loop = getInputData(0);
 		if(!loop) return;
 		
-		for( var i = 0; i < TOTAL_FRAMES; i++ )
-		for( var j = 0, m = array_length(topoList); j < m; j++ ) {
-			var node = topoList[j];
-			var _ins = instanceof(node);
-			
-			if(!string_pos("Node_VFX", _ins)) 
-				continue;
-			if(_ins == "Node_VFX_Renderer" || _ins == "Node_VFX_Renderer_Output") 
-				continue;
-			
-			node.doUpdate(i);
+		for( var i = 0; i < TOTAL_FRAMES; i++ ) {
+			for( var j = 0, m = array_length(topoList); j < m; j++ ) {
+				var node = topoList[j];
+				var _ins = instanceof(node);
+				
+				if(!string_pos("Node_VFX", _ins)) continue;
+				if(is(node, Node_VFX_Renderer))   continue;
+				
+				node.doUpdate(i);
+			}
 		}
 		
 		for( var i = 0, n = array_length(nodes); i < n; i++ ) {

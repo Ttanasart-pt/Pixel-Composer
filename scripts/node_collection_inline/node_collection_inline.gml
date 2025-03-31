@@ -28,6 +28,8 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	
 	static topoSortable = function() { return false; }
 	
+	////- Nodes
+	
 	static removeNode = function(node) {
 		array_remove(attributes.members, node.node_id);
 		
@@ -64,6 +66,8 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	
 	static onAddNode = function(node) {}
 	
+	////- Render
+	
 	static resetRender = function(_clearCache = false) {
 		LOG_LINE_IF(global.FLAG.render == 1, $"Reset Render for {INAME}");
 		
@@ -74,7 +78,7 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			nodes[i].resetRender(_clearCache);
 	}
 	
-	///////////////////////////////////////////////////////////////////////////////////////
+	////- Draw
 	
 	static ccw = function(a, b, c) { return (b[0] - a[0]) * (c[1] - a[1]) - (c[0] - a[0]) * (b[1] - a[1]); }
 	
@@ -315,7 +319,31 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	
 	static drawBadge = function(_x, _y, _s) {}
 	
-	static drawJunctions = function(_draw, _x, _y, _mx, _my, _s) {}
+	static drawJunctions = function(_draw, _x, _y, _mx, _my, _s) {
+		var hover = noone;
+		
+		var jx = junction_x;
+		var jy = junction_y;
+		
+		gpu_set_tex_filter(true);
+		for( var i = 0, n = array_length(inputs); i < n; i++ ) {
+			var jun = inputs[i];
+		    jun.rx  = jx;
+		    jun.ry  = jy;
+		    jun.x   = _x + jx * _s;
+		    jun.y   = _y + jy * _s;
+			
+			if(!jun.isVisible()) continue;
+			
+			if(jun.drawJunction(_draw, _s, _mx, _my)) hover = jun;
+			jy += junction_draw_pad_y;
+		}
+		gpu_set_tex_filter(false);
+		
+		return hover;
+	}
+	
+	////- Serialize
 	
 	static postDeserialize = function() {
 		if(APPENDING)
@@ -324,6 +352,8 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			
 		refreshMember();
 	}
+	
+	////- Actions
 	
 	static junctionIsInside = function(junc) {
 		

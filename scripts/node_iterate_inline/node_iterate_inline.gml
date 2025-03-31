@@ -94,23 +94,6 @@ function Node_Iterate_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 		value_buffer    = undefined;
 	}
 	
-	static drawJunctions = function(_draw, _x, _y, _mx, _my, _s) {
-		var hover = noone;
-		
-		gpu_set_tex_filter(true);
-		var jun = inputs[0];
-	    jun.rx  = junction_x;
-	    jun.ry  = junction_y;
-	    jun.x   = _x + junction_x * _s;
-	    jun.y   = _y + junction_y * _s;
-		
-		if(jun.isVisible() && jun.drawJunction(_draw, _s, _mx, _my)) 
-			hover = jun;
-		gpu_set_tex_filter(false);
-		
-		return hover;
-	}
-	
 	static drawConnections = function(params = {}, _draw = true) {
 		var hovering = noone;
 		
