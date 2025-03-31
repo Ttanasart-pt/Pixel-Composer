@@ -20,8 +20,6 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	name = "Scatter";
 	dimension_index = 1;
 	
-	inputs = array_create(44);
-	
 	newInput(10, nodeValueSeed(self));
 	
 	////- Surfaces
@@ -96,6 +94,8 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	newInput(18, nodeValue_Enum_Scroll( "Blend Mode", self,  0, [ "Normal", "Add", "Max" ]));
 	newInput(23, nodeValue_Bool(        "Sort Y",     self, false));
+	
+	// inputs: 44
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	

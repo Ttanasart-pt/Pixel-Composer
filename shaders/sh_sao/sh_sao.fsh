@@ -8,12 +8,17 @@ uniform float intensity;
 uniform float height;
 uniform int   pixel;
 
+uniform int   blend;
+uniform int   blendMode;
+uniform float blendStrength;
+
 float h(vec4 c) { return (c.r + c.g + c.b) / 3. * c.a; }
 
 void main() {
     vec2  tx = 1. / dimension;
     float dd = length(tx);
-    float ch = h(texture2D( gm_BaseTexture, v_vTexcoord ));
+    vec4  bg = texture2D( gm_BaseTexture, v_vTexcoord );
+    float ch = h(bg);
     float aa = 0.;
     
     float base = 1.;
@@ -31,7 +36,7 @@ void main() {
 	    
 	    for(float i = 0.; i <= height; i++) {
         	
-    		vec2 txs = v_vTexcoord + vec2( cos(ang),  sin(ang)) * i * tx;
+    		vec2 txs = v_vTexcoord + vec2(cos(ang), sin(ang)) * i * tx;
     		float hh = h(texture2D( gm_BaseTexture, txs ));
     		
     		float dh = (hh - ch) * height;
@@ -44,5 +49,18 @@ void main() {
     	aa += ad / 64.;
 	}
 	
-	gl_FragColor = vec4(vec3(max(.0, 1. - aa)), 1.);
+	float aaf = max(.0, 1. - aa);
+	vec4  aao = vec4(vec3(aaf), bg.a);
+	gl_FragColor = aao;
+	
+	if(blend == 0) return;
+	
+	vec4 res = bg;
+	
+	if(blendMode == 0) {
+		res.rgb *= aaf;
+	}
+	
+	gl_FragColor   = mix(bg, res, blendStrength);
+	gl_FragColor.a = bg.a;
 }
