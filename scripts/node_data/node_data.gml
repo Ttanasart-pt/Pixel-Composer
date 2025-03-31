@@ -1835,24 +1835,26 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static drawJunctions = function(_draw, _x, _y, _mx, _my, _s, _fast = false) {
 		var hover = noone;
 		
-		var _scs = gpu_get_scissor();
-		gpu_set_scissor(_x, _y, w * _s, h * _s);
-		
-		var _js = 16 * _s;
-		for( var i = 0, n = array_length(inputDisplayGroup); i < n; i++ ) {
-			var _gr  = inputDisplayGroup[i];
-			var _gx  = _gr[0] - 1;
-			var _gy0 = _gr[1] - 1;
-			var _gy1 = _gr[2] - 1;
+		if(!array_empty(inputDisplayGroup)) {
+			var _scs = gpu_get_scissor();
+			gpu_set_scissor(_x, _y, w * _s, h * _s);
 			
-			_gr[3] = key_mod_press(CTRL) && point_in_rectangle(_mx, _my, _gx - _js/2, _gy0 - _js/2, _gx + _js/2, _gy1 + _js/2);
+			var _js = 16 * _s;
+			for( var i = 0, n = array_length(inputDisplayGroup); i < n; i++ ) {
+				var _gr  = inputDisplayGroup[i];
+				var _gx  = _gr[0] - 1;
+				var _gy0 = _gr[1] - 1;
+				var _gy1 = _gr[2] - 1;
 				
-			draw_set_color_alpha(_gr[3]? CDEF.main_dkgrey : CDEF.main_mdblack, .75);
-				draw_roundrect_ext(_gx - _js/2, _gy0 - _js/2, _gx + _js/2, _gy1 + _js/2, _js, _js, false);
-			draw_set_alpha(1);
+				_gr[3] = key_mod_press(CTRL) && point_in_rectangle(_mx, _my, _gx - _js/2, _gy0 - _js/2, _gx + _js/2, _gy1 + _js/2);
+					
+				draw_set_color_alpha(_gr[3]? CDEF.main_dkgrey : CDEF.main_mdblack, .75);
+					draw_roundrect_ext(_gx - _js/2, _gy0 - _js/2, _gx + _js/2, _gy1 + _js/2, _js, _js, false);
+				draw_set_alpha(1);
+			}
+			gpu_set_scissor(_scs);
 		}
-		gpu_set_scissor(_scs);
-		
+			
 		if(_fast) draw_set_circle_precision(4);
 		else      gpu_set_texfilter(true);
 		

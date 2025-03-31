@@ -166,8 +166,6 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		array_delete(_vtrx, 1, _linS - 1);
 	
 		group_vertex = [ _vtrx[0], _vtrx[1] ];
-		junction_x   = _vtrx[0][0]; 
-		junction_y   = _vtrx[0][1];
 		
 		var minx   = _vtrx[0][0];
 		var miny   = _vtrx[0][1];
@@ -197,15 +195,20 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			if(min(abs(d), abs(d - 180)) <= 2) 
 				array_delete(group_vertex, i, 1);
 			
-			if(v1[0] <= junction_x && v1[1] <= junction_y) {
-				junction_x = v1[0];
-				junction_y = v1[1] + 8;
-			}
-			
 			minx = min(minx, v1[0]);
 			miny = min(miny, v1[1]);
 			maxx = max(maxx, v1[0]);
 			maxy = max(maxy, v1[1]);
+		}
+		
+		junction_x = group_vertex[0][0]; 
+		junction_y = group_vertex[0][1];
+		for( var i = 1, n = array_length(group_vertex); i < n; i++ ) {
+			var v1 = group_vertex[i];
+			if(v1[0] <= junction_x && v1[1] <= junction_y) {
+				junction_x = v1[0];
+				junction_y = v1[1] + 8;
+			}
 		}
 		
 		bbox = [ minx, miny, maxx, maxy ];
@@ -312,9 +315,7 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	}
 	
 	static drawNode = function(_draw, _x, _y, _mx, _my, _s, display_parameter = noone) {
-		var xx = x * _s + _x;
-		var yy = y * _s + _y;
-		return drawJunctions(_draw, xx, yy, _mx, _my, _s)
+		return drawJunctions(_draw, _x, _y, _mx, _my, _s)
 	}
 	
 	static drawBadge = function(_x, _y, _s) {}
@@ -334,9 +335,8 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		    jun.y   = _y + jy * _s;
 			
 			if(!jun.isVisible()) continue;
-			
 			if(jun.drawJunction(_draw, _s, _mx, _my)) hover = jun;
-			jy += junction_draw_pad_y;
+			jy += junction_draw_hei_y;
 		}
 		gpu_set_tex_filter(false);
 		
