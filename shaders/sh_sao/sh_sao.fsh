@@ -57,9 +57,8 @@ void main() {
 	
 	vec4 res = bg;
 	
-	if(blendMode == 0) {
-		res.rgb *= aaf;
-	}
+	     if(blendMode == 0) res *= aaf;
+	else if(blendMode == 1) res -= aaf;
 	
 	gl_FragColor   = mix(bg, res, blendStrength);
 	gl_FragColor.a = bg.a;

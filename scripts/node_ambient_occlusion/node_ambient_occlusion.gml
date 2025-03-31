@@ -9,7 +9,7 @@ function Node_Ambient_Occlusion(_x, _y, _group = noone) : Node_Processor(_x, _y,
 	newInput(4, nodeValue_Bool(   "Pixel Sweep", self, true));
 	
 	newInput(5, nodeValue_Bool(        "Blend Original", self, false));
-	newInput(6, nodeValue_Enum_Scroll( "Blendmode",      self, 0, [ "Multiply" ]));
+	newInput(6, nodeValue_Enum_Scroll( "Blendmode",      self, 0, [ "Multiply", "Subtract" ]));
 	newInput(7, nodeValue_Slider(      "Blend Strength", self, 1 ));
 	
 	input_display_list = [ 2, 0, 
