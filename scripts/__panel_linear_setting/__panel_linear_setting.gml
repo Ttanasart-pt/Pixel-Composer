@@ -87,7 +87,7 @@ function Panel_Linear_Setting() : PanelContent() constructor {
                 var lbx = ui(4);
                 var lby = ui(0);
                 var lbh = th - ui(4);
-                var lbw = w - ui(8);
+                var lbw =  w - ui(8);
                 
                 if(pHOVER && point_in_rectangle(mx, my, lbx, yy, lbx + lbw, yy + lbh)) {
                     draw_sprite_stretched_ext(THEME.box_r5_clr, 0, lbx, yy, lbw, lbh, COLORS.panel_inspector_group_hover, 1);

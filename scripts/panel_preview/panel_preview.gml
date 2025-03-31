@@ -444,7 +444,7 @@ function Panel_Preview() : PanelContent() constructor {
                 THEME.icon_grid_setting,
                 function() /*=>*/ {return 0},
                 function() /*=>*/ {return new tooltipHotkey(__txtx("grid_title", "Grid settings") + "...", "Preview", "Grid Settings")}, 
-                function(param) /*=>*/ { dialogPanelCall(new Panel_Preview_Grid_Setting(), 
+                function(data) /*=>*/ { dialogPanelCall(new Panel_Preview_Grid_Setting(), 
                 									x + ui(8), y + h - toolbar_height - ui(8), { anchor: ANCHOR.bottom | ANCHOR.left }); }, 
             ).setHotkey("Preview", "Grid Settings"),
             
@@ -452,7 +452,7 @@ function Panel_Preview() : PanelContent() constructor {
                 THEME.onion_skin,
                 function() /*=>*/ {return 0},
                 function() /*=>*/ {return new tooltipHotkey(__txt("Onion Skin") + "...", "Preview", "Onion Skin Settings")}, 
-                function(param) /*=>*/ { dialogPanelCall(new Panel_Preview_Onion_Setting(), 
+                function(data) /*=>*/ { dialogPanelCall(new Panel_Preview_Onion_Setting(), 
                 									x + ui(8), y + h - toolbar_height - ui(8), { anchor: ANCHOR.bottom | ANCHOR.left }); }, 
             ).setHotkey("Preview", "Onion Skin Settings"),
         ];
@@ -462,16 +462,16 @@ function Panel_Preview() : PanelContent() constructor {
                 THEME.d3d_preview_settings,
                 function() /*=>*/ {return 0},
                 function() /*=>*/ {return new tooltipHotkey(__txt("3D Preview Settings") + "...", "Preview", "3D View Settings")},
-                function(param) /*=>*/ { dialogPanelCall(new Panel_Preview_3D_Setting(), 
-                									x + w - ui(8), y + h - toolbar_height - ui(8), { anchor: ANCHOR.bottom | ANCHOR.right }); }, 
+                function(data) /*=>*/ { dialogPanelCall(new Panel_Preview_3D_Setting(), 
+                									x - ui(8), y + h - toolbar_height - ui(8), { anchor: ANCHOR.bottom | ANCHOR.left }); }, 
             ).setHotkey("Preview", "3D View Settings"),
             
             new panel_toolbar_icon("3D Snap Settings",
                 THEME.d3d_snap_settings,
                 function() /*=>*/ {return 0},
                 function() /*=>*/ {return new tooltipHotkey(__txt("3D Snap Settings") + "...", "Preview", "3D Snap Settings")},
-                function(param) /*=>*/ { dialogPanelCall(new Panel_Preview_Snap_Setting(), 
-                									x + w - ui(8), y + h - toolbar_height - ui(8), { anchor: ANCHOR.bottom | ANCHOR.right }); }, 
+                function(data) /*=>*/ { dialogPanelCall(new Panel_Preview_Snap_Setting(), 
+                									x - ui(8), y + h - toolbar_height - ui(8), { anchor: ANCHOR.bottom | ANCHOR.left }); }, 
             ).setHotkey("Preview", "3D Snap Settings"),
         ];
         
@@ -480,16 +480,16 @@ function Panel_Preview() : PanelContent() constructor {
                 THEME.d3d_preview_settings,
                 function() /*=>*/ {return 0},
                 function() /*=>*/ {return new tooltipHotkey(__txt("3D SDF Preview Settings") + "...", "Preview", "3D SDF View Settings")},
-                function(param) /*=>*/ { dialogPanelCall(new Panel_Preview_3D_SDF_Setting(), 
-                									x + w - ui(8), y + h - toolbar_height - ui(8), { anchor: ANCHOR.bottom | ANCHOR.right }); }, 
+                function(data) /*=>*/ { dialogPanelCall(new Panel_Preview_3D_SDF_Setting(), 
+                									x - ui(8), y + h - toolbar_height - ui(8), { anchor: ANCHOR.bottom | ANCHOR.left }); }, 
             ).setHotkey("Preview", "3D SDF View Settings"),
             
             new panel_toolbar_icon("3D Snap Settings",
                 THEME.d3d_snap_settings,
                 function() /*=>*/ {return 0},
                 function() /*=>*/ {return new tooltipHotkey(__txt("3D Snap Settings") + "...", "Preview", "3D Snap Settings")},
-                function(param) /*=>*/ { dialogPanelCall(new Panel_Preview_Snap_Setting(), 
-                									x + w - ui(8), y + h - toolbar_height - ui(8), { anchor: ANCHOR.bottom | ANCHOR.right }); }, 
+                function(data) /*=>*/ { dialogPanelCall(new Panel_Preview_Snap_Setting(), 
+                									x - ui(8), y + h - toolbar_height - ui(8), { anchor: ANCHOR.bottom | ANCHOR.left }); }, 
             ).setHotkey("Preview", "3D Snap Settings"),
         ];
         
@@ -823,8 +823,7 @@ function Panel_Preview() : PanelContent() constructor {
                 canvas_zoom_m   = my;
             }
             
-            if(MOUSE_WHEEL != 0)
-            	d3_view_camera.focus_dist = clamp(d3_view_camera.focus_dist * (1 + d3_zoom_speed * MOUSE_WHEEL), 1, 1000);
+            if(MOUSE_WHEEL != 0) d3_view_camera.focus_dist = clamp(d3_view_camera.focus_dist * (1 - d3_zoom_speed * MOUSE_WHEEL), 1, 1000);
         }
         
         canvas_dragging_key = false;
