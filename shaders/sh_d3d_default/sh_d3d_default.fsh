@@ -92,6 +92,8 @@ uniform int use_8bit;
 	uniform int   wireframe_only;
 	uniform float wireframe_width;
 	uniform vec4  wireframe_color;
+	
+	uniform vec4  backface_blending;
 #endregion
 
 #region ++++ mapping ++++
@@ -217,6 +219,12 @@ void main() {
 		
 	vec3 normal        = mat_defer_normal == 1? texture2D(mat_normal_map, viewProjPos.xy).rgb : v_vNormal;
 		 normal        = normalize(normal);
+	
+	bool isBackface    = dot(normal, viewDirection) < 0.0;
+	
+	#region ++++ base color effect ++++
+		if(isBackface) final_color *= backface_blending;
+	#endregion
 	
 	#region ++++ environment ++++
 		if(env_use_mapping == 1 && mat_reflective > 0.) {

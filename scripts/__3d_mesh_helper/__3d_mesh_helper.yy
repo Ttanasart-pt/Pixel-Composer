@@ -1,0 +1,14 @@
+{
+  "$GMScript":"v1",
+  "%Name":"__3d_mesh_helper",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"__3d_mesh_helper",
+  "parent":{
+    "name":"3d",
+    "path":"folders/functions/3d.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+  "tags":[],
+}

@@ -94,7 +94,7 @@ function Node_Threshold(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _alphSmt = _data[9];
 		
 		var _algo      = _data[15];
-		var _adap_size = _data[16];
+		var _adap_size = _data[16]; _adap_size = min(_adap_size, 32);
 		
 		var _brightInv = _data[17];
 		var _alhpaInv  = _data[18];

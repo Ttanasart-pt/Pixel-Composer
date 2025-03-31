@@ -430,6 +430,17 @@
 		
 		return arr;
 	}
+	
+	function array_merge_array(arrs) {
+		INLINE
+		
+		var arr = [];
+		for( var i = 0, n = array_length(arrs); i < n; i++ )
+			array_append(arr, arrs[i]);
+		
+		return arr;
+	}
+
 
 	#macro array_equals array_equals_overwrite
 	#macro __array_equals array_equals

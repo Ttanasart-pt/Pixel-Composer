@@ -2,66 +2,58 @@ function Node_3D_Mesh_Cube(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 	name = "3D Cube";
 	object_class = noone;
 	
-	newInput(in_mesh + 0, nodeValue_Bool("Material per side", self, false ));
+	var i = in_mesh;
+	newInput(i+0, nodeValue_Bool("Material per side", self, false ));
 	
-	newInput(in_mesh + 1, nodeValue_D3Material("Material", self, new __d3dMaterial()))
-		.setVisible(true, true);
+	newInput(i+1, nodeValue_D3Material("Material",        self)).setVisible(true, true);
+	newInput(i+2, nodeValue_D3Material("Material Bottom", self)).setVisible(true, true);
+	newInput(i+3, nodeValue_D3Material("Material Left",   self)).setVisible(true, true);
+	newInput(i+4, nodeValue_D3Material("Material Right",  self)).setVisible(true, true);
+	newInput(i+5, nodeValue_D3Material("Material Back",   self)).setVisible(true, true);
+	newInput(i+6, nodeValue_D3Material("Material Front",  self)).setVisible(true, true);
 	
-	newInput(in_mesh + 2, nodeValue_D3Material("Material Bottom", self, new __d3dMaterial()))
-		.setVisible(true, true);
-	
-	newInput(in_mesh + 3, nodeValue_D3Material("Material Left", self, new __d3dMaterial()))
-		.setVisible(true, true);
-	
-	newInput(in_mesh + 4, nodeValue_D3Material("Material Right", self, new __d3dMaterial()))
-		.setVisible(true, true);
-	
-	newInput(in_mesh + 5, nodeValue_D3Material("Material Back", self, new __d3dMaterial()))
-		.setVisible(true, true);
-	
-	newInput(in_mesh + 6, nodeValue_D3Material("Material Front", self, new __d3dMaterial()))
-		.setVisible(true, true);
+	newInput(i+7, nodeValue_Slider(      "Taper",      self, 0, [ -1, 1, 0.01 ]));
+	newInput(i+8, nodeValue_Enum_Button( "Taper Axis", self, 0, [ "X", "Y", "Z" ]));
 	
 	input_display_list = [
-		__d3d_input_list_mesh,
-		__d3d_input_list_transform,
-		["Material",	false], in_mesh + 0, in_mesh + 1, in_mesh + 2, in_mesh + 3, in_mesh + 4, in_mesh + 5, in_mesh + 6, 
+		__d3d_input_list_mesh,      i+7, i+8, 
+		__d3d_input_list_transform, 
+		["Material", false],        i+0, i+1, i+2, i+3, i+4, i+5, i+6, 
 	]
 	
 	static onDrawOverlay3D = function(active, params, _mx, _my, _snx, _sny, _panel) {}
 	
-	static step = function() { 
-		var _mat_side = getInputData(in_mesh + 0);
-		
-		inputs[in_mesh + 1].name = _mat_side? "Material Top" : "Material";
-		inputs[in_mesh + 1].setVisible(true, true);
-		inputs[in_mesh + 2].setVisible(_mat_side, _mat_side);
-		inputs[in_mesh + 3].setVisible(_mat_side, _mat_side);
-		inputs[in_mesh + 4].setVisible(_mat_side, _mat_side);
-		inputs[in_mesh + 5].setVisible(_mat_side, _mat_side);
-		inputs[in_mesh + 6].setVisible(_mat_side, _mat_side);
-	} 
-	
 	static processData = function(_output, _data, _output_index, _array_index = 0) { 
-		var _mat_side = _data[in_mesh + 0];
-		var _mat_1    = _data[in_mesh + 1];
-		var _mat_2    = _data[in_mesh + 2];
-		var _mat_3    = _data[in_mesh + 3];
-		var _mat_4    = _data[in_mesh + 4];
-		var _mat_5    = _data[in_mesh + 5];
-		var _mat_6    = _data[in_mesh + 6];
+		var i = in_mesh;
 		
-		var object;
+		var _mat_side = _data[i+0];
+		var _mat_1    = _data[i+1];
+		var _mat_2    = _data[i+2];
+		var _mat_3    = _data[i+3];
+		var _mat_4    = _data[i+4];
+		var _mat_5    = _data[i+5];
+		var _mat_6    = _data[i+6];
 		
-		if(_mat_side) {
-			object = getObject(_array_index, __3dCubeFaces);
-			object.materials = [ _mat_1, _mat_2, _mat_3, _mat_4, _mat_5, _mat_6 ];
+		var _tap_amo  = _data[i+7];
+		var _tap_axs  = _data[i+8];
+		
+		inputs[i+1].name = _mat_side? "Material Top" : "Material";
+		inputs[i+1].setVisible(true, true);
+		inputs[i+2].setVisible(_mat_side, _mat_side);
+		inputs[i+3].setVisible(_mat_side, _mat_side);
+		inputs[i+4].setVisible(_mat_side, _mat_side);
+		inputs[i+5].setVisible(_mat_side, _mat_side);
+		inputs[i+6].setVisible(_mat_side, _mat_side);
+		
+		var object = getObject(_array_index, __3dCube);
 			
-		} else {
-			object = getObject(_array_index, __3dCube);
-			object.materials = [ _mat_1 ];
-		}
+		object.checkParameter({ 
+			separate_faces: _mat_side,
+			taper_amount:   _tap_amo, 
+			taper_axis:     _tap_axs, 
+		});
 		
+		object.materials = [ _mat_1, _mat_2, _mat_3, _mat_4, _mat_5, _mat_6 ];
 		setTransform(object, _data);
 		
 		return object;

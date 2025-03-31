@@ -28,12 +28,12 @@
 	}
 #endregion
 
-#macro D3DSCENE_PRESUBMIT  if(!is_struct(object)) return; matrix_stack_clear(); if(apply_transform) custom_transform.submitMatrix(); 
+#macro D3DSCENE_PRESUBMIT  if(!is_struct(o)) return; matrix_stack_clear(); if(apply_transform) custom_transform.submitMatrix(); 
 #macro D3DSCENE_POSTSUBMIT if(apply_transform) custom_transform.clearMatrix(); 
 
-function __3dScene(camera, name = "New scene") constructor {
-	self.camera = camera;
-	self.name = name;
+function __3dScene(_camera, _name = "New scene") constructor {
+	camera = _camera;
+	name   = _name;
 	
 	apply_transform     = false;
 	custom_transform    = new __transform();
@@ -66,6 +66,8 @@ function __3dScene(camera, name = "New scene") constructor {
 	ssao_bias           = 0.1;
 	ssao_strength       = 1.;
 	
+	backface_blending   = cola(c_white);
+	
 	static reset = function() {
 		lightDir_count     = 0;
 		lightDir_direction = [];
@@ -95,10 +97,10 @@ function __3dScene(camera, name = "New scene") constructor {
 	
 	////- Submit
 	
-	static submit		= function(object, shader = noone) { D3DSCENE_PRESUBMIT object.submit		(self, shader); D3DSCENE_POSTSUBMIT }
-	static submitUI		= function(object, shader = noone) { D3DSCENE_PRESUBMIT object.submitUI		(self, shader); D3DSCENE_POSTSUBMIT }
-	static submitSel	= function(object, shader = noone) { D3DSCENE_PRESUBMIT object.submitSel	(self, shader); D3DSCENE_POSTSUBMIT }
-	static submitShader	= function(object, shader = noone) { D3DSCENE_PRESUBMIT object.submitShader (self, shader); D3DSCENE_POSTSUBMIT }
+	static submit       = function(o, sh=noone) /*=>*/ { D3DSCENE_PRESUBMIT o.submit(      self, sh); D3DSCENE_POSTSUBMIT }
+	static submitUI     = function(o, sh=noone) /*=>*/ { D3DSCENE_PRESUBMIT o.submitUI(    self, sh); D3DSCENE_POSTSUBMIT }
+	static submitSel    = function(o, sh=noone) /*=>*/ { D3DSCENE_PRESUBMIT o.submitSel(   self, sh); D3DSCENE_POSTSUBMIT }
+	static submitShader = function(o, sh=noone) /*=>*/ { D3DSCENE_PRESUBMIT o.submitShader(self, sh); D3DSCENE_POSTSUBMIT }
 	
 	////- Rendering
 	
@@ -224,7 +226,7 @@ function __3dScene(camera, name = "New scene") constructor {
 		shader_set_i("use_8bit",  OS == os_macosx);
 			
 			#region ---- background ----
-				shader_set_f("light_ambient",			colToVec4(lightAmbient));
+				shader_set_color("light_ambient",		lightAmbient);
 				shader_set_i("env_use_mapping",			is_surface(enviroment_map) );
 				shader_set_surface("env_map",			enviroment_map, false, true );
 				shader_set_dim("env_map_dimension",		enviroment_map );
@@ -287,7 +289,8 @@ function __3dScene(camera, name = "New scene") constructor {
 				shader_set_color("wireframe_color", wireframe_color);
 			#endregion
 			
-			//print($"Submitting scene with {lightDir_count} dir, {lightPnt_count} pnt lights.");
+			shader_set_color("backface_blending", backface_blending);
+			
 		shader_reset();
 	}
 	

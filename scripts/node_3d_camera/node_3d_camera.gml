@@ -25,70 +25,59 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	global.SKY_SPHERE = new __3dUVSphere(0.5, 16, 8, true);
 	var i = in_d3d;
 	
-	newInput(i+0, nodeValue_Int("FOV", self, 60 ))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ 10, 90, 0.1 ] });
+	newInput(i+4, nodeValue_D3Scene("Scene", self, noone )).setVisible(true, true);
 	
-	newInput(i+1, nodeValue_Vec2("Clipping Distance", self, [ 1, 10 ] ));
-	 
+	////- Output
+	
 	newInput(i+2, nodeValue_Dimension(self));
 	
-	newInput(i+3, nodeValue_Enum_Button("Projection", self,  1 , [ "Perspective", "Orthographic" ]));
+	////- Transform
 	
-	newInput(i+4, nodeValue_D3Scene("Scene", self, noone ))
-		.setVisible(true, true);
+	newInput(i+ 9, nodeValue_Enum_Scroll( "Postioning Mode",  self, 2, [ "Position + Rotation", "Position + Lookat", "Lookat + Rotation" ] ));
+	newInput(i+10, nodeValue_Vec3(        "Lookat Position",  self, [ 0, 0, 0 ] ));
+	newInput(i+11, nodeValue_Rotation(    "Roll",             self, 0));
+	newInput(i+12, nodeValue_Rotation(    "Horizontal Angle", self, 45 ));
+	newInput(i+13, nodeValue_Slider(      "Vertical Angle",   self, 30, [ 0, 90, 0.1 ] ))
+	newInput(i+14, nodeValue_Float(       "Distance",         self, 4 ));
 	
-	newInput(i+5, nodeValue_Color("Ambient Light", self, c_dkgrey ));
+	////- Camera
 	
-	newInput(i+6, nodeValue_Bool("Show Background", self, false ));
+	newInput(i+3, nodeValue_Enum_Button( "Projection",         self,  1 , [ "Perspective", "Orthographic" ]));
+	newInput(i+0, nodeValue_ISlider(     "FOV",                self, 60, [ 10, 90, 0.1 ] ));
+	newInput(i+1, nodeValue_Vec2(        "Clipping Distance",  self, [ 1, 10 ] ));
+	newInput(i+8, nodeValue_Slider(      "Orthographic Scale", self, 0.5, [ 0.01, 4, 0.01 ] ));
 	
-	newInput(i+7, nodeValue_Enum_Button("Backface Culling", self,  2 , [ "None", "CW", "CCW" ]));
+	////- Render
 	
-	newInput(i+8, nodeValue_Float("Orthographic Scale", self, 0.5 ))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0.01, 4, 0.01 ] });
+	newInput(i+ 5, nodeValue_Color(       "Ambient Light",       self, c_dkgrey ));
+	newInput(i+16, nodeValue_Surface(     "Environment Texture", self));
+	newInput(i+ 6, nodeValue_Bool(        "Show Background",     self, false ));
+	newInput(i+ 7, nodeValue_Enum_Button( "Backface Culling",    self,  2 , [ "None", "CW", "CCW" ]));
+	newInput(i+15, nodeValue_Bool(        "Gamma Adjust",        self, false ));
+	newInput(i+22, nodeValue_Enum_Button( "Blend mode",          self,  0 , [ "Normal", "Additive" ]));
 	
-	newInput(i+9, nodeValue_Enum_Scroll("Postioning Mode", self, 2, [ "Position + Rotation", "Position + Lookat", "Lookat + Rotation" ] ));
+	////- Wireframe
 	
-	newInput(i+10, nodeValue_Vec3("Lookat Position", self, [ 0, 0, 0 ] ));
+	newInput(i+23, nodeValue_Bool(  "Wireframe",           self, false));
+	newInput(i+24, nodeValue_Float( "Wireframe Thickness", self, 1));
+	newInput(i+25, nodeValue_Color( "Wireframe Color",     self, cola(c_black)));
+	newInput(i+26, nodeValue_Bool(  "Wireframe antialias", self, false));
+	newInput(i+27, nodeValue_Bool(  "Wireframe shading",   self, false));
+	newInput(i+28, nodeValue_Bool(  "Wireframe only",      self, false));
 	
-	newInput(i+11, nodeValue_Rotation("Roll", self, 0));
+	////- Ambient Occlusion
 	
-	newInput(i+12, nodeValue_Rotation("Horizontal Angle", self, 45 ));
+	newInput(i+17, nodeValue_Bool(   "Ambient Occlusion", self, false ));
+	newInput(i+20, nodeValue_Slider( "AO Strength",       self, 1., [ 0.01, 4, 0.01 ] ));
+	newInput(i+18, nodeValue_Float(  "AO Radius",         self, 0.25 ));
+	newInput(i+19, nodeValue_Float(  "AO Bias",           self, 0.05 ));
 	
-	newInput(i+13, nodeValue_Float("Vertical Angle", self, 30 ))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 90, 0.1] });
+	////- Effects
 	
-	newInput(i+14, nodeValue_Float("Distance", self, 4 ));
+	newInput(i+21, nodeValue_Int(   "Round Normal",      self, 0 )).setWindows();
+	newInput(i+29, nodeValue_Color( "Backface Blending", self, ca_white ));
 	
-	newInput(i+15, nodeValue_Bool("Gamma Adjust", self, false ));
-	
-	newInput(i+16, nodeValue_Surface("Environment Texture", self));
-	
-	newInput(i+17, nodeValue_Bool("Ambient Occlusion", self, false ));
-	
-	newInput(i+18, nodeValue_Float("AO Radius", self, 0.25 ));
-	
-	newInput(i+19, nodeValue_Float("AO Bias", self, 0.05 ));
-	
-	newInput(i+20, nodeValue_Float("AO Strength", self, 1. ))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0.01, 4, 0.01 ] });
-	
-	newInput(i+21, nodeValue_Int("Round Normal", self, 0 ))
-		.setWindows();
-	
-	newInput(i+22, nodeValue_Enum_Button("Blend mode", self,  0 , [ "Normal", "Additive" ]));
-	
-	newInput(i+23, nodeValue_Bool("Wireframe", self, false));
-	
-	newInput(i+24, nodeValue_Float("Wireframe Thickness", self, 1));
-	
-	newInput(i+25, nodeValue_Color("Wireframe Color", self, cola(c_black)));
-	
-	newInput(i+26, nodeValue_Bool("Wireframe antialias", self, false));
-	
-	newInput(i+27, nodeValue_Bool("Wireframe shading", self, false));
-	
-	newInput(i+28, nodeValue_Bool("Wireframe only", self, false));
-	
+	// inputs i+30
 	in_cam = array_length(inputs);
 	
 	newOutput(0, nodeValue_Output("Rendered", self, VALUE_TYPE.surface, noone ));
@@ -105,7 +94,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		["Render",		      true],       i+ 5, i+16, i+ 6, i+ 7, i+15, i+22, 
 		["Wireframe",         true, i+23], i+24, i+25, i+26, i+27, i+28, 
 		["Ambient Occlusion", true, i+17], i+20, i+18, i+19, 
-		["Effects",			  true],       i+21,
+		["Effects",			  true],       i+21, i+29, 
 	];
 	
 	output_display_list = [ 0, 5, 1, 2, 3, 4 ];
@@ -217,35 +206,30 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	
 	static processData = function(_outData, _data, _output_index, _array_index = 0) {
 		#region data
-			var _pos = _data[0];
-			var _rot = _data[1];
-			
-			var _fov  = _data[in_d3d + 0];
-			var _clip = _data[in_d3d + 1];
-			var _dim  = _data[in_d3d + 2];
-			var _proj = _data[in_d3d + 3];
 			var _sobj = _data[in_d3d + 4];
-			var _ambt = _data[in_d3d + 5];
-			var _dbg  = _data[in_d3d + 6];
-			var _back = _data[in_d3d + 7];
-			var _orts = _data[in_d3d + 8];
-		
+			
+			var _dim  = _data[in_d3d + 2];
+			
 			var _posm = _data[in_d3d + 9];
+			var _pos  = _data[0];
+			var _rot  = _data[1];
 			var _look = _data[in_d3d + 10];
 			var _roll = _data[in_d3d + 11];
 			var _hAng = _data[in_d3d + 12];
 			var _vAng = _data[in_d3d + 13];
 			var _dist = _data[in_d3d + 14];
-			var _gamm = _data[in_d3d + 15];
-			var _env  = _data[in_d3d + 16];
-		
-			var _aoEn = _data[in_d3d + 17];
-			var _aoRa = _data[in_d3d + 18];
-			var _aoBi = _data[in_d3d + 19];
-			var _aoSr = _data[in_d3d + 20];
-		
-			var _nrmSmt = _data[in_d3d + 21];
-			var _blend  = _data[in_d3d + 22];
+			
+			var _proj = _data[in_d3d + 3];
+			var _fov  = _data[in_d3d + 0];
+			var _clip = _data[in_d3d + 1];
+			var _orts = _data[in_d3d + 8];
+			
+			var _ambt  = _data[in_d3d +  5];
+			var _env   = _data[in_d3d + 16];
+			var _dbg   = _data[in_d3d +  6];
+			var _back  = _data[in_d3d +  7];
+			var _gamm  = _data[in_d3d + 15];
+			var _blend = _data[in_d3d + 22];
 			
 			var _wire   = _data[in_d3d + 23];
 			var _wiret  = _data[in_d3d + 24];
@@ -253,7 +237,15 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 			var _wirea  = _data[in_d3d + 26];
 			var _wires  = _data[in_d3d + 27];
 			var _wireo  = _data[in_d3d + 28];
+			
+			var _aoEn = _data[in_d3d + 17];
+			var _aoSr = _data[in_d3d + 20];
+			var _aoRa = _data[in_d3d + 18];
+			var _aoBi = _data[in_d3d + 19];
 		
+			var _nrmSmt = _data[in_d3d + 21];
+			var _bckBln = _data[in_d3d + 29];
+			
 			var _qi1  = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(0, 1, 0),  90);
 			var _qi2  = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(1, 0, 0), -90);
 			var _qi3  = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(1, 0, 0),  90);
@@ -335,6 +327,8 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 			scene.wireframe_aa        = _wirea;
 			scene.wireframe_shade     = _wires;
 			scene.wireframe_only      = _wireo;
+			
+			scene.backface_blending   = _bckBln;
 		#endregion
 		
 		#region submit
