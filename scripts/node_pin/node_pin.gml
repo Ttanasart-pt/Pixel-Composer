@@ -4,7 +4,6 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	auto_height      = false;
 	junction_shift_y = 16;
-	// custom_grid      = 8;
 	
 	isHovering     = false;
 	hover_scale    = 0;
@@ -58,11 +57,15 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var xx =  x      * _s + _x;
 		var yy = (y + 8) * _s + _y;
 		
-		inputs[0].x = xx;
-		inputs[0].y = yy;
+		inputs[0].x  = xx;
+		inputs[0].y  = yy;
+		inputs[0].rx = x;
+		inputs[0].ry = y + 8;
 		
-		outputs[0].x = xx;
-		outputs[0].y = yy;
+		outputs[0].x  = xx;
+		outputs[0].y  = yy;
+		outputs[0].rx = x;
+		outputs[0].ry = y + 8;
 	}
 	
 	static drawBadge = function(_x, _y, _s) {}
