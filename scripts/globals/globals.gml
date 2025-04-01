@@ -161,6 +161,7 @@
 		
 		#macro ca_white cola(c_white)
 		#macro ca_black cola(c_black)
+		#macro ca_zero  cola(c_black, 0)
 	#endregion
 	
 	#macro RETURN_ON_REST if(!PROJECT.animator.is_playing || !PROJECT.animator.frame_progress) return;

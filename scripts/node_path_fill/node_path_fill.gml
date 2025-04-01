@@ -3,22 +3,20 @@ function Node_Path_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	newInput(0, nodeValue_Dimension(self));
 	
-	newInput(1, nodeValue_PathNode("Path", self, noone))
-		.setVisible(true, true);
+	newInput(1, nodeValue_PathNode( "Path",       self, noone)).setVisible(true, true);
+	newInput(2, nodeValue_Int(      "Resolution", self, 64)).setValidator(VV_min(2));
+	newInput(6, nodeValue_2(        "Scale",      self, [ 1, 1 ]));
 	
-	newInput(2, nodeValue_Int("Resolution", self, 64))
-		.setValidator(VV_min(2));
+	newInput(3, nodeValue_Color( "Color",      self, ca_white))
+	newInput(4, nodeValue_Bool(  "Inverted",   self, false))
+	newInput(5, nodeValue_Color( "Bachground", self, ca_zero))
 	
-	newInput(3, nodeValue_Color("Color", self, cola(c_white)))
-	
-	newInput(4, nodeValue_Bool("Inverted", self, false))
-	
-	newInput(5, nodeValue_Color("Bachground", self, cola(c_black, 0)))
+	// inputs 7
 	
 	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 0, 
-		["Path",  false], 1, 2, 
+		["Path",  false], 1, 2, 6, 
 		["Color", false], 3, 4, 5, 
 	]
 	
@@ -30,12 +28,12 @@ function Node_Path_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		if(_path && struct_has(_path, "drawOverlay")) _path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
-	static step = function() {}
-	
 	static processData = function(_outSurf, _data, _output_index, _array_index = 0) { 
 	    var _dim  = _data[0];
 	    var _path = _data[1];
 	    var _reso = _data[2];
+	    var _sca  = _data[6];
+	    
 	    var _colr = _data[3];
 	    var _invt = _data[4];
 	    var _bg   = _data[5];
@@ -62,9 +60,9 @@ function Node_Path_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				var p1 = _t[1];
 				var p2 = _t[2];
 				
-				draw_vertex(p0.x, p0.y);
-				draw_vertex(p1.x, p1.y);
-				draw_vertex(p2.x, p2.y);
+				draw_vertex(p0.x * _sca[0], p0.y * _sca[1]);
+				draw_vertex(p1.x * _sca[0], p1.y * _sca[1]);
+				draw_vertex(p2.x * _sca[0], p2.y * _sca[1]);
 			}
 			draw_primitive_end();
 			
