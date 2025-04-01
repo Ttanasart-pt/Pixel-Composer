@@ -47,9 +47,23 @@ function Node_Mesh_Create_Path(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		
 		var triangles = [];
 		switch(_algo) {
-			case 0 : triangles = polygon_triangulate(points)[0]; break;
+			case 0 : triangles = polygon_triangulate(points)[0];         break;
 			case 1 : triangles = polygon_triangulate_convex_fan(points); break;
-			case 2 : triangles = delaunay_triangulation(points); break;
+			case 2 : triangles = delaunay_triangulation(points);         break;
+		}
+		
+		for( var i = 0, n = array_length(triangles); i < n; i++ ) {
+			var tr = triangles[i];
+			
+			if(_triangle_is_ccw(tr)) {
+	    		var p0 = tr[0];
+	    		var p1 = tr[1];
+	    		var p2 = tr[2];
+	    		
+	    		tr[0] = p0;
+				tr[1] = p2;
+				tr[2] = p1;
+			}
 		}
 		
 		mesh.points    = points;

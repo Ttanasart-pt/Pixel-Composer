@@ -26,10 +26,10 @@ function __3dMeshExtrude() : __3dObject() constructor {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
 		for( var i = 0; i < _tria; i++ ) { // caps
-			var _tri = _tris[i];
-			var p0   = _tri[0];
-    		var p1   = _tri[1];
-    		var p2   = _tri[2];
+			var tr = _tris[i];
+			var p0 = tr[0];
+    		var p1 = tr[1];
+    		var p2 = tr[2];
     		
     		var p0u  = (p0.x - _minx) / _boxw;
     		var p0v  = (p0.y - _miny) / _boxh;
