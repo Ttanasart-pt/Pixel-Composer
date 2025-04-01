@@ -401,10 +401,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var positions = array_create(_amount);
 			var posIndex  = 0;
 			
-			var seedFrac  = frac(_sed);
-			var _sedSt    = floor(_sed);
-			var i = -1;
-			
+			var  i  = -1;
 			var _ww = _dim[0];
 			var _hh = _dim[1];
 			var uniAmoX = uniAmo[0];
@@ -431,10 +428,11 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					_y = _atl.y;
 				}
 				
-				random_set_seed(_sedSt + i * 100);
+				var _csed = _sed + i * 100 * pi;
+				random_set_seed(_csed);
 				
-				var _scx = _scaUniX? _scale[0] : lerp(_scale[0], _scale[1], lerp(random(1), random(1), seedFrac));
-				var _scy = _scaUniY? _scale[2] : lerp(_scale[2], _scale[3], lerp(random(1), random(1), seedFrac));
+				var _scx = _scaUniX? _scale[0] : random_range_seed(_scale[0], _scale[1], _csed++);
+				var _scy = _scaUniY? _scale[2] : random_range_seed(_scale[2], _scale[3], _csed++);
 				
 				switch(_dist) { // position
 					case NODE_SCATTER_DIST.area : 
@@ -473,7 +471,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 								}
 							}
 						} else {
-							sp = area_get_random_point(_area, _dist, _scat, i, _amount);
+							sp = area_get_random_point(_area, _dist, _scat, i, _amount, _csed);
 							_x = sp[0];
 							_y = sp[1];
 						}
@@ -532,8 +530,8 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 						}
 						
 						var pp = path.getPointRatio(_pathProgress, path_line_index);
-						_x = pp.x + lerp(-pathDis, pathDis, lerp(random(1), random(1), seedFrac));
-						_y = pp.y + lerp(-pathDis, pathDis, lerp(random(1), random(1), seedFrac));
+						_x = pp.x + random_range_seed(-pathDis, pathDis, _csed++);
+						_y = pp.y + random_range_seed(-pathDis, pathDis, _csed++);
 						break;
 						
 					case NODE_SCATTER_DIST.tile : 
@@ -547,20 +545,20 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 							_y = uniAmoY == 1? _h2 : (_arow + 0.5) * _ha;
 								
 						} else if(_scat == 1) {
-							_x = lerp(0, _ww, lerp(random(1), random(1), seedFrac));
-							_y = lerp(0, _hh, lerp(random(1), random(1), seedFrac));
+							_x = random_range_seed(0, _ww, _csed++);
+							_y = random_range_seed(0, _hh, _csed++);
 						}
 						break;
 				}
 				
 				if(_calPos) {
-					if(_wigX) _x += lerp(posWig[0], posWig[1], lerp(random(1), random(1), seedFrac));
-					if(_wigY) _y += lerp(posWig[2], posWig[3], lerp(random(1), random(1), seedFrac));
+					if(_wigX) _x += random_range_seed(posWig[0], posWig[1], _csed++);
+					if(_wigY) _y += random_range_seed(posWig[2], posWig[3], _csed++);
 				
 					_x += posShf[0] * i;
 					_y += posShf[1] * i;
 				
-					var shrRad = lerp(shfRad[0], shfRad[1], lerp(random(1), random(1), seedFrac));
+					var shrRad = random_range_seed(shfRad[0], shfRad[1], _csed++);
 					var shrAng = point_direction(_x, _y, _area[0], _area[1]);
 					
 					_x -= lengthdir_x(shrRad, shrAng);
@@ -578,7 +576,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					_scy *= vSca;
 				}
 				
-				var _r = (_pint? point_direction(_area[0], _area[1], _x, _y) : 0) + angle_random_eval_fast_fract(_rota, seedFrac);
+				var _r = (_pint? point_direction(_area[0], _area[1], _x, _y) : 0) + angle_random_eval_fast(_rota, _csed++);
 				
 				if(iRot > 1 && _v != noone)
 					_r += array_safe_get_fast(_v, iRot, 0);
@@ -658,14 +656,14 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				var grSamp = random_seed(1, _sed++);
 				
 				var clr = _clrUni? _clrSin  : evaluate_gradient_map(grSamp, color, clr_map, clr_rng, inputs[11], true);
-				var alp  = _alpUni? alpha[0] : lerp(alpha[0], alpha[1], lerp(random(1), random(1), seedFrac));
+				var alp  = _alpUni? alpha[0] : random_range_seed(alpha[0], alpha[1], _csed++);
 				
 				if(iCol > 1 && _v != noone) 
 					clr = colorMultiply(clr, array_safe_get_fast(_v, iCol, cola(c_white, 1)));
 				
 				if(surfSamp.active) {
-					var _samC = surfSamp.getPixel(_x + lerp(sampWig[0], sampWig[1], lerp(random(1), random(1), seedFrac)), 
-					                              _y + lerp(sampWig[2], sampWig[3], lerp(random(1), random(1), seedFrac)));
+					var _samC = surfSamp.getPixel(_x + random_range_seed(sampWig[0], sampWig[1], _csed++), 
+					                              _y + random_range_seed(sampWig[2], sampWig[3], _csed++));
 					clr =  colorMultiply(clr, _samC);
 					alp *= color_get_alpha(_samC);
 				}
