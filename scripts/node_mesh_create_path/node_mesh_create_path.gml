@@ -1,6 +1,5 @@
 function Node_Mesh_Create_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name		= "Path to Mesh";
-	
+	name = "Path to Mesh";
 	setDimension(96, 48);
 	
 	newInput(0, nodeValue_PathNode("Path", self, noone))
@@ -27,7 +26,7 @@ function Node_Mesh_Create_Path(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		var _pth  = getInputData(0);
 		var _sam  = getInputData(1);
 		var _algo = getInputData(2);
-		var mesh = new Mesh();
+		var mesh  = new Mesh();
 		
 		if(_pth == noone) return;
 		_sam = max(_sam, 1);
@@ -55,6 +54,7 @@ function Node_Mesh_Create_Path(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		
 		mesh.points    = points;
 		mesh.triangles = triangles;
+		mesh.calcCoM();
 		
 		outputs[0].setValue(mesh);
 	}

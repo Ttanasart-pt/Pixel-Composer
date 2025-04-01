@@ -1,6 +1,5 @@
 function Node_3D_Mesh_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group) constructor {
-	name     = "Surface Extrude";
-	
+	name = "Surface Extrude";
 	object_class = __3dSurfaceExtrude;
 	
 	newInput(in_mesh + 0, nodeValue_D3Material("Front Surface", self, new __d3dMaterial()))

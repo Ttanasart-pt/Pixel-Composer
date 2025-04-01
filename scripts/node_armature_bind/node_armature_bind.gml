@@ -455,6 +455,14 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	atlas_data = [];
 	bind_data  = [];
 	
+	__d0  = [ 0, 0 ];
+	__d1  = [ 0, 0 ];
+	__d2  = [ 0, 0 ];
+	__d3  = [ 0, 0 ];
+	__rr  = [ 0, 0 ];
+	__mov = [ 0, 0 ];
+	__cen = [ 0, 0 ];
+
 	bone = noone;
 	surface_selecting = noone;
 	selection_surf    = noone;
@@ -656,11 +664,11 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			var _cx = (_anc.x * _dsca) + _mov[0] + _dpos[0];
 			var _cy = (_anc.y * _dsca) + _mov[1] + _dpos[1];
 			
-			var _d0 = point_rotate(_cx - _sw / 2, _cy - _sh / 2, _cx, _cy, _rot);
-			var _d1 = point_rotate(_cx - _sw / 2, _cy + _sh / 2, _cx, _cy, _rot);
-			var _d2 = point_rotate(_cx + _sw / 2, _cy - _sh / 2, _cx, _cy, _rot);
-			var _d3 = point_rotate(_cx + _sw / 2, _cy + _sh / 2, _cx, _cy, _rot);
-			var _rr = point_rotate(_cx,  _cy - _sh / 2 - 4,      _cx, _cy, _rot);
+			var _d0 = point_rotate(_cx - _sw / 2, _cy - _sh / 2, _cx, _cy, _rot, __d0);
+			var _d1 = point_rotate(_cx - _sw / 2, _cy + _sh / 2, _cx, _cy, _rot, __d1);
+			var _d2 = point_rotate(_cx + _sw / 2, _cy - _sh / 2, _cx, _cy, _rot, __d2);
+			var _d3 = point_rotate(_cx + _sw / 2, _cy + _sh / 2, _cx, _cy, _rot, __d3);
+			var _rr = point_rotate(_cx,  _cy - _sh / 2 - 4,      _cx, _cy, _rot, __rr);
 			
 			_d0[0] = overlay_x(_d0[0], _x, _s); _d0[1] = overlay_y(_d0[1], _y, _s);
 			_d1[0] = overlay_x(_d1[0], _x, _s); _d1[1] = overlay_y(_d1[1], _y, _s);
@@ -940,7 +948,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			
 			var _rot  = _aang * (_pang? _b.pose_angle : _b.pose_apply_rotate) + _tran[TRANSFORM.rot];
 			var _anc  = _b.getPoint(0.5);
-			var _mov  = point_rotate(_tran[TRANSFORM.pos_x], _tran[TRANSFORM.pos_y], 0, 0, _b.pose_angle);
+			var _mov  = point_rotate(_tran[TRANSFORM.pos_x], _tran[TRANSFORM.pos_y], 0, 0, _b.pose_angle, __mov);
 			var _sca  = [ _tran[TRANSFORM.sca_x], _tran[TRANSFORM.sca_y] ];
 			if(_asca) {
 				_sca[0] *= _psca? _b.pose_scale : _b.pose_apply_scale;
@@ -952,7 +960,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			var _sw = _ww * _sca[0];
 			var _sh = _hh * _sca[1];
 			
-			var _cen = point_rotate(-_sw / 2, -_sh / 2, 0, 0, _rot);
+			var _cen = point_rotate(-_sw / 2, -_sh / 2, 0, 0, _rot, __cen);
 			var _pos  = [ 
 				(_anc.x * _dsca) + _cen[0] + _mov[0] + _dpos[0], 
 				(_anc.y * _dsca) + _cen[1] + _mov[1] + _dpos[1]

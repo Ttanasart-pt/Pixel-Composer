@@ -475,6 +475,12 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	selection_surf    = noone;
 	selection_sampler = new Surface_sampler();
 	
+	__d0 = [ 0, 0 ];
+	__d1 = [ 0, 0 ];
+	__d2 = [ 0, 0 ];
+	__d3 = [ 0, 0 ];
+	__rr = [ 0, 0 ];
+
 	attributes.select_object = false;
 	array_push(attributeEditors, "Selection");
 	array_push(attributeEditors, ["Content-Based", function() /*=>*/ {return attributes.select_object}, new checkBox(function() /*=>*/ { attributes.select_object = !attributes.select_object; triggerRender(); })]);
@@ -626,11 +632,11 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var _cx = _pos[0] + _ww / 2;
 			var _cy = _pos[1] + _hh / 2;
 			
-			var _d0 = point_rotate(_cx - _sw / 2, _cy - _sh / 2, _cx, _cy, _rot);
-			var _d1 = point_rotate(_cx - _sw / 2, _cy + _sh / 2, _cx, _cy, _rot);
-			var _d2 = point_rotate(_cx + _sw / 2, _cy - _sh / 2, _cx, _cy, _rot);
-			var _d3 = point_rotate(_cx + _sw / 2, _cy + _sh / 2, _cx, _cy, _rot);
-			var _rr = point_rotate(_cx,  _cy - _sh / 2 - 1,      _cx, _cy, _rot);
+			var _d0 = point_rotate(_cx - _sw / 2, _cy - _sh / 2, _cx, _cy, _rot, __d0);
+			var _d1 = point_rotate(_cx - _sw / 2, _cy + _sh / 2, _cx, _cy, _rot, __d1);
+			var _d2 = point_rotate(_cx + _sw / 2, _cy - _sh / 2, _cx, _cy, _rot, __d2);
+			var _d3 = point_rotate(_cx + _sw / 2, _cy + _sh / 2, _cx, _cy, _rot, __d3);
+			var _rr = point_rotate(_cx,  _cy - _sh / 2 - 1,      _cx, _cy, _rot, __rr);
 			
 			_d0[0] = overlay_x(_d0[0], _x, _s); _d0[1] = overlay_y(_d0[1], _y, _s);
 			_d1[0] = overlay_x(_d1[0], _x, _s); _d1[1] = overlay_y(_d1[1], _y, _s);

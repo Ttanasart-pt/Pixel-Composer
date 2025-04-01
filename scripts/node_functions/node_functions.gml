@@ -84,24 +84,34 @@
 		}
 		
 		var p0 = point_rotate(-_sca[0], -_sca[1],     0, 0, _rot);
-		var p1 = point_rotate( _sca[0], -_sca[1],     0, 0, _rot);
-		var p2 = point_rotate(-_sca[0],  _sca[1],     0, 0, _rot);
-		var p3 = point_rotate( _sca[0],  _sca[1],     0, 0, _rot);
-		var pr = point_rotate(       0, -_sca[1] - 1, 0, 0, _rot);
+		var pd0x = _x + (p0[0] + _pos[0]) * _s; 
+		var pd0y = _y + (p0[1] + _pos[1]) * _s;
 		
-		var pd0x = _x + (p0[0] + _pos[0]) * _s; var pd0y = _y + (p0[1] + _pos[1]) * _s;
-		var pd1x = _x + (p1[0] + _pos[0]) * _s; var pd1y = _y + (p1[1] + _pos[1]) * _s;
-		var pd2x = _x + (p2[0] + _pos[0]) * _s; var pd2y = _y + (p2[1] + _pos[1]) * _s;
-		var pd3x = _x + (p3[0] + _pos[0]) * _s; var pd3y = _y + (p3[1] + _pos[1]) * _s;
-		var prx  = _x + (pr[0] + _pos[0]) * _s; var pry  = _y + (pr[1] + _pos[1]) * _s;
+		var p1 = point_rotate( _sca[0], -_sca[1],     0, 0, _rot);
+		var pd1x = _x + (p1[0] + _pos[0]) * _s; 
+		var pd1y = _y + (p1[1] + _pos[1]) * _s;
+		
+		var p2 = point_rotate(-_sca[0],  _sca[1],     0, 0, _rot);
+		var pd2x = _x + (p2[0] + _pos[0]) * _s; 
+		var pd2y = _y + (p2[1] + _pos[1]) * _s;
+		
+		var p3 = point_rotate( _sca[0],  _sca[1],     0, 0, _rot);
+		var pd3x = _x + (p3[0] + _pos[0]) * _s; 
+		var pd3y = _y + (p3[1] + _pos[1]) * _s;
+		
+		var pr = point_rotate(       0, -_sca[1] - 1, 0, 0, _rot);
+		var prx  = _x + (pr[0] + _pos[0]) * _s; 
+		var pry  = _y + (pr[1] + _pos[1]) * _s;
 		
 		var hovering = -1;
 		
 		if(drag_type == -1) {
 			if(point_in_rectangle_points(_mx, _my, pd0x, pd0y, pd1x, pd1y, pd2x, pd2y, pd3x, pd3y)) 
 				hovering = 0;
+				
 			if(point_in_circle(_mx, _my, prx, pry, 12)) 
 				hovering = 1;
+				
 			if(point_in_circle(_mx, _my, pd3x, pd3y, 12)) 
 				hovering = 2;
 		}
@@ -112,8 +122,8 @@
 		draw_line_width(pd3x, pd3y, pd1x, pd1y, hovering == 0? 2 : 1);
 		draw_line_width(pd3x, pd3y, pd2x, pd2y, hovering == 0? 2 : 1);
 		
-		draw_sprite_colored(THEME.anchor_rotate, hovering == 1,  prx,  pry,, _rot);
-		draw_sprite_colored(THEME.anchor_scale,  hovering == 2, pd3x, pd3y,, _rot);
+		draw_sprite_colored(THEME.anchor_rotate, hovering == 1,  prx,  pry, 1, _rot);
+		draw_sprite_colored(THEME.anchor_scale,  hovering == 2, pd3x, pd3y, 1, _rot);
 		
 		if(hovering == -1) return;
 		if(drag_type > -1) return;

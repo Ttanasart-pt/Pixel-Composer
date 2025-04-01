@@ -45,6 +45,9 @@ function Node_Atlas_Set(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		[ "Alpha",    false, 16], 17, 18, 
 	];
 	
+	__p0 = [ 0, 0 ];
+	__p1 = [ 0, 0 ];
+	
 	static processData = function(_outData, _data, _output_index, _array_index = 0) {
 		var atl = _data[0];
 		if(!is(atl, Atlas)) return _outData;
@@ -76,8 +79,8 @@ function Node_Atlas_Set(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				var _sw = _dim[0] * _newAtl.sx;
 				var _sh = _dim[1] * _newAtl.sy;
 				
-				var p0 = point_rotate(0, 0, _sw / 2, _sh / 2, -_or);
-				var p1 = point_rotate(0, 0, _sw / 2, _sh / 2,  _nr);
+				var p0 = point_rotate(0, 0, _sw / 2, _sh / 2, -_or, __p0);
+				var p1 = point_rotate(0, 0, _sw / 2, _sh / 2,  _nr, __p1);
 				
 				_newAtl.x = _newAtl.x - p0[1] + p1[0];
 				_newAtl.y = _newAtl.y - p0[0] + p1[1];

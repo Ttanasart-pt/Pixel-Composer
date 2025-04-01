@@ -79,6 +79,11 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	prev_pos   = [ 0, 0 ];
 	prev_data  = noone;
 	
+	__p0 = [ 0, 0 ];
+	__p1 = [ 0, 0 ];
+	__p2 = [ 0, 0 ];
+	__p3 = [ 0, 0 ];
+	
 	static getDimension = function(arr = 0) {
 		var _surf		= getSingleValue(0, arr);
 		var _out_type	= getSingleValue(9, arr);
@@ -110,10 +115,10 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				ww = sw * _scale[0];
 				hh = sh * _scale[1];
 				
-				var p0 = point_rotate( 0,  0, ww / 2, hh / 2, _rotate);
-				var p1 = point_rotate(ww,  0, ww / 2, hh / 2, _rotate);
-				var p2 = point_rotate( 0, hh, ww / 2, hh / 2, _rotate);
-				var p3 = point_rotate(ww, hh, ww / 2, hh / 2, _rotate);
+				var p0 = point_rotate( 0,  0, ww / 2, hh / 2, _rotate, __p0);
+				var p1 = point_rotate(ww,  0, ww / 2, hh / 2, _rotate, __p1);
+				var p2 = point_rotate( 0, hh, ww / 2, hh / 2, _rotate, __p2);
+				var p3 = point_rotate(ww, hh, ww / 2, hh / 2, _rotate, __p3);
 				
 				var minx = min(p0[0], p1[0], p2[0], p3[0]);
 				var maxx = max(p0[0], p1[0], p2[0], p3[0]);
@@ -220,10 +225,10 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				_ww = ww * sca[0];
 				_hh = hh * sca[1];
 				
-				var p0 = point_rotate(  0,   0, _ww / 2, _hh / 2, rot);
-				var p1 = point_rotate(_ww,   0, _ww / 2, _hh / 2, rot);
-				var p2 = point_rotate(  0, _hh, _ww / 2, _hh / 2, rot);
-				var p3 = point_rotate(_ww, _hh, _ww / 2, _hh / 2, rot);
+				var p0 = point_rotate(  0,   0, _ww / 2, _hh / 2, rot, __p0);
+				var p1 = point_rotate(_ww,   0, _ww / 2, _hh / 2, rot, __p1);
+				var p2 = point_rotate(  0, _hh, _ww / 2, _hh / 2, rot, __p2);
+				var p3 = point_rotate(_ww, _hh, _ww / 2, _hh / 2, rot, __p3);
 				
 				var minx = min(p0[0], p1[0], p2[0], p3[0]);
 				var maxx = max(p0[0], p1[0], p2[0], p3[0]);
@@ -328,6 +333,13 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	overlay_drag_ma  = 0;
 	overlay_drag_sa  = 0;
 	
+	__tl  = [ 0, 0 ];
+	__tr  = [ 0, 0 ];
+	__bl  = [ 0, 0 ];
+	__br  = [ 0, 0 ];
+	__sz  = [ 0, 0 ];
+	__rth = [ 0, 0 ];
+	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		PROCESSOR_OVERLAY_CHECK
 		
@@ -382,13 +394,13 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var bax = _x + (pos[0] + anc[0]) * _s;
 			var bay = _y + (pos[1] + anc[1]) * _s;
 			
-			var tl = point_rotate(bx0, by0, bax, bay, rot);
-			var tr = point_rotate(bx1, by0, bax, bay, rot);
-			var bl = point_rotate(bx0, by1, bax, bay, rot);
-			var br = point_rotate(bx1, by1, bax, bay, rot);
-			var sz = point_rotate(bx2, by2, bax, bay, rot);
+			var tl = point_rotate(bx0, by0, bax, bay, rot, __tl);
+			var tr = point_rotate(bx1, by0, bax, bay, rot, __tr);
+			var bl = point_rotate(bx0, by1, bax, bay, rot, __bl);
+			var br = point_rotate(bx1, by1, bax, bay, rot, __br);
+			var sz = point_rotate(bx2, by2, bax, bay, rot, __sz);
 			
-			var rth = point_rotate((bx0 + bx1) / 2, by0 - 16, bax, bay, rot);
+			var rth = point_rotate((bx0 + bx1) / 2, by0 - 16, bax, bay, rot, __rth);
 			
 			var a_index  = 0;
 			var r_index  = 0;

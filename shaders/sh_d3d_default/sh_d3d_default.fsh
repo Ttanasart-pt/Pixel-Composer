@@ -199,6 +199,17 @@ vec4 wireframeCalc(in vec4 baseColr) {
 	return mixed_color;
 }
 
+float normalCurvature(vec3 n) {
+      vec3 dx = dFdx(n);
+	  vec3 dy = dFdy(n);
+	  vec3 xneg = n - dx;
+	  vec3 xpos = n + dx;
+	  vec3 yneg = n - dy;
+	  vec3 ypos = n + dy;
+	  float curvature = (cross(xneg, xpos).y - cross(yneg, ypos).x) * 4.0;
+	  return curvature;
+}
+
 void main() {
 	vec2 uv_coord = v_vTexcoord;
 	if(mat_flip == 1) uv_coord.y = -uv_coord.y;
@@ -219,7 +230,6 @@ void main() {
 		
 	vec3 normal        = mat_defer_normal == 1? texture2D(mat_normal_map, viewProjPos.xy).rgb : v_vNormal;
 		 normal        = normalize(normal);
-	
 	bool isBackface    = dot(normal, viewDirection) < 0.0;
 	
 	#region ++++ base color effect ++++
