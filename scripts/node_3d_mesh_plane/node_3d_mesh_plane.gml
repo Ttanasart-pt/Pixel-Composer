@@ -1,6 +1,5 @@
 function Node_3D_Mesh_Plane(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group) constructor {
-	name     = "3D Plane";
-	
+	name = "3D Plane";
 	object_class = __3dPlane;
 	
 	newInput(in_mesh + 0, nodeValue_D3Material("Material", self, new __d3dMaterial()))

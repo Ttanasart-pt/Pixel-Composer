@@ -128,8 +128,8 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 						array_remove(inputs, anc);
 						array_insert(inputs, input_fix_len + _line_hover + 1, anc);
 					}
+					
 				} else {
-					// print($"{array_length(inputs)}: {_anchor_hover}");
 					recordAction(ACTION_TYPE.array_delete, inputs, [ inputs[_anchor_hover], _anchor_hover, "remove path anchor point" ]);
 					array_delete(inputs, _anchor_hover, 1);
 					resetDisplayList();

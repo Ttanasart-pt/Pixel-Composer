@@ -22,9 +22,9 @@ function shader_set_i(uniform, value) {
 
 function shader_set_i_array(shader, uniform, array) { shader_set_uniform_i_array(shader_get_uniform(shader, uniform), array); }
 
-function shader_set_2(uniform, v) { var shader = shader_current(); shader_set_uniform_f(shader_get_uniform(shader, uniform), aGetF(v, 0), aGetF(v, 1)); } 
-function shader_set_3(uniform, v) { var shader = shader_current(); shader_set_uniform_f(shader_get_uniform(shader, uniform), aGetF(v, 0), aGetF(v, 1), aGetF(v, 2)); } 
-function shader_set_4(uniform, v) { var shader = shader_current(); shader_set_uniform_f(shader_get_uniform(shader, uniform), aGetF(v, 0), aGetF(v, 1), aGetF(v, 2), aGetF(v, 3)); } 
+function shader_set_2(u,v) { shader_set_uniform_f(shader_get_uniform(shader_current(),u), aGetF(v, 0), aGetF(v, 1));                           } 
+function shader_set_3(u,v) { shader_set_uniform_f(shader_get_uniform(shader_current(),u), aGetF(v, 0), aGetF(v, 1), aGetF(v, 2));              } 
+function shader_set_4(u,v) { shader_set_uniform_f(shader_get_uniform(shader_current(),u), aGetF(v, 0), aGetF(v, 1), aGetF(v, 2), aGetF(v, 3)); } 
 
 function shader_set_f_array(uniform, value, max_length = 128) {
 	var shader = shader_current();

@@ -1,6 +1,6 @@
 function Node_3D_Mesh_Cube(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group) constructor {
 	name = "3D Cube";
-	object_class = noone;
+	object_class = __3dCube;
 	
 	var i = in_mesh;
 	newInput(i+0, nodeValue_Bool("Material per side", self, false ));
@@ -12,11 +12,12 @@ function Node_3D_Mesh_Cube(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 	newInput(i+5, nodeValue_D3Material("Material Back",   self)).setVisible(true, true);
 	newInput(i+6, nodeValue_D3Material("Material Front",  self)).setVisible(true, true);
 	
-	newInput(i+7, nodeValue_Slider(      "Taper",      self, 0, [ -1, 1, 0.01 ]));
-	newInput(i+8, nodeValue_Enum_Button( "Taper Axis", self, 0, [ "X", "Y", "Z" ]));
+	newInput(i+9, nodeValue_IVec3(       "Subdivision", self, [ 1, 1, 1 ]));
+	newInput(i+7, nodeValue_Slider(      "Taper",       self, 0, [ -1, 1, 0.01 ]));
+	newInput(i+8, nodeValue_Enum_Button( "Taper Axis",  self, 0, [ "X", "Y", "Z" ]));
 	
 	input_display_list = [
-		__d3d_input_list_mesh,      i+7, i+8, 
+		__d3d_input_list_mesh,      i+9, i+7, i+8, 
 		__d3d_input_list_transform, 
 		["Material", false],        i+0, i+1, i+2, i+3, i+4, i+5, i+6, 
 	]
@@ -36,6 +37,7 @@ function Node_3D_Mesh_Cube(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 		
 		var _tap_amo  = _data[i+7];
 		var _tap_axs  = _data[i+8];
+		var _subd     = _data[i+9];
 		
 		inputs[i+1].name = _mat_side? "Material Top" : "Material";
 		inputs[i+1].setVisible(true, true);
@@ -45,14 +47,13 @@ function Node_3D_Mesh_Cube(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 		inputs[i+5].setVisible(_mat_side, _mat_side);
 		inputs[i+6].setVisible(_mat_side, _mat_side);
 		
-		var object = getObject(_array_index, __3dCube);
-			
+		var object = getObject(_array_index);
 		object.checkParameter({ 
 			separate_faces: _mat_side,
 			taper_amount:   _tap_amo, 
 			taper_axis:     _tap_axs, 
+			subdivision:    _subd, 
 		});
-		
 		object.materials = [ _mat_1, _mat_2, _mat_3, _mat_4, _mat_5, _mat_6 ];
 		setTransform(object, _data);
 		

@@ -37,3 +37,11 @@ function lerp_color(from, to, ratio) {
 function lerp_invert(val, from, to) { return (val - from) / (to - from); }
 
 function lerp_smooth(_x) { return _x * _x * (3.0 - 2.0 * _x) }
+
+function lerp_d3(_a, _b, _l) {
+	return [ 
+		lerp(_a[0], _b[0], _l), 
+		lerp(_a[1], _b[1], _l), 
+		lerp(_a[2], _b[2], _l), 
+	];
+}
