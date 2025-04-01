@@ -47,6 +47,7 @@ function Node_3D_Mesh_Extrude_Mesh(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 		_object.checkParameter( { 
 			mesh   : _mesh,
 			height : _hght, 
+			smooth : _smt, 
 		}, _updt);
 		
 		_object.materials = [ _tex_crs, _tex_bck, _tex_sid ];

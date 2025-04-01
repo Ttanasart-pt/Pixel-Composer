@@ -76,24 +76,35 @@ function Mesh() constructor {
 		
 		if(!_conn) return segments;
 		
+		var _smap   = array_create(array_length(segments));
+		var _pntMap = {};
+		var _pntInv = {};
+		var _pntInd = 0;
+		
 		for( var i = 0, n = array_length(segments); i < n; i++ ) {
 			var _s = segments[i];
-			pointsPairs[$ _s[0]] = _s[1];
-			pointsPairs[$ _s[1]] = _s[0];
-		}
-		
-		var path = [ segments[0][0], segments[0][1] ];
-		var indx = 1;
-		
-		for( var i = 0, n = array_length(segments); i < n; i++ ) {
-			var last_point = path[indx];
-	        var next_point = pointsPairs[$ last_point];
-			if(next_point == undefined) break;
 			
-			struct_remove(pointsPairs, last_point);
-			array_push(path, next_point);
-			indx++;
+			if(!struct_has(_pntInv, _s[0])) {
+				_pntInv[$ _s[0]]   = _pntInd;
+				_pntMap[$ _pntInd] = _s[0];
+				_pntInd++;
+			}
+			
+			if(!struct_has(_pntInv, _s[1])) {
+				_pntInv[$ _s[1]]   = _pntInd;
+				_pntMap[$ _pntInd] = _s[1];
+				_pntInd++;
+			}
+			
+			_smap[i] = [ _pntInv[$ _s[0]], _pntInv[$ _s[1]] ];
 		}
+		
+		var _spath = connect_index_pairs(_smap);
+		if(_spath[0] == _spath[array_length(_spath) - 1]) array_pop(_spath);
+		
+		var   path = array_create(array_length(_spath));
+		for( var i = 0, n = array_length(_spath); i < n; i++ )
+			path[i] = _pntMap[$ _spath[i]];
 		
 		return path;
 	}
@@ -147,4 +158,53 @@ function Mesh() constructor {
 	
 	static serialize   = function()  { return ""; }
 	static deserialize = function(s) { return self; }
+}
+
+function connect_index_pairs(index_pairs) {
+    var result = [];
+    if (array_empty(index_pairs)) return result;
+	
+    result[0] = index_pairs[0][0];
+    result[1] = index_pairs[0][1];
+	array_delete(index_pairs, 0, 1);
+    
+    while (array_length(index_pairs) > 0) {
+        var connected = false;
+
+        for( var i = 0, n = array_length(index_pairs); i < n; i++ ) {
+            var current_pair = index_pairs[i];
+            var first_value  = current_pair[0];
+            var second_value = current_pair[1];
+
+            if (result[0] == second_value) {
+                array_insert(result, 0, first_value);
+                array_delete(index_pairs, i, 1);
+                connected = true;
+                break;
+                
+            } else if (result[0] == first_value) {
+                array_insert(result, 0, second_value);
+                array_delete(index_pairs, i, 1);
+                connected = true;
+                break;
+                
+            } else if (result[array_length(result) - 1] == first_value) {
+                array_push(result, second_value);
+                array_delete(index_pairs, i, 1);
+                connected = true;
+                break;
+                
+            } else if (result[array_length(result) - 1] == second_value) {
+                array_push(result, first_value);
+                array_delete(index_pairs, i, 1);
+                connected = true;
+                break;
+                
+            }
+        }
+
+        if (!connected) break;
+    }
+
+    return result;
 }
