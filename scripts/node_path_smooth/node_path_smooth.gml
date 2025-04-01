@@ -32,6 +32,7 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	#region ---- path ----
 		anchors		= [];
+		anchorSize  = 1;
 		controls    = [];
 		segments    = [];
 		lengths		= [];
@@ -75,7 +76,6 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var sample = PREFERENCES.path_resolution;
-		var ansize = array_length(inputs) - input_fix_len;
 		var loop   = getInputData(0);
 		var rond   = getInputData(1);
 		
@@ -85,15 +85,16 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		if(!array_empty(anchors)) {
 			draw_set_color(COLORS._main_accent);
 			
+			var _ox = 0, _oy = 0, _nx = 0, _ny = 0, p = 0;
+			
 			for( var i = 0, n = array_length(segments); i < n; i++ ) { // draw path
 				var _seg = segments[i];
-				var _ox = 0, _oy = 0, _nx = 0, _ny = 0, p = 0;
 					
 				for( var j = 0, m = array_length(_seg); j < m; j += 2 ) {
 					_nx = _x + _seg[j + 0] * _s;
 					_ny = _y + _seg[j + 1] * _s;
 						
-					if(j) {
+					if(i || j) {
 						if((key_mod_press(CTRL) || isUsingTool(0)) && distance_to_line(_mx, _my, _ox, _oy, _nx, _ny) < 4)
 							_line_hover = i;
 						draw_line_width(_ox, _oy, _nx, _ny, 1 + 2 * (line_hover == i));
@@ -149,16 +150,15 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		boundary    = new BoundingBox();
 		
 		var sample  = PREFERENCES.path_resolution;
-		var ansize  = array_length(inputs) - input_fix_len;
-		if(ansize < 2) return;
+		if(anchorSize < 2) return;
 		
-		var con = loop? ansize : ansize - 1;
+		var con = loop? anchorSize : anchorSize - 1;
 		
 		for(var i = 0; i < con; i++) {
-			var _a0 = anchors[ (i + 0) % ansize];
-			var _a1 = anchors[ (i + 1) % ansize];
-			var _c0 = controls[(i + 0) % ansize];
-			var _c1 = controls[(i + 1) % ansize];
+			var _a0 = anchors[ (i + 0) % anchorSize];
+			var _a1 = anchors[ (i + 1) % anchorSize];
+			var _c0 = controls[(i + 0) % anchorSize];
+			var _c1 = controls[(i + 1) % anchorSize];
 			
 			var l = 0, _ox = 0, _oy = 0, _nx = 0, _ny = 0, p = 0;
 			var sg = array_create(sample * 2);
@@ -235,12 +235,12 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 	}
 	
-	static getLineCount		= function() { return 1; }
-	static getSegmentCount	= function() { return array_length(lengths); }
-	static getBoundary		= function() { return boundary; }
+	static getLineCount		= function() /*=>*/ {return 1};
+	static getSegmentCount	= function() /*=>*/ {return array_length(lengths)};
+	static getBoundary		= function() /*=>*/ {return boundary};
 	
-	static getLength		= function() { return lengthTotal; }
-	static getAccuLength	= function() { return lengthAccs; }
+	static getLength		= function() /*=>*/ {return lengthTotal};
+	static getAccuLength	= function() /*=>*/ {return lengthAccs};
 	
 	static getPointDistance = function(_dist, _ind = 0, out = undefined) {
 		if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
@@ -258,14 +258,13 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var loop = getInputData(1);
 		if(loop) _dist = safe_mod(_dist, lengthTotal, MOD_NEG.wrap);
 		
-		var ansize = array_length(inputs) - input_fix_len;
-		if(ansize == 0) return out;
+		if(anchorSize == 0) return out;
 		
-		for(var i = 0; i < ansize; i++) {
-			var _a0 = anchors[ (i + 0) % ansize];
-			var _a1 = anchors[ (i + 1) % ansize];
-			var _c0 = controls[(i + 0) % ansize];
-			var _c1 = controls[(i + 1) % ansize];
+		for(var i = 0; i < anchorSize; i++) {
+			var _a0 = anchors[ (i + 0) % anchorSize];
+			var _a1 = anchors[ (i + 1) % anchorSize];
+			var _c0 = controls[(i + 0) % anchorSize];
+			var _c1 = controls[(i + 1) % anchorSize];
 			
 			if(_dist > lengths[i]) {
 				_dist -= lengths[i];
@@ -290,8 +289,7 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	}
 	
 	static getPointRatio = function(_rat, _ind = 0, out = undefined) {
-		var pix = frac(_rat) * lengthTotal;
-		return getPointDistance(pix, _ind, out);
+		return getPointDistance(frac(_rat) * lengthTotal, _ind, out);
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
@@ -303,30 +301,38 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		var _a = [];
 		for(var i = input_fix_len; i < array_length(inputs); i++) {
-			var _anc = array_clone(getInputData(i));
+			var _dat = getInputData(i);
+			var _dep = array_get_depth(_dat);
 			
-			if(rond) {
-				_anc[0] = round(_anc[0]);
-				_anc[1] = round(_anc[1]);
+			if(_dep == 1)
+				array_push(_a, [ _dat[0], _dat[1] ]);
+				
+			else if(_dep == 2) {
+				for( var j = 0, m = array_length(_dat); j < m; j++ ) 
+					array_push(_a, [ _dat[j][0], _dat[j][1] ]);
 			}
-			
-			array_push(_a, _anc);
 		}
 		
-		var amo  = array_length(_a);
-		anchors  = _a;
-		controls = array_create(amo);
+		anchorSize = array_length(_a);
+		anchors    = _a;
+		controls   = array_create(anchorSize);
 		
-		if(amo == 2) { 
+		if(rond)
+		for( var i = 0; i < anchorSize; i++ ) {
+			_a[i][0] = round(_a[i][0]);
+			_a[i][1] = round(_a[i][1]);
+		}
+		
+		if(anchorSize == 2) { 
 			controls = [
 				[ 0, 0, 0, 0 ],
 				[ 0, 0, 0, 0 ],
 			];
 		} else {
-			for( var i = 0, n = amo; i < n; i++ ) {
-				var _a0 = array_safe_get_fast(anchors, (i - 1 + amo) % n, [ 0, 0 ]);
-				var _a1 = array_safe_get_fast(anchors, (i     + amo) % n, [ 0, 0 ]);
-				var _a2 = array_safe_get_fast(anchors, (i + 1 + amo) % n, [ 0, 0 ]);
+			for( var i = 0, n = anchorSize; i < n; i++ ) {
+				var _a0 = array_safe_get_fast(anchors, (i - 1 + anchorSize) % n, [ 0, 0 ]);
+				var _a1 = array_safe_get_fast(anchors, (i     + anchorSize) % n, [ 0, 0 ]);
+				var _a2 = array_safe_get_fast(anchors, (i + 1 + anchorSize) % n, [ 0, 0 ]);
 				
 				var _dr  = point_direction(_a0[0], _a0[1], _a2[0], _a2[1]);
 				var _ds0 = point_distance(_a1[0], _a1[1], _a0[0], _a0[1]) / smot;
@@ -336,9 +342,9 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				                 lengthdir_x(_ds2, _dr),  lengthdir_y(_ds2, _dr) ];
 			}
 			
-			if(!loop && amo) {
+			if(!loop && anchorSize) {
 				controls[0]       = [ 0, 0, 0, 0 ];
-				controls[amo - 1] = [ 0, 0, 0, 0 ];
+				controls[anchorSize - 1] = [ 0, 0, 0, 0 ];
 			}
 		}
 		

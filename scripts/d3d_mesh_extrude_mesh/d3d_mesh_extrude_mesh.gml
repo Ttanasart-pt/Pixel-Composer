@@ -50,23 +50,25 @@ function __3dMeshExtrude() : __3dObject() constructor {
 		
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
-		var br = mesh.mergePath(smooth);
+		var br = mesh.mergePath(true);
 	    var n  = array_length(br);
 		var vs = array_create(3 * n * 2);
 	    
-	    if(smooth) {
-	    	
-	    	for( var i = 0; i < n; i++ ) {
-	    		var pb = br[(i - 1 + n) % n];
-				var p0 = br[(i + 0 + n) % n];
-	    		var p1 = br[(i + 1 + n) % n];
-    			var pa = br[(i + 2 + n) % n];
-    			
-	    		var p0u  = (p0.x - _minx) / _boxw;
-	    		var p0v  = (p0.y - _miny) / _boxh;
-	    		var p1u  = (p1.x - _minx) / _boxw;
-	    		var p1v  = (p1.y - _miny) / _boxh;
-	    		
+    	for( var i = 0; i < n; i++ ) {
+    		var pb = br[(i - 1 + n) % n];
+			var p0 = br[(i + 0 + n) % n];
+    		var p1 = br[(i + 1 + n) % n];
+			var pa = br[(i + 2 + n) % n];
+			
+    		var p0u  = (p0.x - _minx) / _boxw;
+    		var p0v  = (p0.y - _miny) / _boxh;
+    		var p1u  = (p1.x - _minx) / _boxw;
+    		var p1v  = (p1.y - _miny) / _boxh;
+    		
+    		var u0   =  i      / n;
+    		var u1   = (i + 1) / n;
+    		
+    		if(smooth) {
 	    		var pbu = (pb.x - _minx) / _boxw;
 	    		var pbv = (pb.y - _miny) / _boxh;
 	    		var pau = (pa.x - _minx) / _boxw;
@@ -80,38 +82,22 @@ function __3dMeshExtrude() : __3dObject() constructor {
 	    		var nl = sqrt(n1[0] * n1[0] + n1[1] * n1[1]);
 	    		    n1[0] /= nl; n1[1] /= nl;
 	    		    
-	    		vs[i * 6 + 0] = new __vertex(p0u * 2 - 1, p0v * 2 - 1,  _h).setNormal(n0[0], n0[1], 0).setUV(0, 0);
-				vs[i * 6 + 1] = new __vertex(p0u * 2 - 1, p0v * 2 - 1, -_h).setNormal(n0[0], n0[1], 0).setUV(0, 1);
-				vs[i * 6 + 2] = new __vertex(p1u * 2 - 1, p1v * 2 - 1,  _h).setNormal(n1[0], n1[1], 0).setUV(1, 0);
-				
-				vs[i * 6 + 3] = new __vertex(p1u * 2 - 1, p1v * 2 - 1,  _h).setNormal(n1[0], n1[1], 0).setUV(1, 0);
-				vs[i * 6 + 4] = new __vertex(p0u * 2 - 1, p0v * 2 - 1, -_h).setNormal(n0[0], n0[1], 0).setUV(0, 1);
-				vs[i * 6 + 5] = new __vertex(p1u * 2 - 1, p1v * 2 - 1, -_h).setNormal(n1[0], n1[1], 0).setUV(1, 1);
-			}
-			
-	    } else {
-			for( var i = 0; i < n; i++ ) {
-				var p0 = br[i][0];
-	    		var p1 = br[i][1];
-	    		
-	    		var p0u  = (p0.x - _minx) / _boxw;
-	    		var p0v  = (p0.y - _miny) / _boxh;
-	    		var p1u  = (p1.x - _minx) / _boxw;
-	    		var p1v  = (p1.y - _miny) / _boxh;
-	    		
+    		} else {
     			var n0 = [-(p1v - p0v), p1u - p0u];
     			var nl = sqrt(n0[0] * n0[0] + n0[1] * n0[1]);
 	    		    n0[0] /= nl; n0[1] /= nl;
-	    		
-	    		vs[i * 6 + 0] = new __vertex(p0u * 2 - 1, p0v * 2 - 1,  _h).setNormal(n0[0], n0[1], 0).setUV(0, 0);
-				vs[i * 6 + 1] = new __vertex(p0u * 2 - 1, p0v * 2 - 1, -_h).setNormal(n0[0], n0[1], 0).setUV(0, 1);
-				vs[i * 6 + 2] = new __vertex(p1u * 2 - 1, p1v * 2 - 1,  _h).setNormal(n0[0], n0[1], 0).setUV(1, 0);
-				
-				vs[i * 6 + 3] = new __vertex(p1u * 2 - 1, p1v * 2 - 1,  _h).setNormal(n0[0], n0[1], 0).setUV(1, 0);
-				vs[i * 6 + 4] = new __vertex(p0u * 2 - 1, p0v * 2 - 1, -_h).setNormal(n0[0], n0[1], 0).setUV(0, 1);
-				vs[i * 6 + 5] = new __vertex(p1u * 2 - 1, p1v * 2 - 1, -_h).setNormal(n0[0], n0[1], 0).setUV(1, 1);
-			}
-	    }
+	    		    
+	    		var n1 = n0;
+    		}
+    		
+    		vs[i * 6 + 0] = new __vertex(p0u * 2 - 1, p0v * 2 - 1,  _h).setNormal(n0[0], n0[1], 0).setUV(u0, 0);
+			vs[i * 6 + 1] = new __vertex(p0u * 2 - 1, p0v * 2 - 1, -_h).setNormal(n0[0], n0[1], 0).setUV(u0, 1);
+			vs[i * 6 + 2] = new __vertex(p1u * 2 - 1, p1v * 2 - 1,  _h).setNormal(n1[0], n1[1], 0).setUV(u1, 0);
+			
+			vs[i * 6 + 3] = new __vertex(p1u * 2 - 1, p1v * 2 - 1,  _h).setNormal(n1[0], n1[1], 0).setUV(u1, 0);
+			vs[i * 6 + 4] = new __vertex(p0u * 2 - 1, p0v * 2 - 1, -_h).setNormal(n0[0], n0[1], 0).setUV(u0, 1);
+			vs[i * 6 + 5] = new __vertex(p1u * 2 - 1, p1v * 2 - 1, -_h).setNormal(n1[0], n1[1], 0).setUV(u1, 1);
+		}
 		
 		vertex = [ v0, v1, vs ];
 		VB = build();

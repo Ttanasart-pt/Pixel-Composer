@@ -31,3 +31,5 @@ function convertBase(str, fromBase, toBase) {
 }
 
 function saturate(_x) { return clamp(_x, 0, 1); }
+
+function smoothstep(t) { return t * t * (3.0 - 2.0 * t); }

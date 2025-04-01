@@ -9,39 +9,29 @@
 function Node_Scatter_Points(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Scatter Points";
 	color = COLORS.node_blend_number;
-	
 	setDimension(96, 48);
 	
+	////- Base
+	
+	newInput(5, nodeValueSeed(self)).rejectArray();
+	newInput(6, nodeValue_Bool( "Fixed Position",      self, false, "Fix point position, and only select point in the area."));
+	newInput(7, nodeValue_Vec2( "Reference Dimension", self, DEF_SURF));
+	
+	////- Scatter
+	
 	onSurfaceSize = function() /*=>*/ {return DEF_SURF}; 
-	newInput(0, nodeValue_Area("Point area", self, DEF_AREA_REF, { onSurfaceSize } ))
-		.setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
+	newInput(0, nodeValue_Area(        "Point area",       self, DEF_AREA_REF, { onSurfaceSize } )).setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
+	newInput(1, nodeValue_Enum_Button( "Distribution",     self, 0, [ "Area", "Border", "Map" ]))		.rejectArray();
+	newInput(4, nodeValue_Surface(     "Distribution Map", self)).rejectArray();
+	newInput(2, nodeValue_Enum_Button( "Scatter",          self, 1, [ "Uniform", "Random" ])).rejectArray();
+	newInput(3, nodeValue_Int(         "Amount",           self, 2, "Amount of particle spawn in that frame.")).rejectArray();
 	
-	newInput(1, nodeValue_Enum_Button("Distribution", self,  0, [ "Area", "Border", "Map" ]))
-		.rejectArray();
+	////- 3D
 	
-	newInput(2, nodeValue_Enum_Button("Scatter", self,  1, [ "Uniform", "Random" ]))
-		.rejectArray();
-	
-	newInput(3, nodeValue_Int("Amount", self, 2, "Amount of particle spawn in that frame."))
-		.rejectArray();
-	
-	newInput(4, nodeValue_Surface("Distribution Map", self))
-		.rejectArray();
-	
-	newInput(5, nodeValueSeed(self))
-		.rejectArray();
-	
-	newInput(6, nodeValue_Bool("Fixed Position", self, false, "Fix point position, and only select point in the area."));
-	
-	newInput(7, nodeValue_Vec2("Reference Dimension", self, DEF_SURF));
-	
-	newInput(8, nodeValue_Surface("Reference Value", self));
-	
-	newInput(9, nodeValue_Bool("Output 3D", self, false));
-	
-	newInput(10, nodeValue_Enum_Button("Normal", self,  0, [ "X", "Y", "Z" ]));
-	
-	newInput(11, nodeValue_Float("Plane Position", self, 0));
+	newInput( 8, nodeValue_Surface(     "Reference Value", self));
+	newInput( 9, nodeValue_Bool(        "Output 3D",       self, false));
+	newInput(10, nodeValue_Enum_Button( "Normal",          self, 0, [ "X", "Y", "Z" ]));
+	newInput(11, nodeValue_Float(       "Plane Position",  self, 0));
 	
 	input_display_list = [ 
 		["Base",	false], 5, 6, 7, 
@@ -51,13 +41,6 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	newOutput(0, nodeValue_Output("Points", self, VALUE_TYPE.float, [ 0, 0 ]))
 		.setDisplay(VALUE_DISPLAY.vector);
-	
-	static step = function() {
-		var _dist = getInputData(1);
-		
-		inputs[2].setVisible(_dist != 2);
-		inputs[4].setVisible(_dist == 2, _dist == 2);
-	}
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		inputs[0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
@@ -77,6 +60,8 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		__temp_3dNorm = getInputData(10);
 		__temp_3dPos  = getInputData(11);
 		
+		inputs[2].setVisible(_dist != 2);
+		inputs[4].setVisible(_dist == 2, _dist == 2);
 		inputs[7].setVisible(_fix);
 		var pos = [];
 		
@@ -96,13 +81,14 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			
 			if(_fix) {
 				for( var i = 0; i < _amo; i++ ) {
-					var p = area_get_random_point(_fixArea, _dist, _scat, i, _amo, _seed + i * 16);
+					var p = area_get_random_point(_fixArea, _dist, _scat, i, _amo, _seed + i * pi);
 					if(point_in_rectangle(p[0], p[1], aBox[0], aBox[1], aBox[2], aBox[3]))
 						array_push(pos, p);
 				} 
+				
 			} else {
 				for( var i = 0; i < _amo; i++ )
-					pos[i] = area_get_random_point(_area, _dist, _scat, i, _amo, _seed + i * 16);
+					pos[i] = area_get_random_point(_area, _dist, _scat, i, _amo, _seed + i * pi);
 			}
 			
 		} else {
