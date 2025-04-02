@@ -38,10 +38,9 @@ function lerp_invert(val, from, to) { return (val - from) / (to - from); }
 
 function lerp_smooth(_x) { return _x * _x * (3.0 - 2.0 * _x) }
 
-function lerp_d3(_a, _b, _l) {
-	return [ 
-		lerp(_a[0], _b[0], _l), 
-		lerp(_a[1], _b[1], _l), 
-		lerp(_a[2], _b[2], _l), 
-	];
+function lerp_d3(_a, _b, _l, _p) {
+	_p[0] = lerp(_a[0], _b[0], _l);
+	_p[1] = lerp(_a[1], _b[1], _l);
+	_p[2] = lerp(_a[2], _b[2], _l);
+	return _p;
 }

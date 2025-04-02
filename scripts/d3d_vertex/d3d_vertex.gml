@@ -1,14 +1,9 @@
+function __vertexA(_v, color = c_white, alpha = 1) { return new __vertex(_v[0], _v[1], _v[2], color, alpha); }
+
 function __vertex(_x = 0, _y = _x, _z = _x, color = c_white, alpha = 1) constructor {
-	if(is_array(_x)) {
-		x = _x[0];
-		y = _x[1];
-		z = _x[2];
-		
-	} else {
-		x = _x;
-		y = _y;
-		z = _z;
-	}
+	x = _x;
+	y = _y;
+	z = _z;
 	
 	nx = 0;
 	ny = 0;
