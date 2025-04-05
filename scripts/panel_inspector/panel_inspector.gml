@@ -19,27 +19,31 @@
     function panel_inspector_extract_global()            { CALL("inspector_extract_global");         PANEL_INSPECTOR.junction_extract_global();                                                  }
     function panel_inspector_extract_single()            { CALL("inspector_extract_single");         PANEL_INSPECTOR.junction_extract_single();                                                  }
     function panel_inspector_junction_bypass_toggle()    { CALL("inspector_junc_bypass");            PANEL_INSPECTOR.junction_bypass_toggle();                                                   }
+    function panel_inspector_visible_bypass_toggle()     { CALL("inspector_junc_visible");           PANEL_INSPECTOR.junction_visible_toggle();                                                  }
     
     function __fnInit_Inspector() {
-        registerFunction("", "Color Picker",                   "",    MOD_KEY.alt,     panel_inspector_color_pick           ).setMenu("color_picker")
+    	var i = "Inspector";
+    	
+        registerFunction("", "Color Picker",         "",    MOD_KEY.alt,     panel_inspector_color_pick             ).setMenu("color_picker")
         
-        registerFunction("Inspector", "Copy Value",            "C",   MOD_KEY.ctrl,    panel_inspector_copy_prop            ).setMenu("inspector_copy_property",  THEME.copy)
-        registerFunction("Inspector", "Paste Value",           "V",   MOD_KEY.ctrl,    panel_inspector_paste_prop           ).setMenu("inspector_paste_property", THEME.paste)
-        registerFunction("Inspector", "Toggle Animation",      "I",   MOD_KEY.none,    panel_inspector_toggle_animation     ).setMenu("inspector_toggle_animation")
+        registerFunction(i, "Copy Value",            "C",   MOD_KEY.ctrl,    panel_inspector_copy_prop              ).setMenu("inspector_copy_property",  THEME.copy)
+        registerFunction(i, "Paste Value",           "V",   MOD_KEY.ctrl,    panel_inspector_paste_prop             ).setMenu("inspector_paste_property", THEME.paste)
+        registerFunction(i, "Toggle Animation",      "I",   MOD_KEY.none,    panel_inspector_toggle_animation       ).setMenu("inspector_toggle_animation")
         
-        registerFunction("Inspector", "Expand All Sections",   "",    MOD_KEY.none,    panel_inspector_section_expand_all   ).setMenu("inspector_expand_all_sections")
-        registerFunction("Inspector", "Collapse All Sections", "",    MOD_KEY.none,    panel_inspector_section_collapse_all ).setMenu("inspector_collapse_all_sections")
+        registerFunction(i, "Expand All Sections",   "",    MOD_KEY.none,    panel_inspector_section_expand_all     ).setMenu("inspector_expand_all_sections")
+        registerFunction(i, "Collapse All Sections", "",    MOD_KEY.none,    panel_inspector_section_collapse_all   ).setMenu("inspector_collapse_all_sections")
         
-        registerFunction("Inspector", "Reset",                 "",    MOD_KEY.none,    panel_inspector_reset                  ).setMenu("inspector_reset")
-        registerFunction("Inspector", "Animate",               "",    MOD_KEY.none,    panel_inspector_add                    ).setMenu("inspector_animate")
-        registerFunction("Inspector", "Reset Animation",       "",    MOD_KEY.none,    panel_inspector_remove                 ).setMenu("inspector_remove_animate")
-        registerFunction("Inspector", "Combine Axis",          "",    MOD_KEY.none,    panel_inspector_axis_combine           ).setMenu("inspector_combine_axis")
-        registerFunction("Inspector", "Separate Axis",         "",    MOD_KEY.none,    panel_inspector_axis_separate          ).setMenu("inspector_separate_axis")
-        registerFunction("Inspector", "Use Expression",        "",    MOD_KEY.none,    panel_inspector_use_expression         ).setMenu("inspector_use_expression")
-        registerFunction("Inspector", "Disable Expression",    "",    MOD_KEY.none,    panel_inspector_disable_expression     ).setMenu("inspector_disable_expression")
-        registerFunction("Inspector", "Extract to Globalvar",  "",    MOD_KEY.none,    panel_inspector_extract_global         ).setMenu("inspector_extract_global")
-        registerFunction("Inspector", "Extract Value",         "",    MOD_KEY.none,    panel_inspector_extract_single         ).setMenu("inspector_extract_value")
-        registerFunction("Inspector", "Toggle Bypass",         "",    MOD_KEY.none,    panel_inspector_junction_bypass_toggle ).setMenu("inspector_bypass_toggle")
+        registerFunction(i, "Reset",                 "",    MOD_KEY.none,    panel_inspector_reset                  ).setMenu("inspector_reset")
+        registerFunction(i, "Toggle Animation",      "",    MOD_KEY.none,    panel_inspector_add                    ).setMenu("inspector_animate")
+        registerFunction(i, "Reset Animation",       "",    MOD_KEY.none,    panel_inspector_remove                 ).setMenu("inspector_remove_animate")
+        registerFunction(i, "Combine Axis",          "",    MOD_KEY.none,    panel_inspector_axis_combine           ).setMenu("inspector_combine_axis")
+        registerFunction(i, "Separate Axis",         "",    MOD_KEY.none,    panel_inspector_axis_separate          ).setMenu("inspector_separate_axis")
+        registerFunction(i, "Use Expression",        "",    MOD_KEY.none,    panel_inspector_use_expression         ).setMenu("inspector_use_expression")
+        registerFunction(i, "Disable Expression",    "",    MOD_KEY.none,    panel_inspector_disable_expression     ).setMenu("inspector_disable_expression")
+        registerFunction(i, "Extract to Globalvar",  "",    MOD_KEY.none,    panel_inspector_extract_global         ).setMenu("inspector_extract_global")
+        registerFunction(i, "Extract Value",         "",    MOD_KEY.none,    panel_inspector_extract_single         ).setMenu("inspector_extract_value")
+        registerFunction(i, "Toggle Bypass",         "",    MOD_KEY.none,    panel_inspector_junction_bypass_toggle ).setMenu("inspector_bypass_toggle")
+        registerFunction(i, "Toggle Visible",        "",    MOD_KEY.none,    panel_inspector_visible_bypass_toggle  ).setMenu("inspector_visible_toggle")
         
         __fnGroupInit_Inspector();
     }
@@ -90,9 +94,9 @@ function Inspector_Custom_Renderer(drawFn, registerFn = noone) : widget() constr
     
     b_toggle = button(function() /*=>*/ { togglePopup(name); }).setIcon(THEME.node_goto, 0, COLORS._main_icon, .75);
     
-    static setName  = function(name) { self.name = name; return self; }
-    static setNode  = function(node) { self.node = node; return self; }
-    static toString = function()     { return $"Custon renderer: {name}"; }
+    static setName  = function(n) /*=>*/ { name = n; return self; }
+    static setNode  = function(n) /*=>*/ { node = n; return self; }
+    static toString = function( ) /*=>*/ { return $"Custon renderer: {name}"; }
     
     static step = function() {
         b_toggle.icon_blend = popupPanel == noone? COLORS._main_icon : COLORS._main_accent;
@@ -125,12 +129,11 @@ function Inspector_Custom_Renderer(drawFn, registerFn = noone) : widget() constr
     }
 }
 
-function Inspector_Sprite(spr) constructor { self.spr = spr; }
+function Inspector_Sprite(_spr) constructor { spr = _spr; }
 
-function Inspector_Label( text, font = f_p3) constructor { 
-    self.text = text; 
-    self.font = font; 
-    
+function Inspector_Label(_text, _font = f_p3) constructor { 
+    text = _text; 
+    font = _font; 
     open = true;
 }
 
@@ -170,8 +173,8 @@ function Panel_Inspector() : PanelContent() constructor {
     #endregion
     
     #region ---- properties ----
-        prop_hover      = noone;
-        prop_selecting  = noone;
+        prop_hover          = noone;
+        prop_selecting      = noone;
         
         prop_highlight      = noone;
         prop_highlight_time = 0;
@@ -180,11 +183,11 @@ function Panel_Inspector() : PanelContent() constructor {
         prop_sel_drag_x     = 0;
         prop_sel_drag_y     = 0;
     
-        color_picking = false;
-        picker_index  = 0;
-        picker_change = false;
+        color_picking       = false;
+        picker_index        = 0;
+        picker_change       = false;
         
-        attribute_hovering = noone;
+        attribute_hovering  = noone;
     #endregion
     
     drawWidgetInit();
@@ -219,10 +222,10 @@ function Panel_Inspector() : PanelContent() constructor {
     
     #region ---- metadata ----
         current_meta = -1;
-        meta_tb[0] = new textArea(TEXTBOX_INPUT.text, function(str) { current_meta.description = str; });    
-        meta_tb[1] = new textArea(TEXTBOX_INPUT.text, function(str) { current_meta.author      = str; });
-        meta_tb[2] = new textArea(TEXTBOX_INPUT.text, function(str) { current_meta.contact     = str; });
-        meta_tb[3] = new textArea(TEXTBOX_INPUT.text, function(str) { current_meta.alias       = str; });
+        meta_tb[0] = new textArea(TEXTBOX_INPUT.text, function(s) /*=>*/ { current_meta.description = s; });
+        meta_tb[1] = new textArea(TEXTBOX_INPUT.text, function(s) /*=>*/ { current_meta.author      = s; });
+        meta_tb[2] = new textArea(TEXTBOX_INPUT.text, function(s) /*=>*/ { current_meta.contact     = s; });
+        meta_tb[3] = new textArea(TEXTBOX_INPUT.text, function(s) /*=>*/ { current_meta.alias       = s; });
         meta_tb[4] = new textArrayBox(noone, META_TAGS);
         for( var i = 0, n = array_length(meta_tb); i < n; i++ )
             meta_tb[i].hide = true;
@@ -234,14 +237,17 @@ function Panel_Inspector() : PanelContent() constructor {
             [ __txt("Group Properties"),    false, "group prop" ], 
         ];
         
-        meta_steam_avatar = new checkBox(function() { STEAM_UGC_ITEM_AVATAR = !STEAM_UGC_ITEM_AVATAR; });
+        meta_steam_avatar = new checkBox(function() /*=>*/ { STEAM_UGC_ITEM_AVATAR = !STEAM_UGC_ITEM_AVATAR; });
         
-        global_button_edit = button(function() /*=>*/ { meta_display[2][1] = false; global_drawer.editing = !global_drawer.editing; }).setIcon(THEME.gear_16, 0, COLORS._main_icon_light);
-        global_button_new  = button(function() /*=>*/ { meta_display[2][1] = false; PROJECT.globalNode.createValue(); }).setIcon(THEME.add_16,  0, COLORS._main_value_positive);
+        global_button_edit = button(function() /*=>*/ { meta_display[2][1] = false; global_drawer.editing = !global_drawer.editing; })
+			.setIcon(THEME.gear_16, 0, COLORS._main_icon_light);
+                                    
+        global_button_new  = button(function() /*=>*/ { meta_display[2][1] = false; PROJECT.globalNode.createValue();               })
+			.setIcon(THEME.add_16,  0, COLORS._main_value_positive);
+                                
         global_buttons         = [ global_button_edit ];
         global_buttons_editing = [ global_button_edit, global_button_new ];
-        
-        global_drawer = new GlobalVarDrawer();
+        global_drawer          = new GlobalVarDrawer();
         
         GM_Explore_draw_init();
         
@@ -289,20 +295,18 @@ function Panel_Inspector() : PanelContent() constructor {
                 nodeCollapseAll(inspectings[i]);
         }
         
-        function junction_reset()              { if(__dialog_junction == noone) return; __dialog_junction.resetValue();            }
-        function junction_add()                { if(__dialog_junction == noone) return; __dialog_junction.setAnim(true, true);     }
-        function junction_remove()             { if(__dialog_junction == noone) return; __dialog_junction.setAnim(false, true);    }
-        function junction_axis_combine()       { if(__dialog_junction == noone) return; __dialog_junction.sep_axis = false;        }
-        function junction_axis_separate()      { if(__dialog_junction == noone) return; __dialog_junction.sep_axis = true;         }
-        function junction_use_expression()     { if(__dialog_junction == noone) return; __dialog_junction.expUse = true;           }
-        function junction_disable_expression() { if(__dialog_junction == noone) return; __dialog_junction.expUse = false;          }
-        function junction_extract_global()     { if(__dialog_junction == noone) return; __dialog_junction.extractGlobal();         }
-        function junction_extract_single()     { if(__dialog_junction == noone) return; __dialog_junction.extractNode();           }
-        function junction_bypass_toggle()      { 
-            if(__dialog_junction == noone || __dialog_junction.bypass_junc == noone) return; 
-            __dialog_junction.bypass_junc.visible = !__dialog_junction.bypass_junc.visible;
-            __dialog_junction.node.refreshNodeDisplay();
-        }
+        function junction_reset()              { if(__dialog_junction == noone) return; __dialog_junction.resetValue();         }
+        function junction_add()                { if(__dialog_junction == noone) return; __dialog_junction.setAnim(true, true);  }
+        function junction_remove()             { if(__dialog_junction == noone) return; __dialog_junction.setAnim(false, true); }
+        function junction_axis_combine()       { if(__dialog_junction == noone) return; __dialog_junction.sep_axis = false;     }
+        function junction_axis_separate()      { if(__dialog_junction == noone) return; __dialog_junction.sep_axis = true;      }
+        function junction_use_expression()     { if(__dialog_junction == noone) return; __dialog_junction.expUse   = true;      }
+        function junction_disable_expression() { if(__dialog_junction == noone) return; __dialog_junction.expUse   = false;     }
+        function junction_extract_global()     { if(__dialog_junction == noone) return; __dialog_junction.extractGlobal();      }
+        function junction_extract_single()     { if(__dialog_junction == noone) return; __dialog_junction.extractNode();        }
+        function junction_visible_toggle()     { if(__dialog_junction == noone) return; __dialog_junction.setVisibleManual(!__dialog_junction.visible_manual); }
+        function junction_bypass_toggle()      { if(__dialog_junction == noone || __dialog_junction.bypass_junc == noone) return; 
+            var b = __dialog_junction.bypass_junc; b.visible = !b.visible; __dialog_junction.node.refreshNodeDisplay(); }
         
         group_menu = [
             MENU_ITEMS.inspector_expand_all_sections,
@@ -320,6 +324,7 @@ function Panel_Inspector() : PanelContent() constructor {
         menu_junc_extract_global   = MENU_ITEMS.inspector_extract_global;
         menu_junc_extract          = MENU_ITEMS.inspector_extract_value;
         menu_junc_bypass_toggle    = MENU_ITEMS.inspector_bypass_toggle;
+        menu_junc_visible_toggle   = MENU_ITEMS.inspector_visible_toggle;
         
         menu_junc_copy             = MENU_ITEMS.inspector_copy_property;
         menu_junc_paste            = MENU_ITEMS.inspector_paste_property;
@@ -376,6 +381,55 @@ function Panel_Inspector() : PanelContent() constructor {
     function propSelectPaste() { 
     	if(!prop_selecting) return; 
     	prop_selecting.setString(clipboard_get_text()); 
+    }
+    
+    function propRightClick(jun) {
+          prop_selecting  = jun;
+        __dialog_junction = jun;
+        
+        var _menuItem = [ menu_junc_color, -1 ];
+        var _inp = jun.connect_type == CONNECT_TYPE.input;
+        
+        if(_inp) {
+            array_push(_menuItem, jun.is_anim? menu_junc_rem_anim : menu_junc_add_anim);
+            if(jun.sepable) array_push(_menuItem, jun.sep_axis? menu_junc_combine_axis : menu_junc_separate_axis);
+            array_push(_menuItem, menu_junc_visible_toggle, menu_junc_bypass_toggle);
+	        array_push(_menuItem, jun.expUse? menu_junc_expression_dis : menu_junc_expression_ena);
+	        	
+	        if(jun.globalExtractable()) {
+	    		array_push(_menuItem, menuItemShelf(__txtx("panel_inspector_use_global", "Use Globalvar"), function(_dat) /*=>*/ { 
+	    			var arr = [];
+	                for( var i = 0, n = array_length(PROJECT.globalNode.inputs); i < n; i++ ) {
+	            		var _glInp = PROJECT.globalNode.inputs[i];
+	            		if(!typeCompatible(_glInp.type, __dialog_junction.type)) continue;
+	            		array_push(arr, menuItem(_glInp.name, function(d) /*=>*/ { __dialog_junction.setExpression(d.name); }, noone, noone, noone, { name : _glInp.name }));
+	            	}
+	                return submenuCall(_dat, arr);
+	            }));
+	        	
+	        	array_push(_menuItem, menu_junc_extract_global);
+	        }
+        }
+        
+        array_push(_menuItem, -1, menu_junc_reset_value, menu_junc_copy, menu_junc_paste.setActive(_inp));
+        
+        if(_inp && jun.extract_node != "") {
+            if(is_array(jun.extract_node)) {
+                array_push(_menuItem, menuItemShelf(__txtx("panel_inspector_extract_multiple", "Extract to..."), function(_dat) /*=>*/ { 
+                    var arr = [];
+                    for(var i = 0; i < array_length(__dialog_junction.extract_node); i++)  {
+                        var _rec = __dialog_junction.extract_node[i];
+                        array_push(arr, menuItem(ALL_NODES[$ _rec].name, 
+                        	function(d) /*=>*/ { __dialog_junction.extractNode(d.name); }, noone, noone, noone, { name : _rec }));
+                    }
+                        
+                    return submenuCall(_dat, arr);
+                }));
+                
+            } else array_push(_menuItem, menu_junc_extract);
+        }
+        
+        return menuCall("inspector_value_menu", _menuItem);
     }
     
     ////- DRAW
@@ -986,12 +1040,18 @@ function Panel_Inspector() : PanelContent() constructor {
                 var cc, aa = 1;
                 
                 if(togl != noone) {
+                	var jun = _inspecting.inputs[togl];
+                	
                     if(_hover && point_in_rectangle(_m[0], _m[1], 0, yy, ui(32), yy + lbh)) {
                         contentPane.hover_content = true;
                         draw_sprite_stretched_ext(THEME.box_r5_clr, 0, 0, yy, ui(32), lbh, COLORS.panel_inspector_group_hover, 1);
                         
                         if(mouse_press(mb_left, pFOCUS))
-                            _inspecting.inputs[togl].setValue(!toging);
+                            jun.setValue(!toging);
+                            
+                        if(mouse_press(mb_right, pFOCUS))
+                    		propRightClick(jun);
+                            
                     } else 
                         draw_sprite_stretched_ext(THEME.box_r5_clr, 0, 0, yy, ui(32), lbh, COLORS.panel_inspector_group_bg, 1);
                     
@@ -1116,58 +1176,8 @@ function Panel_Inspector() : PanelContent() constructor {
                 if(mouse_press(mb_left, pFOCUS))
                     prop_selecting = jun;
                         
-                if(mouse_press(mb_right, pFOCUS && mbRight)) { // right click menu
-                    prop_selecting = jun;
-                    
-                    var _menuItem = [ menu_junc_color, -1 ];
-                    var _inp = jun.connect_type == CONNECT_TYPE.input;
-                    
-                    if(i < amoIn) {
-                        array_push(_menuItem, menu_junc_reset_value, jun.is_anim? menu_junc_rem_anim : menu_junc_add_anim);
-                        if(jun.sepable) array_push(_menuItem, jun.sep_axis? menu_junc_combine_axis : menu_junc_separate_axis);
-                        array_push(_menuItem, -1);
-                    }
-                    
-                    if(_inp) array_push(_menuItem, menu_junc_bypass_toggle);
-                    
-                    array_push(_menuItem, jun.expUse? menu_junc_expression_dis : menu_junc_expression_ena);
-                    if(jun.globalExtractable()) {
-                    	
-                		array_push(_menuItem, menuItemShelf(__txtx("panel_inspector_use_global", "Use Globalvar"), function(_dat) /*=>*/ { 
-                			var arr = [];
-                            for( var i = 0, n = array_length(PROJECT.globalNode.inputs); i < n; i++ ) {
-	                    		var _glInp = PROJECT.globalNode.inputs[i];
-	                    		if(!typeCompatible(_glInp.type, __dialog_junction.type)) continue;
-	                    		array_push(arr, menuItem(_glInp.name, function(d) /*=>*/ { __dialog_junction.setExpression(d.name); }, noone, noone, noone, { name : _glInp.name }));
-	                    	}
-                            return submenuCall(_dat, arr);
-                        }));
-                    	
-                    	array_push(_menuItem, menu_junc_extract_global);
-                    }
-                    
-                    array_push(_menuItem, -1, menu_junc_copy);
-                    if(_inp) array_push(_menuItem, menu_junc_paste);
-                    
-                    if(_inp && jun.extract_node != "") {
-                        if(is_array(jun.extract_node)) {
-                            array_push(_menuItem, menuItemShelf(__txtx("panel_inspector_extract_multiple", "Extract to..."), function(_dat) /*=>*/ { 
-                                var arr = [];
-                                for(var i = 0; i < array_length(__dialog_junction.extract_node); i++)  {
-                                    var _rec = __dialog_junction.extract_node[i];
-                                    array_push(arr, menuItem(ALL_NODES[$ _rec].name, 
-                                    	function(d) /*=>*/ { __dialog_junction.extractNode(d.name); }, noone, noone, noone, { name : _rec }));
-                                }
-                                    
-                                return submenuCall(_dat, arr);
-                            }));
-                            
-                        } else array_push(_menuItem, menu_junc_extract);
-                    }
-                    
-                    var dia = menuCall("inspector_value_menu", _menuItem);
-                    __dialog_junction = jun;
-                }
+                if(mouse_press(mb_right, pFOCUS && mbRight))
+                    propRightClick(jun);
             } 
         }
         

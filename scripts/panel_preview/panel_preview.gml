@@ -1889,7 +1889,7 @@ function Panel_Preview() : PanelContent() constructor {
             
             if(right_menu_x == 0) right_menu_x = w - ui(8);
             
-            if(PROJECT.previewSetting.show_info) {
+            if(PROJECT.previewSetting.show_info && !CAPTURING) {
                 if(PANEL_PREVIEW == self) {
                     draw_set_color(COLORS._main_text_accent);
                     draw_text(right_menu_x, right_menu_y, __txt("Active"));
@@ -2037,6 +2037,7 @@ function Panel_Preview() : PanelContent() constructor {
     
     function drawViewController() {
         if(!PROJECT.previewSetting.show_view_control) return;
+        if(CAPTURING) return;
         
         var _side   = PROJECT.previewSetting.show_view_control == 1? 1 : -1;
         var _view_x = PROJECT.previewSetting.show_view_control == 1? 
@@ -2201,6 +2202,7 @@ function Panel_Preview() : PanelContent() constructor {
         params.panel = self;
         
         var _nlist = PANEL_GRAPH.nodes_list;
+        if(!CAPTURING)
         for( var i = 0, n = array_length(_nlist); i < n; i++ ) {
         	var _n = _nlist[i];
         	if(!is(_n, Node))     continue;
@@ -2262,7 +2264,7 @@ function Panel_Preview() : PanelContent() constructor {
 				_ovs *= _trans[2];
             }
             
-            _node.drawOverlay(overHover, overActive, _ovx, _ovy, _ovs, _mx, _my, _snx, _sny, params);
+            if(!CAPTURING) _node.drawOverlay(overHover, overActive, _ovx, _ovy, _ovs, _mx, _my, _snx, _sny, params);
             
         } else {
             if(key_mod_press(CTRL) || PROJECT.previewSetting.d3_tool_snap) {
@@ -2270,7 +2272,7 @@ function Panel_Preview() : PanelContent() constructor {
                 _sny = PROJECT.previewSetting.d3_tool_snap_rotation;
             }
             
-            _node.drawOverlay3D(overActive, d3_scene, _mx, _my, _snx, _sny, params);
+            if(!CAPTURING) _node.drawOverlay3D(overActive, d3_scene, _mx, _my, _snx, _sny, params);
         }
         
         overlay_hovering = false;

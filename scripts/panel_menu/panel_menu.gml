@@ -252,9 +252,9 @@ function Panel_Menu() : PanelContent() constructor {
     if(TESTING) {
         array_push(menus, [ __txt("Dev"), [
             MENU_ITEMS.console_panel,
-            menuItem(__txtx("panel_debug_overlay", "Debug overlay"),                              function() /*=>*/ { show_debug_overlay(true);                      }),
-            menuItem(__txtx("panel_menu_profile_render", "Render Profiler"),                      function() /*=>*/ { dialogPanelCall(new Panel_Profile_Render());   }),
-            // menuItem(__txtx("panel_menu_resource_monitor", "Resource Monitor"),                   () => { dialogPanelCall(new Panel_Resource_Monitor()); }),
+            menuItem(__txt("Debug overlay"),   function() /*=>*/ { show_debug_overlay(true);                      }),
+            menuItem(__txt("Render Profiler"), function() /*=>*/ { dialogPanelCall(new Panel_Profile_Render());   }),
+            menuItem(__txt("Capture"),         function() /*=>*/ { dialogPanelCall(new Panel_Capture_Project());  }),
             -1, 
             
             menuItem(__txtx("panel_menu_tester", "Save frozen"),                                  function() /*=>*/ { PROJECT.freeze = true; SAVE();                 }),

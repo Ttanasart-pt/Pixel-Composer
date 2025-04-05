@@ -830,13 +830,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var iamo = getInputAmount();
 		if(input_display_dynamic != -1 && iamo) {
 			
-			for(var i = 0; i < array_length(input_display_list_raw); i++) {
+			for( var i = 0, n = array_length(input_display_list_raw); i < n; i++ ) {
 				var ind = input_display_list_raw[i];
 				if(!is_real(ind)) continue;
 				
 				var jun = array_safe_get(inputs, ind, noone);
-				if(jun == noone || is_undefined(jun)) continue;
-				if(!jun.isVisible()) continue;
+				if(!is(jun, NodeValue) || !jun.isVisible()) continue;
 				
 				array_push(inputDisplayList, jun);
 			}
@@ -848,26 +847,36 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 					if(!is_real(input_display_dynamic[j])) continue;
 					
 					var _in_ind = ind + input_display_dynamic[j];
-					
 					var jun = array_safe_get(inputs, _in_ind, noone);
-					if(jun == noone || is_undefined(jun)) continue;
-					if(!jun.isVisible()) continue;
+					if(!is(jun, NodeValue) || !jun.isVisible()) continue;
 					
 					array_push(inputDisplayList, jun);
 				}
 			}
 			
-		} else {
-			var amo = input_display_list == -1? array_length(inputs) : array_length(input_display_list);
+		} else if (input_display_list != -1) {
 			
-			for(var i = 0; i < amo; i++) {
-				var ind = getInputJunctionIndex(i);
-				if(ind == noone) continue;
+			for( var i = 0, n = array_length(input_display_list); i < n; i++ ) {
+				var ind = input_display_list[i];
 				
-				var jun = array_safe_get(inputs, ind, noone);
-				if(jun == noone || is_undefined(jun)) continue;
-				if(!jun.isVisible()) continue;
-				
+				if(is_real(ind)) {
+					var jun = array_safe_get(inputs, ind, noone);
+					if(!is(jun, NodeValue) || !jun.isVisible()) continue;
+					array_push(inputDisplayList, jun);
+					
+				} else if(is_array(ind) && array_length(ind) >= 3) {
+					var _trInd = ind[2];
+					var jun = array_safe_get(inputs, _trInd, noone);
+					if(!is(jun, NodeValue) || !jun.isVisible()) continue;
+					array_push(inputDisplayList, jun);
+				}
+			}
+			
+		} else {
+			
+			for( var i = 0, n = array_length(inputs); i < n; i++ ) {
+				var jun = inputs[i];
+				if(!is(jun, NodeValue) || !jun.isVisible()) continue;
 				array_push(inputDisplayList, jun);
 			}
 		}
@@ -2122,6 +2131,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(!active)           return;
 		if(_s * w < 64)       return;
 		if(!previewable)      return;
+		if(CAPTURING)         return;
 		
 		draw_set_text(f_p3, fa_center, fa_top, COLORS.panel_graph_node_dimension);
 		var tx = xx + w * _s / 2;

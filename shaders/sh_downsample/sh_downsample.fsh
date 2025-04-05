@@ -1,11 +1,8 @@
-//
-// Simple passthrough fragment shader
-//
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 uniform float down;
-uniform vec2 dimension;
+uniform vec2  dimension;
 
 void main() {
 	vec4 col  = vec4(0.);

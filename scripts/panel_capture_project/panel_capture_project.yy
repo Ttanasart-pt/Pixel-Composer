@@ -1,0 +1,14 @@
+{
+  "$GMScript":"v1",
+  "%Name":"panel_capture_project",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"panel_capture_project",
+  "parent":{
+    "name":"debug",
+    "path":"folders/panels/_others/debug.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+  "tags":[],
+}

@@ -298,7 +298,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
             show_dimension  : true,
             show_compute    : true,
             show_view_control : 1,
-        
+        	
             avoid_label     : false,
             preview_scale   : 100,
             highlight       : false,
@@ -1209,6 +1209,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
     
     function drawViewController() { //
         if(h < ui(96)) return;
+        if(CAPTURING)  return;
     	
         view_hovering = false;
         if(!display_parameter.show_view_control) return;
@@ -2765,7 +2766,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
     
     function drawTooltipHints() {
     	if(!display_parameter.show_tooltip) { tooltip_overlay = {}; return; }
-	
+		if(CAPTURING) return;
+		
         var _over = variable_struct_get_names(tooltip_overlay);
     	var _tx   = ui(16);
     	var _ty   = h - toolbar_height - ui(10);
@@ -2888,6 +2890,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         mouse_on_graph = true;
         
         #region draw metadata
+        if(!CAPTURING) {
 	        draw_set_text(f_p2, fa_right, fa_top, COLORS._main_text_sub);
 	        
 	        var _zmsl = tb_zoom_level.selecting || tb_zoom_level.hovering || tb_zoom_level.sliding;
@@ -2909,6 +2912,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	    	draw_set_text(f_p2, fa_right, fa_top, _zmc);
 	        if(!tb_zoom_level.selecting && !tb_zoom_level.sliding)
 		    	draw_text(_zmx - _zmw + ui(14), ovy + ui(1), "x");
+        }
     	#endregion
     	
         drawToolBar();
@@ -2917,9 +2921,6 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         drawViewController();
         
         if(pFOCUS && !view_hovering) array_foreach(nodes_selecting, function(node) { node.focusStep(); });
-        
-             if(UPDATE == RENDER_TYPE.full)    draw_text(w - ui(8), ui(28), __txtx("panel_graph_rendering", "Rendering") + "...");
-        else if(UPDATE == RENDER_TYPE.partial) draw_text(w - ui(8), ui(28), __txtx("panel_graph_rendering_partial", "Rendering partial") + "...");
         
         graph_dragging_key = false;
         graph_zooming_key  = false;
