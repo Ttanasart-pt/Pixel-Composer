@@ -238,15 +238,21 @@ function Panel_Preference() : PanelContent() constructor {
     		));
     	
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_directory_assets", "Assets directory path*"),
+    			__txtx("pref_directory_assets", "Assets directory paths*"),
     			"path_assets",
     			new folderArrayBox(PREFERENCES.path_assets, function() /*=>*/ { PREF_SAVE(); }).setFont(f_p2),
     		));
     	
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_directory_font", "Font directory path*"),
+    			__txtx("pref_directory_font", "Font directory paths*"),
     			"path_fonts",
     			new folderArrayBox(PREFERENCES.path_fonts, function() /*=>*/ { PREF_SAVE(); }).setFont(f_p2),
+    		));
+    		
+    		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
+    			__txtx("pref_directory_welcome", "Welcome file directory paths*"),
+    			"path_welcome",
+    			new folderArrayBox(PREFERENCES.path_welcome, function() /*=>*/ { PREF_SAVE(); }).setFont(f_p2),
     		));
     	
     	ds_list_add(pref_global, __txt("Libraries"));

@@ -73,7 +73,9 @@ function path_is_project(path, checkExist = true) {
 	if(checkExist && !file_exists_empty(path)) return false;
 	
 	var ext = filename_ext(path);
-	    ext = string_lower(string_letters(ext));
+	    ext = string_letters(ext);
+	    ext = string_lower(ext);
+	    ext = string_trim(ext, ["."]);
 	
 	switch(ext) {
 		case "pxc":

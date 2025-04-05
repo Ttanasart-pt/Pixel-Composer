@@ -216,6 +216,8 @@ event_inherited();
 			_boxx = _nx;
 			
 			if(yy > -grid_heigh && yy < sp_sample.surface_h) {
+				var spr = _project.getSpr();
+				
 				draw_sprite_stretched(THEME.node_bg, 0, _boxx, yy, grid_width, grid_heigh);
 				
 				if(_project.path == PROJECT.path) {
@@ -239,7 +241,6 @@ event_inherited();
 					}
 				}
 				
-				var spr = _project.getSpr();
 				if(spr) {
 					var gw = grid_width - ui(4);
 					var gh = grid_heigh - ui(4);

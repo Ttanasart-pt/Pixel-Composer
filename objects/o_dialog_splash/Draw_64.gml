@@ -171,19 +171,22 @@ if !ready exit;
 	draw_sprite_stretched_ext(THEME.ui_panel, 1, x0, y0, x1 - x0, y1 - y0, COLORS.panel_frame);
 	draw_sprite_bbox(THEME.ui_panel_tab, 3, tab_cover);
 	
+	var bs = ui(32);
+	var bx = x1 - ui(32);
+	var by = y0 - ui(36);
+	
 	switch(pages[project_page]) {
 		case "Welcome Files" :
 			sp_sample.setFocusHover(sFOCUS, sHOVER);
 			sp_sample.draw(x0 + ui(6), y0 + 1);
+			
+			if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txt("Open Welcome Folder"), THEME.path_open) == 2)
+				shellOpenExplorer($"{DIRECTORY}Welcome files");
 			break;
 			
 		case "Workshop" : 
 			sp_sample.setFocusHover(sFOCUS, sHOVER);
 			sp_sample.draw(x0 + ui(6), y0 + 1);
-			
-			var bs = ui(32);
-			var bx = x1 - ui(32);
-			var by = y0 - ui(36);
 			
 			if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txtx("workshop_open", "Open Steam Workshop"), THEME.steam) == 2)
 				steam_activate_overlay_browser("https://steamcommunity.com/app/2299510/workshop/");

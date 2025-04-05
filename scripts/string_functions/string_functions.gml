@@ -36,31 +36,6 @@ function string_char_last(str, shift = 0) {
 	INLINE
 	return string_char_at(str, string_length(str) - shift);
 }
-
-function filename_name_validate(name) {
-	static reserved = [ "/", "\\", ".", "<", ">", ":", "\"", "|", "?", "*" ];
-	static no = [ "CON", "PRN", "AUX", "NUL", "COM0", "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9", "LPT0", "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9" ];
-	
-	for (var i = 0, n = array_length(reserved); i < n; i++)
-		name = string_replace_all(name, reserved[i], "");
-	
-	for (var i = 0, n = array_length(no); i < n; i++)
-		if(string_lower(name) == string_lower(no[i]))
-			return "";
-	
-	return name;
-}
-
-function filename_name_only(name) {
-	name = filename_name(name);
-	return string_replace(name, filename_ext(name), "")
-}
-
-function filename_ext_verify(_path, _ext) {
-	var _pext = filename_ext(_path);
-	if(_pext == _ext) return _path;
-	return filename_dir(_path) + "/" + filename_name_only(_path) + _ext;
-}
 	
 function string_to_var(str) {
 	str = string_lower(str);
