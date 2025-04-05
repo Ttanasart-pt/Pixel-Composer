@@ -5,6 +5,7 @@
     function panel_preview_focus_content()              { CALL("preview_focus_content");             PANEL_PREVIEW.fullView();                                                }
     function panel_preview_save_current_frame()         { CALL("preview_save_current_frame");        PANEL_PREVIEW.saveCurrentFrame();                                        }
     function panel_preview_saveCurrentFrameToFocus()    { CALL("preview_save_to_focused_file");      PANEL_PREVIEW.saveCurrentFrameToFocus();                                 }
+    function panel_preview_saveCurrentFrameProject()    { CALL("preview_save_to_project");           PANEL_PREVIEW.saveCurrentFrameProject();                                 }
     function panel_preview_save_all_current_frame()     { CALL("preview_save_all_current_frame");    PANEL_PREVIEW.saveAllCurrentFrames();                                    }
     function panel_preview_preview_window()             { CALL("preview_preview_window");            PANEL_PREVIEW.create_preview_window(PANEL_PREVIEW.getNodePreview());     }
     
@@ -60,23 +61,24 @@
     	var a = MOD_KEY.alt;
     	var cs = MOD_KEY.ctrl | MOD_KEY.shift;
     	
-        registerFunction(p, "Clear tool",               "A", n, panel_preview_clear_tool               )
+        registerFunction(p, "Clear Tool",               "A", n, panel_preview_clear_tool               )
         
-        registerFunction(p, "Focus content",            "F", n, panel_preview_focus_content            ).setMenu("preview_focus_content", THEME.icon_center_canvas)
-        registerFunction(p, "Save current frame",       "S", s, panel_preview_save_current_frame       ).setMenu("preview_save_current_frame")
-        registerFunction(p, "Save to focused file",     "",  n, panel_preview_saveCurrentFrameToFocus  ).setMenu("preview_save_to_focused_file")
-        registerFunction(p, "Save all current frame",   "",  n, panel_preview_save_all_current_frame   ).setMenu("preview_save_all_current_frame")
-        registerFunction(p, "Preview window",           "P", c, panel_preview_preview_window           ).setMenu("preview_preview_window")
+        registerFunction(p, "Focus Content",            "F", n, panel_preview_focus_content            ).setMenu("preview_focus_content", THEME.icon_center_canvas)
+        registerFunction(p, "Save Current Frame",       "S", s, panel_preview_save_current_frame       ).setMenu("preview_save_current_frame")
+        registerFunction(p, "Save to Focused File",     "",  n, panel_preview_saveCurrentFrameToFocus  ).setMenu("preview_save_to_focused_file")
+        registerFunction(p, "Save to Project",          "",  n, panel_preview_saveCurrentFrameProject  ).setMenu("preview_save_to_project")
+        registerFunction(p, "Save all Current Frames",  "",  n, panel_preview_save_all_current_frame   ).setMenu("preview_save_all_current_frame")
+        registerFunction(p, "Preview Window",           "P", c, panel_preview_preview_window           ).setMenu("preview_preview_window")
     
         registerFunction(p, "Pan",                      "", c,     panel_preview_pan                   ).setMenu("preview_pan")
         registerFunction(p, "Zoom",                     "", a | c, panel_preview_zoom                  ).setMenu("preview_zoom")
         
-        registerFunction(p, "3D Front view",            vk_numpad1, n, panel_preview_3d_view_front     ).setMenu("preview_3d_front_view")
-        registerFunction(p, "3D Back view",             vk_numpad1, a, panel_preview_3d_view_back      ).setMenu("preview_3d_back_view")
-        registerFunction(p, "3D Right view ",           vk_numpad3, n, panel_preview_3d_view_right     ).setMenu("preview_3d_right_view")
-        registerFunction(p, "3D Left view ",            vk_numpad3, a, panel_preview_3d_view_left      ).setMenu("preview_3d_left_view")
-        registerFunction(p, "3D Top view",              vk_numpad7, n, panel_preview_3d_view_top       ).setMenu("preview_3d_top_view")
-        registerFunction(p, "3D Bottom view",           vk_numpad7, a, panel_preview_3d_view_bottom    ).setMenu("preview_3d_bottom_view")
+        registerFunction(p, "3D Front View",            vk_numpad1, n, panel_preview_3d_view_front     ).setMenu("preview_3d_front_view")
+        registerFunction(p, "3D Back View",             vk_numpad1, a, panel_preview_3d_view_back      ).setMenu("preview_3d_back_view")
+        registerFunction(p, "3D Right View",            vk_numpad3, n, panel_preview_3d_view_right     ).setMenu("preview_3d_right_view")
+        registerFunction(p, "3D Left View",             vk_numpad3, a, panel_preview_3d_view_left      ).setMenu("preview_3d_left_view")
+        registerFunction(p, "3D Top View",              vk_numpad7, n, panel_preview_3d_view_top       ).setMenu("preview_3d_top_view")
+        registerFunction(p, "3D Bottom View",           vk_numpad7, a, panel_preview_3d_view_bottom    ).setMenu("preview_3d_bottom_view")
         
         registerFunction(p, "Scale x1",                 "1", n, function() /*=>*/ { panel_preview_set_zoom(1) }    ).setMenu("preview_scale_x1")
         registerFunction(p, "Scale x2",                 "2", n, function() /*=>*/ { panel_preview_set_zoom(2) }    ).setMenu("preview_scale_x2")
@@ -2607,6 +2609,7 @@ function Panel_Preview() : PanelContent() constructor {
                 -1,
                 MENU_ITEMS.preview_save_current_frame, 
                 MENU_ITEMS.preview_save_all_current_frames, 
+                MENU_ITEMS.preview_save_to_project, 
                 -1,
                 MENU_ITEMS.preview_copy_current_frame, 
                 MENU_ITEMS.preview_copy_color, 
@@ -2798,19 +2801,42 @@ function Panel_Preview() : PanelContent() constructor {
         _fileO.refreshThumbnail();
     }
     
+    function saveCurrentFrameProject(_max_size = undefined) {
+    	var prevS = getNodePreviewSurface();
+        if(!is_surface(prevS)) return;
+        
+        var path = PROJECT.path; 
+        if(!file_exists_empty(path)) { noti_warning("Save the project first."); return; }
+        path = filename_ext_verify(path, ".png");
+        
+        if(_max_size == undefined) {
+        	surface_save_safe(prevS, path);
+        	return;
+        }
+        
+        var _sw = surface_get_width_safe(prevS);
+        var _sh = surface_get_height_safe(prevS);
+        var _ss = max(1, min(_max_size / _sw, _max_size / _sh));
+        
+        var _surf = surface_create(_ss * _sw, _ss * _sh);
+        surface_set_shader(_surf, sh_sample, true, BLEND.over);
+        	draw_surface_ext(prevS, 0, 0, _ss, _ss, 0, c_white, 1);
+        surface_reset_shader();
+        
+        surface_save_safe(_surf, path);
+        surface_free(_surf);
+    }
+    
     function saveCurrentFrame() {
         var prevS = getNodePreviewSurface();
         var _node = getNodePreview();
-        
-        if(_node == noone) return;
-        if(!is_surface(prevS)) return;
+        if(_node == noone || !is_surface(prevS)) return;
         
         var path = get_save_filename_pxc("image|*.png;*.jpg", _node.display_name == ""? "export" : _node.display_name, "Save surface as"); 
         key_release();
         
         if(path == "") return;
-        if(filename_ext(path) != ".png") path += ".png";
-        
+        path = filename_ext_verify(path, ".png");
         surface_save_safe(prevS, path);
     }
     

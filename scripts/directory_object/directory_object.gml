@@ -59,14 +59,16 @@ function FileObject(_path) constructor {
 		if(sprFetchID != noone) return -1;
 		
 		if(array_empty(spr_path)) {
+			var _spath = filename_ext_verify(path, ".png");
+			
 			if(loadThumbnailAsync) {
-				sprFetchID = sprite_add_ext(self.path, 0, 0, 0, true);
+				sprFetchID = sprite_add_ext(_spath, 0, 0, 0, true);
 				IMAGE_FETCH_MAP[? sprFetchID] = function(load_result) {
 					spr = load_result[? "id"];
 					if(spr) sprite_set_offset(spr, sprite_get_width(spr) / 2, sprite_get_height(spr) / 2);
 				};
 			} else {
-				spr = sprite_add(self.path, 0, 0, 0, 0, 0);
+				spr = sprite_add(_spath, 0, 0, 0, 0, 0);
 				if(spr) sprite_set_offset(spr, sprite_get_width(spr) / 2, sprite_get_height(spr) / 2);
 			}
 			
@@ -75,7 +77,6 @@ function FileObject(_path) constructor {
 		
 		var _path = array_safe_get_fast(spr_path, 0);
 		var _amo  = array_safe_get_fast(spr_path, 1);
-		
 		if(!file_exists_empty(_path)) return -1;
 		
 		if(loadThumbnailAsync) {

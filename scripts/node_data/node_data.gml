@@ -763,7 +763,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(!auto_height) return;
 		
 		var _ps = is_surface(getGraphPreviewSurface()) || preserve_height_for_preview;
-		var _ou = preview_channel >= 0 && preview_channel < array_length(outputs) && outputs[preview_channel].type == VALUE_TYPE.surface;
+		var _oo = array_safe_get(outputs, preview_channel, noone)
+		var _ou = _oo != noone && _oo.type == VALUE_TYPE.surface;
 		var _prev_surf = previewable && preview_draw && (_ps || _ou);
 		
 		junction_draw_hei_y = SHOW_PARAM?  32 : 16;

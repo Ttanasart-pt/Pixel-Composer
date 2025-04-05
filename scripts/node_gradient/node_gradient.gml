@@ -28,7 +28,8 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	newInput(2, nodeValue_Enum_Scroll("Type", self,  0, [ new scrollItem("Linear",   s_node_gradient_type, 0),
 												          new scrollItem("Circular", s_node_gradient_type, 1),
-												          new scrollItem("Radial",   s_node_gradient_type, 2) ]));
+												          new scrollItem("Radial",   s_node_gradient_type, 2),
+												          new scrollItem("Diamond",  s_node_gradient_type, 3), ]));
 	
 	newInput(3, nodeValue_Rotation("Angle", self, 0))
 		.setMappable(10);
@@ -110,13 +111,6 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	}
 	
 	static step = function() {
-		var _typ = getInputData(2);
-		
-		inputs[ 3].setVisible(_typ != 1);
-		inputs[ 4].setVisible(_typ == 1);
-		inputs[14].setVisible(_typ);
-		inputs[17].setVisible(_typ == 1);
-		
 		inputs[1].mappableStep();
 		inputs[3].mappableStep();
 		inputs[4].mappableStep();
@@ -125,13 +119,18 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
-		var _dim  = _data[0];
-		var _typ  = _data[2];
-		var _cnt  = _data[6];
-		var _lop  = _data[7];
-		var _msk  = _data[8];
+		var _dim  = _data[ 0];
+		var _typ  = _data[ 2];
+		var _cnt  = _data[ 6];
+		var _lop  = _data[ 7];
+		var _msk  = _data[ 8];
 		var _uni  = _data[14];
 		var _csca = _data[17];
+		
+		inputs[ 3].setVisible(_typ != 1);
+		inputs[ 4].setVisible(_typ == 1);
+		inputs[14].setVisible(_typ);
+		inputs[17].setVisible(_typ == 1);
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		

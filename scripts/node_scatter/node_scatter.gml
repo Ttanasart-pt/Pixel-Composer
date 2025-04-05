@@ -370,10 +370,10 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		#endregion
 		
 		#region update
-			var _calPos = CURRENT_FRAME == 0 || !IS_PLAYING;
+			var _calPos = true;
 			
-			for( var i = 0, n = array_length(transform_prop); i < n; i++ )
-				_calPos |= inputs[transform_prop[i]].isDynamic();
+			// for( var i = 0, n = array_length(transform_prop); i < n; i++ )
+			// 	_calPos |= inputs[transform_prop[i]].isDynamic();
 		#endregion
 		
 		var _outSurf = _outData[0];

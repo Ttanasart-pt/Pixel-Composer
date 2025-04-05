@@ -3285,6 +3285,7 @@
     {"id":{"name":"s_icon_24","path":"sprites/s_icon_24/s_icon_24.yy",},},
     {"id":{"name":"s_icon_256","path":"sprites/s_icon_256/s_icon_256.yy",},},
     {"id":{"name":"s_icon_32","path":"sprites/s_icon_32/s_icon_32.yy",},},
+    {"id":{"name":"s_icon_64_white","path":"sprites/s_icon_64_white/s_icon_64_white.yy",},},
     {"id":{"name":"s_icon_64","path":"sprites/s_icon_64/s_icon_64.yy",},},
     {"id":{"name":"s_inspector_wavetable","path":"sprites/s_inspector_wavetable/s_inspector_wavetable.yy",},},
     {"id":{"name":"s_junc_aseprite","path":"sprites/s_junc_aseprite/s_junc_aseprite.yy",},},

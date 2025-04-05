@@ -160,6 +160,9 @@ uniform vec2 cirScale;
 	
 #endregion //////////////////////////////////// GRADIENT ////////////////////////////////////
 
+float sLength(vec2 p) { return max(abs(p.x), abs(p.y)); }
+float dLength(vec2 p) { return (abs(p.x) + abs(p.y));   }
+
 void main() {
 	#region params
 		float ang = angle.x;
@@ -206,7 +209,11 @@ void main() {
 		float _a = atan(_p.y, _p.x) + ang;
 		prog = (_a - floor(_a / TAU) * TAU) / TAU;
 		
-	}
+	} else if(type == 3) { // diamond
+		vec2 _asp = uniAsp == 0? vec2(1.) : asp;
+		prog = dLength((v_vTexcoord - center) * _asp / cirScale) / rad;
+		
+	} 
 	
 	prog = (prog + shf - 0.5) / sca + 0.5;
 	

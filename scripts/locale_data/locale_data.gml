@@ -33,6 +33,8 @@ function __locale_file(file) {
 function loadLocale() {
 	LOCALE.word   = json_load_struct(__locale_file("/words.json"));
 	LOCALE.ui     = json_load_struct(__locale_file("/UI.json"));
+	LOCALE.texts  = struct_append(LOCALE.word, LOCALE.ui);
+	
 	LOCALE.node   = json_load_struct(__locale_file("/nodes.json"));
 	LOCALE.config = json_load_struct(__locale_file("/config.json"));
 	
@@ -54,10 +56,7 @@ function __txtx(key, def = "") {
 		return "";
 	}
 	
-	if(struct_has(LOCALE.word, key)) return LOCALE.word[$ key];
-	if(struct_has(LOCALE.ui, key))   return LOCALE.ui[$ key];
-	
-	return def;
+	return LOCALE.texts[$ key] ?? def;
 }
 
 function __txt(txt, prefix = "") {

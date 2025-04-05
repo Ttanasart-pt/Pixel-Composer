@@ -170,9 +170,9 @@ event_inherited();
 		var name_height = 0;
 		
 		grid_space = (ww - col * grid_width) / (col + 1);
-		var group_labels  = [];
-		var _curr_tag = "";
-		var _cur_col  = 0;
+		var group_labels = [];
+		var _curr_tag    = "";
+		var _cur_col     = 0;
 		var _nx, _boxx;
 		var _meta;
 		
@@ -217,12 +217,34 @@ event_inherited();
 			
 			if(yy > -grid_heigh && yy < sp_sample.surface_h) {
 				var spr = _project.getSpr();
+				var gridX = _boxx;
+				var gridY = yy;
+				var gridW = grid_width;
+				var gridH = grid_heigh;
 				
-				draw_sprite_stretched(THEME.node_bg, 0, _boxx, yy, grid_width, grid_heigh);
+				if(sprite_exists(spr)) {
+					var gw = grid_width - ui(4);
+					var gh = grid_heigh - ui(4);
+					
+					var sw = sprite_get_width(spr);
+					var sh = sprite_get_height(spr);
+					
+					var s = min(gw / sw, gh / sh);
+					if(abs(s - 1) < 0.1) s = 1;
+					
+					gridW = sw * s + ui(4);
+					gridX = gridX + grid_width / 2 - gridW / 2;
+					
+				} else {
+					gridW = gridH;
+					gridX = gridX + grid_width / 2 - gridW / 2;
+				}
+					
+				draw_sprite_stretched(THEME.node_bg, 0, gridX, gridY, gridW, gridH);
 				
 				if(_project.path == PROJECT.path) {
-					draw_sprite_stretched_ext(THEME.node_bg, 0, _boxx, yy, grid_width, grid_heigh, COLORS._main_accent, 1);
-					draw_sprite_stretched_add(THEME.node_bg, 1, _boxx, yy, grid_width, grid_heigh, COLORS._main_accent, 0.25);
+					draw_sprite_stretched_ext(THEME.node_bg, 0, gridX, gridY, gridW, gridH, COLORS._main_accent, 1);
+					draw_sprite_stretched_add(THEME.node_bg, 1, gridX, gridY, gridW, gridH, COLORS._main_accent, 0.25);
 				}
 					
 				if(sHOVER && sp_sample.hover && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_heigh)) {
@@ -233,25 +255,15 @@ event_inherited();
 						TOOLTIP = _meta;
 					}
 					
-					draw_sprite_stretched_ext(THEME.node_bg, 1, _boxx, yy, grid_width, grid_heigh, COLORS._main_accent, 1);
+					draw_sprite_stretched_ext(THEME.node_bg, 1, gridX, gridY, gridW, gridH, COLORS._main_accent, 1);
 					if(mouse_press(mb_left, sFOCUS)) {
-						LOAD_PATH(_project.path, true);
+						LOAD_PATH(_project.path, !TESTING);
 						PROJECT.thumbnail = array_safe_get_fast(_project.spr_path, 0);
 						instance_destroy();
 					}
 				}
 				
-				if(spr) {
-					var gw = grid_width - ui(4);
-					var gh = grid_heigh - ui(4);
-					// print($"{gw}, {gh}");
-					
-					var sw = sprite_get_width(spr);
-					var sh = sprite_get_height(spr);
-					
-					var s = min(gw / sw, gh / sh);
-					if(abs(s - 1) < 0.1) s = 1;
-					
+				if(sprite_exists(spr)) {
 					var ox = (sprite_get_xoffset(spr) - sw / 2) * s;
 					var oy = (sprite_get_yoffset(spr) - sh / 2) * s;
 					
@@ -274,9 +286,15 @@ event_inherited();
 						surface_reset_target();
 						
 						draw_surface(clip_surf, _sx, _sy);
-					} else {
+					} else 
 						draw_sprite_uniform(spr, 0, _sx, _sy, s);
-					}
+					
+				} else {
+					
+					var _sx = _boxx + grid_width / 2;
+					var _sy = yy    + grid_heigh / 2;
+					
+					draw_sprite_ext(s_icon_64_white, 0, _sx, _sy, 1, 1, 0, COLORS._main_icon, 1);
 				}
 			}
 			
@@ -286,7 +304,7 @@ event_inherited();
 			if(string_digits(string_char_at(_name, 1)) != "")
 				_name = string_copy(_name, string_pos(" ", _name), string_length(_name) - string_pos(" ", _name) + 1);
 			
-			draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text);
+			draw_set_text(f_p3, fa_center, fa_top, COLORS._main_text);
 			name_height = max(name_height, string_height_ext(_name, -1, grid_width) + ui(8));
 			draw_text_ext_add(tx, ty - ui(2), _name, -1, grid_width);
 			
