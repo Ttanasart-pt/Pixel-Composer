@@ -3169,7 +3169,21 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         clipboard_set_text(json_stringify_minify(_map));
     } 
 
+    function doPasteSurface() {
+    	var s = clipboard_get_surface();
+    	if(s == noone) return false;
+    	
+    	var n = nodeBuild("Node_Image_Buffer", mouse_grid_x, mouse_grid_y).skipDefault();
+    	n.attributes.data   = s.buffer;
+		n.attributes.width  = s.w;
+		n.attributes.height = s.h;
+		surface_free_safe(s.surface);
+		return true;
+    }
+    
     function doPaste() {
+    	if(doPasteSurface()) return;
+    	
         var txt  = clipboard_get_text();
         var _map = json_try_parse(txt, noone);
         
@@ -3732,15 +3746,25 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         var dia = dialogPanelCall(pan);
     }
     
-    function searchWiki() {
-    	if(array_empty(nodes_selecting)) return;
+    function __searchWiki() {
     	var _node = nodes_selecting[0];
     	var _type = instanceof(_node);
     	    _type = string_lower(_type);
     	    _type = string_replace(_type, "node_", "");
     	var _url  = $"https://docs.pixel-composer.com/nodes/_index/{_type}.html";
-    	
     	URL_open(_url);
+    }
+    
+    function searchWiki() {
+    	if(array_empty(nodes_selecting)) return;
+    	
+    	
+    	var dia = dialogCall(o_dialog_generic)
+    		.setContent("Open URL", "Open documentation in browser?")
+    		.setButtons([
+				[ __txt("Open"),   function() /*=>*/ {return __searchWiki()} ],
+				[ __txt("Cancel"), function() /*=>*/ {} ],
+			]);
     }
     
     ////- Serialize

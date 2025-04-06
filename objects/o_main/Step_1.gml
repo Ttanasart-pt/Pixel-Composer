@@ -126,15 +126,16 @@ _FILE_DROPPED     = false;
 		var loc = DIRECTORY + "Autosave/";
 		directory_verify(loc);
 		
-		var fname = string_replace(filename_name(PROJECT.path), filename_ext(PROJECT.path), "") + 
-			"_autosave" + string(current_year) + "-" + 
-			string_lead_zero(current_month, 2) + "-" + 
-			string_lead_zero(current_day, 2) + "T" + 
-			string_lead_zero(current_hour, 2) + 
-			string_lead_zero(current_minute, 2) + 
-			string_lead_zero(current_second, 2) + filename_ext(PROJECT.path);
+		var fname = $"{filename_name_only(PROJECT.path)}_autosave"
+		    + string(current_year)                + "-" 
+			+ string_lead_zero(current_month,  2) + "-"
+			+ string_lead_zero(current_day,    2) + "T" 
+			+ string_lead_zero(current_hour,   2) 
+			+ string_lead_zero(current_minute, 2)
+			+ string_lead_zero(current_second, 2) 
+			+ filename_ext(PROJECT.path);
 		
-		try		 { SAVE_AT(PROJECT, loc + fname, "Autosaved "); }
+		try		 { SAVE_AT(PROJECT, loc + fname, "Autosaved ", false); }
 		catch(e) { print(exception_print(e)); }
 	}
 #endregion

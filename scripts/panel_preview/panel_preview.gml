@@ -2766,21 +2766,7 @@ function Panel_Preview() : PanelContent() constructor {
     
     function copyCurrentFrame() {
         var prevS = getNodePreviewSurface();
-        if(!is_surface(prevS)) return;
-        
-        var buff = buffer_create(surface_get_width_safe(prevS) * surface_get_height_safe(prevS) * 4, buffer_fixed, 1);
-        var s = surface_create(surface_get_width_safe(prevS), surface_get_height_safe(prevS));
-        
-        surface_set_target(s);
-            shader_set(sh_BGR);
-            draw_surface_safe(prevS);
-            shader_reset();
-        surface_reset_target();
-        
-        buffer_get_surface(buff, s, 0);
-        surface_free(s);
-        
-        clipboard_set_bitmap(buffer_get_address(buff), surface_get_width_safe(prevS), surface_get_height_safe(prevS));
+        clipboard_set_surface(prevS);
     }
     
     function saveCurrentFrameToFocus() {
@@ -2801,11 +2787,11 @@ function Panel_Preview() : PanelContent() constructor {
         _fileO.refreshThumbnail();
     }
     
-    function saveCurrentFrameProject(_max_size = undefined) {
+    function saveCurrentFrameProject(_max_size = undefined, _path = undefined) {
     	var prevS = getNodePreviewSurface();
         if(!is_surface(prevS)) return;
         
-        var path = PROJECT.path; 
+        var path = _path ?? PROJECT.path; 
         if(!file_exists_empty(path)) { noti_warning("Save the project first."); return; }
         path = filename_ext_verify(path, ".png");
         

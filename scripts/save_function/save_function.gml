@@ -68,7 +68,7 @@ function SAVE_AS(project = PROJECT) {
 	return true;
 }
 
-function SAVE_AT(project = PROJECT, path = "", log = "save at ") {
+function SAVE_AT(project = PROJECT, path = "", log = "save at ", _thum = true) {
 	CALL("save");
 	
 	if(DEMO) return false;
@@ -96,12 +96,11 @@ function SAVE_AT(project = PROJECT, path = "", log = "save at ") {
 	SAVING = false;
 	project.readonly  = false;
 	project.modified  = false;
-	project.path      = path;
 	
 	log_message("FILE", log + path, THEME.noti_icon_file_save);
 	PANEL_MENU.setNotiIcon(THEME.noti_icon_file_save);
 	
-	if(PREFERENCES.save_thumbnail) PANEL_PREVIEW.saveCurrentFrameProject(128);
+	if(_thum && PREFERENCES.save_thumbnail) PANEL_PREVIEW.saveCurrentFrameProject(128, path);
 	
 	return true;
 }

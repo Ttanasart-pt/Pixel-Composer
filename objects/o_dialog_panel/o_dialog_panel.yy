@@ -10,8 +10,8 @@
   "name":"o_dialog_panel",
   "overriddenProperties":[],
   "parent":{
-    "name":"dialog",
-    "path":"folders/dialog.yy",
+    "name":"_others",
+    "path":"folders/dialog/_others.yy",
   },
   "parentObjectId":{
     "name":"_p_dialog",

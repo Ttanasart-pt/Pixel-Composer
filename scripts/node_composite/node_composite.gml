@@ -40,11 +40,11 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	renaming       = noone;
 	rename_text    = "";
 	renaming_index = noone;
-	tb_rename      = new textBox(TEXTBOX_INPUT.text, function(_name) { 
+	tb_rename      = new textBox(TEXTBOX_INPUT.text, function(_n) { 
 		if(renaming == noone) return;
 		
-		     if(is_real(renaming))  inputs[renaming].setName(_name);
-		else if(is(renaming, Node)) renaming.setDisplayName(_name) 
+		     if(is_real(renaming))  inputs[renaming].setName(_n);
+		else if(is(renaming, Node)) renaming.setDisplayName(_n) 
 		
 		renaming       = noone;
 		renaming_index = noone;

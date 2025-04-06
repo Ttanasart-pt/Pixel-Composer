@@ -1,0 +1,14 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_image_buffer",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_image_buffer",
+  "parent":{
+    "name":"image",
+    "path":"folders/nodes/data/io/image.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+  "tags":[],
+}

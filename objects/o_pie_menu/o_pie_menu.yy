@@ -9,8 +9,8 @@
   "name":"o_pie_menu",
   "overriddenProperties":[],
   "parent":{
-    "name":"dialog",
-    "path":"folders/dialog.yy",
+    "name":"_others",
+    "path":"folders/dialog/_others.yy",
   },
   "parentObjectId":null,
   "persistent":false,

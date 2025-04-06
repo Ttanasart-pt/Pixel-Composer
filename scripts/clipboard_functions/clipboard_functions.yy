@@ -1,0 +1,14 @@
+{
+  "$GMScript":"v1",
+  "%Name":"clipboard_functions",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"clipboard_functions",
+  "parent":{
+    "name":"clipboard",
+    "path":"folders/functions/clipboard.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+  "tags":[],
+}
