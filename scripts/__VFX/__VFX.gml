@@ -100,6 +100,7 @@ function __part(_node) : __particleObject() constructor {
 	rotT     = noone;
 	rot_base = 0;
 	rot_s	 = 0;
+	rot_snap = 0;
 	
 	path      = noone;
 	pathIndex = 0;
@@ -240,7 +241,7 @@ function __part(_node) : __particleObject() constructor {
 		ground_friction	= clamp(1 - _ground_frict, 0, 1);
 	}
 	
-	static setTransform = function(_scx, _scy, _sct, _rot, _rots, _rott, _follow) {
+	static setTransform = function(_scx, _scy, _sct, _rot, _rots, _rott, _rot_snap, _follow) {
 		INLINE
 		
 		sc_sx = _scx;
@@ -250,6 +251,7 @@ function __part(_node) : __particleObject() constructor {
 		rot_base = _rot;
 		rot      = _rot;
 		rotT     = _rott;
+		rot_snap = _rot_snap;
 		rot_s    = _rots;
 		follow   = _follow;
 	}
@@ -469,10 +471,12 @@ function __part(_node) : __particleObject() constructor {
 		
 		var _xx = drawx;
 		var _yy = drawy;
+		var _rr = drawrot;
+		_rr = value_snap(_rr, rot_snap);
 		
 		var s_w = (_useS? surface_get_width_safe(_surf)  : 1) * scx;
 		var s_h = (_useS? surface_get_height_safe(_surf) : 1) * scy;
-		var _pp = point_rotate(-s_w / 2, -s_h / 2, 0, 0, rot);
+		var _pp = point_rotate(-s_w / 2, -s_h / 2, 0, 0, _rr);
 		_xx += _pp[0];
 		_yy += _pp[1];
 		
@@ -492,7 +496,7 @@ function __part(_node) : __particleObject() constructor {
 		switch(render_type) {
 			case PARTICLE_RENDER_TYPE.surface : 
 				if(surface_exists(_surf)) {
-					draw_surface_ext_safe(_surf, _xx, _yy, scx, scy, drawrot, currColor, alp_draw);
+					draw_surface_ext_safe(_surf, _xx, _yy, scx, scy, _rr, currColor, alp_draw);
 					
 				} else {
 					var ss = round(min(scx, scy));

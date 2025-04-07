@@ -2,8 +2,6 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	name = "Spawner";
 	update_on_frame = true;
 	
-	inputs = array_create(61);
-	
 	newInput(32, nodeValueSeed(self));
 	
 	////- Sprite
@@ -45,6 +43,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	newInput( 8, nodeValue_Rotation_Random( "Initial Rotation",           self, [ 0, 0, 0, 0, 0 ] ));
 	newInput( 9, nodeValue_Rotation_Random( "Rotational Speed",           self, [ 0, 0, 0, 0, 0 ] ));
 	newInput(59, nodeValue_Curve(           "Rotational Speed Over Time", self, CURVE_DEFN_11));
+	newInput(61, nodeValue_Float(           "Snap Rotation",              self, 0));
 	
 	////- Scale
 	
@@ -103,6 +102,8 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	newInput(31, nodeValue_Surface("Atlas",      self, [])).setArrayDepth(1);
 	newInput(48, nodeValue_Trigger("Reset Seed", self )).setDisplay(VALUE_DISPLAY.button, { name: "Trigger" })
 	
+	// inputs 62
+	
 	array_foreach(inputs, function(i) /*=>*/ {return i.rejectArray()}, 1);
 	input_len = array_length(inputs);
 	
@@ -141,7 +142,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		["Sprite",	   false],	    0, dynaDraw_parameter, 22, 23, 49, 26,
 		["Spawn",		true],	   27, 16, 44,  1, 51,  2,  4,  3, 30, 55, 24, __inspc(ui(6), true), 52,  5, 
 		["Movement",	true],     29, 53,  6, 18, 60, 
-		["Rotation",	true],	   15,  8,  9, 59, 
+		["Rotation",	true],	   15,  8,  9, 59, 61, 
 		["Scale",		true],	   10, 17, 11, 
 		["Color",		true],	   12, 28, 50, 13, 14, 56, 
 		__inspc(ui(6), true, false, ui(3)), 
@@ -214,6 +215,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		
 		var _rotation   	= getInputData( 8);
 		var _rotation_speed	= getInputData( 9);
+		var _rotation_snap	= getInputData(61);
 		var _scale      	= getInputData(10);
 		var _size       	= getInputData(17);
 		var _follow     	= getInputData(15);
@@ -317,8 +319,9 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 				
 			var _lif = irandom_range(_life[0], _life[1]);
 				
-			var _rot	 = angle_random_eval(_rotation);
-			var _rot_spd = angle_random_eval(_rotation_speed);
+			var _rot	  = angle_random_eval(_rotation);
+			var _rot_spd  = angle_random_eval(_rotation_speed);
+			var _rot_snap = _rotation_snap;
 			
 			var _dirRand = angle_random_eval(_direction);
 			var _dirr	 = _dirRand;
@@ -365,7 +368,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			part.setWiggle(_use_wig, wiggle_maps);
 			
 			part.setGround(_ground, _ground_offset, _ground_bounce, _ground_frict);
-			part.setTransform(_scx, _scy, curve_scale, _rot, _rot_spd, curve_rotate, _follow);
+			part.setTransform(_scx, _scy, curve_scale, _rot, _rot_spd, curve_rotate, _rot_snap, _follow);
 			part.setDraw(_color, _bld, _alp, curve_alpha);
 			part.setPath(_path, curve_path_div);
 			part.params = custom_parameter_map;
