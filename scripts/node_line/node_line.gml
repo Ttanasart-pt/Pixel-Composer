@@ -9,95 +9,74 @@
 function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {	
 	name = "Draw Line";
 	
-	newInput(0, nodeValue_Dimension(self));
+	newInput(39, nodeValueSeed(self));
 	
-	newInput(1, nodeValue_Bool("Background", self, false));
+	////- Output
 	
-	newInput(2, nodeValue_Int("Segment", self, 1))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 32, 0.1] });
+	newInput( 0, nodeValue_Dimension(self));
+	newInput( 1, nodeValue_Bool(    "Background",            self, false));
+	newInput(30, nodeValue_Bool(    "Use Path Bounding Box", self, false ));
+	newInput(31, nodeValue_Padding( "Padding",               self, [ 0, 0, 0, 0 ]))
+	newInput(16, nodeValue_Bool(    "Width Pass",            self, false));
 	
-	newInput(3, nodeValue_Vec2("Width", self, [ 2, 2 ]));
+	////- Line data
 	
-	newInput(4, nodeValue_Float("Wiggle", self, 0))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 16, 0.01] });
+	newInput(27, nodeValue_Enum_Scroll( "Data Type",      self, 1, [ "None", "Path", "Segments", "Two points" ]));
+	newInput( 6, nodeValue_Rotation(    "Rotation",       self, 0));
+	newInput( 7, nodeValue_PathNode(    "Path",           self, noone, "Draw line along path.")).setVisible(true, true);
+	newInput(28, nodeValue_Vector(      "Segments",       self, [[]])).setArrayDepth(2);
+	newInput(32, nodeValue_Vec2(        "Start Point",    self, [ 0, 0.5 ])).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput(33, nodeValue_Vec2(        "End Point",      self, [ 1, 0.5 ])).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput(35, nodeValue_Bool(        "Force Loop",     self, false));
+	newInput(19, nodeValue_Bool(        "Fix Length",     self, false, "Fix length of each segment instead of segment count."));
+	newInput( 2, nodeValue_ISlider(     "Segment",        self, 1, [1, 32, 0.1]));
+	newInput(20, nodeValue_Float(       "Segment Length", self, 4));
 	
-	newInput(5, nodeValue_Float("Random Seed", self, 0));
+	////- Width
 	
-	newInput(6, nodeValue_Rotation("Rotation", self, 0));
+	newInput(17, nodeValue_Bool(  "1px Mode",             self, false, "Render pixel perfect 1px line."));
+	newInput( 3, nodeValue_Vec2(  "Width",                self, [ 2, 2 ]));
+	newInput(11, nodeValue_Curve( "Width over Length",    self, CURVE_DEF_11));
+	newInput(12, nodeValue_Bool(  "Span Width over Path", self, false, "Apply the full 'width over length' to the trimmed path."));
+	newInput(36, nodeValue_Bool(  "Apply Weight",         self, true));
 	
-	newInput(7, nodeValue_PathNode("Path", self, noone, "Draw line along path."))
-		.setVisible(true, true);
+	////- Line settings
 	
-	newInput(8, nodeValue_Slider_Range("Range", self, [0, 1]))
-		.setTooltip("Range of the path to draw.");
+	newInput( 8, nodeValue_Slider_Range( "Range",         self, [0, 1])).setTooltip("Range of the path to draw.");
+	newInput(25, nodeValue_Bool(         "Invert",        self, false ));
+	newInput( 9, nodeValue_Float(        "Shift",         self, 0));
+	newInput(26, nodeValue_Bool(         "Clamp Range",   self, false ));
+	newInput(13, nodeValue_Enum_Button(  "End Cap",       self, 0, __enum_array_gen([ "None", "Round", "Tri" ], s_node_line_cap)));
+	newInput(14, nodeValue_ISlider(      "Round Segment", self, 8, [2, 32, 0.1]));
 	
-	newInput(9, nodeValue_Float("Shift", self, 0));
+	////- Wiggle
 	
-	newInput(10, nodeValue_Gradient("Color over Length", self, new gradientObject(cola(c_white))));
+	newInput(4, nodeValue_Slider( "Wiggle",     self, 0, [0, 16, 0.01]));
+	newInput(5, nodeValue_Float(  "Random Seed", self, 0));
 	
-	newInput(11, nodeValue_Curve("Width over Length", self, CURVE_DEF_11));
+	////- Color
 	
-	newInput(12, nodeValue_Bool("Span Width over Path", self, false, "Apply the full 'width over length' to the trimmed path."));
-		
-	newInput(13, nodeValue_Enum_Button("End Cap", self, 0, [ new scrollItem("None",  s_node_line_cap, 0), 
-	                                                         new scrollItem("Round", s_node_line_cap, 1),
-	                                                         new scrollItem("Tri",   s_node_line_cap, 2), ]));
+	newInput(10, nodeValue_Gradient( "Color over Length",    self, new gradientObject(ca_white)));
+	newInput(24, nodeValue_Gradient( "Random Blend",         self, new gradientObject(ca_white)));
+	newInput(15, nodeValue_Bool(     "Span Color over Path", self, false, "Apply the full 'color over length' to the trimmed path."));
+	newInput(37, nodeValue_Gradient( "Color Weight",         self, new gradientObject(ca_white)));
+	newInput(38, nodeValue_Vec2(     "Color Range",          self, [ 0, 1 ]));
 	
-	newInput(14, nodeValue_Int("Round Segment", self, 8))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [2, 32, 0.1] });
+	////- Texture
 	
-	newInput(15, nodeValue_Bool("Span Color over Path", self, false, "Apply the full 'color over length' to the trimmed path."));
+	newInput(18, nodeValue_Surface(  "Texture",                 self));
+	newInput(21, nodeValue_Vec2(     "Texture Position",        self, [ 0, 0 ]));
+	newInput(22, nodeValue_Rotation( "Texture Rotation",        self, 0));
+	newInput(23, nodeValue_Vec2(     "Texture Scale",           self, [ 1, 1 ]));
+	newInput(29, nodeValue_Bool(     "Scale Texture to Length", self, true ));
 	
-	newInput(16, nodeValue_Bool("Width Pass", self, false));
-	
-	newInput(17, nodeValue_Bool("1px Mode", self, false, "Render pixel perfect 1px line."));
-	
-	newInput(18, nodeValue_Surface("Texture", self));
-	
-	newInput(19, nodeValue_Bool("Fix Length", self, false, "Fix length of each segment instead of segment count."));
-	
-	newInput(20, nodeValue_Float("Segment Length", self, 4));
-	
-	newInput(21, nodeValue_Vec2("Texture Position", self, [ 0, 0 ]));
-	
-	newInput(22, nodeValue_Rotation("Texture Rotation", self, 0));
-	
-	newInput(23, nodeValue_Vec2("Texture Scale", self, [ 1, 1 ]));
-	
-	newInput(24, nodeValue_Gradient("Random Blend", self, new gradientObject(cola(c_white))));
-	
-	newInput(25, nodeValue_Bool("Invert", self, false ));
-	
-	newInput(26, nodeValue_Bool("Clamp Range", self, false ));
-	
-	newInput(27, nodeValue_Enum_Scroll("Data Type", self, 1, [ "None", "Path", "Segments", "Two points" ]));
-	
-	newInput(28, nodeValue_Vector("Segments", self, [[]]))
-		.setArrayDepth(2);
-		
-	newInput(29, nodeValue_Bool("Scale Texture to Length", self, true ));
-	
-	newInput(30, nodeValue_Bool("Use Path Bounding Box", self, false ));
-	
-	newInput(31, nodeValue_Padding("Padding", self, [ 0, 0, 0, 0 ]))
-		
-	newInput(32, nodeValue_Vec2("Start Point", self, [ 0, 0.5 ]))
-		.setUnitRef(function(index) /*=>*/ {return getDimension(index)}, VALUE_UNIT.reference);
-		
-	newInput(33, nodeValue_Vec2("End Point", self, [ 1, 0.5 ]))
-		.setUnitRef(function(index) /*=>*/ {return getDimension(index)}, VALUE_UNIT.reference);
-	
+	////- Render
+
 	newInput(34, nodeValue_Enum_Scroll("SSAA", self, 0, [ "None", "2x", "4x", "8x" ]));
 	
-	newInput(35, nodeValue_Bool("Force Loop", self, false));
+	//// Inputs 40
 	
-	newInput(36, nodeValue_Bool("Apply Weight", self, true));
-	
-	newInput(37, nodeValue_Gradient("Color Weight", self, new gradientObject(cola(c_white))));
-	
-	newInput(38, nodeValue_Vec2("Color Range", self, [ 0, 1 ]));
-	
-	input_display_list = [
+	input_display_list = [ 39, 
 		["Output",         true], 0, 1, 30, 31, 16, 
 		["Line data",     false], 27, 6, 7, 28, 32, 33, 35, 19, 2, 20, 
 		["Width",         false], 17, 3, 11, 12, 36, 
@@ -162,40 +141,6 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		return is(_path, Node)? _path : self; 
 	}
 	
-	static step = function() {
-		var px    = !getInputData(17);
-		var _tex  = inputs[18].value_from != noone;
-		var _flen = getInputData(19);
-		
-		inputs[ 3].setVisible(px);
-		inputs[11].setVisible(px);
-		inputs[12].setVisible(px);
-		inputs[13].setVisible(px && !_tex);
-		inputs[14].setVisible(px);
-		inputs[18].setVisible(px);
-		
-		inputs[15].setVisible(!_tex);
-		inputs[16].setVisible(!_tex);
-		
-		inputs[ 2].setVisible(!_flen);
-		inputs[20].setVisible( _flen);
-		
-		var _pat   = getInputData( 7);
-		var _dtype = getInputData(27);
-		var _segs  = getInputData(28);
-		var _pbbox = getInputData(30);
-		
-		inputs[ 6].setVisible(_dtype == 0);
-		inputs[ 7].setVisible(_dtype == 1, _dtype == 1);
-		inputs[28].setVisible(_dtype == 2, _dtype == 2);
-		
-		inputs[30].setVisible( _dtype == 1 || _dtype == 2);
-		inputs[31].setVisible((_dtype == 1 || _dtype == 2) && _pbbox);
-		
-		inputs[32].setVisible(_dtype == 3);
-		inputs[33].setVisible(_dtype == 3);
-	}
-	
 	static onValueUpdate = function(index = 0) {
 		if(index == 11) ds_map_clear(widthMap);
 	}
@@ -253,12 +198,41 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _wg2clr   = _data[37];
 			var _wg2clrR  = _data[38];
 			
+			var _seed     = _data[39];
+			
 			if(_dtype == 1 && _pat == noone) 
 				_dtype = 0;
 				
 			if(_dtype == 2 && (array_invalid(_segs) || array_invalid(_segs[0]))) 
 				_dtype = 0; 
+				
+			var _utex = inputs[18].value_from != noone;
+		
+			inputs[ 3].setVisible(!_1px);
+			inputs[11].setVisible(!_1px);
+			inputs[12].setVisible(!_1px);
+			inputs[13].setVisible(!_1px && !_utex);
+			inputs[14].setVisible(!_1px);
+			inputs[18].setVisible(!_1px);
+			
+			inputs[15].setVisible(!_utex);
+			inputs[16].setVisible(!_utex);
+			
+			inputs[ 2].setVisible(!_fixL);
+			inputs[20].setVisible( _fixL);
+			
+			inputs[ 6].setVisible(_dtype == 0);
+			inputs[ 7].setVisible(_dtype == 1, _dtype == 1);
+			inputs[28].setVisible(_dtype == 2, _dtype == 2);
+			
+			inputs[30].setVisible( _dtype == 1 || _dtype == 2);
+			inputs[31].setVisible((_dtype == 1 || _dtype == 2) && _pbbox);
+			
+			inputs[32].setVisible(_dtype == 3);
+			inputs[33].setVisible(_dtype == 3);
 		#endregion
+		
+		random_set_seed(_seed);
 		
 		if(IS_FIRST_FRAME || inputs[11].is_anim)
 			ds_map_clear(widthMap);
@@ -372,7 +346,8 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					var _total_prev = _total;								// Use to prevent infinite loop
 					var _freeze		= 0;									// Use to prevent infinite loop
 						
-					var _prog_curr	= _clamp? _shift : frac(_shift);		// Pointer to the current position
+					var _sh         = _shift;
+					var _prog_curr	= _clamp? _sh : frac(_sh);		        // Pointer to the current position
 					var _prog_next  = 0;
 					var _prog		= _prog_curr + 1;						// Record previous position to delete from _total
 					var _prog_total	= 0;									// Record the distance the pointer has moved so far

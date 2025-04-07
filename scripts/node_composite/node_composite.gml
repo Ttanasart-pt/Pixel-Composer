@@ -29,11 +29,6 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	attributes.layer_selectable = [];
 	properties_expand = [];
 	
-	hold_visibility = true;
-	hold_select		= true;
-	layer_dragging	= noone;
-	layer_remove	= -1;
-	
 	canvas_group    = noone;
 	canvas_draw     = noone;
 	
@@ -52,6 +47,11 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	tb_rename.font = f_p1;
 	tb_rename.hide = true;
 	
+	hold_visibility = true;
+	hold_select		= true;
+	
+	layer_dragging	= noone;
+	layer_remove	= -1;
 	layer_height    = 0;
 	layer_renderer	= new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		PROCESSOR_OVERLAY_CHECK
@@ -391,14 +391,12 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			return;
 		} 
 		
-		for( var i = 0; i < data_length; i++ )
-			array_delete(inputs, idx, 1);
+		for( var i = 0; i < data_length; i++ ) {
+			var _in = array_safe_get(inputs, idx+i, noone);
+			if(_in != noone) _in.removeFrom();
+		}
 		
-		input_display_list = array_clone(input_display_list_raw, 1);
-		
-		for(var i = input_fix_len, n = array_length(inputs); i < n; i++)
-			array_push(input_display_list, i);
-		
+		refreshDynamicDisplay();
 		doUpdate();
 	}
 	
@@ -406,21 +404,16 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var inAmo = array_length(inputs);
 		var _s    = floor((index - input_fix_len) / data_length);
 		
-		newInput(index + 0, nodeValue_Surface($"Surface {_s}", self, noone));
+		newInput(index + 0, nodeValue_Surface(     $"Surface {_s}",  self, noone));
 		inputs[index + 0].hover_effect  = 0;
 		
-		newInput(index + 1, nodeValue_Vec2($"Position {_s}", self, [ 0, 0 ] ))
-			.setUnitRef(function(index) { return [ overlay_w, overlay_h ]; });
-		
-		newInput(index + 2, nodeValue_Rotation($"Rotation {_s}", self, 0));
+		newInput(index + 1, nodeValue_Vec2(        $"Position {_s}", self, [0,0] )).setUnitRef(function() /*=>*/ {return [ overlay_w, overlay_h ]});
+		newInput(index + 2, nodeValue_Rotation(    $"Rotation {_s}", self, 0));
 		inputs[index + 2].options_histories = [ BLEND_TYPES, { cond: function() /*=>*/ {return LOADING_VERSION < 1_18_00_0}, list: global.BLEND_TYPES_18 } ];
 		
-		newInput(index + 3, nodeValue_Vec2($"Scale {_s}", self, [ 1, 1 ] ));
-		
-		newInput(index + 4, nodeValue_Enum_Scroll($"Blend {_s}", self,  0, BLEND_TYPES ));
-		
-		newInput(index + 5, nodeValue_Float($"Opacity {_s}", self, 1))
-			.setDisplay(VALUE_DISPLAY.slider);
+		newInput(index + 3, nodeValue_Vec2(        $"Scale {_s}",    self, [ 1, 1 ] ));
+		newInput(index + 4, nodeValue_Enum_Scroll( $"Blend {_s}",    self, 0, BLEND_TYPES ));
+		newInput(index + 5, nodeValue_Slider(      $"Opacity {_s}",  self, 1));
 		
 		while(_s >= array_length(attributes.layer_visible))    array_push(attributes.layer_visible,    true);
 		while(_s >= array_length(attributes.layer_selectable)) array_push(attributes.layer_selectable, true);
@@ -434,10 +427,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		["Transform", false], 1, 2, 3, 
 	];
 	
-	input_display_dynamic_full = function(j) { 
-		var _sname = $"Surface {j}";
-		return [ [_sname, false], 0, 4, 5, __inspc(ui(4), true, true, ui(4)), 1, 2, 3 ]; 
-	}
+	input_display_dynamic_full = function(j) { return [ [ $"Surface {j}", false], 0, 4, 5, __inspc(ui(4), true, true, ui(4)), 1, 2, 3 ]; }
 	
 	input_display_list = [
 		["Output",	 true],	0, 1, 2,

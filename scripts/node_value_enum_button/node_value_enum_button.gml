@@ -27,6 +27,4 @@ function __NodeValue_Enum_Button(_name, _node, _value, _data) : NodeValue(_name,
 	static arrayLength = arrayLengthSimple;
 }
 
-//Replacement regex 
-// (nodeValue)(.*self,\s*)(CONNECT_TYPE\.input, VALUE_TYPE\.integer,)(.*(?=\)))(.*\n.*)(\.setDisplay\(VALUE_DISPLAY\.enum_button)
-// nodeValue_Enum_Button$2$4
+function __enum_array_gen(arr, spr) { __spr = spr; return array_map(arr, function(v,i) /*=>*/ {return new scrollItem(v, __spr, i)}); }
