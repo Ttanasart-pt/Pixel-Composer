@@ -20,4 +20,16 @@ function Node_Image_Buffer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		outputs[0].setValue(_surf);
 	}
+	
+	static attributeSerialize = function() { 
+		var _buff = buffer_serialize(attributes.data);
+		return { buffer: _buff }; 
+	}
+	
+	static attributeDeserialize = function(attr) {
+		struct_override(attributes, attr, true); 
+		
+		var _buff = attr.buffer;
+		attributes.data = buffer_deserialize(_buff);
+	}
 }

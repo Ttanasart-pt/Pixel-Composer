@@ -194,6 +194,7 @@ void main() {
 	
 	vec2  asp  = dimension / dimension.y;
 	float prog = 0.;
+	mat2  rot  = mat2(cos(ang), - sin(ang), sin(ang), cos(ang));
 	
 	if(type == 0) { // linear
 		prog = .5 + (v_vTexcoord.x - center.x) * cos(ang) - (v_vTexcoord.y - center.y) * sin(ang);
@@ -211,7 +212,7 @@ void main() {
 		
 	} else if(type == 3) { // diamond
 		vec2 _asp = uniAsp == 0? vec2(1.) : asp;
-		prog = dLength((v_vTexcoord - center) * _asp / cirScale) / rad;
+		prog = dLength((v_vTexcoord - center) * rot * _asp / cirScale) / rad;
 		
 	} 
 	
@@ -219,6 +220,7 @@ void main() {
 	
 	if(gradient_loop == 1) {
 		prog = fract(prog < 0.? 1. - abs(prog) : prog);
+		
 	} else if(gradient_loop == 2) {
 		prog = mod(abs(prog), 2.);
 		if(prog >= 1.) prog = 2. - prog;
