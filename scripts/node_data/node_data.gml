@@ -546,7 +546,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	function onInputResize() { refreshDynamicInput(); triggerRender(); }
 	
-	static getOutput = function(_y, junc = noone) {
+	static getOutput = function(_y = 0, junc = noone) {
 		var _targ = noone;
 		var _dy   = 9999;
 		
@@ -2321,8 +2321,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 	}
 	
-	static drawActive = function(_x, _y, _s, ind = 0) {
-		active_draw_index = ind;
+	static drawActive = function(ind = 0) {
+		active_draw_index = max(active_draw_index, ind);
 		if(display_parameter.highlight) drawBranch();
 	}
 	

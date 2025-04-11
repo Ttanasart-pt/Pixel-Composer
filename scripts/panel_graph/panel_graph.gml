@@ -304,6 +304,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         bg_color          = c_black;
         slider_width      = 0;
         tooltip_overlay   = {};
+        toolbar_height    = ui(40);
         
         function addKeyOverlay(_title, _keys) {
         	if(struct_has(tooltip_overlay, _title)) {
@@ -386,18 +387,21 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
     #endregion
     
     #region // ---- nodes ----
-        node_context  = [];
-        nodes_list    = [];
+        node_context         = [];
+        nodes_list           = [];
         
-        node_dragging = noone;
-        node_drag_mx  = 0;
-        node_drag_my  = 0;
-        node_drag_sx  = 0;
-        node_drag_sy  = 0;
-        node_drag_ox  = 0;
-        node_drag_oy  = 0;
-        node_drag_add = false;
-    
+        node_dragging        = noone;
+        node_drag_mx         = 0;
+        node_drag_my         = 0;
+        node_drag_sx         = 0;
+        node_drag_sy         = 0;
+        node_drag_ox         = 0;
+        node_drag_oy         = 0;
+        node_drag_add        = false;
+    	node_drag_connect    = noone;
+    	node_drag_removing   = false;
+    	node_drag_remove     = [];
+    	
         selection_block      = 0;
         nodes_selecting      = [];
         nodes_selecting_jun  = [];
@@ -431,7 +435,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         connection_draw_mouse  = noone;
         connection_draw_target = noone;
         connection_draw_update = true;
-        connection_cache  = {};
+        connection_cache       = {};
         
         value_focus     = noone;
         _value_focus    = noone;
@@ -479,8 +483,6 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         tb_search.align       = fa_left;
         tb_search.auto_update = true;
     #endregion
-    
-    toolbar_height = ui(40);
     
     function toCenterNode(_arr = nodes_list) {
         if(!project.active) return; 
@@ -1159,6 +1161,63 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         }
     } 
     
+    function nodeWrangler() {
+    	var _focus = pFOCUS && !view_hovering;
+    	
+        if(node_drag_connect) {
+        	node_drag_connect.drawActive(2);
+        	connection_param.setDraw(1, bg_color);
+        	
+    		var _from = node_drag_connect.getOutput(), _to;
+    		var _draw = true;
+    		
+        	if(node_hovering != noone) {
+        		_to = node_hovering.getInput();
+        		
+        		if(_to && _to.isConnectable(_from)) {
+        			node_hovering.drawActive(2);
+        			
+        			_from.drawConnectionMouse(connection_param, _to.x, _to.y, _to);
+        			_draw = false;
+        			
+        			if(mouse_release(mb_left))
+        				_to.setFrom(_from);
+        		}
+        	} 
+        	
+        	if(_draw) {
+        		draw_set_color(COLORS.node_border_file_drop);
+    			draw_line(_from.x, _from.y, mx, my);
+        	}
+        	
+        	if(mouse_release(mb_left))
+            	node_drag_connect = noone;
+        }
+        
+        if(node_drag_removing) {
+        	draw_circle_ui(mx, my, ui(8), .1, COLORS._main_value_negative);
+        	
+        	if(junction_hovering != noone)
+        		junction_hovering.removeFrom();
+        	
+        	if(mouse_release(mb_right))
+            	node_drag_removing = false;
+        }
+        
+        if(!_focus || !mouse_on_graph) return;
+        if(value_focus != noone)       return;
+        
+        var _node = getFocusingNode();
+        if(_node && mouse_press(mb_left) && key_mod_press(CTRL))
+        	node_drag_connect = _node;
+        
+        if(mouse_press(mb_right) && key_mod_press(CTRL)) {
+        	node_drag_removing = true;
+        	node_drag_remove   = [];
+        }
+        
+    }
+    
     ////- Draw
     
     function drawGrid() { //
@@ -1350,10 +1409,10 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
             node_drag_add   = false;
         }
         
-        for(var i = 0; i < array_length(nodes_list); i++)
+        for( var i = 0, n = array_length(nodes_list); i < n; i++ ) 
             nodes_list[i].groupCheck(gr_x, gr_y, graph_s, mx, my);
         
-        if(node_dragging && !key_mod_press(ALT)) {
+        if(node_dragging) {
             addKeyOverlay("Dragging node(s)", [[ "Ctrl", "Disable snapping" ]]);
 			connection_draw_update = true;
 			node_surface_update    = true;
@@ -1414,26 +1473,30 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                     recordAction(ACTION_TYPE.var_modify, _n, [ _n.y + shfy, "y", "node y position" ]);
                 }
             }
+            
+            if(!node_drag_add && mouse_release(mb_left))
+            	node_dragging = noone;
         }
         
-        if(!node_drag_add && mouse_release(mb_left))
-            node_dragging = noone;
+        ////- Start Drag
+        
+        var _node = getFocusingNode();
+        
+        if(!_focus || !mouse_on_graph) return;
+        if(_node == noone)             return;
+        if(value_focus != noone)       return;
+        if(!_node.draggable)           return;
+    	if(key_mod_press_any())        return;
+        
+        if(mouse_press(mb_left)) {
+            node_dragging = _node;
+            node_drag_mx  = mouse_graph_x;
+            node_drag_my  = mouse_graph_y;
+            node_drag_sx  = _node.x;
+            node_drag_sy  = _node.y;
             
-        if(mouse_on_graph && _focus) {
-	        var _node = getFocusingNode();
-	        
-	        if(_node && _node.draggable && value_focus == noone) {
-	            if(mouse_press(mb_left) && !key_mod_press(ALT)) {
-	                node_dragging = _node;
-	                node_drag_mx  = mouse_graph_x;
-	                node_drag_my  = mouse_graph_y;
-	                node_drag_sx  = _node.x;
-	                node_drag_sy  = _node.y;
-	                
-	                node_drag_ox  = -1;
-	                node_drag_oy  = -1;
-	            }
-	        }
+            node_drag_ox  = -1;
+            node_drag_oy  = -1;
         }
     }
     
@@ -1603,7 +1666,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                 nodes_select_anchor = _anc;
             
             
-            if(mouse_press(mb_right, _focus)) { //
+            if(mouse_press(mb_right, _focus) && !key_mod_press_any()) {
                 node_hover = node_hovering;    
                 __junction_hovering = noone;
                 
@@ -1727,7 +1790,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         printIf(log, $"Node selection time: {get_timer() - t}"); t = get_timer();
         
         // draw active
-        array_foreach(nodes_selecting, function(_n) /*=>*/ { _n.drawActive(__gr_x, __gr_y, __gr_s, instanceof(_n) == FOCUS_STR); _n.is_selecting = true; });
+        array_foreach(nodes_selecting, function(_n) /*=>*/ { _n.drawActive(instanceof(_n) == FOCUS_STR); _n.is_selecting = true; });
         if(nodes_select_anchor) nodes_select_anchor.active_draw_anchor = true;
         
         printIf(log, $"Draw active: {get_timer() - t}"); t = get_timer();
@@ -1743,16 +1806,17 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         
         hov = noone;
         
+        connection_param.setPos(gr_x, gr_y, graph_s, mx, my);
+        connection_param.setBoundary(-64, -64, w + 64, h + 64);
+        connection_param.setDraw(aa, bg_color);
+        
         if(connection_draw_update || pHOVER) {
 	        surface_set_target(connection_surface_cc);
 	        	if(connection_draw_update) { DRAW_CLEAR }
 		    	
 				connection_param.active    = pHOVER && (node_dragging == noone || node_drag_add);
 				connection_param.checkNode = node_dragging != noone && node_drag_add? node_dragging : noone;
-		        connection_param.setPos(gr_x, gr_y, graph_s, mx, my);
-		        connection_param.setBoundary(-64, -64, w + 64, h + 64);
 		        connection_param.setProp(array_length(_node_active), display_parameter.highlight);
-		        connection_param.setDraw(aa, bg_color);
 		        
 		        array_foreach(_node_active, function(n) /*=>*/ {
 		        	var _hov = n.drawConnections(connection_param, connection_draw_update);
@@ -1866,6 +1930,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         printIf(log, $"Draw node: {get_timer() - t}"); t = get_timer();
         
         dragNodes();
+        nodeWrangler();
         
         if(mouse_on_graph && _focus) {
             if(DOUBLE_CLICK && junction_hovering != noone) {
@@ -2138,11 +2203,11 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
             else if(!key_mod_press(CTRL) && node_hovering != noone) {
                 if(value_dragging.connect_type == CONNECT_TYPE.input) {
                     target = node_hovering.getOutput(my, value_dragging);
-                    if(target != noone) node_hovering.active_draw_index = 1;
+                    if(target != noone) node_hovering.drawActive(1);
                         
                 } else {
                     target = node_hovering.getInput(my, value_dragging, 0);
-                    if(target != noone) node_hovering.active_draw_index = 1;
+                    if(target != noone) node_hovering.drawActive(1);
                         
                 }
             }
@@ -2177,10 +2242,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
     function drawJunctionConnect() {
         var _focus = pFOCUS && !view_hovering;
         
-        if(value_dragging)
-            draggingValue();
-		else 
-			node_drag_search = false;
+        if(value_dragging) draggingValue();
+		else node_drag_search = false;
         
         if(value_dragging == noone && value_focus && mouse_press(mb_left, _focus) && !key_mod_press(ALT)) {
             value_dragging  = value_focus;

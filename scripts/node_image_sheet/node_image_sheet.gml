@@ -139,36 +139,38 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			curr_off = getInputData(4);
 		}
 		
+		var __dim = getInputData(1);
+		var __amo = getInputData(3);
+		var __off = getInputData(4);
+					
 		var _amo = array_safe_get_fast(curr_amo, 0) * array_safe_get_fast(curr_amo, 1);
 		
-		// if(drag_type == 0) {
-			if(_amo < 256) {
-				for(var i = _amo - 1; i >= 0; i--) {
-					if(!array_safe_get_fast(sprite_valid, i, false))
-						continue;
-					
-					var _f = sprite_pos[i];
-					var _fx0 = _x + _f[0] * _s;
-					var _fy0 = _y + _f[1] * _s;
-					var _fx1 = _fx0 + curr_dim[0] * _s;
-					var _fy1 = _fy0 + curr_dim[1] * _s;
+		if(_amo < 256) {
+			for(var i = _amo - 1; i >= 0; i--) {
+				if(!array_safe_get_fast(sprite_valid, i, false))
+					continue;
 				
-					draw_set_color(COLORS._main_accent);
-					draw_set_alpha(i == 0? 1 : 0.75);
-					draw_rectangle(_fx0, _fy0, _fx1 - 1, _fy1 - 1, true);
-					draw_set_alpha(1);
-				}
-			} else {
-				var _f = sprite_pos[0];
+				var _f = sprite_pos[i];
 				var _fx0 = _x + _f[0] * _s;
 				var _fy0 = _y + _f[1] * _s;
 				var _fx1 = _fx0 + curr_dim[0] * _s;
 				var _fy1 = _fy0 + curr_dim[1] * _s;
-				
+			
 				draw_set_color(COLORS._main_accent);
+				draw_set_alpha(i == 0? 1 : 0.75);
 				draw_rectangle(_fx0, _fy0, _fx1 - 1, _fy1 - 1, true);
+				draw_set_alpha(1);
 			}
-		// }
+		} else {
+			var _f = sprite_pos[0];
+			var _fx0 = _x + _f[0] * _s;
+			var _fy0 = _y + _f[1] * _s;
+			var _fx1 = _fx0 + curr_dim[0] * _s;
+			var _fy1 = _fy0 + curr_dim[1] * _s;
+			
+			draw_set_color(COLORS._main_accent);
+			draw_rectangle(_fx0, _fy0, _fx1 - 1, _fy1 - 1, true);
+		}
 		
 		var __ax = curr_off[0];
 		var __ay = curr_off[1];
@@ -183,31 +185,32 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _bw = curr_amo[0] * (curr_dim[0] + _spc[0]) - _spc[0]; _bw *= _s;
 		var _bh = curr_amo[1] * (curr_dim[1] + _spc[1]) - _spc[1]; _bh *= _s;
 		
-		var _4 = 4 * _s;
+		var _4 = 2 * _s;
 		var x0 = _ax;
 		var y0 = _ay;
 		var x1 = _ax + _aw;
 		var y1 = _ay + _ah;
-		var xc = _ax + _aw / 2;
-		var yc = _ay + _ah / 2;
+		var x2 = _ax + (__aw + _spc[0]) * __amo[0] * _s;
+		var y2 = _ay + (__ah + _spc[1]) * __amo[1] * _s;
+		
+		var wc = (x0 + x1) / 2;
+		var hc = (y0 + y1) / 2;
+		var xc = (x0 + x2) / 2;
+		var yc = (y0 + y2) / 2;
 		
 		var _h0 = false, _h1 = false, _h2 = false, _h3 = false;
 		if(active) {
 			     if(point_in_circle(    _mx, _my, x1, y1, 8))      _h0 = true;
-			else if(point_in_circle(    _mx, _my, x1 + _4, yc, 8)) _h1 = true;
-			else if(point_in_circle(    _mx, _my, xc, y1 + _4, 8)) _h2 = true;
+			else if(point_in_circle(    _mx, _my, x2 + _4, yc, 8)) _h1 = true;
+			else if(point_in_circle(    _mx, _my, xc, y2 + _4, 8)) _h2 = true;
 			else if(point_in_rectangle( _mx, _my, x0, y0, x1, y1)) _h3 = true;
 		}
 		
 		draw_sprite_colored(THEME.anchor_selector, _h0, x1, y1);
-		draw_sprite_colored(THEME.anchor_arrow,    _h1, x1 + _4, yc);
-		draw_sprite_colored(THEME.anchor_arrow,    _h2, xc, y1 + _4, 1, -90);
-		draw_sprite_colored(THEME.anchor,          _h3, xc, yc);
+		draw_sprite_colored(THEME.anchor_arrow,    _h1, x2 + _4, yc);
+		draw_sprite_colored(THEME.anchor_arrow,    _h2, xc, y2 + _4, 1, -90);
+		draw_sprite_colored(THEME.anchor,          _h3, wc, hc);
 		
-		var __dim = getInputData(1);
-		var __amo = getInputData(3);
-		var __off = getInputData(4);
-					
 		var _ax = __off[0] * _s + _x;
 		var _ay = __off[1] * _s + _y;
 		var _aw = __dim[0] * _s;
