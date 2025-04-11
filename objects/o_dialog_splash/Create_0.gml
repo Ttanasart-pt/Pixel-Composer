@@ -337,6 +337,7 @@ event_inherited();
 			}
 			
 			var pd = grid_space / 2;
+			var _cAll = 0;
 			
 			for( var i = 0; i < len; i++ ) {
 				var lb = group_labels[i];
@@ -354,7 +355,8 @@ event_inherited();
 				if(_hov) {
 					sp_sample.hover_content = true;
 					
-					if(mouse_press(mb_left)) {
+					if(DOUBLE_CLICK) _cAll = _coll? -1 : 1;
+					else if(mouse_press(mb_left)) {
 						if(_coll) array_remove(PREFERENCES.welcome_file_closed, lb.text);
 						else      array_push(PREFERENCES.welcome_file_closed, lb.text);
 					}
@@ -369,6 +371,13 @@ event_inherited();
 
 				}
 			}
+			
+			if(_cAll !=  0) PREFERENCES.welcome_file_closed = [];
+			if(_cAll == -1) { 
+				for( var i = 0, n = array_length(group_labels); i < n; i++ ) 
+					array_push(PREFERENCES.welcome_file_closed, group_labels[i].text);
+			}
+		
 		}
 			
 		return hh + ui(20);

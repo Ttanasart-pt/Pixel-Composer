@@ -1,5 +1,8 @@
 enum TEXTBOX_INPUT { text, number }
 
+function textBox_Text(_onModify)   { return new textBox(TEXTBOX_INPUT.text,   _onModify); }
+function textBox_Number(_onModify) { return new textBox(TEXTBOX_INPUT.number, _onModify); }
+
 function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	onRelease = noone;
 	

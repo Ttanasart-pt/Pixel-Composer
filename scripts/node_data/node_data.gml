@@ -237,8 +237,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		attributeEditors = [
 			"Display",
-			["Annotation",   function() /*=>*/ {return attributes.annotation},       new textArea(TEXTBOX_INPUT.text,  function(val) /*=>*/ { attributes.annotation = val; }) ],
-			["Params Width", function() /*=>*/ {return attributes.node_param_width}, new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ { attributes.node_param_width = val; refreshNodeDisplay(); }) ],
+			["Annotation",   function() /*=>*/ {return attributes.annotation},       new textArea(TEXTBOX_INPUT.text,  function(val) /*=>*/ { attributes.annotation = val;          }) ],
+			["Params Width", function() /*=>*/ {return attributes.node_param_width}, textBox_Number(function(val) /*=>*/ { attributes.node_param_width = val; refreshNodeDisplay(); }) ],
+			["Node Width",   function() /*=>*/ {return attributes.node_width},       textBox_Number(function(val) /*=>*/ { attributes.node_width       = val; refreshNodeDisplay(); }) ],
+			["Node Height",  function() /*=>*/ {return attributes.node_height},      textBox_Number(function(val) /*=>*/ { attributes.node_height      = val; refreshNodeDisplay(); }) ],
 			
 			"Node",
 			["Auto update",     function() /*=>*/ {return attributes.update_graph},		  new checkBox(function() /*=>*/ { attributes.update_graph        = !attributes.update_graph;           }) ],
@@ -760,7 +762,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static setHeight = function() {
 		
-		w = SHOW_PARAM? attributes.node_param_width : min_w;
+		w = attributes.node_width? attributes.node_width : min_w;
+		if(SHOW_PARAM) w = attributes.node_param_width;
+		
 		if(!auto_height) return;
 		
 		var _ps = is_surface(getGraphPreviewSurface()) || preserve_height_for_preview;

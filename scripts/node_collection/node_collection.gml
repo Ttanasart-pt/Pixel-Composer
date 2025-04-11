@@ -341,7 +341,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	////- STEP
 	
 	static stepBegin = function() {
-		moved = false;
+		moved       = false;
 		dummy_input = attributes.lock_input? noone : __dummy_input;
 		
 		if(will_refresh) refreshNodes();
