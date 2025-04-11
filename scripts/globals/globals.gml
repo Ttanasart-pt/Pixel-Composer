@@ -52,8 +52,7 @@
 	NIGHTLY  = string_length(_lsp) == 3;
 	
 	HOTKEYS			= {};
-	HOTKEY_CONTEXT	= ds_list_create();
-	HOTKEY_CONTEXT[| 0] = 0;
+	HOTKEY_CONTEXT	= [0];
 	
 	globalvar TOOLTIP, DRAGGING, DIALOG_DEPTH_HOVER;
 	global.KEYS = { download_links: "" };
@@ -64,7 +63,7 @@
 #endregion
 
 #region input
-	globalvar FOCUS, FOCUS_STR, FOCUS_CONTENT, HOVER, HOVERING_ELEMENT, _HOVERING_ELEMENT;
+	globalvar FOCUS, FOCUS_STR, FOCUS_CONTENT, FOCUS_STACK, HOVER, HOVERING_ELEMENT, _HOVERING_ELEMENT;
 	globalvar DOUBLE_CLICK, DOUBLE_CLICK_POS;
 	globalvar DIALOG_CLICK;
 	globalvar WINDOW_ACTIVE, TOOLTIP_WINDOW;
@@ -75,6 +74,7 @@
 	FOCUS	      = noone;
 	FOCUS_CONTENT = noone;
 	FOCUS_STR	  = "";
+	FOCUS_STACK   = ds_stack_create();
 	
 	HOVER             = noone;
 	HOVERING_ELEMENT  = noone;

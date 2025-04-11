@@ -50,6 +50,7 @@ if(!LOADING && PROJECT.active && !PROJECT.safeMode) { //node step
 			}
 		}
 		
+		ds_stack_clear(FOCUS_STACK);
 		HOTKEY_ACT |= _action;
 	}
 	

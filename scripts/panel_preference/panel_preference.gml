@@ -1192,8 +1192,8 @@ function Panel_Preference() : PanelContent() constructor {
     	function initHK() {
     		hk_init = true;
 	    	
-	    	for(var i = 0; i < ds_list_size(HOTKEY_CONTEXT); i++) {
-	    		var ctx  = HOTKEY_CONTEXT[| i];
+	    	for( var i = 0, n = array_length(HOTKEY_CONTEXT); i < n; i++ ) {
+	    		var ctx  = HOTKEY_CONTEXT[i];
 	    		
 	    		var _title = ctx == 0? "Global" : ctx;
 	    		    _title = string_replace_all(_title, "_", " ");
@@ -1206,8 +1206,8 @@ function Panel_Preference() : PanelContent() constructor {
 	    		
 	    		var _lst = [];
 	    		var ll   = HOTKEYS[$ ctx];
-	    		for( var i = 0, n = array_length(ll); i < n; i++ ) 
-	    			_lst[i] = ll[i];
+	    		for( var j = 0, m = array_length(ll); j < m; j++ ) 
+	    			_lst[j] = ll[j];
 	    		
 	    		array_sort(_lst, function(s1, s2) /*=>*/ {return string_compare(s1.name, s2.name)});
 	    		array_push(hotkeyContext, { context: ctx, list: _lst });
@@ -1231,8 +1231,8 @@ function Panel_Preference() : PanelContent() constructor {
 	    		array_push(hotkeyArray, _title);
 	    		
 	    		var ll = HOTKEYS[$ ctx];
-	    		for(var j = 0; j < ds_list_size(ll); j++)
-	    			array_push(_lst, ll[| j]);
+	    		for(var j = 0; j < array_length(ll); j++)
+	    			array_push(_lst, ll[j]);
 	    		
 	    		array_sort(_lst, function(s1, s2) /*=>*/ {return string_compare(s1.name, s2.name)});
 	    		array_push(hotkeyContext, { list: _lst });

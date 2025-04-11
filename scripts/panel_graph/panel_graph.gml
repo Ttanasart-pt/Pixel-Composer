@@ -62,24 +62,18 @@
     function panel_graph_doPasteProp()             { CALL("graph_doPasteProp");         PANEL_GRAPH.doPasteProp();                            }
     function panel_graph_createTunnel()            { CALL("graph_createTunnel");        PANEL_GRAPH.createTunnel();                           }
     
-    function panel_graph_grid_snap()               { CALL("graph_grid_snap");         PANEL_GRAPH_PROJECT_CHECK PANEL_GRAPH.project.graphGrid.snap = !PANEL_GRAPH.project.graphGrid.snap;               }
-    function panel_graph_show_origin()             { CALL("graph_grid_show_origin");  PANEL_GRAPH_PROJECT_CHECK PANEL_GRAPH.project.graphGrid.show_origin = !PANEL_GRAPH.project.graphGrid.show_origin; }
-    function panel_graph_searchWiki()              { CALL("graph_searchWiki");        PANEL_GRAPH.searchWiki();                               }
+    function panel_graph_grid_snap()               { CALL("graph_grid_snap");           PANEL_GRAPH_PROJECT_CHECK PANEL_GRAPH.project.graphGrid.snap = !PANEL_GRAPH.project.graphGrid.snap;               }
+    function panel_graph_show_origin()             { CALL("graph_grid_show_origin");    PANEL_GRAPH_PROJECT_CHECK PANEL_GRAPH.project.graphGrid.show_origin = !PANEL_GRAPH.project.graphGrid.show_origin; }
+    function panel_graph_searchWiki()              { CALL("graph_searchWiki");          PANEL_GRAPH.searchWiki();                               }
+    function panel_graph_swapConnection()          { CALL("graph_swapConnection");      PANEL_GRAPH.swapConnection();                           }
+    function panel_graph_transferConnection()      { CALL("graph_transferConnection");  PANEL_GRAPH.transferConnection();                       }
 				                                                                           
     function __fnInit_Graph() {
     	registerFunction("Graph", "Add Node",              "A", MOD_KEY.none,                    panel_graph_add_node            ).setMenu("graph_add_node")
         registerFunction("Graph", "Replace Node",          "R", MOD_KEY.ctrl,                    panel_graph_replace_node        ).setMenu("graph_replace_node")
         registerFunction("Graph", "Focus Content",         "F", MOD_KEY.none,                    panel_graph_focus_content       ).setMenu("graph_focus_content")
         registerFunction("Graph", "Preview Focusing Node", "P", MOD_KEY.none,                    panel_graph_preview_focus       ).setMenu("graph_preview_focusing_node")
-                                                                                        
-        // registerFunction("Graph", "Import Image",          "I", MOD_KEY.none,                    panel_graph_import_image        ).setMenu("graph_import_image")
-        // registerFunction("Graph", "Import Image Array",    "I", MOD_KEY.shift,                   panel_graph_import_image_array  ).setMenu("graph_import_image_array")
-        // registerFunction("Graph", "Add Number",            "1", MOD_KEY.none,                    panel_graph_add_number          ).setMenu("graph_add_number")
-        // registerFunction("Graph", "Add Vector2",           "2", MOD_KEY.none,                    panel_graph_add_vec2            ).setMenu("graph_add_vector2")
-        // registerFunction("Graph", "Add Vector3",           "3", MOD_KEY.none,                    panel_graph_add_vec3            ).setMenu("graph_add_vector3")
-        // registerFunction("Graph", "Add Vector4",           "4", MOD_KEY.none,                    panel_graph_add_vec4            ).setMenu("graph_add_vector4")
-        // registerFunction("Graph", "Add Display",           "D", MOD_KEY.none,                    panel_graph_add_display         ).setMenu("graph_add_display")
-                                                                                        
+		
         registerFunction("Graph", "Select All",            "A", MOD_KEY.ctrl,                    panel_graph_select_all          ).setMenu("graph_select_all")
         registerFunction("Graph", "Toggle Grid",           "G", MOD_KEY.none,                    panel_graph_toggle_grid         ).setMenu("graph_toggle_grid")
         registerFunction("Graph", "Toggle Dimension",      "",  MOD_KEY.none,                    panel_graph_toggle_dimension    ).setMenu("graph_toggle_dimension")
@@ -135,6 +129,8 @@
         registerFunction("Graph", "Toggle Grid Snap",      "",  MOD_KEY.none,                    panel_graph_grid_snap           ).setMenu("graph_grid_snap")
         registerFunction("Graph", "Toggle Show Origin",    "",  MOD_KEY.none,                    panel_graph_show_origin         ).setMenu("graph_show_origin")
         registerFunction("Graph", "Search Wiki",         vk_f1, MOD_KEY.none,                    panel_graph_searchWiki          ).setMenu("graph_search_wiki")
+        registerFunction("Graph", "Swap Connections",      "S", MOD_KEY.alt,                     panel_graph_swapConnection      ).setMenu("graph_swap_connection")
+        registerFunction("Graph", "Transfer Connections",  "T", MOD_KEY.alt,                     panel_graph_transferConnection  ).setMenu("graph_transfer_connection")
                                                                                     
         if(!DEMO) {
             registerFunction("Graph", "Export Selected Node",   "E", MOD_KEY.ctrl,               panel_graph_export              ).setMenu("graph_export_selected")
@@ -3825,6 +3821,64 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				[ __txt("Open"),   function() /*=>*/ {return __searchWiki()} ],
 				[ __txt("Cancel"), function() /*=>*/ {} ],
 			]);
+    }
+    
+    function swapConnection() { 
+    	
+    	if(array_length(nodes_selecting) == 1) {
+    		var _n = nodes_selecting[0];
+    		
+    		if(array_length(_n.inputs) >= 2 && _n.inputs[0].type == _n.inputs[1].type) {
+	    		var _f0 = _n.inputs[0].value_from;
+	    		var _f1 = _n.inputs[1].value_from;
+	    		
+	    		_n.inputs[0].setFrom(_f1);
+	    		_n.inputs[1].setFrom(_f0);
+	    	}
+	    	
+    	} else if(array_length(nodes_selecting) == 2) {
+    		
+	    	var _n0 = nodes_selecting[0];
+			var _n1 = nodes_selecting[1];
+	    	
+	    	var _o0 = _n0.getOutput();
+			var _o1 = _n1.getOutput();
+			if(_o0 == noone || _o1 == noone) return;
+			
+			var _t0 = _o0.getJunctionTo();
+			var _t1 = _o1.getJunctionTo();
+			
+			for( var i = 0, n = array_length(_t0); i < n; i++ ) _t0[i].setFrom(_o1);
+			for( var i = 0, n = array_length(_t1); i < n; i++ ) _t1[i].setFrom(_o0);
+    	}
+    }
+    
+    function transferJunction(nFrom, nTo) {
+    	var _toTarg = nTo.getOutput();
+    	if(_toTarg == noone) return;
+    	
+    	for( var i = 0, n = array_length(nFrom.outputs); i < n; i++ ) {
+    		var _ot = nFrom.outputs[i];
+    		var _to = _ot.getJunctionTo();
+    		
+    		for( var j = 0, m = array_length(_to); j < m; j++ ) {
+    			var _jto = _to[i];
+    			if(_jto.node == nTo) continue;
+    			
+    			_jto.setFrom(_toTarg);
+    		}
+    	}
+    }
+    
+    function transferConnection() { 
+    	if(array_length(nodes_selecting) != 2) return;
+    	
+    	var _n0 = nodes_selecting[0];
+		var _n1 = nodes_selecting[1];
+    		
+		     if(array_exists(_n1.getNodeFrom(), _n0)) transferJunction(_n0, _n1);
+		else if(array_exists(_n0.getNodeFrom(), _n1)) transferJunction(_n1, _n0);
+		else transferJunction(_n0, _n1);
     }
     
     ////- Serialize
