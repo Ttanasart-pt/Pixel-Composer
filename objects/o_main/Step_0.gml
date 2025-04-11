@@ -2,8 +2,6 @@
 if(winMan_isMinimized()) exit;
 winManStep();
 
-//print("===== Step start =====");
-
 if(!LOADING && PROJECT.active && !PROJECT.safeMode) { //node step
 	PROJECT.step();
 	LIVE_UPDATE = false;

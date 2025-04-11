@@ -15,11 +15,11 @@ function tooltipHotkey(text, context = "", name = "") constructor {
 		draw_set_font(f_p1);
 		var _w2 = string_width(keyStr);
 		
-		var tw  = min(__win_tw - ui(32), _w1 + ui(24) + _w2);
+		var tw  = min(WIN_W - ui(32), _w1 + ui(24) + _w2);
 		var th  = string_height_ext(text, -1, tw);
 		
-		var mx = min(__mouse_tx + ui(16), __win_tw - (tw + ui(16)));
-		var my = min(__mouse_ty + ui(16), __win_th - (th + ui(16)));
+		var mx = min(mouse_mxs + ui(16), WIN_W - (tw + ui(16)));
+		var my = min(mouse_mys + ui(16), WIN_H - (th + ui(16)));
 		
 		draw_sprite_stretched(THEME.textbox, 3, mx, my, tw + ui(16), th + ui(16));
 		draw_sprite_stretched(THEME.textbox, 0, mx, my, tw + ui(16), th + ui(16));
@@ -57,9 +57,9 @@ function tooltipHotkey_assign(text, hotkey = "") constructor {
 			 th += string_height(_ts);
 		}
 		
-		var tw = min(__win_tw - ui(32), _w1 + ui(24) + _w2);
-		var mx = min(__mouse_tx + ui(16), __win_tw - (tw + ui(16)));
-		var my = min(__mouse_ty + ui(16), __win_th - (th + ui(16)));
+		var tw = min(WIN_W - ui(32), _w1 + ui(24) + _w2);
+		var mx = min(mouse_mxs + ui(16), WIN_W - (tw + ui(16)));
+		var my = min(mouse_mys + ui(16), WIN_H - (th + ui(16)));
 		
 		draw_sprite_stretched(THEME.textbox, 3, mx, my, tw + ui(16), th + ui(16));
 		draw_sprite_stretched(THEME.textbox, 0, mx, my, tw + ui(16), th + ui(16));

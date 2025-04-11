@@ -1,8 +1,8 @@
 function mac_window_step() {
 	if(--__win_delay) return;
 	
-	var _mx = mouse_raw_x;
-	var _my = mouse_raw_y;
+	var _mx = mouse_mx;
+	var _my = mouse_my;
 	
 	if(__win_is_dragging) {
 		if(__win_is_dragging == WINDOW_DRAG_MODE._move)
@@ -45,8 +45,8 @@ function mac_window_step() {
 		if(point_in_rectangle(mouse_mx, mouse_my, 6, 6, WIN_W - 6, ui(40))) {
 			if(mouse_press(mb_left)) {
 				__win_is_dragging = WINDOW_DRAG_MODE._move;
-				__win_drag_mx = mouse_raw_x;
-				__win_drag_my = mouse_raw_y;
+				__win_drag_mx = mouse_mx;
+				__win_drag_my = mouse_my;
 				__win_drag_sx = window_get_x();
 				__win_drag_sy = window_get_y();
 				__win_drag_sw = window_get_width();
@@ -80,8 +80,8 @@ function mac_window_step() {
 			
 			if(hover > 0 && mouse_press(mb_left)) {
 				__win_is_dragging = hover;
-				__win_drag_mx = mouse_raw_x;
-				__win_drag_my = mouse_raw_y;
+				__win_drag_mx = mouse_mx;
+				__win_drag_my = mouse_my;
 				__win_drag_sx = window_get_x();
 				__win_drag_sy = window_get_y();
 				__win_drag_sw = window_get_width();

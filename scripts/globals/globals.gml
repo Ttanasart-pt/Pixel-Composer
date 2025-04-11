@@ -43,8 +43,8 @@
 	LATEST_VERSION	= 1_18_00_0;
 	VERSION			= 1_18_11_0;
 	SAVE_VERSION	= 1_18_09_1;
-	VERSION_STRING  = MAC? "1.18.003m" : "1.19rc3";
-	BUILD_NUMBER	= 118503;
+	VERSION_STRING  = MAC? "1.18.003m" : "1.19rc5";
+	BUILD_NUMBER	= 118505;
 	PREF_VERSION    = 1_17_1;
 	
 	var _vsp = string_split(VERSION_STRING, ".");
@@ -107,8 +107,8 @@
 	#macro UI_SCALE PREFERENCES.display_scaling
 	
 	#macro mouse_ui [mouse_mx, mouse_my]
-	#macro mouse_mx (PEN_USE? PEN_X : winwin_mouse_get_x_safe(WINDOW_ACTIVE))
-	#macro mouse_my (PEN_USE? PEN_Y : winwin_mouse_get_y_safe(WINDOW_ACTIVE))
+	#macro mouse_mx (PEN_USE? PEN_X : device_mouse_raw_x(0))
+	#macro mouse_my (PEN_USE? PEN_Y : device_mouse_raw_y(0))
 	
 	#macro mouse_mxs (FILE_IS_DROPPING? FILE_DROPPING_X : mouse_mx)
 	#macro mouse_mys (FILE_IS_DROPPING? FILE_DROPPING_Y : mouse_my)
@@ -117,8 +117,8 @@
 	#macro mouse_raw_y display_mouse_get_y()
 	
 	#macro sFOCUS (FOCUS == self.id)
+	#macro sHOVER (!CURSOR_IS_LOCK && (HOVER == self.id))
 	#macro DIALOG_SHOW_FOCUS (FOCUS == self.id || (instance_exists(o_dialog_menubox) && o_dialog_menubox.getContextPanel() == self))
-	#macro sHOVER (!CURSOR_IS_LOCK && (HOVER == self.id || (WINDOW_ACTIVE != noone && winwin_mouse_is_over_safe(WINDOW_ACTIVE))))
 	
 	#macro DELTA_TIME delta_time / 1_000_000
 	
@@ -166,6 +166,8 @@
 	
 	#macro RETURN_ON_REST if(!PROJECT.animator.is_playing || !PROJECT.animator.frame_progress) return;
 	#macro PANEL_PAD THEME_VALUE.panel_padding
+	
+	#macro INIT_BASE_CLASS base = static_get(static_get(self));
 	
 	//!#mfunc returnNull {"args":["v"," a"],"order":[0,1,0,0]}
 #macro returnNull_mf0  var 

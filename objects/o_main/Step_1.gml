@@ -1,8 +1,4 @@
 /// @description init
-if(PREFERENCES.multi_window) winwin_update();
-
-// print($"{TOOLTIP_WINDOW}, {winwin_get_focus()}");
-// print(keyboard_check(vk_space));
 
 global.__debug_runner++;
 global.cache_call = 0;
@@ -116,6 +112,7 @@ _FILE_DROPPED     = false;
 	
 	with(_p_dialog) doResize();			WINDOW_ACTIVE = noone;
 	with(_p_dialog) doDrag();			WINDOW_ACTIVE = noone;
+	
 #endregion
 
 #region auto save
@@ -302,6 +299,7 @@ _FILE_DROPPED     = false;
 	}
 #endregion
 
+//print(typeof(WIDGET_CURRENT), instanceof(WIDGET_CURRENT));
 //if(global.cache_call) print($"CACHE called: {global.cache_call} | hit: {global.cache_hit} ({global.cache_hit / global.cache_call * 100}%)");
 //print($"{is_struct(HOVER)? instanceof(HOVER) : HOVER}, {is_struct(FOCUS)? instanceof(FOCUS) : FOCUS}");
 //print($"{mouse_mx}, {mouse_my}");

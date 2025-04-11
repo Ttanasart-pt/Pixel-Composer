@@ -1,5 +1,7 @@
 #macro struct_key variable_struct_get_names
 
+function struct_create() { return {}; }
+
 function struct_has(s, k) { return is_struct(s) && variable_struct_exists(s, k); }
 
 function struct_override(original, override, _clone = false) {

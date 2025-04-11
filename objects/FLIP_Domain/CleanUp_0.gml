@@ -2,4 +2,4 @@
 FLIP_cleanDomain(domain);
 if(particlePosBuff >= 0) buffer_delete(particlePosBuff);
 
-domain = noone;
+domain = -1;

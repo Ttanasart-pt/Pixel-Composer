@@ -212,13 +212,13 @@ function Panel_Preference() : PanelContent() constructor {
     			new checkBox(function() /*=>*/ { PREFERENCES.test_mode = !PREFERENCES.test_mode; should_restart = true; PREF_SAVE(); })
     		));
     		
-    		if(PREFERENCES.test_mode) {
-    			ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
-    				__txtx("pref_exp_popup_dialog", "[Experimental] Pop-up Dialog"),
-    				"multi_window",
-    				new checkBox(function() /*=>*/ { PREFERENCES.multi_window = !PREFERENCES.multi_window; PREF_SAVE(); })
-    			));
-    		}
+    		// if(PREFERENCES.test_mode) {
+    		// 	ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
+    		// 		__txtx("pref_exp_popup_dialog", "[Experimental] Pop-up Dialog"),
+    		// 		"multi_window",
+    		// 		new checkBox(() => { PREFERENCES.multi_window = !PREFERENCES.multi_window; PREF_SAVE(); })
+    		// 	));
+    		// }
     	
     	ds_list_add(pref_global, __txt("Paths"));
     		

@@ -51,7 +51,6 @@ DIALOG_WINCLEAR1
 			_menuItem.hoykeyObject = _key;
 		}
 		
-		//print($"{i}: {sHOVER} && {point_in_rectangle(mouse_mx, mouse_my, dialog_x, yy + 1, dialog_x + dialog_w, yy + _h - 1)}")
 		if(sHOVER && point_in_rectangle(mouse_mx, mouse_my, dialog_x, yy + 1, dialog_x + dialog_w, yy + _h - 1)) {
 			selecting = i;
 			var tips  = array_safe_get_fast(tooltips, i, noone);

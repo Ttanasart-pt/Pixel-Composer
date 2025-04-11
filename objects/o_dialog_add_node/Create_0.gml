@@ -5,6 +5,7 @@ event_inherited();
 	draggable = false;
 	dialog_w  = PREFERENCES.dialog_add_node_w;
 	dialog_h  = PREFERENCES.dialog_add_node_h;
+	volatile  = true;
 	destroy_on_click_out = true;
 	
 	title = "Add node";
@@ -31,10 +32,8 @@ event_inherited();
 	anchor = ANCHOR.left | ANCHOR.top;
 	node_menu_selecting = noone;
 	
-	display_grid_size    = ui(56);
-	display_grid_size_to = display_grid_size;
-	display_list_size    = ui(28);
-	display_list_size_to = display_list_size;
+	display_grid_size = ui(56); display_grid_size_to = display_grid_size;
+	display_list_size = ui(28); display_list_size_to = display_list_size;
 	
 	left_free  = true;
 	right_free = !mouse_click(mb_right);

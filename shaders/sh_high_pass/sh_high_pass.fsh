@@ -22,6 +22,7 @@ varying vec4 v_vColour;
 uniform vec2  dimension;
 uniform float radius;
 uniform float intensity;
+uniform int   blend;
 
 void main() {
     vec2  tx = 1. / dimension;
@@ -41,7 +42,11 @@ void main() {
     }
     
     vec4 sc = sampleTexture( gm_BaseTexture, v_vTexcoord );
-    ss += sc * ww;
+         ss += sc * ww;
     
-    gl_FragColor = vec4(ss.rgb * intensity, sc.a);
+    vec4 res = ss * intensity;
+    if(blend == 1) res += sc;
+    res.a = sc.a;
+    
+    gl_FragColor = res;
 }

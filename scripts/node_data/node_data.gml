@@ -23,6 +23,7 @@
 #endregion
 
 function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
+	INIT_BASE_CLASS
 	
 	#region ---- main & active ----
 		project      = PROJECT;
@@ -2544,7 +2545,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static isNotUsingTool = function() { return PANEL_PREVIEW.tool_current == noone; }
 	
 	static getTool = function() { return self; }
-	
 	
 	static getToolSettings = function() { return tool_settings; }
 	

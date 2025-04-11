@@ -938,8 +938,9 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			}
 		}
 		
+		// if(is(WIDGET_CURRENT, textBox)) print("w|", self.label, WIDGET_CURRENT.label, self == WIDGET_CURRENT);
 		selecting = self == WIDGET_CURRENT;
-		resetFocus();		
+		resetFocus();
 		sprite_index = -1;
 		return _h;
 	}

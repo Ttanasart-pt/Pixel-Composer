@@ -8,6 +8,5 @@
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",
-  "tags":[],
   "type":1,
 }

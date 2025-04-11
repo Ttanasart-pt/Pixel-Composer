@@ -1,6 +1,6 @@
 #region funtion calls
-    function panel_animation_settings()                { var dia = dialogPanelCall(new Panel_Animation_Setting()); dia.anchor = ANCHOR.none;                                                             }
-    function panel_animation_scale()                   { dialogPanelCall(new Panel_Animation_Scaler());                                                                                                  }
+    function panel_animation_settings_call()           { var dia = dialogPanelCall(new Panel_Animation_Setting()); dia.anchor = ANCHOR.none;                                                             }
+    function panel_animation_scale_call()              { dialogPanelCall(new Panel_Animation_Scaler());                                                                                                  }
     
     function panel_animation_play_pause()              { CALL("play_pause");           if(IS_RENDERING) return; if(IS_PLAYING) PROJECT.animator.pause() else PROJECT.animator.play();                    }
     function panel_animation_resume()                  { CALL("resume_pause");         if(IS_RENDERING) return; if(PROJECT.animator.is_playing) PROJECT.animator.pause() else PROJECT.animator.resume(); }
@@ -56,8 +56,8 @@
         registerFunction("Animation", "Toggle Nodes",       "H",        MOD_KEY.none,                 panel_animation_show_nodes            ).setMenu("animation_toggle_nodes",        )
         registerFunction("Animation", "Quantize",           "Q",        MOD_KEY.none,                 panel_animation_quantize              ).setMenu("animation_quantize",            )
         
-        registerFunction("Animation", "Settings",           "S",        MOD_KEY.ctrl | MOD_KEY.shift, panel_animation_settings              ).setMenu("animation_settings", THEME.animation_setting )
-        registerFunction("Animation", "Scaler",             "",         MOD_KEY.none,                 panel_animation_scale                 ).setMenu("animation_scaler",   THEME.animation_timing  )
+        registerFunction("Animation", "Settings",           "S",        MOD_KEY.ctrl | MOD_KEY.shift, panel_animation_settings_call         ).setMenu("animation_settings", THEME.animation_setting )
+        registerFunction("Animation", "Scaler",             "",         MOD_KEY.none,                 panel_animation_scale_call            ).setMenu("animation_scaler",   THEME.animation_timing  )
         
         registerFunction("Animation", "Edit Keyframe Value","", MOD_KEY.none, panel_animation_edit_keyframe_value   ).setMenu("animation_edit_keyframe_value", )
         registerFunction("Animation", "Lock Keyframe Y",    "", MOD_KEY.none, panel_animation_edit_keyframe_lock_y  ).setMenu("animation_lock_keyframe_y",     )

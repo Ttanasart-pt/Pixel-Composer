@@ -89,8 +89,6 @@ function directory_listdir(path, flag = fa_directory) {
 	////- File name
 	
 function filepath_resolve(path) {
-	INLINE
-	
 	path = string_replace_all(path, "%DIR%/", DIRECTORY);
 	path = string_replace_all(path, "%APP%/", APP_LOCATION);
 	path = string_replace_all(path, "\\", "/");

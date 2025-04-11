@@ -1,6 +1,6 @@
 /// @description Insert description here
 #region params
-	domain           = noone;
+	domain           = -1;
 	particlePosBuff  = noone;
 	particleVelBuff  = noone;
 
@@ -36,30 +36,26 @@
 	domain_preview   = noone;
 #endregion
 
-function init(width, height, particleSize, density, maxParticles) { #region domain init
-	particlePos  = array_create(maxParticles * 2);
-	particleVel  = array_create(maxParticles * 2);
-	particleHist = array_create(maxParticles * 2 * TOTAL_FRAMES);
-	particleLife = array_create(maxParticles);
+function init(_width, _height, _particleSize, _density, _maxParticles) {
+	particlePos  = array_create(_maxParticles * 2);
+	particleVel  = array_create(_maxParticles * 2);
+	particleHist = array_create(_maxParticles * 2 * TOTAL_FRAMES);
+	particleLife = array_create(_maxParticles);
 	obstracles   = [];
 	numParticles = 0;
 	
-	if(domain            != noone        && 
-	   self.width        == width        && 
-	   self.height       == height       && 
-	   self.particleSize == particleSize && 
-	   self.density      == density      && 
-	   self.maxParticles == maxParticles) {
-		
-		FLIP_resetDomain(domain);
-		return;
-	}
+	if(domain       != -1            && 
+	   width        == _width        && 
+	   height       == _height       && 
+	   particleSize == _particleSize && 
+	   density      == _density      && 
+	   maxParticles == _maxParticles) { FLIP_resetDomain(domain); return; }
 	
-	self.width        = width       ;
-	self.height       = height      ;
-	self.particleSize = particleSize;
-	self.density      = density     ;
-	self.maxParticles = maxParticles;
+	width        = _width;
+	height       = _height;
+	particleSize = _particleSize;
+	density      = _density;
+	maxParticles = _maxParticles;
 	
 	particlePosBuff   = buffer_create(maxParticles * 2 * 8, buffer_grow, 8);
 	particleVelBuff   = buffer_create(maxParticles * 2 * 8, buffer_grow, 8);
@@ -76,9 +72,9 @@ function init(width, height, particleSize, density, maxParticles) { #region doma
 	cellY = floor(height / particleSize) + 1;
 	
 	domain_preview = surface_verify(domain_preview, width, height);
-} #endregion
+}
 
-function update() { #region
+function update() {
 	FLIP_setQuality(		 domain, iteration, numPressureIters, numParticleIters);
 	FLIP_setGravity(		 domain, g, gDirection);
 	FLIP_setViscosity(		 domain, viscosity);
@@ -87,9 +83,9 @@ function update() { #region
 	FLIP_setVelocityDamping( domain, velocityDamping);
 	FLIP_setOverRelaxation(	 domain, overRelaxation);
 	FLIP_setWallCollisions(  domain, wallCollide, wallElasticity);
-} #endregion
+}
 
-function step() { #region
+function step() {
 	FLIP_resetDensity(domain);
 	
 	if(skip_incompressible) { 
@@ -135,4 +131,4 @@ function step() { #region
 		particleLife[i] = buffer_read(particleLifeBuff, buffer_f64);
 		
 	domain_preview = surface_verify(domain_preview, width, height);
-} #endregion
+}

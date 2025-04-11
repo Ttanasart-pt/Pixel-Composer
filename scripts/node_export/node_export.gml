@@ -231,7 +231,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	temp_surface = [ 0 ]; 
 	
 	if(OS == os_windows) {
-		var _w = function(str, pth) /*=>*/ {return $"No {str} detected at {pth}, please make sure the installation is complete and {str} path is set correctly in the preference."};
+		var _w = function(s,p) /*=>*/ {return $"No {s} detected at {p}, please make sure the installation is complete and {s} path is set correctly in the preference."};
 		
 		if(!file_exists_empty(converter)) noti_warning(_w("ImageMagick", magick), noone, self);
 		if(!file_exists_empty(magick))    noti_warning(_w("ImageMagick", magick), noone, self);

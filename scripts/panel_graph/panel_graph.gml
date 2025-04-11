@@ -301,20 +301,17 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         }
         
         connection_param  = new connectionParameter();
+        bg_color          = c_black;
+        slider_width      = 0;
+        tooltip_overlay   = {};
         
-        bg_color = c_black;
-        
-        slider_width = 0;
-        
-        tooltip_overlay = {};
-        
-        function addKeyOverlay(title, keys) {
-        	if(struct_has(tooltip_overlay, title)) {
-        		array_append(tooltip_overlay[$ title], keys);
+        function addKeyOverlay(_title, _keys) {
+        	if(struct_has(tooltip_overlay, _title)) {
+        		array_append(tooltip_overlay[$ _title], _keys);
         		return;
         	}
         	
-        	tooltip_overlay[$ title] = keys;
+        	tooltip_overlay[$ _title] = _keys;
         }
         
         tb_zoom_level = new textBox(TEXTBOX_INPUT.number, function(z) /*=>*/ { 
@@ -3926,8 +3923,8 @@ function Panel_Graph_Drop_tooltip(panel) constructor {
 		var tw = max(w1, w2);
 		var th = h1 + ui(8) + h2;
 		
-		var mx = min(__mouse_tx + ui(16), __win_tw - (tw + ui(16)));
-		var my = min(__mouse_ty + ui(16), __win_th - (th + ui(16)));
+		var mx = min(mouse_mxs + ui(16), WIN_W - (tw + ui(16)));
+		var my = min(mouse_mys + ui(16), WIN_H - (th + ui(16)));
 		
 		draw_sprite_stretched(THEME.textbox, 3, mx, my, tw + ui(16), th + ui(16));
 		draw_sprite_stretched(THEME.textbox, 0, mx, my, tw + ui(16), th + ui(16));

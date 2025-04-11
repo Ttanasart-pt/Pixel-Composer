@@ -455,15 +455,15 @@
 		if(MAC) PREFERENCES.multi_window = false;
 		
 		if(PREFERENCES.multi_window) {
-			var _cfg = winwin_config_ext("", winwin_kind_borderless, true, false, winwin_main);
-			    _cfg.clickthrough = true;
-			    _cfg.noactivate   = true;
+			// var _cfg = winwin_config_ext("", winwin_kind_borderless, true, false, winwin_main);
+			//     _cfg.clickthrough = true;
+			//     _cfg.noactivate   = true;
 			    // _cfg.thread       = true;
 			    
-			if(TOOLTIP_WINDOW != noone && winwin_exists(TOOLTIP_WINDOW))
-				winwin_destroy(TOOLTIP_WINDOW);
+			// if(TOOLTIP_WINDOW != noone && winwin_exists(TOOLTIP_WINDOW))
+			// 	winwin_destroy(TOOLTIP_WINDOW);
 			
-			TOOLTIP_WINDOW = winwin_create(0, 0, display_get_width(), display_get_height(), _cfg);
+			// TOOLTIP_WINDOW = winwin_create(0, 0, display_get_width(), display_get_height(), _cfg);
 		}
 	}
 #endregion

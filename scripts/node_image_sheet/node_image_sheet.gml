@@ -1,27 +1,13 @@
 function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Splice Spritesheet";
 	
-	newInput(0, nodeValue_Surface("Surface In", self));
+	newInput(0, nodeValue_Surface( "Surface In",  self));
+	newInput(1, nodeValue_Vec2(    "Sprite size", self, [ 32, 32 ]));
+	newInput(6, nodeValue_Padding( "Padding",     self, [0, 0, 0, 0]));
+	newInput(2, nodeValue_Int(     "Row",         self, 1)); //unused
 	
-	newInput(1, nodeValue_Vec2("Sprite size", self, [ 32, 32 ]));
-	
-	newInput(2, nodeValue_Int("Row", self, 1)); //unused
-	newInput(3, nodeValue_Vec2("Amount", self, [ 1, 1 ]));
-	
-	newInput(4, nodeValue_Vec2("Offset", self, [ 0, 0 ]));
-	
-	newInput(5, nodeValue_Vec2("Spacing", self, [ 0, 0 ]));
-	
-	newInput(6, nodeValue_Padding("Padding", self, [0, 0, 0, 0]));
-	
-	newInput(7, nodeValue_Enum_Scroll("Output", self,  1, [ "Animation", "Array" ]));
-	
-	newInput(8, nodeValue_Float("Animation speed", self, 1));
-	
-	newInput(9, nodeValue_Enum_Scroll("Main Axis", self,  0, [ new scrollItem("Horizontal", s_node_alignment, 0), 
-												               new scrollItem("Vertical",   s_node_alignment, 1), ]));
-	
-	newInput(10, nodeValue_Trigger("Auto fill", self, "Automatically set amount based on sprite size."))
+	newInput( 3, nodeValue_Vec2(        "Amount",    self, [ 1, 1 ]));
+	newInput(10, nodeValue_Trigger(     "Auto fill", self, "Automatically set amount based on sprite size."))
 		.setDisplay(VALUE_DISPLAY.button, { name: "Auto fill", UI : true, onClick: function() /*=>*/ {
 			var _sur = getInputData(0);
 			if(!is_surface(_sur) || _sur == DEF_SURFACE) return;
@@ -43,24 +29,27 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 			doUpdate();
 		} });
-		
-	newInput(11, nodeValue_Trigger("Sync animation", self ))
+	newInput( 9, nodeValue_Enum_Scroll( "Main Axis", self, 0, __enum_array_gen(["Horizontal", "Vertical"], s_node_alignment)));
+	newInput( 4, nodeValue_Vec2(        "Offset",    self, [ 0, 0 ]));
+	newInput( 5, nodeValue_Vec2(        "Spacing",   self, [ 0, 0 ]));
+	
+	newInput( 7, nodeValue_Enum_Scroll( "Output",          self, 1, [ "Animation", "Array" ]));
+	newInput( 8, nodeValue_Float(       "Animation speed", self, 1));
+	newInput(11, nodeValue_Trigger(     "Sync animation",  self ))
 		.setDisplay(VALUE_DISPLAY.button, { name: "Sync frames", UI : true, onClick: function() /*=>*/ { 
 			var _atl = outputs[1].getValue();
 			var _spd = getInputData(8);
 			TOTAL_FRAMES = max(1, _spd == 0? 1 : ceil(array_length(_atl) / _spd));
 		} });
 		
-	newInput(12, nodeValue_Bool("Filter empty output", self, false));
-		
-	newInput(13, nodeValue_Enum_Scroll("Filtered Pixel", self,  0, [ "Transparent", "Color" ]));
-	
-	newInput(14, nodeValue_Color("Filtered Color", self, cola(c_black)))
+	newInput(12, nodeValue_Bool(        "Filter empty output", self, false));
+	newInput(13, nodeValue_Enum_Scroll( "Filtered Pixel",      self, 0, [ "Transparent", "Color" ]));
+	newInput(14, nodeValue_Color(       "Filtered Color",      self, ca_black));
 	
 	input_display_list = [
-		["Sprite", false],	0, 1, 6, 
-		["Sheet",  false],	3, 10, 9, 4, 5, 
-		["Output", false],	7, 8, 11,
+		["Sprite", false], 0, 1, 6, 
+		["Sheet",  false], 3, 10, 9, 4, 5, 
+		["Output", false], 7, 8, 11,
 		["Filter Empty", true, 12], 13, 14, 
 	];
 	
@@ -152,32 +141,34 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		var _amo = array_safe_get_fast(curr_amo, 0) * array_safe_get_fast(curr_amo, 1);
 		
-		if(_amo < 256) {
-			for(var i = _amo - 1; i >= 0; i--) {
-				if(!array_safe_get_fast(sprite_valid, i, false))
-					continue;
+		// if(drag_type == 0) {
+			if(_amo < 256) {
+				for(var i = _amo - 1; i >= 0; i--) {
+					if(!array_safe_get_fast(sprite_valid, i, false))
+						continue;
+					
+					var _f = sprite_pos[i];
+					var _fx0 = _x + _f[0] * _s;
+					var _fy0 = _y + _f[1] * _s;
+					var _fx1 = _fx0 + curr_dim[0] * _s;
+					var _fy1 = _fy0 + curr_dim[1] * _s;
 				
-				var _f = sprite_pos[i];
+					draw_set_color(COLORS._main_accent);
+					draw_set_alpha(i == 0? 1 : 0.75);
+					draw_rectangle(_fx0, _fy0, _fx1 - 1, _fy1 - 1, true);
+					draw_set_alpha(1);
+				}
+			} else {
+				var _f = sprite_pos[0];
 				var _fx0 = _x + _f[0] * _s;
 				var _fy0 = _y + _f[1] * _s;
 				var _fx1 = _fx0 + curr_dim[0] * _s;
 				var _fy1 = _fy0 + curr_dim[1] * _s;
-			
+				
 				draw_set_color(COLORS._main_accent);
-				draw_set_alpha(i == 0? 1 : 0.75);
 				draw_rectangle(_fx0, _fy0, _fx1 - 1, _fy1 - 1, true);
-				draw_set_alpha(1);
 			}
-		} else {
-			var _f = sprite_pos[0];
-			var _fx0 = _x + _f[0] * _s;
-			var _fy0 = _y + _f[1] * _s;
-			var _fx1 = _fx0 + curr_dim[0] * _s;
-			var _fy1 = _fy0 + curr_dim[1] * _s;
-			
-			draw_set_color(COLORS._main_accent);
-			draw_rectangle(_fx0, _fy0, _fx1 - 1, _fy1 - 1, true);
-		}
+		// }
 		
 		var __ax = curr_off[0];
 		var __ay = curr_off[1];
@@ -192,99 +183,103 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _bw = curr_amo[0] * (curr_dim[0] + _spc[0]) - _spc[0]; _bw *= _s;
 		var _bh = curr_amo[1] * (curr_dim[1] + _spc[1]) - _spc[1]; _bh *= _s;
 		
-		draw_sprite_colored(THEME.anchor, 0, _ax, _ay);
-		draw_sprite_colored(THEME.anchor_selector, 0, _ax + _aw, _ay + _ah);
-		draw_sprite_colored(THEME.anchor_arrow, 0, _ax + _bw + _s * 4, _ay + _bh / 2);
-		draw_sprite_colored(THEME.anchor_arrow, 0, _ax + _bw / 2, _ay + _bh + _s * 4,, -90);
+		var _4 = 4 * _s;
+		var x0 = _ax;
+		var y0 = _ay;
+		var x1 = _ax + _aw;
+		var y1 = _ay + _ah;
+		var xc = _ax + _aw / 2;
+		var yc = _ay + _ah / 2;
 		
+		var _h0 = false, _h1 = false, _h2 = false, _h3 = false;
 		if(active) {
-			if(point_in_circle(_mx, _my, _ax + _aw, _ay + _ah, 8))
-				draw_sprite_colored(THEME.anchor_selector, 1, _ax + _aw, _ay + _ah);
-			else if(point_in_rectangle(_mx, _my, _ax - _aw, _ay - _ah, _ax + _aw, _ay + _ah))
-				draw_sprite_colored(THEME.anchor, 0, _ax, _ay, 1.25, c_white);
-			else if(point_in_circle(_mx, _my, _ax + _bw + _s * 4, _ay + _bh / 2, 8))
-				draw_sprite_colored(THEME.anchor_arrow, 1, _ax + _bw + _s * 4, _ay + _bh / 2);
-			else if(point_in_circle(_mx, _my, _ax + _bw / 2, _ay + _bh + _s * 4, 8))
-				draw_sprite_colored(THEME.anchor_arrow, 1, _ax + _bw / 2, _ay + _bh + _s * 4,, -90);
+			     if(point_in_circle(    _mx, _my, x1, y1, 8))      _h0 = true;
+			else if(point_in_circle(    _mx, _my, x1 + _4, yc, 8)) _h1 = true;
+			else if(point_in_circle(    _mx, _my, xc, y1 + _4, 8)) _h2 = true;
+			else if(point_in_rectangle( _mx, _my, x0, y0, x1, y1)) _h3 = true;
 		}
 		
-		#region area
-			var __dim = getInputData(1);
-			var __amo = getInputData(3);
-			var __off = getInputData(4);
+		draw_sprite_colored(THEME.anchor_selector, _h0, x1, y1);
+		draw_sprite_colored(THEME.anchor_arrow,    _h1, x1 + _4, yc);
+		draw_sprite_colored(THEME.anchor_arrow,    _h2, xc, y1 + _4, 1, -90);
+		draw_sprite_colored(THEME.anchor,          _h3, xc, yc);
+		
+		var __dim = getInputData(1);
+		var __amo = getInputData(3);
+		var __off = getInputData(4);
+					
+		var _ax = __off[0] * _s + _x;
+		var _ay = __off[1] * _s + _y;
+		var _aw = __dim[0] * _s;
+		var _ah = __dim[1] * _s;
+		
+		if(drag_type == 1) {
+			var _xx = value_snap(round(drag_sx + (_mx - drag_mx) / _s), _snx);
+			var _yy = value_snap(round(drag_sy + (_my - drag_my) / _s), _sny);
 						
-			var _ax = __off[0] * _s + _x;
-			var _ay = __off[1] * _s + _y;
-			var _aw = __dim[0] * _s;
-			var _ah = __dim[1] * _s;
+			var off = [ _xx, _yy ];
+			curr_off = off;
+			inputs[4].setValue(off);
+		
+			if(mouse_release(mb_left)) drag_type = 0;
 			
-			if(drag_type == 1) {
-				var _xx = value_snap(round(drag_sx + (_mx - drag_mx) / _s), _snx);
-				var _yy = value_snap(round(drag_sy + (_my - drag_my) / _s), _sny);
-							
-				var off = [ _xx, _yy ];
-				curr_off = off;
+		} else if(drag_type == 2) {
+			var _dx = value_snap(round(abs((_mx - drag_mx) / _s)), _snx);
+			var _dy = value_snap(round(abs((_my - drag_my) / _s)), _sny);
 			
-				if(mouse_release(mb_left)) {
-					drag_type = 0;
-					inputs[4].setValue(off);
-				}
-			} else if(drag_type == 2) {
-				var _dx = value_snap(round(abs((_mx - drag_mx) / _s)), _snx);
-				var _dy = value_snap(round(abs((_my - drag_my) / _s)), _sny);
-				
-				var dim = [_dx, _dy];
-				curr_dim = dim;
-							
-				if(key_mod_press(SHIFT)) {
-					dim[0] = max(_dx, _dy);
-					dim[1] = max(_dx, _dy);
-				}
-				
-				if(mouse_release(mb_left)) {
-					drag_type = 0;
-					inputs[1].setValue(dim);
-				}
-			} else if(drag_type == 3) {
-				var _col = floor((abs(_mx - drag_mx) / _s - _spc[0]) / (__dim[0] + _spc[0]));
-				curr_amo = [ _col, curr_amo[1] ];
-				
-				if(mouse_release(mb_left)) {
-					drag_type = 0;
-					inputs[3].setValue(curr_amo);
-				}
-			} else if(drag_type == 4) {
-				var _row = floor((abs(_my - drag_my) / _s - _spc[1]) / (__dim[1] + _spc[1]));
-				curr_amo = [ curr_amo[0], _row ];
-				
-				if(mouse_release(mb_left)) {
-					drag_type = 0;
-					inputs[3].setValue(curr_amo);
-				}
-			}
+			var dim = [_dx, _dy];
+			curr_dim = dim;
 						
-			if(mouse_press(mb_left, active)) {
-				if(point_in_circle(_mx, _my, _ax + _aw, _ay + _ah, 8)) { // drag size
-					drag_type = 2;
-					drag_mx   = _ax;
-					drag_my   = _ay;
-				} else if(point_in_rectangle(_mx, _my, _ax - _aw, _ay - _ah, _ax + _aw, _ay + _ah)) { // drag position
-					drag_type = 1;	
-					drag_sx   = __off[0];
-					drag_sy   = __off[1];
-					drag_mx   = _mx;
-					drag_my   = _my;
-				} else if(point_in_circle(_mx, _my, _ax + _bw + _s * 4, _ay + _bh / 2, 8)) { // drag col
-					drag_type = 3;
-					drag_mx   = _ax;
-					drag_my   = _ay;
-				} else if(point_in_circle(_mx, _my, _ax + _bw / 2, _ay + _bh + _s * 4, 8)) { // drag row
-					drag_type = 4;
-					drag_mx   = _ax;
-					drag_my   = _ay;
-				}
+			if(key_mod_press(SHIFT)) {
+				dim[0] = max(_dx, _dy);
+				dim[1] = max(_dx, _dy);
 			}
-		#endregion
+			
+			inputs[1].setValue(dim);
+			
+			if(mouse_release(mb_left)) drag_type = 0;
+			
+		} else if(drag_type == 3) {
+			var _col = floor((abs(_mx - drag_mx) / _s - _spc[0]) / (__dim[0] + _spc[0]));
+			curr_amo = [ _col, curr_amo[1] ];
+			inputs[3].setValue(curr_amo);
+			
+			if(mouse_release(mb_left)) drag_type = 0;
+			
+		} else if(drag_type == 4) {
+			var _row = floor((abs(_my - drag_my) / _s - _spc[1]) / (__dim[1] + _spc[1]));
+			curr_amo = [ curr_amo[0], _row ];
+			inputs[3].setValue(curr_amo);
+			
+			if(mouse_release(mb_left)) drag_type = 0;
+			
+		}
+					
+		if(mouse_press(mb_left, active)) {
+			if(_h0) { // drag size
+				drag_type = 2;
+				drag_mx   = _ax;
+				drag_my   = _ay;
+				
+			} else if(_h1) { // drag col
+				drag_type = 3;
+				drag_mx   = _ax;
+				drag_my   = _ay;
+				
+			} else if(_h2) { // drag row
+				drag_type = 4;
+				drag_mx   = _ax;
+				drag_my   = _ay;
+				
+			} else if(_h3) { // drag position
+				drag_type = 1;	
+				drag_sx   = __off[0];
+				drag_sy   = __off[1];
+				drag_mx   = _mx;
+				drag_my   = _my;
+				
+			} 
+		}
 	}
 	
 	static step = function() {

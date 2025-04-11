@@ -31,12 +31,6 @@
 	
 	#macro MOUSE_MOVED (window_mouse_get_delta_x() != 0 || window_mouse_get_delta_y() != 0)
 	
-	#macro   mouse_wheel_up mouse_wheel_up_override
-	#macro __mouse_wheel_up mouse_wheel_up
-	
-	#macro   mouse_wheel_down mouse_wheel_down_override
-	#macro __mouse_wheel_down mouse_wheel_down
-	
 	function setMouseWrap() {
 		INLINE
 		MOUSE_WRAP = true;
@@ -55,23 +49,6 @@ function global_mouse_pool_init() {
 	MOUSE_POOL.lrelease = mouse_check_button_released(mb_left);
 	MOUSE_POOL.rrelease = mouse_check_button_released(mb_right);
 	MOUSE_POOL.mrelease = mouse_check_button_released(mb_middle);
-
-	for( var i = 0, n = array_length(global.winwin_all); i < n; i++ ) {
-		var ww = global.winwin_all[i];
-		if(!__ww_valid) continue;
-		
-		MOUSE_POOL.lclick |= winwin_mouse_check_button(ww, mb_left);
-		MOUSE_POOL.rclick |= winwin_mouse_check_button(ww, mb_right);
-		MOUSE_POOL.mclick |= winwin_mouse_check_button(ww, mb_middle);
-		
-		MOUSE_POOL.lpress |= winwin_mouse_check_button_pressed(ww, mb_left);
-		MOUSE_POOL.rpress |= winwin_mouse_check_button_pressed(ww, mb_right);
-		MOUSE_POOL.mpress |= winwin_mouse_check_button_pressed(ww, mb_middle);
-		
-		MOUSE_POOL.lrelease |= winwin_mouse_check_button_released(ww, mb_left);
-		MOUSE_POOL.rrelease |= winwin_mouse_check_button_released(ww, mb_right);
-		MOUSE_POOL.mrelease |= winwin_mouse_check_button_released(ww, mb_middle);
-	}
 }
 
 function mouse_step() {
@@ -94,7 +71,7 @@ function mouse_click(mouse, focus = true) {
 	
 	if(PEN_RIGHT_CLICK) return mouse == mb_right;
 	
-	return WINDOW_ACTIVE == noone? mouse_check_button(mouse) : winwin_mouse_check_button_safe(WINDOW_ACTIVE, mouse);
+	return mouse_check_button(mouse);
 }
 
 function mouse_press(mouse, focus = true, pass = false) {
@@ -103,11 +80,8 @@ function mouse_press(mouse, focus = true, pass = false) {
 	if(!focus)				 return false;
 	
 	if(PEN_RIGHT_PRESS)      return mouse == mb_right;
-	if(mouse == mb_any)      return winwin_mouse_check_button_pressed_safe(WINDOW_ACTIVE, mb_left)  || 
-									winwin_mouse_check_button_pressed_safe(WINDOW_ACTIVE, mb_right) || 
-									winwin_mouse_check_button_pressed_safe(WINDOW_ACTIVE, mb_middle);
 	
-	return winwin_mouse_check_button_pressed_safe(WINDOW_ACTIVE, mouse);
+	return mouse_check_button_pressed(mouse);
 }
 
 function mouse_release(mouse, focus = true) {
@@ -116,7 +90,7 @@ function mouse_release(mouse, focus = true) {
 	
 	if(PEN_RIGHT_RELEASE) return mouse == mb_right;
 	
-	var rl = WINDOW_ACTIVE == noone? mouse_check_button_released(mouse) : winwin_mouse_check_button_released_safe(WINDOW_ACTIVE, mouse);
+	var rl = mouse_check_button_released(mouse);
 	return rl || ((mouse == mb_left || mouse == mb_any) && PEN_RELEASED);
 }
 
@@ -126,7 +100,7 @@ function mouse_lclick(focus = true) {
 	if(!focus)			return false;
 	if(PEN_RIGHT_CLICK || PEN_RIGHT_RELEASE) return false;
 	
-	return WINDOW_ACTIVE == noone? mouse_check_button(mb_left) : winwin_mouse_check_button_safe(WINDOW_ACTIVE, mb_left);
+	return mouse_check_button(mb_left);
 }
 
 function mouse_lpress(focus = true) {
@@ -135,7 +109,7 @@ function mouse_lpress(focus = true) {
 	if(!focus)			return false;
 	if(PEN_RIGHT_PRESS) return false;
 	
-	return WINDOW_ACTIVE == noone? mouse_check_button_pressed(mb_left) : winwin_mouse_check_button_pressed_safe(WINDOW_ACTIVE, mb_left);
+	return mouse_check_button_pressed(mb_left);
 }
 
 function mouse_lrelease(focus = true) {
@@ -144,7 +118,7 @@ function mouse_lrelease(focus = true) {
 	if(PEN_RIGHT_RELEASE) return false;
 	if(PEN_RELEASED)	  return true;
 	
-	return WINDOW_ACTIVE == noone? mouse_check_button_released(mb_left) : winwin_mouse_check_button_released_safe(WINDOW_ACTIVE, mb_left);
+	return mouse_check_button_released(mb_left);
 }
 
 function mouse_rclick(focus = true) {
@@ -153,7 +127,7 @@ function mouse_rclick(focus = true) {
 	if(!focus)			return false;
 	if(PEN_RIGHT_CLICK) return true;
 	
-	return WINDOW_ACTIVE == noone? mouse_check_button(mb_right) : winwin_mouse_check_button_safe(WINDOW_ACTIVE, mb_right);
+	return mouse_check_button(mb_right);
 }
 
 function mouse_rpress(focus = true) {
@@ -162,7 +136,7 @@ function mouse_rpress(focus = true) {
 	if(!focus)			return false;
 	if(PEN_RIGHT_PRESS) return true;
 	
-	return WINDOW_ACTIVE == noone? mouse_check_button_pressed(mb_right) : winwin_mouse_check_button_pressed_safe(WINDOW_ACTIVE, mb_right);
+	return mouse_check_button_pressed(mb_right);
 }
 
 function mouse_rrelease(focus = true) {
@@ -170,7 +144,7 @@ function mouse_rrelease(focus = true) {
 	if(!focus)			  return false;
 	if(PEN_RIGHT_RELEASE) return true;
 	
-	return WINDOW_ACTIVE == noone? mouse_check_button_released(mb_right) : winwin_mouse_check_button_released_safe(WINDOW_ACTIVE, mb_right);
+	return mouse_check_button_released(mb_right);
 }
 	
 function mouse_lock(mx = CURSOR_LOCK_X, my = CURSOR_LOCK_Y) {
@@ -182,6 +156,3 @@ function mouse_lock(mx = CURSOR_LOCK_X, my = CURSOR_LOCK_Y) {
 	
 	window_mouse_set(CURSOR_LOCK_X, CURSOR_LOCK_Y);
 }
-
-function mouse_wheel_up_override()   { return (WINDOW_ACTIVE != noone && winwin_exists(WINDOW_ACTIVE))? winwin_mouse_wheel_up(WINDOW_ACTIVE)   : __mouse_wheel_up();   }
-function mouse_wheel_down_override() { return (WINDOW_ACTIVE != noone && winwin_exists(WINDOW_ACTIVE))? winwin_mouse_wheel_down(WINDOW_ACTIVE) : __mouse_wheel_down(); }

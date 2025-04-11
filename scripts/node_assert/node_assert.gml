@@ -104,8 +104,8 @@ function tooltipSurfaceAssetion(expect, got) constructor {
 		var tw =  ss * 2 + ui(8);
 		var th = (ss + ui(4)) * array_length(expect) + ui(20) - ui(4);
 		
-		var mx = min(__mouse_tx + ui(16), __win_tw - (tw + ui(16)));
-		var my = min(__mouse_ty + ui(16), __win_th - (th + ui(16)));
+		var mx = min(mouse_mys + ui(16), WIN_W - (tw + ui(16)));
+		var my = min(mouse_mxs + ui(16), WIN_H - (th + ui(16)));
 		
 		draw_sprite_stretched(THEME.textbox, 3, mx, my, tw + ui(16), th + ui(16));
 		draw_sprite_stretched(THEME.textbox, 0, mx, my, tw + ui(16), th + ui(16));
