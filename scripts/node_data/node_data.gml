@@ -238,9 +238,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		attributeEditors = [
 			"Display",
 			["Annotation",   function() /*=>*/ {return attributes.annotation},       new textArea(TEXTBOX_INPUT.text,  function(val) /*=>*/ { attributes.annotation = val;          }) ],
-			["Params Width", function() /*=>*/ {return attributes.node_param_width}, textBox_Number(function(val) /*=>*/ { attributes.node_param_width = val; refreshNodeDisplay(); }) ],
 			["Node Width",   function() /*=>*/ {return attributes.node_width},       textBox_Number(function(val) /*=>*/ { attributes.node_width       = val; refreshNodeDisplay(); }) ],
 			["Node Height",  function() /*=>*/ {return attributes.node_height},      textBox_Number(function(val) /*=>*/ { attributes.node_height      = val; refreshNodeDisplay(); }) ],
+			["Params Width", function() /*=>*/ {return attributes.node_param_width}, textBox_Number(function(val) /*=>*/ { attributes.node_param_width = val; refreshNodeDisplay(); }) ],
 			
 			"Node",
 			["Auto update",     function() /*=>*/ {return attributes.update_graph},		  new checkBox(function() /*=>*/ { attributes.update_graph        = !attributes.update_graph;           }) ],
@@ -434,11 +434,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			dummy_input = nodeValue("Add value", self, CONNECT_TYPE.input, dummy_type, 0)
 				.setDummy(function() /*=>*/ {
 					var index = array_length(inputs);
-					
-					if(dummy_insert != noone) {
-						var i = dummy_insert;
-						index = input_fix_len + i * data_length;
-					}
+					if(dummy_insert != noone) 
+						index = input_fix_len + dummy_insert * data_length;
 					
 					repeat(data_length) array_insert(inputs, index, 0);
 					return createNewInput(index);

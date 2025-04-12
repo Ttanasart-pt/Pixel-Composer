@@ -43,12 +43,12 @@
 	LATEST_VERSION	= 1_18_00_0;
 	VERSION			= 1_18_11_0;
 	SAVE_VERSION	= 1_18_09_1;
-	VERSION_STRING  = MAC? "1.18.003m" : "1.19rc5";
-	BUILD_NUMBER	= 118505;
+	VERSION_STRING  = MAC? "1.18.003m" : "1.19rc7";
+	BUILD_NUMBER	= 118507;
 	PREF_VERSION    = 1_17_1;
 	
 	var _vsp = string_split(VERSION_STRING, ".");
-	var _lsp = _vsp[array_length(_vsp) - 1];
+	var _lsp = array_last(_vsp);
 	NIGHTLY  = string_length(_lsp) == 3;
 	
 	HOTKEYS			= {};

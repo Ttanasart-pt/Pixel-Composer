@@ -398,6 +398,12 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
     	node_drag_removing   = false;
     	node_drag_remove     = [];
     	
+    	node_resize          = noone;
+    	node_resize_mx       = 0;
+    	node_resize_my       = 0;
+    	node_resize_sx       = 0;
+    	node_resize_sy       = 0;
+    	
         selection_block      = 0;
         nodes_selecting      = [];
         nodes_selecting_jun  = [];
@@ -1204,14 +1210,13 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         if(value_focus != noone)       return;
         
         var _node = getFocusingNode();
-        if(_node && mouse_press(mb_left) && key_mod_press(CTRL))
+        if(_node && mouse_press(mb_left) && key_mod_check(MOD_KEY.ctrl))
         	node_drag_connect = _node;
         
-        if(mouse_press(mb_right) && key_mod_press(CTRL)) {
+        if(mouse_press(mb_right) && key_mod_check(MOD_KEY.ctrl)) {
         	node_drag_removing = true;
         	node_drag_remove   = [];
         }
-        
     }
     
     ////- Draw
@@ -1655,12 +1660,11 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                         }
                         
                         if(WIDGET_CURRENT) WIDGET_CURRENT.deactivate();
-                        array_foreach(nodes_selecting, function(node) { bringNodeToFront(node); });
+                        array_foreach(nodes_selecting, function(n) /*=>*/ { bringNodeToFront(n) });
                     }
                 }
                 
                 nodes_select_anchor = _anc;
-            
             
             if(mouse_press(mb_right, _focus) && !key_mod_press_any()) {
                 node_hover = node_hovering;    

@@ -23,35 +23,38 @@ if(!LOADING && PROJECT.active && !PROJECT.safeMode) { //node step
 
 #region hotkey
 	if(!HOTKEY_BLOCK) {
-		var _action = false;
+		var hotkey_use = !HOTKEY_ACT;
+		HOTKEY_ACT = false;
 		
-		if(!HOTKEY_ACT && struct_has(HOTKEYS, 0)) {
-			var l = HOTKEYS[$ 0];
-			for(var i = 0, n = array_length(l); i < n; i++) {
-				var hotkey = l[i];
+		if(hotkey_use) {
+			var _toAct = [];
+			
+			repeat(ds_stack_size(FOCUS_STACK)) {
+				var _focus_ctx = ds_stack_pop(FOCUS_STACK);
+				if(!struct_has(HOTKEYS, _focus_ctx)) continue;
 				
-				if(hotkey.isPressing(true)) {
-					hotkey.action();
-					_action |= hotkey.key != noone;
+				var list = HOTKEYS[$ _focus_ctx];
+				for( var i = 0, n = array_length(list); i < n; i++ ) {
+					var hotkey = list[i];
+					
+					if(hotkey.isPressing(true))
+						array_push(_toAct, hotkey);
 				}
 			}
-		}
-		
-		if(!HOTKEY_ACT && struct_has(HOTKEYS, FOCUS_STR)) {
-			var list = HOTKEYS[$ FOCUS_STR];
 			
-			for(var i = 0, n = array_length(list); i < n; i++) {
-				var hotkey = list[i];
+			var _l = array_length(_toAct);
+			if(_l == 1) {
+				_toAct[0].action();
+				HOTKEY_ACT |= _toAct[0].key != noone;
 				
-				if(hotkey.isPressing(true)) {
-					hotkey.action();
-					_action |= hotkey.key != noone;
-				}
+			} else if(_l > 1) {
+				menuCall($"hotkey.multi", array_map(_toAct, function(h) /*=>*/ {return new MenuItem(h.name, function(h) /*=>*/ { h.action(); HOTKEY_ACT |= h.key != noone; }).setParam(h)}));
 			}
 		}
 		
 		ds_stack_clear(FOCUS_STACK);
-		HOTKEY_ACT |= _action;
+		ds_stack_push(FOCUS_STACK, 0, FOCUS_STR);
+		
 	}
 	
 	HOTKEY_BLOCK = false;

@@ -1303,6 +1303,7 @@ function Panel_Preference() : PanelContent() constructor {
     		
     		var _addnode  = _list == GRAPH_ADD_NODE_KEYS;
     		var _search   = string_lower(search_text);
+    		var _hoverAny = false;
     		
     		var key, name;
     		
@@ -1356,22 +1357,27 @@ function Panel_Preference() : PanelContent() constructor {
     			var bh = th + ui(6);
     			var cc = c_white;
     			
+    			var hv = _hov && point_in_rectangle(_m[0], _m[1], _ww / 2, by, bx + bw, by + bh);
+    			_hoverAny |= hv;
+    			
     			if(hk_editing == key) {
     				draw_sprite_stretched_ext(THEME.ui_panel, 1, bx, by, bw, bh, COLORS._main_accent);
     				cc = COLORS._main_text_accent;
     				
+    				if(hv) {
+    					sp_hotkey.hover_content = true;
+    					if(mouse_press(mb_left, pFOCUS)) hk_editing = noone;
+    				} 
+    				
     			} else {
-    				if(_hov && point_in_rectangle(_m[0], _m[1], _ww / 2, by, bx + bw, by + bh)) {
+    				cc = CDEF.main_ltgrey;
+    				
+    				if(hv) {
     					draw_sprite_stretched_ext(THEME.ui_panel, 1, bx, by, bw, bh, CDEF.main_ltgrey);
     					sp_hotkey.hover_content = true;
     					cc = CDEF.main_white;
-    					
-    					if(mouse_press(mb_left, pFOCUS))
-    						hk_editing = key.modify();
-    					
-    				} else {
-    					cc = CDEF.main_ltgrey;
-    				}
+    					if(mouse_press(mb_left, pFOCUS)) hk_editing = key.modify();
+    				} 
     			}
     			
     			draw_set_text(f_p2, fa_right, fa_top, cc);
@@ -1389,6 +1395,8 @@ function Panel_Preference() : PanelContent() constructor {
     			
     			hh += th + padd * 2;
     		}
+    		
+    		if(!_hoverAny && hk_editing && mouse_press(mb_left, pFOCUS)) hk_editing = noone;
     		
     		hotkey_focus         = noone;
     		hotkey_focus_high_bg = lerp_linear(hotkey_focus_high_bg, 0, DELTA_TIME);
@@ -1695,9 +1703,6 @@ function Panel_Preference() : PanelContent() constructor {
     	    case 4 : //Hotkeys
     	    	if(!hk_init) initHK();
     	    	
-        		if(mouse_press(mb_left, pFOCUS)) 
-        			hk_editing = noone;
-        		
         		var hk_w = panel_width;
         		var hk_h = hotkey_cont_h - ui(16);
         		var kdsp = keyboards_display;
