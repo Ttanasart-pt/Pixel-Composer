@@ -70,13 +70,13 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		.addSetting("Replace",    VALUE_TYPE.boolean, function(   ) /*=>*/ { tool_pathDrawer.attribute.create = !tool_pathDrawer.attribute.create; }, "create", true);
 	
 	tools = [
-		new NodeTool( "Transform",           THEME.path_tools_transform ),
-		new NodeTool( "Anchor add / remove", THEME.path_tools_add ),
-		new NodeTool( "Edit Control point",  THEME.path_tools_anchor ),
+		new NodeTool( "Transform",           THEME.path_tools_transform   ),
+		new NodeTool( "Anchor add / remove", THEME.path_tools_add         ),
+		new NodeTool( "Edit Control point",  THEME.path_tools_anchor      ),
 		tool_pathDrawer,
-		new NodeTool( "Rectangle path", THEME.path_tools_rectangle ),
-		new NodeTool( "Circle path",    THEME.path_tools_circle ),
-		new NodeTool( "Weight edit",    THEME.path_tools_weight_edit ),
+		new NodeTool( "Rectangle path",      THEME.path_tools_rectangle   ),
+		new NodeTool( "Circle path",         THEME.path_tools_circle      ),
+		new NodeTool( "Weight edit",         THEME.path_tools_weight_edit ),
 	];
 	
 	#region ---- path ----

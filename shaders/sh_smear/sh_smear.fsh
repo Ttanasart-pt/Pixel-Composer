@@ -35,7 +35,8 @@ uniform int	 alpha;
 uniform int	 modulateStr;
 uniform int	 inv;
 uniform int	 blend;
-uniform int	 normalized;
+uniform int	 rMode;
+uniform vec4 blendSide;
 
 vec4 smear(vec2 shift) {
 	float delta  = 1. / size;
@@ -64,15 +65,12 @@ vec4 smear(vec2 shift) {
 			}
 		}
 		
-		if(modulateStr == 1) {
-			if(alpha == 0) res.rgb *= mBri;
-			else           res.a   *= res.a;
-		}
-		
+		if(modulateStr == 1) 
+			res = alpha == 0? vec4(base.rgb * vec3(mBri), base.a) : vec4(base.rgb, base.a * mBri);
+			
 	} else if(inv == 1) {
 		base = alpha == 0? vec4(0., 0., 0., 1.) : vec4(0.);
-		mBri = 0.;
-	    res  = base;
+		res  = base;
 		
 		for(float i = 0.; i <= 1.; i += delta) {
 			col    = sampleTexture( gm_BaseTexture, v_vTexcoord + shift * i);
@@ -86,10 +84,13 @@ vec4 smear(vec2 shift) {
 				else           col.a   *= i;
 			}
 			
-			mBri   = bright;
+			float _i = 0.;
+			     if(rMode == 0) _i = i;
+			else if(rMode == 1) _i = i / bright;
+			else if(rMode == 2) _i = bright;
 			
-			float _i = normalized == 1? i / bright : i;
-			res    = alpha == 0? vec4(vec3(_i), 1.) : vec4(vec3(1.), _i);
+			res = alpha == 0? vec4(vec3(_i), 1.) : vec4(vec3(1.), _i);
+			if(abs(i - bright) >= delta) res *= blendSide;
 		}
 	}
 	
