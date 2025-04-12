@@ -9,39 +9,41 @@
 function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Region Fill";
 	
-	newInput(0, nodeValue_Surface("Surface In", self));
-	
-	newInput(1, nodeValue_Surface("Mask", self));
-	
-	newInput(2, nodeValue_Palette("Fill Colors", self, array_clone(DEF_PALETTE)));
-	
-	newInput(3, nodeValue_Bool("Fill", self, true));
-	
 	newInput(4, nodeValueSeed(self));
 	
-	newInput(5, nodeValue_Color("Target Color", self, cola(c_white)));
+	////- Surfaces
 	
-	newInput(6, nodeValue_Bool("Inner Only", self, false, "Only fill regions with surrounding pixels."));
+	newInput(0, nodeValue_Surface("Surface In", self));
+	newInput(1, nodeValue_Surface("Mask", self));
+	
+	////- Filter
+	
+	newInput(11, nodeValue_Bool("Color Filter", self, false));
+	newInput( 5, nodeValue_Color("Target Color", self, cola(c_white)));
+	newInput( 6, nodeValue_Bool("Inner Only", self, false, "Only fill regions with surrounding pixels."));
+	
+	////- Fill
+	
+	newInput( 8, nodeValue_Enum_Scroll("Fill Type", self,  0, [ "Random", "Color map", "Texture map", "Texture Coord", "Texture Index" ]));
+	newInput( 2, nodeValue_Palette("Fill Colors", self, array_clone(DEF_PALETTE)));
+	newInput( 9, nodeValue_Surface("Color Map", self));
+	newInput( 3, nodeValue_Bool("Fill", self, true));
+	newInput(10, nodeValue_Surface("Texture Map", self));
+	newInput(12, nodeValue_Rotation_Range("Random Rotation", self, [ 0, 0 ]));
+	
+	////- Render
 	
 	newInput(7, nodeValue_Enum_Scroll("Draw Original", self,  0, [ "None", "Above", "Behind" ]));
 	
-	newInput(8, nodeValue_Enum_Scroll("Fill Type", self,  0, [ "Random", "Color map", "Texture map", "Texture Coord", "Texture Index" ]));
-	
-	newInput(9, nodeValue_Surface("Color Map", self));
-	
-	newInput(10, nodeValue_Surface("Texture Map", self));
-	
-	newInput(11, nodeValue_Bool("Color Filter", self, false));
-	
-	newInput(12, nodeValue_Rotation_Range("Random Rotation", self, [ 0, 0 ]));
+	//// Inputs 13
 	
 	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 4, 
-		["Surfaces",        false], 0, 1, 
-		["Region Filter",   false, 11], 5, 6, 
-		["Fill",	        false], 8, 2, 9, 10, 12, 
-		["Render",	        false], 7, 
+		["Surfaces", false    ], 0, 1, 
+		["Filter",   false, 11], 5, 6, 
+		["Fill",	 false    ], 8, 2, 9, 10, 12, 
+		["Render",	 false    ], 7, 
 	];
 	
 	temp_surface = array_create(3);

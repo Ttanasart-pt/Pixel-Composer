@@ -84,12 +84,17 @@ vec4 smear(vec2 shift) {
 				else           col.a   *= i;
 			}
 			
-			float _i = 0.;
-			     if(rMode == 0) _i = i;
-			else if(rMode == 1) _i = i / bright;
-			else if(rMode == 2) _i = bright;
+			if(rMode == 2) {
+				res = col;
+				
+			} else {
+				float _i = 0.;
+				     if(rMode == 0) _i = i;
+				else if(rMode == 1) _i = i / bright;
+				
+				res = alpha == 0? vec4(vec3(_i), 1.) : vec4(vec3(1.), _i);
+			}
 			
-			res = alpha == 0? vec4(vec3(_i), 1.) : vec4(vec3(1.), _i);
 			if(abs(i - bright) >= delta) res *= blendSide;
 		}
 	}

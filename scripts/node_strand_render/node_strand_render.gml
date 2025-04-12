@@ -1,148 +1,154 @@
 function Node_Strand_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name  = "Strand Render";
-	color = COLORS.node_blend_strand;
-	icon  = THEME.strandSim;
+	name      = "Strand Render";
+	color     = COLORS.node_blend_strand;
+	icon      = THEME.strandSim;
 	use_cache = CACHE_USE.auto;
 	
 	manual_ungroupable	 = false;
 	
+	newInput(6, nodeValueSeed(self));
+	newInput(8, nodeValue_Int("Update Step", self, 4));
+	
+	////- Output
+	
 	newInput(0, nodeValue_Dimension(self));
 	
-	newInput(1, nodeValue("Strand", self, CONNECT_TYPE.input, VALUE_TYPE.strands, noone))
-		.setVisible(true, true);
+	////- Strand
 	
-	newInput(2, nodeValue_Range("Thickness", self, [ 1, 1 ], { linked : true }));
+	newInput(1, nodeValue(       "Strand",                self, CONNECT_TYPE.input, VALUE_TYPE.strands, noone)).setVisible(true, true);
+	newInput(2, nodeValue_Range( "Thickness",             self, [ 1, 1 ], { linked : true }));
+	newInput(3, nodeValue_Curve( "Thickness over length", self, CURVE_DEF_11));
 	
-	newInput(3, nodeValue_Curve("Thickness over length", self, CURVE_DEF_11));
+	////- Scatter
 	
-	newInput(4, nodeValue_Gradient("Random color", self, new gradientObject(cola(c_white))));
+	newInput( 9, nodeValue_Bool(  "Use Scatter",          self, false));
+	newInput( 7, nodeValue_Float( "Children Count",       self, 0, "Render extra strands between the real strands."));
+	newInput(10, nodeValue_Float( "Scatter Range",        self, 2));
 	
-	newInput(5, nodeValue_Gradient("Color over length", self, new gradientObject(cola(c_white))));
+	////- Color
 	
-	newInput(6, nodeValueSeed(self));
+	newInput(4, nodeValue_Gradient( "Random color",       self, new gradientObject(ca_white)));
+	newInput(5, nodeValue_Gradient( "Color over length",  self, new gradientObject(ca_white)));
 	
-	newInput(7, nodeValue_Float("Child", self, 0, "Render extra strands between the real strands."));
-	
-	newInput(8, nodeValue_Int("Update quality", self, 4));
+	//// inputs 11
 	
 	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 6, 8, 
-		["Output",  false], 0,
-		["Strand",  false], 7, 1, 2, 3, 
-		["Color",   false], 4, 5, 
+		["Output",   false   ], 0,
+		["Strand",   false   ], 1, 2, 3, 
+		["Scatter",  false, 9], 7, 10, 
+		["Color",    false   ], 4, 5, 
 	];
+	
+	attributes.show_strand = true;
+	array_push(attributeEditors, "Display");
+	array_push(attributeEditors, [ "Draw Strand", function() /*=>*/ {return attributes.show_strand}, new checkBox(function() /*=>*/ { attributes.show_strand = !attributes.show_strand; }) ]);
 	
 	setTrigger(2, "Clear cache", [ THEME.cache, 0, COLORS._main_icon ]);
 	
 	static onInspector2Update = function() { clearCache(); }
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
-		var _str = getInputData(1);
-		if(_str == noone) return;
-		if(!is_array(_str)) _str = [ _str ];
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		if(!attributes.show_strand) return;
 		
-		for( var i = 0, n = array_length(_str); i < n; i++ )
-			_str[i].draw(_x, _y, _s);
-	} #endregion
+		var _strd = getInputData(1);
+		if(_strd == noone) return;
+		if(!is_array(_strd)) _strd = [ _strd ];
+		
+		for( var i = 0, n = array_length(_strd); i < n; i++ )
+			_strd[i].draw(_x, _y, _s);
+	}
 	
 	static update = function(frame = CURRENT_FRAME) {
 		if(!PROJECT.animator.is_playing && recoverCache()) return;
 			
+		var _seed       = getInputData(6);
+		var _renderStep = getInputData(8);
+		
 		var _dim = getInputData(0);
-		var _str = getInputData(1);
-		var _thk = getInputData(2);
-		var _tln = getInputData(3);
-		var _bld = getInputData(4);
-		var _col = getInputData(5);
-		var _sed = getInputData(6);
-		var _chd = getInputData(7);
-		var _stp = getInputData(8);
+		
+		var _strd = getInputData(1);
+		var _tbas = getInputData(2);
+		var _tlen = getInputData(3);
+		
+		var _chUse = getInputData( 9);
+		var _chid  = getInputData( 7);
+		var _chRng = getInputData(10);
+		
+		var _cbas = getInputData(4);
+		var _clen = getInputData(5);
 		
 		var _surf = outputs[0].getValue();
 		_surf = surface_verify(_surf, _dim[0], _dim[1]);
 		outputs[0].setValue(_surf);
 		
-		if(_str == noone) return;
-		if(!is_array(_str)) _str = [ _str ];
+		if(_strd == noone) return;
+		if(!is_array(_strd)) _strd = [ _strd ];
 		
-		random_set_seed(_sed);
+		random_set_seed(_seed);
 		var _sedIndex = 0;
 		
 		surface_set_target(_surf);
-			DRAW_CLEAR
-			var h0 = [], h1 = [];
+		DRAW_CLEAR
+		
+		var ox, nx; 
+		var oy, ny; 
+		var ot, nt;
+		var oc, nc;
+		
+		if(!_chUse) _chid = 0;
+		
+		for( var h = 0, m = array_length(_strd); h < m; h++ ) {
+			var _strand = _strd[h];
+			var hairs   = _strand.hairs;
 			
-			for( var h = 0; h < array_length(_str); h++ ) {
-				var _strand = _str[h];
-				var hairs   = _strand.hairs;
+			if(_renderStep) _strand.step(_renderStep);
+			
+			for( var i = 0, n = array_length(hairs); i < n; i++ ) {
+				var hair = hairs[i];
 				
-				if(_stp) _strand.step(_stp);
+				var len = array_length(hair.points);
+				if(len <= 1) continue;
 				
-				for( var i = 0, n = array_length(hairs); i < n; i++ ) {
-					var hair = hairs[i];
-					var os, ns, ot, nt;
+				var bld = _cbas.eval(random1D(_seed + _sedIndex++));
+				var st  = 1 / (len - 1);
+				var j   = 0;
+				var prg = 0;
 				
-					var len = array_length(hair.points);
-					var bld = _bld.eval(random1D(_sed + _sedIndex)); _sedIndex++;
-					var clr = c_black;
-				
-					for( var j = 0; j < len; j++ ) {
-						ns = hair.points[j];
-						nt = eval_curve_x(_tln, j / (len - 1));
-						nt *= random1D(_sed + _sedIndex, _thk[0], _thk[1]); _sedIndex++;
+				repeat(len) {
+					nx  = hair.points[j].x;
+					ny  = hair.points[j].y;
 					
-						if(j) {
-							clr = _col.eval(j / (len - 1));
-							clr = colorMultiply(bld, clr);
-							draw_set_color(clr);
-							draw_line_width2(os.x, os.y, ns.x, ns.y, ot, nt, 3);
-						}
+					nt  = eval_curve_x(_tlen, prg);
+					nt *= random1D(_seed + _sedIndex++, _tbas[0], _tbas[1]);
 					
-						ot = nt;
-						os = ns;
+					nc  = _clen.eval(prg);
+					nc  = colorMultiply(bld, nc);
 					
-						h1[j] = [ nt, clr ];
-					}
-				
-					if(_chd && (i > 0 || _strand.loop)) {
-						var hair0 = i == 0? hairs[array_length(hairs) - 1] : hairs[i - 1];
-					
-						for( var j = 1; j < _chd + 1; j++ ) {
-							var lrp = j / (_chd + 1);
+					if(j) {
+						draw_line_width2(ox, oy, nx, ny, ot, nt, 3, oc, nc);
 						
-							var ox, oy, nx, ny, ot, nt, oc, nc;
-							for( var k = 0; k < len; k++ ) {
-								var nx0 = hair0.points[k].x;
-								var ny0 = hair0.points[k].y;
+						repeat(_chid) {
+							var ofx = random_range(-_chRng, _chRng);
+							var ofy = random_range(-_chRng, _chRng);
 							
-								var nx1 = hair.points[k].x;
-								var ny1 = hair.points[k].y;
-							
-								nx = lerp(nx0, nx1, lrp);
-								ny = lerp(ny0, ny1, lrp);
-							
-								if(k) {
-									ot = i == 0? h1[k][0] : h0[k][0];
-									nt = h1[k][0];
-							
-									oc = i == 0? h1[k][1] : h0[k][1];
-									nc = h1[k][1];
-							
-									draw_set_color(merge_color(oc, nc, lrp));
-									draw_line_width2(ox, oy, nx, ny, ot, nt, 3);
-								}
-							
-								ox = nx;
-								oy = ny;
-							}
+							draw_line_width2(ox + ofx, oy + ofy, nx + ofx, ny + ofy, ot, nt, 3, oc, nc);
 						}
 					}
-				
-					h0 = array_clone(h1);
+					
+					ox = nx;
+					oy = ny;
+					ot = nt;
+					oc = nc;
+					prg += st;
+					j++;
 				}
+				
 			}
+		}
 		surface_reset_target();
+		
 		cacheCurrentFrame(_surf);
 	}
 }

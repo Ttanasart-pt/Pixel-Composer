@@ -1,4 +1,5 @@
 #macro ROTATION_RANDOM_LENGTH 5
+#macro ROTATION_RANDOM_DEF_0_360 [ 0, 0, 360, 0, 0 ]
 
 function nodeValue_Rotation_Random(_name, _node, _value, _tooltip = "") { return new __NodeValue_Rotation_Random(_name, _node, _value, _tooltip); }
 
@@ -17,3 +18,5 @@ function __NodeValue_Rotation_Random(_name, _node, _value, _tooltip = "") : __No
 		return array_verify(val, 5);
 	}
 }
+
+// angle_random_eval

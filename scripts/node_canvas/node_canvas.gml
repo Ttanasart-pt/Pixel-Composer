@@ -284,8 +284,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		attributes.show_slope_check = true;
 		array_push(attributeEditors, "Display");
-		array_push(attributeEditors, [ "Draw Guide", function() /*=>*/ {return attributes.show_slope_check}, 
-			new checkBox(function() /*=>*/ { attributes.show_slope_check = !attributes.show_slope_check; }) ]);
+		array_push(attributeEditors, [ "Draw Guide", function() /*=>*/ {return attributes.show_slope_check}, new checkBox(function() /*=>*/ { attributes.show_slope_check = !attributes.show_slope_check; }) ]);
 	#endregion
 	
 	////- Tools

@@ -17,58 +17,50 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	update_on_frame      = true;
 	manual_ungroupable	 = false;
 	
-	newInput(0, nodeValue_Enum_Scroll("Type", self,  0, [ "Point", "Path", "Mesh" ]));
-	
-	newInput(1, nodeValue_Int("Density", self, 8, "How many strands to generate."));
-	
-	newInput(2, nodeValue_Vec2("Length", self, [ 4, 4 ]));
-	
-	newInput(3, nodeValue_Int("Segment", self, 4));
-	
-	newInput(4, nodeValue_Float("Elasticity", self, 0.05, "Length preservation, the higher the value the easier it is to stretch each segment."))
-		.setDisplay(VALUE_DISPLAY.slider);
-	
-	newInput(5, nodeValue_PathNode("Path", self, noone));
-	
-	newInput(6, nodeValue_Vec2("Position", self, [ 0, 0 ]));
-	
-	newInput(7, nodeValue_Enum_Button("Side", self,  0, [ "Inner", "Outer", "Both" ]));
-	
-	newInput(8, nodeValue_Float("Spring", self, 0.8, "Angular stiffness, the higher the value the easier it is to bend each segment."))
-		.setDisplay(VALUE_DISPLAY.slider);
-	
-	newInput(9, nodeValue_Float("Structure", self, 0.2, "The ability to keep its original shape."))
-		.setDisplay(VALUE_DISPLAY.slider);
-		
 	newInput(10, nodeValueSeed(self));
 	
-	newInput(11, nodeValue_Float("Curl frequency", self, 0));
+	////- Generation
 	
-	newInput(12, nodeValue_Float("Curliness", self, 1))
-		.setDisplay(VALUE_DISPLAY.slider);
-	
-	newInput(13, nodeValue("Mesh", self, CONNECT_TYPE.input, VALUE_TYPE.mesh, noone));
-	
-	newInput(14, nodeValue_Enum_Scroll("Distribution", self,  0, [ "Uniform", "Random" ]));
-	
-	newInput(15, nodeValue_Trigger("Bake hair", self, "Prevent strand reseting to apply manual modification. Unbaking will remove all changes."))
+	newInput( 0, nodeValue_Enum_Scroll( "Type",         self, 0, [ "Point", "Path", "Mesh" ]));
+	newInput( 1, nodeValue_Int(         "Density",      self, 8, "How many strands to generate."));
+	newInput( 5, nodeValue_PathNode(    "Path",         self, noone));
+	newInput( 6, nodeValue_Vec2(        "Position",     self, [ 0, 0 ]));
+	newInput( 7, nodeValue_Enum_Button( "Side",         self, 0, [ "Inner", "Outer", "Both" ]));
+	newInput(13, nodeValue(             "Mesh",         self, CONNECT_TYPE.input, VALUE_TYPE.mesh, noone));
+	newInput(14, nodeValue_Enum_Scroll( "Distribution", self, 0, [ "Uniform", "Random" ]));
+	newInput(15, nodeValue_Trigger(     "Bake hair",    self, "Prevent strand reseting to apply manual modification. Unbaking will remove all changes."))
 		.setDisplay(VALUE_DISPLAY.button, { name: "Bake", UI : true, onClick: function() { 
 			attributes.use_groom = !attributes.use_groom; 
-			if(attributes.use_groom)
-				groomed = strands.clone();
+			if(attributes.use_groom) groomed = strands.clone();
 			strandUpdate(true);
 		} });
+		
+	////- Strand
+	
+	newInput( 2, nodeValue_Vec2(            "Length",        self, [ 4, 4 ]));
+	newInput( 3, nodeValue_Int(             "Segment",       self, 4));
+	newInput(18, nodeValue_Rotation_Random( "Direction",     self, ROTATION_RANDOM_DEF_0_360));
+	newInput( 4, nodeValue_Slider(          "Elasticity",    self, 0.05)).setTooltip("Length preservation, the higher the value the easier it is to stretch each segment.");
+	newInput( 8, nodeValue_Slider(          "Spring",        self, 0.8 )).setTooltip("Angular stiffness, the higher the value the easier it is to bend each segment.");
+	newInput( 9, nodeValue_Slider(          "Structure",     self, 0.2 )).setTooltip("The ability to keep its original shape.");
+	newInput(17, nodeValue_Vec2(            "Root Strength", self, [-1, -1])).setTooltip("The force required to break strand from its root. Set to -1 to make strand infinitely strong.");
+	
+	////- Curl
+	
+	newInput(11, nodeValue_Float(  "Curl frequency", self, 0));
+	newInput(12, nodeValue_Slider( "Curliness",      self, 1));
+	
+	////- Preview
 	
 	newInput(16, nodeValue_Bool("View fix hair", self, false));
 	
-	newInput(17, nodeValue_Vec2("Root strength", self, [-1, -1]))
-		.setTooltip("The force required to break strand from its root. Set to -1 to make strand infinitely strong.");
+	//// inputs 18
 	
 	newOutput(0, nodeValue_Output("Strand", self, VALUE_TYPE.strands, noone));
 	
 	input_display_list = [ 10, 
 		["Generation",	false], 0, 1, 5, 6, 7, 13, 14, 15, 
-		["Strand",		false], 2, 3, 4, 8, 9, 17, 
+		["Strand",		false], 2, 3, 18, 4, 8, 9, 17, 
 		["Curl",		false], 11, 12, 
 		["Preview",		 true], 16, 
 	];
@@ -77,32 +69,36 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	groomed = new StrandMesh();
 	strands = new StrandMesh();
 	
+	attributes.show_strand = true;
+	array_push(attributeEditors, "Display");
+	array_push(attributeEditors, [ "Draw Strand", function() /*=>*/ {return attributes.show_strand}, new checkBox(function() /*=>*/ { attributes.show_strand = !attributes.show_strand; }) ]);
+	
 	#region ---- tools ----
 		tool_push = new NodeTool( "Push", THEME.strand_push )
-			.addSetting("Radius",	  VALUE_TYPE.float,		function(val) { tool_push.attribute.radius = val; }, "radius", 6)
-			.addSetting("Strength",	  VALUE_TYPE.float,		function(val) { tool_push.attribute.strength = val; }, "strength", 0.2)
-			.addSetting("Falloff",	  VALUE_TYPE.float,		function(val) { tool_push.attribute.fall = val; }, "fall", 0.1)
-			.addSetting("Fix length", VALUE_TYPE.boolean,	function() { tool_push.attribute.fix = !tool_push.attribute.fix; }, "fix", false)
+			.addSetting("Radius",	  VALUE_TYPE.float,		function(v) /*=>*/ { tool_push.attribute.radius   = v; }, "radius",   6)
+			.addSetting("Strength",	  VALUE_TYPE.float,		function(v) /*=>*/ { tool_push.attribute.strength = v; }, "strength", 0.2)
+			.addSetting("Falloff",	  VALUE_TYPE.float,		function(v) /*=>*/ { tool_push.attribute.fall     = v; }, "fall",     0.1)
+			.addSetting("Fix length", VALUE_TYPE.boolean,	function( ) /*=>*/ { tool_push.attribute.fix      = !tool_push.attribute.fix; }, "fix", false)
 	
 		tool_comb = new NodeTool( "Comb", THEME.strand_comb )
-			.addSetting("Width",	  VALUE_TYPE.float,		function(val) { tool_comb.attribute.width = val; }, "width", 8)
-			.addSetting("Thick",	  VALUE_TYPE.float,		function(val) { tool_comb.attribute.thick = val; }, "thick", 4)
-			.addSetting("Strength",	  VALUE_TYPE.float,		function(val) { tool_comb.attribute.strength = val; }, "strength", 0.75)
+			.addSetting("Width",	  VALUE_TYPE.float,		function(v) /*=>*/ { tool_comb.attribute.width    = v; }, "width",    8)
+			.addSetting("Thick",	  VALUE_TYPE.float,		function(v) /*=>*/ { tool_comb.attribute.thick    = v; }, "thick",    4)
+			.addSetting("Strength",	  VALUE_TYPE.float,		function(v) /*=>*/ { tool_comb.attribute.strength = v; }, "strength", 0.75)
 	
 		tool_stretch = new NodeTool( "Stretch", THEME.strand_stretch )
-			.addSetting("Radius",	  VALUE_TYPE.float,		function(val) { tool_stretch.attribute.radius = val; }, "radius", 6)
-			.addSetting("Strength",	  VALUE_TYPE.float,		function(val) { tool_stretch.attribute.strength = val; }, "strength", 0.5)
-			.addSetting("Falloff",	  VALUE_TYPE.float,		function(val) { tool_stretch.attribute.fall = val; }, "fall", 0.1)
+			.addSetting("Radius",	  VALUE_TYPE.float,		function(v) /*=>*/ { tool_stretch.attribute.radius   = v; }, "radius",   6)
+			.addSetting("Strength",	  VALUE_TYPE.float,		function(v) /*=>*/ { tool_stretch.attribute.strength = v; }, "strength", 0.5)
+			.addSetting("Falloff",	  VALUE_TYPE.float,		function(v) /*=>*/ { tool_stretch.attribute.fall     = v; }, "fall",     0.1)
 	
 		tool_cut = new NodeTool( "Shorten", THEME.strand_cut )
-			.addSetting("Radius",	  VALUE_TYPE.float,		function(val) { tool_cut.attribute.radius = val; }, "radius", 6)
-			.addSetting("Strength",	  VALUE_TYPE.float,		function(val) { tool_cut.attribute.strength = val; }, "strength", 0.5)
-			.addSetting("Falloff",	  VALUE_TYPE.float,		function(val) { tool_cut.attribute.fall = val; }, "fall", 0.1)
+			.addSetting("Radius",	  VALUE_TYPE.float,		function(v) /*=>*/ { tool_cut.attribute.radius   = v; }, "radius",   6)
+			.addSetting("Strength",	  VALUE_TYPE.float,		function(v) /*=>*/ { tool_cut.attribute.strength = v; }, "strength", 0.5)
+			.addSetting("Falloff",	  VALUE_TYPE.float,		function(v) /*=>*/ { tool_cut.attribute.fall     = v; }, "fall",     0.1)
 	
 		tool_grab = new NodeTool( "Grab", THEME.strand_grab )
-			.addSetting("Radius",	  VALUE_TYPE.float,		function(val) { tool_grab.attribute.radius = val; }, "radius", 4)
-			.addSetting("Strength",	  VALUE_TYPE.float,		function(val) { tool_grab.attribute.strength = val; }, "strength", 1)
-			.addSetting("Falloff",	  VALUE_TYPE.float,		function(val) { tool_grab.attribute.fall = val; }, "fall", 0.2)
+			.addSetting("Radius",	  VALUE_TYPE.float,		function(v) /*=>*/ { tool_grab.attribute.radius   = v; }, "radius",   4)
+			.addSetting("Strength",	  VALUE_TYPE.float,		function(v) /*=>*/ { tool_grab.attribute.strength = v; }, "strength", 1)
+			.addSetting("Falloff",	  VALUE_TYPE.float,		function(v) /*=>*/ { tool_grab.attribute.fall     = v; }, "fall",     0.2)
 	
 		groomTools = [
 			tool_push,
@@ -113,28 +109,26 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		];
 	
 		tool_dragging = noone;
-		tool_mx  = 0;
-		tool_my  = 0;
-		tool_dmx = 0;
-		tool_dmy = 0;
-		tool_dir = 0;
-		tool_dir_fix = 0;
-		tool_dir_to = 0;
-	
+		tool_mx       = 0;
+		tool_my       = 0;
+		tool_dmx      = 0;
+		tool_dmy      = 0;
+		tool_dir      = 0;
+		tool_dir_fix  = 0;
+		tool_dir_to   = 0;
 		tool_grabbing = [];
 	#endregion
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _typ = getInputData(0);
 		var _pre = getInputData(16);
-		if(!attributes.use_groom) 
-			strands.draw(_x, _y, _s, _pre);
+		if(!attributes.use_groom && attributes.show_strand) strands.draw(_x, _y, _s, _pre);
 		
 		tools = attributes.use_groom? groomTools : -1;
 		
 		if(_typ == 0) {
-			if(tool_dragging == noone)
-				inputs[6].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+			if(tool_dragging == noone) inputs[6].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+			
 		} else if(_typ == 1) {
 			var _pth = getInputData(5);
 			var _sid = getInputData(7);
@@ -429,36 +423,42 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		tool_dmy = __my;
 	}
 	
+	////- Nodes
+	
 	static step = function() {
 		var _typ = getInputData(0);
-		
-		inputs[ 5].setVisible(_typ == 1, _typ == 1);
-		inputs[ 7].setVisible(_typ == 1);
-		inputs[13].setVisible(_typ == 2, _typ == 2);
-		inputs[14].setVisible(_typ != 2);
 		
 		inputs[15].editWidget.text  = attributes.use_groom? "Unbake" : "Bake";
 		inputs[15].editWidget.blend = attributes.use_groom? COLORS._main_value_negative : COLORS._main_value_positive;
 	}
 	
 	static strandUpdate = function(willReset = false) {
-		var _typ = getInputData(0);
-		var _den = getInputData(1);
-		var _len = getInputData(2);
-		var _seg = getInputData(3); _seg = _seg + 1;
-		var _ten = getInputData(4); _ten = 1 - _ten;
-		var _pth = getInputData(5);
-		var _pos = getInputData(6);
-		var _sid = getInputData(7);
-		var _spr = getInputData(8);
-		var _ang = getInputData(9);
 		var _sed = getInputData(10);
-		var _crF = getInputData(11);
-		var _crS = getInputData(12);
+		
+		var _typ = getInputData( 0);
+		var _den = getInputData( 1);
+		var _pth = getInputData( 5);
+		var _pos = getInputData( 6);
+		var _sid = getInputData( 7);
 		var _msh = getInputData(13);
 		var _rnd = getInputData(14);
-		var _rot = getInputData(17);
+		
+		var _length = getInputData( 2);
+		var _segmnt = getInputData( 3);
+		var _direct = getInputData(18);
+		var _tenson = getInputData( 4);
+		var _spring = getInputData( 8);
+		var _struct = getInputData( 9);
+		var _rotstr = getInputData(17);
+		
+		var _crF = getInputData(11);
+		var _crS = getInputData(12);
 		var sx, sy, prog, dir;
+		
+		inputs[ 5].setVisible(_typ == 1, _typ == 1);
+		inputs[ 7].setVisible(_typ == 1);
+		inputs[13].setVisible(_typ == 2, _typ == 2);
+		inputs[14].setVisible(_typ != 2);
 		
 		if(willReset) {
 			if(attributes.use_groom) {
@@ -472,24 +472,27 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		outputs[0].setValue(strands);
 		
-		if(_typ == 0)
-			strands.loop = true;
-		else if(_typ == 1) {
-			if(!struct_has(_pth, "getPointRatio"))
-				return;
+		var lines = 1;
+		
+		switch(_typ) {
+			case 0 : strands.loop = true; break;
 			
-			var _p0 = _pth.getPointRatio(0);
-			var _p1 = _pth.getPointRatio(0.999);
-			strands.loop = abs(_p0.x - _p1.x) < 1 && abs(_p0.y - _p1.y) < 1;
-		} else if(_typ == 2) {
-			if(_msh == noone) return;
-			strands.mesh = _msh;
-			strands.loop = false;
+			case 1 : 
+				if(!struct_has(_pth, "getPointRatio")) return;
+				
+				var _p0 = _pth.getPointRatio(0);
+				var _p1 = _pth.getPointRatio(0.999);
+				strands.loop = abs(_p0.x - _p1.x) < 1 && abs(_p0.y - _p1.y) < 1;
+				lines = _pth.getLineCount();
+				break;
+			
+			case 2 :
+				if(_msh == noone) return;
+				strands.mesh = _msh;
+				strands.loop = false;
+				break;
 		}
 		
-		var lines = 1;
-		if(_typ == 1 && struct_has(_pth, "getLineCount"))
-			lines = _pth.getLineCount();
 		
 		var ind = 0;
 		
@@ -497,44 +500,52 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		for( var i = 0; i < _den; i++ ) {
 			prog = i / _den;
 			
-			if(_typ == 0) {
-				sx  = _pos[0];
-				sy  = _pos[1];
-				dir = _rnd? random1D(_sed, 0, 360) : 360 * prog; _sed++;
-			} else if(_typ == 1) {
-				var rat = _rnd? random1D(_sed) : prog; _sed++;
-				rat = clamp(rat, 0.01, 0.99);
-				
-				var _p = _pth.getPointRatio(rat, k);
-				sx  = _pos[0] + _p.x;
-				sy  = _pos[1] + _p.y;
-				
-				var _p0 = _pth.getPointRatio(clamp(rat - 0.001, 0, 1));
-				var _p1 = _pth.getPointRatio(clamp(rat + 0.001, 0, 1));
-				dir = point_direction(_p0.x, _p0.y, _p1.x, _p1.y) + 90;
-				
-				if(_sid == 1)	   dir += 180;
-				else if(_sid == 2) dir += 180 * (_rnd? choose(0, 1) : i % 2);
-			} else if(_typ == 2) {
-				var _p = strands.mesh.getRandomPoint(_sed); _sed += 5;
-				sx  = _pos[0] + _p.x;
-				sy  = _pos[1] + _p.y;
-				dir = irandom(360);
+			switch(_typ) {
+				case 0 :
+					sx  = _pos[0];
+					sy  = _pos[1];
+					dir = _rnd? angle_random_eval_fast(_direct, _sed++) : 360 * prog;
+					break;
+					
+				case 1 : 
+					var rat = _rnd? random1D(_sed) : prog; _sed++;
+					rat = clamp(rat, 0.01, 0.99);
+					
+					var _p = _pth.getPointRatio(rat, k);
+					sx  = _pos[0] + _p.x;
+					sy  = _pos[1] + _p.y;
+					
+					var _p0 = _pth.getPointRatio(clamp(rat - 0.001, 0, 1));
+					var _p1 = _pth.getPointRatio(clamp(rat + 0.001, 0, 1));
+					dir = point_direction(_p0.x, _p0.y, _p1.x, _p1.y) + 90;
+					
+					     if(_sid == 1) dir += 180;
+					else if(_sid == 2) dir += 180 * (_rnd? choose(0, 1) : i % 2);
+					break;
+					
+				case 2 : 
+					var _p = strands.mesh.getRandomPoint(_sed); _sed += 5;
+					sx  = _pos[0] + _p.x;
+					sy  = _pos[1] + _p.y;
+					dir = angle_random_eval_fast(_direct, _sed++);
+					break;
 			}
 			
 			if(willReset || array_safe_get_fast(strands.hairs, i, noone) == noone) {
-				var h = new Strand(sx, sy, _seg, random_range(_len[0], _len[1]), dir, _crF, _crS);
-				h.rootStrength = random1D(h.id, _rot[0], _rot[1]);
-				strands.hairs[ind] = h;
+				var _len = random_range(_length[0], _length[1]);
+				
+				var hair = new Strand(sx, sy, _segmnt + 1, _len, dir, _crF, _crS);
+				hair.rootStrength = random1D(hair.id, _rotstr[0], _rotstr[1]);
+				strands.hairs[ind] = hair;
 			}
 			
 			if(ind >= array_length(strands.hairs)) return;
 			
 			var h = strands.hairs[ind];
 			h.setOrigin(sx, sy);
-			h.tension		 = _ten;
-			h.spring		 = _spr;
-			h.angularTension = _ang;
+			h.tension		 = 1 - _tenson;
+			h.spring		 = _spring;
+			h.angularTension = _struct;
 			h.curl_freq		 = _crF;
 			h.curl_size		 = _crS;
 			
@@ -550,6 +561,8 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var bbox = drawGetBbox(xx, yy, _s);
 		draw_sprite_fit(s_node_strand_create, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
+	
+	////- Serialize
 	
 	static attributeSerialize = function() {
 		var att = {};
