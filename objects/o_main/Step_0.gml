@@ -35,20 +35,23 @@ if(!LOADING && PROJECT.active && !PROJECT.safeMode) { //node step
 				
 				var list = HOTKEYS[$ _focus_ctx];
 				for( var i = 0, n = array_length(list); i < n; i++ ) {
-					var hotkey = list[i];
+					var h = list[i];
 					
-					if(hotkey.isPressing(true))
-						array_push(_toAct, hotkey);
+					if(h.isPressing()) {
+						if(h.key == noone) h.action();
+						else array_push(_toAct, h);
+					}
 				}
 			}
 			
 			var _l = array_length(_toAct);
 			if(_l == 1) {
 				_toAct[0].action();
-				HOTKEY_ACT |= _toAct[0].key != noone;
+				HOTKEY_ACT = true;
 				
 			} else if(_l > 1) {
-				menuCall($"hotkey.multi", array_map(_toAct, function(h) /*=>*/ {return new MenuItem(h.name, function(h) /*=>*/ { h.action(); HOTKEY_ACT |= h.key != noone; }).setParam(h)}));
+				menuCall($"hotkey.multi", array_map(_toAct, function(h) /*=>*/ {return new MenuItem(h.name, function(h) /*=>*/ {return h.action()}).setParam(h)}));
+				HOTKEY_ACT = true;
 			}
 		}
 		

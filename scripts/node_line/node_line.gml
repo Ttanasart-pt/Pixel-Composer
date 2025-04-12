@@ -200,12 +200,6 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			
 			var _seed     = _data[39];
 			
-			if(_dtype == 1 && _pat == noone) 
-				_dtype = 0;
-				
-			if(_dtype == 2 && (array_invalid(_segs) || array_invalid(_segs[0]))) 
-				_dtype = 0; 
-				
 			var _utex = inputs[18].value_from != noone;
 		
 			inputs[ 3].setVisible(!_1px);
@@ -230,6 +224,13 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			
 			inputs[32].setVisible(_dtype == 3);
 			inputs[33].setVisible(_dtype == 3);
+			
+			if(_dtype == 1 && _pat == noone)  
+				_dtype = 0;
+				
+			if(_dtype == 2 && (array_invalid(_segs) || array_invalid(_segs[0]))) 
+				_dtype = 0; 
+				
 		#endregion
 		
 		random_set_seed(_seed);

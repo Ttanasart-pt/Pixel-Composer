@@ -11,12 +11,9 @@
 #endregion
 
 enum _ANCHOR {
-	x,
-	y,
-	c1x,
-	c1y,
-	c2x,
-	c2y,
+	  x,   y,
+	c1x, c1y,
+	c2x, c2y,
 	
 	ind,
 	amount
@@ -24,8 +21,9 @@ enum _ANCHOR {
 
 function __vec2P(_x = 0, _y = _x, _w = 1) : __vec2(_x, _y) constructor {
 	weight = _w;
-	static clone = function() /*=>*/ {return new __vec2P(x, y, weight)};
-	static toString = function() { return $"[__vec2P] ({x}, {y} | {weight})"; }
+	
+	static clone    = function() /*=>*/ {return new __vec2P(x, y, weight)};
+	static toString = function() /*=>*/ {return $"[__vec2P] ({x}, {y} | {weight})"};
 }
 
 function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
@@ -34,17 +32,17 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Float("Path progress", self, 0, "Sample position from path."))
-		.setDisplay(VALUE_DISPLAY.slider);
+	////- Path
 	
-	newInput(1, nodeValue_Bool("Loop", self, false))
-		.rejectArray();
+	newInput(1, nodeValue_Bool( "Loop",         self, false)).rejectArray();
+	newInput(3, nodeValue_Bool( "Round anchor", self, false)).rejectArray();
 	
-	newInput(2, nodeValue_Enum_Scroll("Progress mode", self,  0, ["Entire line", "Segment"]))
-		.rejectArray();
+	////- Sampling
 	
-	newInput(3, nodeValue_Bool("Round anchor", self, false))
-		.rejectArray();
+	newInput(0, nodeValue_Slider(      "Path progress", self, 0)).setTooltip("Sample position from path.");
+	newInput(2, nodeValue_Enum_Scroll( "Progress mode", self, 0, ["Entire line", "Segment"])).rejectArray();
+	
+	//// Inputs 4
 	
 	newOutput(0, nodeValue_Output("Position out", self, VALUE_TYPE.float, [ 0, 0 ]))
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -56,9 +54,9 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		.setArrayDepth(1);
 	
 	input_display_list = [
-		["Path",		false], 1, 3, 
-		["Sampling",	false], 0, 2, 
-		["Anchors",		false], 
+		["Path",     false], 1, 3, 
+		["Sampling", false], 0, 2, 
+		["Anchors",  false], 
 	];
 	
 	output_display_list   = [ 1, 0, 2 ];
