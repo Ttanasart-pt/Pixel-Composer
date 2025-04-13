@@ -1011,35 +1011,30 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 	}
 	
-	////- INPUTS
+	////- PRESETS
 	
 	set_default = true;
 	
 	static skipDefault = function() /*=>*/ { set_default = false; return self; }
 	
-	static resetDefault = function() { 
-		var folder = instanceof(self);
+	static resetDefault = function() {
+		var _defPreset = setPreset("_default");
+		if(!_defPreset) array_foreach(inputs, function(i) /*=>*/ {return i.resetValue()});
 		
-		if(!ds_map_exists(global.PRESETS_MAP, folder)) {
-			for( var i = 0, n = array_length(inputs); i < n; i++ )
-				inputs[i].resetValue();
-			return;
-		}
-		
-		var pres = global.PRESETS_MAP[? folder];
-		for( var i = 0, n = array_length(pres); i < n; i++ ) {
-			var preset = pres[i];
-			if(preset.name != "_default") continue;
-			
-			deserialize(loadPreset(preset), true, true);
-			applyDeserialize(true);
-			return;
-		}
-		
-		for( var i = 0, n = array_length(inputs); i < n; i++ )
-			inputs[i].resetValue();
-			
 	} if(!APPENDING && !LOADING) run_in(1, function() /*=>*/ { if(set_default) resetDefault() });
+	
+	static setPreset = function(pName) {
+		var _fName = $"{instanceof(self)}>{pName}";
+		if(!ds_map_exists(global.PRESETS_MAP_NODE, _fName)) return false;
+		
+		var _preset = global.PRESETS_MAP_NODE[? _fName];
+		if(_preset.content == -1) _preset.content = json_load_struct(_preset.path);
+		
+		deserialize(_preset.content, true, true);
+		return true;
+	}
+	
+	////- INPUTS
 	
 	static addInput = function(junctionFrom, shift = input_fix_len) {
 		var targ = getInput(y, junctionFrom, shift);
@@ -2658,7 +2653,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		load_map   = _map;
 		load_scale = scale;
-		renamed    = load_map[$ "renamed"] ?? false;
 		
 		preDeserialize();
 		
@@ -2667,6 +2661,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			else		  node_id = load_map.id;
 			
 			project.nodeMap[? node_id] = self;
+			renamed    = load_map[$ "renamed"] ?? false;
 			
 			if(struct_has(load_map, "name")) setDisplayName(load_map.name);
 			internalName = load_map[$ "iname"] ?? internalName;

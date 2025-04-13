@@ -1213,7 +1213,7 @@ function Panel_Preference() : PanelContent() constructor {
 	    		array_push(hotkeyContext, { context: ctx, list: _lst });
 	    		
 	    		if(_title == "Graph") {
-	    			array_push(hotkeyArray, "> Add Nodes");
+	    			array_push(hotkeyArray, "Add Nodes");
 	    			array_push(hotkeyContext, { list: GRAPH_ADD_NODE_KEYS });
 	    		}
 	    	}
@@ -1312,11 +1312,20 @@ function Panel_Preference() : PanelContent() constructor {
     			name = __txt(key.name);
     			
     			if(_addnode) {
-    				var _nd = ALL_NODES[$ key.name];
-    				name = _nd.name;
+    				var _nodeType = key.name;
+			    	var _preset   = "";
+			    	
+			    	if(string_pos(">", _nodeType)) {
+			    		var _sp   = string_split(_nodeType, ">");
+			    		_nodeType = string_trim(_sp[0]);
+						_preset   = string_trim(_sp[1]);
+			    	}
+			    	
+    				var _nd = ALL_NODES[$ _nodeType];
+    				if(_nd) name = _nd.name;
     			}
     			
-    			var dk   = key.getName();
+    			var dk = key.getName();
     			
     			if(_search != "" && string_pos(_search, string_lower(name)) == 0
     			                 && string_pos(_search, string_lower(dk))   == 0)

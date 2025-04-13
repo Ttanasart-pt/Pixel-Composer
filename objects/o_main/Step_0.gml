@@ -42,6 +42,13 @@ if(!LOADING && PROJECT.active && !PROJECT.safeMode) { //node step
 						else array_push(_toAct, h);
 					}
 				}
+				
+				if(_focus_ctx == "Graph") {
+					for( var i = 0, n = array_length(GRAPH_ADD_NODE_KEYS); i < n; i++ ) {
+		        		var h = GRAPH_ADD_NODE_KEYS[i];
+		        		if(h.isPressing()) array_push(_toAct, h);
+		        	}
+				}
 			}
 			
 			var _l = array_length(_toAct);

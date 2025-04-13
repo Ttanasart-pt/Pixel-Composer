@@ -110,13 +110,7 @@ event_inherited();
 			-1,
 			menuItem(__txt("Edit Hotkey"),  function() /*=>*/ { 
 				var _n  = node_menu_selecting.nodeName;
-				var _hk = struct_try_get(GRAPH_ADD_NODE_MAPS, _n, noone);
-				
-				if(_hk == noone) {
-					_hk = new Hotkey("_graph_add_node", _n);
-	        		array_push(GRAPH_ADD_NODE_KEYS, _hk);
-	        		GRAPH_ADD_NODE_MAPS[$ _n] = _hk;
-				}
+				var _hk = __fnGraph_BuildNode(_n);
 				
 				hk_edit_node = node_menu_selecting;
 				hk_editing   = _hk.modify();

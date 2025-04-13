@@ -11,7 +11,7 @@ function __initHotKey() {
 
 	////- Classes
 
-function Hotkey(_context, _name, _key = "", _mod = MOD_KEY.none, _action = noone) constructor {
+function Hotkey(_context, _name, _key = "", _mod = MOD_KEY.none, _action = noone, _param = noone) constructor {
 	context	= _context;
 	name	= _name;
 	
@@ -21,7 +21,15 @@ function Hotkey(_context, _name, _key = "", _mod = MOD_KEY.none, _action = noone
 	modi	= _mod;
 	dModi	= _mod;
 	
-	action	= _action;
+	rawAction = _action;
+	param     = _param;
+	
+	static setParam = function(p) /*=>*/ { param = p; return self; }
+	
+	static action = function() {
+		if(param == noone) rawAction();
+		else rawAction(param);
+	}
 	
 	static getName     = function() /*=>*/ {return key_get_name(key, modi)};
 	static getNameFull = function() /*=>*/ {return string_to_var(context == 0? $"global.{name}" : $"{context}.{name}")};

@@ -142,7 +142,7 @@
     	if(struct_has(GRAPH_ADD_NODE_MAPS, _k)) 
     		return GRAPH_ADD_NODE_MAPS[$ _k];
     	
-    	var _h = new Hotkey("_graph_add_node", _k, _key, _mod);
+    	var _h = new Hotkey("_graph_add_node", _k, _key, _mod, function(k) /*=>*/ {return PANEL_GRAPH.createNodeHotkey(k)}).setParam(_k);
 		array_push(GRAPH_ADD_NODE_KEYS, _h);
 		GRAPH_ADD_NODE_MAPS[$ _k] = _h;
 		
@@ -152,6 +152,11 @@
     function __fnInit_Graph_Nodes() {
     	GRAPH_ADD_NODE_KEYS = [];
     	GRAPH_ADD_NODE_MAPS = {};
+    	
+    	__fnGraph_BuildNode("Node_Number",    "1", MOD_KEY.none);
+    	__fnGraph_BuildNode("Node_Vector2",   "2", MOD_KEY.none);
+    	__fnGraph_BuildNode("Node_Vector3",   "3", MOD_KEY.none);
+    	__fnGraph_BuildNode("Node_Vector4",   "4", MOD_KEY.none);
     	
     	__fnGraph_BuildNode("Node_Transform", "T", MOD_KEY.ctrl);
     	__fnGraph_BuildNode("Node_Blend",     "B", MOD_KEY.ctrl);
@@ -636,29 +641,6 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         PANEL_PREVIEW.setNodePreview(_node);
     }
 
-    function setCurrentExport(_node = getFocusingNode()) {
-        if(DEMO) return;
-        if(!_node) return;
-    
-        var _outp = -1;
-        var _path = -1;
-    
-        for( var i = 0; i < array_length(_node.outputs); i++ ) {
-            if(_node.outputs[i].type == VALUE_TYPE.path)
-                _path = _node.outputs[i];
-            if(_node.outputs[i].type == VALUE_TYPE.surface && _outp == -1)
-                _outp = _node.outputs[i];
-        }
-    
-        if(_outp == -1) return;
-    
-        var _export = nodeBuild("Node_Export", _node.x + _node.w + 64, _node.y);
-        if(_path != -1)
-            _export.inputs[1].setFrom(_path);
-    
-        _export.inputs[0].setFrom(_outp);
-    }
-
     function setTriggerPreview() {
         __temp_show = false;
         array_foreach(nodes_selecting, function(node, index) {
@@ -787,7 +769,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
             pan.content.locked = true;
         }
         
-        function send_hover_to_export()  { setCurrentExport(node_hover); }
+        function send_hover_to_export()  { doExport(node_hover); }
         function enter_group()           { PANEL_GRAPH.addContext(node_hover); }
         function hide_disconnected()     { hideDisconnected(); }
         
@@ -1159,15 +1141,6 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         mouse_grid_y = round(m_y / project.graphGrid.size) * project.graphGrid.size;
         
         setTitle();
-        
-        if(pFOCUS) {
-        	for( var i = 0, n = array_length(GRAPH_ADD_NODE_KEYS); i < n; i++ ) {
-        		var _addKey = GRAPH_ADD_NODE_KEYS[i];
-        		if(!struct_has(ALL_NODES, _addKey.name)) continue;
-        		
-        		if(_addKey.isPressing()) createNodeHotkey(_addKey.name);
-        	}
-        }
     } 
     
     function nodeWrangler() {
@@ -3066,14 +3039,261 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
     
     ////- Action
     
-    function createNodeHotkey(_node, _param = noone) {
-    	if(_node == "Node_Blend")     { doBlend();          return; }
-    	if(_node == "Node_Composite") { doCompose();        return; }
-    	if(_node == "Node_Array")     { doArray();          return; }
-    	if(_node == "Node_Export")    { setCurrentExport(); return; }
-    	if(_node == "Node_Frame")     { doFrame();          return; }
+    function createNodeHotkey(_node) {
+    	var _nodeType = _node;
+    	var _preset   = "";
     	
-        if(mouse_create_x == undefined || mouse_create_sx != mouse_grid_x || mouse_create_sy != mouse_grid_y) {
+    	if(string_pos(">", _node)) {
+    		var _sp   = string_split(_node, ">");
+    		_nodeType = _sp[0];
+			_preset   = _sp[1];
+    	}
+    	
+    	var node = noone;
+    	
+    	switch(_nodeType) {
+	    	case "Node_Blend" :     node = doBlend();                   break;
+	    	case "Node_Math" :      node = doBlend("Node_Math");        break;
+	    	
+	    	case "Node_Composite" : node = doCompose();                 break;
+	    	case "Node_Logic" :     node = doCompose("Node_Logic");     break;
+	    	case "Node_Statistic" : node = doCompose("Node_Statistic"); break;
+	    	case "Node_3D_Scene" :  node = doCompose("Node_3D_Scene");  break;
+	    	
+	    	case "Node_Array" :     node = doArray();                   break;
+	    	case "Node_Export" :    node = doExport();                  break;
+	    	case "Node_Frame" :     node = doFrame();                   break;
+	    	
+	    	default :               node = doNewNode(_nodeType);        break;
+    	}
+    	
+        if(node == noone) return;
+        if(_preset != "") {
+        	node.skipDefault();
+        	node.setPreset(_preset);
+        }
+    }
+    
+    function doBlend(_base = "") {
+    	var _ty = _base == ""? "Node_Composite" : _base;
+    	
+        if(array_empty(nodes_selecting) || array_empty(nodes_selecting[0].outputs))
+        	return nodeBuild(_ty, mouse_grid_x, mouse_grid_y, getCurrentContext()).skipDefault();
+    	
+    	var _jj = nodes_selecting[0].outputs[0];
+    	var _ty = _base;
+    	
+    	if(_base == "") {
+				 if(value_bit(_jj.type) & (1 << 15) || is(nodes_selecting[0], Node_Path)) return doCompose();
+			else if(value_bit(_jj.type) & (1 <<  3)) return doCompose();
+			else if(value_bit(_jj.type) & (1 << 29)) return doCompose();
+			else if(value_bit(_jj.type) & (1 <<  1)) _ty = "Node_Math";
+			else if(value_bit(_jj.type) & (1 <<  5)) _ty = "Node_Blend";
+			else if(value_bit(_jj.type) & (1 << 28)) _ty = "Node_Blend";
+			
+    	} 
+    	
+        if(array_length(nodes_selecting) == 1) {
+	        var _nodex = nodes_selecting[0].x + 160;
+	        var _nodey = nodes_selecting[0].y;
+	        var _blend = nodeBuild(_ty, _nodex, _nodey, getCurrentContext()).skipDefault();
+            
+            switch(_ty) {
+            	case "Node_Blend" :    _blend.inputs[0].setFrom(_jj); break;
+            	case "Node_Math" :     _blend.inputs[1].setFrom(_jj); break;
+            }
+        	
+        	return _blend;
+        }
+        
+        var _n0 = nodes_selecting[0].y < nodes_selecting[1].y? nodes_selecting[0] : nodes_selecting[1];
+        var _n1 = nodes_selecting[0].y < nodes_selecting[1].y? nodes_selecting[1] : nodes_selecting[0];
+        
+        var _nodex = max(_n0.x, _n1.x) + 160;
+        var _nodey = round((_n0.y + _n1.y) / 2 / 32) * 32;
+        var _blend = nodeBuild(_ty, _nodex, _nodey, getCurrentContext()).skipDefault();
+        
+        if(array_empty(_n0.outputs)) return _blend;
+        if(array_empty(_n1.outputs)) return _blend;
+        
+        var _j0 = _n0.outputs[0]; 
+        var _j1 = _n1.outputs[0]; 
+        
+        switch(_ty) {
+        	case "Node_Blend" :    
+        		var i0 = 0;
+        		var i1 = 0;
+        		
+        		while(i0 < array_length(_n0.outputs) && value_bit(_n0.outputs[i0].type) & (1 << 5) == 0) i0++;
+        		while(i1 < array_length(_n1.outputs) && value_bit(_n1.outputs[i1].type) & (1 << 5) == 0) i1++;
+        			
+        		_blend.inputs[0].setFrom(_n0.outputs[i0]);
+            	_blend.inputs[1].setFrom(_n1.outputs[i1]);
+        		break;
+        		
+        	case "Node_Math" :    
+	            _blend.inputs[1].setFrom(_j0);
+	            _blend.inputs[2].setFrom(_j1); 
+        		break;
+        		
+        }
+    	
+        nodes_selecting = [ _blend ];
+        FOCUS_STR = instanceof(_blend);
+        
+        return _blend;
+    } 
+    
+    function doCompose(_base = "") { //
+    	var _ty = _base == ""? "Node_Composite" : _base;
+    	
+        if(array_empty(nodes_selecting) || array_empty(nodes_selecting[0].outputs)) {
+        	var _compose = nodeBuild(_ty, mouse_grid_x, mouse_grid_y, getCurrentContext()).skipDefault();
+        	nodes_selecting = [];
+        	return _compose;
+        }
+    	
+    	var _jj = nodes_selecting[0].outputs[0];
+    	
+    	if(_base == "") {
+	    	     if(value_bit(_jj.type) & (1 << 15) || is(nodes_selecting[0], Node_Path)) _ty = "Node_Path_Array";
+			else if(value_bit(_jj.type) & (1 <<  5))   _ty = "Node_Composite";
+			else if(value_bit(_jj.type) & (1 <<  3))   _ty = "Node_Logic";
+			else if(value_bit(_jj.type) & (1 <<  1))   _ty = "Node_Statistic";
+			else if(value_bit(_jj.type) & (1 << 29))   _ty = "Node_3D_Scene";
+    	}
+    	
+        var cx   = nodes_selecting[0].x;
+        var cy   = 0;
+        var pr   = ds_priority_create();
+        var amo  = array_length(nodes_selecting);
+        var len  = 0;
+        
+        for(var i = 0; i < amo; i++) {
+            var _node = nodes_selecting[i];
+            if(array_empty(_node.outputs)) continue;
+            
+            var _jj = _node.outputs[0];
+            
+            switch(_ty) {
+	        	case "Node_Composite" : if((value_bit(_jj.type) & (1 <<  5)) == 0) continue; break;
+	        	case "Node_Logic"     : if((value_bit(_jj.type) & (1 <<  3)) == 0) continue; break;
+	        	case "Node_Statistic" : if((value_bit(_jj.type) & (1 <<  1)) == 0) continue; break;
+	        	case "Node_3D_Scene"  : if((value_bit(_jj.type) & (1 << 29)) == 0) continue; break;
+	        	
+	        	case "Node_Path_Array": 
+	        		if(is(nodes_selecting[0], Node_Path)) _jj = _node.outputs[1];
+	        		if((value_bit(_jj.type) & (1 << 15)) == 0) continue; 
+        		break;
+	        }
+            
+            cx = max(cx, _node.x);
+            cy += _node.y;
+            
+            ds_priority_add(pr, _jj, _node.y);
+            len++;
+        }
+        
+        cx = cx + 160;
+        cy = value_snap(cy / len, 16);
+        
+        var _compose = nodeBuild(_ty, cx, cy, getCurrentContext()).skipDefault();
+        
+        repeat(len) {
+            var _outp = ds_priority_delete_min(pr);
+            _compose.addInput(_outp);
+        }
+        
+        nodes_selecting = [];
+        ds_priority_destroy(pr);
+        
+        return _compose;
+    } 
+
+    function doArray() { //
+        if(array_empty(nodes_selecting)) 
+        	return nodeBuild("Node_Array", mouse_grid_x, mouse_grid_y, getCurrentContext()).skipDefault();
+    	
+        var cx  = nodes_selecting[0].x;
+        var cy  = 0;
+        var pr  = ds_priority_create();
+        var amo = array_length(nodes_selecting);
+        var len = 0;
+        
+        for(var i = 0; i < amo; i++) {
+            var _node = nodes_selecting[i];
+            if(array_length(_node.outputs) == 0) continue;
+            
+            cx = max(cx, _node.x);
+            cy += _node.y;
+            
+            ds_priority_add(pr, _node, _node.y);
+            len++;
+        }
+        
+        cx = cx + 160;
+        cy = round(cy / len / 32) * 32;
+    
+        var _array = nodeBuild("Node_Array", cx, cy).skipDefault();
+        
+        repeat(len) {
+            var _node = ds_priority_delete_min(pr);
+            _array.addInput(_node.outputs[0]);
+        }
+        
+        nodes_selecting = [];
+        ds_priority_destroy(pr);
+        
+        return _array;
+    } 
+
+    function doFrame() { //
+        var x0 = 999999, y0 = 999999, x1 = -999999, y1 = -999999;
+        
+        for( var i = 0; i < array_length(nodes_selecting); i++ )  {
+            var _node = nodes_selecting[i];
+            x0 = min(x0, _node.x);
+            y0 = min(y0, _node.y);
+            x1 = max(x1, _node.x + _node.w);
+            y1 = max(y1, _node.y + _node.h);
+        }
+        
+        x0 -= 64;
+        y0 -= 64;
+        x1 += 64;
+        y1 += 64;
+    
+        var _frame = nodeBuild("Node_Frame", x0, y0, getCurrentContext()).skipDefault();
+        _frame.inputs[0].setValue([x1 - x0, y1 - y0]);
+        
+        return _frame;
+    } 
+
+    function doExport(_node = getFocusingNode()) {
+        if(DEMO) return;
+        if(!_node) return;
+    
+        var _outp = -1;
+        var _path = -1;
+    
+        for( var i = 0; i < array_length(_node.outputs); i++ ) {
+            if(_node.outputs[i].type == VALUE_TYPE.path)
+                _path = _node.outputs[i];
+            if(_node.outputs[i].type == VALUE_TYPE.surface && _outp == -1)
+                _outp = _node.outputs[i];
+        }
+    
+        if(_outp == -1) return;
+    
+        var _export = nodeBuild("Node_Export", _node.x + _node.w + 64, _node.y);
+        if(_path != -1)
+            _export.inputs[1].setFrom(_path);
+    
+        _export.inputs[0].setFrom(_outp);
+    }
+	
+	function doNewNode(_nodeType) {
+		if(mouse_create_x == undefined || mouse_create_sx != mouse_grid_x || mouse_create_sy != mouse_grid_y) {
             mouse_create_sx = mouse_grid_x;
             mouse_create_sy = mouse_grid_y;
             
@@ -3085,8 +3305,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         var _my = mouse_create_y;
         var _gs = project.graphGrid.size;
         
-        var node = is_string(_node)? nodeBuild(_node, _mx, _my) : _node(_mx, _my, getCurrentContext(), _param);
-        if(node == noone) return;
+        var node = nodeBuild(_nodeType, _mx, _my);
+        if(node == noone) return node;
         
         mouse_create_y = ceil((mouse_create_y + node.h + _gs / 2) / _gs) * _gs;
         
@@ -3110,7 +3330,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	        }
 	        
 	        value_dragging = noone;
-	        return;
+	        return node;
         }
         
         if(array_length(nodes_selecting) == 1) {
@@ -3123,28 +3343,17 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         		node.y = sNode.y;
         	}
         	
-        	return;
+        	return node;
         }
-    }
-    
+        
+        return node;
+	}
+	
     function getFocusStr() {
     	var _n = array_safe_get(nodes_selecting, 0);
     	return instanceof(_n) == FOCUS_STR? _n : noone;
     }
     
-    function doTransform() {
-        for( var i = 0; i < array_length(nodes_selecting); i++ ) {
-            var node = nodes_selecting[i];
-            if(array_empty(node.outputs)) continue;
-            
-            var _o = node.outputs[0];
-            if(_o.type == VALUE_TYPE.surface || _o.type == VALUE_TYPE.dynaSurface) {
-                var tr = nodeBuild("Node_Transform", node.x + node.w + 64, node.y).skipDefault();
-                tr.inputs[0].setFrom(_o);
-            }
-        }
-    }
-
     function doDuplicate() {
         if(array_empty(nodes_selecting)) return;
         
@@ -3341,173 +3550,6 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         
     } 
 
-    function doBlend() {
-        if(array_empty(nodes_selecting)) {
-        	nodeBuild("Node_Blend", mouse_grid_x, mouse_grid_y, getCurrentContext()).skipDefault();
-        	return;
-        }
-    	
-    	if(array_empty(nodes_selecting[0].outputs)) return;
-    	var _jj = nodes_selecting[0].outputs[0];
-    	var _ty = "";
-    	
-			 if(value_bit(_jj.type) & (1 << 15) || is(nodes_selecting[0], Node_Path)) doCompose();
-		else if(value_bit(_jj.type) & (1 <<  5)) _ty = "Node_Blend";
-		else if(value_bit(_jj.type) & (1 <<  3)) doCompose();
-		else if(value_bit(_jj.type) & (1 <<  1)) _ty = "Node_Math";
-		else if(value_bit(_jj.type) & (1 << 28)) _ty = "Node_Blend";
-		else if(value_bit(_jj.type) & (1 << 29)) doCompose();
-        
-        if(_ty = "") return;
-        
-        if(array_length(nodes_selecting) == 1) {
-        	
-	        var _nodex = nodes_selecting[0].x + 160;
-	        var _nodey = nodes_selecting[0].y;
-	        var _blend = nodeBuild(_ty, _nodex, _nodey, getCurrentContext()).skipDefault();
-            
-            switch(_ty) {
-            	case "Node_Blend" :    _blend.inputs[0].setFrom(_jj); break;
-            	case "Node_Math" :     _blend.inputs[1].setFrom(_jj); break;
-            }
-        	
-        	return;
-        }
-        
-        var _n0 = nodes_selecting[0].y < nodes_selecting[1].y? nodes_selecting[0] : nodes_selecting[1];
-        var _n1 = nodes_selecting[0].y < nodes_selecting[1].y? nodes_selecting[1] : nodes_selecting[0];
-        
-        if(array_empty(_n0.outputs)) return;
-        if(array_empty(_n1.outputs)) return;
-        
-        var _nodex = max(_n0.x, _n1.x) + 160;
-        var _nodey = round((_n0.y + _n1.y) / 2 / 32) * 32;
-        var _blend = nodeBuild(_ty, _nodex, _nodey, getCurrentContext()).skipDefault();
-        
-        var _j0 = _n0.outputs[0]; 
-        var _j1 = _n1.outputs[0]; 
-        
-        switch(_ty) {
-        	case "Node_Blend" :    
-        		var i0 = 0;
-        		var i1 = 0;
-        		
-        		while(i0 < array_length(_n0.outputs) && value_bit(_n0.outputs[i0].type) & (1 << 5) == 0) i0++;
-        		while(i1 < array_length(_n1.outputs) && value_bit(_n1.outputs[i1].type) & (1 << 5) == 0) i1++;
-        			
-        		_blend.inputs[0].setFrom(_n0.outputs[i0]);
-            	_blend.inputs[1].setFrom(_n1.outputs[i1]);
-        		break;
-        		
-        	case "Node_Math" :    
-	            _blend.inputs[1].setFrom(_j0);
-	            _blend.inputs[2].setFrom(_j1); 
-        		break;
-        		
-        }
-    	
-        nodes_selecting = [ _blend ];
-        FOCUS_STR = instanceof(_blend);
-    } 
-    
-    function doCompose() { //
-        if(array_empty(nodes_selecting)) {
-        	nodeBuild("Node_Composite", mouse_grid_x, mouse_grid_y, getCurrentContext()).skipDefault();
-        	nodes_selecting = [];
-        	return;
-        }
-    
-    	if(array_empty(nodes_selecting[0].outputs)) return;
-    	var _jj = nodes_selecting[0].outputs[0];
-    	var _ty = "";
-    	
-    	     if(value_bit(_jj.type) & (1 << 15) || is(nodes_selecting[0], Node_Path)) _ty = "Node_Path_Array";
-		else if(value_bit(_jj.type) & (1 <<  5))   _ty = "Node_Composite";
-		else if(value_bit(_jj.type) & (1 <<  3))   _ty = "Node_Logic";
-		else if(value_bit(_jj.type) & (1 <<  1))   _ty = "Node_Statistic";
-		else if(value_bit(_jj.type) & (1 << 29))   _ty = "Node_3D_Scene";
-        
-        if(_ty = "") return;
-        
-        var cx   = nodes_selecting[0].x;
-        var cy   = 0;
-        var pr   = ds_priority_create();
-        var amo  = array_length(nodes_selecting);
-        var len  = 0;
-        
-        for(var i = 0; i < amo; i++) {
-            var _node = nodes_selecting[i];
-            if(array_empty(_node.outputs)) continue;
-            
-            var _jj = _node.outputs[0];
-            
-            switch(_ty) {
-	        	case "Node_Composite" : if((value_bit(_jj.type) & (1 <<  5)) == 0) continue; break;
-	        	case "Node_Logic"     : if((value_bit(_jj.type) & (1 <<  3)) == 0) continue; break;
-	        	case "Node_Statistic" : if((value_bit(_jj.type) & (1 <<  1)) == 0) continue; break;
-	        	case "Node_3D_Scene"  : if((value_bit(_jj.type) & (1 << 29)) == 0) continue; break;
-	        	
-	        	case "Node_Path_Array": 
-	        		if(is(nodes_selecting[0], Node_Path)) _jj = _node.outputs[1];
-	        		if((value_bit(_jj.type) & (1 << 15)) == 0) continue; 
-        		break;
-	        }
-            
-            cx = max(cx, _node.x);
-            cy += _node.y;
-            
-            ds_priority_add(pr, _jj, _node.y);
-            len++;
-        }
-        
-        cx = cx + 160;
-        cy = value_snap(cy / len, 16);
-        
-        var _compose = nodeBuild(_ty, cx, cy, getCurrentContext()).skipDefault();
-        
-        repeat(len) {
-            var _outp = ds_priority_delete_min(pr);
-            _compose.addInput(_outp);
-        }
-        
-        nodes_selecting = [];
-        ds_priority_destroy(pr);
-    } 
-
-    function doArray() { //
-        if(array_empty(nodes_selecting)) return;
-    
-        var cx  = nodes_selecting[0].x;
-        var cy  = 0;
-        var pr  = ds_priority_create();
-        var amo = array_length(nodes_selecting);
-        var len = 0;
-        
-        for(var i = 0; i < amo; i++) {
-            var _node = nodes_selecting[i];
-            if(array_length(_node.outputs) == 0) continue;
-            
-            cx = max(cx, _node.x);
-            cy += _node.y;
-            
-            ds_priority_add(pr, _node, _node.y);
-            len++;
-        }
-        
-        cx = cx + 160;
-        cy = round(cy / len / 32) * 32;
-    
-        var _array = nodeBuild("Node_Array", cx, cy).skipDefault();
-        
-        repeat(len) {
-            var _node = ds_priority_delete_min(pr);
-            _array.addInput(_node.outputs[0]);
-        }
-        
-        nodes_selecting = [];
-        ds_priority_destroy(pr);
-    } 
-
     function doGroup() { //
         if(array_empty(nodes_selecting)) return;
         groupNodes(nodes_selecting);
@@ -3519,26 +3561,6 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         if(!is_instanceof(_node, Node_Collection) || !_node.ungroupable) return;
     
         upgroupNode(_node);
-    } 
-
-    function doFrame() { //
-        var x0 = 999999, y0 = 999999, x1 = -999999, y1 = -999999;
-        
-        for( var i = 0; i < array_length(nodes_selecting); i++ )  {
-            var _node = nodes_selecting[i];
-            x0 = min(x0, _node.x);
-            y0 = min(y0, _node.y);
-            x1 = max(x1, _node.x + _node.w);
-            y1 = max(y1, _node.y + _node.h);
-        }
-        
-        x0 -= 64;
-        y0 -= 64;
-        x1 += 64;
-        y1 += 64;
-    
-        var f = nodeBuild("Node_Frame", x0, y0, getCurrentContext()).skipDefault();
-        f.inputs[0].setValue([x1 - x0, y1 - y0]);
     } 
 
     function doDelete(_merge = false) { //

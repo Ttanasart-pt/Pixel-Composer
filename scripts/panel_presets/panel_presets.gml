@@ -1,42 +1,56 @@
-#macro CHECK_PANEL_PRESETS if(!is_instanceof(FOCUS_CONTENT, Panel_Presets)) return;
-
-function panel_preset_replace()	{ CHECK_PANEL_PRESETS CALL("panel_preset_replace");	FOCUS_CONTENT.replacePreset(FOCUS_CONTENT.selecting_preset.path);					}
-function panel_preset_delete()	{ CHECK_PANEL_PRESETS CALL("panel_preset_delete");	file_delete(FOCUS_CONTENT.selecting_preset.path); __initPresets();	}
-function panel_preset_reset()	{ CHECK_PANEL_PRESETS CALL("panel_preset_reset");	FOCUS_CONTENT.newPresetFromNode("_default");										}
-
-function __fnInit_Presets() {
-	registerFunction("Presets", "Replace",			"",	   MOD_KEY.none,	panel_preset_replace).setMenu("preset_replace").hidePalette();
-	registerFunction("Presets", "Delete",			"",	   MOD_KEY.none,	panel_preset_delete	).setMenu("preset_delete", THEME.cross).hidePalette();
-	registerFunction("Presets", "Reset To Default",	"",	   MOD_KEY.none,	panel_preset_reset	).setMenu("preset_reset")
-}
+#region functions
+	#macro CHECK_PANEL_PRESETS if(!is_instanceof(FOCUS_CONTENT, Panel_Presets)) return;
+	
+	function panel_preset_replace()	{ CHECK_PANEL_PRESETS CALL("panel_preset_replace");	FOCUS_CONTENT.replacePreset(FOCUS_CONTENT.selecting_preset.path);					}
+	function panel_preset_delete()	{ CHECK_PANEL_PRESETS CALL("panel_preset_delete");	file_delete(FOCUS_CONTENT.selecting_preset.path); __initPresets();	}
+	function panel_preset_reset()	{ CHECK_PANEL_PRESETS CALL("panel_preset_reset");	FOCUS_CONTENT.newPresetFromNode("_default");										}
+	
+	function __fnInit_Presets() {
+		registerFunction("Presets", "Replace",			"",	   MOD_KEY.none,	panel_preset_replace).setMenu("preset_replace").hidePalette();
+		registerFunction("Presets", "Delete",			"",	   MOD_KEY.none,	panel_preset_delete	).setMenu("preset_delete", THEME.cross).hidePalette();
+		registerFunction("Presets", "Reset To Default",	"",	   MOD_KEY.none,	panel_preset_reset	).setMenu("preset_reset")
+	}
+#endregion
 
 function Panel_Presets(_node) : PanelContent() constructor {
-	title   = __txt("Presets");
-	
-	w = ui(240);
-	h = ui(400);
+	title  = __txt("Presets");
+	w      = ui(240);
+	h      = ui(400);
 	anchor = ANCHOR.left | ANCHOR.top;
 	
-	defPres = noone;
-	node    = _node;
-	adding  = false;
-	add_txt = "";
-	tb_add  = new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ { 
-			adding  = false; 
-			add_txt = txt; 
-			if(txt == "") return;
-			
-			newPresetFromNode(txt); 
-		});
+	defPres  = noone;
+	node     = _node;
+	nodeType = instanceof(node);
+	dirPath  = $"{DIRECTORY}Presets/{nodeType}/";
+	
+	adding   = false;
+	add_txt  = "";
+	tb_add   = new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ { 
+		adding  = false; 
+		add_txt = txt; 
+		if(txt == "") return;
+		
+		newPresetFromNode(txt); 
+	});
 	
 	selecting_preset = noone; 
+	hk_selecting     = noone;
+	hk_editing       = noone;
 	
-	directory_verify($"{DIRECTORY}Presets/{instanceof(node)}/");
+	directory_verify(dirPath);
 	__initPresets();
 	
 	context_menu = [
 		MENU_ITEMS.preset_replace,
 		MENU_ITEMS.preset_delete,
+		
+		-1,
+		menuItem(__txt("Edit Hotkey"),  function() /*=>*/ { 
+			var _hk    = __fnGraph_BuildNode($"{nodeType}>{selecting_preset.name}");
+			hk_editing = _hk.modify();
+		}),
+		menuItem(__txt("Reset Hotkey"), function() /*=>*/ { if(is_struct(hk_selecting)) hk_selecting.reset(true) }, THEME.refresh_20)
+			.setActive(is_struct(hk_selecting) && hk_selecting.isModified()),
 	];
 	
 	context_def = [
@@ -59,9 +73,8 @@ function Panel_Presets(_node) : PanelContent() constructor {
 	
 	function newPresetFromNode(name) {
 		if(node == noone) return;
-		var dir = $"{DIRECTORY}Presets/{instanceof(node)}/";
-		var pth = dir + name + ".json";
 		
+		var pth = $"{dirPath}{name}.json";
 		var map = node.serialize(true, true);
 		var thm = node.getPreviewValues();
 		if(is_surface(thm)) map.thumbnail = surface_encode(thm, false);
@@ -81,12 +94,11 @@ function Panel_Presets(_node) : PanelContent() constructor {
 		var _h  = 0;
 		if(node == noone) return _h;
 		
-		var folder = instanceof(node);
-		if(!ds_map_exists(global.PRESETS_MAP, folder)) return 0;
+		if(!ds_map_exists(global.PRESETS_MAP, nodeType)) return 0;
 		
 		draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
 		
-		var pres = global.PRESETS_MAP[? folder];
+		var pres = global.PRESETS_MAP[? nodeType];
 		var amo  = array_length(pres);
 		var _hh  = line_get_height() + ui(10);
 		    _h  += amo * (_hh + ui(4)) + ui(32);
@@ -103,7 +115,7 @@ function Panel_Presets(_node) : PanelContent() constructor {
 				if(mouse_press(mb_left, pFOCUS)) {
 					LOADING_VERSION = SAVE_VERSION;
 					
-					node.deserialize(loadPreset(preset), true, true);
+					node.setPreset(preset.name);
 					if(in_dialog && panel.destroy_on_click_out) close();
 				}
 				
@@ -142,11 +154,14 @@ function Panel_Presets(_node) : PanelContent() constructor {
 		
 		var _sz = _hh - ui(8);
 		thumbnail_mask = surface_create(_sz, _sz);
-		
 		defPres = noone;
+		
 		for( var i = 0; i < amo; i++ ) {
 			var preset = pres[i];
-			if(preset.name == "_default") {
+			var _name  = preset.name;
+			var fName  = $"{nodeType}>{_name}";
+			
+			if(_name == "_default") {
 				defPres = preset;
 				continue;
 			}
@@ -160,17 +175,22 @@ function Panel_Presets(_node) : PanelContent() constructor {
 				if(mouse_press(mb_left, pFOCUS)) {
 					LOADING_VERSION = SAVE_VERSION;
 					
-					node.deserialize(loadPreset(preset), true, true);
+					node.setPreset(_name);
 					if(in_dialog && panel.destroy_on_click_out) close();
 				}
 				
 				if(mouse_press(mb_right, pFOCUS)) {
 					selecting_preset = preset;
+					hk_selecting     = GRAPH_ADD_NODE_MAPS[$ fName];
 					dia = menuCall("preset_window_menu", context_menu);
 				}
 			}
 			
-			loadPreset(preset);
+			if(preset.content == -1) {
+				preset.content        = json_load_struct(preset.path);
+				preset.thumbnail_data = struct_try_get(preset.content, "thumbnail", -1);
+			}
+			
 			var _thm = preset.getThumbnail();
 			var _xx  = ui(8);
 			
@@ -198,7 +218,33 @@ function Panel_Presets(_node) : PanelContent() constructor {
 			}
 			
 			draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
-			draw_text_add(_xx, _yy + _hh / 2, preset.name);
+			draw_text_add(_xx, _yy + _hh / 2, _name);
+			
+			// Hotkeys
+			draw_set_text(f_p2, fa_right, fa_center, COLORS._main_text);
+			var _hotkey = GRAPH_ADD_NODE_MAPS[$ fName];
+			var _hkC    = COLORS._main_text_sub;
+			
+			var _ktxt = _hotkey != undefined? _hotkey.getName() : "";
+			var _tx   = _ww - ui(16);
+			var _ty   = _yy + _hh / 2;
+			var _tw   = string_width(_ktxt);
+			var _th   = line_get_height();
+			
+			var _bx = _tx - _tw - ui(4);
+			var _by = _ty - _th / 2 - ui(3);
+			var _bw = _tw + ui(8);
+			var _bh = _th + ui(6);
+			
+			if(hk_editing == _hotkey) {
+				draw_sprite_stretched_ext(THEME.ui_panel, 1, _bx, _by, _bw, _bh, COLORS._main_text_accent);
+				_hkC = COLORS._main_accent;
+			}
+			
+			if(_hotkey != undefined) {
+				draw_set_color(_hkC);
+				draw_text_add(_tx, _ty, _ktxt);
+			}
 			
 			_yy += _hh + ui(4);
 		}
@@ -243,6 +289,14 @@ function Panel_Presets(_node) : PanelContent() constructor {
 				adding = true;
 			}
 			
+		}
+		
+		if(hk_editing != noone) {
+			if(keyboard_check_pressed(vk_enter))  hk_editing = noone;
+			else hotkey_editing(hk_editing);
+				
+			if(keyboard_check_pressed(vk_escape)) hk_editing = noone;
+				
 		}
 	}
 }

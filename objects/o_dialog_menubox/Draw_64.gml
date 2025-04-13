@@ -213,11 +213,26 @@ DIALOG_WINCLEAR1
 			}
 			
 			var tx = dialog_x + show_icon * ui(32) + ui(16);
-			draw_set_text(font, fa_left, fa_center, COLORS._main_text);
-			draw_set_alpha(_menuItem.active * 0.75 + 0.25);
-			draw_text(tx, yy + hght / 2, label);
-			draw_set_alpha(1);
+			var ty = yy + hght / 2;
+			var ta = _menuItem.active * 0.75 + 0.25;
 			
+			if(string_pos(">", label)) {
+				var _sp = string_split(label, ">");
+				
+				draw_set_text(font, fa_left, fa_center, COLORS._main_text_sub, ta);
+    			draw_text(tx, ty, _sp[0]);
+    			tx += string_width(_sp[0]) + ui(8);
+    			
+    			draw_set_text(font, fa_left, fa_center, COLORS._main_text, ta);
+				draw_text(tx, ty, _sp[1]);
+				
+			} else {
+    			draw_set_text(font, fa_left, fa_center, COLORS._main_text, ta);
+				draw_text(tx, ty, label);
+			}
+			
+			draw_set_alpha(1);
+    		
 			if(_menuItem.isShelf) {
 				draw_sprite_ui_uniform(THEME.arrow, 0, dialog_x + dialog_w - ui(20), yy + hght / 2, 1, COLORS._main_icon);	
 				_hx -= ui(24);
