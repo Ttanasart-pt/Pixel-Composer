@@ -2309,12 +2309,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(_map == noone)     return;
 		if(!is_struct(_map))  return;
 		
-		visible 	   = _map[$ LOADING_VERSION >= 1_18_04_0 || CLONING? "v" : "visible"] ?? 0;
-		visible_manual = _map[$ "visible_manual"] ?? 0;
-		color   	   = _map[$ "color"] ?? -1;
+		if(!preset) {
+			visible 	   = _map[$ LOADING_VERSION >= 1_18_04_0 || CLONING? "v" : "visible"] ?? 0;
+			visible_manual = _map[$ "visible_manual"] ?? 0;
+			color   	   = _map[$ "color"] ?? -1;
+		}
 		
-		if(connect_type == CONNECT_TYPE.output) 
-			return;
+		if(connect_type == CONNECT_TYPE.output) return;
 		
 		on_end		= _map[$ "on_end"]     ?? KEYFRAME_END.hold;
 		loop_range	= _map[$ "loop_range"] ?? -1;

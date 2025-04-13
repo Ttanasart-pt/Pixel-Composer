@@ -2706,7 +2706,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		if(preset) {
 			postDeserialize();
-			applyDeserialize();
+			applyDeserialize(preset);
 			
 			triggerRender();
 			postLoad();
