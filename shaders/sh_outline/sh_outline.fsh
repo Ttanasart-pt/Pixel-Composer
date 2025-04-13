@@ -34,6 +34,7 @@ uniform int       borderSizeUseSurf;
 uniform sampler2D borderSizeSurf;
 
 uniform vec4  borderColor;
+uniform float alphaThers;
 uniform int	  side;
 uniform int	  crop_border;
 uniform int	  is_aa;
@@ -92,8 +93,8 @@ void checkPixel(vec2 px, vec2 p) {
 	if(side == 0 && crop_border == 1 && (txs.x < 0. || txs.x > 1. || txs.y < 0. || txs.y > 1.)) return;
 	
 	vec4 sam = sampleTexture( gm_BaseTexture, txs );
-	if(side == 0 && sam.a == 1.) return; //inside border,  skip if current pixel is filled
-	if(side == 1 && sam.a == 0.) return; //outside border, skip if current pixel is empty
+	if(side == 0 && sam.a >= alphaThers) return; //inside border,  skip if current pixel is filled
+	if(side == 1 && sam.a <  alphaThers) return; //outside border, skip if current pixel is empty
 	
 	isOutline = true;
 	
@@ -138,8 +139,8 @@ void main() {
 	
 	#region filter out filled ot empty pixel
 		bool isBorder = false;
-		if(side == 0)      isBorder = baseColor.a > 0.;
-		else if(side == 1) isBorder = baseColor.a < 1.;
+		     if(side == 0) isBorder = baseColor.a >= alphaThers;
+		else if(side == 1) isBorder = baseColor.a <  alphaThers;
 	
 		if(!isBorder) {
 			gl_FragColor = col;
