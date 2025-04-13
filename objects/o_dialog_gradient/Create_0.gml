@@ -172,7 +172,7 @@ event_inherited();
 		
 		for( var i = 0, n = array_length(currentGradient); i < n; i++ ) {
 			var _prest = currentGradient[i];
-			var _match = string_partial_match(_prest.name, gradient_search_string);
+			var _match = string_partial_match(string_lower(_prest.name), string_lower(gradient_search_string));
 			if(_match <= -9999) continue;
 			
 			ds_priority_add(_pr, _prest, _match);
@@ -310,7 +310,7 @@ event_inherited();
 		
 		for( var i = 0, n = array_length(currentPresets); i < n; i++ ) {
 			var _prest = currentPresets[i];
-			var _match = string_partial_match(_prest.name, palette_search_string);
+			var _match = string_partial_match(string_lower(_prest.name), string_lower(palette_search_string));
 			if(_match <= -9999) continue;
 			
 			ds_priority_add(_pr, _prest, _match);

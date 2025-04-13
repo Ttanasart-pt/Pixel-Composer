@@ -99,6 +99,9 @@ function __initPalette() {
 		file = file_find_next();
 	}
 	file_find_close();
+	
+	with(o_dialog_palette)  initPalette();
+	with(o_dialog_gradient) initPalette();
 }
 
 function palette_string_hex(palette, alpha = true) { //palette generate

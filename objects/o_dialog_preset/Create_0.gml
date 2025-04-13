@@ -55,7 +55,7 @@ event_inherited();
 				
 				if(mouse_click(mb_right, sFOCUS)) {
 					selecting_path = preset.path;
-					var dia = menuCall("preset_window_menu", [ menuItem(__txt("Delete"), function() { file_delete(selecting_path); __initPresets(); }), ]); 
+					menuCall("preset_window_menu", [ menuItem(__txt("Delete"), function() /*=>*/ { file_delete(selecting_path); __initPresets(); }), ]); 
 				}
 			}
 			

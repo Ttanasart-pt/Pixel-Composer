@@ -64,6 +64,7 @@ function __PaletteColor(_color = c_black) constructor {
 				for(var i = 0; i < array_length(palette); i++)
 					file_text_write_string(file,  $"{color_get_hex(palette[i])}\n");
 				file_text_close(file);
+				
 				__initPalette();
 			};
 			dia.path = DIRECTORY + "Palettes/"
@@ -180,7 +181,7 @@ function __PaletteColor(_color = c_black) constructor {
 		
 		for( var i = 0, n = array_length(currentPresets); i < n; i++ ) {
 			var _prest = currentPresets[i];
-			var _match = string_partial_match(_prest.name, search_string);
+			var _match = string_partial_match(string_lower(_prest.name), string_lower(search_string));
 			if(_match <= -9999) continue;
 			
 			ds_priority_add(_pr, _prest, _match);

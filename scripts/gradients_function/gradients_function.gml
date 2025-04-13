@@ -373,4 +373,6 @@ function __initGradient() {
 		file = file_find_next();
 	}
 	file_find_close();
+	
+	with(o_dialog_gradient) initGradient();
 }
