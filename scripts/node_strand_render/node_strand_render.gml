@@ -3,6 +3,7 @@ function Node_Strand_Render(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	color     = COLORS.node_blend_strand;
 	icon      = THEME.strandSim;
 	
+	inline_output        = false;
 	manual_ungroupable	 = false;
 	
 	newInput(6, nodeValueSeed(self));

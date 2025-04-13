@@ -3,6 +3,8 @@ function Node_Strand_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inli
 	color = COLORS.node_blend_strand;
 	icon  = THEME.strandSim;
 	
+	output_node_type   = Node_Strand_Render;
+	
 	is_simulation   = true;
 	update_on_frame = true;
 	

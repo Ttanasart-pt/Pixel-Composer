@@ -3,6 +3,8 @@ function Node_Smoke_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inlin
 	color = COLORS.node_blend_smoke;
 	icon  = THEME.smoke_sim;
 	
+	output_node_type   = Node_Smoke_Render;
+	
 	is_simulation = true;
 	
 	if(NODE_NEW_MANUAL) {

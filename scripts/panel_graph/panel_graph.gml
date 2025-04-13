@@ -3866,7 +3866,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
     		var _to = _ot.getJunctionTo();
     		
     		for( var j = 0, m = array_length(_to); j < m; j++ ) {
-    			var _jto = _to[i];
+    			var _jto = _to[j];
     			if(_jto.node == nTo) continue;
     			
     			_jto.setFrom(_toTarg);

@@ -3,6 +3,7 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	color = COLORS.node_blend_fluid;
 	icon  = THEME.fluid_sim;
 	
+	inline_output      = false;
 	manual_ungroupable = false;
 	
 	newInput(0, nodeValue_Fdomain("Domain", self, noone))

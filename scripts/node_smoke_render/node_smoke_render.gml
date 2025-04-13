@@ -4,7 +4,8 @@ function Node_Smoke_Render(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 	icon  = THEME.smoke_sim;
 	use_cache = CACHE_USE.manual;
 	
-	manual_ungroupable	 = false;
+	inline_output      = false;
+	manual_ungroupable = false;
 	
 	newInput(0, nodeValue("Domain", self, CONNECT_TYPE.input, VALUE_TYPE.sdomain, noone))
 		.setVisible(true, true);

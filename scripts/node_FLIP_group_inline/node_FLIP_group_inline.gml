@@ -3,6 +3,8 @@ function Node_FLIP_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inline
 	color = COLORS.node_blend_fluid;
 	icon  = THEME.fluid_sim;
 	
+	output_node_type   = Node_FLIP_Render;
+	
 	is_simulation   = true;
 	update_on_frame = true;
 	
