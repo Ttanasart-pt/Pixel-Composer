@@ -295,6 +295,8 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 		return tx;
 	}
 	
+	////- Serialize
+	
 	static serialize = function() {
 		var _str = {
 			name,
@@ -376,6 +378,14 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 				else 
 					CUSTOM_NODES_POSITION[$ pos] = [ self ];
 			}
+		}
+		
+		if(struct_has(GRAPH_ADD_NODE_MAPS, nodeName)) {
+	    	var _id   = $"graph_add_{nodeName}";
+			var _menu = menuItem(name, function(p) /*=>*/ {return PANEL_GRAPH.createNodeHotkey(p)}, noone, [ "_graph_add_node", nodeName ]).setParam(nodeName);
+			
+			_menu.hoykeyObject = GRAPH_ADD_NODE_MAPS[$ nodeName];
+			MENU_ITEMS[$ _id] = _menu;
 		}
 		
 		return self;

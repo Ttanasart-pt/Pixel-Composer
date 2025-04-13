@@ -87,7 +87,7 @@ switch(load_process) {
     // case 5 : 
         try {
         	array_foreach(create_list, function(n) /*=>*/ {return n.preConnect()}  );
-        	array_foreach(create_list, function(n) /*=>*/ {return n.connect(true)} );
+        	array_foreach(create_list, function(n) /*=>*/ {return n.connect()}     );
         	array_foreach(create_list, function(n) /*=>*/ {return n.postConnect()} );
         	
         } catch(e) {

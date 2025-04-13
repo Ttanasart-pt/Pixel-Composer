@@ -18,18 +18,12 @@
     function panel_graph_toggle_control()          { CALL("graph_toggle_control");      PANEL_GRAPH.display_parameter.show_control   = !PANEL_GRAPH.display_parameter.show_control;     }
     function panel_graph_toggle_avoid_label()      { CALL("graph_toggle_avoid_label");  PANEL_GRAPH.display_parameter.avoid_label    = !PANEL_GRAPH.display_parameter.avoid_label;      }
     
-    function panel_graph_add_transform()           { CALL("graph_add_transform");       PANEL_GRAPH.doTransform();            }
-    function panel_graph_blend()                   { CALL("graph_blend");               PANEL_GRAPH.doBlend();                }
-    function panel_graph_compose()                 { CALL("graph_compose");             PANEL_GRAPH.doCompose();              }
-    function panel_graph_array()                   { CALL("graph_array");               PANEL_GRAPH.doArray();                }
-    function panel_graph_group()                   { CALL("graph_group");               PANEL_GRAPH.doGroup();                }
-    function panel_graph_ungroup()                 { CALL("graph_ungroup");             PANEL_GRAPH.doUngroup();              }
-    function panel_graph_export()                  { CALL("graph_export");              PANEL_GRAPH.setCurrentExport();       }
+    function panel_graph_group()                   { CALL("graph_group");               PANEL_GRAPH.doGroup();                 }
+    function panel_graph_ungroup()                 { CALL("graph_ungroup");             PANEL_GRAPH.doUngroup();               }
                                                                                                                             
     function panel_graph_canvas_copy()             { CALL("graph_canvas_copy");         PANEL_GRAPH.setCurrentCanvas();       }
     function panel_graph_canvas_blend()            { CALL("graph_canvas_blend");        PANEL_GRAPH.setCurrentCanvasBlend();  }
                                                                                                                             
-    function panel_graph_frame()                   { CALL("graph_frame");               PANEL_GRAPH.doFrame();                }
     function panel_graph_delete_break()            { CALL("graph_delete_break");        PANEL_GRAPH.doDelete(false);          }
     function panel_graph_delete_merge()            { CALL("graph_delete_merge");        PANEL_GRAPH.doDelete(true);           }
     function panel_graph_duplicate()               { CALL("graph_duplicate");           PANEL_GRAPH.doDuplicate();            }
@@ -81,12 +75,6 @@
         registerFunction("Graph", "Toggle Control",        "",  MOD_KEY.none,                    panel_graph_toggle_control      ).setMenu("graph_toggle_control")
         registerFunction("Graph", "Toggle Avoid Label",    "",  MOD_KEY.none,                    panel_graph_toggle_avoid_label  ).setMenu("graph_toggle_avoid_label")
         
-        registerFunction("Graph", "Transform Output",      "T", MOD_KEY.ctrl,                    panel_graph_add_transform       ).setMenu("graph_transform_node")
-        registerFunction("Graph", "Blend",                 "B", MOD_KEY.ctrl,                    panel_graph_blend               ).setMenu("graph_blend")
-        registerFunction("Graph", "Compose",               "B", MOD_KEY.ctrl | MOD_KEY.shift,    panel_graph_compose             ).setMenu("graph_compose")
-        registerFunction("Graph", "Array",                 "A", MOD_KEY.ctrl | MOD_KEY.shift,    panel_graph_array               ).setMenu("graph_array")
-        registerFunction("Graph", "Frame",                 "F", MOD_KEY.shift,                   panel_graph_frame               ).setMenu("graph_frame")
-        
         registerFunction("Graph", "Copy to Canvas",        "C", MOD_KEY.ctrl | MOD_KEY.shift,    panel_graph_canvas_copy         ).setMenu("graph_canvas_copy")
         registerFunction("Graph", "Blend Canvas",          "C", MOD_KEY.ctrl | MOD_KEY.alt,      panel_graph_canvas_blend        ).setMenu("graph_canvas_blend")
         registerFunction("Graph", "Canvas",                "",  MOD_KEY.none,                    
@@ -133,7 +121,7 @@
         registerFunction("Graph", "Transfer Connections",  "T", MOD_KEY.alt,                     panel_graph_transferConnection  ).setMenu("graph_transfer_connection")
                                                                                     
         if(!DEMO) {
-            registerFunction("Graph", "Export Selected Node",   "E", MOD_KEY.ctrl,               panel_graph_export              ).setMenu("graph_export_selected")
+            // registerFunction("Graph", "Export Selected Node",   "E", MOD_KEY.ctrl,               panel_graph_export              ).setMenu("graph_export_selected")
             registerFunction("Graph", "Export Hovering Node",   "",  MOD_KEY.none,               panel_graph_send_to_export      ).setMenu("graph_export_hover")
         }
         
@@ -146,20 +134,38 @@
         
         for( var i = 0, n = array_length(global.__FN_NODE_CONTEXT); i < n; i++ ) 
         	global.__FN_NODE_CONTEXT[i]();
-        	
+        
+        __fnInit_Graph_Nodes();
+    }
+    
+    function __fnGraph_BuildNode(_k, _key = "", _mod = MOD_KEY.none) {
+    	if(struct_has(GRAPH_ADD_NODE_MAPS, _k)) 
+    		return GRAPH_ADD_NODE_MAPS[$ _k];
+    	
+    	var _h = new Hotkey("_graph_add_node", _k, _key, _mod);
+		array_push(GRAPH_ADD_NODE_KEYS, _h);
+		GRAPH_ADD_NODE_MAPS[$ _k] = _h;
+		
+		return _h;
+    }
+    
+    function __fnInit_Graph_Nodes() {
     	GRAPH_ADD_NODE_KEYS = [];
     	GRAPH_ADD_NODE_MAPS = {};
+    	
+    	__fnGraph_BuildNode("Node_Transform", "T", MOD_KEY.ctrl);
+    	__fnGraph_BuildNode("Node_Blend",     "B", MOD_KEY.ctrl);
+    	__fnGraph_BuildNode("Node_Composite", "B", MOD_KEY.ctrl | MOD_KEY.shift);
+    	__fnGraph_BuildNode("Node_Array",     "A", MOD_KEY.ctrl | MOD_KEY.shift);
+    	__fnGraph_BuildNode("Node_Frame",     "F", MOD_KEY.shift);
+    	if(!DEMO) __fnGraph_BuildNode("Node_Export",    "E", MOD_KEY.ctrl);
     	
         if(struct_has(HOTKEYS_DATA, "graph")) {
         	var _grps = HOTKEYS_DATA.graph;
         	var _keys = struct_get_names(_grps);
         	
-        	for( var i = 0, n = array_length(_keys); i < n; i++ ) {
-        		var _k = _keys[i];
-        		var _h = new Hotkey("_graph_add_node", _k).deserialize(_grps[$ _k]);
-        		array_push(GRAPH_ADD_NODE_KEYS, _h);
-        		GRAPH_ADD_NODE_MAPS[$ _k] = _h;
-        	}
+        	for( var i = 0, n = array_length(_keys); i < n; i++ )
+        		__fnGraph_BuildNode(_keys[i]).deserialize(_grps[$ _keys[i]]);
         }
     }
     
@@ -829,13 +835,14 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	    menu_nodes_align        = MENU_ITEMS.graph_group_align;
 	    
 	    menu_node_replace       = MENU_ITEMS.graph_replace_node;
-	    menu_node_transform     = MENU_ITEMS.graph_transform_node;
-	    menu_nodes_blend        = MENU_ITEMS.graph_blend;
-	    menu_nodes_compose      = MENU_ITEMS.graph_compose;
-	    menu_nodes_array        = MENU_ITEMS.graph_array;
 	    menu_nodes_group        = MENU_ITEMS.graph_group;
-	    menu_nodes_frame        = MENU_ITEMS.graph_frame;
 	    menu_node_canvas        = MENU_ITEMS.graph_canvas;
+	    
+	    menu_nodes_frame        = MENU_ITEMS.graph_add_Node_Frame;
+	    menu_node_transform     = MENU_ITEMS.graph_add_Node_Transform;
+	    menu_nodes_blend        = MENU_ITEMS.graph_add_Node_Blend;
+	    menu_nodes_compose      = MENU_ITEMS.graph_add_Node_Composite;
+	    menu_nodes_array        = MENU_ITEMS.graph_add_Node_Array;
 	    
 	    menu_node_copy_prop     = MENU_ITEMS.graph_copy_value;
 	    menu_node_paste_prop    = MENU_ITEMS.graph_paste_value;
@@ -1174,7 +1181,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
     		var _draw = true;
     		
         	if(node_hovering != noone) {
-        		_to = node_hovering.getInput();
+        		_to = node_hovering.getInput(0, noone,, true);
         		
         		if(_to && _to.isConnectable(_from)) {
         			node_hovering.drawActive(2);
@@ -3060,10 +3067,12 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
     ////- Action
     
     function createNodeHotkey(_node, _param = noone) {
-    	// if(value_dragging != noone) return;
+    	if(_node == "Node_Blend")     { doBlend();          return; }
+    	if(_node == "Node_Composite") { doCompose();        return; }
+    	if(_node == "Node_Array")     { doArray();          return; }
+    	if(_node == "Node_Export")    { setCurrentExport(); return; }
+    	if(_node == "Node_Frame")     { doFrame();          return; }
     	
-        var node;
-        
         if(mouse_create_x == undefined || mouse_create_sx != mouse_grid_x || mouse_create_sy != mouse_grid_y) {
             mouse_create_sx = mouse_grid_x;
             mouse_create_sy = mouse_grid_y;
@@ -3076,34 +3085,46 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         var _my = mouse_create_y;
         var _gs = project.graphGrid.size;
         
-        if(is_string(_node)) node = nodeBuild(_node, _mx, _my);
-        else                 node = _node(_mx, _my, getCurrentContext(), _param);
-        
+        var node = is_string(_node)? nodeBuild(_node, _mx, _my) : _node(_mx, _my, getCurrentContext(), _param);
         if(node == noone) return;
         
         mouse_create_y = ceil((mouse_create_y + node.h + _gs / 2) / _gs) * _gs;
         
-        if(value_dragging == noone) return;
-            
-        if(value_dragging.connect_type == CONNECT_TYPE.output) {
-            if(node.input_display_list != -1) {
-                for (var i = 0, n = array_length(node.input_display_list); i < n; i++) {
-                    if(!is_real(node.input_display_list[i])) continue;
-                    if(node.inputs[node.input_display_list[i]].setFrom(value_dragging)) break;
-                }
-                    
-            } else {
-                for (var i = 0, n = array_length(node.inputs); i < n; i++)
-                    if(node.inputs[i].setFrom(value_dragging)) break;
-            }
-            
-        } else if(value_dragging.connect_type == CONNECT_TYPE.input) {
-            for (var i = 0, n = array_length(node.outputs); i < n; i++)
-                if(value_dragging.setFrom(node.outputs[i])) break;
-                
+        if(value_dragging != noone) {
+	        if(value_dragging.connect_type == CONNECT_TYPE.output) {
+	            if(node.input_display_list != -1) {
+	                for (var i = 0, n = array_length(node.input_display_list); i < n; i++) {
+	                    if(!is_real(node.input_display_list[i])) continue;
+	                    if(node.inputs[node.input_display_list[i]].setFrom(value_dragging)) break;
+	                }
+	                    
+	            } else {
+	                for (var i = 0, n = array_length(node.inputs); i < n; i++)
+	                    if(node.inputs[i].setFrom(value_dragging)) break;
+	            }
+	            
+	        } else if(value_dragging.connect_type == CONNECT_TYPE.input) {
+	            for (var i = 0, n = array_length(node.outputs); i < n; i++)
+	                if(value_dragging.setFrom(node.outputs[i])) break;
+	                
+	        }
+	        
+	        value_dragging = noone;
+	        return;
         }
         
-        value_dragging = noone;
+        if(array_length(nodes_selecting) == 1) {
+        	var sNode = nodes_selecting[0];
+        	var _jOut = sNode.getOutput();
+        	var _jIn  = node.getInput();
+        	
+        	if(_jOut != noone && _jIn != noone && _jIn.setFrom(_jOut)) {
+        		node.x = sNode.x + sNode.w + 64;
+        		node.y = sNode.y;
+        	}
+        	
+        	return;
+        }
     }
     
     function getFocusStr() {

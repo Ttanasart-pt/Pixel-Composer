@@ -562,17 +562,17 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return _targ;
 	}
 	
-	static getInput = function(_y = 0, junc = noone, shift = input_fix_len) {
+	static getInput = function(_y = 0, _junc = noone, _shft = input_fix_len, _over = false) {
 		
 		var _targ = noone;
 		var _dy   = 9999;
 		
-		for( var i = shift; i < array_length(inputs); i++ ) {
+		for( var i = _shft; i < array_length(inputs); i++ ) {
 			var _inp = inputs[i];
 			
 			if(!_inp.isVisible()) continue;
-			if(_inp.value_from != noone) continue;
-			if(junc != noone && (value_bit(junc.type) & value_bit(_inp.type)) == 0) continue;
+			if(!_over && _inp.value_from != noone) continue;
+			if(_junc != noone && (value_bit(_junc.type) & value_bit(_inp.type)) == 0) continue;
 			
 			var _ddy = abs(_inp.y - _y);
 			

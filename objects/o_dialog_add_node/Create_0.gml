@@ -8,7 +8,7 @@ event_inherited();
 	volatile  = true;
 	destroy_on_click_out = true;
 	
-	title = "Add node";
+	title             = "Add node";
 	node_target_x	  = 0;
 	node_target_y	  = 0;
 	node_target_x_raw = 0;
@@ -1058,6 +1058,7 @@ event_inherited();
 		
 		var equation = string_char_at(search_string, 0) == "=";
 		var amo		 = array_length(search_list);
+		var ww       = search_pane.surface_w;
 		var hh		 = 0;
 		var _hover	 = sHOVER && search_pane.hover;
 		
@@ -1297,6 +1298,11 @@ event_inherited();
 				
 				if(is(_node, NodeObject)) {
 					var tx = _node.drawList(pd, yy, _m[0], _m[1], list_height, list_width - pd, _param);
+					var _hotkey = GRAPH_ADD_NODE_MAPS[$ _node.nodeName];
+					if(_hotkey != undefined) {
+						draw_set_text(f_p2, fa_right, fa_center, COLORS._main_text_sub);
+						draw_text_add(ww - ui(16), yy + list_height / 2, _hotkey.getName());
+					}
 					
 				} else {
 					if(struct_has(_node, "getSpr")) _node.getSpr();
