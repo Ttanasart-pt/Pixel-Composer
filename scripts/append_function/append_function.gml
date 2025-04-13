@@ -54,11 +54,13 @@ function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext(), appended_
 	}
 	printIf(log, $"Load time: {current_time - t}"); t = current_time;
 	
+	var _append_len = array_length(appended_list);
+	
 	try {
-		for(var i = 0; i < array_length(appended_list); i++) {
+		for(var i = 0; i < _append_len; i++) {
 			var _node = appended_list[i];
 			_node.loadGroup(context);
-		
+			
 			if(_node.group == context) array_push(node_create, _node);
 		}
 	} catch(e) {
@@ -67,7 +69,7 @@ function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext(), appended_
 	printIf(log, $"Load group time: {current_time - t}"); t = current_time;
 	
 	try {
-		for(var i = 0; i < array_length(appended_list); i++)
+		for(var i = 0; i < _append_len; i++)
 			appended_list[i].postDeserialize();
 	} catch(e) {
 		log_warning("APPEND, deserialize", exception_print(e));
@@ -75,7 +77,7 @@ function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext(), appended_
 	printIf(log, $"Deserialize time: {current_time - t}"); t = current_time;
 	
 	try {
-		for(var i = 0; i < array_length(appended_list); i++)
+		for(var i = 0; i < _append_len; i++)
 			appended_list[i].applyDeserialize();
 	} catch(e) {
 		log_warning("LOAD, apply deserialize", exception_print(e));
@@ -83,11 +85,15 @@ function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext(), appended_
 	printIf(log, $"Apply deserialize time: {current_time - t}"); t = current_time;
 	
 	try {
-		var _conn_list = _connect_outside? appended_list : array_substract(appended_list, node_create);
+		var _nodeGroup = undefined;
+		if(!_connect_outside) {
+			_nodeGroup = {};
+			for(var i = 0; i < _append_len; i++) _nodeGroup[$ appended_list[i].node_id] = appended_list[i];
+		}
 		
-		for(var i = 0; i < array_length(_conn_list); i++) _conn_list[i].preConnect();
-		for(var i = 0; i < array_length(_conn_list); i++) _conn_list[i].connect();
-		for(var i = 0; i < array_length(_conn_list); i++) _conn_list[i].postConnect();
+		for(var i = 0; i < _append_len; i++) appended_list[i].preConnect();
+		for(var i = 0; i < _append_len; i++) appended_list[i].connect(false, _nodeGroup);
+		for(var i = 0; i < _append_len; i++) appended_list[i].postConnect();
 			
 	} catch(e) {
 		log_warning("APPEND, connect", exception_print(e));
@@ -95,7 +101,7 @@ function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext(), appended_
 	printIf(log, $"Connect time: {current_time - t}"); t = current_time;
 	
 	try {
-		for(var i = 0; i < array_length(appended_list); i++)
+		for(var i = 0; i < _append_len; i++)
 			appended_list[i].doUpdate();
 	} catch(e) {
 		log_warning("APPEND, update", exception_print(e));
@@ -129,7 +135,7 @@ function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext(), appended_
 	printIf(log, $"Conflict time: {current_time - t}"); t = current_time;
 	
 	try {
-		for(var i = 0; i < array_length(appended_list); i++)
+		for(var i = 0; i < _append_len; i++)
 			appended_list[i].postLoad();
 	} catch(e) {
 		log_warning("APPEND, connect", exception_print(e));

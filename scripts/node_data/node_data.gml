@@ -2855,14 +2855,14 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static onLoadGroup = function() {}
 	
-	static connect = function(log = false) {
+	static connect = function(log = false, _nodeGroup = undefined) {
 		var connected = true;
-		for(var i = 0; i < array_length(inputs); i++)
-			connected &= inputs[i].connect(log);
+		for( var i = 0, n = array_length(inputs); i < n; i++ )
+			connected &= inputs[i].connect(log, _nodeGroup);
 		
-		inspectInput1.connect(log);
-		inspectInput2.connect(log);
-		updatedInTrigger.connect(log);
+		inspectInput1.connect(    log, _nodeGroup );
+		inspectInput2.connect(    log, _nodeGroup );
+		updatedInTrigger.connect( log, _nodeGroup );
 		
 		if(!connected) ds_queue_enqueue(CONNECTION_CONFLICT, self);
 		refreshTimeline();

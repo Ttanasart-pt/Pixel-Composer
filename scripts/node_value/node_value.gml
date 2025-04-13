@@ -2380,15 +2380,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			mappableStep();
 	}
 	
-	static connect = function(log = false) {
+	static connect = function(log = false, _nodeGroup = undefined) {
 		if(con_node == -1 || con_index == -1) return true;
-		// print($"{node.name} > {con_node} : {con_index}");
 		
 		var _node = con_node;
 		if(APPENDING) {
 			_node = GetAppendID(con_node);
-			if(_node == noone)
-				return true;
+			if(_node == noone) return true;
 		}
 		
 		if(!ds_map_exists(PROJECT.nodeMap, _node)) {
@@ -2399,6 +2397,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		var _nd = PROJECT.nodeMap[? _node];
 		var _ol = array_length(_nd.outputs);
+		
+		if(_nodeGroup != undefined) {
+			if(_nd.group != node.group)        return true;
+			// if(!struct_has(_nodeGroup, _node)) return true;
+		}
 		
 		if(log) log_warning("LOAD", $"[Connect] Reconnecting {node.name} to {_nd.name}", node);
 		

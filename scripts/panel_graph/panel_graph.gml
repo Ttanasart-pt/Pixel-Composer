@@ -3252,7 +3252,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         if(is_struct(_map)) {
             ds_map_clear(APPEND_MAP);
             CLONING   = true;
-            var _app  = __APPEND_MAP(_map, getCurrentContext(), [], true);
+            var _app  = __APPEND_MAP(_map, getCurrentContext(), [], false);
             CLONING   = false;
             
             if(_app == noone || array_empty(_app)) return;
