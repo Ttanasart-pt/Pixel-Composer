@@ -1808,10 +1808,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	static searchNodeBackward = function(_node) {
-		if(node == _node) 
-			return true;
+		if(node == _node) return true;
 			
-		if(struct_has(node, "__key") && struct_has(_node, "__key") && node.__key == _node.__key)
+		if(NOT_LOAD && struct_has(node, "__key") && struct_has(_node, "__key") && node.__key == _node.__key)
 			return true;
 		
 		for(var i = 0; i < array_length(node.inputs); i++) {
@@ -2398,42 +2397,42 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var _nd = PROJECT.nodeMap[? _node];
 		var _ol = array_length(_nd.outputs);
 		
+		if(_nd.group != node.group) return true;
 		if(_nodeGroup != undefined) {
-			if(_nd.group != node.group)        return true;
-			// if(!struct_has(_nodeGroup, _node)) return true;
+			if(!struct_has(_nodeGroup, _node)) return true;
 		}
 		
-		if(log) log_warning("LOAD", $"[Connect] Reconnecting {node.name} to {_nd.name}", node);
+		// if(log) log_warning("LOAD", $"    [Connect] Connecting {node.name} to {_nd.name}", node);
 		
 		switch(con_tag) {
 			case VALUE_TAG.updateInTrigger  : return setFrom(_nd.updatedInTrigger);
 			case VALUE_TAG.updateOutTrigger : return setFrom(_nd.updatedOutTrigger);
 			case VALUE_TAG.matadata         : return setFrom(_nd.junc_meta[con_index]);
+		}
+		
+		if(con_index >= 0 && con_index < _ol) {
+			var _set = setFrom(_nd.outputs[con_index], false, true, log);
+			if(_set) return true;
 			
-			default : 
-				if(con_index >= 0 && con_index < _ol) {
-					var _set = setFrom(_nd.outputs[con_index], false, true);
-					if(_set) return true;
-					
-						 if(_set == -1) log_warning("LOAD", $"[Connect] Connection conflict {node.name} to {_nd.name} : Not connectable.",   node);
-					else if(_set == -2) log_warning("LOAD", $"[Connect] Connection conflict {node.name} to {_nd.name} : Condition not met.", node); 
-					
-					return false;
-				} 
-				
-				if(con_index >= 1000) { //connect bypass
-					var _inp = array_safe_get_fast(_nd.inputs, con_index - 1000, noone);
-					if(_inp == noone) return false;
-					
-					var _set = setFrom(_inp.bypass_junc, false, true);
-					if(_set) return true;
-					
-						 if(_set == -1) log_warning("LOAD", $"[Connect] Connection conflict {node.name} to {_nd.name} (bypass) : Not connectable.",   node);
-					else if(_set == -2) log_warning("LOAD", $"[Connect] Connection conflict {node.name} to {_nd.name} (bypass) : Condition not met.", node); 
-					
-					return false;
-				}
-				break;
+				 if(_set == -1) log_warning("LOAD", $"[Connect] Connection conflict {node.name} to {_nd.name} : Not connectable.",        node);
+			else if(_set == -2) log_warning("LOAD", $"[Connect] Connection conflict {node.name} to {_nd.name} : Condition not met.",      node); 
+			else                log_warning("LOAD", $"[Connect] Connection conflict {node.name} to {_nd.name} : General failure {_set}.", node);
+			
+			return false;
+		} 
+		
+		if(con_index >= 1000) { //connect bypass
+			var _inp = array_safe_get_fast(_nd.inputs, con_index - 1000, noone);
+			if(_inp == noone) return false;
+			
+			var _set = setFrom(_inp.bypass_junc, false, true, log);
+			if(_set) return true;
+			
+				 if(_set == -1) log_warning("LOAD", $"[Connect] Connection conflict {node.name} to {_nd.name} (bypass) : Not connectable.",        node);
+			else if(_set == -2) log_warning("LOAD", $"[Connect] Connection conflict {node.name} to {_nd.name} (bypass) : Condition not met.",      node);  
+			else                log_warning("LOAD", $"[Connect] Connection conflict {node.name} to {_nd.name} (bypass) : General failure {_set}.", node);
+			
+			return false;
 		}
 		
 		log_warning("LOAD", $"[Connect] Connection conflict {node.name} to {_nd.name} : Output not exist [{con_index}].", node);

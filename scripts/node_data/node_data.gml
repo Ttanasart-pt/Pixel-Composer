@@ -2864,7 +2864,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		inspectInput2.connect(    log, _nodeGroup );
 		updatedInTrigger.connect( log, _nodeGroup );
 		
-		if(!connected) ds_queue_enqueue(CONNECTION_CONFLICT, self);
+		if(!connected) {
+			// if(log) log_warning("LOAD", $"[Connect] Connection failed {name}", self);
+			ds_queue_enqueue(CONNECTION_CONFLICT, self);
+		}
 		refreshTimeline();
 		
 		return connected;
