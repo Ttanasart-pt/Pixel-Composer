@@ -240,6 +240,7 @@
     {"$GMFolder":"","%Name":"legacy","folderPath":"folders/nodes/data/simulation/smokeSim/legacy.yy","name":"legacy","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Shaders","folderPath":"folders/nodes/data/simulation/smokeSim/Shaders.yy","name":"Shaders","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"strandSim","folderPath":"folders/nodes/data/simulation/strandSim.yy","name":"strandSim","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"affectors","folderPath":"folders/nodes/data/simulation/strandSim/affectors.yy","name":"affectors","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"VFX","folderPath":"folders/nodes/data/simulation/VFX.yy","name":"VFX","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"__legacy","folderPath":"folders/nodes/data/simulation/VFX/__legacy.yy","name":"__legacy","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"affector","folderPath":"folders/nodes/data/simulation/VFX/affector.yy","name":"affector","resourceType":"GMFolder","resourceVersion":"2.0",},

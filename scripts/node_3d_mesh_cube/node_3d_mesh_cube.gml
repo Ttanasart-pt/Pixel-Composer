@@ -39,6 +39,10 @@ function Node_3D_Mesh_Cube(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 		var _tap_axs  = _data[i+8];
 		var _subd     = _data[i+9];
 		
+		_subd[0] = max(1, _subd[0]);
+		_subd[1] = max(1, _subd[1]);
+		_subd[2] = max(1, _subd[2]);
+		
 		inputs[i+1].name = _mat_side? "Material Top" : "Material";
 		inputs[i+1].setVisible(true, true);
 		inputs[i+2].setVisible(_mat_side, _mat_side);

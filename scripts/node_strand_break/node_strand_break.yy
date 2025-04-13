@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"node_strand_break",
   "parent":{
-    "name":"strandSim",
-    "path":"folders/nodes/data/simulation/strandSim.yy",
+    "name":"affectors",
+    "path":"folders/nodes/data/simulation/strandSim/affectors.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

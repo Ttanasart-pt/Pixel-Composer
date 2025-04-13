@@ -2,7 +2,6 @@ function Node_Strand_Render(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	name      = "Strand Render";
 	color     = COLORS.node_blend_strand;
 	icon      = THEME.strandSim;
-	use_cache = CACHE_USE.auto;
 	
 	manual_ungroupable	 = false;
 	
@@ -41,13 +40,17 @@ function Node_Strand_Render(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		["Color",    false   ], 4, 5, 
 	];
 	
+	attributes.use_cache   = false;
 	attributes.show_strand = true;
+	
+	array_push(attributeEditors, [ "Cache", function() /*=>*/ {return attributes.use_cache}, new checkBox(function() /*=>*/ { attributes.use_cache = !attributes.use_cache; }) ]);
+	
 	array_push(attributeEditors, "Display");
 	array_push(attributeEditors, [ "Draw Strand", function() /*=>*/ {return attributes.show_strand}, new checkBox(function() /*=>*/ { attributes.show_strand = !attributes.show_strand; }) ]);
 	
 	setTrigger(2, "Clear cache", [ THEME.cache, 0, COLORS._main_icon ]);
 	
-	static onInspector2Update = function() { clearCache(); }
+	static onInspector2Update = function() /*=>*/ {return clearCache()};
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(!attributes.show_strand) return;
@@ -60,9 +63,11 @@ function Node_Strand_Render(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			_strd[i].draw(_x, _y, _s);
 	}
 	
+	static step = function() {
+		use_cache = attributes.use_cache? CACHE_USE.auto : CACHE_USE.none;
+	}
+	
 	static update = function(frame = CURRENT_FRAME) {
-		if(!PROJECT.animator.is_playing && recoverCache()) return;
-			
 		var _seed       = getInputData(6);
 		var _renderStep = getInputData(8);
 		
@@ -80,7 +85,7 @@ function Node_Strand_Render(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var _clen = getInputData(5);
 		
 		var _surf = outputs[0].getValue();
-		_surf = surface_verify(_surf, _dim[0], _dim[1]);
+		    _surf = surface_verify(_surf, _dim[0], _dim[1]);
 		outputs[0].setValue(_surf);
 		
 		if(_strd == noone) return;
@@ -149,6 +154,6 @@ function Node_Strand_Render(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		}
 		surface_reset_target();
 		
-		cacheCurrentFrame(_surf);
+		if(attributes.use_cache) cacheCurrentFrame(_surf);
 	}
 }

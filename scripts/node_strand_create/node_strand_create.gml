@@ -41,9 +41,10 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	newInput( 3, nodeValue_Int(             "Segment",       self, 4));
 	newInput(18, nodeValue_Rotation_Random( "Direction",     self, ROTATION_RANDOM_DEF_0_360));
 	newInput( 4, nodeValue_Slider(          "Elasticity",    self, 0.05)).setTooltip("Length preservation, the higher the value the easier it is to stretch each segment.");
-	newInput( 8, nodeValue_Slider(          "Spring",        self, 0.8 )).setTooltip("Angular stiffness, the higher the value the easier it is to bend each segment.");
+	newInput( 8, nodeValue_Slider(          "Spring",        self, 0.8 ));
 	newInput( 9, nodeValue_Slider(          "Structure",     self, 0.2 )).setTooltip("The ability to keep its original shape.");
 	newInput(17, nodeValue_Vec2(            "Root Strength", self, [-1, -1])).setTooltip("The force required to break strand from its root. Set to -1 to make strand infinitely strong.");
+	newInput(19, nodeValue_Float(           "Restitution",   self, .01)).setTooltip("Minimum speed before the strand stops moving completely.");
 	
 	////- Curl
 	
@@ -54,13 +55,13 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	newInput(16, nodeValue_Bool("View fix hair", self, false));
 	
-	//// inputs 18
+	//// inputs 20
 	
 	newOutput(0, nodeValue_Output("Strand", self, VALUE_TYPE.strands, noone));
 	
 	input_display_list = [ 10, 
 		["Generation",	false], 0, 1, 5, 6, 7, 13, 14, 15, 
-		["Strand",		false], 2, 3, 18, 4, 8, 9, 17, 
+		["Strand",		false], 2, 3, 18, 4, 8, 9, 17, 19, 
 		["Curl",		false], 11, 12, 
 		["Preview",		 true], 16, 
 	];
@@ -450,6 +451,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var _spring = getInputData( 8);
 		var _struct = getInputData( 9);
 		var _rotstr = getInputData(17);
+		var _restit = getInputData(19);
 		
 		var _crF = getInputData(11);
 		var _crS = getInputData(12);
@@ -492,7 +494,6 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				strands.loop = false;
 				break;
 		}
-		
 		
 		var ind = 0;
 		
@@ -546,6 +547,8 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			h.tension		 = 1 - _tenson;
 			h.spring		 = _spring;
 			h.angularTension = _struct;
+			h.restitution    = _restit;
+			
 			h.curl_freq		 = _crF;
 			h.curl_size		 = _crS;
 			
