@@ -84,7 +84,7 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 		open_ry = _ry;
 		h = _h;
 		
-		data     = is_method(data_list)? data_list() : data_list;
+		data = is_method(data_list)? data_list() : data_list;
 		
 		if(array_empty(data)) {
 			draw_sprite_stretched(THEME.textbox, 3, _x, _y, _w, _h);
@@ -111,10 +111,20 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 		var _txw = is_string(_text)? string_width(_text) : ui(32);
 		if(type == 1) w = _txw + padding * 2 + ui(24);
 		
+		var _bs = min(h, ui(32));
+		
 		if(extra_button != noone) {
 			extra_button.setFocusHover(active, hover);
-			extra_button.draw(_x + _w - ui(32), _y + _h / 2 - ui(32 / 2), ui(32), ui(32), _m, THEME.button_hide_fill);
-			w -= ui(40);
+			extra_button.draw(_x + _w - _bs, _y + _h / 2 - ui(32 / 2), _bs, _bs, _m, THEME.button_hide_fill);
+			w -= _bs + ui(4);
+		}
+		
+		if(_w - _bs > ui(100) && front_button) {
+			front_button.setFocusHover(active, hover);
+			front_button.draw(_x, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide_fill);
+			
+			_x += _bs + ui(4);
+			_w -= _bs + ui(4);
 		}
 		
 		if(open) {

@@ -571,7 +571,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			var _inp = inputs[i];
 			
 			if(!_inp.isVisible()) continue;
-			if(!_over && _inp.value_from != noone) continue;
+			if(_inp.value_from != noone) continue;
 			if(_junc != noone && (value_bit(_junc.type) & value_bit(_inp.type)) == 0) continue;
 			
 			var _ddy = abs(_inp.y - _y);
@@ -585,6 +585,24 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(dummy_input) {
 			var _ddy = abs(dummy_input.y - _y);
 			if(_ddy < _dy) _targ = dummy_input;
+		}
+		
+		if(_targ == noone && _over) {
+			var _dy   = 9999;
+			
+			for( var i = _shft; i < array_length(inputs); i++ ) {
+				var _inp = inputs[i];
+				
+				if(!_inp.isVisible()) continue;
+				if(_junc != noone && (value_bit(_junc.type) & value_bit(_inp.type)) == 0) continue;
+				
+				var _ddy = abs(_inp.y - _y);
+				
+				if(_ddy < _dy) {
+					_targ = _inp;
+					_dy   = _ddy;
+				}
+			}
 		}
 		
 		return _targ;
