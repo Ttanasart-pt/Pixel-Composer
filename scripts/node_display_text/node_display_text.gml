@@ -4,6 +4,29 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	previewable = false;
 	
+	newInput(1, nodeValue_Text("Text", self, "Text"));
+	
+	////- Styling
+	
+	newInput(2, nodeValue_Enum_Scroll( "Style",       self, 2, [ "Header", "Sub header", "Normal" ]));
+	newInput(0, nodeValue_Color(       "Color",       self, ca_white ));
+	newInput(3, nodeValue_Slider(      "Alpha",       self, 0.75));
+	newInput(4, nodeValue_Float(       "Line width",  self, -1));
+	newInput(6, nodeValue_Float(       "Line height", self, 0));
+	
+	////- Display
+	
+	newInput(5, nodeValue_Vec2( "Position", self, [ x, y ]));
+	
+	//// inputs 7
+	
+	array_foreach(inputs, function(i) /*=>*/ {return i.rejectArray()});
+		
+	input_display_list = [1, 
+		["Styling", false], 2, 0, 4, 6, 
+		["Display", false], 5, 
+	];
+	
 	size_dragging    = false;
 	size_dragging_w  = w;
 	size_dragging_h  = h;
@@ -15,51 +38,25 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	draw_scale  = 1;
 	init_size   = true;
 	
-	ta_editor   = new textArea(TEXTBOX_INPUT.text, function(val) { inputs[1].setValue(val); })
+	ta_editor   = new textArea(TEXTBOX_INPUT.text, function(v) /*=>*/ { inputs[1].setValue(v); });
 	
-	newInput(0, nodeValue_Color("Color", self, cola(c_white) ))
-		.rejectArray();
-	
-	newInput(1, nodeValue_Text("Text", self, "Text"));
-	
-	newInput(2, nodeValue_Enum_Scroll("Style", self,  2, [ "Header", "Sub header", "Normal" ]))
-		.rejectArray();
-	
-	newInput(3, nodeValue_Float("Alpha", self, 0.75))
-		.setDisplay(VALUE_DISPLAY.slider)
-		.rejectArray();
-	
-	newInput(4, nodeValue_Float("Line width", self, -1))
-		.rejectArray();
-	
-	newInput(5, nodeValue_Vec2("Position", self, [ x, y ]))
-		.rejectArray();
-	
-	newInput(6, nodeValue_Float("Line height", self, 0))
-		.rejectArray();
-		
-	input_display_list = [1, 
-		["Styling", false], 2, 0, 4, 6, 
-		["Display", false], 5, 
-	];
-	
-	_prev_text = "";
-	font   = f_sdf_medium;
-	fsize  = 1;
-	line_h = 0;
-	_lines = [];
+	_prev_text  = "";
+	font        = f_sdf_medium;
+	fsize       = 1;
+	line_h      = 0;
+	_lines      = [];
 	draw_simple = false;
 	
-	pos_x  = x;
-	pos_y  = y;
+	pos_x       = x;
+	pos_y       = y;
 	
-	ml_press   = 0;
-	ml_release = 0;
-	ml_double  = 0;
-	mr_press   = 0;
-	mr_release = 0;
-	mm_press   = 0;
-	mm_release = 0;
+	ml_press    = 0;
+	ml_release  = 0;
+	ml_double   = 0;
+	mr_press    = 0;
+	mr_release  = 0;
+	mm_press    = 0;
+	mm_release  = 0;
 	
 	static move = function(_x, _y, _s) {
 		if(x == _x && y == _y) return;
@@ -72,62 +69,17 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			UNDO_HOLDING = true;
 	}
 	
-	static button_reactive_update = function() {
-		ml_press   = lerp_float(ml_press  , 0, 5);
-		ml_release = lerp_float(ml_release, 0, 5);
-		ml_double  = lerp_float(ml_double,  0, 5);
-		mr_press   = lerp_float(mr_press  , 0, 5);
-		mr_release = lerp_float(mr_release, 0, 5);
-		mm_press   = lerp_float(mm_press  , 0, 5);
-		mm_release = lerp_float(mm_release, 0, 5);
-		
-		if(mouse_press(mb_left))     ml_press   = 2;
-		if(mouse_release(mb_left))   ml_release = 2;
-		if(DOUBLE_CLICK)		     ml_double  = 2;
-		if(mouse_press(mb_right))    mr_press   = 2;
-		if(mouse_release(mb_right))  mr_release = 2;
-		if(mouse_press(mb_middle))   mm_press   = 2;
-		if(mouse_release(mb_middle)) mm_release = 2;
+	////- Update
+	
+	static onValueUpdate = function(index = 0) {
+		if(index == 1 || index == 4) line_update(inputs[1].getValue(), inputs[4].getValue());
 	}
 	
-	static button_reactive = function(key) {
-		switch(key) {
-			case "left_mouse_click" :		 return clamp(ml_press, 0, 1);
-			case "left_mouse_double_click" : return clamp(ml_double, 0, 1);
-			case "left_mouse_release" :		 return clamp(ml_release, 0, 1);
-			case "left_mouse_drag" :		 return mouse_click(mb_left);
-			
-			case "right_mouse_click" :		 return clamp(mr_press, 0, 1);
-			case "right_mouse_release" :	 return clamp(mr_release, 0, 1);
-			case "right_mouse_drag" :		 return mouse_click(mb_right);
-			
-			case "middle_mouse_click" :		 return clamp(mm_press, 0, 1);
-			case "middle_mouse_release" :	 return clamp(mm_release, 0, 1);
-			case "middle_mouse_drag" :		 return mouse_click(mb_middle);
-			
-			case "ctrl" :  return key_mod_press(CTRL);
-			case "alt" :   return key_mod_press(ALT);
-			case "shift" : return key_mod_press(SHIFT);
-			
-			case "space" : return keyboard_check(vk_space);
-			case "f1" :    return keyboard_check(vk_f1);
-			case "f2" :    return keyboard_check(vk_f2);
-			case "f3" :    return keyboard_check(vk_f3);
-			case "f4" :    return keyboard_check(vk_f4);
-			case "f5" :    return keyboard_check(vk_f5);
-			case "f6" :    return keyboard_check(vk_f6);
-			case "f7" :    return keyboard_check(vk_f7);
-			case "f8" :    return keyboard_check(vk_f8);
-			case "f9" :    return keyboard_check(vk_f9);
-			case "f10" :   return keyboard_check(vk_f10);
-			case "f11" :   return keyboard_check(vk_f11);
-			case "f12" :   return keyboard_check(vk_f12);
-		}
-		
-		if(string_length(key) == 1) return keyboard_check(ord(string_upper(key)));
-		
-		return 0;
-	}
+	static isRenderable = function() /*=>*/ {return false};
+	static doUpdate = function() {}
+	static update   = function() {}
+	
+	////- Draw
 	
 	static draw_text_style = function(_x, _y, txt, _s, _mx, _my) {
 		var _ss = _s * fsize;
@@ -360,6 +312,63 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		return ss;
 	}
 	
+	static button_reactive_update = function() {
+		ml_press   = lerp_float(ml_press  , 0, 5);
+		ml_release = lerp_float(ml_release, 0, 5);
+		ml_double  = lerp_float(ml_double,  0, 5);
+		mr_press   = lerp_float(mr_press  , 0, 5);
+		mr_release = lerp_float(mr_release, 0, 5);
+		mm_press   = lerp_float(mm_press  , 0, 5);
+		mm_release = lerp_float(mm_release, 0, 5);
+		
+		if(mouse_press(mb_left))     ml_press   = 2;
+		if(mouse_release(mb_left))   ml_release = 2;
+		if(DOUBLE_CLICK)		     ml_double  = 2;
+		if(mouse_press(mb_right))    mr_press   = 2;
+		if(mouse_release(mb_right))  mr_release = 2;
+		if(mouse_press(mb_middle))   mm_press   = 2;
+		if(mouse_release(mb_middle)) mm_release = 2;
+	}
+	
+	static button_reactive = function(key) {
+		switch(key) {
+			case "left_mouse_click" :		 return clamp(ml_press, 0, 1);
+			case "left_mouse_double_click" : return clamp(ml_double, 0, 1);
+			case "left_mouse_release" :		 return clamp(ml_release, 0, 1);
+			case "left_mouse_drag" :		 return mouse_click(mb_left);
+			
+			case "right_mouse_click" :		 return clamp(mr_press, 0, 1);
+			case "right_mouse_release" :	 return clamp(mr_release, 0, 1);
+			case "right_mouse_drag" :		 return mouse_click(mb_right);
+			
+			case "middle_mouse_click" :		 return clamp(mm_press, 0, 1);
+			case "middle_mouse_release" :	 return clamp(mm_release, 0, 1);
+			case "middle_mouse_drag" :		 return mouse_click(mb_middle);
+			
+			case "ctrl" :  return key_mod_press(CTRL);
+			case "alt" :   return key_mod_press(ALT);
+			case "shift" : return key_mod_press(SHIFT);
+			
+			case "space" : return keyboard_check(vk_space);
+			case "f1" :    return keyboard_check(vk_f1);
+			case "f2" :    return keyboard_check(vk_f2);
+			case "f3" :    return keyboard_check(vk_f3);
+			case "f4" :    return keyboard_check(vk_f4);
+			case "f5" :    return keyboard_check(vk_f5);
+			case "f6" :    return keyboard_check(vk_f6);
+			case "f7" :    return keyboard_check(vk_f7);
+			case "f8" :    return keyboard_check(vk_f8);
+			case "f9" :    return keyboard_check(vk_f9);
+			case "f10" :   return keyboard_check(vk_f10);
+			case "f11" :   return keyboard_check(vk_f11);
+			case "f12" :   return keyboard_check(vk_f12);
+		}
+		
+		if(string_length(key) == 1) return keyboard_check(ord(string_upper(key)));
+		
+		return 0;
+	}
+	
 	static line_update = function(txt, line_width = -1) {
 		_prev_text = txt;
 		_lines = [];
@@ -401,14 +410,6 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		if(ss != "") array_push(_lines, ss);
 	}
 	
-	static onValueUpdate = function(index = 0) {
-		if(index == 1 || index == 4) line_update(inputs[1].getValue(), inputs[4].getValue());
-	}
-	
-	static isRenderable = function() /*=>*/ {return false};
-	static doUpdate = function() {}
-	static update   = function() {}
-	
 	static preDraw = function(_x, _y, _mx, _my, _s) {
 		var xx = (x - 3) * _s + _x;
 		var yy = y * _s + _y;
@@ -439,6 +440,8 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	static drawNodeBase = function(xx, yy, mx, my, _s) {
 		if(draw_graph_culled) return;
+		
+		_s /= UI_SCALE;
 		
 		var color  = inputs[0].getValue();
 		var txt    = inputs[1].getValue();

@@ -861,8 +861,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         connection_draw_update = true;
         
         setTitle();
-        run_in(2, function() /*=>*/ { 
-            setSlideShow(0); 
+        run_in(10, function() /*=>*/ { 
+            setSlideShow(0);
             struct_override(display_parameter, project.graphDisplay);
         });
     } 
@@ -1032,7 +1032,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
     
     function setSlideShow(index, skip = false) {
         var _targ = project.slideShowSet(index);
-        if(_targ == noone) return;
+    	if(_targ == noone) return;
         
         setContext(_targ);
         
