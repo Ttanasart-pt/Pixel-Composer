@@ -222,7 +222,6 @@
     "surface":                                "Surface",
     "system":                                 "System",
     "text":                                   "Text",
-
     "3d_camera":                              "3D Camera",
     "add_bones":                              "Add bones",
     "add_node":                               "Add node",
@@ -305,7 +304,6 @@
     "transform_node":                         "Transform node",
     "widget":                                 "Widget",
     "workshop":                               "Workshop",
-
     "rename":                                 "Rename",
     "inputs":                                 "Inputs",
     "save/load":                              "Save/Load",
@@ -329,24 +327,20 @@
     "noise":                                  "Noise",
     "pattern":                                "Pattern",
     "related":                                "Related",
-
     "uncategorized":                          "uncategorized",
     "libraries":                              "Libraries",
     "extra":                                  "Extra",
     "modify":                                 "Modify",
     "points":                                 "Points",
     "text_area":                              "Text Area",
-
     "safe_mode":                              "SAFE MODE",
     "read_only":                              "READ ONLY",
     "untitled":                               "Untitled",
     "supporter":                              "Supporter",
     "supporter_exclusive":                    "Supporter exclusive",
-
     "external":                               "External",
     "mk_effects":                             "MK Effects",
     "flip_fluid":                             "FLIP Fluid",
-
     "projects":                               "Projects",
     "project":                                "Project",
     "portable_project_(.zip)":                "Portable project (.zip)",
@@ -355,7 +349,7 @@
     "material":                               "Material",
     "packing":                                "Packing",
     "resume":                                 "Resume", 
-
+    
     // 1.16
     "histogram":                              "Histogram",
     "background":                             "Background",
@@ -371,7 +365,7 @@
     "view_mode":                              "View mode",
     "palettes_mixer":                         "Palettes Mixer",
     "release_note":                           "Release note",
-
+    
     //1.17.10
     "3d_back_view":                           "3D Back view",
     "3d_bottom_view":                         "3D Bottom view",
@@ -498,21 +492,17 @@
     "upload_to_steam":                        "Upload To Steam",
     "use_expression":                         "Use Expression",
     "view_settings":                          "View Settings",
-
+    
     //imported from UI.json
     "anim_length":                            "Animation length",
     "anim_frame_rate":                        "Preview frame rate",
     "anim_on_end":                            "On end",
-
     "anim_scale_title":                       "Animation scaler",
     "anim_scale_target_frame_length":         "Target frame length",
     "anim_scale_scale_factor":                "Scaling factor",
-
     "anim_interpolation":                     "Interpolation curve",
-
     "color_selector_title":                   "Color selector",
     "color_selector_open_palette":            "Open palette folder",
-
     "gradient_editor_delete":                 "Delete gradient",
     "gradient_editor_title":                  "Gradient editor",
     "gradient_editor_key_blend":              "Key blending",
@@ -528,12 +518,10 @@
     "palette_editor_sort_darker":             "Darker",
     "palette_editor_sort_hue":                "Hue",
     "palette_editor_load":                    "Load palette file",
-
     "add_images_title_direcory":              "Import directory",
     "add_images_title_images":                "Import multiple images",
     "add_images_recursive":                   "Recursive",
     "add_images_filter":                      "Filter",
-
     "add_node_group_enabled":                 "Group enabled",
     "add_node_group_disabled":                "Group disabled",
     "add_node_show_connect":                  "Showing connectable",
@@ -542,7 +530,6 @@
     "add_node_remove_favourite":              "Remove from favourite",
     "add_node_create_equation":               "Create equation",
     "add_node_equation_enter":                "Press Enter to create equation node.",
-
     "grid_title":                             "Grid settings",
     "grid_snap":                              "Snap to grid",
     "grid_size":                              "Grid size",
@@ -550,32 +537,24 @@
     "grid_height":                            "Grid height",
     "grid_opacity":                           "Grid opacity",
     "grid_color":                             "Grid color",
-
     "graph_visibility_title":                 "Visibility settings",
     "graph_visibility_dim":                   "Dimension",
     "graph_visibility_compute":               "Compute time",
-
     "output_visibility_title":                "Outputs visibility",
-
     "new_file_placeholder":                   "New file",
-
     "new_collection_placeholder":             "New collection",
     "new_collection_create":                  "Create collection",
     "new_collection_meta_edit":               "Edit metadata",
     "new_collection_update":                  "Update collection",
-
     "crashed_title":                          "Restore project",
     "crashed_content":                        "Restore previous project before crash?",
     "crashed_log":                            "Log file",
-    
     "exit_title":                             "Project modified",
     "exit_content":                           "Save progress before exit?",
     "exit_save":                              "Save",
     "exit_no_save":                           "Don't save",
-
     "array_edit_title":                       "Image array edit",
     "array_edit_sort_name":                   "Sort by name",
-
     "noti_clear_log":                         "Clear log messages",
     "noti_clear_warn":                        "Clear warning messages",
     "noti_clear_all":                         "Clear all notifications",
@@ -588,12 +567,10 @@
     "noti_show_warning":                      "Show warning",
     "noti_hide_log":                          "Hide log",
     "noti_show_log":                          "Show log",
-
     "pref_pages_general":                     "General",
     "pref_pages_nodes":                       "Node settings",
     "pref_pages_appearance":                  "Appearances",
     "pref_reset_colors":                      "Reset colors",
-
     "pref_show_welcome_screen":               "Show welcome screen",
     "pref_gui_scaling":                       "GUI scaling",
     "pref_double_click_delay":                "Double click delay",
@@ -619,18 +596,15 @@
     "pref_connection_aa":                     "Connection anti aliasing",
     "pref_connection_anim":                   "Connection line animation",
     "pref_windows_control":                   "Use Windows style window control.",
-
     "pref_max_particles":                     "Max particles",
     "pref_max_shapes":                        "Max shapes",
     "pref_histogram_resolution":              "Histogram resolution",
     "pref_maximum_sampling":                  "Maximum sampling",
     "pref_verlet_iteration":                  "Verlet iteration",
     "pref_gravity":                           "Gravity",
-
     "pref_reset_color":                       "Reset colors",
     "pref_connection_thickness":              "Connection thickness",
     "pref_connection_curve_smoothness":       "Connection curve smoothness",
-
     "panel_pop_out":                          "Pop out",
     "panel_menu_addons_key":                  "Key displayer",
     "panel_menu_center_preview":              "Center preview",
@@ -659,11 +633,9 @@
     "panel_menu_steam":                       "Steam page",
     "panel_menu_auto_save_folder":            "Open autosave folder",
     "panel_menu_save_layout":                 "Save layout",
-
     "panel_globalvar":                        "Global Variables",
     "panel_export_graph":                     "Export Graph",
     "panel_debug_console":                    "Debug Console",
-
     "panel_graph_center_to_nodes":            "Center to nodes",
     "panel_graph_minimap_enabled":            "Minimap enabled",
     "panel_graph_minimap_disabled":           "Minimap disabled",
@@ -693,7 +665,6 @@
     "panel_graph_export_image":               "Export graph as image",
     "panel_graph_connection_line":            "Connection render settings",
     "panel_graph_inspector_panel":            "Send to new inspector",
-
     "panel_preview_center_canvas_on_preview": "Center canvas on preview",
     "panel_preview_keep_canvas_on_preview":   "Keep canvas on preview",
     "panel_preview_split_view":               "Split view",
@@ -712,7 +683,6 @@
     "panel_preview_copy_image":               "Copy image",
     "panel_preview_copy_color":               "Copy color",
     "panel_preview_copy_hex":                 "Copy hex",
-
     "panel_animation_ease_in":                "Ease in",
     "panel_animation_ease_out":               "Ease out",
     "panel_animation_ease_linear":            "Linear",
@@ -744,7 +714,6 @@
     "panel_collection_add_folder":            "Add folder",
     "panel_collection_open_file":             "Open in file explorer",
     "panel_collection_you_created":           "You created this item",
-
     "panel_inspector_toggle_anim":            "Toggle animation",
     "panel_inspector_remove_link":            "Remove link",
     "panel_inspector_remove_key":             "Remove keyframe",
@@ -762,20 +731,15 @@
     "panel_inspector_workshop_upload":        "Upload to Steam Workshop",
     "panel_inspector_workshop_update":        "Update Steam Workshop",
     "panel_inspector_use_expression":         "Use expression",
-
     "panel_addon_not_activated" :             "Not activated",
     "panel_addon_activated":                  "Activated",
     "panel_addon_run_on_start":               "Run on start",
-
     "more_actions":                            " more actions...",
-
     "dialog_migration_title":                 "Program directory changed in 1.13",
     "dialog_migration_content":               "This means all custom collections, assets, palettes, gradients, fonts, presets have to be move manually.",
     "migrate_files":                          "Migrate files",
     "migrate_open_directory":                 "Open directory",
-
     "palette_change_preview_size":            "Change preview size",
-
     "graph_export_scale":                     "Scale",
     "graph_export_padding":                   "Padding",
     "graph_export_solid_background":          "Solid Background",
@@ -786,42 +750,30 @@
     "graph_export_border":                    "Border",
     "graph_export_border_color":              "Border Color",
     "graph_export_border_opacity":            "Border Opacity",
-
     "panel_node_goto":                        "Go to node",
     "panel_tunnel_create_tunnel":             "Create tunnel",
     "panel_tunnel_no_key":                    "No key",
-
     "panel_globalvar_add":                    "Add variable",
-
     "widget_area_center_Span":                "Center + Span",
     "widget_area_padding":                    "Padding",
     "widget_area_two_points":                 "Two points",
     "widget_area_fill_surface":               "Full surface",
     "widget_font_open_folder":                "Open font folder",
-
     "dialog_revert_and_exit":                 "Revert and exit",
-
     "dialog_connection_title":                "Connection settings",
     "dialog_connection_thickness":            "Line thickness",
     "dialog_connection_radius":               "Corner radius",
-
     "dialog_group_order_title":               "Input order",
     "dialog_group_order_add":                 "Add separator",
-
     "dialog_exit_title":                      "Project modified",
     "dialog_exit_content":                    "Save progress before close?",
-
     "contest_open_discord":                   "Open in Discord",
-
     "splash_clear_recent":                    "Clear recent files",
     "splash_hide_thumbnail":                  "Hide thumbnail",
     "splash_show_thumbnail":                  "Show thumbnail",
     "splash_open_autosave":                   "Open autosave folder",
-
     "workshop_open":                          "Open Steam Workshop",
-    
     "workspace_replace_current":              "Replace with current",
-
     "close_all_projects":                     "Close all projects",
     "close_current_file":                     "Close current file",
     "graph_connection_settings":              "Connection Settings",
@@ -862,12 +814,10 @@
     "widget_rotator_random_double_span":      "Double Span",
     "widget_rotator_random_range":            "Range",
     "widget_rotator_random_span":             "Span",
-
     "pref_clear_temp"     :                   "Clear temp file on close.",
     "pref_connection_type":                   "Connection type",
     "pref_use_alt"        :                   "Use ALT for",
     "meta_old_version"    :                   "Created on an older version",
-
     "open_in_safe_mode":                      "Open in safe mode",
     "group_properties":                       "Group Properties",
     "panel_inspector_axis_combine":           "Combine axis",
@@ -887,7 +837,6 @@
     "pref_pan_key":                           "Panning key",
     "reload_theme":                           "Reload theme",
     "reset_layout":                           "Reset layout",
-
     "close_current_project":                  "Close current project",
     "panel_menu_connect_patreon":             "Connect to Patreon",
     "pref_directory_ImageMagick":             "ImageMagick path*",
@@ -899,10 +848,8 @@
     "pref_widget_autocomplete_delay":         "Code Autocomplete delay",
     "panel_collection_workshop_update":       "Update Steam Workshop content",
     "meta_new_version":                       "Created on a newer version",
-
     "pref_ui_font":                           "Overwrite UI font",
     "panel_menu_node_credit":                 "Node credit dialog",
-
     "panel_graph_toggle_parameter" :          "Toggle node parameters", 
     "panel_graph_group_require_shift" :       "Hold Shift to enter group", 
     "pref_add_node_remember" :                "Remember add node position", 
@@ -921,8 +868,6 @@
     "toggle_parameters" :                     "Toggle parameters", 
     "panel_driver" :                          "Driver...", 
     "panel_preview_lock_preview" :            "Lock previewing node", 
-
-    // 1.16
     "global_variables":                       "Global Variables",
     "panel_animation_keyframe_edit":          "Edit Value...",
     "panel_graph_hide_disconnected":          "Hide stray junctions",
@@ -930,7 +875,7 @@
     "art_by_kenney":                          "Art by Kenney",
     "panel_menu_reset_layout":                "Reset layout",
     "panel_graph_toggle_minimap":             "Toggle minimap",
-
+    
     // 1.19
     "3d_left_view":                           "3D Left View",
     "3d_right_view":                          "3D Right View",
@@ -958,7 +903,6 @@
     "border_opacity":                         "Border Opacity",
     "border":                                 "Border",
     "cache_data":                             "Cache Data",
-    "cache":                                  "Cache",
     "capture":                                "Capture",
     "cleanups":                               "Cleanups",
     "coll_animated_speed":                    "Animation speed",
@@ -983,7 +927,6 @@
     "display_bone":                           "Display bone",
     "display_name":                           "Display name",
     "display_scale":                          "Display scale",
-    "display":                                "Display",
     "don't_save":                             "Don't Save",
     "draw_fluid_particles":                   "Draw Fluid Particles",
     "draw_guide":                             "Draw Guide",
@@ -1009,7 +952,6 @@
     "graph_visibility_tooltip":               "Show Tooltip",
     "grid_highlight_every":                   "Highlight period",
     "grid_show_origin":                       "Show origin",
-    "group":                                  "Group",
     "home":                                   "Home",
     "http":                                   "HTTP",
     "info":                                   "Info",
@@ -1024,7 +966,6 @@
     "max_dimension":                          "Max Dimension",
     "max_request_size":                       "Max request size",
     "maximum_particles":                      "Maximum particles",
-    "network":                                "Network",
     "new_armature":                           "New armature",
     "new_folder_from_selection":              "New Folder From Selection",
     "new_path":                               "New path",
@@ -1032,7 +973,6 @@
     "news":                                   "News",
     "node_height":                            "Node Height",
     "node_width":                             "Node Width",
-    "node":                                   "Node",
     "nodes_manager":                          "Nodes Manager",
     "nodes_panel":                            "Nodes Panel",
     "none":                                   "None",
@@ -1099,7 +1039,6 @@
     "runner":                                 "Runner",
     "save_to_project":                        "Save to Project",
     "search_wiki":                            "Search Wiki",
-    "selection":                              "Selection",
     "serizalize_data":                        "Serizalize Data",
     "shadertoy":                              "ShaderToy",
     "shift":                                  "Shift",
@@ -1110,7 +1049,6 @@
     "skip_incompressible":                    "Skip incompressible",
     "solid_background":                       "Solid Background",
     "stacked":                                "Stacked",
-    "surface":                                "Surface",
     "swap_connections":                       "Swap Connections",
     "texture_interpolation":                  "Texture interpolation",
     "toggle_search":                          "Toggle Search",
@@ -1129,5 +1067,5 @@
     "warp":                                   "Warp",
     "workspace_panel":                        "Workspace Panel",
 
-    "":                                        ""
+    "":                                        "",
 }

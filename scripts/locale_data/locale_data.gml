@@ -1,6 +1,6 @@
 globalvar LOCALE, TEST_LOCALE, LOCALE_DEF;
 
-TEST_LOCALE = 1;
+TEST_LOCALE = 0;
 LOCALE_DEF  = 1;
 LOCALE      = {
 	fontDir: "",
