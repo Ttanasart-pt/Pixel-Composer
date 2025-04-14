@@ -311,6 +311,7 @@ function draw_tooltip_curve(curve) {
 }
 
 function draw_tooltip_path(_path) {
+	if(!is_struct(_path)) return;
 	
 	var ww = ui(160);
 	var hh = ui(160);
