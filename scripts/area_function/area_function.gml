@@ -175,8 +175,10 @@ function area_get_random_point_poisson(_area, _distance, _seed) {
     var points = [];
     var active = [];
     
+    random_set_seed(_sed);
+    
     var i      = 0;
-    var _p     = [ random_range_seed(x0, x1, _sed++), random_range_seed(y0, y1, _sed++) ];
+    var _p     = [ random_range(x0, x1), random_range(y0, y1) ];
     var cell_x = floor((_p[0] - x0) / cs);
     var cell_y = floor((_p[1] - y0) / cs);
     var cell   = cell_x + (cell_y * cell_nw);
@@ -186,13 +188,13 @@ function area_get_random_point_poisson(_area, _distance, _seed) {
     grid[cell] = i++;
 
     while (array_length(active)) {
-        var j = random_range_seed(0, array_length(active) - 1, _sed++);
+        var j = random_range(0, array_length(active) - 1);
         var p = active[j];
         var found = false;
 
         repeat(32) {
-            var _dir = random_range_seed(0, 360, _sed++);
-            var _rad = random_range_seed(_distance, _distance * 2, _sed++);
+            var _dir = random_range(0, 360);
+            var _rad = random_range(_distance, _distance * 2);
             var _px  = p[0] + lengthdir_x(_rad, _dir);
             var _py  = p[1] + lengthdir_y(_rad, _dir);
             if (_px < x0 || _px > x1 || _py < y0 || _py > y1) continue;
@@ -201,7 +203,23 @@ function area_get_random_point_poisson(_area, _distance, _seed) {
             var cell_y = floor((_py - y0) / cs);
             var cell   = cell_x + (cell_y * cell_nw);
             if (grid[cell] != -1) continue;
-
+			
+			var cull = false;
+			for (var k = -1; k <= 1; k++)
+            for (var l = -1; l <= 1; l++) {
+                var _cell_x = cell_x + k;
+                var _cell_y = cell_y + l;
+                if (_cell_x < 0 || _cell_x >= cell_nw) continue;
+                if (_cell_y < 0 || _cell_y >= cell_nh) continue;
+                var _cell = _cell_x + (_cell_y * cell_nw);
+                if (grid[_cell] != -1) {
+                    var p2 = points[grid[_cell]];
+                    if (point_distance(_px, _py, p2[0], p2[1]) < _distance) cull = true;
+                }
+            }
+            
+            if(cull) continue;
+            
 			var _p = [_px, _py];
             array_push(points, _p);
             array_push(active, _p);
@@ -213,9 +231,19 @@ function area_get_random_point_poisson(_area, _distance, _seed) {
         if (!found) array_delete(active, j, 1);
     }
     
-    if(_area_t == 1) {
-    	__area = _area;
-    	array_filter_ext(points, function(p) /*=>*/ {return area_point_in(__area, p[0], p[1])});
+    if(_area_t == AREA_SHAPE.elipse) {
+    	for(var i = array_length(points) - 1; i >= 0; i--) {
+    		var p  = points[i];
+    		var px = p[0];
+    		var py = p[1];
+    		
+    		var _dir = point_direction(_area_x, _area_y, px, py);
+			var _epx = _area_x + lengthdir_x(_area_w, _dir);
+			var _epy = _area_y + lengthdir_y(_area_h, _dir);
+			
+			if(point_distance(_area_x, _area_y, px, py) > point_distance(_area_x, _area_y, _epx, _epy))
+				array_delete(points, i, 1);
+    	}
     }
 
     return points;
@@ -233,19 +261,18 @@ function area_point_in(_area, _x, _y) {
 	var _area_y0 = _area_y - _area_h;
 	var _area_y1 = _area_y + _area_h;
 	
-	var in = false;
-	
-	if(_area_t == AREA_SHAPE.rectangle) {
-		in = point_in_rectangle(_x, _y, _area_x0, _area_y0, _area_x1, _area_y1);
-	} else if(_area_t == AREA_SHAPE.elipse) {
-		var _dirr = point_direction(_area_x, _area_y, _x, _y);
-		var _epx = _area_x + lengthdir_x(_area_w, _dirr);
-		var _epy = _area_y + lengthdir_y(_area_h, _dirr);
+	if(_area_t == AREA_SHAPE.rectangle)
+		return point_in_rectangle(_x, _y, _area_x0, _area_y0, _area_x1, _area_y1);
 		
-		in = point_distance(_area_x, _area_y, _x, _y) < point_distance(_area_x, _area_y, _epx, _epy);
+	if(_area_t == AREA_SHAPE.elipse) {
+		var _dir = point_direction(_area_x, _area_y, _x, _y);
+		var _epx = _area_x + lengthdir_x(_area_w, _dir);
+		var _epy = _area_y + lengthdir_y(_area_h, _dir);
+		
+		return point_distance(_area_x, _area_y, _x, _y) < point_distance(_area_x, _area_y, _epx, _epy);
 	}
 	
-	return in;
+	return false;
 }
 
 function area_point_in_fallout(_area, _x, _y, _fall_distance) {
