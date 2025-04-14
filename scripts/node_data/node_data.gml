@@ -2035,7 +2035,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		for(var i = 0, n = array_length(inputs); i < n; i++) {
 			_jun = inputs[i];
 			
-			if( _jun.value_from == noone || !_jun.value_from.node.active || !_jun.isVisible()) continue;
+			if(!is_struct(_jun) || _jun.value_from == noone || !_jun.value_from.node.active || !_jun.isVisible()) continue;
 			__draw_inputs[__draw_inputs_len++] = _jun;
 		}
 		

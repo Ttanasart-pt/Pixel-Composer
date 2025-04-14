@@ -1,12 +1,14 @@
 globalvar LOCALE, TEST_LOCALE, LOCALE_DEF;
 
-TEST_LOCALE = false;
-LOCALE_DEF  =  true;
+TEST_LOCALE = 1;
+LOCALE_DEF  = 1;
 LOCALE      = {
 	fontDir: "",
 	config: { per_character_line_break: false },
-};
+}
+
 global.missing_locale = {}
+global.missing_file   = "D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/datafiles/data/Locale/missing.txt";
 
 function __initLocale() {
 	var lfile = $"data/Locale/en.zip";
@@ -19,7 +21,6 @@ function __initLocale() {
 	}
 	
 	if(LOCALE_DEF && !TEST_LOCALE) return;
-	
 	loadLocale();
 }
 
@@ -31,9 +32,9 @@ function __locale_file(file) {
 }
 
 function loadLocale() {
-	LOCALE.word   = json_load_struct(__locale_file("/words.json"));
-	LOCALE.ui     = json_load_struct(__locale_file("/UI.json"));
-	LOCALE.texts  = struct_append(LOCALE.word, LOCALE.ui);
+	var _word     = json_load_struct(__locale_file("/words.json"));
+	var _ui       = json_load_struct(__locale_file("/UI.json"));
+	LOCALE.texts  = struct_append(_word, _ui);
 	
 	LOCALE.node   = json_load_struct(__locale_file("/nodes.json"));
 	LOCALE.config = json_load_struct(__locale_file("/config.json"));
@@ -48,31 +49,33 @@ function __txtx(key, def = "") {
 	if(LOCALE_DEF && !TEST_LOCALE) return def;
 	
 	if(TEST_LOCALE) {
-		if(key != "" && !struct_has(LOCALE.word, key) && !struct_has(LOCALE.ui, key)) {
+		if(key != "" && !struct_has(LOCALE.texts, key) && !struct_has(global.missing_locale, key)) {
 			global.missing_locale[$ key] = def;
-			show_debug_message($"LOCALE: {global.missing_locale}\n");
-			return def;
+			file_text_write_all(global.missing_file, json_stringify(global.missing_locale));
 		}
-		return "";
+		
+		return def;
 	}
 	
 	return LOCALE.texts[$ key] ?? def;
 }
 
+function __txts(keys) { array_map_ext(keys, function(k) /*=>*/ {return __txt(k, k)}); return keys; } 
 function __txt(txt, prefix = "") {
 	INLINE
 	
+	if(!is_string(txt)) return txt;
 	if(LOCALE_DEF && !TEST_LOCALE) return txt;
 	
 	var key = string_replace_all(string_lower(txt), " ", "_");
 		
 	if(TEST_LOCALE) {
-		if(key != "" && !struct_has(LOCALE.word, key) && !struct_has(LOCALE.ui, key)) {
+		if(key != "" && !struct_has(LOCALE.texts, key) && !struct_has(global.missing_locale, key)) {
 			global.missing_locale[$ key] = txt;
-			show_debug_message($"LOCALE: {global.missing_locale}\n");
-			return txt;
-		}	
-		return "";
+			file_text_write_all(global.missing_file, json_stringify(global.missing_locale));
+		}
+		
+		return txt;
 	}
 	
 	return __txtx(prefix + key, txt);

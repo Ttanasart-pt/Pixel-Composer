@@ -56,7 +56,7 @@ function Panel_Graph_Connection_Setting() : Panel_Linear_Setting() constructor {
 		
 		new __Panel_Linear_Setting_Item(
 			__txtx("pref_connection_highlight", "Highlight connection"),
-			new buttonGroup([ "None", "ALT", "Always" ], function(val) /*=>*/ { graphConnection.line_highlight = val; }), 
+			new buttonGroup(__txts([ "None", "ALT", "Always" ]), function(val) /*=>*/ { graphConnection.line_highlight = val; }), 
 			function( ) /*=>*/   {return graphConnection.line_highlight},
 			function(v) /*=>*/ { graphConnection.line_highlight = v; },
 			PREFERENCES.project_graphConnection.line_highlight,

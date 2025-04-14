@@ -472,7 +472,7 @@ function Panel_Preference() : PanelContent() constructor {
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
     			__txtx("pref_use_alt", "Use ALT for"),
     			"alt_picker",
-    			new buttonGroup([ "Pan", "Color Picker" ], function(val) /*=>*/ { PREFERENCES.alt_picker = val; PREF_SAVE(); })
+    			new buttonGroup(__txts([ "Pan", "Color Picker" ]), function(val) /*=>*/ { PREFERENCES.alt_picker = val; PREF_SAVE(); })
     		));
     		
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item(

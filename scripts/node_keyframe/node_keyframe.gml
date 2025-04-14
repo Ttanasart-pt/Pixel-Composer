@@ -437,7 +437,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		if(is_struct(_val))    return _val;
 		
 		switch(prop.type) {
-			case VALUE_TYPE.integer : return prop.unit.mode == VALUE_UNIT.constant? round(_val) : _val;
+			case VALUE_TYPE.integer : return is_real(_val) && prop.unit.mode == VALUE_UNIT.constant? round(_val) : _val;
 			case VALUE_TYPE.float   : return _val;
 			case VALUE_TYPE.text    : return is_string(_val)?  _val : string_real(_val);
 			case VALUE_TYPE.color   : return is_real(_val)?    cola(_val) : _val;

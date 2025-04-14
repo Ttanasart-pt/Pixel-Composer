@@ -103,7 +103,7 @@ function colorSelector(onApply = noone) constructor {
 		resetHSV();
 	});
 	
-	scr_disp = new buttonGroup(["Hue", "Value"], function(mode) { disp_mode = mode; } );
+	scr_disp = new buttonGroup(__txts(["Hue", "Value"]), function(mode) { disp_mode = mode; } );
 	
 	function resetHSV(_apply = true) {
 		hue = round(color_get_hue(current_color));

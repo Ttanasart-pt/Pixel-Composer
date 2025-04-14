@@ -69,7 +69,7 @@ function Panel_Graph_View_Setting(graphPanel, display) : Panel_Linear_Setting() 
 		
 		new __Panel_Linear_Setting_Item(
 			__txt("View Control"),
-			new buttonGroup([ "None", "Left", "Right" ], function(val) /*=>*/ { display_parameter.show_view_control = val; }),
+			new buttonGroup(__txts([ "None", "Left", "Right" ]), function(val) /*=>*/ { display_parameter.show_view_control = val; }),
 			function()    /*=>*/   {return display_parameter.show_view_control},
 			function(val) /*=>*/ { display_parameter.show_view_control = val; },
 			PREFERENCES.project_graphDisplay.show_view_control,

@@ -14,7 +14,7 @@ function Panel_Preview_View_Setting() : Panel_Linear_Setting() constructor {
 		),
 		new __Panel_Linear_Setting_Item(
 			__txt("View Control"),
-			new buttonGroup([ "None", "Left", "Right" ], function(val) /*=>*/ { previewPanel.show_view_control = val; }),
+			new buttonGroup(__txts([ "None", "Left", "Right" ]), function(val) /*=>*/ { previewPanel.show_view_control = val; }),
 			function()    /*=>*/   {return previewPanel.show_view_control},
 			function(val) /*=>*/ { previewPanel.show_view_control = val; },
 			PREFERENCES.project_previewSetting.show_view_control,

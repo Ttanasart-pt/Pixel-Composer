@@ -210,7 +210,7 @@ function Panel_Inspector() : PanelContent() constructor {
         filter_text = "";
     	
         prop_page   = 0;
-        prop_page_b = new buttonGroup([ "Properties", "Settings", THEME.message_16 ], function(val) /*=>*/ { prop_page = val; })
+        prop_page_b = new buttonGroup(__txts([ "Properties", "Settings", THEME.message_16 ]), function(val) /*=>*/ { prop_page = val; })
    							.setButton([ THEME.button_hide_left, THEME.button_hide_middle, THEME.button_hide_right ])
    							.setFont(f_p2, COLORS._main_text_sub)
         
@@ -786,12 +786,13 @@ function Panel_Inspector() : PanelContent() constructor {
                 var edt = _inspecting.attributeEditors[i];
                 
                 if(is_string(edt)) { // label
+                	var txt = __txt(edt);
                     var lby = yy + ui(12);
                     draw_set_alpha(0.5);
                     draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text_sub);
-                    draw_text_add(xc, lby, edt);
+                    draw_text_add(xc, lby, txt);
                     
-                    var lbw = string_width(edt) / 2;
+                    var lbw = string_width(txt) / 2;
                     draw_set_color(COLORS._main_text_sub);
                     draw_line_round(xc + lbw + ui(16), lby,   wx1, lby, 2);
                     draw_line_round(xc - lbw - ui(16), lby, ui(8), lby, 2);
@@ -802,7 +803,7 @@ function Panel_Inspector() : PanelContent() constructor {
                     continue;
                 }
                 
-                var _att_name = edt[0];
+                var _att_name = __txt(edt[0]);
                 var _att_val  = edt[1]();
                 var _att_wid  = edt[2];
                 var _att_h    = viewMode == INSP_VIEW_MODE.spacious? hg : line_get_height(font, 8);

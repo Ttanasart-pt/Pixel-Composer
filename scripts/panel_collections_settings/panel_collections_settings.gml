@@ -5,7 +5,7 @@ function Panel_Collections_Setting() : Panel_Linear_Setting() constructor {
 	properties = [
 		new __Panel_Linear_Setting_Item(
 			__txt("View"),
-			new buttonGroup([ "Grid", "List" ], function(i) /*=>*/ { PANEL_COLLECTION.contentView = i; }),
+			new buttonGroup(__txts([ "Grid", "List" ]), function(i) /*=>*/ { PANEL_COLLECTION.contentView = i; }),
 			function() /*=>*/ {return PANEL_COLLECTION.contentView},
 		),
 		

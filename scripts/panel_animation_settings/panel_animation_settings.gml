@@ -25,7 +25,7 @@ function Panel_Animation_Setting() : Panel_Linear_Setting() constructor {
 		
 		new __Panel_Linear_Setting_Item(
 			__txtx("anim_on_end", "On end"),
-			new buttonGroup([ __txt("Loop"), __txt("Stop"), __txt("Ping Pong")], function(b) /*=>*/ { PROJECT.animator.playback = b; }),
+			new buttonGroup(__txts([ "Loop", "Stop", "Ping Pong"]), function(b) /*=>*/ { PROJECT.animator.playback = b; }),
 			function( ) /*=>*/   {return PROJECT.animator.playback},
 			function(v) /*=>*/ { PROJECT.animator.playback = v; },
 		),
