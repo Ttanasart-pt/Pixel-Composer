@@ -3068,6 +3068,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
     	}
     	
         if(node == noone) return;
+        
         if(_preset != "") {
         	node.skipDefault();
         	node.setPreset(_preset);

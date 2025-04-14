@@ -153,7 +153,7 @@ void main() {
 		     if(space == 0) dif = colorDifferentRGB(pcol, col);
 		else if(space == 1) dif = colorDifferentLAB(pcol, col);
 		
-		dif *= mix(hdf, 1., (1. - hBias));
+		if(chsv.s > .05) dif *= mix(hdf, 1., (1. - hBias));
 		
 		if(dif < closet_value) {
 			closet_value = dif;

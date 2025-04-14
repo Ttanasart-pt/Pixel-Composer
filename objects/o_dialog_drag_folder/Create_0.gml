@@ -11,7 +11,6 @@ event_inherited();
 	dir_recursive	= false;
 	dir_filter		= ".png";
 	
-	cb_recursive = new checkBox(function(val) { dir_recursive = !dir_recursive; });
-	
-	tb_filter = new textBox(TEXTBOX_INPUT.text, function(str) { dir_filter = str; })
+	cb_recursive = new checkBox(function()  /*=>*/ { dir_recursive = !dir_recursive; });
+	tb_filter    = textBox_Text(function(s) /*=>*/ { dir_filter = s; })
 #endregion

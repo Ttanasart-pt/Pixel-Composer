@@ -6,7 +6,7 @@ if !ready exit;
 	if(DIALOG_SHOW_FOCUS) DIALOG_DRAW_FOCUS
 	
 	draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
-	draw_text(dialog_x + ui(24), dialog_y + ui(16), __txtx("add_images_title_direcory", "Import directory"));
+	draw_text(dialog_x + ui(20), dialog_y + ui(12), __txtx("add_images_title_direcory", "Import directory"));
 #endregion
 
 #region directory option
@@ -15,14 +15,14 @@ if !ready exit;
 	cb_recursive.setFocusHover(sFOCUS, sHOVER);
 	cb_recursive.draw(dialog_x + dialog_w - ui(48), dir_y, dir_recursive, mouse_ui);
 		
-	draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
+	draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
 	draw_text(dialog_x + ui(20), dir_y + ui(14), __txt("Recursive"));
 	
 	dir_y += ui(40);
 	tb_filter.setFocusHover(sFOCUS, sHOVER);
 	tb_filter.draw(dialog_x + ui(100), dir_y, dialog_w - ui(120), ui(36), dir_filter, mouse_ui);
 		
-	draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
+	draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
 	draw_text(dialog_x + ui(20), dir_y + ui(18), __txt("Filter"));
 	
 	var bx = dialog_x + dialog_w - ui(120);

@@ -20,11 +20,12 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	////- Scatter
 	
 	onSurfaceSize = function() /*=>*/ {return DEF_SURF}; 
-	newInput(0, nodeValue_Area(        "Point area",       self, DEF_AREA_REF, { onSurfaceSize } )).setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
-	newInput(1, nodeValue_Enum_Button( "Distribution",     self, 0, [ "Area", "Border", "Map" ]))		.rejectArray();
-	newInput(4, nodeValue_Surface(     "Distribution Map", self)).rejectArray();
-	newInput(2, nodeValue_Enum_Button( "Scatter",          self, 1, [ "Uniform", "Random" ])).rejectArray();
-	newInput(3, nodeValue_Int(         "Amount",           self, 2, "Amount of particle spawn in that frame.")).rejectArray();
+	newInput( 0, nodeValue_Area(        "Point area",       self, DEF_AREA_REF, { onSurfaceSize } )).setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
+	newInput( 1, nodeValue_Enum_Button( "Distribution",     self, 0, [ "Area", "Border", "Map" ])).rejectArray();
+	newInput( 4, nodeValue_Surface(     "Distribution Map", self)).rejectArray();
+	newInput( 2, nodeValue_Enum_Button( "Scatter",          self, 1, [ "Uniform", "Random", "Poisson" ])).rejectArray();
+	newInput( 3, nodeValue_Int(         "Amount",           self, 2, "Amount of particle spawn in that frame.")).rejectArray();
+	newInput(12, nodeValue_Float(       "Distance",         self, 8)).setValidator(VV_min(0));
 	
 	////- 3D
 	
@@ -33,9 +34,11 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput(10, nodeValue_Enum_Button( "Normal",          self, 0, [ "X", "Y", "Z" ]));
 	newInput(11, nodeValue_Float(       "Plane Position",  self, 0));
 	
+	// inputs 13
+	
 	input_display_list = [ 
 		["Base",	false], 5, 6, 7, 
-		["Scatter",	false], 0, 1, 4, 2, 3, 
+		["Scatter",	false], 0, 1, 4, 2, 3, 12, 
 		["3D",		 true, 9], 10, 11
 	];
 	
@@ -55,14 +58,18 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		var _seed	 = getInputData(5);
 		var _fix	 = getInputData(6);
 		var _fixRef  = getInputData(7);
+		var poisDist = getInputData(12);
 		
 		var _3d = getInputData( 9);
 		__temp_3dNorm = getInputData(10);
 		__temp_3dPos  = getInputData(11);
 		
-		inputs[2].setVisible(_dist != 2);
-		inputs[4].setVisible(_dist == 2, _dist == 2);
-		inputs[7].setVisible(_fix);
+		inputs[ 2].setVisible(_dist != 2);
+		inputs[ 4].setVisible(_dist == 2, _dist == 2);
+		inputs[ 7].setVisible(_fix);
+		
+		inputs[ 3].setVisible(_scat != 2);
+		inputs[12].setVisible(_scat == 2);
 		var pos = [];
 		
 		random_set_seed(_seed);
@@ -76,7 +83,10 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		var aBox = area_get_bbox(_area);
 		pos = [];
 			
-		if(_dist != 2) {
+		if(_scat == 2) {
+			pos = area_get_random_point_poisson(_area, poisDist, _seed);
+			
+		} else if(_dist != 2) {
 			var _fixArea = [_fixRef[0] / 2, _fixRef[1] / 2, _fixRef[0] / 2, _fixRef[1] / 2, 0];
 			
 			if(_fix) {

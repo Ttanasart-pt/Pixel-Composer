@@ -216,19 +216,24 @@ DIALOG_WINCLEAR1
 			var ty = yy + hght / 2;
 			var ta = _menuItem.active * 0.75 + 0.25;
 			
-			if(string_pos(">", label)) {
-				var _sp = string_split(label, ">");
+			var txt = label;
+			if(struct_has(ALL_NODES, txt)) txt = ALL_NODES[$ txt].name;
+			
+			if(string_pos(">", txt)) {
+				var _sp = string_split(txt, ">");
+				var txt = _sp[0];
+				if(struct_has(ALL_NODES, txt)) txt = ALL_NODES[$ txt].name;
 				
 				draw_set_text(font, fa_left, fa_center, COLORS._main_text_sub, ta);
-    			draw_text(tx, ty, _sp[0]);
-    			tx += string_width(_sp[0]) + ui(8);
+    			draw_text(tx, ty, txt);
+    			tx += string_width(txt) + ui(8);
     			
     			draw_set_text(font, fa_left, fa_center, COLORS._main_text, ta);
 				draw_text(tx, ty, _sp[1]);
 				
 			} else {
     			draw_set_text(font, fa_left, fa_center, COLORS._main_text, ta);
-				draw_text(tx, ty, label);
+				draw_text(tx, ty, txt);
 			}
 			
 			draw_set_alpha(1);

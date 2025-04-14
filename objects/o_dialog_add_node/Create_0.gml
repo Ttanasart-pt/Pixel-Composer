@@ -1073,7 +1073,7 @@ event_inherited();
 			draw_text_add(round(search_pane.w / 2), round(search_pane.h / 2 - ui(4)), 
 				__txtx("add_node_equation_enter", "Press Enter to create equation node."));
 			
-			if(keyboard_check_pressed(vk_enter))
+			if(hk_editing == noone && keyboard_check_pressed(vk_enter))
 				buildNode(ALL_NODES[$ "Node_Equation"], { query: eq } );
 			return hh;
 		}
@@ -1139,7 +1139,7 @@ event_inherited();
 					
 					if(node_selecting == i) {
 						draw_sprite_stretched_ext(THEME.node_bg, 1, _boxx, yy, grid_size, grid_size, COLORS._main_accent, 1);
-						if(keyboard_check_pressed(vk_enter))
+						if(hk_editing == noone && keyboard_check_pressed(vk_enter))
 							buildNode(_node, _param);
 					}
 					
@@ -1285,7 +1285,7 @@ event_inherited();
 				
 				if(node_selecting == i) {
 					draw_sprite_stretched_ext(THEME.node_bg, 1, pd, yy, list_width - pd * 2, list_height, COLORS._main_accent, 1);
-					if(keyboard_check_pressed(vk_enter)) buildNode(_node, _param);
+					if(hk_editing == noone && keyboard_check_pressed(vk_enter)) buildNode(_node, _param);
 				}
 				
 				var tx;

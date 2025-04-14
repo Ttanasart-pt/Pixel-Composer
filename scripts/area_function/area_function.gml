@@ -152,6 +152,75 @@ function area_get_random_point(area, distrib = AREA_DISTRIBUTION.area, scatter =
 	return [xx, yy];
 }
 
+function area_get_random_point_poisson(_area, _distance, _seed) {
+	var _sed    = _seed ?? random_get_seed();
+    var _area_x = array_safe_get_fast(_area, 0);
+	var _area_y = array_safe_get_fast(_area, 1);
+	var _area_w = array_safe_get_fast(_area, 2);
+	var _area_h = array_safe_get_fast(_area, 3);
+	var _area_t = array_safe_get_fast(_area, 4);
+
+    var x0 = _area_x - _area_w;
+    var y0 = _area_y - _area_h;
+    var x1 = _area_x + _area_w;
+    var y1 = _area_y + _area_h;
+    var ww = _area_w * 2;
+    var hh = _area_h * 2;
+    var cs = floor(_distance / sqrt(2));
+
+    var cell_nw = ceil(ww / cs) + 1;
+    var cell_nh = ceil(hh / cs) + 1;
+    
+    var grid   = array_create(cell_nw * cell_nh, -1);
+    var points = [];
+    var active = [];
+    
+    var i      = 0;
+    var _p     = [ random_range_seed(x0, x1, _sed++), random_range_seed(y0, y1, _sed++) ];
+    var cell_x = floor((_p[0] - x0) / cs);
+    var cell_y = floor((_p[1] - y0) / cs);
+    var cell   = cell_x + (cell_y * cell_nw);
+    
+    array_push(points, _p);
+    array_push(active, _p);
+    grid[cell] = i++;
+
+    while (array_length(active)) {
+        var j = random_range_seed(0, array_length(active) - 1, _sed++);
+        var p = active[j];
+        var found = false;
+
+        repeat(32) {
+            var _dir = random_range_seed(0, 360, _sed++);
+            var _rad = random_range_seed(_distance, _distance * 2, _sed++);
+            var _px  = p[0] + lengthdir_x(_rad, _dir);
+            var _py  = p[1] + lengthdir_y(_rad, _dir);
+            if (_px < x0 || _px > x1 || _py < y0 || _py > y1) continue;
+            
+            var cell_x = floor((_px - x0) / cs);
+            var cell_y = floor((_py - y0) / cs);
+            var cell   = cell_x + (cell_y * cell_nw);
+            if (grid[cell] != -1) continue;
+
+			var _p = [_px, _py];
+            array_push(points, _p);
+            array_push(active, _p);
+            grid[cell] = i++;
+            found      = true;
+            break;
+        }
+
+        if (!found) array_delete(active, j, 1);
+    }
+    
+    if(_area_t == 1) {
+    	__area = _area;
+    	array_filter_ext(points, function(p) /*=>*/ {return area_point_in(__area, p[0], p[1])});
+    }
+
+    return points;
+}
+
 function area_point_in(_area, _x, _y) {
 	var _area_x = _area[0];
 	var _area_y = _area[1];

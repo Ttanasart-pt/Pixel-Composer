@@ -45,11 +45,12 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(14, nodeValue_Vector(         "Distribution Data", self, [])).setArrayDepth(1);
 	newInput(17, nodeValue_Text(           "Extra Value",       self, [], "Apply the third and later values in each data point (if exist) on given properties."))
 		.setDisplay(VALUE_DISPLAY.text_array, { data: [ "Scale", "Rotation", "Color", "Alpha", "Array Index" ] });
-	newInput( 9, nodeValue_Enum_Button(    "Scatter",           self,  1, [ "Uniform", "Random" ]));
+	newInput( 9, nodeValue_Enum_Button(    "Scatter",           self,  1, [ "Uniform", "Random", "Poisson" ]));
 	newInput(31, nodeValue_Bool(           "Auto Amount",       self, false));
 	newInput( 2, nodeValue_Int(            "Amount",            self, 8)).setValidator(VV_min(0));
 	newInput(30, nodeValue_Vec2(           "Uniform Amount",    self, [ 4, 4 ]));
 	newInput(35, nodeValue_Rotation_Range( "Angle Range",       self, [ 0, 360 ]));
+	newInput(44, nodeValue_Float(          "Distance",          self, 8)).setValidator(VV_min(0));
 	
 	////- Path
 	
@@ -95,7 +96,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(18, nodeValue_Enum_Scroll( "Blend Mode", self,  0, [ "Normal", "Add", "Max" ]));
 	newInput(23, nodeValue_Bool(        "Sort Y",     self, false));
 	
-	// inputs: 44
+	// inputs: 45
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -107,13 +108,13 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	input_display_list = [ 10, 
 		["Surfaces",  true],  0,  1, 15, 24, 25, 26, 27, 
-		["Scatter",  false],  6,  5, 13, 14, 17,  9, 31,  2, 30, 35, 
+		["Scatter",  false],  6,  5, 13, 14, 17,  9, 31,  2, 30, 35, 44, 
 		["Path",     false], 19, 38, 20, 21, 22, 
 		["Position", false], 40, 33, 36, 37, 39, 
 		["Rotation", false],  7,  4, 32, 
 		["Scale",    false],  3,  8, 34, 43, 
 		["Color",    false], 11, 28, 12, 16, 41, 42, 
-		["Render",   false], 18, 23, 44, 
+		["Render",   false], 18, 23, 
 	];
 	
 	transform_prop = [ 10, 40, 33, 36, 37, 39 ];
@@ -167,114 +168,109 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	////=========== PROCESS ===========
 	
-	static processData = function(_outData, _data, _output_index, _array_index) { 
-		var _inSurf = _data[0];
-		var _dim	= _data[1];
-		var _amount	= _data[2];
-		var _scale	= _data[3];
-		var _rota	= _data[4];
-		
-		var _area	= _data[5];
-		
-		var _dist		= _data[ 6];
-		var _distMap	= _data[13];
-		var _distData	= _data[14];
-		var _scat		= _data[ 9];
-		
-		var _pint	= _data[7];
-		var _unis	= _data[8];
-		
-		var seed	= _data[10];
-		var color	= _data[11];
-		var clr_map = _data[28];
-		var clr_rng = _data[29];
-		
-		var alpha	= _data[12];
-		var _arr    = _data[15];
-		var mulpA	= _data[16];
-		var useV	= _data[17];
-		var blend   = _data[18];
-		
-		var path    = _data[19];
-		var pathRot = _data[20];
-		var pathShf = _data[21];
-		var pathDis = _data[22];
-		var sortY   = _data[23];
-		var arrId   = _data[24];
-		var arrTex  = _data[25], useArrTex = is_surface(arrTex);
-		var arrAnim = _data[26];
-		var arrAnimEnd = _data[27];
-		
-		var uniAmo  = _data[30];
-		var uniAut  = _data[31];
-		var uniRot  = _data[32];
-		var posWig  = _data[33];
-		var uniSca  = _data[34];
-		var cirRng  = _data[35];
-		var posShf  = _data[36];
-		var posExt  = _data[37];
-		var pthSpac = _data[38];
-		var shfRad  = _data[39];
-		var anchor  = _data[40];
-		
-		var sampSrf = _data[41]; surfSamp.setSurface(sampSrf);
-		var sampWig = _data[42];
-		var scalSam = _data[43]; scalSamp.setSurface(scalSam);
-		
-		var _in_w, _in_h;
+	static processData = function(_outData, _data, _output_index, _array_index) {
+		#region data
+			var seed       = _data[10];
+			
+			var _inSurf    = _data[ 0];
+			var _dim       = _data[ 1];
+			var _arr       = _data[15];
+			var arrId      = _data[24];
+			var arrTex     = _data[25], useArrTex = is_surface(arrTex);
+			var arrAnim    = _data[26];
+			var arrAnimEnd = _data[27];
+			
+			var _dist      = _data[ 6];
+			var _area      = _data[ 5];
+			var _distMap   = _data[13];
+			var _distData  = _data[14];
+			var useV       = _data[17];
+			var _scat      = _data[ 9];
+			var uniAut     = _data[31];
+			var _amount    = _data[ 2];
+			var uniAmo     = _data[30];
+			var cirRng     = _data[35];
+			var poisDist   = _data[44];
+			
+			var path       = _data[19];
+			var pthSpac    = _data[38];
+			var pathRot    = _data[20];
+			var pathShf    = _data[21];
+			var pathDis    = _data[22];
+			
+			var anchor     = _data[40];
+			var posWig     = _data[33];
+			var posShf     = _data[36];
+			var posExt     = _data[37];
+			var shfRad     = _data[39];
+			
+			var _pint      = _data[ 7];
+			var _rota      = _data[ 4];
+			var uniRot     = _data[32];
+			
+			var _scale     = _data[ 3];
+			var _unis      = _data[ 8];
+			var uniSca     = _data[34];
+			var scalSam    = _data[43]; scalSamp.setSurface(scalSam);
+			
+			var color      = _data[11];
+			var clr_map    = _data[28];
+			var clr_rng    = _data[29];
+			var alpha      = _data[12];
+			var mulpA      = _data[16];
+			var sampSrf    = _data[41]; surfSamp.setSurface(sampSrf);
+			var sampWig    = _data[42];
+			
+			var blend      = _data[18];
+			var sortY      = _data[23];
+		#endregion
 		
 		#region visible
-			var _are = _data[5];
-			var _dis = _data[6];
-			var _sct = _data[9];
-			var _arr = _data[15];
-			var _amn = _data[26];
-			var _spa = _data[38];
-			
-			update_on_frame = _arr && (_amn[0] != 0 || _amn[1] != 0);
+			update_on_frame = _arr && (arrAnim[0] != 0 || arrAnim[1] != 0);
 			
 			inputs[0].array_depth = bool(_arr);
 			
-			inputs[13].setVisible(_dis == 2, _dis == 2);
-			inputs[14].setVisible(_dis == 3, _dis == 3);
-			inputs[17].setVisible(_dis == 3);
-			inputs[ 9].setVisible(_dis != 2 && _dis != 3);
-			inputs[19].setVisible(_dis == 4, _dis == 4);
-			inputs[20].setVisible(_dis == 4);
-			inputs[21].setVisible(_dis == 4 && _spa == 0);
-			inputs[22].setVisible(_dis == 4);
-			inputs[38].setVisible(_dis == 4 && _sct == 0);
-			inputs[24].setVisible(_arr == 3, _arr == 3);
-			inputs[25].setVisible(_arr == 4, _arr == 4);
+			inputs[13].setVisible(_dist == 2,   _dist == 2);
+			inputs[14].setVisible(_dist == 3,   _dist == 3);
+			inputs[17].setVisible(_dist == 3);
+			inputs[ 9].setVisible(_dist != 2 && _dist != 3);
+			inputs[19].setVisible(_dist == 4,   _dist == 4);
+			inputs[20].setVisible(_dist == 4);
+			inputs[21].setVisible(_dist == 4 && pthSpac == 0);
+			inputs[22].setVisible(_dist == 4);
+			inputs[38].setVisible(_dist == 4 && _scat == 0);
+			inputs[24].setVisible(_arr == 3,    _arr  == 3);
+			inputs[25].setVisible(_arr == 4,    _arr  == 4);
 			inputs[26].setVisible(_arr);
 			inputs[27].setVisible(_arr);
 			
-			inputs[ 5].setVisible(_dis < 3);
-			inputs[ 2].setVisible(_dis != 3);
+			inputs[ 5].setVisible(_dist <  3);
+			inputs[ 2].setVisible(_dist != 3 && _scat != 2);
 			inputs[30].setVisible(false);
 			inputs[31].setVisible(false);
 			inputs[32].setVisible(false);
 			inputs[34].setVisible(false);
 			inputs[35].setVisible(false);
 			
-			if(_dis == 0 && _sct == 0) {
-				if(_are[AREA_INDEX.shape] == AREA_SHAPE.elipse) {
-					var _aut = _data[31];
-				
-					inputs[ 2].setVisible( _aut);
-					inputs[30].setVisible(!_aut);
+			inputs[44].setVisible(_scat == 2);
+			
+			if(_dist == 0 && _scat == 0) {
+				if(_area[AREA_INDEX.shape] == AREA_SHAPE.elipse) {
+					inputs[ 2].setVisible( uniAut);
+					inputs[30].setVisible(!uniAut);
 					inputs[31].setVisible( true);
-					inputs[32].setVisible(!_aut);
-					inputs[34].setVisible(!_aut);
-					inputs[35].setVisible(!_aut);
+					inputs[32].setVisible(!uniAut);
+					inputs[34].setVisible(!uniAut);
+					inputs[35].setVisible(!uniAut);
 					
 				} else {
 					inputs[ 2].setVisible(false);
 					inputs[30].setVisible( true);
 				}
-			} else if(_dis == 5) {
-				inputs[ 2].setVisible(_sct == 1);
-				inputs[30].setVisible(_sct == 0);
+				
+			} else if(_dist == 5) {
+				inputs[ 2].setVisible(_scat == 1);
+				inputs[30].setVisible(_scat == 0);
 			}
 		#endregion
 		
@@ -325,7 +321,12 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			if(_dist == NODE_SCATTER_DIST.area) { // Area
 				if(_scat == 0 && (!uniAut || _area[AREA_INDEX.shape] == AREA_SHAPE.rectangle)) 
 					_amount = uniAmo[0] * uniAmo[1];
-			
+				
+				if(_scat == 2) {
+					var _points = area_get_random_point_poisson(_area, poisDist, seed);
+					_amount = array_length(_points);
+				}
+				
 			} else if(_dist == NODE_SCATTER_DIST.data) { // Data
 				_amount = array_length(_distData);
 			
@@ -343,6 +344,13 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				
 			} else if(_dist == NODE_SCATTER_DIST.tile) {
 				if(_scat == 0) _amount = uniAmo[0] * uniAmo[1];
+				
+				if(_scat == 2) {
+					var _area   = [ _dim[0] / 2, _dim[1] / 2, _dim[0] / 2, _dim[1] / 2, 0 ];
+					var _points = area_get_random_point_poisson(_area, poisDist, seed);
+					_amount = array_length(_points);
+				}
+				
 			}
 		
 			var _sed     = seed;
@@ -367,13 +375,6 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var _datLen = array_length(scatter_data);
 			
 			var _p = [ 0, 0 ];
-		#endregion
-		
-		#region update
-			var _calPos = true;
-			
-			// for( var i = 0, n = array_length(transform_prop); i < n; i++ )
-			// 	_calPos |= inputs[transform_prop[i]].isDynamic();
 		#endregion
 		
 		var _outSurf = _outData[0];
@@ -436,7 +437,12 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				
 				switch(_dist) { // position
 					case NODE_SCATTER_DIST.area : 
-						if(!_calPos) break;
+						if(_scat == 2) {
+							var _p = _points[i];
+							_x = _p[0];
+							_y = _p[1];
+							break;
+						}
 						
 						if(_scat == 0) {
 							var _axc = _area[AREA_INDEX.center_x];
@@ -478,16 +484,12 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 						break;
 						
 					case NODE_SCATTER_DIST.border : 
-						if(!_calPos) break;
-						
 						sp = area_get_random_point(_area, _dist, _scat, i, _amount);
 						_x = sp[0];
 						_y = sp[1];
 						break;
 						
 					case NODE_SCATTER_DIST.map : 
-						if(!_calPos) break;
-						
 						sp = array_safe_get_fast(_posDist, i);
 						if(!is_array(sp)) continue;
 						
@@ -505,8 +507,6 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 						break;
 						
 					case NODE_SCATTER_DIST.path : 
-						if(!_calPos) break;
-						
 						if(_scat == 0) {
 							switch(pthSpac) {
 								case 0 :
@@ -535,8 +535,6 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 						break;
 						
 					case NODE_SCATTER_DIST.tile : 
-						if(!_calPos) break;
-						
 						if(_scat == 0) {
 							var _acol =       i % uniAmoX;
 							var _arow = floor(i / uniAmoX);
@@ -547,23 +545,26 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 						} else if(_scat == 1) {
 							_x = random_range_seed(0, _ww, _csed++);
 							_y = random_range_seed(0, _hh, _csed++);
+							
+						} else if(_scat == 2) {
+							var _p = _points[i];
+							_x = _p[0];
+							_y = _p[1];
 						}
 						break;
 				}
 				
-				if(_calPos) {
-					if(_wigX) _x += random_range_seed(posWig[0], posWig[1], _csed++);
-					if(_wigY) _y += random_range_seed(posWig[2], posWig[3], _csed++);
+				if(_wigX) _x += random_range_seed(posWig[0], posWig[1], _csed++);
+				if(_wigY) _y += random_range_seed(posWig[2], posWig[3], _csed++);
+			
+				_x += posShf[0] * i;
+				_y += posShf[1] * i;
+			
+				var shrRad = random_range_seed(shfRad[0], shfRad[1], _csed++);
+				var shrAng = point_direction(_x, _y, _area[0], _area[1]);
 				
-					_x += posShf[0] * i;
-					_y += posShf[1] * i;
-				
-					var shrRad = random_range_seed(shfRad[0], shfRad[1], _csed++);
-					var shrAng = point_direction(_x, _y, _area[0], _area[1]);
-					
-					_x -= lengthdir_x(shrRad, shrAng);
-					_y -= lengthdir_y(shrRad, shrAng);
-				}
+				_x -= lengthdir_x(shrRad, shrAng);
+				_y -= lengthdir_y(shrRad, shrAng);
 				
 				if(_unis) {
 					_scy = max(_scx, _scy);
@@ -641,16 +642,14 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				var _shf_x = sw * _scx * anchor[0];
 				var _shf_y = sh * _scy * anchor[1];
 				
-				if(_calPos) {
-					if(_r == 0) {
-						_x -= _shf_x;
-						_y -= _shf_y;
-						
-					} else {
-						_p = point_rotate(_x - _shf_x, _y - _shf_y, _x, _y, _r, _p);
-						_x = _p[0];
-						_y = _p[1];
-					}
+				if(_r == 0) {
+					_x -= _shf_x;
+					_y -= _shf_y;
+					
+				} else {
+					_p = point_rotate(_x - _shf_x, _y - _shf_y, _x, _y, _r, _p);
+					_x = _p[0];
+					_y = _p[1];
 				}
 				
 				var grSamp = random_seed(1, _sed++);
@@ -671,7 +670,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				if(iAlp > 1 && _v != noone) 
 					alp += array_safe_get_fast(_v, iAlp, 0);
 					
-				if(_calPos && posExt) { 
+				if(posExt) { 
 					_x = round(_x); 
 					_y = round(_y); 
 				}
