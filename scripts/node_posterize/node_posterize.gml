@@ -8,70 +8,64 @@
 function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Posterize";
 	
+	newActiveInput(5);
 	newInput(0, nodeValue_Surface("Surface In", self));
 	
-	newInput(1, nodeValue_Palette("Palette", self, array_clone(DEF_PALETTE)));
+	////- Palette
 	
-	newInput(2, nodeValue_Bool("Use Palette", self, true));
+	newInput(2, nodeValue_Bool(        "Use Palette",      self, true));
+	newInput(1, nodeValue_Palette(     "Palette",          self, array_clone(DEF_PALETTE)));
+	newInput(9, nodeValue_Bool(        "Use Global Range", self, true));
+	newInput(3, nodeValue_ISlider(     "Steps",            self, 4, [2, 16, 0.1]));
+	newInput(4, nodeValue_Slider(      "Gamma",            self, 1, [0, 2, 0.01])).setMappable(7);
+	newInput(7, nodeValueMap(          "Gamma map",        self));
+	newInput(8, nodeValue_Enum_Button( "Space",            self, 0, [ "RGB", "LAB" ]));
+	newInput(10, nodeValue_Slider(     "Hue Bias",         self, 0));
 	
-	newInput(3, nodeValue_Int("Steps", self, 4))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [2, 16, 0.1] });
-	
-	newInput(4, nodeValue_Float("Gamma", self, 1))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 2, 0.01] })
-		.setMappable(7);
-	
-	newInput(5, nodeValue_Bool("Active", self, true));
-		active_index = 5;
+	////- Alpha
 		
-	newInput(6, nodeValue_Bool("Posterize alpha", self, true));
+	newInput(6, nodeValue_Bool( "Posterize alpha", self, true));
 	
-	//////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	newInput(7, nodeValueMap("Gamma map", self));
-	
-	//////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	newInput(8, nodeValue_Enum_Button("Space", self,  0, [ "RGB", "LAB" ]));
-	
-	newInput(9, nodeValue_Bool("Use Global Range", self, true));
+	//// inputs 11
 	
 	input_display_list = [ 5, 0, 
-		["Palette", false, 2], 1, 9, 3, 4, 7, 8, 
-		["Alpha",   false], 6, 
+		["Palette", false, 2], 1, 9, 3, 4, 7, 8, 10, 
+		["Alpha",   false],    6, 
 	];
 	
 	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	attribute_surface_depth();
 	
-	temp_surface = [ surface_create(1, 1), surface_create(1, 1), surface_create(1, 1), surface_create(1, 1) ];
+	temp_surface = array_create(4);
 	
 	static step = function() {
-		var _use_pal = getInputData(2);
-		
-		inputs[1].setVisible( _use_pal);
-		inputs[3].setVisible(!_use_pal);
-		inputs[4].setVisible(!_use_pal);
 		inputs[4].mappableStep();
-		
-		inputs[8].setVisible( _use_pal);
-		inputs[9].setVisible(!_use_pal);
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
-		var _surf    = _data[0];
-		var _pal     = _data[1];
-		var _use_pal = _data[2];
-		var _alp     = _data[6];
-		var _spce    = _data[8];
-		var _glob    = _data[9];
+		var _surf    = _data[ 0];
+		var _pal     = _data[ 1];
+		var _use_pal = _data[ 2];
+		var _alp     = _data[ 6];
+		var _spce    = _data[ 8];
+		var _glob    = _data[ 9];
+		var _hbas    = _data[10];
+		
+		inputs[ 1].setVisible( _use_pal);
+		inputs[ 8].setVisible( _use_pal);
+		inputs[10].setVisible( _use_pal);
+		
+		inputs[ 3].setVisible(!_use_pal);
+		inputs[ 4].setVisible(!_use_pal);
+		inputs[ 9].setVisible(!_use_pal);
 		
 		if(_use_pal) {
 			surface_set_shader(_outSurf, sh_posterize_palette);
 				shader_set_palette(_pal, "palette", "keys");
 				shader_set_i("alpha", _alp);
 				shader_set_i("space", _spce);
+				shader_set_f("hBias", _hbas);
 				
 				draw_surface_safe(_surf);
 			surface_reset_shader();
