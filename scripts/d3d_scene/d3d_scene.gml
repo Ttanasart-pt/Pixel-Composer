@@ -105,10 +105,12 @@ function __3dScene(_camera, _name = "New scene") constructor {
 	////- Rendering
 	
 	static deferPass = function(object, w, h, deferData = noone) {
-		if(deferData == noone) deferData = {
-			geometry_data: [ noone, noone, noone ],
-			ssao : noone,
-		};
+		if(deferData == noone) {
+			deferData = {
+				geometry_data: [ noone, noone, noone ],
+				ssao : noone,
+			}
+		}
 		
 		geometryPass(deferData, object, w, h);
 		ssaoPass(deferData);

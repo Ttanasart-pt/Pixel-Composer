@@ -236,6 +236,12 @@ void main() {
 		if(isBackface) final_color *= backface_blending;
 	#endregion
 	
+	#region ++++ cavity ++++
+		vec3  dd = fwidth(normal);
+		float cavity = dot(dd, dd);
+		cavity = smoothstep(0., .000001, cavity);
+	#endregion
+	
 	#region ++++ environment ++++
 		if(env_use_mapping == 1 && mat_reflective > 0.) {
 			

@@ -734,7 +734,9 @@ function Panel_Animation() : PanelContent() constructor {
 	            var bar_line_x = (CURRENT_FRAME + 1) * timeline_scale + timeline_shift;
 	            var cc = PROJECT.animator.is_playing? COLORS._main_value_positive : COLORS._main_accent;
 	            draw_set_color(cc);
+	            draw_set_alpha((CURRENT_FRAME >= 0 && CURRENT_FRAME < TOTAL_FRAMES) * .5 + .5);
 	            draw_line(bar_line_x, ui(15), bar_line_x, bar_h - PANEL_PAD);
+	            draw_set_alpha(1);
 	            
 	            draw_set_text(f_p2, fa_center, fa_bottom, cc);
 	            draw_text_add(bar_line_x, ui(16), string(CURRENT_FRAME + 1));
@@ -778,10 +780,10 @@ function Panel_Animation() : PanelContent() constructor {
 	                timeline_show_time  = CURRENT_FRAME;
 	                if(timeline_show_time != _scrub_frame)
 	                    _scrub_frame = timeline_show_time;
-	                    
-	                if(mouse_release(mb_left))
-	                    timeline_scubbing = false;
 	            }
+	            
+                if(mouse_release(mb_left))
+                    timeline_scubbing = false;
 	            
 	            if(timeline_dragging) {
 	                timeline_shift_to = timeline_drag_sx + mx - timeline_drag_mx;
@@ -2332,7 +2334,9 @@ function Panel_Animation() : PanelContent() constructor {
             var cc = PROJECT.animator.is_playing? COLORS._main_value_positive : COLORS._main_accent;
             
             draw_set_color(cc);
+            draw_set_alpha((CURRENT_FRAME >= 0 && CURRENT_FRAME < TOTAL_FRAMES) * .5 + .5);
             draw_line(bar_line_x, PANEL_PAD, bar_line_x, dope_sheet_h);
+            draw_set_alpha(1);
             
             var _phover = pHOVER && msy > hh;
             for( var i = 0, n = array_length(timeline_contents); i < n; i++ ) {

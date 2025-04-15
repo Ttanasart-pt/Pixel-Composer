@@ -264,7 +264,6 @@ event_inherited();
 				}
 				
 				if(sprite_exists(spr)) {
-					
 					var _spw = sw * s;
 					var _sph = sh * s;
 					
@@ -289,7 +288,6 @@ event_inherited();
 					draw_surface(clip_surf, _sx, _sy);
 					
 				} else {
-					
 					var _sx = _boxx + grid_width / 2;
 					var _sy = yy    + grid_heigh / 2;
 					

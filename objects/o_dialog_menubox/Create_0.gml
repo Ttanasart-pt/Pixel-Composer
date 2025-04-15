@@ -81,6 +81,12 @@ event_inherited();
 			
 			if(is(_menuItem, MenuItem)) {
 				ww += _kw;
+				
+				var _txt     = _menuItem.name;
+				var _nodeKey = string_pos(">", _txt)? string_copy(_txt, 1, string_pos(">", _txt) - 1) : _txt;
+				var _node    = struct_try_get(ALL_NODES, _nodeKey, noone);
+				
+				if(_node != noone) show_icon = true;
 				if(_menuItem.getSpr() != noone || _menuItem.toggle != noone) show_icon = true;
 			}
 			

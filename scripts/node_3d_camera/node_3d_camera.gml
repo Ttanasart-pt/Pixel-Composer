@@ -33,19 +33,19 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	
 	////- Transform
 	
-	newInput(i+ 9, nodeValue_Enum_Scroll( "Postioning Mode",  self, 2, [ "Position + Rotation", "Position + Lookat", "Lookat + Rotation" ] ));
-	newInput(i+10, nodeValue_Vec3(        "Lookat Position",  self, [ 0, 0, 0 ] ));
-	newInput(i+11, nodeValue_Rotation(    "Roll",             self, 0));
-	newInput(i+12, nodeValue_Rotation(    "Horizontal Angle", self, 45 ));
-	newInput(i+13, nodeValue_Slider(      "Vertical Angle",   self, 30, [ 0, 90, 0.1 ] ))
-	newInput(i+14, nodeValue_Float(       "Distance",         self, 4 ));
+	newInput(i+ 9, nodeValue_Enum_Scroll( "Postioning Mode",     self, 2, [ "Position + Rotation", "Position + Lookat", "Lookat + Rotation" ] ));
+	newInput(i+10, nodeValue_Vec3(        "Lookat Position",     self, [ 0, 0, 0 ] ));
+	newInput(i+11, nodeValue_Rotation(    "Roll",                self, 0));
+	newInput(i+12, nodeValue_Rotation(    "Horizontal Angle",    self, 45 ));
+	newInput(i+13, nodeValue_Slider(      "Vertical Angle",      self, 30, [ 0, 90, 0.1 ] ))
+	newInput(i+14, nodeValue_Float(       "Distance",            self, 4 ));
 	
 	////- Camera
 	
-	newInput(i+3, nodeValue_Enum_Button( "Projection",         self,  1 , [ "Perspective", "Orthographic" ]));
-	newInput(i+0, nodeValue_ISlider(     "FOV",                self, 60, [ 10, 90, 0.1 ] ));
-	newInput(i+1, nodeValue_Vec2(        "Clipping Distance",  self, [ 1, 10 ] ));
-	newInput(i+8, nodeValue_Slider(      "Orthographic Scale", self, 0.5, [ 0.01, 4, 0.01 ] ));
+	newInput(i+3, nodeValue_Enum_Button(  "Projection",          self,  1 , [ "Perspective", "Orthographic" ]));
+	newInput(i+0, nodeValue_ISlider(      "FOV",                 self, 60, [ 10, 90, 0.1 ] ));
+	newInput(i+1, nodeValue_Vec2(         "Clipping Distance",   self, [ 1, 10 ] ));
+	newInput(i+8, nodeValue_Slider(       "Orthographic Scale",  self, 0.5, [ 0.01, 4, 0.01 ] ));
 	
 	////- Render
 	
@@ -58,34 +58,34 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	
 	////- Wireframe
 	
-	newInput(i+23, nodeValue_Bool(  "Wireframe",           self, false));
-	newInput(i+24, nodeValue_Float( "Wireframe Thickness", self, 1));
-	newInput(i+25, nodeValue_Color( "Wireframe Color",     self, cola(c_black)));
-	newInput(i+26, nodeValue_Bool(  "Wireframe antialias", self, false));
-	newInput(i+27, nodeValue_Bool(  "Wireframe shading",   self, false));
-	newInput(i+28, nodeValue_Bool(  "Wireframe only",      self, false));
+	newInput(i+23, nodeValue_Bool(        "Wireframe",           self, false));
+	newInput(i+24, nodeValue_Float(       "Wireframe Thickness", self, 1));
+	newInput(i+25, nodeValue_Color(       "Wireframe Color",     self, cola(c_black)));
+	newInput(i+26, nodeValue_Bool(        "Wireframe antialias", self, false));
+	newInput(i+27, nodeValue_Bool(        "Wireframe shading",   self, false));
+	newInput(i+28, nodeValue_Bool(        "Wireframe only",      self, false));
 	
 	////- Ambient Occlusion
 	
-	newInput(i+17, nodeValue_Bool(   "Ambient Occlusion", self, false ));
-	newInput(i+20, nodeValue_Slider( "AO Strength",       self, 1., [ 0.01, 4, 0.01 ] ));
-	newInput(i+18, nodeValue_Float(  "AO Radius",         self, 0.25 ));
-	newInput(i+19, nodeValue_Float(  "AO Bias",           self, 0.05 ));
+	newInput(i+17, nodeValue_Bool(        "Ambient Occlusion",   self, false ));
+	newInput(i+20, nodeValue_Slider(      "AO Strength",         self, 1., [ 0.01, 4, 0.01 ] ));
+	newInput(i+18, nodeValue_Float(       "AO Radius",           self, 0.25 ));
+	newInput(i+19, nodeValue_Float(       "AO Bias",             self, 0.05 ));
 	
 	////- Effects
 	
-	newInput(i+21, nodeValue_Int(   "Round Normal",      self, 0 )).setWindows();
-	newInput(i+29, nodeValue_Color( "Backface Blending", self, ca_white ));
+	newInput(i+21, nodeValue_Int(         "Round Normal",        self, 0 )).setWindows();
+	newInput(i+29, nodeValue_Color(       "Backface Blending",   self, ca_white ));
 	
 	// inputs i+30
 	in_cam = array_length(inputs);
 	
-	newOutput(0, nodeValue_Output("Rendered", self, VALUE_TYPE.surface, noone ));
-	newOutput(1, nodeValue_Output("Normal",   self, VALUE_TYPE.surface, noone )).setVisible(false);
-	newOutput(2, nodeValue_Output("Depth",    self, VALUE_TYPE.surface, noone )).setVisible(false);
-	newOutput(3, nodeValue_Output("Shadow",   self, VALUE_TYPE.surface, noone )).setVisible(false);
+	newOutput(0, nodeValue_Output("Rendered",          self, VALUE_TYPE.surface, noone ));
+	newOutput(1, nodeValue_Output("Normal",            self, VALUE_TYPE.surface, noone )).setVisible(false);
+	newOutput(2, nodeValue_Output("Depth",             self, VALUE_TYPE.surface, noone )).setVisible(false);
+	newOutput(3, nodeValue_Output("Shadow",            self, VALUE_TYPE.surface, noone )).setVisible(false);
 	newOutput(4, nodeValue_Output("Ambient Occlusion", self, VALUE_TYPE.surface, noone )).setVisible(false);
-	newOutput(5, nodeValue_Output("Diffuse",  self, VALUE_TYPE.surface, noone )).setVisible(false);
+	newOutput(5, nodeValue_Output("Diffuse",           self, VALUE_TYPE.surface, noone )).setVisible(false);
 	
 	input_display_list = [ i+4,
 		["Output",		     false],       i+ 2,
@@ -101,6 +101,10 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	
 	temp_surface = [ 0 ];
 	tool_lookat  = new NodeTool( "Move Target", THEME.tools_3d_transform_object );
+	
+	_qi1  = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(0, 1, 0),  90);
+	_qi2  = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(1, 0, 0), -90);
+	_qi3  = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(1, 0, 0),  90);
 	
 	////- Preview
 	
@@ -163,24 +167,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	}
 		
 	static step = function() {
-		var _proj = getInputData(in_d3d +  3);
 		var _posm = getInputData(in_d3d +  9);
-		var _ao   = getInputData(in_d3d + 17);
-		
-		inputs[in_d3d + 0].setVisible(_proj == 0);
-		inputs[in_d3d + 8].setVisible(_proj == 1);
-		
-		inputs[0].setVisible(_posm == 0 || _posm == 1);
-		inputs[1].setVisible(_posm == 0);
-		inputs[in_d3d + 10].setVisible(_posm == 1 || _posm == 2);
-		inputs[in_d3d + 11].setVisible(_posm == 1);
-		inputs[in_d3d + 12].setVisible(_posm == 2);
-		inputs[in_d3d + 13].setVisible(_posm == 2);
-		inputs[in_d3d + 14].setVisible(_posm == 2);
-		
-		inputs[in_d3d + 18].setVisible(_ao);
-		inputs[in_d3d + 19].setVisible(_ao);
-		inputs[in_d3d + 20].setVisible(_ao);
 		
 		switch(_posm) {
 			case 0 : 
@@ -245,20 +232,33 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		
 			var _nrmSmt = _data[in_d3d + 21];
 			var _bckBln = _data[in_d3d + 29];
+				
+			inputs[in_d3d + 0].setVisible(_proj == 0);
+			inputs[in_d3d + 8].setVisible(_proj == 1);
 			
-			var _qi1  = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(0, 1, 0),  90);
-			var _qi2  = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(1, 0, 0), -90);
-			var _qi3  = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(1, 0, 0),  90);
+			inputs[0].setVisible(_posm == 0 || _posm == 1);
+			inputs[1].setVisible(_posm == 0);
+			inputs[in_d3d + 10].setVisible(_posm == 1 || _posm == 2);
+			inputs[in_d3d + 11].setVisible(_posm == 1);
+			inputs[in_d3d + 12].setVisible(_posm == 2);
+			inputs[in_d3d + 13].setVisible(_posm == 2);
+			inputs[in_d3d + 14].setVisible(_posm == 2);
+			
+			inputs[in_d3d + 18].setVisible(_aoEn);
+			inputs[in_d3d + 19].setVisible(_aoEn);
+			inputs[in_d3d + 20].setVisible(_aoEn);
+			
 		#endregion
 		
 		surface_depth_disable(false);
 		
-		switch(_posm) { #region ++++ camera positioning ++++
+		switch(_posm) { // ++++ camera positioning ++++
 			case 0 :
 				camera.useFocus = false;
 				camera.position.set(_pos);
 				camera.rotation.set(_rot[0], _rot[1], _rot[2], _rot[3]);
 				break;
+				
 			case 1 :
 				camera.useFocus = true;
 				camera.position.set(_pos);
@@ -272,6 +272,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 				lookat.transform.position.set(_look);
 				lookLine = new __3dGizmoLineDashed(camera.position, camera.focus, 0.25, c_gray, 1);
 				break;
+				
 			case 2 :
 				camera.useFocus = true;
 				camera.focus.set(_look);
@@ -290,7 +291,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 				lookRad.transform.scale.set(_rad, _rad, 1);
 				lookRad.transform.position.set(new __vec3(camera.focus.x, camera.focus.y, camera.position.z));
 				break;
-		} #endregion
+		}
 		
 		object.transform.position.set(camera.position);
 		object.transform.rotation = camera.rotation.Clone();
@@ -408,14 +409,16 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 					BLEND_MULTIPLY
 					draw_surface_safe(deferData.ssao);
 					BLEND_NORMAL
-					
-					_outData[4] = deferData.ssao;
 				}
 			surface_reset_target();
 			surface_free(_render);
 			
+			surface_set_shader(_outData[4], noone, true, BLEND.over);
+				draw_surface_safe(deferData.ssao)
+			surface_reset_shader();	
 		#endregion
 		
+		print("deferData|", deferData)
 		surface_depth_disable(true);
 		
 		return _outData;

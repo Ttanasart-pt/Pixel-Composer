@@ -3039,7 +3039,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
     
     ////- Action
     
-    function createNodeHotkey(_node) {
+    function createNodeHotkey(_node, _select = true) {
     	var _nodeType = _node;
     	var _preset   = "";
     	
@@ -3073,10 +3073,15 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         	node.skipDefault();
         	node.setPreset(_preset);
         }
+        
+        if(_select) {
+        	nodes_selecting = [node];
+        	FOCUS_STR = instanceof(node);
+        }
     }
     
     function doBlend(_base = "") {
-    	var _ty = _base == ""? "Node_Composite" : _base;
+    	var _ty = _base == ""? "Node_Blend" : _base;
     	
         if(array_empty(nodes_selecting) || array_empty(nodes_selecting[0].outputs))
         	return nodeBuild(_ty, mouse_grid_x, mouse_grid_y, getCurrentContext()).skipDefault();

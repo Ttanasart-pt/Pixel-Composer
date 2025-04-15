@@ -195,7 +195,12 @@ DIALOG_WINCLEAR1
 			
 		} else {
 			var _spr = _menuItem.getSpr();
-			
+			var _txt = label;
+				
+			var _nodeKey = string_pos(">", _txt)? string_copy(_txt, 1, string_pos(">", _txt) - 1) : _txt;
+			var _node    = struct_try_get(ALL_NODES, _nodeKey, noone);
+			if(_node != noone) _spr = [ _node.spr, 0, .6, c_white ];
+				
 			if(_spr != noone) {
 				var spr = array_safe_get_fast(_spr, 0, _spr);
 				var ind = array_safe_get_fast(_spr, 1, 0);
@@ -216,24 +221,21 @@ DIALOG_WINCLEAR1
 			var ty = yy + hght / 2;
 			var ta = _menuItem.active * 0.75 + 0.25;
 			
-			var txt = label;
-			if(struct_has(ALL_NODES, txt)) txt = ALL_NODES[$ txt].name;
-			
-			if(string_pos(">", txt)) {
-				var _sp = string_split(txt, ">");
-				var txt = _sp[0];
-				if(struct_has(ALL_NODES, txt)) txt = ALL_NODES[$ txt].name;
+			if(string_pos(">", label)) {
+				var _sp = string_split(label, ">");
+				var _txt = _sp[0];
+				if(struct_has(ALL_NODES, _txt)) _txt = ALL_NODES[$ _txt].name;
 				
 				draw_set_text(font, fa_left, fa_center, COLORS._main_text_sub, ta);
-    			draw_text(tx, ty, txt);
-    			tx += string_width(txt) + ui(8);
+    			draw_text(tx, ty, _txt);
+    			tx += string_width(_txt) + ui(8);
     			
     			draw_set_text(font, fa_left, fa_center, COLORS._main_text, ta);
 				draw_text(tx, ty, _sp[1]);
 				
 			} else {
     			draw_set_text(font, fa_left, fa_center, COLORS._main_text, ta);
-				draw_text(tx, ty, txt);
+				draw_text(tx, ty, _node == noone? _txt : _node.name);
 			}
 			
 			draw_set_alpha(1);
