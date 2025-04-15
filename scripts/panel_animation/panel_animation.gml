@@ -770,7 +770,7 @@ function Panel_Animation() : PanelContent() constructor {
 	        #region Pan Zoom
 	            timeline_shift = lerp_float(timeline_shift, timeline_shift_to, 4);
 	                
-	            if(timeline_scubbing) {
+	            if(timeline_scubbing && timeline_stretch == 0) {
 	                var rfrm = (mx - bar_x - timeline_shift) / timeline_scale - 1;
 	                if(!key_mod_press(CTRL)) rfrm = clamp(rfrm, 0, TOTAL_FRAMES - 1);                 // clamp to animating region
 	                PROJECT.animator.setFrame(rfrm, !key_mod_press(ALT));
@@ -837,7 +837,7 @@ function Panel_Animation() : PanelContent() constructor {
             if(pHOVER && point_in_rectangle(mx, my, bar_x, bar_y, bar_x + bar_w, bar_y + bar_h)) { //preview
                 if(MOUSE_WHEEL != 0) timeline_shift_to = clamp(timeline_shift_to + 64 * MOUSE_WHEEL, -max(bar_total_w - bar_w + 32, 0), 0);
                 
-                if(mx < bar_int_x && mouse_press(mb_left, pFOCUS)) {
+                if(mx < bar_int_x && mouse_press(mb_left, pFOCUS) && timeline_stretch == 0) {
                     timeline_scubbing = true;
                     timeline_scub_st  = CURRENT_FRAME;
                     _scrub_frame      = timeline_scub_st;
@@ -2136,7 +2136,7 @@ function Panel_Animation() : PanelContent() constructor {
         	
         #endregion
         
-        if(pHOVER && point_in_rectangle(msx, msy, 0, ui(18), dope_sheet_w, dope_sheet_h)) { // selection & stagger
+        if(pHOVER && point_in_rectangle(msx, msy, 0, ui(18), dope_sheet_w, dope_sheet_h) && timeline_stretch == 0) { // selection & stagger
             if(mouse_press(mb_right, pFOCUS) && key_hover == noone)
                 keyframe_selecting = [];
             
@@ -2450,22 +2450,23 @@ function Panel_Animation() : PanelContent() constructor {
         #endregion
         
         #region stretch
-            var stx = timeline_shift + bar_total_w + ui(24);
+            var stx = timeline_shift + bar_total_w;
             var sty = ui(10);
             
             if(timeline_stretch == 1) {
-                var len = round((mx - bar_x - timeline_shift) / timeline_scale) - 2;
+                var len = round((mx - bar_x - timeline_shift) / timeline_scale);
                     len = max(1, len);
                 TOOLTIP = __txtx("panel_animation_length", "Animation length") + $" {len}";
                 TOTAL_FRAMES = len;
                 
                 if(mouse_release(mb_left))
                     timeline_stretch = 0;
-                    
-                draw_sprite_ui(THEME.animation_stretch, 0, stx, sty, 1, 1, 0, COLORS.panel_animation_end_line, 1);
+                        
+                draw_set_color(COLORS._main_accent);
+        		draw_line_width(stx, sty - ui(10), stx, sty + ui(10), 2);
                 
             } else if(timeline_stretch == 2) {
-                var len  = round((mx - bar_x - timeline_shift) / timeline_scale) - 2;
+                var len  = round((mx - bar_x - timeline_shift) / timeline_scale);
                     len  = max(1, len);
                 TOOLTIP  = __txtx("panel_animation_length", "Animation length") + $" {len}";
                 var _len = TOTAL_FRAMES;
@@ -2497,12 +2498,15 @@ function Panel_Animation() : PanelContent() constructor {
                 if(mouse_release(mb_left))
                     timeline_stretch = 0;
                     
-                draw_sprite_ui(THEME.animation_stretch, 1, stx, sty, 1, 1, 0, COLORS.panel_animation_end_line, 1);
+                draw_set_color(COLORS._main_value_positive);
+        		draw_line_width(stx, sty - ui(10), stx, sty + ui(10), 2);
                 
             } else {
                 if(!IS_PLAYING && pHOVER && point_in_circle(msx, msy, stx, sty, sty)) {
-                    if(key_mod_press(ALT)) {
-                        draw_sprite_ui(THEME.animation_stretch, 1, stx, sty, 1, 1, 0, COLORS._main_icon, 1);
+                	if(key_mod_press(ALT)) {
+                        draw_set_color(COLORS._main_value_positive);
+                		draw_line_width(stx, sty - ui(10), stx, sty + ui(10), 2);
+                		
                         TOOLTIP = __txtx("panel_animation_stretch", "Stretch animation");
                         if(mouse_press(mb_left, pFOCUS)) {
                             timeline_stretch = 2;
@@ -2510,8 +2514,10 @@ function Panel_Animation() : PanelContent() constructor {
                             timeline_stretch_sx = TOTAL_FRAMES;
                         }
                         
-                    } else {
-                        draw_sprite_ui(THEME.animation_stretch, 0, stx, sty, 1, 1, 0, COLORS._main_icon, 1);
+                    } else if(key_mod_press(CTRL)) {
+                        draw_set_color(COLORS._main_accent);
+                		draw_line_width(stx, sty - ui(10), stx, sty + ui(10), 2);
+                	
                         TOOLTIP = __txtx("panel_animation_adjust_length", "Adjust animation length");
                         if(mouse_press(mb_left, pFOCUS)) {
                             timeline_stretch = 1;
@@ -2520,7 +2526,7 @@ function Panel_Animation() : PanelContent() constructor {
                         }
                     }
                     
-                } else draw_sprite_ui(THEME.animation_stretch, 0, stx, sty, 1, 1, 0, COLORS._main_icon, 0.5);
+                }
             }
         #endregion
         
@@ -2615,7 +2621,7 @@ function Panel_Animation() : PanelContent() constructor {
             draw_set_color(COLORS._main_accent);
             draw_line(px, y0, px, y1);
             
-            if(point_in_rectangle(mx, my, ui(8), y0, w - ui(16), y1)) {
+            if(point_in_rectangle(mx, my, ui(8), y0, w - ui(16), y1) && timeline_stretch == 0) {
                 if(mouse_click(mb_left, pFOCUS)) {
                     var rfrm = (mx - ui(8)) / (w - ui(16)) * TOTAL_FRAMES;
                     if(!key_mod_press(CTRL)) rfrm = clamp(rfrm, 0, TOTAL_FRAMES - 1);                 // clamp to animating region

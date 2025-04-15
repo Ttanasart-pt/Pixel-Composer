@@ -278,8 +278,9 @@ event_inherited();
 					
 					surface_set_target(clip_surf);
 						DRAW_CLEAR
-							
+						BLEND_OVERRIDE	
 						draw_sprite_uniform(spr, 0, ox, oy, s);
+						
 						gpu_set_blendmode_ext(bm_dest_colour, bm_zero);
 						draw_sprite_stretched(THEME.ui_panel_bg, 4, 0, 0, _spw, _sph);
 						BLEND_NORMAL
