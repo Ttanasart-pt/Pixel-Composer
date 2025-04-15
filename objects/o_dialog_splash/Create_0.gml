@@ -264,30 +264,28 @@ event_inherited();
 				}
 				
 				if(sprite_exists(spr)) {
-					var ox = (sprite_get_xoffset(spr) - sw / 2) * s;
-					var oy = (sprite_get_yoffset(spr) - sh / 2) * s;
-					
-					var _sx = _boxx + grid_width / 2 + ox;
-					var _sy = yy    + grid_heigh / 2 + oy;
 					
 					var _spw = sw * s;
 					var _sph = sh * s;
 					
-					if(txt == "Workshop") {
-						clip_surf = surface_verify(clip_surf, _spw, _sph);
-						
-						surface_set_target(clip_surf);
-							DRAW_CLEAR
+					var _sx = _boxx + grid_width / 2 - _spw / 2;
+					var _sy = yy    + grid_heigh / 2 - _sph / 2;
+					
+					var ox = sprite_get_xoffset(spr) * s;
+					var oy = sprite_get_yoffset(spr) * s;
+					
+					clip_surf = surface_verify(clip_surf, _spw, _sph);
+					
+					surface_set_target(clip_surf);
+						DRAW_CLEAR
 							
-							draw_sprite_uniform(spr, 0, 0, 0, s);
-							gpu_set_blendmode_ext(bm_dest_colour, bm_zero);
-							draw_sprite_stretched(THEME.ui_panel_bg, 4, 0, 0, _spw, _sph);
-							BLEND_NORMAL
-						surface_reset_target();
-						
-						draw_surface(clip_surf, _sx, _sy);
-					} else 
-						draw_sprite_uniform(spr, 0, _sx, _sy, s);
+						draw_sprite_uniform(spr, 0, ox, oy, s);
+						gpu_set_blendmode_ext(bm_dest_colour, bm_zero);
+						draw_sprite_stretched(THEME.ui_panel_bg, 4, 0, 0, _spw, _sph);
+						BLEND_NORMAL
+					surface_reset_target();
+					
+					draw_surface(clip_surf, _sx, _sy);
 					
 				} else {
 					

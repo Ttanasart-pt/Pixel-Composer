@@ -375,8 +375,6 @@
     {"$GMIncludedFile":"","%Name":"config.json","CopyToMask":-1,"filePath":"datafiles/data/Locale/en","name":"config.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"nodes.json","CopyToMask":-1,"filePath":"datafiles/data/locale/en","name":"nodes.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"nodes.json","CopyToMask":-1,"filePath":"datafiles/data/Locale/en","name":"nodes.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
-    {"$GMIncludedFile":"","%Name":"UI.json","CopyToMask":-1,"filePath":"datafiles/data/locale/en","name":"UI.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
-    {"$GMIncludedFile":"","%Name":"UI.json","CopyToMask":-1,"filePath":"datafiles/data/Locale/en","name":"UI.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"words.json","CopyToMask":-1,"filePath":"datafiles/data/locale/en","name":"words.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"words.json","CopyToMask":-1,"filePath":"datafiles/data/Locale/en","name":"words.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"LOCALIZATION GUIDES.txt","CopyToMask":-1,"filePath":"datafiles/data/Locale","name":"LOCALIZATION GUIDES.txt","resourceType":"GMIncludedFile","resourceVersion":"2.0",},

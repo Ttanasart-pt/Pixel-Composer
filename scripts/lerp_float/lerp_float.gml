@@ -3,7 +3,7 @@ function lerp_float(from, to, speed, pre = 0.01) {
 
     if(abs(from - to) < pre) return to;
     
-    var _rat = 1 - power(1 - 1 / speed, delta_time / 1000000 * game_get_speed(gamespeed_fps));
+    var _rat = 1 - power(1 - 1 / speed, delta_time / 10000);
     return lerp(from, to, _rat);
 }
 
@@ -19,7 +19,7 @@ function lerp_angle_direct(from, to, speed) {
 function lerp_angle(from, to, speed) {
 	if(fps < 15) return to;
 	
-	var _rat = 1 - power(1 - 1 / speed, delta_time / 1000000 * game_get_speed(gamespeed_fps));
+	var _rat = 1 - power(1 - 1 / speed, delta_time / 10000);
 	return from + angle_difference(to, from) * _rat;
 }
 
