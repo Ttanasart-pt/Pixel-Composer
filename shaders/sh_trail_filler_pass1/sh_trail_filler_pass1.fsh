@@ -10,9 +10,6 @@ uniform vec2  dimension;
 uniform float range;
 uniform float alpha;
 
-uniform int matchColor;
-uniform int blendColor;
-
 vec4 sampP( vec2 p ) { return texture2D( prevFrame, p ); }
 vec4 sampC( vec2 p ) { return texture2D( currFrame, p ); }
 

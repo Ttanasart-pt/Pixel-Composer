@@ -37,23 +37,18 @@ function Node_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	input_display_list = [
 		["Surfaces",   true], 0, 
-		["Trail",     false], 1, 2,
-		["Tracking",  false], 3, 4, 5, 
+		["Trail",     false], 1, 2, 3, 
 		["Rendering", false], 6, 
 	];
 	
 	temp_surface = array_create(5);
-	cached_trail = [];
 	
 	attribute_surface_depth();
 	
 	setTrigger(2, "Clear cache", [ THEME.cache, 0, COLORS._main_icon ]);
 	
 	static onInspector2Update = function() { 
-		clearCache(true); 
-		for( var i = 0, n = array_length(cached_trail); i < n; i++ ) 
-			surface_free_safe(cached_trail[i]);
-		cached_trail = [];
+		clearCache(true);
 	}
 	
 	static update = function() {
@@ -61,12 +56,8 @@ function Node_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var _life  = getInputData(1);
 		var _loop  = getInputData(2);
 		var _rang  = getInputData(3);
-		var _colr  = getInputData(4);
-		var _blend = getInputData(5);
 		var _alpha = getInputData(6);
 		var cDep   = attrDepth();
-		
-		inputs[5].setVisible(!_colr);
 		
 		if(!is_surface(_surf)) {
 			logNode($"Surface array not supported.");
@@ -105,7 +96,7 @@ function Node_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			
 			if(!is_surface(preS)) continue;
 			
-			if(preF >= curF || is_surface(curS)) {
+			if(preF >= curF || !is_surface(curS)) {
 				surface_set_shader(temp_surface[bg], sh_trail_blend, true, BLEND.over);
 					shader_set_surface("bg", temp_surface[!bg]);
 					shader_set_surface("fg", preS);
@@ -123,8 +114,6 @@ function Node_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			shader_set_surface("currFrame", curS);
 			shader_set_dim("dimension",     _surf);
 			shader_set_f("range",           _rang? _rang : _sw / 2);
-			shader_set_i("matchColor",      _colr);
-			shader_set_i("blendColor",      _blend);
 			shader_set_f("alpha",           a1);
 			
 			surface_set_target_ext(0, temp_surface[2]);
