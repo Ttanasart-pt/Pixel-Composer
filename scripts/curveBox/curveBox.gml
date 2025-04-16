@@ -1,9 +1,9 @@
 function curveBox(_onModify) : widget() constructor {
 	h = ui(200);
 	
-	onModify   = _onModify;
-	curr_data  = [];
-	anc_mirror = [];
+	onModify    = _onModify;
+	curr_data   = [];
+	anc_mirror  = [];
 	linear_mode = false;
 	
 	curve_surface   = noone;
@@ -358,10 +358,11 @@ function curveBox(_onModify) : widget() constructor {
 						point_insert = i;
 					_x1 = _x0;
 				}
-		
+				
 				draw_set_color(COLORS._main_accent);
 				draw_curve(0, 0, cw, ch, _data, minx, maxx, miny, maxy);
 			
+				// print("point_insert|", point_insert);
 			surface_reset_target();
 		#endregion
 		

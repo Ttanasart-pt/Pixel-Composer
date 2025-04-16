@@ -87,8 +87,17 @@ function draw_curve(x0, y0, _w, _h, _bz, minx = 0, maxx = 1, miny = 0, maxy = 1,
 				}
 		
 				if(_bz[ind + 4] == 0 && _bz[ind + 5] == 0 && _bz[ind + 6 + 0] == 0 && _bz[ind + 6 + 1] == 0) {
-					draw_line(x0 + _x0 * _w, y0 + (1 - _y0) * _h, 
-					          x0 + _x1 * _w, y0 + (1 - _y1) * _h);
+					var _rx0 = ( _x0 - minx ) / rngx;
+					var _ry0 = ( _y0 - miny ) / rngy;
+					var _rx1 = ( _x1 - minx ) / rngx;
+					var _ry1 = ( _y1 - miny ) / rngy;
+					
+					var px0 = x0 + _rx0 * _w;
+					var py0 = y0 + (1 - _ry0) * _h;
+					var px1 = x0 + _rx1 * _w;
+					var py1 = y0 + (1 - _ry1) * _h;
+					
+					draw_line(px0, py0, px1, py1);
 					continue;
 				}
 				
