@@ -963,6 +963,7 @@
     {"name":"node_iterator_input","order":1,"path":"scripts/node_iterator_input/node_iterator_input.yy",},
     {"name":"node_iterator_length","order":9,"path":"scripts/node_iterator_length/node_iterator_length.yy",},
     {"name":"node_iterator_output","order":2,"path":"scripts/node_iterator_output/node_iterator_output.yy",},
+    {"name":"sh_trail_blend","order":3,"path":"shaders/sh_trail_blend/sh_trail_blend.yy",},
     {"name":"node_iterator_sort_inline_input","order":1,"path":"scripts/node_iterator_sort_inline_input/node_iterator_sort_inline_input.yy",},
     {"name":"node_iterator_sort_inline_output","order":2,"path":"scripts/node_iterator_sort_inline_output/node_iterator_sort_inline_output.yy",},
     {"name":"node_iterator_sort_input","order":1,"path":"scripts/node_iterator_sort_input/node_iterator_sort_input.yy",},
