@@ -354,7 +354,7 @@ function curveBox(_onModify) : widget() constructor {
 						display_sel   = 1;
 					}
 			
-					if(msx >= _x1 && msy <= _x0)
+					if(msx >= _x1 && msx <= _x0)
 						point_insert = i;
 					_x1 = _x0;
 				}
