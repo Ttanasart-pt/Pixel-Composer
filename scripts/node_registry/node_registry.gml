@@ -143,8 +143,8 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 		return self;
 	}
 	
-	static getName    = function() { return __txt_node_name(node, name);	   }
-	static getTooltip = function() { return __txt_node_tooltip(node, tooltip); }
+	static getName    = function() /*=>*/ {return __txt_node_name(node, name)};
+	static getTooltip = function() /*=>*/ {return __txt_node_tooltip(node, tooltip)};
 	static getTooltipSpr = function() { 
 		if(tooltip_spr != undefined) return tooltip_spr;
 		
@@ -157,7 +157,7 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 	}
 	
 	static build = function(_x = 0, _y = 0, _group = PANEL_GRAPH.getCurrentContext(), _param = {}) {
-		if(context != noone && !array_exists(context, instanceof(_group))) {
+		if(NOT_LOAD && context != noone && !array_exists(context, instanceof(_group))) {
 			noti_warning($"Cannot create node outside context.");
 			return noone;
 		}

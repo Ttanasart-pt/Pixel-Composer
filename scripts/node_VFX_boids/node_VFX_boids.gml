@@ -12,17 +12,25 @@ function Node_VFX_Boids(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	newInput(0, nodeValue_Particle("Particles",    self, -1 )).setVisible(true, true);
 	newInput(7, nodeValue_f("Speed amplification", self, 1   ));
 	
+	////- Separation
+	
 	newInput(11, nodeValue_b( "Separate",          self, true));
 	newInput( 1, nodeValue_f( "Sep. radius",       self, 4   ));
 	newInput( 2, nodeValue_s( "Sep. influence",    self, 0.2 ));
+	
+	////- Alignment
 		
 	newInput(12, nodeValue_b( "Align",             self, true));
 	newInput( 3, nodeValue_f( "Ali. radius",       self, 32  ));
 	newInput( 4, nodeValue_s( "Ali. influence",    self, 0.2 ));
+	
+	////- Grouping
 		
 	newInput(13, nodeValue_b( "Group",             self, true));
 	newInput( 5, nodeValue_f( "Grp. radius",       self, 32  ));
 	newInput( 6, nodeValue_s( "Grp. influence",    self, 0.2 ));
+	
+	////- Follow
 	
 	newInput( 8, nodeValue_b( "Follow point",      self, false    ));
 	newInput( 9, nodeValue_2( "Point",             self, [ 0, 0 ] )).setUnitRef(function() /*=>*/ {return inline_context.dimension}, VALUE_UNIT.reference);

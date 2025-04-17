@@ -2590,7 +2590,7 @@ function Panel_Preview() : PanelContent() constructor {
             } else {
             	if(tool_current != noone) {
 	                var _tobj = tool_current.getToolObject();
-	        		if(_tobj) _tobj.disable();
+	        		if(struct_has(_tobj, "disable")) _tobj.disable();
 	                tool_current = noone;
             	}
 	        	
