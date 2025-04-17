@@ -36,6 +36,7 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 	spr  = s_node_icon;
 	icon = noone;
 	nodekey = "";
+	context = noone;
 	
 	nodeName     = script_get_name(node);
 	usecreateFn  = false;
@@ -156,7 +157,10 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 	}
 	
 	static build = function(_x = 0, _y = 0, _group = PANEL_GRAPH.getCurrentContext(), _param = {}) {
-		INLINE 
+		if(context != noone && !array_exists(context, instanceof(_group))) {
+			noti_warning($"Cannot create node outside context.");
+			return noone;
+		}
 		
 		if(createParam != noone) {
 			struct_append(_param, createParam);
@@ -507,6 +511,11 @@ function __read_node_display(_list) {
 							array_push(NEW_NODES, _head);
 						_currLab = _head;
 						array_push(NEW_NODES, _node);
+					}
+					
+					if(_filter != undefined) {
+						if(_node.context == noone) _node.context = [];
+						array_append_unique(_node.context, _filter);
 					}
 					
 					array_push(_l, _node);

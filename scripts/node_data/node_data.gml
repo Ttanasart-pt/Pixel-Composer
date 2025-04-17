@@ -44,10 +44,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		array_push(project.allNodes, self);
 		
-		inline_input   = true;
-		inline_output  = true;
-		inline_context = noone;
-		inline_parent_object  = "";
+		inline_input         = true;
+		inline_output        = true;
+		inline_context       = noone;
+		inline_parent_object = "";
 		
 		search_match  = -9999;
 		onDoubleClick = -1;

@@ -3067,7 +3067,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	    	default :               node = doNewNode(_nodeType);        break;
     	}
     	
-        if(node == noone) return;
+        if(!is(node, Node)) return;
         
         if(_preset != "") {
         	node.skipDefault();
@@ -3276,8 +3276,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
     } 
 
     function doExport(_node = getFocusingNode()) {
-        if(DEMO) return;
-        if(!_node) return;
+        if(DEMO)   return noone;
+        if(!_node) return noone;
     
         var _outp = -1;
         var _path = -1;
@@ -3289,13 +3289,13 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                 _outp = _node.outputs[i];
         }
     
-        if(_outp == -1) return;
+        if(_outp == -1) return noone;
     
         var _export = nodeBuild("Node_Export", _node.x + _node.w + 64, _node.y);
-        if(_path != -1)
-            _export.inputs[1].setFrom(_path);
+        if(_path != -1) _export.inputs[1].setFrom(_path);
     
         _export.inputs[0].setFrom(_outp);
+        return _export;
     }
 	
 	function doNewNode(_nodeType) {
