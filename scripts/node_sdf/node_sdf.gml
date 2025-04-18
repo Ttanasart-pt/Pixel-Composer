@@ -9,26 +9,31 @@
 function Node_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "SDF";
 	
+	newActiveInput(1);
+	
+	////- Surface
+	
 	newInput(0, nodeValue_Surface("Surface In", self));
 	
-	newInput(1, nodeValue_Bool("Active", self, true));
-		active_index = 1;
+	////- SDF
 	
-	newInput(2, nodeValue_Enum_Button("Side", self,  2, [ "Inside", "Outside", "Both" ]));
+	newInput(2, nodeValue_Enum_Button( "Side",         self, 2, [ "Inside", "Outside", "Both" ]));
+	newInput(3, nodeValue_Slider(      "Max distance", self, 1, [ 0, 2, 0.01 ]));
+	newInput(6, nodeValue_Bool(        "Angle",        self, false));
 	
-	newInput(3, nodeValue_Float("Max distance", self, 1))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 2, 0.01 ] });
+	////- Render
 	
-	newInput(4, nodeValue_Bool("Keep Alpha", self, false));
+	newInput(4, nodeValue_Bool( "Keep Alpha", self, false));
+	newInput(5, nodeValue_Bool( "Invert",     self, false));
 	
-	newInput(5, nodeValue_Bool("Invert", self, false));
+	//// input 6
 	
 	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 1,
 		["Surfaces", false], 0, 
 		["SDF",		 false], 2, 3, 
-		["Render",	 false], 4, 5, 
+		["Render",	 false], 4, 5, 6, 
 	]
 	
 	attribute_surface_depth();
@@ -41,14 +46,15 @@ function Node_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 		var _dist  = _data[3];
 		var _alph  = _data[4];
 		var _invt  = _data[5];
+		var _angl  = _data[6];
 		
 		var sw	   = surface_get_width_safe(inSurf);
 		var sh	   = surface_get_height_safe(inSurf);
 		var _n	   = max(sw, sh);
 		var cDep   = attrDepth();
 		
-		temp_surface[0]  = surface_verify(temp_surface[0], _n, _n, cDep);
-		temp_surface[1]  = surface_verify(temp_surface[1], _n, _n, cDep);
+		temp_surface[0] = surface_verify(temp_surface[0], _n, _n, cDep);
+		temp_surface[1] = surface_verify(temp_surface[1], _n, _n, cDep);
 		_outSurf = surface_verify(_outSurf, sw, sh, cDep);
 		
 		surface_set_shader(temp_surface[0], sh_sdf_tex);
@@ -78,6 +84,7 @@ function Node_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 			shader_set_f("max_distance", _dist);
 			shader_set_i("alpha",        _alph);
 			shader_set_i("invert",       _invt);
+			shader_set_i("angle",        _angl);
 			
 			draw_surface_safe(temp_surface[bg]);
 		surface_reset_shader();

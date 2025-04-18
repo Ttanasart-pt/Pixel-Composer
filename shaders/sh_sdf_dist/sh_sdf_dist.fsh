@@ -6,7 +6,10 @@ uniform sampler2D original;
 uniform int side;
 uniform int alpha;
 uniform int invert;
+uniform int angle;
 uniform float max_distance;
+
+const float PI = 3.14159265358979323846;
 
 void main() {
 	vec4 col = texture2D( gm_BaseTexture, v_vTexcoord );
@@ -25,5 +28,14 @@ void main() {
 		return;
 	}
 	
-    gl_FragColor = vec4(vec3(dist), aa);
+	vec3 cc = vec3(dist);
+    
+    if(angle == 1) {
+	    vec2  vct = col.xy - v_vTexcoord;
+	    float ang = atan(vct.y, vct.x) / PI * .5 + .5;
+	    cc = vec3(ang) * step(.1, dist);
+	    // cc = vec3(abs(vct) * 8., 0.) * step(.1, dist);
+    }
+    
+    gl_FragColor = vec4(cc, aa);
 }
