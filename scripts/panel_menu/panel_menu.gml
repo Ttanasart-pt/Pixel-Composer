@@ -137,18 +137,18 @@ function Panel_Menu() : PanelContent() constructor {
     if(!DEMO) menu_file = array_append(menu_file_nondemo, menu_file);
     
     menu_help = [ 
-        menuItem(__txtx("panel_menu_help_video", "Tutorial videos"),                       function() { url_open("https://www.youtube.com/@makhamdev"); }, THEME.youtube),
-        menuItem(__txtx("panel_menu_help_wiki", "Community Wiki"),                         function() { url_open("https://pixel-composer.fandom.com/wiki/Pixel_Composer_Wiki"); }, THEME.wiki),
+        menuItem(__txtx("panel_menu_help_video", "Tutorial videos"),                       function() /*=>*/ {return url_open("https://www.youtube.com/@makhamdev")}, THEME.youtube),
+        menuItem(__txtx("panel_menu_help_wiki", "Community Wiki"),                         function() /*=>*/ {return url_open("https://pixel-composer.fandom.com/wiki/Pixel_Composer_Wiki")}, THEME.wiki),
         -1, 
-        menuItem(__txtx("panel_menu_local_directory", "Open local directory"),             function() { shellOpenExplorer(DIRECTORY); }, THEME.folder),
-        menuItem(__txtx("panel_menu_autosave_directory", "Open autosave directory"),       function() { shellOpenExplorer(DIRECTORY + "autosave/"); }, THEME.folder),
-        menuItem(__txtx("panel_menu_reset_default", "Reset default collection, assets"),   function() {
+        menuItem(__txtx("panel_menu_local_directory", "Open local directory"),             function() /*=>*/ {return shellOpenExplorer(DIRECTORY)},               THEME.folder),
+        menuItem(__txtx("panel_menu_autosave_directory", "Open autosave directory"),       function() /*=>*/ {return shellOpenExplorer(DIRECTORY + "autosave/")}, THEME.folder),
+        menuItem(__txtx("panel_menu_reset_default", "Reset default collection, assets"),   function() /*=>*/ {
             zip_unzip("data/Collections.zip", DIRECTORY + "Collections");
             zip_unzip("data/Assets.zip", DIRECTORY + "Assets");
         }),
         -1,
-        menuItem(__txtx("panel_menu_connect_patreon", "Connect to Patreon"),               function() { dialogCall(o_dialog_patreon);         }, THEME.patreon),
-        menuItem(__txtx("panel_menu_connect_patreon", "Connect to Patreon (legacy)"),      function() { dialogPanelCall(new Panel_Patreon()); }, THEME.patreon),
+        menuItem(__txtx("panel_menu_connect_patreon", "Connect to Patreon"),               function() /*=>*/ {return dialogCall(o_dialog_patreon)},         THEME.patreon),
+        menuItem(__txtx("panel_menu_connect_patreon", "Connect to Patreon (legacy)"),      function() /*=>*/ {return dialogPanelCall(new Panel_Patreon())}, THEME.patreon),
     ];
     
     menuItem_undo = MENU_ITEMS.undo;

@@ -550,20 +550,23 @@ function Panel_Preview() : PanelContent() constructor {
     
     ////- DATA
     
-    function setNodePreview(node) {
-        if(locked) return;
+    function setNodePreview(_node, _lock = locked) {
+        if(locked) return self;
         
         if(resetViewOnDoubleClick)
             do_fullView = true;
         
-        preview_node[splitView? splitSelection : 0] = node;
+        preview_node[splitView? splitSelection : 0] = _node;
+        locked = _lock;
+        
+        return self;
     }
     
-    function removeNodePreview(node) {
+    function removeNodePreview(_node) {
         if(locked) return;
         
-        if(preview_node[0] == node) preview_node[0] = noone;
-        if(preview_node[1] == node) preview_node[1] = noone;
+        if(preview_node[0] == _node) preview_node[0] = noone;
+        if(preview_node[1] == _node) preview_node[1] = noone;
     }
     
     function resetNodePreview() {

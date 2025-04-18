@@ -232,12 +232,21 @@ event_inherited();
 		var _outputs  = [];
 		
 		if(is(_node, NodeObject)) {
-			_new_node = _node.build(node_target_x, node_target_y,, _param);
+			var _context = PANEL_GRAPH.getCurrentContext();
+			var _skipc   = false;
+			
+			if(is(context, Node_Collection_Inline)) {
+				_context = context.group;
+				_skipc   = true;
+			}
+			
+			_new_node = _node.build(node_target_x, node_target_y, _context, _param, _skipc);
 			if(!_new_node) return;
 			
 			if(category == NODE_CATEGORY && _node.show_in_recent) {
 				array_remove(global.RECENT_NODES, _node.nodeName);
 				array_insert(global.RECENT_NODES, 0, _node.nodeName);
+				
 				if(array_length(global.RECENT_NODES) > PREFERENCES.node_recents_amount)
 					array_pop(global.RECENT_NODES);
 			}
@@ -404,8 +413,10 @@ event_inherited();
 #endregion
 
 #region content
+	cat_disp_y = undefined;
+	
 	catagory_pane = new scrollPane(category_width, dialog_h - ui(66), function(_y, _m) {
-		draw_clear_alpha(COLORS.panel_bg_clear, 1);
+		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
 		var ww = catagory_pane.surface_w;
 		var hh = 0;
@@ -413,7 +424,7 @@ event_inherited();
 		
 		var start = category == NODE_CATEGORY? -2 : 0;
 		
-		for(var i = start; i < array_length(category); i++) {
+		for(var i = start, n = array_length(category); i < n; i++) {
 			var name  = "";
 			
 			     if(i == -2) name = "All";
@@ -470,8 +481,12 @@ event_inherited();
 					break;
 			}
 			
+			if(i == ADD_NODE_PAGE) {
+				cat_disp_y = _y + hh;
+			}
+			
 			if(i == ADD_NODE_PAGE) draw_set_text(f_p1b, fa_left, fa_center, COLORS._main_text_accent);
-			else				   draw_set_text(f_p1,  fa_left, fa_center, cc);
+			else                   draw_set_text(f_p1,  fa_left, fa_center, cc);
 			
 			var _is_extra = name == "Extra";
 			name = __txt(name);
@@ -536,16 +551,13 @@ event_inherited();
 	content_pane = new scrollPane(dialog_w - category_width - ui(40), dialog_h - ui(66), function(_y, _m) {
 		draw_clear_alpha(c_white, 0);
 		
+		if(node_list == noone) { setPage(NODE_PAGE_DEFAULT); return 0; }
+		
 		var _hover = sHOVER && content_pane.hover;
 		var _focus = sFOCUS && content_pane.active;
 		var _list  = [];
 		var ww     = content_pane.surface_w;
 		var hh     = 0;
-		
-		if(node_list == noone) {
-			setPage(NODE_PAGE_DEFAULT); 
-			return 0;
-		}
 		
 		var _subg_cur = -1;
 		subgroups_size = array_create(array_length(subgroups), 0);
@@ -591,9 +603,10 @@ event_inherited();
 			for(var index = 0; index < node_count; index++) {
 				var _node = _list[index];
 				if(is_undefined(_node)) continue;
+				
 				if(is(_node, NodeObject)) {
-					if(_node.patreon && !IS_PATREON) continue;
-					if(is_global && !_node.show_in_global)    continue;
+					if(_node.patreon && !IS_PATREON)       continue;
+					if(is_global && !_node.show_in_global) continue;
 				}
 				
 				if(is(_node, NodeAction_create) && array_empty(PANEL_GRAPH.nodes_selecting)) continue;
@@ -632,10 +645,10 @@ event_inherited();
 				var _boxx = _nx + (grid_width - grid_size) / 2;
 				var cc    = c_white;
 				
-					 if(is(_node, NodeObject))	cc = c_white;
-				else if(is(_node, NodeAction))	cc = COLORS.add_node_blend_action;
-				else if(is(_node, AddNodeItem))	cc = COLORS.add_node_blend_generic;
-				else										cc = COLORS.dialog_add_node_collection;
+				     if(is(_node, NodeObject))  cc = c_white;
+				else if(is(_node, NodeAction))  cc = COLORS.add_node_blend_action;
+				else if(is(_node, AddNodeItem)) cc = COLORS.add_node_blend_generic;
+				else                            cc = COLORS.dialog_add_node_collection;
 				
 				if(!struct_try_get(_node, "hide_bg", false)) {
 					BLEND_OVERRIDE
@@ -1080,11 +1093,11 @@ event_inherited();
 		
 		if(PREFERENCES.dialog_add_node_view == 0) { // grid
 			
+			var col = floor(search_pane.surface_w / (grid_width + grid_space));
+			var yy  = _y + grid_space;
+			var ind = 0;
+			var nmh = 0;
 			var cc;
-			var col    = floor(search_pane.surface_w / (grid_width + grid_space));
-			var yy     = _y + grid_space;
-			var index  = 0;
-			var name_height = 0;
 			
 			grid_width = round(search_pane.surface_w - grid_space) / col - grid_space;
 			hh += (grid_space + grid_size) * 2;
@@ -1108,10 +1121,9 @@ event_inherited();
 				_param.search_string = highlight? search_string : 0;
 				_param.query = _query;
 				
-				var _nx   = grid_space + (grid_width + grid_space) * index;
+				var _nx   = grid_space + (grid_width + grid_space) * ind;
 				var _boxx = _nx + (grid_width - grid_size) / 2;
-				
-				var _drw = yy > -grid_size && yy < search_pane.h;
+				var _drw  = yy > -grid_size && yy < search_pane.h;
 				
 				if(_drw) {
 					
@@ -1183,14 +1195,12 @@ event_inherited();
 				}
 				
 				var _name = _node.getName();
-				var _showQuery = _query != "";
+				var _nmy  = yy + grid_size + 4, _nmh;
+				var _drw  = _nmy > -grid_size && _nmy < search_pane.h;
 				
-				draw_set_font(_showQuery? f_p3 : f_p2);
-				var _nmh = string_height_ext(_name, -1, grid_width);
-				var _nmy = yy + grid_size + 4;
-				var _drw = _nmy > -grid_size && _nmy < search_pane.h;
-				
-				if(_showQuery) {
+				if(_query != "") {
+					draw_set_font(f_p3);
+					_nmh   = string_height(_name);
 					_query = string_title(_query);
 					
 					draw_set_text(f_p3, fa_center, fa_top, COLORS._main_text_sub);
@@ -1207,6 +1217,9 @@ event_inherited();
 					_nmh += _qhh;
 					
 				} else {
+					draw_set_font(f_p3);
+					_nmh = string_height_ext(_name, -1, grid_width);
+				
 					draw_set_text(f_p3, fa_center, fa_top, COLORS._main_text);
 					if(_drw) {
 						if(highlight && _mrng != noone) _nmh = draw_text_match_range_ext(_boxx + grid_size / 2, _nmy, _name, grid_width, _mrng);
@@ -1214,14 +1227,14 @@ event_inherited();
 					}
 				}
 				
-				name_height = max(name_height, _nmh);
+				nmh = max(nmh, _nmh);
 				
 				if(node_focusing == i) search_pane.scroll_y_to = -max(0, hh - search_pane.h);	
 					
-				if(++index >= col) {
-					index = 0;
-					var hght = grid_size + grid_space + name_height;
-					name_height = 0;
+				if(++ind >= col) {
+					ind = 0;
+					var hght = grid_size + grid_space + nmh;
+					nmh = 0;
 					hh += hght;
 					yy += hght;
 				}

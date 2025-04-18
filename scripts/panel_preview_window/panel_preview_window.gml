@@ -33,9 +33,13 @@ function Panel_Preview_Window() : PanelContent() constructor {
 	pan_sx = 0;
 	pan_sy = 0;
 	
-	function surfaceCheck() {
-		content_surface = surface_verify(content_surface, w, h);
+	function setPreview(_node, _channel) {
+		node_target     = _node;
+		preview_channel = _channel;
+		return self;
 	}
+	
+	function surfaceCheck() { content_surface = surface_verify(content_surface, w, h); }
 	
 	function reset() {
 		scale = 0;

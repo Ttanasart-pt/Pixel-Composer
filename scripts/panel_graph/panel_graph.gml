@@ -2079,9 +2079,6 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                     	ctx = value_dragging.node.inline_context;
                 }
                 
-                if(is_instanceof(ctx, Node_Collection_Inline) && !ctx.junctionIsInside(value_dragging))
-                	ctx = noone;
-                
                 with(dialogCall(o_dialog_add_node, mouse_mx + 8, mouse_my + 8, { context: ctx })) {    
                     node_target_x     = other.mouse_grid_x;
                     node_target_y     = other.mouse_grid_y;
