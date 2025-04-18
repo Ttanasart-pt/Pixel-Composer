@@ -2,12 +2,13 @@ function Node_Path_Trim(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	name = "Trim Path";
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_PathNode("Path", self, noone))
-		.setVisible(true, true);
-	
-	newInput(1, nodeValue_Slider_Range("Range", self, [ 0, 1 ]));
+	newInput(0, nodeValue_PathNode(     "Path",  self, noone)).setVisible(true, true);
+	newInput(1, nodeValue_Slider_Range( "Range", self, [ 0, 1 ]));
+	newInput(2, nodeValue_Float(        "Shift", self, 0));
 	
 	newOutput(0, nodeValue_Output("Path", self, VALUE_TYPE.pathnode, noone));
+	
+	input_display_list = [ 0, 1, 2 ];
 	
 	function _trimmedPath() constructor {
 		curr_path  = noone;
@@ -62,17 +63,22 @@ function Node_Path_Trim(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	}
 	
 	static processData = function(_outData, _data, _output_index, _array_index = 0) { 
-		
 		if(!is(_outData, _trimmedPath)) 
 			_outData = new _trimmedPath();
 		
+		var _path = _data[0];
+		var _rang = [ _data[1][0], _data[1][1] ];
+		var _shft = _data[2];
+		
+		_rang[0] += _shft;
+		_rang[1] += _shft;
+		
 		_outData.cached_pos = {};
-		_outData.curr_path  = _data[0];
-		_outData.curr_range = _data[1];
+		_outData.curr_path  = _path;
+		_outData.curr_range = _rang;
 		_outData.is_path    = struct_has(_outData.curr_path, "getPointRatio");
 		
 		return _outData;
-		
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

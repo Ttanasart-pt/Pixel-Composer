@@ -72,9 +72,12 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	////- Render
 
-	newInput(34, nodeValue_Enum_Scroll("SSAA", self, 0, [ "None", "2x", "4x", "8x" ]));
+	newInput(34, nodeValue_Enum_Scroll( "SSAA",       self, 0, [ "None", "2x", "4x", "8x" ]));
+	newInput(40, nodeValue_Surface(     "Start Cap",  self, noone ));
+	newInput(41, nodeValue_Surface(     "End Cap",    self, noone ));
+	newInput(42, nodeValue_Bool(        "Rotate Cap", self, true  ));
 	
-	//// Inputs 40
+	//// Inputs 43
 	
 	input_display_list = [ 39, 
 		["Output",         true], 0, 1, 30, 31, 16, 
@@ -84,19 +87,16 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		["Wiggle",        false], 4, 5, 
 		["Color",         false], 10, 24, 15, 37, 38, 
 		["Texture",       false], 18, 21, 22, 23, 29, 
-		["Render",        false], 34, 
+		["Render",        false], 34, 40, 41, 42, 
 	];
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output( "Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(1, nodeValue_Output( "Width Pass",  self, VALUE_TYPE.surface, noone));
 	
-	newOutput(1, nodeValue_Output("Width Pass", self, VALUE_TYPE.surface, noone));
-	
-	lines     = [];
-	line_data = [];
-	
+	lines        = [];
+	line_data    = [];
 	temp_surface = [ noone ];
-	
-	widthMap = ds_map_create();
+	widthMap     = ds_map_create();
 	
 	attribute_surface_depth();
 	attribute_interpolation();
@@ -161,7 +161,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _color    = _data[10];
 			var _widc     = _data[11];
 			var _widap    = _data[12];
-		
+			
 			var _cap      = _data[13];
 			var _capP     = _data[14];
 			var _colP     = _data[15];
@@ -200,6 +200,12 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			
 			var _seed     = _data[39];
 			
+			var _cap_st   = _data[40];
+			var _cap_ed   = _data[41];
+			var _cap_rt   = _data[42];
+		#endregion
+		
+		#region visible
 			var _utex = inputs[18].value_from != noone;
 		
 			inputs[ 3].setVisible(!_1px);
@@ -230,326 +236,327 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				
 			if(_dtype == 2 && (array_invalid(_segs) || array_invalid(_segs[0]))) 
 				_dtype = 0; 
-				
 		#endregion
 		
-		random_set_seed(_seed);
-		
-		if(IS_FIRST_FRAME || inputs[11].is_anim)
-			ds_map_clear(widthMap);
-		
-		var _surfDim = [ _dim[0], _dim[1] ];
-		var __debug_timer = get_timer();
-		
-		var _rangeMin = min(_ratio[0], _ratio[1]);
-		var _rangeMax = max(_ratio[0], _ratio[1]);
-		if(_rangeMax == 1) _rangeMax = 0.99999;
-		
-		var _rtStr = min(_rangeMin, _rangeMax);
-		var _rtMax = max(_rangeMin, _rangeMax);
-		
-		var _useTex = !_1px && is_surface(_text);
-		if(_useTex) { _cap = false; _1px = false; }
-		
-		random_set_seed(_sed);
-		var _sedIndex = 0;
-		
-		var p = new __vec2P();
-		var _pathData = [];
-		var minx = 999999, miny = 999999, maxx = -999999, maxy = -999999;
-		
-		var _ox, _nx, _nx1, _oy, _ny, _ny1;
-		var _ow, _nw, _oa, _na, _oc, _nc, _owg, _nwg;
-		var _wmin = 0, _wmax = 1;
-		
-		switch(_dtype) {
-			case 0 :
-			case 3 :
-				var x0, y0, x1, y1;
-				
-				if(_dtype == 0) {
-					_ang = (_ang % 360 + 360) % 360;
-				
-					var _0 = point_rectangle_overlap(_dim[0], _dim[1], (_ang + 180) % 360);
-					var _1 = point_rectangle_overlap(_dim[0], _dim[1], _ang);
-					x0 = _0[0]; 
-					y0 = _0[1];
-					x1 = _1[0]; 
-					y1 = _1[1];
+		#region prep data
+			random_set_seed(_seed);
+			
+			if(IS_FIRST_FRAME || inputs[11].is_anim)
+				ds_map_clear(widthMap);
+			
+			var _surfDim = [ _dim[0], _dim[1] ];
+			var __debug_timer = get_timer();
+			
+			var _rangeMin = min(_ratio[0], _ratio[1]);
+			var _rangeMax = max(_ratio[0], _ratio[1]);
+			if(_rangeMax == 1) _rangeMax = 0.99999;
+			
+			var _rtStr = min(_rangeMin, _rangeMax);
+			var _rtMax = max(_rangeMin, _rangeMax);
+			
+			var _useTex = !_1px && is_surface(_text);
+			if(_useTex) { _cap = false; _1px = false; }
+			
+			random_set_seed(_sed);
+			var _sedIndex = 0;
+			
+			var p = new __vec2P();
+			var _pathData = [];
+			var minx = 999999, miny = 999999, maxx = -999999, maxy = -999999;
+			
+			var _ox, _nx, _nx1, _oy, _ny, _ny1;
+			var _ow, _nw, _oa, _na, _oc, _nc, _owg, _nwg;
+			var _wmin = 0, _wmax = 1;
+			
+			switch(_dtype) {
+				case 0 :
+				case 3 :
+					var x0, y0, x1, y1;
 					
-				} else if(_dtype == 3) {
-					x0 = _pnt0[0]; 
-					y0 = _pnt0[1];
-					x1 = _pnt1[0]; 
-					y1 = _pnt1[1];
-				}
-				
-				var _l = point_distance(x0, y0, x1, y1);
-				var _d = point_direction(x0, y0, x1, y1);
-				var _od = _d, _nd = _d;
+					if(_dtype == 0) {
+						_ang = (_ang % 360 + 360) % 360;
 					
-				var ww          = _rtMax / _seg;
-				var _total		= _rtMax;
-				var _prog_curr	= frac(_shift) - ww;
-				var _prog		= _prog_curr + 1;
-				var _prog_total	= 0;
-				var points = [];
-					
-				while(_total > 0) {
-					if(_prog_curr >= 1) _prog_curr = 0;
-					else _prog_curr = min(_prog_curr + min(_total, ww), 1);
-					_prog_total += min(_total, ww);
+						var _0 = point_rectangle_overlap(_dim[0], _dim[1], (_ang + 180) % 360);
+						var _1 = point_rectangle_overlap(_dim[0], _dim[1], _ang);
+						x0 = _0[0]; 
+						y0 = _0[1];
+						x1 = _1[0]; 
+						y1 = _1[1];
 						
-					_nx = x0 + lengthdir_x(_l * _prog_curr, _d);
-					_ny = y0 + lengthdir_y(_l * _prog_curr, _d);
-						
-					var wgLen = random1D(_sed + _sedIndex, -_wig, _wig); _sedIndex++;
-					_nx += lengthdir_x(wgLen, _d + 90); 
-					_ny += lengthdir_y(wgLen, _d + 90);
-						
-					if(_prog_total > _rtStr) //prevent drawing point before range start.
-						array_push(points, { x: _nx, y: _ny, prog: _prog_total / _rtMax, progCrop: _prog_curr, weight: 1 });
-						
-					if(_prog_curr > _prog)
-						_total -= (_prog_curr - _prog);
-					_prog = _prog_curr;
-					_ox = _nx;
-					_oy = _ny;
-				}
-					
-				lines     = [ points ];
-				line_data = [ { length: 1 } ];
-				break;
-				
-			case 1 :
-				var lineLen = 1;
-				if(struct_has(_pat, "getLineCount")) lineLen  = _pat.getLineCount();
-				if(struct_has(_pat, "getPathData")) _pathData = _pat.getPathData();
-				
-				lines = array_verify(lines, lineLen);
-				var _lineAmo = 0;
-				var _wmin =  infinity;
-				var _wmax = -infinity;
-				
-				if(_rtMax > 0) 
-				for( var i = 0; i < lineLen; i++ ) {
-					var _useDistance = _fixL && struct_has(_pat, "getLength");
-					var _pathLength  = _useDistance? _pat.getLength(i) : 1;
-					if(_pathLength == 0) continue;
-						
-					var _pathStr = _rtStr;
-					var _pathEnd = _rtMax;
-						
-					var _stepLen = min(_pathEnd, 1 / _seg); 				// Distance to move per step
-					if(_stepLen <= 0.00001) continue;
-						
-					var _total		= _pathEnd;								// Length remaining
-					var _total_prev = _total;								// Use to prevent infinite loop
-					var _freeze		= 0;									// Use to prevent infinite loop
-						
-					var _sh         = _shift;
-					var _prog_curr	= _clamp? _sh : frac(_sh);		        // Pointer to the current position
-					var _prog_next  = 0;
-					var _prog		= _prog_curr + 1;						// Record previous position to delete from _total
-					var _prog_total	= 0;									// Record the distance the pointer has moved so far
-					var points		= [];
-					var pointAmo    = 0;
-					var wght;
-					var _pathPng;
-					
-					if(_useDistance) {						
-						_pathStr   *= _pathLength;
-						_pathEnd   *= _pathLength;
-						_stepLen    = min(_segL, _pathEnd);
-							
-						_total	   *= _pathLength;
-						_total_prev = _total;
-							
-						_prog_curr *= _pathLength;
+					} else if(_dtype == 3) {
+						x0 = _pnt0[0]; 
+						y0 = _pnt0[1];
+						x1 = _pnt1[0]; 
+						y1 = _pnt1[1];
 					}
 					
-					var _segLength    = struct_has(_pat, "getAccuLength")? _pat.getAccuLength(i) : [];
-					var _segLengthAmo = array_length(_segLength);
-					var _segIndex     = 0;
-					var _segIndexPrev = 0;
-					
-					if(_segLengthAmo)
-					while(_prog_curr > _segLength[_segIndex]) {
-						_segIndex++;
-						if(_segIndex == _segLengthAmo) {
-							_segIndex = 0;
-							break;
-						}
-					}
-					
-					// print($"===== {_prog_curr} / {_segLength} : {_segIndex} - {_pathLength} =====");
-					
-					while(true) {
-						var _pp = 0;
-						wght = 1;
-						_segIndexPrev = _segIndex;
+					var _l = point_distance(x0, y0, x1, y1);
+					var _d = point_direction(x0, y0, x1, y1);
+					var _od = _d, _nd = _d;
 						
-						if(_useDistance) {
-							var segmentLength = array_safe_get_fast(_segLength, _segIndex, _pathLength);
+					var ww          = _rtMax / _seg;
+					var _total		= _rtMax;
+					var _prog_curr	= frac(_shift) - ww;
+					var _prog		= _prog_curr + 1;
+					var _prog_total	= 0;
+					var points = [];
+						
+					while(_total > 0) {
+						if(_prog_curr >= 1) _prog_curr = 0;
+						else _prog_curr = min(_prog_curr + min(_total, ww), 1);
+						_prog_total += min(_total, ww);
 							
-							_prog_next = min(_prog_curr + _stepLen, _pathLength, segmentLength);
-							_pathPng   = _ratInv? _pathLength - _prog_curr : _prog_curr;
+						_nx = x0 + lengthdir_x(_l * _prog_curr, _d);
+						_ny = y0 + lengthdir_y(_l * _prog_curr, _d);
 							
-							//print($"{segmentLength}/{_pathLength} = {_prog_next}");
-							if(_prog_next == segmentLength) _segIndex++;
+						var wgLen = random1D(_sed + _sedIndex, -_wig, _wig); _sedIndex++;
+						_nx += lengthdir_x(wgLen, _d + 90); 
+						_ny += lengthdir_y(wgLen, _d + 90);
 							
-							_pp = _clamp? clamp(_pathPng, 0, _pathLength) : _pathPng;
-							// print($"_pp = {_pp}, total = {_total}");
+						if(_prog_total > _rtStr) //prevent drawing point before range start.
+							array_push(points, { x: _nx, y: _ny, prog: _prog_total / _rtMax, progCrop: _prog_curr, weight: 1 });
 							
-							p = _pat.getPointDistance(_pp, i, p);
-							wght = p[$ "weight"] ?? 1;
+						if(_prog_curr > _prog)
+							_total -= (_prog_curr - _prog);
+						_prog = _prog_curr;
+						_ox = _nx;
+						_oy = _ny;
+					}
+						
+					lines     = [ points ];
+					line_data = [ { length: 1 } ];
+					break;
+					
+				case 1 :
+					var lineLen = 1;
+					if(struct_has(_pat, "getLineCount")) lineLen  = _pat.getLineCount();
+					if(struct_has(_pat, "getPathData")) _pathData = _pat.getPathData();
+					
+					lines = array_verify(lines, lineLen);
+					var _lineAmo = 0;
+					var _wmin =  infinity;
+					var _wmax = -infinity;
+					
+					if(_rtMax > 0) 
+					for( var i = 0; i < lineLen; i++ ) {
+						var _useDistance = _fixL && struct_has(_pat, "getLength");
+						var _pathLength  = _useDistance? _pat.getLength(i) : 1;
+						if(_pathLength == 0) continue;
+							
+						var _pathStr = _rtStr;
+						var _pathEnd = _rtMax;
+							
+						var _stepLen = min(_pathEnd, 1 / _seg); 				// Distance to move per step
+						if(_stepLen <= 0.00001) continue;
+							
+						var _total		= _pathEnd;								// Length remaining
+						var _total_prev = _total;								// Use to prevent infinite loop
+						var _freeze		= 0;									// Use to prevent infinite loop
+							
+						var _sh         = _shift;
+						var _prog_curr	= _clamp? _sh : frac(_sh);		        // Pointer to the current position
+						var _prog_next  = 0;
+						var _prog		= _prog_curr + 1;						// Record previous position to delete from _total
+						var _prog_total	= 0;									// Record the distance the pointer has moved so far
+						var points		= [];
+						var pointAmo    = 0;
+						var wght;
+						var _pathPng;
+						
+						if(_useDistance) {						
+							_pathStr   *= _pathLength;
+							_pathEnd   *= _pathLength;
+							_stepLen    = min(_segL, _pathEnd);
 								
-						} else {
-							_prog_next = min(_prog_curr + _stepLen, 1); //Move forward _stepLen or _total (if less) stop at 1
-							_pathPng   = _ratInv? 1 - _prog_curr : _prog_curr;
-							
-							_pp = _clamp? clamp(_pathPng, 0, 1) : _pathPng
-							
-							p = _pat.getPointRatio(_pp, i, p);
-							wght = p[$ "weight"] ?? 1;
+							_total	   *= _pathLength;
+							_total_prev = _total;
+								
+							_prog_curr *= _pathLength;
 						}
 						
-						_nx = p.x;
-						_ny = p.y;
+						var _segLength    = struct_has(_pat, "getAccuLength")? _pat.getAccuLength(i) : [];
+						var _segLengthAmo = array_length(_segLength);
+						var _segIndex     = 0;
+						var _segIndexPrev = 0;
 						
-						_wmin = min(_wmin, wght);
-						_wmax = max(_wmax, wght);
-						
-						if(_total < _pathEnd) { //Do not wiggle the last point.
-							var _d = point_direction(_ox, _oy, _nx, _ny);
-							_nx   += lengthdir_x(random1D(_sed + _sedIndex, -_wig, _wig), _d + 90); _sedIndex++;
-							_ny   += lengthdir_y(random1D(_sed + _sedIndex, -_wig, _wig), _d + 90); _sedIndex++;
+						if(_segLengthAmo)
+						while(_prog_curr > _segLength[_segIndex]) {
+							_segIndex++;
+							if(_segIndex == _segLengthAmo) {
+								_segIndex = 0;
+								break;
+							}
 						}
+						
+						// print($"===== {_prog_curr} / {_segLength} : {_segIndex} - {_pathLength} =====");
+						
+						while(true) {
+							var _pp = 0;
+							wght = 1;
+							_segIndexPrev = _segIndex;
 							
-						if(_prog_total >= _pathStr) { //Do not add point before range start. Do this instead of starting at _rtStr to prevent wiggle. 
-							points[pointAmo++] = { 
-								x:        _nx, 
-								y:        _ny, 
-								prog:     (_prog_total - _pathStr) / (_pathEnd - _pathStr), 
-								progCrop: _prog_curr / _pathLength, 
-								weight:   wght,
+							if(_useDistance) {
+								var segmentLength = array_safe_get_fast(_segLength, _segIndex, _pathLength);
+								
+								_prog_next = min(_prog_curr + _stepLen, _pathLength, segmentLength);
+								_pathPng   = _ratInv? _pathLength - _prog_curr : _prog_curr;
+								
+								//print($"{segmentLength}/{_pathLength} = {_prog_next}");
+								if(_prog_next == segmentLength) _segIndex++;
+								
+								_pp = _clamp? clamp(_pathPng, 0, _pathLength) : _pathPng;
+								// print($"_pp = {_pp}, total = {_total}");
+								
+								p = _pat.getPointDistance(_pp, i, p);
+								wght = p[$ "weight"] ?? 1;
+									
+							} else {
+								_prog_next = min(_prog_curr + _stepLen, 1); //Move forward _stepLen or _total (if less) stop at 1
+								_pathPng   = _ratInv? 1 - _prog_curr : _prog_curr;
+								
+								_pp = _clamp? clamp(_pathPng, 0, 1) : _pathPng
+								
+								p = _pat.getPointRatio(_pp, i, p);
+								wght = p[$ "weight"] ?? 1;
 							}
 							
-							minx = min(minx, _nx);
-							miny = min(miny, _ny);
-							maxx = max(maxx, _nx);
-							maxy = max(maxy, _ny);
+							_nx = p.x;
+							_ny = p.y;
+							
+							_wmin = min(_wmin, wght);
+							_wmax = max(_wmax, wght);
+							
+							if(_total < _pathEnd) { //Do not wiggle the last point.
+								var _d = point_direction(_ox, _oy, _nx, _ny);
+								_nx   += lengthdir_x(random1D(_sed + _sedIndex, -_wig, _wig), _d + 90); _sedIndex++;
+								_ny   += lengthdir_y(random1D(_sed + _sedIndex, -_wig, _wig), _d + 90); _sedIndex++;
+							}
+								
+							if(_prog_total >= _pathStr) { //Do not add point before range start. Do this instead of starting at _rtStr to prevent wiggle. 
+								points[pointAmo++] = { 
+									x:        _nx, 
+									y:        _ny, 
+									prog:     (_prog_total - _pathStr) / (_pathEnd - _pathStr), 
+									progCrop: _prog_curr / _pathLength, 
+									weight:   wght,
+								}
+								
+								minx = min(minx, _nx);
+								miny = min(miny, _ny);
+								maxx = max(maxx, _nx);
+								maxy = max(maxy, _ny);
+							}
+							
+							if(_total <= 0) break;
+							
+							if(_prog_next == _prog_curr && _segIndexPrev == _segIndex) { /*print("Terminate line not moving");*/ break; }
+							else if(_prog_next > _prog_curr) {
+								_prog_total += _prog_next - _prog_curr;
+								_total      -= _prog_next - _prog_curr;
+							}
+							_stepLen = min(_stepLen, _total);
+								
+							_prog_curr = _prog_next;
+							_ox		   = _nx;
+							_oy		   = _ny;
+								
+							if(_total_prev == _total && _segIndexPrev == _segIndex && ++_freeze > 16) { /*print("Terminate line not moving");*/ break; }
+							_total_prev = _total;
+							
+							if(_segIndex >= _segLengthAmo) { /*print("Terminate line finish last segment");*/ break; }
 						}
 						
-						if(_total <= 0) break;
+						array_resize(points, pointAmo);
+						if(_loop) points[pointAmo] = points[0];
 						
-						if(_prog_next == _prog_curr && _segIndexPrev == _segIndex) { /*print("Terminate line not moving");*/ break; }
-						else if(_prog_next > _prog_curr) {
-							_prog_total += _prog_next - _prog_curr;
-							_total      -= _prog_next - _prog_curr;
+						lines[_lineAmo]     = points;
+						line_data[_lineAmo] = { length: _pathLength };
+						
+						_lineAmo++;
+					}
+					
+					array_resize(lines,     _lineAmo);
+					array_resize(line_data, _lineAmo);
+					
+					if(_wmax == _wmin) { _wmin = 0; _wmax = 1; }
+					
+					if(_pbbox) _surfDim = [ max(1, maxx - minx + _ppadd[0] + _ppadd[2]), max(1, maxy - miny + _ppadd[1] + _ppadd[3]) ];
+					break;
+					
+				case 2 :
+					if(!is_array(_segs[0][0])) //spreaded single path
+						_segs = [ _segs ];
+					
+					lines     = array_create(array_length(_segs));
+					line_data = array_create(array_length(_segs));
+					
+					for (var i = 0, n = array_length(_segs); i < n; i++) {
+						var _seg    = _segs[i];
+						if(array_empty(_seg)) continue;
+						
+						var m = array_length(_seg);
+						
+						var _uselen = array_length(_seg[0]) >= 3;
+						var _lin    = array_create(m);
+						
+						var _l, _len = [ 0 ], _lenTotal = 0;
+						var ox = _seg[0][0], oy = _seg[0][1], nx, ny;
+						
+						for (var j = 1; j < m; j++) {
+							nx = _seg[j][0];
+							ny = _seg[j][1];
+							_l = point_distance(ox, oy, nx, ny);
+							
+							_len[j]    = _l;
+							_lenTotal += _l;
+							
+							ox = nx;
+							oy = ny;
 						}
-						_stepLen = min(_stepLen, _total);
-							
-						_prog_curr = _prog_next;
-						_ox		   = _nx;
-						_oy		   = _ny;
-							
-						if(_total_prev == _total && _segIndexPrev == _segIndex && ++_freeze > 16) { /*print("Terminate line not moving");*/ break; }
-						_total_prev = _total;
 						
-						if(_segIndex >= _segLengthAmo) { /*print("Terminate line finish last segment");*/ break; }
-					}
-					
-					array_resize(points, pointAmo);
-					if(_loop) points[pointAmo] = points[0];
-					
-					lines[_lineAmo]     = points;
-					line_data[_lineAmo] = { length: _pathLength };
-					
-					_lineAmo++;
-				}
-				
-				array_resize(lines,     _lineAmo);
-				array_resize(line_data, _lineAmo);
-				
-				if(_wmax == _wmin) { _wmin = 0; _wmax = 1; }
-				
-				if(_pbbox) _surfDim = [ max(1, maxx - minx + _ppadd[0] + _ppadd[2]), max(1, maxy - miny + _ppadd[1] + _ppadd[3]) ];
-				break;
-				
-			case 2 :
-				if(!is_array(_segs[0][0])) //spreaded single path
-					_segs = [ _segs ];
-				
-				lines     = array_create(array_length(_segs));
-				line_data = array_create(array_length(_segs));
-				
-				for (var i = 0, n = array_length(_segs); i < n; i++) {
-					var _seg    = _segs[i];
-					if(array_empty(_seg)) continue;
-					
-					var m = array_length(_seg);
-					
-					var _uselen = array_length(_seg[0]) >= 3;
-					var _lin    = array_create(m);
-					
-					var _l, _len = [ 0 ], _lenTotal = 0;
-					var ox = _seg[0][0], oy = _seg[0][1], nx, ny;
-					
-					for (var j = 1; j < m; j++) {
-						nx = _seg[j][0];
-						ny = _seg[j][1];
-						_l = point_distance(ox, oy, nx, ny);
+						if(_uselen) {
+							for (var j = 0; j < m; j++) {
+								_lin[j] = { 
+									x :        _seg[j][0], 
+									y :        _seg[j][1], 
+									prog :     _seg[j][2], 
+									progCrop : _seg[j][2], 
+									weight :   1,
+								};
+							}
+								
+						} else {
+							for (var j = 0; j < m; j++) {
+								_lin[j] = { 
+									x :        _seg[j][0],
+									y :        _seg[j][1],
+									prog :     _len[j] / _lenTotal,
+									progCrop : _len[j] / _lenTotal,
+									weight :   1,
+								};
+							}
+						}
 						
-						_len[j]    = _l;
-						_lenTotal += _l;
+						if(_loop) _lin[m] = _lin[0];
 						
-						ox = nx;
-						oy = ny;
-					}
-					
-					if(_uselen) {
 						for (var j = 0; j < m; j++) {
-							_lin[j] = { 
-								x :        _seg[j][0], 
-								y :        _seg[j][1], 
-								prog :     _seg[j][2], 
-								progCrop : _seg[j][2], 
-								weight :   1,
-							};
+							minx = min(minx, _lin[j].x);
+							miny = min(miny, _lin[j].y);
+							maxx = max(maxx, _lin[j].x);
+							maxy = max(maxy, _lin[j].y);
 						}
-							
-					} else {
-						for (var j = 0; j < m; j++) {
-							_lin[j] = { 
-								x :        _seg[j][0],
-								y :        _seg[j][1],
-								prog :     _len[j] / _lenTotal,
-								progCrop : _len[j] / _lenTotal,
-								weight :   1,
-							};
-						}
+						
+						lines[i]     = _lin;
+						line_data[i] = { length: _lenTotal };
 					}
 					
-					if(_loop) _lin[m] = _lin[0];
+					if(_pbbox) _surfDim = [ max(1, maxx - minx + _ppadd[0] + _ppadd[2]), max(1, maxy - miny + _ppadd[1] + _ppadd[3]) ];
+					break;
 					
-					for (var j = 0; j < m; j++) {
-						minx = min(minx, _lin[j].x);
-						miny = min(miny, _lin[j].y);
-						maxx = max(maxx, _lin[j].x);
-						maxy = max(maxy, _lin[j].y);
-					}
 					
-					lines[i]     = _lin;
-					line_data[i] = { length: _lenTotal };
-				}
-				
-				if(_pbbox) _surfDim = [ max(1, maxx - minx + _ppadd[0] + _ppadd[2]), max(1, maxy - miny + _ppadd[1] + _ppadd[3]) ];
-				break;
-				
-				
-		}
-		
+			}
+		#endregion
+			
 		////- Draw
 		
 		var _colorPass = surface_verify(_outData[0], _surfDim[0], _surfDim[1], attrDepth());
@@ -594,6 +601,9 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				var _col_base = dat == noone? _colb.eval(random(1)) : dat.color;
 				_ow = 1;
 				
+				var _stx = 0, _sty = 0, _sta = 0;
+				var _edx = 0, _edy = 0, _eda = 0;
+				
 				for( var j = 0, m = array_length(points); j < m; j++ ) {
 					var p0   = points[j];
 					var _nx  = p0.x - 0.5 * _1px + _padx;
@@ -602,6 +612,10 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					var prog = p0.prog;
 					var prgc = p0.progCrop;
 					var _dir = j? point_direction(_ox, _oy, _nx, _ny) : 0;
+					
+					     if(j ==     0) { _stx = _nx; _sty = _ny;              }
+					else if(j ==     1) { _sta = _dir;                         }
+					else if(j == m - 1) { _edx = _nx; _edy = _ny; _eda = _dir; }
 					
 					var widProg = value_snap_real(_widap? prog : prgc, 0.01);
 					
@@ -702,6 +716,29 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				}
 				
 				draw_primitive_end();
+				
+				if(!array_empty(points)) {
+					var _pp = [ 0, 0 ];
+					
+					if(is_surface(_cap_st)) {
+						var _cap_st_w = surface_get_width_safe(_cap_st);
+						var _cap_st_h = surface_get_height_safe(_cap_st);
+						var _rr = _cap_rt? _sta : 0;
+						
+						_pp = point_rotate_origin(-_cap_st_w / 2, -_cap_st_h / 2, _rr, _pp);
+						draw_surface_ext(_cap_st, _stx + _pp[0], _sty + _pp[1], 1, 1, _rr, c_white, 1);
+					}
+					
+					if(is_surface(_cap_ed)) {
+						var _cap_ed_w = surface_get_width_safe(_cap_ed);
+						var _cap_ed_h = surface_get_height_safe(_cap_ed);
+						var _rr = _cap_rt? _eda : 0;
+						
+						_pp = point_rotate_origin(-_cap_st_w / 2, -_cap_st_h / 2, _rr, _pp);
+						draw_surface_ext(_cap_ed, _edx + _pp[0], _edy + _pp[1], 1, 1, _rr, c_white, 1);
+					}
+				}
+				
 			}
 			
 			if(_useTex) shader_reset();
