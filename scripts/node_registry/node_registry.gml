@@ -156,8 +156,8 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 		return tooltip_spr;
 	}
 	
-	static build = function(_x = 0, _y = 0, _group = PANEL_GRAPH.getCurrentContext(), _param = {}) {
-		if(NOT_LOAD && context != noone && !array_exists(context, instanceof(_group))) {
+	static build = function(_x = 0, _y = 0, _group = PANEL_GRAPH.getCurrentContext(), _param = {}, _skip_context = false) {
+		if(!_skip_context && NOT_LOAD && context != noone && !array_exists(context, instanceof(_group))) {
 			noti_warning($"Cannot create node outside context.");
 			return noone;
 		}
@@ -397,15 +397,20 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 }
 
 function nodeBuild(_name, _x, _y, _group = PANEL_GRAPH.getCurrentContext()) {
-	INLINE
-	
 	if(!struct_has(ALL_NODES, _name)) {
 		log_warning("LOAD", $"Node type {_name} not found");
 		return noone;
 	}
 	
+	var _skipc = false;
+	
+	if(is(_group, Node_Collection_Inline)) {
+		_skipc = true;
+		_group = _group.group;
+	}
+	
 	var _node  = ALL_NODES[$ _name];
-	var _bnode = _node.build(_x, _y, _group);
+	var _bnode = _node.build(_x, _y, _group, {}, _skipc);
 	
 	return _bnode;
 }

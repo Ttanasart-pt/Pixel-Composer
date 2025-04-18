@@ -46,8 +46,8 @@ function ExpFile(path) constructor {
 			case "pxc":
 			case "pxcc":
 				thumbnail = THEME.icon_64;
-				th_w = 64;
-				th_h = 64;
+				th_w = sprite_get_width(thumbnail);
+				th_h = sprite_get_height(thumbnail);
 				break;
 		}
 		
@@ -100,6 +100,7 @@ function ExpDir(path) : ExpFile(path) constructor {
 	    	array_push(files, _fileObj);
 		}
 		
+		array_sort(files, function(f0, f1) /*=>*/ {return string_compare_file(f0.name, f1.name)});
 		file_find_close();
 		
 		return self;
@@ -160,8 +161,8 @@ function Panel_File_Explorer() : PanelContent() constructor {
 		
 	} setRoot(PREFERENCES.file_explorer);
 	
-	view_mode = PREFERENCES.file_explorer_view;
-	view_mode_tooltip = new tooltipSelector(__txt("View mode"), [ __txt("List"), __txt("Grid") ]);
+	view_mode         = PREFERENCES.file_explorer_view;
+	view_mode_tooltip = new tooltipSelector(__txt("View mode"), __txts([ "List", "Grid" ]));
 	
 	scroll_y     = 0;
 	scroll_y_to  = 0;
@@ -170,9 +171,13 @@ function Panel_File_Explorer() : PanelContent() constructor {
 	item_height  = ui(20);
 	grid_size    = ui(64);
 	
-	cntPad  = ui(4);
-	top_bar = ui(44);
-	tb_root = new textBox(TEXTBOX_INPUT.text, function(v) /*=>*/ {return setRoot(v)});
+	cntPad       = ui(4);
+	top_bar      = ui(44);
+	tb_root      = new textBox(TEXTBOX_INPUT.text, function(v) /*=>*/ {return setRoot(v)});
+	
+	current_ext  = {};
+	filter_ext   = [];
+	tba_filter   = new textArrayBox(function() /*=>*/ {return filter_ext}, [], function() /*=>*/ {});
 	
 	file_selectings  = [];
 	file_hovering    = noone;
@@ -318,7 +323,7 @@ function Panel_File_Explorer() : PanelContent() constructor {
 		if(array_length(dirObject.files)) { _h  += ui(4); _sy += ui(4); }
 		
 		if(view_mode == FILE_EXPLORER_VIEW.list) {
-			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text);
+			draw_set_text(f_p3, fa_left, fa_top, COLORS._main_text);
 			
 			for (var i = 0, n = array_length(dirObject.files); i < n; i++) {
 				var _fil = dirObject.files[i];
@@ -327,9 +332,11 @@ function Panel_File_Explorer() : PanelContent() constructor {
 				var _py  = _sy + ui(2);
 				var _pw  = _w  - ui(4);
 				var _ph  = _ith;
+				var _tw  = ui(4) + _ph + string_width(_fil.name) + ui(8);
+				var _ex = _fil.ext;
+				if(_ex != "") current_ext[$ _ex] = struct_has(current_ext, _ex)? current_ext[$ _ex] + 1 : 1;
 				
-				var _tw = ui(4) + _ph + string_width(_fil.name) + ui(8);
-				
+				if(!array_empty(filter_ext) && !array_exists(filter_ext, _ex)) continue;
 				if(frame_dragging && rectangle_in_rectangle(_px, _py, _px + _tw, _py + _ph, frame_drag_mx, frame_drag_my, _m[0], _m[1]))
 					array_push(file_selectings, _fil);
 				
@@ -387,8 +394,10 @@ function Panel_File_Explorer() : PanelContent() constructor {
 						else if(path_is_project(_fil.path)) menuCall("", menu_file_project);
 					}
 					
-					if(pFOCUS && DOUBLE_CLICK)
+					if(pFOCUS && DOUBLE_CLICK) {
+						if(key_mod_press(CTRL)) global_project_close_all();
 						load_file_path([ _fil.path ], _graph_x, _graph_y);
+					}
 				}
 				
 				if(sprite_exists(_th)) {
@@ -403,7 +412,7 @@ function Panel_File_Explorer() : PanelContent() constructor {
 				if(_fil == file_focus)        _cc = COLORS._main_value_positive;
 				if(_fil.path == PROJECT.path) _cc = COLORS._main_accent;
 				
-				draw_set_color(_cc);
+				draw_set_text(f_p3, fa_left, fa_top, _cc);
 				draw_text_add(_tx, _ty, _fil.name);
 				
 				_h  += _ith + ui(2);
@@ -421,9 +430,11 @@ function Panel_File_Explorer() : PanelContent() constructor {
 			var _col = floor(_w / (_grid_width + _grid_spac));
 			_grid_width = (_w - (_col - 1) * _grid_spac) / _col;
 			
+			var _index = 0;
+			
 			for (var i = 0; i < _amo; i++) {
-				var _cind = i % _col;
-				var _rind = floor(i / _col);
+				var _cind = _index % _col;
+				var _rind = floor(_index / _col);
 				
 				var _px  = _x  + _cind * (_grid_width  + _grid_spac);
 				var _py  = _sy + _rind * (_grid_height + _title_heigh + _grid_spac);
@@ -431,6 +442,10 @@ function Panel_File_Explorer() : PanelContent() constructor {
 				var _ph  = _grid_height + _title_heigh;
 				
 				var _fil = dirObject.files[i];
+				var _ex  = _fil.ext;
+				if(_ex != "") current_ext[$ _ex] = struct_has(current_ext, _ex)? current_ext[$ _ex] + 1 : 1;
+				
+				if(!array_empty(filter_ext) && !array_exists(filter_ext, _ex)) continue;
 				if(frame_dragging && rectangle_in_rectangle(_px, _py, _px + _pw, _py + _ph, frame_drag_mx, frame_drag_my, _m[0], _m[1]))
 					array_push(file_selectings, _fil);
 				
@@ -462,8 +477,10 @@ function Panel_File_Explorer() : PanelContent() constructor {
 						else if(path_is_project(_fil.path)) menuCall("", menu_file_project);
 					}
 					
-					if(pFOCUS && DOUBLE_CLICK)
+					if(pFOCUS && DOUBLE_CLICK) {
+						if(key_mod_press(CTRL)) global_project_close_all();
 						load_file_path([ _fil.path ], _graph_x, _graph_y);
+					}
 				}
 				
 				if(sprite_exists(_th)) {
@@ -477,9 +494,10 @@ function Panel_File_Explorer() : PanelContent() constructor {
 				if(_fil == file_focus)        _cc = COLORS._main_value_positive;
 				if(_fil.path == PROJECT.path) _cc = COLORS._main_accent;
 				
-				draw_set_color(_cc);
+				draw_set_text(f_p3, fa_center, fa_bottom, _cc);
 				draw_text_ext_add(_tx, _ty, _fil.name, -1, _grid_width, 1, true);
 				
+				_index++;
 			}
 			
 			_h += ceil(_amo / _col) * (_grid_height + _title_heigh + _grid_spac);
@@ -499,10 +517,13 @@ function Panel_File_Explorer() : PanelContent() constructor {
 		file_hovering    = noone;
 		context_hovering = noone;
 		draggable        = true;
-		
+		current_ext      = {};
 		contentPane.hover_content = true;
 		
 		var _h = drawDir(rootFile, 0, _y, contentPane.surface_w, _m);
+		
+		tba_filter.data     = struct_get_names(current_ext);
+		tba_filter.arraySet = filter_ext;
 		
 		if(frame_dragging) draw_sprite_stretched_points_clamp(THEME.ui_selection, 0, frame_drag_mx, frame_drag_my, _m[0], _m[1], COLORS._main_accent);
 		if(context_hovering == noone) context_hovering = rootFile;
@@ -632,44 +653,66 @@ function Panel_File_Explorer() : PanelContent() constructor {
 	function drawContent(panel) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 1);
 		
+		var m     = [mx,my];
 		var pad   = padding;
 		var cnt_x = pad;
 		var cnt_y = top_bar;
 		var cnt_w = w - pad - cnt_x;
 		var cnt_h = h - pad - cnt_y;
-			
+		var bspr  = THEME.button_hide_fill;
 		draw_sprite_stretched(THEME.ui_panel_bg, 1, cnt_x, cnt_y, cnt_w, cnt_h);
 		
-		var bs = top_bar - pad - ui(8);
-		var bx = pad;
-		var bc = root != ""? COLORS._main_icon : COLORS._main_icon_dark;
-		if(buttonInstant(THEME.button_hide_fill, bx, pad, bs, bs, [mx, my], pHOVER, pFOCUS, "Go up", THEME.arrow, 1, bc) == 2)
-			if(root != "") setRoot(filename_dir(root));
-		bx += bs + ui(4);
-		
-		if(buttonInstant(THEME.button_hide_fill, bx, pad, bs, bs, [mx, my], pHOVER, pFOCUS, "Go to current project", s_icon_16_white) == 2) {
-			var _pth = PROJECT.path;
-			if(_pth == "") return;
-			setRoot(filename_dir(_pth));
-		}
-		bx += bs + ui(4);
-		
-		var tb_x = bx;
-		var tb_y = pad;
-		var tb_w = w - pad - tb_x - bs - ui(4);
-		var tb_h = top_bar - pad - ui(8);
-		
-		var b = buttonInstant(THEME.button_hide_fill, w - pad - bs, pad, bs, bs, [mx, my], pHOVER, pFOCUS, view_mode_tooltip, THEME.view_mode, !view_mode);
-		if(b == 2 || (b == 1 && key_mod_press(SHIFT) && MOUSE_WHEEL != 0)) { 
-			view_mode = !view_mode; 
-			PREFERENCES.file_explorer_view = view_mode; 
-		}
-		view_mode_tooltip.index = view_mode;
+		#region Topbar
+			var bs = top_bar - pad - ui(8);
+			var bx = pad;
+			var bc = root != ""? COLORS._main_icon : COLORS._main_icon_dark;
+			if(buttonInstant(bspr, bx, pad, bs, bs, m, pHOVER, pFOCUS, "Go up", THEME.arrow, 1, bc) == 2)
+				if(root != "") setRoot(filename_dir(root));
+			bx += bs + ui(4);
 			
-		tb_root.setFocusHover(pFOCUS, pHOVER);
-		tb_root.font = f_p2;
-		tb_root.draw(tb_x, tb_y, tb_w, tb_h, root, [mx, my]);
-		
+			if(PROJECT.path == "")
+				draw_sprite_ext(s_icon_16_white, 0, bx + bs / 2, pad + bs / 2, UI_SCALE, UI_SCALE, 0, COLORS._main_icon, .5);
+			else if(buttonInstant(bspr, bx, pad, bs, bs, m, pHOVER, pFOCUS, "Go to current project", s_icon_16_white, 0, COLORS._main_icon, 1, UI_SCALE) == 2) {
+				var _pth = PROJECT.path;
+				if(_pth == "") return;
+				setRoot(filename_dir(_pth));
+			}
+			bx += bs + ui(4);
+			
+			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			
+			var bx1 = w - pad;
+			var b = buttonInstant(bspr, bx1 - bs, pad, bs, bs, m, pHOVER, pFOCUS, view_mode_tooltip, THEME.view_mode, !view_mode, COLORS._main_icon, 1, .8);
+			if(b == 2 || (b == 1 && key_mod_press(SHIFT) && MOUSE_WHEEL != 0)) { 
+				view_mode = !view_mode; 
+				PREFERENCES.file_explorer_view = view_mode; 
+			}
+			view_mode_tooltip.index = view_mode;
+			bx1 -= bs + ui(4);
+			
+			bc = array_empty(filter_ext)? COLORS._main_icon : COLORS._main_accent;
+			if(buttonInstant(bspr, bx1 - bs, pad, bs, bs, m, pHOVER, pFOCUS, "Filter...", THEME.filter, 1, bc, 1, .8) == 2) {
+				with(dialogCall(o_dialog_arrayBox, x + bx1 - bs, y + pad)) {
+					arrayBox = other.tba_filter;	
+					dialog_w = ui(160);
+					font     = f_p3;
+					mode     = 0;
+				}
+			}
+			bx1 -= bs + ui(4);
+			
+			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			
+			var tb_x = bx;
+			var tb_y = pad;
+			var tb_w = bx1 - bx;
+			var tb_h = top_bar - pad - ui(8);
+			
+			tb_root.setFocusHover(pFOCUS, pHOVER);
+			tb_root.font = f_p3;
+			tb_root.draw(tb_x, tb_y, tb_w, tb_h, root, m);
+		#endregion
+			
 		contentPane.setFocusHover(pFOCUS, pHOVER);
 		contentPane.draw(cnt_x + cntPad, cnt_y + cntPad, mx - cnt_x - cntPad, my - cnt_y - cntPad);
 	}

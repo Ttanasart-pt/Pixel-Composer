@@ -15,8 +15,8 @@ function Node_Iterate_Sort_Inline(_x, _y, _group = noone) : Node_Collection_Inli
 	iterated         = 0;
 	
 	if(!LOADING && !APPENDING) {
-		var input  = nodeBuild("Node_Iterator_Sort_Inline_Input",  x,       y);
-		var output = nodeBuild("Node_Iterator_Sort_Inline_Output", x + 256, y);
+		var input  = nodeBuild("Node_Iterator_Sort_Inline_Input",  x,       y, self);
+		var output = nodeBuild("Node_Iterator_Sort_Inline_Output", x + 256, y, self);
 		
 		addNode(input);
 		addNode(output);

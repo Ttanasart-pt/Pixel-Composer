@@ -74,6 +74,35 @@ function string_compare(s1, s2) {
     return l1 - l2;
 }
 
+function string_compare_file(s1, s2) {
+	    s1 = string_lower(s1);
+	    s2 = string_lower(s2);
+	    
+    if(string_digits(string_char_at(s1, 1)) && string_digits(string_char_at(s2, 1))) {
+    	var n1 = real(string_copy(s1, 1, string_pos(" ", s1) - 1));
+    	var n2 = real(string_copy(s2, 1, string_pos(" ", s2) - 1));
+    	if(n1 != n2) return n1 - n2;
+    }
+	    
+    var l1 = string_length(s1);
+    var l2 = string_length(s2);
+	var l  = min(l1, l2);
+	
+    var i = 1;
+    var c1, c2;
+	
+    repeat(l) {
+        c1 = string_char_at(s1, i);
+        c2 = string_char_at(s2, i);
+		i++;
+		
+        if(c1 == c2) continue;
+        return ord(c1) - ord(c2);
+    }
+
+    return l1 - l2;
+}
+
 function array_to_string(arr) {
 	if(!is_array(arr))   return string_real(arr);
 	if(array_empty(arr)) return "[]";

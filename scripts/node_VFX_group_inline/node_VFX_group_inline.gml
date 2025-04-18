@@ -23,8 +23,8 @@ function Node_VFX_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 	dimension  = DEF_SURF;
 	
 	if(NODE_NEW_MANUAL) {
-		var input  = nodeBuild("Node_VFX_Spawner",  x,       y);
-		var output = nodeBuild("Node_VFX_Renderer", x + 256, y);
+		var input  = nodeBuild("Node_VFX_Spawner",  x,       y, self);
+		var output = nodeBuild("Node_VFX_Renderer", x + 256, y, self);
 		
 		output.dummy_input.setFrom(input.outputs[0]);
 		

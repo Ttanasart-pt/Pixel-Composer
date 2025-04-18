@@ -418,7 +418,6 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 			surface_reset_shader();	
 		#endregion
 		
-		print("deferData|", deferData)
 		surface_depth_disable(true);
 		
 		return _outData;

@@ -9,8 +9,8 @@ function Node_Strand_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inli
 	update_on_frame = true;
 	
 	if(NODE_NEW_MANUAL) {
-		var _create = nodeBuild("Node_Strand_Create", x,       y);
-		var _render = nodeBuild("Node_Strand_Render", x + 256, y);
+		var _create = nodeBuild("Node_Strand_Create", x,       y, self);
+		var _render = nodeBuild("Node_Strand_Render", x + 256, y, self);
 		
 		_render.inputs[1].setFrom(_create.outputs[0]);
 		
