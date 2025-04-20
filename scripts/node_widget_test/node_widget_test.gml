@@ -30,9 +30,9 @@ function Node_Widget_Test(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	newInput(22, nodeValue_Gradient("buttonGradient", self, new gradientObject(cola(c_white)))  .setDisplay(VALUE_DISPLAY._default))
 
 	newInput(23, nodeValue("pathArrayBox", self, CONNECT_TYPE.input, VALUE_TYPE.path, [])                                 .setDisplay(VALUE_DISPLAY.path_array, { filter: [ "image|*.png;*.jpg", "" ] }))
-	newInput(24, nodeValue("pathLoad", self, CONNECT_TYPE.input, VALUE_TYPE.path, "")                                      .setDisplay(VALUE_DISPLAY.path_load))
-	newInput(25, nodeValue("pathSave", self, CONNECT_TYPE.input, VALUE_TYPE.path, "")                                      .setDisplay(VALUE_DISPLAY.path_save))
-	// newInput(26, nodeValue("font", self, CONNECT_TYPE.input, VALUE_TYPE.font, "")
+	newInput(24, nodeValue("pathLoad",     self, CONNECT_TYPE.input, VALUE_TYPE.path, "")                                 .setDisplay(VALUE_DISPLAY.path_load))
+	newInput(25, nodeValue("pathSave",     self, CONNECT_TYPE.input, VALUE_TYPE.path, "")                                 .setDisplay(VALUE_DISPLAY.path_save))
+	newInput(26, nodeValue("font",         self, CONNECT_TYPE.input, VALUE_TYPE.font, ""));
 	
 	newInput(27, nodeValue_Curve("curveBox", self, CURVE_DEF_11)                          .setDisplay(VALUE_DISPLAY._default))
 

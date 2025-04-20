@@ -142,9 +142,10 @@ function Panel_Animation() : PanelContent() constructor {
     icon        = THEME.panel_animation_icon;
     
     #region ---- dimension ----
-        timeline_h   = ui(28);
         min_w        = ui(40);
         min_h        = ui(48);
+        
+        timeline_h   = ui(28);
         tool_width   = ui(224);
     #endregion
     
@@ -1689,7 +1690,7 @@ function Panel_Animation() : PanelContent() constructor {
 	    
     function drawDopesheet_Label() {
         surface_set_target(dope_sheet_name_surface);    
-        draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
+        draw_clear_alpha(COLORS.panel_bg_clear_inner, 0);
         var msx = mx - ui(8);
         var msy = my - ui(8);
         
@@ -2570,7 +2571,7 @@ function Panel_Animation() : PanelContent() constructor {
         draw_sprite_stretched(THEME.ui_panel_bg, 1, ui(8), ui(8), tool_width, dope_sheet_h);
         draw_surface_safe(dope_sheet_name_surface, ui(8), ui(8));
         
-        draw_sprite_stretched(THEME.ui_panel_bg, 1, bar_x, ui(8), bar_w, dope_sheet_h); //base BG
+        draw_sprite_stretched(THEME.ui_panel_bg, 1, bar_x, ui(8), bar_w, dope_sheet_h);
         draw_surface_safe(dope_sheet_surface, bar_x, ui(8));
         
         draw_sprite_stretched(THEME.ui_panel_bg_cover, 1, bar_x, ui(8), bar_w, dope_sheet_h);

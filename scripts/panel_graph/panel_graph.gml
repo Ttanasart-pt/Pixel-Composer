@@ -1153,24 +1153,26 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
     		var _from = node_drag_connect.getOutput(), _to;
     		var _draw = true;
     		
-        	if(node_hovering != noone) {
-        		_to = node_hovering.getInput(0, noone,, true);
-        		
-        		if(_to && _to.isConnectable(_from)) {
-        			node_hovering.drawActive(2);
-        			
-        			_from.drawConnectionMouse(connection_param, _to.x, _to.y, _to);
-        			_draw = false;
-        			
-        			if(mouse_release(mb_left))
-        				_to.setFrom(_from);
-        		}
-        	} 
-        	
-        	if(_draw) {
-        		draw_set_color(COLORS.node_border_file_drop);
-    			draw_line(_from.x, _from.y, mx, my);
-        	}
+    		if(_from) {
+	        	if(node_hovering != noone) {
+	        		_to = node_hovering.getInput(0, noone,, true);
+	        		
+	        		if(_to && _to.isConnectable(_from)) {
+	        			node_hovering.drawActive(2);
+	        			
+	        			_from.drawConnectionMouse(connection_param, _to.x, _to.y, _to);
+	        			_draw = false;
+	        			
+	        			if(mouse_release(mb_left))
+	        				_to.setFrom(_from);
+	        		}
+	        	} 
+	        	
+	        	if(_draw) {
+	        		draw_set_color(COLORS.node_border_file_drop);
+	    			draw_line(_from.x, _from.y, mx, my);
+	        	}
+    		}
         	
         	if(mouse_release(mb_left))
             	node_drag_connect = noone;

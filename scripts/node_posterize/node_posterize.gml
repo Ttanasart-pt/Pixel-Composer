@@ -20,16 +20,21 @@ function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput(4, nodeValue_Slider(      "Gamma",            self, 1, [0, 2, 0.01])).setMappable(7);
 	newInput(7, nodeValueMap(          "Gamma map",        self));
 	newInput(8, nodeValue_Enum_Button( "Space",            self, 0, [ "RGB", "LAB" ]));
-	newInput(10, nodeValue_Slider(     "Hue Bias",         self, 0));
+	
+	////- Bias
+	
+	newInput(11, nodeValue_Surface( "Reference", self));
+	newInput(10, nodeValue_Slider(  "Hue Bias",  self, 0));
 	
 	////- Alpha
 		
 	newInput(6, nodeValue_Bool( "Posterize alpha", self, true));
 	
-	//// inputs 11
+	//// inputs 12
 	
 	input_display_list = [ 5, 0, 
-		["Palette", false, 2], 1, 9, 3, 4, 7, 8, 10, 
+		["Palette", false, 2], 1, 9, 3, 4, 7, 8, 
+		["Bias",    false],    11, 10, 
 		["Alpha",   false],    6, 
 	];
 	
@@ -50,7 +55,9 @@ function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _alp     = _data[ 6];
 		var _spce    = _data[ 8];
 		var _glob    = _data[ 9];
+		
 		var _hbas    = _data[10];
+		var _href    = _data[11];
 		
 		inputs[ 1].setVisible( _use_pal);
 		inputs[ 8].setVisible( _use_pal);
@@ -62,6 +69,7 @@ function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		if(_use_pal) {
 			surface_set_shader(_outSurf, sh_posterize_palette);
+				shader_set_surface("reference", _href);
 				shader_set_palette(_pal, "palette", "keys");
 				shader_set_i("alpha", _alp);
 				shader_set_i("space", _spce);

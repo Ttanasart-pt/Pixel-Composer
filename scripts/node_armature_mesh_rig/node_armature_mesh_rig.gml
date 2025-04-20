@@ -109,7 +109,7 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			var _sel  = attributes.rigBones == noone? true : array_exists(attributes.rigBones, _bone.ID);
 			
 			for( var i = 0, n = array_length(_bone.childs); i < n; i++ )
-				ds_stack_push(_bst, [ _bone.childs[i], __x + 16, __w - 16 ]);
+				ds_stack_push(_bst, [ _bone.childs[i], __x + ui(16), __w - ui(16) ]);
 				
 			if(_bone.is_main) continue;
 			var _dx = __x + ui(24);
@@ -149,7 +149,7 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			if(_sel) draw_sprite_stretched_ext(THEME.checkbox_def, 2, _x + ui(16), ty + ui(4), ui(20), ui(20), COLORS._main_accent);
 			
 			draw_set_text(f_p2, fa_left, fa_center, cc);
-			draw_text_add(_dx + 24, ty + 12, _bone.name);
+			draw_text_add(_dx + ui(24), ty + ui(12), _bone.name);
 			
 			if(_hov && attributes.baked) {
 				var _ix = _x + _w - ui(20);
@@ -173,7 +173,7 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			
 			if(!ds_stack_empty(_bst)) {
 				draw_set_color(COLORS.node_composite_separator);
-				draw_line(_x + 16, ty, _x + _w - 16, ty);
+				draw_line(_x + ui(16), ty, _x + _w - ui(16), ty);
 			}
 		}
 		
@@ -397,6 +397,8 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 				
 				for( var i = 0; i < _plen; i++ ) {
 					var _p  = _pnts[i];
+					if(!is_struct(_p)) continue;
+					
 					var _d  = point_distance(_p.x, _p.y, mx, my);
 					var _ww = 1 - _d / _r;
 					if(_ww <= 0) continue;
@@ -550,10 +552,10 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		bone_posed.setPose(false);
 		bone_bbox = bone_posed.bbox();
 		
-		var _rdata = attributes.baked? attributes.bakeData : rigdata;
-        if(!attributes.baked && rigdata == noone) 
+        if(!attributes.baked && rigdata == noone)
         	AutoWeightPaint(false);
         
+        var _rdata          = attributes.baked? attributes.bakeData : rigdata;
         var _meshRigged     = new RiggedMeshedSurface();
         _meshRigged.rigMap  = _rdata;
         _meshRigged.mesh    = _mesh.clone();

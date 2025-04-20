@@ -915,7 +915,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		for( var i = 0; i < array_length(inputs); i++ ) {
 			var jun = inputs[i];
-			if(jun.value_validation)
+			if(is(jun, NodeValue) && jun.value_validation) 
 				value_validation[jun.value_validation]++;
 		}
 	}

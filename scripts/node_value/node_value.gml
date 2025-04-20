@@ -188,7 +188,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	#endregion
 	
 	#region ---- graph ----
-		value_validation = VALIDATION.pass;
+		value_validation   = VALIDATION.pass;
 		error_notification = noone;
 		
 		extract_node = "";

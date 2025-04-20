@@ -40,6 +40,8 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	newInput(3, nodeValue_Bool("Use cel dimension", self, false));
 	
+	/////////////////////////////////
+	
 	newOutput(0, nodeValue_Output("Output", self, VALUE_TYPE.surface, noone));
 	
 	newOutput(1, nodeValue_Output("Content", self, VALUE_TYPE.object, self))

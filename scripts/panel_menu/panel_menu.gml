@@ -320,6 +320,7 @@ function Panel_Menu() : PanelContent() constructor {
         var font = f_p2;
         var xx   = ui(40);
         var yy   = ui(8);
+        var m    = [mx, my];
         
         #region about
             if(hori) {
@@ -543,7 +544,7 @@ function Panel_Menu() : PanelContent() constructor {
                 
                 switch(action) {
                     case "exit":
-                        var b = buttonInstant(THEME.button_hide_fill, x1 - bs, ui(6), bs, bs, [mx, my], pHOVER, true,, THEME.window_exit_icon, 0, COLORS._main_accent);
+                        var b = buttonInstant(THEME.button_hide_fill, x1 - bs, ui(6), bs, bs, m, pHOVER, true,, THEME.window_exit_icon, 0, COLORS._main_accent);
                         if(b) _draggable = false;
                         if(b == 2) window_close();
                         break;
@@ -553,7 +554,7 @@ function Panel_Menu() : PanelContent() constructor {
                         if(OS == os_macosx)
                             win_max = __win_is_maximized;
                         
-                        var b = buttonInstant(THEME.button_hide_fill, x1 - bs, ui(6), bs, bs, [mx, my], pHOVER, true,, THEME.window_maximize_icon, win_max, [ COLORS._main_icon, CDEF.lime ]);
+                        var b = buttonInstant(THEME.button_hide_fill, x1 - bs, ui(6), bs, bs, m, pHOVER, true,, THEME.window_maximize_icon, win_max, [ COLORS._main_icon, CDEF.lime ]);
                         if(b) _draggable = false;
                         if(b == 2) {
                             if(OS == os_windows) {
@@ -578,7 +579,7 @@ function Panel_Menu() : PanelContent() constructor {
                         break;
                         
                     case "minimize":
-                        var b = buttonInstant(THEME.button_hide_fill, x1 - bs, ui(6), bs, bs, [mx, my], pHOVER, true,, THEME.window_minimize_icon, 0, [ COLORS._main_icon, CDEF.yellow ]);
+                        var b = buttonInstant(THEME.button_hide_fill, x1 - bs, ui(6), bs, bs, m, pHOVER, true,, THEME.window_minimize_icon, 0, [ COLORS._main_icon, CDEF.yellow ]);
                         if(b) _draggable = false;
                         if(b == -2) {
                                  if(OS == os_windows) winMan_Minimize();
@@ -588,7 +589,7 @@ function Panel_Menu() : PanelContent() constructor {
                         
                     case "fullscreen":
                         var win_full = window_is_fullscreen;
-                        var b = buttonInstant(THEME.button_hide_fill, x1 - bs, ui(6), bs, bs, [mx, my], pHOVER, true,, THEME.window_fullscreen_icon, win_full, [ COLORS._main_icon, CDEF.cyan ]);
+                        var b = buttonInstant(THEME.button_hide_fill, x1 - bs, ui(6), bs, bs, m, pHOVER, true,, THEME.window_fullscreen_icon, win_full, [ COLORS._main_icon, CDEF.cyan ]);
                         if(b) _draggable = false;
                         if(b == 2) {
                             if(OS == os_windows)
@@ -675,7 +676,6 @@ function Panel_Menu() : PanelContent() constructor {
         #endregion
         
         #region title
-            
             var txt = PROJECT.path == ""? __txt("Untitled") : filename_name_only(PROJECT.path);
             if(PROJECT.modified) txt += "*";
             
@@ -721,7 +721,7 @@ function Panel_Menu() : PanelContent() constructor {
             }
             
             if(full_name) tw += string_width(".pxc");
-            var _b   = buttonInstant(THEME.button_hide_fill, tbx0, tby0, tw, th, [mx, my], pHOVER, pFOCUS);
+            var _b   = buttonInstant(THEME.button_hide_fill, tbx0, tby0, tw, th, m, pHOVER, pFOCUS);
             var _hov = _b > 0;
             
             if(_b) _draggable = false;
@@ -731,17 +731,19 @@ function Panel_Menu() : PanelContent() constructor {
                 var dat = [];
                 var tip = [];
                 
-                for(var i = 0; i < min(10, ds_list_size(RECENT_FILES)); i++)  {
+                for(var i = 0, n = min(10, ds_list_size(RECENT_FILES)); i < n; i++)  {
                     var _rec = RECENT_FILES[| i];
                     var _dat = RECENT_FILE_DATA[| i];
                     array_push(arr, menuItem(_rec, function(_dat) /*=>*/ {return LOAD_PATH(_dat.path)}, noone, noone, noone, { path: _dat.path }) );
                     array_push(tip, [ method(_dat, _dat.getThumbnail), VALUE_TYPE.surface ]);
                 }
                 
-                var dia = hori? menuCall("title_recent_menu", arr, x + tcx, y + h, fa_center) : menuCall("title_recent_menu", arr, x + w, y + tby0);
+                var dx  = hori? x + tcx : x + w;
+                var dy  = hori? y + h : y + tby0;
+                var da  = hori? fa_center : fa_left;
+                var dia = menuCall("title_recent_menu", arr, dx, dy, da);
                 if(dia) dia.tooltips = tip;
             }
-            
             
             draw_set_font(f_p0b);
             var _tcw = string_width(tc);
@@ -791,25 +793,25 @@ function Panel_Menu() : PanelContent() constructor {
             
             draw_set_font(f_p0b);
             
+            var _tw = string_width(tc);
+            var _th = string_height(tc);
+            var _cx, _cy;
+            
+            if(hori) {
+                _cx = tcx + _tw / 2;
+                _cy = (ty0 + ty1) / 2 - _th / 2;
+                
+            } else {
+                _cx = tx0 + ui(8) + _tw;
+                _cy = tby0 + th / 2 - _th / 2;
+            }
+            
+            if(full_name) _cx += string_width(".pxc");
+            
+            _cx += ui(2);
+            _cy += ui(6);
+            
             if(IS_PATREON && PREFERENCES.show_supporter_icon) {
-                var _tw  = string_width(tc);
-                var _th  = string_height(tc);
-                var _cx, _cy;
-                
-                if(hori) {
-                    _cx = tcx + _tw / 2;
-                    _cy = (ty0 + ty1) / 2 - _th / 2;
-                    
-                } else {
-                    _cx = tx0 + ui(8) + _tw;
-                    _cy = tby0 + th / 2 - _th / 2;
-                }
-                
-                if(full_name) _cx += string_width(".pxc");
-                
-                _cx += ui(2);
-                _cy += ui(6);
-                
                 var _ib = COLORS._main_text_sub;
                 
                 if(pHOVER && point_in_rectangle(mx, my, _cx - 12, _cy - 12, _cx + 12, _cy + 12)) {
@@ -820,6 +822,21 @@ function Panel_Menu() : PanelContent() constructor {
                 draw_sprite_ui(THEME.patreon_supporter, 0, _cx, _cy, 1, 1, 0, _hov? COLORS._main_icon_dark : COLORS.panel_bg_clear, 1);
                 draw_sprite_ui(THEME.patreon_supporter, 1, _cx, _cy, 1, 1, 0, _ib, 1);
             }
+            
+            if(PROJECT.path != "" && _cx + ui(40) < tx1) {
+                var bs = th;
+                var bx = _cx + ui(8);
+                var by = _tyc - bs / 2;
+                
+                var _b = buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, m, pHOVER, pFOCUS, __txt("Explore Folder"), THEME.folder, 0, COLORS._main_icon, .5);
+                if(_b) _draggable = false;
+                if(_b == 2) {
+                    var _pan = panelAdd("Panel_File_Explorer", true);
+                    var _dir = filename_dir(PROJECT.path);
+                    _pan.content.setRoot(_dir);
+                }
+            }
+            
         #endregion
         
         #region drag

@@ -7,6 +7,7 @@ varying vec4 v_vColour;
 	#define PALETTE_LIMIT 256 
 #endif
 
+uniform sampler2D reference;
 uniform vec4  palette[PALETTE_LIMIT];
 uniform int   keys;
 uniform int   alpha;
@@ -144,16 +145,26 @@ void main() {
 	float closet_value = 999.;
 	vec3  chsv = rgb2hsv(col.rgb);
 	
+	if(hBias != 0.) {
+		vec4 _ref  = texture2D( reference, v_vTexcoord );
+		vec3 rhsv  = rgb2hsv(_ref.rgb);
+		
+		chsv    = vec3(mix(chsv.x, rhsv.x, hBias), chsv.yz);
+		col.rgb = hsv2rgb(chsv);
+	}
+	
 	for(int i = 0; i < keys; i++) {
 		vec4  pcol = palette[i];
 		vec3  phsv = rgb2hsv(pcol.rgb);
-		float dif  = 0.;
-		float hdf  = min(abs(chsv.x - phsv.x), 1. - abs(chsv.x - phsv.x));
+		float hdf  = abs(chsv.x - phsv.x);
+		      hdf  = min(hdf, 1. - hdf);
+		      hdf  = mix(.1, 1., hdf);
 		
+		float dif  = 0.;
 		     if(space == 0) dif = colorDifferentRGB(pcol, col);
 		else if(space == 1) dif = colorDifferentLAB(pcol, col);
 		
-		if(chsv.s > .05) dif *= mix(hdf, 1., (1. - hBias));
+		if(chsv.s > .05) dif *= mix(1., hdf, hBias);
 		
 		if(dif < closet_value) {
 			closet_value = dif;
