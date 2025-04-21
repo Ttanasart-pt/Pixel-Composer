@@ -1021,10 +1021,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				var _ind = string(_ou);
 				_io.map[$ _ind] = _ou;
 				
-				if(struct_has(_io.outputs, _ind))
-					array_push(_io.outputs[$ _ind ], _to);
-				else 
-					_io.outputs[$ _ind ] = [ _to ];
+				if(!struct_has(_io.outputs, _ind))
+					_io.outputs[$ _ind] = [];
+				array_push(_io.outputs[$ _ind ], _to);
 			}
 		}
 	}

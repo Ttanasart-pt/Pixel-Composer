@@ -369,6 +369,7 @@
 		json_save_struct(DIRECTORY + "Nodes/recent.json",           global.RECENT_NODES);
 		
 		hotkey_serialize();
+		print("save", PREFERENCES.versions);
 	}
 	
 	function PREF_LOAD() {
@@ -376,10 +377,14 @@
 		if(!directory_exists(PREFERENCES_DIR)) PREF_UPDATE();
 		
 		var path = PREFERENCES_DIR + "keys.json";
-		if(file_exists(path)) {should_restart = true;
-			var map = json_load_struct(path);
-			if(struct_has(map, "preferences")) struct_override(PREFERENCES, map.preferences);
-			else                               struct_override(PREFERENCES, map);
+		if(file_exists(path)) {
+			should_restart = true;
+			var _map = json_load_struct(path);
+			
+			if(struct_has(_map, "preferences")) 
+				struct_override(PREFERENCES, _map.preferences, true);
+			else 
+				struct_override(PREFERENCES, _map, true);
 		}
 		
 		if(!directory_exists($"{DIRECTORY}Themes/{PREFERENCES.theme}"))

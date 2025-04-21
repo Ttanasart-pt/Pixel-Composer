@@ -32,11 +32,9 @@ if (_id == note_get) {
 				}
 			}
 		}
-		
-		PREF_SAVE();
 	}
 	
-} else if ( struct_has(downloading, _id)) {
+} else if (struct_has(downloading, _id)) {
 	var dl = downloading[$ _id];
 	
 	if(_status == 0) {
