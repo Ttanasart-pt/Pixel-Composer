@@ -103,6 +103,10 @@ function Node_3D_Mesh_Export(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 						var _b  = buffer_read(_buffer, buffer_s8);
 						var _a  = buffer_read(_buffer, buffer_s8);
 						
+						var _bx = buffer_read(_buffer, buffer_f32);
+						var _by = buffer_read(_buffer, buffer_f32);
+						var _bz = buffer_read(_buffer, buffer_f32);
+						
 						var __v  = $"v {string_format(_px, -1, 5)} {string_format(_py, -1, 5)} {string_format(_pz, -1, 5)}";
 						var __vn = $"vn {string_format(_nx, -1, 5)} {string_format(_ny, -1, 5)} {string_format(_nz, -1, 5)}";
 						var __vt = $"vt {string_format(_u, -1, 5)} {string_format(_v, -1, 5)}";

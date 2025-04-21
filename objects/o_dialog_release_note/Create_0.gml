@@ -5,6 +5,7 @@ event_inherited();
 	dialog_w = ui(720);
 	dialog_h = ui(480);
 	padding  = ui(12);
+	dialog_resizable     = true;
 	destroy_on_click_out = true;
 	
 	pages = [ "Release note", "Downloads" ];
@@ -33,10 +34,11 @@ event_inherited();
 			var _line = line;
 			
 			if(array_length(_stx) <= 1) {
-				draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
+				draw_set_text(f_p3, fa_left, fa_top, COLORS._main_text);
 				draw_text_line(xx + 0, _y + yy, line, -1, ww);
 				
 				yy += string_height_ext(_line, -1, ww);
+				
 			} else {
 				var _cont = array_create(array_length(_stx) - 1);
 				for( var j = 1, m = array_length(_stx); j < m; j++ ) 
@@ -46,14 +48,15 @@ event_inherited();
 				
 				switch(_stx[0]) {
 					case "#" :
-						draw_set_text(f_h3, fa_left, fa_top, COLORS._main_text_sub);
+						draw_set_text(f_p0b, fa_left, fa_top, COLORS._main_text_sub);
 						yy += (!!i) * ui(16);
 						draw_text_line(xx, _y + yy, _line, -1, ww);
 					
 						yy += ui(4);
 						break;
+						
 					case "##" :
-						draw_set_text(f_h5, fa_left, fa_top, COLORS._main_text_sub);
+						draw_set_text(f_p1b, fa_left, fa_top, COLORS._main_text_sub);
 						var  _h = string_height_ext(_line, -1, ww);
 						yy += (!!i) * ui(16);
 						
@@ -61,23 +64,25 @@ event_inherited();
 						draw_text_line(xx + ui(16), _y + yy, _line, -1, ww);
 						yy += ui(8);
 						break;
+						
 					case "###" :
-						draw_set_text(f_p0b, fa_left, fa_top, COLORS._main_accent);
+						draw_set_text(f_p2b, fa_left, fa_top, COLORS._main_accent);
 						yy += (!!i) * ui(8);
 						draw_text_line(xx + ui(16), _y + yy, _line, -1, ww);
 						yy += ui(4);
 						break;
+						
 					case "-" :
 						var _x = xx + ui(28);
-						if(string_char_at(line, 1) == "\t")
+						if(string_char_at(line, 1) != "-")
 							_x += ui(16);
-						
-						draw_sprite_ui_uniform(THEME.text_bullet, 0, _x - ui(12), _y + yy + ui(18), 1, COLORS._main_icon);
 						
 						var _lx = _x;
 						var _topic = false;
 						
-						draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
+						draw_set_text(f_p3, fa_left, fa_top, COLORS._main_text);
+						draw_sprite_ui_uniform(THEME.text_bullet, 0, _x - ui(8), _y + yy + ui(12), 1, COLORS._main_icon);
+						
 						for( var j = 1, m = array_length(_stx); j < m; j++ ) {
 							var _word = (j > 1? " " : "") + _stx[j];
 							
@@ -99,8 +104,9 @@ event_inherited();
 						
 						yy += line_get_height();
 						break;
+						
 					default :
-						draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
+						draw_set_text(f_p3, fa_left, fa_top, COLORS._main_text);
 						draw_text_line(xx + 0, _y + yy, _line, -1, ww);
 						break;
 				}
@@ -117,7 +123,21 @@ event_inherited();
 #region downloads
 	dl_get = http_get(global.KEYS.download_links);
 	dls    = [];
-	downloading = {};
+	downloading  = {};
+	dl_selecting = noone;
+	
+	function toggleDownload(dl) {
+		var _path = get_save_filename_ext("Compressed zip (.zip)| *.zip", $"PixelComposer {vers}.zip", "", "Download location");
+		var _dir  = filename_dir(_path);
+		
+		if(_dir != "") {
+			dl.status        = 1;
+			dl.download_path = _path;
+			
+			var _get = http_get_file(dl.link, _path);
+			downloading[$ _get] = dl;
+		}
+	}
 	
 	sp_dl = new scrollPane(content_w, content_h, function(_y, _m) {
 		draw_clear_alpha(COLORS.dialog_splash_badge, 1);
@@ -137,34 +157,72 @@ event_inherited();
 			
 			if(dl.status == 0 && hov) {
 				draw_sprite_stretched_ext(THEME.ui_panel, 1, xx, yy, ww, hh, COLORS._main_accent, 1);
-				if(mouse_press(mb_left, sFOCUS)) {
-					var _path = get_save_filename_ext("Compressed zip (.zip)| *.zip", $"PixelComposer {vers}.zip", "", "Download location");
-					var _dir  = filename_dir(_path);
-					
-					if(_dir != "") {
-						dl.status        = 1;
-						dl.download_path = _path;
-						
-						var _get = http_get_file(dl.link, _path);
-						downloading[$ _get] = dl;
-					}
+				if(mouse_press(mb_left, sFOCUS)) 
+					toggleDownload(dl);
+				
+				if(hov && mouse_press(mb_right, sFOCUS)) {
+					dl_selecting = dl;
+					menuCall("", [
+						menuItem("Download", function() /*=>*/ {return toggleDownload(dl_selecting)}),
+						menuItem("Open URL", function() /*=>*/ {return url_open(dl_selecting.link)}),
+					]);
 				}
-			
+				
 			} else if(dl.status == 2 && hov) {
 				draw_sprite_stretched_ext(THEME.ui_panel, 1, xx, yy, ww, hh, COLORS._main_accent, 1);
 				if(mouse_press(mb_left, sFOCUS)) 
 					shellOpenExplorer(filename_dir(dl.download_path));
-			
+				
+				if(hov && mouse_press(mb_right, sFOCUS)) {
+					dl_selecting = dl;
+					menuCall("", [
+						menuItem("Open",   function() /*=>*/ {return shellOpenExplorer(filename_dir(dl_selecting.download_path))}),
+						menuItem("Delete", function() /*=>*/ {
+							file_delete(dl_selecting.download_path);
+							dl_selecting.download_path = "";
+							dl_selecting.status = 0;
+						}),
+						menuItem("Re-Download", function() /*=>*/ {
+							file_delete(dl_selecting.download_path);
+							var _path = dl_selecting.download_path;
+							dl_selecting.status = 1;
+							
+							var _get = http_get_file(dl_selecting.link, _path);
+							downloading[$ _get] = dl_selecting;
+						}),
+					]);
+				}
+				
 			} else if(dl.status == -1 && hov) {
 				draw_sprite_stretched_ext(THEME.ui_panel, 1, xx, yy, ww, hh, COLORS._main_accent, 1);
 				if(mouse_press(mb_left, sFOCUS)) 
-					url_open(dl.download_path);
+					url_open(dl.link);
 				
 			} else 
 				draw_sprite_stretched_ext(THEME.ui_panel, 1, xx, yy, ww, hh, COLORS.node_display_text_frame_outline, 1);
 			
-			draw_set_text(f_p1b, fa_left, fa_top, dl.status == 2? COLORS._main_text : COLORS._main_text_sub);
-			draw_text(xx + ui(8), yy + ui(4), vers);
+			var tx = xx + ui(8);
+			
+			switch(type) {
+				case "stable" : 
+					draw_set_text(f_p1b, fa_left, fa_top, COLORS._main_text_accent); 
+					tx = xx + ui(8);
+					break;
+					
+				case "beta"   : 
+					draw_set_text(f_p2,  fa_left, fa_top, COLORS._main_text);        
+					tx = xx + ui(20);
+					break;
+					
+				case "alpha"  : 
+					draw_set_text(f_p3,  fa_left, fa_top, COLORS._main_text);        
+					tx = xx + ui(20);
+					break;
+			}
+			
+			draw_set_alpha(dl.status == 2? 1 : .5);
+			draw_text(tx, yy + ui(4), vers);
+			draw_set_alpha(1);
 			
 			if(dl.status == 1) {
 				var _bw  = ww - ui(16);

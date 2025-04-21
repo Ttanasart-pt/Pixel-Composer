@@ -15,7 +15,7 @@ event_inherited();
 		[ "WebP", "Google" ],
 		[ "FFmpeg", "FFmpeg team" ],
 		[ "File dialog module", "Samuel Venable" ],
-		[ "gif importer\nWindow commands\nApollow LUA compiler\nWinwin", "YellowAfterLife" ],
+		[ "gif importer\nWindow commands\nApollow LUA compiler", "YellowAfterLife" ],
 		
 		[ "The Book of Shaders", "Patricio Gonzalez Vivo & Jen Lowe" ],
 		[ "Many noise and shape shaders", "Inigo Quilez" ],
@@ -29,7 +29,7 @@ event_inherited();
 	patreons = "";
 	
 	if(os_is_network_connected())
-		patron_list_id = http_get("https://gist.githubusercontent.com/Ttanasart-pt/573ab1dea80606616cac5ba497e528fd/raw/6bd76af8751416cd08f9c268cd6b7fb0c06611a1/patreon");
+		patron_list_id = http_get("https://gist.githubusercontent.com/Ttanasart-pt/573ab1dea80606616cac5ba497e528fd/raw/patreon");
 	
 	sc_thank = new scrollPane(dialog_w - ui(64), thank_h, function(_y, _m) {
 		var cx = sc_thank.surface_w / 2;
@@ -69,7 +69,7 @@ event_inherited();
 		
 		yy += ui(40); 
 		draw_set_text(f_p0b, fa_center, fa_top, COLORS._main_text_sub);
-		draw_text_line(cx, yy, "Made with GameMaker Studio 2, Adobe Illustrator, Aseprite", -1, sc_thank.w - ui(16));
+		draw_text_line(cx, yy, "Made with GameMaker Studio 2, Affinity Designer", -1, sc_thank.w - ui(16));
 		yy += ui(32);
 		BLEND_NORMAL
 		

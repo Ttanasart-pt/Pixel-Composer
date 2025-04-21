@@ -702,8 +702,10 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 				if(is_array(_val)) {
 					for( var i = 0, n = array_length(_val); i < n; i++ )
 						_val[i] = LOADING_VERSION < 11640 && !is_int64(_val[i])? cola(_val[i]) : int64(_val[i]);
-				} else 
+				} else if(is_numeric(_val))
 					_val = LOADING_VERSION < 11640 && !is_int64(_val)? cola(_val) : int64(_val);
+				else 
+					_val = 0;
 			
 			} else if(_typ == VALUE_TYPE.surface) {
 				if(is_struct(_val))

@@ -143,11 +143,11 @@
 		return val;
 	}
 	
-	function panelAdd(panel, create = false, focus = true) {
+	function panelAdd(panel, create = false, focus = true, _x = noone, _y = noone) {
 		var pan = getPanelFromName(panel, create, focus);
 		if(pan == noone) return noone;
 		
-		return dialogPanelCall(pan, noone, noone, { focus: focus });
+		return dialogPanelCall(pan, _x, _y, { focus: focus });
 	}
 	
 	function panelObjectInit() {

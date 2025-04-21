@@ -831,6 +831,9 @@ function Panel_Menu() : PanelContent() constructor {
                 var _b = buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, m, pHOVER, pFOCUS, __txt("Explore Folder"), THEME.folder, 0, COLORS._main_icon, .5);
                 if(_b) _draggable = false;
                 if(_b == 2) {
+                    var dx  = hori? x + tcx : x + w;
+                    var dy  = hori? y + h : y + tby0;
+                
                     var _pan = panelAdd("Panel_File_Explorer", true);
                     var _dir = filename_dir(PROJECT.path);
                     _pan.content.setRoot(_dir);

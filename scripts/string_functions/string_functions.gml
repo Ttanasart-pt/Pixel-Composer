@@ -75,13 +75,13 @@ function string_compare(s1, s2) {
 }
 
 function string_compare_file(s1, s2) {
-	    s1 = string_lower(s1);
-	    s2 = string_lower(s2);
-	    
-    if(string_digits(string_char_at(s1, 1)) && string_digits(string_char_at(s2, 1))) {
-    	var n1 = real(string_copy(s1, 1, string_pos(" ", s1) - 1));
-    	var n2 = real(string_copy(s2, 1, string_pos(" ", s2) - 1));
-    	if(n1 != n2) return n1 - n2;
+    s1 = string_lower(s1);
+    s2 = string_lower(s2);
+	
+    if(string_digits(string_char_at(s1, 1)) != "" && string_digits(string_char_at(s2, 1)) != "") {
+    	var n1 = toNumber(string_copy(s1, 1, string_pos(" ", s1) - 1));
+    	var n2 = toNumber(string_copy(s2, 1, string_pos(" ", s2) - 1));
+    	if(is_numeric(n1) && is_numeric(n2) && n1 != n2) return n1 - n2;
     }
 	    
     var l1 = string_length(s1);
