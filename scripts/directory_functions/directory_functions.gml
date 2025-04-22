@@ -1,4 +1,5 @@
 function directory_verify(path) {
+	// show_debug_message($"verify: {path}")
 	var _d = path;
 	var _v = ds_stack_create();
 	

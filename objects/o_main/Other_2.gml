@@ -46,18 +46,19 @@
 	PREFERENCES_DIR = $"{DIRECTORY}Preferences/{PREF_VERSION}/";
 	directory_verify(DIRECTORY);
 	directory_verify($"{DIRECTORY}Cache");
+	directory_verify($"{DIRECTORY}log");
 	
 	APP_LOCATION = program_directory;
 	if(OS == os_macosx) APP_LOCATION = string_replace(APP_LOCATION, "/Contents/MacOS/", "/Contents/Resources/");
 	if(RUN_IDE)         APP_LOCATION = "D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/datafiles/";
 		
 	printDebug($"===================== WORKING DIRECTORIES =====================\n\t{working_directory}\n\t{DIRECTORY}");
-	directory_verify($"{DIRECTORY}log");
 #endregion
 
 #region Set up
 	var t = get_timer();
 	
+	printDebug($"> Setup");
 	              PREF_LOAD();                  printDebug($"> init Preferences   | complete in {get_timer() - t}");    t = get_timer();
 	if(!IS_CMD) { __initLocale();               printDebug($"> init Locale        | complete in {get_timer() - t}");    t = get_timer(); }
 	if(!IS_CMD) { __initHotKey();               printDebug($"> init Hotkeys       | complete in {get_timer() - t}");    t = get_timer(); }
