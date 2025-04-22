@@ -41,6 +41,7 @@ function struct_append(original, append) {
 	
 	for( var i = 0, n = array_length(args); i < n; i++ ) {
 		var _key = array_safe_get(args, i);
+		if(_key == "") continue;
 		original[$ _key] = append[$ _key];
 	}
 	
