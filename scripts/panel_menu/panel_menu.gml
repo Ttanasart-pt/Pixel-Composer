@@ -261,15 +261,13 @@ function Panel_Menu() : PanelContent() constructor {
             menuItem(__txtx("panel_menu_tester", "Tester"),                                       function() /*=>*/ { dialogPanelCall(new Panel_Test());             }),
             -1, 
             
-            menuItem(__txt("Collection Manager"),                                                 function() /*=>*/ { dialogPanelCall(new Panel_Collection_Manager());}),
-            menuItem(__txt("Nodes Manager"),                                                      function() /*=>*/ { dialogPanelCall(new Panel_Nodes_Manager());     }),
-            // menuItem(__txtx("panel_menu_test_load_nodes", "Load all nodes"),                      () => { __test_load_all_nodes();                        }),
-            // menuItem(__txtx("panel_menu_test_gen_guide", "Generate node guide"),                  () => { dialogPanelCall(new Panel_Node_Data_Gen());    }),
-            // menuItem(__txtx("panel_menu_test_gen_theme", "Generate theme object"),                () => {  __test_generate_theme();                      }),
+            menuItem(__txt("Collection Manager"),                                                 function() /*=>*/ {return dialogPanelCall(new Panel_Collection_Manager())}),
+            menuItem(__txt("Nodes Manager"),                                                      function() /*=>*/ {return dialogPanelCall(new Panel_Nodes_Manager())}),
+            menuItem(__txtx("panel_menu_test_gen_guide", "Generate node guide"),                  function() /*=>*/ {return dialogPanelCall(new Panel_Node_Data_Gen())}),
             -1,
-            menuItem(__txtx("panel_menu_test_warning", "Display Warning"),                        function() /*=>*/ { noti_warning("Error message")                  }),
-            menuItem(__txtx("panel_menu_test_error", "Display Error"),                            function() /*=>*/ { noti_error("Error message")                    }),
-            menuItem(__txtx("panel_menu_test_crash", "Force crash"),                              function() /*=>*/ { print(1 + "a");                                }),
+            menuItem(__txtx("panel_menu_test_warning", "Display Warning"),                        function() /*=>*/ {return noti_warning("Error message")}),
+            menuItem(__txtx("panel_menu_test_error", "Display Error"),                            function() /*=>*/ {return noti_error("Error message")}),
+            menuItem(__txtx("panel_menu_test_crash", "Force crash"),                              function() /*=>*/ {return print(1 + "a")}),
             -1,
             menuItemShelf(__txt("Misc."), function(_dat) { 
                 return submenuCall(_dat, [ menuItem(__txtx("panel_menu_node_credit", "Node credit dialog"), function() /*=>*/ { dialogPanelCall(new Panel_Node_Cost()); }), ]);

@@ -216,7 +216,6 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 						selectNode.info[$ "pxc_version"] = 1_18_09_0;
 						selectNode.updateInfo();
 					}
-						
 				}
 				
 				_wdg.setFocusHover(pFOCUS, pHOVER);
@@ -234,7 +233,6 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 			draw_set_text(f_p2, fa_center, fa_center, COLORS._main_text);
 			draw_text_add(bx + bw / 2, by + bh / 2, "Update");
 			by += bh + ui(4);
-			
 		}
 		
 		// Lists

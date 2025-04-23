@@ -127,6 +127,7 @@ event_inherited();
 	dl_selecting = noone;
 	
 	function toggleDownload(dl) {
+		var  vers = dl.version;
 		var _path = get_save_filename_ext("Compressed zip (.zip)| *.zip", $"PixelComposer {vers}.zip", "", "Download location");
 		var _dir  = filename_dir(_path);
 		
