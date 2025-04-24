@@ -145,7 +145,12 @@ event_inherited();
 			if(is_string(_txt)) {
 				draw_set_text(font, align, fa_center, _act? COLORS._main_text : COLORS._main_text_sub);
 				if(align == fa_center) {
-					var _xc = _spr != noone? hght + (_dw - hght) / 2 : _dw / 2;
+					var _x0 = 0;
+					var _x1 = _dw;
+					if(_spr != noone) _x0 += hght;
+					if(_tol)          _x1 -= hght;
+					
+					var _xc = (_x0 + _x1) / 2;
 					draw_text_add(_xc, _yy, _txt);
 					
 				} else if(align == fa_left) 

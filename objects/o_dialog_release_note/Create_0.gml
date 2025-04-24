@@ -2,21 +2,23 @@
 event_inherited();
 
 #region data
-	dialog_w = ui(720);
-	dialog_h = ui(480);
+	dialog_w = ui(800);
+	dialog_h = ui(560);
 	padding  = ui(12);
 	dialog_resizable     = true;
 	destroy_on_click_out = true;
 	
-	pages = [ "Release note", "Downloads" ];
-	page  = 0;
+	page_width = ui(132);
+	pages      = [ "Release note", "Downloads" ];
+	page       = 0;
 	
-	content_w = dialog_w - (padding + ui(8)) * 2;
-	content_h = dialog_h - ui(48 + 16) - padding;
+	content_w = dialog_w - padding - page_width;
+	content_h = dialog_h - padding * 2;
 #endregion
 
 #region note
-	note_get = http_get($"https://gist.githubusercontent.com/Ttanasart-pt/f21a140906a60c6e12c99ebfecec1645/raw/{VERSION_STRING}");
+	note_pre = "https://gist.githubusercontent.com/Ttanasart-pt/f21a140906a60c6e12c99ebfecec1645/raw/";
+	note_get = http_get(note_pre + RELEASE_STRING);
 	note     = "";
 	
 	sp_note = new scrollPane(content_w, content_h, function(_y, _m) {

@@ -7,10 +7,9 @@ if !ready exit;
 #endregion
 
 #region text
-	var bh = line_get_height(f_p0) + ui(8);
-	var _x = dialog_x + ui(24);
+	var _x = dialog_x + ui(16);
 	var _y = dialog_y + ui(16);
-	var hd = ui(48);
+	var hg = line_get_height(f_p1, 8);
 	
 	draw_set_text(f_p0b, fa_left, fa_top, COLORS._main_text);
 	
@@ -19,30 +18,44 @@ if !ready exit;
 		var r  = __txt(pages[i]);
 		var rw = string_width(r);
 		
-		if(buttonInstant(THEME.button_hide_fill, _x - ui(8), _y - ui(4), rw + ui(16), bh, [ mouse_mx, mouse_my ], sHOVER, sFOCUS) == 2)
-			page = i;
+		var px = _x - ui(8);
+		var py = _y - ui(4);
+		var pw = page_width - ui(16);
+		var ph = hg;
 		
-		draw_set_font(i == page? f_p0b : f_p0);
+		if(sHOVER && point_in_rectangle(mouse_mx, mouse_my, px, py, px + pw, py + ph - 1)) {
+			draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, px, py, pw, ph, CDEF.main_white, 1);
+			
+			if(i != page && mouse_press(mb_left, sFOCUS))
+				page = i;
+		}
+	
+		draw_set_font(i == page? f_p1b : f_p1);
 		draw_set_color(i == page? COLORS._main_text : COLORS._main_text_sub);
 		draw_text(_x, _y, r);
 			
-		_x += rw + ui(24);
+		_y += hg;
 	}
-		
-	draw_sprite_stretched(THEME.ui_panel_bg, 1, dialog_x + padding, dialog_y + hd, dialog_w - padding * 2, dialog_h - hd - padding);
 	
-	content_w = dialog_w - (padding + ui(8)) * 2;
-	content_h = dialog_h - ui(48 + 16) - padding;
+	var _px = dialog_x + page_width;
+	var _py = dialog_y + padding;
+	var _pw = dialog_w - padding - page_width;
+	var _ph = dialog_h - padding - padding;
+	
+	draw_sprite_stretched(THEME.ui_panel_bg, 1, _px, _py, _pw, _ph);
+	
+	content_w = _pw - ui(16);
+	content_h = _ph - ui(16);
 	
 	if(page == 0) {
 		sp_note.setFocusHover(sFOCUS, sHOVER);
 		sp_note.verify(content_w, content_h);
-		sp_note.draw(dialog_x + padding + ui(8), dialog_y + hd + ui(8));
+		sp_note.draw(_px + ui(8), _py + ui(8));
 		
 	} else if(page == 1) {
 		sp_dl.setFocusHover(sFOCUS, sHOVER);
 		sp_dl.verify(content_w, content_h);
-		sp_dl.draw(dialog_x + padding + ui(8), dialog_y + hd + ui(8));
+		sp_dl.draw(_px + ui(8), _py + ui(8));
 		
 	}
 #endregion

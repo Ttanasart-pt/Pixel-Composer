@@ -350,6 +350,7 @@ function Panel_Preference() : PanelContent() constructor {
     		
     		for( var i = 0, n = array_length(_arr); i < n; i++ ) {
     			var _lc = _arr[i];
+    			var _mt = struct_try_get(_lc, "meta", "");
     			var _sc = new scrollItem(_lc.language, THEME.globe).setTooltip(_lc.link);
     			_sc.data = _lc;
     			
@@ -1691,7 +1692,7 @@ function Panel_Preference() : PanelContent() constructor {
     	var px = padding + page_width;
     	var py = padding;
     	var pw = w - padding * 2 - page_width;
-    	var ph = h - padding + padding;
+    	var ph = h - padding - padding;
     	
     	draw_sprite_stretched(THEME.ui_panel_bg, 1, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
     	
