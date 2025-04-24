@@ -1,19 +1,13 @@
-/// @description init
-event_inherited();
-
-#region data
-	dialog_resizable = true;
-	dialog_w = ui(960);
-	dialog_h = ui(640);
-	destroy_on_click_out = true;
+function Panel_Lua_Reference() : PanelContent() constructor {
+	title = "Lua Reference";
+	w = ui(960);
+	h = ui(640);
 	
-	onResize = function() {
-		sp_note.resize(dialog_w - ui(padding + padding), dialog_h - ui(title_height + padding));
-	}
+	panel_width   = w - padding * 2;
+	panel_height  = h - padding * 2;
 	
 	is_open = array_create(array_length(global.lua_functions), false);
-	
-	sp_note = new scrollPane(dialog_w - ui(padding + padding), dialog_h - ui(title_height + padding), function(_y, _m) {
+	sp_note = new scrollPane(panel_width, panel_height, function(_y, _m) {
 		draw_clear_alpha(c_white, 0);
 		
 		var f = global.lua_functions;
@@ -57,7 +51,7 @@ event_inherited();
 				
 				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, yy, sp_note.surface_w, hh, COLORS.dialog_lua_ref_bg_hover, 1);
 				
-				if(mouse_press(mb_left, sFOCUS)) 
+				if(mouse_press(mb_left, pFOCUS)) 
 					is_open[i] = !array_get(is_open, i);
 			} else 
 				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, yy, sp_note.surface_w, hh, COLORS.dialog_lua_ref_bg, 1);
@@ -106,4 +100,21 @@ event_inherited();
 		
 		return _h + ui(128);
 	})
-#endregion
+	
+	function drawContent(panel) {
+			
+		panel_width   = w - padding * 2;
+		panel_height  = h - padding * 2;
+		
+		var px = padding;
+		var py = padding;
+		var pw = panel_width;
+		var ph = panel_height;
+		
+		draw_sprite_stretched(THEME.ui_panel_bg, 1, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
+		sp_note.verify(panel_width, panel_height);
+		sp_note.setFocusHover(pFOCUS, pHOVER);
+		sp_note.drawOffset(px, py, mx, my);
+		
+	}
+}

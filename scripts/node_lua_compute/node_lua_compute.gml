@@ -6,7 +6,7 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	newInput(1, nodeValue_Enum_Scroll("Return type", self,  0, { data: [ "Number", "String", "Struct" ], update_hover: false }));
 	
-	newInput(2, nodeValue_Text("Lua code", self, "", o_dialog_lua_reference))
+	newInput(2, nodeValue_Text("Lua code", self, "", function() /*=>*/ {return dialogPanelCall(new Panel_Lua_Reference())}))
 		.setDisplay(VALUE_DISPLAY.codeLUA);
 	
 	newInput(3, nodeValue("Execution thread", self, CONNECT_TYPE.input, VALUE_TYPE.node, noone))

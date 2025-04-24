@@ -1,0 +1,14 @@
+{
+  "$GMScript":"v1",
+  "%Name":"panel_l_system",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"panel_l_system",
+  "parent":{
+    "name":"guide",
+    "path":"folders/panels/guide.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+  "tags":[],
+}

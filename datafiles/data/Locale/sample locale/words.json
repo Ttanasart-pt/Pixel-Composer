@@ -897,7 +897,6 @@
     "auto_organize":                          "Auto Organize",
     "auto_refresh":                           "Auto refresh",
     "auto_update":                            "Auto update",
-    "auto_update":                            "Auto Update",
     "background_color":                       "Background Color",
     "border_color":                           "Border Color",
     "border_opacity":                         "Border Opacity",
@@ -1067,5 +1066,5 @@
     "warp":                                   "Warp",
     "workspace_panel":                        "Workspace Panel",
 
-    "":                                        "",
+    "": ""
 }

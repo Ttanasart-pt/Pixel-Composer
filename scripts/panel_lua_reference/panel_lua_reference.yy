@@ -1,0 +1,14 @@
+{
+  "$GMScript":"v1",
+  "%Name":"panel_lua_reference",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"panel_lua_reference",
+  "parent":{
+    "name":"guide",
+    "path":"folders/panels/guide.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+  "tags":[],
+}

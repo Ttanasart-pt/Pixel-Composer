@@ -22,16 +22,16 @@ void main() {
 	vec4 _col1 = texture2D( fore, _frtx );
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		
-		_col1.rgb *= _col1.a;
-		vec4 blend = 1. - (1. - _col0) * (1. - _col1);
+	
+		vec4 blend = 1. - mix(1. - _col0, (1. - _col0) * (1. - _col1), opacity);
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	vec4  res = mix(_col0, blend, opacity * sampleMask());
-	float al  = _col1.a + _col0.a * (1. - _col1.a);
-	res.rgb  /= al;
-	res.a     = preserveAlpha == 1? _col0.a : res.a;
+	float po = preserveAlpha == 1? _col1.a : opacity;
+	float al = _col1.a + _col0.a * (1. - _col1.a);
+	vec4 res = mix(_col0, blend, po * sampleMask());
+	res.rgb /= al;
+	res.a = preserveAlpha == 1? _col0.a : res.a;
 	
     gl_FragColor = res;
 }

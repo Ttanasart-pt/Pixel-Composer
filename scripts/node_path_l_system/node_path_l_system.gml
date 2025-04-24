@@ -16,32 +16,32 @@ function L_Turtle(x = 0, y = 0, z = 0, ang = 90, w = 1, color = c_white, itr = 0
 }
 
 function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
-	name		= "L System";
+	name = "L System";
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Float("Length", self, 8));
+	////- Origin
 	
-	newInput(1, nodeValue_Rotation("Angle", self, 45));
-		
-	newInput(2, nodeValue_Vec2("Starting position", self, [ DEF_SURF_W / 2, DEF_SURF_H / 2 ]));
+	newInput( 2, nodeValue_Vec2(     "Starting position", self, [ DEF_SURF_W / 2, DEF_SURF_H / 2 ]));
+	newInput(10, nodeValue_Vec3(     "Starting position", self, [ 0, 0, 0 ]));
+	newInput( 6, nodeValue_Rotation( "Starting Angle",    self, 90));
 	
-	newInput(3, nodeValue_Int("Iteration", self, 4));
+	////- Properties
 	
-	newInput(4, nodeValue_Text("Starting rule", self, "", o_dialog_l_system));
-	
-	newInput(5, nodeValue_Text("End replacement", self, "", "Replace symbol of the last generated rule, for example a=F to replace all a with F. Use comma to separate different replacements."));
-	
-	newInput(6, nodeValue_Rotation("Starting Angle", self, 90));
-	
+	newInput(0, nodeValue_Float(     "Length", self,  8));
+	newInput(1, nodeValue_Rotation(  "Angle",  self, 45));
 	newInput(7, nodeValueSeed(self));
+		
+	////- 3D
 	
-	newInput(8, nodeValue_Bool("3D", self, false));
+	newInput( 8, nodeValue_Bool(        "3D",       self, false));
+	newInput( 9, nodeValue_Enum_Button( "Forward",  self, 1, [ "X", "Y", "Z" ]));
+	newInput(11, nodeValue_Rotation(    "Subangle", self, 45));
 	
-	newInput(9, nodeValue_Enum_Button("Forward", self, 1, [ "X", "Y", "Z" ]));
+	////- Rules
 	
-	newInput(10, nodeValue_Vec3("Starting position", self, [ 0, 0, 0 ]));
-	
-	newInput(11, nodeValue_Rotation("Subangle", self, 45));
+	newInput(3, nodeValue_Int(  "Iteration",       self, 4));
+	newInput(4, nodeValue_Text( "Starting rule",   self, "", function() /*=>*/ {return dialogPanelCall(new Panel_L_System())}));
+	newInput(5, nodeValue_Text( "End replacement", self, "", "Replace symbol of the last generated rule, for example a=F to replace all a with F. Use comma to separate different replacements."));
 	
 	static createNewInput = function(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);

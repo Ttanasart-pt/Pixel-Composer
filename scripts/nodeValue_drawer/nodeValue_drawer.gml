@@ -159,19 +159,24 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 	
 	#region draw name
 		draw_text_add(lb_x, lb_y, dispName);
+		var _tip = jun.tooltip;
 				
-		if(jun.tooltip != "") { // Tooltip
+		if(_tip != "") { // Tooltip
 			var tx = xx + ui(40) + string_width(dispName) + ui(16);
 			var ty = lb_y - ui(1);
 					
 			if(_hover && point_in_circle(_m[0], _m[1], tx, ty, ui(10))) {
 				cHov  = true;
 				
-				if(is_string(jun.tooltip))
-					TOOLTIP = jun.tooltip;
-					
-				else if(mouse_click(mb_left, _focus))
-					dialogCall(jun.tooltip);
+			    if(is_string(_tip)) {
+			    	TOOLTIP = _tip;
+			    	
+				} else if(mouse_click(mb_left, _focus)) {
+					if(is_callable(_tip))
+						_tip();
+					else 
+						dialogCall(_tip);
+				}
 					
 				draw_sprite_ui(THEME.info, 0, tx, ty,,,, COLORS._main_icon_light, 1);
 			} else 

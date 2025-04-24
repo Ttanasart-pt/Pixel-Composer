@@ -1,6 +1,3 @@
-//
-// Simple passthrough fragment shader
-//
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
@@ -23,19 +20,17 @@ void main() {
 	vec4 _col0 = texture2D( gm_BaseTexture, v_vTexcoord );
 	vec2 _frtx = tile_type == 1? fract(v_vTexcoord * dimension) : v_vTexcoord;
 	vec4 _col1 = texture2D( fore, _frtx );
-	_col1.a   *= opacity * sampleMask();
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-		vec4 blend = (_col0 * (1. - opacity)) + (_col0 * _col1 * opacity);
+		vec4 blend = _col0 * _col1;
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	float po = preserveAlpha == 1? _col1.a : opacity;
-	float al = _col1.a + _col0.a * (1. - _col1.a);
-	vec4 res = mix(_col0, blend, po);
-	res.rgb /= al;
-	res.a = preserveAlpha == 1? _col0.a : res.a;
+	vec4  res = mix(_col0, blend, opacity * sampleMask());
+	float al  = _col1.a + _col0.a * (1. - _col1.a);
+	res.rgb  /= al;
+	res.a     = preserveAlpha == 1? _col0.a : res.a;
 	
     gl_FragColor = res;
 }

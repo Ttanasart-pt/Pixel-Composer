@@ -4,7 +4,8 @@ var _status = ds_map_find_value(async_load, "status");
 
 if (_id == note_get) {
     if (_status == 0) {
-        note = ds_map_find_value(async_load, "result");
+        note   = ds_map_find_value(async_load, "result");
+        noteMd = markdown_parse(note);
 		alarm[0] = 1;
 	}
 	

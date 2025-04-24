@@ -7,7 +7,7 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	newInput(1, nodeValue_Vec2("Output dimension", self, DEF_SURF));
 		
-	newInput(2, nodeValue_Text("Lua code", self, "", o_dialog_lua_reference))
+	newInput(2, nodeValue_Text("Lua code", self, "", function() /*=>*/ {return dialogPanelCall(new Panel_Lua_Reference())}))
 		.setDisplay(VALUE_DISPLAY.codeLUA);
 	
 	newInput(3, nodeValue("Execution thread", self, CONNECT_TYPE.input, VALUE_TYPE.node, noone))
@@ -22,8 +22,8 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	attribute_surface_depth();
 	argumentRenderer(global.lua_arguments);
 	
-	lb_pre = new Inspector_Label("", _f_code_s);
-	lb_pos = new Inspector_Label("", _f_code_s);
+	lb_pre = new Inspector_Label("", f_code);
+	lb_pos = new Inspector_Label("", f_code);
 	
 	input_display_list = [ 3, 4, 
 		["Function",	false], 0, 1,

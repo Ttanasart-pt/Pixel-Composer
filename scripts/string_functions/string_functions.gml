@@ -513,3 +513,14 @@ function string_full_match(str, key) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function string_count_start(str, char) {
+	var i = 1;
+	
+	repeat(string_length(str)) {
+		if(string_char_at(str, i) != char) return i - 1;
+		i++;
+	}
+	
+	return string_length(str);
+}

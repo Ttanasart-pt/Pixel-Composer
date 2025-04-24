@@ -21,105 +21,17 @@ event_inherited();
 	note_dir = "https://raw.githubusercontent.com/Ttanasart-pt/Pixel-Composer/refs/heads/main/releases/"
 	note_get = http_get(note_dir + RELEASE_STRING + ".md");
 	note     = "";
+	noteMd   = [];
 	
 	sp_note = new scrollPane(content_w, content_h, function(_y, _m) {
 		draw_clear_alpha(COLORS.dialog_splash_badge, 1);
 		
 		var xx = ui(8);
-		var yy = ui(8);
+		var yy = ui(8) + _y;
 		var ww = sp_note.surface_w - ui(16);
-		var txt = note;
+		var hh = markdown_draw(noteMd, xx, yy, ww);
 		
-		var lines = string_split(txt, "\n");
-		for( var i = 0, n = array_length(lines); i < n; i++ ) {
-			var line  = lines[i];
-			var _stx  = string_split(string_trim(line), " ");
-			var _line = line;
-			
-			if(array_length(_stx) <= 1) {
-				draw_set_text(f_p3, fa_left, fa_top, COLORS._main_text);
-				draw_text_line(xx + 0, _y + yy, line, -1, ww);
-				
-				yy += string_height_ext(_line, -1, ww);
-				
-			} else {
-				var _cont = array_create(array_length(_stx) - 1);
-				for( var j = 1, m = array_length(_stx); j < m; j++ ) 
-					_cont[j - 1] = _stx[j];
-				
-				_line = string_join_ext(" ", _cont);
-				
-				switch(_stx[0]) {
-					case "#" :
-						draw_set_text(f_p0b, fa_left, fa_top, COLORS._main_text_sub);
-						yy += (!!i) * ui(16);
-						draw_text_line(xx, _y + yy, _line, -1, ww);
-					
-						yy += ui(4);
-						break;
-						
-					case "##" :
-						draw_set_text(f_p1b, fa_left, fa_top, COLORS._main_text_sub);
-						var  _h = string_height_ext(_line, -1, ww);
-						yy += (!!i) * ui(16);
-						
-						draw_sprite_stretched_ext(THEME.box_r5_clr, 1, xx, _y + yy - ui(4), ww, _h + ui(8), COLORS._main_icon, 1);
-						draw_text_line(xx + ui(16), _y + yy, _line, -1, ww);
-						yy += ui(8);
-						break;
-						
-					case "###" :
-						draw_set_text(f_p2b, fa_left, fa_top, COLORS._main_accent);
-						yy += (!!i) * ui(8);
-						draw_text_line(xx + ui(16), _y + yy, _line, -1, ww);
-						yy += ui(4);
-						break;
-						
-					case "-" :
-						var _x = xx + ui(28);
-						if(string_char_at(line, 1) != "-")
-							_x += ui(16);
-						
-						var _lx = _x;
-						var _topic = false;
-						
-						draw_set_text(f_p3, fa_left, fa_top, COLORS._main_text);
-						draw_sprite_ui_uniform(THEME.text_bullet, 0, _x - ui(8), _y + yy + ui(12), 1, COLORS._main_icon);
-						
-						for( var j = 1, m = array_length(_stx); j < m; j++ ) {
-							var _word = (j > 1? " " : "") + _stx[j];
-							
-							if(_x + string_width(_word) > ww) {
-								yy += line_get_height();
-								_x  = _lx;
-							}
-							
-							if(string_char_at(_word, 1) == "[")
-								_topic = true;
-								
-							draw_set_color(_topic? COLORS._main_text_accent : COLORS._main_text);
-							draw_text_add(_x, _y + yy, _word);
-							_x += string_width(_word);
-							
-							if(string_char_last(_word) == "]")
-								_topic = false;
-						}
-						
-						yy += line_get_height();
-						break;
-						
-					default :
-						draw_set_text(f_p3, fa_left, fa_top, COLORS._main_text);
-						draw_text_line(xx + 0, _y + yy, _line, -1, ww);
-						break;
-				}
-				
-				if(_stx[0] != "-")
-					yy += string_height_ext(_line, -1, ww);
-			}
-		}
-		
-		return yy + ui(64);
+		return hh + ui(64);
 	})
 #endregion
 
