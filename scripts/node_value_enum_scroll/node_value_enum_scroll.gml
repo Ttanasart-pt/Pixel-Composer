@@ -4,8 +4,11 @@ function nodeValue_Enum_Scroll(_name, _node, _value, _data) { return new __NodeV
 function __NodeValue_Enum_Scroll(_name, _node, _value, _data) : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.integer, _value, "") constructor {
 	setDisplay(VALUE_DISPLAY.enum_scroll, _data);
 	
+	clamp_range = true;
+	
 	/////============== SET =============
 	
+	static setUnclamp = function( ) /*=>*/ { clamp_range = false;   return self;  }
 	static setHistory = function(h) /*=>*/ { options_histories = h; return self;  }
 	
 	/////============== GET =============
@@ -14,6 +17,8 @@ function __NodeValue_Enum_Scroll(_name, _node, _value, _data) : NodeValue(_name,
 		getValueRecursive(self.__curr_get_val, _time);
 		var val = __curr_get_val[0];
 		var nod = __curr_get_val[1]; if(!is(nod, NodeValue)) return val;
+		
+		if(!clamp_range) return val;
 		
 		var choicesAmount = array_length(editWidget.data);
 		if(choicesAmount == undefined) return val;

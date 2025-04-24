@@ -79,12 +79,14 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	skipDefault();
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Enum_Scroll("Subtype", self,  0, { data: GROUP_IO_DISPLAY[11], update_hover: false }));
+	newInput(0, nodeValue_Enum_Scroll("Subtype", self,  0, { data: GROUP_IO_DISPLAY[11], update_hover: false }))
+		.setUnclamp();
 	
 	newInput(1, nodeValue_Range("Range", self, [ 0, 1 ]))
 		.setVisible(false);
 	
-	newInput(2, nodeValue_Enum_Scroll("Input Type", self,  11, { data: GROUP_IO_TYPE_NAME, update_hover: false }));
+	newInput(2, nodeValue_Enum_Scroll("Input Type", self,  11, { data: GROUP_IO_TYPE_NAME, update_hover: false }))
+		.setUnclamp();
 	
 	newInput(3, nodeValue_Text("Enum Labels", self, "", "Define enum choices, use comma to separate each choice."))
 		.setVisible(false);
@@ -184,7 +186,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		} 
 		
 		juncTo.value_from = noone;
-			inParent.setValue(juncTo.getValue());
+		inParent.setValue(juncTo.getValue());
 		juncTo.value_from = outputs[0];
 		
 	}
@@ -210,75 +212,66 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			group.refreshNodeDisplay();
 			group.sortIO();
 		}
-			
-		onValueUpdate(0);
+		
+		refreshWidget();
 		
 		return inParent;
 	} 
 	
 	////- Render
 	
-	static isRenderable = function(log = false) { //Check if every input is ready (updated)
-		if(!active)	return false;
-		if(!isRenderActive()) return false;
+	static updateGroupInput = function() {
+		var _dstype = getInputData(0);
+		var _data   = getInputData(2);
+		var _dsList = array_safe_get_fast(GROUP_IO_DISPLAY, _data);
+		if(!is_array(_dsList)) _dsList = [ "Default" ];
 		
-		for(var j = 0; j < 9; j++) if(!inputs[j].isRendered()) return false;
-		return true;
-	}
-	
-	static visibleCheck = function() {
-		var _vty = inputs[ 9].getValue();
+		inputs[0].display_data.data    = _dsList;
+		inputs[0].editWidget.data_list = _dsList;
 		
-		inputs[10].setVisible(_vty >= 2, _vty >= 2);
-		inputs[11].setVisible(_vty >= 2);
+		var _dstype = array_safe_get_fast(_dsList, _dstype);
+		var _datype = array_safe_get_fast(GROUP_IO_TYPE_MAP, _data, VALUE_TYPE.any);
 		
-		var _val = inputs[10].getValue();
-		var _vto = inputs[11].getValue();
-		var _vis = true;
+		inputs[1].setVisible(false);
+		inputs[3].setVisible(false);
+		inputs[4].setVisible(false);
+		inputs[7].setVisible(false);
+		inputs[8].setVisible(_datype == VALUE_TYPE.trigger);
 		
-		switch(_vty) {
-			case 0 : _vis =  true; break;
-			case 1 : _vis = false; break;
+		switch(_dstype) {
+			case "Slider" :
+			case "Slider range" :
+				inputs[7].setVisible(true);
+				inputs[1].setVisible(true);
+				break;
 				
-			case 2 : _vis = _val == _vto; break;
-			case 3 : _vis = _val != _vto; break;
-			
-			case 4 : _vis = _val >  _vto; break;
-			case 5 : _vis = _val >= _vto; break;
-			
-			case 6 : _vis = _val <  _vto; break;
-			case 7 : _vis = _val <= _vto; break;
+			case "Range" :
+				inputs[1].setVisible(true);
+				break;
+				
+			case "Enum button" :
+			case "Menu scroll" :
+				inputs[3].setVisible(true);
+				break;
+				
+			case "Vector" :
+			case "Vector range" :
+				inputs[4].setVisible(true);
+				break;
 		}
 		
-		inParent.setVisible(_vis, _vis);
+		visibleCheck();
 	}
 	
-	static onValueUpdate = function(index = 0) {
-		if(is_undefined(inParent)) return;
+	static refreshWidget = function() {
+		var _type  = getInputData(2);
+		var _vtype = array_safe_get_fast(GROUP_IO_TYPE_MAP, _type, VALUE_TYPE.any);
 		
-		var _dtype	    = getInputData(0);
-		var _range	    = getInputData(1);
-		var _type		= getInputData(2);
-		var _val_type   = array_safe_get_fast(GROUP_IO_TYPE_MAP, _type, VALUE_TYPE.any);
-		var _enum_label = getInputData(3);
-		var _vec_size	= getInputData(4);
-		var _step		= getInputData(7);
+		var _disp  = getInputData(0);
+		var _dtype = array_safe_get_fast(array_safe_get_fast(GROUP_IO_DISPLAY, _vtype), _disp);
 		
-		if(index == 2) {
-			if(outputs[0].type != _val_type) {
-				var _to = outputs[0].getJunctionTo();
-				for( var i = 0, n = array_length(_to); i < n; i++ )
-					_to[i].removeFrom();
-			}
-			
-			inputs[0].setValue(0);
-			attributes.inherit_type = false;
-		}
-		
-		_dtype = array_safe_get_fast(array_safe_get_fast(GROUP_IO_DISPLAY, _val_type), _dtype);
-		
-		inParent.setType(_val_type);
-		outputs[0].setType(_val_type);
+		inParent.setType(_vtype);
+		outputs[0].setType(_vtype);
 		var _val = inParent.getValue();
 		
 		switch(_dtype) {
@@ -291,13 +284,19 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				break;
 			
 			case "Slider" :	
+				var _range = getInputData(1);
+				var _step  = getInputData(7);
+				
 				if(is_array(_val)) inParent.animator = new valueAnimator(0, inParent);
 				
 				inParent.def_val = 0;
 				inParent.setDisplay(VALUE_DISPLAY.slider, { range: [_range[0], _range[1], _step] });	
 				break;
 				
-			case "Slider range" :	
+			case "Slider range" :
+				var _range = getInputData(1);
+				var _step  = getInputData(7);
+					
 				if(!is_array(_val) || array_length(_val) != 2) 
 					inParent.animator = new valueAnimator([0, 0], inParent);
 					
@@ -338,7 +337,9 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				
 			case "Vector" :
 			case "Vector range" :
-				switch(_vec_size) {
+				var _vsize = getInputData(4);
+				
+				switch(_vsize) {
 					case 0 : 
 						if(!is_array(_val) || array_length(_val) != 2)
 							inParent.animator = new valueAnimator([0, 0], inParent);
@@ -365,17 +366,21 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				break;
 			
 			case "Enum button" : 
+				var _elabel = getInputData(3);
+				
 				if(is_array(_val)) inParent.animator = new valueAnimator(0, inParent);
 				
 				inParent.def_val = 0;
-				inParent.setDisplay(VALUE_DISPLAY.enum_button, string_splice(_enum_label, ",")); 
+				inParent.setDisplay(VALUE_DISPLAY.enum_button, string_splice(_elabel, ",")); 
 				break;
 				
 			case "Menu scroll" : 
+				var _elabel = getInputData(3);
+				
 				if(is_array(_val)) inParent.animator = new valueAnimator(0, inParent);
 				
 				inParent.def_val = 0;
-				inParent.setDisplay(VALUE_DISPLAY.enum_scroll, string_splice(_enum_label, ",")); 
+				inParent.setDisplay(VALUE_DISPLAY.enum_scroll, string_splice(_elabel, ",")); 
 				break;
 			
 			case "Palette" :
@@ -410,57 +415,67 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				break;
 		}
 		
-		switch(_val_type) {
+		switch(_vtype) {
 			case VALUE_TYPE.trigger : 
 				var bname = getInputData(8);
 				inParent.setDisplay(VALUE_DISPLAY.button, { name: bname, onClick: function() /*=>*/ { doTrigger = 1; } });
 				break;
 		}
-		
-		visibleCheck();
 	}
 	
-	static updateGroupInput = function() {
-		var _dstype = getInputData(0);
-		var _data   = getInputData(2);
-		var _dsList = array_safe_get_fast(GROUP_IO_DISPLAY, _data);
-		if(!is_array(_dsList)) _dsList = [ "Default" ];
+	static isRenderable = function(log = false) { //Check if every input is ready (updated)
+		if(!active)	return false;
+		if(!isRenderActive()) return false;
 		
-		inputs[0].display_data.data    = _dsList;
-		inputs[0].editWidget.data_list = _dsList;
+		for(var j = 0; j < 9; j++) if(!inputs[j].isRendered()) return false;
+		return true;
+	}
+	
+	static visibleCheck = function() {
+		var _vty = inputs[ 9].getValue();
 		
-		_dstype = array_safe_get_fast(_dsList, _dstype);
+		inputs[10].setVisible(_vty >= 2, _vty >= 2);
+		inputs[11].setVisible(_vty >= 2);
 		
-		var _datype = array_safe_get_fast(GROUP_IO_TYPE_MAP, _data, VALUE_TYPE.any);
+		var _val = inputs[10].getValue();
+		var _vto = inputs[11].getValue();
+		var _vis = true;
 		
-		inputs[1].setVisible(false);
-		inputs[3].setVisible(false);
-		inputs[4].setVisible(false);
-		inputs[7].setVisible(false);
-		inputs[8].setVisible(_datype == VALUE_TYPE.trigger);
-		
-		switch(_dstype) {
-			case "Slider" :
-			case "Slider range" :
-				inputs[7].setVisible(true);
-				inputs[1].setVisible(true);
-				break;
+		switch(_vty) {
+			case 0 : _vis =  true; break;
+			case 1 : _vis = false; break;
 				
-			case "Range" :
-				inputs[1].setVisible(true);
-				break;
-				
-			case "Enum button" :
-			case "Menu scroll" :
-				inputs[3].setVisible(true);
-				break;
-				
-			case "Vector" :
-			case "Vector range" :
-				inputs[4].setVisible(true);
-				break;
+			case 2 : _vis = _val == _vto; break;
+			case 3 : _vis = _val != _vto; break;
+			
+			case 4 : _vis = _val >  _vto; break;
+			case 5 : _vis = _val >= _vto; break;
+			
+			case 6 : _vis = _val <  _vto; break;
+			case 7 : _vis = _val <= _vto; break;
 		}
 		
+		inParent.setVisible(_vis, _vis);
+	}
+	
+	static onValueUpdate = function(index = 0) {
+		if(is_undefined(inParent)) return;
+		
+		var _type		= getInputData(2);
+		var _val_type   = array_safe_get_fast(GROUP_IO_TYPE_MAP, _type, VALUE_TYPE.any);
+		
+		if(index == 2) {
+			if(outputs[0].type != _val_type) {
+				var _to = outputs[0].getJunctionTo();
+				for( var i = 0, n = array_length(_to); i < n; i++ )
+					_to[i].removeFrom();
+			}
+			
+			inputs[0].setValue(0);
+			attributes.inherit_type = false;
+		}
+		
+		refreshWidget();
 		visibleCheck();
 	}
 	
@@ -497,14 +512,16 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		if(!is(inParent, NodeValue)) return;
 		outputs[0].setValue(inParent.getValue());
 		
-		var _dstype = inputs[0].getValue();
 		var _data   = inputs[2].getValue();
+		var _dstype = inputs[0].getValue();
+		print(_dstype);
+		
 		if(_dstype == __dstype && _data == __data) return;
-		getInputs(frame);
 		updateGroupInput();
 		
 		__dstype = _dstype;
 		__data   = _data;
+		
 	}
 	
 	////- Draw
@@ -564,6 +581,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		inParent.name = name;
 		getInputs();
 		onValueUpdate();
+		refreshWidget();
 		
 		group.sortIO();
 	}
