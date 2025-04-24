@@ -145,8 +145,8 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	attributes.inherit_type = true;
 	doTrigger = 0;
 	
-	dtype  = -1;
-	range  = 0;
+	dtype = -1;
+	range = 0;
 	
 	onSetDisplayName = function() /*=>*/ { attributes.inherit_name = false; }
 	

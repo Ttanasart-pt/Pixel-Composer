@@ -47,9 +47,15 @@ function Panel_Node_Data_Gen() : PanelContent() constructor {
 	
 	game_set_speed(99999, gamespeed_fps);
 	
+	function sanitize(str) {
+		str = json_stringify(str);
+		return str;
+	}
+	
 	function drawContent(panel) {
 		var _n = ALL_NODES[$ key[cur]];
-		if(_n.nodeName == "Node_Custom") { if(++cur < amo) return; }
+		if(_n.nodeName == "Node_Custom")        { if(++cur < amo) return; }
+		if(_n.nodeName == "Node_Custom_Shader") { if(++cur < amo) return; }
 		
 		var _b = _n.build(0, 0);
 		
@@ -71,17 +77,17 @@ function Panel_Node_Data_Gen() : PanelContent() constructor {
 		if(_b.name == "") return;
 		
 		var _lCon  = $"\t\t\"name\":\"{_n.name}\",\n";
-		    _lCon += $"\t\t\"tooltip\":\"{_n.tooltip}\",\n";
+		    _lCon += $"\t\t\"tooltip\":{sanitize(_n.tooltip)},\n";
 		
 		var _tIn = "";
 		var _tOt = "";
 		
-		for( var i = 0; i < array_length(_b.inputs); i++ ) {
+		for( var i = 0, n = array_length(_b.inputs); i < n; i++ ) {
 			var _in = _b.inputs[i];
 			if(!is(_in, NodeValue)) continue;
 			
-			var _ti  = $"\t\t\t\t\"name\":\"{_in._initName}\",\n";
-		    if(_in.tooltip != "") _ti += $"\t\t\t\t\"tooltip\":\"{_in.tooltip}\",\n";
+			var _ti  = $"\t\t\t\t\"name\":\"{_in._initName}\"";
+		    if(_in.tooltip != "") _ti += $",\n\t\t\t\t\"tooltip\":{sanitize(_in.tooltip)}";
 			
 			switch(_in.display_type) {
 				case VALUE_DISPLAY.enum_button :
@@ -92,38 +98,38 @@ function Panel_Node_Data_Gen() : PanelContent() constructor {
 					for( var j = 0, m = array_length(_eData); j < m; j++ ) {
 						var _s = _eData[j];
 						if(struct_has(_s, "name")) _s = _s.name;
-						_sData += $"\t\t\t\t\t\"{_s}\",\n";
+						_sData += $"\t\t\t\t\t{sanitize(_s)}" + (j == m - 1? "\n" : ",\n");
 					}
 					
-					_ti += $"\t\t\t\t\"display_data\":[\n{_sData}\t\t\t\t],\n";
+					_ti += $",\n\t\t\t\t\"display_data\":[\n{_sData}\t\t\t\t]";
 					break;
 			}
 			
-			_tIn += $"\t\t\t\{\n{_ti}\t\t\t\},\n";
+			_tIn += $"\t\t\t\{\n{_ti}\n\t\t\t\}" + (i == n - 1? "\n" : ",\n");
 		}
 		
-		for( var i = 0; i < array_length(_b.outputs); i++ ) {
+		for( var i = 0, n = array_length(_b.outputs); i < n; i++ ) {
 			var _ot = _b.outputs[i];
 			if(!is(_ot, NodeValue)) continue;
 			
-			var _to  = $"\t\t\t\t\"name\":\"{_ot._initName}\",\n";
-			if(_ot.tooltip != "") _to += $"\t\t\t\t\"tooltip\":\"{_ot.tooltip}\",\n";
+			var _to  = $"\t\t\t\t\"name\":\"{_ot._initName}\"";
+			if(_ot.tooltip != "") _to += $",\n\t\t\t\t\"tooltip\":{sanitize(_ot.tooltip)}";
 			
-			_tOt += $"\t\t\t\{\n{_to}\t\t\t\},\n";
+			_tOt += $"\t\t\t\{\n{_to}\n\t\t\t\}" + (i == n - 1? "\n" : ",\n");
 		}
 		
 		try { _b.destroy(); } catch(e) {}
 			
-		_lCon += _tIn == ""? $"\t\t\"inputs\":[],\n"  : $"\t\t\"inputs\":[\n{_tIn}\t\t],\n";
-		_lCon += _tOt == ""? $"\t\t\"outputs\":[],\n" : $"\t\t\"outputs\":[\n{_tOt}\t\t],\n";
+		_lCon += _tIn == ""? $"\t\t\"inputs\":[],\n" : $"\t\t\"inputs\":[\n{_tIn}\t\t],\n";
+		_lCon += _tOt == ""? $"\t\t\"outputs\":[]\n" : $"\t\t\"outputs\":[\n{_tOt}\t\t]\n";
 		
-		var _lTxt = $"\t\"{_n.nodeName}\":\{\n{_lCon}\t\},\n";
+		var _lTxt = $"\t\"{_n.nodeName}\":\{\n{_lCon}\t\}" + (cur == amo - 1? "\n" : ",\n");
 		locText += _lTxt;
 		
 		if(++cur < amo) return;
 		
 		locText = string_replace_all(locText, "\t", "  ");
-		file_text_write_all($"{dir}node.json", $"\{\n{locText}\}");
+		file_text_write_all($"{dir}nodes.json", $"\{\n{locText}\}");
 		shellOpenExplorer(dir);
 		
 		game_end();

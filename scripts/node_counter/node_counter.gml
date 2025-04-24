@@ -8,9 +8,7 @@ function Node_Counter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	newInput(1, nodeValue_Float("Speed", self, 1));
 	
-	newInput(2, nodeValue_Int("Mode", self, 0, @"Counting mode
-    - Frame count: Count value up/down per frame.
-    - Animation progress: Count from 0 (first frame) to 1 (last frame). ")
+	newInput(2, nodeValue_Int("Mode", self, 0, @"Counting mode\n- Frame count: Count value up/down per frame.\n- Animation progress: Count from 0 (first frame) to 1 (last frame). ")
 		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Frame count", "Animation progress"]))
 		.rejectArray();
 	
