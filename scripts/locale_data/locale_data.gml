@@ -7,8 +7,11 @@ LOCALE      = {
 	config: { per_character_line_break: false },
 }
 
-global.missing_locale = {}
-global.missing_file   = "D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/datafiles/data/Locale/missing.txt";
+global.missing_locale     = {}
+global.missing_lfile      = "D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/datafiles/data/Locale/missing.txt";
+
+global.missing_lnode      = {}
+global.missing_lfile_node = "D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/datafiles/data/Locale/missing.txt";
 
 function __initLocale() {
 	var lfile = $"data/Locale/en.zip";
@@ -51,7 +54,7 @@ function __txtx(key, def = "") {
 	if(TEST_LOCALE) {
 		if(key != "" && !struct_has(LOCALE.texts, key) && !struct_has(global.missing_locale, key)) {
 			global.missing_locale[$ key] = def;
-			file_text_write_all(global.missing_file, json_stringify(global.missing_locale));
+			file_text_write_all(global.missing_lfile, json_stringify(global.missing_locale));
 		}
 		
 		return def;
@@ -61,6 +64,7 @@ function __txtx(key, def = "") {
 }
 
 function __txts(keys) { array_map_ext(keys, function(k) /*=>*/ {return __txt(k, k)}); return keys; } 
+
 function __txt(txt, prefix = "") {
 	INLINE
 	
@@ -72,7 +76,7 @@ function __txt(txt, prefix = "") {
 	if(TEST_LOCALE) {
 		if(key != "" && !struct_has(LOCALE.texts, key) && !struct_has(global.missing_locale, key)) {
 			global.missing_locale[$ key] = txt;
-			file_text_write_all(global.missing_file, json_stringify(global.missing_locale));
+			file_text_write_all(global.missing_lfile, json_stringify(global.missing_locale));
 		}
 		
 		return txt;
@@ -99,13 +103,10 @@ function __txt_node_name(node, def = "") {
 			show_debug_message($"LOCALE [NODE]: \"{node}\": \"{def}\",");
 			return def;
 		}
-		return "";
 	}
 	
-	if(!struct_has(LOCALE.node, node)) 
-		return def;
-	
-	return LOCALE.node[$ node].name;
+	if(!struct_has(LOCALE.node, node)) return def;
+	return struct_try_get(LOCALE.node[$ node], "name", def);
 }
 
 function __txt_node_tooltip(node, def = "") {
@@ -118,13 +119,10 @@ function __txt_node_tooltip(node, def = "") {
 			show_debug_message($"LOCALE [TIP]: \"{node}\": \"{def}\",");
 			return def;
 		}
-		return "";
 	}
 	
-	if(!struct_has(LOCALE.node, node)) 
-		return def;
-	
-	return LOCALE.node[$ node].tooltip;
+	if(!struct_has(LOCALE.node, node)) return def;
+	return struct_try_get(LOCALE.node[$ node], "tooltip", def);
 }
 
 function __txt_junction_name(node, type, index, def = "") {
@@ -137,7 +135,6 @@ function __txt_junction_name(node, type, index, def = "") {
 			show_debug_message($"LOCALE [JNAME]: \"{node}\": \"{def}\",");
 			return def;
 		}
-		return "";
 	}
 	
 	if(!struct_has(LOCALE.node, node)) 
@@ -147,7 +144,7 @@ function __txt_junction_name(node, type, index, def = "") {
 	var lst = type == CONNECT_TYPE.input? nde.inputs : nde.outputs;
 	if(index >= array_length(lst)) return def;
 	
-	return lst[index].name;
+	return struct_try_get(lst[index], "name", def);
 }
 
 function __txt_junction_tooltip(node, type, index, def = "") {
@@ -160,7 +157,6 @@ function __txt_junction_tooltip(node, type, index, def = "") {
 			show_debug_message($"LOCALE [JTIP]: \"{node}\": \"{def}\",");
 			return def;
 		}
-		return "";
 	}
 	
 	if(!struct_has(LOCALE.node, node)) 
@@ -170,7 +166,7 @@ function __txt_junction_tooltip(node, type, index, def = "") {
 	var lst = type == CONNECT_TYPE.input? nde.inputs : nde.outputs;
 	if(index >= array_length(lst)) return def;
 	
-	return lst[index].tooltip;
+	return struct_try_get(lst[index], "tooltip", def);
 }
 
 function __txt_junction_data(node, type, index, def = []) {
@@ -193,8 +189,5 @@ function __txt_junction_data(node, type, index, def = []) {
 	var lst = type == CONNECT_TYPE.input? nde.inputs : nde.outputs;
 	if(index >= array_length(lst)) return def;
 	
-	if(!struct_has(lst[index], "display_data"))
-		return def;
-	
-	return lst[index].display_data;
+	return struct_try_get(lst[index], "display_data", def);
 }

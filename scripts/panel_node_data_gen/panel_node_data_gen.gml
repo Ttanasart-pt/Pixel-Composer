@@ -29,7 +29,7 @@ function Panel_Node_Data_Gen() : PanelContent() constructor {
 	w = ui(640);
 	h = ui(64);
 	
-	title    = "Dump node data";
+	title    = "Dumping node data";
 	auto_pin = true;
 	
 	key = struct_get_names(ALL_NODES);
