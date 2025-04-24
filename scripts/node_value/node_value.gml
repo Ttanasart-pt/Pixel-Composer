@@ -27,6 +27,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		y   = node.y; ry  = node.y;
 		
 		index     = array_length(_connect == CONNECT_TYPE.input? node.inputs : node.outputs);
+		lIndex    = index;
 		type      = _type;
 		forward   = true;
 		_initName = _name;
@@ -226,13 +227,16 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	#endregion
 	
 	#region ---- Init Fn ---
-		static setIndex = function(i) {
-			index = i;
+		static setIndex = function(_index) {
+			index  = _index;
+			lIndex = _index;
 			
 			if(connect_type == CONNECT_TYPE.input) {
 				bypass_junc.setIndex(index);
 				node.input_bypass[index] = bypass_junc;
 				node.inputs_data[index]  = def_val;
+				
+				if(node.is_dynamic_input) lIndex = (lIndex - node.input_fix_len) % node.data_length;
 			}
 		}
 		
@@ -304,7 +308,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	////- NAME
 	
-	static getName = function() /*=>*/ {return name_custom? name : __txt_junction_name(instanceof(node), connect_type, index, name)};
+	static getName = function() /*=>*/ {return name_custom? name : __txt_junction_name(instanceof(node), connect_type, lIndex, name)};
 	
 	static setName = function(_name) /*=>*/ { name = _name; return self; }
 	
@@ -602,7 +606,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break;
 						
 					case VALUE_DISPLAY.range :		
-						editWidget = new rangeBox(function(val, index) /*=>*/ {return setValueInspector(val, index)});
+						editWidget = new rangeBox(function(val, i) /*=>*/ {return setValueInspector(val, i)});
 						
 						if(!struct_has(display_data, "linked")) display_data.linked = false;
 						
@@ -617,7 +621,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						var len = array_length(val);
 						
 						if(len <= 4) {
-							editWidget = new vectorBox(len, function(val, index) /*=>*/ {return setValueInspector(val, index)}, unit );
+							editWidget = new vectorBox(len, function(val, i) /*=>*/ {return setValueInspector(val, i)}, unit );
 							
 							if(struct_has(display_data, "label"))		 editWidget.axis	    = display_data.label;
 							if(struct_has(display_data, "linkable"))	 editWidget.linkable    = display_data.linkable;
@@ -639,7 +643,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					case VALUE_DISPLAY.vector_range :
 						var val = animator.getValue();
 						
-						editWidget = new vectorRangeBox(array_length(val), _txt, function(val, index) /*=>*/ {return setValueInspector(val, index)}, unit );
+						editWidget = new vectorRangeBox(array_length(val), _txt, function(val, i) /*=>*/ {return setValueInspector(val, i)}, unit );
 						
 						if(!struct_has(display_data, "linked")) display_data.linked = false;
 						if(!struct_has(display_data, "ranged")) display_data.ranged = false;
@@ -662,7 +666,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break;
 						
 					case VALUE_DISPLAY.rotation_range :
-						editWidget = new rotatorRange(function(val, index) /*=>*/ {return setValueInspector(val, index)});
+						editWidget = new rotatorRange(function(val, i) /*=>*/ {return setValueInspector(val, i)});
 						
 						for( var i = 0, n = array_length(animators); i < n; i++ )
 							animators[i].suffix = $" {array_safe_get_fast(global.displaySuffix_Range, i)}";
@@ -671,7 +675,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break;
 						
 					case VALUE_DISPLAY.rotation_random :
-						editWidget = new rotatorRandom(function(val, index) /*=>*/ {return setValueInspector(val, index)});
+						editWidget = new rotatorRandom(function(val, i) /*=>*/ {return setValueInspector(val, i)});
 						
 						extract_node = "Node_Number";
 						break;
@@ -691,7 +695,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					case VALUE_DISPLAY.slider_range :
 						var _range = struct_try_get(display_data, "range", [ 0, 1, 0.01 ]);
 						
-						editWidget = new sliderRange(_range[2], type == VALUE_TYPE.integer, [ _range[0], _range[1] ], function(val, index) /*=>*/ {return setValueInspector(val, index)});
+						editWidget = new sliderRange(_range[2], type == VALUE_TYPE.integer, [ _range[0], _range[1] ], function(val, i) /*=>*/ {return setValueInspector(val, i)});
 						
 						for( var i = 0, n = array_length(animators); i < n; i++ )
 							animators[i].suffix = $" {array_safe_get_fast(global.displaySuffix_Range, i)}";
@@ -700,7 +704,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break;
 						
 					case VALUE_DISPLAY.area :		
-						editWidget = new areaBox(function(val, index) /*=>*/ {return setValueInspector(val, index)}, unit);
+						editWidget = new areaBox(function(val, i) /*=>*/ {return setValueInspector(val, i)}, unit);
 						
 						editWidget.onSurfaceSize = struct_try_get(display_data, "onSurfaceSize", noone);
 						editWidget.showShape     = struct_try_get(display_data, "useShape", true);
@@ -712,7 +716,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break;
 						
 					case VALUE_DISPLAY.padding :	
-						editWidget = new paddingBox(function(val, index) /*=>*/ {return setValueInspector(val, index)}, unit);
+						editWidget = new paddingBox(function(val, i) /*=>*/ {return setValueInspector(val, i)}, unit);
 						
 						for( var i = 0, n = array_length(animators); i < n; i++ )
 							animators[i].suffix = $" {array_safe_get_fast(global.displaySuffix_Padding, i)}";
@@ -721,7 +725,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break;
 						
 					case VALUE_DISPLAY.corner :		
-						editWidget = new cornerBox(function(val, index) /*=>*/ {return setValueInspector(val, index)}, unit);
+						editWidget = new cornerBox(function(val, i) /*=>*/ {return setValueInspector(val, i)}, unit);
 						
 						for( var i = 0, n = array_length(animators); i < n; i++ )
 							animators[i].suffix = $" {array_safe_get_fast(global.displaySuffix_Padding, i)}";
@@ -730,7 +734,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break;
 						
 					case VALUE_DISPLAY.puppet_control :
-						editWidget = new controlPointBox(function(val, index) /*=>*/ {return setValueInspector(val, index)});
+						editWidget = new controlPointBox(function(val, i) /*=>*/ {return setValueInspector(val, i)});
 						
 						extract_node = "";
 						break;
@@ -763,7 +767,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break;
 						
 					case VALUE_DISPLAY.matrix :		
-						editWidget = new matrixGrid(_txt, function(val, index) /*=>*/ {return setValueInspector(val, index)}, unit );
+						editWidget = new matrixGrid(_txt, function(val, i) /*=>*/ {return setValueInspector(val, i)}, unit );
 						if(struct_has(display_data, "size")) editWidget.setSize(display_data.size);
 						
 						for( var i = 0, n = array_length(animators); i < n; i++ )
@@ -773,7 +777,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break;
 						
 					case VALUE_DISPLAY.boolean_grid :
-						editWidget = new matrixGrid(_txt, function(val, index) /*=>*/ {return setValueInspector(val, index)}, unit );
+						editWidget = new matrixGrid(_txt, function(val, i) /*=>*/ {return setValueInspector(val, i)}, unit );
 						if(struct_has(display_data, "size")) editWidget.setSize(display_data.size);
 						
 						for( var i = 0, n = array_length(animators); i < n; i++ )
@@ -783,7 +787,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break;
 						
 					case VALUE_DISPLAY.transform :	
-						editWidget = new transformBox(function(val, index) /*=>*/ {return setValueInspector(val, index)});
+						editWidget = new transformBox(function(val, i) /*=>*/ {return setValueInspector(val, i)});
 						
 						extract_node = "Node_Transform_Array";
 						break;
@@ -797,14 +801,14 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break;
 						
 					case VALUE_DISPLAY.d3quarternion :
-						editWidget = new quarternionBox(function(val, index) /*=>*/ {return setValueInspector(val, index)});
+						editWidget = new quarternionBox(function(val, i) /*=>*/ {return setValueInspector(val, i)});
 						
 						extract_node = "Node_Vector4";
 						attributes.angle_display = QUARTERNION_DISPLAY.euler;
 						break;
 						
 					case VALUE_DISPLAY.path_anchor :
-						editWidget = new pathAnchorBox(function(val, index) /*=>*/ {return setValueInspector(val, index)});
+						editWidget = new pathAnchorBox(function(val, i) /*=>*/ {return setValueInspector(val, i)});
 						extract_node = "Node_Path_Anchor";
 						break;
 						
@@ -1524,28 +1528,28 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 	}
 	
-	static setValueInspector = function(_val = 0, index = noone, time = CURRENT_FRAME) { // This should be in panel_inspector not here. 
+	static setValueInspector = function(_val = 0, _index = noone, time = CURRENT_FRAME) { // This should be in panel_inspector not here. 
 		INLINE
 		
 		var res = false;
 		
 		if(PANEL_INSPECTOR && PANEL_INSPECTOR.inspectGroup == 1) {
-			var ind = self.index;
+			var ind = index;
 			
 			for( var i = 0, n = array_length(PANEL_INSPECTOR.inspectings); i < n; i++ ) {
 				var _node = PANEL_INSPECTOR.inspectings[i];
 				if(ind >= array_length(_node.inputs)) continue;
 				
-				var r = _node.inputs[ind].setValueDirect(_val, index, true, time);
+				var r = _node.inputs[ind].setValueDirect(_val, _index, true, time);
 				if(_node == node) res = r;
 			}
 		} else
-			res = setValueDirect(_val, index, true, time);
+			res = setValueDirect(_val, _index, true, time);
 		
 		return res;
 	}
 	
-	static setValueDirect = function(val = 0, index = noone, record = true, time = CURRENT_FRAME, _update = true) {
+	static setValueDirect = function(val = 0, _index = noone, record = true, time = CURRENT_FRAME, _update = true) {
 		is_modified = true;
 		var updated = false;
 		var _val    = val;
@@ -1554,18 +1558,18 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		record &= record_value & _inp;
 		
 		if(sep_axis) {
-			if(index == noone) {
+			if(_index == noone) {
 				for( var i = 0, n = array_length(animators); i < n; i++ )
 					updated |= animators[i].setValue(val[i], record, time); 
 			} else
-				updated = animators[index].setValue(val, record, time);
+				updated = animators[_index].setValue(val, record, time);
 				
 		} else {
-			if(index != noone) {
+			if(_index != noone) {
 				_val = animator.getValue(time);
 				if(_inp) _val = variable_clone(_val); 
 				
-				_val[index] = val;
+				_val[_index] = val;
 			}
 			
 			updated = animator.setValue(_val, record, time);
@@ -1579,10 +1583,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(is_instanceof(self, __NodeValue_Dimension))
 			attributes.use_project_dimension = false;
 		
-		if(connect_type == CONNECT_TYPE.input && self.index >= 0) {
+		if(connect_type == CONNECT_TYPE.input && index >= 0) {
 			var _val = getValue(time);
 			
-			node.inputs_data[self.index]         = _val; // setInputData(self.index, _val);
+			node.inputs_data[index]         = _val; // setInputData(index, _val);
 			node.input_value_map[$ internalName] = _val;
 		}
 		
@@ -1597,7 +1601,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		if(connect_type == CONNECT_TYPE.output) {
-			if(self.index == 0) {
+			if(index == 0) {
 				node.preview_value = getValue();
 				node.preview_array = $"[{array_shape(node.preview_value)}]";
 			}
@@ -1608,7 +1612,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(_update) { // This part used to have !IS_PLAYING
 			node.triggerRender();
-			node.valueUpdate(self.index);
+			node.valueUpdate(index);
 			node.clearCacheForward();
 		}
 		
