@@ -1680,8 +1680,8 @@ function Panel_Preference() : PanelContent() constructor {
     		
     		var _rw = page_width - ui(8);
     		var _rh = string_height_ext(_txt, -1, _rw - ui(16)) + ui(8);
-    		var _rx = ui(2);
-    		var _ry = h - ui(2) - _rh;
+    		var _rx = ui(6);
+    		var _ry = h - ui(6) - _rh;
     		
     		draw_sprite_stretched_ext(THEME.box_r5_clr, 0, _rx, _ry, _rw, _rh, COLORS._main_accent, 1);
     		draw_text_ext_add(_rx + _rw / 2, _ry + _rh / 2, _txt, -1, _rw - ui(16));
