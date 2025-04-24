@@ -3866,7 +3866,6 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
     function searchWiki() {
     	if(array_empty(nodes_selecting)) return;
     	
-    	
     	var dia = dialogCall(o_dialog_generic)
     		.setContent("Open URL", "Open documentation in browser?")
     		.setButtons([

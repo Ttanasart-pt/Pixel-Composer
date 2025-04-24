@@ -18,6 +18,19 @@ function Panel_Preference() : PanelContent() constructor {
 	hotkey_cont_h = ui(240);
 	hotkey_height = panel_height - hotkey_cont_h - ui(32);
     
+    function prefSet(_key, _val, _restart = false) {
+    	struct_set(PREFERENCES, _key, _val);
+    	should_restart |= _restart;
+    	PREF_SAVE();
+    }
+    
+    function prefToggle(_key, _apply = false, _restart = false) {
+    	struct_set(PREFERENCES, _key, !struct_try_get(PREFERENCES, _key));
+    	should_restart |= _restart;
+    	if(_apply) PREF_APPLY();
+    	PREF_SAVE();
+    }
+    
     #region pages
     	page_current = 0;
     	page[0] = __txtx("pref_pages_general", "General");
@@ -101,49 +114,49 @@ function Panel_Preference() : PanelContent() constructor {
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
     			__txtx("pref_double_click_delay", "Double click delay"),
     			"double_click_delay",
-    			slider(0, 1, 0.01, function(val) /*=>*/ { PREFERENCES.double_click_delay = val; PREF_SAVE(); })
+    			slider(0, 1, 0.01, function(val) /*=>*/ {return prefSet("double_click_delay", val)})
     		));
     		
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
     			__txtx("pref_mouse_wheel_speed", "Scroll speed"),
     			"mouse_wheel_speed",
-    			new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ { PREFERENCES.mouse_wheel_speed = val; PREF_SAVE(); })
+    			new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ {return prefSet("mouse_wheel_speed", val)})
     		));
     		
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
     			__txtx("pref_keyboard_hold_start", "Keyboard hold start"),
     			"keyboard_repeat_start",
-    			slider(0, 1, 0.01, function(val) /*=>*/ { PREFERENCES.keyboard_repeat_start = val; PREF_SAVE(); })
+    			slider(0, 1, 0.01, function(val) /*=>*/ {return prefSet("keyboard_repeat_start", val)})
     		));
     		
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
     			__txtx("pref_keyboard_repeat_delay", "Keyboard repeat delay"),
     			"keyboard_repeat_speed",
-    			slider(0, 1, 0.01, function(val) /*=>*/ { PREFERENCES.keyboard_repeat_speed = val; PREF_SAVE(); })
+    			slider(0, 1, 0.01, function(val) /*=>*/ {return prefSet("keyboard_repeat_speed", val)})
     		));
     		
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
     			__txtx("pref_keyboard_check_sweep", "Keyboard check sweep"),
     			"keyboard_check_sweep",
-    			new checkBox(function() /*=>*/ { PREFERENCES.keyboard_check_sweep = !PREFERENCES.keyboard_check_sweep; PREF_SAVE(); })
+    			new checkBox(function() /*=>*/ {return prefToggle("keyboard_check_sweep")})
     		));
     		
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
     			__txtx("pref_expand_hovering_panel", "Expand hovering panel"),
     			"expand_hover",
-    			new checkBox(function() /*=>*/ { PREFERENCES.expand_hover = !PREFERENCES.expand_hover; PREF_SAVE(); })
+    			new checkBox(function() /*=>*/ {return prefToggle("expand_hover")})
     		));
     	
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
     			__txtx("pref_expand_lock_mouse_slider", "Lock mouse when sliding"),
     			"slider_lock_mouse",
-    			new checkBox(function() /*=>*/ { PREFERENCES.slider_lock_mouse = !PREFERENCES.slider_lock_mouse; PREF_SAVE(); })
+    			new checkBox(function() /*=>*/ {return prefToggle("slider_lock_mouse")})
     		));
     		
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
     			__txtx("pref_pen_pool_delay", "Pen leave delay"),
     			"pen_pool_delay",
-    			new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ { PREFERENCES.pen_pool_delay = max(0, val); PREF_SAVE(); })
+    			new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ {return prefSet("pen_pool_delay", max(0, val))})
     		));
     		
     	ds_list_add(pref_global, __txt("Save/Load"));
@@ -151,37 +164,37 @@ function Panel_Preference() : PanelContent() constructor {
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
     			__txtx("pref_auto_save_time", "Autosave delay (-1 to disable)"),
     			"auto_save_time",
-    			new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ { PREFERENCES.auto_save_time = val; PREF_SAVE(); })
+    			new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ {return prefSet("auto_save_time", val)})
     		));
     		
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
     			__txtx("pref_save_layout", "Save layout"),
     			"save_layout",
-    			new checkBox(function() /*=>*/ { PREFERENCES.save_layout = !PREFERENCES.save_layout; PREF_SAVE(); })
+    			new checkBox(function() /*=>*/ {return prefToggle("save_layout")})
     		));
     		
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
     			__txtx("pref_save_file_minify", "Minify save file"),
     			"save_file_minify",
-    			new checkBox(function() /*=>*/ { PREFERENCES.save_file_minify = !PREFERENCES.save_file_minify; PREF_SAVE(); })
+    			new checkBox(function() /*=>*/ {return prefToggle("save_file_minify")})
     		));
     		
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
     			__txtx("pref_save_file_compress", "Compress save file"),
     			"save_compress",
-    			new checkBox(function() /*=>*/ { PREFERENCES.save_compress = !PREFERENCES.save_compress; PREF_SAVE(); })
+    			new checkBox(function() /*=>*/ {return prefToggle("save_compress")})
     		));
     		
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
     			__txtx("pref_save_backups", "Backup save(s) amount"),
     			"save_backup",
-    			new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ { PREFERENCES.save_backup = max(0, val);  PREF_SAVE(); })
+    			new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ {return prefSet("save_backup", max(0, val))})
     		));
     		
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
     			__txtx("pref_save_file_thumbnail", "Save Thumbnail"),
     			"save_thumbnail",
-    			new checkBox(function() /*=>*/ { PREFERENCES.save_thumbnail = !PREFERENCES.save_thumbnail; PREF_SAVE(); })
+    			new checkBox(function() /*=>*/ {return prefToggle("save_thumbnail")})
     		));
     	
     	ds_list_add(pref_global, __txt("Crash"));
@@ -189,13 +202,13 @@ function Panel_Preference() : PanelContent() constructor {
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
     			__txtx("pref_legacy_exception", "Use legacy exception handler"),
     			"use_legacy_exception",
-    			new checkBox(function() /*=>*/ { PREFERENCES.use_legacy_exception = !PREFERENCES.use_legacy_exception; PREF_APPLY(); PREF_SAVE(); })
+    			new checkBox(function() /*=>*/ {return prefToggle("use_legacy_exception", true)})
     		));
     		
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
     			__txtx("pref_crash_dialog", "Show dialog after crash"),
     			"show_crash_dialog",
-    			new checkBox(function() /*=>*/ { PREFERENCES.show_crash_dialog = !PREFERENCES.show_crash_dialog;  PREF_APPLY(); PREF_SAVE(); })
+    			new checkBox(function() /*=>*/ {return prefToggle("show_crash_dialog", true)})
     		));
     		
     	ds_list_add(pref_global, __txt("Misc"));
@@ -203,22 +216,14 @@ function Panel_Preference() : PanelContent() constructor {
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
     			__txtx("pref_clear_temp", "Clear temp file on close"),
     			"clear_temp_on_close",
-    			new checkBox(function() /*=>*/ { PREFERENCES.clear_temp_on_close = !PREFERENCES.clear_temp_on_close; PREF_SAVE(); })
+    			new checkBox(function() /*=>*/ {return prefToggle("clear_temp_on_close")})
     		));
     		
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
     			__txtx("pref_enable_test_mode", "Enable developer mode*"),
     			"test_mode",
-    			new checkBox(function() /*=>*/ { PREFERENCES.test_mode = !PREFERENCES.test_mode; should_restart = true; PREF_SAVE(); })
+    			new checkBox(function() /*=>*/ {return prefToggle("test_mode", false, true)})
     		));
-    		
-    		// if(PREFERENCES.test_mode) {
-    		// 	ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
-    		// 		__txtx("pref_exp_popup_dialog", "[Experimental] Pop-up Dialog"),
-    		// 		"multi_window",
-    		// 		new checkBox(() => { PREFERENCES.multi_window = !PREFERENCES.multi_window; PREF_SAVE(); })
-    		// 	));
-    		// }
     	
     	ds_list_add(pref_global, __txt("Paths"));
     		
@@ -238,7 +243,7 @@ function Panel_Preference() : PanelContent() constructor {
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
     			__txtx("pref_directory_temp", "Temp directory path*"),
     			"temp_path",
-    			new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ { PREFERENCES.temp_path = txt; PREF_SAVE(); })
+    			new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ {return prefSet("temp_path", txt)})
     				.setSideButton(button(function() /*=>*/ { PREFERENCES.temp_path = get_directory(PREFERENCES.temp_path); PREF_SAVE(); }, THEME.button_path_icon))
     				.setFont(f_p2).setEmpty(),
     		));
@@ -266,7 +271,7 @@ function Panel_Preference() : PanelContent() constructor {
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
     			__txtx("pref_directory_ImageMagick", "ImageMagick path*"),
     			"ImageMagick_path",
-    			new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ { PREFERENCES.ImageMagick_path = txt; PREF_SAVE(); })
+    			new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ {return prefSet("ImageMagick_path", txt)})
     				.setSideButton(button(function() /*=>*/ { PREFERENCES.ImageMagick_path = get_directory(PREFERENCES.ImageMagick_path); PREF_SAVE(); }, THEME.button_path_icon))
     				.setFont(f_p2).setEmpty(),
     		));
@@ -274,7 +279,7 @@ function Panel_Preference() : PanelContent() constructor {
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
     			__txtx("pref_directory_webp", "Webp path*"),
     			"webp_path",
-    			new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ { PREFERENCES.webp_path = txt; PREF_SAVE(); })
+    			new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ {return prefSet("webp_path")})
     				.setSideButton(button(function() /*=>*/ { PREFERENCES.webp_path = get_directory(PREFERENCES.webp_path); PREF_SAVE(); }, THEME.button_path_icon))
     				.setFont(f_p2).setEmpty(),
     		));
@@ -282,7 +287,7 @@ function Panel_Preference() : PanelContent() constructor {
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
     			__txtx("pref_directory_gifski", "Gifski path*"),
     			"gifski_path",
-    			new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ { PREFERENCES.gifski_path = txt; PREF_SAVE(); })
+    			new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ {return prefSet("gifski_path")})
     				.setSideButton(button(function() /*=>*/ { PREFERENCES.gifski_path = get_directory(PREFERENCES.gifski_path); PREF_SAVE(); }, THEME.button_path_icon))
     				.setFont(f_p2).setEmpty(),
     		));
@@ -290,7 +295,7 @@ function Panel_Preference() : PanelContent() constructor {
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
     			__txtx("pref_directory_FFmpeg", "FFmpeg path*"),
     			"ffmpeg_path",
-    			new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ { PREFERENCES.gifski_path = txt; PREF_SAVE(); })
+    			new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ {return prefSet("gifski_path")})
     				.setSideButton(button(function() /*=>*/ { PREFERENCES.ffmpeg_path = get_directory(PREFERENCES.ffmpeg_path); PREF_SAVE(); }, THEME.button_path_icon))
     				.setFont(f_p2).setEmpty(),
     		));
@@ -332,6 +337,52 @@ function Panel_Preference() : PanelContent() constructor {
     		
     #endregion
     
+    #region language
+    	var _localLink = "https://gist.githubusercontent.com/Ttanasart-pt/abe375c929fe8eb7e8463a66c3bde389/raw/locale";
+    	asyncCall(http_get(_localLink), function(param, data) /*=>*/ {
+			var sta = data[? "status"];
+			var res = data[? "result"];
+    		
+    		var _arr = json_try_parse(res, -1);
+    		if(!is_array(_arr) || array_empty(_arr)) return;
+    		
+    		array_push(locals, -1);
+    		
+    		for( var i = 0, n = array_length(_arr); i < n; i++ ) {
+    			var _lc = _arr[i];
+    			var _sc = new scrollItem(_lc.language, THEME.globe).setTooltip(_lc.link);
+    			_sc.data = _lc;
+    			
+    			array_push(locals, _sc);
+    		}
+    	});
+    	
+    	locals = [];
+		var f = file_find_first(DIRECTORY + "Locale/*", fa_directory);
+		while(f != "") {
+			if(directory_exists(DIRECTORY + "Locale/" + f)) { if(f != "_extend") array_push(locals, f); }
+			f = file_find_next();
+		}
+		file_find_close();
+		
+		item_locale = new __Panel_Linear_Setting_Item_Preference(
+			__txtx("pref_interface_language", "Interface Language*"),
+			"local",
+			new scrollBox(locals, function(_idx) /*=>*/ { 
+				var _l = array_safe_get(locals, _idx, "en");
+				if(is_string(_l)) {
+					prefSet("locals", _l, true); 
+					return;
+				}
+				
+				if(is_struct(_l)) {
+					var _url = struct_try_get(_l.data, "link", "");
+					if(_url != "") URL_open(_url);
+				}
+			}, false)
+		);
+    #endregion
+    
     #region interface
     	pref_appr = ds_list_create();
     	
@@ -357,38 +408,21 @@ function Panel_Preference() : PanelContent() constructor {
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
     			__txtx("pref_ui_frame_rate", "UI frame rate"),
     			"ui_framerate",
-    			new textBox(TEXTBOX_INPUT.number, function(str) /*=>*/ { PREFERENCES.ui_framerate = max(15, round(real(str))); PREF_SAVE(); })
+    			new textBox(TEXTBOX_INPUT.number, function(str) /*=>*/ {return prefSet("ui_framerate", max(15, round(real(str))))})
     		));
     		
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
     			__txtx("pref_ui_frame_rate", "UI inactive frame rate"),
     			"ui_framerate_non_focus",
-    			new textBox(TEXTBOX_INPUT.number, function(str) /*=>*/ { PREFERENCES.ui_framerate_non_focus = max(1, round(real(str))); PREF_SAVE(); })
+    			new textBox(TEXTBOX_INPUT.number, function(str) /*=>*/ {return prefSet("ui_framerate_non_focus", max(1, round(real(str))))})
     		));
     		
-    		locals = [];
-    		var f = file_find_first(DIRECTORY + "Locale/*", fa_directory);
-    		while(f != "") {
-    			if(directory_exists(DIRECTORY + "Locale/" + f)) { if(f != "_extend") array_push(locals, f); }
-    			f = file_find_next();
-    		}
-    		file_find_close();
-    		
-    		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_interface_language", "Interface Language*"),
-    			"local",
-    			new scrollBox(locals, function(str) /*=>*/ { 
-    				should_restart = true;
-    				if(str < 0) return;
-    				PREFERENCES.local = locals[str];
-    				PREF_SAVE();
-    			}, false)
-    		));
+    		ds_list_add(pref_appr, item_locale);
     		
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
     			__txtx("pref_ui_font", "Overwrite UI font") + "*",
     			"font_overwrite",
-    			new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ { PREFERENCES.font_overwrite = txt; should_restart = true; PREF_SAVE(); })
+    			new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ {return prefSet("font_overwrite", txt, true)})
     				.setSideButton(button(function() /*=>*/ { PREFERENCES.font_overwrite = get_open_filename_pxc("Font files (.ttf, .otf)|*.ttf;*.otf", ""); PREF_SAVE(); }, THEME.button_path_icon))
     				.setFont(f_p2).setEmpty()
     		));
@@ -396,41 +430,32 @@ function Panel_Preference() : PanelContent() constructor {
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
     			__txtx("pref_windows_control", "Use Windows style window control."),
     			"panel_menu_right_control",
-    			new checkBox(function() /*=>*/ { PREFERENCES.panel_menu_right_control = !PREFERENCES.panel_menu_right_control; PREF_SAVE(); })
+    			new checkBox(function() /*=>*/ {return prefToggle("panel_menu_right_control")})
     		));
     		
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
     			__txtx("pref_ui_fix_window_size", "Fix Window size on start"),
     			"window_fix",
-    			new checkBox(function() /*=>*/ { 
-    				PREFERENCES.window_fix = !PREFERENCES.window_fix;
-    				PREF_SAVE();
-    			})
+    			new checkBox(function() /*=>*/ {return prefToggle("window_fix")})
     		));
     		
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
     			__txtx("pref_ui_fix_width", "Fix width"),
     			"window_fix_width",
-    			new textBox(TEXTBOX_INPUT.number, function(str) /*=>*/ { 
-    				PREFERENCES.window_fix_width = max(1, round(real(str)));
-    				PREF_SAVE();
-    			})
+    			new textBox(TEXTBOX_INPUT.number, function(str) /*=>*/ {return prefSet("window_fix_width", max(1, round(real(str))))})
     		));
     		
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
     			__txtx("pref_ui_fix_height", "Fix height"),
     			"window_fix_height",
-    			new textBox(TEXTBOX_INPUT.number, function(str) /*=>*/ { 
-    				PREFERENCES.window_fix_height = max(1, round(real(str)));
-    				PREF_SAVE();
-    			})
+    			new textBox(TEXTBOX_INPUT.number, function(str) /*=>*/ {return prefSet("window_fix_height", max(1, round(real(str))))})
     		));
     		
     		if(TESTING) {
 	    		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
 	    			__txtx("pref_ui_window_shadoe", "Shadow"),
 	    			"window_shadow",
-	    			new checkBox(function() /*=>*/ { PREFERENCES.window_shadow = !PREFERENCES.window_shadow; PREF_SAVE(); PREF_APPLY(); })
+	    			new checkBox(function() /*=>*/ {return prefToggle("window_shadow", true)})
 	    		));
     		}
     		
@@ -440,7 +465,7 @@ function Panel_Preference() : PanelContent() constructor {
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
     			__txtx("pref_supporter_icon", "Show supporter icon"),
     			"show_supporter_icon",
-    			new checkBox(function() /*=>*/ { PREFERENCES.show_supporter_icon = !PREFERENCES.show_supporter_icon; PREF_SAVE(); })
+    			new checkBox(function() /*=>*/ {return prefToggle("show_supporter_icon")})
     		));
     	
     	ds_list_add(pref_appr, __txt("Graph")); //////////////////////////////////////////////////////////////////////// Graph
@@ -448,37 +473,37 @@ function Panel_Preference() : PanelContent() constructor {
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
     			__txtx("pref_add_node_remember", "Remember add node position"),
     			"add_node_remember",
-    			new checkBox(function() /*=>*/ { PREFERENCES.add_node_remember = !PREFERENCES.add_node_remember; })
+    			new checkBox(function() /*=>*/ {return prefToggle("add_node_remember")})
     		));
     		
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
     			__txtx("pref_graph_group_in_tab", "Open group in new tab"),
     			"graph_open_group_in_tab",
-    			new checkBox(function() /*=>*/ { PREFERENCES.graph_open_group_in_tab = !PREFERENCES.graph_open_group_in_tab; PREF_SAVE(); })
+    			new checkBox(function() /*=>*/ {return prefToggle("graph_open_group_in_tab")})
     		));
     		
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
     			__txtx("pref_graph_zoom_smoothing", "Graph zoom smoothing"),
     			"graph_zoom_smoooth",
-    			new textBox(TEXTBOX_INPUT.number, function(str) /*=>*/ { PREFERENCES.graph_zoom_smoooth = max(1, round(real(str))); PREF_SAVE(); })
+    			new textBox(TEXTBOX_INPUT.number, function(str) /*=>*/ {return prefSet("graph_zoom_smoooth", max(1, round(real(str))))})
     		));
     		
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
     			__txtx("panel_graph_group_require_shift", "Hold Shift to enter group"),
     			"panel_graph_group_require_shift",
-    			new checkBox(function() /*=>*/ { PREFERENCES.panel_graph_group_require_shift = !PREFERENCES.panel_graph_group_require_shift; PREF_SAVE(); })
+    			new checkBox(function() /*=>*/ {return prefToggle("panel_graph_group_require_shift")})
     		));
     		
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
     			__txtx("pref_use_alt", "Use ALT for"),
     			"alt_picker",
-    			new buttonGroup(__txts([ "Pan", "Color Picker" ]), function(val) /*=>*/ { PREFERENCES.alt_picker = val; PREF_SAVE(); })
+    			new buttonGroup(__txts([ "Pan", "Color Picker" ]), function(val) /*=>*/ {return prefSet("alt_picker", val)})
     		));
     		
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item(
     			__txtx("pref_pan_key", "Panning key"),
-    			new scrollBox([ "Middle Mouse", "Mouse 4", "Mouse 5" ], function(val) /*=>*/ { PREFERENCES.pan_mouse_key = val + 3; PREF_SAVE(); }),
-    			function() /*=>*/ { return PREFERENCES.pan_mouse_key - 3; },
+    			new scrollBox([ "Middle Mouse", "Mouse 4", "Mouse 5" ], function(val) /*=>*/ {return prefSet("pan_mouse_key", val + 3)}),
+    			function() /*=>*/ {return PREFERENCES.pan_mouse_key - 3},
     		).setKey("panning_key"));
     		
     	ds_list_add(pref_appr, __txt("Preview")); ////////////////////////////////////////////////////////////////////// Preview
@@ -486,7 +511,7 @@ function Panel_Preference() : PanelContent() constructor {
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
     			__txtx("pref_preview_show_real_fps", "Show real fps"),
     			"panel_preview_show_real_fps",
-    			new checkBox(function(str) /*=>*/ { PREFERENCES.panel_preview_show_real_fps = !PREFERENCES.panel_preview_show_real_fps; PREF_SAVE(); })
+    			new checkBox(function() /*=>*/ {return prefToggle("panel_preview_show_real_fps")})
     		));
     		
     	ds_list_add(pref_appr, __txt("Inspector")); //////////////////////////////////////////////////////////////////// Inspector
@@ -494,7 +519,7 @@ function Panel_Preference() : PanelContent() constructor {
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
     			__txtx("pref_inspector_focus_on_double_click", "Focus on double click"),
     			"inspector_focus_on_double_click",
-    			new checkBox(function(str) /*=>*/ { PREFERENCES.inspector_focus_on_double_click = !PREFERENCES.inspector_focus_on_double_click; PREF_SAVE(); })
+    			new checkBox(function() /*=>*/ {return prefToggle("inspector_focus_on_double_click")})
     		));
     		
     	ds_list_add(pref_appr, __txt("Collection")); /////////////////////////////////////////////////////////////////// Collection
@@ -502,7 +527,7 @@ function Panel_Preference() : PanelContent() constructor {
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
     			__txtx("pref_collection_preview_speed", "Collection preview speed"),
     			"collection_preview_speed",
-    			new textBox(TEXTBOX_INPUT.number, function(str) /*=>*/ { PREFERENCES.collection_preview_speed = max(1, round(real(str))); PREF_SAVE(); })
+    			new textBox(TEXTBOX_INPUT.number, function(str) /*=>*/ {return prefSet("collection_preview_speed", max(1, round(real(str))))})
     		));
     		
     	ds_list_add(pref_appr, __txt("Notification")); ///////////////////////////////////////////////////////////////// Notification
@@ -510,7 +535,7 @@ function Panel_Preference() : PanelContent() constructor {
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
     			__txtx("pref_warning_notification_time", "Warning notification time"),
     			"notification_time",
-    			new textBox(TEXTBOX_INPUT.number, function(str) /*=>*/ { PREFERENCES.notification_time = max(0, round(real(str))); PREF_SAVE(); })
+    			new textBox(TEXTBOX_INPUT.number, function(str) /*=>*/ {return prefSet("notification_time", max(0, round(real(str))))})
     		));
     		
     	ds_list_add(pref_appr, __txt("Text Area")); //////////////////////////////////////////////////////////////////// Text area
@@ -518,20 +543,20 @@ function Panel_Preference() : PanelContent() constructor {
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
     			__txtx("pref_widget_autocomplete_delay", "Code Autocomplete delay"),
     			"widget_autocomplete_delay",
-    			new textBox(TEXTBOX_INPUT.number, function(str) /*=>*/ { PREFERENCES.widget_autocomplete_delay = round(real(str)); PREF_SAVE(); })
+    			new textBox(TEXTBOX_INPUT.number, function(str) /*=>*/ {return prefSet("widget_autocomplete_delay", round(real(str)))})
     		));
     	
     	if(IS_PATREON) {
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
     			__txtx("pref_widget_textbox_shake", "Textbox shake"),
     			"textbox_shake",
-    			new textBox(TEXTBOX_INPUT.number, function(str) /*=>*/ { PREFERENCES.textbox_shake = real(str); PREF_SAVE(); })
+    			new textBox(TEXTBOX_INPUT.number, function(str) /*=>*/ {return prefSet("textbox_shake", real(str))})
     		).patreon());
     		
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
     			__txtx("pref_widget_textbox_particles", "Textbox particles"),
     			"textbox_particle",
-    			new textBox(TEXTBOX_INPUT.number, function(str) /*=>*/ { PREFERENCES.textbox_particle = round(real(str)); PREF_SAVE(); })
+    			new textBox(TEXTBOX_INPUT.number, function(str) /*=>*/ {return prefSet("textbox_particle", round(real(str)))})
     		).patreon());
     		
     	}
@@ -546,25 +571,25 @@ function Panel_Preference() : PanelContent() constructor {
 			ds_list_add(pref_node, new __Panel_Linear_Setting_Item_Preference(
 				__txtx("pref_node_default_depth", "Default surface depth"),
 				"node_default_depth",
-				new scrollBox(global.SURFACE_FORMAT_NAME, function(val) /*=>*/ { PREFERENCES.node_default_depth = val; PREF_SAVE(); })
+				new scrollBox(global.SURFACE_FORMAT_NAME, function(val) /*=>*/ {return prefSet("node_default_depth", val)})
 			));
 			
 			ds_list_add(pref_node, new __Panel_Linear_Setting_Item_Preference(
 				__txtx("pref_node_default_interpolation", "Default interpolation"),
 				"node_default_interpolation",
-				new scrollBox(global.SURFACE_INTERPOLATION, function(val) /*=>*/ { PREFERENCES.node_default_interpolation = val; PREF_SAVE(); })
+				new scrollBox(global.SURFACE_INTERPOLATION, function(val) /*=>*/ {return prefSet("node_default_interpolation", val)})
 			));
 			
 			ds_list_add(pref_node, new __Panel_Linear_Setting_Item_Preference(
 				__txtx("pref_node_default_oversample", "Default oversample"),
 				"node_default_oversample",
-				new scrollBox(global.SURFACE_OVERSAMPLE, function(val) /*=>*/ { PREFERENCES.node_default_oversample = val; PREF_SAVE(); })
+				new scrollBox(global.SURFACE_OVERSAMPLE, function(val) /*=>*/ {return prefSet("node_default_oversample", val)})
 			));
 			
 			ds_list_add(pref_node, new __Panel_Linear_Setting_Item_Preference(
 				__txtx("pref_node_param_width", "Default param width"),
 				"node_param_width",
-				new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ { PREFERENCES.node_param_width = val; PREF_SAVE(); })
+				new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ {return prefSet("node_param_width", val)})
 			));
 			
 		ds_list_add(pref_node, __txt("Add node"));
@@ -572,7 +597,7 @@ function Panel_Preference() : PanelContent() constructor {
 			ds_list_add(pref_node, new __Panel_Linear_Setting_Item_Preference(
 				__txtx("pref_node_add_select", "Select node on add"),
 				"node_add_select",
-				new checkBox(function() /*=>*/ { PREFERENCES.node_add_select = !PREFERENCES.node_add_select; PREF_SAVE(); })
+				new checkBox(function() /*=>*/ {return prefToggle("node_add_select")})
 			));
 			
 		ds_list_add(pref_node, __txt("Display"));
@@ -580,13 +605,13 @@ function Panel_Preference() : PanelContent() constructor {
 			ds_list_add(pref_node, new __Panel_Linear_Setting_Item_Preference(
 				__txtx("pref_node_param_show", "Show paramater on new node"),
 				"node_param_show",
-				new checkBox(function() /*=>*/ { PREFERENCES.node_param_show = !PREFERENCES.node_param_show; PREF_SAVE(); })
+				new checkBox(function() /*=>*/ {return prefToggle("node_param_show")})
 			));
 			
 			ds_list_add(pref_node, new __Panel_Linear_Setting_Item_Preference(
 				__txtx("pref_node_3d_preview", "3D Preview resolution"),
 				"node_3d_preview_size",
-				new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ { PREFERENCES.node_3d_preview_size = clamp(val, 16, 1024); PREF_SAVE(); })
+				new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ {return prefSet("node_3d_preview_size", clamp(val, 16, 1024))})
 			));
 		
 		ds_list_add(pref_node, __txt("Files"));
@@ -594,7 +619,7 @@ function Panel_Preference() : PanelContent() constructor {
 			ds_list_add(pref_node, new __Panel_Linear_Setting_Item_Preference(
 				__txtx("pref_file_watcher_delay", "File watcher delay (s)"),
 				"file_watcher_delay",
-				new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ { PREFERENCES.file_watcher_delay = val; PREF_SAVE(); })
+				new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ {return prefSet("file_watcher_delay", val)})
 			));
 		
     #endregion

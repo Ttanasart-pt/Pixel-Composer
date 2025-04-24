@@ -369,7 +369,6 @@
 		json_save_struct(DIRECTORY + "Nodes/recent.json",           global.RECENT_NODES);
 		
 		hotkey_serialize();
-		print("save", PREFERENCES.versions);
 	}
 	
 	function PREF_LOAD() {

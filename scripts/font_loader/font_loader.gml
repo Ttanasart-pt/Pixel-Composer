@@ -118,24 +118,18 @@ function _font_load_default(name, def) {
 }
 
 function _font_load_from_struct(str, name, def, over = true) {
-	if(!struct_has(str, name)) return def;
+	if(!struct_has(str, name)) { noti_status($"Font data {name} not found. Rollback to default font."); return def; }
 	
-	var font = str[$ name];
-	var path = "";
+	var _data = str[$ name];
+	var _path = over && file_exists_empty(PREFERENCES.font_overwrite)? PREFERENCES.font_overwrite : _font_path(_data.path);
 	
-	if(over && file_exists_empty(PREFERENCES.font_overwrite)) 
-		path = PREFERENCES.font_overwrite;
-	else
-		path = _font_path(font.path);
+	if(!file_exists_empty(_path)) { noti_status($"Font resource {_path} not found. Rollback to default font."); return def; }
 	
-	if(!file_exists_empty(path)) {
-		noti_status($"Font resource {path} not found. Rollback to default font.");
-		return def;
-	}
+	var _sdf = struct_try_get(_data, "sdf", false);
+	var _aa  = struct_try_get(THEME_VALUE, "font_aa", true);
 	
-	font_add_enable_aa(THEME_VALUE.font_aa);
-	var _sdf  = struct_try_get(font, "sdf", false);
-	var _font = _font_add(path, round(font.size * UI_SCALE), _sdf);
+	font_add_enable_aa(_aa);
+	var _font = _font_add(_path, round(_data.size * UI_SCALE), _sdf);
 	
 	FONT_LIST[$ name] = { data: str, font: _font }
 	
@@ -145,7 +139,6 @@ function _font_load_from_struct(str, name, def, over = true) {
 function font_clear(font) { if(font_exists(font)) font_delete(font); }
 
 function loadFonts() {
-	
 	if(FONT_ISLOADED) {
 		font_clear(f_h1);
 		font_clear(f_h2);
