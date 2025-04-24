@@ -247,15 +247,15 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			return self;
 		}
 		
-		static updateName = function(_name) {
+		static updateName = function(_name, _custom = true) {
 			name          = _name;
-			name_custom   = true;
+			name_custom  |= _custom;
 			
 			setInternalName(name);
 			return self;
 		} 
 		
-		updateName(_name);
+		updateName(_name, false);
 		
 		if(connect_type == CONNECT_TYPE.input)
 			node.input_value_map[$ internalName] = _value;

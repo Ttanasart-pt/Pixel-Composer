@@ -198,3 +198,19 @@ function buttonTextIconInstant(active, spr, _x, _y, _w, _h, _m, _act, _hvr, _tip
 	
 	return _b;
 }
+
+function buttonInstantGlass(hover, focus, mx, my, bx, by, bw, bh, txt = "", aa = .3) {
+	var _hov = hover && point_in_rectangle(mx, my, bx, by, bx + bw, by + bh);
+	var _res = _hov;
+	
+	draw_sprite_stretched_ext(THEME.ui_panel, 0, bx, by, bw, bh, _hov? COLORS._main_value_positive : COLORS._main_icon, aa     + _hov * .1);
+	draw_sprite_stretched_ext(THEME.ui_panel, 1, bx, by, bw, bh, _hov? COLORS._main_value_positive : COLORS._main_icon, aa * 2 + _hov * .25);
+	
+	draw_set_text(f_p2, fa_center, fa_center, _hov? COLORS._main_value_positive : COLORS._main_icon);
+	draw_text_add(bx + bw / 2, by + bh / 2, txt);
+	
+	if(mouse_press(mb_left, focus && _hov))
+		_res = 2;
+		
+	return _res;
+}

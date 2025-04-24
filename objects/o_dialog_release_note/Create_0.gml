@@ -18,7 +18,8 @@ event_inherited();
 
 #region note
 	note_pre = "https://gist.githubusercontent.com/Ttanasart-pt/f21a140906a60c6e12c99ebfecec1645/raw/";
-	note_get = http_get(note_pre + RELEASE_STRING);
+	note_dir = "https://raw.githubusercontent.com/Ttanasart-pt/Pixel-Composer/refs/heads/main/releases/"
+	note_get = http_get(note_dir + RELEASE_STRING + ".md");
 	note     = "";
 	
 	sp_note = new scrollPane(content_w, content_h, function(_y, _m) {
@@ -145,9 +146,11 @@ event_inherited();
 	sp_dl = new scrollPane(content_w, content_h, function(_y, _m) {
 		draw_clear_alpha(COLORS.dialog_splash_badge, 1);
 		
+		var bw = 0 * ui(96);
+		
 		var xx = ui(8);
 		var yy = _y + ui(8);
-		var ww = sp_dl.surface_w - ui(16);
+		var ww = sp_dl.surface_w - ui(16) - bw - ui(4);
 		
 		for( var i = 0, n = array_length(dls); i < n; i++ ) {
 			var dl   = dls[i];
@@ -157,26 +160,37 @@ event_inherited();
 			var hov  = sHOVER && point_in_rectangle(_m[0], _m[1], xx, yy, xx + ww, yy + hh);
 			
 			draw_sprite_stretched(THEME.ui_panel_bg, 0, xx, yy, ww, hh);
+			draw_sprite_stretched_ext(THEME.ui_panel, 1, xx, yy, ww, hh, COLORS.node_display_text_frame_outline, 1);
 			
-			if(dl.status == 0 && hov) {
-				draw_sprite_stretched_ext(THEME.ui_panel, 1, xx, yy, ww, hh, COLORS._main_accent, 1);
-				if(mouse_press(mb_left, sFOCUS)) 
-					toggleDownload(dl);
-				
-				if(hov && mouse_press(mb_right, sFOCUS)) {
-					dl_selecting = dl;
-					menuCall("", [
-						menuItem("Download", function() /*=>*/ {return toggleDownload(dl_selecting)}),
-						menuItem("Open URL", function() /*=>*/ {return url_open(dl_selecting.link)}),
-					]);
+			if(dl.status == 0) {
+				if(hov) {
+					draw_sprite_stretched_ext(THEME.ui_panel, 1, xx, yy, ww, hh, COLORS._main_accent, 1);
+					if(mouse_press(mb_left, sFOCUS)) 
+						toggleDownload(dl);
+					
+					if(mouse_press(mb_right, sFOCUS)) {
+						dl_selecting = dl;
+						menuCall("", [
+							menuItem("Download", function() /*=>*/ {return toggleDownload(dl_selecting)}),
+							menuItem("Open URL", function() /*=>*/ {return url_open(dl_selecting.link)}),
+						]);
+					}
 				}
+				
+				// var _bx = xx + ww + ui(4);
+				// var _by = yy;
+				// var _bw = bw;
+				// var _bh = hh;
+				// if(buttonInstantGlass(sHOVER, sFOCUS, _m[0], _m[1], _bx, _by, _bw, _bh, __txt("Download"), .1) == 2) {
+					
+				// }
 				
 			} else if(dl.status == 2 && hov) {
 				draw_sprite_stretched_ext(THEME.ui_panel, 1, xx, yy, ww, hh, COLORS._main_accent, 1);
 				if(mouse_press(mb_left, sFOCUS)) 
 					shellOpenExplorer(filename_dir(dl.download_path));
 				
-				if(hov && mouse_press(mb_right, sFOCUS)) {
+				if(mouse_press(mb_right, sFOCUS)) {
 					dl_selecting = dl;
 					menuCall("", [
 						menuItem("Open",   function() /*=>*/ {return shellOpenExplorer(filename_dir(dl_selecting.download_path))}),
@@ -201,8 +215,7 @@ event_inherited();
 				if(mouse_press(mb_left, sFOCUS)) 
 					url_open(dl.link);
 				
-			} else 
-				draw_sprite_stretched_ext(THEME.ui_panel, 1, xx, yy, ww, hh, COLORS.node_display_text_frame_outline, 1);
+			}
 			
 			var tx = xx + ui(8);
 			

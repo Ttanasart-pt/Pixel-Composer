@@ -371,8 +371,9 @@ function Panel_Preference() : PanelContent() constructor {
 			"local",
 			new scrollBox(locals, function(_idx) /*=>*/ { 
 				var _l = array_safe_get(locals, _idx, "en");
+				
 				if(is_string(_l)) {
-					prefSet("locals", _l, true); 
+					prefSet("local", _l, true); 
 					return;
 				}
 				

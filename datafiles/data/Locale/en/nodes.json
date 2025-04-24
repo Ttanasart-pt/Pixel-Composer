@@ -5,6 +5,87 @@
     "inputs":[
       {
         "name":"Surface In"
+      },
+      {
+        "name":"Light shape",
+        "display_data":[
+          "Point",
+          "Ellipse",
+          "Line",
+          "Line asymmetric",
+          "Saber",
+          "Spot",
+          "Flame"
+        ]
+      },
+      {
+        "name":"Center"
+      },
+      {
+        "name":"Range"
+      },
+      {
+        "name":"Intensity"
+      },
+      {
+        "name":"Color"
+      },
+      {
+        "name":"Start"
+      },
+      {
+        "name":"Finish"
+      },
+      {
+        "name":"Sweep"
+      },
+      {
+        "name":"Sweep end"
+      },
+      {
+        "name":"Banding"
+      },
+      {
+        "name":"Attenuation",
+        "tooltip":"Control how light fade out over distance.",
+        "display_data":[
+          "Quadratic",
+          "Invert quadratic",
+          "Linear"
+        ]
+      },
+      {
+        "name":"Radial banding"
+      },
+      {
+        "name":"Radial start"
+      },
+      {
+        "name":"Radial band ratio"
+      },
+      {
+        "name":"Active"
+      },
+      {
+        "name":"Radius x"
+      },
+      {
+        "name":"Radius y"
+      },
+      {
+        "name":"Rotation"
+      },
+      {
+        "name":"Exponent"
+      },
+      {
+        "name":"Anti aliasing"
+      },
+      {
+        "name":"Two sides"
+      },
+      {
+        "name":"Thickness"
       }
     ],
     "outputs":[
@@ -785,6 +866,9 @@
           "XZ-Y",
           "X-ZY"
         ]
+      },
+      {
+        "name":"Material"
       }
     ],
     "outputs":[
@@ -1262,7 +1346,11 @@
   "Node_3D_Scene":{
     "name":"3D Scene",
     "tooltip":"Combine multiple 3D objects into a single junction.",
-    "inputs":[],
+    "inputs":[
+      {
+        "name":"Object"
+      }
+    ],
     "outputs":[
       {
         "name":"Scene"
@@ -1821,6 +1909,24 @@
       },
       {
         "name":"Bone scale"
+      },
+      {
+        "name":"Surface"
+      },
+      {
+        "name":"Transform"
+      },
+      {
+        "name":"Inherit Rotation"
+      },
+      {
+        "name":"Apply Bone Rotation"
+      },
+      {
+        "name":"Inherit Scale"
+      },
+      {
+        "name":"Apply Bone Scale"
       }
     ],
     "outputs":[
@@ -1878,6 +1984,9 @@
     "inputs":[
       {
         "name":"Armature"
+      },
+      {
+        "name":"bone"
       }
     ],
     "outputs":[
@@ -1923,6 +2032,9 @@
       {
         "name":"Spread array",
         "tooltip":"Unpack array and push the contents into the output one by one."
+      },
+      {
+        "name":"Input"
       }
     ],
     "outputs":[
@@ -1940,6 +2052,9 @@
       },
       {
         "name":"Spread array"
+      },
+      {
+        "name":"Value"
       }
     ],
     "outputs":[
@@ -2164,7 +2279,11 @@
   "Node_Array_Pin":{
     "name":"Array Pin",
     "tooltip":"Create a pin that can receive multiple values and return an array.",
-    "inputs":[],
+    "inputs":[
+      {
+        "name":"Input"
+      }
+    ],
     "outputs":[
       {
         "name":"Array"
@@ -2429,6 +2548,9 @@
     "inputs":[
       {
         "name":"Spread Content"
+      },
+      {
+        "name":"Value"
       }
     ],
     "outputs":[
@@ -3045,17 +3167,17 @@
       {
         "name":"Horizontal Align",
         "display_data":[
-          "@ref sprite(__newsprite1123)",
-          "@ref sprite(__newsprite1123)",
-          "@ref sprite(__newsprite1123)"
+          "@ref sprite(__newsprite1122)",
+          "@ref sprite(__newsprite1122)",
+          "@ref sprite(__newsprite1122)"
         ]
       },
       {
         "name":"Vertical Align",
         "display_data":[
-          "@ref sprite(__newsprite1124)",
-          "@ref sprite(__newsprite1124)",
-          "@ref sprite(__newsprite1124)"
+          "@ref sprite(__newsprite1123)",
+          "@ref sprite(__newsprite1123)",
+          "@ref sprite(__newsprite1123)"
         ]
       },
       {
@@ -4074,6 +4196,34 @@
       },
       {
         "name":"Dimension"
+      },
+      {
+        "name":"Element 0"
+      },
+      {
+        "name":"Positioning 0",
+        "display_data":[
+          "Space",
+          "Camera"
+        ]
+      },
+      {
+        "name":"Position 0"
+      },
+      {
+        "name":"Oversample 0",
+        "display_data":[
+          "Empty ",
+          "Repeat ",
+          "Repeat X",
+          "Repeat Y"
+        ]
+      },
+      {
+        "name":"Parallax 0"
+      },
+      {
+        "name":"Depth 0"
       }
     ],
     "outputs":[
@@ -5048,6 +5198,54 @@
       },
       {
         "name":"Dimension"
+      },
+      {
+        "name":"Surface 0"
+      },
+      {
+        "name":"Position 0"
+      },
+      {
+        "name":"Rotation 0"
+      },
+      {
+        "name":"Scale 0"
+      },
+      {
+        "name":"Blend 0",
+        "display_data":[
+          "Normal",
+          "Replace",
+          -1.0,
+          "Multiply",
+          "Color Burn",
+          "Linear Burn",
+          "Minimum",
+          -1.0,
+          "Add",
+          "Screen",
+          "Color Dodge",
+          "Maximum",
+          -1.0,
+          "Overlay",
+          "Soft Light",
+          "Hard Light",
+          "Vivid Light",
+          "Linear Light",
+          "Pin Light",
+          -1.0,
+          "Difference",
+          "Exclusion",
+          "Subtract",
+          "Divide",
+          -1.0,
+          "Hue",
+          "Saturation",
+          "Luminosity"
+        ]
+      },
+      {
+        "name":"Opacity 0"
       }
     ],
     "outputs":[
@@ -5068,6 +5266,9 @@
     "inputs":[
       {
         "name":"Dimension"
+      },
+      {
+        "name":"Surface"
       }
     ],
     "outputs":[
@@ -6281,6 +6482,12 @@
     "inputs":[
       {
         "name":"Equation"
+      },
+      {
+        "name":"Argument name"
+      },
+      {
+        "name":"Argument value"
       }
     ],
     "outputs":[
@@ -7482,7 +7689,11 @@
   "Node_GMRoom":{
     "name":"GMRoom",
     "tooltip":"",
-    "inputs":[],
+    "inputs":[
+      {
+        "name":"Data"
+      }
+    ],
     "outputs":[
       {
         "name":"Room Preview"
@@ -8674,6 +8885,26 @@
       },
       {
         "name":"Global"
+      },
+      {
+        "name":"Argument name"
+      },
+      {
+        "name":"Argument type",
+        "display_data":[
+          "Float",
+          "Int",
+          "Vec2",
+          "Vec3",
+          "Vec4",
+          "Mat3",
+          "Mat4",
+          "Sampler2D",
+          "Color"
+        ]
+      },
+      {
+        "name":"Argument value"
       }
     ],
     "outputs":[
@@ -8937,6 +9168,9 @@
       },
       {
         "name":"Group"
+      },
+      {
+        "name":"Input"
       }
     ],
     "outputs":[
@@ -10115,6 +10349,45 @@
       },
       {
         "name":"Mask feather"
+      },
+      {
+        "name":"Type",
+        "display_data":[
+          "Push",
+          "Twirl",
+          "Pinch",
+          "Bloat"
+        ]
+      },
+      {
+        "name":"Position"
+      },
+      {
+        "name":"Position 2"
+      },
+      {
+        "name":"Radius"
+      },
+      {
+        "name":"Intensity"
+      },
+      {
+        "name":"Falloff"
+      },
+      {
+        "name":"Falloff Curve"
+      },
+      {
+        "name":"Push"
+      },
+      {
+        "name":"Push path"
+      },
+      {
+        "name":"Push resolution"
+      },
+      {
+        "name":"Radius 2"
       }
     ],
     "outputs":[
@@ -10197,6 +10470,9 @@
           "Nor",
           "Xor"
         ]
+      },
+      {
+        "name":"a"
       }
     ],
     "outputs":[
@@ -10229,6 +10505,21 @@
       },
       {
         "name":"Execute on frame"
+      },
+      {
+        "name":"Argument name"
+      },
+      {
+        "name":"Argument type",
+        "display_data":[
+          "Number",
+          "String",
+          "Surface",
+          "Struct"
+        ]
+      },
+      {
+        "name":"Argument value"
       }
     ],
     "outputs":[
@@ -10284,6 +10575,21 @@
       },
       {
         "name":"Execute on frame"
+      },
+      {
+        "name":"Argument name"
+      },
+      {
+        "name":"Argument type",
+        "display_data":[
+          "Number",
+          "String",
+          "Surface",
+          "Struct"
+        ]
+      },
+      {
+        "name":"Argument value"
       }
     ],
     "outputs":[
@@ -10646,6 +10952,12 @@
         "name":"Input",
         "display_data":[
         ]
+      },
+      {
+        "name":"Index"
+      },
+      {
+        "name":"Normalize"
       }
     ],
     "outputs":[
@@ -10657,6 +10969,9 @@
       },
       {
         "name":"Direct values"
+      },
+      {
+        "name":"Value"
       }
     ]
   },
@@ -12040,6 +12355,33 @@
       },
       {
         "name":"Height map"
+      },
+      {
+        "name":"Type",
+        "display_data":[
+          "Point",
+          "Sun",
+          "Line",
+          "Spot"
+        ]
+      },
+      {
+        "name":"Position"
+      },
+      {
+        "name":"Range"
+      },
+      {
+        "name":"Intensity"
+      },
+      {
+        "name":"Color"
+      },
+      {
+        "name":"End Position"
+      },
+      {
+        "name":"End Color"
       }
     ],
     "outputs":[
@@ -12413,17 +12755,17 @@
       {
         "name":"Horizontal Alignment",
         "display_data":[
-          "@ref sprite(__newsprite1123)",
-          "@ref sprite(__newsprite1123)",
-          "@ref sprite(__newsprite1123)"
+          "@ref sprite(__newsprite1122)",
+          "@ref sprite(__newsprite1122)",
+          "@ref sprite(__newsprite1122)"
         ]
       },
       {
         "name":"Vertical Alignment",
         "display_data":[
-          "@ref sprite(__newsprite1124)",
-          "@ref sprite(__newsprite1124)",
-          "@ref sprite(__newsprite1124)"
+          "@ref sprite(__newsprite1123)",
+          "@ref sprite(__newsprite1123)",
+          "@ref sprite(__newsprite1123)"
         ]
       }
     ],
@@ -12904,6 +13246,9 @@
       },
       {
         "name":"Round anchor"
+      },
+      {
+        "name":"Anchor"
       }
     ],
     "outputs":[
@@ -12938,6 +13283,9 @@
       },
       {
         "name":"Round anchor"
+      },
+      {
+        "name":"Anchor"
       }
     ],
     "outputs":[
@@ -13049,7 +13397,11 @@
   "Node_Path_Array":{
     "name":"Path Combine",
     "tooltip":"Combine multiple path into one.",
-    "inputs":[],
+    "inputs":[
+      {
+        "name":"Path"
+      }
+    ],
     "outputs":[
       {
         "name":"Combined Path"
@@ -13228,6 +13580,12 @@
       },
       {
         "name":"Subangle"
+      },
+      {
+        "name":"Name 0"
+      },
+      {
+        "name":"Rule 0"
       }
     ],
     "outputs":[
@@ -13771,6 +14129,9 @@
       },
       {
         "name":"Smoothness"
+      },
+      {
+        "name":"Anchor"
       }
     ],
     "outputs":[
@@ -14125,12 +14486,12 @@
       {
         "name":"Type",
         "display_data":[
-          "@ref sprite(__newsprite927)",
-          "@ref sprite(__newsprite927)",
-          "@ref sprite(__newsprite927)",
-          "@ref sprite(__newsprite927)",
-          "@ref sprite(__newsprite927)",
-          "@ref sprite(__newsprite927)"
+          "@ref sprite(__newsprite938)",
+          "@ref sprite(__newsprite938)",
+          "@ref sprite(__newsprite938)",
+          "@ref sprite(__newsprite938)",
+          "@ref sprite(__newsprite938)",
+          "@ref sprite(__newsprite938)"
         ]
       },
       {
@@ -14144,6 +14505,150 @@
       },
       {
         "name":"Segments"
+      },
+      {
+        "name":"Effect Type",
+        "display_data":[
+          "Fill",
+          "Stroke",
+          "Corner",
+          "Highlight",
+          "Extrude",
+          "Shine"
+        ]
+      },
+      {
+        "name":"Color"
+      },
+      {
+        "name":"Intensity"
+      },
+      {
+        "name":"Pattern",
+        "display_data":[
+          "Solid",
+          -1.0,
+          "Stripe X",
+          "Stripe Y",
+          "Stripe D0",
+          "Stripe D1",
+          -1.0,
+          "Checker",
+          "Checker Diag",
+          -1.0,
+          "Grid",
+          "Grid Diag",
+          -1.0,
+          "Half X",
+          "Half Y",
+          "Half D0",
+          "Half D1",
+          -1.0,
+          "Grad X",
+          "Grad Y",
+          "Grad D0",
+          "Grad D1",
+          -1.0,
+          "Grad Both X",
+          "Grad Both Y",
+          "Grad Both D0",
+          "Grad Both D1",
+          -1.0,
+          "Grad Circular",
+          "Grad Radial",
+          -1.0,
+          "Brick X",
+          "Brick Y",
+          -1.0,
+          "Zigzag X",
+          "Zigzag Y",
+          "Half Zigzag X",
+          "Half Zigzag Y",
+          -1.0,
+          "Half Wave X",
+          "Half Wave Y",
+          -1.0,
+          "Noise"
+        ]
+      },
+      {
+        "name":"Color"
+      },
+      {
+        "name":"Intensity"
+      },
+      {
+        "name":"Scale"
+      },
+      {
+        "name":"Position"
+      },
+      {
+        "name":"Map BBOX"
+      },
+      {
+        "name":"Thickness"
+      },
+      {
+        "name":"Position",
+        "display_data":[
+          "@ref sprite(__newsprite955)",
+          "@ref sprite(__newsprite955)",
+          "@ref sprite(__newsprite955)"
+        ]
+      },
+      {
+        "name":"Corner",
+        "display_data":[
+          "@ref sprite(__newsprite956)",
+          "@ref sprite(__newsprite956)"
+        ]
+      },
+      {
+        "name":"Radius"
+      },
+      {
+        "name":"Widths"
+      },
+      {
+        "name":"Color Left"
+      },
+      {
+        "name":"Color Right"
+      },
+      {
+        "name":"Color Top"
+      },
+      {
+        "name":"Color Bottom"
+      },
+      {
+        "name":"Modify"
+      },
+      {
+        "name":"Subtract"
+      },
+      {
+        "name":"Direction"
+      },
+      {
+        "name":"Shines"
+      },
+      {
+        "name":"Progress"
+      },
+      {
+        "name":"Slope"
+      },
+      {
+        "name":"Axis",
+        "display_data":[
+          "X",
+          "Y"
+        ]
+      },
+      {
+        "name":"Seed"
       }
     ],
     "outputs":[
@@ -14189,6 +14694,150 @@
           "Scale",
           "Minimum"
         ]
+      },
+      {
+        "name":"Effect Type",
+        "display_data":[
+          "Fill",
+          "Stroke",
+          "Corner",
+          "Highlight",
+          "Extrude",
+          "Shine"
+        ]
+      },
+      {
+        "name":"Color"
+      },
+      {
+        "name":"Intensity"
+      },
+      {
+        "name":"Pattern",
+        "display_data":[
+          "Solid",
+          -1.0,
+          "Stripe X",
+          "Stripe Y",
+          "Stripe D0",
+          "Stripe D1",
+          -1.0,
+          "Checker",
+          "Checker Diag",
+          -1.0,
+          "Grid",
+          "Grid Diag",
+          -1.0,
+          "Half X",
+          "Half Y",
+          "Half D0",
+          "Half D1",
+          -1.0,
+          "Grad X",
+          "Grad Y",
+          "Grad D0",
+          "Grad D1",
+          -1.0,
+          "Grad Both X",
+          "Grad Both Y",
+          "Grad Both D0",
+          "Grad Both D1",
+          -1.0,
+          "Grad Circular",
+          "Grad Radial",
+          -1.0,
+          "Brick X",
+          "Brick Y",
+          -1.0,
+          "Zigzag X",
+          "Zigzag Y",
+          "Half Zigzag X",
+          "Half Zigzag Y",
+          -1.0,
+          "Half Wave X",
+          "Half Wave Y",
+          -1.0,
+          "Noise"
+        ]
+      },
+      {
+        "name":"Color"
+      },
+      {
+        "name":"Intensity"
+      },
+      {
+        "name":"Scale"
+      },
+      {
+        "name":"Position"
+      },
+      {
+        "name":"Map BBOX"
+      },
+      {
+        "name":"Thickness"
+      },
+      {
+        "name":"Position",
+        "display_data":[
+          "@ref sprite(__newsprite955)",
+          "@ref sprite(__newsprite955)",
+          "@ref sprite(__newsprite955)"
+        ]
+      },
+      {
+        "name":"Corner",
+        "display_data":[
+          "@ref sprite(__newsprite956)",
+          "@ref sprite(__newsprite956)"
+        ]
+      },
+      {
+        "name":"Radius"
+      },
+      {
+        "name":"Widths"
+      },
+      {
+        "name":"Color Left"
+      },
+      {
+        "name":"Color Right"
+      },
+      {
+        "name":"Color Top"
+      },
+      {
+        "name":"Color Bottom"
+      },
+      {
+        "name":"Modify"
+      },
+      {
+        "name":"Subtract"
+      },
+      {
+        "name":"Direction"
+      },
+      {
+        "name":"Shines"
+      },
+      {
+        "name":"Progress"
+      },
+      {
+        "name":"Slope"
+      },
+      {
+        "name":"Axis",
+        "display_data":[
+          "X",
+          "Y"
+        ]
+      },
+      {
+        "name":"Seed"
       }
     ],
     "outputs":[
@@ -14227,6 +14876,150 @@
       },
       {
         "name":"PBBOX Height"
+      },
+      {
+        "name":"Effect Type",
+        "display_data":[
+          "Fill",
+          "Stroke",
+          "Corner",
+          "Highlight",
+          "Extrude",
+          "Shine"
+        ]
+      },
+      {
+        "name":"Color"
+      },
+      {
+        "name":"Intensity"
+      },
+      {
+        "name":"Pattern",
+        "display_data":[
+          "Solid",
+          -1.0,
+          "Stripe X",
+          "Stripe Y",
+          "Stripe D0",
+          "Stripe D1",
+          -1.0,
+          "Checker",
+          "Checker Diag",
+          -1.0,
+          "Grid",
+          "Grid Diag",
+          -1.0,
+          "Half X",
+          "Half Y",
+          "Half D0",
+          "Half D1",
+          -1.0,
+          "Grad X",
+          "Grad Y",
+          "Grad D0",
+          "Grad D1",
+          -1.0,
+          "Grad Both X",
+          "Grad Both Y",
+          "Grad Both D0",
+          "Grad Both D1",
+          -1.0,
+          "Grad Circular",
+          "Grad Radial",
+          -1.0,
+          "Brick X",
+          "Brick Y",
+          -1.0,
+          "Zigzag X",
+          "Zigzag Y",
+          "Half Zigzag X",
+          "Half Zigzag Y",
+          -1.0,
+          "Half Wave X",
+          "Half Wave Y",
+          -1.0,
+          "Noise"
+        ]
+      },
+      {
+        "name":"Color"
+      },
+      {
+        "name":"Intensity"
+      },
+      {
+        "name":"Scale"
+      },
+      {
+        "name":"Position"
+      },
+      {
+        "name":"Map BBOX"
+      },
+      {
+        "name":"Thickness"
+      },
+      {
+        "name":"Position",
+        "display_data":[
+          "@ref sprite(__newsprite955)",
+          "@ref sprite(__newsprite955)",
+          "@ref sprite(__newsprite955)"
+        ]
+      },
+      {
+        "name":"Corner",
+        "display_data":[
+          "@ref sprite(__newsprite956)",
+          "@ref sprite(__newsprite956)"
+        ]
+      },
+      {
+        "name":"Radius"
+      },
+      {
+        "name":"Widths"
+      },
+      {
+        "name":"Color Left"
+      },
+      {
+        "name":"Color Right"
+      },
+      {
+        "name":"Color Top"
+      },
+      {
+        "name":"Color Bottom"
+      },
+      {
+        "name":"Modify"
+      },
+      {
+        "name":"Subtract"
+      },
+      {
+        "name":"Direction"
+      },
+      {
+        "name":"Shines"
+      },
+      {
+        "name":"Progress"
+      },
+      {
+        "name":"Slope"
+      },
+      {
+        "name":"Axis",
+        "display_data":[
+          "X",
+          "Y"
+        ]
+      },
+      {
+        "name":"Seed"
       }
     ],
     "outputs":[
@@ -14269,12 +15062,12 @@
       {
         "name":"Type",
         "display_data":[
-          "@ref sprite(__newsprite927)",
-          "@ref sprite(__newsprite927)",
-          "@ref sprite(__newsprite927)",
-          "@ref sprite(__newsprite927)",
-          "@ref sprite(__newsprite927)",
-          "@ref sprite(__newsprite927)"
+          "@ref sprite(__newsprite938)",
+          "@ref sprite(__newsprite938)",
+          "@ref sprite(__newsprite938)",
+          "@ref sprite(__newsprite938)",
+          "@ref sprite(__newsprite938)",
+          "@ref sprite(__newsprite938)"
         ]
       },
       {
@@ -14285,6 +15078,150 @@
       },
       {
         "name":"Corner"
+      },
+      {
+        "name":"Effect Type",
+        "display_data":[
+          "Fill",
+          "Stroke",
+          "Corner",
+          "Highlight",
+          "Extrude",
+          "Shine"
+        ]
+      },
+      {
+        "name":"Color"
+      },
+      {
+        "name":"Intensity"
+      },
+      {
+        "name":"Pattern",
+        "display_data":[
+          "Solid",
+          -1.0,
+          "Stripe X",
+          "Stripe Y",
+          "Stripe D0",
+          "Stripe D1",
+          -1.0,
+          "Checker",
+          "Checker Diag",
+          -1.0,
+          "Grid",
+          "Grid Diag",
+          -1.0,
+          "Half X",
+          "Half Y",
+          "Half D0",
+          "Half D1",
+          -1.0,
+          "Grad X",
+          "Grad Y",
+          "Grad D0",
+          "Grad D1",
+          -1.0,
+          "Grad Both X",
+          "Grad Both Y",
+          "Grad Both D0",
+          "Grad Both D1",
+          -1.0,
+          "Grad Circular",
+          "Grad Radial",
+          -1.0,
+          "Brick X",
+          "Brick Y",
+          -1.0,
+          "Zigzag X",
+          "Zigzag Y",
+          "Half Zigzag X",
+          "Half Zigzag Y",
+          -1.0,
+          "Half Wave X",
+          "Half Wave Y",
+          -1.0,
+          "Noise"
+        ]
+      },
+      {
+        "name":"Color"
+      },
+      {
+        "name":"Intensity"
+      },
+      {
+        "name":"Scale"
+      },
+      {
+        "name":"Position"
+      },
+      {
+        "name":"Map BBOX"
+      },
+      {
+        "name":"Thickness"
+      },
+      {
+        "name":"Position",
+        "display_data":[
+          "@ref sprite(__newsprite955)",
+          "@ref sprite(__newsprite955)",
+          "@ref sprite(__newsprite955)"
+        ]
+      },
+      {
+        "name":"Corner",
+        "display_data":[
+          "@ref sprite(__newsprite956)",
+          "@ref sprite(__newsprite956)"
+        ]
+      },
+      {
+        "name":"Radius"
+      },
+      {
+        "name":"Widths"
+      },
+      {
+        "name":"Color Left"
+      },
+      {
+        "name":"Color Right"
+      },
+      {
+        "name":"Color Top"
+      },
+      {
+        "name":"Color Bottom"
+      },
+      {
+        "name":"Modify"
+      },
+      {
+        "name":"Subtract"
+      },
+      {
+        "name":"Direction"
+      },
+      {
+        "name":"Shines"
+      },
+      {
+        "name":"Progress"
+      },
+      {
+        "name":"Slope"
+      },
+      {
+        "name":"Axis",
+        "display_data":[
+          "X",
+          "Y"
+        ]
+      },
+      {
+        "name":"Seed"
       }
     ],
     "outputs":[
@@ -14332,6 +15269,150 @@
           "@ref sprite(s_node_pb_draw_pie_corner)",
           "@ref sprite(s_node_pb_draw_pie_corner)"
         ]
+      },
+      {
+        "name":"Effect Type",
+        "display_data":[
+          "Fill",
+          "Stroke",
+          "Corner",
+          "Highlight",
+          "Extrude",
+          "Shine"
+        ]
+      },
+      {
+        "name":"Color"
+      },
+      {
+        "name":"Intensity"
+      },
+      {
+        "name":"Pattern",
+        "display_data":[
+          "Solid",
+          -1.0,
+          "Stripe X",
+          "Stripe Y",
+          "Stripe D0",
+          "Stripe D1",
+          -1.0,
+          "Checker",
+          "Checker Diag",
+          -1.0,
+          "Grid",
+          "Grid Diag",
+          -1.0,
+          "Half X",
+          "Half Y",
+          "Half D0",
+          "Half D1",
+          -1.0,
+          "Grad X",
+          "Grad Y",
+          "Grad D0",
+          "Grad D1",
+          -1.0,
+          "Grad Both X",
+          "Grad Both Y",
+          "Grad Both D0",
+          "Grad Both D1",
+          -1.0,
+          "Grad Circular",
+          "Grad Radial",
+          -1.0,
+          "Brick X",
+          "Brick Y",
+          -1.0,
+          "Zigzag X",
+          "Zigzag Y",
+          "Half Zigzag X",
+          "Half Zigzag Y",
+          -1.0,
+          "Half Wave X",
+          "Half Wave Y",
+          -1.0,
+          "Noise"
+        ]
+      },
+      {
+        "name":"Color"
+      },
+      {
+        "name":"Intensity"
+      },
+      {
+        "name":"Scale"
+      },
+      {
+        "name":"Position"
+      },
+      {
+        "name":"Map BBOX"
+      },
+      {
+        "name":"Thickness"
+      },
+      {
+        "name":"Position",
+        "display_data":[
+          "@ref sprite(__newsprite955)",
+          "@ref sprite(__newsprite955)",
+          "@ref sprite(__newsprite955)"
+        ]
+      },
+      {
+        "name":"Corner",
+        "display_data":[
+          "@ref sprite(__newsprite956)",
+          "@ref sprite(__newsprite956)"
+        ]
+      },
+      {
+        "name":"Radius"
+      },
+      {
+        "name":"Widths"
+      },
+      {
+        "name":"Color Left"
+      },
+      {
+        "name":"Color Right"
+      },
+      {
+        "name":"Color Top"
+      },
+      {
+        "name":"Color Bottom"
+      },
+      {
+        "name":"Modify"
+      },
+      {
+        "name":"Subtract"
+      },
+      {
+        "name":"Direction"
+      },
+      {
+        "name":"Shines"
+      },
+      {
+        "name":"Progress"
+      },
+      {
+        "name":"Slope"
+      },
+      {
+        "name":"Axis",
+        "display_data":[
+          "X",
+          "Y"
+        ]
+      },
+      {
+        "name":"Seed"
       }
     ],
     "outputs":[
@@ -14376,6 +15457,150 @@
       },
       {
         "name":"Angle"
+      },
+      {
+        "name":"Effect Type",
+        "display_data":[
+          "Fill",
+          "Stroke",
+          "Corner",
+          "Highlight",
+          "Extrude",
+          "Shine"
+        ]
+      },
+      {
+        "name":"Color"
+      },
+      {
+        "name":"Intensity"
+      },
+      {
+        "name":"Pattern",
+        "display_data":[
+          "Solid",
+          -1.0,
+          "Stripe X",
+          "Stripe Y",
+          "Stripe D0",
+          "Stripe D1",
+          -1.0,
+          "Checker",
+          "Checker Diag",
+          -1.0,
+          "Grid",
+          "Grid Diag",
+          -1.0,
+          "Half X",
+          "Half Y",
+          "Half D0",
+          "Half D1",
+          -1.0,
+          "Grad X",
+          "Grad Y",
+          "Grad D0",
+          "Grad D1",
+          -1.0,
+          "Grad Both X",
+          "Grad Both Y",
+          "Grad Both D0",
+          "Grad Both D1",
+          -1.0,
+          "Grad Circular",
+          "Grad Radial",
+          -1.0,
+          "Brick X",
+          "Brick Y",
+          -1.0,
+          "Zigzag X",
+          "Zigzag Y",
+          "Half Zigzag X",
+          "Half Zigzag Y",
+          -1.0,
+          "Half Wave X",
+          "Half Wave Y",
+          -1.0,
+          "Noise"
+        ]
+      },
+      {
+        "name":"Color"
+      },
+      {
+        "name":"Intensity"
+      },
+      {
+        "name":"Scale"
+      },
+      {
+        "name":"Position"
+      },
+      {
+        "name":"Map BBOX"
+      },
+      {
+        "name":"Thickness"
+      },
+      {
+        "name":"Position",
+        "display_data":[
+          "@ref sprite(__newsprite955)",
+          "@ref sprite(__newsprite955)",
+          "@ref sprite(__newsprite955)"
+        ]
+      },
+      {
+        "name":"Corner",
+        "display_data":[
+          "@ref sprite(__newsprite956)",
+          "@ref sprite(__newsprite956)"
+        ]
+      },
+      {
+        "name":"Radius"
+      },
+      {
+        "name":"Widths"
+      },
+      {
+        "name":"Color Left"
+      },
+      {
+        "name":"Color Right"
+      },
+      {
+        "name":"Color Top"
+      },
+      {
+        "name":"Color Bottom"
+      },
+      {
+        "name":"Modify"
+      },
+      {
+        "name":"Subtract"
+      },
+      {
+        "name":"Direction"
+      },
+      {
+        "name":"Shines"
+      },
+      {
+        "name":"Progress"
+      },
+      {
+        "name":"Slope"
+      },
+      {
+        "name":"Axis",
+        "display_data":[
+          "X",
+          "Y"
+        ]
+      },
+      {
+        "name":"Seed"
       }
     ],
     "outputs":[
@@ -14426,6 +15651,150 @@
       },
       {
         "name":"Bottom Right"
+      },
+      {
+        "name":"Effect Type",
+        "display_data":[
+          "Fill",
+          "Stroke",
+          "Corner",
+          "Highlight",
+          "Extrude",
+          "Shine"
+        ]
+      },
+      {
+        "name":"Color"
+      },
+      {
+        "name":"Intensity"
+      },
+      {
+        "name":"Pattern",
+        "display_data":[
+          "Solid",
+          -1.0,
+          "Stripe X",
+          "Stripe Y",
+          "Stripe D0",
+          "Stripe D1",
+          -1.0,
+          "Checker",
+          "Checker Diag",
+          -1.0,
+          "Grid",
+          "Grid Diag",
+          -1.0,
+          "Half X",
+          "Half Y",
+          "Half D0",
+          "Half D1",
+          -1.0,
+          "Grad X",
+          "Grad Y",
+          "Grad D0",
+          "Grad D1",
+          -1.0,
+          "Grad Both X",
+          "Grad Both Y",
+          "Grad Both D0",
+          "Grad Both D1",
+          -1.0,
+          "Grad Circular",
+          "Grad Radial",
+          -1.0,
+          "Brick X",
+          "Brick Y",
+          -1.0,
+          "Zigzag X",
+          "Zigzag Y",
+          "Half Zigzag X",
+          "Half Zigzag Y",
+          -1.0,
+          "Half Wave X",
+          "Half Wave Y",
+          -1.0,
+          "Noise"
+        ]
+      },
+      {
+        "name":"Color"
+      },
+      {
+        "name":"Intensity"
+      },
+      {
+        "name":"Scale"
+      },
+      {
+        "name":"Position"
+      },
+      {
+        "name":"Map BBOX"
+      },
+      {
+        "name":"Thickness"
+      },
+      {
+        "name":"Position",
+        "display_data":[
+          "@ref sprite(__newsprite955)",
+          "@ref sprite(__newsprite955)",
+          "@ref sprite(__newsprite955)"
+        ]
+      },
+      {
+        "name":"Corner",
+        "display_data":[
+          "@ref sprite(__newsprite956)",
+          "@ref sprite(__newsprite956)"
+        ]
+      },
+      {
+        "name":"Radius"
+      },
+      {
+        "name":"Widths"
+      },
+      {
+        "name":"Color Left"
+      },
+      {
+        "name":"Color Right"
+      },
+      {
+        "name":"Color Top"
+      },
+      {
+        "name":"Color Bottom"
+      },
+      {
+        "name":"Modify"
+      },
+      {
+        "name":"Subtract"
+      },
+      {
+        "name":"Direction"
+      },
+      {
+        "name":"Shines"
+      },
+      {
+        "name":"Progress"
+      },
+      {
+        "name":"Slope"
+      },
+      {
+        "name":"Axis",
+        "display_data":[
+          "X",
+          "Y"
+        ]
+      },
+      {
+        "name":"Seed"
       }
     ],
     "outputs":[
@@ -14464,6 +15833,150 @@
       },
       {
         "name":"PBBOX Height"
+      },
+      {
+        "name":"Effect Type",
+        "display_data":[
+          "Fill",
+          "Stroke",
+          "Corner",
+          "Highlight",
+          "Extrude",
+          "Shine"
+        ]
+      },
+      {
+        "name":"Color"
+      },
+      {
+        "name":"Intensity"
+      },
+      {
+        "name":"Pattern",
+        "display_data":[
+          "Solid",
+          -1.0,
+          "Stripe X",
+          "Stripe Y",
+          "Stripe D0",
+          "Stripe D1",
+          -1.0,
+          "Checker",
+          "Checker Diag",
+          -1.0,
+          "Grid",
+          "Grid Diag",
+          -1.0,
+          "Half X",
+          "Half Y",
+          "Half D0",
+          "Half D1",
+          -1.0,
+          "Grad X",
+          "Grad Y",
+          "Grad D0",
+          "Grad D1",
+          -1.0,
+          "Grad Both X",
+          "Grad Both Y",
+          "Grad Both D0",
+          "Grad Both D1",
+          -1.0,
+          "Grad Circular",
+          "Grad Radial",
+          -1.0,
+          "Brick X",
+          "Brick Y",
+          -1.0,
+          "Zigzag X",
+          "Zigzag Y",
+          "Half Zigzag X",
+          "Half Zigzag Y",
+          -1.0,
+          "Half Wave X",
+          "Half Wave Y",
+          -1.0,
+          "Noise"
+        ]
+      },
+      {
+        "name":"Color"
+      },
+      {
+        "name":"Intensity"
+      },
+      {
+        "name":"Scale"
+      },
+      {
+        "name":"Position"
+      },
+      {
+        "name":"Map BBOX"
+      },
+      {
+        "name":"Thickness"
+      },
+      {
+        "name":"Position",
+        "display_data":[
+          "@ref sprite(__newsprite955)",
+          "@ref sprite(__newsprite955)",
+          "@ref sprite(__newsprite955)"
+        ]
+      },
+      {
+        "name":"Corner",
+        "display_data":[
+          "@ref sprite(__newsprite956)",
+          "@ref sprite(__newsprite956)"
+        ]
+      },
+      {
+        "name":"Radius"
+      },
+      {
+        "name":"Widths"
+      },
+      {
+        "name":"Color Left"
+      },
+      {
+        "name":"Color Right"
+      },
+      {
+        "name":"Color Top"
+      },
+      {
+        "name":"Color Bottom"
+      },
+      {
+        "name":"Modify"
+      },
+      {
+        "name":"Subtract"
+      },
+      {
+        "name":"Direction"
+      },
+      {
+        "name":"Shines"
+      },
+      {
+        "name":"Progress"
+      },
+      {
+        "name":"Slope"
+      },
+      {
+        "name":"Axis",
+        "display_data":[
+          "X",
+          "Y"
+        ]
+      },
+      {
+        "name":"Seed"
       }
     ],
     "outputs":[
@@ -14515,6 +16028,150 @@
       },
       {
         "name":"Clamp"
+      },
+      {
+        "name":"Effect Type",
+        "display_data":[
+          "Fill",
+          "Stroke",
+          "Corner",
+          "Highlight",
+          "Extrude",
+          "Shine"
+        ]
+      },
+      {
+        "name":"Color"
+      },
+      {
+        "name":"Intensity"
+      },
+      {
+        "name":"Pattern",
+        "display_data":[
+          "Solid",
+          -1.0,
+          "Stripe X",
+          "Stripe Y",
+          "Stripe D0",
+          "Stripe D1",
+          -1.0,
+          "Checker",
+          "Checker Diag",
+          -1.0,
+          "Grid",
+          "Grid Diag",
+          -1.0,
+          "Half X",
+          "Half Y",
+          "Half D0",
+          "Half D1",
+          -1.0,
+          "Grad X",
+          "Grad Y",
+          "Grad D0",
+          "Grad D1",
+          -1.0,
+          "Grad Both X",
+          "Grad Both Y",
+          "Grad Both D0",
+          "Grad Both D1",
+          -1.0,
+          "Grad Circular",
+          "Grad Radial",
+          -1.0,
+          "Brick X",
+          "Brick Y",
+          -1.0,
+          "Zigzag X",
+          "Zigzag Y",
+          "Half Zigzag X",
+          "Half Zigzag Y",
+          -1.0,
+          "Half Wave X",
+          "Half Wave Y",
+          -1.0,
+          "Noise"
+        ]
+      },
+      {
+        "name":"Color"
+      },
+      {
+        "name":"Intensity"
+      },
+      {
+        "name":"Scale"
+      },
+      {
+        "name":"Position"
+      },
+      {
+        "name":"Map BBOX"
+      },
+      {
+        "name":"Thickness"
+      },
+      {
+        "name":"Position",
+        "display_data":[
+          "@ref sprite(__newsprite955)",
+          "@ref sprite(__newsprite955)",
+          "@ref sprite(__newsprite955)"
+        ]
+      },
+      {
+        "name":"Corner",
+        "display_data":[
+          "@ref sprite(__newsprite956)",
+          "@ref sprite(__newsprite956)"
+        ]
+      },
+      {
+        "name":"Radius"
+      },
+      {
+        "name":"Widths"
+      },
+      {
+        "name":"Color Left"
+      },
+      {
+        "name":"Color Right"
+      },
+      {
+        "name":"Color Top"
+      },
+      {
+        "name":"Color Bottom"
+      },
+      {
+        "name":"Modify"
+      },
+      {
+        "name":"Subtract"
+      },
+      {
+        "name":"Direction"
+      },
+      {
+        "name":"Shines"
+      },
+      {
+        "name":"Progress"
+      },
+      {
+        "name":"Slope"
+      },
+      {
+        "name":"Axis",
+        "display_data":[
+          "X",
+          "Y"
+        ]
+      },
+      {
+        "name":"Seed"
       }
     ],
     "outputs":[
@@ -14572,6 +16229,150 @@
       },
       {
         "name":"Thickness"
+      },
+      {
+        "name":"Effect Type",
+        "display_data":[
+          "Fill",
+          "Stroke",
+          "Corner",
+          "Highlight",
+          "Extrude",
+          "Shine"
+        ]
+      },
+      {
+        "name":"Color"
+      },
+      {
+        "name":"Intensity"
+      },
+      {
+        "name":"Pattern",
+        "display_data":[
+          "Solid",
+          -1.0,
+          "Stripe X",
+          "Stripe Y",
+          "Stripe D0",
+          "Stripe D1",
+          -1.0,
+          "Checker",
+          "Checker Diag",
+          -1.0,
+          "Grid",
+          "Grid Diag",
+          -1.0,
+          "Half X",
+          "Half Y",
+          "Half D0",
+          "Half D1",
+          -1.0,
+          "Grad X",
+          "Grad Y",
+          "Grad D0",
+          "Grad D1",
+          -1.0,
+          "Grad Both X",
+          "Grad Both Y",
+          "Grad Both D0",
+          "Grad Both D1",
+          -1.0,
+          "Grad Circular",
+          "Grad Radial",
+          -1.0,
+          "Brick X",
+          "Brick Y",
+          -1.0,
+          "Zigzag X",
+          "Zigzag Y",
+          "Half Zigzag X",
+          "Half Zigzag Y",
+          -1.0,
+          "Half Wave X",
+          "Half Wave Y",
+          -1.0,
+          "Noise"
+        ]
+      },
+      {
+        "name":"Color"
+      },
+      {
+        "name":"Intensity"
+      },
+      {
+        "name":"Scale"
+      },
+      {
+        "name":"Position"
+      },
+      {
+        "name":"Map BBOX"
+      },
+      {
+        "name":"Thickness"
+      },
+      {
+        "name":"Position",
+        "display_data":[
+          "@ref sprite(__newsprite955)",
+          "@ref sprite(__newsprite955)",
+          "@ref sprite(__newsprite955)"
+        ]
+      },
+      {
+        "name":"Corner",
+        "display_data":[
+          "@ref sprite(__newsprite956)",
+          "@ref sprite(__newsprite956)"
+        ]
+      },
+      {
+        "name":"Radius"
+      },
+      {
+        "name":"Widths"
+      },
+      {
+        "name":"Color Left"
+      },
+      {
+        "name":"Color Right"
+      },
+      {
+        "name":"Color Top"
+      },
+      {
+        "name":"Color Bottom"
+      },
+      {
+        "name":"Modify"
+      },
+      {
+        "name":"Subtract"
+      },
+      {
+        "name":"Direction"
+      },
+      {
+        "name":"Shines"
+      },
+      {
+        "name":"Progress"
+      },
+      {
+        "name":"Slope"
+      },
+      {
+        "name":"Axis",
+        "display_data":[
+          "X",
+          "Y"
+        ]
+      },
+      {
+        "name":"Seed"
       }
     ],
     "outputs":[
@@ -14660,6 +16461,150 @@
       },
       {
         "name":"Side"
+      },
+      {
+        "name":"Effect Type",
+        "display_data":[
+          "Fill",
+          "Stroke",
+          "Corner",
+          "Highlight",
+          "Extrude",
+          "Shine"
+        ]
+      },
+      {
+        "name":"Color"
+      },
+      {
+        "name":"Intensity"
+      },
+      {
+        "name":"Pattern",
+        "display_data":[
+          "Solid",
+          -1.0,
+          "Stripe X",
+          "Stripe Y",
+          "Stripe D0",
+          "Stripe D1",
+          -1.0,
+          "Checker",
+          "Checker Diag",
+          -1.0,
+          "Grid",
+          "Grid Diag",
+          -1.0,
+          "Half X",
+          "Half Y",
+          "Half D0",
+          "Half D1",
+          -1.0,
+          "Grad X",
+          "Grad Y",
+          "Grad D0",
+          "Grad D1",
+          -1.0,
+          "Grad Both X",
+          "Grad Both Y",
+          "Grad Both D0",
+          "Grad Both D1",
+          -1.0,
+          "Grad Circular",
+          "Grad Radial",
+          -1.0,
+          "Brick X",
+          "Brick Y",
+          -1.0,
+          "Zigzag X",
+          "Zigzag Y",
+          "Half Zigzag X",
+          "Half Zigzag Y",
+          -1.0,
+          "Half Wave X",
+          "Half Wave Y",
+          -1.0,
+          "Noise"
+        ]
+      },
+      {
+        "name":"Color"
+      },
+      {
+        "name":"Intensity"
+      },
+      {
+        "name":"Scale"
+      },
+      {
+        "name":"Position"
+      },
+      {
+        "name":"Map BBOX"
+      },
+      {
+        "name":"Thickness"
+      },
+      {
+        "name":"Position",
+        "display_data":[
+          "@ref sprite(__newsprite955)",
+          "@ref sprite(__newsprite955)",
+          "@ref sprite(__newsprite955)"
+        ]
+      },
+      {
+        "name":"Corner",
+        "display_data":[
+          "@ref sprite(__newsprite956)",
+          "@ref sprite(__newsprite956)"
+        ]
+      },
+      {
+        "name":"Radius"
+      },
+      {
+        "name":"Widths"
+      },
+      {
+        "name":"Color Left"
+      },
+      {
+        "name":"Color Right"
+      },
+      {
+        "name":"Color Top"
+      },
+      {
+        "name":"Color Bottom"
+      },
+      {
+        "name":"Modify"
+      },
+      {
+        "name":"Subtract"
+      },
+      {
+        "name":"Direction"
+      },
+      {
+        "name":"Shines"
+      },
+      {
+        "name":"Progress"
+      },
+      {
+        "name":"Slope"
+      },
+      {
+        "name":"Axis",
+        "display_data":[
+          "X",
+          "Y"
+        ]
+      },
+      {
+        "name":"Seed"
       }
     ],
     "outputs":[
@@ -14726,6 +16671,150 @@
           "@ref sprite(s_node_pb_draw_tri_apexc)",
           "@ref sprite(s_node_pb_draw_tri_apexc)"
         ]
+      },
+      {
+        "name":"Effect Type",
+        "display_data":[
+          "Fill",
+          "Stroke",
+          "Corner",
+          "Highlight",
+          "Extrude",
+          "Shine"
+        ]
+      },
+      {
+        "name":"Color"
+      },
+      {
+        "name":"Intensity"
+      },
+      {
+        "name":"Pattern",
+        "display_data":[
+          "Solid",
+          -1.0,
+          "Stripe X",
+          "Stripe Y",
+          "Stripe D0",
+          "Stripe D1",
+          -1.0,
+          "Checker",
+          "Checker Diag",
+          -1.0,
+          "Grid",
+          "Grid Diag",
+          -1.0,
+          "Half X",
+          "Half Y",
+          "Half D0",
+          "Half D1",
+          -1.0,
+          "Grad X",
+          "Grad Y",
+          "Grad D0",
+          "Grad D1",
+          -1.0,
+          "Grad Both X",
+          "Grad Both Y",
+          "Grad Both D0",
+          "Grad Both D1",
+          -1.0,
+          "Grad Circular",
+          "Grad Radial",
+          -1.0,
+          "Brick X",
+          "Brick Y",
+          -1.0,
+          "Zigzag X",
+          "Zigzag Y",
+          "Half Zigzag X",
+          "Half Zigzag Y",
+          -1.0,
+          "Half Wave X",
+          "Half Wave Y",
+          -1.0,
+          "Noise"
+        ]
+      },
+      {
+        "name":"Color"
+      },
+      {
+        "name":"Intensity"
+      },
+      {
+        "name":"Scale"
+      },
+      {
+        "name":"Position"
+      },
+      {
+        "name":"Map BBOX"
+      },
+      {
+        "name":"Thickness"
+      },
+      {
+        "name":"Position",
+        "display_data":[
+          "@ref sprite(__newsprite955)",
+          "@ref sprite(__newsprite955)",
+          "@ref sprite(__newsprite955)"
+        ]
+      },
+      {
+        "name":"Corner",
+        "display_data":[
+          "@ref sprite(__newsprite956)",
+          "@ref sprite(__newsprite956)"
+        ]
+      },
+      {
+        "name":"Radius"
+      },
+      {
+        "name":"Widths"
+      },
+      {
+        "name":"Color Left"
+      },
+      {
+        "name":"Color Right"
+      },
+      {
+        "name":"Color Top"
+      },
+      {
+        "name":"Color Bottom"
+      },
+      {
+        "name":"Modify"
+      },
+      {
+        "name":"Subtract"
+      },
+      {
+        "name":"Direction"
+      },
+      {
+        "name":"Shines"
+      },
+      {
+        "name":"Progress"
+      },
+      {
+        "name":"Slope"
+      },
+      {
+        "name":"Axis",
+        "display_data":[
+          "X",
+          "Y"
+        ]
+      },
+      {
+        "name":"Seed"
       }
     ],
     "outputs":[
@@ -15026,6 +17115,12 @@
     "inputs":[
       {
         "name":"Equation"
+      },
+      {
+        "name":"Argument name"
+      },
+      {
+        "name":"Argument value"
       }
     ],
     "outputs":[
@@ -16556,6 +18651,68 @@
       },
       {
         "name":"Shift per copy"
+      },
+      {
+        "name":"Animator type",
+        "display_data":[
+          "Linear Transform",
+          "Blending"
+        ]
+      },
+      {
+        "name":"Select mode",
+        "display_data":[
+          "Index",
+          "Area",
+          "Surface"
+        ]
+      },
+      {
+        "name":"Position"
+      },
+      {
+        "name":"Rotation"
+      },
+      {
+        "name":"Scale"
+      },
+      {
+        "name":"Anchor type",
+        "display_data":[
+          "Global",
+          "Local"
+        ]
+      },
+      {
+        "name":"Anchor Position",
+        "tooltip":"Anchor point for transformation, absolute value for global type, relative for local."
+      },
+      {
+        "name":"Color"
+      },
+      {
+        "name":"Alpha"
+      },
+      {
+        "name":"Selection area"
+      },
+      {
+        "name":"Selection index"
+      },
+      {
+        "name":"Selection range"
+      },
+      {
+        "name":"Selection falloff"
+      },
+      {
+        "name":"Selection falloff curve"
+      },
+      {
+        "name":"Selection surface"
+      },
+      {
+        "name":"Strength"
       }
     ],
     "outputs":[
@@ -16873,6 +19030,9 @@
       },
       {
         "name":"Round position"
+      },
+      {
+        "name":"Object"
       }
     ],
     "outputs":[
@@ -16890,6 +19050,9 @@
       },
       {
         "name":"Round position"
+      },
+      {
+        "name":"Object"
       }
     ],
     "outputs":[]
@@ -18854,7 +21017,11 @@
   "Node_Smoke_Domain_Queue":{
     "name":"Queue Domain",
     "tooltip":"Sync multiple domains to be render at the same time.",
-    "inputs":[],
+    "inputs":[
+      {
+        "name":"Input"
+      }
+    ],
     "outputs":[
       {
         "name":"Domain"
@@ -19303,6 +21470,9 @@
           "Saturation",
           "Luminosity"
         ]
+      },
+      {
+        "name":"Input"
       }
     ],
     "outputs":[
@@ -19357,6 +21527,9 @@
           "Max",
           "Min"
         ]
+      },
+      {
+        "name":"Input"
       }
     ],
     "outputs":[
@@ -19805,6 +21978,12 @@
     "inputs":[
       {
         "name":"Text"
+      },
+      {
+        "name":"Argument name"
+      },
+      {
+        "name":"Argument value"
       }
     ],
     "outputs":[
@@ -19894,7 +22073,11 @@
   "Node_String_Merge":{
     "name":"Combine Texts",
     "tooltip":"Combine multiple strings into one long string.",
-    "inputs":[],
+    "inputs":[
+      {
+        "name":"Text"
+      }
+    ],
     "outputs":[
       {
         "name":"Text"
@@ -20105,7 +22288,14 @@
   "Node_Struct":{
     "name":"Struct",
     "tooltip":"Create key-value pair struct.",
-    "inputs":[],
+    "inputs":[
+      {
+        "name":"Key"
+      },
+      {
+        "name":"value"
+      }
+    ],
     "outputs":[
       {
         "name":"Struct"
@@ -20259,6 +22449,12 @@
     "inputs":[
       {
         "name":"Surface In"
+      },
+      {
+        "name":"Tag"
+      },
+      {
+        "name":"Position"
       }
     ],
     "outputs":[
@@ -20310,6 +22506,12 @@
       },
       {
         "name":"Default value"
+      },
+      {
+        "name":"Case"
+      },
+      {
+        "name":"value"
       }
     ],
     "outputs":[
@@ -20356,9 +22558,9 @@
       {
         "name":"H Align",
         "display_data":[
-          "@ref sprite(__newsprite1000)",
-          "@ref sprite(__newsprite1000)",
-          "@ref sprite(__newsprite1000)"
+          "@ref sprite(__newsprite1002)",
+          "@ref sprite(__newsprite1002)",
+          "@ref sprite(__newsprite1002)"
         ]
       },
       {
@@ -21780,6 +23982,17 @@
       },
       {
         "name":"Line life"
+      },
+      {
+        "name":"Blend mode",
+        "display_data":[
+          "Normal",
+          "Alpha",
+          "Additive"
+        ]
+      },
+      {
+        "name":"Particles"
       }
     ],
     "outputs":[
@@ -21808,6 +24021,17 @@
       },
       {
         "name":"Line life"
+      },
+      {
+        "name":"Blend mode",
+        "display_data":[
+          "Normal",
+          "Alpha",
+          "Additive"
+        ]
+      },
+      {
+        "name":"Particles"
       }
     ],
     "outputs":[]

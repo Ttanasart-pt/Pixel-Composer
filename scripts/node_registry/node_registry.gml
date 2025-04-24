@@ -143,8 +143,8 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 		return self;
 	}
 	
-	static getName    = function() /*=>*/ {return __txt_node_name(node, name)};
-	static getTooltip = function() /*=>*/ {return __txt_node_tooltip(node, tooltip)};
+	static getName    = function() /*=>*/ {return __txt_node_name(nodeName, name)};
+	static getTooltip = function() /*=>*/ {return __txt_node_tooltip(nodeName, tooltip)};
 	static getTooltipSpr = function() { 
 		if(tooltip_spr != undefined) return tooltip_spr;
 		

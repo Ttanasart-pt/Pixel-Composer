@@ -82,6 +82,8 @@ function Panel_Node_Data_Gen() : PanelContent() constructor {
 		var _tIn = "";
 		var _tOt = "";
 		
+		if(_b.createNewInput != -1 && _b.getInputAmount() == 0) _b.createNewInput();
+		
 		for( var i = 0, n = array_length(_b.inputs); i < n; i++ ) {
 			var _in = _b.inputs[i];
 			if(!is(_in, NodeValue)) continue;
