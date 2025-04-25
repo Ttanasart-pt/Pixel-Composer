@@ -2114,9 +2114,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                     var junc_out = data.junc_out;
                     
                     var feed = nodeBuild("Node_Feedback_Inline", 0, 0).skipDefault();
-                    feed.attributes.junc_in  = [ junc_in .node.node_id, junc_in .index ];
-                    feed.attributes.junc_out = [ junc_out.node.node_id, junc_out.index ];
-                    feed.scanJunc();
+                    feed.connectJunctions(junc_in, junc_out);
                     
                 }, THEME.feedback_24, noone, noone, { junc_in : _connect[1], junc_out : _connect[2] }),
                 
@@ -2124,10 +2122,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                     var junc_in  = data.junc_in;
                     var junc_out = data.junc_out;
                     
-                    var feed = nodeBuild("Node_Iterate_Inline", 0, 0).skipDefault();
-                    feed.attributes.junc_in  = [ junc_in .node.node_id, junc_in .index ];
-                    feed.attributes.junc_out = [ junc_out.node.node_id, junc_out.index ];
-                    feed.scanJunc();
+                    var loop = nodeBuild("Node_Iterate_Inline", 0, 0).skipDefault();
+                    loop.connectJunctions(junc_in, junc_out);
                     
                 }, THEME.loop_24, noone, noone, { junc_in : _connect[1], junc_out : _connect[2] }),
             ];

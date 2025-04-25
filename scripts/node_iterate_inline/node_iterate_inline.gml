@@ -3,12 +3,10 @@ function Node_Iterate_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 	color   = COLORS.node_blend_loop;
 	icon    = THEME.loop;
 	icon_24 = THEME.loop_24;
+	is_root = false;
 	
-	is_root     = false;
+	newInput(0, nodeValue_Int("Repeat", self, 1 )).uncache();
 	
-	newInput(0, nodeValue_Int("Repeat", self, 1 ))
-		.uncache();
-		
 	managedRenderOrder = true;
 	
 	attributes.junc_in  = [ "", 0 ];
@@ -46,6 +44,8 @@ function Node_Iterate_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 		
 		attributes.junc_in  = [ junc_in .node.node_id, junc_in .index ];
 		attributes.junc_out = [ junc_out.node.node_id, junc_out.index ];
+		
+		scanJunc();
 	}
 	
 	static scanJunc = function() {
@@ -58,8 +58,18 @@ function Node_Iterate_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 		if(node_in)  junc_in  = array_safe_get(node_in.inputs,   attributes.junc_in[1]);
 		if(node_out) junc_out = array_safe_get(node_out.outputs, attributes.junc_out[1]);
 		
-		if(junc_in)  { junc_in.value_from_loop = self;				addNode(junc_in.node);  }
-		if(junc_out) { array_push(junc_out.value_to_loop, self);	addNode(junc_out.node); }
+		if(junc_in)  { 
+			junc_in.value_from_loop = self;
+			junc_in.node.refreshNodeDisplay();
+			addNode(junc_in.node);
+		}
+			
+		if(junc_out) { 
+			array_push(junc_out.value_to_loop, self);
+			junc_out.node.refreshNodeDisplay();
+			addNode(junc_out.node);
+		}
+		
 	}
 	
 	static updateValue = function() {
