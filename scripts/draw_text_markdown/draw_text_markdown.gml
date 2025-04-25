@@ -66,6 +66,11 @@ function markdown_parse_line(line) {
 			ds_stack_push(symStck, "[");
 		}
 		
+		if(string_starts_with(_spl, "`")) {
+			_spl = string_copy(_spl, 2, string_length(_spl) - 1);
+			ds_stack_push(symStck, "`");
+		}
+		
 		var _s = new md_p(_spl);
 		
 		switch(ds_stack_top(symStck)) {
@@ -78,6 +83,17 @@ function markdown_parse_line(line) {
 				}
 				
 				_s.setFont(f_p2b).setColor(COLORS._main_text_accent);
+				break;
+				
+			case "`" :
+				if(string_ends_with(_spl, "`")) {
+					_spl   = string_copy(_spl, 1, string_length(_spl) - 1);
+					_s.txt = _spl;
+					
+					ds_stack_pop(symStck);
+				}
+				
+				_s.setFont(f_p3).setColor(CDEF.main_mdwhite);
 				break;
 		}
 		
@@ -154,7 +170,7 @@ function markdown_draw_symbols(symbols, xx, yy, ww) {
 			var _word = _symb.txt;
 			if(i) _word = " " + _word;
 			
-			draw_set_text(_symb.font, fa_left, fa_top, _symb.color);
+			draw_set_text(_symb.font, fa_left, fa_bottom, _symb.color);
 			var _w = string_width(_word);
 			var _h = string_height(_word);
 			
@@ -170,7 +186,7 @@ function markdown_draw_symbols(symbols, xx, yy, ww) {
 				_w    = string_width(_word);
 			}
 			
-			draw_text(_x, _y, _word);
+			draw_text(_x, _y + line_get_height(f_p2), _word);
 			
 			_x    += _w;
 			lineW += _w;
@@ -232,10 +248,10 @@ function markdown_draw(lines, xx, yy, ww) {
 				break;
 				
 			case "md_h3" : 
-				draw_set_text(f_p2b, fa_left, fa_top, COLORS._main_accent);
+				draw_set_text(f_p2b, fa_left, fa_top, COLORS._main_text_sub);
 				hg += (!!i) * ui(8);
-				draw_text_line(xx + ui(16), yy + hg, text, -1, ww);
-				hg += ui(4);
+				draw_text_line(xx + ui(24), yy + hg, text, -1, ww);
+				hg += string_height_ext(text, -1, ww) + ui(8);
 				break;
 				
 			case "md_h4" : 
@@ -258,13 +274,15 @@ function markdown_draw(lines, xx, yy, ww) {
 				
 			case "mb_group_start" : 
 				if(line.lineH != 0)
-					draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, xx, yy - ui(8), ww, line.lineH + ui(16), line.lineColor);
+					draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, xx, yy + ui(4) - ui(8), ww, line.lineH + ui(16), line.lineColor);
 				
 				line.lineH = hh;
+				hg = ui(4);
 				break;
 				
 			case "mb_group_end" : 
 				line.group.lineH = hh - line.group.lineH;
+				hg = ui(4);
 				break;
 				
 		}

@@ -1139,7 +1139,7 @@ function Panel_Inspector() : PanelContent() constructor {
                     prop_dragging = jun;
                         
                     prop_sel_drag_x = mouse_mx;
-                      prop_sel_drag_y = mouse_my;
+                    prop_sel_drag_y = mouse_my;
                 }
             #endregion
             

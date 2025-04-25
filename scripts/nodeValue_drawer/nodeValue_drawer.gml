@@ -18,7 +18,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 	#region data
 		var con_w     = ww - ui(4);
 		var xc	      = xx + ww / 2;
-		var _font     = viewMode == INSP_VIEW_MODE.spacious? f_p1 : f_p2;
+		var _font     = viewMode == INSP_VIEW_MODE.spacious? f_p2 : f_p3;
 		var breakLine = viewMode == INSP_VIEW_MODE.spacious || jun.expUse;
 		var lb_h      = line_get_height(_font, 6);
 		var lb_y      = yy + lb_h / 2;
@@ -417,8 +417,8 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			}
 			
 			var _widH = wid.drawParam(param) ?? 0;
-			widH  = _widH - (TEXTBOX_HEIGHT * !widExtend);
-			cHov |= wid.inBBOX(_m)
+			widH  = max(0, _widH - (TEXTBOX_HEIGHT * !widExtend));
+			cHov |= wid.inBBOX(_m);
 			
 			mbRight &= wid.right_click_block;
 		}

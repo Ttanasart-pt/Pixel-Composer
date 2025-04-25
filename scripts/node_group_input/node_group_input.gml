@@ -385,9 +385,9 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			
 			case "Palette" :
 				if(!is_array(_val))
-					inParent.animator = new valueAnimator([c_black], inParent);
+					inParent.animator = new valueAnimator([ca_black], inParent);
 					
-				inParent.def_val = [c_black];
+				inParent.def_val = [ca_black];
 				inParent.setDisplay(VALUE_DISPLAY.palette);
 				break;
 				
@@ -514,7 +514,6 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		var _data   = inputs[2].getValue();
 		var _dstype = inputs[0].getValue();
-		print(_dstype);
 		
 		if(_dstype == __dstype && _data == __data) return;
 		updateGroupInput();

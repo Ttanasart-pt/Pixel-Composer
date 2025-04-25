@@ -23,6 +23,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		node   = _node;
 		tags   = VALUE_TAG.none;
 		
+		nodeData = ALL_NODES[$ instanceof(node)];
+		
 		x	= node.x; rx  = node.x; 
 		y   = node.y; ry  = node.y;
 		
@@ -31,10 +33,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		type      = _type;
 		forward   = true;
 		_initName = _name;
-		
 		name_custom = false;
 		
-		tooltip        = _tooltip;
 		editWidget     = noone;
 		editWidgetRaw  = noone;
 		editWidgetMap  = {};
@@ -51,6 +51,22 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		dummy_get      = noone;
 		dummy_undo     = -1;
 		dummy_redo     = -1;
+	#endregion
+	
+	#region ---- tooltip ----
+		tooltip     = _tooltip;
+		tooltipData = {};
+		
+		if(nodeData && struct_has(nodeData.notes, _initName)) {
+			tooltipData = nodeData.notes[$ _initName];
+			
+			if(struct_has(tooltipData, "path")) {
+				var _cpath = string_replace(tooltipData.path, "./", nodeData.sourceDir + "/");
+				tooltipData.content = file_read_all(_cpath);
+			}
+			
+			tooltip = function() /*=>*/ {return dialogPanelCall(new Panel_Note_Md(tooltipData))};
+		}
 	#endregion
 	
 	#region ---- connection ----

@@ -88,7 +88,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		bg_spr         = THEME.node_bg;
 		bg_spr_add     = 0.1;
 		bg_spr_add_clr = c_white;
-	
+		
 		name             = "";
 		display_name     = "";
 		internalName     = "";

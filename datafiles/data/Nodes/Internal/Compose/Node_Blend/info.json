@@ -1,4 +1,5 @@
 {
+  "name":"Blend",
   "tooltip":"Combine 2 images using different blend modes.",
   "alias":[
     "normal",
@@ -37,5 +38,11 @@
     "surface"
   ],
   "build":"Node_create_Blend",
-  "name":"Blend"
+
+  "notes": {
+    "Blend mode": {
+      "title": "Blend mode",
+      "path": "./note_blend_modes.md"
+    }
+  }
 }

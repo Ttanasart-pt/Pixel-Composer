@@ -173,7 +173,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	nodes       = [];
 	node_length = 0;
 	modifiable  = true;
-	setDimension(w, 0);
+	setDimension(w, 16);
 	
 	ungroupable			= true;
 	auto_render_time	= false;

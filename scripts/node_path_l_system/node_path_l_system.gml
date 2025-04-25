@@ -40,7 +40,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	////- Rules
 	
 	newInput(3, nodeValue_Int(  "Iteration",       self, 4));
-	newInput(4, nodeValue_Text( "Starting rule",   self, "", function() /*=>*/ {return dialogPanelCall(new Panel_L_System())}));
+	newInput(4, nodeValue_Text( "Starting rule",   self, ""));
 	newInput(5, nodeValue_Text( "End replacement", self, "", "Replace symbol of the last generated rule, for example a=F to replace all a with F. Use comma to separate different replacements."));
 	
 	static createNewInput = function(index = array_length(inputs)) {
