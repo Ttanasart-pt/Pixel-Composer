@@ -1,5 +1,5 @@
 #region globalvar
-	globalvar ALL_NODES, NODE_PCX_CATEGORY;
+	globalvar ALL_NODES, NODE_PCX_CATEGORY; ALL_NODES = {};
 	globalvar NODE_CATEGORY, NODE_CATEGORY_MAP;
 	globalvar SUPPORTER_NODES, NEW_NODES;
 	globalvar CUSTOM_NODES, CUSTOM_NODES_POSITION;
@@ -67,6 +67,9 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 	author  = "";
 	license = "";
 	
+	buildFn = registerFunction("Add node", name, "", 0, function(n) /*=>*/ { PANEL_GRAPH.createNodeHotkey(n); }, [ nodeName ]).setMenu($"graph_add_{nodeName}", spr);
+	buildFn.nodeName = nodeName;
+	
 	static init = function() {
 		if(IS_CMD) return;
 		
@@ -78,13 +81,15 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 		}
 	} init();
     
+	static setSpr = function(_spr)  { 
+		spr = _spr; 
+		buildFn.setSpr(spr);  
+		return self; 
+	}
+	
 	static setTags    = function(_tags) { tags        = _tags; return self; }
-	static setSpr     = function(_spr)  { spr         = _spr;  return self; }
 	static setTooltip = function(_tool) { tooltip     = _tool; return self; }
 	static setParam   = function(_par)  { createParam = _par;  return self; }
-	
-    _fn = registerFunctionLite("New node", name, function(n) /*=>*/ { PANEL_GRAPH.createNodeHotkey(n); }, [ nodeName ]);
-    _fn.spr = spr;
     static setBuild   = function(_fn)   { createFn    = method(self, _fn); usecreateFn = true; return self; }
 	
 	static setIO = function(t) { 
@@ -329,18 +334,20 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 			var _ispr = _data[$ "spr"];
 			_spr = asset_get_index(_ispr);
 				
-			if(sprite_exists(_spr)) spr = _spr;
+			if(sprite_exists(_spr)) setSpr(_spr);
 			else print($"Node icon not found {_ispr}");
 			
 		} else {
 			var pth = $"{sourceDir}/icon.png";
 			
 			if(file_exists_empty(pth)) {
-				spr = sprite_add(pth, 0, false, false, 0, 0);
-				sprite_set_offset(spr, sprite_get_width(spr) / 2, sprite_get_height(spr) / 2);
+				var _spr = sprite_add(pth, 0, false, false, 0, 0);
+				sprite_set_offset(_spr, sprite_get_width(_spr) / 2, sprite_get_height(_spr) / 2);
+				setSpr(_spr);
+				
 			} else {
 				var _spr = asset_get_index($"s_{string_lower(nodeName)}");
-				if(sprite_exists(_spr)) spr = _spr;
+				if(sprite_exists(_spr)) setSpr(_spr);
 			}
 		}
 			
@@ -385,12 +392,11 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 		}
 		
 		if(struct_has(GRAPH_ADD_NODE_MAPS, nodeName)) {
-	    	var _id   = $"graph_add_{nodeName}";
-			var _menu = menuItem(name, function(p) /*=>*/ {return PANEL_GRAPH.createNodeHotkey(p)}, noone, [ "_graph_add_node", nodeName ]).setParam(nodeName);
-			
-			_menu.hoykeyObject = GRAPH_ADD_NODE_MAPS[$ nodeName];
-			MENU_ITEMS[$ _id] = _menu;
-		}
+			var _hot  = GRAPH_ADD_NODE_MAPS[$ nodeName]
+			buildFn.hotkey = _hot;
+	    	
+		} else 
+			buildFn.hotkey = noone;
 		
 		return self;
 	}

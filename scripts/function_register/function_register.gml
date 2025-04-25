@@ -45,7 +45,7 @@ function functionObjectLite(_context, _name, _action, _param = noone) constructo
 	menu     = noone;
 	spr      = noone;
 	
-	FUNCTIONS[$ fnName]     = self;
+	FUNCTIONS[$ fnName] = self;
 }
 	
 function registerFunction(_context, _name, _key, _mod, _action, _param = noone) { return new functionObject(_context, _name, _key, _mod, _action, _param); }
@@ -66,6 +66,7 @@ function functionObject(_context, _name, _key, _mod, _action, _param = noone) co
 	FUNCTIONS[$ fnName]     = self;
 	CMD_FUNCTIONS[$ fnName] = { action: _action, args: [] };
 	
+	static setSpr = function(_spr) { spr = _spr; if(menu) menu.spr = _spr; return self; }
 	static setArg = function(_args = []) { CMD_FUNCTIONS[$ fnName] = { action, args: _args }; return self; }
 	
 	static setMenuAlt = function(_name, _id, _spr = noone, shelf = false) { 

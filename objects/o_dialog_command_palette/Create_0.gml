@@ -3,6 +3,8 @@ event_inherited();
 
 #region data
 	destroy_on_click_out = true;
+	destroy_on_escape    = false;
+	
 	draggable = false;
 	selecting = 0;
 	
@@ -79,7 +81,7 @@ event_inherited();
 	sc_content = new scrollPane(dialog_w - ui(4), dialog_h - ui(32), function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 1);
 		
-		var hght = line_get_height(f_p2, item_pad);
+		var hght = line_get_height(f_p3, item_pad);
 		var _dw  = sc_content.surface_w;
 		var _h   = array_length(data) * hght;
 		var _ly  = _y;
@@ -99,33 +101,49 @@ event_inherited();
 			var _menu = data[i];
 			
 			var _menuItem = _menu.menu;
-			var _hasKey   = struct_has(_menu, "hotkey");
+			var _hasKey   = struct_try_get(_menu, "hotkey", noone) != noone;
 			var _mhover   = mouse_move && point_in_rectangle(_m[0], _m[1], 0, _ly, _dw, _ly + hght - 1); 
 			
 			if(selecting == i) {
 				draw_sprite_stretched_ext(THEME.textbox, 3, 0, _ly, _dw, hght, COLORS.dialog_menubox_highlight, 1);
 				
 				if(sc_content.active) {
-					if((!keyboard_trigger && mouse_press(mb_left)) || keyboard_check_pressed(vk_enter)) {
+					if((!keyboard_trigger && mouse_press(mb_left)) || (hk_editing == noone && keyboard_check_pressed(vk_enter))) {
 						call(_menu.action, _menu.params);
 						array_push(RECENT_COMMANDS, _menu);
 						instance_destroy();
 					}
 					
-					if(_hasKey && mouse_press(mb_right)) {
-						var _key = _menu.hotkey;
-						selecting_hotkey = _key;
-						
-						var _loadKey = _key.getNameFull();
-						var context_menu_settings = [
-							_loadKey,
-							menuItem("Edit Hotkey", function() /*=>*/ {
-								hk_editing = selecting_hotkey.modify();
-								tb_search.deactivate();
-							}),
-						];
-						
-						item_selecting = menuCall("command_palette_item", context_menu_settings);
+					if(mouse_press(mb_right)) {
+						if(_hasKey) {
+							var _key = _menu.hotkey;
+							selecting_hotkey = _key;
+							
+							var _loadKey = _key.getNameFull();
+							var context_menu_settings = [
+								_loadKey,
+								menuItem("Edit Hotkey", function() /*=>*/ {
+									hk_editing = selecting_hotkey.modify();
+									tb_search.deactivate();
+								}),
+							];
+							
+							item_selecting = menuCall("command_palette_item", context_menu_settings);
+							
+						} else if(_menu.context == "Add node") {
+							var context_menu_settings = [
+								$"global.{_menu.nodeName}",
+								menuItem(__txt("Edit Hotkey"),  function() /*=>*/ { 
+									var _n  = item_selecting.nodeName;
+									var _hk = __fnGraph_BuildNode(_n);
+									
+									hk_editing = _hk.modify();
+								})
+							];
+							
+							item_selecting = menuCall("command_palette_item", context_menu_settings);
+							item_selecting.nodeName = _menu.nodeName;
+						}
 					}
 				}
 			}
@@ -141,7 +159,7 @@ event_inherited();
 			var _ty   = _ly + hght / 2;
 			
 			if(_cnxt != "") {
-				draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text_sub);
+				draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text_sub);
 				draw_text_add(_tx, _ty, _cnxt);
 				_tx += string_width(_cnxt);
 				
@@ -149,7 +167,7 @@ event_inherited();
 				_tx += ui(16);
 			}
 			
-			draw_set_text(f_p2, fa_left, fa_center, COLORS._main_icon_light);
+			draw_set_text(f_p3, fa_left, fa_center, COLORS._main_icon_light);
 			draw_text_match_ext(_tx, _ty, _name, _dw, search_string);
 			
 			var _spr = _menu.spr;
@@ -166,7 +184,7 @@ event_inherited();
 			if(_hasKey) {
 				var _key = _menu.hotkey;
 				
-				if(is_instanceof(_key, hotkeyObject)) {
+				if(is_instanceof(_key, Hotkey)) {
 					var _hx = _dw - ui(6);
 					var _hy = _ty + ui(1);
 					
@@ -181,14 +199,8 @@ event_inherited();
 					var _bw = _tw + ui(8);
 					var _bh = _th + ui(2);
 					
-					if(hk_editing == _key) {
-						draw_set_color(COLORS._main_accent);
-						// draw_sprite_stretched_ext(THEME.ui_panel, 1, _bx, _by, _bw, _bh, COLORS._main_text_accent);
-						
-					} else if(_ktxt != "") {
-						draw_set_color(COLORS._main_text_sub);
-						// draw_sprite_stretched_ext(THEME.ui_panel, 1, _bx, _by, _bw, _bh, CDEF.main_dkgrey);
-					}
+					     if(hk_editing == _key) draw_set_color(COLORS._main_accent);
+					else if(_ktxt != "")        draw_set_color(COLORS._main_text_sub);
 					
 					draw_text_add(_hx, _hy, _ktxt);
 				}
@@ -208,6 +220,8 @@ event_inherited();
 				
 			if(keyboard_check_pressed(vk_escape))
 				hk_editing = noone;
+				
+			KEYBOARD_STRING = "";
 				
 		} else if(sc_content.active) {
 			if(KEYBOARD_PRESSED == vk_up) {

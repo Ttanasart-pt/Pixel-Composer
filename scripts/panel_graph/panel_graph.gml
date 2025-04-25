@@ -146,6 +146,9 @@
 		array_push(GRAPH_ADD_NODE_KEYS, _h);
 		GRAPH_ADD_NODE_MAPS[$ _k] = _h;
 		
+		if(struct_has(ALL_NODES, _k)) 
+			ALL_NODES[$ _k].buildFn.hotkey = _h;
+		
 		return _h;
     }
     
