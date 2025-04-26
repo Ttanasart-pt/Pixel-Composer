@@ -130,8 +130,8 @@ function Node_Path_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var _resetOri = _data[12];
 		
 		var _scattered = new Path_Scatter();
-		if(path_base == noone) return _scattered;
-		if(path_scat == noone) return _scattered;
+		if(!is_struct(path_base)) return _scattered;
+		if(!is_struct(path_scat)) return _scattered;
 		
 		var _line_amounts = path_scat.getLineCount();
 		_scattered.line_amount    = _repeat * _line_amounts;

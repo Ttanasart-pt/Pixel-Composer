@@ -6,12 +6,5 @@
   "baseNode":"Node_Path_L_System",
   "io":[
     "pathnode"
-  ],
-
-  "notes": {
-    "Starting rule": {
-      "title": "Lindenmayer System",
-      "path": "./note_l_system.md"
-    }
-  }
+  ]
 }

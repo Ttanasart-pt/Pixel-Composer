@@ -79,30 +79,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	skipDefault();
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Enum_Scroll("Subtype", self,  0, { data: GROUP_IO_DISPLAY[11], update_hover: false }))
-		.setUnclamp();
-	
-	newInput(1, nodeValue_Range("Range", self, [ 0, 1 ]))
-		.setVisible(false);
-	
-	newInput(2, nodeValue_Enum_Scroll("Input Type", self,  11, { data: GROUP_IO_TYPE_NAME, update_hover: false }))
-		.setUnclamp();
-	
-	newInput(3, nodeValue_Text("Enum Labels", self, "", "Define enum choices, use comma to separate each choice."))
-		.setVisible(false);
-	
-	newInput(4, nodeValue_Enum_Button("Vector size", self,  0, [ "2", "3", "4" ]))
-		.setVisible(false);
-	
-	newInput(5, nodeValue_Int("Order", self, 0));
-	
-	newInput(6, nodeValue_Bool("Display preview gizmo", self, true));
-		
-	newInput(7, nodeValue_Float("Step", self, 0.01))
-		.setVisible(false);
-		
-	newInput(8, nodeValue_Text("Button Label", self, "Trigger"))
-		.setVisible(false);
+	////- Visibility
 	
 	newInput(9, nodeValue_Enum_Scroll("Visible Condition", self,  0, [ "Always Show", "Always Hide", /* 2 */ new scrollItem("Equal",              s_node_condition_type, 0), 
 												        		                                     /* 3 */ new scrollItem("Not equal",          s_node_condition_type, 1), 
@@ -111,17 +88,27 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 												        		                                     /* 6 */ new scrollItem("Lesser",             s_node_condition_type, 2), 
 												        		                                     /* 7 */ new scrollItem("Lesser or equal",    s_node_condition_type, 3), ]));
 	
-	newInput(10, nodeValue_Float("Visible Check", self, 0));
+	newInput(10, nodeValue_Float(      "Visible Check",       self, 0));
+	newInput(11, nodeValue_Float(      "Visible Check To",    self, 0));
 	
-	newInput(11, nodeValue_Float("Visible Check To", self, 0));
+	////- Data
 	
-	newInput(12, nodeValue_Vec2("Gizmo Position", self, [ 0, 0 ]));
+	newInput(2, nodeValue_Enum_Scroll( "Input Type",          self, 11, { data: GROUP_IO_TYPE_NAME, update_hover: false })).setUnclamp();
+	newInput(0, nodeValue_Enum_Scroll( "Subtype",             self,  0, { data: GROUP_IO_DISPLAY[11], update_hover: false })).setUnclamp();
+	newInput(4, nodeValue_Enum_Button( "Vector size",         self,  0, [ "2", "3", "4" ]));
+	newInput(1, nodeValue_Range(       "Range",               self, [0,1]));
+	newInput(7, nodeValue_Float(       "Step",                self, 0.01));
+	newInput(3, nodeValue_Text(        "Enum Labels",         self, "", "Define enum choices, use comma to separate each choice."));
+	newInput(8, nodeValue_Text(        "Button Label",        self, "Trigger"));
+	newInput(5, nodeValue_Int(         "Order",               self, 0));
 	
-	newInput(13, nodeValue_Float("Gizmo Scale", self, 1));
+	////- Gizmo
 	
-	newInput(14, nodeValue_Rotation("Gizmo Rotation", self, 0));
-	
-	newInput(15, nodeValue_Bool("Gizmo Label", self, true));
+	newInput( 6, nodeValue_Bool(     "Display preview gizmo", self, true));
+	newInput(12, nodeValue_Vec2(     "Gizmo Position",        self, [ 0, 0 ]));
+	newInput(13, nodeValue_Float(    "Gizmo Scale",           self, 1));
+	newInput(14, nodeValue_Rotation( "Gizmo Rotation",        self, 0));
+	newInput(15, nodeValue_Bool(     "Gizmo Label",           self, true));
 	
 	inputs[10].setFrom_condition = function(v) {
 		if(is(v.node, Node_Group_Input)) return true;
@@ -133,9 +120,9 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		inputs[i].uncache().rejectArray();
 		
 	input_display_list = [ 
-		["Junction", false], 9, 10, 11, 
-		["Data",     false], 2, 0, 4, 1, 7, 3, 8, 
-		["Gizmo",    false, 6], 12, 13, 14, 15, 
+		["Visibility", false], 9, 10, 11, 
+		["Data",       false], 2, 0, 4, 1, 7, 3, 8, 
+		["Gizmo",      false, 6], 12, 13, 14, 15, 
 	];
 	
 	newOutput(0, nodeValue_Output("Value", self, VALUE_TYPE.any, 0))
@@ -339,30 +326,14 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			case "Vector range" :
 				var _vsize = getInputData(4);
 				
-				switch(_vsize) {
-					case 0 : 
-						if(!is_array(_val) || array_length(_val) != 2)
-							inParent.animator = new valueAnimator([0, 0], inParent);
-							
-							inParent.def_val = [0, 0];
-						break;
-						
-					case 1 : 
-						if(!is_array(_val) || array_length(_val) != 3)
-							inParent.animator = new valueAnimator([0, 0, 0], inParent);
-							
-							inParent.def_val = [0, 0, 0];
-						break;
-						
-					case 2 : 
-						if(!is_array(_val) || array_length(_val) != 4)
-							inParent.animator = new valueAnimator([0, 0, 0, 0], inParent);
-							
-							inParent.def_val = [0, 0, 0, 0];
-						break;
+				if(!is_array(_val) || array_length(_val) != _vsize) {
+					var _defV  = array_create(_vsize);
+					inParent.animator = new valueAnimator(_defV, inParent);
+					inParent.def_val = _defV;
 				}
-				if(_dtype == "Vector")				inParent.setDisplay(VALUE_DISPLAY.vector);
-				else if(_dtype == "Vector range")	inParent.setDisplay(VALUE_DISPLAY.vector_range);
+				
+				     if(_dtype == "Vector")       inParent.setDisplay(VALUE_DISPLAY.vector);
+				else if(_dtype == "Vector range") inParent.setDisplay(VALUE_DISPLAY.vector_range);
 				break;
 			
 			case "Enum button" : 
@@ -384,8 +355,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				break;
 			
 			case "Palette" :
-				if(!is_array(_val))
-					inParent.animator = new valueAnimator([ca_black], inParent);
+				if(!is_array(_val)) inParent.animator = new valueAnimator([ca_black], inParent);
 					
 				inParent.def_val = [ca_black];
 				inParent.setDisplay(VALUE_DISPLAY.palette);
@@ -402,11 +372,22 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				
 			case "Curve":
 				inParent.animator = new valueAnimator(CURVE_DEF_11, inParent);
-				
-				inParent.def_val = array_clone(CURVE_DEF_11);
+				inParent.def_val  = array_clone(CURVE_DEF_11);
 				inParent.setDisplay(VALUE_DISPLAY.curve);
 				break;
-				
+			
+			case "Surface":
+				inParent.animator = new valueAnimator(noone, inParent);
+				inParent.def_val  = array_clone(noone);
+				inParent.setDisplay(VALUE_DISPLAY._default);
+				break;
+			
+			case "Pathnode":
+				inParent.animator = new valueAnimator(noone, inParent);
+				inParent.def_val  = array_clone(noone);
+				inParent.setDisplay(VALUE_DISPLAY._default);
+				break;
+			
 			default:
 				if(is_array(_val)) inParent.animator = new valueAnimator(0, inParent);
 				

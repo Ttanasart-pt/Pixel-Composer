@@ -48,8 +48,6 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 	tooltip      = _tooltip;
 	tooltip_spr  = undefined;
 	
-	notes        = undefined;
-	
 	pxc_version  = 0;
 	new_node     = false;
 	deprecated   = false;
@@ -378,9 +376,6 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 		
 		if(struct_has(_data, "params"))
 			setParam(_data.params);
-			
-		if(struct_has(_data, "notes"))
-			notes = _data.notes;
 			
 		testable = _data[$ "testable"] ?? testable;
 		author   = _data[$ "author"]   ?? author;

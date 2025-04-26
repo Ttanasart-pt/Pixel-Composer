@@ -6,6 +6,9 @@
 		lineH     = 0;
 		lineColor = undefined;
 		
+		x = 0;
+		y = 0;
+		
 		static setPad   = function(p) /*=>*/ { pad       = p; return self; }
 		static setBG    = function(c) /*=>*/ { lineColor = c; return self; }
 	}
@@ -32,10 +35,11 @@
 	function md_li(_txt) : md_block_text(_txt) constructor { font = f_p2; color = COLORS._main_text; }
 	function md_p (_txt) : md_block_text(_txt) constructor { font = f_p2; color = COLORS._main_text; }
 	
-	function md_line_x(_width) : md_block() constructor { width = _width; }
-	function md_line_s(_spr)   : md_block() constructor { spr   = struct_try_get(THEME, _spr); }
+	function md_line_x(_width)  : md_block() constructor { width  = _width;  }
+	function md_line_y(_height) : md_block() constructor { height = _height; }
+	function md_line_s(_spr)    : md_block() constructor { spr    = struct_try_get(THEME, _spr); }
 	
-	function mb_group_start(_name) : md_block() constructor { name  = _name;  lineColor = CDEF.main_white; }
+	function mb_group_start(_name) : md_block() constructor { name  = _name;  }
 	function mb_group_end(_group)  : md_block() constructor { group = _group; }
 	
 #endregion
@@ -55,6 +59,7 @@ function markdown_parse_line(line) {
 			
 			switch(_type) {
 				case "x" : _symbol[i] = new md_line_x(real(_val)); break;
+				case "y" : _symbol[i] = new md_line_y(real(_val)); break;
 				case "s" : _symbol[i] = new md_line_s(_val);       break;
 			}
 			
@@ -194,6 +199,9 @@ function markdown_draw_symbols(symbols, xx, yy, ww) {
 			
 		} else if(is(_symb, md_line_x)) {
 			_x = lineX + ui(_symb.width);
+		
+		} else if(is(_symb, md_line_y)) {
+			_y += ui(_symb.height);
 			
 		} else if(is(_symb, md_line_s)) {
 			var _spr = _symb.spr;
@@ -229,6 +237,9 @@ function markdown_draw(lines, xx, yy, ww) {
 		var padd = line.pad;
 		var linH = 0;
 		var hg   = 0;
+		
+		line.x = 0;
+		line.y = hh;
 		
 		switch(instanceof(line)) {
 			case "md_h1" : 
@@ -274,7 +285,16 @@ function markdown_draw(lines, xx, yy, ww) {
 				
 			case "mb_group_start" : 
 				if(line.lineH != 0)
-					draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, xx, yy + ui(4) - ui(8), ww, line.lineH + ui(16), line.lineColor);
+				switch(line.name) {
+					case "g" : 
+						draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, xx, yy + ui(4) - ui(8), ww, line.lineH + ui(16), CDEF.main_mdwhite);  
+						draw_sprite_stretched_ext(THEME.ui_panel,    1, xx, yy + ui(4) - ui(8), ww, line.lineH + ui(16), #090915);  
+						break;
+						
+					case "d" : 
+						draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, xx + ui(10), yy + ui(4), ww - ui(20), line.lineH, CDEF.main_ltgrey); 
+						break;
+				}
 				
 				line.lineH = hh;
 				hg = ui(4);

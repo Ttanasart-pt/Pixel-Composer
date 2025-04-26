@@ -37,12 +37,5 @@
     "surface",
     "surface"
   ],
-  "build":"Node_create_Blend",
-
-  "notes": {
-    "Blend mode": {
-      "title": "Blend mode",
-      "path": "./note_blend_modes.md"
-    }
-  }
+  "build":"Node_create_Blend"
 }

@@ -1,11 +1,11 @@
 globalvar LOCALE, TEST_LOCALE, LOCALE_DEF;
+globalvar LOCALE_NOTE_DATA, LOCALE_NOTE_JUNC;
 
-TEST_LOCALE = 0;
-LOCALE_DEF  = 1;
-LOCALE      = {
-	fontDir: "",
-	config: { per_character_line_break: false },
-}
+TEST_LOCALE  = 0;
+LOCALE_DEF   = 1;
+LOCALE       = { fontDir: "", config: { per_character_line_break: false } }
+LOCALE_NOTE_DATA = {};
+LOCALE_NOTE_JUNC = {};
 
 global.missing_locale     = {}
 global.missing_lfile      = "D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/datafiles/data/Locale/missing.txt";
@@ -13,25 +13,42 @@ global.missing_lfile      = "D:/Project/MakhamDev/LTS-PixelComposer/PixelCompose
 global.missing_lnode      = {}
 global.missing_lfile_node = "D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/datafiles/data/Locale/missing.txt";
 
-function __initLocale() {
-	var lfile = $"data/Locale/en.zip";
-	var root  = $"{DIRECTORY}Locale";
-	
-	directory_verify(root);
-	if(check_version($"{root}/version")) {
-		zip_unzip(lfile, root);
-		file_copy($"data/Locale/LOCALIZATION GUIDES.txt", $"{DIRECTORY}Locale/LOCALIZATION GUIDES.txt");
-	}
-	
-	if(LOCALE_DEF && !TEST_LOCALE) return;
-	loadLocale();
-}
-
 function __locale_file(file) {
 	var dirr = $"{DIRECTORY}Locale/{PREFERENCES.local}";
 	if(!directory_exists(dirr) || !file_exists_empty(dirr + file)) 
 		dirr = $"{DIRECTORY}Locale/en";
+		
 	return dirr + file;
+}
+
+function __initLocale() {
+	var root  = $"{DIRECTORY}Locale";
+	
+	directory_verify(root);
+	if(check_version($"{root}/version")) {
+		var lfile = $"data/Locale/en.zip";
+		zip_unzip(lfile, root);
+		file_copy($"data/Locale/LOCALIZATION GUIDES.txt", $"{DIRECTORY}Locale/LOCALIZATION GUIDES.txt");
+	}
+	
+	if(!LOCALE_DEF || TEST_LOCALE) loadLocale();
+	loadLocaleNotes();
+}
+
+function loadLocaleNotes() {
+	LOCALE_NOTE_DATA = {};
+	
+	LOCALE_NOTE_JUNC = json_load_struct(__locale_file("/junctions.json"));
+	var _noteD = $"{DIRECTORY}Locale/{PREFERENCES.local}/notes"
+	if(!directory_exists(_noteD)) _noteD = $"{DIRECTORY}Locale/en/notes";
+	
+	var _notes = directory_get_files_ext(_noteD, ".md");
+	for( var i = 0, n = array_length(_notes); i < n; i++ ) {
+		var _n = _notes[i];
+		var _p = $"{_noteD}/{_n}";
+		
+		LOCALE_NOTE_DATA[$ _n] = file_read_all(_p);
+	}
 }
 
 function loadLocale() {

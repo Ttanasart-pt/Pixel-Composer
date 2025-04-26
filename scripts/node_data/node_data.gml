@@ -55,12 +55,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	#endregion
 	
 	static resetInternalName = function() {
-		var str = string_replace_all(name, " ", "_");
-			str = string_replace_all(str,  "/", "");
-			str = string_replace_all(str,  "-", "");
+		var _str = string_replace_all(name, " ", "_");
+			_str = string_replace_all(_str,  "/", "");
+			_str = string_replace_all(_str,  "-", "");
 		
 		ds_map_delete(project.nodeNameMap, internalName);
-		internalName = str + string(irandom_range(10000, 99999)); 
+		internalName = $"{_str}{seed_random(5)}";
 		project.nodeNameMap[? internalName] = self;
 	}
 	
@@ -100,10 +100,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		y = _y;
 		w = 128;
 		h = 128;
-		moved   = false;
-		min_w   = w;
-		con_h   = 128;
-		h_param = h;
+		
+		moved       = false;
+		min_w       = w;
+		con_h       = 128;
+		h_param     = h;
 		name_height = 16;
 		custom_grid = 0;
 		
@@ -664,20 +665,20 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static doStepBegin = function() {}
 	
 	static setTrigger = function(index, 
-	                             tooltip   = __txtx("panel_inspector_execute", "Execute"), 
-	                             icon      = [ THEME.sequence_control, 1, COLORS._main_value_positive ], 
+	                             _tooltip  = __txtx("panel_inspector_execute", "Execute"), 
+	                             _icon     = [ THEME.sequence_control, 1, COLORS._main_value_positive ], 
 	                             _function = undefined) {
 	                             	
 		use_trigger         = true;
 		
 		if(index == 1) {
-			insp1UpdateTooltip  = tooltip;
-			insp1UpdateIcon     = icon;
+			insp1UpdateTooltip  = _tooltip;
+			insp1UpdateIcon     = _icon;
 			if(!is_undefined(_function)) onInspector1Update  = _function;
 			
 		} else if(index == 2) {
-			insp2UpdateTooltip  = tooltip;
-			insp2UpdateIcon     = icon;
+			insp2UpdateTooltip  = _tooltip;
+			insp2UpdateIcon     = _icon;
 			if(!is_undefined(_function)) onInspector2Update  = _function;
 		} 
 	}
@@ -1776,7 +1777,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		draw_set_alpha(1);
 	}
 	
-	static drawJunctionWidget = function(_x, _y, _mx, _my, _s, _hover, _focus, display_parameter = noone, _panel = noone) {
+	static drawJunctionWidget = function(_x, _y, _mx, _my, _s, _hover, _focus, _display_parameter = noone, _panel = noone) {
 		
 		var hover = noone;
 		
@@ -2189,7 +2190,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static groupCheck = function(_x, _y, _s, _mx, _my) {}
 	
-	static drawNodeBG = function(_x, _y, _mx, _my, _s, display_parameter = noone, _panel = noone) { 
+	static drawNodeBG = function(_x, _y, _mx, _my, _s, _display_parameter = noone, _panel = noone) { 
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
 		
@@ -2209,10 +2210,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return false; 
 	}
 	
-	static drawNodeFG = function(_x, _y, _mx, _my, _s, display_parameter = noone, _panel = noone) { }
+	static drawNodeFG = function(_x, _y, _mx, _my, _s, _display_parameter = noone, _panel = noone) { }
 	
-	static drawNode = function(_draw, _x, _y, _mx, _my, _s, display_parameter = noone, _panel = noone) { 
-		if(display_parameter != noone) self.display_parameter = display_parameter;
+	static drawNode = function(_draw, _x, _y, _mx, _my, _s, _display_parameter = noone, _panel = noone) { 
+		if(_display_parameter != noone) display_parameter = _display_parameter;
 		
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
@@ -2239,7 +2240,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			catch(e) { log_warning("NODE onDrawNode", exception_print(e)); }
 		} 
 		
-		if(SHOW_PARAM) drawJunctionWidget(xx, yy, _mx, _my, _s, _hover, _focus, display_parameter, _panel);
+		if(SHOW_PARAM) drawJunctionWidget(xx, yy, _mx, _my, _s, _hover, _focus, _display_parameter, _panel);
 		
 		draw_name = false;
 		if((previewable && _s >= 0.5) || (!previewable && h * _s >= name_height * .5)) drawNodeName(xx, yy, _s, _panel);

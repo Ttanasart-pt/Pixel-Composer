@@ -3,6 +3,16 @@
 function struct_create() { return {}; }
 
 function struct_has(s, k) { return is_struct(s) && variable_struct_exists(s, k); }
+function struct_has_ext(s) { 
+	if(!is_struct(s)) return false;
+	
+	for(var i = 1; i < argument_count; i++) {
+		if(!struct_has(s, argument[i])) return false;
+		s = s[$ argument[i]];
+	}
+	
+	return true; 
+}
 
 function struct_override(original, override, _clone = false) {
 	var args = variable_struct_get_names(override);

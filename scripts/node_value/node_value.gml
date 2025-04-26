@@ -23,8 +23,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		node   = _node;
 		tags   = VALUE_TAG.none;
 		
-		nodeData = ALL_NODES[$ instanceof(node)];
-		
 		x	= node.x; rx  = node.x; 
 		y   = node.y; ry  = node.y;
 		
@@ -57,15 +55,15 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		tooltip     = _tooltip;
 		tooltipData = {};
 		
-		if(nodeData && struct_has(nodeData.notes, _initName)) {
-			tooltipData = nodeData.notes[$ _initName];
+		var _inode = instanceof(node);
+		if(struct_has_ext(LOCALE_NOTE_JUNC, _inode, _initName)) {
+			var _dat = LOCALE_NOTE_JUNC[$ _inode][$ _initName];
 			
-			if(struct_has(tooltipData, "path")) {
-				var _cpath = string_replace(tooltipData.path, "./", nodeData.sourceDir + "/");
-				tooltipData.content = file_read_all(_cpath);
+			if(struct_has(LOCALE_NOTE_DATA, _dat.note)) {
+				tooltipData.title   = filename_name_only(_dat.note);
+				tooltipData.content = LOCALE_NOTE_DATA[$ _dat.note];
+				tooltip = function() /*=>*/ {return dialogPanelCall(new Panel_Note_Md(tooltipData))};
 			}
-			
-			tooltip = function() /*=>*/ {return dialogPanelCall(new Panel_Note_Md(tooltipData))};
 		}
 	#endregion
 	

@@ -28,6 +28,7 @@ function directory_size_mb(dir) {
 function directory_get_files_ext(dir, ext) {
 	var a = [];
 	
+	if(!directory_exists(dir)) return a;
 	var f = file_find_first(dir + "/*", 0), _f;
 	while (f != "") {
 		if(filename_ext(f) == ext) array_push(a, f);

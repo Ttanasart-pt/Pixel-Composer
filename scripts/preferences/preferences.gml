@@ -401,6 +401,8 @@
 		struct_override(PROJECT_ATTRIBUTES, f);
 		
 		hotkey_deserialize();
+		
+		TESTING = struct_try_get(PREFERENCES, "test_mode", false);
 	}
 	
 	function PREF_APPLY() {
