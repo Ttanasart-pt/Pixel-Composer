@@ -82,7 +82,7 @@ function draw_surface_blend(background, foreground, blend = BLEND_MODE.normal, a
 		case BLEND_MODE.luminosity :   sh = sh_blend_luma;         break;
 		
 		// case "XOR" :			sh = sh_blend_xor;				break;
-		default: return;
+		default: noti_warning("Blend error: Invalid blend mode."); return;
 	}
 	
 	var surf	= surface_get_target();
