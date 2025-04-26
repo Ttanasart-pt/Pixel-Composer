@@ -119,11 +119,11 @@ function Panel_Notification() : PanelContent() constructor {
 					tx += timeW + ui(8);
 				
 					draw_set_text(f_p3, fa_right, fa_center, COLORS._main_text_sub_inner);
-					draw_text_line(tx - ui(4), yy + _h / 2, noti.time, -1, txw);
+					draw_text_line(round(tx - ui(4)), round(yy + _h / 2), noti.time, -1, txw);
 				}
 				
 				draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text_inner);
-				draw_text_line(tx + ui(4), yy + _h / 2, noti.txt, -1, txw);
+				draw_text_line(round(tx + ui(4)), round(yy + _h / 2), noti.txt, -1, txw);
 				
 				if(noti.amount > 1) {
 					draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text);
@@ -134,7 +134,7 @@ function Panel_Notification() : PanelContent() constructor {
 					var by = yy + ui(0) + ui(1);
 					
 					draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text_accent);
-					draw_text(bx + bw / 2, by + bh / 2, noti.amount);
+					draw_text(round(bx + bw / 2), round(by + bh / 2), noti.amount);
 				}
 			}
 			

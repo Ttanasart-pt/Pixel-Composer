@@ -324,12 +324,11 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				
 			case "Vector" :
 			case "Vector range" :
-				var _vsize = getInputData(4);
+				var _vsize = getInputData(4) + 2;
 				
 				if(!is_array(_val) || array_length(_val) != _vsize) {
-					var _defV  = array_create(_vsize);
-					inParent.animator = new valueAnimator(_defV, inParent);
-					inParent.def_val = _defV;
+					inParent.animator = new valueAnimator(array_create(_vsize), inParent);
+					inParent.def_val = array_create(_vsize);
 				}
 				
 				     if(_dtype == "Vector")       inParent.setDisplay(VALUE_DISPLAY.vector);
@@ -377,12 +376,25 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				break;
 			
 			case "Surface":
-				inParent.animator = new valueAnimator(noone, inParent);
-				inParent.def_val  = array_clone(noone);
-				inParent.setDisplay(VALUE_DISPLAY._default);
-				break;
-			
+			case "Object":
+			case "Node":
 			case "Pathnode":
+			case "Particle":
+			case "Rigidbody Object":
+			case "Domain":
+			case "Struct":
+			case "Strand":
+			case "Mesh":
+			case "Trigger":
+			case "3D Mesh":
+			case "3D Light":
+			case "3D Camera":
+			case "3D Scene":
+			case "3D Material":
+			case "PCX":
+			case "Audio":
+			case "Fdomain":
+			case "SDF":
 				inParent.animator = new valueAnimator(noone, inParent);
 				inParent.def_val  = array_clone(noone);
 				inParent.setDisplay(VALUE_DISPLAY._default);
@@ -413,7 +425,8 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	}
 	
 	static visibleCheck = function() {
-		var _vty = inputs[ 9].getValue();
+		var _vty = inputs[9].getValue();
+		    _vty = is_array(_vty)? 0 : _vty;
 		
 		inputs[10].setVisible(_vty >= 2, _vty >= 2);
 		inputs[11].setVisible(_vty >= 2);
