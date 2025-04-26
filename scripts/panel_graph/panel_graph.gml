@@ -880,11 +880,9 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
     } 
     
     function focusNode(_node) {
-        if(_node == noone) {
-            nodes_selecting = [];
-            return;
-        }
+        if(_node == noone) { nodes_selecting = []; return; }
         
+        setContext(_node);
         nodes_selecting = [ _node ];
         fullView();
     } 

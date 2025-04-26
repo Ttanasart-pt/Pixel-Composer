@@ -288,8 +288,11 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		_mask = mask_modify(_mask, _mskInv, _mskFea);
 		
 		surface_set_shader(_output, noone);
-			if(is_surface(_fore)) draw_surface_blend(_backDraw, _foreDraw, _type, _opacity, _pre_alp, _mask);
-			else                  draw_surface_safe(_backDraw);
+			if(!is_surface(_fore)) draw_surface_safe(_backDraw);
+			else {
+				try { draw_surface_blend(_backDraw, _foreDraw, _type, _opacity, _pre_alp, _mask); }
+				catch(e) noti_warning(e, noone, self);
+			}
 		surface_reset_shader();
 		
 		if(_atlas) {
