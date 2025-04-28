@@ -11,77 +11,66 @@
 function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Draw Text";
 	font = f_p0;
-	
 	dimension_index = -1;
 	
-	newInput(0, nodeValue_Text("Text", self, ""))
-		.setVisible(true, true);
+	newInput( 0, nodeValue_Text(         "Text",               self, "")).setVisible(true, true);
 	
-	newInput(1, nodeValue_Font("Font", self))
-		.setVisible(true, false);
+	////- Output
 	
-	newInput(2, nodeValue_Int("Size", self, 16));
+	newInput( 9, nodeValue_Enum_Scroll(  "Output Dimension",   self, 1, [ "Fixed", "Dynamic" ]));
+	newInput( 6, nodeValue_Vec2(         "Fixed Dimension",    self, DEF_SURF )).setVisible(true, false);
+	newInput(10, nodeValue_Padding(      "Padding",            self, [0, 0, 0, 0]));
 	
-	newInput(3, nodeValue_Bool("Anti-aliasing ", self, false));
+	////- Alignment
 	
-	newInput(4, nodeValue_Vec2("Character Range", self, [ 32, 128 ]));
+	newInput(13, nodeValue_PathNode(     "Path",               self, noone)).setVisible(true, true);
+	newInput(14, nodeValue_Float(        "Path Shift",         self, 0));
+	newInput( 7, nodeValue_Enum_Button(  "H Align",            self, 0, array_create(3, THEME.inspector_text_halign)));
+	newInput( 8, nodeValue_Enum_Button(  "V Align",            self, 0, array_create(3, THEME.inspector_text_valign)));
+	newInput(27, nodeValue_Int(          "Max Line Width",     self, 0));
+	newInput(30, nodeValue_Bool(         "Rotate Along Path",  self, true));
 	
-	newInput(5, nodeValue_Color("Color", self, cola(c_white)));
+	////- Font
 	
-	newInput(6, nodeValue_Vec2("Fixed Dimension", self, DEF_SURF ))
-		.setVisible(true, false);
+	newInput( 1, nodeValue_Font(         "Font",               self)).setVisible(true, false);
+	newInput( 4, nodeValue_Vec2(         "Character Range",    self, [ 32, 128 ]));
+	newInput( 2, nodeValue_Int(          "Size",               self, 16));
+	newInput(15, nodeValue_Bool(         "Scale to Fit",       self, false));
+	newInput( 3, nodeValue_Bool(         "Anti-aliasing ",     self, false));
+	newInput(11, nodeValue_Float(        "Letter Spacing",     self, 0));
+	newInput(12, nodeValue_Float(        "Line Height",        self, 0));
 	
-	newInput(7, nodeValue_Enum_Button("H Align", self, 0, [ THEME.inspector_text_halign, THEME.inspector_text_halign, THEME.inspector_text_halign]));
+	////- Rendering
 	
-	newInput(8, nodeValue_Enum_Button("V Align", self, 0, [ THEME.inspector_text_valign, THEME.inspector_text_valign, THEME.inspector_text_valign ]));
+	newInput(28, nodeValue_Bool(         "Round Position",     self, true ));
+	newInput( 5, nodeValue_Color(        "Color",              self, ca_white));
+	newInput(29, nodeValue_Enum_Button(  "Blend Mode",         self, 1, [ "Normal", "Alpha" ]));
 	
-	newInput(9, nodeValue_Enum_Scroll("Output Dimension", self,  1, [ "Fixed", "Dynamic" ]));
+	////- Background
 	
-	newInput(10, nodeValue_Padding("Padding", self, [0, 0, 0, 0]));
+	newInput(16, nodeValue_Bool(         "Render Background",  self, false));
+	newInput(17, nodeValue_Color(        "BG Color",           self, ca_black));
 	
-	newInput(11, nodeValue_Float("Letter Spacing", self, 0));
+	////- Wave
 	
-	newInput(12, nodeValue_Float("Line Height", self, 0));
+	newInput(18, nodeValue_Bool(         "Wave",               self, false));
+	newInput(22, nodeValue_Slider(       "Wave Shape",         self, 0, [ 0, 3, 0.01 ]));
+	newInput(19, nodeValue_Float(        "Wave Amplitude",     self, 4));
+	newInput(20, nodeValue_Float(        "Wave Scale",         self, 30));
+	newInput(21, nodeValue_Rotation(     "Wave Phase",         self, 0));
 	
-	newInput(13, nodeValue_PathNode("Path", self, noone))
-		.setVisible(true, true);
+	////- Trim
 	
-	newInput(14, nodeValue_Float("Path Shift", self, 0));
-	
-	newInput(15, nodeValue_Bool("Scale to Fit", self, false));
-	
-	newInput(16, nodeValue_Bool("Render Background", self, false));
-	
-	newInput(17, nodeValue_Color("BG Color", self, cola(c_black)));
-	
-	newInput(18, nodeValue_Bool("Wave", self, false));
-	
-	newInput(19, nodeValue_Float("Wave Amplitude", self, 4));
-	
-	newInput(20, nodeValue_Float("Wave Scale", self, 30));
-	
-	newInput(21, nodeValue_Rotation("Wave Phase", self, 0));
-	
-	newInput(22, nodeValue_Float("Wave Shape", self, 0))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 3, 0.01 ] });
-	
-	newInput(23, nodeValue_Bool("Typewriter", self, false));
-	
-	newInput(24, nodeValue_Slider_Range("Range", self, [ 0, 1 ]));
-	
-	newInput(25, nodeValue_Enum_Button("Trim Type", self,  0 , [ "Character", "Word", "Line" ]));
-	
-	newInput(26, nodeValue_Bool("Use Full Text Size", self, true ));
-	
-	newInput(27, nodeValue_Int("Max Line Width", self, 0 ));
-	
-	newInput(28, nodeValue_Bool("Round Position", self, true ));
-	
-	newInput(29, nodeValue_Enum_Button("Blend Mode", self,  1, [ "Normal", "Alpha" ]));
+	newInput(23, nodeValue_Bool(         "Typewriter",         self, false));
+	newInput(25, nodeValue_Enum_Button(  "Trim Type",          self, 0, [ "Character", "Word", "Line" ]));
+	newInput(24, nodeValue_Slider_Range( "Range",              self, [ 0, 1 ]));
+	newInput(26, nodeValue_Bool(         "Use Full Text Size", self, true ));
+		
+	// inputs 31
 		
 	input_display_list = [ 0, 
-		["Output",		true],	9,  6, 10,
-		["Alignment",	false], 13, 14, 7, 8, 27, 
+		["Output",		 true],	9,  6, 10,
+		["Alignment",	false], 13, 14, 7, 8, 27, 30, 
 		["Font",		false], 1,  2, 15, 3, 11, 12, 
 		["Rendering",	false], 5, 
 		["Background",   true, 16], 17, 
@@ -317,47 +306,52 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
-		var str    = _data[ 0];
-		var strRaw = str;
-		
-		var _font  = _data[ 1];
-		var _size  = _data[ 2];
-		var _aa    = _data[ 3];
-		var _col   = _data[ 5];
-		var _dim   = _data[ 6];
-		var _hali  = _data[ 7];
-		var _vali  = _data[ 8];
-		var _dimt  = _data[ 9];
-		var _padd  = _data[10];
-		var _trck  = _data[11];
-		var _line  = _data[12];
-		var _path  = _data[13];
-		var _pthS  = _data[14];
-		var _scaF  = _data[15];
-		var _ubg   = _data[16];
-		var _bgc   = _data[17];
-		
-		var _wave  = _data[18];
-		var _waveA = _data[19];
-		var _waveS = _data[20];
-		var _waveP = _data[21];
-		var _waveH = _data[22];
-		
-		var _type  = _data[23];
-		var _typeR = _data[24];
-		var _typeC = _data[25];
-		var _typeF = _data[26];
-		
-		var _lineW = _data[27];
-		__rnd_pos  = _data[28];
-		
-		var _bm    = _data[29];
-		
-		__dwData   = array_create(string_length(str));
-		__dwDataI  = 0;
-		__f        = font;
-		
+		#region data
+			var str    = _data[ 0];
+			var strRaw = str;
+			
+			var _dimt  = _data[ 9];
+			var _dim   = _data[ 6];
+			var _padd  = _data[10];
+			
+			var _path  = _data[13];
+			var _pthS  = _data[14];
+			var _hali  = _data[ 7];
+			var _vali  = _data[ 8];
+			var _lineW = _data[27];
+			__pthR     = _data[30];
+			
+			var _font  = _data[ 1];
+			var _size  = _data[ 2];
+			var _scaF  = _data[15];
+			var _aa    = _data[ 3];
+			var _trck  = _data[11];
+			var _line  = _data[12];
+			
+			__rnd_pos  = _data[28];
+			var _col   = _data[ 5];
+			var _bm    = _data[29];
+			
+			var _ubg   = _data[16];
+			var _bgc   = _data[17];
+			
+			var _wave  = _data[18];
+			var _waveH = _data[22];
+			var _waveA = _data[19];
+			var _waveS = _data[20];
+			var _waveP = _data[21];
+			
+			var _type  = _data[23];
+			var _typeC = _data[25];
+			var _typeR = _data[24];
+			var _typeF = _data[26];
+		#endregion
+			
 		#region font
+			__dwData   = array_create(string_length(str));
+			__dwDataI  = 0;
+			__f        = font;
+			
 			inputs[2].setVisible(false);
 			inputs[3].setVisible(false);
 				
@@ -552,7 +546,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				string_foreach(_str_line, function(_chr, _ind) /*=>*/ {
 					var _p1  = __temp_pt.getPointDistance(__temp_tx,      0, __temp_p0);
 					var _p2  = __temp_pt.getPointDistance(__temp_tx + .1, 0, __temp_p1);
-					var _nor = point_direction(_p1.x, _p1.y, _p2.x, _p2.y);
+					var _nor = __pthR? point_direction(_p1.x, _p1.y, _p2.x, _p2.y) : 0;
 					
 					var _line_ang = _nor + 90;
 					var _dx = lengthdir_x(__temp_ty, _line_ang);
