@@ -59,32 +59,32 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			var __w  = _st[2];
 			
 			for( var i = 0, n = array_length(bone.childs); i < n; i++ )
-				ds_stack_push(_bst, [ bone.childs[i], __x + 16, __w - 16 ]);
+				ds_stack_push(_bst, [ bone.childs[i], __x + ui(16), __w - ui(16) ]);
 				
 			if(bone.is_main) continue;
 			
 			if(bone.parent_anchor) 
-				draw_sprite_ui(THEME.bone, 1, __x + 12, ty + 14,,,, COLORS._main_icon);
+				draw_sprite_ui(THEME.bone, 1, __x + ui(12), ty + ui(14),,,, COLORS._main_icon);
 				
 			else if(bone.IKlength) 
-				draw_sprite_ui(THEME.bone, 2, __x + 12, ty + 14,,,, COLORS._main_icon);
+				draw_sprite_ui(THEME.bone, 2, __x + ui(12), ty + ui(14),,,, COLORS._main_icon);
 				
 			else {
-				if(_hover && point_in_circle(_m[0], _m[1], __x + 12, ty + 12, 12)) {
-					draw_sprite_ui(THEME.bone, 0, __x + 12, ty + 14,,,, COLORS._main_icon_light);
+				if(_hover && point_in_circle(_m[0], _m[1], __x + ui(12), ty + ui(12), ui(12))) {
+					draw_sprite_ui(THEME.bone, 0, __x + ui(12), ty + ui(14),,,, COLORS._main_icon_light);
 					if(mouse_press(mb_left, _focus))
 						bone_dragging = bone;
 				} else 
-					draw_sprite_ui(THEME.bone, 0, __x + 12, ty + 14,,,, COLORS._main_icon);
+					draw_sprite_ui(THEME.bone, 0, __x + ui(12), ty + ui(14),,,, COLORS._main_icon);
 			}
 				
-			if(point_in_rectangle(_m[0], _m[1], __x + 24, ty + 3, __x + __w, ty + _hh - 3))
+			if(point_in_rectangle(_m[0], _m[1], __x + ui(24), ty + ui(3), __x + __w, ty + _hh - ui(3)))
 				anchor_selecting = [ bone, 2 ];
 			
-			var bx = __x + __w - 24;
+			var bx = __x + __w - ui(24);
 			var by = ty + _hh / 2;
 			
-			if(point_in_circle(_m[0], _m[1], bx, by, 16)) {
+			if(point_in_circle(_m[0], _m[1], bx, by, ui(16))) {
 				draw_sprite_ui_uniform(THEME.icon_delete, 3, bx, by, 1, COLORS._main_value_negative);
 				
 				if(mouse_press(mb_left, _focus))
@@ -96,12 +96,12 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			var ww = string_width(bone.name);
 			
 			bone.tb_name.setFocusHover(_focus, _hover);
-			bone.tb_name.draw(__x + 24, ty + 3, ww + 16, _hh - 6, bone.name, _m);
+			bone.tb_name.draw(__x + ui(24), ty + ui(3), ww + ui(16), _hh - ui(6), bone.name, _m);
 			
-			var _x0 = bx - 24;
+			var _x0 = bx - ui(24);
 			var _y0 = by;
 			var cc  = bone.apply_scale? COLORS._main_icon : COLORS._main_value_negative;
-			if(_hover && point_in_circle(_m[0], _m[1], _x0, _y0, 10)) {
+			if(_hover && point_in_circle(_m[0], _m[1], _x0, _y0, ui(10))) {
 				TOOLTIP = "Apply Scale";
 				draw_sprite_ui(THEME.bone, 3, _x0, _y0,,,, cc, 0.75);
 				
@@ -110,9 +110,9 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			} else 
 				draw_sprite_ui(THEME.bone, 3, _x0, _y0,,,, cc, 0.5);
 			
-			_x0 -= 20;
+			_x0 -= ui(20);
 			var cc  = bone.apply_rotation? COLORS._main_icon : COLORS._main_value_negative;
-			if(_hover && point_in_circle(_m[0], _m[1], _x0, _y0, 10)) {
+			if(_hover && point_in_circle(_m[0], _m[1], _x0, _y0, ui(10))) {
 				TOOLTIP = "Apply Rotation";
 				draw_sprite_ui(THEME.bone, 4, _x0, _y0,,,, cc, 0.75);
 				
@@ -121,9 +121,9 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			} else 
 				draw_sprite_ui(THEME.bone, 4, _x0, _y0,,,, cc, 0.5);
 			
-			_x0 -= 20;
+			_x0 -= ui(20);
 			var cc = COLORS._main_icon;
-			if(_hover && point_in_circle(_m[0], _m[1], _x0, _y0, 10)) {
+			if(_hover && point_in_circle(_m[0], _m[1], _x0, _y0, ui(10))) {
 				TOOLTIP = "Add Constrains";
 				draw_sprite_ui(THEME.bone, 5, _x0, _y0,,,, cc, .75);
 				
@@ -138,7 +138,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 				
 			if(!ds_stack_empty(_bst)) {
 				draw_set_color(COLORS.node_composite_separator);
-				draw_line(_x + 16, ty, _x + _w - 16, ty);
+				draw_line(_x + ui(16), ty, _x + _w - ui(16), ty);
 			}
 		}
 		
