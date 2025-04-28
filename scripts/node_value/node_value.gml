@@ -488,7 +488,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(is_anim == anim) return;
 		is_modified = true;
 		
-		if(record) recordAction_variable_change(self, "is_anim", is_anim, $"Toggle '{name}' animation");
+		if(record) recordAction_variable_change(self, "is_anim", is_anim, $"{name} animation status");
 		is_anim = anim;
 		
 		if(is_anim) {

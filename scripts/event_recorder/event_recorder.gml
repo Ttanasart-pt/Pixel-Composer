@@ -48,8 +48,8 @@ function Action(_type, _object, _data, _trigger = 0) constructor {
 	prev_action  = noone;
 	next_actions = [];
 	
-	static setName = function(n) /*=>*/ { name = n; return self; }
-	static setRef  = function(r) /*=>*/ { ref  = r; return self; }
+	static setName  = function(n) /*=>*/ { name    = n; return self; }
+	static setRef   = function(r) /*=>*/ { ref     = r; return self; }
 	
 	static undo = function() {
 		var _n;

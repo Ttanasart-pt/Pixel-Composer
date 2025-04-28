@@ -2229,12 +2229,13 @@ function Panel_Animation() : PanelContent() constructor {
                             
                 if(mouse_release(mb_left)) {
                     keyframe_dragging = noone;
-                    UNDO_HOLDING = false;
                     
                     for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
                         var k  = keyframe_selecting[i];
                         k.anim.setKeyTime(k, k.time, true, true);
                     }
+                    
+                    UNDO_HOLDING = false;
                 }
                 
             } else if(keyframe_drag_type == KEYFRAME_DRAG_TYPE.scale) {
@@ -2264,12 +2265,13 @@ function Panel_Animation() : PanelContent() constructor {
                             
                 if(mouse_release(mb_left)) {
                     keyframe_dragging = noone;
-                    UNDO_HOLDING = false;
                     
                     for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
                         var k  = keyframe_selecting[i];
                         k.anim.setKeyTime(k, k.time, true, true);
                     }
+                    
+                    UNDO_HOLDING = false;
                 }
                 
             } else {

@@ -61,6 +61,9 @@ function Panel_History() : PanelContent() constructor {
 		var connect_line_st = 0;
 		var connect_line_ed = 0;
 		
+		draw_set_color(COLORS._main_icon);
+		draw_line_round(0, sep_y, sc_history.surface_w, sep_y, 2);
+		
 		for( var i = 0; i < amo; i++ ) {
 			if(i == red) {
 				sep_y_to = yy;
@@ -152,9 +155,6 @@ function Panel_History() : PanelContent() constructor {
 			draw_set_text(f_p3, fa_left, fa_top, COLORS._main_text_sub);
 			draw_text_transformed(ui(0), sep_y + ui(2 - 8), __txt("Future"), 1, 1, 90);
 		}
-		
-		draw_set_color(COLORS._main_icon);
-		draw_line_round(0, sep_y, sc_history.surface_w, sep_y, 2);
 		
 		if(mouse_release(mb_left)) 
 			click_hold = noone;
