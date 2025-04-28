@@ -682,6 +682,9 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 					var _bone = anchor_selecting[0];
 					var _par  = _bone.parent;
 					
+					recordAction(ACTION_TYPE.struct_modify, bones)
+						.setName($"Remove bone [{_bone.name}]");
+							
 					array_remove(_par.childs, _bone);
 					
 					for( var i = 0, n = array_length(_bone.childs); i < n; i++ ) {
@@ -705,6 +708,9 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 				if(anchor_selecting != noone && anchor_selecting[1] == 2 && mouse_press(mb_left, active)) {
 					var detach_bone = anchor_selecting[0];
 					
+					recordAction(ACTION_TYPE.struct_modify, bones)
+						.setName($"Detach bone [{detach_bone.name}]");
+						
 					var par = detach_bone.parent;
 					if(detach_bone.parent_anchor) {
 						detach_bone.distance  = par.length;
