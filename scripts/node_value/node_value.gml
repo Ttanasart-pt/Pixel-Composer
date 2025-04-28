@@ -488,12 +488,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(is_anim == anim) return;
 		is_modified = true;
 		
-		if(record) {
-			recordAction(ACTION_TYPE.custom, function(data) {
-				setAnim(data.is_anim);
-				data.is_anim = !data.is_anim;
-			}, { is_anim, tooltip : $"Toggle '{name}' animation" });
-		}
+		if(record) recordAction_variable_change(self, "is_anim", is_anim, $"Toggle '{name}' animation");
 		is_anim = anim;
 		
 		if(is_anim) {
