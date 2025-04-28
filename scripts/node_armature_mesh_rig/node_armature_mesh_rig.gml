@@ -62,8 +62,8 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	
 	array_push(attributeEditors, "Display");
 	array_push(attributeEditors, ["Display name", function() /*=>*/ {return attributes.display_name},      new checkBox(function() /*=>*/ { attributes.display_name = !attributes.display_name; })]);
-	array_push(attributeEditors, ["Display bone", function() /*=>*/ {return attributes.display_bone},      new scrollBox(["Octahedral", "Stick"], function(ind) /*=>*/ { attributes.display_bone = ind; })]);
-	array_push(attributeEditors, ["Vertex size",  function() /*=>*/ {return attributes.display_mesh_size}, new textBox(TEXTBOX_INPUT.number, function(ind) /*=>*/ { attributes.display_mesh_size = ind; })]);
+	array_push(attributeEditors, ["Display bone", function() /*=>*/ {return attributes.display_bone},      new scrollBox(__txts(["Octahedral", "Stick"]), function(i) /*=>*/ { attributes.display_bone = i; })]);
+	array_push(attributeEditors, ["Vertex size",  function() /*=>*/ {return attributes.display_mesh_size}, textBox_Number(function(i) /*=>*/ { attributes.display_mesh_size = i; })]);
 	
 	tools_dynamic = [
 		new NodeTool( "Pose",          THEME.bone_tool_pose      ),

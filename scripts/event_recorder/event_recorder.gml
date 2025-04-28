@@ -35,13 +35,19 @@ enum DS_TYPE {
 }
 
 function Action(_type, _object, _data, _trigger = 0) constructor {
+	name    = "";
+	ref     = undefined;
 	type    = _type;
 	obj     = _object;
 	data    = _data;
 	trigger = _trigger;
-	extra_data = 0;
 	
+	next_actions = [];
+	extra_data   = 0;
 	clear_action = noone;
+	
+	static setName = function(n) /*=>*/ { name = n; return self; }
+	static setRef  = function(r) /*=>*/ { ref  = r; return self; }
 	
 	static undo = function() {
 		var _n;
@@ -252,6 +258,7 @@ function Action(_type, _object, _data, _trigger = 0) constructor {
 	}
 	
 	static toString = function() {
+		if(name != "") return name;
 		
 		switch(type) {
 			case ACTION_TYPE.var_modify :          return $"Modify '{array_length(data) > 2? data[2] : data[1]}'";
@@ -285,6 +292,9 @@ function recordAction(_type, _object, _data = -1, _trigger = 0) {
 	if(LOADING)			return noone;
 	if(UNDO_HOLDING)	return noone;
 	
+	if(_type == ACTION_TYPE.struct_modify && _data == -1 && struct_has(_object, "serialize"))
+		_data = _object.serialize();
+	
 	var act = new Action(_type, _object, _data, _trigger);
 	array_push(o_main.action_last_frame, act);
 	
@@ -299,8 +309,8 @@ function recordAction(_type, _object, _data = -1, _trigger = 0) {
 }
 
 function recordAction_variable_change(object, variable_name, variable_old_value, undo_label = "", _trigger = 0) {
-	INLINE
-	recordAction(ACTION_TYPE.var_modify, object, undo_label == ""? [ variable_old_value, variable_name ] : [ variable_old_value, variable_name, undo_label ], _trigger);
+	recordAction(ACTION_TYPE.var_modify, object, undo_label == ""? [ variable_old_value, variable_name ] : 
+	                                                               [ variable_old_value, variable_name, undo_label ], _trigger);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

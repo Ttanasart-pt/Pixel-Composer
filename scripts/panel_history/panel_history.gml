@@ -4,6 +4,7 @@ function Panel_History() : PanelContent() constructor {
 	h     = ui(480);
 	w_min = 320;
 	h_min = 320;
+	auto_pin = true;
 	
 	hold     = false;
 	hovering = -1;

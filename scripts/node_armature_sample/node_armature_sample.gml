@@ -8,8 +8,7 @@ function Node_Armature_Sample(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		
 	newInput(1, nodeValue_Text("Bone name", self, ""));
 		
-	newInput(2, nodeValue_Float("Sample point", self, 0))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(2, nodeValue_Slider("Sample point", self, 0));
 	
 	newOutput(0, nodeValue_Output("Position", self, VALUE_TYPE.integer, [ 0, 0 ]))
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -18,17 +17,11 @@ function Node_Armature_Sample(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	attributes.display_bone = 0;
 	
 	array_push(attributeEditors, "Display");
-	array_push(attributeEditors, ["Display name", function() { return attributes.display_name; }, 
-		new checkBox(function() { 
-			attributes.display_name = !attributes.display_name;
-		})]);
-	array_push(attributeEditors, ["Display bone", function() { return attributes.display_bone; }, 
-		new scrollBox(["Octahedral", "Stick"], function(ind) { 
-			attributes.display_bone = ind;
-		})]);
+	array_push(attributeEditors, ["Display name", function() /*=>*/ {return attributes.display_name}, new checkBox(function() /*=>*/ { attributes.display_name = !attributes.display_name; })]);
+	array_push(attributeEditors, ["Display bone", function() /*=>*/ {return attributes.display_bone}, new scrollBox(__txts(["Octahedral", "Stick"]), function(i) /*=>*/ { attributes.display_bone = i; })]);
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var _b	  = getInputData(0);
+		var _b = getInputData(0);
 		
 		if(_b == noone) return;
 		_b.draw(attributes, false, _x, _y, _s, _mx, _my);

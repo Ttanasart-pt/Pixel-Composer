@@ -17,14 +17,8 @@ function Node_Armature_Path(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	attributes.display_bone = 0;
 	
 	array_push(attributeEditors, "Display");
-	array_push(attributeEditors, ["Display name", function() { return attributes.display_name; }, 
-		new checkBox(function() { 
-			attributes.display_name = !attributes.display_name;
-		})]);
-	array_push(attributeEditors, ["Display bone", function() { return attributes.display_bone; }, 
-		new scrollBox(["Octahedral", "Stick"], function(ind) { 
-			attributes.display_bone = ind;
-		})]);
+	array_push(attributeEditors, ["Display name", function() /*=>*/ {return attributes.display_name}, new checkBox(function() /*=>*/ { attributes.display_name = !attributes.display_name; })]);
+	array_push(attributeEditors, ["Display bone", function() /*=>*/ {return attributes.display_bone}, new scrollBox(__txts(["Octahedral", "Stick"]), function(i) /*=>*/ { attributes.display_bone = i; })]);
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _b = getInputData(0);
@@ -33,12 +27,11 @@ function Node_Armature_Path(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		_b.draw(attributes, false, _x, _y, _s, _mx, _my);
 	}
 	
-	static getBoundary	= function() { return boundary; }
-	
-	static getLineCount		= function() { return array_length(lines); }
-	static getSegmentCount	= function() { return 1; }
-	static getLength		= function() { return current_length; }
-	static getAccuLength	= function() { return [ 0, current_length ]; }
+	static getBoundary     = function() /*=>*/ {return boundary};
+	static getLineCount    = function() /*=>*/ {return array_length(lines)};
+	static getSegmentCount = function() /*=>*/ {return 1};
+	static getLength       = function() /*=>*/ {return current_length};
+	static getAccuLength   = function() /*=>*/ {return [ 0, current_length ]};
 	
 	static getPointDistance = function(_dist, _ind = 0, out = undefined) { return getPointRatio(_dist / current_length, _ind, out); }
 	
