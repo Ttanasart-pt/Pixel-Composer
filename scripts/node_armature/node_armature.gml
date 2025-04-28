@@ -690,14 +690,14 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 					for( var i = 0, n = array_length(_bone.childs); i < n; i++ ) {
 						var _ch = _bone.childs[i];
 						_par.addChild(_ch);
-							
+						
 						_ch.parent_anchor = _bone.parent_anchor;
 					}
 						
 					triggerRender();
 				}
 				
-				if(anchor_selecting != noone)
+				if(anchor_selecting != noone) 
 					draw_sprite_ui(THEME.bone_tool_remove, 1, _mx + 24, _my + 24, 1, 1, 0, c_white, 1);
 				break;
 				

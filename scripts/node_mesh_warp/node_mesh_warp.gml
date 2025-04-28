@@ -217,42 +217,32 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	anchor_drag_mx  = -1;
 	anchor_drag_my  = -1;
 	
-	newInput(0, nodeValue_Surface("Surface In", self));
-	
-	newInput(1, nodeValue_Int("Sample", self, 8, "Amount of grid subdivision. Higher number means more grid, detail."))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ 2, 32, 0.1 ] });
-	
-	newInput(2, nodeValue_Float("Spring Force", self, 0.5))
-		.setDisplay(VALUE_DISPLAY.slider);
-	
-	newInput(3, nodeValue_Trigger("Mesh", self ))
-		.setDisplay(VALUE_DISPLAY.button, { name: "Generate", UI : true, onClick: function() /*=>*/ {return Mesh_build()} });
-	
-	newInput(4, nodeValue_Bool("Diagonal Link", self, false, "Include diagonal link to prevent drastic grid deformation."));
-	
-	newInput(5, nodeValue_Bool("Active", self, true));
-		active_index = 5;
-	
-	newInput(6, nodeValue_Float("Link Strength", self, 0, "Link length preservation, setting it to 1 will prevent any stretching, contraction."))
-		.setDisplay(VALUE_DISPLAY.slider);
-		
-	newInput(7, nodeValue_Bool("Full Mesh", self, false));
-		
-	newInput(8, nodeValue_Enum_Button("Mesh Type", self,  0, [ "Grid", "Custom" ] ));
-	
+	newActiveInput(5, nodeValue_Bool("Active", self, true));
 	newInput(9, nodeValueSeed(self));
 	
-	newInput(10, nodeValue_Float("Randomness", self, 0.5))
-		.setDisplay(VALUE_DISPLAY.slider);
+	////- Mesh
 	
+	newInput( 0, nodeValue_Surface(     "Surface In", self));
+	newInput( 8, nodeValue_Enum_Button( "Mesh Type",  self,  0, [ "Grid", "Custom" ] ));
+	newInput( 1, nodeValue_ISlider(     "Sample",     self, 8, [ 2, 32, 0.1 ])).setTooltip("Amount of grid subdivision. Higher number means more grid, detail.");
+	newInput( 7, nodeValue_Bool(        "Full Mesh",  self, false));
+	newInput(10, nodeValue_Slider(      "Randomness", self, 0.5));
+	newInput( 3, nodeValue_Trigger(     "Mesh",       self )).setDisplay(VALUE_DISPLAY.button, { name: "Generate", UI : true, onClick: function() /*=>*/ {return Mesh_build()} });
+	
+	////- Link
+	
+	newInput(2, nodeValue_Slider("Spring Force", self, 0.5));
+	newInput(4, nodeValue_Bool("Diagonal Link", self, false, "Include diagonal link to prevent drastic grid deformation."));
+	newInput(6, nodeValue_Slider("Link Strength", self, 0)).setTooltip("Link length preservation, setting it to 1 will prevent any stretching, contraction.");
+		
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	newOutput(1, nodeValue_Output("Mesh data", self, VALUE_TYPE.mesh, mesh_data));
 	
-	input_display_list = [ 5, 
-		["Mesh",			false],	0, 8, 9, 1, 7, 10, 3, 
+	input_display_list = [ 5, 9, 
+		["Mesh",			false],	0, 8, 1, 7, 10, 3, 
 		["Link",			false],	4, 6,
 		["Control points",	false], 
 	];
@@ -265,6 +255,9 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			.setDisplay(VALUE_DISPLAY.puppet_control);
 		
 		array_push(input_display_list, index);
+		
+		recordAction(ACTION_TYPE.array_insert, inputs, [ inputs[index], index, $"Create control point {index}" ]);
+		recordAction(ACTION_TYPE.array_insert, input_display_list, [ array_last(input_display_list), array_length(input_display_list) - 1 ]);
 		return inputs[index];
 	}
 	
@@ -277,11 +270,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		array_push(attributeEditors, "Warp");
 		
 		attributes.iteration = 4;
-		array_push(attributeEditors, ["Iteration", function() { return attributes.iteration; }, 
-			new textBox(TEXTBOX_INPUT.number, function(val) { 
-				attributes.iteration = val;
-				triggerRender();
-			})]);
+		array_push(attributeEditors, ["Iteration", function() /*=>*/ {return attributes.iteration}, textBox_Number(function(v) /*=>*/ { attributes.iteration = v; triggerRender(); })]);
 	
 		tools = [];
 	
@@ -676,12 +665,15 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _inSurf = getInputData(0);
 		var _type   = getInputData(8);
 		
+		recordAction_variable_change(self, "points",    points,    "Build mesh");
+		recordAction_variable_change(self, "mesh_data", mesh_data, "Build mesh");
+		
 		points    = [];
 		mesh_data = new MeshedSurface();
 		
 		switch(_type) {
-			case 0 : Mesh_build_RegularTri(_inSurf);   break;
-			case 1 : Mesh_build_Triangulate(_inSurf);	break;
+			case 0 : Mesh_build_RegularTri(_inSurf);  break;
+			case 1 : Mesh_build_Triangulate(_inSurf); break;
 		}
 		
 		for(var i = 0; i < array_length(mesh_data.tris); i++)
@@ -695,6 +687,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				if(ind < array_length(points))
 					points[ind].pin = true;
 			}
+			
 			loadPin = noone;
 		}
 	}

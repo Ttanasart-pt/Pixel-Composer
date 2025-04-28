@@ -1,10 +1,10 @@
 globalvar UNDO_STACK, REDO_STACK;
 globalvar IS_UNDOING, UNDO_HOLDING;
 
-IS_UNDOING		= false;
-UNDO_HOLDING	= false;
-UNDO_STACK		= ds_stack_create();
-REDO_STACK		= ds_stack_create();
+IS_UNDOING   = false;
+UNDO_HOLDING = false;
+UNDO_STACK   = ds_stack_create();
+REDO_STACK   = ds_stack_create();
 
 enum ACTION_TYPE {
 	var_modify,
@@ -42,9 +42,11 @@ function Action(_type, _object, _data, _trigger = 0) constructor {
 	data    = _data;
 	trigger = _trigger;
 	
-	next_actions = [];
 	extra_data   = 0;
 	clear_action = noone;
+	
+	prev_action  = noone;
+	next_actions = [];
 	
 	static setName = function(n) /*=>*/ { name = n; return self; }
 	static setRef  = function(r) /*=>*/ { ref  = r; return self; }
@@ -288,9 +290,7 @@ function Action(_type, _object, _data, _trigger = 0) constructor {
 }
 
 function recordAction(_type, _object, _data = -1, _trigger = 0) {
-	if(IS_UNDOING)		return noone;
-	if(LOADING)			return noone;
-	if(UNDO_HOLDING)	return noone;
+	if(IS_UNDOING || LOADING || UNDO_HOLDING) return noone;
 	
 	if(_type == ACTION_TYPE.struct_modify && _data == -1 && struct_has(_object, "serialize"))
 		_data = _object.serialize();
@@ -300,8 +300,7 @@ function recordAction(_type, _object, _data = -1, _trigger = 0) {
 	
 	while(!ds_stack_empty(REDO_STACK)) {
 		var actions = ds_stack_pop(REDO_STACK);
-		for( var i = 0, n = array_length(actions); i < n; i++ )
-			actions[i].destroy();
+		array_foreach(actions, function(a) /*=>*/ {return a.destroy()});
 	}
 	
 	PANEL_MENU.undoUpdate();

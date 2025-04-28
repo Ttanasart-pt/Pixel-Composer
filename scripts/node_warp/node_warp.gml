@@ -7,31 +7,34 @@
 function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Warp";
 	
-	newInput(0, nodeValue_Surface("Surface In", self));
+	newActiveInput(5, nodeValue_Bool("Active", self, true));
+	
+	////- Surface
+	
+	newInput( 0, nodeValue_Surface(     "Surface In",     self));
+	newInput(10, nodeValue_Surface(     "Back Surface",   self));
+	newInput( 6, nodeValue_Enum_Scroll( "Dimension Type", self, 0, [ "Input", "Absolute", "Relative" ]));
+	newInput( 7, nodeValue_Dimension(self));
+	newInput( 9, nodeValue_Vec2("Relative Dimension",     self, [ 1, 1 ] ));
+	
+	////- Warp
 	
 	newInput(1, nodeValue_Vec2("Top Left",     self, [ 0, 0 ] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
 	newInput(2, nodeValue_Vec2("Top Right",    self, [ 1, 0 ] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
 	newInput(3, nodeValue_Vec2("Bottom Left",  self, [ 0, 1 ] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
 	newInput(4, nodeValue_Vec2("Bottom Right", self, [ 1, 1 ] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
 	
-	newInput(5, nodeValue_Bool("Active", self, true));
-		active_index = 5;
-	
-	newInput(6, nodeValue_Enum_Scroll("Dimension Type", self, 0, [ "Input", "Absolute", "Relative" ]));
-	
-	newInput(7, nodeValue_Dimension(self));
+	////- Render
 	
 	newInput(8, nodeValue_Bool("Tile", self, false));
 	
-	newInput(9, nodeValue_Vec2("Relative Dimension", self, [ 1, 1 ] ));
-	
-	newInput(10, nodeValue_Surface("Back Surface", self));
+	//// inputs 11
 	
 	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 5,
 		["Surfaces", false], 0, 10, 6, 7, 9, 
-		["Wrap",	 false], 1, 2, 3, 4, 
+		["Warp",	 false], 1, 2, 3, 4, 
 		["Render",	 false], 8, 
 	]
 	
