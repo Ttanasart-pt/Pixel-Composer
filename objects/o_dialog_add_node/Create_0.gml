@@ -1200,11 +1200,11 @@ event_inherited();
 				
 				if(_query != "") {
 					draw_set_font(f_p3);
-					_nmh   = string_height(_name);
 					_query = string_title(_query);
 					
 					draw_set_text(f_p3, fa_center, fa_top, COLORS._main_text_sub);
-					if(_drw) draw_text_add(_boxx + grid_size / 2, _nmy, _name); 
+					_nmh = string_height_ext(_name, -1, grid_width);
+					if(_drw) draw_text_ext_add(_boxx + grid_size / 2, _nmy, _name, -1, grid_width); 
 					_nmy += _nmh - ui(2);
 					
 					draw_set_text(f_p3, fa_center, fa_top, COLORS._main_text);
@@ -1213,6 +1213,7 @@ event_inherited();
 						if(highlight && _mrng != noone) _qhh = draw_text_match_range_ext(_boxx + grid_size / 2, _nmy, _query, grid_width, _mrng); 
 						else draw_text_ext(_boxx + grid_size / 2, _nmy, _query, -1, grid_width); 
 					}
+					
 					_nmy += _qhh;
 					_nmh += _qhh;
 					

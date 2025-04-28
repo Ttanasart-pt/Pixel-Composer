@@ -60,7 +60,6 @@
 	
 	globalvar CURRENT_COLOR;
 	CURRENT_COLOR = cola(c_white);
-	
 #endregion
 
 #region input

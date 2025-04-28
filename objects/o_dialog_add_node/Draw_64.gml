@@ -103,7 +103,7 @@ if(DIALOG_SHOW_FOCUS) {
 	}
 	
 	if(search_string != "") {
-		var txt = __txtx("add_node_highlight", "Hightlight Query");
+		var txt = __txtx("add_node_highlight", "Highlight Query");
 		bx -= ui(32);
 		if(buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, sHOVER, sFOCUS, txt, THEME.add_node_search_high, PREFERENCES.dialog_add_node_search_high, COLORS._main_icon) == 2) 
 			PREFERENCES.dialog_add_node_search_high = !PREFERENCES.dialog_add_node_search_high;
