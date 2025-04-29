@@ -1,6 +1,6 @@
 function Panel_History() : PanelContent() constructor {
 	title = __txt("History");
-	w     = ui(400);
+	w     = ui(320);
 	h     = ui(480);
 	w_min = 320;
 	h_min = 320;

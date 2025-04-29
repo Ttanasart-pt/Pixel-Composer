@@ -488,7 +488,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(is_anim == anim) return;
 		is_modified = true;
 		
-		if(record) recordAction_variable_change(self, "is_anim", is_anim, $"{name} animation status");
+		if(record) recordAction_variable_change(self, "is_anim", is_anim, $"{name} animation status").setRef(node);
 		is_anim = anim;
 		
 		if(is_anim) {
@@ -1732,7 +1732,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			var _res     = _targ.setFrom(_valueFrom, _update, checkRecur, log);
 			UNDO_HOLDING = false;
 			
-			recordAction(ACTION_TYPE.junction_connect, self, [ _targ, _valueFrom ]);
+			recordAction(ACTION_TYPE.junction_connect, self, [ _targ, _valueFrom ]).setRef(node);
 			return _res;
 		}
 		
@@ -1747,7 +1747,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(value_from != noone) array_remove(value_from.value_to, self);
 		
 		var _o = animator.getValue();
-		recordAction(ACTION_TYPE.junction_connect, self, value_from);
+		recordAction(ACTION_TYPE.junction_connect, self, value_from).setRef(node);
 		value_from = _valueFrom;
 		
 		array_push(_valueFrom.value_to, self);
@@ -1788,7 +1788,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static removeFrom = function(_remove_list = true) {
 		run_in(2, function() /*=>*/ { updateColor(getValue()); });
 		
-		recordAction(ACTION_TYPE.junction_disconnect, self, value_from);
+		recordAction(ACTION_TYPE.junction_disconnect, self, value_from).setRef(node);
 		if(_remove_list && value_from != noone)
 			array_remove(value_from.value_to, self);	
 		value_from = noone;

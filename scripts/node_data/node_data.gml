@@ -65,7 +65,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	if(!LOADING && !APPENDING) {
-		recordAction(ACTION_TYPE.node_added, self);
 		project.nodeMap[? node_id] = self;
 		project.modified = true;
 		
@@ -395,7 +394,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			var _name = data.name;
 			data.name = display_name;
 			setDisplayName(_name);
-		}, { name : display_name, tooltip : $"Rename node" });
+		}, { name : display_name, tooltip : $"Rename node" }).setRef(self);
 		
 		renamed      = true;
 		display_name = _name;
@@ -2977,7 +2976,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		onDestroy();
 		if(group)  group.refreshNodes();
-		if(record) recordAction(ACTION_TYPE.node_delete, self);
+		if(record) recordAction(ACTION_TYPE.node_delete, self).setRef(self);
 		
 		RENDER_ALL_REORDER
 	}

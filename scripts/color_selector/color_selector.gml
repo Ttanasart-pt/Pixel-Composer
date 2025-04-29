@@ -115,10 +115,14 @@ function colorSelector(onApply = noone) constructor {
 	
 	function setHSV(_apply = true) {
 		if(!interactable) return;
-		var alp = color_get_alpha(current_color);
-		current_color = make_color_hsva(hue, sat, val, alp);
 		
-		if(_apply && onApply != noone) onApply(int64(current_color));
+		var _alpha    = color_get_alpha(current_color);
+		current_color = make_color_hsva(hue, sat, val, _alpha);
+		
+		if(_apply && onApply != noone) {
+			onApply(int64(current_color));
+			UNDO_HOLDING = true;
+		}
 	}
 	
 	function setColor(color, _apply = true) {
@@ -330,11 +334,10 @@ function colorSelector(onApply = noone) constructor {
 			}
 			
 			if(side_dragging) {
-				if(disp_mode == 0) {
-					hue = clamp((mouse_my - sel_y) / UI_SCALE, 0, 256);
-				} else if(disp_mode == 1) {
-					val = 256 - clamp((mouse_my - sel_y) / UI_SCALE, 0, 256);
-				}
+				var _my = clamp((mouse_my - sel_y) / UI_SCALE, 0, 256);
+				
+				     if(disp_mode == 0) hue = _my;
+				else if(disp_mode == 1) val = 256 - _my;
 				
 				setHSV();
 				
@@ -342,20 +345,30 @@ function colorSelector(onApply = noone) constructor {
 					current_color = disp_mode == 0? surface_getpixel(content_surface, sat, 256 - val) : 
 													surface_getpixel(content_surface, hue, 256 - sat);
 					current_color = cola(current_color, 1);
-					if(onApply != noone) onApply(current_color);
+					
+					if(onApply != noone) {
+						onApply(current_color);
+						UNDO_HOLDING = true;
+					}
 				}
 				
-				if(mouse_release(mb_left))
-					side_dragging  = false;
+				if(mouse_release(mb_left)) {
+					side_dragging = false;
+					UNDO_HOLDING  = false;
+				}
 			}
 		
 			if(area_dragging) {
+				var _mx = clamp((mouse_mx - cont_x) / UI_SCALE, 0, 256);
+				var _my = clamp((mouse_my - cont_y) / UI_SCALE, 0, 256);
+				
 				if(disp_mode == 0) {
-					sat = clamp((mouse_mx - cont_x) / UI_SCALE, 0, 256);
-					val = 256 - clamp((mouse_my - cont_y) / UI_SCALE, 0, 256);
+					sat = _mx;
+					val = 256 - _my;
+					
 				} else if(disp_mode == 1) {
-					hue = clamp((mouse_mx - cont_x) / UI_SCALE, 0, 256);
-					sat = 256 - clamp((mouse_my - cont_y) / UI_SCALE, 0, 256);	
+					hue = _mx;
+					sat = 256 - _my;	
 				}
 				
 				setHSV();
@@ -364,11 +377,17 @@ function colorSelector(onApply = noone) constructor {
 					current_color = disp_mode == 0? surface_getpixel(content_surface, sat, 256 - val) : 
 													surface_getpixel(content_surface, hue, 256 - sat);
 					current_color = cola(current_color, 1);
-					if(onApply != noone) onApply(current_color);
+					
+					if(onApply != noone) {
+						onApply(current_color);
+						UNDO_HOLDING = true;
+					}
 				}
 				
-				if(mouse_release(mb_left))
-					area_dragging  = false;
+				if(mouse_release(mb_left)) {
+					area_dragging = false;
+					UNDO_HOLDING  = false;
+				}
 			}
 		#endregion
 		

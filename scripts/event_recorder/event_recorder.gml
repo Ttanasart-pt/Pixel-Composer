@@ -48,8 +48,13 @@ function Action(_type, _object, _data, _trigger = 0) constructor {
 	prev_action  = noone;
 	next_actions = [];
 	
-	static setName  = function(n) /*=>*/ { name    = n; return self; }
-	static setRef   = function(r) /*=>*/ { ref     = r; return self; }
+	static setName  = function(n) /*=>*/ { name = n; return self; }
+	static setRef   = function(r) /*=>*/ { if(type == undefined) return self; 
+		ref = r; 
+		if(is(ref, Node)) ref.logNode(toString(), false);
+		
+		return self; 
+	}
 	
 	static undo = function() {
 		var _n;
@@ -290,6 +295,13 @@ function Action(_type, _object, _data, _trigger = 0) constructor {
 }
 
 function recordAction(_type, _object, _data = -1, _trigger = 0) {
+	var _action = __recordAction(_type, _object, _data, _trigger);
+	if(_action == noone) _action = new Action(undefined, undefined, undefined);
+	
+	return _action;
+}
+
+function __recordAction(_type, _object, _data = -1, _trigger = 0) {
 	if(IS_UNDOING || LOADING || UNDO_HOLDING) return noone;
 	
 	if(_type == ACTION_TYPE.struct_modify && _data == -1 && struct_has(_object, "serialize"))
@@ -308,8 +320,8 @@ function recordAction(_type, _object, _data = -1, _trigger = 0) {
 }
 
 function recordAction_variable_change(object, variable_name, variable_old_value, undo_label = "", _trigger = 0) {
-	recordAction(ACTION_TYPE.var_modify, object, undo_label == ""? [ variable_old_value, variable_name ] : 
-	                                                               [ variable_old_value, variable_name, undo_label ], _trigger);
+	return recordAction(ACTION_TYPE.var_modify, object, undo_label == ""? [ variable_old_value, variable_name ] : 
+	                                                                      [ variable_old_value, variable_name, undo_label ], _trigger);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
