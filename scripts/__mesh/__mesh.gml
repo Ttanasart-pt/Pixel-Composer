@@ -5,7 +5,7 @@ function Mesh() constructor {
 	
 	static getRandomPoint = function(seed) {
 		random_set_seed(seed);
-		if(array_length(triangles) == 0) return [ 0, 0 ];
+		if(array_length(triangles) == 0) return new __vec2();
 		
 		var tri = triangles[irandom(array_length(triangles) - 1)];
 		var p0  = tri[0];

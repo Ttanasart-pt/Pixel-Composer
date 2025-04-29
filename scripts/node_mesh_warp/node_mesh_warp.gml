@@ -7,12 +7,12 @@
 	});
 #endregion
 
-function MeshedSurface() constructor {
-	surface  = noone;
-	points   = [];
-	tris     = [];
-	links    = [];
-	controls = [];
+function MeshedSurface() : Mesh() constructor {
+	surface   = noone;
+	points    = [];
+	tris      = [];
+	links     = [];
+	controls  = [];
 	
 	static clone = function() {
 		var n = new MeshedSurface();
@@ -27,6 +27,16 @@ function MeshedSurface() constructor {
 		
 		var t = array_create_ext(array_length(tris), function(i) /*=>*/ {return tris[i].clone(p)});
 		n.tris = t;
+		
+		for( var i = 0; i < array_length(triangles); i++ ) {
+			n.triangles[i] = [
+				triangles[i][0].clone(),
+				triangles[i][1].clone(),
+				triangles[i][2].clone(),
+			];
+		}
+		
+		n.center = [ center[0], center[1] ];
 		
 		return n;
 	}
@@ -206,9 +216,9 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	attributes.mesh_bound  = [];
 	
-	points    = [];
-	mesh_data = new MeshedSurface();
-
+	points      = [];
+	mesh_data   = new MeshedSurface();
+	
 	is_convex       = true;
 	hover           = -1;
 	anchor_dragging = -1;
@@ -223,7 +233,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	////- Mesh
 	
 	newInput( 0, nodeValue_Surface(     "Surface In", self));
-	newInput( 8, nodeValue_Enum_Button( "Mesh Type",  self,  0, [ "Grid", "Custom" ] ));
+	newInput( 8, nodeValue_Enum_Button( "Mesh Type",  self, 0, [ "Grid", "Custom" ] ));
 	newInput( 1, nodeValue_ISlider(     "Sample",     self, 8, [ 2, 32, 0.1 ])).setTooltip("Amount of grid subdivision. Higher number means more grid, detail.");
 	newInput( 7, nodeValue_Bool(        "Full Mesh",  self, false));
 	newInput(10, nodeValue_Slider(      "Randomness", self, 0.5));
@@ -231,15 +241,14 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	////- Link
 	
-	newInput(2, nodeValue_Slider("Spring Force", self, 0.5));
-	newInput(4, nodeValue_Bool("Diagonal Link", self, false, "Include diagonal link to prevent drastic grid deformation."));
-	newInput(6, nodeValue_Slider("Link Strength", self, 0)).setTooltip("Link length preservation, setting it to 1 will prevent any stretching, contraction.");
+	newInput(2, nodeValue_Slider( "Spring Force",  self, 0.5));
+	newInput(4, nodeValue_Bool(   "Diagonal Link", self, false)).setTooltip("Include diagonal link to prevent drastic grid deformation.");
+	newInput(6, nodeValue_Slider ("Link Strength", self, 0)).setTooltip("Link length preservation, setting it to 1 will prevent any stretching, contraction.");
 		
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
-	
-	newOutput(1, nodeValue_Output("Mesh data", self, VALUE_TYPE.mesh, mesh_data));
+	newOutput(0, nodeValue_Output( "Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(1, nodeValue_Output( "Mesh data",   self, VALUE_TYPE.mesh, new Mesh()));
 	
 	input_display_list = [ 5, 9, 
 		["Mesh",			false],	0, 8, 1, 7, 10, 3, 
@@ -289,13 +298,6 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	setTrigger(1, "Generate", [ THEME.refresh_icon, 1, COLORS._main_value_positive ], function() /*=>*/ {return Mesh_build()});
 	will_triangluate   = false;
-	
-	static onValueFromUpdate = function(index) {
-		if(LOADING || APPENDING) return;
-		
-		if(index == 0 && array_empty(mesh_data.tris))
-			Mesh_build();
-	}
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var mx = (_mx - _x) / _s;
@@ -396,16 +398,8 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		for(var i = 0; i < array_length(mesh_data.links); i++)
 			mesh_data.links[i].draw(_x, _y, _s);
 			
-		for(var i = 0; i < array_length(mesh_data.tris); i++) {
+		for(var i = 0; i < array_length(mesh_data.tris); i++)
 			mesh_data.tris[i].drawPoints(_x, _y, _s);
-			
-			// var _t = mesh_data.tris[i];
-			// var _in = delaunay_triangle_in_polygon(attributes.mesh_bound, _t);
-			// draw_set_color(_in? c_lime : c_red);
-			// draw_circle(_x + (_t.p0.x + _t.p1.x + _t.p2.x) / 3 * _s, 
-			//             _y + (_t.p0.y + _t.p1.y + _t.p2.y) / 3 * _s,
-			//             4, false);
-		}
 		
 		var _hover = -1;
 		for(var i = control_index; i < array_length(inputs); i++) {
@@ -458,26 +452,12 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		} 
 	}
 	
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	static step = function() {
-		var _type = getInputData(8);
-		
-		inputs[ 2].setVisible(_type == 0);
-		inputs[ 4].setVisible(_type == 0);
-		inputs[ 7].setVisible(_type == 0);
-		inputs[10].setVisible(_type == 1);
-		
-			 if(_type == 0) tools = tools_edit;
-		else if(_type == 1) tools = tools_mesh;
-	}
+	////- Mesh
 	
 	static reset = function() {
 		for(var i = 0; i < array_length(mesh_data.tris); i++)
 			mesh_data.tris[i].reset(mesh_data);
 	}
-	
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	static Mesh_build_RegularTri = function(surf) {
 		if(is_array(surf)) surf = array_safe_get_fast(surf, 0);
@@ -775,6 +755,27 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		}
 	}
 	
+	////- Update
+	
+	static onValueFromUpdate = function(index) {
+		if(LOADING || APPENDING) return;
+		
+		if(index == 0 && array_empty(mesh_data.tris))
+			Mesh_build();
+	}
+	
+	static step = function() {
+		var _type = getInputData(8);
+		
+		inputs[ 2].setVisible(_type == 0);
+		inputs[ 4].setVisible(_type == 0);
+		inputs[ 7].setVisible(_type == 0);
+		inputs[10].setVisible(_type == 1);
+		
+			 if(_type == 0) tools = tools_edit;
+		else if(_type == 1) tools = tools_mesh;
+	}
+	
 	static processData = function(_outData, _data, _output_index, _array_index) {
 		if(will_triangluate) {
 			Mesh_build(false);
@@ -814,10 +815,18 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		surface_reset_shader();	
 		
+		var _tris = array_length(mesh_data.tris), _t;
+		mesh_data.triangles = array_verify(mesh_data.triangles, _tris);
+		
+		for(var i = 0; i < _tris; i++) {
+			_t = mesh_data.tris[i];
+			mesh_data.triangles[i] = [ _t.p0, _t.p1, _t.p2 ];
+		}
+		
 		return [ _outSurf, mesh_data ];
 	}
 	
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	////- Serialize
 	
 	static postDeserialize = function() {
 		var _inputs = load_map.inputs;

@@ -1790,7 +1790,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		recordAction(ACTION_TYPE.junction_disconnect, self, value_from).setRef(node);
 		if(_remove_list && value_from != noone)
-			array_remove(value_from.value_to, self);	
+			array_remove(value_from.value_to, self);
 		value_from = noone;
 		
 		if(connect_type == CONNECT_TYPE.input)

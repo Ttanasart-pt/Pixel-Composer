@@ -21,7 +21,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	////- Generation
 	
-	newInput( 0, nodeValue_Enum_Scroll( "Type",         self, 0, [ "Point", "Path", "Mesh" ]));
+	newInput( 0, nodeValue_Enum_Scroll( "Source",       self, 0, [ "Point", "Path", "Mesh" ]));
 	newInput( 1, nodeValue_Int(         "Density",      self, 8, "How many strands to generate."));
 	newInput( 5, nodeValue_PathNode(    "Path",         self, noone));
 	newInput( 6, nodeValue_Vec2(        "Position",     self, [ 0, 0 ]));
