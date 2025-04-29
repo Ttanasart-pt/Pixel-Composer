@@ -232,7 +232,7 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	        }
 	        
 	        brush_bone_target = _boneTargetID;
-	        var _weightData = _rdata[$ _boneTargetID];
+	        var _weightData   = _rdata[$ _boneTargetID];
 	        if(__weights == noone)
 	        	__weights = _weightData;
 		}
@@ -319,7 +319,7 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 					var ori = posing_bone.getHead();
 					var ang = point_direction(ori.x, ori.y, mx, my);
 					var rot = angle_difference(ang, posing_sy);
-					posing_sy = ang;
+					posing_sy  = ang;
 					posing_sx += rot;
 					
 					posing_input[TRANSFORM.rot] = posing_sx;
@@ -338,6 +338,9 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 				if(!struct_has(attributes.bonePoseData, posing_bone.ID))
 					attributes.bonePoseData[$ posing_bone.ID] = [ 0, 0, 0, 1, 1 ];
 				posing_input = attributes.bonePoseData[$ posing_bone.ID];
+				
+				recordAction_variable_change(attributes, "bonePoseData", variable_clone(attributes.bonePoseData)).setName("Pose bone").setRef(self);
+				UNDO_HOLDING = true;
 				
 				if(anchor_selecting[1] == 0 || anchor_selecting[0].IKlength) { // move
 					
@@ -378,7 +381,7 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			return;
 		} 
 		
-		if(isUsingTool("Weight Brush") || isUsingTool("Weight Eraser")) {
+		if(attributes.baked && (isUsingTool("Weight Brush") || isUsingTool("Weight Eraser"))) {
 			if(_boneTargetID == noone) return;
 			
 			draw_set_color(COLORS._main_icon);
@@ -394,6 +397,9 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			if(brush_drawing) {
 				var _weight = tool_attribute.weight;
 				if(isUsingTool("Weight Eraser")) _weight = -_weight;
+				
+				recordAction_variable_change(attributes.bakeData, _boneTargetID, variable_clone(_weightData), "Weight Paint").setRef(self);
+				UNDO_HOLDING = true;
 				
 				for( var i = 0; i < _plen; i++ ) {
 					var _p  = _pnts[i];
@@ -415,6 +421,7 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 				if(mouse_release(mb_left)) {
 					brush_drawing = false;
 					triggerRender();
+					UNDO_HOLDING = false;
 				}
 			}
 			
@@ -442,6 +449,7 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
         if(!is(bone_posed, __Bone))    return;
         if(!is(_mesh,  MeshedSurface)) return;
         
+        if(_render) recordAction_variable_change(self, "rigdata", rigdata, "Set Auto wight").setRef(self);
         rigdata = {};
         
         var _pnts = _mesh.points;
@@ -514,6 +522,48 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
         if(_render) triggerRender();
 	}
 	
+    static bake = function() {
+    	recordAction_variable_change(attributes, "baked", attributes.baked, "Bake Weight").setRef(self);
+    	if(attributes.baked) { attributes.baked = false; return; }
+    	
+    	attributes.baked = true;
+    	var _dat = {};
+    	var _k = struct_get_names(rigdata);
+    	
+    	for( var i = 0, n = array_length(_k); i < n; i++ )
+    		_dat[$ _k[i]] = array_clone(rigdata[$ _k[i]]);
+    	
+    	recordAction_variable_change(attributes, "bakeData", attributes.bakeData, "Bake Weight data").setRef(self);
+    	attributes.bakeData = _dat;
+    }
+    
+    static normalizeWeight = function() {
+    	if(!attributes.baked) return;
+    	
+    	var _mesh  = inputs[1].getValue();
+        if(!is(_mesh,  MeshedSurface)) return;
+        
+        recordAction_variable_change(attributes, "bakeData", variable_clone(attributes.bakeData), "Normalize Weight").setRef(self);
+        
+    	var _wdata = attributes.bakeData;
+        var _wkeys = struct_get_names(_wdata);
+        
+        var _plen = array_length(_mesh.points);
+        
+        for( var i = 0; i < _plen; i++ ) {
+        	
+            var _totalWeight = 0;
+            for( var j = 0, m = array_length(_wkeys); j < m; j++ )
+            	_totalWeight += _wdata[$ _wkeys[j]][i];
+            if(_totalWeight == 0) continue;
+            
+            for( var j = 0, m = array_length(_wkeys); j < m; j++ )
+            	_wdata[$ _wkeys[j]][i] /= _totalWeight;
+        }
+        
+        triggerRender();
+    }
+    
 	static step = function() {
 		auto_button.interactable = !attributes.baked;
 		bake_button.text  = attributes.baked? "Unbake" : "Bake mesh";
@@ -563,44 +613,6 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
         _meshRigged.boneMap = _map;
         
         outputs[0].setValue(_meshRigged);
-    }
-    
-    static bake = function() {
-    	if(attributes.baked) { attributes.baked = false; return; }
-    	
-    	attributes.baked = true;
-    	var _dat = {};
-    	var _k = struct_get_names(rigdata);
-    	
-    	for( var i = 0, n = array_length(_k); i < n; i++ )
-    		_dat[$ _k[i]] = array_clone(rigdata[$ _k[i]]);
-    	
-    	attributes.bakeData = _dat;
-    }
-    
-    static normalizeWeight = function() {
-    	if(!attributes.baked) return;
-    	
-    	var _mesh  = inputs[1].getValue();
-        if(!is(_mesh,  MeshedSurface)) return;
-        
-    	var _wdata = attributes.bakeData;
-        var _wkeys = struct_get_names(_wdata);
-        
-        var _plen = array_length(_mesh.points);
-        
-        for( var i = 0; i < _plen; i++ ) {
-        	
-            var _totalWeight = 0;
-            for( var j = 0, m = array_length(_wkeys); j < m; j++ )
-            	_totalWeight += _wdata[$ _wkeys[j]][i];
-            if(_totalWeight == 0) continue;
-            
-            for( var j = 0, m = array_length(_wkeys); j < m; j++ )
-            	_wdata[$ _wkeys[j]][i] /= _totalWeight;
-        }
-        
-        triggerRender();
     }
     
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -665,8 +665,10 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _inSurf = getInputData(0);
 		var _type   = getInputData(8);
 		
-		recordAction_variable_change(self, "points",    points,    "Build mesh");
-		recordAction_variable_change(self, "mesh_data", mesh_data, "Build mesh");
+		if(_render) {
+			recordAction_variable_change(self, "points",    points).setName("Build Mesh").setRef(self);
+			recordAction_variable_change(self, "mesh_data", mesh_data).setRef(self);
+		}
 		
 		points    = [];
 		mesh_data = new MeshedSurface();
