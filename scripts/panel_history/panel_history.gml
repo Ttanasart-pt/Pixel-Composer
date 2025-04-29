@@ -9,38 +9,23 @@ function Panel_History() : PanelContent() constructor {
 	hold     = false;
 	hovering = -1;
 		
-	redo_list  = ds_list_create();
-	undo_list  = ds_list_create();
+	redo_list  = [];
+	undo_list  = [];
 	click_hold = noone;
 	
 	sep_y    = 0;
 	sep_y_to = 0;
 	
 	function refreshList() {
-		ds_list_clear(redo_list);
-		ds_list_clear(undo_list);
-		
-		while(!ds_stack_empty(REDO_STACK))
-			ds_list_insert(redo_list, 0, ds_stack_pop(REDO_STACK));
-	
-		for( var i = 0; i < ds_list_size(redo_list); i++ )
-			ds_stack_push(REDO_STACK, redo_list[| i]);
-	
-		while(!ds_stack_empty(UNDO_STACK))
-			ds_list_add(undo_list, ds_stack_pop(UNDO_STACK));
-	
-		for( var i = ds_list_size(undo_list) - 1; i >= 0; i-- )
-			ds_stack_push(UNDO_STACK, undo_list[| i]);
-		
+		redo_list = ds_stack_to_array(REDO_STACK);
+		undo_list = array_reverse(ds_stack_to_array(UNDO_STACK));
 	}
 	refreshList();
 
-	onResize = function() { sc_history.resize(w - padding * 2, h - padding * 2); }
-	
 	sc_history = new scrollPane(w - padding * 2, h - padding * 2, function(_y, _m) {
 		draw_clear_alpha(COLORS._main_text, 0);
 		
-		if((ds_list_size(redo_list) != ds_stack_size(REDO_STACK)) || (ds_list_size(undo_list) != ds_stack_size(UNDO_STACK)))
+		if((array_length(redo_list) != ds_stack_size(REDO_STACK)) || (array_length(undo_list) != ds_stack_size(UNDO_STACK)))
 			refreshList();
 		
 		draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text);
@@ -54,8 +39,8 @@ function Panel_History() : PanelContent() constructor {
 		var pad = ui(2);
 		var lh  = line_get_height() + spc;
 		
-		var red = ds_list_size(redo_list);
-		var amo = ds_list_size(redo_list) + ds_list_size(undo_list) + 1;
+		var red = array_length(redo_list);
+		var amo = array_length(redo_list) + array_length(undo_list) + 1;
 		var _hover = -1;
 		var action = -1;
 		var connect_line_st = 0;
@@ -75,8 +60,8 @@ function Panel_History() : PanelContent() constructor {
 			}
 			
 			var item;
-			if(i < red)	item = redo_list[| i];
-			else		item = undo_list[| i - red - 1];
+			if(i < red)	item = redo_list[i];
+			else		item = undo_list[i - red - 1];
 			
 			var itamo   = array_length(item);
 			var amoDisp = itamo;
@@ -161,13 +146,11 @@ function Panel_History() : PanelContent() constructor {
 		hovering = _hover;
 		
 		if(action > -1) {
-			if(action < red) {
-				repeat(red - action) REDO();
-				
-			} else {
-				repeat(action - red) UNDO();
-				
-			}
+			var _st = abs(red - action);
+			
+			if(action < red) repeat(_st) REDO();
+			else             repeat(_st) UNDO();
+			
 			hovering = -1;
 		}
 		
@@ -177,13 +160,34 @@ function Panel_History() : PanelContent() constructor {
 	function drawContent(panel) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
+		var sp = padding - ui(8);
+		var bw = w - sp * 2;
+		var bh = ui(24);
+		
 		var px = padding;
 		var py = padding;
-		var pw = w - padding * 2;
-		var ph = h - padding * 2;
+		var pw = w - px - padding;
+		var ph = h - py - padding - bh - ui(4);
 		
 		draw_sprite_stretched(THEME.ui_panel_bg, 1, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
+		
+		sc_history.verify(pw, ph);
 		sc_history.setFocusHover(pFOCUS, pHOVER);
 		sc_history.draw(px, py, mx - px, my - py);
+		
+		var _bx  = sp;
+		var _by  = h - bh - sp;
+		var _hov = pHOVER && point_in_rectangle(mx, my, _bx, _by, _bx + bw, _by + bh);
+		
+		draw_sprite_stretched_ext(THEME.ui_panel, 0, _bx, _by, bw, bh, _hov? COLORS._main_value_negative : COLORS._main_icon, .3 + _hov * .1);
+		draw_sprite_stretched_ext(THEME.ui_panel, 1, _bx, _by, bw, bh, _hov? COLORS._main_value_negative : COLORS._main_icon, .6 + _hov * .25);
+		draw_set_text(f_p2, fa_center, fa_center, _hov? COLORS._main_value_negative : COLORS._main_icon);
+		draw_text_add(_bx + bw / 2, _by + bh / 2, __txt("Clear History"));
+		
+		if(mouse_press(mb_left, pFOCUS && _hov)) {
+			ds_stack_clear(REDO_STACK);
+			ds_stack_clear(UNDO_STACK);
+		}
+		
 	}
 }
