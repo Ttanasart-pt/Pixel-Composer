@@ -173,12 +173,14 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	nodes       = [];
 	node_length = 0;
 	modifiable  = true;
-	setDimension(w, 16);
 	
 	ungroupable			= true;
 	auto_render_time	= false;
 	combine_render_time = true;
 	previewable         = true;
+	thumbnail_node      = noone;
+	
+	setDimension(w, 16);
 	
 	isPure   = false;
 	nodeTopo = [];
@@ -427,8 +429,15 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	doUpdate = doUpdateLite;
 	
 	static update = function() {
-		if(!isPure) return;
+		#region thumbnail
+			var _ind = array_find_index(nodes, function(n) /*=>*/ {return is(n, Node_Group_Thumbnail)});
+			var _thm = thumbnail_node;
+			thumbnail_node = array_safe_get(nodes, _ind, noone);
+			preserve_height_for_preview = _ind > -1;
+			if(_thm != thumbnail_node) setHeight();
+		#endregion
 		
+		if(!isPure) return;
 		for( var i = 0, n = array_length(nodeTopo); i < n; i++ )
 			nodeTopo[i].doUpdate();
 	}
@@ -593,11 +602,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	////- PREVIEW
 	
 	static getGraphPreviewSurface = function() { 
-		for( var i = 0, n = array_length(nodes); i < n; i++ ) {
-			if(!nodes[i].active) continue;
-			if(is(nodes[i], Node_Group_Thumbnail))
-				return nodes[i].inputs[0].getValue();
-		}
+		if(thumbnail_node != noone) return thumbnail_node.inputs[0].getValue();
 		
 		preview_channel = clamp(preview_channel, 0, array_length(outputs) - 1);
 		var _oj = array_safe_get(outputs, preview_channel);
@@ -609,6 +614,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}
 	
 	function getPreviewingNode() {
+		if(thumbnail_node != noone) return thumbnail_node;
+		
 		preview_channel = clamp(preview_channel, 0, array_length(outputs) - 1);
 		var _oj = array_safe_get(outputs, preview_channel);
 		if(!is(_oj, NodeValue)) return noone;

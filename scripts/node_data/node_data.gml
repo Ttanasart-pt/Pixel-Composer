@@ -753,7 +753,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static setHeight = function() {
-		
 		w = attributes.node_width? attributes.node_width : min_w;
 		if(SHOW_PARAM) w = attributes.node_param_width;
 		

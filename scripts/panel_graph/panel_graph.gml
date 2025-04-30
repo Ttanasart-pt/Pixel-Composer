@@ -1132,7 +1132,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
     	if(getCurrentContext() == noone) return;
     	
     	array_pop(node_context);
-    	nodes_list = getNodeList;
+    	nodes_list = getNodeList();
     	
         node_dragging   = noone;
         nodes_selecting = [];
