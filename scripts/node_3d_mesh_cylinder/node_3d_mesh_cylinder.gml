@@ -1,28 +1,20 @@
 function Node_3D_Mesh_Cylinder(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group) constructor {
-	name     = "3D Cylinder";
-	
+	name = "3D Cylinder";
 	object_class = __3dCylinder;
 	
-	newInput(in_mesh + 0, nodeValue_Int("Side", self, 8 ))
-		.setValidator(VV_min(3));
+	////- Geometry
 	
-	newInput(in_mesh + 1, nodeValue_D3Material("Material Top", self, new __d3dMaterial()))
-		.setVisible(true, true);
+	newInput(in_mesh + 0, nodeValue_Int(   "Side",     self, 8 )).setValidator(VV_min(3));
+	newInput(in_mesh + 5, nodeValue_Bool(  "End caps", self, true ));
+	newInput(in_mesh + 6, nodeValue_Int(   "Segments", self, 1 )).setValidator(VV_min(1));
+	newInput(in_mesh + 7, nodeValue_Curve( "Profile",  self, CURVE_DEF_11 ));
 	
-	newInput(in_mesh + 2, nodeValue_D3Material("Material Bottom", self, new __d3dMaterial()))
-		.setVisible(true, true);
+	////- Material
 	
-	newInput(in_mesh + 3, nodeValue_D3Material("Material Side", self, new __d3dMaterial()))
-		.setVisible(true, true);
-	
-	newInput(in_mesh + 4, nodeValue_Bool("Smooth Side", self, false ));
-	
-	newInput(in_mesh + 5, nodeValue_Bool("End caps", self, true ));
-	
-	newInput(in_mesh + 6, nodeValue_Int("Segments", self, 1 ))
-		.setValidator(VV_min(1));
-		
-	newInput(in_mesh + 7, nodeValue_Curve("Profile", self, CURVE_DEF_11 ));
+	newInput(in_mesh + 4, nodeValue_Bool(       "Smooth Side",     self, false ));
+	newInput(in_mesh + 1, nodeValue_D3Material( "Material Top",    self, new __d3dMaterial())).setVisible(true, true);
+	newInput(in_mesh + 2, nodeValue_D3Material( "Material Bottom", self, new __d3dMaterial())).setVisible(true, true);
+	newInput(in_mesh + 3, nodeValue_D3Material( "Material Side",   self, new __d3dMaterial())).setVisible(true, true);
 		
 	input_display_list = [
 		__d3d_input_list_mesh, in_mesh + 0, in_mesh + 5, in_mesh + 6, in_mesh + 7, 

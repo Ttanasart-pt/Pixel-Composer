@@ -4,7 +4,7 @@ function Node_3D_Mesh_Export(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput(0, nodeValue_D3Mesh("Mesh", self, noone))
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_Path("Paths",   self, ""))
+	newInput(1, nodeValue_Path("Paths", self, ""))
 		.setDisplay(VALUE_DISPLAY.path_save, { filter: "Obj (.obj)|*.obj" })
 		.setVisible(true);
 	
@@ -18,23 +18,21 @@ function Node_3D_Mesh_Export(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	setTrigger(1, "Export", [ THEME.sequence_control, 1, COLORS._main_value_positive ], function() /*=>*/ {return export()});
 	
-	static export = function() {
-		var _mesh = getInputData(0);
-		var _path = getInputData(1);
+	static serializeMesh = function(_mesh) {
+		if(!is(_mesh, __3dObject)) return [ "", "" ];
+		
 		var _mat  = getInputData(2);
 		var _invv = getInputData(3);
 		
-		if(_mesh == noone) return;
-		if(!is_instanceof(_mesh, __3dObject)) return;
-		
+		var _mtl = "";
+		var _obj = "";
 		var _vbs = _mesh.VB;
 		
-		var _mtlPath   = filename_dir(_path) + "/" + filename_name_only(_path) + ".mtl";
-		var _mtlName   = filename_name(_mtlPath);
-		var _mtl       =  "# Pixel Composer\n";
-		var _obj       =  "# Pixel Composer\n";
-		if(_mat) _obj += $"mtllib {_mtlName}\n";
-		    
+		var _map_v  = ds_map_create();
+		var _map_vn = ds_map_create();
+		var _map_vt = ds_map_create();
+		var _map_f  = ds_map_create();
+		
 		for (var i = 0, n = array_length(_vbs); i < n; i++) {
 			var _vb = _vbs[i];
 			
@@ -59,31 +57,21 @@ function Node_3D_Mesh_Export(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				}
 			}
 			
-			var _obj_v  = "";
-			var _obj_vn = "";
-			var _obj_vt = "";
-			var _obj_f  = "";
-			
-			var _map_v  = ds_map_create();
-			var _map_vn = ds_map_create();
-			var _map_vt = ds_map_create();
-			var _map_f  = ds_map_create();
+			var _str_v  = "";
+			var _str_vn = "";
+			var _str_vt = "";
+			var _str_f  = "";
 			
 			switch(_mesh.VF) {
 				case global.VF_POS_NORM_TEX_COL :
 					var _format_s = global.VF_POS_NORM_TEX_COL_size;
 					var _vertex_s = floor(_buffer_s / _format_s);
-					var _ind = 0;
+					var _ind      = 0;
 					buffer_to_start(_buffer);
 					
 					var _idx_v  = [ 0, 0, 0 ];
 					var _idx_vn = [ 0, 0, 0 ];
 					var _idx_vt = [ 0, 0, 0 ];
-					
-					ds_map_clear(_map_v);
-					ds_map_clear(_map_vn);
-					ds_map_clear(_map_vt);
-					ds_map_clear(_map_f);
 					
 					repeat(_vertex_s) {
 						var _px = buffer_read(_buffer, buffer_f32);
@@ -118,7 +106,7 @@ function Node_3D_Mesh_Export(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 						} else {
 							_id_v = ds_map_size(_map_v) + 1;
 							_map_v[? __v] = _id_v;
-							_obj_v  += $"{__v} \n";
+							_str_v  += $"{__v} \n";
 						}
 						
 						if(ds_map_exists(_map_vn, __vn)) {
@@ -126,7 +114,7 @@ function Node_3D_Mesh_Export(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 						} else {
 							_id_vn = ds_map_size(_map_vn) + 1;
 							_map_vn[? __vn] = _id_vn;
-							_obj_vn  += $"{__vn} \n";
+							_str_vn  += $"{__vn} \n";
 						}
 						
 						if(ds_map_exists(_map_vt, __vt)) {
@@ -134,41 +122,83 @@ function Node_3D_Mesh_Export(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 						} else {
 							_id_vt = ds_map_size(_map_vt) + 1;
 							_map_vt[? __vt] = _id_vt;
-							_obj_vt  += $"{__vt} \n";
+							_str_vt  += $"{__vt} \n";
 						}
 						
-						_idx_v[_ind % 3]  = _id_v;
+						_idx_v [_ind % 3] = _id_v;
 						_idx_vn[_ind % 3] = _id_vn;
 						_idx_vt[_ind % 3] = _id_vt;
 						
-						if(_ind % 3 == 2) _obj_f += $"f {_idx_v[0]}/{_idx_vt[0]}/{_idx_vn[0]} {_idx_v[1]}/{_idx_vt[1]}/{_idx_vn[1]} {_idx_v[2]}/{_idx_vt[2]}/{_idx_vn[2]}\n";
+						if(_ind % 3 == 2) {
+							_str_f += $"f {_idx_v[0]}/{_idx_vt[0]}/{_idx_vn[0]}";
+							_str_f +=  $" {_idx_v[1]}/{_idx_vt[1]}/{_idx_vn[1]}";
+							_str_f +=  $" {_idx_v[2]}/{_idx_vt[2]}/{_idx_vn[2]}\n";
+						}
+						
 						_ind++;
 					}
+					
 					break;
 			}
 			
-			ds_map_destroy(_map_v);
-			ds_map_destroy(_map_vn);
-			ds_map_destroy(_map_vt);
-			ds_map_destroy(_map_f);
-			
-			_obj += _obj_v  + "\n";
-			_obj += _obj_vn + "\n";
-			_obj += _obj_vt + "\n";
-			_obj += _obj_f  + "\n";
+			_obj += _str_v  + "\n";
+			_obj += _str_vn + "\n";
+			_obj += _str_vt + "\n";
+			_obj += _str_f  + "\n";
 			
 			buffer_delete(_buffer);
 		}
+
+		ds_map_destroy(_map_v);
+		ds_map_destroy(_map_vn);
+		ds_map_destroy(_map_vt);
+		ds_map_destroy(_map_f);
+			
+		return [ _mtl, _obj ];
+	}
+	
+	static serializeObject = function(_object) {
+		if( is(_object, __3dObject)) return serializeMesh(_object);
+		if(!is(_object, __3dGroup))  return [ "", "" ];
 		
-		file_text_write_all(   _path, _obj);
+		var _mtl = "";
+		var _obj = "";
+		
+		for( var i = 0, n = array_length(_object.objects); i < n; i++ ) {
+			var _meshStr = serializeObject(_object.objects[i]);
+			_mtl += _meshStr[0];
+			_obj += _meshStr[1];
+		}
+		
+		return [ _mtl, _obj ];
+	}
+	
+	static export = function() {
+		var _mesh = getInputData(0);
+		var _path = getInputData(1);
+		var _mat  = getInputData(2);
+		
+		if(_mesh == noone) return;
+		
+		var _mtlPath   = filename_dir(_path) + "/" + filename_name_only(_path) + ".mtl";
+		var _mtlName   = filename_name(_mtlPath);
+		var _mtl       =  "# Pixel Composer\n";
+		var _obj       =  "# Pixel Composer\n";
+		if(_mat) _obj += $"mtllib {_mtlName}\n";
+		
+		var _meshStr = serializeObject(_mesh);
+		_mtl += _meshStr[0];
+		_obj += _meshStr[1];
+		
+		file_text_write_all(_path, _obj);
 		if(_mat) file_text_write_all(_mtlPath, _mtl);
 		
-		var _txt = $"Export model complete.";
-		logNode(_txt);
-		
+		// log
+		var _txt  = $"Export model complete.";
 		var noti  = log_message("EXPORT", _txt, THEME.noti_icon_tick, COLORS._main_value_positive, false);
 		noti.path = filename_dir(_path);
 		noti.setOnClick(function() /*=>*/ {return shellOpenExplorer(self.path)}, "Open in explorer", THEME.explorer);
+		logNode(_txt);
 	}
 	
 	static update = function() {}
