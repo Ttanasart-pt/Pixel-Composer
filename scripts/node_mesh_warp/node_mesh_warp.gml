@@ -15,30 +15,26 @@ function MeshedSurface() : Mesh() constructor {
 	controls  = [];
 	
 	static clone = function() {
-		var n = new MeshedSurface();
-		n.surface  = surface;
-		n.controls = controls;
+		var msh = new MeshedSurface();
+		msh.surface  = surface;
+		msh.controls = controls;
 		
 		p = array_create_ext(array_length(points), function(i) /*=>*/ { return is(points[i], MeshedPoint)? points[i].clone() : points[i]; });
-		n.points = p;
+		msh.points = p;
+		msh.links  = array_create_ext(array_length(links), function(i) /*=>*/ {return links[i].clone(p)});
+		msh.tris   = array_create_ext(array_length(tris),  function(i) /*=>*/ {return tris[i].clone(p)});
 		
-		var l = array_create_ext(array_length(links), function(i) /*=>*/ {return links[i].clone(p)});
-		n.links = l;
-		
-		var t = array_create_ext(array_length(tris), function(i) /*=>*/ {return tris[i].clone(p)});
-		n.tris = t;
-		
-		for( var i = 0; i < array_length(triangles); i++ ) {
-			n.triangles[i] = [
+		for( var i = 0, n = array_length(triangles); i < n; i++ ) {
+			msh.triangles[i] = [
 				triangles[i][0].clone(),
 				triangles[i][1].clone(),
 				triangles[i][2].clone(),
 			];
 		}
 		
-		n.center = [ center[0], center[1] ];
+		msh.center = [ center[0], center[1] ];
 		
-		return n;
+		return msh;
 	}
 }
 

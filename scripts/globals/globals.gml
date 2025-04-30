@@ -43,9 +43,9 @@
 	LATEST_VERSION	= 1_18_00_0;
 	VERSION			= 1_19_00_0;
 	SAVE_VERSION	= 1_18_09_1;
-	VERSION_STRING  = MAC? "1.18.003m" : "1.19.0.6";
+	VERSION_STRING  = MAC? "1.18.003m" : "1.19.0.7";
 	RELEASE_STRING  = "1.19.0";
-	BUILD_NUMBER	= 119006;
+	BUILD_NUMBER	= 119007;
 	PREF_VERSION    = 1_17_1;
 	
 	var _vsp = string_split(VERSION_STRING, ".");
@@ -59,7 +59,7 @@
 	global.KEYS = { download_links: "" };
 	
 	globalvar CURRENT_COLOR;
-	CURRENT_COLOR = cola(c_white);
+	CURRENT_COLOR = ca_white;
 #endregion
 
 #region input
