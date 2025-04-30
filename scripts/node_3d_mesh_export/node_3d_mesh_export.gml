@@ -33,7 +33,6 @@ function Node_3D_Mesh_Export(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			_trans = _trans.applyTransform(_transform);
 		
 		_trans.applyMatrix();
-		print(_trans.matrix.Raw);
 		
 		var _mtl = "";
 		var _obj = "";
@@ -111,7 +110,6 @@ function Node_3D_Mesh_Export(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 							_nx = _n.x;
 							_ny = _n.y;
 							_nz = _n.z;
-							
 						}
 						
 						var __v  = $"v {string_format(_px, -1, 5)} {string_format(_py, -1, 5)} {string_format(_pz, -1, 5)}";
