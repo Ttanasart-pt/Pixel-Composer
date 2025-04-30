@@ -122,7 +122,7 @@ function Node_MK_Brownian(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 					var _ss  = random_range(_size[0], _size[1]);
 					
 					if(_sprt == noone) {
-						global.DynaDraw_circle_fill.draw(_pos[0], _pos[1], round(_ss), round(_ss), 0, _cc, _aa);
+						DYNADRAW_DEFAULT.draw(_pos[0], _pos[1], round(_ss), round(_ss), 0, _cc, _aa);
 						
 					} else {
 						var _p = _sprt;

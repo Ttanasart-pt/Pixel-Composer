@@ -151,8 +151,8 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 	}
 }
 
-function buttonInstant(spr, _x, _y, _w, _h, _m, _hvr, _act, _tip = "", _icon = noone, _icon_index = 0, _icon_blend = COLORS._main_icon, _icon_alpha = 1, _icon_scale = 1, 
-	_button_blend = c_white) {
+function buttonInstant(spr, _x, _y, _w, _h, _m, _hvr, _act, _tip = "", 
+	_icon = noone, _icon_index = 0, _icon_blend = COLORS._main_icon, _icon_alpha = 1, _icon_scale = 1, _button_blend = c_white) {
 		
 	var res = 0;
 	var cc  = is_array(_icon_blend)? _icon_blend[0] : _icon_blend;
@@ -178,7 +178,12 @@ function buttonInstant(spr, _x, _y, _w, _h, _m, _hvr, _act, _tip = "", _icon = n
 	} else if(spr)
 		draw_sprite_stretched_ext(spr, 0, _x, _y, _w, _h, _button_blend);
 	
-	if(_icon) draw_sprite_ui_uniform(_icon, _icon_index, _x + _w / 2, _y + _h / 2, _icon_scale, cc, _icon_alpha == 1 || res == 0? _icon_alpha : 1);
+	var icx = _x + _w / 2;
+	var icy = _y + _h / 2;
+	var ica = _icon_alpha == 1 || res == 0? _icon_alpha : 1;
+	
+	     if(is(_icon, sprite_drawer)) _icon.draw(icx, icy, _icon_scale, cc, ica);
+	else if(sprite_exists(_icon))     draw_sprite_ui_uniform(_icon, _icon_index, icx, icy, _icon_scale, cc, ica);
 	
 	return res;
 }

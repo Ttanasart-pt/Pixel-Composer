@@ -180,7 +180,7 @@ if !ready exit;
 			sp_sample.setFocusHover(sFOCUS, sHOVER);
 			sp_sample.draw(x0 + ui(6), y0 + 1);
 			
-			if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txt("Open Welcome Folder"), THEME.path_open) == 2)
+			if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txt("Open Welcome files Folder..."), THEME.dPath_open) == 2)
 				shellOpenExplorer($"{DIRECTORY}Welcome files");
 			break;
 			

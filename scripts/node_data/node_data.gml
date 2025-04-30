@@ -31,6 +31,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		active       = true;
 		renderActive = true;
 		
+		x = _x;
+		y = _y;
+		
 		node_id              = UUID_generate();
 		group                = _group;
 		manual_deletable	 = true;
@@ -53,16 +56,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		onDoubleClick = -1;
 		is_controller = false;
 	#endregion
-	
-	static resetInternalName = function() {
-		var _str = string_replace_all(name, " ", "_");
-			_str = string_replace_all(_str,  "/", "");
-			_str = string_replace_all(_str,  "-", "");
-		
-		ds_map_delete(project.nodeNameMap, internalName);
-		internalName = $"{_str}{seed_random(5)}";
-		project.nodeNameMap[? internalName] = self;
-	}
 	
 	if(!LOADING && !APPENDING) {
 		project.nodeMap[? node_id] = self;
@@ -95,8 +88,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		renamed          = false;
 		tooltip          = "";
 		
-		x = _x;
-		y = _y;
 		w = 128;
 		h = 128;
 		
@@ -365,29 +356,15 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	////- NAME
 	
-	static initTooltip    = function() { 
-		if(IS_CMD) return;
+	static resetInternalName = function() {
+		var _str = string_replace_all(name, " ", "_");
+			_str = string_replace_all(_str,  "/", "");
+			_str = string_replace_all(_str,  "-", "");
 		
-		var type_self = instanceof(self);
-		if(!struct_has(global.NODE_GUIDE, type_self)) return;
-		
-		
-		var _n = global.NODE_GUIDE[$ type_self];
-		var _ins = _n.inputs;
-		var _ots = _n.outputs;
-		
-		var amo = min(array_length(inputs), array_length(_ins));
-		for( var i = 0; i < amo; i++ ) {
-			inputs[i].name    = _ins[i].name;
-			inputs[i].tooltip = _ins[i].tooltip;
-		}
-		
-		var amo = min(array_length(outputs), array_length(_ots));
-		for( var i = 0; i < amo; i++ ) {
-			outputs[i].name    = _ots[i].name;
-			outputs[i].tooltip = _ots[i].tooltip;
-		}
-	} run_in(1, function() /*=>*/ {return initTooltip});
+		ds_map_delete(project.nodeNameMap, internalName);
+		internalName = $"{_str}{seed_random(5)}";
+		project.nodeNameMap[? internalName] = self;
+	}
 	
 	static setDisplayName = function(_name) {
 		if(NOT_LOAD) recordAction(ACTION_TYPE.custom, function(data) { 

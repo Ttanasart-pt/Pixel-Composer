@@ -70,17 +70,6 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 	buildFn = registerFunction("Add node", name, "", 0, function(n) /*=>*/ { PANEL_GRAPH.createNodeHotkey(n); }, [ nodeName ]).setMenu($"graph_add_{nodeName}", spr);
 	buildFn.nodeName = nodeName;
 	
-	static init = function() {
-		if(IS_CMD) return;
-		
-		if(struct_has(global.NODE_GUIDE, node)) {
-			var _n = global.NODE_GUIDE[$ node];
-			name   = _n.name;
-			if(_n.tooltip != "")
-				tooltip = _n.tooltip;
-		}
-	} init();
-    
 	static setSpr = function(_spr)  { 
 		spr = _spr; 
 		buildFn.setSpr(spr);  

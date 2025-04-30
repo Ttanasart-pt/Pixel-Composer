@@ -138,7 +138,6 @@ function __generate_node_data() { #region
 	}
 #endregion
 
-global.NODE_GUIDE = {};
 function __initNodeData() {
 	var nodeDir = DIRECTORY + "Nodes/";
 	directory_verify(nodeDir);

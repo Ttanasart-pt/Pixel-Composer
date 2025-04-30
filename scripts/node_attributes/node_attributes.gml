@@ -53,7 +53,7 @@
 			array_push(global.SURFACE_FORMAT_SUPP, _supp);
 			
 			if(!_supp) {
-				log_message("WARNING", $"Surface format [{surface_format_name[i].name}] not supported in this device.");
+				log_message("WARNING", $"Surface format [{surface_format_name[i].name}] not supported on this device.");
 				surface_format_name[i].setActive(false);
 			}
 		}

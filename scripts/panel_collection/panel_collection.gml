@@ -724,8 +724,8 @@ function Panel_Collection() : PanelContent() constructor {
 		return hh + ui(16);
 	});
 	
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
+	////- Draw
+		
 	function setPage(i) {
 		page    = i;
 		title   = roots[i][0];
@@ -737,17 +737,7 @@ function Panel_Collection() : PanelContent() constructor {
 	
 	function onFocusBegin() { PANEL_COLLECTION = self; }
 	
-	function onResize() { 
-		initSize();
-		
-		folderPane.resize(  group_w - ui(8), content_h);
-		
-		if(pageStr[page] == "Projects")	contentPane.resize(w - ui(24),        content_h - ui(4));
-		else			                contentPane.resize(content_w - ui(8), content_h - ui(4));
-		
-		nodeListPane.resize(group_w - ui(8), content_h);
-		nodecontentPane.resize(content_w - ui(8), content_h - ui(4));
-	} 
+	function onResize() { initSize(); } 
 	
 	function setContext(cont) { 
 		context = cont;
@@ -766,14 +756,19 @@ function Panel_Collection() : PanelContent() constructor {
 		draw_clear_alpha(COLORS.panel_bg_clear, 1);
 		
 		var content_y = ui(48);
-		var ppd = ui(2);
+		var ppd       = ui(2);
+		var pageS     = pageStr[page];
 		
-		switch(pageStr[page]) {
+		switch(pageS) {
 			case "Collections" : 
 			case "Assets" : 
 			case "Nodes" : 
-				if(pageStr[page] == "Nodes") {
+				contentPane.verify(content_w - ui(8), content_h - ui(4));
+				
+				if(pageS == "Nodes") {
 					draw_sprite_stretched(THEME.ui_panel_bg, 1, group_w, content_y, content_w, content_h);
+					nodeListPane.verify(group_w - ui(8), content_h);
+					nodecontentPane.verify(content_w - ui(8), content_h - ui(4));
 					
 					nodeListPane.setFocusHover(pFOCUS, pHOVER);
 					nodecontentPane.setFocusHover(pFOCUS, pHOVER);
@@ -783,6 +778,7 @@ function Panel_Collection() : PanelContent() constructor {
 					
 				} else {
 					draw_sprite_stretched(THEME.ui_panel_bg, 1, group_w, content_y, content_w, content_h);
+					folderPane.verify(  group_w - ui(8), content_h);
 					
 					folderPane.setFocusHover(pFOCUS, pHOVER);
 					contentPane.setFocusHover(pFOCUS, pHOVER);
@@ -812,6 +808,8 @@ function Panel_Collection() : PanelContent() constructor {
 				break;
 				
 			case "Projects" : 
+				contentPane.verify(w - ui(24), content_h - ui(4));
+				
 				var pad = ui(8);
 				
 				draw_sprite_stretched(THEME.ui_panel_bg, 1, pad, content_y, w - pad * 2, content_h);
@@ -827,13 +825,12 @@ function Panel_Collection() : PanelContent() constructor {
 		var _x = ui(10);
 		var _y = ui(10);
 		var _w = ui(160);
-		var _h = line_get_height(f_p0b, 8);
-		
-		var bh    = line_get_height(f_p0b, 8);
+		var _h = line_get_height(f_p0b, 4);
+		var bh = line_get_height(f_p0b, 4);
 		var rootx = _x;
 		
 		sc_pages.setFocusHover(pFOCUS, pHOVER);
-		sc_pages.draw(_x, _y, _w, _h, pageStr[page], [mx, my], x, y);
+		sc_pages.draw(_x, _y, _w, _h, pageS, [mx, my], x, y);
 		rootx = _x + _w + ui(8);
 		
 		var bx = w - ui(40);
@@ -855,7 +852,7 @@ function Panel_Collection() : PanelContent() constructor {
 			return;
 		}
 		
-		if(pageStr[page] == "Collections" && !DEMO) {
+		if(pageS == "Collections" && !DEMO) {
 			if(bx < rootx) return;
 			if(context != root) {
 				var txt = __txtx("panel_collection_add_node", "Add selecting node as collection");
@@ -876,23 +873,18 @@ function Panel_Collection() : PanelContent() constructor {
 			
 			if(bx < rootx) return;
 			var txt = __txtx("panel_collection_add_folder", "Add folder");
-			if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, [mx, my], pHOVER, pFOCUS, txt) == 2) {
-				fileNameCall(context.path, function (txt) {
-					directory_create(txt);
-					refreshContext();
-				});
-			}
+			if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, [mx, my], pHOVER, pFOCUS, txt) == 2) 
+				fileNameCall(context.path, function(txt) /*=>*/ { directory_create(txt); refreshContext(); });
 			draw_sprite_ui_uniform(THEME.folder_add, 0, bx + bs / 2, by + bs / 2, 1, COLORS._main_icon);
 			draw_sprite_ui_uniform(THEME.folder_add, 1, bx + bs / 2, by + bs / 2, 1, COLORS._main_value_positive);
 			bx -= ui(36);
 		}
 	
-		if(pageStr[page] != "Nodes") {
+		if(pageS != "Nodes") {
 			if(bx < rootx) return;
 			var txt = __txtx("panel_collection_open_file", "Open in file explorer");
-			if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, [mx, my], pHOVER, pFOCUS, txt, THEME.path_open) == 2)
+			if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, [mx, my], pHOVER, pFOCUS, txt, THEME.dPath_open) == 2)
 				shellOpenExplorer(context.path);
-			draw_sprite_ui_uniform(THEME.path_open, 1, bx + bs / 2, by + bs / 2, 1, c_white);
 			bx -= ui(36);
 			
 			if(bx < rootx) return;
@@ -909,6 +901,8 @@ function Panel_Collection() : PanelContent() constructor {
 			dialogPanelCall(new Panel_Collections_Setting(), x + bx, y + by - 8, { anchor: ANCHOR.bottom | ANCHOR.left }); 
 		bx -= ui(36);
 	}
+		
+	////- Serialize
 		
     static serialize = function() { 
         _map = { 

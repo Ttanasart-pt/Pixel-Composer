@@ -1,5 +1,10 @@
-globalvar THEME, THEME_DEF; 
-THEME_DEF = true;
+globalvar THEME_DEF; THEME_DEF = true;
+globalvar THEME; 
+
+function sprite_drawer(_draw) constructor {
+	static draw = function(_x, _y, scale, color, alpha) {}
+	draw = _draw;
+}
 
 function __initTheme() {
 	var root = DIRECTORY + "Themes";
@@ -90,4 +95,9 @@ function loadGraphic(theme = "default") {
 		
 		THEME[$ key] = _sprite_load_from_struct(str, theme, key);
 	}
+	
+	THEME.dPath_open = new sprite_drawer(function(_x, _y, scale, color, alpha) /*=>*/ {
+		draw_sprite_ui_uniform(THEME.path_open, 0, _x, _y, scale, color, alpha);
+		draw_sprite_ui_uniform(THEME.path_open, 1, _x, _y, scale, c_white, alpha);
+	});
 }
