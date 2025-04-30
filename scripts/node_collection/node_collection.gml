@@ -595,12 +595,13 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	static getGraphPreviewSurface = function() { 
 		for( var i = 0, n = array_length(nodes); i < n; i++ ) {
 			if(!nodes[i].active) continue;
-			if(is_instanceof(nodes[i], Node_Group_Thumbnail))
+			if(is(nodes[i], Node_Group_Thumbnail))
 				return nodes[i].inputs[0].getValue();
 		}
 		
+		preview_channel = clamp(preview_channel, 0, array_length(outputs) - 1);
 		var _oj = array_safe_get(outputs, preview_channel);
-		if(!is_instanceof(_oj, NodeValue)) return noone;
+		if(!is(_oj, NodeValue)) return noone;
 		
 		if(_oj.from == noone) return noone;
 		var _fr = array_safe_get(_oj.from.inputs, 0);
@@ -608,8 +609,9 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}
 	
 	function getPreviewingNode() {
-		var _oj = array_safe_get(outputs, preview_channel, noone);
-		if(_oj == noone) return self;
+		preview_channel = clamp(preview_channel, 0, array_length(outputs) - 1);
+		var _oj = array_safe_get(outputs, preview_channel);
+		if(!is(_oj, NodeValue)) return noone;
 		
 		switch(_oj.type) {
 			case VALUE_TYPE.d3Mesh   : 

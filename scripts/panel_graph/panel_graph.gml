@@ -1066,7 +1066,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
     
     ////- Context
     
-    function getCurrentContext() { return array_empty(node_context)? noone : node_context[array_length(node_context) - 1]; }
+    function getCurrentContext() { return array_empty(node_context)? noone : array_last(node_context); }
     
     function getNodeList(cont = getCurrentContext()) { return cont == noone? project.nodes : cont.getNodeList(); }
     
@@ -1100,9 +1100,9 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         nodes_list = _node.nodes;
         array_push(node_context, _node);
         
-        node_dragging     = noone;
+        node_dragging   = noone;
         nodes_selecting = [];
-        selection_block   = 1;
+        selection_block = 1;
         
         setContextFrame(false, _node);
         toCenterNode();
@@ -1126,6 +1126,19 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         context_frame_sy        = gr_y + node.y * graph_s;
         context_frame_ex        = context_frame_sx + node.w * graph_s;
         context_frame_ey        = context_frame_sy + node.h * graph_s;
+    }
+    
+    function exitContext() {
+    	if(getCurrentContext() == noone) return;
+    	
+    	array_pop(node_context);
+    	nodes_list = getNodeList;
+    	
+        node_dragging   = noone;
+        nodes_selecting = [];
+        selection_block = 1;
+        
+        toCenterNode();
     }
     
     ////- Step
