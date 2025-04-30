@@ -221,7 +221,7 @@ function BBMOD_Matrix(_raw=undefined) constructor
 			matrix_get(matrix_projection));
 		return self;
 	};
-
+	
 	/// @func ApplyWorld()
 	///
 	/// @desc Changes the current world matrix to this one.
@@ -461,6 +461,19 @@ function BBMOD_Matrix(_raw=undefined) constructor
 		}
 		return _res;
 	};
+
+	static MulVector = function(_vector) {
+		INLINE
+		var _res = new __vec4();
+		var _raw = Raw;
+
+		_res.x = _raw[0] * _vector.x + _raw[4] * _vector.y + _raw[8] * _vector.z + _raw[12] * _vector.w;
+		_res.y = _raw[1] * _vector.x + _raw[5] * _vector.y + _raw[9] * _vector.z + _raw[13] * _vector.w;
+		_res.z = _raw[2] * _vector.x + _raw[6] * _vector.y + _raw[10] * _vector.z + _raw[14] * _vector.w;
+		_res.w = _raw[3] * _vector.x + _raw[7] * _vector.y + _raw[11] * _vector.z + _raw[15] * _vector.w;
+
+		return _res;
+	}
 
 	/// @func AddComponentwise(_matrix)
 	///

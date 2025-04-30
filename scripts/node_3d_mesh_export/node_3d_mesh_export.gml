@@ -12,26 +12,32 @@ function Node_3D_Mesh_Export(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	newInput(3, nodeValue_Bool("Invert UV", self, false));
 	
+	newInput(4, nodeValue_Bool("Apply Transform", self, true));
+	
 	input_display_list = [ 0, 
-		["Export", false], 1, 2, 3, 
+		["Export", false], 1, 2, 
+		["Mesh",   false], 3, 4, 
 	];
 	
 	setTrigger(1, "Export", [ THEME.sequence_control, 1, COLORS._main_value_positive ], function() /*=>*/ {return export()});
 	
-	static serializeMesh = function(_mesh) {
+	static serializeMesh = function(_mesh, _transform = noone) {
 		if(!is(_mesh, __3dObject)) return [ "", "" ];
 		
-		var _mat  = getInputData(2);
-		var _invv = getInputData(3);
+		var _mat   = getInputData(2);
+		var _invv  = getInputData(3);
+		var _appl  = getInputData(4);
+		
+		var _trans = _mesh.transform;
+		if(_transform != noone) 
+			_trans = _trans.applyTransform(_transform);
+		
+		_trans.applyMatrix();
+		print(_trans.matrix.Raw);
 		
 		var _mtl = "";
 		var _obj = "";
 		var _vbs = _mesh.VB;
-		
-		var _map_v  = ds_map_create();
-		var _map_vn = ds_map_create();
-		var _map_vt = ds_map_create();
-		var _map_f  = ds_map_create();
 		
 		for (var i = 0, n = array_length(_vbs); i < n; i++) {
 			var _vb = _vbs[i];
@@ -95,6 +101,19 @@ function Node_3D_Mesh_Export(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 						var _by = buffer_read(_buffer, buffer_f32);
 						var _bz = buffer_read(_buffer, buffer_f32);
 						
+						if(_appl) {
+							var _p = _trans.applyPoint([_px, _py, _pz]);
+							_px = _p.x;
+							_py = _p.y;
+							_pz = _p.z;
+							
+							var _n = _trans.applyNormal([_nx, _ny, _nz]);
+							_nx = _n.x;
+							_ny = _n.y;
+							_nz = _n.z;
+							
+						}
+						
 						var __v  = $"v {string_format(_px, -1, 5)} {string_format(_py, -1, 5)} {string_format(_pz, -1, 5)}";
 						var __vn = $"vn {string_format(_nx, -1, 5)} {string_format(_ny, -1, 5)} {string_format(_nz, -1, 5)}";
 						var __vt = $"vt {string_format(_u, -1, 5)} {string_format(_v, -1, 5)}";
@@ -148,24 +167,23 @@ function Node_3D_Mesh_Export(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			
 			buffer_delete(_buffer);
 		}
-
-		ds_map_destroy(_map_v);
-		ds_map_destroy(_map_vn);
-		ds_map_destroy(_map_vt);
-		ds_map_destroy(_map_f);
-			
+		
 		return [ _mtl, _obj ];
 	}
 	
-	static serializeObject = function(_object) {
-		if( is(_object, __3dObject)) return serializeMesh(_object);
+	static serializeObject = function(_object, _transform = noone) {
+		if( is(_object, __3dObject)) return serializeMesh(_object, _transform);
 		if(!is(_object, __3dGroup))  return [ "", "" ];
 		
 		var _mtl = "";
 		var _obj = "";
 		
+		var _trans = _object.transform;
+		if(_transform != noone)
+			_trans = _trans.applyTransform(_transform);
+		
 		for( var i = 0, n = array_length(_object.objects); i < n; i++ ) {
-			var _meshStr = serializeObject(_object.objects[i]);
+			var _meshStr = serializeObject(_object.objects[i], _trans);
 			_mtl += _meshStr[0];
 			_obj += _meshStr[1];
 		}
@@ -186,9 +204,19 @@ function Node_3D_Mesh_Export(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		var _obj       =  "# Pixel Composer\n";
 		if(_mat) _obj += $"mtllib {_mtlName}\n";
 		
+		_map_v  = ds_map_create();
+		_map_vn = ds_map_create();
+		_map_vt = ds_map_create();
+		_map_f  = ds_map_create();
+		
 		var _meshStr = serializeObject(_mesh);
 		_mtl += _meshStr[0];
 		_obj += _meshStr[1];
+		
+		ds_map_destroy(_map_v);
+		ds_map_destroy(_map_vn);
+		ds_map_destroy(_map_vt);
+		ds_map_destroy(_map_f);
 		
 		file_text_write_all(_path, _obj);
 		if(_mat) file_text_write_all(_mtlPath, _mtl);
