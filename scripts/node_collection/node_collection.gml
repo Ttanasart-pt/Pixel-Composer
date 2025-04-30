@@ -634,6 +634,21 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		return self;
 	}
 	
+	static getPreviewValues = function() {
+		if(thumbnail_node != noone) return thumbnail_node.getInputData(0);
+		if(preview_channel < 0 || preview_channel >= array_length(outputs)) return noone;
+		
+		var _type = outputs[preview_channel].type;
+		if(_type != VALUE_TYPE.surface && _type != VALUE_TYPE.dynaSurface)
+			return noone;
+		
+		var val = outputs[preview_channel].getValue();
+		if(is_struct(val) && is(val, dynaSurf))
+			val = array_safe_get_fast(val.surfaces, 0, noone);
+		
+		return val;
+	}
+	
 	////- CACHE
 	
 	static clearCache = function() { array_foreach(getNodeList(), function(node) /*=>*/ { node.clearCache(); }); }
