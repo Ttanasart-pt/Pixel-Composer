@@ -823,8 +823,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	    menu_nodes_group        = MENU_ITEMS.graph_group;
 	    menu_node_canvas        = MENU_ITEMS.graph_canvas;
 	    
-	    menu_nodes_frame        = MENU_ITEMS.graph_add_Node_Frame;
 	    menu_node_transform     = MENU_ITEMS.graph_add_Node_Transform;
+	    menu_nodes_frame        = MENU_ITEMS.graph_add_Node_Frame;
 	    menu_nodes_blend        = MENU_ITEMS.graph_add_Node_Blend;
 	    menu_nodes_compose      = MENU_ITEMS.graph_add_Node_Composite;
 	    menu_nodes_array        = MENU_ITEMS.graph_add_Node_Array;
