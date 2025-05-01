@@ -100,7 +100,7 @@ function Mesh() constructor {
 		}
 		
 		var _spath = connect_index_pairs(_smap);
-		if(_spath[0] == _spath[array_length(_spath) - 1]) array_pop(_spath);
+		if(_spath[0] == array_last(_spath)) array_pop(_spath);
 		
 		var   path = array_create(array_length(_spath));
 		for( var i = 0, n = array_length(_spath); i < n; i++ )
@@ -188,13 +188,13 @@ function connect_index_pairs(index_pairs) {
                 connected = true;
                 break;
                 
-            } else if (result[array_length(result) - 1] == first_value) {
+            } else if (array_last(result) == first_value) {
                 array_push(result, second_value);
                 array_delete(index_pairs, i, 1);
                 connected = true;
                 break;
                 
-            } else if (result[array_length(result) - 1] == second_value) {
+            } else if (array_last(result) == second_value) {
                 array_push(result, first_value);
                 array_delete(index_pairs, i, 1);
                 connected = true;

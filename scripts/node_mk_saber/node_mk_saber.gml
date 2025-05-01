@@ -88,7 +88,7 @@ function Node_MK_Saber(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			if(IS_FIRST_FRAME)
 				fixed_length = point_distance(_pnt1[0], _pnt1[1], _pnt2[0], _pnt2[1]);
 			else if(!array_empty(_prevArr)){
-				var _prev = _prevArr[array_length(_prevArr) - 1];
+				var _prev = array_last(_prevArr);
 				
 				var _pr1x = _prev[2][0];
 				var _pr1y = _prev[2][1];

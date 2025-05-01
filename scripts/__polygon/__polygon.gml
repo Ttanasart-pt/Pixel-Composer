@@ -5,7 +5,7 @@ function polygon_simplify(points, tolerance = 4) {
 		if(points[i].equal(points[i - 1]))
 			array_delete(points, i, 1);
 	}
-	if(points[0].equal(points[array_length(points) - 1]))
+	if(points[0].equal(array_last(points)))
 		array_pop(points);
 	
 	var remSt = ds_stack_create();

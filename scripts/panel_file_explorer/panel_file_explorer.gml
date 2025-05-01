@@ -538,7 +538,7 @@ function Panel_File_Explorer() : PanelContent() constructor {
 			} else {
 				if(key_mod_press(SHIFT)) {
 					if(!array_empty(file_selectings)) {
-						var _frm = file_selectings[array_length(file_selectings) - 1];
+						var _frm = array_last(file_selectings);
 						var _to  = file_hovering;
 						
 						if(is(_frm, ExpFile) && is(_to, ExpFile) && _frm.parent && _frm.parent == _to.parent) {

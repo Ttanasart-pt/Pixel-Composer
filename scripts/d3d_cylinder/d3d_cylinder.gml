@@ -22,7 +22,7 @@ function __3dCylinder(radius = 0.5, height = 1, sides = 8, smooth = false) : __3
 			var a0 = (i + 0) / sides * 360;
 			var a1 = (i + 1) / sides * 360;
 			
-			var _r0 = radius * profiles[array_length(profiles) - 1];
+			var _r0 = radius * array_last(profiles);
 			var _r1 = radius * profiles[0];
 				
 			var x0 = lengthdir_x(1, a0);

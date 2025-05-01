@@ -408,7 +408,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				tool_grabbing = [];
 				for( var i = 0, n = array_length(groomed.hairs); i < n; i++ ) {
 					var h = groomed.hairs[i];
-					var p = h.points[array_length(h.points) - 1];
+					var p = array_last(h.points);
 						
 					var d = point_distance(p.x, p.y, tool_mx, tool_my);
 					if(d > rad * (1 + fall)) continue;

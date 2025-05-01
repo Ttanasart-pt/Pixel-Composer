@@ -95,7 +95,7 @@ for( var i = 0, n = array_length(contest_message_req); i < n; i++ ) {
 		nicknames[? aut] = [ http_request(url, "GET", discord_map, ""), msg.author.username ];
 	}
 	
-	thr.title = msgs[array_length(msgs) - 1];
+	thr.title = array_last(msgs);
 	thr.title.meta = {};
 	
 	var content = thr.title.content;

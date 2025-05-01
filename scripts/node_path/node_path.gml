@@ -579,7 +579,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			
 			var _dis = point_distance(weight_drag_sx, weight_drag_sy, _mmx, _mmy) / _s;
 			attributes.weight[weight_drag][1] = _dis;
-			if(path_loop && weight_drag == 0) attributes.weight[array_length(attributes.weight) - 1][1] = _dis;
+			if(path_loop && weight_drag == 0) array_last(attributes.weight)[1] = _dis;
 			
 			updateLength();
 			

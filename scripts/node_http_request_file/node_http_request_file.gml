@@ -22,7 +22,7 @@ function Node_HTTP_Request_File(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		downloaded_size = 0;
 		
 		var spl = string_split(_addr, "/");
-		attributes.temp_path = spl[array_length(spl) - 1];
+		attributes.temp_path = array_last(spl);
 		
 		asyncCall(http_get_file(_addr, attributes.temp_path), function(param, data) /*=>*/ {
 			var sta = data[? "status"];

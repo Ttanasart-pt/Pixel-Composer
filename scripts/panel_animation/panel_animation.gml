@@ -1065,7 +1065,7 @@ function Panel_Animation() : PanelContent() constructor {
                 if(array_length(animator.values) == 1) oy[ki] = sy;
             }
                 
-            var key_last = animator.values[array_length(animator.values) - 1];
+            var key_last = array_last(animator.values);
             var t_last = (key_last.time + 1) * timeline_scale + timeline_shift;
                 
             if(key_last.time < TOTAL_FRAMES) {
@@ -1228,7 +1228,7 @@ function Panel_Animation() : PanelContent() constructor {
                 }
             }
             
-            key_next = prop.animator.values[array_length(prop.animator.values) - 1];
+            key_next = array_last(prop.animator.values);
             if(key_next.time < TOTAL_FRAMES) {
                 draw_set_color(key_next.value);
                 draw_rectangle(key_next.dopesheet_x, _gy0, bar_show_w, _gy1, 0);
@@ -1324,7 +1324,7 @@ function Panel_Animation() : PanelContent() constructor {
         
         if((animator.prop.on_end == KEYFRAME_END.loop || animator.prop.on_end == KEYFRAME_END.ping) && array_length(key_list) > 1) {
             var keyframe_s = animator.prop.loop_range == -1? key_list[0].time : key_list[array_length(key_list) - 1 - animator.prop.loop_range].time;
-            var keyframe_e = key_list[array_length(key_list) - 1].time;
+            var keyframe_e = array_last(key_list).time;
                                 
             var ks_x = (keyframe_s + 1) * timeline_scale + timeline_shift;
             var ke_x = (keyframe_e + 1) * timeline_scale + timeline_shift;

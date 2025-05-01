@@ -34,7 +34,7 @@ function Node_MIDI_In(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		
 		var amo = array_length(inputs);
 		if(buttonTextIconInstant(amo > 1, THEME.button_hide_fill, _x + _w - bw, _y + ui(8), bw, bh, _m, _focus, _hover, "", THEME.minus, __txt("Remove"), COLORS._main_value_negative) == 2) {
-			var _out = outputs[array_length(outputs) - 1];
+			var _out = array_last(outputs);
 			for( var i = 0, n = array_length(_out.value_to); i < n; i++ )
 				_out.value_to[i].removeFrom();
 			

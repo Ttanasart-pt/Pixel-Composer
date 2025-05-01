@@ -145,7 +145,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			return; 
 		}
 		
-		var _len = max(TOTAL_FRAMES, values[array_length(values) - 1].time);
+		var _len = max(TOTAL_FRAMES, array_last(values).time);
 		key_map_mode = prop.on_end;
 		
 		if(array_length(key_map) != _len)

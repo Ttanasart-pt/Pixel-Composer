@@ -924,7 +924,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                 
                 var _s = graph_s;
                 
-                graph_s_to = clamp(graph_s_to * (1 + dy), scale[0], scale[array_length(scale) - 1]);
+                graph_s_to = clamp(graph_s_to * (1 + dy), scale[0], array_last(scale));
                 graph_s    = graph_s_to;
                 
                 if(_s != graph_s) {
@@ -1001,7 +1001,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	                    }
 	                }
 	            } else
-	            	graph_s_to = clamp(graph_s_to + MOUSE_WHEEL * .1, scale[0], scale[array_length(scale) - 1]);
+	            	graph_s_to = clamp(graph_s_to + MOUSE_WHEEL * .1, scale[0], array_last(scale));
             }
             
             graph_s = lerp_float(graph_s, graph_s_to, PREFERENCES.graph_zoom_smoooth);
