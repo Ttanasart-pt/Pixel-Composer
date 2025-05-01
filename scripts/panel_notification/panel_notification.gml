@@ -4,7 +4,7 @@
 		registerFunction("Notifications", "Clear warning messages",		"",   MOD_KEY.none,	notification_clear_log		).setMenu("noti_clear_log");
 		registerFunction("Notifications", "Clear all notifications",	"",   MOD_KEY.none,	notification_clear_warning	).setMenu("noti_clear_warning");
 		
-		registerFunction("Notifications", "Open log file",				"",   MOD_KEY.none,	notification_open_log		).setMenu("noti_open_log");
+		registerFunction("Notifications", "Open log folder....",		"",   MOD_KEY.none,	notification_open_log		).setMenu("noti_open_log");
 		
 	}
 	
@@ -28,8 +28,6 @@ function Panel_Notification() : PanelContent() constructor {
 	show_time = false;
 	
 	rightClickMenu = [ 
-		menuItem(__txtx("noti_copy_message",   "Copy notification message"), function() /*=>*/ { if(noti_selecting == noone) return; clipboard_set_text(noti_selecting.txt); }, THEME.copy), 
-		-1, 
 		MENU_ITEMS.noti_clear_all,
 		MENU_ITEMS.noti_clear_log,
 		MENU_ITEMS.noti_clear_warning,
@@ -38,6 +36,13 @@ function Panel_Notification() : PanelContent() constructor {
 		-1,
 		MENU_ITEMS.noti_open_log,
 	];
+	
+	rightClickMenu_item = [
+		menuItem(__txtx("noti_copy_message",   "Copy notification message"), function() /*=>*/ { if(noti_selecting == noone) return; clipboard_set_text(noti_selecting.txt); }, THEME.copy), 
+		-1, 
+	]
+	
+	array_append(rightClickMenu_item, rightClickMenu);
 	
 	function onResize() {
 		sp_noti.resize(w - padding * 2, h - padding * 2);
@@ -57,6 +62,9 @@ function Panel_Notification() : PanelContent() constructor {
 		draw_set_font(f_p3);
 		var timeW = string_width("00:00:00");
 		
+		if(mouse_press(mb_right, pFOCUS))
+			noti_selecting = noone;
+						
 		for( var i = 0; i < amo; i++ ) {
 			var index = amo - 1 - i;
 			var noti = STATUSES[| index];
@@ -158,6 +166,6 @@ function Panel_Notification() : PanelContent() constructor {
 		sp_noti.draw(px, py, mx - px, my - py);
 		
 		if(mouse_press(mb_right, pFOCUS))
-			menuCall("notification_log_menu", rightClickMenu);
+			menuCall("notification_log_menu", noti_selecting == noone? rightClickMenu : rightClickMenu_item);
 	}
 }

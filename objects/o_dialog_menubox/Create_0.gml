@@ -97,8 +97,8 @@ event_inherited();
 		dialog_w += show_icon * ui(32);
 		
 		var _mon  = winMan_getData();
-		var _maxw = PREFERENCES.multi_window? _mon[6] - WIN_X : WIN_W;
-		var _maxh = PREFERENCES.multi_window? _mon[7] - WIN_Y : WIN_H;
+		var _maxw = WIN_W;
+		var _maxh = WIN_H;
 		
 		dialog_y = min(dialog_y, _maxh - dialog_h - 2);
 		
@@ -111,22 +111,6 @@ event_inherited();
 		mouse_init_inside = point_in_rectangle(mouse_mx, mouse_my, dialog_x, dialog_y, dialog_x + dialog_w, dialog_y + dialog_h);
 		ready = true;
 		
-		// if(PREFERENCES.multi_window) {
-		// 	var _wx = winwin_get_x_safe(WINDOW_ACTIVE) + dialog_x;
-		// 	var _wy = winwin_get_y_safe(WINDOW_ACTIVE) + dialog_y;
-			
-		// 	if(window == noone || !winwin_exists(window)) {
-		// 		var _cfg = winwin_config_ext("", winwin_kind_borderless, false, false);
-		// 		window   = winwin_create_ext(_wx, _wy, dialog_w, dialog_h, _cfg);
-				
-		// 	} else {
-		// 		winwin_set_position_safe(window, _wx, _wy);
-		// 		winwin_set_size_safe(window, dialog_w, dialog_h);
-		// 	}
-			
-		// 	dialog_x = 0;
-		// 	dialog_y = 0;
-		// }
 	}
 	
 	function getContextPanel() { return is(context, PanelContent)? context.panel : context; }

@@ -3,10 +3,10 @@
 #macro DIALOG_DRAW_BG    draw_sprite_stretched(THEME.dialog, 0, dialog_x - 8, dialog_y - 8, dialog_w + 16, dialog_h + 16);
 #macro DIALOG_DRAW_FOCUS draw_sprite_stretched_ext(THEME.dialog, 1, dialog_x - 8, dialog_y - 8, dialog_w + 16, dialog_h + 16, COLORS._main_accent, 1);
 
-#macro DIALOG_WINCLEAR  if(window != noone) { draw_clear(COLORS.panel_bg_clear, 0); }
-#macro DIALOG_WINCLEAR1 if(window != noone) { draw_clear(COLORS.panel_bg_clear, 1); }
-#macro DIALOG_PREDRAW   if(window != noone) {  }
-#macro DIALOG_POSTDRAW  if(window != noone) {  }
+#macro DIALOG_WINCLEAR  //
+#macro DIALOG_WINCLEAR1 //
+#macro DIALOG_PREDRAW   //
+#macro DIALOG_POSTDRAW  //
 
 #region data
 	on_top    = false;
@@ -28,7 +28,6 @@
 	anchor    = ANCHOR.none;
 	
 	title  = "dialog";
-	window = noone;
 	window_drawing = false;
 	
 	title_height = 64;
@@ -64,76 +63,32 @@
 		mouse_active = true;
 		if(!draggable) return;
 		
-		WINDOW_ACTIVE = window;
+		if(dialog_dragging) {
+			var _dx = dialog_drag_sx + mouse_mx - dialog_drag_mx;
+			var _dy = dialog_drag_sy + mouse_my - dialog_drag_my;
+			
+			var _wx = window_get_x();
+			var _wy = window_get_y();
+			
+			dialog_x = clamp(_dx, ui(16) - dialog_w, WIN_W - ui(16));
+			dialog_y = clamp(_dy, ui(16) - dialog_h, WIN_H - ui(16));
+			
+			if(mouse_release(mb_left))
+				dialog_dragging = false;
+		}
 		
-		if(window == noone) {
-			if(dialog_dragging) {
-				var _dx = dialog_drag_sx + mouse_mx - dialog_drag_mx;
-				var _dy = dialog_drag_sy + mouse_my - dialog_drag_my;
-				
-				var _wx = window_get_x();
-				var _wy = window_get_y();
-				
-				dialog_x = clamp(_dx, ui(16) - dialog_w, WIN_W - ui(16));
-				dialog_y = clamp(_dy, ui(16) - dialog_h, WIN_H - ui(16));
-					
-				// if(PREFERENCES.multi_window && !point_in_rectangle(mouse_raw_x, mouse_raw_y, _wx, _wy, _wx + WIN_W, _wy + WIN_H)) {
-				// 	o_main.dialog_popup_to = 1;
-				// 	o_main.dialog_popup_x  = mouse_mx;
-				// 	o_main.dialog_popup_y  = mouse_my;
-					
-				// 	if(mouse_release(mb_left)) {
-				// 		var _cfg = winwin_config_ext(title, winwin_kind_borderless, false, true);
-				// 		window   = winwin_create_ext(_wx + _dx, _wy + _dy, dialog_w, dialog_h, _cfg);
-				// 		dialog_x = 0;
-				// 		dialog_y = 0;
-				// 	}
-				// }
-				
-				if(mouse_release(mb_left))
-					dialog_dragging = false;
+		if(mouse_draggable && !dialog_resizing && point_in_rectangle(mouse_mx, mouse_my, dialog_x, dialog_y, dialog_x + dialog_w, dialog_y + title_height)) {
+			mouse_active = false;
+			if(mouse_press(mb_left, sFOCUS)) {
+				dialog_dragging = true;
+				dialog_drag_sx  = dialog_x;
+				dialog_drag_sy  = dialog_y;
+				dialog_drag_mx  = mouse_mx;
+				dialog_drag_my  = mouse_my;
 			}
-			
-			if(mouse_draggable && !dialog_resizing && point_in_rectangle(mouse_mx, mouse_my, dialog_x, dialog_y, dialog_x + dialog_w, dialog_y + title_height)) {
-				mouse_active = false;
-				if(mouse_press(mb_left, sFOCUS)) {
-					dialog_dragging = true;
-					dialog_drag_sx  = dialog_x;
-					dialog_drag_sy  = dialog_y;
-					dialog_drag_mx  = mouse_mx;
-					dialog_drag_my  = mouse_my;
-				}
-			}
-			
-		} 
-		// else {
-			
-		// 	if(dialog_dragging) {
-		// 		var _dx = dialog_drag_sx + mouse_raw_x - dialog_drag_mx;
-		// 		var _dy = dialog_drag_sy + mouse_raw_y - dialog_drag_my;
-				
-		// 		winwin_set_position_safe(window, _dx, _dy);
-				
-		// 		if(mouse_release(mb_left))
-		// 			dialog_dragging = false;
-		// 	}
-			
-		// 	if(mouse_draggable && point_in_rectangle(mouse_mx, mouse_my, 0, 0, dialog_w, title_height)) {
-		// 		mouse_active = false;
-		// 		// print($"{mouse_mx}, {mouse_my} / {mouse_press(mb_left, sFOCUS)}");
-				
-		// 		if(mouse_press(mb_left, sFOCUS)) {
-		// 			dialog_dragging = true;
-		// 			dialog_drag_sx  = winwin_get_x_safe(window);
-		// 			dialog_drag_sy  = winwin_get_y_safe(window);
-		// 			dialog_drag_mx  = mouse_raw_x;
-		// 			dialog_drag_my  = mouse_raw_y;
-		// 		}
-		// 	}
-		// }
-		
+		}
+	
 		mouse_draggable = true;
-		WINDOW_ACTIVE = noone;
 	}
 	
 	dialog_resizable = false;
@@ -154,136 +109,81 @@
 		if(!active) return;
 		if(!dialog_resizable) return;
 		
-		if(window == noone) {
-			if(dialog_resizing != 0) {
+		if(dialog_resizing != 0) {
+			
+			if(dialog_resizing & 0b0001) {
+				var ww = dialog_resiz_sw + (mouse_mx - dialog_resiz_mx);
+				    ww = clamp(ww, dialog_w_min, dialog_w_max);
+				dialog_w = ww;
+			} 
+			
+			if(dialog_resizing & 0b0010) {
+				var hh = dialog_resiz_sh + (mouse_my - dialog_resiz_my);
+				    hh = clamp(hh, dialog_h_min, dialog_h_max);
+				dialog_h = hh;
+			}
+			
+			if(dialog_resizing & 0b0100) {
+				var ww = dialog_resiz_sw - (mouse_mx - dialog_resiz_mx);
+				    ww = clamp(ww, dialog_w_min, dialog_w_max);
+				dialog_x = dialog_resiz_sx - (ww - dialog_resiz_sw);
+				dialog_w = ww;
+			} 
+			
+			if(dialog_resizing & 0b1000) {
+				var hh = dialog_resiz_sh - (mouse_my - dialog_resiz_my);
+				    hh = clamp(hh, dialog_h_min, dialog_h_max);
 				
-				if(dialog_resizing & 0b0001) {
-					var ww = dialog_resiz_sw + (mouse_mx - dialog_resiz_mx);
-					    ww = clamp(ww, dialog_w_min, dialog_w_max);
-					dialog_w = ww;
-				} 
+				dialog_y = dialog_resiz_sy - (hh - dialog_resiz_sh);
+				dialog_h = hh;
+			}
+			
+			switch(dialog_resizing) {
+				case 0b0001 : case 0b0100 : CURSOR = cr_size_we;   break;
+				case 0b0010 : case 0b1000 : CURSOR = cr_size_ns;   break;
+				case 0b0011 : case 0b1100 : CURSOR = cr_size_nwse; break;
+				case 0b1001 : case 0b0110 : CURSOR = cr_size_nesw; break;
+			}
+			
+			if(mouse_release(mb_left)) dialog_resizing = 0;
+		}
+		
+		if(sHOVER) {
+			var _x0 = dialog_x;
+			var _y0 = dialog_y;
+			var _x1 = dialog_x + dialog_w;
+			var _y1 = dialog_y + dialog_h;
+			var _sel_mask = 0;
+			
+			if(point_in_rectangle(mouse_mx, mouse_my, _x0, _y0, _x1, _y1)) {
+				if(distance_to_line(mouse_mx, mouse_my, _x1, _y0, _x1, _y1) < DIALOG_PAD) _sel_mask |= 1 << 0;
+				if(distance_to_line(mouse_mx, mouse_my, _x0, _y1, _x1, _y1) < DIALOG_PAD) _sel_mask |= 1 << 1;
+				if(distance_to_line(mouse_mx, mouse_my, _x0, _y0, _x0, _y1) < DIALOG_PAD) _sel_mask |= 1 << 2;
+				if(distance_to_line(mouse_mx, mouse_my, _x0, _y0, _x1, _y0) < DIALOG_PAD) _sel_mask |= 1 << 3;
+			}
+			
+			if(_sel_mask != 0) {
+				mouse_active = false;
 				
-				if(dialog_resizing & 0b0010) {
-					var hh = dialog_resiz_sh + (mouse_my - dialog_resiz_my);
-					    hh = clamp(hh, dialog_h_min, dialog_h_max);
-					dialog_h = hh;
-				}
-				
-				if(dialog_resizing & 0b0100) {
-					var ww = dialog_resiz_sw - (mouse_mx - dialog_resiz_mx);
-					    ww = clamp(ww, dialog_w_min, dialog_w_max);
-					dialog_x = dialog_resiz_sx - (ww - dialog_resiz_sw);
-					dialog_w = ww;
-				} 
-				
-				if(dialog_resizing & 0b1000) {
-					var hh = dialog_resiz_sh - (mouse_my - dialog_resiz_my);
-					    hh = clamp(hh, dialog_h_min, dialog_h_max);
-					
-					dialog_y = dialog_resiz_sy - (hh - dialog_resiz_sh);
-					dialog_h = hh;
-				}
-				
-				switch(dialog_resizing) {
+				switch(_sel_mask) {
 					case 0b0001 : case 0b0100 : CURSOR = cr_size_we;   break;
 					case 0b0010 : case 0b1000 : CURSOR = cr_size_ns;   break;
 					case 0b0011 : case 0b1100 : CURSOR = cr_size_nwse; break;
 					case 0b1001 : case 0b0110 : CURSOR = cr_size_nesw; break;
 				}
 				
-				if(mouse_release(mb_left)) dialog_resizing = 0;
-			}
-			
-			if(sHOVER) {
-				var _x0 = dialog_x;
-				var _y0 = dialog_y;
-				var _x1 = dialog_x + dialog_w;
-				var _y1 = dialog_y + dialog_h;
-				var _sel_mask = 0;
-				
-				if(point_in_rectangle(mouse_mx, mouse_my, _x0, _y0, _x1, _y1)) {
-					if(distance_to_line(mouse_mx, mouse_my, _x1, _y0, _x1, _y1) < DIALOG_PAD) _sel_mask |= 1 << 0;
-					if(distance_to_line(mouse_mx, mouse_my, _x0, _y1, _x1, _y1) < DIALOG_PAD) _sel_mask |= 1 << 1;
-					if(distance_to_line(mouse_mx, mouse_my, _x0, _y0, _x0, _y1) < DIALOG_PAD) _sel_mask |= 1 << 2;
-					if(distance_to_line(mouse_mx, mouse_my, _x0, _y0, _x1, _y0) < DIALOG_PAD) _sel_mask |= 1 << 3;
-				}
-				
-				if(_sel_mask != 0) {
-					mouse_active = false;
-					
-					switch(_sel_mask) {
-						case 0b0001 : case 0b0100 : CURSOR = cr_size_we;   break;
-						case 0b0010 : case 0b1000 : CURSOR = cr_size_ns;   break;
-						case 0b0011 : case 0b1100 : CURSOR = cr_size_nwse; break;
-						case 0b1001 : case 0b0110 : CURSOR = cr_size_nesw; break;
-					}
-					
-					if(mouse_press(mb_left, sFOCUS)) {
-						dialog_resizing = _sel_mask;
-						dialog_resiz_sx = dialog_x;
-						dialog_resiz_sy = dialog_y;
-						dialog_resiz_sw = dialog_w;
-						dialog_resiz_sh = dialog_h;
-						dialog_resiz_mx = mouse_mx;
-						dialog_resiz_my = mouse_my;
-					}
+				if(mouse_press(mb_left, sFOCUS)) {
+					dialog_resizing = _sel_mask;
+					dialog_resiz_sx = dialog_x;
+					dialog_resiz_sy = dialog_y;
+					dialog_resiz_sw = dialog_w;
+					dialog_resiz_sh = dialog_h;
+					dialog_resiz_mx = mouse_mx;
+					dialog_resiz_my = mouse_my;
 				}
 			}
-			
-		} 
-		// else {
-		// 	WINDOW_ACTIVE = window;
-			
-		// 	var ww = dialog_resiz_sw;
-		// 	var hh = dialog_resiz_sh;
-			
-		// 	if(dialog_resizing & 1 << 0 != 0) {
-		// 		ww = dialog_resiz_sw + (mouse_raw_x - dialog_resiz_mx);
-		// 		ww = clamp(ww, dialog_w_min, dialog_w_max);
-		// 	} 
-			
-		// 	if(dialog_resizing & 1 << 1 != 0) {
-		// 		hh = dialog_resiz_sh + (mouse_raw_y - dialog_resiz_my);
-		// 		hh = clamp(hh, dialog_h_min, dialog_h_max);
-		// 	}
-			
-		// 	if(dialog_resizing != 0) {
-		// 		winwin_set_size_safe(window, ww, hh);
-		// 		if(mouse_release(mb_left)) dialog_resizing = 0;
-		// 	}
-			
-		// 	if(sHOVER && distance_to_line(mouse_mx, mouse_my, dialog_w, 0, dialog_w, dialog_h) < 12) {
-				
-		// 		mouse_active = false;
-		// 		CURSOR = cr_size_we;
-				
-		// 		if(mouse_press(mb_left, sFOCUS)) {
-		// 			dialog_resizing |= 1 << 0;
-		// 			dialog_resiz_sw = dialog_w;
-		// 			dialog_resiz_sh = dialog_h;
-		// 			dialog_resiz_mx = mouse_raw_x;
-		// 			dialog_resiz_my = mouse_raw_y;
-		// 		}
-		// 	} 
-				
-		// 	if(sHOVER && distance_to_line(mouse_mx, mouse_my, 0, dialog_h, dialog_w, dialog_h) < 12) {
-				
-		// 		mouse_active = false;
-		// 		if(CURSOR == cr_size_we) CURSOR = cr_size_nwse;
-		// 		else                     CURSOR = cr_size_ns;  
-				
-		// 		if(mouse_press(mb_left, sFOCUS)) {
-		// 			dialog_resizing |= 1 << 1;
-		// 			dialog_resiz_sw = dialog_w;
-		// 			dialog_resiz_sh = dialog_h;
-		// 			dialog_resiz_mx = mouse_raw_x;
-		// 			dialog_resiz_my = mouse_raw_y;
-		// 		}
-		// 	}
-			
-		// 	winwin_set_cursor(window, CURSOR);
-		// 	WINDOW_ACTIVE = noone;
-		// }
+		}
+		
 	}
 #endregion
 
@@ -301,26 +201,21 @@
 	
 	function checkFocus() {
 		if(!active) return;
-		WINDOW_ACTIVE = window;
 		
-		if(window == noone) {
-			var _mx = FILE_IS_DROPPING? FILE_DROPPING_X : mouse_mx;
-			var _my = FILE_IS_DROPPING? FILE_DROPPING_Y : mouse_my;
-			
-			if(point_in(_mx, _my) && depth <= DIALOG_DEPTH_HOVER) {
-				DIALOG_DEPTH_HOVER = depth;
-				HOVER = self.id;
-			}
-		} 
+		var _mx = FILE_IS_DROPPING? FILE_DROPPING_X : mouse_mx;
+		var _my = FILE_IS_DROPPING? FILE_DROPPING_Y : mouse_my;
 		
-		WINDOW_ACTIVE = noone;
+		if(point_in(_mx, _my) && depth <= DIALOG_DEPTH_HOVER) {
+			DIALOG_DEPTH_HOVER = depth;
+			HOVER = self.id;
+		}
+		
 	}
 	
 	function checkDepth() {
 		if(!active) return;
 		if(HOVER != self.id) return;
 		
-		WINDOW_ACTIVE = window;
 		
 		if(mouse_press(mb_any, true, true)) {
 			setFocus(self.id, "Dialog");
@@ -328,7 +223,6 @@
 			with(_p_dialog) other.depth = min(other.depth, depth - 1);
 		}
 		
-		WINDOW_ACTIVE = noone;
 	}
 	
 	function onFocusBegin() {}

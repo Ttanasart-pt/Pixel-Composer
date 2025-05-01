@@ -48,8 +48,7 @@
 	BUILD_NUMBER	= 119008;
 	PREF_VERSION    = 1_17_1;
 	
-	var _vsp = string_split(VERSION_STRING, ".");
-	var _lsp = array_last(_vsp);
+	var _lsp = array_last(string_split(VERSION_STRING, "."));
 	NIGHTLY  = string_length(_lsp) == 3;
 	
 	HOTKEYS			= {};
@@ -66,28 +65,27 @@
 	globalvar FOCUS, FOCUS_STR, FOCUS_CONTENT, FOCUS_STACK, HOVER, HOVERING_ELEMENT, _HOVERING_ELEMENT;
 	globalvar DOUBLE_CLICK, DOUBLE_CLICK_POS;
 	globalvar DIALOG_CLICK;
-	globalvar WINDOW_ACTIVE, TOOLTIP_WINDOW;
+	globalvar TOOLTIP_WINDOW;
 	
-	DOUBLE_CLICK_POS = [ 0, 0 ];
-	DOUBLE_CLICK  = false;
+	DOUBLE_CLICK_POS  = [ 0, 0 ];
+	DOUBLE_CLICK      = false;
 	
-	FOCUS	      = noone;
-	FOCUS_CONTENT = noone;
-	FOCUS_STR	  = "";
-	FOCUS_STACK   = ds_stack_create();
+	FOCUS	          = noone;
+	FOCUS_CONTENT     = noone;
+	FOCUS_STR	      = "";
+	FOCUS_STACK       = ds_stack_create();
 	
 	HOVER             = noone;
 	HOVERING_ELEMENT  = noone;
 	_HOVERING_ELEMENT = noone;
 	
-	DIALOG_CLICK = true;
+	DIALOG_CLICK      = true;
 	
 	globalvar ADD_NODE_PAGE, ADD_NODE_SCROLL, ADD_NODE_SUBPAGE;
 	
 	ADD_NODE_PAGE    = 0;
 	ADD_NODE_SUBPAGE = 0;
 	ADD_NODE_SCROLL  = 0;
-	WINDOW_ACTIVE    = noone;
 	TOOLTIP_WINDOW   = noone;
 #endregion
 

@@ -36,9 +36,7 @@ if(!is_undefined(content) && content != noone) { // content
 	surface_set_target(panel);
 		draw_clear(COLORS.panel_bg_clear);
 		
-		WINDOW_ACTIVE = window;
 		content.drawContent(panel);
-		WINDOW_ACTIVE = noone;
 		
 		gpu_set_blendmode(bm_subtract);
 		draw_surface_safe(mask_surface);
@@ -51,7 +49,7 @@ if(!is_undefined(content) && content != noone) { // content
 }
 
 if(content.showHeader) {
-	var _tx = window == noone? dialog_x + ui(32) : dialog_x + ui(10);
+	var _tx = dialog_x + ui(32);
 	
 	draw_sprite_stretched_ext(THEME.ui_panel_bg, 3, dialog_x + 3, dialog_y + 3, dialog_w - 6, title_height + 2, COLORS._main_icon_light, 1);
 	draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
@@ -91,7 +89,7 @@ if(content.showHeader) {
 	var ss  = ui(20);
 	var sc  = 0.75;
 	
-	if(window == noone && instanceof(content) != "Panel_Menu") {
+	if(instanceof(content) != "Panel_Menu") {
 		var b = buttonInstant(THEME.button_hide_fill, bx, by, ss, ss, [ mouse_mx, mouse_my ], sHOVER, sFOCUS, txt, THEME.pin, ind, cc, 1, sc);
 		if(b == 2) destroy_on_click_out = !destroy_on_click_out;
 	}
@@ -105,7 +103,7 @@ if(content.showHeader) {
 	var ss  = ui(28);
 	var sc  = 1;
 	
-	if(window == noone && instanceof(content) != "Panel_Menu") {
+	if(instanceof(content) != "Panel_Menu") {
 		var b = buttonInstant(THEME.button_hide_fill, bx, by, ss, ss, [ mouse_mx, mouse_my ], sHOVER, sFOCUS, txt, THEME.pin, ind, cc, 1, sc);
 		if(b == 2) destroy_on_click_out = !destroy_on_click_out;
 	}
@@ -113,7 +111,7 @@ if(content.showHeader) {
 
 if(DIALOG_SHOW_FOCUS) DIALOG_DRAW_FOCUS
 
-if(sFOCUS && window == noone && !m_in && m_ot) {
+if(sFOCUS && !m_in && m_ot) {
 	var p  = DIALOG_PAD;
 	var p2 = DIALOG_PAD * 2;
 	draw_sprite_stretched_ext(THEME.dialog, 1, dialog_x - p, dialog_y - p, dialog_w + p2, dialog_h + p2, c_white, 0.4);

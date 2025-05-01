@@ -135,8 +135,6 @@ function Panel_Preview_Window() : PanelContent() constructor {
 			else if(scale > 0.25)	inc = 0.25;
 			else					inc = 0.05;
 			
-			//if(WINDOW_ACTIVE != noone) print($"{winwin_mouse_wheel_down(WINDOW_ACTIVE)} : {winwin_mouse_wheel_up(WINDOW_ACTIVE)} : {random(1)}");
-			
 			var s = scale;
 			if(MOUSE_WHEEL != 0) {
 				if(MOUSE_WHEEL == -1) {

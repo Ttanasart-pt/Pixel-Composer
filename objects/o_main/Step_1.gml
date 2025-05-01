@@ -18,8 +18,6 @@ _FILE_DROPPED     = false;
 
 #region minimize
 	if(winMan_isMinimized()) {
-		// if(!minimized) game_set_speed(1, gamespeed_fps);
-		// minimized = true;
 		exit;
 		
 	} else if(!minimized)
@@ -30,16 +28,11 @@ _FILE_DROPPED     = false;
 		minimized = false;
 	}
 	
-	var foc = window_has_focus();
-	//if(HOVER && instance_exists(HOVER) && HOVER.window != noone) 
-	if(PREFERENCES.multi_window)
-		foc = true;
-	
+	var  foc     = window_has_focus();
 	var _fps_cur = game_get_speed(gamespeed_fps);
 	var _fps_tar = foc || IS_PLAYING? PREFERENCES.ui_framerate : PREFERENCES.ui_framerate_non_focus;
 	if(_fps_tar != _fps_cur) game_set_speed(_fps_tar, gamespeed_fps);
 	
-	WINDOW_ACTIVE = noone;
 #endregion
 
 #region fpss
@@ -101,17 +94,17 @@ _FILE_DROPPED     = false;
 	if(mouse_release(mb_any)) DIALOG_CLICK = true;
 	
 	HOVER = noone;
-	with(_p_dialog) checkMouse();		WINDOW_ACTIVE = noone;
+	with(_p_dialog) checkMouse();
 	
 	if(PANEL_MAIN != 0) PANEL_MAIN.stepBegin();
 	
 	DIALOG_DEPTH_HOVER = 0;
 	
-	with(_p_dialog) checkFocus();		WINDOW_ACTIVE = noone;
-	with(_p_dialog) checkDepth();		WINDOW_ACTIVE = noone;
+	with(_p_dialog) checkFocus();
+	with(_p_dialog) checkDepth();
 	
-	with(_p_dialog) doResize();			WINDOW_ACTIVE = noone;
-	with(_p_dialog) doDrag();			WINDOW_ACTIVE = noone;
+	with(_p_dialog) doResize();
+	with(_p_dialog) doDrag();
 	
 #endregion
 

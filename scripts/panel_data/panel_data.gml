@@ -909,7 +909,6 @@ function PanelContent() constructor {
 	
 	dragSurface = surface_create(1, 1);
 	showHeader  = true;
-	window      = noone;
 	
 	title_actions = [];
 	
@@ -947,7 +946,6 @@ function PanelContent() constructor {
 	function onStepBegin() {
 		mx = mouse_mx - x;
 		my = mouse_my - y;
-		window = WINDOW_ACTIVE;
 		
 		stepBegin();
 	}

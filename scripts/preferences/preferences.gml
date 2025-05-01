@@ -177,10 +177,6 @@
 	
 	#endregion
 	
-	#region EXPERIMENT
-		PREFERENCES.multi_window		= false;
-	#endregion
-	
 	#region PROJECT
 		PREFERENCES.project_animation_duration  = 30;
 		PREFERENCES.project_animation_framerate = 30;
@@ -406,6 +402,7 @@
 	}
 	
 	function PREF_APPLY() {
+		
 		if(PREFERENCES.double_click_delay > 1)
 			PREFERENCES.double_click_delay /= 60;
 		
@@ -415,62 +412,33 @@
 			instance_create_depth(0, 0, 0, addon_key_displayer);
 		}
 		
-		if(PREFERENCES.use_legacy_exception) resetException();
-		else                                 setException();
+		_=PREFERENCES.use_legacy_exception? resetException() : setException();
 		
-		var ww = PREFERENCES.window_fix? PREFERENCES.window_fix_width : PREFERENCES.window_width;
+		var ww = PREFERENCES.window_fix? PREFERENCES.window_fix_width  : PREFERENCES.window_width;
 		var hh = PREFERENCES.window_fix? PREFERENCES.window_fix_height : PREFERENCES.window_height;
 		window_minimize_size = [ ww, hh ];
 		
-		if(OS == os_macosx) {
-			
-			window_set_rectangle(display_get_width() / 2 - ww / 2, display_get_height() / 2 - hh / 2, ww, hh);
-			
-			if(PREFERENCES.window_maximize)
-				winMan_Maximize();
-				
-		} else if(!LOADING) {
+		var cx = display_get_width()  / 2;
+		var cy = display_get_height() / 2;
+		
+		if(OS == os_windows) {
 			var _monitors = display_measure_all();
-			var _monitor  = noone;
 			
 			if(is_array(_monitors))
 			for( var i = 0, n = array_length(_monitors); i < n; i++ ) {
 				var _m = _monitors[i];
 				if(!is_array(_m) || array_length(_m) < 10) continue;
 				
-				if(PREFERENCES.window_monitor == _m[9]) 
-					_monitor = _m;
+				if(PREFERENCES.window_monitor == _m[9]) {
+					cx = _m[0] + _m[2] / 2;
+					cy = _m[1] + _m[3] / 2;
+				}
 			}
-			
-			if(is_array(_monitor) && array_length(_monitor) >= 8)
-				window_set_rectangle(_monitor[0] + _monitor[2] / 2 - ww / 2, _monitor[1] + _monitor[3] / 2 - hh / 2, ww, hh);
-			else
-				window_set_rectangle(display_get_width() / 2 - ww / 2, display_get_height() / 2 - hh / 2, ww, hh);
-			
-			if(PREFERENCES.window_maximize)
-				winMan_Maximize();
-					
-			gameframe_set_shadow(PREFERENCES.window_shadow);
 		}
 		
+		window_set_rectangle(cx - ww / 2, cy - hh / 2, ww, hh);
+		if(PREFERENCES.window_maximize) winMan_Maximize();
 		window_refresh();
-		
-		var grav = struct_try_get(PREFERENCES, "physics_gravity", [ 0, 10 ]);
-		physics_world_gravity(array_safe_get_fast(grav, 0, 0), array_safe_get_fast(grav, 1, 10));
-		
-		if(MAC) PREFERENCES.multi_window = false;
-		
-		if(PREFERENCES.multi_window) {
-			// var _cfg = winwin_config_ext("", winwin_kind_borderless, true, false, winwin_main);
-			//     _cfg.clickthrough = true;
-			//     _cfg.noactivate   = true;
-			    // _cfg.thread       = true;
-			    
-			// if(TOOLTIP_WINDOW != noone && winwin_exists(TOOLTIP_WINDOW))
-			// 	winwin_destroy(TOOLTIP_WINDOW);
-			
-			// TOOLTIP_WINDOW = winwin_create(0, 0, display_get_width(), display_get_height(), _cfg);
-		}
 	}
 #endregion
 

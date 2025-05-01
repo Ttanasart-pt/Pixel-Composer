@@ -69,7 +69,7 @@ function winMan_isMinimized() {
 	return gameframe_is_natively_minimized();
 }
 
-function winMan_Maximize() {
+function winMan_Maximize() { 
 	INLINE
 	if(gameframe_is_natively_minimized()) return;
 	window_is_maximized = true;
