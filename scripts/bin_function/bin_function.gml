@@ -22,3 +22,17 @@ function dec_to_hex(dec, len = 1)  {
 	
     return hex;
 }
+
+function dec_to_bin(dec, len = 1)  {
+	static dig = "01";
+    var bin = "";
+	
+    if (dec < 0) len = max(len, ceil(logn(16, 2 * abs(dec))));
+ 
+    while (len-- || dec) {
+        bin = string_char_at(dig, (dec % 2) + 1) + bin;
+        dec = dec >> 1;
+    }
+	
+    return bin;
+}

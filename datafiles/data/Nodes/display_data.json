@@ -764,6 +764,7 @@
             "Node_String_Count",
             "Node_String_Delete",
             "Node_String_Change_Case",
+            "Node_Buffer_to_String",
             { "label": "/RegEx" },
             "Node_String_Regex_Match",
             "Node_String_Regex_Search",
@@ -875,7 +876,8 @@
             "Node_Surface_From_Buffer",
             
             { "label": "Buffer" },
-            "Node_Surface_To_Buffer"
+            "Node_Surface_To_Buffer",
+            "Node_Buffer_to_String"
         ]
     },
     {

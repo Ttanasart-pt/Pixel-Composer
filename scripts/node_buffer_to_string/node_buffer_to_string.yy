@@ -1,0 +1,14 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_buffer_to_string",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_buffer_to_string",
+  "parent":{
+    "name":"buffer",
+    "path":"folders/nodes/data/value/buffer.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+  "tags":[],
+}

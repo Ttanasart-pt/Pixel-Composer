@@ -205,7 +205,7 @@ void main() {
 		float str;
 		vec4  c;
 		
-		if(reposition == 1) stren /= iteration;
+		stren /= iteration;
 		
 		for(float i = 0.; i < iteration; i++) {
 			str    = stren * (i * _t);
@@ -215,6 +215,7 @@ void main() {
 			
 			ncol   = blend(ncol, c);
 		}
+		
 	} else {
 		samPos = shiftMap(samPos, stren);
 		ncol   = sampleTexture( gm_BaseTexture, samPos );
