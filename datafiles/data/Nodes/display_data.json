@@ -610,6 +610,7 @@
             "Node_Random_Tile",
             { "label": "/Others" },
             "Node_Box_Pattern",
+            "Node_Recursive_Subdiv",
             "Node_Quasicrystal",
             "Node_Pixel_Sampler",
             "Node_Julia_Set",

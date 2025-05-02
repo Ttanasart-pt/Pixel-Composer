@@ -11,52 +11,54 @@ function Node_Scale(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	manage_atlas = false;
 	
+	newActiveInput(4);
+	
+	////- Surfaces
+	
 	newInput(0, nodeValue_Surface("Surface In", self));
 	
-	newInput(1, nodeValue_Float("Scale", self, 1));
+	////- Scale
 	
-	newInput(2, nodeValue_Enum_Button("Mode", self,  0, [ "Upscale", "Scale to fit" ]));
+	newInput(2, nodeValue_Enum_Button( "Mode",                 self, 0, [ "Upscale", "Scale to fit" ]));
+	newInput(6, nodeValue_Enum_Button( "Fit Mode",             self, 0, [ "Stretch", "Minimum", "Maximum" ]));
+	newInput(1, nodeValue_Float(       "Scale",                self, 1));
+	newInput(3, nodeValue_Vec2(        "Target Dimension",     self, DEF_SURF));
+	newInput(5, nodeValue_Bool(        "Scale Atlas Position", self, true));
 	
-	newInput(3, nodeValue_Vec2("Target Dimension", self, DEF_SURF));
-	
-	newInput(4, nodeValue_Bool("Active", self, true));
-		active_index = 4;
-		
-	newInput(5, nodeValue_Bool("Scale Atlas Position", self, true));
+	// inputs 6
 		
 	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 4, 
 		["Surfaces", true], 0,
-		["Scale",	false], 2, 1, 3, 5, 
+		["Scale",	false], 2, 6, 1, 3, 5, 
 	];
 	
 	attribute_surface_depth();
 	attribute_interpolation();
-	
-	static step = function() {
-		var _surf = getSingleValue(0);
-		var _atlas = is_instanceof(_surf, SurfaceAtlas);
-		inputs[5].setVisible(_atlas);
-	}
 	
 	draw_transforms = [];
 	static drawOverlayTransform = function(_node) { return array_safe_get(draw_transforms, preview_index, noone); }
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var surf  = _data[0];
-		var scale = _data[1];
+		
 		var mode  = _data[2];
+		var fmode = _data[6];
+		var scale = _data[1];
 		var targ  = _data[3];
 		var _atlS = _data[5];
 		var cDep  = attrDepth();
 		
 		inputs[1].setVisible(mode == 0);
 		inputs[3].setVisible(mode == 1);
+		inputs[5].setVisible(is(surf, SurfaceAtlas));
+		inputs[6].setVisible(mode == 1);
 		
-		var isAtlas = is_instanceof(surf, SurfaceAtlas);
-		if(isAtlas && !is_instanceof(_outSurf, SurfaceAtlas))
+		var isAtlas = is(surf, SurfaceAtlas);
+		if(isAtlas && !is(_outSurf, SurfaceAtlas))
 			_outSurf = _data[0].clone(true);
+			
 		var _surf = isAtlas? _outSurf.getSurface() : _outSurf;
 		
 		var ww, hh, scx = 1, scy = 1;
@@ -70,36 +72,55 @@ function Node_Scale(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 				ww	= scale * _sw;
 				hh	= scale * _sh;
 				break;
+				
 			case 1 : 
 				scx = targ[0] / _sw;
 				scy = targ[1] / _sh;
-				ww	= targ[0];
-				hh	= targ[1];
+				
+				switch(fmode) {
+					case 0 : 
+						ww	= targ[0];
+						hh	= targ[1];
+						break;
+					
+					case 1 :
+						scx = min(scx, scy);
+						scy = scx;
+						ww  = _sw * scx;
+						hh  = _sh * scx;
+						break;
+						
+					case 2 :
+						scx = max(scx, scy);
+						scy = scx;
+						ww  = _sw * scx;
+						hh  = _sh * scx;
+						break;
+						
+				}
 				break;
 		}
 		
 		_surf = surface_verify(_surf, ww, hh, cDep);
 		
 		surface_set_shader(_surf);
-		shader_set_interpolation(_data[0]);
-		draw_surface_stretched_safe(_data[0], 0, 0, ww, hh);
+			shader_set_interpolation(surf);
+			draw_surface_stretched_safe(surf, 0, 0, ww, hh);
 		surface_reset_shader();
 		
 		draw_transforms[_array_index] = [ 0, 0, ww * _sw, hh * _sh, 0];
 		
-		if(isAtlas) {
-			if(_atlS) {
-				_outSurf.x = surf.x * scx;
-				_outSurf.y = surf.y * scy;
-			} else {
-				_outSurf.x = surf.x;
-				_outSurf.y = surf.y;
-			}
-			
-			_outSurf.setSurface(_surf);
-		} else 
-			_outSurf = _surf;
+		if(!isAtlas) return _surf;
 		
+		if(_atlS) {
+			_outSurf.x = surf.x * scx;
+			_outSurf.y = surf.y * scy;
+		} else {
+			_outSurf.x = surf.x;
+			_outSurf.y = surf.y;
+		}
+		
+		_outSurf.setSurface(_surf);
 		return _outSurf;
 	}
 }
