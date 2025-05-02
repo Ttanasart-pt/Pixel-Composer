@@ -1,5 +1,5 @@
 {
-    "name":          "Buffer to String",
+    "name":          "Buffer to Text",
     "spr":           "s_node_buffer_to_string",
     "baseNode":      "Node_Buffer_to_String",
     "pxc_version":    119010,

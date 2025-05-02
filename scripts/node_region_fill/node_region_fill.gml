@@ -13,23 +13,23 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	////- Surfaces
 	
-	newInput(0, nodeValue_Surface("Surface In", self));
-	newInput(1, nodeValue_Surface("Mask", self));
+	newInput(0, nodeValue_Surface( "Surface In", self));
+	newInput(1, nodeValue_Surface( "Mask",       self));
 	
 	////- Filter
 	
-	newInput(11, nodeValue_Bool("Color Filter", self, false));
-	newInput( 5, nodeValue_Color("Target Color", self, ca_white));
-	newInput( 6, nodeValue_Bool("Inner Only", self, false, "Only fill regions with surrounding pixels."));
+	newInput(11, nodeValue_Bool(  "Color Filter", self, false));
+	newInput( 5, nodeValue_Color( "Target Color", self, ca_white));
+	newInput( 6, nodeValue_Bool(  "Inner Only",   self, false, "Only fill regions with surrounding pixels."));
 	
 	////- Fill
 	
-	newInput( 8, nodeValue_Enum_Scroll("Fill Type", self,  0, [ "Random", "Color map", "Texture map", "Texture Coord", "Texture Index" ]));
-	newInput( 2, nodeValue_Palette("Fill Colors", self, array_clone(DEF_PALETTE)));
-	newInput( 9, nodeValue_Surface("Color Map", self));
-	newInput( 3, nodeValue_Bool("Fill", self, true));
-	newInput(10, nodeValue_Surface("Texture Map", self));
-	newInput(12, nodeValue_Rotation_Range("Random Rotation", self, [ 0, 0 ]));
+	newInput( 8, nodeValue_Enum_Scroll(    "Fill Type",       self, 0, [ "Random", "Color map", "Texture map", "Texture Coord", "Texture Index" ]));
+	newInput( 2, nodeValue_Palette(        "Fill Colors",     self, array_clone(DEF_PALETTE)));
+	newInput( 9, nodeValue_Surface(        "Color Map",       self));
+	newInput( 3, nodeValue_Bool(           "Fill",            self, true));
+	newInput(10, nodeValue_Surface(        "Texture Map",     self));
+	newInput(12, nodeValue_Rotation_Range( "Random Rotation", self, [ 0, 0 ]));
 	
 	////- Render
 	
@@ -40,27 +40,14 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 4, 
-		["Surfaces", false    ], 0, 1, 
+		["Surfaces", false], 0, 1, 
 		["Filter",   false, 11], 5, 6, 
-		["Fill",	 false    ], 8, 2, 9, 10, 12, 
-		["Render",	 false    ], 7, 
+		["Fill",	 false], 8, 2, 9, 10, 12, 
+		["Render",	 false], 7, 
 	];
 	
 	temp_surface = array_create(3);
 		
-	static step = function() {
-		var _filt = getInputData( 8);
-		var _fclr = getInputData(11);
-		
-		inputs[ 2].setVisible(_filt == 0);
-		inputs[ 9].setVisible(_filt == 1, _filt == 1);
-		inputs[10].setVisible(_filt == 2, _filt == 2);
-		inputs[12].setVisible(_filt == 2 || _filt == 3);
-		
-		inputs[ 5].setVisible(_fclr);
-		inputs[ 6].setVisible(_fclr);
-	}
-	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _surf = _data[0];
 		var _mask = _data[1];
@@ -77,6 +64,14 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		var _targ = _data[5];
 		var _innr = _data[6];
 		var _trot = _data[12];
+		
+		inputs[ 2].setVisible(_filt == 0);
+		inputs[ 9].setVisible(_filt == 1, _filt == 1);
+		inputs[10].setVisible(_filt == 2, _filt == 2);
+		inputs[12].setVisible(_filt == 2 || _filt == 3);
+		
+		inputs[ 5].setVisible(_fclr);
+		inputs[ 6].setVisible(_fclr);
 		
 		var _sw = surface_get_width_safe(_surf);
 		var _sh = surface_get_height_safe(_surf)
@@ -134,7 +129,7 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 					surface_set_shader(temp_surface[base], sh_region_fill_coordinate);
 						shader_set_f("dimension",   _sw, _sh);
 						shader_set_surface("base",	temp_surface[2]);
-					
+						
 						draw_surface_safe(temp_surface[!base]);
 					surface_reset_shader();
 				

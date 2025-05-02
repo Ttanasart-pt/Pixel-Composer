@@ -36,7 +36,7 @@ function Node_Dotted(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	newInput(16, nodeValue_Enum_Button("Dot Color Mode", self,  0, [ "Solid", "Palette", "Random", "Texture" ]));
 	
-	newInput(17, nodeValue_Palette("Palette", self, DEF_PALETTE));
+	newInput(17, nodeValue_Palette("Palette", self, array_clone(DEF_PALETTE)));
 	
 	newInput(18, nodeValue_Gradient("Gradient", self, new gradientObject([ca_black, ca_white])) );
 	
