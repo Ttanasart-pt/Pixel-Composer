@@ -367,7 +367,7 @@ draggable = true;
 	if(array_length(palette) > 1) {
 		if(buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, sHOVER, _foc, "", THEME.minus_16) == 2) {
 			array_delete(palette, index_selecting[0], index_selecting[1]);
-			if(array_empty(palette)) palette = [ cola(c_black) ];
+			if(array_empty(palette)) palette = [ ca_black ];
 			index_selecting = [ 0, 0 ];
 			
 			refreshPaletteObject();
@@ -379,7 +379,7 @@ draggable = true;
 	bx -= ui(32);
 	if(buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, sHOVER, _foc, "", THEME.add_16) == 2) {
 		index_selecting = [ array_length(palette), 1 ];
-		palette[array_length(palette)] = cola(c_black);
+		palette[array_length(palette)] = ca_black;
 		
 		refreshPaletteObject();
 		onApply(palette);

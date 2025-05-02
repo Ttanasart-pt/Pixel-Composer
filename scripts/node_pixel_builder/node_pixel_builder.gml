@@ -11,7 +11,7 @@ function Node_Pixel_Builder(_x, _y, _group = noone) : Node_Collection(_x, _y, _g
 	
 	newInput(1, nodeValue_b("Outline",   self, false));
 	newInput(2, nodeValue_i("Thickness", self, 0));
-	newInput(3, nodeValue_c("Color",     self, cola(c_white))).setInternalName("Outline Color");
+	newInput(3, nodeValue_c("Color",     self, ca_white)).setInternalName("Outline Color");
 	
 	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	

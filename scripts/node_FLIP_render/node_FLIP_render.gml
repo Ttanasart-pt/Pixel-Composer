@@ -31,7 +31,7 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	newInput(10, nodeValue_Int("Segments", self, 1));
 	
-	newInput(11, nodeValue_Gradient("Color Over Velocity", self, new gradientObject(cola(c_white))));
+	newInput(11, nodeValue_Gradient("Color Over Velocity", self, new gradientObject(ca_white)));
 	
 	newInput(12, nodeValue_Range("Velocity Map", self, [ 0, 10 ]));
 	

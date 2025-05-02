@@ -22,10 +22,10 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(4, nodeValue_Rotation("Angle", self, 0))
 		.setMappable(15);
 		
-	newInput(5, nodeValue_Gradient("Tile Color", self, new gradientObject(cola(c_white))))
+	newInput(5, nodeValue_Gradient("Tile Color", self, new gradientObject(ca_white)))
 		.setMappable(20);
 		
-	newInput(6, nodeValue_Color("Gap Color",  self, cola(c_black)));
+	newInput(6, nodeValue_Color("Gap Color",  self, ca_black));
 	
 	newInput(7, nodeValue_Surface("Texture", self));
 	

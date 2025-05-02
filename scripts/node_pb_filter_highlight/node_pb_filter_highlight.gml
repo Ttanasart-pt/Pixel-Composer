@@ -4,10 +4,10 @@ function Node_PB_FX_Highlight(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	newInput(0, nodeValue_Surface("Surface", self));
 	
 	newInput(1, nodeValue_i(  "Width",             self, [ 0, 0, 0, 0 ])).setDisplay(VALUE_DISPLAY.padding).setInternalName("Highlight Width");
-	newInput(2, nodeValue_c(  "Color Left",        self, cola(c_white))).setInternalName("Corner Color");
-	newInput(3, nodeValue_c(  "Color Right",       self, cola(c_white))).setInternalName("Corner Color");
-	newInput(4, nodeValue_c(  "Color Top",         self, cola(c_white))).setInternalName("Corner Color");
-	newInput(5, nodeValue_c(  "Color Bottom",      self, cola(c_white))).setInternalName("Corner Color");
+	newInput(2, nodeValue_c(  "Color Left",        self, ca_white)).setInternalName("Corner Color");
+	newInput(3, nodeValue_c(  "Color Right",       self, ca_white)).setInternalName("Corner Color");
+	newInput(4, nodeValue_c(  "Color Top",         self, ca_white)).setInternalName("Corner Color");
+	newInput(5, nodeValue_c(  "Color Bottom",      self, ca_white)).setInternalName("Corner Color");
 	
 	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	

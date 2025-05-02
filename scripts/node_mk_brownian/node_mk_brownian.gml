@@ -14,7 +14,7 @@ function Node_MK_Brownian(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	newInput(5, nodeValue_Range("Speed", self, [ 1, 1 ]));
 	
-	newInput(6, nodeValue_Gradient("Color", self, new gradientObject(cola(c_white))));
+	newInput(6, nodeValue_Gradient("Color", self, new gradientObject(ca_white)));
 	
 	newInput(7, nodeValue_Curve("Alpha", self, CURVE_DEF_11));
 	

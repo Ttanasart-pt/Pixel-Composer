@@ -268,7 +268,10 @@ function Panel_Menu() : PanelContent() constructor {
             menuItem(__txtx("panel_menu_test_crash", "Force crash"),              function() /*=>*/ {return print(1 + "a")}),
             -1,
             menuItemShelf(__txt("Misc."), function(_dat) { 
-                return submenuCall(_dat, [ menuItem(__txtx("panel_menu_node_credit", "Node credit dialog"), function() /*=>*/ { dialogPanelCall(new Panel_Node_Cost()); }), ]);
+                return submenuCall(_dat, [ 
+                    menuItem("Node credit dialog", function() /*=>*/ { dialogPanelCall(new Panel_Node_Cost()); }), 
+                    // menuItem("RogueTD",            () => { dialogPanelCall(new Panel_RogueTD());   }), 
+                ]);
             }),
         ]]);
     }

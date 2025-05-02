@@ -172,7 +172,7 @@
 #endregion
 
 function key_press(_key, _mod = MOD_KEY.none, _hold = false) {
-	if(WIDGET_CURRENT != noone) return false;
+	if(WIDGET_CURRENT != undefined) return false;
 	if(_mod == MOD_KEY.none && _key == noone) return false;
 	
 	var _modPress = HOTKEY_MOD == _mod;

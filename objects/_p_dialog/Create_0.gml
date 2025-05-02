@@ -103,7 +103,7 @@
 	dialog_h_min    = 320;
 	dialog_w_max    = WIN_W;
 	dialog_h_max    = WIN_H;
-	onResize        = -1;
+	onResize        = undefined;
 	
 	function doResize() {
 		if(!active) return;

@@ -6,11 +6,11 @@ function Node_PB_FX_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput(1, nodeValue_r(  "Angle",       self, 0));
 	newInput(2, nodeValue_i(  "Distance",    self, 1));
 	
-	newInput(3, nodeValue_c(  "Color",       self, cola(c_white)));
+	newInput(3, nodeValue_c(  "Color",       self, ca_white));
 	newInput(4, nodeValue_b(  "Clone Color", self, false));
 	
 	newInput(5, nodeValue_b(  "Highlight",           self, false));
-	newInput(6, nodeValue_c(  "Highlight Color",     self, cola(c_white)));
+	newInput(6, nodeValue_c(  "Highlight Color",     self, ca_white));
 	newInput(7, nodeValue_r(  "Highlight Direction", self, 0));
 	
 	newInput( 8, nodeValue_Pbbox("Shape PBBOX",   self, new __pbBox()));

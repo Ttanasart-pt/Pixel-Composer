@@ -18,7 +18,7 @@ function gradientKey(time, value) constructor {
 	static serialize = function() { return { time, value }; }
 }
 
-function gradientObject(color = cola(c_black)) constructor {
+function gradientObject(color = ca_black) constructor {
 	static GRADIENT_LIMIT = 128;
 	
 	if(is_array(color)) keys = [ new gradientKey(0, cola(color[0])), new gradientKey(1, cola(color[1])) ];

@@ -30,7 +30,7 @@ function __Node_3D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	newInput(11, nodeValue_Float("Light intensity", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(12, nodeValue_Color("Light color", self, cola(c_white)));
+	newInput(12, nodeValue_Color("Light color", self, ca_white));
 	newInput(13, nodeValue_Color("Ambient color", self, cola(c_grey)));
 	
 	newInput(14, nodeValue_Surface("Height map", self));

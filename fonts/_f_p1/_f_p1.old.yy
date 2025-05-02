@@ -216,7 +216,7 @@
   "name":"_f_p1",
   "parent":{
     "name":"font",
-    "path":"folders/sprites/font.yy",
+    "path":"folders/font.yy",
   },
   "pointRounding":0,
   "ranges":[
@@ -230,10 +230,7 @@
   "sdfSpread":8,
   "size":11.0,
   "styleName":"Medium",
-  "textureGroupId":{
-    "name":"Default",
-    "path":"texturegroups/Default",
-  },
+  "textureGroupId":null,
   "TTFName":"",
   "usesSDF":false,
 }

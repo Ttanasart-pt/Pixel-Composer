@@ -1413,6 +1413,7 @@
     {"name":"panel_preview","order":2,"path":"scripts/panel_preview/panel_preview.yy",},
     {"name":"panel_profile_render","order":3,"path":"scripts/panel_profile_render/panel_profile_render.yy",},
     {"name":"panel_resource_monitor","order":4,"path":"scripts/panel_resource_monitor/panel_resource_monitor.yy",},
+    {"name":"panel_rogueTD","order":1,"path":"scripts/panel_rogueTD/panel_rogueTD.yy",},
     {"name":"panel_test","order":2,"path":"scripts/panel_test/panel_test.yy",},
     {"name":"panel_text_editor","order":12,"path":"scripts/panel_text_editor/panel_text_editor.yy",},
     {"name":"panel_toolbar_icon","order":17,"path":"scripts/panel_toolbar_icon/panel_toolbar_icon.yy",},

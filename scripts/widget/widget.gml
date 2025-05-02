@@ -95,15 +95,15 @@ function widget() constructor {
 	static activate = function() {
 		if(!interactable) return;
 		
-		WIDGET_CURRENT = self;
+		WIDGET_CURRENT        = self;
 		WIDGET_CURRENT_SCROLL = parent;
 		parentFocus();
 	}
 	
 	static deactivate = function() {
 		if(WIDGET_CURRENT != self) return;
-		WIDGET_CURRENT = noone;
-		WIDGET_CURRENT_SCROLL = noone;
+		WIDGET_CURRENT        = undefined;
+		WIDGET_CURRENT_SCROLL = undefined;
 	}
 	
 	static setFocusHover = function(active = false, hover = false) {

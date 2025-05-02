@@ -364,8 +364,8 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				inParent.setType(VALUE_TYPE.gradient);
 				outputs[0].setType(inParent.type);
 				
-				inParent.animator = new valueAnimator(new gradientObject(cola(c_white)), inParent);
-				inParent.def_val  = new gradientObject(cola(c_white));
+				inParent.animator = new valueAnimator(new gradientObject(ca_white), inParent);
+				inParent.def_val  = new gradientObject(ca_white);
 				inParent.setDisplay(VALUE_DISPLAY._default);
 				break;
 				

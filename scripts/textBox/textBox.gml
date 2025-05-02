@@ -174,8 +174,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		if(is_callable(onRelease))
 			apply(true);
 			
-		WIDGET_CURRENT = noone;
-		UNDO_HOLDING = false;
+		WIDGET_CURRENT = undefined;
+		UNDO_HOLDING   = false;
 		
 		if(PEN_USE) keyboard_virtual_hide();
 		
@@ -941,7 +941,6 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			}
 		}
 		
-		// if(is(WIDGET_CURRENT, textBox)) print("w|", self.label, WIDGET_CURRENT.label, self == WIDGET_CURRENT);
 		selecting = self == WIDGET_CURRENT;
 		resetFocus();
 		sprite_index = -1;
@@ -949,8 +948,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	}
 	
 	static clone = function() { 
-		var cln = new textBox(input, onModify); 
-		return cln;
+		return new textBox(input, onModify);
 	}
 	
 	static free = function() {

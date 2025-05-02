@@ -69,7 +69,7 @@ function d3d11_shader_override_vs(_vs) {
 ///
 /// @desc Checks whether a shader exists.
 ///
-/// @param {Real} _ps The ID of the shader.
+/// @param {Real} _shader The ID of the shader.
 ///
 /// @return {Bool} Returns true if the shader exists.
 function d3d11_shader_exists(_shader) {

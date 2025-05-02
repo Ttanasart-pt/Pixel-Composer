@@ -200,7 +200,7 @@ function canvas_tool_node(_canvas, _node) : canvas_tool() constructor {
 		
 		nodeObject.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 		
-		if(WIDGET_CURRENT == noone) {
+		if(WIDGET_CURRENT == undefined) {
 			if(key_press(vk_enter))  apply();
 			if(key_press(vk_escape)) cancel();
 		}

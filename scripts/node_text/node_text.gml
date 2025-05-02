@@ -32,7 +32,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	////- Font
 	
-	newInput( 1, nodeValue_Font(         "Font",               self)).setVisible(true, false);
+	newInput( 1, nodeValue_Font(         "Font",               self, "")).setVisible(true, false);
 	newInput( 4, nodeValue_Vec2(         "Character Range",    self, [ 32, 128 ]));
 	newInput( 2, nodeValue_Int(          "Size",               self, 16));
 	newInput(15, nodeValue_Bool(         "Scale to Fit",       self, false));

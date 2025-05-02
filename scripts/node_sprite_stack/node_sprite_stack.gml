@@ -15,7 +15,7 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		
 	newInput(5, nodeValue_Rotation("Rotation", self, 0));
 	
-	newInput(6, nodeValue_Color("Stack blend", self, cola(c_white) ));
+	newInput(6, nodeValue_Color("Stack blend", self, ca_white ));
 	
 	newInput(7, nodeValue_Float("Alpha end", self, 1, "Alpha value for the last copy." ))
 		.setDisplay(VALUE_DISPLAY.slider);
@@ -24,7 +24,7 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	newInput(9, nodeValue_Enum_Scroll("Highlight", self,  0, [ "None", "Color", "Inner pixel" ]));
 	
-	newInput(10, nodeValue_Color("Highlight color", self, cola(c_white)));
+	newInput(10, nodeValue_Color("Highlight color", self, ca_white));
 	
 	newInput(11, nodeValue_Float("Highlight alpha", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider);

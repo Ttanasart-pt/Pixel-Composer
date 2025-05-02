@@ -1133,7 +1133,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				return g;
 			} 
 			
-			return is_real(value)? new gradientObject(value) : new gradientObject(cola(c_black));
+			return is_real(value)? new gradientObject(value) : new gradientObject(ca_black);
 		}
 	
 		if(display_type == VALUE_DISPLAY.palette && !is_array(value)) return [ value ];

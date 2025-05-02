@@ -13,7 +13,7 @@ function Node_Flood_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		
 	newInput(4, nodeValue_Vec2("Position", self, [ 1, 1 ]));
 		
-	newInput(5, nodeValue_Color("Colors", self, cola(c_black) ));
+	newInput(5, nodeValue_Color("Colors", self, ca_black ));
 	
 	newInput(6, nodeValue_Float("Threshold", self, 0.1))
 		.setDisplay(VALUE_DISPLAY.slider);

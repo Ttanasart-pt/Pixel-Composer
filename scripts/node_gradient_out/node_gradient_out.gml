@@ -3,13 +3,13 @@ function Node_Gradient_Out(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	batch_output = false;
 	setDimension(96);
 	
-	newInput(0, nodeValue_Gradient("Gradient", self, new gradientObject([ cola(c_black), cola(c_white) ])));
+	newInput(0, nodeValue_Gradient("Gradient", self, new gradientObject([ ca_black, ca_white ])));
 	
 	newInput(1, nodeValue_Float("Sample", self, 0, "Position to sample a color from the gradient."))
 		.setDisplay(VALUE_DISPLAY.slider)
 		.rejectArray();
 	
-	newOutput(0, nodeValue_Output("Gradient", self, VALUE_TYPE.gradient, new gradientObject(cola(c_white)) ));
+	newOutput(0, nodeValue_Output("Gradient", self, VALUE_TYPE.gradient, new gradientObject(ca_white) ));
 	
 	newOutput(1, nodeValue_Output("Color", self, VALUE_TYPE.color, c_white));
 	

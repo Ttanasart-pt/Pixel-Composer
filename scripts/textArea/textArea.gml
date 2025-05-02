@@ -113,8 +113,8 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		if(WIDGET_CURRENT != self) return;
 		
 		apply();
-		WIDGET_CURRENT = noone;
-		UNDO_HOLDING = false;
+		WIDGET_CURRENT = undefined;
+		UNDO_HOLDING   = false;
 		
 		if(PEN_USE) keyboard_virtual_hide();
 	}

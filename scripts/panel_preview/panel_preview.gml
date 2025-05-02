@@ -1017,7 +1017,7 @@ function Panel_Preview() : PanelContent() constructor {
             }
             
             var _key = tool.checkHotkey();
-            if(_key != noone && pFOCUS && WIDGET_CURRENT == noone) {
+            if(_key != noone && pFOCUS && WIDGET_CURRENT == undefined) {
             	if(tool_clearKey.hotkey.equal(_key)) tool_clearable = false;
                 if(_key.isPressing()) {
                 	tool.toggleKeyboard();
@@ -1161,7 +1161,7 @@ function Panel_Preview() : PanelContent() constructor {
             }
             
             var _key = tool.checkHotkey();
-            if(_key != noone && pFOCUS && WIDGET_CURRENT == noone) {
+            if(_key != noone && pFOCUS && WIDGET_CURRENT == undefined) {
             	if(tool_clearKey.hotkey.equal(_key)) tool_clearable = false;
                 if(_key.isPressing()) {
                 	tool.toggleKeyboard();

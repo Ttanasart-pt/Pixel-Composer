@@ -21,9 +21,9 @@ function Node_Checker(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(3, nodeValue_Vec2("Position", self, [0, 0] ))
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	newInput(4, nodeValue_Color("Color 1", self, cola(c_white)));
+	newInput(4, nodeValue_Color("Color 1", self, ca_white));
 	
-	newInput(5, nodeValue_Color("Color 2", self, cola(c_black)));
+	newInput(5, nodeValue_Color("Color 2", self, ca_black));
 	
 	//////////////////////////////////////////////////////////////////////////////////
 	

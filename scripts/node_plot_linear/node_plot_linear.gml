@@ -51,7 +51,7 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	////- Render
 	
-	newInput( 6, nodeValue_Color(        "Base Color",                self, cola(c_white)));
+	newInput( 6, nodeValue_Color(        "Base Color",                self, ca_white));
 	newInput(13, nodeValue_Gradient(     "Color Over Sample",         self, new gradientObject(ca_white))).setMappable(27);
 	newInput(27, nodeValueMap(           "Sample Gradient map",       self));
 	newInput(28, nodeValueGradientRange( "Sample Gradient map range", self, inputs[13]));

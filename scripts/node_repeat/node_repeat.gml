@@ -64,7 +64,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	newInput(13, nodeValue_Float("Path shift", self, 0));
 	
-	newInput(14, nodeValue_Gradient("Color over copy", self, new gradientObject(cola(c_white))))
+	newInput(14, nodeValue_Gradient("Color over copy", self, new gradientObject(ca_white)))
 		.setMappable(30);
 		
 	newInput(15, nodeValue_Curve("Alpha over copy", self, CURVE_DEF_11 ));
@@ -96,7 +96,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(26, nodeValue_Enum_Button("Stack", self,  0, [ "None", "X", "Y" ]))
 		.setTooltip("Place each copy next to each other, taking surface dimension into account.");
 	
-	/* deprecated */ newInput(27, nodeValue_Color("Animator blend", self, cola(c_white)));                                  
+	/* deprecated */ newInput(27, nodeValue_Color("Animator blend", self, ca_white));                                  
 	
 	/* deprecated */ newInput(28, nodeValue_Float("Animator alpha", self, 1))                                               
 		               .setDisplay(VALUE_DISPLAY.slider);
@@ -156,7 +156,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		newInput(index + 6, nodeValue_Vec2("Anchor Position", self, [ 0.5, 0.5 ]))
 			.setTooltip("Anchor point for transformation, absolute value for global type, relative for local.");
 		
-		newInput(index + 7, nodeValue_Color("Color", self, cola(c_white)));
+		newInput(index + 7, nodeValue_Color("Color", self, ca_white));
 		
 		newInput(index + 8, nodeValue_Float("Alpha", self, 0))
 			.setDisplay(VALUE_DISPLAY.slider, { range : [ -1, 1, 0.01 ] });

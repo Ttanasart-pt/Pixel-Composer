@@ -66,7 +66,7 @@ function __3dScene(_camera, _name = "New scene") constructor {
 	ssao_bias           = 0.1;
 	ssao_strength       = 1.;
 	
-	backface_blending   = cola(c_white);
+	backface_blending   = ca_white;
 	
 	static reset = function() {
 		lightDir_count     = 0;

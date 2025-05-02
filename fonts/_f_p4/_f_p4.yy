@@ -230,7 +230,10 @@
   "sdfSpread":8,
   "size":7.0,
   "styleName":"SemiBold",
-  "textureGroupId":null,
+  "textureGroupId":{
+    "name":"Default",
+    "path":"texturegroups/Default",
+  },
   "TTFName":"",
   "usesSDF":false,
 }

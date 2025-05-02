@@ -12,9 +12,9 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	newInput(1, nodeValue_Bool("Background", self, false));
 	
-	newInput(2, nodeValue_Color("Background color", self, cola(c_black)));
+	newInput(2, nodeValue_Color("Background color", self, ca_black));
 	
-	newInput(3, nodeValue_Color("Shape color", self, cola(c_white)));
+	newInput(3, nodeValue_Color("Shape color", self, ca_white));
 	
 	shapesArray = [ 
 		    "Rectangle", "Diamond", "Trapezoid", "Parallelogram", 
@@ -68,17 +68,17 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	////////////
 	
-	newInput(19, nodeValue_Color("Vertex Color 1", self, cola(c_white)));
+	newInput(19, nodeValue_Color("Vertex Color 1", self, ca_white));
 	
-	newInput(20, nodeValue_Color("Vertex Color 2", self, cola(c_white)));
+	newInput(20, nodeValue_Color("Vertex Color 2", self, ca_white));
 	
-	newInput(21, nodeValue_Color("Vertex Color 3", self, cola(c_white)));
+	newInput(21, nodeValue_Color("Vertex Color 3", self, ca_white));
 	
 	////////////
 	
 	newInput(22, nodeValue_Float("Piece Scale", self, 1));
 	
-	newInput(23, nodeValue_Palette("Shape Palette", self, [ cola(c_white) ]));
+	newInput(23, nodeValue_Palette("Shape Palette", self, [ ca_white ]));
 	
 	newInput(24, nodeValue_Enum_Scroll("SSAA", self, 0, [ "None", "2x", "4x", "8x" ]));
 	

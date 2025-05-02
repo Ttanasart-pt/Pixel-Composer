@@ -30,12 +30,12 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 	newInput(6, nodeValue_Enum_Button("Coloring", self,  0, [ "Alternate", "Palette", "Random" ]));
 	
-	newInput(7, nodeValue_Gradient("Colors", self, new gradientObject(cola(c_white))))
+	newInput(7, nodeValue_Gradient("Colors", self, new gradientObject(ca_white)))
 		.setMappable(15);
 	
-	newInput(8, nodeValue_Color("Color 1", self, cola(c_white)));
+	newInput(8, nodeValue_Color("Color 1", self, ca_white));
 	
-	newInput(9, nodeValue_Color("Color 2", self, cola(c_black)));
+	newInput(9, nodeValue_Color("Color 2", self, ca_black));
 	
 	newInput(10, nodeValue_Float("Strip Ratio", self, 0.5))
 		.setDisplay(VALUE_DISPLAY.slider)

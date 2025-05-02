@@ -47,7 +47,7 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		newInput(index + 3, nodeValue_Float("Intensity", self, 1))
 			.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01 ]});
 		
-		newInput(index + 4, nodeValue_Color("Color", self, cola(c_white)));
+		newInput(index + 4, nodeValue_Color("Color", self, ca_white));
 		
 		newInput(index + 5, nodeValue_Vec2("Start", self, [ 16, 16 ]));
 		

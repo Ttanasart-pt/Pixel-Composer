@@ -19,7 +19,7 @@ function Node_Blur_Simple(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	newInput(4, nodeValue_Bool("Override color", self, false, "Replace all color while keeping the alpha. Used to\nfix grey outline when bluring transparent pixel."));
 	
-	newInput(5, nodeValue_Color("Color", self, cola(c_black)));
+	newInput(5, nodeValue_Color("Color", self, ca_black));
 	
 	newInput(6, nodeValue_Surface("Mask", self));
 	
@@ -33,7 +33,7 @@ function Node_Blur_Simple(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	__init_mask_modifier(6); // inputs 10, 11, 
 	
-	newInput(12, nodeValue_Gradient("Gradient", self, new gradientObject([ cola(c_black), cola(c_white) ])))
+	newInput(12, nodeValue_Gradient("Gradient", self, new gradientObject([ ca_black, ca_white ])))
 		.setMappable(13);
 	
 	newInput(13, nodeValueMap("Gradient map", self));

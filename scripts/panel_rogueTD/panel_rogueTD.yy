@@ -1,0 +1,14 @@
+{
+  "$GMScript":"v1",
+  "%Name":"panel_rogueTD",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"panel_rogueTD",
+  "parent":{
+    "name":"what?",
+    "path":"folders/panels/_others/what?.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+  "tags":[],
+}

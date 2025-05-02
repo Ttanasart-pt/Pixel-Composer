@@ -33,7 +33,7 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	////- Blend
 	
-	newInput(15, nodeValue_c(  "Blend",        self, cola(c_white)));
+	newInput(15, nodeValue_c(  "Blend",        self, ca_white));
 	newInput(16, nodeValue_s(  "Saturation",   self, 1, { range: [ 0, 2, 0.01] }));
 	
 	input_display_list = [ 7, 8, 

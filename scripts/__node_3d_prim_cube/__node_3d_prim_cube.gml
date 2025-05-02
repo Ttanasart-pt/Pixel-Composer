@@ -33,7 +33,7 @@ function __Node_3D_Cube(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput(15, nodeValue_Float("Light intensity", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(16, nodeValue_Color("Light color", self, cola(c_white)));
+	newInput(16, nodeValue_Color("Light color", self, ca_white));
 	
 	newInput(17, nodeValue_Color("Ambient color", self, cola(c_grey)));
 	

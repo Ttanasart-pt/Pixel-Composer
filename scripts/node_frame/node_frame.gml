@@ -37,7 +37,7 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	newInput(0, nodeValue_Vec2("Size", self, [ 240, 160 ] ))
 		.rejectArray();
 	
-	newInput(1, nodeValue_Color("Color", self, cola(c_white) ))
+	newInput(1, nodeValue_Color("Color", self, ca_white ))
 		.rejectArray();
 	
 	newInput(2, nodeValue_Float("Alpha", self, 0.75 ))

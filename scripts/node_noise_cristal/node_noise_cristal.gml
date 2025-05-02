@@ -14,7 +14,7 @@ function Node_Noise_Cristal(_x, _y, _group = noone) : Node_Shader_Generator(_x, 
 	newInput(4, nodeValue_Int("Iteration", self, 15 ));
 		addShaderProp(SHADER_UNIFORM.integer, "iteration");
 		
-	newInput(5, nodeValue_Color("Color", self, cola(c_white) ));
+	newInput(5, nodeValue_Color("Color", self, ca_white ));
 		addShaderProp(SHADER_UNIFORM.color, "color");
 	
 	newInput(6, nodeValue_Float("Gamma", self, 1 ))

@@ -50,7 +50,7 @@
   "resourceType":"GMSprite",
   "resourceVersion":"2.0",
   "sequence":{
-    "$GMSequence":"",
+    "$GMSequence":"v1",
     "%Name":"s_workshop_badge_version",
     "autoRecord":true,
     "backdropHeight":768,

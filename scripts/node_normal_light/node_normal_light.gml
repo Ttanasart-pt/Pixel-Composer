@@ -7,7 +7,7 @@ function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	newInput(2, nodeValue_Float("Height", self, 1));
 	
-	newInput(3, nodeValue_Color("Ambient", self, cola(c_black)));
+	newInput(3, nodeValue_Color("Ambient", self, ca_black));
 	
 	newInput(4, nodeValue_Surface("Height map", self));
 	
@@ -33,12 +33,12 @@ function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		
 		newInput(index + 3, nodeValue_Float("Intensity", self, 4));
 		
-		newInput(index + 4, nodeValue_Color("Color", self, cola(c_white)));
+		newInput(index + 4, nodeValue_Color("Color", self, ca_white));
 		
 		newInput(index + 5, nodeValue_Vec3("End Position", self, [ 0, 0, 1 ]))
 			.setUnitRef(function(index) /*=>*/ {return getDimension(index)});
 		
-		newInput(index + 6, nodeValue_Color("End Color", self, cola(c_white)));
+		newInput(index + 6, nodeValue_Color("End Color", self, ca_white));
 		
 		refreshDynamicDisplay();
 		return inputs[index];

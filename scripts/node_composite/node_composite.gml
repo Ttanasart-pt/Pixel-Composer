@@ -882,7 +882,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			
 			surface_set_shader(temp_surface[_bg], sh_sample, true, BLEND.over);
 				try { draw_surface_blend_ext(temp_surface[!_bg], _s, _d0[0], _d0[1], _sca[0], _sca[1], _rot, c_white, _alp, _bld, true); }
-				catch(e) noti_warning(e, noone, self);
+				catch(e) { noti_warning(e, noone, self); }
 			surface_reset_shader();
 			
 			surface_set_shader(selection_surf, sh_selection_mask, false, BLEND.maximum);

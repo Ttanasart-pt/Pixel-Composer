@@ -15,8 +15,8 @@ function Panel_Palette_Mixer(_selector = noone) : PanelContent() constructor {
 	var _def = load_palette_mixer();
 	palette_data = _def != noone? _def : {
 		nodes: [
-			{ color : cola(c_black), x : -64, y : 0 },
-			{ color : cola(c_white), x :  64, y : 0 },
+			{ color : ca_black, x : -64, y : 0 },
+			{ color : ca_white, x :  64, y : 0 },
 		],
 		connections: [
 			[ 0, 1 ],
@@ -502,7 +502,7 @@ function Panel_Palette_Mixer(_selector = noone) : PanelContent() constructor {
 						node_selecting = noone;
 						
 					if(DOUBLE_CLICK) {
-						var _node = { color : cola(c_black), x : value_snap(_mmx, 8), y : value_snap(_mmy, 8) };
+						var _node = { color : ca_black, x : value_snap(_mmx, 8), y : value_snap(_mmy, 8) };
 						array_push(palette_data.nodes, _node);
 						node_selecting = _node;
 						

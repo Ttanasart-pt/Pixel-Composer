@@ -131,7 +131,7 @@ function Inspector_Custom_Renderer(drawFn, registerFn = noone) : widget() constr
 
 function Inspector_Sprite(_spr) constructor { spr = _spr; }
 
-function Inspector_Label(_text, _font = f_p3) constructor { 
+function Inspector_Label(_text = "", _font = f_p3) constructor { 
     text = _text; 
     font = _font; 
     open = true;

@@ -204,7 +204,7 @@
 			show_origin : false,
 			snap	    : true,
 			size	    : 16,
-			color       : cola(c_white),
+			color       : ca_white,
 			opacity     : 0.05,
 			highlight   : 12,
 		}
@@ -248,7 +248,7 @@
 	
 	PROJECT_ATTRIBUTES.strict            = false;
 	PROJECT_ATTRIBUTES.surface_dimension = [ 32, 32 ];
-	PROJECT_ATTRIBUTES.palette           = [ cola(c_white), cola(c_black) ];
+	PROJECT_ATTRIBUTES.palette           = [ ca_white, ca_black ];
 	PROJECT_ATTRIBUTES.palette_fix       = false;
 #endregion
 

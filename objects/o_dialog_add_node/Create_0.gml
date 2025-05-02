@@ -839,7 +839,7 @@ event_inherited();
 					}
 				}
 				
-				var tx;
+				var tx = 0;
 				
 				if(is(_node, NodeObject)) {
 					tx = _node.drawList(pd, yy, _m[0], _m[1], list_height, list_width - pd);
@@ -1195,7 +1195,7 @@ event_inherited();
 				}
 				
 				var _name = _node.getName();
-				var _nmy  = yy + grid_size + 4, _nmh;
+				var _nmy  = yy + grid_size + 4, _nmh = 0;
 				var _drw  = _nmy > -grid_size && _nmy < search_pane.h;
 				
 				if(_query != "") {

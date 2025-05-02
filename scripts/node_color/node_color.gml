@@ -2,7 +2,7 @@ function Node_Color(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	name = "Color";
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Color("Color", self, cola(c_white)));
+	newInput(0, nodeValue_Color("Color", self, ca_white));
 	
 	newOutput(0, nodeValue_Output("Color", self, VALUE_TYPE.color, c_white));
 	

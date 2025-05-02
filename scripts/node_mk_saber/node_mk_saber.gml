@@ -9,7 +9,7 @@ function Node_MK_Saber(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	newInput(3, nodeValue_Int("Thickness", self, 2))
 	
-	newInput(4, nodeValue_Gradient("Color", self, new gradientObject(cola(c_white))))
+	newInput(4, nodeValue_Gradient("Color", self, new gradientObject(ca_white)))
 	
 	newInput(5, nodeValue_Int("Trace", self, 0));
 	

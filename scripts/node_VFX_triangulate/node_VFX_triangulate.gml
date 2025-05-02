@@ -16,9 +16,9 @@ function Node_VFX_Triangulate(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	newInput( 4, nodeValue_b(  "Inherit Thickness",     self, false        ));
 	newInput( 7, nodeValue_cu( "Thickness over Length", self, CURVE_DEF_11 ));
 		
-	newInput( 3, nodeValue_c(  "Color",                 self, cola(c_white) ));
+	newInput( 3, nodeValue_c(  "Color",                 self, ca_white ));
 	newInput( 5, nodeValue_b(  "Inherit Color",         self, false         ));
-	newInput( 8, nodeValue_gr( "Color over Length",     self, new gradientObject(cola(c_white))));
+	newInput( 8, nodeValue_gr( "Color over Length",     self, new gradientObject(ca_white)));
 	
 	newInput( 6, nodeValue_i("Segments",                self, 1 ));
 		

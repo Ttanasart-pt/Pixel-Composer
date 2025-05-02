@@ -13,7 +13,7 @@ function Node_Strand_Render_Texture(_x, _y, _group = noone) : Node(_x, _y, _grou
 	
 	newInput(2, nodeValue_Range("Thickness", self, [ 8, 8 ], { linked : true }));
 	
-	newInput(3, nodeValue_Gradient("Random color", self, new gradientObject(cola(c_white))));
+	newInput(3, nodeValue_Gradient("Random color", self, new gradientObject(ca_white)));
 	
 	newInput(4, nodeValue_Surface("Texture", self));
 	

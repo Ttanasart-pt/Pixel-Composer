@@ -15,9 +15,9 @@ function Node_Dotted(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	newInput(6, nodeValue_Enum_Button("Render Mode", self,  0, [ "Step", "AA", "Smooth" ]));
 	
-	newInput(7, nodeValue_Color("BG Color", self, cola(c_black)));
+	newInput(7, nodeValue_Color("BG Color", self, ca_black));
 	
-	newInput(8, nodeValue_Color("Dot Color", self, cola(c_white)));
+	newInput(8, nodeValue_Color("Dot Color", self, ca_white));
 	
 	newInput(9, nodeValue_Slider("Dot Size", self, .5))
 		.setMappable(10);
@@ -38,7 +38,7 @@ function Node_Dotted(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	newInput(17, nodeValue_Palette("Palette", self, DEF_PALETTE));
 	
-	newInput(18, nodeValue_Gradient("Gradient", self, new gradientObject([cola(c_black), cola(c_white)])) );
+	newInput(18, nodeValue_Gradient("Gradient", self, new gradientObject([ca_black, ca_white])) );
 	
 	newInput(19, nodeValue_Surface("Texture", self));
 	

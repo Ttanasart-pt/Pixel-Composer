@@ -216,24 +216,21 @@
   "name":"_f_sdf",
   "parent":{
     "name":"font",
-    "path":"folders/sprites/font.yy",
+    "path":"folders/font.yy",
   },
   "pointRounding":0,
   "ranges":[
     {"lower":32,"upper":255,},
     {"lower":9647,"upper":9647,},
   ],
-  "regenerateBitmap":false,
+  "regenerateBitmap":true,
   "resourceType":"GMFont",
   "resourceVersion":"2.0",
   "sampleText":"abcdef ABCDEF\n0123456789 .,<>\"'&!?\nthe quick brown fox jumps over the lazy dog\nTHE QUICK BROWN FOX JUMPS OVER THE LAZY DOG\nDefault character: ▯ (9647)",
   "sdfSpread":8,
   "size":32.0,
   "styleName":"Bold",
-  "textureGroupId":{
-    "name":"Default",
-    "path":"texturegroups/Default",
-  },
+  "textureGroupId":null,
   "TTFName":"",
   "usesSDF":true,
 }

@@ -11,7 +11,7 @@ if !ready exit;
 		doDrag();
 	}
 	
-	if(sFOCUS && WIDGET_CURRENT == noone) {
+	if(sFOCUS && WIDGET_CURRENT == undefined) {
 		if(keyboard_check_pressed(vk_enter)) {
 			onApply(palette);
 			instance_destroy();
@@ -29,6 +29,6 @@ if !ready exit;
 		_dialog_h = dialog_h;
 		_dialog_w = dialog_w;
 		
-		if(onResize != -1) onResize();
+		if(onResize != undefined) onResize();
 	}
 #endregion

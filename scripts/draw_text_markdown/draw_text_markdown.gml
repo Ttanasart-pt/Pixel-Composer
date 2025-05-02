@@ -23,7 +23,14 @@
 		
 		static parse  = function( ) /*=>*/ { sym = markdown_parse_line(txt); }
 		
+        /// @desc setFont
+        /// @param {any} f font
+        /// @returns {Struct.md_block_text}
 		static setFont  = function(f) /*=>*/ { font      = f; return self; }
+        
+		/// @desc setColor
+        /// @param {any} c color
+        /// @returns {Struct.md_block_text}
 		static setColor = function(c) /*=>*/ { color     = c; return self; }
 	}
 	

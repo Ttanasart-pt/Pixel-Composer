@@ -21,7 +21,7 @@ function __Node_3D_Cone(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput(7, nodeValue_Float("Light intensity", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(8, nodeValue_Color("Light color", self, cola(c_white)));
+	newInput(8, nodeValue_Color("Light color", self, ca_white));
 	newInput(9, nodeValue_Color("Ambient color", self, cola(c_grey)));
 	
 	newInput(10, nodeValue_Vec3("Object rotation", self, [ 0, 0, 0 ]));

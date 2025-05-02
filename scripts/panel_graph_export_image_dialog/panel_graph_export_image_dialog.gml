@@ -30,7 +30,7 @@ function Panel_Graph_Export_Image(_panel) : PanelContent() constructor {
 		gridAlpha   : targetPanel.project.graphGrid.opacity,
 		
 		borderPad	: 0,
-		borderColor	: cola(c_white),
+		borderColor	: ca_white,
 		borderAlpha	: 0.05,
 	};
 	

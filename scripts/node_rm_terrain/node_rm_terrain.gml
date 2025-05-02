@@ -20,7 +20,7 @@ function Node_RM_Terrain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newInput(7, nodeValue_Float("BG Bleed", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(8, nodeValue_Color("Ambient", self, cola(c_white)));
+	newInput(8, nodeValue_Color("Ambient", self, ca_white));
 	
 	newInput(9, nodeValue_Float("Height", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01 ] });
@@ -29,7 +29,7 @@ function Node_RM_Terrain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	newInput(11, nodeValue_Surface("Texture", self));
 	
-	newInput(12, nodeValue_Color("Background", self, cola(c_black)));
+	newInput(12, nodeValue_Color("Background", self, ca_black));
 	
 	newInput(13, nodeValue_Surface("Reflection", self));
 	

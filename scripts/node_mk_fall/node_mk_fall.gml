@@ -28,7 +28,7 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	
 	newInput(12, nodeValue_Vec2("Wind", self, [ 0, 0 ]));
 	
-	newInput(13, nodeValue_Gradient("Color", self, new gradientObject(cola(c_white))))
+	newInput(13, nodeValue_Gradient("Color", self, new gradientObject(ca_white)))
 	
 	newInput(14, nodeValue_Curve("Alpha", self, CURVE_DEF_11));
 	

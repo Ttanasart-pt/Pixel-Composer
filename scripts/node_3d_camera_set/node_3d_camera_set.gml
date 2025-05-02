@@ -12,7 +12,7 @@ function Node_3D_Camera_Set(_x, _y, _group = noone) : Node_3D_Camera(_x, _y, _gr
 		.setName("Vertical angle")
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 90, 0.1] });
 	
-	newInput(in_cam + 2, nodeValue_Color("L1 Color", self, cola(c_white) ))
+	newInput(in_cam + 2, nodeValue_Color("L1 Color", self, ca_white ))
 		.setName("Color")
 	
 	newInput(in_cam + 3, nodeValue_Float("L1 Intensity", self, 1 ))
@@ -26,7 +26,7 @@ function Node_3D_Camera_Set(_x, _y, _group = noone) : Node_3D_Camera(_x, _y, _gr
 		.setName("Vertical angle")
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 90, 0.1] });
 	
-	newInput(in_cam + 6, nodeValue_Color("L2 Color", self, cola(c_white) ))
+	newInput(in_cam + 6, nodeValue_Color("L2 Color", self, ca_white ))
 		.setName("Color")
 	
 	newInput(in_cam + 7, nodeValue_Float("L2 Intensity", self, 0.25 ))

@@ -2,7 +2,7 @@ function Node_Gradient_Shift(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	name = "Gradient Shift";
 	setDimension(96);
 	
-	newInput(0, nodeValue_Gradient("Gradient", self, new gradientObject(cola(c_white))))
+	newInput(0, nodeValue_Gradient("Gradient", self, new gradientObject(ca_white)))
 		.setVisible(true, true);
 	
 	newInput(1, nodeValue_Float("Shift", self, 0))
@@ -13,7 +13,7 @@ function Node_Gradient_Shift(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	newInput(3, nodeValue_Float("Scale", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 2, 0.01] });
 	
-	newOutput(0, nodeValue_Output("Gradient", self, VALUE_TYPE.gradient, new gradientObject(cola(c_white)) ));
+	newOutput(0, nodeValue_Output("Gradient", self, VALUE_TYPE.gradient, new gradientObject(ca_white) ));
 	
 	_pal = -1;
 	

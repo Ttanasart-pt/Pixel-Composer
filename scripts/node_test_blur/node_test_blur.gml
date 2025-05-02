@@ -12,7 +12,7 @@
 		
 // 	newInput(3, nodeValue_Bool("Override color", self, false, "Replace all color while keeping the alpha. Used to\nfix grey outline when bluring transparent pixel."));
 	
-// 	newInput(4, nodeValue_Color("Color", self, cola(c_black)));
+// 	newInput(4, nodeValue_Color("Color", self, ca_black));
 	
 // 	newInput(5, nodeValue_Surface("Mask", self));
 	

@@ -78,8 +78,8 @@
 
 #region widget
 	globalvar WIDGET_CURRENT, WIDGET_ACTIVE, WIDGET_CURRENT_SCROLL;
-	WIDGET_CURRENT = noone;
-	WIDGET_CURRENT_SCROLL = noone;
+	WIDGET_CURRENT        = undefined;
+	WIDGET_CURRENT_SCROLL = undefined;
 	
 	function widget_start() {
 		INLINE
@@ -92,14 +92,14 @@
 		INLINE
 		
 		if(array_length(WIDGET_ACTIVE) == 0) {
-			if(WIDGET_CURRENT != noone) {
+			if(WIDGET_CURRENT != undefined) {
 				WIDGET_CURRENT.deactivate();
-				WIDGET_CURRENT = noone;
+				WIDGET_CURRENT = undefined;
 			}
 			return;
 		}
 		
-		if(WIDGET_CURRENT == noone) {
+		if(WIDGET_CURRENT == undefined) {
 			widget_start()
 			return;
 		}
@@ -118,14 +118,14 @@
 	
 	function widget_previous() {
 		if(array_length(WIDGET_ACTIVE) == 0) {
-			if(WIDGET_CURRENT != noone) {
+			if(WIDGET_CURRENT != undefined) {
 				WIDGET_CURRENT.deactivate();
-				WIDGET_CURRENT = noone;
+				WIDGET_CURRENT = undefined;
 			}
 			return;
 		}
 		
-		if(WIDGET_CURRENT == noone) {
+		if(WIDGET_CURRENT == undefined) {
 			widget_start()
 			return;
 		}
@@ -154,14 +154,14 @@
 	}
 	
 	function widget_clear() {
-		if(WIDGET_CURRENT == noone) return;
+		if(WIDGET_CURRENT == undefined) return;
 		
 		WIDGET_CURRENT.deactivate();
-		WIDGET_CURRENT = noone;
+		WIDGET_CURRENT = undefined;
 	}
 	
 	function widget_trigger() {
-		if(WIDGET_CURRENT == noone) return;
+		if(WIDGET_CURRENT == undefined) return;
 		WIDGET_CURRENT.trigger();
 	}
 #endregion

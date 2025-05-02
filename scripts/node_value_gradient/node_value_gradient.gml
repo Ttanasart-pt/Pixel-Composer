@@ -25,7 +25,7 @@ function __NodeValue_Gradient(_name, _node, _value, _tooltip = "") : NodeValue(_
 			return g;
 		} 
 		
-		return is_real(val)? new gradientObject(val) : new gradientObject(cola(c_black));
+		return is_real(val)? new gradientObject(val) : new gradientObject(ca_black);
 	}
 	
 	static __getAnimValue = function(_time = CURRENT_FRAME) {

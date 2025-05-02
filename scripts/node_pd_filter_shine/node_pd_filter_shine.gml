@@ -5,7 +5,7 @@ function Node_PB_FX_Shine(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	newInput(1, nodeValue_Surface("Mask", self));
 	
-	newInput(2, nodeValue_c("Colors", self, cola(c_white)));
+	newInput(2, nodeValue_c("Colors", self, ca_white));
 	
 	newInput(3, nodeValue_b("Invert Direction", self, false));
 	

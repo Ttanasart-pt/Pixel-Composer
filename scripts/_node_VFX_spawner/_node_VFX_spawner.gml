@@ -53,9 +53,9 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	////- Color
 	
-	newInput(12, nodeValue_Gradient( "Color Over Lifetime", self, new gradientObject(cola(c_white))));
-	newInput(28, nodeValue_Gradient( "Random Blend",        self, new gradientObject(cola(c_white))));
-	newInput(50, nodeValue_Palette(  "Color by Index",      self, [ cola(c_white) ] ));
+	newInput(12, nodeValue_Gradient( "Color Over Lifetime", self, new gradientObject(ca_white)));
+	newInput(28, nodeValue_Gradient( "Random Blend",        self, new gradientObject(ca_white)));
+	newInput(50, nodeValue_Palette(  "Color by Index",      self, [ ca_white ] ));
 	newInput(13, nodeValue_Range(    "Alpha",               self, [ 1, 1 ], { linked : true }));
 	newInput(14, nodeValue_Curve(    "Alpha Over Time",     self, CURVE_DEF_11));
 	newInput(56, nodeValue_Surface(  "Sample Surface",      self, noone));
@@ -344,7 +344,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			var _alp = random_range(_alpha[0], _alpha[1]);
 			var _bld = _blend.eval(random(1));
 			
-			var _clr_ind = array_safe_get(_color_idx, safe_mod(spawn_index, _color_idx_len), cola(c_white));
+			var _clr_ind = array_safe_get(_color_idx, safe_mod(spawn_index, _color_idx_len), ca_white);
 			    _bld = colorMultiply(_bld, _clr_ind);
 			
 			if(surfSamp.active) {

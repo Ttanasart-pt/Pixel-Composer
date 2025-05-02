@@ -17,7 +17,7 @@ if !active exit;
 		_dialog_h = dialog_h;
 		_dialog_w = dialog_w;
 		
-		if(onResize != -1) onResize();
+		if(onResize != undefined) onResize();
 	}
 #endregion
 

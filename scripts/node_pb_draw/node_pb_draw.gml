@@ -49,11 +49,11 @@ function Node_PB_Draw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 		newInput(index + 0, nodeValue_Enum_Scroll("Effect Type", self, 0, typeList));
 		
-		newInput(index + 1, nodeValue_c(  "Color",         self, cola(c_white)));
+		newInput(index + 1, nodeValue_c(  "Color",         self, ca_white));
 		newInput(index + 2, nodeValue_s(  "Intensity",     self, 1));
 		
 		newInput(index + 3, nodeValue_es( "Pattern",       self, 0, { data: fill_pattern_scroll_data, horizontal: true, text_pad: ui(16) } ));
-		newInput(index + 4, nodeValue_c(  "Color",         self, cola(c_white)));
+		newInput(index + 4, nodeValue_c(  "Color",         self, ca_white));
 		newInput(index + 5, nodeValue_s(  "Intensity",     self, 1));
 		newInput(index + 6, nodeValue_2(  "Scale",         self, [1,1])).setUnitRef(function(i) /*=>*/ {return group.dimension});
 		newInput(index + 7, nodeValue_2(  "Position",      self, [0,0])).setUnitRef(function(i) /*=>*/ {return group.dimension});
@@ -69,10 +69,10 @@ function Node_PB_Draw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 		// Highlight
 		newInput(index + 13, nodeValue_i(  "Widths",       self, [ 0, 0, 0, 0 ])).setDisplay(VALUE_DISPLAY.padding);
-		newInput(index + 14, nodeValue_c(  "Color Left",   self, cola(c_white)));
-		newInput(index + 15, nodeValue_c(  "Color Right",  self, cola(c_white)));
-		newInput(index + 16, nodeValue_c(  "Color Top",    self, cola(c_white)));
-		newInput(index + 17, nodeValue_c(  "Color Bottom", self, cola(c_white)));
+		newInput(index + 14, nodeValue_c(  "Color Left",   self, ca_white));
+		newInput(index + 15, nodeValue_c(  "Color Right",  self, ca_white));
+		newInput(index + 16, nodeValue_c(  "Color Top",    self, ca_white));
+		newInput(index + 17, nodeValue_c(  "Color Bottom", self, ca_white));
 		
 		// Generic Props
 		newInput(index + 18, nodeValue_f(  "Modify",       self, 4));

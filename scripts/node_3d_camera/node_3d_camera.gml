@@ -60,7 +60,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	
 	newInput(i+23, nodeValue_Bool(        "Wireframe",           self, false));
 	newInput(i+24, nodeValue_Float(       "Wireframe Thickness", self, 1));
-	newInput(i+25, nodeValue_Color(       "Wireframe Color",     self, cola(c_black)));
+	newInput(i+25, nodeValue_Color(       "Wireframe Color",     self, ca_black));
 	newInput(i+26, nodeValue_Bool(        "Wireframe antialias", self, false));
 	newInput(i+27, nodeValue_Bool(        "Wireframe shading",   self, false));
 	newInput(i+28, nodeValue_Bool(        "Wireframe only",      self, false));

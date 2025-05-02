@@ -21,13 +21,13 @@ function Node_Path_Profile(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	newInput(4, nodeValue_Bool("Mirror", self, false ));
 	
-	newInput(5, nodeValue_Color("Color", self, cola(c_white) ));
+	newInput(5, nodeValue_Color("Color", self, ca_white ));
 	
 	newInput(6, nodeValue_Bool("Anti-aliasing", self, false ));
 	
 	newInput(7, nodeValue_Bool("Background", self, false ));
 	
-	newInput(8, nodeValue_Color("BG Color", self, cola(c_black) ));
+	newInput(8, nodeValue_Color("BG Color", self, ca_black ));
 	
 	newInput(9, nodeValue_Enum_Button("Fill", self, 0, [ "Odd", "All" ] ));
 	

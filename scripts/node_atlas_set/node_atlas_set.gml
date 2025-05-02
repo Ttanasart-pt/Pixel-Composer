@@ -25,7 +25,7 @@ function Node_Atlas_Set(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 	newInput(13, nodeValue_Bool("Set Blending", self, false));
 	newInput(14, nodeValue_Enum_Button("Mode", self, 0, [ "Absolute", "Multiplicative" ])).setInternalName("Blend mode");
-	newInput(15, nodeValue_Color("Blend", self, cola(c_white)));
+	newInput(15, nodeValue_Color("Blend", self, ca_white));
 		
 	newInput(16, nodeValue_Bool("Set Alpha", self, false));
 	newInput(17, nodeValue_Enum_Button("Mode", self, 0, [ "Absolute", "Additive", "Multiplicative" ])).setInternalName("Alpha mode");

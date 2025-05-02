@@ -2,7 +2,7 @@ function Node_Color_to_OKLCH(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	name = "Color OKLCH";
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Color("Color", self, cola(c_white)))
+	newInput(0, nodeValue_Color("Color", self, ca_white))
 		.setVisible(true, true);
 	
 	newOutput(0, nodeValue_Output("Lightness", self, VALUE_TYPE.float, 0));

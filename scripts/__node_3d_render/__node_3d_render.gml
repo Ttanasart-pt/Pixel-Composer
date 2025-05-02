@@ -22,7 +22,7 @@
 //		.setDisplay(VALUE_DISPLAY.slider)
 //		.rejectArray();
 	
-//	newInput(9, nodeValue_Color("Light color", self, cola(c_white)))
+//	newInput(9, nodeValue_Color("Light color", self, ca_white))
 //		.rejectArray();
 	
 //	newInput(10, nodeValue_Color("Ambient color", self, cola(c_grey)))

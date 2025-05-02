@@ -64,7 +64,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 	
 	newInput(8, nodeValue_Vec3("Light Position", self, [ -.4, -.5, 1 ]));
 	
-	newInput(9, nodeValue_Color("Base Color", self, cola(c_white)));
+	newInput(9, nodeValue_Color("Base Color", self, ca_white));
 	
 	newInput(10, nodeValue_Float("Ambient Level", self, 0.2))
 		.setDisplay(VALUE_DISPLAY.slider);
@@ -118,7 +118,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 	
 	newInput(29, nodeValue_Vec3("Tile Amount", self, [ 1, 1, 1 ]));
 	
-	newInput(30, nodeValue_Color("Background", self, cola(c_black)));
+	newInput(30, nodeValue_Color("Background", self, ca_black));
 	
 	newInput(31, nodeValue_Bool("Draw BG", self, false));
 	

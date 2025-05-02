@@ -23,7 +23,7 @@ function __Node_3D_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	newInput(8, nodeValue_Float("Light intensity", self, 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(9, nodeValue_Color("Light color", self, cola(c_white)));
+	newInput(9, nodeValue_Color("Light color", self, ca_white));
 	
 	newInput(10, nodeValue_Color("Ambient color", self, cola(c_grey)));
 	

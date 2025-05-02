@@ -2,7 +2,7 @@
 if(sHOVER) HOVER = noone;
 if(sFOCUS) setFocus(noone);
 
-WIDGET_CURRENT = noone;
+WIDGET_CURRENT = undefined;
 ds_list_remove(DIALOGS, self);
 
 if(parent) array_remove(parent.children, id);

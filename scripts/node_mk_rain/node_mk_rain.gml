@@ -12,7 +12,7 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	newInput(4, nodeValue_Range("Raindrop length", self, [ 5, 10 ]));
 	
-	newInput(5, nodeValue_Gradient("Color", self, new gradientObject(cola(c_white))));
+	newInput(5, nodeValue_Gradient("Color", self, new gradientObject(ca_white)));
 	
 	newInput(6, nodeValue_Slider_Range("Alpha", self, [ 0.5, 1 ]));
 		

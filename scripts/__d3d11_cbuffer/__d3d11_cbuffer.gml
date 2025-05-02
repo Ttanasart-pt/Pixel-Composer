@@ -97,7 +97,7 @@ function d3d11_cbuffer_add_float(_count) {
 ///
 /// @desc Retrieves size of a constant buffer in bytes.
 ///
-/// @param {Real} The size of the constant buffer in bytes.
+/// @param {Real} _cbuffer The size of the constant buffer in bytes.
 function d3d11_cbuffer_get_size(_cbuffer) {
 	if(!GMD3D11_IS_SUPPORTED) return;
 	INLINE

@@ -23,7 +23,7 @@ function Node_VFX_Override(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(9, nodeValue_2(  "Scales",        self, [1, 1] ));
 	
 	newInput(10, nodeValue_b( "Set Blend",     self, false ));
-	newInput(11, nodeValue_c( "Blend",         self, cola(c_black) ));
+	newInput(11, nodeValue_c( "Blend",         self, ca_black ));
 	
 	newInput(12, nodeValue_b(  "Set Alpha",    self, false ));
 	newInput(13, nodeValue_eb( "Mode",         self, 0, [ "Absolute", "Relative" ])).setInternalName("Alpha mode");

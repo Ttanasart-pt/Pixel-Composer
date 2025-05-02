@@ -1,5 +1,5 @@
 {
-  "$GMProject":"",
+  "$GMProject":"v1",
   "%Name":"PixelComposer",
   "AudioGroups":[
     {"$GMAudioGroup":"","%Name":"audiogroup_default","name":"audiogroup_default","resourceType":"GMAudioGroup","resourceVersion":"2.0","targets":-1,},
@@ -358,6 +358,7 @@
     {"$GMFolder":"","%Name":"sliders","folderPath":"folders/widgets/sliders.yy","name":"sliders","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"text","folderPath":"folders/widgets/text.yy","name":"text","resourceType":"GMFolder","resourceVersion":"2.0",},
   ],
+  "ForcedPrefabProjectReferences":[],
   "IncludedFiles":[
     {"$GMIncludedFile":"","%Name":"Addons.zip","CopyToMask":-1,"filePath":"datafiles/data","name":"Addons.zip","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"Assets.zip","CopyToMask":-1,"filePath":"datafiles/data","name":"Assets.zip","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
@@ -1394,7 +1395,7 @@
   "isEcma":false,
   "LibraryEmitters":[],
   "MetaData":{
-    "IDEVersion":"2024.11.0.179",
+    "IDEVersion":"2024.13.1.193",
   },
   "name":"PixelComposer",
   "resources":[
@@ -2677,6 +2678,7 @@
     {"id":{"name":"panel_preview","path":"scripts/panel_preview/panel_preview.yy",},},
     {"id":{"name":"panel_profile_render","path":"scripts/panel_profile_render/panel_profile_render.yy",},},
     {"id":{"name":"panel_resource_monitor","path":"scripts/panel_resource_monitor/panel_resource_monitor.yy",},},
+    {"id":{"name":"panel_rogueTD","path":"scripts/panel_rogueTD/panel_rogueTD.yy",},},
     {"id":{"name":"panel_test","path":"scripts/panel_test/panel_test.yy",},},
     {"id":{"name":"panel_text_editor","path":"scripts/panel_text_editor/panel_text_editor.yy",},},
     {"id":{"name":"panel_toolbar_icon","path":"scripts/panel_toolbar_icon/panel_toolbar_icon.yy",},},

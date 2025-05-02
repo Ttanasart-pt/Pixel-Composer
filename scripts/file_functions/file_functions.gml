@@ -12,9 +12,6 @@ function file_is_image(path) {
 		case ".jpeg" :
 		case ".gif"  :
 			return true;
-			
-		default : 
-			return false;
 	}
 	
 	return false;

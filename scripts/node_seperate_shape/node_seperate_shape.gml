@@ -19,7 +19,7 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput(2, nodeValue_Bool("Override color", self, false))
 		.rejectArray();
 	
-	newInput(3, nodeValue_Color("Color", self, cola(c_white)))
+	newInput(3, nodeValue_Color("Color", self, ca_white))
 		.rejectArray();
 	
 	newInput(4, nodeValue_Bool("Ignore blank", self, true, "Skip empty shapes."))

@@ -9,7 +9,7 @@ function Node_Solid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	newInput(0, nodeValue_Dimension(self));
 	
-	newInput(1, nodeValue_Color("Color", self, cola(c_white)));
+	newInput(1, nodeValue_Color("Color", self, ca_white));
 	
 	newInput(2, nodeValue_Bool("Empty", self, false));
 	

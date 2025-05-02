@@ -31,7 +31,7 @@ function Node_Color_replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	newInput(14, nodeValueSeed(self));
 	
-	newInput(15, nodeValue_Color("Target Color", self, cola(c_black)));
+	newInput(15, nodeValue_Color("Target Color", self, ca_black));
 	
 	input_display_list = [ 9, 10, 
 		["Surfaces",	 true], 0, 7, 8, 11, 12, 

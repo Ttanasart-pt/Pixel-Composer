@@ -21,7 +21,7 @@ function Node_MK_Sparkle(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newInput(5, nodeValue_Float("Scatter", self, 0.5))
 		.setDisplay(VALUE_DISPLAY.slider)
 		
-	newInput(6, nodeValue_Palette("Colors", self, [ cola(c_black), cola(c_white) ]))
+	newInput(6, nodeValue_Palette("Colors", self, [ ca_black, ca_white ]))
 		
 	newInput(7, nodeValue_Bool("Additive", self, false))
 		

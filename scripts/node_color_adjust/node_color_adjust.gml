@@ -24,7 +24,7 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] })
 		.setMappable(22);
 	
-	newInput(6, nodeValue_Color("Blend",   self, cola(c_white)));
+	newInput(6, nodeValue_Color("Blend",   self, ca_white));
 	
 	newInput(7, nodeValue_Float("Blend amount",  self, 0))
 		.setDisplay(VALUE_DISPLAY.slider)
