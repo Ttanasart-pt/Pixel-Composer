@@ -2732,7 +2732,7 @@ function drawJuncConnection(from, to, params, _hover = 0) {
 			break;
 			
 		case 1 : 
-			if(down)	draw_line_curve_corner(jx, jy, frx, fry, ss, th, c0, c1); 
+			if(down)	draw_line_curve_corner(frx, fry, jx, jy, ss, th, c0, c1); 
 			else		draw_line_curve_color(jx, jy, frx, fry, cx, cy, ss, th, c0, c1, ty); 
 			break;
 			
