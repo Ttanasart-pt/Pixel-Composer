@@ -26,16 +26,6 @@ function Node_Array_Sample(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		["Sampling", false], 2, 6, 1, 3, 
 		["Amount",   false], 7, 5, 
 	];
-		
-	static step = function() {
-		inputs[0].setType(VALUE_TYPE.any);
-		outputs[0].setType(VALUE_TYPE.any);
-		
-		if(inputs[0].value_from != noone) {
-			inputs[0].setType(inputs[0].value_from.type);
-			outputs[0].setType(inputs[0].type);
-		}
-	}
 	
 	static sample = function(_arr) {
 		__temp_arr = _arr;
@@ -93,6 +83,10 @@ function Node_Array_Sample(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
+		var type = inputs[0].value_from == noone? VALUE_TYPE.any : inputs[0].value_from.type;
+		inputs[0].setType(type);
+		outputs[0].setType(type);
+		
 		var _arr = getInputData(0);
 		var _mod = getInputData(2);
 		var _dim = getInputData(6);
@@ -111,6 +105,16 @@ function Node_Array_Sample(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
+		
+		if(outputs[0].type == VALUE_TYPE.color) {
+			var pal = outputs[0].getValue();
+			if(array_empty(pal)) return;
+			if(is_array(pal[0])) pal = pal[0];
+			
+			drawPaletteBBOX(pal, bbox);
+			return;
+		}
+		
 		draw_sprite_fit(s_node_array_sample, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 }

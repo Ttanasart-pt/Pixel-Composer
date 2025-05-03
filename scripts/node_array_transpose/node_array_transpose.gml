@@ -8,19 +8,15 @@ function Node_Array_Transpose(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	newOutput(0, nodeValue_Output("Transposed Array", self, VALUE_TYPE.any, []));
 	
 	static update = function(frame = CURRENT_FRAME) {
-		var arr = getInputData(0);
+		var type = inputs[0].value_from == noone? VALUE_TYPE.any : inputs[0].value_from.type;
+		inputs[0].setType(type);
+		outputs[0].setType(type);
 		
-		inputs[0].setType(VALUE_TYPE.any);
-		outputs[0].setType(VALUE_TYPE.any);
+		var arr = getInputData(0);
 		
 		if(!is_array(arr)) {
 		    noti_warning($"{name}: Input not an array", noone, self);
 		    return;
-		}
-		
-		if(inputs[0].value_from != noone) {
-			inputs[0].setType(inputs[0].value_from.type);
-			outputs[0].setType(inputs[0].value_from.type);
 		}
 		
 		var _w = array_length(arr);

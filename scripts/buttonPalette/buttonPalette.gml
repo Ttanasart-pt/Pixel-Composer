@@ -191,6 +191,8 @@ function buttonPalette(_onApply, dialog = noone) : widget() constructor {
 	}
 }
 
+function drawPaletteBBOX(_pal, _bbox, _a = 1) { drawPalette(_pal, _bbox.x0, _bbox.y0, _bbox.w, _bbox.h, _a); }
+
 function drawPalette(_pal, _x, _y, _w, _h, _a = 1) {
 	var am = array_length(_pal);
 	

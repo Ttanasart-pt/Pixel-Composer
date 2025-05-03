@@ -16,20 +16,14 @@ function Node_Array_Boolean_Opr(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	input_display_list = [ 2, 0, 1 ];
 	
 	static update = function(frame = CURRENT_FRAME) {
+		var type = inputs[0].value_from == noone? VALUE_TYPE.any : inputs[0].value_from.type;
+		inputs[0].setType(type);
+		inputs[1].setType(type);
+		outputs[0].setType(type);
+		
 		var arr1 = getInputData(0);
 		var arr2 = getInputData(1);
 		var opr  = getInputData(2);
-		
-		inputs[0].setType(VALUE_TYPE.any);
-		inputs[1].setType(VALUE_TYPE.any);
-		outputs[0].setType(VALUE_TYPE.any);
-		
-		if(inputs[0].value_from != noone) {
-			inputs[0].setType(inputs[0].value_from.type);
-			inputs[1].setType(inputs[1].value_from.type);
-			outputs[0].setType(inputs[0].value_from.type);
-		}
-		
 		if(!is_array(arr1) || !is_array(arr2)) return;
 		
 		var _arr;

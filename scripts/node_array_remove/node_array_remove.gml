@@ -18,34 +18,22 @@ function Node_Array_Remove(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 	newOutput(0, nodeValue_Output("Array", self, VALUE_TYPE.any, 0));
 	
-	static step = function() {
-		var type  = getInputData(1);
-		
-		inputs[2].setVisible(type == 0, type == 0);
-		inputs[3].setVisible(type == 1, type == 1);
-		
-		inputs[0].setType(VALUE_TYPE.any);
-		inputs[3].setType(VALUE_TYPE.any);
-		outputs[0].setType(VALUE_TYPE.any);
-		
-		if(inputs[0].value_from != noone) {
-			var type = inputs[0].value_from.type;
-			inputs[0].setType(type);
-			inputs[3].setType(type);
-			outputs[0].setType(type);
-		}
-		
-	}
-	
 	static update = function(frame = CURRENT_FRAME) {
-		var _arr = getInputData(0);
-		if(!is_array(_arr)) return;
+		var type = inputs[0].value_from == noone? VALUE_TYPE.any : inputs[0].value_from.type;
+		inputs[0].setType(type);
+		inputs[3].setType(type);
+		outputs[0].setType(type);
 		
+		var _arr  = getInputData(0);
 		var type  = getInputData(1);
 		var index = getInputData(2);
 		var value = getInputData(3);
 		var spred = getInputData(4);
 		
+		inputs[2].setVisible(type == 0, type == 0);
+		inputs[3].setVisible(type == 1, type == 1);
+		
+		if(!is_array(_arr)) return;
 		_arr = array_clone(_arr);
 		
 		if(type == 0) {
@@ -68,6 +56,16 @@ function Node_Array_Remove(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
+		
+		if(outputs[0].type == VALUE_TYPE.color) {
+			var pal = outputs[0].getValue();
+			if(array_empty(pal)) return;
+			if(is_array(pal[0])) pal = pal[0];
+			
+			drawPaletteBBOX(pal, bbox);
+			return;
+		}
+		
 		draw_sprite_fit(s_node_array_remove, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 }
