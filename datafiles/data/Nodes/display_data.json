@@ -788,6 +788,7 @@
             "Node_Array_Split",
             "Node_Array_Insert",
             "Node_Array_Remove",
+            "Node_Array_Trim",
             "Node_Array_Reverse",
             "Node_Array_Shift",
             "Node_Array_Rearrange",

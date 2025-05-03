@@ -64,6 +64,13 @@ function Node_Array_Get(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
+		
+		if(outputs[0].type == VALUE_TYPE.color) {
+			var pal = outputs[0].getValue();
+			if(is_array(pal)) drawPaletteBBOX(pal, bbox);
+			else              drawColorBBOX(pal, bbox);
+		}
+		
 		draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
 		draw_text_bbox(bbox, string(getInputData(1)));
 	}

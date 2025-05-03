@@ -1,0 +1,6 @@
+{
+    "name":          "Array Trim",
+    "spr":           "s_node_array_trim",
+    "baseNode":      "Node_Array_Trim",
+    "pxc_version":    119010,
+}

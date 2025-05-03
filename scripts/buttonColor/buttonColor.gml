@@ -199,6 +199,8 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 	}
 }
 
+function drawColorBBOX(_color, _bbox, _alp = true, _ind = 1) { drawColor(_color, _bbox.x0, _bbox.y0, _bbox.w, _bbox.h, _alp, _ind); }
+	
 function drawColor(color, _x, _y, _w, _h, _alp = true, _ind = 1) {
 	
 	if(is_real(color) || !_alp) {
