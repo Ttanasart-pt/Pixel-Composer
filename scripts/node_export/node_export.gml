@@ -909,15 +909,22 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			var res = ProcIdExists(render_process_id);
 			
 			if(res == 0 || OS == os_macosx) {
+				var msg = ExecutedProcessReadFromStandardOutput(render_process_id);
+				
 				if(!IS_CMD) {
-					var noti  = log_message("EXPORT", $"Export {render_type} as {render_target}", THEME.noti_icon_tick, COLORS._main_value_positive, false);
-					noti.path = filename_dir(render_target);
-					noti.setOnClick(function() { shellOpenExplorer(self.path); }, "Open in explorer", THEME.explorer);
-					PANEL_MENU.setNotiIcon(THEME.noti_icon_tick);
+					if(msg == "") {
+						var noti  = log_message("EXPORT", $"Export {render_type} as {render_target}", THEME.noti_icon_tick, COLORS._main_value_positive, false);
+						noti.path = filename_dir(render_target);
+						noti.setOnClick(function() /*=>*/ { shellOpenExplorer(self.path); }, "Open in explorer", THEME.explorer);
+						PANEL_MENU.setNotiIcon(THEME.noti_icon_tick);
+						
+					} else {
+						var noti  = log_message("EXPORT", $"Export error: {msg}", THEME.cross_16, COLORS._main_value_negative, false);
+						PANEL_MENU.setNotiIcon(THEME.cross_16);
+					}
 				}
 				
 				render_process_id = 0;
-				
 				if(IS_CMD) array_remove(PROGRAM_ARGUMENTS._exporting, node_id);
 			}
 		}

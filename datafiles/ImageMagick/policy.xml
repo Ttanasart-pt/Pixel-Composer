@@ -1,0 +1,4 @@
+<policymap>
+    <policy domain="Undefined" rights="none"/>
+    <policy domain="resource" name="memory" value="4GiB"/>
+</policymap>
