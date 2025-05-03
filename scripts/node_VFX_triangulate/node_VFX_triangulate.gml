@@ -75,7 +75,7 @@ function Node_VFX_Triangulate(_x, _y, _group = noone) : Node(_x, _y, _group) con
 			array_resize(_vrx, _ind);
 		#endregion
 		
-		var tri = delaunay_triangulation(_vrx);
+		var tri = delaunay_triangulation_c(_vrx);
 		var p0, p1, p2;
 		var t0, t1, t2;
 		var c0, c1, c2;

@@ -1407,6 +1407,7 @@
     {"id":{"name":"ac_ripple","path":"animcurves/ac_ripple/ac_ripple.yy",},},
     {"id":{"name":"Apollo","path":"extensions/Apollo/Apollo.yy",},},
     {"id":{"name":"clipboard","path":"extensions/clipboard/clipboard.yy",},},
+    {"id":{"name":"delaunayC","path":"extensions/delaunayC/delaunayC.yy",},},
     {"id":{"name":"discordBridge","path":"extensions/discordBridge/discordBridge.yy",},},
     {"id":{"name":"display_measure","path":"extensions/display_measure/display_measure.yy",},},
     {"id":{"name":"display_screenshot","path":"extensions/display_screenshot/display_screenshot.yy",},},

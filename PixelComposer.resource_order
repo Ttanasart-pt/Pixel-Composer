@@ -288,6 +288,7 @@
     {"name":"ac_ripple","order":1,"path":"animcurves/ac_ripple/ac_ripple.yy",},
     {"name":"Apollo","order":21,"path":"extensions/Apollo/Apollo.yy",},
     {"name":"clipboard","order":11,"path":"extensions/clipboard/clipboard.yy",},
+    {"name":"delaunayC","order":22,"path":"extensions/delaunayC/delaunayC.yy",},
     {"name":"discordBridge","order":12,"path":"extensions/discordBridge/discordBridge.yy",},
     {"name":"display_measure","order":1,"path":"extensions/display_measure/display_measure.yy",},
     {"name":"display_screenshot","order":4,"path":"extensions/display_screenshot/display_screenshot.yy",},

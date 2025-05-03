@@ -48,7 +48,7 @@ function Node_Points_Triangulate(_x, _y, _group = noone) : Node(_x, _y, _group) 
 		if(_d == 1) _points = [ _points ];
 		
 		var _pnts   = array_create_ext(array_length(_points), function(i) /*=>*/ {return new __vec2(_points[i][0], _points[i][1])});
-		var _tris   = delaunay_triangulation(_pnts);
+		var _tris   = delaunay_triangulation_c(_pnts);
 		var _segOut = array_create(array_length(_tris));
 		
 		for( var i = 0, n = array_length(_tris); i < n; i++ ) {

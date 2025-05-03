@@ -625,10 +625,11 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			mesh_data.points[_i] = new MeshedPoint(_i, _p[i][0], _p[i][1]); _i++;
 		}
 		
-		var _t = delaunay_triangulation(mesh_data.points, _m);
+		var _t = delaunay_triangulation_c(mesh_data.points, _m);
 		
 		for( var i = 0, n = array_length(_t); i < n; i++ ) {
 			var t = _t[i];
+			
 			array_push(mesh_data.tris,  new MeshedTriangle(t[0], t[1], t[2]));
 			
 			array_push(mesh_data.links, new MeshedLink(t[0], t[1]));
