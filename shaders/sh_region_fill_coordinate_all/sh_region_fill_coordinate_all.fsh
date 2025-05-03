@@ -5,6 +5,7 @@ varying vec4 v_vColour;
 
 uniform sampler2D base;
 uniform vec2  dimension;
+uniform float threshold;
 
 vec2 minn( in vec2 a, in vec2 b) {
 		 if(a.y < b.y) return a;
@@ -20,6 +21,8 @@ vec2 maxx( in vec2 a, in vec2 b) {
 	return (a.x < b.x)? b : a;
 }
 
+bool sameColor(in vec4 c0, in vec4 c1) { return distance(c0.rgb * c0.a, c1.rgb * c1.a) <= threshold; }
+
 void main() {
 	vec2 tx = 1. / dimension;
     vec4 c  = texture2D( gm_BaseTexture, v_vTexcoord );
@@ -32,7 +35,7 @@ void main() {
 		if(x.x < 0. || x.y < 0. || x.x > 1. || x.y > 1.) break;
 		
 		vec4 b = texture2D( base, x );
-		if(b != ba) break;
+		if(!sameColor(b, ba)) break;
 		
 		vec4 s = texture2D( gm_BaseTexture, x );
 		gl_FragColor.xy = minn( gl_FragColor.xy, s.xy );
@@ -44,7 +47,7 @@ void main() {
 		if(x.x < 0. || x.y < 0. || x.x > 1. || x.y > 1.) break;
 		
 		vec4 b = texture2D( base, x );
-		if(b != ba) break;
+		if(!sameColor(b, ba)) break;
 		
 		vec4 s = texture2D( gm_BaseTexture, x );
 		gl_FragColor.xy = min( gl_FragColor.xy, s.xy );
@@ -56,7 +59,7 @@ void main() {
 		if(x.x < 0. || x.y < 0. || x.x > 1. || x.y > 1.) break;
 		
 		vec4 b = texture2D( base, x );
-		if(b != ba) break;
+		if(!sameColor(b, ba)) break;
 		
 		vec4 s = texture2D( gm_BaseTexture, x );
 		gl_FragColor.xy = min( gl_FragColor.xy, s.xy );
@@ -68,7 +71,7 @@ void main() {
 		if(x.x < 0. || x.y < 0. || x.x > 1. || x.y > 1.) break;
 		
 		vec4 b = texture2D( base, x );
-		if(b != ba) break;
+		if(!sameColor(b, ba)) break;
 		
 		vec4 s = texture2D( gm_BaseTexture, x );
 		gl_FragColor.xy = min( gl_FragColor.xy, s.xy );

@@ -9,10 +9,10 @@ function Node_Gap_Contract(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	newInput(2, nodeValue_Surface("Mask", self));
 	newInput(3, nodeValue_Slider("Mix", self, 1));
 	__init_mask_modifier(2); // inputs 4, 5, 
+	newInput(7, nodeValue_Bool( "Invert", self, false));
 	
 	////- Gap
 	
-	newInput(7, nodeValue_Bool( "Invert Gap", self, false));
 	newInput(6, nodeValue_Int(  "Max Width",  self, 8));
 	
 	/// inputs 8
@@ -20,8 +20,8 @@ function Node_Gap_Contract(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 1, 
-		["Surfaces", true], 0, 2, 3, 4, 5, 
-		["Gap",     false], 6, 7, 
+		["Surfaces", false], 0, 2, 3, 4, 5, 7, 
+		["Gap",      false], 6, 
 	]
 	
 	temp_surface = [ noone, noone ];
@@ -43,7 +43,7 @@ function Node_Gap_Contract(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		
 		var _bg = 0;
 		
-		if(_itr < -1) {
+		if(_inv) {
 			surface_set_shader(temp_surface[1], sh_invert);
 				shader_set_i("alpha", 0);
 				draw_surface_safe(surf);
@@ -59,7 +59,7 @@ function Node_Gap_Contract(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			surface_set_shader(temp_surface[_bg], sh_gap_contract);
 				shader_set_2("dimension", _dim);
 				shader_set_i("process",   _bg);
-				shader_set_i("inverted",  _inv);
+				shader_set_i("inverted",  _itr < 0);
 				
 				draw_surface_safe(temp_surface[!_bg]);
 			surface_reset_shader();

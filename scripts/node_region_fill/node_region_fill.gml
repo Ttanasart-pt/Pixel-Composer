@@ -24,6 +24,7 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	////- Fill
 	
+	newInput(13, nodeValue_Slider(         "Threshold",       self, 0.1));
 	newInput( 8, nodeValue_Enum_Scroll(    "Fill Type",       self, 0, [ "Random", "Color map", "Texture map", "Texture Coord", "Texture Index" ]));
 	newInput( 2, nodeValue_Palette(        "Fill Colors",     self, array_clone(DEF_PALETTE)));
 	newInput( 9, nodeValue_Surface(        "Color Map",       self));
@@ -35,14 +36,14 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	newInput(7, nodeValue_Enum_Scroll("Draw Original", self,  0, [ "None", "Above", "Behind" ]));
 	
-	//// Inputs 13
+	//// Inputs 14
 	
 	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 4, 
 		["Surfaces", false], 0, 1, 
 		["Filter",   false, 11], 5, 6, 
-		["Fill",	 false], 8, 2, 9, 10, 12, 
+		["Fill",	 false], 13, 8, 2, 9, 10, 12, 
 		["Render",	 false], 7, 
 	];
 	
@@ -52,6 +53,7 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		var _surf = _data[0];
 		var _mask = _data[1];
 		
+		var _thr  = _data[13];
 		var _colr = _data[2];
 		var _fill = _data[3];
 		var _seed = _data[4];
@@ -63,15 +65,15 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		var _fclr = _data[11];
 		var _targ = _data[5];
 		var _innr = _data[6];
-		var _trot = _data[12];
+		var _trot = _data[12]; 
 		
 		inputs[ 2].setVisible(_filt == 0);
 		inputs[ 9].setVisible(_filt == 1, _filt == 1);
 		inputs[10].setVisible(_filt == 2, _filt == 2);
 		inputs[12].setVisible(_filt == 2 || _filt == 3);
 		
-		inputs[ 5].setVisible(_fclr);
-		inputs[ 6].setVisible(_fclr);
+		inputs[ 5].setVisible(true);
+		inputs[ 6].setVisible(true);
 		
 		var _sw = surface_get_width_safe(_surf);
 		var _sh = surface_get_height_safe(_surf)
@@ -88,7 +90,8 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			
 			surface_set_shader(temp_surface[1], sh_region_fill_init);
 				shader_set_color("targetColor", _targ);
-			
+				shader_set_f("threshold",   _thr);
+				
 				draw_surface_safe(_surf);
 			surface_reset_shader();
 			
@@ -125,7 +128,7 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 				base = !base;
 				var amo = _sw + _sh;
 			
-				repeat( amo ) {
+				repeat(amo) {
 					surface_set_shader(temp_surface[base], sh_region_fill_coordinate);
 						shader_set_f("dimension",   _sw, _sh);
 						shader_set_surface("base",	temp_surface[2]);
@@ -135,7 +138,7 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 				
 					base = !base;
 				}
-			
+				
 				surface_set_shader(temp_surface[base], sh_region_fill_border);
 					shader_set_f("dimension",       _sw, _sh);
 					shader_set_surface("original",	_surf);
@@ -157,6 +160,7 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			repeat( amo ) {
 				surface_set_shader(temp_surface[base], sh_region_fill_coordinate_all);
 					shader_set_f("dimension",   _sw, _sh);
+					shader_set_f("threshold",   _thr);
 					shader_set_surface("base",	_surf);
 					
 					draw_surface_safe(temp_surface[!base]);
