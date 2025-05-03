@@ -1,4 +1,18 @@
 <policymap>
-    <policy domain="Undefined" rights="none"/>
-    <policy domain="resource" name="memory" value="4GiB"/>
+    <!-- Set maximum parallel threads. -->
+    <policy domain="resource" name="thread" value="4"/>
+
+    <!-- Set maximum amount of memory in bytes to allocate for the pixel cache
+    from the heap. When this limit is exceeded, the image pixels are cached
+    to memory-mapped disk. -->
+    <policy domain="resource" name="memory" value="8GiB"/>
+
+    <!-- Set maximum amount of memory map in bytes to allocate for the pixel
+    cache. When this limit is exceeded, the image pixels are cached to
+    disk. -->
+    <policy domain="resource" name="map" value="8GiB"/>
+
+    <!-- Set the maximum amount of memory in bytes that is permitted for
+    allocation requests. -->
+    <policy domain="system" name="max-memory-request" value="1GiB"/>
 </policymap>

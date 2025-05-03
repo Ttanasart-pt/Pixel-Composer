@@ -47,74 +47,53 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	_format_still = { filter: "Portable Network Graphics (.png)|*.png|Joint Photographic Experts Group (.jpg)|*.jpg" };
 	_format_anim  = { filter: "Graphics Interchange Format (.gif)|*.gif|Animated WebP (.webp)|*.webp" };
 	
-	newInput(0, nodeValue_Surface("Surface", self));
-	
-	newInput(1, nodeValue_Path("Directory",   self, ""))
-		.setDisplay(VALUE_DISPLAY.path_save, { filter: "dir" })
-		.setVisible(true);
-	
-	newInput(2, nodeValue_Text("Template",  self, "%d%n"))
-		.rejectArray();
-	inputs[2].editWidget.format		 = TEXT_AREA_FORMAT.path_template;
-	inputs[2].editWidget.auto_update = true;
-	
-	format_single = ["Single image", "Image sequence", "Animation"];
-	format_array  = ["Multiple images", "Image sequences", "Animations"];
-	
-	newInput(3, nodeValue_Enum_Scroll("Type", self,  0, { data: format_single, update_hover: false }))
-		.rejectArray();
-	
-	newInput(4, nodeValue_Int("Template guides", self, 0));
-
-	newInput(5, nodeValue_Bool("Loop", self, true))
-		.setVisible(false)
-		.rejectArray();
-	
-	newInput(6, nodeValue_Bool("Frame optimization", self, false))
-		.setVisible(false)
-		.rejectArray();
-	
-	newInput(7, nodeValue_Float("Color merge", self, 0.02))
-		.setDisplay(VALUE_DISPLAY.slider)
-		.setVisible(false)
-		.rejectArray();
-	
-	newInput(8, nodeValue_Int("Framerate", self, 30))
-		.rejectArray();
-	
+	format_single    = ["Single image", "Image sequence", "Animation"];
+	format_array     = ["Multiple images", "Image sequences", "Animations"];
 	format_image     = [ ".png", ".jpg",  ".webp", ".exr" ];
 	format_animation = [ ".gif", ".apng", ".webp", ".mp4" ];
 	
-	newInput(9, nodeValue_Enum_Scroll("Format", self,  0, { data: format_image, update_hover: false }))
-		.rejectArray();
+	png_format       = [ "INDEX4", "INDEX8", "Default (PNG32)" ];
 	
-	newInput(10, nodeValue_Float("Quality", self, 23))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 100, 0.1 ] })
-		.rejectArray();
+	////- Export
 	
-	newInput(11, nodeValue_Int("Sequence begin", self, 0));
+	newInput( 0, nodeValue_Surface( "Surface",         self));
+	newInput( 1, nodeValue_Path(    "Directory",       self, "")).setDisplay(VALUE_DISPLAY.path_save, { filter: "dir" }).setVisible(true);
+	newInput(20, nodeValue_Text(    "File name",       self, ""));
+	newInput( 4, nodeValue_Int(     "Template guides", self, 0));
+	newInput( 2, nodeValue_Text(    "Template",        self, "%d%n")).rejectArray();
+	inputs[2].editWidget.format		 = TEXT_AREA_FORMAT.path_template;
+	inputs[2].editWidget.auto_update = true;
+	newInput(16, nodeValue_Bool(    "Export on Save",  self, false)).setTooltip("Automatically export when saving project.");
 	
-	newInput(12, nodeValue_Slider_Range("Frame range", self, [0, -1], { range: [0, TOTAL_FRAMES, 0.1] }));
+	////- Format
 	
-	png_format   = [ "INDEX4", "INDEX8", "Default (PNG32)" ];
-	newInput(13, nodeValue_Enum_Scroll("Subformat", self,  2, { data: png_format, update_hover: false }));
+	newInput( 3, nodeValue_Enum_Scroll( "Type",                     self,  0, { data: format_single, update_hover: false })).rejectArray();
+	newInput( 9, nodeValue_Enum_Scroll( "Format",                   self,  0, { data: format_image, update_hover: false })).rejectArray();
+	newInput(17, nodeValue_Bool(        "Use Built-in gif encoder", self, false))
+	newInput(18, nodeValue_Int(         "Quality",                  self, 2, [ 0, 3, 1 ])).rejectArray();
+	newInput( 6, nodeValue_Bool(        "Frame optimization",       self, false)).setVisible(false).rejectArray();
+	newInput( 7, nodeValue_Slider(      "Color merge",              self, 0.02)).setVisible(false).rejectArray();
+	newInput(10, nodeValue_Slider(      "Quality",                  self, 23, [ 0, 100, 0.1 ])).rejectArray();
+	newInput(13, nodeValue_Enum_Scroll( "Subformat",                self,  2, { data: png_format, update_hover: false }));
 	
-	newInput(14, nodeValue_Int("Frame step", self, 1));
+	////- Post-Process
 	
-	newInput(15, nodeValue_Bool("Custom Range", self, false))
-		.rejectArray();
+	newInput(19, nodeValue_Float( "Scale", self, 1));
 	
-	newInput(16, nodeValue_Bool("Export on Save", self, false)).setTooltip("Automatically export when saving project.");
+	////- Custom Range
 	
-	newInput(17, nodeValue_Bool("Use Built-in gif encoder", self, false))
+	newInput(15, nodeValue_Bool(         "Custom Range", self, false)).rejectArray();
+	newInput(12, nodeValue_Slider_Range( "Frame range",  self, [0, -1], { range: [0, TOTAL_FRAMES, 0.1] }));
 	
-	newInput(18, nodeValue_Int("Quality", self, 2))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 3, 1 ] })
-		.rejectArray();
-		
-	newInput(19, nodeValue_Float("Scale", self, 1))
+	////- Animation
 	
-	newInput(20, nodeValue_Text("File name",  self, ""))
+	newInput( 8, nodeValue_Int(  "Framerate",      self, 30)).rejectArray();
+	newInput( 5, nodeValue_Bool( "Loop",           self, true)).setVisible(false).rejectArray();
+	newInput(11, nodeValue_Int(  "Sequence begin", self, 0));
+	newInput(14, nodeValue_Int(  "Frame step",     self, 1));
+	newInput(21, nodeValue_Int(  "Batch gif",      self, 0)).setTooltip("Batch animations to reduce memory footprint. Set to zero to export all at once.");
+	
+	// inputs 22
 	
 	newOutput(0, nodeValue_Output("Preview", self, VALUE_TYPE.surface, noone));
 	
@@ -208,18 +187,22 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		["Format",		 false    ],  3,  9, 17, 18,  6,  7, 10, 13, 
 		["Post-Process", false    ], 19,
 		["Custom Range",  true, 15], 12, 
-		["Animation",	 false    ],  8,  5, 11, 14, 
+		["Animation",	 false    ],  8,  5, 11, 14, 21, 
 	];
 	
 	////- Paths
 	
-	render_process_id = 0;
+	render_process_id    = 0;
+	render_process_batch = [];
+	render_process_batch_merge = "";
+	
 	render_type       = "";
 	render_target     = "";
 	exportLog         = true;
 	
 	use_gif_encoder   = false;
 	gif_encoder       = [];
+	gif_frames        = 0;
 	
 	directory = TEMPDIR + string(irandom_range(100000, 999999));
 	converter = filepath_resolve(PREFERENCES.ImageMagick_path) + "convert.exe";
@@ -469,6 +452,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var fuzz = getInputData( 7);
 		var rate = max(1, getInputData( 8));
 		var qual = getInputData(10);
+		var bsiz = getInputData(21);
 		
 		temp_path   = string_replace_all(temp_path, "/", "\\");
 		target_path = string_replace_all(target_path, "/", "\\");
@@ -477,11 +461,29 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var loop_str   = loop? 0 : 1;
 		var use_gifski = false;
 		
-		var		 shell_cmd  = $"-delay {framerate} -alpha set -dispose 2 -loop {loop_str}";
-		if(opti) shell_cmd += $" -fuzz {fuzz * 100}% -layers OptimizeFrame -layers OptimizeTransparency";
-				 shell_cmd += $" {string_quote(temp_path)} {string_quote(target_path)}";
+		if(bsiz) {
+			for(var i = 0; i < gif_frames; i += bsiz) {
+				var temp_batch_path = string_replace(temp_path, "*.png", $"{i/bsiz}-*.png");
+				var targ_batch_path = string_replace(temp_path, "*.png", $"{i/bsiz}.gif");
+				
+				var		 shell_cmd  = $"-delay {framerate} -alpha set -dispose 2 -loop {loop_str}";
+				if(opti) shell_cmd += $" -fuzz {fuzz * 100}% -layers OptimizeFrame -layers OptimizeTransparency";
+						 shell_cmd += $" {string_quote(temp_batch_path)} {string_quote(targ_batch_path)}";
+				var _id = shell_execute_async(converter, shell_cmd, self);
+				array_push(render_process_batch, _id);
+			}
 			
-		render_process_id = shell_execute_async(converter, shell_cmd, self);
+			var batch_gif_path = string_replace(temp_path, "*.png", $"*.gif");
+			render_process_batch_merge = $"{string_quote(batch_gif_path)} {string_quote(target_path)}";
+			
+		} else {
+			var		 shell_cmd  = $"-delay {framerate} -alpha set -dispose 2 -loop {loop_str}";
+			if(opti) shell_cmd += $" -fuzz {fuzz * 100}% -layers OptimizeFrame -layers OptimizeTransparency";
+					 shell_cmd += $" {string_quote(temp_path)} {string_quote(target_path)}";
+			
+			render_process_id = shell_execute_async(converter, shell_cmd, self);
+		}
+		
 		render_type       = "gif";
 		render_target     = target_path;
 	}
@@ -563,6 +565,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 						surface_save_safe(_surf, _pathOut);
 						break;
 				}
+				
 				break;
 				
 			case ".jpg": 
@@ -675,10 +678,16 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		} else if(is_surface(surf)) {
 			var _pathDir = array_safe_get_fast(path, 0, path);
 			var _pathNam = array_safe_get_fast(fnam, 0, fnam);
+			var bsiz     = getInputData(21);
 			var p;
 				
 			if(form == NODE_EXPORT_FORMAT.animation) {
-				p = $"{directory}/{string_lead_zero(CURRENT_FRAME, 5)}.png";
+				var _name = string_lead_zero(gif_frames, 5);
+				if(bsiz) _name = $"{floor(gif_frames/bsiz)}-{string_lead_zero(gif_frames, 5)}";
+				gif_frames++;
+				
+				p = $"{directory}/{_name}.png";
+				
 			} else {
 				p = pathString(_pathDir, _pathNam);
 				CLI_EXPORT_AMOUNT++;
@@ -692,7 +701,6 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				
 				var noti  = log_message("EXPORT", _txt, THEME.noti_icon_tick, COLORS._main_value_positive, false)
 								.setRef(filename_dir(p))
-								// .setColor(COLORS._main_value_positive)
 								.setOnClick(function() /*=>*/ {return shellOpenExplorer(self.reference)}, "Open in explorer", THEME.explorer);
 					
 				PANEL_MENU.setNotiIcon(THEME.noti_icon_tick);
@@ -705,7 +713,8 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	static renderStarted = function() {
 		use_gif_encoder = false;
 		
-		var extd = getInputData( 9);
+		var extd   = getInputData( 9);
+		gif_frames = 0;
 		
 		if(format_animation[extd] == ".gif") {
 			var _build_in_gif = getInputData(17);
@@ -928,6 +937,19 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				if(IS_CMD) array_remove(PROGRAM_ARGUMENTS._exporting, node_id);
 			}
 		}
+		
+		if(!array_empty(render_process_batch)) {
+			var _completed = true;
+			for( var i = 0, n = array_length(render_process_batch); i < n; i++ ) {
+				var res = ProcIdExists(render_process_batch[i]);
+				if(res) _completed = false;
+			}
+			
+			if(_completed) {
+				render_process_id    = shell_execute_async(converter, render_process_batch_merge, self);
+				render_process_batch = [];
+			}
+		}
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
@@ -953,7 +975,8 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		graph_preview_alpha = 1;
-		if(render_process_id != 0) {
+		
+		if(render_process_id != 0 || !array_empty(render_process_batch)) {
 			graph_preview_alpha = 0.5;
 			draw_sprite_ui(THEME.loading, 0, xx + w * _s / 2, yy + h * _s / 2, _s, _s, current_time / 2, COLORS._main_icon, 1);
 		}
