@@ -50,17 +50,20 @@ function Node_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(18, nodeValue_Int(         "Iteration",     self, 16));
 	newInput(19, nodeValue_Bool(        "Fade Distance", self, false));
 	newInput(20, nodeValue_Bool(        "Reposition",    self, false));
+	newInput(21, nodeValue_Int(         "Repeat",        self, 1));
 	
-	// inputs 21
+	// inputs 22
 	
 	input_display_list = [ 10, 12, 
 		["Surfaces",	  true], 0, 8, 9, 13, 14, 
 		["Strength",	 false], 1, 17, 3, 15, 4,
 		["Displacement", false], 5, 16, 2, 
-		["Iterate",	      true, 6], 11, 18, 19, 20, 
+		["Iterate",	      true, 6], 11, 18, 19, 20, 21, 
 	];
 	
 	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	
+	temp_surface = [ 0, 0 ];
 	
 	attribute_surface_depth();
 	attribute_oversample();
@@ -93,47 +96,65 @@ function Node_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
-		var _map  = _data[1];
+		var _surf = _data[ 0];
+		var _map  = _data[ 1];
 		var _sep  = _data[16];
 		var _map2 = _data[17];
+		var _rept = _data[21]; _rept = max(1, _rept);
 		
 		var _mode = _data[5];
 		if(!is_surface(_map) || (_sep && !is_surface(_map2))) {
 			surface_set_shader(_outSurf); 
-				draw_surface_safe(_data[0]);
+				draw_surface_safe(_surf);
 			surface_reset_shader()
 			return _outSurf;
 		}
 		
-		var ww = surface_get_width_safe(_data[0]);
-		var hh = surface_get_height_safe(_data[0]);
-		var mw = surface_get_width_safe(_data[1]);
-		var mh = surface_get_height_safe(_data[1]);
+		var ww = surface_get_width_safe(  _surf );
+		var hh = surface_get_height_safe( _surf );
+		var mw = surface_get_width_safe(  _map  );
+		var mh = surface_get_height_safe( _map  );
 		
-		surface_set_shader(_outSurf, sh_displace);
-		shader_set_interpolation(_data[0]);
-			shader_set_surface("map",  _data[1]);
-			shader_set_surface("map2", _data[17]);
+		for( var i = 0, n = array_length(temp_surface); i < n; i++ ) {
+			temp_surface[i] = surface_verify(temp_surface[i], ww, hh);
+			surface_set_shader(temp_surface[i]); 
+				draw_surface_safe(_surf);
+			surface_reset_shader();
+		}
+		
+		var bg = 0;
+		repeat(_rept) {
+			surface_set_shader(temp_surface[bg], sh_displace);
+			shader_set_interpolation(_surf);
+				shader_set_surface("map",  _map);
+				shader_set_surface("map2", _data[17]);
+				
+				shader_set_f("dimension",     [ww, hh]);
+				shader_set_f("map_dimension", [mw, mh]);
+				shader_set_f("displace",      _data[ 2]);
+				shader_set_f_map("strength",  _data[ 3], _data[15], inputs[3]);
+				shader_set_f("middle",        _data[ 4]);
+				shader_set_i("mode",          _data[ 5]);
+				shader_set_i("sepAxis",       _data[16]);
+				
+				shader_set_i("iterate",       _data[ 6]);
+				shader_set_f("iteration",     _data[18]);
+				shader_set_i("blendMode",     _data[11]);
+				shader_set_i("fadeDist",      _data[19]);
+				shader_set_i("reposition",    _data[20]);
+				draw_surface_safe(temp_surface[!bg]);
+			surface_reset_shader();
 			
-			shader_set_f("dimension",     [ww, hh]);
-			shader_set_f("map_dimension", [mw, mh]);
-			shader_set_f("displace",      _data[ 2]);
-			shader_set_f_map("strength",  _data[ 3], _data[15], inputs[3]);
-			shader_set_f("middle",        _data[ 4]);
-			shader_set_i("mode",          _data[ 5]);
-			shader_set_i("sepAxis",       _data[16]);
-			
-			shader_set_i("iterate",       _data[ 6]);
-			shader_set_f("iteration",     _data[18]);
-			shader_set_i("blendMode",     _data[11]);
-			shader_set_i("fadeDist",      _data[19]);
-			shader_set_i("reposition",    _data[20]);
-			draw_surface_safe(_data[0]);
+			bg = !bg;
+		}
+		
+		surface_set_shader(_outSurf);
+			draw_surface_safe(temp_surface[!bg]);
 		surface_reset_shader();
 		
 		__process_mask_modifier(_data);
-		_outSurf = mask_apply(_data[0], _outSurf, _data[8], _data[9]);
-		_outSurf = channel_apply(_data[0], _outSurf, _data[12]);
+		_outSurf = mask_apply(_surf, _outSurf, _data[8], _data[9]);
+		_outSurf = channel_apply(_surf, _outSurf, _data[12]);
 		
 		return _outSurf;
 	}

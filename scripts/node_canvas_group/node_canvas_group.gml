@@ -183,7 +183,7 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 		
 		_b += 32;
 		var _canvas = nodeBuild("Node_Canvas", _l, _b);
-		_canvas.setDisplayName($"Layer {array_length(canvases)}");
+		_canvas.setDisplayName($"Layer {array_length(canvases)}", false);
 		_canvas.inputs[12].setValue(true);
 		
 		composite.dummy_input.setFrom(_canvas.outputs[0]);
@@ -230,7 +230,7 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 	if(NODE_NEW_MANUAL) {
 		var _canvas  = nodeBuild("Node_Canvas", x - 160, y);
 		_canvas.inputs[12].setValue(true);
-		_canvas.setDisplayName($"Background");
+		_canvas.setDisplayName($"Background", false);
 		
 		var _compose = nodeBuild("Node_Composite", x, y);
 		_compose.dummy_input.setFrom(_canvas.outputs[0]);

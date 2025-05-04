@@ -366,11 +366,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		project.nodeNameMap[? internalName] = self;
 	}
 	
-	static setDisplayName = function(_name) {
-		if(NOT_LOAD) recordAction(ACTION_TYPE.custom, function(data) { 
+	static setDisplayName = function(_name, _rec = true) {
+		if(NOT_LOAD && _rec && display_name != _name) recordAction(ACTION_TYPE.custom, function(data) { 
 			var _name = data.name;
 			data.name = display_name;
-			setDisplayName(_name);
+			setDisplayName(_name, false);
 		}, { name : display_name, tooltip : $"Rename node" }).setRef(self);
 		
 		renamed      = true;

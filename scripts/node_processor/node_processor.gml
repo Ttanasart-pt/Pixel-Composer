@@ -288,9 +288,12 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 						_outa[i] = array_safe_get(_out[i], l);
 						
 						if(outputs[i].type != VALUE_TYPE.surface) continue;
-						
 						_outa[i] = surface_verify(_outa[i], _dim[0], _dim[1], attrDepth());
 					}
+					
+				} else {
+					for(var i = 0; i < _os; i++)
+						_outa[i] = array_safe_get(_out[i], l);
 				}
 				
 				if(_os == 1) {

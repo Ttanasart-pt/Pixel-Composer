@@ -105,7 +105,7 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			if(path == -1) continue;
 			
 			var ext = string_lower(filename_ext(path));
-			if(file_exists_empty(path)) setDisplayName(filename_name_only(path));
+			if(file_exists_empty(path)) setDisplayName(filename_name_only(path), false);
 			edit_time = max(edit_time, file_get_modify_s(path));
 			
 			switch(ext) {

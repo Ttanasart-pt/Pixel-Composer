@@ -84,7 +84,7 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		pos = [];
 			
 		if(_scat == 2) {
-			pos = area_get_random_point_poisson(_area, poisDist, _seed);
+			pos = area_get_random_point_poisson_c(_area, poisDist, _seed);
 			
 		} else if(_dist != 2) {
 			var _fixArea = [_fixRef[0] / 2, _fixRef[1] / 2, _fixRef[0] / 2, _fixRef[1] / 2, 0];

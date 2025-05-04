@@ -26,6 +26,6 @@ function Node_Slideshow(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		slide_anchor = inputs[2].getValue();
 		slide_speed  = max(1, 100 / inputs[3].getValue());
 		
-		setDisplayName($"Slide-{slide_title}");
+		setDisplayName($"Slide-{slide_title}", false);
 	}
 }

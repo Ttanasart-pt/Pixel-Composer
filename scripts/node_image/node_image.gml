@@ -65,7 +65,7 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			case ".jpg":
 			case ".jpeg":
 			case ".gif":
-				setDisplayName(_name);
+				setDisplayName(_name, false);
 				
 				var _real_path = sprite_path_check_depth(path);
 				var _spr = sprite_add(_real_path, 1, false, false, 0, 0);

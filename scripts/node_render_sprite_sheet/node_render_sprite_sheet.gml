@@ -11,41 +11,34 @@ enum SPRITE_ANIM_GROUP {
 
 function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	static log = false;
-	
 	name		= "Render Spritesheet";
 	anim_drawn	= array_create(TOTAL_FRAMES + 1, false);
 	
-	newInput(0, nodeValue_Surface("Sprites", self));
+	////- Surfaces
 	
-	newInput(1, nodeValue_Enum_Scroll("Sprite set", self,  0, [ "Animation", "Sprite array" ]))
-		.rejectArray();
+	newInput(0, nodeValue_Surface(     "Sprites",    self));
+	newInput(1, nodeValue_Enum_Scroll( "Sprite set", self, 0, [ "Animation", "Sprite array" ])).rejectArray();
+	newInput(2, nodeValue_Int(         "Frame step", self, 1, "Number of frames until next sprite. Can be seen as (Step - 1) frame skip.")).rejectArray();
 	
-	newInput(2, nodeValue_Int("Frame step", self, 1, "Number of frames until next sprite. Can be seen as (Step - 1) frame skip."))
-		.rejectArray();
+	////- Packing
 	
-	newInput(3, nodeValue_Enum_Scroll("Packing type", self,  0, [ new scrollItem("Horizontal", s_node_alignment, 0), 
-												                  new scrollItem("Vertical",   s_node_alignment, 1), 
-												                  new scrollItem("Grid",       s_node_alignment, 2), ]))
-		.rejectArray();
+	newInput(3, nodeValue_Enum_Scroll( "Packing type", self, 0, __enum_array_gen(["Horizontal", "Vertical", "Grid"], s_node_alignment))).rejectArray();
+	newInput(4, nodeValue_Int(         "Grid column",  self, 4)).rejectArray();
+	newInput(5, nodeValue_Enum_Button( "Alignment",    self, 0, [ "First", "Middle", "Last" ])).rejectArray();
+	newInput(6, nodeValue_Int(         "Spacing",      self, 0));
+	newInput(9, nodeValue_Vec2(        "Spacing",      self, [ 0, 0 ]));
+	newInput(7, nodeValue_Padding(     "Padding",      self, [ 0, 0, 0, 0 ]))
+	
+	////- Rendering
+	
+	newInput(10, nodeValue_Bool( "Overlappable", self, false));
+	
+	////- Range
+	
+	newInput(11, nodeValue_Bool(         "Custom Range", self, false));
+	newInput( 8, nodeValue_Slider_Range( "Range",        self, [ 0, 0 ])).setTooltip("Starting/ending frames, set end to 0 to default to last frame.")
 		
-	newInput(4, nodeValue_Int("Grid column", self, 4))
-		.rejectArray();
-	
-	newInput(5, nodeValue_Enum_Button("Alignment", self,  0, [ "First", "Middle", "Last" ]))
-		.rejectArray();
-	
-	newInput(6, nodeValue_Int("Spacing", self, 0));
-	
-	newInput(7, nodeValue_Padding("Padding", self, [ 0, 0, 0, 0 ]))
-	
-	newInput(8, nodeValue_Slider_Range("Range", self, [ 0, 0 ]))
-		.setTooltip("Starting/ending frames, set end to 0 to default to last frame.")
-		
-	newInput(9, nodeValue_Vec2("Spacing", self, [ 0, 0 ]));
-	
-	newInput(10, nodeValue_Bool("Overlappable", self, false));
-	
-	newInput(11, nodeValue_Bool("Custom Range", self, false));
+	// inputs 12
 	
 	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 		
@@ -53,8 +46,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 	
 	input_display_list = [
 		["Surfaces",  false], 0, 1, 2,
-		["Sprite",	  false], 3, 
-		["Packing",	  false], 4, 5, 6, 9, 7, 
+		["Packing",	  false], 3, 4, 5, 6, 9, 7, 
 		//["Rendering", false], 10, 
 		["Custom Range", true, 11], 8, 
 	]
@@ -97,18 +89,20 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		if(IS_FIRST_FRAME) initSurface();
 		
 		var grup = getInputData(1);
+		var anim = grup == SPRITE_ANIM_GROUP.animation;
 		
-		if(grup == SPRITE_ANIM_GROUP.animation) animationRender();
-		else									arrayRender();
+		if(anim) animationRender();
+		else     arrayRender();
 	}
 	
 	static initSurface = function(clear = false) {
 		for(var i = 0; i < TOTAL_FRAMES; i++) anim_drawn[i] = false;
 		
 		var grup = getInputData(1);
+		var anim = grup == SPRITE_ANIM_GROUP.animation;
 		
-		if(grup == SPRITE_ANIM_GROUP.animation) animationInit(clear);
-		else									arrayRender();
+		if(anim) animationInit(clear);
+		else     arrayRender();
 	}
 	
 	static arrayRender = function() {
@@ -124,8 +118,26 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		
 		var cDep = attrDepth();
 		
+		var _outSurf = outputs[0].getValue();
+		
+		if(is_array(_outSurf)) {
+			surface_array_free(_outSurf);
+			_outSurf = noone;
+		}
+		
 		if(!is_array(inpt)) {
-			outputs[0].setValue(surface_clone(inpt));
+			if(is_surface(inpt)) {
+				_outSurf = surface_verify(_outSurf, surface_get_width_safe(inpt), surface_get_height_safe(inpt));
+				surface_set_shader(_outSurf, noone);
+					draw_surface(inpt, 0, 0);
+				surface_reset_shader();
+				
+			} else {
+				surface_array_free(_outSurf);
+				_outSurf = noone;
+			}
+			
+			outputs[0].setValue(_outSurf);
 			outputs[1].setValue([]);
 			return;	
 		}
@@ -153,7 +165,6 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		atlases  = [];
 		
 		#region surface generate
-			
 			switch(pack) { 
 				case SPRITE_STACK.horizontal :
 					for(var i = _st; i <= _ed; i++) {
@@ -165,6 +176,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 						hh  = max(hh, surface_get_height_safe(_surf));
 					}
 					break;
+					
 				case SPRITE_STACK.vertical :
 					for(var i = _st; i <= _ed; i++) {
 						var _surf = array_safe_get(inpt, i);
@@ -175,6 +187,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 						if(i > _st) hh += spac;
 					}
 					break;
+					
 				case SPRITE_STACK.grid :
 					var col = getInputData(4);
 					var row = ceil(amo / col);
@@ -204,7 +217,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 				
 			ww += padd[0] + padd[2];
 			hh += padd[1] + padd[3];
-			var _surf = surface_create_valid(ww, hh, cDep);
+			var _surf = surface_verify(_outSurf, ww, hh, cDep);
 		#endregion
 		
 		#region draw
@@ -385,8 +398,8 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 			ww += padd[0] + padd[2];
 			hh += padd[1] + padd[3];
 				
-			_out[i] = surface_verify(array_safe_get_fast(_out, i), surface_valid_size(ww), surface_valid_size(hh), cDep);
-			
+			var _o  = array_safe_get_fast(_out, i);
+			_out[i] = surface_verify(_o, ww, hh, cDep);
 			if(clear) surface_clear(_out[i]);
 		}
 			

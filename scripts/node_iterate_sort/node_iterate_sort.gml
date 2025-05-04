@@ -23,11 +23,11 @@ function Node_Iterate_Sort(_x, _y, _group = noone) : Node_Collection(_x, _y, _gr
 	
 	if(NODE_NEW_MANUAL) { #region
 		var input0 = nodeBuild("Node_Iterator_Sort_Input", -256, -64, self);
-		input0.setDisplayName("Value 1");
+		input0.setDisplayName("Value 1", false);
 		input0.attributes.sort_inputs = 1;
 		
 		var input1 = nodeBuild("Node_Iterator_Sort_Input", -256,  64, self);
-		input1.setDisplayName("Value 2");
+		input1.setDisplayName("Value 2", false);
 		input1.attributes.sort_inputs = 2;
 		
 		var output = nodeBuild("Node_Iterator_Sort_Output", 256, -32, self);

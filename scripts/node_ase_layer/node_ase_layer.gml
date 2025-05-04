@@ -77,7 +77,7 @@ function Node_ASE_layer(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		if(data == noone) return;
 		
 		var _lname = getInputData(2);
-		setDisplayName(_lname);
+		setDisplayName(_lname, false);
 		
 		for( var i = 0, n = array_length(data.layers); i < n; i++ ) {
 			if(data.layers[i].name == _lname) 

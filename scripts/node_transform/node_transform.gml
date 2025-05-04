@@ -184,7 +184,6 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var alp       = _data[14];
 		
 		var _outSurf  = _outData[0];
-		var _outRes   = array_create(array_length(outputs));
 		
 		var cDep = attrDepth();
 		
@@ -194,14 +193,12 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _hh = hh;
 		
 		if(!is_surface(ins)) {
-			surface_free(_outSurf);
+			surface_free_safe(_outSurf);
 			_outSurf = noone;
 		}
 		
-		_outRes[0] = _outSurf;
-		_outRes[1] = [ ww, hh ];
-		
-		if(_ww <= 1 && _hh <= 1) return _outRes;
+		_outData[1] = [ ww, hh ];
+		if(_ww <= 1 && _hh <= 1) return _outData;
 		
 		switch(out_type) { // output dimension
 			case OUTPUT_SCALING.same_as_input :
@@ -240,12 +237,12 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				break;
 		}
 		
-		_outRes[1] = [ ww, hh ];
+		_outData[1] = [ ww, hh ];
 		
-		if(_ww <= 0 || _hh <= 0) return _outRes;
+		if(_ww <= 0 || _hh <= 0) return _outData;
 		
 		_outSurf = surface_verify(_outSurf, _ww, _hh, cDep);
-		_outRes[0] = _outSurf;
+		_outData[0] = _outSurf;
 		
 		anc[0] *= ww * sca[0];
 		anc[1] *= hh * sca[1];
@@ -271,7 +268,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				draw_surface_tiled_ext_safe(ins, draw_x, draw_y, sca[0], sca[1], rot, c_white, alp);
 				
 			surface_reset_shader();
-		
+			
 		} else { // Normal or wrap
 			surface_set_shader(_outSurf);
 			shader_set_interpolation(ins);
@@ -319,7 +316,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			[ sca[0], sca[1] ],
 		];
 		
-		return _outRes;
+		return _outData;
 	}
 	
 	overlay_dragging = 0;

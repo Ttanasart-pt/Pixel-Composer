@@ -60,11 +60,11 @@ function Node_Statistic(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var _type = inputs[0].getValue();
 		
 		switch(_type) {
-			case STAT_OPERATOR._sum :		setDisplayName("Sum")        break;
-			case STAT_OPERATOR._average :	setDisplayName("Average");	 break;
-			case STAT_OPERATOR._median :	setDisplayName("Median");	 break;
-			case STAT_OPERATOR._max :		setDisplayName("Max");       break;
-			case STAT_OPERATOR._min :		setDisplayName("Min");       break;
+			case STAT_OPERATOR._sum :		setDisplayName("Sum", false)        break;
+			case STAT_OPERATOR._average :	setDisplayName("Average", false);	 break;
+			case STAT_OPERATOR._median :	setDisplayName("Median", false);	 break;
+			case STAT_OPERATOR._max :		setDisplayName("Max", false);       break;
+			case STAT_OPERATOR._min :		setDisplayName("Min", false);       break;
 		}
 	}
 	

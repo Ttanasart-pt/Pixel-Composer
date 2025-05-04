@@ -67,14 +67,14 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	////- Format
 	
-	newInput( 3, nodeValue_Enum_Scroll( "Type",                     self,  0, { data: format_single, update_hover: false })).rejectArray();
-	newInput( 9, nodeValue_Enum_Scroll( "Format",                   self,  0, { data: format_image, update_hover: false })).rejectArray();
+	newInput( 3, nodeValue_Enum_Scroll( "Type",                     self, 0, { data: format_single, update_hover: false })).rejectArray();
+	newInput( 9, nodeValue_Enum_Scroll( "Format",                   self, 0, { data: format_image,  update_hover: false })).rejectArray();
 	newInput(17, nodeValue_Bool(        "Use Built-in gif encoder", self, false))
 	newInput(18, nodeValue_Int(         "Quality",                  self, 2, [ 0, 3, 1 ])).rejectArray();
 	newInput( 6, nodeValue_Bool(        "Frame optimization",       self, false)).setVisible(false).rejectArray();
 	newInput( 7, nodeValue_Slider(      "Color merge",              self, 0.02)).setVisible(false).rejectArray();
 	newInput(10, nodeValue_Slider(      "Quality",                  self, 23, [ 0, 100, 0.1 ])).rejectArray();
-	newInput(13, nodeValue_Enum_Scroll( "Subformat",                self,  2, { data: png_format, update_hover: false }));
+	newInput(13, nodeValue_Enum_Scroll( "Subformat",                self, 2, { data: png_format, update_hover: false }));
 	
 	////- Post-Process
 	

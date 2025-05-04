@@ -323,7 +323,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					_amount = uniAmo[0] * uniAmo[1];
 				
 				if(_scat == 2) {
-					var _points = area_get_random_point_poisson(_area, poisDist, seed);
+					var _points = area_get_random_point_poisson_c(_area, poisDist, seed);
 					_amount = array_length(_points);
 				}
 				
@@ -347,7 +347,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				
 				if(_scat == 2) {
 					var _area   = [ _dim[0] / 2, _dim[1] / 2, _dim[0] / 2, _dim[1] / 2, 0 ];
-					var _points = area_get_random_point_poisson(_area, poisDist, seed);
+					var _points = area_get_random_point_poisson_c(_area, poisDist, seed);
 					_amount = array_length(_points);
 				}
 				

@@ -119,7 +119,7 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			if(_path == -1) continue;
 			
 			array_push(path_current, _path);
-			if(file_exists_empty(_path)) setDisplayName(filename_name_only(_path));
+			if(file_exists_empty(_path)) setDisplayName(filename_name_only(_path), false);
 			
 			var ext = string_lower(filename_ext(_path));
 			

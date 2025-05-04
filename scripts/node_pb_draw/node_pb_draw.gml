@@ -215,7 +215,7 @@ function Node_PB_Draw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	setDynamicInput(26, false);
 	if(!LOADING && !APPENDING) run_in(1, function() /*=>*/ {return createNewInput()});
 	
-	temp_surfaces = [ 0, 0 ];
+	temp_surface = [ 0, 0 ];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _pbase = getSingleValue(0);
@@ -290,13 +290,13 @@ function Node_PB_Draw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 		var _dim     = group.dimension;
 		var _outSurf = surface_verify(_outData[0], _dim[0], _dim[1]);
-		for( var i = 0, n = array_length(temp_surfaces); i < n; i++ )
-			temp_surfaces[i] = surface_verify(temp_surfaces[i], _dim[0], _dim[1]);
+		for( var i = 0, n = array_length(temp_surface); i < n; i++ )
+			temp_surface[i] = surface_verify(temp_surface[i], _dim[0], _dim[1]);
 		
 		var _pbbox = _data[1];
 		var _bbox  = getBBOX(_data);
 		
-		var _draws = temp_surfaces[0];
+		var _draws = temp_surface[0];
 		var _bboxw = _bbox[2] - _bbox[0];
 		var _bboxh = _bbox[3] - _bbox[1];
 		
@@ -313,7 +313,7 @@ function Node_PB_Draw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var _ind = input_fix_len + i * data_length;
 			
 			bg = !bg;
-			surface_set_shader(temp_surfaces[bg], sh_pb_draw);
+			surface_set_shader(temp_surface[bg], sh_pb_draw);
 				shader_set_i("empty",     i == 0 );
 				shader_set_2("dimension", _dim );
 				shader_set_4("bbox",      _bbox);
@@ -353,12 +353,12 @@ function Node_PB_Draw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				shader_set_f("shines_slope",    _data[_ind + 23]);
 				shader_set_i("shines_axis",     _data[_ind + 24]);
 				
-				draw_surface_safe(temp_surfaces[!bg]);
+				draw_surface_safe(temp_surface[!bg]);
 			surface_reset_shader();
 		}
 		
 		surface_set_shader(_outSurf);
-			draw_surface_safe(temp_surfaces[bg]);
+			draw_surface_safe(temp_surface[bg]);
 		surface_reset_shader();
 		
 		return [ _pbbox, _outSurf ];

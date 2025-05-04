@@ -109,7 +109,7 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		if(index != 0) return;
 		
 		var _type = inputs[0].getValue();
-		setDisplayName(array_safe_get(global.node_math_names, _type, ""));
+		setDisplayName(array_safe_get(global.node_math_names, _type, ""), false);
 	}
 	
 	static _eval = function(a, b, c, f, t) {

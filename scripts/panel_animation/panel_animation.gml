@@ -194,7 +194,9 @@ function Panel_Animation() : PanelContent() constructor {
         timeline_stretch    = 0;
         timeline_stretch_sx = 0;
         timeline_stretch_mx = 0;
-    
+    	
+    	tooltip_anim_end    = new tooltipAnimEnd();
+    	
         timeline_show_time  = -1;
         timeline_preview    = noone;
         
@@ -2510,9 +2512,11 @@ function Panel_Animation() : PanelContent() constructor {
                 
             } else {
                 if(!IS_PLAYING && pHOVER && point_in_circle(msx, msy, stx, sty, sty)) {
+                	draw_set_color(COLORS._main_icon_light);
+                	TOOLTIP = tooltip_anim_end;
+                	
                 	if(key_mod_press(ALT)) {
                         draw_set_color(COLORS._main_value_positive);
-                		draw_line_width(stx, sty - ui(10), stx, sty + ui(10), 2);
                 		
                         TOOLTIP = __txtx("panel_animation_stretch", "Stretch animation");
                         if(mouse_press(mb_left, pFOCUS)) {
@@ -2523,8 +2527,7 @@ function Panel_Animation() : PanelContent() constructor {
                         
                     } else if(key_mod_press(CTRL)) {
                         draw_set_color(COLORS._main_accent);
-                		draw_line_width(stx, sty - ui(10), stx, sty + ui(10), 2);
-                	
+                		
                         TOOLTIP = __txtx("panel_animation_adjust_length", "Adjust animation length");
                         if(mouse_press(mb_left, pFOCUS)) {
                             timeline_stretch = 1;
@@ -2533,6 +2536,7 @@ function Panel_Animation() : PanelContent() constructor {
                         }
                     }
                     
+                    draw_line_width(stx, sty - ui(10), stx, sty + ui(10), 2);
                 }
             }
         #endregion
@@ -2828,5 +2832,29 @@ function Panel_Animation() : PanelContent() constructor {
 			var k = keyframe_selecting[i];
 			k.time = round(k.time);
 		}
+	}
+}
+
+function tooltipAnimEnd() constructor {
+	
+	static drawTooltip = function() {
+		var lh = line_get_height(f_p1);
+		var _h = lh * 2 + ui(4);
+		var _w = ui(136);
+		
+		var mx = min(mouse_mxs + ui(16), WIN_W - (_w + ui(16) + ui(4)));
+		var my = min(mouse_mys + ui(16), WIN_H - (_h + ui(16) + ui(4)));
+		
+		draw_sprite_stretched(THEME.textbox, 3, mx, my, _w + ui(16), _h + ui(16));
+		draw_sprite_stretched(THEME.textbox, 0, mx, my, _w + ui(16), _h + ui(16));
+		
+		var yy = my + ui(8);
+		draw_set_text(f_p1b, fa_left, fa_top, COLORS._main_text_sub);
+		draw_text(mx + ui(116), yy,              "Ctrl");
+		draw_text(mx + ui(116), yy + lh + ui(4), "Alt");
+		
+		draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text);
+		draw_text(mx + ui(8), yy,              "Adjust Length");
+		draw_text(mx + ui(8), yy + lh + ui(4), "Stretch");
 	}
 }

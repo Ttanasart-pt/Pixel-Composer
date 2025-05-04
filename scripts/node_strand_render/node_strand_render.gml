@@ -72,21 +72,21 @@ function Node_Strand_Render(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var _seed       = getInputData(6);
 		var _renderStep = getInputData(8);
 		
-		var _dim = getInputData(0);
+		var _dim   = getInputData(0);
 		
-		var _strd = getInputData(1);
-		var _tbas = getInputData(2);
-		var _tlen = getInputData(3);
+		var _strd  = getInputData(1);
+		var _tbas  = getInputData(2);
+		var _tlen  = getInputData(3);
 		
 		var _chUse = getInputData( 9);
 		var _chid  = getInputData( 7);
 		var _chRng = getInputData(10);
 		
-		var _cbas = getInputData(4);
-		var _clen = getInputData(5);
+		var _cbas  = getInputData(4);
+		var _clen  = getInputData(5);
 		
-		var _surf = outputs[0].getValue();
-		    _surf = surface_verify(_surf, _dim[0], _dim[1]);
+		var _surf  = outputs[0].getValue();
+		    _surf  = surface_verify(_surf, _dim[0], _dim[1]);
 		outputs[0].setValue(_surf);
 		
 		if(_strd == noone) return;

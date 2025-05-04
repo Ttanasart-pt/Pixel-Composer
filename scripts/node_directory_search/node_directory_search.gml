@@ -119,7 +119,7 @@ function Node_Directory_Search(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		}
 		
 		var _p = string_trim_end(path, ["/", "\\"]);
-		setDisplayName(filename_name_only(_p));
+		setDisplayName(filename_name_only(_p), false);
 	}
 	
 	setTrigger(1, __txt("Refresh"), [ THEME.refresh_icon, 1, COLORS._main_value_positive ], function() /*=>*/ { updatePaths(); triggerRender(); });
