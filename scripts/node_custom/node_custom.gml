@@ -82,8 +82,8 @@ function Node_Custom(_x, _y, _group = noone, _param = {}) : Node_Processor(_x, _
             var _n = node_overlay[i];
             var hv = _n.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); 
             
-            _hov  |=  hv;
-            hover &= !hv;
+            _hov  = _hov || hv;
+            hover = hover && !hv;
         }
         
         return _hov;

@@ -54,6 +54,7 @@ function Node_Grid_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	}
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+
 		var mx = (_mx - _x) / _s;
 		var my = (_my - _y) / _s;
 		
@@ -63,8 +64,7 @@ function Node_Grid_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _aamo = (_grid + 1) * (_grid + 1);
 		var _iamo = getInputAmount();
 		
-		if(_iamo != _aamo) return;
-		var _hov = false;
+		if(_iamo != _aamo) return w_hovering;
 		
 		var _an = array_create(_iamo);
 		
@@ -94,10 +94,10 @@ function Node_Grid_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		}
 				
 		for( var i = input_fix_len, n = array_length(inputs); i < n; i++ ) {
-			var hv = inputs[i].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); active &= !hv; _hov |= hv;
+			var hv = inputs[i].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
 		}
 		
-		return _hov;
+		return w_hovering;
 	}
 	
 	static step = function() {

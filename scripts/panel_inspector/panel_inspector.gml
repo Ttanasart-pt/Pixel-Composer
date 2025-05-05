@@ -346,7 +346,7 @@ function Panel_Inspector() : PanelContent() constructor {
         if(locked) return;
         
         inspecting = _inspecting;
-        locked    |= _lock;
+        locked    = locked || _lock;
         focusable  = _focus;
         
         if(inspecting != noone)

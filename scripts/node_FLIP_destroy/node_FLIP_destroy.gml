@@ -24,7 +24,9 @@ function Node_FLIP_Destroy(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	newOutput(0, nodeValue_Output("Domain", self, VALUE_TYPE.fdomain, noone ));
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+
+		
 		var _pos = getInputData(1);
 		var _shp = getInputData(2);
 		var _rad = getInputData(3);
@@ -41,18 +43,18 @@ function Node_FLIP_Destroy(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		     if(_shp == 0) draw_circle(_px, _py, _r, true);
 		else if(_shp == 1) draw_rectangle(_px - _w, _py - _h, _px + _w, _py + _h, true);
 		
-		if(inputs[1].drawOverlay(hover, active,  _x,  _y, _s, _mx, _my, _snx, _sny)) active = false;
+		var hv = inputs[1].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
 		
-	} #endregion
+	}
 	
-	static step = function() { #region
+	static step = function() {
 		var _shp = getInputData(2);
 		
 		inputs[3].setVisible(_shp == 0);
 		inputs[4].setVisible(_shp == 1);
-	} #endregion
+	}
 	
-	static update = function() { #region 
+	static update = function() { 
 		var domain = getInputData(0);
 		if(!instance_exists(domain)) return;
 		
@@ -66,7 +68,7 @@ function Node_FLIP_Destroy(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		     if(_shp == 0) FLIP_deleteParticle_circle(domain.domain, _pos[0], _pos[1], _rad, _rat);
 		else if(_shp == 1) FLIP_deleteParticle_rectangle(domain.domain, _pos[0], _pos[1], _siz[0], _siz[1], _rat);
-	} #endregion
+	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);

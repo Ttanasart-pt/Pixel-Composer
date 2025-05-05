@@ -85,7 +85,7 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	//////////////////////////////////////////////////
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		inputs[1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		var hv = inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
 		
 		var area = getInputData(1);
 		var cx = _x + area[0] * _s;

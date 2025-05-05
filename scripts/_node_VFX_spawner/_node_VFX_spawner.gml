@@ -532,7 +532,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			if(is_array(_spr)) _spr = _spr[0];
 			
 			var _flag = is_instanceof(_spr, SurfaceAtlas)? 0b0001 : 0b0011;
-			inputs[3].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag);
+			var hv = inputs[3].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag); OVERLAY_HV
 		}
 		
 		if(onDrawOverlay != -1) onDrawOverlay(active, _x, _y, _s, _mx, _my);

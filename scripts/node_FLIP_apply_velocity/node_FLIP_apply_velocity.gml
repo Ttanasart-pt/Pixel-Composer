@@ -34,7 +34,9 @@ function Node_FLIP_Apply_Velocity(_x, _y, _group = noone) : Node(_x, _y, _group)
 		return [ domain.width, domain.height ];
 	}
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+
+		
 		var _posit = getInputData(1);
 		var _rad   = getInputData(2);
 		var _velo  = getInputData(3);
@@ -60,19 +62,18 @@ function Node_FLIP_Apply_Velocity(_x, _y, _group = noone) : Node(_x, _y, _group)
 		draw_line_width2(_px, _py, _vx, _vy, 6, 2);
 		draw_set_alpha(1);
 		
-		if(inputs[1].drawOverlay(hover, active,  _x,  _y, _s, _mx, _my, _snx, _sny)) { hover = false; active = false; }
-		//if(inputs[3].drawOverlay(hover, active, _px, _py, _s, _mx, _my, _snx, _sny)) { hover = false; active = false; }
+		var hv = inputs[1].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
 		
-	} #endregion
+	}
 	
-	static step = function() { #region
+	static step = function() {
 		var _shp = getInputData(4);
 		
 		inputs[2].setVisible(_shp == 0);
 		inputs[5].setVisible(_shp == 1);
-	} #endregion
+	}
 	
-	static update = function(frame = CURRENT_FRAME) { #region
+	static update = function(frame = CURRENT_FRAME) {
 		var domain = getInputData(0);
 		if(!instance_exists(domain)) return;
 		
@@ -86,7 +87,7 @@ function Node_FLIP_Apply_Velocity(_x, _y, _group = noone) : Node(_x, _y, _group)
 		
 		     if(_shp == 0) FLIP_applyVelocity_circle(domain.domain, _posit[0], _posit[1], _rad, _velo[0], _velo[1]);
 		else if(_shp == 1) FLIP_applyVelocity_rectangle(domain.domain, _posit[0] - _siz[0], _posit[1] - _siz[1], _siz[0] * 2, _siz[1] * 2, _velo[0], _velo[1]);
-	} #endregion
+	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);

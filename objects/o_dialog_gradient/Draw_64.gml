@@ -77,12 +77,12 @@ draggable = true;
 		};
 		dia.path = DIRECTORY + "Gradients/"
 	}
-	draggable &= !b;
+	draggable = draggable && !b;
 	bx -= ui(32);
 	
 	var b = buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txt("Refresh"), THEME.refresh_20);
 	if(b == 2) { __initGradient(); initGradient(); }
-	draggable &= !b;
+	draggable = draggable && !b;
 	bx -= ui(32);
 	
 	var b = buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txtx("graident_editor_open_folder", "Open gradient folder"), THEME.path_open_20);
@@ -91,7 +91,7 @@ draggable = true;
 		shellOpenExplorer(_realpath)
 	}
 	draw_sprite_ui_uniform(THEME.path_open_20, 1, bx + bs / 2, by + bs / 2, 1, c_white);
-	draggable &= !b;
+	draggable = draggable && !b;
 	bx -= ui(32);
 #endregion
 
@@ -117,7 +117,7 @@ draggable = true;
 	
 	var b = buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txt("Show on Selector"), THEME.display_palette, NODE_COLOR_SHOW_PALETTE, c_white);
 	if(b == 2) NODE_COLOR_SHOW_PALETTE = !NODE_COLOR_SHOW_PALETTE;
-	draggable &= !b;
+	draggable = draggable && !b;
 	bx -= ui(32);
 	
 	var b = buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txt("View settings..."), THEME.sort_v);
@@ -125,7 +125,7 @@ draggable = true;
 		var _menu = menuCall("", menu_preset_sort, bx + bs, by + bs);
 		_menu.close_on_trigger = false;
 	}
-	draggable &= !b;
+	draggable = draggable && !b;
 	bx -= ui(32);
 	
 #endregion
@@ -141,7 +141,7 @@ draggable = true;
 		
 		var t = __txtx("gradient_editor_key_blend", "Key blending");
 		var b = buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, _hov, _foc, t, THEME.gradient_keys_blend);
-		draggable &= !b;
+		draggable = draggable && !b;
 		
 		if(b == 2) {
 			menuCall("gradient_window_blend_menu", [ 
@@ -155,7 +155,7 @@ draggable = true;
 		
 		var t = __txtx("gradient_editor_reverse", "Reverse");
 		var b = buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, _hov, _foc, t, THEME.gradient_keys_reverse);
-		draggable &= !b;
+		draggable = draggable && !b;
 		
 		if(b == 2) {
 			for( var i = 0, n = array_length(gradient.keys); i < n; i++ )
@@ -167,7 +167,7 @@ draggable = true;
 		
 		var t = __txt("Distribute");
 		var b = buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, _hov, _foc, t, THEME.gradient_keys_distribute);
-		draggable &= !b;
+		draggable = draggable && !b;
 		
 		if(b == 2) {
 			var _stp = 1 / (array_length(gradient.keys) - (gradient.type != 1));
@@ -197,7 +197,7 @@ draggable = true;
 		var _ky = gr_y + gr_h / 2;
 		
 		var _hov  = sHOVER && point_in_rectangle(mouse_mx, mouse_my, _kx - ui(6), gr_y, _kx + ui(6), gr_y + gr_h);
-		    _hov |= key_dragging == _k;
+		    _hov = _hov || key_dragging == _k;
 		_k._hover = lerp_float(_k._hover, _hov || key_selecting == _k, 5);
 		
 		var _kw = ui(12);

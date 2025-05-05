@@ -160,7 +160,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var _hov = false;
 		
 		var _pth = getSingleValue(13);
-		if(struct_has(_pth, "drawOverlay")) { var hv = _pth.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= bool(hv); }
+		if(struct_has(_pth, "drawOverlay")) { var hv = _pth.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov = _hov || bool(hv); }
 		
 		if(isNotUsingTool()) return _hov;
 		

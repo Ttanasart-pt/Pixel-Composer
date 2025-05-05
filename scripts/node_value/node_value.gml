@@ -267,7 +267,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		static updateName = function(_name, _custom = true) {
 			name          = _name;
-			name_custom  |= _custom;
+			name_custom  = name_custom || _custom;
 			
 			setInternalName(name);
 			return self;
@@ -1203,11 +1203,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(useCache && use_cache) {
 			var cache_hit = cache_value[0];
-			cache_hit &= !isActiveDynamic(_time) || cache_value[1] == _time;
-			cache_hit &= cache_value[2] != undefined;
-			cache_hit &= cache_value[3] == applyUnit;
-			cache_hit &= connect_type == CONNECT_TYPE.input;
-			cache_hit &= unit.reference == noone || unit.mode == VALUE_UNIT.constant;
+			cache_hit = cache_hit && !isActiveDynamic(_time) || cache_value[1] == _time;
+			cache_hit = cache_hit && cache_value[2] != undefined;
+			cache_hit = cache_hit && cache_value[3] == applyUnit;
+			cache_hit = cache_hit && connect_type == CONNECT_TYPE.input;
+			cache_hit = cache_hit && unit.reference == noone || unit.mode == VALUE_UNIT.constant;
 			
 			if(cache_hit) return cache_value[2];
 		}
@@ -1564,12 +1564,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var _val    = val;
 		var _inp    = connect_type == CONNECT_TYPE.input;
 		
-		record &= record_value & _inp;
+		record = record && record_value & _inp;
 		
 		if(sep_axis) {
 			if(_index == noone) {
 				for( var i = 0, n = array_length(animators); i < n; i++ )
-					updated |= animators[i].setValue(val[i], record, time); 
+					updated = animators[i].setValue(val[i], record, time) || updated; 
 			} else
 				updated = animators[_index].setValue(val, record, time);
 				

@@ -43,7 +43,7 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var _node = gr.nodes[i];
 			if(!is_instanceof(_node, Node_Rigid_Object)) continue;
 			var _hov = _node.drawOverlayPreview(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-			active &= !_hov;
+			active = active && !_hov;
 		}
 	} 
 	

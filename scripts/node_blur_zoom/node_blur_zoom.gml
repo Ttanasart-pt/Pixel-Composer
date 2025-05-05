@@ -58,15 +58,16 @@ function Node_Blur_Zoom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	attribute_oversample();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+
+		
 		var pos  = getInputData(2);
 		var px   = _x + pos[0] * _s;
 		var py   = _y + pos[1] * _s;
-		var _hov = false;
 		
-		var hv = inputs[1].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny, 0, 64);	_hov |= hv;
-		var hv = inputs[2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);			_hov |= hv;
+		var hv = inputs[1].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny, 0, 64); OVERLAY_HV
+		var hv = inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny);        OVERLAY_HV
 		
-		return _hov;
+		return w_hovering;
 	}
 	
 	static step = function() {

@@ -26,16 +26,20 @@ function Node_Julia_Set(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
     ];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+
+		
 	    var _pos = current_data[2];
-	    var _px = _x + _pos[0] * _s;
-	    var _py = _y + _pos[1] * _s;
-	    inputs[2].drawOverlay(hover, active,  _x,  _y, _s, _mx, _my, _snx, _sny);
-	    inputs[4].drawOverlay(hover, active, _px, _py, _s, _mx, _my, _snx, _sny);
+	    var _px  = _x + _pos[0] * _s;
+	    var _py  = _y + _pos[1] * _s;
+	    var hv   = inputs[2].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
+	    var hv   = inputs[4].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, _snx, _sny); OVERLAY_HV
 	    
 	    var _dim = current_data[0];
-	    var _px = _x + _dim[0] / 2 * _s;
-	    var _py = _y + _dim[1] / 2 * _s;
-	    inputs[1].drawOverlay(hover, active, _px, _py, _s, _mx, _my, _snx, _sny);
+	    var _px  = _x + _dim[0] / 2 * _s;
+	    var _py  = _y + _dim[1] / 2 * _s;
+	    var hv   = inputs[1].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, _snx, _sny); OVERLAY_HV
+	    
+	    return w_hovering;
 	}
 	
 	static step = function() {

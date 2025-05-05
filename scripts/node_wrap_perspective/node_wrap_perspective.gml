@@ -89,10 +89,10 @@ function Node_Warp_Perspective(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 		draw_line(br[0], br[1], tr[0], tr[1]);
 		draw_line(br[0], br[1], bl[0], bl[1]);
 		
-		if(inputs[tool * 4 + 2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
-		if(inputs[tool * 4 + 3].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
-		if(inputs[tool * 4 + 4].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
-		if(inputs[tool * 4 + 5].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
+		var hv = inputs[tool * 4 + 2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
+		var hv = inputs[tool * 4 + 3].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
+		var hv = inputs[tool * 4 + 4].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
+		var hv = inputs[tool * 4 + 5].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
 		
 		var dx = 0;
 		var dy = 0;
@@ -179,10 +179,10 @@ function Node_Warp_Perspective(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 			}
 		}
 		
-		inputs[tool * 4 + 2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-		inputs[tool * 4 + 3].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-		inputs[tool * 4 + 4].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-		inputs[tool * 4 + 5].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		var hv = inputs[tool * 4 + 2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
+		var hv = inputs[tool * 4 + 3].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
+		var hv = inputs[tool * 4 + 4].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
+		var hv = inputs[tool * 4 + 5].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {

@@ -67,8 +67,8 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 		whover  = hover;
 		wactive = active;
 		
-		hover  &= point_in_rectangle( mx, my, 0, 0, surface_w, surface_h);
-		hover  &= pen_scrolling != 2;
+		hover = hover && point_in_rectangle( mx, my, 0, 0, surface_w, surface_h);
+		hover = hover && pen_scrolling != 2;
 		surface = surface_verify(surface, surface_w, surface_h);
 		hover_content = false;
 		

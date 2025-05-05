@@ -76,10 +76,10 @@ function rotatorRange(_onModify) : widget() constructor {
 				real_val[1]   = round(dragging.delta_acc + drag_sv[1]);
 				
 				val   = key_mod_press(CTRL)? round(real_val[0] / 15) * 15 : real_val[0];
-				modi |= onModify(val, 0);
+				modi = onModify(val, 0) || modi;
 				
 				val   = key_mod_press(CTRL)? round(real_val[1] / 15) * 15 : real_val[1];
-				modi |= onModify(val, 1);
+				modi = onModify(val, 1) || modi;
 				
 				if(modi) UNDO_HOLDING = true;
 				MOUSE_BLOCK = true;

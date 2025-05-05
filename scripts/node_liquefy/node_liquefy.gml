@@ -152,14 +152,14 @@ function Node_Liquefy(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	disp_path = [];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+
 		PROCESSOR_OVERLAY_CHECK
 		
-		if(getInputAmount() == 0) return;
+		if(getInputAmount() == 0) return w_hovering;
 		
 		dynamic_input_inspecting = clamp(dynamic_input_inspecting, 0, getInputAmount() - 1);
 		var _ind  = input_fix_len + dynamic_input_inspecting * data_length;
 		var _type = current_data[_ind + 0];
-		var _hov  = false;
 		
 		draw_set_circle_precision(64);
 		
@@ -182,10 +182,10 @@ function Node_Liquefy(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					draw_circle(px, py, rad,  true);
 					draw_circle(qx, qy, rad2, true);
 					
-					var hv = inputs[_ind + 2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= bool(hv); hover &= !hv;
-					var hv = inputs[_ind + 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= bool(hv); hover &= !hv;
+					var hv = inputs[_ind + 2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny);  OVERLAY_HV
+					var hv = inputs[_ind + 1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny);  OVERLAY_HV
 					
-					var hv = inputs[_ind + 10].drawOverlay(hover, active, qx, qy, _s, _mx, _my, _snx, _sny); _hov |= bool(hv); hover &= !hv;
+					var hv = inputs[_ind + 10].drawOverlay(w_hoverable, active, qx, qy, _s, _mx, _my, _snx, _sny); OVERLAY_HV
 					
 				} else if(!array_empty(disp_path)) {
 					var ox, oy, nx, ny;
@@ -211,17 +211,17 @@ function Node_Liquefy(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					
 					draw_circle(ox, oy, rad2, true);
 					
-					var hv = inputs[_ind + 10].drawOverlay(hover, active, ox, oy, _s, _mx, _my, _snx, _sny); _hov |= bool(hv); hover &= !hv;
+					var hv = inputs[_ind + 10].drawOverlay(w_hoverable, active, ox, oy, _s, _mx, _my, _snx, _sny); OVERLAY_HV
 				}
 				break;
-			
+				
 			default:
-				var hv  = inputs[_ind + 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= bool(hv); hover &= !hv;
+				var hv = inputs[_ind + 1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
 				break;
 		}
 		
-		var hv  = inputs[_ind + 3].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny); _hov |= bool(hv); hover &= !hv;
-		return _hov;
+		var hv = inputs[_ind + 3].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny); OVERLAY_HV
+		return w_hovering;
 	}
 	
 	static step = function() {

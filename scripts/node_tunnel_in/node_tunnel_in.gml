@@ -195,7 +195,7 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		var hover = isHovering || hover_alpha == 1;
 		var tun   = findPanel("Panel_Tunnels");
-		hover |= tun && tun.tunnel_hover == self;
+		hover = hover || (tun && tun.tunnel_hover == self);
 		if(!hover) return;
 		
 		var _key  = inputs[0].getValue();

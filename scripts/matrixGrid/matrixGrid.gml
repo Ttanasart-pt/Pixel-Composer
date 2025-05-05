@@ -15,7 +15,7 @@ function matrixGrid(_type, _onModify, _unit = noone) : widget() constructor {
 		
 		if(linked) {
 			for( var i = 0; i < vsize; i++ )
-				modi |= onModify(toNumber(val), i); 
+				modi = onModify(toNumber(val), i) || modi;
 			return modi;
 		}
 		

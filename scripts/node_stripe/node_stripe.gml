@@ -84,9 +84,9 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var py   = _y + pos[1] * _s;
 		var _hov = false;
 		
-		var hv = inputs[4].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);						active &= !hv; _hov |= hv;
-		var hv = inputs[2].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny);						active &= !hv; _hov |= hv;
-		var hv = inputs[16].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, current_data[0]);	active &= !hv; _hov |= hv;
+		var hv = inputs[4].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny);						OVERLAY_HV
+		var hv = inputs[2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny);						OVERLAY_HV
+		var hv = inputs[16].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, current_data[0]);	OVERLAY_HV
 		
 		return _hov;
 	}

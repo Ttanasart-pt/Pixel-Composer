@@ -418,7 +418,8 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		} else 
 			drawOverlayPreviewSingle(0, _x, _y, _s, _pr_x, _pr_y, _tex);
 			
-		return inputs[7].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		var hv = inputs[7].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
+		return w_hovering;
 	}
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
@@ -426,14 +427,14 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		if(inline_context != noone) gr = inline_context;
 		if(gr == noone) return;
 		
-		var a = inputs[7].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); active &= !a;
+		var hv = inputs[7].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
 		
 		if(previewing == 0) {
 			for( var i = 0, n = array_length(gr.nodes); i < n; i++ ) {
 				var _node = gr.nodes[i];
 				if(!is_instanceof(_node, Node_Rigid_Object)) continue;
 				var _hov = _node.drawOverlayPreview(active, _x, _y, _s, _mx, _my, _snx, _sny);
-				active &= _hov;
+				active = active && _hov;
 			}
 			return active;
 		}

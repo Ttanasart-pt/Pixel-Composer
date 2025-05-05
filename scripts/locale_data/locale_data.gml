@@ -105,7 +105,7 @@ function __txt(txt, prefix = "") {
 function __txta(txt) {
 	var _txt = __txt(txt);
 	for(var i = 1; i < argument_count; i++)
-		_txt = string_replace_all(_txt, $"\{{i}\}", string(argument[i]));
+		_txt = string_replace_all(_txt, "{"+string(i)+"}", string(argument[i]));
 	
 	return _txt;
 }

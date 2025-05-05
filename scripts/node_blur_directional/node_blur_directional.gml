@@ -50,7 +50,7 @@ function Node_Blur_Directional(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	attribute_surface_depth();
 	attribute_oversample();
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _surf = outputs[0].getValue();
 		if(is_array(_surf)) {
 			if(array_length(_surf) == 0) return;
@@ -59,21 +59,20 @@ function Node_Blur_Directional(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 		
 		var ww = surface_get_width_safe(_surf);
 		var hh = surface_get_height_safe(_surf);
-		var _hov = false;
 		
-		var hv = inputs[2].drawOverlay(hover, active, _x + ww / 2 * _s, _y + hh / 2 * _s, _s, _mx, _my, _snx, _sny); _hov |= hv;
+		var hv = inputs[2].drawOverlay(w_hoverable, active, _x + ww / 2 * _s, _y + hh / 2 * _s, _s, _mx, _my, _snx, _sny); OVERLAY_HV
 		
-		return _hov;
-	} #endregion
+		return w_hovering;
+	}
 	
-	static step = function() { #region
+	static step = function() {
 		__step_mask_modifier();
 		
 		inputs[ 1].mappableStep();
 		inputs[ 2].mappableStep();
-	} #endregion
+	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		
 		surface_set_shader(_outSurf, sh_blur_directional);
 			shader_set_f("size",          max(surface_get_width_safe(_data[0]), surface_get_height_safe( _data[0])));
@@ -91,5 +90,5 @@ function Node_Blur_Directional(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 		_outSurf = channel_apply(_data[0], _outSurf, _data[6]);
 		
 		return _outSurf;
-	} #endregion
+	}
 }

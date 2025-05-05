@@ -53,7 +53,7 @@ draggable = true;
 	
 	var b = buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txt("Add preset..."), THEME.add_16);
 	if(b == 2) menuCall("", menu_add, bx + bs, by + bs);
-	draggable &= !b;
+	draggable = draggable && !b;
 	bx -= ui(32);
 	
 	var b = buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txt("View settings..."), THEME.sort_v);
@@ -61,18 +61,18 @@ draggable = true;
 		var _menu = menuCall("", menu_preset_sort, bx + bs, by + bs);
 		_menu.close_on_trigger = false;
 	}
-	draggable &= !b;
+	draggable = draggable && !b;
 	bx -= ui(32);
 	
 	var b = buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txt("Refresh"), THEME.refresh_20);
 	if(b == 2) __initPalette();
-	draggable &= !b;
+	draggable = draggable && !b;
 	bx -= ui(32);
 	
 	var b = buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txtx("color_selector_open_palette", "Open palette folder..."), THEME.path_open_20);
 	if(b == 2) shellOpenExplorer(DIRECTORY + "Palettes")
 	draw_sprite_ui_uniform(THEME.path_open_20, 1, bx + bs / 2, by + bs / 2, 1, c_white);
-	draggable &= !b;
+	draggable = draggable && !b;
 	bx -= ui(32);
 #endregion
 
@@ -131,7 +131,7 @@ draggable = true;
 				mixer.setPalette(_pal);
 			}
 		}
-		draggable &= !b;
+		draggable = draggable && !b;
 		bx -= ui(32);
 		
 	#endregion

@@ -140,10 +140,10 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var _distType = current_data[6];
 		var _hov = false;
 		
-		if(_distType <  3) { var hv = inputs[ 5].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); active &= !hv; _hov |= hv; }
-		if(_distType == 4) { var hv = inputs[19].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); active &= !hv; _hov |= hv; }
+		if(_distType <  3) { var hv = inputs[ 5].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV }
+		if(_distType == 4) { var hv = inputs[19].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV }
 		
-		var hv = inputs[29].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, current_data[1]); active &= !hv; _hov |= hv;
+		var hv = inputs[29].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, current_data[1]); OVERLAY_HV
 		
 		return _hov;
 	}
@@ -290,7 +290,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			
 			if(surfArray) {
 				for( var i = 0, n = array_length(_inSurf); i < n; i++ ) {
-					_dyna |= is(_inSurf[i], dynaSurf);
+					_dyna = _dyna || is(_inSurf[i], dynaSurf);
 					surface_valid_map[$ _inSurf[i]] = is_surface(_inSurf[i]);
 					surface_size_map[$ _inSurf[i]]  = surface_get_dimension(_inSurf[i]);
 				}

@@ -26,14 +26,16 @@ function Node_FLIP_Vortex(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	newOutput(0, nodeValue_Output("Domain", self, VALUE_TYPE.fdomain, noone ));
 	
-	static getDimension = function() { #region
+	static getDimension = function() {
 		var domain = getInputData(0);
 		if(!instance_exists(domain)) return [ 1, 1 ];
 		
 		return [ domain.width, domain.height ];
-	} #endregion
+	}
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+
+		
 		var _posit = getInputData(1);
 		var _rad   = getInputData(2);
 		
@@ -45,15 +47,15 @@ function Node_FLIP_Vortex(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		draw_set_color(COLORS._main_accent);
 		draw_circle_prec(_px, _py, _r, true, 32);
 		
-		if(inputs[1].drawOverlay(hover, active,  _x,  _y, _s, _mx, _my, _snx, _sny)) { hover = false; active = false; }
+		var hv = inputs[1].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
 		
-	} #endregion
+	}
 	
-	static step = function() { #region
+	static step = function() {
 		
-	} #endregion
+	}
 	
-	static update = function(frame = CURRENT_FRAME) { #region
+	static update = function(frame = CURRENT_FRAME) {
 		var domain = getInputData(0);
 		if(!instance_exists(domain)) return;
 		
@@ -65,7 +67,7 @@ function Node_FLIP_Vortex(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _attr  = getInputData(4);
 		
 		FLIP_Vortex(domain.domain, _posit[0], _posit[1], _rad, _str, _attr);
-	} #endregion
+	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);

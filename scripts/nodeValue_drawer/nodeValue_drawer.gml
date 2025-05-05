@@ -47,7 +47,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				break;
 				
 			case "matrixGrid"      : 
-				breakLine |= wid.size[0] > 5;
+				breakLine = breakLine || wid.size[0] > 5;
 				break;
 		}
 	#endregion
@@ -355,7 +355,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				
 			var wd_h = jun.express_edit.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.expression, _m);
 			widH  = wd_h - (TEXTBOX_HEIGHT * !widExtend);
-			cHov |= jun.express_edit.inBBOX(_m);
+			cHov = cHov || jun.express_edit.inBBOX(_m);
 			
 			var un = jun.unit;
 			if(un.reference != noone) {
@@ -418,9 +418,9 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			
 			var _widH = wid.drawParam(param) ?? 0;
 			widH  = max(0, _widH - (TEXTBOX_HEIGHT * !widExtend));
-			cHov |= wid.inBBOX(_m);
+			cHov = cHov || wid.inBBOX(_m);
 			
-			mbRight &= wid.right_click_block;
+			mbRight = mbRight && wid.right_click_block;
 		}
 	#endregion
 	

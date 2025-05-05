@@ -46,10 +46,10 @@ function Node_Colorize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	attribute_surface_depth();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var _hov = false;
-		var  hv  = inputs[12].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, surface_get_dimension(getSingleValue(0))); _hov |= hv;
+
+		var hv = inputs[12].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, surface_get_dimension(getSingleValue(0))); OVERLAY_HV
 		
-		return _hov;
+		return w_hovering;
 	}
 	
 	static step = function() {

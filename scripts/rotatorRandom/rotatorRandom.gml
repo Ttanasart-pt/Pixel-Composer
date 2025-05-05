@@ -166,10 +166,10 @@ function rotatorRandom(_onModify) : widget() constructor {
 						curr_val[2] = round(dragging.delta_acc + drag_sv[2]);
 						
 						val   = key_mod_press(CTRL)? round(curr_val[1] / 15) * 15 : curr_val[1];
-						modi |= onModify(val, 1);
+						modi = onModify(val, 1) || modi;
 						
 						val   = key_mod_press(CTRL)? round(curr_val[2] / 15) * 15 : curr_val[2];
-						modi |= onModify(val, 2);
+						modi = onModify(val, 2) || modi;
 				
 						if(modi) UNDO_HOLDING = true;
 					

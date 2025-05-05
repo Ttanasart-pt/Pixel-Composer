@@ -48,7 +48,7 @@ function Node_Smoke_Apply_Velocity(_x, _y, _group = noone) : Node_Smoke(_x, _y, 
 			draw_ellipse(_px - sw, _py - sh, _px + sw, _py + sh, false);
 			draw_set_alpha(1);
 			
-			var hv = inputs[6].drawOverlay(hover, active, _px, _py, _s, _mx, _my, _snx, _sny); hover &= !hv;
+			var hv = inputs[6].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, _snx, _sny); OVERLAY_HV
 			
 		} else if(_typ == 1) {
 			if(is_surface(_mat)) {
@@ -61,8 +61,8 @@ function Node_Smoke_Apply_Velocity(_x, _y, _group = noone) : Node_Smoke(_x, _y, 
 			}
 		}
 		
-		var hv = inputs[2].drawOverlay(hover, active,  _x,  _y, _s, _mx, _my, _snx, _sny);       hover &= !hv;
-		var hv = inputs[3].drawOverlay(hover, active, _px, _py, _s, _mx, _my, _snx, _sny, 0, 4); hover &= !hv;
+		var hv = inputs[2].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my, _snx, _sny);       OVERLAY_HV
+		var hv = inputs[3].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, _snx, _sny, 0, 4); OVERLAY_HV
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {

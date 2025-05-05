@@ -542,10 +542,10 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					}
 					
 					if(drag_type == 3) {
-						edited |= inputs[input_fix_len + 0].setValue(newAnchor(minx, miny));
-						edited |= inputs[input_fix_len + 1].setValue(newAnchor(maxx, miny));
-						edited |= inputs[input_fix_len + 2].setValue(newAnchor(maxx, maxy));
-						edited |= inputs[input_fix_len + 3].setValue(newAnchor(minx, maxy));
+						edited = edited || inputs[input_fix_len + 0].setValue(newAnchor(minx, miny));
+						edited = edited || inputs[input_fix_len + 1].setValue(newAnchor(maxx, miny));
+						edited = edited || inputs[input_fix_len + 2].setValue(newAnchor(maxx, maxy));
+						edited = edited || inputs[input_fix_len + 3].setValue(newAnchor(minx, maxy));
 						
 					} else if(drag_type == 4) {
 							
@@ -554,10 +554,10 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 						var _ccx = (maxx - minx) * 0.27614;
 						var _ccy = (maxy - miny) * 0.27614;
 						
-						edited |= inputs[input_fix_len + 0].setValue(newAnchor( _cnx, miny, -_ccx,     0,  _ccx,     0));
-						edited |= inputs[input_fix_len + 1].setValue(newAnchor( maxx, _cny,     0, -_ccy,     0,  _ccy));
-						edited |= inputs[input_fix_len + 2].setValue(newAnchor( _cnx, maxy,  _ccx,     0, -_ccx,     0));
-						edited |= inputs[input_fix_len + 3].setValue(newAnchor( minx, _cny,     0,  _ccy,     0, -_ccy));
+						edited = edited || inputs[input_fix_len + 0].setValue(newAnchor( _cnx, miny, -_ccx,     0,  _ccx,     0));
+						edited = edited || inputs[input_fix_len + 1].setValue(newAnchor( maxx, _cny,     0, -_ccy,     0,  _ccy));
+						edited = edited || inputs[input_fix_len + 2].setValue(newAnchor( _cnx, maxy,  _ccx,     0, -_ccx,     0));
+						edited = edited || inputs[input_fix_len + 3].setValue(newAnchor( minx, _cny,     0,  _ccy,     0, -_ccy));
 						
 					}
 					break;

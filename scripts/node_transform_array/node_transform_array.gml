@@ -23,8 +23,8 @@ function Node_Transform_Array(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 		var px  = _x + pos[0] * _s;
 		var py  = _y + pos[1] * _s;
 		
-		inputs[0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-		inputs[1].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny);
+		var hv = inputs[0].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
+		var hv = inputs[1].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny); OVERLAY_HV
 	}
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) {  

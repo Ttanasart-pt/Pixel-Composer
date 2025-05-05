@@ -16,9 +16,11 @@ function Node_Mesh_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newOutput(0, nodeValue_Output("Mesh", self, VALUE_TYPE.mesh, noone));
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+
+		
 		var imesh = getInputData(0);
 		var omesh = outputs[0].getValue();
-		if(imesh == noone) return;
+		if(imesh == noone) return w_hovering;
 		
 		var _cm = imesh.center;
 		var pos = getInputData(1);
@@ -29,15 +31,13 @@ function Node_Mesh_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		var px = ax + pos[0] * _s;
 		var py = ay + pos[1] * _s;
 		
-		var _hov = false;
-		
-		var hv = inputs[1].drawOverlay(hover, active, ax, ay, _s, _mx, _my, _snx, _sny); active &= !hv; _hov |= hv;
-		var hv = inputs[2].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny); active &= !hv; _hov |= hv;
+		var hv = inputs[1].drawOverlay(w_hoverable, active, ax, ay, _s, _mx, _my, _snx, _sny); OVERLAY_HV
+		var hv = inputs[2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny); OVERLAY_HV
 		
 		draw_set_color(COLORS._main_accent);
 		omesh.draw(_x, _y, _s);
 		
-		return _hov;
+		return w_hovering;
 	}
 	
 	function pointTransform(p, _pos, _rot, _sca, _anc) {

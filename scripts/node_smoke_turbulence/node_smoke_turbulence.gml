@@ -27,7 +27,7 @@ function Node_Smoke_Turbulence(_x, _y, _group = noone) : Node_Smoke(_x, _y, _gro
 	temp_surface = [ 0 ];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		inputs[1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		var hv = inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {

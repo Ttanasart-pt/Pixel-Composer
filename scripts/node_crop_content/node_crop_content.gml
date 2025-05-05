@@ -53,7 +53,7 @@ function Node_Crop_Content(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		}
 		
 		var _arr = is_array(_inSurf);
-		_array  &= _arr;
+		_array  = _array && _arr;
 		
 		if(!is_array(_inSurf) && !is_surface(_inSurf)) return;
 		if( is_array(_inSurf) && array_empty(_inSurf)) return;

@@ -18,18 +18,18 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 		var modi = false;
 		
 		if(linked && !ranged) {
-			modi |= onModify(v, 0);
-			modi |= onModify(v, 1);
-			modi |= onModify(v, 2);
-			modi |= onModify(v, 3);
+			modi = onModify(v, 0) || modi;
+			modi = onModify(v, 1) || modi;
+			modi = onModify(v, 2) || modi;
+			modi = onModify(v, 3) || modi;
 			
 		} else if(linked) {
-			modi |= onModify(v,  index);
-			modi |= onModify(v, (index + 2) % 4);
+			modi = onModify(v,  index) || modi;
+			modi = onModify(v, (index + 2) % 4) || modi;
 			
 		} else if(!ranged) {
-			modi |= onModify(v, floor(index / 2) * 2 + 0);
-			modi |= onModify(v, floor(index / 2) * 2 + 1);
+			modi = onModify(v, floor(index / 2) * 2 + 0) || modi;
+			modi = onModify(v, floor(index / 2) * 2 + 1) || modi;
 			
 		}
 		

@@ -91,10 +91,11 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		var _gx = _x + gz_pos[0] * _s;
 		var _gy = _y + gz_pos[1] * _s;
-		var _h = false;
 		
-		if(gz_style == 0) _h = inputs[0].drawOverlay(hover, active, _gx, _gy, _s, _mx, _my, _snx, _sny, 0, gz_scale);
-		else {
+		if(gz_style == 0) {
+			var hv = inputs[0].drawOverlay(w_hoverable, active, _gx, _gy, _s, _mx, _my, _snx, _sny, 0, gz_scale); OVERLAY_HV
+			
+		} else {
 			var val = inputs[0].getValue();
 			
 			if(gz_dragging) {
@@ -118,7 +119,7 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			var _rx1 = _rx + _rw / 2;
 			var _ry1 = _ry + _rh / 2;
 			
-			_h = hover && point_in_rectangle(_mx, _my, _rx0, _ry0, _rx1, _ry1);
+			w_hovering = hover && point_in_rectangle(_mx, _my, _rx0, _ry0, _rx1, _ry1);
 			
 			if(gz_style == 1) {
 				draw_set_color(_h || gz_dragging? COLORS._main_accent : COLORS._main_icon);
@@ -148,10 +149,10 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				}
 				
 			} else if(gz_style == 2) {
-				if(is_surface(gz_sprite)) draw_surface_stretched_ext(gz_sprite, _rx0, _ry0, _rw, _rh, c_white, 0.5 + 0.5 * _h);
+				if(is_surface(gz_sprite)) draw_surface_stretched_ext(gz_sprite, _rx0, _ry0, _rw, _rh, c_white, 0.5 + 0.5 * w_hovering);
 			}
 			
-			if(_h && mouse_press(mb_left, active)) {
+			if(w_hovering && mouse_press(mb_left, active)) {
 				gz_dragging = true;
 				
 				gz_drag_sx = val;
@@ -161,7 +162,7 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		inputs[0].display_type = VALUE_DISPLAY._default;
 		
-		return _h;
+		return w_hovering;
 	}
 	
 	static setType = function() {

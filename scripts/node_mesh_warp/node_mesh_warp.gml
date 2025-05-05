@@ -399,8 +399,8 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		var _hover = -1;
 		for(var i = control_index; i < array_length(inputs); i++) {
-			if(inputs[i].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny))
-				_hover = i;
+			var hv = inputs[i].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
+			if(hv) _hover = i;
 		}
 		
 		if(isUsingTool("Edit control point")) {
@@ -503,17 +503,17 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				var _i = i * gh;
 				var _j = j * gw;
 				
-				fill |= surface_get_pixel(cont, _j - 1, _i - 1);
-				fill |= surface_get_pixel(cont, _j - 1, _i);
-				fill |= surface_get_pixel(cont, _j - 1, _i + 1);
+				fill = fill || surface_get_pixel(cont, _j - 1, _i - 1);
+				fill = fill || surface_get_pixel(cont, _j - 1, _i);
+				fill = fill || surface_get_pixel(cont, _j - 1, _i + 1);
 				
-				fill |= surface_get_pixel(cont, _j, _i - 1);
-				fill |= surface_get_pixel(cont, _j, _i);
-				fill |= surface_get_pixel(cont, _j, _i + 1);
+				fill = fill || surface_get_pixel(cont, _j, _i - 1);
+				fill = fill || surface_get_pixel(cont, _j, _i);
+				fill = fill || surface_get_pixel(cont, _j, _i + 1);
 				
-				fill |= surface_get_pixel(cont, _j + 1, _i - 1);
-				fill |= surface_get_pixel(cont, _j + 1, _i);
-				fill |= surface_get_pixel(cont, _j + 1, _i + 1);
+				fill = fill || surface_get_pixel(cont, _j + 1, _i - 1);
+				fill = fill || surface_get_pixel(cont, _j + 1, _i);
+				fill = fill || surface_get_pixel(cont, _j + 1, _i + 1);
 			}
 			
 			if(!fill) continue;

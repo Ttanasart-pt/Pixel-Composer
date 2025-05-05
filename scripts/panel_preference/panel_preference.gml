@@ -20,13 +20,13 @@ function Panel_Preference() : PanelContent() constructor {
     
     function prefSet(_key, _val, _restart = false) {
     	struct_set(PREFERENCES, _key, _val);
-    	should_restart |= _restart;
+    	should_restart = should_restart || _restart;
     	PREF_SAVE();
     }
     
     function prefToggle(_key, _apply = false, _restart = false) {
     	struct_set(PREFERENCES, _key, !struct_try_get(PREFERENCES, _key));
-    	should_restart |= _restart;
+    	should_restart = should_restart || _restart;
     	if(_apply) PREF_APPLY();
     	PREF_SAVE();
     }
@@ -1394,7 +1394,7 @@ function Panel_Preference() : PanelContent() constructor {
     			var cc = c_white;
     			
     			var hv = _hov && point_in_rectangle(_m[0], _m[1], _ww / 2, by, bx + bw, by + bh);
-    			_hoverAny |= hv;
+    			_hoverAny = _hoverAny || hv;
     			
     			if(hk_editing == key) {
     				draw_sprite_stretched_ext(THEME.ui_panel, 1, bx, by, bw, bh, COLORS._main_accent);

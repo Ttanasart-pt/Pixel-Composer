@@ -58,7 +58,7 @@ function Node_Rigid_Render_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 			var _node = gr.nodes[i];
 			if(!is_instanceof(_node, Node_Rigid_Object)) continue;
 			var _hov = _node.drawOverlayPreview(active, _x, _y, _s, _mx, _my, _snx, _sny);
-			active &= !_hov;
+			active = active && !_hov;
 		}
 	} #endregion
 	

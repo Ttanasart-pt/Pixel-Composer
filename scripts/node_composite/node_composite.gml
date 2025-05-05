@@ -44,6 +44,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		renaming       = noone;
 		renaming_index = noone;
 	});
+	
 	tb_rename.font = f_p1;
 	tb_rename.hide = true;
 	
@@ -190,7 +191,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				var _txx = _sx1 + ui(12);
 				var _txy = _cy + lh / 2 + ui(2);
 				
-				if(_junc_canvas) hover &= _m[0] > _txx + ui(8 + 16);
+				if(_junc_canvas) hover = hover && _m[0] > _txx + ui(8 + 16);
 				
 				var tc = ind == dynamic_input_inspecting? COLORS._main_text_accent : COLORS._main_icon;
 				var tf = ind == dynamic_input_inspecting? f_p1b : f_p1;
@@ -628,11 +629,11 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var _d3 = point_rotate(_cx + _sw / 2, _cy + _sh / 2, _cx, _cy, _rot, __d3);
 			var _rr = point_rotate(_cx,  _cy - _sh / 2 - 1,      _cx, _cy, _rot, __rr);
 			
-			_d0[0] = overlay_x(_d0[0], _x, _s); _d0[1] = overlay_y(_d0[1], _y, _s);
-			_d1[0] = overlay_x(_d1[0], _x, _s); _d1[1] = overlay_y(_d1[1], _y, _s);
-			_d2[0] = overlay_x(_d2[0], _x, _s); _d2[1] = overlay_y(_d2[1], _y, _s);
-			_d3[0] = overlay_x(_d3[0], _x, _s); _d3[1] = overlay_y(_d3[1], _y, _s);
-			_rr[0] = overlay_x(_rr[0], _x, _s); _rr[1] = overlay_y(_rr[1], _y, _s);
+			_d0 = [ overlay_x(_d0[0], _x, _s), overlay_y(_d0[1], _y, _s) ];
+			_d1 = [ overlay_x(_d1[0], _x, _s), overlay_y(_d1[1], _y, _s) ];
+			_d2 = [ overlay_x(_d2[0], _x, _s), overlay_y(_d2[1], _y, _s) ];
+			_d3 = [ overlay_x(_d3[0], _x, _s), overlay_y(_d3[1], _y, _s) ];
+			_rr = [ overlay_x(_rr[0], _x, _s), overlay_y(_rr[1], _y, _s) ];
 			
 			anchors[index] = {
 				cx: _cx,
@@ -693,6 +694,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			}
 		}
 		
+		
 		if(attributes.select_object && selection_sampler.active) {
 			var _msx = floor((_mx - _x) / _s);
 			var _msy = floor((_my - _y) / _s);
@@ -726,7 +728,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			draw_line(a.d3[0], a.d3[1], a.d1[0], a.d1[1]);
 			draw_line(a.d3[0], a.d3[1], a.d2[0], a.d2[1]);
 		}
-				
+		
 		if(dynamic_input_inspecting != noone) {
 			var _ss = input_fix_len + dynamic_input_inspecting * data_length;
 			var   a = anchors[_ss];

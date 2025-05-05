@@ -42,6 +42,8 @@ def getVersionName(path):
         
     return None
 
+print("\n==== Updating release notes... ====\n")
+
 for note in notes:
     v = getVersionName(note)
     if v is None:

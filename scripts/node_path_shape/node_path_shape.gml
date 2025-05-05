@@ -164,9 +164,9 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	    var _px = _x + posx * _s;
 	    var _py = _y + posy * _s;
 	    
-	    var h = inputs[0].drawOverlay(hover, active,  _x,  _y, _s, _mx, _my, _snx, _sny); hover &= !h;
-	    var h = inputs[2].drawOverlay(hover, active, _px, _py, _s, _mx, _my, _snx, _sny); hover &= !h;
-	    var h = inputs[1].drawOverlay(hover, active, _px, _py, _s, _mx, _my, _snx, _sny); hover &= !h;
+	    var hv = inputs[0].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
+	    var hv = inputs[2].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, _snx, _sny); OVERLAY_HV
+	    var hv = inputs[1].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, _snx, _sny); OVERLAY_HV
 	    
 	}
 	

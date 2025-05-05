@@ -14,7 +14,7 @@ function rangeBox(_onModify) : widget() constructor {
 		
 		if(linked) {
 			for( var i = 0; i < 2; i++ )
-				modi |= onModify(toNumber(val), i); 
+				modi = onModify(toNumber(val), i) || modi;
 			return modi;
 		}
 		

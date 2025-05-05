@@ -6,18 +6,23 @@ function Node_Strand_Render_Texture(_x, _y, _group = noone) : Node(_x, _y, _grou
 	
 	manual_ungroupable	 = false;
 	
+	newInput(5, nodeValueSeed(self));
+	
+	////- Ouptut
+	
 	newInput(0, nodeValue_Dimension(self));
 	
-	newInput(1, nodeValue("Strand", self, CONNECT_TYPE.input, VALUE_TYPE.strands, noone))
-		.setVisible(true, true);
+	////- Strand
 	
+	newInput(1, nodeValue("Strand", self, CONNECT_TYPE.input, VALUE_TYPE.strands, noone)).setVisible(true, true);
 	newInput(2, nodeValue_Range("Thickness", self, [ 8, 8 ], { linked : true }));
 	
-	newInput(3, nodeValue_Gradient("Random color", self, new gradientObject(ca_white)));
+	////- Texture
 	
 	newInput(4, nodeValue_Surface("Texture", self));
+	newInput(3, nodeValue_Gradient("Random color", self, new gradientObject(ca_white)));
 	
-	newInput(5, nodeValueSeed(self));
+	// inputs 6
 	
 	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	

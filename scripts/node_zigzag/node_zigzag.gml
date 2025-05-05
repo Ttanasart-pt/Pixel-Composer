@@ -56,8 +56,8 @@ function Node_Zigzag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var py   = _y + pos[1] * _s;
 		var _hov = false;
 		
-		var  hv  = inputs[2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= hv;
-		var  hv  = inputs[8].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny); _hov |= hv;
+		var hv = inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
+		var hv = inputs[8].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny); OVERLAY_HV
 		
 		return _hov;
 	}

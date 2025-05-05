@@ -25,7 +25,8 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 			var modi = false;
 			for( var i = 0; i < size; i++ ) {
 				tb[i]._input_text = v;
-				if(is_callable(onModify)) modi |= onModify(v, i); 
+				
+				if(is_callable(onModify)) modi = onModify(v, i) || modi;
 			}
 			
 			return modi;

@@ -53,12 +53,14 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	surface_blur_init();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+
 		var _typ = getSingleValue(13);
-		var _hov = false;
 		
-		if(_typ == 1) { var hv = inputs[14].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= hv; }
+		if(_typ == 1) { 
+			var hv = inputs[14].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
+		}
 		
-		return _hov;
+		return w_hovering;
 	}
 	
 	static step = function() { __step_mask_modifier(); }

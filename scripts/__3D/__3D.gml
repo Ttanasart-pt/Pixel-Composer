@@ -486,7 +486,7 @@ enum CAMERA_PROJ {
 			drag_my		= _my;
 		}
 		
-		inputs[global_pos].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		var hv = inputs[global_pos].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
 	#endregion
 	}
 	

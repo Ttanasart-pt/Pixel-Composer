@@ -20,9 +20,9 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 		if(mode == AREA_MODE.area || mode == AREA_MODE.two_point || !link_value) 
 			return m;
 		
-		m |= onModify(v, 1);
-		m |= onModify(v, 2);
-		m |= onModify(v, 3);
+		m = onModify(v, 1) || m;
+		m = onModify(v, 2) || m;
+		m = onModify(v, 3) || m;
 		
 		return m;
 	}
@@ -34,9 +34,9 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 		if(mode == AREA_MODE.area || mode == AREA_MODE.two_point || !link_value) 
 			return m;
 		
-		m |= onModify(v, 0);
-		m |= onModify(v, 2);
-		m |= onModify(v, 3);
+		m = onModify(v, 0) || m;
+		m = onModify(v, 2) || m;
+		m = onModify(v, 3) || m;
 		
 		return m;
 	}
@@ -48,9 +48,9 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 		if(mode == AREA_MODE.area || mode == AREA_MODE.two_point || !link_value) 
 			return m;
 		
-		m |= onModify(v, 0);
-		m |= onModify(v, 1);
-		m |= onModify(v, 3);
+		m = onModify(v, 0) || m;
+		m = onModify(v, 1) || m;
+		m = onModify(v, 3) || m;
 		
 		return m;
 	}
@@ -62,9 +62,9 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 		if(mode == AREA_MODE.area || mode == AREA_MODE.two_point || !link_value) 
 			return m;
 		
-		m |= onModify(v, 0);
-		m |= onModify(v, 1);
-		m |= onModify(v, 2);
+		m = onModify(v, 0) || m;
+		m = onModify(v, 1) || m;
+		m = onModify(v, 2) || m;
 		
 		return m;
 	}

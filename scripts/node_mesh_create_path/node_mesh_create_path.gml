@@ -12,8 +12,8 @@ function Node_Mesh_Create_Path(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	newOutput(0, nodeValue_Output("Mesh", self, VALUE_TYPE.mesh, noone));
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var _hov = false;
-		var  hv  = inputs[0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= bool(hv);
+
+		var hv = inputs[0].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
 	
 		var mesh = outputs[0].getValue();
 		if(mesh == noone) return;

@@ -154,7 +154,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		if(hasContent()) {
 			var res = true;
 			for( var i = 0, n = array_length(content); i < n; i++ )
-				res &= hori? tw + dw > content[i].min_w : th + dh > content[i].min_h;
+				res = res && hori? tw + dw > content[i].min_w : th + dh > content[i].min_h;
 			return res;
 		}
 		
@@ -329,10 +329,10 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				var _panel = childs[i];
 				switch(_panel.anchor) {
 					case ANCHOR.left:
-						res &= _panel.resizable(dw, 0, ANCHOR.left);
+						res = res && _panel.resizable(dw, 0, ANCHOR.left);
 						break;
 					case ANCHOR.right:
-						res &= _panel.resizable(-dw, 0, ANCHOR.right);
+						res = res && _panel.resizable(-dw, 0, ANCHOR.right);
 						break;
 				}
 			}
@@ -367,10 +367,10 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				var _panel = childs[i];
 				switch(_panel.anchor) {
 					case ANCHOR.top:
-						res &= _panel.resizable(0, dh, ANCHOR.top);
+						res = res && _panel.resizable(0, dh, ANCHOR.top);
 						break;
 					case ANCHOR.bottom:
-						res &= _panel.resizable(0, -dh, ANCHOR.bottom);
+						res = res && _panel.resizable(0, -dh, ANCHOR.bottom);
 						break;
 				}
 			}

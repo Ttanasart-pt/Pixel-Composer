@@ -29,7 +29,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	newInput(13, nodeValue(             "Mesh",         self, CONNECT_TYPE.input, VALUE_TYPE.mesh, noone));
 	newInput(14, nodeValue_Enum_Scroll( "Distribution", self, 0, [ "Uniform", "Random" ]));
 	newInput(15, nodeValue_Trigger(     "Bake hair",    self, "Prevent strand reseting to apply manual modification. Unbaking will remove all changes."))
-		.setDisplay(VALUE_DISPLAY.button, { name: "Bake", UI : true, onClick: function() { 
+		.setDisplay(VALUE_DISPLAY.button, { name: "Bake", UI : true, onClick: function() /*=>*/ { 
 			attributes.use_groom = !attributes.use_groom; 
 			if(attributes.use_groom) groomed = strands.clone();
 			strandUpdate(true);
@@ -128,7 +128,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		tools = attributes.use_groom? groomTools : -1;
 		
 		if(_typ == 0) {
-			if(tool_dragging == noone) inputs[6].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+			if(tool_dragging == noone) { var hv = inputs[6].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV }
 			
 		} else if(_typ == 1) {
 			var _pth = getInputData(5);

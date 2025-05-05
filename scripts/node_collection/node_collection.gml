@@ -276,12 +276,12 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		for( var i = 0, n = array_length(nodes); i < n; i++ ) {
 			var _node = nodes[i];
-			hasInsp1 |= _node.hasInspector1Update();
-			hasInsp2 |= _node.hasInspector2Update();
+			hasInsp1 = hasInsp1 || _node.hasInspector1Update();
+			hasInsp2 = hasInsp2 || _node.hasInspector2Update();
 			
-			p &= !is(_node, Node_Collection_Inline);
-			p &= !is(_node, Node_Collection);
-			p &= !_node.isAnimated();
+			p = p && !is(_node, Node_Collection_Inline);
+			p = p && !is(_node, Node_Collection);
+			p = p && !_node.isAnimated();
 		}
 		
 		icon_blend = p? COLORS._main_value_positive : c_white;
@@ -550,7 +550,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		for(var i = custom_input_index; i < array_length(inputs); i++) {
 			var _in = inputs[i];
 			var _hv = _in.from.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-			if(_hv != undefined) active &= !_hv;
+			if(_hv != undefined) active = active && !_hv;
 		}
 	}
 	
@@ -579,7 +579,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		var _by = previewable? (yy + h * _s) - 10 : yy + h / 2 * _s;
 		
 		var _hv = PANEL_GRAPH.pHOVER && PANEL_GRAPH.node_hovering == self && PANEL_GRAPH._value_focus == noone;
-		    _hv &= point_in_circle(_mx, _my, _bx, _by, 8);
+		    _hv = _hv && point_in_circle(_mx, _my, _bx, _by, 8);
 		
 		var _ss = 1 / THEME_SCALE;
 		

@@ -102,6 +102,8 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	attribute_interpolation();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+
+		
 		draw_set_color(COLORS._main_accent);
 		for( var i = 0, n = array_length(lines); i < n; i++ ) {
 			var points = lines[i];
@@ -123,17 +125,16 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		}
 		
 		var _dtype = getInputData(27);
-		var hv, _hov = false;
 		
 		if(_dtype == 1) {
-			hv = inputs[7].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= bool(hv);
+			var hv = inputs[7].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
 			
 		} else if(_dtype == 3) {
-			hv = inputs[32].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= bool(hv);
-			hv = inputs[33].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= bool(hv);
+			var hv = inputs[32].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
+			var hv = inputs[33].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
 		}
 		
-		return _hov;
+		return w_hovering;
 	}
 	
 	static getTool = function() { 

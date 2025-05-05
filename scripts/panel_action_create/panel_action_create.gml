@@ -124,7 +124,7 @@ function Panel_Action_Create() : PanelContent() constructor {
 						
 						var _bx = ui(8 + 12);
 						var _by = yy + _lh / 2;
-						var _tg = struct_has(_vali, "value"); _ttg |= _tg;
+						var _tg = struct_has(_vali, "value"); _ttg = _ttg || _tg;
 						var _hv = pHOVER && point_in_circle(_m[0], _m[1], _bx, _by, ui(8));
 						if(_hv) {
 							TOOLTIP = "Save value";
@@ -139,7 +139,7 @@ function Panel_Action_Create() : PanelContent() constructor {
 						_bx += ui(12);
 						
 						if(_in.expUse) {
-							var _tg = struct_has(_vali, "expression"); _ttg |= _tg;
+							var _tg = struct_has(_vali, "expression"); _ttg = _ttg || _tg;
 							var _hv = pHOVER && point_in_circle(_m[0], _m[1], _bx, _by, ui(8));
 							if(_hv) {
 								TOOLTIP = "Save expression";
@@ -155,7 +155,7 @@ function Panel_Action_Create() : PanelContent() constructor {
 						_bx += ui(12);
 						
 						if(_in.unit.reference != noone) {
-							var _tg = struct_has(_vali, "unit"); _ttg |= _tg;
+							var _tg = struct_has(_vali, "unit"); _ttg = _ttg || _tg;
 							var _hv = pHOVER && point_in_circle(_m[0], _m[1], _bx, _by, ui(8));
 							if(_hv) {
 								TOOLTIP = "Save unit";

@@ -52,7 +52,7 @@ function Node_VFX_Boids(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var _hov = false;
 		
 		if(_fol_pnt) {
-			var hv = inputs[9].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= hv;
+			var hv = inputs[9].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
 		}
 		
 		return _hov;

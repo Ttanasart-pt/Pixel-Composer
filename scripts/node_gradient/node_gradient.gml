@@ -64,27 +64,28 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	attribute_surface_depth();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+
 		PROCESSOR_OVERLAY_CHECK
-		var _hov = false;
+		
 		var  dim = getSingleValue(0);
 		var  typ = getSingleValue(2);
 		var  rot = getSingleValue(3);
 		var  pos = getSingleValue(6);
 		
-		var a = inputs[ 6].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);                  active &= !a; _hov |= a;
-		var a = inputs[16].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, current_data[0]); active &= !a; _hov |= a;
+		var hv = inputs[ 6].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny);                                        OVERLAY_HV
+		var hv = inputs[16].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, current_data[0]);                       OVERLAY_HV
 		
 		var _px = _x + pos[0] * _s;
 		var _py = _y + pos[1] * _s;
-		var a = inputs[ 9].drawOverlay(hover, active, _px, _py, _s, _mx, _my, _snx, _sny, typ == 0? rot : 0, dim[0] / 2, 1); active &= !a; _hov |= a;
+		var hv = inputs[ 9].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, _snx, _sny, typ == 0? rot : 0, dim[0] / 2, 1);    OVERLAY_HV
 		
 		if(typ != 1) {
-			var a = inputs[ 3].drawOverlay(hover, active, _px, _py, _s, _mx, _my, _snx, _sny); active &= !a; _hov |= a;
+			var hv = inputs[ 3].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, _snx, _sny);                                  OVERLAY_HV
 		} else {
-			var a = inputs[17].drawOverlay(hover, active, _px, _py, _s, _mx, _my, _snx, _sny, 0, [ dim[0] / 2, dim[1] / 2 ]); active &= !a; _hov |= a;
+			var hv = inputs[17].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, _snx, _sny, 0, [ dim[0] / 2, dim[1] / 2 ]);   OVERLAY_HV
 		}
 		
-		return _hov;
+		return w_hovering;
 	}
 	
 	static step = function() {

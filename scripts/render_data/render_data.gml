@@ -106,8 +106,8 @@ function __topoSort(_arr = [], _nodeArr = [], _sorted = {}) {
 			for( var j = 0, m = array_length(_node.outputs); j < m; j++ ) {
 				var _to = _node.outputs[j].getJunctionTo();
 				
-				if(_global) _isLeaf &=  array_empty(_to);
-				else        _isLeaf &= !array_any(_to, function(_val) /*=>*/ {return array_exists(__temp_nodeList, _val.node)});
+				if(_global) _isLeaf = _isLeaf &&  array_empty(_to);
+				else        _isLeaf = _isLeaf && !array_any(_to, function(_val) /*=>*/ {return array_exists(__temp_nodeList, _val.node)});
 				
 				if(!_isLeaf) break;
 			}

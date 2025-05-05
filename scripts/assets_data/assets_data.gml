@@ -61,7 +61,7 @@
 			var valid = true;
 			if(is_array(s)) {
 				for( var i = 0, n = array_length(s); i < n; i++ )
-					valid &= is_surface(s[i]);
+					valid = valid && is_surface(s[i]);
 			} else 
 				valid = is_surface(s);
 			if(valid) return s;

@@ -16,7 +16,7 @@ if(submenu != noone && !instance_exists(submenu))
 
 var hov = point_in(mouse_mx, mouse_my);
 if(instance_exists(submenu)) 
-	hov |= submenu.point_in(mouse_mx, mouse_my);
+	hov = hov || submenu.point_in(mouse_mx, mouse_my);
 
 _hovering_ch = hov;
 if(!hov && MOUSE_POOL.lpress) instance_destroy();

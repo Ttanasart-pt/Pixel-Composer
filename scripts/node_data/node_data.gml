@@ -4,6 +4,8 @@
 	#macro INAME internalName == ""? name : internalName
 	#macro SHOW_PARAM (show_parameter && previewable)
 	
+	#macro OVERLAY_HV w_hovering = w_hovering || bool(hv); w_hoverable = w_hoverable && !hv;
+	
 	enum CACHE_USE {
 		none,
 		manual,
@@ -269,6 +271,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		preview_value = 0;
 		preview_array = "";
+		
+		w_hovering  = false;
+		w_hoverable = false;
+		w_active    = false;
 	#endregion
 	
 	#region ---- rendering ----
@@ -446,11 +452,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			var _inp    = inputs[i + dyna_input_check_shift];
 			
 			if(dynamic_input_cond & DYNA_INPUT_COND.connection)
-				_active |= _inp.hasJunctionFrom();
+				_active = _active || _inp.hasJunctionFrom();
 				
 			if(dynamic_input_cond & DYNA_INPUT_COND.zero) {
 				var _val = _inp.getValue();
-				_active |= _val != 0 || _val != "";
+				_active = _active || _val != 0 || _val != "";
 			}
 			
 			if(_active) {
@@ -1593,7 +1599,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		_dummy_curr  = 0; 
 		_dummy_start = 0;
-		_dummy &= key_mod_press(CTRL);
+		_dummy = _dummy && key_mod_press(CTRL);
 		if(_dummy) dummy_insert = 0;
 		
 		array_foreach(inputDisplayList, function(jun, i) /*=>*/ { 
@@ -1916,8 +1922,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var _y0 = previewable? yy + name_height * _s : yy;
 		var _y1 = yy + h * _s;
 		
-		show_input_name  &= point_in_rectangle(_mx, _my, xx - (    12) * _s, _y0, xx + (    12) * _s, _y1);
-		show_output_name &= point_in_rectangle(_mx, _my, xx + (w - 12) * _s, _y0, xx + (w + 12) * _s, _y1);
+		show_input_name  = _dummy && point_in_rectangle(_mx, _my, xx - (    12) * _s, _y0, xx + (    12) * _s, _y1);
+		show_output_name = show_output_name && point_in_rectangle(_mx, _my, xx + (w - 12) * _s, _y0, xx + (w + 12) * _s, _y1);
 		
 		if(_panel.value_dragging && _panel.node_hovering == self) {
 			if(_panel.value_dragging.connect_type == CONNECT_TYPE.input)  show_output_name = true;
@@ -2315,7 +2321,15 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(display_parameter.highlight) drawBranch();
 	}
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {}
+	static doDrawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { 
+		w_hovering  = false; 
+		w_hoverable = hover;
+		w_active    = active;
+		
+		return drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+	}
+	
+	static drawOverlay    = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {}
 	
 	static drawOverlayChainTransform = function(_node) {
 		var _ch = getNodeChildList(_node);
@@ -2846,7 +2860,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static connect = function(log = false, _nodeGroup = undefined) {
 		var connected = true;
 		for( var i = 0, n = array_length(inputs); i < n; i++ )
-			connected &= inputs[i].connect(log, _nodeGroup);
+			connected = inputs[i].connect(log, _nodeGroup) && connected;
 		
 		inspectInput1.connect(    log, _nodeGroup );
 		inspectInput2.connect(    log, _nodeGroup );

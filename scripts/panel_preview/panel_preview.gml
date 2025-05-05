@@ -2197,10 +2197,10 @@ function Panel_Preview() : PanelContent() constructor {
             _sny = PROJECT.previewGrid.size[1];
         }
             
-        overHover &= !view_hovering;
-        overHover &= tool_hovering == noone && !overlay_hovering;
-        overHover &= !canvas_dragging && !canvas_zooming;
-        overHover &= point_in_rectangle(mx, my, 0, toolbar_height, w, h - toolbar_height);
+        overHover = overHover && !view_hovering;
+        overHover = overHover && tool_hovering == noone && !overlay_hovering;
+        overHover = overHover && !canvas_dragging && !canvas_zooming;
+        overHover = overHover && point_in_rectangle(mx, my, 0, toolbar_height, w, h - toolbar_height);
         
         var overActive = active && overHover;
         var params = { w, h, toolbar_height };
@@ -2213,7 +2213,7 @@ function Panel_Preview() : PanelContent() constructor {
         	if(!is(_n, Node))     continue;
         	if(!_n.isGizmoGlobal) continue;
         	
-        	var _h = _n.drawOverlay(overHover, overActive, cx, cy, canvas_s, _mx, _my, _snx, _sny, params);
+        	var _h = _n.doDrawOverlay(overHover, overActive, cx, cy, canvas_s, _mx, _my, _snx, _sny, params);
         	
         	if(_h == true) {
         		overHover = false;
@@ -2237,10 +2237,10 @@ function Panel_Preview() : PanelContent() constructor {
         if(_node.tools != -1 && point_in_rectangle(_mx, _my, 0, 0, toolbar_width, h))
             overHover = false;
         
-        overHover &= !view_hovering;
-        overHover &= tool_hovering == noone && !overlay_hovering;
-        overHover &= !canvas_dragging && !canvas_zooming;
-        overHover &= point_in_rectangle(mx, my, (_node.tools != -1) * toolbar_width, toolbar_height, w, h - toolbar_height);
+        overhover = overHover && !view_hovering;
+        overhover = overHover && tool_hovering == noone && !overlay_hovering;
+        overhover = overHover && !canvas_dragging && !canvas_zooming;
+        overhover = overHover && point_in_rectangle(mx, my, (_node.tools != -1) * toolbar_width, toolbar_height, w, h - toolbar_height);
         
         var overActive = active && overHover;
         var params = { w, h, toolbar_height };
@@ -2269,7 +2269,7 @@ function Panel_Preview() : PanelContent() constructor {
 				_ovs *= _trans[2];
             }
             
-            if(!CAPTURING) _node.drawOverlay(overHover, overActive, _ovx, _ovy, _ovs, _mx, _my, _snx, _sny, params);
+            if(!CAPTURING) _node.doDrawOverlay(overHover, overActive, _ovx, _ovy, _ovs, _mx, _my, _snx, _sny, params);
             
         } else {
             if(key_mod_press(CTRL) || PROJECT.previewSetting.d3_tool_snap) {

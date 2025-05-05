@@ -226,7 +226,7 @@ function string_partial_match_ext(str, key, _matRng) {
 			conMax = max(conMax, consec);
 			if(++run > keyAmo) {
 				for( var j = 1; j <= amo; j++ )
-					_matRng[j] |= matRng[j];
+					_matRng[j] = _matRng[j] || matRng[j];
 				
 				return conMax - misMatch - (amo - i);
 			}

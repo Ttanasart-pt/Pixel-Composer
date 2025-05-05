@@ -24,14 +24,12 @@ function Node_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	]
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+
 		PROCESSOR_OVERLAY_CHECK
 		
 		var _shape = current_data[2];
 		var _type  = current_data[3];
-		var _hov   = hover;
-		var _hhh   = false;
-		var hv;
-			
+		
 		if(_type == 0) {
 			var _pos	= current_data[0];
 			var _span	= current_data[1];
@@ -47,8 +45,8 @@ function Node_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				case AREA_SHAPE.elipse :    draw_ellipse(px - ex, py - ey, px + ex, py + ey, true);   break;
 			}
 			
-			hv = inputs[0].drawOverlay(_hov, active, _x, _y, _s, _mx, _my, _snx, _sny); _hhh |= hv; _hov &= !hv;
-			hv = inputs[1].drawOverlay(_hov, active, px, py, _s, _mx, _my, _snx, _sny); _hhh |= hv; _hov &= !hv;
+			var hv = inputs[0].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
+			var hv = inputs[1].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny); OVERLAY_HV
 			
 		} else if(_type == 1) {
 			var _v0 = current_data[0];
@@ -65,11 +63,11 @@ function Node_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				case AREA_SHAPE.elipse :    draw_ellipse(px, py, ex, ey, true);   break;
 			}
 			
-			hv = inputs[0].drawOverlay(_hov, active, _x, _y, _s, _mx, _my, _snx, _sny); _hhh |= hv; _hov &= !hv;
-			hv = inputs[1].drawOverlay(_hov, active, _x, _y, _s, _mx, _my, _snx, _sny); _hhh |= hv; _hov &= !hv;
+			var hv = inputs[0].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
+			var hv = inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
 		}
 			
-		return _hhh;
+		return w_hovering;
 	}
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) {

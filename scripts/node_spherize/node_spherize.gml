@@ -69,7 +69,7 @@ function Node_Spherize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		var py   = _y + pos[1] * _s;
 		var _hov = false;
 		
-		var  hv  = inputs[1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= hv;
+		var hv = inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
 		
 		return _hov;
 	} #endregion

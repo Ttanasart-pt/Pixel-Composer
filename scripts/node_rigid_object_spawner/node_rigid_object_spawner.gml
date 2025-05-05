@@ -52,10 +52,11 @@ function Node_Rigid_Object_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group
 			var _node = gr.nodes[i];
 			if(!is_instanceof(_node, Node_Rigid_Object)) continue;
 			var _hov = _node.drawOverlayPreview(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-			active &= !_hov;
+			active = active && !_hov;
 		}
 		
-		return inputs[1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		var hv = inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
+		return w_hovering;
 	}
 	
 	static step = function() {

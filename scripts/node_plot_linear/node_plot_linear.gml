@@ -116,13 +116,13 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		var _use_path = current_data[20] != noone;
 		
 		if(!_use_path) {
-			var a = inputs[4].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-			active &= !a;
+			var hv = inputs[4].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
+			active = active && !a;
 		}
 		
-		var a = inputs[20].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);                  active &= !a;
-		var a = inputs[28].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, current_data[0]); active &= !a;
-		var a = inputs[30].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, current_data[0]); active &= !a;
+		var hv = inputs[20].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny);                  OVERLAY_HV
+		var hv = inputs[28].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, current_data[0]); OVERLAY_HV
+		var hv = inputs[30].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, current_data[0]); OVERLAY_HV
 	}
 	
 	static getTool = function() { 

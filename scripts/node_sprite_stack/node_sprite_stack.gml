@@ -72,9 +72,9 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		draw_set_color(COLORS._main_accent);
 		draw_line(px, py, sx, sy);
 		var _hov = false;
-		var  hv  = inputs[3].drawOverlay(hover, active, px, py, _s * 4, _mx, _my, _snx, _sny, 1); active &= hv; _hov |= hv;
-		var  hv  = inputs[4].drawOverlay(hover, active, _x, _y, _s,     _mx, _my, _snx, _sny);	active &= hv; _hov |= hv;
-		var  hv  = inputs[5].drawOverlay(hover, active, px, py, _s,     _mx, _my, _snx, _sny);	active &= hv; _hov |= hv;
+		var hv = inputs[3].drawOverlay(w_hoverable, active, px, py, _s * 4, _mx, _my, _snx, _sny, 1); OVERLAY_HV
+		var hv = inputs[4].drawOverlay(w_hoverable, active, _x, _y, _s,     _mx, _my, _snx, _sny);	OVERLAY_HV
+		var hv = inputs[5].drawOverlay(w_hoverable, active, px, py, _s,     _mx, _my, _snx, _sny);	OVERLAY_HV
 		
 		return _hov;
 	}

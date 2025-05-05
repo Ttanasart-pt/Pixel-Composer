@@ -97,6 +97,7 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	}
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, params) {
+
 		PROCESSOR_OVERLAY_CHECK
 		
 		var _inSurf	= current_data[0];
@@ -199,16 +200,20 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					else if(drag_side == 3)	vv = value_snap(drag_sv - (_my - drag_my) / _s, _sny);
 					
 					_splice[drag_side] = vv;
+					
 				} else if(drag_side < 8) {
 					if(drag_side == 4)	{
 						_splice[2] = value_snap(drag_sv[2] + (_mx - drag_mx) / _s, _snx);
 						_splice[1] = value_snap(drag_sv[1] + (_my - drag_my) / _s, _sny);
+					
 					} else if(drag_side == 5)	{
 						_splice[0] = value_snap(drag_sv[0] - (_mx - drag_mx) / _s, _snx);
 						_splice[1] = value_snap(drag_sv[1] + (_my - drag_my) / _s, _sny);
+					
 					} else if(drag_side == 6)	{
 						_splice[2] = value_snap(drag_sv[2] + (_mx - drag_mx) / _s, _snx);
 						_splice[3] = value_snap(drag_sv[3] - (_my - drag_my) / _s, _sny);
+					
 					} else if(drag_side == 7)	{
 						_splice[0] = value_snap(drag_sv[0] - (_mx - drag_mx) / _s, _snx);
 						_splice[3] = value_snap(drag_sv[3] - (_my - drag_my) / _s, _sny);
@@ -237,33 +242,41 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					draw_line_width(0, sp_t, params.w, sp_t, 4);
 					draw_sprite_colored(THEME.anchor_selector, 1, sp_l, sp_t);
 					_hov = 4;
+					
 				} else if(drag_side == 5 || point_in_circle(_mx, _my, sp_r, sp_t, 12)) {
 					draw_line_width(sp_r, 0, sp_r, params.h, 4);
 					draw_line_width(0, sp_t, params.w, sp_t, 4);
 					draw_sprite_colored(THEME.anchor_selector, 1, sp_r, sp_t);
 					_hov = 5;
+					
 				} else if(drag_side == 6 || point_in_circle(_mx, _my, sp_l, sp_b, 12)) {
 					draw_line_width(sp_l, 0, sp_l, params.h, 4);
 					draw_line_width(0, sp_b, params.w, sp_b, 4);
 					draw_sprite_colored(THEME.anchor_selector, 1, sp_l, sp_b);
 					_hov = 6;
+					
 				} else if(drag_side == 7 || point_in_circle(_mx, _my, sp_r, sp_b, 12)) {
 					draw_line_width(sp_r, 0, sp_r, params.h, 4);
 					draw_line_width(0, sp_b, params.w, sp_b, 4);
 					draw_sprite_colored(THEME.anchor_selector, 1, sp_r, sp_b);
 					_hov = 7;
+					
 				} else if(drag_side == 0 || distance_to_line(_mx, _my, sp_r, 0, sp_r, params.h) < 12) {
 					draw_line_width(sp_r, 0, sp_r, params.h, 4);
 					_hov = 0;
+					
 				} else if(drag_side == 1 || distance_to_line(_mx, _my, 0, sp_t, params.w, sp_t) < 12) {
 					draw_line_width(0, sp_t, params.w, sp_t, 4);
 					_hov = 1;
+					
 				} else if(drag_side == 2 || distance_to_line(_mx, _my, sp_l, 0, sp_l, params.h) < 12) {
 					draw_line_width(sp_l, 0, sp_l, params.h, 4);
 					_hov = 2;
+					
 				} else if(drag_side == 3 || distance_to_line(_mx, _my, 0, sp_b, params.w, sp_b) < 12) {
 					draw_line_width(0, sp_b, params.w, sp_b, 4);
 					_hov = 3;
+					
 				} else if(drag_side == 8 || point_in_rectangle(_mx, _my, sp_l, sp_t, sp_r, sp_b)) {
 					draw_line_width(sp_r, sp_t - 1, sp_r, sp_b + 1, 4);
 					draw_line_width(sp_l, sp_t - 1, sp_l, sp_b + 1, 4);
@@ -313,8 +326,8 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _px = _x + _cent[0] * _s;
 			var _py = _y + _cent[1] * _s;
 			
-			var a = inputs[5].drawOverlay(hover, active,  _x,  _y, _s, _mx, _my, _snx, _sny); 	active &= !a;
-			var a = inputs[6].drawOverlay(hover, active, _px, _py, _s / 2, _mx, _my, _snx, _sny); active &= !a;
+			var hv = inputs[5].drawOverlay(w_hovering, active,  _x,  _y, _s, _mx, _my, _snx, _sny);     OVERLAY_HV
+			var hv = inputs[6].drawOverlay(w_hovering, active, _px, _py, _s / 2, _mx, _my, _snx, _sny); OVERLAY_HV
 			
 		} else {
 			var _idim = surface_get_dimension(_inSurf);

@@ -458,8 +458,8 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				
 				if(key_mod_press(ALT)) {
 					var modi = false;
-					modi |= inputs[3].setValue([ nanx, nany ]);
-					modi |= inputs[2].setValue([ overlay_drag_px + pos_x, overlay_drag_py + pos_y ]);
+					modi = modi || inputs[3].setValue([ nanx, nany ]);
+					modi = modi || inputs[2].setValue([ overlay_drag_px + pos_x, overlay_drag_py + pos_y ]);
 					
 					if(modi)
 						UNDO_HOLDING = true;

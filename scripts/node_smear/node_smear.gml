@@ -61,7 +61,7 @@ function Node_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var ww   = surface_get_width_safe(_surf);
 		var hh   = surface_get_height_safe(_surf);
 		var _hov = false;
-		var  hv  = inputs[2].drawOverlay(hover, active, _x + ww / 2 * _s, _y + hh / 2 * _s, _s, _mx, _my, _snx, _sny); _hov |= hv;
+		var hv = inputs[2].drawOverlay(w_hoverable, active, _x + ww / 2 * _s, _y + hh / 2 * _s, _s, _mx, _my, _snx, _sny); OVERLAY_HV
 		
 		return _hov;
 	}

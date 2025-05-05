@@ -21,7 +21,7 @@ function __get_node_custom_directory(dir) {
 	file_find_close();
 	
 	for( var i = 0, n = array_length(_dirs); i < n; i++ )
-		_res |= __get_node_custom_directory(_dirs[i]);
+		_res = __get_node_custom_directory(_dirs[i]) || _res;
 	return _res;
 }
 

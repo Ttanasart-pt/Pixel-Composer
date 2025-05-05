@@ -55,7 +55,7 @@ function Panel_Globalvar() : PanelContent() constructor {
 			draw_set_text(f_p2, fa_center, fa_center, _hov? COLORS._main_value_positive : COLORS._main_icon_light);
 			draw_text_add(_bx + _bw / 2, _by + _add_h / 2, __txt("Add"));
 			
-			contentPane.hover_content |= _hov;
+			contentPane.hover_content = contentPane.hover_content || _hov;
 			if(mouse_press(mb_left, _hov && pFOCUS))
 				PROJECT.globalNode.createValue();
 			
@@ -67,7 +67,7 @@ function Panel_Globalvar() : PanelContent() constructor {
 			draw_set_text(f_p2, fa_center, fa_center, _hov? COLORS._main_icon_light : COLORS._main_icon_light);
 			draw_text_add(_bx + _bw / 2, _by + _add_h / 2, __txt("Apply"));
 			
-			contentPane.hover_content |= _hov;
+			contentPane.hover_content = contentPane.hover_content || _hov;
 			if(mouse_press(mb_left, _hov && pFOCUS))
 				global_drawer.editing = false;
 				
@@ -79,7 +79,7 @@ function Panel_Globalvar() : PanelContent() constructor {
 			draw_set_text(f_p2, fa_center, fa_center, _hov? COLORS._main_value_positive : COLORS._main_icon_light);
 			draw_text_add(_bx + _ww / 2, _by + _add_h / 2, __txt("Edit"));
 			
-			contentPane.hover_content |= _hov;
+			contentPane.hover_content = contentPane.hover_content || _hov;
 			if(mouse_press(mb_left, _hov && pFOCUS))
 				global_drawer.editing = true;
 		}

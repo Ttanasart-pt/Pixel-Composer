@@ -156,13 +156,13 @@ function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 				draw_line(px, py, px2, py2);
 			}
 			
-			var  hv  = inputs[_ind + 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= hv; hover &= !hv;
-			var  hv  = inputs[_ind + 2].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny); _hov |= hv; hover &= !hv;
-			var  hv  = inputs[_ind + 5].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= hv; hover &= !hv;
+			var hv = inputs[_ind + 1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
+			var hv = inputs[_ind + 2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny); OVERLAY_HV
+			var hv = inputs[_ind + 5].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
 			
 		} else {
-			var  hv  = inputs[_ind + 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= hv; hover &= !hv;
-			var  hv  = inputs[_ind + 2].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny); _hov |= hv; hover &= !hv;
+			var hv = inputs[_ind + 1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
+			var hv = inputs[_ind + 2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny); OVERLAY_HV
 		}
 		
 		return _hov;

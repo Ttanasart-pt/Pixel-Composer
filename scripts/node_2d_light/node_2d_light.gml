@@ -175,14 +175,13 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		PROCESSOR_OVERLAY_CHECK
-		
+
 		if(getInputAmount() == 0) return;
 		
 		dynamic_input_inspecting = clamp(dynamic_input_inspecting, 0, getInputAmount() - 1);
 		var _ind = input_fix_len + dynamic_input_inspecting * data_length;
 		
 		var _shape = current_data[_ind + 0];
-		var _hov   = false;
 		
 		draw_set_circle_precision(64);
 		
@@ -199,8 +198,8 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				draw_circle_dash(px, py, rad * _s, 1, 8);
 				draw_set_alpha(1);
 				
-				var hv = inputs[_ind + 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= bool(hv); hover &= !hv;
-				var hv = inputs[_ind + 2].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny); _hov |= bool(hv); hover &= !hv;
+				var hv = inputs[_ind + 1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
+				var hv = inputs[_ind + 2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny); OVERLAY_HV
 				break;
 			
 			case LIGHT_SHAPE_2D.ellipse :
@@ -217,23 +216,23 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				draw_ellipse_dash(px, py, rdx * _s, rdy * _s, 1, 8, ang);
 				draw_set_alpha(1);
 				
-				var hv = inputs[_ind +  1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);           _hov |= bool(hv); hover &= !hv;
-				var hv = inputs[_ind + 15].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny, ang);      _hov |= bool(hv); hover &= !hv;
-				var hv = inputs[_ind + 16].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny, ang + 90); _hov |= bool(hv); hover &= !hv;
-				var hv = inputs[_ind + 17].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny);           _hov |= bool(hv); hover &= !hv;
+				var hv = inputs[_ind +  1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny);           OVERLAY_HV
+				var hv = inputs[_ind + 15].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny, ang);      OVERLAY_HV
+				var hv = inputs[_ind + 16].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny, ang + 90); OVERLAY_HV
+				var hv = inputs[_ind + 17].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny);           OVERLAY_HV
 				break;
 			
 			case LIGHT_SHAPE_2D.line      :
 			case LIGHT_SHAPE_2D.line_asym :
 			case LIGHT_SHAPE_2D.spot      :
 			case LIGHT_SHAPE_2D.flame     :
-				var hv = inputs[_ind + 5].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= bool(hv); hover &= !hv;
-				var hv = inputs[_ind + 6].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= bool(hv); hover &= !hv;
+				var hv = inputs[_ind + 5].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
+				var hv = inputs[_ind + 6].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
 				break;
 				
 			case LIGHT_SHAPE_2D.saber     :
-				var hv = inputs[_ind + 5].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= bool(hv); hover &= !hv;
-				var hv = inputs[_ind + 6].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov |= bool(hv); hover &= !hv;
+				var hv = inputs[_ind + 5].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
+				var hv = inputs[_ind + 6].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
 				
 				var pos = current_data[_ind +  5];
 				var rad = current_data[_ind +  2];
@@ -249,12 +248,12 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				draw_set_alpha(1);
 				
 				inputs[_ind + 21].overlay_text_valign = fa_bottom;
-				var hv = inputs[_ind +  2].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny); _hov |= bool(hv); hover &= !hv;
-				var hv = inputs[_ind + 21].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny); _hov |= bool(hv); hover &= !hv;
+				var hv = inputs[_ind +  2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny); OVERLAY_HV
+				var hv = inputs[_ind + 21].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny); OVERLAY_HV
 				break;
 		}
 		
-		return _hov;
+		return w_hovering;
 	}
 	
 	static applyLight = function(_data, _ind, _lightSurf) {

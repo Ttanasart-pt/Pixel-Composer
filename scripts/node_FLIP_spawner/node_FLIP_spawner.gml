@@ -49,7 +49,9 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	prev_position = [ 0, 0 ];
 	toReset       = true;
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+
+		
 		var _shp   = getInputData(1);
 		var _posit = getInputData(2);
 		
@@ -78,9 +80,9 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			draw_surface_ext(_surf, _px - _sw * _s / 2, _py - _sh * _s / 2, _s, _s, 0, c_white, 0.5);
 		}
 		
-		if(inputs[2].drawOverlay(hover, active,  _x,  _y, _s, _mx, _my, _snx, _sny)) active = false;
+		var hv = inputs[2].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
 		
-	} #endregion
+	}
 	
 	static getDimension = function() { 
 		var domain = getInputData(0);
@@ -89,7 +91,7 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		return [ domain.width, domain.height ];
 	}
 	
-	static step = function() { #region
+	static step = function() {
 		var _shp = getInputData(1);
 		var _typ = getInputData(3);
 		
@@ -99,9 +101,9 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		inputs[ 7].setVisible(_shp == 2, _shp == 2);
 		inputs[ 8].setVisible(_shp == 0);
 		inputs[13].setVisible(_shp == 1);
-	} #endregion
+	}
 	
-	static update = function(frame = CURRENT_FRAME) { #region
+	static update = function(frame = CURRENT_FRAME) {
 		var domain = getInputData(0);
 		if(!instance_exists(domain)) return;
 		
@@ -201,12 +203,12 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		prev_position[0] = _posit[0];
 		prev_position[1] = _posit[1];
-	} #endregion
+	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
 		draw_sprite_fit(s_node_flip_spawner, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
-	} #endregion
+	}
 	
 	static getPreviewValues = function() { var domain = getInputData(0); return instance_exists(domain)? domain.domain_preview : noone; }
 }

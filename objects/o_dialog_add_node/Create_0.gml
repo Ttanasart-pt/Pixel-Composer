@@ -720,7 +720,7 @@ event_inherited();
 					draw_rectangle(0, 0, ww, _lbh + ui(12), false);
 					gpu_set_blendmode(bm_normal);
 					
-					content_hoverable &= !point_in_rectangle(_m[0], _m[1], 0, 0, ww, _lbh + ui(12));
+					content_hoverable = content_hoverable && !point_in_rectangle(_m[0], _m[1], 0, 0, ww, _lbh + ui(12));
 				}
 				
 				var _cAll = 0;
@@ -901,7 +901,7 @@ event_inherited();
 					draw_rectangle(0, 0, ww, _lbh + sec_pd + ui(4), false);
 					gpu_set_blendmode(bm_normal);
 					
-					content_hoverable &= !point_in_rectangle(_m[0], _m[1], 0, 0, ww, _lbh + ui(12));
+					content_hoverable = content_hoverable && !point_in_rectangle(_m[0], _m[1], 0, 0, ww, _lbh + ui(12));
 				}
 				
 				var _cAll = 0;

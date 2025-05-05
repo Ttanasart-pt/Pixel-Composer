@@ -30,10 +30,11 @@ function Node_Mirror(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	attribute_surface_depth();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+
 		PROCESSOR_OVERLAY_CHECK
 		
-		var _pos   = current_data[1];
-		var _ang   = current_data[2];
+		var _pos  = current_data[1];
+		var _ang  = current_data[2];
 		var _posx = _pos[0] * _s + _x;
 		var _posy = _pos[1] * _s + _y;
 		
@@ -45,11 +46,10 @@ function Node_Mirror(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		draw_set_color(COLORS._main_accent);
 		draw_line(dx0, dy0, dx1, dy1);
 		
-		var _hov = false;
-		var  hv  = inputs[1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);		active &= !hv; _hov |= hv;
-		var  hv  = inputs[2].drawOverlay(hover, active, _posx, _posy, _s, _mx, _my, _snx, _sny);  active &= !hv; _hov |= hv;
+		var hv = inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny);       OVERLAY_HV
+		var hv = inputs[2].drawOverlay(w_hoverable, active, _posx, _posy, _s, _mx, _my, _snx, _sny); OVERLAY_HV
 		
-		return _hov;
+		return w_hovering;
 	}
 	
 	static processData = function(_outData, _data, _output_index, _array_index) {

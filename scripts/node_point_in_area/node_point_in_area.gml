@@ -17,8 +17,8 @@ function Node_Point_In_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		
 		var hhv = false;
 		var hov = hover;
-		var _hv = inputs[1].drawOverlay(hov, active, _x, _y, _s, _mx, _my, _snx, _sny); hhv |= _hv; hov &= !_hv;
-		var _hv = inputs[0].drawOverlay(hov, active, _x, _y, _s, _mx, _my, _snx, _sny); hhv |= _hv; hov &= !_hv;
+		var hv = inputs[1].drawOverlay(hov, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
+		var hv = inputs[0].drawOverlay(hov, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
 			
 		return hhv;
 	}

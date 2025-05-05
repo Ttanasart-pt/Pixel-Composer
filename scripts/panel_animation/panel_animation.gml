@@ -548,7 +548,7 @@ function Panel_Animation() : PanelContent() constructor {
             var k = keyframe_selecting[i];
             var _t = t + abs(i -  _index) * _stag;
             
-            modified |= k.anim.setKeyTime(k, _t);
+            modified = k.anim.setKeyTime(k, _t) || modified;
         }
         
         if(modified) UNDO_HOLDING = true;

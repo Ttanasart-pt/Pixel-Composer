@@ -82,11 +82,11 @@ function Node_Grid_Hex(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	attribute_oversample();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var _hov = false;
-		var a = inputs[ 1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);                    active &= !a; _hov |= a;
-		var a = inputs[18].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, getSingleValue(0));	active &= !a; _hov |= a;
+
+		var hv = inputs[ 1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny);                    OVERLAY_HV
+		var hv = inputs[18].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, getSingleValue(0)); OVERLAY_HV
 		
-		return _hov;
+		return w_hovering;
 	}
 	
 	static step = function() {

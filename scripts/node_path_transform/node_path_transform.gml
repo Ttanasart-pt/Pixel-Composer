@@ -130,11 +130,11 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		var px  = _x + _pos[0] * _s;
 		var py  = _y + _pos[1] * _s;
 		
-		active &= !inputs[1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-		active &= !inputs[2].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny);
+		var hv = inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
+		var hv = inputs[2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny); OVERLAY_HV
 		
 		inputs[4].overlay_draw_text = false;
-		active &= !inputs[4].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, 1);
+		var hv = inputs[4].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, 1); OVERLAY_HV
 	}
 	
 	static processData = function(_outData, _data, _output_index, _array_index = 0) { 

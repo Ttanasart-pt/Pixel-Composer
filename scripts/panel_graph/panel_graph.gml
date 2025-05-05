@@ -1334,7 +1334,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         
         for(var i = 0; i < array_length(nodes_list); i++) {
             var h = nodes_list[i].drawPreviewBackground(gr_x, gr_y, mx, my, graph_s);
-            _hov |= h;
+            _hov = _hov || h;
         }
         
         return _hov;
@@ -1343,34 +1343,34 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
     function drawCacheCheck(_x, _y, _s, _w, _h) {
     	var _upd = false;
     	
-    	_upd |= pFOCUS && (mouse_click(mb_any) || keyboard_check_pressed(vk_anykey));
-    	_upd |= draw_refresh; draw_refresh = false;
+    	_upd = _upd || (pFOCUS && (mouse_click(mb_any) || keyboard_check_pressed(vk_anykey)));
+    	_upd = _upd || draw_refresh; draw_refresh = false;
     	
-    	_upd |= connection_cache[$ "_x"] != _x; connection_cache[$ "_x"] = _x;
-		_upd |= connection_cache[$ "_y"] != _y; connection_cache[$ "_y"] = _y;
-		_upd |= connection_cache[$ "_s"] != _s; connection_cache[$ "_s"] = _s;
-		_upd |= connection_cache[$ "_w"] != _w; connection_cache[$ "_w"] = _w;
-		_upd |= connection_cache[$ "_h"] != _h; connection_cache[$ "_h"] = _h;
+    	_upd = _upd || connection_cache[$ "_x"] != _x; connection_cache[$ "_x"] = _x;
+		_upd = _upd || connection_cache[$ "_y"] != _y; connection_cache[$ "_y"] = _y;
+		_upd = _upd || connection_cache[$ "_s"] != _s; connection_cache[$ "_s"] = _s;
+		_upd = _upd || connection_cache[$ "_w"] != _w; connection_cache[$ "_w"] = _w;
+		_upd = _upd || connection_cache[$ "_h"] != _h; connection_cache[$ "_h"] = _h;
 		
-		_upd |= connection_cache[$ "type"]        != project.graphConnection.type;
+		_upd = _upd || connection_cache[$ "type"]        != project.graphConnection.type;
 		        connection_cache[$ "type"]        =  project.graphConnection.type;
 		        
-		_upd |= connection_cache[$ "line_width"]  != project.graphConnection.line_width;
+		_upd = _upd || connection_cache[$ "line_width"]  != project.graphConnection.line_width;
 		        connection_cache[$ "line_width"]  =  project.graphConnection.line_width;
 		        
-		_upd |= connection_cache[$ "line_corner"] != project.graphConnection.line_corner;
+		_upd = _upd || connection_cache[$ "line_corner"] != project.graphConnection.line_corner;
 		        connection_cache[$ "line_corner"] =  project.graphConnection.line_corner;
 		        
-		_upd |= connection_cache[$ "line_extend"] != project.graphConnection.line_extend;
+		_upd = _upd || connection_cache[$ "line_extend"] != project.graphConnection.line_extend;
 		        connection_cache[$ "line_extend"] =  project.graphConnection.line_extend;
 		        
-		_upd |= connection_cache[$ "line_aa"]     != project.graphConnection.line_aa;
+		_upd = _upd || connection_cache[$ "line_aa"]     != project.graphConnection.line_aa;
 		        connection_cache[$ "line_aa"]     =  project.graphConnection.line_aa;
 		
-		connection_draw_update |= _upd;
+		connection_draw_update = connection_draw_update || _upd;
 		
-		_upd |= connection_cache[$ "frame"]     != CURRENT_FRAME;     connection_cache[$ "frame"]     = CURRENT_FRAME;
-		node_surface_update    |= _upd;
+		_upd = _upd || connection_cache[$ "frame"]     != CURRENT_FRAME;     connection_cache[$ "frame"]     = CURRENT_FRAME;
+		node_surface_update    = node_surface_update || _upd;
     }
     
     function dragNodes() {
@@ -1794,7 +1794,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         // draw connections
         var aa = floor(min(8192 / w, 8192 / h, project.graphConnection.line_aa));
         
-        connection_draw_update |= !surface_valid(connection_surface_cc, w * aa, h * aa);
+        connection_draw_update = connection_draw_update || !surface_valid(connection_surface_cc, w * aa, h * aa);
         
         connection_surface    = surface_verify(connection_surface,    w * aa, h * aa);
         connection_surface_cc = surface_verify(connection_surface_cc, w * aa, h * aa);
@@ -1890,8 +1890,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         
         var t = get_timer();
         
-        // node_surface_update |= !surface_valid(node_surface, w, h);
-        node_surface_update |= true;
+        // node_surface_update = node_surface_update || !surface_valid(node_surface, w, h);
+        node_surface_update = true;
         // node_surface = surface_verify(node_surface, w, h);
         
         // surface_set_target(node_surface);

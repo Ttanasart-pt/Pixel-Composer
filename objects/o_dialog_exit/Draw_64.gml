@@ -30,7 +30,8 @@ if(DIALOG_SHOW_FOCUS) DIALOG_DRAW_FOCUS
 	py += line_get_height(, 4);
 	
 	draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
-	var txt = __txta("Save project '{1}' before exit?", filename_name(project.path));
+	var prj = filename_name_only(project.path);
+	var txt = prj == ""? __txt("Save new project before exit?") : __txta("Save project '{1}' before exit?", prj);
 	draw_text_ext(dialog_x + ui(24), py, txt, -1, dialog_w - ui(48));
 	_dialog_h = ui(118) + string_height_ext(txt, -1, dialog_w - ui(48));
 	
