@@ -142,7 +142,7 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-	    if(array_empty(points)) return;
+	    if(array_empty(points)) return w_hovering;
 	    
 	    var ox = _x + points[0][0] * _s, x0 = ox;
 	    var oy = _y + points[0][1] * _s, y0 = oy;
@@ -164,10 +164,11 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	    var _px = _x + posx * _s;
 	    var _py = _y + posy * _s;
 	    
-	    var hv = inputs[0].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
-	    var hv = inputs[2].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, _snx, _sny); OVERLAY_HV
-	    var hv = inputs[1].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, _snx, _sny); OVERLAY_HV
+	    InputDrawOverlay(inputs[0].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my, _snx, _sny));
+	    InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, _snx, _sny));
+	    InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, _snx, _sny));
 	    
+	    return w_hovering;
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {

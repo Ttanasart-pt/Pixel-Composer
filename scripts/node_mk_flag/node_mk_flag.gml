@@ -179,30 +179,9 @@ function Node_MK_Flag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	} #endregion
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var _hov = false;
-		var hv = inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
+		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 		
-		//for( var i = 0, n = array_length(links); i < n; i++ ) {
-		//	var _l = links[i];
-			
-		//	var p0 = _l.p0;
-		//	var p1 = _l.p1;
-			
-		//	var _p0x = _x + p0.x * _s;
-		//	var _p0y = _y + p0.y * _s;
-		//	var _p1x = _x + p1.x * _s;
-		//	var _p1y = _y + p1.y * _s;
-			
-		//	if(p0.pin && p1.pin) {
-		//		draw_set_color(COLORS._main_text);
-		//		draw_line_width(_p0x, _p0y, _p1x, _p1y, 2);
-		//	} else {
-		//		draw_set_color(COLORS._main_accent);
-		//		draw_line(_p0x, _p0y, _p1x, _p1y);
-		//	}
-		//}
-		
-		return _hov;
+		return w_hovering;
 	}
 	
 	static processData_prebatch  = function() { #region

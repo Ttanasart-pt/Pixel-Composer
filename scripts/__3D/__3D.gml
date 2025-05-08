@@ -291,7 +291,7 @@ enum CAMERA_PROJ {
 		];
 	}
 	
-	function _3d_gizmo(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	function _3d_gizmo(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _gpos = getInputData(global_pos);
 		var _gsca = getInputData(global_sca);
 		
@@ -486,8 +486,7 @@ enum CAMERA_PROJ {
 			drag_my		= _my;
 		}
 		
-		var hv = inputs[global_pos].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
-	#endregion
+		InputDrawOverlay(inputs[global_pos].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 	}
 	
 	function _3d_local_transform(_lpos, _lrot, _lsca) {

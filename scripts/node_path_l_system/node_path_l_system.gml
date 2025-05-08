@@ -159,10 +159,10 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	}
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var hv = inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
+		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 		
 		var _out = getSingleValue(0, preview_index, true);
-		if(!is_struct(_out)) return;
+		if(!is_struct(_out)) return w_hovering;
 		
 		draw_set_color(COLORS._main_accent);
 		for( var i = 0, n = array_length(_out.lines); i < n; i++ ) {
@@ -181,6 +181,8 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				
 			draw_line(x0, y0, x1, y1);
 		}
+		
+		return w_hovering;
 	}
 	
 	static drawOverlay3D = function(active, params, _mx, _my, _snx, _sny, _panel) {

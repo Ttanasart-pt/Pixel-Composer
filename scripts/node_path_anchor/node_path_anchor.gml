@@ -45,13 +45,13 @@ function Node_Path_Anchor(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		draw_line(px, py, c1x, c1y);
 		draw_line(px, py, c2x, c2y);
 		
-		var hv = inputs[0].drawOverlay(w_hoverable, !isUsingTool(0) && active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
-		var hv = inputs[1].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny);                    OVERLAY_HV
+		InputDrawOverlay(inputs[0].drawOverlay(w_hoverable, !isUsingTool(0) && active, _x, _y, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
 		
-		if(!_mir) {
-			var hv = inputs[2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny);                OVERLAY_HV
-		} else
-			draw_circle_prec(c2x, c2y, 4, false);
+		if(!_mir) InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
+		else      draw_circle_prec(c2x, c2y, 4, false);
+		
+		return w_hovering;
 	}
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) {  

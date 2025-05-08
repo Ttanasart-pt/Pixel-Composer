@@ -4,8 +4,6 @@
 	#macro INAME internalName == ""? name : internalName
 	#macro SHOW_PARAM (show_parameter && previewable)
 	
-	#macro OVERLAY_HV w_hovering = w_hovering || bool(hv); w_hoverable = w_hoverable && !hv;
-	
 	enum CACHE_USE {
 		none,
 		manual,
@@ -182,6 +180,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		in_cache_len      = 0;
 		inputDisplayList  = [];
 		inputDisplayGroup = [];
+		
+		outputDisplayList = [];
 		
 		outputs_index  = [];
 		out_cache_len  = 0;
@@ -887,6 +887,24 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(auto_input && dummy_input) {
 			if(dummy_add_index == noone) array_push(inputDisplayList, dummy_input);
 			else array_insert(inputDisplayList, _dummy_start + dummy_add_index, dummy_input);
+		}
+		
+		outputDisplayList = [];
+		
+		for( var i = 0, n = array_length(outputs); i < n; i++ )
+			outputDisplayList[i] = outputs[i];
+			
+		for( var i = 0; i < array_length(inputs); i++ ) {
+			var jun = inputs[i].bypass_junc;
+			if(jun == noone || !jun.visible) continue;
+			array_push(outputDisplayList, jun);
+		}
+		
+		if(attributes.outp_meta) {
+			for(var i = 0; i < array_length(junc_meta); i++) {
+				var jun = junc_meta[i];
+				if(jun.isVisible()) array_push(outputDisplayList, jun);
+			}
 		}
 	}
 	
@@ -1914,63 +1932,33 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
 		
-		var _hov = _panel.pHOVER && (_panel.node_hovering == noone || _panel.node_hovering == self);
+		var y0 = previewable? yy + name_height * _s : yy;
+		var y1 = yy + h * _s;
 		
+		var _hov = _panel.pHOVER && (_panel.node_hovering == noone || _panel.node_hovering == self);
 		show_input_name  = _hov;
 		show_output_name = _hov;
 		
-		var _y0 = previewable? yy + name_height * _s : yy;
-		var _y1 = yy + h * _s;
-		
-		show_input_name  = _dummy && point_in_rectangle(_mx, _my, xx - (    12) * _s, _y0, xx + (    12) * _s, _y1);
-		show_output_name = show_output_name && point_in_rectangle(_mx, _my, xx + (w - 12) * _s, _y0, xx + (w + 12) * _s, _y1);
+		show_input_name  = show_input_name  && point_in_rectangle(_mx, _my, xx - (    12) * _s, y0, xx + (    12) * _s, y1);
+		show_output_name = show_output_name && point_in_rectangle(_mx, _my, xx + (w - 12) * _s, y0, xx + (w + 12) * _s, y1);
 		
 		if(_panel.value_dragging && _panel.node_hovering == self) {
 			if(_panel.value_dragging.connect_type == CONNECT_TYPE.input)  show_output_name = true;
-			if(_panel.value_dragging.connect_type == CONNECT_TYPE.output) show_input_name = true;
+			if(_panel.value_dragging.connect_type == CONNECT_TYPE.output) show_input_name  = true;
 		}
 		
+		__s  = _s;
+		__mx = _mx;
+		__my = _my;
+		
 		if(show_input_name) {
-			for(var i = 0, n = array_length(inputDisplayList); i < n; i++) {
-				var jun = inputDisplayList[i];
-				jun.drawNameBG(_s);
-			}
-			
-			for(var i = 0, n = array_length(inputDisplayList); i < n; i++) {
-				var jun = inputDisplayList[i];
-				jun.drawName(_s, _mx, _my);
-			}
+			array_foreach(inputDisplayList, function(i) /*=>*/ { i.drawNameBG(__s);           });
+			array_foreach(inputDisplayList, function(i) /*=>*/ { i.drawName(__s, __mx, __my); });
 		}
 		
 		if(show_output_name) {
-			for(var i = 0; i < array_length(outputs); i++)
-				if(outputs[i].isVisible()) outputs[i].drawNameBG(_s);
-			
-			for( var i = 0; i < array_length(inputs); i++ ) {
-				var jun = inputs[i].bypass_junc;
-				if(jun == noone || !jun.visible) continue;
-				jun.drawNameBG(_s);
-			}
-			
-			for(var i = 0; i < array_length(outputs); i++)
-				if(outputs[i].isVisible()) outputs[i].drawName(_s, _mx, _my);
-			
-			for( var i = 0; i < array_length(inputs); i++ ) {
-				var jun = inputs[i].bypass_junc;
-				if(jun == noone || !jun.visible) continue;
-				jun.drawName(_s, _mx, _my);
-			}
-			
-			if(attributes.outp_meta) {
-				for(var i = 0; i < array_length(junc_meta); i++) {
-					var jun = junc_meta[i];
-					
-					if(!jun.isVisible()) continue;
-					jun.drawNameBG(_s);
-					jun.drawName(_s, _mx, _my);
-				}
-			}
-			
+			array_foreach(outputDisplayList, function(i) /*=>*/ { i.drawNameBG(__s);           });
+			array_foreach(outputDisplayList, function(i) /*=>*/ { i.drawName(__s, __mx, __my); });
 		}
 		
 		if(hasInspector1Update() && _panel.pHOVER && point_in_circle(_mx, _my, inspectInput1.x, inspectInput1.y, 10)) {
@@ -2319,6 +2307,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static drawActive = function(ind = 0) {
 		active_draw_index = max(active_draw_index, ind);
 		if(display_parameter.highlight) drawBranch();
+	}
+	
+	static InputDrawOverlay = function(hv) {
+		w_hovering  = w_hovering || bool(hv); 
+		w_hoverable = w_hoverable && !hv;
+		return hv;
 	}
 	
 	static doDrawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params = {}) { 

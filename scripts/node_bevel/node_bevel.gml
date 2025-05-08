@@ -45,7 +45,6 @@ function Node_Bevel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	attribute_oversample();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-
 		PROCESSOR_OVERLAY_CHECK
 		
 		var _surf = current_data[0];
@@ -54,7 +53,7 @@ function Node_Bevel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var _pw = surface_get_width_safe(_surf) * _s / 2;
 		var _ph = surface_get_height_safe(_surf) * _s / 2;
 		
-		var hv = inputs[2].drawOverlay(w_hoverable, active, _x + _pw, _y + _ph, _s, _mx, _my, _snx, _sny); OVERLAY_HV
+		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _x + _pw, _y + _ph, _s, _mx, _my, _snx, _sny));
 		
 		return w_hovering;
 	}

@@ -54,12 +54,11 @@ function Node_Zigzag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var pos  = current_data[2];
 		var px   = _x + pos[0] * _s;
 		var py   = _y + pos[1] * _s;
-		var _hov = false;
 		
-		var hv = inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
-		var hv = inputs[8].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny); OVERLAY_HV
+		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[8].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
 		
-		return _hov;
+		return w_hovering;
 	}
 	
 	static step = function() {

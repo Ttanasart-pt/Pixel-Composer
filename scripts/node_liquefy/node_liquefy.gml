@@ -182,10 +182,9 @@ function Node_Liquefy(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					draw_circle(px, py, rad,  true);
 					draw_circle(qx, qy, rad2, true);
 					
-					var hv = inputs[_ind + 2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny);  OVERLAY_HV
-					var hv = inputs[_ind + 1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny);  OVERLAY_HV
-					
-					var hv = inputs[_ind + 10].drawOverlay(w_hoverable, active, qx, qy, _s, _mx, _my, _snx, _sny); OVERLAY_HV
+					InputDrawOverlay(inputs[_ind +  2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
+					InputDrawOverlay(inputs[_ind +  1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
+					InputDrawOverlay(inputs[_ind + 10].drawOverlay(w_hoverable, active, qx, qy, _s, _mx, _my, _snx, _sny));
 					
 				} else if(!array_empty(disp_path)) {
 					var ox, oy, nx, ny;
@@ -211,16 +210,16 @@ function Node_Liquefy(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					
 					draw_circle(ox, oy, rad2, true);
 					
-					var hv = inputs[_ind + 10].drawOverlay(w_hoverable, active, ox, oy, _s, _mx, _my, _snx, _sny); OVERLAY_HV
+					InputDrawOverlay(inputs[_ind + 10].drawOverlay(w_hoverable, active, ox, oy, _s, _mx, _my, _snx, _sny));
 				}
 				break;
 				
 			default:
-				var hv = inputs[_ind + 1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
+				InputDrawOverlay(inputs[_ind + 1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 				break;
 		}
 		
-		var hv = inputs[_ind + 3].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny); OVERLAY_HV
+		InputDrawOverlay(inputs[_ind + 3].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
 		return w_hovering;
 	}
 	

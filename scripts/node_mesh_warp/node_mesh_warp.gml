@@ -399,7 +399,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		var _hover = -1;
 		for(var i = control_index; i < array_length(inputs); i++) {
-			var hv = inputs[i].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
+			var hv = InputDrawOverlay(inputs[i].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 			if(hv) _hover = i;
 		}
 		

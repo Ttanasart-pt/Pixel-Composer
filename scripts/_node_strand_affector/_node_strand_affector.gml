@@ -132,9 +132,9 @@ function _Node_Strand_Affector(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			draw_line_dashed(px0, py0, px1, py1);
 		}
 		
-		var hv = inputs[2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
-		var hv = inputs[4].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny); OVERLAY_HV
-		var hv = inputs[3].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny); OVERLAY_HV
+		InputDrawOverlay(inputs[2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[4].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[3].drawOverlay(hover, active, px, py, _s, _mx, _my, _snx, _sny));
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {

@@ -31,8 +31,8 @@ function Node_Mesh_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		var px = ax + pos[0] * _s;
 		var py = ay + pos[1] * _s;
 		
-		var hv = inputs[1].drawOverlay(w_hoverable, active, ax, ay, _s, _mx, _my, _snx, _sny); OVERLAY_HV
-		var hv = inputs[2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny); OVERLAY_HV
+		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, ax, ay, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
 		
 		draw_set_color(COLORS._main_accent);
 		omesh.draw(_x, _y, _s);

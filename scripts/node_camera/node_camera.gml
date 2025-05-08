@@ -282,8 +282,9 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 		if(PANEL_PREVIEW.getNodePreview() == self)
 			draw_surface_ext_safe(_out, _cam_x, _cam_y, _s * _zoom, _s * _zoom);
-		var hv = inputs[0].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
-		var hv = inputs[6].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, _snx, _sny, 0, [.5, .5]); OVERLAY_HV
+			
+		InputDrawOverlay(inputs[0].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[6].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, _snx, _sny, 0, [.5, .5]));
 		
 		draw_set_color(COLORS._main_accent);
 		var x0 = _cam_x;

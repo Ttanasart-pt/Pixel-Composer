@@ -138,8 +138,6 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		PROCESSOR_OVERLAY_CHECK
 		
-		var _hov = false;
-		
 		var _shape   = current_data[ 2];
 		var _posMode = current_data[15];
 		var _pos  = [ 0, 0 ];
@@ -147,22 +145,19 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var _px, _py;
 		var hv;
 		
-		var _hov = false;
-		var _int = hover;
-		
 		var _shp = array_safe_get(shape_types, _shape, "");
 		if(is_struct(_shp)) _shp = _shp.data;
 		
 		switch(_shp) {
 			case "Arrow"	:
 			case "Line"	:
-				var hv = inputs[32].drawOverlay(_int, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
-				var hv = inputs[33].drawOverlay(_int, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
-				return _hov;
+				InputDrawOverlay(inputs[32].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
+				InputDrawOverlay(inputs[33].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
+				return w_hovering;
 				
 			case "Half"	:
-				var hv = inputs[32].drawOverlay(_int, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
-				return _hov;
+				InputDrawOverlay(inputs[32].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
+				return w_hovering;
 		}
 		
 		if(_posMode == 0) {
@@ -176,14 +171,14 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		}
 		
 		if(_posMode == 0) {
-			var hv = inputs[3].drawOverlay(_int, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
+			InputDrawOverlay(inputs[3].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 			
 		} else if(_posMode == 1) {
 			_px  = _x + _pos[0] * _s;
 			_py  = _y + _pos[1] * _s;
 			
-			var hv = inputs[16].drawOverlay(_int, active,  _x,  _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
-			var hv = inputs[17].drawOverlay(_int, active, _px, _py, _s, _mx, _my, _snx, _sny); OVERLAY_HV
+			InputDrawOverlay(inputs[16].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my, _snx, _sny));
+			InputDrawOverlay(inputs[17].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, _snx, _sny));
 		
 		}
 		
@@ -213,10 +208,10 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			draw_set_color(COLORS._main_accent);
 			draw_arc(cx, cy, _cor - _corr, ar, ar + 90, 2);
 			
-			var hv = inputs[9].drawOverlay(_int, active, _x0, _y0, _s, _mx, _my, _snx, _sny, aa, _max_s, 1); OVERLAY_HV
+			InputDrawOverlay(inputs[9].drawOverlay(w_hoverable, active, _x0, _y0, _s, _mx, _my, _snx, _sny, aa, _max_s, 1));
 		}
 		
-		return _hov;
+		return w_hovering;
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {

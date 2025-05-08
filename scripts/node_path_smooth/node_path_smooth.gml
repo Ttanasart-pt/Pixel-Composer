@@ -108,7 +108,7 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			var _act = active && !isUsingTool(0);
 			
 			for(var i = input_fix_len; i < array_length(inputs); i++) {
-				var hv = inputs[i].drawOverlay(hover, _act, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
+				var hv = InputDrawOverlay(inputs[i].drawOverlay(hover, _act, _x, _y, _s, _mx, _my, _snx, _sny));
 				if(hv) _anchor_hover = i;
 			}
 		}
@@ -137,6 +137,8 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				RENDER_ALL
 			}
 		}
+		
+		return w_hovering;
 	}
 	
 	static updateLength = function() {

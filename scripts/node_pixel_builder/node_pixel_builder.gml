@@ -96,11 +96,11 @@ function Node_Pixel_Builder(_x, _y, _group = noone) : Node_Collection(_x, _y, _g
 		
 		for(var i = custom_input_index; i < array_length(inputs); i++) {
 			var _in = inputs[i];
-			var _hv = _in.from.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-			if(_hv != undefined) active = active && !_hv;
+			InputDrawOverlay(_in.from.drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 		}
 		
-		var hv = inputs[0].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
+		InputDrawOverlay(inputs[0].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
+		return w_hovering;
 	}
 	
 	static checkComplete = function() {

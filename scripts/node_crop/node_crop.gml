@@ -299,6 +299,7 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					drag_sv   = _hov < 4? _splice[_hov] : _splice;
 				}
 			}
+			
 		} else if(_fit == 0) {
 			tools = [ tool_fitw, tool_fith ];
 			
@@ -326,8 +327,8 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _px = _x + _cent[0] * _s;
 			var _py = _y + _cent[1] * _s;
 			
-			var hv = inputs[5].drawOverlay(w_hovering, active,  _x,  _y, _s, _mx, _my, _snx, _sny);     OVERLAY_HV
-			var hv = inputs[6].drawOverlay(w_hovering, active, _px, _py, _s / 2, _mx, _my, _snx, _sny); OVERLAY_HV
+			InputDrawOverlay(inputs[5].drawOverlay(w_hovering, active,  _x,  _y, _s, _mx, _my, _snx, _sny));
+			InputDrawOverlay(inputs[6].drawOverlay(w_hovering, active, _px, _py, _s / 2, _mx, _my, _snx, _sny));
 			
 		} else {
 			var _idim = surface_get_dimension(_inSurf);

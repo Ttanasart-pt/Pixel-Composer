@@ -34,8 +34,6 @@ function Node_FLIP_Vortex(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	}
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-
-		
 		var _posit = getInputData(1);
 		var _rad   = getInputData(2);
 		
@@ -47,8 +45,9 @@ function Node_FLIP_Vortex(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		draw_set_color(COLORS._main_accent);
 		draw_circle_prec(_px, _py, _r, true, 32);
 		
-		var hv = inputs[1].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
+		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my, _snx, _sny));
 		
+		return w_hovering;
 	}
 	
 	static step = function() {

@@ -139,7 +139,6 @@ function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var rad  = current_data[_ind + 2];
 		var px   = _x + pos[0] * _s;
 		var py   = _y + pos[1] * _s;
-		var _hov = false;
 		
 		draw_set_color(COLORS._main_accent);
 		draw_set_alpha(0.5);
@@ -156,16 +155,16 @@ function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 				draw_line(px, py, px2, py2);
 			}
 			
-			var hv = inputs[_ind + 1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
-			var hv = inputs[_ind + 2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny); OVERLAY_HV
-			var hv = inputs[_ind + 5].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
+			InputDrawOverlay(inputs[_ind + 1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
+			InputDrawOverlay(inputs[_ind + 2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
+			InputDrawOverlay(inputs[_ind + 5].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 			
 		} else {
-			var hv = inputs[_ind + 1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
-			var hv = inputs[_ind + 2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny); OVERLAY_HV
+			InputDrawOverlay(inputs[_ind + 1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
+			InputDrawOverlay(inputs[_ind + 2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
 		}
 		
-		return _hov;
+		return w_hovering;
 	}
 	
 	static applyLight = function(_data, _dim, _ind, _ligSurf) {

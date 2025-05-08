@@ -43,10 +43,9 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _surf = outputs[0].getValue();
-		var _hov  = false;
 		
 		if(is_array(_surf)) {
-			if(array_length(_surf) == 0) return _hov;
+			if(array_length(_surf) == 0) return w_hovering;
 			_surf = _surf[preview_index];
 		}
 		
@@ -55,10 +54,10 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 		var _typ = getSingleValue(11);
 		
-			 if(_typ == 0) { var hv = inputs[ 3].drawOverlay(w_hoverable, active, _x + ww / 2, _y + hh / 2, _s, _mx, _my, _snx, _sny); OVERLAY_HV }
-		else if(_typ == 1) { var hv = inputs[12].drawOverlay(w_hoverable, active, _x,          _y,          _s, _mx, _my, _snx, _sny); OVERLAY_HV }
+			 if(_typ == 0) InputDrawOverlay(inputs[ 3].drawOverlay(w_hoverable, active, _x + ww / 2, _y + hh / 2, _s, _mx, _my, _snx, _sny));
+		else if(_typ == 1) InputDrawOverlay(inputs[12].drawOverlay(w_hoverable, active, _x,          _y,          _s, _mx, _my, _snx, _sny));
 		
-		return _hov;
+		return w_hovering;
 	}
 	
 	static step = function() { 

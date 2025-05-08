@@ -61,8 +61,8 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			draw_line_width2(px, py, fx, fy, 8, 2);
 			draw_set_alpha(1);
 			
-			var hv = inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
-			var hv = inputs[5].drawOverlay(w_hoverable, active, px, py, _s * attributes.display_scale, _mx, _my, _snx, _sny, 0, 10); OVERLAY_HV
+			InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
+			InputDrawOverlay(inputs[5].drawOverlay(w_hoverable, active, px, py, _s * attributes.display_scale, _mx, _my, _snx, _sny, 0, 10));
 			
 		} else if(_typ == 3) {
 			var _rad = getInputData(8);
@@ -72,11 +72,13 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			draw_circle_prec(px, py, _rad * _s, 1);
 			draw_set_alpha(1);
 			
-			var hv = inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
-			var hv = inputs[8].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny); OVERLAY_HV
+			InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
+			InputDrawOverlay(inputs[8].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
 			
 		} else 
-			var hv = inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
+			InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
+			
+		return w_hovering;
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {

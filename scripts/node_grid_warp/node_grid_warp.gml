@@ -93,9 +93,8 @@ function Node_Grid_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			draw_line(_a0[0], _a0[1], _a1[0], _a1[1]);
 		}
 				
-		for( var i = input_fix_len, n = array_length(inputs); i < n; i++ ) {
-			var hv = inputs[i].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
-		}
+		for( var i = input_fix_len, n = array_length(inputs); i < n; i++ )
+			InputDrawOverlay(inputs[i].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 		
 		return w_hovering;
 	}

@@ -33,7 +33,8 @@ function Node_Path_Map_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		var _toType = getSingleValue(4);
 		
 		switch(_toType) {
-			case 0 : var hv = inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV break;
+			case 0 : InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny)); break;
+			
 			case 1 : 
 				var _tdim = getSingleValue(5);
 				draw_set_color(COLORS._main_accent);
@@ -59,6 +60,8 @@ function Node_Path_Map_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				break;
 				
 		}
+		
+		return w_hovering;
 	}
 	
 	function _areaMappedPath() constructor {

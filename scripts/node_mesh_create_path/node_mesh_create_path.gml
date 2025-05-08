@@ -13,13 +13,15 @@ function Node_Mesh_Create_Path(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 
-		var hv = inputs[0].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
+		InputDrawOverlay(inputs[0].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 	
 		var mesh = outputs[0].getValue();
-		if(mesh == noone) return;
+		if(mesh == noone) return w_hovering;
 		
 		draw_set_color(COLORS._main_accent);
 		mesh.draw(_x, _y, _s);
+		
+		return w_hovering;
 	}
 	
 	static update = function() {  

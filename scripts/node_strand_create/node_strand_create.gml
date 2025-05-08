@@ -128,7 +128,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		tools = attributes.use_groom? groomTools : -1;
 		
 		if(_typ == 0) {
-			if(tool_dragging == noone) { var hv = inputs[6].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV }
+			if(tool_dragging == noone) InputDrawOverlay(inputs[6].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 			
 		} else if(_typ == 1) {
 			var _pth = getInputData(5);

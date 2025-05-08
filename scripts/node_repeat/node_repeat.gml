@@ -268,7 +268,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		PROCESSOR_OVERLAY_CHECK
 		
 		var _hov = false;
-		var hv = inputs[9].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
+		InputDrawOverlay(inputs[9].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 		
 		var _pat  = current_data[3];
 		var _spos = current_data[9];
@@ -276,14 +276,14 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var px = _x + _spos[0] * _s;
 		var py = _y + _spos[1] * _s;
 		
-		if(_pat == 0 || _pat == 1) { var hv = inputs[4].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny); OVERLAY_HV }
-		else if(_pat == 2)         { var hv = inputs[8].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny); OVERLAY_HV }
+		if(_pat == 0 || _pat == 1) InputDrawOverlay(inputs[4].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
+		else if(_pat == 2)         InputDrawOverlay(inputs[8].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
 		
-		var hv = inputs[31].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, current_data[1]); OVERLAY_HV
-		var hv = inputs[11].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny);                  OVERLAY_HV
+		InputDrawOverlay(inputs[31].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, current_data[1]));
+		InputDrawOverlay(inputs[11].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 	
 		var _ani_amo = getInputAmount();
-		if(_ani_amo == 0) return _hov;
+		if(_ani_amo == 0) return w_hovering;
 		
 		dynamic_input_inspecting = clamp(dynamic_input_inspecting, 0, getInputAmount() - 1);
 		var _ind = input_fix_len + dynamic_input_inspecting * data_length;
@@ -292,10 +292,10 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _selc = current_data[_ind + 1];
 		
 		if(_selc == 1) {
-			var hv = inputs[_ind + 9].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
+			InputDrawOverlay(inputs[_ind + 9].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 		}
 		
-		return _hov;
+		return w_hovering;
 	}
 	
 	static getTool = function() { 

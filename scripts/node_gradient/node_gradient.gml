@@ -1,5 +1,4 @@
 #region create
-
 	FN_NODE_CONTEXT_INVOKE {
 		addHotkey("Node_Gradient", "Type > Toggle",     "T", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[2].setValue((_n.inputs[2].getValue() + 1) % 3); });
 		addHotkey("Node_Gradient", "Angle > Rotate CCW","R", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[3].setValue((_n.inputs[3].getValue() + 90) % 360); });
@@ -15,7 +14,6 @@
 			_n.triggerRender();
 		});
 	});
-	
 #endregion
 
 function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
@@ -72,18 +70,15 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		var  rot = getSingleValue(3);
 		var  pos = getSingleValue(6);
 		
-		var hv = inputs[ 6].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny);                                        OVERLAY_HV
-		var hv = inputs[16].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, current_data[0]);                       OVERLAY_HV
+		InputDrawOverlay(inputs[ 6].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[16].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, current_data[0]));
 		
 		var _px = _x + pos[0] * _s;
 		var _py = _y + pos[1] * _s;
-		var hv = inputs[ 9].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, _snx, _sny, typ == 0? rot : 0, dim[0] / 2, 1);    OVERLAY_HV
+		InputDrawOverlay(inputs[ 9].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, _snx, _sny, typ == 0? rot : 0, dim[0] / 2, 1));
 		
-		if(typ != 1) {
-			var hv = inputs[ 3].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, _snx, _sny);                                  OVERLAY_HV
-		} else {
-			var hv = inputs[17].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, _snx, _sny, 0, [ dim[0] / 2, dim[1] / 2 ]);   OVERLAY_HV
-		}
+		if(typ != 1) InputDrawOverlay(inputs[ 3].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, _snx, _sny));
+		else         InputDrawOverlay(inputs[17].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, _snx, _sny, 0, [ dim[0] / 2, dim[1] / 2 ]));
 		
 		return w_hovering;
 	}

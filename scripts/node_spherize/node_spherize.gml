@@ -61,27 +61,26 @@ function Node_Spherize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	attributes.oversample  = 3;
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		PROCESSOR_OVERLAY_CHECK
 		
 		var pos  = current_data[1];
 		var px   = _x + pos[0] * _s;
 		var py   = _y + pos[1] * _s;
-		var _hov = false;
 		
-		var hv = inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
+		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 		
-		return _hov;
-	} #endregion
+		return w_hovering;
+	}
 	
-	static step = function() { #region
+	static step = function() {
 		__step_mask_modifier();
 		
 		inputs[2].mappableStep();
 		inputs[3].mappableStep();
-	} #endregion
+	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var sam    = getAttribute("oversample");
 		
 		surface_set_shader(_outSurf, sh_spherize);
@@ -101,5 +100,5 @@ function Node_Spherize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		_outSurf = channel_apply(_data[0], _outSurf, _data[8]);
 		
 		return _outSurf;
-	} #endregion
+	}
 }

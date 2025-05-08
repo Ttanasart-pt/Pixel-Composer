@@ -49,13 +49,9 @@ function Node_VFX_Boids(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _fol_pnt = getInputData(8);
-		var _hov = false;
 		
-		if(_fol_pnt) {
-			var hv = inputs[9].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV
-		}
-		
-		return _hov;
+		if(_fol_pnt) InputDrawOverlay(inputs[9].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
+		return w_hovering;
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {

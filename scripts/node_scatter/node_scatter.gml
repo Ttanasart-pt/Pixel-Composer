@@ -138,14 +138,13 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		PROCESSOR_OVERLAY_CHECK
 		
 		var _distType = current_data[6];
-		var _hov = false;
 		
-		if(_distType <  3) { var hv = inputs[ 5].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV }
-		if(_distType == 4) { var hv = inputs[19].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny); OVERLAY_HV }
+		if(_distType <  3) InputDrawOverlay(inputs[ 5].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
+		if(_distType == 4) InputDrawOverlay(inputs[19].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 		
-		var hv = inputs[29].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, current_data[1]); OVERLAY_HV
+		InputDrawOverlay(inputs[29].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, current_data[1]));
 		
-		return _hov;
+		return w_hovering;
 	}
 	
 	static getTool = function() { 

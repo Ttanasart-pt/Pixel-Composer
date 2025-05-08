@@ -53,14 +53,14 @@ function Node_Blur_Directional(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _surf = outputs[0].getValue();
 		if(is_array(_surf)) {
-			if(array_length(_surf) == 0) return;
+			if(array_length(_surf) == 0) return w_hovering;
 			_surf = _surf[preview_index];
 		}
 		
 		var ww = surface_get_width_safe(_surf);
 		var hh = surface_get_height_safe(_surf);
 		
-		var hv = inputs[2].drawOverlay(w_hoverable, active, _x + ww / 2 * _s, _y + hh / 2 * _s, _s, _mx, _my, _snx, _sny); OVERLAY_HV
+		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _x + ww / 2 * _s, _y + hh / 2 * _s, _s, _mx, _my, _snx, _sny));
 		
 		return w_hovering;
 	}

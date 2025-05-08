@@ -93,7 +93,7 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var _gy = _y + gz_pos[1] * _s;
 		
 		if(gz_style == 0) {
-			var hv = inputs[0].drawOverlay(w_hoverable, active, _gx, _gy, _s, _mx, _my, _snx, _sny, 0, gz_scale); OVERLAY_HV
+			InputDrawOverlay(inputs[0].drawOverlay(w_hoverable, active, _gx, _gy, _s, _mx, _my, _snx, _sny, 0, gz_scale));
 			
 		} else {
 			var val = inputs[0].getValue();
