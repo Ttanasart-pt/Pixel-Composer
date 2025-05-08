@@ -16,10 +16,7 @@ function Node_Rigid_Render_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 	
 	attributes.show_objects = true;	
 	array_push(attributeEditors, "Display");
-	array_push(attributeEditors, ["Show objects", function() { return attributes.show_objects; }, 
-		new checkBox(function() { 
-			attributes.show_objects = !attributes.show_objects;
-		})]);
+	array_push(attributeEditors, ["Show objects", function() /*=>*/ {return attributes.show_objects}, new checkBox(function() /*=>*/ {return toggleAttribute("show_objects")})]);
 	
 	static createNewInput = function(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);

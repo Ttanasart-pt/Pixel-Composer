@@ -41,8 +41,8 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	attributes.show_objects  = true;
 	attributes.display_scale = 512;
 	
-	array_push(attributeEditors, ["Show objects",  function() /*=>*/ {return attributes.show_objects},  new checkBox(function() /*=>*/ { attributes.show_objects = !attributes.show_objects; })]);
-	array_push(attributeEditors, ["Display scale", function() /*=>*/ {return attributes.display_scale}, new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ { attributes.display_scale = v; })]);
+	array_push(attributeEditors, ["Show objects",  function() /*=>*/ {return attributes.show_objects},  new checkBox(function() /*=>*/ {return toggleAttribute("show_objects")})]);
+	array_push(attributeEditors, ["Display scale", function() /*=>*/ {return attributes.display_scale}, textBox_Number(function(v) /*=>*/ {return setAttribute("display_scale", v)})]);
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _typ = getInputData(1);

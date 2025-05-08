@@ -14,7 +14,7 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 	
 	attributes.show_slope_check = true;
 	array_push(attributeEditors, "Display");
-	array_push(attributeEditors, [ "Draw Guide", function() /*=>*/ {return attributes.show_slope_check}, new checkBox(function() /*=>*/ { attributes.show_slope_check = !attributes.show_slope_check; }) ]);
+	array_push(attributeEditors, [ "Draw Guide", function() /*=>*/ {return attributes.show_slope_check}, new checkBox(function() /*=>*/ {return toggleAttribute("show_slope_check")}) ]);
 	
 	#region layers 
 		layers     = {};

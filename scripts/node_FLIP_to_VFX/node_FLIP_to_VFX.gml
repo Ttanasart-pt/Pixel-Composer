@@ -12,8 +12,7 @@ function Node_FLIP_to_VFX(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	newOutput(0, nodeValue_Output("Particles",	self, VALUE_TYPE.particle, [] ));
 	
 	attributes.part_amount = 512;
-	array_push(attributeEditors, ["Maximum particles", function() { return attributes.part_amount; },
-		new textBox(TEXTBOX_INPUT.number, function(val) { attributes.part_amount = val; }) ]);
+	array_push(attributeEditors, ["Maximum particles", function() /*=>*/ {return attributes.part_amount}, textBox_Number(function(v) /*=>*/ {return setAttribute("part_amount", val)}) ]);
 		
 	for( var i = 0; i < attributes.part_amount; i++ )
 		parts[i] = new __particleObject();

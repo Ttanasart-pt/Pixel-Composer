@@ -37,11 +37,7 @@ function Node_Flood_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	attributes.fill_iteration = -1;
 	array_push(attributeEditors, "Algorithm");
-	array_push(attributeEditors, ["Fill iteration", function() { return attributes.fill_iteration; }, 
-		new textBox(TEXTBOX_INPUT.number, function(val) { 
-			attributes.fill_iteration = val; 
-			triggerRender();
-		})]);
+	array_push(attributeEditors, ["Fill iteration", function() /*=>*/ {return attributes.fill_iteration}, textBox_Number(function(v) /*=>*/ {return setAttribute("fill_iteration", v, true)} )]);
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		InputDrawOverlay(inputs[4].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));

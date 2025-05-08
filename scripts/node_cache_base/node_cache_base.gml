@@ -13,7 +13,7 @@ function __Node_Cache(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	
 	attributes.serialize = true;
 	array_push(attributeEditors, "Cache");
-	array_push(attributeEditors, [ "Serizalize Data", function() /*=>*/ {return attributes.serialize}, new checkBox(function() /*=>*/ { attributes.serialize = !attributes.serialize; }) ]);
+	array_push(attributeEditors, [ "Serizalize Data", function() /*=>*/ {return attributes.serialize}, new checkBox(function() /*=>*/ {return toggleAttribute("serialize")}) ]);
 	
 	setTrigger(1, "Generate cache group", [ THEME.cache_group, 0, COLORS._main_icon ]);
 	

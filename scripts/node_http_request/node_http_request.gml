@@ -17,7 +17,7 @@ function Node_HTTP_request(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	attributes.max_file_size = 10000;
 	array_push(attributeEditors, "HTTP");
-	array_push(attributeEditors, ["Max request size", function() { return attributes.max_file_size; }, new textBox(TEXTBOX_INPUT.number, function(val) { attributes.max_file_size = val; }) ]);
+	array_push(attributeEditors, ["Max request size", function() /*=>*/ {return attributes.max_file_size}, textBox_Number(function(v) /*=>*/ {return setAttribute("max_file_size", v)}) ]);
 	
 	static request = function() {
 		var _addr = getInputData(0);

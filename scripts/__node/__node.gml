@@ -48,11 +48,15 @@ function __Node_Base(x, y) constructor {
 		
 		static setAlwaysTimeline = function(item = timeline_item) {
 			attributes.show_timeline = true;
-			array_push(attributeEditors, [ "Show In Timeline", function() { return attributes.show_timeline; }, new checkBox(function() { 
-				attributes.show_timeline = !attributes.show_timeline; 
-				anim_timeline = attributes.show_timeline;
-				refreshTimeline();
-			}) ]);
+			array_push(attributeEditors, [ "Show In Timeline", function() /*=>*/ {return attributes.show_timeline}, 
+				new checkBox(function() /*=>*/ { 
+					attributes.show_timeline = !attributes.show_timeline; 
+					anim_timeline = attributes.show_timeline;
+					refreshTimeline();
+					
+					PROJECT.modified = true;
+				})
+			]);
 			
 			timeline_item   = item;
 			anim_timeline   = true; 

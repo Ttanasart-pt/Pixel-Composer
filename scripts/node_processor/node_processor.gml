@@ -27,7 +27,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	array_push(attributeEditors, "Array processor");
 	array_push(attributeEditors, [ "Array process type", function() /*=>*/ {return attributes.array_process}, 
-		new scrollBox([ "Loop", "Hold", "Expand", "Expand inverse" ], function(val) /*=>*/ { attributes.array_process = val; triggerRender(); }, false) ]);
+		new scrollBox([ "Loop", "Hold", "Expand", "Expand inverse" ], function(v) /*=>*/ {return setAttribute("array_process", v, true)}, false) ]);
 	
 	static getInputData = function(index, def = 0) { INLINE return array_safe_get_fast(inputs_data, index, def); }
 	

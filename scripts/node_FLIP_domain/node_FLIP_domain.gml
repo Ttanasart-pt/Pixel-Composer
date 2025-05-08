@@ -49,48 +49,20 @@ function Node_FLIP_Domain(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	newOutput(0, nodeValue_Output("Domain", self, VALUE_TYPE.fdomain, noone));
 	
 	#region attributes
-		array_push(attributeEditors, "FLIP Solver");
-	
-		attributes.max_particles = 10000;
-		array_push(attributeEditors, ["Maximum particles", function() { return attributes.max_particles; }, 
-			new textBox(TEXTBOX_INPUT.number, function(val) { 
-				attributes.max_particles = val; 
-			})]);
-	
-		attributes.iteration = 8;
-		array_push(attributeEditors, ["Global iteration", function() { return attributes.iteration; }, 
-			new textBox(TEXTBOX_INPUT.number, function(val) { 
-				attributes.iteration = val; 
-				triggerRender();
-			})]);
-	
-		attributes.iteration_pressure = 2;
-		array_push(attributeEditors, ["Pressure iteration", function() { return attributes.iteration_pressure; }, 
-			new textBox(TEXTBOX_INPUT.number, function(val) { 
-				attributes.iteration_pressure = val; 
-				triggerRender();
-			})]);
-	
-		attributes.iteration_particle = 2;
-		array_push(attributeEditors, ["Particle iteration", function() { return attributes.iteration_particle; }, 
-			new textBox(TEXTBOX_INPUT.number, function(val) { 
-				attributes.iteration_particle = val; 
-				triggerRender();
-			})]);
-	
-		attributes.overrelax = 1.5;
-		array_push(attributeEditors, ["Overrelaxation", function() { return attributes.overrelax; }, 
-			new textBox(TEXTBOX_INPUT.number, function(val) { 
-				attributes.overrelax = val; 
-				triggerRender();
-			})]);
-	
+		attributes.max_particles       = 10000;
+		attributes.iteration           = 8;
+		attributes.iteration_pressure  = 2;
+		attributes.iteration_particle  = 2;
+		attributes.overrelax           = 1.5;
 		attributes.skip_incompressible = false;
-		array_push(attributeEditors, ["Skip incompressible", function() { return attributes.skip_incompressible; }, 
-			new checkBox(function() { 
-				attributes.skip_incompressible = !attributes.skip_incompressible;
-				triggerRender();
-			})]);
+
+		array_push(attributeEditors, "FLIP Solver");
+		array_push(attributeEditors, ["Maximum particles",   function() /*=>*/ {return attributes.max_particles},      textBox_Number(function(v) /*=>*/ {return setAttribute("max_particles", v)})            ]);
+		array_push(attributeEditors, ["Global iteration",    function() /*=>*/ {return attributes.iteration},          textBox_Number(function(v) /*=>*/ {return setAttribute("iteration", v, true)})          ]);
+		array_push(attributeEditors, ["Pressure iteration",  function() /*=>*/ {return attributes.iteration_pressure}, textBox_Number(function(v) /*=>*/ {return setAttribute("iteration_pressure", v, true)}) ]);
+		array_push(attributeEditors, ["Particle iteration",  function() /*=>*/ {return attributes.iteration_particle}, textBox_Number(function(v) /*=>*/ {return setAttribute("iteration_particle", v, true)}) ]);
+		array_push(attributeEditors, ["Overrelaxation",      function() /*=>*/ {return attributes.overrelax},          textBox_Number(function(v) /*=>*/ {return setAttribute("overrelax", v, true)})          ]);
+		array_push(attributeEditors, ["Skip incompressible", function() /*=>*/ {return attributes.skip_incompressible}, new checkBox(function() /*=>*/ {return toggleAttribute("skip_incompressible", true)})  ]);
 	#endregion
 	
 	domain  = instance_create(0, 0, FLIP_Domain);

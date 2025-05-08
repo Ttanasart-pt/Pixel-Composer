@@ -18,8 +18,7 @@ function Node_Path_From_Mask(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	cached_pos  = ds_map_create();
 	
 	attributes.maximum_dim = 64;
-	array_push(attributeEditors, ["Max Dimension", function() { return attributes.maximum_dim; }, 
-		new textBox(TEXTBOX_INPUT.number, function(val) { attributes.maximum_dim = clamp(val, 8, 8192); })]);
+	array_push(attributeEditors, ["Max Dimension", function() /*=>*/ {return attributes.maximum_dim}, textBox_Number(function(v) /*=>*/ {return setAttribute("maximum_dim", clamp(v, 8, 8192))})]);
 	
 	static getBoundary		= function() /*=>*/ {return boundary};
 	static getAccuLength	= function() /*=>*/ {return lengthAccs};

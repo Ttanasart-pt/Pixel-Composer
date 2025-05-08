@@ -111,12 +111,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	attributes.rule_length_limit = 10000;
 	array_push(attributeEditors, "L System");
-	array_push(attributeEditors, [ "Rule length limit", function() { return attributes.rule_length_limit; }, 
-		new textBox(TEXTBOX_INPUT.number, function(val) { 
-			attributes.rule_length_limit = val; 
-			cache_data.start = "";
-			triggerRender();
-		}) ]);
+	array_push(attributeEditors, [ "Rule length limit", function() /*=>*/ {return attributes.rule_length_limit}, textBox_Number(function(v) /*=>*/ { setAttribute("rule_length_limit", v, true); cache_data.start = ""; }) ]);
 	
 	path_3d = false;
 	cache_data = {

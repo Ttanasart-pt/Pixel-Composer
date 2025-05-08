@@ -31,7 +31,7 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 	
 	attributes.cache = true;
 	array_push(attributeEditors, "Cache");
-	array_push(attributeEditors, [ "Cache Data", function() /*=>*/ {return attributes.cache}, new checkBox(function() /*=>*/ { attributes.cache = !attributes.cache; }) ]);
+	array_push(attributeEditors, [ "Cache Data", function() /*=>*/ {return attributes.cache}, new checkBox(function() /*=>*/ {return toggleAttribute("cache")}) ]);
 	
 	def_surface    = -1;
 	curr_dimension = [ 0, 0 ];

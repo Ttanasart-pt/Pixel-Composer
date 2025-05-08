@@ -228,17 +228,20 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		attributes.annotation_size  = .4;
 		attributes.annotation_color = COLORS._main_text_sub;
 		
+		setAttribute = function(k, v, r = false) /*=>*/ { attributes[$ k] = v;                if(r) triggerRender(); PROJECT.modified = true; }
+		toggleAttribute = function(k, r = false) /*=>*/ { attributes[$ k] = !attributes[$ k]; if(r) triggerRender(); PROJECT.modified = true; }
+		
 		attributeEditors = [
 			"Display",
-			["Annotation",   function() /*=>*/ {return attributes.annotation},       new textArea(TEXTBOX_INPUT.text,  function(val) /*=>*/ { attributes.annotation = val;          }) ],
-			["Node Width",   function() /*=>*/ {return attributes.node_width},       textBox_Number(function(val) /*=>*/ { attributes.node_width       = val; refreshNodeDisplay(); }) ],
-			["Node Height",  function() /*=>*/ {return attributes.node_height},      textBox_Number(function(val) /*=>*/ { attributes.node_height      = val; refreshNodeDisplay(); }) ],
-			["Params Width", function() /*=>*/ {return attributes.node_param_width}, textBox_Number(function(val) /*=>*/ { attributes.node_param_width = val; refreshNodeDisplay(); }) ],
+			["Annotation",   function() /*=>*/ {return attributes.annotation},       new textArea(TEXTBOX_INPUT.text,  function(val) /*=>*/ { setAttribute("annotation", val);          }) ],
+			["Node Width",   function() /*=>*/ {return attributes.node_width},       textBox_Number(function(val) /*=>*/ { setAttribute("node_width", val);       refreshNodeDisplay(); }) ],
+			["Node Height",  function() /*=>*/ {return attributes.node_height},      textBox_Number(function(val) /*=>*/ { setAttribute("node_height", val);      refreshNodeDisplay(); }) ],
+			["Params Width", function() /*=>*/ {return attributes.node_param_width}, textBox_Number(function(val) /*=>*/ { setAttribute("node_param_width", val); refreshNodeDisplay(); }) ],
 			
 			"Node",
-			["Auto update",     function() /*=>*/ {return attributes.update_graph},		  new checkBox(function() /*=>*/ { attributes.update_graph        = !attributes.update_graph;           }) ],
-			["Update trigger",  function() /*=>*/ {return attributes.show_update_trigger}, new checkBox(function() /*=>*/ { attributes.show_update_trigger = !attributes.show_update_trigger;    }) ],
-			["Output metadata", function() /*=>*/ {return attributes.outp_meta},           new checkBox(function() /*=>*/ { attributes.outp_meta           = !attributes.outp_meta; setHeight(); }) ],
+			["Auto update",     function() /*=>*/ {return attributes.update_graph},		  new checkBox(function() /*=>*/ { toggleAttribute("update_graph");           }) ],
+			["Update trigger",  function() /*=>*/ {return attributes.show_update_trigger}, new checkBox(function() /*=>*/ { toggleAttribute("show_update_trigger");    }) ],
+			["Output metadata", function() /*=>*/ {return attributes.outp_meta},           new checkBox(function() /*=>*/ { toggleAttribute("outp_meta"); setHeight(); }) ],
 		];
 	#endregion
 	

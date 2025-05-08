@@ -44,10 +44,10 @@ function Node_Strand_Render(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	attributes.use_cache   = false;
 	attributes.show_strand = true;
 	
-	array_push(attributeEditors, [ "Cache", function() /*=>*/ {return attributes.use_cache}, new checkBox(function() /*=>*/ { attributes.use_cache = !attributes.use_cache; }) ]);
+	array_push(attributeEditors, [ "Cache", function() /*=>*/ {return attributes.use_cache}, new checkBox(function() /*=>*/ {return toggleAttribute("use_cache")}) ]);
 	
 	array_push(attributeEditors, "Display");
-	array_push(attributeEditors, [ "Draw Strand", function() /*=>*/ {return attributes.show_strand}, new checkBox(function() /*=>*/ { attributes.show_strand = !attributes.show_strand; }) ]);
+	array_push(attributeEditors, [ "Draw Strand", function() /*=>*/ {return attributes.show_strand}, new checkBox(function() /*=>*/ {return toggleAttribute("show_strand")}) ]);
 	
 	setTrigger(2, "Clear cache", [ THEME.cache, 0, COLORS._main_icon ]);
 	

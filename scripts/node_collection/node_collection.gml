@@ -238,8 +238,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	draw_input_overlay = true;
 	
 	array_push(attributeEditors, "Group");
-	array_push(attributeEditors, ["Pure Function",       function() /*=>*/ {return attributes.pure_function}, new checkBox(function() /*=>*/ { attributes.pure_function = !attributes.pure_function   }) ]);
-	array_push(attributeEditors, ["Lock Input",          function() /*=>*/ {return attributes.lock_input},    new checkBox(function() /*=>*/ { attributes.lock_input    = !attributes.lock_input      }) ]);
+	array_push(attributeEditors, ["Pure Function",       function() /*=>*/ {return attributes.pure_function}, new checkBox(function() /*=>*/ {return toggleAttribute("pure_function")}) ]);
+	array_push(attributeEditors, ["Lock Input",          function() /*=>*/ {return attributes.lock_input},    new checkBox(function() /*=>*/ {return toggleAttribute("lock_input")})    ]);
 	array_push(attributeEditors, ["Edit Input Display",  function() /*=>*/ {return 0}, button(function() /*=>*/ { dialogCall(o_dialog_group_input_order).setNode(self, CONNECT_TYPE.input);  }) ]);
 	array_push(attributeEditors, ["Edit Output Display", function() /*=>*/ {return 0}, button(function() /*=>*/ { dialogCall(o_dialog_group_input_order).setNode(self, CONNECT_TYPE.output); }) ]);
 	

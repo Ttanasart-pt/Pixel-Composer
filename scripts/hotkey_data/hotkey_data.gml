@@ -12,14 +12,14 @@ function __initHotKey() {
 	////- Classes
 
 function Hotkey(_context, _name, _key = "", _mod = MOD_KEY.none, _action = noone, _param = noone) constructor {
-	context	= _context;
-	name	= _name;
+	context   = _context;
+	name      = _name;
 	
-	key		= key_get_index(_key);
-	dKey	= key;
+	key       = key_get_index(_key);
+	dKey      = key;
 	
-	modi	= _mod;
-	dModi	= _mod;
+	modi      = _mod;
+	dModi     = modi;
 	
 	rawAction = _action;
 	param     = _param;
@@ -45,7 +45,7 @@ function Hotkey(_context, _name, _key = "", _mod = MOD_KEY.none, _action = noone
 	
 	////- Serialize
 	
-	static serialize = function( ) /*=>*/ { return { context, name, key, modi } }
+	static serialize = function() /*=>*/ { return { context, name, key, modi } }
 	
 	static deserialize = function(l) /*=>*/ { 
 		if(!is_struct(l)) return self; 
@@ -77,11 +77,11 @@ function addHotkey(_context, _name, _key, _mod, _action) {
 	}
 	
 	for(var i = 0; i < array_length(HOTKEYS[$ _context]); i++) {
-		var hotkey	= HOTKEYS[$ _context][i];
+		var hotkey = HOTKEYS[$ _context][i];
 		if(hotkey.name == key.name) {
 			delete HOTKEYS[$ _context][i];
 			HOTKEYS[$ _context][i] = key;
-			return;
+			return key;
 		}
 	}
 	

@@ -50,7 +50,7 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	attributes.show_tile_index = false;
 	array_push(attributeEditors, "Display");
-	array_push(attributeEditors, ["Show index", function() /*=>*/ {return attributes.show_tile_index}, new checkBox(function() /*=>*/ { attributes.show_tile_index = !attributes.show_tile_index; }) ]);
+	array_push(attributeEditors, ["Show index", function() /*=>*/ {return attributes.show_tile_index}, new checkBox(function() /*=>*/ {return toggleAttribute("show_tile_index")}) ]);
 	
 	#region overlay
 		tile_overlay_select = noone;

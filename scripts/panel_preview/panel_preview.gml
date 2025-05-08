@@ -899,8 +899,8 @@ function Panel_Preview() : PanelContent() constructor {
     
     ////- TOOL
     
-    function clearTool() {
-    	if(!tool_clearable)       return;
+    function clearTool(_bypass_clearable = false) { 
+    	if(!tool_clearable && !_bypass_clearable) return;
     	if(tool_current == noone) return;
     	
     	var _tobj = tool_current.getToolObject();
@@ -2606,6 +2606,8 @@ function Panel_Preview() : PanelContent() constructor {
         drawToolBar(toolNode);
         drawMinimap();
         
+        ////////////////////////////////// Actions //////////////////////////////////
+        
         if(mouse_on_preview && mouse_press(mb_right, pFOCUS) && !key_mod_press(SHIFT)) {
             menuCall("preview_context_menu", [ 
                 MENU_ITEMS.preview_new_preview_window, 
@@ -2621,6 +2623,9 @@ function Panel_Preview() : PanelContent() constructor {
                 MENU_ITEMS.preview_group_preview_bg,
             ], 0, 0, fa_left, getNodePreview());
         }
+        
+        if(pFOCUS && keyboard_check_pressed(vk_escape))
+        	clearTool(true);
         
         ////////////////////////////////// File drop //////////////////////////////////
         
