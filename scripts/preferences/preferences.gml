@@ -474,8 +474,8 @@
 
 #region command palette
 	//!#mfunc __regFnPref {"args":["name"," key"],"order":[0,1]}
-#macro __regFnPref_mf0  { registerFunctionLite("Preference", 
-#macro __regFnPref_mf1 , function() { dialogPanelCall(new Panel_Preference().goto(
+#macro __regFnPref_mf0  { registerFunction("Preference", 
+#macro __regFnPref_mf1 , "", 0, function() { dialogPanelCall(new Panel_Preference().goto(
 #macro __regFnPref_mf2 )); }); }
 	
 	function __fnInit_Preference() {

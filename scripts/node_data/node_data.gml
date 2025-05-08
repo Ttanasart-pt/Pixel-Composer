@@ -1961,12 +1961,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			array_foreach(outputDisplayList, function(i) /*=>*/ { i.drawName(__s, __mx, __my); });
 		}
 		
-		if(hasInspector1Update() && _panel.pHOVER && point_in_circle(_mx, _my, inspectInput1.x, inspectInput1.y, 10)) {
+		if(hasInspector1Update() && _panel.pHOVER && point_in_circle(_mx, _my, inspectInput1.x, inspectInput1.y, 10 * _s)) {
 			inspectInput1.drawNameBG(_s);
 			inspectInput1.drawName(_s, _mx, _my);
 		}
 		
-		if(hasInspector2Update() && _panel.pHOVER && point_in_circle(_mx, _my, inspectInput2.x, inspectInput2.y, 10)) {
+		if(hasInspector2Update() && _panel.pHOVER && point_in_circle(_mx, _my, inspectInput2.x, inspectInput2.y, 10 * _s)) {
 			inspectInput2.drawNameBG(_s);
 			inspectInput2.drawName(_s, _mx, _my);
 		}

@@ -41,6 +41,7 @@ function functionObjectLite(_context, _name, _action, _param = noone) constructo
 	name     = _name;
 	action   = method(undefined, _action);
 	params   = _param;
+	
 	fnName   = string_to_var2(_context, _name);
 	menu     = noone;
 	spr      = noone;
@@ -53,8 +54,6 @@ function functionObject(_context, _name, _key, _mod, _action, _param = noone) co
 	hotkey   = addHotkey(_context == ""? 0 : _context, _name, _key, _mod, _action, _param);
 	context  = _context;
 	name     = _name;
-	dkey     = _key;
-	dmod     = _mod;
 	action   = method(undefined, _action);
 	params   = _param;
 	hide     = false;
@@ -107,11 +106,9 @@ function callFunction(name, args) {
 	return true;
 }
 	
-function call(fn, args) {
-	if(!is_array(args)) {
-		fn();
-		return;
-	}
+function call(fn, args = undefined) {
+	if(args == undefined) return fn();
+	if(!is_array(args))   return fn(args);
 	
 	switch(array_length(args)) {
 		case  0 : fn();																																						break;
