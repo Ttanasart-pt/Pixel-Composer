@@ -8,6 +8,11 @@
   "bold":true,
   "canGenerateBitmap":true,
   "charset":0,
+  "ConfigValues":{
+    "Itch":{
+      "textureGroupId":"{ \"name\":\"Default\", \"path\":\"texturegroups/Default\" }",
+    },
+  },
   "first":0,
   "fontName":"Atkinson Hyperlegible",
   "glyphOperations":0,

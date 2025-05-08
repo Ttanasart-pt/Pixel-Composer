@@ -2321,15 +2321,15 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(display_parameter.highlight) drawBranch();
 	}
 	
-	static doDrawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { 
+	static doDrawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params = {}) { 
 		w_hovering  = false; 
 		w_hoverable = hover;
 		w_active    = active;
 		
-		return drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		return drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params);
 	}
 	
-	static drawOverlay    = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {}
+	static drawOverlay    = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params = {}) {}
 	
 	static drawOverlayChainTransform = function(_node) {
 		var _ch = getNodeChildList(_node);

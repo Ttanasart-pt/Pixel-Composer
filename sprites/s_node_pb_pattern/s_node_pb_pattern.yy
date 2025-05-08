@@ -81,7 +81,7 @@
   "resourceType":"GMSprite",
   "resourceVersion":"2.0",
   "sequence":{
-    "$GMSequence":"v1",
+    "$GMSequence":"",
     "%Name":"s_node_pb_pattern",
     "autoRecord":true,
     "backdropHeight":768,

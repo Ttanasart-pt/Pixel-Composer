@@ -1,5 +1,5 @@
 {
-  "$GMProject":"v1",
+  "$GMProject":"",
   "%Name":"PixelComposer",
   "AudioGroups":[
     {"$GMAudioGroup":"","%Name":"audiogroup_default","name":"audiogroup_default","resourceType":"GMAudioGroup","resourceVersion":"2.0","targets":-1,},
@@ -360,7 +360,6 @@
     {"$GMFolder":"","%Name":"sliders","folderPath":"folders/widgets/sliders.yy","name":"sliders","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"text","folderPath":"folders/widgets/text.yy","name":"text","resourceType":"GMFolder","resourceVersion":"2.0",},
   ],
-  "ForcedPrefabProjectReferences":[],
   "IncludedFiles":[
     {"$GMIncludedFile":"","%Name":"Addons.zip","CopyToMask":-1,"filePath":"datafiles/data","name":"Addons.zip","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"Assets.zip","CopyToMask":-1,"filePath":"datafiles/data","name":"Assets.zip","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
@@ -1401,7 +1400,7 @@
   "isEcma":false,
   "LibraryEmitters":[],
   "MetaData":{
-    "IDEVersion":"2024.13.1.193",
+    "IDEVersion":"2024.11.0.179",
   },
   "name":"PixelComposer",
   "resources":[

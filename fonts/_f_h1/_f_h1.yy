@@ -8,6 +8,11 @@
   "bold":false,
   "canGenerateBitmap":true,
   "charset":0,
+  "ConfigValues":{
+    "Itch":{
+      "textureGroupId":"{ \"name\":\"Default\", \"path\":\"texturegroups/Default\" }",
+    },
+  },
   "first":0,
   "fontName":"Noto Sans",
   "glyphOperations":0,
