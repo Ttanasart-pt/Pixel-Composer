@@ -36,10 +36,9 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 	
 	char_run = 0
 	
-	cursor_select	= -1;
-	
-	click_block = 0;
-	format = TEXT_AREA_FORMAT._default;
+	format         = TEXT_AREA_FORMAT._default;
+	cursor_select  = -1;
+	click_block    = 0;
 	
 	code_line_width = 48;
 	
@@ -774,6 +773,9 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		w = _w; h = _h;
 		
 		hovering = false;
+		
+		if(!interactable && string_length(_text) > 1000)
+			_text = string_copy(_text, 1, 1000) + "...";
 		
 		autocomplete_delay += delta_time / 1000;
 		_stretch_width      = _w < 0;
