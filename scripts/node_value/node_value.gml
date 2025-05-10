@@ -2009,8 +2009,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			default: return;
 		}
 		
-		if(string_length(_txt) > 256)
-			_txt = string_copy(_txt, 1, 256) + "...";
+		if(string_length(_txt) > 64)
+			_txt = string_copy(_txt, 1, 64) + "...";
 			
 		draw_set_text(f_sdf, fa_center, fa_center, _tc);
 		draw_text_bbox(_bbox, _txt);

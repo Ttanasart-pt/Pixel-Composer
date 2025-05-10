@@ -1420,6 +1420,7 @@
     {"id":{"name":"FirebaseSetup","path":"extensions/FirebaseSetup/FirebaseSetup.yy",},},
     {"id":{"name":"FLIP","path":"extensions/FLIP/FLIP.yy",},},
     {"id":{"name":"gameframe_native","path":"extensions/gameframe_native/gameframe_native.yy",},},
+    {"id":{"name":"gmlBox2D","path":"extensions/gmlBox2D/gmlBox2D.yy",},},
     {"id":{"name":"GMSSimpleMIDI","path":"extensions/GMSSimpleMIDI/GMSSimpleMIDI.yy",},},
     {"id":{"name":"libborderless","path":"extensions/libborderless/libborderless.yy",},},
     {"id":{"name":"libdlgmodule","path":"extensions/libdlgmodule/libdlgmodule.yy",},},

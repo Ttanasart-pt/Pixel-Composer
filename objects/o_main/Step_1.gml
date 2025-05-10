@@ -292,7 +292,9 @@ _FILE_DROPPED     = false;
 	}
 #endregion
 
-//print(typeof(WIDGET_CURRENT), instanceof(WIDGET_CURRENT));
-//if(global.cache_call) print($"CACHE called: {global.cache_call} | hit: {global.cache_hit} ({global.cache_hit / global.cache_call * 100}%)");
-//print($"{is_struct(HOVER)? instanceof(HOVER) : HOVER}, {is_struct(FOCUS)? instanceof(FOCUS) : FOCUS}");
-//print($"{mouse_mx}, {mouse_my}");
+#region random debug
+	//print(typeof(WIDGET_CURRENT), instanceof(WIDGET_CURRENT));
+	//if(global.cache_call) print($"CACHE called: {global.cache_call} | hit: {global.cache_hit} ({global.cache_hit / global.cache_call * 100}%)");
+	//print($"{is_struct(HOVER)? instanceof(HOVER) : HOVER}, {is_struct(FOCUS)? instanceof(FOCUS) : FOCUS}");
+	//print($"{mouse_mx}, {mouse_my}");
+#endregion

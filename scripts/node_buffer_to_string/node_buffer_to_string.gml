@@ -2,7 +2,7 @@ function Node_Buffer_to_String(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	name = "Buffer to Text";
 	
 	newInput(0, nodeValue_Buffer(      "Buffer", self)).setVisible(true, true);
-	newInput(1, nodeValue_Enum_Scroll( "Format", self, 1, { data: [ "Binary", "Hexadecimal", "ASCII" ], update_hover: false }));
+	newInput(1, nodeValue_Enum_Scroll( "Format", self, 1, { data: [ "Binary", "Hexadecimal", "ASCII", "Base64" ], update_hover: false }));
 	
 	newOutput(0, nodeValue_Output("String Out", self, VALUE_TYPE.text, ""));
 	
@@ -25,7 +25,6 @@ function Node_Buffer_to_String(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 				
 				buffer_delete(_res);
 				break;
-				
 			case 1 : 
 				var _res  = buffer_create(len * 2 + 1, buffer_fixed, 1);
 				var _olen = buffer_to_string_hex(buffer_get_address(_buff), len, buffer_get_address(_res));
@@ -40,6 +39,17 @@ function Node_Buffer_to_String(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 				buffer_to_start(_buff);
 				_str = buffer_read(_buff, buffer_string); 
 				break;
+				
+			case 3 : 
+				var _res  = buffer_create(len * 4, buffer_fixed, 1);
+				var _olen = buffer_to_string_base64(buffer_get_address(_buff), len, buffer_get_address(_res));
+				
+				buffer_to_start(_res);
+				_str = buffer_read(_res, buffer_string);
+				
+				buffer_delete(_res);
+				break;
+			
 		}
 		
 		return _str;

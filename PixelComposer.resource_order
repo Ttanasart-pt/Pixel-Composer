@@ -299,6 +299,7 @@
     {"name":"FirebaseSetup","order":3,"path":"extensions/FirebaseSetup/FirebaseSetup.yy",},
     {"name":"FLIP","order":19,"path":"extensions/FLIP/FLIP.yy",},
     {"name":"gameframe_native","order":2,"path":"extensions/gameframe_native/gameframe_native.yy",},
+    {"name":"gmlBox2D","order":4,"path":"extensions/gmlBox2D/gmlBox2D.yy",},
     {"name":"GMSSimpleMIDI","order":17,"path":"extensions/GMSSimpleMIDI/GMSSimpleMIDI.yy",},
     {"name":"libborderless","order":1,"path":"extensions/libborderless/libborderless.yy",},
     {"name":"libdlgmodule","order":15,"path":"extensions/libdlgmodule/libdlgmodule.yy",},
